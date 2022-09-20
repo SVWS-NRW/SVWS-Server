@@ -1,4 +1,4 @@
-import { ApiSchema, ApiServer, List, ReligionEintrag, Vector } from "@svws-nrw/svws-core-ts";
+import { ApiSchema, ApiServer, LehrerKatalogBeschaeftigungsartEintrag, List, ReligionEintrag, Vector } from "@svws-nrw/svws-core-ts";
 import {
 	DBSchemaListeEintrag,
 	Schuljahresabschnitt,
