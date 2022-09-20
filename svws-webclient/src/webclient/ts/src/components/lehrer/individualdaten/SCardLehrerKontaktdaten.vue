@@ -59,6 +59,7 @@
 	import {
 		AdressenUtils,
 		LehrerStammdaten,
+		List,
 		OrtKatalogEintrag,
 		OrtsteilKatalogEintrag
 	} from "@svws-nrw/svws-core-ts";
@@ -75,11 +76,11 @@
 	const main: Main = injectMainApp();
 	const app = main.apps.lehrer;
 
-	const inputKatalogOrte: ComputedRef<OrtKatalogEintrag[]> = computed(() => {
+	const inputKatalogOrte: ComputedRef<List<OrtKatalogEintrag>> = computed(() => {
 		return main.kataloge.orte;
 	});
 
-	const inputKatalogOrtsteil: ComputedRef<OrtsteilKatalogEintrag[]> =
+	const inputKatalogOrtsteil: ComputedRef<List<OrtsteilKatalogEintrag>> =
 		computed(() => {
 			return main.kataloge.ortsteile;
 		});
@@ -114,9 +115,15 @@
 	const inputWohnortID: WritableComputedRef<OrtKatalogEintrag | undefined> =
 		computed({
 			get(): OrtKatalogEintrag | undefined {
-				return inputKatalogOrte.value.find(
-					o => o.id === daten.value.wohnortID
-				);
+				const id = daten.value.wohnortID;
+				let o;
+				for (const r of inputKatalogOrte.value) {
+					if (r.id === id) {
+						o = r;
+						break;
+					}
+				}
+				return o;
 			},
 			set(val: OrtKatalogEintrag | undefined) {
 				app.stammdaten.patch({ wohnortID: val?.id });
@@ -127,9 +134,15 @@
 		OrtsteilKatalogEintrag | undefined
 	> = computed({
 		get(): OrtsteilKatalogEintrag | undefined {
-			return inputKatalogOrtsteil.value.find(
-				o => o.id === daten.value.ortsteilID
-			);
+			const id = daten.value.ortsteilID;
+			let o;
+			for (const r of inputKatalogOrtsteil.value) {
+				if (r.id === id) {
+					o = r;
+					break;
+				}
+			}
+			return o;
 		},
 		set(val) {
 			app.stammdaten.patch({ ortsteilID: val?.id });

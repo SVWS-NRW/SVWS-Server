@@ -21,7 +21,7 @@
 import { computed, ComputedRef, WritableComputedRef } from "vue";
 
 import {
-List,
+	List,
 	Nationalitaeten,
 	ReligionEintrag,
 	SchuelerStammdaten

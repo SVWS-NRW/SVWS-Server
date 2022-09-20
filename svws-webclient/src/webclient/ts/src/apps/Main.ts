@@ -1,4 +1,4 @@
-import { ApiSchema, ApiServer, List, Religion, ReligionEintrag, Vector } from "@svws-nrw/svws-core-ts";
+import { ApiSchema, ApiServer, LehrerKatalogBeschaeftigungsartEintrag, List, ReligionEintrag, Vector } from "@svws-nrw/svws-core-ts";
 import {
 	DBSchemaListeEintrag,
 	Schuljahresabschnitt,
@@ -18,7 +18,7 @@ import { Jahrgaenge } from "./jahrgaenge/Jahrgaenge";
 import { Klassen } from "./klassen/Klassen";
 import { Kurse } from "./kurse/Kurse";
 import { Lehrer } from "./lehrer/Lehrer";
-import { computed, ComputedRef, inject, InjectionKey, provide, reactive, Ref, ref } from "vue";
+import { ComputedRef, inject, InjectionKey, provide, reactive } from "vue";
 import { BaseList } from "./BaseList";
 import { Foerderschwerpunkte } from "./kataloge/foerderschwerpunkt/Foerderschwerpunkte";
 import { Religionen } from "./kataloge/religionen/Religionen";
@@ -26,11 +26,11 @@ import { ApiLoadingStatus } from "./core/ApiLoadingStatus.class";
 import { MAIN_LOADING_SYMBOL } from "./core/LoadingSymbols";
 
 export type Kataloge = {
-	orte: OrtKatalogEintrag[];
-	ortsteile: OrtsteilKatalogEintrag[];
+	orte: List<OrtKatalogEintrag>;
+	ortsteile: List<OrtsteilKatalogEintrag>;
 	religionen: List<ReligionEintrag>;
-	haltestellen: KatalogEintrag[];
-	beschaeftigungsarten: KatalogEintrag[];
+	haltestellen: List<KatalogEintrag>;
+	beschaeftigungsarten: List<KatalogEintrag>;
 };
 
 export class MainConfig {
@@ -93,11 +93,11 @@ export class Main {
 	public config = reactive(new MainConfig());
 
 	public kataloge: Kataloge = {
-		ortsteile: [],
-		haltestellen: [],
+		ortsteile: new Vector<OrtsteilKatalogEintrag>(),
+		haltestellen: new Vector<KatalogEintrag>(),
 		religionen: new Vector<ReligionEintrag>(),
-		orte: [],
-		beschaeftigungsarten: [],
+		orte: new Vector<OrtKatalogEintrag>(),
+		beschaeftigungsarten: new Vector<KatalogEintrag>(),
 	};
 
 	/**
@@ -242,9 +242,7 @@ export class Main {
 				.getKatalogOrte(o)
 				.then(
 					r =>
-					(this.kataloge.orte = r.toArray(
-						new Array<OrtKatalogEintrag>()
-					))
+						(this.kataloge.orte = r)
 				)
 		);
 		this._pending.push(
@@ -252,9 +250,7 @@ export class Main {
 				.getKatalogOrtsteile(o)
 				.then(
 					r =>
-					(this.kataloge.ortsteile = r.toArray(
-						new Array<OrtsteilKatalogEintrag>()
-					))
+						(this.kataloge.ortsteile = r)
 				)
 		);
 		this._pending.push(
@@ -271,9 +267,7 @@ export class Main {
 				.getKatalogHaltestellen(o)
 				.then(
 					r =>
-					(this.kataloge.haltestellen = r.toArray(
-						new Array<KatalogEintrag>()
-					))
+						(this.kataloge.haltestellen = r)
 				)
 		);
 		this._pending.push(
@@ -281,15 +275,11 @@ export class Main {
 				.getKatalogBeschaeftigungsart(o)
 				.then(
 					r =>
-					(this.kataloge.beschaeftigungsarten = r.toArray(
-						new Array<KatalogEintrag>()
-					))
+						(this.kataloge.beschaeftigungsarten = r)
 				)
 		);
 
 		const prom = Promise.all(this._pending)
-			// .then(() => (this.config.pending = false))
-			// .catch(() => (this.config.pending = true))
 			.finally(() => (this.config.selected_app = "Schueler"));
 
 		this.config.apiLoadingStatus.addStatusByPromise(
