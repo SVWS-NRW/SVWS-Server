@@ -420,9 +420,12 @@ import { App } from "~/apps/BaseApp";
 	const inputWohnortID: WritableComputedRef<OrtKatalogEintrag | undefined> =computed({
 			get(): OrtKatalogEintrag | undefined {
 				// TODO Die UI-Komponente zeigt nach Auswahl eines neuen Eintrags den Eintrag doppelt. Erst nach 10 Sekunden ist es wieder normal.
-				// FIXME: Funktion zum Suchen in Liste implementieren.
-				if(app.betriebsStammdaten.daten?.ort_id)
-					return inputKatalogOrte.value.get(0); //find( o => o.id === app.betriebsStammdaten.daten?.ort_id);
+				if (app.betriebsStammdaten.daten?.ort_id) {
+					const id = app.betriebsStammdaten.daten?.ort_id;
+					let o;
+					for (const r of inputKatalogOrte.value) { if (r.id === id) { o = r; break } }
+					return o;
+				}
 				return undefined;
 			},
 			set(val: OrtKatalogEintrag | undefined) {

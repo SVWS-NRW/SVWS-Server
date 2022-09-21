@@ -1,69 +1,69 @@
 <template>
 	<td>
-		<svws-ui-multi-select 
-			v-model="inputBetrieb" 
-			title="Betrieb" 
+		<svws-ui-multi-select
+			v-model="inputBetrieb"
+			title="Betrieb"
 			:items="inputBetriebListe"
-			:item-text="(i: BetriebListeEintrag) => i.name1" 
+			:item-text="(i: BetriebListeEintrag) => i.name1"
 		/>
 	</td>
 	<td>
-		<svws-ui-text-input 
-			v-model="ausbilder" 
-			type="text" 
-			placeholder="Ausbilder" 
+		<svws-ui-text-input
+			v-model="ausbilder"
+			type="text"
+			placeholder="Ausbilder"
 		/>
 	</td>
 	<td>
-		<svws-ui-multi-select 
-			v-model="beschaeftigungsart" 
-			title="Beschäftigungsart" 
+		<svws-ui-multi-select
+			v-model="beschaeftigungsart"
+			title="Beschäftigungsart"
 			:items="inputBeschaeftigungsarten"
-			:item-text="(i: KatalogEintrag) => i.text" 
+			:item-text="(i: KatalogEintrag) => i.text"
 		/>
 	</td>
 	<td>
-		<svws-ui-text-input 
-			v-model="vertragsbeginn" 
-			type="date" 
-			placeholder="Vertragsbeginn" 
+		<svws-ui-text-input
+			v-model="vertragsbeginn"
+			type="date"
+			placeholder="Vertragsbeginn"
 		/>
 	</td>
 	<td>
-		<svws-ui-text-input 
-			v-model="vertragsende" 
-			type="date" 
-			placeholder="Vertragsende" 
+		<svws-ui-text-input
+			v-model="vertragsende"
+			type="date"
+			placeholder="Vertragsende"
 		/>
 	</td>
 	<td>
-		<svws-ui-checkbox 
-			v-model="praktikum" 
+		<svws-ui-checkbox
+			v-model="praktikum"
 		/>
 	</td>
-	
+
 	<!--
 	<td>
-		<svws-ui-multi-select 
-			v-model="inputBetreuungslehrer" 
-			title="Betreuungslehrer" 
+		<svws-ui-multi-select
+			v-model="inputBetreuungslehrer"
+			title="Betreuungslehrer"
 			:items="inputLehrerListe"
-			:item-text="(i: LehrerListeEintrag) => i.nachname" 
+			:item-text="(i: LehrerListeEintrag) => i.nachname"
 		/>
 	</td>
 	<td>
 		<svws-ui-multi-select
 			v-if="inputBetriebAnsprechpartner.length > 0"
-			v-model="ansprechpartner" 
-			title="Ansprechpartner" 
+			v-model="ansprechpartner"
+			title="Ansprechpartner"
 			:items="inputBetriebAnsprechpartner"
-			:item-text="(i: BetriebAnsprechpartner) => i.name" 
+			:item-text="(i: BetriebAnsprechpartner) => i.name"
 		/>
 		<p v-else>Kein BetriebAnsprechpartner</p>
 	</td>
-	
+
 	<td>
-		<svws-ui-checkbox 
+		<svws-ui-checkbox
 			v-model="anschreiben"
 		/>
 	</td>
@@ -72,7 +72,7 @@
 
 <script setup lang="ts">
 	import { computed, ComputedRef, WritableComputedRef } from "vue";
-	import { BetriebAnsprechpartner, BetriebListeEintrag, KatalogEintrag, LehrerListeEintrag, SchuelerBetriebsdaten } from "@svws-nrw/svws-core-ts";
+	import { BetriebAnsprechpartner, BetriebListeEintrag, KatalogEintrag, LehrerListeEintrag, List, SchuelerBetriebsdaten } from "@svws-nrw/svws-core-ts";
 	import { injectMainApp, Main } from "~/apps/Main";
 	import { App } from "~/apps/BaseApp";
 
@@ -86,7 +86,7 @@
 	const main: Main = injectMainApp();
 	const app = main.apps.schueler;
 
-	const inputBeschaeftigungsarten: ComputedRef<KatalogEintrag[]> = computed(() => main.kataloge.beschaeftigungsarten);
+	const inputBeschaeftigungsarten: ComputedRef<List<KatalogEintrag>> = computed(() => main.kataloge.beschaeftigungsarten);
 
 	const inputLehrerListe: ComputedRef<LehrerListeEintrag[]> = computed(() => {
 		return app.listSchuelerbetriebe?.lehrer.liste || [];
@@ -148,7 +148,10 @@
 
 	const beschaeftigungsart: WritableComputedRef<KatalogEintrag | undefined> = computed({
 		get(): KatalogEintrag | undefined {
-			return inputBeschaeftigungsarten.value.find(l => { return l.id === props.betrieb.beschaeftigungsart_id });
+			const id = props.betrieb.beschaeftigungsart_id;
+			let o;
+			for (const r of inputBeschaeftigungsarten.value) { if (r.id === id) { o = r; break } }
+			return o;
 		},
 		set(val: KatalogEintrag | undefined) {
 			const data: SchuelerBetriebsdaten | undefined = app.listSchuelerbetriebe?.ausgewaehlt;
@@ -233,7 +236,7 @@
 		@apply whitespace-nowrap px-1 py-2 text-sm font-medium text-gray-600
 
 	}
-	
+
 
 
 </style>

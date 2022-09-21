@@ -1,54 +1,54 @@
 <template>
-	
+
 	<svws-ui-modal ref="modalAddBetrieb" size="medium">
 		<template #modalTitle>Ansprechpartner Hinzufügen</template>
 
 		<template #modalContent>
 			<div class="input-wrapper">
-				<svws-ui-multi-select 
-					v-model="betrieb" 
-					title="Betrieb" 
+				<svws-ui-multi-select
+					v-model="betrieb"
+					title="Betrieb"
 					:items="inputBetriebListe"
-					:item-text="(i: BetriebListeEintrag) => i.name1" 
+					:item-text="(i: BetriebListeEintrag) => i.name1"
 				/>
-				<svws-ui-text-input 
-					v-model="s_betrieb.ausbilder" 
-					type="text" 
-					placeholder="Ausbilder" 
-				/>
-				<svws-ui-multi-select 
-					v-model="beschaeftigungsart" 
-					title="Beschäftigungsart" 
-					:items="inputBeschaeftigungsarten"
-					:item-text="(i: KatalogEintrag) => i.text" 
-				/>
-				<svws-ui-text-input 
-					v-model="s_betrieb.vertragsbeginn" 
-					type="date" 
-					placeholder="Vertragsbeginn" 
-				/>
-				<svws-ui-text-input 
-					v-model="s_betrieb.vertragsende" 
-					type="date" 
-					placeholder="Vertragsende" 
-				/>
-				<svws-ui-checkbox 
-					v-model="s_betrieb.praktikum" 
-				>Praktikum</svws-ui-checkbox>
-				<svws-ui-multi-select 
-					v-model="betreuungslehrer" 
-					title="Betreuungslehrer" 
-					:items="inputLehrerListe"
-					:item-text="(i: LehrerListeEintrag) => i.nachname" 
+				<svws-ui-text-input
+					v-model="s_betrieb.ausbilder"
+					type="text"
+					placeholder="Ausbilder"
 				/>
 				<svws-ui-multi-select
-					v-model="ansprechpartner" 
-					title="Ansprechpartner" 
-					:items="inputBetriebAnsprechpartner"
-					:item-text="(i: BetriebAnsprechpartner) => i.name" 
+					v-model="beschaeftigungsart"
+					title="Beschäftigungsart"
+					:items="inputBeschaeftigungsarten"
+					:item-text="(i: KatalogEintrag) => i.text"
 				/>
-				
-				<svws-ui-checkbox 
+				<svws-ui-text-input
+					v-model="s_betrieb.vertragsbeginn"
+					type="date"
+					placeholder="Vertragsbeginn"
+				/>
+				<svws-ui-text-input
+					v-model="s_betrieb.vertragsende"
+					type="date"
+					placeholder="Vertragsende"
+				/>
+				<svws-ui-checkbox
+					v-model="s_betrieb.praktikum"
+				>Praktikum</svws-ui-checkbox>
+				<svws-ui-multi-select
+					v-model="betreuungslehrer"
+					title="Betreuungslehrer"
+					:items="inputLehrerListe"
+					:item-text="(i: LehrerListeEintrag) => i.nachname"
+				/>
+				<svws-ui-multi-select
+					v-model="ansprechpartner"
+					title="Ansprechpartner"
+					:items="inputBetriebAnsprechpartner"
+					:item-text="(i: BetriebAnsprechpartner) => i.name"
+				/>
+
+				<svws-ui-checkbox
 					v-model="s_betrieb.allgadranschreiben"
 				>Anschreiben</svws-ui-checkbox>
 			</div>
@@ -67,7 +67,7 @@
 </template>
 
 <script setup lang="ts">
-	import { BetriebAnsprechpartner, BetriebListeEintrag, KatalogEintrag, LehrerListeEintrag, SchuelerBetriebsdaten } from "@svws-nrw/svws-core-ts";
+	import { BetriebAnsprechpartner, BetriebListeEintrag, KatalogEintrag, LehrerListeEintrag, List, SchuelerBetriebsdaten } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, reactive, ref, WritableComputedRef } from "vue";
 	import { injectMainApp, Main } from "~/apps/Main";
 	import { App } from "~/apps/BaseApp";
@@ -76,7 +76,7 @@
 
 	const modalAddBetrieb = ref();
 	const s_betrieb : SchuelerBetriebsdaten = reactive(new SchuelerBetriebsdaten());
-	const inputBeschaeftigungsarten: ComputedRef<KatalogEintrag[]> = computed(() => main.kataloge.beschaeftigungsarten);
+	const inputBeschaeftigungsarten: ComputedRef<List<KatalogEintrag>> = computed(() => main.kataloge.beschaeftigungsarten);
 
 	const inputLehrerListe: ComputedRef<LehrerListeEintrag[]> = computed(() => {
 		return app.listSchuelerbetriebe?.lehrer.liste || [];
@@ -94,15 +94,15 @@
 		return [];
 	})
 
-	
+
 
 	const betrieb: WritableComputedRef<BetriebListeEintrag | undefined> = computed({
-		get(): BetriebListeEintrag | undefined {	
+		get(): BetriebListeEintrag | undefined {
 			if(s_betrieb.betrieb_id)
 				return inputBetriebListe.value.find(l => { return l.id === s_betrieb.betrieb_id;
 				});
 			return undefined;
-		},	
+		},
 		set(val: BetriebListeEintrag | undefined) {
 			s_betrieb.betrieb_id = Number(val?.id);
 			const ap= inputBetriebAnsprechpartner.value.filter(l => { return l.betrieb_id === s_betrieb.betrieb_id});
@@ -122,13 +122,16 @@
 
 	const beschaeftigungsart: WritableComputedRef<KatalogEintrag | undefined> = computed({
 		get(): KatalogEintrag | undefined {
-			return inputBeschaeftigungsarten.value.find(l => { return l.id === s_betrieb.beschaeftigungsart_id }) || undefined;
+			const id = s_betrieb.beschaeftigungsart_id;
+			let o;
+			for (const r of inputBeschaeftigungsarten.value) { if (r.id === id) { o = r; break } }
+			return o;
 		},
 		set(val: KatalogEintrag | undefined) {
 			s_betrieb.beschaeftigungsart_id = Number(val?.id);
 		}
 	})
-	
+
 	const betreuungslehrer: WritableComputedRef<LehrerListeEintrag | undefined> = computed({
 		get(): LehrerListeEintrag | undefined {
 			return inputLehrerListe.value.find(l => { return l.id === s_betrieb.betreuungslehrer_id}) || undefined;
@@ -143,7 +146,7 @@
 		if(!s_betrieb.betrieb_id || !s_betrieb.schueler_id){
 			alert("Betrieb-ID bzw. Schuler_ID darf nicht null sein.");
 		}
-		
+
 		else{
 			await App.api.createSchuelerbetrieb(s_betrieb,App.schema,s_betrieb.schueler_id.valueOf(),s_betrieb.betrieb_id.valueOf());
 			// TODO Zeitverzögerung muss her, weil das Laden der Daten schneller geht, als sie in die Datenbank geschrieben werden.

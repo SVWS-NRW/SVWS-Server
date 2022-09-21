@@ -129,11 +129,10 @@
 		OrtsteilKatalogEintrag | undefined
 	> = computed({
 		get(): OrtsteilKatalogEintrag | undefined {
-			// FIXME: Suche implementieren sobald Funktionalität in List umgesetzt wurde
-			// return inputKatalogOrtsteil.value.find(
-			// 	o => o.id === daten.value.ortsteilID
-			// );
-			return undefined
+			const id = daten.value.ortsteilID;
+			let o;
+			for (const r of inputKatalogOrtsteil.value) { if (r.id === id) { o = r; break } }
+			return o;
 		},
 		set(val: OrtsteilKatalogEintrag | undefined) {
 			app.stammdaten.patch({ ortsteilID: val?.id });

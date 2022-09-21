@@ -111,10 +111,10 @@
 	const inputHaltestelleID: WritableComputedRef<KatalogEintrag | undefined> =
 		computed({
 			get(): KatalogEintrag | undefined {
-				// FIXME: Suche implementieren sobald Funktionalität in List umgesetzt wurde
-				// const id = daten.value.haltestelleID;
-				// return inputKatalogHaltestellen.value.find(n => n.id === id);
-				return undefined
+				const id = daten.value.haltestelleID;
+				let o;
+				for (const r of inputKatalogHaltestellen.value) { if (r.id === id) { o = r; break } }
+				return o;
 			},
 			set(val) {
 				app.stammdaten.patch({ haltestelleID: val?.id });

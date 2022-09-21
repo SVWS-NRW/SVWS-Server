@@ -214,11 +214,11 @@
 	const inputWohnortID: WritableComputedRef<OrtKatalogEintrag | undefined> =
 		computed({
 			get(): OrtKatalogEintrag | undefined {
-				// FIXME: Nach Umsetzung von Suche in List Klasse fixen.
-				// return inputKatalogOrte.value.find(
-				// 	o => o.id === props.erzieher.wohnortID
-				// );
-				return undefined;
+				// TODO:TEST testen
+				const id = props.erzieher.wohnortID;
+				let o;
+				for (const r of inputKatalogOrte.value) { if (r.id === id) { o = r; break } }
+				return o;
 			},
 			set(val: OrtKatalogEintrag | undefined) {
 				app.erzieher?.patch({ wohnortID: val?.id }, props.erzieher);
@@ -229,11 +229,11 @@
 		OrtsteilKatalogEintrag | undefined
 	> = computed({
 		get(): OrtsteilKatalogEintrag | undefined {
-			// FIXME: An List anpassen, sobald Funktionen implementiert.
-			// return inputKatalogOrtsteil.value.find(
-			// 	o => o.id === props.erzieher.ortsteilID
-			// );
-			return inputKatalogOrtsteil.value.get(0);
+			// TODO:TEST testen
+			const id = props.erzieher.ortsteilID;
+			let o;
+			for (const r of inputKatalogOrtsteil.value) { if (r.id === id) { o = r; break } }
+			return o;
 		},
 		set(val: OrtsteilKatalogEintrag | undefined) {
 			app.erzieher?.patch({ ortsteilID: val?.id }, props.erzieher);

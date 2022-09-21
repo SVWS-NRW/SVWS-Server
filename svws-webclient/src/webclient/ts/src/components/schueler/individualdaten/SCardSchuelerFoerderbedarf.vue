@@ -22,7 +22,7 @@
 <script setup lang="ts">
 	import { computed, ComputedRef, WritableComputedRef } from "vue";
 
-	import { FoerderschwerpunktEintrag, KatalogEintrag, SchuelerStammdaten } from "@svws-nrw/svws-core-ts";
+	import { FoerderschwerpunktEintrag, SchuelerStammdaten } from "@svws-nrw/svws-core-ts";
 	import { injectMainApp, Main } from "~/apps/Main";
 
 	const main: Main = injectMainApp();
