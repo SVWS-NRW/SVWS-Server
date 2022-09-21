@@ -20,7 +20,7 @@
 						type="text"
 						placeholder="Namensergänzung"
 					/>
-					<svws-ui-text-input	
+					<svws-ui-text-input
 						v-model="telefon1"
 						type="text"
 						placeholder="1. Telefon-Nr."
@@ -49,12 +49,12 @@
 					/>
 					<div class="flex w-full flex-row items-center space-x-4">
 						<div class="flex-grow">
-							<svws-ui-multi-select 
+							<svws-ui-multi-select
 								v-if="inputBetriebAnsprechpartner.length > 0"
-								v-model="ansprechpartner" 
-								title="Ansprechpartner" 
+								v-model="ansprechpartner"
+								title="Ansprechpartner"
 								:items="inputBetriebAnsprechpartner"
-								:item-text="(i: BetriebAnsprechpartner) => i.name" 
+								:item-text="(i: BetriebAnsprechpartner) => i.name"
 							/>
 							<p v-else>Kein Ansprechpartner</p>
 						</div>
@@ -80,9 +80,9 @@
 							title="betreuende Lehrkraft"
 							:items="inputLehrerListe"
 							:item-text="(i:LehrerListeEintrag) => i.nachname"
-							
+
 						/>
-						
+
 				</div>
 			</div>
 			<div class="entry-wrapper">
@@ -127,7 +127,7 @@
 					<svws-ui-checkbox v-model="anschreiben">
 						erhält Anschreiben</svws-ui-checkbox
 					>
-					
+
 				</div>
 			</div>
 			<div class="entry-wrapper">
@@ -262,7 +262,7 @@
 <script setup lang="ts">
 	import { injectMainApp, Main } from "~/apps/Main";
 	import { computed, ComputedRef, reactive, ref, WritableComputedRef } from "vue";
-	import { BetriebAnsprechpartner, LehrerListeEintrag, OrtKatalogEintrag, SchuelerBetriebsdaten } from "@svws-nrw/svws-core-ts";
+	import { BetriebAnsprechpartner, LehrerListeEintrag, List, OrtKatalogEintrag, SchuelerBetriebsdaten } from "@svws-nrw/svws-core-ts";
 
 	import {
 		orte_filter,
@@ -274,18 +274,18 @@ import { App } from "~/apps/BaseApp";
 	const app = main.apps.schueler;
 	const modalEdit = ref();
 	const modalAdd = ref();
-	
+
 	/**
 	 * Kataloge
 	 */
-	
+
 	 const inputBetriebAnsprechpartner: ComputedRef<BetriebAnsprechpartner[]> = computed(() => {
 		if ( app.listSchuelerbetriebe?.ausgewaehlt === undefined )
 			return []
 		return app.listSchuelerbetriebe?.betriebansprechpartner.liste.filter(l => { return l.betrieb_id === app.listSchuelerbetriebe?.ausgewaehlt?.betrieb_id}) || [];
 	})
 
-	const inputKatalogOrte: ComputedRef<OrtKatalogEintrag[]> = computed(() => {
+	const inputKatalogOrte: ComputedRef<List<OrtKatalogEintrag>> = computed(() => {
 		return main.kataloge.orte;
 	});
 
@@ -363,7 +363,7 @@ import { App } from "~/apps/BaseApp";
 		get(): BetriebAnsprechpartner | undefined {
 			if(app.listSchuelerbetriebe?.ausgewaehlt){
 				return inputBetriebAnsprechpartner.value.find(l => { return l.id === app.listSchuelerbetriebe?.ausgewaehlt?.ansprechpartner_id});
-			}	
+			}
 			return undefined;
 		},
 		set(val: BetriebAnsprechpartner | undefined) {
@@ -385,7 +385,7 @@ import { App } from "~/apps/BaseApp";
 					return undefined;
 				return inputLehrerListe.value.find(l => { return l.id === app.listSchuelerbetriebe?.ausgewaehlt?.betreuungslehrer_id });
 			}
-			return undefined;	
+			return undefined;
 		},
 		set(val: LehrerListeEintrag | undefined) {
 			const data: SchuelerBetriebsdaten | undefined = app.listSchuelerbetriebe?.ausgewaehlt;
@@ -420,8 +420,9 @@ import { App } from "~/apps/BaseApp";
 	const inputWohnortID: WritableComputedRef<OrtKatalogEintrag | undefined> =computed({
 			get(): OrtKatalogEintrag | undefined {
 				// TODO Die UI-Komponente zeigt nach Auswahl eines neuen Eintrags den Eintrag doppelt. Erst nach 10 Sekunden ist es wieder normal.
+				// FIXME: Funktion zum Suchen in Liste implementieren.
 				if(app.betriebsStammdaten.daten?.ort_id)
-					return inputKatalogOrte.value.find( o => o.id === app.betriebsStammdaten.daten?.ort_id);
+					return inputKatalogOrte.value.get(0); //find( o => o.id === app.betriebsStammdaten.daten?.ort_id);
 				return undefined;
 			},
 			set(val: OrtKatalogEintrag | undefined) {
@@ -442,12 +443,12 @@ import { App } from "~/apps/BaseApp";
 			if( app.listSchuelerbetriebe?.ausgewaehlt){
 				const data = app.listSchuelerbetriebe?.ausgewaehlt as SchuelerBetriebsdaten;
 				data.allgadranschreiben = Boolean(val);
-			
+
 				if ((!data) || (!data.id))
 					return;
 				App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id.valueOf());
 			}
-			return;	
+			return;
 		}
 	});
 
@@ -515,7 +516,7 @@ import { App } from "~/apps/BaseApp";
 			App.api.patchBetriebanpsrechpartnerdaten(data, App.schema,data.id.valueOf());
 		}
 	})
-	
+
 	const ap_email : WritableComputedRef<string | undefined> = computed({
 		get(): string | undefined {
 			return ansprechpartner.value?.email?.valueOf();
@@ -569,7 +570,7 @@ import { App } from "~/apps/BaseApp";
 
 
 
-	
+
 
 </script>
 

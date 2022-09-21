@@ -17,7 +17,7 @@ export const orte_sort = (a: OrtKatalogEintrag, b: OrtKatalogEintrag): number =>
 
 /** Der Filter für Ortsteile */
 export const orte_filter = (
-	items: List<OrtKatalogEintrag>,
+	items: OrtKatalogEintrag[],
 	search: string
 ): OrtKatalogEintrag[] => {
 	// Teilmatch PLZ
@@ -25,59 +25,38 @@ export const orte_filter = (
 	const plz = plzmatch ? plzmatch[0] : undefined;
 	//Teilmatch Ort
 	const ortsname = search.replace(/\d+\s*/, "").trim();
-	// const arrayList: OrtKatalogEintrag[] = items.toArray() as OrtKatalogEintrag[];
-	for (let item in items) {
-		console.log('########## Item in Items:', item);
-		// if (item && item.ortsname !== null) {
-		// 	if (item.ortsname
-		// 		.toLocaleLowerCase("de-DE")
-		// 		.startsWith(ortsname.toLocaleLowerCase("de-DE")))
-		// }
-	}
 	if (!plz && !ortsname) {
-		return [] as OrtKatalogEintrag[];
+		return items;
 	}
 	if (!plz) {
-
-		// return arrayList.filter((item: OrtKatalogEintrag) => {
-		// 	if (item && item.ortsname !== null) {
-		// 		return item.ortsname
-		// 			.toLocaleLowerCase("de-DE")
-		// 			.startsWith(ortsname.toLocaleLowerCase("de-DE"));
-		// 	}
-		// 	return false;
-		// });
-		let result: KatalogEintrag[];
-		for (let i in items) {
-			console.log('########## Item in Items:', i);
-			// if (item && item.ortsname !== null) {
-			// 	if (item.ortsname
-			// 		.toLocaleLowerCase("de-DE")
-			// 		.startsWith(ortsname.toLocaleLowerCase("de-DE")))
-			// }
-		}
-		return [] as OrtKatalogEintrag[];
-		// } else if (!ortsname) {
-		// 	return arrayList.filter(item => {
-		// 		if (item.plz) {
-		// 			return item.plz.includes(plz);
-		// 		}
-		// 		return false;
-		// 	});
-		// } else {
-		// 	return arrayList.filter(item => {
-		// 		if (item.plz && item.ortsname) {
-		// 			return (
-		// 				item.plz.includes(plz) &&
-		// 				item.ortsname
-		// 					.toLocaleLowerCase("de-DE")
-		// 					.startsWith(ortsname.toLocaleLowerCase("de-DE"))
-		// 			);
-		// 		}
-		// 		return false;
-		// 	});
+		return items.filter((item: OrtKatalogEintrag) => {
+			if (item && item.ortsname !== null) {
+				return item.ortsname
+					.toLocaleLowerCase("de-DE")
+					.startsWith(ortsname.toLocaleLowerCase("de-DE"));
+			}
+			return false;
+		});
+	} else if (!ortsname) {
+		return items.filter(item => {
+			if (item.plz) {
+				return item.plz.includes(plz);
+			}
+			return false;
+		});
+	} else {
+		return items.filter(item => {
+			if (item.plz && item.ortsname) {
+				return (
+					item.plz.includes(plz) &&
+					item.ortsname
+						.toLocaleLowerCase("de-DE")
+						.startsWith(ortsname.toLocaleLowerCase("de-DE"))
+				);
+			}
+			return false;
+		});
 	}
-	return [] as OrtKatalogEintrag[]
 };
 
 /** Filter für Staatsangehörigkeiten */

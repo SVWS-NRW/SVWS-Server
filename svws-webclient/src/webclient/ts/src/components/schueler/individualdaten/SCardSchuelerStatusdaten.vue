@@ -57,6 +57,7 @@
 
 	import {
 		KatalogEintrag,
+		List,
 		SchuelerStammdaten,
 		SchuelerStatus
 	} from "@svws-nrw/svws-core-ts";
@@ -73,7 +74,7 @@
 		computed(() => {
 			return app.katalogFahrschuelerarten;
 		});
-	const inputKatalogHaltestellen: ComputedRef<KatalogEintrag[]> = computed(
+	const inputKatalogHaltestellen: ComputedRef<List<KatalogEintrag>> = computed(
 		() => {
 			return main.kataloge.haltestellen;
 		}
@@ -110,8 +111,10 @@
 	const inputHaltestelleID: WritableComputedRef<KatalogEintrag | undefined> =
 		computed({
 			get(): KatalogEintrag | undefined {
-				const id = daten.value.haltestelleID;
-				return inputKatalogHaltestellen.value.find(n => n.id === id);
+				// FIXME: Suche implementieren sobald Funktionalität in List umgesetzt wurde
+				// const id = daten.value.haltestelleID;
+				// return inputKatalogHaltestellen.value.find(n => n.id === id);
+				return undefined
 			},
 			set(val) {
 				app.stammdaten.patch({ haltestelleID: val?.id });

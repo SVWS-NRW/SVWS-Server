@@ -63,6 +63,7 @@
 
 	import {
 		AdressenUtils,
+		List,
 		OrtKatalogEintrag,
 		OrtsteilKatalogEintrag,
 		SchuelerStammdaten
@@ -78,11 +79,11 @@
 		return app.stammdaten.daten || new SchuelerStammdaten();
 	});
 
-	const inputKatalogOrte: ComputedRef<OrtKatalogEintrag[]> = computed(() => {
+	const inputKatalogOrte: ComputedRef<List<OrtKatalogEintrag>> = computed(() => {
 		return main.kataloge.orte;
 	});
 
-	const inputKatalogOrtsteil: ComputedRef<OrtsteilKatalogEintrag[]> =
+	const inputKatalogOrtsteil: ComputedRef<List<OrtsteilKatalogEintrag>> =
 		computed(() => {
 			return main.kataloge.ortsteile;
 		});
@@ -113,9 +114,11 @@
 	const inputWohnortID: WritableComputedRef<OrtKatalogEintrag | undefined> =
 		computed({
 			get(): OrtKatalogEintrag | undefined {
-				return inputKatalogOrte.value.find(
-					o => o.id === daten.value.wohnortID
-				);
+				// FIXME: Suche implementieren sobald Funktionalität in List umgesetzt wurde
+				// return inputKatalogOrte.value.find(
+				// 	o => o.id === daten.value.wohnortID
+				// );
+				return undefined;
 			},
 			set(val: OrtKatalogEintrag | undefined) {
 				app.stammdaten.patch({ wohnortID: val?.id });
@@ -126,9 +129,11 @@
 		OrtsteilKatalogEintrag | undefined
 	> = computed({
 		get(): OrtsteilKatalogEintrag | undefined {
-			return inputKatalogOrtsteil.value.find(
-				o => o.id === daten.value.ortsteilID
-			);
+			// FIXME: Suche implementieren sobald Funktionalität in List umgesetzt wurde
+			// return inputKatalogOrtsteil.value.find(
+			// 	o => o.id === daten.value.ortsteilID
+			// );
+			return undefined
 		},
 		set(val: OrtsteilKatalogEintrag | undefined) {
 			app.stammdaten.patch({ ortsteilID: val?.id });

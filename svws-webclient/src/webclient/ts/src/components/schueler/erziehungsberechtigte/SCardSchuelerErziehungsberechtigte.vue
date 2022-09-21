@@ -111,6 +111,7 @@
 	import {
 		Erzieherart,
 		ErzieherStammdaten,
+		List,
 		Nationalitaeten,
 		OrtKatalogEintrag,
 		OrtsteilKatalogEintrag
@@ -194,7 +195,7 @@
 		}
 	});
 
-	const inputKatalogStaatsangehoerigkeit: ComputedRef<Nationalitaeten[]> = computed(() => 
+	const inputKatalogStaatsangehoerigkeit: ComputedRef<Nationalitaeten[]> = computed(() =>
 		Nationalitaeten.values()
 	);
 
@@ -204,18 +205,20 @@
 		//main.kataloge.erzieherarten || []
 	);
 
-	const inputKatalogOrte: Ref<OrtKatalogEintrag[]> = ref(main.kataloge.orte);
+	const inputKatalogOrte: Ref<List<OrtKatalogEintrag>> = ref(main.kataloge.orte);
 
-	const inputKatalogOrtsteil: Ref<OrtsteilKatalogEintrag[]> = ref(
+	const inputKatalogOrtsteil: Ref<List<OrtsteilKatalogEintrag>> = ref(
 		main.kataloge.ortsteile
 	);
 
 	const inputWohnortID: WritableComputedRef<OrtKatalogEintrag | undefined> =
 		computed({
 			get(): OrtKatalogEintrag | undefined {
-				return inputKatalogOrte.value.find(
-					o => o.id === props.erzieher.wohnortID
-				);
+				// FIXME: Nach Umsetzung von Suche in List Klasse fixen.
+				// return inputKatalogOrte.value.find(
+				// 	o => o.id === props.erzieher.wohnortID
+				// );
+				return undefined;
 			},
 			set(val: OrtKatalogEintrag | undefined) {
 				app.erzieher?.patch({ wohnortID: val?.id }, props.erzieher);
@@ -226,9 +229,11 @@
 		OrtsteilKatalogEintrag | undefined
 	> = computed({
 		get(): OrtsteilKatalogEintrag | undefined {
-			return inputKatalogOrtsteil.value.find(
-				o => o.id === props.erzieher.ortsteilID
-			);
+			// FIXME: An List anpassen, sobald Funktionen implementiert.
+			// return inputKatalogOrtsteil.value.find(
+			// 	o => o.id === props.erzieher.ortsteilID
+			// );
+			return inputKatalogOrtsteil.value.get(0);
 		},
 		set(val: OrtsteilKatalogEintrag | undefined) {
 			app.erzieher?.patch({ ortsteilID: val?.id }, props.erzieher);
