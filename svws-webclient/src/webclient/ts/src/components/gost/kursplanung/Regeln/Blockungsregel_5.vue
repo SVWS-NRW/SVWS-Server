@@ -1,0 +1,84 @@
+<script setup lang="ts">
+import { injectMainApp, Main } from "~/apps/Main";
+import { GostBlockungKurs, GostBlockungRegel, GostKursblockungRegelTyp, SchuelerListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
+import { computed, ComputedRef, Ref, ref } from "vue";
+
+const main: Main = injectMainApp();
+const app = main.apps.gost;
+const manager = app.dataKursblockung.manager
+const faechermanager = app.dataFaecher.manager
+
+const regel_typ = GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS
+// public static readonly SCHUELER_VERBIETEN_IN_KURS : GostKursblockungRegelTyp =
+// new GostKursblockungRegelTyp("SCHUELER_VERBIETEN_IN_KURS", 5, 5, "Schüler: Verbiete in Kurs",
+// Arrays.asList(GostKursblockungRegelParameterTyp.SCHUELER_ID, GostKursblockungRegelParameterTyp.KURS_ID));
+const kurse = app.dataKursblockung.daten?.kurse || new Vector<GostBlockungKurs>()
+const schuelerliste = app.listAbiturjahrgangSchueler.liste || []
+
+const kurs: Ref<GostBlockungKurs> = ref(kurse.get(0))
+const schueler = ref(schuelerliste[0]) as Ref<SchuelerListeEintrag>
+const regeln: ComputedRef<GostBlockungRegel[]> = computed(() => {
+	const arr = []
+	if (!app.dataKursblockung.daten?.regeln) return []
+	for (const r of app.dataKursblockung.daten.regeln) if (r.typ === regel_typ.typ) arr.push(r)
+	return arr
+})
+
+const regel: Ref<GostBlockungRegel | undefined> = ref(undefined)
+const speichern = async () => {
+	if (!regel.value || !schueler.value) return
+	regel.value.parameter.set(0, schueler.value.id)
+	regel.value.parameter.set(1, kurs.value.id)
+	await app.dataKursblockung.patch_blockung_regel(regel.value)
+	regel.value = undefined
+}
+
+const regel_hinzufuegen = async () => {
+	regel.value = await app.dataKursblockung.add_blockung_regel(regel_typ.typ)
+	if (!regel.value) return
+	app.dataKursblockung.manager?.addRegel(regel.value)
+}
+
+const regel_entfernen = async (r: GostBlockungRegel) => {
+	await app.dataKursblockung.del_blockung_regel(r.id)
+	if (r === regel.value) regel.value = undefined
+}
+
+const name = (id: number) => {
+	const schueler = schuelerliste.find(s => s.id === id)
+	return schueler ? `${schueler.nachname}, ${schueler.vorname}` : ""
+}
+</script>
+<template>
+	<div>
+		<div class="flex justify-between my-4">
+			<h5 class="headline-5">{{ regel_typ.bezeichnung }}</h5>
+			<svws-ui-badge v-if="!regel" size="tiny" variant="primary" @click="regel_hinzufuegen" class="cursor-pointer">Regel
+				hinzufügen</svws-ui-badge>
+		</div>
+		<div v-for="r in regeln" :key="r.id" class="flex justify-between">
+			<div class="cursor-pointer" @click="regel = (regel !== r) ? r:undefined" :class="{'bg-slate-200':r===regel}">
+				{{name(r.parameter.get(0).valueOf())}} in
+				{{`${faechermanager?.get(manager?.getKurs(r.parameter.get(1).valueOf())?.fach_id.valueOf()||-1)?.kuerzel}
+				${kurs.kursart}${kurs.nummer}${kurs.suffix ? "-"+kurs.suffix:""}`}} verboten
+			</div>
+			<svws-ui-icon type="danger" class="cursor-pointer" @click="regel_entfernen(r)">
+				<i-ri-delete-bin-2-line />
+			</svws-ui-icon>
+		</div>
+		<div v-if="regel">
+			<div class="inline-flex items-baseline">
+				Verbiete
+				<parameter-schueler v-model="schueler" />
+				in
+				<parameter-kurs v-model="kurs" />
+				<svws-ui-button type="primary" @click="speichern">
+					<svws-ui-icon>
+						<i-ri-check-line />
+					</svws-ui-icon>
+				</svws-ui-button>
+			</div>
+		</div>
+	</div>
+</template>
+

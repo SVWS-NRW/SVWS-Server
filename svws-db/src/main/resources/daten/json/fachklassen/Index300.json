@@ -1,0 +1,142 @@
+{
+	"index": 300,
+	"fachklassen": [
+		{
+			"schluessel": "083",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1610000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "G",
+				"berufsfeld": "KG",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Fachhochschulreife 3j. (TZ) - Kunst/Musik/Gestaltung",
+				"bezeichnungM": "Fachhochschulreife 3j. (TZ) - Kunst/Musik/Gestaltung",
+				"bezeichnungW": "Fachhochschulreife 3j. (TZ) - Kunst/Musik/Gestaltung",
+				"gueltigVon": null,
+				"gueltigBis": 2010
+			} ]
+		}, {
+			"schluessel": "084",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1611000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "S",
+				"berufsfeld": "ES",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Fachhochschulreife 3j. (TZ) - Erziehung u. Soziales",
+				"bezeichnungM": "Fachhochschulreife 3j. (TZ) - Erziehung u. Soziales",
+				"bezeichnungW": "Fachhochschulreife 3j. (TZ) - Erziehung u. Soziales",
+				"gueltigVon": null,
+				"gueltigBis": 2010
+			} ]
+		}, {
+			"schluessel": "085",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1612000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WW",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Fachhochschulreife 3j. (TZ) - Wirtschaftswissenschaften",
+				"bezeichnungM": "Fachhochschulreife 3j. (TZ) - Wirtschaftswissenschaften",
+				"bezeichnungW": "Fachhochschulreife 3j. (TZ) - Wirtschaftswissenschaften",
+				"gueltigVon": null,
+				"gueltigBis": 2010
+			} ]
+		}, {
+			"schluessel": "086",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1613000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "BT",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Fachhochschulreife 3j. (TZ) - Bautechnik",
+				"bezeichnungM": "Fachhochschulreife 3j. (TZ) - Bautechnik",
+				"bezeichnungW": "Fachhochschulreife 3j. (TZ) - Bautechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2010
+			} ]
+		}, {
+			"schluessel": "087",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1614000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "VT",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Fachhochschulreife 3j. (TZ) - Verkehrstechnik",
+				"bezeichnungM": "Fachhochschulreife 3j. (TZ) - Verkehrstechnik",
+				"bezeichnungW": "Fachhochschulreife 3j. (TZ) - Verkehrstechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2010
+			} ]
+		}, {
+			"schluessel": "088",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1615000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "MT",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Fachhochschulreife 3j. (TZ) - Maschinenbautechnik",
+				"bezeichnungM": "Fachhochschulreife 3j. (TZ) - Maschinenbautechnik",
+				"bezeichnungW": "Fachhochschulreife 3j. (TZ) - Maschinenbautechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2010
+			} ]
+		}, {
+			"schluessel": "089",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1616000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "ET",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Fachhochschulreife 3j. (TZ) - Elektrotechnik",
+				"bezeichnungM": "Fachhochschulreife 3j. (TZ) - Elektrotechnik",
+				"bezeichnungW": "Fachhochschulreife 3j. (TZ) - Elektrotechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2010
+			} ]
+		}, {
+			"schluessel": "090",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1617000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "NW",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Fachhochschulreife 3j. (TZ) - Naturwissenschaften",
+				"bezeichnungM": "Fachhochschulreife 3j. (TZ) - Naturwissenschaften",
+				"bezeichnungW": "Fachhochschulreife 3j. (TZ) - Naturwissenschaften",
+				"gueltigVon": null,
+				"gueltigBis": 2010
+			} ]
+		}
+	]
+}

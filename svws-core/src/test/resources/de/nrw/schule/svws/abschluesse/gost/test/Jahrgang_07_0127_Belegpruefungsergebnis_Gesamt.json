@@ -1,0 +1,25 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [ {
+    "code" : "GW_10",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Mindestens eine Gesellschaftswissenschaft muss von Q1.1 bis Q2.2 durchgehend belegt werden."
+  }, {
+    "code" : "GW_12",
+    "art" : "SCHRIFTLICHKEIT",
+    "beschreibung" : "Mindestens eine Gesellschaftswissenschaft oder Religionslehre muss von Q1.1 bis wenigstens Q2.1 schriftlich belegt werden."
+  }, {
+    "code" : "GE_10",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Geschichte muss von EF.1 bis wenigstens Q1.2 oder als Zusatzkurs (in der Regel von Q2.1 bis Q2.2) belegt werden."
+  }, {
+    "code" : "SW_10",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Sozialwissenschaften muss von EF.1 bis wenigstens Q1.2 oder als Zusatzkurs (in der Regel von Q2.1 bis Q2.2) belegt werden."
+  }, {
+    "code" : "LK1_13",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Die Abiturfächer müssen alle drei Aufgabenfelder abdecken. Insgesamt sind vier Abiturfächer zu belegen."
+  } ],
+  "log" : [ ]
+}

@@ -1,0 +1,397 @@
+{
+	"index": 170,
+	"fachklassen": [
+		{
+			"schluessel": "101",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1248000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "BT",
+				"ebene1": "TE",
+				"ebene2": "BT",
+				"ebene3": "BH",
+				"bezeichnung": "Allgemeine Hochschulreife / Bautechnik",
+				"bezeichnungM": "Allgemeine Hochschulreife / Bautechnik",
+				"bezeichnungW": "Allgemeine Hochschulreife / Bautechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "102",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1249000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WW",
+				"ebene1": "WV",
+				"ebene2": null,
+				"ebene3": "BW",
+				"bezeichnung": "Allgemeine Hochschulreife / Betriebswirtschaftslehre",
+				"bezeichnungM": "Allgemeine Hochschulreife / Betriebswirtschaftslehre",
+				"bezeichnungW": "Allgemeine Hochschulreife / Betriebswirtschaftslehre",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "103",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1250000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "NW",
+				"ebene1": "TE",
+				"ebene2": "BI",
+				"ebene3": "BC",
+				"bezeichnung": "Allgemeine Hochschulreife / Biologie, Chemie",
+				"bezeichnungM": "Allgemeine Hochschulreife / Biologie, Chemie",
+				"bezeichnungW": "Allgemeine Hochschulreife / Biologie, Chemie",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "104",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1251000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "NW",
+				"ebene1": "TE",
+				"ebene2": "CT",
+				"ebene3": "CC",
+				"bezeichnung": "Allgemeine Hochschulreife / Chemie, Chemietechnik",
+				"bezeichnungM": "Allgemeine Hochschulreife / Chemie, Chemietechnik",
+				"bezeichnungW": "Allgemeine Hochschulreife / Chemie, Chemietechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "105",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1252000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "CP",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Allgemeine Hochschulreife / Chemietechnik",
+				"bezeichnungM": "Allgemeine Hochschulreife / Chemietechnik",
+				"bezeichnungW": "Allgemeine Hochschulreife / Chemietechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2005
+			} ]
+		}, {
+			"schluessel": "106",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1253000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "S",
+				"berufsfeld": "SL",
+				"ebene1": "GT",
+				"ebene2": null,
+				"ebene3": "DE",
+				"bezeichnung": "Allgemeine Hochschulreife / Deutsch, Englisch",
+				"bezeichnungM": "Allgemeine Hochschulreife / Deutsch, Englisch",
+				"bezeichnungW": "Allgemeine Hochschulreife / Deutsch, Englisch",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "107",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1254000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "ET",
+				"ebene1": "TE",
+				"ebene2": "ET",
+				"ebene3": "ET",
+				"bezeichnung": "Allgemeine Hochschulreife / Elektrotechnik",
+				"bezeichnungM": "Allgemeine Hochschulreife / Elektrotechnik",
+				"bezeichnungW": "Allgemeine Hochschulreife / Elektrotechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "108",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1255000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "E",
+				"berufsfeld": "EH",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Allgemeine Hochschulreife / Ernährung u. Hauswirtschaft",
+				"bezeichnungM": "Allgemeine Hochschulreife / Ernährung u. Hauswirtschaft",
+				"bezeichnungW": "Allgemeine Hochschulreife / Ernährung u. Hauswirtschaft",
+				"gueltigVon": null,
+				"gueltigBis": 2005
+			} ]
+		}, {
+			"schluessel": "109",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1256000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "E",
+				"berufsfeld": "EW",
+				"ebene1": "ER",
+				"ebene2": null,
+				"ebene3": "ER",
+				"bezeichnung": "Allgemeine Hochschulreife / Ernährung",
+				"bezeichnungM": "Allgemeine Hochschulreife / Ernährung",
+				"bezeichnungW": "Allgemeine Hochschulreife / Ernährung",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "110",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1257000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "S",
+				"berufsfeld": "ES",
+				"ebene1": "GU",
+				"ebene2": "PG",
+				"ebene3": "EW",
+				"bezeichnung": "Allgemeine Hochschulreife / Erziehungswissenschaften",
+				"bezeichnungM": "Allgemeine Hochschulreife / Erziehungswissenschaften",
+				"bezeichnungW": "Allgemeine Hochschulreife / Erziehungswissenschaften",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "111",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1258000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "S",
+				"berufsfeld": "ES",
+				"ebene1": "GU",
+				"ebene2": "GS",
+				"ebene3": "FL",
+				"bezeichnung": "Allgemeine Hochschulreife / Freizeitsportleiter/-in (Sport, Gesundheitsförderung, Biologie)",
+				"bezeichnungM": "Allgemeine Hochschulreife / Freizeitsportleiter (Sport, Gesundheitsförderung, Biologie)",
+				"bezeichnungW": "Allgemeine Hochschulreife / Freizeitsportleiterin (Sport, Gesundheitsförderung, Biologie)",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "112",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1259000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WW",
+				"ebene1": "WV",
+				"ebene2": null,
+				"ebene3": "FK",
+				"bezeichnung": "Allgemeine Hochschulreife / Fremdsprachenkorrespondent/-in (Betriebswirtschaftslehre, Sprachen)",
+				"bezeichnungM": "Allgemeine Hochschulreife / Fremdsprachenkorrespondent (Betriebswirtschaftslehre, Sprachen)",
+				"bezeichnungW": "Allgemeine Hochschulreife / Fremdsprachenkorrespondentin (Betriebswirtschaftslehre, Sprachen)",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "113",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1260000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "G",
+				"berufsfeld": "KM",
+				"ebene1": "GT",
+				"ebene2": null,
+				"ebene3": "KE",
+				"bezeichnung": "Allgemeine Hochschulreife / Kunst, Englisch",
+				"bezeichnungM": "Allgemeine Hochschulreife / Kunst, Englisch",
+				"bezeichnungW": "Allgemeine Hochschulreife / Kunst, Englisch",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "114",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1261000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "MB",
+				"ebene1": "TE",
+				"ebene2": "MB",
+				"ebene3": "MT",
+				"bezeichnung": "Allgemeine Hochschulreife / Maschinenbautechnik",
+				"bezeichnungM": "Allgemeine Hochschulreife / Maschinenbautechnik",
+				"bezeichnungW": "Allgemeine Hochschulreife / Maschinenbautechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "115",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1262000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "MP",
+				"ebene1": "IF",
+				"ebene2": "IF",
+				"ebene3": "MI",
+				"bezeichnung": "Allgemeine Hochschulreife / Mathematik, Informatik",
+				"bezeichnungM": "Allgemeine Hochschulreife / Mathematik, Informatik",
+				"bezeichnungW": "Allgemeine Hochschulreife / Mathematik, Informatik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "116",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1263000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "S",
+				"berufsfeld": "SG",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Allgemeine Hochschulreife / Sozial- u. Gesundheitswesen",
+				"bezeichnungM": "Allgemeine Hochschulreife / Sozial- u. Gesundheitswesen",
+				"bezeichnungW": "Allgemeine Hochschulreife / Sozial- u. Gesundheitswesen",
+				"gueltigVon": null,
+				"gueltigBis": 2005
+			} ]
+		}, {
+			"schluessel": "117",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1264000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TB",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Allgemeine Hochschulreife / Textiltechnik, Physik",
+				"bezeichnungM": "Allgemeine Hochschulreife / Textiltechnik, Physik",
+				"bezeichnungW": "Allgemeine Hochschulreife / Textiltechnik, Physik",
+				"gueltigVon": null,
+				"gueltigBis": 2005
+			} ]
+		}, {
+			"schluessel": "118",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1265000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "RW",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Allgemeine Hochschulreife / Werkstofftechnik, Physik",
+				"bezeichnungM": "Allgemeine Hochschulreife / Werkstofftechnik, Physik",
+				"bezeichnungW": "Allgemeine Hochschulreife / Werkstofftechnik, Physik",
+				"gueltigVon": null,
+				"gueltigBis": 2008
+			} ]
+		}, {
+			"schluessel": "119",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1266000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WW",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Allgemeine Hochschulreife / Wirtschaft u. Verwaltung",
+				"bezeichnungM": "Allgemeine Hochschulreife / Wirtschaft u. Verwaltung",
+				"bezeichnungW": "Allgemeine Hochschulreife / Wirtschaft u. Verwaltung",
+				"gueltigVon": null,
+				"gueltigBis": 2006
+			} ]
+		}, {
+			"schluessel": "120",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1267000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "S",
+				"berufsfeld": "SG",
+				"ebene1": "GS",
+				"ebene2": "GS",
+				"ebene3": "GE",
+				"bezeichnung": "Allgemeine Hochschulreife / Gesundheit",
+				"bezeichnungM": "Allgemeine Hochschulreife / Gesundheit",
+				"bezeichnungW": "Allgemeine Hochschulreife / Gesundheit",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "121",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1268000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": "TE",
+				"ebene2": null,
+				"ebene3": "IW",
+				"bezeichnung": "Allgemeine Hochschulreife / Ingenieurwissenschaften",
+				"bezeichnungM": "Allgemeine Hochschulreife / Ingenieurwissenschaften",
+				"bezeichnungW": "Allgemeine Hochschulreife / Ingenieurwissenschaften",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "999",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1269000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "X",
+				"berufsfeld": "XX",
+				"ebene1": "XX",
+				"ebene2": "XX",
+				"ebene3": "XX",
+				"bezeichnung": "Sonstiger Bildungsgang",
+				"bezeichnungM": "Sonstiger Bildungsgang",
+				"bezeichnungW": "Sonstiger Bildungsgang",
+				"gueltigVon": 2022,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "999",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 1270000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "X",
+				"berufsfeld": "XX",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Sonstiger Bildungsgang",
+				"bezeichnungM": "Sonstiger Bildungsgang",
+				"bezeichnungW": "Sonstiger Bildungsgang",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}
+	]
+}

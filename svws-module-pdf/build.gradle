@@ -1,0 +1,52 @@
+configurations {
+	implementation.extendsFrom(pdf)
+}
+
+compileJava.dependsOn(":svws-core:assemble")
+
+dependencies {
+	implementation project(':svws-core')
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "GitHub"
+            url = "https://maven.pkg.github.com/SVWS-NRW/SVWS-Packages"
+            credentials {
+            	username = getGithubActor()
+                password = getGithubToken()
+            }
+        }
+    }
+    publications {
+        mavenSVWSDBUtils(MavenPublication) {
+            artifactId = 'svws-module-pdf'
+            from components.java
+            versionMapping {
+                usage('java-api') {
+                    fromResolutionOf('runtimeClasspath')
+                }
+                usage('java-runtime') {
+                    fromResolutionResult()
+                }
+            }
+            pom {
+                name = 'SVWS PDF Module'
+                description = 'Diese Bibliothek unterstützt das Generieren von PDFs für die Schulverwaltungssoftware in NRW'
+                url = 'http://www.svws.nrw.de'
+                licenses {
+                    license {
+                        name = 'BSD-3-Clause'
+                        url = 'https://opensource.org/licenses/BSD-3-Clause'
+                    }
+                }
+                scm {
+        			connection = 'scm:git@github.com/SVWS-NRW/SVWS-Packages'
+        			developerConnection = 'scm:git@github.com/SVWS-NRW/SVWS-Packages.git'
+                    url = 'https://github.com/SVWS-NRW/SVWS-Packages.git'
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,17 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [ {
+    "code" : "SW_1_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Wird Sozialwissenschaften nicht in EF.1 belegt, so muss Sozialwissenschaften in der Qualifikationsphase als Zusatzkurs gewählt werden."
+  }, {
+    "code" : "PF_10",
+    "art" : "BELEGUNG",
+    "beschreibung" : "In EF.1 können keine Projektkurse belegt werden."
+  }, {
+    "code" : "IGF_10",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Inhaltsgleiche Fächer dürfen nur einmal belegt werden."
+  } ],
+  "log" : [ ]
+}

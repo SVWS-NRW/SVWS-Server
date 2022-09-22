@@ -1,0 +1,2658 @@
+{
+	"index": 210,
+	"fachklassen": [
+		{
+			"schluessel": "101",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 1320000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "A",
+				"berufsfeld": "AW",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Agrarwirtschaft Gartenbau - Friedhofsgärtnerei",
+				"bezeichnungM": "FS Agrarwirtschaft Gartenbau - Friedhofsgärtnerei",
+				"bezeichnungW": "FS Agrarwirtschaft Gartenbau - Friedhofsgärtnerei",
+				"gueltigVon": null,
+				"gueltigBis": 2013
+			} ]
+		}, {
+			"schluessel": "101",
+			"schluessel2": "02",
+			"historie": [ {
+				"id": 1321000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "A",
+				"berufsfeld": "AW",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Agrarwirtschaft Gartenbau - Garten- und Landschaftsbau",
+				"bezeichnungM": "FS Agrarwirtschaft Gartenbau - Garten- und Landschaftsbau",
+				"bezeichnungW": "FS Agrarwirtschaft Gartenbau - Garten- und Landschaftsbau",
+				"gueltigVon": null,
+				"gueltigBis": 2013
+			} ]
+		}, {
+			"schluessel": "101",
+			"schluessel2": "03",
+			"historie": [ {
+				"id": 1322000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": "AW",
+				"ebene1": "AW",
+				"ebene2": "GB",
+				"ebene3": "PV",
+				"bezeichnung": "FS Agrarwirtschaft/Gartenbau - Produktion und Vermarktung",
+				"bezeichnungM": "FS Agrarwirtschaft/Gartenbau - Produktion und Vermarktung",
+				"bezeichnungW": "FS Agrarwirtschaft/Gartenbau - Produktion und Vermarktung",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "101",
+			"schluessel2": "04",
+			"historie": [ {
+				"id": 1323000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "A",
+				"berufsfeld": "AW",
+				"ebene1": "AW",
+				"ebene2": "GB",
+				"ebene3": "DG",
+				"bezeichnung": "FS Agrarwirtschaft/Gartenbau - Dienstleistungsgartenbau",
+				"bezeichnungM": "FS Agrarwirtschaft/Gartenbau - Dienstleistungsgartenbau",
+				"bezeichnungW": "FS Agrarwirtschaft/Gartenbau - Dienstleistungsgartenbau",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "102",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1324000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "A",
+				"berufsfeld": "AW",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Agrarwirtschaft Milch- und Molkereiwirtschaft",
+				"bezeichnungM": "FS Agrarwirtschaft Milch- und Molkereiwirtschaft",
+				"bezeichnungW": "FS Agrarwirtschaft Milch- und Molkereiwirtschaft",
+				"gueltigVon": null,
+				"gueltigBis": 2012
+			} ]
+		}, {
+			"schluessel": "103",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1325000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "E",
+				"berufsfeld": "EH",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Ernährung u. Hauswirtschaft/Ernährung u. Hauswirtschaft",
+				"bezeichnungM": "FS Ernährung u. Hauswirtschaft/Ernährung u. Hauswirtschaft",
+				"bezeichnungW": "FS Ernährung u. Hauswirtschaft/Ernährung u. Hauswirtschaft",
+				"gueltigVon": null,
+				"gueltigBis": 2005
+			} ]
+		}, {
+			"schluessel": "104",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 1326000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "E",
+				"berufsfeld": "EH",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Ernährung u. Hauswirtschaft/Hauswirtschaft (2-jährig) - ambulante hauswirtschaftliche Dienstl.",
+				"bezeichnungM": "FS Ernährung u. Hauswirtschaft/Hauswirtschaft (2-jährig) - ambulante hauswirtschaftliche Dienstl.",
+				"bezeichnungW": "FS Ernährung u. Hauswirtschaft/Hauswirtschaft (2-jährig) - ambulante hauswirtschaftliche Dienstl.",
+				"gueltigVon": null,
+				"gueltigBis": 2005
+			} ]
+		}, {
+			"schluessel": "104",
+			"schluessel2": "02",
+			"historie": [ {
+				"id": 1327000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "E",
+				"berufsfeld": "EH",
+				"ebene1": "EV",
+				"ebene2": "GO",
+				"ebene3": null,
+				"bezeichnung": "FS Ernährungs- und Versorgungsmanagement/Großhaushalt",
+				"bezeichnungM": "FS Ernährungs- und Versorgungsmanagement/Großhaushalt",
+				"bezeichnungW": "FS Ernährungs- und Versorgungsmanagement/Großhaushalt",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "105",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1328000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "E",
+				"berufsfeld": "EH",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Ernährung u. Hauswirtschaft/Hauswirtschaftsmeister/-innen",
+				"bezeichnungM": "FS Ernährung u. Hauswirtschaft/Hauswirtschaftsmeister",
+				"bezeichnungW": "FS Ernährung u. Hauswirtschaft/Hauswirtschaftsmeisterinnen",
+				"gueltigVon": null,
+				"gueltigBis": 2012
+			} ]
+		}, {
+			"schluessel": "106",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1329000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "E",
+				"berufsfeld": "EH",
+				"ebene1": "EV",
+				"ebene2": "HG",
+				"ebene3": null,
+				"bezeichnung": "FS Ernährungs- und Versorgungsmanagement/Hotel und Gaststätten",
+				"bezeichnungM": "FS Ernährungs- und Versorgungsmanagement/Hotel und Gaststätten",
+				"bezeichnungW": "FS Ernährungs- und Versorgungsmanagement/Hotel und Gaststätten",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "107",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1330000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "E",
+				"berufsfeld": "EH",
+				"ebene1": "OZ",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Ernährungs- und Versorgungsmanagement/Lehrgänge für Hauswirtschaftsmeisterinnen",
+				"bezeichnungM": "FS Ernährungs- und Versorgungsmanagement/Lehrgänge für Hauswirtschaftsmeisterinnen",
+				"bezeichnungW": "FS Ernährungs- und Versorgungsmanagement/Lehrgänge für Hauswirtschaftsmeisterinnen",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "108",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1331000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "S",
+				"berufsfeld": "SG",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Familienpflege",
+				"bezeichnungM": "FS Familienpflege",
+				"bezeichnungW": "FS Familienpflege",
+				"gueltigVon": null,
+				"gueltigBis": 2005
+			} ]
+		}, {
+			"schluessel": "109",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1332000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "G",
+				"berufsfeld": "GS",
+				"ebene1": "GT",
+				"ebene2": "EM",
+				"ebene3": null,
+				"bezeichnung": "FS Gestaltung/Edelmetallgestaltung",
+				"bezeichnungM": "FS Gestaltung/Edelmetallgestaltung",
+				"bezeichnungW": "FS Gestaltung/Edelmetallgestaltung",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "110",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1333000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "G",
+				"berufsfeld": "GS",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Gestaltung - Farbe, Gestaltung, Werbung",
+				"bezeichnungM": "FS Gestaltung - Farbe, Gestaltung, Werbung",
+				"bezeichnungW": "FS Gestaltung - Farbe, Gestaltung, Werbung",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "110",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 1334000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "G",
+				"berufsfeld": "GS",
+				"ebene1": "GT",
+				"ebene2": "FG",
+				"ebene3": "GD",
+				"bezeichnung": "FS Gestaltung/Farbe, Gestaltung, Werbung - Mediendesign",
+				"bezeichnungM": "FS Gestaltung/Farbe, Gestaltung, Werbung - Mediendesign",
+				"bezeichnungW": "FS Gestaltung/Farbe, Gestaltung, Werbung - Mediendesign",
+				"gueltigVon": null,
+				"gueltigBis": 2021
+			} ]
+		}, {
+			"schluessel": "110",
+			"schluessel2": "02",
+			"historie": [ {
+				"id": 1335000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "G",
+				"berufsfeld": "GS",
+				"ebene1": "GT",
+				"ebene2": "FG",
+				"ebene3": "GD",
+				"bezeichnung": "FS Gestaltung - Farbe, Gestaltung, Werbung - Industrie-, Objekt-, Raumdesign",
+				"bezeichnungM": "FS Gestaltung - Farbe, Gestaltung, Werbung - Industrie-, Objekt-, Raumdesign",
+				"bezeichnungW": "FS Gestaltung - Farbe, Gestaltung, Werbung - Industrie-, Objekt-, Raumdesign",
+				"gueltigVon": null,
+				"gueltigBis": 2018
+			} ]
+		}, {
+			"schluessel": "110",
+			"schluessel2": "03",
+			"historie": [ {
+				"id": 1336000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "G",
+				"berufsfeld": "GS",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Gestaltung - Farbe, Gestaltung, Werbung - Medien-Design",
+				"bezeichnungM": "FS Gestaltung - Farbe, Gestaltung, Werbung - Medien-Design",
+				"bezeichnungW": "FS Gestaltung - Farbe, Gestaltung, Werbung - Medien-Design",
+				"gueltigVon": null,
+				"gueltigBis": 2018
+			} ]
+		}, {
+			"schluessel": "111",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 1337000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "S",
+				"berufsfeld": "SG",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Sozial- u. Gesundheitswesen - Heilerziehungspflege",
+				"bezeichnungM": "FS Sozial- u. Gesundheitswesen - Heilerziehungspflege",
+				"bezeichnungW": "FS Sozial- u. Gesundheitswesen - Heilerziehungspflege",
+				"gueltigVon": null,
+				"gueltigBis": 2005
+			} ]
+		}, {
+			"schluessel": "111",
+			"schluessel2": "02",
+			"historie": [ {
+				"id": 1338000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "S",
+				"berufsfeld": "SG",
+				"ebene1": "SW",
+				"ebene2": "HD",
+				"ebene3": null,
+				"bezeichnung": "FS Sozialwesen/Heilpädagogik",
+				"bezeichnungM": "FS Sozialwesen/Heilpädagogik",
+				"bezeichnungW": "FS Sozialwesen/Heilpädagogik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "112",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1339000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Abfalltechnik",
+				"bezeichnungM": "FS Technik/Abfalltechnik",
+				"bezeichnungW": "FS Technik/Abfalltechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2005
+			} ]
+		}, {
+			"schluessel": "113",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1340000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Abwassertechnik",
+				"bezeichnungM": "FS Technik/Abwassertechnik",
+				"bezeichnungW": "FS Technik/Abwassertechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2005
+			} ]
+		}, {
+			"schluessel": "114",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 1341000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Baudenkmalpflege und Altbauerhaltung - Farbe/Stuck",
+				"bezeichnungM": "FS Technik/Baudenkmalpflege und Altbauerhaltung - Farbe/Stuck",
+				"bezeichnungW": "FS Technik/Baudenkmalpflege und Altbauerhaltung - Farbe/Stuck",
+				"gueltigVon": null,
+				"gueltigBis": 2016
+			} ]
+		}, {
+			"schluessel": "114",
+			"schluessel2": "02",
+			"historie": [ {
+				"id": 1342000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Baudenkmalpflege und Altbauerhaltung - Holz",
+				"bezeichnungM": "FS Technik/Baudenkmalpflege und Altbauerhaltung - Holz",
+				"bezeichnungW": "FS Technik/Baudenkmalpflege und Altbauerhaltung - Holz",
+				"gueltigVon": null,
+				"gueltigBis": 2016
+			} ]
+		}, {
+			"schluessel": "114",
+			"schluessel2": "03",
+			"historie": [ {
+				"id": 1343000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Baudenkmalpflege u. Altbauerhaltung - Metall",
+				"bezeichnungM": "FS Technik/Baudenkmalpflege u. Altbauerhaltung - Metall",
+				"bezeichnungW": "FS Technik/Baudenkmalpflege u. Altbauerhaltung - Metall",
+				"gueltigVon": null,
+				"gueltigBis": 2011
+			} ]
+		}, {
+			"schluessel": "114",
+			"schluessel2": "04",
+			"historie": [ {
+				"id": 1344000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Baudenkmalpflege und Altbauerhaltung - Stein",
+				"bezeichnungM": "FS Technik/Baudenkmalpflege und Altbauerhaltung - Stein",
+				"bezeichnungW": "FS Technik/Baudenkmalpflege und Altbauerhaltung - Stein",
+				"gueltigVon": null,
+				"gueltigBis": 2016
+			} ]
+		}, {
+			"schluessel": "114",
+			"schluessel2": "05",
+			"historie": [ {
+				"id": 1345000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": "TE",
+				"ebene2": "BP",
+				"ebene3": "BP",
+				"bezeichnung": "FS Technik/Baudenkmalpflege und Altbauerneuerung - angewandte Baudenkmalpflege",
+				"bezeichnungM": "FS Technik/Baudenkmalpflege und Altbauerneuerung - angewandte Baudenkmalpflege",
+				"bezeichnungW": "FS Technik/Baudenkmalpflege und Altbauerneuerung - angewandte Baudenkmalpflege",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "114",
+			"schluessel2": "06",
+			"historie": [ {
+				"id": 1346000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": "TE",
+				"ebene2": "BP",
+				"ebene3": "AE",
+				"bezeichnung": "FS Technik/Baudenkmalpflege und Altbauerneuerung - energieeffiziente ökologische Altbauerneuerung",
+				"bezeichnungM": "FS Technik/Baudenkmalpflege und Altbauerneuerung - energieeffiziente ökologische Altbauerneuerung",
+				"bezeichnungW": "FS Technik/Baudenkmalpflege und Altbauerneuerung - energieeffiziente ökologische Altbauerneuerung",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "115",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 1347000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": "TE",
+				"ebene2": "BT",
+				"ebene3": "HB",
+				"bezeichnung": "FS Technik/Bautechnik - Hochbau",
+				"bezeichnungM": "FS Technik/Bautechnik - Hochbau",
+				"bezeichnungW": "FS Technik/Bautechnik - Hochbau",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "115",
+			"schluessel2": "02",
+			"historie": [ {
+				"id": 1348000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": "TE",
+				"ebene2": "BT",
+				"ebene3": "TB",
+				"bezeichnung": "FS Technik/Bautechnik - Tiefbau",
+				"bezeichnungM": "FS Technik/Bautechnik - Tiefbau",
+				"bezeichnungW": "FS Technik/Bautechnik - Tiefbau",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "115",
+			"schluessel2": "03",
+			"historie": [ {
+				"id": 1349000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": "TE",
+				"ebene2": "BT",
+				"ebene3": "AU",
+				"bezeichnung": "FS Technik/Bautechnik - Ausbau",
+				"bezeichnungM": "FS Technik/Bautechnik - Ausbau",
+				"bezeichnungW": "FS Technik/Bautechnik - Ausbau",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "116",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1350000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": "TE",
+				"ebene2": "BK",
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Bekleidungstechnik",
+				"bezeichnungM": "FS Technik/Bekleidungstechnik",
+				"bezeichnungW": "FS Technik/Bekleidungstechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "116",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 1351000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Bekleidungstechnik - Bekleidungsfertigung",
+				"bezeichnungM": "FS Technik/Bekleidungstechnik - Bekleidungsfertigung",
+				"bezeichnungW": "FS Technik/Bekleidungstechnik - Bekleidungsfertigung",
+				"gueltigVon": null,
+				"gueltigBis": 2008
+			} ]
+		}, {
+			"schluessel": "116",
+			"schluessel2": "02",
+			"historie": [ {
+				"id": 1352000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Bekleidungstechnik - Bekleidungsgestaltung",
+				"bezeichnungM": "FS Technik/Bekleidungstechnik - Bekleidungsgestaltung",
+				"bezeichnungW": "FS Technik/Bekleidungstechnik - Bekleidungsgestaltung",
+				"gueltigVon": null,
+				"gueltigBis": 2008
+			} ]
+		}, {
+			"schluessel": "117",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1353000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Bergbautechnik",
+				"bezeichnungM": "FS Technik/Bergbautechnik",
+				"bezeichnungW": "FS Technik/Bergbautechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2012
+			} ]
+		}, {
+			"schluessel": "117",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 1354000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Bergbautechnik - Tagebautechnik",
+				"bezeichnungM": "FS Technik/Bergbautechnik - Tagebautechnik",
+				"bezeichnungW": "FS Technik/Bergbautechnik - Tagebautechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2005
+			} ]
+		}, {
+			"schluessel": "117",
+			"schluessel2": "02",
+			"historie": [ {
+				"id": 1355000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Bergbautechnik - Tiefbautechnik",
+				"bezeichnungM": "FS Technik/Bergbautechnik - Tiefbautechnik",
+				"bezeichnungW": "FS Technik/Bergbautechnik - Tiefbautechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2005
+			} ]
+		}, {
+			"schluessel": "117",
+			"schluessel2": "03",
+			"historie": [ {
+				"id": 1356000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Bergbautechnik - Verfahrenstechnik",
+				"bezeichnungM": "FS Technik/Bergbautechnik - Verfahrenstechnik",
+				"bezeichnungW": "FS Technik/Bergbautechnik - Verfahrenstechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2005
+			} ]
+		}, {
+			"schluessel": "117",
+			"schluessel2": "04",
+			"historie": [ {
+				"id": 1357000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": "TE",
+				"ebene2": "BB",
+				"ebene3": "KO",
+				"bezeichnung": "FS Technik/Bergbautechnik - Kokerei/Aufbereitungstechnik",
+				"bezeichnungM": "FS Technik/Bergbautechnik - Kokerei/Aufbereitungstechnik",
+				"bezeichnungW": "FS Technik/Bergbautechnik - Kokerei/Aufbereitungstechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "117",
+			"schluessel2": "05",
+			"historie": [ {
+				"id": 1358000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": "TE",
+				"ebene2": "BB",
+				"ebene3": "TG",
+				"bezeichnung": "FS Technik/Bergbautechnik - Tagebautechnik",
+				"bezeichnungM": "FS Technik/Bergbautechnik - Tagebautechnik",
+				"bezeichnungW": "FS Technik/Bergbautechnik - Tagebautechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "117",
+			"schluessel2": "06",
+			"historie": [ {
+				"id": 1359000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": "TE",
+				"ebene2": "BB",
+				"ebene3": "TT",
+				"bezeichnung": "FS Technik/Bergbautechnik - Tiefbautechnik",
+				"bezeichnungM": "FS Technik/Bergbautechnik - Tiefbautechnik",
+				"bezeichnungW": "FS Technik/Bergbautechnik - Tiefbautechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "118",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1360000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": "TE",
+				"ebene2": "BO",
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Biogentechnik",
+				"bezeichnungM": "FS Technik/Biogentechnik",
+				"bezeichnungW": "FS Technik/Biogentechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "119",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 1361000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": "TE",
+				"ebene2": "CT",
+				"ebene3": "BT",
+				"bezeichnung": "FS Technik/Chemietechnik - Betriebstechnik",
+				"bezeichnungM": "FS Technik/Chemietechnik - Betriebstechnik",
+				"bezeichnungW": "FS Technik/Chemietechnik - Betriebstechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "119",
+			"schluessel2": "02",
+			"historie": [ {
+				"id": 1362000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": "TE",
+				"ebene2": "CT",
+				"ebene3": "LT",
+				"bezeichnung": "FS Technik/Chemietechnik - Labortechnik",
+				"bezeichnungM": "FS Technik/Chemietechnik - Labortechnik",
+				"bezeichnungW": "FS Technik/Chemietechnik - Labortechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "120",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1363000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Chemietechnik",
+				"bezeichnungM": "FS Technik/Chemietechnik",
+				"bezeichnungW": "FS Technik/Chemietechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2005
+			} ]
+		}, {
+			"schluessel": "121",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1364000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": "TE",
+				"ebene2": "DM",
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Druck- und Medientechnik",
+				"bezeichnungM": "FS Technik/Druck- und Medientechnik",
+				"bezeichnungW": "FS Technik/Druck- und Medientechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "122",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1365000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Drucktechnik",
+				"bezeichnungM": "FS Technik/Drucktechnik",
+				"bezeichnungW": "FS Technik/Drucktechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2005
+			} ]
+		}, {
+			"schluessel": "123",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1366000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": "TE",
+				"ebene2": "ET",
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Elektrotechnik",
+				"bezeichnungM": "FS Technik/Elektrotechnik",
+				"bezeichnungW": "FS Technik/Elektrotechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "123",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 1367000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Elektrotechnik - Datenverarbeitungstechnik",
+				"bezeichnungM": "FS Technik/Elektrotechnik - Datenverarbeitungstechnik",
+				"bezeichnungW": "FS Technik/Elektrotechnik - Datenverarbeitungstechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2008
+			} ]
+		}, {
+			"schluessel": "123",
+			"schluessel2": "02",
+			"historie": [ {
+				"id": 1368000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Elektrotechnik - Elektronik",
+				"bezeichnungM": "FS Technik/Elektrotechnik - Elektronik",
+				"bezeichnungW": "FS Technik/Elektrotechnik - Elektronik",
+				"gueltigVon": null,
+				"gueltigBis": 2005
+			} ]
+		}, {
+			"schluessel": "123",
+			"schluessel2": "03",
+			"historie": [ {
+				"id": 1369000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Elektrotechnik - Energietechnik u. Prozeßautomatisierung",
+				"bezeichnungM": "FS Technik/Elektrotechnik - Energietechnik u. Prozeßautomatisierung",
+				"bezeichnungW": "FS Technik/Elektrotechnik - Energietechnik u. Prozeßautomatisierung",
+				"gueltigVon": null,
+				"gueltigBis": 2008
+			} ]
+		}, {
+			"schluessel": "123",
+			"schluessel2": "04",
+			"historie": [ {
+				"id": 1370000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Elektrotechnik - Gebäudetechnik",
+				"bezeichnungM": "FS Technik/Elektrotechnik - Gebäudetechnik",
+				"bezeichnungW": "FS Technik/Elektrotechnik - Gebäudetechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2005
+			} ]
+		}, {
+			"schluessel": "123",
+			"schluessel2": "05",
+			"historie": [ {
+				"id": 1371000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Elektrotechnik - Kommunikationstechnik",
+				"bezeichnungM": "FS Technik/Elektrotechnik - Kommunikationstechnik",
+				"bezeichnungW": "FS Technik/Elektrotechnik - Kommunikationstechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2007
+			} ]
+		}, {
+			"schluessel": "124",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1372000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": "TE",
+				"ebene2": "FL",
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Farb- und Lacktechnik",
+				"bezeichnungM": "FS Technik/Farb- und Lacktechnik",
+				"bezeichnungW": "FS Technik/Farb- und Lacktechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "125",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1373000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Feinwerktechnik",
+				"bezeichnungM": "FS Technik/Feinwerktechnik",
+				"bezeichnungW": "FS Technik/Feinwerktechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2017
+			} ]
+		}, {
+			"schluessel": "126",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1374000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": "TE",
+				"ebene2": "GT",
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Galvanotechnik",
+				"bezeichnungM": "FS Technik/Galvanotechnik",
+				"bezeichnungW": "FS Technik/Galvanotechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "126",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 1375000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Galvanotechnik - Leiterplattentechnik",
+				"bezeichnungM": "FS Technik/Galvanotechnik - Leiterplattentechnik",
+				"bezeichnungW": "FS Technik/Galvanotechnik - Leiterplattentechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2016
+			} ]
+		}, {
+			"schluessel": "126",
+			"schluessel2": "02",
+			"historie": [ {
+				"id": 1376000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Galvanotechnik - Oberflächentechnik",
+				"bezeichnungM": "FS Technik/Galvanotechnik - Oberflächentechnik",
+				"bezeichnungW": "FS Technik/Galvanotechnik - Oberflächentechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2016
+			} ]
+		}, {
+			"schluessel": "127",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1377000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": "TE",
+				"ebene2": "GL",
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Glastechnik",
+				"bezeichnungM": "FS Technik/Glastechnik",
+				"bezeichnungW": "FS Technik/Glastechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "128",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1378000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": "TE",
+				"ebene2": "HL",
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Heizungs-, Lüftungs-, Klimatechnik",
+				"bezeichnungM": "FS Technik/Heizungs-, Lüftungs-, Klimatechnik",
+				"bezeichnungW": "FS Technik/Heizungs-, Lüftungs-, Klimatechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "129",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1379000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": "TE",
+				"ebene2": "HT",
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Holztechnik",
+				"bezeichnungM": "FS Technik/Holztechnik",
+				"bezeichnungW": "FS Technik/Holztechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "130",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1380000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Informatik",
+				"bezeichnungM": "FS Technik/Informatik",
+				"bezeichnungW": "FS Technik/Informatik",
+				"gueltigVon": null,
+				"gueltigBis": 2016
+			} ]
+		}, {
+			"schluessel": "130",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 1381000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Informatik - Computer- und Kommunikationstechnik",
+				"bezeichnungM": "FS Technik/Informatik - Computer- und Kommunikationstechnik",
+				"bezeichnungW": "FS Technik/Informatik - Computer- und Kommunikationstechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2012
+			} ]
+		}, {
+			"schluessel": "130",
+			"schluessel2": "02",
+			"historie": [ {
+				"id": 1382000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Informatik - CNC-Systemtechnik",
+				"bezeichnungM": "FS Technik/Informatik - CNC-Systemtechnik",
+				"bezeichnungW": "FS Technik/Informatik - CNC-Systemtechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2012
+			} ]
+		}, {
+			"schluessel": "130",
+			"schluessel2": "03",
+			"historie": [ {
+				"id": 1383000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Informatik - Technische Informatik",
+				"bezeichnungM": "FS Technik/Informatik - Technische Informatik",
+				"bezeichnungW": "FS Technik/Informatik - Technische Informatik",
+				"gueltigVon": null,
+				"gueltigBis": 2012
+			} ]
+		}, {
+			"schluessel": "131",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1384000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": "TE",
+				"ebene2": "KT",
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Kältetechnik",
+				"bezeichnungM": "FS Technik/Kältetechnik",
+				"bezeichnungW": "FS Technik/Kältetechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "132",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1385000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": "TE",
+				"ebene2": "KF",
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Karosserie- und Fahrzeugbautechnik",
+				"bezeichnungM": "FS Technik/Karosserie- und Fahrzeugbautechnik",
+				"bezeichnungW": "FS Technik/Karosserie- und Fahrzeugbautechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "133",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1386000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": "TE",
+				"ebene2": "KO",
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Korrosionsschutztechnik",
+				"bezeichnungM": "FS Technik/Korrosionsschutztechnik",
+				"bezeichnungW": "FS Technik/Korrosionsschutztechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "134",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1387000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Kraftfahrzeugtechnik",
+				"bezeichnungM": "FS Technik/Kraftfahrzeugtechnik",
+				"bezeichnungW": "FS Technik/Kraftfahrzeugtechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2017
+			} ]
+		}, {
+			"schluessel": "135",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1388000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": "TE",
+				"ebene2": "KK",
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Kunststoff- und Kautschuktechnik",
+				"bezeichnungM": "FS Technik/Kunststoff- und Kautschuktechnik",
+				"bezeichnungW": "FS Technik/Kunststoff- und Kautschuktechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "136",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1389000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": "TE",
+				"ebene2": "LT",
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Lebensmitteltechnik",
+				"bezeichnungM": "FS Technik/Lebensmitteltechnik",
+				"bezeichnungW": "FS Technik/Lebensmitteltechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "136",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 1390000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Lebensmitteltechnik - Bäckereitechnik",
+				"bezeichnungM": "FS Technik/Lebensmitteltechnik - Bäckereitechnik",
+				"bezeichnungW": "FS Technik/Lebensmitteltechnik - Bäckereitechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2005
+			} ]
+		}, {
+			"schluessel": "136",
+			"schluessel2": "02",
+			"historie": [ {
+				"id": 1391000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Lebensmitteltechnik - Fleischereitechnik",
+				"bezeichnungM": "FS Technik/Lebensmitteltechnik - Fleischereitechnik",
+				"bezeichnungW": "FS Technik/Lebensmitteltechnik - Fleischereitechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2005
+			} ]
+		}, {
+			"schluessel": "136",
+			"schluessel2": "03",
+			"historie": [ {
+				"id": 1392000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Lebensmitteltechnik - Konservierungstechnik",
+				"bezeichnungM": "FS Technik/Lebensmitteltechnik - Konservierungstechnik",
+				"bezeichnungW": "FS Technik/Lebensmitteltechnik - Konservierungstechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2005
+			} ]
+		}, {
+			"schluessel": "136",
+			"schluessel2": "04",
+			"historie": [ {
+				"id": 1393000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Lebensmitteltechnik - Lebensmittelverarbeitungstechnik",
+				"bezeichnungM": "FS Technik/Lebensmitteltechnik - Lebensmittelverarbeitungstechnik",
+				"bezeichnungW": "FS Technik/Lebensmitteltechnik - Lebensmittelverarbeitungstechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2005
+			} ]
+		}, {
+			"schluessel": "137",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1394000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": "TE",
+				"ebene2": "MB",
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Maschinenbautechnik",
+				"bezeichnungM": "FS Technik/Maschinenbautechnik",
+				"bezeichnungW": "FS Technik/Maschinenbautechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "137",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 1395000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Maschinenbautechnik - Betriebstechnik",
+				"bezeichnungM": "FS Technik/Maschinenbautechnik - Betriebstechnik",
+				"bezeichnungW": "FS Technik/Maschinenbautechnik - Betriebstechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2007
+			} ]
+		}, {
+			"schluessel": "137",
+			"schluessel2": "02",
+			"historie": [ {
+				"id": 1396000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Maschinenbautechnik - Entwicklungstechnik",
+				"bezeichnungM": "FS Technik/Maschinenbautechnik - Entwicklungstechnik",
+				"bezeichnungW": "FS Technik/Maschinenbautechnik - Entwicklungstechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2008
+			} ]
+		}, {
+			"schluessel": "137",
+			"schluessel2": "03",
+			"historie": [ {
+				"id": 1397000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Maschinenbautechnik - Fertigungstechnik",
+				"bezeichnungM": "FS Technik/Maschinenbautechnik - Fertigungstechnik",
+				"bezeichnungW": "FS Technik/Maschinenbautechnik - Fertigungstechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2008
+			} ]
+		}, {
+			"schluessel": "137",
+			"schluessel2": "04",
+			"historie": [ {
+				"id": 1398000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Maschinenbautechnik - Luftfahrzeugtechnik",
+				"bezeichnungM": "FS Technik/Maschinenbautechnik - Luftfahrzeugtechnik",
+				"bezeichnungW": "FS Technik/Maschinenbautechnik - Luftfahrzeugtechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2005
+			} ]
+		}, {
+			"schluessel": "137",
+			"schluessel2": "05",
+			"historie": [ {
+				"id": 1399000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Maschinenbautechnik - System- u. Automatisierungstechnik",
+				"bezeichnungM": "FS Technik/Maschinenbautechnik - System- u. Automatisierungstechnik",
+				"bezeichnungW": "FS Technik/Maschinenbautechnik - System- u. Automatisierungstechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2008
+			} ]
+		}, {
+			"schluessel": "138",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1400000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": "TE",
+				"ebene2": "MD",
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Medizintechnik",
+				"bezeichnungM": "FS Technik/Medizintechnik",
+				"bezeichnungW": "FS Technik/Medizintechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "139",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1401000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": "TE",
+				"ebene2": "ML",
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Metallbautechnik",
+				"bezeichnungM": "FS Technik/Metallbautechnik",
+				"bezeichnungW": "FS Technik/Metallbautechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "140",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1402000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Museums- und Ausstellungstechnik",
+				"bezeichnungM": "FS Technik/Museums- und Ausstellungstechnik",
+				"bezeichnungW": "FS Technik/Museums- und Ausstellungstechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2012
+			} ]
+		}, {
+			"schluessel": "141",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1403000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Sanitärtechnik",
+				"bezeichnungM": "FS Technik/Sanitärtechnik",
+				"bezeichnungW": "FS Technik/Sanitärtechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2012
+			} ]
+		}, {
+			"schluessel": "142",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1404000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": "TE",
+				"ebene2": "SI",
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Spreng- und Sicherheitstechnik",
+				"bezeichnungM": "FS Technik/Spreng- und Sicherheitstechnik",
+				"bezeichnungW": "FS Technik/Spreng- und Sicherheitstechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "143",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1405000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": "TE",
+				"ebene2": "TT",
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Textiltechnik",
+				"bezeichnungM": "FS Technik/Textiltechnik",
+				"bezeichnungW": "FS Technik/Textiltechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "143",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 1406000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Textiltechnik - Textilerzeugung",
+				"bezeichnungM": "FS Technik/Textiltechnik - Textilerzeugung",
+				"bezeichnungW": "FS Technik/Textiltechnik - Textilerzeugung",
+				"gueltigVon": null,
+				"gueltigBis": 2005
+			} ]
+		}, {
+			"schluessel": "143",
+			"schluessel2": "02",
+			"historie": [ {
+				"id": 1407000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Textiltechnik - Textilveredlung",
+				"bezeichnungM": "FS Technik/Textiltechnik - Textilveredlung",
+				"bezeichnungW": "FS Technik/Textiltechnik - Textilveredlung",
+				"gueltigVon": null,
+				"gueltigBis": 2005
+			} ]
+		}, {
+			"schluessel": "144",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1408000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": "TE",
+				"ebene2": "VT",
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Vermessungstechnik",
+				"bezeichnungM": "FS Technik/Vermessungstechnik",
+				"bezeichnungW": "FS Technik/Vermessungstechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "145",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1409000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Wasserversorgungstechnik",
+				"bezeichnungM": "FS Technik/Wasserversorgungstechnik",
+				"bezeichnungW": "FS Technik/Wasserversorgungstechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2005
+			} ]
+		}, {
+			"schluessel": "146",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1410000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": "TE",
+				"ebene2": "WT",
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Werkstofftechnik",
+				"bezeichnungM": "FS Technik/Werkstofftechnik",
+				"bezeichnungW": "FS Technik/Werkstofftechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "147",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1411000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WI",
+				"ebene1": "WI",
+				"ebene2": "BW",
+				"ebene3": "AH",
+				"bezeichnung": "FS Wirtschaft/Außenhandel",
+				"bezeichnungM": "FS Wirtschaft/Außenhandel",
+				"bezeichnungW": "FS Wirtschaft/Außenhandel",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "148",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 1412000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WI",
+				"ebene1": "WI",
+				"ebene2": "BW",
+				"ebene3": "AB",
+				"bezeichnung": "FS Wirtschaft/Betriebswirtschaft - Absatzwirtschaft",
+				"bezeichnungM": "FS Wirtschaft/Betriebswirtschaft - Absatzwirtschaft",
+				"bezeichnungW": "FS Wirtschaft/Betriebswirtschaft - Absatzwirtschaft",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "148",
+			"schluessel2": "02",
+			"historie": [ {
+				"id": 1413000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WI",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Wirtschaft/Betriebswirtschaft - Allg. Betriebswirtschaft",
+				"bezeichnungM": "FS Wirtschaft/Betriebswirtschaft - Allg. Betriebswirtschaft",
+				"bezeichnungW": "FS Wirtschaft/Betriebswirtschaft - Allg. Betriebswirtschaft",
+				"gueltigVon": null,
+				"gueltigBis": 2005
+			} ]
+		}, {
+			"schluessel": "148",
+			"schluessel2": "03",
+			"historie": [ {
+				"id": 1414000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WI",
+				"ebene1": "WI",
+				"ebene2": "BW",
+				"ebene3": "FW",
+				"bezeichnung": "FS Wirtschaft/Betriebswirtschaft - Finanzwirtschaft",
+				"bezeichnungM": "FS Wirtschaft/Betriebswirtschaft - Finanzwirtschaft",
+				"bezeichnungW": "FS Wirtschaft/Betriebswirtschaft - Finanzwirtschaft",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "148",
+			"schluessel2": "04",
+			"historie": [ {
+				"id": 1415000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WI",
+				"ebene1": "WI",
+				"ebene2": "BW",
+				"ebene3": "FS",
+				"bezeichnung": "FS Wirtschaft/Betriebswirtschaft - Fremdsprachen",
+				"bezeichnungM": "FS Wirtschaft/Betriebswirtschaft - Fremdsprachen",
+				"bezeichnungW": "FS Wirtschaft/Betriebswirtschaft - Fremdsprachen",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "148",
+			"schluessel2": "05",
+			"historie": [ {
+				"id": 1416000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WI",
+				"ebene1": "WI",
+				"ebene2": "BW",
+				"ebene3": "MV",
+				"bezeichnung": "FS Wirtschaft/Betriebswirtschaft - Medizinische Verwaltung",
+				"bezeichnungM": "FS Wirtschaft/Betriebswirtschaft - Medizinische Verwaltung",
+				"bezeichnungW": "FS Wirtschaft/Betriebswirtschaft - Medizinische Verwaltung",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "148",
+			"schluessel2": "06",
+			"historie": [ {
+				"id": 1417000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WI",
+				"ebene1": "WI",
+				"ebene2": "BW",
+				"ebene3": "PE",
+				"bezeichnung": "FS Wirtschaft/Betriebswirtschaft - Personalwirtschaft",
+				"bezeichnungM": "FS Wirtschaft/Betriebswirtschaft - Personalwirtschaft",
+				"bezeichnungW": "FS Wirtschaft/Betriebswirtschaft - Personalwirtschaft",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "148",
+			"schluessel2": "07",
+			"historie": [ {
+				"id": 1418000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WI",
+				"ebene1": "WI",
+				"ebene2": "BW",
+				"ebene3": "PW",
+				"bezeichnung": "FS Wirtschaft/Betriebswirtschaft - Produktionswirtschaft",
+				"bezeichnungM": "FS Wirtschaft/Betriebswirtschaft - Produktionswirtschaft",
+				"bezeichnungW": "FS Wirtschaft/Betriebswirtschaft - Produktionswirtschaft",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "148",
+			"schluessel2": "08",
+			"historie": [ {
+				"id": 1419000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WI",
+				"ebene1": "WI",
+				"ebene2": "BW",
+				"ebene3": "RW",
+				"bezeichnung": "FS Wirtschaft/Betriebswirtschaft - Rechnungswesen",
+				"bezeichnungM": "FS Wirtschaft/Betriebswirtschaft - Rechnungswesen",
+				"bezeichnungW": "FS Wirtschaft/Betriebswirtschaft - Rechnungswesen",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "148",
+			"schluessel2": "09",
+			"historie": [ {
+				"id": 1420000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WI",
+				"ebene1": "WI",
+				"ebene2": "BW",
+				"ebene3": "RE",
+				"bezeichnung": "FS Wirtschaft/Betriebswirtschaft - Recht",
+				"bezeichnungM": "FS Wirtschaft/Betriebswirtschaft - Recht",
+				"bezeichnungW": "FS Wirtschaft/Betriebswirtschaft - Recht",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "148",
+			"schluessel2": "10",
+			"historie": [ {
+				"id": 1421000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WI",
+				"ebene1": "WI",
+				"ebene2": "BW",
+				"ebene3": "RT",
+				"bezeichnung": "FS Wirtschaft/Betriebswirtschaft - Reiseverkehr / Touristik",
+				"bezeichnungM": "FS Wirtschaft/Betriebswirtschaft - Reiseverkehr / Touristik",
+				"bezeichnungW": "FS Wirtschaft/Betriebswirtschaft - Reiseverkehr / Touristik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "148",
+			"schluessel2": "11",
+			"historie": [ {
+				"id": 1422000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WI",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Wirtschaft/Betriebswirtschaft - Sekretariat",
+				"bezeichnungM": "FS Wirtschaft/Betriebswirtschaft - Sekretariat",
+				"bezeichnungW": "FS Wirtschaft/Betriebswirtschaft - Sekretariat",
+				"gueltigVon": null,
+				"gueltigBis": 2011
+			} ]
+		}, {
+			"schluessel": "148",
+			"schluessel2": "12",
+			"historie": [ {
+				"id": 1423000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WI",
+				"ebene1": "WI",
+				"ebene2": "BW",
+				"ebene3": "ST",
+				"bezeichnung": "FS Wirtschaft/Betriebswirtschaft - Steuern",
+				"bezeichnungM": "FS Wirtschaft/Betriebswirtschaft - Steuern",
+				"bezeichnungW": "FS Wirtschaft/Betriebswirtschaft - Steuern",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "148",
+			"schluessel2": "13",
+			"historie": [ {
+				"id": 1424000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WI",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Wirtschaft/Betriebswirtschaft - Umweltökonomie",
+				"bezeichnungM": "FS Wirtschaft/Betriebswirtschaft - Umweltökonomie",
+				"bezeichnungW": "FS Wirtschaft/Betriebswirtschaft - Umweltökonomie",
+				"gueltigVon": null,
+				"gueltigBis": 2011
+			} ]
+		}, {
+			"schluessel": "148",
+			"schluessel2": "14",
+			"historie": [ {
+				"id": 1425000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WI",
+				"ebene1": "WI",
+				"ebene2": "BW",
+				"ebene3": "WI",
+				"bezeichnung": "FS Wirtschaft/Betriebswirtschaft - Wirtschaftsinformatik/Organisation",
+				"bezeichnungM": "FS Wirtschaft/Betriebswirtschaft - Wirtschaftsinformatik/Organisation",
+				"bezeichnungW": "FS Wirtschaft/Betriebswirtschaft - Wirtschaftsinformatik/Organisation",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "148",
+			"schluessel2": "15",
+			"historie": [ {
+				"id": 1426000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WI",
+				"ebene1": "WI",
+				"ebene2": "BW",
+				"ebene3": "LO",
+				"bezeichnung": "FS Wirtschaft/Betriebswirtschaft - Logistik",
+				"bezeichnungM": "FS Wirtschaft/Betriebswirtschaft - Logistik",
+				"bezeichnungW": "FS Wirtschaft/Betriebswirtschaft - Logistik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "148",
+			"schluessel2": "16",
+			"historie": [ {
+				"id": 1427000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WI",
+				"ebene1": "WI",
+				"ebene2": "BW",
+				"ebene3": "SF",
+				"bezeichnung": "FS Wirtschaft/Betriebswirtschaft - Sport und Freizeit",
+				"bezeichnungM": "FS Wirtschaft/Betriebswirtschaft - Sport und Freizeit",
+				"bezeichnungW": "FS Wirtschaft/Betriebswirtschaft - Sport und Freizeit",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "148",
+			"schluessel2": "17",
+			"historie": [ {
+				"id": 1428000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WI",
+				"ebene1": "WI",
+				"ebene2": "BW",
+				"ebene3": "FD",
+				"bezeichnung": "FS Wirtschaft/Betriebswirtschaft - Finanzdienstleistungen",
+				"bezeichnungM": "FS Wirtschaft/Betriebswirtschaft - Finanzdienstleistungen",
+				"bezeichnungW": "FS Wirtschaft/Betriebswirtschaft - Finanzdienstleistungen",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "148",
+			"schluessel2": "18",
+			"historie": [ {
+				"id": 1429000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "O",
+				"berufsfeld": "OH",
+				"ebene1": "WI",
+				"ebene2": "BW",
+				"ebene3": "HM",
+				"bezeichnung": "FS Wirtschaft/Betriebswirtschaft - Handelsmanagement",
+				"bezeichnungM": "FS Wirtschaft/Betriebswirtschaft - Handelsmanagement",
+				"bezeichnungW": "FS Wirtschaft/Betriebswirtschaft - Handelsmanagement",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "148",
+			"schluessel2": "19",
+			"historie": [ {
+				"id": 1430000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WI",
+				"ebene1": "WI",
+				"ebene2": "BW",
+				"ebene3": "MK",
+				"bezeichnung": "FS Wirtschaft/Betriebswirtschaft - Marketing-Kommunikation",
+				"bezeichnungM": "FS Wirtschaft/Betriebswirtschaft - Marketing-Kommunikation",
+				"bezeichnungW": "FS Wirtschaft/Betriebswirtschaft - Marketing-Kommunikation",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "148",
+			"schluessel2": "20",
+			"historie": [ {
+				"id": 1431000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WI",
+				"ebene1": "WI",
+				"ebene2": "BW",
+				"ebene3": "GM",
+				"bezeichnung": "FS Wirtschaft/Betriebswirtschaft - Gesundheitsökonomie und -management",
+				"bezeichnungM": "FS Wirtschaft/Betriebswirtschaft - Gesundheitsökonomie und -management",
+				"bezeichnungW": "FS Wirtschaft/Betriebswirtschaft - Gesundheitsökonomie und -management",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "148",
+			"schluessel2": "21",
+			"historie": [ {
+				"id": 1432000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WI",
+				"ebene1": "WI",
+				"ebene2": "BW",
+				"ebene3": "ME",
+				"bezeichnung": "FS Wirtschaft/Betriebswirtschaft - Medien- und Eventmanagement",
+				"bezeichnungM": "FS Wirtschaft/Betriebswirtschaft - Medien- und Eventmanagement",
+				"bezeichnungW": "FS Wirtschaft/Betriebswirtschaft - Medien- und Eventmanagement",
+				"gueltigVon": null,
+				"gueltigBis": 2021
+			} ]
+		}, {
+			"schluessel": "148",
+			"schluessel2": "22",
+			"historie": [ {
+				"id": 1433000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WI",
+				"ebene1": "WI",
+				"ebene2": "BW",
+				"ebene3": null,
+				"bezeichnung": "FS Wirtschaft/Betriebswirtschaft - Kulturmanagement",
+				"bezeichnungM": "FS Wirtschaft/Betriebswirtschaft - Kulturmanagement",
+				"bezeichnungW": "FS Wirtschaft/Betriebswirtschaft - Kulturmanagement",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "148",
+			"schluessel2": "23",
+			"historie": [ {
+				"id": 1434000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "WI",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Wirtschaft/Betriebswirtschaft - Internationale Wirtschaft",
+				"bezeichnungM": "FS Wirtschaft/Betriebswirtschaft - Internationale Wirtschaft",
+				"bezeichnungW": "FS Wirtschaft/Betriebswirtschaft - Internationale Wirtschaft",
+				"gueltigVon": 2022,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "149",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1435000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WI",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Wirtschaft/Eisenwaren- u. Hausratshandel",
+				"bezeichnungM": "FS Wirtschaft/Eisenwaren- u. Hausratshandel",
+				"bezeichnungW": "FS Wirtschaft/Eisenwaren- u. Hausratshandel",
+				"gueltigVon": null,
+				"gueltigBis": 2005
+			} ]
+		}, {
+			"schluessel": "150",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1436000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WI",
+				"ebene1": "WI",
+				"ebene2": "TO",
+				"ebene3": null,
+				"bezeichnung": "FS Wirtschaft/Tourismus",
+				"bezeichnungM": "FS Wirtschaft/Tourismus",
+				"bezeichnungW": "FS Wirtschaft/Tourismus",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "151",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1437000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WI",
+				"ebene1": "WI",
+				"ebene2": "HB",
+				"ebene3": null,
+				"bezeichnung": "FS Wirtschaft/Hotel- und Gaststättengewerbe",
+				"bezeichnungM": "FS Wirtschaft/Hotel- und Gaststättengewerbe",
+				"bezeichnungW": "FS Wirtschaft/Hotel- und Gaststättengewerbe",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "152",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1438000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WI",
+				"ebene1": "WI",
+				"ebene2": "MG",
+				"ebene3": null,
+				"bezeichnung": "FS Wirtschaft/Marketing",
+				"bezeichnungM": "FS Wirtschaft/Marketing",
+				"bezeichnungW": "FS Wirtschaft/Marketing",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "153",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1439000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WI",
+				"ebene1": "WI",
+				"ebene2": "MH",
+				"ebene3": null,
+				"bezeichnung": "FS Wirtschaft/Möbelhandel",
+				"bezeichnungM": "FS Wirtschaft/Möbelhandel",
+				"bezeichnungW": "FS Wirtschaft/Möbelhandel",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "154",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1440000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WI",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Wirtschaft/Informatik",
+				"bezeichnungM": "FS Wirtschaft/Informatik",
+				"bezeichnungW": "FS Wirtschaft/Informatik",
+				"gueltigVon": null,
+				"gueltigBis": 2011
+			} ]
+		}, {
+			"schluessel": "154",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 1441000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WI",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Wirtschaft/Informatik - Wirtschaftsinformatik",
+				"bezeichnungM": "FS Wirtschaft/Informatik - Wirtschaftsinformatik",
+				"bezeichnungW": "FS Wirtschaft/Informatik - Wirtschaftsinformatik",
+				"gueltigVon": null,
+				"gueltigBis": 2012
+			} ]
+		}, {
+			"schluessel": "155",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1442000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WI",
+				"ebene1": "WI",
+				"ebene2": "WR",
+				"ebene3": null,
+				"bezeichnung": "FS Wirtschaft/Wohnungswirtschaft und Realkredit",
+				"bezeichnungM": "FS Wirtschaft/Wohnungswirtschaft und Realkredit",
+				"bezeichnungW": "FS Wirtschaft/Wohnungswirtschaft und Realkredit",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "156",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1443000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "S",
+				"berufsfeld": "SG",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Höhere FS für Sozialarbeit",
+				"bezeichnungM": "Höhere FS für Sozialarbeit",
+				"bezeichnungW": "Höhere FS für Sozialarbeit",
+				"gueltigVon": null,
+				"gueltigBis": 2005
+			} ]
+		}, {
+			"schluessel": "157",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1444000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Denkmalpflege - Möbel und Raumausstattung",
+				"bezeichnungM": "FS Technik/Denkmalpflege - Möbel und Raumausstattung",
+				"bezeichnungW": "FS Technik/Denkmalpflege - Möbel und Raumausstattung",
+				"gueltigVon": null,
+				"gueltigBis": 2005
+			} ]
+		}, {
+			"schluessel": "158",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1445000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": "TE",
+				"ebene2": "MT",
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Mechatronik",
+				"bezeichnungM": "FS Technik/Mechatronik",
+				"bezeichnungW": "FS Technik/Mechatronik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "159",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1446000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WI",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Wirtschaft/Logistik",
+				"bezeichnungM": "FS Wirtschaft/Logistik",
+				"bezeichnungW": "FS Wirtschaft/Logistik",
+				"gueltigVon": null,
+				"gueltigBis": 2016
+			} ]
+		}, {
+			"schluessel": "160",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1447000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": "TE",
+				"ebene2": "MN",
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Medien",
+				"bezeichnungM": "FS Technik/Medien",
+				"bezeichnungW": "FS Technik/Medien",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "161",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1448000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "A",
+				"berufsfeld": "AW",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Agrarwirtschaft Forstwirtschaft",
+				"bezeichnungM": "FS Agrarwirtschaft Forstwirtschaft",
+				"bezeichnungW": "FS Agrarwirtschaft Forstwirtschaft",
+				"gueltigVon": null,
+				"gueltigBis": 2012
+			} ]
+		}, {
+			"schluessel": "162",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1449000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "G",
+				"berufsfeld": "GS",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Gestaltung - Metallgestaltung",
+				"bezeichnungM": "FS Gestaltung - Metallgestaltung",
+				"bezeichnungW": "FS Gestaltung -Metallgestaltung",
+				"gueltigVon": null,
+				"gueltigBis": 2012
+			} ]
+		}, {
+			"schluessel": "163",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1450000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "G",
+				"berufsfeld": "GS",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Gestaltung - Werbegestaltung",
+				"bezeichnungM": "FS Gestaltung - Werbegestaltung",
+				"bezeichnungW": "FS Gestaltung - Werbegestaltung",
+				"gueltigVon": null,
+				"gueltigBis": 2012
+			} ]
+		}, {
+			"schluessel": "164",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1451000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Agrartechnik",
+				"bezeichnungM": "FS Technik/Agrartechnik",
+				"bezeichnungW": "FS Technik/Agrartechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2012
+			} ]
+		}, {
+			"schluessel": "165",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1452000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": "TE",
+				"ebene2": "GD",
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Gebäudesystemtechnik",
+				"bezeichnungM": "FS Technik/Gebäudesystemtechnik",
+				"bezeichnungW": "FS Technik/Gebäudesystemtechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "166",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1453000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": "TE",
+				"ebene2": "GR",
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Gießereitechnik",
+				"bezeichnungM": "FS Technik/Gießereitechnik",
+				"bezeichnungW": "FS Technik/Gießereitechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "167",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1454000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Luftfahrttechnik",
+				"bezeichnungM": "FS Technik/Luftfahrttechnik",
+				"bezeichnungW": "FS Technik/Luftfahrttechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2016
+			} ]
+		}, {
+			"schluessel": "167",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 1455000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": "TE",
+				"ebene2": "LF",
+				"ebene3": "AI",
+				"bezeichnung": "FS Technik/Luftfahrttechnik - Avionik",
+				"bezeichnungM": "FS Technik/Luftfahrttechnik - Avionik",
+				"bezeichnungW": "FS Technik/Luftfahrttechnik - Avionik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "167",
+			"schluessel2": "02",
+			"historie": [ {
+				"id": 1456000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": "TE",
+				"ebene2": "LF",
+				"ebene3": "FT",
+				"bezeichnung": "FS Technik/Luftfahrttechnik - Flugwerk/Triebwerk",
+				"bezeichnungM": "FS Technik/Luftfahrttechnik - Flugwerk/Triebwerk",
+				"bezeichnungW": "FS Technik/Luftfahrttechnik - Flugwerk/Triebwerk",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "168",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1457000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": "TE",
+				"ebene2": "US",
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Umweltschutztechnik",
+				"bezeichnungM": "FS Technik/Umweltschutztechnik",
+				"bezeichnungW": "FS Technik/Umweltschutztechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "168",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 1458000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Umweltschutztechnik - Abfalltechnik",
+				"bezeichnungM": "FS Technik/Umweltschutztechnik - Abfalltechnik",
+				"bezeichnungW": "FS Technik/Umweltschutztechnik - Abfalltechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2016
+			} ]
+		}, {
+			"schluessel": "168",
+			"schluessel2": "02",
+			"historie": [ {
+				"id": 1459000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Umweltschutztechnik - Abwassertechnik",
+				"bezeichnungM": "FS Technik/Umweltschutztechnik - Abwassertechnik",
+				"bezeichnungW": "FS Technik/Umweltschutztechnik - Abwassertechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2016
+			} ]
+		}, {
+			"schluessel": "168",
+			"schluessel2": "03",
+			"historie": [ {
+				"id": 1460000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Umweltschutztechnik - Wasserversorgungstechnik",
+				"bezeichnungM": "FS Technik/Umweltschutztechnik - Wasserversorgungstechnik",
+				"bezeichnungW": "FS Technik/Umweltschutztechnik - Wasserversorgungstechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2011
+			} ]
+		}, {
+			"schluessel": "169",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1461000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "A",
+				"berufsfeld": "AW",
+				"ebene1": "AW",
+				"ebene2": "LW",
+				"ebene3": null,
+				"bezeichnung": "FS Agrarwirtschaft/Landwirtschaft",
+				"bezeichnungM": "FS Agrarwirtschaft/Landwirtschaft",
+				"bezeichnungW": "FS Agrarwirtschaft/Landwirtschaft",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "170",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1462000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "G",
+				"berufsfeld": "GS",
+				"ebene1": "GT",
+				"ebene2": "MO",
+				"ebene3": null,
+				"bezeichnung": "FS Gestaltung/Mode",
+				"bezeichnungM": "FS Gestaltung/Mode",
+				"bezeichnungW": "FS Gestaltung/Mode",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "171",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1463000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WI",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Wirtschaft/Bank- und Finanzdienstleistungen",
+				"bezeichnungM": "FS Wirtschaft/Bank- und Finanzdienstleistungen",
+				"bezeichnungW": "FS Wirtschaft/Bank- und Finanzdienstleistungen",
+				"gueltigVon": null,
+				"gueltigBis": 2011
+			} ]
+		}, {
+			"schluessel": "172",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1464000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": "TE",
+				"ebene2": "AU",
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Augenoptik",
+				"bezeichnungM": "FS Technik/Augenoptik",
+				"bezeichnungW": "FS Technik/Augenoptik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "173",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 1465000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Informatik - Technische Informatik",
+				"bezeichnungM": "FS Informatik - Technische Informatik",
+				"bezeichnungW": "FS Informatik - Technische Informatik",
+				"gueltigVon": null,
+				"gueltigBis": 2021
+			} ]
+		}, {
+			"schluessel": "173",
+			"schluessel2": "02",
+			"historie": [ {
+				"id": 1466000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WI",
+				"ebene1": "IF",
+				"ebene2": "WI",
+				"ebene3": null,
+				"bezeichnung": "FS Informatik/Wirtschaftsinformatik",
+				"bezeichnungM": "FS Informatik/Wirtschaftsinformatik",
+				"bezeichnungW": "FS Informatik/Wirtschaftsinformatik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "173",
+			"schluessel2": "03",
+			"historie": [ {
+				"id": 1467000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "IF",
+				"ebene2": "TI",
+				"ebene3": "CK",
+				"bezeichnung": "FS Informatik/Technische Informatik - Computer- und Kommunikationstechnik",
+				"bezeichnungM": "FS Informatik/Technische Informatik - Computer- und Kommunikationstechnik",
+				"bezeichnungW": "FS Informatik/Technische Informatik - Computer- und Kommunikationstechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "173",
+			"schluessel2": "04",
+			"historie": [ {
+				"id": 1468000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "IF",
+				"ebene2": "TI",
+				"ebene3": "CS",
+				"bezeichnung": "FS Informatik/Technische Informatik - CNC-Systemtechnik",
+				"bezeichnungM": "FS Informatik/Technische Informatik - CNC-Systemtechnik",
+				"bezeichnungW": "FS Informatik/Technische Informatik - CNC-Systemtechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "174",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1469000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": "TE",
+				"ebene2": "FT",
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Fahrzeugtechnik",
+				"bezeichnungM": "FS Technik/Fahrzeugtechnik",
+				"bezeichnungW": "FS Technik/Fahrzeugtechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "174",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 1470000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TE",
+				"ebene2": "FT",
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Fahrzeugtechnik - Elektromobilität",
+				"bezeichnungM": "FS Technik/Fahrzeugtechnik - Elektromobilität",
+				"bezeichnungW": "FS Technik/Fahrzeugtechnik - Elektromobilität",
+				"gueltigVon": 2022,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "175",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1471000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TE",
+				"ebene2": "PL",
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Automatisierungstechnik mit Schwerpunkt digitale Produktionstechnik",
+				"bezeichnungM": "FS Technik/Automatisierungstechnik mit Schwerpunkt digitale Produktionstechnik",
+				"bezeichnungW": "FS Technik/Automatisierungstechnik mit Schwerpunkt digitale Produktionstechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "176",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1472000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "GT",
+				"ebene2": "MM",
+				"ebene3": null,
+				"bezeichnung": "FS Gestaltung/Werbe- und Mediendesign",
+				"bezeichnungM": "FS Gestaltung/Werbe- und Mediendesign",
+				"bezeichnungW": "FS Gestaltung/Werbe- und Mediendesign",
+				"gueltigVon": 2022,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "999",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1473000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "X",
+				"berufsfeld": "XX",
+				"ebene1": "XX",
+				"ebene2": "XX",
+				"ebene3": "XX",
+				"bezeichnung": "Sonstiger Bildungsgang",
+				"bezeichnungM": "Sonstiger Bildungsgang",
+				"bezeichnungW": "Sonstiger Bildungsgang",
+				"gueltigVon": 2022,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "999",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 1474000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "X",
+				"berufsfeld": "XX",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Sonstiger Bildungsgang",
+				"bezeichnungM": "Sonstiger Bildungsgang",
+				"bezeichnungW": "Sonstiger Bildungsgang",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}, {
+			"schluessel": "999",
+			"schluessel2": "02",
+			"historie": [ {
+				"id": 1475000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "X",
+				"berufsfeld": "XX",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Sonstiger Bildungsgang",
+				"bezeichnungM": "Sonstiger Bildungsgang",
+				"bezeichnungW": "Sonstiger Bildungsgang",
+				"gueltigVon": null,
+				"gueltigBis": 2017
+			} ]
+		}
+	]
+}

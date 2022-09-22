@@ -1,0 +1,17 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [ {
+    "code" : "RE_10",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Religionslehre muss wenigstens von EF.1-Q1.2 durchgehend belegt werden. Als Ersatz kann Philosophie dienen, sofern Philosophie nicht die einzige von EF.1 bis Q2.2 durchgehend belegte Gesellschaftswissenschaft ist. In diesen Fällen muss ein weiteres Fach der Gesellschaftswissenschaften als Religionsersatz dienen."
+  }, {
+    "code" : "NW_FS_12_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Da von EF.1 bis Q2.2 weniger als zwei naturwissenschaftliche Fächer durchgehend belegt wurden, oder kein naturwissenschaftliches Fach schriftlich belegt wurde, liegt ausschließlich ein Sprachenschwerpunkt vor."
+  }, {
+    "code" : "LK1_13",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Die Abiturfächer müssen alle drei Aufgabenfelder abdecken. Insgesamt sind vier Abiturfächer zu belegen."
+  } ],
+  "log" : [ ]
+}

@@ -1,0 +1,21 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [ {
+    "code" : "GW_12",
+    "art" : "SCHRIFTLICHKEIT",
+    "beschreibung" : "Mindestens eine Gesellschaftswissenschaft oder Religionslehre muss von Q1.1 bis wenigstens Q2.1 schriftlich belegt werden."
+  }, {
+    "code" : "GE_10",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Geschichte muss von EF.1 bis wenigstens Q1.2 oder als Zusatzkurs (in der Regel von Q2.1 bis Q2.2) belegt werden."
+  }, {
+    "code" : "ABI_17",
+    "art" : "SCHRIFTLICHKEIT",
+    "beschreibung" : "Das 3. Abiturfach muss von Q1.1 bis Q2.2 schriftlich belegt sein."
+  }, {
+    "code" : "E1BEL_10",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Bis auf Literatur, vokal- und instrumentalpraktische Kurse, Zusatzkurse, Vertiefungsfächer und Projektkurse können keine Fächer hinzugewählt werden, die nicht schon ab EF.1 belegt wurden."
+  } ],
+  "log" : [ ]
+}

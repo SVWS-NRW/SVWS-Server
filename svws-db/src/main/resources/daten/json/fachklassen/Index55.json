@@ -1,0 +1,363 @@
+{
+	"index": 55,
+	"fachklassen": [
+		{
+			"schluessel": "101",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1711000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "A",
+				"berufsfeld": "AW",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Agrarwirtschaft",
+				"bezeichnungM": "Agrarwirtschaft",
+				"bezeichnungW": "Agrarwirtschaft",
+				"gueltigVon": null,
+				"gueltigBis": 2017
+			} ]
+		}, {
+			"schluessel": "102",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1712000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "BT",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Bautechnik",
+				"bezeichnungM": "Bautechnik",
+				"bezeichnungW": "Bautechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2015
+			} ]
+		}, {
+			"schluessel": "104",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1713000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "DT",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Drucktechnik",
+				"bezeichnungM": "Drucktechnik",
+				"bezeichnungW": "Drucktechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2015
+			} ]
+		}, {
+			"schluessel": "105",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1714000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "ET",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Elektrotechnik",
+				"bezeichnungM": "Elektrotechnik",
+				"bezeichnungW": "Elektrotechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2015
+			} ]
+		}, {
+			"schluessel": "106",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1715000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "E",
+				"berufsfeld": "EH",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Ernährung und Hauswirtschaft",
+				"bezeichnungM": "Ernährung und Hauswirtschaft",
+				"bezeichnungW": "Ernährung und Hauswirtschaft",
+				"gueltigVon": null,
+				"gueltigBis": 2015
+			} ]
+		}, {
+			"schluessel": "107",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1716000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "G",
+				"berufsfeld": "FR",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Farbtechnik und Raumgestaltung",
+				"bezeichnungM": "Farbtechnik und Raumgestaltung",
+				"bezeichnungW": "Farbtechnik und Raumgestaltung",
+				"gueltigVon": null,
+				"gueltigBis": 2015
+			} ]
+		}, {
+			"schluessel": "108",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1717000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "HT",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Holztechnik",
+				"bezeichnungM": "Holztechnik",
+				"bezeichnungW": "Holztechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2015
+			} ]
+		}, {
+			"schluessel": "109",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1718000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "IT",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Informations- und Telekommunikationstechnik",
+				"bezeichnungM": "Informations- und Telekommunikationstechnik",
+				"bezeichnungW": "Informations- und Telekommunikationstechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2015
+			} ]
+		}, {
+			"schluessel": "110",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1719000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "S",
+				"berufsfeld": "KP",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Körperpflege",
+				"bezeichnungM": "Körperpflege",
+				"bezeichnungW": "Körperpflege",
+				"gueltigVon": null,
+				"gueltigBis": 2015
+			} ]
+		}, {
+			"schluessel": "112",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1720000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "MM",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Medien/Medientechnologie",
+				"bezeichnungM": "Medien/Medientechnologie",
+				"bezeichnungW": "Medien/Medientechnologie",
+				"gueltigVon": null,
+				"gueltigBis": 2015
+			} ]
+		}, {
+			"schluessel": "113",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1721000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "MZ",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Medizintechnik",
+				"bezeichnungM": "Medizintechnik",
+				"bezeichnungW": "Medizintechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2015
+			} ]
+		}, {
+			"schluessel": "114",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1722000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "MT",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Metalltechnik",
+				"bezeichnungM": "Metalltechnik",
+				"bezeichnungW": "Metalltechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2015
+			} ]
+		}, {
+			"schluessel": "116",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1723000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "CP",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Physik,Chemie,Biologie",
+				"bezeichnungM": "Physik,Chemie,Biologie",
+				"bezeichnungW": "Physik,Chemie,Biologie",
+				"gueltigVon": null,
+				"gueltigBis": 2015
+			} ]
+		}, {
+			"schluessel": "117",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1724000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "S",
+				"berufsfeld": "SG",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Sozial- und Gesundheitswesen",
+				"bezeichnungM": "Sozial- und Gesundheitswesen",
+				"bezeichnungW": "Sozial- und Gesundheitswesen",
+				"gueltigVon": null,
+				"gueltigBis": 2015
+			} ]
+		}, {
+			"schluessel": "118",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1725000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TB",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Textiltechnik und Bekleidung",
+				"bezeichnungM": "Textiltechnik und Bekleidung",
+				"bezeichnungW": "Textiltechnik und Bekleidung",
+				"gueltigVon": null,
+				"gueltigBis": 2015
+			} ]
+		}, {
+			"schluessel": "120",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1726000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "VT",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Vermessungstechnik",
+				"bezeichnungM": "Vermessungstechnik",
+				"bezeichnungW": "Vermessungstechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2015
+			} ]
+		}, {
+			"schluessel": "121",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1727000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WV",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Wirtschaft und Verwaltung",
+				"bezeichnungM": "Wirtschaft und Verwaltung",
+				"bezeichnungW": "Wirtschaft und Verwaltung",
+				"gueltigVon": null,
+				"gueltigBis": 2015
+			} ]
+		}, {
+			"schluessel": "122",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1728000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "FT",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Fahrzeugtechnik",
+				"bezeichnungM": "Fahrzeugtechnik",
+				"bezeichnungW": "Fahrzeugtechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2015
+			} ]
+		}, {
+			"schluessel": "123",
+			"schluessel2": "04",
+			"historie": [ {
+				"id": 1729000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "ET",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Praktikanten/Praktikantinnen mit Förderverträgen - Elektrotechnik",
+				"bezeichnungM": "Praktikanten mit Förderverträgen - Elektrotechnik",
+				"bezeichnungW": "Praktikantinnen mit Förderverträgen - Elektrotechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2015
+			} ]
+		}, {
+			"schluessel": "123",
+			"schluessel2": "12",
+			"historie": [ {
+				"id": 1730000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "MT",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Praktikanten/Praktikantinnen mit Förderverträgen - Metalltechnik",
+				"bezeichnungM": "Praktikanten mit Förderverträgen - Metalltechnik",
+				"bezeichnungW": "Praktikantinnen mit Förderverträgen - Metalltechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2015
+			} ]
+		}, {
+			"schluessel": "999",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1731000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "X",
+				"berufsfeld": "XX",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Sonstiger Bildungsgang",
+				"bezeichnungM": "Sonstiger Bildungsgang",
+				"bezeichnungW": "Sonstiger Bildungsgang",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}
+	]
+}

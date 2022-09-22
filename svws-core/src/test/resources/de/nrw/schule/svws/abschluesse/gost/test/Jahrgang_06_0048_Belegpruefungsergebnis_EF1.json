@@ -1,0 +1,13 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [ {
+    "code" : "GW_11",
+    "art" : "SCHRIFTLICHKEIT",
+    "beschreibung" : "Mindestens eine Gesellschaftswissenschaft muss in EF.1 schriftlich belegt werden."
+  }, {
+    "code" : "GE_1_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Wird Geschichte nicht in EF.1 belegt, so muss Geschichte in der Qualifikationsphase als Zusatzkurs gewählt werden."
+  } ],
+  "log" : [ ]
+}

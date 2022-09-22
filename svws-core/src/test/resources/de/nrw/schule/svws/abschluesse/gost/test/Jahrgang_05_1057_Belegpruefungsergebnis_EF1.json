@@ -1,0 +1,77 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [ {
+    "code" : "D_10",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Deutsch muss in EF.1 schriftlich belegt werden."
+  }, {
+    "code" : "FS_21",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Eine fortgeführte Fremdsprache wurde in der Sprachenfolge als neu einsetzend eingetragen. Die Sprachenfolge ist fehlerhaft."
+  }, {
+    "code" : "FS_22_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Englisch wurde nicht in der Sprachenfolge eingetragen. Bitte Prüfen Sie die Sprachenfolge auf Korrektheit."
+  }, {
+    "code" : "FS_18",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Mindestens eine in der Sekundarstufe I begonnene Fremdsprache muss in EF.1 schriftlich belegt werden."
+  }, {
+    "code" : "FS_14",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Wurde bisher keine 2. Fremdsprache erlernt, muss eine neu einsetzende Fremdsprache in EF.1 schriftlich belegt werden."
+  }, {
+    "code" : "KU_MU_10",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Mindestens eines der Fächer Kunst oder Musik muss in EF.1 belegt werden"
+  }, {
+    "code" : "GW_10",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Mindestens eine Gesellschaftswissenschaft muss in EF.1 belegt werden und durchgängig belegbar sein."
+  }, {
+    "code" : "GW_11",
+    "art" : "SCHRIFTLICHKEIT",
+    "beschreibung" : "Mindestens eine Gesellschaftswissenschaft muss in EF.1 schriftlich belegt werden."
+  }, {
+    "code" : "GE_1_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Wird Geschichte nicht in EF.1 belegt, so muss Geschichte in der Qualifikationsphase als Zusatzkurs gewählt werden."
+  }, {
+    "code" : "SW_1_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Wird Sozialwissenschaften nicht in EF.1 belegt, so muss Sozialwissenschaften in der Qualifikationsphase als Zusatzkurs gewählt werden."
+  }, {
+    "code" : "RE_10",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Ein Religionskurs muss in EF.1 belegt werden. Als Ersatz kann Philosophie belegt werden, sofern eine weitere Gesellschaftswissenschaft bis zum Abitur belegt wird."
+  }, {
+    "code" : "M_10",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Mathematik muss in EF.1 schriftlich belegt werden."
+  }, {
+    "code" : "NW_10",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Mindestens eines der Fächer Physik, Chemie oder Biologie muss in EF.1 belegt werden und durchgängig belegbar sein."
+  }, {
+    "code" : "NW_11",
+    "art" : "SCHRIFTLICHKEIT",
+    "beschreibung" : "Mindestens eines der Fächer Physik, Chemie oder Biologie muss in EF.1 schriftlich belegt werden."
+  }, {
+    "code" : "SP_10",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Sport muss in EF.1 belegt werden."
+  }, {
+    "code" : "NW_FS_10",
+    "art" : "BELEGUNG",
+    "beschreibung" : "In EF.1 müssen entweder zwei Naturwissenschaften oder zwei Fremdsprachen belegt werden. Hierbei ist eine Naturwissenschaft oder sind zwei Fremdsprachen schriftlich zu belegen. Zu den Fremdsprachen zählen auch in einer weiteren Fremdsprache unterrichtete Sachfächer."
+  }, {
+    "code" : "ANZ_10",
+    "art" : "BELEGUNG",
+    "beschreibung" : "In EF.1 müssen mindestens 10 Kurse belegt werden. Bei der Kurszählung werden Vertiefungskurse nicht mitgezählt."
+  }, {
+    "code" : "ANZ_11_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Die Gesamtstundenzahl sollte 32 bis 36 Stunden betragen, um eine gleichmäßige Stundenbelastung in der Oberstufe zu gewährleisten."
+  } ],
+  "log" : [ ]
+}

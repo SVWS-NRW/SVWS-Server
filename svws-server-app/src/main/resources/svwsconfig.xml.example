@@ -1,0 +1,65 @@
+<!-- Diese Datei beinhaltet die Konfiguration der SVWS-Server-Umgebung. Sie trägt den Namen "svwsconfig.xml" und muss im Ausführungsverzeichnis 
+     des Servers oder im Home-Verzeichnis des den Server ausführenden Benutzers liegen -->
+<SVWSKonfiguration>
+
+	<!-- Deaktiviert den Zugriff auf Schema-Operation, die einen root-Zugriff auf die SVWS-DB benötigen - Default: false -->
+	<DisableDBRootAccess>false</DisableDBRootAccess>
+	
+	<!-- Gibt an, ob die Auto Updates auf alle Schemata zu Beginn des Server-Starts deaktiviert werden sollen - Default: false -->
+	<DisableAutoUpdates>false</DisableAutoUpdates>
+
+	<!-- Setzt HTTP v1.1 statt v2 als Default-HTTP-Version - Default: false -->
+	<UseHTTPDefaultv11>false</UseHTTPDefaultv11>
+	
+	<!-- Gibt den HTTPS-Port des Servers an -->
+	<PortHTTPS>443</PortHTTPS>
+	
+	<!-- Aktiviert die Nutzung der CORS-Header - Default: true -->
+	<UseCORSHeader>true</UseCORSHeader>
+	
+	<!-- Gibt den Pfad an, wo die Dateien des Web-Clients liegen -->
+	<ClientPath>webclient/build</ClientPath>
+	
+	<!-- Gibt an, ob Logging in Dateien aktiviert werden soll. -->
+	<LoggingEnabled>true</LoggingEnabled>
+	
+	<!-- Gibt den Pfad an, der für das Logging verwendet werden soll. Ist keiner angegeben, so wird das aktuelle Verzeichnis verwendet. -->
+	<LoggingPath>logs</LoggingPath>	
+
+	<!-- Gibt den Pfad an, der für temporäre Dateien verwendet werden soll. Ist keiner angegeben, so wird tmp im aktuellen Verzeichnis verwendet. -->
+	<TempPath>tmp</TempPath>
+		
+	<!-- Gibt den Pfad zum Keystore an, der für die TLS-Verbindung genutzt wird. -->
+	<TLSKeystorePath>.</TLSKeystorePath>
+
+	<!-- Gibt das Kennwort an, welches für die TLS-Verbindung genutzt wird. -->
+	<TLSKeystorePassword>svwskeystore</TLSKeystorePassword>
+		
+	<!-- Beinhaltet die Datenbank-Konfiguration. Für den Zugriff auf mehrere Schemata können mehrere SchemaKonfigurations-Einträge angelegt werden -->
+	<DBKonfiguration>
+
+		<!-- Gibt das verwendete DBMS an (gültige Werte: MARIA_DB, MYSQL oder MSSQL) -->
+		<dbms>MARIA_DB</dbms>
+		<location>localhost</location>
+		
+		<!-- Gibt das Default-Schema an, sofern mehr als ein Schema definiert wurde -->
+		<defaultschema>svws</defaultschema>
+	
+		<SchemaKonfiguration>
+			<!-- Der Name des Datenbank-Schemas für den SVWS-Benutzer -->
+			<name>svws</name>
+			
+			<!-- Gibt an, ob der SVWS-Anmeldename und das zugehörige Kennwort auch für die Datenbankverbindung genutzt wird 
+			     oder nicht. Erfordert das Anlegen eines Datenbankbenutzers für jeden SVWS-Benutzer -->
+			<svwslogin>false</svwslogin>
+			
+			<!-- Der Benutzername für die Verbindung zur Datenbank, falls nicht der SVWS-Benutzername dafür genutzt wird - siehe svwslogin -->
+			<username>schildadmin</username>
+			
+			<!-- Das Kennwort für die Verbindung zur Datenbank, falls nicht das Kennwort des SVWS-Benutzer dafür genutzt wird - siehe svwslogin -->
+			<password>schildadmin</password>
+		</SchemaKonfiguration>
+	
+	</DBKonfiguration>
+	
+</SVWSKonfiguration>

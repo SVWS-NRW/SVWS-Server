@@ -1,0 +1,17 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [ {
+    "code" : "LI_IV_10",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Die Fächer Literatur, instrumentalpraktischer bzw. vokalpraktischer Grundkurs dürfen maximal in zwei aufeinanderfolgenden Halbjahren belegt werden."
+  }, {
+    "code" : "KU_MU_10",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Mindestens eines der Fächer Kunst oder Musik muss von EF.1 bis wenigstens Q1.2 durchgehend belegt werden. In der Qualifikationsphase kann auch alternativ Literatur, ein vokalpraktisches oder ein instrumentalpraktisches Fach mit zwei Kursen belegt werden."
+  }, {
+    "code" : "ANZ_11_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Die Stundenbandbreite sollte pro Halbjahr 32 bis 36 Stunden betragen, um eine gleichmäßige Stundenbelastung zu gewährleisten."
+  } ],
+  "log" : [ ]
+}

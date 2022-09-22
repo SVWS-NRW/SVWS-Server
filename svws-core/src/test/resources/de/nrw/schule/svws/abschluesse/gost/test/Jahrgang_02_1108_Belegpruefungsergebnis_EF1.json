@@ -1,0 +1,13 @@
+{
+  "erfolgreich" : true,
+  "fehlercodes" : [ {
+    "code" : "L_10_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Um das Latinum zu erlangen muss Latein in EF.1 schriftlich fortgeführt werden."
+  }, {
+    "code" : "GE_1_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Wird Geschichte nicht in EF.1 belegt, so muss Geschichte in der Qualifikationsphase als Zusatzkurs gewählt werden."
+  } ],
+  "log" : [ ]
+}

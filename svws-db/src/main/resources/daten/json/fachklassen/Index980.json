@@ -1,0 +1,23 @@
+{
+	"index": 980,
+	"fachklassen": [
+		{
+			"schluessel": "998",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 2106000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "O",
+				"berufsfeld": "OH",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Berufsgrundbildung - ohne weitere Zuordnung",
+				"bezeichnungM": "Berufsgrundbildung - ohne weitere Zuordnung",
+				"bezeichnungW": "Berufsgrundbildung - ohne weitere Zuordnung",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}
+	]
+}

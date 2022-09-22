@@ -1,0 +1,22 @@
+plugins {
+	id 'java'
+	id 'groovy-gradle-plugin'
+}
+
+dependencies {
+	implementation gradleApi()
+	implementation localGroovy()
+}
+
+gradlePlugin {
+    plugins {
+        nodePlugin {
+            id = 'svws.gradle.node.plugin'
+            implementationClass = 'svws.gradle.node.NodePlugin'
+        }
+        javalibPlugin {
+            id = 'svws.gradle.javalib.plugin'
+            implementationClass = 'svws.gradle.java.JavaLibPlugin'
+        }
+    }
+}

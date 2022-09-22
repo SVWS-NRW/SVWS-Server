@@ -1,0 +1,25 @@
+{
+	"compilerOptions": {
+		"composite": false,
+		"isolatedModules": true,
+		"skipLibCheck": true,
+		"useDefineForClassFields": true,
+		"target": "esnext",
+		"module": "esnext",
+		"moduleResolution": "node",
+		"strict": true,
+		"importHelpers": true,
+		"noImplicitAny": true,
+		"esModuleInterop": true,
+		"allowSyntheticDefaultImports": true,
+		"sourceMap": true,
+		"jsx": "preserve",
+		"declaration": true,
+		"declarationMap": true,
+		"lib": ["esnext", "dom"],
+		"allowJs": true,
+		"checkJs": true,
+		"newLine": "lf",
+		"types": ["unplugin-icons/types/vue", "vite/client"]
+	}
+}

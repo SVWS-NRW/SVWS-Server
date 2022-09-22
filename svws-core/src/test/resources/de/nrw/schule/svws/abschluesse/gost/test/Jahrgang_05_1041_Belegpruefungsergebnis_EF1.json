@@ -1,0 +1,17 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [ {
+    "code" : "FS_22_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Englisch wurde nicht in der Sprachenfolge eingetragen. Bitte Prüfen Sie die Sprachenfolge auf Korrektheit."
+  }, {
+    "code" : "FS_25",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Es wurde keine fortführbare Fremdsprache in der Sprachbelegung gefunden. Bitte prüfen Sie die Sprachenfolge."
+  }, {
+    "code" : "NW_FS_13_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Da in EF.1 weniger als zwei Fremdsprachen schriftlich belegt wurden, müssen zwei Naturwissenschaften bis Q2.2 belegt, davon mindestens eine schriftlich belegt werden."
+  } ],
+  "log" : [ ]
+}

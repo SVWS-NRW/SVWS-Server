@@ -1,0 +1,37 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [ {
+    "code" : "FS_22_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Englisch wurde nicht in der Sprachenfolge eingetragen. Bitte Prüfen Sie die Sprachenfolge auf Korrektheit."
+  }, {
+    "code" : "FS_19_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Eine erfolgreiche Feststellungsprüfung in der Muttersprache am Ende der Sekundarstufe I und am Ende von EF.2 ist notwendig, um die Fremdsprachenbedingungen zu erfüllen."
+  }, {
+    "code" : "NW_FS_13_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Da von EF.1 bis Q2.2 weniger als zwei Fremdsprachen schriftlich belegt wurden, liegt ausschließlich ein naturwissenschaftlicher Schwerpunkt vor."
+  }, {
+    "code" : "ANZ_11_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Die Stundenbandbreite sollte pro Halbjahr 32 bis 36 Stunden betragen, um eine gleichmäßige Stundenbelastung zu gewährleisten."
+  }, {
+    "code" : "ANZ_12",
+    "art" : "BELEGUNG",
+    "beschreibung" : "In der Qualifikationsphase müssen mindestens 38 anrechenbare Kurse belegt werden."
+  }, {
+    "code" : "WST_20",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Die durchschnittliche Wochenstundenzahl muss in der Einführungsphase mindestens 34 Stunden betragen."
+  }, {
+    "code" : "WST_21",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Die durchschnittliche Wochenstundenzahl muss in der Qualifikationsphase mindestens 34 Stunden betragen."
+  }, {
+    "code" : "STD_10",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Der Pflichtunterricht darf 102 Stunden nicht unterschreiten."
+  } ],
+  "log" : [ ]
+}

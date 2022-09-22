@@ -1,0 +1,92 @@
+package de.nrw.schule.svws.api.server;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
+import de.nrw.schule.svws.api.OpenAPIApplication;
+import de.nrw.schule.svws.core.data.abschluss.GEAbschlussFaecher;
+import de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenz;
+import de.nrw.schule.svws.data.ge.DataGEAbschlussFaecher;
+import de.nrw.schule.svws.db.DBEntityManager;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
+/**
+ * Die Klasse spezifiziert die OpenAPI-Schnittstelle für den Zugriff auf Schülerdaten aus der SVWS-Datenbank in Bezug auf die SekI-Daten der Gesamtschule.
+ * Ein Zugriff erfolgt über den Pfad https://{Hostname}/db/{schema}/schueler/ge/...
+ */
+@Path("/db/{schema}/gesamtschule")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
+@Tag(name = "Server")	
+public class APIGesamtschule {
+	
+    /**
+     * Die OpenAPI-Methode für die Abfrage der Leistungsdaten aus dem aktuellen Abschnitt zu der ID eines Schüler im angegebenen Schema, um die Prognose zu berechnen.
+     *  
+     * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param id            die ID des Schüler, für den die Leistungsdaten ausgelesen werden sollen
+     * @param request       die Informationen zur HTTP-Anfrage
+     * 
+     * @return              die Liste der Fächer mit ID des Datenbankschemas
+     */
+    @GET
+    @Path("/schueler/{id : \\d+}/prognose_leistungsdaten")
+    @Operation(summary = "Liefert zu der ID des Schülers die zugehörigen Leistungsdaten des aktuellen Lernabschnittes in Bezug auf die Prognose- bzw. Abschlussberechnung in der Sek I der Gesamtschule.",
+    description = "Liest die Leistungsdaten des aktuellen Lernabschnittes in Bezug auf die Prognose- bzw. Abschlussberechnung in der Sek I "
+    		    + "der Gesamtschule des Schülers mit der angegebene ID aus der Datenbank und liefert diese zurück. "
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Leistungsdaten besitzt.")
+    @ApiResponse(responseCode = "200", description = "Die Leistungsdaten des Schülers",
+                 content = @Content(mediaType = "application/json",
+                 schema = @Schema(implementation = GEAbschlussFaecher.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Leistungsdaten anzusehen.")
+    @ApiResponse(responseCode = "404", description = "Kein Schüler-Eintrag mit der angegebenen ID gefunden")
+    public Response getGesamtschuleSchuelerPrognoseLeistungsdaten(@PathParam("schema") String schema, @PathParam("id") long id, 
+    		                                               @Context HttpServletRequest request) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN)) {
+    		return (new DataGEAbschlussFaecher(conn)).get(id);
+    	}
+    }
+
+
+    
+    /**
+     * Die OpenAPI-Methode für die Abfrage der Leistungsdaten aus dem angegebenen Abschnitt zu der ID eines Schüler im angegebenen Schema, um die Prognose zu berechnen.
+     *  
+     * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param id            die ID des Schüler, für den die Leistungsdaten ausgelesen werden sollen
+     * @param abschnittID   der Schuljahresabschnitt, für den die Leistungsdaten ausgelesen werden sollen
+     * @param request       die Informationen zur HTTP-Anfrage
+     * 
+     * @return              die Liste der Fächer mit ID des Datenbankschemas
+     */
+    @GET
+    @Path("/schueler/{id : \\d+}/prognose_leistungsdaten/abschnitt/{abschnittID : \\d+}")
+    @Operation(summary = "Liefert zu der ID des Schülers die zugehörigen Leistungsdaten des angegegebenen Lernabschnittes in Bezug auf die Prognose- bzw. Abschlussberechnung in der Sek I der Gesamtschule.",
+    description = "Liest die Leistungsdaten des angegebenen Lernabschnittes in Bezug auf die Prognose- bzw. Abschlussberechnung in der Sek I "
+    		    + "der Gesamtschule des Schülers mit der angegebene ID aus der Datenbank und liefert diese zurück. "
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Leistungsdaten besitzt.")
+    @ApiResponse(responseCode = "200", description = "Die Leistungsdaten des Schülers",
+                 content = @Content(mediaType = "application/json",
+                 schema = @Schema(implementation = GEAbschlussFaecher.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Leistungsdaten anzusehen.")
+    @ApiResponse(responseCode = "404", description = "Kein Schüler-Eintrag mit der angegebenen ID gefunden")
+    public Response getGesamtschuleSchuelerPrognosLeistungsdatenFuerAbschnitt(@PathParam("schema") String schema, @PathParam("id") long id,
+    																@PathParam("abschnittID") long abschnittID,
+    		                                                        @Context HttpServletRequest request) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN)) {
+    		return (new DataGEAbschlussFaecher(conn)).getByAbschnitt(id, abschnittID);
+    	}
+    }
+    
+}

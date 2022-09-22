@@ -1,0 +1,13 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [ {
+    "code" : "VF_10",
+    "art" : "BELEGUNG",
+    "beschreibung" : "In der Einführungsphase können maximal vier Vertiefungskurse belegt werden."
+  }, {
+    "code" : "ANZ_11_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Die Stundenbandbreite sollte pro Halbjahr 32 bis 36 Stunden betragen, um eine gleichmäßige Stundenbelastung zu gewährleisten."
+  } ],
+  "log" : [ ]
+}

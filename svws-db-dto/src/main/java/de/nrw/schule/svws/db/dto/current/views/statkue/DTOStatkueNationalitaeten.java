@@ -1,0 +1,133 @@
+package de.nrw.schule.svws.db.dto.current.views.statkue;
+
+import de.nrw.schule.svws.db.DBEntityManager;
+
+import jakarta.persistence.Cacheable;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.NamedQuery;
+import jakarta.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+/**
+ * Diese Klasse dient als DTO für die Datenbank-View Statkue_Nationalitaeten.
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
+ */
+@Entity
+@Cacheable(DBEntityManager.use_db_caching)
+@Table(name = "Statkue_Nationalitaeten")
+@NamedQuery(name="DTOStatkueNationalitaeten.all", query="SELECT e FROM DTOStatkueNationalitaeten e")
+@NamedQuery(name="DTOStatkueNationalitaeten.schluessel", query="SELECT e FROM DTOStatkueNationalitaeten e WHERE e.Schluessel = :value")
+@NamedQuery(name="DTOStatkueNationalitaeten.schluessel.multiple", query="SELECT e FROM DTOStatkueNationalitaeten e WHERE e.Schluessel IN :value")
+@NamedQuery(name="DTOStatkueNationalitaeten.land", query="SELECT e FROM DTOStatkueNationalitaeten e WHERE e.Land = :value")
+@NamedQuery(name="DTOStatkueNationalitaeten.land.multiple", query="SELECT e FROM DTOStatkueNationalitaeten e WHERE e.Land IN :value")
+@NamedQuery(name="DTOStatkueNationalitaeten.nationalitaet", query="SELECT e FROM DTOStatkueNationalitaeten e WHERE e.Nationalitaet = :value")
+@NamedQuery(name="DTOStatkueNationalitaeten.nationalitaet.multiple", query="SELECT e FROM DTOStatkueNationalitaeten e WHERE e.Nationalitaet IN :value")
+@NamedQuery(name="DTOStatkueNationalitaeten.flag", query="SELECT e FROM DTOStatkueNationalitaeten e WHERE e.Flag = :value")
+@NamedQuery(name="DTOStatkueNationalitaeten.flag.multiple", query="SELECT e FROM DTOStatkueNationalitaeten e WHERE e.Flag IN :value")
+@NamedQuery(name="DTOStatkueNationalitaeten.geaendert", query="SELECT e FROM DTOStatkueNationalitaeten e WHERE e.geaendert = :value")
+@NamedQuery(name="DTOStatkueNationalitaeten.geaendert.multiple", query="SELECT e FROM DTOStatkueNationalitaeten e WHERE e.geaendert IN :value")
+@NamedQuery(name="DTOStatkueNationalitaeten.beginn", query="SELECT e FROM DTOStatkueNationalitaeten e WHERE e.Beginn = :value")
+@NamedQuery(name="DTOStatkueNationalitaeten.beginn.multiple", query="SELECT e FROM DTOStatkueNationalitaeten e WHERE e.Beginn IN :value")
+@NamedQuery(name="DTOStatkueNationalitaeten.ende", query="SELECT e FROM DTOStatkueNationalitaeten e WHERE e.Ende = :value")
+@NamedQuery(name="DTOStatkueNationalitaeten.ende.multiple", query="SELECT e FROM DTOStatkueNationalitaeten e WHERE e.Ende IN :value")
+@NamedQuery(name="DTOStatkueNationalitaeten.gueltigvon", query="SELECT e FROM DTOStatkueNationalitaeten e WHERE e.gueltigVon = :value")
+@NamedQuery(name="DTOStatkueNationalitaeten.gueltigvon.multiple", query="SELECT e FROM DTOStatkueNationalitaeten e WHERE e.gueltigVon IN :value")
+@NamedQuery(name="DTOStatkueNationalitaeten.gueltigbis", query="SELECT e FROM DTOStatkueNationalitaeten e WHERE e.gueltigBis = :value")
+@NamedQuery(name="DTOStatkueNationalitaeten.gueltigbis.multiple", query="SELECT e FROM DTOStatkueNationalitaeten e WHERE e.gueltigBis IN :value")
+@NamedQuery(name="DTOStatkueNationalitaeten.primaryKeyQuery", query="SELECT e FROM DTOStatkueNationalitaeten e WHERE e.Schluessel = ?1")
+@JsonPropertyOrder({"Schluessel","Land","Nationalitaet","Flag","geaendert","Beginn","Ende","gueltigVon","gueltigBis"})
+public class DTOStatkueNationalitaeten {
+
+	/** Der Statisik-Schlüssel (DESTATIS) */
+	@Id
+	@Column(name = "Schluessel")
+	@JsonProperty
+	public String Schluessel;
+
+	/** Die Bezeichnung des Landes */
+	@Column(name = "Land")
+	@JsonProperty
+	public String Land;
+
+	/** Die Bezeichnung der Staatsangehörigkeit */
+	@Column(name = "Nationalitaet")
+	@JsonProperty
+	public String Nationalitaet;
+
+	/** Simulation des Flags aus der Statkue */
+	@Column(name = "Flag")
+	@JsonProperty
+	public String Flag;
+
+	/** Datum der letzten Änderung (hier zur Kompatibilität vorhanden) */
+	@Column(name = "geaendert")
+	@JsonProperty
+	public String geaendert;
+
+	/** Beginn der Gültigkeit (hier zur Kompatibilität vorhanden) */
+	@Column(name = "Beginn")
+	@JsonProperty
+	public String Beginn;
+
+	/** Ende der Gültigkeit (hier zur Kompatibilität vorhanden) */
+	@Column(name = "Ende")
+	@JsonProperty
+	public String Ende;
+
+	/** Gibt die Gültigkeit ab welchem Schuljahr an */
+	@Column(name = "gueltigVon")
+	@JsonProperty
+	public String gueltigVon;
+
+	/** Gibt die Gültigkeit bis zu welchem Schuljahr an */
+	@Column(name = "gueltigBis")
+	@JsonProperty
+	public String gueltigBis;
+
+	/**
+	 * Erstellt ein neues Objekt der Klasse DTOStatkueNationalitaeten ohne eine Initialisierung der Attribute.
+	 */
+	private DTOStatkueNationalitaeten() {
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		DTOStatkueNationalitaeten other = (DTOStatkueNationalitaeten) obj;
+		if (Schluessel == null) {
+			if (other.Schluessel != null)
+				return false;
+		} else if (!Schluessel.equals(other.Schluessel))
+			return false;
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((Schluessel == null) ? 0 : Schluessel.hashCode());
+		return result;
+	}
+
+
+	/**
+	 * Konvertiert das Objekt in einen String. Dieser kann z.B. für Debug-Ausgaben genutzt werden.
+	 *
+	 * @return die String-Repräsentation des Objektes
+	 */
+	@Override
+	public String toString() {
+		return "DTOStatkueNationalitaeten(Schluessel=" + this.Schluessel + ", Land=" + this.Land + ", Nationalitaet=" + this.Nationalitaet + ", Flag=" + this.Flag + ", geaendert=" + this.geaendert + ", Beginn=" + this.Beginn + ", Ende=" + this.Ende + ", gueltigVon=" + this.gueltigVon + ", gueltigBis=" + this.gueltigBis + ")";
+	}
+
+}

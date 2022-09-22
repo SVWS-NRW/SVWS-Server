@@ -1,0 +1,9 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [ {
+    "code" : "E1BEL_10",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Bis auf Literatur, vokal- und instrumentalpraktische Kurse, Zusatzkurse, Vertiefungsfächer und Projektkurse können keine Fächer hinzugewählt werden, die nicht schon ab EF.1 belegt wurden."
+  } ],
+  "log" : [ ]
+}

@@ -1,0 +1,10 @@
+ID;SF;Kurztext;Langtext;Beginn;Ende;Sort;geaendert;gueltigVon;gueltigBis
+1;;H;Hauptschule;1900-01-01 00:00:00.000;;100;;;
+2;;R;Realschule;1900-01-01 00:00:00.000;;300;2014-04-03 13:31:03.000;;
+3;;GY;Gymnasium;1900-01-01 00:00:00.000;;700;2014-04-03 13:31:10.000;;
+4;;GE;Gesamtschule;1900-01-01 00:00:00.000;;500;2014-04-03 13:31:15.000;;
+5;;FW;Freie Waldorfschule / Hiberniaschule;1900-01-01 00:00:00.000;;800;2014-04-03 13:31:18.000;;
+6;;S;Förderschule / Schule für Kranke;1900-01-01 00:00:00.000;;200;2014-04-03 13:31:22.000;;
+7;;SK;Sekundarschule;;;400;2014-04-03 13:31:37.000;;
+8;;GM;Gemeinschaftsschule;;;600;2014-04-03 13:31:50.000;;
+9;;PS;Schulversuch Primus;;;700;2014-04-03 13:32:17.000;;

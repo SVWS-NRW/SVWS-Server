@@ -1,0 +1,9 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [ {
+    "code" : "ZK_13",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Zusatzkurse dürfen nur einmal pro Fach belegt werden und können nicht in einem bilingualen Fach gewählt werden."
+  } ],
+  "log" : [ ]
+}

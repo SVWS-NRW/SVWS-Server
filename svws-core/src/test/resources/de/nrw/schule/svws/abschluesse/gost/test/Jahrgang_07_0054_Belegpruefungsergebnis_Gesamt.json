@@ -1,0 +1,33 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [ {
+    "code" : "RE_10",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Religionslehre muss wenigstens von EF.1-Q1.2 durchgehend belegt werden. Als Ersatz kann Philosophie dienen, sofern Philosophie nicht die einzige von EF.1 bis Q2.2 durchgehend belegte Gesellschaftswissenschaft ist. In diesen Fällen muss ein weiteres Fach der Gesellschaftswissenschaften als Religionsersatz dienen."
+  }, {
+    "code" : "PF_10",
+    "art" : "BELEGUNG",
+    "beschreibung" : "In der Einführungsphase können keine Projektkurse belegt werden."
+  }, {
+    "code" : "PF_13",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Ein Projektkurs kann nur belegt werden, wenn in der Qualifikationsphase zeitgleich oder vorab auch sein Leitfach zwei Halbjahre lang belegt wurde."
+  }, {
+    "code" : "ANZ_11_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Die Stundenbandbreite sollte pro Halbjahr 32 bis 36 Stunden betragen, um eine gleichmäßige Stundenbelastung zu gewährleisten."
+  }, {
+    "code" : "WST_21",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Die durchschnittliche Wochenstundenzahl muss in der Qualifikationsphase mindestens 34 Stunden betragen."
+  }, {
+    "code" : "STD_11_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Der Pflichtunterricht darf nur in begründeten Ausnahmefällen 102 Stunden unterschreiten."
+  }, {
+    "code" : "E1BEL_10",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Bis auf Literatur, vokal- und instrumentalpraktische Kurse, Zusatzkurse, Vertiefungsfächer und Projektkurse können keine Fächer hinzugewählt werden, die nicht schon ab EF.1 belegt wurden."
+  } ],
+  "log" : [ ]
+}

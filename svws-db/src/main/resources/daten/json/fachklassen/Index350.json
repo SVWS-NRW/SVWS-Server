@@ -1,0 +1,74 @@
+{
+	"index": 350,
+	"fachklassen": [
+		{
+			"schluessel": "087",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1625000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "G",
+				"berufsfeld": "KG",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Berufsabschluss/ZQ. 3j. (VZ) - Kunst/Musik/Gestaltung/Techn. Assistent  - Kosm.",
+				"bezeichnungM": "Berufsabschluss/ZQ. 3j. (VZ) - Kunst/Musik/Gestaltung/Techn. Assistent  - Kosm.",
+				"bezeichnungW": "Berufsabschluss/ZQ. 3j. (VZ) - Kunst/Musik/Gestaltung/Techn. Assistent  - Kosm.",
+				"gueltigVon": null,
+				"gueltigBis": 2005
+			} ]
+		}, {
+			"schluessel": "088",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1626000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "L",
+				"berufsfeld": "SL",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Berufsabschluss/ZQ. 3j. (VZ) - Sprache u. Literatur/Fremdsprachenkorrespondent/-in",
+				"bezeichnungM": "Berufsabschluss/ZQ. 3j. (VZ) - Sprache u. Literatur/Fremdsprachenkorrespondent",
+				"bezeichnungW": "Berufsabschluss/ZQ. 3j. (VZ) - Sprache u. Literatur/Fremdsprachenkorrespondentin",
+				"gueltigVon": null,
+				"gueltigBis": 2012
+			} ]
+		}, {
+			"schluessel": "089",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1627000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "S",
+				"berufsfeld": "ES",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Berufsabschluss/ZQ. 3j. (VZ) - Erziehung u. Soziales/Erzieher/-in",
+				"bezeichnungM": "Berufsabschluss/ZQ. 3j. (VZ) - Erziehung u. Soziales/Erzieher",
+				"bezeichnungW": "Berufsabschluss/ZQ. 3j. (VZ) - Erziehung u. Soziales/Erzieherin",
+				"gueltigVon": null,
+				"gueltigBis": 2012
+			} ]
+		}, {
+			"schluessel": "090",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1628000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TB",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Berufsabschluss/ZQ. 3j. (VZ) - Textil- u. Bekleidungstechnik/Damenschneider/-in",
+				"bezeichnungM": "Berufsabschluss/ZQ. 3j. (VZ) - Textil- u. Bekleidungstechnik/Damenschneider",
+				"bezeichnungW": "Berufsabschluss/ZQ. 3j. (VZ) - Textil- u. Bekleidungstechnik/Damenschneiderin",
+				"gueltigVon": null,
+				"gueltigBis": 2012
+			} ]
+		}
+	]
+}

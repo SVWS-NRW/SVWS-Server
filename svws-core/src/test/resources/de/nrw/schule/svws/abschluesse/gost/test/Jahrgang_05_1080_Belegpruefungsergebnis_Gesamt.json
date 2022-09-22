@@ -1,0 +1,21 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [ {
+    "code" : "GW_12",
+    "art" : "SCHRIFTLICHKEIT",
+    "beschreibung" : "Mindestens eine Gesellschaftswissenschaft oder Religionslehre muss von Q1.1 bis wenigstens Q2.1 schriftlich belegt werden."
+  }, {
+    "code" : "NW_FS_10",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Von EF.1 bis Q2.2 müssen entweder zwei Naturwissenschaften oder zwei Fremdsprachen durchgehend gewählt werden. Hierbei ist eine Naturwissenschaft oder sind zwei Fremdsprachen schriftlich zu belegen. Zu den Fremdsprachen zählen auch in einer weiteren Fremdsprache unterrichtete Sachfächer."
+  }, {
+    "code" : "LK1_13",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Die Abiturfächer müssen alle drei Aufgabenfelder abdecken. Insgesamt sind vier Abiturfächer zu belegen."
+  }, {
+    "code" : "ANZ_11_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Die Stundenbandbreite sollte pro Halbjahr 32 bis 36 Stunden betragen, um eine gleichmäßige Stundenbelastung zu gewährleisten."
+  } ],
+  "log" : [ ]
+}

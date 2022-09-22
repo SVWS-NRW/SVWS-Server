@@ -1,0 +1,29 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [ {
+    "code" : "BIL_11_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Im bilingualen Bildungsgang werden in EF.1 und EF.2 in der Regel zwei bilinguale Sachfächer belegt."
+  }, {
+    "code" : "BIL_12",
+    "art" : "SCHRIFTLICHKEIT",
+    "beschreibung" : "Im bilingualen Bildungsgang muss ein bilinguales Sachfach durchgehend von Q1.1 bis Q2.1 schriftlich belegt werden."
+  }, {
+    "code" : "BIL_13",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Ein bilinguales Sachfach muss unter den Abiturfächern sein."
+  }, {
+    "code" : "NW_FS_13_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Da von EF.1 bis Q2.2 weniger als zwei Fremdsprachen schriftlich belegt wurden, liegt ausschließlich ein naturwissenschaftlicher Schwerpunkt vor."
+  }, {
+    "code" : "LK1_13",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Die Abiturfächer müssen alle drei Aufgabenfelder abdecken. Insgesamt sind vier Abiturfächer zu belegen."
+  }, {
+    "code" : "ANZ_11_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Die Stundenbandbreite sollte pro Halbjahr 32 bis 36 Stunden betragen, um eine gleichmäßige Stundenbelastung zu gewährleisten."
+  } ],
+  "log" : [ ]
+}

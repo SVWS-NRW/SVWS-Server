@@ -1,0 +1,9 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [ {
+    "code" : "D_11",
+    "art" : "SCHRIFTLICHKEIT",
+    "beschreibung" : "Deutsch muss in EF.1 schriftlich belegt werden."
+  } ],
+  "log" : [ ]
+}

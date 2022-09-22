@@ -1,0 +1,7 @@
+ID;Bezeichnung;Beschreibung;Sortierung;gueltigVon;gueltigBis
+1;NIVEAU_HA9;Hauptschulabschluss nach Klasse 9;1;;
+2;NIVEAU_HA10;Hauptschulabschluss nach Klasse 10;2;;
+3;NIVEAU_MSA;Mittlerer Schulabschluss (Fachoberschulreife) / Berechtigung zum Besuch der gymnasialen Oberstufe (Gymnasium G8 Klasse 9);3;;
+4;NIVEAU_EF;Ende der Einführungsphase der gymnasialen Oberstufe in einer fortgeführten Fremdsprache (Gymnasium und Gesamtschule);4;;
+5;NIVEAU_FHR;Fachhochschulreife (Abschluss an berufsbildenden Schulen);5;;
+6;NIVEAU_WBK_FF;Fortgeführte Fremdsprache gemäß § 34 Abs. 4 APO-WbK (nur zweite Pflichtfremdsprache);6;;

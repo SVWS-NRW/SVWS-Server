@@ -1,0 +1,100 @@
+"ID";"TableDescription";"FieldDescription";"DstTable";"DstFieldName";"DstFieldType";"DstRequiredState";"DstLookupTable";"DstLookupTableIDFieldName";"DstLookupFieldName";"DstResultFieldName";"DstKeyLookupInsert";"DstKeyLookupNameCreateID";"DstForceNumeric"
+0;Schüler;Statistik-Jahrgang;Schueler;ASDJahrgang;S;;;;;;-;-;-
+1;Erzieher;"1. Person Anrede";SchuelerErzAdr;Anrede1;S;;;;;;-;-;-
+2;Erzieher;"1. Person Nachname";SchuelerErzAdr;Name1;S;;;;;;-;-;-
+3;Erzieher;"1. Person Titel";SchuelerErzAdr;Titel1;S;;;;;;-;-;-
+4;Erzieher;"1. Person Vorname";SchuelerErzAdr;Vorname1;S;;;;;;-;-;-
+5;Erzieher;"2. Person Anrede";SchuelerErzAdr;Anrede2;S;;;;;;-;-;-
+6;Erzieher;"2. Person Nachname";SchuelerErzAdr;Name2;S;;;;;;-;-;-
+7;Erzieher;"2. Person Titel";SchuelerErzAdr;Titel2;S;;;;;;-;-;-
+8;Erzieher;"2. Person Vorname";SchuelerErzAdr;Vorname2;S;;;;;;-;-;-
+9;Erzieher;Art;SchuelerErzAdr;ErzieherArt_ID;I;L;K_ErzieherArt;ID;ImportKrz;ID;+;+;-
+10;Erzieher;Ortsteil;SchuelerErzAdr;ErzOrtsteil_ID;I;;K_Ortsteil;ID;Bezeichnung;ID;+;+;-
+11;Erzieher;Postleitzahl;SchuelerErzAdr;ErzPLZ;S;;K_Ort;ID;PLZ;PLZ;+;+;-
+12;Erzieher;Straße u. Hausnr.;SchuelerErzAdr;ErzStrasse;S;;;;;;-;-;-
+13;Schüler;Aussiedler;Schueler;Aussiedler;B;;;;;;-;-;-
+14;Schüler;Externe ID;Schueler;IDExt;S;;;;;;-;-;-
+15;Schüler;Geburtsdatum;Schueler;Geburtsdatum;D;R;;;;;-;-;-
+16;Schüler;Geburtsort;Schueler;Geburtsort;S;;;;;;-;-;-
+17;Schüler;Geschlecht;Schueler;Geschlecht;I;;;;;;-;-;-
+18;Schüler;Haltestelle;Schueler;Haltestelle_ID;I;;K_Haltestelle;ID;Bezeichnung;ID;+;+;-
+19;Schüler;Nachname;Schueler;Name;S;R;;;;;-;-;-
+20;Schüler;Namenszusatz;Schueler;Zusatz;S;;;;;;-;-;-
+21;Schüler;Ortsteil;Schueler;Ortsteil_ID;I;;K_Ortsteil;ID;Bezeichnung;ID;+;+;-
+22;Schüler;Postleitzahl;Schueler;PLZ;S;;K_Ort;ID;PLZ;PLZ;+;+;-
+23;Schüler;Religion;Schueler;Religion_ID;I;L;K_Religion;ID;StatistikKrz;ID;-;-;-
+24;Schüler;Staatsangehörigkeit;Schueler;StaatKrz;S;L;K_Staat;ID;StatistikKrz;StatistikKrz;-;-;-
+25;Schüler;Straße;Schueler;Strasse;S;;;;;;-;-;-
+26;Schüler;Telefon;Schueler;Telefon;S;;;;;;-;-;-
+27;Schüler;Vorname;Schueler;Vorname;S;R;;;;;-;-;-
+28;Schüler;GUID des Schülers;Schueler;GU_ID;S;;;;;;-;-;-
+29;Schüler;Klasse;Schueler;Klasse;S;;Versetzung;ID;Klasse;Klasse;+;+;-
+30;Schüler;Fachklasse (Bezeichnung);Schueler;Fachklasse_ID;I;;EigeneSchule_Fachklassen;ID;Bezeichnung;ID;-;-;-
+31;Schüler;Fachklasse (Kürzel);Schueler;Fachklasse_ID;I;;EigeneSchule_Fachklassen;ID;Kennung;ID;-;-;-
+32;Schüler;Geburtsname;Schueler;Geburtsname;S;;;;;;-;-;-
+33;Schüler;Schulgliederung;Schueler;ASDSchulform;S;;EigeneSchule_Schulformen;ID;SGL;SGL;-;-;-
+34;Schüler;Aufnahmedatum;Schueler;Aufnahmedatum;D;;;;;;-;-;-
+35;Schüler;Nr. der abgebenden Schule;Schueler;LSSchulNr;S;;K_Schule;ID;SchulNr;SchulNr;+;+;-
+36;Schüler;Schulform der abgebenden Schule;Schueler;LSSchulform;S;;;;;;-;-;-
+37;Allg. Adressen;Name1;K_AllgAdresse;AllgAdrName1;S;;;;;;-;-;-
+38;Allg. Adressen;Name2;K_AllgAdresse;AllgAdrName2;S;;;;;;-;-;-
+39;Allg. Adressen;Telefon1;K_AllgAdresse;AllgAdrTelefon1;S;;;;;;-;-;-
+40;Allg. Adressen;Telefon2;K_AllgAdresse;AllgAdrTelefon2;S;;;;;;-;-;-
+41;Allg. Adressen;Straße;K_AllgAdresse;AllgAdrStrasse;S;;;;;;-;-;-
+42;Allg. Adressen;Postleitzahl;K_AllgAdresse;AllgAdrPLZ;S;;;;;;-;-;-
+43;Allg. Adressen;Fax;K_AllgAdresse;AllgAdrFax;S;;;;;;-;-;-
+44;Allg. Adressen;E-Mail;K_AllgAdresse;AllgAdrEMail;S;;;;;;-;-;-
+45;Allg. Adressen;Branche;K_AllgAdresse;AllgAdrBranche;S;;;;;;-;-;-
+46;Allg. Adressen;Zusatz1;K_AllgAdresse;AllgAdrZusatz1;S;;;;;;-;-;-
+47;Allg. Adressen;Zusatz2;K_AllgAdresse;AllgAdrZusatz2;S;;;;;;-;-;-
+48;Allg. Adressen;Vertragsbeginn;Schueler_AllgAdr;Vertragsbeginn;D;;;;;;-;-;-
+49;Allg. Adressen;Vertragsende;Schueler_AllgAdr;Vertragsende;D;;;;;;-;-;-
+50;Schüler;ID-Nr. des Schülers;Schueler;ID;I;;;;;;-;-;-
+51;Schüler;Status;Schueler;Status;I;;;;;;-;-;-
+52;Schüler;Jahrgang in der abgebenden Schule;Schueler;LSJahrgang;S;;;;;;-;-;-
+53;Schüler;Entlassdatum der abgebenden Schule;Schueler;LSSchulentlassDatum;D;;;;;;-;-;-
+54;Schüler;Versetzungsvermerk der abgebenden Schule;Schueler;LSVersetzung;S;;;;;;-;-;-
+55;Schüler;Fachklasse in abgebender Schule (SchILD-Kürzel);Schueler;LSFachklKennung;S;;;;;;-;-;-
+56;Schüler;Fachklasse in abgebender Schule (SIM-Kürzel);Schueler;LSFachklSIM;S;;;;;;-;-;-
+57;Schüler;Entlassgrund von abgebender Schule;Schueler;LSEntlassgrund;S;;;;;;-;-;-
+58;Schüler;Abschluss an abgebender Schule;Schueler;LSEntlassart;S;;;;;;-;-;-
+59;Schüler;Folgeklasse;Schueler;Folgeklasse;S;;;;;;-;-;-
+60;Schüler;Entlassjahrgang;Schueler;Entlassjahrgang;S;;;;;;-;-;-
+61;Schüler;Entlassdatum;Schueler;Entlassdatum;D;;;;;;-;-;-
+62;Schüler;Entlassart;Schueler;Entlassart;S;;;;;;-;-;-
+63;Schüler;Entlassgrund;Schueler;Entlassgrund;S;;;;;;-;-;-
+64;Schüler;Beruf;Schueler;Beruf;S;;;;;;-;-;-
+65;Schüler;Abschlussdatum;Schueler;Abschlussdatum;S;;;;;;-;-;-
+66;Schüler;Allgemeine Herkunft;Schueler;LSSchulformSIM;S;;;;;;-;-;-
+68;Schüler;Reformpädagogik in abgebender Schule;Schueler;LSRefPaed;S;;;;;;-;-;-
+69;Schüler;Reformpädagogik;Schueler;RefPaed;S;;;;;;-;-;-
+70;Schüler;Bemerkungen;Schueler;Bemerkungen;S;;;;;;-;-;-
+71;Schüler;Schwerpunkt;Schueler;Schwerpunkt_ID;I;;K_Schwerpunkt;ID;Bezeichnung;ID;+;+;-
+72;Schüler;Schulbesuchsjahre;Schueler;Jahrgang;I;;;;;;-;-;-
+73;Schüler;Straßenname;Schueler;Strassenname;S;;;;;;-;-;-
+74;Schüler;Hausnummer;Schueler;Hausnr;S;;;;;;-;-;-
+75;Schüler;E-Mail;Schueler;Email;S;;;;;;-;-;-
+76;Schüler;Mobil-Nr.;Schueler;Fax;S;;;;;;-;-;-
+77;Schüler;Organisationsform;Schueler;OrgFormKrz;S;;;;;;-;-;-
+78;Schüler;BKAZVO-Anrechnungszeit;Schueler;BKAZVO;I;;;;;;-;-;-
+79;Schüler;Hat Berufsausbildung;Schueler;HatBerufsausbildung;B;;;;;;-;-;-
+80;Schüler;Ausweisnummer;Schueler;Ausweisnummer;S;;;;;;-;-;-
+81;Schüler;AO-SF;Schueler;AOSF;B;;;;;;-;-;-
+82;Schüler;EP-Jahre;Schueler;EPJahre;I;;;;;;-;-;-
+83;Schüler;Bemerkung zur abgebender Schule;Schueler;LSBemerkung;S;;;;;;-;-;-
+84;Schüler;Beginn d. Bildungsganges;Schueler;BeginnBildungsgang;D;;;;;;-;-;-
+85;Schüler;Dauer d. Bildungsganges (Monate);Schueler;DauerBildungsgang;I;;;;;;-;-;-
+86;Schüler;Anmeldedatum;Schueler;AnmeldeDatum;D;;;;;;-;-;-
+87;Schüler;Meister-Bafög;Schueler;MeisterBafoeg;B;;;;;;-;-;-
+88;Schüler;Online-Anmeldung;Schueler;OnlineAnmeldung;B;;;;;;-;-;-
+89;Schüler;Einschulungsjahr;Schueler;Einschulungsjahr;I;;;;;;-;-;-
+90;Schüler;Geburtsland;Schueler;GeburtslandSchueler;S;L;K_Staat;ID;StatistikKrz;StatistikKrz;-;-;-
+91;Schüler;Geburtsland d. Mutter;Schueler;GeburtslandMutter;S;L;K_Staat;ID;StatistikKrz;StatistikKrz;-;-;-
+92;Schüler;Geburtsland d. Vaters;Schueler;GeburtslandVater;S;L;K_Staat;ID;StatistikKrz;StatistikKrz;-;-;-
+93;Schüler;Zuzugsjahr;Schueler;JahrZuzug;I;;;;;;-;-;-
+94;Schüler;Migrationshintergrund;Schueler;Migrationshintergrund;B;;;;;;-;-;-
+95;Schüler;Verkehrssprache i. d. Familie;Schueler;VerkehrsspracheFamilie;S;L;K_Verkehrssprachen;ID;Kurztext;Kurztext;-;-;-
+96;Erzieher;"1. Person E-Mail-Adresse";SchuelerErzAdr;ErzEMail;S;;;;;;-;-;-
+97;Schüler;Abmeldung v. Religionsunterricht;Schueler;Religionsabmeldung;D;;;;;;-;-;-
+98;Schüler;schulische E-Mail-Adresse;Schueler;SchulEmail;S;;;;;;-;-;-
+99;Erzieher;"2. Person E-Mail-Adresse";SchuelerErzAdr;ErzEMail2;S;;;;;;-;-;-

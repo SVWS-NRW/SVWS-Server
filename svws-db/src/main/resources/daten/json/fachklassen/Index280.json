@@ -1,0 +1,91 @@
+{
+	"index": 280,
+	"fachklassen": [
+		{
+			"schluessel": "086",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1572000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "G",
+				"berufsfeld": "KG",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Allgemeine Hochschulreife (gymn. Oberstufe) - Kunst/Musik/Gestaltung",
+				"bezeichnungM": "Allgemeine Hochschulreife (gymn. Oberstufe) - Kunst/Musik/Gestaltung",
+				"bezeichnungW": "Allgemeine Hochschulreife (gymn. Oberstufe) - Kunst/Musik/Gestaltung",
+				"gueltigVon": null,
+				"gueltigBis": 2010
+			} ]
+		}, {
+			"schluessel": "087",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1573000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "L",
+				"berufsfeld": "SL",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Allgemeine Hochschulreife (gymn. Oberstufe) - Sprache u. Literatur",
+				"bezeichnungM": "Allgemeine Hochschulreife (gymn. Oberstufe) - Sprache u. Literatur",
+				"bezeichnungW": "Allgemeine Hochschulreife (gymn. Oberstufe) - Sprache u. Literatur",
+				"gueltigVon": null,
+				"gueltigBis": 2010
+			} ]
+		}, {
+			"schluessel": "088",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1574000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "S",
+				"berufsfeld": "ES",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Allgemeine Hochschulreife (gymn. Oberstufe) - Erziehung u. Soziales",
+				"bezeichnungM": "Allgemeine Hochschulreife (gymn. Oberstufe) - Erziehung u. Soziales",
+				"bezeichnungW": "Allgemeine Hochschulreife (gymn. Oberstufe) - Erziehung u. Soziales",
+				"gueltigVon": null,
+				"gueltigBis": 2010
+			} ]
+		}, {
+			"schluessel": "089",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1575000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "ET",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Allgemeine Hochschulreife (gymn. Oberstufe) - Elektrotechnik",
+				"bezeichnungM": "Allgemeine Hochschulreife (gymn. Oberstufe) - Elektrotechnik",
+				"bezeichnungW": "Allgemeine Hochschulreife (gymn. Oberstufe) - Elektrotechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2010
+			} ]
+		}, {
+			"schluessel": "090",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1576000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "MP",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Allgemeine Hochschulreife (gymn. Oberstufe) - Mathematik/Philosophie",
+				"bezeichnungM": "Allgemeine Hochschulreife (gymn. Oberstufe) - Mathematik/Philosophie",
+				"bezeichnungW": "Allgemeine Hochschulreife (gymn. Oberstufe) - Mathematik/Philosophie",
+				"gueltigVon": null,
+				"gueltigBis": 2010
+			} ]
+		}
+	]
+}

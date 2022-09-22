@@ -1,0 +1,20 @@
+open module de.nrw.schule.svws.api {
+    requires transitive de.nrw.schule.svws.core;
+    requires transitive de.nrw.schule.svws.db;
+    requires transitive de.nrw.schule.svws.dbutils;
+	
+	requires java.base;
+	requires transitive jetty.servlet.api;
+	requires org.apache.commons.lang3;
+	requires org.apache.commons.io;
+	requires transitive java.ws.rs;
+	requires org.jboss.resteasy.core;
+	requires org.jboss.resteasy.providers.jackson;
+	requires org.jboss.resteasy.providers.multipart;
+	requires io.swagger.v3.jaxrs2;
+	requires io.swagger.v3.oas.annotations;
+	requires io.swagger.v3.oas.integration;
+	requires io.swagger.v3.oas.models;
+	
+	exports de.nrw.schule.svws.api;
+}

@@ -1,0 +1,176 @@
+{
+	"index": 62,
+	"fachklassen": [
+		{
+			"schluessel": "177",
+			"schluessel2": "02",
+			"historie": [ {
+				"id": 1900000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Elektroniker/-in für Betriebstechnik",
+				"bezeichnungM": "Elektroniker für Betriebstechnik",
+				"bezeichnungW": "Elektronikerin für Betriebstechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2019
+			} ]
+		}, {
+			"schluessel": "242",
+			"schluessel2": "02",
+			"historie": [ {
+				"id": 1901000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Glaser/-in - Verglasung und Glasbau",
+				"bezeichnungM": "Glaser - Verglasung und Glasbau",
+				"bezeichnungW": "Glaserin - Verglasung und Glasbau",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "248",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 1902000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Glasveredler/-in - Schliff und Gravur",
+				"bezeichnungM": "Glasveredler - Schliff und Gravur",
+				"bezeichnungW": "Glasveredlerin - Schliff und Gravur",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "248",
+			"schluessel2": "02",
+			"historie": [ {
+				"id": 1903000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Glasveredler/-in - Glasmalerei und Kunstverglasung",
+				"bezeichnungM": "Glasveredler - Glasmalerei und Kunstverglasung",
+				"bezeichnungW": "Glasveredlerin - Glasmalerei und Kunstverglasung",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "248",
+			"schluessel2": "03",
+			"historie": [ {
+				"id": 1904000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Glasveredler/-in - Kanten- und Flächenveredlung",
+				"bezeichnungM": "Glasveredler - Kanten- und Flächenveredlung",
+				"bezeichnungW": "Glasveredlerin - Kanten- und Flächenveredlung",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "276",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1905000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Industriemechaniker/-in",
+				"bezeichnungM": "Industriemechaniker",
+				"bezeichnungW": "Industriemechanikerin",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "279",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1906000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Informations- und Telekommunikationssystemelektroniker/-in",
+				"bezeichnungM": "Informations- und Telekommunikationssystemelektroniker",
+				"bezeichnungW": "Informations- und Telekommunikationssystemelektronikerin",
+				"gueltigVon": null,
+				"gueltigBis": 2019
+			} ]
+		}, {
+			"schluessel": "335",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1907000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Mechatroniker/-in",
+				"bezeichnungM": "Mechatroniker",
+				"bezeichnungW": "Mechatronikerin",
+				"gueltigVon": null,
+				"gueltigBis": 2019
+			} ]
+		}, {
+			"schluessel": "531",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1908000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Maschinen- und Anlagenführer/-in",
+				"bezeichnungM": "Maschinen- und Anlagenführer",
+				"bezeichnungW": "Maschinen- und Anlagenführerin",
+				"gueltigVon": null,
+				"gueltigBis": 2019
+			} ]
+		}, {
+			"schluessel": "999",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1909000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "XX",
+				"ebene2": "XX",
+				"ebene3": "XX",
+				"bezeichnung": "Sonstiger Bildungsgang",
+				"bezeichnungM": "Sonstiger Bildungsgang",
+				"bezeichnungW": "Sonstiger Bildungsgang",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}
+	]
+}

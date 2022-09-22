@@ -1,0 +1,9 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [ {
+    "code" : "VF_11",
+    "art" : "BELEGUNG",
+    "beschreibung" : "In der Qualifikationsphase können maximal zwei Vertiefungskurse belegt werden."
+  } ],
+  "log" : [ ]
+}

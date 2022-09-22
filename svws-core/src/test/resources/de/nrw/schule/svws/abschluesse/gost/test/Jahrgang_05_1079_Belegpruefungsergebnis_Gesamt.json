@@ -1,0 +1,41 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [ {
+    "code" : "FS_21",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Eine fortgeführte Fremdsprache wurde in der Sprachenfolge als neu einsetzend eingetragen. Die Sprachenfolge ist fehlerhaft."
+  }, {
+	  "code" : "FS_23",
+	  "art" : "BELEGUNG",
+	  "beschreibung" : "Es wird das Fach einer fortgeführten Fremdsprache belegt, zu dem es keine entsprechende Eintragung einer Belegung oder Sprachprüfung in der Sekundarstufe I gibt. Bitte die Sprachenfolge und Sprachprüfungen prüfen."
+  }, {
+    "code" : "FS_22_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Englisch wurde nicht in der Sprachenfolge eingetragen. Bitte Prüfen Sie die Sprachenfolge auf Korrektheit."
+  }, {
+	  "code" : "FS_10",
+	  "art" : "BELEGUNG",
+	  "beschreibung" : "Mindestens eine Fremdsprache muss von EF.1 bis Q2.2 durchgehend belegt werden. Handelt es sich hierbei um eine neu einsetzende Fremdsprache, so muss zusätzlich mindestens eine aus der SI fortgeführte Fremdsprache von EF.1 bis EF.2 belegt werden."
+  }, {
+    "code" : "FS_14",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Bei fehlender 2. Fremdsprache muss eine neu einsetzende Fremdsprache durchgehend schriftlich belegt werden."
+  }, {
+    "code" : "NW_FS_12_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Da von EF.1 bis Q2.2 weniger als zwei naturwissenschaftliche Fächer durchgehend belegt wurden, oder kein naturwissenschaftliches Fach schriftlich belegt wurde, liegt ausschließlich ein Sprachenschwerpunkt vor."
+  }, {
+    "code" : "WST_20",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Die durchschnittliche Wochenstundenzahl muss in der Einführungsphase mindestens 34 Stunden betragen."
+  }, {
+    "code" : "STD_11_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Der Pflichtunterricht darf nur in begründeten Ausnahmefällen 102 Stunden unterschreiten."
+  }, {
+    "code" : "ABI_16",
+    "art" : "SCHRIFTLICHKEIT",
+    "beschreibung" : "Fächer, die keine Abiturfächer sind, müssen in Q2.2 mündlich belegt werden."
+  } ],
+  "log" : [ ]
+}

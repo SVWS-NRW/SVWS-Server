@@ -1,0 +1,9 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [ {
+    "code" : "M_11",
+    "art" : "SCHRIFTLICHKEIT",
+    "beschreibung" : "Mathematik muss in EF.1 schriftlich belegt werden."
+  } ],
+  "log" : [ ]
+}

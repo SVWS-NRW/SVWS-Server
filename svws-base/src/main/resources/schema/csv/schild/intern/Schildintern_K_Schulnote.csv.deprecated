@@ -1,0 +1,26 @@
+ID;Krz;Art;Bezeichnung;Zeugnisnotenbez;Punkte;Sortierung;Sichtbar;Aenderbar;gueltigVon;gueltigBis
+2;1;N;sehr gut;sehr gut;14;22;+;+;;
+3;1+;Z;sehr gut (plus);sehr gut;15;21;+;+;;
+4;1-;Z;sehr gut (minus);sehr gut;13;23;+;+;;
+5;2;N;gut;gut;11;25;+;+;;
+6;2+;Z;gut (plus);gut;12;24;+;+;;
+7;2-;Z;gut (minus);gut;10;26;+;+;;
+8;3;N;befriedigend;befriedigend;8;28;+;+;;
+9;3+;Z;befriedigend (plus);befriedigend;9;27;+;+;;
+10;3-;Z;befriedigend (minus);befriedigend;7;29;+;+;;
+11;4;N;ausreichend;ausreichend;5;31;+;+;;
+12;4+;Z;ausreichend (plus);ausreichend;6;30;+;+;;
+13;4-;Z;ausreichend (minus);ausreichend;4;32;+;+;;
+14;5;N;mangelhaft;mangelhaft;2;34;+;+;;
+15;5+;Z;mangelhaft (plus);mangelhaft;3;33;+;+;;
+16;5-;Z;mangelhaft (minus);mangelhaft;1;35;+;+;;
+17;6;N;ungenügend;ungenügend;0;37;+;+;;
+18;AM;N;(abgemeldet);--------------------;--;410;+;+;;
+19;AT;N;(ärztl. Attest);--------------------;AT;400;+;+;;
+20;E1;N;mit besonderem Erfolg teilgenommen;mit besonderem Erfolg teilgenommen;E1;200;+;+;;
+21;E2;N;mit Erfolg teilgenommen;mit Erfolg teilgenommen;E2;201;+;+;;
+22;E3;N;teilgenommen;teilgenommen;E3;202;+;+;;
+23;LM;N;(kein Unterricht wegen Lehrermangels);--------------------;--;3000;+;+;;
+24;NB;N;(kann nicht beurteilt werden);--------------------;--;1000;+;+;;
+25;NE;N;(nicht erteilt);--------------------;--;1030;+;+;;
+26;NT;N;(nicht teilgenommen);--------------------;--;1010;+;+;;

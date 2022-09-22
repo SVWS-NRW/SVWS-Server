@@ -1,0 +1,51 @@
+"ID";"Beschreibung";"Feldname";"Tabellen";"SQLText";"Schulform";"Feldtyp"
+10;Vorname;Vorname;;;;S
+20;Straße;Straße;;;;S
+30;Postleitzahl;PLZ;;;;S
+40;Telefon-Nr.;Telefon;;;;S
+50;Akt. Schuljahr;AktSchuljahr;;;;I
+60;Akt. Abschnitt;AktAbschnitt;;;;I
+70;Klasse;Klasse;;;;S
+80;Statistik-Jahrgang;Jahrgang_ID;;;;I
+90;Prüfungsordnung;PruefOrdnung;;;;S
+100;Geburtsdatum;Geburtsdatum;;;;D
+110;Geburtsort;Geburtsort;;;;S
+120;Staatsangehörigkeit;StaatKrz;;;;S
+130;Konfession;Religion_ID;;;;I
+140;Gliederung;ASDSchulform;;;;S
+150;Einschulungsart;Einschulungsart_ID;;;-BK-SB-WB-;I
+151;Einschulungsart;EinschulungsartASD;;;-G-H-R-SR-GY-SG-GE-S-;S
+160;Einschulungsjahr;Einschulungsjahr;;;;I
+170;voraus. Abschlussdatum;AbschlussDatum;;;;D
+180;Organisationsform;OrgFormKrz;;;;S
+190;Zuletzt besuchte Schule: Name der Schule;;;;LSSchulNr;S
+200;Zuletzt besuchte Schule: Entlassdatum;;;;LSSchulEntlassDatum;D
+210;Zuletzt besuchte Schule: Entlassjahrgang;;;;LSJahrgang;S
+220;Zuletzt besuchte Schule: Art des Abschlusses;;;;LSEntlassart;S
+230;Art des Abschlusses;EntlassArt;;;;S
+240;Fachklasse;Fachklasse_ID;;;-BK-SB-;I
+250;Zuletzt besuchte Schule: Fachklasse;LSFachklKennung;;;-BK-SB-;S
+260;Erzieher: Erzieherart;Erzieherart_ID;SchuelerErzAdr;and SchuelerErzAdr.Schueler_ID=Schueler.ID and SchuelerErzAdr.Erzieherart_ID is null;;I
+270;E-Mail;Email;;;;S
+280;Erzieher: E-Mail;ErzEMail;SchuelerErzAdr;and SchuelerErzAdr.Schueler_ID=Schueler.ID and SchuelerErzAdr.ErzEMail is null;;S
+285;schulische E-Mail;SchulEmail;;;;S
+290;Kindergarten;Kindergarten_ID;;;-G-S-;I
+300;Geburtsland Schüler;GeburtslandSchueler;;;;S
+310;Geburtsland Mutter;GeburtslandMutter;;;;S
+320;Geburtsland Vater;GeburtslandVater;;;;S
+330;Zuzugsjahr;JahrZuzug;;;;I
+340;Verkehrssprache;VerkehrsspracheFamilie;;;;S
+350;Beginn des Bildungsganges;BeginnBildungsgang;;;;D
+360;Aufnahmedatum;Aufnahmedatum;;;;D
+370;Übergangsempfehlung;Uebergangsempfehlung_JG5;;;-G-;S
+380;Erste Schulform Sek.1;ErsteSchulform_SI;;;-H-R-GY-GE-SR-SG-;S
+390;Geschlecht;Geschlecht;;;;I
+400;Schulgliederung;ASDSchulform;;;;S
+410;Haupt-Förderschwerpunkt;Foerderschwerpunkt_ID;;;;I
+420;Jahr d. Wechsels in Sek. 1;JahrWechsel_SI;;;-G-S-H-R-GY-GE-SR-SG-;I
+430;Jahr d. Wechsels in Sek. 2;JahrWechsel_SII;;;-H-R-SR-GE-GY-SG-BK-SB-WB-;I
+440;Entlassdatum;Entlassdatum;;;;D
+450;Übergangsempfehlung in Kl. 5;Uebergangsempfehlung_JG5;;;-G-H-R-SR-GY-SG-GE-;S
+460;Weiterer Förderschwerpunkt;Foerderschwerpunkt2_ID;;;;I
+470;Schwerpunkt;Schwerpunkt_ID;;;-R-SR-;I
+480;Aufnehmende Schule;SchulwechselNr;;;;S

@@ -1,0 +1,57 @@
+{
+    "input": {
+        "schuljahr": 2020,
+        "abschnitt": 1,
+        "jahrgang": "10",
+        "faecher": []
+    },
+    "Prognose": {
+        "erworben": false,
+        "abschluss": "OA",
+        "npFaecher": null,
+        "log": null
+    },
+    "HA9": null,
+    "HA10": {
+        "erworben": false,
+        "abschluss": null,
+        "npFaecher": null,
+        "log": null
+    },
+    "MSA": {
+        "erworben": false,
+        "abschluss": null,
+        "npFaecher": null,
+        "log": [
+            "Name   : Ebsen, Stefan (10d)",
+            "Datum  : 16.02.2022 15:44:39",
+            "Hinweis: Informationen zum MSA",
+            "         Das Programm befreit nicht von einer auf der geltenden Rechtslage basierenden Entscheidungsfindung!",
+            "___________________________________________________",
+            "",
+            "Prüfe MSA:",
+            "==============================",
+            " - Fächergruppen:",
+            "______________________________",
+            "=> Fehler: FG1 oder FG2 enthält keine Leistungsdaten"
+        ]
+    },
+    "MSA_Q": {
+        "erworben": false,
+        "abschluss": null,
+        "npFaecher": null,
+        "log": [
+            "Name   : Ebsen, Stefan (10d)",
+            "Datum  : 16.02.2022 15:44:39",
+            "Hinweis: Informationen zum MSA-Q",
+            "         Das Programm befreit nicht von einer auf der geltenden Rechtslage basierenden Entscheidungsfindung!",
+            "___________________________________________________",
+            "",
+            "Prüfe MSA-Q:",
+            "==============================",
+            " - Fächergruppen:",
+            "______________________________",
+            "=> Fehler: FG1 oder FG2 enthält keine Leistungsdaten"
+        ]
+    }
+}

@@ -1,0 +1,23 @@
+{
+	"index": 320,
+	"fachklassen": [
+		{
+			"schluessel": "090",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1619000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WW",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Berufsabschluss/Assistent 3j. (TZ) - Wirtschaftswiss./Eurowirtschaftsassistent/-in",
+				"bezeichnungM": "Berufsabschluss/Assistent 3j. (TZ) - Wirtschaftswiss./Eurowirtschaftsassistent",
+				"bezeichnungW": "Berufsabschluss/Assistent 3j. (TZ) - Wirtschaftswiss./Eurowirtschaftsassistentin",
+				"gueltigVon": null,
+				"gueltigBis": 2012
+			} ]
+		}
+	]
+}

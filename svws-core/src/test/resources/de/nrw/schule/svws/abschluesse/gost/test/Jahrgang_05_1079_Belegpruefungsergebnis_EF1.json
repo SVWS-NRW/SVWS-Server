@@ -1,0 +1,29 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [ {
+    "code" : "FS_21",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Eine fortgeführte Fremdsprache wurde in der Sprachenfolge als neu einsetzend eingetragen. Die Sprachenfolge ist fehlerhaft."
+  }, {
+    "code" : "FS_22_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Englisch wurde nicht in der Sprachenfolge eingetragen. Bitte Prüfen Sie die Sprachenfolge auf Korrektheit."
+  }, {
+    "code" : "FS_23",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Es wird das Fach einer fortgeführten Fremdsprache belegt, zu dem es keine entsprechende Eintragung einer Belegung oder Sprachprüfung in der Sekundarstufe I gibt. Bitte die Sprachenfolge und Sprachprüfungen prüfen."
+  }, {
+    "code" : "FS_18",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Mindestens eine in der Sekundarstufe I begonnene Fremdsprache muss in EF.1 schriftlich belegt werden."
+  }, {
+    "code" : "FS_14",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Wurde bisher keine 2. Fremdsprache erlernt, muss eine neu einsetzende Fremdsprache in EF.1 schriftlich belegt werden."
+  }, {
+    "code" : "GE_1_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Wird Geschichte nicht in EF.1 belegt, so muss Geschichte in der Qualifikationsphase als Zusatzkurs gewählt werden."
+  } ],
+  "log" : [ ]
+}

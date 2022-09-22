@@ -1,0 +1,40 @@
+{
+	"index": 270,
+	"fachklassen": [
+		{
+			"schluessel": "101",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1570000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "S",
+				"berufsfeld": "SG",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS - Berufspraktikum für Erzieher/-innen",
+				"bezeichnungM": "FS - Berufspraktikum für Erzieher",
+				"bezeichnungW": "FS - Berufspraktikum für Erzieherinnen",
+				"gueltigVon": null,
+				"gueltigBis": 2012
+			} ]
+		}, {
+			"schluessel": "102",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1571000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "S",
+				"berufsfeld": "SG",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS - Berufspraktikum für Sozialarbeiter/-innen",
+				"bezeichnungM": "FS - Berufspraktikum für Sozialarbeiter",
+				"bezeichnungW": "FS - Berufspraktikum für Sozialarbeiterinnen",
+				"gueltigVon": null,
+				"gueltigBis": 2012
+			} ]
+		}
+	]
+}

@@ -1,0 +1,1485 @@
+{
+	"index": 58,
+	"fachklassen": [
+		{
+			"schluessel": "101",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1780000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "AW",
+				"ebene2": null,
+				"ebene3": "AP",
+				"bezeichnung": "Schüler/-innen mit Arbeitsverh. u. Praktikanten/Praktikantinnen - Agrarwirtschaft",
+				"bezeichnungM": "Schüler mit Arbeitsverh. u. Praktikanten - Agrarwirtschaft",
+				"bezeichnungW": "Schülerinnen mit Arbeitsverh. u. Praktikantinnen - Agrarwirtschaft",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "102",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1781000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "EV",
+				"ebene2": null,
+				"ebene3": "AP",
+				"bezeichnung": "Schüler/-innen mit Arbeitsverh. u. Praktikanten/Praktikantinnen - Ernährungs- u. Versorgungsmanagem.",
+				"bezeichnungM": "Schüler mit Arbeitsverh. u. Praktikanten - Ernährungs- u. Versorgungsmanagem.",
+				"bezeichnungW": "Schülerinnen mit Arbeitsverh. u. Praktikantinnen - Ernährungs- u. Versorgungsmanagem.",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "103",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 1782000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "GT",
+				"ebene2": "FR",
+				"ebene3": "AP",
+				"bezeichnung": "Schüler/-innen mit Arbeitsverh. u. Praktikanten/Praktikantinnen - Farbtechnik und Raumgestaltung",
+				"bezeichnungM": "Schüler mit Arbeitsverh. u. Praktikanten - Farbtechnik und Raumgestaltung",
+				"bezeichnungW": "Schülerinnen mit Arbeitsverh. u. Praktikantinnen - Farbtechnik und Raumgestaltung",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "103",
+			"schluessel2": "02",
+			"historie": [ {
+				"id": 1783000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "GT",
+				"ebene2": "MM",
+				"ebene3": "AP",
+				"bezeichnung": "Schüler/-innen mit Arbeitsverh. u. Praktikanten/Praktikantinnen - Medien/Medientechnologie",
+				"bezeichnungM": "Schüler mit Arbeitsverh. u. Praktikanten - Medien/Medientechnologie",
+				"bezeichnungW": "Schülerinnen mit Arbeitsverh. u. Praktikantinnen - Medien/Medientechnologie",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "104",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 1784000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "GE",
+				"ebene2": "GW",
+				"ebene3": "AP",
+				"bezeichnung": "Schüler/-innen mit Arbeitsverh. u. Praktikanten/Praktikantinnen - Gesundheitswesen",
+				"bezeichnungM": "Schüler mit Arbeitsverh. u. Praktikanten - Gesundheitswesen",
+				"bezeichnungW": "Schülerinnen mit Arbeitsverh. u. Praktikantinnen - Gesundheitswesen",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "104",
+			"schluessel2": "02",
+			"historie": [ {
+				"id": 1785000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "GE",
+				"ebene2": "SW",
+				"ebene3": "AP",
+				"bezeichnung": "Schüler/-innen mit Arbeitsverh. u. Praktikanten/Praktikantinnen - Sozialwesen",
+				"bezeichnungM": "Schüler mit Arbeitsverh. u. Praktikanten - Sozialwesen",
+				"bezeichnungW": "Schülerinnen mit Arbeitsverh. u. Praktikantinnen - Sozialwesen",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "104",
+			"schluessel2": "03",
+			"historie": [ {
+				"id": 1786000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "GE",
+				"ebene2": "KP",
+				"ebene3": "AP",
+				"bezeichnung": "Schüler/-innen mit Arbeitsverh. u. Praktikanten/Praktikantinnen - Körperpflege",
+				"bezeichnungM": "Schüler mit Arbeitsverh. u. Praktikanten - Körperpflege",
+				"bezeichnungW": "Schülerinnen mit Arbeitsverh. u. Praktikantinnen - Körperpflege",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "105",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1787000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "IF",
+				"ebene2": null,
+				"ebene3": "AP",
+				"bezeichnung": "Schüler/-innen mit Arbeitsverh. u. Praktikanten/Praktikantinnen - Informatik",
+				"bezeichnungM": "Schüler mit Arbeitsverh. u. Praktikanten - Informatik",
+				"bezeichnungW": "Schülerinnen mit Arbeitsverh. u. Praktikantinnen - Informatik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "106",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 1788000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": "BH",
+				"ebene3": "AP",
+				"bezeichnung": "Schüler/-innen mit Arbeitsverh. u. Praktikanten/Praktikantinnen - Bau und Holztechnik",
+				"bezeichnungM": "Schüler mit Arbeitsverh. u. Praktikanten - Bau und Holztechnik",
+				"bezeichnungW": "Schülerinnen mit Arbeitsverh. u. Praktikantinnen - Bau und Holztechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "106",
+			"schluessel2": "02",
+			"historie": [ {
+				"id": 1789000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": "DT",
+				"ebene3": "AP",
+				"bezeichnung": "Schüler/-innen mit Arbeitsverh. u. Praktikanten/Praktikantinnen - Drucktechnik",
+				"bezeichnungM": "Schüler mit Arbeitsverh. u. Praktikanten - Drucktechnik",
+				"bezeichnungW": "Schülerinnen mit Arbeitsverh. u. Praktikantinnen - Drucktechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "106",
+			"schluessel2": "03",
+			"historie": [ {
+				"id": 1790000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": "ET",
+				"ebene3": "AP",
+				"bezeichnung": "Schüler/-innen mit Arbeitsverh. u. Praktikanten/Praktikantinnen - Elektrotechnik",
+				"bezeichnungM": "Schüler mit Arbeitsverh. u. Praktikanten - Elektrotechnik",
+				"bezeichnungW": "Schülerinnen mit Arbeitsverh. u. Praktikantinnen - Elektrotechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "106",
+			"schluessel2": "04",
+			"historie": [ {
+				"id": 1791000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": "FT",
+				"ebene3": "AP",
+				"bezeichnung": "Schüler/-innen mit Arbeitsverh. u. Praktikanten/Praktikantinnen - Fahrzeugtechnik",
+				"bezeichnungM": "Schüler mit Arbeitsverh. u. Praktikanten - Fahrzeugtechnik",
+				"bezeichnungW": "Schülerinnen mit Arbeitsverh. u. Praktikantinnen - Fahrzeugtechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "106",
+			"schluessel2": "05",
+			"historie": [ {
+				"id": 1792000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": "MD",
+				"ebene3": "AP",
+				"bezeichnung": "Schüler/-innen mit Arbeitsverh. u. Praktikanten/Praktikantinnen - Medizintechnik",
+				"bezeichnungM": "Schüler mit Arbeitsverh. u. Praktikanten - Medizintechnik",
+				"bezeichnungW": "Schülerinnen mit Arbeitsverh. u. Praktikantinnen - Medizintechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "106",
+			"schluessel2": "06",
+			"historie": [ {
+				"id": 1793000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": "ME",
+				"ebene3": "AP",
+				"bezeichnung": "Schüler/-innen mit Arbeitsverh. u. Praktikanten/Praktikantinnen - Metalltechnik",
+				"bezeichnungM": "Schüler mit Arbeitsverh. u. Praktikanten - Metalltechnik",
+				"bezeichnungW": "Schülerinnen mit Arbeitsverh. u. Praktikantinnen - Metalltechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "106",
+			"schluessel2": "07",
+			"historie": [ {
+				"id": 1794000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": "PC",
+				"ebene3": "AP",
+				"bezeichnung": "Schüler/-innen mit Arbeitsverh. u. Praktikanten/Praktikantinnen - Physik/Chemie/Biologie",
+				"bezeichnungM": "Schüler mit Arbeitsverh. u. Praktikanten - Physik/Chemie/Biologie",
+				"bezeichnungW": "Schülerinnen mit Arbeitsverh. u. Praktikantinnen - Physik/Chemie/Biologie",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "106",
+			"schluessel2": "08",
+			"historie": [ {
+				"id": 1795000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": "TB",
+				"ebene3": "AP",
+				"bezeichnung": "Schüler/-innen mit Arbeitsverh. u. Praktikanten/Praktikantinnen - Textiltechnik und Bekleidung",
+				"bezeichnungM": "Schüler mit Arbeitsverh. u. Praktikanten - Textiltechnik und Bekleidung",
+				"bezeichnungW": "Schülerinnen mit Arbeitsverh. u. Praktikantinnen - Textiltechnik und Bekleidung",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "107",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1796000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "WV",
+				"ebene2": null,
+				"ebene3": "AP",
+				"bezeichnung": "Schüler/-innen mit Arbeitsverh. u. Praktikanten/Praktikantinnen - Wirtschaft und Verwaltung",
+				"bezeichnungM": "Schüler mit Arbeitsverh. u. Praktikanten - Wirtschaft und Verwaltung",
+				"bezeichnungW": "Schülerinnen mit Arbeitsverh. u. Praktikantinnen - Wirtschaft und Verwaltung",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "201",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1797000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "AW",
+				"ebene2": null,
+				"ebene3": "AV",
+				"bezeichnung": "Schüler/-innen in berufsvorb. Maßn. der AV u. freier Träger - Agrarwirtschaft",
+				"bezeichnungM": "Schüler in berufsvorb. Maßn. der AV u. freier Träger - Agrarwirtschaft",
+				"bezeichnungW": "Schülerinnen in berufsvorb. Maßn. der AV u. freier Träger - Agrarwirtschaft",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "202",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1798000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "EV",
+				"ebene2": null,
+				"ebene3": "AV",
+				"bezeichnung": "Schüler/-innen in berufsvorb. Maßn. der AV u. freier Träger - Ernährungs- und Versorgungsmanagement",
+				"bezeichnungM": "Schüler in berufsvorb. Maßn. der AV u. freier Träger - Ernährungs- und Versorgungsmanagement",
+				"bezeichnungW": "Schülerinnen in berufsvorb. Maßn. der AV u. freier Träger - Ernährungs- und Versorgungsmanagement",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "203",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 1799000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "GT",
+				"ebene2": "FR",
+				"ebene3": "AV",
+				"bezeichnung": "Schüler/-innen in berufsvorb. Maßn. der AV u. freier Träger - Farbtechnik und Raumgestaltung",
+				"bezeichnungM": "Schüler in berufsvorb. Maßn. der AV u. freier Träger - Farbtechnik und Raumgestaltung",
+				"bezeichnungW": "Schülerinnen in berufsvorb. Maßn. der AV u. freier Träger - Farbtechnik und Raumgestaltung",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "203",
+			"schluessel2": "02",
+			"historie": [ {
+				"id": 1800000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "GT",
+				"ebene2": "MM",
+				"ebene3": "AV",
+				"bezeichnung": "Schüler/-innen in berufsvorb. Maßn. der AV u. freier Träger - Medien/Medientechnologie",
+				"bezeichnungM": "Schüler in berufsvorb. Maßn. der AV u. freier Träger - Medien/Medientechnologie",
+				"bezeichnungW": "Schülerinnen in berufsvorb. Maßn. der AV u. freier Träger - Medien/Medientechnologie",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "204",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 1801000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "GE",
+				"ebene2": "GW",
+				"ebene3": "AV",
+				"bezeichnung": "Schüler/-innen in berufsvorb. Maßn. der AV u. freier Träger - Gesundheitswesen",
+				"bezeichnungM": "Schüler in berufsvorb. Maßn. der AV u. freier Träger - Gesundheitswesen",
+				"bezeichnungW": "Schülerinnen in berufsvorb. Maßn. der AV u. freier Träger - Gesundheitswesen",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "204",
+			"schluessel2": "02",
+			"historie": [ {
+				"id": 1802000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "GE",
+				"ebene2": "SW",
+				"ebene3": "AV",
+				"bezeichnung": "Schüler/-innen in berufsvorb. Maßn. der AV u. freier Träger - Sozialwesen",
+				"bezeichnungM": "Schüler in berufsvorb. Maßn. der AV u. freier Träger - Sozialwesen",
+				"bezeichnungW": "Schülerinnen in berufsvorb. Maßn. der AV u. freier Träger - Sozialwesen",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "204",
+			"schluessel2": "03",
+			"historie": [ {
+				"id": 1803000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "GE",
+				"ebene2": "KP",
+				"ebene3": "AV",
+				"bezeichnung": "Schüler/-innen in berufsvorb. Maßn. der AV u. freier Träger - Körperpflege",
+				"bezeichnungM": "Schüler in berufsvorb. Maßn. der AV u. freier Träger - Körperpflege",
+				"bezeichnungW": "Schülerinnen in berufsvorb. Maßn. der AV u. freier Träger - Körperpflege",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "205",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1804000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "IF",
+				"ebene2": null,
+				"ebene3": "AV",
+				"bezeichnung": "Schüler/-innen in berufsvorb. Maßn. der AV u. freier Träger - Informatik",
+				"bezeichnungM": "Schüler in berufsvorb. Maßn. der AV u. freier Träger - Informatik",
+				"bezeichnungW": "Schülerinnen in berufsvorb. Maßn. der AV u. freier Träger - Informatik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "206",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 1805000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": "BH",
+				"ebene3": "AV",
+				"bezeichnung": "Schüler/-innen in berufsvorb. Maßn. der AV u. freier Träger - Bau und Holztechnik",
+				"bezeichnungM": "Schüler in berufsvorb. Maßn. der AV u. freier Träger - Bau und Holztechnik",
+				"bezeichnungW": "Schülerinnen in berufsvorb. Maßn. der AV u. freier Träger - Bau und Holztechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "206",
+			"schluessel2": "02",
+			"historie": [ {
+				"id": 1806000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": "DT",
+				"ebene3": "AV",
+				"bezeichnung": "Schüler/-innen in berufsvorb. Maßn. der AV u. freier Träger - Drucktechnik",
+				"bezeichnungM": "Schüler in berufsvorb. Maßn. der AV u. freier Träger - Drucktechnik",
+				"bezeichnungW": "Schülerinnen in berufsvorb. Maßn. der AV u. freier Träger - Drucktechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "206",
+			"schluessel2": "03",
+			"historie": [ {
+				"id": 1807000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": "ET",
+				"ebene3": "AV",
+				"bezeichnung": "Schüler/-innen in berufsvorb. Maßn. der AV u. freier Träger - Elektrotechnik",
+				"bezeichnungM": "Schüler in berufsvorb. Maßn. der AV u. freier Träger - Elektrotechnik",
+				"bezeichnungW": "Schülerinnen in berufsvorb. Maßn. der AV u. freier Träger - Elektrotechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "206",
+			"schluessel2": "04",
+			"historie": [ {
+				"id": 1808000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": "FT",
+				"ebene3": "AV",
+				"bezeichnung": "Schüler/-innen in berufsvorb. Maßn. der AV u. freier Träger - Fahrzeugtechnik",
+				"bezeichnungM": "Schüler in berufsvorb. Maßn. der AV u. freier Träger - Fahrzeugtechnik",
+				"bezeichnungW": "Schülerinnen in berufsvorb. Maßn. der AV u. freier Träger - Fahrzeugtechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "206",
+			"schluessel2": "05",
+			"historie": [ {
+				"id": 1809000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": "MD",
+				"ebene3": "AV",
+				"bezeichnung": "Schüler/-innen in berufsvorb. Maßn. der AV u. freier Träger - Medizintechnik",
+				"bezeichnungM": "Schüler in berufsvorb. Maßn. der AV u. freier Träger - Medizintechnik",
+				"bezeichnungW": "Schülerinnen in berufsvorb. Maßn. der AV u. freier Träger - Medizintechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "206",
+			"schluessel2": "06",
+			"historie": [ {
+				"id": 1810000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": "ME",
+				"ebene3": "AV",
+				"bezeichnung": "Schüler/-innen in berufsvorb. Maßn. der AV u. freier Träger - Metalltechnik",
+				"bezeichnungM": "Schüler in berufsvorb. Maßn. der AV u. freier Träger - Metalltechnik",
+				"bezeichnungW": "Schülerinnen in berufsvorb. Maßn. der AV u. freier Träger - Metalltechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "206",
+			"schluessel2": "07",
+			"historie": [ {
+				"id": 1811000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": "PC",
+				"ebene3": "AV",
+				"bezeichnung": "Schüler/-innen in berufsvorb. Maßn. der AV u. freier Träger - Physik/Chemie/Biologie",
+				"bezeichnungM": "Schüler in berufsvorb. Maßn. der AV u. freier Träger - Physik/Chemie/Biologie",
+				"bezeichnungW": "Schülerinnen in berufsvorb. Maßn. der AV u. freier Träger - Physik/Chemie/Biologie",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "206",
+			"schluessel2": "08",
+			"historie": [ {
+				"id": 1812000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": "TB",
+				"ebene3": "AV",
+				"bezeichnung": "Schüler/-innen in berufsvorb. Maßn. der AV u. freier Träger - Textiltechnik und Bekleidung",
+				"bezeichnungM": "Schüler in berufsvorb. Maßn. der AV u. freier Träger - Textiltechnik und Bekleidung",
+				"bezeichnungW": "Schülerinnen in berufsvorb. Maßn. der AV u. freier Träger - Textiltechnik und Bekleidung",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "207",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1813000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "WV",
+				"ebene2": null,
+				"ebene3": "AV",
+				"bezeichnung": "Schüler/-innen in berufsvorb. Maßn. der AV u. freier Träger - Wirtschaft und Verwaltung",
+				"bezeichnungM": "Schüler in berufsvorb. Maßn. der AV u. freier Träger - Wirtschaft und Verwaltung",
+				"bezeichnungW": "Schülerinnen in berufsvorb. Maßn. der AV u. freier Träger - Wirtschaft und Verwaltung",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "301",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1814000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "AW",
+				"ebene2": null,
+				"ebene3": "OA",
+				"bezeichnung": "Schüler/-innen ohne Arbeitsverhältnis - Agrarwirtschaft",
+				"bezeichnungM": "Schüler ohne Arbeitsverhältnis - Agrarwirtschaft",
+				"bezeichnungW": "Schülerinnen ohne Arbeitsverhältnis - Agrarwirtschaft",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "302",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1815000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "EV",
+				"ebene2": null,
+				"ebene3": "OA",
+				"bezeichnung": "Schüler/-innen ohne Arbeitsverhältnis - Ernährungs- und Versorgungsmanagement",
+				"bezeichnungM": "Schüler ohne Arbeitsverhältnis - Ernährungs- und Versorgungsmanagement",
+				"bezeichnungW": "Schülerinnen ohne Arbeitsverhältnis - Ernährungs- und Versorgungsmanagement",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "303",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 1816000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "GT",
+				"ebene2": "FR",
+				"ebene3": "OA",
+				"bezeichnung": "Schüler/-innen ohne Arbeitsverhältnis - Farbtechnik und Raumgestaltung",
+				"bezeichnungM": "Schüler ohne Arbeitsverhältnis - Farbtechnik und Raumgestaltung",
+				"bezeichnungW": "Schülerinnen ohne Arbeitsverhältnis - Farbtechnik und Raumgestaltung",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "303",
+			"schluessel2": "02",
+			"historie": [ {
+				"id": 1817000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "GT",
+				"ebene2": "MM",
+				"ebene3": "OA",
+				"bezeichnung": "Schüler/-innen ohne Arbeitsverhältnis - Medien/Medientechnologie",
+				"bezeichnungM": "Schüler ohne Arbeitsverhältnis - Medien/Medientechnologie",
+				"bezeichnungW": "Schülerinnen ohne Arbeitsverhältnis - Medien/Medientechnologie",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "304",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 1818000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "GE",
+				"ebene2": "GW",
+				"ebene3": "OA",
+				"bezeichnung": "Schüler/-innen ohne Arbeitsverhältnis - Gesundheitswesen",
+				"bezeichnungM": "Schüler ohne Arbeitsverhältnis - Gesundheitswesen",
+				"bezeichnungW": "Schülerinnen ohne Arbeitsverhältnis - Gesundheitswesen",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "304",
+			"schluessel2": "02",
+			"historie": [ {
+				"id": 1819000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "GE",
+				"ebene2": "SW",
+				"ebene3": "OA",
+				"bezeichnung": "Schüler/-innen ohne Arbeitsverhältnis - Sozialwesen",
+				"bezeichnungM": "Schüler ohne Arbeitsverhältnis - Sozialwesen",
+				"bezeichnungW": "Schülerinnen ohne Arbeitsverhältnis - Sozialwesen",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "304",
+			"schluessel2": "03",
+			"historie": [ {
+				"id": 1820000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "GE",
+				"ebene2": "KP",
+				"ebene3": "OA",
+				"bezeichnung": "Schüler/-innen ohne Arbeitsverhältnis -Körperpflege",
+				"bezeichnungM": "Schüler ohne Arbeitsverhältnis - Körperpflege",
+				"bezeichnungW": "Schülerinnen ohne Arbeitsverhältnis -Körperpflege",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "305",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1821000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "IF",
+				"ebene2": null,
+				"ebene3": "OA",
+				"bezeichnung": "Schüler/-innen ohne Arbeitsverhältnis - Informatik",
+				"bezeichnungM": "Schüler ohne Arbeitsverhältnis - Informatik",
+				"bezeichnungW": "Schülerinnen ohne Arbeitsverhältnis - Informatik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "306",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 1822000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": "BH",
+				"ebene3": "OA",
+				"bezeichnung": "Schüler/-innen ohne Arbeitsverhältnis - Bau und Holztechnik",
+				"bezeichnungM": "Schüler ohne Arbeitsverhältnis - Bau und Holztechnik",
+				"bezeichnungW": "Schülerinnen ohne Arbeitsverhältnis - Bau und Holztechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "306",
+			"schluessel2": "02",
+			"historie": [ {
+				"id": 1823000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": "DT",
+				"ebene3": "OA",
+				"bezeichnung": "Schüler/-innen ohne Arbeitsverhältnis - Drucktechnik",
+				"bezeichnungM": "Schüler ohne Arbeitsverhältnis - Drucktechnik",
+				"bezeichnungW": "Schülerinnen ohne Arbeitsverhältnis - Drucktechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "306",
+			"schluessel2": "03",
+			"historie": [ {
+				"id": 1824000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": "ET",
+				"ebene3": "OA",
+				"bezeichnung": "Schüler/-innen ohne Arbeitsverhältnis - Elektrotechnik",
+				"bezeichnungM": "Schüler ohne Arbeitsverhältnis - Elektrotechnik",
+				"bezeichnungW": "Schülerinnen ohne Arbeitsverhältnis - Elektrotechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "306",
+			"schluessel2": "04",
+			"historie": [ {
+				"id": 1825000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": "FT",
+				"ebene3": "OA",
+				"bezeichnung": "Schüler/-innen ohne Arbeitsverhältnis - Fahrzeugtechnik",
+				"bezeichnungM": "Schüler ohne Arbeitsverhältnis - Fahrzeugtechnik",
+				"bezeichnungW": "Schülerinnen ohne Arbeitsverhältnis - Fahrzeugtechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "306",
+			"schluessel2": "05",
+			"historie": [ {
+				"id": 1826000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": "MD",
+				"ebene3": "OA",
+				"bezeichnung": "Schüler/-innen ohne Arbeitsverhältnis - Medizintechnik",
+				"bezeichnungM": "Schüler ohne Arbeitsverhältnis - Medizintechnik",
+				"bezeichnungW": "Schülerinnen ohne Arbeitsverhältnis - Medizintechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "306",
+			"schluessel2": "06",
+			"historie": [ {
+				"id": 1827000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": "ME",
+				"ebene3": "OA",
+				"bezeichnung": "Schüler/-innen ohne Arbeitsverhältnis - Metalltechnik",
+				"bezeichnungM": "Schüler ohne Arbeitsverhältnis - Metalltechnik",
+				"bezeichnungW": "Schülerinnen ohne Arbeitsverhältnis - Metalltechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "306",
+			"schluessel2": "07",
+			"historie": [ {
+				"id": 1828000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": "PC",
+				"ebene3": "OA",
+				"bezeichnung": "Schüler/-innen ohne Arbeitsverhältnis - Physik/Chemie/Biologie",
+				"bezeichnungM": "Schüler ohne Arbeitsverhältnis - Physik/Chemie/Biologie",
+				"bezeichnungW": "Schülerinnen ohne Arbeitsverhältnis - Physik/Chemie/Biologie",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "306",
+			"schluessel2": "08",
+			"historie": [ {
+				"id": 1829000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": "TB",
+				"ebene3": "OA",
+				"bezeichnung": "Schüler/-innen ohne Arbeitsverhältnis - Textiltechnik und Bekleidung",
+				"bezeichnungM": "Schüler ohne Arbeitsverhältnis - Textiltechnik und Bekleidung",
+				"bezeichnungW": "Schülerinnen ohne Arbeitsverhältnis - Textiltechnik und Bekleidung",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "307",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1830000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "WV",
+				"ebene2": null,
+				"ebene3": "OA",
+				"bezeichnung": "Schüler/-innen ohne Arbeitsverhältnis - Wirtschaft und Verwaltung",
+				"bezeichnungM": "Schüler ohne Arbeitsverhältnis - Wirtschaft und Verwaltung",
+				"bezeichnungW": "Schülerinnen ohne Arbeitsverhältnis - Wirtschaft und Verwaltung",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "401",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1831000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "AW",
+				"ebene2": null,
+				"ebene3": "WJ",
+				"bezeichnung": "Werkstattjahr - Agrarwirtschaft",
+				"bezeichnungM": "Werkstattjahr - Agrarwirtschaft",
+				"bezeichnungW": "Werkstattjahr - Agrarwirtschaft",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "402",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1832000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "EV",
+				"ebene2": null,
+				"ebene3": "WJ",
+				"bezeichnung": "Werkstattjahr - Ernährungs- und Versorgungsmanagement",
+				"bezeichnungM": "Werkstattjahr - Ernährungs- und Versorgungsmanagement",
+				"bezeichnungW": "Werkstattjahr - Ernährungs- und Versorgungsmanagement",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "403",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 1833000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "GT",
+				"ebene2": "FR",
+				"ebene3": "WJ",
+				"bezeichnung": "Werkstattjahr - Farbtechnik und Raumgestaltung",
+				"bezeichnungM": "Werkstattjahr - Farbtechnik und Raumgestaltung",
+				"bezeichnungW": "Werkstattjahr - Farbtechnik und Raumgestaltung",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "403",
+			"schluessel2": "02",
+			"historie": [ {
+				"id": 1834000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "GT",
+				"ebene2": "MM",
+				"ebene3": "WJ",
+				"bezeichnung": "Werkstattjahr - Medien/Medientechnologie",
+				"bezeichnungM": "Werkstattjahr - Medien/Medientechnologie",
+				"bezeichnungW": "Werkstattjahr - Medien/Medientechnologie",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "404",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 1835000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "GE",
+				"ebene2": "GW",
+				"ebene3": "WJ",
+				"bezeichnung": "Werkstattjahr - Gesundheitswesen",
+				"bezeichnungM": "Werkstattjahr - Gesundheitswesen",
+				"bezeichnungW": "Werkstattjahr - Gesundheitswesen",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "404",
+			"schluessel2": "02",
+			"historie": [ {
+				"id": 1836000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "GE",
+				"ebene2": "SW",
+				"ebene3": "WJ",
+				"bezeichnung": "Werkstattjahr - Sozialwesen",
+				"bezeichnungM": "Werkstattjahr - Sozialwesen",
+				"bezeichnungW": "Werkstattjahr - Sozialwesen",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "404",
+			"schluessel2": "03",
+			"historie": [ {
+				"id": 1837000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "GE",
+				"ebene2": "KP",
+				"ebene3": "WJ",
+				"bezeichnung": "Werkstattjahr - Körperpflege",
+				"bezeichnungM": "Werkstattjahr - Körperpflege",
+				"bezeichnungW": "Werkstattjahr - Körperpflege",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "405",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1838000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "IF",
+				"ebene2": null,
+				"ebene3": "WJ",
+				"bezeichnung": "Werkstattjahr - Informatik",
+				"bezeichnungM": "Werkstattjahr - Informatik",
+				"bezeichnungW": "Werkstattjahr - Informatik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "406",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 1839000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": "BH",
+				"ebene3": "WJ",
+				"bezeichnung": "Werkstattjahr - Bau und Holztechnik",
+				"bezeichnungM": "Werkstattjahr - Bau und Holztechnik",
+				"bezeichnungW": "Werkstattjahr - Bau und Holztechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "406",
+			"schluessel2": "02",
+			"historie": [ {
+				"id": 1840000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": "DT",
+				"ebene3": "WJ",
+				"bezeichnung": "Werkstattjahr - Drucktechnik",
+				"bezeichnungM": "Werkstattjahr - Drucktechnik",
+				"bezeichnungW": "Werkstattjahr - Drucktechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "406",
+			"schluessel2": "03",
+			"historie": [ {
+				"id": 1841000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": "ET",
+				"ebene3": "WJ",
+				"bezeichnung": "Werkstattjahr - Elektrotechnik",
+				"bezeichnungM": "Werkstattjahr - Elektrotechnik",
+				"bezeichnungW": "Werkstattjahr - Elektrotechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "406",
+			"schluessel2": "04",
+			"historie": [ {
+				"id": 1842000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": "FT",
+				"ebene3": "WJ",
+				"bezeichnung": "Werkstattjahr - Fahrzeugtechnik",
+				"bezeichnungM": "Werkstattjahr - Fahrzeugtechnik",
+				"bezeichnungW": "Werkstattjahr - Fahrzeugtechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "406",
+			"schluessel2": "05",
+			"historie": [ {
+				"id": 1843000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": "MD",
+				"ebene3": "WJ",
+				"bezeichnung": "Werkstattjahr - Medizintechnik",
+				"bezeichnungM": "Werkstattjahr - Medizintechnik",
+				"bezeichnungW": "Werkstattjahr - Medizintechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "406",
+			"schluessel2": "06",
+			"historie": [ {
+				"id": 1844000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": "ME",
+				"ebene3": "WJ",
+				"bezeichnung": "Werkstattjahr - Metalltechnik",
+				"bezeichnungM": "Werkstattjahr - Metalltechnik",
+				"bezeichnungW": "Werkstattjahr - Metalltechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "406",
+			"schluessel2": "07",
+			"historie": [ {
+				"id": 1845000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": "PC",
+				"ebene3": "WJ",
+				"bezeichnung": "Werkstattjahr - Physik/Chemie/Biologie",
+				"bezeichnungM": "Werkstattjahr - Physik/Chemie/Biologie",
+				"bezeichnungW": "Werkstattjahr - Physik/Chemie/Biologie",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "406",
+			"schluessel2": "08",
+			"historie": [ {
+				"id": 1846000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": "TB",
+				"ebene3": "WJ",
+				"bezeichnung": "Werkstattjahr - Textiltechnik und Bekleidung",
+				"bezeichnungM": "Werkstattjahr - Textiltechnik und Bekleidung",
+				"bezeichnungW": "Werkstattjahr - Textiltechnik und Bekleidung",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "407",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1847000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "WV",
+				"ebene2": null,
+				"ebene3": "WJ",
+				"bezeichnung": "Werkstattjahr - Wirtschaft und Verwaltung",
+				"bezeichnungM": "Werkstattjahr - Wirtschaft und Verwaltung",
+				"bezeichnungW": "Werkstattjahr - Wirtschaft und Verwaltung",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "500",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1848000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "OZ",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Förderzentrum für Flüchtlinge",
+				"bezeichnungM": "Förderzentrum für Flüchtlinge",
+				"bezeichnungW": "Förderzentrum für Flüchtlinge",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "601",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1849000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "AW",
+				"ebene2": null,
+				"ebene3": "AV",
+				"bezeichnung": "Berufsvorb. Bildungsmaßn. Rehabilitation (BvB Reha) - Agrarwirtschaft",
+				"bezeichnungM": "Berufsvorb. Bildungsmaßn. Rehabilitation (BvB Reha) - Agrarwirtschaft",
+				"bezeichnungW": "Berufsvorb. Bildungsmaßn. Rehabilitation (BvB Reha) - Agrarwirtschaft",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "602",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1850000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "EV",
+				"ebene2": null,
+				"ebene3": "AV",
+				"bezeichnung": "Berufsvorb. Bildungsmaßn. Rehabilitation (BvB Reha) - Ernährungs- und Versorgungsmanagement",
+				"bezeichnungM": "Berufsvorb. Bildungsmaßn. Rehabilitation (BvB Reha) - Ernährungs- und Versorgungsmanagement",
+				"bezeichnungW": "Berufsvorb. Bildungsmaßn. Rehabilitation (BvB Reha) - Ernährungs- und Versorgungsmanagement",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "603",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 1851000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "GT",
+				"ebene2": "FR",
+				"ebene3": "AV",
+				"bezeichnung": "Berufsvorb. Bildungsmaßn. Rehabilitation (BvB Reha) - Farbtechnik und Raumgestaltung",
+				"bezeichnungM": "Berufsvorb. Bildungsmaßn. Rehabilitation (BvB Reha) - Farbtechnik und Raumgestaltung",
+				"bezeichnungW": "Berufsvorb. Bildungsmaßn. Rehabilitation (BvB Reha) - Farbtechnik und Raumgestaltung",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "603",
+			"schluessel2": "02",
+			"historie": [ {
+				"id": 1852000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "GT",
+				"ebene2": "MM",
+				"ebene3": "AV",
+				"bezeichnung": "Berufsvorb. Bildungsmaßn. Rehabilitation (BvB Reha) - Medien/Medientechnologie",
+				"bezeichnungM": "Berufsvorb. Bildungsmaßn. Rehabilitation (BvB Reha) - Medien/Medientechnologie",
+				"bezeichnungW": "Berufsvorb. Bildungsmaßn. Rehabilitation (BvB Reha) - Medien/Medientechnologie",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "604",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 1853000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "GE",
+				"ebene2": "GW",
+				"ebene3": "AV",
+				"bezeichnung": "Berufsvorb. Bildungsmaßn. Rehabilitation (BvB Reha) - Gesundheitswesen",
+				"bezeichnungM": "Berufsvorb. Bildungsmaßn. Rehabilitation (BvB Reha) - Gesundheitswesen",
+				"bezeichnungW": "Berufsvorb. Bildungsmaßn. Rehabilitation (BvB Reha) - Gesundheitswesen",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "604",
+			"schluessel2": "02",
+			"historie": [ {
+				"id": 1854000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "GE",
+				"ebene2": "SW",
+				"ebene3": "AV",
+				"bezeichnung": "Berufsvorb. Bildungsmaßn. Rehabilitation (BvB Reha) - Sozialwesen",
+				"bezeichnungM": "Berufsvorb. Bildungsmaßn. Rehabilitation (BvB Reha) - Sozialwesen",
+				"bezeichnungW": "Berufsvorb. Bildungsmaßn. Rehabilitation (BvB Reha) - Sozialwesen",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "604",
+			"schluessel2": "03",
+			"historie": [ {
+				"id": 1855000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "GE",
+				"ebene2": "KP",
+				"ebene3": "AV",
+				"bezeichnung": "Berufsvorb. Bildungsmaßn. Rehabilitation (BvB Reha) - Körperpflege",
+				"bezeichnungM": "Berufsvorb. Bildungsmaßn. Rehabilitation (BvB Reha) - Körperpflege",
+				"bezeichnungW": "Berufsvorb. Bildungsmaßn. Rehabilitation (BvB Reha) - Körperpflege",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "605",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1856000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "IF",
+				"ebene2": null,
+				"ebene3": "AV",
+				"bezeichnung": "Berufsvorb. Bildungsmaßn. Rehabilitation (BvB Reha) - Informatik",
+				"bezeichnungM": "Berufsvorb. Bildungsmaßn. Rehabilitation (BvB Reha) - Informatik",
+				"bezeichnungW": "Berufsvorb. Bildungsmaßn. Rehabilitation (BvB Reha) - Informatik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "606",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 1857000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": "BH",
+				"ebene3": "AV",
+				"bezeichnung": "Berufsvorb. Bildungsmaßn. Rehabilitation (BvB Reha) - Bau und Holztechnik",
+				"bezeichnungM": "Berufsvorb. Bildungsmaßn. Rehabilitation (BvB Reha) - Bau und Holztechnik",
+				"bezeichnungW": "Berufsvorb. Bildungsmaßn. Rehabilitation (BvB Reha) - Bau und Holztechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "606",
+			"schluessel2": "02",
+			"historie": [ {
+				"id": 1858000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": "DT",
+				"ebene3": "AV",
+				"bezeichnung": "Berufsvorb. Bildungsmaßn. Rehabilitation (BvB Reha) - Drucktechnik",
+				"bezeichnungM": "Berufsvorb. Bildungsmaßn. Rehabilitation (BvB Reha) - Drucktechnik",
+				"bezeichnungW": "Berufsvorb. Bildungsmaßn. Rehabilitation (BvB Reha) - Drucktechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "606",
+			"schluessel2": "03",
+			"historie": [ {
+				"id": 1859000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": "ET",
+				"ebene3": "AV",
+				"bezeichnung": "Berufsvorb. Bildungsmaßn. Rehabilitation (BvB Reha) - Elektrotechnik",
+				"bezeichnungM": "Berufsvorb. Bildungsmaßn. Rehabilitation (BvB Reha) - Elektrotechnik",
+				"bezeichnungW": "Berufsvorb. Bildungsmaßn. Rehabilitation (BvB Reha) - Elektrotechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "606",
+			"schluessel2": "04",
+			"historie": [ {
+				"id": 1860000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": "FT",
+				"ebene3": "AV",
+				"bezeichnung": "Berufsvorb. Bildungsmaßn. Rehabilitation (BvB Reha) - Fahrzeugtechnik",
+				"bezeichnungM": "Berufsvorb. Bildungsmaßn. Rehabilitation (BvB Reha) - Fahrzeugtechnik",
+				"bezeichnungW": "Berufsvorb. Bildungsmaßn. Rehabilitation (BvB Reha) - Fahrzeugtechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "606",
+			"schluessel2": "05",
+			"historie": [ {
+				"id": 1861000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": "MD",
+				"ebene3": "AV",
+				"bezeichnung": "Berufsvorb. Bildungsmaßn. Rehabilitation (BvB Reha) - Medizintechnik",
+				"bezeichnungM": "Berufsvorb. Bildungsmaßn. Rehabilitation (BvB Reha) - Medizintechnik",
+				"bezeichnungW": "Berufsvorb. Bildungsmaßn. Rehabilitation (BvB Reha) - Medizintechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "606",
+			"schluessel2": "06",
+			"historie": [ {
+				"id": 1862000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": "ME",
+				"ebene3": "AV",
+				"bezeichnung": "Berufsvorb. Bildungsmaßn. Rehabilitation (BvB Reha) - Metalltechnik",
+				"bezeichnungM": "Berufsvorb. Bildungsmaßn. Rehabilitation (BvB Reha) - Metalltechnik",
+				"bezeichnungW": "Berufsvorb. Bildungsmaßn. Rehabilitation (BvB Reha) - Metalltechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "606",
+			"schluessel2": "07",
+			"historie": [ {
+				"id": 1863000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": "PC",
+				"ebene3": "AV",
+				"bezeichnung": "Berufsvorb. Bildungsmaßn. Rehabilitation (BvB Reha) - Physik/Chemie/Biologie",
+				"bezeichnungM": "Berufsvorb. Bildungsmaßn. Rehabilitation (BvB Reha) - Physik/Chemie/Biologie",
+				"bezeichnungW": "Berufsvorb. Bildungsmaßn. Rehabilitation (BvB Reha) - Physik/Chemie/Biologie",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "606",
+			"schluessel2": "08",
+			"historie": [ {
+				"id": 1864000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": "TB",
+				"ebene3": "AV",
+				"bezeichnung": "Berufsvorb. Bildungsmaßn. Rehabilitation (BvB Reha) - Textiltechnik und Bekleidung",
+				"bezeichnungM": "Berufsvorb. Bildungsmaßn. Rehabilitation (BvB Reha) - Textiltechnik und Bekleidung",
+				"bezeichnungW": "Berufsvorb. Bildungsmaßn. Rehabilitation (BvB Reha) - Textiltechnik und Bekleidung",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "607",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1865000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "WV",
+				"ebene2": null,
+				"ebene3": "AV",
+				"bezeichnung": "Berufsvorb. Bildungsmaßn. Rehabilitation (BvB Reha) - Wirtschaft und Verwaltung",
+				"bezeichnungM": "Berufsvorb. Bildungsmaßn. Rehabilitation (BvB Reha) - Wirtschaft und Verwaltung",
+				"bezeichnungW": "Berufsvorb. Bildungsmaßn. Rehabilitation (BvB Reha) - Wirtschaft und Verwaltung",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "999",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1866000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "XX",
+				"ebene2": "XX",
+				"ebene3": "XX",
+				"bezeichnung": "Sonstiger Bildungsgang",
+				"bezeichnungM": "Sonstiger Bildungsgang",
+				"bezeichnungW": "Sonstiger Bildungsgang",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}
+	]
+}

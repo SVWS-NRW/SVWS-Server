@@ -1,0 +1,17 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [ {
+    "code" : "L_10_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Um das Latinum zu erlangen muss Latein in EF.1 schriftlich fortgeführt werden."
+  }, {
+    "code" : "SW_1_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Wird Sozialwissenschaften nicht in EF.1 belegt, so muss Sozialwissenschaften in der Qualifikationsphase als Zusatzkurs gewählt werden."
+  }, {
+    "code" : "NW_FS_10",
+    "art" : "BELEGUNG",
+    "beschreibung" : "In EF.1 müssen entweder zwei Naturwissenschaften oder zwei Fremdsprachen belegt werden. Hierbei ist eine Naturwissenschaft oder sind zwei Fremdsprachen schriftlich zu belegen. Zu den Fremdsprachen zählen auch in einer weiteren Fremdsprache unterrichtete Sachfächer."
+  } ],
+  "log" : [ ]
+}

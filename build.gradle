@@ -1,0 +1,220 @@
+import org.gradle.internal.os.OperatingSystem
+
+plugins {
+	// TODO Support JPMS-Modules
+    // id "de.jjohannes.extra-java-module-info" version "0.9" apply false
+	id 'com.github.jk1.dependency-license-report' version '2.1'
+}
+
+String osName = OperatingSystem.current().getName();
+String osVersion = OperatingSystem.current().getVersion();
+String os = OperatingSystem.current().isMacOsX()
+println "*** OS-Version: $osName $osVersion was detected. (MacOS: $os)"
+println "*** Gradle Version: $gradle.gradleVersion"
+
+ext.getGithubActor = { ->
+    if (properties.containsKey('github_actor'))
+		return github_actor;
+	def username = System.getenv("GITHUB_ACTOR")
+	if (username != null)
+		return username;
+	throw new GradleException('Fehler: Der Github benutzer wurde weder in USERHOME/.gradle/gradle.properties als github_actor, noch als Umgebungsvariable GITHUB_ACTOR festgelegt!')
+}
+
+ext.getGithubToken = { ->
+    if (properties.containsKey('github_token'))
+		return github_token;
+	def token = System.getenv("GITHUB_TOKEN")
+	if (token != null)
+		return token;
+	throw new GradleException('Fehler: Der Github-Token wurde weder in USERHOME/.gradle/gradle.properties als github_token, noch als Umgebungsvariable GITHUB_TOKEN festgelegt!')
+}
+
+
+wrapper {
+    description "Regenerates the Gradle Wrapper files"
+    gradleVersion = '7.4.2'
+    distributionUrl = "https://services.gradle.org/distributions/gradle-${gradleVersion}-all.zip"
+}
+
+
+allprojects {
+    apply plugin: 'svws.gradle.javalib.plugin'
+	apply plugin: 'maven-publish'
+	apply plugin: 'eclipse'
+	// TODO Support JPMS-Modules
+	// apply plugin: 'de.jjohannes.extra-java-module-info'
+
+	version = '0.2.13'
+	group = 'de.nrw.schule.svws'
+	
+    repositories {
+        mavenCentral()
+        maven {
+	    	name = "GitHubPackagesJBCrypt"
+	        url = "https://maven.pkg.github.com/SVWS-NRW/SVWS-Packages"
+	        credentials {
+	        	username = getGithubActor()
+	            password = getGithubToken()
+	        }
+	    }        
+	}
+	
+	java {
+	    withJavadocJar()
+	    withSourcesJar()	
+	}
+
+	javadoc {
+		options.encoding = 'UTF-8' 
+		options.charSet = 'UTF-8'
+		options.docEncoding = 'UTF-8'
+	    options.addStringOption('Xmaxerrs', '10000')
+	    options.addStringOption('Xmaxwarns', '10000')
+	    if (JavaVersion.current().isJava9Compatible()) {
+	        options.addBooleanOption('html5', true)
+	    }
+	}
+	
+	project.ext.setProperty = { File file, String key, String value ->
+	    def s = file.text.replaceAll("(?ms)(^\\Q${key}\\E\\s*=).*?\$", '')
+	    s = s.replaceAll('\n{2,}', '\n')
+	    file.text = s + key + '=' + value + '\n'
+	}
+	
+	project.ext.setEclipsePreference = { File prefsFile, String key, String value ->
+	    if (!prefsFile.exists()) {
+	        prefsFile.parentFile.mkdirs()
+	        prefsFile.write("eclipse.preferences.version=1\n")
+	    }
+	    setProperty(prefsFile, key, value)
+	}
+	
+	eclipse {
+		project {
+        	file { 
+        		beforeMerged { gp ->
+					setEclipsePreference(file('.settings/org.eclipse.core.resources.prefs'), 'encoding/<project>', 'UTF-8')
+					setEclipsePreference(file('.settings/org.eclipse.core.runtime.prefs'), 'line.separator', '\\n')
+				}
+        	}			
+		}
+	}
+	
+	// create javadoc task for test code
+	task testJavadoc(type: Javadoc) {
+		group = 'documentation'	  
+		options.encoding = 'UTF-8' 
+		options.charSet = 'UTF-8'
+		options.docEncoding = 'UTF-8'
+	    options.addStringOption('Xmaxerrs', '10000')
+	    options.addStringOption('Xmaxwarns', '10000')
+		if (JavaVersion.current().isJava9Compatible()) {
+			options.addBooleanOption('html5', true)
+		}
+		source = sourceSets.test.allJava
+		classpath = sourceSets.test.compileClasspath
+		destinationDir = file("${buildDir}/docs/testjavadoc")
+	}
+	
+	javadoc.dependsOn testJavadoc
+	
+/* TODO Support JPMS-Modules
+	plugins.withType(JavaPlugin).configureEach {
+        java {
+            modularity.inferModulePath = true
+        }
+    }
+*/    
+
+	test {
+	    useJUnitPlatform()
+	}
+
+	task printDependencies {
+		group = 'build'
+		doLast {
+			println "Dependencies:"
+			configurations.default.each { println it }
+		}
+	}
+	
+}
+
+task rebuild(type: GradleBuild) {
+	tasks = ['clean', 'build']
+	group "build"
+}
+
+
+task wipe() {
+	dependsOn(':svws-webclient:nodeWipe')
+	group "build"
+}
+
+
+task assembleServer() {
+	dependsOn(':svws-server-app:assemble')
+	group "build"	
+}
+
+task buildServer() {
+	dependsOn(':svws-server-app:build')
+	group "build"	
+}
+
+
+task assembleTS() {
+	dependsOn(':svws-webclient:assemble')
+	group "build"	
+}
+
+task buildTS() {
+	dependsOn(':svws-webclient:build')
+	group "build"	
+}
+
+
+
+import com.github.jk1.license.render.*
+import com.github.jk1.license.importer.*
+
+licenseReport {
+    // Set output directory for the report data.
+    // Defaults to ${project.buildDir}/reports/dependency-license.
+    outputDir = "$projectDir/build/licenses"
+
+    // Select projects to examine for dependencies.
+    // Defaults to current project and all its subprojects
+    projects = [project] + project.subprojects
+
+    // Adjust the configurations to fetch dependencies, e.g. for Android projects. Default is 'runtimeClasspath'
+    // configurations = ['implementation']
+    // Use 'ALL' to dynamically resolve all configurations:
+//    configurations = ALL
+    configurations = ['runtimeClasspath']
+
+
+    // List the groups ids to exclude from dependency report. Supports regular expressions.
+    // For finer granularity, see: excludes.
+    excludeGroups = ['de.nrw.schule.svws.server']
+
+    // List the ids (in module:name format) to exclude from dependency report. Supports regular expressions.
+    // By default excludes is empty.
+    excludes = ['moduleGroup:moduleName']
+
+    // Don't include artifacts of project's own group into the report
+    excludeOwnGroup = true
+
+    // Set custom report renderer, implementing ReportRenderer.
+    // Yes, you can write your own to support any format necessary.
+    renderers = [new XmlReportRenderer('third-party-libs.xml', 'Back-End Libraries')]
+
+    // Set importers to import any external dependency information, i.e. from npm.
+    // Custom importer should implement DependencyDataImporter interface.
+    // importers = [new XmlReportImporter('Frontend dependencies', file(frontend_libs.xml))]
+
+    // This is for the allowed-licenses-file in checkLicense Task
+    allowedLicensesFile = new File("$projectDir/allowed-licenses.json")
+}
+

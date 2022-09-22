@@ -1,0 +1,103 @@
+"ID";"Gruppe";"KurzBez";"Bezeichnung";"Grundschule";"Tabelle";"DBFeld";"Typ";"Control";"WerteAnzeige";"WerteSQL";"LookupInfo";"OperatorenAnzeige";"OperatorenSQL";"Zusatzbedingung";"ZusatzTabellen"
+1;S;Name;Schüler: Name;+;Schueler;Name;C;EDIT;;;;"gleich;ungleich;größer;größer gleich;kleiner;kleiner gleich;enthält";"=;<>;>;>=;<;<=;LIKE";;
+2;S;Vorname;Schüler: Vorname;+;Schueler;Vorname;C;EDIT;;;;"gleich;enthält;beginnt mit";"=;LIKE;like";;
+3;S;Geschlecht;Schüler: Geschlecht;+;Schueler;Geschlecht;N;LOOKUP;"männlich;weiblich";"3;4";;gleich;=;;
+4;S;Strasse;Schüler: Strasse;+;Schueler;Strasse;C;EDIT;;;;"gleich;enthält;beginnt mit;leer";"=;LIKE;like;IS NULL";;
+5;S;Postleitzahl;Schüler: Postleitzahl;+;Schueler;PLZ;C;EDIT;;;;"gleich;ungleich;größer;größer gleich;kleiner;kleiner gleich;enthält;enthält nicht;beginnt mit;leer;nicht leer";"=;<>;>;>=;<;<=;LIKE;NOT LIKE;like;IS NULL;IS NOT NULL";;
+6;S;Geburtsdatum;Schüler: Geburtsdatum;+;Schueler;Geburtsdatum;D;DATEEDIT;;;;"gleich;größer;größer gleich;kleiner;kleiner gleich;leer;nicht leer";"=;>;>=;<;<=;IS NULL;IS NOT NULL";;
+8;S;Geburtsort;Schüler: Geburtsort;+;Schueler;Geburtsort;C;EDIT;;;;"gleich;enthält;beginnt mit;leer;nicht leer";"=;LIKE;like;IS NULL;IS NOT NULL";;
+9;S;"1. Staatsangehörigkeit";Schüler: 1. Staatsangehörigkeit;+;Schueler;StaatKrz;C;DBLOOKUP;;;"dsStaat;Bezeichnung;StatistikKrz";"gleich;ungleich;leer;nicht leer";"=;<>;IS NULL;IS NOT NULL";;
+10;S;Konfession;Schüler: Konfession;+;Schueler;Religion_ID;N;DBLOOKUP;;;"dsKonfession;Bezeichnung;ID";"gleich;ungleich;leer;nicht leer";"=;<>;IS NULL;IS NOT NULL";;
+11;S;Aussiedler;Schüler: Aussiedler;+;Schueler;Aussiedler;C;LOOKUP;"Ja;Nein";"+;-";;gleich;=;;
+12;S;Volljährig;Schüler: Volljährig;+;Schueler;Volljaehrig;C;LOOKUP;"Ja;Nein";"+;-";;gleich;=;;
+13;S;Schulpflicht erfüllt;Schüler: Schulpflichtig;+;Schueler;SchulpflichtErf;C;LOOKUP;"Ja;Nein";"+;-";;gleich;=;;
+14;S;Schwerstbehinderung;Schüler: Schwerbehinderung;+;Schueler;Schwerbehinderung;C;LOOKUP;"Ja;Nein";"+;-";;gleich;=;;
+15;S;Bafög;Schüler: Bafög;+;Schueler;Bafoeg;C;LOOKUP;"Ja;Nein";"+;-";;gleich;=;;
+16;S;Fahrschüler-Art;Schüler: Fahrschüler-Art;+;Schueler;Fahrschueler_ID;N;DBLOOKUP;;;"dsFahrschuelerArt;Bezeichnung;ID";"gleich;ungleich;leer;nicht leer";"=;<>;IS NULL;IS NOT NULL";;
+17;S;Sportbefreiung;Schüler: Sportbefreiung;+;Schueler;Sportbefreiung_ID;N;DBLOOKUP;;;"dsSportbefreiung;Bezeichnung;ID";"gleich;ungleich;leer;nicht leer";"=;<>;IS NULL;IS NOT NULL";;
+18;S;Gelöscht;Schüler: Gelöscht;+;Schueler;Geloescht;C;LOOKUP;"Ja;Nein";"+;-";;gleich;=;;
+20;S;Status;Schüler: Status;+;Schueler;Status;N;DBLOOKUP;;;"dsStatus;Bezeichnung;StatusNr";"gleich;ungleich";"=;<>";;
+21;S;Statistik-Jahrgang;Schüler: Statistik-Jahrgang;+;Schueler;ASDJahrgang;C;DBLOOKUP;;;"dsEigeneSchule_Jahrgaenge;ASDJahrgang;ASDJahrgang";"gleich;ungleich;größer;größer gleich;kleiner;kleiner gleich;leer;nicht leer";"=;<>;>;>=;<;<=;IS NULL;IS NOT NULL";;
+22;S;Klasse;Schüler: Klasse;+;Schueler;Klasse;C;EDIT;;;"dsVersetzung;Klasse;Klasse";"gleich;ungleich;größer;größer gleich;kleiner;kleiner gleich;enthält;leer;nicht leer";"=;<>;>;>=;<;<=;LIKE;IS NULL;IS NOT NULL";;
+23;S;Einschulungsjahr;Schüler: Einschulungsjahr;+;Schueler;Einschulungsjahr;N;EDIT;;;;"gleich;ungleich;größer;größer gleich;kleiner;kleiner gleich;leer;nicht leer";"=;<>;>;>=;<;<=;IS NULL;IS NOT NULL";;
+24;S;Prüfungsordnung;Schüler: Prüfungsordnung;+;Schueler;SLBNr;N;DBLOOKUP;;;"dsSchulLaufbahn;SLBName;SLBNr";"gleich;ungleich;leer;nicht leer";"=;<>;IS NULL;IS NOT NULL";;
+26;S;Geburtsname;Schüler: Geburtsname;+;Schueler;Geburtsname;C;EDIT;;;;"gleich;enthält;beginnt mit;leer;nicht leer";"=;LIKE;like;IS NULL;IS NOT NULL";;
+27;S;Ortsteil;Schüler: Ortsteil;+;Schueler;Ortsteil_ID;N;DBLOOKUP;;;"dsOrtsteil;Bezeichnung;ID";"gleich;ungleich;leer;nicht leer";"=;<>;IS NULL;IS NOT NULL";;
+28;S;Telefon;Schüler: Telefon;+;Schueler;Telefon;C;EDIT;;;;"gleich;enthält;beginnt mit;leer;nicht leer";"=;LIKE;like;IS NULL;IS NOT NULL";;
+29;S;Mobilnummer;Schüler: Mobilnr.;+;Schueler;Fax;C;EDIT;;;;"gleich;enthält;beginnt mit;leer;nicht leer";"=;LIKE;like;IS NULL;IS NOT NULL";;
+30;S;Email;Schüler: Email;+;Schueler;Email;C;EDIT;;;;"gleich;enthält;beginnt mit;leer;nicht leer";"=;LIKE;like;IS NULL;IS NOT NULL";;
+31;S;Aufnahmedatum;Schüler: Aufnahmedatum;+;Schueler;Aufnahmedatum;D;DATEEDIT;;;;"gleich;größer;größer gleich;kleiner;kleiner gleich;leer;nicht leer";"=;>;>=;<;<=;IS NULL;IS NOT NULL";;
+32;S;Externe ID-Nr.;Schüler: Externe ID-Nr.;+;Schueler;IDExt;C;EDIT;;;;"gleich;größer;größer gleich;kleiner;kleiner gleich;enthält;beginnt mit;leer;nicht leer";"=;>;>=;<;<=;LIKE;like;IS NULL;IS NOT NULL";;
+33;S;Haltestelle;Schüler: Haltestelle;+;Schueler;Haltestelle_ID;N;DBLOOKUP;;;"dsHaltestelle;Bezeichnung;ID";"gleich;ungleich;leer;nicht leer";"=;<>;IS NULL;IS NOT NULL";;
+34;S;Religionsunterricht Abmeldung;Schüler: Religionsunterricht Abmeldung;+;Schueler;Religionsabmeldung;D;DATEEDIT;;;;"gleich;größer;größer gleich;kleiner;kleiner gleich;leer;nicht leer";"=;>;>=;<;<=;IS NULL;IS NOT NULL";;
+35;S;Religionsunterricht Anmeldung;Schüler: Religionsunterricht Anmeldung;+;Schueler;Religionsanmeldung;D;DATEEDIT;;;;"gleich;größer;größer gleich;kleiner;kleiner gleich;leer;nicht leer";"=;>;>=;<;<=;IS NULL;IS NOT NULL";;
+36;S;Haupt-Förderschwerpunkt;Schüler: Haupt-Förderschwerpunkt;+;Schueler;Foerderschwerpunkt_ID;N;DBLOOKUP;;;"dsFoerderschwerpunkt;Bezeichnung;ID";"gleich;ungleich;leer;nicht leer";"=;<>;IS NULL;IS NOT NULL";;
+37;S;Anschreiben am;Schüler: Anschreiben am;+;Schueler;Anschreibdatum;D;DATEEDIT;;;;"gleich;größer;größer gleich;kleiner;kleiner gleich;leer;nicht leer";"=;>;>=;<;<=;IS NULL;IS NOT NULL";;
+38;S;Schuljahr;Schüler: Schuljahr;+;Schueler;AktSchuljahr;N;EDIT;;;;"gleich;größer;größer gleich;kleiner;kleiner gleich;leer;nicht leer";"=;>;>=;<;<=;IS NULL;IS NOT NULL";;
+39;S;Schuljahres-Abschnitt;Schüler: Schuljahres-Abschnitt;+;Schueler;AktAbschnitt;N;EDIT;;;;"gleich;größer;größer gleich;kleiner;kleiner gleich;leer;nicht leer";"=;>;>=;<;<=;IS NULL;IS NOT NULL";;
+40;S;Einschulungsart;Schüler: Einschulungsart;+;Schueler;EinschulungsartASD;C;EDIT;;;"dsEinschulungsArt;Beschreibung;Art";"gleich;ungleich;leer;nicht leer";"=;<>;IS NULL;IS NOT NULL";;
+41;S;Schulgliederung;Schüler: Schulgliederung;+;Schueler;ASDSchulform;C;DBLOOKUP;;;"dsEigeneSchule_SF;Schulform;SGL";"gleich;ungleich;leer;nicht leer";"=;<>;IS NULL;IS NOT NULL";;
+42;S;Ort;Schüler: Ort;+;K_Ort;Bezeichnung;C;EDIT;;;;"gleich;ungleich;enthält;beginnt mit";"=;<>;LIKE;like";Schueler.PLZ=K_Ort.PLZ;
+43;E;Erzieher-Art;Erzieher: Erzieher-Art;+;SchuelerErzAdr;Erzieherart_ID;N;DBLOOKUP;;;"dsErzieherArt;Bezeichnung;ID";"gleich;ungleich;leer;nicht leer";"=;<>;IS NULL;IS NOT NULL";Schueler.ID=SchuelerErzAdr.Schueler_ID;
+44;E;Anrede 1. Person;Erzieher: Anrede 1.Person;+;SchuelerErzAdr;Anrede1;C;LOOKUP;"Herr;Frau";"Herr;Frau";;"gleich;ungleich;leer;nicht leer";"=;<>;IS NULL;IS NOT NULL";Schueler.ID=SchuelerErzAdr.Schueler_ID;
+45;E;Titel 1.Person;Erzieher: Titel 1.Person;+;SchuelerErzAdr;Titel1;C;EDIT;;;;"gleich;enthält;leer;nicht leer";"=;LIKE;IS NULL;IS NOT NULL";Schueler.ID=SchuelerErzAdr.Schueler_ID;
+46;E;Name 1.Person;Erzieher: Name 1.Person;+;SchuelerErzAdr;Name1;C;EDIT;;;;"gleich;enthält;leer;nicht leer";"=;LIKE;IS NULL;IS NOT NULL";Schueler.ID=SchuelerErzAdr.Schueler_ID;
+47;E;Titel 2.Person;Erzieher: Titel 2.Person;+;SchuelerErzAdr;Titel2;C;EDIT;;;;"gleich;enthält;leer;nicht leer";"=;LIKE;IS NULL;IS NOT NULL";Schueler.ID=SchuelerErzAdr.Schueler_ID;
+48;E;Name 2.Person;Erzieher: Name 2.Person;+;SchuelerErzAdr;Name2;C;EDIT;;;;"gleich;enthält;leer;nicht leer";"=;LIKE;IS NULL;IS NOT NULL";Schueler.ID=SchuelerErzAdr.Schueler_ID;
+49;E;Straße;Erzieher: Straße;+;SchuelerErzAdr;ErzStrasse;C;EDIT;;;;"gleich;enthält;beginnt mit;leer";"=;LIKE;like;IS NULL";Schueler.ID=SchuelerErzAdr.Schueler_ID;
+50;E;Postleitzahl;Erzieher: PLZ;+;SchuelerErzAdr;ErzPLZ;C;EDIT;;;;"gleich;ungleich;größer;größer gleich;kleiner;kleiner gleich;enthält;enthält nicht;beginnt mit;leer;nicht leer";"=;<>;>;>=;<;<=;LIKE;NOT LIKE;like;IS NULL;IS NOT NULL";Schueler.ID=SchuelerErzAdr.Schueler_ID;
+51;E;Ortsteil;Erzieher: Ortsteil;+;SchuelerErzAdr;ErzOrtsteil_ID;N;DBLOOKUP;;;"dsOrtsteil;Bezeichnung;ID";"gleich;ungleich;leer;nicht leer";"=;<>;IS NULL;IS NOT NULL";Schueler.ID=SchuelerErzAdr.Schueler_ID;
+52;E;Erhält Anschreiben;Erzieher: Erhält Anschreiben;+;SchuelerErzAdr;ErzAnschreiben;C;EDIT;"Ja;Nein";"+;-";;gleich;=;Schueler.ID=SchuelerErzAdr.Schueler_ID;
+53;TA;Ansprechpartner-Art;telef. Ansprechpartner: Art;+;SchuelerTelefone;Telefonart_ID;N;DBLOOKUP;;;"dsTelefonArt;Bezeichnung;ID";"gleich;ungleich;leer;nicht leer";"=;<>;IS NULL;IS NOT NULL";Schueler.ID=SchuelerTelefone.Schueler_ID;
+54;TA;Telefon-Nr.;telef. Ansprechpartner: Telefon;+;SchuelerTelefone;TelefonNummer;C;EDIT;;;;"gleich;enthält;beginnt mit";"=;LIKE;like";Schueler.ID=SchuelerTelefone.Schueler_ID;
+55;S;Vermerk-Art;Schüler: Vermerk-Art;+;SchuelerVermerke;Vermerkart_ID;N;DBLOOKUP;;;"dsVermerkArt;Bezeichnung;ID";"gleich;ungleich;leer;nicht leer";"=;<>;IS NULL;IS NOT NULL";Schueler.ID=SchuelerVermerke.Schueler_ID;
+56;S;Vermerk-Datum;Schüler: Vermerk-Datum;+;SchuelerVermerke;Datum;D;DATEEDIT;;;;"gleich;größer;größer gleich;kleiner;kleiner gleich;leer;nicht leer";"=;>;>=;<;<=;IS NULL;IS NOT NULL";Schueler.ID=SchuelerVermerke.Schueler_ID;
+57;S;Entlassungs-Datum;Schüler: Entlassungs-Datum;+;Schueler;Entlassdatum;D;DATEEDIT;;;;"gleich;größer;größer gleich;kleiner;kleiner gleich;leer;nicht leer";"=;>;>=;<;<=;IS NULL;IS NOT NULL";;
+58;S;Entlassungs-Jahrgang;Schüler: Entlassungs-Jahrgang;+;Schueler;Entlassjahrgang;C;DBLOOKUP;;;"dsEigeneSchule_Jahrgaenge;InternKrz;ASDJahrgang";"gleich;ungleich;größer;größer gleich;kleiner;kleiner gleich;leer;nicht leer";"=;<>;>;>=;<;<=;IS NULL;IS NOT NULL";;
+59;S;Entlassungs-Grund;Schüler: Entlassungs-Grund;+;Schueler;Entlassgrund_ID;N;DBLOOKUP;;;"dsEntlassGrund;Bezeichnung;ID";"gleich;ungleich;leer;nicht leer";"=;<>;IS NULL;IS NOT NULL";;
+63;S;abgebende Schule;Schüler: abgebende Schule;+;Schueler;LSSchulNr;C;DBLOOKUP;;;"dsSchule;Name;SchulNr";"gleich;ungleich;enthält;beginnt mit;leer;nicht leer";"=;<>;LIKE;like;IS NULL;IS NOT NULL";;
+64;S;aufnehmende Schule;Schüler: aufnehmende Schule;+;Schueler;SchulwechselNr;C;DBLOOKUP;;;"dsSchule;Name;SchulNr";"gleich;ungleich;enthält;beginnt mit;leer;nicht leer";"=;<>;LIKE;like;IS NULL;IS NOT NULL";;
+66;S;Schulwechseldatum;Schüler: Schulwechseldatum;+;Schueler;Schulwechseldatum;D;DATEEDIT;;;;"gleich;größer;größer gleich;kleiner;kleiner gleich;leer;nicht leer";"=;>;>=;<;<=;IS NULL;IS NOT NULL";;
+67;WA;Adressart;Weitere Adressen: Adressart;+;K_AllgAdresse;AllgAdrAdressArt;C;DBLOOKUP;;;"dsAdressArt;Bezeichnung;Bezeichnung";"gleich;ungleich;enthält;beginnt mit";"=;<>;LIKE;like";Schueler_AllgAdr.Adresse_ID=K_AllgAdresse.ID AND Schueler.ID=Schueler_AllgAdr.Schueler_ID;Schueler_AllgAdr
+68;WA;Name1;Weitere Adressen: Name1;+;K_AllgAdresse;AllgAdrName1;C;EDIT;;;;"enthält;beginnt mit;gleich;ungleich";"LIKE;like;=;<>";Schueler_AllgAdr.Adresse_ID=K_AllgAdresse.ID AND Schueler.ID=Schueler_AllgAdr.Schueler_ID;Schueler_AllgAdr
+69;WA;Name2;Weitere Adressen: Name2;+;K_AllgAdresse;AllgAdrName2;C;EDIT;;;;"enthält;beginnt mit;gleich;ungleich";"LIKE;like;=;<>";Schueler_AllgAdr.Adresse_ID=K_AllgAdresse.ID AND Schueler.ID=Schueler_AllgAdr.Schueler_ID;Schueler_AllgAdr
+70;WA;Postleitzahl;Weitere Adressen: PLZ;+;K_AllgAdresse;AllgAdrPLZ;C;EDIT;;;;"gleich;ungleich;größer;größer gleich;kleiner;kleiner gleich;enthält;enthält nicht;beginnt mit;leer;nicht leer";"=;<>;>;>=;<;<=;LIKE;NOT LIKE;like;IS NULL;IS NOT NULL";Schueler_AllgAdr.Adresse_ID=K_AllgAdresse.ID AND Schueler.ID=Schueler_AllgAdr.Schueler_ID;Schueler_AllgAdr
+71;S;Beschäftigungsart;Schüler: Beschäftigungsart;-;Schueler_AllgAdr;Vertragsart_ID;N;DBLOOKUP;;;"dsBeschaeftigungsArt;Bezeichnung;ID";"gleich;ungleich;leer;nicht leer";"=;<>;IS NULL;IS NOT NULL";Schueler.ID=Schueler_AllgAdr.Schueler_ID;
+72;S;Vertragsbeginn;Schüler: Vertragsbeginn;-;Schueler_AllgAdr;Vertragsbeginn;D;DATEEDIT;;;;"gleich;größer;größer gleich;kleiner;kleiner gleich;leer;nicht leer";"=;>;>=;<;<=;IS NULL;IS NOT NULL";Schueler.ID=Schueler_AllgAdr.Schueler_ID;
+73;S;Vertragsende;Schüler: Vertragsende;-;Schueler_AllgAdr;Vertragsende;D;DATEEDIT;;;;"gleich;größer;größer gleich;kleiner;kleiner gleich;leer;nicht leer";"=;>;>=;<;<=;IS NULL;IS NOT NULL";Schueler.ID=Schueler_AllgAdr.Schueler_ID;
+74;S;Praktikum;Schüler: Praktikum;-;Schueler_AllgAdr;Praktikum;C;LOOKUP;"Ja;Nein";"+;-";;gleich;=;Schueler.ID=Schueler_AllgAdr.Schueler_ID;
+75;S;Ausbilder;Schüler: Ausbilder;-;Schueler_AllgAdr;Ausbilder;C;EDIT;;;;"enthält;beginnt mit;gleich;ungleich";"LIKE;like;=;<>";Schueler.ID=Schueler_AllgAdr.Schueler_ID;
+76;S;Betrieb erhält Anschreiben;Schüler: Betrieb erhält Anschreiben;-;Schueler_AllgAdr;AllgAdrAnschreiben;C;LOOKUP;"Ja;Nein";"+;-";;gleich;=;Schueler.ID=Schueler_AllgAdr.Schueler_ID;
+77;S;Jahrgang;Schüler: Jahrgang;+;EigeneSchule_Jahrgaenge;Sortierung;N;DBLOOKUP;;;"dsEigeneSchule_Jahrgaenge;InternKrz;Sortierung";"gleich;ungleich;größer;größer gleich;kleiner;kleiner gleich;leer;nicht leer";"=;<>;>;>=;<;<=;IS NULL;IS NOT NULL";Schueler.Jahrgang_ID=EigeneSchule_Jahrgaenge.ID;
+78;S;Fachklasse;Schüler: Fachklasse;-;Schueler;Fachklasse_ID;N;DBLOOKUP;;;"dsEigeneSchule_Fachklassen;Bezeichnung;ID";"gleich;ungleich;leer;nicht leer";"=;<>;IS NULL;IS NOT NULL";;
+79;E;Anrede 2. Person;Erzieher: Anrede 2.Person;+;SchuelerErzAdr;Anrede2;C;LOOKUP;"Herr;Frau";"Herr;Frau";;"gleich;ungleich;leer;nicht leer";"=;<>;IS NULL;IS NOT NULL";Schueler.ID=SchuelerErzAdr.Schueler_ID;
+80;E;Ortsname;Erzieher: Ortsname;+;K_Ort;Bezeichnung;C;EDIT;;;;"gleich;ungleich;enthält;beginnt mit";"=;<>;LIKE;like";Schueler.ID=SchuelerErzAdr.Schueler_ID AND K_Ort.PLZ=SchuelerErzAdr.ErzPLZ;SchuelerErzAdr
+81;S;Beruf;Schüler: Beruf;-;Schueler;Beruf;C;EDIT;;;;"gleich;ungleich;enthält;beginnt mit;leer;nicht leer";"=;<>;LIKE;like;IS NULL;IS NOT NULL";;
+82;WA;Branche;Weitere Adressen: Branche;-;K_AllgAdresse;AllgAdrBranche;C;EDIT;;;;"gleich;ungleich;größer;größer gleich;kleiner;kleiner gleich;enthält;enthält nicht;beginnt mit;leer;nicht leer";"=;<>;>;>=;<;<=;LIKE;NOT LIKE;like;IS NULL;IS NOT NULL";Schueler_AllgAdr.Adresse_ID=K_AllgAdresse.ID AND Schueler.ID=Schueler_AllgAdr.Schueler_ID;Schueler_AllgAdr
+83;WA;Zusatz 1;Weitere Adressen: Zusatz 1;-;K_AllgAdresse;AllgAdrZusatz1;C;EDIT;;;;"gleich;ungleich;größer;größer gleich;kleiner;kleiner gleich;enthält;enthält nicht;beginnt mit;leer;nicht leer";"=;<>;>;>=;<;<=;LIKE;NOT LIKE;like;IS NULL;IS NOT NULL";Schueler_AllgAdr.Adresse_ID=K_AllgAdresse.ID AND Schueler.ID=Schueler_AllgAdr.Schueler_ID;Schueler_AllgAdr
+84;WA;Zusatz 2;Weitere Adressen: Zusatz 2;-;K_AllgAdresse;AllgAdrZusatz2;C;EDIT;;;;"gleich;ungleich;größer;größer gleich;kleiner;kleiner gleich;enthält;enthält nicht;beginnt mit;leer;nicht leer";"=;<>;>;>=;<;<=;LIKE;NOT LIKE;like;IS NULL;IS NOT NULL";Schueler_AllgAdr.Adresse_ID=K_AllgAdresse.ID AND Schueler.ID=Schueler_AllgAdr.Schueler_ID;Schueler_AllgAdr
+85;S;"2. Staatsangehörigkeit";Schüler: 2. Staatsangehörigkeit;+;Schueler;StaatKrz2;C;DBLOOKUP;;;"dsStaat;Bezeichnung;StatistikKrz";"gleich;ungleich;leer;nicht leer";"=;<>;IS NULL;IS NOT NULL";;
+86;S;Bildungsgang-Beginn;Schüler: Bildungsgang-Beginn;-;Schueler;BeginnBildungsgang;D;DATEEDIT;;;;"gleich;größer;größer gleich;kleiner;kleiner gleich;leer;nicht leer";"=;>;>=;<;<=;IS NULL;IS NOT NULL";;
+87;S;Organisationsform;Schüler: Organisationsform;+;Schueler;OrgFormKrz;C;DBLOOKUP;;;"dsKlassenOrgForm;Beschreibung;OF";"gleich;ungleich;leer;nicht leer";"=;<>;IS NULL;IS NOT NULL";;
+88;S;Schwerpunkt;Schüler: Schwerpunkt;-;Schueler;Schwerpunkt_ID;N;DBLOOKUP;;;"dsSchwerpunkt;Bezeichnung;ID";"gleich;ungleich;leer;nicht leer";"=;<>;IS NULL;IS NOT NULL";;
+89;S;Geburtsland;Schüler: Geburtsland;+;Schueler;GeburtslandSchueler;C;DBLOOKUP;;;"dsStaat;Bezeichnung;StatistikKrz";"gleich;ungleich;leer;nicht leer";"=;<>;IS NULL;IS NOT NULL";;
+90;S;Zuzugsjahr;Schüler: Zuzugsjahr;+;Schueler;JahrZuzug;N;EDIT;;;;"gleich;ungleich;größer;größer gleich;kleiner;kleiner gleich;leer;nicht leer";"=;<>;>;>=;<;<=;IS NULL;IS NOT NULL";;
+91;S;Verkehrssprache;Schüler: Verkehrssprache;+;Schueler;VerkehrsspracheFamilie;C;DBLOOKUP;;;"dsVerkehrssprachen;Langtext;Kurztext";"gleich;ungleich;leer;nicht leer";"=;<>;IS NULL;IS NOT NULL";;
+92;S;Geburtsland Mutter;Schüler: Geburtsland Mutter;+;Schueler;GeburtslandMutter;C;DBLOOKUP;;;"dsStaat;Bezeichnung;StatistikKrz";"gleich;ungleich;leer;nicht leer";"=;<>;IS NULL;IS NOT NULL";;
+93;S;Geburtsland Vater;Schüler: Geburtsland Vater;+;Schueler;GeburtslandVater;C;DBLOOKUP;;;"dsStaat;Bezeichnung;StatistikKrz";"gleich;ungleich;leer;nicht leer";"=;<>;IS NULL;IS NOT NULL";;
+94;S;Migrationshintergrund;Schüler: Migrationshintergrund;+;Schueler;Migrationshintergrund;C;LOOKUP;"Ja;Nein";"+;-";;gleich;=;;
+95;S;Dauer d. Kindergartenbesuches;Schüler: Dauer d. Kindergartenbesuches;+;Schueler;DauerKindergartenbesuch;C;DBLOOKUP;;;"dsDauerKindergarten;Langtext;Kurztext";"gleich;ungleich;leer;nicht leer";"=;<>;IS NULL;IS NOT NULL";;
+96;S;Kindergarten;Schüler: Kindergarten;+;Schueler;Kindergarten_ID;N;DBLOOKUP;;;"dsKindergarten;Bezeichnung;ID";"gleich;ungleich;leer;nicht leer";"=;<>;IS NULL;IS NOT NULL";;
+97;S;Übergangsempfehlung;Schüler: Übergangsempfehlung;+;Schueler;Uebergangsempfehlung_JG5;C;DBLOOKUP;;;"dsUebergangsEmpfehlungSI;Langtext;Kurztext";"gleich;ungleich;leer;nicht leer";"=;<>;IS NULL;IS NOT NULL";;
+98;S;Jahr Wechsel in Sek.I;Schüler: Jahr Wechsel in Sek.I;+;Schueler;JahrWechsel_SI;N;EDIT;;;;"gleich;ungleich;größer;größer gleich;kleiner;kleiner gleich;leer;nicht leer";"=;<>;>;>=;<;<=;IS NULL;IS NOT NULL";;
+99;S;"1. Schulform in Sek.I";Schüler: 1. Schulform in Sek.I;+;Schueler;ErsteSchulform_SI;C;DBLOOKUP;;;"dsErsteSchulformSI;Langtext;Kurztext";"gleich;ungleich;leer;nicht leer";"=;<>;IS NULL;IS NOT NULL";;
+100;S;Jahr Wechsel in Sek.II;Schüler: Jahr Wechsel in Sek.II;+;Schueler;JahrWechsel_SII;N;EDIT;;;;"gleich;ungleich;größer;größer gleich;kleiner;kleiner gleich;leer;nicht leer";"=;<>;>;>=;<;<=;IS NULL;IS NOT NULL";;
+101;S;Weiterer Förderschwerpunkt;Schüler: Weiterer Förderschwerpunkt;+;Schueler;Foerderschwerpunkt2_ID;N;DBLOOKUP;;;"dsFoerderschwerpunkt;Bezeichnung;ID";"gleich;ungleich;leer;nicht leer";"=;<>;IS NULL;IS NOT NULL";;
+102;S;Schulform d. abgebenden Schule;Schüler: Schulform d. abgebenden Schule;-;Schueler;LSSchulform;C;DBLOOKUP;;;"dsSchulformen;Bezeichnung;SF";"gleich;ungleich;leer;nicht leer";"=;<>;IS NULL;IS NOT NULL";;
+103;S;allgemeine Herkunft;Schüler: allgemeine Herkunft;+;Schueler;LSSchulFormSIM;C;DBLOOKUP;;;"dsHerkunftsSF;Beschreibung;HSF";"gleich;ungleich;leer;nicht leer";"=;<>;IS NULL;IS NOT NULL";;
+104;S;Entlassdatum an abgebender Schule;Schüler: Entlassdatum an abgebender Schule;+;Schueler;LSSchulentlassDatum;N;EDIT;;;;"gleich;ungleich;größer;größer gleich;kleiner;kleiner gleich;leer;nicht leer";"=;<>;>;>=;<;<=;IS NULL;IS NOT NULL";;
+105;S;Entlassjahrgang an abgebender Schule;Schüler: Entlassjahrgang an abgebender Schule;-;Schueler;LSJahrgang;C;DBLOOKUP;;;"dsASDJahrgang;Beschreibung;Jahrgang";"gleich;ungleich;leer;nicht leer";"=;<>;IS NULL;IS NOT NULL";;
+106;S;Versetzung an abgebender Schule;Schüler: Versetzung an abgebender Schule;-;Schueler;LSVersetzung;C;DBLOOKUP;;;"dsHerkunftsart;Beschreibung;Art";"gleich;ungleich;leer;nicht leer";"=;<>;IS NULL;IS NOT NULL";;
+107;S;Fachklasse an abgebender Schule;Schüler: Fachklasse an abgebender Schule;-;Schueler;LSFachklKennung;C;DBLOOKUP;;;"dsASDFachkl1;Beschreibung;Kennung";"gleich;ungleich;leer;nicht leer";"=;<>;IS NULL;IS NOT NULL";;
+108;S;Abschluss an abgebender Schule;Schüler: Abschluss an abgebender Schule;-;Schueler;LSEntlassArt;C;DBLOOKUP;;;"dsAbgangsArt;Beschreibung;Art";"gleich;ungleich;leer;nicht leer";"=;<>;IS NULL;IS NOT NULL";;
+109;S;Entlassart;Schüler: Entlassart;+;Schueler;EntlassArt;C;DBLOOKUP;;;"dsASDAbgangsartES;Beschreibung;Art";"gleich;ungleich;leer;nicht leer";"=;<>;IS NULL;IS NOT NULL";;

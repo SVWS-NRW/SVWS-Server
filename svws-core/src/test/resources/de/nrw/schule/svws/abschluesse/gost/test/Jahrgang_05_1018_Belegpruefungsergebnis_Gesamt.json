@@ -1,0 +1,37 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [ {
+    "code" : "FS_15",
+    "art" : "SCHRIFTLICHKEIT",
+    "beschreibung" : "Kurse in neu einsetzenden Fremdsprachen müssen schriftlich belegt werden."
+  }, {
+    "code" : "NW_FS_13_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Da von EF.1 bis Q2.2 weniger als zwei Fremdsprachen schriftlich belegt wurden, liegt ausschließlich ein naturwissenschaftlicher Schwerpunkt vor."
+  }, {
+    "code" : "ABI_17",
+    "art" : "SCHRIFTLICHKEIT",
+    "beschreibung" : "Das 3. Abiturfach muss von Q1.1 bis Q2.2 schriftlich belegt sein."
+  }, {
+    "code" : "ABI_12",
+    "art" : "SCHRIFTLICHKEIT",
+    "beschreibung" : "In Q2.2 muss das 3. Abiturfach schriftlich belegt sein."
+  }, {
+    "code" : "ABI_18",
+    "art" : "SCHRIFTLICHKEIT",
+    "beschreibung" : "Das 4. Abiturfach muss von Q1.1 bis Q2.1 schriftlich belegt sein."
+  }, {
+    "code" : "ABI_13",
+    "art" : "SCHRIFTLICHKEIT",
+    "beschreibung" : "In Q2.2 muss das 4. Abiturfach mündlich belegt sein."
+  }, {
+    "code" : "ANZ_11_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Die Stundenbandbreite sollte pro Halbjahr 32 bis 36 Stunden betragen, um eine gleichmäßige Stundenbelastung zu gewährleisten."
+  }, {
+    "code" : "ABI_16",
+    "art" : "SCHRIFTLICHKEIT",
+    "beschreibung" : "Fächer, die keine Abiturfächer sind, müssen in Q2.2 mündlich belegt werden."
+  } ],
+  "log" : [ ]
+}

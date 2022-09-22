@@ -1,0 +1,822 @@
+{
+	"index": 110,
+	"fachklassen": [
+		{
+			"schluessel": "101",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1088000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WV",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Assistent/-in für Betriebsinformatik",
+				"bezeichnungM": "Assistent für Betriebsinformatik",
+				"bezeichnungW": "Assistentin für Betriebsinformatik",
+				"gueltigVon": null,
+				"gueltigBis": 2015
+			} ]
+		}, {
+			"schluessel": "102",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1089000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "BH",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Bautechnische/-r Assistent/-in",
+				"bezeichnungM": "Bautechnischer Assistent",
+				"bezeichnungW": "Bautechnische Assistentin",
+				"gueltigVon": null,
+				"gueltigBis": 2012
+			} ]
+		}, {
+			"schluessel": "102",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 1090000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "BH",
+				"ebene1": "TN",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Bautechnische/-r Assistent/-in - Denkmalpflege",
+				"bezeichnungM": "Bautechnischer Assistent - Denkmalpflege",
+				"bezeichnungW": "Bautechnische Assistentin - Denkmalpflege",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "102",
+			"schluessel2": "02",
+			"historie": [ {
+				"id": 1091000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "BH",
+				"ebene1": "TN",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Bautechnische/-r Assistent/-in - Hoch-/Tiefbau",
+				"bezeichnungM": "Bautechnischer Assistent - Hoch-/Tiefbau",
+				"bezeichnungW": "Bautechnische Assistentin - Hoch-/Tiefbau",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "103",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1092000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TB",
+				"ebene1": "TN",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Bekleidungstechnische/-r Assistent/-in",
+				"bezeichnungM": "Bekleidungstechnischer Assistent",
+				"bezeichnungW": "Bekleidungstechnische Assistentin",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "104",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1093000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "CP",
+				"ebene1": "TN",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Biologisch-technische/-r Assistent/-in",
+				"bezeichnungM": "Biologisch-technischer Assistent",
+				"bezeichnungW": "Biologisch-technische Assistentin",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "105",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1094000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "CP",
+				"ebene1": "TN",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Chemisch-technische/-r Assistent/-in",
+				"bezeichnungM": "Chemisch-technischer Assistent",
+				"bezeichnungW": "Chemisch-technische Assistentin",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "106",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1095000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "BH",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Denkmaltechnische/-r Assistent/-in",
+				"bezeichnungM": "Denkmaltechnischer Assistent",
+				"bezeichnungW": "Denkmaltechnische Assistentin",
+				"gueltigVon": null,
+				"gueltigBis": 2012
+			} ]
+		}, {
+			"schluessel": "107",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1096000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "ET",
+				"ebene1": "TN",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Elektrotechnische/-r Assistent/-in",
+				"bezeichnungM": "Elektrotechnischer Assistent",
+				"bezeichnungW": "Elektrotechnische Assistentin",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "108",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1097000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "S",
+				"berufsfeld": "SG",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Erzieher/-in",
+				"bezeichnungM": "Erzieher",
+				"bezeichnungW": "Erzieherin",
+				"gueltigVon": null,
+				"gueltigBis": 2012
+			} ]
+		}, {
+			"schluessel": "109",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1098000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WV",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Eurowirtschaftsassistent/-in",
+				"bezeichnungM": "Eurowirtschaftsassistent",
+				"bezeichnungW": "Eurowirtschaftsassistentin",
+				"gueltigVon": null,
+				"gueltigBis": 2012
+			} ]
+		}, {
+			"schluessel": "110",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 1099000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "G",
+				"berufsfeld": "GS",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Gestaltungstechnische/-r Assistent/-in - Grafik",
+				"bezeichnungM": "Gestaltungstechnischer Assistent - Grafik",
+				"bezeichnungW": "Gestaltungstechnische Assistentin - Grafik",
+				"gueltigVon": null,
+				"gueltigBis": 2012
+			} ]
+		}, {
+			"schluessel": "110",
+			"schluessel2": "02",
+			"historie": [ {
+				"id": 1100000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "G",
+				"berufsfeld": "GS",
+				"ebene1": "GT",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Gestaltungstechnische/-r Assistent/-in - Medien/Kommunikation",
+				"bezeichnungM": "Gestaltungstechnischer Assistent - Medien/Kommunikation",
+				"bezeichnungW": "Gestaltungstechnische Assistentin - Medien/Kommunikation",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "110",
+			"schluessel2": "03",
+			"historie": [ {
+				"id": 1101000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "G",
+				"berufsfeld": "GS",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Gestaltungstechnische/-r Assistent/-in - Produkt/Design",
+				"bezeichnungM": "Gestaltungstechnischer Assistent - Produkt/Design",
+				"bezeichnungW": "Gestaltungstechnische Assistentin - Produkt/Design",
+				"gueltigVon": null,
+				"gueltigBis": 2012
+			} ]
+		}, {
+			"schluessel": "110",
+			"schluessel2": "04",
+			"historie": [ {
+				"id": 1102000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "G",
+				"berufsfeld": "GS",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Gestaltungstechnische/-r Assistent/-in - Digital-, Print- und audiovisuelle Medien",
+				"bezeichnungM": "Gestaltungstechnischer Assistent - Digital-, Print- und audiovisuelle Medien",
+				"bezeichnungW": "Gestaltungstechnische Assistentin - Digital-, Print- und audiovisuelle Medien",
+				"gueltigVon": null,
+				"gueltigBis": 2012
+			} ]
+		}, {
+			"schluessel": "110",
+			"schluessel2": "05",
+			"historie": [ {
+				"id": 1103000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "G",
+				"berufsfeld": "GS",
+				"ebene1": "GT",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Gestaltungstechnische/-r Assistent/-in - Grafikdesign und Objektdesign",
+				"bezeichnungM": "Gestaltungstechnischer Assistent - Grafikdesign und Objektdesign",
+				"bezeichnungW": "Gestaltungstechnische Assistentin - Grafikdesign und Objektdesign",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "111",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1104000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "E",
+				"berufsfeld": "EH",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Hauswirtschaftlich-technische/-r Assistent/-in",
+				"bezeichnungM": "Hauswirtschaftlich-technischer Assistent",
+				"bezeichnungW": "Hauswirtschaftlich-technische Assistentin",
+				"gueltigVon": null,
+				"gueltigBis": 2015
+			} ]
+		}, {
+			"schluessel": "112",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1105000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WV",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Hotel- u. Gaststättengewerbe",
+				"bezeichnungM": "Hotel- u. Gaststättengewerbe",
+				"bezeichnungW": "Hotel- u. Gaststättengewerbe",
+				"gueltigVon": null,
+				"gueltigBis": 2005
+			} ]
+		}, {
+			"schluessel": "113",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1106000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "O",
+				"berufsfeld": "OH",
+				"ebene1": "TN",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Industrietechnologe/-technologin",
+				"bezeichnungM": "Industrietechnologe",
+				"bezeichnungW": "Industrietechnologin",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "114",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 1107000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "O",
+				"berufsfeld": "OH",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Informatikassistent/-in - Büromanagement",
+				"bezeichnungM": "Informatikassistent - Büromanagement",
+				"bezeichnungW": "Informatikassistentin - Büromanagement",
+				"gueltigVon": null,
+				"gueltigBis": 2012
+			} ]
+		}, {
+			"schluessel": "114",
+			"schluessel2": "02",
+			"historie": [ {
+				"id": 1108000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "O",
+				"berufsfeld": "OH",
+				"ebene1": "IF",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Informatiker/-in - Medizinökonomie",
+				"bezeichnungM": "Informatiker - Medizinökonomie",
+				"bezeichnungW": "Informatikerin - Medizinökonomie",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "114",
+			"schluessel2": "03",
+			"historie": [ {
+				"id": 1109000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "O",
+				"berufsfeld": "OH",
+				"ebene1": "IF",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Informatiker/-in - Multimedia",
+				"bezeichnungM": "Informatiker - Multimedia",
+				"bezeichnungW": "Informatikerin - Multimedia",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "114",
+			"schluessel2": "04",
+			"historie": [ {
+				"id": 1110000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "O",
+				"berufsfeld": "OH",
+				"ebene1": "IF",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Informatiker/-in - Softwareentwicklung",
+				"bezeichnungM": "Informatiker - Softwareentwicklung",
+				"bezeichnungW": "Informatikerin - Softwareentwicklung",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "114",
+			"schluessel2": "05",
+			"historie": [ {
+				"id": 1111000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "O",
+				"berufsfeld": "OH",
+				"ebene1": "IF",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Informatiker/-in - Wirtschaft",
+				"bezeichnungM": "Informatiker - Wirtschaft",
+				"bezeichnungW": "Informatikerin - Wirtschaft",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "115",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1112000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "O",
+				"berufsfeld": "OH",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Informationsassistent/-in",
+				"bezeichnungM": "Informationsassistent",
+				"bezeichnungW": "Informationsassistentin",
+				"gueltigVon": null,
+				"gueltigBis": 2012
+			} ]
+		}, {
+			"schluessel": "116",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1113000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "O",
+				"berufsfeld": "OH",
+				"ebene1": "IF",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Informationstechnische/-r Assistent/-in",
+				"bezeichnungM": "Informationstechnischer Assistent",
+				"bezeichnungW": "Informationstechnische Assistentin",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "117",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 1114000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WV",
+				"ebene1": "WV",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Kaufmännische/-r Assistent/-in - Betriebswirtschaft",
+				"bezeichnungM": "Kaufmännischer Assistent - Betriebswirtschaft",
+				"bezeichnungW": "Kaufmännische Assistentin - Betriebswirtschaft",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "117",
+			"schluessel2": "02",
+			"historie": [ {
+				"id": 1115000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WV",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Kaufmännische/-r Assistent/-in f. Bürowirtschaft",
+				"bezeichnungM": "Kaufmännischer Assistent f. Bürowirtschaft",
+				"bezeichnungW": "Kaufmännische Assistentin f. Bürowirtschaft",
+				"gueltigVon": null,
+				"gueltigBis": 2012
+			} ]
+		}, {
+			"schluessel": "117",
+			"schluessel2": "03",
+			"historie": [ {
+				"id": 1116000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WV",
+				"ebene1": "WV",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Kaufmännische/-r Assistent/-in - Fremdsprachen",
+				"bezeichnungM": "Kaufmännischer Assistent - Fremdsprachen",
+				"bezeichnungW": "Kaufmännische Assistentin - Fremdsprachen",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "117",
+			"schluessel2": "04",
+			"historie": [ {
+				"id": 1117000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WV",
+				"ebene1": "WV",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Kaufmännische/-r Assistent/-in - Informationsverarbeitung",
+				"bezeichnungM": "Kaufmännischer Assistent - Informationsverarbeitung",
+				"bezeichnungW": "Kaufmännische Assistentin - Informationsverarbeitung",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "117",
+			"schluessel2": "05",
+			"historie": [ {
+				"id": 1118000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WV",
+				"ebene1": "WV",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Kaufmännische/-r Assistent/-in - Betriebsinformatik",
+				"bezeichnungM": "Kaufmännischer Assistent - Betriebsinformatik",
+				"bezeichnungW": "Kaufmännische Assistentin - Betriebsinformatik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "118",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1119000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "MB",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Konstruktions- und Fertigungstechnische/-r Assistent/-in",
+				"bezeichnungM": "Konstruktions- und Fertigungstechnischer Assistent",
+				"bezeichnungW": "Konstruktions- und Fertigungstechnische Assistentin",
+				"gueltigVon": null,
+				"gueltigBis": 2012
+			} ]
+		}, {
+			"schluessel": "119",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1120000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "S",
+				"berufsfeld": "KP",
+				"ebene1": "GS",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Kosmetiker/-in",
+				"bezeichnungM": "Kosmetiker",
+				"bezeichnungW": "Kosmetikerin",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "120",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1121000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "E",
+				"berufsfeld": "EH",
+				"ebene1": "EH",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Lebensmitteltechnische/-r Assistent/-in",
+				"bezeichnungM": "Lebensmitteltechnischer Assistent",
+				"bezeichnungW": "Lebensmitteltechnische Assistentin",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "121",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1122000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "MT",
+				"ebene1": "TN",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Maschinenbautechnische/-r Assistent/-in",
+				"bezeichnungM": "Maschinenbautechnischer Assistent",
+				"bezeichnungW": "Maschinenbautechnische Assistentin",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "122",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1123000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "MZ",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Medizinisch-technische/r Assistent/-in",
+				"bezeichnungM": "Medizinisch-technischer Assistent",
+				"bezeichnungW": "Medizinisch-technische Assistentin",
+				"gueltigVon": null,
+				"gueltigBis": 2012
+			} ]
+		}, {
+			"schluessel": "123",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1124000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "CP",
+				"ebene1": "TN",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Physikalisch-technische/-r Assistent/-in",
+				"bezeichnungM": "Physikalisch-technischer Assistent",
+				"bezeichnungW": "Physikalisch-technische Assistentin",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "123",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 1125000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "MT",
+				"ebene1": "TN",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Physikalisch-technische/-r Assistent/-in - Metallografie und Werkstoffkunde",
+				"bezeichnungM": "Physikalisch-technischer Assistent - Metallografie und Werkstoffkunde",
+				"bezeichnungW": "Physikalisch-technische Assistentin - Metallografie und Werkstoffkunde",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "124",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 1126000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "CP",
+				"ebene1": "TN",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Präparationstechnische/-r Assistent/-in - Biologie",
+				"bezeichnungM": "Präparationstechnischer Assistent - Biologie",
+				"bezeichnungW": "Präparationstechnische Assistentin - Biologie",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "124",
+			"schluessel2": "02",
+			"historie": [ {
+				"id": 1127000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "CP",
+				"ebene1": "TN",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Präparationstechnische/-r Assistent/-in - Geowissenschaften",
+				"bezeichnungM": "Präparationstechnischer Assistent - Geowissenschaften",
+				"bezeichnungW": "Präparationstechnische Assistentin - Geowissenschaften",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "124",
+			"schluessel2": "03",
+			"historie": [ {
+				"id": 1128000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "CP",
+				"ebene1": "TN",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Präparationstechnische/-r Assistent/-in - Medizin",
+				"bezeichnungM": "Präparationstechnischer Assistent - Medizin",
+				"bezeichnungW": "Präparationstechnische Assistentin - Medizin",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "125",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1129000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "MT",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Technische/-r Assistent/-in für Metallografie und Werkstoffkunde",
+				"bezeichnungM": "Technischer Assistent für Metallografie und Werkstoffkunde",
+				"bezeichnungW": "Technische Assistentin für Metallografie und Werkstoffkunde",
+				"gueltigVon": null,
+				"gueltigBis": 2012
+			} ]
+		}, {
+			"schluessel": "126",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1130000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TB",
+				"ebene1": "TN",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Textiltechnische/-r Assistent/-in",
+				"bezeichnungM": "Textiltechnischer Assistent",
+				"bezeichnungW": "Textiltechnische Assistentin",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "127",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1131000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "CP",
+				"ebene1": "TN",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Umweltschutztechnische/-r Assistent/-in",
+				"bezeichnungM": "Umweltschutztechnischer Assistent",
+				"bezeichnungW": "Umweltschutztechnische Assistentin",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "128",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1132000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WV",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Wirtschaftsassistent/-in Informatik",
+				"bezeichnungM": "Wirtschaftsassistent Informatik",
+				"bezeichnungW": "Wirtschaftsassistentin Informatik",
+				"gueltigVon": null,
+				"gueltigBis": 2012
+			} ]
+		}, {
+			"schluessel": "129",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 1133000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "E",
+				"berufsfeld": "EH",
+				"ebene1": "EH",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Assistent/-in für Ernährung und Versorgung - Technik",
+				"bezeichnungM": "Assistent für Ernährung und Versorgung - Technik",
+				"bezeichnungW": "Assistentin für Ernährung und Versorgung - Technik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "999",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1134000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "X",
+				"berufsfeld": "XX",
+				"ebene1": "XX",
+				"ebene2": "XX",
+				"ebene3": "XX",
+				"bezeichnung": "Sonstiger Bildungsgang",
+				"bezeichnungM": "Sonstiger Bildungsgang",
+				"bezeichnungW": "Sonstiger Bildungsgang",
+				"gueltigVon": 2022,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "999",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 1135000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "X",
+				"berufsfeld": "XX",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Sonstiger Bildungsgang",
+				"bezeichnungM": "Sonstiger Bildungsgang",
+				"bezeichnungW": "Sonstiger Bildungsgang",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}
+	]
+}

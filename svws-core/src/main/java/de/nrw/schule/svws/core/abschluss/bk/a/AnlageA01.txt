@@ -1,0 +1,27 @@
+INPUT
+=====
+- Liste Fächer (Kuerzel, Note ohne Tendenz)
+- Berufabschlussprüfung (praktisch, Handwerkskammer) bestanden?
+(- höchster zuletzt erreichter Abschluss -> anderer Service)
+- Englisch Referenzniveau (GeR)
+  * TODO Enumeration
+
+OUTPUT
+======
+- Abschluss BSA (schulischer Teil)
+- ggf. Gesamt: 
+  * Bestanden?, 
+  * Note, 
+  * zusätzlicher Schulabschluss 
+  (* Statistik-Kürzel erreichter Abschluss, je nach vorigem Abschluss -> anderer Service)
+  
+VORGEHEN
+========
+- Prüfung BSA
+  * Anzahl der Defizite entscheidend (max. zulässig: 1x5)
+- Prüfung HSA
+  * Durchschnittsnote irrelevant
+- Prüfung MSA
+  * Englisch-GER B1 * Durchschnittsnote besser als oder gleich 3.5
+- Prüfung MSA/Q
+  * Englisch-GER B1 * Durchschnittsnote besser als oder gleich 2.5

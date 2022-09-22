@@ -1,0 +1,295 @@
+{
+	"index": 160,
+	"fachklassen": [
+		{
+			"schluessel": "101",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1231000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "MB",
+				"ebene1": "TE",
+				"ebene2": "MB",
+				"ebene3": "AK",
+				"bezeichnung": "Assistent/-in für Konstruktions- und Fertigungstechnik / AHR",
+				"bezeichnungM": "Assistent für Konstruktions- und Fertigungstechnik / AHR",
+				"bezeichnungW": "Assistentin für Konstruktions- und Fertigungstechnik / AHR",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "102",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1232000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "BT",
+				"ebene1": "TE",
+				"ebene2": "BT",
+				"ebene3": "BA",
+				"bezeichnung": "Bautechnische/-r Assistent/-in / AHR",
+				"bezeichnungM": "Bautechnischer Assistent / AHR",
+				"bezeichnungW": "Bautechnische Assistentin / AHR",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "103",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1233000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "NW",
+				"ebene1": "TE",
+				"ebene2": "BI",
+				"ebene3": "BS",
+				"bezeichnung": "Biologisch-technische/-r Assistent/-in / AHR",
+				"bezeichnungM": "Biologisch-technischer Assistent / AHR",
+				"bezeichnungW": "Biologisch-technische Assistentin / AHR",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "104",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1234000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "NW",
+				"ebene1": "TE",
+				"ebene2": "CT",
+				"ebene3": "CA",
+				"bezeichnung": "Chemisch-technische/-r Assistent/-in / AHR",
+				"bezeichnungM": "Chemisch-technischer Assistent / AHR",
+				"bezeichnungW": "Chemisch-technische Assistentin / AHR",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "105",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1235000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "ET",
+				"ebene1": "TE",
+				"ebene2": "ET",
+				"ebene3": "EA",
+				"bezeichnung": "Elektrotechnische/-r Assistent/-in / AHR",
+				"bezeichnungM": "Elektrotechnischer Assistent / AHR",
+				"bezeichnungW": "Elektrotechnische Assistentin / AHR",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "106",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1236000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "S",
+				"berufsfeld": "ES",
+				"ebene1": "GU",
+				"ebene2": "PG",
+				"ebene3": "EZ",
+				"bezeichnung": "Erzieher/-in / AHR",
+				"bezeichnungM": "Erzieher / AHR",
+				"bezeichnungW": "Erzieherin / AHR",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "107",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1237000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "G",
+				"berufsfeld": "KM",
+				"ebene1": "GT",
+				"ebene2": null,
+				"ebene3": "GA",
+				"bezeichnung": "Gestaltungstechnische/-r Assistent/-in / AHR",
+				"bezeichnungM": "Gestaltungstechnischer Assistent / AHR",
+				"bezeichnungW": "Gestaltungstechnische Assistentin / AHR",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "108",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1238000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "A",
+				"berufsfeld": "LH",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Hauswirtschaftliche/-r Assistent/-in / AHR",
+				"bezeichnungM": "Hauswirtschaftlicher Assistent / AHR",
+				"bezeichnungW": "Hauswirtschaftliche Assistentin / AHR",
+				"gueltigVon": null,
+				"gueltigBis": 2012
+			} ]
+		}, {
+			"schluessel": "109",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1239000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WW",
+				"ebene1": "WV",
+				"ebene2": null,
+				"ebene3": "KA",
+				"bezeichnung": "Kaufmännische/-r Assistent/-in / AHR",
+				"bezeichnungM": "Kaufmännischer Assistent / AHR",
+				"bezeichnungW": "Kaufmännische Assistentin / AHR",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "110",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1240000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "MB",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Maschinenbautechnische/-r Assistent/-in",
+				"bezeichnungM": "Maschinenbautechnischer Assistent",
+				"bezeichnungW": "Maschinenbautechnische Assistentin",
+				"gueltigVon": null,
+				"gueltigBis": 2012
+			} ]
+		}, {
+			"schluessel": "111",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1241000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "NW",
+				"ebene1": "TE",
+				"ebene2": "PT",
+				"ebene3": "PT",
+				"bezeichnung": "Physikalisch-technische/-r Assistent/-in / AHR",
+				"bezeichnungM": "Physikalisch-technischer Assistent / AHR",
+				"bezeichnungW": "Physikalisch-technische Assistentin / AHR",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "112",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1242000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WW",
+				"ebene1": "WV",
+				"ebene2": null,
+				"ebene3": "TA",
+				"bezeichnung": "Technische/-r Assistent/-in für Betriebsinformatik / AHR",
+				"bezeichnungM": "Technischer Assistent für Betriebsinformatik / AHR",
+				"bezeichnungW": "Technischer Assistentin für Betriebsinformatik / AHR",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "113",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1243000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TB",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Textiltechnische/-r Assistent/-in / AHR",
+				"bezeichnungM": "Textiltechnischer Assistent / AHR",
+				"bezeichnungW": "Textiltechnische Assistentin / AHR",
+				"gueltigVon": null,
+				"gueltigBis": 2012
+			} ]
+		}, {
+			"schluessel": "114",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1244000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "NW",
+				"ebene1": "TE",
+				"ebene2": "UT",
+				"ebene3": "UA",
+				"bezeichnung": "Umwelttechnische/-r Assistent/-in / AHR",
+				"bezeichnungM": "Umwelttechnischer Assistent / AHR",
+				"bezeichnungW": "Umwelttechnische Assistentin / AHR",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "115",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1245000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "IF",
+				"ebene1": "IF",
+				"ebene2": "TI",
+				"ebene3": "IA",
+				"bezeichnung": "Informationstechnische/-r Assistent/-in / AHR",
+				"bezeichnungM": "Informationstechnischer Assistent / AHR",
+				"bezeichnungW": "Informationstechnische Assistentin / AHR",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "999",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1246000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "X",
+				"berufsfeld": "XX",
+				"ebene1": "XX",
+				"ebene2": "XX",
+				"ebene3": "XX",
+				"bezeichnung": "Sonstiger Bildungsgang",
+				"bezeichnungM": "Sonstiger Bildungsgang",
+				"bezeichnungW": "Sonstiger Bildungsgang",
+				"gueltigVon": 2022,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "999",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 1247000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "X",
+				"berufsfeld": "XX",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Sonstiger Bildungsgang",
+				"bezeichnungM": "Sonstiger Bildungsgang",
+				"bezeichnungW": "Sonstiger Bildungsgang",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}
+	]
+}

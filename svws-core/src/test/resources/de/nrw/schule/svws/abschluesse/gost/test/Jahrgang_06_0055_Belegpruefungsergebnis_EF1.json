@@ -1,0 +1,9 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [ {
+    "code" : "IGF_10",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Inhaltsgleiche Fächer dürfen nur einmal belegt werden."
+  } ],
+  "log" : [ ]
+}

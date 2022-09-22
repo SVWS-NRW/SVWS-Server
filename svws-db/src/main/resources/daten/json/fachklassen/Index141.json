@@ -1,0 +1,210 @@
+{
+	"index": 141,
+	"fachklassen": [
+		{
+			"schluessel": "101",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1186000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "AB",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Agrarwirtschaft, Bio- und Umwelttechnologie",
+				"bezeichnungM": "Agrarwirtschaft, Bio- und Umwelttechnologie",
+				"bezeichnungW": "Agrarwirtschaft, Bio- und Umwelttechnologie",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "102",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1187000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TE",
+				"ebene2": "BH",
+				"ebene3": null,
+				"bezeichnung": "Bau- und Holztechnik",
+				"bezeichnungM": "Bau- und Holztechnik",
+				"bezeichnungW": "Bau- und Holztechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "103",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1188000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TE",
+				"ebene2": "DT",
+				"ebene3": null,
+				"bezeichnung": "Drucktechnik",
+				"bezeichnungM": "Drucktechnik",
+				"bezeichnungW": "Drucktechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "104",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1189000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TE",
+				"ebene2": "ET",
+				"ebene3": null,
+				"bezeichnung": "Elektrotechnik",
+				"bezeichnungM": "Elektrotechnik",
+				"bezeichnungW": "Elektrotechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "105",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1190000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "EU",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Ernährung und Hauswirtschaft",
+				"bezeichnungM": "Ernährung und Hauswirtschaft",
+				"bezeichnungW": "Ernährung und Hauswirtschaft",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "106",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1191000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "GT",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Gestaltung",
+				"bezeichnungM": "Gestaltung",
+				"bezeichnungW": "Gestaltung",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "107",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1192000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TE",
+				"ebene2": "ME",
+				"ebene3": null,
+				"bezeichnung": "Metalltechnik",
+				"bezeichnungM": "Metalltechnik",
+				"bezeichnungW": "Metalltechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "108",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1193000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TE",
+				"ebene2": "PU",
+				"ebene3": null,
+				"bezeichnung": "Physik, Chemie, Biologie",
+				"bezeichnungM": "Physik, Chemie, Biologie",
+				"bezeichnungW": "Physik, Chemie, Biologie",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "109",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1194000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "GU",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Gesundheit und Soziales",
+				"bezeichnungM": "Gesundheit und Soziales",
+				"bezeichnungW": "Gesundheit und Soziales",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "111",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1195000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TE",
+				"ebene2": "TB",
+				"ebene3": null,
+				"bezeichnung": "Textiltechnik und Bekleidung",
+				"bezeichnungM": "Textiltechnik und Bekleidung",
+				"bezeichnungW": "Textiltechnik und Bekleidung",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "112",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1196000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "WV",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Wirtschaft und Verwaltung",
+				"bezeichnungM": "Wirtschaft und Verwaltung",
+				"bezeichnungW": "Wirtschaft und Verwaltung",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "999",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1197000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "XX",
+				"ebene2": "XX",
+				"ebene3": "XX",
+				"bezeichnung": "Sonstiger Bildungsgang",
+				"bezeichnungM": "Sonstiger Bildungsgang",
+				"bezeichnungW": "Sonstiger Bildungsgang",
+				"gueltigVon": 2022,
+				"gueltigBis": null
+			} ]
+		}
+	]
+}

@@ -1,0 +1,13 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [ {
+    "code" : "PF_14",
+    "art" : "BELEGUNG",
+    "beschreibung" : "In der Qualifikationsphase kann maximal ein Projektkurs in zwei aufeinanderfolgenden Halbjahren belegt werden."
+  }, {
+    "code" : "PF_13",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Ein Projektkurs kann nur belegt werden, wenn in der Qualifikationsphase zeitgleich oder vorab auch sein Leitfach zwei Halbjahre lang belegt wurde."
+  } ],
+  "log" : [ ]
+}

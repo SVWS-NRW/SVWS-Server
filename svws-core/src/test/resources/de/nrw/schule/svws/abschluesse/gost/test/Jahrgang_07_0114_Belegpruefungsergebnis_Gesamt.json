@@ -1,0 +1,21 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [ {
+    "code" : "FS_12",
+    "art" : "SCHRIFTLICHKEIT",
+    "beschreibung" : "In EF.1 und EF.2 müssen alle gewählten Fremdsprachenfächer schriftlich belegt werden."
+  }, {
+    "code" : "FS_11",
+    "art" : "SCHRIFTLICHKEIT",
+    "beschreibung" : "Mindestens eine durchgehend belegte Fremdsprache muss von EF.1 bis Q2.1 schriftlich belegt sein."
+  }, {
+	  "code" : "FS_16",
+	  "art" : "SCHRIFTLICHKEIT",
+	  "beschreibung" : "Mindestens eine fortgeführte Fremdsprache muss in EF.1 und EF.2 schriftlich belegt werden."
+  }, {
+    "code" : "NW_FS_13_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Da von EF.1 bis Q2.2 weniger als zwei Fremdsprachen schriftlich belegt wurden, liegt ausschließlich ein naturwissenschaftlicher Schwerpunkt vor."
+  } ],
+  "log" : [ ]
+}

@@ -1,0 +1,9 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [ {
+    "code" : "SP_10",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Sport muss in EF.1 belegt werden."
+  } ],
+  "log" : [ ]
+}

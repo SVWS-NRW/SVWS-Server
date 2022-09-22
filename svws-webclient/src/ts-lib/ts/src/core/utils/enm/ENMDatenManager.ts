@@ -1,0 +1,428 @@
+import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
+import { ENMKlasse, cast_de_nrw_schule_svws_core_data_enm_ENMKlasse } from '../../../core/data/enm/ENMKlasse';
+import { ENMLeistung, cast_de_nrw_schule_svws_core_data_enm_ENMLeistung } from '../../../core/data/enm/ENMLeistung';
+import { ENMFach, cast_de_nrw_schule_svws_core_data_enm_ENMFach } from '../../../core/data/enm/ENMFach';
+import { ENMJahrgang, cast_de_nrw_schule_svws_core_data_enm_ENMJahrgang } from '../../../core/data/enm/ENMJahrgang';
+import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
+import { Schulform, cast_de_nrw_schule_svws_core_types_statkue_Schulform } from '../../../core/types/statkue/Schulform';
+import { ENMLerngruppe, cast_de_nrw_schule_svws_core_data_enm_ENMLerngruppe } from '../../../core/data/enm/ENMLerngruppe';
+import { ENMLehrer, cast_de_nrw_schule_svws_core_data_enm_ENMLehrer } from '../../../core/data/enm/ENMLehrer';
+import { ENMSchueler, cast_de_nrw_schule_svws_core_data_enm_ENMSchueler } from '../../../core/data/enm/ENMSchueler';
+import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
+import { ENMFoerderschwerpunkt, cast_de_nrw_schule_svws_core_data_enm_ENMFoerderschwerpunkt } from '../../../core/data/enm/ENMFoerderschwerpunkt';
+import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
+import { ENMDaten, cast_de_nrw_schule_svws_core_data_enm_ENMDaten } from '../../../core/data/enm/ENMDaten';
+import { Note, cast_de_nrw_schule_svws_core_types_Note } from '../../../core/types/Note';
+import { JavaLong, cast_java_lang_Long } from '../../../java/lang/JavaLong';
+import { List, cast_java_util_List } from '../../../java/util/List';
+import { Geschlecht, cast_de_nrw_schule_svws_core_types_Geschlecht } from '../../../core/types/Geschlecht';
+import { ENMNote, cast_de_nrw_schule_svws_core_data_enm_ENMNote } from '../../../core/data/enm/ENMNote';
+import { Foerderschwerpunkt, cast_de_nrw_schule_svws_core_types_statkue_Foerderschwerpunkt } from '../../../core/types/statkue/Foerderschwerpunkt';
+
+export class ENMDatenManager extends JavaObject {
+
+	public readonly daten : ENMDaten;
+
+	private mapLehrer : HashMap<Number, ENMLehrer> = new HashMap();
+
+	private mapSchueler : HashMap<Number, ENMSchueler> = new HashMap();
+
+	private mapFaecher : HashMap<Number, ENMFach> = new HashMap();
+
+	private mapJahrgaenge : HashMap<Number, ENMJahrgang> = new HashMap();
+
+	private mapKlassen : HashMap<Number, ENMKlasse> = new HashMap();
+
+	private lerngruppenIDZaehler : number = 1;
+
+	private mapLerngruppen : HashMap<String, ENMLerngruppe> = new HashMap();
+
+
+	/**
+	 * Erzeugt einen neuen ENM-Daten-Manager mit leeren ENM-Daten.
+	 */
+	public constructor();
+
+	/**
+	 * Erzeugt einen neuen ENM-Daten-Manager für die übergebenen Daten.
+	 * 
+	 * @param daten   die ENM-Daten
+	 */
+	public constructor(daten : ENMDaten);
+
+	/**
+	 * Implementation for method overloads of 'constructor'
+	 */
+	public constructor(__param0? : ENMDaten) {
+		super();
+		if ((typeof __param0 === "undefined")) {
+			this.daten = new ENMDaten();
+		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.data.enm.ENMDaten'))))) {
+			let daten : ENMDaten = cast_de_nrw_schule_svws_core_data_enm_ENMDaten(__param0);
+			this.daten = daten;
+		} else throw new Error('invalid method overload');
+	}
+
+	/**
+	 * Fügt alle Noten des Core-Type {@link Note} zu dem Noten-Katalog der ENM-Datei hinzu.
+	 */
+	public addNoten() : void {
+		if (this.daten.noten.size() > 0) 
+			return;
+		let noten : Array<Note> = Note.values();
+		for (let i : number = 0; i < noten.length; i++){
+			let note : Note = noten[i];
+			let enmNote : ENMNote = new ENMNote();
+			enmNote.kuerzel = note.kuerzel;
+			enmNote.notenpunkte = note.notenpunkte;
+			enmNote.text = note.text;
+			this.daten.noten.add(enmNote);
+		}
+	}
+
+	/**
+	 * Fügt alle Förderschwerpunkte des Core-Type {@link Foerderschwerpunkt} zu dem 
+	 * Förderschwerpunkt-Katalog der ENM-Datei hinzu.
+	 * 
+	 * @param schulform   die Schulform, für welche die zulässigen Förderschwerpunkte 
+	 *                    zurückgegeben werden
+	 */
+	public addFoerderschwerpunkte(schulform : Schulform) : void {
+		if (this.daten.foerderschwerpunkte.size() > 0) 
+			return;
+		let foerderschwerpunkte : List<Foerderschwerpunkt> = Foerderschwerpunkt.get(schulform);
+		for (let i : number = 0; i < foerderschwerpunkte.size(); i++){
+			let foerderschwerpunkt : Foerderschwerpunkt | null = foerderschwerpunkte.get(i);
+			let enmFoerderschwerpunkt : ENMFoerderschwerpunkt | null = new ENMFoerderschwerpunkt();
+			enmFoerderschwerpunkt.kuerzel = foerderschwerpunkt.daten.kuerzel;
+			enmFoerderschwerpunkt.beschreibung = foerderschwerpunkt.daten.beschreibung;
+			this.daten.foerderschwerpunkte.add(enmFoerderschwerpunkt);
+		}
+	}
+
+	/**
+	 * Fügt einen Lehrer hinzu und überprüft dabei, ob der Lehrer schon in der Liste vorhanden ist.
+	 * 
+	 * @param id            die eindeutige ID des Lehrers
+	 * @param kuerzel       das Kürzel des Lehrers
+	 * @param nachname      der Nachname des Lehrers
+	 * @param vorname       der Vorname des Lehrers
+	 * @param geschlecht        das Geschlecht des Lehrers
+	 * @param eMailDienstlich   die Dienst-Email-Adresse des Lehrers
+	 * 
+	 * @return true, falls der Lehrer hinzugefügt wurde, ansonsten false  
+	 */
+	public addLehrer(id : number, kuerzel : String | null, nachname : String | null, vorname : String | null, geschlecht : Geschlecht, eMailDienstlich : String | null) : boolean {
+		if (this.mapLehrer.get(id) !== null) 
+			return false;
+		let enmLehrer : ENMLehrer = new ENMLehrer();
+		enmLehrer.id = id;
+		enmLehrer.kuerzel = kuerzel;
+		enmLehrer.nachname = nachname;
+		enmLehrer.vorname = vorname;
+		enmLehrer.geschlecht = geschlecht.kuerzel;
+		enmLehrer.eMailDienstlich = eMailDienstlich;
+		this.daten.lehrer.add(enmLehrer);
+		this.mapLehrer.put(id, enmLehrer);
+		return true;
+	}
+
+	/**
+	 * Fügt einen Schueler hinzu und überprüft dabei, ob der Schueler schon in der Liste vorhanden ist.
+	 * 
+	 * @param id                  die ID des Schülers in der SVWS-DB
+	 * @param jahrgangID          die ID des aktuellen Jahrgangs, in dem sich der Schüler befindet
+	 * @param klasseID            die ID der aktuellen Klasse, in der sich der Schüler befindet
+	 * @param nachname            der Nachname des Schülers (z.B. Mustermann)
+	 * @param vorname             der Vorname des Schülers (z.B. Max)
+	 * @param geschlecht          das Geschlecht des Schülers
+	 * @param bilingualeSprache   gibt an, ob sich der Schüler aktuell im bilingualen Bildungsgang befindet 
+	 *                            (wenn ja, z.B. F) oder nicht (null)
+	 * @param istZieldifferent    gibt an, ob der Schüler Ziel-different unterrichtet wird
+	 * @param istDaZFoerderung    gibt an, ob der Schüler Deutsch-Förderung mit Deutsch als Zweitsprache (DaZ) 
+	 *                            bekommt (Seiteneinsteiger, z.B. Flüchtlingskinder)
+	 * 
+	 * @return true, falls der Schueler hinzugefügt wurde, ansonsten false  
+	 */
+	public addSchueler(id : number, jahrgangID : number, klasseID : number, nachname : String | null, vorname : String | null, geschlecht : Geschlecht, bilingualeSprache : String | null, istZieldifferent : boolean, istDaZFoerderung : boolean) : boolean {
+		if (this.mapSchueler.get(id) !== null) 
+			return false;
+		let enmSchueler : ENMSchueler = new ENMSchueler();
+		enmSchueler.id = id;
+		enmSchueler.jahrgangID = jahrgangID;
+		enmSchueler.nachname = nachname;
+		enmSchueler.vorname = vorname;
+		enmSchueler.geschlecht = geschlecht.kuerzel;
+		enmSchueler.bilingualeSprache = bilingualeSprache;
+		enmSchueler.istZieldifferent = istZieldifferent;
+		enmSchueler.istDaZFoerderung = istDaZFoerderung;
+		this.daten.schueler.add(enmSchueler);
+		this.mapSchueler.put(id, enmSchueler);
+		return true;
+	}
+
+	/**
+	 * Fügt ein Fach hinzu und überprüft dabei, ob das Fach schon in der Liste vorhanden ist.
+	 * 
+	 * @param id                die eindeutige ID des Faches
+	 * @param kuerzel           das Kürzel des Faches, wie es im Rahmen der amtlichen Schulstatistik verwendet wird. (z.B. D)
+	 * @param kuerzelAnzeige    das Kürzel des Faches, wie es im Rahmen der Schule benannt wird und angezeigt werden soll. (z.B. D)
+	 * @param sortierung        die Reihenfolge des Faches bei der Sortierung der Fächer. (z.B. 37)
+	 * @param istFremdsprache   gibt an, ob es sich bei dem Fach um eine Fremdsprache handelt oder nicht
+	 * 
+	 * @return true, falls das Fach hinzugefügt wurde, ansonsten false  
+	 */
+	public addFach(id : number, kuerzel : String | null, kuerzelAnzeige : String | null, sortierung : number, istFremdsprache : boolean) : boolean {
+		if (this.mapFaecher.get(id) !== null) 
+			return false;
+		let enmFach : ENMFach = new ENMFach();
+		enmFach.id = id;
+		enmFach.kuerzel = kuerzel;
+		enmFach.kuerzelAnzeige = kuerzelAnzeige;
+		enmFach.sortierung = sortierung;
+		enmFach.istFremdsprache = istFremdsprache;
+		this.daten.faecher.add(enmFach);
+		this.mapFaecher.put(id, enmFach);
+		return true;
+	}
+
+	/**
+	 * Fügt einen Jahrgang hinzu und überprüft dabei, ob der Jahrgang schon in der Liste vorhanden ist.
+	 * 
+	 * @param id                die eindeutige ID des Jahrganges
+	 * @param kuerzel           das Kürzel des Jahrgangs, wie es im Rahmen der amtlichen Schulstatistik verwendet wird. (z.B. EF)
+	 * @param kuerzelAnzeige    das Kürzel des Jahrgangs, wie es im Rahmen der Schule benannt wird und angezeigt werden soll. (z.B. EF)
+	 * @param beschreibung      die textuelle Bezeichnung des Jahrgangs. (z.B. Einführungsphase)
+	 * @param stufe             die Stufe des Jahrgangs. (z.B. PR, SI, nur Berufskolleg: SII, Berufskolleg Anlage D und GOSt: SII-1, SII-2, SII-3)
+	 * @param sortierung        die Reihenfolge des Jahrgangs bei der Sortierung der Jahrgänge. (z.B. 8)
+	 * 
+	 * @return true, falls der Jahrgang hinzugefügt wurde, ansonsten false  
+	 */
+	public addJahrgang(id : number, kuerzel : String | null, kuerzelAnzeige : String | null, beschreibung : String | null, stufe : String | null, sortierung : number) : boolean {
+		if (this.mapJahrgaenge.get(id) !== null) 
+			return false;
+		let enmJahrgang : ENMJahrgang = new ENMJahrgang();
+		enmJahrgang.id = id;
+		enmJahrgang.kuerzel = kuerzel;
+		enmJahrgang.kuerzelAnzeige = kuerzelAnzeige;
+		enmJahrgang.beschreibung = beschreibung;
+		enmJahrgang.stufe = stufe;
+		enmJahrgang.sortierung = sortierung;
+		this.daten.jahrgaenge.add(enmJahrgang);
+		this.mapJahrgaenge.put(id, enmJahrgang);
+		return true;
+	}
+
+	/**
+	 * Fügt eine Klasse hinzu und überprüft dabei, ob die Klasse schon in der Liste vorhanden ist.
+	 * 
+	 * @param id                die eindeutige ID der Klasse
+	 * @param kuerzel           das Kürzel der Klasse, wie es im Rahmen der amtlichen Schulstatistik verwendet wird. (z.B. EF)
+	 * @param kuerzelAnzeige    das Kürzel der Klasse, wie es im Rahmen der Schule benannt wird und angezeigt werden soll. (z.B. EF)
+	 * @param sortierung        die Reihenfolge der Klasse bei der Sortierung der Klassen. (z.B. 8)
+	 * 
+	 * @return true, falls die Klasse hinzugefügt wurde, ansonsten false  
+	 */
+	public addKlasse(id : number, kuerzel : String | null, kuerzelAnzeige : String | null, sortierung : number) : boolean {
+		if (this.mapKlassen.get(id) !== null) 
+			return false;
+		let enmKlasse : ENMKlasse = new ENMKlasse();
+		enmKlasse.id = id;
+		enmKlasse.kuerzel = kuerzel;
+		enmKlasse.kuerzelAnzeige = kuerzelAnzeige;
+		enmKlasse.sortierung = sortierung;
+		this.daten.klassen.add(enmKlasse);
+		this.mapKlassen.put(id, enmKlasse);
+		return true;
+	}
+
+	/**
+	 * Liefert das ENM-Lehrer-Objekt für die angegebene Lehrer-ID zurück,
+	 * sofern die Lehrer über die Methode {@link ENMDatenManager#addLehrer(long, String, String, String, Geschlecht, String)}
+	 * hinzugefügt wurden.
+	 * 
+	 * @param id   die ID des Lehrers
+	 * 
+	 * @return das ENM-Lehrer-Objekt
+	 */
+	public getLehrer(id : number) : ENMLehrer | null {
+		return this.mapLehrer.get(id);
+	}
+
+	/**
+	 * Liefert das ENM-Schüler-Objekt für die angegebene Schüler-ID zurück,
+	 * sofern die Schüler über die Methode {@link ENMDatenManager#addSchueler(long, long, long, String, String, Geschlecht, String, boolean, boolean)}
+	 * hinzugefügt wurden.
+	 * 
+	 * @param id   die ID des Schülers
+	 * 
+	 * @return das ENM-Schüler-Objekt
+	 */
+	public getSchueler(id : number) : ENMSchueler | null {
+		return this.mapSchueler.get(id);
+	}
+
+	/**
+	 * Liefert das ENM-Fächer-Objekt für die angegebene Fächer-ID zurück,
+	 * sofern die Fächer über die Methode {@link ENMDatenManager#addFach(long, String, String, int, boolean)}
+	 * hinzugefügt wurden.
+	 * 
+	 * @param id   die ID des Faches
+	 * 
+	 * @return das ENM-Fächer-Objekt
+	 */
+	public getFach(id : number) : ENMFach | null {
+		return this.mapFaecher.get(id);
+	}
+
+	/**
+	 * Liefert das ENM-Jahrgänge-Objekt für die angegebene Jahrgangs-ID zurück,
+	 * sofern die Jahrgänge über die Methode {@link ENMDatenManager#addJahrgang(long, String, String, String, String, int)}
+	 * hinzugefügt wurden.
+	 * 
+	 * @param id   die ID des Jahrgangs
+	 * 
+	 * @return das ENM-Jahrgänge-Objekt
+	 */
+	public getJahrgang(id : number) : ENMJahrgang | null {
+		return this.mapJahrgaenge.get(id);
+	}
+
+	/**
+	 * Liefert das ENM-Klassen-Objekt für die angegebene Klassen-ID zurück,
+	 * sofern die Klassen über die Methode {@link ENMDatenManager#addKlasse(long, String, String, int)}
+	 * hinzugefügt wurden.
+	 * 
+	 * @param id   die ID der Klasse
+	 * 
+	 * @return das ENM-Klassen-Objekt
+	 */
+	public getKlasse(id : number) : ENMKlasse | null {
+		return this.mapKlassen.get(id);
+	}
+
+	/**
+	 * Fügt eine neue Lerngruppe mit den angegebenen Parametern hinzu, falls sie noch nicht existiert. Die strID ist dabei
+	 * eine temporäre ID, die nur bei der Erstellung von ENMLerngruppen auf Serverseite genutzt wird.
+	 *  
+	 * @param strID               die temporäre ID der Lerngruppe, um festzustellen, ob es diese Lerngruppe bereits gibt.
+	 * @param kID                 die ID der Lerngruppe (Klasse oder Kurs) in der SVWS-DB
+	 * @param fachID              die ID des Faches der Lerngruppe.
+	 * @param kursartID           gibt die ID der Kursart an. Ist dieser Wert null, so handelt es sich um Klassen-Unterricht
+	 * @param bezeichnung         die Bezeichnung der Lerngruppe (z.B. D-GK4)
+	 * @param kursartKuerzel      das Kürzel der (allgemeinen) Kursart (z.B. GK)
+	 * @param bilingualeSprache   das einstellige Kürzel der bilingualen Sprache, sofern es sich um eine bilinguale 
+	 *                            Lerngruppe handelt. (z.B. F)
+	 * @param wochenstunden       die Anzahl der Wochenstunden, falls es sich um einen Kurs handelt.
+	 */
+	public addLerngruppe(strID : String, kID : number, fachID : number, kursartID : Number | null, bezeichnung : String | null, kursartKuerzel : String | null, bilingualeSprache : String | null, wochenstunden : number) : void {
+		if (this.mapLerngruppen.get(strID) !== null) 
+			return;
+		let lerngruppe : ENMLerngruppe = new ENMLerngruppe();
+		lerngruppe.id = this.lerngruppenIDZaehler++;
+		lerngruppe.kID = kID;
+		lerngruppe.fachID = fachID;
+		lerngruppe.kursartID = kursartID;
+		lerngruppe.bezeichnung = bezeichnung;
+		lerngruppe.kursartKuerzel = kursartKuerzel;
+		lerngruppe.bilingualeSprache = bilingualeSprache;
+		lerngruppe.wochenstunden = wochenstunden;
+		this.mapLerngruppen.put(strID, lerngruppe);
+		this.daten.lerngruppen.add(lerngruppe);
+	}
+
+	/**
+	 * Liefert die Lerngruppe mit der übergebenen (temporären) ID zurück.
+	 * 
+	 * @param strID   die temporäre ID der Lerngruppe, um festzustellen, ob es diese Lerngruppe bereits gibt.
+	 * 
+	 * @return die Lerngruppe
+	 */
+	public getLerngruppe(strID : String) : ENMLerngruppe | null {
+		return this.mapLerngruppen.get(strID);
+	}
+
+	/**
+	 * Fügt die Klassenlehrer zu der List der Klassenlehrer bei einem Schüler hinzu
+	 * 
+	 * @param schueler           der Schüler
+	 * @param klassenlehrerIDs   die IDs der Klassenlehrer
+	 */
+	public addSchuelerKlassenlehrer(schueler : ENMSchueler, ...klassenlehrerIDs : Array<number>) : void {
+	}
+
+	/**
+	 * Fügt eine Sprache mit den übergebenen Informationen zu der Sprachenfolge eines Schülers hinzu.
+	 * 
+	 * @param schueler               der Schüler
+	 * @param sprache                das Kürzel der Sprache, bereinigt von dem Jahrgang, in dem die Sprache eingesetzt hat
+	 * @param fachID                 die ID des Faches
+	 * @param fachKuerzel            das Kürzel des Faches
+	 * @param reihenfolge            die Reihenfolge des Faches in der Sprachenfolge (Beispiel 1)
+	 * @param belegungVonJahrgang    die Information, ab welchem Jahrgang die Sprache belegt wurde (Beispiel 5)
+	 * @param belegungVonAbschnitt   die Information, ab welchem Abschnitt in dem Jahrgang die Sprache belegt wurde (Beispiel 1)
+	 * @param belegungBisJahrgang    die Information, bis zu welchem Jahrgang die Sprache belegt wurde (Beispiel 12), sofern die Sprache bereits abgeschlossen ist
+	 * @param belegungBisAbschnitt   die Information, bis zu welchem Abschnitt in dem Jahrgang die Sprache belegt wurde (Beispiel 2), sofern die Sprache bereits abgeschlossen ist
+	 * @param referenzniveau         die Bezeichnung des Sprachreferenzniveaus, welches bisher erreicht wurde (z.B. B2/C1)
+	 * @param belegungSekI           die Mindest-Dauer der Belegung in der Sekundarstufe I gemäß den Stufen im Core-Type SprachBelegungSekI (z.B. 0, 2, 4, 6)
+	 */
+	public addSchuelerSprachenfolge(schueler : ENMSchueler, sprache : String | null, fachID : number, fachKuerzel : String | null, reihenfolge : number, belegungVonJahrgang : number, belegungVonAbschnitt : number, belegungBisJahrgang : Number | null, belegungBisAbschnitt : Number | null, referenzniveau : String | null, belegungSekI : Number | null) : void {
+	}
+
+	/**
+	 * Fügt die Leistungsdaten mit den übergebenen Informationen zu den Leistungsdaten eines Schülers hinzu
+	 * 
+	 * @param schueler                    der Schüler
+	 * @param leistungID                  die ID der Leistungsdaten des Schülers in der SVWS-DB (z.B. 307956)
+	 * @param lerngruppenID               die eindeutige ID der Lerngruppe, der der Schüler zugeordnet ist. 
+	 *                                    (Klasse oder Kurs wird erst in der Lerngruppe unterschieden!)
+	 * @param note                        das Kürzel der Note, die vergeben wurde
+	 * @param istSchriftlich              gibt an, ob das Fach schriftlich belegt wurde oder nicht
+	 * @param abiturfach                  gibt an, ob es sich um ein Abitufach handelt (1,2,3 oder 4) oder nicht (null)
+	 * @param fehlstundenGesamt           gibt die Anzahl der gesamten Fehlstunden an, sofern diese fachbezogen ermittel werden
+	 * @param fehlstundenUnentschuldigt   gibt die Anzahl der unentschuldigten Fehlstunden an, sofern diese fachbezogen ermittel werden
+	 * @param fachbezogeneBemerkungen     die fachbezogenen Bemerkungen bzw. das Thema bei Projektkursen
+	 * @param neueZuweisungKursart        die Kurszuweisung, die auf dem Zeugnis erscheinen soll für den nächsten Kursabschnitt 
+	 *                                    (z.B. E oder G-Kurs, z.B. an der Gesamtschule)
+	 * @param istGemahnt                  gibt an, ob ein Fach gemahnt wurde oder nicht
+	 * @param mahndatum                   das Mahndatum bei erfolgter Mahnung
+	 */
+	public addSchuelerLeistungsdaten(schueler : ENMSchueler, leistungID : number, lerngruppenID : number, note : String | null, istSchriftlich : boolean, abiturfach : Number | null, fehlstundenGesamt : Number | null, fehlstundenUnentschuldigt : Number | null, fachbezogeneBemerkungen : String | null, neueZuweisungKursart : String | null, istGemahnt : boolean, mahndatum : String | null) : void {
+		let enmLeistung : ENMLeistung = new ENMLeistung();
+		enmLeistung.id = leistungID;
+		enmLeistung.lerngruppenID = lerngruppenID;
+		enmLeistung.note = note;
+		enmLeistung.istSchriftlich = istSchriftlich;
+		enmLeistung.abiturfach = abiturfach;
+		enmLeistung.fehlstundenGesamt = fehlstundenGesamt;
+		enmLeistung.fehlstundenUnentschuldigt = fehlstundenUnentschuldigt;
+		enmLeistung.fachbezogeneBemerkungen = fachbezogeneBemerkungen;
+		enmLeistung.neueZuweisungKursart = neueZuweisungKursart;
+		enmLeistung.istGemahnt = istGemahnt;
+		enmLeistung.mahndatum = mahndatum;
+		schueler.leistungsdaten.add(enmLeistung);
+	}
+
+	/**
+	 * Fügt die Teilleistung mit den übergebenen Angaben zu übergebenen Leistungsdaten 
+	 * eines Schülers hinzu.  
+	 *
+	 * @param leistung       die Leistungsdaten eines Schülers
+	 * @param id             die ID der Teilleistung
+	 * @param artID          die ID der Art von Teileistungen
+	 * @param datum          das Datum, welches dem Erbringen der Teilleistung zuzuordnen ist (z.B. Klausurdatum)
+	 * @param bemerkung      ggf. eine Bemerkung zu der Teilleistung 
+	 * @param notenKuerzel   das Notenkürzel, welches der Teilleistung zuzuordnen ist.
+	 */
+	public addSchuelerTeilleistung(leistung : ENMLeistung, id : number, artID : number, datum : String | null, bemerkung : String | null, notenKuerzel : String | null) : void {
+	}
+
+	isTranspiledInstanceOf(name : string): boolean {
+		return ['de.nrw.schule.svws.core.utils.enm.ENMDatenManager'].includes(name);
+	}
+
+}
+
+export function cast_de_nrw_schule_svws_core_utils_enm_ENMDatenManager(obj : unknown) : ENMDatenManager {
+	return obj as ENMDatenManager;
+}

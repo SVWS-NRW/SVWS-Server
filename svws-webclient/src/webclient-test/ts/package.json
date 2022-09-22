@@ -1,0 +1,30 @@
+{
+	"name": "@svws-nrw/svws-client-test",
+	"description": "SVWS-Server-Projekt: Webclient (Tests)",
+	"author": "MSB NRW",
+	"license": "BSD-3-Clause",
+	"version": "0.2.13",
+	"main": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"files": [
+		"./dist/**/*"
+	],
+	"scripts": {
+		"dev": "vite",
+		"build": "vite build",
+		"serve": "vite preview",
+		"test": "vitest",
+		"test:run": "vitest run --coverage",
+		"lint:script": "eslint --ext .ts,vue --ignore-path .gitignore . --fix",
+		"format": "prettier --write .",
+		"check-licenses": "license-checker-rseidelsohn --summary --unknown --production",
+		"tsbuild": "vuedx-typecheck . && vite build"
+	},
+	"dependencies": {
+		"@headlessui/vue": "^1.5.0",
+		"vue": "^3.2",
+		"vue-router": "^4.1.5",
+		"@svws-nrw/svws-core-ts": "^0.2.13",
+		"@svws-nrw/svws-ui": "^0.2.13"
+	}
+}

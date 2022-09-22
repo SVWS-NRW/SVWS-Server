@@ -1,0 +1,23 @@
+{
+	"index": 94,
+	"fachklassen": [
+		{
+			"schluessel": "102",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 2098000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "GE",
+				"ebene2": "KI",
+				"ebene3": null,
+				"bezeichnung": "Berufsbegleitende/-r Kinderpfleger/-in",
+				"bezeichnungM": "Berufsbegleitender Kinderpfleger",
+				"bezeichnungW": "Berufsbegleitende Kinderpflegerin",
+				"gueltigVon": null,
+				"gueltigBis": 2021
+			} ]
+		}
+	]
+}

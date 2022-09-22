@@ -1,0 +1,9 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [ {
+    "code" : "KU_MU_10",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Mindestens eines der Fächer Kunst oder Musik muss in EF.1 belegt werden"
+  } ],
+  "log" : [ ]
+}

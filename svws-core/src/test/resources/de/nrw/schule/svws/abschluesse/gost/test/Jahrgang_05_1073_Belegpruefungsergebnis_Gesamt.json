@@ -1,0 +1,21 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [ {
+    "code" : "NW_FS_13_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Da von EF.1 bis Q2.2 weniger als zwei Fremdsprachen schriftlich belegt wurden, liegt ausschließlich ein naturwissenschaftlicher Schwerpunkt vor."
+  }, {
+    "code" : "WST_21",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Die durchschnittliche Wochenstundenzahl muss in der Qualifikationsphase mindestens 34 Stunden betragen."
+  }, {
+    "code" : "STD_11_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Der Pflichtunterricht darf nur in begründeten Ausnahmefällen 102 Stunden unterschreiten."
+  }, {
+    "code" : "ABI_16",
+    "art" : "SCHRIFTLICHKEIT",
+    "beschreibung" : "Fächer, die keine Abiturfächer sind, müssen in Q2.2 mündlich belegt werden."
+  } ],
+  "log" : [ ]
+}

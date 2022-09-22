@@ -1,0 +1,13 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [ {
+    "code" : "ANZ_11_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Die Stundenbandbreite sollte pro Halbjahr 32 bis 36 Stunden betragen, um eine gleichmäßige Stundenbelastung zu gewährleisten."
+  }, {
+    "code" : "VF_11",
+    "art" : "BELEGUNG",
+    "beschreibung" : "In der Qualifikationsphase können maximal zwei Vertiefungskurse belegt werden."
+  } ],
+  "log" : [ ]
+}

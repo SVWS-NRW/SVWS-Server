@@ -1,0 +1,345 @@
+<template>
+	<svws-ui-secondary-menu>
+		<template #headline> Schülerauswahl</template>
+		<template #header>
+			<div class="px-6 pt-3">
+				<svws-ui-multi-select
+					v-model="filterStatus"
+					:items="inputKatalogSchuelerStatus"
+					:item-text="text_status"
+					tags
+					title="Status"
+				/>
+				<div class="mt-4 grid grid-cols-2 gap-4">
+					<svws-ui-multi-select
+						v-model="filterKlassen"
+						title="Klasse"
+						:items="inputKlassen"
+						:item-text="text_klasse"
+					/>
+					<svws-ui-multi-select
+						v-model="filterJahrgaenge"
+						title="Jahrgang"
+						:items="inputJahrgaenge"
+						:item-text="text_jahrgang"
+					/>
+					<svws-ui-multi-select
+						v-model="filterKurse"
+						title="Kurs"
+						:items="inputKurse"
+						:item-text="text_kurs"
+					/>
+					<svws-ui-multi-select
+						v-model="filterSchulgliederung"
+						title="Schulgliederung"
+						:items="inputSchulgliederungen"
+						:item-text="text_schulgliederung"
+					/>
+				</div>
+				<div class="mt-4 flex flex-row items-center justify-between">
+					<svws-ui-button type="secondary">
+						<svws-ui-icon><i-ri-filter--3-line /></svws-ui-icon>
+						<span class="ml-2">Erweiterte Filter</span>
+					</svws-ui-button>
+					<svws-ui-button
+						v-show="filtered"
+						type="transparent"
+						@click="filterReset"
+					>
+						<svws-ui-icon><i-ri-close-line /></svws-ui-icon>
+						<span class="ml-2">Filter zurücksetzen</span>
+					</svws-ui-button>
+				</div>
+				<div class="mt-4">
+					<svws-ui-text-input
+						v-model="search"
+						type="search"
+						placeholder="Suche nach Namen oder Klasse"
+						><i-ri-search-line
+					/></svws-ui-text-input>
+				</div>
+			</div>
+		</template>
+		<template #content>
+			<div class="container">
+				<svws-ui-table
+					v-model:selected="selected"
+					:cols="cols"
+					:rows="rowsFiltered"
+					:footer="true"
+					:asc="true"
+					:multi-select="true"
+					:actions="actions"
+					@update:selected-items="updateSelectedItems"
+					@action="onAction"
+				>
+					<template #footer>
+						<button
+							class="flex h-10 w-10 items-center justify-center"
+						>
+							<svws-ui-icon><i-ri-add-line /></svws-ui-icon>
+						</button>
+						<button
+							class="flex h-10 w-10 items-center justify-center"
+						>
+							<svws-ui-icon><i-ri-file-copy-line /></svws-ui-icon>
+						</button>
+						<button
+							class="flex h-10 w-10 items-center justify-center"
+						>
+							<svws-ui-icon><i-ri-more--2-line /></svws-ui-icon>
+						</button>
+					</template>
+				</svws-ui-table>
+			</div>
+		</template>
+	</svws-ui-secondary-menu>
+</template>
+
+<script setup lang="ts">
+	import { computed, ComputedRef, Ref, ref, WritableComputedRef } from "vue";
+
+	import {
+		JahrgangsListeEintrag,
+		KlassenListeEintrag,
+		KursListeEintrag,
+		SchuelerListeEintrag,
+		SchuelerStatus,
+		Schulgliederung
+	} from "@svws-nrw/svws-core-ts";
+	import { injectMainApp, Main } from "~/apps/Main";
+	import { useAuswahlViaRoute } from '~/router/auswahlViaRoute';
+
+	export interface SchuelerProps {
+		selectedItems: Array<SchuelerListeEintrag>;
+		schulgliederung: Schulgliederung | undefined;
+		filtered: boolean;
+		search: string;
+	}
+
+	// TODO Speichere in einem speziellen Filter-Objekt
+	const filtered: Ref<boolean> = ref(false);
+	const search: Ref<string> = ref("");
+	const cols = [
+		{ id: "klasse", title: "Klasse", sortable: true },
+		{ id: "nachname", title: "Nachname", sortable: true },
+		{ id: "vorname", title: "Vorname", sortable: true }
+	];
+	const actions = [
+		{ label: "Löschen", action: "delete" },
+		{ label: "Kopieren", action: "copy" }
+	];
+	const main: Main = injectMainApp();
+	const app = main.apps.schueler;
+	const appKlassen = main.apps.klassen;
+	const appSchule = main.apps.schule;
+	const appJahrgaenge = main.apps.jahrgaenge;
+	const appKurse = main.apps.kurse;
+
+	// rows(): Array<SchuelerListeEintrag & {klasse: string}> {
+	const rows: ComputedRef<Array<any>> = computed(() => {
+		const array = app.auswahl.gefiltert.map(e => ({
+			...e,
+			klasse:
+				appKlassen.auswahl.liste
+					.find(k => k.id === e.idKlasse)
+					?.kuerzel?.toString() || ""
+		}));
+		return array;
+	});
+
+	const rowsFiltered: ComputedRef<Array<any>> = computed(() => {
+		const rowsConst = rows.value;
+		if (search.value && rowsConst) {
+			return rowsConst.filter(
+				(e: any) =>
+					e.nachname
+						.toLocaleLowerCase()
+						.includes(search.value.toLocaleLowerCase()) ||
+					e.vorname
+						.toLocaleLowerCase()
+						.includes(search.value.toLocaleLowerCase())
+			);
+		}
+		return rowsConst;
+	});
+
+	const selected = useAuswahlViaRoute('schueler')
+
+	const inputKatalogSchuelerStatus: ComputedRef<Array<SchuelerStatus>> =
+		computed(() => {
+			return SchuelerStatus.values();
+		});
+
+	const filterStatus: WritableComputedRef<Array<SchuelerStatus> | undefined> =
+		computed({
+			get(): Array<SchuelerStatus> | undefined {
+				return app.auswahl.filter.status;
+			},
+			set(value: Array<SchuelerStatus> | undefined) {
+				const filter = app.auswahl.filter;
+				if (filter) {
+					filter.status = value || [];
+					app.auswahl.filter = filter;
+					filtered.value = true;
+				}
+			}
+		});
+
+	const inputSchulgliederungen: ComputedRef<
+		Array<Schulgliederung> | undefined
+	> = computed(() => {
+		// if (!this.$app.schulgliederungen) return [];
+		return appSchule.schulgliederungen;
+	});
+
+	const filterSchulgliederung: WritableComputedRef<
+		Schulgliederung | undefined
+	> = computed({
+		get(): Schulgliederung | undefined {
+			// TODO Lese aus einem speziellen Filter-Objekt, nicht in der lokalen Variable
+			return app.auswahl.filter.schulgliederung;
+		},
+		set(value: Schulgliederung | undefined) {
+			// TODO Speichere in einem speziellen Filter-Objekt, nicht in der lokalen Variable
+			const filter = app.auswahl.filter;
+			if (filter) {
+				filter.schulgliederung = value;
+				app.auswahl.filter = filter;
+				filtered.value = true;
+			}
+		}
+	});
+
+	const inputJahrgaenge: ComputedRef<
+		Array<JahrgangsListeEintrag> | undefined
+	> = computed(() => {
+		return appJahrgaenge.auswahl.liste;
+	});
+
+	const filterJahrgaenge: WritableComputedRef<
+		JahrgangsListeEintrag | undefined
+	> = computed({
+		get(): JahrgangsListeEintrag | undefined {
+			return app.auswahl.filter.jahrgang;
+		},
+		set(value: JahrgangsListeEintrag | undefined) {
+			const filter = app.auswahl.filter;
+			if (filter && app) {
+				filter.jahrgang = value;
+				filter.klasse = undefined;
+				filter.kurs = undefined;
+				app.auswahl.filter = filter;
+				filtered.value = true;
+			}
+		}
+	});
+
+	const inputKlassen: ComputedRef<Array<KlassenListeEintrag> | undefined> =
+		computed(() => {
+			if (appKlassen) {
+				const liste = [...appKlassen.auswahl.liste];
+				const jahrgang = app.auswahl.filter.jahrgang;
+				if (jahrgang) {
+					return liste.filter(k => k.idJahrgang === jahrgang.id);
+				} else return liste;
+			}
+			return undefined;
+		});
+
+	const filterKlassen: WritableComputedRef<KlassenListeEintrag | undefined> =
+		computed({
+			get(): KlassenListeEintrag | undefined {
+				return app.auswahl.filter.klasse;
+			},
+			set(value: KlassenListeEintrag | undefined) {
+				if (app) {
+					const filter = app.auswahl.filter;
+					filter.klasse = value;
+					app.auswahl.filter = filter;
+					filtered.value = true;
+				}
+			}
+		});
+
+	const inputKurse: ComputedRef<Array<KursListeEintrag> | undefined> =
+		computed(() => {
+			if (appKurse) {
+				const liste = [...appKurse.auswahl.liste];
+				const jahrgang = app.auswahl.filter.jahrgang;
+				if (jahrgang) {
+					return liste.filter(k =>
+						k.idJahrgaenge.contains(jahrgang.id)
+					);
+				} else return liste;
+			} else return undefined;
+		});
+
+	const filterKurse: WritableComputedRef<KursListeEintrag | undefined> =
+		computed({
+			get(): KursListeEintrag | undefined {
+				return app.auswahl.filter.kurs;
+			},
+			set(value: KursListeEintrag | undefined) {
+				if (app) {
+					const filter = app.auswahl.filter;
+					filter.kurs = value;
+					app.auswahl.filter = filter;
+					filtered.value = true;
+				}
+			}
+		});
+
+	function text_status(status: SchuelerStatus): string {
+		if (status instanceof Array) return "";
+		return status.bezeichnung.toString();
+	}
+
+	function text_klasse(klasse: KlassenListeEintrag): string {
+		return klasse.kuerzel?.toString() ?? "";
+	}
+
+	function text_jahrgang(jahrgang: JahrgangsListeEintrag): string {
+		return jahrgang.kuerzel?.toString() ?? "";
+	}
+
+	function text_kurs(kurs: KursListeEintrag): string {
+		return kurs.kuerzel.toString();
+	}
+
+	function text_schulgliederung(schulgliederung: Schulgliederung): string {
+		return schulgliederung.daten.kuerzel.toString();
+	}
+
+	function updateSelectedItems(selectedItems: SchuelerListeEintrag[]) {
+		if (app) {
+			app.auswahl.ausgewaehlt_gruppe = selectedItems;
+		}
+	}
+
+	function deleteSchueler(schueler: SchuelerListeEintrag) {
+		// TODO delete Schueler
+		console.log("delete", schueler);
+	}
+
+	function onAction(props: { action: string; item: SchuelerListeEintrag }) {
+		console.log(props);
+		if (props.action === "delete") {
+			deleteSchueler(props.item);
+		}
+	}
+
+	function filterReset() {
+		if (app) {
+			search.value = "";
+			const filter = app.auswahl.filter;
+			filter.jahrgang = undefined;
+			filter.klasse = undefined;
+			filter.kurs = undefined;
+			filter.schulgliederung = undefined;
+			filter.status = [SchuelerStatus.AKTIV];
+			app.auswahl.filter = filter;
+			filtered.value = false;
+		}
+	}
+</script>

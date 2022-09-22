@@ -1,0 +1,162 @@
+###############################################################################
+######################## Information zu dieser Blockung #######################
+###############################################################################
+
+Es handelt sich um eine EF Blockung einer sehr großen Stufe.
+
+Schienen   =  12 (muss genau 12 sein)
+Schüler    = 153
+Kurse      =  86
+Facharten  =  23
+  BI;GK Wahlen =  124 = 20.6 * 6 
+  CH;GK Wahlen =  63 = 21.0 * 3 
+  D;GK Wahlen =  150 = 18.7 * 8 
+  DV;VTF Wahlen =  2 = 2.0 * 1 
+  E;GK Wahlen =  149 = 18.6 * 8 
+  EK;GK Wahlen =  100 = 25.0 * 4 
+  EL;GK Wahlen =  41 = 20.5 * 2 
+  ER;GK Wahlen =  44 = 22.0 * 2 
+  F;GK Wahlen =  18 = 18.0 * 1 
+  GE;GK Wahlen =  79 = 19.7 * 4 
+  IF;GK Wahlen =  62 = 20.6 * 3 
+  KR;GK Wahlen =  106 = 21.2 * 5 
+  KU;GK Wahlen =  98 = 24.5 * 4 
+  L;GK Wahlen =  53 = 26.5 * 2 
+  M;GK Wahlen =  150 = 18.7 * 8 
+  MU;GK Wahlen =  54 = 27.0 * 2 
+  MV;VTF Wahlen =  6 = 6.0 * 1 
+  PA;GK Wahlen =  61 = 20.3 * 3 
+  PH;GK Wahlen =  85 = 21.2 * 4 
+  PL;GK Wahlen =  51 = 25.5 * 2 
+  S0;GK Wahlen =  24 = 24.0 * 1 
+  SP;GK Wahlen =  150 = 25.0 * 6 
+  SW;GK Wahlen =  128 = 21.3 * 6 
+Fachwahlen = 1798 [11.7 Fachwahlen pro Schüler]
+   0 Fachwahlen haben   3 Schüler
+  11 Fachwahlen haben   2 Schüler
+  12 Fachwahlen haben 148 Schüler
+
+Kurse, die über mehr als eine Schiene gehen, gibt es nicht.
+		
+Die einzigen Regeln sind: 
+    Kurs#BI-GK1#in Schiene#1
+    Kurs#M-GK1#in Schiene#1
+    Kurs#L-GK1#in Schiene#1
+
+Zudem sollen nicht gleiche Facharten in einer Schiene landen.
+
+--> Eine optimale Blockung ist möglich! 
+--> Beispielsweise bei folgender Kursverteilung:
+
+Schiene 1 (150 SuS)
+    BI-GK1 (21 SuS) 
+    E-GK6 (18 SuS) 
+    GE-GK3 (20 SuS) 
+    L-GK1 (26 SuS) 
+    M-GK1 (19 SuS) 
+    PH-GK2 (21 SuS) 
+    SP-GK1 (25 SuS) 
+
+Schiene 2 (150 SuS)
+    GE-GK4 (20 SuS) 
+    KR-GK3 (21 SuS) 
+    M-GK4 (19 SuS) 
+    PA-GK3 (20 SuS) 
+    PH-GK1 (21 SuS) 
+    PL-GK2 (25 SuS) 
+    S0-GK1 (24 SuS) 
+
+Schiene 3 (150 SuS)
+    D-GK5 (19 SuS) 
+    EK-GK1 (25 SuS) 
+    IF-GK3 (20 SuS) 
+    KR-GK1 (21 SuS) 
+    M-GK6 (19 SuS) 
+    SP-GK6 (25 SuS) 
+    SW-GK6 (21 SuS) 
+
+Schiene 4 (149 SuS)
+    D-GK8 (19 SuS) 
+    EK-GK3 (25 SuS) 
+    ER-GK1 (22 SuS) 
+    GE-GK1 (19 SuS) 
+    KU-GK4 (24 SuS) 
+    M-GK8 (19 SuS) 
+    SW-GK3 (21 SuS) 
+
+Schiene 5 (149 SuS)
+    CH-GK1 (21 SuS) 
+    D-GK4 (19 SuS) 
+    E-GK2 (19 SuS) 
+    ER-GK2 (22 SuS) 
+    KR-GK4 (21 SuS) 
+    KU-GK3 (25 SuS) 
+    SW-GK4 (22 SuS) 
+
+Schiene 6 (150 SuS)
+    BI-GK6 (20 SuS) 
+    D-GK6 (18 SuS) 
+    E-GK5 (18 SuS) 
+    KU-GK1 (24 SuS) 
+    M-GK5 (18 SuS) 
+    MV-VTF1 (6 SuS) 
+    SP-GK5 (25 SuS) 
+    SW-GK2 (21 SuS) 
+
+Schiene 7 (150 SuS)
+    BI-GK3 (20 SuS) 
+    D-GK2 (19 SuS) 
+    E-GK4 (19 SuS) 
+    GE-GK2 (20 SuS) 
+    KU-GK2 (25 SuS) 
+    PA-GK2 (21 SuS) 
+    PL-GK1 (26 SuS) 
+
+Schiene 8 (150 SuS)
+    BI-GK5 (21 SuS) 
+    D-GK1 (19 SuS) 
+    E-GK1 (19 SuS) 
+    F-GK1 (18 SuS) 
+    L-GK2 (27 SuS) 
+    SP-GK2 (25 SuS) 
+    SW-GK5 (21 SuS) 
+
+Schiene 9 (150 SuS)
+    E-GK8 (19 SuS) 
+    EK-GK2 (25 SuS) 
+    EL-GK2 (20 SuS) 
+    IF-GK1 (21 SuS) 
+    M-GK2 (19 SuS) 
+    PH-GK4 (21 SuS) 
+    SP-GK4 (25 SuS) 
+
+Schiene 10 (150 SuS)
+    CH-GK3 (21 SuS) 
+    D-GK7 (18 SuS) 
+    EK-GK4 (25 SuS) 
+    KR-GK2 (21 SuS) 
+    M-GK3 (18 SuS) 
+    MU-GK1 (27 SuS) 
+    PA-GK1 (20 SuS) 
+
+Schiene 11 (150 SuS)
+    BI-GK4 (21 SuS) 
+    CH-GK2 (21 SuS) 
+    DV-VTF1 (2 SuS) 
+    E-GK3 (19 SuS) 
+    EL-GK1 (21 SuS) 
+    KR-GK5 (22 SuS) 
+    PH-GK3 (22 SuS) 
+    SW-GK1 (22 SuS) 
+
+Schiene 12 (150 SuS)
+    BI-GK2 (21 SuS) 
+    D-GK3 (19 SuS) 
+    E-GK7 (18 SuS) 
+    IF-GK2 (21 SuS) 
+    M-GK7 (19 SuS) 
+    MU-GK2 (27 SuS) 
+    SP-GK3 (25 SuS) 
+
+
+

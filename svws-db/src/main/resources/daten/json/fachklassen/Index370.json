@@ -1,0 +1,23 @@
+{
+	"index": 370,
+	"fachklassen": [
+		{
+			"schluessel": "101",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1629000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Kooperationsklasse Hauptschule",
+				"bezeichnungM": "Kooperationsklasse Hauptschule",
+				"bezeichnungW": "Kooperationsklasse Hauptschule",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}
+	]
+}

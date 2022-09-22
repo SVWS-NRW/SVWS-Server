@@ -1,0 +1,244 @@
+{
+	"index": 180,
+	"fachklassen": [
+		{
+			"schluessel": "101",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1271000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "MB",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Assistent/-in für Konstruktions- und Fertigungstechnik / AHR",
+				"bezeichnungM": "Assistent für Konstruktions- und Fertigungstechnik / AHR",
+				"bezeichnungW": "Assistentin für Konstruktions- und Fertigungstechnik / AHR",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}, {
+			"schluessel": "102",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1272000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "BT",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Bautechnische/-r Assistent/-in / AHR",
+				"bezeichnungM": "Bautechnischer Assistent / AHR",
+				"bezeichnungW": "Bautechnische Assistentin / AHR",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}, {
+			"schluessel": "103",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1273000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "NW",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Biologisch-technische/-r Assistent/-in / AHR",
+				"bezeichnungM": "Biologisch-technischer Assistent / AHR",
+				"bezeichnungW": "Biologisch-technische Assistentin / AHR",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}, {
+			"schluessel": "104",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1274000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "NW",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Chemisch-technische/-r Assistent/-in / AHR",
+				"bezeichnungM": "Chemisch-technischer Assistent / AHR",
+				"bezeichnungW": "Chemisch-technische Assistentin / AHR",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}, {
+			"schluessel": "105",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1275000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "E",
+				"berufsfeld": "ET",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Elektrotechnische/-r Assistent/-in / AHR",
+				"bezeichnungM": "Elektrotechnischer Assistent / AHR",
+				"bezeichnungW": "Elektrotechnische Assistentin / AHR",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}, {
+			"schluessel": "106",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1276000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "S",
+				"berufsfeld": "ES",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Erzieher/-in / AHR",
+				"bezeichnungM": "Erzieher / AHR",
+				"bezeichnungW": "Erzieherin / AHR",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}, {
+			"schluessel": "107",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1277000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "G",
+				"berufsfeld": "KM",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Gestaltungstechnische/-r Assistent/-in / AHR",
+				"bezeichnungM": "Gestaltungstechnischer Assistent / AHR",
+				"bezeichnungW": "Gestaltungstechnische Assistentin / AHR",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}, {
+			"schluessel": "108",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1278000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "A",
+				"berufsfeld": "LH",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Hauswirtschaftliche/-r Assistent/-in / AHR",
+				"bezeichnungM": "Hauswirtschaftlicher Assistent / AHR",
+				"bezeichnungW": "Hauswirtschaftliche Assistentin / AHR",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}, {
+			"schluessel": "109",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1279000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WW",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Kaufmännische/-r Assistent/-in / AHR",
+				"bezeichnungM": "Kaufmännischer Assistent / AHR",
+				"bezeichnungW": "Kaufmännische Assistentin / AHR",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}, {
+			"schluessel": "110",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1280000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "NW",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Physikalisch-technische/-r Assistent/-in / AHR",
+				"bezeichnungM": "Physikalisch-technischer Assistent / AHR",
+				"bezeichnungW": "Physikalisch-technische Assistentin / AHR",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}, {
+			"schluessel": "111",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1281000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WW",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Technische/-r Assistent/-in für Betriebsinformatik / AHR",
+				"bezeichnungM": "Technischer Assistent für Betriebsinformatik / AHR",
+				"bezeichnungW": "Technische Assistentin für Betriebsinformatik / AHR",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}, {
+			"schluessel": "112",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1282000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TB",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Textiltechnische/-r Assistent/-in / AHR",
+				"bezeichnungM": "Textiltechnischer Assistent / AHR",
+				"bezeichnungW": "Textiltechnische Assistentin / AHR",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}, {
+			"schluessel": "113",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1283000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "NW",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Umwelttechnische/-r Assistent/-in / AHR",
+				"bezeichnungM": "Umwelttechnischer Assistent / AHR",
+				"bezeichnungW": "Umwelttechnische Assistentin / AHR",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}, {
+			"schluessel": "999",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1284000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "X",
+				"berufsfeld": "XX",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Sonstiger Bildungsgang",
+				"bezeichnungM": "Sonstiger Bildungsgang",
+				"bezeichnungW": "Sonstiger Bildungsgang",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}
+	]
+}

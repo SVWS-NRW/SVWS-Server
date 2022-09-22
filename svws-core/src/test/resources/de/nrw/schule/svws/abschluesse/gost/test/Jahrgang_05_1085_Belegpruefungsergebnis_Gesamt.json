@@ -1,0 +1,13 @@
+{
+  "erfolgreich" : true,
+  "fehlercodes" : [ {
+    "code" : "L_10_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Um das Latinum zu erlangen muss Latein in EF.1 und EF.2 belegt werden."
+  }, {
+    "code" : "ANZ_11_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Die Stundenbandbreite sollte pro Halbjahr 32 bis 36 Stunden betragen, um eine gleichmäßige Stundenbelastung zu gewährleisten."
+  } ],
+  "log" : [ ]
+}

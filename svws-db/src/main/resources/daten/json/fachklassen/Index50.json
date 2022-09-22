@@ -1,0 +1,57 @@
+{
+	"index": 50,
+	"fachklassen": [
+		{
+			"schluessel": "101",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1708000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "S",
+				"berufsfeld": "SG",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Praktikanten/Praktikantinnen mit FO-Reife für FS der Sozialpädagogik",
+				"bezeichnungM": "Praktikanten mit FO-Reife für FS der Sozialpädagogik",
+				"bezeichnungW": "Praktikantinnen mit FO-Reife für FS der Sozialpädagogik",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}, {
+			"schluessel": "102",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1709000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "E",
+				"berufsfeld": "EH",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Praktikanten/Praktikantinnen mit FO-Reife für FS der Ernährung u. Hauswirtschaft",
+				"bezeichnungM": "Praktikanten mit FO-Reife für FS der Ernährung u. Hauswirtschaft",
+				"bezeichnungW": "Praktikantinnen mit FO-Reife für FS der Ernährung u. Hauswirtschaft",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}, {
+			"schluessel": "999",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1710000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "X",
+				"berufsfeld": "XX",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Praktikanten/Praktikantinnen: Sonstiger Bildungsgang",
+				"bezeichnungM": "Praktikanten: Sonstiger Bildungsgang",
+				"bezeichnungW": "Praktikanten: Sonstiger Bildungsgang",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}
+	]
+}

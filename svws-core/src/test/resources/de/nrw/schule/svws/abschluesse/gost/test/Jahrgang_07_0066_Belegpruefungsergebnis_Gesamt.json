@@ -1,0 +1,17 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [ {
+    "code" : "D_10",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Deutsch muss von EF.1 bis Q2.2 belegt werden."
+  }, {
+    "code" : "D_11",
+    "art" : "SCHRIFTLICHKEIT",
+    "beschreibung" : "Deutsch muss von EF.1 bis wenigstens Q2.1 schriftlich belegt werden."
+  }, {
+    "code" : "ANZ_11_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Die Stundenbandbreite sollte pro Halbjahr 32 bis 36 Stunden betragen, um eine gleichmäßige Stundenbelastung zu gewährleisten."
+  } ],
+  "log" : [ ]
+}

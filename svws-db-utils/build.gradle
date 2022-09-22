@@ -1,0 +1,88 @@
+configurations {
+	implementation.extendsFrom(crypto, database, jackson, resteasy)
+} 
+
+dependencies {
+    implementation project(':svws-base')
+    implementation project(':svws-core')
+    implementation project(':svws-db')
+    implementation project(':svws-db-dto')
+}
+
+compileJava.dependsOn(":svws-base:assemble")
+compileJava.dependsOn(":svws-core:assemble")
+compileJava.dependsOn(":svws-db-dto:assemble")
+
+/* TODO Support JPMS-Modules
+extraJavaModuleInfo {
+	module("jackcess-4.0.1.jar", "com.healthmarketscience.jackcess", "4.0.1") {
+        exports("com.healthmarketscience.jackcess")
+    }
+    automaticModule("commons-logging-1.2.jar", "org.apache.commons.logging")
+}
+*/
+
+publishing {
+    repositories {
+        maven {
+            name = "GitHub"
+            url = "https://maven.pkg.github.com/SVWS-NRW/SVWS-Packages"
+            credentials {
+            	username = getGithubActor()
+                password = getGithubToken()
+            }
+        }
+    }
+    publications {
+        mavenSVWSDBUtils(MavenPublication) {
+            artifactId = 'svws-db-utils'
+            from components.java
+            versionMapping {
+                usage('java-api') {
+                    fromResolutionOf('runtimeClasspath')
+                }
+                usage('java-runtime') {
+                    fromResolutionResult()
+                }
+            }
+            pom {
+                name = 'SVWS DB Utils Library'
+                description = 'Diese Bibliothek unterstützt bei dem Zugriff auf Datenbanken für die Schulverwaltungssoftware in NRW'
+                url = 'http://www.svws.nrw.de'
+                licenses {
+                    license {
+                        name = 'BSD-3-Clause'
+                        url = 'https://opensource.org/licenses/BSD-3-Clause'
+                    }
+                }
+                scm {
+        			connection = 'scm:git@github.com/SVWS-NRW/SVWS-Packages'
+        			developerConnection = 'scm:git@github.com/SVWS-NRW/SVWS-Packages.git'
+                    url = 'https://github.com/SVWS-NRW/SVWS-Packages.git'
+                }
+            }
+        }
+    }
+}
+
+task generateLegacyMDBs(type: JavaExec) {
+	group = 'svws'
+	dependsOn compileJava
+	classpath = sourceSets.main.runtimeClasspath
+    outputs.dir file(project.buildDir.toString() + '/mdb/')
+    description "Erzeuge die vier Access-Datenbanken impexp.mdb, statkue.mdb, schildintern.mdb und schulver.mdb für die Verwendung mit Schild v2.x"
+    mainClass = 'de.nrw.schule.svws.db.utils.app.MDBGenerator'
+    jvmArgs "-Dfile.encoding=UTF-8" 
+    args "-j"
+}
+
+task generateSQLScripts(type: JavaExec) {
+	group = 'svws'
+	dependsOn compileJava
+	classpath = sourceSets.main.runtimeClasspath
+    outputs.dir file(project.buildDir.toString() + '/sql/')
+    description "Erzeuge SQL-Skripte für das Erstellen und Löschen eines Datenbankschemas sowie zum Befüllen eines Schemas mit Default-Daten"
+    mainClass = 'de.nrw.schule.svws.db.utils.app.SQLGenerator'
+    jvmArgs "-Dfile.encoding=UTF-8" 
+    args "-a"
+}

@@ -1,0 +1,19 @@
+***** Avatars Grey ****
+
+man_grey.svg
+woman_grey.svg
+girl_grey.svg
+boy_grey.svg
+divers_grey.svg
+
+https://www.svgrepo.com/
+
+LICENSE: CC0 License
+
+
+*****
+
+placeholder-background.jpg
+erstellt und zur Verfügung gestellt durch Malte Gerkensmeier
+
+*****

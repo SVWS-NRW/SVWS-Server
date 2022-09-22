@@ -1,0 +1,74 @@
+{
+	"index": 146,
+	"fachklassen": [
+		{
+			"schluessel": "110",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1226000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": "TN",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Ingenieurtechnik (Klasse 11 und 12) (Jahrgangsstufe 01 und 02)",
+				"bezeichnungM": "Ingenieurtechnik (Klasse 11 und 12) (Jahrgangsstufe 01 und 02)",
+				"bezeichnungW": "Ingenieurtechnik (Klasse 11 und 12) (Jahrgangsstufe 01 und 02)",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "110",
+			"schluessel2": "10",
+			"historie": [ {
+				"id": 1227000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": "TN",
+				"ebene2": "BT",
+				"ebene3": "BA",
+				"bezeichnung": "Ingenieurtechnik: Berufsabschluss Bautechnische/-r Assistent/-in (Klasse 13) (Jg 03)",
+				"bezeichnungM": "Ingenieurtechnik: Berufsabschluss Bautechnische/-r Assistent/-in (Klasse 13) (Jg 03)",
+				"bezeichnungW": "Ingenieurtechnik: Berufsabschluss Bautechnische/-r Assistent/-in (Klasse 13) (Jg 03)",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "110",
+			"schluessel2": "11",
+			"historie": [ {
+				"id": 1228000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": "TN",
+				"ebene2": "ET",
+				"ebene3": "EA",
+				"bezeichnung": "Ingenieurtechnik: Berufsabschluss Elektrotechnische/-r Assistent/-in (Klasse 13) (Jg 03)",
+				"bezeichnungM": "Ingenieurtechnik: Berufsabschluss Elektrotechnische/-r Assistent/-in (Klasse 13) (Jg 03)",
+				"bezeichnungW": "Ingenieurtechnik: Berufsabschluss Elektrotechnische/-r Assistent/-in (Klasse 13) (Jg 03)",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "110",
+			"schluessel2": "12",
+			"historie": [ {
+				"id": 1229000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": "TN",
+				"ebene2": "MB",
+				"ebene3": null,
+				"bezeichnung": "Ingenieurtechnik: Berufsabschluss Maschinenbautechnische/-r Assistent/-in (Klasse 13) (Jg 03)",
+				"bezeichnungM": "Ingenieurtechnik: Berufsabschluss Maschinenbautechnische/-r Assistent/-in (Klasse 13) (Jg 03)",
+				"bezeichnungW": "Ingenieurtechnik: Berufsabschluss Maschinenbautechnische/-r Assistent/-in (Klasse 13) (Jg 03)",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}
+	]
+}

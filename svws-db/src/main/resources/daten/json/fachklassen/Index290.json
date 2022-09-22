@@ -1,0 +1,176 @@
+{
+	"index": 290,
+	"fachklassen": [
+		{
+			"schluessel": "081",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1577000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "G",
+				"berufsfeld": "KG",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Fachhochschulreife 2j. (VZ) - Kunst/Musik/Gestaltung",
+				"bezeichnungM": "Fachhochschulreife 2j. (VZ) - Kunst/Musik/Gestaltung",
+				"bezeichnungW": "Fachhochschulreife 2j. (VZ) - Kunst/Musik/Gestaltung",
+				"gueltigVon": null,
+				"gueltigBis": 2010
+			} ]
+		}, {
+			"schluessel": "082",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1578000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "S",
+				"berufsfeld": "ES",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Fachhochschulreife 2j. (VZ) - Erziehung u. Soziales",
+				"bezeichnungM": "Fachhochschulreife 2j. (VZ) - Erziehung u. Soziales",
+				"bezeichnungW": "Fachhochschulreife 2j. (VZ) - Erziehung u. Soziales",
+				"gueltigVon": null,
+				"gueltigBis": 2010
+			} ]
+		}, {
+			"schluessel": "083",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1579000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WW",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Fachhochschulreife 2j. (VZ) - Wirtschaftswissenschaften",
+				"bezeichnungM": "Fachhochschulreife 2j. (VZ) - Wirtschaftswissenschaften",
+				"bezeichnungW": "Fachhochschulreife 2j. (VZ) - Wirtschaftswissenschaften",
+				"gueltigVon": null,
+				"gueltigBis": 2010
+			} ]
+		}, {
+			"schluessel": "084",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1580000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "A",
+				"berufsfeld": "LH",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Fachhochschulreife 2j. (VZ) - Land- u. Hauswirtschaft",
+				"bezeichnungM": "Fachhochschulreife 2j. (VZ) - Land- u. Hauswirtschaft",
+				"bezeichnungW": "Fachhochschulreife 2j. (VZ) - Land- u. Hauswirtschaft",
+				"gueltigVon": null,
+				"gueltigBis": 2010
+			} ]
+		}, {
+			"schluessel": "085",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1581000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "BT",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Fachhochschulreife 2j. (VZ) - Bautechnik",
+				"bezeichnungM": "Fachhochschulreife 2j. (VZ) - Bautechnik",
+				"bezeichnungW": "Fachhochschulreife 2j. (VZ) - Bautechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2010
+			} ]
+		}, {
+			"schluessel": "086",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1582000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "VT",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Fachhochschulreife 2j. (VZ) - Verkehrstechnik",
+				"bezeichnungM": "Fachhochschulreife 2j. (VZ) - Verkehrstechnik",
+				"bezeichnungW": "Fachhochschulreife 2j. (VZ) - Verkehrstechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2010
+			} ]
+		}, {
+			"schluessel": "087",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1583000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "MT",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Fachhochschulreife 2j. (VZ) - Maschinenbautechnik",
+				"bezeichnungM": "Fachhochschulreife 2j. (VZ) - Maschinenbautechnik",
+				"bezeichnungW": "Fachhochschulreife 2j. (VZ) - Maschinenbautechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2010
+			} ]
+		}, {
+			"schluessel": "088",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1584000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "ET",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Fachhochschulreife 2j. (VZ) - Elektrotechnik",
+				"bezeichnungM": "Fachhochschulreife 2j. (VZ) - Elektrotechnik",
+				"bezeichnungW": "Fachhochschulreife 2j. (VZ) - Elektrotechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2010
+			} ]
+		}, {
+			"schluessel": "089",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1585000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "RO",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Fachhochschulreife 2j. (VZ) - Rohstoffe/Werkstoffe",
+				"bezeichnungM": "Fachhochschulreife 2j. (VZ) - Rohstoffe/Werkstoffe",
+				"bezeichnungW": "Fachhochschulreife 2j. (VZ) - Rohstoffe/Werkstoffe",
+				"gueltigVon": null,
+				"gueltigBis": 2010
+			} ]
+		}, {
+			"schluessel": "090",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1586000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "MP",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Fachhochschulreife 2j. (VZ) - Mathematik/Philosophie",
+				"bezeichnungM": "Fachhochschulreife 2j. (VZ) - Mathematik/Philosophie",
+				"bezeichnungW": "Fachhochschulreife 2j. (VZ) - Mathematik/Philosophie",
+				"gueltigVon": null,
+				"gueltigBis": 2010
+			} ]
+		}
+	]
+}

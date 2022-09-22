@@ -1,0 +1,4 @@
+Kursart;Klartext;E1;E2;Q1;Q2;Q3;Q4;Sortierung
+GKM;Grundkurs mündlich;true;true;true;true;true;true;1
+GKS;Grundkurs schriftlich;true;true;true;true;true;true;2
+LK;Leistungskurs;false;false;true;true;true;true;3

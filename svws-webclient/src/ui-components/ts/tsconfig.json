@@ -1,0 +1,17 @@
+{
+	"extends": "../../../tsconfig.base.json",
+	"compilerOptions": {
+		"rootDir": "./src",
+		"outDir": "./dist",
+		"baseUrl": ".",
+		"paths": {
+			"~/*": ["src/*"]
+		}
+	},
+	"include": [
+		"src/**/*",
+		"components.d.ts",
+		"auto-imports.d.ts"
+	],
+	"exclude": ["**/*.story.vue"]
+}

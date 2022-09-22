@@ -1,0 +1,13 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [ {
+    "code" : "FS_12",
+    "art" : "SCHRIFTLICHKEIT",
+    "beschreibung" : "In EF.1 müssen alle belegten Fremdsprachen schriftlich belegt werden."
+  }, {
+    "code" : "ANZ_11_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Die Gesamtstundenzahl sollte 32 bis 36 Stunden betragen, um eine gleichmäßige Stundenbelastung in der Oberstufe zu gewährleisten."
+  } ],
+  "log" : [ ]
+}

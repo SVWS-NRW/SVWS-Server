@@ -1,0 +1,33 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [ {
+    "code" : "FS_21",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Eine fortgeführte Fremdsprache wurde in der Sprachenfolge als neu einsetzend eingetragen. Die Sprachenfolge ist fehlerhaft."
+  }, {
+	  "code" : "FS_23",
+	  "art" : "BELEGUNG",
+	  "beschreibung" : "Es wird das Fach einer fortgeführten Fremdsprache belegt, zu dem es keine entsprechende Eintragung einer Belegung oder Sprachprüfung in der Sekundarstufe I gibt. Bitte die Sprachenfolge und Sprachprüfungen prüfen."
+  }, {
+    "code" : "PF_17_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Ein Projektkurs soll nur im Ausnahmefall abgewählt werden. Bei einem abgewählten Projektkurs werden lediglich die Wochenstunden auf die Laufbahn angerechnet."
+  }, {
+    "code" : "PF_14",
+    "art" : "BELEGUNG",
+    "beschreibung" : "In der Qualifikationsphase kann maximal ein Projektkurs in zwei aufeinanderfolgenden Halbjahren belegt werden."
+  }, {
+    "code" : "PF_13",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Ein Projektkurs kann nur belegt werden, wenn in der Qualifikationsphase zeitgleich oder vorab auch sein Leitfach zwei Halbjahre lang belegt wurde."
+  }, {
+    "code" : "LK1_13",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Die Abiturfächer müssen alle drei Aufgabenfelder abdecken. Insgesamt sind vier Abiturfächer zu belegen."
+  }, {
+    "code" : "ANZ_11_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Die Stundenbandbreite sollte pro Halbjahr 32 bis 36 Stunden betragen, um eine gleichmäßige Stundenbelastung zu gewährleisten."
+  } ],
+  "log" : [ ]
+}

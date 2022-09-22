@@ -1,0 +1,17 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [ {
+    "code" : "LK_10",
+    "art" : "BELEGUNG",
+    "beschreibung" : "In der Qualifikationsphase müssen zwei Fächer durchgehend in Leistungskursen belegt werden."
+  }, {
+    "code" : "LK_11",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Es dürfen nicht mehr als zwei Fächer als Leistungskurse belegt werden."
+  }, {
+    "code" : "ABI_16",
+    "art" : "SCHRIFTLICHKEIT",
+    "beschreibung" : "Fächer, die keine Abiturfächer sind, müssen in Q2.2 mündlich belegt werden."
+  } ],
+  "log" : [ ]
+}

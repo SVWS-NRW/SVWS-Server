@@ -1,0 +1,29 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [ {
+    "code" : "FS_22_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Englisch wurde nicht in der Sprachenfolge eingetragen. Bitte Prüfen Sie die Sprachenfolge auf Korrektheit."
+  }, {
+    "code" : "FS_12",
+    "art" : "SCHRIFTLICHKEIT",
+    "beschreibung" : "In EF.1 müssen alle belegten Fremdsprachen schriftlich belegt werden."
+  }, {
+    "code" : "FS_18",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Mindestens eine in der Sekundarstufe I begonnene Fremdsprache muss in EF.1 schriftlich belegt werden."
+  }, {
+    "code" : "FS_19_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Eine erfolgreiche Feststellungsprüfung in der Muttersprache am Ende der Sekundarstufe I und am Ende von EF.2 ist notwendig, um die Fremdsprachenbedingungen zu erfüllen."
+  }, {
+    "code" : "FS_14",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Wurde bisher keine 2. Fremdsprache erlernt, muss eine neu einsetzende Fremdsprache in EF.1 schriftlich belegt werden."
+  }, {
+    "code" : "NW_FS_13_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Da in EF.1 weniger als zwei Fremdsprachen schriftlich belegt wurden, müssen zwei Naturwissenschaften bis Q2.2 belegt, davon mindestens eine schriftlich belegt werden."
+  } ],
+  "log" : [ ]
+}

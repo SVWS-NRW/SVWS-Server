@@ -1,0 +1,12 @@
+open module de.nrw.schule.svws.dbutils {
+    requires transitive de.nrw.schule.svws.db;
+    requires transitive de.nrw.schule.svws.external.jbcrypt;
+	
+	requires java.base;
+	requires org.apache.commons.lang3;
+	requires com.healthmarketscience.jackcess;
+	
+	exports de.nrw.schule.svws.db.utils;
+	exports de.nrw.schule.svws.db.utils.app;
+	exports de.nrw.schule.svws.db.utils.schema;
+}

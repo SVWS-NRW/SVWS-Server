@@ -1,0 +1,295 @@
+{
+	"index": 120,
+	"fachklassen": [
+		{
+			"schluessel": "101",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1136000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "A",
+				"berufsfeld": "AW",
+				"ebene1": "AW",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Agrarwirtschaft",
+				"bezeichnungM": "Agrarwirtschaft",
+				"bezeichnungW": "Agrarwirtschaft",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "102",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1137000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "BH",
+				"ebene1": "TN",
+				"ebene2": "BH",
+				"ebene3": null,
+				"bezeichnung": "Bau- und Holztechnik",
+				"bezeichnungM": "Bau- und Holztechnik",
+				"bezeichnungW": "Bau- und Holztechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "103",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1138000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WV",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Berufliche Kenntnisse/Fachhochschulreife",
+				"bezeichnungM": "Berufliche Kenntnisse/Fachhochschulreife",
+				"bezeichnungW": "Berufliche Kenntnisse/Fachhochschulreife",
+				"gueltigVon": null,
+				"gueltigBis": 2010
+			} ]
+		}, {
+			"schluessel": "104",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1139000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "DT",
+				"ebene1": "TN",
+				"ebene2": "DT",
+				"ebene3": null,
+				"bezeichnung": "Drucktechnik",
+				"bezeichnungM": "Drucktechnik",
+				"bezeichnungW": "Drucktechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "105",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1140000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "ET",
+				"ebene1": "TN",
+				"ebene2": "ET",
+				"ebene3": null,
+				"bezeichnung": "Elektrotechnik",
+				"bezeichnungM": "Elektrotechnik",
+				"bezeichnungW": "Elektrotechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "106",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1141000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "E",
+				"berufsfeld": "EH",
+				"ebene1": "EH",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Ernährung/Hauswirtschaft",
+				"bezeichnungM": "Ernährung/Hauswirtschaft",
+				"bezeichnungW": "Ernährung/Hauswirtschaft",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "107",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1142000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "G",
+				"berufsfeld": "GS",
+				"ebene1": "GT",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Gestaltung",
+				"bezeichnungM": "Gestaltung",
+				"bezeichnungW": "Gestaltung",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "108",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1143000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "MT",
+				"ebene1": "TN",
+				"ebene2": "ME",
+				"ebene3": null,
+				"bezeichnung": "Metalltechnik",
+				"bezeichnungM": "Metalltechnik",
+				"bezeichnungW": "Metalltechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "109",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1144000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "CP",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Physik, Chemie, Biologie",
+				"bezeichnungM": "Physik, Chemie, Biologie",
+				"bezeichnungW": "Physik, Chemie, Biologie",
+				"gueltigVon": null,
+				"gueltigBis": 2010
+			} ]
+		}, {
+			"schluessel": "110",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1145000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "S",
+				"berufsfeld": "SG",
+				"ebene1": "GS",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Gesundheit und Soziales",
+				"bezeichnungM": "Gesundheit und Soziales",
+				"bezeichnungW": "Gesundheit und Soziales",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "111",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1146000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TB",
+				"ebene1": "TN",
+				"ebene2": "TB",
+				"ebene3": null,
+				"bezeichnung": "Textiltechnik und Bekleidung",
+				"bezeichnungM": "Textiltechnik und Bekleidung",
+				"bezeichnungW": "Textiltechnik und Bekleidung",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "112",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1147000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WV",
+				"ebene1": "WV",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Wirtschaft und Verwaltung (Höhere Handelsschule)",
+				"bezeichnungM": "Wirtschaft und Verwaltung (Höhere Handelsschule)",
+				"bezeichnungW": "Wirtschaft und Verwaltung (Höhere Handelsschule)",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "113",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1148000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "CP",
+				"ebene1": "TN",
+				"ebene2": "LV",
+				"ebene3": null,
+				"bezeichnung": "Labor- und Verfahrenstechnik",
+				"bezeichnungM": "Labor- und Verfahrenstechnik",
+				"bezeichnungW": "Labor- und Verfahrenstechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "114",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1149000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": "ET",
+				"ebene3": null,
+				"bezeichnung": "Energie-/Automatisierungstechnik",
+				"bezeichnungM": "Energie-/Automatisierungstechnik",
+				"bezeichnungW": "Energie-/Automatisierungstechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "115",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1150000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": "ET",
+				"ebene3": null,
+				"bezeichnung": "Informations- und Kommunikationstechnik",
+				"bezeichnungM": "Informations- und Kommunikationstechnik",
+				"bezeichnungW": "Informations- und Kommunikationstechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "999",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1151000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "X",
+				"berufsfeld": "XX",
+				"ebene1": "XX",
+				"ebene2": "XX",
+				"ebene3": "XX",
+				"bezeichnung": "Sonstiger Bildungsgang",
+				"bezeichnungM": "Sonstiger Bildungsgang",
+				"bezeichnungW": "Sonstiger Bildungsgang",
+				"gueltigVon": 2022,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "999",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 1152000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "X",
+				"berufsfeld": "XX",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Sonstiger Bildungsgang",
+				"bezeichnungM": "Sonstiger Bildungsgang",
+				"bezeichnungW": "Sonstiger Bildungsgang",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}
+	]
+}

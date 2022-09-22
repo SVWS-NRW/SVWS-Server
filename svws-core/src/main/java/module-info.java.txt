@@ -1,0 +1,23 @@
+open module de.nrw.schule.svws.core {
+	requires java.base;
+	requires java.xml.bind;
+	
+    requires org.jsweet.core.es6;
+    requires org.apache.commons.configuration2;
+
+    requires com.fasterxml.jackson.annotation;
+	requires io.swagger.v3.jaxrs2;
+	requires io.swagger.v3.oas.annotations;
+	
+	exports de.nrw.schule.svws.core;
+	exports de.nrw.schule.svws.core.abschluss;
+	exports de.nrw.schule.svws.core.abschluss.bk.a;
+	exports de.nrw.schule.svws.core.abschluss.ge;
+	exports de.nrw.schule.svws.core.abschluss.gost;
+	exports de.nrw.schule.svws.core.abschluss.gost.abitur.services;
+	exports de.nrw.schule.svws.core.abschluss.gost.belegpruefung;
+	exports de.nrw.schule.svws.core.shell;
+	exports de.nrw.schule.svws.core.types;
+	exports de.nrw.schule.svws.core.types.gost;
+	exports de.nrw.schule.svws.core.logger;
+}

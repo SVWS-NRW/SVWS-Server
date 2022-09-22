@@ -1,0 +1,23 @@
+{
+	"index": 150,
+	"fachklassen": [
+		{
+			"schluessel": "101",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1230000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "S",
+				"berufsfeld": "SG",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Berufspraktikum für Erzieher/-innen",
+				"bezeichnungM": "Berufspraktikum für Erzieher",
+				"bezeichnungW": "Berufspraktikum für Erzieherinnen",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}
+	]
+}

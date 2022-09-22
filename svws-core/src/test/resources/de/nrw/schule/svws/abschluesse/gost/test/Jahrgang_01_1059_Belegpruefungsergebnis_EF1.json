@@ -1,0 +1,9 @@
+{
+  "erfolgreich" : true,
+  "fehlercodes" : [ {
+    "code" : "NW_FS_13_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Da in EF.1 weniger als zwei Fremdsprachen schriftlich belegt wurden, müssen zwei Naturwissenschaften bis Q2.2 belegt, davon mindestens eine schriftlich belegt werden."
+  } ],
+  "log" : [ ]
+}

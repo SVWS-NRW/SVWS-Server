@@ -1,0 +1,244 @@
+{
+	"index": 130,
+	"fachklassen": [
+		{
+			"schluessel": "101",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1153000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "A",
+				"berufsfeld": "AW",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Agrarwirtschaft, Bio- und Umwelttechnologie",
+				"bezeichnungM": "Agrarwirtschaft, Bio- und Umwelttechnologie",
+				"bezeichnungW": "Agrarwirtschaft, Bio- und Umwelttechnologie",
+				"gueltigVon": null,
+				"gueltigBis": 2015
+			} ]
+		}, {
+			"schluessel": "102",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1154000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "BH",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Bau- und Holztechnik",
+				"bezeichnungM": "Bau- und Holztechnik",
+				"bezeichnungW": "Bau- und Holztechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2015
+			} ]
+		}, {
+			"schluessel": "103",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1155000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "DT",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Drucktechnik",
+				"bezeichnungM": "Drucktechnik",
+				"bezeichnungW": "Drucktechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2015
+			} ]
+		}, {
+			"schluessel": "104",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1156000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "ET",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Elektrotechnik",
+				"bezeichnungM": "Elektrotechnik",
+				"bezeichnungW": "Elektrotechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2015
+			} ]
+		}, {
+			"schluessel": "105",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1157000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "E",
+				"berufsfeld": "EH",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Ernährung und Hauswirschaft",
+				"bezeichnungM": "Ernährung und Hauswirschaft",
+				"bezeichnungW": "Ernährung und Hauswirschaft",
+				"gueltigVon": null,
+				"gueltigBis": 2015
+			} ]
+		}, {
+			"schluessel": "106",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1158000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WV",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Fremdsprachenkorrespondent/-in",
+				"bezeichnungM": "Fremdsprachenkorrespondent",
+				"bezeichnungW": "Fremdsprachenkorrespondentin",
+				"gueltigVon": null,
+				"gueltigBis": 2015
+			} ]
+		}, {
+			"schluessel": "107",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1159000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "G",
+				"berufsfeld": "GS",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Gestaltung",
+				"bezeichnungM": "Gestaltung",
+				"bezeichnungW": "Gestaltung",
+				"gueltigVon": null,
+				"gueltigBis": 2015
+			} ]
+		}, {
+			"schluessel": "108",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1160000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "MT",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Metalltechnik",
+				"bezeichnungM": "Metalltechnik",
+				"bezeichnungW": "Metalltechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2015
+			} ]
+		}, {
+			"schluessel": "109",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1161000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "CP",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Physik, Chemie, Biologie",
+				"bezeichnungM": "Physik, Chemie, Biologie",
+				"bezeichnungW": "Physik, Chemie, Biologie",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}, {
+			"schluessel": "110",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1162000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "S",
+				"berufsfeld": "SG",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Gesundheit und Soziales",
+				"bezeichnungM": "Gesundheit und Soziales",
+				"bezeichnungW": "Gesundheit und Soziales",
+				"gueltigVon": null,
+				"gueltigBis": 2015
+			} ]
+		}, {
+			"schluessel": "111",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1163000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TB",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Textiltechnik und Bekleidung",
+				"bezeichnungM": "Textiltechnik und Bekleidung",
+				"bezeichnungW": "Textiltechnik und Bekleidung",
+				"gueltigVon": null,
+				"gueltigBis": 2015
+			} ]
+		}, {
+			"schluessel": "112",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1164000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WV",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Wirtschaft und Verwaltung (Höhere Handelsschule)",
+				"bezeichnungM": "Wirtschaft und Verwaltung (Höhere Handelsschule)",
+				"bezeichnungW": "Wirtschaft und Verwaltung (Höhere Handelsschule)",
+				"gueltigVon": null,
+				"gueltigBis": 2015
+			} ]
+		}, {
+			"schluessel": "113",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1165000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "CP",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Labor- und Verfahrenstechnik",
+				"bezeichnungM": "Labor- und Verfahrenstechnik",
+				"bezeichnungW": "Labor- und Verfahrenstechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2015
+			} ]
+		}, {
+			"schluessel": "999",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1166000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "X",
+				"berufsfeld": "XX",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Sonstiger Bildungsgang",
+				"bezeichnungM": "Sonstiger Bildungsgang",
+				"bezeichnungW": "Sonstiger Bildungsgang",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}
+	]
+}

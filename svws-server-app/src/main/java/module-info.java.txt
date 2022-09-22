@@ -1,0 +1,29 @@
+open module de.nrw.schule.svws.server {
+    requires transitive de.nrw.schule.svws.core;
+    requires transitive de.nrw.schule.svws.db;
+    requires transitive de.nrw.schule.svws.dbutils;
+    requires transitive de.nrw.schule.svws.api;
+	
+	requires java.base;
+	requires transitive jetty.servlet.api;
+	requires transitive jakarta.persistence;
+	requires transitive java.ws.rs;
+	
+	requires io.swagger.v3.jaxrs2;
+	requires io.swagger.v3.core;
+	requires io.swagger.v3.oas.integration;
+	requires io.swagger.v3.oas.models;
+	
+	requires org.eclipse.jetty.http2.server;
+	requires org.eclipse.jetty.servlet;
+	requires org.eclipse.jetty.servlets;
+	requires transitive org.eclipse.jetty.security;
+	requires org.eclipse.jetty.jaas;
+	requires org.eclipse.jetty.alpn.java.server;
+	requires transitive org.eclipse.jetty.server;
+	
+	requires org.jboss.resteasy.core;
+	
+	exports de.nrw.schule.svws.server;
+	exports de.nrw.schule.svws.server.jetty;
+}

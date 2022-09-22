@@ -1,0 +1,380 @@
+{
+	"index": 60,
+	"fachklassen": [
+		{
+			"schluessel": "102",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1867000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "BT",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Bautechnische/-r Assistent/-in",
+				"bezeichnungM": "Bautechnischer Assistent",
+				"bezeichnungW": "Bautechnische Assistentin",
+				"gueltigVon": null,
+				"gueltigBis": 2019
+			} ]
+		}, {
+			"schluessel": "105",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1868000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TB",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Bekleidungstechnische/-r Assistent/-in",
+				"bezeichnungM": "Bekleidungstechnischer Assistent",
+				"bezeichnungW": "Bekleidungstechnische Assistentin",
+				"gueltigVon": null,
+				"gueltigBis": 2019
+			} ]
+		}, {
+			"schluessel": "107",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1869000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "CP",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Biologisch-technische/-r Assistent/-in",
+				"bezeichnungM": "Biologisch-technischer Assistent",
+				"bezeichnungW": "Biologisch-technische Assistentin",
+				"gueltigVon": null,
+				"gueltigBis": 2019
+			} ]
+		}, {
+			"schluessel": "110",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1870000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "CP",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Chemisch-technische/-r Assistent/-in",
+				"bezeichnungM": "Chemisch-technischer Assistent",
+				"bezeichnungW": "Chemisch-technische Assistentin",
+				"gueltigVon": null,
+				"gueltigBis": 2019
+			} ]
+		}, {
+			"schluessel": "117",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1871000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "ET",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Elektrotechnische/-r Assistent/-in",
+				"bezeichnungM": "Elektrotechnischer Assistent",
+				"bezeichnungW": "Elektrotechnische Assistentin",
+				"gueltigVon": null,
+				"gueltigBis": 2019
+			} ]
+		}, {
+			"schluessel": "120",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1872000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "S",
+				"berufsfeld": "SG",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Erzieher/-in",
+				"bezeichnungM": "Erzieher",
+				"bezeichnungW": "Erzieherin",
+				"gueltigVon": null,
+				"gueltigBis": 2019
+			} ]
+		}, {
+			"schluessel": "121",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1873000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "S",
+				"berufsfeld": "SG",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Heilerziehungshelfer/-in",
+				"bezeichnungM": "Heilerziehungshelfer",
+				"bezeichnungW": "Heilerziehungshelferin",
+				"gueltigVon": null,
+				"gueltigBis": 2019
+			} ]
+		}, {
+			"schluessel": "122",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1874000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WV",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Fremdsprachenkorrespondent/-in",
+				"bezeichnungM": "Fremdsprachenkorrespondent",
+				"bezeichnungW": "Fremdsprachenkorrespondentin",
+				"gueltigVon": null,
+				"gueltigBis": 2019
+			} ]
+		}, {
+			"schluessel": "125",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1875000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "G",
+				"berufsfeld": "FR",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Gestaltungstechnische/-r Assistent/-in",
+				"bezeichnungM": "Gestaltungstechnischer Assistent",
+				"bezeichnungW": "Gestaltungstechnische Assistentin",
+				"gueltigVon": null,
+				"gueltigBis": 2019
+			} ]
+		}, {
+			"schluessel": "133",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1876000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "IT",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Informationstechnische/-r Assistent/-in",
+				"bezeichnungM": "Informationstechnischer Assistent",
+				"bezeichnungW": "Informationstechnische Assistentin",
+				"gueltigVon": null,
+				"gueltigBis": 2019
+			} ]
+		}, {
+			"schluessel": "134",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1877000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "S",
+				"berufsfeld": "SG",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Kinderpfleger/-in",
+				"bezeichnungM": "Kinderpfleger",
+				"bezeichnungW": "Kinderpflegerin",
+				"gueltigVon": null,
+				"gueltigBis": 2019
+			} ]
+		}, {
+			"schluessel": "135",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1878000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "E",
+				"berufsfeld": "EH",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Lebensmitteltechnische/-r Assistent/-in",
+				"bezeichnungM": "Lebensmitteltechnischer Assistent",
+				"bezeichnungW": "Lebensmitteltechnische Assistentin",
+				"gueltigVon": null,
+				"gueltigBis": 2019
+			} ]
+		}, {
+			"schluessel": "146",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1879000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "E",
+				"berufsfeld": "EH",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Servicekraft",
+				"bezeichnungM": "Servicekraft",
+				"bezeichnungW": "Servicekraft",
+				"gueltigVon": null,
+				"gueltigBis": 2019
+			} ]
+		}, {
+			"schluessel": "147",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1880000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "S",
+				"berufsfeld": "SG",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Sozialhelfer/-in",
+				"bezeichnungM": "Sozialhelfer",
+				"bezeichnungW": "Sozialhelferin",
+				"gueltigVon": null,
+				"gueltigBis": 2019
+			} ]
+		}, {
+			"schluessel": "148",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1881000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "S",
+				"berufsfeld": "KP",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Technische/-r Assistent/-in / Kosmetik",
+				"bezeichnungM": "Technischer Assistent/Kosmetik",
+				"bezeichnungW": "Technische Assistentin/Kosmetik",
+				"gueltigVon": null,
+				"gueltigBis": 2019
+			} ]
+		}, {
+			"schluessel": "149",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1882000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TB",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Änderungsschneider/-in",
+				"bezeichnungM": "Änderungsschneider",
+				"bezeichnungW": "Änderungsschneiderin",
+				"gueltigVon": null,
+				"gueltigBis": 2019
+			} ]
+		}, {
+			"schluessel": "150",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 1883000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "E",
+				"berufsfeld": "EH",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Assistent/-in für Ernährung und Versorgung - Service",
+				"bezeichnungM": "Assistent für Ernährung und Versorgung - Service",
+				"bezeichnungW": "Assistentin für Ernährung und Versorgung - Service",
+				"gueltigVon": null,
+				"gueltigBis": 2019
+			} ]
+		}, {
+			"schluessel": "151",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1884000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "S",
+				"berufsfeld": "SG",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Sozialassistent/-in",
+				"bezeichnungM": "Sozialassistent",
+				"bezeichnungW": "Sozialassistentin",
+				"gueltigVon": null,
+				"gueltigBis": 2019
+			} ]
+		}, {
+			"schluessel": "151",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 1885000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "S",
+				"berufsfeld": "SG",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Sozialassistent/-in - Heilerziehung",
+				"bezeichnungM": "Sozialassistent - Heilerziehung",
+				"bezeichnungW": "Sozialassistentin - Heilerziehung",
+				"gueltigVon": null,
+				"gueltigBis": 2019
+			} ]
+		}, {
+			"schluessel": "999",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1886000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "X",
+				"berufsfeld": "XX",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Sonstiger Bildungsgang",
+				"bezeichnungM": "Sonstiger Bildungsgang",
+				"bezeichnungW": "Sonstiger Bildungsgang",
+				"gueltigVon": null,
+				"gueltigBis": 2019
+			} ]
+		}, {
+			"schluessel": "999",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 1887000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "X",
+				"berufsfeld": "XX",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Sonstiger Bildungsgang",
+				"bezeichnungM": "Sonstiger Bildungsgang",
+				"bezeichnungW": "Sonstiger Bildungsgang",
+				"gueltigVon": null,
+				"gueltigBis": 2019
+			} ]
+		}, {
+			"schluessel": "999",
+			"schluessel2": "02",
+			"historie": [ {
+				"id": 1888000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "X",
+				"berufsfeld": "XX",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Sonstiger Bildungsgang",
+				"bezeichnungM": "Sonstiger Bildungsgang",
+				"bezeichnungW": "Sonstiger Bildungsgang",
+				"gueltigVon": null,
+				"gueltigBis": 2019
+			} ]
+		}
+	]
+}

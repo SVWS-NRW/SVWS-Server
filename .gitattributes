@@ -1,0 +1,11 @@
+# Line-Ending: Nutze lf als Default 
+* text eol=lf
+*.csv text
+
+# Line-Ending: *.bat als Ausnahme für Windows  
+*.bat eol=crlf
+
+# Betrachte Bilder immer als Binärdateien, um eien fehlerhafte Anpassung zu vermeiden
+*.ico binary
+*.jpg binary
+*.png binary

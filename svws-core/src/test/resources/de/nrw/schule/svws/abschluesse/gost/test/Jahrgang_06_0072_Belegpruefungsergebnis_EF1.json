@@ -1,0 +1,13 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [ {
+    "code" : "ANZ_11_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Die Gesamtstundenzahl sollte 32 bis 36 Stunden betragen, um eine gleichmäßige Stundenbelastung in der Oberstufe zu gewährleisten."
+  }, {
+    "code" : "IGF_10",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Inhaltsgleiche Fächer dürfen nur einmal belegt werden."
+  } ],
+  "log" : [ ]
+}

@@ -1,0 +1,20 @@
+Information zu dieser Blockung
+
+Es handelt sich um eine Q1 Blockung einer relativ großen Schule.
+
+Schienen  =  14
+Schüler   = 137 (davon einige extern)
+Kurse     =  69
+Facharten =  44
+
+Es gibt zudem spezielle Kurse, die über 2 Schienen gehen.
+		
+Es soll 14 Schienen geben.
+	Schiene  1 nur LKs
+	Schiene  2 nur LKs
+	Schiene 14 nur I0-GK1 und S0-GK1
+	Schiene 13 nur PXSP-PJK1
+    Schiene 12 nur die drei Sportkurse
+    
+--> Eine perfekte Blockung ist möglich.
+--> 0 Nichtwahlen, max. ???? Kursdifferenz

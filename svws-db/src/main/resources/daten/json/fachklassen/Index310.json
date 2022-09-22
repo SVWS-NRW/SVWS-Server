@@ -1,0 +1,23 @@
+{
+	"index": 310,
+	"fachklassen": [
+		{
+			"schluessel": "090",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1618000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WW",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Berufspraktikum Fremdsprachenassistent/-in/Wirtschaftswissenschaften",
+				"bezeichnungM": "Berufspraktikum Fremdsprachenassistent/Wirtschaftswissenschaften",
+				"bezeichnungW": "Berufspraktikum Fremdsprachenassistentin/Wirtschaftswissenschaften",
+				"gueltigVon": null,
+				"gueltigBis": 2012
+			} ]
+		}
+	]
+}

@@ -1,0 +1,301 @@
+{
+	"version": 1,
+	"eintraege": [ {
+		"kuerzel": "A",
+		"historie": [ {
+			"id": 1000,
+			"beschreibung": "Ohne Abschluss",
+			"zulaessig": [
+				{ "schulform": "FW", "jahrgaenge": ["06","07","08","09","10","11","12","13","71"] },
+				{ "schulform": "GE", "jahrgaenge": ["06","07","08","09","10"] },
+				{ "schulform": "GM", "jahrgaenge": ["06","07","08","09","10","1A","1B"] },
+				{ "schulform": "GY", "jahrgaenge": ["06","07","08","09","10"] },
+				{ "schulform": "H", "jahrgaenge": ["06","07","08","09","10","1A","1B"] },
+				{ "schulform": "HI", "jahrgaenge": ["06","07","08","09","10","11","12"] },
+				{ "schulform": "KS", "jahrgaenge": ["06","07","08","09","10","71"] },
+				{ "schulform": "PS", "jahrgaenge": ["06","07","08","09","10"] },
+				{ "schulform": "R", "jahrgaenge": ["06","07","08","09","10","1A"] },
+				{ "schulform": "S", "jahrgaenge": ["06","07","08","09","10","71"] },
+				{ "schulform": "SG", "jahrgaenge": ["06","07","08","09","10"] },
+				{ "schulform": "SK", "jahrgaenge": ["06","07","08","09","10","1A","1B"] },
+				{ "schulform": "SR", "jahrgaenge": ["06","07","08","09","10"] },
+				{ "schulform": "V", "jahrgaenge": ["06","07","08","09","10","1A","1B"] },
+				{ "schulform": "WF", "jahrgaenge": ["06","07","08","09","10","11","12","13","71"] }
+			],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"kuerzel": "B",
+		"historie": [ {
+			"id": 2000,
+			"beschreibung": "Hauptschulabschluss",
+			"zulaessig": [
+				{ "schulform": "FW", "jahrgaenge": ["10","11","12","71"] },
+				{ "schulform": "GE", "jahrgaenge": ["09","10"] },
+				{ "schulform": "GM", "jahrgaenge": ["09","10","1A","1B"] },
+				{ "schulform": "GY", "jahrgaenge": ["09","10","EF"] },
+				{ "schulform": "H", "jahrgaenge": ["09","10","1A","1B"] },
+				{ "schulform": "HI", "jahrgaenge": ["10"] },
+				{ "schulform": "KS", "jahrgaenge": ["09","10","71"] },
+				{ "schulform": "PS", "jahrgaenge": ["09","10"] },
+				{ "schulform": "R", "jahrgaenge": ["09","10","1A"] },
+				{ "schulform": "S", "jahrgaenge": ["09","10","71"] },
+				{ "schulform": "SG", "jahrgaenge": ["09"] },
+				{ "schulform": "SK", "jahrgaenge": ["09","10","1A","1B"] },
+				{ "schulform": "SR", "jahrgaenge": ["09"] },
+				{ "schulform": "V", "jahrgaenge": ["09","10","1A","1B"] },
+				{ "schulform": "WB", "jahrgaenge": ["null"] },
+				{ "schulform": "WF", "jahrgaenge": ["10","11","12","71"] }
+			],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"kuerzel": "C",
+		"historie": [ {
+			"id": 3000,
+			"beschreibung": "Hauptschulabschluss (mit Berechtigung zum Besuch der Klasse 10, Typ B) (Nur G9, zehnjährige Vollzeitschulpflicht erfüllt)",
+			"zulaessig": [
+				{ "schulform": "GE", "jahrgaenge": ["09","10"] },
+				{ "schulform": "GM", "jahrgaenge": ["09","10","1B"] },
+				{ "schulform": "GY", "jahrgaenge": ["09","10"] },
+				{ "schulform": "H", "jahrgaenge": ["09","10","1B"] },
+				{ "schulform": "KS", "jahrgaenge": ["09","10","71"] },
+				{ "schulform": "PS", "jahrgaenge": ["09","10"] },
+				{ "schulform": "R", "jahrgaenge": ["09","10"] },
+				{ "schulform": "S", "jahrgaenge": ["09","10","71"] },
+				{ "schulform": "SG", "jahrgaenge": ["09","10"] },
+				{ "schulform": "SK", "jahrgaenge": ["09","10","1B"] },
+				{ "schulform": "SR", "jahrgaenge": ["09","10"] },
+				{ "schulform": "V", "jahrgaenge": ["09","10","1B"] }
+			],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"kuerzel": "D",
+		"historie": [ {
+			"id": 4000,
+			"beschreibung": "Hauptschulabschluss nach Klasse 10",
+			"zulaessig": [
+				{ "schulform": "FW", "jahrgaenge": ["11","12","13","71"] },
+				{ "schulform": "GE", "jahrgaenge": ["10"] },
+				{ "schulform": "GM", "jahrgaenge": ["10","1A","1B"] },
+				{ "schulform": "GY", "jahrgaenge": ["10"] },
+				{ "schulform": "H", "jahrgaenge": ["10","1A","1B"] },
+				{ "schulform": "HI", "jahrgaenge": ["11","12"] },
+				{ "schulform": "KS", "jahrgaenge": ["10","71"] },
+				{ "schulform": "PS", "jahrgaenge": ["10"] },
+				{ "schulform": "R", "jahrgaenge": ["10","1A"] },
+				{ "schulform": "S", "jahrgaenge": ["10","71"] },
+				{ "schulform": "SG", "jahrgaenge": ["10"] },
+				{ "schulform": "SK", "jahrgaenge": ["10","1A","1B"] },
+				{ "schulform": "SR", "jahrgaenge": ["10"] },
+				{ "schulform": "V", "jahrgaenge": ["10","1A","1B"] },
+				{ "schulform": "WB", "jahrgaenge": ["null"] },
+				{ "schulform": "WF", "jahrgaenge": ["11","12","13","71"] }
+			],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"kuerzel": "F",
+		"historie": [ {
+			"id": 5000,
+			"beschreibung": "Mittlerer Schulabschluss - Fachoberschulreife ohne Berechtigung zum Besuch der gymnasialen Oberstufe",
+			"zulaessig": [
+				{ "schulform": "FW", "jahrgaenge": ["11","12","13","71"] },
+				{ "schulform": "GE", "jahrgaenge": ["10"] },
+				{ "schulform": "GM", "jahrgaenge": ["10","1B"] },
+				{ "schulform": "GY", "jahrgaenge": ["10"] },
+				{ "schulform": "H", "jahrgaenge": ["10","1B"] },
+				{ "schulform": "HI", "jahrgaenge": ["11","12"] },
+				{ "schulform": "KS", "jahrgaenge": ["10","71"] },
+				{ "schulform": "PS", "jahrgaenge": ["10"] },
+				{ "schulform": "R", "jahrgaenge": ["10"] },
+				{ "schulform": "S", "jahrgaenge": ["10","71"] },
+				{ "schulform": "SG", "jahrgaenge": ["10"] },
+				{ "schulform": "SK", "jahrgaenge": ["10","1B"] },
+				{ "schulform": "SR", "jahrgaenge": ["10"] },
+				{ "schulform": "V", "jahrgaenge": ["10","1B"] },
+				{ "schulform": "WB", "jahrgaenge": ["null"] },
+				{ "schulform": "WF", "jahrgaenge": ["11","12","13","71"] }
+			],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"kuerzel": "H",
+		"historie": [ {
+			"id": 7000,
+			"beschreibung": "Fachhochschulreife (schulischer Teil)",
+			"zulaessig": [
+				{ "schulform": "FW", "jahrgaenge": ["13","71"] },
+				{ "schulform": "GE", "jahrgaenge": ["Q1","Q2"] },
+				{ "schulform": "GM", "jahrgaenge": ["Q1","Q2"] },
+				{ "schulform": "GY", "jahrgaenge": ["Q1","Q2"] },
+				{ "schulform": "SG", "jahrgaenge": ["Q1","Q2"] },
+				{ "schulform": "WB", "jahrgaenge": ["null"] },
+				{ "schulform": "WF", "jahrgaenge": ["13","71"] }
+			],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"kuerzel": "I",
+		"historie": [ {
+			"id": 8000,
+			"beschreibung": "Mittlerer Schulabschluss (Fachoberschulreife) mit Berechtigung zum Besuch der Qualifikationsphase 1",
+			"zulaessig": [
+				{ "schulform": "GE", "jahrgaenge": ["10","EF","Q1","Q2"] },
+				{ "schulform": "GM", "jahrgaenge": ["10","EF","Q1","Q2"] },
+				{ "schulform": "GY", "jahrgaenge": ["EF","Q1","Q2"] },
+				{ "schulform": "H", "jahrgaenge": ["10"] },
+				{ "schulform": "PS", "jahrgaenge": ["10"] },
+				{ "schulform": "R", "jahrgaenge": ["10"] },
+				{ "schulform": "SG", "jahrgaenge": ["EF","Q1","Q2"] },
+				{ "schulform": "SK", "jahrgaenge": ["10"] }
+			],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"kuerzel": "J",
+		"historie": [ {
+			"id": 9000,
+			"beschreibung": "Fachhochschulreife (nur für Studierende, die bereits den berufsbezogenen Teil der Fachhochschulreife erworben haben)",
+			"zulaessig": [
+				{ "schulform": "WB", "jahrgaenge": ["null"] }
+			],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"kuerzel": "G",
+		"historie": [ {
+			"id": 6000,
+			"beschreibung": "Mittlerer Schulabschluss - Fachoberschulreife mit Berechtigung zum Besuch der gymnasialen Oberstufe",
+			"zulaessig": [
+				{ "schulform": "FW", "jahrgaenge": ["11","12","13","71"] },
+				{ "schulform": "GE", "jahrgaenge": ["10","EF"] },
+				{ "schulform": "GM", "jahrgaenge": ["10","1B","EF"] },
+				{ "schulform": "GY", "jahrgaenge": ["10","EF"] },
+				{ "schulform": "H", "jahrgaenge": ["10","1B"] },
+				{ "schulform": "KS", "jahrgaenge": ["10","71"] },
+				{ "schulform": "PS", "jahrgaenge": ["10"] },
+				{ "schulform": "R", "jahrgaenge": ["10"] },
+				{ "schulform": "S", "jahrgaenge": ["10","71"] },
+				{ "schulform": "SG", "jahrgaenge": ["10","EF"] },
+				{ "schulform": "SK", "jahrgaenge": ["10","1B"] },
+				{ "schulform": "SR", "jahrgaenge": ["10"] },
+				{ "schulform": "V", "jahrgaenge": ["10","1B"] },
+				{ "schulform": "WB", "jahrgaenge": ["null"] },
+				{ "schulform": "WF", "jahrgaenge": ["11","12","13","71"] }
+			],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"kuerzel": "K",
+		"historie": [ {
+			"id": 10000,
+			"beschreibung": "Abitur (allgemeine Hochschulreife)",
+			"zulaessig": [
+				{ "schulform": "FW", "jahrgaenge": ["13","71"] },
+				{ "schulform": "GE", "jahrgaenge": ["Q2"] },
+				{ "schulform": "GM", "jahrgaenge": ["Q2"] },
+				{ "schulform": "GY", "jahrgaenge": ["Q2"] },
+				{ "schulform": "SG", "jahrgaenge": ["Q2"] },
+				{ "schulform": "WB", "jahrgaenge": ["null"] },
+				{ "schulform": "WF", "jahrgaenge": ["13","71"] }
+			],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"kuerzel": "M",
+		"historie": [ {
+			"id": 11000,
+			"beschreibung": "Abschlusszeugnis im zieldifferenten Bildungsgang Geistige Entwicklung",
+			"zulaessig": [
+				{ "schulform": "FW", "jahrgaenge": ["06","07","08","09","10","11","85","86"] },
+				{ "schulform": "GE", "jahrgaenge": ["06","07","08","09","10"] },
+				{ "schulform": "GM", "jahrgaenge": ["06","07","08","09","10","1A","1B"] },
+				{ "schulform": "GY", "jahrgaenge": ["06","07","08","09","10","EF"] },
+				{ "schulform": "H", "jahrgaenge": ["06","07","08","09","10","1A","1B"] },
+				{ "schulform": "KS", "jahrgaenge": ["06","07","08","09","10","71","85","86"] },
+				{ "schulform": "PS", "jahrgaenge": ["06","07","08","09","10"] },
+				{ "schulform": "R", "jahrgaenge": ["06","07","08","09","10","1A"] },
+				{ "schulform": "S", "jahrgaenge": ["06","07","08","09","10","71","85","86"] },
+				{ "schulform": "SK", "jahrgaenge": ["06","07","08","09","10","1A","1B"] },
+				{ "schulform": "V", "jahrgaenge": ["06","07","08","09","10","1A","1B"] },
+				{ "schulform": "WF", "jahrgaenge": ["06","07","08","09","10","11","85","86"] }
+			],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"kuerzel": "O",
+		"historie": [ {
+			"id": 12000,
+			"beschreibung": "Hauptschulabschluss nach Klasse 9 (Nur G8, mit Berechtigung zum Besuch der gymnasialen Oberstufe, § 43 Abs. 3 i.V.m. § 40 Abs. 4 S. 2 APO-SI)",
+			"zulaessig": [
+				{ "schulform": "GE", "jahrgaenge": ["09","EF"] },
+				{ "schulform": "GM", "jahrgaenge": ["EF"] },
+				{ "schulform": "GY", "jahrgaenge": ["09","EF"] },
+				{ "schulform": "SG", "jahrgaenge": ["EF"] }
+			],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"kuerzel": "U",
+		"historie": [ {
+			"id": 13000,
+			"beschreibung": "Hauptschulabschluss nach Klasse 10 (mit Berechtigung zum Besuch der gymnasialen Oberstufe, § 41 Abs. 2 APO-SI i.V.m. § 40 Abs. 2 APO-GOSt)",
+			"zulaessig": [
+				{ "schulform": "GE", "jahrgaenge": ["EF"] },
+				{ "schulform": "GM", "jahrgaenge": ["EF"] },
+				{ "schulform": "GY", "jahrgaenge": ["EF"] },
+				{ "schulform": "SG", "jahrgaenge": ["EF"] }
+			],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"kuerzel": "V",
+		"historie": [ {
+			"id": 14000,
+			"beschreibung": "Abschluss des zieldifferenten Bildungsgangs Lernen",
+			"zulaessig": [
+				{ "schulform": "FW", "jahrgaenge": ["10","11","12"] },
+				{ "schulform": "GE", "jahrgaenge": ["09","10"] },
+				{ "schulform": "GM", "jahrgaenge": ["10","1A","1B"] },
+				{ "schulform": "GY", "jahrgaenge": ["09","10","EF"] },
+				{ "schulform": "H", "jahrgaenge": ["10","1A","1B"] },
+				{ "schulform": "KS", "jahrgaenge": ["10","71"] },
+				{ "schulform": "PS", "jahrgaenge": ["10"] },
+				{ "schulform": "R", "jahrgaenge": ["10","1A"] },
+				{ "schulform": "S", "jahrgaenge": ["10","71"] },
+				{ "schulform": "SK", "jahrgaenge": ["10","1A","1B"] },
+				{ "schulform": "V", "jahrgaenge": ["10","1A","1B"] },
+				{ "schulform": "WF", "jahrgaenge": ["10","11","12"] }
+			],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"kuerzel": "W",
+		"historie": [ {
+			"id": 15000,
+			"beschreibung": "Zeugnis der Waldorfschule",
+			"zulaessig": [
+				{ "schulform": "FW", "jahrgaenge": ["12","13","71"] },
+				{ "schulform": "WF", "jahrgaenge": ["12","13","71"] }
+			],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	} ]
+}

@@ -1,0 +1,159 @@
+{
+	"index": 250,
+	"fachklassen": [
+		{
+			"schluessel": "101",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1559000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "AO",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Augenoptik",
+				"bezeichnungM": "FS Augenoptik",
+				"bezeichnungW": "FS Augenoptik",
+				"gueltigVon": null,
+				"gueltigBis": 2006
+			} ]
+		}, {
+			"schluessel": "102",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 1560000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "IF",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Informatik - CNC-Systemtechnik",
+				"bezeichnungM": "FS Informatik - CNC-Systemtechnik",
+				"bezeichnungW": "FS Informatik - CNC-Systemtechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2006
+			} ]
+		}, {
+			"schluessel": "102",
+			"schluessel2": "02",
+			"historie": [ {
+				"id": 1561000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "IF",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Informatik - Computer- u. Kommunikationstechnik",
+				"bezeichnungM": "FS Informatik - Computer- u. Kommunikationstechnik",
+				"bezeichnungW": "FS Informatik - Computer- u. Kommunikationstechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2006
+			} ]
+		}, {
+			"schluessel": "102",
+			"schluessel2": "03",
+			"historie": [ {
+				"id": 1562000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "IF",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Informatik - Wirtschaft",
+				"bezeichnungM": "FS Informatik - Wirtschaft",
+				"bezeichnungW": "FS Informatik - Wirtschaft",
+				"gueltigVon": null,
+				"gueltigBis": 2006
+			} ]
+		}, {
+			"schluessel": "103",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1563000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "G",
+				"berufsfeld": "MD",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Mode",
+				"bezeichnungM": "FS Mode",
+				"bezeichnungW": "FS Mode",
+				"gueltigVon": null,
+				"gueltigBis": 2005
+			} ]
+		}, {
+			"schluessel": "104",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1564000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "S",
+				"berufsfeld": "SG",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Höhere FS für Sozialarbeit (Theorie)",
+				"bezeichnungM": "Höhere FS für Sozialarbeit (Theorie)",
+				"bezeichnungW": "Höhere FS für Sozialarbeit (Theorie)",
+				"gueltigVon": null,
+				"gueltigBis": 2007
+			} ]
+		}, {
+			"schluessel": "104",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 1565000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "S",
+				"berufsfeld": "SG",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Höhere FS für Sozialarbeit (Praxis)",
+				"bezeichnungM": "Höhere FS für Sozialarbeit (Praxis)",
+				"bezeichnungW": "Höhere FS für Sozialarbeit (Praxis)",
+				"gueltigVon": null,
+				"gueltigBis": 2008
+			} ]
+		}, {
+			"schluessel": "105",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1566000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "S",
+				"berufsfeld": "SG",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Sozialswesen - Heilerziehungspflege (Integrierte Ausbildung)",
+				"bezeichnungM": "FS Sozialswesen - Heilerziehungspflege (Integrierte Ausbildung)",
+				"bezeichnungW": "FS Sozialwesen - Heilerziehungspflege (Integrierte Ausbildung)",
+				"gueltigVon": null,
+				"gueltigBis": 2006
+			} ]
+		}, {
+			"schluessel": "999",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1567000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "X",
+				"berufsfeld": "XX",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Sonstiger Bildungsgang",
+				"bezeichnungM": "Sonstiger Bildungsgang",
+				"bezeichnungW": "Sonstiger Bildungsgang",
+				"gueltigVon": null,
+				"gueltigBis": 2010
+			} ]
+		}
+	]
+}

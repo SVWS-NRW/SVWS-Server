@@ -1,0 +1,25 @@
+{
+    "DisableDBRootAccess": false,
+    "DisableAutoUpdates" : false,
+	"UseHTTPDefaultv11": false,
+	"PortHTTPS": 443,
+	"UseCORSHeader": true,
+	"ClientPath": "webclient/build",
+	"LoggingEnabled": true,
+	"LoggingPath": "logs",
+	"TempPath": "tmp",
+	"TLSKeystorePath": ".",
+	"TLSKeystorePassword": "svwskeystore",
+	"DBKonfiguration": {
+		"dbms": "MARIA_DB",
+		"location": "localhost",
+		"SchemaKonfiguration": [
+			{
+				"name": "schildtest",
+				"svwslogin": false,
+				"username": "schildadmin",
+				"password": "schildadmin"
+			}
+		]
+	}
+}

@@ -1,0 +1,17 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [ {
+    "code" : "PF_18",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Ein Projektkurs kann nicht in der Q2.2 beginnen."
+  }, {
+    "code" : "PF_14",
+    "art" : "BELEGUNG",
+    "beschreibung" : "In der Qualifikationsphase kann maximal ein Projektkurs in zwei aufeinanderfolgenden Halbjahren belegt werden."
+  }, {
+    "code" : "ANZ_11_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Die Stundenbandbreite sollte pro Halbjahr 32 bis 36 Stunden betragen, um eine gleichmäßige Stundenbelastung zu gewährleisten."
+  } ],
+  "log" : [ ]
+}

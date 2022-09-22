@@ -1,0 +1,18 @@
+# Blacklist alles
+/*
+# außer Dateien
+!.gitignore
+!.build.gradle
+# außer folgende Ordner
+!src/
+# erst erlauben
+!npm/
+# dann verbieten
+npm/*
+# mit diesen Ausnahmen
+!npm/test/
+npm/test/resources/
+!npm/package.json
+!npm/tsconfig.json
+!npm/vite.config.ts
+

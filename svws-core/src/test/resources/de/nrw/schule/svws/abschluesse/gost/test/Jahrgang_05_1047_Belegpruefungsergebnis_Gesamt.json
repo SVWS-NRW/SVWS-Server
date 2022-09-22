@@ -1,0 +1,25 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [ {
+    "code" : "L_10_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Um das Latinum zu erlangen muss Latein in EF.1 und EF.2 belegt werden."
+  }, {
+    "code" : "NW_FS_12_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Da von EF.1 bis Q2.2 weniger als zwei naturwissenschaftliche Fächer durchgehend belegt wurden, oder kein naturwissenschaftliches Fach schriftlich belegt wurde, liegt ausschließlich ein Sprachenschwerpunkt vor."
+  }, {
+    "code" : "WST_21",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Die durchschnittliche Wochenstundenzahl muss in der Qualifikationsphase mindestens 34 Stunden betragen."
+  }, {
+    "code" : "STD_11_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Der Pflichtunterricht darf nur in begründeten Ausnahmefällen 102 Stunden unterschreiten."
+  }, {
+    "code" : "ABI_16",
+    "art" : "SCHRIFTLICHKEIT",
+    "beschreibung" : "Fächer, die keine Abiturfächer sind, müssen in Q2.2 mündlich belegt werden."
+  } ],
+  "log" : [ ]
+}

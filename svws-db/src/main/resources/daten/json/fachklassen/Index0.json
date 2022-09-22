@@ -1,0 +1,91 @@
+{
+	"index": 0,
+	"fachklassen": [
+		{
+			"schluessel": "620",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 0,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": null,
+				"ebene3": "A4",
+				"bezeichnung": "Präzisionswerkzeugmechaniker/-in - Schneidwerkzeuge",
+				"bezeichnungM": "Präzisionswerkzeugmechaniker - Schneidwerkzeuge",
+				"bezeichnungW": "Präzisionswerkzeugmechanikerin - Schneidwerkzeuge",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "620",
+			"schluessel2": "02",
+			"historie": [ {
+				"id": 1000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": null,
+				"ebene3": "A4",
+				"bezeichnung": "Präzisionswerkzeugmechaniker/-in - Zerspanwerkzeuge",
+				"bezeichnungM": "Präzisionswerkzeugmechaniker - Zerspanwerkzeuge",
+				"bezeichnungW": "Präzisionswerkzeugmechanikerin - Zerspanwerkzeuge",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "622",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 2000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "OZ",
+				"ebene2": null,
+				"ebene3": "A3",
+				"bezeichnung": "Prüftechnologe/-in (Keramik)",
+				"bezeichnungM": "Prüftechnologe (Keramik)",
+				"bezeichnungW": "Prüftechnologin (Keramik)",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "898",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 3000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "OZ",
+				"ebene2": null,
+				"ebene3": "A3",
+				"bezeichnung": "Fachpraktiker/-in für Kreislauf- und Abfallwirtschaft",
+				"bezeichnungM": "Fachpraktiker für Kreislauf- und Abfallwirtschaft",
+				"bezeichnungW": "Fachpraktikerin für Kreislauf- und Abfallwirtschaft",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "899",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 4000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "OZ",
+				"ebene2": null,
+				"ebene3": "A3",
+				"bezeichnung": "Fachpraktiker/-in für Informationstechnik",
+				"bezeichnungM": "Fachpraktiker für Informationstechnik",
+				"bezeichnungW": "Fachpraktikerin für Informationstechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}
+	]
+}

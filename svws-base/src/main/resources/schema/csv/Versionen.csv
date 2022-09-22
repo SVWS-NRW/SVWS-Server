@@ -1,0 +1,14 @@
+Revision;MaxRevision;Datum;Kommentar
+-1;8;2019-08-14;Dummy Revision, welche anzeigt dass keine Revision definiert ist - z.B., um zu kennzeichnen, dass ein Datensatz noch nicht veraltet ist.
+0;;2019-08-14;Erste Version der SVWS-Datenbank. Das Schema wurde von der letzten Schild-NRW Version 2.x übernommen
+1;;2019-08-14;"Korrekturen an aus Schild2 importierten Daten, bevor weitere Fremdschlüssel mit Revision 2 ergänzt werden. 
+Außerdem: Hinzufügen der Tabelle SchildKursSchueler (Erstellen der Tabelle) für den schnellen Zugriff auf die Schüler-Zuordnung zu Kursen."
+2;;2019-08-14;"Hinzufügen weitere Fremdschlüssel, um die referentielle Integrität in zukünftigen Revisionen zu verbessern.
+Erstellen der Trigger zur automatischen Aktualisierung der Tabelle SchildKursSchueler bei Änderung der Leistungsdaten eines Schülers.
+Außerdem wird die Tabelle mit den Daten aus den Leistungsdaten eines Schülers initial befüllt."
+3;;2019-11-27;Befüllen der Foreign-Keys auf die Tabelle K_Ort in den Tabellen K_AllgAdresse, K_Lehrer, Schueler, SchuelerErzAdr
+4;;2019-12-04;Tabellen für die Laufbahnplanung in der gymnasialen Oberstufe hinzugefügt.
+5;;2019-12-06;Tabellen für Stundenpläne mit Unterrichts- und Pausenzeiten
+6;;2021-12-16;Erstellen von allgemein nutzbaren Views
+7;;2022-02-18;Tabellen für die Kursblockung in der gymnasialen Oberstufe hinzugefügt
+8;;2022-09-13;Tabellen für DavRessourcen und Sammlungen

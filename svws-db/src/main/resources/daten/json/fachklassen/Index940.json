@@ -1,0 +1,91 @@
+{
+	"index": 940,
+	"fachklassen": [
+		{
+			"schluessel": "134",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 2099000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "S",
+				"berufsfeld": "SG",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Berufsausbildung - Kinderpfleger/-in",
+				"bezeichnungM": "Berufsausbildung - Kinderpfleger",
+				"bezeichnungW": "Berufsausbildung - Kinderpflegerin",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "177",
+			"schluessel2": "03",
+			"historie": [ {
+				"id": 2100000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "ET",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Berufsausbildung - Elektroniker/-in für Energie- und Gebäudetechnik",
+				"bezeichnungM": "Berufsausbildung - Elektroniker für Energie- und Gebäudetechnik",
+				"bezeichnungW": "Berufsausbildung - Elektronikerin für Energie- und Gebäudetechnik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "454",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 2101000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "HT",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Berufsausbildung - Tischler/-in",
+				"bezeichnungM": "Berufsausbildung - Tischler",
+				"bezeichnungW": "Berufsausbildung - Tischlerin",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "509",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 2102000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "MT",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Berufsausbildung - Feinwerkmechaniker/-in",
+				"bezeichnungM": "Berufsausbildung - Feinwerkmechaniker",
+				"bezeichnungW": "Berufsausbildung - Feinwerkmechanikerin",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "532",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 2103000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TB",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Berufsausbildung - Maßschneider/-in",
+				"bezeichnungM": "Berufsausbildung - Maßschneider",
+				"bezeichnungW": "Berufsausbildung - Maßschneiderin",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}
+	]
+}

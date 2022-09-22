@@ -1,0 +1,283 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
+plugins {
+	id 'svws.gradle.node.plugin'
+}
+
+configurations {
+    ts_lib
+    ts_lib_test
+    ui_components
+	webclient
+	webclient_test
+	package_json
+}
+
+dependencies {
+	ts_lib files(
+		'config/ts-lib/package-template.json'
+	)
+	ts_lib_test files(
+		'config/ts-lib/package-template.json', 
+		'config/ts-lib/vite.config-template.ts', 
+		'config/ts-lib/vitest.config-template.ts'
+	)
+	ui_components files(
+        'config/ui-components/package-template.json', 
+        'config/postcss.config-template.js',
+        'config/vueconfig-template.json'
+    )
+	webclient files(
+        'config/webclient/package-template.json', 
+        'config/webclient/vite.config-template.ts',
+        'config/postcss.config-template.js',
+        'config/vueconfig-template.json'
+    )
+	webclient_test files(
+        'config/webclient/package-template.json', 
+        'config/webclient/vite.config-template.ts',
+        'config/postcss.config-template.js',
+        'config/vueconfig-template.json'
+    )
+    package_json files(
+    	'package.json',
+    	'src/ts-lib/ts/package.json',
+    	'src/ts-lib-test/ts/package.json',
+    	'src/ui-components/ts/package.json',
+    	'src/webclient/ts/package.json',
+    	'src/webclient-test/ts/package.json'
+    )
+}
+project.ext.npm_organization = 'svws-nrw'
+project.ext.npm_packagename_ts_lib = 'svws-core-ts'
+project.ext.npm_packagename_ui_components = 'svws-ui'
+project.ext.npm_packagename_webclient = 'svws-client'
+project.ext.npm_description_webclient = 'SVWS-Server-Projekt: Webclient'
+project.ext.npm_description_ui_components = 'SVWS-Server-Projekt: UI-Komponenten'
+project.ext.npm_description_ts_lib = 'SVWS-Server-Projekt: Generierter Code für die Client-API und transpilierter Server-Code zur Verwendung in Clients'
+project.ext.npm_author = 'MSB NRW'
+project.ext.npm_license = 'BSD-3-Clause'
+project.ext.ts_out = "."
+project.ext.coverage_out = "../../../build/coverage"
+
+task copyConfigTsLib(type: Copy) {
+	group "build"
+	from configurations.ts_lib
+	into "$projectDir/src/ts-lib/ts"
+	inputs.files configurations.ts_lib.files
+	rename(/(\S+)-template(\S+)/, '$1$2')
+	filteringCharset = 'UTF-8'
+	filter(ReplaceTokens, tokens: [
+		npm_organization: project.ext.npm_organization,
+		npm_package: project.ext.npm_packagename_ts_lib,
+		npm_description: project.ext.npm_description_ts_lib,
+		npm_author: project.ext.npm_author,
+		npm_license: project.ext.npm_license,
+		ts_out: project.ext.ts_out,
+		version: project.version
+	])
+}
+
+task copyConfigTsLibTest(type: Copy) {
+	group "build"
+	from configurations.ts_lib_test
+	into "$projectDir/src/ts-lib-test/ts"
+	inputs.files configurations.ts_lib_test.files
+	rename(/(\S+)-template(\S+)/, '$1$2')
+	filteringCharset = 'UTF-8'
+	filter(ReplaceTokens, tokens: [
+		npm_organization: project.ext.npm_organization,
+		npm_package: project.ext.npm_packagename_ts_lib + '-test',
+		npm_description: project.ext.npm_description_ts_lib + ' (Tests)',
+		npm_author: project.ext.npm_author,
+		npm_license: project.ext.npm_license,
+		ts_out: project.ext.ts_out,
+		coverage_out: project.ext.coverage_out + '/' + project.ext.npm_packagename_ts_lib,
+		version: project.version
+	])
+}
+
+task copyConfigUiComponents(type: Copy) {
+	group "build"
+	from configurations.ui_components
+	into "$projectDir/src/ui-components/ts"
+	inputs.files configurations.ui_components.files
+	rename(/(\S+)-template(\S+)/, '$1$2')
+	filteringCharset = 'UTF-8'
+	filter(ReplaceTokens, tokens: [
+		npm_organization: project.ext.npm_organization,
+		npm_package: project.ext.npm_packagename_ui_components,
+		npm_description: project.ext.npm_description_ui_components,
+		npm_author: project.ext.npm_author,
+		npm_license: project.ext.npm_license,
+		ts_out: project.ext.ts_out,
+		version: project.version
+	])
+}
+
+task copyConfigWebclient(type: Copy) {
+	group "build"
+	from configurations.webclient
+	into "$projectDir/src/webclient/ts"
+	inputs.files configurations.webclient.files
+	rename(/(\S+)-template(\S+)/, '$1$2')
+	filteringCharset = 'UTF-8'
+	filter(ReplaceTokens, tokens: [
+		npm_organization: project.ext.npm_organization,
+		npm_package: project.ext.npm_packagename_webclient,
+		npm_description: project.ext.npm_description_webclient,
+		npm_author: project.ext.npm_author,
+		npm_license: project.ext.npm_license,
+		ts_out: project.ext.ts_out,
+		version: project.version
+	])
+}
+
+task copyConfigWebclientTest(type: Copy) {
+	group "build"
+	from configurations.webclient_test
+	into "$projectDir/src/webclient-test/ts"
+	inputs.files configurations.webclient_test.files
+	rename(/(\S+)-template(\S+)/, '$1$2')
+	filteringCharset = 'UTF-8'
+	filter(ReplaceTokens, tokens: [
+		npm_organization: project.ext.npm_organization,
+		npm_package: project.ext.npm_packagename_webclient + '-test',
+		npm_description: project.ext.npm_description_webclient + " (Tests)",
+		npm_author: project.ext.npm_author,
+		npm_license: project.ext.npm_license,
+		ts_out: project.ext.ts_out,
+		coverage_out: project.ext.coverage_out + '/' + project.ext.npm_packagename_webclient,
+		version: project.version
+	])
+}
+
+task copyConfig {
+	group "build"
+    dependsOn copyConfigTsLib, copyConfigTsLibTest, copyConfigUiComponents, copyConfigWebclient, copyConfigWebclientTest
+}
+
+task npmInstallDev(type: NpmInstall) {
+    dependsOn project(':svws-transpile').tasks.assemble, copyConfig;
+    inputs.files configurations.package_json.files
+}
+
+task assembleTSLib(type: NpmRun) {
+	dependsOn npmInstallDev, ':svws-transpile:assemble', copyConfigTsLib
+	group "build"
+	args = ['build']
+	inputs.files fileTree("$projectDir/src/ts-lib/ts").matching { exclude "dist" }, file("$rootDir/svws-transpiler/src/main/resources/typescript")
+	outputs.dir file("$projectDir/src/ts-lib/ts/dist")
+	workingDir = file("$projectDir/src/ts-lib/ts")
+}
+
+task assembleUIComponents(type: NpmRun) {
+	dependsOn npmInstallDev, copyConfigUiComponents
+	group "build"
+	args = ['build']
+	inputs.files fileTree("$projectDir/src/ui-components/ts").matching { exclude "dist", ".histoire" } 
+	outputs.dir file("$projectDir/src/ui-components/ts/dist")
+	workingDir = file("$projectDir/src/ui-components/ts")
+}
+
+task assembleUIComponentsHistoire(type: NpmRun) {
+	dependsOn assembleUIComponents
+	group "build"
+	args = ['story:build']
+	inputs.files fileTree("$projectDir/src/ui-components/ts").matching { exclude "dist", ".histoire" } 
+	outputs.dir file("$projectDir/src/ui-components/ts/.histoire")
+	workingDir = file("$projectDir/src/ui-components/ts")
+}
+
+task assembleWebClient(type: NpmRun) {
+	dependsOn assembleTSLib
+	dependsOn assembleUIComponents
+	dependsOn assembleUIComponentsHistoire
+	dependsOn copyConfigWebclient
+	group "build"
+	args = ['build']
+	inputs.files file("$projectDir/src/webclient/ts")
+	outputs.dir file("$buildDir/output")
+	workingDir = file("$projectDir/src/webclient/ts")
+}
+
+assemble.dependsOn assembleTSLib
+assemble.dependsOn assembleUIComponents
+assemble.dependsOn assembleWebClient
+
+task testTSLib(type: NpmRun) {
+	group "svws"
+	dependsOn assembleTSLib, copyConfigTsLibTest
+	inputs.files file("$projectDir/src/ts-lib-test/ts/src")
+	outputs.dir file(project.ext.coverage_out + "/ts-lib")
+	args = [ 'test:run' ]
+	workingDir = file("$projectDir/src/ts-lib-test/ts/src")
+	doFirst {
+		mkdir file(project.ext.coverage_out)
+		mkdir file(project.ext.coverage_out + "/ts-lib")
+	}
+}
+
+test.dependsOn testTSLib
+
+task doZip(type: Zip) {
+	dependsOn assembleWebClient
+    archiveFileName = "SVWS-Client.zip"
+    destinationDirectory = file("$buildDir")
+    from "$buildDir/output"
+}
+
+assemble.dependsOn doZip
+
+
+task cleanTsLib(type: Delete) {
+	delete 'src/ts-lib/ts/dist'
+}
+
+task cleanUIComponents(type: Delete) {
+	delete 'src/ts-lib/ts/dist'
+}
+
+task cleanWebClient(type: Delete) {
+	delete 'src/ts-lib/ts/dist'
+}
+
+clean.dependsOn cleanTsLib
+clean.dependsOn cleanUIComponents
+clean.dependsOn cleanWebClient
+
+
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackagesSVWSClient"
+            url = "https://maven.pkg.github.com/SVWS-NRW/SVWS-Packages"
+            credentials {
+            	username = getGithubActor()
+                password = getGithubToken()
+            }
+        }
+    }
+    publications {
+        mavenClientZip(MavenPublication) {
+            artifact  'build/SVWS-Client.zip'
+            artifactId = 'svws-client'
+            pom {
+                name = 'SVWS-Client'
+                description = 'Stellt den SVWS-Client zur Verfügung.'
+                url = 'http://www.svws.nrw.de'
+                licenses {
+                    license {
+                        name = 'BSD-3-Clause'
+                        url = 'https://opensource.org/licenses/BSD-3-Clause'
+                    }
+                }
+                scm {
+                    connection = 'scm:git@github.com/SVWS-NRW/SVWS-Packages'
+                    developerConnection = 'scm:git@github.com/SVWS-NRW/SVWS-Packages.git'
+                    url = 'https://github.com/SVWS-NRW/SVWS-Packages.git'
+                }
+            }
+        }
+    }
+}

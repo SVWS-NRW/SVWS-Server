@@ -1,0 +1,81 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.page-wrapper {
+	@apply flex flex-grow flex-col justify-between;
+	@apply h-screen;
+	@apply overflow-hidden;
+	@apply relative;
+}
+
+.app-wrapper {
+	@apply flex h-screen w-full flex-grow flex-col;
+}
+
+.content-wrapper {
+	@apply flex flex-row items-start space-x-4;
+}
+.input-wrapper {
+	@apply grid flex-grow grid-cols-1 gap-4 xl:grid-cols-2;
+}
+
+.input-wrapper-3-cols {
+	@apply col-span-2 grid grid-cols-3 gap-4;
+}
+
+.app-container {
+	@apply grid grid-cols-1 gap-8 gap-x-8 gap-y-4 2xl:grid-cols-2 4xl:grid-cols-3;
+}
+
+/* Defaults zu den Schriften */
+
+.default-font {
+	font-family: "Roboto", sans-serif;
+	line-height: 1.5em;
+	font-size: medium;
+}
+
+.default-font-small {
+	font-family: "Roboto", sans-serif;
+	line-height: 1.5em;
+	font-size: small;
+}
+
+.text-left {
+	text-align: left;
+}
+
+.center {
+	text-align: center;
+}
+
+/* Effekte */
+
+.elevation-5 {
+	box-shadow: 0px 3px 5px -1px rgba(0, 0, 0, 0.2),
+		0px 5px 8px 0px rgba(0, 0, 0, 0.14),
+		0px 1px 14px 0px rgba(0, 0, 0, 0.12) !important;
+}
+
+/* Mauscursor */
+
+.pointer {
+	cursor: pointer;
+}
+
+/* Default Theme (Light) */
+:root {
+	--font-color: rgb(0, 0, 0, 1);
+	--table-head-background-color: rgb(50, 156, 213);
+	--table-head-foreground-color: rgb(36, 36, 36);
+	--table-selection-background-color: rgb(184, 221, 233);
+	--table-selection-foreground-color: rgb(0, 0, 0, 1);
+	--table-cell-default-padding: 0px 0.25em 0px 0.25em;
+}
+
+/* Dark Theme */
+body.theme-dark {
+	--font-color: rgb(255, 255, 255, 1);
+	--table-cell-default-padding: 0px $default-padding 0px $default-padding;
+}

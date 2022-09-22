@@ -1,0 +1,11 @@
+.__histoire-sandbox {
+	@apply m-5;
+}
+
+.__histoire-sandbox {
+	contain: layout;
+
+	&.htw-overflow-auto {
+		overflow: visible;
+	}
+}

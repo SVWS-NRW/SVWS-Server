@@ -1,0 +1,17 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [ {
+    "code" : "GW_11",
+    "art" : "SCHRIFTLICHKEIT",
+    "beschreibung" : "In EF.1 und EF.2 muss mindestens eine Gesellschaftswissenschaft schriftlich belegt sein."
+  }, {
+    "code" : "GW_12",
+    "art" : "SCHRIFTLICHKEIT",
+    "beschreibung" : "Mindestens eine Gesellschaftswissenschaft oder Religionslehre muss von Q1.1 bis wenigstens Q2.1 schriftlich belegt werden."
+  }, {
+    "code" : "LK1_13",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Die Abiturfächer müssen alle drei Aufgabenfelder abdecken. Insgesamt sind vier Abiturfächer zu belegen."
+  } ],
+  "log" : [ ]
+}

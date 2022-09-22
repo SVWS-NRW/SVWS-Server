@@ -1,0 +1,16 @@
+rootProject.name = 'svws-server'
+
+include "buildSrc"
+rootProject.children.find{ it.name == "buildSrc" }.name = "gradle-build-src"
+
+include 'svws-base'
+include 'svws-core'
+include 'svws-db'
+include 'svws-db-dto'
+include 'svws-db-utils'
+include 'svws-module-pdf'
+include 'svws-openapi'
+include 'svws-server-app'
+include 'svws-transpile'
+include 'svws-webclient'
+include 'svws-module-dav-api'

@@ -1,0 +1,68 @@
+configurations {
+	coretypedefinition
+	implementation.extendsFrom(resteasy, validation, swagger)
+} 
+
+dependencies {
+	coretypedefinition project(':svws-base')
+    implementation project(':svws-base')
+
+	implementation(configurations.resteasy)
+	implementation(configurations.validation)
+	implementation(configurations.swagger)
+}
+
+task createCoreTypes(type: JavaExec) {
+	group = 'svws'
+	classpath = configurations.coretypedefinition
+//    outputs.dir file(project.projectDir.toString() + '/src/main/java/de/nrw/schule/svws/core/types')
+    description "Erzeugt Core-Types anhand der zugehörigen CSV-Dateien"
+    mainClass = 'de.nrw.schule.svws.app.coregen.CoreTypeWriter'
+    jvmArgs '-Dfile.encoding=UTF-8', '-Dline.separator="\n"'
+}
+
+// compileJava.dependsOn createCoreTypes
+// sourcesJar.dependsOn createCoreTypes
+
+publishing {
+    repositories {
+        maven {
+            name = "GitHub"
+            url = "https://maven.pkg.github.com/SVWS-NRW/SVWS-Packages"
+            credentials {
+            	username = getGithubActor()
+                password = getGithubToken()
+            }
+        }
+    }
+    publications {
+        mavenSVWSCore(MavenPublication) {
+            artifactId = 'svws-core'
+            from components.java
+            versionMapping {
+                usage('java-api') {
+                    fromResolutionOf('runtimeClasspath')
+                }
+                usage('java-runtime') {
+                    fromResolutionResult()
+                }
+            }
+            pom {
+                name = 'SVWS Core Library'
+                description = 'Diese Bibliothek stellt grundlegende Datenypen und Algorithmen der Server-Applikation der Schulverwaltungssoftware in NRW bereit'
+                url = 'http://www.svws.nrw.de'
+                licenses {
+                    license {
+                        name = 'BSD-3-Clause'
+                        url = 'https://opensource.org/licenses/BSD-3-Clause'
+                    }
+                }
+                scm {
+        			connection = 'scm:git@github.com/SVWS-NRW/SVWS-Packages'
+        			developerConnection = 'scm:git@github.com/SVWS-NRW/SVWS-Packages.git'
+                    url = 'https://github.com/SVWS-NRW/SVWS-Packages.git'
+                }
+            }
+        }
+    }
+}

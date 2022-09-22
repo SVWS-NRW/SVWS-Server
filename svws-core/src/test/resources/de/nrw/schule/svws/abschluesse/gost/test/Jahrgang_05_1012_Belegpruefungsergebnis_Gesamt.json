@@ -1,0 +1,17 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [ {
+    "code" : "FS_20",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Eine neu einsetzende Fremdsprache kann nur gewählt werden, wenn diese nicht zuvor in der Sekundarstaufe I belegt wurde. Die Sprachenfolge ist fehlerhaft."
+  }, {
+    "code" : "FS_15",
+    "art" : "SCHRIFTLICHKEIT",
+    "beschreibung" : "Kurse in neu einsetzenden Fremdsprachen müssen schriftlich belegt werden."
+  }, {
+    "code" : "NW_FS_10",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Von EF.1 bis Q2.2 müssen entweder zwei Naturwissenschaften oder zwei Fremdsprachen durchgehend gewählt werden. Hierbei ist eine Naturwissenschaft oder sind zwei Fremdsprachen schriftlich zu belegen. Zu den Fremdsprachen zählen auch in einer weiteren Fremdsprache unterrichtete Sachfächer."
+  } ],
+  "log" : [ ]
+}

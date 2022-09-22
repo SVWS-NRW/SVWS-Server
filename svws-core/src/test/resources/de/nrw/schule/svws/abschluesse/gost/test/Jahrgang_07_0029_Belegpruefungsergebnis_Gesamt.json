@@ -1,0 +1,9 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [ {
+    "code" : "FS_17",
+    "art" : "SCHRIFTLICHKEIT",
+    "beschreibung" : "Neu einsetzende Fremdsprachen dürfen nicht als Leistungskurs belegt werden."
+  } ],
+  "log" : [ ]
+}

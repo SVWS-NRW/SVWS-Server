@@ -1,0 +1,23 @@
+{
+	"index": 970,
+	"fachklassen": [
+		{
+			"schluessel": "108",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 2105000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "S",
+				"berufsfeld": "SG",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Erzieher/-in",
+				"bezeichnungM": "Erzieher",
+				"bezeichnungW": "Erzieherin",
+				"gueltigVon": null,
+				"gueltigBis": 2012
+			} ]
+		}
+	]
+}

@@ -1,0 +1,133 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [ {
+    "code" : "D_10",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Deutsch muss von EF.1 bis Q2.2 belegt werden."
+  }, {
+    "code" : "D_11",
+    "art" : "SCHRIFTLICHKEIT",
+    "beschreibung" : "Deutsch muss von EF.1 bis wenigstens Q2.1 schriftlich belegt werden."
+  }, {
+    "code" : "FS_22_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Englisch wurde nicht in der Sprachenfolge eingetragen. Bitte Prüfen Sie die Sprachenfolge auf Korrektheit."
+  }, {
+    "code" : "FS_18",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Mindestens eine Fremdsprache muss von EF.1 bis Q2.2 belegt werden."
+  }, {
+	  "code" : "FS_14",
+	  "art" : "BELEGUNG",
+	  "beschreibung" : "Bei fehlender 2. Fremdsprache muss eine neu einsetzende Fremdsprache durchgehend schriftlich belegt werden."
+  }, {
+    "code" : "FS_15",
+    "art" : "SCHRIFTLICHKEIT",
+    "beschreibung" : "Kurse in neu einsetzenden Fremdsprachen müssen schriftlich belegt werden."
+  }, {
+    "code" : "FS_11",
+    "art" : "SCHRIFTLICHKEIT",
+    "beschreibung" : "Mindestens eine durchgehend belegte Fremdsprache muss von EF.1 bis Q2.1 schriftlich belegt sein."
+  }, {
+	  "code" : "FS_12",
+	  "art" : "SCHRIFTLICHKEIT",
+	  "beschreibung" : "In EF.1 und EF.2 müssen alle gewählten Fremdsprachenfächer schriftlich belegt werden."
+  }, {
+    "code" : "KU_MU_10",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Mindestens eines der Fächer Kunst oder Musik muss von EF.1 bis wenigstens Q1.2 durchgehend belegt werden. In der Qualifikationsphase kann auch alternativ Literatur, ein vokalpraktisches oder ein instrumentalpraktisches Fach mit zwei Kursen belegt werden."
+  }, {
+    "code" : "GW_11",
+    "art" : "SCHRIFTLICHKEIT",
+    "beschreibung" : "In EF.1 und EF.2 muss mindestens eine Gesellschaftswissenschaft schriftlich belegt sein."
+  }, {
+    "code" : "GW_10",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Mindestens eine Gesellschaftswissenschaft muss von Q1.1 bis Q2.2 durchgehend belegt werden."
+  }, {
+    "code" : "GW_12",
+    "art" : "SCHRIFTLICHKEIT",
+    "beschreibung" : "Mindestens eine Gesellschaftswissenschaft oder Religionslehre muss von Q1.1 bis wenigstens Q2.1 schriftlich belegt werden."
+  }, {
+    "code" : "GE_10",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Geschichte muss von EF.1 bis wenigstens Q1.2 oder als Zusatzkurs (in der Regel von Q2.1 bis Q2.2) belegt werden."
+  }, {
+    "code" : "SW_10",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Sozialwissenschaften muss von EF.1 bis wenigstens Q1.2 oder als Zusatzkurs (in der Regel von Q2.1 bis Q2.2) belegt werden."
+  }, {
+    "code" : "RE_10",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Religionslehre muss wenigstens von EF.1-Q1.2 durchgehend belegt werden. Als Ersatz kann Philosophie dienen, sofern Philosophie nicht die einzige von EF.1 bis Q2.2 durchgehend belegte Gesellschaftswissenschaft ist. In diesen Fällen muss ein weiteres Fach der Gesellschaftswissenschaften als Religionsersatz dienen."
+  }, {
+    "code" : "M_10",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Mathematik muss von EF.1 bis Q2.2 belegt werden."
+  }, {
+    "code" : "M_11",
+    "art" : "SCHRIFTLICHKEIT",
+    "beschreibung" : "Mathematik muss von EF.1 bis wenigstens Q2.1 schriftlich belegt werden."
+  }, {
+    "code" : "NW_10",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Mindestens eine klassische Naturwissenschaft (Physik, Biologie, Chemie) muss durchgehend von Q1.1 bis Q2.2 belegt werden."
+  }, {
+    "code" : "NW_11",
+    "art" : "SCHRIFTLICHKEIT",
+    "beschreibung" : "In EF.1 und EF.2 muss mindestens eine klassische Naturwissenschaft schriftlich belegt sein."
+  }, {
+    "code" : "SP_10",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Sport muss von EF.1 bis Q2.2 belegt werden."
+  }, {
+    "code" : "NW_FS_10",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Von EF.1 bis Q2.2 müssen entweder zwei Naturwissenschaften oder zwei Fremdsprachen durchgehend gewählt werden. Hierbei ist eine Naturwissenschaft oder sind zwei Fremdsprachen schriftlich zu belegen. Zu den Fremdsprachen zählen auch in einer weiteren Fremdsprache unterrichtete Sachfächer."
+  }, {
+    "code" : "LK1_11",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Das erste Leistungskursfach muss eine fortgeführte Fremdsprache, Mathematik, eine klassische Naturwissenschaft oder Deutsch sein."
+  }, {
+    "code" : "LK1_13",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Die Abiturfächer müssen alle drei Aufgabenfelder abdecken. Insgesamt sind vier Abiturfächer zu belegen."
+  }, {
+    "code" : "ABI_10",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Unter den vier Abiturfächern müssen zwei der Fächer Deutsch, Mathematik oder Fremdsprache sein."
+  }, {
+    "code" : "ANZ_10",
+    "art" : "BELEGUNG",
+    "beschreibung" : "In der Einführungsphase müssen in jedem Halbjahr mindestens 10 Fächer belegt werden. Vertiefungskurse werden bei der Zählung nicht berücksichtigt."
+  }, {
+    "code" : "GKS_10",
+    "art" : "BELEGUNG",
+    "beschreibung" : "In der Qualifikationsphase sind pro Halbjahr mindestens 7 Fächer in Grundkursen zu wählen."
+  }, {
+    "code" : "LK_10",
+    "art" : "BELEGUNG",
+    "beschreibung" : "In der Qualifikationsphase müssen zwei Fächer durchgehend in Leistungskursen belegt werden."
+  }, {
+    "code" : "ANZ_11_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Die Stundenbandbreite sollte pro Halbjahr 32 bis 36 Stunden betragen, um eine gleichmäßige Stundenbelastung zu gewährleisten."
+  }, {
+    "code" : "ANZ_12",
+    "art" : "BELEGUNG",
+    "beschreibung" : "In der Qualifikationsphase müssen mindestens 38 anrechenbare Kurse belegt werden."
+  }, {
+    "code" : "WST_20",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Die durchschnittliche Wochenstundenzahl muss in der Einführungsphase mindestens 34 Stunden betragen."
+  }, {
+    "code" : "WST_21",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Die durchschnittliche Wochenstundenzahl muss in der Qualifikationsphase mindestens 34 Stunden betragen."
+  }, {
+    "code" : "STD_10",
+    "art" : "BELEGUNG",
+    "beschreibung" : "Der Pflichtunterricht darf 102 Stunden nicht unterschreiten."
+  } ],
+  "log" : [ ]
+}

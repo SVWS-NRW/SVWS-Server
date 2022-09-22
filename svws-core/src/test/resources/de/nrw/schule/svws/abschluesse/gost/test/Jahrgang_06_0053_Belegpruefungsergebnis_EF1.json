@@ -1,0 +1,9 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [ {
+    "code" : "NW_11",
+    "art" : "SCHRIFTLICHKEIT",
+    "beschreibung" : "Mindestens eines der Fächer Physik, Chemie oder Biologie muss in EF.1 schriftlich belegt werden."
+  } ],
+  "log" : [ ]
+}

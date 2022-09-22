@@ -1,0 +1,210 @@
+{
+	"index": 230,
+	"fachklassen": [
+		{
+			"schluessel": "101",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1544000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "S",
+				"berufsfeld": "SG",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Sozialwesen - Heilerziehungspflege",
+				"bezeichnungM": "FS Sozialwesen - Heilerziehungspflege",
+				"bezeichnungW": "FS Sozialwesen - Heilerziehungspflege",
+				"gueltigVon": null,
+				"gueltigBis": 2005
+			} ]
+		}, {
+			"schluessel": "101",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 1545000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "S",
+				"berufsfeld": "SG",
+				"ebene1": "SW",
+				"ebene2": "HP",
+				"ebene3": null,
+				"bezeichnung": "FS Sozialwesen/Heilerziehungspflege (Theorie; Jahrgang 1 und 2 bei VZ, Jahrgang 1 bis 4 bei TZ)",
+				"bezeichnungM": "FS Sozialwesen/Heilerziehungspflege (Theorie; Jahrgang 1 und 2 bei VZ, Jahrgang 1 bis 4 bei TZ)",
+				"bezeichnungW": "FS Sozialwesen/Heilerziehungspflege (Theorie; Jahrgang 1 und 2 bei VZ, Jahrgang 1 bis 4 bei TZ)",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "101",
+			"schluessel2": "02",
+			"historie": [ {
+				"id": 1546000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "S",
+				"berufsfeld": "SG",
+				"ebene1": "SW",
+				"ebene2": "HP",
+				"ebene3": null,
+				"bezeichnung": "FS Sozialwesen/Heilerziehungspflege (Praxis; Jahrgang 3 bei VZ, Jahrgang 5 bis 6 bei TZ)",
+				"bezeichnungM": "FS Sozialwesen/Heilerziehungspflege (Praxis; Jahrgang 3 bei VZ, Jahrgang 5 bis 6 bei TZ)",
+				"bezeichnungW": "FS Sozialwesen/Heilerziehungspflege (Praxis; Jahrgang 3 bei VZ, Jahrgang 5 bis 6 bei TZ)",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "101",
+			"schluessel2": "05",
+			"historie": [ {
+				"id": 1547000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "S",
+				"berufsfeld": "SG",
+				"ebene1": "SW",
+				"ebene2": "HP",
+				"ebene3": null,
+				"bezeichnung": "FS Sozialwesen/Heilerziehungspflege (integrierte Form)",
+				"bezeichnungM": "FS Sozialwesen/Heilerziehungspflege (integrierte Form)",
+				"bezeichnungW": "FS Sozialwesen/Heilerziehungspflege (integrierte Form)",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "102",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1548000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "S",
+				"berufsfeld": "SG",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Sozialwesen - Sozialpädagogik",
+				"bezeichnungM": "FS Sozialwesen - Sozialpädagogik",
+				"bezeichnungW": "FS Sozialwesen - Sozialpädagogik",
+				"gueltigVon": null,
+				"gueltigBis": 2005
+			} ]
+		}, {
+			"schluessel": "102",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 1549000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "S",
+				"berufsfeld": "SG",
+				"ebene1": "SW",
+				"ebene2": "SP",
+				"ebene3": null,
+				"bezeichnung": "FS Sozialwesen/Sozialpädagogik (Theorie; Jahrgang 1 und 2 bei VZ, Jahrgang 1 bis 4 bei TZ)",
+				"bezeichnungM": "FS Sozialwesen/Sozialpädagogik (Theorie; Jahrgang 1 und 2 bei VZ, Jahrgang 1 bis 4 bei TZ)",
+				"bezeichnungW": "FS Sozialwesen/Sozialpädagogik (Theorie; Jahrgang 1 und 2 bei VZ, Jahrgang 1 bis 4 bei TZ)",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "102",
+			"schluessel2": "02",
+			"historie": [ {
+				"id": 1550000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "S",
+				"berufsfeld": "SG",
+				"ebene1": "SW",
+				"ebene2": "SP",
+				"ebene3": null,
+				"bezeichnung": "FS Sozialwesen/Sozialpädagogik (Praxis; Jahrgang 3 bei VZ, Jahrgang 5 bis 6 bei TZ)",
+				"bezeichnungM": "FS Sozialwesen/Sozialpädagogik (Praxis; Jahrgang 3 bei VZ, Jahrgang 5 bis 6 bei TZ)",
+				"bezeichnungW": "FS Sozialwesen/Sozialpädagogik (Praxis; Jahrgang 3 bei VZ, Jahrgang 5 bis 6 bei TZ)",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "102",
+			"schluessel2": "05",
+			"historie": [ {
+				"id": 1551000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "S",
+				"berufsfeld": "SG",
+				"ebene1": "SW",
+				"ebene2": "SP",
+				"ebene3": null,
+				"bezeichnung": "FS Sozialwesen/Sozialpädagogik (integrierte Form)",
+				"bezeichnungM": "FS Sozialwesen/Sozialpädagogik (integrierte Form)",
+				"bezeichnungW": "FS Sozialwesen/Sozialpädagogik (integrierte Form)",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "103",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 1552000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "S",
+				"berufsfeld": "SG",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Sozialwesen - Familienpflege (Theorie; Jahrgang 1 und 2 bei VZ, Jahrgang 1 bis 4 bei TZ)",
+				"bezeichnungM": "FS Sozialwesen - Familienpflege (Theorie; Jahrgang 1 und 2 bei VZ, Jahrgang 1 bis 4 bei TZ)",
+				"bezeichnungW": "FS Sozialwesen - Familienpflege (Theorie; Jahrgang 1 und 2 bei VZ, Jahrgang 1 bis 4 bei TZ)",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}, {
+			"schluessel": "103",
+			"schluessel2": "02",
+			"historie": [ {
+				"id": 1553000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "S",
+				"berufsfeld": "SG",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Sozialwesen - Familienpflege (Praxis; Jahrgang 3 bei VZ, Jahrgang 5 bis 6 bei TZ)",
+				"bezeichnungM": "FS Sozialwesen - Familienpflege (Praxis; Jahrgang 3 bei VZ, Jahrgang 5 bis 6 bei TZ)",
+				"bezeichnungW": "FS Sozialwesen - Familienpflege (Praxis; Jahrgang 3 bei VZ, Jahrgang 5 bis 6 bei TZ)",
+				"gueltigVon": null,
+				"gueltigBis": 2016
+			} ]
+		}, {
+			"schluessel": "999",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1554000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "S",
+				"berufsfeld": "SG",
+				"ebene1": "XX",
+				"ebene2": "XX",
+				"ebene3": "XX",
+				"bezeichnung": "Sonstiger Bildungsgang",
+				"bezeichnungM": "Sonstiger Bildungsgang",
+				"bezeichnungW": "Sonstiger Bildungsgang",
+				"gueltigVon": 2022,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "999",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 1555000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "S",
+				"berufsfeld": "SG",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Sonstiger Bildungsgang",
+				"bezeichnungM": "Sonstiger Bildungsgang",
+				"bezeichnungW": "Sonstiger Bildungsgang",
+				"gueltigVon": null,
+				"gueltigBis": 2010
+			} ]
+		}
+	]
+}

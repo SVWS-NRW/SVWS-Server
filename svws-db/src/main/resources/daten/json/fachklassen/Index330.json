@@ -1,0 +1,57 @@
+{
+	"index": 330,
+	"fachklassen": [
+		{
+			"schluessel": "088",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1620000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "L",
+				"berufsfeld": "SL",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Berufsabschluss/Ass. 3j. (VZ) - Sprache u. Literatur / Fremdspr.korrespondent/-in",
+				"bezeichnungM": "Berufsabschluss/Ass. 3j. (VZ) - Sprache u. Literatur / Fremdspr.korrespondent",
+				"bezeichnungW": "Berufsabschluss/Ass. 3j. (VZ) - Sprache u. Literatur / Fremdspr.korrespondentin",
+				"gueltigVon": null,
+				"gueltigBis": 2012
+			} ]
+		}, {
+			"schluessel": "089",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1621000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "S",
+				"berufsfeld": "ES",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Berufsabschluss/Ass. 3j. (VZ) - Erziehung u. Soziales / Freizeitsportleiter/-in",
+				"bezeichnungM": "Berufsabschluss/Ass. 3j. (VZ) - Erziehung u. Soziales / Freizeitsportleiter",
+				"bezeichnungW": "Berufsabschluss/Ass. 3j. (VZ) - Erziehung u. Soziales / Freizeitsportleiterin",
+				"gueltigVon": null,
+				"gueltigBis": 2012
+			} ]
+		}, {
+			"schluessel": "090",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1622000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "NW",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Berufsabschluss/Ass. 3j. (VZ) - Naturwissenschaften / Informationstechn. Ass.",
+				"bezeichnungM": "Berufsabschluss/Ass. 3j. (VZ) - Naturwissenschaften / Informationstechn. Ass.",
+				"bezeichnungW": "Berufsabschluss/Ass. 3j. (VZ) - Naturwissenschaften / Informationstechn. Ass.",
+				"gueltigVon": null,
+				"gueltigBis": 2005
+			} ]
+		}
+	]
+}

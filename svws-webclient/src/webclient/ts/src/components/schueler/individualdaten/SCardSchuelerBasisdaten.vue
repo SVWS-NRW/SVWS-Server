@@ -1,0 +1,168 @@
+<template>
+	<svws-ui-content-card title="Basisdaten">
+		<div class="content-wrapper">
+			<div class="flex-shrink-0">
+				<svws-ui-avatar
+					:src="'data:image/png;base64, ' + foto"
+					:alt="'Foto ' + inputVorname + ' ' + inputNachname"
+				/>
+			</div>
+			<div class="input-wrapper">
+				<svws-ui-text-input
+					v-model="inputNachname"
+					type="text"
+					placeholder="Nachname"
+				/>
+				<svws-ui-text-input
+					v-model="inputZusatzNachname"
+					type="text"
+					placeholder="Zusatz"
+				/>
+				<svws-ui-text-input
+					v-model="inputVorname"
+					type="text"
+					placeholder="Vorname"
+				/>
+				<svws-ui-text-input
+					v-model="inputAlleVornamen"
+					type="text"
+					placeholder="Alle Vornamen"
+				/>
+				<svws-ui-multi-select
+					v-model="inputGeschlecht"
+					title="Geschlecht"
+					:items="inputKatalogGeschlecht"
+					statistics
+				/>
+				<svws-ui-text-input
+					v-model="inputGeburtsdatum"
+					type="date"
+					placeholder="Geburtsdatum"
+					required
+					statistics
+				/>
+				<svws-ui-text-input
+					v-model="inputGeburtsort"
+					type="text"
+					placeholder="Geburtsort"
+					statistics
+				/>
+				<svws-ui-text-input
+					v-model="inputGeburtsname"
+					type="text"
+					placeholder="Geburtsname"
+				/>
+			</div>
+		</div>
+	</svws-ui-content-card>
+</template>
+
+<script setup lang="ts">
+	import { computed, ComputedRef, WritableComputedRef } from "vue";
+
+	import { Geschlecht, SchuelerStammdaten } from "@svws-nrw/svws-core-ts";
+	import { injectMainApp, Main } from "~/apps/Main";
+
+	const main: Main = injectMainApp();
+	const app = main.apps.schueler;
+
+	const daten: ComputedRef<SchuelerStammdaten> = computed(() => {
+		return app.stammdaten.daten || new SchuelerStammdaten();
+	});
+
+	const inputKatalogGeschlecht: ComputedRef<Geschlecht[]> = computed(() => {
+		return Geschlecht.values();
+	});
+
+	const id: ComputedRef<number | undefined> = computed(() => {
+		return daten.value.id.valueOf();
+	});
+
+	const foto: ComputedRef<string | undefined> = computed(() => {
+		return daten.value.foto?.toString();
+	});
+
+	const inputNachname: WritableComputedRef<string | undefined> = computed({
+		get(): string | undefined {
+			return daten.value.nachname.toString();
+		},
+		set(val: string | undefined) {
+			app.stammdaten.patch({ nachname: val });
+		}
+	});
+
+	const inputZusatzNachname: WritableComputedRef<string | undefined> =
+		computed({
+			get(): string | undefined {
+				return daten.value.zusatzNachname?.toString();
+			},
+			set(val) {
+				app.stammdaten.patch({ zusatzNachname: val });
+			}
+		});
+
+	const inputVorname: WritableComputedRef<string | undefined> = computed({
+		get(): string | undefined {
+			return daten.value.vorname.toString();
+		},
+		set(val) {
+			app.stammdaten.patch({ vorname: val });
+		}
+	});
+
+	const inputAlleVornamen: WritableComputedRef<string | undefined> = computed(
+		{
+			get(): string | undefined {
+				return daten.value.alleVornamen?.toString();
+			},
+			set(val) {
+				app.stammdaten.patch({ alleVornamen: val });
+			}
+		}
+	);
+
+	const inputGeschlecht: WritableComputedRef<Geschlecht | undefined> =
+		computed({
+			get(): Geschlecht | undefined {
+				if (daten.value.geschlecht) {
+					return (
+						Geschlecht.fromValue(daten.value.geschlecht) ||
+						undefined
+					);
+				}
+				return Geschlecht.X;
+			},
+			set(val: Geschlecht | undefined) {
+				app.stammdaten.patch({ geschlecht: val?.id });
+			}
+		});
+
+	const inputGeburtsdatum: WritableComputedRef<string | undefined> = computed(
+		{
+			get(): string | undefined {
+				return daten.value.geburtsdatum?.toString();
+			},
+			set(val: string | undefined) {
+				app.stammdaten.patch({ geburtsdatum: val });
+			}
+		}
+	);
+
+	const inputGeburtsort: WritableComputedRef<string | undefined> = computed({
+		get(): string | undefined {
+			return daten.value.geburtsort?.toString();
+		},
+		set(val: string | undefined) {
+			app.stammdaten.patch({ geburtsort: val });
+		}
+	});
+
+	const inputGeburtsname: WritableComputedRef<string | undefined> = computed({
+		get(): string | undefined {
+			return daten.value.geburtsname?.toString();
+		},
+		set(val: string | undefined) {
+			app.stammdaten.patch({ geburtsname: val });
+		}
+	});
+</script>

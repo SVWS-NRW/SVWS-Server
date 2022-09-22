@@ -1,0 +1,90 @@
+configurations {
+    implementation.extendsFrom(crypto, database, validation, jetty, resteasy)
+}
+
+// add generated java files to sourceSets
+sourceSets {
+    main {
+        java {
+            srcDirs += 'src/main/gen'
+        }
+    }
+}
+
+//exclude javadoc for generated model without comments
+javadoc {
+    exclude 'de/nrw/schule/svws/davapi/model/**'
+}
+
+//add new source folder to eclipse
+eclipse {
+    classpath {
+        file.whenMerged { cp ->
+            cp.entries.add( new org.gradle.plugins.ide.eclipse.model.SourceFolder('src/main/gen', null) )
+        }
+    }
+}
+//TODO setting für classpath in eclipse fehlt
+
+compileJava.dependsOn(":svws-db:assemble")
+compileJava.dependsOn(":svws-db-utils:assemble")
+
+dependencies {
+    implementation project(':svws-base')
+    implementation project(':svws-core')
+    implementation project(':svws-db')
+    implementation project(':svws-db-dto')
+    implementation project(':svws-db-utils')
+
+    implementation(configurations.crypto)
+    implementation(configurations.database)
+    implementation(configurations.jackson)
+    implementation(configurations.jetty)
+    implementation(configurations.resteasy)
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "GitHub"
+            url = "https://maven.pkg.github.com/SVWS-NRW/SVWS-Packages"
+            credentials {
+                username = getGithubActor()
+                password = getGithubToken()
+            }
+        }
+    }
+    publications {
+        mavenSVWSOpenAPI(MavenPublication) {
+            artifactId = 'svws-module-dav-api'
+            from components.java
+            versionMapping {
+                usage('java-api') {
+                    fromResolutionOf('runtimeClasspath')
+                }
+                usage('java-runtime') {
+                    fromResolutionResult()
+                }
+            }
+            pom {
+                name = 'SVWS DAV-API Library'
+                description = 'Diese Bibliothek enthält die Java-Server-Definition der CalDAV und CardDAV-Schnittstelle für die Schulverwaltungssoftware in NRW'
+                url = 'http://www.svws.nrw.de'
+                licenses {
+                    license {
+                        name = 'BSD-3-Clause'
+                        url = 'https://opensource.org/licenses/BSD-3-Clause'
+                    }
+                }
+                scm {
+                    connection = 'scm:git@github.com/SVWS-NRW/SVWS-Packages'
+                    developerConnection = 'scm:git@github.com/SVWS-NRW/SVWS-Packages.git'
+                    url = 'https://github.com/SVWS-NRW/SVWS-Packages.git'
+                }
+            }
+        }
+    }
+}
+
+
+

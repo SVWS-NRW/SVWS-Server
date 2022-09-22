@@ -1,0 +1,40 @@
+{
+	"index": 340,
+	"fachklassen": [
+		{
+			"schluessel": "089",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1623000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "S",
+				"berufsfeld": "ES",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Berufsabschluss/Ass. 3j. (VZ) - Erziehung u. Soziales / Sozialhelfer/-in",
+				"bezeichnungM": "Berufsabschluss/Ass. 3j. (VZ) - Erziehung u. Soziales / Sozialhelfer",
+				"bezeichnungW": "Berufsabschluss/Ass. 3j. (VZ) - Erziehung u. Soziales / Sozialhelferin",
+				"gueltigVon": null,
+				"gueltigBis": 2012
+			} ]
+		}, {
+			"schluessel": "090",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1624000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "S",
+				"berufsfeld": "ES",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Berufsabschluss/Ass. 3j. (VZ) - Erziehung u. Soziales / Kinderpfleger/-in",
+				"bezeichnungM": "Berufsabschluss/Ass. 3j. (VZ) - Erziehung u. Soziales / Kinderpfleger",
+				"bezeichnungW": "Berufsabschluss/Ass. 3j. (VZ) - Erziehung u. Soziales / Kinderpflegerin",
+				"gueltigVon": null,
+				"gueltigBis": 2012
+			} ]
+		}
+	]
+}

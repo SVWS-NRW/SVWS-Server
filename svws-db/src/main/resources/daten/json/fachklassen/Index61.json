@@ -1,0 +1,193 @@
+{
+	"index": 61,
+	"fachklassen": [
+		{
+			"schluessel": "242",
+			"schluessel2": "02",
+			"historie": [ {
+				"id": 1889000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Glaser/-in - Verglasung und Glasbau",
+				"bezeichnungM": "Glaser - Verglasung und Glasbau",
+				"bezeichnungW": "Glaserin - Verglasung und Glasbau",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "248",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 1890000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Glasveredler/-in - Schliff und Gravur",
+				"bezeichnungM": "Glasveredler - Schliff und Gravur",
+				"bezeichnungW": "Glasveredlerin - Schliff und Gravur",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "248",
+			"schluessel2": "02",
+			"historie": [ {
+				"id": 1891000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Glasveredler/-in - Glasmalerei und Kunstverglasung",
+				"bezeichnungM": "Glasveredler - Glasmalerei und Kunstverglasung",
+				"bezeichnungW": "Glasveredlerin - Glasmalerei und Kunstverglasung",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "248",
+			"schluessel2": "03",
+			"historie": [ {
+				"id": 1892000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Glasveredler/-in - Kanten- und Flächenveredlung",
+				"bezeichnungM": "Glasveredler - Kanten- und Flächenveredlung",
+				"bezeichnungW": "Glasveredlerin - Kanten- und Flächenveredlung",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "276",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1893000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Industriemechaniker/-in",
+				"bezeichnungM": "Industriemechaniker",
+				"bezeichnungW": "Industriemechanikerin",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "456",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1894000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Uhrmacher/-in",
+				"bezeichnungM": "Uhrmacher",
+				"bezeichnungW": "Uhrmacherin",
+				"gueltigVon": null,
+				"gueltigBis": 2019
+			} ]
+		}, {
+			"schluessel": "527",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1895000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "WV",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Fachkraft für Lagerlogistik",
+				"bezeichnungM": "Fachkraft für Lagerlogistik",
+				"bezeichnungW": "Fachkraft für Lagerlogistik",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "531",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1896000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Maschinen- und Anlagenführer/-in",
+				"bezeichnungM": "Maschinen- und Anlagenführer",
+				"bezeichnungW": "Maschinen- und Anlagenführerin",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "538",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1897000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Änderungsschneider/-in",
+				"bezeichnungM": "Änderungsschneider",
+				"bezeichnungW": "Änderungsschneiderin",
+				"gueltigVon": null,
+				"gueltigBis": 2019
+			} ]
+		}, {
+			"schluessel": "607",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1898000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "WV",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Kaufmann/-frau für Büromanagement",
+				"bezeichnungM": "Kaufmann für Büromanagement",
+				"bezeichnungW": "Kauffrau für Büromanagement",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "999",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1899000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "XX",
+				"ebene2": "XX",
+				"ebene3": "XX",
+				"bezeichnung": "Sonstiger Bildungsgang",
+				"bezeichnungM": "Sonstiger Bildungsgang",
+				"bezeichnungW": "Sonstiger Bildungsgang",
+				"gueltigVon": null,
+				"gueltigBis": null
+			} ]
+		}
+	]
+}

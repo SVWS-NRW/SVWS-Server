@@ -1,0 +1,296 @@
+import { JavaObject, cast_java_lang_Object } from '../../java/lang/JavaObject';
+import { KursblockungDynStatistik, cast_de_nrw_schule_svws_core_kursblockung_KursblockungDynStatistik } from '../../core/kursblockung/KursblockungDynStatistik';
+import { KursblockungStatic, cast_de_nrw_schule_svws_core_kursblockung_KursblockungStatic } from '../../core/kursblockung/KursblockungStatic';
+import { Random, cast_java_util_Random } from '../../java/util/Random';
+import { KursblockungDynKurs, cast_de_nrw_schule_svws_core_kursblockung_KursblockungDynKurs } from '../../core/kursblockung/KursblockungDynKurs';
+import { KursblockungDynSchueler, cast_de_nrw_schule_svws_core_kursblockung_KursblockungDynSchueler } from '../../core/kursblockung/KursblockungDynSchueler';
+import { JavaString, cast_java_lang_String } from '../../java/lang/JavaString';
+import { System, cast_java_lang_System } from '../../java/lang/System';
+
+export class KursblockungDynFachart extends JavaObject {
+
+	private readonly _random : Random;
+
+	private readonly nr : number;
+
+	private readonly representation : String;
+
+	private kursArr : Array<KursblockungDynKurs>;
+
+	private schuelerMax : number = 0;
+
+	private kurseMax : number = 0;
+
+	private schuelerAnzNow : number = 0;
+
+	private readonly statistik : KursblockungDynStatistik;
+
+
+	/**
+	 * @param pRandom         Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
+	 * @param pNr             Eine laufende Nummer (ID) für alle Facharten.
+	 * @param pRepresentation Eine String-Darstellung der Fachart, z.B. 'D;LK'.
+	 * @param pStatistik      Dem Statistik-Objekt wird eine Veränderung der Kursdifferenz mitgeteilt.
+	 */
+	public constructor(pRandom : Random, pNr : number, pRepresentation : String, pStatistik : KursblockungDynStatistik) {
+		super();
+		this._random = pRandom;
+		this.nr = pNr;
+		this.representation = pRepresentation;
+		this.statistik = pStatistik;
+		this.kursArr = Array(0).fill(null);
+		this.kurseMax = 0;
+		this.schuelerMax = 0;
+		this.schuelerAnzNow = 0;
+	}
+
+	/**
+	 * Durch das Überschreiben dieser Methode, liefert dieses Objekt eine automatische String-Darstellung,
+	 * beispielsweise 'D;LK'.
+	 */
+	public toString() : String {
+		return this.representation;
+	}
+
+	/**
+	 * Liefert die Nummer dieser Fachart.
+	 * 
+	 * @return Die Nummer dieser Fachart.
+	 */
+	gibNr() : number {
+		return this.nr;
+	}
+
+	/**
+	 * Liefert die maximale Anzahl ({@link #schuelerMax}) an SuS, die dieser Fachart zugeordnet sein können. Das ist die
+	 * Anzahl der Fachwahlen.
+	 * 
+	 * @return Die Anzahl der SuS, die diese Fachart gewählt haben.
+	 */
+	gibSchuelerMax() : number {
+		return this.schuelerMax;
+	}
+
+	/**
+	 * Liefert die aktuelle Anzahl ({@link #schuelerAnzNow}) an SuS, die dieser Fachart zugeordnet sind.
+	 * 
+	 * @return Die Anzahl der SuS, die diese Fachart aktuell zugeordnet sind.
+	 */
+	gibSchuelerZordnungen() : number {
+		return this.schuelerAnzNow;
+	}
+
+	/**
+	 * Liefert die Anzahl der Kurse die dieser Fachart zugeordnet sind.
+	 * 
+	 * @return Die Anzahl der Kurse die dieser Fachart zugeordnet sind.
+	 */
+	gibKurseMax() : number {
+		return this.kurseMax;
+	}
+
+	/**
+	 * Liefert die aktuell größte Kursdifferenz.
+	 * 
+	 * @return Die aktuell größte Kursdifferenz.
+	 */
+	gibKursdifferenz() : number {
+		return this.kursArr[this.kursArr.length - 1].gibSchuelerAnzahl() - this.kursArr[0].gibSchuelerAnzahl();
+	}
+
+	/**
+	 * Liefert das Array aller Kurse dieser Fachart.
+	 * 
+	 * @return Das Array aller Kurse dieser Fachart.
+	 */
+	gibKurse() : Array<KursblockungDynKurs> {
+		return this.kursArr;
+	}
+
+	/**
+	 * Liefert den Kurs mit der geringsten SuS-Anzahl, welcher in Schiene {@code pSchiene } vorkommt.
+	 * 
+	 * @param pSchiene     Die Schiene, in der gesucht wird.
+	 * @param kursGesperrt Definiert, alle Kurse des S. die gesperrt sind und somit ignoriert werden sollen.
+	 * 
+	 * @return Der kleinste Kurs in der Schiene pSchiene, oder null.
+	 */
+	gibKleinstenKursInSchiene(pSchiene : number, kursGesperrt : Array<boolean>) : KursblockungDynKurs | null {
+		for (let i : number = 0; i < this.kursArr.length; i++){
+			let kurs : KursblockungDynKurs = this.kursArr[i];
+			if (kursGesperrt[kurs.gibInternalID()]) {
+				continue;
+			}
+			for (let c of kurs.gibSchienenLage()) {
+				if (c === pSchiene) {
+					return kurs;
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Liefert TRUE, falls mindestens ein Kurs dieser Fachart ein Multikurs ist.
+	 * 
+	 * @return TRUE, falls mindestens ein Kurs dieser Fachart ein Multikurs ist.
+	 */
+	gibHatMultikurs() : boolean {
+		for (let kurs of this.kursArr) {
+			if (kurs.gibSchienenAnzahl() > 1) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Liefert TRUE, falls mindestens ein Kurs dieser Fachart in Schiene c ist.
+	 * 
+	 * @param pSchiene     Die Schiene, die angefragt wurde.
+	 * @param kursGesperrt Falls TRUE, muss dieser Kurs ignoriert werden.
+	 * 
+	 * @return TRUE, falls mindestens ein Kurs dieser Fachart in Schiene c ist.
+	 */
+	gibHatKursInSchiene(pSchiene : number, kursGesperrt : Array<boolean>) : boolean {
+		for (let kurs of this.kursArr) {
+			if (kursGesperrt[kurs.gibInternalID()]) {
+				continue;
+			}
+			if (kurs.gibIstInSchiene(pSchiene)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Liefert TRUE, falls mindestens ein Kurs dieser Fachart in Schiene c wandern darf.
+	 * 
+	 * @param pSchiene     Die Schiene, die angefragt wurde.
+	 * @param kursGesperrt Falls TRUE, muss dieser Kurs ignoriert werden.
+	 * 
+	 * @return TRUE, falls mindestens ein Kurs dieser Fachart in Schiene c wandern darf.
+	 */
+	public gibHatKursMitFreierSchiene(pSchiene : number, kursGesperrt : Array<boolean>) : boolean {
+		for (let kurs of this.kursArr) {
+			if (kursGesperrt[kurs.gibInternalID()]) {
+				continue;
+			}
+			if (kurs.gibIstSchieneFrei(pSchiene)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Ordnet alle Kurse der Fachart zu. Die Kurse haben noch keine SuS und sind somit automatisch sortiert.
+	 * 
+	 * @param pKursArr Alle Kurse der Fachart.
+	 */
+	public aktionSetKurse(pKursArr : Array<KursblockungDynKurs>) : void {
+		this.kursArr = pKursArr;
+	}
+
+	/**
+	 * Erhöht die Anzahl ({@link #schuelerMax}) an SuS, die diese Fachart gewählt haben um 1.
+	 */
+	public aktionMaxSchuelerErhoehen() : void {
+		this.schuelerMax++;
+	}
+
+	/**
+	 * Erhöht die Anzahl ({@link #kurseMax}) an Kursen, die zu dieser Fachart gehören.
+	 */
+	public aktionMaxKurseErhoehen() : void {
+		this.kurseMax++;
+	}
+
+	/**
+	 * Muss aufgerufen werden, bevor die Schüleranzahl eines Kurses verändert wird.
+	 */
+	public aktionKursdifferenzEntfernen() : void {
+		this.statistik.aktionKursdifferenzEntfernen(this.gibKursdifferenz());
+	}
+
+	/**
+	 * Muss aufgerufen werden, nachdem die Schüleranzahl eines Kurses verändert wird.
+	 */
+	public aktionKursdifferenzHinzufuegen() : void {
+		this.statistik.aktionKursdifferenzHinzufuegen(this.gibKursdifferenz());
+	}
+
+	/**
+	 * Erhöht die Anzahl ({@link #schuelerAnzNow}) an Schülern, die dieser Fachart momentan zugeordnet sind um 1. Da ein
+	 * (bestimmter) Kurs nun einen S. mehr hat, muss das Array einmalig von links nach rechts sortiert werden.
+	 */
+	public aktionSchuelerWurdeHinzugefuegt() : void {
+		this.schuelerAnzNow++;
+		for (let i : number = 1; i < this.kursArr.length; i++){
+			let kursL : KursblockungDynKurs = this.kursArr[i - 1];
+			let kursR : KursblockungDynKurs = this.kursArr[i];
+			let b1 : boolean = kursL.gibSchuelerAnzahl() > kursR.gibSchuelerAnzahl();
+			let b2 : boolean = (kursL.gibSchuelerAnzahl() === kursR.gibSchuelerAnzahl()) && (kursL.gibID() > kursR.gibID());
+			if (b1 || b2) {
+				this.kursArr[i - 1] = kursR;
+				this.kursArr[i] = kursL;
+			}
+		}
+	}
+
+	/**
+	 * Verringert die Anzahl ({@link #schuelerAnzNow}) an SuS, die dieser Fachart momentan zugeordnet sind um 1. Da ein
+	 * (bestimmter) Kurs nun einen S. weniger hat, muss das Array einmalig von rechts nach links sortiert werden.
+	 */
+	public aktionSchuelerWurdeEntfernt() : void {
+		this.schuelerAnzNow--;
+		for (let i : number = this.kursArr.length - 1; i >= 1; i--){
+			let kursL : KursblockungDynKurs = this.kursArr[i - 1];
+			let kursR : KursblockungDynKurs = this.kursArr[i];
+			let b1 : boolean = kursL.gibSchuelerAnzahl() > kursR.gibSchuelerAnzahl();
+			let b2 : boolean = (kursL.gibSchuelerAnzahl() === kursR.gibSchuelerAnzahl()) && (kursL.gibID() > kursR.gibID());
+			if (b1 || b2) {
+				this.kursArr[i - 1] = kursR;
+				this.kursArr[i] = kursL;
+			}
+		}
+	}
+
+	/**
+	 * Lässt einen zufälligen Kurs dieser Fachart in die angegebene Schiene wandern.
+	 * 
+	 * @param pSchiene Die Schiene, in die einer Kurs der Fachart wandern soll.
+	 */
+	aktionZufaelligerKursWandertNachSchiene(pSchiene : number) : void {
+		let perm : Array<number> = KursblockungStatic.gibPermutation(this._random, this.kursArr.length);
+		for (let p : number = 0; p < perm.length; p++){
+			let kurs : KursblockungDynKurs | null = this.kursArr[perm[p]];
+			if (kurs.gibIstSchieneFrei(pSchiene)) {
+				kurs.aktionSetzeInSchiene(pSchiene);
+				return;
+			}
+		}
+		console.log(JSON.stringify("aktionZufaelligerKursWandertNachSchiene: THIS SHOULD NOT BE REACHED!!!"));
+	}
+
+	/**
+	 * Debug Ausgabe. Nur für Testzwecke.
+	 * 
+	 * @param schuelerArr Das Array mit den Schülerdaten.
+	 */
+	debug(schuelerArr : Array<KursblockungDynSchueler>) : void {
+		for (let i : number = 0; i < this.kursArr.length; i++){
+			this.kursArr[i].debug(schuelerArr);
+		}
+	}
+
+	isTranspiledInstanceOf(name : string): boolean {
+		return ['de.nrw.schule.svws.core.kursblockung.KursblockungDynFachart'].includes(name);
+	}
+
+}
+
+export function cast_de_nrw_schule_svws_core_kursblockung_KursblockungDynFachart(obj : unknown) : KursblockungDynFachart {
+	return obj as KursblockungDynFachart;
+}

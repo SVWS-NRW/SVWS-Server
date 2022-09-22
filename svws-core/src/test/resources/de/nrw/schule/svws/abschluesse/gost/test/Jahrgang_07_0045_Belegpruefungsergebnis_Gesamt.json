@@ -1,0 +1,9 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [ {
+    "code" : "M_11",
+    "art" : "SCHRIFTLICHKEIT",
+    "beschreibung" : "Mathematik muss von EF.1 bis wenigstens Q2.1 schriftlich belegt werden."
+  } ],
+  "log" : [ ]
+}

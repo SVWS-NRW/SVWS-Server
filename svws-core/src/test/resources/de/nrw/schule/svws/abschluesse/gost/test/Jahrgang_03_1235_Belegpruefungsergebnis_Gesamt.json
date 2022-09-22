@@ -1,0 +1,13 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [ {
+    "code" : "NW_FS_13_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Da von EF.1 bis Q2.2 weniger als zwei Fremdsprachen schriftlich belegt wurden, liegt ausschließlich ein naturwissenschaftlicher Schwerpunkt vor."
+  }, {
+    "code" : "ABI_12",
+    "art" : "SCHRIFTLICHKEIT",
+    "beschreibung" : "In Q2.2 muss das 3. Abiturfach schriftlich belegt sein."
+  } ],
+  "log" : [ ]
+}

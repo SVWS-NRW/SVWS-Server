@@ -1,0 +1,1111 @@
+{
+	"index": 90,
+	"fachklassen": [
+		{
+			"schluessel": "101",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1987000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "IT",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Energiegeräteelektroniker/-in",
+				"bezeichnungM": "Energiegeräteelektroniker",
+				"bezeichnungW": "Energiegeräteelektronikerin",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}, {
+			"schluessel": "102",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1988000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "IT",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Funkelektroniker/-in",
+				"bezeichnungM": "Funkelektroniker",
+				"bezeichnungW": "Funkelektronikerin",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}, {
+			"schluessel": "103",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1989000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "CP",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Galvaniseur/-in",
+				"bezeichnungM": "Galvaniseur",
+				"bezeichnungW": "Galvaniseurin",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}, {
+			"schluessel": "104",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1990000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "G",
+				"berufsfeld": "FR",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Glas- und Porzellanmaler/-in",
+				"bezeichnungM": "Glas- und Porzellanmaler",
+				"bezeichnungW": "Glas- und Porzellanmalerin",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}, {
+			"schluessel": "105",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 1991000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "BT",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Glaser/-in",
+				"bezeichnungM": "Glaser",
+				"bezeichnungW": "Glaserin",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}, {
+			"schluessel": "105",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 1992000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "BT",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Glaser/-in - Fenster und Glasfassadenbau",
+				"bezeichnungM": "Glaser - Fenster und Glasfassadenbau",
+				"bezeichnungW": "Glaserin - Fenster und Glasfassadenbau",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}, {
+			"schluessel": "105",
+			"schluessel2": "02",
+			"historie": [ {
+				"id": 1993000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "BT",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Glaser/-in - Verglasung und Glasbau",
+				"bezeichnungM": "Glaser - Verglasung und Glasbau",
+				"bezeichnungW": "Glaserin - Verglasung und Glasbau",
+				"gueltigVon": null,
+				"gueltigBis": 2019
+			} ]
+		}, {
+			"schluessel": "106",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 1994000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "G",
+				"berufsfeld": "FR",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Glasveredler/-in - Flächenveredler",
+				"bezeichnungM": "Glasveredler - Flächenveredler",
+				"bezeichnungW": "Glasveredlerin - Flächenveredler",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}, {
+			"schluessel": "106",
+			"schluessel2": "02",
+			"historie": [ {
+				"id": 1995000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "G",
+				"berufsfeld": "FR",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Glasveredler/-in - Glasgraveur",
+				"bezeichnungM": "Glasveredler - Glasgraveur",
+				"bezeichnungW": "Glasveredlerin- Glasgraveur",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}, {
+			"schluessel": "106",
+			"schluessel2": "03",
+			"historie": [ {
+				"id": 1996000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "G",
+				"berufsfeld": "FR",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Glasveredler/-in - Glasschleifer",
+				"bezeichnungM": "Glasveredler - Glasschleifer",
+				"bezeichnungW": "Glasveredlerin - Glasschleifer",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}, {
+			"schluessel": "106",
+			"schluessel2": "04",
+			"historie": [ {
+				"id": 1997000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "G",
+				"berufsfeld": "FR",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Glasveredler/-in - Glasmalerei und Kunstverglasung",
+				"bezeichnungM": "Glasveredler - Glasmalerei und Kunstverglasung",
+				"bezeichnungW": "Glasveredlerin - Glasmalerei und Kunstverglasung",
+				"gueltigVon": null,
+				"gueltigBis": 2019
+			} ]
+		}, {
+			"schluessel": "106",
+			"schluessel2": "05",
+			"historie": [ {
+				"id": 1998000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "G",
+				"berufsfeld": "FR",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Glasveredler/-in - Kanten- und Flächenveredlung",
+				"bezeichnungM": "Glasveredler - Kanten- und Flächenveredlung",
+				"bezeichnungW": "Glasveredlerin - Kanten- und Flächenveredlung",
+				"gueltigVon": null,
+				"gueltigBis": 2019
+			} ]
+		}, {
+			"schluessel": "106",
+			"schluessel2": "06",
+			"historie": [ {
+				"id": 1999000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "G",
+				"berufsfeld": "FR",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Glasveredler/-in - Schliff und Gravur",
+				"bezeichnungM": "Glasveredler - Schliff und Gravur",
+				"bezeichnungW": "Glasveredlerin - Schliff und Gravur",
+				"gueltigVon": null,
+				"gueltigBis": 2019
+			} ]
+		}, {
+			"schluessel": "107",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 2000000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "ET",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Informationselektroniker/-in",
+				"bezeichnungM": "Informationselektroniker",
+				"bezeichnungW": "Informationselektronikerin",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}, {
+			"schluessel": "108",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 2001000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "MT",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Maschinenschlosser/-in",
+				"bezeichnungM": "Maschinenschlosser",
+				"bezeichnungW": "Maschinenschlosserin",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}, {
+			"schluessel": "109",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 2002000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TB",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Weber/-in",
+				"bezeichnungM": "Weber",
+				"bezeichnungW": "Weberin",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}, {
+			"schluessel": "110",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 2003000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "MT",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Werkzeugmacher/-in",
+				"bezeichnungM": "Werkzeugmacher",
+				"bezeichnungW": "Werkzeugmacherin",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}, {
+			"schluessel": "111",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 2004000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TB",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Damenschneider/-in",
+				"bezeichnungM": "Damenschneider",
+				"bezeichnungW": "Damenschneiderin",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}, {
+			"schluessel": "112",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 2005000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "ET",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Elektroniker/-in für Automatisierungstechnik",
+				"bezeichnungM": "Elektroniker für Automatisierungstechnik",
+				"bezeichnungW": "Elektronikerin für Automatisierungstechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}, {
+			"schluessel": "112",
+			"schluessel2": "02",
+			"historie": [ {
+				"id": 2006000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "ET",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Elektroniker/-in für Betriebstechnik",
+				"bezeichnungM": "Elektroniker für Betriebstechnik",
+				"bezeichnungW": "Elektronikerin für Betriebstechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2019
+			} ]
+		}, {
+			"schluessel": "112",
+			"schluessel2": "03",
+			"historie": [ {
+				"id": 2007000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "ET",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Elektroniker/-in für Energie- und Gebäudetechnik",
+				"bezeichnungM": "Elektroniker für Energie- und Gebäudetechnik",
+				"bezeichnungW": "Elektronikerin für Energie- und Gebäudetechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}, {
+			"schluessel": "112",
+			"schluessel2": "04",
+			"historie": [ {
+				"id": 2008000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "ET",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Elektroniker/-in für Gebäude- und Infrastruktursysteme",
+				"bezeichnungM": "Elektroniker für Gebäude- und Infrastruktursysteme",
+				"bezeichnungW": "Elektronikerin für Gebäude- und Infrastruktursysteme",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}, {
+			"schluessel": "112",
+			"schluessel2": "05",
+			"historie": [ {
+				"id": 2009000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "ET",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Elektroniker/-in für Geräte und Systeme",
+				"bezeichnungM": "Elektroniker für Geräte und Systeme",
+				"bezeichnungW": "Elektronikerin für Geräte und Systeme",
+				"gueltigVon": null,
+				"gueltigBis": 2019
+			} ]
+		}, {
+			"schluessel": "112",
+			"schluessel2": "06",
+			"historie": [ {
+				"id": 2010000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "ET",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Elektroniker/-in für Informations- und Telekommunikationstechnik",
+				"bezeichnungM": "Elektroniker für Informations- und Telekommunikationstechnik",
+				"bezeichnungW": "Elektronikerin für Informations- und Telekommunikationstechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}, {
+			"schluessel": "112",
+			"schluessel2": "07",
+			"historie": [ {
+				"id": 2011000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "ET",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Elektroniker/-in für Maschinen und Antriebstechnik",
+				"bezeichnungM": "Elektroniker für Maschinen und Antriebstechnik",
+				"bezeichnungW": "Elektronikerin für Maschinen und Antriebstechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}, {
+			"schluessel": "113",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 2012000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "MT",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Industriemechaniker/-in",
+				"bezeichnungM": "Industriemechaniker",
+				"bezeichnungW": "Industriemechanikerin",
+				"gueltigVon": null,
+				"gueltigBis": 2019
+			} ]
+		}, {
+			"schluessel": "113",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 2013000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "MT",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Industriemechaniker/-in - Betriebstechnik",
+				"bezeichnungM": "Industriemechaniker - Betriebstechnik",
+				"bezeichnungW": "Industriemechanikerin - Betriebstechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}, {
+			"schluessel": "113",
+			"schluessel2": "02",
+			"historie": [ {
+				"id": 2014000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "MT",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Industriemechaniker/-in - Geräte- und Feinwerktechnik",
+				"bezeichnungM": "Industriemechaniker - Geräte- und Feinwerktechnik",
+				"bezeichnungW": "Industriemechanikerin - Geräte- und Feinwerktechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}, {
+			"schluessel": "113",
+			"schluessel2": "03",
+			"historie": [ {
+				"id": 2015000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "MT",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Industriemechaniker/-in - Maschinen- und Systemtechnik",
+				"bezeichnungM": "Industriemechaniker - Maschinen- und Systemtechnik",
+				"bezeichnungW": "Industriemechanikerin - Maschinen- und Systemtechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}, {
+			"schluessel": "113",
+			"schluessel2": "04",
+			"historie": [ {
+				"id": 2016000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "MT",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Industriemechaniker/-in - Produktionstechnik",
+				"bezeichnungM": "Industriemechaniker - Produktionstechnik",
+				"bezeichnungW": "Industriemechanikerin - Produktionstechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}, {
+			"schluessel": "114",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 2017000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "MT",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Werkzeugmechaniker/-in",
+				"bezeichnungM": "Werkzeugmechaniker",
+				"bezeichnungW": "Werkzeugmechanikerin",
+				"gueltigVon": null,
+				"gueltigBis": 2019
+			} ]
+		}, {
+			"schluessel": "114",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 2018000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "MT",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Werkzeugmechaniker/-in - Formentechnik",
+				"bezeichnungM": "Werkzeugmechaniker - Formentechnik",
+				"bezeichnungW": "Werkzeugmechanikerin - Formentechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}, {
+			"schluessel": "114",
+			"schluessel2": "02",
+			"historie": [ {
+				"id": 2019000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "MT",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Werkzeugmechaniker/-in - Instrumententechnik",
+				"bezeichnungM": "Werkzeugmechaniker - Instrumententechnik",
+				"bezeichnungW": "Werkzeugmechanikerin - Instrumententechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}, {
+			"schluessel": "114",
+			"schluessel2": "03",
+			"historie": [ {
+				"id": 2020000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "MT",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Werkzeugmechaniker/-in - Stanz- und Umformtechnik",
+				"bezeichnungM": "Werkzeugmechaniker - Stanz- und Umformtechnik",
+				"bezeichnungW": "Werkzeugmechanikerin- Stanz- und Umformtechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}, {
+			"schluessel": "115",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 2021000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "ET",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Energieelektroniker/-in",
+				"bezeichnungM": "Energieelektroniker",
+				"bezeichnungW": "Energieelektronikerin",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}, {
+			"schluessel": "116",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 2022000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "ET",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Kommunikationselektroniker/-in - Funktechnik",
+				"bezeichnungM": "Kommunikationselektroniker - Funktechnik",
+				"bezeichnungW": "Kommunikationselektronikerin - Funktechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}, {
+			"schluessel": "117",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 2023000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "O",
+				"berufsfeld": "OH",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Mechatroniker/-in",
+				"bezeichnungM": "Mechatroniker",
+				"bezeichnungW": "Mechatronikerin",
+				"gueltigVon": null,
+				"gueltigBis": 2019
+			} ]
+		}, {
+			"schluessel": "118",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 2024000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TB",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Maßschneider/-in",
+				"bezeichnungM": "Maßschneider",
+				"bezeichnungW": "Maßschneiderin",
+				"gueltigVon": null,
+				"gueltigBis": 2019
+			} ]
+		}, {
+			"schluessel": "119",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 2025000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "O",
+				"berufsfeld": "OH",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Informations- und Telekommunikationssystemelektroniker/-in",
+				"bezeichnungM": "Informations- und Telekommunikationssystemelektroniker",
+				"bezeichnungW": "Informations- und Telekommunikationssystemelektronikerin",
+				"gueltigVon": null,
+				"gueltigBis": 2019
+			} ]
+		}, {
+			"schluessel": "120",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 2026000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "ET",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Kommunikationselektroniker/-in - Informationstechnik",
+				"bezeichnungM": "Kommunikationselektroniker - Informationstechnik",
+				"bezeichnungW": "Kommunikationselektronikerin - Informationstechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}, {
+			"schluessel": "121",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 2027000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "CP",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Oberflächenbeschichter/-in",
+				"bezeichnungM": "Oberflächenbeschichter",
+				"bezeichnungW": "Oberflächenbeschichterin",
+				"gueltigVon": null,
+				"gueltigBis": 2019
+			} ]
+		}, {
+			"schluessel": "122",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 2028000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "O",
+				"berufsfeld": "OH",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Kaufmann/-frau für Bürokommunikation",
+				"bezeichnungM": "Kaufmann für Bürokommunikation",
+				"bezeichnungW": "Kauffrau für Bürokommunikation",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}, {
+			"schluessel": "123",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 2029000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "G",
+				"berufsfeld": "FR",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Bauten- und Objektbeschichter/-in",
+				"bezeichnungM": "Bauten- und Objektbeschichter",
+				"bezeichnungW": "Bauten- und Objektbeschichterin",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}, {
+			"schluessel": "124",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 2030000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WV",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Bürokaufmann/-frau",
+				"bezeichnungM": "Bürokaufmann",
+				"bezeichnungW": "Bürokauffrau",
+				"gueltigVon": null,
+				"gueltigBis": 2019
+			} ]
+		}, {
+			"schluessel": "125",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 2031000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "S",
+				"berufsfeld": "KP",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Friseur/-in",
+				"bezeichnungM": "Friseur",
+				"bezeichnungW": "Friseurin",
+				"gueltigVon": null,
+				"gueltigBis": 2019
+			} ]
+		}, {
+			"schluessel": "126",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 2032000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "MT",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Konstruktionsmechaniker/-in",
+				"bezeichnungM": "Konstruktionsmechaniker",
+				"bezeichnungW": "Konstruktionsmechanikerin",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}, {
+			"schluessel": "127",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 2033000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "E",
+				"berufsfeld": "EH",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Hauswirtschafter/-in",
+				"bezeichnungM": "Hauswirtschafter",
+				"bezeichnungW": "Hauswirtschafterin",
+				"gueltigVon": null,
+				"gueltigBis": 2019
+			} ]
+		}, {
+			"schluessel": "128",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 2034000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "O",
+				"berufsfeld": "OH",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Maschinen- und Anlagenführer/-in",
+				"bezeichnungM": "Maschinen- und Anlagenführer",
+				"bezeichnungW": "Maschinen- und Anlagenführerin",
+				"gueltigVon": null,
+				"gueltigBis": 2019
+			} ]
+		}, {
+			"schluessel": "129",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 2035000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "O",
+				"berufsfeld": "OH",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Verfahrensmechaniker/-in im Kunststoff- und Kautschukbereich",
+				"bezeichnungM": "Verfahrensmechaniker im Kunststoff- und Kautschukbereich",
+				"bezeichnungW": "Verfahrensmechanikerin im Kunststoff- und Kautschukbereich",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}, {
+			"schluessel": "130",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 2036000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "O",
+				"berufsfeld": "OH",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Fachkraft für Lagerlogistik",
+				"bezeichnungM": "Fachkraft für Lagerlogistik",
+				"bezeichnungW": "Fachkraft für Lagerlogistik",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}, {
+			"schluessel": "131",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 2037000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "O",
+				"berufsfeld": "OH",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Fachlagerist/-in",
+				"bezeichnungM": "Fachlagerist",
+				"bezeichnungW": "Fachlageristin",
+				"gueltigVon": null,
+				"gueltigBis": 2019
+			} ]
+		}, {
+			"schluessel": "132",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 2038000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "HT",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Holzmechaniker/-in",
+				"bezeichnungM": "Holzmechaniker",
+				"bezeichnungW": "Holzmechanikerin",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}, {
+			"schluessel": "133",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 2039000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WV",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Kaufmann/-frau im Einzelhandel",
+				"bezeichnungM": "Kaufmann im Einzelhandel",
+				"bezeichnungW": "Kauffrau im Einzelhandel",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}, {
+			"schluessel": "134",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 2040000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WV",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Verkäufer/-in",
+				"bezeichnungM": "Verkäufer",
+				"bezeichnungW": "Verkäuferin",
+				"gueltigVon": null,
+				"gueltigBis": 2019
+			} ]
+		}, {
+			"schluessel": "135",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 2041000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "MT",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Zerspanungsmechaniker/-in",
+				"bezeichnungM": "Zerspanungsmechaniker",
+				"bezeichnungW": "Zerspanungsmechanikerin",
+				"gueltigVon": null,
+				"gueltigBis": 2019
+			} ]
+		}, {
+			"schluessel": "136",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 2042000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "E",
+				"berufsfeld": "EH",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Fachverkäufer/-in im Lebensmittelhandwerk",
+				"bezeichnungM": "Fachverkäufer im Lebensmittelhandwerk",
+				"bezeichnungW": "Fachverkäuferin im Lebensmittelhandwerk",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}, {
+			"schluessel": "137",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 2043000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "MT",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Metallbauer/-in - Konstruktionstechnik",
+				"bezeichnungM": "Metallbauer - Konstruktionstechnik",
+				"bezeichnungW": "Metallbauerin - Konstruktionstechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2019
+			} ]
+		}, {
+			"schluessel": "137",
+			"schluessel2": "02",
+			"historie": [ {
+				"id": 2044000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "MT",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Metallbauer/-in - Metallgestaltung",
+				"bezeichnungM": "Metallbauer - Metallgestaltung",
+				"bezeichnungW": "Metallbauerin - Metallgestaltung",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}, {
+			"schluessel": "137",
+			"schluessel2": "03",
+			"historie": [ {
+				"id": 2045000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "MT",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Metallbauer/-in - Nutzfahrzeugbau",
+				"bezeichnungM": "Metallbauer - Nutzfahrzeugbau",
+				"bezeichnungW": "Metallbauerin - Nutzfahrzeugbau",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}, {
+			"schluessel": "138",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 2046000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "O",
+				"berufsfeld": "OH",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Florist/-in",
+				"bezeichnungM": "Florist",
+				"bezeichnungW": "Floristin",
+				"gueltigVon": null,
+				"gueltigBis": 2019
+			} ]
+		}, {
+			"schluessel": "139",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 2047000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TB",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Änderungsschneider/-in",
+				"bezeichnungM": "Änderungsschneider",
+				"bezeichnungW": "Änderungsschneiderin",
+				"gueltigVon": null,
+				"gueltigBis": 2019
+			} ]
+		}, {
+			"schluessel": "140",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 2048000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "O",
+				"berufsfeld": "OH",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Kosmetiker/-in",
+				"bezeichnungM": "Kosmetiker",
+				"bezeichnungW": "Kosmetikerin",
+				"gueltigVon": null,
+				"gueltigBis": 2019
+			} ]
+		}, {
+			"schluessel": "141",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 2049000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "O",
+				"berufsfeld": "OH",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Uhrmacher/-in",
+				"bezeichnungM": "Uhrmacher",
+				"bezeichnungW": "Uhrmacherin",
+				"gueltigVon": null,
+				"gueltigBis": 2019
+			} ]
+		}, {
+			"schluessel": "999",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 2050000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "X",
+				"berufsfeld": "XX",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Sonstiger Bildungsgang",
+				"bezeichnungM": "Sonstiger Bildungsgang",
+				"bezeichnungW": "Sonstiger Bildungsgang",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}, {
+			"schluessel": "999",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 2051000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "X",
+				"berufsfeld": "XX",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Sonstiger Bildungsgang",
+				"bezeichnungM": "Sonstiger Bildungsgang",
+				"bezeichnungW": "Sonstiger Bildungsgang",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			} ]
+		}
+	]
+}

@@ -1,0 +1,53 @@
+open module de.nrw.schule.svws.db {
+    requires transitive de.nrw.schule.svws.core;
+    requires transitive de.nrw.schule.svws.external.jbcrypt;
+    
+	requires java.base;
+	requires transitive java.sql;
+	requires transitive jakarta.persistence;
+    requires com.fasterxml.jackson.databind;
+    requires com.fasterxml.jackson.core;
+    requires com.fasterxml.jackson.dataformat.csv;
+    requires com.fasterxml.jackson.dataformat.xml;
+    requires org.apache.commons.lang3;
+    requires org.apache.commons.io;
+    	
+	exports de.nrw.schule.svws.csv;
+	exports de.nrw.schule.svws.db;
+	exports de.nrw.schule.svws.db.auth;
+	exports de.nrw.schule.svws.db.converter;
+	exports de.nrw.schule.svws.db.converter.gost;
+	exports de.nrw.schule.svws.db.dto;
+	exports de.nrw.schule.svws.db.dto.kurs42;
+	exports de.nrw.schule.svws.db.dto.lupo;
+	exports de.nrw.schule.svws.db.dto.schild;
+	exports de.nrw.schule.svws.db.dto.schild.benutzer;
+	exports de.nrw.schule.svws.db.dto.schild.berufskolleg;
+	exports de.nrw.schule.svws.db.dto.schild.erzieher;
+	exports de.nrw.schule.svws.db.dto.schild.faecher;
+	exports de.nrw.schule.svws.db.dto.schild.gost;
+	exports de.nrw.schule.svws.db.dto.schild.grundschule;
+	exports de.nrw.schule.svws.db.dto.schild.impexp;
+	exports de.nrw.schule.svws.db.dto.schild.intern;
+	exports de.nrw.schule.svws.db.dto.schild.katalog;
+	exports de.nrw.schule.svws.db.dto.schild.klassen;
+	exports de.nrw.schule.svws.db.dto.schild.kurse;
+	exports de.nrw.schule.svws.db.dto.schild.lehrer;
+	exports de.nrw.schule.svws.db.dto.schild.personengruppen;
+	exports de.nrw.schule.svws.db.dto.schild.schildapp;
+	exports de.nrw.schule.svws.db.dto.schild.schueler;
+	exports de.nrw.schule.svws.db.dto.schild.schueler.abitur;
+	exports de.nrw.schule.svws.db.dto.schild.schueler.fhr;
+	exports de.nrw.schule.svws.db.dto.schild.schule;
+	exports de.nrw.schule.svws.db.dto.schild.stundenplan;
+	exports de.nrw.schule.svws.db.dto.schulver;
+	exports de.nrw.schule.svws.db.dto.statkue;
+	exports de.nrw.schule.svws.db.dto.svws.client;
+	exports de.nrw.schule.svws.db.dto.svws.db;
+	exports de.nrw.schule.svws.db.schema;
+	exports de.nrw.schule.svws.db.schema.app;
+	exports de.nrw.schule.svws.db.schema.csv;
+	exports de.nrw.schule.svws.db.schema.dto;
+	exports de.nrw.schule.svws.config;
+	exports de.nrw.schule.svws.config.app;
+}
