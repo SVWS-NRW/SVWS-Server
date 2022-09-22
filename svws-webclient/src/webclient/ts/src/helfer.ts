@@ -212,13 +212,16 @@ export const ortsteilSort = (
 };
 
 export const ortsteilFilter = (
-	items: List<OrtsteilKatalogEintrag>,
+	items: OrtsteilKatalogEintrag[],
 	search: string
-) => {
-	let o;
-	for (const r of items) { if (r.ortsteil?.includes(search)) { o = r; break } }
-	return o;
-}
+) =>
+	items.filter((i: OrtsteilKatalogEintrag) => {
+		if (i.ortsteil) {
+			return i.ortsteil.toLowerCase().includes(search.toLowerCase());
+		}
+		return false;
+	});
+	
 export const erzieherArtSort = (a: Erzieherart, b: Erzieherart) => {
 	if (a.bezeichnung && b.bezeichnung) {
 		a.bezeichnung.localeCompare(b.bezeichnung.toString());
