@@ -70,12 +70,12 @@ const actions = [
   { label: "Edit", action: "edit" }
 ];
 
-const selectedRows = ref([data.value[0]])
+const clickedRow = ref(data.value[0]);
 const selectedRows2 = ref([data.value[0]])
 const selectedRows3 = ref([data.value[0]])
 
 function updateSelectedRow() {
-  selectedRows.value = [data.value[2]];
+  clickedRow.value = data.value[2];
 }
 
 function execute(action: string, row: DataTableItem) {
@@ -92,24 +92,27 @@ function execute(action: string, row: DataTableItem) {
     <Variant title="Basic">
       <NewTable :data="data" />
     </Variant>
-    <Variant title="Selection Single">
-      <NewTable v-model="selectedRows" :data="data" selection-mode="single" />
+    <Variant title="Simple Row Click Selection">
+      <NewTable v-model="clickedRow" :data="data" />
       <br />
       <Button @click="updateSelectedRow">Update Selection</Button>
       <br />
-      <strong>Selected:</strong>
-      <div v-if="selectedRows.length === 0">No rows selected</div>
-      <span v-else>{{ selectedRows }}</span>
+      <strong>Clicked:</strong>
+      <div v-if="Object.keys(clickedRow).length === 0">No row clickd</div>
+      <span v-else>{{ clickedRow }}</span>
     </Variant>
     <Variant title="Selection Multi">
-      <NewTable v-model="selectedRows2" :data="data" selection-mode="multiple" />
+      <NewTable v-model:selection="selectedRows2" v-model="clickedRow" :data="data" is-multi-select />
       <br />
       <strong>Selected:</strong>
       <div v-if="selectedRows2.length === 0">No rows selected</div>
       <span v-else>{{ selectedRows2 }}</span>
+      <div><strong>Clicked:</strong></div>
+      <div v-if="Object.keys(clickedRow).length === 0">No row clicked</div>
+      <span v-else>{{ clickedRow }}</span>
     </Variant>
     <Variant title="Sorting + Selection + Header Labels">
-      <NewTable v-model="selectedRows3" :data="data" :columns="columns" selection-mode="multiple" />
+      <NewTable v-model:selection="selectedRows3" :data="data" :columns="columns" is-multi-select />
       <br />
       <strong>Selected:</strong>
       <div v-if="selectedRows3.length === 0">No rows selected</div>
@@ -178,7 +181,7 @@ function execute(action: string, row: DataTableItem) {
       </NewTable>
     </Variant>
     <Variant title="Headless Inputs">
-      <NewTable :data="data" :columns="columns2" selection-mode="single">
+      <NewTable :data="data" :columns="columns2">
         <template #cell-name="{ row }">
           <span v-if="!row.isEditing" class="table__cell-content">{{ row.name }}</span>
           <TextInput v-else v-model="row.name" headless />

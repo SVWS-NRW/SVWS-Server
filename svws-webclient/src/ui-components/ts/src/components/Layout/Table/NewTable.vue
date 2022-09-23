@@ -5,42 +5,58 @@ import type { DataTableItem, DataTableColumn } from './types';
 const {
   data = [],
   columns = [],
-  selectionMode = null,
-  modelValue = [],
+  isMultiSelect = false,
+  modelValue = {},
+  selection = [],
   footer = false,
 } = defineProps<{
   data: Array<DataTableItem>,
   columns?: Array<DataTableColumn>,
-  selectionMode?: 'single' | 'multiple' | null,
-  modelValue?: Array<DataTableItem>,
+  isMultiSelect?: boolean,
+  selection?: Array<DataTableItem>,
+  modelValue?: DataTableItem,
   footer?: boolean
 }>();
 
 const emit = defineEmits<{
-  (e: 'update:modelValue', selection: Array<DataTableItem>): void
+  (e: 'update:modelValue', selection: DataTableItem): void
+  (e: 'update:selection', selection: Array<DataTableItem>): void
 }>();
 
 const { columnsComputed } = useColumns(data, columns);
 const tableRef = ref();
+const clickedRow = ref(modelValue);
 
 function proxyUpdate(tableFn: () => void) {
   tableFn();
-  emit('update:modelValue', tableRef.value?.tableState?.selectedRows ?? []);
+  emit('update:selection', tableRef.value?.tableState?.selectedRows ?? []);
 }
 
-onMounted(() => tableRef.value.selectRows(modelValue));
-watch(() => modelValue, (newVal) => tableRef.value.selectRows(newVal));
+function updateClickedRow(row: DataTableItem) {
+  if(clickedRow.value === row) {
+    clickedRow.value = {};
+  } else {
+    clickedRow.value = row;
+  }
+  emit('update:modelValue', clickedRow.value);
+}
+
+onMounted(() => tableRef.value.selectRows(selection));
+watch(() => selection, (newVal) => tableRef.value.selectRows(newVal));
+watch(() => modelValue, (newVal) => clickedRow.value = newVal);
 </script>
   
 <template>
   <VTable
-ref="tableRef" :data="data" :selection-mode="selectionMode" :select-on-click="selectionMode ? false : null"
+ref="tableRef" :data="data" :selection-mode="isMultiSelect ? 'multiple' : null" :select-on-click="false"
     hide-sort-icons>
     <template #head="{ allRowsSelected, toggleAllRows }">
       <tr>
-        <th v-if="selectionMode" class="w-1">
+        <th v-if="isMultiSelect" class="w-1">
           <span class="table__head-content">
-            <Checkbox v-if="selectionMode === 'multiple'" :model-value="allRowsSelected" @update:model-value="proxyUpdate(toggleAllRows)" />
+            <Checkbox
+v-if="isMultiSelect" :model-value="allRowsSelected"
+              @update:model-value="proxyUpdate(toggleAllRows)" />
           </span>
         </th>
         <template v-for="(column, index) in columnsComputed" :key="`head-${index}`">
@@ -75,10 +91,10 @@ v-show="
       </tr>
     </template>
     <template #body="{ rows }">
-      <VTr v-for="(row, index) in rows" :key="`row-${index}`" v-slot="{ isSelected, toggle }" :row="row">
-        <td v-if="selectionMode">
+      <VTr v-for="(row, index) in rows" :key="`row-${index}`" v-slot="{ isSelected, toggle }" :row="row" :class="{'vt-clicked': row === clickedRow}" @click="updateClickedRow(row)">
+        <td v-if="isMultiSelect">
           <span class="table__cell-content">
-            <Checkbox :model-value="isSelected === row" @update:model-value="proxyUpdate(toggle)" />
+            <Checkbox :model-value="isSelected === row" @click.stop @update:model-value="proxyUpdate(toggle)" />
           </span>
         </td>
         <td v-for="(column, columnIndex) in columnsComputed" :key="`row-column-${column.key}-${columnIndex}`">
@@ -90,11 +106,11 @@ v-show="
         </td>
       </VTr>
     </template>
-    <template v-if="selectionMode === 'multiple' || footer" #foot="{ allRowsSelected, toggleAllRows }">
+    <template v-if="isMultiSelect || footer" #foot="{ allRowsSelected, toggleAllRows }">
       <tr>
         <td colspan="1000">
           <div class="v-table__footer">
-            <Checkbox v-if="selectionMode === 'multiple'" :model-value="allRowsSelected" @change="toggleAllRows" />
+            <Checkbox v-if="isMultiSelect" :model-value="allRowsSelected" @change="toggleAllRows" />
             <div class="v-table__footer--actions">
               <slot v-if="footer" name="footer" />
             </div>
@@ -141,9 +157,11 @@ v-show="
         @apply outline-none;
       }
 
-      &.vt-selected {
+      &.vt-clicked {
         @apply font-bold text-primary;
+      }
 
+      &.vt-selected {
         .checkbox {
           .checkbox--indicator {
             @apply border-primary;
