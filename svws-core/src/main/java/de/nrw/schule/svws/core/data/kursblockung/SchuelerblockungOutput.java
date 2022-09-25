@@ -1,23 +1,24 @@
 package de.nrw.schule.svws.core.data.kursblockung;
 
+import java.util.Vector;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 import de.nrw.schule.svws.core.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 
-/** Diese Klasse spezifiziert die grundlegende Struktur von JSON-Daten für Rückgabedaten, 
- * die dem Schüler-Blockungsalgorithmus übergeben werden. Dabei handelt es sich um eine (Neu-)Zuweisung EINES
- * Schülers auf eine existierende Kurslage. 
- * 
- * */
+/** Diese Klasse spezifiziert die grundlegende Struktur von JSON-Daten, die Fachwahlen EINES Schülers zu Kursen
+ * zuordnet. */
 @XmlRootElement(name = "SchuelerblockungOutput")
-@Schema(name = "SchuelerblockungOutput", description = "Spezifiziert die grundlegende Struktur von JSON-Daten für die Output-Daten des Schülerblockungsalgorithmus.")
+@Schema(name = "SchuelerblockungOutput", description = "Diese Klasse spezifiziert die grundlegende Struktur von JSON-Daten, die Fachwahlen EINES Schülers zu Kursen zuordnet.")
 @TranspilerDTO
 public class SchuelerblockungOutput {
-	
-	// Schüler ID (nötig?)
-	
-	// ???
-	
+
+	/** Die ID des Schülers. */
+	public long schuelerID;
+
+	/** Alle Fachwahlen-Zuordnungen. */
+	public @NotNull Vector<@NotNull SchuelerblockungOutputFachwahlZuKurs> fachwahlenZuKurs = new Vector<>();
 
 }

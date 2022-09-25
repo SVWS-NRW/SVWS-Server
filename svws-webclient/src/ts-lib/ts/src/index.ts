@@ -162,6 +162,11 @@ export { KursblockungOutput } from './core/data/kursblockung/KursblockungOutput'
 export { KursblockungOutputFachwahlZuKurs } from './core/data/kursblockung/KursblockungOutputFachwahlZuKurs';
 export { KursblockungOutputKursZuSchiene } from './core/data/kursblockung/KursblockungOutputKursZuSchiene';
 export { KursblockungOutputs } from './core/data/kursblockung/KursblockungOutputs';
+export { SchuelerblockungInput } from './core/data/kursblockung/SchuelerblockungInput';
+export { SchuelerblockungInputFachwahl } from './core/data/kursblockung/SchuelerblockungInputFachwahl';
+export { SchuelerblockungInputKurs } from './core/data/kursblockung/SchuelerblockungInputKurs';
+export { SchuelerblockungOutput } from './core/data/kursblockung/SchuelerblockungOutput';
+export { SchuelerblockungOutputFachwahlZuKurs } from './core/data/kursblockung/SchuelerblockungOutputFachwahlZuKurs';
 export { KursDaten } from './core/data/kurse/KursDaten';
 export { KursListeEintrag } from './core/data/kurse/KursListeEintrag';
 export { KursartKatalogEintrag } from './core/data/kurse/KursartKatalogEintrag';
@@ -234,6 +239,13 @@ export { SchuelerStundenplan } from './core/data/stundenplan/SchuelerStundenplan
 export { SchuelerStundenplanUnterricht } from './core/data/stundenplan/SchuelerStundenplanUnterricht';
 export { StundenplanListeEintrag } from './core/data/stundenplan/StundenplanListeEintrag';
 export { StundenplanZeitraster } from './core/data/stundenplan/StundenplanZeitraster';
+export { StundenplanInputSimple } from './core/data/stundenplanblockung/StundenplanInputSimple';
+export { StundenplanInputSimpleFach } from './core/data/stundenplanblockung/StundenplanInputSimpleFach';
+export { StundenplanInputSimpleKlasse } from './core/data/stundenplanblockung/StundenplanInputSimpleKlasse';
+export { StundenplanInputSimpleKopplung } from './core/data/stundenplanblockung/StundenplanInputSimpleKopplung';
+export { StundenplanInputSimpleKurs } from './core/data/stundenplanblockung/StundenplanInputSimpleKurs';
+export { StundenplanInputSimpleLehrkraft } from './core/data/stundenplanblockung/StundenplanInputSimpleLehrkraft';
+export { StundenplanInputSimpleRaum } from './core/data/stundenplanblockung/StundenplanInputSimpleRaum';
 export { KlausurblockungException } from './core/klausurblockung/KlausurblockungException';
 export { KlausurblockungSchienenAlgorithmus } from './core/klausurblockung/KlausurblockungSchienenAlgorithmus';
 export { KlausurblockungSchienenAlgorithmusAbstract } from './core/klausurblockung/KlausurblockungSchienenAlgorithmusAbstract';
