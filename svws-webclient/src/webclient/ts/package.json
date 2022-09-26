@@ -21,7 +21,7 @@
 		"tsbuild": "vuedx-typecheck . && vite build"
 	},
 	"dependencies": {
-		"@headlessui/vue": "^1.5.0",
+		"@headlessui/vue": "1.6.7",
 		"vue": "^3.2",
 		"vue-router": "^4.1.5",
 		"@svws-nrw/svws-core-ts": "^0.2.14",

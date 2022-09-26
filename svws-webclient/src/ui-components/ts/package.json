@@ -22,8 +22,10 @@
   "module": "./dist/svws-ui.mjs",
   "types": "./dist/index.d.ts",
   "dependencies": {
-    "@headlessui/vue": "^1.2.0",
-    "histoire": "0.10.7",
+		"@headlessui/vue": "1.6.7",
     "vuejs-smart-table": "github:antony-k1208/vuejs-smart-table#next"
+  },
+  "dev_dependencies": {
+    "histoire": "0.10.7"
   }
 }
