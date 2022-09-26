@@ -8,7 +8,7 @@
 						inputKlasse
 				}}</svws-ui-badge>
 			</svws-ui-header>
-			<svws-ui-tab-bar v-model="app.selectedTab">
+			<svws-ui-tab-bar v-model="app.selectedTab.value">
 				<template #tabs>
 					<svws-ui-tab-button>Individualdaten</svws-ui-tab-button>
 					<svws-ui-tab-button>Erziehungsberechtigte</svws-ui-tab-button>

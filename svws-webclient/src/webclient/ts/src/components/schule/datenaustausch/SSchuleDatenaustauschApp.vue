@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<svws-ui-header>Datenaustausch</svws-ui-header>
-		<svws-ui-tab-bar v-model="app.selectedTab">
+		<svws-ui-tab-bar v-model="app.selectedTab.value">
 			<template #tabs>
 				<svws-ui-tab-button>Laufbahnplanung</svws-ui-tab-button>
 			</template>
