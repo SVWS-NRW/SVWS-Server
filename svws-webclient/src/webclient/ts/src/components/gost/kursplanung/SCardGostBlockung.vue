@@ -19,9 +19,6 @@
 									>
 										{{ getAnzahlSchuelerSchiene(s.id) }}
 									</td>
-									<td class="border border-[#7f7f7f]/20 text-center" rowspan="4">
-										Blocken
-									</td>
 								</tr>
 								<tr>
 									<td class="border border-[#7f7f7f]/20" colspan="3">Umwahlen</td>
@@ -49,7 +46,6 @@
 								</tr>
 								<tr>
 									<td class="border border-[#7f7f7f]/20 text-center">Kurs</td>
-									<td class="border border-[#7f7f7f]/20 text-center">Größe</td>
 									<td class="border border-[#7f7f7f]/20 text-center">Diff</td>
 									<!--Schienen-->
 									<td

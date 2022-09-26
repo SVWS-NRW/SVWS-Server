@@ -9,7 +9,6 @@
 			{{ fachKuerzel }}-{{ art }}{{ kurs.nummer
 			}}{{ kurs.suffix ? "-" : "" }}{{ kurs.suffix }}
 		</td>
-		<td class="text-center">Gr.</td>
 		<td class="text-center">Di</td>
 		<td
 			v-for="(b, i) in belegung"
@@ -29,7 +28,6 @@
 				<i-ri-lock-unlock-line v-else class="inline-block" />
 			</svws-ui-badge>
 		</td>
-		<td class="text-center">ja</td>
 	</tr>
 </template>
 

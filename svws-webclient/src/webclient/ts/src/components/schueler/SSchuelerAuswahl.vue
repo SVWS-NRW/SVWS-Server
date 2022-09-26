@@ -38,7 +38,7 @@
 				</div>
 				<div class="mt-4 flex flex-row items-center justify-between">
 					<svws-ui-button type="secondary">
-						<svws-ui-icon><i-ri-filter--3-line /></svws-ui-icon>
+						<svws-ui-icon><i-ri-filter-3-line /></svws-ui-icon>
 						<span class="ml-2">Erweiterte Filter</span>
 					</svws-ui-button>
 					<svws-ui-button
@@ -83,7 +83,7 @@
 						<button
 							class="flex h-10 w-10 items-center justify-center"
 						>
-							<svws-ui-icon><i-ri-more--2-line /></svws-ui-icon>
+							<svws-ui-icon><i-ri-more-2-line /></svws-ui-icon>
 						</button>
 					</template>
 				</svws-ui-new-table>
@@ -93,7 +93,7 @@
 </template>
 
 <script setup lang="ts">
-	import { computed, ComputedRef, Ref, ref, watch, WritableComputedRef } from "vue";
+	import { computed, ComputedRef, Ref, ref, WritableComputedRef } from "vue";
 
 	import {
 		JahrgangsListeEintrag,
@@ -185,7 +185,6 @@
 	const inputSchulgliederungen: ComputedRef<
 		Array<Schulgliederung> | undefined
 	> = computed(() => {
-		// if (!this.$app.schulgliederungen) return [];
 		return appSchule.schulgliederungen;
 	});
 
@@ -193,11 +192,9 @@
 		Schulgliederung | undefined
 	> = computed({
 		get(): Schulgliederung | undefined {
-			// TODO Lese aus einem speziellen Filter-Objekt, nicht in der lokalen Variable
 			return app.auswahl.filter.schulgliederung;
 		},
 		set(value: Schulgliederung | undefined) {
-			// TODO Speichere in einem speziellen Filter-Objekt, nicht in der lokalen Variable
 			const filter = app.auswahl.filter;
 			if (filter) {
 				filter.schulgliederung = value;

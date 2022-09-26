@@ -37,7 +37,7 @@
 					</div>
 					<div class="flex justify-between">
 						<svws-ui-button class="my-4" @click="create_blockung"
-							>Blockung erstellen</svws-ui-button
+							>Ergebnisse berechnen</svws-ui-button
 						>
 						<div class="flex gap-4">
 							<svws-ui-button
@@ -128,11 +128,9 @@
 			const halbjahresHashCode: number = app.blockungsauswahl.ausgewaehlt?.hashCode() ? app.blockungsauswahl.ausgewaehlt.hashCode() : -1;
 			const id = app.blockungsauswahl.ausgewaehlt?.id;
 			if (!id) return;
-			let berechnung;
 			const apiCall = app.create_blockung(id, halbjahresHashCode);
 			main.config.apiLoadingStatus.addStatusByPromise(apiCall, {message: 'Blockung wird berechnet...', caller: 'Kursplanung (Gost)', categories: [GOST_CREATE_BLOCKUNG_SYMBOL]});
-			berechnung = await apiCall;
-			console.log(berechnung);
+			await apiCall;
 		};
 
 		   function toggle_schienenmodal() {
