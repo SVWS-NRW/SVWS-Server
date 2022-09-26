@@ -35,8 +35,8 @@
 										hj === selected_hj
 								}" @click="selected_hj = hj">
 									{{ hj.kuerzel }}
-									<svws-ui-badge v-if="hj === selected_hj" size="tiny" variant="primary"
-										class="float-right cursor-pointer" @click="blockung_hinzufuegen">Blockung hinzufügen</svws-ui-badge>
+									<svws-ui-button v-if="hj === selected_hj" size="small" type="primary"
+										class="float-right cursor-pointer" @click="blockung_hinzufuegen">Blockung hinzufügen</svws-ui-button>
 								</td>
 							</tr>
 							<template v-if="hj === selected_hj && !wait">
@@ -49,11 +49,13 @@
 												selected_blockungauswahl
 										}" colspan="3" @click="selected_blockungauswahl = blockung">
 											{{ blockung.name }}
-											<svws-ui-badge v-if="
-												blockung ===
-												selected_blockungauswahl
-											" size="tiny" variant="error" class="float-right cursor-pointer" @click="remove_blockung">löschen
-											</svws-ui-badge>
+											<template v-if=" blockung === selected_blockungauswahl ">
+
+												<div class="float-right inline flex gap-1">
+													<svws-ui-button class="cursor-pointer" @click="create_blockung" size="small" >Ergebnisse berechnen</svws-ui-button >
+														<svws-ui-button size="small" type="danger" class="cursor-pointer" @click="remove_blockung">löschen </svws-ui-button>
+												</div>
+												</template>
 										</td>
 									</tr>
 									<!-- Api-Status für das Halbjahr -->
@@ -83,8 +85,8 @@
 										ergebnis === selected_ergebnis
 								}" @click="selected_ergebnis = ergebnis">
 									{{ ergebnis.id }}
-									<svws-ui-badge v-if="ergebnis === selected_ergebnis" size="tiny" variant="error"
-										class="float-right cursor-pointer" @click="remove_ergebnis">löschen</svws-ui-badge>
+									<svws-ui-button v-if="ergebnis === selected_ergebnis" size="small" type="danger"
+										class="float-right cursor-pointer" @click="remove_ergebnis">löschen</svws-ui-button>
 								</td>
 							</tr>
 						</template>
@@ -111,6 +113,7 @@ import {
 	WritableComputedRef
 } from "vue";
 import { App } from "~/apps/BaseApp";
+import { GOST_CREATE_BLOCKUNG_SYMBOL } from "~/apps/core/LoadingSymbols";
 import { injectMainApp, Main } from "~/apps/Main";
 
 const main: Main = injectMainApp();
@@ -250,6 +253,14 @@ async function abiturjahr_hinzufuegen(jahrgang: JahrgangsListeEintrag) {
 		console.log("Fehler: ", e);
 	}
 }
+		const create_blockung = async (): Promise<any> => {
+			const halbjahresHashCode: number = app.blockungsauswahl.ausgewaehlt?.hashCode() ? app.blockungsauswahl.ausgewaehlt.hashCode() : -1;
+			const id = app.blockungsauswahl.ausgewaehlt?.id;
+			if (!id) return;
+			const apiCall = app.create_blockung(id, halbjahresHashCode);
+			main.config.apiLoadingStatus.addStatusByPromise(apiCall, {message: 'Blockung wird berechnet...', caller: 'Kursplanung (Gost)', categories: [GOST_CREATE_BLOCKUNG_SYMBOL]});
+			await apiCall;
+		};
 
 async function blockung_hinzufuegen() {
 	if (

@@ -36,9 +36,6 @@
 						</table>
 					</div>
 					<div class="flex justify-between">
-						<svws-ui-button class="my-4" @click="create_blockung"
-							>Ergebnisse berechnen</svws-ui-button
-						>
 						<div class="flex gap-4">
 							<svws-ui-button
 								class="my-4"
@@ -123,15 +120,6 @@
 		   const jahrgangsstufen: ComputedRef<GostHalbjahr[]> = computed(() => {
 			return GostHalbjahr.values() || [];
 		});
-
-		const create_blockung = async (): Promise<any> => {
-			const halbjahresHashCode: number = app.blockungsauswahl.ausgewaehlt?.hashCode() ? app.blockungsauswahl.ausgewaehlt.hashCode() : -1;
-			const id = app.blockungsauswahl.ausgewaehlt?.id;
-			if (!id) return;
-			const apiCall = app.create_blockung(id, halbjahresHashCode);
-			main.config.apiLoadingStatus.addStatusByPromise(apiCall, {message: 'Blockung wird berechnet...', caller: 'Kursplanung (Gost)', categories: [GOST_CREATE_BLOCKUNG_SYMBOL]});
-			await apiCall;
-		};
 
 		   function toggle_schienenmodal() {
 			schienenmodal.value.isOpen ? schienenmodal.value.closeModal() : schienenmodal.value.openModal()
