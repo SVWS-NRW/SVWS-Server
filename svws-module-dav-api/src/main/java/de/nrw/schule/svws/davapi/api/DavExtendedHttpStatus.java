@@ -1,6 +1,6 @@
 package de.nrw.schule.svws.davapi.api;
 
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response;
 
 /**
  * Erweiterung der StatusType-Enumeration um die DAV-spezifischen

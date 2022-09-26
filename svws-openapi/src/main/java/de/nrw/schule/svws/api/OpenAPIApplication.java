@@ -6,12 +6,12 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.ApplicationPath;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Application;
-import javax.ws.rs.core.Context;
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.ws.rs.ApplicationPath;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Application;
+import jakarta.ws.rs.core.Context;
 
 import de.nrw.schule.svws.api.client.APISVWSClient;
 import de.nrw.schule.svws.api.debug.APIDebug;
@@ -62,7 +62,7 @@ import io.swagger.v3.oas.models.servers.Server;
  * Diese Klasse dient als Grundlage für einen OpenAPI-Server und dient der Initialisierung
  * der OpenAPI-Schnittstelle auf Basis der zugeordneten OpenAPI-Klassen. Zunächst können 
  * OpenAPI-Klassen über die Methode addAPI hinzugefügt werden, bevor das
- * Servlet später mit dem zugehörigen Init-Parameter (javax.ws.rs.Application)
+ * Servlet später mit dem zugehörigen Init-Parameter (jakarta.ws.rs.Application)
  * und dieser Klasse initialisiert wird.
  */
 @ApplicationPath("/")

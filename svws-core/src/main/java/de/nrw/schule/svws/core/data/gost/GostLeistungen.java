@@ -2,7 +2,7 @@ package de.nrw.schule.svws.core.data.gost;
 
 import java.util.Vector;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 import de.nrw.schule.svws.core.data.Sprachendaten;
 import de.nrw.schule.svws.core.transpiler.TranspilerDTO;

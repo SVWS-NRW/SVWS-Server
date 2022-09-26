@@ -1,6 +1,6 @@
 package de.nrw.schule.svws.core.abschluss.bk.a;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 

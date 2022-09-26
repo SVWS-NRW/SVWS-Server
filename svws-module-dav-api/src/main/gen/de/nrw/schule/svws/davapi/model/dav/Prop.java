@@ -13,7 +13,7 @@ import de.nrw.schule.svws.davapi.model.dav.card.CardAddressData;
 import de.nrw.schule.svws.davapi.model.dav.card.SupportedAddressData;
 import de.nrw.schule.svws.davapi.model.dav.cs.Getctag;
 
-import javax.xml.bind.annotation.*;
+import jakarta.xml.bind.annotation.*;
 
 /**
  * <p>Java class for anonymous complex type.</p>

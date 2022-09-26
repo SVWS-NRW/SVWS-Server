@@ -3,7 +3,7 @@ package de.nrw.schule.svws.core.data.fach;
 import java.util.List;
 import java.util.Vector;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 import de.nrw.schule.svws.core.adt.Pair;
 import de.nrw.schule.svws.core.data.schule.SchulformSchulgliederung;

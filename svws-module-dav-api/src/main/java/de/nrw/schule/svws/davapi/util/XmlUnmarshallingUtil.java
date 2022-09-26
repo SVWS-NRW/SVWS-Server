@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
+import com.fasterxml.jackson.module.jakarta.xmlbind.JakartaXmlBindAnnotationModule;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -124,7 +124,7 @@ public class XmlUnmarshallingUtil {
 		module.setDefaultUseWrapper(false);
 		ObjectMapper mapper = new XmlMapper(module);
 		mapper.enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES);
-		mapper.registerModule(new JaxbAnnotationModule());
+		mapper.registerModule(new JakartaXmlBindAnnotationModule());
 		mapper.enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
 		return mapper;
 	}

@@ -8,7 +8,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
+import com.fasterxml.jackson.module.jakarta.xmlbind.JakartaXmlBindAnnotationModule;
 
 import de.nrw.schule.svws.davapi.model.dav.Getetag;
 import de.nrw.schule.svws.davapi.model.dav.Prop;
@@ -112,7 +112,7 @@ public class XmlUnmarshallingTest {
 		JacksonXmlModule module = new JacksonXmlModule();
 		module.setDefaultUseWrapper(false);
 		ObjectMapper mapper = new XmlMapper(module);
-		mapper.registerModule(new JaxbAnnotationModule());
+		mapper.registerModule(new JakartaXmlBindAnnotationModule());
 		return mapper;
 	}
 

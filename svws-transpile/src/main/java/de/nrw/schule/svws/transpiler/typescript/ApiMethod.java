@@ -83,12 +83,12 @@ public class ApiMethod {
 		if (tmp200 == null)
 			throw new TranspilerException("Transpiler Error: Missing http response code annotation for method " + name + " of class " + classTree.getSimpleName().toString());
 		returnResponse = tmp200;
-		ApiMimeType tmpProduces = ApiMethod.getMimeType(transpiler, method, "javax.ws.rs.Produces");
+		ApiMimeType tmpProduces = ApiMethod.getMimeType(transpiler, method, "jakarta.ws.rs.Produces");
 		if (tmpProduces == null) // nehme den Standard der Java-API-Klasse
 			this.produces = classAnnotations.produces;
 		else
 			this.produces = tmpProduces;
-		ApiMimeType tmpConsumes = ApiMethod.getMimeType(transpiler, method, "javax.ws.rs.Consumes");
+		ApiMimeType tmpConsumes = ApiMethod.getMimeType(transpiler, method, "jakarta.ws.rs.Consumes");
 		if (tmpConsumes == null) // nehme den Standard der Java-API-Klasse
 			this.consumes = classAnnotations.consumes;
 		else
@@ -117,7 +117,7 @@ public class ApiMethod {
 	}
 	
 	private static String getPath(Transpiler transpiler, MethodTree methodTree) {
-		AnnotationTree annotationPath = transpiler.getAnnotation("javax.ws.rs.Path", methodTree);
+		AnnotationTree annotationPath = transpiler.getAnnotation("jakarta.ws.rs.Path", methodTree);
 		if (annotationPath == null)
 			return null;
 		Map<String, ExpressionTree> args = transpiler.getArguments(annotationPath);

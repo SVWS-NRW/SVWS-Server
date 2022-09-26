@@ -1,8 +1,8 @@
 package de.nrw.schule.svws.server.jetty;
 
 import javax.security.auth.Subject;
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.eclipse.jetty.security.IdentityService;
 import org.eclipse.jetty.security.LoginService;
@@ -52,7 +52,7 @@ public class SVWSLoginService extends AbstractLifeCycle implements LoginService 
 	
 	/**
 	 * @see org.eclipse.jetty.security.LoginService#login(java.lang.String,
-	 *      java.lang.Object, javax.servlet.ServletRequest)
+	 *      java.lang.Object, jakarta.servlet.ServletRequest)
 	 */
 	@Override
 	public UserIdentity login(String username, Object credentials, ServletRequest request) {

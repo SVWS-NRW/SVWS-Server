@@ -7,7 +7,7 @@ import de.nrw.schule.svws.davapi.model.dav.Response;
 import de.nrw.schule.svws.davapi.model.dav.card.AddressbookHomeSet;
 import de.nrw.schule.svws.davapi.util.XmlUnmarshallingUtil;
 
-import javax.servlet.ServletInputStream;
+import jakarta.servlet.ServletInputStream;
 
 import java.io.IOException;
 

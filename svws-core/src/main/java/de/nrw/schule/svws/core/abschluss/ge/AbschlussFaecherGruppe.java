@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Vector;
 import java.util.function.Predicate;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 import de.nrw.schule.svws.core.abschluss.AbschlussManager;
 import de.nrw.schule.svws.core.data.abschluss.GEAbschlussFach;

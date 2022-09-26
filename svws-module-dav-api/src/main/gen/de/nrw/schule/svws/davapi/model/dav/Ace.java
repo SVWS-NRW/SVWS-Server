@@ -1,6 +1,6 @@
 package de.nrw.schule.svws.davapi.model.dav;
 
-import javax.xml.bind.annotation.*;
+import jakarta.xml.bind.annotation.*;
 
 /**
  * <p>Java class for anonymous complex type.</p>

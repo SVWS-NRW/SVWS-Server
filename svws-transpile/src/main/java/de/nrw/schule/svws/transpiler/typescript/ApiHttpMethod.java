@@ -39,11 +39,11 @@ public enum ApiHttpMethod {
 	 * @throws TranspilerException falls die HTTP-Methode nicht bestimmt werden kann  
 	 */
 	public static ApiHttpMethod get(Transpiler transpiler, MethodTree method) throws TranspilerException {
-		AnnotationTree annotationGET = transpiler.getAnnotation("javax.ws.rs.GET", method);
-		AnnotationTree annotationPATCH = transpiler.getAnnotation("javax.ws.rs.PATCH", method);
-		AnnotationTree annotationPOST = transpiler.getAnnotation("javax.ws.rs.POST", method);
-		AnnotationTree annotationPUT = transpiler.getAnnotation("javax.ws.rs.PUT", method);
-		AnnotationTree annotationDELETE = transpiler.getAnnotation("javax.ws.rs.DELETE", method);
+		AnnotationTree annotationGET = transpiler.getAnnotation("jakarta.ws.rs.GET", method);
+		AnnotationTree annotationPATCH = transpiler.getAnnotation("jakarta.ws.rs.PATCH", method);
+		AnnotationTree annotationPOST = transpiler.getAnnotation("jakarta.ws.rs.POST", method);
+		AnnotationTree annotationPUT = transpiler.getAnnotation("jakarta.ws.rs.PUT", method);
+		AnnotationTree annotationDELETE = transpiler.getAnnotation("jakarta.ws.rs.DELETE", method);
 		ApiHttpMethod result = null;
 		if (annotationGET != null)
 			result = GET;

@@ -5,8 +5,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Collections;
 
-import javax.ws.rs.HttpMethod;
-import javax.ws.rs.core.Application;
+import jakarta.ws.rs.HttpMethod;
+import jakarta.ws.rs.core.Application;
 
 import org.eclipse.jetty.alpn.server.ALPNServerConnectionFactory;
 import org.eclipse.jetty.http2.HTTP2Cipher;
@@ -217,7 +217,7 @@ public class HttpServer {
 	 */
 	public static void addOpenAPIApplication(Class<? extends Application> c) {
 		ServletHolder servlet = context_handler.addServlet(HttpServletDispatcher.class, "/*");
-		servlet.setInitParameter("javax.ws.rs.Application", c.getCanonicalName());		
+		servlet.setInitParameter("jakarta.ws.rs.Application", c.getCanonicalName());		
 	}
 	
 }

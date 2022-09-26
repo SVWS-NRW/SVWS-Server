@@ -1,6 +1,6 @@
 package de.nrw.schule.svws.davapi.api;
 
-import javax.ws.rs.core.UriBuilder;
+import jakarta.ws.rs.core.UriBuilder;
 import java.net.URI;
 
 import jakarta.validation.constraints.NotNull;

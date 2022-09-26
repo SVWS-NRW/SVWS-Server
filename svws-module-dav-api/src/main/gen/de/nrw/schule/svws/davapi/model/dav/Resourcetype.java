@@ -10,7 +10,7 @@ package de.nrw.schule.svws.davapi.model.dav;
 
 import de.nrw.schule.svws.davapi.model.dav.card.CardAddressbook;
 
-import javax.xml.bind.annotation.*;
+import jakarta.xml.bind.annotation.*;
 
 
 /**

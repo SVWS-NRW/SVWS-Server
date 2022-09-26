@@ -48,17 +48,18 @@ class JavaLibPlugin implements Plugin<Project> {
 
 
 	void addJacksonConfiguration() {
-		def version = "2.12.3";
+		def version = "2.13.4";
 		project.configurations.create('jackson');
 		project.dependencies.add('jackson', 'com.fasterxml.jackson.core:jackson-annotations:' + version);
 		project.dependencies.add('jackson', 'com.fasterxml.jackson.core:jackson-core:' + version);
 		project.dependencies.add('jackson', 'com.fasterxml.jackson.core:jackson-databind:' + version);
 		project.dependencies.add('jackson', 'com.fasterxml.jackson.dataformat:jackson-dataformat-csv:' + version);
     	project.dependencies.add('jackson', 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:' + version);
+    	project.dependencies.add('jackson', 'com.fasterxml.jackson.module:jackson-module-jakarta-xmlbind-annotations:' + version);
 	}
 	
 	
-	void addJettyConfiguration() {
+	void addJetty10Configuration() {
 		// TODO replace with addJetty11Configuration as soon as all dependency conflicts with the jakarta name space are solved
 		def version = "10.0.9";
 		def versionServletApi = "4.0.6";
@@ -73,9 +74,9 @@ class JavaLibPlugin implements Plugin<Project> {
 	}
 
 
-	void addJetty11Configuration() {
+	void addJettyConfiguration() {
 		// TODO for future use - see above
-		def version = "11.0.9";
+		def version = "11.0.12";
 		def versionServletApi = "5.0.2";
 		project.configurations.create('jetty');
 	    project.dependencies.add('jetty', 'org.eclipse.jetty.toolchain:jetty-jakarta-servlet-api:' + versionServletApi);
@@ -101,7 +102,7 @@ class JavaLibPlugin implements Plugin<Project> {
 
 
 	void addRestEasyConfiguration() {
-		def version = "5.0.1.Final";
+		def version = "6.2.0.Final";
 		project.configurations.create('resteasy');
 		project.dependencies.add('resteasy', 'org.jboss.resteasy:resteasy-core:' + version);
 		project.dependencies.add('resteasy', 'org.jboss.resteasy:resteasy-jackson2-provider:' + version);
@@ -111,11 +112,11 @@ class JavaLibPlugin implements Plugin<Project> {
 
 
 	void addSwagger() {
-	    def version = "2.1.11";
+	    def version = "2.2.2";
 	    def versionUI = "4.1.3";
 		project.configurations.create('swagger');
-	    project.dependencies.add('swagger', 'io.swagger.core.v3:swagger-jaxrs2:' + version);
-		project.dependencies.add('swagger', 'io.swagger.core.v3:swagger-annotations:' + version);
+	    project.dependencies.add('swagger', 'io.swagger.core.v3:swagger-jaxrs2-jakarta:' + version);
+		project.dependencies.add('swagger', 'io.swagger.core.v3:swagger-annotations-jakarta:' + version);
 		project.dependencies.add('swagger', 'org.webjars.npm:swagger-ui-dist:' + versionUI);
 	}
 

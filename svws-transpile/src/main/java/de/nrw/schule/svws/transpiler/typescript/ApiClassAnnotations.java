@@ -40,12 +40,12 @@ public class ApiClassAnnotations {
 	public ApiClassAnnotations(Transpiler transpiler, ClassTree classTree) {
 		this.tag = ApiClassAnnotations.getTag(transpiler, classTree);
 		this.path = ApiClassAnnotations.getPath(transpiler, classTree);
-		ApiMimeType tmpProduces = ApiClassAnnotations.getMimeType(transpiler, classTree, "javax.ws.rs.Produces");
+		ApiMimeType tmpProduces = ApiClassAnnotations.getMimeType(transpiler, classTree, "jakarta.ws.rs.Produces");
 		if (tmpProduces == null) // set JSON as class default mime type for Produces and Consumes, if no mime type is specified
 			this.produces = ApiMimeType.APPLICATION_JSON;
 		else
 			this.produces = tmpProduces;
-		ApiMimeType tmpConsumes = ApiClassAnnotations.getMimeType(transpiler, classTree, "javax.ws.rs.Consumes");
+		ApiMimeType tmpConsumes = ApiClassAnnotations.getMimeType(transpiler, classTree, "jakarta.ws.rs.Consumes");
 		if (tmpConsumes == null) // set JSON as class default mime type for Produces and Consumes, if no mime type is specified
 			this.consumes = ApiMimeType.APPLICATION_JSON;
 		else
@@ -69,7 +69,7 @@ public class ApiClassAnnotations {
 	
 	
 	private static String getPath(Transpiler transpiler, ClassTree classTree) {
-		AnnotationTree annotationPath = transpiler.getAnnotation("javax.ws.rs.Path", classTree);
+		AnnotationTree annotationPath = transpiler.getAnnotation("jakarta.ws.rs.Path", classTree);
 		if (annotationPath == null)
 			throw new TranspilerException("Transpiler Exception: Missing Path annotation for class " + classTree.getSimpleName().toString() + ".");
 		Map<String, ExpressionTree> args = transpiler.getArguments(annotationPath);

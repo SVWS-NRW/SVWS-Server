@@ -8,10 +8,10 @@
 /**
  * Generated classes from the WebDAV XML schema.
  */
-@javax.xml.bind.annotation.XmlSchema(namespace = "DAV:",
-    elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED,
+@jakarta.xml.bind.annotation.XmlSchema(namespace = "DAV:",
+    elementFormDefault = jakarta.xml.bind.annotation.XmlNsForm.QUALIFIED,
     xmlns = {
     @XmlNs(namespaceURI = "DAV:", prefix = "d")})
 package de.nrw.schule.svws.davapi.model.dav;
 
-import javax.xml.bind.annotation.XmlNs;
+import jakarta.xml.bind.annotation.XmlNs;

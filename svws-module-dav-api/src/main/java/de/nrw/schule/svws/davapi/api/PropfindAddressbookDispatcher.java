@@ -21,7 +21,7 @@ import de.nrw.schule.svws.davapi.model.dav.card.SupportedAddressData;
 import de.nrw.schule.svws.davapi.model.dav.cs.Getctag;
 import de.nrw.schule.svws.davapi.util.XmlUnmarshallingUtil;
 
-import javax.servlet.ServletInputStream;
+import jakarta.servlet.ServletInputStream;
 
 import java.io.IOException;
 import java.util.List;

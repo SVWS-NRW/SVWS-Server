@@ -2,10 +2,10 @@ package de.nrw.schule.svws.data.schema;
 
 import java.util.Random;
 
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-import javax.ws.rs.core.StreamingOutput;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
+import jakarta.ws.rs.core.StreamingOutput;
 
 import de.nrw.schule.svws.config.SVWSKonfiguration;
 import de.nrw.schule.svws.db.DBEntityManager;

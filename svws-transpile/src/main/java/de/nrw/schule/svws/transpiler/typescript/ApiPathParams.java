@@ -41,7 +41,7 @@ public class ApiPathParams {
 		// Ermittle die Request-Body Annotation
 		List<? extends VariableTree> params = method.getParameters();
 		for (VariableTree param : params) {
-			AnnotationTree annotation = transpiler.getAnnotation("javax.ws.rs.PathParam", param);
+			AnnotationTree annotation = transpiler.getAnnotation("jakarta.ws.rs.PathParam", param);
 			if (annotation != null) {
 				String name = determineValue(transpiler, annotation);
 				Tree type = param.getType();

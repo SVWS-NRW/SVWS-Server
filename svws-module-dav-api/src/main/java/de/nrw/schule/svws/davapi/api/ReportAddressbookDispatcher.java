@@ -14,7 +14,7 @@ import de.nrw.schule.svws.davapi.model.dav.card.CardAddressData;
 import de.nrw.schule.svws.davapi.util.XmlUnmarshallingUtil;
 import de.nrw.schule.svws.davapi.util.vcard.VCard;
 
-import javax.servlet.ServletInputStream;
+import jakarta.servlet.ServletInputStream;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

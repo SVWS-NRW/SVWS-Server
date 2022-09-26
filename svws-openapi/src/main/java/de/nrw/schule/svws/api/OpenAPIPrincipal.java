@@ -3,7 +3,7 @@ package de.nrw.schule.svws.api;
 import java.io.Serializable;
 import java.security.Principal;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import de.nrw.schule.svws.config.SVWSKonfiguration;
 import de.nrw.schule.svws.db.Benutzer;

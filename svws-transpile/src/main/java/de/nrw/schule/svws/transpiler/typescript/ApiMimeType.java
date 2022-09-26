@@ -1,6 +1,6 @@
 package de.nrw.schule.svws.transpiler.typescript;
 
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MediaType;
 
 import de.nrw.schule.svws.transpiler.TranspilerException;
 

@@ -1,7 +1,7 @@
 package de.nrw.schule.svws.db.utils;
 
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Response;
 
 /**
  * Diese Aufzählung enthält die Codes für Fehler, die bei Datenbank-Operationen

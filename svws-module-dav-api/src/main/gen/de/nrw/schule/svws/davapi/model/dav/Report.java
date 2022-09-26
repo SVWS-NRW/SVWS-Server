@@ -10,7 +10,7 @@ package de.nrw.schule.svws.davapi.model.dav;
 
 import org.w3c.dom.Element;
 
-import javax.xml.bind.annotation.*;
+import jakarta.xml.bind.annotation.*;
 
 
 /**

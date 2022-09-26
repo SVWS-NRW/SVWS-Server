@@ -2,7 +2,7 @@ package de.nrw.schule.svws.core.data.schule;
 
 import java.util.Vector;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 import de.nrw.schule.svws.core.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
