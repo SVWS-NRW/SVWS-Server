@@ -8,7 +8,7 @@
 							<!-- Wenn sticky angewendet wird, verschwinden die  border border-[#7f7f7f]/20 s...  -->
 							<thead class="sticky top-0  bg-slate-100">
 								<tr>
-									<td class="border border-[#7f7f7f]/20 " colspan="3">
+									<td class="border border-[#7f7f7f]/20 " colspan="2">
 										Schülerzahl
 									</td>
 									<!-- Schülerzahlen -->
@@ -21,7 +21,7 @@
 									</td>
 								</tr>
 								<tr>
-									<td class="border border-[#7f7f7f]/20" colspan="3">Umwahlen</td>
+									<td class="border border-[#7f7f7f]/20" colspan="2">Umwahlen</td>
 									<!-- Umwahlen -->
 									<td
 										v-for="s in schienen"
@@ -32,7 +32,7 @@
 									</td>
 								</tr>
 								<tr>
-									<td class="border border-[#7f7f7f]/20" colspan="3">
+									<td class="border border-[#7f7f7f]/20" colspan="2">
 										Kollisionen
 									</td>
 									<!-- Kollisionen -->
