@@ -48,21 +48,21 @@ watch(() => modelValue, (newVal) => clickedRow.value = newVal);
   
 <template>
   <VTable
-ref="tableRef" :data="data" :selection-mode="isMultiSelect ? 'multiple' : null" :select-on-click="false"
+    ref="tableRef" :data="data" :selection-mode="isMultiSelect ? 'multiple' : null" :select-on-click="false"
     hide-sort-icons>
     <template #head="{ allRowsSelected, toggleAllRows }">
       <tr>
         <th v-if="isMultiSelect" class="w-1">
           <span class="table__head-content">
             <Checkbox
-v-if="isMultiSelect" :model-value="allRowsSelected"
+              v-if="isMultiSelect" :model-value="allRowsSelected"
               @update:model-value="proxyUpdate(toggleAllRows)" />
           </span>
         </th>
         <template v-for="(column, index) in columnsComputed" :key="`head-${index}`">
           <slot :name="`head-${column.key}`" :column="column">
             <VTh
-v-if="column.sortable" v-slot="{ sortOrder }" :sort-key="column.key"
+              v-if="column.sortable" v-slot="{ sortOrder }" :sort-key="column.key"
               :default-sort="column.defaultSort">
               <div>
                 <span>{{ column.label }}</span>
@@ -70,16 +70,10 @@ v-if="column.sortable" v-slot="{ sortOrder }" :sort-key="column.key"
                   <Icon v-show="sortOrder === 0">
                     <i-ri-arrow-up-down-line />
                   </Icon>
-                  <Icon
-v-show="
-                    sortOrder === 1
-                  ">
+                  <Icon v-show=" sortOrder === 1 ">
                     <i-ri-sort-asc />
                   </Icon>
-                  <Icon
-v-show="
-                    sortOrder === -1
-                  ">
+                  <Icon v-show=" sortOrder === -1 ">
                     <i-ri-sort-desc />
                   </Icon>
                 </span>

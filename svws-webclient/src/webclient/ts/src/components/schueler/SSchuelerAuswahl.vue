@@ -62,17 +62,13 @@
 		</template>
 		<template #content>
 			<div class="container">
-				<svws-ui-table
-					v-model:selected="selected"
-					:cols="cols"
-					:rows="rowsFiltered"
-					:footer="true"
-					:asc="true"
-					:multi-select="true"
-					:actions="actions"
-					@update:selected-items="updateSelectedItems"
-					@action="onAction"
-				>
+				<svws-ui-new-table
+					v-model="selected"
+					:data="rowsFiltered"
+					:columns="cols"
+					is-multi-select
+					>
+
 					<template #footer>
 						<button
 							class="flex h-10 w-10 items-center justify-center"
@@ -90,14 +86,14 @@
 							<svws-ui-icon><i-ri-more--2-line /></svws-ui-icon>
 						</button>
 					</template>
-				</svws-ui-table>
+				</svws-ui-new-table>
 			</div>
 		</template>
 	</svws-ui-secondary-menu>
 </template>
 
 <script setup lang="ts">
-	import { computed, ComputedRef, Ref, ref, WritableComputedRef } from "vue";
+	import { computed, ComputedRef, Ref, ref, watch, WritableComputedRef } from "vue";
 
 	import {
 		JahrgangsListeEintrag,
@@ -121,10 +117,10 @@
 	const filtered: Ref<boolean> = ref(false);
 	const search: Ref<string> = ref("");
 	const cols = [
-		{ id: "klasse", title: "Klasse", sortable: true },
-		{ id: "nachname", title: "Nachname", sortable: true },
-		{ id: "vorname", title: "Vorname", sortable: true }
-	];
+		{ key: "klasse", label: "Klasse", sortable: true },
+		{ key: "nachname", label: "Nachname", sortable: true },
+		{ key: "vorname", label: "Vorname", sortable: true }
+	]
 	const actions = [
 		{ label: "Löschen", action: "delete" },
 		{ label: "Kopieren", action: "copy" }

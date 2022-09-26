@@ -3,27 +3,27 @@
 	"description": "SVWS-Server-Projekt: UI-Komponenten",
 	"author": "MSB NRW",
 	"license": "BSD-3-Clause",
-	"version": "0.2.13",
-	"scripts": {
-		"format": "prettier --write ./src/main/ts ./*.config.js",
-		"build": "vite build && tsc --emitDeclarationOnly",
-		"dts": "vue-tsc --declaration --emitDeclarationOnly",
-		"lint:script": "eslint --ext .ts,vue --ignore-path .gitignore . --fix",
-		"lint-tsc": "vue-tsc --noEmit",
-		"story:dev": "histoire dev",
-		"story:build": "histoire build",
-		"story:preview": "histoire preview",
-		"check-licenses": "license-checker-rseidelsohn --summary --unknown --production"
-	},
-	"files": [
-		"dist"
-	],
-	"main": "./dist/svws-ui.umd.js",
-	"module": "./dist/svws-ui.mjs",
-	"types": "./dist/index.d.ts",
-	"dependencies": {
-		"@headlessui/vue": "^1.2.0",
-		"histoire": "0.10.7",
-		"vuejs-smart-table": "github:antony-k1208/vuejs-smart-table#next"
-	}
+	"version": "0.2.14",
+  "scripts": {
+    "format": "prettier --write ./src/main/ts ./*.config.js",
+    "build": "vite build && tsc --emitDeclarationOnly",
+    "dts": "vue-tsc --declaration --emitDeclarationOnly",
+    "lint:script": "eslint --ext .ts,vue --ignore-path .gitignore . --fix",
+    "lint-tsc": "vue-tsc --noEmit",
+    "story:dev": "histoire dev",
+    "story:build": "histoire build",
+    "story:preview": "histoire preview",
+    "check-licenses": "license-checker-rseidelsohn --summary --unknown --production"
+  },
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/svws-ui.umd.js",
+  "module": "./dist/svws-ui.mjs",
+  "types": "./dist/index.d.ts",
+  "dependencies": {
+    "@headlessui/vue": "^1.2.0",
+    "histoire": "0.10.7",
+    "vuejs-smart-table": "github:antony-k1208/vuejs-smart-table#next"
+  }
 }
