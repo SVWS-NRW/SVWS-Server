@@ -47,15 +47,18 @@
 											'table--row-selected':
 												blockung ===
 												selected_blockungauswahl
-										}" colspan="3" @click="selected_blockungauswahl = blockung">
-											{{ blockung.name }}
+											}" colspan="3" @click="selected_blockungauswahl = blockung">
 											<template v-if=" blockung === selected_blockungauswahl ">
-
-												<div class="float-right inline flex gap-1">
-													<svws-ui-button class="cursor-pointer" @click="create_blockung" size="small" >Ergebnisse berechnen</svws-ui-button >
-														<svws-ui-button size="small" type="danger" class="cursor-pointer" @click="remove_blockung">löschen </svws-ui-button>
+												<div class="float-left flex">
+													<span v-if="!edit_blockungsname">{{blockung.name}}</span>
+													<svws-ui-text-input v-else style="width: 10rem" v-model="blockung.name" headless/>
+													<svws-ui-icon class="cursor-pointer px-1" @click="edit_blockungsname = !edit_blockungsname"><i-ri-edit-line /></svws-ui-icon>
 												</div>
-												</template>
+												<div class="float-right flex gap-1">
+													<svws-ui-button class="cursor-pointer" @click="create_blockung" size="small" >Ergebnisse berechnen</svws-ui-button >
+													<svws-ui-button size="small" type="danger" class="cursor-pointer" @click="remove_blockung">löschen </svws-ui-button>
+												</div>
+											</template>
 										</td>
 									</tr>
 									<!-- Api-Status für das Halbjahr -->
@@ -141,7 +144,7 @@ const cols = [
 const wait: Ref<boolean> = ref(false);
 const halbjahre = GostHalbjahr.values();
 const hj_memo: Ref<number | undefined> = ref(undefined)
-
+const edit_blockungsname: Ref<boolean> = ref(false)
 
 const rows: ComputedRef<GostJahrgang[]> = computed(() => {
 	const list = [...app.auswahl.liste];
