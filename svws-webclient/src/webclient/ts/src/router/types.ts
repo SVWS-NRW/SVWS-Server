@@ -5,8 +5,8 @@ import type {
   KursListeEintrag,
   JahrgangsListeEintrag,
   FaecherListeEintrag,
-  ReligionEntrag
-} from '@svws-nrw/svws-api-ts'
+  ReligionEintrag
+} from '@svws-nrw/svws-core-ts'
 
 import type { Lehrer } from '../apps/lehrer/Lehrer'
 import type { Schueler } from '../apps/schueler/schueler'
@@ -34,7 +34,7 @@ export type RouteItemTypesMap = {
   kurse: KursListeEintrag
   jahrgaenge: JahrgangsListeEintrag
   faecher: FaecherListeEintrag
-  religionen: ReligionEntrag
+  religionen: ReligionEintrag
 }
 
 export type RouteNames = keyof RouteItemTypesMap
