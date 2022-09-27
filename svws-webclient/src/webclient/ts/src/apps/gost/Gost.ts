@@ -12,8 +12,8 @@ import { DataGostKursblockungsergebnis } from "./DataGostKursblockungsergebnis";
 import { ListKursblockungsergebnisse } from "./ListKursblockungsergebnisse";
 import { ListAbiturjahrgangSchueler } from "./ListAbiturjahrgangSchueler";
 import { DataSchuelerLaufbahndaten } from "./DataSchuelerLaufbahnplanung";
+import { FeedbackValues, ApiStatus } from "./userfeedback";
 import { reactive } from "vue";
-import { FeedbackValues, ApiStatus } from "~/components/gost/userfeedback.types";
 
 /**
  * Diese Klasse enthält den Abiturjahrgangsspezifischen Teil der gymnasialen

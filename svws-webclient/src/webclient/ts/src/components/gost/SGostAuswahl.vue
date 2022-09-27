@@ -10,8 +10,12 @@
 			<svws-ui-dropdown variant="secondary" class="float-right m-4">
 				<template #dropdownButton>Abiturjahr hinzufügen</template>
 				<template #dropdownItems>
-					<svws-ui-dropdown-item v-for="jahrgang in jahrgaenge" :key="jahrgang.id" class="px-2"
-						@click="abiturjahr_hinzufuegen(jahrgang)">{{ jahrgang.kuerzel }}</svws-ui-dropdown-item>
+					<svws-ui-dropdown-item
+						v-for="jahrgang in jahrgaenge"
+						:key="jahrgang.id"
+						class="px-2"
+						@click="abiturjahr_hinzufuegen(jahrgang)"
+					>{{ jahrgang.kuerzel }}</svws-ui-dropdown-item>
 				</template>
 			</svws-ui-dropdown>
 			<div v-if="main.config.kursblockung_aktiv.size && abiturjahr" class="container">
@@ -30,32 +34,39 @@
 					<tbody>
 						<template v-for="hj in halbjahre" :key="hj.id">
 							<tr class="table--row">
-								<td class="table--cell table--cell-padded table--border" :class="{
-									'table--row-selected':
-										hj === selected_hj
-								}" @click="selected_hj = hj">
+								<td
+									class="table--cell table--cell-padded table--border"
+									:class="{ 'table--row-selected': hj === selected_hj }"
+									@click="selected_hj = hj"
+								>
 									{{ hj.kuerzel }}
-									<svws-ui-button v-if="hj === selected_hj" size="small" type="primary"
-										class="float-right cursor-pointer" @click="blockung_hinzufuegen">Blockung hinzufügen</svws-ui-button>
+									<svws-ui-button
+										v-if="hj === selected_hj"
+										size="small"
+										type="primary"
+										class="float-right cursor-pointer"
+										@click="blockung_hinzufuegen"
+									>Blockung hinzufügen</svws-ui-button>
 								</td>
 							</tr>
 							<template v-if="hj === selected_hj && !wait">
 
 								<template v-for="blockung in rows_blockungsswahl" :key="blockung.id">
 									<tr class="table--row">
-										<td class="table--cell table--cell-padded table--border px-8" :class="{
-											'table--row-selected':
-												blockung ===
-												selected_blockungauswahl
-											}" colspan="3" @click="selected_blockungauswahl = blockung">
+										<td
+											class="table--cell table--cell-padded table--border px-8" 
+											:class="{ 'table--row-selected': blockung === selected_blockungauswahl }"
+											colspan="3"
+											@click="selected_blockungauswahl = blockung"
+											>
 											<template v-if=" blockung === selected_blockungauswahl ">
 												<div class="float-left flex">
 													<span v-if="!edit_blockungsname">{{blockung.name}}</span>
-													<svws-ui-text-input v-else style="width: 10rem" v-model="blockung.name" headless/>
+													<svws-ui-text-input v-else v-model="blockung.name" style="width: 10rem" headless @keyup.enter="patch_blockung(blockung)"/>
 													<svws-ui-icon class="cursor-pointer px-1" @click="edit_blockungsname = !edit_blockungsname"><i-ri-edit-line /></svws-ui-icon>
 												</div>
 												<div class="float-right flex gap-1">
-													<svws-ui-button class="cursor-pointer" @click="create_blockung" size="small" >Ergebnisse berechnen</svws-ui-button >
+													<svws-ui-button class="cursor-pointer" size="small" @click="create_blockung" >Ergebnisse berechnen</svws-ui-button >
 													<svws-ui-button size="small" type="danger" class="cursor-pointer" @click="remove_blockung">löschen </svws-ui-button>
 												</div>
 											</template>
@@ -83,13 +94,19 @@
 					<tbody>
 						<template v-for="ergebnis in rows_ergebnisse" :key="ergebnis.id">
 							<tr class="table--row">
-								<td class="table--cell table--cell-padded table--border" :class="{
-									'table--row-selected':
-										ergebnis === selected_ergebnis
-								}" @click="selected_ergebnis = ergebnis">
+								<td
+									class="table--cell table--cell-padded table--border"
+									:class="{ 'table--row-selected': ergebnis === selected_ergebnis }"
+									@click="selected_ergebnis = ergebnis"
+									>
 									{{ ergebnis.id }}
-									<svws-ui-button v-if="ergebnis === selected_ergebnis" size="small" type="danger"
-										class="float-right cursor-pointer" @click="remove_ergebnis">löschen</svws-ui-button>
+									<svws-ui-button
+										v-if="ergebnis === selected_ergebnis"
+										size="small"
+										type="danger"
+										class="float-right cursor-pointer"
+										@click="remove_ergebnis"
+										>löschen</svws-ui-button>
 								</td>
 							</tr>
 						</template>
@@ -256,7 +273,7 @@ async function abiturjahr_hinzufuegen(jahrgang: JahrgangsListeEintrag) {
 		console.log("Fehler: ", e);
 	}
 }
-		const create_blockung = async (): Promise<any> => {
+		const create_blockung = async (): Promise<void> => {
 			const halbjahresHashCode: number = app.blockungsauswahl.ausgewaehlt?.hashCode() ? app.blockungsauswahl.ausgewaehlt.hashCode() : -1;
 			const id = app.blockungsauswahl.ausgewaehlt?.id;
 			if (!id) return;
@@ -312,6 +329,11 @@ async function remove_ergebnis() {
 		app.blockungsauswahl.ausgewaehlt?.id
 	);
 	selected_ergebnis.value = app.blockungsergebnisauswahl.liste.at(-1);
+}
+
+async function patch_blockung(blockung: GostBlockungListeneintrag) {
+	await app.dataKursblockung.patch({name: blockung.name});
+	edit_blockungsname.value = false;
 }
 </script>
 
