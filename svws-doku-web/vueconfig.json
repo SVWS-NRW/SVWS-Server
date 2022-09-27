@@ -1,4 +1,0 @@
-// Helfer für VueDX, findet sonst die globalen Komponenten nicht
-{
-	"globalComponents": ["**/components/**/*.vue"]
-}
