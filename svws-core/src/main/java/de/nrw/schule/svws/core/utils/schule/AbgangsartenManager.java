@@ -142,6 +142,23 @@ public class AbgangsartenManager {
 		return this._mapDatenByID.get(id);
 	}
 
+	/**
+	 * Gibt den Katalog für allgemeinbildende Schulformen zurück.
+	 * 
+	 * @return der Katalog für allgemeinbildende Schulformen
+	 */
+	public @NotNull AbgangsartKatalog getKatalogAllgemeinbildend() {
+		return this._katalogAllgemein;
+	}
+	
+	/**
+	 * Gibt den Katalog für berufsbildende Schulformen zurück.
+	 * 
+	 * @return der Katalog für berufsbildende Schulformen
+	 */
+	public @NotNull AbgangsartKatalog getKatalogBerufsbildend() {
+		return this._katalogBeruf;
+	}
 
 	/**
 	 * Bestimmt den Allgemeinbildenden Abschluss der Abschlussart.
