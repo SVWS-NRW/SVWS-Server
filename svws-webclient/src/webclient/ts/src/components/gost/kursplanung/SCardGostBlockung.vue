@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-content-card title="Blockungen">
+	<svws-ui-content-card title="Übersicht über die Blockung / Festlegung von Regeln">
 		<div class="flex flex-row">
 			<div class="w-full flex-none sm:-mx-6 lg:-mx-8">
 				<div class="py-2 align-middle sm:px-6 lg:px-8">

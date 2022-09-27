@@ -29,6 +29,13 @@
 			</div>
 		</td>
 	</tr>
+	<svws-ui-modal ref="modal" size="small">
+		<template #modalTitle>Bitte wählen Sie</template>
+		<template #modalDescription>
+			<svws-ui-button>Ergebnisse löschen</svws-ui-button>
+			<svws-ui-button>Neue Blockung als Duplikat mit dieser Änderung anlegen</svws-ui-button>
+		</template>
+	</svws-ui-modal>
 </template>
 
 <script setup lang="ts">
@@ -37,7 +44,7 @@ import {
 	GostStatistikFachwahl,
 	GostStatistikFachwahlHalbjahr
 } from "@svws-nrw/svws-core-ts";
-import { computed, ComputedRef } from "vue";
+import { computed, ComputedRef, ref, Ref } from "vue";
 
 import { injectMainApp, Main } from "~/apps/Main";
 
@@ -54,6 +61,8 @@ const props = defineProps({
 
 const main: Main = injectMainApp();
 const app = main.apps.gost;
+
+const modal: Ref<any> = ref(null);
 
 const kursezaehler: ComputedRef<{ lk: number; gk: number; zk: number }> =
 	computed(() => {
@@ -78,11 +87,18 @@ const kursezaehler: ComputedRef<{ lk: number; gk: number; zk: number }> =
 async function add_kurs(art: "lk" | "gk" | "zk") {
 	const nr = art === "lk" ? 1 : art === "gk" ? 2 : 3;
 	await app.dataKursblockung.add_blockung_kurse(props.fach.id, nr)
+	if (app.blockungsergebnisauswahl.liste) toggle_modal()
 }
 async function del_kurs(art: "lk" | "gk" | "zk") {
 	const nr = art === "lk" ? 1 : art === "gk" ? 2 : 3;
 	await app.dataKursblockung.del_blockung_kurse(props.fach.id, nr)
+	if (app.blockungsergebnisauswahl.liste) toggle_modal()
 }
+
+function toggle_modal() {
+	modal.value.isOpen ? modal.value.closeModal() : modal.value.openModal()
+};
+
 const daten: ComputedRef<GostBlockungsdaten> = computed(() => {
 	return app.dataKursblockung.daten || new GostBlockungsdaten();
 });

@@ -89,24 +89,52 @@
 									</span>
 								</div>
 							</td>
+							<td class="table--cell table--cell-padded">
+								<div class="table--header-col">
+									<span class="table--header-col--text">
+										Umwähler
+									</span>
+								</div>
+							</td>
+							<td class="table--cell table--cell-padded">
+								<div class="table--header-col">
+									<span class="table--header-col--text">
+										Bewertungen
+									</span>
+								</div>
+							</td>
 						</tr>
 					</thead>
 					<tbody>
 						<template v-for="ergebnis in rows_ergebnisse" :key="ergebnis.id">
-							<tr class="table--row">
-								<td
-									class="table--cell table--cell-padded table--border"
-									:class="{ 'table--row-selected': ergebnis === selected_ergebnis }"
-									@click="selected_ergebnis = ergebnis"
-									>
-									{{ ergebnis.id }}
-									<svws-ui-button
-										v-if="ergebnis === selected_ergebnis"
-										size="small"
-										type="danger"
-										class="float-right cursor-pointer"
-										@click="remove_ergebnis"
-										>löschen</svws-ui-button>
+							<tr 
+								class="table--row"
+								:class="{ 'table--row-selected': ergebnis === selected_ergebnis }"
+								@click="selected_ergebnis = ergebnis"
+							>
+								<td class="table--cell table--cell-padded table--border" >
+										{{ ergebnis.id }}
+								</td>
+								<td class="table--cell table--cell-padded table--border flex" >
+									<span
+												class="inline-flex"
+												:class="{
+													'bg-green-300': ergebnis.anzahlUmwaehler === 0,
+													'bg-yellow-300': ergebnis.anzahlUmwaehler <= 10,
+													'bg-red-300': ergebnis.anzahlUmwaehler > 10
+												}"
+												>
+												<svws-ui-icon><i-ri-group-line/></svws-ui-icon>{{ergebnis.anzahlUmwaehler}}
+											</span>
+								</td>
+								<td class="table--cell table--cell-padded table--border" >
+											<svws-ui-button
+											v-if="ergebnis === selected_ergebnis"
+											size="small"
+											type="danger"
+											class="float-right cursor-pointer"
+											@click="remove_ergebnis"
+											>löschen</svws-ui-button>
 								</td>
 							</tr>
 						</template>

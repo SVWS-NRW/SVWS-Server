@@ -1,12 +1,5 @@
 <template>
-	<svws-ui-content-card
-		:title="
-			'Kursplanung für den Jahrgang: ' +
-				bezeichnung +
-				' – ' +
-				kursauswahl?.name || 'keine Auswahl'
-		"
-	>
+	<svws-ui-content-card title="Festlegung der Anzahl von Kursen" >
 		<div class="flex flex-row">
 			<div class="w-full flex-none sm:-mx-6 lg:-mx-8">
 				<div class="py-2 align-middle sm:px-6 lg:px-8">
@@ -87,8 +80,6 @@
 	} from "@svws-nrw/svws-core-ts";
 		   // import { SvwsUiModal } from "@svws-nrw/svws-ui";
 		import { computed, ComputedRef, Ref, ref } from "vue";
-		import { GOST_CREATE_BLOCKUNG_SYMBOL } from "~/apps/core/LoadingSymbols";
-
 		import { injectMainApp, Main } from "~/apps/Main";
 
 				const main: Main = injectMainApp();
