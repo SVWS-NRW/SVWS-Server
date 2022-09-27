@@ -74,8 +74,45 @@ public class TestCoreTypesStatkue {
     @Test
     @DisplayName("Teste den Typ Schulgliederung")
     void testSchulgliederung() {
+    	if (Schulgliederung.get(Schulform.G).size() <= 0)
+    		fail("Keine Schulgliederungen für die Schulform G gefunden.");
+    	if (Schulgliederung.get(Schulform.H).size() <= 0)
+    		fail("Keine Schulgliederungen für die Schulform H gefunden.");
+    	if (Schulgliederung.get(Schulform.V).size() <= 0)
+    		fail("Keine Schulgliederungen für die Schulform V gefunden.");
+    	if (Schulgliederung.get(Schulform.S).size() <= 0)
+    		fail("Keine Schulgliederungen für die Schulform S gefunden.");
+    	if (Schulgliederung.get(Schulform.PS).size() <= 0)
+    		fail("Keine Schulgliederungen für die Schulform PS gefunden.");
+    	if (Schulgliederung.get(Schulform.SK).size() <= 0)
+    		fail("Keine Schulgliederungen für die Schulform SK gefunden.");
+    	if (Schulgliederung.get(Schulform.R).size() <= 0)
+    		fail("Keine Schulgliederungen für die Schulform R gefunden.");
+    	if (Schulgliederung.get(Schulform.GE).size() <= 0)
+    		fail("Keine Schulgliederungen für die Schulform GE gefunden.");
+    	if (Schulgliederung.get(Schulform.GM).size() <= 0)
+    		fail("Keine Schulgliederungen für die Schulform GM gefunden.");
+    	if (Schulgliederung.get(Schulform.FW).size() <= 0)
+    		fail("Keine Schulgliederungen für die Schulform FW gefunden.");
+    	if (Schulgliederung.get(Schulform.HI).size() <= 0)
+    		fail("Keine Schulgliederungen für die Schulform HI gefunden.");
+    	if (Schulgliederung.get(Schulform.WF).size() <= 0)
+    		fail("Keine Schulgliederungen für die Schulform WF gefunden.");
     	if (Schulgliederung.get(Schulform.GY).size() <= 0)
     		fail("Keine Schulgliederungen für die Schulform GY gefunden.");
+    	if (Schulgliederung.get(Schulform.WB).size() <= 0)
+    		fail("Keine Schulgliederungen für die Schulform WB gefunden.");
+    	if (Schulgliederung.get(Schulform.BK).size() <= 0)
+    		fail("Keine Schulgliederungen für die Schulform BK gefunden.");
+    	if (Schulgliederung.get(Schulform.KS).size() <= 0)
+    		fail("Keine Schulgliederungen für die Schulform KS gefunden.");
+    	if (Schulgliederung.get(Schulform.SR).size() <= 0)
+    		fail("Keine Schulgliederungen für die Schulform SR gefunden.");
+    	if (Schulgliederung.get(Schulform.SG).size() <= 0)
+    		fail("Keine Schulgliederungen für die Schulform SG gefunden.");
+    	if (Schulgliederung.get(Schulform.SB).size() <= 0)
+    		fail("Keine Schulgliederungen für die Schulform GB gefunden.");
+    	
     }
     
 }
