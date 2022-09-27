@@ -11,7 +11,7 @@ import de.nrw.schule.svws.core.types.schule.SchulabschlussBerufsbildend;
 import de.nrw.schule.svws.core.utils.schule.AbgangsartenManager;
 
 /**
- * Diese Klasse testet die einzelnen Katalog, welche im DB-Projekt als
+ * Diese Klasse testet die einzelnen Kataloge, welche im DB-Projekt als
  * JSON-Dateien hinterlegt sind. Hierbei werden die Daten auch vereinzelt
  * auf Korrektheit geprüft.
  */
@@ -19,7 +19,7 @@ public class TestJSONData {
 	
 	/**
 	 * Prüft die Einträge der beiden Kataloge für die Abgangsarten
-	 * bei allgemeinbildenden bzw. berifsbildenden Schulformen.
+	 * bei allgemeinbildenden bzw. berufsbildenden Schulformen.
 	 */
 	@Test
 	@DisplayName("Prüfe AbgangsartenAllgemeinbildend.json und AbgangsartenBerufsbildend.json")
