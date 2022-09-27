@@ -150,6 +150,7 @@ export class ENMDatenManager extends JavaObject {
 		let enmSchueler : ENMSchueler = new ENMSchueler();
 		enmSchueler.id = id;
 		enmSchueler.jahrgangID = jahrgangID;
+		enmSchueler.klasseID = klasseID;
 		enmSchueler.nachname = nachname;
 		enmSchueler.vorname = vorname;
 		enmSchueler.geschlecht = geschlecht.kuerzel;

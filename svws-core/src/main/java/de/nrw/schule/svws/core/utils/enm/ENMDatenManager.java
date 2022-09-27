@@ -159,6 +159,7 @@ public class ENMDatenManager {
 		@NotNull ENMSchueler enmSchueler = new ENMSchueler();
 		enmSchueler.id = id; 
 		enmSchueler.jahrgangID = jahrgangID;
+		enmSchueler.klasseID = klasseID;
 		enmSchueler.nachname = nachname;
 		enmSchueler.vorname = vorname;
 		enmSchueler.geschlecht = geschlecht.kuerzel;
