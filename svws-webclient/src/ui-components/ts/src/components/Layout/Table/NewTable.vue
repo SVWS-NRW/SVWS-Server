@@ -22,28 +22,27 @@ const emit = defineEmits<{
   (e: 'update:modelValue', selection: DataTableItem): void
   (e: 'update:selection', selection: Array<DataTableItem>): void
 }>();
-
 const { columnsComputed } = useColumns(data, columns);
 const tableRef = ref();
-const clickedRow = ref(modelValue);
+// const clickedRow = ref(modelValue);
 
 function proxyUpdate(tableFn: () => void) {
   tableFn();
   emit('update:selection', tableRef.value?.tableState?.selectedRows ?? []);
 }
 
-function updateClickedRow(row: DataTableItem) {
-  if(clickedRow.value === row) {
-    clickedRow.value = {};
-  } else {
-    clickedRow.value = row;
-  }
-  emit('update:modelValue', clickedRow.value);
-}
+// function updateClickedRow(row: DataTableItem) {
+//   if(clickedRow.value === row) {
+//     clickedRow.value = {};
+//   } else {
+//     clickedRow.value = row;
+//   }
+//   emit('update:modelValue', clickedRow.value);
+// }
 
 onMounted(() => tableRef.value.selectRows(selection));
 watch(() => selection, (newVal) => tableRef.value.selectRows(newVal));
-watch(() => modelValue, (newVal) => clickedRow.value = newVal);
+// watch(() => modelValue, (newVal) => clickedRow.value = newVal);
 </script>
   
 <template>
@@ -85,7 +84,7 @@ watch(() => modelValue, (newVal) => clickedRow.value = newVal);
       </tr>
     </template>
     <template #body="{ rows }">
-      <VTr v-for="(row, index) in rows" :key="`row-${index}`" v-slot="{ isSelected, toggle }" :row="row" :class="{'vt-clicked': row === clickedRow}" @click="updateClickedRow(row)">
+      <VTr v-for="(row, index) in rows" :key="`row-${index}`" v-slot="{ isSelected, toggle }" :row="row" :class="{'vt-clicked': row.id === modelValue.id}" @click="emit('update:modelValue', row)">
         <td v-if="isMultiSelect">
           <span class="table__cell-content">
             <Checkbox :model-value="isSelected === row" @click.stop @update:model-value="proxyUpdate(toggle)" />
