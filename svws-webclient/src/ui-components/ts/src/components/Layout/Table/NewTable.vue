@@ -9,13 +9,15 @@ const {
   modelValue = {},
   selection = [],
   footer = false,
+  id = undefined
 } = defineProps<{
   data: Array<DataTableItem>,
   columns?: Array<DataTableColumn>,
   isMultiSelect?: boolean,
   selection?: Array<DataTableItem>,
   modelValue?: DataTableItem,
-  footer?: boolean
+  footer?: boolean,
+  id?: keyof DataTableColumn
 }>();
 
 const emit = defineEmits<{
@@ -29,6 +31,13 @@ const tableRef = ref();
 function proxyUpdate(tableFn: () => void) {
   tableFn();
   emit('update:selection', tableRef.value?.tableState?.selectedRows ?? []);
+}
+
+/** prüft, ob ein Attribut zum Vergleich mitgegeben wurde, ob `id` vorhanden ist oder die beiden Objekte gleich sind */
+function check_same(row: DataTableItem): boolean {
+  if (id) return row[id] === modelValue[id]
+  else if (row.id) return row.id === modelValue.id
+  else return row === modelValue
 }
 
 // function updateClickedRow(row: DataTableItem) {
@@ -84,7 +93,7 @@ watch(() => selection, (newVal) => tableRef.value.selectRows(newVal));
       </tr>
     </template>
     <template #body="{ rows }">
-      <VTr v-for="(row, index) in rows" :key="`row-${index}`" v-slot="{ isSelected, toggle }" :row="row" :class="{'vt-clicked': row.id === modelValue.id}" @click="emit('update:modelValue', row)">
+      <VTr v-for="(row, index) in rows" :key="`row-${index}`" v-slot="{ isSelected, toggle }" :row="row" :class="{'vt-clicked': check_same(row)}" @click="emit('update:modelValue', row)">
         <td v-if="isMultiSelect">
           <span class="table__cell-content">
             <Checkbox :model-value="isSelected === row" @click.stop @update:model-value="proxyUpdate(toggle)" />
