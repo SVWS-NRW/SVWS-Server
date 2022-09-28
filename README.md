@@ -11,7 +11,7 @@ Für weitere Informationen bitte dem Link zum [WIKI](https://schulverwaltungsinf
 
 Des Weitern finden Sie hier die [Dokumentation](https://git.svws-nrw.de/svws/SVWS-Server/-/wikis/home) des Repositories.  
 
-Beispiel Installation der Entwicklungsumgebung in Eclipse: [REAMDME_Eclipse](REAMDME_Eclipse.md).
+Beispiel Installation der Entwicklungsumgebung in Eclipse: [README_Eclipse](README_Eclipse.md).
 
 
 Aufruf des Lizenzchecks in UI- und Webclient-Ordner:  
