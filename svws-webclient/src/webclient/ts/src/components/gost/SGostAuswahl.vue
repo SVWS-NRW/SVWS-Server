@@ -61,7 +61,7 @@
 											<template v-if=" blockung === selected_blockungauswahl ">
 												<div class="float-left flex">
 													<span v-if="!edit_blockungsname" class="px-3 underline decoration-dashed underline-offset-2 cursor-text">{{blockung.name}}</span>
-													<svws-ui-text-input v-else v-model="blockung.name" style="width: 10rem" headless @keyup.enter="edit_blockungsname=false" @input="patch_blockung(blockung)"/>
+													<svws-ui-text-input v-else v-model="blockung.name" style="width: 10rem" headless focus @keyup.enter="edit_blockungsname=false" @input="patch_blockung(blockung)"/>
 												</div>
 												<div class="float-right flex gap-1">
 													<svws-ui-button class="cursor-pointer" size="small" @click="create_blockung" >Ergebnisse berechnen</svws-ui-button >

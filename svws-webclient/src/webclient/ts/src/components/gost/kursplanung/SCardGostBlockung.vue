@@ -53,7 +53,12 @@
 										:key="s.id"
 										class="border border-[#7f7f7f]/20 text-center"
 									>
-										{{ s.bezeichnung }}
+									<template v-if=" s === edit_schienenname ">
+										<svws-ui-text-input v-model="s.bezeichnung" focus style="width: 6rem" headless @keyup.enter="edit_schienenname=undefined" @input="patch_schiene(s)"/>
+									</template>
+									<template v-else>
+										<span class="px-3 underline decoration-dashed underline-offset-2 cursor-text" @click="edit_schienenname = s">{{s.bezeichnung}}</span>
+									</template>
 										<i-ri-lock-line
 											v-if="false"
 											class="inline-block text-red-700"
@@ -90,16 +95,17 @@
 		GostBlockungSchiene,
 		GostBlockungsergebnisKurs,
 		GostBlockungsergebnisManager,
-		GostBlockungsergebnisSchiene,
 		Vector
 	} from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef } from "vue";
+	import { computed, ComputedRef, Ref, ref } from "vue";
 
 	import { injectMainApp, Main } from "~/apps/Main";
 
 
 	const main: Main = injectMainApp();
 	const app = main.apps.gost
+
+	const edit_schienenname: Ref<GostBlockungSchiene|undefined> = ref()
 
 	const bezeichnung: ComputedRef<string | undefined> = computed(() => {
 		return app.auswahl.ausgewaehlt?.bezeichnung?.toString();
@@ -154,4 +160,8 @@
 	function getAnzahlKollisionenSchiene(idSchiene: number): number {
 		return manager.value?.getAnzahlKollisionenSchiene(idSchiene) || 0;
 	};
+
+	async function patch_schiene(schiene: GostBlockungSchiene) {
+		await app.dataKursblockung.patch_schiene(schiene);
+	}
 </script>

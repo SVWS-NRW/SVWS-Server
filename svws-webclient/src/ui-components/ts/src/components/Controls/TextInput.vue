@@ -1,4 +1,6 @@
 <script setup lang='ts'>
+import { InputHTMLAttributes } from 'vue';
+
 type InputType = 'text' | 'number' | 'date' | 'email';
 
 const {
@@ -10,7 +12,8 @@ const {
 	disabled = false,
 	required = false,
 	readonly = false,
-	headless = false
+	headless = false,
+	focus = false
 } = defineProps<{
 	type?: InputType;
 	modelValue: string | number;
@@ -21,6 +24,7 @@ const {
 	required?: boolean;
 	readonly?: boolean;
 	headless?: boolean;
+	focus?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -36,6 +40,11 @@ const slots = useSlots();
 
 const input = ref<null | HTMLElement>(null);
 const focused = ref(false);
+
+const vFocus = {
+  mounted: (el: HTMLInputElement) => { if (focus) el.focus() }
+}
+
 const emailValid = computed(() => {
 	if (type !== "email" || !modelValue) return true;
 	else {
@@ -96,7 +105,7 @@ defineExpose({
 		'text-input--icon': hasIcon,
 		'text-input--statistics': statistics
 	}">
-		<input ref="input" :class="{
+		<input ref="input" v-focus :class="{
 			'text-input--control': !headless,
 			'text-input--headless': headless
 		}" :type="type" :value="modelValue" :disabled="disabled" :required="required" :readonly="readonly" @input="onInput"
