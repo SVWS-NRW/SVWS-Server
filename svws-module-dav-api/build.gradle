@@ -20,11 +20,13 @@ javadoc {
 eclipse {
     classpath {
         file.whenMerged { cp ->
-            cp.entries.add( new org.gradle.plugins.ide.eclipse.model.SourceFolder('src/main/gen', null) )
+            def src = new org.gradle.plugins.ide.eclipse.model.SourceFolder('src/main/gen', null)
+            //deactivate optional warnings in eclipse for this source folder
+            src.entryAttributes.put("ignore_optional_problems", "true")
+            cp.entries.add( src )
         }
     }
 }
-//TODO setting für classpath in eclipse fehlt
 
 compileJava.dependsOn(":svws-db:assemble")
 compileJava.dependsOn(":svws-db-utils:assemble")

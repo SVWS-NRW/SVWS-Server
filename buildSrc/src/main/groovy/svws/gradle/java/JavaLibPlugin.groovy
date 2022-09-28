@@ -1,5 +1,6 @@
 package svws.gradle.java;
 
+import org.gradle.api.GradleException
 import org.gradle.api.Plugin 
 import org.gradle.api.Project 
 import org.gradle.api.tasks.Exec 
@@ -127,6 +128,27 @@ class JavaLibPlugin implements Plugin<Project> {
 		project.dependencies.add('validation', 'jakarta.validation:jakarta.validation-api:' + version);
     }
 
+	void addGithubActor() {
+		project.ext.getGithubActor = { ->
+			if (project.hasProperty('github_actor'))
+				return project.github_actor;
+			def username = System.getenv("GITHUB_ACTOR")
+			if (username != null)
+				return username;
+			throw new GradleException('Fehler: Der Github-Benutzer wurde weder in USERHOME/.gradle/gradle.properties als github_actor, noch als Umgebungsvariable GITHUB_ACTOR festgelegt!')
+		}
+	}
+
+	void addGithubToken() {
+		project.ext.getGithubToken = { ->
+			if (project.hasProperty('github_token'))
+				return project.github_token;
+			def token = System.getenv("GITHUB_TOKEN")
+			if (token != null)
+				return token;
+			throw new GradleException('Fehler: Der Github-Token wurde weder in USERHOME/.gradle/gradle.properties als github_token, noch als Umgebungsvariable GITHUB_TOKEN festgelegt!')
+		}
+	}
 
   	void apply(Project project) {
     	this.project = project;
@@ -155,6 +177,8 @@ class JavaLibPlugin implements Plugin<Project> {
 		this.addRestEasyConfiguration();
 		this.addSwagger();
 		this.addValidation();
+		this.addGithubActor();
+		this.addGithubToken();
     }
     
 }

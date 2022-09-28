@@ -12,25 +12,6 @@ String os = OperatingSystem.current().isMacOsX()
 println "*** OS-Version: $osName $osVersion was detected. (MacOS: $os)"
 println "*** Gradle Version: $gradle.gradleVersion"
 
-ext.getGithubActor = { ->
-    if (properties.containsKey('github_actor'))
-		return github_actor;
-	def username = System.getenv("GITHUB_ACTOR")
-	if (username != null)
-		return username;
-	throw new GradleException('Fehler: Der Github benutzer wurde weder in USERHOME/.gradle/gradle.properties als github_actor, noch als Umgebungsvariable GITHUB_ACTOR festgelegt!')
-}
-
-ext.getGithubToken = { ->
-    if (properties.containsKey('github_token'))
-		return github_token;
-	def token = System.getenv("GITHUB_TOKEN")
-	if (token != null)
-		return token;
-	throw new GradleException('Fehler: Der Github-Token wurde weder in USERHOME/.gradle/gradle.properties als github_token, noch als Umgebungsvariable GITHUB_TOKEN festgelegt!')
-}
-
-
 wrapper {
     description "Regenerates the Gradle Wrapper files"
     gradleVersion = '7.4.2'
@@ -47,7 +28,7 @@ allprojects {
 
 	version = '0.2.14'
 	group = 'de.nrw.schule.svws'
-	
+
     repositories {
         mavenCentral()
         maven {
@@ -57,16 +38,16 @@ allprojects {
 	        	username = getGithubActor()
 	            password = getGithubToken()
 	        }
-	    }        
+	    }
 	}
-	
+
 	java {
 	    withJavadocJar()
-	    withSourcesJar()	
+	    withSourcesJar()
 	}
 
 	javadoc {
-		options.encoding = 'UTF-8' 
+		options.encoding = 'UTF-8'
 		options.charSet = 'UTF-8'
 		options.docEncoding = 'UTF-8'
 	    options.addStringOption('Xmaxerrs', '10000')
@@ -81,7 +62,7 @@ allprojects {
 	    s = s.replaceAll('\n{2,}', '\n')
 	    file.text = s + key + '=' + value + '\n'
 	}
-	
+
 	project.ext.setEclipsePreference = { File prefsFile, String key, String value ->
 	    if (!prefsFile.exists()) {
 	        prefsFile.parentFile.mkdirs()
@@ -89,22 +70,22 @@ allprojects {
 	    }
 	    setProperty(prefsFile, key, value)
 	}
-	
+
 	eclipse {
 		project {
-        	file { 
+        	file {
         		beforeMerged { gp ->
 					setEclipsePreference(file('.settings/org.eclipse.core.resources.prefs'), 'encoding/<project>', 'UTF-8')
 					setEclipsePreference(file('.settings/org.eclipse.core.runtime.prefs'), 'line.separator', '\\n')
 				}
-        	}			
+        	}
 		}
 	}
-	
+
 	// create javadoc task for test code
 	task testJavadoc(type: Javadoc) {
-		group = 'documentation'	  
-		options.encoding = 'UTF-8' 
+		group = 'documentation'
+		options.encoding = 'UTF-8'
 		options.charSet = 'UTF-8'
 		options.docEncoding = 'UTF-8'
 	    options.addStringOption('Xmaxerrs', '10000')
@@ -116,16 +97,16 @@ allprojects {
 		classpath = sourceSets.test.compileClasspath
 		destinationDir = file("${buildDir}/docs/testjavadoc")
 	}
-	
+
 	javadoc.dependsOn testJavadoc
-	
+
 /* TODO Support JPMS-Modules
 	plugins.withType(JavaPlugin).configureEach {
         java {
             modularity.inferModulePath = true
         }
     }
-*/    
+*/
 
 	test {
 	    useJUnitPlatform()
@@ -138,7 +119,7 @@ allprojects {
 			configurations.default.each { println it }
 		}
 	}
-	
+
 }
 
 task rebuild(type: GradleBuild) {
@@ -155,23 +136,23 @@ task wipe() {
 
 task assembleServer() {
 	dependsOn(':svws-server-app:assemble')
-	group "build"	
+	group "build"
 }
 
 task buildServer() {
 	dependsOn(':svws-server-app:build')
-	group "build"	
+	group "build"
 }
 
 
 task assembleTS() {
 	dependsOn(':svws-webclient:assemble')
-	group "build"	
+	group "build"
 }
 
 task buildTS() {
 	dependsOn(':svws-webclient:build')
-	group "build"	
+	group "build"
 }
 
 
