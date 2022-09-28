@@ -50,7 +50,6 @@
 								</td>
 							</tr>
 							<template v-if="hj === selected_hj && !wait">
-
 								<template v-for="blockung in rows_blockungsswahl" :key="blockung.id">
 									<tr class="table--row">
 										<td
@@ -59,12 +58,12 @@
 											colspan="3"
 											@click="selected_blockungauswahl = blockung"
 											>
+											<div class="float-left flex">
+												<span v-if="!edit_blockungsname">{{blockung.name}}</span>
+												<svws-ui-text-input v-else v-model="blockung.name" style="width: 10rem" headless @keyup.enter="patch_blockung(blockung)"/>
+												<svws-ui-icon class="cursor-pointer px-1" @click="edit_blockungsname = !edit_blockungsname"><i-ri-edit-line /></svws-ui-icon>
+											</div>
 											<template v-if=" blockung === selected_blockungauswahl ">
-												<div class="float-left flex">
-													<span v-if="!edit_blockungsname">{{blockung.name}}</span>
-													<svws-ui-text-input v-else v-model="blockung.name" style="width: 10rem" headless @keyup.enter="patch_blockung(blockung)"/>
-													<svws-ui-icon class="cursor-pointer px-1" @click="edit_blockungsname = !edit_blockungsname"><i-ri-edit-line /></svws-ui-icon>
-												</div>
 												<div class="float-right flex gap-1">
 													<svws-ui-button class="cursor-pointer" size="small" @click="create_blockung" >Ergebnisse berechnen</svws-ui-button >
 													<svws-ui-button size="small" type="danger" class="cursor-pointer" @click="remove_blockung">löschen </svws-ui-button>

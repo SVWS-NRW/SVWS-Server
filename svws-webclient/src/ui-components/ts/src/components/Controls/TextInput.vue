@@ -86,8 +86,7 @@ defineExpose({
 </script>
 	
 <template>
-	<label
-class="text-input-component" :class="{
+	<label class="text-input-component" :class="{
 		'text-input-focus': focused,
 		'text-input-filled':
 			!!modelValue || (type === 'number' && modelValue === '0'),
@@ -97,14 +96,12 @@ class="text-input-component" :class="{
 		'text-input--icon': hasIcon,
 		'text-input--statistics': statistics
 	}">
-		<input
-ref="input" :class="{
+		<input ref="input" :class="{
 			'text-input--control': !headless,
 			'text-input--headless': headless
 		}" :type="type" :value="modelValue" :disabled="disabled" :required="required" :readonly="readonly" @input="onInput"
 			@focus="onFocus" @blur="onBlur" @click="onClick" @mousedown="onMouseDown" @keydown="onKeyDown" />
-		<span
-v-if="placeholder && !headless" class="text-input--placeholder" :class="{
+		<span v-if="placeholder && !headless" class="text-input--placeholder" :class="{
 			'text-input--placeholder--required': required
 		}">
 			{{ placeholder }}
@@ -261,6 +258,6 @@ v-if="placeholder && !headless" class="text-input--placeholder" :class="{
 }
 
 .text-input--headless {
-	@apply bg-white w-full text-black whitespace-nowrap outline-none border-0 px-3;
+	@apply bg-white w-full text-black whitespace-nowrap outline-none border-0 px-3 underline decoration-dashed underline-offset-2;
 }
 </style>
