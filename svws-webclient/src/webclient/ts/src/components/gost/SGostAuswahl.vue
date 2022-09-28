@@ -60,7 +60,7 @@
 											>
 											<template v-if=" blockung === selected_blockungauswahl ">
 												<div class="float-left flex">
-													<span v-if="!edit_blockungsname" class="px-3 underline decoration-dashed underline-offset-2">{{blockung.name}}</span>
+													<span v-if="!edit_blockungsname" class="px-3 underline decoration-dashed underline-offset-2 cursor-text">{{blockung.name}}</span>
 													<svws-ui-text-input v-else v-model="blockung.name" style="width: 10rem" headless @keyup.enter="edit_blockungsname=false" @input="patch_blockung(blockung)"/>
 												</div>
 												<div class="float-right flex gap-1">
@@ -372,14 +372,13 @@ async function remove_ergebnis() {
 
 async function derive_blockung() {
 	if (!selected_ergebnis.value) return;
-	await App.api.deriveGostBlockungsergebnis(
+	const blockungsdaten = await App.api.dupliziereGostBlockungMitErgebnis(
 		App.schema,
 		selected_ergebnis.value.id
 	);
-	await app.blockungsergebnisauswahl.update_list(
-		app.blockungsauswahl.ausgewaehlt?.id
-	);
-	selected_ergebnis.value = app.blockungsergebnisauswahl.liste.at(-1);
+	const abiturjahr = selected.value?.abiturjahr?.valueOf() || -1;
+	await app.blockungsauswahl.update_list(abiturjahr, selected_hj.value.id);
+	app.blockungsauswahl.select_by_id(blockungsdaten.id)
 }
 async function patch_blockung(blockung: GostBlockungListeneintrag) {
 	await app.dataKursblockung.patch({name: blockung.name});

@@ -56,4 +56,9 @@ export class ListKursblockungen extends BaseList<GostBlockungListeneintrag> {
 			this.ausgewaehlt?.id
 		);
 	}
+
+	public select_by_id(id: number): void {
+		const blockung = this.liste.find(e=>e.id === id)
+		this.ausgewaehlt = blockung
+	}
 }
