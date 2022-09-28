@@ -7,9 +7,13 @@ Unittesting
 
 
 Das Projekt zur Schaffung einer Open:API-Schnittstelle für die Schulverwaltung NRW. 
-Für weitere Informationen bitte dem Link zum WIKI folgen.
 
+
+Für weitere Informationen bitte dem Link zum WIKI folgen.
 https://schulverwaltungsinfos.nrw.de/svws/wiki/index.php?title=Hauptseite
+
+![Dokumentation des Repositories](https://git.svws-nrw.de/svws/SVWS-Server/-/wikis/home)
+
 
 
 Aufruf des Lizenzchecks in UI- und Webclient-Ordner:
