@@ -9,7 +9,9 @@ Ziel des Projekts ist die Schaffung einer Open:API-Schnittstelle für die Schulv
 
 Für weitere Informationen bitte dem Link zum [WIKI](https://schulverwaltungsinfos.nrw.de/svws/wiki/index.php?title=Hauptseite) folgen.  
 
-Des Weitern finden Sie hier die [Dokumentation](https://git.svws-nrw.de/svws/SVWS-Server/-/wikis/home) des Repositories.
+Des Weitern finden Sie hier die [Dokumentation](https://git.svws-nrw.de/svws/SVWS-Server/-/wikis/home) des Repositories.  
+
+Beispiel Installation der Entwicklungsumgebung in Eclipse: [REAMDME_Eclipse](REAMDME_Eclipse.md).
 
 
 Aufruf des Lizenzchecks in UI- und Webclient-Ordner:  
