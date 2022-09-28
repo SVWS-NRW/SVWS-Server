@@ -53,12 +53,12 @@
 								<template v-for="blockung in rows_blockungsswahl" :key="blockung.id">
 									<tr class="table--row">
 										<td
-											class="table--cell table--cell-padded table--border px-8" 
+											class="table--cell table--cell-padded table--border" 
 											:class="{ 'table--row-selected': blockung === selected_blockungauswahl }"
 											colspan="3"
 											@click="selected_blockungauswahl = blockung"
 											>
-											<div class="float-left flex">
+											<div class="float-left flex px-4">
 												<span v-if="!edit_blockungsname">{{blockung.name}}</span>
 												<svws-ui-text-input v-else v-model="blockung.name" style="width: 10rem" headless @keyup.enter="patch_blockung(blockung)"/>
 												<svws-ui-icon class="cursor-pointer px-1" @click="edit_blockungsname = !edit_blockungsname"><i-ri-edit-line /></svws-ui-icon>
@@ -127,13 +127,20 @@
 											</span>
 								</td>
 								<td class="table--cell table--cell-padded table--border" >
-											<svws-ui-button
-											v-if="ergebnis === selected_ergebnis"
-											size="small"
-											type="danger"
-											class="float-right cursor-pointer"
-											@click="remove_ergebnis"
-											>löschen</svws-ui-button>
+									<div v-if="ergebnis === selected_ergebnis" class="flex gap-1 float-right ">
+										<svws-ui-button
+										size="small"
+										type="primary"
+										class="cursor-pointer"
+										@click="derive_blockung"
+										>Blockung ableiten</svws-ui-button>
+										<svws-ui-button
+										size="small"
+										type="danger"
+										class="cursor-pointer"
+										@click="remove_ergebnis"
+										>löschen</svws-ui-button>
+									</div>
 								</td>
 							</tr>
 						</template>
@@ -358,6 +365,17 @@ async function remove_ergebnis() {
 	selected_ergebnis.value = app.blockungsergebnisauswahl.liste.at(-1);
 }
 
+async function derive_blockung() {
+	if (!selected_ergebnis.value) return;
+	await App.api.deriveGostBlockungsergebnis(
+		App.schema,
+		selected_ergebnis.value.id
+	);
+	await app.blockungsergebnisauswahl.update_list(
+		app.blockungsauswahl.ausgewaehlt?.id
+	);
+	selected_ergebnis.value = app.blockungsergebnisauswahl.liste.at(-1);
+}
 async function patch_blockung(blockung: GostBlockungListeneintrag) {
 	await app.dataKursblockung.patch({name: blockung.name});
 	edit_blockungsname.value = false;

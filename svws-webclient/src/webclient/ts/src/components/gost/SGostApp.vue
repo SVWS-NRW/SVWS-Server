@@ -9,14 +9,12 @@
 					<svws-ui-tab-button>Fächer</svws-ui-tab-button>
 					<svws-ui-tab-button :hidden="!jahrgang">Fachwahlen</svws-ui-tab-button>
 					<svws-ui-tab-button :hidden="!abiturjahr">Kursplanung</svws-ui-tab-button>
-					<svws-ui-tab-button :hidden="!abiturjahr">Kurs/Schüler</svws-ui-tab-button>
 				</template>
 				<template #panels>
 					<svws-ui-tab-panel :hidden="!jahrgang"> <s-gost-stammdaten /> </svws-ui-tab-panel>
 					<svws-ui-tab-panel> <s-gost-faecher /> </svws-ui-tab-panel>
 					<svws-ui-tab-panel :hidden="!jahrgang"> <s-gost-fachwahlen /> </svws-ui-tab-panel>
 					<svws-ui-tab-panel :hidden="!abiturjahr"> <s-gost-kursplanung /> </svws-ui-tab-panel>
-					<svws-ui-tab-panel :hidden="!abiturjahr"> <s-gost-kurs-schueler /> </svws-ui-tab-panel>
 				</template>
 			</svws-ui-tab-bar>
 		</div>

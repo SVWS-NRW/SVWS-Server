@@ -82,6 +82,7 @@ export abstract class BaseList<ListenEintragTyp, ListenFilterTyp = undefined> {
 		this._state.pending = true;
 		try {
 			const result = await getter();
+			this.ausgewaehlt = undefined;
 			this.liste = result.toArray(new Array<ListenEintragTyp>());
 		} catch (error) {
 			console.log(
