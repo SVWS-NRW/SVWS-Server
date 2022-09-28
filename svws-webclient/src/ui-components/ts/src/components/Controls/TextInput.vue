@@ -258,6 +258,6 @@ defineExpose({
 }
 
 .text-input--headless {
-	@apply bg-white w-full text-black whitespace-nowrap outline-none border-0 px-3 underline decoration-dashed underline-offset-2;
+	@apply bg-white w-full text-black whitespace-nowrap outline-none border-0 px-3;
 }
 </style>

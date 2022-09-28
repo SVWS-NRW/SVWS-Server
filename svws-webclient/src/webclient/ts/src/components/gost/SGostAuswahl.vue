@@ -58,16 +58,18 @@
 											colspan="3"
 											@click="selected_blockungauswahl = blockung"
 											>
-											<div class="float-left flex px-4">
-												<span v-if="!edit_blockungsname">{{blockung.name}}</span>
-												<svws-ui-text-input v-else v-model="blockung.name" style="width: 10rem" headless @keyup.enter="patch_blockung(blockung)"/>
-												<svws-ui-icon class="cursor-pointer px-1" @click="edit_blockungsname = !edit_blockungsname"><i-ri-edit-line /></svws-ui-icon>
-											</div>
 											<template v-if=" blockung === selected_blockungauswahl ">
+												<div class="float-left flex">
+													<span v-if="!edit_blockungsname" class="px-3 underline decoration-dashed underline-offset-2">{{blockung.name}}</span>
+													<svws-ui-text-input v-else v-model="blockung.name" style="width: 10rem" headless @keyup.enter="edit_blockungsname=false" @input="patch_blockung(blockung)"/>
+												</div>
 												<div class="float-right flex gap-1">
 													<svws-ui-button class="cursor-pointer" size="small" @click="create_blockung" >Ergebnisse berechnen</svws-ui-button >
 													<svws-ui-button size="small" type="danger" class="cursor-pointer" @click="remove_blockung">löschen </svws-ui-button>
 												</div>
+											</template>
+											<template v-else>
+												<span class="px-3">{{blockung.name}}</span>
 											</template>
 										</td>
 									</tr>
@@ -249,7 +251,10 @@ const selected_blockungauswahl: WritableComputedRef<
 		return app.blockungsauswahl.ausgewaehlt;
 	},
 	set: (value: GostBlockungListeneintrag | undefined) => {
-		if (app.blockungsauswahl) {
+		if (value === app.blockungsauswahl.ausgewaehlt)
+			edit_blockungsname.value = true;
+		else {
+			edit_blockungsname.value = false
 			app.blockungsauswahl.ausgewaehlt = value;
 		}
 	}
@@ -378,7 +383,6 @@ async function derive_blockung() {
 }
 async function patch_blockung(blockung: GostBlockungListeneintrag) {
 	await app.dataKursblockung.patch({name: blockung.name});
-	edit_blockungsname.value = false;
 }
 </script>
 
