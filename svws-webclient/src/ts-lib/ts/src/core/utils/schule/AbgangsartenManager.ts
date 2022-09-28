@@ -136,6 +136,24 @@ export class AbgangsartenManager extends JavaObject {
 	}
 
 	/**
+	 * Gibt den Katalog für allgemeinbildende Schulformen zurück.
+	 * 
+	 * @return der Katalog für allgemeinbildende Schulformen
+	 */
+	public getKatalogAllgemeinbildend() : AbgangsartKatalog {
+		return this._katalogAllgemein;
+	}
+
+	/**
+	 * Gibt den Katalog für berufsbildende Schulformen zurück.
+	 * 
+	 * @return der Katalog für berufsbildende Schulformen
+	 */
+	public getKatalogBerufsbildend() : AbgangsartKatalog {
+		return this._katalogBeruf;
+	}
+
+	/**
 	 * Bestimmt den Allgemeinbildenden Abschluss der Abschlussart.
 	 * 
 	 * @param abschlussart   die Abschlussart

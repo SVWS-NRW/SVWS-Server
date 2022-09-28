@@ -2,25 +2,12 @@ package de.nrw.schule.svws.api.server;
 
 import java.io.InputStream;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.PATCH;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.PUT;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.Context;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-
 import de.nrw.schule.svws.api.OpenAPIApplication;
 import de.nrw.schule.svws.core.data.schule.AbgangsartKatalog;
 import de.nrw.schule.svws.core.data.schule.AllgemeineMerkmaleKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.BerufskollegAnlageKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.BerufskollegBerufsebeneKatalogEintrag;
-import de.nrw.schule.svws.core.data.schule.BerufskollegFachklassenKatalogEintrag;
+import de.nrw.schule.svws.core.data.schule.BerufskollegFachklassenKatalog;
 import de.nrw.schule.svws.core.data.schule.EinschulungsartKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.FoerderschwerpunktEintrag;
 import de.nrw.schule.svws.core.data.schule.FoerderschwerpunktKatalogEintrag;
@@ -67,6 +54,18 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityResult;
 import jakarta.persistence.FieldResult;
 import jakarta.persistence.SqlResultSetMapping;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.PATCH;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 
 /**
@@ -378,17 +377,17 @@ public class APISchule {
      * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param request   die Informationen zur HTTP-Anfrage
      * 
-     * @return die Liste mit dem Katalog der Fachklassen am Berufskolleg
+     * @return der Katalog der Fachklassen am Berufskolleg
      */
     @GET
     @Path("/berufskolleg/fachklassen")
     @Operation(summary = "Gibt den Katalog der Fachklassen am Berufskolleg zurück.",
-               description = "Erstellt eine Liste aller in dem Katalog vorhanden Fachklassen am Berufskolleg. "
+               description = "Gibt den Katalog der Fachklassen am Berufskolleg zurück. "
                		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
-    @ApiResponse(responseCode = "200", description = "Eine Liste von Berufskolleg-Fachklassen-Katalog-Einträgen",
-                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = BerufskollegFachklassenKatalogEintrag.class))))
-    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
-    @ApiResponse(responseCode = "404", description = "Keine Berufskolleg-Fachklassen-Katalog-Einträge gefunden")
+    @ApiResponse(responseCode = "200", description = "Der Fachklassen-Katalog für berufsbildende Schulen",
+                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = BerufskollegFachklassenKatalog.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um den Katalog anzusehen.")
+    @ApiResponse(responseCode = "404", description = "Kein Berufskolleg-Fachklassen-Katalog gefunden")
     public Response getBerufskollegFachklassen(@PathParam("schema") String schema, @Context HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
     		return (new DataKatalogBerufskollegFachklassen(null)).getList();

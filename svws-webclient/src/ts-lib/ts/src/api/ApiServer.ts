@@ -10,7 +10,7 @@ import { BenutzerKompetenzKatalogEintrag, cast_de_nrw_schule_svws_core_data_benu
 import { BenutzerListeEintrag, cast_de_nrw_schule_svws_core_data_benutzer_BenutzerListeEintrag } from '../core/data/benutzer/BenutzerListeEintrag';
 import { BerufskollegAnlageKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_BerufskollegAnlageKatalogEintrag } from '../core/data/schule/BerufskollegAnlageKatalogEintrag';
 import { BerufskollegBerufsebeneKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_BerufskollegBerufsebeneKatalogEintrag } from '../core/data/schule/BerufskollegBerufsebeneKatalogEintrag';
-import { BerufskollegFachklassenKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_BerufskollegFachklassenKatalogEintrag } from '../core/data/schule/BerufskollegFachklassenKatalogEintrag';
+import { BerufskollegFachklassenKatalog, cast_de_nrw_schule_svws_core_data_schule_BerufskollegFachklassenKatalog } from '../core/data/schule/BerufskollegFachklassenKatalog';
 import { BetriebAnsprechpartner, cast_de_nrw_schule_svws_core_data_betrieb_BetriebAnsprechpartner } from '../core/data/betrieb/BetriebAnsprechpartner';
 import { BetriebListeEintrag, cast_de_nrw_schule_svws_core_data_betrieb_BetriebListeEintrag } from '../core/data/betrieb/BetriebListeEintrag';
 import { BetriebStammdaten, cast_de_nrw_schule_svws_core_data_betrieb_BetriebStammdaten } from '../core/data/betrieb/BetriebStammdaten';
@@ -3920,27 +3920,25 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der GET-Methode getBerufskollegFachklassen für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/berufskolleg/fachklassen
 	 * 
-	 * Erstellt eine Liste aller in dem Katalog vorhanden Fachklassen am Berufskolleg. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 * Gibt den Katalog der Fachklassen am Berufskolleg zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
 	 * 
 	 * Mögliche HTTP-Antworten: 
-	 *   Code 200: Eine Liste von Berufskolleg-Fachklassen-Katalog-Einträgen
+	 *   Code 200: Der Fachklassen-Katalog für berufsbildende Schulen
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<BerufskollegFachklassenKatalogEintrag>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
-	 *   Code 404: Keine Berufskolleg-Fachklassen-Katalog-Einträge gefunden
+	 *     - Rückgabe-Typ: BerufskollegFachklassenKatalog
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um den Katalog anzusehen.
+	 *   Code 404: Kein Berufskolleg-Fachklassen-Katalog gefunden
 	 * 
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * 
-	 * @returns Eine Liste von Berufskolleg-Fachklassen-Katalog-Einträgen
+	 * @returns Der Fachklassen-Katalog für berufsbildende Schulen
 	 */
-	public async getBerufskollegFachklassen(schema : string) : Promise<List<BerufskollegFachklassenKatalogEintrag>> {
+	public async getBerufskollegFachklassen(schema : string) : Promise<BerufskollegFachklassenKatalog> {
 		let path : string = "/db/{schema}/schule/berufskolleg/fachklassen"
 				.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		let ret = new Vector<BerufskollegFachklassenKatalogEintrag>();
-		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(BerufskollegFachklassenKatalogEintrag.transpilerFromJSON(text)); });
-		return ret;
+		const text = result;
+		return BerufskollegFachklassenKatalog.transpilerFromJSON(text);
 	}
 
 

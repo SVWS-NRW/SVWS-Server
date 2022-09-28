@@ -207,7 +207,10 @@ export { AbgangsartKatalogEintrag } from './core/data/schule/AbgangsartKatalogEi
 export { AllgemeineMerkmaleKatalogEintrag } from './core/data/schule/AllgemeineMerkmaleKatalogEintrag';
 export { BerufskollegAnlageKatalogEintrag } from './core/data/schule/BerufskollegAnlageKatalogEintrag';
 export { BerufskollegBerufsebeneKatalogEintrag } from './core/data/schule/BerufskollegBerufsebeneKatalogEintrag';
+export { BerufskollegFachklassenKatalog } from './core/data/schule/BerufskollegFachklassenKatalog';
+export { BerufskollegFachklassenKatalogDaten } from './core/data/schule/BerufskollegFachklassenKatalogDaten';
 export { BerufskollegFachklassenKatalogEintrag } from './core/data/schule/BerufskollegFachklassenKatalogEintrag';
+export { BerufskollegFachklassenKatalogIndex } from './core/data/schule/BerufskollegFachklassenKatalogIndex';
 export { BildungsgangTypKatalogEintrag } from './core/data/schule/BildungsgangTypKatalogEintrag';
 export { EinschulungsartKatalogEintrag } from './core/data/schule/EinschulungsartKatalogEintrag';
 export { FoerderschwerpunktEintrag } from './core/data/schule/FoerderschwerpunktEintrag';
@@ -319,7 +322,6 @@ export { BerufskollegBerufsebene1 } from './core/types/schule/BerufskollegBerufs
 export { BerufskollegBerufsebene2 } from './core/types/schule/BerufskollegBerufsebene2';
 export { BerufskollegBerufsebene3 } from './core/types/schule/BerufskollegBerufsebene3';
 export { BerufskollegBildungsgangTyp } from './core/types/schule/BerufskollegBildungsgangTyp';
-export { BerufskollegFachklassen } from './core/types/schule/BerufskollegFachklassen';
 export { BerufskollegOrganisationsformen } from './core/types/schule/BerufskollegOrganisationsformen';
 export { Nationalitaeten } from './core/types/schule/Nationalitaeten';
 export { Pruefungsordnung } from './core/types/schule/Pruefungsordnung';
@@ -370,6 +372,7 @@ export { GostFaecherManager } from './core/utils/gost/GostFaecherManager';
 export { GostStatistikFachwahlManager } from './core/utils/gost/GostStatistikFachwahlManager';
 export { JahrgangsUtils } from './core/utils/jahrgang/JahrgangsUtils';
 export { AbgangsartenManager } from './core/utils/schule/AbgangsartenManager';
+export { BerufskollegFachklassenManager } from './core/utils/schule/BerufskollegFachklassenManager';
 export { SchuljahresAbschnittsManager } from './core/utils/schule/SchuljahresAbschnittsManager';
 export { SchuelerStundenplanManager } from './core/utils/stundenplan/SchuelerStundenplanManager';
 export { IOException } from './java/io/IOException';

@@ -30,7 +30,9 @@ import de.nrw.schule.svws.core.data.lehrer.LehrerKatalogZugangsgrundEintrag;
 import de.nrw.schule.svws.core.data.schule.AllgemeineMerkmaleKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.BerufskollegAnlageKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.BerufskollegBerufsebeneKatalogEintrag;
+import de.nrw.schule.svws.core.data.schule.BerufskollegFachklassenKatalogDaten;
 import de.nrw.schule.svws.core.data.schule.BerufskollegFachklassenKatalogEintrag;
+import de.nrw.schule.svws.core.data.schule.BerufskollegFachklassenKatalogIndex;
 import de.nrw.schule.svws.core.data.schule.EinschulungsartKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.FoerderschwerpunktKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.HerkunftKatalogEintrag;
@@ -56,7 +58,6 @@ import de.nrw.schule.svws.core.types.schule.BerufskollegAnlage;
 import de.nrw.schule.svws.core.types.schule.BerufskollegBerufsebene1;
 import de.nrw.schule.svws.core.types.schule.BerufskollegBerufsebene2;
 import de.nrw.schule.svws.core.types.schule.BerufskollegBerufsebene3;
-import de.nrw.schule.svws.core.types.schule.BerufskollegFachklassen;
 import de.nrw.schule.svws.core.types.schule.BerufskollegOrganisationsformen;
 import de.nrw.schule.svws.core.types.schule.Nationalitaeten;
 import de.nrw.schule.svws.core.types.schule.SchulabschlussAllgemeinbildend;
@@ -90,9 +91,11 @@ import de.nrw.schule.svws.core.types.statkue.Schulform;
 import de.nrw.schule.svws.core.types.statkue.Schulgliederung;
 import de.nrw.schule.svws.core.types.statkue.ZulaessigeKursart;
 import de.nrw.schule.svws.core.types.statkue.ZulaessigesFach;
+import de.nrw.schule.svws.core.utils.schule.BerufskollegFachklassenManager;
 import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.DBException;
 import de.nrw.schule.svws.db.dto.current.svws.db.DTOCoreTypeVersion;
+import de.nrw.schule.svws.json.JsonDaten;
 import de.nrw.schule.svws.logger.Logger;
 
 /**
@@ -137,8 +140,8 @@ public class DBCoreTypeUpdater {
 		tables.add(new CoreTypeTable("Berufskolleg_Berufsebenen1", BerufskollegBerufsebene1.VERSION, updateBerufskollegBerufsebene1));
 		tables.add(new CoreTypeTable("Berufskolleg_Berufsebenen2", BerufskollegBerufsebene2.VERSION, updateBerufskollegBerufsebene2));
 		tables.add(new CoreTypeTable("Berufskolleg_Berufsebenen3", BerufskollegBerufsebene3.VERSION, updateBerufskollegBerufsebene3));
-		tables.add(new CoreTypeTable("Berufskolleg_Fachklassen", BerufskollegFachklassen.VERSION, updateBerufskollegFachklassen));
-		tables.add(new CoreTypeTable("Berufskolleg_Fachklassen_Keys", BerufskollegFachklassen.VERSION, updateBerufskollegFachklassenKeys));
+		tables.add(new CoreTypeTable("Berufskolleg_Fachklassen", JsonDaten.fachklassenManager.getVersion(), updateBerufskollegFachklassen));
+		tables.add(new CoreTypeTable("Berufskolleg_Fachklassen_Keys", JsonDaten.fachklassenManager.getVersion(), updateBerufskollegFachklassenKeys));
 		tables.add(new CoreTypeTable("Fachgruppen", Fachgruppe.VERSION, updateFachgruppen));
 		tables.add(new CoreTypeTable("KursFortschreibungsarten", KursFortschreibungsart.VERSION, updateKursFortschreibungsarten));
 		tables.add(new CoreTypeTable("Schulabschluesse_Allgemeinbildend", SchulabschlussAllgemeinbildend.VERSION, updateSchulabschluesseAllgemeinbildend));
@@ -481,7 +484,7 @@ public class DBCoreTypeUpdater {
 
 
 	/**
-	 * Aktualisiert die Tabelle für den Core-Type BerufskollegFachklassen 
+	 * Aktualisiert die Tabelle für den Core-Type BerufskollegFachklassenManager
 	 */
 	private Consumer<Logger> updateBerufskollegFachklassen = (Logger logger) -> {
 		String tabname = "Berufskolleg_Fachklassen";
@@ -490,31 +493,32 @@ public class DBCoreTypeUpdater {
 		sql.append("INSERT INTO ");
 		sql.append(tabname); 
 		sql.append("(ID, FachklassenIndex, Schluessel, Schluessel2, IstAusgelaufen, BerufsfeldGruppe, Berufsfeld, Berufsebene1, Berufsebene2, Berufsebene3, Bezeichnung, BezeichnungM, BezeichnungW, gueltigVon, gueltigBis) ");
-		BerufskollegFachklassen[] values = BerufskollegFachklassen.values();
+		BerufskollegFachklassenManager manager = JsonDaten.fachklassenManager;
 		boolean isFirst = true;
-		for (int i = 0; i < values.length; i++) {
-			BerufskollegFachklassen bkfk = values[i];
-			for (BerufskollegFachklassenKatalogEintrag fk : bkfk.historie) {
-				sql.append(isFirst ? "VALUES (" : ", (");
-				isFirst = false;
-				sql.append(fk.id).append(",");
-				sql.append(fk.index).append(",");
-				sql.append("'").append(fk.schluessel).append("'").append(",");
-				sql.append("'").append(fk.schluessel2).append("'").append(",");
-				sql.append(fk.istAusgelaufen ? 1 : 0).append(",");
-				sql.append("'").append(fk.berufsfeldGruppe).append("'").append(",");
-				sql.append("'").append(fk.berufsfeld).append("'").append(",");
-				sql.append("'").append(fk.ebene1).append("'").append(",");
-				sql.append("'").append(fk.ebene2).append("'").append(",");
-				sql.append("'").append(fk.ebene3).append("'").append(",");
-				sql.append("'").append(fk.bezeichnung).append("'").append(",");
-				sql.append("'").append(fk.bezeichnungM).append("'").append(",");
-				sql.append("'").append(fk.bezeichnungW).append("'").append(",");
-				sql.append(fk.gueltigVon).append(",");
-				sql.append(fk.gueltigBis).append(")");
+		for (BerufskollegFachklassenKatalogIndex katIndex : manager.getKatalog().indizes) {
+			for (BerufskollegFachklassenKatalogEintrag eintrag : katIndex.fachklassen) {
+				for (BerufskollegFachklassenKatalogDaten daten : eintrag.historie) {
+					sql.append(isFirst ? "VALUES (" : ", (");
+					isFirst = false;
+					sql.append(daten.id).append(",");
+					sql.append(katIndex.index).append(",");
+					sql.append("'").append(eintrag.schluessel).append("'").append(",");
+					sql.append("'").append(eintrag.schluessel2).append("'").append(",");
+					sql.append(daten.istAusgelaufen ? 1 : 0).append(",");
+					sql.append("'").append(daten.berufsfeldGruppe).append("'").append(",");
+					sql.append("'").append(daten.berufsfeld).append("'").append(",");
+					sql.append("'").append(daten.ebene1).append("'").append(",");
+					sql.append("'").append(daten.ebene2).append("'").append(",");
+					sql.append("'").append(daten.ebene3).append("'").append(",");
+					sql.append("'").append(daten.bezeichnung).append("'").append(",");
+					sql.append("'").append(daten.bezeichnungM).append("'").append(",");
+					sql.append("'").append(daten.bezeichnungW).append("'").append(",");
+					sql.append(daten.gueltigVon).append(",");
+					sql.append(daten.gueltigBis).append(")");
+				}
 			}
 		}
-		updateCoreTypeTabelle(tabname, BerufskollegFachklassen.class.getCanonicalName(), BerufskollegFachklassen.VERSION, sql.toString());
+		updateCoreTypeTabelle(tabname, BerufskollegFachklassenManager.class.getCanonicalName(), JsonDaten.fachklassenManager.getVersion(), sql.toString());
 	};
 
 
@@ -528,17 +532,18 @@ public class DBCoreTypeUpdater {
 		sql.append("INSERT INTO ");
 		sql.append(tabname); 
 		sql.append("(FachklassenIndex, Schluessel, Schluessel2) ");
-		BerufskollegFachklassen[] values = BerufskollegFachklassen.values();
+		BerufskollegFachklassenManager manager = JsonDaten.fachklassenManager;
 		boolean isFirst = true;
-		for (int i = 0; i < values.length; i++) {
-			BerufskollegFachklassenKatalogEintrag fk = values[i].historie[0];
-			sql.append(isFirst ? "VALUES (" : ", (");
-			isFirst = false;
-			sql.append(fk.index).append(",");
-			sql.append("'").append(fk.schluessel).append("'").append(",");
-			sql.append("'").append(fk.schluessel2).append("'").append(")");
+		for (BerufskollegFachklassenKatalogIndex katIndex : manager.getKatalog().indizes) {
+			for (BerufskollegFachklassenKatalogEintrag eintrag : katIndex.fachklassen) {
+				sql.append(isFirst ? "VALUES (" : ", (");
+				isFirst = false;
+				sql.append(katIndex.index).append(",");
+				sql.append("'").append(eintrag.schluessel).append("'").append(",");
+				sql.append("'").append(eintrag.schluessel2).append("'").append(")");
+			}
 		}
-		updateCoreTypeTabelle(tabname, BerufskollegFachklassen.class.getCanonicalName(), BerufskollegFachklassen.VERSION, sql.toString());
+		updateCoreTypeTabelle(tabname, BerufskollegFachklassenManager.class.getCanonicalName(), JsonDaten.fachklassenManager.getVersion(), sql.toString());
 	};
 
 

@@ -308,6 +308,25 @@ export class Schulgliederung extends JavaObject {
 	}
 
 	/**
+	 * Gibt alle Schulgliderungen zurück, die zu dem angebenen
+	 * Fachklassen-Index am Berufskolleg gehören.
+	 * 
+	 * @param index   der Fachklassen-Index
+	 * 
+	 * @return die zugehörigen Schulgliederungen
+	 */
+	public static getByBkIndex(index : number) : List<Schulgliederung | null> | null {
+		let result : Vector<Schulgliederung> = new Vector();
+		let gliederungen : Array<Schulgliederung> = Schulgliederung.values();
+		for (let i : number = 0; i < gliederungen.length; i++){
+			let gliederung : Schulgliederung = gliederungen[i];
+			if ((gliederung.daten.bkIndex !== null) && (gliederung.daten.bkIndex === index)) 
+				result.add(gliederung);
+		}
+		return result;
+	}
+
+	/**
 	 * Liefert alle Schulformen zurück, bei welchen die Schulgliederung vorkommt.
 	 * 
 	 * @return eine Liste der Schulformen

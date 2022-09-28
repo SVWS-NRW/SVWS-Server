@@ -1706,6 +1706,25 @@ public enum Schulgliederung {
 	}
 
 
+	/**
+	 * Gibt alle Schulgliderungen zurück, die zu dem angebenen
+	 * Fachklassen-Index am Berufskolleg gehören.
+	 * 
+	 * @param index   der Fachklassen-Index
+	 * 
+	 * @return die zugehörigen Schulgliederungen
+	 */
+	public static List<Schulgliederung> getByBkIndex(int index) {
+		@NotNull Vector<@NotNull Schulgliederung> result = new Vector<>();
+		@NotNull Schulgliederung@NotNull[] gliederungen = Schulgliederung.values();
+		for (int i = 0; i < gliederungen.length; i++) {
+			@NotNull Schulgliederung gliederung = gliederungen[i];
+			if ((gliederung.daten.bkIndex != null) && (gliederung.daten.bkIndex == index))
+				result.add(gliederung);
+		}
+		return result;
+	}
+
 
 	/**
 	 * Liefert alle Schulformen zurück, bei welchen die Schulgliederung vorkommt.

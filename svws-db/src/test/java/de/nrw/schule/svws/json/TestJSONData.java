@@ -47,5 +47,7 @@ public class TestJSONData {
 		}
 		System.out.println("Prüfung des Katalogs der Abgangsarten erfolgreich abgeschlossen.");
 	}
+	
+	// TODO Tests für BerufskollegFachklassenManager manager = JsonDaten.fachklassenManager;
 
 }
