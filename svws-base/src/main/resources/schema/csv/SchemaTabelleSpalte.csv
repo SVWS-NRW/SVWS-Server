@@ -430,7 +430,7 @@ Gost_Blockung_Kurse;IstKoopKurs;;;6;int;;0;1;;Boolean01Converter;;;Kursblockung 
 Gost_Blockung_Kurse;BezeichnungSuffix;;;7;varchar;255;;0;;;;;Kursblockung der Gymnasialen Oberstufe - Kurse der Blockung: Ein Suffix, welches der Kursbezeichnung ggf. angehangen wird (kann z.B. zum Kennzeichnen von Kooperationskursen verwendet werden)
 Gost_Blockung_Kurse;Wochenstunden;;;8;int;;3;1;;;;;Kursblockung der Gymnasialen Oberstufe - Kurse der Blockung: Die Anzahl der Wochenstunden für den Kurs
 Gost_Blockung_Kurslehrer;Blockung_Kurs_ID;;;1;bigint;;;1;;;;;Kursblockung der Gymnasialen Oberstufe - Kurslehrer der Blockung: ID des Kurses
-Gost_Blockung_Kurslehrer;Lehrer_ID;;;2;bigint;;;0;;;;;Kursblockung der Gymnasialen Oberstufe - Kurslehrer der Blockung: ID des Lehrers, welcher dem Kurs zugeordnet ist - sofern einer zugeordnet wurde
+Gost_Blockung_Kurslehrer;Lehrer_ID;;;2;bigint;;;1;;;;;Kursblockung der Gymnasialen Oberstufe - Kurslehrer der Blockung: ID des Lehrers, welcher dem Kurs zugeordnet ist
 Gost_Blockung_Kurslehrer;Reihenfolge;;;3;int;;1;1;;;;;Kursblockung der Gymnasialen Oberstufe - Kurslehrer der Blockung: Eine Reihenfolge für die Lehrer, z.B. zur Unterscheidung des eigentlichen Kurslehrer (z.B. 1) und einer Zusatzkraft (z.B. 2)
 Gost_Blockung_Kurslehrer;Wochenstunden;;;4;int;;3;1;;;;;Kursblockung der Gymnasialen Oberstufe - Kurslehrer der Blockung: Die Anzahl der Wochenstunden für die der Lehrer in dem Kurs eingesetzt wird
 Gost_Blockung_Regeln;ID;;;1;bigint;;;1;;;;;Kursblockung der Gymnasialen Oberstufe - Regeldefinition der Blockung: ID der Regel (generiert)
@@ -448,7 +448,8 @@ Gost_Blockung_Zwischenergebnisse;ID;;;1;bigint;;;1;;;;;Kursblockung der Gymnasia
 Gost_Blockung_Zwischenergebnisse;Blockung_ID;;;2;bigint;;;1;;;;;Kursblockung der Gymnasialen Oberstufe - Zwischenergebnis einer Blockung: ID der Blockung
 Gost_Blockung_Zwischenergebnisse;AnzahlUmwaehler;;;3;int;;0;1;;;;;Kursblockung der Gymnasialen Oberstufe - Zwischenergebnis einer Blockung: Die Anzahl der Umwähler
 Gost_Blockung_Zwischenergebnisse;Bewertung;;;4;bigint;;-1;1;;;;;Kursblockung der Gymnasialen Oberstufe - Zwischenergebnis einer Blockung: Ein Wert zur Bewertung der Blockung
-Gost_Blockung_Zwischenergebnisse;IstMarkiert;;;5;int;;0;1;;Boolean01Converter;;;Kursblockung der Gymnasialen Oberstufe - Zwischenergebnis einer Blockung: Gibt an, ob das Zwichenergebnis von einem Benutzer markiert wurde oder nicht: 1 - true, 0 - false 
+Gost_Blockung_Zwischenergebnisse;IstMarkiert;;;5;int;;0;1;;Boolean01Converter;;;Kursblockung der Gymnasialen Oberstufe - Zwischenergebnis einer Blockung: Gibt an, ob das Zwischenergebnis von einem Benutzer markiert wurde oder nicht: 1 - true, 0 - false 
+Gost_Blockung_Zwischenergebnisse;IstDupliziert;;;6;int;;0;1;;Boolean01Converter;;;Kursblockung der Gymnasialen Oberstufe - Zwischenergebnis einer Blockung: Gibt an, ob das Zwischenergebnis mit einer anderen Blockungsdefinition dupliziert wurde und nur als Vorlage für Regeldefinitionen dient oder nicht: 1 - true, 0 - false 
 Gost_Blockung_Zwischenergebnisse_Kurs_Schienen;Zwischenergebnis_ID;;;1;bigint;;;1;;;;;Kursblockung der Gymnasialen Oberstufe - Kurs-Schienen-Zuordnung eines Zwischenergebnisses einer Blockung: ID des Zwischenergebnisses
 Gost_Blockung_Zwischenergebnisse_Kurs_Schienen;Blockung_Kurs_ID;;;2;bigint;;;1;;;;;Kursblockung der Gymnasialen Oberstufe - Kurs-Schienen-Zuordnung eines Zwischenergebnisses einer Blockung: ID des Kurses
 Gost_Blockung_Zwischenergebnisse_Kurs_Schienen;Schienen_ID;;;3;bigint;;;1;;;;;Kursblockung der Gymnasialen Oberstufe - Kurs-Schienen-Zuordnung eines Zwischenergebnisses einer Blockung: ID der Schiene aus der Blockung

@@ -55,7 +55,7 @@ public class DataGostBlockungsergebnisliste extends DataManager<Long> {
 		eintrag.anzahlUmwaehler = ergebnis.AnzahlUmwaehler;
 		eintrag.bewertung = ergebnis.Bewertung == null ? -1 : ergebnis.Bewertung;
 		eintrag.istMarkiert = ergebnis.IstMarkiert == null ? false : ergebnis.IstMarkiert;
-
+		eintrag.istDuplikat = ergebnis.IstDupliziert == null ? false : ergebnis.IstDupliziert;
 		return eintrag;
 	}
 
@@ -67,7 +67,7 @@ public class DataGostBlockungsergebnisliste extends DataManager<Long> {
 		if (ergebnisse.size() != 0) {
 			for (DTOGostBlockungZwischenergebnis ergebnis : ergebnisse) {
 				list.add(dtoMapperErgebnis(ergebnis, blockungen.get(ergebnis.Blockung_ID),
-						mapKursSchienen.get(ergebnis.ID), mapKursSchueler.get(ergebnis.ID)));
+				mapKursSchienen.get(ergebnis.ID), mapKursSchueler.get(ergebnis.ID)));
 			}
 		}
 		return list;
@@ -90,6 +90,7 @@ public class DataGostBlockungsergebnisliste extends DataManager<Long> {
 				"DTOGostBlockungZwischenergebnis.blockung_id", idBlockung, DTOGostBlockungZwischenergebnis.class);
 		if (ergebnisse == null)
 			return OperationError.NOT_FOUND.getResponse();
+		ergebnisse.removeIf(e -> e.IstDupliziert); // Gib nur Ergebnisse zurück, welche für diese Blockungsdefinition erstellt wurden
 		DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, idBlockung);
 		if (blockung == null)
 			return OperationError.NOT_FOUND.getResponse();
@@ -101,14 +102,16 @@ public class DataGostBlockungsergebnisliste extends DataManager<Long> {
 		Map<Long, DTOGostBlockung> blockungen = new HashMap<>();
 		blockungen.put(blockung.ID, blockung);
 		List<Long> ergebnisIDs = ergebnisse.stream().map(e -> e.ID).collect(Collectors.toList());
-		Map<Long, List<DTOGostBlockungZwischenergebnisKursSchiene>> mapKursSchienen = conn
-				.queryNamed("DTOGostBlockungZwischenergebnisKursSchiene.zwischenergebnis_id.multiple", ergebnisIDs,
+		Map<Long, List<DTOGostBlockungZwischenergebnisKursSchiene>> mapKursSchienen = (ergebnisIDs.size() == 0) 
+				? new HashMap<>()
+				: conn.queryNamed("DTOGostBlockungZwischenergebnisKursSchiene.zwischenergebnis_id.multiple", ergebnisIDs,
 						DTOGostBlockungZwischenergebnisKursSchiene.class)
-				.stream().collect(Collectors.groupingBy(e -> e.Zwischenergebnis_ID, Collectors.toList()));
-		Map<Long, List<DTOGostBlockungZwischenergebnisKursSchueler>> mapKursSchueler = conn
-				.queryNamed("DTOGostBlockungZwischenergebnisKursSchueler.zwischenergebnis_id.multiple", ergebnisIDs,
+					.stream().collect(Collectors.groupingBy(e -> e.Zwischenergebnis_ID, Collectors.toList()));
+		Map<Long, List<DTOGostBlockungZwischenergebnisKursSchueler>> mapKursSchueler = (ergebnisIDs.size() == 0) 
+				? new HashMap<>()
+				: conn.queryNamed("DTOGostBlockungZwischenergebnisKursSchueler.zwischenergebnis_id.multiple", ergebnisIDs,
 						DTOGostBlockungZwischenergebnisKursSchueler.class)
-				.stream().collect(Collectors.groupingBy(e -> e.Zwischenergebnis_ID, Collectors.toList()));
+					.stream().collect(Collectors.groupingBy(e -> e.Zwischenergebnis_ID, Collectors.toList()));
 		daten = dtoMapperErgebnisse(ergebnisse, blockungen, mapKursSchienen, mapKursSchueler);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}

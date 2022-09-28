@@ -40,6 +40,10 @@ public class GostBlockungsergebnisListeneintrag {
 	 * Blockungsergebnisse hervorzuheben. */
 	public boolean istMarkiert = false;
 
+	/** Gibt an, ob dieses Ergebnis ein Duplikat aus einer anderen Blockung ist und als Grundlage für diese 
+	 * Blockungsdefinition dienen soll. */
+	public boolean istDuplikat = false; 
+	
 	/** Bewertungskriterium 1: Array mit den Datenbank-IDs der Regeln, die nicht erfüllt werden konnten. */
 	public @NotNull Long @NotNull [] bewertungNichtErfuellteRegeln = new Long[0];
 

@@ -1516,6 +1516,33 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der GET-Methode dupliziereGostBlockung für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/{blockungsid : \d+}/dupliziere
+	 * 
+	 * Dupliziert die angegebene Blockung der gymnasialen Oberstufe ohne Zwischenergebnisse in der DB und gibt diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Duplizieren einer Blockung besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Die Blockungsdaten der gymnasialen Oberstfue des Duplikats
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: GostBlockungsdaten
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Blockungsdaten der Gymnasialen Oberstufe zu duplizieren.
+	 *   Code 404: Keine Blockung mit der angebenen ID gefunden.
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} blockungsid - der Pfad-Parameter blockungsid
+	 * 
+	 * @returns Die Blockungsdaten der gymnasialen Oberstfue des Duplikats
+	 */
+	public async dupliziereGostBlockung(schema : string, blockungsid : number) : Promise<GostBlockungsdaten> {
+		let path : string = "/db/{schema}/gost/blockungen/{blockungsid : \d+}/dupliziere"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema)
+				.replace(/{blockungsid\s*(:[^}]+)?}/g, blockungsid.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return GostBlockungsdaten.transpilerFromJSON(text);
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getGostBlockungsergebnisliste für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/{blockungsid : \d+}/ergebnisse
 	 * 
 	 * Erstellt eine Liste aller Ergebnisse der angegebenen Blockung der gymnasialen Oberstufe Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Blockungsdaten besitzt.
@@ -1932,6 +1959,33 @@ export class ApiServer extends BaseApi {
 		const result : string = await super.deleteJSON(path, null);
 		const text = result;
 		return parseFloat(JSON.parse(text));
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode dupliziereGostBlockungMitErgebnis für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \d+}/dupliziere
+	 * 
+	 * Dupliziert zu dem angegebenen Zwischenergebnis gehörende Blockung der gymnasialen Oberstufe. Das Zwischenergebnis wird als einziges mit dupliziert und dient bei dem Blockungsduplikat. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Duplizieren einer Blockung besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Die Blockungsdaten der gymnasialen Oberstfue des Duplikats als Vorlage für die Definition von Regeln
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: GostBlockungsdaten
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Blockungsdaten der Gymnasialen Oberstufe zu duplizieren.
+	 *   Code 404: Keine Blockung mit der angebenen ID gefunden.
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} ergebnisid - der Pfad-Parameter ergebnisid
+	 * 
+	 * @returns Die Blockungsdaten der gymnasialen Oberstfue des Duplikats als Vorlage für die Definition von Regeln
+	 */
+	public async dupliziereGostBlockungMitErgebnis(schema : string, ergebnisid : number) : Promise<GostBlockungsdaten> {
+		let path : string = "/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \d+}/dupliziere"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema)
+				.replace(/{ergebnisid\s*(:[^}]+)?}/g, ergebnisid.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return GostBlockungsdaten.transpilerFromJSON(text);
 	}
 
 

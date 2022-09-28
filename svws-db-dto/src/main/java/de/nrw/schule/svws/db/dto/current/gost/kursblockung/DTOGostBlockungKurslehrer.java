@@ -41,7 +41,7 @@ public class DTOGostBlockungKurslehrer {
 	@JsonProperty
 	public Long Blockung_Kurs_ID;
 
-	/** Kursblockung der Gymnasialen Oberstufe - Kurslehrer der Blockung: ID des Lehrers, welcher dem Kurs zugeordnet ist - sofern einer zugeordnet wurde */
+	/** Kursblockung der Gymnasialen Oberstufe - Kurslehrer der Blockung: ID des Lehrers, welcher dem Kurs zugeordnet ist */
 	@Id
 	@Column(name = "Lehrer_ID")
 	@JsonProperty
@@ -67,14 +67,19 @@ public class DTOGostBlockungKurslehrer {
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOGostBlockungKurslehrer ohne eine Initialisierung der Attribute.
 	 * @param Blockung_Kurs_ID   der Wert für das Attribut Blockung_Kurs_ID
+	 * @param Lehrer_ID   der Wert für das Attribut Lehrer_ID
 	 * @param Reihenfolge   der Wert für das Attribut Reihenfolge
 	 * @param Wochenstunden   der Wert für das Attribut Wochenstunden
 	 */
-	public DTOGostBlockungKurslehrer(final Long Blockung_Kurs_ID, final Integer Reihenfolge, final Integer Wochenstunden) {
+	public DTOGostBlockungKurslehrer(final Long Blockung_Kurs_ID, final Long Lehrer_ID, final Integer Reihenfolge, final Integer Wochenstunden) {
 		if (Blockung_Kurs_ID == null) { 
 			throw new NullPointerException("Blockung_Kurs_ID must not be null");
 		}
 		this.Blockung_Kurs_ID = Blockung_Kurs_ID;
+		if (Lehrer_ID == null) { 
+			throw new NullPointerException("Lehrer_ID must not be null");
+		}
+		this.Lehrer_ID = Lehrer_ID;
 		if (Reihenfolge == null) { 
 			throw new NullPointerException("Reihenfolge must not be null");
 		}

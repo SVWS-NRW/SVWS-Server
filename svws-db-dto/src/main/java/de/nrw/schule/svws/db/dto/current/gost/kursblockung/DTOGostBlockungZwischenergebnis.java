@@ -38,9 +38,11 @@ import de.nrw.schule.svws.csv.converter.current.Boolean01ConverterDeserializer;
 @NamedQuery(name="DTOGostBlockungZwischenergebnis.bewertung.multiple", query="SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.Bewertung IN :value")
 @NamedQuery(name="DTOGostBlockungZwischenergebnis.istmarkiert", query="SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.IstMarkiert = :value")
 @NamedQuery(name="DTOGostBlockungZwischenergebnis.istmarkiert.multiple", query="SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.IstMarkiert IN :value")
+@NamedQuery(name="DTOGostBlockungZwischenergebnis.istdupliziert", query="SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.IstDupliziert = :value")
+@NamedQuery(name="DTOGostBlockungZwischenergebnis.istdupliziert.multiple", query="SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.IstDupliziert IN :value")
 @NamedQuery(name="DTOGostBlockungZwischenergebnis.primaryKeyQuery", query="SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.ID = ?1")
 @NamedQuery(name="DTOGostBlockungZwischenergebnis.all.migration", query="SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Blockung_ID","AnzahlUmwaehler","Bewertung","IstMarkiert"})
+@JsonPropertyOrder({"ID","Blockung_ID","AnzahlUmwaehler","Bewertung","IstMarkiert","IstDupliziert"})
 public class DTOGostBlockungZwischenergebnis {
 
 	/** Kursblockung der Gymnasialen Oberstufe - Zwischenergebnis einer Blockung: ID der Zwischenergebnisses (generiert) */
@@ -64,13 +66,21 @@ public class DTOGostBlockungZwischenergebnis {
 	@JsonProperty
 	public Long Bewertung;
 
-	/** Kursblockung der Gymnasialen Oberstufe - Zwischenergebnis einer Blockung: Gibt an, ob das Zwichenergebnis von einem Benutzer markiert wurde oder nicht: 1 - true, 0 - false  */
+	/** Kursblockung der Gymnasialen Oberstufe - Zwischenergebnis einer Blockung: Gibt an, ob das Zwischenergebnis von einem Benutzer markiert wurde oder nicht: 1 - true, 0 - false  */
 	@Column(name = "IstMarkiert")
 	@JsonProperty
 	@Convert(converter=Boolean01Converter.class)
 	@JsonSerialize(using=Boolean01ConverterSerializer.class)
 	@JsonDeserialize(using=Boolean01ConverterDeserializer.class)
 	public Boolean IstMarkiert;
+
+	/** Kursblockung der Gymnasialen Oberstufe - Zwischenergebnis einer Blockung: Gibt an, ob das Zwischenergebnis mit einer anderen Blockungsdefinition dupliziert wurde und nur als Vorlage für Regeldefinitionen dient oder nicht: 1 - true, 0 - false  */
+	@Column(name = "IstDupliziert")
+	@JsonProperty
+	@Convert(converter=Boolean01Converter.class)
+	@JsonSerialize(using=Boolean01ConverterSerializer.class)
+	@JsonDeserialize(using=Boolean01ConverterDeserializer.class)
+	public Boolean IstDupliziert;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOGostBlockungZwischenergebnis ohne eine Initialisierung der Attribute.
@@ -86,8 +96,9 @@ public class DTOGostBlockungZwischenergebnis {
 	 * @param AnzahlUmwaehler   der Wert für das Attribut AnzahlUmwaehler
 	 * @param Bewertung   der Wert für das Attribut Bewertung
 	 * @param IstMarkiert   der Wert für das Attribut IstMarkiert
+	 * @param IstDupliziert   der Wert für das Attribut IstDupliziert
 	 */
-	public DTOGostBlockungZwischenergebnis(final Long ID, final Long Blockung_ID, final Integer AnzahlUmwaehler, final Long Bewertung, final Boolean IstMarkiert) {
+	public DTOGostBlockungZwischenergebnis(final Long ID, final Long Blockung_ID, final Integer AnzahlUmwaehler, final Long Bewertung, final Boolean IstMarkiert, final Boolean IstDupliziert) {
 		if (ID == null) { 
 			throw new NullPointerException("ID must not be null");
 		}
@@ -108,6 +119,10 @@ public class DTOGostBlockungZwischenergebnis {
 			throw new NullPointerException("IstMarkiert must not be null");
 		}
 		this.IstMarkiert = IstMarkiert;
+		if (IstDupliziert == null) { 
+			throw new NullPointerException("IstDupliziert must not be null");
+		}
+		this.IstDupliziert = IstDupliziert;
 	}
 
 
@@ -144,7 +159,7 @@ public class DTOGostBlockungZwischenergebnis {
 	 */
 	@Override
 	public String toString() {
-		return "DTOGostBlockungZwischenergebnis(ID=" + this.ID + ", Blockung_ID=" + this.Blockung_ID + ", AnzahlUmwaehler=" + this.AnzahlUmwaehler + ", Bewertung=" + this.Bewertung + ", IstMarkiert=" + this.IstMarkiert + ")";
+		return "DTOGostBlockungZwischenergebnis(ID=" + this.ID + ", Blockung_ID=" + this.Blockung_ID + ", AnzahlUmwaehler=" + this.AnzahlUmwaehler + ", Bewertung=" + this.Bewertung + ", IstMarkiert=" + this.IstMarkiert + ", IstDupliziert=" + this.IstDupliziert + ")";
 	}
 
 }

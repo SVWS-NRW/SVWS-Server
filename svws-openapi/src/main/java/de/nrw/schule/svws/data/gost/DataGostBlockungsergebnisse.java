@@ -150,13 +150,9 @@ public class DataGostBlockungsergebnisse extends DataManager<Long> {
 			manager.assignKursSchiene(ks.Blockung_Kurs_ID, ks.Schienen_ID);
 		for (DTOGostBlockungZwischenergebnisKursSchueler ks : listKursSchueler)
 			manager.assignSchuelerKurs(ks.Schueler_ID, ks.Blockung_Kurs_ID, false);
-// TODO
-//		daten.anzahlUmwaehler = ergebnis.AnzahlUmwaehler;
-//		daten.bewertung = ergebnis.Bewertung == null ? -1 : ergebnis.Bewertung;
-//		daten.istMarkiert = ergebnis.IstMarkiert == null ? false : ergebnis.IstMarkiert;
-//		daten.anzahlKollisionen = 0;
-//		daten.anzahlSchienenMitKollisionen = 0;
 		GostBlockungsergebnis daten = manager.getErgebnis();
+		daten.istMarkiert = ergebnis.IstMarkiert == null ? false : ergebnis.IstMarkiert;
+		daten.istDuplikat = ergebnis.IstDupliziert == null ? false : ergebnis.IstDupliziert;
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

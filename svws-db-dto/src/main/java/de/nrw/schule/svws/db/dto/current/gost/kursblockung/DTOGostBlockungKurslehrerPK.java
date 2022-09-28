@@ -15,7 +15,7 @@ public class DTOGostBlockungKurslehrerPK implements Serializable {
 	/** Kursblockung der Gymnasialen Oberstufe - Kurslehrer der Blockung: ID des Kurses */
 	public Long Blockung_Kurs_ID;
 
-	/** Kursblockung der Gymnasialen Oberstufe - Kurslehrer der Blockung: ID des Lehrers, welcher dem Kurs zugeordnet ist - sofern einer zugeordnet wurde */
+	/** Kursblockung der Gymnasialen Oberstufe - Kurslehrer der Blockung: ID des Lehrers, welcher dem Kurs zugeordnet ist */
 	public Long Lehrer_ID;
 
 	/**

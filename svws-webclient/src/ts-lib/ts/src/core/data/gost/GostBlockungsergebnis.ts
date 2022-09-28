@@ -23,6 +23,8 @@ export class GostBlockungsergebnis extends JavaObject {
 
 	public istMarkiert : boolean = false;
 
+	public istDuplikat : boolean = false;
+
 	public readonly schienen : Vector<GostBlockungsergebnisSchiene> = new Vector();
 
 
@@ -64,6 +66,9 @@ export class GostBlockungsergebnis extends JavaObject {
 		if (typeof obj.istMarkiert === "undefined")
 			 throw new Error('invalid json format, missing attribute istMarkiert');
 		result.istMarkiert = obj.istMarkiert;
+		if (typeof obj.istDuplikat === "undefined")
+			 throw new Error('invalid json format, missing attribute istDuplikat');
+		result.istDuplikat = obj.istDuplikat;
 		if (!!obj.schienen) {
 			for (let elem of obj.schienen) {
 				result.schienen?.add(GostBlockungsergebnisSchiene.transpilerFromJSON(JSON.stringify(elem)));
@@ -83,6 +88,7 @@ export class GostBlockungsergebnis extends JavaObject {
 		result += '"anzahlSchienenMitKollisionen" : ' + obj.anzahlSchienenMitKollisionen + ',';
 		result += '"bewertung" : ' + obj.bewertung + ',';
 		result += '"istMarkiert" : ' + obj.istMarkiert + ',';
+		result += '"istDuplikat" : ' + obj.istDuplikat + ',';
 		if (!obj.schienen) {
 			result += '"schienen" : []';
 		} else {
@@ -128,6 +134,9 @@ export class GostBlockungsergebnis extends JavaObject {
 		}
 		if (typeof obj.istMarkiert !== "undefined") {
 			result += '"istMarkiert" : ' + obj.istMarkiert + ',';
+		}
+		if (typeof obj.istDuplikat !== "undefined") {
+			result += '"istDuplikat" : ' + obj.istDuplikat + ',';
 		}
 		if (typeof obj.schienen !== "undefined") {
 			if (!obj.schienen) {

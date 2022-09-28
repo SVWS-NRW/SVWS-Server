@@ -918,7 +918,36 @@ public class APIGost {
     	}
     }
 
-    
+
+    /**
+     * Die OpenAPI-Methode für das Duplizieren der Definition einer Blockung mit den in der DB 
+     * gespeicherten Blockungsdaten. Vorhandene Zwischenergebnisse werden nicht dupliziert.
+     *  
+     * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param id         die ID der Blockung
+     * @param request    die Informationen zur HTTP-Anfrage
+     * 
+     * @return die HTTP-Antwort mit der Duplizierten Blockung 
+     */
+    @GET
+    @Path("/blockungen/{blockungsid : \\d+}/dupliziere")
+    @Operation(summary = "Dupliziert die angegebene Blockung.",
+               description = "Dupliziert die angegebene Blockung der gymnasialen Oberstufe ohne Zwischenergebnisse in der DB und gibt diese zurück. "
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Duplizieren einer Blockung "
+    		    + "besitzt.")
+    @ApiResponse(responseCode = "200", description = "Die Blockungsdaten der gymnasialen Oberstfue des Duplikats",
+    	content = @Content(mediaType = "application/json",
+    	schema = @Schema(implementation = GostBlockungsdaten.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Blockungsdaten der Gymnasialen Oberstufe zu duplizieren.")
+    @ApiResponse(responseCode = "404", description = "Keine Blockung mit der angebenen ID gefunden.")
+    public Response dupliziereGostBlockung(@PathParam("schema") String schema, @PathParam("blockungsid") long id, @Context HttpServletRequest request) {
+    	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeinformationen
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) {
+    		return (new DataGostBlockungsdaten(conn)).dupliziere(id, null);
+    	}
+    }
+
+
     /**
      * Die OpenAPI-Methode für das Hinzufügen eines weiteren Kurses zu einer
      * Blockung der Gymnasialen Oberstufe.
@@ -1436,6 +1465,37 @@ public class APIGost {
     }
     
 
+    /**
+     * Die OpenAPI-Methode für das Duplizieren der Definition einer Blockung mit den in der DB 
+     * gespeicherten Blockungsdaten ausgehend von dem angegebenen Zwischenergebnis. 
+     * Dieses Zwischenergebnis wird als einziges mit dupliziert und dient bei dem Blockungsduplikat 
+     * als Vorlage für die Definition von Regeln.
+     *  
+     * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param id         die ID des Zwischenergebnisses
+     * @param request    die Informationen zur HTTP-Anfrage
+     * 
+     * @return die HTTP-Antwort mit der Duplizierten Blockung 
+     */
+    @GET
+    @Path("/blockungen/zwischenergebnisse/{ergebnisid : \\d+}/dupliziere")
+    @Operation(summary = "Dupliziert die zu dem angegebenen Zwischenergebnis gehörende Blockung.",
+               description = "Dupliziert zu dem angegebenen Zwischenergebnis gehörende Blockung der gymnasialen Oberstufe. "
+               	+ "Das Zwischenergebnis wird als einziges mit dupliziert und dient bei dem Blockungsduplikat. "
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Duplizieren einer Blockung "
+    		    + "besitzt.")
+    @ApiResponse(responseCode = "200", description = "Die Blockungsdaten der gymnasialen Oberstfue des Duplikats als Vorlage für die Definition von Regeln",
+    	content = @Content(mediaType = "application/json",
+    	schema = @Schema(implementation = GostBlockungsdaten.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Blockungsdaten der Gymnasialen Oberstufe zu duplizieren.")
+    @ApiResponse(responseCode = "404", description = "Keine Blockung mit der angebenen ID gefunden.")
+    public Response dupliziereGostBlockungMitErgebnis(@PathParam("schema") String schema, @PathParam("ergebnisid") long id, @Context HttpServletRequest request) {
+    	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeinformationen
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) {
+    		return (new DataGostBlockungsdaten(conn)).dupliziere(null, id);
+    	}
+    }
+    
     
     /**
      * Die OpenAPI-Methode für das Erstellen einer Kurszuordnung zu einem Schüler bei einem Blockungsergebnis einer 
