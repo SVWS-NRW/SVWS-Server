@@ -143,10 +143,10 @@ const blockungsergebnisse: ComputedRef<
 > = computed(() => {
 	const v = app.dataKursblockungsergebnis.daten?.schienen
 	if (!v) return new Map();
-	const schienen = Array.from(v)
+	const schienen = v.toArray(new Array<GostBlockungsergebnisSchiene>())
 	const map = new Map();
 	for (const k of kurse.value)
-		map.set(k, schienen.map(s => Array.from(s.kurse).find(kk => k.id === kk.id)));
+		map.set(k, schienen.map(s => s.kurse.toArray(new Array<GostBlockungsergebnisKurs>()).find(kk => k.id === kk.id)));
 	return map;
 });
 

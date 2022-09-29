@@ -157,7 +157,7 @@
 	const kursdifferenz: ComputedRef<[number, number]|undefined> = computed(()=>{
 		const kurse = app.dataKursblockungsergebnis.manager?.getKursSchuelerZuordnungenFuerFach(props.kurs.fach_id)
 		if (!kurse) return undefined
-		const arr = Array.from(kurse)
+		const arr = kurse.toArray(new Array<GostBlockungsergebnisKurs>())
 		const filtered = arr.filter(k=>k.kursart === art.value)
 		if (!filtered.length) return [-1,-1]
 		if (props.belegung.find(k=>k)?.id !== filtered.sort((a,b)=>a.id-b.id)[0].id) return undefined

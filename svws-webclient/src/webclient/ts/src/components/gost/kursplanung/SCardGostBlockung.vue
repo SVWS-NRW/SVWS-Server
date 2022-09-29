@@ -139,7 +139,7 @@
 	});
 
 	const sorted_kurse: ComputedRef<Array<GostBlockungKurs>|Vector<GostBlockungKurs>> = computed(() => {
-		const arr = Array.from(kurse.value)
+		const arr = kurse.value.toArray(new Array<GostBlockungKurs>())
 		if (sort_by.value === 'kursart') 
 			return arr.sort((a,b)=>a.kursart-b.kursart)
 		else
@@ -148,7 +148,7 @@
 
 	const schienen: ComputedRef<GostBlockungSchiene[]> = computed(() => {
 		const result = app.dataKursblockung.daten?.schienen || new Vector<GostBlockungSchiene>();
-		return result.toArray(new Array<GostBlockungSchiene>);
+		return result.toArray(new Array<GostBlockungSchiene>());
 	});
 
 	const manager: ComputedRef<GostBlockungsergebnisManager | undefined> = computed(() => {
@@ -161,7 +161,7 @@
 	>> = computed(() => {
 		const map = new Map();
 		if (!app.dataKursblockung.daten) return map;
-		const schienen = Array.from(app.dataKursblockung.daten.schienen)
+		const schienen = app.dataKursblockung.daten.schienen.toArray(new Array<GostBlockungSchiene>())
 		for (const k of sorted_kurse.value) {
 			let zuordnung: GostBlockungsergebnisKurs | undefined = undefined
 			try {

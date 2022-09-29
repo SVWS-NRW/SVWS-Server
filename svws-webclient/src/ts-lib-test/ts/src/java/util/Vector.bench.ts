@@ -17,7 +17,7 @@ describe.each([s, n, l])(
 				Array.from(v);
 			});
 		bench( "toArray", () => {
-				v.toArray();
+				v.toArray(new Array<typeof a>());
 			});
 	}
 );
