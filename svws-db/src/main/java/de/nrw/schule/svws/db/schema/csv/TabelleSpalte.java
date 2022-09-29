@@ -14,6 +14,7 @@ import de.nrw.schule.svws.csv.converter.Boolean01ConverterSerializer;
 import de.nrw.schule.svws.db.DBDriver;
 import de.nrw.schule.svws.db.converter.DBAttributeConverter;
 import de.nrw.schule.svws.db.schema.DBSchemaDefinition;
+import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 
 
 
@@ -189,7 +190,7 @@ public class TabelleSpalte implements Comparable<TabelleSpalte> {
 	 */
 	@JsonIgnore
 	public String getSQL(DBSchemaDefinition schema, DBDriver dbms) {
-		Datentypen type = schema.datentypen.get(this.Datentyp);
+		SchemaDatentypen type = schema.datentypen.get(this.Datentyp);
 		return this.NameSpalte + " " + type.getDBType(dbms)
 	         + (((this.Datenlaenge == null) || (this.Datenlaenge <= 0)) ? "" : "(" + this.Datenlaenge + ")")
 	         + this.getSQLCollation(schema, dbms)
@@ -247,9 +248,9 @@ public class TabelleSpalte implements Comparable<TabelleSpalte> {
 	 */
 	@JsonIgnore
 	private String getSQLCollation(DBSchemaDefinition schema, DBDriver dbms) {
-		Datentypen type = schema.datentypen.get(this.Datentyp);
+		SchemaDatentypen type = schema.datentypen.get(this.Datentyp);
 		Datenbanksysteme datenbanksystem = schema.dbms.get(dbms.toString());
-		if ((!type.isCharString) || (datenbanksystem == null) || (datenbanksystem.CollationTable == null))
+		if ((!type.isCharString()) || (datenbanksystem == null) || (datenbanksystem.CollationTable == null))
 			return "";
 		switch (dbms) {
 			case MARIA_DB:
@@ -304,9 +305,9 @@ public class TabelleSpalte implements Comparable<TabelleSpalte> {
 	 * @return der SQL-Code für eine Default-Wert bei dieser Spalte
 	 */
 	@JsonIgnore
-	private String getSQLDefault(DBDriver dbms, Datentypen type) {
+	private String getSQLDefault(DBDriver dbms, SchemaDatentypen type) {
 		if (this.DefaultWert != null)
-			return " DEFAULT " + (type.isQuoted ? "'" : "") + this.DefaultWert + (type.isQuoted ? "'" : "");
+			return " DEFAULT " + (type.isQuoted() ? "'" : "") + this.DefaultWert + (type.isQuoted() ? "'" : "");
 		if (!this.IsNotNull)
 			return "";
 		if ("date".equals(this.Datentyp)) {

@@ -90,7 +90,7 @@ public class SQLGenerator {
 							if (obj == null)
 								return "NULL";
 							var coldata = obj.toString();
-							if (schema.datentypen.get(col.Datentyp).isQuoted) 
+							if (schema.datentypen.get(col.Datentyp).isQuoted()) 
 								coldata = "'" + coldata.replace("'", "''") + "'";
 	        				return coldata;
 						} catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {

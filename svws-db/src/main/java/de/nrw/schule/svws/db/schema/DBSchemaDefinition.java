@@ -1,5 +1,6 @@
 package de.nrw.schule.svws.db.schema;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,7 +12,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.nrw.schule.svws.csv.CsvReader;
 import de.nrw.schule.svws.db.DBDriver;
 import de.nrw.schule.svws.db.schema.csv.Datenbanksysteme;
-import de.nrw.schule.svws.db.schema.csv.Datentypen;
 import de.nrw.schule.svws.db.schema.csv.Fremdschluessel;
 import de.nrw.schule.svws.db.schema.csv.FremdschluesselSpalte;
 import de.nrw.schule.svws.db.schema.csv.PrimaerschluesselSpalte;
@@ -76,7 +76,7 @@ public class DBSchemaDefinition {
     @JsonIgnore public final Map<String, Datenbanksysteme> dbms;
 
     /** Enthält alle im Projekt für die Datenbank verwendeten Datentypen in den DBMS- und Java-spezifischen Benennungen */
-    @JsonIgnore public final Map<String, Datentypen> datentypen;
+    @JsonIgnore public final Map<String, SchemaDatentypen> datentypen;
     
     
     /** Enthält alle Revisionen des SVWS-Datenbank-Schemas */
@@ -108,7 +108,7 @@ public class DBSchemaDefinition {
     @JsonIgnore
 	private DBSchemaDefinition() {
     	// Lese die im Projekt für die Datenbank verwendeten Datentypen ein
-    	datentypen = CsvReader.fromResource("schema/csv/Datentypen.csv", Datentypen.class).stream().collect(Collectors.toMap(d -> d.Name, d -> d));
+    	datentypen = Arrays.stream(SchemaDatentypen.values()).collect(Collectors.toMap(d -> d.getName(), d -> d));
     	
     	// Lese die Datenbank-Revisionen ein
     	revisionen = CsvReader.fromResource("schema/csv/Versionen.csv", Versionen.class).stream().collect(Collectors.toMap(v -> v.Revision, v -> v));
@@ -767,7 +767,7 @@ public class DBSchemaDefinition {
 	 * @return der Java-Datentyp der Spalte
 	 */
 	public String getJavatype(TabelleSpalte spalte) {
-		return datentypen.get(spalte.Datentyp).java;
+		return datentypen.get(spalte.Datentyp).java();
 	}
 	
 }
