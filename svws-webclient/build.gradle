@@ -209,12 +209,12 @@ task testTSLib(type: NpmRun) {
 	group "svws"
 	dependsOn assembleTSLib, copyConfigTsLibTest
 	inputs.files file("$projectDir/src/ts-lib-test/ts/src")
-	outputs.dir file(project.ext.coverage_out + "/ts-lib")
+	outputs.dir file("$projectDir/build/coverage/ts-lib")
 	args = [ 'test:run' ]
 	workingDir = file("$projectDir/src/ts-lib-test/ts/src")
 	doFirst {
-		mkdir file(project.ext.coverage_out)
-		mkdir file(project.ext.coverage_out + "/ts-lib")
+		mkdir file("$projectDir/build/coverage")
+		mkdir file("$projectDir/build/coverage/ts-lib")
 	}
 }
 
