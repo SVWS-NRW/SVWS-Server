@@ -21,7 +21,7 @@ describe("Server", () => {
 	test("should be able to create a server", async () => {
 		expect(server).toBeDefined();
 	});
-	test("isAlive", async () => {
+	test.skip("isAlive", async () => {
 		try {
 			await server.isAlive();
 		} catch (e) {
