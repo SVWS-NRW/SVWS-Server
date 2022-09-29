@@ -366,10 +366,10 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 * Ermittelt die Kurs-Schüler-Zuordnungen für die Kurs mit der angegebenen Fach-ID. Erzeugt eine NullPointerException 
+	 * Ermittelt die Kurs-Schüler-Zuordnungen für die Kurse mit der angegebenen Fach-ID. Erzeugt eine NullPointerException 
 	 * im Fehlerfall, dass die ID nicht bekannt ist.
 	 * 
-	 * @param id   die ID des Kurses
+	 * @param id   die ID des Faches
 	 * 
 	 * @return die Kurs-Schüler-Zuordnungen der Kurse mit der angegebenen Fach-ID
 	 * 
