@@ -1,6 +1,4 @@
 <script setup lang='ts'>
-import { InputHTMLAttributes } from 'vue';
-
 type InputType = 'text' | 'number' | 'date' | 'email';
 
 const {

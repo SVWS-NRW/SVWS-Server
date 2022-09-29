@@ -1,26 +1,46 @@
 <template>
 	<tr
-		class="border border-[#7f7f7f]/20 px-2 text-left"
+		class="px-2 text-left"
+		
 		:style="{
 			'background-color': bgColor
 		}"
 	>
-		<td class="px-2">
-			{{ fachKuerzel }}-{{ art }}{{ kurs.nummer
-			}}{{ kurs.suffix ? "-" : "" }}{{ kurs.suffix }}
+		<td class="border border-[#7f7f7f]/20 px-2 whitespace-nowrap" :class="{'border-t-2': kursdifferenz}">
+	<div class="flex gap-1">
+		<template v-if=" kurs === edit_name ">
+			{{ fachKuerzel }}-{{ art }}{{ kurs.nummer }}-
+			<svws-ui-text-input 
+				v-model="suffix"
+				focus headless
+				style="width: 2rem"
+				@blur="edit_name=undefined"
+				@keyup.enter="edit_name=undefined"
+			/>
+		</template>
+		<template v-else>
+			<span class="underline decoration-dashed underline-offset-2 cursor-text" @click="edit_name = kurs">
+				{{ fachKuerzel }}-{{ art }}{{ kurs.nummer }}{{ kurs.suffix ? "-"+kurs.suffix : "" }}
+			</span>
+		</template>
+	</div>
 		</td>
-		<td class="text-center">Di</td>
+		<td class="border border-[#7f7f7f]/20 text-center" :class="{'border-t-2': kursdifferenz}"><svws-ui-checkbox v-model="koop"></svws-ui-checkbox></td>
+		<template v-if="!some_belegung"><td></td></template>
+		<template v-if="kursdifferenz">
+			<td class="border border-[#7f7f7f]/20 text-center" :class="{'border-t-2': kursdifferenz}" :rowspan="kursdifferenz[0]">{{kursdifferenz[1]}}</td>
+		</template>
 		<td
 			v-for="(b, i) in belegung"
 			:key="i"
-			class="border border-[#7f7f7f]/20 text-center"
+			class="border border-[#7f7f7f]/20 text-center" :class="{'border-t-2': kursdifferenz}"
 		>
 			<svws-ui-badge
-				v-if="b?.schueler.size()"
+				v-if="b"
 				size="tiny"
 				:variant="locked_kurs ? 'error' : 'highlight'"
 			>
-				{{ b?.schueler.size() }}
+				{{ b.schueler.size() }}
 				<i-ri-lock-line
 					v-if="locked_kurs"
 					class="inline-block text-red-700"
@@ -28,6 +48,7 @@
 				<i-ri-lock-unlock-line v-else class="inline-block" />
 			</svws-ui-badge>
 		</td>
+		<td class="border-none bg-white"></td>
 	</tr>
 </template>
 
@@ -38,7 +59,7 @@
 		GostFach,
 		ZulaessigesFach
 	} from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef } from "vue";
+	import { computed, ComputedRef, Ref, ref, WritableComputedRef } from "vue";
 
 	import { injectMainApp, Main } from "~/apps/Main";
 
@@ -48,13 +69,15 @@
 			required: true
 		},
 		belegung: {
-			type: Array as () => GostBlockungsergebnisKurs[],
+			type: Array as () => (GostBlockungsergebnisKurs|undefined)[],
 			required: true
 		}
 	});
 
 	const main: Main = injectMainApp();
 	const app = main.apps.gost;
+
+	const edit_name: Ref<GostBlockungKurs|undefined> = ref(undefined)
 
 	const gostFach: ComputedRef<GostFach | null> = computed(() => {
 		let fach: GostFach | null = null
@@ -107,8 +130,40 @@
 		return "";
 	});
 
-	const schiene: ComputedRef<string> = computed(() => {
-		app.dataKursblockungsergebnis.daten?.schienen;
-		return "";
+	const koop: WritableComputedRef<boolean> = computed({
+		get(): boolean {
+			return props.kurs.istKoopKurs.valueOf();
+		},
+		set(value: boolean) {
+			const kurs = app.dataKursblockung.manager?.getKurs(props.kurs.id)
+			if (!kurs) return
+			kurs.istKoopKurs = Boolean(value);
+			app.dataKursblockung.patch_kurs(kurs);
+		}
 	});
+	const suffix: WritableComputedRef<string> = computed({
+		get(): string {
+			return props.kurs.suffix.toString();
+		},
+		set(value: string) {
+			const kurs = app.dataKursblockung.manager?.getKurs(props.kurs.id)
+			if (!kurs) return
+			kurs.suffix = String(value);
+			app.dataKursblockung.patch_kurs(kurs);
+		}
+	});
+
+	const some_belegung: Ref<boolean> = computed(()=>props.belegung.some(b=>b))
+	const kursdifferenz: ComputedRef<[number, number]|undefined> = computed(()=>{
+		const kurse = app.dataKursblockungsergebnis.manager?.getKursSchuelerZuordnungenFuerFach(props.kurs.fach_id)
+		if (!kurse) return undefined
+		const arr = Array.from(kurse)
+		const filtered = arr.filter(k=>k.kursart === art.value)
+		if (!filtered.length) return [-1,-1]
+		if (props.belegung.find(k=>k)?.id !== filtered.sort((a,b)=>a.id-b.id)[0].id) return undefined
+		if (!filtered.length) return undefined
+		if (filtered.length === 2) return [2, Math.abs(filtered[0].schueler.size() - filtered[1].schueler.size())]
+		const sorted = filtered.sort((a,b)=>b.schueler.size()-a.schueler.size())
+		return [filtered.length, sorted[0].schueler.size() - sorted[sorted.length-1].schueler.size()]
+	})
 </script>

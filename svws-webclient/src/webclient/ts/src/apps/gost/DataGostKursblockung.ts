@@ -153,17 +153,14 @@ export class DataGostKursblockung extends BaseData<
 		return schiene
 	}
 
-	/**Entfernt eine Schiene aus der Blockung
-	 * @returns {Promise<GostBlockungSchiene|undefined>} Ein Schienenobjekt bei Erfolg
-	 */
-	public async del_blockung_schiene(): Promise<GostBlockungSchiene | undefined> {
+	/** Entfernt eine Schiene aus der Blockung */
+	public async del_blockung_schiene(s: GostBlockungSchiene): Promise<void> {
 		if (!this.daten?.id) return;
-		const schiene = await App.api.deleteGostBlockungSchiene(
+		const schiene = await App.api.deleteGostBlockungSchieneByID(
 			App.schema,
-			this.daten.id,
+			s.id,
 		);
 		this.manager?.removeSchiene(schiene)
-		return schiene
 	}
 
 	/** passt eine Schiene an */

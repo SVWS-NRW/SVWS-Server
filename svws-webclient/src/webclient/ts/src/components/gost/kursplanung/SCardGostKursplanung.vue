@@ -28,95 +28,24 @@
 							></s-fach-kurs>
 						</table>
 					</div>
-					<div class="flex justify-between">
-						<div class="flex gap-4">
-							<svws-ui-button
-								class="my-4"
-								@click="toggle_schienenmodal"
-								>Schienen...</svws-ui-button
-							>
-							<svws-ui-button
-								class="my-4"
-								@click="toggle_kursmodal"
-								>Kurse ...</svws-ui-button
-							>
-						</div>
-					</div>
 				</div>
 			</div>
 		</div>
 	</svws-ui-content-card>
-	<svws-ui-modal ref="schienenmodal" size="small">
-		<template #modalTitle>Verfügbare Schienen</template>
-		<template #modalDescription>
-			<s-modal-gost-schienen />
-		</template>
-
-		<template #modalActions>
-			<svws-ui-button type="secondary" @click="toggle_schienenmodal">
-				Schließen
-			</svws-ui-button>
-		</template>
-	</svws-ui-modal>
-	<svws-ui-modal ref="kursmodal" size="small">
-		<template #modalTitle>Kursübersicht</template>
-		<template #modalDescription>
-			<s-modal-gost-kursliste />
-		</template>
-
-		<template #modalActions>
-			<svws-ui-button type="secondary" @click="toggle_kursmodal">
-				Schließen
-			</svws-ui-button>
-		</template>
-	</svws-ui-modal>
 </template>
 
 <script setup lang="ts">
-		import {
-	GostBlockungListeneintrag,
-	GostHalbjahr,
-	GostStatistikFachwahl
-	} from "@svws-nrw/svws-core-ts";
-		   // import { SvwsUiModal } from "@svws-nrw/svws-ui";
-		import { computed, ComputedRef, Ref, ref } from "vue";
+		import { GostStatistikFachwahl } from "@svws-nrw/svws-core-ts";
+		import { computed, ComputedRef } from "vue";
 		import { injectMainApp, Main } from "~/apps/Main";
 
-				const main: Main = injectMainApp();
-			const app = main.apps.gost
+		const main: Main = injectMainApp();
+		const app = main.apps.gost
 
-		   // FIXME:
-		   // const schienenmodal: Ref<SvwsUiModal> = ref(null);
-		   // const kursmodal: Ref<SvwsUiModal> = ref(null);
-
-		   const schienenmodal: Ref<any> = ref(null);
-		   const kursmodal: Ref<any> = ref(null);
-
-		   const kursauswahl: ComputedRef<GostBlockungListeneintrag | undefined> = computed(() => {
-			return app.blockungsauswahl
-				.ausgewaehlt;
-		});
-
-		   const bezeichnung: ComputedRef<string | undefined> = computed(() => {
-			return app.auswahl.ausgewaehlt?.bezeichnung?.toString();
-		});
-
-		   const faecher: ComputedRef<Array<GostStatistikFachwahl>> = computed(() => {
+		const faecher: ComputedRef<Array<GostStatistikFachwahl>> = computed(() => {
 			return (
 				app.dataFachwahlen.daten?.toArray(new Array<GostStatistikFachwahl>) ||
 				new Array<GostStatistikFachwahl>()
 			);
 		});
-
-		   const jahrgangsstufen: ComputedRef<GostHalbjahr[]> = computed(() => {
-			return GostHalbjahr.values() || [];
-		});
-
-		   function toggle_schienenmodal() {
-			schienenmodal.value.isOpen ? schienenmodal.value.closeModal() : schienenmodal.value.openModal()
-		};
-
-		   function toggle_kursmodal() {
-			kursmodal.value.isOpen ? kursmodal.value.closeModal() : kursmodal.value.openModal()
-		};
 </script>

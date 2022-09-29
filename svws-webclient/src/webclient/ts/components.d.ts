@@ -18,6 +18,7 @@ declare module '@vue/runtime-core' {
     DropData: typeof import('./src/components/gost/kursschueler/DropData.vue')['default']
     IRiAddLine: typeof import('~icons/ri/add-line')['default']
     IRiArrowLeftLine: typeof import('~icons/ri/arrow-left-line')['default']
+    IRiArrowUpDownLine: typeof import('~icons/ri/arrow-up-down-line')['default']
     IRiArrowUpSLine: typeof import('~icons/ri/arrow-up-s-line')['default']
     IRiArtboardLine: typeof import('~icons/ri/artboard-line')['default']
     IRiBookReadLine: typeof import('~icons/ri/book-read-line')['default']
