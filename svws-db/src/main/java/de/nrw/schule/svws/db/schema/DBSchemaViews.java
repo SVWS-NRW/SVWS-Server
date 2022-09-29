@@ -262,8 +262,8 @@ public class DBSchemaViews {
                 """
 		).add("SF", "Zulässige Schulform der Gliederung", "String", "ssf.Schulform_Kuerzel", null, true)
 		 .add("Flag", "Ein Flag (hier zur Kompatibilität vorhanden)", "String", "'1'", null, true)
-		 .add("BKAnlage", "Die Anlage bei einem Bildungsgang des Berufskollegs", "String", "sg.BKAnlage", null, true)
-		 .add("BKTyp", "Der Typ der Anlage bei einem Bildungsgang des Berufskollegs", "String", "sg.BKTyp", null, true)
+		 .add("BKAnlage", "Die Anlage bei einem Bildungsgang des Berufskollegs", "String", "CASE WHEN sg.BKAnlage IS NULL THEN substr(sg.Kuerzel,1,1) ELSE sg.BKAnlage END", null, true)
+		 .add("BKTyp", "Der Typ der Anlage bei einem Bildungsgang des Berufskollegs", "String", "CASE WHEN sg.BKTyp IS NULL THEN substr(sg.Kuerzel,2) ELSE sg.BKTyp END", null, true)
 		 .add("BKIndex", "Der Index in die Fachklassen-Tabelle einem Bildungsgang des Berufskollegs", "String", "sg.BKIndex", null, false)
 		 .add("Beschreibung", "Textuelle Beschreibung der Schulgliederung", "String", "sg.Bezeichnung", null, false)
 		 .add("geaendert", "Das Datum der letzten Änderung (hier zur Kompatibilität vorhanden)", "String", "NULL", null, false)
