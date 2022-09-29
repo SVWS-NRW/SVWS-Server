@@ -114,6 +114,7 @@ public enum Schulform {
 
 
 	// Pseudo-Schulformen (unter anderem genutzt, um die Herkunft von Schülern bei der Anmeldung an einer Schule angeben zu können)
+	// TODO entfernen
 
 	/** Schulform Ausländische Schüler, die zugewandert sind */
 	AS(new SchulformKatalogEintrag[]{
