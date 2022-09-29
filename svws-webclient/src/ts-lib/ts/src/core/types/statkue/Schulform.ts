@@ -57,22 +57,6 @@ export class Schulform extends JavaObject {
 
 	public static readonly WF : Schulform = new Schulform("WF", 18, [new SchulformKatalogEintrag(19000, "WF", "19", "Freie Waldorfschule (Förderschule)", true, null, null)]);
 
-	public static readonly AS : Schulform = new Schulform("AS", 19, [new SchulformKatalogEintrag(100000, "AS", null, "Ausländische Schüler, die zugewandert sind", false, null, null)]);
-
-	public static readonly HU : Schulform = new Schulform("HU", 20, [new SchulformKatalogEintrag(200000, "HU", null, "Hochschule, Universität", false, null, null)]);
-
-	public static readonly LB : Schulform = new Schulform("LB", 21, [new SchulformKatalogEintrag(300000, "LB", null, "Förderschule, Schwerpunkt Lernen", false, null, null)]);
-
-	public static readonly SO : Schulform = new Schulform("SO", 22, [new SchulformKatalogEintrag(400000, "SO", null, "Sonstige Förderschulen", true, null, null)]);
-
-	public static readonly SP : Schulform = new Schulform("SP", 23, [new SchulformKatalogEintrag(500000, "SP", null, "Ausgesiedelte Schüler, die zugewandert sind", false, null, null)]);
-
-	public static readonly WZ : Schulform = new Schulform("WZ", 24, [new SchulformKatalogEintrag(600000, "WZ", null, "Wehrdienst bzw. Zivildienst", false, null, null)]);
-
-	public static readonly XB : Schulform = new Schulform("XB", 25, [new SchulformKatalogEintrag(700000, "XB", null, "Berufstätigkeit, z.B. vor Besuch einer Fachschule", false, null, null)]);
-
-	public static readonly XS : Schulform = new Schulform("XS", 26, [new SchulformKatalogEintrag(800000, "XS", null, "Sonstige Schulen bzw. keine Schule", false, null, null)]);
-
 	public static VERSION : number = 1;
 
 	public readonly daten : SchulformKatalogEintrag;

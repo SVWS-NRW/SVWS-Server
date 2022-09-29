@@ -110,50 +110,6 @@ public enum Schulform {
 	/** Schulform Freie Waldorfschule (Förderschule) */
 	WF(new SchulformKatalogEintrag[]{
 		new SchulformKatalogEintrag(19000, "WF", "19", "Freie Waldorfschule (Förderschule)", true, null, null)
-	}),
-
-
-	// Pseudo-Schulformen (unter anderem genutzt, um die Herkunft von Schülern bei der Anmeldung an einer Schule angeben zu können)
-	// TODO entfernen
-
-	/** Schulform Ausländische Schüler, die zugewandert sind */
-	AS(new SchulformKatalogEintrag[]{
-		new SchulformKatalogEintrag(100000, "AS", null, "Ausländische Schüler, die zugewandert sind", false, null, null)
-	}),
-
-	/** Schulform Hochschule, Universität */
-	HU(new SchulformKatalogEintrag[]{
-		new SchulformKatalogEintrag(200000, "HU", null, "Hochschule, Universität", false, null, null)
-	}),
-
-	/** Schulform Förderschule, Schwerpunkt Lernen */
-	LB(new SchulformKatalogEintrag[]{
-		new SchulformKatalogEintrag(300000, "LB", null, "Förderschule, Schwerpunkt Lernen", false, null, null)
-	}),
-
-	/** Schulform Sonstige Förderschulen */
-	SO(new SchulformKatalogEintrag[]{
-		new SchulformKatalogEintrag(400000, "SO", null, "Sonstige Förderschulen", true, null, null)
-	}),
-
-	/** Schulform Ausgesiedelte Schüler, die zugewandert sind */
-	SP(new SchulformKatalogEintrag[]{
-		new SchulformKatalogEintrag(500000, "SP", null, "Ausgesiedelte Schüler, die zugewandert sind", false, null, null)
-	}),
-
-	/** Schulform Wehrdienst bzw. Zivildienst */
-	WZ(new SchulformKatalogEintrag[]{
-		new SchulformKatalogEintrag(600000, "WZ", null, "Wehrdienst bzw. Zivildienst", false, null, null)
-	}),
-
-	/** Schulform Berufstätigkeit, z.B. vor Besuch einer Fachschule */
-	XB(new SchulformKatalogEintrag[]{
-		new SchulformKatalogEintrag(700000, "XB", null, "Berufstätigkeit, z.B. vor Besuch einer Fachschule", false, null, null)
-	}),
-
-	/** Schulform Sonstige Schulen bzw. keine Schule */
-	XS(new SchulformKatalogEintrag[]{
-		new SchulformKatalogEintrag(800000, "XS", null, "Sonstige Schulen bzw. keine Schule", false, null, null)
 	});
 
 

@@ -27,7 +27,6 @@ declare module '@vue/runtime-core' {
     'IRiDeleteBin-2Line': typeof import('~icons/ri/delete-bin-2-line')['default']
     IRiDeleteBin2Line: typeof import('~icons/ri/delete-bin2-line')['default']
     IRiDraftLine: typeof import('~icons/ri/draft-line')['default']
-    IRiEditLine: typeof import('~icons/ri/edit-line')['default']
     IRiFileCopyLine: typeof import('~icons/ri/file-copy-line')['default']
     IRiFilter3Line: typeof import('~icons/ri/filter3-line')['default']
     IRiGroupLine: typeof import('~icons/ri/group-line')['default']

@@ -27,9 +27,6 @@ public class TestCoreTypeSchulgliederung {
     @DisplayName("Teste ob die Schulformen mindestens eine Schulgliederungen haben")
     void testSchulformMindestensEineSchulgliederung() {
     	for (Schulform sf : Schulform.values()) {
-        	// TODO Pseudoschulformen entfernen und dann die nachfolgende Überprüfung entfernen
-    		if (switch (sf) { case AS, HU, LB, SO, SP, WZ, XB, XS -> true; default -> false; }) 
-    			continue;
     		if (Schulgliederung.get(sf).size() <= 0)
         		fail("Keine Schulgliederungen für die Schulform " + sf.name() + " gefunden.");
     	}
