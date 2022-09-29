@@ -14,7 +14,7 @@ import de.nrw.schule.svws.core.utils.schule.AbgangsartenManager;
  * JSON-Dateien hinterlegt sind. Hierbei werden die Daten auch vereinzelt
  * auf Korrektheit geprüft.
  */
-public class TestJSONData {
+public class TestAbgangsartenManager {
 	
 	/**
 	 * Prüft die Einträge der beiden Kataloge für die Abgangsarten
@@ -48,6 +48,4 @@ public class TestJSONData {
 		System.out.println("Prüfung des Katalogs der Abgangsarten erfolgreich abgeschlossen.");
 	}
 	
-	// TODO Tests für BerufskollegFachklassenManager manager = JsonDaten.fachklassenManager;
-
 }
