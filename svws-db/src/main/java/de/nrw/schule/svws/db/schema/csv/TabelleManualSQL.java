@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import de.nrw.schule.svws.csv.converter.Boolean01ConverterDeserializer;
 import de.nrw.schule.svws.csv.converter.Boolean01ConverterSerializer;
 import de.nrw.schule.svws.db.DBDriver;
+import de.nrw.schule.svws.db.schema.SchemaRevisionen;
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle SchemaTabelleManualSQL.
@@ -15,11 +16,11 @@ import de.nrw.schule.svws.db.DBDriver;
 public class TabelleManualSQL {
 
 	/** Die Revision, in welcher der SQL-Befehl ausgeführt wird, sofern es sich um ein Update handelt. */
-    @JsonProperty public Integer Revision;
+    @JsonProperty public Long Revision;
 	
 	/** Die Revision, bis zu welcher der SQL-Befehl ausgeführt werden soll: -1 falls es keine Einschränkung gibt und NULL,
      * wenn die Revision mit der Veraltet-Revision der Tabelle übereinstimmt */
-    @JsonProperty public Integer Veraltet;
+    @JsonProperty public Long Veraltet;
 
 	/** Gibt die Reihenfolge an, in der die manuelle SQL-Befehle einer Revision abgearbeitet werden sollen */
     @JsonProperty public Integer Reihenfolge;
@@ -44,10 +45,10 @@ public class TabelleManualSQL {
     
     
     /** Die Revision, bei welcher der SQL-Befehl aufgeführt wird */
-    @JsonIgnore public Versionen dbRevision;
+    @JsonIgnore public SchemaRevisionen dbRevision;
 
     /** Die Revision, bis zu welcher der SQL-Befehl ausgeführt werden kann, oder null */
-    @JsonIgnore public Versionen dbRevisionVeraltet;
+    @JsonIgnore public SchemaRevisionen dbRevisionVeraltet;
 
     
     /** Das DBMS für welches der SQL-Befehl definiert wurde. */

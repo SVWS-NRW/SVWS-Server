@@ -39,7 +39,7 @@ public class DTOCreatorView {
 	 * 
 	 * @return der Package-Name
 	 */
-	public String getPackageName(int rev) {
+	public String getPackageName(long rev) {
 		if (rev == 0)
 			throw new IllegalArgumentException("Java-DTOs für Views brauchen nicht für die Migration erstellt werden.");
 		return DBSchemaDefinition.javaPackage + "." 
@@ -57,7 +57,7 @@ public class DTOCreatorView {
      * @return der Name der Java-Klasse
      */
     @JsonIgnore
-    public String getJavaKlasse(final int rev) {
+    public String getJavaKlasse(final long rev) {
     	if (rev == 0)
 			throw new IllegalArgumentException("Java-DTOs für Views brauchen nicht für die Migration erstellt werden.");
 		return (rev > 0) ? "Rev" + rev + view.dtoName : view.dtoName;
@@ -121,7 +121,7 @@ public class DTOCreatorView {
 	 * 
 	 * @return eine Liste mit den Attribut-Konvertern.
 	 */
-	private List<DBAttributeConverter<?,?>> getAttributeConverter(final int rev) {
+	private List<DBAttributeConverter<?,?>> getAttributeConverter(final long rev) {
 		return view.spalten.stream().map(spalte -> spalte.converter)
 				.filter(acName -> acName != null)
 				.map(acName -> DBAttributeConverter.getByClassName(acName))
@@ -165,7 +165,7 @@ public class DTOCreatorView {
 	 * 
 	 * @return der Java Code
 	 */
-	private String getCode4NamedQueries(final int rev) {
+	private String getCode4NamedQueries(final long rev) {
 		String className = getJavaKlasse(rev);
 		// alle Views: Generiere Code für eine NamedQuery auf alle Datensätze der View
 		String code 
@@ -209,7 +209,7 @@ public class DTOCreatorView {
 	 *  
 	 * @return der Java-Code für das Attribut für die DB-Spalte
 	 */
-	private String getCode4Attributes(ViewSpalte spalte, final int rev, boolean withAnnotations) {
+	private String getCode4Attributes(ViewSpalte spalte, final long rev, boolean withAnnotations) {
 		StringBuilder sb = new StringBuilder();
 		if (spalte.beschreibung != null) 
 			sb.append("\t/** " + spalte.beschreibung + " */" + System.lineSeparator());
@@ -240,7 +240,7 @@ public class DTOCreatorView {
 	 * 
 	 * @return der Java-Code für die DTO-Klasse in der angegebenen Revision.
 	 */
-	public String getCode(final int rev) {
+	public String getCode(final long rev) {
 		var acs = getAttributeConverter(rev);
 		String className = getJavaKlasse(rev);
 
@@ -336,7 +336,7 @@ public class DTOCreatorView {
 	 * 
 	 * @return der Java-Code für die Primärschlüssel-DTO-Klasse. 
 	 */
-	public String getCode4PrimaryKeyClass(final int rev) {
+	public String getCode4PrimaryKeyClass(final long rev) {
 		String className = getJavaKlasse(rev);
 		// Bestimme die Spalten für den Primärschlüssel und erzeuge nur Code, wenn es sich nicht um einen einfachen Primärschlüssel handelt
 		List<ViewSpalte> pkSpalten = view.pkSpalten;

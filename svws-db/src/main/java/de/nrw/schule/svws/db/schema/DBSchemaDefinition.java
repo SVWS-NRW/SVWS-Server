@@ -24,7 +24,6 @@ import de.nrw.schule.svws.db.schema.csv.TabelleSpalte;
 import de.nrw.schule.svws.db.schema.csv.TabelleUnique;
 import de.nrw.schule.svws.db.schema.csv.TabelleUniqueSpalte;
 import de.nrw.schule.svws.db.schema.csv.Trigger;
-import de.nrw.schule.svws.db.schema.csv.Versionen;
 
 
 /**
@@ -79,26 +78,11 @@ public class DBSchemaDefinition {
     @JsonIgnore public final Map<String, SchemaDatentypen> datentypen;
     
     
-    /** Enthält alle Revisionen des SVWS-Datenbank-Schemas */
-    @JsonIgnore public final Map<Integer, Versionen> revisionen;
-    
-    /** Die maximale Version (-1), die bei dem SVWS-DB-Schema existiert */
-    @JsonIgnore private Versionen maxVersion;
-    
-    /** Die maximale Revision, die bei dem SVWS-DB-Schema existiert */
-    @JsonIgnore public int maxRevision;
-    
-    /** Die maximale Version, die für ein SVWS-DB-Schema existiert, welches nicht im Produktivbetrieb eingesetzt wird, sondern nur im Bereich der Weiterentwicklung des Servers */
-    @JsonIgnore private Versionen maxVersionDeveloper;
-
-    /** Die maximale Revision, die für ein SVWS-DB-Schema existiert, welches nicht im Produktivbetrieb eingesetzt wird, sondern nur im Bereich der Weiterentwicklung des Servers */
-    @JsonIgnore public int maxRevisionDeveloper;
-    
     /** Enthält alle Trigger, die unabhängig von Auto-Inkrementen auf der SVWS-DB definiert wurden. */
     @JsonIgnore public final Map<DBDriver, Map<String, Trigger>> trigger;
     
     /** Enthält alle "von Hand" definierten SQL-Befehle die bei einem Update zu einer speziellen SVWS-DB-Revision ausgeführt werden müssen */
-    @JsonIgnore public final Map<DBDriver, Map<Integer, List<TabelleManualSQL>>> manualSQL;
+    @JsonIgnore public final Map<DBDriver, Map<Long, List<TabelleManualSQL>>> manualSQL;
 
 
 
@@ -110,19 +94,6 @@ public class DBSchemaDefinition {
     	// Lese die im Projekt für die Datenbank verwendeten Datentypen ein
     	datentypen = Arrays.stream(SchemaDatentypen.values()).collect(Collectors.toMap(d -> d.getName(), d -> d));
     	
-    	// Lese die Datenbank-Revisionen ein
-    	revisionen = CsvReader.fromResource("schema/csv/Versionen.csv", Versionen.class).stream().collect(Collectors.toMap(v -> v.Revision, v -> v));
-    	maxVersion = revisionen.get(-1);
-    	if (maxVersion == null)
-			throw new RuntimeException("FEHLER: Es wurde keine gültige Schema-Revision -1 gefunden. Eine maximale Revision ist somit nicht definiert.");
-    	if (maxVersion.MaxRevision == null)
-			throw new RuntimeException("FEHLER: Es wurde keine gültige maximale Schema-Revision bei der Revision -1 gefunden.");
-    	maxRevision = maxVersion.MaxRevision;
-    	maxVersionDeveloper = revisionen.values().stream().max((a,b) -> Integer.compare(a.Revision, b.Revision)).orElse(null);
-    	if (maxVersionDeveloper == null)
-			throw new RuntimeException("FEHLER: Es wurde keine gültige Schema-Revision gefunden, so dass keine maximale Entwickler-Revision bestimmt werden konnte.");
-    	maxRevisionDeveloper = maxVersionDeveloper.Revision;
-    	
     	// Lese die unterstützten DBMS ein
     	dbms = CsvReader.fromResource("schema/csv/Datenbanksysteme.csv", Datenbanksysteme.class).stream().collect(Collectors.toMap(d -> d.Name, d -> d));
 
@@ -133,12 +104,12 @@ public class DBSchemaDefinition {
     		tab.primaerschluessel.tabelle = tab;
     		if (tab.Revision == null)
     			throw new NullPointerException("FEHLER: Die Revision bei der Tabelle " + tab.Name + " darf nicht null sein.");
-    		tab.dbRevision = revisionen.get(tab.Revision);
+    		tab.dbRevision = SchemaRevisionen.get(tab.Revision);
     		if (tab.dbRevision == null)
     			throw new RuntimeException("FEHLER: Die Revision bei der Tabelle " + tab.Name + " ist ungültig.");
     		if (tab.Veraltet == null)
     			throw new NullPointerException("FEHLER: Die Revision, welche angibt ob die Tabelle " + tab.Name + " veraltet ist, darf nicht null sein. -1 signalisiert, dass die Tabelle nicht veraltet ist.");
-    		tab.dbRevisionVeraltet = revisionen.get(tab.Veraltet);
+    		tab.dbRevisionVeraltet = SchemaRevisionen.get(tab.Veraltet);
     		if (tab.dbRevisionVeraltet == null)
     			throw new RuntimeException("FEHLER: Die Revision, ab wann die Tabelle " + tab.Name + " veraltet ist, ist ungültig.");
     	}
@@ -153,14 +124,14 @@ public class DBSchemaDefinition {
     		if (ts.Revision == null) {
     			ts.dbRevision = ts.tabelle.dbRevision;
     		} else {
-    			ts.dbRevision = revisionen.get(ts.Revision);
+    			ts.dbRevision = SchemaRevisionen.get(ts.Revision);
     			if (ts.dbRevision == null)
     				throw new RuntimeException("FEHLER: Die Revision bei der Tabellenspalte " + ts.NameTabelle + "." + ts.NameSpalte + " ist ungültig.");
     		}
     		if (ts.Veraltet == null) {
     			ts.dbRevisionVeraltet = ts.tabelle.dbRevisionVeraltet;
     		} else {
-    			ts.dbRevisionVeraltet = revisionen.get(ts.Veraltet);
+    			ts.dbRevisionVeraltet = SchemaRevisionen.get(ts.Veraltet);
     			if (ts.dbRevisionVeraltet == null)
     				throw new RuntimeException("FEHLER: Die Revision, ab der die Tabellenspalte " + ts.NameTabelle + "." + ts.NameSpalte + " veraltet ist, ist ungültig.");    			
     		}
@@ -208,14 +179,14 @@ public class DBSchemaDefinition {
     		if (tis.Revision == null) {
     			tis.dbRevision = tis.tabelle.dbRevision;
     		} else {
-    			tis.dbRevision = revisionen.get(tis.Revision);
+    			tis.dbRevision = SchemaRevisionen.get(tis.Revision);
     			if (tis.dbRevision == null)
     				throw new RuntimeException("FEHLER: Die Revision bei dem index " + tis.Name + " ist ungültig.");
     		}
     		if (tis.Veraltet == null) {
     			tis.dbRevisionVeraltet = tis.tabelle.dbRevisionVeraltet;
     		} else {
-    			tis.dbRevisionVeraltet = revisionen.get(tis.Veraltet);
+    			tis.dbRevisionVeraltet = SchemaRevisionen.get(tis.Veraltet);
     			if (tis.dbRevisionVeraltet == null)
     				throw new RuntimeException("FEHLER: Die Revision, ab der der Index " + tis.Name + " veraltet ist, ist ungültig.");    			
     		}
@@ -226,9 +197,9 @@ public class DBSchemaDefinition {
     			// Prüfe, ob der existierende Index, die gleichen Informationen beinhaltet, wie Tabelle und Revisionen
     			if (!tis.NameTabelle.equals(tabIndex.tabelle.Name))
     				throw new NullPointerException("FEHLER: Kann die Tabellenspalte des Index " + tis.Name + " keiner Tabelle zuordnen: " + tis.NameTabelle + "." + tis.NameSpalte);
-    			if (tis.dbRevision.compareTo(tabIndex.dbRevision) != 0)
+    			if (!tis.dbRevision.equals(tabIndex.dbRevision))
     				throw new RuntimeException("FEHLER: Die Revision bei dem Index " + tis.Name + " wurde bei einzelnen Tabellenspalten nicht einheitlich definiert");
-    			if (tis.dbRevisionVeraltet.compareTo(tabIndex.dbRevisionVeraltet) != 0)
+    			if (!tis.dbRevisionVeraltet.equals(tabIndex.dbRevisionVeraltet))
     				throw new RuntimeException("FEHLER: Die Revision, wann der Index " + tis.Name + " veraltet ist, wurde bei einzelnen Tabellenspalten nicht einheitlich definiert");
     		} else {
     			// Füge den neuen Index ein - auch bei der zugehörigen Tabelle
@@ -263,14 +234,14 @@ public class DBSchemaDefinition {
     		if (tus.Revision == null) {
     			tus.dbRevision = tus.tabelle.dbRevision;
     		} else {
-    			tus.dbRevision = revisionen.get(tus.Revision);
+    			tus.dbRevision = SchemaRevisionen.get(tus.Revision);
     			if (tus.dbRevision == null)
     				throw new RuntimeException("FEHLER: Die Revision bei der Unique-Constraint " + tus.Name + " ist ungültig.");
     		}
     		if (tus.Veraltet == null) {
     			tus.dbRevisionVeraltet = tus.tabelle.dbRevisionVeraltet;
     		} else {
-    			tus.dbRevisionVeraltet = revisionen.get(tus.Veraltet);
+    			tus.dbRevisionVeraltet = SchemaRevisionen.get(tus.Veraltet);
     			if (tus.dbRevisionVeraltet == null)
     				throw new RuntimeException("FEHLER: Die Revision, ab der die Unique-Constraint " + tus.Name + " veraltet ist, ist ungültig.");    			
     		}
@@ -281,9 +252,9 @@ public class DBSchemaDefinition {
     			// Prüfe, ob die existierende Unique-Constraint, die gleichen Informationen beinhaltet, wie Tabelle und Revisionen
     			if (!tus.NameTabelle.equals(tabUnique.tabelle.Name))
     				throw new NullPointerException("FEHLER: Kann die Tabellenspalte der Unique-Constraint " + tus.Name + " keiner Tabelle zuordnen: " + tus.NameTabelle + "." + tus.NameSpalte);
-    			if (tus.dbRevision.compareTo(tabUnique.dbRevision) != 0)
+    			if (!tus.dbRevision.equals(tabUnique.dbRevision))
     				throw new RuntimeException("FEHLER: Die Revision bei der Unique-Constraint " + tus.Name + " wurde bei einzelnen Tabellenspalten nicht einheitlich definiert");
-    			if (tus.dbRevisionVeraltet.compareTo(tabUnique.dbRevisionVeraltet) != 0)
+    			if (!tus.dbRevisionVeraltet.equals(tabUnique.dbRevisionVeraltet))
     				throw new RuntimeException("FEHLER: Die Revision, wann die Unique-Constraint " + tus.Name + " veraltet ist, wurde bei einzelnen Tabellenspalten nicht einheitlich definiert");
     		} else {
     			// Füge die neue Unique-Constraint ein - auch bei der zugehörigen Tabelle
@@ -326,14 +297,14 @@ public class DBSchemaDefinition {
     		if (tfs.Revision == null) {
     			tfs.dbRevision = tfs.tabelle.dbRevision;
     		} else {
-    			tfs.dbRevision = revisionen.get(tfs.Revision);
+    			tfs.dbRevision = SchemaRevisionen.get(tfs.Revision);
     			if (tfs.dbRevision == null)
     				throw new RuntimeException("FEHLER: Die Revision bei dem Fremdschlüssel " + tfs.Name + " ist ungültig.");
     		}
     		if (tfs.Veraltet == null) {
     			tfs.dbRevisionVeraltet = tfs.tabelle.dbRevisionVeraltet;
     		} else {
-    			tfs.dbRevisionVeraltet = revisionen.get(tfs.Veraltet);
+    			tfs.dbRevisionVeraltet = SchemaRevisionen.get(tfs.Veraltet);
     			if (tfs.dbRevisionVeraltet == null)
     				throw new RuntimeException("FEHLER: Die Revision, ab der der Fremdschlüssel " + tfs.Name + " veraltet ist, ist ungültig.");    			
     		}
@@ -346,9 +317,9 @@ public class DBSchemaDefinition {
     				throw new NullPointerException("FEHLER: Fehler bei der Definition des Fremdschlüssels " + tfs.Name + ": Der Name der zugehörigen Tabelle ist nicht eindeutig (" + tfs.NameTabelle + " bzw. " + fk.tabelle.Name + ")");
     			if (!tfs.NameTabelleReferenziert.equals(fk.tabelleReferenziert.Name))
     				throw new NullPointerException("FEHLER: Fehler bei der Definition des Fremdschlüssels " + tfs.Name + ": Der Name der referenzierten Tabelle ist nicht eindeutig (" + tfs.NameTabelleReferenziert + " bzw. " + fk.tabelleReferenziert.Name + ")");
-    			if (tfs.dbRevision.compareTo(fk.dbRevision) != 0)
+    			if (!tfs.dbRevision.equals(fk.dbRevision))
     				throw new RuntimeException("FEHLER: Die Revision bei dem Fremdschlüssel " + tfs.Name + " wurde nicht einheitlich definiert");
-    			if (tfs.dbRevisionVeraltet.compareTo(fk.dbRevisionVeraltet) != 0)
+    			if (!tfs.dbRevisionVeraltet.equals(fk.dbRevisionVeraltet))
     				throw new RuntimeException("FEHLER: Die Revision, ab wann der Fremdschlüssel " + tfs.Name + " veraltet ist, wurde nicht einheitlich definiert");
     			if (!tfs.OnUpdate.equals(fk.OnUpdate))
     				throw new NullPointerException("FEHLER: Fehler bei der Definition des Fremdschlüssels " + tfs.Name + ": Die Reaktion bei OnUpdate ist nicht eindeutig festgelegt.");
@@ -381,7 +352,7 @@ public class DBSchemaDefinition {
     			throw new NullPointerException("FEHLER: Kann die Tabelle für die Default-Daten nicht finden: " + td.NameTabelle);
     		if (td.Revision == null)
     			throw new NullPointerException("FEHLER: Die Revision für die letzten Änderungen bei den Default-Daten der Tabelle " + td.NameTabelle + " darf nicht null sein.");
-    		td.dbRevision = revisionen.get(td.Revision);
+    		td.dbRevision = SchemaRevisionen.get(td.Revision);
     		if (td.dbRevision == null)
     			throw new RuntimeException("FEHLER: Die Revision für die letzten Änderungen bei den Default-Daten der Tabelle " + td.NameTabelle + " ist ungültig.");
     	}
@@ -402,14 +373,14 @@ public class DBSchemaDefinition {
     		if (tr.Revision == null) {
     			tr.dbRevision = tr.tabelle.dbRevision;
     		} else {
-    			tr.dbRevision = revisionen.get(tr.Revision);
+    			tr.dbRevision = SchemaRevisionen.get(tr.Revision);
     			if (tr.dbRevision == null)
     				throw new RuntimeException("FEHLER: Die Revision bei der Unique-Constraint " + tr.Name + " ist ungültig.");
     		}
     		if (tr.Veraltet == null) {
     			tr.dbRevisionVeraltet = tr.tabelle.dbRevisionVeraltet;
     		} else {
-    			tr.dbRevisionVeraltet = revisionen.get(tr.Veraltet);
+    			tr.dbRevisionVeraltet = SchemaRevisionen.get(tr.Veraltet);
     			if (tr.dbRevisionVeraltet == null)
     				throw new RuntimeException("FEHLER: Die Revision, ab der die Unique-Constraint " + tr.Name + " veraltet ist, ist ungültig.");    			
     		}
@@ -423,24 +394,23 @@ public class DBSchemaDefinition {
     	
     	manualSQL = new HashMap<>();
     	for (DBDriver dbms : DBDriver.values()) {
-    		var map = new HashMap<Integer, List<TabelleManualSQL>>();
+    		var map = new HashMap<Long, List<TabelleManualSQL>>();
     		manualSQL.put(dbms, map);
-    		for (Integer rev : revisionen.keySet()) {
-    			map.put(rev, new Vector<TabelleManualSQL>());
-    		}
+    		for (SchemaRevisionen rev : SchemaRevisionen.values())
+    			map.put(rev.revision, new Vector<TabelleManualSQL>());
     	}
     	CsvReader.fromResource("schema/csv/SchemaTabelleManualSQL.csv", TabelleManualSQL.class).stream().forEach(msql -> {
     		// Prüfe, ob die angegebe Tabelle überhaupt definiert ist
     		msql.tabelle = tabellenMap.get(msql.NameTabelle);
     		if (msql.tabelle == null)
     			throw new NullPointerException("FEHLER: Kann die für den SQL-Befehl '" + msql.Kommentar + "' benötigte Tabelle " + msql.NameTabelle + " nicht finden.");
-			msql.dbRevision = revisionen.get(msql.Revision);
+			msql.dbRevision = SchemaRevisionen.get(msql.Revision);
 			if (msql.dbRevision == null)
 				throw new RuntimeException("FEHLER: Die Revision bei dem SQL-Befehl '" + msql.Kommentar + "' ist ungültig.");
     		if (msql.Veraltet == null) {
     			msql.dbRevisionVeraltet = msql.tabelle.dbRevisionVeraltet;
     		} else {
-    			msql.dbRevisionVeraltet = revisionen.get(msql.Veraltet);
+    			msql.dbRevisionVeraltet = SchemaRevisionen.get(msql.Veraltet);
     			if (msql.dbRevisionVeraltet == null)
     				throw new RuntimeException("FEHLER: Die Revision, ab der der SQL-Befehl " + msql.Kommentar + " veraltet ist, ist ungültig.");    			
     		}
@@ -459,8 +429,8 @@ public class DBSchemaDefinition {
     	
     	// Initialisiere die Tabellenreihenfolge für alle Revisionen
     	tabellenSortiert = new HashMap<>();
-    	for (Versionen version : revisionen.values()) {
-    		int rev = version.Revision;
+    	for (SchemaRevisionen version : SchemaRevisionen.values()) {
+    		long rev = version.revision;
     		for (Tabelle t : tabellen) {
     			t.sortierung.put(rev, getTabelleSortierKriterium(rev, 0, t));
     		}
@@ -479,7 +449,7 @@ public class DBSchemaDefinition {
      * @return ein String, der den Namen für die Sortierung der Tabellen bei der entsprechenden Revision festlegt, 
      *         oder null, falls dieser Aufruf zu einer in der Revision ungültigen Tabelle führt 
      */
-    private String getTabelleSortierKriterium(int rev, int recDepth, Tabelle t) {
+    private String getTabelleSortierKriterium(long rev, int recDepth, Tabelle t) {
     	List<Tabelle> tabellen = new Vector<>();
     	return getTabelleSortierKriterium(rev, recDepth, t, tabellen);
     }
@@ -497,10 +467,10 @@ public class DBSchemaDefinition {
      * @return ein String, der den Namen für die Sortierung der Tabellen bei der entsprechenden Revision festlegt, 
      *         oder null, falls dieser Aufruf zu einer in der Revision ungültigen Tabelle führt 
      */
-    private String getTabelleSortierKriterium(int rev, int recDepth, Tabelle t, List<Tabelle> tabellen) {
+    private String getTabelleSortierKriterium(long rev, int recDepth, Tabelle t, List<Tabelle> tabellen) {
     	// Prüfe, ob die Revision der Tabelle in Ordnung ist
-    	if (((rev == -1) && (t.dbRevisionVeraltet.Revision == -1))
-			|| ((rev != -1) && (rev >= t.dbRevision.Revision) && ((t.dbRevisionVeraltet.Revision == -1) || (rev < t.dbRevisionVeraltet.Revision)))) {
+    	if (((rev == -1) && (t.dbRevisionVeraltet.revision == -1))
+			|| ((rev != -1) && (rev >= t.dbRevision.revision) && ((t.dbRevisionVeraltet.revision == -1) || (rev < t.dbRevisionVeraltet.revision)))) {
     		// Revision in Ordnung. Prüfe, nun, ob es mit der neuen Tabelle zu einer Schleife gekommen ist
     		if (tabellen.contains(t)) {
     			String s = "Fehler beim Erstellen des Datenbankschemas: Es kann keine geeignete Sortierreihenfolge erstellt werden, da die Fremdschlüssel-Bedingungen Schleifen beinhalten. "
@@ -567,10 +537,10 @@ public class DBSchemaDefinition {
      * @return eine Liste mit den definierten Tabellen
      */
     @JsonIgnore 
-    public List<Tabelle> getTabellen(int rev) {
+    public List<Tabelle> getTabellen(long rev) {
     	return this.tabellen.stream()
-    			.filter(t -> ((rev == -1) && (t.dbRevisionVeraltet.Revision == -1))
-    					|| ((rev != -1) && (rev >= t.dbRevision.Revision) && ((t.dbRevisionVeraltet.Revision == -1) || (rev < t.dbRevisionVeraltet.Revision))))
+    			.filter(t -> ((rev == -1) && (t.dbRevisionVeraltet.revision == -1))
+    					|| ((rev != -1) && (rev >= t.dbRevision.revision) && ((t.dbRevisionVeraltet.revision == -1) || (rev < t.dbRevisionVeraltet.revision))))
     			.collect(Collectors.toList());
     }
 
@@ -584,10 +554,10 @@ public class DBSchemaDefinition {
      * @return eine Liste mit den in der Revision definierten Tabellen
      */
     @JsonIgnore 
-    public List<Tabelle> getTabellenSortiert(int rev) {
+    public List<Tabelle> getTabellenSortiert(long rev) {
     	return this.tabellen.stream()
-    			.filter(t -> ((rev == -1) && (t.dbRevisionVeraltet.Revision == -1))
-    					|| ((rev != -1) && (rev >= t.dbRevision.Revision) && ((t.dbRevisionVeraltet.Revision == -1) || (rev < t.dbRevisionVeraltet.Revision))))
+    			.filter(t -> ((rev == -1) && (t.dbRevisionVeraltet.revision == -1))
+    					|| ((rev != -1) && (rev >= t.dbRevision.revision) && ((t.dbRevisionVeraltet.revision == -1) || (rev < t.dbRevisionVeraltet.revision))))
     			.sorted((a,b) -> a.compareTo(rev, b))
     			.collect(Collectors.toList());
     }
@@ -601,10 +571,10 @@ public class DBSchemaDefinition {
      * @return eine Liste mit den in der Revision definierten Tabellen
      */
     @JsonIgnore 
-    public List<Tabelle> getTabellenSortiertAbsteigend(int rev) {
+    public List<Tabelle> getTabellenSortiertAbsteigend(long rev) {
     	return this.tabellen.stream()
-    			.filter(t -> ((rev == -1) && (t.dbRevisionVeraltet.Revision == -1))
-    					|| ((rev != -1) && (rev >= t.dbRevision.Revision) && ((t.dbRevisionVeraltet.Revision == -1) || (rev < t.dbRevisionVeraltet.Revision))))
+    			.filter(t -> ((rev == -1) && (t.dbRevisionVeraltet.revision == -1))
+    					|| ((rev != -1) && (rev >= t.dbRevision.revision) && ((t.dbRevisionVeraltet.revision == -1) || (rev < t.dbRevisionVeraltet.revision))))
     			.sorted((a,b) -> b.compareTo(rev, a))
     			.collect(Collectors.toList());
     }
@@ -618,11 +588,11 @@ public class DBSchemaDefinition {
      * @return eine Liste mit den in der Revision definierten Tabellen, die Default-Daten haben
      */
     @JsonIgnore 
-    public List<Tabelle> getTabellenDefaultDatenSortiert(int rev) {
+    public List<Tabelle> getTabellenDefaultDatenSortiert(long rev) {
     	return this.tabellenMitDefaultDaten.values().stream()
     			.map(tdd -> tdd.tabelle)
-    			.filter(t -> ((rev == -1) && (t.dbRevisionVeraltet.Revision == -1))
-    					|| ((rev != -1) && (rev >= t.dbRevision.Revision) && ((t.dbRevisionVeraltet.Revision == -1) || (rev < t.dbRevisionVeraltet.Revision))))
+    			.filter(t -> ((rev == -1) && (t.dbRevisionVeraltet.revision == -1))
+    					|| ((rev != -1) && (rev >= t.dbRevision.revision) && ((t.dbRevisionVeraltet.revision == -1) || (rev < t.dbRevisionVeraltet.revision))))
     			.sorted((a,b) -> a.compareTo(rev, b))
     			.collect(Collectors.toList());
     }
@@ -637,12 +607,12 @@ public class DBSchemaDefinition {
 	 * @return die Liste mit den Tabellennamen in Erstell-Reihenfolge
 	 */
     @JsonIgnore
-    public List<Tabelle> getTabellenDefaultDatenUpdatesSortiert(int rev) {
+    public List<Tabelle> getTabellenDefaultDatenUpdatesSortiert(long rev) {
     	return this.tabellenMitDefaultDaten.values().stream()
-    			.filter(tdd -> tdd.dbRevision.Revision == rev)
+    			.filter(tdd -> tdd.dbRevision.revision == rev)
     			.map(tdd -> tdd.tabelle)
-    			.filter(t -> ((rev == -1) && (t.dbRevisionVeraltet.Revision == -1))
-    					|| ((rev != -1) && (rev >= t.dbRevision.Revision) && ((t.dbRevisionVeraltet.Revision == -1) || (rev < t.dbRevisionVeraltet.Revision))))
+    			.filter(t -> ((rev == -1) && (t.dbRevisionVeraltet.revision == -1))
+    					|| ((rev != -1) && (rev >= t.dbRevision.revision) && ((t.dbRevisionVeraltet.revision == -1) || (rev < t.dbRevisionVeraltet.revision))))
     			.sorted((a,b) -> a.compareTo(rev, b))
     			.collect(Collectors.toList());    	
     }
@@ -659,7 +629,7 @@ public class DBSchemaDefinition {
      * @return eine Liste mit den SQL-Befehlen
      */
     @JsonIgnore 
-    public List<String> getCreateBenutzerSQL(int rev) {
+    public List<String> getCreateBenutzerSQL(long rev) {
     	Vector<String> result = new Vector<>();
     	if (rev == 0) {
     		result.add("INSERT INTO Users(ID,US_Name,US_LoginName,US_UserGroups,US_Privileges) VALUES "

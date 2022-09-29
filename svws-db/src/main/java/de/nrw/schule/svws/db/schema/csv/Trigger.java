@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import de.nrw.schule.svws.db.DBDriver;
+import de.nrw.schule.svws.db.schema.SchemaRevisionen;
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle SchemeTabelleTrigger.
@@ -14,10 +15,10 @@ public class Trigger {
     @JsonProperty public String Name;
 	
 	/** Die Revision, in welcher der Trigger eingeführt wurde - NULL, wenn die Revision mit der Revision der Tabelle übereinstimmt */
-    @JsonProperty public Integer Revision;
+    @JsonProperty public Long Revision;
 	
 	/** Die Revision, in welcher der Trigger als veraltet definiert wurde - NULL, wenn diese mit der Tabelle übereinstimmt */
-    @JsonProperty public Integer Veraltet;
+    @JsonProperty public Long Veraltet;
 	  
 	/** Das Datenbanksystem für welches der Trigger definiert wurde - NULL nicht erlaubt, da Trigger vom SQL-Dialekt abhängen */
     @JsonProperty public String dbms;
@@ -37,10 +38,10 @@ public class Trigger {
     
     
     /** Die Revision, bei welcher der Trigger erstellt wird */
-    @JsonIgnore public Versionen dbRevision;
+    @JsonIgnore public SchemaRevisionen dbRevision;
 
     /** Die Revision, bis zu welcher der Trigger gültig ist, oder null */
-    @JsonIgnore public Versionen dbRevisionVeraltet;
+    @JsonIgnore public SchemaRevisionen dbRevisionVeraltet;
     
     
     /** Das DBMS für welches der Trigger definiert wurde. */

@@ -76,7 +76,7 @@ public class Primaerschluessel {
 	 * @return das SQL-Skript zum Erstellen oder Entfernen von Triggern für das Auto-Inkrement
 	 */
 	@JsonIgnore 
-	public List<String> getTriggerSQLList(DBDriver dbms, int rev, boolean create) {
+	public List<String> getTriggerSQLList(DBDriver dbms, long rev, boolean create) {
 		Vector<String> result = new Vector<>();
 		if ((!this.hatAutoIncrement) || (this.spalten.size() != 1))
 			return result;
@@ -85,8 +85,8 @@ public class Primaerschluessel {
 		String spalte = this.spalten.get(0).NameSpalte;
 		String newline = System.lineSeparator();
 		if (create) {
-			if (!(((rev == -1) && (this.tabelle.dbRevisionVeraltet.Revision == -1))
-					|| ((rev != -1) && (rev >= this.tabelle.dbRevision.Revision) && ((this.tabelle.dbRevisionVeraltet.Revision == -1) || (rev < this.tabelle.dbRevisionVeraltet.Revision)))))
+			if (!(((rev == -1) && (this.tabelle.dbRevisionVeraltet.revision == -1))
+					|| ((rev != -1) && (rev >= this.tabelle.dbRevision.revision) && ((this.tabelle.dbRevisionVeraltet.revision == -1) || (rev < this.tabelle.dbRevisionVeraltet.revision)))))
 				return result;
 			if (DBDriver.MARIA_DB.equals(dbms) || DBDriver.MYSQL.equals(dbms)) {
 				result.add( 
@@ -301,7 +301,7 @@ public class Primaerschluessel {
 				);
 			}
 		} else {
-			if ((this.tabelle.dbRevisionVeraltet.Revision < 0) || (rev < this.tabelle.dbRevisionVeraltet.Revision))
+			if ((this.tabelle.dbRevisionVeraltet.revision < 0) || (rev < this.tabelle.dbRevisionVeraltet.revision))
 				return result;
 			if (DBDriver.MARIA_DB.equals(dbms) || DBDriver.MYSQL.equals(dbms)) {
 				result.add("DROP TRIGGER IF EXISTS t_AutoIncrement_INSERT_" + tab + ";");

@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import de.nrw.schule.svws.db.DBDriver;
+import de.nrw.schule.svws.db.schema.SchemaRevisionen;
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle TabelleUnique.
@@ -18,10 +19,10 @@ public class TabelleUnique {
 	@JsonProperty public String Name;
 	
 	/** Die Revision, in welcher die Unique-Constraint eingeführt wurde */
-    @JsonIgnore public Versionen dbRevision;
+    @JsonIgnore public SchemaRevisionen dbRevision;
 	
 	/** Die Revision, in welcher die Unique-Constraint als veraltet definiert wurde */
-    @JsonIgnore public Versionen dbRevisionVeraltet;
+    @JsonIgnore public SchemaRevisionen dbRevisionVeraltet;
     
     /** Die Tabelle, welcher die Unique-Constraint zugeorndet ist */
     @JsonIgnore public Tabelle tabelle; 

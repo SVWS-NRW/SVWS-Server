@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import de.nrw.schule.svws.db.DBDriver;
+import de.nrw.schule.svws.db.schema.SchemaRevisionen;
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle TabelleIndex.
@@ -18,10 +19,10 @@ public class TabelleIndex {
 	@JsonProperty public String Name;
 	
 	/** Die Revision, in welcher der Index eingeführt wurde */
-    @JsonIgnore public Versionen dbRevision;
+    @JsonIgnore public SchemaRevisionen dbRevision;
 	
 	/** Die Revision, in welcher der Index als veraltet definiert wurde */
-    @JsonIgnore public Versionen dbRevisionVeraltet;
+    @JsonIgnore public SchemaRevisionen dbRevisionVeraltet;
     
     /** Die Tabelle, welcher der Index zugeorndet ist */
     @JsonIgnore public Tabelle tabelle; 

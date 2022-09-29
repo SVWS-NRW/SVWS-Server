@@ -1,6 +1,6 @@
 package de.nrw.schule.svws.db.dto;
 
-import de.nrw.schule.svws.db.schema.DBSchemaDefinition;
+import de.nrw.schule.svws.db.schema.SchemaRevisionen;
 
 /**
  * Diese Klasse dient als Hilfsklasse zum Zugriff auf die Datenbank-DTO-Klassen unterschiedlicher Revisionen.
@@ -18,12 +18,12 @@ public class DTOHelper {
      *
      * @return die DTO-Klasse
      */
-    public static Class<? extends Object> getFromDTOName(String name, int rev) {
+    public static Class<? extends Object> getFromDTOName(String name, long rev) {
         if (rev == 0) {
             return MigrationDTOs.getFromDTOName(name);
-        } else if ((rev < 0) || (rev <= DBSchemaDefinition.getInstance().maxRevision)) {
+        } else if ((rev < 0) || (rev <= SchemaRevisionen.maxRevision.revision)) {
             return DTOs.getFromDTOName(name);
-        } else if (rev <= DBSchemaDefinition.getInstance().maxRevisionDeveloper) {
+        } else if (rev <= SchemaRevisionen.maxDeveloperRevision.revision) {
             return Rev8DTOs.getFromDTOName(name);
         } else {
             return null;
@@ -39,12 +39,12 @@ public class DTOHelper {
      *
      * @return die DTO-Klasse
      */
-    public static Class<? extends Object> getFromTableName(String name, int rev) {
+    public static Class<? extends Object> getFromTableName(String name, long rev) {
         if (rev == 0) {
             return MigrationDTOs.getFromTableName(name);
-        } else if ((rev < 0) || (rev <= DBSchemaDefinition.getInstance().maxRevision)) {
+        } else if ((rev < 0) || (rev <= SchemaRevisionen.maxRevision.revision)) {
             return DTOs.getFromTableName(name);
-        } else if (rev <= DBSchemaDefinition.getInstance().maxRevisionDeveloper) {
+        } else if (rev <= SchemaRevisionen.maxDeveloperRevision.revision) {
             return Rev8DTOs.getFromTableName(name);
         } else {
             return null;

@@ -89,7 +89,7 @@ public class DTOCreatorTable {
 	 * 
 	 * @return der Package-Name
 	 */
-	public String getPackageName(int rev) {
+	public String getPackageName(long rev) {
 		String packagename = DBSchemaDefinition.javaPackage + "." + DBSchemaDefinition.javaDTOPackage;
 		if (rev < 0) {
 			packagename += ".current." + tabelle.JavaPackage;
@@ -123,7 +123,7 @@ public class DTOCreatorTable {
 	 * 
 	 * @return der Java-Datentyp
 	 */
-	private static String getDataType(TabelleSpalte spalte, final int rev) {		
+	private static String getDataType(TabelleSpalte spalte, final long rev) {		
 		String dataType = schema.getJavatype(spalte);
 		String attrConverter = spalte.getJavaAttributConverter(rev);
 		if (attrConverter != null) {
@@ -191,7 +191,7 @@ public class DTOCreatorTable {
 	 * 
 	 * @return eine Liste mit den Attribut-Konvertern.
 	 */
-	private List<DBAttributeConverter<?,?>> getAttributeConverter(final int rev) {
+	private List<DBAttributeConverter<?,?>> getAttributeConverter(final long rev) {
 		return tabelle.getSpalten(rev).stream()
 				.map(spalte -> spalte.getJavaAttributConverter(rev))
 				.filter(acName -> acName != null)
@@ -236,7 +236,7 @@ public class DTOCreatorTable {
 	 * 
 	 * @return der Java Code
 	 */
-	private String getCode4NamedQueries(final int rev) {
+	private String getCode4NamedQueries(final long rev) {
 		// alle Tabellen: Generiere Code für eine NamedQuery auf alle Datensätze der Tabelle
 		String code 
 			= "@NamedQuery(name=\"" + tabelle.getJavaKlasse(rev) + ".all\", query=\"SELECT e FROM " + tabelle.getJavaKlasse(rev) + " e\")"
@@ -288,7 +288,7 @@ public class DTOCreatorTable {
 	 *  
 	 * @return der Java-Code für das Attribut für die DB-Spalte
 	 */
-	private String getCode4Attributes(TabelleSpalte spalte, final int rev, boolean withAnnotations) {
+	private String getCode4Attributes(TabelleSpalte spalte, final long rev, boolean withAnnotations) {
 		String javaAttributName = getJavaAttributeName(spalte);
 		if (javaAttributName == null)
 			return null;
@@ -329,7 +329,7 @@ public class DTOCreatorTable {
 	 * 
 	 * @return der Java-Code für die DTO-Klasse in der angegebenen Revision.
 	 */
-	public String getCode(final int rev) {
+	public String getCode(final long rev) {
 		// Prüfe, ob überhaupt eine Java-Klasse erzeugt werden soll
 		if ((tabelle.getJavaKlasse(rev) == null) || (!tabelle.isDefined(rev)))
 			return null;
@@ -466,7 +466,7 @@ public class DTOCreatorTable {
 	 * 
 	 * @return der Java-Code für die Primärschlüssel-DTO-Klasse. 
 	 */
-	public String getCode4PrimaryKeyClass(final int rev) {
+	public String getCode4PrimaryKeyClass(final long rev) {
 		// Prüfe, ob überhaupt eine Java-Klasse erzeugt werden soll
 		if ((tabelle.getJavaKlasse(rev) == null) || (!tabelle.isDefined(rev)))
 			return null;

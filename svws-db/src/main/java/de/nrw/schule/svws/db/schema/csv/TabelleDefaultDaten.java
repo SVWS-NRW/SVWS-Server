@@ -3,6 +3,8 @@ package de.nrw.schule.svws.db.schema.csv;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import de.nrw.schule.svws.db.schema.SchemaRevisionen;
+
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle SchemaDefaultDaten.
@@ -13,7 +15,7 @@ public class TabelleDefaultDaten  {
     @JsonProperty public String NameTabelle;
 	
 	/** Die Revision, bei welcher die Default-Daten angepasst wurden */
-    @JsonProperty public Integer Revision;
+    @JsonProperty public Long Revision;
 	
 	/** Der Kommentar zu der Anpassung der Default-Daten */
     @JsonProperty public String Kommentar;
@@ -23,6 +25,6 @@ public class TabelleDefaultDaten  {
     @JsonIgnore public Tabelle tabelle;
     
     /** Die Revision, bei der die Default-Daten angepasst wurden */
-    @JsonIgnore public Versionen dbRevision;
+    @JsonIgnore public SchemaRevisionen dbRevision;
 
 }

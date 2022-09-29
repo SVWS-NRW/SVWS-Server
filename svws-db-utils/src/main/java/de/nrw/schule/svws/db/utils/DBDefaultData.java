@@ -6,6 +6,7 @@ import java.util.List;
 import de.nrw.schule.svws.csv.CsvReader;
 import de.nrw.schule.svws.db.dto.DTOHelper;
 import de.nrw.schule.svws.db.schema.DBSchemaDefinition;
+import de.nrw.schule.svws.db.schema.SchemaRevisionen;
 import de.nrw.schule.svws.db.schema.csv.Tabelle;
 import de.nrw.schule.svws.logger.Logger;
 
@@ -33,7 +34,7 @@ public class DBDefaultData {
 	 *  
 	 * @return true, falls der Cache erfolgreich geladen wurde 
 	 */
-	private static boolean reload(int revision, Logger logger, HashMap<Class<?>, List<?>> cache) {
+	private static boolean reload(long revision, Logger logger, HashMap<Class<?>, List<?>> cache) {
 		if (cache.size() > 0) {
 			logger.log("Leere bestehenden Default-Daten-Cache...");
 			cache.clear();
@@ -123,7 +124,7 @@ public class DBDefaultData {
 	@SuppressWarnings("unchecked")
 	public static <T> List<T> getDev(Class<T> clazz) {
 		if (cacheDev.size() == 0)
-			reload(DBSchemaDefinition.getInstance().maxRevisionDeveloper, new Logger(), cacheDev);
+			reload(SchemaRevisionen.maxDeveloperRevision.revision, new Logger(), cacheDev);
 		return (List<T>)cacheDev.get(clazz);			
 	}
 	

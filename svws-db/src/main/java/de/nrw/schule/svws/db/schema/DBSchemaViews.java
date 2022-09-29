@@ -18,10 +18,10 @@ public class DBSchemaViews {
 	private Vector<View> allViews = new Vector<>();
 	
 	/** Eine HashMap mit allen Views, welche den Revisionen der Datenbank zugeordnet sind. */
-	private @NotNull HashMap<@NotNull Integer, List<View>> views = new HashMap<>();
+	private @NotNull HashMap<@NotNull Long, List<View>> views = new HashMap<>();
 
 	/** Eine HashMap mit allen Views, welche der Revision der Datenbank als veraltet zugeordnet sind. */
-	private @NotNull HashMap<@NotNull Integer, List<View>> viewsDeprecated = new HashMap<>();
+	private @NotNull HashMap<@NotNull Long, List<View>> viewsDeprecated = new HashMap<>();
 	
 
 	/**
@@ -84,7 +84,7 @@ public class DBSchemaViews {
 	 * 
 	 * @return die Liste der Views, welche in der angegebenen Revision erstellt werden.
 	 */
-	public List<View> getViewsCreated(int revision) {
+	public List<View> getViewsCreated(long revision) {
 		List<View> v = views.get(revision);
 		if (v == null) {
 			v = new Vector<>();
@@ -101,7 +101,7 @@ public class DBSchemaViews {
 	 * 
 	 * @return die Liste der Views, welche in der angegebenen Revision als veraltet gesetzt sind.
 	 */
-	public List<View> getViewsDeprecated(int revision) {
+	public List<View> getViewsDeprecated(long revision) {
 		List<View> v = viewsDeprecated.get(revision);
 		if (v == null) {
 			v = new Vector<>();
@@ -118,7 +118,7 @@ public class DBSchemaViews {
 	 * 
 	 * @return die Liste der Views, welche in der angegebenen Revision aktiv sind.
 	 */
-	public List<View> getViewsActive(int revision) {
+	public List<View> getViewsActive(long revision) {
 		Vector<View> views = new Vector<>();
 		for (View v : allViews)
 			if ((revision >= v.revision) && ((v.veraltet == null) || (revision < v.veraltet)))

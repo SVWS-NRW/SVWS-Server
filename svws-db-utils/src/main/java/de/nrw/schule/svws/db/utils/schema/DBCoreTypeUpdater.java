@@ -252,7 +252,7 @@ public class DBCoreTypeUpdater {
 	 * 
 	 * @return true im Erfolgsfall, sonst false
 	 */
-	public boolean update(boolean lockSchema, int revision) {
+	public boolean update(boolean lockSchema, long revision) {
 		// Sperre ggf. das Datenbankschema
 		if ((lockSchema) && (!SVWSKonfiguration.get().lockSchema(schemaManager.getSchemaStatus().schemaName))) {
 			logger.logLn("-> Update fehlgeschlagen! (Schema ist aktuell gesperrt und kann daher nicht aktualisiert werden)");

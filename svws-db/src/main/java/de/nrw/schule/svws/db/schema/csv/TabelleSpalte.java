@@ -15,6 +15,7 @@ import de.nrw.schule.svws.db.DBDriver;
 import de.nrw.schule.svws.db.converter.DBAttributeConverter;
 import de.nrw.schule.svws.db.schema.DBSchemaDefinition;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
+import de.nrw.schule.svws.db.schema.SchemaRevisionen;
 
 
 
@@ -30,10 +31,10 @@ public class TabelleSpalte implements Comparable<TabelleSpalte> {
     @JsonProperty public String NameSpalte;
 	
 	/** Die Revision, in welcher die Spalte eingeführt wurde - in der CSV-Datei NULL, wenn die Revision mit der Revision der Tabelle übereinstimmt */
-    @JsonProperty public Integer Revision;
+    @JsonProperty public Long Revision;
 	
 	/** Die Revision, in welcher die Spalte als veraltet definiert wurde - in der CSV-Datei NULL, wenn diese mit der Tabelle übereinstimmt */
-    @JsonProperty public Integer Veraltet;
+    @JsonProperty public Long Veraltet;
 	  
 	/** Gibt an, in welcher Reihenfolge die Spalten bei der Code-Erzeugung für SQL bzw. Java aufgelistet werden */
     @JsonProperty public Integer Sortierung;
@@ -71,10 +72,10 @@ public class TabelleSpalte implements Comparable<TabelleSpalte> {
 	
 
     /** Die Revision, bei der die Tabellenspalte erstellt wird */
-    @JsonIgnore public Versionen dbRevision;
+    @JsonIgnore public SchemaRevisionen dbRevision;
 
     /** Die Revision, ab der die Tabellenspalte veraltet ist, oder null */
-    @JsonIgnore public Versionen dbRevisionVeraltet;
+    @JsonIgnore public SchemaRevisionen dbRevisionVeraltet;
     
     /** Das zugeordnete Tabellen-Objekt */
     @JsonIgnore public Tabelle tabelle;
@@ -112,8 +113,8 @@ public class TabelleSpalte implements Comparable<TabelleSpalte> {
 	 * @return der Name des Attribut-Converters oder null
 	 */
 	@JsonIgnore
-	public String getJavaAttributConverter(final int rev) {
-		final int revision = (rev < 0) ? DBSchemaDefinition.getInstance().maxRevision : rev;
+	public String getJavaAttributConverter(final long rev) {
+		final long revision = (rev < 0) ? SchemaRevisionen.maxRevision.revision : rev;
 		if ((JavaAttributConverter == null) || ("".equals(JavaAttributConverter)))
 			return null;
 		if ((JavaAttributConverterRevision != null) && (revision < JavaAttributConverterRevision))

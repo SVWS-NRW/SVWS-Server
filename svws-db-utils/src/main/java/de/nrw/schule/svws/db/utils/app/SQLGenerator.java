@@ -18,6 +18,7 @@ import de.nrw.schule.svws.csv.CsvReader;
 import de.nrw.schule.svws.db.DBDriver;
 import de.nrw.schule.svws.db.dto.DTOs;
 import de.nrw.schule.svws.db.schema.DBSchemaDefinition;
+import de.nrw.schule.svws.db.schema.SchemaRevisionen;
 import de.nrw.schule.svws.db.schema.csv.Tabelle;
 import de.nrw.schule.svws.db.schema.csv.TabelleDefaultDaten;
 import de.nrw.schule.svws.shell.CommandLineException;
@@ -61,12 +62,12 @@ public class SQLGenerator {
      * 
      * @return der SQL-Befehl zum Einfügen aller Default-Daten
      */
-    public static String getSQLInsert(TabelleDefaultDaten tabelleDefaultDaten, int rev) {
+    public static String getSQLInsert(TabelleDefaultDaten tabelleDefaultDaten, long rev) {
     	// Bestimme die Spalten der Tabelle und erzeuge die INSERT INTO - Zeile mit den Spaltennamen
     	Tabelle tabelle = tabelleDefaultDaten.tabelle;
     	var cols = tabelle.getSpalten().stream()
-    			.filter(col -> ((rev == -1) && (col.dbRevisionVeraltet.Revision == -1)) 
-        				|| ((rev != -1) && (rev >= col.dbRevision.Revision) && ((col.dbRevisionVeraltet.Revision == -1) || (rev < col.dbRevisionVeraltet.Revision))))
+    			.filter(col -> ((rev == -1) && (col.dbRevisionVeraltet.revision == -1)) 
+        				|| ((rev != -1) && (rev >= col.dbRevision.revision) && ((col.dbRevisionVeraltet.revision == -1) || (rev < col.dbRevisionVeraltet.revision))))
     			.sorted((a,b) -> Integer.compare(a.Sortierung, b.Sortierung))
     			.collect(Collectors.toList());
     	String newline = System.lineSeparator();
@@ -111,7 +112,7 @@ public class SQLGenerator {
      * 
      * @return das SQL-Skript zum Löschen und erneuten Einfügen aller Default-Daten
      */
-    public static String getSQL(TabelleDefaultDaten tabelleDefaultDaten, int rev) {
+    public static String getSQL(TabelleDefaultDaten tabelleDefaultDaten, long rev) {
     	return getSQLDelete(tabelleDefaultDaten) + System.lineSeparator() + System.lineSeparator() + getSQLInsert(tabelleDefaultDaten, rev) + System.lineSeparator();
     }
 	
@@ -126,7 +127,7 @@ public class SQLGenerator {
 	 *
 	 * @return das SQL-Create-Skript
 	 */
-	public static String getCreateSchemaSkript(DBDriver dbms, int rev) {
+	public static String getCreateSchemaSkript(DBDriver dbms, long rev) {
 		String newline = System.lineSeparator();
 		String result = "";
 		var tabs = dbschema.getTabellenSortiert(rev);
@@ -150,7 +151,7 @@ public class SQLGenerator {
 					.collect(Collectors.joining(newline + newline))
 		        + newline 
 		        + newline 
-				+ "INSERT INTO SVWS_DB_Version(Revision) VALUES (" + ((rev == - 1) ? dbschema.maxRevision : rev) + ");" + newline
+				+ "INSERT INTO SVWS_DB_Version(Revision) VALUES (" + ((rev == - 1) ? SchemaRevisionen.maxRevision.revision : rev) + ");" + newline
 		        + newline 
 		        + newline 
 		        + dbschema.getCreateBenutzerSQL(rev).stream().collect(Collectors.joining(newline + newline)) + newline;
@@ -167,7 +168,7 @@ public class SQLGenerator {
 	 *
 	 * @return das SQL-Drop-Skript
 	 */
-	public static String getDropSchemaSkript(DBDriver dbms, int rev) {
+	public static String getDropSchemaSkript(DBDriver dbms, long rev) {
 		return dbschema.getTabellen(rev).stream().sorted((a,b) -> (-1) * a.compareTo(rev, b)).map(t -> t.getSQLDrop(dbms)).collect(Collectors.joining(System.lineSeparator())) + System.lineSeparator();
 	}
 
@@ -181,11 +182,11 @@ public class SQLGenerator {
 	 *
 	 * @return das SQL-Skript zum Einfügen der Default-Daten
 	 */
-	public static String getDefaultDatenSkript(int revision) {
-		final int rev = (revision == -1) ? dbschema.maxRevision : revision;  
+	public static String getDefaultDatenSkript(long revision) {
+		final long rev = (revision == -1) ? SchemaRevisionen.maxRevision.revision : revision;  
 		return dbschema.tabellenMitDefaultDaten.values().stream()
-    			.filter(tdd -> ((rev == -1) && (tdd.tabelle.dbRevisionVeraltet.Revision == -1))
-    					|| ((rev != -1) && (rev >= tdd.tabelle.dbRevision.Revision) && ((tdd.tabelle.dbRevisionVeraltet.Revision == -1) || (rev < tdd.tabelle.dbRevisionVeraltet.Revision))))
+    			.filter(tdd -> ((rev == -1) && (tdd.tabelle.dbRevisionVeraltet.revision == -1))
+    					|| ((rev != -1) && (rev >= tdd.tabelle.dbRevision.revision) && ((tdd.tabelle.dbRevisionVeraltet.revision == -1) || (rev < tdd.tabelle.dbRevisionVeraltet.revision))))
     			.sorted((a,b) -> a.tabelle.compareTo(rev, b.tabelle))
 				.map(tdd -> getSQL(tdd, rev))
 				.collect(Collectors.joining(System.lineSeparator() + System.lineSeparator() + System.lineSeparator()));
@@ -224,7 +225,7 @@ public class SQLGenerator {
 	 * 
 	 * @throws IOException   tritt auf, wenn die Skripte nicht erfolgreich geschrieben werden konnten
 	 */
-	private static void writeScript(DBSchemaDefinition schema, Path baseDir, int revision) throws IOException {
+	private static void writeScript(DBSchemaDefinition schema, Path baseDir, long revision) throws IOException {
 		// Create- und Drop-Schema-Skripte in Abhängigkeit von dem DBMS
 		System.out.println("- Erzeuge Skripte für die Revision " + revision);
 		for (DBDriver driver : DBDriver.values()) {
@@ -254,8 +255,8 @@ public class SQLGenerator {
 	 * 
 	 * @throws IOException   tritt auf, wenn die Skripte nicht erfolgreich geschrieben werden konnten
 	 */
-	public static void writeScripts(DBSchemaDefinition schema, Path baseDir, int revision, boolean allrev) throws IOException {
-		for (int r = (allrev ? 0 : revision); r <= revision; r++) {
+	public static void writeScripts(DBSchemaDefinition schema, Path baseDir, long revision, boolean allrev) throws IOException {
+		for (long r = (allrev ? 0 : revision); r <= revision; r++) {
 			writeScript(schema, Paths.get(baseDir.toString(), "" + r), r);
 		}
 		writeScript(schema, Paths.get(baseDir.toString(), "current"), -1);
@@ -289,8 +290,8 @@ public class SQLGenerator {
 				cmdLine.printOptionsAndExit(2, "Kann das Datenbank-Schema nicht einlesen.");
 			
 			// Lese optional eine spezielle Revision ein...
-			int rev = NumberUtils.toInt(cmdLine.getValue("r", "-1"), -1);
-			int revision = (rev == -1) ? schema.maxRevision : rev;
+			long rev = NumberUtils.toLong(cmdLine.getValue("r", "-1"), -1);
+			long revision = (rev == -1) ? SchemaRevisionen.maxRevision.revision : rev;
 	
 			// Schreibe die Daten in das Revisions-Verzeichnis und ggf. in das Verzeichnis für die aktuelle Revision (-1)
 			boolean allrev = cmdLine.isSet("a");  

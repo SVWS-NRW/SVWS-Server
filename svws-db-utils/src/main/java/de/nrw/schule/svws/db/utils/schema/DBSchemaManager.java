@@ -10,6 +10,7 @@ import de.nrw.schule.svws.db.dto.DTOHelper;
 import de.nrw.schule.svws.db.dto.current.svws.db.DTODBVersion;
 import de.nrw.schule.svws.db.schema.DBSchemaDefinition;
 import de.nrw.schule.svws.db.schema.DBSchemaViews;
+import de.nrw.schule.svws.db.schema.SchemaRevisionen;
 import de.nrw.schule.svws.db.schema.View;
 import de.nrw.schule.svws.db.schema.csv.Tabelle;
 import de.nrw.schule.svws.db.schema.csv.TabelleIndex;
@@ -129,7 +130,7 @@ public class DBSchemaManager {
 	 * 
 	 * @return true, falls alle Tabellen erfolgreich erstellt wurden
 	 */
-	private boolean createAllTables(int revision) {
+	private boolean createAllTables(long revision) {
 		boolean result = true;
 		var dbms = conn.getDBDriver();
 		for (Tabelle tab : schema.getTabellenSortiert(revision)) {
@@ -166,7 +167,7 @@ public class DBSchemaManager {
 	 * 
 	 * @return true, falls alle Indizes erfolgreich erstellt wurden
 	 */
-	private boolean createAllIndizes(int revision) {
+	private boolean createAllIndizes(long revision) {
 		boolean result = true;
 		for (Tabelle tab : schema.getTabellenSortiert(revision)) {
 			for (TabelleIndex idx : tab.indizes) {
@@ -192,16 +193,16 @@ public class DBSchemaManager {
 	 * 
 	 * @return true, falls alle Trigger erfolgreich erstellt wurden
 	 */
-	private boolean createAllTrigger(int revision) {
+	private boolean createAllTrigger(long revision) {
 		boolean result = true;
 		var dbms = conn.getDBDriver();
 		for (Tabelle tab : schema.getTabellenSortiert(revision)) {
 			for (Trigger trig : tab.trigger) {
 				if (!dbms.equals(trig.dbDriver))
 					continue;
-				if (revision < trig.dbRevision.Revision)
+				if (revision < trig.dbRevision.revision)
 					continue;
-				if ((trig.dbRevisionVeraltet.Revision >= 0) && (revision > trig.dbRevisionVeraltet.Revision))
+				if ((trig.dbRevisionVeraltet.revision >= 0) && (revision > trig.dbRevisionVeraltet.revision))
 					continue;
 				logger.logLn(trig.Name);
 				String script = trig.getSQL(conn.getDBDriver(), true);
@@ -225,16 +226,16 @@ public class DBSchemaManager {
 	 * 
 	 * @return true, falls alle Skripte erfolgreich ausgeführt wurden
 	 */
-	private boolean executeManualSQLOnCreate(int revision) {
+	private boolean executeManualSQLOnCreate(long revision) {
 		boolean result = true;
 		var dbms = conn.getDBDriver();
 		var msqlAll = schema.manualSQL.get(dbms);
-		for (int r = 0; r <= revision; r++) {
+		for (long r = 0; r <= revision; r++) {
 			for (TabelleManualSQL msql : msqlAll.get(r)) {
 				if (msql.UpdateOnly)
 					continue;
-				if (!(((r == -1) && (msql.dbRevisionVeraltet.Revision == -1)) || 
-						((r != -1) && (r >= msql.dbRevision.Revision) && ((msql.dbRevisionVeraltet.Revision == -1) || (r <= msql.dbRevisionVeraltet.Revision)))))
+				if (!(((r == -1) && (msql.dbRevisionVeraltet.revision == -1)) || 
+						((r != -1) && (r >= msql.dbRevision.revision) && ((msql.dbRevisionVeraltet.revision == -1) || (r <= msql.dbRevisionVeraltet.revision)))))
 					continue;
 				String script = msql.getSQL(dbms);
 				logger.logLn(msql.Kommentar);
@@ -257,7 +258,7 @@ public class DBSchemaManager {
 	 * 
 	 * @return true, falls alle Skripte erfolgreich ausgeführt wurden
 	 */
-	private boolean executeSQLCreateViews(int revision) {
+	private boolean executeSQLCreateViews(long revision) {
 		boolean result = true;
 		List<View> views = DBSchemaViews.getInstance().getViewsActive(revision);
 		for (View view : views) {
@@ -281,7 +282,7 @@ public class DBSchemaManager {
 	 * 
 	 * @return true, falls alle Skripte erfolgreich ausgeführt wurden
 	 */
-	private boolean createDefaultSVWSBenutzer(int revision) {
+	private boolean createDefaultSVWSBenutzer(long revision) {
 		boolean result = true;
 		List<String> sqlList = schema.getCreateBenutzerSQL(revision);
 		for (String sql : sqlList) {
@@ -304,7 +305,7 @@ public class DBSchemaManager {
 	 * 
 	 * @return true, falls die Daten erfolgreich kopiert wurden, sonst false.
 	 */
-	boolean copyDefaultData(Tabelle tab, int rev) {
+	boolean copyDefaultData(Tabelle tab, long rev) {
 		Class<?> dtoClass = DTOHelper.getFromTableName(tab.Name, rev);
 		if (dtoClass == null)
 			return false;
@@ -335,7 +336,7 @@ public class DBSchemaManager {
 	 * 
 	 * @return true, falls die Daten erfolgreich kopiert wurden, sonst false.
 	 */
-	private boolean copyAllDefaultData(int revision) {
+	private boolean copyAllDefaultData(long revision) {
 		boolean success = true;
 		for (Tabelle tab : schema.getTabellenDefaultDatenSortiert(revision)) {
 			logger.logLn(tab.Name);
@@ -356,12 +357,12 @@ public class DBSchemaManager {
 	 * 
 	 * @return true, falls die Revision erfolgreich gesetzt wurde, sonst false
 	 */
-	public boolean setDBRevision(int revision) {
-		int rev = (revision == -1) ? schema.maxRevision : revision;
+	public boolean setDBRevision(long revision) {
+		long rev = (revision == -1) ? SchemaRevisionen.maxRevision.revision : revision;
 		if (rev == -1)
 			return false;
 		DTODBVersion oldObj = conn.querySingle(DTODBVersion.class);
-		DTODBVersion newObj = new DTODBVersion(rev, (rev > schema.maxRevision) || ((oldObj != null) && (oldObj.IsTainted)));
+		DTODBVersion newObj = new DTODBVersion((int) rev, (rev > SchemaRevisionen.maxRevision.revision) || ((oldObj != null) && (oldObj.IsTainted)));
 		if (oldObj == null) {
 			conn.persist(newObj);
 		} else {
@@ -380,7 +381,7 @@ public class DBSchemaManager {
 	 * 
 	 * @return true, wenn das Schema erfolgreich erstellt wurde, sonst false
 	 */
-	public boolean createSVWSSchema(int revision, boolean createUser) {
+	public boolean createSVWSSchema(long revision, boolean createUser) {
 		logger.logLn("- Erstelle Tabellen für die aktuelle DB-Revision... ");
 		logger.modifyIndent(2);
 		boolean success = createAllTables(revision);

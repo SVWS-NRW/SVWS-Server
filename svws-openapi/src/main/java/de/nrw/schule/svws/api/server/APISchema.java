@@ -2,6 +2,21 @@ package de.nrw.schule.svws.api.server;
 
 import java.util.List;
 
+import de.nrw.schule.svws.api.OpenAPIApplication;
+import de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenz;
+import de.nrw.schule.svws.data.schema.DataSQLite;
+import de.nrw.schule.svws.db.DBEntityManager;
+import de.nrw.schule.svws.db.dto.current.svws.db.DTODBVersion;
+import de.nrw.schule.svws.db.schema.SchemaRevisionen;
+import de.nrw.schule.svws.db.utils.schema.DBSchemaManager;
+import de.nrw.schule.svws.logger.LogConsumerVector;
+import de.nrw.schule.svws.logger.Logger;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
@@ -14,22 +29,6 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
-
-import de.nrw.schule.svws.api.OpenAPIApplication;
-import de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenz;
-import de.nrw.schule.svws.data.schema.DataSQLite;
-import de.nrw.schule.svws.db.DBEntityManager;
-import de.nrw.schule.svws.db.dto.current.svws.db.DTODBVersion;
-import de.nrw.schule.svws.db.schema.DBSchemaDefinition;
-import de.nrw.schule.svws.db.utils.schema.DBSchemaManager;
-import de.nrw.schule.svws.logger.LogConsumerVector;
-import de.nrw.schule.svws.logger.Logger;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
  * Die Klasse spezifiziert die OpenAPI-Schnittstelle für den Zugriff auf Schemaoperationen ohne Root-Rechte.
@@ -88,11 +87,11 @@ public class APISchema {
     		     content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = String.class))))
 	@ApiResponse(responseCode = "400", description = "Es wurde ein ungültiger Schema-Name oder eine ungültige Revision angegeben.")
 	@ApiResponse(responseCode = "404", description = "Die Schema-Datenbank konnte nicht geladen werden. Die Server-Konfiguration ist fehlerhaft.")
-    public List<String> updateSchema(@PathParam("schema") String schemaname, @PathParam("revision") int revision, @Context HttpServletRequest request) {
+    public List<String> updateSchema(@PathParam("schema") String schemaname, @PathParam("revision") long revision, @Context HttpServletRequest request) {
     	// Akzeptiere nur einen Datenbankzugriff als Administrator in Bezug auf Updates
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADMIN)) {
 			// Ermittle die Revision, auf die aktualisiert werden soll. Hier wird ggf. eine negative Revision als neueste Revision interpretiert
-			int max_revision = DBSchemaDefinition.getInstance().maxRevision;
+			long max_revision = SchemaRevisionen.maxRevision.revision;
 			if (revision < 0)
 				revision = max_revision;
 			if (revision > max_revision)

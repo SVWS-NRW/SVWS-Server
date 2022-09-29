@@ -8,18 +8,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.Vector;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.WebApplicationException;
-import jakarta.ws.rs.core.Context;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response.Status;
-
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
 import de.nrw.schule.svws.api.OpenAPIApplication;
@@ -33,7 +21,7 @@ import de.nrw.schule.svws.db.DBConfig;
 import de.nrw.schule.svws.db.DBDriver;
 import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.DBException;
-import de.nrw.schule.svws.db.schema.DBSchemaDefinition;
+import de.nrw.schule.svws.db.schema.SchemaRevisionen;
 import de.nrw.schule.svws.db.schema.dto.DTOInformationSchema;
 import de.nrw.schule.svws.db.schema.dto.DTOInformationUser;
 import de.nrw.schule.svws.db.utils.OperationError;
@@ -53,6 +41,17 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Die Klasse spezifiziert die OpenAPI-Schnittstelle für den Zugriff auf Schemaoperationen mit Root-Rechten.
@@ -251,7 +250,7 @@ public class APISchemaRoot {
     @ApiResponse(responseCode = "500", description = "Der Datenbankzugriff auf das neue Schema mit dem neuen zugehörigen Admin-Benutzer ist fehlgeschlagen oder das SVWS-Schema mit der Revision konnte nicht angelegt werden.",
 	 			 content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
     public SimpleOperationResponse createSchema(@PathParam("schema") String schemaname, 
-    						 @PathParam("revision") int revision, 
+    						 @PathParam("revision") long revision, 
     						 @RequestBody(description = "Der Benutzername und das Kennwort für den administrativen Zugang zum Schema", required = true) BenutzerKennwort kennwort, 
     						 @Context HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KEINE)) {
@@ -261,7 +260,7 @@ public class APISchemaRoot {
 	    	logger.addConsumer(new LogConsumerConsole());
 			// TODO move to DBSchemaManager, use DBException and extend logging...
 	
-			int max_revision = DBSchemaDefinition.getInstance().maxRevision;
+			long max_revision = SchemaRevisionen.maxRevision.revision;
 			if (revision < 0)
 				revision = max_revision;
 			if (revision > max_revision)

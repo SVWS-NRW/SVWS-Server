@@ -14,6 +14,7 @@ import de.nrw.schule.svws.csv.converter.Boolean01ConverterDeserializer;
 import de.nrw.schule.svws.csv.converter.Boolean01ConverterSerializer;
 import de.nrw.schule.svws.db.DBDriver;
 import de.nrw.schule.svws.db.schema.DBSchemaDefinition;
+import de.nrw.schule.svws.db.schema.SchemaRevisionen;
 
 /**
  * Diese Klasse repräsentiert ein DTO-Objekt für den Zugriff auf die CSV-Datei, welche
@@ -25,13 +26,13 @@ public class Tabelle {
     @JsonProperty public String Name;
 	
 	/** Die Revision, ab welcher die Tabelle im Schema existiert */
-    @JsonProperty public Integer Revision;
+    @JsonProperty public Long Revision;
 	
 	/** 
 	 * Eine Version, ab der die Tabelle veraltet ist und aus dem Schema entfernt werden soll 
      * oder: -1 falls die Tabelle auch bei der neuesten Version noch aktuell ist 
      */
-    @JsonProperty public Integer Veraltet;
+    @JsonProperty public Long Veraltet;
 	
 	/** Gibt an, ob die Tabelle bei der Migration einer alten Schild NRW-Version (2.x) in die SVWS-DB (Revision 0) berücksichtigt werden soll */
     @JsonSerialize(using=Boolean01ConverterSerializer.class)
@@ -54,13 +55,13 @@ public class Tabelle {
 
     
     /** Gibt den jeweiligen String an, der für die Sortierung der Tabellen bei der jeweiligen Revision relevant ist. */
-    @JsonIgnore public HashMap<Integer, String> sortierung = new HashMap<>();
+    @JsonIgnore public HashMap<Long, String> sortierung = new HashMap<>();
     
     /** Die Revision, bei der die Tabelle erstellt wird */
-    @JsonIgnore public Versionen dbRevision;
+    @JsonIgnore public SchemaRevisionen dbRevision;
 
     /** Die Revision, ab der die Tabelle veraltet ist, oder null */
-    @JsonIgnore public Versionen dbRevisionVeraltet;
+    @JsonIgnore public SchemaRevisionen dbRevisionVeraltet;
     
     /** Die Primärschlüsseldefinition für diese Tabelle */
     @JsonIgnore public Primaerschluessel primaerschluessel = new Primaerschluessel();
@@ -92,9 +93,9 @@ public class Tabelle {
      * @return true, falls die Tabelle in der Revision definiert ist und ansonsten false
      */
     @JsonIgnore
-    public boolean isDefined(final int rev) {
-    	final int revision = (rev < 0) ? DBSchemaDefinition.getInstance().maxRevision : rev;
-    	return (revision >= dbRevision.Revision) && ((dbRevisionVeraltet.Revision < 0) || (revision < dbRevisionVeraltet.Revision));
+    public boolean isDefined(final long rev) {
+    	final long revision = (rev < 0) ? SchemaRevisionen.maxRevision.revision : rev;
+    	return (revision >= dbRevision.revision) && ((dbRevisionVeraltet.revision < 0) || (revision < dbRevisionVeraltet.revision));
     }
     
     
@@ -118,10 +119,10 @@ public class Tabelle {
      * @return die Tabellenspalten in der durch das Feld Sortierung definierten Reihenfolge
      */
     @JsonIgnore
-    public List<TabelleSpalte> getSpalten(final int rev) {
-    	final int revision = (rev < 0) ? DBSchemaDefinition.getInstance().maxRevision : rev;
+    public List<TabelleSpalte> getSpalten(final long rev) {
+    	final long revision = (rev < 0) ? SchemaRevisionen.maxRevision.revision : rev;
     	return spalten.values().stream()
-    			.filter(sp -> (revision >= sp.dbRevision.Revision) && ((sp.dbRevisionVeraltet.Revision < 0) || (revision < sp.dbRevisionVeraltet.Revision)))
+    			.filter(sp -> (revision >= sp.dbRevision.revision) && ((sp.dbRevisionVeraltet.revision < 0) || (revision < sp.dbRevisionVeraltet.revision)))
     			.sorted((a,b) -> { return a.Sortierung.compareTo(b.Sortierung); }).collect(Collectors.toList());
     }
 
@@ -135,7 +136,7 @@ public class Tabelle {
      * @return der Name der Java-Klasse
      */
     @JsonIgnore
-    public String getJavaKlasse(final int rev) {
+    public String getJavaKlasse(final long rev) {
     	if (rev > 0)
     		return "Rev" + rev + JavaKlasse;
     	if (rev == 0)
@@ -178,7 +179,7 @@ public class Tabelle {
      * 
      * @return der entsprechende SQL-Befehl
      */
-    public String getSQL(DBSchemaDefinition schema, DBDriver dbms, int rev) {
+    public String getSQL(DBSchemaDefinition schema, DBDriver dbms, long rev) {
 		String newline = System.lineSeparator();
 		String pk = this.primaerschluessel.getSQL();
 		return "CREATE TABLE " + this.Name + " (" + newline
@@ -211,10 +212,10 @@ public class Tabelle {
      * @return die in der angegebenen Revision gültigen Fremdschlüssel
      */
     @JsonIgnore
-    public List<Fremdschluessel> getFremdschluessel(int rev) {
+    public List<Fremdschluessel> getFremdschluessel(long rev) {
     	return fremdschluessel.stream()
-			.filter(fk -> ((rev == -1) && (fk.dbRevisionVeraltet.Revision == -1)) 
-				|| ((rev != -1) && (rev >= fk.dbRevision.Revision) && ((fk.dbRevisionVeraltet.Revision == -1) || (rev < fk.dbRevisionVeraltet.Revision))))
+			.filter(fk -> ((rev == -1) && (fk.dbRevisionVeraltet.revision == -1)) 
+				|| ((rev != -1) && (rev >= fk.dbRevision.revision) && ((fk.dbRevisionVeraltet.revision == -1) || (rev < fk.dbRevisionVeraltet.revision))))
 			.collect(Collectors.toList());
     }
     
@@ -227,10 +228,10 @@ public class Tabelle {
      * @return der SQL-Code für die Fremdschlüssel-Constraints der Tabelle
      */
     @JsonIgnore
-    private String getSQLFremdschluessel(int rev) {
+    private String getSQLFremdschluessel(long rev) {
     	String result = fremdschluessel.stream()
-    			.filter(fk -> ((rev == -1) && (fk.dbRevisionVeraltet.Revision == -1)) 
-					|| ((rev != -1) && (rev >= fk.dbRevision.Revision) && ((fk.dbRevisionVeraltet.Revision == -1) || (rev < fk.dbRevisionVeraltet.Revision))))
+    			.filter(fk -> ((rev == -1) && (fk.dbRevisionVeraltet.revision == -1)) 
+					|| ((rev != -1) && (rev >= fk.dbRevision.revision) && ((fk.dbRevisionVeraltet.revision == -1) || (rev < fk.dbRevisionVeraltet.revision))))
     			.map(fk -> fk.getSQL())
     			.collect(Collectors.joining("," + System.lineSeparator() + "  "));
     	if ((result == null) || ("".equals(result)))
@@ -249,10 +250,10 @@ public class Tabelle {
      * @return der SQL-Code
      */
     @JsonIgnore 
-    private String getSQLSpalten(DBSchemaDefinition schema, DBDriver dbms, int rev) {
+    private String getSQLSpalten(DBSchemaDefinition schema, DBDriver dbms, long rev) {
     	return getSpalten().stream()
-    			.filter(col -> ((rev == -1) && (col.dbRevisionVeraltet.Revision == -1)) 
-    					|| ((rev != -1) && (rev >= col.dbRevision.Revision) && ((col.dbRevisionVeraltet.Revision == -1) || (rev < col.dbRevisionVeraltet.Revision))))
+    			.filter(col -> ((rev == -1) && (col.dbRevisionVeraltet.revision == -1)) 
+    					|| ((rev != -1) && (rev >= col.dbRevision.revision) && ((col.dbRevisionVeraltet.revision == -1) || (rev < col.dbRevisionVeraltet.revision))))
     			.map(col -> col.getSQL(schema, dbms))
     			.collect(Collectors.joining(", " + System.lineSeparator() + "  "));    	
     }
@@ -267,10 +268,10 @@ public class Tabelle {
      * @return der SQL-Code für die Unique-Constraints der Tabelle
      */
     @JsonIgnore
-    private String getSQLUniqueContraints(int rev) {
+    private String getSQLUniqueContraints(long rev) {
     	String result = unique.values().stream()
-        		.filter(uc -> ((rev == -1) && (uc.dbRevisionVeraltet.Revision == -1)) 
-        				|| ((rev != -1) && (rev >= uc.dbRevision.Revision) && ((uc.dbRevisionVeraltet.Revision == -1) || (rev < uc.dbRevisionVeraltet.Revision))))
+        		.filter(uc -> ((rev == -1) && (uc.dbRevisionVeraltet.revision == -1)) 
+        				|| ((rev != -1) && (rev >= uc.dbRevision.revision) && ((uc.dbRevisionVeraltet.revision == -1) || (rev < uc.dbRevisionVeraltet.revision))))
         		.map(uc -> uc.getSQL())
         		.collect(Collectors.joining("," + System.lineSeparator() + "  "));
     	if ((result == null) || ("".equals(result)))
@@ -287,10 +288,10 @@ public class Tabelle {
      * @return der SQL-Code für die Indizes der Tabelle
      */
     @JsonIgnore
-    public String getSQLIndizes(int rev) {
+    public String getSQLIndizes(long rev) {
     	return indizes.stream()
-        		.filter(idx -> ((rev == -1) && (idx.dbRevisionVeraltet.Revision == -1)) 
-        				|| ((rev != -1) && (rev >= idx.dbRevision.Revision) && ((idx.dbRevisionVeraltet.Revision == -1) || (rev < idx.dbRevisionVeraltet.Revision))))
+        		.filter(idx -> ((rev == -1) && (idx.dbRevisionVeraltet.revision == -1)) 
+        				|| ((rev != -1) && (rev >= idx.dbRevision.revision) && ((idx.dbRevisionVeraltet.revision == -1) || (rev < idx.dbRevisionVeraltet.revision))))
         		.map(idx -> idx.getSQL())
         		.collect(Collectors.joining(System.lineSeparator()));
     }
@@ -307,7 +308,7 @@ public class Tabelle {
      * @return der SQL-Code für die Trigger der Tabelle
      */
     @JsonIgnore
-    public String getSQLTrigger(DBDriver dbms, int rev, boolean create) {
+    public String getSQLTrigger(DBDriver dbms, long rev, boolean create) {
     	// Lese die einzelnen Trigger aus
     	Vector<String> sqlTrigger = new Vector<>();
     	for (Trigger t : this.trigger) {
@@ -315,11 +316,11 @@ public class Tabelle {
     			continue;
     		// Prüfe, ab wann die Trigger gültig bzw. ungültig sind
     		if (create) {
-        		if (((rev == -1) && (t.dbRevisionVeraltet.Revision == -1))
-    					|| ((rev != -1) && (rev >= t.dbRevision.Revision) && ((t.dbRevisionVeraltet.Revision == -1) || (rev < t.dbRevisionVeraltet.Revision))))
+        		if (((rev == -1) && (t.dbRevisionVeraltet.revision == -1))
+    					|| ((rev != -1) && (rev >= t.dbRevision.revision) && ((t.dbRevisionVeraltet.revision == -1) || (rev < t.dbRevisionVeraltet.revision))))
         			sqlTrigger.add(t.getSQL(dbms, true));    			
     		} else {
-    			if ((t.dbRevisionVeraltet.Revision >= 0) && (rev >= t.dbRevisionVeraltet.Revision))
+    			if ((t.dbRevisionVeraltet.revision >= 0) && (rev >= t.dbRevisionVeraltet.revision))
     				sqlTrigger.add(t.getSQL(dbms, false));
     		}
     	}
@@ -350,10 +351,10 @@ public class Tabelle {
      * @return die SQL-Befehle
      */
     @JsonIgnore
-    public String getSQLInit(DBDriver dbms, int rev) {
+    public String getSQLInit(DBDriver dbms, long rev) {
     	String result = manualSQL.stream()
-        		.filter(msql -> ((rev == -1) && (msql.dbRevisionVeraltet.Revision == -1)) 
-        				|| ((rev != -1) && (rev >= msql.dbRevision.Revision) && ((msql.dbRevisionVeraltet.Revision == -1) || (rev < msql.dbRevisionVeraltet.Revision))))
+        		.filter(msql -> ((rev == -1) && (msql.dbRevisionVeraltet.revision == -1)) 
+        				|| ((rev != -1) && (rev >= msql.dbRevision.revision) && ((msql.dbRevisionVeraltet.revision == -1) || (rev < msql.dbRevisionVeraltet.revision))))
         		.filter(msql -> !msql.UpdateOnly)
         		.map(msql -> msql.getSQL(dbms))
         		.filter(msql -> (msql != null) && (!"".equals(msql)))
@@ -373,7 +374,7 @@ public class Tabelle {
      *          1, falls diese Tabelle weiter hinten einsortiert ist
      */
     @JsonIgnore
-    public int compareTo(int rev, Tabelle other) {
+    public int compareTo(long rev, Tabelle other) {
     	var a = this.sortierung.get(rev);
     	var b = other.sortierung.get(rev);
     	if ((a == null) && (b == null))

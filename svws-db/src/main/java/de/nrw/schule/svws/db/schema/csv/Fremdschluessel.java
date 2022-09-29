@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import de.nrw.schule.svws.db.DBDriver;
+import de.nrw.schule.svws.db.schema.SchemaRevisionen;
 
 
 /**
@@ -19,10 +20,10 @@ public class Fremdschluessel {
 	@JsonIgnore public String Name;
     
     /** Die Revision, bei welcher der Fremdschlüssel eingeführt wurde */
-    @JsonIgnore public Versionen dbRevision;
+    @JsonIgnore public SchemaRevisionen dbRevision;
 
     /** Die Revision, ab der der Fremdschlüssel veraltet ist, oder null */
-    @JsonIgnore public Versionen dbRevisionVeraltet;
+    @JsonIgnore public SchemaRevisionen dbRevisionVeraltet;
     
 	/** Die Tabelle, zu der der Fremdschlüssel gehört*/
 	@JsonIgnore public Tabelle tabelle; 

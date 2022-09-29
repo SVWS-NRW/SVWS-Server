@@ -11,6 +11,7 @@ import java.util.Vector;
 
 import de.nrw.schule.svws.db.schema.DBSchemaDefinition;
 import de.nrw.schule.svws.db.schema.DBSchemaViews;
+import de.nrw.schule.svws.db.schema.SchemaRevisionen;
 import de.nrw.schule.svws.db.schema.View;
 import de.nrw.schule.svws.db.schema.csv.TabelleSpalte;
 import de.nrw.schule.svws.logger.LogConsumerConsole;
@@ -47,7 +48,7 @@ public class DTOCreator {
 	 * 
 	 * @return das {@link File}-Objekt, falls das Verzeichnis erstellt wurde, im Fehlerfall null 
 	 */
-	private static File createPackageDirectory(final String baseDir, final int rev) {
+	private static File createPackageDirectory(final String baseDir, final long rev) {
 		try {
 			// Erstelle das Verzeichnis für das Package
 			String pack = DBSchemaDefinition.javaPackage + "." + DBSchemaDefinition.javaDTOPackage;
@@ -74,7 +75,7 @@ public class DTOCreator {
 	 * 
 	 * @return das {@link File}-Objekt für das Package-Verzeichnis
 	 */
-	private static File createJavaCode(final DBSchemaDefinition schema, final String baseDir, final int rev) {
+	private static File createJavaCode(final DBSchemaDefinition schema, final String baseDir, final long rev) {
 		final File packageDir = createPackageDirectory(baseDir, rev);
 		if (packageDir == null)
 			cmdLine.printOptionsAndExit(2, "Fehler beim Erstellen des Verzeichnisses für das DTO-Package. Korrigieren Sie den Ausgabe-Pfad.");
@@ -134,7 +135,7 @@ public class DTOCreator {
 		
 		// Erzeuge die DTOs für die einzelnen Views
 		if (rev != 0) {
-			int revision = (rev < 0) ? DBSchemaDefinition.getInstance().maxRevision : rev;
+			long revision = (rev < 0) ? SchemaRevisionen.maxRevision.revision : rev;
 			String packagename = DBSchemaDefinition.javaPackage + "." + DBSchemaDefinition.javaDTOPackage + ((rev < 0) ? ".current" : ".rev" + rev) + ".";
 			for (View view : DBSchemaViews.getInstance().getViewsActive(revision)) {
 				logger.log("View " + view.name + ": ");
@@ -273,7 +274,7 @@ public class DTOCreator {
 		try {
 			String dtosCode = "package " + DBSchemaDefinition.javaPackage + "." + DBSchemaDefinition.javaDTOPackage + ";" + System.lineSeparator()
 			 + "" + System.lineSeparator()
-			 + "import de.nrw.schule.svws.db.schema.DBSchemaDefinition;" + System.lineSeparator()
+			 + "import de.nrw.schule.svws.db.schema.SchemaRevisionen;" + System.lineSeparator()
 			 + "" + System.lineSeparator()
 	         + "/**" + System.lineSeparator()
 			 + " * Diese Klasse dient als Hilfsklasse zum Zugriff auf die Datenbank-DTO-Klassen unterschiedlicher Revisionen." + System.lineSeparator()
@@ -291,13 +292,13 @@ public class DTOCreator {
 			 + "     *" + System.lineSeparator()
 			 + "     * @return die DTO-Klasse" + System.lineSeparator()
 			 + "     */" + System.lineSeparator()
-			 + "    public static Class<? extends Object> getFromDTOName(String name, int rev) {" + System.lineSeparator()
+			 + "    public static Class<? extends Object> getFromDTOName(String name, long rev) {" + System.lineSeparator()
 			 + "        if (rev == 0) {" + System.lineSeparator()
 		     + "            return MigrationDTOs.getFromDTOName(name);" + System.lineSeparator()
-		     + "        } else if ((rev < 0) || (rev <= DBSchemaDefinition.getInstance().maxRevision)) {" + System.lineSeparator()
+		     + "        } else if ((rev < 0) || (rev <= SchemaRevisionen.maxRevision.revision)) {" + System.lineSeparator()
     		 + "            return DTOs.getFromDTOName(name);" + System.lineSeparator()
-    		 + "        } else if (rev <= DBSchemaDefinition.getInstance().maxRevisionDeveloper) {" + System.lineSeparator()
-		     + "            return Rev" + DBSchemaDefinition.getInstance().maxRevisionDeveloper + "DTOs.getFromDTOName(name);" + System.lineSeparator()
+    		 + "        } else if (rev <= SchemaRevisionen.maxDeveloperRevision.revision) {" + System.lineSeparator()
+		     + "            return Rev" + SchemaRevisionen.maxDeveloperRevision.revision + "DTOs.getFromDTOName(name);" + System.lineSeparator()
 		     + "        } else {" + System.lineSeparator()
 		     + "            return null;" + System.lineSeparator()
 		     + "        }" + System.lineSeparator()
@@ -312,13 +313,13 @@ public class DTOCreator {
 			 + "     *" + System.lineSeparator()
 			 + "     * @return die DTO-Klasse" + System.lineSeparator()
 			 + "     */" + System.lineSeparator()
-			 + "    public static Class<? extends Object> getFromTableName(String name, int rev) {" + System.lineSeparator()
+			 + "    public static Class<? extends Object> getFromTableName(String name, long rev) {" + System.lineSeparator()
 			 + "        if (rev == 0) {" + System.lineSeparator()
 		     + "            return MigrationDTOs.getFromTableName(name);" + System.lineSeparator()
-		     + "        } else if ((rev < 0) || (rev <= DBSchemaDefinition.getInstance().maxRevision)) {" + System.lineSeparator()
+		     + "        } else if ((rev < 0) || (rev <= SchemaRevisionen.maxRevision.revision)) {" + System.lineSeparator()
     		 + "            return DTOs.getFromTableName(name);" + System.lineSeparator()
-    		 + "        } else if (rev <= DBSchemaDefinition.getInstance().maxRevisionDeveloper) {" + System.lineSeparator()
-		     + "            return Rev" + DBSchemaDefinition.getInstance().maxRevisionDeveloper + "DTOs.getFromTableName(name);" + System.lineSeparator()
+    		 + "        } else if (rev <= SchemaRevisionen.maxDeveloperRevision.revision) {" + System.lineSeparator()
+		     + "            return Rev" + SchemaRevisionen.maxDeveloperRevision.revision + "DTOs.getFromTableName(name);" + System.lineSeparator()
 		     + "        } else {" + System.lineSeparator()
 		     + "            return null;" + System.lineSeparator()
 		     + "        }" + System.lineSeparator()
@@ -427,7 +428,7 @@ public class DTOCreator {
 			
 			logger.logLn("Erzeuge DTO-Klassen für die aktuelle Entwickler-Revision, d.h. für den experimentellen SVWS-Server-Betrieb...");
 			logger.modifyIndent(2);
-			createJavaCode(DBSchemaDefinition.getInstance(), path, DBSchemaDefinition.getInstance().maxRevisionDeveloper);
+			createJavaCode(DBSchemaDefinition.getInstance(), path, SchemaRevisionen.maxDeveloperRevision.revision);
 			logger.modifyIndent(-2);
 
 			logger.logLn("Erzeuge persistence.xml, so dass named queries verwendet werden können...");

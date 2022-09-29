@@ -3,6 +3,8 @@ package de.nrw.schule.svws.db.schema.csv;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import de.nrw.schule.svws.db.schema.SchemaRevisionen;
+
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle SchemaInit.
  */
@@ -12,10 +14,10 @@ public class SchemaInit {
     @JsonProperty public String dbms;
 	
 	/** Die Revision, ab welcher die Skripte ausgeführt werden sollen */
-    @JsonProperty public Integer Revision;
+    @JsonProperty public Long Revision;
 	
 	/** Eine Version, ab der die Skripte veraltet sind oder: -1 falls die Skripte auch bei der neuesten Version noch aktuell sind */
-    @JsonProperty public Integer Veraltet;
+    @JsonProperty public Long Veraltet;
 	
 	/** Ein Integer-Wert, der die Reihenfolge angibt, in der die SQL-Befehle ausgeführt werden sollen. */
     @JsonProperty public Integer Reihenfolge;
@@ -31,9 +33,9 @@ public class SchemaInit {
 
     
 	/** Die Revision, ab welcher die Skripte ausgeführt werden sollen */
-    @JsonIgnore public Versionen dbRevision;
+    @JsonIgnore public SchemaRevisionen dbRevision;
 
 	/** Eine Version, ab der die Skripte veraltet sind oder: -1 falls die Skripte auch bei der neuesten Version noch aktuell sind */
-    @JsonIgnore public Versionen dbRevisionVeraltet;
+    @JsonIgnore public SchemaRevisionen dbRevisionVeraltet;
     
 }

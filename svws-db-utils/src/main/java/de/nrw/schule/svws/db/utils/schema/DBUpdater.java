@@ -8,6 +8,7 @@ import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.DBException;
 import de.nrw.schule.svws.db.schema.DBSchemaDefinition;
 import de.nrw.schule.svws.db.schema.DBSchemaViews;
+import de.nrw.schule.svws.db.schema.SchemaRevisionen;
 import de.nrw.schule.svws.db.schema.View;
 import de.nrw.schule.svws.db.schema.csv.Fremdschluessel;
 import de.nrw.schule.svws.db.schema.csv.Tabelle;
@@ -66,7 +67,7 @@ public class DBUpdater {
 	 * @return true, falls ein update erfolgreich durchgeführt wurde, sonst false - d.h. 
 	 *         auch dann false, falls kein Update notwendig ist.
 	 */
-	private boolean performUpdate(int neue_revision) {
+	private boolean performUpdate(long neue_revision) {
 		boolean success = true;
 		try {
 			// 1. Update-Schritt: DROP_TRIGGER
@@ -159,14 +160,14 @@ public class DBUpdater {
 	 * 
 	 * @return true, falls das schema aktuell ist, sonst false
 	 */
-	public boolean isUptodate(int maxUpdateRevision, boolean devMode) {
+	public boolean isUptodate(long maxUpdateRevision, boolean devMode) {
 		status.update();
 		DBSchemaVersion currentVersion = status.getVersion();
 		if (currentVersion == null) {
 			logger.logLn("Fehler: Aktuelle Revision des Schemas konnte nicht ermittelt werden.");
 			return false;
 		}
-		int max_revision = devMode ? schema.maxRevisionDeveloper : schema.maxRevision;
+		long max_revision = devMode ? SchemaRevisionen.maxDeveloperRevision.revision : SchemaRevisionen.maxRevision.revision;
 		if (max_revision < 0) {
 			logger.logLn("Interner Fehler: Es ist keine gültige Datenbank-Revision definiert");
 			return true;
@@ -175,7 +176,7 @@ public class DBUpdater {
 			max_revision = maxUpdateRevision;
 		try {
 			// Prüfe, ob das Schema aktuell ist oder sogar neuer als in der schema-Beschreibung bekannt.
-			int revision = currentVersion.getRevision();
+			long revision = currentVersion.getRevision();
 			if (revision == max_revision) {
 				logger.logLn("Das Schema ist bereits in der angegebenen Revision.");
 				return true;
@@ -200,18 +201,18 @@ public class DBUpdater {
 	 * 
 	 * @return true, falls eine Aktualisierung möglich ist, sonst false
 	 */
-	public boolean isUpdatable(int maxUpdateRevision, boolean devMode) {
+	public boolean isUpdatable(long maxUpdateRevision, boolean devMode) {
 		// Prüfe zunächst, ob ein Update möglich ist
 		status.update();
 		DBSchemaVersion currentVersion = status.getVersion();
-		int max_revision = devMode ? schema.maxRevisionDeveloper : schema.maxRevision;
+		long max_revision = devMode ? SchemaRevisionen.maxDeveloperRevision.revision : SchemaRevisionen.maxRevision.revision;
 		if ((currentVersion == null) || (max_revision < 0))
 			return false;
 		if ((maxUpdateRevision >= 0) && (maxUpdateRevision < max_revision))
 			max_revision = maxUpdateRevision;
 		try {
 			// Ist eine Aktualisierung überhaupt nötig, oder ist das Schema schon aktuell oder sogar aktueller?
-			int revision = currentVersion.getRevision();
+			long revision = currentVersion.getRevision();
 			if (revision >= max_revision)
 				return false;
 		} catch (Exception e) {
@@ -232,7 +233,7 @@ public class DBUpdater {
 	 * 
 	 * @return true im Erfolgsfall, sonst false
 	 */
-	public boolean update(int maxUpdateRevision, boolean devMode, boolean lockSchema) {
+	public boolean update(long maxUpdateRevision, boolean devMode, boolean lockSchema) {
 		// Sperre ggf. das Datenbankschema
 		if ((lockSchema) && (!SVWSKonfiguration.get().lockSchema(schemaManager.getSchemaStatus().schemaName))) {
 			logger.logLn("-> Update fehlgeschlagen! (Schema ist aktuell gesperrt und kann daher nicht aktualisiert werden)");
@@ -242,7 +243,7 @@ public class DBUpdater {
 		// Prüfe zunächst, ob ein Update möglich ist
 		status.update();
 		DBSchemaVersion currentVersion = status.getVersion();
-		int max_revision = devMode ? schema.maxRevisionDeveloper : schema.maxRevision;
+		long max_revision = devMode ? SchemaRevisionen.maxDeveloperRevision.revision : SchemaRevisionen.maxRevision.revision;
 		if ((currentVersion == null) || (max_revision < 0))
 			return false;
 		if ((maxUpdateRevision >= 0) && (maxUpdateRevision < max_revision))
@@ -281,7 +282,7 @@ public class DBUpdater {
 	 * 
 	 * @return true, falls die Daten erfolgreich kopiert wurden, sonst false.
 	 */
-	private boolean copyDefaultDataUpdates(int rev) {
+	private boolean copyDefaultDataUpdates(long rev) {
 		logger.log("- Aktualisiere Daten: ");
 		List<Tabelle> tabs = schema.getTabellenDefaultDatenUpdatesSortiert(rev);
 		if ((tabs == null) || (tabs.size() <= 0)) {
@@ -311,12 +312,12 @@ public class DBUpdater {
 	 * @return true, false alle entsprechenden Trigger erfolgreich verworfen wurden 
 	 *         oder keine verworfen werden müssen, sonst false
 	 */
-	private boolean dropTrigger(int veraltet) {
+	private boolean dropTrigger(long veraltet) {
 		DBEntityManager conn = schemaManager.getEntityManager();
 		logger.log("- Verwerfe: ");
 		var dbms = conn.getDBDriver();
 		List<Trigger> trigger = schema.trigger.get(dbms).values().stream()
-				.filter(trig -> trig.dbRevisionVeraltet.Revision == veraltet)
+				.filter(trig -> trig.dbRevisionVeraltet.revision == veraltet)
 				.collect(Collectors.toList());
 		if ((trigger == null) || (trigger.size() <= 0)) {
 			logger.logLn(0, "0 Trigger");
@@ -349,10 +350,10 @@ public class DBUpdater {
 	 * @return true, false alle entsprechenden Indizes erfolgreich verworfen wurden 
 	 *         oder keine verworfen werden müssen, sonst false
 	 */
-	private boolean dropIndices(int veraltet) {
+	private boolean dropIndices(long veraltet) {
 		DBEntityManager conn = schemaManager.getEntityManager();
 		logger.log("- Verwerfe: ");
-		List<TabelleIndex> indizesVeraltet = schema.indizes.stream().filter(idx -> idx.dbRevisionVeraltet.Revision == veraltet).collect(Collectors.toList());
+		List<TabelleIndex> indizesVeraltet = schema.indizes.stream().filter(idx -> idx.dbRevisionVeraltet.revision == veraltet).collect(Collectors.toList());
 		if ((indizesVeraltet == null) || (indizesVeraltet.size() <= 0)) {
 			logger.logLn(0, "0 Indizes");
 			return true;
@@ -387,10 +388,10 @@ public class DBUpdater {
 	 * @return true, false alle entsprechenden Unique-Constraints erfolgreich verworfen wurden 
 	 *         oder keine verworfen werden müssen, sonst false
 	 */
-	private boolean dropUniqueConstraints(int veraltet) {
+	private boolean dropUniqueConstraints(long veraltet) {
 		DBEntityManager conn = schemaManager.getEntityManager();
 		logger.log("- Verwerfe: ");
-		List<TabelleUnique> ucs = schema.unique.values().stream().filter(uc -> uc.dbRevisionVeraltet.Revision == veraltet).collect(Collectors.toList());
+		List<TabelleUnique> ucs = schema.unique.values().stream().filter(uc -> uc.dbRevisionVeraltet.revision == veraltet).collect(Collectors.toList());
 		if ((ucs == null) || (ucs.size() <= 0)) {
 			logger.logLn(0, "0 Unique-Constraints");
 			return true;
@@ -425,10 +426,10 @@ public class DBUpdater {
 	 * @return true, false alle entsprechenden Fremdschlüssel erfolgreich verworfen wurden 
 	 *         oder keine verworfen werden müssen, sonst false
 	 */
-	private boolean dropForeignKeys(int veraltet) {
+	private boolean dropForeignKeys(long veraltet) {
 		DBEntityManager conn = schemaManager.getEntityManager();
 		logger.log("- Verwerfe: ");
-		List<Fremdschluessel> fks = schema.fremdschluessel.stream().filter(fk -> fk.dbRevisionVeraltet.Revision == veraltet).collect(Collectors.toList());
+		List<Fremdschluessel> fks = schema.fremdschluessel.stream().filter(fk -> fk.dbRevisionVeraltet.revision == veraltet).collect(Collectors.toList());
 		if ((fks == null) || (fks.size() <= 0)) {
 			logger.logLn(0, "0 Fremdschlüssel");
 			return true;
@@ -463,13 +464,13 @@ public class DBUpdater {
 	 * @return true, false alle entsprechenden Tabellenspalten erfolgreich verworfen wurden 
 	 *         oder keine verworfen werden müssen, sonst false
 	 */
-	private boolean dropColumns(int veraltet) {
+	private boolean dropColumns(long veraltet) {
 		DBEntityManager conn = schemaManager.getEntityManager();
 		logger.log("- Verwerfe: ");
 		List<TabelleSpalte> cols = schema.getTabellenSortiertAbsteigend(veraltet-1).stream()
-				.filter(tab -> tab.dbRevisionVeraltet.Revision != veraltet)
+				.filter(tab -> tab.dbRevisionVeraltet.revision != veraltet)
 				.flatMap(tab -> tab.getSpalten().stream())
-				.filter(col -> col.dbRevisionVeraltet.Revision == veraltet)
+				.filter(col -> col.dbRevisionVeraltet.revision == veraltet)
 				.collect(Collectors.toList());
 		if ((cols == null) || (cols.size() <= 0)) {
 			logger.logLn(0, "0 Spalten");
@@ -505,11 +506,11 @@ public class DBUpdater {
 	 * @return true, false alle entsprechenden Tabellen erfolgreich verworfen wurden 
 	 *         oder keine verworfen werden müssen, sonst false
 	 */
-	private boolean dropTables(int veraltet) {
+	private boolean dropTables(long veraltet) {
 		DBEntityManager conn = schemaManager.getEntityManager();
 		logger.log("- Verwerfe: ");
 		List<Tabelle> tabs = schema.getTabellenSortiertAbsteigend(veraltet-1).stream()
-				.filter(tab -> tab.dbRevisionVeraltet.Revision == veraltet)
+				.filter(tab -> tab.dbRevisionVeraltet.revision == veraltet)
 				.collect(Collectors.toList());
 		if ((tabs == null) || (tabs.size() <= 0)) {
 			logger.logLn(0, "0 Tabellen");
@@ -541,7 +542,7 @@ public class DBUpdater {
 	 * @return true, false alle entsprechenden Views erfolgreich verworfen wurden 
 	 *         oder keine verworfen werden müssen, sonst false
 	 */
-	private boolean dropViews(int veraltet) {
+	private boolean dropViews(long veraltet) {
 		DBEntityManager conn = schemaManager.getEntityManager();
 		logger.log("- Verwerfe: ");
 		List<View> views = DBSchemaViews.getInstance().getViewsDeprecated(veraltet); 
@@ -575,14 +576,14 @@ public class DBUpdater {
 	 * @return true, false alle entsprechenden Tabellen erfolgreich angelegt wurden 
 	 *         oder keine angelegt werden müssen, sonst false
 	 */
-	private boolean createNewTables(int revision) {
+	private boolean createNewTables(long revision) {
 		DBEntityManager conn = schemaManager.getEntityManager();
 		logger.log("- Erstelle: ");
 		if (revision == 0) {
 			logger.logLn(0, "Fehler: Eine Aktualisierung auf Revision 0 ergibt keinen Sinn, weshalb keine Tabellen erstellt werden.");
 			return false;
 		}
-		List<Tabelle> tabs = schema.getTabellenSortiert(revision).stream().filter(tab -> tab.dbRevision.Revision == revision).collect(Collectors.toList());
+		List<Tabelle> tabs = schema.getTabellenSortiert(revision).stream().filter(tab -> tab.dbRevision.revision == revision).collect(Collectors.toList());
 		if ((tabs == null) || (tabs.size() <= 0)) {
 			logger.logLn(0, "0 Tabellen");
 			return true;
@@ -628,7 +629,7 @@ public class DBUpdater {
 	 * @return true, false alle entsprechenden Views erfolgreich angelegt wurden 
 	 *         oder keine angelegt werden müssen, sonst false
 	 */
-	private boolean createNewViews(int revision) {
+	private boolean createNewViews(long revision) {
 		DBEntityManager conn = schemaManager.getEntityManager();
 		logger.log("- Erstelle: ");
 		if (revision == 0) {
@@ -667,13 +668,13 @@ public class DBUpdater {
 	 * @return true, false alle entsprechenden Tabellenspalten erfolgreich angelegt wurden 
 	 *         oder keine angelegt werden müssen, sonst false
 	 */
-	private boolean addNewColumns(int revision) {
+	private boolean addNewColumns(long revision) {
 		DBEntityManager conn = schemaManager.getEntityManager();
 		logger.log("- Hinzufügen: ");
 		List<TabelleSpalte> cols = schema.getTabellenSortiert(revision).stream()
-				.filter(tab -> tab.dbRevision.Revision < revision)
+				.filter(tab -> tab.dbRevision.revision < revision)
 				.flatMap(tab -> tab.getSpalten().stream())
-				.filter(col -> col.dbRevision.Revision == revision)
+				.filter(col -> col.dbRevision.revision == revision)
 				.collect(Collectors.toList());
 		if ((cols == null) || (cols.size() <= 0)) {
 			logger.logLn(0, "0 Spalten");
@@ -709,13 +710,13 @@ public class DBUpdater {
 	 * @return true, false alle entsprechenden Fremdschlüssel erfolgreich angelegt wurden 
 	 *         oder keine angelegt werden müssen, sonst false
 	 */
-	private boolean addNewForeignKeys(int revision) {
+	private boolean addNewForeignKeys(long revision) {
 		DBEntityManager conn = schemaManager.getEntityManager();
 		logger.log("- Hinzufügen: ");
 		List<Fremdschluessel> fks = schema.getTabellenSortiert(revision).stream()
-				.filter(tab -> tab.dbRevision.Revision < revision)
+				.filter(tab -> tab.dbRevision.revision < revision)
 				.flatMap(tab -> tab.fremdschluessel.stream())
-				.filter(fk -> fk.dbRevision.Revision == revision)
+				.filter(fk -> fk.dbRevision.revision == revision)
 				.collect(Collectors.toList());
 		if ((fks == null) || (fks.size() <= 0)) {
 			logger.logLn(0, "0 Fremdschlüssel");
@@ -751,13 +752,13 @@ public class DBUpdater {
 	 * @return true, false alle entsprechenden Unique-Constraints erfolgreich angelegt wurden 
 	 *         oder keine angelegt werden müssen, sonst false
 	 */
-	private boolean addNewUniqueConstraints(int revision) {
+	private boolean addNewUniqueConstraints(long revision) {
 		DBEntityManager conn = schemaManager.getEntityManager();
 		logger.log("- Hinzufügen: ");
 		List<TabelleUnique> ucs = schema.getTabellenSortiert(revision).stream()
-				.filter(tab -> tab.dbRevision.Revision < revision)
+				.filter(tab -> tab.dbRevision.revision < revision)
 				.flatMap(tab -> tab.unique.values().stream())
-				.filter(uc -> uc.dbRevision.Revision == revision)
+				.filter(uc -> uc.dbRevision.revision == revision)
 				.collect(Collectors.toList());
 		if ((ucs == null) || (ucs.size() <= 0)) {
 			logger.logLn(0, "0 Unique-Constraints");
@@ -793,13 +794,13 @@ public class DBUpdater {
 	 * @return true, false alle entsprechenden Indizes erfolgreich angelegt wurden 
 	 *         oder keine angelegt werden müssen, sonst false
 	 */
-	private boolean addNewIndices(int revision) {
+	private boolean addNewIndices(long revision) {
 		DBEntityManager conn = schemaManager.getEntityManager();
 		logger.log("- Hinzufügen: ");
 		List<TabelleIndex> indizes = schema.getTabellenSortiert(revision).stream()
-				.filter(tab -> tab.dbRevision.Revision < revision)
+				.filter(tab -> tab.dbRevision.revision < revision)
 				.flatMap(tab -> tab.indizes.stream())
-				.filter(idx -> idx.dbRevision.Revision == revision)
+				.filter(idx -> idx.dbRevision.revision == revision)
 				.collect(Collectors.toList());
 		if ((indizes == null) || (indizes.size() <= 0)) {
 			logger.logLn(0, "0 Indizes");
@@ -834,7 +835,7 @@ public class DBUpdater {
 	 * @return true, false alle manuelle SQL-Befehle erfolgreich ausgeführt wurden 
 	 *         oder keine ausgeführt werden müssen, sonst false
 	 */
-	private boolean executeManualSQLCommands(int revision) {
+	private boolean executeManualSQLCommands(long revision) {
 		DBEntityManager conn = schemaManager.getEntityManager();
 		logger.log("- Ausführen: ");
 		var tmpCommands = schema.manualSQL.get(conn.getDBDriver());
@@ -880,11 +881,11 @@ public class DBUpdater {
 	 * @return true, false alle entsprechenden Trigger erfolgreich angelegt wurden 
 	 *         oder keine angelegt werden müssen, sonst false
 	 */
-	private boolean createNewTrigger(int revision) {
+	private boolean createNewTrigger(long revision) {
 		DBEntityManager conn = schemaManager.getEntityManager();
 		logger.log("- Erstelle: ");
 		var dbms = conn.getDBDriver();
-		List<Trigger> trigger = schema.trigger.get(dbms).values().stream().filter(trig -> trig.dbRevision.Revision == revision).collect(Collectors.toList());
+		List<Trigger> trigger = schema.trigger.get(dbms).values().stream().filter(trig -> trig.dbRevision.revision == revision).collect(Collectors.toList());
 		if ((trigger == null) || (trigger.size() <= 0)) {
 			logger.logLn(0, "0 Trigger");
 			return true;
