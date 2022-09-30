@@ -312,13 +312,12 @@ async function abiturjahr_hinzufuegen(jahrgang: JahrgangsListeEintrag) {
 		console.log("Fehler: ", e);
 	}
 }
-		const create_blockung = async (): Promise<void> => {
+		const create_blockung = () => {
 			const halbjahresHashCode: number = app.blockungsauswahl.ausgewaehlt?.hashCode() ? app.blockungsauswahl.ausgewaehlt.hashCode() : -1;
 			const id = app.blockungsauswahl.ausgewaehlt?.id;
 			if (!id) return;
 			const apiCall = app.create_blockung(id, halbjahresHashCode);
 			main.config.apiLoadingStatus.addStatusByPromise(apiCall, {message: 'Blockung wird berechnet...', caller: 'Kursplanung (Gost)', categories: [GOST_CREATE_BLOCKUNG_SYMBOL]});
-			await apiCall;
 		};
 
 async function blockung_hinzufuegen() {

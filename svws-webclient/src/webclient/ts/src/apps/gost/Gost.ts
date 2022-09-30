@@ -1,4 +1,4 @@
-import { ZulaessigesFach, GostStatistikFachwahl } from "@svws-nrw/svws-core-ts";
+import { ZulaessigesFach, GostStatistikFachwahl, List } from "@svws-nrw/svws-core-ts";
 
 import { App } from "../BaseApp";
 
@@ -130,15 +130,17 @@ export class Gost extends App {
 			", 1.0)"
 		);
 	}
-	async create_blockung(id: number, hjId: number): Promise<any> {
+	async create_blockung(id: number, hjId: number): Promise<List<Number>|void> {
 		this.addIdToApiStatus(hjId);
 		this.setApiStatusIdle(hjId);
-		return await App.api.rechneGostBlockung(App.schema, id, 5000)
-			.then(() => {
-				this.blockungsergebnisauswahl.update_list(id);
-				this.removeApiStatusId(hjId)
-			})
-			.catch(() => this.setApiStatusError(hjId));
+		try {
+			const res = await App.api.rechneGostBlockung(App.schema, id, 5000)
+			this.blockungsergebnisauswahl.update_list(id);
+			this.removeApiStatusId(hjId)
+			return res
+		} catch (e) {
+			this.setApiStatusError(hjId);
+		}
 	}
 
 	/**
