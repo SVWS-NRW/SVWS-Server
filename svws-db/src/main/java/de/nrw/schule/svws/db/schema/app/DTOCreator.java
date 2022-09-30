@@ -362,21 +362,6 @@ public class DTOCreator {
                              <class>de.nrw.schule.svws.db.converter.gost.GOStAbiturFachConverter</class>
                              <class>de.nrw.schule.svws.db.converter.gost.GOStBesondereLernleistungConverter</class>
                              <class>de.nrw.schule.svws.db.converter.gost.GOStKursartConverter</class>
-                             <class>de.nrw.schule.svws.db.schema.dto.DTODatenbanksysteme</class>
-                             <class>de.nrw.schule.svws.db.schema.dto.DTODatentypen</class>
-                             <class>de.nrw.schule.svws.db.schema.dto.DTOFremdschluesselAktionen</class>
-                             <class>de.nrw.schule.svws.db.schema.dto.DTOSchemaInit</class>
-                             <class>de.nrw.schule.svws.db.schema.dto.DTOSchemaTabelle</class>
-                             <class>de.nrw.schule.svws.db.schema.dto.DTOSchemaTabelleDefaultDaten</class>
-                             <class>de.nrw.schule.svws.db.schema.dto.DTOSchemaTabelleFremdschluessel</class>
-                             <class>de.nrw.schule.svws.db.schema.dto.DTOSchemaTabelleIndizes</class>
-                             <class>de.nrw.schule.svws.db.schema.dto.DTOSchemaTabelleManualSQL</class>
-                             <class>de.nrw.schule.svws.db.schema.dto.DTOSchemaTabellePrimaerschluessel</class>
-                             <class>de.nrw.schule.svws.db.schema.dto.DTOSchemaTabelleSpalte</class>
-                             <class>de.nrw.schule.svws.db.schema.dto.DTOSchemaTabelleUniqueConstraints</class>
-                             <class>de.nrw.schule.svws.db.schema.dto.DTOSchemaTabelleTrigger</class>
-                             <class>de.nrw.schule.svws.db.schema.dto.DTOJavaConfig</class>
-                             <class>de.nrw.schule.svws.db.schema.dto.DTOVersionen</class>
                              <class>de.nrw.schule.svws.db.utils.dto.enm.DTOENMLehrerSchuelerAbschnittsdaten</class>
                      """;
 		for (String cl : allClasses)
