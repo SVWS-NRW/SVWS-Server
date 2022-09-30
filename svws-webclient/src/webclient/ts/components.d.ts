@@ -30,6 +30,8 @@ declare module '@vue/runtime-core' {
     IRiDraftLine: typeof import('~icons/ri/draft-line')['default']
     IRiFileCopyLine: typeof import('~icons/ri/file-copy-line')['default']
     IRiFilter3Line: typeof import('~icons/ri/filter3-line')['default']
+    IRiForbidFill: typeof import('~icons/ri/forbid-fill')['default']
+    IRiForbidLine: typeof import('~icons/ri/forbid-line')['default']
     IRiGroupLine: typeof import('~icons/ri/group-line')['default']
     IRiLineChartLine: typeof import('~icons/ri/line-chart-line')['default']
     IRiLockLine: typeof import('~icons/ri/lock-line')['default']
