@@ -1,7 +1,0 @@
-Name;DropIfExists;CollationSchema;CollationTable
-MARIA_DB;1;utf8mb4_bin;
-MYSQL;1;utf8mb4_bin;
-MSSQL;0;Latin1_General_100_BIN2_UTF8;
-SQLITE;1;;
-MDB;0;;
-ALL;0;;

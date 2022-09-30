@@ -9,7 +9,6 @@ import de.nrw.schule.svws.db.Benutzer;
 import de.nrw.schule.svws.db.DBConfig;
 import de.nrw.schule.svws.db.DBDriver;
 import de.nrw.schule.svws.db.DBEntityManager;
-import de.nrw.schule.svws.db.schema.DBSchemaDefinition;
 import de.nrw.schule.svws.db.schema.dto.DTOInformationSchema;
 import de.nrw.schule.svws.db.schema.dto.DTOInformationUser;
 import de.nrw.schule.svws.logger.LogLevel;
@@ -26,9 +25,6 @@ public class DBRootManager {
 	
 	/** Die Datenbank-Verbindung, die vom Root-Manager genutzt wird */
 	private DBEntityManager conn;
-	
-	/// Das Schema der Datenbank, wie es sein sollte 
-	private final DBSchemaDefinition schema = DBSchemaDefinition.getInstance();
 
 
 	/**
@@ -127,7 +123,7 @@ public class DBRootManager {
 	private boolean createDBSchema(final String nameSchema) {
 		if ((conn == null) || (nameSchema == null) || "".equals(nameSchema))
 			return false;
-		String collation = schema.dbms.get(conn.getDBDriver().toString()).CollationSchema;		
+		String collation = conn.getDBDriver().getCollation();
 		switch (conn.getDBDriver()) {
 			case MARIA_DB:
 			case MYSQL:

@@ -194,7 +194,6 @@ public class TabelleSpalte implements Comparable<TabelleSpalte> {
 		SchemaDatentypen type = schema.datentypen.get(this.Datentyp);
 		return this.NameSpalte + " " + type.getDBType(dbms)
 	         + (((this.Datenlaenge == null) || (this.Datenlaenge <= 0)) ? "" : "(" + this.Datenlaenge + ")")
-	         + this.getSQLCollation(schema, dbms)
 	         + this.getSQLAutoinkrement(dbms)
 	         + this.getSQLDefault(dbms, type)
 	         + (this.IsNotNull ? " NOT NULL" : "");
@@ -238,33 +237,6 @@ public class TabelleSpalte implements Comparable<TabelleSpalte> {
 	}
 	
 
-	
-	/**
-	 * Liefert den SQL-String für die Collation, die einer Spalte explizit zugeordnet werden kann.
-	 * 
-	 * @param schema   eine Referenz auf die Schema-Definition
-	 * @param dbms     das DBMS
-	 * 
-	 * @return der SQL-String für die Zuordnung einer Collation
-	 */
-	@JsonIgnore
-	private String getSQLCollation(DBSchemaDefinition schema, DBDriver dbms) {
-		SchemaDatentypen type = schema.datentypen.get(this.Datentyp);
-		Datenbanksysteme datenbanksystem = schema.dbms.get(dbms.toString());
-		if ((!type.isCharString()) || (datenbanksystem == null) || (datenbanksystem.CollationTable == null))
-			return "";
-		switch (dbms) {
-			case MARIA_DB:
-			case MYSQL:
-			case MSSQL:
-				return " COLLATE " + datenbanksystem.CollationTable;
-			case MDB:
-			case SQLITE:
-			default:
-				return "";
-		}
-	}
-	
 	
 	/**
 	 * Liefert in Abhängigkeit des angegebenen DBMS den SQL-Code,

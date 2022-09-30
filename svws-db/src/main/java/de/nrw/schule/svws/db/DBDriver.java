@@ -109,6 +109,22 @@ public enum DBDriver {
 				return false;
 		}		
 	}
+	
+	
+	/**
+	 * Gibt die Default-Collation für das SVWS-Datenbankschema in
+	 * Abhängigkeit des DBMS zurück.
+	 *
+	 * @return die Collation
+	 */
+	public String getCollation() {
+		return switch(this) {
+			case MARIA_DB -> "utf8mb4_bin";
+			case MYSQL -> "utf8mb4_bin";
+			case MSSQL -> "Latin1_General_100_BIN2_UTF8";
+			default -> null;
+		};
+	}
 
 	
 	/**
