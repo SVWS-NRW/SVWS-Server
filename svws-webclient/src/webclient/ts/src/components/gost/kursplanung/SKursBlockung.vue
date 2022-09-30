@@ -38,14 +38,18 @@
 			<svws-ui-badge
 				v-if="b"
 				size="tiny"
-				:variant="locked_kurs ? 'error' : 'highlight'"
+				:variant="sperr_regel ? 'error' : 'highlight'"
 			>
 				{{ b.schueler.size() }}
-				<i-ri-lock-line
-					v-if="locked_kurs"
-					class="inline-block text-red-700"
-				/>
-				<i-ri-lock-unlock-line v-else class="inline-block" />
+
+				<svws-ui-icon class="cursor_pointer">
+					<i-ri-pushpin-fill
+						v-if="sperr_regel"
+						class="inline-block"
+						@click="sperren_regel_entfernen"
+					/>
+					<i-ri-pushpin-line v-else class="inline-block"  @click="sperren_regel_hinzufuegen"/>
+				</svws-ui-icon>
 			</svws-ui-badge>
 		</td>
 		<td class="border-none bg-white"></td>
@@ -55,8 +59,11 @@
 <script setup lang="ts">
 	import {
 		GostBlockungKurs,
+		GostBlockungRegel,
 		GostBlockungsergebnisKurs,
 		GostFach,
+		GostKursart,
+		GostKursblockungRegelTyp,
 		ZulaessigesFach
 	} from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, Ref, ref, WritableComputedRef } from "vue";
@@ -98,10 +105,6 @@
 		return ZulaessigesFach.getByKuerzelASD(gostFach.value?.kuerzel || null);
 	});
 
-	const locked_kurs: ComputedRef<boolean> = computed(() => {
-		return false;
-	});
-
 	const bgColor: ComputedRef<string> = computed(() => {
 		const fachgruppe = fach.value?.getFachgruppe();
 		if (!fachgruppe) return "#ffffff";
@@ -112,23 +115,7 @@
 		return "#" + (0x1000000 + rgb).toString(16).slice(1);
 	});
 
-	const art: ComputedRef<string> = computed(() => {
-		switch (props.kurs.kursart) {
-			case 1:
-				return "LK";
-			case 2:
-				return "GK";
-			case 3:
-				return "ZK";
-			case 4:
-				return "PKJ";
-			case 5:
-				return "VTF";
-			default:
-				break;
-		}
-		return "";
-	});
+	const art = GostKursart.fromID(props.kurs.kursart).kuerzel
 
 	const koop: WritableComputedRef<boolean> = computed({
 		get(): boolean {
@@ -158,7 +145,7 @@
 		const kurse = app.dataKursblockungsergebnis.manager?.getKursSchuelerZuordnungenFuerFach(props.kurs.fach_id)
 		if (!kurse) return undefined
 		const arr = kurse.toArray(new Array<GostBlockungsergebnisKurs>())
-		const filtered = arr.filter(k=>k.kursart === art.value)
+		const filtered = arr.filter(k=>k.kursart === art)
 		if (!filtered.length) return [-1,-1]
 		if (props.belegung.find(k=>k)?.id !== filtered.sort((a,b)=>a.id-b.id)[0].id) return undefined
 		if (!filtered.length) return undefined
@@ -166,4 +153,32 @@
 		const sorted = filtered.sort((a,b)=>b.schueler.size()-a.schueler.size())
 		return [filtered.length, sorted[0].schueler.size() - sorted[sorted.length-1].schueler.size()]
 	})
+
+	const sperr_regel: ComputedRef<GostBlockungRegel|undefined> = computed(()=> {
+		const regeln = app.dataKursblockung.daten?.regeln.toArray(new Array<GostBlockungRegel>())
+		const regel = regeln?.find(r=>r.typ === GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ && r.parameter.get(0) === props.kurs.id)
+		return regel
+	})
+		
+const regel_speichern = async (regel: GostBlockungRegel) => {
+	const belegung = props.belegung.find(b => b)
+	if (!belegung) return
+	const schiene = app.dataKursblockungsergebnis.manager?.getSchiene(belegung.schienenID?.valueOf() || -1)
+	if (!schiene) return
+	regel.parameter.set(0, props.kurs.id)
+	regel.parameter.set(1, schiene.nummer)
+	await app.dataKursblockung.patch_blockung_regel(regel)
+}
+
+const sperren_regel_hinzufuegen = async () => {
+	const regel = await app.dataKursblockung.add_blockung_regel(GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ)
+	if (!regel) return
+	await regel_speichern(regel)
+	app.dataKursblockung.manager?.addRegel(regel)
+}
+
+const sperren_regel_entfernen = async () => {
+	if (!sperr_regel.value) return
+	await app.dataKursblockung.del_blockung_regel(sperr_regel.value.id)
+}
 </script>

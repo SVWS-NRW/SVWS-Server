@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { injectMainApp, Main } from "~/apps/Main";
-import { GostBlockungKurs, GostBlockungRegel, GostBlockungSchiene, GostKursblockungRegelTyp, Vector } from "@svws-nrw/svws-core-ts";
+import { GostBlockungKurs, GostBlockungRegel, GostBlockungSchiene, GostKursart, GostKursblockungRegelTyp, Vector } from "@svws-nrw/svws-core-ts";
 import { computed, ComputedRef, Ref, ref } from "vue";
 
 const main: Main = injectMainApp();
@@ -44,26 +44,40 @@ const regel_entfernen = async (r: GostBlockungRegel) => {
 	await app.dataKursblockung.del_blockung_regel(r.id)
 	if (r === regel.value) regel.value = undefined
 }
+
+const kursbezeichnung = (regel: GostBlockungRegel): string => {
+	const kurs = manager?.getKurs(regel.parameter.get(0).valueOf())
+	if (!kurs) return ""
+	const fach = faechermanager?.get(kurs.fach_id)
+	if (!fach) return ""
+	return `${fach.kuerzel}-${GostKursart.fromID(kurs.kursart).kuerzel}${kurs.nummer}${kurs.suffix ? '-'+kurs.suffix : ''}`
+}
 </script>
 	
 <template>
 	<div>
 		<div class="flex justify-between my-4">
 			<h5 class="headline-5">{{ regel_typ.bezeichnung }}</h5>
-			<svws-ui-badge v-if="!regel" size="tiny" variant="primary" @click="regel_hinzufuegen" class="cursor-pointer">Regel
+			<svws-ui-badge 
+				v-if="!regel"
+				size="tiny"
+				variant="primary"
+				class="cursor-pointer"
+				@click="regel_hinzufuegen">Regel
 				hinzufügen</svws-ui-badge>
 		</div>
 		<div v-for="r in regeln" :key="r.id" class="flex justify-between">
-			<div class="cursor-pointer" @click="regel = (regel !== r) ? r:undefined" :class="{'bg-slate-200':r===regel}">
-				{{`${faechermanager?.get(manager?.getKurs(r.parameter.get(0).valueOf())?.fach_id.valueOf()||-1)?.kuerzel}
-				${kurs.kursart}${kurs.nummer}${kurs.suffix ? "-"+kurs.suffix:""}`}} auf Schiene {{r.parameter.get(1)}} gesperrt
-			</div>
+			<div
+				class="cursor-pointer"
+				:class="{'bg-slate-200':r===regel}"
+				@click="regel = (regel !== r) ? r:undefined"
+			>{{kursbezeichnung(r)}} auf Schiene {{r.parameter.get(1)}} gesperrt</div>
 			<svws-ui-icon type="danger" class="cursor-pointer" @click="regel_entfernen(r)">
 				<i-ri-delete-bin-2-line />
 			</svws-ui-icon>
 		</div>
 		<div v-if="regel">
-			<div class="inline-flex items-baseline">
+			<div class="inline-flex items-baseline gap-1">
 				Sperre
 				<parameter-kurs v-model="kurs" />
 				in
@@ -71,6 +85,11 @@ const regel_entfernen = async (r: GostBlockungRegel) => {
 				<svws-ui-button type="primary" @click="speichern">
 					<svws-ui-icon>
 						<i-ri-check-line />
+					</svws-ui-icon>
+				</svws-ui-button>
+				<svws-ui-button type="danger" @click="regel_entfernen(regel!)">
+					<svws-ui-icon>
+						<i-ri-delete-bin-2-line />
 					</svws-ui-icon>
 				</svws-ui-button>
 			</div>
