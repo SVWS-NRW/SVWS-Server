@@ -286,6 +286,9 @@ export { KursblockungDynStatistik } from './core/kursblockung/KursblockungDynSta
 export { KursblockungException } from './core/kursblockung/KursblockungException';
 export { KursblockungMatrix } from './core/kursblockung/KursblockungMatrix';
 export { KursblockungStatic } from './core/kursblockung/KursblockungStatic';
+export { SchuelerblockungAlgorithmus } from './core/kursblockung/SchuelerblockungAlgorithmus';
+export { SchuelerblockungDynDaten } from './core/kursblockung/SchuelerblockungDynDaten';
+export { SchuelerblockungException } from './core/kursblockung/SchuelerblockungException';
 export { Clause } from './core/kursblockung/satsolver/Clause';
 export { Heap } from './core/kursblockung/satsolver/Heap';
 export { SatSolver3 } from './core/kursblockung/satsolver/SatSolver3';

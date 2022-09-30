@@ -70,7 +70,8 @@ public class KursblockungDynDaten {
 	 * 
 	 * @param pRandom Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 * @param pLogger Logger für Benutzerhinweise, Warnungen und Fehler.
-	 * @param pInput  Die Eingabedaten (Schnittstelle zur GUI). */
+	 * @param pInput  Die Eingabedaten (Schnittstelle zur GUI). 
+	 * */
 	public KursblockungDynDaten(@NotNull Random pRandom, @NotNull Logger pLogger, @NotNull KursblockungInput pInput) {
 		_random = pRandom;
 		logger = pLogger;

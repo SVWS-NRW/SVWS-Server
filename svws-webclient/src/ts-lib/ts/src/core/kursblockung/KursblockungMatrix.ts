@@ -40,11 +40,11 @@ export class KursblockungMatrix extends JavaObject {
 
 
 	/**
-	 * Erzeugt eine neue Matrix mit {@code rows} Zeilen und {@code cols} Spalten.
+	 *Erzeugt eine neue Matrix mit {@code rows} Zeilen und {@code cols} Spalten.
 	 * 
 	 * @param pRandom Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 * @param rows    Die Anzahl der Zeilen der Matrix.
-	 * @param cols    Die Anzahl der Spalten der Matrix.
+	 * @param cols    Die Anzahl der Spalten der Matrix. 
 	 */
 	public constructor(pRandom : Random, rows : number, cols : number) {
 		super();
@@ -68,15 +68,14 @@ export class KursblockungMatrix extends JavaObject {
 	}
 
 	/**
-	 * Berechnet zur aktuellen Matrix ein maximales bipartites Matching. Die Methode geht davon aus, dass in der Matrix
+	 *Berechnet zur aktuellen Matrix ein maximales bipartites Matching. Die Methode geht davon aus, dass in der Matrix
 	 * ausschließlich die Werte 0 und 1 vorkommen. Werte ungleich 0 werden andernfalls als 1 (eine Kante im Graphen)
 	 * interpretiert. Nichtquadratische Matrizen sind erlaubt. Das Ergebnis der Methode ist eine größtmögliche Zeilen-
 	 * zu Spaltenzuordnung. Der Algorithmus hat eine Laufzeit von O(n³).
 	 * 
-	 * @param nichtdeterministisch definiert, ob das Ergebnis zufällig sein soll, falls es mehrere optimale Lösungen
-	 *                             gibt.
-	 * 
-	 * @return die Zeilen- zu Spaltenzuordnung, negative Werte entsprechen einer Nichtzuordnung.
+	 * @param  nichtdeterministisch definiert, ob das Ergebnis zufällig sein soll, falls es mehrere optimale Lösungen
+	 *                              gibt.
+	 * @return                      die Zeilen- zu Spaltenzuordnung, negative Werte entsprechen einer Nichtzuordnung. 
 	 */
 	public gibMaximalesBipartitesMatching(nichtdeterministisch : boolean) : Array<number> {
 		Arrays.fill(this.r2c, -1);
@@ -124,22 +123,21 @@ export class KursblockungMatrix extends JavaObject {
 	}
 
 	/**
-	 * Berechnet zur aktuellen Matrix ein minimales gewichtetes Matching. Die Methode geht davon aus, dass in der Matrix
-	 * ganzzahlige Werte vorkommen, d.h. es existiert eine Kante von jedem linken Knoten zu jedem rechten Knoten.
+	 *Berechnet zur aktuellen Matrix ein minimales gewichtetes Matching. Die Methode geht davon aus, dass in der
+	 * Matrix ganzzahlige Werte vorkommen, d.h. es existiert eine Kante von jedem linken Knoten zu jedem rechten Knoten.
 	 * Negative Werte und nichtquadratische Matrizen sind erlaubt. Zur Berechnung eines maximalen Matching kann man
 	 * vorher alle Zellenwerte negieren. Das Ergebnis der Methode ist eine Zeilen- zu Spaltenzuordnung, deren Summe
 	 * minimal ist. Der Algorithmus verwendet mehrere Runden eines SSSP-Algorithmus (Dijkstra). Damit dies bei negativen
 	 * Werten funktioniert, werden die Kanten mit Hilfe von Knoten-Potentialen umgewichtet. Der Algorithmus hat eine
 	 * Laufzeit von O(n³).
 	 * 
-	 * @see <a href= "https://en.wikipedia.org/wiki/Shortest_path_problem">Wikipedia - Shortest_path_problem</a>
-	 * 
-	 * @see <a href= "https://en.wikipedia.org/wiki/Johnson%27s_algorithm">Wikipedia - Johnsons Algorithm</a>
-	 * 
-	 * @param nichtdeterministisch definiert, ob das Ergebnis zufällig sein soll, falls es mehrere optimale Lösungen
-	 *                             gibt.
-	 * 
-	 * @return die Zeilen- zu Spaltenzuordnung, negative Werte entsprechen einer Nichtzuordnung.
+	 * @see                         <a href= "https://en.wikipedia.org/wiki/Shortest_path_problem">Wikipedia -
+	 *                              Shortest_path_problem</a>
+	 * @see                         <a href= "https://en.wikipedia.org/wiki/Johnson%27s_algorithm">Wikipedia - Johnsons
+	 *                              Algorithm</a>
+	 * @param  nichtdeterministisch definiert, ob das Ergebnis zufällig sein soll, falls es mehrere optimale Lösungen
+	 *                              gibt.
+	 * @return                      die Zeilen- zu Spaltenzuordnung, negative Werte entsprechen einer Nichtzuordnung. 
 	 */
 	public gibMinimalesBipartitesMatchingGewichtet(nichtdeterministisch : boolean) : Array<number> {
 		Arrays.fill(this.r2c, -1);
@@ -252,11 +250,11 @@ export class KursblockungMatrix extends JavaObject {
 	}
 
 	/**
-	 * Interne Methode zum Permutieren oder Initialisieren der Arrays {@link KursblockungMatrix#permR} und
+	 *Interne Methode zum Permutieren oder Initialisieren der Arrays {@link KursblockungMatrix#permR} und
 	 * {@link KursblockungMatrix#permC}.
 	 * 
 	 * @param nichtdeterministisch falls {@code true} werden {@link KursblockungMatrix#permR} und
-	 *                             {@link KursblockungMatrix#permC} permutiert, sonst initialisiert.
+	 *                             {@link KursblockungMatrix#permC} permutiert, sonst initialisiert. 
 	 */
 	private initialisierPermRundPermC(nichtdeterministisch : boolean) : void {
 		if (nichtdeterministisch) {
@@ -269,9 +267,9 @@ export class KursblockungMatrix extends JavaObject {
 	}
 
 	/**
-	 * Interne Methode zum Initialisieren eines Arrays so, dass das Array mit den Zahlen {@code 0,1,2...} gefüllt wird.
+	 *Interne Methode zum Initialisieren eines Arrays so, dass das Array mit den Zahlen {@code 0,1,2...} gefüllt wird.
 	 * 
-	 * @param perm Das Array, welches mit den Zahlen {@code 0,1,2...} gefüllt wird.
+	 * @param perm Das Array, welches mit den Zahlen {@code 0,1,2...} gefüllt wird. 
 	 */
 	private static initialisiere(perm : Array<number>) : void {
 		let laenge : number = perm.length;
@@ -281,9 +279,9 @@ export class KursblockungMatrix extends JavaObject {
 	}
 
 	/**
-	 * Interne Methode zum zufälligen Permutieren eines Arrays.
+	 *Interne Methode zum zufälligen Permutieren eines Arrays.
 	 * 
-	 * @param perm Das Array, dessen Inhalt zufällig permutiert wird.
+	 * @param perm Das Array, dessen Inhalt zufällig permutiert wird. 
 	 */
 	private permutiere(perm : Array<number>) : void {
 		let laenge : number = perm.length;
@@ -297,24 +295,23 @@ export class KursblockungMatrix extends JavaObject {
 	}
 
 	/**
-	 * Erlaubt Zugriff auf den Inhalt des Arrays.
+	 *Erlaubt Zugriff auf den Inhalt des Arrays.
 	 * 
-	 * @return Die Array-Referenz.
+	 * @return Die Array-Referenz. 
 	 */
 	public getMatrix() : Array<Array<number>> {
 		return this.matrix;
 	}
 
 	/**
-	 * Erzeugt String-Ausgabe des Arrays sowie der Zeilen-zu-Spalten-Zuordnung {@link KursblockungMatrix#r2c}. Diese
+	 *Erzeugt String-Ausgabe des Arrays sowie der Zeilen-zu-Spalten-Zuordnung {@link KursblockungMatrix#r2c}. Diese
 	 * Methode ist für Debug-Zwecke gedacht.
 	 * 
-	 * @param kommentar          Ein Kommentar der über der Matrix angezeigt wird.
-	 * @param zellenbreite       Die Breite bei der Ausgabe der Zelle.
-	 * @param mitKnotenPotential Falls {@code true}, werden die Kantenwerte umgewichtet entsprechenden der
-	 *                           Knotenpotentiale, andernfalls bleiben die Kantenwerte unverändert.
-	 * 
-	 * @return Eine String-Representation der Matrix.
+	 * @param  kommentar          Ein Kommentar der über der Matrix angezeigt wird.
+	 * @param  zellenbreite       Die Breite bei der Ausgabe der Zelle.
+	 * @param  mitKnotenPotential Falls {@code true}, werden die Kantenwerte umgewichtet entsprechenden der
+	 *                            Knotenpotentiale, andernfalls bleiben die Kantenwerte unverändert.
+	 * @return                    Eine String-Representation der Matrix. 
 	 */
 	public convertToString(kommentar : String, zellenbreite : number, mitKnotenPotential : boolean) : String {
 		let sb : StringBuilder = new StringBuilder();
@@ -336,10 +333,10 @@ export class KursblockungMatrix extends JavaObject {
 	}
 
 	/**
-	 * Füllt die Matrix mit ganzzahligen zufälligen Zahlenwerten aus dem Intervall {@code [von;bis]}.
+	 *Füllt die Matrix mit ganzzahligen zufälligen Zahlenwerten aus dem Intervall {@code [von;bis]}.
 	 * 
 	 * @param von Der kleinstmögliche zufällige Wert (inklusive).
-	 * @param bis Der größtmögliche zufällige Wert (inklusive).
+	 * @param bis Der größtmögliche zufällige Wert (inklusive). 
 	 */
 	public fuelleMitZufallszahlenVonBis(von : number, bis : number) : void {
 		for (let r : number = 0; r < this.rows; r++){
@@ -347,6 +344,24 @@ export class KursblockungMatrix extends JavaObject {
 				this.matrix[r][c] = this._random.nextInt(bis - von + 1) + von;
 			}
 		}
+	}
+
+	/**
+	 *Liefert die Anzahl an Zeilen der Matrix.
+	 * 
+	 * @return die Anzahl an Zeilen der Matrix. 
+	 */
+	public gibZeilen() : number {
+		return this.rows;
+	}
+
+	/**
+	 *Liefert die Anzahl an Spalten der Matrix.
+	 * 
+	 * @return die Anzahl an Spalten der Matrix. 
+	 */
+	public gibSpalten() : number {
+		return this.cols;
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

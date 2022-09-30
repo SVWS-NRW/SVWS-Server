@@ -65,6 +65,7 @@ export class KursblockungDynDaten extends JavaObject {
 	 * @param pRandom Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 * @param pLogger Logger für Benutzerhinweise, Warnungen und Fehler.
 	 * @param pInput  Die Eingabedaten (Schnittstelle zur GUI). 
+	 * 
 	 */
 	public constructor(pRandom : Random, pLogger : Logger, pInput : KursblockungInput) {
 		super();

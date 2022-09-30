@@ -5,109 +5,70 @@ import java.util.Random;
 
 import jakarta.validation.constraints.NotNull;
 
-/**
- * Diese Klasse realisiert eine Adjazenzmatrix und implementiert einige Graph-Algorithmen (Maximum-cardinality bipartite
- * matching, maximum/minimum weighted bipartite matching, ...).
+/** Diese Klasse realisiert eine Adjazenzmatrix und implementiert einige Graph-Algorithmen (Maximum-cardinality
+ * bipartite matching, maximum/minimum weighted bipartite matching, ...). Die Adjazenzmatrix wird im Folgenden Matrix
+ * genannt.
  * 
- * Die Adjazenzmatrix wird im Folgenden Matrix genannt.
- * 
- * @see <a href= "https://en.wikipedia.org/wiki/Matching_(graph_theory)">Wikipedia - Matching_(graph_theory)</a>
- */
+ * @see <a href= "https://en.wikipedia.org/wiki/Matching_(graph_theory)">Wikipedia - Matching_(graph_theory)</a> */
 public class KursblockungMatrix {
 
-	/**
-	 * Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
-	 */
+	/** Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed. */
 	private final @NotNull Random _random;
 
-	/**
-	 * Die Werte der Matrix [Zeile][Spalte].
-	 */
-	private final @NotNull long @NotNull [] @NotNull[] matrix;
+	/** Die Werte der Matrix [Zeile][Spalte]. */
+	private final @NotNull long @NotNull [] @NotNull [] matrix;
 
-
-	
-	/**
-	 * Die Anzahl der Zeilen der Matrix.
-	 */
+	/** Die Anzahl der Zeilen der Matrix. */
 	private final int rows;
 
-	/**
-	 * Die Anzahl der Spalten der Matrix.
-	 */
+	/** Die Anzahl der Spalten der Matrix. */
 	private final int cols;
 
-	/**
-	 * Die aktuelle Permutation der Zeilen für potentiellen Nichtdeterminismus. Interne Algorithmen iterieren so über
+	/** Die aktuelle Permutation der Zeilen für potentiellen Nichtdeterminismus. Interne Algorithmen iterieren so über
 	 * die Matrix-Zeilen in zufälliger Reihenfolge, damit aus mehreren optimalen Lösungen eine zufällige ausgewählt
-	 * wird. Die echten Zeilen der Matrix bleiben unverändert.
-	 */
+	 * wird. Die echten Zeilen der Matrix bleiben unverändert. */
 	private final @NotNull int[] permR;
 
-	/**
-	 * Die aktuelle Permutation der Spalten für potentiellen Nichtdeterminismus. Interne Algorithmen iterieren so über
+	/** Die aktuelle Permutation der Spalten für potentiellen Nichtdeterminismus. Interne Algorithmen iterieren so über
 	 * die Matrix-Spalten in zufälliger Reihenfolge, damit aus mehreren optimalen Lösungen eine zufällige ausgewählt
-	 * wird. Die echten Spalten der Matrix bleiben unverändert.
-	 */
+	 * wird. Die echten Spalten der Matrix bleiben unverändert. */
 	private final @NotNull int[] permC;
 
-	/**
-	 * Die Zuordnung einer Zeile zu einer Spalte (für das bipartite Matching).
-	 */
+	/** Die Zuordnung einer Zeile zu einer Spalte (für das bipartite Matching). */
 	private final @NotNull int[] r2c;
 
-	/**
-	 * Die Zuordnung einer Spalte zu einer Zeile (für das bipartite Matching).
-	 */
+	/** Die Zuordnung einer Spalte zu einer Zeile (für das bipartite Matching). */
 	private final @NotNull int[] c2r;
 
-	/**
-	 * Definiert, ob eine linker Zeilen-Knoten bereits besucht wurde (für das bipartite Matching).
-	 */
+	/** Definiert, ob eine linker Zeilen-Knoten bereits besucht wurde (für das bipartite Matching). */
 	private final @NotNull boolean[] besuchtR;
 
-	/**
-	 * Definiert, ob eine rechter Spalten-Knoten bereits besucht wurde (für das bipartite Matching).
-	 */
+	/** Definiert, ob eine rechter Spalten-Knoten bereits besucht wurde (für das bipartite Matching). */
 	private final @NotNull boolean[] abgearbeitetC;
 
-	/**
-	 * Definiert, den Zeilen-Vorgänger-Knoten eines rechten Spalten-Knotens (für das bipartite Matching).
-	 */
+	/** Definiert, den Zeilen-Vorgänger-Knoten eines rechten Spalten-Knotens (für das bipartite Matching). */
 	private final @NotNull int[] vorgaengerCzuR;
 
-	/**
-	 * Definiert eine Warteschlange mit maximal <i>rows</i> Knoten (für das bipartite Matching).
-	 */
+	/** Definiert eine Warteschlange mit maximal <i>rows</i> Knoten (für das bipartite Matching). */
 	private final @NotNull int[] queueR;
 
-	/**
-	 * Definiert ein linkes Knotengewicht (Potential) zur Umgewichtung der ausgehenden Kanten (für das bipartite
-	 * Matching).
-	 */
+	/** Definiert ein linkes Knotengewicht (Potential) zur Umgewichtung der ausgehenden Kanten (für das bipartite
+	 * Matching). */
 	private final @NotNull long[] potentialR;
 
-	/**
-	 * Definiert ein rechtes Knotengewicht (Potential) zur Umgewichtung der eingehenden Kanten (für das bipartite
-	 * Matching).
-	 */
+	/** Definiert ein rechtes Knotengewicht (Potential) zur Umgewichtung der eingehenden Kanten (für das bipartite
+	 * Matching). */
 	private final @NotNull long[] potentialC;
 
-	/**
-	 * Definiert die Entfernung vom aktuellen Zeilen-Knoten zu den jeweiligen Spalten-Knoten (für das bipartite
-	 * Matching).
-	 */
+	/** Definiert die Entfernung vom aktuellen Zeilen-Knoten zu den jeweiligen Spalten-Knoten (für das bipartite
+	 * Matching). */
 	private final @NotNull long[] distanzC;
 
-
-
-	/**
-	 * Erzeugt eine neue Matrix mit {@code rows} Zeilen und {@code cols} Spalten.
+	/** Erzeugt eine neue Matrix mit {@code rows} Zeilen und {@code cols} Spalten.
 	 * 
 	 * @param pRandom Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 * @param rows    Die Anzahl der Zeilen der Matrix.
-	 * @param cols    Die Anzahl der Spalten der Matrix.
-	 */
+	 * @param cols    Die Anzahl der Spalten der Matrix. */
 	public KursblockungMatrix(@NotNull Random pRandom, int rows, int cols) {
 		this._random = pRandom;
 		this.rows = rows;
@@ -128,17 +89,14 @@ public class KursblockungMatrix {
 		initialisiere(permC);
 	}
 
-	/**
-	 * Berechnet zur aktuellen Matrix ein maximales bipartites Matching. Die Methode geht davon aus, dass in der Matrix
+	/** Berechnet zur aktuellen Matrix ein maximales bipartites Matching. Die Methode geht davon aus, dass in der Matrix
 	 * ausschließlich die Werte 0 und 1 vorkommen. Werte ungleich 0 werden andernfalls als 1 (eine Kante im Graphen)
 	 * interpretiert. Nichtquadratische Matrizen sind erlaubt. Das Ergebnis der Methode ist eine größtmögliche Zeilen-
 	 * zu Spaltenzuordnung. Der Algorithmus hat eine Laufzeit von O(n³).
 	 * 
-	 * @param nichtdeterministisch definiert, ob das Ergebnis zufällig sein soll, falls es mehrere optimale Lösungen
-	 *                             gibt.
-	 * 
-	 * @return die Zeilen- zu Spaltenzuordnung, negative Werte entsprechen einer Nichtzuordnung.
-	 */
+	 * @param  nichtdeterministisch definiert, ob das Ergebnis zufällig sein soll, falls es mehrere optimale Lösungen
+	 *                              gibt.
+	 * @return                      die Zeilen- zu Spaltenzuordnung, negative Werte entsprechen einer Nichtzuordnung. */
 	public @NotNull int[] gibMaximalesBipartitesMatching(boolean nichtdeterministisch) {
 		// Aktuelle Spalten-Zeilen-Zuordnungen löschen
 		Arrays.fill(r2c, -1);
@@ -199,24 +157,21 @@ public class KursblockungMatrix {
 		return r2c;
 	}
 
-	/**
-	 * Berechnet zur aktuellen Matrix ein minimales gewichtetes Matching. Die Methode geht davon aus, dass in der Matrix
-	 * ganzzahlige Werte vorkommen, d.h. es existiert eine Kante von jedem linken Knoten zu jedem rechten Knoten.
+	/** Berechnet zur aktuellen Matrix ein minimales gewichtetes Matching. Die Methode geht davon aus, dass in der
+	 * Matrix ganzzahlige Werte vorkommen, d.h. es existiert eine Kante von jedem linken Knoten zu jedem rechten Knoten.
 	 * Negative Werte und nichtquadratische Matrizen sind erlaubt. Zur Berechnung eines maximalen Matching kann man
 	 * vorher alle Zellenwerte negieren. Das Ergebnis der Methode ist eine Zeilen- zu Spaltenzuordnung, deren Summe
 	 * minimal ist. Der Algorithmus verwendet mehrere Runden eines SSSP-Algorithmus (Dijkstra). Damit dies bei negativen
 	 * Werten funktioniert, werden die Kanten mit Hilfe von Knoten-Potentialen umgewichtet. Der Algorithmus hat eine
 	 * Laufzeit von O(n³).
 	 * 
-	 * @see <a href= "https://en.wikipedia.org/wiki/Shortest_path_problem">Wikipedia - Shortest_path_problem</a>
-	 * 
-	 * @see <a href= "https://en.wikipedia.org/wiki/Johnson%27s_algorithm">Wikipedia - Johnsons Algorithm</a>
-	 * 
-	 * @param nichtdeterministisch definiert, ob das Ergebnis zufällig sein soll, falls es mehrere optimale Lösungen
-	 *                             gibt.
-	 * 
-	 * @return die Zeilen- zu Spaltenzuordnung, negative Werte entsprechen einer Nichtzuordnung.
-	 */
+	 * @see                         <a href= "https://en.wikipedia.org/wiki/Shortest_path_problem">Wikipedia -
+	 *                              Shortest_path_problem</a>
+	 * @see                         <a href= "https://en.wikipedia.org/wiki/Johnson%27s_algorithm">Wikipedia - Johnsons
+	 *                              Algorithm</a>
+	 * @param  nichtdeterministisch definiert, ob das Ergebnis zufällig sein soll, falls es mehrere optimale Lösungen
+	 *                              gibt.
+	 * @return                      die Zeilen- zu Spaltenzuordnung, negative Werte entsprechen einer Nichtzuordnung. */
 	public @NotNull int[] gibMinimalesBipartitesMatchingGewichtet(boolean nichtdeterministisch) {
 		// Aktuelle Spalten-Zeilen-Zuordnungen löschen.
 		Arrays.fill(r2c, -1);
@@ -394,13 +349,11 @@ public class KursblockungMatrix {
 		return r2c;
 	}
 
-	/**
-	 * Interne Methode zum Permutieren oder Initialisieren der Arrays {@link KursblockungMatrix#permR} und
+	/** Interne Methode zum Permutieren oder Initialisieren der Arrays {@link KursblockungMatrix#permR} und
 	 * {@link KursblockungMatrix#permC}.
 	 * 
 	 * @param nichtdeterministisch falls {@code true} werden {@link KursblockungMatrix#permR} und
-	 *                             {@link KursblockungMatrix#permC} permutiert, sonst initialisiert.
-	 */
+	 *                             {@link KursblockungMatrix#permC} permutiert, sonst initialisiert. */
 	private void initialisierPermRundPermC(boolean nichtdeterministisch) {
 		if (nichtdeterministisch) {
 			permutiere(permR);
@@ -411,11 +364,9 @@ public class KursblockungMatrix {
 		}
 	}
 
-	/**
-	 * Interne Methode zum Initialisieren eines Arrays so, dass das Array mit den Zahlen {@code 0,1,2...} gefüllt wird.
+	/** Interne Methode zum Initialisieren eines Arrays so, dass das Array mit den Zahlen {@code 0,1,2...} gefüllt wird.
 	 * 
-	 * @param perm Das Array, welches mit den Zahlen {@code 0,1,2...} gefüllt wird.
-	 */
+	 * @param perm Das Array, welches mit den Zahlen {@code 0,1,2...} gefüllt wird. */
 	private static void initialisiere(@NotNull int[] perm) {
 		int laenge = perm.length;
 		for (int i = 0; i < laenge; i++) {
@@ -423,11 +374,9 @@ public class KursblockungMatrix {
 		}
 	}
 
-	/**
-	 * Interne Methode zum zufälligen Permutieren eines Arrays.
+	/** Interne Methode zum zufälligen Permutieren eines Arrays.
 	 * 
-	 * @param perm Das Array, dessen Inhalt zufällig permutiert wird.
-	 */
+	 * @param perm Das Array, dessen Inhalt zufällig permutiert wird. */
 	private void permutiere(@NotNull int[] perm) {
 		int laenge = perm.length;
 		for (int i = 0; i < laenge; i++) {
@@ -440,29 +389,23 @@ public class KursblockungMatrix {
 		}
 	}
 
-	/**
-	 * Erlaubt Zugriff auf den Inhalt des Arrays.
+	/** Erlaubt Zugriff auf den Inhalt des Arrays.
 	 * 
-	 * @return Die Array-Referenz.
-	 */
+	 * @return Die Array-Referenz. */
 	public @NotNull long @NotNull [][] getMatrix() {
 		return matrix;
 	}
 
-	/**
-	 * Erzeugt String-Ausgabe des Arrays sowie der Zeilen-zu-Spalten-Zuordnung {@link KursblockungMatrix#r2c}. Diese
+	/** Erzeugt String-Ausgabe des Arrays sowie der Zeilen-zu-Spalten-Zuordnung {@link KursblockungMatrix#r2c}. Diese
 	 * Methode ist für Debug-Zwecke gedacht.
 	 * 
-	 * @param kommentar          Ein Kommentar der über der Matrix angezeigt wird.
-	 * @param zellenbreite       Die Breite bei der Ausgabe der Zelle.
-	 * @param mitKnotenPotential Falls {@code true}, werden die Kantenwerte umgewichtet entsprechenden der
-	 *                           Knotenpotentiale, andernfalls bleiben die Kantenwerte unverändert.
-	 * 
-	 * @return Eine String-Representation der Matrix.
-	 */
+	 * @param  kommentar          Ein Kommentar der über der Matrix angezeigt wird.
+	 * @param  zellenbreite       Die Breite bei der Ausgabe der Zelle.
+	 * @param  mitKnotenPotential Falls {@code true}, werden die Kantenwerte umgewichtet entsprechenden der
+	 *                            Knotenpotentiale, andernfalls bleiben die Kantenwerte unverändert.
+	 * @return                    Eine String-Representation der Matrix. */
 	public @NotNull String convertToString(@NotNull String kommentar, int zellenbreite, boolean mitKnotenPotential) {
-		@NotNull
-		StringBuilder sb = new StringBuilder();
+		@NotNull StringBuilder sb = new StringBuilder();
 		sb.append(kommentar + System.lineSeparator());
 		for (int r = 0; r < rows; r++) {
 			for (int c = 0; c < cols; c++) {
@@ -470,8 +413,7 @@ public class KursblockungMatrix {
 				String sWert = "" + wert;
 				while (sWert.length() < zellenbreite)
 					sWert = " " + sWert;
-				@NotNull
-				String sZusatz = r2c[r] == c ? "*" : " ";
+				@NotNull String sZusatz = r2c[r] == c ? "*" : " ";
 				sb.append(sWert + sZusatz);
 			}
 			sb.append("\n");
@@ -481,18 +423,30 @@ public class KursblockungMatrix {
 		return sb.toString();
 	}
 
-	/**
-	 * Füllt die Matrix mit ganzzahligen zufälligen Zahlenwerten aus dem Intervall {@code [von;bis]}.
+	/** Füllt die Matrix mit ganzzahligen zufälligen Zahlenwerten aus dem Intervall {@code [von;bis]}.
 	 * 
 	 * @param von Der kleinstmögliche zufällige Wert (inklusive).
-	 * @param bis Der größtmögliche zufällige Wert (inklusive).
-	 */
+	 * @param bis Der größtmögliche zufällige Wert (inklusive). */
 	public void fuelleMitZufallszahlenVonBis(int von, int bis) {
 		for (int r = 0; r < rows; r++) {
 			for (int c = 0; c < cols; c++) {
 				matrix[r][c] = _random.nextInt(bis - von + 1) + von;
 			}
 		}
+	}
+
+	/** Liefert die Anzahl an Zeilen der Matrix.
+	 * 
+	 * @return die Anzahl an Zeilen der Matrix. */
+	public int gibZeilen() {
+		return rows;
+	}
+
+	/** Liefert die Anzahl an Spalten der Matrix.
+	 * 
+	 * @return die Anzahl an Spalten der Matrix. */
+	public int gibSpalten() {
+		return cols;
 	}
 
 }
