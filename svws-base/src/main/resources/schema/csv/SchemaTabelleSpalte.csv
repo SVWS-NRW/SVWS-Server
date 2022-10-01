@@ -1199,14 +1199,14 @@ Schildintern_FilterFehlendeEintraege;ID;;;1;bigint;;;1;;;;;Schildintern Tabelle:
 Schildintern_FilterFehlendeEintraege;Beschreibung;;;2;varchar;100;;0;;;;;Schildintern Tabelle: Beschreibung des Eintrags die bei der Prüfung auf fehlende Einträge genutzt werden
 Schildintern_FilterFehlendeEintraege;Feldname;;;3;varchar;30;;0;;;;;Schildintern Tabelle: Feldname des zu prüfenden Feldes
 Schildintern_FilterFehlendeEintraege;Tabellen;;;4;varchar;50;;0;;;;;Schildintern Tabelle: Tabellenname des zu prüfenden Feldes
-Schildintern_FilterFehlendeEintraege;SQLText;;;5;varchar;100;;0;;;;;Schildintern Tabelle: Abfrage die zur Prüfung des Feldes führt.
+Schildintern_FilterFehlendeEintraege;SQLText;;;5;text;;;0;;;;;Schildintern Tabelle: Abfrage die zur Prüfung des Feldes führt.
 Schildintern_FilterFehlendeEintraege;Schulform;;;6;varchar;50;;0;;;;;Schildintern Tabelle: ggf Schulform für bestimmte Schulformen
 Schildintern_FilterFehlendeEintraege;Feldtyp;;;7;varchar;1;;0;;;;;Schildintern Tabelle: Feldty des zu prüfenden Feldes
 Schildintern_FilterFehlendeEintraegeSchild3;ID;;;1;bigint;;;1;;;;;Schildintern Tabelle: ID des Eintrags die bei der Prüfung auf fehlende Einträge genutzt werden
 Schildintern_FilterFehlendeEintraegeSchild3;Beschreibung;;;2;varchar;100;;0;;;;;Schildintern Tabelle: Beschreibung des Eintrags die bei der Prüfung auf fehlende Einträge genutzt werden
 Schildintern_FilterFehlendeEintraegeSchild3;Feldname;;;3;varchar;30;;0;;;;;Schildintern Tabelle: Feldname des zu prüfenden Feldes
 Schildintern_FilterFehlendeEintraegeSchild3;Tabellen;;;4;varchar;50;;0;;;;;Schildintern Tabelle: Tabellenname des zu prüfenden Feldes
-Schildintern_FilterFehlendeEintraegeSchild3;SQLText;;;5;varchar;100;;0;;;;;Schildintern Tabelle: Abfrage die zur Prüfung des Feldes führt.
+Schildintern_FilterFehlendeEintraegeSchild3;SQLText;;;5;text;;;0;;;;;Schildintern Tabelle: Abfrage die zur Prüfung des Feldes führt.
 Schildintern_FilterFehlendeEintraegeSchild3;Schulform;;;6;varchar;50;;0;;;;;Schildintern Tabelle: ggf Schulform für bestimmte Schulformen
 Schildintern_FilterFehlendeEintraegeSchild3;Feldtyp;;;7;varchar;1;;0;;;;;Schildintern Tabelle: Feldty des zu prüfenden Feldes
 Schildintern_FilterFeldListe;ID;;;1;bigint;;;1;;;;;Schildintern Tabelle: ID für den Eintrag welche Felder iim Attributsfilter zur Verfügung stehen.
