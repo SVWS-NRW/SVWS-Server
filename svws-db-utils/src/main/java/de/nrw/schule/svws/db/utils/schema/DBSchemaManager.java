@@ -232,8 +232,6 @@ public class DBSchemaManager {
 		var msqlAll = schema.manualSQL.get(dbms);
 		for (long r = 0; r <= revision; r++) {
 			for (TabelleManualSQL msql : msqlAll.get(r)) {
-				if (msql.UpdateOnly)
-					continue;
 				if (!(((r == -1) && (msql.dbRevisionVeraltet.revision == -1)) || 
 						((r != -1) && (r >= msql.dbRevision.revision) && ((msql.dbRevisionVeraltet.revision == -1) || (r <= msql.dbRevisionVeraltet.revision)))))
 					continue;

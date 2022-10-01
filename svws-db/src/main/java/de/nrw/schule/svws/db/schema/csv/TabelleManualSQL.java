@@ -2,11 +2,7 @@ package de.nrw.schule.svws.db.schema.csv;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import de.nrw.schule.svws.csv.converter.Boolean01ConverterDeserializer;
-import de.nrw.schule.svws.csv.converter.Boolean01ConverterSerializer;
 import de.nrw.schule.svws.db.DBDriver;
 import de.nrw.schule.svws.db.schema.SchemaRevisionen;
 
@@ -34,11 +30,6 @@ public class TabelleManualSQL {
 	/** Eine kurze Beschreibung der Bedeutung des manuellen SQL-Befehls */
     @JsonProperty public String Kommentar;
 	
-	/** Gibt an, ob der SQL-Befehl nur zum Aktualisieren von Daten ausgeführt werden soll oder auch bei dem Erstellen/Initialisieren der Tabelle */
-    @JsonSerialize(using=Boolean01ConverterSerializer.class)
-    @JsonDeserialize(using=Boolean01ConverterDeserializer.class)	
-    @JsonProperty public Boolean UpdateOnly;
-
 	/** Gibt den manuellen SQL-Befehl in dem entsprechenden SQL-Dialekt an. */
     @JsonProperty public String sql;
 

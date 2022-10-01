@@ -145,12 +145,6 @@ public class SQLGenerator {
 		       		.filter(sql -> (sql != null) && (!"".equals(sql)))
 					.collect(Collectors.joining(newline + newline))
                 + newline + newline + newline
-                + tabs.stream()
-					.map(t -> t.getSQLInit(dbms, rev))
-					.filter(sql -> (sql != null) && (!"".equals(sql)))
-					.collect(Collectors.joining(newline + newline))
-		        + newline 
-		        + newline 
 				+ "INSERT INTO SVWS_DB_Version(Revision) VALUES (" + ((rev == - 1) ? SchemaRevisionen.maxRevision.revision : rev) + ");" + newline
 		        + newline 
 		        + newline 

@@ -340,29 +340,8 @@ public class Tabelle {
     	}
     	return sqlTrigger.stream().collect(Collectors.joining(newline));
     }
-    
-    
-    /**
-     * Liefert die manuellen SQL-Befehle für das angegebene DBMS, die zur Initialisierung eines neuen Schemas dienen.
-     * 
-     * @param dbms   das DBMS
-     * @param rev    die Revision des Schemas
-     * 
-     * @return die SQL-Befehle
-     */
-    @JsonIgnore
-    public String getSQLInit(DBDriver dbms, long rev) {
-    	String result = manualSQL.stream()
-        		.filter(msql -> ((rev == -1) && (msql.dbRevisionVeraltet.revision == -1)) 
-        				|| ((rev != -1) && (rev >= msql.dbRevision.revision) && ((msql.dbRevisionVeraltet.revision == -1) || (rev < msql.dbRevisionVeraltet.revision))))
-        		.filter(msql -> !msql.UpdateOnly)
-        		.map(msql -> msql.getSQL(dbms))
-        		.filter(msql -> (msql != null) && (!"".equals(msql)))
-        		.collect(Collectors.joining(";" + System.lineSeparator()));
-    	return "".equals(result) ? "" : result + ";" + System.lineSeparator();
-    }
 
-    
+
     /**
      * Vergleicht diese und eine andere Tabelle in Bezug auf die Sortierreihenfolge bei Erstellen der Tabellen  
      * 
