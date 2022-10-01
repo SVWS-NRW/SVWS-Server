@@ -255,7 +255,7 @@ public class DBUpdater {
 		
 		// Ermittle die nächste Revision, auf die aktualisiert werden soll
 		boolean success = true;
-		for (int neue_revision = currentVersion.getRevisionOrDefault(0) + 1; neue_revision <= max_revision; neue_revision++) {
+		for (long neue_revision = currentVersion.getRevisionOrDefault(0) + 1; neue_revision <= max_revision; neue_revision++) {
 			logger.logLn("* Aktualisiere auf Revision " + neue_revision);
 			logger.modifyIndent(2);
 			success = performUpdate(neue_revision);

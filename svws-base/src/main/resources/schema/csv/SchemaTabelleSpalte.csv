@@ -2522,7 +2522,7 @@ SVWS_Core_Type_Versionen;Name;;;2;varchar;1023;;1;;;;;Gibt den Namen des Core-Ty
 SVWS_Core_Type_Versionen;Version;;;3;bigint;;1;1;;;;;Die Version, in welcher der Core-Type in der DB vorliegt
 SVWS_DB_AutoInkremente;NameTabelle;;;1;varchar;200;;1;;;;;Gibt den Tabellennamen an, für dessen Auto-Inkrement der ID-Wert verwendet werden soll.
 SVWS_DB_AutoInkremente;MaxID;;;2;bigint;;1;1;;;;;Die ID des höchsten jemals in die DB geschriebenen ID-Wertes bei der zugehörigen Tabelle
-SVWS_DB_Version;Revision;;;1;int;;0;1;;;;;Die Revision des Datenbankschemas der SVWS-DB
+SVWS_DB_Version;Revision;;;1;bigint;;0;1;;;;;Die Revision des Datenbankschemas der SVWS-DB
 SVWS_DB_Version;IsTainted;;;2;int;;0;1;;Boolean01Converter;;;Gibt an, ob die Datenbank noch für einen Produktivbetrieb zugelassen ist oder durch ein Update auf eine Entwicklerversion eventuell in einem ungültigen Zustand ist
 TextExportVorlagen;SchulnrEigner;;1;1;int;;;1;;;;;Die Schulnummer zu welcher der Datensatz gehört – wird benötigt, wenn mehrere Schulen in einem Schema der Datenbank gespeichert werden
 TextExportVorlagen;VorlageName;;;2;varchar;50;;1;;;;;Name der Export-Textvorlage

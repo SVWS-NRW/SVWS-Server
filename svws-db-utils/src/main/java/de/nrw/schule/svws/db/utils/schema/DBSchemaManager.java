@@ -360,7 +360,7 @@ public class DBSchemaManager {
 		if (rev == -1)
 			return false;
 		DTODBVersion oldObj = conn.querySingle(DTODBVersion.class);
-		DTODBVersion newObj = new DTODBVersion((int) rev, (rev > SchemaRevisionen.maxRevision.revision) || ((oldObj != null) && (oldObj.IsTainted)));
+		DTODBVersion newObj = new DTODBVersion(rev, (rev > SchemaRevisionen.maxRevision.revision) || ((oldObj != null) && (oldObj.IsTainted)));
 		if (oldObj == null) {
 			conn.persist(newObj);
 		} else {
@@ -492,7 +492,7 @@ public class DBSchemaManager {
 			// no support to drop multiple tables in one drop statement - drop table order is important due to foreign key constraints
 			// Bestimme die aktuelle Revision der Datenbank
 			DBSchemaVersion version = status.getVersion(); 
-			int revision = version.getRevisionOrDefault(0);
+			long revision = version.getRevisionOrDefault(0);
 			for (Tabelle tab : schema.getTabellenSortiertAbsteigend(revision)) {
 				// Prüfe bei einer Lecagy-Schild-DB, ob eine Tabelle für die Migration vorliegt - nur diese sollen verworfen werden
 				if (!version.isValid()) {

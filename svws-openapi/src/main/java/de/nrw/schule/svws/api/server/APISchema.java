@@ -163,9 +163,9 @@ public class APISchema {
 	           description = "Liefert die aktuelle Revision des angegebenen Schemas.")
     @ApiResponse(responseCode = "200", description = "Die Revision des Schemas",
     	content = @Content(mediaType = "application/json",
-    	schema = @Schema(implementation = Integer.class)))
+    	schema = @Schema(implementation = Long.class)))
     @ApiResponse(responseCode = "404", description = "Es konnte keine Revision für das Schema ermittelt werden.")
-    public Integer revision(@PathParam("schema") String schemaname, @Context HttpServletRequest request) {
+    public Long revision(@PathParam("schema") String schemaname, @Context HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KEINE)) {
 	    	DTODBVersion version = conn.querySingle(DTODBVersion.class);
 	    	if ((version == null) || (version.Revision == null))

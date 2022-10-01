@@ -1,7 +1,7 @@
 import { BaseApi } from '../api/BaseApi';
 import { JavaBoolean, cast_java_lang_Boolean } from '../java/lang/JavaBoolean';
-import { JavaInteger, cast_java_lang_Integer } from '../java/lang/JavaInteger';
 import { List, cast_java_util_List } from '../java/util/List';
+import { JavaLong, cast_java_lang_Long } from '../java/lang/JavaLong';
 import { Vector, cast_java_util_Vector } from '../java/util/Vector';
 
 export class ApiSchema extends BaseApi {
@@ -73,7 +73,7 @@ export class ApiSchema extends BaseApi {
 	 * Mögliche HTTP-Antworten: 
 	 *   Code 200: Die Revision des Schemas
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: Integer
+	 *     - Rückgabe-Typ: Long
 	 *   Code 404: Es konnte keine Revision für das Schema ermittelt werden.
 	 * 
 	 * @param {string} schema - der Pfad-Parameter schema
@@ -85,7 +85,7 @@ export class ApiSchema extends BaseApi {
 				.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const text = result;
-		return parseInt(JSON.parse(text));
+		return parseFloat(JSON.parse(text));
 	}
 
 

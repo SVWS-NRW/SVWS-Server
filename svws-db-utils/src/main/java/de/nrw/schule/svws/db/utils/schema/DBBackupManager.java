@@ -56,7 +56,7 @@ public class DBBackupManager {
 	 * 
 	 * @return true, falls der Import erfolgreich durchgeführt wurde
 	 */
-	public boolean importDB(DBConfig tgtConfig, String tgtRootPW, int maxUpdateRevision, boolean devMode, Logger logger) {
+	public boolean importDB(DBConfig tgtConfig, String tgtRootPW, long maxUpdateRevision, boolean devMode, Logger logger) {
 		DBEntityManager conn = schemaManager.getEntityManager();
 		boolean success = true;
 		long timeStart = System.currentTimeMillis();
@@ -254,7 +254,7 @@ public class DBBackupManager {
 	 * 
 	 * @return true, falls die Daten erfolgreich kopiert wurden und sonst false 
 	 */
-	private boolean expimpCopyFrom(final DBSchemaManager tgtManager, final int rev) {
+	private boolean expimpCopyFrom(final DBSchemaManager tgtManager, final long rev) {
 		// Durchwandere alle Tabellen in der geeigneten Reihenfolge, so dass Foreign-Key-Constraints erfüllt werden
 		for (Tabelle tab : schema.getTabellenSortiert(rev)) {
 			// Prüfe, ob die Tabelle bei dem Import/Export beachtet werden soll, wenn nicht dann übespringe sie

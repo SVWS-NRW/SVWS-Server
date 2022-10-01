@@ -41,7 +41,7 @@ public class DTODBVersion {
 	@Id
 	@Column(name = "Revision")
 	@JsonProperty
-	public Integer Revision;
+	public Long Revision;
 
 	/** Gibt an, ob die Datenbank noch für einen Produktivbetrieb zugelassen ist oder durch ein Update auf eine Entwicklerversion eventuell in einem ungültigen Zustand ist */
 	@Column(name = "IsTainted")
@@ -63,7 +63,7 @@ public class DTODBVersion {
 	 * @param Revision   der Wert für das Attribut Revision
 	 * @param IsTainted   der Wert für das Attribut IsTainted
 	 */
-	public DTODBVersion(final Integer Revision, final Boolean IsTainted) {
+	public DTODBVersion(final Long Revision, final Boolean IsTainted) {
 		if (Revision == null) { 
 			throw new NullPointerException("Revision must not be null");
 		}

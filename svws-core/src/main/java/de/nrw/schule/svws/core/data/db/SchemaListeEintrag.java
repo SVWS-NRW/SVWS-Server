@@ -20,7 +20,7 @@ public class SchemaListeEintrag {
 
 	/** Die Revisionsnummer des Schemas. */
 	@Schema(required = true, description = "die Revisionsnummer des Schemas", example="3")
-	public int revision;
+	public long revision;
 
 	/** Gibt an, ob das Schema als "verdorben" markiert wurde und deswegen nicht mehr für den produktiven Einsatz in der Schule genutzt werden sollte. */
 	@Schema(required = true, description = "gibt an, ob das Schema als \"verdorben\" markiert wurde und deswegen nicht mehr für den produktiven Einsatz in der Schule genutzt werden sollte", example="false")

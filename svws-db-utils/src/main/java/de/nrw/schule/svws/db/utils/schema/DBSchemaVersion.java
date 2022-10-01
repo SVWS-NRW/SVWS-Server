@@ -4,10 +4,10 @@ package de.nrw.schule.svws.db.utils.schema;
 /**
  * Diese Klasse repräsentiert eine Schema-Version der SVWS-Datenbank
  */
-public class DBSchemaVersion implements Comparable<Integer> {
+public class DBSchemaVersion implements Comparable<Long> {
 	
 	/** die Schema-Revision */
-	private final Integer revision;
+	private final Long revision;
 	
 	/** Gibt an, ob das Schema durch eine Entwicklerversion "verdorben" wurde und nicht mehr für den Produktivbetrieb genutzt werden sollte. */
 	private final boolean tainted;
@@ -21,7 +21,7 @@ public class DBSchemaVersion implements Comparable<Integer> {
 	 *                    handelt, die nicht mehr für den Produktivbetrieb genutzt 
 	 *                    werden sollte (z.B. aufgrund von Entwicklerversionen des SVWS-Servers)      
 	 */
-	public DBSchemaVersion(Integer revision, boolean isTainted) {
+	public DBSchemaVersion(Long revision, boolean isTainted) {
 		this.revision = (revision == null) ? null : ((revision >= 0) ? revision : null);
 		this.tainted = isTainted;
 	}
@@ -44,7 +44,7 @@ public class DBSchemaVersion implements Comparable<Integer> {
 	 * 
 	 * @throws Exception   tritt aus, wenn das Schema keine gültige Revision hat
 	 */
-	public int getRevision() throws Exception {
+	public long getRevision() throws Exception {
 	  if (revision == null)
 		  throw new Exception("Das Schema besitzt keine gültige revision");
 	  return revision;
@@ -71,7 +71,7 @@ public class DBSchemaVersion implements Comparable<Integer> {
 	 * 
 	 * @return die Revision des Schemas oder der Default-Wert
 	 */
-	public int getRevisionOrDefault(int default_revision) {
+	public long getRevisionOrDefault(long default_revision) {
 		  if (revision == null)
 			  return default_revision;
 		  return revision;		
@@ -79,7 +79,7 @@ public class DBSchemaVersion implements Comparable<Integer> {
 
 
 	@Override
-	public int compareTo(Integer otherRevision) {
+	public int compareTo(Long otherRevision) {
 		if ((this.revision == null) || this.tainted)
 			return (otherRevision == null) ? 0 : -1;
 		if (otherRevision == null)
@@ -93,7 +93,7 @@ public class DBSchemaVersion implements Comparable<Integer> {
 	public int hashCode() {
 		if (revision == null)
 			return Integer.MIN_VALUE;
-		return tainted ? -revision : revision;
+		return (int) (tainted ? -revision : revision);
 	}
 
 
