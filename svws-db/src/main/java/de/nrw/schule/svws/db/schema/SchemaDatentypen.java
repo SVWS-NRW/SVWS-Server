@@ -1,5 +1,9 @@
 package de.nrw.schule.svws.db.schema;
 
+import java.util.Arrays;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import de.nrw.schule.svws.db.DBDriver;
 
 /**
@@ -45,6 +49,10 @@ public enum SchemaDatentypen {
 	LONGBLOB;
 
 
+	/** Eine Map für den schnellen Zugriff auf die einzelnen Elemente der Aufzählung anhand des Namens. */
+	private static Map<String, SchemaDatentypen> _typen = null; 
+
+
 	/** 
 	 * Der Name zur eindeutigen und DBMS-unabhängigen Identidikation des Datentyps.
 	 *  
@@ -54,6 +62,21 @@ public enum SchemaDatentypen {
     	return this.name().toLowerCase();
     }
 	
+    /**
+     * Gibt an, ob dies ein Datentyp für Ganzzahlen ist oder nicht.
+     * 
+     * @return true, falls es sich um einen Datentyp für Ganzzahlen handelt und ansonsten false
+     */
+    public boolean isIntType() {
+    	return switch(this) {
+			case CHAR, VARCHAR, TEXT -> false;
+			case DATE, TIME, DATETIME -> false;
+    		case BOOLEAN, FLOAT, LONGBLOB -> false;
+    		case SMALLINT, INT, BIGINT -> true;
+    		default -> throw new IllegalArgumentException("Unexpected value: " + this);
+    	};
+    }
+    
 	/** 
 	 * Gibt an, ob Anführungszeichen im SQL-Code verwendet werden sollen, da es sich in SQL um Strings handelt
 	 *  
@@ -197,6 +220,19 @@ public enum SchemaDatentypen {
 			default:
 				return null;
 		}    	
+    }
+
+    /**
+     * Liefert den Datentyp anhand des übergebenen Namens zurück.
+     * 
+     * @param name   der Name des Datentyps
+     * 
+     * @return der Datentyp
+     */
+    public static SchemaDatentypen getByName(String name) {
+    	if (_typen == null)
+    		_typen = Arrays.stream(SchemaDatentypen.values()).collect(Collectors.toMap(t -> t.getName(), t -> t));
+    	return _typen.get(name);
     }
 
 }

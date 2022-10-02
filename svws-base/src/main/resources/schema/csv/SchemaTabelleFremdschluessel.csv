@@ -97,7 +97,6 @@ LehrerLernplattform_Lernplattform_FK;;;LehrerLernplattform;LernplattformID;Lernp
 LehrerLernplattform_Credential_FK;;;LehrerLernplattform;CredentialID;CredentialsLernplattformen;ID;CASCADE;SET NULL
 LehrerMehrleistung_Abschnitt_FK;;;LehrerMehrleistung;Abschnitt_ID;LehrerAbschnittsdaten;ID;CASCADE;CASCADE
 LehrerMehrleistung_Lehrer_FK;;1;LehrerMehrleistung;Lehrer_ID;K_Lehrer;ID;CASCADE;CASCADE
-Logins_Users_FK;;1;Logins;LI_UserID;Users;ID;CASCADE;CASCADE
 Logins_Benutzer_FK;2;;Logins;LI_UserID;Benutzer;ID;CASCADE;CASCADE
 NichtMoeglAbiFachKombi_Fach1_FK;;;NichtMoeglAbiFachKombi;Fach1_ID;EigeneSchule_Faecher;ID;CASCADE;CASCADE
 NichtMoeglAbiFachKombi_Fach2_FK;;;NichtMoeglAbiFachKombi;Fach2_ID;EigeneSchule_Faecher;ID;CASCADE;CASCADE
@@ -200,7 +199,6 @@ SchuelerListeInhalt_Liste_FK;;;SchuelerListe_Inhalt;Liste_ID;SchuelerListe;ID;CA
 SchuelerListeInhalt_Schueler_FK;;;SchuelerListe_Inhalt;Schueler_ID;Schueler;ID;CASCADE;CASCADE
 SchuelerMerkmale_Schueler_FK;;;SchuelerMerkmale;Schueler_ID;Schueler;ID;CASCADE;CASCADE
 SchuelerReportvorlagen_Benutzer_FK;2;;SchuelerReportvorlagen;User_ID;Benutzer;ID;CASCADE;CASCADE
-SchuelerReportvorlagen_User_FK;;1;SchuelerReportvorlagen;User_ID;Users;ID;CASCADE;CASCADE
 SchuelerSprachenfolge_Schueler_FK;;;SchuelerSprachenfolge;Schueler_ID;Schueler;ID;CASCADE;CASCADE
 SchuelerSprachpruefungen_Schueler_FK;1;;SchuelerSprachpruefungen;Schueler_ID;Schueler;ID;CASCADE;CASCADE
 SchuelerTelefone_Schueler_FK;;;SchuelerTelefone;Schueler_ID;Schueler;ID;CASCADE;CASCADE
@@ -209,7 +207,6 @@ SchuelerVermerke_Schueler_FK;;;SchuelerVermerke;Schueler_ID;Schueler;ID;CASCADE;
 SchuelerVermerke_VermerkArt_FK;;;SchuelerVermerke;VermerkArt_ID;K_Vermerkart;ID;CASCADE;CASCADE
 SchuelerWiedervorlage_Schueler_FK;;;SchuelerWiedervorlage;Schueler_ID;Schueler;ID;CASCADE;CASCADE
 SchuelerWiedervorlage_Benutzer_FK;1;;SchuelerWiedervorlage;User_ID;Benutzer;ID;CASCADE;CASCADE
-SchuelerWiedervorlage_User_FK;;1;SchuelerWiedervorlage;User_ID;Users;ID;CASCADE;CASCADE
 SchuelerZP10_Schuljahreabschnitt_FK;;;SchuelerZP10;Schuljahresabschnitts_ID;Schuljahresabschnitte;ID;CASCADE;CASCADE
 SchuelerZP10_Fach_FK;;;SchuelerZP10;Fach_ID;EigeneSchule_Faecher;ID;CASCADE;CASCADE
 SchuelerZP10_Schueler_FK;;;SchuelerZP10;Schueler_ID;Schueler;ID;CASCADE;CASCADE

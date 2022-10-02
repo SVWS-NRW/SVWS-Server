@@ -57,13 +57,13 @@ public class TabelleSpalte implements Comparable<TabelleSpalte> {
     @JsonProperty private String JavaAttributName;
 	  
 	/** Gibt an, ob welche Java-Converter-Klasse genutzt werden soll, um dass Attribut in einen zuhörigen Java-Datentyp umzuwandeln */  
-    @JsonProperty private String JavaAttributConverter;
+    @JsonProperty public String JavaAttributConverter;
     
     /** Gibt an, ab welcher Revision der Attribut-Converter eingesetzt werden soll.*/
-    @JsonProperty private Integer JavaAttributConverterRevision;
+    @JsonProperty public Integer JavaAttributConverterRevision;
     
     /** Gibt an, ab welcher Revision der Attribut-Converter als veraltet markiert ist und bis zu welcher er nur eingesetzt werden soll. */
-    @JsonProperty private Integer JavaAttributConverterVeraltet;
+    @JsonProperty public Integer JavaAttributConverterVeraltet;
     
 	  
 	/** Gibt den Javadoc-Kommentar für das Attribut innerhalt der Java-DTO-Klasse an */
