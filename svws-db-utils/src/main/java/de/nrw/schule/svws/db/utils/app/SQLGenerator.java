@@ -8,6 +8,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,10 +19,9 @@ import org.apache.commons.lang3.math.NumberUtils;
 import de.nrw.schule.svws.csv.CsvReader;
 import de.nrw.schule.svws.db.DBDriver;
 import de.nrw.schule.svws.db.dto.DTOs;
-import de.nrw.schule.svws.db.schema.DBSchemaDefinition;
+import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaRevisionen;
-import de.nrw.schule.svws.db.schema.csv.Tabelle;
-import de.nrw.schule.svws.db.schema.csv.TabelleDefaultDaten;
+import de.nrw.schule.svws.db.schema.SchemaTabelle;
 import de.nrw.schule.svws.shell.CommandLineException;
 import de.nrw.schule.svws.shell.CommandLineOption;
 import de.nrw.schule.svws.shell.CommandLineParser;
@@ -34,8 +35,6 @@ public class SQLGenerator {
 	
 	private static String dirOutput = "build/sql";
 
-	private static DBSchemaDefinition dbschema = DBSchemaDefinition.getInstance();
-
 	/// Der Parser für die Kommandozeile
 	private static CommandLineParser cmdLine;
 	
@@ -45,57 +44,55 @@ public class SQLGenerator {
     /**
      * Gibt den SQL-Befehl zum Löschen aller Daten in der Tabelle zurück
      * 
-     * @param tabelleDefaultDaten   die Tabelle mit den Default-Daten
+     * @param tabelle   die Tabelle mit den Default-Daten
      * 
      * @return der SQL-Befehl zum Löschen
      */
-    public static String getSQLDelete(TabelleDefaultDaten tabelleDefaultDaten) {
-    	return "DELETE FROM " + tabelleDefaultDaten.tabelle.Name + ";";
+    public static String getSQLDelete(SchemaTabelle tabelle) {
+    	return "DELETE FROM " + tabelle.name() + ";";
     }
     
     
     /**
      * Gibt den SQL-Befehl zum Einfügen aller Default-Daten in diese Tabelle zurück
      * 
-     * @param tabelleDefaultDaten   die Tabelle mit den Default-Daten
-     * @param rev   die Revision, für welche das Skript erzeugt wird
+     * @param tabelle   die Tabelle mit den Default-Daten
+     * @param rev       die Revision, für welche das Skript erzeugt wird
      * 
      * @return der SQL-Befehl zum Einfügen aller Default-Daten
      */
-    public static String getSQLInsert(TabelleDefaultDaten tabelleDefaultDaten, long rev) {
+    public static String getSQLInsert(SchemaTabelle tabelle, long rev) {
     	// Bestimme die Spalten der Tabelle und erzeuge die INSERT INTO - Zeile mit den Spaltennamen
-    	Tabelle tabelle = tabelleDefaultDaten.tabelle;
     	var cols = tabelle.getSpalten().stream()
-    			.filter(col -> ((rev == -1) && (col.dbRevisionVeraltet.revision == -1)) 
-        				|| ((rev != -1) && (rev >= col.dbRevision.revision) && ((col.dbRevisionVeraltet.revision == -1) || (rev < col.dbRevisionVeraltet.revision))))
-    			.sorted((a,b) -> Integer.compare(a.Sortierung, b.Sortierung))
+    			.filter(col -> ((rev == -1) && (col.veraltet().revision == -1)) 
+        				|| ((rev != -1) && (rev >= col.revision().revision) && ((col.veraltet().revision == -1) || (rev < col.veraltet().revision))))
+    			.sorted((a,b) -> Integer.compare(a.sortierung(), b.sortierung()))
     			.collect(Collectors.toList());
     	String newline = System.lineSeparator();
-    	String script = "INSERT INTO " + tabelle.Name + "(" 
-    			+ cols.stream().map(col -> col.NameSpalte).collect(Collectors.joining(","))
+    	String script = "INSERT INTO " + tabelle.name() + "(" 
+    			+ cols.stream().map(col -> col.name()).collect(Collectors.joining(","))
     			+ ") VALUES" + newline;
     	// Lese die Default-Daten ein
-		Class<?> dtoClass = DTOs.getFromTableName(tabelle.Name);
+		Class<?> dtoClass = DTOs.getFromTableName(tabelle.name());
 		if (dtoClass == null)
-			throw new RuntimeException("Fehler beim Erstellen des SQL-Skriptes für die Revision " + rev + " zum Einfügen der Default-Daten in die Tabelle " + tabelle.Name);
-        var data = CsvReader.fromResource("schema/csv/" + tabelle.JavaPackage.replace(".", "/") + "/" + tabelle.Name + ".csv", dtoClass);
+			throw new RuntimeException("Fehler beim Erstellen des SQL-Skriptes für die Revision " + rev + " zum Einfügen der Default-Daten in die Tabelle " + tabelle.name());
+        var data = CsvReader.fromResource("schema/csv/" + tabelle.javaSubPackage().replace(".", "/") + "/" + tabelle.name() + ".csv", dtoClass);
         // Erstelle den einzelnen Zeilen für den Einfüge-Befehl
-        DBSchemaDefinition schema = DBSchemaDefinition.getInstance();
         List<String> rows = data.stream()
         		.map(dto -> {
         			return "(" + cols.stream().map(col -> {
         				try {
-            				Field field = dtoClass.getDeclaredField(col.NameSpalte);
+            				Field field = dtoClass.getDeclaredField(col.name());
             				field.setAccessible(true);
 							var obj = field.get(dto);
 							if (obj == null)
 								return "NULL";
 							var coldata = obj.toString();
-							if (schema.datentypen.get(col.Datentyp).isQuoted()) 
+							if (col.datentyp().isQuoted()) 
 								coldata = "'" + coldata.replace("'", "''") + "'";
 	        				return coldata;
 						} catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
-							throw new RuntimeException("Fehler beim Erstellen des SQL-Skriptes für die Revision " + rev + " zum Einfügen der Default-Daten in die Tabelle " + tabelle.Name + " (kann die Daten nicht korrekt einlesen)", e);
+							throw new RuntimeException("Fehler beim Erstellen des SQL-Skriptes für die Revision " + rev + " zum Einfügen der Default-Daten in die Tabelle " + tabelle.name() + " (kann die Daten nicht korrekt einlesen)", e);
 						} 
         			}).collect(Collectors.joining(",")) + ")";
         		}).collect(Collectors.toList());
@@ -107,13 +104,13 @@ public class SQLGenerator {
      * Gibt den SQL-Skript zum Löschen und erneuten Einfügen aller Default-Daten in dieser
      * Tabelle zurück.
      * 
-     * @param tabelleDefaultDaten   die Tabelle mit den Default-Daten
-     * @param rev   die Revision, für welche das Skript erzeugt wird
+     * @param tabelle   die Tabelle mit den Default-Daten
+     * @param rev       die Revision, für welche das Skript erzeugt wird
      * 
      * @return das SQL-Skript zum Löschen und erneuten Einfügen aller Default-Daten
      */
-    public static String getSQL(TabelleDefaultDaten tabelleDefaultDaten, long rev) {
-    	return getSQLDelete(tabelleDefaultDaten) + System.lineSeparator() + System.lineSeparator() + getSQLInsert(tabelleDefaultDaten, rev) + System.lineSeparator();
+    public static String getSQL(SchemaTabelle tabelle, long rev) {
+    	return getSQLDelete(tabelle) + System.lineSeparator() + System.lineSeparator() + getSQLInsert(tabelle, rev) + System.lineSeparator();
     }
 	
 	
@@ -130,9 +127,8 @@ public class SQLGenerator {
 	public static String getCreateSchemaSkript(DBDriver dbms, long rev) {
 		String newline = System.lineSeparator();
 		String result = "";
-		var tabs = dbschema.getTabellenSortiert(rev);
-		for (Tabelle t : tabs) {
-			result += t.getSQL(dbschema, dbms, rev);
+		for (SchemaTabelle t : Schema.tabellen.values()) {
+			result += t.getSQL(dbms, rev);
 			var sql_indizes = t.getSQLIndizes(rev);
 			if ((sql_indizes != null) && (!"".equals(sql_indizes)))
 				result += newline + newline + sql_indizes;
@@ -140,15 +136,15 @@ public class SQLGenerator {
 		}
 		result += newline
 		        + ((dbms == DBDriver.MSSQL) ? "GO" + newline + newline : "")
-		        + tabs.stream()
-		       		.map(t -> t.getSQLTrigger(dbms, rev, true))
+		        + Schema.tabellen.values().stream()
+		       		.map(tab -> tab.getSQLTrigger(dbms, rev, true))
 		       		.filter(sql -> (sql != null) && (!"".equals(sql)))
 					.collect(Collectors.joining(newline + newline))
                 + newline + newline + newline
 				+ "INSERT INTO SVWS_DB_Version(Revision) VALUES (" + ((rev == - 1) ? SchemaRevisionen.maxRevision.revision : rev) + ");" + newline
 		        + newline 
 		        + newline 
-		        + dbschema.getCreateBenutzerSQL(rev).stream().collect(Collectors.joining(newline + newline)) + newline;
+		        + Schema.getCreateBenutzerSQL(rev).stream().collect(Collectors.joining(newline + newline)) + newline;
 		return result;
 	}
 
@@ -163,11 +159,13 @@ public class SQLGenerator {
 	 * @return das SQL-Drop-Skript
 	 */
 	public static String getDropSchemaSkript(DBDriver dbms, long rev) {
-		return dbschema.getTabellen(rev).stream().sorted((a,b) -> (-1) * a.compareTo(rev, b)).map(t -> t.getSQLDrop(dbms)).collect(Collectors.joining(System.lineSeparator())) + System.lineSeparator();
+		var tmp = Schema.getTabellen(rev);
+		Collections.reverse(tmp);
+		return tmp.stream().map(t -> t.getSQLDrop(dbms)).collect(Collectors.joining(System.lineSeparator())) + System.lineSeparator();
 	}
 
-	
-	
+
+
 	/**
 	 * Liest das SQL-Skript zum Einfügen der Default-Daten für die angebene Revision 
 	 * aus der Schema-Datenbank aus. 
@@ -178,19 +176,15 @@ public class SQLGenerator {
 	 */
 	public static String getDefaultDatenSkript(long revision) {
 		final long rev = (revision == -1) ? SchemaRevisionen.maxRevision.revision : revision;  
-		return dbschema.tabellenMitDefaultDaten.values().stream()
-    			.filter(tdd -> ((rev == -1) && (tdd.tabelle.dbRevisionVeraltet.revision == -1))
-    					|| ((rev != -1) && (rev >= tdd.tabelle.dbRevision.revision) && ((tdd.tabelle.dbRevisionVeraltet.revision == -1) || (rev < tdd.tabelle.dbRevisionVeraltet.revision))))
-    			.sorted((a,b) -> a.tabelle.compareTo(rev, b.tabelle))
-				.map(tdd -> getSQL(tdd, rev))
+		return Arrays.stream(Schema.tabellenDefaultDaten)
+    			.filter(tab -> ((rev == -1) && (tab.veraltet().revision == -1))
+    					|| ((rev != -1) && (rev >= tab.revision().revision) && ((tab.veraltet().revision == -1) || (rev < tab.veraltet().revision))))
+				.map(tab -> getSQL(tab, rev))
 				.collect(Collectors.joining(System.lineSeparator() + System.lineSeparator() + System.lineSeparator()));
 	}
-	
-	
-	
-	
-	
-	
+
+
+
 	/**
 	 * Diese Methode schreibt die übergebenen Daten in die angebene Datei.
 	 * 
@@ -207,19 +201,18 @@ public class SQLGenerator {
 		}
 		System.out.println("[OK]");
 	}
-	
-	
+
+
 	/**
 	 * Schreibt die jeweiligen Create-Schema-, Drop-Schema- und Default-Daten-SQL-Skript für die einzelnen
 	 * DBMS für die angebene Revision in das angegebene Verzeichnis.  
 	 * 
-	 * @param schema      die Definition des SVWS-Datenbank-Schemas
 	 * @param baseDir     das Verzeichnis, in welches die Skripte geschrieben werden sollen
 	 * @param revision    die Revision der SVWS-Datenbank, für welche die Skripte geschrieben werden sollen
 	 * 
 	 * @throws IOException   tritt auf, wenn die Skripte nicht erfolgreich geschrieben werden konnten
 	 */
-	private static void writeScript(DBSchemaDefinition schema, Path baseDir, long revision) throws IOException {
+	private static void writeScript(Path baseDir, long revision) throws IOException {
 		// Create- und Drop-Schema-Skripte in Abhängigkeit von dem DBMS
 		System.out.println("- Erzeuge Skripte für die Revision " + revision);
 		for (DBDriver driver : DBDriver.values()) {
@@ -242,21 +235,20 @@ public class SQLGenerator {
 	 * Schreibt die jeweiligen Create-Schema-, Drop-Schema- und Default-Daten-SQL-Skript für die einzelnen
 	 * DBMS für die angebenen Revisionen in das angegebene Verzeichnis.  
 	 * 
-	 * @param schema      die Definition des SVWS-Datenbank-Schemas
 	 * @param baseDir     das Verzeichnis, in welches die Skripte geschrieben werden sollen
 	 * @param revision    die Revision der SVWS-Datenbank, bis zu welcher die Skripte geschrieben werden sollen
 	 * @param allrev      gibt an, ob alle Revision ab Revision 0 geschrieben werden sollen oder nur eine
 	 * 
 	 * @throws IOException   tritt auf, wenn die Skripte nicht erfolgreich geschrieben werden konnten
 	 */
-	public static void writeScripts(DBSchemaDefinition schema, Path baseDir, long revision, boolean allrev) throws IOException {
+	public static void writeScripts(Path baseDir, long revision, boolean allrev) throws IOException {
 		for (long r = (allrev ? 0 : revision); r <= revision; r++) {
-			writeScript(schema, Paths.get(baseDir.toString(), "" + r), r);
+			writeScript(Paths.get(baseDir.toString(), "" + r), r);
 		}
-		writeScript(schema, Paths.get(baseDir.toString(), "current"), -1);
+		writeScript(Paths.get(baseDir.toString(), "current"), -1);
 	}
-	
-	
+
+
 	/**
 	 * Dieses Programm erstellt die Skripte für die aktuelle Revision in dem Verzeichnis 
      * schema/sql/[n]/[dbms]/, wobei n die Revision und dbms der Name des DBMS ist 
@@ -267,7 +259,6 @@ public class SQLGenerator {
 	 * @throws IOException   tritt auf, wenn die Skripte nicht erfolgreich geschrieben werden konnten
 	 */
 	public static void main(String[] args) throws IOException {
-		
 		cmdLine = new CommandLineParser(args);
 		try {
 			cmdLine.addOption(new CommandLineOption("o", "output", true, "Der Ort, an welchem die Skripte in Unterordnern paltziert werden sollen (Default: " + dirOutput + ")"));	
@@ -279,21 +270,16 @@ public class SQLGenerator {
 			System.out.println("- Ausgabe-Verzeichnis \"" + dirScripts + "\"");
 			Files.createDirectories(dirScripts);
 			
-			DBSchemaDefinition schema = DBSchemaDefinition.getInstance();
-			if (schema == null)
-				cmdLine.printOptionsAndExit(2, "Kann das Datenbank-Schema nicht einlesen.");
-			
 			// Lese optional eine spezielle Revision ein...
 			long rev = NumberUtils.toLong(cmdLine.getValue("r", "-1"), -1);
 			long revision = (rev == -1) ? SchemaRevisionen.maxRevision.revision : rev;
 	
 			// Schreibe die Daten in das Revisions-Verzeichnis und ggf. in das Verzeichnis für die aktuelle Revision (-1)
 			boolean allrev = cmdLine.isSet("a");  
-			writeScripts(schema, Paths.get(dirScripts.toString()), revision, allrev);			
+			writeScripts(Paths.get(dirScripts.toString()), revision, allrev);			
 		} catch (CommandLineException e) {
 			cmdLine.printOptionsAndExit(1, e.getMessage());
 		}
-		
 	}
 
 }

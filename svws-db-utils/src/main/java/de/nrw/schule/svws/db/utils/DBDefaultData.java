@@ -5,9 +5,9 @@ import java.util.List;
 
 import de.nrw.schule.svws.csv.CsvReader;
 import de.nrw.schule.svws.db.dto.DTOHelper;
-import de.nrw.schule.svws.db.schema.DBSchemaDefinition;
+import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaRevisionen;
-import de.nrw.schule.svws.db.schema.csv.Tabelle;
+import de.nrw.schule.svws.db.schema.SchemaTabelle;
 import de.nrw.schule.svws.logger.Logger;
 
 /**
@@ -41,15 +41,14 @@ public class DBDefaultData {
 		}
 		logger.logLn("Fülle Default-Daten-Cache...");
 		logger.modifyIndent(2);
-		for (Tabelle tab : DBSchemaDefinition.getInstance().getTabellenDefaultDatenSortiert(-1)) {
-			logger.log("Lese Daten für die Tabelle " + tab.JavaPackage + "." + tab.Name + "... ");
-			Class<?> dtoClass = DTOHelper.getFromTableName(tab.Name, -1);
-// TODO ungültige Tabellen sollten von getTabellenDefaultDatenSortiert nicht geliefert werden !!!  			
+		for (SchemaTabelle tab : Schema.tabellenDefaultDaten) {
+			logger.log("Lese Daten für die Tabelle " + tab.javaSubPackage() + "." + tab.name() + "... ");
+			Class<?> dtoClass = DTOHelper.getFromTableName(tab.name(), -1);
 			if (dtoClass == null) {
 				logger.logLn(0, "In dieser DB-Revision nicht vorhanden.");
 				continue;
 			}
-	        var data = CsvReader.fromResource("schema/csv/" + tab.JavaPackage.replace(".", "/") + "/" + tab.Name + ".csv", dtoClass);
+	        var data = CsvReader.fromResource("schema/csv/" + tab.javaSubPackage().replace(".", "/") + "/" + tab.name() + ".csv", dtoClass);
 	        if (data != null) {
 	        	cache.put(dtoClass, data);
 	        	logger.logLn(0, "OK");

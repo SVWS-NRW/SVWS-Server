@@ -1,6 +1,9 @@
 package de.nrw.schule.svws.db.schema;
 
 import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Vector;
+import java.util.stream.Collectors;
 
 import de.nrw.schule.svws.db.schema.tabellen.Tabelle_AllgemeineMerkmaleKatalog;
 import de.nrw.schule.svws.db.schema.tabellen.Tabelle_AllgemeineMerkmaleKatalog_Keys;
@@ -1095,4 +1098,100 @@ public class Schema {
 	/** Tabelle ZuordnungReportvorlagen */
 	public static final Tabelle_ZuordnungReportvorlagen tab_ZuordnungReportvorlagen = add(new Tabelle_ZuordnungReportvorlagen());
 
+	
+	// TODO Passe dieses Attribut an, sobald die Default-Daten nicht mehr über CSV-Dateien eingelesen werden
+	/** Die Tabellen, welche Default-Daten beinhalten und in diesem Zusammenhang aktualisiert werden sollen */
+	public static final SchemaTabelle[] tabellenDefaultDaten = new SchemaTabelle[] {
+		Schema.tab_Schildintern_AbiturInfos,
+		Schema.tab_Schildintern_Datenart,
+		Schema.tab_Schildintern_DQR_Niveaus,
+		Schema.tab_Schildintern_FaecherSortierung,
+		Schema.tab_Schildintern_FilterFehlendeEintraege,
+		Schema.tab_Schildintern_FilterFehlendeEintraegeSchild3,
+		Schema.tab_Schildintern_FilterFeldListe,
+		Schema.tab_Schildintern_HSchStatus,
+		Schema.tab_Schildintern_KAoA_Anschlussoption,
+		Schema.tab_Schildintern_KAoA_Berufsfeld,
+		Schema.tab_Schildintern_KAoA_Kategorie,
+		Schema.tab_Schildintern_KAoA_Merkmal,
+		Schema.tab_Schildintern_KAoA_SBO_Ebene4,
+		Schema.tab_Schildintern_KAoA_Zusatzmerkmal,
+		Schema.tab_Schildintern_Laender,
+		Schema.tab_Schildintern_PrfSemAbschl,
+		Schema.tab_Schildintern_PruefOrd_Optionen,
+		Schema.tab_Schildintern_PruefungsOrdnung,
+		Schema.tab_Schildintern_SchuelerImpExp,
+		Schema.tab_Schildintern_SpezialFilterFelder,
+		Schema.tab_Schildintern_TextExport,
+		Schema.tab_Schildintern_UnicodeUmwandlung,
+		Schema.tab_Schildintern_VerfImportFelder,
+		Schema.tab_Schildintern_VerfImportTabellen,
+		Schema.tab_Schildintern_Zusatzinfos,
+		Schema.tab_SchulleitungFunktion,
+		Schema.tab_Schulver_DBS,
+		Schema.tab_Schulver_Schultraeger,
+		Schema.tab_Schulver_WeitereSF,
+		Schema.tab_Statkue_Abgangsart,
+		Schema.tab_Statkue_AndereGrundschulen,
+		Schema.tab_Statkue_Bilingual,
+		Schema.tab_Statkue_PLZOrt,
+		Schema.tab_Statkue_Reformpaedagogik,
+		Schema.tab_Statkue_SchuelerErsteSchulformSekI,
+		Schema.tab_Statkue_SchuelerKindergartenbesuch,
+		Schema.tab_Statkue_SchuelerUebergangsempfehlung5Jg,
+		Schema.tab_Statkue_SVWS_SprachpruefungNiveaus
+	};
+
+	
+    /**
+     * Liefert die SQL-Befehle zum Anlegen von Default-SVWS-Benutzern
+     * bei einem leeren Schema in Abhängigkeit von der übergebenen Revision.
+     * 
+     * @param rev    die Revision
+     * 
+     * @return eine Liste mit den SQL-Befehlen
+     */
+    public static final List<String> getCreateBenutzerSQL(long rev) {
+    	Vector<String> result = new Vector<>();
+    	if (rev == 0) {
+    		result.add("INSERT INTO Users(ID,US_Name,US_LoginName,US_UserGroups,US_Privileges) VALUES "
+    			 	 + "(1,'Administrator','Admin','1;2;3','$');");
+    		result.add("INSERT INTO Usergroups(UG_ID, UG_Bezeichnung, UG_Kompetenzen, UG_Nr) VALUES "
+    				 + "(1, 'Administrator', '$', 1),"
+    				 + "(2, 'Lehrer', '11;21;22;81;31;61', 3),"
+    				 + "(3, 'Sekretariat', '11;12;13;14;21;81;82;83;31;32;33;34;91;92;93;94;95;61;62;71', 4);");
+    		return result;
+    	}
+    	result.add("INSERT INTO Credentials(ID, Benutzername, BenutzernamePseudonym, Initialkennwort, PasswordHash, RSAPublicKey, RSAPrivateKey, AES) VALUES "
+    			 + "(1, 'Admin', NULL, NULL, NULL, NULL, NULL, NULL);");
+		result.add("INSERT INTO BenutzerAllgemein(ID,AnzeigeName,CredentialID) VALUES "
+				 + "(1,'Administrator',1);");
+		result.add("INSERT INTO Benutzer(ID, Typ, Allgemein_ID, Lehrer_ID, Schueler_ID, Erzieher_ID, IstAdmin) VALUES "
+				 + "(1, 0, 1, NULL, NULL, NULL, 1)");
+		result.add("INSERT INTO Benutzergruppen(ID, Bezeichnung, IstAdmin) VALUES "
+				 + "(1, 'Administrator', 1),"
+				 + "(2, 'Lehrer', 0),"
+				 + "(3, 'Sekretariat', 0);");
+		result.add("INSERT INTO BenutzergruppenMitglieder(Gruppe_ID, Benutzer_ID) VALUES (1, 1);");
+		result.add("INSERT INTO BenutzergruppenKompetenzen(Gruppe_ID, Kompetenz_ID) VALUES "
+				 + "(2, 11), (2, 21), (2, 22), (2, 31), (2, 61), (2, 81),"
+				 + "(3, 11),(3, 12),(3, 13),(3, 14),(3, 21),(3, 31),(3, 32),(3, 33),(3, 34),(3, 61),(3, 62),(3, 71),(3, 81),(3, 82),(3, 83),(3, 91),(3, 92),(3, 93),(3, 94),(3, 95);");
+    	return result;
+    }
+
+    
+    /**
+     * Liefert alle Tabellen, welche in der angegebenen Revision definiert sind. 
+     * 
+     * @param rev   die SVWS-DB-Revision
+     * 
+     * @return eine Liste mit den definierten Tabellen
+     */
+    public static final List<SchemaTabelle> getTabellen(long rev) {
+    	return tabellen.values().stream()
+    			.filter(t -> ((rev == -1) && (t.veraltet().revision == -1))
+    					|| ((rev != -1) && (rev >= t.revision().revision) && ((t.veraltet().revision == -1) || (rev < t.veraltet().revision))))
+    			.collect(Collectors.toList());
+    }
+    
 }

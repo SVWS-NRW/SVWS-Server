@@ -60,7 +60,10 @@ public class SchemaTabelle {
 
 	/** Die Unqiue-Indizes dieser Tabelle */
 	private Vector<SchemaTabelleUniqueIndex> _unique = new Vector<>();
-	
+
+	/** Die Trigger, die dieser Tabelle zugeordnet sind */
+	private Vector<SchemaTabelleTrigger> _trigger = new Vector<>();
+
 
 	/**
 	 * Erstellt eine neue Schema-Definition für eine 
@@ -328,6 +331,23 @@ public class SchemaTabelle {
 	}
 
 
+	/**
+	 * Fügt einen neuen Trigger zu dieser Tabelle hinzu
+	 * 
+	 * @param name      der Name des Triggers
+	 * @param dbDriver  das DBMS für welches der Trigger eingerichtet wird
+	 * @param sql       der Teil des SQL-Befehls für das Erstellen des Triggers hinter "CREATE TRIGGER name "
+	 * @param genutzt   die Spalten des Index
+	 * 
+	 * @return der Trigger
+	 */
+	public SchemaTabelleTrigger addTrigger(String name, DBDriver dbDriver, String sql, SchemaTabelle... genutzt) {
+		SchemaTabelleTrigger trig = new SchemaTabelleTrigger(this, name, dbDriver, sql, genutzt);
+		_trigger.add(trig);
+		return trig;
+	}
+
+
     /**
      * Prüft, ob die Tabelle in der angegebenen Revision definiert ist oder nicht.
      * 
@@ -477,9 +497,8 @@ public class SchemaTabelle {
 			.map(col -> col.getSQL(dbms))
 			.collect(Collectors.joining(", " + System.lineSeparator() + "  "));    	
     }
-    
-    
-    
+
+
     /**
      * Generiert den SQL-Code für die Unique-Constraints der Tabelle
      * 
@@ -498,7 +517,7 @@ public class SchemaTabelle {
     	return "," + System.lineSeparator() + "  " + result;
     }
 
-    
+
     /**
      * Generiert den SQL-Code für das Erstellen der Indizes der Tabelle
      * 
@@ -515,73 +534,47 @@ public class SchemaTabelle {
     }
 
 
-// TODO Trigger implementation
-//    /**
-//     * Generiert den SQL-Code für das Erstellen oder Entfernen der Trigger der Tabelle
-//     * 
-//     * @param dbms     das DBMS, für welches der Trigger-SQL-Code generiert wird
-//     * @param rev      die Revision, für welche die Trigger der Tabelle erzeugt oder entfernt werden sollen
-//     * @param create   gibt an, ob der SQL-Code für das Erstellen oder das Entfernen von Triggern generiert wird. 
-//     * 
-//     * @return der SQL-Code für die Trigger der Tabelle
-//     */
-//    public String getSQLTrigger(DBDriver dbms, long rev, boolean create) {
-//    	// Lese die einzelnen Trigger aus
-//    	Vector<String> sqlTrigger = new Vector<>();
-//    	for (SchemaTrigger t : this._trigger) {
-//    		if (!dbms.equals(t.dbms))
-//    			continue;
-//    		// Prüfe, ab wann die Trigger gültig bzw. ungültig sind
-//    		if (create) {
-//        		if (((rev == -1) && (t.veraltet().revision == -1))
-//    					|| ((rev != -1) && (rev >= t.revision().revision) && ((t.veraltet().revision == -1) || (rev < t.veraltet().revision))))
-//        			sqlTrigger.add(t.getSQL(dbms, true));    			
-//    		} else {
-//    			if ((t.dbRevisionVeraltet.revision >= 0) && (rev >= t.dbRevisionVeraltet.revision))
-//    				sqlTrigger.add(t.getSQL(dbms, false));
-//    		}
-//    	}
-//    	sqlTrigger.addAll(this.getPrimaerschluesselTriggerSQLList(dbms, rev, create));
-//    	// Füge die einzelnen SQL-Code-Abschnitte zu einem Skript zusammen
-//    	var newline = System.lineSeparator();
-//    	if (create) {
-//	    	if (DBDriver.MARIA_DB.equals(dbms) || DBDriver.MYSQL.equals(dbms)) {
-//	    		return sqlTrigger.stream().map(sql -> "delimiter $" + newline + sql + newline + "$" + newline + "delimiter ;" + newline)
-//	    				.collect(Collectors.joining(newline + newline));
-//	    	} else if (DBDriver.MSSQL.equals(dbms)) {
-//	    		return sqlTrigger.stream().map(sql -> sql + newline + "GO" + newline)
-//	    				.collect(Collectors.joining(newline + newline));    		
-//	    	} 
-//	    	// DBDriver.SQLITE.equals(dbms))
-//			return sqlTrigger.stream().collect(Collectors.joining(newline + newline));
-//    	}
-//    	return sqlTrigger.stream().collect(Collectors.joining(newline));
-//    }
-
-
-// TODO remove
-//    /**
-//     * Vergleicht diese und eine andere Tabelle in Bezug auf die Sortierreihenfolge bei Erstellen der Tabellen  
-//     * 
-//     * @param rev     die DB-Revision, für die der Vergleich stattfindet 
-//     * @param other   die andere Tabelle, mit der verglichen wird
-//     * 
-//     * @return -1, falls diese Tabelle zuvor einsortiert wird, 
-//     *          0, falls die Tabellen identisch einsortiert werden und 
-//     *          1, falls diese Tabelle weiter hinten einsortiert ist
-//     */
-//    public int compareTo(long rev, SchemaTabelle other) {
-//    	var a = this.sortierung.get(rev);
-//    	var b = other.sortierung.get(rev);
-//    	if ((a == null) && (b == null))
-//    		return 0;
-//    	if (a == null)
-//    		return 1;
-//    	if (b == null)
-//    		return -1;
-//    	int result = a.compareTo(b);
-//    	return (result != 0) ? result : this.Name.compareTo(other.Name);
-//    }
+    /**
+     * Generiert den SQL-Code für das Erstellen oder Entfernen der Trigger der Tabelle
+     * 
+     * @param dbms     das DBMS, für welches der Trigger-SQL-Code generiert wird
+     * @param rev      die Revision, für welche die Trigger der Tabelle erzeugt oder entfernt werden sollen
+     * @param create   gibt an, ob der SQL-Code für das Erstellen oder das Entfernen von Triggern generiert wird. 
+     * 
+     * @return der SQL-Code für die Trigger der Tabelle
+     */
+    public String getSQLTrigger(DBDriver dbms, long rev, boolean create) {
+    	// Lese die einzelnen Trigger aus
+    	Vector<String> sqlTrigger = new Vector<>();
+    	for (SchemaTabelleTrigger t : this._trigger) {
+    		if (!dbms.equals(t.dbms()))
+    			continue;
+    		// Prüfe, ab wann die Trigger gültig bzw. ungültig sind
+    		if (create) {
+        		if (((rev == -1) && (t.veraltet().revision == -1))
+    					|| ((rev != -1) && (rev >= t.revision().revision) && ((t.veraltet().revision == -1) || (rev < t.veraltet().revision))))
+        			sqlTrigger.add(t.getSQL(dbms, true));
+    		} else {
+    			if ((t.veraltet().revision >= 0) && (rev >= t.veraltet().revision))
+    				sqlTrigger.add(t.getSQL(dbms, false));
+    		}
+    	}
+    	sqlTrigger.addAll(this.getPrimaerschluesselTriggerSQLList(dbms, rev, create));
+    	// Füge die einzelnen SQL-Code-Abschnitte zu einem Skript zusammen
+    	var newline = System.lineSeparator();
+    	if (create) {
+	    	if (DBDriver.MARIA_DB.equals(dbms) || DBDriver.MYSQL.equals(dbms)) {
+	    		return sqlTrigger.stream().map(sql -> "delimiter $" + newline + sql + newline + "$" + newline + "delimiter ;" + newline)
+	    				.collect(Collectors.joining(newline + newline));
+	    	} else if (DBDriver.MSSQL.equals(dbms)) {
+	    		return sqlTrigger.stream().map(sql -> sql + newline + "GO" + newline)
+	    				.collect(Collectors.joining(newline + newline));    		
+	    	} 
+	    	// DBDriver.SQLITE.equals(dbms))
+			return sqlTrigger.stream().collect(Collectors.joining(newline + newline));
+    	}
+    	return sqlTrigger.stream().collect(Collectors.joining(newline));
+    }
 
 
     /**
