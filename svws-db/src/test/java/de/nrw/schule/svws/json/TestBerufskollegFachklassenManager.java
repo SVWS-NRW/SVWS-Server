@@ -6,8 +6,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import de.nrw.schule.svws.core.data.schule.AbgangsartKatalogEintrag;
+import de.nrw.schule.svws.core.data.schule.BerufskollegFachklassenKatalog;
+import de.nrw.schule.svws.core.data.schule.BerufskollegFachklassenKatalogEintrag;
+import de.nrw.schule.svws.core.data.schule.BerufskollegFachklassenKatalogIndex;
 import de.nrw.schule.svws.core.types.schule.SchulabschlussBerufsbildend;
 import de.nrw.schule.svws.core.utils.schule.AbgangsartenManager;
+import de.nrw.schule.svws.core.utils.schule.BerufskollegFachklassenManager;
 
 /**
  * Diese Klasse testet die einzelnen Kataloge, welche im DB-Projekt als
@@ -18,34 +22,26 @@ public class TestBerufskollegFachklassenManager {
 	
 	// TODO Tests für BerufskollegFachklassenManager manager = JsonDaten.fachklassenManager;
 	/**
-	 * TODO
+	 * Prüft die Einträge der Kataloge für die Fachklassen
+	 * bei den berufsbildenden Schulformen.
 	 */
 	@Test
-	@DisplayName("Prüfe TODO")
+	@DisplayName("Prüfe Fachklassendaten Jsons auf Korrektheit.")
 	void testBerufskollegFachklassen() {
-//		System.out.println("Erstelle AbgangsartenManager...");
-//		AbgangsartenManager manager = JsonDaten.abgangsartenManager;
-//		System.out.println("  Die Daten liegen in Version " + manager.getVersion() + " vor.");
-//		System.out.println("Prüfe die Einträge des Abgangsarten-Katalogs für allgemeinbildende Schulformen");
-//		for (AbgangsartKatalogEintrag eintrag : manager.getKatalogAllgemeinbildend().eintraege) {
-//			if (eintrag.kuerzel.length() != 1)
-//				fail("Katalog-Eintrag " + eintrag.kuerzel + " ist fehlerhaft, da bei allgemeinbildenden Katalog-Einträgen das Kürzel einstellig sein muss .");
-//			if (AbgangsartenManager.getAbschlussAllgemeinbildend(eintrag) == null)
-//				fail("Katalog-Eintrag " + eintrag.kuerzel + " ist fehlerhaft und enthält keinen gültigen Eintrag für einen allgmeinbildenden Abschluss.");
-//			if (AbgangsartenManager.getAbschlussBerufsbildend(eintrag) != null)
-//				fail("Katalog-Eintrag " + eintrag.kuerzel + " ist fehlerhaft, da ein Katalog-Eintrag für allgemeinbildende Schulformen keinen berufsbildenden Abschluss beinhalten kann.");
-//		}
-//		System.out.println("Prüfe die Einträge des Abgangsarten-Katalogs für berufsbildende Schulformen");
-//		for (AbgangsartKatalogEintrag eintrag : manager.getKatalogBerufsbildend().eintraege) {
-//			if (eintrag.kuerzel.length() != 2)
-//				fail("Katalog-Eintrag " + eintrag.kuerzel + " ist fehlerhaft, da bei berufsbildenden Katalog-Einträgen das Kürzel zweistellig sein muss .");
-//			if (AbgangsartenManager.getAbschlussAllgemeinbildend(eintrag) == null)
-//				fail("Katalog-Eintrag " + eintrag.kuerzel + " ist fehlerhaft und enthält keinen gültigen Eintrag für einen allgmeinbildenden Abschluss.");
-//			SchulabschlussBerufsbildend abschlussBeruf = AbgangsartenManager.getAbschlussBerufsbildend(eintrag);
-//			if (abschlussBeruf == null)
-//				fail("Katalog-Eintrag " + eintrag.kuerzel + " ist fehlerhaft und enthält keinen gültigen Eintrag für einen berufsbildenden Abschluss.");
-//		}
-//		System.out.println("Prüfung des Katalogs der Abgangsarten erfolgreich abgeschlossen.");
+		System.out.println("Erstelle FachklassenManager...");
+		BerufskollegFachklassenManager manager = JsonDaten.fachklassenManager;
+		System.out.println("  Die Daten liegen in Version " + manager.getVersion() + " vor.");
+		System.out.println("Prüfe die Einträge des Fachklassen-Katalogs für berufsbildende Schulformen");
+		for (BerufskollegFachklassenKatalogIndex index : manager.getKatalog().indizes) {
+			for (BerufskollegFachklassenKatalogEintrag eintrag : index.fachklassen) {
+			if (eintrag.schluessel == null)
+					fail("Katalog-Eintrag " + eintrag.schluessel + " ist fehlerhaft, da bei Fachklassen der erste Teil des Schlüssels nicht leer sein darf .");
+			if (eintrag.schluessel2 == null)
+				fail("Katalog-Eintrag " + eintrag.schluessel2 + " ist fehlerhaft, da bei Fachklassen der zweite Teil des Schlüssels nicht leer sein darf .");
+			
+			}
+		}
+		System.out.println("Prüfung des Katalogs der Fachklassen erfolgreich abgeschlossen.");
 	}
 
 }
