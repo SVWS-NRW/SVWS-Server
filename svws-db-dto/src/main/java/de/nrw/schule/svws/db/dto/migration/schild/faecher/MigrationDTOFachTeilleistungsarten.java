@@ -30,8 +30,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @NamedQuery(name="MigrationDTOFachTeilleistungsarten.kursart.multiple", query="SELECT e FROM MigrationDTOFachTeilleistungsarten e WHERE e.Kursart IN :value")
 @NamedQuery(name="MigrationDTOFachTeilleistungsarten.schulnreigner", query="SELECT e FROM MigrationDTOFachTeilleistungsarten e WHERE e.SchulnrEigner = :value")
 @NamedQuery(name="MigrationDTOFachTeilleistungsarten.schulnreigner.multiple", query="SELECT e FROM MigrationDTOFachTeilleistungsarten e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name="MigrationDTOFachTeilleistungsarten.primaryKeyQuery", query="SELECT e FROM MigrationDTOFachTeilleistungsarten e WHERE e.Fach_ID = ?1 AND e.Kursart = ?2 AND e.Teilleistungsart_ID = ?3")
-@NamedQuery(name="MigrationDTOFachTeilleistungsarten.all.migration", query="SELECT e FROM MigrationDTOFachTeilleistungsarten e WHERE e.Fach_ID IS NOT NULL AND e.Kursart IS NOT NULL AND e.Teilleistungsart_ID IS NOT NULL")
+@NamedQuery(name="MigrationDTOFachTeilleistungsarten.primaryKeyQuery", query="SELECT e FROM MigrationDTOFachTeilleistungsarten e WHERE e.Teilleistungsart_ID = ?1 AND e.Fach_ID = ?2 AND e.Kursart = ?3")
+@NamedQuery(name="MigrationDTOFachTeilleistungsarten.all.migration", query="SELECT e FROM MigrationDTOFachTeilleistungsarten e WHERE e.Teilleistungsart_ID IS NOT NULL AND e.Fach_ID IS NOT NULL AND e.Kursart IS NOT NULL")
 @JsonPropertyOrder({"Teilleistungsart_ID","Fach_ID","Kursart","SchulnrEigner"})
 public class MigrationDTOFachTeilleistungsarten {
 
@@ -96,6 +96,12 @@ public class MigrationDTOFachTeilleistungsarten {
 		if (getClass() != obj.getClass())
 			return false;
 		MigrationDTOFachTeilleistungsarten other = (MigrationDTOFachTeilleistungsarten) obj;
+		if (Teilleistungsart_ID == null) {
+			if (other.Teilleistungsart_ID != null)
+				return false;
+		} else if (!Teilleistungsart_ID.equals(other.Teilleistungsart_ID))
+			return false;
+
 		if (Fach_ID == null) {
 			if (other.Fach_ID != null)
 				return false;
@@ -107,12 +113,6 @@ public class MigrationDTOFachTeilleistungsarten {
 				return false;
 		} else if (!Kursart.equals(other.Kursart))
 			return false;
-
-		if (Teilleistungsart_ID == null) {
-			if (other.Teilleistungsart_ID != null)
-				return false;
-		} else if (!Teilleistungsart_ID.equals(other.Teilleistungsart_ID))
-			return false;
 		return true;
 	}
 
@@ -120,11 +120,11 @@ public class MigrationDTOFachTeilleistungsarten {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((Teilleistungsart_ID == null) ? 0 : Teilleistungsart_ID.hashCode());
+
 		result = prime * result + ((Fach_ID == null) ? 0 : Fach_ID.hashCode());
 
 		result = prime * result + ((Kursart == null) ? 0 : Kursart.hashCode());
-
-		result = prime * result + ((Teilleistungsart_ID == null) ? 0 : Teilleistungsart_ID.hashCode());
 		return result;
 	}
 

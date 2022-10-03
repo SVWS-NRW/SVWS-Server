@@ -41,8 +41,8 @@ import de.nrw.schule.svws.csv.converter.current.BooleanPlusMinusDefaultMinusConv
 @NamedQuery(name="Rev8DTOSchuelerDatenschutz.status.multiple", query="SELECT e FROM Rev8DTOSchuelerDatenschutz e WHERE e.Status IN :value")
 @NamedQuery(name="Rev8DTOSchuelerDatenschutz.abgefragt", query="SELECT e FROM Rev8DTOSchuelerDatenschutz e WHERE e.Abgefragt = :value")
 @NamedQuery(name="Rev8DTOSchuelerDatenschutz.abgefragt.multiple", query="SELECT e FROM Rev8DTOSchuelerDatenschutz e WHERE e.Abgefragt IN :value")
-@NamedQuery(name="Rev8DTOSchuelerDatenschutz.primaryKeyQuery", query="SELECT e FROM Rev8DTOSchuelerDatenschutz e WHERE e.Datenschutz_ID = ?1 AND e.Schueler_ID = ?2")
-@NamedQuery(name="Rev8DTOSchuelerDatenschutz.all.migration", query="SELECT e FROM Rev8DTOSchuelerDatenschutz e WHERE e.Datenschutz_ID IS NOT NULL AND e.Schueler_ID IS NOT NULL")
+@NamedQuery(name="Rev8DTOSchuelerDatenschutz.primaryKeyQuery", query="SELECT e FROM Rev8DTOSchuelerDatenschutz e WHERE e.Schueler_ID = ?1 AND e.Datenschutz_ID = ?2")
+@NamedQuery(name="Rev8DTOSchuelerDatenschutz.all.migration", query="SELECT e FROM Rev8DTOSchuelerDatenschutz e WHERE e.Schueler_ID IS NOT NULL AND e.Datenschutz_ID IS NOT NULL")
 @JsonPropertyOrder({"Schueler_ID","Datenschutz_ID","Status","Abgefragt"})
 public class Rev8DTOSchuelerDatenschutz {
 
@@ -117,16 +117,16 @@ public class Rev8DTOSchuelerDatenschutz {
 		if (getClass() != obj.getClass())
 			return false;
 		Rev8DTOSchuelerDatenschutz other = (Rev8DTOSchuelerDatenschutz) obj;
-		if (Datenschutz_ID == null) {
-			if (other.Datenschutz_ID != null)
-				return false;
-		} else if (!Datenschutz_ID.equals(other.Datenschutz_ID))
-			return false;
-
 		if (Schueler_ID == null) {
 			if (other.Schueler_ID != null)
 				return false;
 		} else if (!Schueler_ID.equals(other.Schueler_ID))
+			return false;
+
+		if (Datenschutz_ID == null) {
+			if (other.Datenschutz_ID != null)
+				return false;
+		} else if (!Datenschutz_ID.equals(other.Datenschutz_ID))
 			return false;
 		return true;
 	}
@@ -135,9 +135,9 @@ public class Rev8DTOSchuelerDatenschutz {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((Datenschutz_ID == null) ? 0 : Datenschutz_ID.hashCode());
-
 		result = prime * result + ((Schueler_ID == null) ? 0 : Schueler_ID.hashCode());
+
+		result = prime * result + ((Datenschutz_ID == null) ? 0 : Datenschutz_ID.hashCode());
 		return result;
 	}
 

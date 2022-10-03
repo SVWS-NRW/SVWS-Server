@@ -25,104 +25,113 @@
         <class>de.nrw.schule.svws.db.converter.gost.GOStBesondereLernleistungConverter</class>
         <class>de.nrw.schule.svws.db.converter.gost.GOStKursartConverter</class>
         <class>de.nrw.schule.svws.db.utils.dto.enm.DTOENMLehrerSchuelerAbschnittsdaten</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.katalog.MigrationDTOAnsprechpartnerAllgemeineAdresse</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAllgemeineMerkmaleKatalog</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAllgemeineMerkmaleKatalogKeys</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAllgemeineMerkmaleKatalogSchulformen</class>
+        <class>de.nrw.schule.svws.db.dto.migration.coretypes.MigrationDTOKursFortschreibungsart</class>
+        <class>de.nrw.schule.svws.db.dto.migration.coretypes.MigrationDTONote</class>
+        <class>de.nrw.schule.svws.db.dto.migration.coretypes.MigrationDTOPersonalTyp</class>
+        <class>de.nrw.schule.svws.db.dto.migration.coretypes.MigrationDTOSchuelerStatus</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.MigrationDTOSchildAuswahlFilter</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.MigrationDTOSchildVerwaltung</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.MigrationDTOSchuelerIndividuelleGruppe</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.MigrationDTOSchuelerIndividuelleGruppeSchueler</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.MigrationDTOSchuelerReportvorlagen</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.MigrationDTOSchuelerWiedervorlage</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.MigrationDTOTextExportVorlagen</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.MigrationDTOZuordnungReportvorlagen</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.benutzer.MigrationDTOBenutzer</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.benutzer.MigrationDTOBenutzerAllgemein</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.benutzer.MigrationDTOBenutzerKompetenz</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.benutzer.MigrationDTOBenutzerMail</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.benutzer.MigrationDTOBenutzergruppe</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.benutzer.MigrationDTOBenutzergruppenKompetenz</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.benutzer.MigrationDTOBenutzergruppenMitglied</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.benutzer.MigrationDTOBenutzerKompetenz</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOBerufskollegAnlagen</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOBerufskollegBerufsebenen1</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOBerufskollegBerufsebenen2</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOBerufskollegBerufsebenen3</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOBerufskollegFachklassen</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOBerufskollegFachklassenKeys</class>
-        <class>de.nrw.schule.svws.db.dto.migration.svws.auth.MigrationDTOCredentials</class>
-        <class>de.nrw.schule.svws.db.dto.migration.svws.auth.MigrationDTOCredentialsLernplattformen</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOEigeneSchule</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAbteilungsKlassen</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAbteilungen</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.berufskolleg.MigrationDTOFachklassen</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.faecher.MigrationDTOFachTeilleistungsarten</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.faecher.MigrationDTOFach</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOJahrgang</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOEigeneSchuleKAoADaten</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.katalog.MigrationDTOKursarten</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOMerkmale</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOSchulformen</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOTeilstandorte</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOSchultexte</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.berufskolleg.MigrationDTOZertifikate</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOEinschulungsartenKatalog</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOEinschulungsartenKatalogKeys</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.erzieher.MigrationDTOErzieherLernplattform</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.erzieher.MigrationDTOErzieherDatenschutz</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.benutzer.MigrationDTOKatalogBenutzerKompetenz</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.benutzer.MigrationDTOKatalogBenutzerKompetenzGruppe</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.benutzer.MigrationDTOProtokollLogin</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.benutzer.MigrationDTOUserGroups</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.benutzer.MigrationDTOUsers</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.berufskolleg.MigrationDTOBeschaeftigungsart</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.berufskolleg.MigrationDTOFachgliederungen</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.berufskolleg.MigrationDTOFachklassen</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.berufskolleg.MigrationDTOKatalogZertifikate</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.berufskolleg.MigrationDTOSchuelerBKAbschluss</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.berufskolleg.MigrationDTOSchuelerBKFach</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.berufskolleg.MigrationDTOSchuelerZuweisung</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.berufskolleg.MigrationDTOZertifikate</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.erzieher.MigrationDTOErzieherDatenschutz</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.erzieher.MigrationDTOErzieherLernplattform</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.erzieher.MigrationDTOErzieherart</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.erzieher.MigrationDTOErzieherfunktion</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.erzieher.MigrationDTOSchuelerErzieherAdresse</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.erzieher.MigrationDTOSchuelerTelefon</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.erzieher.MigrationDTOTelefonArt</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.faecher.MigrationDTOFach</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.faecher.MigrationDTOFachTeilleistungsarten</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.faecher.MigrationDTOFachgruppen</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.faecher.MigrationDTOFaecherKatalog</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.faecher.MigrationDTOFaecherKatalogKeys</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.faecher.MigrationDTOFaecherKatalogSchulformen</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.katalog.MigrationDTOFloskelgruppen</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.katalog.MigrationDTOFloskeln</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAlleFoerderschwerpunkte</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAlleFoerderschwerpunkteSchulformen</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOHerkunft</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schule.MigrationDTOHerkunftKeys</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOHerkunftSchulformen</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOHerkunftsart</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schule.MigrationDTOHerkunftsartKeys</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOHerkunftsartSchulformen</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.gost.MigrationDTOFaecherNichtMoeglicheKombination</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.grundschule.MigrationDTOAnkreuzdaten</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.grundschule.MigrationDTOAnkreuzfloskeln</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.grundschule.MigrationDTOKindergarten</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.grundschule.MigrationDTOSchuelerAnkreuzfloskeln</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.impexp.MigrationDTOEigeneImporte</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.impexp.MigrationDTOEigeneImporteFelder</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.impexp.MigrationDTOEigeneImporteTabellen</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAlleJahrgaenge</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAlleJahrgaengeBezeichnungen</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAlleJahrgaengeKeys</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternAbiturInfos</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternDQRNiveaus</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternDatenart</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternFaecherSortierung</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternFilterFehlendeEintraege</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternFilterFehlendeEintraegeSchild3</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternFilterFeldListe</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternLaender</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternPrfSemesterAbschluss</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternPruefungsOrdnung</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternPruefungsOrdnungOptionen</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternSchuelerImportExport</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternSchuelerStatus</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternSpezialFilterFelder</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternTextExport</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternUnicodeUmwandllung</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternVerfImportFelder</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternVerfImportTabellen</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternZusatzinfos</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOKAoAAnschlussoption</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOKAoABerufsfeld</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOKAoAKategorie</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOKAoAMerkmal</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOKAoASBOEB4</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOKAoAZusatzmerkmal</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.katalog.MigrationDTOAnsprechpartnerAllgemeineAdresse</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.katalog.MigrationDTOFahrschuelerart</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.katalog.MigrationDTOFloskelgruppen</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.katalog.MigrationDTOFloskeln</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.katalog.MigrationDTOHaltestellen</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.katalog.MigrationDTOKatalogAdressart</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.katalog.MigrationDTOKatalogAllgemeineAdresse</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.grundschule.MigrationDTOAnkreuzdaten</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.grundschule.MigrationDTOAnkreuzfloskeln</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.berufskolleg.MigrationDTOBeschaeftigungsart</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.katalog.MigrationDTOKatalogDatenschutz</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.schueler.MigrationDTOEinschulungsart</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.schueler.MigrationDTOTeilleistungsarten</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.schueler.MigrationDTOEntlassarten</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.erzieher.MigrationDTOErzieherart</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.erzieher.MigrationDTOErzieherfunktion</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.katalog.MigrationDTOFahrschuelerart</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.schueler.MigrationDTOFoerderschwerpunkt</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.katalog.MigrationDTOHaltestellen</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.grundschule.MigrationDTOKindergarten</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.lehrer.MigrationDTOLehrer</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.katalog.MigrationDTOKonfession</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.katalog.MigrationDTOKursarten</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.katalog.MigrationDTOOrt</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.katalog.MigrationDTOOrtsteil</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.katalog.MigrationDTOKonfession</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.katalog.MigrationDTOSchuleNRW</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.katalog.MigrationDTOSchulfunktion</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.katalog.MigrationDTOSchwerpunkt</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.schueler.MigrationDTOSportbefreiung</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.erzieher.MigrationDTOTelefonArt</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.katalog.MigrationDTOTextDateien</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.katalog.MigrationDTOVermerkArt</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.berufskolleg.MigrationDTOKatalogZertifikate</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.benutzer.MigrationDTOKatalogBenutzerKompetenz</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.benutzer.MigrationDTOKatalogBenutzerKompetenzGruppe</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.klassen.MigrationDTOKlassen</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.klassen.MigrationDTOKlassenLeitung</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.klassen.MigrationDTOKlassenartenKatalog</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.klassen.MigrationDTOKlassenartenKatalogKeys</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.klassen.MigrationDTOKlassenartenKatalogSchulformen</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.klassen.MigrationDTOKlassenLeitung</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.klassen.MigrationDTOVersetzung</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.kurse.MigrationDTOKurs</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.kurse.MigrationDTOKursLehrer</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.kurse.MigrationDTOKursartenKatalog</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.kurse.MigrationDTOKursartenKatalogKeys</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.kurse.MigrationDTOKursartenKatalogSchulformen</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.kurse.MigrationDTOKurs</class>
-        <class>de.nrw.schule.svws.db.dto.migration.coretypes.MigrationDTOKursFortschreibungsart</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.kurse.MigrationDTOKursLehrer</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.lehrer.MigrationDTOLehrer</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.lehrer.MigrationDTOLehrerAbschnittsdaten</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.lehrer.MigrationDTOLehrerAnrechnungsstunde</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.lehrer.MigrationDTOLehrerDatenschutz</class>
@@ -130,99 +139,95 @@
         <class>de.nrw.schule.svws.db.dto.migration.schild.lehrer.MigrationDTOLehrerFoto</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.lehrer.MigrationDTOLehrerFunktion</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.lehrer.MigrationDTOLehrerLehramt</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.lehrer.MigrationDTOLehrerLehramtFachrichtung</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.lehrer.MigrationDTOLehrerLehramtBefaehigung</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.lehrer.MigrationDTOLehrerLehramtFachrichtung</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.lehrer.MigrationDTOLehrerLernplattform</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.lehrer.MigrationDTOLehrerMehrleistung</class>
-        <class>de.nrw.schule.svws.db.dto.migration.svws.auth.MigrationDTOLernplattformen</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.benutzer.MigrationDTOProtokollLogin</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schule.MigrationDTONationalitaeten</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schule.MigrationDTONationalitaetenKeys</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.gost.MigrationDTOFaecherNichtMoeglicheKombination</class>
-        <class>de.nrw.schule.svws.db.dto.migration.coretypes.MigrationDTONote</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOOrganisationsformenKatalog</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOOrganisationsformenKatalogKeys</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOOrganisationsformenKatalogSchulformen</class>
-        <class>de.nrw.schule.svws.db.dto.migration.coretypes.MigrationDTOPersonalTyp</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.lehrer.MigrationDTOSchulleitung</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.lehrer.MigrationDTOSchulleitungFunktion</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.personengruppen.MigrationDTOPersonengruppen</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.personengruppen.MigrationDTOPersonengruppenPersonen</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schule.MigrationDTOReligion</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schule.MigrationDTOReligionKeys</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.MigrationDTOSchildVerwaltung</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.MigrationDTOSchildAuswahlFilter</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternAbiturInfos</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternDatenart</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternDQRNiveaus</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternFaecherSortierung</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternFilterFehlendeEintraege</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternFilterFehlendeEintraegeSchild3</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternFilterFeldListe</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternSchuelerStatus</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOKAoAAnschlussoption</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOKAoABerufsfeld</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOKAoAKategorie</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOKAoAMerkmal</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOKAoAZusatzmerkmal</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOKAoASBOEB4</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternLaender</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternPrfSemesterAbschluss</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternPruefungsOrdnungOptionen</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternPruefungsOrdnung</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternSchuelerImportExport</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternSpezialFilterFelder</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternTextExport</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternUnicodeUmwandllung</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternVerfImportFelder</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternVerfImportTabellen</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternZusatzinfos</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.schueler.MigrationDTOEinschulungsart</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.schueler.MigrationDTOEntlassarten</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.schueler.MigrationDTOFoerderschwerpunkt</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.schueler.MigrationDTOSchueler</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.schueler.MigrationDTOSchuelerAllgemeineAdresse</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.schueler.MigrationDTOSchuelerAbgaenge</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.schueler.abitur.MigrationDTOSchuelerAbiturFach</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.schueler.abitur.MigrationDTOSchuelerAbitur</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.grundschule.MigrationDTOSchuelerAnkreuzfloskeln</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.berufskolleg.MigrationDTOSchuelerBKAbschluss</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.berufskolleg.MigrationDTOSchuelerBKFach</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.schueler.MigrationDTOSchuelerAllgemeineAdresse</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.schueler.MigrationDTOSchuelerDatenschutz</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.schueler.MigrationDTOSchuelerTeilleistung</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.erzieher.MigrationDTOSchuelerErzieherAdresse</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.schueler.MigrationDTOSchuelerFehlstunden</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.schueler.fhr.MigrationDTOSchuelerFHR</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.schueler.fhr.MigrationDTOSchuelerFHRFach</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.schueler.MigrationDTOSchuelerFoerderempfehlung</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.schueler.MigrationDTOSchuelerFoto</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.schueler.MigrationDTOSchuelerGrundschuldaten</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.schueler.MigrationDTOSchuelerKAoADaten</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.schueler.MigrationDTOSchuelerPSFachBemerkungen</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.schueler.MigrationDTOSchuelerLeistungsdaten</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.schueler.MigrationDTOSchuelerLernabschnittsdaten</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.schueler.MigrationDTOSchuelerLernplattform</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.MigrationDTOSchuelerIndividuelleGruppe</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.MigrationDTOSchuelerIndividuelleGruppeSchueler</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.schueler.MigrationDTOSchuelerMerkmale</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.MigrationDTOSchuelerReportvorlagen</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.schueler.MigrationDTOSchuelerPSFachBemerkungen</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.schueler.MigrationDTOSchuelerSprachenfolge</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.schueler.MigrationDTOSchuelerSprachpruefungen</class>
-        <class>de.nrw.schule.svws.db.dto.migration.coretypes.MigrationDTOSchuelerStatus</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.erzieher.MigrationDTOSchuelerTelefon</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.schueler.MigrationDTOSchuelerTeilleistung</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.schueler.MigrationDTOSchuelerVermerke</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.MigrationDTOSchuelerWiedervorlage</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.schueler.MigrationDTOSchuelerZP10</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.berufskolleg.MigrationDTOSchuelerZuweisung</class>
-        <class>de.nrw.schule.svws.db.dto.migration.svws.auth.MigrationDTOSchuleCredentials</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.schueler.MigrationDTOSportbefreiung</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.schueler.MigrationDTOTeilleistungsarten</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.schueler.abitur.MigrationDTOSchuelerAbitur</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.schueler.abitur.MigrationDTOSchuelerAbiturFach</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.schueler.fhr.MigrationDTOSchuelerFHR</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.schueler.fhr.MigrationDTOSchuelerFHRFach</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAbteilungen</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAbteilungsKlassen</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAlleFoerderschwerpunkte</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAlleFoerderschwerpunkteSchulformen</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAlleJahrgaenge</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAlleJahrgaengeBezeichnungen</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAlleJahrgaengeKeys</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAlleSchulformen</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOSchulabschluesse_Allgemeinbildend</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOSchulabschluesse_Berufsbildend</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAlleSchulgliederungen</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAlleSchulgliederungenSchulformen</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAlleSchulgliederungenAbschluesseAllgmeinbildend</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAlleSchulgliederungenAbschluesseBerufsbildend</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAlleSchulgliederungenSchulformen</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAllgemeineMerkmaleKatalog</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAllgemeineMerkmaleKatalogKeys</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAllgemeineMerkmaleKatalogSchulformen</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOBerufskollegAnlagen</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOBerufskollegBerufsebenen1</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOBerufskollegBerufsebenen2</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOBerufskollegBerufsebenen3</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOBerufskollegFachklassen</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOBerufskollegFachklassenKeys</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOEigeneSchule</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOEigeneSchuleKAoADaten</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOEinschulungsartenKatalog</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOEinschulungsartenKatalogKeys</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOHerkunft</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOHerkunftSchulformen</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOHerkunftsart</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOHerkunftsartSchulformen</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOJahrgang</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOMerkmale</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOOrganisationsformenKatalog</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOOrganisationsformenKatalogKeys</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOOrganisationsformenKatalogSchulformen</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOSchulabschluesse_Allgemeinbildend</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOSchulabschluesse_Berufsbildend</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOSchulformen</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOSchuljahresabschnitte</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.lehrer.MigrationDTOSchulleitung</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.lehrer.MigrationDTOSchulleitungFunktion</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOSchultexte</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOStundentafel</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOStundentafelFaecher</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOTeilstandorte</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schule.MigrationDTOHerkunftKeys</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schule.MigrationDTOHerkunftsartKeys</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schule.MigrationDTONationalitaeten</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schule.MigrationDTONationalitaetenKeys</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schule.MigrationDTOReligion</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schule.MigrationDTOReligionKeys</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schule.MigrationDTOVerkehrssprachen</class>
         <class>de.nrw.schule.svws.db.dto.migration.schulver.MigrationDTOSchulverDBS</class>
         <class>de.nrw.schule.svws.db.dto.migration.schulver.MigrationDTOSchulverSchultraeger</class>
         <class>de.nrw.schule.svws.db.dto.migration.schulver.MigrationDTOSchulverWeitereSF</class>
+        <class>de.nrw.schule.svws.db.dto.migration.statkue.MigrationDTOSVWSSprachpruefungNiveaus</class>
         <class>de.nrw.schule.svws.db.dto.migration.statkue.MigrationDTOStatkueAbgangsart</class>
         <class>de.nrw.schule.svws.db.dto.migration.statkue.MigrationDTOStatkueAndereGrundschulen</class>
         <class>de.nrw.schule.svws.db.dto.migration.statkue.MigrationDTOStatkueBilingual</class>
@@ -230,8 +235,8 @@
         <class>de.nrw.schule.svws.db.dto.migration.statkue.MigrationDTOStatkueLehrerAnrechnung</class>
         <class>de.nrw.schule.svws.db.dto.migration.statkue.MigrationDTOStatkueLehrerBeschaeftigungsart</class>
         <class>de.nrw.schule.svws.db.dto.migration.statkue.MigrationDTOStatkueLehrerEinsatzstatus</class>
-        <class>de.nrw.schule.svws.db.dto.migration.statkue.MigrationDTOStatkueLehrerFachrichtungAnerkennung</class>
         <class>de.nrw.schule.svws.db.dto.migration.statkue.MigrationDTOStatkueLehrerFachrichtung</class>
+        <class>de.nrw.schule.svws.db.dto.migration.statkue.MigrationDTOStatkueLehrerFachrichtungAnerkennung</class>
         <class>de.nrw.schule.svws.db.dto.migration.statkue.MigrationDTOStatkueLehrerLehramt</class>
         <class>de.nrw.schule.svws.db.dto.migration.statkue.MigrationDTOStatkueLehrerLehramtAnerkennung</class>
         <class>de.nrw.schule.svws.db.dto.migration.statkue.MigrationDTOStatkueLehrerLehrbefaehigung</class>
@@ -245,68 +250,25 @@
         <class>de.nrw.schule.svws.db.dto.migration.statkue.MigrationDTOStatkueSchuelerErsteSchulformSekI</class>
         <class>de.nrw.schule.svws.db.dto.migration.statkue.MigrationDTOStatkueSchuelerKindergartenbesuch</class>
         <class>de.nrw.schule.svws.db.dto.migration.statkue.MigrationDTOStatkueSchuelerUebergangsempfehlung5Jg</class>
-        <class>de.nrw.schule.svws.db.dto.migration.statkue.MigrationDTOSVWSSprachpruefungNiveaus</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOStundentafel</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOStundentafelFaecher</class>
+        <class>de.nrw.schule.svws.db.dto.migration.svws.auth.MigrationDTOCredentials</class>
+        <class>de.nrw.schule.svws.db.dto.migration.svws.auth.MigrationDTOCredentialsLernplattformen</class>
+        <class>de.nrw.schule.svws.db.dto.migration.svws.auth.MigrationDTOLernplattformen</class>
+        <class>de.nrw.schule.svws.db.dto.migration.svws.auth.MigrationDTOSchuleCredentials</class>
         <class>de.nrw.schule.svws.db.dto.migration.svws.client.MigrationDTOClientKonfigurationBenutzer</class>
         <class>de.nrw.schule.svws.db.dto.migration.svws.client.MigrationDTOClientKonfigurationGlobal</class>
         <class>de.nrw.schule.svws.db.dto.migration.svws.db.MigrationDTOCoreTypeVersion</class>
         <class>de.nrw.schule.svws.db.dto.migration.svws.db.MigrationDTODBAutoInkremente</class>
         <class>de.nrw.schule.svws.db.dto.migration.svws.db.MigrationDTODBVersion</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.MigrationDTOTextExportVorlagen</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.benutzer.MigrationDTOUserGroups</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.benutzer.MigrationDTOUsers</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schule.MigrationDTOVerkehrssprachen</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.klassen.MigrationDTOVersetzung</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.MigrationDTOZuordnungReportvorlagen</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.katalog.DTOAnsprechpartnerAllgemeineAdresse</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOAllgemeineMerkmaleKatalog</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOAllgemeineMerkmaleKatalogKeys</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOAllgemeineMerkmaleKatalogSchulformen</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.benutzer.DTOBenutzer</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.benutzer.DTOBenutzerAllgemein</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.benutzer.DTOBenutzerMail</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.benutzer.DTOBenutzergruppe</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.benutzer.DTOBenutzergruppenKompetenz</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.benutzer.DTOBenutzergruppenMitglied</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.benutzer.DTOBenutzerKompetenz</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOBerufskollegAnlagen</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOBerufskollegBerufsebenen1</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOBerufskollegBerufsebenen2</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOBerufskollegBerufsebenen3</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOBerufskollegFachklassen</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOBerufskollegFachklassenKeys</class>
-        <class>de.nrw.schule.svws.db.dto.current.svws.auth.DTOCredentials</class>
-        <class>de.nrw.schule.svws.db.dto.current.svws.auth.DTOCredentialsLernplattformen</class>
-        <class>de.nrw.schule.svws.db.dto.current.svws.dav.DTODavRessourceCollection</class>
-        <class>de.nrw.schule.svws.db.dto.current.svws.dav.DTODavRessource</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOEigeneSchule</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOAbteilungsKlassen</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOAbteilungen</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.berufskolleg.DTOFachklassen</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.faecher.DTOFachTeilleistungsarten</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.faecher.DTOFach</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOJahrgang</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOEigeneSchuleKAoADaten</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.katalog.DTOKursarten</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOMerkmale</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOSchulformen</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOTeilstandorte</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOSchultexte</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.berufskolleg.DTOZertifikate</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOEinschulungsartenKatalog</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOEinschulungsartenKatalogKeys</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.erzieher.DTOErzieherLernplattform</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.erzieher.DTOErzieherDatenschutz</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.berufskolleg.DTOFachgliederungen</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.faecher.DTOFachgruppen</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.faecher.DTOFaecherKatalog</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.faecher.DTOFaecherKatalogKeys</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.faecher.DTOFaecherKatalogSchulformen</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.katalog.DTOFloskelgruppen</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.katalog.DTOFloskeln</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOAlleFoerderschwerpunkte</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOAlleFoerderschwerpunkteSchulformen</class>
+        <class>de.nrw.schule.svws.db.dto.current.coretypes.DTOKursFortschreibungsart</class>
+        <class>de.nrw.schule.svws.db.dto.current.coretypes.DTONote</class>
+        <class>de.nrw.schule.svws.db.dto.current.coretypes.DTOPersonalTyp</class>
+        <class>de.nrw.schule.svws.db.dto.current.coretypes.DTOSchuelerStatus</class>
+        <class>de.nrw.schule.svws.db.dto.current.gost.DTOGostJahrgangBeratungslehrer</class>
+        <class>de.nrw.schule.svws.db.dto.current.gost.DTOGostJahrgangFachkombinationen</class>
+        <class>de.nrw.schule.svws.db.dto.current.gost.DTOGostJahrgangFaecher</class>
+        <class>de.nrw.schule.svws.db.dto.current.gost.DTOGostJahrgangsdaten</class>
+        <class>de.nrw.schule.svws.db.dto.current.gost.DTOGostSchueler</class>
+        <class>de.nrw.schule.svws.db.dto.current.gost.DTOGostSchuelerFachbelegungen</class>
         <class>de.nrw.schule.svws.db.dto.current.gost.kursblockung.DTOGostBlockung</class>
         <class>de.nrw.schule.svws.db.dto.current.gost.kursblockung.DTOGostBlockungKurs</class>
         <class>de.nrw.schule.svws.db.dto.current.gost.kursblockung.DTOGostBlockungKurslehrer</class>
@@ -316,69 +278,109 @@
         <class>de.nrw.schule.svws.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergebnis</class>
         <class>de.nrw.schule.svws.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergebnisKursSchiene</class>
         <class>de.nrw.schule.svws.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergebnisKursSchueler</class>
-        <class>de.nrw.schule.svws.db.dto.current.gost.DTOGostJahrgangBeratungslehrer</class>
-        <class>de.nrw.schule.svws.db.dto.current.gost.DTOGostJahrgangFaecher</class>
-        <class>de.nrw.schule.svws.db.dto.current.gost.DTOGostJahrgangsdaten</class>
-        <class>de.nrw.schule.svws.db.dto.current.gost.DTOGostJahrgangFachkombinationen</class>
-        <class>de.nrw.schule.svws.db.dto.current.gost.DTOGostSchueler</class>
-        <class>de.nrw.schule.svws.db.dto.current.gost.DTOGostSchuelerFachbelegungen</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOHerkunft</class>
-        <class>de.nrw.schule.svws.db.dto.current.schule.DTOHerkunftKeys</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOHerkunftSchulformen</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOHerkunftsart</class>
-        <class>de.nrw.schule.svws.db.dto.current.schule.DTOHerkunftsartKeys</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOHerkunftsartSchulformen</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.DTOSchildAuswahlFilter</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.DTOSchildVerwaltung</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.DTOSchuelerIndividuelleGruppe</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.DTOSchuelerIndividuelleGruppeSchueler</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.DTOSchuelerReportvorlagen</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.DTOSchuelerWiedervorlage</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.DTOTextExportVorlagen</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.DTOZuordnungReportvorlagen</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.benutzer.DTOBenutzer</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.benutzer.DTOBenutzerAllgemein</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.benutzer.DTOBenutzerKompetenz</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.benutzer.DTOBenutzerMail</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.benutzer.DTOBenutzergruppe</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.benutzer.DTOBenutzergruppenKompetenz</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.benutzer.DTOBenutzergruppenMitglied</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.benutzer.DTOKatalogBenutzerKompetenz</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.benutzer.DTOKatalogBenutzerKompetenzGruppe</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.benutzer.DTOProtokollLogin</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.berufskolleg.DTOBeschaeftigungsart</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.berufskolleg.DTOFachgliederungen</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.berufskolleg.DTOFachklassen</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.berufskolleg.DTOKatalogZertifikate</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.berufskolleg.DTOSchuelerBKAbschluss</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.berufskolleg.DTOSchuelerBKFach</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.berufskolleg.DTOSchuelerZuweisung</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.berufskolleg.DTOZertifikate</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.erzieher.DTOErzieherDatenschutz</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.erzieher.DTOErzieherLernplattform</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.erzieher.DTOErzieherart</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.erzieher.DTOErzieherfunktion</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.erzieher.DTOSchuelerErzieherAdresse</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.erzieher.DTOSchuelerTelefon</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.erzieher.DTOTelefonArt</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.faecher.DTOFach</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.faecher.DTOFachTeilleistungsarten</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.faecher.DTOFachgruppen</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.faecher.DTOFaecherKatalog</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.faecher.DTOFaecherKatalogKeys</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.faecher.DTOFaecherKatalogSchulformen</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.gost.DTOFaecherNichtMoeglicheKombination</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.grundschule.DTOAnkreuzdaten</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.grundschule.DTOAnkreuzfloskeln</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.grundschule.DTOKindergarten</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.grundschule.DTOSchuelerAnkreuzfloskeln</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.impexp.DTOEigeneImporte</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.impexp.DTOEigeneImporteFelder</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.impexp.DTOEigeneImporteTabellen</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOAlleJahrgaenge</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOAlleJahrgaengeBezeichnungen</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOAlleJahrgaengeKeys</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternAbiturInfos</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternDQRNiveaus</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternDatenart</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternFaecherSortierung</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternFilterFehlendeEintraege</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternFilterFehlendeEintraegeSchild3</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternFilterFeldListe</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternLaender</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternPrfSemesterAbschluss</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternPruefungsOrdnung</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternPruefungsOrdnungOptionen</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternSchuelerImportExport</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternSchuelerStatus</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternSpezialFilterFelder</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternTextExport</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternUnicodeUmwandllung</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternVerfImportFelder</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternVerfImportTabellen</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternZusatzinfos</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOKAoAAnschlussoption</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOKAoABerufsfeld</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOKAoAKategorie</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOKAoAMerkmal</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOKAoASBOEB4</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOKAoAZusatzmerkmal</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.katalog.DTOAnsprechpartnerAllgemeineAdresse</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.katalog.DTOFahrschuelerart</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.katalog.DTOFloskelgruppen</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.katalog.DTOFloskeln</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.katalog.DTOHaltestellen</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.katalog.DTOKatalogAdressart</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.katalog.DTOKatalogAllgemeineAdresse</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.grundschule.DTOAnkreuzdaten</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.grundschule.DTOAnkreuzfloskeln</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.berufskolleg.DTOBeschaeftigungsart</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.katalog.DTOKatalogAufsichtsbereich</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.katalog.DTOKatalogDatenschutz</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.schueler.DTOEinschulungsart</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.schueler.DTOTeilleistungsarten</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.schueler.DTOEntlassarten</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.erzieher.DTOErzieherart</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.erzieher.DTOErzieherfunktion</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.katalog.DTOFahrschuelerart</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.schueler.DTOFoerderschwerpunkt</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.katalog.DTOHaltestellen</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.grundschule.DTOKindergarten</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.lehrer.DTOLehrer</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.katalog.DTOKatalogRaum</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.katalog.DTOKonfession</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.katalog.DTOKursarten</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.katalog.DTOOrt</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.katalog.DTOOrtsteil</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.katalog.DTOKonfession</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.katalog.DTOSchuleNRW</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.katalog.DTOSchulfunktion</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.katalog.DTOSchwerpunkt</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSportbefreiung</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.erzieher.DTOTelefonArt</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.katalog.DTOTextDateien</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.katalog.DTOVermerkArt</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.berufskolleg.DTOKatalogZertifikate</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.katalog.DTOKatalogAufsichtsbereich</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.stundenplan.DTOKatalogPausenzeit</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.katalog.DTOKatalogRaum</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.stundenplan.DTOKatalogZeitraster</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.benutzer.DTOKatalogBenutzerKompetenz</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.benutzer.DTOKatalogBenutzerKompetenzGruppe</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.klassen.DTOKlassen</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.klassen.DTOKlassenLeitung</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.klassen.DTOKlassenartenKatalog</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.klassen.DTOKlassenartenKatalogKeys</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.klassen.DTOKlassenartenKatalogSchulformen</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.klassen.DTOKlassenLeitung</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.kurse.DTOKurs</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.kurse.DTOKursLehrer</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.kurse.DTOKursSchueler</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.kurse.DTOKursartenKatalog</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.kurse.DTOKursartenKatalogKeys</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.kurse.DTOKursartenKatalogSchulformen</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.kurse.DTOKurs</class>
-        <class>de.nrw.schule.svws.db.dto.current.coretypes.DTOKursFortschreibungsart</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.kurse.DTOKursLehrer</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.lehrer.DTOLehrer</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.lehrer.DTOLehrerAbschnittsdaten</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.lehrer.DTOLehrerAnrechnungsstunde</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.lehrer.DTOLehrerDatenschutz</class>
@@ -386,99 +388,107 @@
         <class>de.nrw.schule.svws.db.dto.current.schild.lehrer.DTOLehrerFoto</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.lehrer.DTOLehrerFunktion</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.lehrer.DTOLehrerLehramt</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.lehrer.DTOLehrerLehramtFachrichtung</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.lehrer.DTOLehrerLehramtBefaehigung</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.lehrer.DTOLehrerLehramtFachrichtung</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.lehrer.DTOLehrerLernplattform</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.lehrer.DTOLehrerMehrleistung</class>
-        <class>de.nrw.schule.svws.db.dto.current.svws.auth.DTOLernplattformen</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.benutzer.DTOProtokollLogin</class>
-        <class>de.nrw.schule.svws.db.dto.current.schule.DTONationalitaeten</class>
-        <class>de.nrw.schule.svws.db.dto.current.schule.DTONationalitaetenKeys</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.gost.DTOFaecherNichtMoeglicheKombination</class>
-        <class>de.nrw.schule.svws.db.dto.current.coretypes.DTONote</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOOrganisationsformenKatalog</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOOrganisationsformenKatalogKeys</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOOrganisationsformenKatalogSchulformen</class>
-        <class>de.nrw.schule.svws.db.dto.current.coretypes.DTOPersonalTyp</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.lehrer.DTOSchulleitung</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.lehrer.DTOSchulleitungFunktion</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.personengruppen.DTOPersonengruppen</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.personengruppen.DTOPersonengruppenPersonen</class>
-        <class>de.nrw.schule.svws.db.dto.current.schule.DTOReligion</class>
-        <class>de.nrw.schule.svws.db.dto.current.schule.DTOReligionKeys</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.DTOSchildVerwaltung</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.DTOSchildAuswahlFilter</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternAbiturInfos</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternDatenart</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternDQRNiveaus</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternFaecherSortierung</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternFilterFehlendeEintraege</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternFilterFehlendeEintraegeSchild3</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternFilterFeldListe</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternSchuelerStatus</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOKAoAAnschlussoption</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOKAoABerufsfeld</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOKAoAKategorie</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOKAoAMerkmal</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOKAoAZusatzmerkmal</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOKAoASBOEB4</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternLaender</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternPrfSemesterAbschluss</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternPruefungsOrdnungOptionen</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternPruefungsOrdnung</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternSchuelerImportExport</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternSpezialFilterFelder</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternTextExport</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternUnicodeUmwandllung</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternVerfImportFelder</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternVerfImportTabellen</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternZusatzinfos</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.schueler.DTOEinschulungsart</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.schueler.DTOEntlassarten</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.schueler.DTOFoerderschwerpunkt</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchueler</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchuelerAllgemeineAdresse</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchuelerAbgaenge</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.schueler.abitur.DTOSchuelerAbiturFach</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.schueler.abitur.DTOSchuelerAbitur</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.grundschule.DTOSchuelerAnkreuzfloskeln</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.berufskolleg.DTOSchuelerBKAbschluss</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.berufskolleg.DTOSchuelerBKFach</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchuelerAllgemeineAdresse</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchuelerDatenschutz</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchuelerTeilleistung</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.erzieher.DTOSchuelerErzieherAdresse</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchuelerFehlstunden</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.schueler.fhr.DTOSchuelerFHR</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.schueler.fhr.DTOSchuelerFHRFach</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchuelerFoerderempfehlung</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchuelerFoto</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchuelerGrundschuldaten</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchuelerKAoADaten</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchuelerPSFachBemerkungen</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchuelerLernplattform</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.DTOSchuelerIndividuelleGruppe</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.DTOSchuelerIndividuelleGruppeSchueler</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchuelerMerkmale</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.DTOSchuelerReportvorlagen</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchuelerPSFachBemerkungen</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchuelerSprachenfolge</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchuelerSprachpruefungen</class>
-        <class>de.nrw.schule.svws.db.dto.current.coretypes.DTOSchuelerStatus</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.erzieher.DTOSchuelerTelefon</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchuelerTeilleistung</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchuelerVermerke</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.DTOSchuelerWiedervorlage</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchuelerZP10</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.berufskolleg.DTOSchuelerZuweisung</class>
-        <class>de.nrw.schule.svws.db.dto.current.svws.auth.DTOSchuleCredentials</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSportbefreiung</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.schueler.DTOTeilleistungsarten</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.schueler.abitur.DTOSchuelerAbitur</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.schueler.abitur.DTOSchuelerAbiturFach</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.schueler.fhr.DTOSchuelerFHR</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.schueler.fhr.DTOSchuelerFHRFach</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOAbteilungen</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOAbteilungsKlassen</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOAlleFoerderschwerpunkte</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOAlleFoerderschwerpunkteSchulformen</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOAlleJahrgaenge</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOAlleJahrgaengeBezeichnungen</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOAlleJahrgaengeKeys</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOAlleSchulformen</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOSchulabschluesse_Allgemeinbildend</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOSchulabschluesse_Berufsbildend</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOAlleSchulgliederungen</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOAlleSchulgliederungenSchulformen</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOAlleSchulgliederungenAbschluesseAllgmeinbildend</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOAlleSchulgliederungenAbschluesseBerufsbildend</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOAlleSchulgliederungenSchulformen</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOAllgemeineMerkmaleKatalog</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOAllgemeineMerkmaleKatalogKeys</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOAllgemeineMerkmaleKatalogSchulformen</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOBerufskollegAnlagen</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOBerufskollegBerufsebenen1</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOBerufskollegBerufsebenen2</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOBerufskollegBerufsebenen3</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOBerufskollegFachklassen</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOBerufskollegFachklassenKeys</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOEigeneSchule</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOEigeneSchuleKAoADaten</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOEinschulungsartenKatalog</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOEinschulungsartenKatalogKeys</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOHerkunft</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOHerkunftSchulformen</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOHerkunftsart</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOHerkunftsartSchulformen</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOJahrgang</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOMerkmale</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOOrganisationsformenKatalog</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOOrganisationsformenKatalogKeys</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOOrganisationsformenKatalogSchulformen</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOSchulabschluesse_Allgemeinbildend</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOSchulabschluesse_Berufsbildend</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOSchulformen</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOSchuljahresabschnitte</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.lehrer.DTOSchulleitung</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.lehrer.DTOSchulleitungFunktion</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOSchultexte</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOStundentafel</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOStundentafelFaecher</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOTeilstandorte</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.stundenplan.DTOKatalogPausenzeit</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.stundenplan.DTOKatalogZeitraster</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.stundenplan.DTOStundenplan</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.stundenplan.DTOStundenplanAufsichtsbereich</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.stundenplan.DTOStundenplanPausenaufsichten</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.stundenplan.DTOStundenplanPausenaufsichtenBereiche</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.stundenplan.DTOStundenplanPausenzeit</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.stundenplan.DTOStundenplanRaum</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.stundenplan.DTOStundenplanUnterricht</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.stundenplan.DTOStundenplanUnterrichtLehrer</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.stundenplan.DTOStundenplanUnterrichtRaum</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.stundenplan.DTOStundenplanZeitraster</class>
+        <class>de.nrw.schule.svws.db.dto.current.schule.DTOHerkunftKeys</class>
+        <class>de.nrw.schule.svws.db.dto.current.schule.DTOHerkunftsartKeys</class>
+        <class>de.nrw.schule.svws.db.dto.current.schule.DTONationalitaeten</class>
+        <class>de.nrw.schule.svws.db.dto.current.schule.DTONationalitaetenKeys</class>
+        <class>de.nrw.schule.svws.db.dto.current.schule.DTOReligion</class>
+        <class>de.nrw.schule.svws.db.dto.current.schule.DTOReligionKeys</class>
+        <class>de.nrw.schule.svws.db.dto.current.schule.DTOVerkehrssprachen</class>
         <class>de.nrw.schule.svws.db.dto.current.schulver.DTOSchulverDBS</class>
         <class>de.nrw.schule.svws.db.dto.current.schulver.DTOSchulverSchultraeger</class>
         <class>de.nrw.schule.svws.db.dto.current.schulver.DTOSchulverWeitereSF</class>
+        <class>de.nrw.schule.svws.db.dto.current.statkue.DTOSVWSSprachpruefungNiveaus</class>
         <class>de.nrw.schule.svws.db.dto.current.statkue.DTOStatkueAbgangsart</class>
         <class>de.nrw.schule.svws.db.dto.current.statkue.DTOStatkueAndereGrundschulen</class>
         <class>de.nrw.schule.svws.db.dto.current.statkue.DTOStatkueBilingual</class>
@@ -486,8 +496,8 @@
         <class>de.nrw.schule.svws.db.dto.current.statkue.DTOStatkueLehrerAnrechnung</class>
         <class>de.nrw.schule.svws.db.dto.current.statkue.DTOStatkueLehrerBeschaeftigungsart</class>
         <class>de.nrw.schule.svws.db.dto.current.statkue.DTOStatkueLehrerEinsatzstatus</class>
-        <class>de.nrw.schule.svws.db.dto.current.statkue.DTOStatkueLehrerFachrichtungAnerkennung</class>
         <class>de.nrw.schule.svws.db.dto.current.statkue.DTOStatkueLehrerFachrichtung</class>
+        <class>de.nrw.schule.svws.db.dto.current.statkue.DTOStatkueLehrerFachrichtungAnerkennung</class>
         <class>de.nrw.schule.svws.db.dto.current.statkue.DTOStatkueLehrerLehramt</class>
         <class>de.nrw.schule.svws.db.dto.current.statkue.DTOStatkueLehrerLehramtAnerkennung</class>
         <class>de.nrw.schule.svws.db.dto.current.statkue.DTOStatkueLehrerLehrbefaehigung</class>
@@ -501,27 +511,17 @@
         <class>de.nrw.schule.svws.db.dto.current.statkue.DTOStatkueSchuelerErsteSchulformSekI</class>
         <class>de.nrw.schule.svws.db.dto.current.statkue.DTOStatkueSchuelerKindergartenbesuch</class>
         <class>de.nrw.schule.svws.db.dto.current.statkue.DTOStatkueSchuelerUebergangsempfehlung5Jg</class>
-        <class>de.nrw.schule.svws.db.dto.current.statkue.DTOSVWSSprachpruefungNiveaus</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.stundenplan.DTOStundenplan</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.stundenplan.DTOStundenplanAufsichtsbereich</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.stundenplan.DTOStundenplanPausenaufsichten</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.stundenplan.DTOStundenplanPausenaufsichtenBereiche</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.stundenplan.DTOStundenplanPausenzeit</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.stundenplan.DTOStundenplanRaum</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.stundenplan.DTOStundenplanUnterricht</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.stundenplan.DTOStundenplanUnterrichtLehrer</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.stundenplan.DTOStundenplanUnterrichtRaum</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.stundenplan.DTOStundenplanZeitraster</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOStundentafel</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOStundentafelFaecher</class>
+        <class>de.nrw.schule.svws.db.dto.current.svws.auth.DTOCredentials</class>
+        <class>de.nrw.schule.svws.db.dto.current.svws.auth.DTOCredentialsLernplattformen</class>
+        <class>de.nrw.schule.svws.db.dto.current.svws.auth.DTOLernplattformen</class>
+        <class>de.nrw.schule.svws.db.dto.current.svws.auth.DTOSchuleCredentials</class>
         <class>de.nrw.schule.svws.db.dto.current.svws.client.DTOClientKonfigurationBenutzer</class>
         <class>de.nrw.schule.svws.db.dto.current.svws.client.DTOClientKonfigurationGlobal</class>
+        <class>de.nrw.schule.svws.db.dto.current.svws.dav.DTODavRessource</class>
+        <class>de.nrw.schule.svws.db.dto.current.svws.dav.DTODavRessourceCollection</class>
         <class>de.nrw.schule.svws.db.dto.current.svws.db.DTOCoreTypeVersion</class>
         <class>de.nrw.schule.svws.db.dto.current.svws.db.DTODBAutoInkremente</class>
         <class>de.nrw.schule.svws.db.dto.current.svws.db.DTODBVersion</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.DTOTextExportVorlagen</class>
-        <class>de.nrw.schule.svws.db.dto.current.schule.DTOVerkehrssprachen</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.DTOZuordnungReportvorlagen</class>
         <class>de.nrw.schule.svws.db.dto.current.views.schildintern.DTOSchildInternBerufsebenen</class>
         <class>de.nrw.schule.svws.db.dto.current.views.schildintern.DTOSchildInternFachgruppen</class>
         <class>de.nrw.schule.svws.db.dto.current.views.schildintern.DTOSchildInternNote</class>
@@ -548,54 +548,16 @@
         <class>de.nrw.schule.svws.db.dto.current.views.benutzer.DTOViewBenutzerKompetenz</class>
         <class>de.nrw.schule.svws.db.dto.current.views.benutzer.DTOViewBenutzerdetails</class>
         <class>de.nrw.schule.svws.db.dto.current.views.gost.DTOViewGostSchuelerAbiturjahrgang</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.katalog.Rev8DTOAnsprechpartnerAllgemeineAdresse</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOAllgemeineMerkmaleKatalog</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOAllgemeineMerkmaleKatalogKeys</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOAllgemeineMerkmaleKatalogSchulformen</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.benutzer.Rev8DTOBenutzer</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.benutzer.Rev8DTOBenutzerAllgemein</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.benutzer.Rev8DTOBenutzerMail</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.benutzer.Rev8DTOBenutzergruppe</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.benutzer.Rev8DTOBenutzergruppenKompetenz</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.benutzer.Rev8DTOBenutzergruppenMitglied</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.benutzer.Rev8DTOBenutzerKompetenz</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOBerufskollegAnlagen</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOBerufskollegBerufsebenen1</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOBerufskollegBerufsebenen2</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOBerufskollegBerufsebenen3</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOBerufskollegFachklassen</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOBerufskollegFachklassenKeys</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.svws.auth.Rev8DTOCredentials</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.svws.auth.Rev8DTOCredentialsLernplattformen</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.svws.dav.Rev8DTODavRessourceCollection</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.svws.dav.Rev8DTODavRessource</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOEigeneSchule</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOAbteilungsKlassen</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOAbteilungen</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.berufskolleg.Rev8DTOFachklassen</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.faecher.Rev8DTOFachTeilleistungsarten</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.faecher.Rev8DTOFach</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOJahrgang</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOEigeneSchuleKAoADaten</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.katalog.Rev8DTOKursarten</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOMerkmale</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOSchulformen</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOTeilstandorte</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOSchultexte</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.berufskolleg.Rev8DTOZertifikate</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOEinschulungsartenKatalog</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOEinschulungsartenKatalogKeys</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.erzieher.Rev8DTOErzieherLernplattform</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.erzieher.Rev8DTOErzieherDatenschutz</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.berufskolleg.Rev8DTOFachgliederungen</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.faecher.Rev8DTOFachgruppen</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.faecher.Rev8DTOFaecherKatalog</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.faecher.Rev8DTOFaecherKatalogKeys</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.faecher.Rev8DTOFaecherKatalogSchulformen</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.katalog.Rev8DTOFloskelgruppen</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.katalog.Rev8DTOFloskeln</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOAlleFoerderschwerpunkte</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOAlleFoerderschwerpunkteSchulformen</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.coretypes.Rev8DTOKursFortschreibungsart</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.coretypes.Rev8DTONote</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.coretypes.Rev8DTOPersonalTyp</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.coretypes.Rev8DTOSchuelerStatus</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.gost.Rev8DTOGostJahrgangBeratungslehrer</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.gost.Rev8DTOGostJahrgangFachkombinationen</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.gost.Rev8DTOGostJahrgangFaecher</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.gost.Rev8DTOGostJahrgangsdaten</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.gost.Rev8DTOGostSchueler</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.gost.Rev8DTOGostSchuelerFachbelegungen</class>
         <class>de.nrw.schule.svws.db.dto.rev8.gost.kursblockung.Rev8DTOGostBlockung</class>
         <class>de.nrw.schule.svws.db.dto.rev8.gost.kursblockung.Rev8DTOGostBlockungKurs</class>
         <class>de.nrw.schule.svws.db.dto.rev8.gost.kursblockung.Rev8DTOGostBlockungKurslehrer</class>
@@ -605,69 +567,109 @@
         <class>de.nrw.schule.svws.db.dto.rev8.gost.kursblockung.Rev8DTOGostBlockungZwischenergebnis</class>
         <class>de.nrw.schule.svws.db.dto.rev8.gost.kursblockung.Rev8DTOGostBlockungZwischenergebnisKursSchiene</class>
         <class>de.nrw.schule.svws.db.dto.rev8.gost.kursblockung.Rev8DTOGostBlockungZwischenergebnisKursSchueler</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.gost.Rev8DTOGostJahrgangBeratungslehrer</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.gost.Rev8DTOGostJahrgangFaecher</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.gost.Rev8DTOGostJahrgangsdaten</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.gost.Rev8DTOGostJahrgangFachkombinationen</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.gost.Rev8DTOGostSchueler</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.gost.Rev8DTOGostSchuelerFachbelegungen</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOHerkunft</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schule.Rev8DTOHerkunftKeys</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOHerkunftSchulformen</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOHerkunftsart</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schule.Rev8DTOHerkunftsartKeys</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOHerkunftsartSchulformen</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.Rev8DTOSchildAuswahlFilter</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.Rev8DTOSchildVerwaltung</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.Rev8DTOSchuelerIndividuelleGruppe</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.Rev8DTOSchuelerIndividuelleGruppeSchueler</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.Rev8DTOSchuelerReportvorlagen</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.Rev8DTOSchuelerWiedervorlage</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.Rev8DTOTextExportVorlagen</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.Rev8DTOZuordnungReportvorlagen</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.benutzer.Rev8DTOBenutzer</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.benutzer.Rev8DTOBenutzerAllgemein</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.benutzer.Rev8DTOBenutzerKompetenz</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.benutzer.Rev8DTOBenutzerMail</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.benutzer.Rev8DTOBenutzergruppe</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.benutzer.Rev8DTOBenutzergruppenKompetenz</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.benutzer.Rev8DTOBenutzergruppenMitglied</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.benutzer.Rev8DTOKatalogBenutzerKompetenz</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.benutzer.Rev8DTOKatalogBenutzerKompetenzGruppe</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.benutzer.Rev8DTOProtokollLogin</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.berufskolleg.Rev8DTOBeschaeftigungsart</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.berufskolleg.Rev8DTOFachgliederungen</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.berufskolleg.Rev8DTOFachklassen</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.berufskolleg.Rev8DTOKatalogZertifikate</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.berufskolleg.Rev8DTOSchuelerBKAbschluss</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.berufskolleg.Rev8DTOSchuelerBKFach</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.berufskolleg.Rev8DTOSchuelerZuweisung</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.berufskolleg.Rev8DTOZertifikate</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.erzieher.Rev8DTOErzieherDatenschutz</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.erzieher.Rev8DTOErzieherLernplattform</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.erzieher.Rev8DTOErzieherart</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.erzieher.Rev8DTOErzieherfunktion</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.erzieher.Rev8DTOSchuelerErzieherAdresse</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.erzieher.Rev8DTOSchuelerTelefon</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.erzieher.Rev8DTOTelefonArt</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.faecher.Rev8DTOFach</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.faecher.Rev8DTOFachTeilleistungsarten</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.faecher.Rev8DTOFachgruppen</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.faecher.Rev8DTOFaecherKatalog</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.faecher.Rev8DTOFaecherKatalogKeys</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.faecher.Rev8DTOFaecherKatalogSchulformen</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.gost.Rev8DTOFaecherNichtMoeglicheKombination</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.grundschule.Rev8DTOAnkreuzdaten</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.grundschule.Rev8DTOAnkreuzfloskeln</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.grundschule.Rev8DTOKindergarten</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.grundschule.Rev8DTOSchuelerAnkreuzfloskeln</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.impexp.Rev8DTOEigeneImporte</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.impexp.Rev8DTOEigeneImporteFelder</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.impexp.Rev8DTOEigeneImporteTabellen</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOAlleJahrgaenge</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOAlleJahrgaengeBezeichnungen</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOAlleJahrgaengeKeys</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternAbiturInfos</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternDQRNiveaus</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternDatenart</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternFaecherSortierung</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternFilterFehlendeEintraege</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternFilterFehlendeEintraegeSchild3</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternFilterFeldListe</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternLaender</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternPrfSemesterAbschluss</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternPruefungsOrdnung</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternPruefungsOrdnungOptionen</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternSchuelerImportExport</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternSchuelerStatus</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternSpezialFilterFelder</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternTextExport</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternUnicodeUmwandllung</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternVerfImportFelder</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternVerfImportTabellen</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternZusatzinfos</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOKAoAAnschlussoption</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOKAoABerufsfeld</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOKAoAKategorie</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOKAoAMerkmal</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOKAoASBOEB4</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOKAoAZusatzmerkmal</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.katalog.Rev8DTOAnsprechpartnerAllgemeineAdresse</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.katalog.Rev8DTOFahrschuelerart</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.katalog.Rev8DTOFloskelgruppen</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.katalog.Rev8DTOFloskeln</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.katalog.Rev8DTOHaltestellen</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.katalog.Rev8DTOKatalogAdressart</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.katalog.Rev8DTOKatalogAllgemeineAdresse</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.grundschule.Rev8DTOAnkreuzdaten</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.grundschule.Rev8DTOAnkreuzfloskeln</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.berufskolleg.Rev8DTOBeschaeftigungsart</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.katalog.Rev8DTOKatalogAufsichtsbereich</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.katalog.Rev8DTOKatalogDatenschutz</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.schueler.Rev8DTOEinschulungsart</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.schueler.Rev8DTOTeilleistungsarten</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.schueler.Rev8DTOEntlassarten</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.erzieher.Rev8DTOErzieherart</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.erzieher.Rev8DTOErzieherfunktion</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.katalog.Rev8DTOFahrschuelerart</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.schueler.Rev8DTOFoerderschwerpunkt</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.katalog.Rev8DTOHaltestellen</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.grundschule.Rev8DTOKindergarten</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.lehrer.Rev8DTOLehrer</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.katalog.Rev8DTOKatalogRaum</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.katalog.Rev8DTOKonfession</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.katalog.Rev8DTOKursarten</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.katalog.Rev8DTOOrt</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.katalog.Rev8DTOOrtsteil</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.katalog.Rev8DTOKonfession</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.katalog.Rev8DTOSchuleNRW</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.katalog.Rev8DTOSchulfunktion</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.katalog.Rev8DTOSchwerpunkt</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.schueler.Rev8DTOSportbefreiung</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.erzieher.Rev8DTOTelefonArt</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.katalog.Rev8DTOTextDateien</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.katalog.Rev8DTOVermerkArt</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.berufskolleg.Rev8DTOKatalogZertifikate</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.katalog.Rev8DTOKatalogAufsichtsbereich</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.stundenplan.Rev8DTOKatalogPausenzeit</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.katalog.Rev8DTOKatalogRaum</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.stundenplan.Rev8DTOKatalogZeitraster</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.benutzer.Rev8DTOKatalogBenutzerKompetenz</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.benutzer.Rev8DTOKatalogBenutzerKompetenzGruppe</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.klassen.Rev8DTOKlassen</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.klassen.Rev8DTOKlassenLeitung</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.klassen.Rev8DTOKlassenartenKatalog</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.klassen.Rev8DTOKlassenartenKatalogKeys</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.klassen.Rev8DTOKlassenartenKatalogSchulformen</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.klassen.Rev8DTOKlassenLeitung</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.kurse.Rev8DTOKurs</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.kurse.Rev8DTOKursLehrer</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.kurse.Rev8DTOKursSchueler</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.kurse.Rev8DTOKursartenKatalog</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.kurse.Rev8DTOKursartenKatalogKeys</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.kurse.Rev8DTOKursartenKatalogSchulformen</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.kurse.Rev8DTOKurs</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.coretypes.Rev8DTOKursFortschreibungsart</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.kurse.Rev8DTOKursLehrer</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.lehrer.Rev8DTOLehrer</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.lehrer.Rev8DTOLehrerAbschnittsdaten</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.lehrer.Rev8DTOLehrerAnrechnungsstunde</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.lehrer.Rev8DTOLehrerDatenschutz</class>
@@ -675,99 +677,107 @@
         <class>de.nrw.schule.svws.db.dto.rev8.schild.lehrer.Rev8DTOLehrerFoto</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.lehrer.Rev8DTOLehrerFunktion</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.lehrer.Rev8DTOLehrerLehramt</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.lehrer.Rev8DTOLehrerLehramtFachrichtung</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.lehrer.Rev8DTOLehrerLehramtBefaehigung</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.lehrer.Rev8DTOLehrerLehramtFachrichtung</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.lehrer.Rev8DTOLehrerLernplattform</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.lehrer.Rev8DTOLehrerMehrleistung</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.svws.auth.Rev8DTOLernplattformen</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.benutzer.Rev8DTOProtokollLogin</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schule.Rev8DTONationalitaeten</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schule.Rev8DTONationalitaetenKeys</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.gost.Rev8DTOFaecherNichtMoeglicheKombination</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.coretypes.Rev8DTONote</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOOrganisationsformenKatalog</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOOrganisationsformenKatalogKeys</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOOrganisationsformenKatalogSchulformen</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.coretypes.Rev8DTOPersonalTyp</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.lehrer.Rev8DTOSchulleitung</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.lehrer.Rev8DTOSchulleitungFunktion</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.personengruppen.Rev8DTOPersonengruppen</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.personengruppen.Rev8DTOPersonengruppenPersonen</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schule.Rev8DTOReligion</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schule.Rev8DTOReligionKeys</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.Rev8DTOSchildVerwaltung</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.Rev8DTOSchildAuswahlFilter</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternAbiturInfos</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternDatenart</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternDQRNiveaus</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternFaecherSortierung</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternFilterFehlendeEintraege</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternFilterFehlendeEintraegeSchild3</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternFilterFeldListe</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternSchuelerStatus</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOKAoAAnschlussoption</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOKAoABerufsfeld</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOKAoAKategorie</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOKAoAMerkmal</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOKAoAZusatzmerkmal</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOKAoASBOEB4</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternLaender</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternPrfSemesterAbschluss</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternPruefungsOrdnungOptionen</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternPruefungsOrdnung</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternSchuelerImportExport</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternSpezialFilterFelder</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternTextExport</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternUnicodeUmwandllung</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternVerfImportFelder</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternVerfImportTabellen</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternZusatzinfos</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.schueler.Rev8DTOEinschulungsart</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.schueler.Rev8DTOEntlassarten</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.schueler.Rev8DTOFoerderschwerpunkt</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.schueler.Rev8DTOSchueler</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.schueler.Rev8DTOSchuelerAllgemeineAdresse</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.schueler.Rev8DTOSchuelerAbgaenge</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.schueler.abitur.Rev8DTOSchuelerAbiturFach</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.schueler.abitur.Rev8DTOSchuelerAbitur</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.grundschule.Rev8DTOSchuelerAnkreuzfloskeln</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.berufskolleg.Rev8DTOSchuelerBKAbschluss</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.berufskolleg.Rev8DTOSchuelerBKFach</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.schueler.Rev8DTOSchuelerAllgemeineAdresse</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.schueler.Rev8DTOSchuelerDatenschutz</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.schueler.Rev8DTOSchuelerTeilleistung</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.erzieher.Rev8DTOSchuelerErzieherAdresse</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.schueler.Rev8DTOSchuelerFehlstunden</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.schueler.fhr.Rev8DTOSchuelerFHR</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.schueler.fhr.Rev8DTOSchuelerFHRFach</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.schueler.Rev8DTOSchuelerFoerderempfehlung</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.schueler.Rev8DTOSchuelerFoto</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.schueler.Rev8DTOSchuelerGrundschuldaten</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.schueler.Rev8DTOSchuelerKAoADaten</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.schueler.Rev8DTOSchuelerPSFachBemerkungen</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.schueler.Rev8DTOSchuelerLeistungsdaten</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.schueler.Rev8DTOSchuelerLernabschnittsdaten</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.schueler.Rev8DTOSchuelerLernplattform</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.Rev8DTOSchuelerIndividuelleGruppe</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.Rev8DTOSchuelerIndividuelleGruppeSchueler</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.schueler.Rev8DTOSchuelerMerkmale</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.Rev8DTOSchuelerReportvorlagen</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.schueler.Rev8DTOSchuelerPSFachBemerkungen</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.schueler.Rev8DTOSchuelerSprachenfolge</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.schueler.Rev8DTOSchuelerSprachpruefungen</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.coretypes.Rev8DTOSchuelerStatus</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.erzieher.Rev8DTOSchuelerTelefon</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.schueler.Rev8DTOSchuelerTeilleistung</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.schueler.Rev8DTOSchuelerVermerke</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.Rev8DTOSchuelerWiedervorlage</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.schueler.Rev8DTOSchuelerZP10</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.berufskolleg.Rev8DTOSchuelerZuweisung</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.svws.auth.Rev8DTOSchuleCredentials</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.schueler.Rev8DTOSportbefreiung</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.schueler.Rev8DTOTeilleistungsarten</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.schueler.abitur.Rev8DTOSchuelerAbitur</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.schueler.abitur.Rev8DTOSchuelerAbiturFach</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.schueler.fhr.Rev8DTOSchuelerFHR</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.schueler.fhr.Rev8DTOSchuelerFHRFach</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOAbteilungen</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOAbteilungsKlassen</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOAlleFoerderschwerpunkte</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOAlleFoerderschwerpunkteSchulformen</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOAlleJahrgaenge</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOAlleJahrgaengeBezeichnungen</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOAlleJahrgaengeKeys</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOAlleSchulformen</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOSchulabschluesse_Allgemeinbildend</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOSchulabschluesse_Berufsbildend</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOAlleSchulgliederungen</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOAlleSchulgliederungenSchulformen</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOAlleSchulgliederungenAbschluesseAllgmeinbildend</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOAlleSchulgliederungenAbschluesseBerufsbildend</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOAlleSchulgliederungenSchulformen</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOAllgemeineMerkmaleKatalog</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOAllgemeineMerkmaleKatalogKeys</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOAllgemeineMerkmaleKatalogSchulformen</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOBerufskollegAnlagen</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOBerufskollegBerufsebenen1</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOBerufskollegBerufsebenen2</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOBerufskollegBerufsebenen3</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOBerufskollegFachklassen</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOBerufskollegFachklassenKeys</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOEigeneSchule</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOEigeneSchuleKAoADaten</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOEinschulungsartenKatalog</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOEinschulungsartenKatalogKeys</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOHerkunft</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOHerkunftSchulformen</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOHerkunftsart</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOHerkunftsartSchulformen</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOJahrgang</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOMerkmale</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOOrganisationsformenKatalog</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOOrganisationsformenKatalogKeys</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOOrganisationsformenKatalogSchulformen</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOSchulabschluesse_Allgemeinbildend</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOSchulabschluesse_Berufsbildend</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOSchulformen</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOSchuljahresabschnitte</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.lehrer.Rev8DTOSchulleitung</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.lehrer.Rev8DTOSchulleitungFunktion</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOSchultexte</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOStundentafel</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOStundentafelFaecher</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOTeilstandorte</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.stundenplan.Rev8DTOKatalogPausenzeit</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.stundenplan.Rev8DTOKatalogZeitraster</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.stundenplan.Rev8DTOStundenplan</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.stundenplan.Rev8DTOStundenplanAufsichtsbereich</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.stundenplan.Rev8DTOStundenplanPausenaufsichten</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.stundenplan.Rev8DTOStundenplanPausenaufsichtenBereiche</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.stundenplan.Rev8DTOStundenplanPausenzeit</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.stundenplan.Rev8DTOStundenplanRaum</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.stundenplan.Rev8DTOStundenplanUnterricht</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.stundenplan.Rev8DTOStundenplanUnterrichtLehrer</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.stundenplan.Rev8DTOStundenplanUnterrichtRaum</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.stundenplan.Rev8DTOStundenplanZeitraster</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schule.Rev8DTOHerkunftKeys</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schule.Rev8DTOHerkunftsartKeys</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schule.Rev8DTONationalitaeten</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schule.Rev8DTONationalitaetenKeys</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schule.Rev8DTOReligion</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schule.Rev8DTOReligionKeys</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schule.Rev8DTOVerkehrssprachen</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schulver.Rev8DTOSchulverDBS</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schulver.Rev8DTOSchulverSchultraeger</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schulver.Rev8DTOSchulverWeitereSF</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.statkue.Rev8DTOSVWSSprachpruefungNiveaus</class>
         <class>de.nrw.schule.svws.db.dto.rev8.statkue.Rev8DTOStatkueAbgangsart</class>
         <class>de.nrw.schule.svws.db.dto.rev8.statkue.Rev8DTOStatkueAndereGrundschulen</class>
         <class>de.nrw.schule.svws.db.dto.rev8.statkue.Rev8DTOStatkueBilingual</class>
@@ -775,8 +785,8 @@
         <class>de.nrw.schule.svws.db.dto.rev8.statkue.Rev8DTOStatkueLehrerAnrechnung</class>
         <class>de.nrw.schule.svws.db.dto.rev8.statkue.Rev8DTOStatkueLehrerBeschaeftigungsart</class>
         <class>de.nrw.schule.svws.db.dto.rev8.statkue.Rev8DTOStatkueLehrerEinsatzstatus</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.statkue.Rev8DTOStatkueLehrerFachrichtungAnerkennung</class>
         <class>de.nrw.schule.svws.db.dto.rev8.statkue.Rev8DTOStatkueLehrerFachrichtung</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.statkue.Rev8DTOStatkueLehrerFachrichtungAnerkennung</class>
         <class>de.nrw.schule.svws.db.dto.rev8.statkue.Rev8DTOStatkueLehrerLehramt</class>
         <class>de.nrw.schule.svws.db.dto.rev8.statkue.Rev8DTOStatkueLehrerLehramtAnerkennung</class>
         <class>de.nrw.schule.svws.db.dto.rev8.statkue.Rev8DTOStatkueLehrerLehrbefaehigung</class>
@@ -790,27 +800,17 @@
         <class>de.nrw.schule.svws.db.dto.rev8.statkue.Rev8DTOStatkueSchuelerErsteSchulformSekI</class>
         <class>de.nrw.schule.svws.db.dto.rev8.statkue.Rev8DTOStatkueSchuelerKindergartenbesuch</class>
         <class>de.nrw.schule.svws.db.dto.rev8.statkue.Rev8DTOStatkueSchuelerUebergangsempfehlung5Jg</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.statkue.Rev8DTOSVWSSprachpruefungNiveaus</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.stundenplan.Rev8DTOStundenplan</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.stundenplan.Rev8DTOStundenplanAufsichtsbereich</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.stundenplan.Rev8DTOStundenplanPausenaufsichten</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.stundenplan.Rev8DTOStundenplanPausenaufsichtenBereiche</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.stundenplan.Rev8DTOStundenplanPausenzeit</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.stundenplan.Rev8DTOStundenplanRaum</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.stundenplan.Rev8DTOStundenplanUnterricht</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.stundenplan.Rev8DTOStundenplanUnterrichtLehrer</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.stundenplan.Rev8DTOStundenplanUnterrichtRaum</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.stundenplan.Rev8DTOStundenplanZeitraster</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOStundentafel</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOStundentafelFaecher</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.svws.auth.Rev8DTOCredentials</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.svws.auth.Rev8DTOCredentialsLernplattformen</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.svws.auth.Rev8DTOLernplattformen</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.svws.auth.Rev8DTOSchuleCredentials</class>
         <class>de.nrw.schule.svws.db.dto.rev8.svws.client.Rev8DTOClientKonfigurationBenutzer</class>
         <class>de.nrw.schule.svws.db.dto.rev8.svws.client.Rev8DTOClientKonfigurationGlobal</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.svws.dav.Rev8DTODavRessource</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.svws.dav.Rev8DTODavRessourceCollection</class>
         <class>de.nrw.schule.svws.db.dto.rev8.svws.db.Rev8DTOCoreTypeVersion</class>
         <class>de.nrw.schule.svws.db.dto.rev8.svws.db.Rev8DTODBAutoInkremente</class>
         <class>de.nrw.schule.svws.db.dto.rev8.svws.db.Rev8DTODBVersion</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.Rev8DTOTextExportVorlagen</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schule.Rev8DTOVerkehrssprachen</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.Rev8DTOZuordnungReportvorlagen</class>
         <class>de.nrw.schule.svws.db.dto.rev8.views.schildintern.Rev8DTOSchildInternBerufsebenen</class>
         <class>de.nrw.schule.svws.db.dto.rev8.views.schildintern.Rev8DTOSchildInternFachgruppen</class>
         <class>de.nrw.schule.svws.db.dto.rev8.views.schildintern.Rev8DTOSchildInternNote</class>

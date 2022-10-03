@@ -30,8 +30,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @NamedQuery(name="Rev8DTOInternZusatzinfos.gueltigvon.multiple", query="SELECT e FROM Rev8DTOInternZusatzinfos e WHERE e.gueltigVon IN :value")
 @NamedQuery(name="Rev8DTOInternZusatzinfos.gueltigbis", query="SELECT e FROM Rev8DTOInternZusatzinfos e WHERE e.gueltigBis = :value")
 @NamedQuery(name="Rev8DTOInternZusatzinfos.gueltigbis.multiple", query="SELECT e FROM Rev8DTOInternZusatzinfos e WHERE e.gueltigBis IN :value")
-@NamedQuery(name="Rev8DTOInternZusatzinfos.primaryKeyQuery", query="SELECT e FROM Rev8DTOInternZusatzinfos e WHERE e.JG_BKAbschl = ?1 AND e.SGL_BKAbschl = ?2")
-@NamedQuery(name="Rev8DTOInternZusatzinfos.all.migration", query="SELECT e FROM Rev8DTOInternZusatzinfos e WHERE e.JG_BKAbschl IS NOT NULL AND e.SGL_BKAbschl IS NOT NULL")
+@NamedQuery(name="Rev8DTOInternZusatzinfos.primaryKeyQuery", query="SELECT e FROM Rev8DTOInternZusatzinfos e WHERE e.SGL_BKAbschl = ?1 AND e.JG_BKAbschl = ?2")
+@NamedQuery(name="Rev8DTOInternZusatzinfos.all.migration", query="SELECT e FROM Rev8DTOInternZusatzinfos e WHERE e.SGL_BKAbschl IS NOT NULL AND e.JG_BKAbschl IS NOT NULL")
 @JsonPropertyOrder({"SGL_BKAbschl","JG_BKAbschl","gueltigVon","gueltigBis"})
 public class Rev8DTOInternZusatzinfos {
 
@@ -90,16 +90,16 @@ public class Rev8DTOInternZusatzinfos {
 		if (getClass() != obj.getClass())
 			return false;
 		Rev8DTOInternZusatzinfos other = (Rev8DTOInternZusatzinfos) obj;
-		if (JG_BKAbschl == null) {
-			if (other.JG_BKAbschl != null)
-				return false;
-		} else if (!JG_BKAbschl.equals(other.JG_BKAbschl))
-			return false;
-
 		if (SGL_BKAbschl == null) {
 			if (other.SGL_BKAbschl != null)
 				return false;
 		} else if (!SGL_BKAbschl.equals(other.SGL_BKAbschl))
+			return false;
+
+		if (JG_BKAbschl == null) {
+			if (other.JG_BKAbschl != null)
+				return false;
+		} else if (!JG_BKAbschl.equals(other.JG_BKAbschl))
 			return false;
 		return true;
 	}
@@ -108,9 +108,9 @@ public class Rev8DTOInternZusatzinfos {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((JG_BKAbschl == null) ? 0 : JG_BKAbschl.hashCode());
-
 		result = prime * result + ((SGL_BKAbschl == null) ? 0 : SGL_BKAbschl.hashCode());
+
+		result = prime * result + ((JG_BKAbschl == null) ? 0 : JG_BKAbschl.hashCode());
 		return result;
 	}
 

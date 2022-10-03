@@ -191,7 +191,7 @@ public class TabelleSpalte implements Comparable<TabelleSpalte> {
 	 */
 	@JsonIgnore
 	public String getSQL(DBSchemaDefinition schema, DBDriver dbms) {
-		SchemaDatentypen type = schema.datentypen.get(this.Datentyp);
+		SchemaDatentypen type = SchemaDatentypen.getByName(this.Datentyp); 
 		return this.NameSpalte + " " + type.getDBType(dbms)
 	         + (((this.Datenlaenge == null) || (this.Datenlaenge <= 0)) ? "" : "(" + this.Datenlaenge + ")")
 	         + this.getSQLAutoinkrement(dbms)

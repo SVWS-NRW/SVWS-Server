@@ -12,11 +12,11 @@ public class Rev8DTOInternPruefungsOrdnungPK implements Serializable {
 	/** Die UID für diese Klasse */
 	private static final long serialVersionUID = 1L;
 
-	/** Schildintern Tabelle: erstes Kürzel */
-	public String PO_Krz;
-
 	/** Schildintern Tabelle: zulässige Schulformen der Prüfungsordnungen */
 	public String PO_Schulform;
+
+	/** Schildintern Tabelle: erstes Kürzel */
+	public String PO_Krz;
 
 	/** Schildintern Tabelle: zulässige Gliederungen */
 	public String PO_SGL;
@@ -30,19 +30,19 @@ public class Rev8DTOInternPruefungsOrdnungPK implements Serializable {
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse Rev8DTOInternPruefungsOrdnungPK.
-	 * @param PO_Krz   der Wert für das Attribut PO_Krz
 	 * @param PO_Schulform   der Wert für das Attribut PO_Schulform
+	 * @param PO_Krz   der Wert für das Attribut PO_Krz
 	 * @param PO_SGL   der Wert für das Attribut PO_SGL
 	 */
-	public Rev8DTOInternPruefungsOrdnungPK(final String PO_Krz, final String PO_Schulform, final String PO_SGL) {
-		if (PO_Krz == null) { 
-			throw new NullPointerException("PO_Krz must not be null");
-		}
-		this.PO_Krz = PO_Krz;
+	public Rev8DTOInternPruefungsOrdnungPK(final String PO_Schulform, final String PO_Krz, final String PO_SGL) {
 		if (PO_Schulform == null) { 
 			throw new NullPointerException("PO_Schulform must not be null");
 		}
 		this.PO_Schulform = PO_Schulform;
+		if (PO_Krz == null) { 
+			throw new NullPointerException("PO_Krz must not be null");
+		}
+		this.PO_Krz = PO_Krz;
 		if (PO_SGL == null) { 
 			throw new NullPointerException("PO_SGL must not be null");
 		}
@@ -59,16 +59,16 @@ public class Rev8DTOInternPruefungsOrdnungPK implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Rev8DTOInternPruefungsOrdnungPK other = (Rev8DTOInternPruefungsOrdnungPK) obj;
-		if (PO_Krz == null) {
-			if (other.PO_Krz != null)
-				return false;
-		} else if (!PO_Krz.equals(other.PO_Krz))
-			return false;
-
 		if (PO_Schulform == null) {
 			if (other.PO_Schulform != null)
 				return false;
 		} else if (!PO_Schulform.equals(other.PO_Schulform))
+			return false;
+
+		if (PO_Krz == null) {
+			if (other.PO_Krz != null)
+				return false;
+		} else if (!PO_Krz.equals(other.PO_Krz))
 			return false;
 
 		if (PO_SGL == null) {
@@ -83,9 +83,9 @@ public class Rev8DTOInternPruefungsOrdnungPK implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((PO_Krz == null) ? 0 : PO_Krz.hashCode());
-
 		result = prime * result + ((PO_Schulform == null) ? 0 : PO_Schulform.hashCode());
+
+		result = prime * result + ((PO_Krz == null) ? 0 : PO_Krz.hashCode());
 
 		result = prime * result + ((PO_SGL == null) ? 0 : PO_SGL.hashCode());
 		return result;

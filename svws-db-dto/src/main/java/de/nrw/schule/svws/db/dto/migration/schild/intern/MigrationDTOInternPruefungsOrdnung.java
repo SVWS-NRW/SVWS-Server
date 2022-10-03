@@ -40,8 +40,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @NamedQuery(name="MigrationDTOInternPruefungsOrdnung.gueltigvon.multiple", query="SELECT e FROM MigrationDTOInternPruefungsOrdnung e WHERE e.gueltigVon IN :value")
 @NamedQuery(name="MigrationDTOInternPruefungsOrdnung.gueltigbis", query="SELECT e FROM MigrationDTOInternPruefungsOrdnung e WHERE e.gueltigBis = :value")
 @NamedQuery(name="MigrationDTOInternPruefungsOrdnung.gueltigbis.multiple", query="SELECT e FROM MigrationDTOInternPruefungsOrdnung e WHERE e.gueltigBis IN :value")
-@NamedQuery(name="MigrationDTOInternPruefungsOrdnung.primaryKeyQuery", query="SELECT e FROM MigrationDTOInternPruefungsOrdnung e WHERE e.PO_Krz = ?1 AND e.PO_Schulform = ?2 AND e.PO_SGL = ?3")
-@NamedQuery(name="MigrationDTOInternPruefungsOrdnung.all.migration", query="SELECT e FROM MigrationDTOInternPruefungsOrdnung e WHERE e.PO_Krz IS NOT NULL AND e.PO_Schulform IS NOT NULL AND e.PO_SGL IS NOT NULL")
+@NamedQuery(name="MigrationDTOInternPruefungsOrdnung.primaryKeyQuery", query="SELECT e FROM MigrationDTOInternPruefungsOrdnung e WHERE e.PO_Schulform = ?1 AND e.PO_Krz = ?2 AND e.PO_SGL = ?3")
+@NamedQuery(name="MigrationDTOInternPruefungsOrdnung.all.migration", query="SELECT e FROM MigrationDTOInternPruefungsOrdnung e WHERE e.PO_Schulform IS NOT NULL AND e.PO_Krz IS NOT NULL AND e.PO_SGL IS NOT NULL")
 @JsonPropertyOrder({"PO_Schulform","PO_Krz","PO_Name","PO_SGL","PO_MinJahrgang","PO_MaxJahrgang","PO_Jahrgaenge","gueltigVon","gueltigBis"})
 public class MigrationDTOInternPruefungsOrdnung {
 
@@ -151,16 +151,16 @@ public class MigrationDTOInternPruefungsOrdnung {
 		if (getClass() != obj.getClass())
 			return false;
 		MigrationDTOInternPruefungsOrdnung other = (MigrationDTOInternPruefungsOrdnung) obj;
-		if (PO_Krz == null) {
-			if (other.PO_Krz != null)
-				return false;
-		} else if (!PO_Krz.equals(other.PO_Krz))
-			return false;
-
 		if (PO_Schulform == null) {
 			if (other.PO_Schulform != null)
 				return false;
 		} else if (!PO_Schulform.equals(other.PO_Schulform))
+			return false;
+
+		if (PO_Krz == null) {
+			if (other.PO_Krz != null)
+				return false;
+		} else if (!PO_Krz.equals(other.PO_Krz))
 			return false;
 
 		if (PO_SGL == null) {
@@ -175,9 +175,9 @@ public class MigrationDTOInternPruefungsOrdnung {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((PO_Krz == null) ? 0 : PO_Krz.hashCode());
-
 		result = prime * result + ((PO_Schulform == null) ? 0 : PO_Schulform.hashCode());
+
+		result = prime * result + ((PO_Krz == null) ? 0 : PO_Krz.hashCode());
 
 		result = prime * result + ((PO_SGL == null) ? 0 : PO_SGL.hashCode());
 		return result;

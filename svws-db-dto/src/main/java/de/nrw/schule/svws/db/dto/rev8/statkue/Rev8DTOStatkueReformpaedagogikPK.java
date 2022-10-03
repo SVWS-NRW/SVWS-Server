@@ -12,11 +12,11 @@ public class Rev8DTOStatkueReformpaedagogikPK implements Serializable {
 	/** Die UID für diese Klasse */
 	private static final long serialVersionUID = 1L;
 
-	/** Statkue Tabelle IT.NRW: Statstikkürzel Reformpädagogik */
-	public String RPG;
-
 	/** Statkue Tabelle IT.NRW: zulässige Schulform für Reformpädagogik */
 	public String SF;
+
+	/** Statkue Tabelle IT.NRW: Statstikkürzel Reformpädagogik */
+	public String RPG;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse Rev8DTOStatkueReformpaedagogikPK ohne eine Initialisierung der Attribute.
@@ -27,18 +27,18 @@ public class Rev8DTOStatkueReformpaedagogikPK implements Serializable {
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse Rev8DTOStatkueReformpaedagogikPK.
-	 * @param RPG   der Wert für das Attribut RPG
 	 * @param SF   der Wert für das Attribut SF
+	 * @param RPG   der Wert für das Attribut RPG
 	 */
-	public Rev8DTOStatkueReformpaedagogikPK(final String RPG, final String SF) {
-		if (RPG == null) { 
-			throw new NullPointerException("RPG must not be null");
-		}
-		this.RPG = RPG;
+	public Rev8DTOStatkueReformpaedagogikPK(final String SF, final String RPG) {
 		if (SF == null) { 
 			throw new NullPointerException("SF must not be null");
 		}
 		this.SF = SF;
+		if (RPG == null) { 
+			throw new NullPointerException("RPG must not be null");
+		}
+		this.RPG = RPG;
 	}
 
 
@@ -51,16 +51,16 @@ public class Rev8DTOStatkueReformpaedagogikPK implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Rev8DTOStatkueReformpaedagogikPK other = (Rev8DTOStatkueReformpaedagogikPK) obj;
-		if (RPG == null) {
-			if (other.RPG != null)
-				return false;
-		} else if (!RPG.equals(other.RPG))
-			return false;
-
 		if (SF == null) {
 			if (other.SF != null)
 				return false;
 		} else if (!SF.equals(other.SF))
+			return false;
+
+		if (RPG == null) {
+			if (other.RPG != null)
+				return false;
+		} else if (!RPG.equals(other.RPG))
 			return false;
 		return true;
 	}
@@ -69,9 +69,9 @@ public class Rev8DTOStatkueReformpaedagogikPK implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((RPG == null) ? 0 : RPG.hashCode());
-
 		result = prime * result + ((SF == null) ? 0 : SF.hashCode());
+
+		result = prime * result + ((RPG == null) ? 0 : RPG.hashCode());
 		return result;
 	}
 }

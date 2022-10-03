@@ -38,8 +38,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @NamedQuery(name="Rev8DTOInternAbiturInfos.gueltigvon.multiple", query="SELECT e FROM Rev8DTOInternAbiturInfos e WHERE e.gueltigVon IN :value")
 @NamedQuery(name="Rev8DTOInternAbiturInfos.gueltigbis", query="SELECT e FROM Rev8DTOInternAbiturInfos e WHERE e.gueltigBis = :value")
 @NamedQuery(name="Rev8DTOInternAbiturInfos.gueltigbis.multiple", query="SELECT e FROM Rev8DTOInternAbiturInfos e WHERE e.gueltigBis IN :value")
-@NamedQuery(name="Rev8DTOInternAbiturInfos.primaryKeyQuery", query="SELECT e FROM Rev8DTOInternAbiturInfos e WHERE e.AbiFach = ?1 AND e.AbiInfoKrz = ?2 AND e.Bedingung = ?3 AND e.PrfOrdnung = ?4")
-@NamedQuery(name="Rev8DTOInternAbiturInfos.all.migration", query="SELECT e FROM Rev8DTOInternAbiturInfos e WHERE e.AbiFach IS NOT NULL AND e.AbiInfoKrz IS NOT NULL AND e.Bedingung IS NOT NULL AND e.PrfOrdnung IS NOT NULL")
+@NamedQuery(name="Rev8DTOInternAbiturInfos.primaryKeyQuery", query="SELECT e FROM Rev8DTOInternAbiturInfos e WHERE e.PrfOrdnung = ?1 AND e.AbiFach = ?2 AND e.Bedingung = ?3 AND e.AbiInfoKrz = ?4")
+@NamedQuery(name="Rev8DTOInternAbiturInfos.all.migration", query="SELECT e FROM Rev8DTOInternAbiturInfos e WHERE e.PrfOrdnung IS NOT NULL AND e.AbiFach IS NOT NULL AND e.Bedingung IS NOT NULL AND e.AbiInfoKrz IS NOT NULL")
 @JsonPropertyOrder({"PrfOrdnung","AbiFach","Bedingung","AbiInfoKrz","AbiInfoBeschreibung","AbiInfoText","gueltigVon","gueltigBis"})
 public class Rev8DTOInternAbiturInfos {
 
@@ -120,16 +120,16 @@ public class Rev8DTOInternAbiturInfos {
 		if (getClass() != obj.getClass())
 			return false;
 		Rev8DTOInternAbiturInfos other = (Rev8DTOInternAbiturInfos) obj;
+		if (PrfOrdnung == null) {
+			if (other.PrfOrdnung != null)
+				return false;
+		} else if (!PrfOrdnung.equals(other.PrfOrdnung))
+			return false;
+
 		if (AbiFach == null) {
 			if (other.AbiFach != null)
 				return false;
 		} else if (!AbiFach.equals(other.AbiFach))
-			return false;
-
-		if (AbiInfoKrz == null) {
-			if (other.AbiInfoKrz != null)
-				return false;
-		} else if (!AbiInfoKrz.equals(other.AbiInfoKrz))
 			return false;
 
 		if (Bedingung == null) {
@@ -138,10 +138,10 @@ public class Rev8DTOInternAbiturInfos {
 		} else if (!Bedingung.equals(other.Bedingung))
 			return false;
 
-		if (PrfOrdnung == null) {
-			if (other.PrfOrdnung != null)
+		if (AbiInfoKrz == null) {
+			if (other.AbiInfoKrz != null)
 				return false;
-		} else if (!PrfOrdnung.equals(other.PrfOrdnung))
+		} else if (!AbiInfoKrz.equals(other.AbiInfoKrz))
 			return false;
 		return true;
 	}
@@ -150,13 +150,13 @@ public class Rev8DTOInternAbiturInfos {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((AbiFach == null) ? 0 : AbiFach.hashCode());
+		result = prime * result + ((PrfOrdnung == null) ? 0 : PrfOrdnung.hashCode());
 
-		result = prime * result + ((AbiInfoKrz == null) ? 0 : AbiInfoKrz.hashCode());
+		result = prime * result + ((AbiFach == null) ? 0 : AbiFach.hashCode());
 
 		result = prime * result + ((Bedingung == null) ? 0 : Bedingung.hashCode());
 
-		result = prime * result + ((PrfOrdnung == null) ? 0 : PrfOrdnung.hashCode());
+		result = prime * result + ((AbiInfoKrz == null) ? 0 : AbiInfoKrz.hashCode());
 		return result;
 	}
 

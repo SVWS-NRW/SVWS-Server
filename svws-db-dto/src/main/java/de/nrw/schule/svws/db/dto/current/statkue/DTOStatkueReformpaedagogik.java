@@ -34,8 +34,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @NamedQuery(name="DTOStatkueReformpaedagogik.gueltigvon.multiple", query="SELECT e FROM DTOStatkueReformpaedagogik e WHERE e.gueltigVon IN :value")
 @NamedQuery(name="DTOStatkueReformpaedagogik.gueltigbis", query="SELECT e FROM DTOStatkueReformpaedagogik e WHERE e.gueltigBis = :value")
 @NamedQuery(name="DTOStatkueReformpaedagogik.gueltigbis.multiple", query="SELECT e FROM DTOStatkueReformpaedagogik e WHERE e.gueltigBis IN :value")
-@NamedQuery(name="DTOStatkueReformpaedagogik.primaryKeyQuery", query="SELECT e FROM DTOStatkueReformpaedagogik e WHERE e.RPG = ?1 AND e.SF = ?2")
-@NamedQuery(name="DTOStatkueReformpaedagogik.all.migration", query="SELECT e FROM DTOStatkueReformpaedagogik e WHERE e.RPG IS NOT NULL AND e.SF IS NOT NULL")
+@NamedQuery(name="DTOStatkueReformpaedagogik.primaryKeyQuery", query="SELECT e FROM DTOStatkueReformpaedagogik e WHERE e.SF = ?1 AND e.RPG = ?2")
+@NamedQuery(name="DTOStatkueReformpaedagogik.all.migration", query="SELECT e FROM DTOStatkueReformpaedagogik e WHERE e.SF IS NOT NULL AND e.RPG IS NOT NULL")
 @JsonPropertyOrder({"SF","RPG","Beschreibung","geaendert","gueltigVon","gueltigBis"})
 public class DTOStatkueReformpaedagogik {
 
@@ -109,16 +109,16 @@ public class DTOStatkueReformpaedagogik {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOStatkueReformpaedagogik other = (DTOStatkueReformpaedagogik) obj;
-		if (RPG == null) {
-			if (other.RPG != null)
-				return false;
-		} else if (!RPG.equals(other.RPG))
-			return false;
-
 		if (SF == null) {
 			if (other.SF != null)
 				return false;
 		} else if (!SF.equals(other.SF))
+			return false;
+
+		if (RPG == null) {
+			if (other.RPG != null)
+				return false;
+		} else if (!RPG.equals(other.RPG))
 			return false;
 		return true;
 	}
@@ -127,9 +127,9 @@ public class DTOStatkueReformpaedagogik {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((RPG == null) ? 0 : RPG.hashCode());
-
 		result = prime * result + ((SF == null) ? 0 : SF.hashCode());
+
+		result = prime * result + ((RPG == null) ? 0 : RPG.hashCode());
 		return result;
 	}
 

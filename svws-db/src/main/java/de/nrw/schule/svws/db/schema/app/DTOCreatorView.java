@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import de.nrw.schule.svws.db.converter.DBAttributeConverter;
-import de.nrw.schule.svws.db.schema.DBSchemaDefinition;
+import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.View;
 import de.nrw.schule.svws.db.schema.ViewSpalte;
 
@@ -42,8 +42,8 @@ public class DTOCreatorView {
 	public String getPackageName(long rev) {
 		if (rev == 0)
 			throw new IllegalArgumentException("Java-DTOs für Views brauchen nicht für die Migration erstellt werden.");
-		return DBSchemaDefinition.javaPackage + "." 
-			+ DBSchemaDefinition.javaDTOPackage 
+		return Schema.javaPackage + "." 
+			+ Schema.javaDTOPackage 
 			+ ((rev < 0) ? ".current." : ".rev" + rev + ".") 
 			+ view.packageName;
 	}

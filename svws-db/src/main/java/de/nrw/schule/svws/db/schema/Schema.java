@@ -221,7 +221,6 @@ import de.nrw.schule.svws.db.schema.tabellen.Tabelle_Schild_Verwaltung;
 import de.nrw.schule.svws.db.schema.tabellen.Tabelle_SchuelerEinzelleistungen;
 import de.nrw.schule.svws.db.schema.tabellen.Tabelle_SchuelerReportvorlagen;
 import de.nrw.schule.svws.db.schema.tabellen.Tabelle_SchuelerWiedervorlage;
-import de.nrw.schule.svws.db.schema.tabellen.Tabelle_DavRessources;
 import de.nrw.schule.svws.db.schema.tabellen.Tabelle_SchulleitungFunktion;
 import de.nrw.schule.svws.db.schema.tabellen.Tabelle_Schulleitung;
 import de.nrw.schule.svws.db.schema.tabellen.Tabelle_Schulver_DBS;
@@ -263,13 +262,23 @@ import de.nrw.schule.svws.db.schema.tabellen.Tabelle_Stundenplan_UnterrichtRaum;
 import de.nrw.schule.svws.db.schema.tabellen.Tabelle_Stundentafel;
 import de.nrw.schule.svws.db.schema.tabellen.Tabelle_Stundentafel_Faecher;
 import de.nrw.schule.svws.db.schema.tabellen.Tabelle_TextExportVorlagen;
+import de.nrw.schule.svws.db.schema.tabellen.Tabelle_Usergroups;
+import de.nrw.schule.svws.db.schema.tabellen.Tabelle_Users;
 import de.nrw.schule.svws.db.schema.tabellen.Tabelle_Verkehrssprachen;
+import de.nrw.schule.svws.db.schema.tabellen.Tabelle_Versetzung;
+import de.nrw.schule.svws.db.schema.tabellen.Tabelle_DavRessources;
 import de.nrw.schule.svws.db.schema.tabellen.Tabelle_ZuordnungReportvorlagen;
 
 	/**
 	 * Diese Klasse stellt alle Tabellen des Schemas zur Verfügung.
 	 */
 public class Schema {
+
+	/** Das übergeordnete Java-Paket, welches die Klassen für die SVWS-Datenbank beinhaltet */
+	public static final String javaPackage = "de.nrw.schule.svws.db";
+
+	/** Das Java-Unterpaket, welches die Klassen für die generierten DTOs für den Dantebankzugriff beinhaltet */
+	public static final String javaDTOPackage = "dto";
 
 	/** Eine Map von dem Namen der Tabelle auf die einzelnen Tabellen. */
 	public static final LinkedHashMap<String, SchemaTabelle> tabellen = new LinkedHashMap<>();
@@ -945,9 +954,6 @@ public class Schema {
 	/** Tabelle SchuelerWiedervorlage */
 	public static final Tabelle_SchuelerWiedervorlage tab_SchuelerWiedervorlage = add(new Tabelle_SchuelerWiedervorlage());
 
-	/** Tabelle DavRessources */
-	public static final Tabelle_DavRessources tab_DavRessources = add(new Tabelle_DavRessources());
-
 	/** Tabelle SchulleitungFunktion */
 	public static final Tabelle_SchulleitungFunktion tab_SchulleitungFunktion = add(new Tabelle_SchulleitungFunktion());
 
@@ -1071,8 +1077,20 @@ public class Schema {
 	/** Tabelle TextExportVorlagen */
 	public static final Tabelle_TextExportVorlagen tab_TextExportVorlagen = add(new Tabelle_TextExportVorlagen());
 
+	/** Tabelle Usergroups */
+	public static final Tabelle_Usergroups tab_Usergroups = add(new Tabelle_Usergroups());
+
+	/** Tabelle Users */
+	public static final Tabelle_Users tab_Users = add(new Tabelle_Users());
+
 	/** Tabelle Verkehrssprachen */
 	public static final Tabelle_Verkehrssprachen tab_Verkehrssprachen = add(new Tabelle_Verkehrssprachen());
+
+	/** Tabelle Versetzung */
+	public static final Tabelle_Versetzung tab_Versetzung = add(new Tabelle_Versetzung());
+
+	/** Tabelle DavRessources */
+	public static final Tabelle_DavRessources tab_DavRessources = add(new Tabelle_DavRessources());
 
 	/** Tabelle ZuordnungReportvorlagen */
 	public static final Tabelle_ZuordnungReportvorlagen tab_ZuordnungReportvorlagen = add(new Tabelle_ZuordnungReportvorlagen());

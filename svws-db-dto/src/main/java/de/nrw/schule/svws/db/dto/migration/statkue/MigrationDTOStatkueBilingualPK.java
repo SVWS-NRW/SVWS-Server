@@ -12,11 +12,11 @@ public class MigrationDTOStatkueBilingualPK implements Serializable {
 	/** Die UID für diese Klasse */
 	private static final long serialVersionUID = 1L;
 
-	/** Statkue Tabelle IT.NRW: Fachkürzel Bilinguale Fächer */
-	public String Fach;
-
 	/** Statkue Tabelle IT.NRW: zulässige Schulform Bilinguale Fächer */
 	public String SF;
+
+	/** Statkue Tabelle IT.NRW: Fachkürzel Bilinguale Fächer */
+	public String Fach;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse MigrationDTOStatkueBilingualPK ohne eine Initialisierung der Attribute.
@@ -27,18 +27,18 @@ public class MigrationDTOStatkueBilingualPK implements Serializable {
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse MigrationDTOStatkueBilingualPK.
-	 * @param Fach   der Wert für das Attribut Fach
 	 * @param SF   der Wert für das Attribut SF
+	 * @param Fach   der Wert für das Attribut Fach
 	 */
-	public MigrationDTOStatkueBilingualPK(final String Fach, final String SF) {
-		if (Fach == null) { 
-			throw new NullPointerException("Fach must not be null");
-		}
-		this.Fach = Fach;
+	public MigrationDTOStatkueBilingualPK(final String SF, final String Fach) {
 		if (SF == null) { 
 			throw new NullPointerException("SF must not be null");
 		}
 		this.SF = SF;
+		if (Fach == null) { 
+			throw new NullPointerException("Fach must not be null");
+		}
+		this.Fach = Fach;
 	}
 
 
@@ -51,16 +51,16 @@ public class MigrationDTOStatkueBilingualPK implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		MigrationDTOStatkueBilingualPK other = (MigrationDTOStatkueBilingualPK) obj;
-		if (Fach == null) {
-			if (other.Fach != null)
-				return false;
-		} else if (!Fach.equals(other.Fach))
-			return false;
-
 		if (SF == null) {
 			if (other.SF != null)
 				return false;
 		} else if (!SF.equals(other.SF))
+			return false;
+
+		if (Fach == null) {
+			if (other.Fach != null)
+				return false;
+		} else if (!Fach.equals(other.Fach))
 			return false;
 		return true;
 	}
@@ -69,9 +69,9 @@ public class MigrationDTOStatkueBilingualPK implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((Fach == null) ? 0 : Fach.hashCode());
-
 		result = prime * result + ((SF == null) ? 0 : SF.hashCode());
+
+		result = prime * result + ((Fach == null) ? 0 : Fach.hashCode());
 		return result;
 	}
 }

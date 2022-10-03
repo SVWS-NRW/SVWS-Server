@@ -13,10 +13,10 @@ public class MigrationDTOInternZusatzinfosPK implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/** Schildintern Tabelle: für den WinSchildImport ??? DEPRECATED */
-	public String JG_BKAbschl;
+	public String SGL_BKAbschl;
 
 	/** Schildintern Tabelle: für den WinSchildImport ??? DEPRECATED */
-	public String SGL_BKAbschl;
+	public String JG_BKAbschl;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse MigrationDTOInternZusatzinfosPK ohne eine Initialisierung der Attribute.
@@ -27,18 +27,18 @@ public class MigrationDTOInternZusatzinfosPK implements Serializable {
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse MigrationDTOInternZusatzinfosPK.
-	 * @param JG_BKAbschl   der Wert für das Attribut JG_BKAbschl
 	 * @param SGL_BKAbschl   der Wert für das Attribut SGL_BKAbschl
+	 * @param JG_BKAbschl   der Wert für das Attribut JG_BKAbschl
 	 */
-	public MigrationDTOInternZusatzinfosPK(final String JG_BKAbschl, final String SGL_BKAbschl) {
-		if (JG_BKAbschl == null) { 
-			throw new NullPointerException("JG_BKAbschl must not be null");
-		}
-		this.JG_BKAbschl = JG_BKAbschl;
+	public MigrationDTOInternZusatzinfosPK(final String SGL_BKAbschl, final String JG_BKAbschl) {
 		if (SGL_BKAbschl == null) { 
 			throw new NullPointerException("SGL_BKAbschl must not be null");
 		}
 		this.SGL_BKAbschl = SGL_BKAbschl;
+		if (JG_BKAbschl == null) { 
+			throw new NullPointerException("JG_BKAbschl must not be null");
+		}
+		this.JG_BKAbschl = JG_BKAbschl;
 	}
 
 
@@ -51,16 +51,16 @@ public class MigrationDTOInternZusatzinfosPK implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		MigrationDTOInternZusatzinfosPK other = (MigrationDTOInternZusatzinfosPK) obj;
-		if (JG_BKAbschl == null) {
-			if (other.JG_BKAbschl != null)
-				return false;
-		} else if (!JG_BKAbschl.equals(other.JG_BKAbschl))
-			return false;
-
 		if (SGL_BKAbschl == null) {
 			if (other.SGL_BKAbschl != null)
 				return false;
 		} else if (!SGL_BKAbschl.equals(other.SGL_BKAbschl))
+			return false;
+
+		if (JG_BKAbschl == null) {
+			if (other.JG_BKAbschl != null)
+				return false;
+		} else if (!JG_BKAbschl.equals(other.JG_BKAbschl))
 			return false;
 		return true;
 	}
@@ -69,9 +69,9 @@ public class MigrationDTOInternZusatzinfosPK implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((JG_BKAbschl == null) ? 0 : JG_BKAbschl.hashCode());
-
 		result = prime * result + ((SGL_BKAbschl == null) ? 0 : SGL_BKAbschl.hashCode());
+
+		result = prime * result + ((JG_BKAbschl == null) ? 0 : JG_BKAbschl.hashCode());
 		return result;
 	}
 }

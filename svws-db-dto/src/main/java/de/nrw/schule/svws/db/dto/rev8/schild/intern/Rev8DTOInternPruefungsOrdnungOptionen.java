@@ -54,8 +54,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @NamedQuery(name="Rev8DTOInternPruefungsOrdnungOptionen.gueltigvon.multiple", query="SELECT e FROM Rev8DTOInternPruefungsOrdnungOptionen e WHERE e.gueltigVon IN :value")
 @NamedQuery(name="Rev8DTOInternPruefungsOrdnungOptionen.gueltigbis", query="SELECT e FROM Rev8DTOInternPruefungsOrdnungOptionen e WHERE e.gueltigBis = :value")
 @NamedQuery(name="Rev8DTOInternPruefungsOrdnungOptionen.gueltigbis.multiple", query="SELECT e FROM Rev8DTOInternPruefungsOrdnungOptionen e WHERE e.gueltigBis IN :value")
-@NamedQuery(name="Rev8DTOInternPruefungsOrdnungOptionen.primaryKeyQuery", query="SELECT e FROM Rev8DTOInternPruefungsOrdnungOptionen e WHERE e.OP_Art = ?1 AND e.OP_Bildungsgang = ?2 AND e.OP_Jahrgaenge = ?3 AND e.OP_Krz = ?4 AND e.OP_Name = ?5 AND e.OP_POKrz = ?6 AND e.OP_Reihenfolge = ?7 AND e.OP_Schulformen = ?8")
-@NamedQuery(name="Rev8DTOInternPruefungsOrdnungOptionen.all.migration", query="SELECT e FROM Rev8DTOInternPruefungsOrdnungOptionen e WHERE e.OP_Art IS NOT NULL AND e.OP_Bildungsgang IS NOT NULL AND e.OP_Jahrgaenge IS NOT NULL AND e.OP_Krz IS NOT NULL AND e.OP_Name IS NOT NULL AND e.OP_POKrz IS NOT NULL AND e.OP_Reihenfolge IS NOT NULL AND e.OP_Schulformen IS NOT NULL")
+@NamedQuery(name="Rev8DTOInternPruefungsOrdnungOptionen.primaryKeyQuery", query="SELECT e FROM Rev8DTOInternPruefungsOrdnungOptionen e WHERE e.OP_Schulformen = ?1 AND e.OP_POKrz = ?2 AND e.OP_Krz = ?3 AND e.OP_Art = ?4 AND e.OP_Bildungsgang = ?5 AND e.OP_Name = ?6 AND e.OP_Jahrgaenge = ?7 AND e.OP_Reihenfolge = ?8")
+@NamedQuery(name="Rev8DTOInternPruefungsOrdnungOptionen.all.migration", query="SELECT e FROM Rev8DTOInternPruefungsOrdnungOptionen e WHERE e.OP_Schulformen IS NOT NULL AND e.OP_POKrz IS NOT NULL AND e.OP_Krz IS NOT NULL AND e.OP_Art IS NOT NULL AND e.OP_Bildungsgang IS NOT NULL AND e.OP_Name IS NOT NULL AND e.OP_Jahrgaenge IS NOT NULL AND e.OP_Reihenfolge IS NOT NULL")
 @JsonPropertyOrder({"OP_Schulformen","OP_POKrz","OP_Krz","OP_Abgangsart_B","OP_Abgangsart_NB","OP_Art","OP_Typ","OP_Bildungsgang","OP_Name","OP_Kommentar","OP_Jahrgaenge","OP_BKIndex","OP_BKAnl_Typ","OP_Reihenfolge","gueltigVon","gueltigBis"})
 public class Rev8DTOInternPruefungsOrdnungOptionen {
 
@@ -210,6 +210,24 @@ public class Rev8DTOInternPruefungsOrdnungOptionen {
 		if (getClass() != obj.getClass())
 			return false;
 		Rev8DTOInternPruefungsOrdnungOptionen other = (Rev8DTOInternPruefungsOrdnungOptionen) obj;
+		if (OP_Schulformen == null) {
+			if (other.OP_Schulformen != null)
+				return false;
+		} else if (!OP_Schulformen.equals(other.OP_Schulformen))
+			return false;
+
+		if (OP_POKrz == null) {
+			if (other.OP_POKrz != null)
+				return false;
+		} else if (!OP_POKrz.equals(other.OP_POKrz))
+			return false;
+
+		if (OP_Krz == null) {
+			if (other.OP_Krz != null)
+				return false;
+		} else if (!OP_Krz.equals(other.OP_Krz))
+			return false;
+
 		if (OP_Art == null) {
 			if (other.OP_Art != null)
 				return false;
@@ -222,40 +240,22 @@ public class Rev8DTOInternPruefungsOrdnungOptionen {
 		} else if (!OP_Bildungsgang.equals(other.OP_Bildungsgang))
 			return false;
 
-		if (OP_Jahrgaenge == null) {
-			if (other.OP_Jahrgaenge != null)
-				return false;
-		} else if (!OP_Jahrgaenge.equals(other.OP_Jahrgaenge))
-			return false;
-
-		if (OP_Krz == null) {
-			if (other.OP_Krz != null)
-				return false;
-		} else if (!OP_Krz.equals(other.OP_Krz))
-			return false;
-
 		if (OP_Name == null) {
 			if (other.OP_Name != null)
 				return false;
 		} else if (!OP_Name.equals(other.OP_Name))
 			return false;
 
-		if (OP_POKrz == null) {
-			if (other.OP_POKrz != null)
+		if (OP_Jahrgaenge == null) {
+			if (other.OP_Jahrgaenge != null)
 				return false;
-		} else if (!OP_POKrz.equals(other.OP_POKrz))
+		} else if (!OP_Jahrgaenge.equals(other.OP_Jahrgaenge))
 			return false;
 
 		if (OP_Reihenfolge == null) {
 			if (other.OP_Reihenfolge != null)
 				return false;
 		} else if (!OP_Reihenfolge.equals(other.OP_Reihenfolge))
-			return false;
-
-		if (OP_Schulformen == null) {
-			if (other.OP_Schulformen != null)
-				return false;
-		} else if (!OP_Schulformen.equals(other.OP_Schulformen))
 			return false;
 		return true;
 	}
@@ -264,21 +264,21 @@ public class Rev8DTOInternPruefungsOrdnungOptionen {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((OP_Schulformen == null) ? 0 : OP_Schulformen.hashCode());
+
+		result = prime * result + ((OP_POKrz == null) ? 0 : OP_POKrz.hashCode());
+
+		result = prime * result + ((OP_Krz == null) ? 0 : OP_Krz.hashCode());
+
 		result = prime * result + ((OP_Art == null) ? 0 : OP_Art.hashCode());
 
 		result = prime * result + ((OP_Bildungsgang == null) ? 0 : OP_Bildungsgang.hashCode());
 
-		result = prime * result + ((OP_Jahrgaenge == null) ? 0 : OP_Jahrgaenge.hashCode());
-
-		result = prime * result + ((OP_Krz == null) ? 0 : OP_Krz.hashCode());
-
 		result = prime * result + ((OP_Name == null) ? 0 : OP_Name.hashCode());
 
-		result = prime * result + ((OP_POKrz == null) ? 0 : OP_POKrz.hashCode());
+		result = prime * result + ((OP_Jahrgaenge == null) ? 0 : OP_Jahrgaenge.hashCode());
 
 		result = prime * result + ((OP_Reihenfolge == null) ? 0 : OP_Reihenfolge.hashCode());
-
-		result = prime * result + ((OP_Schulformen == null) ? 0 : OP_Schulformen.hashCode());
 		return result;
 	}
 

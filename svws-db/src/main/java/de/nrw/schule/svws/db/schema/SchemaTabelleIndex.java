@@ -2,6 +2,9 @@ package de.nrw.schule.svws.db.schema;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import de.nrw.schule.svws.db.DBDriver;
 
 /**
  * Diese Klasse dient der Definition eines Index bei SVWS-Datenbank-Tabellen.  
@@ -122,4 +125,44 @@ public class SchemaTabelleIndex {
 		return _veraltet;
 	}
 
+	
+    /**
+     * Liefert die Tabellenspalten des Index in der durch das Feld Sortierung definierten Reihenfolge
+     * 
+     * @return die Tabellenspalten des Index in der durch das Feld Sortierung definierten Reihenfolge 
+     */
+    public List<SchemaTabelleSpalte> getSpalten() {
+    	return _spalten.stream().sorted((a,b) -> { return Integer.compare(a.sortierung(), b.sortierung()); }).collect(Collectors.toList());
+    }
+	
+	
+	/**
+	 * Erstellt einen SQL-String für das Erstellen eines Index 
+	 * 
+	 * @return der SQL-String für das Erstellen des Index
+	 */
+	public String getSQL() {
+		return "CREATE INDEX " + this._name + " ON " + this._tabelle.name() + '(' 
+				+ getSpalten().stream().map(spalte -> spalte.name()).collect(Collectors.joining(", "))
+				+ ");";
+	}
+	
+	
+	/**
+	 * Erzeugt den SQL-Drop-Befehl für diesen Index für den SQL-Dialekt des angegebenen DBMS
+	 * 
+	 * @param dbms   das DBMS
+	 * 
+	 * @return der SQL-Drop-Befehl
+	 */
+	public String getSQLDrop(DBDriver dbms) {
+		return switch (dbms) {
+			case SQLITE -> "DROP INDEX IF EXISTS " + this._name + ";";
+			case MARIA_DB, MYSQL -> "ALTER TABLE " + this._tabelle.name() + " DROP INDEX " + this._name + ';';
+			case MDB -> "DROP INDEX " + this._name + " ON " + this._tabelle.name() + ";";
+			case MSSQL -> "DROP INDEX " + this._tabelle.name() + "." + this._name + ";";
+			default -> "ALTER TABLE " + this._tabelle.name() + " DROP INDEX " + this._name + ';';
+		};
+	}
+	
 }

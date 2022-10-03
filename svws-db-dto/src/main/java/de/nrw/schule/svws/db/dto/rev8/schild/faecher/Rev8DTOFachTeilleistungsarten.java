@@ -28,8 +28,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @NamedQuery(name="Rev8DTOFachTeilleistungsarten.fach_id.multiple", query="SELECT e FROM Rev8DTOFachTeilleistungsarten e WHERE e.Fach_ID IN :value")
 @NamedQuery(name="Rev8DTOFachTeilleistungsarten.kursart", query="SELECT e FROM Rev8DTOFachTeilleistungsarten e WHERE e.Kursart = :value")
 @NamedQuery(name="Rev8DTOFachTeilleistungsarten.kursart.multiple", query="SELECT e FROM Rev8DTOFachTeilleistungsarten e WHERE e.Kursart IN :value")
-@NamedQuery(name="Rev8DTOFachTeilleistungsarten.primaryKeyQuery", query="SELECT e FROM Rev8DTOFachTeilleistungsarten e WHERE e.Fach_ID = ?1 AND e.Kursart = ?2 AND e.Teilleistungsart_ID = ?3")
-@NamedQuery(name="Rev8DTOFachTeilleistungsarten.all.migration", query="SELECT e FROM Rev8DTOFachTeilleistungsarten e WHERE e.Fach_ID IS NOT NULL AND e.Kursart IS NOT NULL AND e.Teilleistungsart_ID IS NOT NULL")
+@NamedQuery(name="Rev8DTOFachTeilleistungsarten.primaryKeyQuery", query="SELECT e FROM Rev8DTOFachTeilleistungsarten e WHERE e.Teilleistungsart_ID = ?1 AND e.Fach_ID = ?2 AND e.Kursart = ?3")
+@NamedQuery(name="Rev8DTOFachTeilleistungsarten.all.migration", query="SELECT e FROM Rev8DTOFachTeilleistungsarten e WHERE e.Teilleistungsart_ID IS NOT NULL AND e.Fach_ID IS NOT NULL AND e.Kursart IS NOT NULL")
 @JsonPropertyOrder({"Teilleistungsart_ID","Fach_ID","Kursart"})
 public class Rev8DTOFachTeilleistungsarten {
 
@@ -84,6 +84,12 @@ public class Rev8DTOFachTeilleistungsarten {
 		if (getClass() != obj.getClass())
 			return false;
 		Rev8DTOFachTeilleistungsarten other = (Rev8DTOFachTeilleistungsarten) obj;
+		if (Teilleistungsart_ID == null) {
+			if (other.Teilleistungsart_ID != null)
+				return false;
+		} else if (!Teilleistungsart_ID.equals(other.Teilleistungsart_ID))
+			return false;
+
 		if (Fach_ID == null) {
 			if (other.Fach_ID != null)
 				return false;
@@ -95,12 +101,6 @@ public class Rev8DTOFachTeilleistungsarten {
 				return false;
 		} else if (!Kursart.equals(other.Kursart))
 			return false;
-
-		if (Teilleistungsart_ID == null) {
-			if (other.Teilleistungsart_ID != null)
-				return false;
-		} else if (!Teilleistungsart_ID.equals(other.Teilleistungsart_ID))
-			return false;
 		return true;
 	}
 
@@ -108,11 +108,11 @@ public class Rev8DTOFachTeilleistungsarten {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((Teilleistungsart_ID == null) ? 0 : Teilleistungsart_ID.hashCode());
+
 		result = prime * result + ((Fach_ID == null) ? 0 : Fach_ID.hashCode());
 
 		result = prime * result + ((Kursart == null) ? 0 : Kursart.hashCode());
-
-		result = prime * result + ((Teilleistungsart_ID == null) ? 0 : Teilleistungsart_ID.hashCode());
 		return result;
 	}
 

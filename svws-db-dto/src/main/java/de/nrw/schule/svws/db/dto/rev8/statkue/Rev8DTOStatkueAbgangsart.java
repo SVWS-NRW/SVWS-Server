@@ -44,8 +44,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @NamedQuery(name="Rev8DTOStatkueAbgangsart.gueltigvon.multiple", query="SELECT e FROM Rev8DTOStatkueAbgangsart e WHERE e.gueltigVon IN :value")
 @NamedQuery(name="Rev8DTOStatkueAbgangsart.gueltigbis", query="SELECT e FROM Rev8DTOStatkueAbgangsart e WHERE e.gueltigBis = :value")
 @NamedQuery(name="Rev8DTOStatkueAbgangsart.gueltigbis.multiple", query="SELECT e FROM Rev8DTOStatkueAbgangsart e WHERE e.gueltigBis IN :value")
-@NamedQuery(name="Rev8DTOStatkueAbgangsart.primaryKeyQuery", query="SELECT e FROM Rev8DTOStatkueAbgangsart e WHERE e.AbgangsJG = ?1 AND e.Art = ?2 AND e.KZ_Bereich = ?3 AND e.KZ_Bereich_JG = ?4 AND e.SF = ?5")
-@NamedQuery(name="Rev8DTOStatkueAbgangsart.all.migration", query="SELECT e FROM Rev8DTOStatkueAbgangsart e WHERE e.AbgangsJG IS NOT NULL AND e.Art IS NOT NULL AND e.KZ_Bereich IS NOT NULL AND e.KZ_Bereich_JG IS NOT NULL AND e.SF IS NOT NULL")
+@NamedQuery(name="Rev8DTOStatkueAbgangsart.primaryKeyQuery", query="SELECT e FROM Rev8DTOStatkueAbgangsart e WHERE e.SF = ?1 AND e.Art = ?2 AND e.KZ_Bereich = ?3 AND e.KZ_Bereich_JG = ?4 AND e.AbgangsJG = ?5")
+@NamedQuery(name="Rev8DTOStatkueAbgangsart.all.migration", query="SELECT e FROM Rev8DTOStatkueAbgangsart e WHERE e.SF IS NOT NULL AND e.Art IS NOT NULL AND e.KZ_Bereich IS NOT NULL AND e.KZ_Bereich_JG IS NOT NULL AND e.AbgangsJG IS NOT NULL")
 @JsonPropertyOrder({"SF","Art","Beschreibung","KZ_Bereich","KZ_Bereich_JG","AbgangsJG","Flag","geaendert","Sortierung","gueltigVon","gueltigBis"})
 public class Rev8DTOStatkueAbgangsart {
 
@@ -142,10 +142,10 @@ public class Rev8DTOStatkueAbgangsart {
 		if (getClass() != obj.getClass())
 			return false;
 		Rev8DTOStatkueAbgangsart other = (Rev8DTOStatkueAbgangsart) obj;
-		if (AbgangsJG == null) {
-			if (other.AbgangsJG != null)
+		if (SF == null) {
+			if (other.SF != null)
 				return false;
-		} else if (!AbgangsJG.equals(other.AbgangsJG))
+		} else if (!SF.equals(other.SF))
 			return false;
 
 		if (Art == null) {
@@ -166,10 +166,10 @@ public class Rev8DTOStatkueAbgangsart {
 		} else if (!KZ_Bereich_JG.equals(other.KZ_Bereich_JG))
 			return false;
 
-		if (SF == null) {
-			if (other.SF != null)
+		if (AbgangsJG == null) {
+			if (other.AbgangsJG != null)
 				return false;
-		} else if (!SF.equals(other.SF))
+		} else if (!AbgangsJG.equals(other.AbgangsJG))
 			return false;
 		return true;
 	}
@@ -178,7 +178,7 @@ public class Rev8DTOStatkueAbgangsart {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((AbgangsJG == null) ? 0 : AbgangsJG.hashCode());
+		result = prime * result + ((SF == null) ? 0 : SF.hashCode());
 
 		result = prime * result + ((Art == null) ? 0 : Art.hashCode());
 
@@ -186,7 +186,7 @@ public class Rev8DTOStatkueAbgangsart {
 
 		result = prime * result + ((KZ_Bereich_JG == null) ? 0 : KZ_Bereich_JG.hashCode());
 
-		result = prime * result + ((SF == null) ? 0 : SF.hashCode());
+		result = prime * result + ((AbgangsJG == null) ? 0 : AbgangsJG.hashCode());
 		return result;
 	}
 

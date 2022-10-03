@@ -43,8 +43,8 @@ import de.nrw.schule.svws.csv.converter.migration.MigrationBooleanPlusMinusDefau
 @NamedQuery(name="MigrationDTOSchuelerDatenschutz.schulnreigner.multiple", query="SELECT e FROM MigrationDTOSchuelerDatenschutz e WHERE e.SchulnrEigner IN :value")
 @NamedQuery(name="MigrationDTOSchuelerDatenschutz.abgefragt", query="SELECT e FROM MigrationDTOSchuelerDatenschutz e WHERE e.Abgefragt = :value")
 @NamedQuery(name="MigrationDTOSchuelerDatenschutz.abgefragt.multiple", query="SELECT e FROM MigrationDTOSchuelerDatenschutz e WHERE e.Abgefragt IN :value")
-@NamedQuery(name="MigrationDTOSchuelerDatenschutz.primaryKeyQuery", query="SELECT e FROM MigrationDTOSchuelerDatenschutz e WHERE e.Datenschutz_ID = ?1 AND e.Schueler_ID = ?2")
-@NamedQuery(name="MigrationDTOSchuelerDatenschutz.all.migration", query="SELECT e FROM MigrationDTOSchuelerDatenschutz e WHERE e.Datenschutz_ID IS NOT NULL AND e.Schueler_ID IS NOT NULL")
+@NamedQuery(name="MigrationDTOSchuelerDatenschutz.primaryKeyQuery", query="SELECT e FROM MigrationDTOSchuelerDatenschutz e WHERE e.Schueler_ID = ?1 AND e.Datenschutz_ID = ?2")
+@NamedQuery(name="MigrationDTOSchuelerDatenschutz.all.migration", query="SELECT e FROM MigrationDTOSchuelerDatenschutz e WHERE e.Schueler_ID IS NOT NULL AND e.Datenschutz_ID IS NOT NULL")
 @JsonPropertyOrder({"Schueler_ID","Datenschutz_ID","Status","SchulnrEigner","Abgefragt"})
 public class MigrationDTOSchuelerDatenschutz {
 
@@ -129,16 +129,16 @@ public class MigrationDTOSchuelerDatenschutz {
 		if (getClass() != obj.getClass())
 			return false;
 		MigrationDTOSchuelerDatenschutz other = (MigrationDTOSchuelerDatenschutz) obj;
-		if (Datenschutz_ID == null) {
-			if (other.Datenschutz_ID != null)
-				return false;
-		} else if (!Datenschutz_ID.equals(other.Datenschutz_ID))
-			return false;
-
 		if (Schueler_ID == null) {
 			if (other.Schueler_ID != null)
 				return false;
 		} else if (!Schueler_ID.equals(other.Schueler_ID))
+			return false;
+
+		if (Datenschutz_ID == null) {
+			if (other.Datenschutz_ID != null)
+				return false;
+		} else if (!Datenschutz_ID.equals(other.Datenschutz_ID))
 			return false;
 		return true;
 	}
@@ -147,9 +147,9 @@ public class MigrationDTOSchuelerDatenschutz {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((Datenschutz_ID == null) ? 0 : Datenschutz_ID.hashCode());
-
 		result = prime * result + ((Schueler_ID == null) ? 0 : Schueler_ID.hashCode());
+
+		result = prime * result + ((Datenschutz_ID == null) ? 0 : Datenschutz_ID.hashCode());
 		return result;
 	}
 

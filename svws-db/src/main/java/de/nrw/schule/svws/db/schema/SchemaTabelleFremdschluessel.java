@@ -1,6 +1,9 @@
 package de.nrw.schule.svws.db.schema;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
+import de.nrw.schule.svws.db.DBDriver;
 
 /**
  * Diese Klasse dient der Definition eines Fremdschlüssels bei SVWS-Datenbank-Tabellen.  
@@ -175,6 +178,78 @@ public class SchemaTabelleFremdschluessel {
 	 */
 	public SchemaRevisionen veraltet() {
 		return _veraltet;
+	}
+
+	
+    /**
+     * Liefert die Tabellenspalten des Fremdschlüssels in der durch das Feld Sortierung definierten Reihenfolge
+     * 
+     * @return die Tabellenspalten des Fremdschlüssels in der durch das Feld Sortierung definierten Reihenfolge 
+     */
+    public List<SchemaTabelleSpalte> getSpalten() {
+    	return _spalten.stream().sorted((a,b) -> { return Integer.compare(a.sortierung(), b.sortierung()); }).collect(Collectors.toList());
+    }
+	
+	
+	/**
+	 * Erstellt einen SQL-String für das Erstellen einen Fremdschlüssels als SQL-CONSTRAINT 
+	 * 
+	 * @return der SQL-String für das Erstellen des Fremdschlüssels
+	 */
+	public String getSQL() {
+		return "CONSTRAINT " + this.name() + " FOREIGN KEY (" 
+				+ getSpalten().stream().map(spalte -> spalte.name()).collect(Collectors.joining(", "))
+				+ ") REFERENCES " + this._tabelleReferenziert.name() + '('
+				+ _spaltenReferenziert.stream().map(spalte -> spalte.name()).collect(Collectors.joining(", "))
+				+ ")" 
+				+ ((this._onUpdate == null) || this._onUpdate == SchemaFremdschluesselAktionen.NO_ACTION ? "" : " ON UPDATE " + this._onUpdate.sql())
+				+ ((this._onDelete == null) || this._onDelete == SchemaFremdschluesselAktionen.NO_ACTION ? "" : " ON DELETE " + this._onDelete.sql());
+	}
+
+	
+	/**
+	 * Erstellt einen SQL-String für das nachträgliche Erstellen einen Fremdschlüssels 
+	 * für den SQL-Dialekt des angegebenen DBMS
+	 * 
+	 * @param dbms   das DBMS
+	 * 
+	 * @return der SQL-String für das nachträgliche Erstellen des Fremdschlüssels
+	 */
+	public String getSQLCreate(DBDriver dbms) {
+		switch (dbms) {
+			case SQLITE:
+				// TODO currently not supported
+				return null;
+			case MDB:
+			case MARIA_DB:
+			case MYSQL:
+			case MSSQL:
+			default:
+				return "ALTER TABLE " + this._tabelle.name() + " ADD " + this.getSQL();		
+		}
+	}
+	
+	
+	/**
+	 * Erzeugt den SQL-Drop-Befehl für diesen Fremdschlüssel für den SQL-Dialekt des angegebenen DBMS
+	 * 
+	 * @param dbms   das DBMS
+	 * 
+	 * @return der SQL-Drop-Befehl
+	 */
+	public String getSQLDrop(DBDriver dbms) {
+		switch (dbms) {
+			case SQLITE:
+				// TODO SQLite - Currently not supported
+				return null;  
+			case MARIA_DB:
+			case MYSQL:
+			default:
+				return "ALTER TABLE " + this._tabelle.name() + " DROP FOREIGN KEY " + this._name + ";";
+			case MDB:
+			case MSSQL:
+				return "ALTER TABLE " + this._tabelle.name() + " DROP CONSTRAINT " + this._name + ";";
+		}
 	}
 
 }

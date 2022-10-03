@@ -12,29 +12,29 @@ public class Rev8DTOInternPruefungsOrdnungOptionenPK implements Serializable {
 	/** Die UID für diese Klasse */
 	private static final long serialVersionUID = 1L;
 
+	/** Schildintern Tabelle: Schulformen für die die Optionen gelten */
+	public String OP_Schulformen;
+
+	/** Schildintern Tabelle: Kürzel der Prüfungsordung */
+	public String OP_POKrz;
+
+	/** Schildintern Tabelle: Angezeigter Kurztext in Schild-NRW */
+	public String OP_Krz;
+
 	/** Schildintern Tabelle: A=Allgemein B=Berufsbildend */
 	public String OP_Art;
 
 	/** Schildintern Tabelle: Bildungsgang A oder B */
 	public String OP_Bildungsgang;
 
-	/** Schildintern Tabelle: zulässig für diese Jahrgänge */
-	public String OP_Jahrgaenge;
-
-	/** Schildintern Tabelle: Angezeigter Kurztext in Schild-NRW */
-	public String OP_Krz;
-
 	/** Schildintern Tabelle: Text des Abschlusses */
 	public String OP_Name;
 
-	/** Schildintern Tabelle: Kürzel der Prüfungsordung */
-	public String OP_POKrz;
+	/** Schildintern Tabelle: zulässig für diese Jahrgänge */
+	public String OP_Jahrgaenge;
 
 	/** Schildintern Tabelle: Reihenfolge */
 	public Integer OP_Reihenfolge;
-
-	/** Schildintern Tabelle: Schulformen für die die Optionen gelten */
-	public String OP_Schulformen;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse Rev8DTOInternPruefungsOrdnungOptionenPK ohne eine Initialisierung der Attribute.
@@ -45,16 +45,28 @@ public class Rev8DTOInternPruefungsOrdnungOptionenPK implements Serializable {
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse Rev8DTOInternPruefungsOrdnungOptionenPK.
+	 * @param OP_Schulformen   der Wert für das Attribut OP_Schulformen
+	 * @param OP_POKrz   der Wert für das Attribut OP_POKrz
+	 * @param OP_Krz   der Wert für das Attribut OP_Krz
 	 * @param OP_Art   der Wert für das Attribut OP_Art
 	 * @param OP_Bildungsgang   der Wert für das Attribut OP_Bildungsgang
-	 * @param OP_Jahrgaenge   der Wert für das Attribut OP_Jahrgaenge
-	 * @param OP_Krz   der Wert für das Attribut OP_Krz
 	 * @param OP_Name   der Wert für das Attribut OP_Name
-	 * @param OP_POKrz   der Wert für das Attribut OP_POKrz
+	 * @param OP_Jahrgaenge   der Wert für das Attribut OP_Jahrgaenge
 	 * @param OP_Reihenfolge   der Wert für das Attribut OP_Reihenfolge
-	 * @param OP_Schulformen   der Wert für das Attribut OP_Schulformen
 	 */
-	public Rev8DTOInternPruefungsOrdnungOptionenPK(final String OP_Art, final String OP_Bildungsgang, final String OP_Jahrgaenge, final String OP_Krz, final String OP_Name, final String OP_POKrz, final Integer OP_Reihenfolge, final String OP_Schulformen) {
+	public Rev8DTOInternPruefungsOrdnungOptionenPK(final String OP_Schulformen, final String OP_POKrz, final String OP_Krz, final String OP_Art, final String OP_Bildungsgang, final String OP_Name, final String OP_Jahrgaenge, final Integer OP_Reihenfolge) {
+		if (OP_Schulformen == null) { 
+			throw new NullPointerException("OP_Schulformen must not be null");
+		}
+		this.OP_Schulformen = OP_Schulformen;
+		if (OP_POKrz == null) { 
+			throw new NullPointerException("OP_POKrz must not be null");
+		}
+		this.OP_POKrz = OP_POKrz;
+		if (OP_Krz == null) { 
+			throw new NullPointerException("OP_Krz must not be null");
+		}
+		this.OP_Krz = OP_Krz;
 		if (OP_Art == null) { 
 			throw new NullPointerException("OP_Art must not be null");
 		}
@@ -63,30 +75,18 @@ public class Rev8DTOInternPruefungsOrdnungOptionenPK implements Serializable {
 			throw new NullPointerException("OP_Bildungsgang must not be null");
 		}
 		this.OP_Bildungsgang = OP_Bildungsgang;
-		if (OP_Jahrgaenge == null) { 
-			throw new NullPointerException("OP_Jahrgaenge must not be null");
-		}
-		this.OP_Jahrgaenge = OP_Jahrgaenge;
-		if (OP_Krz == null) { 
-			throw new NullPointerException("OP_Krz must not be null");
-		}
-		this.OP_Krz = OP_Krz;
 		if (OP_Name == null) { 
 			throw new NullPointerException("OP_Name must not be null");
 		}
 		this.OP_Name = OP_Name;
-		if (OP_POKrz == null) { 
-			throw new NullPointerException("OP_POKrz must not be null");
+		if (OP_Jahrgaenge == null) { 
+			throw new NullPointerException("OP_Jahrgaenge must not be null");
 		}
-		this.OP_POKrz = OP_POKrz;
+		this.OP_Jahrgaenge = OP_Jahrgaenge;
 		if (OP_Reihenfolge == null) { 
 			throw new NullPointerException("OP_Reihenfolge must not be null");
 		}
 		this.OP_Reihenfolge = OP_Reihenfolge;
-		if (OP_Schulformen == null) { 
-			throw new NullPointerException("OP_Schulformen must not be null");
-		}
-		this.OP_Schulformen = OP_Schulformen;
 	}
 
 
@@ -99,6 +99,24 @@ public class Rev8DTOInternPruefungsOrdnungOptionenPK implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Rev8DTOInternPruefungsOrdnungOptionenPK other = (Rev8DTOInternPruefungsOrdnungOptionenPK) obj;
+		if (OP_Schulformen == null) {
+			if (other.OP_Schulformen != null)
+				return false;
+		} else if (!OP_Schulformen.equals(other.OP_Schulformen))
+			return false;
+
+		if (OP_POKrz == null) {
+			if (other.OP_POKrz != null)
+				return false;
+		} else if (!OP_POKrz.equals(other.OP_POKrz))
+			return false;
+
+		if (OP_Krz == null) {
+			if (other.OP_Krz != null)
+				return false;
+		} else if (!OP_Krz.equals(other.OP_Krz))
+			return false;
+
 		if (OP_Art == null) {
 			if (other.OP_Art != null)
 				return false;
@@ -111,40 +129,22 @@ public class Rev8DTOInternPruefungsOrdnungOptionenPK implements Serializable {
 		} else if (!OP_Bildungsgang.equals(other.OP_Bildungsgang))
 			return false;
 
-		if (OP_Jahrgaenge == null) {
-			if (other.OP_Jahrgaenge != null)
-				return false;
-		} else if (!OP_Jahrgaenge.equals(other.OP_Jahrgaenge))
-			return false;
-
-		if (OP_Krz == null) {
-			if (other.OP_Krz != null)
-				return false;
-		} else if (!OP_Krz.equals(other.OP_Krz))
-			return false;
-
 		if (OP_Name == null) {
 			if (other.OP_Name != null)
 				return false;
 		} else if (!OP_Name.equals(other.OP_Name))
 			return false;
 
-		if (OP_POKrz == null) {
-			if (other.OP_POKrz != null)
+		if (OP_Jahrgaenge == null) {
+			if (other.OP_Jahrgaenge != null)
 				return false;
-		} else if (!OP_POKrz.equals(other.OP_POKrz))
+		} else if (!OP_Jahrgaenge.equals(other.OP_Jahrgaenge))
 			return false;
 
 		if (OP_Reihenfolge == null) {
 			if (other.OP_Reihenfolge != null)
 				return false;
 		} else if (!OP_Reihenfolge.equals(other.OP_Reihenfolge))
-			return false;
-
-		if (OP_Schulformen == null) {
-			if (other.OP_Schulformen != null)
-				return false;
-		} else if (!OP_Schulformen.equals(other.OP_Schulformen))
 			return false;
 		return true;
 	}
@@ -153,21 +153,21 @@ public class Rev8DTOInternPruefungsOrdnungOptionenPK implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((OP_Schulformen == null) ? 0 : OP_Schulformen.hashCode());
+
+		result = prime * result + ((OP_POKrz == null) ? 0 : OP_POKrz.hashCode());
+
+		result = prime * result + ((OP_Krz == null) ? 0 : OP_Krz.hashCode());
+
 		result = prime * result + ((OP_Art == null) ? 0 : OP_Art.hashCode());
 
 		result = prime * result + ((OP_Bildungsgang == null) ? 0 : OP_Bildungsgang.hashCode());
 
-		result = prime * result + ((OP_Jahrgaenge == null) ? 0 : OP_Jahrgaenge.hashCode());
-
-		result = prime * result + ((OP_Krz == null) ? 0 : OP_Krz.hashCode());
-
 		result = prime * result + ((OP_Name == null) ? 0 : OP_Name.hashCode());
 
-		result = prime * result + ((OP_POKrz == null) ? 0 : OP_POKrz.hashCode());
+		result = prime * result + ((OP_Jahrgaenge == null) ? 0 : OP_Jahrgaenge.hashCode());
 
 		result = prime * result + ((OP_Reihenfolge == null) ? 0 : OP_Reihenfolge.hashCode());
-
-		result = prime * result + ((OP_Schulformen == null) ? 0 : OP_Schulformen.hashCode());
 		return result;
 	}
 }

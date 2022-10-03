@@ -12,8 +12,8 @@ public class DTOStatkueAbgangsartPK implements Serializable {
 	/** Die UID für diese Klasse */
 	private static final long serialVersionUID = 1L;
 
-	/** Statkue Tabelle IT.NRW: zulässige Jahrgäng der Abgangsart */
-	public String AbgangsJG;
+	/** Statkue Tabelle IT.NRW: zulässige Schulform der Abgangsart */
+	public String SF;
 
 	/** Statkue Tabelle IT.NRW: ASD-Kürzel der Abgangsart */
 	public String Art;
@@ -24,8 +24,8 @@ public class DTOStatkueAbgangsartPK implements Serializable {
 	/** Statkue Tabelle IT.NRW: ??? */
 	public Integer KZ_Bereich_JG;
 
-	/** Statkue Tabelle IT.NRW: zulässige Schulform der Abgangsart */
-	public String SF;
+	/** Statkue Tabelle IT.NRW: zulässige Jahrgäng der Abgangsart */
+	public String AbgangsJG;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOStatkueAbgangsartPK ohne eine Initialisierung der Attribute.
@@ -36,17 +36,17 @@ public class DTOStatkueAbgangsartPK implements Serializable {
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOStatkueAbgangsartPK.
-	 * @param AbgangsJG   der Wert für das Attribut AbgangsJG
+	 * @param SF   der Wert für das Attribut SF
 	 * @param Art   der Wert für das Attribut Art
 	 * @param KZ_Bereich   der Wert für das Attribut KZ_Bereich
 	 * @param KZ_Bereich_JG   der Wert für das Attribut KZ_Bereich_JG
-	 * @param SF   der Wert für das Attribut SF
+	 * @param AbgangsJG   der Wert für das Attribut AbgangsJG
 	 */
-	public DTOStatkueAbgangsartPK(final String AbgangsJG, final String Art, final Integer KZ_Bereich, final Integer KZ_Bereich_JG, final String SF) {
-		if (AbgangsJG == null) { 
-			throw new NullPointerException("AbgangsJG must not be null");
+	public DTOStatkueAbgangsartPK(final String SF, final String Art, final Integer KZ_Bereich, final Integer KZ_Bereich_JG, final String AbgangsJG) {
+		if (SF == null) { 
+			throw new NullPointerException("SF must not be null");
 		}
-		this.AbgangsJG = AbgangsJG;
+		this.SF = SF;
 		if (Art == null) { 
 			throw new NullPointerException("Art must not be null");
 		}
@@ -59,10 +59,10 @@ public class DTOStatkueAbgangsartPK implements Serializable {
 			throw new NullPointerException("KZ_Bereich_JG must not be null");
 		}
 		this.KZ_Bereich_JG = KZ_Bereich_JG;
-		if (SF == null) { 
-			throw new NullPointerException("SF must not be null");
+		if (AbgangsJG == null) { 
+			throw new NullPointerException("AbgangsJG must not be null");
 		}
-		this.SF = SF;
+		this.AbgangsJG = AbgangsJG;
 	}
 
 
@@ -75,10 +75,10 @@ public class DTOStatkueAbgangsartPK implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOStatkueAbgangsartPK other = (DTOStatkueAbgangsartPK) obj;
-		if (AbgangsJG == null) {
-			if (other.AbgangsJG != null)
+		if (SF == null) {
+			if (other.SF != null)
 				return false;
-		} else if (!AbgangsJG.equals(other.AbgangsJG))
+		} else if (!SF.equals(other.SF))
 			return false;
 
 		if (Art == null) {
@@ -99,10 +99,10 @@ public class DTOStatkueAbgangsartPK implements Serializable {
 		} else if (!KZ_Bereich_JG.equals(other.KZ_Bereich_JG))
 			return false;
 
-		if (SF == null) {
-			if (other.SF != null)
+		if (AbgangsJG == null) {
+			if (other.AbgangsJG != null)
 				return false;
-		} else if (!SF.equals(other.SF))
+		} else if (!AbgangsJG.equals(other.AbgangsJG))
 			return false;
 		return true;
 	}
@@ -111,7 +111,7 @@ public class DTOStatkueAbgangsartPK implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((AbgangsJG == null) ? 0 : AbgangsJG.hashCode());
+		result = prime * result + ((SF == null) ? 0 : SF.hashCode());
 
 		result = prime * result + ((Art == null) ? 0 : Art.hashCode());
 
@@ -119,7 +119,7 @@ public class DTOStatkueAbgangsartPK implements Serializable {
 
 		result = prime * result + ((KZ_Bereich_JG == null) ? 0 : KZ_Bereich_JG.hashCode());
 
-		result = prime * result + ((SF == null) ? 0 : SF.hashCode());
+		result = prime * result + ((AbgangsJG == null) ? 0 : AbgangsJG.hashCode());
 		return result;
 	}
 }

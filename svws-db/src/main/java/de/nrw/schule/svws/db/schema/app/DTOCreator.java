@@ -6,14 +6,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.List;
 import java.util.Vector;
 
-import de.nrw.schule.svws.db.schema.DBSchemaDefinition;
 import de.nrw.schule.svws.db.schema.DBSchemaViews;
+import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaRevisionen;
 import de.nrw.schule.svws.db.schema.View;
-import de.nrw.schule.svws.db.schema.csv.TabelleSpalte;
 import de.nrw.schule.svws.logger.LogConsumerConsole;
 import de.nrw.schule.svws.logger.Logger;
 import de.nrw.schule.svws.shell.CommandLineException;
@@ -51,7 +49,7 @@ public class DTOCreator {
 	private static File createPackageDirectory(final String baseDir, final long rev) {
 		try {
 			// Erstelle das Verzeichnis für das Package
-			String pack = DBSchemaDefinition.javaPackage + "." + DBSchemaDefinition.javaDTOPackage;
+			String pack = Schema.javaPackage + "." + Schema.javaDTOPackage;
 			logger.logLn("Erzeuge Package " + pack);
 			String packPath = pack.replace(".", "/");
 			if ((baseDir != null) && !baseDir.isEmpty())
@@ -69,13 +67,12 @@ public class DTOCreator {
 	 * Generiert den JavaDTO-Klassencode des Parameter Schemas und legt ihn an dem 
 	 * spezifiziertem Pfad ab.
 	 * 
-	 * @param schema     das Schema, für das der Javacode generiert wird 
 	 * @param baseDir    das Verzeichnis, in welchem das Package für die DTOs erzeugt werden soll
 	 * @param rev        die Revision, für die die DTOs erzeugt werden sollen (-1 für die neueste Revision)
 	 * 
 	 * @return das {@link File}-Objekt für das Package-Verzeichnis
 	 */
-	private static File createJavaCode(final DBSchemaDefinition schema, final String baseDir, final long rev) {
+	private static File createJavaCode(final String baseDir, final long rev) {
 		final File packageDir = createPackageDirectory(baseDir, rev);
 		if (packageDir == null)
 			cmdLine.printOptionsAndExit(2, "Fehler beim Erstellen des Verzeichnisses für das DTO-Package. Korrigieren Sie den Ausgabe-Pfad.");
@@ -89,7 +86,7 @@ public class DTOCreator {
 
 		// Erzeuge die DTOs für die einzelnen Tabellen
 		for (DTOCreatorTable dto : DTOCreatorTable.all) {
-			logger.log("Tabelle " + dto.tabelle.Name + ": ");
+			logger.log("Tabelle " + dto.tabelle.name() + ": ");
 			String javaPackage = dto.getPackageName(rev);
 			if (!dto.tabelle.isDefined(rev)) {
 				logger.logLn("---");
@@ -113,10 +110,9 @@ public class DTOCreator {
 				// Erzeuge den Code zum Registrieren der DTO-Klasse in dem Verzeichnis der DTO-Klassen
 				codeDTOImports += "import " + javaPackage + "." + dto.tabelle.getJavaKlasse(rev) + ";" + System.lineSeparator();
 				codeMapDTOName2DTOClass += "             mapDTOName2DTOClass.put(" + dto.tabelle.getJavaKlasse(rev) + ".class.getSimpleName()," + dto.tabelle.getJavaKlasse(rev) + ".class);" + System.lineSeparator();
-				codeMapTablename2DTOClass += "             mapTablename2DTOClass.put(\"" + dto.tabelle.Name + "\"," + dto.tabelle.getJavaKlasse(rev) + ".class);" + System.lineSeparator();
+				codeMapTablename2DTOClass += "             mapTablename2DTOClass.put(\"" + dto.tabelle.name() + "\"," + dto.tabelle.getJavaKlasse(rev) + ".class);" + System.lineSeparator();
 				// Generierere ggf. zusätzliche Code für eine Primary Key - Klasse
-				List<TabelleSpalte> pkSpalten = dto.tabelle.primaerschluessel.spalten;
-				if ((pkSpalten == null) || (pkSpalten.size() > 1)) {
+				if ((dto.tabelle.pkSpalten() == null) || (dto.tabelle.pkSpalten().size() != 1)) {
 					logger.log(" (" + dto.tabelle.getJavaKlasse(rev) + "PK)");
 					file = new File(dir, dto.tabelle.getJavaKlasse(rev) + "PK.java");
 					code = dto.getCode4PrimaryKeyClass(rev);
@@ -136,7 +132,7 @@ public class DTOCreator {
 		// Erzeuge die DTOs für die einzelnen Views
 		if (rev != 0) {
 			long revision = (rev < 0) ? SchemaRevisionen.maxRevision.revision : rev;
-			String packagename = DBSchemaDefinition.javaPackage + "." + DBSchemaDefinition.javaDTOPackage + ((rev < 0) ? ".current" : ".rev" + rev) + ".";
+			String packagename = Schema.javaPackage + "." + Schema.javaDTOPackage + ((rev < 0) ? ".current" : ".rev" + rev) + ".";
 			for (View view : DBSchemaViews.getInstance().getViewsActive(revision)) {
 				logger.log("View " + view.name + ": ");
 				DTOCreatorView creator = new DTOCreatorView(view);
@@ -181,7 +177,7 @@ public class DTOCreator {
 		}
 		
 		try {
-			String dtosCode = "package " + DBSchemaDefinition.javaPackage + "." + DBSchemaDefinition.javaDTOPackage + ";" + System.lineSeparator()
+			String dtosCode = "package " + Schema.javaPackage + "." + Schema.javaDTOPackage + ";" + System.lineSeparator()
 			 + "" + System.lineSeparator()
 			 + "import java.util.HashMap;" + System.lineSeparator()
 			 + "" + System.lineSeparator()
@@ -272,7 +268,7 @@ public class DTOCreator {
 	private static void writeDTOHelper(File packageDir) {
 		final File dtosFile = new File(packageDir, "DTOHelper.java");
 		try {
-			String dtosCode = "package " + DBSchemaDefinition.javaPackage + "." + DBSchemaDefinition.javaDTOPackage + ";" + System.lineSeparator()
+			String dtosCode = "package " + Schema.javaPackage + "." + Schema.javaDTOPackage + ";" + System.lineSeparator()
 			 + "" + System.lineSeparator()
 			 + "import de.nrw.schule.svws.db.schema.SchemaRevisionen;" + System.lineSeparator()
 			 + "" + System.lineSeparator()
@@ -403,17 +399,17 @@ public class DTOCreator {
 			
 			logger.logLn("Erzeuge DTO-Klassen für die Revision 0, d.h. für die Migration alter Datenbanken...");
 			logger.modifyIndent(2);
-			createJavaCode(DBSchemaDefinition.getInstance(), path, 0);
+			createJavaCode(path, 0);
 			logger.modifyIndent(-2);
 			
 			logger.logLn("Erzeuge DTO-Klassen für die neueste Revision, d.h. für den normalen SVWS-Server-Betrieb...");
 			logger.modifyIndent(2);
-			File packageDir = createJavaCode(DBSchemaDefinition.getInstance(), path, -1);
+			File packageDir = createJavaCode(path, -1);
 			logger.modifyIndent(-2);
 			
 			logger.logLn("Erzeuge DTO-Klassen für die aktuelle Entwickler-Revision, d.h. für den experimentellen SVWS-Server-Betrieb...");
 			logger.modifyIndent(2);
-			createJavaCode(DBSchemaDefinition.getInstance(), path, SchemaRevisionen.maxDeveloperRevision.revision);
+			createJavaCode(path, SchemaRevisionen.maxDeveloperRevision.revision);
 			logger.modifyIndent(-2);
 
 			logger.logLn("Erzeuge persistence.xml, so dass named queries verwendet werden können...");

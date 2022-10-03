@@ -7,9 +7,9 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import de.nrw.schule.svws.db.converter.DBAttributeConverter;
-import de.nrw.schule.svws.db.schema.DBSchemaDefinition;
-import de.nrw.schule.svws.db.schema.csv.Tabelle;
-import de.nrw.schule.svws.db.schema.csv.TabelleSpalte;
+import de.nrw.schule.svws.db.schema.Schema;
+import de.nrw.schule.svws.db.schema.SchemaTabelle;
+import de.nrw.schule.svws.db.schema.SchemaTabelleSpalte;
 import de.nrw.schule.svws.logger.LogConsumerConsole;
 import de.nrw.schule.svws.logger.LogConsumerVector;
 import de.nrw.schule.svws.logger.LogData;
@@ -22,9 +22,6 @@ import de.nrw.schule.svws.logger.Logger;
  */
 public class DTOCreatorTable {
 
-	/** Die Defintion des SVWS-Datenbank-Schemas */
-	private static DBSchemaDefinition schema = DBSchemaDefinition.getInstance();
-
 	/** Der intern genutzte Logger für das Erzeugen des Quellcodes */
 	private static Logger logger = new Logger();
 
@@ -33,7 +30,7 @@ public class DTOCreatorTable {
 
 
 	/** Die Tabelle für die der Java-Code erzeugt werden soll */
-	public final Tabelle tabelle;
+	public final SchemaTabelle tabelle;
 
 
 	/**
@@ -41,7 +38,7 @@ public class DTOCreatorTable {
 	 * 
 	 * @param tabelle    die Tabelle, für die der Java-Code erstellt werden soll.
 	 */
-	private DTOCreatorTable(Tabelle tabelle) {
+	private DTOCreatorTable(SchemaTabelle tabelle) {
 		this.tabelle = tabelle;
 	}
 
@@ -64,13 +61,17 @@ public class DTOCreatorTable {
 	 */
 	public static void init() {
 		if (all.size() == 0) {
-			for (Tabelle tab : schema.tabellen) {
+			for (SchemaTabelle tab : Schema.tabellen.values().stream().sorted((a,b) -> {
+				String a_cmp = a.javaSubPackage() + "." + a.javaClassName();
+				String b_cmp = b.javaSubPackage() + "." + b.javaClassName();
+				return a_cmp.compareTo(b_cmp); 
+			}).toList()) {
 				if (tab == null) {
-					logger.log("Tabellen-Definiation fehlerhaft!");
+					logger.log("Tabellen-Definition fehlerhaft!");
 					return;
 				}
 				if (tab.getJavaKlasse(-1) == null) {
-					logger.log("Tabelle " + tab.Name + " wird nicht nach Java übernommen. ");
+					logger.log("Tabelle " + tab.name() + " wird nicht nach Java übernommen. ");
 					return;
 				}
 				logger.modifyIndent(2);
@@ -90,13 +91,13 @@ public class DTOCreatorTable {
 	 * @return der Package-Name
 	 */
 	public String getPackageName(long rev) {
-		String packagename = DBSchemaDefinition.javaPackage + "." + DBSchemaDefinition.javaDTOPackage;
+		String packagename = Schema.javaPackage + "." + Schema.javaDTOPackage;
 		if (rev < 0) {
-			packagename += ".current." + tabelle.JavaPackage;
+			packagename += ".current." + tabelle.javaSubPackage();
 		} else if (rev == 0) {
-			packagename += ".migration." + tabelle.JavaPackage;
+			packagename += ".migration." + tabelle.javaSubPackage();
 		} else {
-			packagename += ".rev" + rev + "." + tabelle.JavaPackage;
+			packagename += ".rev" + rev + "." + tabelle.javaSubPackage();
 		}
 		return packagename;
 	}
@@ -109,10 +110,10 @@ public class DTOCreatorTable {
 	 * 
 	 * @return der Java-Attributname
 	 */
-	private static String getJavaAttributeName(TabelleSpalte spalte) {
-		if (spalte.getJavaAttributName() != null)
-			return spalte.getJavaAttributName().startsWith("-") ? null : spalte.getJavaAttributName();
-		return spalte.NameSpalte;
+	private static String getJavaAttributeName(SchemaTabelleSpalte spalte) {
+		if (spalte.javaAttributName() != null)
+			return spalte.javaAttributName().startsWith("-") ? null : spalte.javaAttributName();
+		return spalte.name();
 	}
 	
 	
@@ -123,8 +124,8 @@ public class DTOCreatorTable {
 	 * 
 	 * @return der Java-Datentyp
 	 */
-	private static String getDataType(TabelleSpalte spalte, final long rev) {		
-		String dataType = schema.getJavatype(spalte);
+	private static String getDataType(SchemaTabelleSpalte spalte, final long rev) {		
+		String dataType = spalte.datentyp().java();
 		String attrConverter = spalte.getJavaAttributConverter(rev);
 		if (attrConverter != null) {
 			dataType = DBAttributeConverter.getByClassName(attrConverter).getResultType().getSimpleName();
@@ -142,7 +143,7 @@ public class DTOCreatorTable {
 	 * 
 	 * @return der Java-Code für die beiden Methoden 
 	 */
-	private static String getCode4EqualsAndHashcode(String classname, Collection<TabelleSpalte> pkspalten) {
+	private static String getCode4EqualsAndHashcode(String classname, Collection<SchemaTabelleSpalte> pkspalten) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("\t@Override" + System.lineSeparator());		
 		sb.append("\tpublic boolean equals(Object obj) {" + System.lineSeparator());
@@ -242,31 +243,32 @@ public class DTOCreatorTable {
 			= "@NamedQuery(name=\"" + tabelle.getJavaKlasse(rev) + ".all\", query=\"SELECT e FROM " + tabelle.getJavaKlasse(rev) + " e\")"
 			+ System.lineSeparator();
 		// alle Tabellen: Generiere Annotationen für NamedQueries für einzelne Attribute der Tabelle
-		for (TabelleSpalte spalte : tabelle.getSpalten(rev)) {
-			if (spalte.getJavaAttributName().startsWith("-"))
+		for (SchemaTabelleSpalte spalte : tabelle.getSpalten(rev)) {
+			if (spalte.javaAttributName().startsWith("-"))
 				continue; // ignoriere Datenbank-Spalten, welche nicht als Java-Attribute umgesetzt werden sollen
-			code += "@NamedQuery(name=\"" + tabelle.getJavaKlasse(rev) + "." + spalte.getJavaAttributName().toLowerCase() + "\", query=\"SELECT e FROM " + tabelle.getJavaKlasse(rev) + " e WHERE "
-				 + "e." + spalte.getJavaAttributName() + " = :value"
+			code += "@NamedQuery(name=\"" + tabelle.getJavaKlasse(rev) + "." + spalte.javaAttributName().toLowerCase() + "\", query=\"SELECT e FROM " + tabelle.getJavaKlasse(rev) + " e WHERE "
+				 + "e." + spalte.javaAttributName() + " = :value"
 				 + "\")" + System.lineSeparator();
-			code += "@NamedQuery(name=\"" + tabelle.getJavaKlasse(rev) + "." + spalte.getJavaAttributName().toLowerCase() + ".multiple\", query=\"SELECT e FROM " + tabelle.getJavaKlasse(rev) + " e WHERE "
-					 + "e." + spalte.getJavaAttributName() + " IN :value"
+			code += "@NamedQuery(name=\"" + tabelle.getJavaKlasse(rev) + "." + spalte.javaAttributName().toLowerCase() + ".multiple\", query=\"SELECT e FROM " + tabelle.getJavaKlasse(rev) + " e WHERE "
+					 + "e." + spalte.javaAttributName() + " IN :value"
 					 + "\")" + System.lineSeparator();
 		}
 		// nur für Tabellen mit Primärschlüssel...
-		if (tabelle.primaerschluessel.spalten.size() > 0) {
+		if (tabelle.pkSpalten().size() > 0) {
 			// Generiere Code für eine parametrisierte NamedQuery mit den Spalten des Primärschlüssels als Parameter
 			code += "@NamedQuery(name=\"" + tabelle.getJavaKlasse(rev) + ".primaryKeyQuery\", query=\"SELECT e FROM " + tabelle.getJavaKlasse(rev) + " e WHERE ";
-			for (int i = 0; i < tabelle.primaerschluessel.spalten.size(); i++) {
-				TabelleSpalte col = tabelle.primaerschluessel.spalten.get(i);
+			var iter = tabelle.pkSpalten().iterator();
+			for (int i = 0; i < tabelle.pkSpalten().size(); i++) {
+				SchemaTabelleSpalte col = iter.next();
 				if (i > 0)
 					code += " AND "; 
-				code += "e." + col.getJavaAttributName() + " = ?" + (i+1);
+				code += "e." + col.javaAttributName() + " = ?" + (i+1);
 			}
 			code += "\")" + System.lineSeparator(); 
 			// Generiere Code für eine NamedQuery auf alle Datensätze der Tabelle, welche für eine Migration Datensätze entfernt, die nicht der Primary-key-Constraint entsprechen
 			code += "@NamedQuery(name=\"" + tabelle.getJavaKlasse(rev) + ".all.migration\", query=\"SELECT e FROM " + tabelle.getJavaKlasse(rev) + " e WHERE ";
-			code += tabelle.primaerschluessel.spalten.stream()
-					.map(col -> "e." + col.getJavaAttributName() + " IS NOT NULL")
+			code += tabelle.pkSpalten().stream()
+					.map(col -> "e." + col.javaAttributName() + " IS NOT NULL")
 					.collect(Collectors.joining(" AND "));
 			code += "\")" + System.lineSeparator();
 		}
@@ -288,27 +290,23 @@ public class DTOCreatorTable {
 	 *  
 	 * @return der Java-Code für das Attribut für die DB-Spalte
 	 */
-	private String getCode4Attributes(TabelleSpalte spalte, final long rev, boolean withAnnotations) {
+	private String getCode4Attributes(SchemaTabelleSpalte spalte, final long rev, boolean withAnnotations) {
 		String javaAttributName = getJavaAttributeName(spalte);
 		if (javaAttributName == null)
 			return null;
 		StringBuilder sb = new StringBuilder();
-		if (spalte.JavaKommentar != null) 
-			sb.append("\t/** " + spalte.JavaKommentar + " */" + System.lineSeparator());
+		if (spalte.javaComment() != null) 
+			sb.append("\t/** " + spalte.javaComment() + " */" + System.lineSeparator());
 		if (withAnnotations) {
-			// TODO Der Fall, dass ein Primärschlüssel in der Schema-Definition nicht vorhanden ist, sollte bereits in der Klasse DBSchemaDefinition gehandhabt werden
-			if ((tabelle.primaerschluessel.spalten.size() <= 0) || tabelle.primaerschluessel.spalten.contains(spalte))
+			if ((tabelle.pkSpalten().size() <= 0) || tabelle.pkSpalten().contains(spalte))
 				sb.append("\t@Id" + System.lineSeparator());
-//			if ((tabelle.primaerschluessel.hatAutoIncrement) && tabelle.primaerschluessel.spalten.contains(spalte))
-//				sb.append("\t@GeneratedValue(strategy=GenerationType.IDENTITY)" + System.lineSeparator());
-			sb.append("\t@Column(name = \"" + spalte.NameSpalte + "\")" + System.lineSeparator());
+			sb.append("\t@Column(name = \"" + spalte.name() + "\")" + System.lineSeparator());
 			sb.append("\t@JsonProperty" + System.lineSeparator());
 		}
-		String dataType = schema.getJavatype(spalte);
+		String dataType = spalte.datentyp().java(); 
 		String attrConverter = spalte.getJavaAttributConverter(rev); 
 		if (attrConverter != null) {
 			if (withAnnotations) {
-// TODO Test whether an Attribute Converter should be applied...			
 				var simpleConverterClassName = DBAttributeConverter.getByClassName(attrConverter).getClass().getSimpleName();
 				sb.append("\t@Convert(converter=" + simpleConverterClassName + ".class)" + System.lineSeparator());
 				sb.append("\t@JsonSerialize(using=" + simpleConverterClassName + "Serializer.class)" + System.lineSeparator());
@@ -350,12 +348,8 @@ public class DTOCreatorTable {
 			sb.append("import jakarta.persistence.Convert;" + System.lineSeparator());
 		sb.append("import jakarta.persistence.Entity;" + System.lineSeparator());
 		sb.append("import jakarta.persistence.Id;" + System.lineSeparator());
-		if (tabelle.primaerschluessel.spalten.size() != 1)
+		if (tabelle.pkSpalten().size() != 1)
 			sb.append("import jakarta.persistence.IdClass;" + System.lineSeparator());
-//		if (tabelle.primaerschluessel.hatAutoIncrement) {
-//			sb.append("import jakarta.persistence.GeneratedValue;" + System.lineSeparator());
-//			sb.append("import jakarta.persistence.GenerationType;" + System.lineSeparator());
-//		}
 		sb.append("import jakarta.persistence.NamedQuery;" + System.lineSeparator());
 		sb.append("import jakarta.persistence.Table;" + System.lineSeparator());
 		sb.append(System.lineSeparator());
@@ -375,19 +369,19 @@ public class DTOCreatorTable {
 		}
 
 		sb.append("/**" + System.lineSeparator());
-		sb.append(" * Diese Klasse dient als DTO für die Datenbanktabelle " + tabelle.Name + "." + System.lineSeparator());
+		sb.append(" * Diese Klasse dient als DTO für die Datenbanktabelle " + tabelle.name() + "." + System.lineSeparator());
 		sb.append(" * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, " + System.lineSeparator());
 		sb.append(" * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird." + System.lineSeparator());
 		sb.append(" */" + System.lineSeparator());		
 		sb.append("@Entity" + System.lineSeparator());
-		if (tabelle.primaerschluessel.spalten.size() != 1) {
+		if (tabelle.pkSpalten().size() != 1) {
 			sb.append("@IdClass(" + tabelle.getJavaKlasse(rev) + "PK.class)" + System.lineSeparator());
 		}
 		sb.append("@Cacheable(DBEntityManager.use_db_caching)" + System.lineSeparator());
-		sb.append("@Table(name = \"" + tabelle.Name + "\")" + System.lineSeparator());
+		sb.append("@Table(name = \"" + tabelle.name() + "\")" + System.lineSeparator());
 		sb.append(getCode4NamedQueries(rev));
 		sb.append(tabelle.getSpalten(rev).stream()
-				.map(spalte -> "\"" + spalte.getJavaAttributName() + "\"")
+				.map(spalte -> "\"" + spalte.javaAttributName() + "\"")
 				.collect(Collectors.joining(",","@JsonPropertyOrder({","})" + System.lineSeparator())));		
 		sb.append("public class " + tabelle.getJavaKlasse(rev) + " {" + System.lineSeparator());
 		sb.append(System.lineSeparator());
@@ -403,10 +397,10 @@ public class DTOCreatorTable {
 		sb.append("\tprivate " + tabelle.getJavaKlasse(rev) + "() {" + System.lineSeparator());
 		sb.append("\t}" + System.lineSeparator());
 		sb.append(System.lineSeparator());
-		if (tabelle.getSpalten(rev).stream().anyMatch(spalte -> spalte.IsNotNull)) {
+		if (tabelle.getSpalten(rev).stream().anyMatch(spalte -> spalte.notNull())) {
 			sb.append("\t/**" + System.lineSeparator());
 			sb.append("\t * Erstellt ein neues Objekt der Klasse " + tabelle.getJavaKlasse(rev) + " ohne eine Initialisierung der Attribute." + System.lineSeparator());
-			tabelle.getSpalten(rev).stream().filter(spalte -> spalte.IsNotNull).forEach(spalte -> {
+			tabelle.getSpalten(rev).stream().filter(spalte -> spalte.notNull()).forEach(spalte -> {
 				String colname = getJavaAttributeName(spalte);
 				if (colname != null)
 					sb.append("\t * @param " + colname + "   der Wert für das Attribut " + colname + "" + System.lineSeparator());
@@ -414,14 +408,14 @@ public class DTOCreatorTable {
 			sb.append("\t */" + System.lineSeparator());
 			sb.append("\tpublic " + tabelle.getJavaKlasse(rev) + "(");
 			sb.append(tabelle.getSpalten(rev).stream()
-					.filter(spalte -> spalte.IsNotNull)
+					.filter(spalte -> spalte.notNull())
 					.filter(spalte -> getJavaAttributeName(spalte) != null)
 					.map(spalte -> "final " + getDataType(spalte, rev) + " " + getJavaAttributeName(spalte))
 					.collect(Collectors.joining(", "))
 					);
 			sb.append(") {" + System.lineSeparator());
 			sb.append(tabelle.getSpalten(rev).stream()
-					.filter(spalte -> spalte.IsNotNull)
+					.filter(spalte -> spalte.notNull())
 					.filter(spalte -> getJavaAttributeName(spalte) != null)
 					.map(spalte ->
 					    "\t\tif (" + getJavaAttributeName(spalte) + " == null) { " + System.lineSeparator() +
@@ -434,8 +428,7 @@ public class DTOCreatorTable {
 		}
 		sb.append(System.lineSeparator());
 		sb.append(System.lineSeparator());
-		// TODO Zuordnung von allen Spalten sollte ggf. beim Einlesen der Schema-Definition bereits erfolgen... 
-		Collection<TabelleSpalte> tmpPkSpalten = tabelle.primaerschluessel.spalten.size() <= 0 ? tabelle.getSpalten(rev) : tabelle.primaerschluessel.spalten; 
+		Collection<SchemaTabelleSpalte> tmpPkSpalten = tabelle.pkSpalten().size() <= 0 ? tabelle.getSpalten(rev) : tabelle.pkSpalten(); 
 		sb.append(getCode4EqualsAndHashcode(tabelle.getJavaKlasse(rev), tmpPkSpalten));
 		sb.append(System.lineSeparator());
 		sb.append(System.lineSeparator());
@@ -472,7 +465,7 @@ public class DTOCreatorTable {
 			return null;
 		
 		// Bestimme die Spalten für den Primärschlüssel und erzeuge nur Code, wenn es sich nicht um einen einfachen Primärschlüssel handelt
-		List<TabelleSpalte> pkSpalten = tabelle.primaerschluessel.spalten;
+		Collection<SchemaTabelleSpalte> pkSpalten = tabelle.pkSpalten();
 		if (pkSpalten == null)
 			pkSpalten = tabelle.getSpalten(rev);
 		if (pkSpalten.size() <= 1)
@@ -484,7 +477,7 @@ public class DTOCreatorTable {
 		sb.append("import java.io.Serializable;" + System.lineSeparator());
 		sb.append(System.lineSeparator());	
 		sb.append("/**" + System.lineSeparator());
-		sb.append(" * Diese Klasse dient als DTO für den Primärschlüssel der Datenbanktabelle " + tabelle.Name + "." + System.lineSeparator());
+		sb.append(" * Diese Klasse dient als DTO für den Primärschlüssel der Datenbanktabelle " + tabelle.name() + "." + System.lineSeparator());
 		sb.append(" * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, " + System.lineSeparator());
 		sb.append(" * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird." + System.lineSeparator());
 		sb.append(" */" + System.lineSeparator());
@@ -493,7 +486,7 @@ public class DTOCreatorTable {
 		sb.append("\t/** Die UID für diese Klasse */" + System.lineSeparator());
 		sb.append("\tprivate static final long serialVersionUID = 1L;" + System.lineSeparator());
 		sb.append(System.lineSeparator());		
-		sb.append(tabelle.primaerschluessel.spalten.stream()
+		sb.append(tabelle.pkSpalten().stream()
 				.map(col -> getCode4Attributes(col, rev, false))
 				.filter(code -> code != null)
 				.collect(Collectors.joining(System.lineSeparator())));
@@ -507,20 +500,20 @@ public class DTOCreatorTable {
 		sb.append(System.lineSeparator());		
 		sb.append("\t/**" + System.lineSeparator());
 		sb.append("\t * Erstellt ein neues Objekt der Klasse " + tabelle.getJavaKlasse(rev) + "PK." + System.lineSeparator());
-		tabelle.primaerschluessel.spalten.stream().forEach(spalte -> {
+		tabelle.pkSpalten().stream().forEach(spalte -> {
 			String colname = getJavaAttributeName(spalte);
 			if (colname != null)
 				sb.append("\t * @param " + colname + "   der Wert für das Attribut " + colname + "" + System.lineSeparator());
 		});
 		sb.append("\t */" + System.lineSeparator());
 		sb.append("\tpublic " + tabelle.getJavaKlasse(rev) + "PK(");
-		sb.append(tabelle.primaerschluessel.spalten.stream()
+		sb.append(tabelle.pkSpalten().stream()
 				.filter(spalte -> getJavaAttributeName(spalte) != null)
 				.map(spalte -> "final " + getDataType(spalte, rev) + " " + getJavaAttributeName(spalte))
 				.collect(Collectors.joining(", "))
 				);
 		sb.append(") {" + System.lineSeparator());
-		sb.append(tabelle.primaerschluessel.spalten.stream()
+		sb.append(tabelle.pkSpalten().stream()
 				.filter(spalte -> getJavaAttributeName(spalte) != null)
 				.map(spalte ->
 				    "\t\tif (" + getJavaAttributeName(spalte) + " == null) { " + System.lineSeparator() +

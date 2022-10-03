@@ -40,8 +40,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @NamedQuery(name="MigrationDTOInternTextExport.lookupsqltext.multiple", query="SELECT e FROM MigrationDTOInternTextExport e WHERE e.LookupSQLText IN :value")
 @NamedQuery(name="MigrationDTOInternTextExport.dbformat", query="SELECT e FROM MigrationDTOInternTextExport e WHERE e.DBFormat = :value")
 @NamedQuery(name="MigrationDTOInternTextExport.dbformat.multiple", query="SELECT e FROM MigrationDTOInternTextExport e WHERE e.DBFormat IN :value")
-@NamedQuery(name="MigrationDTOInternTextExport.primaryKeyQuery", query="SELECT e FROM MigrationDTOInternTextExport e WHERE e.AnzeigeText = ?1 AND e.DatenartKrz = ?2 AND e.DBFormat = ?3 AND e.Feldname = ?4")
-@NamedQuery(name="MigrationDTOInternTextExport.all.migration", query="SELECT e FROM MigrationDTOInternTextExport e WHERE e.AnzeigeText IS NOT NULL AND e.DatenartKrz IS NOT NULL AND e.DBFormat IS NOT NULL AND e.Feldname IS NOT NULL")
+@NamedQuery(name="MigrationDTOInternTextExport.primaryKeyQuery", query="SELECT e FROM MigrationDTOInternTextExport e WHERE e.DatenartKrz = ?1 AND e.Feldname = ?2 AND e.AnzeigeText = ?3 AND e.DBFormat = ?4")
+@NamedQuery(name="MigrationDTOInternTextExport.all.migration", query="SELECT e FROM MigrationDTOInternTextExport e WHERE e.DatenartKrz IS NOT NULL AND e.Feldname IS NOT NULL AND e.AnzeigeText IS NOT NULL AND e.DBFormat IS NOT NULL")
 @JsonPropertyOrder({"DatenartKrz","Feldname","AnzeigeText","Feldtyp","Feldwerte","ErgebnisWerte","LookupFeldname","LookupSQLText","DBFormat"})
 public class MigrationDTOInternTextExport {
 
@@ -137,28 +137,28 @@ public class MigrationDTOInternTextExport {
 		if (getClass() != obj.getClass())
 			return false;
 		MigrationDTOInternTextExport other = (MigrationDTOInternTextExport) obj;
-		if (AnzeigeText == null) {
-			if (other.AnzeigeText != null)
-				return false;
-		} else if (!AnzeigeText.equals(other.AnzeigeText))
-			return false;
-
 		if (DatenartKrz == null) {
 			if (other.DatenartKrz != null)
 				return false;
 		} else if (!DatenartKrz.equals(other.DatenartKrz))
 			return false;
 
-		if (DBFormat == null) {
-			if (other.DBFormat != null)
-				return false;
-		} else if (!DBFormat.equals(other.DBFormat))
-			return false;
-
 		if (Feldname == null) {
 			if (other.Feldname != null)
 				return false;
 		} else if (!Feldname.equals(other.Feldname))
+			return false;
+
+		if (AnzeigeText == null) {
+			if (other.AnzeigeText != null)
+				return false;
+		} else if (!AnzeigeText.equals(other.AnzeigeText))
+			return false;
+
+		if (DBFormat == null) {
+			if (other.DBFormat != null)
+				return false;
+		} else if (!DBFormat.equals(other.DBFormat))
 			return false;
 		return true;
 	}
@@ -167,13 +167,13 @@ public class MigrationDTOInternTextExport {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((AnzeigeText == null) ? 0 : AnzeigeText.hashCode());
-
 		result = prime * result + ((DatenartKrz == null) ? 0 : DatenartKrz.hashCode());
 
-		result = prime * result + ((DBFormat == null) ? 0 : DBFormat.hashCode());
-
 		result = prime * result + ((Feldname == null) ? 0 : Feldname.hashCode());
+
+		result = prime * result + ((AnzeigeText == null) ? 0 : AnzeigeText.hashCode());
+
+		result = prime * result + ((DBFormat == null) ? 0 : DBFormat.hashCode());
 		return result;
 	}
 

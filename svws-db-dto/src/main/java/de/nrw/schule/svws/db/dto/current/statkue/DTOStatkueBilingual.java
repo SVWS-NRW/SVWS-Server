@@ -34,8 +34,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @NamedQuery(name="DTOStatkueBilingual.gueltigvon.multiple", query="SELECT e FROM DTOStatkueBilingual e WHERE e.gueltigVon IN :value")
 @NamedQuery(name="DTOStatkueBilingual.gueltigbis", query="SELECT e FROM DTOStatkueBilingual e WHERE e.gueltigBis = :value")
 @NamedQuery(name="DTOStatkueBilingual.gueltigbis.multiple", query="SELECT e FROM DTOStatkueBilingual e WHERE e.gueltigBis IN :value")
-@NamedQuery(name="DTOStatkueBilingual.primaryKeyQuery", query="SELECT e FROM DTOStatkueBilingual e WHERE e.Fach = ?1 AND e.SF = ?2")
-@NamedQuery(name="DTOStatkueBilingual.all.migration", query="SELECT e FROM DTOStatkueBilingual e WHERE e.Fach IS NOT NULL AND e.SF IS NOT NULL")
+@NamedQuery(name="DTOStatkueBilingual.primaryKeyQuery", query="SELECT e FROM DTOStatkueBilingual e WHERE e.SF = ?1 AND e.Fach = ?2")
+@NamedQuery(name="DTOStatkueBilingual.all.migration", query="SELECT e FROM DTOStatkueBilingual e WHERE e.SF IS NOT NULL AND e.Fach IS NOT NULL")
 @JsonPropertyOrder({"SF","Fach","Beschreibung","geaendert","gueltigVon","gueltigBis"})
 public class DTOStatkueBilingual {
 
@@ -104,16 +104,16 @@ public class DTOStatkueBilingual {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOStatkueBilingual other = (DTOStatkueBilingual) obj;
-		if (Fach == null) {
-			if (other.Fach != null)
-				return false;
-		} else if (!Fach.equals(other.Fach))
-			return false;
-
 		if (SF == null) {
 			if (other.SF != null)
 				return false;
 		} else if (!SF.equals(other.SF))
+			return false;
+
+		if (Fach == null) {
+			if (other.Fach != null)
+				return false;
+		} else if (!Fach.equals(other.Fach))
 			return false;
 		return true;
 	}
@@ -122,9 +122,9 @@ public class DTOStatkueBilingual {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((Fach == null) ? 0 : Fach.hashCode());
-
 		result = prime * result + ((SF == null) ? 0 : SF.hashCode());
+
+		result = prime * result + ((Fach == null) ? 0 : Fach.hashCode());
 		return result;
 	}
 

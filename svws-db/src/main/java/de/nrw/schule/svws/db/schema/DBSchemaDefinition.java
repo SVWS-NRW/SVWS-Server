@@ -523,6 +523,36 @@ public class DBSchemaDefinition {
     
     
     /**
+     * Liefert alle Tabellen, die irgendwann mal definiert waren, d.h. unabhängig von der aktuellen Revision, 
+     * in der Reihenfolge bei der Erstellung der Tabellen.
+     *  
+     * @return eine Liste mit allen irgendwann definierten Tabellen
+     */
+    public List<Tabelle> getTabellenSortiert() {
+    	return this.tabellen.stream()
+    			.sorted((a,b) -> {
+    		    	String sa = null;
+    		    	String sb = null;
+    		    	long i = SchemaRevisionen.maxDeveloperRevision.revision;
+    		    	while (((sa == null) || (sb == null)) && (i >= 0)) {
+        		    	sa = a.sortierung.get(i);
+        		    	sb = b.sortierung.get(i);
+    		    		i--;
+    		    	}
+    		    	if ((sa == null) && (sb == null))
+    		    		return 0;
+    		    	if (sa == null)
+    		    		return 1;
+    		    	if (sb == null)
+    		    		return -1;
+    		    	int result = sa.compareTo(sb);
+    		    	return (result != 0) ? result : a.Name.compareTo(b.Name);    				
+    			})
+    			.collect(Collectors.toList());
+    }
+    
+    
+    /**
      * Liefert alle Tabellen, welche in der angegebenen Revision definiert sind. 
      * 
      * @param rev   die SVWS-DB-Revision

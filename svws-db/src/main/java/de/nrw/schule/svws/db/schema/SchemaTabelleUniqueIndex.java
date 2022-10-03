@@ -2,6 +2,9 @@ package de.nrw.schule.svws.db.schema;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import de.nrw.schule.svws.db.DBDriver;
 
 /**
  * Diese Klasse dient der Definition eines Unique-Index bei SVWS-Datenbank-Tabellen.  
@@ -120,6 +123,61 @@ public class SchemaTabelleUniqueIndex {
 	 */
 	public SchemaRevisionen veraltet() {
 		return _veraltet;
+	}
+
+    /**
+     * Liefert die Tabellenspalten der Unique-Constraint in der durch das Feld Sortierung definierten Reihenfolge
+     * 
+     * @return die Tabellenspalten der Unique-Constraint in der durch das Feld Sortierung definierten Reihenfolge 
+     */
+    public List<SchemaTabelleSpalte> getSpalten() {
+    	return _spalten.stream().sorted((a,b) -> { return Integer.compare(a.sortierung(), b.sortierung()); }).collect(Collectors.toList());
+    }
+	
+	
+	/**
+	 * Erstellt einen SQL-String für das Erstellen einer Unique-Constraint 
+	 * 
+	 * @return der SQL-String für das Erstellen der Unique-Constraint
+	 */
+	public String getSQL() {
+		return "CONSTRAINT " + this._name + " UNIQUE (" 
+				+ getSpalten().stream().map(spalte -> spalte.name()).collect(Collectors.joining(", "))
+				+ ")";
+	}
+	
+	
+	/**
+	 * Erstellt einen SQL-String für das nachträgliche Erstellen einer Unique-Constraint 
+	 * für den SQL-Dialekt des angegebenen DBMS
+	 * 
+	 * @param dbms   das DBMS
+	 * 
+	 * @return der SQL-String für das nachträgliche Erstellen der Unique-Constraint
+	 */
+	public String getSQLCreate(DBDriver dbms) {
+		return switch (dbms) {
+			case SQLITE -> null; // TODO currently not supported
+			case MDB, MARIA_DB, MYSQL, MSSQL -> "ALTER TABLE " + this._tabelle.name() + " ADD " + this.getSQL();
+			default -> "ALTER TABLE " + this._tabelle.name() + " ADD " + this.getSQL();
+		};
+	}
+	
+	
+	/**
+	 * Erzeugt den SQL-Drop-Befehl für diese Unique-Constraint für den SQL-Dialekt des angegebenen DBMS
+	 * 
+	 * @param dbms   das DBMS
+	 * 
+	 * @return der SQL-Drop-Befehl
+	 */
+	public String getSQLDrop(DBDriver dbms) {
+		return switch (dbms) {
+			case SQLITE -> null; // TODO SQLite - Currently not supported
+			case MARIA_DB, MYSQL -> "ALTER TABLE " + this._tabelle.name() + " DROP INDEX " + this._name + ";";
+			case MDB, MSSQL -> "ALTER TABLE " + this._tabelle.name() + " DROP CONSTRAINT " + this._name + ";";
+			default -> "ALTER TABLE " + this._tabelle.name() + " DROP INDEX " + this._name + ";";
+		};
 	}
 
 }
