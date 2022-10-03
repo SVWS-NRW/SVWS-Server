@@ -96,12 +96,9 @@
 							</thead>
 							<tbody>
 								<s-kurs-blockung
-									v-for="(
-										[kurs, belegung], index
-									) in blockungsergebnisse"
-									:key="index"
+									v-for="kurs in sorted_kurse"
+									:key="kurs.id"
 									:kurs="kurs"
-									:belegung="belegung"
 								></s-kurs-blockung>
 							</tbody>
 						</table>
@@ -116,7 +113,6 @@
 	import {
 		GostBlockungKurs,
 		GostBlockungSchiene,
-		GostBlockungsergebnisKurs,
 		GostBlockungsergebnisManager,
 		Vector
 	} from "@svws-nrw/svws-core-ts";
@@ -153,32 +149,6 @@
 
 	const manager: ComputedRef<GostBlockungsergebnisManager | undefined> = computed(() => {
 		return app.dataKursblockungsergebnis.manager
-	});
-
-	const blockungsergebnisse: ComputedRef<Map<
-		GostBlockungKurs,
-		GostBlockungsergebnisKurs[]
-	>> = computed(() => {
-		const map = new Map();
-		if (!app.dataKursblockung.daten) return map;
-		const schienen = app.dataKursblockung.daten.schienen.toArray(new Array<GostBlockungSchiene>())
-		for (const k of sorted_kurse.value) {
-			let zuordnung: GostBlockungsergebnisKurs | undefined = undefined
-			try {
-				zuordnung = manager.value?.getKursSchuelerZuordnung(
-					k.id
-				);
-					} catch (e) {zuordnung = undefined}
-			map.set(
-				k,
-				schienen.map(s =>
-					s.id === zuordnung?.schienenID
-						? zuordnung
-						: undefined
-				)
-			);
-		}
-		return map;
 	});
 
 	function getAnzahlSchuelerSchiene(idSchiene: number): number {
