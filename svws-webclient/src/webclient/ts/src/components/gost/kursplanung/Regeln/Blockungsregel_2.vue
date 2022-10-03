@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { injectMainApp, Main } from "~/apps/Main";
-import { GostBlockungKurs, GostBlockungRegel, GostBlockungSchiene, GostKursblockungRegelTyp, Vector } from "@svws-nrw/svws-core-ts";
+import { GostBlockungKurs, GostBlockungRegel, GostBlockungSchiene, GostKursart, GostKursblockungRegelTyp, Vector } from "@svws-nrw/svws-core-ts";
 import { computed, ComputedRef, Ref, ref } from "vue";
 
 const main: Main = injectMainApp();
@@ -43,6 +43,14 @@ const regel_entfernen = async (r: GostBlockungRegel) => {
 	await app.dataKursblockung.del_blockung_regel(r.id)
 	if (r === regel.value) regel.value = undefined
 }
+
+const kursbezeichnung = (regel: GostBlockungRegel): string => {
+	const kurs = manager?.getKurs(regel.parameter.get(0).valueOf())
+	if (!kurs) return ""
+	const fach = faechermanager?.get(kurs.fach_id)
+	if (!fach) return ""
+	return `${fach.kuerzel}-${GostKursart.fromID(kurs.kursart).kuerzel}${kurs.nummer}${kurs.suffix ? '-'+kurs.suffix : ''}`
+}
 </script>
 
 <template>
@@ -54,8 +62,7 @@ const regel_entfernen = async (r: GostBlockungRegel) => {
 		</div>
 		<div v-for="r in regeln" :key="r.id" class="flex justify-between">
 			<div class="cursor-pointer" @click="regel = (regel !== r) ? r:undefined" :class="{'bg-slate-200':r===regel}">
-				{{`${faechermanager?.get(manager?.getKurs(r.parameter.get(0).valueOf())?.fach_id.valueOf()||-1)?.kuerzel}
-				${kurs.kursart}${kurs.nummer}${kurs.suffix ? "-"+kurs.suffix:""}`}} auf Schiene {{r.parameter.get(1)}} fixiert
+				{{kursbezeichnung(r)}} auf Schiene {{r.parameter.get(1)}} fixiert
 			</div>
 			<svws-ui-icon type="danger" class="cursor-pointer" @click="regel_entfernen(r)">
 				<i-ri-delete-bin-2-line />
