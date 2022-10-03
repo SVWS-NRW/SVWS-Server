@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import de.nrw.schule.svws.core.data.schule.AbgangsartKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.BerufskollegFachklassenKatalog;
+import de.nrw.schule.svws.core.data.schule.BerufskollegFachklassenKatalogDaten;
 import de.nrw.schule.svws.core.data.schule.BerufskollegFachklassenKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.BerufskollegFachklassenKatalogIndex;
 import de.nrw.schule.svws.core.types.schule.SchulabschlussBerufsbildend;
@@ -38,10 +39,17 @@ public class TestBerufskollegFachklassenManager {
 					fail("Katalog-Eintrag " + eintrag.schluessel + " ist fehlerhaft, da bei Fachklassen der erste Teil des Schlüssels nicht leer sein darf .");
 			if (eintrag.schluessel2 == null)
 				fail("Katalog-Eintrag " + eintrag.schluessel2 + " ist fehlerhaft, da bei Fachklassen der zweite Teil des Schlüssels nicht leer sein darf .");
-			
+			for (BerufskollegFachklassenKatalogDaten daten : eintrag.historie) {
+			    if (daten.bezeichnung == null)
+	                fail("Katalog-Eintrag " + daten.bezeichnung + " ist fehlerhaft, da bei Fachklassen die Bezeichnung nicht leer sein darf .");
+			    if (daten.bezeichnungM == null)
+	                fail("Katalog-Eintrag " + daten.bezeichnungM + " ist fehlerhaft, da bei Fachklassen die Bezeichnung (männlich) nicht leer sein darf .");
+                if (daten.bezeichnungW == null)
+	                fail("Katalog-Eintrag " + daten.bezeichnungW + " ist fehlerhaft, da bei Fachklassen die Bezeichnung (weiblich) nicht leer sein darf .");
+			    }
 			}
-		}
 		System.out.println("Prüfung des Katalogs der Fachklassen erfolgreich abgeschlossen.");
+		}
 	}
-
 }
+
