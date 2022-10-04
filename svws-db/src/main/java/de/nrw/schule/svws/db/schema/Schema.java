@@ -1,5 +1,6 @@
 package de.nrw.schule.svws.db.schema;
 
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Vector;
@@ -1114,8 +1115,8 @@ public class Schema {
 		Schema.tab_Schildintern_KAoA_Berufsfeld,
 		Schema.tab_Schildintern_KAoA_Kategorie,
 		Schema.tab_Schildintern_KAoA_Merkmal,
-		Schema.tab_Schildintern_KAoA_SBO_Ebene4,
 		Schema.tab_Schildintern_KAoA_Zusatzmerkmal,
+		Schema.tab_Schildintern_KAoA_SBO_Ebene4,
 		Schema.tab_Schildintern_Laender,
 		Schema.tab_Schildintern_PrfSemAbschl,
 		Schema.tab_Schildintern_PruefOrd_Optionen,
@@ -1192,6 +1193,22 @@ public class Schema {
     			.filter(t -> ((rev == -1) && (t.veraltet().revision == -1))
     					|| ((rev != -1) && (rev >= t.revision().revision) && ((t.veraltet().revision == -1) || (rev < t.veraltet().revision))))
     			.collect(Collectors.toList());
+    }
+
+    
+    /**
+     * Liefert alle Tabellen mit Default-Daten, welche in der angegebenen Revision 
+     * definiert sind. 
+     * 
+     * @param rev   die SVWS-DB-Revision
+     * 
+     * @return eine Liste mit den in der Revision definierten Tabellen, die Default-Daten haben
+     */
+    public static final List<SchemaTabelle> getTabellenDefaultDaten(long rev) {
+    	return Arrays.stream(tabellenDefaultDaten)
+			.filter(t -> ((rev == -1) && (t.veraltet().revision == -1))
+					|| ((rev != -1) && (rev >= t.revision().revision) && ((t.veraltet().revision == -1) || (rev < t.veraltet().revision))))
+			.collect(Collectors.toList());
     }
     
 }

@@ -33,7 +33,7 @@ public enum SchemaFremdschluesselAktionen {
 	 * Wenn der Schlüssel des Eltern-Datensatzes verändert wird,
 	 * dann werden alle zugehörigen Datensätze entsprechend angepasst.
 	 */
-	CASCADE("CASADE");
+	CASCADE("CASCADE");
 
 	/** Der SQL-String für die Fremdschlüssel-Aktion */
 	private final String _sql;

@@ -1,5 +1,6 @@
 package de.nrw.schule.svws.db.utils.schema;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -8,14 +9,14 @@ import de.nrw.schule.svws.db.DBDriver;
 import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.dto.DTOHelper;
 import de.nrw.schule.svws.db.dto.current.svws.db.DTODBVersion;
-import de.nrw.schule.svws.db.schema.DBSchemaDefinition;
 import de.nrw.schule.svws.db.schema.DBSchemaViews;
+import de.nrw.schule.svws.db.schema.Schema;
+import de.nrw.schule.svws.db.schema.SchemaRevisionUpdateSQL;
 import de.nrw.schule.svws.db.schema.SchemaRevisionen;
+import de.nrw.schule.svws.db.schema.SchemaTabelle;
+import de.nrw.schule.svws.db.schema.SchemaTabelleIndex;
+import de.nrw.schule.svws.db.schema.SchemaTabelleTrigger;
 import de.nrw.schule.svws.db.schema.View;
-import de.nrw.schule.svws.db.schema.csv.Tabelle;
-import de.nrw.schule.svws.db.schema.csv.TabelleIndex;
-import de.nrw.schule.svws.db.schema.csv.TabelleManualSQL;
-import de.nrw.schule.svws.db.schema.csv.Trigger;
 import de.nrw.schule.svws.logger.Logger;
 
 /**
@@ -31,9 +32,6 @@ public class DBSchemaManager {
 
 	/// Ein Logger, um die Abläufe in dem Schema-Manager zu loggen 
 	private final Logger logger;
-	
-	/// Das Schema der Datenbank, wie es sein sollte 
-	private final DBSchemaDefinition schema = DBSchemaDefinition.getInstance();
 	
 	/// Gibt an, ob die Ausführung von Operationen bei einzelnen Fehlern abgebrochen werden sollen.
 	private final boolean returnOnError;
@@ -133,15 +131,15 @@ public class DBSchemaManager {
 	private boolean createAllTables(long revision) {
 		boolean result = true;
 		var dbms = conn.getDBDriver();
-		for (Tabelle tab : schema.getTabellenSortiert(revision)) {
-			logger.logLn(tab.Name);
-			String script = tab.getSQL(schema, dbms, revision);
+		for (SchemaTabelle tab : Schema.getTabellen(revision)) {
+			logger.logLn(tab.name());
+			String script = tab.getSQL(dbms, revision);
 			if (conn.executeNativeUpdate(script) == Integer.MIN_VALUE) {
 				result = false;
 				if (returnOnError)
 					break;
 			} else {
-				List<String> pkTrigger = tab.primaerschluessel.getTriggerSQLList(dbms, revision, true);
+				List<String> pkTrigger = tab.getPrimaerschluesselTriggerSQLList(dbms, revision, true);
 				if (pkTrigger.size() > 0) {
 					logger.logLn("  -> Erstelle Trigger für Auto-Inkremente");
 					for (String scriptTrigger : pkTrigger) {
@@ -169,9 +167,9 @@ public class DBSchemaManager {
 	 */
 	private boolean createAllIndizes(long revision) {
 		boolean result = true;
-		for (Tabelle tab : schema.getTabellenSortiert(revision)) {
-			for (TabelleIndex idx : tab.indizes) {
-				logger.logLn(idx.Name);
+		for (SchemaTabelle tab : Schema.getTabellen(revision)) {
+			for (SchemaTabelleIndex idx : tab.indizes()) {
+				logger.logLn(idx.name());
 				String script = idx.getSQL();
 				if (conn.executeNativeUpdate(script) == Integer.MIN_VALUE) {
 					result = false;
@@ -187,7 +185,7 @@ public class DBSchemaManager {
 	
 	/**
 	 * Führt die SQL-Skripte zum Erstellen aller Datenbank-Trigger der angegebenen Schema-Revision
-	 * aus.
+	 * aus, welche nicht zu den Auto-Inkrementen bei Primärschlüsseln gehören.
 	 *   
 	 * @param revision   die Revision des Datenbank-Schemas
 	 * 
@@ -196,15 +194,15 @@ public class DBSchemaManager {
 	private boolean createAllTrigger(long revision) {
 		boolean result = true;
 		var dbms = conn.getDBDriver();
-		for (Tabelle tab : schema.getTabellenSortiert(revision)) {
-			for (Trigger trig : tab.trigger) {
-				if (!dbms.equals(trig.dbDriver))
+		for (SchemaTabelle tab : Schema.getTabellen(revision)) {
+			for (SchemaTabelleTrigger trig : tab.trigger()) {
+				if (!dbms.equals(trig.dbms()))
 					continue;
-				if (revision < trig.dbRevision.revision)
+				if (revision < trig.revision().revision)
 					continue;
-				if ((trig.dbRevisionVeraltet.revision >= 0) && (revision > trig.dbRevisionVeraltet.revision))
+				if ((trig.veraltet().revision >= 0) && (revision > trig.veraltet().revision))
 					continue;
-				logger.logLn(trig.Name);
+				logger.logLn(trig.name());
 				String script = trig.getSQL(conn.getDBDriver(), true);
 				if (conn.executeWithJDBCConnection(script) == Integer.MIN_VALUE) {
 					result = false;
@@ -229,14 +227,13 @@ public class DBSchemaManager {
 	private boolean executeManualSQLOnCreate(long revision) {
 		boolean result = true;
 		var dbms = conn.getDBDriver();
-		var msqlAll = schema.manualSQL.get(dbms);
 		for (long r = 0; r <= revision; r++) {
-			for (TabelleManualSQL msql : msqlAll.get(r)) {
-				if (!(((r == -1) && (msql.dbRevisionVeraltet.revision == -1)) || 
-						((r != -1) && (r >= msql.dbRevision.revision) && ((msql.dbRevisionVeraltet.revision == -1) || (r <= msql.dbRevisionVeraltet.revision)))))
-					continue;
-				String script = msql.getSQL(dbms);
-				logger.logLn(msql.Kommentar);
+			SchemaRevisionUpdateSQL msqlAll = SchemaRevisionen.get(revision).update; 
+			for (int i = 0; i < msqlAll.size(); i++) {
+				String script = msqlAll.getSQL(dbms, i);
+				if ((script == null) || "".equals(script))
+					continue; // should not happen
+				logger.logLn(msqlAll.getKommentar(i));
 				if (conn.executeNativeUpdate(script) == Integer.MIN_VALUE) {
 					result = false;
 					if (returnOnError)
@@ -282,7 +279,7 @@ public class DBSchemaManager {
 	 */
 	private boolean createDefaultSVWSBenutzer(long revision) {
 		boolean result = true;
-		List<String> sqlList = schema.getCreateBenutzerSQL(revision);
+		List<String> sqlList = Schema.getCreateBenutzerSQL(revision);
 		for (String sql : sqlList) {
 			logger.logLn(sql);
 			if (conn.executeNativeUpdate(sql) == Integer.MIN_VALUE) {
@@ -303,13 +300,13 @@ public class DBSchemaManager {
 	 * 
 	 * @return true, falls die Daten erfolgreich kopiert wurden, sonst false.
 	 */
-	boolean copyDefaultData(Tabelle tab, long rev) {
-		Class<?> dtoClass = DTOHelper.getFromTableName(tab.Name, rev);
+	boolean copyDefaultData(SchemaTabelle tab, long rev) {
+		Class<?> dtoClass = DTOHelper.getFromTableName(tab.name(), rev);
 		if (dtoClass == null)
 			return false;
 		logger.modifyIndent(2);
 		logger.log("Lese Daten... ");
-        var data = CsvReader.fromResource("schema/csv/" + tab.JavaPackage.replace(".", "/") + "/" + tab.Name + ".csv", dtoClass);
+        var data = CsvReader.fromResource("schema/csv/" + tab.javaSubPackage().replace(".", "/") + "/" + tab.name() + ".csv", dtoClass);
         boolean success = true;
         if (data != null) {
         	logger.logLn(0, "OK");
@@ -336,8 +333,8 @@ public class DBSchemaManager {
 	 */
 	private boolean copyAllDefaultData(long revision) {
 		boolean success = true;
-		for (Tabelle tab : schema.getTabellenDefaultDatenSortiert(revision)) {
-			logger.logLn(tab.Name);
+		for (SchemaTabelle tab : Schema.getTabellenDefaultDaten(revision)) {
+			logger.logLn(tab.name());
 			boolean result = copyDefaultData(tab, revision);
 			if (!result && returnOnError)
 				return false;
@@ -368,9 +365,8 @@ public class DBSchemaManager {
 		}
 		return true;
 	}
-	
-	
-	
+
+
 	/**
 	 * Erstellt ein SVWS-Datenbank-Schema der angegebenen Revision 
 	 * 
@@ -493,17 +489,16 @@ public class DBSchemaManager {
 			// Bestimme die aktuelle Revision der Datenbank
 			DBSchemaVersion version = status.getVersion(); 
 			long revision = version.getRevisionOrDefault(0);
-			for (Tabelle tab : schema.getTabellenSortiertAbsteigend(revision)) {
+			List<SchemaTabelle> tabellen = Schema.getTabellen(revision);
+			Collections.reverse(tabellen);
+			for (SchemaTabelle tab : tabellen) {
 				// Prüfe bei einer Lecagy-Schild-DB, ob eine Tabelle für die Migration vorliegt - nur diese sollen verworfen werden
-				if (!version.isValid()) {
-					if ((tab.Migration == null) || (!tab.Migration))
-						continue;
-				}
-				
-				if (!status.hasTable(tab.Name))
+				if (!version.isValid() && !tab.migrate())
+					continue;
+				if (!status.hasTable(tab.name()))
 					continue;				
-				logger.log(tab.Name + "... ");
-				String sql = "DROP TABLE " + ((driver == DBDriver.SQLITE) ? "IF EXISTS " : "") + tab.Name + ";";
+				logger.log(tab.name() + "... ");
+				String sql = "DROP TABLE " + ((driver == DBDriver.SQLITE) ? "IF EXISTS " : "") + tab.name() + ";";
 				int result = conn.executeWithJDBCConnection(sql);
 				if (result == Integer.MIN_VALUE) {
 					logger.logLn(0, " [Fehler]");
@@ -769,42 +764,4 @@ public class DBSchemaManager {
 		logger.logLn(0, count + " Datensätze");
 	}
 
-
-
-	
-	/**
-	 * Löscht bei der Datenbankverbindung den Inhalt aller vorhandenen Tabellen, die bei 
-	 * der Migration berücksichtigt werden sollen.
-	 * Hierzu werden alle Tabellen unter Berücksichtigung der Abhängigkeiten 
-	 * zwischen den Tabellen rückwärts durchlaufen, d.h. so, dass es nicht zu 
-	 * Fehlern durch Foreign-Key-Constraints kommt.
-	 * 
-	 * @param revision   die Revision des Datenbank-Schemas
-	 * 
-	 * @return true, falls alle vorhandenen Tabellen erfolgreich geleert wurden, sonst false
-	 */
-	@Deprecated
-	public boolean deleteAll(int revision) {
-		boolean success = true;
-		conn.transactionBegin();
-		// Durchwandere alle Tabellen in der umgekehrten Reihenfolge bezüglich der Foreign-Key-Constraints
-		for (Tabelle tab : schema.getTabellenSortiertAbsteigend(revision)) {
-			// Lösche nur die Daten aus den Tabellen, die auch migriert werden sollen
-			if (tab.Migration == true) {
-				logger.log("Lösche Daten in " + tab.Name + "...");
-				if (conn.transactionNativeDelete("DELETE FROM " + tab.Name + ";") >= 0) {
-					logger.logLn(0, " [OK]");
-				} else {				
-					logger.logLn(0, " [FEHLER]");
-					if (returnOnError) {
-						conn.transactionRollback();
-						return false;
-					}
-				}
-			}
-		}
-		success = conn.transactionCommit();		
-		return success;
-	}
-	
 }

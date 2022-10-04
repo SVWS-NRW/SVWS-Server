@@ -64,9 +64,9 @@ import de.nrw.schule.svws.db.dto.migration.schild.schueler.abitur.MigrationDTOSc
 import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOEigeneSchule;
 import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOTeilstandorte;
 import de.nrw.schule.svws.db.dto.migration.svws.auth.MigrationDTOCredentials;
-import de.nrw.schule.svws.db.schema.DBSchemaDefinition;
-import de.nrw.schule.svws.db.schema.csv.Tabelle;
-import de.nrw.schule.svws.db.schema.csv.TabelleSpalte;
+import de.nrw.schule.svws.db.schema.Schema;
+import de.nrw.schule.svws.db.schema.SchemaTabelle;
+import de.nrw.schule.svws.db.schema.SchemaTabelleSpalte;
 import de.nrw.schule.svws.db.utils.data.Schule;
 import de.nrw.schule.svws.logger.LogLevel;
 import de.nrw.schule.svws.logger.Logger;
@@ -86,9 +86,6 @@ public class DBMigrationManager {
 	private final boolean devMode;
 	private final Integer filterSchulNummer;
 	private final Logger logger;
-
-	/// Das Schema der Datenbank, wie es sein sollte 
-	private final DBSchemaDefinition schema = DBSchemaDefinition.getInstance();
 
 	/// Enthält ggf. einen Fehler-String für einen zuletzt aufgetretenen Fehler 
 	private String lastError;
@@ -396,8 +393,8 @@ public class DBMigrationManager {
 	 * 
 	 * @return eine Liste mit allen Entitäten der Tabelle
 	 */
-	private List<?> readAllData(Tabelle tab) {
-		Class<?> dtoClass = MigrationDTOs.getFromTableName(tab.Name);
+	private List<?> readAllData(SchemaTabelle tab) {
+		Class<?> dtoClass = MigrationDTOs.getFromTableName(tab.name());
 		lastError = null;
 		
 		// Prüfe, ob eine Java-DTO-Klasse definiert wurde. Dies sollte eigentlich der Fall sein...
@@ -409,19 +406,19 @@ public class DBMigrationManager {
 		
 		// Prüfe, ob die Tabelle im Schema überhaupt definiert wurde
 		DBSchemaStatus status = srcManager.getSchemaStatus();
-		if (!status.hasTable(tab.Name)) {
+		if (!status.hasTable(tab.name())) {
 			lastError = "Die Tabelle ist im Quell-Schema nicht definiert.";
 			return new Vector<>();
 		}
 		
 		// Prüfe, ob alle Spalten auch wirklich vorhanden sind...
-		List<String> spaltenSoll = tab.getSpalten(0).stream().map(col -> col.NameSpalte).collect(Collectors.toList());
-		List<String> spaltenIst = status.filterColumns(tab.Name, spaltenSoll);
+		List<String> spaltenSoll = tab.getSpalten(0).stream().map(col -> col.name()).collect(Collectors.toList());
+		List<String> spaltenIst = status.filterColumns(tab.name(), spaltenSoll);
 		// Falls ja, dann kopiere direkt, sofern keine Schulnummer angegeben ist.
 		if ((filterSchulNummer == null) && (spaltenSoll.size() == spaltenIst.size())) {
 			// Lese alle Daten aus der Tabelle
 			try {
-				List<?> entities = srcManager.getEntityManager().queryNamed("" + dtoName + ".all" + ((tab.primaerschluessel.spalten.size() > 0) ? ".migration" : ""), dtoClass).getResultList();
+				List<?> entities = srcManager.getEntityManager().queryNamed("" + dtoName + ".all" + ((tab.pkSpalten().size() > 0) ? ".migration" : ""), dtoClass).getResultList();
 				return entities;
 			} catch (PersistenceException e) {
 				lastError = e.getMessage(); 
@@ -446,16 +443,16 @@ public class DBMigrationManager {
 			fields.stream().forEach(f -> f.setAccessible(true));
 			missing_fields.stream().forEach(f -> f.setAccessible(true));
 			String jpql = "SELECT " + fields.stream().map(f -> "e."+f.getName()).collect(Collectors.joining(",")) + " FROM " + dtoClass.getSimpleName() + " e";
-			if (tab.primaerschluessel.spalten.size() > 0) {
-				List<TabelleSpalte> pkSpalten = tab.primaerschluessel.spalten.stream().filter(col -> spaltenIst.contains(col.NameSpalte)).collect(Collectors.toList());
+			if (tab.pkSpalten().size() > 0) {
+				List<SchemaTabelleSpalte> pkSpalten = tab.pkSpalten().stream().filter(col -> spaltenIst.contains(col.name())).collect(Collectors.toList());
 				if (pkSpalten.size() > 0) {
 					jpql += " WHERE " + pkSpalten.stream()
-							.map(col -> "e." + col.getJavaAttributName() + " IS NOT NULL")
+							.map(col -> "e." + col.javaAttributName() + " IS NOT NULL")
 							.collect(Collectors.joining(" AND "));
 				}
 				if ((filterSchulNummer != null) && spaltenIst.contains("SchulnrEigner")) {
 					jpql += ((pkSpalten.size() > 0) ? " AND " : " WHERE ") +  "(e.SchulnrEigner = " + filterSchulNummer + "";
-					if (!"Users".equals(tab.Name) && (!"Logins".equals(tab.Name)))
+					if (!"Users".equals(tab.name()) && (!"Logins".equals(tab.name())))
 						jpql += " OR e.SchulnrEigner = 0";
 					jpql += ")";
 				}
@@ -470,7 +467,7 @@ public class DBMigrationManager {
 				for (Field f : fields)
 					f.set(entity, obj[i++]);
 				for (Field f : missing_fields)
-					f.set(entity, tab.getSpalten(0).stream().filter(col -> col.getJavaAttributName().equals(f.getName())).findFirst().orElse(null).getDefaultWertConverted());
+					f.set(entity, tab.getSpalten(0).stream().filter(col -> col.javaAttributName().equals(f.getName())).findFirst().orElse(null).getDefaultWertConverted());
 				list.add(entity);
 			}
 			return list;
@@ -542,13 +539,7 @@ public class DBMigrationManager {
 	private boolean readSchulnummer() {
 		logger.logLn("Bestimme die Schulnummer aus EigeneSchule:");
 		logger.modifyIndent(2);
-		Tabelle eigeneSchule = schema.getTabelleByName("EigeneSchule");
-		if (eigeneSchule == null) {
-			logger.logLn("Programmfehler. Schema-Definition fehlerhaft.");
-			logger.modifyIndent(-2);
-			return false;
-		}
-		List<?> tmpSchulen = readAllData(eigeneSchule);
+		List<?> tmpSchulen = readAllData(Schema.tab_EigeneSchule);
 		if ((tmpSchulen == null) || (tmpSchulen.size() <= 0)) {
 			logger.logLn("Kein Eintrag in der Tabelle EigeneSchule gefunden. Datenbank kann nicht migriert werden.");
 			logger.modifyIndent(-2);
@@ -1624,12 +1615,12 @@ public class DBMigrationManager {
 			return false;
 		
 		// Durchwandere alle Tabellen in der geeigneten Reihenfolge, so dass Foreign-Key-Constraints erfüllt werden
-		for (Tabelle tab : schema.getTabellenSortiert(0)) {
+		for (SchemaTabelle tab : Schema.getTabellen(0)) {
 			// Prüfe, ob die Tabelle bei der Migration beachtet werden soll, wenn nicht dann überspringe sie
-			if (!tab.Migration)
+			if (!tab.migrate())
 				continue;
 
-			logger.logLn("Tabelle " + tab.Name + ":");
+			logger.logLn("Tabelle " + tab.name() + ":");
 			logger.modifyIndent(2);
 			
 			// Lese alle Datensätze aus der Quell-Tabelle

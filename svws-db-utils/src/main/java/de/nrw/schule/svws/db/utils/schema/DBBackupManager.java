@@ -12,8 +12,8 @@ import de.nrw.schule.svws.db.DBDriver;
 import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.DBException;
 import de.nrw.schule.svws.db.dto.current.svws.db.DTODBVersion;
-import de.nrw.schule.svws.db.schema.DBSchemaDefinition;
-import de.nrw.schule.svws.db.schema.csv.Tabelle;
+import de.nrw.schule.svws.db.schema.Schema;
+import de.nrw.schule.svws.db.schema.SchemaTabelle;
 import de.nrw.schule.svws.logger.LogLevel;
 import de.nrw.schule.svws.logger.Logger;
 
@@ -29,9 +29,6 @@ public class DBBackupManager {
 	/** Ein Logger, um die Abläufe bei dem Update-Prozess zu loggen */ 
 	private final Logger logger;	
 
-	/** Das Schema der Datenbank, wie es sein sollte */ 
-	private final DBSchemaDefinition schema = DBSchemaDefinition.getInstance();
-	
 	
 	/**
 	 * Erzeugt einen neuen {@link DBBackupManager}.
@@ -256,19 +253,19 @@ public class DBBackupManager {
 	 */
 	private boolean expimpCopyFrom(final DBSchemaManager tgtManager, final long rev) {
 		// Durchwandere alle Tabellen in der geeigneten Reihenfolge, so dass Foreign-Key-Constraints erfüllt werden
-		for (Tabelle tab : schema.getTabellenSortiert(rev)) {
+		for (SchemaTabelle tab : Schema.getTabellen(rev)) {
 			// Prüfe, ob die Tabelle bei dem Import/Export beachtet werden soll, wenn nicht dann übespringe sie
-			if (!tab.ImpExp)
+			if (!tab.importExport())
 				continue;
 
-			logger.logLn("Tabelle " + tab.Name + ":");
+			logger.logLn("Tabelle " + tab.name() + ":");
 			logger.modifyIndent(2);
 			
 			// Lese alle Datensätze aus der Quell-Tabelle
 			logger.log("- Lese Datensätze: ");
 			String sql = tab.getSpalten(rev).stream()
-					.map(t -> t.NameSpalte)
-					.collect(Collectors.joining(", ", "SELECT ", " FROM " + tab.Name));
+					.map(t -> t.name())
+					.collect(Collectors.joining(", ", "SELECT ", " FROM " + tab.name()));
 			List<Object[]> entities = schemaManager.getEntityManager().query(sql);
 			if (entities == null) {
 				logger.logLn(LogLevel.ERROR, 0, "[FEHLER] - Kann die Datensätze nicht einlesen - Überspringe die Tabelle");
@@ -298,7 +295,7 @@ public class DBBackupManager {
 			}
 			while (!ranges.isEmpty()) {
 				Map.Entry<Integer, Integer> range = ranges.removeFirst();
-				if (tgtConn.insertRangeNative(tab.Name, tab.getSpalten(rev).stream().map(col -> col.NameSpalte).collect(Collectors.toList()), entities, range.getKey(), range.getValue())) {
+				if (tgtConn.insertRangeNative(tab.name(), tab.getSpalten(rev).stream().map(col -> col.name()).collect(Collectors.toList()), entities, range.getKey(), range.getValue())) {
 					if (range.getKey().equals(range.getValue())) 
 						logger.logLn("Datensatz " + range.getKey() + " erfolgreich geschrieben. (Freier Speicher: " + (Math.round(Runtime.getRuntime().freeMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().totalMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().maxMemory() / 10000000.0) / 100.0) +  "G)");						
 					else 

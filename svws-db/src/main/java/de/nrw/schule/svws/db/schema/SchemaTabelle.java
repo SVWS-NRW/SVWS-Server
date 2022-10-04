@@ -237,6 +237,46 @@ public class SchemaTabelle {
 
 
 	/**
+	 * Gibt die Liste der Fremdschlüsel zurück.
+	 * 
+	 * @return die Liste der Fremdschlüsel
+	 */
+	public List<SchemaTabelleFremdschluessel> fremdschluessel() {
+		return _fremdschluessel;
+	}
+
+
+	/**
+	 * Gibt die Liste der Indizes zurück.
+	 * 
+	 * @return die Liste der Indizes
+	 */
+	public List<SchemaTabelleIndex> indizes() {
+		return _indizes;
+	}
+
+
+	/**
+	 * Gibt die Liste der Unique-Indizes zurück.
+	 * 
+	 * @return die Liste der Unique-Indizes
+	 */
+	public List<SchemaTabelleUniqueIndex> unique() {
+		return _unique;
+	}
+
+
+	/**
+	 * Gibt die Liste der Trigger zurück.
+	 * 
+	 * @return die Liste der Trigger
+	 */
+	public List<SchemaTabelleTrigger> trigger() {
+		return _trigger;
+	}
+
+
+	/**
 	 * Fügt eine neue Spalte zu dieser Tabelle hinzu
 	 * 
 	 * @param name   der Name der Spalte

@@ -5,6 +5,11 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import de.nrw.schule.svws.db.schema.revisionen.Revision1Updates;
+import de.nrw.schule.svws.db.schema.revisionen.Revision2Updates;
+import de.nrw.schule.svws.db.schema.revisionen.Revision3Updates;
+import de.nrw.schule.svws.db.schema.revisionen.RevisionNoUpdates;
+
 /**
  * Diese Klasse enthält eine Aufzählung zu den unterschiedlichen Revisionen,
  * in welchem sich ein SVWS-Datenbankschema befinden kann.
@@ -15,19 +20,19 @@ public enum SchemaRevisionen {
 	 * Dummy Revision, welche anzeigt dass keine Revision definiert ist (z.B. zum kennzeichnen, 
 	 * dass ein Datensatz noch nicht veraltet ist) 
 	 */
-	UNDEFINED(-1, "2022-09-29"),
+	UNDEFINED(-1, "2022-09-29", null),
 	
 	/** 
 	 * Erste Version der SVWS-Datenbank. Das Schema wurde von der letzten Schild-NRW Version 2.x übernommen 
 	 */
-	REV_0(0, "2022-09-29"),
+	REV_0(0, "2022-09-29", null),
 	
 	/**
 	 * Korrekturen an aus Schild2 importierten Daten, bevor weitere Fremdschlüssel mit Revision 2 ergänzt werden. 
 	 * Außerdem: Hinzufügen der Tabelle SchildKursSchueler (Erstellen der Tabelle) für den schnellen Zugriff auf die 
 	 * Schüler-Zuordnung zu Kursen.
 	 */
-	REV_1(1, "2022-09-29"),
+	REV_1(1, "2022-09-29", new Revision1Updates()),
 	
 	/**
 	 * Hinzufügen weitere Fremdschlüssel, um die referentielle Integrität in zukünftigen Revisionen zu verbessern.
@@ -35,37 +40,37 @@ public enum SchemaRevisionen {
 	 * der Leistungsdaten eines Schülers.
 	 * Außerdem wird die Tabelle mit den Daten aus den Leistungsdaten eines Schülers initial befüllt. 
 	 */
-	REV_2(2, "2022-09-29"),
+	REV_2(2, "2022-09-29", new Revision2Updates()),
 	
 	/**
 	 * Befüllen der Foreign-Keys auf die Tabelle K_Ort in den Tabellen K_AllgAdresse, K_Lehrer, Schueler, SchuelerErzAdr
 	 */
-	REV_3(3, "2022-09-29"),
+	REV_3(3, "2022-09-29", new Revision3Updates()),
 	
 	/**
 	 * Tabellen für die Laufbahnplanung in der gymnasialen Oberstufe hinzugefügt.
 	 */
-	REV_4(4, "2022-09-29"),
+	REV_4(4, "2022-09-29", null),
 	
 	/**
 	 * Tabellen für Stundenpläne mit Unterrichts- und Pausenzeiten
 	 */
-	REV_5(5, "2022-09-29"),
+	REV_5(5, "2022-09-29", null),
 	
 	/**
 	 * Erstellen von allgemein nutzbaren Views
 	 */
-	REV_6(6, "2022-09-29"),
+	REV_6(6, "2022-09-29", null),
 	
 	/**
 	 * Tabellen für die Kursblockung in der gymnasialen Oberstufe hinzugefügt
 	 */
-	REV_7(7, "2022-09-29"),
+	REV_7(7, "2022-09-29", null),
 	
 	/**
 	 * Tabellen für DavRessourcen und Sammlungen
 	 */
-	REV_8(8, "2022-09-29");
+	REV_8(8, "2022-09-29", null);
 
 
 	/** 
@@ -92,6 +97,8 @@ public enum SchemaRevisionen {
 	/** Das Datum, wann diese Revision eingeführt wurde */
 	public final LocalDate date; 
 
+	/** Das Objekt mit den Update-Befehlen für diese Revision */
+	public final SchemaRevisionUpdateSQL update;
 
 	/**
 	 * Erstellt eine neue Revision mit der angegebenen Nummer und dem
@@ -100,9 +107,10 @@ public enum SchemaRevisionen {
 	 * @param revision   die Revisionsnummer
 	 * @param date       das Datum, wann diese Revision eingeführt wurde
 	 */
-	private SchemaRevisionen(long revision, String date) {
+	private SchemaRevisionen(long revision, String date, SchemaRevisionUpdateSQL update) {
 		this.revision = revision;
 		this.date = LocalDate.parse(date);
+		this.update = update == null ? new RevisionNoUpdates(this) : update;
 	}
 	
 	
