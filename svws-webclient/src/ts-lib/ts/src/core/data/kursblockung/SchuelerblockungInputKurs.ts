@@ -15,7 +15,7 @@ export class SchuelerblockungInputKurs extends JavaObject {
 
 	public anzahlSuS : number = -1;
 
-	public schienen : Array<number> = [-1];
+	public schienen : Array<number> = Array(0).fill(0);
 
 	public representation : String = "";
 

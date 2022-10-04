@@ -5,8 +5,6 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 
 export class SchuelerblockungInput extends JavaObject {
 
-	public schuelerID : number = 0;
-
 	public schienen : number = 0;
 
 	public kurse : Vector<SchuelerblockungInputKurs> = new Vector();
@@ -25,9 +23,6 @@ export class SchuelerblockungInput extends JavaObject {
 	public static transpilerFromJSON(json : string): SchuelerblockungInput {
 		const obj = JSON.parse(json);
 		const result = new SchuelerblockungInput();
-		if (typeof obj.schuelerID === "undefined")
-			 throw new Error('invalid json format, missing attribute schuelerID');
-		result.schuelerID = obj.schuelerID;
 		if (typeof obj.schienen === "undefined")
 			 throw new Error('invalid json format, missing attribute schienen');
 		result.schienen = obj.schienen;
@@ -46,7 +41,6 @@ export class SchuelerblockungInput extends JavaObject {
 
 	public static transpilerToJSON(obj : SchuelerblockungInput) : string {
 		let result = '{';
-		result += '"schuelerID" : ' + obj.schuelerID + ',';
 		result += '"schienen" : ' + obj.schienen + ',';
 		if (!obj.kurse) {
 			result += '"kurse" : []';
@@ -79,9 +73,6 @@ export class SchuelerblockungInput extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<SchuelerblockungInput>) : string {
 		let result = '{';
-		if (typeof obj.schuelerID !== "undefined") {
-			result += '"schuelerID" : ' + obj.schuelerID + ',';
-		}
 		if (typeof obj.schienen !== "undefined") {
 			result += '"schienen" : ' + obj.schienen + ',';
 		}

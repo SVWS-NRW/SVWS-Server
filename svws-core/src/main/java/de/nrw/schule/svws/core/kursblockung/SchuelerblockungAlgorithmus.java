@@ -29,23 +29,8 @@ public class SchuelerblockungAlgorithmus
 		// SchuelerblockungInput --> SchuelerblockungDynDaten
 		@NotNull SchuelerblockungDynDaten dynDaten = new SchuelerblockungDynDaten(random, logger, pInput);
 
-		// Startzustand
-		dynDaten.aktionFachwahlenEntfernenUndVerteilen();
-		dynDaten.aktionZustand1Speichern();
-
-		// Mehrere Versuche, da Multikurse nicht mit bipartitem Matching verteilbar sind.
-		for (int i = 0; i < 100; i++) {
-			dynDaten.aktionFachwahlenEntfernenUndVerteilen();
-
-			if (dynDaten.gibCompareZustand1() > 0)
-				dynDaten.aktionZustand1Speichern();
-		}
-
-		// Logger-Einrückung (relativ -4)
-		logger.modifyIndent(-4);
-
 		// Rückgabe des besten Ergebnisses
-		return dynDaten.gibErzeugeZustand1();
+		return dynDaten.gibBestesMatching();
 	}
 
 }

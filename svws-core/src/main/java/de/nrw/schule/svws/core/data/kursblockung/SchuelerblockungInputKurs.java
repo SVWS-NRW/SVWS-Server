@@ -35,7 +35,7 @@ public class SchuelerblockungInputKurs {
 
 	/** Die Schienen, die dieser Kurs belegt. In der Regel steht im Array eine Zahl (Schiene). Die Schienen sind
 	 * 1-indiziert. */
-	public @NotNull int[] schienen = new int[] { -1 }; // Absichtlich falscher Dummy-Wert, der geändert werden muss.
+	public @NotNull int[] schienen = new int[0]; // Falls das Array nicht gefüllt wird, wird es als Fehler interpretiert.
 
 	/** Eine String-Darstellung des Kurses, damit bei Warnungen oder Fehlern dem Benutzer diese angezeigt werden kann,
 	 * beispielsweise 'D-GK1'. */

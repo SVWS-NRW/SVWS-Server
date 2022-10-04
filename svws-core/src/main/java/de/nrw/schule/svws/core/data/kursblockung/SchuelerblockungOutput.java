@@ -15,9 +15,6 @@ import jakarta.validation.constraints.NotNull;
 @TranspilerDTO
 public class SchuelerblockungOutput {
 
-	/** Die ID des Schülers. */
-	public long schuelerID;
-
 	/** Alle Fachwahlen-Zuordnungen. */
 	public @NotNull Vector<@NotNull SchuelerblockungOutputFachwahlZuKurs> fachwahlenZuKurs = new Vector<>();
 

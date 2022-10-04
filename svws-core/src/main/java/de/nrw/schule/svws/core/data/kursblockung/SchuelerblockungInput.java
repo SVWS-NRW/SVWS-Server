@@ -16,9 +16,6 @@ import jakarta.validation.constraints.NotNull;
 @TranspilerDTO
 public class SchuelerblockungInput {
 
-	/** Die ID des Schülers. */
-	public long schuelerID;
-
 	/** Die Anzahl an vorhandenen Schienen. */
 	public int schienen;
 

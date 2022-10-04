@@ -19,15 +19,7 @@ export class SchuelerblockungAlgorithmus extends Service<SchuelerblockungInput, 
 		let random : Random = new Random(seed);
 		this.logger.log(LogLevel.APP, "Seed verwendet --> " + seed);
 		let dynDaten : SchuelerblockungDynDaten = new SchuelerblockungDynDaten(random, this.logger, pInput);
-		dynDaten.aktionFachwahlenEntfernenUndVerteilen();
-		dynDaten.aktionZustand1Speichern();
-		for (let i : number = 0; i < 100; i++){
-			dynDaten.aktionFachwahlenEntfernenUndVerteilen();
-			if (dynDaten.gibCompareZustand1() > 0) 
-				dynDaten.aktionZustand1Speichern();
-		}
-		this.logger.modifyIndent(-4);
-		return dynDaten.gibErzeugeZustand1();
+		return dynDaten.gibBestesMatching();
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
