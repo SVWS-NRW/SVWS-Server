@@ -336,6 +336,13 @@ public class DataGostBlockungsdaten extends DataManager<Long> {
 					manager.addKurs(dtoMapperKurse.apply(kurs));
 				}
 			}
+			// Lege ein "leeres" Ergebnis für manuelles Blocken an
+			DTODBAutoInkremente lastErgebnisID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Blockung_Zwischenergebnisse");
+			long ergebnisID = lastErgebnisID == null ? 1 : lastErgebnisID.MaxID + 1;
+			DTOGostBlockungZwischenergebnis erg = new DTOGostBlockungZwischenergebnis(ergebnisID, blockungID, 0, 0L, false, true);
+			conn.transactionPersist(erg);
+			for (GostBlockungKurs kurs : manager.daten().kurse)
+				conn.transactionPersist(new DTOGostBlockungZwischenergebnisKursSchiene(ergebnisID, kurs.id, schienenID + 1));
 			conn.transactionCommit();
 			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 		} catch (Exception exception) {

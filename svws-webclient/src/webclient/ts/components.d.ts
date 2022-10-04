@@ -42,7 +42,6 @@ declare module '@vue/runtime-core' {
     IRiNumbersLine: typeof import('~icons/ri/numbers-line')['default']
     IRiParentLine: typeof import('~icons/ri/parent-line')['default']
     IRiPushpinFill: typeof import('~icons/ri/pushpin-fill')['default']
-    IRiPushpinFull: typeof import('~icons/ri/pushpin-full')['default']
     IRiPushpinLine: typeof import('~icons/ri/pushpin-line')['default']
     IRiSearchLine: typeof import('~icons/ri/search-line')['default']
     IRiSunLine: typeof import('~icons/ri/sun-line')['default']

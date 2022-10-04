@@ -90,7 +90,7 @@ public class DataGostBlockungsergebnisliste extends DataManager<Long> {
 				"DTOGostBlockungZwischenergebnis.blockung_id", idBlockung, DTOGostBlockungZwischenergebnis.class);
 		if (ergebnisse == null)
 			return OperationError.NOT_FOUND.getResponse();
-		ergebnisse.removeIf(e -> e.IstDupliziert); // Gib nur Ergebnisse zurück, welche für diese Blockungsdefinition erstellt wurden
+		// TODO entfernen: evtl. ergebnisse.removeIf(e -> e.IstDupliziert); // Gib nur Ergebnisse zurück, welche für diese Blockungsdefinition erstellt wurden
 		DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, idBlockung);
 		if (blockung == null)
 			return OperationError.NOT_FOUND.getResponse();

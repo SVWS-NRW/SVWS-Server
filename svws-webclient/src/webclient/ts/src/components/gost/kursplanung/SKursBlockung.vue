@@ -167,7 +167,7 @@ const filtered_by_kursart: ComputedRef<GostBlockungsergebnisKurs[]> = computed((
 	const kurse = app.dataKursblockungsergebnis.manager?.getKursSchuelerZuordnungenFuerFach(props.kurs.fach_id)
 	if (!kurse) return []
 	const arr = kurse.toArray(new Array<GostBlockungsergebnisKurs>())
-	return arr.filter(k => k.kursart === art).sort((a,b)=>a.id-b.id)
+	return arr.filter(k => k.kursart === art).sort((a,b)=>a.name.localeCompare(String(b.name), "de-DE"))
 })
 
 const setze_kursdifferenz = computed(()=>filtered_by_kursart.value[0]===kurs_blockungsergebnis.value)
