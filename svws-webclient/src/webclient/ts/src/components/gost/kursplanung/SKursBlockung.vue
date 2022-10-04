@@ -55,21 +55,39 @@
 				<svws-ui-badge size="tiny" class="cursor-grab" :variant="fixier_regel ? 'error' : 'highlight'">
 					{{ kurs_blockungsergebnis.schueler.size() }}
 
-					<svws-ui-icon class="cursor-pointer">
-						<i-ri-pushpin-fill v-if="fixier_regel" class="inline-block" @click="fixieren_regel_entfernen" />
-						<i-ri-pushpin-line v-else class="inline-block" @click="fixieren_regel_hinzufuegen" />
+					<svws-ui-icon class="cursor-pointer" @click="fixieren_regel_toggle" >
+						<i-ri-pushpin-fill v-if="fixier_regel" class="inline-block"/>
+						<i-ri-pushpin-line v-else class="inline-block"/>
 					</svws-ui-icon>
 				</svws-ui-badge>
 			</drag-data>
 			
 			<template v-else>
-				<svws-ui-icon class="cursor-pointer px-4 py-2">
-					<i-ri-forbid-fill v-if="sperr_regeln.find(r=>r.parameter.get(1) === schiene.nummer)" class="inline-block text-red-500" @click="sperren_regel_entfernen(schiene.nummer)" />
-					<i-ri-forbid-line v-else class="inline-block opacity-0 hover:opacity-25" @click="sperren_regel_hinzufuegen(schiene.nummer)" />
+				<svws-ui-icon class="cursor-pointer px-4 py-2" @click="sperren_regel_toggle(schiene.nummer)">
+					<i-ri-forbid-fill v-if="sperr_regeln.find(r=>r.parameter.get(1) === schiene.nummer)" class="inline-block text-red-500" />
+					<i-ri-forbid-line v-else class="inline-block opacity-0 hover:opacity-25" />
 				</svws-ui-icon>
 			</template>
 		</drop-data>
-		<td class="border-none bg-white"></td>
+		<template v-if="setze_kursdifferenz && kurs_blockungsergebnis">
+			<td
+				class="border border-[#7f7f7f]/20 text-center border-t-2 whitespace-nowrap w-2"
+				:rowspan="kursdifferenz[0]" :colspan="kurszahl_anzeige?2:1"
+				@click="toggle_kurszahl_anzeige">
+				<div
+					v-if="kurszahl_anzeige"
+					class="cursor-pointer rounded-lg bg-slate-100 px-2">
+					<span @click="del_kurs">-</span>
+					<span class="px-2">{{kursdifferenz[2]}}</span>
+					<span @click="add_kurs">+</span>
+				</div>
+				<div v-else>{{kursdifferenz[2]}}</div>
+			</td>
+		</template>
+		<template v-if="!kurs_blockungsergebnis">
+			<td></td>
+		</template>
+		<!-- <td class="border-none bg-white"></td> -->
 	</tr>
 </template>
 
@@ -100,6 +118,8 @@ const main: Main = injectMainApp();
 const app = main.apps.gost;
 
 const edit_name: Ref<GostBlockungKurs | undefined> = ref(undefined)
+const kurszahl_anzeige: Ref<boolean> = ref(false)
+const toggle_kurszahl_anzeige = () => kurszahl_anzeige.value = !kurszahl_anzeige.value
 
 const gostFach: ComputedRef<GostFach | null> = computed(() => {
 	let fach: GostFach | null = null
@@ -172,11 +192,12 @@ const filtered_by_kursart: ComputedRef<GostBlockungsergebnisKurs[]> = computed((
 
 const setze_kursdifferenz = computed(()=>filtered_by_kursart.value[0]===kurs_blockungsergebnis.value)
 
-const kursdifferenz: ComputedRef<[number, number]> = computed(() => {
-	if (!filtered_by_kursart.value.length) return [-1,-1]
-	if (filtered_by_kursart.value.length === 2) return [2, Math.abs(filtered_by_kursart.value[0].schueler.size() - filtered_by_kursart.value[1].schueler.size())]
+const kursdifferenz: ComputedRef<[number, number, number]> = computed(() => {
+	if (!filtered_by_kursart.value.length) return [-1,-1, -1]
+	const wahlen = filtered_by_kursart.value.reduce((previousValue, currentValue) => previousValue + currentValue.schueler.size(), 0)
+	if (filtered_by_kursart.value.length === 2) return [2, Math.abs(filtered_by_kursart.value[0].schueler.size() - filtered_by_kursart.value[1].schueler.size()), wahlen]
 	const sorted = [...filtered_by_kursart.value].sort((a, b) => b.schueler.size() - a.schueler.size())
-	return [filtered_by_kursart.value.length, sorted[0].schueler.size() - sorted[sorted.length - 1].schueler.size()]
+	return [filtered_by_kursart.value.length, sorted[0].schueler.size() - sorted[sorted.length - 1].schueler.size(), wahlen]
 })
 
 const sperr_regeln: ComputedRef<GostBlockungRegel[]> = computed(() => {
@@ -202,6 +223,7 @@ const regel_speichern = async (regel: GostBlockungRegel) => {
 	await app.dataKursblockung.patch_blockung_regel(regel)
 }
 
+const fixieren_regel_toggle = () => fixier_regel.value ? fixieren_regel_entfernen() : fixieren_regel_hinzufuegen()
 const fixieren_regel_hinzufuegen = async () => {
 	const regel = await app.dataKursblockung.add_blockung_regel(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ)
 	if (!regel) return
@@ -213,11 +235,15 @@ const fixieren_regel_hinzufuegen = async () => {
 	await regel_speichern(regel)
 	app.dataKursblockung.manager?.addRegel(regel)
 }
-
 const fixieren_regel_entfernen = async () => {
 	if (!fixier_regel.value) return
 	app.dataKursblockung.del_blockung_regel(fixier_regel.value.id)
 }
+
+const sperren_regel_toggle = (nummer: number) =>
+	 sperr_regeln.value.find(r=>r.parameter.get(1) === nummer)
+	 	? sperren_regel_entfernen(nummer)
+		: sperren_regel_hinzufuegen(nummer)
 const sperren_regel_hinzufuegen = async (nummer: number) => {
 	const regel = await app.dataKursblockung.add_blockung_regel(GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ)
 	if (!regel) return
@@ -225,7 +251,6 @@ const sperren_regel_hinzufuegen = async (nummer: number) => {
 	await regel_speichern(regel)
 	app.dataKursblockung.manager?.addRegel(regel)
 }
-
 const sperren_regel_entfernen = async (nummer: number) => {
 	if (!sperr_regeln.value.length) return
 	const regel = sperr_regeln.value.find(r=>r.parameter.get(1) === nummer)
@@ -237,7 +262,7 @@ function drop_aendere_kursschiene(drag_data: {kurs: GostBlockungsergebnisKurs; s
 	if (drag_data.kurs.id === kurs_blockungsergebnis.value?.id && schiene_id !== drag_data.schiene.id) {
 		if (fixier_regel.value) fixieren_regel_entfernen()
 		app.dataKursblockungsergebnis.manager?.assignKursSchiene(drag_data.kurs.id, schiene_id)
-		fixieren_regel_hinzufuegen()
+		// fixieren_regel_hinzufuegen()
 	}
 }
 function drag_over(event: DragEvent) {
@@ -250,4 +275,11 @@ function drag_over(event: DragEvent) {
 			return;
 		event.preventDefault();
 	}
+
+async function add_kurs() {
+	await app.dataKursblockung.add_blockung_kurse(props.kurs.fach_id, props.kurs.kursart)
+}
+async function del_kurs() {
+	await app.dataKursblockung.del_blockung_kurse(props.kurs.fach_id, props.kurs.kursart)
+}
 </script>

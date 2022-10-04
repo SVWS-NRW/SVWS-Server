@@ -33,7 +33,7 @@
 										<svws-ui-icon class="text-red-500 cursor-pointer" @click="del_schiene(s)"><i-ri-delete-bin-2-line/></svws-ui-icon>
 									</div>
 									</td>
-									<td class="bg-[#329cd5] rounded-l-none rounded-lg border-none cursor-pointer" rowspan="5" @click="add_schiene"><div class="px-2" >+</div></td>
+									<td class="bg-[#329cd5] rounded-l-none rounded-lg border-none cursor-pointer" rowspan="5" @click="add_schiene"><div class="px-2" >+</div></td><td rowspan="5" class="bg-white"></td>
 								</tr>
 								<tr>
 									<td class="border border-[#7f7f7f]/20 " colspan="3">
