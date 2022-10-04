@@ -16,39 +16,27 @@ import jakarta.validation.constraints.NotNull;
 @TranspilerDTO
 public class StundenplanInputSimpleKurs {
 
-	/** Alle Lehrkräfte des Kurses. Die Liste darf 0-* Elemente beinhalten. 
-	 *  Alle Lehrkräfte werden dem Kurs zugeordnet.  
-	 */
-	@ArraySchema(schema = @Schema(implementation = StundenplanInputSimpleLehrkraft.class)) 
+	/** 0 bis n Lehrkräfte werden dem Kurs zugeordnet. */
+	@ArraySchema(schema = @Schema(implementation = StundenplanInputSimpleLehrkraft.class))
 	public @NotNull Vector<@NotNull StundenplanInputSimpleLehrkraft> lehrkraefte = new Vector<>();
 
-	/** Alle Klassen des Kurses. Die Liste darf 0-* Elemente beinhalten. 
-	 *  Alle Klassen werden dem Kurs zugeordnet.
-	 */
-	@ArraySchema(schema = @Schema(implementation = StundenplanInputSimpleKlasse.class)) 
+	/** 0 bis n Klassen werden dem Kurs zugeordnet. */
+	@ArraySchema(schema = @Schema(implementation = StundenplanInputSimpleKlasse.class))
 	public @NotNull Vector<@NotNull StundenplanInputSimpleKlasse> klassen = new Vector<>();
 
-	/** Das Fach des Kurses. Die Liste darf 0-1 Element beinhalten.
-	 *  Genau ein oder kein Fach wird dem Kurs zugeordnet.
-	 */
-	@ArraySchema(schema = @Schema(implementation = StundenplanInputSimpleFach.class)) 
+	/** 0 oder 1 Fach wird dem Kurs zugeordnet. */
+	@ArraySchema(schema = @Schema(implementation = StundenplanInputSimpleFach.class))
 	public @NotNull Vector<@NotNull StundenplanInputSimpleFach> faecher = new Vector<>();
 
-	/** Alle potentiellen Räume des Kurses. Die Liste darf 0-* Elemente beinhalten. 
-	 *  Genau ein oder kein Raum der Liste wird dem Kurs zugeordnet. 
-	 */
-	@ArraySchema(schema = @Schema(implementation = StundenplanInputSimpleRaum.class)) 
+	/** 0 bis n potentielle Räume, von denen 0 oder 1 Raum dem Kurs zugeordnet wird. */
+	@ArraySchema(schema = @Schema(implementation = StundenplanInputSimpleRaum.class))
 	public @NotNull Vector<@NotNull StundenplanInputSimpleRaum> raeume = new Vector<>();
 
-	/** Die Kopplung des Kurses. Die Liste darf 0-1 Element beinhalten.
-	 *  Genau eine oder keine Kopplung wird dem Kurs zugeordnet.
-	 */
-	@ArraySchema(schema = @Schema(implementation = StundenplanInputSimpleKopplung.class)) 
+	/** 0 oder 1 Kopplung wird dem Kurs zugeordnet. */
+	@ArraySchema(schema = @Schema(implementation = StundenplanInputSimpleKopplung.class))
 	public @NotNull Vector<@NotNull StundenplanInputSimpleKopplung> kopplungen = new Vector<>();
 
-	/** Die Anzahl der Stunden des Kurses. Wie die Stunden auf die Woche verteilt werden, ist in diesem
-	 * Format nicht definiert und wird vom Stundenplanprogramm automatisch entschieden. 
-	 */
-	public int stunden = -1;
+	/** Die Wochenstunden des Kurses. Das Stundenplanprogramm bestimmt, wie diese verteilt werden. */
+	public int wochenstunden = -1;
 
 }
