@@ -1,8 +1,6 @@
 package de.nrw.schule.svws.core.types.statkue;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -36,6 +34,18 @@ public class TestCoreTypeReligion {
     	assertEquals(Religion.SO, Religion.getByKuerzel("SO"));
     	assertEquals(Religion.XO, Religion.getByKuerzel("XO"));
     	assertEquals(Religion.XR, Religion.getByKuerzel("XR"));
+    	
+    	assertEquals(Religion.AR.daten.bezeichnung,("alevitisch"));
+    	assertEquals(Religion.ER.daten.bezeichnung,("evangelisch"));
+    	assertEquals(Religion.HR.daten.bezeichnung,("jüdisch"));
+    	assertEquals(Religion.IR.daten.bezeichnung,("islamisch"));
+    	assertEquals(Religion.KR.daten.bezeichnung,("katholisch"));
+    	assertEquals(Religion.ME.daten.bezeichnung,("mennonitische BG NRW"));
+    	assertEquals(Religion.OH.daten.bezeichnung,("ohne Bekenntnis"));
+    	assertEquals(Religion.OR.daten.bezeichnung,("griechisch-orthodox"));
+    	assertEquals(Religion.SO.daten.bezeichnung,("syrisch-orthodox"));
+    	assertEquals(Religion.XO.daten.bezeichnung,("sonstige orthodoxe"));
+    	assertEquals(Religion.XR.daten.bezeichnung,("andere Religionen"));
     }
 
 	// TODO add additional tests
