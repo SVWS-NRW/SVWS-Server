@@ -134,8 +134,8 @@ public class DBCoreTypeUpdater {
 		this.schemaManager = schemaManager;
 		this.logger = schemaManager.getLogger();
 		this.status = schemaManager.getSchemaStatus();
-		tables.add(new CoreTypeTable("Kompetenzen", BenutzerKompetenz.VERSION, updateBenutzerKompetenzen));
 		tables.add(new CoreTypeTable("Kompetenzgruppen", BenutzerKompetenzGruppe.VERSION, updateBenutzerKompetenzGruppen));
+		tables.add(new CoreTypeTable("Kompetenzen", BenutzerKompetenz.VERSION, updateBenutzerKompetenzen));
 		tables.add(new CoreTypeTable("Berufskolleg_Anlagen", BerufskollegAnlage.VERSION, updateBerufskollegAnlagen));
 		tables.add(new CoreTypeTable("Berufskolleg_Berufsebenen1", BerufskollegBerufsebene1.VERSION, updateBerufskollegBerufsebene1));
 		tables.add(new CoreTypeTable("Berufskolleg_Berufsebenen2", BerufskollegBerufsebene2.VERSION, updateBerufskollegBerufsebene2));
