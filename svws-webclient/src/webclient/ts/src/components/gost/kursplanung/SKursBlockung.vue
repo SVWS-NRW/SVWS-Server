@@ -85,7 +85,7 @@
 			</td>
 		</template>
 		<template v-if="!kurs_blockungsergebnis">
-			<td></td>
+			<td class="bg-white"></td>
 		</template>
 		<!-- <td class="border-none bg-white"></td> -->
 	</tr>

@@ -116,17 +116,19 @@
 								<td class="table--cell table--cell-padded table--border" >
 										{{ ergebnis.id }}
 								</td>
-								<td class="table--cell table--cell-padded table--border flex" >
-									<span
-												class="inline-flex"
-												:class="{
-													'bg-green-300': ergebnis.anzahlUmwaehler === 0,
-													'bg-yellow-300': ergebnis.anzahlUmwaehler <= 10,
-													'bg-red-300': ergebnis.anzahlUmwaehler > 10
-												}"
-												>
-												<svws-ui-icon><i-ri-group-line/></svws-ui-icon>{{ergebnis.anzahlUmwaehler}}
-											</span>
+								<td class="table--cell table--cell-padded table--border" >
+									<div class="flex">
+										<span
+													class="inline-flex"
+													:class="{
+														'bg-yellow-300': ergebnis.anzahlUmwaehler <= 10 && ergebnis.anzahlUmwaehler > 0,
+														'bg-green-300': ergebnis.anzahlUmwaehler === 0,
+														'bg-red-300': ergebnis.anzahlUmwaehler > 10
+													}"
+													>
+													<svws-ui-icon><i-ri-group-line/></svws-ui-icon>{{ergebnis.anzahlUmwaehler}}
+												</span>
+									</div>
 								</td>
 								<td class="table--cell table--cell-padded table--border" >
 									<div v-if="ergebnis === selected_ergebnis" class="flex gap-1 float-right ">

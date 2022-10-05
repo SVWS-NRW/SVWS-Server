@@ -18,7 +18,7 @@
 					</h1>
 					<div class="login-input-group">
 						<svws-ui-text-input v-model="serverAddress" type="text" placeholder="Server Addresse" />
-						<svws-ui-button type="secondary" @click="connectClicked()">
+						<svws-ui-button type="secondary" @click="connectClicked">
 							Verbinden
 						</svws-ui-button>
 					</div>
@@ -26,12 +26,18 @@
 					<div v-if="inputDBSchema" class="login-input-group">
 						<svws-ui-multi-select v-model="inputDBSchema" title="DB-Schema" :items="inputDBSchemata" :item-text="get_name" />
 						<svws-ui-text-input v-model="username" type="text" placeholder="Benutzername" />
-						<svws-ui-text-input v-model="password" type="password" placeholder="Passwort"
-							@keydown="(e: KeyboardEvent) => { if (e.key === 'Enter') login() }" />
-						<svws-ui-button @click="login()">Anmelden</svws-ui-button>
+						<svws-ui-text-input
+							v-model="password"
+							type="password"
+							placeholder="Passwort"
+							@keyup.enter="login"
+						/>
+						<svws-ui-button @click="login">Anmelden</svws-ui-button>
 						<div v-if="main.config.isAuthenticated === false" class="text-red-500">Fehler bei der Anmeldung. Passwort oder Benutzername falsch.</div>
 					</div>
-					<div v-else class="login-input-group"></div>
+					<div v-else class="login-input-group">
+						<div v-if="!connection_ok" class="text-red-500">Fehler beim Verbinden zum Server</div>
+					</div>
 				</Transition>
 				</div>
 				<div class="login-footer">
@@ -60,7 +66,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ComputedRef, ref, watch, WritableComputedRef } from "vue";
+import { computed, ComputedRef, Ref, ref, watch, WritableComputedRef } from "vue";
 import { DBSchemaListeEintrag } from "@svws-nrw/svws-core-ts";
 import { injectMainApp, Main } from "~/apps/Main";
 import { router } from "~/router";
@@ -71,6 +77,8 @@ const route = useRoute();
 const serverAddress = ref("localhost");
 const username = ref("Admin");
 const password = ref("");
+
+const connection_ok: Ref<boolean> = ref(false)
 
 const main: Main = injectMainApp();
 const inputDBSchemata: ComputedRef<DBSchemaListeEintrag[] | undefined> = computed(() => {
@@ -105,8 +113,9 @@ function get_name(i: DBSchemaListeEintrag): string | undefined {
 	return i?.name?.toString();
 };
 
-function connectClicked() {
-	main.connectTo(serverAddress.value);
+async function connectClicked() {
+	connection_ok.value = true;
+	connection_ok.value = await main.connectTo(serverAddress.value);
 };
 
 async function login() {

@@ -1,4 +1,4 @@
-import { ApiSchema, ApiServer, LehrerKatalogBeschaeftigungsartEintrag, List, ReligionEintrag, Vector } from "@svws-nrw/svws-core-ts";
+import { ApiSchema, ApiServer, List, ReligionEintrag, Vector } from "@svws-nrw/svws-core-ts";
 import {
 	DBSchemaListeEintrag,
 	Schuljahresabschnitt,
@@ -123,7 +123,7 @@ export class Main {
 	 * @param {string} url Die URL unter der der SVWS-Server erreichbar sein soll
 	 * @returns {Promise<void>}
 	 */
-	public async connectTo(url: string): Promise<void> {
+	public async connectTo(url: string): Promise<boolean> {
 		this.hostname = `https://${url || this.hostname}`;
 		this.api = new ApiServer(this.hostname, this.username, this.password);
 		console.log(`Connecting to ${this.hostname}`, url, this.api);
@@ -147,17 +147,16 @@ export class Main {
 				if (!tmp) tmp = result.get(0);
 				this.config.dbSchema = tmp;
 			}
-			console.log(
-				`DB-Schema: ${this.config.dbSchema?.name}`,
-				this.config.dbSchemata
-			);
+			console.log(`Verbunden mit DB-Schema: ${this.config.dbSchema?.name}`);
 			this.config.isConnected = true;
+			return true
 		} catch (error) {
 			{
 				//this.connection.setDBSchemata(false, []);
 				console.log(
 					`Verbindung zum SVWS-Server unter https://${this.hostname} fehlgeschlagen.`
 				);
+				return false
 				// switch (this.connection.connectionStep) {
 				// 	case 1:
 				// 		this.connection.connectionStep++;

@@ -1,4 +1,4 @@
-import { ApiServer, Foerderschwerpunkt, Schuljahresabschnitt } from "@svws-nrw/svws-core-ts";
+import { ApiServer, Schuljahresabschnitt } from "@svws-nrw/svws-core-ts";
 import { ref } from "vue";
 import type { Faecher } from "./faecher/Faecher";
 import type { Gost } from "./gost/Gost";
