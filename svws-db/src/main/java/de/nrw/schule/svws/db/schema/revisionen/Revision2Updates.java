@@ -7,13 +7,13 @@ import de.nrw.schule.svws.db.schema.SchemaRevisionen;
 
 /**
  * Diese Klasse enthält die SQL-Befehle für Revisions-Updates
- * auf Revision 3.
+ * auf Revision 2.
  */
 public class Revision2Updates extends SchemaRevisionUpdateSQL {
 
 	/**
 	 * Erzeugt eine Instanz für die Revisions-Updates 
-	 * für Revision 3.
+	 * für Revision 2.
 	 */
 	public Revision2Updates() {
 		super(SchemaRevisionen.REV_2);
