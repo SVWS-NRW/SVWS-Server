@@ -18,7 +18,7 @@ export class StundenplanInputSimpleKurs extends JavaObject {
 
 	public kopplungen : Vector<StundenplanInputSimpleKopplung> = new Vector();
 
-	public stunden : number = -1;
+	public wochenstunden : number = -1;
 
 
 	public constructor() {
@@ -57,9 +57,9 @@ export class StundenplanInputSimpleKurs extends JavaObject {
 				result.kopplungen?.add(StundenplanInputSimpleKopplung.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (typeof obj.stunden === "undefined")
-			 throw new Error('invalid json format, missing attribute stunden');
-		result.stunden = obj.stunden;
+		if (typeof obj.wochenstunden === "undefined")
+			 throw new Error('invalid json format, missing attribute wochenstunden');
+		result.wochenstunden = obj.wochenstunden;
 		return result;
 	}
 
@@ -125,7 +125,7 @@ export class StundenplanInputSimpleKurs extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		result += '"stunden" : ' + obj.stunden + ',';
+		result += '"wochenstunden" : ' + obj.wochenstunden + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -203,8 +203,8 @@ export class StundenplanInputSimpleKurs extends JavaObject {
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.stunden !== "undefined") {
-			result += '"stunden" : ' + obj.stunden + ',';
+		if (typeof obj.wochenstunden !== "undefined") {
+			result += '"wochenstunden" : ' + obj.wochenstunden + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

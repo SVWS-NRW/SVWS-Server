@@ -48,33 +48,38 @@ dependencies {
     	'src/webclient-test/ts/package.json'
     )
 }
-project.ext.npm_organization = 'svws-nrw'
-project.ext.npm_packagename_ts_lib = 'svws-core-ts'
-project.ext.npm_packagename_ui_components = 'svws-ui'
-project.ext.npm_packagename_webclient = 'svws-client'
-project.ext.npm_description_webclient = 'SVWS-Server-Projekt: Webclient'
-project.ext.npm_description_ui_components = 'SVWS-Server-Projekt: UI-Komponenten'
-project.ext.npm_description_ts_lib = 'SVWS-Server-Projekt: Generierter Code für die Client-API und transpilierter Server-Code zur Verwendung in Clients'
-project.ext.npm_author = 'MSB NRW'
-project.ext.npm_license = 'BSD-3-Clause'
-project.ext.ts_out = "."
-project.ext.coverage_out = "../../../build/coverage"
+
+project.ext.npm_properties = [
+	npm_organization: "svws-nrw",
+	npm_packagename_ts_lib: "svws-core-ts",
+	npm_packagename_ui_components: "svws-ui",
+	npm_packagename_webclient: "svws-client",
+	npm_description_webclient: "SVWS-Server-Projekt: Webclient",
+	npm_description_ui_components: "SVWS-Server-Projekt: UI-Komponenten",
+	npm_description_ts_lib: "SVWS-Server-Projekt: Generierter Code für die Client-API und transpilierter Server-Code zur Verwendung in Clients",
+	npm_author: "MSB NRW",
+	npm_license: "BSD-3-Clause",
+	ts_out: ".",
+	coverage_out: "../../../build/coverage/",
+	version: "$project.version"
+]
 
 task copyConfigTsLib(type: Copy) {
 	group "build"
 	from configurations.ts_lib
 	into "$projectDir/src/ts-lib/ts"
 	inputs.files configurations.ts_lib.files
+	inputs.properties project.ext.npm_properties
 	rename(/(\S+)-template(\S+)/, '$1$2')
 	filteringCharset = 'UTF-8'
 	filter(ReplaceTokens, tokens: [
-		npm_organization: project.ext.npm_organization,
-		npm_package: project.ext.npm_packagename_ts_lib,
-		npm_description: project.ext.npm_description_ts_lib,
-		npm_author: project.ext.npm_author,
-		npm_license: project.ext.npm_license,
-		ts_out: project.ext.ts_out,
-		version: project.version
+		npm_organization: project.ext.npm_properties.npm_organization.toString(),
+		npm_package: project.ext.npm_properties.npm_packagename_ts_lib.toString(),
+		npm_description: project.ext.npm_properties.npm_description_ts_lib.toString(),
+		npm_author: project.ext.npm_properties.npm_author.toString(),
+		npm_license: project.ext.npm_properties.npm_license.toString(),
+		ts_out: project.ext.npm_properties.ts_out.toString(),
+		version: project.ext.npm_properties.version.toString()
 	])
 }
 
@@ -83,17 +88,18 @@ task copyConfigTsLibTest(type: Copy) {
 	from configurations.ts_lib_test
 	into "$projectDir/src/ts-lib-test/ts"
 	inputs.files configurations.ts_lib_test.files
+	inputs.properties project.ext.npm_properties
 	rename(/(\S+)-template(\S+)/, '$1$2')
 	filteringCharset = 'UTF-8'
 	filter(ReplaceTokens, tokens: [
-		npm_organization: project.ext.npm_organization,
-		npm_package: project.ext.npm_packagename_ts_lib + '-test',
-		npm_description: project.ext.npm_description_ts_lib + ' (Tests)',
-		npm_author: project.ext.npm_author,
-		npm_license: project.ext.npm_license,
-		ts_out: project.ext.ts_out,
-		coverage_out: project.ext.coverage_out + '/' + project.ext.npm_packagename_ts_lib,
-		version: project.version
+		npm_organization: project.ext.npm_properties.npm_organization.toString(),
+		npm_package: project.ext.npm_properties.npm_packagename_ts_lib.toString() + '-test',
+		npm_description: project.ext.npm_properties.npm_description_ts_lib.toString() + ' (Tests)',
+		npm_author: project.ext.npm_properties.npm_author,
+		npm_license: project.ext.npm_properties.npm_license,
+		ts_out: project.ext.npm_properties.ts_out,
+		coverage_out: project.ext.npm_properties.coverage_out.toString() + project.ext.npm_properties.npm_packagename_ts_lib.toString(),
+		version: project.ext.npm_properties.version.toString()
 	])
 }
 
@@ -102,16 +108,17 @@ task copyConfigUiComponents(type: Copy) {
 	from configurations.ui_components
 	into "$projectDir/src/ui-components/ts"
 	inputs.files configurations.ui_components.files
+	inputs.properties project.ext.npm_properties
 	rename(/(\S+)-template(\S+)/, '$1$2')
 	filteringCharset = 'UTF-8'
 	filter(ReplaceTokens, tokens: [
-		npm_organization: project.ext.npm_organization,
-		npm_package: project.ext.npm_packagename_ui_components,
-		npm_description: project.ext.npm_description_ui_components,
-		npm_author: project.ext.npm_author,
-		npm_license: project.ext.npm_license,
-		ts_out: project.ext.ts_out,
-		version: project.version
+		npm_organization: project.ext.npm_properties.npm_organization.toString(),
+		npm_package: project.ext.npm_properties.npm_packagename_ui_components.toString(),
+		npm_description: project.ext.npm_properties.npm_description_ui_components.toString(),
+		npm_author: project.ext.npm_properties.npm_author.toString(),
+		npm_license: project.ext.npm_properties.npm_license.toString(),
+		ts_out: project.ext.npm_properties.ts_out.toString(),
+		version: project.ext.npm_properties.version.toString()
 	])
 }
 
@@ -120,16 +127,17 @@ task copyConfigWebclient(type: Copy) {
 	from configurations.webclient
 	into "$projectDir/src/webclient/ts"
 	inputs.files configurations.webclient.files
+	inputs.properties project.ext.npm_properties
 	rename(/(\S+)-template(\S+)/, '$1$2')
 	filteringCharset = 'UTF-8'
 	filter(ReplaceTokens, tokens: [
-		npm_organization: project.ext.npm_organization,
-		npm_package: project.ext.npm_packagename_webclient,
-		npm_description: project.ext.npm_description_webclient,
-		npm_author: project.ext.npm_author,
-		npm_license: project.ext.npm_license,
-		ts_out: project.ext.ts_out,
-		version: project.version
+		npm_organization: project.ext.npm_properties.npm_organization.toString(),
+		npm_package: project.ext.npm_properties.npm_packagename_webclient.toString(),
+		npm_description: project.ext.npm_properties.npm_description_webclient.toString(),
+		npm_author: project.ext.npm_properties.npm_author.toString(),
+		npm_license: project.ext.npm_properties.npm_license.toString(),
+		ts_out: project.ext.npm_properties.ts_out.toString(),
+		version: project.ext.npm_properties.version.toString()
 	])
 }
 
@@ -138,17 +146,18 @@ task copyConfigWebclientTest(type: Copy) {
 	from configurations.webclient_test
 	into "$projectDir/src/webclient-test/ts"
 	inputs.files configurations.webclient_test.files
+	inputs.properties project.ext.npm_properties
 	rename(/(\S+)-template(\S+)/, '$1$2')
 	filteringCharset = 'UTF-8'
 	filter(ReplaceTokens, tokens: [
-		npm_organization: project.ext.npm_organization,
-		npm_package: project.ext.npm_packagename_webclient + '-test',
-		npm_description: project.ext.npm_description_webclient + " (Tests)",
-		npm_author: project.ext.npm_author,
-		npm_license: project.ext.npm_license,
-		ts_out: project.ext.ts_out,
-		coverage_out: project.ext.coverage_out + '/' + project.ext.npm_packagename_webclient,
-		version: project.version
+		npm_organization: project.ext.npm_properties.npm_organization.toString(),
+		npm_package: project.ext.npm_properties.npm_packagename_webclient.toString() + '-test',
+		npm_description: project.ext.npm_properties.npm_description_webclient.toString() + " (Tests)",
+		npm_author: project.ext.npm_properties.npm_author.toString(),
+		npm_license: project.ext.npm_properties.npm_license.toString(),
+		ts_out: project.ext.npm_properties.ts_out.toString(),
+		coverage_out: project.ext.npm_properties.coverage_out.toString() + project.ext.npm_properties.npm_packagename_webclient.toString(),
+		version: project.ext.npm_properties.version.toString()
 	])
 }
 
