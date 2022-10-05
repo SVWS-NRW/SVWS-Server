@@ -22,7 +22,8 @@
 							Verbinden
 						</svws-ui-button>
 					</div>
-					<div class="login-input-group">
+					<Transition>
+					<div v-if="inputDBSchema" class="login-input-group">
 						<svws-ui-multi-select v-model="inputDBSchema" title="DB-Schema" :items="inputDBSchemata" :item-text="get_name" />
 						<svws-ui-text-input v-model="username" type="text" placeholder="Benutzername" />
 						<svws-ui-text-input v-model="password" type="password" placeholder="Passwort"
@@ -30,6 +31,8 @@
 						<svws-ui-button @click="login()">Anmelden</svws-ui-button>
 						<div v-if="main.config.isAuthenticated === false" class="text-red-500">Fehler bei der Anmeldung. Passwort oder Benutzername falsch.</div>
 					</div>
+					<div v-else class="login-input-group"></div>
+				</Transition>
 				</div>
 				<div class="login-footer">
 					<img class="login-footer-logo" src="/images/MSB_NRW_Logo.svg" />
@@ -162,5 +165,14 @@ async function login() {
 	background-size: cover;
 	background-position: center;
 	@apply block min-h-screen w-full;
+}
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
 }
 </style>
