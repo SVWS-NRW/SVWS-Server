@@ -105,6 +105,7 @@ declare module '@vue/runtime-core' {
     SCardSchuelerWechsel: typeof import('./src/components/schueler/schulbesuch/SCardSchuelerWechsel.vue')['default']
     SCardSchuelerZeugnisAbschluss: typeof import('./src/components/schueler/halbjahr/SCardSchuelerZeugnisAbschluss.vue')['default']
     SCardSchuleDatenaustauschLaufbahnplanung: typeof import('./src/components/schule/datenaustausch/laufbahnplanung/SCardSchuleDatenaustauschLaufbahnplanung.vue')['default']
+    SDragSchiene: typeof import('./src/components/gost/kursplanung/SDragSchiene.vue')['default']
     SFachDaten: typeof import('./src/components/faecher/daten/SFachDaten.vue')['default']
     SFachKurs: typeof import('./src/components/gost/kursplanung/SFachKurs.vue')['default']
     SFaecherApp: typeof import('./src/components/faecher/SFaecherApp.vue')['default']

@@ -81,7 +81,7 @@
 					<span class="px-2">{{kursdifferenz[2]}}</span>
 					<span @click="add_kurs">+</span>
 				</div>
-				<div v-else>{{kursdifferenz[2]}}</div>
+				<div v-else class="cursor-pointer underline decoration-dashed underline-offset-2">{{kursdifferenz[2]}}</div>
 			</td>
 		</template>
 		<template v-if="!kurs_blockungsergebnis">
