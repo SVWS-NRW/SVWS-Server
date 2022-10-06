@@ -194,7 +194,7 @@ public class DataGostBlockungsdaten extends DataManager<Long> {
 			GostUtils.pruefeSchuleMitGOSt(conn);
 			// Erstellen den Manager mit den Blockungsdaten
 			GostBlockungsdatenManager manager = getBlockungsdatenManagerFromDB(id);
-			// Ergänze Blockungsliste und das aktuelle Blockungsergebnis
+			// Ergänze Blockungsliste
 			(new DataGostBlockungsergebnisse(conn)).getErgebnisListe(manager);
 			daten = manager.daten();
 			conn.transactionCommit();
@@ -360,7 +360,7 @@ public class DataGostBlockungsdaten extends DataManager<Long> {
 			// Lege eine Kurs-Schienen-Zuordnung für das "leere" Ergebnis fest. Diese Kurse werden der ersten Schiene der neuen Blockung zugeordnet.
 			for (GostBlockungKurs kurs : manager.daten().kurse)
 				conn.transactionPersist(new DTOGostBlockungZwischenergebnisKursSchiene(ergebnisID, kurs.id, schienenID + 1));
-            // Ergänze Blockungsliste und das aktuelle Blockungsergebnis
+            // Ergänze Blockungsliste
             (new DataGostBlockungsergebnisse(conn)).getErgebnisListe(manager);
 			conn.transactionCommit();
 			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();

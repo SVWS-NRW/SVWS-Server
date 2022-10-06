@@ -140,10 +140,6 @@ public class DataGostBlockungsergebnisse extends DataManager<Long> {
             ergebnis.istMarkiert = erg.IstMarkiert == null ? false : erg.IstMarkiert;
             ergebnis.istVorlage = erg.IstVorlage == null ? false : erg.IstVorlage;
 
-            // Hinzufügen des aktuellen Ergebnisses zu den Blockungsdaten
-            if (ergebnis.istVorlage)
-                datenManager.daten().ergebnisAktuell = ergebnis;
-            
             // Hinzufügen des Ergebnis-Listeneintrags zu den Blockungsdaten
             var eintrag = new GostBlockungsergebnisListeneintrag();
             eintrag.id = ergebnis.id;

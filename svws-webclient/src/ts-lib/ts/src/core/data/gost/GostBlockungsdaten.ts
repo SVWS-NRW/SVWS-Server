@@ -1,5 +1,4 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { GostBlockungsergebnis, cast_de_nrw_schule_svws_core_data_gost_GostBlockungsergebnis } from '../../../core/data/gost/GostBlockungsergebnis';
 import { GostBlockungsergebnisListeneintrag, cast_de_nrw_schule_svws_core_data_gost_GostBlockungsergebnisListeneintrag } from '../../../core/data/gost/GostBlockungsergebnisListeneintrag';
 import { GostBlockungSchiene, cast_de_nrw_schule_svws_core_data_gost_GostBlockungSchiene } from '../../../core/data/gost/GostBlockungSchiene';
 import { List, cast_java_util_List } from '../../../java/util/List';
@@ -29,8 +28,6 @@ export class GostBlockungsdaten extends JavaObject {
 	public kurse : List<GostBlockungKurs> = new Vector();
 
 	public readonly ergebnisse : List<GostBlockungsergebnisListeneintrag> = new Vector();
-
-	public ergebnisAktuell : GostBlockungsergebnis = new GostBlockungsergebnis();
 
 
 	public constructor() {
@@ -82,9 +79,6 @@ export class GostBlockungsdaten extends JavaObject {
 				result.ergebnisse?.add(GostBlockungsergebnisListeneintrag.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (typeof obj.ergebnisAktuell === "undefined")
-			 throw new Error('invalid json format, missing attribute ergebnisAktuell');
-		result.ergebnisAktuell = GostBlockungsergebnis.transpilerFromJSON(JSON.stringify(obj.ergebnisAktuell));
 		return result;
 	}
 
@@ -144,7 +138,6 @@ export class GostBlockungsdaten extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		result += '"ergebnisAktuell" : ' + GostBlockungsergebnis.transpilerToJSON(obj.ergebnisAktuell) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -225,9 +218,6 @@ export class GostBlockungsdaten extends JavaObject {
 				}
 				result += ' ]' + ',';
 			}
-		}
-		if (typeof obj.ergebnisAktuell !== "undefined") {
-			result += '"ergebnisAktuell" : ' + GostBlockungsergebnis.transpilerToJSON(obj.ergebnisAktuell) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

@@ -49,8 +49,5 @@ public class GostBlockungsdaten {
 
 	/** Eine Liste der Ergebnisse, die der Blockungsdefintion zugeordnet sind.  */
 	public final @NotNull List<@NotNull GostBlockungsergebnisListeneintrag> ergebnisse = new Vector<>();
-	
-	/** Das aktuelle Ergebniss der Blockung (normalerweise das Vorlage-Ergebnis) */
-	public @NotNull GostBlockungsergebnis ergebnisAktuell = new GostBlockungsergebnis();
-	
+
 }
