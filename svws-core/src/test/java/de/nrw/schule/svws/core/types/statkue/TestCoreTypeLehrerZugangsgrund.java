@@ -34,6 +34,12 @@ public class TestCoreTypeLehrerZugangsgrund {
     	assertEquals(LehrerZugangsgrund.WECHSEL.daten.schluessel, ("3"));
     	assertEquals(LehrerZugangsgrund.WIEDER.daten.schluessel, ("4"));
     	assertEquals(LehrerZugangsgrund.SONSTIG.daten.schluessel, ("5"));
+    	
+    	assertEquals(LehrerZugangsgrund.NEU.daten.text, ("Neueintritt in den Schuldienst mit abgelegter 2. Staatsprüfung oder anderweitig erfüllter Eingangsvoraussetzung"));
+        assertEquals(LehrerZugangsgrund.AndBuLand.daten.text, ("Übertritt aus dem Schuldienst eines anderen Bundeslandes"));
+        assertEquals(LehrerZugangsgrund.WECHSEL.daten.text, ("Wechsel innerhalb des Landes von einer anderen Schule an die berichtende Schule"));
+        assertEquals(LehrerZugangsgrund.WIEDER.daten.text, ("Wiedereintritt in den Schuldienst"));
+        assertEquals(LehrerZugangsgrund.SONSTIG.daten.text, ("Sonstige Zugänge"));
     }
 
 	// TODO add additional tests
