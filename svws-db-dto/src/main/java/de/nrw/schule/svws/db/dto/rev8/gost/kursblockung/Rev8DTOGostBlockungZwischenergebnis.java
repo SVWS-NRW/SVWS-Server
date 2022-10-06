@@ -38,11 +38,11 @@ import de.nrw.schule.svws.csv.converter.current.Boolean01ConverterDeserializer;
 @NamedQuery(name="Rev8DTOGostBlockungZwischenergebnis.bewertung.multiple", query="SELECT e FROM Rev8DTOGostBlockungZwischenergebnis e WHERE e.Bewertung IN :value")
 @NamedQuery(name="Rev8DTOGostBlockungZwischenergebnis.istmarkiert", query="SELECT e FROM Rev8DTOGostBlockungZwischenergebnis e WHERE e.IstMarkiert = :value")
 @NamedQuery(name="Rev8DTOGostBlockungZwischenergebnis.istmarkiert.multiple", query="SELECT e FROM Rev8DTOGostBlockungZwischenergebnis e WHERE e.IstMarkiert IN :value")
-@NamedQuery(name="Rev8DTOGostBlockungZwischenergebnis.istdupliziert", query="SELECT e FROM Rev8DTOGostBlockungZwischenergebnis e WHERE e.IstDupliziert = :value")
-@NamedQuery(name="Rev8DTOGostBlockungZwischenergebnis.istdupliziert.multiple", query="SELECT e FROM Rev8DTOGostBlockungZwischenergebnis e WHERE e.IstDupliziert IN :value")
+@NamedQuery(name="Rev8DTOGostBlockungZwischenergebnis.istvorlage", query="SELECT e FROM Rev8DTOGostBlockungZwischenergebnis e WHERE e.IstVorlage = :value")
+@NamedQuery(name="Rev8DTOGostBlockungZwischenergebnis.istvorlage.multiple", query="SELECT e FROM Rev8DTOGostBlockungZwischenergebnis e WHERE e.IstVorlage IN :value")
 @NamedQuery(name="Rev8DTOGostBlockungZwischenergebnis.primaryKeyQuery", query="SELECT e FROM Rev8DTOGostBlockungZwischenergebnis e WHERE e.ID = ?1")
 @NamedQuery(name="Rev8DTOGostBlockungZwischenergebnis.all.migration", query="SELECT e FROM Rev8DTOGostBlockungZwischenergebnis e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Blockung_ID","AnzahlUmwaehler","Bewertung","IstMarkiert","IstDupliziert"})
+@JsonPropertyOrder({"ID","Blockung_ID","AnzahlUmwaehler","Bewertung","IstMarkiert","IstVorlage"})
 public class Rev8DTOGostBlockungZwischenergebnis {
 
 	/** Kursblockung der Gymnasialen Oberstufe - Zwischenergebnis einer Blockung: ID der Zwischenergebnisses (generiert) */
@@ -74,13 +74,13 @@ public class Rev8DTOGostBlockungZwischenergebnis {
 	@JsonDeserialize(using=Boolean01ConverterDeserializer.class)
 	public Boolean IstMarkiert;
 
-	/** Kursblockung der Gymnasialen Oberstufe - Zwischenergebnis einer Blockung: Gibt an, ob das Zwischenergebnis mit einer anderen Blockungsdefinition dupliziert wurde und nur als Vorlage für Regeldefinitionen dient oder nicht: 1 - true, 0 - false  */
-	@Column(name = "IstDupliziert")
+	/** Kursblockung der Gymnasialen Oberstufe - Zwischenergebnis einer Blockung: Gibt an, ob das Zwischenergebnis im Zusammenhang mit der Erstellen einer Blockung erstellt wurde und somit als Vorlage für Regeldefinitionen dient oder nicht: 1 - true, 0 - false. Die Vorlage kann zu einem späteren Zeitpunkt ggf. auf ein anderes (berechnetes) Ergebnis umgesetzt werden.In diesem Fall müssten jedoch alle anderen Ergebnisse der Blockungsdefinition entfernt werden. */
+	@Column(name = "IstVorlage")
 	@JsonProperty
 	@Convert(converter=Boolean01Converter.class)
 	@JsonSerialize(using=Boolean01ConverterSerializer.class)
 	@JsonDeserialize(using=Boolean01ConverterDeserializer.class)
-	public Boolean IstDupliziert;
+	public Boolean IstVorlage;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse Rev8DTOGostBlockungZwischenergebnis ohne eine Initialisierung der Attribute.
@@ -96,9 +96,9 @@ public class Rev8DTOGostBlockungZwischenergebnis {
 	 * @param AnzahlUmwaehler   der Wert für das Attribut AnzahlUmwaehler
 	 * @param Bewertung   der Wert für das Attribut Bewertung
 	 * @param IstMarkiert   der Wert für das Attribut IstMarkiert
-	 * @param IstDupliziert   der Wert für das Attribut IstDupliziert
+	 * @param IstVorlage   der Wert für das Attribut IstVorlage
 	 */
-	public Rev8DTOGostBlockungZwischenergebnis(final Long ID, final Long Blockung_ID, final Integer AnzahlUmwaehler, final Long Bewertung, final Boolean IstMarkiert, final Boolean IstDupliziert) {
+	public Rev8DTOGostBlockungZwischenergebnis(final Long ID, final Long Blockung_ID, final Integer AnzahlUmwaehler, final Long Bewertung, final Boolean IstMarkiert, final Boolean IstVorlage) {
 		if (ID == null) { 
 			throw new NullPointerException("ID must not be null");
 		}
@@ -119,10 +119,10 @@ public class Rev8DTOGostBlockungZwischenergebnis {
 			throw new NullPointerException("IstMarkiert must not be null");
 		}
 		this.IstMarkiert = IstMarkiert;
-		if (IstDupliziert == null) { 
-			throw new NullPointerException("IstDupliziert must not be null");
+		if (IstVorlage == null) { 
+			throw new NullPointerException("IstVorlage must not be null");
 		}
-		this.IstDupliziert = IstDupliziert;
+		this.IstVorlage = IstVorlage;
 	}
 
 
@@ -159,7 +159,7 @@ public class Rev8DTOGostBlockungZwischenergebnis {
 	 */
 	@Override
 	public String toString() {
-		return "Rev8DTOGostBlockungZwischenergebnis(ID=" + this.ID + ", Blockung_ID=" + this.Blockung_ID + ", AnzahlUmwaehler=" + this.AnzahlUmwaehler + ", Bewertung=" + this.Bewertung + ", IstMarkiert=" + this.IstMarkiert + ", IstDupliziert=" + this.IstDupliziert + ")";
+		return "Rev8DTOGostBlockungZwischenergebnis(ID=" + this.ID + ", Blockung_ID=" + this.Blockung_ID + ", AnzahlUmwaehler=" + this.AnzahlUmwaehler + ", Bewertung=" + this.Bewertung + ", IstMarkiert=" + this.IstMarkiert + ", IstVorlage=" + this.IstVorlage + ")";
 	}
 
 }

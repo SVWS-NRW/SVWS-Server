@@ -34,7 +34,6 @@ declare module '@vue/runtime-core' {
     IRiForbidLine: typeof import('~icons/ri/forbid-line')['default']
     IRiGroupLine: typeof import('~icons/ri/group-line')['default']
     IRiLineChartLine: typeof import('~icons/ri/line-chart-line')['default']
-    IRiLockLine: typeof import('~icons/ri/lock-line')['default']
     IRiLockUnlockLine: typeof import('~icons/ri/lock-unlock-line')['default']
     IRiLogoutBoxLine: typeof import('~icons/ri/logout-box-line')['default']
     IRiMoonLine: typeof import('~icons/ri/moon-line')['default']

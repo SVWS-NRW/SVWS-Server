@@ -46,8 +46,11 @@ public class GostBlockungsergebnis {
 	/** Gibt an, ob dieses Ergebnis markiert wurde. Dies kann verwendet werden, um besonders geeignete Blockungsergebnisse hervorzuheben. */
 	public boolean istMarkiert = false;
 	
-	/** Gibt an, ob dieses Ergebnis ein Duplikat aus einer anderen Blockung ist und als Grundlage für diese Blockungsdefinition dienen soll. */
-	public boolean istDuplikat = false; 
+	/** Gibt an, ob dieses Ergebnis als Vorlage für eine Blockungsdefinition dient. Eine Vorlage wird
+	 * mit der Definition automatisch angepasst in Bezug auf die Kurs- und Schienenanzahl mit angepasst, 
+	 * obwohl dies bei berechneten Ergebnissen nicht vorgesehen ist. Jede Blockungsdefinition hat
+	 * genau eine Vorlage zugeordnet. */
+	public boolean istVorlage = false; 
 
 	/** Eine Liste der Schienen, welche zugeordnete Kurse beinhalten. */
 	public final @NotNull Vector<@NotNull GostBlockungsergebnisSchiene> schienen = new Vector<>();

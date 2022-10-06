@@ -19,7 +19,7 @@ export class GostBlockungsergebnisListeneintrag extends JavaObject {
 
 	public istMarkiert : boolean = false;
 
-	public istDuplikat : boolean = false;
+	public istVorlage : boolean = false;
 
 	public bewertungNichtErfuellteRegeln : Array<Number> = Array(0).fill(null);
 
@@ -62,9 +62,9 @@ export class GostBlockungsergebnisListeneintrag extends JavaObject {
 		if (typeof obj.istMarkiert === "undefined")
 			 throw new Error('invalid json format, missing attribute istMarkiert');
 		result.istMarkiert = obj.istMarkiert;
-		if (typeof obj.istDuplikat === "undefined")
-			 throw new Error('invalid json format, missing attribute istDuplikat');
-		result.istDuplikat = obj.istDuplikat;
+		if (typeof obj.istVorlage === "undefined")
+			 throw new Error('invalid json format, missing attribute istVorlage');
+		result.istVorlage = obj.istVorlage;
 		for (let i : number = 0; i < obj.bewertungNichtErfuellteRegeln.length; i++) {
 			result.bewertungNichtErfuellteRegeln[i] = obj.bewertungNichtErfuellteRegeln[i];
 		}
@@ -89,7 +89,7 @@ export class GostBlockungsergebnisListeneintrag extends JavaObject {
 		result += '"anzahlUmwaehler" : ' + obj.anzahlUmwaehler + ',';
 		result += '"bewertung" : ' + obj.bewertung + ',';
 		result += '"istMarkiert" : ' + obj.istMarkiert + ',';
-		result += '"istDuplikat" : ' + obj.istDuplikat + ',';
+		result += '"istVorlage" : ' + obj.istVorlage + ',';
 		if (!obj.bewertungNichtErfuellteRegeln) {
 			result += '"bewertungNichtErfuellteRegeln" : []';
 		} else {
@@ -144,8 +144,8 @@ export class GostBlockungsergebnisListeneintrag extends JavaObject {
 		if (typeof obj.istMarkiert !== "undefined") {
 			result += '"istMarkiert" : ' + obj.istMarkiert + ',';
 		}
-		if (typeof obj.istDuplikat !== "undefined") {
-			result += '"istDuplikat" : ' + obj.istDuplikat + ',';
+		if (typeof obj.istVorlage !== "undefined") {
+			result += '"istVorlage" : ' + obj.istVorlage + ',';
 		}
 		if (typeof obj.bewertungNichtErfuellteRegeln !== "undefined") {
 			let a = obj.bewertungNichtErfuellteRegeln;

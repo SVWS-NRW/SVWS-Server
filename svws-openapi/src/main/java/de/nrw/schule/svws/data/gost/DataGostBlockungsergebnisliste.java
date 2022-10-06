@@ -55,7 +55,7 @@ public class DataGostBlockungsergebnisliste extends DataManager<Long> {
 		eintrag.anzahlUmwaehler = ergebnis.AnzahlUmwaehler;
 		eintrag.bewertung = ergebnis.Bewertung == null ? -1 : ergebnis.Bewertung;
 		eintrag.istMarkiert = ergebnis.IstMarkiert == null ? false : ergebnis.IstMarkiert;
-		eintrag.istDuplikat = ergebnis.IstDupliziert == null ? false : ergebnis.IstDupliziert;
+		eintrag.istVorlage = ergebnis.IstVorlage == null ? false : ergebnis.IstVorlage;
 		return eintrag;
 	}
 

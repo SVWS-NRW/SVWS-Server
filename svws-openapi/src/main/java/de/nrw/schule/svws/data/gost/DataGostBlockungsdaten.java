@@ -98,7 +98,8 @@ public class DataGostBlockungsdaten extends DataManager<Long> {
 		daten.id = blockung.ID;
 		daten.name = blockung.Name;
 		daten.gostHalbjahr = blockung.Halbjahr.id;
-		daten.ergebnisID = blockung.Ergebnis_ID;
+		daten.istAktiv = blockung.IstAktiv;
+		daten.vorlageID = blockung.Vorlage_ID;
 		return daten;
 	};
 
@@ -180,11 +181,6 @@ public class DataGostBlockungsdaten extends DataManager<Long> {
 			}
 		}
 		GostBlockungsdaten daten = manager.daten();
-		// Prüfe, ob ein Zwischenergebnis als Duplikat vorliegt, welche als Grundlage für die Regeldefinition verwendet werden kann
-		List<DTOGostBlockungZwischenergebnis> ergebnisse = conn.queryNamed(
-				"DTOGostBlockungZwischenergebnis.blockung_id", daten.id, DTOGostBlockungZwischenergebnis.class);
-		if (ergebnisse != null)
-			daten.ergebnisID = ergebnisse.stream().filter(e -> e.IstDupliziert).map(e -> e.ID).findFirst().orElse(null);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
@@ -268,7 +264,7 @@ public class DataGostBlockungsdaten extends DataManager<Long> {
 			// Prüfe, ob es bereits eine aktivierte Blockung gibt. In diesem Fall sollte der Aufruf fehlschlagen... (ggf. muss die aktivierte Blockung deaktiviert werden) 
 			// TODO evtl. weitere Prüfungen: Prüfe abiturjahr + gostHalbjahr in Bezug auf den aktuellen Abschnitt (GUI-Warnung sinnvoll)
 			// TODO evtl. weitere Prüfungen: Fehler: alte Blockung -> nicht erstellen...
-			if (blockungen.stream().filter(b -> (b.Ergebnis_ID != null)).count() > 0)
+			if (blockungen.stream().filter(b -> b.IstAktiv).count() > 0)
 				throw OperationError.CONFLICT.exception("Es gibt bereits eine aktivierte Blockung, so dass die Daten der aktivierten Blockung bereits in die Leistungsdaten der Schüler übertragen wurden.");
 			// Bestimme den Namen der neuen Blockung
 			Set<String> namen = blockungen.stream().map(b -> b.Name).collect(Collectors.toUnmodifiableSet());
@@ -281,9 +277,14 @@ public class DataGostBlockungsdaten extends DataManager<Long> {
 			GostFaecherManager faecherManager = (new DataGostFaecher(conn, abiturjahr)).getListInternal();
 			if (faecherManager == null)
 				return OperationError.NOT_FOUND.getResponse();
+			// Lege ein "leeres" Ergebnis für manuelles Blocken an
+			DTODBAutoInkremente lastErgebnisID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Blockung_Zwischenergebnisse");
+			long ergebnisID = lastErgebnisID == null ? 1 : lastErgebnisID.MaxID + 1;
+			DTOGostBlockungZwischenergebnis erg = new DTOGostBlockungZwischenergebnis(ergebnisID, blockungID, 0, 0L, false, true);
 			// Blockung anlegen
-			DTOGostBlockung blockung = new DTOGostBlockung(blockungID, name, abiturjahr, gostHalbjahr);
+			DTOGostBlockung blockung = new DTOGostBlockung(blockungID, name, abiturjahr, gostHalbjahr, false, ergebnisID);
 			conn.transactionPersist(blockung);
+			conn.transactionPersist(erg);
 			GostBlockungsdaten daten = dtoMapper.apply(blockung);
 			GostBlockungsdatenManager manager = new GostBlockungsdatenManager(daten, faecherManager);
 			// Schienen anlegen
@@ -336,11 +337,7 @@ public class DataGostBlockungsdaten extends DataManager<Long> {
 					manager.addKurs(dtoMapperKurse.apply(kurs));
 				}
 			}
-			// Lege ein "leeres" Ergebnis für manuelles Blocken an
-			DTODBAutoInkremente lastErgebnisID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Blockung_Zwischenergebnisse");
-			long ergebnisID = lastErgebnisID == null ? 1 : lastErgebnisID.MaxID + 1;
-			DTOGostBlockungZwischenergebnis erg = new DTOGostBlockungZwischenergebnis(ergebnisID, blockungID, 0, 0L, false, true);
-			conn.transactionPersist(erg);
+			// Lege eine Kurs-Schienen-Zuordnung für das "leere" Ergebnis fest. Diese Kurse werden der ersten Schiene der neuen Blockung zugeordnet.
 			for (GostBlockungKurs kurs : manager.daten().kurse)
 				conn.transactionPersist(new DTOGostBlockungZwischenergebnisKursSchiene(ergebnisID, kurs.id, schienenID + 1));
 			conn.transactionCommit();
@@ -564,16 +561,6 @@ public class DataGostBlockungsdaten extends DataManager<Long> {
 		try {
 			if ((idBlockungOriginal == null) && (idErgebnisOriginal == null))
 				throw OperationError.CONFLICT.exception();
-			DTOGostBlockungZwischenergebnis ergebnisOriginal = null;
-			if (idErgebnisOriginal != null) {
-				ergebnisOriginal = conn.queryByKey(DTOGostBlockungZwischenergebnis.class, idErgebnisOriginal);
-				if (ergebnisOriginal == null)
-					throw OperationError.NOT_FOUND.exception();
-				if (idBlockungOriginal == null)
-					idBlockungOriginal = ergebnisOriginal.Blockung_ID;
-				if (idBlockungOriginal != ergebnisOriginal.Blockung_ID)
-					throw OperationError.CONFLICT.exception();
-			}
 			conn.transactionBegin();
 			// Prüfe, ob die Schule eine gymnasiale Oberstufe hat
 			DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
@@ -582,16 +569,40 @@ public class DataGostBlockungsdaten extends DataManager<Long> {
 			Schulform schulform = schule.Schulform;
 			if ((schulform == null) || (schulform.daten == null) || (!schulform.daten.hatGymOb))
 				throw OperationError.NOT_FOUND.exception();
-			// Prüfe, ob die Blockung mit der ID existiert			
-			DTOGostBlockung blockungOriginal = conn.queryByKey(DTOGostBlockung.class, idBlockungOriginal);
-			if (blockungOriginal == null)
-				throw OperationError.NOT_FOUND.exception();
+			// Bestimme die Blockung und das zugehörige Ergebnis
+			DTOGostBlockungZwischenergebnis ergebnisOriginal;
+			DTOGostBlockung blockungOriginal;
+			if (idErgebnisOriginal != null) {
+				ergebnisOriginal = conn.queryByKey(DTOGostBlockungZwischenergebnis.class, idErgebnisOriginal);
+				if (ergebnisOriginal == null)
+					throw OperationError.NOT_FOUND.exception();
+				if (idBlockungOriginal == null)
+					idBlockungOriginal = ergebnisOriginal.Blockung_ID;
+				if (idBlockungOriginal != ergebnisOriginal.Blockung_ID)
+					throw OperationError.CONFLICT.exception();
+				// Bestimme die Blockung			
+				blockungOriginal = conn.queryByKey(DTOGostBlockung.class, idBlockungOriginal);
+				if (blockungOriginal == null)
+					throw OperationError.NOT_FOUND.exception();
+			} else {
+				blockungOriginal = conn.queryByKey(DTOGostBlockung.class, idBlockungOriginal);
+				if (blockungOriginal == null)
+					throw OperationError.NOT_FOUND.exception();
+				idErgebnisOriginal = blockungOriginal.Vorlage_ID;
+				ergebnisOriginal = conn.queryByKey(DTOGostBlockungZwischenergebnis.class, idErgebnisOriginal);
+				if (ergebnisOriginal == null)
+					throw OperationError.NOT_FOUND.exception();
+				if (idBlockungOriginal != ergebnisOriginal.Blockung_ID)
+					throw OperationError.CONFLICT.exception();
+			}
 			// Bestimme die ID für das Duplikat der Blockung
 			DTODBAutoInkremente lastID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Blockung");
 			Long idBlockungDuplikat = lastID == null ? 1 : lastID.MaxID + 1;
+			// Bestimme die für das Vorlage-Ergebnis der duplizierten Blockung
+			DTODBAutoInkremente dbErgebnisID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Blockung_Zwischenergebnisse");
+			long idErgebnisDuplikat = dbErgebnisID == null ? 1 : dbErgebnisID.MaxID + 1;
 			// Erstelle das Duplikat
-			DTOGostBlockung blockungDuplikat = new DTOGostBlockung(idBlockungDuplikat, blockungOriginal.Name + " (Duplikat)", blockungOriginal.Abi_Jahrgang, blockungOriginal.Halbjahr);
-			blockungDuplikat.Ergebnis_ID = null; // bei der neuen Blockung gibt es keine aktive Blockung
+			DTOGostBlockung blockungDuplikat = new DTOGostBlockung(idBlockungDuplikat, blockungOriginal.Name + " (Duplikat)", blockungOriginal.Abi_Jahrgang, blockungOriginal.Halbjahr, false, idErgebnisDuplikat);
 			conn.transactionPersist(blockungDuplikat);
 			// Dupliziere die Schienen
 			DTODBAutoInkremente dbSchienenID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Blockung_Schienen");
@@ -653,33 +664,28 @@ public class DataGostBlockungsdaten extends DataManager<Long> {
 					conn.transactionPersist(paramDuplikat);
 				}
 			}
-			// Dupliziere ggf. das Zwischenergebnis und markiere es als Duplikat
-			if (ergebnisOriginal != null) {
-				// Dupliziere das Ergebnis
-				DTODBAutoInkremente dbErgebnisID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Blockung_Zwischenergebnisse");
-				long idErgebnisDuplikat = dbErgebnisID == null ? 1 : dbErgebnisID.MaxID + 1;
-				DTOGostBlockungZwischenergebnis ergebnisDuplikat = new DTOGostBlockungZwischenergebnis(idErgebnisDuplikat, idBlockungDuplikat,
-						ergebnisOriginal.AnzahlUmwaehler, ergebnisOriginal.Bewertung, ergebnisOriginal.IstMarkiert, true);
-				conn.transactionPersist(ergebnisDuplikat);
-				// Dupliziere Kurs-Schienen-Zuordnung
-				List<DTOGostBlockungZwischenergebnisKursSchiene> zuordnungKursSchieneListeOriginal = conn.queryNamed("DTOGostBlockungZwischenergebnisKursSchiene.zwischenergebnis_id", idErgebnisOriginal,
-						DTOGostBlockungZwischenergebnisKursSchiene.class);
-				for (DTOGostBlockungZwischenergebnisKursSchiene zuordnungKursSchieneOriginal : zuordnungKursSchieneListeOriginal) {
-					idKursDuplikat = mapKursIDs.get(zuordnungKursSchieneOriginal.Blockung_Kurs_ID);
-					idSchieneDuplikat = mapSchienenIDs.get(zuordnungKursSchieneOriginal.Schienen_ID);
-					DTOGostBlockungZwischenergebnisKursSchiene zuordnungKursSchieneDuplikat = new DTOGostBlockungZwischenergebnisKursSchiene(
-							idErgebnisDuplikat, idKursDuplikat, idSchieneDuplikat);
-					conn.transactionPersist(zuordnungKursSchieneDuplikat);
-				}
-				// Dupliziere Kurs-Schüler-Zuordnung
-				List<DTOGostBlockungZwischenergebnisKursSchueler> zuordnungKursSchuelerListeOriginal = conn.queryNamed("DTOGostBlockungZwischenergebnisKursSchueler.zwischenergebnis_id", idErgebnisOriginal,
-						DTOGostBlockungZwischenergebnisKursSchueler.class);
-				for (DTOGostBlockungZwischenergebnisKursSchueler zuordnungKursSchuelerOriginal : zuordnungKursSchuelerListeOriginal) {
-					idKursDuplikat = mapKursIDs.get(zuordnungKursSchuelerOriginal.Blockung_Kurs_ID);
-					DTOGostBlockungZwischenergebnisKursSchueler zuordnungKursSchuelerDuplikat = new DTOGostBlockungZwischenergebnisKursSchueler(
-							idErgebnisDuplikat, idKursDuplikat, zuordnungKursSchuelerOriginal.Schueler_ID);
-					conn.transactionPersist(zuordnungKursSchuelerDuplikat);
-				}
+			// Dupliziere das Zwischenergebnis und markiere es als Duplikat
+			DTOGostBlockungZwischenergebnis ergebnisDuplikat = new DTOGostBlockungZwischenergebnis(idErgebnisDuplikat, idBlockungDuplikat,
+					ergebnisOriginal.AnzahlUmwaehler, ergebnisOriginal.Bewertung, ergebnisOriginal.IstMarkiert, true);
+			conn.transactionPersist(ergebnisDuplikat);
+			// Dupliziere Kurs-Schienen-Zuordnung
+			List<DTOGostBlockungZwischenergebnisKursSchiene> zuordnungKursSchieneListeOriginal = conn.queryNamed("DTOGostBlockungZwischenergebnisKursSchiene.zwischenergebnis_id", idErgebnisOriginal,
+					DTOGostBlockungZwischenergebnisKursSchiene.class);
+			for (DTOGostBlockungZwischenergebnisKursSchiene zuordnungKursSchieneOriginal : zuordnungKursSchieneListeOriginal) {
+				idKursDuplikat = mapKursIDs.get(zuordnungKursSchieneOriginal.Blockung_Kurs_ID);
+				idSchieneDuplikat = mapSchienenIDs.get(zuordnungKursSchieneOriginal.Schienen_ID);
+				DTOGostBlockungZwischenergebnisKursSchiene zuordnungKursSchieneDuplikat = new DTOGostBlockungZwischenergebnisKursSchiene(
+						idErgebnisDuplikat, idKursDuplikat, idSchieneDuplikat);
+				conn.transactionPersist(zuordnungKursSchieneDuplikat);
+			}
+			// Dupliziere Kurs-Schüler-Zuordnung
+			List<DTOGostBlockungZwischenergebnisKursSchueler> zuordnungKursSchuelerListeOriginal = conn.queryNamed("DTOGostBlockungZwischenergebnisKursSchueler.zwischenergebnis_id", idErgebnisOriginal,
+					DTOGostBlockungZwischenergebnisKursSchueler.class);
+			for (DTOGostBlockungZwischenergebnisKursSchueler zuordnungKursSchuelerOriginal : zuordnungKursSchuelerListeOriginal) {
+				idKursDuplikat = mapKursIDs.get(zuordnungKursSchuelerOriginal.Blockung_Kurs_ID);
+				DTOGostBlockungZwischenergebnisKursSchueler zuordnungKursSchuelerDuplikat = new DTOGostBlockungZwischenergebnisKursSchueler(
+						idErgebnisDuplikat, idKursDuplikat, zuordnungKursSchuelerOriginal.Schueler_ID);
+				conn.transactionPersist(zuordnungKursSchuelerDuplikat);
 			}
 			conn.transactionCommit();
 			return get(idBlockungDuplikat);

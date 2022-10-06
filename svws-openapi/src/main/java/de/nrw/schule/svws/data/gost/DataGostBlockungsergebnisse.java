@@ -152,7 +152,7 @@ public class DataGostBlockungsergebnisse extends DataManager<Long> {
 			manager.assignSchuelerKurs(ks.Schueler_ID, ks.Blockung_Kurs_ID, false);
 		GostBlockungsergebnis daten = manager.getErgebnis();
 		daten.istMarkiert = ergebnis.IstMarkiert == null ? false : ergebnis.IstMarkiert;
-		daten.istDuplikat = ergebnis.IstDupliziert == null ? false : ergebnis.IstDupliziert;
+		daten.istVorlage = ergebnis.IstVorlage == null ? false : ergebnis.IstVorlage;
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
