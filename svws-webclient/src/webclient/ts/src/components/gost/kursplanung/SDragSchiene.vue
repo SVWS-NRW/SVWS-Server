@@ -28,8 +28,8 @@
 				<parameter-kursart v-model="kursart" class="mx-1" /> <div class="whitespace-nowrap pt-1">von Schiene {{von.nummer}} bis Schiene {{bis.nummer}}</div>
 			</div>
 			<div class="flex gap-1">
-				<svws-ui-button>sperren</svws-ui-button>
-				<svws-ui-button>alleine</svws-ui-button>
+				<svws-ui-button @click="regel_hinzufuegen(GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS)">sperren</svws-ui-button>
+				<svws-ui-button @click="regel_hinzufuegen(GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS)">alleine</svws-ui-button>
 			</div>
 		</template>
 	</svws-ui-modal>
@@ -70,6 +70,7 @@ const is_drop_zone = computed(() => {
 });
 
 const regel_hinzufuegen = async (regeltyp: GostKursblockungRegelTyp) => {
+	toggle_modal()
 	const regel = await app.dataKursblockung.add_blockung_regel(regeltyp.typ)
 	if (!regel) return
 	regel.parameter.set(0, kursart.value.id)

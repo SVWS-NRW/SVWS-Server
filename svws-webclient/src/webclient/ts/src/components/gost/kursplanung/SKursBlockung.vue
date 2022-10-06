@@ -35,12 +35,14 @@
 			<td></td>
 		</template>
 		<drop-data 
-			v-for="(schiene) in schienen" :key="schiene.id" class="border border-[#7f7f7f]/20 text-center"
-			:class="{'border-t-2': kursdifferenz, 'bg-yellow-200': is_drop_zone(schiene) }"
-				type="kurs"
-				tag="td"
-				@drop="drop_aendere_kursschiene($event, schiene.id)"
-				@drag-over="drag_over($event)"
+			v-for="(schiene) in schienen"
+			:key="schiene.id"
+			class="border border-[#7f7f7f]/20 text-center"
+			:class="{'border-t-2': kursdifferenz, 'bg-yellow-200': is_drop_zone(schiene), 'bg-slate-500': schiene_gesperrt(schiene)}"
+			type="kurs"
+			tag="td"
+			@drop="drop_aendere_kursschiene($event, schiene.id)"
+			@drag-over="drag_over($event)"
 			>
 			<drag-data
 				v-if="kurs_blockungsergebnis?.schienenID === schiene.id"
@@ -50,7 +52,8 @@
 				:data="{kurs, schiene}"
 				class="select-none"
 				:draggable="true" 
-				:style="{ 'background-color': bgColor }"
+				:class="{'bg-slate-500': schiene_gesperrt(schiene) }"
+				:style="{ 'background-color': schiene_gesperrt(schiene)? '':bgColor}"
 			>
 				<svws-ui-badge size="tiny" class="cursor-grab" :variant="fixier_regel ? 'error' : 'highlight'">
 					{{ kurs_blockungsergebnis.schueler.size() }}
@@ -217,6 +220,15 @@ const is_drop_zone = (schiene: GostBlockungSchiene) => {
 	const drag_schiene = main.config.drag_and_drop_data?.schiene;
 	return kurs?.id === props.kurs.id && schiene.id !== drag_schiene.id
 };
+
+const schiene_gesperrt = (schiene: GostBlockungSchiene): boolean => {
+	const regeln = app.dataKursblockung.daten?.regeln.toArray(new Array<GostBlockungRegel>())
+	const alleine_regeln = regeln?.filter(r=>r.typ === GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS.typ)
+	const sperr_regeln = regeln?.filter(r=>r.typ === GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS.typ)
+	if (alleine_regeln?.find(r=>r.parameter.get(0) !== props.kurs.kursart && (schiene.nummer >= r.parameter.get(1) && schiene.nummer <= r.parameter.get(2)))) return true
+	if (sperr_regeln?.find(r=>r.parameter.get(0) === props.kurs.kursart && (schiene.nummer >= r.parameter.get(1) && schiene.nummer <= r.parameter.get(2)))) return true
+	return false
+}
 
 const regel_speichern = async (regel: GostBlockungRegel) => {
 	regel.parameter.set(0, props.kurs.id)
