@@ -93,7 +93,7 @@
 							<td class="table--cell table--cell-padded">
 								<div class="table--header-col">
 									<span class="table--header-col--text">
-										Umwähler
+										Kollisionen
 									</span>
 								</div>
 							</td>
@@ -121,12 +121,12 @@
 										<span
 													class="inline-flex"
 													:class="{
-														'bg-yellow-300': ergebnis.anzahlUmwaehler <= 10 && ergebnis.anzahlUmwaehler > 0,
-														'bg-green-300': ergebnis.anzahlUmwaehler === 0,
-														'bg-red-300': ergebnis.anzahlUmwaehler > 10
+														'bg-yellow-300': ergebnis.bewertung.anzahlKollisionen <= 10 && ergebnis.bewertung.anzahlKollisionen > 0,
+														'bg-green-300': ergebnis.bewertung.anzahlKollisionen === 0,
+														'bg-red-300': ergebnis.bewertung.anzahlKollisionen > 10
 													}"
 													>
-													<svws-ui-icon><i-ri-group-line/></svws-ui-icon>{{ergebnis.anzahlUmwaehler}}
+													<svws-ui-icon><i-ri-group-line/></svws-ui-icon>{{ergebnis.bewertung.anzahlKollisionen}}
 												</span>
 									</div>
 								</td>

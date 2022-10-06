@@ -280,7 +280,7 @@ public class DataGostBlockungsdaten extends DataManager<Long> {
 			// Lege ein "leeres" Ergebnis für manuelles Blocken an
 			DTODBAutoInkremente lastErgebnisID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Blockung_Zwischenergebnisse");
 			long ergebnisID = lastErgebnisID == null ? 1 : lastErgebnisID.MaxID + 1;
-			DTOGostBlockungZwischenergebnis erg = new DTOGostBlockungZwischenergebnis(ergebnisID, blockungID, 0, 0L, false, true);
+			DTOGostBlockungZwischenergebnis erg = new DTOGostBlockungZwischenergebnis(ergebnisID, blockungID, false, true);
 			// Blockung anlegen
 			DTOGostBlockung blockung = new DTOGostBlockung(blockungID, name, abiturjahr, gostHalbjahr, false, ergebnisID);
 			conn.transactionPersist(blockung);
@@ -510,8 +510,7 @@ public class DataGostBlockungsdaten extends DataManager<Long> {
 				}
 
 				// Schreiben das Ergebnis in die Datenbank
-				DTOGostBlockungZwischenergebnis erg = new DTOGostBlockungZwischenergebnis(ergebnisID, id, 0, 0L, false, false);
-				erg.AnzahlUmwaehler = setUmwaehler.size();
+				DTOGostBlockungZwischenergebnis erg = new DTOGostBlockungZwischenergebnis(ergebnisID, id, false, false);
 				// TODO Bewertung
 				conn.transactionPersist(erg);
 				for (KursblockungOutputFachwahlZuKurs fzk : output.fachwahlenZuKurs) {
@@ -665,8 +664,8 @@ public class DataGostBlockungsdaten extends DataManager<Long> {
 				}
 			}
 			// Dupliziere das Zwischenergebnis und markiere es als Duplikat
-			DTOGostBlockungZwischenergebnis ergebnisDuplikat = new DTOGostBlockungZwischenergebnis(idErgebnisDuplikat, idBlockungDuplikat,
-					ergebnisOriginal.AnzahlUmwaehler, ergebnisOriginal.Bewertung, ergebnisOriginal.IstMarkiert, true);
+			DTOGostBlockungZwischenergebnis ergebnisDuplikat = new DTOGostBlockungZwischenergebnis(
+					idErgebnisDuplikat, idBlockungDuplikat, ergebnisOriginal.IstMarkiert, true);
 			conn.transactionPersist(ergebnisDuplikat);
 			// Dupliziere Kurs-Schienen-Zuordnung
 			List<DTOGostBlockungZwischenergebnisKursSchiene> zuordnungKursSchieneListeOriginal = conn.queryNamed("DTOGostBlockungZwischenergebnisKursSchiene.zwischenergebnis_id", idErgebnisOriginal,

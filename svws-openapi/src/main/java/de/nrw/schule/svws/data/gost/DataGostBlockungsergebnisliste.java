@@ -52,8 +52,6 @@ public class DataGostBlockungsergebnisliste extends DataManager<Long> {
 		eintrag.blockungID = ergebnis.Blockung_ID;
 		eintrag.name = blockung.Name;
 		eintrag.gostHalbjahr = blockung.Halbjahr.id;
-		eintrag.anzahlUmwaehler = ergebnis.AnzahlUmwaehler;
-		eintrag.bewertung = ergebnis.Bewertung == null ? -1 : ergebnis.Bewertung;
 		eintrag.istMarkiert = ergebnis.IstMarkiert == null ? false : ergebnis.IstMarkiert;
 		eintrag.istVorlage = ergebnis.IstVorlage == null ? false : ergebnis.IstVorlage;
 		return eintrag;
@@ -90,7 +88,6 @@ public class DataGostBlockungsergebnisliste extends DataManager<Long> {
 				"DTOGostBlockungZwischenergebnis.blockung_id", idBlockung, DTOGostBlockungZwischenergebnis.class);
 		if (ergebnisse == null)
 			return OperationError.NOT_FOUND.getResponse();
-		// TODO entfernen: evtl. ergebnisse.removeIf(e -> e.IstDupliziert); // Gib nur Ergebnisse zurück, welche für diese Blockungsdefinition erstellt wurden
 		DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, idBlockung);
 		if (blockung == null)
 			return OperationError.NOT_FOUND.getResponse();

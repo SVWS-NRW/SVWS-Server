@@ -15,7 +15,7 @@ import jakarta.validation.constraints.NotNull;
  */
 @XmlRootElement
 @Schema(description="Informationen zu dem Ergebnis einer Blockung der gymnasialen Oberstufe.")
-@JsonPropertyOrder({ "id", "blockungID", "name", "gostHalbjahr", "anzahlUmwaehler", "anzahlKollisionen", "anzahlSchienenMitKollisionen", "bewertung", "istMarkiert", "schienen" })
+@JsonPropertyOrder({ "id", "blockungID", "name", "gostHalbjahr", "istMarkiert", "schienen", "bewertung" })
 @TranspilerDTO
 public class GostBlockungsergebnis {
 
@@ -31,18 +31,6 @@ public class GostBlockungsergebnis {
 	/** Das Halbjahr, welchem die Kursblockung zugeordnet ist (0=EF.1, 1=EF.2, 2=Q1.1, 3=Q1.2, 4=Q2.1, 5=Q2.2) */
 	public int gostHalbjahr = 0;
 	
-	/** Die Anzahl der nötigen Umwähler bei diesem Blockungsergebnis */
-	public int anzahlUmwaehler = 0;
-	
-	/** Die Anzahl der Kollisionen in diesem Blockungsergebnis */
-	public int anzahlKollisionen = 0;
-	
-	/** Die Anzahl der Schienen mit Kollisionen in diesem Blockungsergebnis */
-	public int anzahlSchienenMitKollisionen = 0;
-	
-	/** Die Bewertung dieser Blockung als numerischer Wert, welche eine automatisierte Qualitätsbewertung des Ergebnisses darstellt. */
-	public long bewertung = -1;
-	
 	/** Gibt an, ob dieses Ergebnis markiert wurde. Dies kann verwendet werden, um besonders geeignete Blockungsergebnisse hervorzuheben. */
 	public boolean istMarkiert = false;
 	
@@ -54,5 +42,8 @@ public class GostBlockungsergebnis {
 
 	/** Eine Liste der Schienen, welche zugeordnete Kurse beinhalten. */
 	public final @NotNull Vector<@NotNull GostBlockungsergebnisSchiene> schienen = new Vector<>();
-	
+
+	/** Die Informationen zur aktuellen Bewertung des Blockungsergebnisses */
+	public @NotNull GostBlockungsergebnisBewertung bewertung = new GostBlockungsergebnisBewertung();
+
 }

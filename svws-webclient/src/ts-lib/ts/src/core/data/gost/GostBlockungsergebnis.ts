@@ -1,5 +1,6 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
 import { GostBlockungsergebnisSchiene, cast_de_nrw_schule_svws_core_data_gost_GostBlockungsergebnisSchiene } from '../../../core/data/gost/GostBlockungsergebnisSchiene';
+import { GostBlockungsergebnisBewertung, cast_de_nrw_schule_svws_core_data_gost_GostBlockungsergebnisBewertung } from '../../../core/data/gost/GostBlockungsergebnisBewertung';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 
@@ -13,19 +14,13 @@ export class GostBlockungsergebnis extends JavaObject {
 
 	public gostHalbjahr : number = 0;
 
-	public anzahlUmwaehler : number = 0;
-
-	public anzahlKollisionen : number = 0;
-
-	public anzahlSchienenMitKollisionen : number = 0;
-
-	public bewertung : number = -1;
-
 	public istMarkiert : boolean = false;
 
 	public istVorlage : boolean = false;
 
 	public readonly schienen : Vector<GostBlockungsergebnisSchiene> = new Vector();
+
+	public bewertung : GostBlockungsergebnisBewertung = new GostBlockungsergebnisBewertung();
 
 
 	public constructor() {
@@ -51,18 +46,6 @@ export class GostBlockungsergebnis extends JavaObject {
 		if (typeof obj.gostHalbjahr === "undefined")
 			 throw new Error('invalid json format, missing attribute gostHalbjahr');
 		result.gostHalbjahr = obj.gostHalbjahr;
-		if (typeof obj.anzahlUmwaehler === "undefined")
-			 throw new Error('invalid json format, missing attribute anzahlUmwaehler');
-		result.anzahlUmwaehler = obj.anzahlUmwaehler;
-		if (typeof obj.anzahlKollisionen === "undefined")
-			 throw new Error('invalid json format, missing attribute anzahlKollisionen');
-		result.anzahlKollisionen = obj.anzahlKollisionen;
-		if (typeof obj.anzahlSchienenMitKollisionen === "undefined")
-			 throw new Error('invalid json format, missing attribute anzahlSchienenMitKollisionen');
-		result.anzahlSchienenMitKollisionen = obj.anzahlSchienenMitKollisionen;
-		if (typeof obj.bewertung === "undefined")
-			 throw new Error('invalid json format, missing attribute bewertung');
-		result.bewertung = obj.bewertung;
 		if (typeof obj.istMarkiert === "undefined")
 			 throw new Error('invalid json format, missing attribute istMarkiert');
 		result.istMarkiert = obj.istMarkiert;
@@ -74,6 +57,9 @@ export class GostBlockungsergebnis extends JavaObject {
 				result.schienen?.add(GostBlockungsergebnisSchiene.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
+		if (typeof obj.bewertung === "undefined")
+			 throw new Error('invalid json format, missing attribute bewertung');
+		result.bewertung = GostBlockungsergebnisBewertung.transpilerFromJSON(JSON.stringify(obj.bewertung));
 		return result;
 	}
 
@@ -83,10 +69,6 @@ export class GostBlockungsergebnis extends JavaObject {
 		result += '"blockungID" : ' + obj.blockungID + ',';
 		result += '"name" : ' + '"' + obj.name.valueOf() + '"' + ',';
 		result += '"gostHalbjahr" : ' + obj.gostHalbjahr + ',';
-		result += '"anzahlUmwaehler" : ' + obj.anzahlUmwaehler + ',';
-		result += '"anzahlKollisionen" : ' + obj.anzahlKollisionen + ',';
-		result += '"anzahlSchienenMitKollisionen" : ' + obj.anzahlSchienenMitKollisionen + ',';
-		result += '"bewertung" : ' + obj.bewertung + ',';
 		result += '"istMarkiert" : ' + obj.istMarkiert + ',';
 		result += '"istVorlage" : ' + obj.istVorlage + ',';
 		if (!obj.schienen) {
@@ -101,6 +83,7 @@ export class GostBlockungsergebnis extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
+		result += '"bewertung" : ' + GostBlockungsergebnisBewertung.transpilerToJSON(obj.bewertung) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -119,18 +102,6 @@ export class GostBlockungsergebnis extends JavaObject {
 		}
 		if (typeof obj.gostHalbjahr !== "undefined") {
 			result += '"gostHalbjahr" : ' + obj.gostHalbjahr + ',';
-		}
-		if (typeof obj.anzahlUmwaehler !== "undefined") {
-			result += '"anzahlUmwaehler" : ' + obj.anzahlUmwaehler + ',';
-		}
-		if (typeof obj.anzahlKollisionen !== "undefined") {
-			result += '"anzahlKollisionen" : ' + obj.anzahlKollisionen + ',';
-		}
-		if (typeof obj.anzahlSchienenMitKollisionen !== "undefined") {
-			result += '"anzahlSchienenMitKollisionen" : ' + obj.anzahlSchienenMitKollisionen + ',';
-		}
-		if (typeof obj.bewertung !== "undefined") {
-			result += '"bewertung" : ' + obj.bewertung + ',';
 		}
 		if (typeof obj.istMarkiert !== "undefined") {
 			result += '"istMarkiert" : ' + obj.istMarkiert + ',';
@@ -151,6 +122,9 @@ export class GostBlockungsergebnis extends JavaObject {
 				}
 				result += ' ]' + ',';
 			}
+		}
+		if (typeof obj.bewertung !== "undefined") {
+			result += '"bewertung" : ' + GostBlockungsergebnisBewertung.transpilerToJSON(obj.bewertung) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

@@ -32,17 +32,13 @@ import de.nrw.schule.svws.csv.converter.current.Boolean01ConverterDeserializer;
 @NamedQuery(name="DTOGostBlockungZwischenergebnis.id.multiple", query="SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.ID IN :value")
 @NamedQuery(name="DTOGostBlockungZwischenergebnis.blockung_id", query="SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.Blockung_ID = :value")
 @NamedQuery(name="DTOGostBlockungZwischenergebnis.blockung_id.multiple", query="SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.Blockung_ID IN :value")
-@NamedQuery(name="DTOGostBlockungZwischenergebnis.anzahlumwaehler", query="SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.AnzahlUmwaehler = :value")
-@NamedQuery(name="DTOGostBlockungZwischenergebnis.anzahlumwaehler.multiple", query="SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.AnzahlUmwaehler IN :value")
-@NamedQuery(name="DTOGostBlockungZwischenergebnis.bewertung", query="SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.Bewertung = :value")
-@NamedQuery(name="DTOGostBlockungZwischenergebnis.bewertung.multiple", query="SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.Bewertung IN :value")
 @NamedQuery(name="DTOGostBlockungZwischenergebnis.istmarkiert", query="SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.IstMarkiert = :value")
 @NamedQuery(name="DTOGostBlockungZwischenergebnis.istmarkiert.multiple", query="SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.IstMarkiert IN :value")
 @NamedQuery(name="DTOGostBlockungZwischenergebnis.istvorlage", query="SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.IstVorlage = :value")
 @NamedQuery(name="DTOGostBlockungZwischenergebnis.istvorlage.multiple", query="SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.IstVorlage IN :value")
 @NamedQuery(name="DTOGostBlockungZwischenergebnis.primaryKeyQuery", query="SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.ID = ?1")
 @NamedQuery(name="DTOGostBlockungZwischenergebnis.all.migration", query="SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Blockung_ID","AnzahlUmwaehler","Bewertung","IstMarkiert","IstVorlage"})
+@JsonPropertyOrder({"ID","Blockung_ID","IstMarkiert","IstVorlage"})
 public class DTOGostBlockungZwischenergebnis {
 
 	/** Kursblockung der Gymnasialen Oberstufe - Zwischenergebnis einer Blockung: ID der Zwischenergebnisses (generiert) */
@@ -55,16 +51,6 @@ public class DTOGostBlockungZwischenergebnis {
 	@Column(name = "Blockung_ID")
 	@JsonProperty
 	public Long Blockung_ID;
-
-	/** Kursblockung der Gymnasialen Oberstufe - Zwischenergebnis einer Blockung: Die Anzahl der Umwähler */
-	@Column(name = "AnzahlUmwaehler")
-	@JsonProperty
-	public Integer AnzahlUmwaehler;
-
-	/** Kursblockung der Gymnasialen Oberstufe - Zwischenergebnis einer Blockung: Ein Wert zur Bewertung der Blockung */
-	@Column(name = "Bewertung")
-	@JsonProperty
-	public Long Bewertung;
 
 	/** Kursblockung der Gymnasialen Oberstufe - Zwischenergebnis einer Blockung: Gibt an, ob das Zwischenergebnis von einem Benutzer markiert wurde oder nicht: 1 - true, 0 - false  */
 	@Column(name = "IstMarkiert")
@@ -93,12 +79,10 @@ public class DTOGostBlockungZwischenergebnis {
 	 * Erstellt ein neues Objekt der Klasse DTOGostBlockungZwischenergebnis ohne eine Initialisierung der Attribute.
 	 * @param ID   der Wert für das Attribut ID
 	 * @param Blockung_ID   der Wert für das Attribut Blockung_ID
-	 * @param AnzahlUmwaehler   der Wert für das Attribut AnzahlUmwaehler
-	 * @param Bewertung   der Wert für das Attribut Bewertung
 	 * @param IstMarkiert   der Wert für das Attribut IstMarkiert
 	 * @param IstVorlage   der Wert für das Attribut IstVorlage
 	 */
-	public DTOGostBlockungZwischenergebnis(final Long ID, final Long Blockung_ID, final Integer AnzahlUmwaehler, final Long Bewertung, final Boolean IstMarkiert, final Boolean IstVorlage) {
+	public DTOGostBlockungZwischenergebnis(final Long ID, final Long Blockung_ID, final Boolean IstMarkiert, final Boolean IstVorlage) {
 		if (ID == null) { 
 			throw new NullPointerException("ID must not be null");
 		}
@@ -107,14 +91,6 @@ public class DTOGostBlockungZwischenergebnis {
 			throw new NullPointerException("Blockung_ID must not be null");
 		}
 		this.Blockung_ID = Blockung_ID;
-		if (AnzahlUmwaehler == null) { 
-			throw new NullPointerException("AnzahlUmwaehler must not be null");
-		}
-		this.AnzahlUmwaehler = AnzahlUmwaehler;
-		if (Bewertung == null) { 
-			throw new NullPointerException("Bewertung must not be null");
-		}
-		this.Bewertung = Bewertung;
 		if (IstMarkiert == null) { 
 			throw new NullPointerException("IstMarkiert must not be null");
 		}
@@ -159,7 +135,7 @@ public class DTOGostBlockungZwischenergebnis {
 	 */
 	@Override
 	public String toString() {
-		return "DTOGostBlockungZwischenergebnis(ID=" + this.ID + ", Blockung_ID=" + this.Blockung_ID + ", AnzahlUmwaehler=" + this.AnzahlUmwaehler + ", Bewertung=" + this.Bewertung + ", IstMarkiert=" + this.IstMarkiert + ", IstVorlage=" + this.IstVorlage + ")";
+		return "DTOGostBlockungZwischenergebnis(ID=" + this.ID + ", Blockung_ID=" + this.Blockung_ID + ", IstMarkiert=" + this.IstMarkiert + ", IstVorlage=" + this.IstVorlage + ")";
 	}
 
 }

@@ -18,29 +18,37 @@ export class GostBlockungsergebnisComparator extends JavaObject implements Compa
 	}
 
 	public compare(o1 : GostBlockungsergebnisListeneintrag, o2 : GostBlockungsergebnisListeneintrag) : number {
-		if (o1.bewertungNichtErfuellteRegeln.length < o2.bewertungNichtErfuellteRegeln.length) 
+		if (o1.bewertung.regelVerletzungen.length < o2.bewertung.regelVerletzungen.length) 
 			return -1;
-		if (o1.bewertungNichtErfuellteRegeln.length > o2.bewertungNichtErfuellteRegeln.length) 
+		if (o1.bewertung.regelVerletzungen.length > o2.bewertung.regelVerletzungen.length) 
 			return +1;
-		if (o1.bewertungNichtZugeordneteFachwahlen < o2.bewertungNichtZugeordneteFachwahlen) 
+		if (o1.bewertung.anzahlNichtZugeordnet < o2.bewertung.anzahlNichtZugeordnet) 
 			return -1;
-		if (o1.bewertungNichtZugeordneteFachwahlen > o2.bewertungNichtZugeordneteFachwahlen) 
+		if (o1.bewertung.anzahlNichtZugeordnet > o2.bewertung.anzahlNichtZugeordnet) 
 			return +1;
-		let length1 : number = o1.bewertungHistogrammDerKursdifferenzen.length;
-		let length2 : number = o2.bewertungHistogrammDerKursdifferenzen.length;
+		if (o1.bewertung.anzahlKollisionen < o2.bewertung.anzahlKollisionen) 
+			return -1;
+		if (o1.bewertung.anzahlKollisionen > o2.bewertung.anzahlKollisionen) 
+			return +1;
+		if (o1.bewertung.anzahlSchienenMitKollisionen < o2.bewertung.anzahlSchienenMitKollisionen) 
+			return -1;
+		if (o1.bewertung.anzahlSchienenMitKollisionen > o2.bewertung.anzahlSchienenMitKollisionen) 
+			return +1;
+		let length1 : number = o1.bewertung.kursdifferenzen.length;
+		let length2 : number = o2.bewertung.kursdifferenzen.length;
 		if (length1 < length2) 
 			return -1;
 		if (length1 > length2) 
 			return +1;
 		for (let i : number = length1 - 1; i >= 0; i--){
-			if (o1.bewertungHistogrammDerKursdifferenzen[i] < o2.bewertungHistogrammDerKursdifferenzen[i]) 
+			if (o1.bewertung.kursdifferenzen[i] < o2.bewertung.kursdifferenzen[i]) 
 				return -1;
-			if (o1.bewertungHistogrammDerKursdifferenzen[i] > o2.bewertungHistogrammDerKursdifferenzen[i]) 
+			if (o1.bewertung.kursdifferenzen[i] > o2.bewertung.kursdifferenzen[i]) 
 				return -1;
 		}
-		if (o1.bewertungGleicheFachartProSchiene < o2.bewertungGleicheFachartProSchiene) 
+		if (o1.bewertung.anzahlKurseMitGleicherFachartProSchiene < o2.bewertung.anzahlKurseMitGleicherFachartProSchiene) 
 			return -1;
-		if (o1.bewertungGleicheFachartProSchiene > o2.bewertungGleicheFachartProSchiene) 
+		if (o1.bewertung.anzahlKurseMitGleicherFachartProSchiene > o2.bewertung.anzahlKurseMitGleicherFachartProSchiene) 
 			return +1;
 		if (o1.id < o2.id) 
 			return -1;

@@ -26,20 +26,6 @@ public class Tabelle_Gost_Blockung_Zwischenergebnisse extends SchemaTabelle {
 		.setJavaComment("Kursblockung der Gymnasialen Oberstufe - Zwischenergebnis einer Blockung: "
 				+ "ID der Blockung");
 
-	/** Die Definition der Tabellenspalte AnzahlUmwaehler */
-	public SchemaTabelleSpalte col_AnzahlUmwaehler = add("AnzahlUmwaehler", SchemaDatentypen.INT, false)
-		.setDefault("0")
-		.setNotNull()
-		.setJavaComment("Kursblockung der Gymnasialen Oberstufe - Zwischenergebnis einer Blockung: "
-				+ "Die Anzahl der Umwähler");
-
-	/** Die Definition der Tabellenspalte Bewertung */
-	public SchemaTabelleSpalte col_Bewertung = add("Bewertung", SchemaDatentypen.BIGINT, false)
-		.setDefault("-1")
-		.setNotNull()
-		.setJavaComment("Kursblockung der Gymnasialen Oberstufe - Zwischenergebnis einer Blockung: "
-				+ "Ein Wert zur Bewertung der Blockung");
-
 	/** Die Definition der Tabellenspalte IstMarkiert */
 	public SchemaTabelleSpalte col_IstMarkiert = add("IstMarkiert", SchemaDatentypen.INT, false)
 		.setDefault("0")

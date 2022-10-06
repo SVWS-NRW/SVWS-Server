@@ -24,35 +24,47 @@ public class GostBlockungsergebnisComparator implements Comparator<@NotNull Gost
 	@Override
 	public int compare(@NotNull GostBlockungsergebnisListeneintrag o1, @NotNull GostBlockungsergebnisListeneintrag o2) {
 		// Bewertungskriterium 1: Je weniger nicht erfüllter Regeln, desto besser.
-		if (o1.bewertungNichtErfuellteRegeln.length < o2.bewertungNichtErfuellteRegeln.length)
+		if (o1.bewertung.regelVerletzungen.length < o2.bewertung.regelVerletzungen.length)
 			return -1;
-		if (o1.bewertungNichtErfuellteRegeln.length > o2.bewertungNichtErfuellteRegeln.length)
+		if (o1.bewertung.regelVerletzungen.length > o2.bewertung.regelVerletzungen.length)
 			return +1;
 
-		// Bewertungskriterium 2: Je weniger nicht zugeordnete Fachwahlen, desto besser.
-		if (o1.bewertungNichtZugeordneteFachwahlen < o2.bewertungNichtZugeordneteFachwahlen)
+		// Bewertungskriterium 2a: Je weniger nicht zugeordnete Fachwahlen, desto besser.
+		if (o1.bewertung.anzahlNichtZugeordnet < o2.bewertung.anzahlNichtZugeordnet)
 			return -1;
-		if (o1.bewertungNichtZugeordneteFachwahlen > o2.bewertungNichtZugeordneteFachwahlen)
+		if (o1.bewertung.anzahlNichtZugeordnet > o2.bewertung.anzahlNichtZugeordnet)
+			return +1;
+
+		// Bewertungskriterium 2b: Je weniger Kollisionen, desto besser.
+		if (o1.bewertung.anzahlKollisionen < o2.bewertung.anzahlKollisionen)
+			return -1;
+		if (o1.bewertung.anzahlKollisionen > o2.bewertung.anzahlKollisionen)
+			return +1;
+
+		// Bewertungskriterium 2c: Je weniger Schienen mit Kollisionen, desto besser.
+		if (o1.bewertung.anzahlSchienenMitKollisionen < o2.bewertung.anzahlSchienenMitKollisionen)
+			return -1;
+		if (o1.bewertung.anzahlSchienenMitKollisionen > o2.bewertung.anzahlSchienenMitKollisionen)
 			return +1;
 
 		// Bewertungskriterium 3: Je kleiner die Größte Kursdifferenz, desto besser.
-		int length1 = o1.bewertungHistogrammDerKursdifferenzen.length;
-		int length2 = o2.bewertungHistogrammDerKursdifferenzen.length;
+		int length1 = o1.bewertung.kursdifferenzen.length;
+		int length2 = o2.bewertung.kursdifferenzen.length;
 		if (length1 < length2)
 			return -1;
 		if (length1 > length2)
 			return +1;
 		for (int i = length1 - 1; i >= 0; i--) {
-			if (o1.bewertungHistogrammDerKursdifferenzen[i] < o2.bewertungHistogrammDerKursdifferenzen[i])
+			if (o1.bewertung.kursdifferenzen[i] < o2.bewertung.kursdifferenzen[i])
 				return -1;
-			if (o1.bewertungHistogrammDerKursdifferenzen[i] > o2.bewertungHistogrammDerKursdifferenzen[i])
+			if (o1.bewertung.kursdifferenzen[i] > o2.bewertung.kursdifferenzen[i])
 				return -1;
 		}
 
 		// Bewertungskriterium 4: Je weniger Facharten in der selben Schiene sind, desto besser.
-		if (o1.bewertungGleicheFachartProSchiene < o2.bewertungGleicheFachartProSchiene)
+		if (o1.bewertung.anzahlKurseMitGleicherFachartProSchiene < o2.bewertung.anzahlKurseMitGleicherFachartProSchiene)
 			return -1;
-		if (o1.bewertungGleicheFachartProSchiene > o2.bewertungGleicheFachartProSchiene)
+		if (o1.bewertung.anzahlKurseMitGleicherFachartProSchiene > o2.bewertung.anzahlKurseMitGleicherFachartProSchiene)
 			return +1;
 
 		// Bei absolut identischen Ergebnissen gewinnt die kleinere ID des Zwischenergebnisses.

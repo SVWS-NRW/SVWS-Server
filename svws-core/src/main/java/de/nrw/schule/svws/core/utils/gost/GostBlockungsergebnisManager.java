@@ -83,10 +83,6 @@ public class GostBlockungsergebnisManager {
 		this.ergebnis.blockungID = blockungID;
 		this.ergebnis.name = name;
 		this.ergebnis.gostHalbjahr = halbjahr.id;
-		this.ergebnis.anzahlUmwaehler = 0;
-		this.ergebnis.bewertung = -1;
-		this.ergebnis.anzahlKollisionen = 0;
-		this.ergebnis.anzahlSchienenMitKollisionen = 0;
 		initSchueler(schueler);
 		initFaecher(faecher);
 		initSchienen(schienen);

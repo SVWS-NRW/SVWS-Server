@@ -90,10 +90,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			this.ergebnis.blockungID = blockungID;
 			this.ergebnis.name = name;
 			this.ergebnis.gostHalbjahr = halbjahr.id;
-			this.ergebnis.anzahlUmwaehler = 0;
-			this.ergebnis.bewertung = -1;
-			this.ergebnis.anzahlKollisionen = 0;
-			this.ergebnis.anzahlSchienenMitKollisionen = 0;
 			this.initSchueler(schueler);
 			this.initFaecher(faecher);
 			this.initSchienen(schienen);

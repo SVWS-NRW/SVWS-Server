@@ -121,6 +121,7 @@ export { GostBlockungRegel } from './core/data/gost/GostBlockungRegel';
 export { GostBlockungSchiene } from './core/data/gost/GostBlockungSchiene';
 export { GostBlockungsdaten } from './core/data/gost/GostBlockungsdaten';
 export { GostBlockungsergebnis } from './core/data/gost/GostBlockungsergebnis';
+export { GostBlockungsergebnisBewertung } from './core/data/gost/GostBlockungsergebnisBewertung';
 export { GostBlockungsergebnisKurs } from './core/data/gost/GostBlockungsergebnisKurs';
 export { GostBlockungsergebnisListeneintrag } from './core/data/gost/GostBlockungsergebnisListeneintrag';
 export { GostBlockungsergebnisSchiene } from './core/data/gost/GostBlockungsergebnisSchiene';
