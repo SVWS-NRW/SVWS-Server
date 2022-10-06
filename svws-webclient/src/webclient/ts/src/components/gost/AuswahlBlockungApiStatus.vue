@@ -5,8 +5,11 @@
 				<div class="loading-display">
 					<span>Blockung wird berechnet...</span>
 					<span class="loading-spinner-dimensions">
-						<img src="../../../public/loading_spinner.svg" alt="Ladeanzeige"
-							class="loading-spinner-dimensions loading-rotation">
+						<img
+							src="/loading_spinner.svg"
+							alt="Ladeanzeige"
+							class="loading-spinner-dimensions loading-rotation"
+						>
 					</span>
 				</div>
 			</td>
@@ -25,7 +28,7 @@ import {
 		computed,
 		ComputedRef,
 	} from "vue";
-	import { ApiStatus, FeedbackValues } from "~/apps/gost/userfeedback";
+	import { FeedbackValues } from "~/apps/gost/userfeedback";
 	import { injectMainApp, Main } from "~/apps/Main";
 	
 	const main: Main = injectMainApp();
