@@ -16,6 +16,7 @@ module.exports = {
 		"vue/no-setup-props-destructure": 0,
 		"no-console": process.env.NODE_ENV === "production" ? "warn" : "off",
 		"no-debugger": process.env.NODE_ENV === "production" ? "warn" : "off",
+		"@typescript-eslint/no-inferrable-types": { "ignoreParameters": true },
 		"@typescript-eslint/ban-types": [
 			"error",
 			{
