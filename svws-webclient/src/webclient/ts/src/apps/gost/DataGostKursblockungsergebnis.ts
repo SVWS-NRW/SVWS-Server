@@ -63,12 +63,10 @@ export class DataGostKursblockungsergebnis extends BaseData<
 			!kurse
 		)
 			return undefined;
-		this.manager = new GostBlockungsergebnisManager(
+		this.manager = (!App.apps.gost.dataKursblockung.manager) ? undefined : new GostBlockungsergebnisManager(
+			App.apps.gost.dataKursblockung.manager,
 			ergebnis,
-			schueler,
-			faecher,
-			schienen,
-			kurse
+			schueler
 		);
 		return ergebnis;
 	}

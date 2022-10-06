@@ -22,17 +22,9 @@ export class GostBlockungsergebnisComparator extends JavaObject implements Compa
 			return -1;
 		if (o1.bewertung.regelVerletzungen.length > o2.bewertung.regelVerletzungen.length) 
 			return +1;
-		if (o1.bewertung.anzahlNichtZugeordnet < o2.bewertung.anzahlNichtZugeordnet) 
+		if (o1.bewertung.anzahlNichtZugeordnet + o1.bewertung.anzahlKollisionen < o2.bewertung.anzahlNichtZugeordnet + o2.bewertung.anzahlKollisionen) 
 			return -1;
-		if (o1.bewertung.anzahlNichtZugeordnet > o2.bewertung.anzahlNichtZugeordnet) 
-			return +1;
-		if (o1.bewertung.anzahlKollisionen < o2.bewertung.anzahlKollisionen) 
-			return -1;
-		if (o1.bewertung.anzahlKollisionen > o2.bewertung.anzahlKollisionen) 
-			return +1;
-		if (o1.bewertung.anzahlSchienenMitKollisionen < o2.bewertung.anzahlSchienenMitKollisionen) 
-			return -1;
-		if (o1.bewertung.anzahlSchienenMitKollisionen > o2.bewertung.anzahlSchienenMitKollisionen) 
+		if (o1.bewertung.anzahlNichtZugeordnet + o1.bewertung.anzahlKollisionen > o2.bewertung.anzahlNichtZugeordnet + o2.bewertung.anzahlKollisionen) 
 			return +1;
 		let length1 : number = o1.bewertung.kursdifferenzen.length;
 		let length2 : number = o2.bewertung.kursdifferenzen.length;

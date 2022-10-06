@@ -29,22 +29,12 @@ public class GostBlockungsergebnisComparator implements Comparator<@NotNull Gost
 		if (o1.bewertung.regelVerletzungen.length > o2.bewertung.regelVerletzungen.length)
 			return +1;
 
-		// Bewertungskriterium 2a: Je weniger nicht zugeordnete Fachwahlen, desto besser.
-		if (o1.bewertung.anzahlNichtZugeordnet < o2.bewertung.anzahlNichtZugeordnet)
+		// Bewertungskriterium 2: Je weniger nicht zugeordnete Fachwahlen und Kollisionen, desto besser.
+		if (o1.bewertung.anzahlNichtZugeordnet + o1.bewertung.anzahlKollisionen < 
+				o2.bewertung.anzahlNichtZugeordnet + o2.bewertung.anzahlKollisionen)
 			return -1;
-		if (o1.bewertung.anzahlNichtZugeordnet > o2.bewertung.anzahlNichtZugeordnet)
-			return +1;
-
-		// Bewertungskriterium 2b: Je weniger Kollisionen, desto besser.
-		if (o1.bewertung.anzahlKollisionen < o2.bewertung.anzahlKollisionen)
-			return -1;
-		if (o1.bewertung.anzahlKollisionen > o2.bewertung.anzahlKollisionen)
-			return +1;
-
-		// Bewertungskriterium 2c: Je weniger Schienen mit Kollisionen, desto besser.
-		if (o1.bewertung.anzahlSchienenMitKollisionen < o2.bewertung.anzahlSchienenMitKollisionen)
-			return -1;
-		if (o1.bewertung.anzahlSchienenMitKollisionen > o2.bewertung.anzahlSchienenMitKollisionen)
+		if (o1.bewertung.anzahlNichtZugeordnet + o1.bewertung.anzahlKollisionen > 
+				o2.bewertung.anzahlNichtZugeordnet + o2.bewertung.anzahlKollisionen)
 			return +1;
 
 		// Bewertungskriterium 3: Je kleiner die Größte Kursdifferenz, desto besser.

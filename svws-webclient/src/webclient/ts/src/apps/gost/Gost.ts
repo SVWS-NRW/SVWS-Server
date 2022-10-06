@@ -98,10 +98,8 @@ export class Gost extends App {
 		this.blockungsergebnisauswahl.add_data([
 			this.dataKursblockungsergebnis
 		]);
-		this.blockungsauswahl = new ListKursblockungen(
-			this.blockungsergebnisauswahl
-		);
-		this.dataKursblockung = new DataGostKursblockung();
+		this.blockungsauswahl = new ListKursblockungen();
+		this.dataKursblockung = new DataGostKursblockung(this.blockungsergebnisauswahl);
 		this.blockungsauswahl.add_data([this.dataKursblockung]);
 
 		this.auswahl = new ListGost(this.listAbiturjahrgangSchueler, this.blockungsauswahl);

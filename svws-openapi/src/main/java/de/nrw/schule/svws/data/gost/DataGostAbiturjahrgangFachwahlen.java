@@ -7,10 +7,6 @@ import java.util.Map;
 import java.util.Vector;
 import java.util.stream.Collectors;
 
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.Response.Status;
-
 import de.nrw.schule.svws.core.data.gost.GostFachwahl;
 import de.nrw.schule.svws.core.data.gost.GostStatistikFachwahl;
 import de.nrw.schule.svws.core.types.gost.GostHalbjahr;
@@ -21,9 +17,11 @@ import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.dto.current.gost.DTOGostSchuelerFachbelegungen;
 import de.nrw.schule.svws.db.dto.current.schild.faecher.DTOFach;
 import de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchueler;
-import de.nrw.schule.svws.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.nrw.schule.svws.db.dto.current.views.gost.DTOViewGostSchuelerAbiturjahrgang;
 import de.nrw.schule.svws.db.utils.OperationError;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
@@ -85,9 +83,7 @@ public class DataGostAbiturjahrgangFachwahlen extends DataManager<Long> {
 	 * @return die Statistik zu den Fachwahlen des Abiturjahrgangs dieses Objektes
 	 */
 	public List<GostStatistikFachwahl> getFachwahlen() {
-		DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
-		if ((schule == null) || (schule.Schulform == null) || (schule.Schulform.daten == null) || (!schule.Schulform.daten.hatGymOb))
-			return null;
+		GostUtils.pruefeSchuleMitGOSt(conn);
     	// Bestimme alle Schüler-IDs des angegebenen Abiturjahrgangs
 		List<DTOViewGostSchuelerAbiturjahrgang> schueler = conn.queryNamed("DTOViewGostSchuelerAbiturjahrgang.abiturjahr", abijahr, DTOViewGostSchuelerAbiturjahrgang.class);
 		if ((schueler == null) || (schueler.size() == 0))
@@ -139,9 +135,7 @@ public class DataGostAbiturjahrgangFachwahlen extends DataManager<Long> {
 	 * @return die Fachwahlen des Abiturjahrgangs dieses Objektes
 	 */
 	public List<GostFachwahl> getSchuelerFachwahlen(GostHalbjahr halbjahr) {
-		DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
-		if ((schule == null) || (schule.Schulform == null) || (schule.Schulform.daten == null) || (!schule.Schulform.daten.hatGymOb))
-			return null;
+		GostUtils.pruefeSchuleMitGOSt(conn);
     	// Bestimme alle Schüler-IDs des angegebenen Abiturjahrgangs
 		List<DTOViewGostSchuelerAbiturjahrgang> schuelerAbijahrgang = conn.queryNamed("DTOViewGostSchuelerAbiturjahrgang.abiturjahr", abijahr, DTOViewGostSchuelerAbiturjahrgang.class);
 		if ((schuelerAbijahrgang == null) || (schuelerAbijahrgang.size() == 0))

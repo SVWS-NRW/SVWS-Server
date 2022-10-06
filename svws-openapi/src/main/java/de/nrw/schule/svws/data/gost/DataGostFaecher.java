@@ -71,9 +71,7 @@ public class DataGostFaecher extends DataManager<Long> {
 
 	@Override
 	public Response get(Long id) {
-		Schulform schulform = Schule.queryCached(conn).getSchulform();
-    	if ((schulform == null) || (schulform.daten == null) || (!schulform.daten.hatGymOb))
-    		return OperationError.NOT_FOUND.getResponse();
+		GostUtils.pruefeSchuleMitGOSt(conn);
     	Map<Long, DTOFach> faecher = conn.queryAll(DTOFach.class).stream().collect(Collectors.toMap(f -> f.ID, f -> f));
     	if (faecher == null)
     		return OperationError.NOT_FOUND.getResponse();
@@ -99,6 +97,7 @@ public class DataGostFaecher extends DataManager<Long> {
     	if (map.size() > 0) {
     		try {
     			conn.transactionBegin();
+    			GostUtils.pruefeSchuleMitGOSt(conn);
     	    	Map<Long, DTOFach> faecher = conn.queryAll(DTOFach.class).stream().collect(Collectors.toMap(f -> f.ID, f -> f));
     	    	if (faecher == null)
     	    		return OperationError.NOT_FOUND.getResponse();

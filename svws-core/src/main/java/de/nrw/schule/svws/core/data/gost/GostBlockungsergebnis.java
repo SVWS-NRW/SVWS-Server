@@ -21,19 +21,19 @@ public class GostBlockungsergebnis {
 
 	/** Die ID des Zwischenergebnisses der Blockung */
 	public long id = -1;
-	
+
 	/** Die ID der Blockung */
 	public long blockungID = -1;
-	
+
 	/** Der Name der Blockung */
 	public @NotNull String name = "Blockung";
 
 	/** Das Halbjahr, welchem die Kursblockung zugeordnet ist (0=EF.1, 1=EF.2, 2=Q1.1, 3=Q1.2, 4=Q2.1, 5=Q2.2) */
 	public int gostHalbjahr = 0;
-	
+
 	/** Gibt an, ob dieses Ergebnis markiert wurde. Dies kann verwendet werden, um besonders geeignete Blockungsergebnisse hervorzuheben. */
 	public boolean istMarkiert = false;
-	
+
 	/** Gibt an, ob dieses Ergebnis als Vorlage für eine Blockungsdefinition dient. Eine Vorlage wird
 	 * mit der Definition automatisch angepasst in Bezug auf die Kurs- und Schienenanzahl mit angepasst, 
 	 * obwohl dies bei berechneten Ergebnissen nicht vorgesehen ist. Jede Blockungsdefinition hat

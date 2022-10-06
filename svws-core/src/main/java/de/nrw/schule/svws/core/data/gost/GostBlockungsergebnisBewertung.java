@@ -26,9 +26,6 @@ public class GostBlockungsergebnisBewertung {
 	/** Bewertungskriterium 2b: Anzahl der Kollisionen bei der Zuordnung von Schülern zu den Kurses in den Schienen. */
 	public long anzahlKollisionen = 0;
 
-	/** Bewertungskriterium 2c: Anzahl der Schienen mit Kollisionen bei der Zuordnung von Schülern zu den Kurses in den Schienen. */
-	public long anzahlSchienenMitKollisionen = 0;
-
 	/** Bewertungskriterium 3: Array mit dem Histogramm der Kursdifferenzen. <br>
 	 * Beispiel: [7, 5, 2, 1, 0, 0, ...] bedeutet: <br>
 	 * Die Kursdifferenz 0 gibt es 7 Mal <br>

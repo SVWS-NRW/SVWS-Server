@@ -2,21 +2,6 @@ package de.nrw.schule.svws.api.server;
 
 import java.io.InputStream;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.DELETE;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.PATCH;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.WebApplicationException;
-import jakarta.ws.rs.core.Context;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.Response.Status;
-
 import de.nrw.schule.svws.api.OpenAPIApplication;
 import de.nrw.schule.svws.core.abschluss.gost.AbiturdatenManager;
 import de.nrw.schule.svws.core.abschluss.gost.GostBelegpruefungErgebnis;
@@ -28,7 +13,6 @@ import de.nrw.schule.svws.core.data.gost.GostBlockungRegel;
 import de.nrw.schule.svws.core.data.gost.GostBlockungSchiene;
 import de.nrw.schule.svws.core.data.gost.GostBlockungsdaten;
 import de.nrw.schule.svws.core.data.gost.GostBlockungsergebnis;
-import de.nrw.schule.svws.core.data.gost.GostBlockungsergebnisListeneintrag;
 import de.nrw.schule.svws.core.data.gost.GostFach;
 import de.nrw.schule.svws.core.data.gost.GostJahrgang;
 import de.nrw.schule.svws.core.data.gost.GostJahrgangsdaten;
@@ -43,7 +27,6 @@ import de.nrw.schule.svws.data.gost.DataGostBlockungKurs;
 import de.nrw.schule.svws.data.gost.DataGostBlockungRegel;
 import de.nrw.schule.svws.data.gost.DataGostBlockungSchiene;
 import de.nrw.schule.svws.data.gost.DataGostBlockungsdaten;
-import de.nrw.schule.svws.data.gost.DataGostBlockungsergebnisliste;
 import de.nrw.schule.svws.data.gost.DataGostBlockungsergebnisse;
 import de.nrw.schule.svws.data.gost.DataGostBlockungsliste;
 import de.nrw.schule.svws.data.gost.DataGostFaecher;
@@ -63,6 +46,20 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.PATCH;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Die Klasse spezifiziert die OpenAPI-Schnittstelle für den Zugriff auf die SVWS-Datenbank in Bezug auf die gymnasiale Oberstufe.
@@ -1378,36 +1375,6 @@ public class APIGost {
     		return (new DataGostBlockungRegel(conn)).delete(idRegel);
     	}
     }
-
-
-    
-    /**
-     * Die OpenAPI-Methode für die Abfrage der Liste der Ergebnisse zu einer Blockungen der gymnasialen Oberstufe 
-     * im angegebenen Schema.
-     *  
-     * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-     * @param id         die ID der Blockung
-     * @param request       die Informationen zur HTTP-Anfrage
-     * 
-     * @return die Liste der Ergebnisse der Blockungen der gymnasialen Oberstufe
-     */
-    @GET
-    @Path("/blockungen/{blockungsid : \\d+}/ergebnisse")
-    @Operation(summary = "Gibt eine Übersicht aller Ergebnisse der angegebenen Blockung der gymnasialen Oberstufe zurück.",
-               description = "Erstellt eine Liste aller Ergebnisse der angegebenen Blockung der gymnasialen Oberstufe "
-               		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Blockungsdaten "
-               		       + "besitzt.")
-    @ApiResponse(responseCode = "200", description = "Eine Liste von Blockungsergebnis-Listen-Einträgen",
-                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = GostBlockungsergebnisListeneintrag.class))))
-    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Blockungsdaten anzusehen.")
-    @ApiResponse(responseCode = "404", description = "Keine Blockungsergebnis-Einträge gefunden, keine gymnasiale Oberstufe bei der Schulform vorhanden oder die Daten für die Blockung sind unvollständig")
-    public Response getGostBlockungsergebnisliste(@PathParam("schema") String schema, @PathParam("blockungsid") long id, @Context HttpServletRequest request) {
-    	// TODO Anpassung der Benutzerrechte
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) {
-    		return (new DataGostBlockungsergebnisliste(conn, id)).getList();
-    	}
-    } 
-
 
 
     /**

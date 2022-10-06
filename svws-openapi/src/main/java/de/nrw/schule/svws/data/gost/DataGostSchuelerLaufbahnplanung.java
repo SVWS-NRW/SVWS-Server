@@ -4,16 +4,10 @@ import java.io.InputStream;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import jakarta.ws.rs.WebApplicationException;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.Response.Status;
-
 import de.nrw.schule.svws.api.JSONMapper;
 import de.nrw.schule.svws.core.data.gost.Abiturdaten;
 import de.nrw.schule.svws.core.data.gost.GostSchuelerFachwahl;
 import de.nrw.schule.svws.core.types.gost.GostHalbjahr;
-import de.nrw.schule.svws.core.types.statkue.Schulform;
 import de.nrw.schule.svws.core.utils.gost.GostFaecherManager;
 import de.nrw.schule.svws.data.DataManager;
 import de.nrw.schule.svws.db.DBEntityManager;
@@ -27,11 +21,14 @@ import de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchuelerLernabschnit
 import de.nrw.schule.svws.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.nrw.schule.svws.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.nrw.schule.svws.db.utils.OperationError;
-import de.nrw.schule.svws.db.utils.data.Schule;
 import de.nrw.schule.svws.db.utils.gost.FaecherGost;
 import de.nrw.schule.svws.db.utils.gost.GostSchuelerLaufbahn;
 import de.nrw.schule.svws.module.pdf.gost.PDFGostWahlbogen;
 import jakarta.persistence.TypedQuery;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
@@ -62,12 +59,7 @@ public class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 	public Response get(Long schueler_id) {
 		if (schueler_id == null)
 	    	return OperationError.NOT_FOUND.getResponse();
-		DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
-		if (schule == null)
-    		return OperationError.NOT_FOUND.getResponse();
-    	Schulform schulform = schule.Schulform;
-    	if ((schulform == null) || (schulform.daten == null) || (!schulform.daten.hatGymOb))
-    		return OperationError.NOT_FOUND.getResponse();
+		GostUtils.pruefeSchuleMitGOSt(conn);
     	Abiturdaten daten = GostSchuelerLaufbahn.get(conn, schueler_id);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -86,12 +78,7 @@ public class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 	 * @return Die HTTP-Response der Get-Operation
 	 */
 	public Response getFachwahl(Long schueler_id, Long fach_id) {
-		DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
-		if (schule == null)
-    		return OperationError.NOT_FOUND.getResponse();
-    	Schulform schulform = schule.Schulform;
-    	if ((schulform == null) || (schulform.daten == null) || (!schulform.daten.hatGymOb))
-    		return OperationError.NOT_FOUND.getResponse();
+		GostUtils.pruefeSchuleMitGOSt(conn);
     	DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, schueler_id);
     	if (schueler == null)
     		return OperationError.NOT_FOUND.getResponse();
@@ -161,12 +148,7 @@ public class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
     	if (map.size() > 0) {
     		try {
     			conn.transactionBegin();
-    	    	Schule schule = Schule.queryCached(conn);
-    	    	if (schule == null)
-    	    		throw OperationError.NOT_FOUND.exception();
-    	    	Schulform schulform = schule.getSchulform();
-    	    	if ((schulform == null) || (schulform.daten == null) || (!schulform.daten.hatGymOb))
-    	    		throw OperationError.NOT_FOUND.exception();
+    			DTOEigeneSchule schule = GostUtils.pruefeSchuleMitGOSt(conn);
     	    	DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, schueler_id);
     	    	if (schueler == null)
     	    		throw OperationError.NOT_FOUND.exception();
@@ -181,7 +163,7 @@ public class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
     	    			.getResultList().stream().findFirst().orElse(null);
     	    	if (lernabschnitt == null)
     	    		throw OperationError.NOT_FOUND.exception();
-    			GostHalbjahr aktHalbjahr = schule.istImQuartalsmodus()  
+    			GostHalbjahr aktHalbjahr = (schule.AnzahlAbschnitte == 4)  
     					? GostHalbjahr.fromJahrgangUndHalbjahr(lernabschnitt.ASDJahrgang, (abschnitt.Abschnitt + 1) / 2)
     					: GostHalbjahr.fromJahrgangUndHalbjahr(lernabschnitt.ASDJahrgang, abschnitt.Abschnitt);
     	    	// Bestimme das Fach und die Fachbelegungen in der DB. Liegen keine vor, so erstelle eine neue Fachnbelegung in der DB,um den Patch zu speichern 
@@ -237,12 +219,7 @@ public class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 		// Lese die Laufbahndaten aus der DB
 		if (schueler_id == null)
 	    	return OperationError.NOT_FOUND.getResponse();
-		DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
-		if (schule == null)
-    		return OperationError.NOT_FOUND.getResponse();
-    	Schulform schulform = schule.Schulform;
-    	if ((schulform == null) || (schulform.daten == null) || (!schulform.daten.hatGymOb))
-    		return OperationError.NOT_FOUND.getResponse();
+		DTOEigeneSchule schule = GostUtils.pruefeSchuleMitGOSt(conn);
     	DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, schueler_id);
 		if (schueler == null)
     		return OperationError.NOT_FOUND.getResponse();

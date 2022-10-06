@@ -12,11 +12,6 @@ import java.util.Vector;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import jakarta.ws.rs.WebApplicationException;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.Response.Status;
-
 import de.nrw.schule.svws.api.JSONMapper;
 import de.nrw.schule.svws.core.data.gost.GostBlockungKurs;
 import de.nrw.schule.svws.core.data.gost.GostBlockungRegel;
@@ -43,7 +38,6 @@ import de.nrw.schule.svws.core.types.gost.GostKursart;
 import de.nrw.schule.svws.core.types.kursblockung.GostKursblockungRegelParameterTyp;
 import de.nrw.schule.svws.core.types.kursblockung.GostKursblockungRegelTyp;
 import de.nrw.schule.svws.core.types.statkue.Jahrgaenge;
-import de.nrw.schule.svws.core.types.statkue.Schulform;
 import de.nrw.schule.svws.core.types.statkue.ZulaessigesFach;
 import de.nrw.schule.svws.core.utils.gost.GostBlockungsdatenManager;
 import de.nrw.schule.svws.core.utils.gost.GostFaecherManager;
@@ -60,10 +54,13 @@ import de.nrw.schule.svws.db.dto.current.gost.kursblockung.DTOGostBlockungZwisch
 import de.nrw.schule.svws.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergebnisKursSchiene;
 import de.nrw.schule.svws.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergebnisKursSchueler;
 import de.nrw.schule.svws.db.dto.current.schild.faecher.DTOFach;
-import de.nrw.schule.svws.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.nrw.schule.svws.db.dto.current.svws.db.DTODBAutoInkremente;
 import de.nrw.schule.svws.db.dto.current.views.gost.DTOViewGostSchuelerAbiturjahrgang;
 import de.nrw.schule.svws.db.utils.OperationError;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
 /** 
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den Core-DTO {@link GostBlockungsdaten}. 
@@ -97,6 +94,7 @@ public class DataGostBlockungsdaten extends DataManager<Long> {
 		GostBlockungsdaten daten = new GostBlockungsdaten();
 		daten.id = blockung.ID;
 		daten.name = blockung.Name;
+		daten.abijahrgang = blockung.Abi_Jahrgang;
 		daten.gostHalbjahr = blockung.Halbjahr.id;
 		daten.istAktiv = blockung.IstAktiv;
 		daten.vorlageID = blockung.Vorlage_ID;
@@ -132,23 +130,27 @@ public class DataGostBlockungsdaten extends DataManager<Long> {
 		daten.wochenstunden = kurs.Wochenstunden;
 		return daten;
 	};
+	
 
-	@Override
-	public Response get(Long id) {
-		DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
-		if (schule == null)
-			return OperationError.NOT_FOUND.getResponse();
-		Schulform schulform = schule.Schulform;
-		if ((schulform == null) || (schulform.daten == null) || (!schulform.daten.hatGymOb))
-			return OperationError.NOT_FOUND.getResponse();
+	/**
+	 * Bestimmt für die angegebene ID alle Daten für die Initialisierung eines 
+	 * Blockungsdaten-Managers zur Bestimmung der Blockungsdaten.
+	 * Folgende Information werden nicht geladen: die Liste
+	 * der Blockungsergebnisse und das aktuelle Blockungsergebnis 
+	 * 
+	 * @param id   die ID der Blockung
+	 * 
+	 * @return der Blockungsdaten-Manager
+	 */
+	GostBlockungsdatenManager getBlockungsdatenManagerFromDB(Long id) {
 		// Bestimme die Blockung
 		DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, id);
 		if (blockung == null)
-			return OperationError.NOT_FOUND.getResponse();
+			throw OperationError.NOT_FOUND.exception();
 		// Bestimme die Fächer des Abiturjahrgangs
 		GostFaecherManager faecherManager = (new DataGostFaecher(conn, blockung.Abi_Jahrgang)).getListInternal();
 		if (faecherManager == null)
-			return OperationError.NOT_FOUND.getResponse();
+			throw OperationError.NOT_FOUND.exception();
 		GostBlockungsdatenManager manager = new GostBlockungsdatenManager(dtoMapper.apply(blockung), faecherManager);
 		// Bestimme alle Schienen
 		List<DTOGostBlockungSchiene> schienen = conn.queryNamed("DTOGostBlockungSchiene.blockung_id", blockung.ID,
@@ -180,7 +182,30 @@ public class DataGostBlockungsdaten extends DataManager<Long> {
 				manager.addRegel(eintrag);
 			}
 		}
-		GostBlockungsdaten daten = manager.daten();
+		return manager;
+	}
+
+
+	@Override
+	public Response get(Long id) {
+		GostBlockungsdaten daten;
+		try {
+			conn.transactionBegin();
+			GostUtils.pruefeSchuleMitGOSt(conn);
+			// Erstellen den Manager mit den Blockungsdaten
+			GostBlockungsdatenManager manager = getBlockungsdatenManagerFromDB(id);
+			// Ergänze Blockungsliste und das aktuelle Blockungsergebnis
+			(new DataGostBlockungsergebnisse(conn)).getErgebnisListe(manager);
+			daten = manager.daten();
+			conn.transactionCommit();
+		} catch (Exception e) {
+			if (e instanceof WebApplicationException webAppException)
+				return webAppException.getResponse();
+			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
+		} finally {
+			// Perform a rollback if necessary
+			conn.transactionRollback();
+		}
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
@@ -191,6 +216,7 @@ public class DataGostBlockungsdaten extends DataManager<Long> {
 			return Response.status(Status.OK).build();
 		try {
 			conn.transactionBegin();
+			GostUtils.pruefeSchuleMitGOSt(conn);
 			// Bestimme die Blockung
 			DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, id);
 			if (blockung == null)
@@ -235,13 +261,7 @@ public class DataGostBlockungsdaten extends DataManager<Long> {
 	public Response create(int abiturjahr, int halbjahr) {
 		try {
 			conn.transactionBegin();
-			// Prüfe, ob die Schule eine gymnasiale Oberstufe hat
-			DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
-			if (schule == null)
-				throw OperationError.NOT_FOUND.exception();
-			Schulform schulform = schule.Schulform;
-			if ((schulform == null) || (schulform.daten == null) || (!schulform.daten.hatGymOb))
-				throw OperationError.NOT_FOUND.exception();
+			GostUtils.pruefeSchuleMitGOSt(conn);
 			// Prüfe die Parameter
 			GostHalbjahr gostHalbjahr = GostHalbjahr.fromID(halbjahr);
 			if (gostHalbjahr == null)
@@ -340,6 +360,8 @@ public class DataGostBlockungsdaten extends DataManager<Long> {
 			// Lege eine Kurs-Schienen-Zuordnung für das "leere" Ergebnis fest. Diese Kurse werden der ersten Schiene der neuen Blockung zugeordnet.
 			for (GostBlockungKurs kurs : manager.daten().kurse)
 				conn.transactionPersist(new DTOGostBlockungZwischenergebnisKursSchiene(ergebnisID, kurs.id, schienenID + 1));
+            // Ergänze Blockungsliste und das aktuelle Blockungsergebnis
+            (new DataGostBlockungsergebnisse(conn)).getErgebnisListe(manager);
 			conn.transactionCommit();
 			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 		} catch (Exception exception) {
@@ -359,12 +381,7 @@ public class DataGostBlockungsdaten extends DataManager<Long> {
 	 */
 	public Response delete(Long id) {
 		// TODO use transaction
-		DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
-		if (schule == null)
-			return OperationError.NOT_FOUND.getResponse();
-		Schulform schulform = schule.Schulform;
-		if ((schulform == null) || (schulform.daten == null) || (!schulform.daten.hatGymOb))
-			return OperationError.NOT_FOUND.getResponse();
+		GostUtils.pruefeSchuleMitGOSt(conn);
 		// Bestimme die Blockung
 		DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, id);
 		if (blockung == null)
@@ -384,12 +401,7 @@ public class DataGostBlockungsdaten extends DataManager<Long> {
 	 * @return die HTTP-Response mit einer Liste von IDs der Zwischenergebnisse 
 	 */
 	public Response berechne(long id, long zeit) {
-		DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
-		if (schule == null)
-			return OperationError.NOT_FOUND.getResponse();
-		Schulform schulform = schule.Schulform;
-		if ((schulform == null) || (schulform.daten == null) || (!schulform.daten.hatGymOb))
-			return OperationError.NOT_FOUND.getResponse();
+		GostUtils.pruefeSchuleMitGOSt(conn);
 		// Bestimme die Blockung
 		DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, id);
 		if (blockung == null)
@@ -561,13 +573,7 @@ public class DataGostBlockungsdaten extends DataManager<Long> {
 			if ((idBlockungOriginal == null) && (idErgebnisOriginal == null))
 				throw OperationError.CONFLICT.exception();
 			conn.transactionBegin();
-			// Prüfe, ob die Schule eine gymnasiale Oberstufe hat
-			DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
-			if (schule == null)
-				throw OperationError.NOT_FOUND.exception();
-			Schulform schulform = schule.Schulform;
-			if ((schulform == null) || (schulform.daten == null) || (!schulform.daten.hatGymOb))
-				throw OperationError.NOT_FOUND.exception();
+			GostUtils.pruefeSchuleMitGOSt(conn);
 			// Bestimme die Blockung und das zugehörige Ergebnis
 			DTOGostBlockungZwischenergebnis ergebnisOriginal;
 			DTOGostBlockung blockungOriginal;
@@ -712,12 +718,7 @@ public class DataGostBlockungsdaten extends DataManager<Long> {
 		try {
 			conn.transactionBegin();
 			// Prüfe, ob die Schule eine gymnasiale Oberstufe hat
-			DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
-			if (schule == null)
-				throw OperationError.NOT_FOUND.exception();
-			Schulform schulform = schule.Schulform;
-			if ((schulform == null) || (schulform.daten == null) || (!schulform.daten.hatGymOb))
-				throw OperationError.NOT_FOUND.exception();
+			GostUtils.pruefeSchuleMitGOSt(conn);
 			// Prüfe, ob die Blockung mit der ID existiert			
 			DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, idBlockung);
 			if (blockung == null)
@@ -786,12 +787,7 @@ public class DataGostBlockungsdaten extends DataManager<Long> {
 	 */
 	public Response deleteKurs(long idBlockung, long idFach, int idKursart) {
 		// TODO use transaction
-		DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
-		if (schule == null)
-			return OperationError.NOT_FOUND.getResponse();
-		Schulform schulform = schule.Schulform;
-		if ((schulform == null) || (schulform.daten == null) || (!schulform.daten.hatGymOb))
-			return OperationError.NOT_FOUND.getResponse();
+		GostUtils.pruefeSchuleMitGOSt(conn);
 		// Bestimme das Fach und prüfe, ob es ein Fach der gymnasialen Oberstufe ist
 		DTOFach fach = conn.queryByKey(DTOFach.class, idFach);
 		if (fach == null)
@@ -828,12 +824,7 @@ public class DataGostBlockungsdaten extends DataManager<Long> {
 		try {
 			conn.transactionBegin();
 			// Prüfe, ob die Schule eine gymnasiale Oberstufe hat
-			DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
-			if (schule == null)
-				throw OperationError.NOT_FOUND.exception();
-			Schulform schulform = schule.Schulform;
-			if ((schulform == null) || (schulform.daten == null) || (!schulform.daten.hatGymOb))
-				throw OperationError.NOT_FOUND.exception();
+			GostUtils.pruefeSchuleMitGOSt(conn);
 			// Prüfe, ob die Blockung mit der ID existiert			
 			DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, idBlockung);
 			if (blockung == null)
@@ -874,12 +865,7 @@ public class DataGostBlockungsdaten extends DataManager<Long> {
 	 */
 	public Response deleteSchiene(long idBlockung) {
 		// TODO use transaction
-		DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
-		if (schule == null)
-			return OperationError.NOT_FOUND.getResponse();
-		Schulform schulform = schule.Schulform;
-		if ((schulform == null) || (schulform.daten == null) || (!schulform.daten.hatGymOb))
-			return OperationError.NOT_FOUND.getResponse();
+		GostUtils.pruefeSchuleMitGOSt(conn);
 		// Bestimme die Schienen der Blockung und löschen die Schiene mit der höchsten Nummer
     	List<DTOGostBlockungSchiene> schienen = conn.queryNamed("DTOGostBlockungSchiene.blockung_id", idBlockung, DTOGostBlockungSchiene.class);
     	if ((schienen == null) || (schienen.size() == 0))
@@ -904,12 +890,7 @@ public class DataGostBlockungsdaten extends DataManager<Long> {
 		try {
 			conn.transactionBegin();
 			// Prüfe, ob die Schule eine gymnasiale Oberstufe hat
-			DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
-			if (schule == null)
-				throw OperationError.NOT_FOUND.exception();
-			Schulform schulform = schule.Schulform;
-			if ((schulform == null) || (schulform.daten == null) || (!schulform.daten.hatGymOb))
-				throw OperationError.NOT_FOUND.exception();
+			GostUtils.pruefeSchuleMitGOSt(conn);
 			// Prüfe, ob die Blockung mit der ID existiert			
 			DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, idBlockung);
 			if (blockung == null)

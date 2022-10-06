@@ -13,7 +13,6 @@ import de.nrw.schule.svws.core.data.gost.GostBlockungsergebnisSchiene;
 import de.nrw.schule.svws.core.data.gost.GostBlockungsergebnisSchuelerzuordnung;
 import de.nrw.schule.svws.core.data.gost.GostFach;
 import de.nrw.schule.svws.core.data.schueler.Schueler;
-import de.nrw.schule.svws.core.types.gost.GostHalbjahr;
 import de.nrw.schule.svws.core.types.gost.GostKursart;
 import jakarta.validation.constraints.NotNull;
 
@@ -22,6 +21,9 @@ import jakarta.validation.constraints.NotNull;
  * Hierbei werden auch Hilfsmethoden zur Interpretation der Daten erzeugt.
  */
 public class GostBlockungsergebnisManager {
+	
+	/** Der Blockungsdaten-Manager für die grundlegenden Definition der dem Ergebnis zugehörigen Blockung */
+	private final @NotNull GostBlockungsdatenManager datenManager;
 
 	/** Das Blockungsergebnis */
 	private final @NotNull GostBlockungsergebnis ergebnis;
@@ -65,48 +67,41 @@ public class GostBlockungsergebnisManager {
 	 * Objekt vom Typ {@link GostBlockungsergebnis}. Die Kurs-Schienen und Kurs-Schülerzuordnung 
 	 * bei dem Blockungsergebnis ist leer.
 	 * 
-	 * @param id           die ID des Zwischenergebnis 
-	 * @param blockungID   die ID der zugehörigen Blockung
-	 * @param name         der Name der Blockung
-	 * @param halbjahr     das Halbjahr der gymnasialen Oberstufe für welches das Blockungsergebnis erstellt wurde
-	 * @param schueler     die Liste der Schüler 
-	 * @param faecher      die Fächer der gymnasialen Oberstufe
-	 * @param schienen     die Schienen der Blockung, welche in dem Ergebnis zugeordnet werden
-	 * @param kurse        die Kurse der Blockung, welche in dem Ergebnis zugeordnet werden 
+	 * @param datenManager   der Daten-Manager für die grundlegenden Definitionen der Blockung  
+	 * @param id             die ID des Zwischenergebnis 
+	 * @param blockungID     die ID der zugehörigen Blockung
+	 * @param schueler       die Liste der Schüler 
 	 */
-	public GostBlockungsergebnisManager(long id, long blockungID, @NotNull String name, GostHalbjahr halbjahr,
-			@NotNull List<@NotNull Schueler> schueler, 
-			@NotNull List<@NotNull GostFach> faecher, @NotNull List<@NotNull GostBlockungSchiene> schienen, 
-			@NotNull List<@NotNull GostBlockungKurs> kurse) {
+	public GostBlockungsergebnisManager(@NotNull GostBlockungsdatenManager datenManager, long id, long blockungID,
+			@NotNull List<@NotNull Schueler> schueler) {
+		this.datenManager = datenManager;
 		this.ergebnis = new GostBlockungsergebnis();
 		this.ergebnis.id = id;
 		this.ergebnis.blockungID = blockungID;
-		this.ergebnis.name = name;
-		this.ergebnis.gostHalbjahr = halbjahr.id;
+		this.ergebnis.name = datenManager.daten().name;
+		this.ergebnis.gostHalbjahr = datenManager.daten().gostHalbjahr;
 		initSchueler(schueler);
-		initFaecher(faecher);
-		initSchienen(schienen);
-		initKurse(kurse);
+		initFaecher(datenManager.faecherManager().toVector());
+		initSchienen(datenManager.daten().schienen);
+		initKurse(datenManager.daten().kurse);
 		update();
 	}
 
-	
+
 	/**
 	 * Erstellt einen neuen Manager mit den Daten aus dem übergebenen Ergebnis
 	 * 
+	 * @param datenManager   der Daten-Manager für die grundlegenden Definitionen der Blockung  
 	 * @param ergebnis     die Daten des Blockungsergebnis 
 	 * @param schueler     die Liste der Schüler 
-	 * @param faecher      die Fächer der gymnasialen Oberstufe
-	 * @param schienen     die Schienen der Blockung, welche in dem Ergebnis zugeordnet werden
-	 * @param kurse        die Kurse der Blockung, welche in dem Ergebnis zugeordnet werden 
 	 */
-	public GostBlockungsergebnisManager(@NotNull GostBlockungsergebnis ergebnis, 
-			@NotNull List<@NotNull Schueler> schueler, @NotNull List<@NotNull GostFach> faecher, 
-			@NotNull List<@NotNull GostBlockungSchiene> schienen,  @NotNull List<@NotNull GostBlockungKurs> kurse) {
+	public GostBlockungsergebnisManager(@NotNull GostBlockungsdatenManager datenManager, @NotNull GostBlockungsergebnis ergebnis, 
+			@NotNull List<@NotNull Schueler> schueler) {
+		this.datenManager = datenManager;
 		this.ergebnis = ergebnis;
 		initSchueler(schueler);
-		initFaecher(faecher);
-		initSchienen(schienen);
+		initFaecher(datenManager.faecherManager().toVector());
+		initSchienen(datenManager.daten().schienen);
 		for (@NotNull GostBlockungsergebnisSchiene schiene : ergebnis.schienen) {
 			mapSchienenKursZuordnungen.put(schiene.id, schiene);
 			for (@NotNull GostBlockungsergebnisKurs kurs : schiene.kurse) {
@@ -117,7 +112,7 @@ public class GostBlockungsergebnisManager {
 					fachKurse.add(kurs);
 			}
 		}
-		initKurse(kurse);
+		initKurse(datenManager.daten().kurse);
 		update();
 	}
 
@@ -262,7 +257,6 @@ public class GostBlockungsergebnisManager {
 			throw new NullPointerException("ID des Faches ist nicht bekannt. Dies ist auf inkonsistente Daten oder einen Programmierfehler zurückzuführen.");
 		return fach;
 	}
-	
 	
 	/**
 	 * Ermittelt die Schiene für die angegebene ID. Erzeugt eine NullPointerException 

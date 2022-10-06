@@ -9,12 +9,23 @@ import {
 	GostBlockungsdatenManager
 } from "@svws-nrw/svws-core-ts";
 import { BaseData } from "../BaseData";
+import { ListKursblockungsergebnisse } from "./ListKursblockungsergebnisse";
 
 export class DataGostKursblockung extends BaseData<
 	GostBlockungsdaten,
 	GostBlockungListeneintrag,
 	GostBlockungsdatenManager
 > {
+
+	protected listKursblockungsergebnisse: ListKursblockungsergebnisse;
+
+	public constructor(
+		listKursblockungsergebnisse: ListKursblockungsergebnisse
+	) {
+		super();
+		this.listKursblockungsergebnisse = listKursblockungsergebnisse;
+	}
+
 	protected on_update(daten: Partial<GostBlockungsdaten>): void {
 		return void daten;
 	}
@@ -27,13 +38,17 @@ export class DataGostKursblockung extends BaseData<
 	 */
 	public async on_select(): Promise<GostBlockungsdaten | undefined> {
 		if (!this.selected_list_item) return super.unselect();
-		const ergebnis = await super._select((eintrag: GostBlockungListeneintrag) =>
+		const blockungsdaten = await super._select((eintrag: GostBlockungListeneintrag) =>
 			App.api.getGostBlockung(App.schema, eintrag.id)
 		);
-		if (ergebnis && App.apps.gost.dataFaecher.manager)
-			this.manager = new GostBlockungsdatenManager(ergebnis, App.apps.gost.dataFaecher.manager)
-		else this.manager = undefined
-		return ergebnis
+		if (blockungsdaten && App.apps.gost.dataFaecher.manager)
+			this.manager = new GostBlockungsdatenManager(blockungsdaten, App.apps.gost.dataFaecher.manager);
+		else 
+			this.manager = undefined;
+		await this.listKursblockungsergebnisse.update_list(
+			blockungsdaten?.id
+		);
+		return blockungsdaten;
 	}
 
 	/**

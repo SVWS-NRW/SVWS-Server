@@ -5,20 +5,17 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Function;
 
+import de.nrw.schule.svws.api.JSONMapper;
+import de.nrw.schule.svws.core.data.gost.GostBlockungKurs;
+import de.nrw.schule.svws.core.data.gost.GostBlockungSchiene;
+import de.nrw.schule.svws.data.DataManager;
+import de.nrw.schule.svws.db.DBEntityManager;
+import de.nrw.schule.svws.db.dto.current.gost.kursblockung.DTOGostBlockungSchiene;
+import de.nrw.schule.svws.db.utils.OperationError;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
-
-import de.nrw.schule.svws.api.JSONMapper;
-import de.nrw.schule.svws.core.data.gost.GostBlockungKurs;
-import de.nrw.schule.svws.core.data.gost.GostBlockungSchiene;
-import de.nrw.schule.svws.core.types.statkue.Schulform;
-import de.nrw.schule.svws.data.DataManager;
-import de.nrw.schule.svws.db.DBEntityManager;
-import de.nrw.schule.svws.db.dto.current.gost.kursblockung.DTOGostBlockungSchiene;
-import de.nrw.schule.svws.db.dto.current.schild.schule.DTOEigeneSchule;
-import de.nrw.schule.svws.db.utils.OperationError;
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
@@ -60,12 +57,7 @@ public class DataGostBlockungSchiene extends DataManager<Long> {
 
 	@Override
 	public Response get(Long id) {
-		DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
-		if (schule == null)
-			return OperationError.NOT_FOUND.getResponse();
-		Schulform schulform = schule.Schulform;
-		if ((schulform == null) || (schulform.daten == null) || (!schulform.daten.hatGymOb))
-			return OperationError.NOT_FOUND.getResponse();
+		GostUtils.pruefeSchuleMitGOSt(conn);
 		// Bestimme die Schiene der Blockung
 		DTOGostBlockungSchiene schiene = conn.queryByKey(DTOGostBlockungSchiene.class, id);
 		if (schiene == null)
@@ -81,6 +73,7 @@ public class DataGostBlockungSchiene extends DataManager<Long> {
 	    	return Response.status(Status.OK).build();
 		try {
 			conn.transactionBegin();
+			GostUtils.pruefeSchuleMitGOSt(conn);
 			// Bestimme die Schiene der Blockung
 			DTOGostBlockungSchiene schiene = conn.queryByKey(DTOGostBlockungSchiene.class, id);
 			if (schiene == null)
@@ -134,12 +127,7 @@ public class DataGostBlockungSchiene extends DataManager<Long> {
 		try {
 			// Bestimme die Schiene der Blockung
 			conn.transactionBegin();
-			DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
-			if (schule == null)
-				return OperationError.NOT_FOUND.getResponse();
-			Schulform schulform = schule.Schulform;
-			if ((schulform == null) || (schulform.daten == null) || (!schulform.daten.hatGymOb))
-				return OperationError.NOT_FOUND.getResponse();
+			GostUtils.pruefeSchuleMitGOSt(conn);
 			DTOGostBlockungSchiene schiene = conn.queryByKey(DTOGostBlockungSchiene.class, id);
 			if (schiene == null)
 				return OperationError.NOT_FOUND.getResponse();

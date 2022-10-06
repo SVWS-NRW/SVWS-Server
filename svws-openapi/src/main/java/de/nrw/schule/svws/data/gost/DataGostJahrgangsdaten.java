@@ -5,14 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import jakarta.ws.rs.WebApplicationException;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.Response.Status;
-
 import de.nrw.schule.svws.api.JSONMapper;
 import de.nrw.schule.svws.core.data.gost.GostJahrgangsdaten;
-import de.nrw.schule.svws.core.types.statkue.Schulform;
 import de.nrw.schule.svws.core.utils.jahrgang.JahrgangsUtils;
 import de.nrw.schule.svws.data.DataManager;
 import de.nrw.schule.svws.db.DBEntityManager;
@@ -22,6 +16,10 @@ import de.nrw.schule.svws.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.nrw.schule.svws.db.dto.current.schild.schule.DTOJahrgang;
 import de.nrw.schule.svws.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.nrw.schule.svws.db.utils.OperationError;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
@@ -50,12 +48,7 @@ public class DataGostJahrgangsdaten extends DataManager<Integer> {
 
 	@Override
 	public Response get(Integer abi_jahrgang) {
-		DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
-		if (schule == null)
-    		return OperationError.NOT_FOUND.getResponse();
-    	Schulform schulform = schule.Schulform;
-    	if ((schulform == null) || (schulform.daten == null) || (!schulform.daten.hatGymOb))
-    		return OperationError.NOT_FOUND.getResponse();
+		DTOEigeneSchule schule = GostUtils.pruefeSchuleMitGOSt(conn);
 
     	// Bestimme den aktuellen Schuljahresabschnitt der Schule
 		DTOSchuljahresabschnitte aktuellerAbschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schule.Schuljahresabschnitts_ID);
@@ -76,7 +69,7 @@ public class DataGostJahrgangsdaten extends DataManager<Integer> {
 		daten.abiturjahr = jahrgangsdaten.Abi_Jahrgang;
 		int restjahre = jahrgangsdaten.Abi_Jahrgang - aktuellerAbschnitt.Jahr;
 		for (DTOJahrgang jahrgang : dtosJahrgaenge) {
-			Integer jahrgangRestjahre = JahrgangsUtils.getRestlicheJahre(schulform, jahrgang.Gliederung, jahrgang.ASDJahrgang);
+			Integer jahrgangRestjahre = JahrgangsUtils.getRestlicheJahre(schule.Schulform, jahrgang.Gliederung, jahrgang.ASDJahrgang);
 			if (jahrgangRestjahre != null && restjahre == jahrgangRestjahre) {
 				daten.jahrgang = jahrgang.ASDJahrgang;
 				break;
@@ -100,6 +93,7 @@ public class DataGostJahrgangsdaten extends DataManager<Integer> {
     	if (map.size() <= 0) 
 	    	return Response.status(Status.OK).build();
 		try {
+			GostUtils.pruefeSchuleMitGOSt(conn);
 			DTOGostJahrgangsdaten jahrgangsdaten = conn.queryByKey(DTOGostJahrgangsdaten.class, abiturjahr);
 	    	if (jahrgangsdaten == null)
 	    		throw OperationError.NOT_FOUND.exception();

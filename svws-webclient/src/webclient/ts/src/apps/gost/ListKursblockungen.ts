@@ -1,19 +1,9 @@
 import { GostBlockungListeneintrag } from "@svws-nrw/svws-core-ts";
 import { App } from "../BaseApp";
 import { BaseList } from "../BaseList";
-import { ListKursblockungsergebnisse } from "./ListKursblockungsergebnisse";
 
 export class ListKursblockungen extends BaseList<GostBlockungListeneintrag> {
 	protected _filter = undefined;
-
-	protected listKursblockungsergebnisse: ListKursblockungsergebnisse;
-
-	public constructor(
-		listKursblockungsergebnisse: ListKursblockungsergebnisse
-	) {
-		super();
-		this.listKursblockungsergebnisse = listKursblockungsergebnisse;
-	}
 
 	/**
 	 * Aktualisiert die Liste für die Schülerauswahl und wählt direkt das zuletzt
@@ -44,17 +34,6 @@ export class ListKursblockungen extends BaseList<GostBlockungListeneintrag> {
 		if (this.liste.length)
 			this.ausgewaehlt = this.liste[this.liste.length - 1];
 		else this.ausgewaehlt = undefined
-	}
-
-	/**
-	 * Aktualisiert die Liste der Blockungsergebnisse
-	 *
-	 * @returns {Promise<void>}
-	 */
-	public async on_select(): Promise<void> {
-		await this.listKursblockungsergebnisse.update_list(
-			this.ausgewaehlt?.id
-		);
 	}
 
 	public select_by_id(id: number): void {

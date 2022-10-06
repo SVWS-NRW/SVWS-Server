@@ -2,38 +2,35 @@ package de.nrw.schule.svws.data.gost;
 
 import java.io.InputStream;
 import java.text.Collator;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
-import java.util.Vector;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import jakarta.ws.rs.WebApplicationException;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.Response.Status;
-
-import de.nrw.schule.svws.core.data.gost.GostBlockungKurs;
-import de.nrw.schule.svws.core.data.gost.GostBlockungSchiene;
 import de.nrw.schule.svws.core.data.gost.GostBlockungsergebnis;
+import de.nrw.schule.svws.core.data.gost.GostBlockungsergebnisListeneintrag;
 import de.nrw.schule.svws.core.data.schueler.Schueler;
-import de.nrw.schule.svws.core.types.statkue.Schulform;
+import de.nrw.schule.svws.core.utils.gost.GostBlockungsdatenManager;
 import de.nrw.schule.svws.core.utils.gost.GostBlockungsergebnisManager;
-import de.nrw.schule.svws.core.utils.gost.GostFaecherManager;
 import de.nrw.schule.svws.data.DataManager;
 import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.dto.current.gost.kursblockung.DTOGostBlockung;
 import de.nrw.schule.svws.db.dto.current.gost.kursblockung.DTOGostBlockungKurs;
-import de.nrw.schule.svws.db.dto.current.gost.kursblockung.DTOGostBlockungSchiene;
 import de.nrw.schule.svws.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergebnis;
 import de.nrw.schule.svws.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergebnisKursSchiene;
 import de.nrw.schule.svws.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergebnisKursSchueler;
 import de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchueler;
-import de.nrw.schule.svws.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.nrw.schule.svws.db.dto.current.views.gost.DTOViewGostSchuelerAbiturjahrgang;
 import de.nrw.schule.svws.db.utils.OperationError;
+import jakarta.validation.constraints.NotNull;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
@@ -98,61 +95,114 @@ public class DataGostBlockungsergebnisse extends DataManager<Long> {
 		daten.geschlecht = dto.Geschlecht.id;
 		return daten;
 	};
-	
+
+
+	/**
+	 * Bestimmt die Liste der Blockungsergebnisse und das aktuelle Blockungsergebnis
+	 * für den angegebenen Blockungsdaten-Manager
+	 * 
+	 * @param datenManager   der Blockungsdaten-Manager
+	 */
+	void getErgebnisListe(@NotNull GostBlockungsdatenManager datenManager) {
+        // Bestimme alle Schüler-IDs für den Abiturjahrgang der Blockung
+        List<DTOSchueler> schuelerListe = (new DataGostJahrgangSchuelerliste(conn, datenManager.daten().abijahrgang)).getSchuelerDTOs();
+        List<Schueler> schueler = schuelerListe.stream().map(dtoMapperSchueler).sorted(schuelerComparator).collect(Collectors.toList());
+	    // Bestimme die Liste der Ergebnisse aus der Datenbank
+        List<DTOGostBlockungZwischenergebnis> ergebnisse = conn.queryNamed(
+                "DTOGostBlockungZwischenergebnis.blockung_id", datenManager.getID(), DTOGostBlockungZwischenergebnis.class);
+        if (ergebnisse == null)
+            throw OperationError.NOT_FOUND.exception();
+        List<Long> ergebnisIDs = ergebnisse.stream().map(e -> e.ID).collect(Collectors.toList());
+        if (ergebnisIDs.size() == 0) // Es muss immer mindestens ein aktuelles Ergebnis vorliegen
+            throw OperationError.INTERNAL_SERVER_ERROR.exception();
+        // Bestimme die Kurs-Schienen-Zuordnungen für alle Zwischenergebnisse
+        Map<Long, List<DTOGostBlockungZwischenergebnisKursSchiene>> mapKursSchienen = 
+            conn.queryNamed("DTOGostBlockungZwischenergebnisKursSchiene.zwischenergebnis_id.multiple", ergebnisIDs,
+                    DTOGostBlockungZwischenergebnisKursSchiene.class)
+                .stream().collect(Collectors.groupingBy(e -> e.Zwischenergebnis_ID, Collectors.toList()));
+        // Bestimme die Kurs-Schüler-Zuordnungen für alle Zwischenergebnisse
+        Map<Long, List<DTOGostBlockungZwischenergebnisKursSchueler>> mapKursSchueler =  
+            conn.queryNamed("DTOGostBlockungZwischenergebnisKursSchueler.zwischenergebnis_id.multiple", ergebnisIDs,
+                    DTOGostBlockungZwischenergebnisKursSchueler.class)
+                .stream().collect(Collectors.groupingBy(e -> e.Zwischenergebnis_ID, Collectors.toList()));
+        
+	    // Durchwandere alle Ergebnisse
+        for (DTOGostBlockungZwischenergebnis erg : ergebnisse) {
+            // Erstelle zunächst das Core-DTO für das Ergebnis mit Bewertung
+            var manager = new GostBlockungsergebnisManager(datenManager, erg.ID, erg.Blockung_ID, schueler);
+            var listSchienenKurse = mapKursSchienen.getOrDefault(erg.ID, Collections.emptyList());
+            var listKursSchueler = mapKursSchueler.getOrDefault(erg.ID, Collections.emptyList());
+            for (var ks : listSchienenKurse)
+                manager.assignKursSchiene(ks.Blockung_Kurs_ID, ks.Schienen_ID);
+            for (var ks : listKursSchueler)
+                manager.assignSchuelerKurs(ks.Schueler_ID, ks.Blockung_Kurs_ID, false);
+            GostBlockungsergebnis ergebnis = manager.getErgebnis();
+            ergebnis.istMarkiert = erg.IstMarkiert == null ? false : erg.IstMarkiert;
+            ergebnis.istVorlage = erg.IstVorlage == null ? false : erg.IstVorlage;
+
+            // Hinzufügen des aktuellen Ergebnisses zu den Blockungsdaten
+            if (ergebnis.istVorlage)
+                datenManager.daten().ergebnisAktuell = ergebnis;
+            
+            // Hinzufügen des Ergebnis-Listeneintrags zu den Blockungsdaten
+            var eintrag = new GostBlockungsergebnisListeneintrag();
+            eintrag.id = ergebnis.id;
+            eintrag.blockungID = ergebnis.blockungID;
+            eintrag.name = ergebnis.name;
+            eintrag.gostHalbjahr = ergebnis.gostHalbjahr;
+            eintrag.istMarkiert = ergebnis.istMarkiert;
+            eintrag.istVorlage = ergebnis.istVorlage;
+            eintrag.bewertung = ergebnis.bewertung;
+            datenManager.daten().ergebnisse.add(eintrag);
+        }
+	}
+
+
+	/**
+	 * Liest die Daten für das Blockungsergebnis aus der Datenbank ein und erstellt das
+	 * zugehörige Core-DTO  
+	 * 
+	 * @param ergebnis        das Datenbank-DTO des Blockungsergebnisses
+	 * @param datenManager    der Blockungsdaten-Manager
+	 * @param schuelerListe   die Liste der Schüler in dem Abiturjahrgang
+	 * 
+	 * @return das Core-DTO für das Blockungsergebnis
+	 * 
+	 * @throws WebApplicationException   falls das Ergebnis nicht in der Datenbank existiert.
+	 */
+	GostBlockungsergebnis getErgebnis(@NotNull DTOGostBlockungZwischenergebnis ergebnis, 
+	        @NotNull GostBlockungsdatenManager datenManager, @NotNull List<@NotNull DTOSchueler> schuelerListe) throws WebApplicationException {
+        List<Schueler> schueler = schuelerListe.stream().map(dtoMapperSchueler).sorted(schuelerComparator).collect(Collectors.toList());
+        GostBlockungsergebnisManager manager = new GostBlockungsergebnisManager(datenManager, ergebnis.ID, ergebnis.Blockung_ID, schueler);
+        // Bestimme alle Kurs-Schienen-Zuordnungen
+        List<DTOGostBlockungZwischenergebnisKursSchiene> listSchienenKurse = conn
+                .queryNamed("DTOGostBlockungZwischenergebnisKursSchiene.zwischenergebnis_id", ergebnis.ID, DTOGostBlockungZwischenergebnisKursSchiene.class);
+        // Bestimme alle Kurs-Schüler-Zuordnungen
+        List<DTOGostBlockungZwischenergebnisKursSchueler> listKursSchueler = conn
+                .queryNamed("DTOGostBlockungZwischenergebnisKursSchueler.zwischenergebnis_id", ergebnis.ID, DTOGostBlockungZwischenergebnisKursSchueler.class);
+        for (DTOGostBlockungZwischenergebnisKursSchiene ks : listSchienenKurse)
+            manager.assignKursSchiene(ks.Blockung_Kurs_ID, ks.Schienen_ID);
+        for (DTOGostBlockungZwischenergebnisKursSchueler ks : listKursSchueler)
+            manager.assignSchuelerKurs(ks.Schueler_ID, ks.Blockung_Kurs_ID, false);
+        GostBlockungsergebnis daten = manager.getErgebnis();
+        daten.istMarkiert = ergebnis.IstMarkiert == null ? false : ergebnis.IstMarkiert;
+        daten.istVorlage = ergebnis.IstVorlage == null ? false : ergebnis.IstVorlage;
+        return daten;
+	}
+
 
 	@Override
 	public Response get(Long id) {
-		DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
-		if (schule == null)
-			return OperationError.NOT_FOUND.getResponse();
-		Schulform schulform = schule.Schulform;
-		if ((schulform == null) || (schulform.daten == null) || (!schulform.daten.hatGymOb))
-			return OperationError.NOT_FOUND.getResponse();
+		GostUtils.pruefeSchuleMitGOSt(conn);
 		// Bestimme das Blockungs-Zwischenergebnis
 		DTOGostBlockungZwischenergebnis ergebnis = conn.queryByKey(DTOGostBlockungZwischenergebnis.class, id);
 		if (ergebnis == null)
 			return OperationError.NOT_FOUND.getResponse();
-		// Bestimme die zugehörige Blockung
-		DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, ergebnis.Blockung_ID);
-		if (blockung == null)
-			return OperationError.NOT_FOUND.getResponse();
-		// Bestimme die Fächer anhand des Abiturjahrgangs der Blockung
-		GostFaecherManager faecher = (new DataGostFaecher(conn, blockung.Abi_Jahrgang)).getListInternal();
-		if (faecher == null)
-			return OperationError.NOT_FOUND.getResponse();
+		GostBlockungsdatenManager datenManager = (new DataGostBlockungsdaten(conn)).getBlockungsdatenManagerFromDB(ergebnis.Blockung_ID);
     	// Bestimme alle Schüler-IDs für den Abiturjahrgang der Blockung
-		List<DTOViewGostSchuelerAbiturjahrgang> schuelerAbijahrgang = conn.queryNamed("DTOViewGostSchuelerAbiturjahrgang.abiturjahr", blockung.Abi_Jahrgang, DTOViewGostSchuelerAbiturjahrgang.class);
-		if ((schuelerAbijahrgang == null) || (schuelerAbijahrgang.size() == 0))
-			return OperationError.NOT_FOUND.getResponse();
-		List<Long> schuelerIDs = schuelerAbijahrgang.stream().map(s -> s.ID).collect(Collectors.toList());
-		List<DTOSchueler> schuelerListe = conn.queryNamed("DTOSchueler.id.multiple", schuelerIDs, DTOSchueler.class);
-		if ((schuelerListe == null) || (schuelerListe.size() == 0))
-			return OperationError.NOT_FOUND.getResponse();
-		List<Schueler> schueler = schuelerListe.stream().map(dtoMapperSchueler).sorted(schuelerComparator).collect(Collectors.toList());
-		// Bestimme alle Schienen
-		List<DTOGostBlockungSchiene> listDTOSchienen = conn.queryNamed("DTOGostBlockungSchiene.blockung_id", blockung.ID, DTOGostBlockungSchiene.class);
-		if (listDTOSchienen == null)
-			listDTOSchienen = new Vector<>();
-		List<GostBlockungSchiene> listSchienen = listDTOSchienen.stream().map(s -> DataGostBlockungsdaten.dtoMapperSchiene.apply(s)).collect(Collectors.toList());
-		// Bestimme die Kurse, welche für die Blockung angelegt wurden
-		List<DTOGostBlockungKurs> kurse = conn.queryNamed("DTOGostBlockungKurs.blockung_id", blockung.ID, DTOGostBlockungKurs.class);
-		if (kurse == null)
-			kurse = new Vector<>();
-		List<GostBlockungKurs> listKurse = kurse.stream().map(k -> DataGostBlockungsdaten.dtoMapperKurse.apply(k)).collect(Collectors.toList());
-		// Bestimme alle Kurs-Schienen-Zuordnungen
-		List<DTOGostBlockungZwischenergebnisKursSchiene> listSchienenKurse = conn
-				.queryNamed("DTOGostBlockungZwischenergebnisKursSchiene.zwischenergebnis_id", id, DTOGostBlockungZwischenergebnisKursSchiene.class);
-		// Bestimme alle Kurs-Schüler-Zuordnungen
-		List<DTOGostBlockungZwischenergebnisKursSchueler> listKursSchueler = conn
-				.queryNamed("DTOGostBlockungZwischenergebnisKursSchueler.zwischenergebnis_id", id, DTOGostBlockungZwischenergebnisKursSchueler.class);
-		GostBlockungsergebnisManager manager = new GostBlockungsergebnisManager(ergebnis.ID, ergebnis.Blockung_ID, blockung.Name, blockung.Halbjahr, schueler, faecher.toVector(), listSchienen, listKurse);
-		for (DTOGostBlockungZwischenergebnisKursSchiene ks : listSchienenKurse)
-			manager.assignKursSchiene(ks.Blockung_Kurs_ID, ks.Schienen_ID);
-		for (DTOGostBlockungZwischenergebnisKursSchueler ks : listKursSchueler)
-			manager.assignSchuelerKurs(ks.Schueler_ID, ks.Blockung_Kurs_ID, false);
-		GostBlockungsergebnis daten = manager.getErgebnis();
-		daten.istMarkiert = ergebnis.IstMarkiert == null ? false : ergebnis.IstMarkiert;
-		daten.istVorlage = ergebnis.IstVorlage == null ? false : ergebnis.IstVorlage;
+		List<DTOSchueler> schuelerListe = (new DataGostJahrgangSchuelerliste(conn, datenManager.daten().abijahrgang)).getSchuelerDTOs();
+		// Bestimme die Daten des Ergebnisses
+        GostBlockungsergebnis daten = getErgebnis(ergebnis, datenManager, schuelerListe);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
@@ -172,12 +222,7 @@ public class DataGostBlockungsergebnisse extends DataManager<Long> {
 	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
 	 */
 	public Response delete(Long id) {
-		DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
-		if (schule == null)
-			return OperationError.NOT_FOUND.getResponse();
-		Schulform schulform = schule.Schulform;
-		if ((schulform == null) || (schulform.daten == null) || (!schulform.daten.hatGymOb))
-			return OperationError.NOT_FOUND.getResponse();
+		GostUtils.pruefeSchuleMitGOSt(conn);
 		// Bestimme das Zwischenergebnis
 		DTOGostBlockungZwischenergebnis erg = conn.queryByKey(DTOGostBlockungZwischenergebnis.class, id);
 		if (erg == null)
@@ -187,15 +232,10 @@ public class DataGostBlockungsergebnisse extends DataManager<Long> {
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(id).build();
 	}
 
-	
-	
+
+
 	private void _createKursSchuelerZuordnung(Long idZwischenergebnis, Long idSchueler, Long idKurs) {
-		DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
-		if (schule == null)
-			throw OperationError.NOT_FOUND.exception();
-		Schulform schulform = schule.Schulform;
-		if ((schulform == null) || (schulform.daten == null) || (!schulform.daten.hatGymOb))
-			throw OperationError.NOT_FOUND.exception();
+		GostUtils.pruefeSchuleMitGOSt(conn);
 		if (idSchueler == null)
 			throw OperationError.CONFLICT.exception();
 		// Bestimme das Blockungs-Zwischenergebnis
@@ -224,15 +264,10 @@ public class DataGostBlockungsergebnisse extends DataManager<Long> {
 		conn.transactionPersist(new DTOGostBlockungZwischenergebnisKursSchueler(idZwischenergebnis, idKurs, idSchueler));
 	}
 
-	
-	
+
+
 	private void _deleteKursSchuelerZuordnung(Long idZwischenergebnis, Long idSchueler, Long idKurs) {
-		DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
-		if (schule == null)
-			throw OperationError.NOT_FOUND.exception();
-		Schulform schulform = schule.Schulform;
-		if ((schulform == null) || (schulform.daten == null) || (!schulform.daten.hatGymOb))
-			throw OperationError.NOT_FOUND.exception();
+		GostUtils.pruefeSchuleMitGOSt(conn);
 		if ((idSchueler == null) || (idKurs == null))
 			throw OperationError.CONFLICT.exception();
 		// Entferne die Zuordnung
@@ -241,7 +276,7 @@ public class DataGostBlockungsergebnisse extends DataManager<Long> {
 			throw OperationError.NOT_FOUND.exception();
 		conn.transactionRemove(dto);
 	}
-	
+
 
 	/**
 	 * Erstellt eine Kurs-Schüler-Zuordnung in der Datenbank.

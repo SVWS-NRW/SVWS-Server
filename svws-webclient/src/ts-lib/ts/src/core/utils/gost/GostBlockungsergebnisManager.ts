@@ -1,23 +1,24 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
 import { GostBlockungsergebnisSchiene, cast_de_nrw_schule_svws_core_data_gost_GostBlockungsergebnisSchiene } from '../../../core/data/gost/GostBlockungsergebnisSchiene';
 import { GostFach, cast_de_nrw_schule_svws_core_data_gost_GostFach } from '../../../core/data/gost/GostFach';
+import { GostBlockungsdatenManager, cast_de_nrw_schule_svws_core_utils_gost_GostBlockungsdatenManager } from '../../../core/utils/gost/GostBlockungsdatenManager';
 import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
 import { GostBlockungsergebnisSchuelerzuordnung, cast_de_nrw_schule_svws_core_data_gost_GostBlockungsergebnisSchuelerzuordnung } from '../../../core/data/gost/GostBlockungsergebnisSchuelerzuordnung';
 import { GostBlockungsergebnisKurs, cast_de_nrw_schule_svws_core_data_gost_GostBlockungsergebnisKurs } from '../../../core/data/gost/GostBlockungsergebnisKurs';
-import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 import { GostKursart, cast_de_nrw_schule_svws_core_types_gost_GostKursart } from '../../../core/types/gost/GostKursart';
 import { GostBlockungsergebnis, cast_de_nrw_schule_svws_core_data_gost_GostBlockungsergebnis } from '../../../core/data/gost/GostBlockungsergebnis';
 import { Schueler, cast_de_nrw_schule_svws_core_data_schueler_Schueler } from '../../../core/data/schueler/Schueler';
 import { NullPointerException, cast_java_lang_NullPointerException } from '../../../java/lang/NullPointerException';
 import { GostBlockungSchiene, cast_de_nrw_schule_svws_core_data_gost_GostBlockungSchiene } from '../../../core/data/gost/GostBlockungSchiene';
 import { JavaLong, cast_java_lang_Long } from '../../../java/lang/JavaLong';
-import { GostHalbjahr, cast_de_nrw_schule_svws_core_types_gost_GostHalbjahr } from '../../../core/types/gost/GostHalbjahr';
 import { List, cast_java_util_List } from '../../../java/util/List';
 import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 import { HashSet, cast_java_util_HashSet } from '../../../java/util/HashSet';
 import { GostBlockungKurs, cast_de_nrw_schule_svws_core_data_gost_GostBlockungKurs } from '../../../core/data/gost/GostBlockungKurs';
 
 export class GostBlockungsergebnisManager extends JavaObject {
+
+	private readonly datenManager : GostBlockungsdatenManager;
 
 	private readonly ergebnis : GostBlockungsergebnis;
 
@@ -49,62 +50,52 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * Objekt vom Typ {@link GostBlockungsergebnis}. Die Kurs-Schienen und Kurs-Schülerzuordnung 
 	 * bei dem Blockungsergebnis ist leer.
 	 * 
-	 * @param id           die ID des Zwischenergebnis 
-	 * @param blockungID   die ID der zugehörigen Blockung
-	 * @param name         der Name der Blockung
-	 * @param halbjahr     das Halbjahr der gymnasialen Oberstufe für welches das Blockungsergebnis erstellt wurde
-	 * @param schueler     die Liste der Schüler 
-	 * @param faecher      die Fächer der gymnasialen Oberstufe
-	 * @param schienen     die Schienen der Blockung, welche in dem Ergebnis zugeordnet werden
-	 * @param kurse        die Kurse der Blockung, welche in dem Ergebnis zugeordnet werden 
+	 * @param datenManager   der Daten-Manager für die grundlegenden Definitionen der Blockung  
+	 * @param id             die ID des Zwischenergebnis 
+	 * @param blockungID     die ID der zugehörigen Blockung
+	 * @param schueler       die Liste der Schüler 
 	 */
-	public constructor(id : number, blockungID : number, name : String, halbjahr : GostHalbjahr | null, schueler : List<Schueler>, faecher : List<GostFach>, schienen : List<GostBlockungSchiene>, kurse : List<GostBlockungKurs>);
+	public constructor(datenManager : GostBlockungsdatenManager, id : number, blockungID : number, schueler : List<Schueler>);
 
 	/**
 	 * Erstellt einen neuen Manager mit den Daten aus dem übergebenen Ergebnis
 	 * 
+	 * @param datenManager   der Daten-Manager für die grundlegenden Definitionen der Blockung  
 	 * @param ergebnis     die Daten des Blockungsergebnis 
 	 * @param schueler     die Liste der Schüler 
-	 * @param faecher      die Fächer der gymnasialen Oberstufe
-	 * @param schienen     die Schienen der Blockung, welche in dem Ergebnis zugeordnet werden
-	 * @param kurse        die Kurse der Blockung, welche in dem Ergebnis zugeordnet werden 
 	 */
-	public constructor(ergebnis : GostBlockungsergebnis, schueler : List<Schueler>, faecher : List<GostFach>, schienen : List<GostBlockungSchiene>, kurse : List<GostBlockungKurs>);
+	public constructor(datenManager : GostBlockungsdatenManager, ergebnis : GostBlockungsergebnis, schueler : List<Schueler>);
 
 	/**
 	 * Implementation for method overloads of 'constructor'
 	 */
-	public constructor(__param0 : GostBlockungsergebnis | number, __param1 : List<Schueler> | number, __param2 : List<GostFach> | String, __param3 : GostHalbjahr | List<GostBlockungSchiene> | null, __param4 : List<GostBlockungKurs> | List<Schueler>, __param5? : List<GostFach>, __param6? : List<GostBlockungSchiene>, __param7? : List<GostBlockungKurs>) {
+	public constructor(__param0 : GostBlockungsdatenManager, __param1 : GostBlockungsergebnis | number, __param2 : List<Schueler> | number, __param3? : List<Schueler>) {
 		super();
-		if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && typeof __param1 === "number") && ((typeof __param2 !== "undefined") && ((__param2 instanceof String) || (typeof __param2 === "string"))) && ((typeof __param3 !== "undefined") && ((__param3 instanceof JavaObject) && (__param3.isTranspiledInstanceOf('de.nrw.schule.svws.core.types.gost.GostHalbjahr'))) || (__param3 === null)) && ((typeof __param4 !== "undefined") && ((__param4 instanceof JavaObject) && (__param4.isTranspiledInstanceOf('java.util.List'))) || (__param4 === null)) && ((typeof __param5 !== "undefined") && ((__param5 instanceof JavaObject) && (__param5.isTranspiledInstanceOf('java.util.List'))) || (__param5 === null)) && ((typeof __param6 !== "undefined") && ((__param6 instanceof JavaObject) && (__param6.isTranspiledInstanceOf('java.util.List'))) || (__param6 === null)) && ((typeof __param7 !== "undefined") && ((__param7 instanceof JavaObject) && (__param7.isTranspiledInstanceOf('java.util.List'))) || (__param7 === null))) {
-			let id : number = __param0 as number;
-			let blockungID : number = __param1 as number;
-			let name : String = __param2;
-			let halbjahr : GostHalbjahr | null = cast_de_nrw_schule_svws_core_types_gost_GostHalbjahr(__param3);
-			let schueler : List<Schueler> = cast_java_util_List(__param4);
-			let faecher : List<GostFach> = cast_java_util_List(__param5);
-			let schienen : List<GostBlockungSchiene> = cast_java_util_List(__param6);
-			let kurse : List<GostBlockungKurs> = cast_java_util_List(__param7);
+		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.utils.gost.GostBlockungsdatenManager')))) && ((typeof __param1 !== "undefined") && typeof __param1 === "number") && ((typeof __param2 !== "undefined") && typeof __param2 === "number") && ((typeof __param3 !== "undefined") && ((__param3 instanceof JavaObject) && (__param3.isTranspiledInstanceOf('java.util.List'))) || (__param3 === null))) {
+			let datenManager : GostBlockungsdatenManager = cast_de_nrw_schule_svws_core_utils_gost_GostBlockungsdatenManager(__param0);
+			let id : number = __param1 as number;
+			let blockungID : number = __param2 as number;
+			let schueler : List<Schueler> = cast_java_util_List(__param3);
+			this.datenManager = datenManager;
 			this.ergebnis = new GostBlockungsergebnis();
 			this.ergebnis.id = id;
 			this.ergebnis.blockungID = blockungID;
-			this.ergebnis.name = name;
-			this.ergebnis.gostHalbjahr = halbjahr.id;
+			this.ergebnis.name = datenManager.daten().name;
+			this.ergebnis.gostHalbjahr = datenManager.daten().gostHalbjahr;
 			this.initSchueler(schueler);
-			this.initFaecher(faecher);
-			this.initSchienen(schienen);
-			this.initKurse(kurse);
+			this.initFaecher(datenManager.faecherManager().toVector());
+			this.initSchienen(datenManager.daten().schienen);
+			this.initKurse(datenManager.daten().kurse);
 			this.update();
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.data.gost.GostBlockungsergebnis')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('java.util.List'))) || (__param1 === null)) && ((typeof __param2 !== "undefined") && ((__param2 instanceof JavaObject) && (__param2.isTranspiledInstanceOf('java.util.List'))) || (__param2 === null)) && ((typeof __param3 !== "undefined") && ((__param3 instanceof JavaObject) && (__param3.isTranspiledInstanceOf('java.util.List'))) || (__param3 === null)) && ((typeof __param4 !== "undefined") && ((__param4 instanceof JavaObject) && (__param4.isTranspiledInstanceOf('java.util.List'))) || (__param4 === null)) && (typeof __param5 === "undefined") && (typeof __param6 === "undefined") && (typeof __param7 === "undefined")) {
-			let ergebnis : GostBlockungsergebnis = cast_de_nrw_schule_svws_core_data_gost_GostBlockungsergebnis(__param0);
-			let schueler : List<Schueler> = cast_java_util_List(__param1);
-			let faecher : List<GostFach> = cast_java_util_List(__param2);
-			let schienen : List<GostBlockungSchiene> = cast_java_util_List(__param3);
-			let kurse : List<GostBlockungKurs> = cast_java_util_List(__param4);
+		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.utils.gost.GostBlockungsdatenManager')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('de.nrw.schule.svws.core.data.gost.GostBlockungsergebnis')))) && ((typeof __param2 !== "undefined") && ((__param2 instanceof JavaObject) && (__param2.isTranspiledInstanceOf('java.util.List'))) || (__param2 === null)) && (typeof __param3 === "undefined")) {
+			let datenManager : GostBlockungsdatenManager = cast_de_nrw_schule_svws_core_utils_gost_GostBlockungsdatenManager(__param0);
+			let ergebnis : GostBlockungsergebnis = cast_de_nrw_schule_svws_core_data_gost_GostBlockungsergebnis(__param1);
+			let schueler : List<Schueler> = cast_java_util_List(__param2);
+			this.datenManager = datenManager;
 			this.ergebnis = ergebnis;
 			this.initSchueler(schueler);
-			this.initFaecher(faecher);
-			this.initSchienen(schienen);
+			this.initFaecher(datenManager.faecherManager().toVector());
+			this.initSchienen(datenManager.daten().schienen);
 			for (let schiene of ergebnis.schienen) {
 				this.mapSchienenKursZuordnungen.put(schiene.id, schiene);
 				for (let kurs of schiene.kurse) {
@@ -115,7 +106,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 						fachKurse.add(kurs);
 				}
 			}
-			this.initKurse(kurse);
+			this.initKurse(datenManager.daten().kurse);
 			this.update();
 		} else throw new Error('invalid method overload');
 	}

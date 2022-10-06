@@ -10,8 +10,6 @@ export class GostBlockungsergebnisBewertung extends JavaObject {
 
 	public anzahlKollisionen : number = 0;
 
-	public anzahlSchienenMitKollisionen : number = 0;
-
 	public kursdifferenzen : Array<Number> = Array(0).fill(null);
 
 	public anzahlKurseMitGleicherFachartProSchiene : number = 0;
@@ -37,9 +35,6 @@ export class GostBlockungsergebnisBewertung extends JavaObject {
 		if (typeof obj.anzahlKollisionen === "undefined")
 			 throw new Error('invalid json format, missing attribute anzahlKollisionen');
 		result.anzahlKollisionen = obj.anzahlKollisionen;
-		if (typeof obj.anzahlSchienenMitKollisionen === "undefined")
-			 throw new Error('invalid json format, missing attribute anzahlSchienenMitKollisionen');
-		result.anzahlSchienenMitKollisionen = obj.anzahlSchienenMitKollisionen;
 		for (let i : number = 0; i < obj.kursdifferenzen.length; i++) {
 			result.kursdifferenzen[i] = obj.kursdifferenzen[i];
 		}
@@ -65,7 +60,6 @@ export class GostBlockungsergebnisBewertung extends JavaObject {
 		}
 		result += '"anzahlNichtZugeordnet" : ' + obj.anzahlNichtZugeordnet + ',';
 		result += '"anzahlKollisionen" : ' + obj.anzahlKollisionen + ',';
-		result += '"anzahlSchienenMitKollisionen" : ' + obj.anzahlSchienenMitKollisionen + ',';
 		if (!obj.kursdifferenzen) {
 			result += '"kursdifferenzen" : []';
 		} else {
@@ -106,9 +100,6 @@ export class GostBlockungsergebnisBewertung extends JavaObject {
 		}
 		if (typeof obj.anzahlKollisionen !== "undefined") {
 			result += '"anzahlKollisionen" : ' + obj.anzahlKollisionen + ',';
-		}
-		if (typeof obj.anzahlSchienenMitKollisionen !== "undefined") {
-			result += '"anzahlSchienenMitKollisionen" : ' + obj.anzahlSchienenMitKollisionen + ',';
 		}
 		if (typeof obj.kursdifferenzen !== "undefined") {
 			let a = obj.kursdifferenzen;

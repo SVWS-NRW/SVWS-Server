@@ -33,7 +33,6 @@ import { GostBlockungRegel, cast_de_nrw_schule_svws_core_data_gost_GostBlockungR
 import { GostBlockungSchiene, cast_de_nrw_schule_svws_core_data_gost_GostBlockungSchiene } from '../core/data/gost/GostBlockungSchiene';
 import { GostBlockungsdaten, cast_de_nrw_schule_svws_core_data_gost_GostBlockungsdaten } from '../core/data/gost/GostBlockungsdaten';
 import { GostBlockungsergebnis, cast_de_nrw_schule_svws_core_data_gost_GostBlockungsergebnis } from '../core/data/gost/GostBlockungsergebnis';
-import { GostBlockungsergebnisListeneintrag, cast_de_nrw_schule_svws_core_data_gost_GostBlockungsergebnisListeneintrag } from '../core/data/gost/GostBlockungsergebnisListeneintrag';
 import { GostFach, cast_de_nrw_schule_svws_core_data_gost_GostFach } from '../core/data/gost/GostFach';
 import { GostJahrgang, cast_de_nrw_schule_svws_core_data_gost_GostJahrgang } from '../core/data/gost/GostJahrgang';
 import { GostJahrgangsdaten, cast_de_nrw_schule_svws_core_data_gost_GostJahrgangsdaten } from '../core/data/gost/GostJahrgangsdaten';
@@ -1539,35 +1538,6 @@ export class ApiServer extends BaseApi {
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return GostBlockungsdaten.transpilerFromJSON(text);
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getGostBlockungsergebnisliste für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/{blockungsid : \d+}/ergebnisse
-	 * 
-	 * Erstellt eine Liste aller Ergebnisse der angegebenen Blockung der gymnasialen Oberstufe Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Blockungsdaten besitzt.
-	 * 
-	 * Mögliche HTTP-Antworten: 
-	 *   Code 200: Eine Liste von Blockungsergebnis-Listen-Einträgen
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<GostBlockungsergebnisListeneintrag>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Blockungsdaten anzusehen.
-	 *   Code 404: Keine Blockungsergebnis-Einträge gefunden, keine gymnasiale Oberstufe bei der Schulform vorhanden oder die Daten für die Blockung sind unvollständig
-	 * 
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} blockungsid - der Pfad-Parameter blockungsid
-	 * 
-	 * @returns Eine Liste von Blockungsergebnis-Listen-Einträgen
-	 */
-	public async getGostBlockungsergebnisliste(schema : string, blockungsid : number) : Promise<List<GostBlockungsergebnisListeneintrag>> {
-		let path : string = "/db/{schema}/gost/blockungen/{blockungsid : \d+}/ergebnisse"
-				.replace(/{schema\s*(:[^}]+)?}/g, schema)
-				.replace(/{blockungsid\s*(:[^}]+)?}/g, blockungsid.toString());
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		let ret = new Vector<GostBlockungsergebnisListeneintrag>();
-		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(GostBlockungsergebnisListeneintrag.transpilerFromJSON(text)); });
-		return ret;
 	}
 
 

@@ -1,5 +1,8 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
+import { GostBlockungsergebnis, cast_de_nrw_schule_svws_core_data_gost_GostBlockungsergebnis } from '../../../core/data/gost/GostBlockungsergebnis';
+import { GostBlockungsergebnisListeneintrag, cast_de_nrw_schule_svws_core_data_gost_GostBlockungsergebnisListeneintrag } from '../../../core/data/gost/GostBlockungsergebnisListeneintrag';
 import { GostBlockungSchiene, cast_de_nrw_schule_svws_core_data_gost_GostBlockungSchiene } from '../../../core/data/gost/GostBlockungSchiene';
+import { List, cast_java_util_List } from '../../../java/util/List';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 import { GostBlockungRegel, cast_de_nrw_schule_svws_core_data_gost_GostBlockungRegel } from '../../../core/data/gost/GostBlockungRegel';
 import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
@@ -11,17 +14,23 @@ export class GostBlockungsdaten extends JavaObject {
 
 	public name : String = "Neue Blockung";
 
+	public abijahrgang : number = -1;
+
 	public gostHalbjahr : number = 0;
 
 	public istAktiv : boolean = false;
 
 	public vorlageID : number = -1;
 
-	public schienen : Vector<GostBlockungSchiene> = new Vector();
+	public schienen : List<GostBlockungSchiene> = new Vector();
 
-	public regeln : Vector<GostBlockungRegel> = new Vector();
+	public regeln : List<GostBlockungRegel> = new Vector();
 
-	public kurse : Vector<GostBlockungKurs> = new Vector();
+	public kurse : List<GostBlockungKurs> = new Vector();
+
+	public readonly ergebnisse : List<GostBlockungsergebnisListeneintrag> = new Vector();
+
+	public ergebnisAktuell : GostBlockungsergebnis = new GostBlockungsergebnis();
 
 
 	public constructor() {
@@ -41,6 +50,9 @@ export class GostBlockungsdaten extends JavaObject {
 		if (typeof obj.name === "undefined")
 			 throw new Error('invalid json format, missing attribute name');
 		result.name = obj.name;
+		if (typeof obj.abijahrgang === "undefined")
+			 throw new Error('invalid json format, missing attribute abijahrgang');
+		result.abijahrgang = obj.abijahrgang;
 		if (typeof obj.gostHalbjahr === "undefined")
 			 throw new Error('invalid json format, missing attribute gostHalbjahr');
 		result.gostHalbjahr = obj.gostHalbjahr;
@@ -65,6 +77,14 @@ export class GostBlockungsdaten extends JavaObject {
 				result.kurse?.add(GostBlockungKurs.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
+		if (!!obj.ergebnisse) {
+			for (let elem of obj.ergebnisse) {
+				result.ergebnisse?.add(GostBlockungsergebnisListeneintrag.transpilerFromJSON(JSON.stringify(elem)));
+			}
+		}
+		if (typeof obj.ergebnisAktuell === "undefined")
+			 throw new Error('invalid json format, missing attribute ergebnisAktuell');
+		result.ergebnisAktuell = GostBlockungsergebnis.transpilerFromJSON(JSON.stringify(obj.ergebnisAktuell));
 		return result;
 	}
 
@@ -72,6 +92,7 @@ export class GostBlockungsdaten extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
 		result += '"name" : ' + '"' + obj.name.valueOf() + '"' + ',';
+		result += '"abijahrgang" : ' + obj.abijahrgang + ',';
 		result += '"gostHalbjahr" : ' + obj.gostHalbjahr + ',';
 		result += '"istAktiv" : ' + obj.istAktiv + ',';
 		result += '"vorlageID" : ' + obj.vorlageID + ',';
@@ -111,6 +132,19 @@ export class GostBlockungsdaten extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
+		if (!obj.ergebnisse) {
+			result += '"ergebnisse" : []';
+		} else {
+			result += '"ergebnisse" : [ ';
+			for (let i : number = 0; i < obj.ergebnisse.size(); i++) {
+				let elem = obj.ergebnisse.get(i);
+				result += GostBlockungsergebnisListeneintrag.transpilerToJSON(elem);
+				if (i < obj.ergebnisse.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
+		}
+		result += '"ergebnisAktuell" : ' + GostBlockungsergebnis.transpilerToJSON(obj.ergebnisAktuell) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -123,6 +157,9 @@ export class GostBlockungsdaten extends JavaObject {
 		}
 		if (typeof obj.name !== "undefined") {
 			result += '"name" : ' + '"' + obj.name.valueOf() + '"' + ',';
+		}
+		if (typeof obj.abijahrgang !== "undefined") {
+			result += '"abijahrgang" : ' + obj.abijahrgang + ',';
 		}
 		if (typeof obj.gostHalbjahr !== "undefined") {
 			result += '"gostHalbjahr" : ' + obj.gostHalbjahr + ',';
@@ -174,6 +211,23 @@ export class GostBlockungsdaten extends JavaObject {
 				}
 				result += ' ]' + ',';
 			}
+		}
+		if (typeof obj.ergebnisse !== "undefined") {
+			if (!obj.ergebnisse) {
+				result += '"ergebnisse" : []';
+			} else {
+				result += '"ergebnisse" : [ ';
+				for (let i : number = 0; i < obj.ergebnisse.size(); i++) {
+					let elem = obj.ergebnisse.get(i);
+					result += GostBlockungsergebnisListeneintrag.transpilerToJSON(elem);
+					if (i < obj.ergebnisse.size() - 1)
+						result += ',';
+				}
+				result += ' ]' + ',';
+			}
+		}
+		if (typeof obj.ergebnisAktuell !== "undefined") {
+			result += '"ergebnisAktuell" : ' + GostBlockungsergebnis.transpilerToJSON(obj.ergebnisAktuell) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';
