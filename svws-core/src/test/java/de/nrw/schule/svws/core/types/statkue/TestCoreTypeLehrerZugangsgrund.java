@@ -1,8 +1,6 @@
 package de.nrw.schule.svws.core.types.statkue;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,6 +28,12 @@ public class TestCoreTypeLehrerZugangsgrund {
     	assertEquals(LehrerZugangsgrund.WECHSEL, LehrerZugangsgrund.getByKuerzel("WECHSEL"));
     	assertEquals(LehrerZugangsgrund.WIEDER, LehrerZugangsgrund.getByKuerzel("WIEDER"));
     	assertEquals(LehrerZugangsgrund.SONSTIG, LehrerZugangsgrund.getByKuerzel("SONSTIG"));
+    	
+    	assertEquals(LehrerZugangsgrund.NEU.daten.schluessel, ("1"));
+    	assertEquals(LehrerZugangsgrund.AndBuLand.daten.schluessel, ("2"));
+    	assertEquals(LehrerZugangsgrund.WECHSEL.daten.schluessel, ("3"));
+    	assertEquals(LehrerZugangsgrund.WIEDER.daten.schluessel, ("4"));
+    	assertEquals(LehrerZugangsgrund.SONSTIG.daten.schluessel, ("5"));
     }
 
 	// TODO add additional tests
