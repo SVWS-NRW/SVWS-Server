@@ -44,7 +44,7 @@ export class LehrerMinderleistungArt extends JavaObject {
 
 	public static readonly ID_300 : LehrerMinderleistungArt = new LehrerMinderleistungArt("ID_300", 12, [new LehrerKatalogMinderleistungsartEintrag(47, "300", "Sonstige Ermäßigungen aus besonderen persönlichen Gründen", null, null)]);
 
-	public static readonly ID_350 : LehrerMinderleistungArt = new LehrerMinderleistungArt("ID_350", 13, [new LehrerKatalogMinderleistungsartEintrag(48, "350", "Abrundung der Pflichtstundenzahl wegen Aufrundung im vorhergehenden Schuljahr ", null, null)]);
+	public static readonly ID_350 : LehrerMinderleistungArt = new LehrerMinderleistungArt("ID_350", 13, [new LehrerKatalogMinderleistungsartEintrag(48, "350", "Abrundung der Pflichtstundenzahl wegen Aufrundung im vorhergehenden Schuljahr", null, null)]);
 
 	public static readonly ID_360 : LehrerMinderleistungArt = new LehrerMinderleistungArt("ID_360", 14, [new LehrerKatalogMinderleistungsartEintrag(49, "360", "Unterschreitung der Pflichtstundenzahl aus organisatorischen Gründen (z. B. Epochenunterricht)", null, null)]);
 
