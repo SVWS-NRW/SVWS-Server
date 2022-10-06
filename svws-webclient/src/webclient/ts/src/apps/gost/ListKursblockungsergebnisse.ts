@@ -1,4 +1,4 @@
-import { GostBlockungsergebnisListeneintrag, Vector, List } from "@svws-nrw/svws-core-ts";
+import { GostBlockungsergebnisListeneintrag } from "@svws-nrw/svws-core-ts";
 import { App } from "../BaseApp";
 import { BaseList } from "../BaseList";
 
@@ -15,10 +15,7 @@ export class ListKursblockungsergebnisse extends BaseList<GostBlockungsergebnisL
 			this.liste = [];
 			return;
 		}
-		await super._update_list(() => 
-			new Promise<List<GostBlockungsergebnisListeneintrag>>((resolve, reject) => {
-				resolve(App.apps.gost.dataKursblockung.daten?.ergebnisse || (new Vector<GostBlockungsergebnisListeneintrag>()))
-			})
-		);
+		await super._update_list(() => App.apps.gost.dataKursblockung.ergebnisse());
+		this.ausgewaehlt = this.liste[0]
 	}
 }

@@ -6,7 +6,10 @@ import {
 	GostBlockungRegel,
 	GostBlockungSchiene,
 	GostBlockungsdaten,
-	GostBlockungsdatenManager
+	GostBlockungsdatenManager,
+	GostBlockungsergebnisListeneintrag,
+	List,
+	Vector
 } from "@svws-nrw/svws-core-ts";
 import { BaseData } from "../BaseData";
 import { ListKursblockungsergebnisse } from "./ListKursblockungsergebnisse";
@@ -51,6 +54,10 @@ export class DataGostKursblockung extends BaseData<
 		return blockungsdaten;
 	}
 
+	/** Übergibt als Promise die Listeneinträge  */
+	public async ergebnisse(): Promise<List<GostBlockungsergebnisListeneintrag>> {
+		return this._daten?.ergebnisse || new Vector<GostBlockungsergebnisListeneintrag>()
+	}
 	/**
 	 * Aktualisiert die übergebenen Felder der Daten mit dem übergebenen Objekt.
 	 * Ruft ggf. einen Callback bei Änderungen an den Daten auf, so dass eine
