@@ -81,7 +81,7 @@ public enum LehrerMinderleistungArt {
 
 	/** Minderleistungsart 'Abrundung der Pflichtstundenzahl wegen Aufrundung im vorhergehenden Schuljahr ' */
 	ID_350(new LehrerKatalogMinderleistungsartEintrag[]{
-		new LehrerKatalogMinderleistungsartEintrag(48, "350", "Abrundung der Pflichtstundenzahl wegen Aufrundung im vorhergehenden Schuljahr ", null, null)
+		new LehrerKatalogMinderleistungsartEintrag(48, "350", "Abrundung der Pflichtstundenzahl wegen Aufrundung im vorhergehenden Schuljahr", null, null)
 	}),
 
 	/** Minderleistungsart 'Unterschreitung der Pflichtstundenzahl aus organisatorischen Gründen (z. B. Epochenunterricht)' */
