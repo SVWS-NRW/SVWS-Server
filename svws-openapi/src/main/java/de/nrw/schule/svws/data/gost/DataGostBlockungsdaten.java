@@ -361,6 +361,8 @@ public class DataGostBlockungsdaten extends DataManager<Long> {
 			for (GostBlockungKurs kurs : manager.daten().kurse)
 				conn.transactionPersist(new DTOGostBlockungZwischenergebnisKursSchiene(ergebnisID, kurs.id, schienenID + 1));
             // Ergänze Blockungsliste
+            conn.transactionCommit();
+            conn.transactionBegin();
             (new DataGostBlockungsergebnisse(conn)).getErgebnisListe(manager);
 			conn.transactionCommit();
 			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
