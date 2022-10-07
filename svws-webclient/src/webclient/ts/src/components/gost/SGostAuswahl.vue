@@ -65,7 +65,7 @@
 												</div>
 												<div class="float-right flex gap-1">
 													<svws-ui-button class="cursor-pointer" size="small" @click="create_blockung" >Ergebnisse berechnen</svws-ui-button >
-													<svws-ui-button size="small" type="danger" class="cursor-pointer" @click="remove_blockung">löschen </svws-ui-button>
+													<svws-ui-button size="small" type="danger" class="cursor-pointer" @click="remove_blockung">Löschen </svws-ui-button>
 												</div>
 											</template>
 											<template v-else>
@@ -115,6 +115,9 @@
 							>
 								<td class="table--cell table--cell-padded table--border" >
 										{{ ergebnis.id }}
+										<svws-ui-icon v-if="ergebnis.istVorlage" class="inline-block"><i-ri-pushpin-fill/></svws-ui-icon>
+										<svws-ui-icon v-else @click="make_vorlage(ergebnis)" class="inline-block opacity-0 hover:opacity-25"><i-ri-pushpin-line/></svws-ui-icon>
+
 								</td>
 								<td class="table--cell table--cell-padded table--border" >
 									<div class="flex">
@@ -133,17 +136,19 @@
 								<td class="table--cell table--cell-padded table--border" >
 									<div v-if="ergebnis === selected_ergebnis" class="flex gap-1 float-right ">
 										<svws-ui-button
+										v-if="ergebnis.istVorlage"
 										size="small"
 										type="primary"
 										class="cursor-pointer"
 										@click="derive_blockung"
-										>Blockung ableiten</svws-ui-button>
+										>Ableiten</svws-ui-button>
 										<svws-ui-button
+										v-if="!ergebnis.istVorlage"
 										size="small"
 										type="danger"
 										class="cursor-pointer"
 										@click="remove_ergebnis"
-										>löschen</svws-ui-button>
+										>Löschen</svws-ui-button>
 									</div>
 								</td>
 							</tr>
@@ -286,20 +291,6 @@ const selected: WritableComputedRef<GostJahrgang | undefined> = computed({
 	}
 });
 
-// function setAbiturjahr(neu: any) {
-// 	if (!neu) return;
-// 	if (main.akt_abschnitt.schuljahr && main.akt_abschnitt.abschnitt) {
-// 		const hj =
-// 			GostHalbjahr.getPlanungshalbjahrFromAbiturjahrSchuljahrUndHalbjahr(
-// 				neu,
-// 				main.akt_abschnitt.schuljahr,
-// 				main.akt_abschnitt.abschnitt
-// 			);
-// 		if (!hj) return;
-// 		selected_hj.value = hj;
-// 	}
-// }
-
 async function abiturjahr_hinzufuegen(jahrgang: JahrgangsListeEintrag) {
 	try {
 		const abiturjahr = await app.dataJahrgang.post_jahrgang(
@@ -324,15 +315,13 @@ async function abiturjahr_hinzufuegen(jahrgang: JahrgangsListeEintrag) {
 
 async function blockung_hinzufuegen() {
 	if (
-		!selected.value?.abiturjahr //||
-		// !shj.value
+		!selected.value?.abiturjahr
 	)
 		return;
 	const daten = await App.api.createGostAbiturjahrgangBlockung(
 		App.schema,
 		selected.value.abiturjahr.valueOf(),
 		selected_hj.value.id
-		// shj.value.id
 	);
 	const abiturjahr = selected.value.abiturjahr.valueOf();
 	if (!abiturjahr) return;
@@ -383,6 +372,14 @@ async function derive_blockung() {
 }
 async function patch_blockung(blockung: GostBlockungListeneintrag) {
 	await app.dataKursblockung.patch({name: blockung.name});
+}
+
+function make_vorlage(ergebnis: GostBlockungsergebnisListeneintrag) {
+	const bisher = rows_ergebnisse.value.find(e=>e.istVorlage)
+	if (!bisher) return
+	bisher.istVorlage = false
+	ergebnis.istVorlage = true
+	//TODO zum Server schicken
 }
 </script>
 
