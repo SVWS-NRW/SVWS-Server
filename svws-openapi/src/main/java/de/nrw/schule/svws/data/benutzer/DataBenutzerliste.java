@@ -15,6 +15,8 @@ import jakarta.ws.rs.core.Response.Status;
 import de.nrw.schule.svws.core.data.benutzer.BenutzerListeEintrag;
 import de.nrw.schule.svws.data.DataManager;
 import de.nrw.schule.svws.db.DBEntityManager;
+import de.nrw.schule.svws.db.dto.current.schild.benutzer.DTOBenutzergruppe;
+import de.nrw.schule.svws.db.dto.current.schild.benutzer.DTOBenutzergruppenMitglied;
 import de.nrw.schule.svws.db.dto.current.views.benutzer.DTOViewBenutzerdetails;
 import de.nrw.schule.svws.db.utils.OperationError;
 
@@ -25,15 +27,15 @@ import de.nrw.schule.svws.db.utils.OperationError;
 public class DataBenutzerliste extends DataManager<Long> {
 
 	/**
-	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link BenutzerListeEintrag}.
+	 * Erstellt einen neuen {@link DataManager} für den Core-DTO
+	 * {@link BenutzerListeEintrag}.
 	 * 
-	 * @param conn        die Datenbank-Verbindung für den Datenbankzugriff
+	 * @param conn die Datenbank-Verbindung für den Datenbankzugriff
 	 */
 	public DataBenutzerliste(DBEntityManager conn) {
 		super(conn);
 	}
-	
-	
+
 	@Override
 	public Response getAll() {
 		return this.getList();
@@ -41,12 +43,35 @@ public class DataBenutzerliste extends DataManager<Long> {
 
 	@Override
 	public Response getList() {
-		List<DTOViewBenutzerdetails> benutzer = conn.queryAll(DTOViewBenutzerdetails.class); 
-    	if (benutzer == null)
-    		throw OperationError.NOT_FOUND.exception();
-    	// Erstelle die Benutzerliste und sortiere sie
-    	List<BenutzerListeEintrag> daten = benutzer.stream().map(dtoMapper).sorted(dataComparator).collect(Collectors.toList());
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		List<DTOViewBenutzerdetails> benutzer = conn.queryAll(DTOViewBenutzerdetails.class);
+		if (benutzer == null)
+			throw OperationError.NOT_FOUND.exception();
+		// Erstelle die Benutzerliste und sortiere sie
+		List<BenutzerListeEintrag> daten = benutzer.stream().map(dtoMapper).sorted(dataComparator)
+				.collect(Collectors.toList());
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+	}
+
+	/**
+	 * @param id ID der Benutzergruppe
+	 * @return Benutzer, die in der Benutzergruppe sind.
+	 */
+	public Response getListMitGruppenID(Long id) {
+		// Bestimme die IDs der Benutzer in der Benutzergruppe mit id
+		DTOBenutzergruppe benutzergruppe = conn.queryByKey(DTOBenutzergruppe.class, id);
+		if (benutzergruppe == null)
+			throw OperationError.NOT_FOUND.exception();
+		List<Long> benutzerIDs = conn
+				.queryNamed("DTOBenutzergruppenMitglied.gruppe_id", benutzergruppe.ID, DTOBenutzergruppenMitglied.class)
+				.stream().map(g -> g.Benutzer_ID).sorted().toList();
+		List<DTOViewBenutzerdetails> benutzer = conn.queryNamed("DTOViewBenutzerdetails.id.multiple", benutzerIDs,
+				DTOViewBenutzerdetails.class);
+		if (benutzer == null)
+			throw OperationError.NOT_FOUND.exception();
+		// Erstelle die Benutzerliste und sortiere sie
+		List<BenutzerListeEintrag> daten = benutzer.stream().map(dtoMapper).sorted(dataComparator)
+				.collect(Collectors.toList());
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
@@ -59,10 +84,10 @@ public class DataBenutzerliste extends DataManager<Long> {
 		throw new UnsupportedOperationException();
 	}
 
-	
-	
 	/**
-	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOViewBenutzerdetails} in einen Core-DTO {@link BenutzerListeEintrag}.  
+	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs
+	 * {@link DTOViewBenutzerdetails} in einen Core-DTO
+	 * {@link BenutzerListeEintrag}.
 	 */
 	private Function<DTOViewBenutzerdetails, BenutzerListeEintrag> dtoMapper = (DTOViewBenutzerdetails b) -> {
 		BenutzerListeEintrag daten = new BenutzerListeEintrag();
@@ -74,13 +99,13 @@ public class DataBenutzerliste extends DataManager<Long> {
 		daten.istAdmin = b.IstAdmin == null ? false : b.IstAdmin;
 		daten.idCredentials = b.credentialID;
 		return daten;
-	};	
-	
-	
+	};
+
 	/**
-	 * Lambda-Ausdruck zum Vergleichen/Sortieren der Core-DTOs {@link BenutzerListeEintrag}.  
+	 * Lambda-Ausdruck zum Vergleichen/Sortieren der Core-DTOs
+	 * {@link BenutzerListeEintrag}.
 	 */
-	private Comparator<BenutzerListeEintrag> dataComparator = (a,b) -> {
+	private Comparator<BenutzerListeEintrag> dataComparator = (a, b) -> {
 		Collator collator = Collator.getInstance(Locale.GERMAN);
 		if ((a.anzeigename == null) && (b.anzeigename != null))
 			return -1;
@@ -90,5 +115,5 @@ public class DataBenutzerliste extends DataManager<Long> {
 			return 0;
 		return collator.compare(a.anzeigename, b.anzeigename);
 	};
-	
+
 }

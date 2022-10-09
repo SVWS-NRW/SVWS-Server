@@ -11,6 +11,8 @@ import { App } from "./BaseApp";
 import { Schule } from "./schule/Schule";
 
 import type { Apps } from "./BaseApp";
+import { Benutzer } from "./schule/benutzerverwaltung/benutzer/Benutzer";
+import { Benutzergruppe } from "./schule/benutzerverwaltung/benutzergruppen/Benutzergruppe";
 import { Schueler } from "./schueler/Schueler";
 import { Faecher } from "./faecher/Faecher";
 import { Gost } from "./gost/Gost";
@@ -214,6 +216,8 @@ export class Main {
 		});
 		App.apps = {
 			schule: new Schule(),
+			benutzer: new Benutzer(),
+			benutzergruppe : new Benutzergruppe(),
 			schueler: new Schueler(),
 			kurse: new Kurse(),
 			klassen: new Klassen(),

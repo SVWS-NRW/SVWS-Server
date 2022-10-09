@@ -5,7 +5,9 @@ import type {
   KursListeEintrag,
   JahrgangsListeEintrag,
   FaecherListeEintrag,
-  ReligionEintrag
+  ReligionEintrag,
+  BenutzerListeEintrag,
+  BenutzergruppeListeEintrag
 } from '@svws-nrw/svws-core-ts'
 
 import type { Lehrer } from '../apps/lehrer/Lehrer'
@@ -15,6 +17,8 @@ import type { Klassen } from '../apps/klassen/Klassen'
 import type { Faecher } from '../apps/faecher/Faecher'
 import type { Jahrgaenge } from '../apps/jahrgaenge/Jahrgaenge'
 import type { Religionen } from '../apps/kataloge/religionen/Religionen'
+import { Benutzer } from '~/apps/schule/benutzerverwaltung/benutzer/Benutzer'
+import { Benutzergruppe } from '~/apps/schule/benutzerverwaltung/benutzergruppen/Benutzergruppe'
 
 // Das sind nur die Routen, die auch dynamische IDs haben können
 export type RouteAppTypesMap = {
@@ -25,6 +29,8 @@ export type RouteAppTypesMap = {
   jahrgaenge: Jahrgaenge
   faecher: Faecher
   religionen: Religionen
+  benutzer: Benutzer
+  benutzergruppe: Benutzergruppe
 }
 
 export type RouteItemTypesMap = {
@@ -35,6 +41,8 @@ export type RouteItemTypesMap = {
   jahrgaenge: JahrgangsListeEintrag
   faecher: FaecherListeEintrag
   religionen: ReligionEintrag
+  benutzer: BenutzerListeEintrag
+  benutzergruppe: BenutzergruppeListeEintrag
 }
 
 export type RouteNames = keyof RouteItemTypesMap

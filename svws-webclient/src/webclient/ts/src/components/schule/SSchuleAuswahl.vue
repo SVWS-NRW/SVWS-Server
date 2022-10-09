@@ -5,54 +5,14 @@
 		<template #content>
 			<div class="container mt-2">
 				<svws-ui-sidebar-menu-item
-					><template #label
-						><span>Schule bearbeiten</span></template
-					></svws-ui-sidebar-menu-item
+					v-for="item in menu_items"
+					:key="item.value"
+					@click="router.push({ name: item.value })"
 				>
-				<svws-ui-sidebar-menu-item
-					><template #label
-						><span>Einstellungen</span></template
-					></svws-ui-sidebar-menu-item
-				>
-				<svws-ui-sidebar-menu-item
-					@click="menubar_selected = 'schule-datenaustausch'"
-					><template #label
-						><span>Datenaustausch</span></template
-					></svws-ui-sidebar-menu-item
-				>
-				<svws-ui-sidebar-menu-item
-					><template #label
-						><span>Datensicherung</span></template
-					></svws-ui-sidebar-menu-item
-				>
-				<svws-ui-sidebar-menu-item
-					><template #label
-						><span>Schuljahreswechsel</span></template
-					></svws-ui-sidebar-menu-item
-				>
-				<svws-ui-sidebar-menu-item
-					><template #label><span></span></template
-				></svws-ui-sidebar-menu-item>
-				<svws-ui-sidebar-menu-item
-					><template #label
-						><span>Statistik IT.NRW</span></template
-					></svws-ui-sidebar-menu-item
-				>
-				<svws-ui-sidebar-menu-item
-					><template #label
-						><span>Werkzeuge</span></template
-					></svws-ui-sidebar-menu-item
-				>
-				<svws-ui-sidebar-menu-item
-					><template #label
-						><span>Benutzerverwaltung</span></template
-					></svws-ui-sidebar-menu-item
-				>
-				<svws-ui-sidebar-menu-item
-					><template #label
-						><span>Hilfe</span></template
-					></svws-ui-sidebar-menu-item
-				>
+					<template #label>
+						<span>{{ item.title }}</span>
+					</template>
+				</svws-ui-sidebar-menu-item>
 			</div>
 		</template>
 	</svws-ui-secondary-menu>
@@ -61,21 +21,18 @@
 <script setup lang="ts">
 	import { computed, WritableComputedRef } from "vue";
 	import { injectMainApp, Main } from "~/apps/Main";
+	import { router } from "~/router";
+	import { useAuswahlViaRoute } from "~/router/auswahlViaRoute";
 
-	const main: Main = injectMainApp();
-	const app = main.apps.schule;
-
-	const menubar_selected: WritableComputedRef<string> = computed({
-		get(): string {
-			if (main.config.selected_app) {
-				return main.config.selected_app;
-			}
-			return "";
-		},
-		set(val: string) {
-			if (val !== menubar_selected.value && main.config.selected_app) {
-				main.config.selected_app = val;
-			}
-		}
-	});
+	const menu_items = [
+		{ title: "Schule bearbeiten", value: "schule_bearbeiten" },
+		{ title: "Einstellungen", value: "einstellungen" },
+		{ title: "Datenaustausch", value: "datenaustausch" },
+		{ title: "Datensicherung", value: "datensicherung" },
+		{ title: "Schuljahreswechsel", value: "schuljahreswechsel" },
+		{ title: "Statistik IT.NRW", value: "statistikitnrw" },
+		{ title: "Werkzeuge", value: "werkzeuge" },
+		{ title: "Benutzerverwaltung", value: "benutzerverwaltung" },
+		{ title: "Hilfe", value: "hilfe" }
+	];
 </script>

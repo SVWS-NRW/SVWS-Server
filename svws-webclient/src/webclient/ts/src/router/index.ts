@@ -17,6 +17,9 @@ import SKurseRoute from "~/components/kurse/SKurseRoute";
 import SGostRoute from "~/components/gost/SGostRoute";
 import SSchuelerRoute from "~/components/schueler/SSchuelerRoute";
 import SStatistikRoute from "~/components/statistik/SStatistikRoute";
+import SBenutzerverwaltungRoute from "~/components/schule/benutzerverwaltung/SBenutzerverwaltungRoute";
+import SBenutzerRoute from "~/components/schule/benutzerverwaltung/benutzer/SBenutzerRoute";
+import SBenutzergruppeRoute from "~/components/schule/benutzerverwaltung/benutzergruppe/SBenutzergruppeRoute";
 
 export const router = createRouter({
 	history: createWebHashHistory(import.meta.env.BASE_URL ?? "/"),
@@ -32,6 +35,12 @@ export const router = createRouter({
 			children: [
 				// /schule
 				SchuleRoute,
+				// /schule/benutzerverwaltung
+				SBenutzerverwaltungRoute,
+				// /schule/benutzer
+				SBenutzerRoute,
+				// /schule/benutzergruppe
+				SBenutzergruppeRoute,
 				// /kataloge
 				SKatalogeRoute,
 				// /katalog/faecher/:fachId?

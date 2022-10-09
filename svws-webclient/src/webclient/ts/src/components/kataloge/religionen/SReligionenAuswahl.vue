@@ -4,9 +4,9 @@
 			><div>
 				<i-ri-arrow-left-line
 					class="inline-block cursor-pointer"
-					@click="main.config.selected_app = 'Kataloge'"
+					@click="router.push({ name: name })"
 				/>
-				Religionenauswahl 
+				Religionenauswahl
 			</div>
 		</template>
 		<template #header> </template>
@@ -20,14 +20,16 @@
 					:asc="true"
 				>
 					<template #footer>
-						<button @click="modalAdd.openModal()" class="flex h-10 w-10 items-center justify-center">
-							<svws-ui-icon><i-ri-add-line/></svws-ui-icon>
+						<button
+							@click="modalAdd.openModal()"
+							class="flex h-10 w-10 items-center justify-center"
+						>
+							<svws-ui-icon><i-ri-add-line /></svws-ui-icon>
 						</button>
-					
 					</template>
 				</svws-ui-table>
 			</div>
-			</template>
+		</template>
 	</svws-ui-secondary-menu>
 
 	<svws-ui-modal ref="modalAdd" size="medium">
@@ -57,13 +59,15 @@
 					type="text"
 					placeholder="Zeugnisbezeichnung"
 				/>
-				
-				
 			</div>
 		</template>
 
 		<template #modalActions>
-			<svws-ui-button v-if="reli_neu.kuerzel || reli_neu.textZeugnis || reli_neu.text" type="secondary" @click="deleteEntries()">
+			<svws-ui-button
+				v-if="reli_neu.kuerzel || reli_neu.textZeugnis || reli_neu.text"
+				type="secondary"
+				@click="deleteEntries()"
+			>
 				Felder Leeren
 			</svws-ui-button>
 			<svws-ui-button type="secondary" @click="modalAdd.closeModal">
@@ -74,19 +78,27 @@
 			</svws-ui-button>
 		</template>
 	</svws-ui-modal>
-
 </template>
 
 <script setup lang="ts">
 	import { Religion, ReligionEintrag } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, reactive, ref, Ref, WritableComputedRef } from "vue";
+	import {
+		computed,
+		ComputedRef,
+		reactive,
+		ref,
+		Ref,
+		WritableComputedRef
+	} from "vue";
 	import { App } from "~/apps/BaseApp";
+	import { router } from "~/router";
 	import { injectMainApp, Main } from "~/apps/Main";
 
+	const name = ref("kataloge");
 	const none_selected: Ref<ReligionEintrag> = ref({
 		id: -1,
-        text: "",
-        textZeugnis: "",
+		text: "",
+		textZeugnis: "",
 		kuerzel: "",
 		istSichtbar: false,
 		istAenderbar: false
@@ -106,14 +118,12 @@
 	const app = main.apps.religionen;
 	const modalAdd = ref();
 
-	const rows: ComputedRef<ReligionEintrag[] | undefined> = computed(
-		() => {
-			return app.auswahl.liste;
-		}
-	);
+	const rows: ComputedRef<ReligionEintrag[] | undefined> = computed(() => {
+		return app.auswahl.liste;
+	});
 
-	const selected: WritableComputedRef<ReligionEintrag | undefined> =
-		computed({
+	const selected: WritableComputedRef<ReligionEintrag | undefined> = computed(
+		{
 			get(): ReligionEintrag {
 				if (!app.auswahl.ausgewaehlt) return none_selected.value;
 				return app.auswahl.ausgewaehlt;
@@ -123,34 +133,36 @@
 					app.auswahl.ausgewaehlt = value;
 				}
 			}
-		});
-	
+		}
+	);
 
 	/**
 	 * Modalfenster-Neu-Anpsrechpartner
 	 */
-	const reli_neu : ReligionEintrag = reactive(new ReligionEintrag())
-	
-	const inputKatalogReligionenStatistik: ComputedRef<Religion[] | undefined> = computed(() => {
-		return Religion.values();
-	});
+	const reli_neu: ReligionEintrag = reactive(new ReligionEintrag());
 
-	async function saveEntries(){
+	const inputKatalogReligionenStatistik: ComputedRef<Religion[] | undefined> =
+		computed(() => {
+			return Religion.values();
+		});
+
+	async function saveEntries() {
 		//TODO  Den Attributswert von reli_neu.id von 0 auf null setzen.
-		if(reli_neu.kuerzel){
-			await App.api.createReligion(reli_neu,App.schema,reli_neu.kuerzel?.valueOf())
+		if (reli_neu.kuerzel) {
+			await App.api.createReligion(
+				reli_neu,
+				App.schema,
+				reli_neu.kuerzel?.valueOf()
+			);
 			modalAdd.value.closeModal();
 			app.auswahl.update_list();
-		}
-		else{
+		} else {
 			alert("Kürzel darf nicht leer sein");
 		}
 		deleteEntries();
-		
-		
 	}
-	function deleteEntries(){
-		reli_neu.kuerzel=null;
+	function deleteEntries() {
+		reli_neu.kuerzel = null;
 		reli_neu.text = null;
 		reli_neu.textZeugnis = null;
 	}

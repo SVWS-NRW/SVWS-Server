@@ -1,6 +1,6 @@
 <template>
 	<div class="flex h-full flex-row">
-		<div class="flex w-full flex-col px-4">
+		<!-- <div class="flex w-full flex-col px-4">
 			<svws-ui-header><span></span></svws-ui-header>
 			<svws-ui-tab-bar v-model="app.selectedTab.value">
 				<template #tabs>
@@ -11,7 +11,7 @@
 					</svws-ui-tab-panel>
 				</template>
 			</svws-ui-tab-bar>
-		</div>
+		</div> -->
 	</div>
 </template>
 

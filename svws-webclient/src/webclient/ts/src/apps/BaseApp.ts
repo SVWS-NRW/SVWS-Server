@@ -9,11 +9,15 @@ import type { Klassen } from "./klassen/Klassen";
 import type { Kurse } from "./kurse/Kurse";
 import type { Lehrer } from "./lehrer/Lehrer";
 import type { Schueler } from "./schueler/Schueler";
+import { Benutzer } from "./schule/benutzerverwaltung/benutzer/Benutzer";
+import { Benutzergruppe } from "./schule/benutzerverwaltung/benutzergruppen/Benutzergruppe";
 import type { Schule } from "./schule/Schule";
 
 /** Der Typ mit allen Apps als App */
 export type Apps = {
 	schule: Schule;
+	benutzer: Benutzer;
+	benutzergruppe: Benutzergruppe;
 	schueler: Schueler;
 	gost: Gost;
 	jahrgaenge: Jahrgaenge;

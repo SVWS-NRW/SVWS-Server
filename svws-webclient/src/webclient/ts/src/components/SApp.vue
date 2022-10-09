@@ -113,6 +113,7 @@
 	import { useRoute } from "vue-router";
 	import { injectMainApp } from "~/apps/Main";
 	import { router } from "~/router";
+	import { App } from "~/apps/BaseApp";
 
 	const route = useRoute();
 
@@ -261,6 +262,12 @@
 	watch(
 		() => route.name,
 		() => {
+			//Die Liste werden biem Navigieren aktualisiert.
+			if (route.name?.toString() === "benutzer")
+				App.apps.benutzer.auswahl.update_list();
+			if (route.name?.toString() === "benutzergruppe")
+				App.apps.benutzergruppe.auswahl.update_list();
+
 			selectedItems.value = [];
 		}
 	);
