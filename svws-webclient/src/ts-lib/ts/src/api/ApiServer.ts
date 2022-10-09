@@ -327,6 +327,35 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der GET-Methode getBenutzerMitGruppenID für den Zugriff auf die URL https://{hostname}/db/{schema}/benutzer/gruppe/{id : \d+}/benutzer
+	 * 
+	 * Liest die Benutzer der Benutzergruppe zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Benutzergruppendaten besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Die Benutzer der Benutzergruppe
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<BenutzerListeEintrag>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Benutzergruppendaten anzusehen.
+	 *   Code 404: Kein Benutzergruppen-Eintrag mit der angegebenen ID gefunden
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 * 
+	 * @returns Die Benutzer der Benutzergruppe
+	 */
+	public async getBenutzerMitGruppenID(schema : string, id : number) : Promise<List<BenutzerListeEintrag>> {
+		let path : string = "/db/{schema}/benutzer/gruppe/{id : \d+}/benutzer"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema)
+				.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		let ret = new Vector<BenutzerListeEintrag>();
+		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(BenutzerListeEintrag.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getKatalogBenutzerkompetenzen für den Zugriff auf die URL https://{hostname}/db/{schema}/benutzer/kompetenzen
 	 * 
 	 * Liefert den Katalog der Benutzerkompetenzen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Kataloge besitzt.

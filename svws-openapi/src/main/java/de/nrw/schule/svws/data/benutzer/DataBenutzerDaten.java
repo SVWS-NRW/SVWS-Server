@@ -106,8 +106,9 @@ public class DataBenutzerDaten extends DataManager<Long> {
     	for (DTOBenutzergruppe gruppe : gruppen) {
     		BenutzergruppeDaten gdaten = dtoMapperGruppe.apply(gruppe);
     		List<DTOBenutzergruppenKompetenz> gruppenkompetenzen = mapGruppenKompetenzen.get(gruppe.ID);
-    		for (Long kompetenzID : gruppenkompetenzen.stream().map(k -> k.Kompetenz_ID).distinct().sorted().toList())
-    			gdaten.kompetenzen.add(BenutzerKompetenz.getByID(kompetenzID).daten);
+    		if (gruppenkompetenzen != null)
+    		    for (Long kompetenzID : gruppenkompetenzen.stream().map(k -> k.Kompetenz_ID).distinct().sorted().toList())
+    		        gdaten.kompetenzen.add(BenutzerKompetenz.getByID(kompetenzID).daten);
     		daten.gruppen.add(gdaten);
     	}
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();

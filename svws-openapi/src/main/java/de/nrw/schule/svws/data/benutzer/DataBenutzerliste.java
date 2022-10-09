@@ -2,6 +2,7 @@ package de.nrw.schule.svws.data.benutzer;
 
 import java.io.InputStream;
 import java.text.Collator;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
@@ -64,8 +65,9 @@ public class DataBenutzerliste extends DataManager<Long> {
 		List<Long> benutzerIDs = conn
 				.queryNamed("DTOBenutzergruppenMitglied.gruppe_id", benutzergruppe.ID, DTOBenutzergruppenMitglied.class)
 				.stream().map(g -> g.Benutzer_ID).sorted().toList();
-		List<DTOViewBenutzerdetails> benutzer = conn.queryNamed("DTOViewBenutzerdetails.id.multiple", benutzerIDs,
-				DTOViewBenutzerdetails.class);
+		List<DTOViewBenutzerdetails> benutzer = benutzerIDs.size() == 0 
+		        ? Collections.emptyList()
+		        : conn.queryNamed("DTOViewBenutzerdetails.id.multiple", benutzerIDs, DTOViewBenutzerdetails.class);
 		if (benutzer == null)
 			throw OperationError.NOT_FOUND.exception();
 		// Erstelle die Benutzerliste und sortiere sie
