@@ -42,7 +42,7 @@ export class DataGostSchuelerFachwahlen extends BaseData<
 	public async on_select(): Promise<List<GostStatistikFachwahl> | undefined> {
 		if (!this.selected_list_item?.abiturjahr) return super.unselect();
 		return super._select((eintrag: GostJahrgang) =>
-			App.api.getGostAbiturjahrgangFachwahlen(
+			App.api.getGostAbiturjahrgangFachwahlstatistik(
 				App.schema,
 				eintrag.abiturjahr?.valueOf() || -1
 			)

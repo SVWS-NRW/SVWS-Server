@@ -1,6 +1,7 @@
 package de.nrw.schule.svws.data.gost;
 
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -124,6 +125,22 @@ public class DataGostAbiturjahrgangFachwahlen extends DataManager<Long> {
     		return Integer.compare(faecher.get(a.id).SortierungSekII, faecher.get(b.id).SortierungSekII); 
     	}).collect(Collectors.toList());
 	}
+	
+	
+    /**
+     * Ermittelt die Fachwahlen zu dem Abiturjahrgang dieses Objektes.
+     * 
+     * @param halbjahr_id   die ID des Halbjahres der gymnasialen Oberstufe, für welches die
+     *                      Fachwahlen bestimmt werden sollen 
+     * 
+     * @return eine HTTP-Response, bei einem Erfolg: Die Fachwahlen des Abiturjahrgangs dieses Objektes
+     */
+	public Response getSchuelerFachwahlenResponse(int halbjahr_id) {
+        List<GostFachwahl> daten = this.getSchuelerFachwahlen(GostHalbjahr.fromID(halbjahr_id));
+        if (daten.size() == 0)
+            return OperationError.NOT_FOUND.getResponse();
+        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+	}
 
 	
 	/**
@@ -135,24 +152,26 @@ public class DataGostAbiturjahrgangFachwahlen extends DataManager<Long> {
 	 * @return die Fachwahlen des Abiturjahrgangs dieses Objektes
 	 */
 	public List<GostFachwahl> getSchuelerFachwahlen(GostHalbjahr halbjahr) {
+	    if (halbjahr == null)
+	        return Collections.emptyList();
 		GostUtils.pruefeSchuleMitGOSt(conn);
     	// Bestimme alle Schüler-IDs des angegebenen Abiturjahrgangs
 		List<DTOViewGostSchuelerAbiturjahrgang> schuelerAbijahrgang = conn.queryNamed("DTOViewGostSchuelerAbiturjahrgang.abiturjahr", abijahr, DTOViewGostSchuelerAbiturjahrgang.class);
 		if ((schuelerAbijahrgang == null) || (schuelerAbijahrgang.size() == 0))
-			return null;
+			return Collections.emptyList();
 		List<Long> schuelerIDs = schuelerAbijahrgang.stream().map(s -> s.ID).collect(Collectors.toList());
     	List<DTOGostSchuelerFachbelegungen> fachbelegungen = conn.queryNamed("DTOGostSchuelerFachbelegungen.schueler_id.multiple", schuelerIDs, DTOGostSchuelerFachbelegungen.class);
 		if ((fachbelegungen == null) || (fachbelegungen.size() == 0))
-			return null;
+			return Collections.emptyList();
 		// Bestimme die Schülernamen
 		List<DTOSchueler> schuelerListe = conn.queryNamed("DTOSchueler.id.multiple", schuelerIDs, DTOSchueler.class);
 		if ((schuelerListe == null) || (schuelerListe.size() == 0))
-			return null;
+			return Collections.emptyList();
 		Map<Long, DTOSchueler> schuelerMap = schuelerListe.stream().collect(Collectors.toMap(s -> s.ID, s -> s));
 		// Lese die Fachliste aus der DB
 		Map<Long, DTOFach> faecher = conn.queryAll(DTOFach.class).stream().collect(Collectors.toMap(f -> f.ID, f -> f));
 		if ((faecher == null) || (faecher.size() == 0))
-			return null;
+			return Collections.emptyList();
 		
 		// Erstelle die Fachwahl-Objekte
 		Vector<GostFachwahl> fachwahlen = new Vector<>();
@@ -189,12 +208,8 @@ public class DataGostAbiturjahrgangFachwahlen extends DataManager<Long> {
 			if (schueler == null)
 				continue;
 			GostFachwahl fw = new GostFachwahl();
-			fw.id = fachbelegung.Fach_ID * 1000000000 + schueler.ID;
 			fw.fachID = fachbelegung.Fach_ID;
-			fw.halbjahrID = halbjahr.id;
 			fw.schuelerID = schueler.ID;
-			fw.schuelerNachname = schueler.Nachname;
-			fw.schuelerVorname = schueler.Vorname;
 			fw.kursartID = kursart.id;
 			fw.istSchriftlich = istSchriftlich;
 			fachwahlen.add(fw);

@@ -14,6 +14,7 @@ import de.nrw.schule.svws.core.data.gost.GostBlockungSchiene;
 import de.nrw.schule.svws.core.data.gost.GostBlockungsdaten;
 import de.nrw.schule.svws.core.data.gost.GostBlockungsergebnis;
 import de.nrw.schule.svws.core.data.gost.GostFach;
+import de.nrw.schule.svws.core.data.gost.GostFachwahl;
 import de.nrw.schule.svws.core.data.gost.GostJahrgang;
 import de.nrw.schule.svws.core.data.gost.GostJahrgangsdaten;
 import de.nrw.schule.svws.core.data.gost.GostLeistungen;
@@ -409,34 +410,65 @@ public class APIGost {
 
 
     /**
-     * Die OpenAPI-Methode für die Abfrage der Fachwahlen für den angegebenen Abitur-Jahrgang der 
+     * Die OpenAPI-Methode für die Abfrage der Fachwahlstatistik für den angegebenen Abitur-Jahrgang der 
      * gymnasialen Oberstufe im angegebenen Schema.
      *  
      * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param abiturjahr    der Abitur-Jahrgang 
      * @param request       die Informationen zur HTTP-Anfrage
      * 
-     * @return              die Liste der Fachwahlen der gymnasialen Oberstufe
+     * @return              die Fachwahlstatistik
      */
     @GET
-    @Path("/abiturjahrgang/{abiturjahr : \\d+}/fachwahlen")
+    @Path("/abiturjahrgang/{abiturjahr : \\d+}/fachwahlstatistik")
     @Operation(summary = "Gibt eine Übersicht von allen Fachwahlen des Abitur-Jahrganges der gymnasialen Oberstufe zurück.",
                description = "Erstellt eine Liste aller in der Datenbank für den angebenen Abitur-Jahrgang vorhanden "
                		       + "Fachwahlen der gymnasialen Oberstufe. "
                		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Fächerdaten "
                		       + "besitzt.")
-    @ApiResponse(responseCode = "200", description = "Eine Liste der Fachwahlen",
+    @ApiResponse(responseCode = "200", description = "Eine Fachwahlstatistik",
                  content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = GostStatistikFachwahl.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Fachwahlen anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Fachwahlen gefunden oder keine gymnasiale Oberstufe bei der Schulform vorhanden")
-    public Response getGostAbiturjahrgangFachwahlen(@PathParam("schema") String schema, @PathParam("abiturjahr") int abiturjahr, @Context HttpServletRequest request) {
+    public Response getGostAbiturjahrgangFachwahlstatistik(@PathParam("schema") String schema, @PathParam("abiturjahr") int abiturjahr, @Context HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
     		return (new DataGostAbiturjahrgangFachwahlen(conn, abiturjahr)).getList();
     	}
     }
-	
-   
-    
+
+
+
+    /**
+     * Die OpenAPI-Methode für die Abfrage der Fachwahlen für den angegebenen Abitur-Jahrgang der 
+     * gymnasialen Oberstufe im angegebenen Schema.
+     *  
+     * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param abiturjahr    der Abitur-Jahrgang 
+     * @param halbjahr      das Halbjahr, für welches die Fachwahlen ermittelt werden sollen.
+     * @param request       die Informationen zur HTTP-Anfrage
+     * 
+     * @return              die Liste der Fachwahlen der gymnasialen Oberstufe
+     */
+    @GET
+    @Path("/abiturjahrgang/{abiturjahr : \\d+}/halbjahr/{halbjahr : \\d+}/fachwahlen")
+    @Operation(summary = "Gibt eine Übersicht von allen Fachwahlen des Abitur-Jahrganges der gymnasialen Oberstufe zurück.",
+               description = "Erstellt eine Liste aller in der Datenbank für den angebenen Abitur-Jahrgang vorhanden "
+                           + "Fachwahlen der gymnasialen Oberstufe. "
+                           + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Fächerdaten "
+                           + "besitzt.")
+    @ApiResponse(responseCode = "200", description = "Eine Liste der Fachwahlen",
+                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = GostFachwahl.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Fachwahlen anzusehen.")
+    @ApiResponse(responseCode = "404", description = "Keine Fachwahlen gefunden oder keine gymnasiale Oberstufe bei der Schulform vorhanden")
+    public Response getGostAbiturjahrgangFachwahlen(@PathParam("schema") String schema, @PathParam("abiturjahr") int abiturjahr, 
+            @PathParam("halbjahr") int halbjahr, @Context HttpServletRequest request) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
+            return (new DataGostAbiturjahrgangFachwahlen(conn, abiturjahr)).getSchuelerFachwahlenResponse(halbjahr);
+        }
+    }
+
+
+
     /**
      * Die OpenAPI-Methode für die Abfrage der Laufbahnplanungsdaten der Gymnasialen Oberstufe eines Schülers.
      *  

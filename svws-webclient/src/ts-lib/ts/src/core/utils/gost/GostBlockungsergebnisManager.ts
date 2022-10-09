@@ -80,7 +80,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			this.ergebnis = new GostBlockungsergebnis();
 			this.ergebnis.id = id;
 			this.ergebnis.blockungID = blockungID;
-			this.ergebnis.name = datenManager.daten().name;
+			this.ergebnis.name = "Ergebnis (ID " + id + ")";
 			this.ergebnis.gostHalbjahr = datenManager.daten().gostHalbjahr;
 			this.initSchueler(schueler);
 			this.initFaecher(datenManager.faecherManager().toVector());

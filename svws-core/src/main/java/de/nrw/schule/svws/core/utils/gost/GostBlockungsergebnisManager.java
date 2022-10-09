@@ -78,7 +78,7 @@ public class GostBlockungsergebnisManager {
 		this.ergebnis = new GostBlockungsergebnis();
 		this.ergebnis.id = id;
 		this.ergebnis.blockungID = blockungID;
-		this.ergebnis.name = datenManager.daten().name;
+		this.ergebnis.name = "Ergebnis (ID " + id + ")";
 		this.ergebnis.gostHalbjahr = datenManager.daten().gostHalbjahr;
 		initSchueler(schueler);
 		initFaecher(datenManager.faecherManager().toVector());

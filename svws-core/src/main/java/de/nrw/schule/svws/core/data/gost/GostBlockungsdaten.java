@@ -47,6 +47,9 @@ public class GostBlockungsdaten {
 	/** Die für die Blockung angelegten Kurse */
 	public @NotNull List<@NotNull GostBlockungKurs> kurse = new Vector<>();
 
+	/** Die Fachwahlen für die Blockung */
+	public @NotNull List<@NotNull GostFachwahl> fachwahlen = new Vector<>();
+
 	/** Eine Liste der Ergebnisse, die der Blockungsdefintion zugeordnet sind.  */
 	public final @NotNull List<@NotNull GostBlockungsergebnisListeneintrag> ergebnisse = new Vector<>();
 

@@ -1,6 +1,7 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
 import { GostBlockungsergebnisListeneintrag, cast_de_nrw_schule_svws_core_data_gost_GostBlockungsergebnisListeneintrag } from '../../../core/data/gost/GostBlockungsergebnisListeneintrag';
 import { GostBlockungSchiene, cast_de_nrw_schule_svws_core_data_gost_GostBlockungSchiene } from '../../../core/data/gost/GostBlockungSchiene';
+import { GostFachwahl, cast_de_nrw_schule_svws_core_data_gost_GostFachwahl } from '../../../core/data/gost/GostFachwahl';
 import { List, cast_java_util_List } from '../../../java/util/List';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 import { GostBlockungRegel, cast_de_nrw_schule_svws_core_data_gost_GostBlockungRegel } from '../../../core/data/gost/GostBlockungRegel';
@@ -26,6 +27,8 @@ export class GostBlockungsdaten extends JavaObject {
 	public regeln : List<GostBlockungRegel> = new Vector();
 
 	public kurse : List<GostBlockungKurs> = new Vector();
+
+	public fachwahlen : List<GostFachwahl> = new Vector();
 
 	public readonly ergebnisse : List<GostBlockungsergebnisListeneintrag> = new Vector();
 
@@ -72,6 +75,11 @@ export class GostBlockungsdaten extends JavaObject {
 		if (!!obj.kurse) {
 			for (let elem of obj.kurse) {
 				result.kurse?.add(GostBlockungKurs.transpilerFromJSON(JSON.stringify(elem)));
+			}
+		}
+		if (!!obj.fachwahlen) {
+			for (let elem of obj.fachwahlen) {
+				result.fachwahlen?.add(GostFachwahl.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		if (!!obj.ergebnisse) {
@@ -122,6 +130,18 @@ export class GostBlockungsdaten extends JavaObject {
 				let elem = obj.kurse.get(i);
 				result += GostBlockungKurs.transpilerToJSON(elem);
 				if (i < obj.kurse.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
+		}
+		if (!obj.fachwahlen) {
+			result += '"fachwahlen" : []';
+		} else {
+			result += '"fachwahlen" : [ ';
+			for (let i : number = 0; i < obj.fachwahlen.size(); i++) {
+				let elem = obj.fachwahlen.get(i);
+				result += GostFachwahl.transpilerToJSON(elem);
+				if (i < obj.fachwahlen.size() - 1)
 					result += ',';
 			}
 			result += ' ]' + ',';
@@ -200,6 +220,20 @@ export class GostBlockungsdaten extends JavaObject {
 					let elem = obj.kurse.get(i);
 					result += GostBlockungKurs.transpilerToJSON(elem);
 					if (i < obj.kurse.size() - 1)
+						result += ',';
+				}
+				result += ' ]' + ',';
+			}
+		}
+		if (typeof obj.fachwahlen !== "undefined") {
+			if (!obj.fachwahlen) {
+				result += '"fachwahlen" : []';
+			} else {
+				result += '"fachwahlen" : [ ';
+				for (let i : number = 0; i < obj.fachwahlen.size(); i++) {
+					let elem = obj.fachwahlen.get(i);
+					result += GostFachwahl.transpilerToJSON(elem);
+					if (i < obj.fachwahlen.size() - 1)
 						result += ',';
 				}
 				result += ' ]' + ',';

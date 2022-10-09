@@ -194,9 +194,12 @@ public class DataGostBlockungsdaten extends DataManager<Long> {
 			GostUtils.pruefeSchuleMitGOSt(conn);
 			// Erstellen den Manager mit den Blockungsdaten
 			GostBlockungsdatenManager manager = getBlockungsdatenManagerFromDB(id);
+            daten = manager.daten();
+			// Bestimme die Fachwahlen aus der DB
+			GostHalbjahr halbjahr = GostHalbjahr.fromID(daten.gostHalbjahr);
+			daten.fachwahlen.addAll((new DataGostAbiturjahrgangFachwahlen(conn, daten.abijahrgang)).getSchuelerFachwahlen(halbjahr));
 			// Ergänze Blockungsliste
 			(new DataGostBlockungsergebnisse(conn)).getErgebnisListe(manager);
-			daten = manager.daten();
 			conn.transactionCommit();
 		} catch (Exception e) {
 			if (e instanceof WebApplicationException webAppException)
@@ -360,6 +363,8 @@ public class DataGostBlockungsdaten extends DataManager<Long> {
 			// Lege eine Kurs-Schienen-Zuordnung für das "leere" Ergebnis fest. Diese Kurse werden der ersten Schiene der neuen Blockung zugeordnet.
 			for (GostBlockungKurs kurs : manager.daten().kurse)
 				conn.transactionPersist(new DTOGostBlockungZwischenergebnisKursSchiene(ergebnisID, kurs.id, schienenID + 1));
+            // Bestimme die Fachwahlen aus der DB
+            daten.fachwahlen.addAll((new DataGostAbiturjahrgangFachwahlen(conn, daten.abijahrgang)).getSchuelerFachwahlen(gostHalbjahr));
             // Ergänze Blockungsliste
             conn.transactionCommit();
             conn.transactionBegin();
@@ -485,20 +490,20 @@ public class DataGostBlockungsdaten extends DataManager<Long> {
 		for (GostFachwahl fachwahl : fachwahlen) {
 			if (!schueler.containsKey(fachwahl.schuelerID))
 				schueler.put(fachwahl.schuelerID, fachwahl);
-			fachwahl2schueler.put(fachwahl.id, fachwahl.schuelerID);
 			KursblockungInputFachwahl fw = new KursblockungInputFachwahl();
-			fw.id = fachwahl.id;
+			fw.id = fachwahl.fachID * 1000000000 + fachwahl.schuelerID;
 			fw.schueler = fachwahl.schuelerID;
 			fw.fach = fachwahl.fachID;
 			fw.kursart = fachwahl.kursartID;
-			fw.representation = "%s;%s;%d;%d".formatted(fachwahl.schuelerNachname, fachwahl.schuelerVorname,
+			fw.representation = "%d;%d;%d".formatted(fachwahl.schuelerID,
 					fachwahl.fachID, fachwahl.kursartID);
 			input.fachwahlen.add(fw);
+            fachwahl2schueler.put(fw.id, fw.schueler);
 		}
 		for (GostFachwahl fachwahl : schueler.values()) {
 			KursblockungInputSchueler s = new KursblockungInputSchueler();
 			s.id = fachwahl.schuelerID;
-			s.representation = fachwahl.schuelerNachname + "," + fachwahl.schuelerVorname;
+			s.representation = "Schüler-ID " + fachwahl.schuelerID;
 			input.schueler.add(s);
 		}
 		KursblockungAlgorithmus algo = new KursblockungAlgorithmus();
@@ -509,10 +514,6 @@ public class DataGostBlockungsdaten extends DataManager<Long> {
 			DTODBAutoInkremente lastID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Blockung_Zwischenergebnisse");
 			long ergebnisID = lastID == null ? 1 : lastID.MaxID + 1;
 			for (KursblockungOutput output : outputs.outputs) {
-				// TODO Der Test unten funktioniert nicht ... output.input wurde scheinbar vom Algo nicht gesetzt
-				// if (output.input != id)
-				// throw new Exception("Die ID der Blockung ist bei dem Blockungsergebnis fehlerhaft.");
-
 				// Erstelle die Zurordnungen von Schülern zu Kursen und von Kursen zu Schienen. Ermittle dabei auch die
 				// Anzahl der Umwähler
 				HashSet<Long> setUmwaehler = new HashSet<>();
@@ -525,7 +526,6 @@ public class DataGostBlockungsdaten extends DataManager<Long> {
 
 				// Schreiben das Ergebnis in die Datenbank
 				DTOGostBlockungZwischenergebnis erg = new DTOGostBlockungZwischenergebnis(ergebnisID, id, false, false);
-				// TODO Bewertung
 				conn.transactionPersist(erg);
 				for (KursblockungOutputFachwahlZuKurs fzk : output.fachwahlenZuKurs) {
 					if (fzk.kurs == -1) // Beachte nur Fachwahlen, die zugeordnet werden konnten
