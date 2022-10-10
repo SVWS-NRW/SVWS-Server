@@ -2,6 +2,7 @@ package de.nrw.schule.svws.db.converter;
 
 import java.util.HashMap;
 import java.util.Map;
+
 import de.nrw.schule.svws.db.converter.current.BenutzerKompetenzConverter;
 import de.nrw.schule.svws.db.converter.current.BenutzerTypConverter;
 import de.nrw.schule.svws.db.converter.current.Boolean01Converter;
@@ -10,6 +11,8 @@ import de.nrw.schule.svws.db.converter.current.BooleanPlusMinusConverter;
 import de.nrw.schule.svws.db.converter.current.BooleanPlusMinusDefaultMinusConverter;
 import de.nrw.schule.svws.db.converter.current.BooleanPlusMinusDefaultPlusConverter;
 import de.nrw.schule.svws.db.converter.current.DatumConverter;
+import de.nrw.schule.svws.db.converter.current.DatumUhrzeitConverter;
+import de.nrw.schule.svws.db.converter.current.DavRessourceCollectionTypConverter;
 import de.nrw.schule.svws.db.converter.current.GeschlechtConverter;
 import de.nrw.schule.svws.db.converter.current.GeschlechtConverterFromString;
 import de.nrw.schule.svws.db.converter.current.KursFortschreibungsartConverter;
@@ -88,6 +91,8 @@ public abstract class DBAttributeConverter<X, Y> implements AttributeConverter<X
 			converter.put(BooleanPlusMinusDefaultMinusConverter.class.getSimpleName(), new BooleanPlusMinusDefaultMinusConverter());
 			converter.put(BooleanPlusMinusDefaultPlusConverter.class.getSimpleName(), new BooleanPlusMinusDefaultPlusConverter());
 			converter.put(DatumConverter.class.getSimpleName(), new DatumConverter());
+			converter.put(DatumUhrzeitConverter.class.getSimpleName(), new DatumUhrzeitConverter());
+			converter.put(DavRessourceCollectionTypConverter.class.getSimpleName(), new DavRessourceCollectionTypConverter());
 			converter.put(GeschlechtConverter.class.getSimpleName(), new GeschlechtConverter());
 			converter.put(GeschlechtConverterFromString.class.getSimpleName(), new GeschlechtConverterFromString());
 			converter.put(KursFortschreibungsartConverter.class.getSimpleName(), new KursFortschreibungsartConverter());
