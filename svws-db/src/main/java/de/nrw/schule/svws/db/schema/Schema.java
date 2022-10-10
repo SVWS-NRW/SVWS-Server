@@ -837,7 +837,13 @@ public class Schema {
 	/** Tabelle ZuordnungReportvorlagen */
 	public static final Tabelle_ZuordnungReportvorlagen tab_ZuordnungReportvorlagen = add(new Tabelle_ZuordnungReportvorlagen());
 
+	/** Tabelle DavSyncTokenSchueler */
+	public static final Tabelle_DavSyncTokenSchueler tab_DavSyncTokenSchueler = add(new Tabelle_DavSyncTokenSchueler());
 	
+    /** Tabelle DavSyncTokenLehrer */
+    public static final Tabelle_DavSyncTokenLehrer tab_DavSyncTokenLehrer = add(new Tabelle_DavSyncTokenLehrer());
+
+
 	// TODO Passe dieses Attribut an, sobald die Default-Daten nicht mehr über CSV-Dateien eingelesen werden
 	/** Die Tabellen, welche Default-Daten beinhalten und in diesem Zusammenhang aktualisiert werden sollen */
 	public static final SchemaTabelle[] tabellenDefaultDaten = new SchemaTabelle[] {

@@ -262,6 +262,8 @@ import de.nrw.schule.svws.db.dto.current.svws.client.DTOClientKonfigurationBenut
 import de.nrw.schule.svws.db.dto.current.svws.client.DTOClientKonfigurationGlobal;
 import de.nrw.schule.svws.db.dto.current.svws.dav.DTODavRessource;
 import de.nrw.schule.svws.db.dto.current.svws.dav.DTODavRessourceCollection;
+import de.nrw.schule.svws.db.dto.current.svws.dav.DTODavSyncTokenLehrer;
+import de.nrw.schule.svws.db.dto.current.svws.dav.DTODavSyncTokenSchueler;
 import de.nrw.schule.svws.db.dto.current.svws.dav.DTODavRessourceCollectionsACL;
 import de.nrw.schule.svws.db.dto.current.svws.db.DTOCoreTypeVersion;
 import de.nrw.schule.svws.db.dto.current.svws.db.DTODBAutoInkremente;
@@ -575,6 +577,8 @@ public class DTOs {
              mapDTOName2DTOClass.put(DTOClientKonfigurationGlobal.class.getSimpleName(),DTOClientKonfigurationGlobal.class);
              mapDTOName2DTOClass.put(DTODavRessource.class.getSimpleName(),DTODavRessource.class);
              mapDTOName2DTOClass.put(DTODavRessourceCollection.class.getSimpleName(),DTODavRessourceCollection.class);
+             mapDTOName2DTOClass.put(DTODavSyncTokenLehrer.class.getSimpleName(),DTODavSyncTokenLehrer.class);
+             mapDTOName2DTOClass.put(DTODavSyncTokenSchueler.class.getSimpleName(),DTODavSyncTokenSchueler.class);
              mapDTOName2DTOClass.put(DTODavRessourceCollectionsACL.class.getSimpleName(),DTODavRessourceCollectionsACL.class);
              mapDTOName2DTOClass.put(DTOCoreTypeVersion.class.getSimpleName(),DTOCoreTypeVersion.class);
              mapDTOName2DTOClass.put(DTODBAutoInkremente.class.getSimpleName(),DTODBAutoInkremente.class);
@@ -892,6 +896,8 @@ public class DTOs {
              mapTablename2DTOClass.put("DavRessources",DTODavRessource.class);
              mapTablename2DTOClass.put("DavRessourceCollections",DTODavRessourceCollection.class);
              mapTablename2DTOClass.put("DavRessourceCollectionsACL",DTODavRessourceCollectionsACL.class);
+             mapTablename2DTOClass.put("DavSyncTokenLehrer",DTODavSyncTokenLehrer.class);
+             mapTablename2DTOClass.put("DavSyncTokenSchueler",DTODavSyncTokenSchueler.class);
              mapTablename2DTOClass.put("SVWS_Core_Type_Versionen",DTOCoreTypeVersion.class);
              mapTablename2DTOClass.put("SVWS_DB_AutoInkremente",DTODBAutoInkremente.class);
              mapTablename2DTOClass.put("SVWS_DB_Version",DTODBVersion.class);
