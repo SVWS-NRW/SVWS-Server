@@ -519,6 +519,7 @@
         <class>de.nrw.schule.svws.db.dto.current.svws.client.DTOClientKonfigurationGlobal</class>
         <class>de.nrw.schule.svws.db.dto.current.svws.dav.DTODavRessource</class>
         <class>de.nrw.schule.svws.db.dto.current.svws.dav.DTODavRessourceCollection</class>
+        <class>de.nrw.schule.svws.db.dto.current.svws.dav.DTODavRessourceCollectionsACL</class>
         <class>de.nrw.schule.svws.db.dto.current.svws.db.DTOCoreTypeVersion</class>
         <class>de.nrw.schule.svws.db.dto.current.svws.db.DTODBAutoInkremente</class>
         <class>de.nrw.schule.svws.db.dto.current.svws.db.DTODBVersion</class>
@@ -808,6 +809,7 @@
         <class>de.nrw.schule.svws.db.dto.rev8.svws.client.Rev8DTOClientKonfigurationGlobal</class>
         <class>de.nrw.schule.svws.db.dto.rev8.svws.dav.Rev8DTODavRessource</class>
         <class>de.nrw.schule.svws.db.dto.rev8.svws.dav.Rev8DTODavRessourceCollection</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.svws.dav.Rev8DTODavRessourceCollectionsACL</class>
         <class>de.nrw.schule.svws.db.dto.rev8.svws.db.Rev8DTOCoreTypeVersion</class>
         <class>de.nrw.schule.svws.db.dto.rev8.svws.db.Rev8DTODBAutoInkremente</class>
         <class>de.nrw.schule.svws.db.dto.rev8.svws.db.Rev8DTODBVersion</class>

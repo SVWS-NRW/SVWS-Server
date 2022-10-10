@@ -1,9 +1,15 @@
 package de.nrw.schule.svws.db.dto.current.svws.dav;
 
 import de.nrw.schule.svws.db.DBEntityManager;
+import de.nrw.schule.svws.db.converter.current.DatumUhrzeitConverter;
+import de.nrw.schule.svws.db.converter.current.DavRessourceCollectionTypConverter;
+
+import de.nrw.schule.svws.core.types.dav.DavRessourceCollectionTyp;
+
 
 import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.NamedQuery;
@@ -11,6 +17,13 @@ import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import de.nrw.schule.svws.csv.converter.current.DatumUhrzeitConverterSerializer;
+import de.nrw.schule.svws.csv.converter.current.DatumUhrzeitConverterDeserializer;
+import de.nrw.schule.svws.csv.converter.current.DavRessourceCollectionTypConverterSerializer;
+import de.nrw.schule.svws.csv.converter.current.DavRessourceCollectionTypConverterDeserializer;
+
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle DavRessourceCollections.
  * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
@@ -51,7 +64,10 @@ public class DTODavRessourceCollection {
 	/** Gibt den Typ dieser Sammlung an, bspw Adressbuch oder Kalender */
 	@Column(name = "Typ")
 	@JsonProperty
-	public String Typ;
+	@Convert(converter=DavRessourceCollectionTypConverter.class)
+	@JsonSerialize(using=DavRessourceCollectionTypConverterSerializer.class)
+	@JsonDeserialize(using=DavRessourceCollectionTypConverterDeserializer.class)
+	public DavRessourceCollectionTyp Typ;
 
 	/** Der Anzeigename der Ressourcensammlung */
 	@Column(name = "Anzeigename")
@@ -66,6 +82,9 @@ public class DTODavRessourceCollection {
 	/** Das SyncToken der Ressourcensammlung */
 	@Column(name = "SyncToken")
 	@JsonProperty
+	@Convert(converter=DatumUhrzeitConverter.class)
+	@JsonSerialize(using=DatumUhrzeitConverterSerializer.class)
+	@JsonDeserialize(using=DatumUhrzeitConverterDeserializer.class)
 	public String SyncToken;
 
 	/**
@@ -83,7 +102,7 @@ public class DTODavRessourceCollection {
 	 * @param Anzeigename   der Wert für das Attribut Anzeigename
 	 * @param SyncToken   der Wert für das Attribut SyncToken
 	 */
-	public DTODavRessourceCollection(final Long Benutzer_ID, final Long ID, final String Typ, final String Anzeigename, final String SyncToken) {
+	public DTODavRessourceCollection(final Long Benutzer_ID, final Long ID, final DavRessourceCollectionTyp Typ, final String Anzeigename, final String SyncToken) {
 		if (Benutzer_ID == null) { 
 			throw new NullPointerException("Benutzer_ID must not be null");
 		}

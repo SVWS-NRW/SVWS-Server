@@ -27,6 +27,7 @@ public class Tabelle_DavRessourceCollections extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte Typ */
 	public SchemaTabelleSpalte col_Typ = add("Typ", SchemaDatentypen.VARCHAR, false).setDatenlaenge(80)
 		.setNotNull()
+		.setConverter("DavRessourceCollectionTypConverter")
 		.setJavaComment("Gibt den Typ dieser Sammlung an, bspw Adressbuch oder Kalender");
 
 	/** Die Definition der Tabellenspalte Anzeigename */
@@ -41,6 +42,7 @@ public class Tabelle_DavRessourceCollections extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte SyncToken */
 	public SchemaTabelleSpalte col_SyncToken = add("SyncToken", SchemaDatentypen.DATETIME, false)
 		.setNotNull()
+		.setConverter("DatumUhrzeitConverter")
 		.setJavaComment("Das SyncToken der Ressourcensammlung");
 
 

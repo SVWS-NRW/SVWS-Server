@@ -1,9 +1,12 @@
 package de.nrw.schule.svws.db.dto.current.svws.dav;
 
 import de.nrw.schule.svws.db.DBEntityManager;
+import de.nrw.schule.svws.db.converter.current.DatumUhrzeitConverter;
+
 
 import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.NamedQuery;
@@ -11,6 +14,11 @@ import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import de.nrw.schule.svws.csv.converter.current.DatumUhrzeitConverterSerializer;
+import de.nrw.schule.svws.csv.converter.current.DatumUhrzeitConverterDeserializer;
+
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle DavRessources.
  * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
@@ -60,6 +68,9 @@ public class DTODavRessource {
 	/** Das Datum an dem die Ressource zuletzt geändert wurde, als Synctoken einsetzbar */
 	@Column(name = "lastModified")
 	@JsonProperty
+	@Convert(converter=DatumUhrzeitConverter.class)
+	@JsonSerialize(using=DatumUhrzeitConverterSerializer.class)
+	@JsonDeserialize(using=DatumUhrzeitConverterDeserializer.class)
 	public String lastModified;
 
 	/** Die Art der Kalenderressource, wenn es eine Kalenderressource ist */
@@ -70,11 +81,17 @@ public class DTODavRessource {
 	/** Der Start der Kalenderressource, wenn es eine Kalenderressource ist */
 	@Column(name = "KalenderStart")
 	@JsonProperty
+	@Convert(converter=DatumUhrzeitConverter.class)
+	@JsonSerialize(using=DatumUhrzeitConverterSerializer.class)
+	@JsonDeserialize(using=DatumUhrzeitConverterDeserializer.class)
 	public String KalenderStart;
 
 	/** Das Ende der Kalenderressource, wenn es eines Kalenderressource ist */
 	@Column(name = "KalenderEnde")
 	@JsonProperty
+	@Convert(converter=DatumUhrzeitConverter.class)
+	@JsonSerialize(using=DatumUhrzeitConverterSerializer.class)
+	@JsonDeserialize(using=DatumUhrzeitConverterDeserializer.class)
 	public String KalenderEnde;
 
 	/** Die Daten der Ressource */

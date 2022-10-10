@@ -32,6 +32,7 @@ public class Tabelle_DavRessources extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte lastModified */
 	public SchemaTabelleSpalte col_lastModified = add("lastModified", SchemaDatentypen.DATETIME, false)
 		.setNotNull()
+		.setConverter("DatumUhrzeitConverter")
 		.setJavaComment("Das Datum an dem die Ressource zuletzt geändert wurde, als Synctoken einsetzbar");
 
 	/** Die Definition der Tabellenspalte KalenderTyp */
@@ -42,11 +43,13 @@ public class Tabelle_DavRessources extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte KalenderStart */
 	public SchemaTabelleSpalte col_KalenderStart = add("KalenderStart", SchemaDatentypen.DATETIME, false)
 		.setNotNull()
+		.setConverter("DatumUhrzeitConverter")
 		.setJavaComment("Der Start der Kalenderressource, wenn es eine Kalenderressource ist");
 
 	/** Die Definition der Tabellenspalte KalenderEnde */
 	public SchemaTabelleSpalte col_KalenderEnde = add("KalenderEnde", SchemaDatentypen.DATETIME, false)
 		.setNotNull()
+		.setConverter("DatumUhrzeitConverter")
 		.setJavaComment("Das Ende der Kalenderressource, wenn es eines Kalenderressource ist");
 
 	/** Die Definition der Tabellenspalte ressource */
