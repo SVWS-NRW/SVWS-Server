@@ -54,6 +54,17 @@ export class DataGostKursblockung extends BaseData<
 		return blockungsdaten;
 	}
 
+	/**
+	 * Setzt die Daten auf die Default-Werte zurück.
+	 *
+	 * @returns {Promise<undefined>} Die Daten als Promise
+	 */
+	public async unselect(): Promise<undefined> {
+		this._daten = undefined;
+		await this.listKursblockungsergebnisse.update_list(undefined);
+		return undefined;
+	}
+	
 	/** Übergibt als Promise die Listeneinträge  */
 	public async ergebnisse(): Promise<List<GostBlockungsergebnisListeneintrag>> {
 		return this._daten?.ergebnisse || new Vector<GostBlockungsergebnisListeneintrag>()
