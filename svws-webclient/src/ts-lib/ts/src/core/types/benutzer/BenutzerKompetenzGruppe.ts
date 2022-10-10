@@ -43,6 +43,8 @@ export class BenutzerKompetenzGruppe extends JavaObject {
 
 	public static readonly CARDDAV : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("CARDDAV", 12, new BenutzerKompetenzGruppenKatalogEintrag(2000, "Addressbuch (CardDAV)", 1, 4));
 
+	public static readonly CALDAV : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("CALDAV", 13, new BenutzerKompetenzGruppenKatalogEintrag(3000, "Kalender (CaldDAV)", 1, 5));
+
 	public static VERSION : number = 1;
 
 	public readonly daten : BenutzerKompetenzGruppenKatalogEintrag;

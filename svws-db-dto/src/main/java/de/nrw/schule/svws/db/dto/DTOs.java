@@ -262,9 +262,9 @@ import de.nrw.schule.svws.db.dto.current.svws.client.DTOClientKonfigurationBenut
 import de.nrw.schule.svws.db.dto.current.svws.client.DTOClientKonfigurationGlobal;
 import de.nrw.schule.svws.db.dto.current.svws.dav.DTODavRessource;
 import de.nrw.schule.svws.db.dto.current.svws.dav.DTODavRessourceCollection;
+import de.nrw.schule.svws.db.dto.current.svws.dav.DTODavRessourceCollectionsACL;
 import de.nrw.schule.svws.db.dto.current.svws.dav.DTODavSyncTokenLehrer;
 import de.nrw.schule.svws.db.dto.current.svws.dav.DTODavSyncTokenSchueler;
-import de.nrw.schule.svws.db.dto.current.svws.dav.DTODavRessourceCollectionsACL;
 import de.nrw.schule.svws.db.dto.current.svws.db.DTOCoreTypeVersion;
 import de.nrw.schule.svws.db.dto.current.svws.db.DTODBAutoInkremente;
 import de.nrw.schule.svws.db.dto.current.svws.db.DTODBVersion;
