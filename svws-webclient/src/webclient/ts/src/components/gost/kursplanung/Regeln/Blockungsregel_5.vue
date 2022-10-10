@@ -25,6 +25,7 @@ const regeln: ComputedRef<GostBlockungRegel[]> = computed(() => {
 })
 
 const regel: Ref<GostBlockungRegel | undefined> = ref(undefined)
+const allow_regeln: ComputedRef<boolean> = computed(()=> app.blockungsergebnisauswahl.liste.length === 1)
 const speichern = async () => {
 	if (!regel.value || !schueler.value) return
 	regel.value.parameter.set(0, schueler.value.id)
@@ -53,7 +54,7 @@ const name = (id: number) => {
 	<div>
 		<div class="flex justify-between my-4">
 			<h5 class="headline-5">{{ regel_typ.bezeichnung }}</h5>
-			<svws-ui-badge v-if="!regel" size="tiny" variant="primary" @click="regel_hinzufuegen" class="cursor-pointer">Regel
+			<svws-ui-badge v-if="!regel && allow_regeln" size="tiny" variant="primary" @click="regel_hinzufuegen" class="cursor-pointer">Regel
 				hinzufügen</svws-ui-badge>
 		</div>
 		<div v-for="r in regeln" :key="r.id" class="flex justify-between">
@@ -62,11 +63,11 @@ const name = (id: number) => {
 				{{`${faechermanager?.get(manager?.getKurs(r.parameter.get(1).valueOf())?.fach_id.valueOf()||-1)?.kuerzel}
 				${kurs.kursart}${kurs.nummer}${kurs.suffix ? "-"+kurs.suffix:""}`}} verboten
 			</div>
-			<svws-ui-icon type="danger" class="cursor-pointer" @click="regel_entfernen(r)">
+			<svws-ui-icon v-if="allow_regeln" type="danger" class="cursor-pointer" @click="regel_entfernen(r)">
 				<i-ri-delete-bin-2-line />
 			</svws-ui-icon>
 		</div>
-		<div v-if="regel">
+		<div v-if="regel && allow_regeln">
 			<div class="inline-flex items-baseline">
 				Verbiete
 				<parameter-schueler v-model="schueler" />

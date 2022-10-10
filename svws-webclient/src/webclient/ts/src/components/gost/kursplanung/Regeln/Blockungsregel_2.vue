@@ -5,6 +5,7 @@ import { computed, ComputedRef, Ref, ref } from "vue";
 
 const main: Main = injectMainApp();
 const app = main.apps.gost;
+const allow_regeln: ComputedRef<boolean> = computed(()=> app.blockungsergebnisauswahl.liste.length === 1)
 const manager = app.dataKursblockung.manager
 const faechermanager = app.dataFaecher.manager
 
@@ -57,18 +58,18 @@ const kursbezeichnung = (regel: GostBlockungRegel): string => {
 	<div>
 		<div class="flex justify-between my-4">
 			<h5 class="headline-5">{{ regel_typ.bezeichnung }}</h5>
-			<svws-ui-badge v-if="!regel" size="tiny" variant="primary" @click="regel_hinzufuegen" class="cursor-pointer">Regel
+			<svws-ui-badge v-if="!regel && allow_regeln" size="tiny" variant="primary" @click="regel_hinzufuegen" class="cursor-pointer">Regel
 				hinzufügen</svws-ui-badge>
 		</div>
 		<div v-for="r in regeln" :key="r.id" class="flex justify-between">
 			<div class="cursor-pointer" @click="regel = (regel !== r) ? r:undefined" :class="{'bg-slate-200':r===regel}">
 				{{kursbezeichnung(r)}} auf Schiene {{r.parameter.get(1)}} fixiert
 			</div>
-			<svws-ui-icon type="danger" class="cursor-pointer" @click="regel_entfernen(r)">
+			<svws-ui-icon v-if="allow_regeln" type="danger" class="cursor-pointer" @click="regel_entfernen(r)">
 				<i-ri-delete-bin-2-line />
 			</svws-ui-icon>
 		</div>
-		<div v-if="regel">
+		<div v-if="regel && allow_regeln">
 			<div class="inline-flex items-baseline">
 				Fixiere
 				<parameter-kurs v-model="kurs" />

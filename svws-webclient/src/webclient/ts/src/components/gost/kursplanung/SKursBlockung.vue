@@ -34,7 +34,8 @@
 		<template v-if="!kurs_blockungsergebnis">
 			<td></td>
 		</template>
-		<drop-data 
+		<drop-data
+			v-if="allow_regeln"
 			v-for="(schiene) in schienen"
 			:key="schiene.id"
 			class="border border-[#7f7f7f]/20 text-center"
@@ -64,7 +65,7 @@
 					</svws-ui-icon>
 				</svws-ui-badge>
 			</drag-data>
-			
+			<!-- Es dürfen keine Regeln erstellt werden -->
 			<template v-else>
 				<svws-ui-icon class="cursor-pointer px-4 py-2" @click="sperren_regel_toggle(schiene.nummer)">
 					<i-ri-forbid-fill v-if="sperr_regeln.find(r=>r.parameter.get(1) === schiene.nummer)" class="inline-block text-red-500" />
@@ -72,7 +73,17 @@
 				</svws-ui-icon>
 			</template>
 		</drop-data>
-		<template v-if="setze_kursdifferenz && kurs_blockungsergebnis">
+		<template v-else v-for="schiene in schienen" :key="schiene.nummer">
+			<td 
+				class="border border-[#7f7f7f]/20 text-center"
+				:class="{'border-t-2': kursdifferenz}"
+			>
+				<svws-ui-badge v-if="kurs_blockungsergebnis?.schienenID === schiene.id" size="tiny"  variant="highlight" >
+					{{ kurs_blockungsergebnis?.schueler.size() }}
+				</svws-ui-badge>
+			</td>
+		</template>
+		<template v-if="setze_kursdifferenz && kurs_blockungsergebnis && allow_regeln">
 			<td
 				class="border border-[#7f7f7f]/20 text-center border-t-2 whitespace-nowrap w-2"
 				:rowspan="kursdifferenz[0]" :colspan="kurszahl_anzeige?2:1"
@@ -87,7 +98,7 @@
 				<div v-else class="cursor-pointer underline decoration-dashed underline-offset-2">{{kursdifferenz[2]}}</div>
 			</td>
 		</template>
-		<template v-if="!kurs_blockungsergebnis">
+		<template v-if="!kurs_blockungsergebnis && allow_regeln">
 			<td class="bg-white"></td>
 		</template>
 		<!-- <td class="border-none bg-white"></td> -->
@@ -214,6 +225,8 @@ const fixier_regel: ComputedRef<GostBlockungRegel | undefined> = computed(() => 
 	const regel = regeln?.find(r => r.typ === GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ && r.parameter.get(0) === props.kurs.id)
 	return regel
 })
+
+const allow_regeln: ComputedRef<boolean> = computed(()=> app.blockungsergebnisauswahl.liste.length === 1)
 
 const is_drop_zone = (schiene: GostBlockungSchiene) => {
 	const kurs = main.config.drag_and_drop_data?.kurs;

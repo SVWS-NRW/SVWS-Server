@@ -25,6 +25,7 @@ const regeln: ComputedRef<GostBlockungRegel[]> = computed(() => {
 	return arr
 })
 
+const allow_regeln: ComputedRef<boolean> = computed(()=> app.blockungsergebnisauswahl.liste.length === 1)
 const regel: Ref<GostBlockungRegel | undefined> = ref(undefined)
 const speichern = async () => {
 	if (!regel.value) return
@@ -59,7 +60,7 @@ const kursbezeichnung = (regel: GostBlockungRegel): string => {
 		<div class="flex justify-between my-4">
 			<h5 class="headline-5">{{ regel_typ.bezeichnung }}</h5>
 			<svws-ui-badge 
-				v-if="!regel"
+				v-if="!regel && allow_regeln"
 				size="tiny"
 				variant="primary"
 				class="cursor-pointer"
@@ -72,11 +73,11 @@ const kursbezeichnung = (regel: GostBlockungRegel): string => {
 				:class="{'bg-slate-200':r===regel}"
 				@click="regel = (regel !== r) ? r:undefined"
 			>{{kursbezeichnung(r)}} auf Schiene {{r.parameter.get(1)}} gesperrt</div>
-			<svws-ui-icon type="danger" class="cursor-pointer" @click="regel_entfernen(r)">
+			<svws-ui-icon v-if="allow_regeln" type="danger" class="cursor-pointer" @click="regel_entfernen(r)">
 				<i-ri-delete-bin-2-line />
 			</svws-ui-icon>
 		</div>
-		<div v-if="regel">
+		<div v-if="regel && allow_regeln">
 			<div class="inline-flex items-baseline gap-1">
 				Sperre
 				<parameter-kurs v-model="kurs" />

@@ -116,7 +116,7 @@
 								<td class="table--cell table--cell-padded table--border" >
 										{{ ergebnis.id }}
 										<svws-ui-icon v-if="ergebnis.istVorlage" class="inline-block"><i-ri-pushpin-fill/></svws-ui-icon>
-										<svws-ui-icon v-else @click="make_vorlage(ergebnis)" class="inline-block opacity-0 hover:opacity-25"><i-ri-pushpin-line/></svws-ui-icon>
+										<svws-ui-icon v-if="!ergebnis.istVorlage && ergebnis === selected_ergebnis" @click="make_vorlage(ergebnis)" class="inline-block opacity-0 hover:opacity-25"><i-ri-pushpin-line/></svws-ui-icon>
 
 								</td>
 								<td class="table--cell table--cell-padded table--border" >

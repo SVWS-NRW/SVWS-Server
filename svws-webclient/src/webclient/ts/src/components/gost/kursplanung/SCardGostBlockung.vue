@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-content-card title="Übersicht über die Blockung / Festlegung von Regeln">
+	<svws-ui-content-card :title="`Übersicht über die Blockung ${allow_regeln ? '/ Festlegung von Regeln':''}`">
 		<div class="flex flex-row">
 			<div class="w-full flex-none sm:-mx-6 lg:-mx-8">
 				<div class="py-2 align-middle sm:px-6 lg:px-8">
@@ -30,10 +30,12 @@
 										<template v-else>
 											<span class="px-3 underline decoration-dashed underline-offset-2 cursor-text" @click="edit_schienenname = s">{{s.nummer}}</span>
 										</template>
-										<svws-ui-icon class="text-red-500 cursor-pointer" @click="del_schiene(s)"><i-ri-delete-bin-2-line/></svws-ui-icon>
+										<svws-ui-icon v-if="allow_regeln" class="text-red-500 cursor-pointer" @click="del_schiene(s)"><i-ri-delete-bin-2-line/></svws-ui-icon>
 									</div>
 									</td>
-									<td class="bg-[#329cd5] rounded-l-none rounded-lg border-none cursor-pointer" rowspan="5" @click="add_schiene"><div class="px-2" >+</div></td><td rowspan="4" class="bg-white"></td>
+									<template v-if="allow_regeln">
+										<td class="bg-[#329cd5] rounded-l-none rounded-lg border-none cursor-pointer" rowspan="5" @click="add_schiene"><div class="px-2" >+</div></td><td rowspan="4" class="bg-white"></td>
+									</template>
 								</tr>
 								<tr>
 									<td class="border border-[#7f7f7f]/20 " colspan="3">
@@ -67,10 +69,12 @@
 									<td class="border border-[#7f7f7f]/20 text-center">Diff</td>
 									<!--Schienen-->
 									<s-drag-schiene
+										v-if="allow_regeln"
 										v-for="s in schienen"
 										:key="s.id"
 										:schiene="s"
 									/>
+									<td v-else :colspan="schienen.length" class="text-center">Regeln können nicht in Ergebnissen erstellt werden</td>
 								</tr>
 								<tr></tr>
 							</thead>
@@ -94,6 +98,7 @@
 		GostBlockungKurs,
 		GostBlockungSchiene,
 		GostBlockungsergebnisManager,
+		List,
 		Vector
 	} from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, Ref, ref } from "vue";
@@ -107,14 +112,14 @@
 	const sort_by: Ref<'kursart'|'fach_id'> = ref('fach_id')
 	const edit_schienenname: Ref<GostBlockungSchiene|undefined> = ref()
 
-	const kurse: ComputedRef<Vector<GostBlockungKurs>> = computed(() => {
+	const kurse: ComputedRef<List<GostBlockungKurs>> = computed(() => {
 		return (
 			app.dataKursblockung.daten?.kurse ||
 			new Vector<GostBlockungKurs>()
 		);
 	});
 
-	const sorted_kurse: ComputedRef<Array<GostBlockungKurs>|Vector<GostBlockungKurs>> = computed(() => {
+	const sorted_kurse: ComputedRef<Array<GostBlockungKurs>|List<GostBlockungKurs>> = computed(() => {
 		const arr = kurse.value.toArray(new Array<GostBlockungKurs>())
 		if (sort_by.value === 'kursart') 
 			return arr.sort((a,b)=>a.kursart-b.kursart)
@@ -130,6 +135,8 @@
 	const manager: ComputedRef<GostBlockungsergebnisManager | undefined> = computed(() => {
 		return app.dataKursblockungsergebnis.manager
 	});
+
+	const allow_regeln: ComputedRef<boolean> = computed(()=> app.blockungsergebnisauswahl.liste.length === 1)
 
 	function getAnzahlSchuelerSchiene(idSchiene: number): number {
 		return manager.value?.getAnzahlSchuelerSchiene(idSchiene) || 0;
@@ -151,7 +158,7 @@
 		}
 	}
 
-async function del_schiene(s: GostBlockungSchiene) {
-	await app.dataKursblockung.del_blockung_schiene(s)
-}
+	async function del_schiene(s: GostBlockungSchiene) {
+		await app.dataKursblockung.del_blockung_schiene(s)
+	}
 </script>
