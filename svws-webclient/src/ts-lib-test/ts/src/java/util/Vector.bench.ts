@@ -19,5 +19,16 @@ describe.each([s, n, l])(
 		bench( "toArray", () => {
 				v.toArray(new Array<typeof a>());
 			});
+		bench( "[...v] destructure", () => {
+				[...v];
+			});
+		bench( "for of loop", () => {
+				let arr = []
+				for (const e of v) arr.push(e)
+			});
+		bench( "for loop", () => {
+				let arr = []
+				for (let i = 0; i < v.size(); i++) arr.push(v.get(i))
+			});
 	}
 );
