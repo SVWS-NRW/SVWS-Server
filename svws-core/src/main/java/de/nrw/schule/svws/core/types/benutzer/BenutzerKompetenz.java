@@ -224,7 +224,7 @@ public enum BenutzerKompetenz {
     
     /** Allgemeine Berechtigung zum Ansehen generierter Kalender abhängig von der Funktion des Nutzers */
     KALENDER_FUNKTIONSBEZOGEN_ANSEHEN(
-		new BenutzerKompetenzKatalogEintrag(302, BenutzerKompetenzGruppe.CALDAV, "Ansehen"
+		new BenutzerKompetenzKatalogEintrag(303, BenutzerKompetenzGruppe.CALDAV, "Ansehen"
 	));
 
 
