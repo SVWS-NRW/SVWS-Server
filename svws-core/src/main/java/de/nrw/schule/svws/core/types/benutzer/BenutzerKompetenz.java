@@ -210,7 +210,22 @@ public enum BenutzerKompetenz {
     /** Allgemeine Berechtigung für das Einsehen von Adressdaten über die CardDav API */
     ADRESSDATEN_ANSEHEN(new BenutzerKompetenzKatalogEintrag(
     	202, BenutzerKompetenzGruppe.CARDDAV, "Ansehen"
-    ));
+    )),
+    
+    /** Allgemeine Berechtigung für den Zugriff auf die CalDav API */
+    KALENDER_ANSEHEN(new BenutzerKompetenzKatalogEintrag(
+		301, BenutzerKompetenzGruppe.CALDAV, "Ansehen"
+	)), 
+    
+    /** Berechtigung für den Besitz und das Bearbeiten eines eigenen Kalenders über die CalDav API. */
+    EIGENEN_KALENDER_BEARBEITEN(
+		new BenutzerKompetenzKatalogEintrag(302, BenutzerKompetenzGruppe.CALDAV, "Bearbeiten"
+	)), 
+    
+    /** Allgemeine Berechtigung zum Ansehen generierter Kalender abhängig von der Funktion des Nutzers */
+    KALENDER_FUNKTIONSBEZOGEN_ANSEHEN(
+		new BenutzerKompetenzKatalogEintrag(302, BenutzerKompetenzGruppe.CALDAV, "Ansehen"
+	));
 
 
 	/** Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. */
