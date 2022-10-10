@@ -24,8 +24,5 @@
   "dependencies": {
 		"@headlessui/vue": "1.6.7",
     "vuejs-smart-table": "github:antony-k1208/vuejs-smart-table#next"
-  },
-  "dev_dependencies": {
-    "histoire": "0.10.7"
   }
 }
