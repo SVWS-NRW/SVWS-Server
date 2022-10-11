@@ -33,6 +33,7 @@ before_script:
 
 stages:
   - build
+  - analyze
 
 build:
   stage: build
@@ -45,3 +46,10 @@ build:
     reports:
       junit: ./**/build/test-results/test/**/TEST-*.xml
 
+sonarqube_analysis:
+  stage: analyze
+  only:
+    refs: 
+      - dev
+  when: manual
+  script: ./gradlew sonarqube -Dsonar.projectKey=svws-server -Dsonar.host.url=$SONAR_URL -Dsonar.login=$SONAR_LOGIN -Dsonar.password=$SONAR_PASSWORD
