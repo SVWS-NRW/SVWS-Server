@@ -419,8 +419,9 @@ public class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte> {
 	 * @return der SQL-Code zur Verwendung beim Erzeugen der Tabellenspalte 
 	 */
 	public String getSQL(DBDriver dbms) {
+	    boolean skipDatenlaenge = ((_datentyp == SchemaDatentypen.DATETIME) && ((dbms != DBDriver.MARIA_DB) && (dbms != DBDriver.MYSQL)));
 		return this._name + " " + _datentyp.getDBType(dbms)
-	         + (((this._datenlaenge == null) || (this._datenlaenge <= 0)) ? "" : "(" + this._datenlaenge + ")")
+	         + (((this._datenlaenge == null) || (this._datenlaenge <= 0) || skipDatenlaenge) ? "" : "(" + this._datenlaenge + ")")
 	         + this.getSQLAutoinkrement(dbms)
 	         + this.getSQLDefault(dbms, _datentyp)
 	         + (this._notNull ? " NOT NULL" : "");

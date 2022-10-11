@@ -21,6 +21,7 @@ public class Tabelle_DavSyncTokenLehrer extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte SyncToken */
 	public SchemaTabelleSpalte col_SyncToken = add("SyncToken", SchemaDatentypen.DATETIME, false)
+        .setDatenlaenge(3)
 		.setNotNull()
 		.setJavaComment("Der Zeitstempel der letzten Änderung an für einen Card-DAV-Eintrag relevanten Lehrerdaten.");
 

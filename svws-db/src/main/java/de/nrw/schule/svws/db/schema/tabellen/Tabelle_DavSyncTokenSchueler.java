@@ -23,6 +23,7 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte SyncToken */
 	public SchemaTabelleSpalte col_SyncToken = add("SyncToken", SchemaDatentypen.DATETIME, false)
+	    .setDatenlaenge(3)
 		.setNotNull()
 		.setJavaComment("Der Zeitstempel der letzten Änderung an für einen Card-DAV-Eintrag relevanten Schülerdaten.");
 
@@ -35,7 +36,6 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
 			new Pair<>(col_ID, Schema.tab_Schueler.col_ID)
 		);
 
-    // TODO Trigger für weitere Spalten ergänzen... 
     /** Trigger t_UPDATE_DavSyncTokenSchueler_Schueler */
     public SchemaTabelleTrigger trigger_MariaDB_UPDATE_DavSyncTokenSchueler_Schueler = addTrigger(
             "t_UPDATE_DavSyncTokenSchueler_Schueler",
@@ -46,20 +46,159 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
                 DECLARE changed BOOLEAN;
                 DECLARE token DATETIME;
                 SET changed := 0;
-                IF OLD.Name <> NEW.Name OR OLD.Vorname <> NEW.Vorname THEN
+                IF OLD.Name <> NEW.Name OR OLD.Vorname <> NEW.Vorname OR OLD.Status <> NEW.Status THEN
                     SET changed := 1;
                 END IF;
                 IF changed = TRUE THEN
-                    SET token := (SELECT DavSyncTokenSchueler.SyncToken FROM DavSyncTokenSchueler);
+                    SET token := (SELECT SyncToken FROM DavSyncTokenSchueler WHERE ID = NEW.ID);
                     IF token IS NULL THEN
-                        INSERT INTO DavSyncTokenSchueler(ID, SyncToken) VALUES (NEW.ID, CURTIME());
+                        INSERT INTO DavSyncTokenSchueler(ID, SyncToken) VALUES (NEW.ID, CURTIME(3));
                     ELSE
-                        UPDATE DavSyncTokenSchueler SET SyncToken = CURTIME() WHERE ID = NEW.ID;
+                        UPDATE DavSyncTokenSchueler SET SyncToken = CURTIME(3) WHERE ID = NEW.ID;
                     END IF;
                 END IF;
             END
             """,
             Schema.tab_Schueler, Schema.tab_DavSyncTokenSchueler);
+
+    /** Trigger t_UPDATE_DavSyncTokenSchueler_Kurs_Schueler */
+    public SchemaTabelleTrigger trigger_MariaDB_UPDATE_DavSyncTokenSchueler_Kurs_Schueler = addTrigger(
+            "t_UPDATE_DavSyncTokenSchueler_Kurs_Schueler",
+            DBDriver.MARIA_DB,
+            """
+            AFTER UPDATE ON Kurs_Schueler FOR EACH ROW
+            BEGIN
+                DECLARE token DATETIME;
+                IF OLD.Schueler_ID <> NEW.Schueler_ID THEN
+                    SET token := (SELECT DavSyncTokenSchueler.SyncToken FROM DavSyncTokenSchueler WHERE ID = OLD.Schueler_ID);
+                    IF token IS NULL THEN
+                        INSERT INTO DavSyncTokenSchueler(ID, SyncToken) VALUES (OLD.Schueler_ID, CURTIME(3));
+                    ELSE
+                        UPDATE DavSyncTokenSchueler SET SyncToken = CURTIME(3) WHERE ID = OLD.Schueler_ID;
+                    END IF;
+                END IF;
+                SET token := (SELECT DavSyncTokenSchueler.SyncToken FROM DavSyncTokenSchueler WHERE ID = NEW.Schueler_ID);
+                IF token IS NULL THEN
+                    INSERT INTO DavSyncTokenSchueler(ID, SyncToken) VALUES (NEW.Schueler_ID, CURTIME(3));
+                ELSE
+                    UPDATE DavSyncTokenSchueler SET SyncToken = CURTIME(3) WHERE ID = NEW.Schueler_ID;
+                END IF;
+            END
+            """,
+            Schema.tab_Kurs_Schueler, Schema.tab_DavSyncTokenSchueler);
+
+    /** Trigger t_INSERT_DavSyncTokenSchueler_Kurs_Schueler */
+    public SchemaTabelleTrigger trigger_MariaDB_INSERT_DavSyncTokenSchueler_Kurs_Schueler = addTrigger(
+            "t_INSERT_DavSyncTokenSchueler_Kurs_Schueler",
+            DBDriver.MARIA_DB,
+            """
+            AFTER INSERT ON Kurs_Schueler FOR EACH ROW
+            BEGIN
+                DECLARE token DATETIME;
+                SET token := (SELECT DavSyncTokenSchueler.SyncToken FROM DavSyncTokenSchueler WHERE ID = NEW.Schueler_ID);
+                IF token IS NULL THEN
+                    INSERT INTO DavSyncTokenSchueler(ID, SyncToken) VALUES (NEW.Schueler_ID, CURTIME(3));
+                ELSE
+                    UPDATE DavSyncTokenSchueler SET SyncToken = CURTIME(3) WHERE ID = NEW.Schueler_ID;
+                END IF;
+            END
+            """,
+            Schema.tab_Kurs_Schueler, Schema.tab_DavSyncTokenSchueler);
+
+    /** Trigger t_DELETE_DavSyncTokenSchueler_Kurs_Schueler */
+    public SchemaTabelleTrigger trigger_MariaDB_DELETE_DavSyncTokenSchueler_Kurs_Schueler = addTrigger(
+            "t_DELETE_DavSyncTokenSchueler_Kurs_Schueler",
+            DBDriver.MARIA_DB,
+            """
+            AFTER DELETE ON Kurs_Schueler FOR EACH ROW
+            BEGIN
+                DECLARE token DATETIME;
+                SET token := (SELECT DavSyncTokenSchueler.SyncToken FROM DavSyncTokenSchueler WHERE ID = OLD.Schueler_ID);
+                IF token IS NULL THEN
+                    INSERT INTO DavSyncTokenSchueler(ID, SyncToken) VALUES (OLD.Schueler_ID, CURTIME(3));
+                ELSE
+                    UPDATE DavSyncTokenSchueler SET SyncToken = CURTIME(3) WHERE ID = OLD.Schueler_ID;
+                END IF;
+            END
+            """,
+            Schema.tab_Kurs_Schueler, Schema.tab_DavSyncTokenSchueler);
+
+    /** Trigger t_UPDATE_DavSyncTokenSchueler_SchuelerErzAdr */
+    public SchemaTabelleTrigger trigger_MariaDB_UPDATE_DavSyncTokenSchueler_SchuelerErzAdr = addTrigger(
+            "t_UPDATE_DavSyncTokenSchueler_SchuelerErzAdr",
+            DBDriver.MARIA_DB,
+            """
+            AFTER UPDATE ON SchuelerErzAdr FOR EACH ROW
+            BEGIN
+                DECLARE changed BOOLEAN;
+                DECLARE token DATETIME;
+                SET changed := 0;
+                IF OLD.Schueler_ID <> NEW.Schueler_ID THEN
+                    SET changed := 1;
+                    SET token := (SELECT SyncToken FROM DavSyncTokenSchueler WHERE ID = OLD.Schueler_ID);
+                    IF token IS NULL THEN
+                        INSERT INTO DavSyncTokenSchueler(ID, SyncToken) VALUES (OLD.Schueler_ID, CURTIME(3));
+                    ELSE
+                        UPDATE DavSyncTokenSchueler SET SyncToken = CURTIME(3) WHERE ID = OLD.Schueler_ID;
+                    END IF;
+                END IF;
+                IF OLD.ErzOrt_ID <> NEW.ErzOrt_ID OR OLD.ErzStrassenname <> NEW.ErzStrassenname 
+                        OR OLD.ErzieherArt_ID <> NEW.ErzieherArt_ID
+                        OR OLD.ErzHausNr <> NEW.ErzHausNr OR OLD.ErzHausNrZusatz <> NEW.ErzHausNrZusatz
+                        OR OLD.ErzEmail <> NEW.ErzEmail OR OLD.ErzEmail2 <> NEW.ErzEmail2
+                        OR OLD.Name1 <> NEW.Name1 OR OLD.Name2 <> NEW.Name2
+                        OR OLD.Vorname1 <> NEW.Vorname1 OR OLD.Vorname2 <> NEW.Vorname2
+                        OR OLD.Erz1ZusatzNachname <> NEW.Erz1ZusatzNachname OR OLD.Erz2ZusatzNachname <> NEW.Erz2ZusatzNachname
+                        THEN
+                    SET changed := 1;
+                END IF;
+                IF changed = TRUE THEN
+                    SET token := (SELECT SyncToken FROM DavSyncTokenSchueler WHERE ID = NEW.Schueler_ID);
+                    IF token IS NULL THEN
+                        INSERT INTO DavSyncTokenSchueler(ID, SyncToken) VALUES (NEW.Schueler_ID, CURTIME(3));
+                    ELSE
+                        UPDATE DavSyncTokenSchueler SET SyncToken = CURTIME(3) WHERE ID = NEW.Schueler_ID;
+                    END IF;
+                END IF;
+            END
+            """,
+            Schema.tab_SchuelerErzAdr, Schema.tab_DavSyncTokenSchueler);
+
+    /** Trigger t_INSERT_DavSyncTokenSchueler_SchuelerErzAdr */
+    public SchemaTabelleTrigger trigger_MariaDB_INSERT_DavSyncTokenSchueler_SchuelerErzAdr = addTrigger(
+            "t_INSERT_DavSyncTokenSchueler_SchuelerErzAdr",
+            DBDriver.MARIA_DB,
+            """
+            AFTER INSERT ON SchuelerErzAdr FOR EACH ROW
+            BEGIN
+                DECLARE token DATETIME;
+                SET token := (SELECT DavSyncTokenSchueler.SyncToken FROM DavSyncTokenSchueler WHERE ID = NEW.Schueler_ID);
+                IF token IS NULL THEN
+                    INSERT INTO DavSyncTokenSchueler(ID, SyncToken) VALUES (NEW.Schueler_ID, CURTIME(3));
+                ELSE
+                    UPDATE DavSyncTokenSchueler SET SyncToken = CURTIME(3) WHERE ID = NEW.Schueler_ID;
+                END IF;
+            END
+            """,
+            Schema.tab_SchuelerErzAdr, Schema.tab_DavSyncTokenSchueler);
+
+    /** Trigger t_DELETE_DavSyncTokenSchueler_SchuelerErzAdr */
+    public SchemaTabelleTrigger trigger_MariaDB_DELETE_DavSyncTokenSchueler_SchuelerErzAdr = addTrigger(
+            "t_DELETE_DavSyncTokenSchueler_SchuelerErzAdr",
+            DBDriver.MARIA_DB,
+            """
+            AFTER DELETE ON SchuelerErzAdr FOR EACH ROW
+            BEGIN
+                DECLARE token DATETIME;
+                SET token := (SELECT DavSyncTokenSchueler.SyncToken FROM DavSyncTokenSchueler WHERE ID = OLD.Schueler_ID);
+                IF token IS NULL THEN
+                    INSERT INTO DavSyncTokenSchueler(ID, SyncToken) VALUES (OLD.Schueler_ID, CURTIME(3));
+                ELSE
+                    UPDATE DavSyncTokenSchueler SET SyncToken = CURTIME(3) WHERE ID = OLD.Schueler_ID;
+                END IF;
+            END
+            """,
+            Schema.tab_SchuelerErzAdr, Schema.tab_DavSyncTokenSchueler);
 
     // TODO weitere Trigger für MariaDB 
 
