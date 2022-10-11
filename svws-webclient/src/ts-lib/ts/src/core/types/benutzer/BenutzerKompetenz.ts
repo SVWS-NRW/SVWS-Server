@@ -104,7 +104,7 @@ export class BenutzerKompetenz extends JavaObject {
 
 	public static readonly EIGENEN_KALENDER_BEARBEITEN : BenutzerKompetenz = new BenutzerKompetenz("EIGENEN_KALENDER_BEARBEITEN", 42, new BenutzerKompetenzKatalogEintrag(302, BenutzerKompetenzGruppe.CALDAV, "Bearbeiten"));
 
-	public static readonly KALENDER_FUNKTIONSBEZOGEN_ANSEHEN : BenutzerKompetenz = new BenutzerKompetenz("KALENDER_FUNKTIONSBEZOGEN_ANSEHEN", 43, new BenutzerKompetenzKatalogEintrag(302, BenutzerKompetenzGruppe.CALDAV, "Ansehen"));
+	public static readonly KALENDER_FUNKTIONSBEZOGEN_ANSEHEN : BenutzerKompetenz = new BenutzerKompetenz("KALENDER_FUNKTIONSBEZOGEN_ANSEHEN", 43, new BenutzerKompetenzKatalogEintrag(303, BenutzerKompetenzGruppe.CALDAV, "Ansehen"));
 
 	public static VERSION : number = 1;
 
