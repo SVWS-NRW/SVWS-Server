@@ -74,7 +74,6 @@ declare module '@vue/runtime-core' {
     SCardGostFachwahlen: typeof import('./src/components/gost/fachwahlen/SCardGostFachwahlen.vue')['default']
     SCardGostFaecher: typeof import('./src/components/gost/faecher/SCardGostFaecher.vue')['default']
     SCardGostKursblockungParameter: typeof import('./src/components/gost/kursplanung/SCardGostKursblockungParameter.vue')['default']
-    SCardGostKursplanung: typeof import('./src/components/gost/kursplanung/SCardGostKursplanung.vue')['default']
     SCardGostKursSchuelerUmwahl: typeof import('./src/components/gost/kursschueler/SCardGostKursSchuelerUmwahl.vue')['default']
     SCardGostTextBeratungsbogen: typeof import('./src/components/gost/stammdaten/SCardGostTextBeratungsbogen.vue')['default']
     SCardGostTextMailversand: typeof import('./src/components/gost/stammdaten/SCardGostTextMailversand.vue')['default']

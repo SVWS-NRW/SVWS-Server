@@ -577,9 +577,9 @@ public class DTOs {
              mapDTOName2DTOClass.put(DTOClientKonfigurationGlobal.class.getSimpleName(),DTOClientKonfigurationGlobal.class);
              mapDTOName2DTOClass.put(DTODavRessource.class.getSimpleName(),DTODavRessource.class);
              mapDTOName2DTOClass.put(DTODavRessourceCollection.class.getSimpleName(),DTODavRessourceCollection.class);
+             mapDTOName2DTOClass.put(DTODavRessourceCollectionsACL.class.getSimpleName(),DTODavRessourceCollectionsACL.class);
              mapDTOName2DTOClass.put(DTODavSyncTokenLehrer.class.getSimpleName(),DTODavSyncTokenLehrer.class);
              mapDTOName2DTOClass.put(DTODavSyncTokenSchueler.class.getSimpleName(),DTODavSyncTokenSchueler.class);
-             mapDTOName2DTOClass.put(DTODavRessourceCollectionsACL.class.getSimpleName(),DTODavRessourceCollectionsACL.class);
              mapDTOName2DTOClass.put(DTOCoreTypeVersion.class.getSimpleName(),DTOCoreTypeVersion.class);
              mapDTOName2DTOClass.put(DTODBAutoInkremente.class.getSimpleName(),DTODBAutoInkremente.class);
              mapDTOName2DTOClass.put(DTODBVersion.class.getSimpleName(),DTODBVersion.class);
