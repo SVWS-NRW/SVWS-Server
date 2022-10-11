@@ -1,16 +1,10 @@
 package de.nrw.schule.svws.davapi.util;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.MapperFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
-import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.fasterxml.jackson.module.jakarta.xmlbind.JakartaXmlBindAnnotationModule;
-
-import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringReader;
 import java.util.Optional;
+
+import jakarta.xml.bind.JAXB;
 
 /**
  * Utility-Klasse für die Deserialisierung von XML in Java-Objekte mittels
@@ -38,12 +32,9 @@ public class XmlUnmarshallingUtil {
 	 *                    (z.B. Profind.class)
 	 * @param <T>         Generischer Typ
 	 * @return Java-Objekt der angegebenen Typ-Klasse
-	 * @throws IOException Fehlende XML-Mappings oder fehlerhaftes XML führen in
-	 *                     dieser Methode zu einer IOException
 	 */
-	public static <T> T unmarshal(InputStream inputstream, Class<T> typeClass) throws IOException {
-		ObjectMapper mapper = getMapper();
-		return mapper.readValue(inputstream, typeClass);
+	public static <T> T unmarshal(InputStream inputstream, Class<T> typeClass) {
+		return JAXB.unmarshal(inputstream, typeClass);
 	}
 
 	/**
@@ -61,14 +52,7 @@ public class XmlUnmarshallingUtil {
 	 *         erfolgreich war, wird das Optional.empty() zurückgegeben.
 	 */
 	public static <T> Optional<T> tryUnmarshal(InputStream inputstream, Class<T> typeClass) {
-		try {
-			return Optional.of(unmarshal(inputstream, typeClass));
-		} catch (UnrecognizedPropertyException uex) {
-			return Optional.empty();
-		} catch (IOException e) {
-			e.printStackTrace();
-			return Optional.empty();
-		}
+		return Optional.of(unmarshal(inputstream, typeClass));
 	}
 
 	/**
@@ -86,16 +70,7 @@ public class XmlUnmarshallingUtil {
 	 *         erfolgreich war, wird das Optional.empty() zurückgegeben.
 	 */
 	public static <T> Optional<T> tryUnmarshal(String input, Class<T> typeClass) {
-		try {
-			T unmarshal = unmarshal(input, typeClass);
-			return Optional.of(unmarshal);
-		} catch (UnrecognizedPropertyException uex) {
-			System.err.println(uex.getMessage());
-			return Optional.empty();
-		} catch (IOException e) {
-			e.printStackTrace();
-			return Optional.empty();
-		}
+		return Optional.of(unmarshal(input, typeClass));
 	}
 
 	/**
@@ -108,24 +83,8 @@ public class XmlUnmarshallingUtil {
 	 *                  (z.B. Profind.class)
 	 * @param <T>       Generischer Typ
 	 * @return Java-Objekt der angegebenen Typ-Klasse
-	 * @throws IOException Fehlende XML-Mappings oder fehlerhaftes XML führen in
-	 *                     dieser Methode zu einer IOException
 	 */
-	public static <T> T unmarshal(String input, Class<T> typeClass) throws IOException {
-		ObjectMapper mapper = getMapper();
-		return mapper.readValue(input, typeClass);
-	}
-
-	/**
-	 * Erstellt einen neuen ObjectMapper zum (de-)serialisieren von Xmls
-	 */
-	private static ObjectMapper getMapper() {
-		JacksonXmlModule module = new JacksonXmlModule();
-		module.setDefaultUseWrapper(false);
-		ObjectMapper mapper = new XmlMapper(module);
-		mapper.enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES);
-		mapper.registerModule(new JakartaXmlBindAnnotationModule());
-		mapper.enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
-		return mapper;
+	public static <T> T unmarshal(String input, Class<T> typeClass) {
+		return JAXB.unmarshal(new StringReader(input), typeClass);
 	}
 }
