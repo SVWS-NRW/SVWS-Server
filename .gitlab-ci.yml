@@ -16,7 +16,7 @@ image: eclipse-temurin:17
 # runtime for each build is more reliable since the runtime is completely
 # isolated from any previous builds.
 variables:
-  GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.logging.level=debug"
+  GRADLE_OPTS: "-Dorg.gradle.daemon=false"
 
 cache: &global_cache
   key: "$CI_COMMIT_REF_NAME"
