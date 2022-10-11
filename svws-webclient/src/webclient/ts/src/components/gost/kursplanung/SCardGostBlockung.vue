@@ -34,7 +34,8 @@
 									</div>
 									</td>
 									<template v-if="allow_regeln">
-										<td class="bg-[#329cd5] rounded-l-none rounded-lg border-none cursor-pointer" rowspan="4" @click="add_schiene"><div class="px-2" >+</div></td><td rowspan="4" class="bg-white"></td>
+										<td class="bg-[#329cd5] rounded-l-none rounded-lg border-none cursor-pointer" rowspan="4" @click="add_schiene">
+											<div class="px-2" >+</div></td><td rowspan="4" class="bg-white"></td>
 									</template>
 								</tr>
 								<tr>
@@ -64,7 +65,8 @@
 									</td>
 								</tr>
 								<tr>
-									<td class="border border-[#7f7f7f]/20 text-center cursor-pointer" @click="sort_by = sort_by === 'kursart'? 'fach_id':'kursart'"><div class="flex gap-1">Kurs<svws-ui-icon><i-ri-arrow-up-down-line /></svws-ui-icon></div></td>
+									<td class="border border-[#7f7f7f]/20 text-center cursor-pointer" @click="sort_by = sort_by === 'kursart'? 'fach_id':'kursart'">
+										<div class="flex gap-1">Kurs<svws-ui-icon><i-ri-arrow-up-down-line /></svws-ui-icon></div></td>
 									<td class="border border-[#7f7f7f]/20 text-center">Koop</td>
 									<td class="border border-[#7f7f7f]/20 text-center">Diff</td>
 									<!--Schienen-->
@@ -83,17 +85,16 @@
 									:key="kurs.id"
 									:kurs="kurs"
 								></s-kurs-blockung>
-								<td class="border border-[#7f7f7f]/20 text-center bg-white" :colspan="schienen.length+4">Fächer ohne Kurse</td>
-								<td class="bg-white"></td>
-								<s-fach-kurs
-								v-for="fach in faecher"
-								:key="fach.id"
-								:fach="fach"
-								:halbjahr="
-									app.blockungsauswahl.ausgewaehlt
-										?.gostHalbjahr || 0
-								"
-							></s-fach-kurs>
+								<template v-if="allow_regeln">
+									<td class="border border-[#7f7f7f]/20 text-center bg-white" :colspan="schienen.length+4">Fächer ohne Kurse</td>
+									<td class="bg-white"></td>
+									<s-fach-kurs
+										v-for="fach in faecher"
+										:key="fach.id"
+										:fach="fach"
+										:halbjahr="app.blockungsauswahl.ausgewaehlt?.gostHalbjahr || 0"
+									/>
+								</template>
 							</tbody>
 						</table>
 					</div>
