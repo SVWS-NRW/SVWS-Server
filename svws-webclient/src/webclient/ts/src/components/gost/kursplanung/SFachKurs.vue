@@ -1,41 +1,45 @@
 <template>
-	<tr class="border border-[#7f7f7f]/20 px-2 text-left" :style="{
-		'background-color': bgColor
-	}">
-		<td class="px-2">{{ fach.kuerzel }}</td>
-		<td>{{ fach.bezeichnung }}</td>
-		<td class="text-center">{{ lk }}</td>
-		<td class="flex text-center">
-			<div class="cursor-pointer rounded-lg bg-slate-100 px-2">
-				<span @click="del_kurs('lk')">-</span>
-				<span class="px-2">{{ lk_kurszahl }}</span>
-				<span @click="add_kurs('lk')">+</span>
-			</div>
-		</td>
-		<td class="text-center">{{ gk }}</td>
-		<td class="flex text-center" :style="{ 'background-color': bgColor + '80' }">
-			<div class="cursor-pointer rounded-lg bg-slate-100 px-2">
-				<span @click="del_kurs('gk')">-</span>
-				<span class="px-2">{{ gk_kurszahl }}</span>
-				<span @click="add_kurs('gk')">+</span>
-			</div>
-		</td>
-		<td class="text-center">{{ zk }}</td>
-		<td class="flex px-2 text-center">
-			<div class="cursor-pointer rounded-lg bg-slate-100 px-2">
-				<span @click="del_kurs('zk')">-</span>
-				<span class="px-2">{{ zk_kurszahl }}</span>
-				<span @click="add_kurs('zk')">+</span>
-			</div>
-		</td>
-	</tr>
-	<svws-ui-modal ref="modal" size="small">
-		<template #modalTitle>Bitte wählen Sie</template>
-		<template #modalDescription>
-			<svws-ui-button>Ergebnisse löschen</svws-ui-button>
-			<svws-ui-button>Neue Blockung als Duplikat mit dieser Änderung anlegen</svws-ui-button>
-		</template>
-	</svws-ui-modal>
+	<template v-if="(lk_kurszahl === 0 && lk) || (gk_kurszahl === 0 && gk) || (zk_kurszahl === 0 && zk)">
+		<tr class="text-left" :style="{
+			'background-color': bgColor
+		}">
+			<td class="px-2 border-y border-[#7f7f7f]/20 border-r" :colspan="daten.schienen.size()+4">{{ fach.bezeichnung }} </td>
+			<td class="bg-white"></td>
+		</tr>
+		<tr v-if="lk_kurszahl === 0 && lk" class="text-left" :style="{
+			'background-color': bgColor
+		}">
+			<td class="px-4 border-y border-[#7f7f7f]/20" :colspan="daten.schienen.size()">
+				{{ fach.kuerzel }}-LK: {{lk}} Kurswahlen
+			</td>
+			<td class="px-2 border-y border-[#7f7f7f]/20 border-r" colspan="4">
+				<svws-ui-button class="" size="small" @click="add_kurs('lk')">Kurs hinzufügen</svws-ui-button>
+			</td>
+			<td class="bg-white"></td>
+		</tr>
+		<tr v-if="gk_kurszahl === 0 && gk" class="text-left" :style="{
+			'background-color': bgColor
+		}">
+			<td class="px-4 border-y border-[#7f7f7f]/20" :colspan="daten.schienen.size()">
+				{{ fach.kuerzel }}-GK: {{gk}} Kurswahlen
+			</td>
+			<td class="px-2 border-y border-[#7f7f7f]/20 border-r" colspan="4">
+				<svws-ui-button class="" size="small" @click="add_kurs('gk')">Kurs hinzufügen</svws-ui-button>
+			</td>
+			<td class="bg-white"></td>
+		</tr>
+		<tr v-if="zk_kurszahl === 0 && zk" class="text-left" :style="{
+			'background-color': bgColor
+		}">
+			<td class="px-4 border-y border-[#7f7f7f]/20" :colspan="daten.schienen.size()">
+				{{ fach.kuerzel }}-ZK: {{zk}} Kurswahlen
+			</td>
+			<td class="px-2 border-y border-[#7f7f7f]/20 border-r" colspan="4">
+				<svws-ui-button class="" size="small" @click="add_kurs('zk')">Kurs hinzufügen</svws-ui-button>
+			</td>
+			<td class="bg-white"></td>
+		</tr>
+	</template>
 </template>
 
 <script setup lang="ts">
@@ -62,8 +66,6 @@ const props = defineProps({
 const main: Main = injectMainApp();
 const app = main.apps.gost;
 
-const modal: Ref<any> = ref(null);
-
 const kursezaehler: ComputedRef<{ lk: number; gk: number; zk: number }> =
 	computed(() => {
 		const zaehler = { lk: 0, gk: 0, zk: 0 };
@@ -87,17 +89,7 @@ const kursezaehler: ComputedRef<{ lk: number; gk: number; zk: number }> =
 async function add_kurs(art: "lk" | "gk" | "zk") {
 	const nr = art === "lk" ? 1 : art === "gk" ? 2 : 3;
 	await app.dataKursblockung.add_blockung_kurse(props.fach.id, nr)
-	if (app.blockungsergebnisauswahl.liste) toggle_modal()
 }
-async function del_kurs(art: "lk" | "gk" | "zk") {
-	const nr = art === "lk" ? 1 : art === "gk" ? 2 : 3;
-	await app.dataKursblockung.del_blockung_kurse(props.fach.id, nr)
-	if (app.blockungsergebnisauswahl.liste) toggle_modal()
-}
-
-function toggle_modal() {
-	modal.value.isOpen ? modal.value.closeModal() : modal.value.openModal()
-};
 
 const daten: ComputedRef<GostBlockungsdaten> = computed(() => {
 	return app.dataKursblockung.daten || new GostBlockungsdaten();

@@ -6,7 +6,7 @@
 					<div class="rounded-lg shadow">
 						<table class="w-full  border-collapse text-sm table-auto">
 							<!-- Wenn sticky angewendet wird, verschwinden die  border border-[#7f7f7f]/20 s...  -->
-							<thead class="sticky top-0  bg-slate-100">
+							<thead class="sticky top-0 bg-slate-100">
 								<tr>
 									<td colspan="3">
 										Schiene
@@ -34,18 +34,18 @@
 									</div>
 									</td>
 									<template v-if="allow_regeln">
-										<td class="bg-[#329cd5] rounded-l-none rounded-lg border-none cursor-pointer" rowspan="5" @click="add_schiene"><div class="px-2" >+</div></td><td rowspan="4" class="bg-white"></td>
+										<td class="bg-[#329cd5] rounded-l-none rounded-lg border-none cursor-pointer" rowspan="4" @click="add_schiene"><div class="px-2" >+</div></td><td rowspan="4" class="bg-white"></td>
 									</template>
 								</tr>
 								<tr>
-									<td class="border border-[#7f7f7f]/20 " colspan="3">
+									<td class="border border-[#7f7f7f]/20" colspan="3">
 										Schülerzahl
 									</td>
 									<!-- Schülerzahlen -->
 									<td
 										v-for="s in schienen"
 										:key="s.id"
-										class="border border-[#7f7f7f]/20  text-center"
+										class="border border-[#7f7f7f]/20 text-center"
 									>
 										{{ getAnzahlSchuelerSchiene(s.id) }}
 									</td>
@@ -76,7 +76,6 @@
 									/>
 									<td v-else :colspan="schienen.length" class="text-center">Regeln können nicht in Ergebnissen erstellt werden</td>
 								</tr>
-								<tr></tr>
 							</thead>
 							<tbody>
 								<s-kurs-blockung
@@ -84,6 +83,17 @@
 									:key="kurs.id"
 									:kurs="kurs"
 								></s-kurs-blockung>
+								<td class="border border-[#7f7f7f]/20 text-center bg-white" :colspan="schienen.length+4">Fächer ohne Kurse</td>
+								<td class="bg-white"></td>
+								<s-fach-kurs
+								v-for="fach in faecher"
+								:key="fach.id"
+								:fach="fach"
+								:halbjahr="
+									app.blockungsauswahl.ausgewaehlt
+										?.gostHalbjahr || 0
+								"
+							></s-fach-kurs>
 							</tbody>
 						</table>
 					</div>
@@ -98,13 +108,13 @@
 		GostBlockungKurs,
 		GostBlockungSchiene,
 		GostBlockungsergebnisManager,
+		GostStatistikFachwahl,
 		List,
 		Vector
 	} from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, Ref, ref } from "vue";
 
 	import { injectMainApp, Main } from "~/apps/Main";
-
 
 	const main: Main = injectMainApp();
 	const app = main.apps.gost
@@ -119,12 +129,19 @@
 		);
 	});
 
+	const faecher: ComputedRef<Array<GostStatistikFachwahl>> = computed(() => {
+			return (
+				app.dataFachwahlen.daten?.toArray(new Array<GostStatistikFachwahl>) ||
+				new Array<GostStatistikFachwahl>()
+			);
+		});
+
 	const sorted_kurse: ComputedRef<Array<GostBlockungKurs>|List<GostBlockungKurs>> = computed(() => {
-		const arr = kurse.value.toArray(new Array<GostBlockungKurs>())
-		if (sort_by.value === 'kursart') 
+		if (sort_by.value === 'kursart') {
+			const arr = kurse.value.toArray(new Array<GostBlockungKurs>())
 			return arr.sort((a,b)=>a.kursart-b.kursart)
-		else
-			return kurse.value
+		}
+		else return kurse.value
 	})
 
 	const schienen: ComputedRef<GostBlockungSchiene[]> = computed(() => {

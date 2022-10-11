@@ -3,7 +3,6 @@
 		v-if="visible && app.blockungsauswahl.ausgewaehlt"
 		class="app-container"
 	>
-		<s-card-gost-kursplanung v-if="!ergebnis"/>
 		<s-card-gost-blockung />
 		<s-gost-kurs-schueler v-if="ergebnis"/>
 		<s-card-gost-kursblockung-parameter />
