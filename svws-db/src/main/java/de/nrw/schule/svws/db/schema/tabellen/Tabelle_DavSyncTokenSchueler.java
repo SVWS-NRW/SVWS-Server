@@ -46,7 +46,13 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
                 DECLARE changed BOOLEAN;
                 DECLARE token DATETIME;
                 SET changed := 0;
-                IF OLD.Name <> NEW.Name OR OLD.Vorname <> NEW.Vorname OR OLD.Status <> NEW.Status THEN
+                IF OLD.Name <> NEW.Name OR OLD.Vorname <> NEW.Vorname OR OLD.Strassenname <> NEW.Strassenname 
+                        OR OLD.HausNr <> NEW.HausNr OR OLD.HausNrZusatz <> NEW.HausNrZusatz
+                        OR OLD.Ort_ID <> NEW.Ort_ID OR OLD.Ortsteil_ID <> NEW.Ortsteil_ID
+                        OR OLD.Telefon <> NEW.Telefon OR OLD.Fax <> NEW.Fax
+                        OR OLD.Email <> NEW.Email OR OLD.SchulEmail <> NEW.SchulEmail
+                        OR OLD.Geschlecht <> NEW.Geschlecht
+                        OR OLD.Status <> NEW.Status THEN
                     SET changed := 1;
                 END IF;
                 IF changed = TRUE THEN
@@ -142,7 +148,8 @@ public class Tabelle_DavSyncTokenSchueler extends SchemaTabelle {
                         UPDATE DavSyncTokenSchueler SET SyncToken = CURTIME(3) WHERE ID = OLD.Schueler_ID;
                     END IF;
                 END IF;
-                IF OLD.ErzOrt_ID <> NEW.ErzOrt_ID OR OLD.ErzStrassenname <> NEW.ErzStrassenname 
+                IF OLD.ErzOrt_ID <> NEW.ErzOrt_ID OR OLD.ErzStrassenname <> NEW.ErzStrassenname
+                        OR OLD.ErzOrtsteil_ID <> NEW.ErzOrtsteil_ID 
                         OR OLD.ErzieherArt_ID <> NEW.ErzieherArt_ID
                         OR OLD.ErzHausNr <> NEW.ErzHausNr OR OLD.ErzHausNrZusatz <> NEW.ErzHausNrZusatz
                         OR OLD.ErzEmail <> NEW.ErzEmail OR OLD.ErzEmail2 <> NEW.ErzEmail2
