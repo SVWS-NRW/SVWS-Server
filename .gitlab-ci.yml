@@ -52,4 +52,4 @@ sonarqube_analysis:
     refs: 
       - dev
   when: manual
-  script: ./gradlew sonarqube -Dsonar.projectKey=svws-server -Dsonar.host.url=$SONAR_URL -Dsonar.login=$SONAR_LOGIN -Dsonar.password=$SONAR_PASSWORD
+  script: ./gradlew sonarqube -Dsonar.projectKey=svws-server -Dsonar.host.url=$SONAR_URL -Dsonar.login=$SONAR_LOGIN -Dsonar.password=$SONAR_PASSWORD --full-stacktrace
