@@ -126,6 +126,77 @@ public class Tabelle_DavSyncTokenLehrer extends SchemaTabelle {
             """,
             Schema.tab_K_Ort, Schema.tab_K_Lehrer, Schema.tab_DavSyncTokenLehrer);
 
+    /** Trigger t_UPDATE_DavSyncTokenLehrer_LehrerLehramtLehrbef */
+    public SchemaTabelleTrigger trigger_MariaDB_UPDATE_DavSyncTokenLehrer_LehrerLehramtLehrbef = addTrigger(
+            "t_UPDATE_DavSyncTokenLehrer_LehrerLehramtLehrbef",
+            DBDriver.MARIA_DB,
+            """
+            AFTER UPDATE ON LehrerLehramtLehrbef FOR EACH ROW
+            BEGIN
+                DECLARE changed BOOLEAN;
+                DECLARE token DATETIME;
+                SET changed := 0;
+                IF OLD.Lehrer_ID <> NEW.Lehrer_ID THEN
+                    SET changed := 1;
+                    SET token := (SELECT SyncToken FROM DavSyncTokenLehrer WHERE ID = OLD.Lehrer_ID);
+                    IF token IS NULL THEN
+                        INSERT INTO DavSyncTokenLehrer(ID, SyncToken) VALUES (OLD.Lehrer_ID, CURTIME(3));
+                    ELSE
+                        UPDATE DavSyncTokenLehrer SET SyncToken = CURTIME(3) WHERE ID = OLD.Lehrer_ID;
+                    END IF;
+                END IF;
+                IF OLD.LehrbefKrz <> NEW.LehrbefKrz THEN
+                    SET changed := 1;
+                END IF;
+                IF changed = TRUE THEN
+                    SET token := (SELECT SyncToken FROM DavSyncTokenLehrer WHERE ID = NEW.Lehrer_ID);
+                    IF token IS NULL THEN
+                        INSERT INTO DavSyncTokenLehrer(ID, SyncToken) VALUES (NEW.Lehrer_ID, CURTIME(3));
+                    ELSE
+                        UPDATE DavSyncTokenLehrer SET SyncToken = CURTIME(3) WHERE ID = NEW.Lehrer_ID;
+                    END IF;
+                END IF;
+            END
+            """,
+            Schema.tab_LehrerLehramtLehrbef, Schema.tab_DavSyncTokenLehrer);
+
+    /** Trigger t_INSERT_DavSyncTokenLehrer_LehrerLehramtLehrbef */
+    public SchemaTabelleTrigger trigger_MariaDB_INSERT_DavSyncTokenLehrer_LehrerLehramtLehrbef = addTrigger(
+            "t_INSERT_DavSyncTokenLehrer_LehrerLehramtLehrbef",
+            DBDriver.MARIA_DB,
+            """
+            AFTER INSERT ON LehrerLehramtLehrbef FOR EACH ROW
+            BEGIN
+                DECLARE token DATETIME;
+                SET token := (SELECT DavSyncTokenLehrer.SyncToken FROM DavSyncTokenLehrer WHERE ID = NEW.Lehrer_ID);
+                IF token IS NULL THEN
+                    INSERT INTO DavSyncTokenLehrer(ID, SyncToken) VALUES (NEW.Lehrer_ID, CURTIME(3));
+                ELSE
+                    UPDATE DavSyncTokenLehrer SET SyncToken = CURTIME(3) WHERE ID = NEW.Lehrer_ID;
+                END IF;
+            END
+            """,
+            Schema.tab_LehrerLehramtLehrbef, Schema.tab_DavSyncTokenLehrer);
+
+    /** Trigger t_DELETE_DavSyncTokenLehrer_LehrerLehramtLehrbef */
+    public SchemaTabelleTrigger trigger_MariaDB_DELETE_DavSyncTokenLehrer_LehrerLehramtLehrbef = addTrigger(
+            "t_DELETE_DavSyncTokenLehrer_LehrerLehramtLehrbef",
+            DBDriver.MARIA_DB,
+            """
+            AFTER DELETE ON LehrerLehramtLehrbef FOR EACH ROW
+            BEGIN
+                DECLARE token DATETIME;
+                SET token := (SELECT DavSyncTokenLehrer.SyncToken FROM DavSyncTokenLehrer WHERE ID = OLD.Lehrer_ID);
+                IF token IS NULL THEN
+                    INSERT INTO DavSyncTokenLehrer(ID, SyncToken) VALUES (OLD.Lehrer_ID, CURTIME(3));
+                ELSE
+                    UPDATE DavSyncTokenLehrer SET SyncToken = CURTIME(3) WHERE ID = OLD.Lehrer_ID;
+                END IF;
+            END
+            """,
+            Schema.tab_LehrerLehramtLehrbef, Schema.tab_DavSyncTokenLehrer);
+
+    
     // TODO weitere Trigger für MariaDB 
 
     // TODO Trigger für SQLite
