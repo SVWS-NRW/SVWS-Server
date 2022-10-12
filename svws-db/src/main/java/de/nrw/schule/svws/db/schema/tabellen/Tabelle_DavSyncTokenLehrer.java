@@ -1,6 +1,7 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
 import de.nrw.schule.svws.core.adt.Pair;
+import de.nrw.schule.svws.db.DBDriver;
 import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaFremdschluesselAktionen;
@@ -8,6 +9,7 @@ import de.nrw.schule.svws.db.schema.SchemaRevisionen;
 import de.nrw.schule.svws.db.schema.SchemaTabelle;
 import de.nrw.schule.svws.db.schema.SchemaTabelleFremdschluessel;
 import de.nrw.schule.svws.db.schema.SchemaTabelleSpalte;
+import de.nrw.schule.svws.db.schema.SchemaTabelleTrigger;
 
 /**
  * Diese Klasse beinhaltet die Schema-Definition für die Tabelle DavSyncTokenLehrer.
@@ -33,6 +35,36 @@ public class Tabelle_DavSyncTokenLehrer extends SchemaTabelle {
 			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
 			new Pair<>(col_ID, Schema.tab_K_Lehrer.col_ID)
 		);
+
+    /** Trigger t_UPDATE_DavSyncTokenSchueler_Lehrer */
+    public SchemaTabelleTrigger trigger_MariaDB_UPDATE_DavSyncTokenSchueler_Lehrer = addTrigger(
+            "t_UPDATE_DavSyncTokenSchueler_Lehrer",
+            DBDriver.MARIA_DB,
+            """
+            AFTER UPDATE ON K_Lehrer FOR EACH ROW
+            BEGIN
+                DECLARE changed BOOLEAN;
+                DECLARE token DATETIME;
+                SET changed := 0;
+                IF OLD.Nachname <> NEW.Nachname OR OLD.Vorname <> NEW.Vorname OR OLD.Strassenname <> NEW.Strassenname 
+                        OR OLD.HausNr <> NEW.HausNr OR OLD.HausNrZusatz <> NEW.HausNrZusatz
+                        OR OLD.Ort_ID <> NEW.Ort_ID OR OLD.Ortsteil_ID <> NEW.Ortsteil_ID
+                        OR OLD.Tel <> NEW.Tel OR OLD.Handy <> NEW.Handy
+                        OR OLD.Email <> NEW.Email OR OLD.EmailDienstlich <> NEW.EmailDienstlich
+                        OR OLD.Geschlecht <> NEW.Geschlecht THEN
+                    SET changed := 1;
+                END IF;
+                IF changed = TRUE THEN
+                    SET token := (SELECT SyncToken FROM DavSyncTokenLehrer WHERE ID = NEW.ID);
+                    IF token IS NULL THEN
+                        INSERT INTO DavSyncTokenLehrer(ID, SyncToken) VALUES (NEW.ID, CURTIME(3));
+                    ELSE
+                        UPDATE DavSyncTokenLehrer SET SyncToken = CURTIME(3) WHERE ID = NEW.ID;
+                    END IF;
+                END IF;
+            END
+            """,
+            Schema.tab_K_Lehrer, Schema.tab_DavSyncTokenLehrer);
 
     // TODO Trigger für MariaDB 
 
