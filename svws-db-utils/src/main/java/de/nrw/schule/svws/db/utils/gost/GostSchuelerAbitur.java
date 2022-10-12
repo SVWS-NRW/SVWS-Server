@@ -4,9 +4,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import jakarta.ws.rs.WebApplicationException;
-import jakarta.ws.rs.core.Response.Status;
-
 import de.nrw.schule.svws.core.data.gost.AbiturFachbelegung;
 import de.nrw.schule.svws.core.data.gost.AbiturFachbelegungHalbjahr;
 import de.nrw.schule.svws.core.data.gost.Abiturdaten;
@@ -22,6 +19,7 @@ import de.nrw.schule.svws.core.types.gost.GostKursart;
 import de.nrw.schule.svws.core.types.statkue.ZulaessigesFach;
 import de.nrw.schule.svws.core.utils.gost.GostFaecherManager;
 import de.nrw.schule.svws.db.DBEntityManager;
+import de.nrw.schule.svws.db.dto.current.schild.faecher.DTOFach;
 import de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchueler;
 import de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchuelerSprachenfolge;
 import de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchuelerSprachpruefungen;
@@ -29,6 +27,8 @@ import de.nrw.schule.svws.db.dto.current.schild.schueler.abitur.DTOSchuelerAbitu
 import de.nrw.schule.svws.db.dto.current.schild.schueler.abitur.DTOSchuelerAbiturFach;
 import de.nrw.schule.svws.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.nrw.schule.svws.db.utils.OperationError;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Response.Status;
 
 
 
@@ -225,12 +225,20 @@ public class GostSchuelerAbitur {
 		for (DTOSchuelerAbiturFach dto : faecher) {
 			AbiturFachbelegung fach = new AbiturFachbelegung();
 			GostFach gostFach = gostFaecher.get(dto.Fach_ID);
-			fach.fachID = gostFach.id;
+			fach.fachID = dto.Fach_ID;
 			fach.letzteKursart = dto.KursartAllgemein == null ? null : dto.KursartAllgemein.kuerzel;
 			fach.abiturFach = dto.AbiturFach == null ? null : dto.AbiturFach.id;
 			if (dto.KursartAllgemein == GostKursart.PJK) {
-				abidaten.projektkursLeitfach1Kuerzel = gostFach.projektKursLeitfach1Kuerzel;
-				abidaten.projektkursLeitfach2Kuerzel = gostFach.projektKursLeitfach2Kuerzel;
+			    if (gostFach == null) {
+			        DTOFach dtoFach = conn.queryByKey(DTOFach.class, dto.Fach_ID);
+			        DTOFach dtoLeitfach1 = dtoFach.ProjektKursLeitfach1_ID == null ? null : conn.queryByKey(DTOFach.class, dtoFach.ProjektKursLeitfach1_ID);
+                    DTOFach dtoLeitfach2 = dtoFach.ProjektKursLeitfach2_ID == null ? null : conn.queryByKey(DTOFach.class, dtoFach.ProjektKursLeitfach2_ID);
+                    abidaten.projektkursLeitfach1Kuerzel = dtoLeitfach1 == null ? null : dtoLeitfach1.Kuerzel;
+                    abidaten.projektkursLeitfach2Kuerzel = dtoLeitfach2 == null ? null : dtoLeitfach2.Kuerzel;
+			    } else {
+    				abidaten.projektkursLeitfach1Kuerzel = gostFach.projektKursLeitfach1Kuerzel;
+    				abidaten.projektkursLeitfach2Kuerzel = gostFach.projektKursLeitfach2Kuerzel;
+			    }
 			}
 			fach.block1PunktSumme = dto.ZulassungPunktsumme;
 			fach.block1NotenpunkteDurchschnitt = dto.ZulassungNotenpunktdurchschnitt;
