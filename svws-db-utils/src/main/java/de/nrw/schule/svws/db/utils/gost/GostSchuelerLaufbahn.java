@@ -146,8 +146,12 @@ public class GostSchuelerLaufbahn {
     	// Belegte Fächer aus den Leistungsdaten überprüfen und Abiturfach setzen
 		for (AbiturFachbelegung fach : abidaten.fachbelegungen) {
 			DTOGostSchuelerFachbelegungen belegungPlanung = dtoFachwahlen.get(fach.fachID);
-			GostAbiturFach tmpAbiturFach = GostAbiturFach.fromID(belegungPlanung.AbiturFach);
-			fach.abiturFach = tmpAbiturFach == null ? null : tmpAbiturFach.id;
+			if (belegungPlanung == null) {
+			    fach.abiturFach = null;
+		    } else {
+			    GostAbiturFach tmpAbiturFach = GostAbiturFach.fromID(belegungPlanung.AbiturFach);
+			    fach.abiturFach = tmpAbiturFach == null ? null : tmpAbiturFach.id;
+			}
 		}
 
 		// Füge gewählte Fächer ohne Leistungsdaten hinzu
