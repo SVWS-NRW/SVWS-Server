@@ -155,8 +155,8 @@ public class GostSchueler {
 								|| ("AB4".equals(leistung.Kursart) && (halbjahr != GostHalbjahr.Q22))));
 				belegung.bilingualeSprache = gostFach.biliSprache;
 				belegung.wochenstunden = leistung.Wochenstunden;
-				belegung.fehlstundenGesamt = leistung.FehlStd;
-				belegung.fehlstundenUnentschuldigt = leistung.uFehlStd;
+				belegung.fehlstundenGesamt = leistung.FehlStd == null ? 0 : leistung.FehlStd;
+				belegung.fehlstundenUnentschuldigt = leistung.uFehlStd == null ? 0 : leistung.uFehlStd;
 				fach.belegungen.add(belegung);
 				
 				// Ermittle ggf. das Projektkursthema und die zughörigen Leitfächer 
