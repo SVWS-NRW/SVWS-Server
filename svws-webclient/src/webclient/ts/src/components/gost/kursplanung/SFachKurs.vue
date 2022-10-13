@@ -48,7 +48,7 @@ import {
 	GostStatistikFachwahl,
 	GostStatistikFachwahlHalbjahr
 } from "@svws-nrw/svws-core-ts";
-import { computed, ComputedRef, ref, Ref } from "vue";
+import { computed, ComputedRef } from "vue";
 
 import { injectMainApp, Main } from "~/apps/Main";
 

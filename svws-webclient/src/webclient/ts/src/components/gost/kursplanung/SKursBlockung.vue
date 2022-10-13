@@ -65,7 +65,6 @@
 					</svws-ui-icon>
 				</svws-ui-badge>
 			</drag-data>
-			<!-- Es dürfen keine Regeln erstellt werden -->
 			<template v-else>
 				<svws-ui-icon class="cursor-pointer px-4 py-2" @click="sperren_regel_toggle(schiene.nummer)">
 					<i-ri-forbid-fill v-if="sperr_regeln.find(r=>r.parameter.get(1) === schiene.nummer)" class="inline-block text-red-500" />
@@ -73,12 +72,16 @@
 				</svws-ui-icon>
 			</template>
 		</drop-data>
+		<!-- Es dürfen keine Regeln erstellt werden -->
 		<template v-else v-for="schiene in schienen" :key="schiene.nummer">
 			<td 
 				class="border border-[#7f7f7f]/20 text-center"
-				:class="{'border-t-2': kursdifferenz}"
+				:class="{ 'border-t-2': kursdifferenz }"
 			>
-				<svws-ui-badge v-if="kurs_blockungsergebnis?.schienenID === schiene.id" size="tiny"  variant="highlight" >
+				<svws-ui-badge
+					v-if="kurs_blockungsergebnis?.schienenID === schiene.id"
+					size="tiny" :variant="selected_kurs?'primary':'highlight'" class="cursor-pointer"
+					@click="toggle_active_kurs">
 					{{ kurs_blockungsergebnis?.schueler.size() }}
 				</svws-ui-badge>
 			</td>
@@ -197,6 +200,8 @@ const kurs_blockungsergebnis: ComputedRef<GostBlockungsergebnisKurs|undefined> =
 	} catch (e) { return undefined }
 	})
 
+const selected_kurs: ComputedRef<boolean> = computed(()=> kurs_blockungsergebnis.value === app.dataKursblockungsergebnis.active_kurs?.value)
+
 const filtered_by_kursart: ComputedRef<GostBlockungsergebnisKurs[]> = computed(()=>{
 	const kurse = app.dataKursblockungsergebnis.manager?.getKursSchuelerZuordnungenFuerFach(props.kurs.fach_id)
 	if (!kurse) return []
@@ -306,5 +311,11 @@ async function add_kurs() {
 }
 async function del_kurs() {
 	await app.dataKursblockung.del_blockung_kurse(props.kurs.fach_id, props.kurs.kursart)
+}
+
+function toggle_active_kurs() {
+	app.dataKursblockungsergebnis.active_kurs.value = app.dataKursblockungsergebnis.active_kurs.value === kurs_blockungsergebnis.value
+	? undefined
+	: kurs_blockungsergebnis.value
 }
 </script>

@@ -1,12 +1,13 @@
 <template>
+	<svws-ui-content-card title="Schüler und Kurszuordnungen">
 	<div class="flex flex-row gap-4">
-		<div class="test flex-none">
+		<div class="flex-none">
 			<div class="sticky">
-				<b>Schüler</b>
 				<div class="rounded-lg shadow">
 					<svws-ui-checkbox v-model="filter_kollision" class="p-5">
 						Nur Kollisionen ({{Object.values(schueler_kollisionen).length}}/{{schueler?.length || 0}})
 					</svws-ui-checkbox>
+					<div v-if="app.dataKursblockungsergebnis.active_kurs.value"><b>Kursansicht {{app.dataKursblockungsergebnis.active_kurs.value.name}}</b></div>
 					<svws-ui-text-input v-model="filter_name" type="search" placeholder="Suche nach Namen">
 						<i-ri-search-line />
 					</svws-ui-text-input>
@@ -34,7 +35,6 @@
 			@drag-over="drag_over($event)"
 			>
 			<div :class="{ 'border-2 border-dashed border-red-700': active }">
-				<b>Kurswahlen</b>
 				<div class="overflow-hidden rounded-lg shadow">
 					<table class="w-full border-collapse text-sm">
 						<s-kurs-schueler-fachbelegung
@@ -45,17 +45,16 @@
 							:schueler-id="selected.id"
 							/>
 					</table>
-					<div class="flex w-full items-center justify-center bg-slate-100">
+					<div class="flex items-center justify-center bg-slate-100">
 						<i-ri-delete-bin-2-line class="m-2 text-4xl" :class="{ 'text-red-700': is_dragging }" />
 					</div>
 				</div>
 			</div>
 		</drop-data>
-		<div v-if="selected" class="w-full flex-none">
+		<div v-if="selected" class="flex-none">
 			<div class="">
-				<b>Zuordnungen </b>
 				<div class="overflow-hidden rounded-lg shadow">
-					<table class="w-full border-collapse text-sm">
+					<table class="border-collapse text-sm">
 						<s-kurs-schueler-schiene
 							v-for="(s, i) in schienen"
 							:key="i"
@@ -67,6 +66,7 @@
 			</div>
 		</div>
 	</div>
+	</svws-ui-content-card>
 </template>
 
 <script setup lang="ts">
@@ -77,10 +77,11 @@ import {
 	GostBlockungsergebnisKurs,
 	GostBlockungsergebnisManager,
 	GostBlockungsergebnisSchiene,
+	List,
 	SchuelerListeEintrag,
 	Vector
 } from "@svws-nrw/svws-core-ts";
-import { computed, ComputedRef, WritableComputedRef } from "vue";
+import { computed, ComputedRef, watch, WritableComputedRef } from "vue";
 
 import { injectMainApp, Main } from "~/apps/Main";
 
@@ -92,15 +93,11 @@ const manager: ComputedRef<GostBlockungsergebnisManager | undefined> =
 		return app.dataKursblockungsergebnis.manager;
 	});
 
-const bezeichnung: ComputedRef<string | undefined> = computed(() => {
-	return app.auswahl.ausgewaehlt?.bezeichnung?.toString();
-});
-
 const is_dragging: ComputedRef<boolean> = computed(() => {
 	return !!main.config.drag_and_drop_data;
 });
 
-const kurse: ComputedRef<Vector<GostBlockungKurs>> = computed(() => {
+const kurse: ComputedRef<List<GostBlockungKurs>> = computed(() => {
 	return (
 		app.dataKursblockung.daten?.kurse || new Vector<GostBlockungKurs>()
 	);
@@ -112,8 +109,17 @@ const schienen: ComputedRef<
 
 const schueler: ComputedRef<Array<SchuelerListeEintrag> | undefined> =
 	computed(() => {
+		if (app.dataKursblockungsergebnis.active_kurs.value) {
+			const ids = new Set()
+			for (const s of app.dataKursblockungsergebnis.active_kurs.value.schueler) ids.add(s.id)
+			return app.listAbiturjahrgangSchueler.gefiltert.filter(s => ids.has(s.id))
+		}
 		return app.listAbiturjahrgangSchueler.gefiltert;
 	});
+
+watch(()=>schueler.value, (new_val)=>{
+	selected.value = new_val ? new_val[0]:undefined
+})
 
 const selected: WritableComputedRef<SchuelerListeEintrag | undefined> =
 	computed({

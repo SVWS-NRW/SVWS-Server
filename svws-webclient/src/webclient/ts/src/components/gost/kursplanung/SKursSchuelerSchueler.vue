@@ -3,18 +3,18 @@
 		class="cursor-pointer border border-[#7f7f7f]/20 px-2 text-left"
 		:class="{ 'bg-red-400': kollision, 'bg-blue-400': selected }"
 	>
-		<td class="px-2">{{ schueler.nachname }}, {{ schueler.vorname }}</td>
+		<td class="px-2">{{ schueler instanceof SchuelerListeEintrag ? `${schueler.nachname}, ${schueler.vorname}` : schueler.name }}</td>
 	</tr>
 </template>
 
 <script setup lang="ts">
-	import { SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
+	import { SchuelerListeEintrag, GostBlockungsergebnisSchuelerzuordnung } from "@svws-nrw/svws-core-ts";
 
 	import { injectMainApp, Main } from "~/apps/Main";
 
 	const props = defineProps({
 		schueler: {
-			type: SchuelerListeEintrag,
+			type: [SchuelerListeEintrag, GostBlockungsergebnisSchuelerzuordnung],
 			required: true
 		},
 		kollision: { type: Boolean, required: true },

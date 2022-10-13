@@ -4,6 +4,7 @@ import {
 	GostBlockungKurs,
 	GostBlockungSchiene,
 	GostBlockungsergebnis,
+	GostBlockungsergebnisKurs,
 	GostBlockungsergebnisListeneintrag,
 	GostBlockungsergebnisManager,
 	GostFach,
@@ -12,12 +13,16 @@ import {
 	Vector
 } from "@svws-nrw/svws-core-ts";
 import { BaseData } from "../BaseData";
+import { Ref, ref } from "vue";
 
 export class DataGostKursblockungsergebnis extends BaseData<
 	GostBlockungsergebnis,
 	GostBlockungsergebnisListeneintrag,
 	GostBlockungsergebnisManager
 > {
+
+	public active_kurs: Ref<GostBlockungsergebnisKurs | undefined> = ref(undefined);
+
 	protected on_update(daten: Partial<GostBlockungsergebnis>): void {
 		return void daten;
 	}
