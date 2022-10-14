@@ -49,6 +49,7 @@ public class Tabelle_DavSyncTokenLehrer extends SchemaTabelle {
                 IF OLD.Nachname <> NEW.Nachname OR OLD.Vorname <> NEW.Vorname OR OLD.Strassenname <> NEW.Strassenname 
                         OR OLD.HausNr <> NEW.HausNr OR OLD.HausNrZusatz <> NEW.HausNrZusatz
                         OR OLD.Ort_ID <> NEW.Ort_ID OR OLD.Ortsteil_ID <> NEW.Ortsteil_ID
+                        OR OLD.Sichtbar <> NEW.Sichtbar
                         OR OLD.Tel <> NEW.Tel OR OLD.Handy <> NEW.Handy
                         OR OLD.Email <> NEW.Email OR OLD.EmailDienstlich <> NEW.EmailDienstlich
                         OR OLD.Geschlecht <> NEW.Geschlecht THEN
@@ -271,6 +272,7 @@ public class Tabelle_DavSyncTokenLehrer extends SchemaTabelle {
                 DECLARE token DATETIME;
                 SET changed := 0;
                 IF OLD.ID <> NEW.ID OR OLD.Klasse <> NEW.Klasse OR OLD.ASDKlasse <> NEW.ASDKlasse
+                        OR OLD.Schuljahresabschnitts_ID <> NEW.Schuljahresabschnitts_ID
                         OR OLD.Jahrgang_ID <> NEW.Jahrgang_ID THEN
                     SET changed := 1;
                 END IF;
