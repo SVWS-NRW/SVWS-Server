@@ -126,7 +126,6 @@ declare module '@vue/runtime-core' {
     SGostFachwahlen: typeof import('./src/components/gost/fachwahlen/SGostFachwahlen.vue')['default']
     SGostFaecher: typeof import('./src/components/gost/faecher/SGostFaecher.vue')['default']
     SGostKursplanung: typeof import('./src/components/gost/kursplanung/SGostKursplanung.vue')['default']
-    SGostKursSchueler: typeof import('./src/components/gost/kursschueler/SGostKursSchueler.vue')['default']
     SGostStammdaten: typeof import('./src/components/gost/stammdaten/SGostStammdaten.vue')['default']
     SJahrgaengeApp: typeof import('./src/components/jahrgaenge/SJahrgaengeApp.vue')['default']
     SJahrgaengeAuswahl: typeof import('./src/components/jahrgaenge/SJahrgaengeAuswahl.vue')['default']
