@@ -58,7 +58,6 @@
 			>
 				<svws-ui-badge size="tiny" class="cursor-grab" :variant="fixier_regel ? 'error' : 'highlight'">
 					{{ kurs_blockungsergebnis.schueler.size() }}
-
 					<svws-ui-icon class="cursor-pointer" @click="fixieren_regel_toggle" >
 						<i-ri-pushpin-fill v-if="fixier_regel" class="inline-block"/>
 						<i-ri-pushpin-line v-else class="inline-block"/>
@@ -274,6 +273,7 @@ const sperren_regel_toggle = (nummer: number) =>
 	 sperr_regeln.value.find(r=>r.parameter.get(1) === nummer)
 	 	? sperren_regel_entfernen(nummer)
 		: sperren_regel_hinzufuegen(nummer)
+
 const sperren_regel_hinzufuegen = async (nummer: number) => {
 	const regel = await app.dataKursblockung.add_blockung_regel(GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ)
 	if (!regel) return
@@ -296,15 +296,12 @@ function drop_aendere_kursschiene(drag_data: {kurs: GostBlockungsergebnisKurs; s
 	}
 }
 function drag_over(event: DragEvent) {
-		const transfer = event.dataTransfer;
-		if (!transfer) return;
-		const data = main.config.drag_and_drop_data;
-		if (
-			!data 
-		)
-			return;
-		event.preventDefault();
-	}
+	const transfer = event.dataTransfer;
+	if (!transfer) return;
+	const data = main.config.drag_and_drop_data;
+	if (!data) return;
+	event.preventDefault();
+}
 
 async function add_kurs() {
 	await app.dataKursblockung.add_blockung_kurse(props.kurs.fach_id, props.kurs.kursart)
@@ -315,7 +312,7 @@ async function del_kurs() {
 
 function toggle_active_kurs() {
 	app.dataKursblockungsergebnis.active_kurs.value = app.dataKursblockungsergebnis.active_kurs.value === kurs_blockungsergebnis.value
-	? undefined
-	: kurs_blockungsergebnis.value
+		? undefined
+		: kurs_blockungsergebnis.value
 }
 </script>

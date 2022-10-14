@@ -14,7 +14,7 @@
 			v-for="k of getSchieneKurseArray(schiene.kurse)"
 			:key="k.id"
 			:kurs="k"
-			:selected="selected"
+			:schueler="selected"
 		/>
 	</tr>
 </template>

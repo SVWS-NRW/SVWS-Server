@@ -7,7 +7,7 @@
 					<svws-ui-checkbox v-model="filter_kollision" class="p-5">
 						Nur Kollisionen ({{Object.values(schueler_kollisionen).length}}/{{schueler?.length || 0}})
 					</svws-ui-checkbox>
-					<div v-if="app.dataKursblockungsergebnis.active_kurs.value"><b>Kursansicht {{app.dataKursblockungsergebnis.active_kurs.value.name}}</b></div>
+					<div v-if="app.dataKursblockungsergebnis.active_kurs.value" class="px-4"><b>Kursansicht {{app.dataKursblockungsergebnis.active_kurs.value.name}}</b></div>
 					<svws-ui-text-input v-model="filter_name" type="search" placeholder="Suche nach Namen">
 						<i-ri-search-line />
 					</svws-ui-text-input>
