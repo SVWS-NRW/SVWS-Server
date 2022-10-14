@@ -3872,7 +3872,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getKatalogAbgangsartenAllgemeinbildend für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/abgangsarten/allgemeinbildend
+	 * Implementierung der GET-Methode getKatalogAbgangsartenAllgemeinbildend für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/allgemein/abgangsarten/allgemeinbildend
 	 * 
 	 * Gibt den Katalog der Abgangsarten für allgemeinbildende Schulformen zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
 	 * 
@@ -3888,7 +3888,7 @@ export class ApiServer extends BaseApi {
 	 * @returns Der Katalog
 	 */
 	public async getKatalogAbgangsartenAllgemeinbildend(schema : string) : Promise<AbgangsartKatalog> {
-		let path : string = "/db/{schema}/schule/abgangsarten/allgemeinbildend"
+		let path : string = "/db/{schema}/schule/allgemein/abgangsarten/allgemeinbildend"
 				.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const text = result;
@@ -3897,7 +3897,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getKatalogAbgangsartenBerufsbildend für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/abgangsarten/berufsbildend
+	 * Implementierung der GET-Methode getKatalogAbgangsartenBerufsbildend für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/allgemein/abgangsarten/berufsbildend
 	 * 
 	 * Gibt den Katalog der Abgangsarten für berufsbildende Schulformen zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
 	 * 
@@ -3913,7 +3913,7 @@ export class ApiServer extends BaseApi {
 	 * @returns Der Katalog
 	 */
 	public async getKatalogAbgangsartenBerufsbildend(schema : string) : Promise<AbgangsartKatalog> {
-		let path : string = "/db/{schema}/schule/abgangsarten/berufsbildend"
+		let path : string = "/db/{schema}/schule/allgemein/abgangsarten/berufsbildend"
 				.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const text = result;
@@ -3922,7 +3922,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getAllgemeineMerkmale für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/allgemeine_merkmale
+	 * Implementierung der GET-Methode getAllgemeineMerkmale für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/allgemein/allgemeine_merkmale
 	 * 
 	 * Erstellt eine Liste aller in dem Katalog vorhanden Allgemeinen Merkmale bei Schulen und Schülern. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
 	 * 
@@ -3938,7 +3938,7 @@ export class ApiServer extends BaseApi {
 	 * @returns Eine Liste von Allgemeinen-Merkmal-Katalog-Einträgen
 	 */
 	public async getAllgemeineMerkmale(schema : string) : Promise<List<AllgemeineMerkmaleKatalogEintrag>> {
-		let path : string = "/db/{schema}/schule/allgemeine_merkmale"
+		let path : string = "/db/{schema}/schule/allgemein/allgemeine_merkmale"
 				.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
@@ -3949,7 +3949,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getBerufskollegAnlagen für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/berufskolleg/anlagen
+	 * Implementierung der GET-Methode getBerufskollegAnlagen für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/allgemein/berufskolleg/anlagen
 	 * 
 	 * Erstellt eine Liste aller in dem Katalog vorhanden Anlagen am Berufskolleg. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
 	 * 
@@ -3965,7 +3965,7 @@ export class ApiServer extends BaseApi {
 	 * @returns Eine Liste von Berufskolleg-Anlagen-Katalog-Einträgen
 	 */
 	public async getBerufskollegAnlagen(schema : string) : Promise<List<BerufskollegAnlageKatalogEintrag>> {
-		let path : string = "/db/{schema}/schule/berufskolleg/anlagen"
+		let path : string = "/db/{schema}/schule/allgemein/berufskolleg/anlagen"
 				.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
@@ -3976,7 +3976,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getBerufskollegBerufsebenen für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/berufskolleg/berufsebenen
+	 * Implementierung der GET-Methode getBerufskollegBerufsebenen für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/allgemein/berufskolleg/berufsebenen
 	 * 
 	 * Erstellt eine Liste aller in dem Katalog vorhanden Berufsebenen am Berufskolleg. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
 	 * 
@@ -3992,7 +3992,7 @@ export class ApiServer extends BaseApi {
 	 * @returns Eine Liste von Berufskolleg-Berufsebenen-Katalog-Einträgen
 	 */
 	public async getBerufskollegBerufsebenen(schema : string) : Promise<List<BerufskollegBerufsebeneKatalogEintrag>> {
-		let path : string = "/db/{schema}/schule/berufskolleg/berufsebenen"
+		let path : string = "/db/{schema}/schule/allgemein/berufskolleg/berufsebenen"
 				.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
@@ -4003,7 +4003,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getBerufskollegFachklassen für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/berufskolleg/fachklassen
+	 * Implementierung der GET-Methode getBerufskollegFachklassen für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/allgemein/berufskolleg/fachklassen
 	 * 
 	 * Gibt den Katalog der Fachklassen am Berufskolleg zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
 	 * 
@@ -4019,7 +4019,7 @@ export class ApiServer extends BaseApi {
 	 * @returns Der Fachklassen-Katalog für berufsbildende Schulen
 	 */
 	public async getBerufskollegFachklassen(schema : string) : Promise<BerufskollegFachklassenKatalog> {
-		let path : string = "/db/{schema}/schule/berufskolleg/fachklassen"
+		let path : string = "/db/{schema}/schule/allgemein/berufskolleg/fachklassen"
 				.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const text = result;
@@ -4028,7 +4028,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getEinschulungsarten für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/einschulungsarten
+	 * Implementierung der GET-Methode getEinschulungsarten für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/allgemein/einschulungsarten
 	 * 
 	 * Erstellt eine Liste aller in dem Katalog vorhanden Einschulungsarten. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
 	 * 
@@ -4044,12 +4044,255 @@ export class ApiServer extends BaseApi {
 	 * @returns Eine Liste von Einschulungsart-Katalog-Einträgen
 	 */
 	public async getEinschulungsarten(schema : string) : Promise<List<EinschulungsartKatalogEintrag>> {
-		let path : string = "/db/{schema}/schule/einschulungsarten"
+		let path : string = "/db/{schema}/schule/allgemein/einschulungsarten"
 				.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		let ret = new Vector<EinschulungsartKatalogEintrag>();
 		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(EinschulungsartKatalogEintrag.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getFoerderschwerpunkte für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/allgemein/foerderschwerpunkte
+	 * 
+	 * Erstellt eine Liste aller in dem Katalog vorhanden Förderschwerpunkte. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Eine Liste von Förderschwerpunkt-Katalog-Einträgen
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<FoerderschwerpunktKatalogEintrag>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
+	 *   Code 404: Keine Förderschwerpunkt-Katalog-Einträge gefunden
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * 
+	 * @returns Eine Liste von Förderschwerpunkt-Katalog-Einträgen
+	 */
+	public async getFoerderschwerpunkte(schema : string) : Promise<List<FoerderschwerpunktKatalogEintrag>> {
+		let path : string = "/db/{schema}/schule/allgemein/foerderschwerpunkte"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		let ret = new Vector<FoerderschwerpunktKatalogEintrag>();
+		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(FoerderschwerpunktKatalogEintrag.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getNationaelitaeten für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/allgemein/nationalitaeten
+	 * 
+	 * Erstellt eine Liste aller in dem Katalog vorhanden Nationalitäten. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Eine Liste von Nationalitäten-Katalog-Einträgen
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<NationalitaetenKatalogEintrag>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
+	 *   Code 404: Keine Nationalitäten-Katalog-Einträge gefunden
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * 
+	 * @returns Eine Liste von Nationalitäten-Katalog-Einträgen
+	 */
+	public async getNationaelitaeten(schema : string) : Promise<List<NationalitaetenKatalogEintrag>> {
+		let path : string = "/db/{schema}/schule/allgemein/nationalitaeten"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		let ret = new Vector<NationalitaetenKatalogEintrag>();
+		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(NationalitaetenKatalogEintrag.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getPruefungsordnungen für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/allgemein/pruefungsordnungen
+	 * 
+	 * Erstellt eine Liste aller in dem Katalog vorhanden Ausbildungs- und Prüfungsordnungen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Eine Liste von Katalog-Einträgen
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<PruefungsordnungKatalogEintrag>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
+	 *   Code 404: Keine Katalog-Einträge gefunden
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * 
+	 * @returns Eine Liste von Katalog-Einträgen
+	 */
+	public async getPruefungsordnungen(schema : string) : Promise<List<PruefungsordnungKatalogEintrag>> {
+		let path : string = "/db/{schema}/schule/allgemein/pruefungsordnungen"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		let ret = new Vector<PruefungsordnungKatalogEintrag>();
+		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(PruefungsordnungKatalogEintrag.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getKatalogReligionen für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/allgemein/religionen
+	 * 
+	 * Erstellt eine Liste aller in dem Katalog vorhanden Relgionen bzw. Konfessionen, welche im Rahmen der amtlichen Schulstatistik verwendet werden. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Eine Liste von Katalog-Einträgen
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<ReligionKatalogEintrag>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
+	 *   Code 404: Keine Katalog-Einträge gefunden
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * 
+	 * @returns Eine Liste von Katalog-Einträgen
+	 */
+	public async getKatalogReligionen(schema : string) : Promise<List<ReligionKatalogEintrag>> {
+		let path : string = "/db/{schema}/schule/allgemein/religionen"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		let ret = new Vector<ReligionKatalogEintrag>();
+		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(ReligionKatalogEintrag.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getSchulabschluesseAllgemeinbildend für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/allgemein/schulabschluesse/allgemeinbildend
+	 * 
+	 * Erstellt eine Liste aller in dem Katalog vorhanden allgemeinbildenden Schulabschlüsse. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Eine Liste von allgemeinbildenden Abschlussart-Katalog-Einträgen
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SchulabschlussAllgemeinbildendKatalogEintrag>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
+	 *   Code 404: Keine Abschlussart-Katalog-Einträge gefunden
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * 
+	 * @returns Eine Liste von allgemeinbildenden Abschlussart-Katalog-Einträgen
+	 */
+	public async getSchulabschluesseAllgemeinbildend(schema : string) : Promise<List<SchulabschlussAllgemeinbildendKatalogEintrag>> {
+		let path : string = "/db/{schema}/schule/allgemein/schulabschluesse/allgemeinbildend"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		let ret = new Vector<SchulabschlussAllgemeinbildendKatalogEintrag>();
+		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(SchulabschlussAllgemeinbildendKatalogEintrag.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getSchulabschluesseBerufsbildend für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/allgemein/schulabschluesse/berufsbildend
+	 * 
+	 * Erstellt eine Liste aller in dem Katalog vorhanden berufsbildenden Schulabschlüsse. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Eine Liste von berufsbildenden Abschlussart-Katalog-Einträgen
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SchulabschlussBerufsbildendKatalogEintrag>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
+	 *   Code 404: Keine Abschlussart-Katalog-Einträge gefunden
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * 
+	 * @returns Eine Liste von berufsbildenden Abschlussart-Katalog-Einträgen
+	 */
+	public async getSchulabschluesseBerufsbildend(schema : string) : Promise<List<SchulabschlussBerufsbildendKatalogEintrag>> {
+		let path : string = "/db/{schema}/schule/allgemein/schulabschluesse/berufsbildend"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		let ret = new Vector<SchulabschlussBerufsbildendKatalogEintrag>();
+		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(SchulabschlussBerufsbildendKatalogEintrag.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getSchulformen für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/allgemein/schulformen
+	 * 
+	 * Erstellt eine Liste aller in dem Katalog vorhanden Schulformen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Eine Liste von Schulform-Katalog-Einträgen
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SchulformKatalogEintrag>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
+	 *   Code 404: Keine Schulform-Katalog-Einträge gefunden
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * 
+	 * @returns Eine Liste von Schulform-Katalog-Einträgen
+	 */
+	public async getSchulformen(schema : string) : Promise<List<SchulformKatalogEintrag>> {
+		let path : string = "/db/{schema}/schule/allgemein/schulformen"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		let ret = new Vector<SchulformKatalogEintrag>();
+		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(SchulformKatalogEintrag.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getSchulgliederungen für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/allgemein/schulgliederungen
+	 * 
+	 * Erstellt eine Liste aller in dem Katalog vorhanden Schulgliederungen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Eine Liste von Schulgliederung-Katalog-Einträgen
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SchulgliederungKatalogEintrag>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
+	 *   Code 404: Keine Schulform-Katalog-Einträge gefunden
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * 
+	 * @returns Eine Liste von Schulgliederung-Katalog-Einträgen
+	 */
+	public async getSchulgliederungen(schema : string) : Promise<List<SchulgliederungKatalogEintrag>> {
+		let path : string = "/db/{schema}/schule/allgemein/schulgliederungen"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		let ret = new Vector<SchulgliederungKatalogEintrag>();
+		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(SchulgliederungKatalogEintrag.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getVerkehrssprachen für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/allgemein/verkehrssprachen
+	 * 
+	 * Erstellt eine Liste aller in dem Katalog vorhanden der Verkehrssprachen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Eine Liste von Katalog-Einträgen
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<VerkehrsspracheKatalogEintrag>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
+	 *   Code 404: Keine Katalog-Einträge gefunden
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * 
+	 * @returns Eine Liste von Katalog-Einträgen
+	 */
+	public async getVerkehrssprachen(schema : string) : Promise<List<VerkehrsspracheKatalogEintrag>> {
+		let path : string = "/db/{schema}/schule/allgemein/verkehrssprachen"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		let ret = new Vector<VerkehrsspracheKatalogEintrag>();
+		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(VerkehrsspracheKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -4109,33 +4352,6 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getFoerderschwerpunkte für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/foerderschwerpunkte/statistik
-	 * 
-	 * Erstellt eine Liste aller in dem Katalog vorhanden Förderschwerpunkte. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
-	 * 
-	 * Mögliche HTTP-Antworten: 
-	 *   Code 200: Eine Liste von Förderschwerpunkt-Katalog-Einträgen
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<FoerderschwerpunktKatalogEintrag>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
-	 *   Code 404: Keine Förderschwerpunkt-Katalog-Einträge gefunden
-	 * 
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * 
-	 * @returns Eine Liste von Förderschwerpunkt-Katalog-Einträgen
-	 */
-	public async getFoerderschwerpunkte(schema : string) : Promise<List<FoerderschwerpunktKatalogEintrag>> {
-		let path : string = "/db/{schema}/schule/foerderschwerpunkte/statistik"
-				.replace(/{schema\s*(:[^}]+)?}/g, schema);
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		let ret = new Vector<FoerderschwerpunktKatalogEintrag>();
-		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(FoerderschwerpunktKatalogEintrag.transpilerFromJSON(text)); });
-		return ret;
-	}
-
-
-	/**
 	 * Implementierung der GET-Methode getSchullogo für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/logo
 	 * 
 	 * Liest das Logo der Schule zum angegebenen Schema aus der Datenbank und liefert dieses zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schuldaten besitzt.
@@ -4182,33 +4398,6 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getNationaelitaeten für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/nationalitaeten
-	 * 
-	 * Erstellt eine Liste aller in dem Katalog vorhanden Nationalitäten. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
-	 * 
-	 * Mögliche HTTP-Antworten: 
-	 *   Code 200: Eine Liste von Nationalitäten-Katalog-Einträgen
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<NationalitaetenKatalogEintrag>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
-	 *   Code 404: Keine Nationalitäten-Katalog-Einträge gefunden
-	 * 
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * 
-	 * @returns Eine Liste von Nationalitäten-Katalog-Einträgen
-	 */
-	public async getNationaelitaeten(schema : string) : Promise<List<NationalitaetenKatalogEintrag>> {
-		let path : string = "/db/{schema}/schule/nationalitaeten"
-				.replace(/{schema\s*(:[^}]+)?}/g, schema);
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		let ret = new Vector<NationalitaetenKatalogEintrag>();
-		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(NationalitaetenKatalogEintrag.transpilerFromJSON(text)); });
-		return ret;
-	}
-
-
-	/**
 	 * Implementierung der GET-Methode getSchuleNummer für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/nummer
 	 * 
 	 * Liefert die Schulnummer der Schule. Es wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Schuldaten besitzt.
@@ -4230,33 +4419,6 @@ export class ApiServer extends BaseApi {
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return parseInt(JSON.parse(text));
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getPruefungsordnungen für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/pruefungsordnungen
-	 * 
-	 * Erstellt eine Liste aller in dem Katalog vorhanden Ausbildungs- und Prüfungsordnungen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
-	 * 
-	 * Mögliche HTTP-Antworten: 
-	 *   Code 200: Eine Liste von Katalog-Einträgen
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<PruefungsordnungKatalogEintrag>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
-	 *   Code 404: Keine Katalog-Einträge gefunden
-	 * 
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * 
-	 * @returns Eine Liste von Katalog-Einträgen
-	 */
-	public async getPruefungsordnungen(schema : string) : Promise<List<PruefungsordnungKatalogEintrag>> {
-		let path : string = "/db/{schema}/schule/pruefungsordnungen"
-				.replace(/{schema\s*(:[^}]+)?}/g, schema);
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		let ret = new Vector<PruefungsordnungKatalogEintrag>();
-		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(PruefungsordnungKatalogEintrag.transpilerFromJSON(text)); });
-		return ret;
 	}
 
 
@@ -4370,141 +4532,6 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getKatalogReligionen für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/religionen/statistik
-	 * 
-	 * Erstellt eine Liste aller in dem Katalog vorhanden Relgionen bzw. Konfessionen, welche im Rahmen der amtlichen Schulstatistik verwendet werden. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
-	 * 
-	 * Mögliche HTTP-Antworten: 
-	 *   Code 200: Eine Liste von Katalog-Einträgen
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<ReligionKatalogEintrag>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
-	 *   Code 404: Keine Katalog-Einträge gefunden
-	 * 
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * 
-	 * @returns Eine Liste von Katalog-Einträgen
-	 */
-	public async getKatalogReligionen(schema : string) : Promise<List<ReligionKatalogEintrag>> {
-		let path : string = "/db/{schema}/schule/religionen/statistik"
-				.replace(/{schema\s*(:[^}]+)?}/g, schema);
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		let ret = new Vector<ReligionKatalogEintrag>();
-		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(ReligionKatalogEintrag.transpilerFromJSON(text)); });
-		return ret;
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getSchulabschluesseAllgemeinbildend für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/schulabschluesse/allgemeinbildend
-	 * 
-	 * Erstellt eine Liste aller in dem Katalog vorhanden allgemeinbildenden Schulabschlüsse. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
-	 * 
-	 * Mögliche HTTP-Antworten: 
-	 *   Code 200: Eine Liste von allgemeinbildenden Abschlussart-Katalog-Einträgen
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<SchulabschlussAllgemeinbildendKatalogEintrag>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
-	 *   Code 404: Keine Abschlussart-Katalog-Einträge gefunden
-	 * 
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * 
-	 * @returns Eine Liste von allgemeinbildenden Abschlussart-Katalog-Einträgen
-	 */
-	public async getSchulabschluesseAllgemeinbildend(schema : string) : Promise<List<SchulabschlussAllgemeinbildendKatalogEintrag>> {
-		let path : string = "/db/{schema}/schule/schulabschluesse/allgemeinbildend"
-				.replace(/{schema\s*(:[^}]+)?}/g, schema);
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		let ret = new Vector<SchulabschlussAllgemeinbildendKatalogEintrag>();
-		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(SchulabschlussAllgemeinbildendKatalogEintrag.transpilerFromJSON(text)); });
-		return ret;
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getSchulabschluesseBerufsbildend für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/schulabschluesse/berufsbildend
-	 * 
-	 * Erstellt eine Liste aller in dem Katalog vorhanden berufsbildenden Schulabschlüsse. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
-	 * 
-	 * Mögliche HTTP-Antworten: 
-	 *   Code 200: Eine Liste von berufsbildenden Abschlussart-Katalog-Einträgen
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<SchulabschlussBerufsbildendKatalogEintrag>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
-	 *   Code 404: Keine Abschlussart-Katalog-Einträge gefunden
-	 * 
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * 
-	 * @returns Eine Liste von berufsbildenden Abschlussart-Katalog-Einträgen
-	 */
-	public async getSchulabschluesseBerufsbildend(schema : string) : Promise<List<SchulabschlussBerufsbildendKatalogEintrag>> {
-		let path : string = "/db/{schema}/schule/schulabschluesse/berufsbildend"
-				.replace(/{schema\s*(:[^}]+)?}/g, schema);
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		let ret = new Vector<SchulabschlussBerufsbildendKatalogEintrag>();
-		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(SchulabschlussBerufsbildendKatalogEintrag.transpilerFromJSON(text)); });
-		return ret;
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getSchulformen für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/schulformen
-	 * 
-	 * Erstellt eine Liste aller in dem Katalog vorhanden Schulformen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
-	 * 
-	 * Mögliche HTTP-Antworten: 
-	 *   Code 200: Eine Liste von Schulform-Katalog-Einträgen
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<SchulformKatalogEintrag>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
-	 *   Code 404: Keine Schulform-Katalog-Einträge gefunden
-	 * 
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * 
-	 * @returns Eine Liste von Schulform-Katalog-Einträgen
-	 */
-	public async getSchulformen(schema : string) : Promise<List<SchulformKatalogEintrag>> {
-		let path : string = "/db/{schema}/schule/schulformen"
-				.replace(/{schema\s*(:[^}]+)?}/g, schema);
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		let ret = new Vector<SchulformKatalogEintrag>();
-		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(SchulformKatalogEintrag.transpilerFromJSON(text)); });
-		return ret;
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getSchulgliederungen für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/schulgliederungen
-	 * 
-	 * Erstellt eine Liste aller in dem Katalog vorhanden Schulgliederungen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
-	 * 
-	 * Mögliche HTTP-Antworten: 
-	 *   Code 200: Eine Liste von Schulgliederung-Katalog-Einträgen
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<SchulgliederungKatalogEintrag>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
-	 *   Code 404: Keine Schulform-Katalog-Einträge gefunden
-	 * 
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * 
-	 * @returns Eine Liste von Schulgliederung-Katalog-Einträgen
-	 */
-	public async getSchulgliederungen(schema : string) : Promise<List<SchulgliederungKatalogEintrag>> {
-		let path : string = "/db/{schema}/schule/schulgliederungen"
-				.replace(/{schema\s*(:[^}]+)?}/g, schema);
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		let ret = new Vector<SchulgliederungKatalogEintrag>();
-		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(SchulgliederungKatalogEintrag.transpilerFromJSON(text)); });
-		return ret;
-	}
-
-
-	/**
 	 * Implementierung der GET-Methode getSchuleStammdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/stammdaten
 	 * 
 	 * Liest die Stammdaten der Schule zum angegebenen Schema aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schuldaten besitzt.
@@ -4550,33 +4577,6 @@ export class ApiServer extends BaseApi {
 				.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		let body : string = SchuleStammdaten.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getVerkehrssprachen für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/verkehrssprachen
-	 * 
-	 * Erstellt eine Liste aller in dem Katalog vorhanden der Verkehrssprachen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
-	 * 
-	 * Mögliche HTTP-Antworten: 
-	 *   Code 200: Eine Liste von Katalog-Einträgen
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<VerkehrsspracheKatalogEintrag>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
-	 *   Code 404: Keine Katalog-Einträge gefunden
-	 * 
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * 
-	 * @returns Eine Liste von Katalog-Einträgen
-	 */
-	public async getVerkehrssprachen(schema : string) : Promise<List<VerkehrsspracheKatalogEintrag>> {
-		let path : string = "/db/{schema}/schule/verkehrssprachen"
-				.replace(/{schema\s*(:[^}]+)?}/g, schema);
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		let ret = new Vector<VerkehrsspracheKatalogEintrag>();
-		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(VerkehrsspracheKatalogEintrag.transpilerFromJSON(text)); });
-		return ret;
 	}
 
 

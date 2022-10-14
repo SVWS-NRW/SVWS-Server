@@ -236,7 +236,7 @@ public class APISchule {
      * @return die Liste mit dem Katalog der allgemeinbildenden Schulabschlüssen
      */
     @GET
-    @Path("/schulabschluesse/allgemeinbildend")
+    @Path("/allgemein/schulabschluesse/allgemeinbildend")
     @Operation(summary = "Gibt den Katalog der allgemeinbildenden Schulabschlüsse zurück.",
                description = "Erstellt eine Liste aller in dem Katalog vorhanden allgemeinbildenden Schulabschlüsse. "
                		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
@@ -260,7 +260,7 @@ public class APISchule {
      * @return die Liste mit dem Katalog der berufsbildenden Schulabschlüssen
      */
     @GET
-    @Path("/schulabschluesse/berufsbildend")
+    @Path("/allgemein/schulabschluesse/berufsbildend")
     @Operation(summary = "Gibt den Katalog der berufsbildenden Schulabschlüsse zurück.",
                description = "Erstellt eine Liste aller in dem Katalog vorhanden berufsbildenden Schulabschlüsse. "
                		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
@@ -284,7 +284,7 @@ public class APISchule {
      * @return die Liste mit dem Katalog der Schulformen
      */
     @GET
-    @Path("/schulformen")
+    @Path("/allgemein/schulformen")
     @Operation(summary = "Gibt den Katalog der Schulformen zurück.",
                description = "Erstellt eine Liste aller in dem Katalog vorhanden Schulformen. "
                		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
@@ -308,7 +308,7 @@ public class APISchule {
      * @return die Liste mit dem Katalog der Schulgliederungen
      */
     @GET
-    @Path("/schulgliederungen")
+    @Path("/allgemein/schulgliederungen")
     @Operation(summary = "Gibt den Katalog der Schulgliederungen zurück.",
                description = "Erstellt eine Liste aller in dem Katalog vorhanden Schulgliederungen. "
                		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
@@ -332,7 +332,7 @@ public class APISchule {
      * @return die Liste mit dem Katalog der Anlagen am Berufskolleg
      */
     @GET
-    @Path("/berufskolleg/anlagen")
+    @Path("/allgemein/berufskolleg/anlagen")
     @Operation(summary = "Gibt den Katalog der Anlagen am Berufskolleg zurück.",
                description = "Erstellt eine Liste aller in dem Katalog vorhanden Anlagen am Berufskolleg. "
                		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
@@ -356,7 +356,7 @@ public class APISchule {
      * @return die Liste mit dem Katalog der Berufsebenen am Berufskolleg
      */
     @GET
-    @Path("/berufskolleg/berufsebenen")
+    @Path("/allgemein/berufskolleg/berufsebenen")
     @Operation(summary = "Gibt den Katalog der Berufsebenen am Berufskolleg zurück.",
                description = "Erstellt eine Liste aller in dem Katalog vorhanden Berufsebenen am Berufskolleg. "
                		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
@@ -380,7 +380,7 @@ public class APISchule {
      * @return der Katalog der Fachklassen am Berufskolleg
      */
     @GET
-    @Path("/berufskolleg/fachklassen")
+    @Path("/allgemein/berufskolleg/fachklassen")
     @Operation(summary = "Gibt den Katalog der Fachklassen am Berufskolleg zurück.",
                description = "Gibt den Katalog der Fachklassen am Berufskolleg zurück. "
                		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
@@ -404,7 +404,7 @@ public class APISchule {
      * @return die Liste mit dem Katalog der Ausbildungs- und Prüfungsordnungen
      */
     @GET
-    @Path("/pruefungsordnungen")
+    @Path("/allgemein/pruefungsordnungen")
     @Operation(summary = "Gibt den Katalog der Ausbildungs- und Prüfungsordnungen zurück.",
                description = "Erstellt eine Liste aller in dem Katalog vorhanden Ausbildungs- und Prüfungsordnungen. "
                		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
@@ -428,7 +428,7 @@ public class APISchule {
      * @return die Liste mit dem Katalog der Verkehrssprachen in einer Familie
      */
     @GET
-    @Path("/verkehrssprachen")
+    @Path("/allgemein/verkehrssprachen")
     @Operation(summary = "Gibt den Katalog der Verkehrssprachen in einer Familie zurück.",
                description = "Erstellt eine Liste aller in dem Katalog vorhanden der Verkehrssprachen. "
                		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
@@ -452,7 +452,7 @@ public class APISchule {
      * @return              die Liste der Nationalitäten mit ID des Datenbankschemas
      */
     @GET
-    @Path("/nationalitaeten")
+    @Path("/allgemein/nationalitaeten")
     @Operation(summary = "Gibt den Katalog der Nationalitäten zurück.",
                description = "Erstellt eine Liste aller in dem Katalog vorhanden Nationalitäten. "
                		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
@@ -476,7 +476,7 @@ public class APISchule {
      * @return der Katalog der Einschulungsarten
      */
     @GET
-    @Path("/einschulungsarten")
+    @Path("/allgemein/einschulungsarten")
     @Operation(summary = "Gibt den Katalog der Einschulungsarten zurück.",
                description = "Erstellt eine Liste aller in dem Katalog vorhanden Einschulungsarten. "
                		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
@@ -500,7 +500,7 @@ public class APISchule {
      * @return der Katalog der Allgemeinen Merkmale bei Schulen und Schülern
      */
     @GET
-    @Path("/allgemeine_merkmale")
+    @Path("/allgemein/allgemeine_merkmale")
     @Operation(summary = "Gibt den Katalog der Allgemeinen Merkmale bei Schulen und Schülern zurück.",
                description = "Erstellt eine Liste aller in dem Katalog vorhanden Allgemeinen Merkmale bei Schulen und Schülern. "
                		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
@@ -525,7 +525,7 @@ public class APISchule {
      * @return die Liste mit dem Katalog der Förderschwerpunkte
      */
     @GET
-    @Path("/foerderschwerpunkte/statistik")
+    @Path("/allgemein/foerderschwerpunkte")
     @Operation(summary = "Gibt den Katalog der Förderschwerpunkte zurück.",
                description = "Erstellt eine Liste aller in dem Katalog vorhanden Förderschwerpunkte. "
                		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
@@ -603,7 +603,7 @@ public class APISchule {
      * @return die Liste mit dem Katalog der Relgionen bzw. Konfessionen
      */
     @GET
-    @Path("/religionen/statistik")
+    @Path("/allgemein/religionen")
     @Operation(summary = "Gibt den Katalog der Relgionen bzw. Konfessionen zurück, welche im Rahmen der amtlichen Schulstatistik verwendet werden.",
                description = "Erstellt eine Liste aller in dem Katalog vorhanden Relgionen bzw. Konfessionen, welche "
                		       + "im Rahmen der amtlichen Schulstatistik verwendet werden. "
@@ -746,7 +746,7 @@ public class APISchule {
      * @return der Katalog der Abgangsarten für allgemeinbildende Schulformen 
      */
     @GET
-    @Path("/abgangsarten/allgemeinbildend")
+    @Path("/allgemein/abgangsarten/allgemeinbildend")
     @Operation(summary = "Gibt den Katalog der Katalog der Abgangsarten für allgemeinbildende Schulformen zurück.",
                description = "Gibt den Katalog der Abgangsarten für allgemeinbildende Schulformen zurück. "
                		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
@@ -772,7 +772,7 @@ public class APISchule {
      * @return der Katalog der Abgangsarten für berufsbildende Schulformen 
      */
     @GET
-    @Path("/abgangsarten/berufsbildend")
+    @Path("/allgemein/abgangsarten/berufsbildend")
     @Operation(summary = "Gibt den Katalog der Katalog der Abgangsarten für berufsbildende Schulformen zurück.",
                description = "Gibt den Katalog der Abgangsarten für berufsbildende Schulformen zurück. "
                		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
