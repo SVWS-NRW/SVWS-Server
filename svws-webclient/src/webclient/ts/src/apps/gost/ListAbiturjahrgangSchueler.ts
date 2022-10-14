@@ -5,6 +5,8 @@ import { BaseList } from "../BaseList";
 
 interface Filter {
 	kollision: { [index: number]: boolean } | undefined;
+	negiert: { [index: number]: boolean } | undefined;
+	kurs: { [index: number]: boolean } | undefined;
 	name: string;
 }
 export class ListAbiturjahrgangSchueler extends BaseList<
@@ -13,7 +15,9 @@ export class ListAbiturjahrgangSchueler extends BaseList<
 > {
 	protected _filter: Filter = reactive({
 		kollision: undefined,
-		name: ""
+		name: "",
+		negiert: undefined,
+		kurs: undefined 
 	});
 
 	/**
@@ -26,6 +30,14 @@ export class ListAbiturjahrgangSchueler extends BaseList<
 		this._state.gefiltert = this.liste
 			.filter(s => {
 				if (this.filter.kollision) return this.filter.kollision[s.id];
+				else return s;
+			})
+			.filter(s => {
+				if (this.filter.kurs && !this.filter.negiert) return this.filter.kurs[s.id];
+				else return s;
+			})
+			.filter(s => {
+				if (this.filter.negiert) return this.filter.negiert[s.id];
 				else return s;
 			})
 			.filter(

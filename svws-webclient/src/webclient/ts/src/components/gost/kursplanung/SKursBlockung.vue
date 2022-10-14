@@ -311,8 +311,18 @@ async function del_kurs() {
 }
 
 function toggle_active_kurs() {
-	app.dataKursblockungsergebnis.active_kurs.value = app.dataKursblockungsergebnis.active_kurs.value === kurs_blockungsergebnis.value
-		? undefined
-		: kurs_blockungsergebnis.value
+	const filterValue = app.listAbiturjahrgangSchueler.filter;
+	if (app.dataKursblockungsergebnis.active_kurs.value === kurs_blockungsergebnis.value) {
+		app.dataKursblockungsergebnis.active_kurs.value = undefined
+		filterValue.kurs = undefined
+	} else {
+		app.dataKursblockungsergebnis.active_kurs.value = kurs_blockungsergebnis.value
+		const schueler: { [index: number]: boolean } = {};
+		if (kurs_blockungsergebnis.value)
+			for (const s of kurs_blockungsergebnis.value.schueler)
+				schueler[s.id] = true;
+		filterValue.kurs = schueler
+	}
+	app.listAbiturjahrgangSchueler.filter = filterValue;
 }
 </script>

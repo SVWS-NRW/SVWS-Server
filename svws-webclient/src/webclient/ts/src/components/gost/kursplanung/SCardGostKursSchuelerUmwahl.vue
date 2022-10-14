@@ -4,10 +4,18 @@
 		<div class="flex-none">
 			<div class="sticky">
 				<div class="rounded-lg shadow">
-					<svws-ui-checkbox v-model="filter_kollision" class="p-5">
+					<svws-ui-checkbox v-model="filter_kollision" class="px-4">
 						Nur Kollisionen ({{Object.values(schueler_kollisionen).length}}/{{schueler?.length || 0}})
 					</svws-ui-checkbox>
-					<div v-if="app.dataKursblockungsergebnis.active_kurs.value" class="px-4"><b>Kursansicht {{app.dataKursblockungsergebnis.active_kurs.value.name}}</b></div>
+					<div>
+						<svws-ui-checkbox
+							v-if="app.dataKursblockungsergebnis.active_kurs.value"
+							v-model="filter_negiert" class="px-4">
+							Nicht in diesem Kurs</svws-ui-checkbox>
+					</div>
+					<div v-if="app.dataKursblockungsergebnis.active_kurs.value" class="px-4">
+						<b>Kursansicht {{app.dataKursblockungsergebnis.active_kurs.value.name}}</b>
+					</div>
 					<svws-ui-text-input v-model="filter_name" type="search" placeholder="Suche nach Namen">
 						<i-ri-search-line />
 					</svws-ui-text-input>
@@ -97,28 +105,17 @@ const is_dragging: ComputedRef<boolean> = computed(() => {
 	return !!main.config.drag_and_drop_data;
 });
 
-const kurse: ComputedRef<List<GostBlockungKurs>> = computed(() => {
-	return (
-		app.dataKursblockung.daten?.kurse || new Vector<GostBlockungKurs>()
-	);
-});
+const kurse: ComputedRef<List<GostBlockungKurs>> = computed(() => 
+	app.dataKursblockung.daten?.kurse || new Vector<GostBlockungKurs>());
 
-const schienen: ComputedRef<
-	Vector<GostBlockungsergebnisSchiene> | undefined
-> = computed(() => app.dataKursblockungsergebnis.daten?.schienen);
+const schienen: ComputedRef<Vector<GostBlockungsergebnisSchiene> | undefined> = computed(() =>
+	app.dataKursblockungsergebnis.daten?.schienen);
 
 const schueler: ComputedRef<Array<SchuelerListeEintrag> | undefined> =
-	computed(() => {
-		if (app.dataKursblockungsergebnis.active_kurs.value) {
-			const ids = new Set()
-			for (const s of app.dataKursblockungsergebnis.active_kurs.value.schueler) ids.add(s.id)
-			return app.listAbiturjahrgangSchueler.gefiltert.filter(s => ids.has(s.id))
-		}
-		return app.listAbiturjahrgangSchueler.gefiltert;
-	});
+	computed(() => app.listAbiturjahrgangSchueler.gefiltert);
 
 watch(()=>schueler.value, (new_val)=>{
-	selected.value = new_val ? new_val[0]:undefined
+	selected.value = new_val ? new_val[0] : undefined;
 })
 
 const selected: WritableComputedRef<SchuelerListeEintrag | undefined> =
@@ -144,9 +141,21 @@ const schueler_kollisionen: ComputedRef<{ [index: number]: boolean }> =
 		return kolls;
 	});
 
-const blockungsergebnisse: ComputedRef<
-	Map<GostBlockungKurs, GostBlockungsergebnisKurs[]>
-> = computed(() => {
+const schueler_negiert: ComputedRef<{ [index: number]: boolean }> = computed(() => {
+	const kurs = app.dataKursblockungsergebnis.active_kurs?.value
+	if (!kurs) return {};
+	const kurse = manager.value?.getKursSchuelerZuordnungenFuerFach(kurs.fachID)
+	console.log(kurse)
+	if (!kurse) return {}
+	const negiert: { [index: number]: boolean } = {};
+	for (const k of kurse)
+		if (kurs !== k && kurs.kursart === k.kursart)
+			for (const ss of k.schueler)
+				negiert[ss.id] = true;
+	return negiert;
+});
+
+const blockungsergebnisse: ComputedRef<Map<GostBlockungKurs, GostBlockungsergebnisKurs[]>> = computed(() => {
 	const v = app.dataKursblockungsergebnis.daten?.schienen
 	if (!v) return new Map();
 	const schienen = v.toArray(new Array<GostBlockungsergebnisSchiene>())
@@ -180,6 +189,19 @@ const filter_kollision: WritableComputedRef<boolean> = computed({
 		const filterValue = app.listAbiturjahrgangSchueler.filter;
 		filterValue.kollision = value
 			? schueler_kollisionen.value
+			: undefined;
+		app.listAbiturjahrgangSchueler.filter = filterValue;
+	}
+});
+
+const filter_negiert: WritableComputedRef<boolean> = computed({
+	get(): boolean {
+		return !!app.listAbiturjahrgangSchueler.filter.negiert;
+	},
+	set(value: boolean) {
+		const filterValue = app.listAbiturjahrgangSchueler.filter;
+		filterValue.negiert = value
+			? schueler_negiert.value
 			: undefined;
 		app.listAbiturjahrgangSchueler.filter = filterValue;
 	}
