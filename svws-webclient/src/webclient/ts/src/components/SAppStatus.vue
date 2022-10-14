@@ -4,7 +4,7 @@
 	>
 		<s-loading-status v-if="loading"></s-loading-status>
 		<div class="status-content">
-			<p>Powered by SVWS-NRW</p>
+			<p>Powered by SVWS-NRW v{{version}}</p>
 			<nav class="status-nav">
 				<a href="https://www.svws.nrw.de/faq/impressum">Impressum</a>
 				<a href="#">Datenschutz</a>
@@ -31,6 +31,7 @@
 <script setup lang="ts">
 	import { computed, ComputedRef, onMounted, ref } from "vue";
 	import { injectMainApp } from "~/apps/Main";
+	import { version } from '../../version';
 
 	const app = injectMainApp();
 	const loading: ComputedRef<boolean> = computed(() => app.config.pending);

@@ -30,6 +30,7 @@ dependencies {
 	webclient files(
         'config/webclient/package-template.json', 
         'config/webclient/vite.config-template.ts',
+				'config/webclient/version-template.ts',
         'config/postcss.config-template.js',
         'config/vueconfig-template.json'
     )
