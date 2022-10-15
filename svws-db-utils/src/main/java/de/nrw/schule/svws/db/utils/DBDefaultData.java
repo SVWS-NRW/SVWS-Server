@@ -25,6 +25,38 @@ public class DBDefaultData {
 	/** Der Cache mit allen Default-Daten der aktuellen Entwickler-Revision der SVWS-DB */
 	private static final HashMap<Class<?>, List<?>> cacheDev = new HashMap<>();
 
+	
+	/**
+	 * Gibt den Dateinamen zurück, wo sich die CSV-Datei mit den Default-Daten 
+	 * für die angegebene Tabelle befindet.
+	 * 
+	 * @param tab   die Tabelle
+	 * 
+	 * @return der Dateiname
+	 */
+	public static String getFileName(SchemaTabelle tab) {
+	    return switch (tab.name()) {
+            case "Schildintern_AbiturInfos" -> "daten/csv/schild3/AbiturInfos.csv";
+            case "Schildintern_Datenart" -> "daten/csv/schild3/Datenart.csv";
+            case "Schildintern_DQR_Niveaus" -> "daten/csv/schild3/DQRNiveaus.csv";
+            case "Schildintern_FaecherSortierung" -> "daten/csv/schild3/FaecherSortierung.csv";
+            case "Schildintern_FilterFehlendeEintraegeSchild3" -> "daten/csv/schild3/FilterFehlendeEintraege.csv";
+            case "Schildintern_FilterFeldListe" -> "daten/csv/schild3/FilterFeldListe.csv";
+            case "Schildintern_HSchStatus" -> "daten/csv/schild3/HSchStatus.csv";
+            case "Schildintern_Laender" -> "daten/csv/schild3/Laender.csv";
+            case "Schildintern_PrfSemAbschl" -> "daten/csv/schild3/PrfSemAbschl.csv";
+            case "Schildintern_PruefOrd_Optionen" -> "daten/csv/schild3/PruefOrd_Optionen.csv";
+            case "Schildintern_PruefungsOrdnung" -> "daten/csv/schild3/PruefungsOrdnung.csv";
+            case "Schildintern_SchuelerImpExp" -> "daten/csv/schild3/SchuelerImpExp.csv";
+            case "Schildintern_SpezialFilterFelder" -> "daten/csv/schild3/SpezialFilterFelder.csv";
+            case "Schildintern_TextExport" -> "daten/csv/schild3/TextExport.csv";
+            case "Schildintern_UnicodeUmwandlung" -> "daten/csv/schild3/UnicodeUmwandlung.csv";
+            case "Schildintern_VerfImportFelder" -> "daten/csv/schild3/VerfImportFelder.csv";
+            case "Schildintern_VerfImportTabellen" -> "daten/csv/schild3/VerfImportTabellen.csv";
+            case "Schildintern_Zusatzinfos" -> "daten/csv/schild3/Zusatzinfos.csv";
+            default -> "schema/csv/" + tab.javaSubPackage().replace(".", "/") + "/" + tab.name() + ".csv";
+        };
+    }
 
 	/**
 	 * Lädt den Cache mit den Default-Daten erneut aus den CSV-Dateien
@@ -48,7 +80,7 @@ public class DBDefaultData {
 				logger.logLn(0, "In dieser DB-Revision nicht vorhanden.");
 				continue;
 			}
-	        var data = CsvReader.fromResource("schema/csv/" + tab.javaSubPackage().replace(".", "/") + "/" + tab.name() + ".csv", dtoClass);
+	        var data = CsvReader.fromResource(getFileName(tab), dtoClass);
 	        if (data != null) {
 	        	cache.put(dtoClass, data);
 	        	logger.logLn(0, "OK");

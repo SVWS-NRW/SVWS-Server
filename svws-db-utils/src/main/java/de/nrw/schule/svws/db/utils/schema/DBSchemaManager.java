@@ -17,6 +17,7 @@ import de.nrw.schule.svws.db.schema.SchemaTabelle;
 import de.nrw.schule.svws.db.schema.SchemaTabelleIndex;
 import de.nrw.schule.svws.db.schema.SchemaTabelleTrigger;
 import de.nrw.schule.svws.db.schema.View;
+import de.nrw.schule.svws.db.utils.DBDefaultData;
 import de.nrw.schule.svws.logger.Logger;
 
 /**
@@ -306,7 +307,7 @@ public class DBSchemaManager {
 			return false;
 		logger.modifyIndent(2);
 		logger.log("Lese Daten... ");
-        var data = CsvReader.fromResource("schema/csv/" + tab.javaSubPackage().replace(".", "/") + "/" + tab.name() + ".csv", dtoClass);
+        var data = CsvReader.fromResource(DBDefaultData.getFileName(tab), dtoClass);
         boolean success = true;
         if (data != null) {
         	logger.logLn(0, "OK");

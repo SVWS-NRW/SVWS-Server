@@ -1,0 +1,49 @@
+ID;Beschreibung;Feldname;Tabellen;SQLText;Schulform;Feldtyp
+10;Vorname;Vorname;;;;S
+20;Straße;Strassenname;;;;S
+30;Postleitzahl;Ort_ID;;;;I
+40;Telefon-Nr.;Telefon;;;;S
+50;Akt. Schuljahr/Abschnitt;Schuljahresabschnitts_ID;;;;I
+70;Klasse;Klasse_ID;SchuelerLernabschnttsdaten;and SchuelerLernabschnittsdaten.Klassen_ID is null;;I
+80;Statistik-Jahrgang;Jahrgang_ID;SchuelerLernabschnttsdaten;and SchuelerLernabschnittsdaten.Jahrgang_ID is null;;I
+90;Prüfungsordnung;PruefOrdnung;SchuelerLernabschnttsdaten;and (SchuelerLernabschnittsdaten.PruefOrdnung is null or SchuelerLernabschnittsdaten.PruefOrdnung='') ;;S
+100;Geburtsdatum;Geburtsdatum;;;;D
+110;Geburtsort;Geburtsort;;;;S
+120;Staatsangehörigkeit;StaatKrz;;;;S
+130;Konfession;Religion_ID;;;;I
+140;Gliederung;ASDSchulform;SchuelerLernabschnttsdaten;and (SchuelerLernabschnittsdaten.ASDSchulgliederung is null or SchuelerLernabschnittsdaten.ASDSchulgliederung='') ;;S
+150;Einschulungsart;Einschulungsart_ID;;;-BK-SB-WB-;I
+151;Einschulungsart;EinschulungsartASD;;;-G-H-R-SR-GY-SG-GE-S-;S
+160;Einschulungsjahr;Einschulungsjahr;;;;I
+170;voraus. Abschlussdatum;AbschlussDatum;;;;D
+180;Organisationsform;OrgFormKrz;SchuelerLernabschnttsdaten;and (SchuelerLernabschnittsdaten.OrgFormKrz is null or SchuelerLernabschnittsdaten.OrgFormKrz='') ;;S
+190;Zuletzt besuchte Schule: Name der Schule;LSSchulnr;;;;S
+200;Zuletzt besuchte Schule: Entlassdatum;LSSchulEntlassDatum;;;;D
+210;Zuletzt besuchte Schule: Entlassjahrgang;LSJahrgang;;;;S
+220;Zuletzt besuchte Schule: Art des Abschlusses;LSEntlassart;;;;S
+230;Art des Abschlusses;EntlassArt;;;;S
+240;Fachklasse;Fachklasse_ID;SchuelerLernabschnttsdaten;and SchuelerLernabschnittsdaten.Fachklasse_ID is null;-BK-SB-;I
+250;Zuletzt besuchte Schule: Fachklasse;LSFachklKennung;;;-BK-SB-;S
+260;Erzieher: Erzieherart;Erzieherart_ID;SchuelerErzAdr;and exists (select SchuelerErzAdr.ID from SchuelerErzAdr where SchuelerErzAdr.Schueler_ID=Schueler.ID and SchuelerErzAdr.Erzieherart_ID is null);;I
+270;E-Mail;Email;;;;S
+280;Erzieher: E-Mail;ErzEMail;SchuelerErzAdr;and exists (select SchuelerErzAdr.ID from SchuelerErzAdr where SchuelerErzAdr.Schueler_ID=Schueler.ID and ( SchuelerErzAdr.ErzEMail is null or SchuelerErzAdr.ErzEMail='' ));;S
+285;schulische E-Mail;SchulEmail;;;;S
+290;Kindergarten;Kindergarten_ID;;;-G-S-;I
+300;Geburtsland Schüler;GeburtslandSchueler;;;;S
+310;Geburtsland Mutter;GeburtslandMutter;;;;S
+320;Geburtsland Vater;GeburtslandVater;;;;S
+330;Zuzugsjahr;JahrZuzug;;;;I
+340;Verkehrssprache;VerkehrsspracheFamilie;;;;S
+350;Beginn des Bildungsganges;BeginnBildungsgang;;;;D
+360;Aufnahmedatum;Aufnahmedatum;;;;D
+370;Übergangsempfehlung;Uebergangsempfehlung_JG5;;;-G-;S
+380;Erste Schulform Sek.1;ErsteSchulform_SI;;;-H-R-GY-GE-SR-SG-;S
+390;Geschlecht;Geschlecht;;;;I
+410;Haupt-Förderschwerpunkt;Foerderschwerpunkt_ID;SchuelerLernabschnttsdaten;and SchuelerLernabschnittsdaten.Foerderschwerpunkt_ID is null;;I
+420;Jahr d. Wechsels in Sek. 1;JahrWechsel_SI;;;-G-S-H-R-GY-GE-SR-SG-;I
+430;Jahr d. Wechsels in Sek. 2;JahrWechsel_SII;;;-H-R-SR-GE-GY-SG-BK-SB-WB-;I
+440;Entlassdatum;Entlassdatum;;;;D
+450;Übergangsempfehlung in Kl. 5;Uebergangsempfehlung_JG5;;;-G-H-R-SR-GY-SG-GE-;S
+460;Weiterer Förderschwerpunkt;Foerderschwerpunkt2_ID;SchuelerLernabschnttsdaten;and SchuelerLernabschnittsdaten.Foerderschwerpunkt2_ID is null;;I
+470;Schwerpunkt;Schwerpunkt_ID;SchuelerLernabschnttsdaten;and SchuelerLernabschnittsdaten.Schwerpunkt_ID is null;-R-SR-;I
+480;Aufnehmende Schule;SchulwechselNr;;;;S

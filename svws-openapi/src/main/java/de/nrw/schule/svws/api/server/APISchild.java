@@ -92,7 +92,7 @@ public class APISchild {
      * @return der Katalog
      */
     @GET
-    @Path("/abiturinfos")
+    @Path("/dqr_niveaus")
     @Operation(summary = "Die Liste der Einträge aus dem Schild-Katalog DQR-Niveaus.",
                description = "Die Liste der Einträge aus dem Schild-Katalog DQR-Niveaus. "
                            + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")

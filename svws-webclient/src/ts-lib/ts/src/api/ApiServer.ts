@@ -3541,33 +3541,6 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getKatalogSchild3DQRNiveaus für den Zugriff auf die URL https://{hostname}/db/{schema}/schild3/abiturinfos
-	 * 
-	 * Die Liste der Einträge aus dem Schild-Katalog DQR-Niveaus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
-	 * 
-	 * Mögliche HTTP-Antworten: 
-	 *   Code 200: Eine Liste von Katalog-Einträgen für den Schild-Katalog DQR-Niveaus
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<Schild3KatalogEintragDQRNiveaus>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
-	 *   Code 404: Keine Katalog-Einträge gefunden
-	 * 
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * 
-	 * @returns Eine Liste von Katalog-Einträgen für den Schild-Katalog DQR-Niveaus
-	 */
-	public async getKatalogSchild3DQRNiveaus(schema : string) : Promise<List<Schild3KatalogEintragDQRNiveaus>> {
-		let path : string = "/db/{schema}/schild3/abiturinfos"
-				.replace(/{schema\s*(:[^}]+)?}/g, schema);
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		let ret = new Vector<Schild3KatalogEintragDQRNiveaus>();
-		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(Schild3KatalogEintragDQRNiveaus.transpilerFromJSON(text)); });
-		return ret;
-	}
-
-
-	/**
 	 * Implementierung der GET-Methode getKatalogSchild3Datenarten für den Zugriff auf die URL https://{hostname}/db/{schema}/schild3/datenarten
 	 * 
 	 * Die Liste der Einträge aus dem Schild-Katalog Datenart. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
@@ -3590,6 +3563,33 @@ export class ApiServer extends BaseApi {
 		const obj = JSON.parse(result);
 		let ret = new Vector<Schild3KatalogEintragDatenart>();
 		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(Schild3KatalogEintragDatenart.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getKatalogSchild3DQRNiveaus für den Zugriff auf die URL https://{hostname}/db/{schema}/schild3/dqr_niveaus
+	 * 
+	 * Die Liste der Einträge aus dem Schild-Katalog DQR-Niveaus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Eine Liste von Katalog-Einträgen für den Schild-Katalog DQR-Niveaus
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<Schild3KatalogEintragDQRNiveaus>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
+	 *   Code 404: Keine Katalog-Einträge gefunden
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * 
+	 * @returns Eine Liste von Katalog-Einträgen für den Schild-Katalog DQR-Niveaus
+	 */
+	public async getKatalogSchild3DQRNiveaus(schema : string) : Promise<List<Schild3KatalogEintragDQRNiveaus>> {
+		let path : string = "/db/{schema}/schild3/dqr_niveaus"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		let ret = new Vector<Schild3KatalogEintragDQRNiveaus>();
+		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(Schild3KatalogEintragDQRNiveaus.transpilerFromJSON(text)); });
 		return ret;
 	}
 
