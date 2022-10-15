@@ -12,6 +12,7 @@ import de.nrw.schule.svws.core.data.schule.EinschulungsartKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.FoerderschwerpunktEintrag;
 import de.nrw.schule.svws.core.data.schule.FoerderschwerpunktKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.NationalitaetenKatalogEintrag;
+import de.nrw.schule.svws.core.data.schule.OrganisationsformKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.PruefungsordnungKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.ReligionEintrag;
 import de.nrw.schule.svws.core.data.schule.ReligionKatalogEintrag;
@@ -23,6 +24,7 @@ import de.nrw.schule.svws.core.data.schule.SchulgliederungKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.Schuljahresabschnitt;
 import de.nrw.schule.svws.core.data.schule.VerkehrsspracheKatalogEintrag;
 import de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenz;
+import de.nrw.schule.svws.data.kataloge.DataKatalogOrganisationsformen;
 import de.nrw.schule.svws.data.kataloge.DataReligionen;
 import de.nrw.schule.svws.data.schueler.DataKatalogSchuelerFoerderschwerpunkte;
 import de.nrw.schule.svws.data.schule.DataKatalogAbgangsartenAllgemeinbildend;
@@ -785,5 +787,30 @@ public class APISchule {
     		return (new DataKatalogAbgangsartenBerufsbildend()).getList();
 		}
     }
+
+    
+    
+    /**
+     * Die OpenAPI-Methode für die Abfrage des Katalogs der gültigen Organisationsformen.
+     *  
+     * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param request       die Informationen zur HTTP-Anfrage
+     * 
+     * @return              der Katalog der gültigen Organisationsformen
+     */
+    @GET
+    @Path("/allgemein/organisationsformen")
+    @Operation(summary = "Gibt den Katalog der gültigen Organisationsformen zurück.",
+               description = "Erstellt eine Liste aller in dem Katalog vorhanden gültigen Organisationsformen. "
+                           + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
+    @ApiResponse(responseCode = "200", description = "Eine Liste von Organisationsform-Katalog-Einträgen",
+                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = OrganisationsformKatalogEintrag.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
+    @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
+    public Response getKatalogOrganisationsformen(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+        try (Benutzer user = OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
+            return (new DataKatalogOrganisationsformen()).getAll();
+        }
+    }  
 
 }

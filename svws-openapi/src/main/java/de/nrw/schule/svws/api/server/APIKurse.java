@@ -13,9 +13,12 @@ import jakarta.ws.rs.core.Response;
 import de.nrw.schule.svws.api.OpenAPIApplication;
 import de.nrw.schule.svws.core.data.kurse.KursDaten;
 import de.nrw.schule.svws.core.data.kurse.KursListeEintrag;
+import de.nrw.schule.svws.core.data.kurse.KursartKatalogEintrag;
 import de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenz;
+import de.nrw.schule.svws.data.kataloge.DataKatalogKursarten;
 import de.nrw.schule.svws.data.kurse.DataKursdaten;
 import de.nrw.schule.svws.data.kurse.DataKursliste;
+import de.nrw.schule.svws.db.Benutzer;
 import de.nrw.schule.svws.db.DBEntityManager;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -117,5 +120,29 @@ public class APIKurse {
     		return (new DataKursdaten(conn)).get(id);
     	}
     }
+
     
+    /**
+     * Die OpenAPI-Methode für die Abfrage des Katalogs der gültigen Kursarten.
+     *  
+     * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param request       die Informationen zur HTTP-Anfrage
+     * 
+     * @return              der Katalog der gültigen Kursarten
+     */
+    @GET
+    @Path("/allgemein/kursarten")
+    @Operation(summary = "Gibt den Katalog der gültigen Kursarten zurück.",
+               description = "Erstellt eine Liste aller in dem Katalog vorhanden gültigen Kursarten. "
+                           + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
+    @ApiResponse(responseCode = "200", description = "Eine Liste von Kursart-Katalog-Einträgen",
+                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = KursartKatalogEintrag.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
+    @ApiResponse(responseCode = "404", description = "Keine Kursart-Katalog-Einträge gefunden")
+    public Response getKatalogKursarten(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+        try (Benutzer user = OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
+            return (new DataKatalogKursarten()).getAll();
+        }
+    }  
+
 }

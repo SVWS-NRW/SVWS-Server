@@ -12,14 +12,14 @@ import jakarta.ws.rs.core.Response;
 
 import de.nrw.schule.svws.api.OpenAPIApplication;
 import de.nrw.schule.svws.core.data.fach.FachDaten;
+import de.nrw.schule.svws.core.data.fach.FachKatalogEintrag;
 import de.nrw.schule.svws.core.data.fach.FaecherListeEintrag;
 import de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenz;
-import de.nrw.schule.svws.core.types.statkue.Fachgruppe;
-import de.nrw.schule.svws.core.types.statkue.ZulaessigesFach;
 import de.nrw.schule.svws.data.faecher.DataFachdaten;
 import de.nrw.schule.svws.data.faecher.DataFaecherliste;
 import de.nrw.schule.svws.data.faecher.DataKatalogFachgruppen;
 import de.nrw.schule.svws.data.faecher.DataKatalogZulaessigeFaecher;
+import de.nrw.schule.svws.db.Benutzer;
 import de.nrw.schule.svws.db.DBEntityManager;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -95,32 +95,33 @@ public class APIFaecher {
     	}
     }
 
-// TODO die beiden nachfolgenden Methode sollten mit speziellen DTOs unter core.data realisiert werden und nicht die Typen aus core.types direkt verwenden
+
+    /**
+     * Die OpenAPI-Methode für die Abfrage des Katalogs der zulässigen Fächer.
+     *  
+     * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param request       die Informationen zur HTTP-Anfrage
+     * 
+     * @return              der Katalog der zulässigen Fächer
+     */
+    @GET
+    @Path("/allgemein/faecher")
+    @Operation(summary = "Gibt den Katalog der zulässigen Fächer zurück.",
+               description = "Erstellt eine Liste aller in dem Katalog vorhanden zulässigen Fächer. "
+                           + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
+    @ApiResponse(responseCode = "200", description = "Eine Liste von Fächer-Katalog-Einträgen",
+                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = FachKatalogEintrag.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
+    @ApiResponse(responseCode = "404", description = "Keine Fach-Katalog-Einträge gefunden")
+    public Response getKatalogFaecher(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+        try (Benutzer user = OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
+            return (new DataKatalogZulaessigeFaecher()).getAll();
+        }
+    }  
+
     
-//    /**
-//     * Die OpenAPI-Methode für die Abfrage der laut der amtlichen Schulstatistik zulässigen Fächer.
-//     *  
-//     * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-//     * @param request       die Informationen zur HTTP-Anfrage
-//     * 
-//     * @return die Liste mit den Informationen zu den zulässigen Fächern
-//     */
-//    @GET
-//    @Path("/zulaessige")
-//    @Operation(summary = "Gibt eine Übersicht aller für die amtliche Schulstatistik zulässigen Fächer für die Schulform dieser "
-//    		+ "Schule zurück.",
-//               description = "Erstellt eine Liste aller für die amtliche Schulstatistik für die Schulform zulässigen Fächer. "
-//           		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen "
-//           		       + "besitzt.")
-//    @ApiResponse(responseCode = "200", description = "Eine Liste aller für die amtliche Schulstatistik zulässigen Fächer",
-//                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ZulaessigesFach.class))))
-//    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine gültige Anmeldung.")
-//    @ApiResponse(responseCode = "404", description = "Keine Fächer gefunden oder konnte nicht auf die Informationen der Schule zugreifen.")
-//    public Response getFaecherZulaessige(@PathParam("schema") String schema, @Context HttpServletRequest request) {
-//    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
-//    		return (new DataKatalogZulaessigeFaecher(conn)).getList();
-//    	}
-//    }
+// TODO die nachfolgende Methode sollten mit speziellen DTOs unter core.data realisiert werden und nicht die Typen aus core.types direkt verwenden
+    
 //	
 //	
 //	
@@ -133,7 +134,7 @@ public class APIFaecher {
 //     * @return die Liste mit den Informationen zu den Fachgruppen für die Schulform dieser Schule
 //     */
 //    @GET
-//    @Path("/fachgruppen")
+//    @Path("/allgemein/fachgruppen")
 //    @Operation(summary = "Gibt eine Übersicht aller Fachgruppen für die Schulform dieser Schule zurück.",
 //               description = "Erstellt eine Liste aller Fachgruppen für die Schulform dieser Schule. "
 //           		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen "

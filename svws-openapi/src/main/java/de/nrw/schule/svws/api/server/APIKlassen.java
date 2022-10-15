@@ -13,9 +13,12 @@ import jakarta.ws.rs.core.Response;
 import de.nrw.schule.svws.api.OpenAPIApplication;
 import de.nrw.schule.svws.core.data.klassen.KlassenDaten;
 import de.nrw.schule.svws.core.data.klassen.KlassenListeEintrag;
+import de.nrw.schule.svws.core.data.klassen.KlassenartKatalogEintrag;
 import de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenz;
+import de.nrw.schule.svws.data.kataloge.DataKatalogKlassenarten;
 import de.nrw.schule.svws.data.klassen.DataKlassendaten;
 import de.nrw.schule.svws.data.klassen.DataKlassenlisten;
+import de.nrw.schule.svws.db.Benutzer;
 import de.nrw.schule.svws.db.DBEntityManager;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -87,6 +90,30 @@ public class APIKlassen {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
     		return (new DataKlassendaten(conn)).get(id);
     	}
+    }
+
+    
+    /**
+     * Die OpenAPI-Methode für die Abfrage des Katalogs der gültigen Klassenarten.
+     *  
+     * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param request       die Informationen zur HTTP-Anfrage
+     * 
+     * @return              der Katalog der gültigen Klassenarten
+     */
+    @GET
+    @Path("/allgemein/klassenarten")
+    @Operation(summary = "Gibt den Katalog der gültigen Klassenarten zurück.",
+               description = "Erstellt eine Liste aller in dem Katalog vorhanden gültigen Klassenarten. "
+                           + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
+    @ApiResponse(responseCode = "200", description = "Eine Liste von Klassenart-Katalog-Einträgen",
+                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = KlassenartKatalogEintrag.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
+    @ApiResponse(responseCode = "404", description = "Keine Klassenart-Katalog-Einträge gefunden")
+    public Response getKatalogKlassenarten(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+        try (Benutzer user = OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
+            return (new DataKatalogKlassenarten()).getAll();
+        }
     }
     
 }

@@ -12,10 +12,13 @@ import jakarta.ws.rs.core.Response;
 
 import de.nrw.schule.svws.api.OpenAPIApplication;
 import de.nrw.schule.svws.core.data.jahrgang.JahrgangsDaten;
+import de.nrw.schule.svws.core.data.jahrgang.JahrgangsKatalogEintrag;
 import de.nrw.schule.svws.core.data.jahrgang.JahrgangsListeEintrag;
 import de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenz;
 import de.nrw.schule.svws.data.jahrgaenge.DataJahrgangsdaten;
 import de.nrw.schule.svws.data.jahrgaenge.DataJahrgangsliste;
+import de.nrw.schule.svws.data.kataloge.DataKatalogJahrgaenge;
+import de.nrw.schule.svws.db.Benutzer;
 import de.nrw.schule.svws.db.DBEntityManager;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -91,4 +94,27 @@ public class APIJahrgaenge {
     }
 
     
+    /**
+     * Die OpenAPI-Methode für die Abfrage des Katalogs der in den einzelnen Schulformen gültigen Jahrgänge.
+     *  
+     * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param request       die Informationen zur HTTP-Anfrage
+     * 
+     * @return              der Katalog der in den einzelnen Schulformen gültigen Jahrgänge
+     */
+    @GET
+    @Path("/allgemein/jahrgaenge")
+    @Operation(summary = "Gibt den Katalog der in den einzelnen Schulformen gültigen Jahrgänge zurück.",
+               description = "Erstellt eine Liste aller in dem Katalog vorhanden in den einzelnen Schulformen gültigen Jahrgänge. "
+                           + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
+    @ApiResponse(responseCode = "200", description = "Eine Liste von Jahrgangs-Katalog-Einträgen",
+                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = JahrgangsKatalogEintrag.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
+    @ApiResponse(responseCode = "404", description = "Keine Jahrgangs-Katalog-Einträge gefunden")
+    public Response getKatalogJahrgaenge(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+        try (Benutzer user = OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
+            return (new DataKatalogJahrgaenge()).getAll();
+        }
+    }  
+
 }

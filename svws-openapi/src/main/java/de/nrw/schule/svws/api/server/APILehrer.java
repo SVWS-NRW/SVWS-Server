@@ -245,8 +245,9 @@ public class APILehrer {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Lehrerleitungsfunktion-Katalog-Einträge gefunden")
     public Response getLehrerLeitungsfunktionen(@PathParam("schema") String schema, @Context HttpServletRequest request) {
-    	OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
-    	return (new DataKatalogLehrerLeitungsfunktionen(null)).getList();
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
+            return (new DataKatalogLehrerLeitungsfunktionen(conn)).getList();
+        }
     }
     
     /**
@@ -258,7 +259,7 @@ public class APILehrer {
      * @return die Liste mit dem Katalog der Lehrerzugangsgründe
      */
     @GET
-    @Path("/zugangsgruende")
+    @Path("/allgemein/zugangsgruende")
     @Operation(summary = "Gibt den Katalog der Lehrerzugangsgründe zurück.",
                description = "Erstellt eine Liste aller in dem Katalog vorhanden Lehrerzugangsgründe unter Angabe der ID, der Bezeichnung und des Statistikschlüssels. "
                		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
@@ -268,7 +269,7 @@ public class APILehrer {
     @ApiResponse(responseCode = "404", description = "Keine Lehrerzugangsgrund-Katalog-Einträge gefunden")
     public Response getLehrerZugangsgruende(@PathParam("schema") String schema, @Context HttpServletRequest request) {
     	OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
-    	return (new DataKatalogLehrerZugangsgruende(null)).getList();
+    	return (new DataKatalogLehrerZugangsgruende()).getList();
     }
     
     /**
@@ -280,7 +281,7 @@ public class APILehrer {
      * @return die Liste mit dem Katalog der Lehrerabgangsgründe
      */
     @GET
-    @Path("/abgangsgruende")
+    @Path("/allgemein/abgangsgruende")
     @Operation(summary = "Gibt den Katalog der Lehrerabgangsgründe zurück.",
                description = "Erstellt eine Liste aller in dem Katalog vorhanden Lehrerabgangsgründe unter Angabe der ID, der Bezeichnung und des Statistikschlüssels. "
                		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
@@ -290,7 +291,7 @@ public class APILehrer {
     @ApiResponse(responseCode = "404", description = "Keine Lehrerabgangsgrund-Katalog-Einträge gefunden")
     public Response getLehrerAbgangsgruende(@PathParam("schema") String schema, @Context HttpServletRequest request) {
     	OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
-    	return (new DataKatalogLehrerAbgangsgruende(null)).getList();
+    	return (new DataKatalogLehrerAbgangsgruende()).getList();
     }
 
     /**
@@ -302,7 +303,7 @@ public class APILehrer {
      * @return die Liste mit dem Katalog der Lehrer Beschäftigungsarten
      */
     @GET
-    @Path("/beschaeftigungsarten")
+    @Path("/allgemein/beschaeftigungsarten")
     @Operation(summary = "Gibt den Katalog der Beschäftigungsarten zurück.",
                description = "Erstellt eine Liste aller in dem Katalog vorhanden Beschäftigungsarten unter Angabe der ID, eines Kürzels und der Bezeichnung. "
                		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
@@ -312,7 +313,7 @@ public class APILehrer {
     @ApiResponse(responseCode = "404", description = "Keine Beschäftigungsart-Katalog-Einträge gefunden")
     public Response getLehrerBeschaeftigungsarten(@PathParam("schema") String schema, @Context HttpServletRequest request) {
     	OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
-    	return (new DataKatalogLehrerBeschaeftigungsarten(null)).getList();
+    	return (new DataKatalogLehrerBeschaeftigungsarten()).getList();
     }
     
     /**
@@ -324,7 +325,7 @@ public class APILehrer {
      * @return die Liste mit dem Katalog der Lehrer Einsatzstatusarten
      */
     @GET
-    @Path("/einsatzstatus")
+    @Path("/allgemein/einsatzstatus")
     @Operation(summary = "Gibt den Katalog des Einsatzstatus zurück.",
                description = "Erstellt eine Liste aller in dem Katalog vorhanden Einsatzstatusarten unter Angabe der ID, eines Kürzels und der Bezeichnung. "
                		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
@@ -334,7 +335,7 @@ public class APILehrer {
     @ApiResponse(responseCode = "404", description = "Keine Einsatzstatus-Katalog-Einträge gefunden")
     public Response getLehrerEinsatzstatus(@PathParam("schema") String schema, @Context HttpServletRequest request) {
     	OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
-    	return (new DataKatalogLehrerEinsatzstatus(null)).getList();
+    	return (new DataKatalogLehrerEinsatzstatus()).getList();
     }
     
     /**
@@ -346,7 +347,7 @@ public class APILehrer {
      * @return die Liste mit dem Katalog der Fachrichtungen von Lehrern
      */
     @GET
-    @Path("/fachrichtungen")
+    @Path("/allgemein/fachrichtungen")
     @Operation(summary = "Gibt den Katalog der Fachrichtungen von Lehrern zurück.",
                description = "Erstellt eine Liste aller in dem Katalog vorhanden Fachrichtungen von Lehrern. "
                		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
@@ -356,7 +357,7 @@ public class APILehrer {
     @ApiResponse(responseCode = "404", description = "Keine Fachrichtungs-Katalog-Einträge gefunden")
     public Response getLehrerFachrichtungen(@PathParam("schema") String schema, @Context HttpServletRequest request) {
     	OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
-    	return (new DataKatalogLehrerFachrichtungen(null)).getList();
+    	return (new DataKatalogLehrerFachrichtungen()).getList();
     }
     
     /**
@@ -368,7 +369,7 @@ public class APILehrer {
      * @return die Liste mit dem Katalog der Anerkennungen von Fachrichtungen für Lehrer
      */
     @GET
-    @Path("/fachrichtungen_anerkennungen")
+    @Path("/allgemein/fachrichtungen_anerkennungen")
     @Operation(summary = "Gibt den Katalog des Anerkennungen von Fachrichtungen für Lehrer zurück.",
                description = "Erstellt eine Liste aller in dem Katalog vorhanden Anerkennungen von Fachrichtungen für Lehrer. "
                		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
@@ -378,7 +379,7 @@ public class APILehrer {
     @ApiResponse(responseCode = "404", description = "Keine Anerkennungs-Katalog-Einträge gefunden")
     public Response getLehrerFachrichtungAnerkennungen(@PathParam("schema") String schema, @Context HttpServletRequest request) {
     	OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
-    	return (new DataKatalogLehrerFachrichtungAnerkennungen(null)).getList();
+    	return (new DataKatalogLehrerFachrichtungAnerkennungen()).getList();
     }
     
     /**
@@ -390,7 +391,7 @@ public class APILehrer {
      * @return die Liste mit dem Katalog der Lehrämter
      */
     @GET
-    @Path("/lehraemter")
+    @Path("/allgemein/lehraemter")
     @Operation(summary = "Gibt den Katalog der Lehrämter zurück.",
                description = "Erstellt eine Liste aller in dem Katalog vorhanden Lehrämter. "
                		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
@@ -400,7 +401,7 @@ public class APILehrer {
     @ApiResponse(responseCode = "404", description = "Keine Lehramt-Katalog-Einträge gefunden")
     public Response getLehrerLehraemter(@PathParam("schema") String schema, @Context HttpServletRequest request) {
     	OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
-    	return (new DataKatalogLehrerLehraemter(null)).getList();
+    	return (new DataKatalogLehrerLehraemter()).getList();
     }
     
     /**
@@ -412,7 +413,7 @@ public class APILehrer {
      * @return die Liste mit dem Katalog der Anerkennungen von Lehrämtern
      */
     @GET
-    @Path("/lehraemter_anerkennungen")
+    @Path("/allgemein/lehraemter_anerkennungen")
     @Operation(summary = "Gibt den Katalog der Anerkennungen von Lehrämtern zurück.",
                description = "Erstellt eine Liste aller Anerkennungen von Lehrämtern. "
                		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
@@ -422,7 +423,7 @@ public class APILehrer {
     @ApiResponse(responseCode = "404", description = "Keine Anerkennungs-Katalog-Einträge gefunden")
     public Response getLehrerLehramtAnerkennungen(@PathParam("schema") String schema, @Context HttpServletRequest request) {
     	OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
-    	return (new DataKatalogLehrerLehramtAnerkennungen(null)).getList();
+    	return (new DataKatalogLehrerLehramtAnerkennungen()).getList();
     }
     
     /**
@@ -434,7 +435,7 @@ public class APILehrer {
      * @return die Liste mit dem Katalog der Lehrbefähigungen
      */
     @GET
-    @Path("/lehrbefaehigungen")
+    @Path("/allgemein/lehrbefaehigungen")
     @Operation(summary = "Gibt den Katalog des Lehrbefähigungen von Lehrern zurück.",
                description = "Erstellt eine Liste aller in dem Katalog vorhanden Lehrbefähigungen. "
                		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
@@ -444,7 +445,7 @@ public class APILehrer {
     @ApiResponse(responseCode = "404", description = "Keine Lehrbefähigung-Katalog-Einträge gefunden")
     public Response getLehrerLehrbefaehigungen(@PathParam("schema") String schema, @Context HttpServletRequest request) {
     	OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
-    	return (new DataKatalogLehrerLehrbefaehigungen(null)).getList();
+    	return (new DataKatalogLehrerLehrbefaehigungen()).getList();
     }
     
     /**
@@ -456,7 +457,7 @@ public class APILehrer {
      * @return die Liste mit dem Katalog der Anerkennungen von Lehrbefähigungen
      */
     @GET
-    @Path("/lehrbefaehigungen_anerkennungen")
+    @Path("/allgemein/lehrbefaehigungen_anerkennungen")
     @Operation(summary = "Gibt den Katalog der Anerkennungen von Lehrbefähigungen zurück.",
                description = "Erstellt eine Liste aller in dem Katalog vorhanden Anerkennungen von Lehrbefähigungen. "
                		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
@@ -466,7 +467,7 @@ public class APILehrer {
     @ApiResponse(responseCode = "404", description = "Keine Anerkennungs-Katalog-Einträge gefunden")
     public Response getLehrerLehrbefaehigungenAnerkennungen(@PathParam("schema") String schema, @Context HttpServletRequest request) {
     	OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
-    	return (new DataKatalogLehrerLehrbefaehigungAnerkennungen(null)).getList();
+    	return (new DataKatalogLehrerLehrbefaehigungAnerkennungen()).getList();
     }
     
     /**
@@ -478,7 +479,7 @@ public class APILehrer {
      * @return die Liste mit dem Katalog der Arten von Mehrleistungen durch Lehrer
      */
     @GET
-    @Path("/mehrleistungsarten")
+    @Path("/allgemein/mehrleistungsarten")
     @Operation(summary = "Gibt den Katalog der Arten von Mehrleistungen durch Lehrer zurück.",
                description = "Erstellt eine Liste aller in dem Katalog vorhanden die Arten von Mehrleistungen durch Lehrer. "
                		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
@@ -488,7 +489,7 @@ public class APILehrer {
     @ApiResponse(responseCode = "404", description = "Keine Mehrleistungsart-Katalog-Einträge gefunden")
     public Response getLehrerMehrleistungsarten(@PathParam("schema") String schema, @Context HttpServletRequest request) {
     	OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
-    	return (new DataKatalogLehrerMehrleistungsarten(null)).getList();
+    	return (new DataKatalogLehrerMehrleistungsarten()).getList();
     }
     
     /**
@@ -500,7 +501,7 @@ public class APILehrer {
      * @return die Liste mit dem Katalog der Arten von Minderleistungen durch Lehrer
      */
     @GET
-    @Path("/minderleistungsarten")
+    @Path("/allgemein/minderleistungsarten")
     @Operation(summary = "Gibt den Katalog der Arten von Minderleistungen durch Lehrer zurück.",
                description = "Erstellt eine Liste aller in dem Katalog vorhanden Arten von Minderleistungen durch Lehrer. "
                		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
@@ -510,7 +511,7 @@ public class APILehrer {
     @ApiResponse(responseCode = "404", description = "Keine Minderleistungsart-Katalog-Einträge gefunden")
     public Response getLehrerMinderleistungsarten(@PathParam("schema") String schema, @Context HttpServletRequest request) {
     	OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
-    	return (new DataKatalogLehrerMinderleistungsarten(null)).getList();
+    	return (new DataKatalogLehrerMinderleistungsarten()).getList();
     }
     
     /**
@@ -522,7 +523,7 @@ public class APILehrer {
      * @return die Liste mit dem Katalog der Lehrer Rechtsverhältnisse
      */
     @GET
-    @Path("/rechtsverhaeltnisse")
+    @Path("/allgemein/rechtsverhaeltnisse")
     @Operation(summary = "Gibt den Katalog des Rechtsverhältnisse zurück.",
                description = "Erstellt eine Liste aller in dem Katalog vorhanden Rechtsverhältnisse unter Angabe der ID, eines Kürzels und der Bezeichnung. "
                		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
@@ -532,7 +533,7 @@ public class APILehrer {
     @ApiResponse(responseCode = "404", description = "Keine Rechtsverhältnis-Katalog-Einträge gefunden")
     public Response getLehrerRechtsverhaeltnisse(@PathParam("schema") String schema, @Context HttpServletRequest request) {
     	OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
-    	return (new DataKatalogLehrerRechtsverhaeltnis(null)).getList();
+    	return (new DataKatalogLehrerRechtsverhaeltnis()).getList();
     }
     
 
@@ -545,7 +546,7 @@ public class APILehrer {
      * @return die Liste mit dem Katalog der Gründe für Anrechnungsstunden von Lehrern
      */
     @GET
-    @Path("/anrechnungsgruende")
+    @Path("/allgemein/anrechnungsgruende")
     @Operation(summary = "Gibt den Katalog der Gründe für Anrechnungsstunden von Lehrern zurück.",
                description = "Erstellt eine Liste aller in dem Katalog vorhanden Gründe für Anrechnungsstunden von Lehrern."
                		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
@@ -555,7 +556,7 @@ public class APILehrer {
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
     public Response getLehrerAnrechnungsgruende(@PathParam("schema") String schema, @Context HttpServletRequest request) {
     	OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
-    	return (new DataKatalogLehrerAnrechnungsgruende(null)).getList();
+    	return (new DataKatalogLehrerAnrechnungsgruende()).getList();
     }
 
 }

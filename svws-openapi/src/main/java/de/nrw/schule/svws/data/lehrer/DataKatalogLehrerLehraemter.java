@@ -21,11 +21,9 @@ public class DataKatalogLehrerLehraemter extends DataManager<Long> {
 
 	/**
 	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link LehrerKatalogLehramtEintrag}.
-	 * 
-	 * @param conn   die Datenbank-Verbindung für den Datenbankzugriff
 	 */
-	public DataKatalogLehrerLehraemter(DBEntityManager conn) {
-		super(conn);
+	public DataKatalogLehrerLehraemter() {
+		super(null);
 	}
 	
 	@Override

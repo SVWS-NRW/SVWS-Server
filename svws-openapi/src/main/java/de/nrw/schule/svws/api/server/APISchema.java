@@ -35,7 +35,7 @@ import jakarta.ws.rs.core.Response.Status;
  * Ein Zugriff erfolgt über den Pfad https://{Hostname}/db/{schema}/api/update/...
  * oder https://{Hostname}/db/{schema}/api/revision
  */
-@Path("")
+@Path("/db/{schema}/api")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Tag(name = "Schema")	
@@ -53,7 +53,7 @@ public class APISchema {
      */
     @GET
     @Produces("application/vnd.sqlite3")
-    @Path("/db/{schema}/api/export/sqlite")
+    @Path("/export/sqlite")
     @Operation(summary = "Exportiert das aktuelle Schema in eine neu erstellte SQLite-Datenbank.",
                description = "Exportiert das aktuelle Schema in eine neu erstellte SQLite-Datenbank. Der Aufruf erfordert "
                		       + "administrative Rechte.")
@@ -79,7 +79,7 @@ public class APISchema {
      * @return Logmeldung über den Updatevorgang
      */
     @POST
-    @Path("/db/{schema}/api/update/{revision : \\d+}")
+    @Path("/update/{revision : \\d+}")
     @Operation(summary = "Aktualisiert das angegebene Schema auf die angegebene Revision.",
     		   description = "Prüft das Schema bezüglich der aktuellen Revision und aktualisiert das Schema ggf. auf die übergebene Revision, sofern "
     		   		       + "diese in der Schema-Definition existiert.")
@@ -136,7 +136,7 @@ public class APISchema {
      * @return Logmeldung über den Updatevorgang
      */
     @POST
-    @Path("/db/{schema}/api/update")
+    @Path("/update")
     @Operation(summary = "Aktualisiert das angegebene Schema auf die neueste Revision.",
 	           description = "Prüft das Schema bezüglich der aktuellen Revision und aktualisiert das Schema ggf. auf die neueste Revision.")
     @ApiResponse(responseCode = "200", description = "Der Log vom Verlauf des Updates",
@@ -158,7 +158,7 @@ public class APISchema {
      * @return die Revisionsnummer des Datenbankschemas
      */
     @GET
-    @Path("/db/{schema}/api/revision")
+    @Path("/revision")
     @Operation(summary = "Liefert die aktuelle Revision des angegebenen Schemas.",
 	           description = "Liefert die aktuelle Revision des angegebenen Schemas.")
     @ApiResponse(responseCode = "200", description = "Die Revision des Schemas",
@@ -187,7 +187,7 @@ public class APISchema {
      * @return true, falls es sich um ein "verdorbenes" Schema handelt und ansonsten false
      */
     @GET
-    @Path("/db/{schema}/api/isTainted")
+    @Path("/isTainted")
     @Operation(summary = "Gibt zurück, ob es sich um ein \"verdorbenes\" Schema handelt oder nicht.",
 	           description = "Gibt zurück, ob es sich um ein \"verdorbenes\" Schema handelt oder nicht. Eine Schema wird "
 	           		+ " wird als \"verdorben\" bezeichnet, wenn es ggf. fehlerhaft ist, weil es mithilfe einer "
@@ -204,6 +204,5 @@ public class APISchema {
 	    	return version.IsTainted;
     	}
     }
-    
-    
+
 }
