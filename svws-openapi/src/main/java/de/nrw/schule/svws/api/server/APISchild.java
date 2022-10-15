@@ -4,10 +4,14 @@ import de.nrw.schule.svws.api.OpenAPIApplication;
 import de.nrw.schule.svws.core.data.schild3.Schild3KatalogEintragAbiturInfos;
 import de.nrw.schule.svws.core.data.schild3.Schild3KatalogEintragDQRNiveaus;
 import de.nrw.schule.svws.core.data.schild3.Schild3KatalogEintragDatenart;
+import de.nrw.schule.svws.core.data.schild3.Schild3KatalogEintragFilterFehlendeEintraege;
+import de.nrw.schule.svws.core.data.schild3.Schild3KatalogEintragFilterFeldListe;
 import de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenz;
 import de.nrw.schule.svws.data.schild3.DataSchildAbiturInfos;
 import de.nrw.schule.svws.data.schild3.DataSchildDQRNiveaus;
 import de.nrw.schule.svws.data.schild3.DataSchildDatenart;
+import de.nrw.schule.svws.data.schild3.DataSchildFilterFehlendeEintraege;
+import de.nrw.schule.svws.data.schild3.DataSchildFilterFeldListe;
 import de.nrw.schule.svws.db.Benutzer;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -103,6 +107,54 @@ public class APISchild {
     public Response getKatalogSchild3DQRNiveaus(@PathParam("schema") String schema, @Context HttpServletRequest request) {
         try (Benutzer user = OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
             return (new DataSchildDQRNiveaus()).getAll();
+        }
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für die Abfrage des Schild3-Kataloges Filter Fehlende Einträge.
+     *  
+     * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param request       die Informationen zur HTTP-Anfrage
+     * 
+     * @return der Katalog
+     */
+    @GET
+    @Path("/filter_fehlende_eintraege")
+    @Operation(summary = "Die Liste der Einträge aus dem Schild-Katalog Filter Fehlende Einträge.",
+               description = "Die Liste der Einträge aus dem Schild-Katalog Filter Fehlende Einträge. "
+                           + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
+    @ApiResponse(responseCode = "200", description = "Eine Liste von Katalog-Einträgen für den Schild-Katalog Filter Fehlende Einträge",
+                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Schild3KatalogEintragFilterFehlendeEintraege.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
+    @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
+    public Response getKatalogSchild3FilterFehlendeEintraege(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+        try (Benutzer user = OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
+            return (new DataSchildFilterFehlendeEintraege()).getAll();
+        }
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für die Abfrage des Schild3-Kataloges Filter Feld Liste.
+     *  
+     * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param request       die Informationen zur HTTP-Anfrage
+     * 
+     * @return der Katalog
+     */
+    @GET
+    @Path("/filter_feld_liste")
+    @Operation(summary = "Die Liste der Einträge aus dem Schild-Katalog Filter Feld Liste.",
+               description = "Die Liste der Einträge aus dem Schild-Katalog Filter Feld Liste. "
+                           + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
+    @ApiResponse(responseCode = "200", description = "Eine Liste von Katalog-Einträgen für den Schild-Katalog Filter Feld Liste",
+                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Schild3KatalogEintragFilterFeldListe.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
+    @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
+    public Response getKatalogSchild3FilterFeldListe(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+        try (Benutzer user = OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
+            return (new DataSchildFilterFeldListe()).getAll();
         }
     }
 

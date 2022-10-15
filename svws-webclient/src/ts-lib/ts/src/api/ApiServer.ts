@@ -82,6 +82,8 @@ import { ReligionKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_Religi
 import { Schild3KatalogEintragAbiturInfos, cast_de_nrw_schule_svws_core_data_schild3_Schild3KatalogEintragAbiturInfos } from '../core/data/schild3/Schild3KatalogEintragAbiturInfos';
 import { Schild3KatalogEintragDatenart, cast_de_nrw_schule_svws_core_data_schild3_Schild3KatalogEintragDatenart } from '../core/data/schild3/Schild3KatalogEintragDatenart';
 import { Schild3KatalogEintragDQRNiveaus, cast_de_nrw_schule_svws_core_data_schild3_Schild3KatalogEintragDQRNiveaus } from '../core/data/schild3/Schild3KatalogEintragDQRNiveaus';
+import { Schild3KatalogEintragFilterFehlendeEintraege, cast_de_nrw_schule_svws_core_data_schild3_Schild3KatalogEintragFilterFehlendeEintraege } from '../core/data/schild3/Schild3KatalogEintragFilterFehlendeEintraege';
+import { Schild3KatalogEintragFilterFeldListe, cast_de_nrw_schule_svws_core_data_schild3_Schild3KatalogEintragFilterFeldListe } from '../core/data/schild3/Schild3KatalogEintragFilterFeldListe';
 import { SchuelerBetriebsdaten, cast_de_nrw_schule_svws_core_data_schueler_SchuelerBetriebsdaten } from '../core/data/schueler/SchuelerBetriebsdaten';
 import { SchuelerLernabschnittListeEintrag, cast_de_nrw_schule_svws_core_data_schueler_SchuelerLernabschnittListeEintrag } from '../core/data/schueler/SchuelerLernabschnittListeEintrag';
 import { SchuelerLernabschnittsdaten, cast_de_nrw_schule_svws_core_data_schueler_SchuelerLernabschnittsdaten } from '../core/data/schueler/SchuelerLernabschnittsdaten';
@@ -3590,6 +3592,60 @@ export class ApiServer extends BaseApi {
 		const obj = JSON.parse(result);
 		let ret = new Vector<Schild3KatalogEintragDQRNiveaus>();
 		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(Schild3KatalogEintragDQRNiveaus.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getKatalogSchild3FilterFehlendeEintraege für den Zugriff auf die URL https://{hostname}/db/{schema}/schild3/filter_fehlende_eintraege
+	 * 
+	 * Die Liste der Einträge aus dem Schild-Katalog Filter Fehlende Einträge. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Eine Liste von Katalog-Einträgen für den Schild-Katalog Filter Fehlende Einträge
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<Schild3KatalogEintragFilterFehlendeEintraege>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
+	 *   Code 404: Keine Katalog-Einträge gefunden
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * 
+	 * @returns Eine Liste von Katalog-Einträgen für den Schild-Katalog Filter Fehlende Einträge
+	 */
+	public async getKatalogSchild3FilterFehlendeEintraege(schema : string) : Promise<List<Schild3KatalogEintragFilterFehlendeEintraege>> {
+		let path : string = "/db/{schema}/schild3/filter_fehlende_eintraege"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		let ret = new Vector<Schild3KatalogEintragFilterFehlendeEintraege>();
+		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(Schild3KatalogEintragFilterFehlendeEintraege.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getKatalogSchild3FilterFeldListe für den Zugriff auf die URL https://{hostname}/db/{schema}/schild3/filter_feld_liste
+	 * 
+	 * Die Liste der Einträge aus dem Schild-Katalog Filter Feld Liste. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Eine Liste von Katalog-Einträgen für den Schild-Katalog Filter Feld Liste
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<Schild3KatalogEintragFilterFeldListe>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
+	 *   Code 404: Keine Katalog-Einträge gefunden
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * 
+	 * @returns Eine Liste von Katalog-Einträgen für den Schild-Katalog Filter Feld Liste
+	 */
+	public async getKatalogSchild3FilterFeldListe(schema : string) : Promise<List<Schild3KatalogEintragFilterFeldListe>> {
+		let path : string = "/db/{schema}/schild3/filter_feld_liste"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		let ret = new Vector<Schild3KatalogEintragFilterFeldListe>();
+		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(Schild3KatalogEintragFilterFeldListe.transpilerFromJSON(text)); });
 		return ret;
 	}
 

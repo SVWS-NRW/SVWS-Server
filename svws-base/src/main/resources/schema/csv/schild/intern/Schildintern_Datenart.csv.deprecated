@@ -1,6 +1,0 @@
-DatenartKrz;Datenart;Tabellenname;Reihenfolge;gueltigVon;gueltigBis
-Schueler;Schüler;Schueler;1;;
-Lehrer;Lehrer;K_Lehrer;2;;
-ErzAdr;Erziehungsberechtigte;SchuelerErzAdr;3;;
-Tel;telefonische Ansprechpartner;SchuelerTelefone;4;;
-AllgAdr;allgemeine Adressen;Schueler_AllgAdr;5;;
