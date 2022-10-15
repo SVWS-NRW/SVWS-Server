@@ -9,6 +9,7 @@ import de.nrw.schule.svws.core.data.schild3.Schild3KatalogEintragFilterFeldListe
 import de.nrw.schule.svws.core.data.schild3.Schild3KatalogEintragLaender;
 import de.nrw.schule.svws.core.data.schild3.Schild3KatalogEintragPruefungsordnung;
 import de.nrw.schule.svws.core.data.schild3.Schild3KatalogEintragPruefungsordnungOption;
+import de.nrw.schule.svws.core.data.schild3.Schild3KatalogEintragSchuelerImportExport;
 import de.nrw.schule.svws.core.data.schild3.Schild3KatalogEintragSchuelerStatus;
 import de.nrw.schule.svws.core.data.schild3.Schild3KatalogEintragVersetzungsvermerke;
 import de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenz;
@@ -20,6 +21,7 @@ import de.nrw.schule.svws.data.schild3.DataSchildFilterFeldListe;
 import de.nrw.schule.svws.data.schild3.DataSchildLaender;
 import de.nrw.schule.svws.data.schild3.DataSchildPruefungsordnung;
 import de.nrw.schule.svws.data.schild3.DataSchildPruefungsordnungOptionen;
+import de.nrw.schule.svws.data.schild3.DataSchildSchuelerImportExport;
 import de.nrw.schule.svws.data.schild3.DataSchildSchuelerStatus;
 import de.nrw.schule.svws.data.schild3.DataSchildVersetzungsvermerke;
 import de.nrw.schule.svws.db.Benutzer;
@@ -242,6 +244,30 @@ public class APISchild {
 
 
     /**
+     * Die OpenAPI-Methode für die Abfrage des Schild3-Kataloges Schüler-Import/Export.
+     *  
+     * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param request       die Informationen zur HTTP-Anfrage
+     * 
+     * @return der Katalog
+     */
+    @GET
+    @Path("/schueler/import_export")
+    @Operation(summary = "Die Liste der Einträge aus dem Schild-Katalog Schüler-Import/Export.",
+               description = "Die Liste der Einträge aus dem Schild-Katalog Schüler-Import/Export. "
+                           + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
+    @ApiResponse(responseCode = "200", description = "Eine Liste von Katalog-Einträgen für den Schild-Katalog Schüler-Import/Export",
+                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Schild3KatalogEintragSchuelerImportExport.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
+    @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
+    public Response getKatalogSchild3SchuelerImportExport(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+        try (Benutzer user = OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
+            return (new DataSchildSchuelerImportExport()).getAll();
+        }
+    }
+
+
+    /**
      * Die OpenAPI-Methode für die Abfrage des Schild3-Kataloges Schüler-Status.
      *  
      * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
@@ -250,7 +276,7 @@ public class APISchild {
      * @return der Katalog
      */
     @GET
-    @Path("/schueler_status")
+    @Path("/schueler/status")
     @Operation(summary = "Die Liste der Einträge aus dem Schild-Katalog Schüler-Status.",
                description = "Die Liste der Einträge aus dem Schild-Katalog Schüler-Status. "
                            + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")

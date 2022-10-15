@@ -197,6 +197,7 @@ export { Schild3KatalogEintragFilterFeldListe } from './core/data/schild3/Schild
 export { Schild3KatalogEintragLaender } from './core/data/schild3/Schild3KatalogEintragLaender';
 export { Schild3KatalogEintragPruefungsordnung } from './core/data/schild3/Schild3KatalogEintragPruefungsordnung';
 export { Schild3KatalogEintragPruefungsordnungOption } from './core/data/schild3/Schild3KatalogEintragPruefungsordnungOption';
+export { Schild3KatalogEintragSchuelerImportExport } from './core/data/schild3/Schild3KatalogEintragSchuelerImportExport';
 export { Schild3KatalogEintragSchuelerStatus } from './core/data/schild3/Schild3KatalogEintragSchuelerStatus';
 export { Schild3KatalogEintragVersetzungsvermerke } from './core/data/schild3/Schild3KatalogEintragVersetzungsvermerke';
 export { Schueler } from './core/data/schueler/Schueler';
