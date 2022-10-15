@@ -207,7 +207,7 @@ public class APIBenutzer {
      * @return die Liste der Benutzerkompetenzen
      */
     @GET
-    @Path("/kompetenzen")
+    @Path("/allgemein/kompetenzen")
     @Operation(summary = "Liefert den Katalog der Benutzerkompetenzen.", description = "Liefert den Katalog der Benutzerkompetenzen. "
             + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Kataloge besitzt.")
     @ApiResponse(responseCode = "200", description = "Der Katalog der Benutzerkompetenzen", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = BenutzerKompetenzKatalogEintrag.class))))
@@ -215,7 +215,7 @@ public class APIBenutzer {
     public Response getKatalogBenutzerkompetenzen(@PathParam("schema") String schema,
             @Context HttpServletRequest request) {
         try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KEINE)) {
-            return (new DataBenutzerkompetenzliste(conn).getList());
+            return (new DataBenutzerkompetenzliste().getList());
         }
     }
 
@@ -230,7 +230,7 @@ public class APIBenutzer {
      * @return die Liste der Benutzerkompetenzgruppen
      */
     @GET
-    @Path("/kompetenzgruppen")
+    @Path("/allgemein/kompetenzgruppen")
     @Operation(summary = "Liefert den Katalog der Benutzerkompetenzgruppen.", description = "Liefert den Katalog der Benutzerkompetenzgruppen. "
             + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Kataloge besitzt.")
     @ApiResponse(responseCode = "200", description = "Der Katalog der Benutzerkompetenzgruppen", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = BenutzerKompetenzGruppenKatalogEintrag.class))))
@@ -238,7 +238,7 @@ public class APIBenutzer {
     public Response getKatalogBenutzerkompetenzgruppen(@PathParam("schema") String schema,
             @Context HttpServletRequest request) {
         try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KEINE)) {
-            return (new DataBenutzerkompetenzGruppenliste(conn).getList());
+            return (new DataBenutzerkompetenzGruppenliste().getList());
         }
     }
 

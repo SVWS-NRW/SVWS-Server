@@ -11,7 +11,6 @@ import jakarta.ws.rs.core.Response.Status;
 import de.nrw.schule.svws.core.data.benutzer.BenutzerKompetenzGruppenKatalogEintrag;
 import de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenzGruppe;
 import de.nrw.schule.svws.data.DataManager;
-import de.nrw.schule.svws.db.DBEntityManager;
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
@@ -21,11 +20,9 @@ public class DataBenutzerkompetenzGruppenliste extends DataManager<Long> {
 
 	/**
 	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link BenutzerKompetenzGruppenKatalogEintrag}.
-	 * 
-	 * @param conn        die Datenbank-Verbindung für den Datenbankzugriff
 	 */
-	public DataBenutzerkompetenzGruppenliste(DBEntityManager conn) {
-		super(conn);
+	public DataBenutzerkompetenzGruppenliste() {
+		super(null);
 	}
 	
 	
