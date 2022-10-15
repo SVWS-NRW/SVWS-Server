@@ -196,6 +196,7 @@ export { Schild3KatalogEintragFilterFehlendeEintraege } from './core/data/schild
 export { Schild3KatalogEintragFilterFeldListe } from './core/data/schild3/Schild3KatalogEintragFilterFeldListe';
 export { Schild3KatalogEintragLaender } from './core/data/schild3/Schild3KatalogEintragLaender';
 export { Schild3KatalogEintragSchuelerStatus } from './core/data/schild3/Schild3KatalogEintragSchuelerStatus';
+export { Schild3KatalogEintragVersetzungsvermerke } from './core/data/schild3/Schild3KatalogEintragVersetzungsvermerke';
 export { Schueler } from './core/data/schueler/Schueler';
 export { SchuelerBetriebsdaten } from './core/data/schueler/SchuelerBetriebsdaten';
 export { SchuelerLeistungsdaten } from './core/data/schueler/SchuelerLeistungsdaten';
