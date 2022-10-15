@@ -1,4 +1,4 @@
-package de.nrw.schule.svws.data.kataloge;
+package de.nrw.schule.svws.data.jahrgaenge;
 
 import java.io.InputStream;
 import java.util.Arrays;

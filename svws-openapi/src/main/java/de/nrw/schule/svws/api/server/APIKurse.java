@@ -15,7 +15,7 @@ import de.nrw.schule.svws.core.data.kurse.KursDaten;
 import de.nrw.schule.svws.core.data.kurse.KursListeEintrag;
 import de.nrw.schule.svws.core.data.kurse.KursartKatalogEintrag;
 import de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenz;
-import de.nrw.schule.svws.data.kataloge.DataKatalogKursarten;
+import de.nrw.schule.svws.data.kurse.DataKatalogKursarten;
 import de.nrw.schule.svws.data.kurse.DataKursdaten;
 import de.nrw.schule.svws.data.kurse.DataKursliste;
 import de.nrw.schule.svws.db.Benutzer;

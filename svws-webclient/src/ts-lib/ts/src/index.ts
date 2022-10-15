@@ -189,6 +189,7 @@ export { LehrerKatalogZugangsgrundEintrag } from './core/data/lehrer/LehrerKatal
 export { LehrerListeEintrag } from './core/data/lehrer/LehrerListeEintrag';
 export { LehrerPersonaldaten } from './core/data/lehrer/LehrerPersonaldaten';
 export { LehrerStammdaten } from './core/data/lehrer/LehrerStammdaten';
+export { Schild3KatalogEintragAbiturInfos } from './core/data/schild3/Schild3KatalogEintragAbiturInfos';
 export { Schueler } from './core/data/schueler/Schueler';
 export { SchuelerBetriebsdaten } from './core/data/schueler/SchuelerBetriebsdaten';
 export { SchuelerLeistungsdaten } from './core/data/schueler/SchuelerLeistungsdaten';

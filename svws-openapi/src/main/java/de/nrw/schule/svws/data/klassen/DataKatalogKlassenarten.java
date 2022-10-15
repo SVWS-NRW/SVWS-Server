@@ -1,4 +1,4 @@
-package de.nrw.schule.svws.data.kataloge;
+package de.nrw.schule.svws.data.klassen;
 
 import java.io.InputStream;
 import java.util.Arrays;
@@ -8,27 +8,27 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
-import de.nrw.schule.svws.core.data.kurse.KursartKatalogEintrag;
-import de.nrw.schule.svws.core.types.statkue.ZulaessigeKursart;
+import de.nrw.schule.svws.core.data.klassen.KlassenartKatalogEintrag;
+import de.nrw.schule.svws.core.types.statkue.Klassenart;
 import de.nrw.schule.svws.data.DataManager;
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
- * Core-DTO {@link KursartKatalogEintrag}.
+ * Core-DTO {@link KlassenartKatalogEintrag}.
  */
-public class DataKatalogKursarten extends DataManager<Long> {
+public class DataKatalogKlassenarten extends DataManager<Long> {
 
 	/**
-	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link KursartKatalogEintrag}.
+	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link KlassenartKatalogEintrag}.
 	 */
-	public DataKatalogKursarten() {
+	public DataKatalogKlassenarten() {
 		super(null);
 	}
 	
 	@Override
 	public Response getAll() {
-		Vector<KursartKatalogEintrag> daten = new Vector<>();
-		for (ZulaessigeKursart ka : ZulaessigeKursart.values())
+		Vector<KlassenartKatalogEintrag> daten = new Vector<>();
+		for (Klassenart ka : Klassenart.values())
 			daten.addAll(Arrays.asList(ka.historie));
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}

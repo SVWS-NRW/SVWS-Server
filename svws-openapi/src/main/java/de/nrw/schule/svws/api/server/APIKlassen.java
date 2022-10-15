@@ -15,7 +15,7 @@ import de.nrw.schule.svws.core.data.klassen.KlassenDaten;
 import de.nrw.schule.svws.core.data.klassen.KlassenListeEintrag;
 import de.nrw.schule.svws.core.data.klassen.KlassenartKatalogEintrag;
 import de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenz;
-import de.nrw.schule.svws.data.kataloge.DataKatalogKlassenarten;
+import de.nrw.schule.svws.data.klassen.DataKatalogKlassenarten;
 import de.nrw.schule.svws.data.klassen.DataKlassendaten;
 import de.nrw.schule.svws.data.klassen.DataKlassenlisten;
 import de.nrw.schule.svws.db.Benutzer;

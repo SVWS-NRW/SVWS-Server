@@ -17,7 +17,7 @@ import de.nrw.schule.svws.core.data.jahrgang.JahrgangsListeEintrag;
 import de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenz;
 import de.nrw.schule.svws.data.jahrgaenge.DataJahrgangsdaten;
 import de.nrw.schule.svws.data.jahrgaenge.DataJahrgangsliste;
-import de.nrw.schule.svws.data.kataloge.DataKatalogJahrgaenge;
+import de.nrw.schule.svws.data.jahrgaenge.DataKatalogJahrgaenge;
 import de.nrw.schule.svws.db.Benutzer;
 import de.nrw.schule.svws.db.DBEntityManager;
 import io.swagger.v3.oas.annotations.Operation;
