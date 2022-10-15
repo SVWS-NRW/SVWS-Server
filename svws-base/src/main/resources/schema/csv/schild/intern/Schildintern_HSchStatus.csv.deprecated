@@ -1,8 +1,0 @@
-StatusNr;Bezeichnung;Sortierung;InSimExp;SIMAbschnitt
-0;Neuaufnahme;10;-;
-1;Warteliste;20;-;
-2;Aktiv;30;+;A
-3;Beurlaubt;40;-;
-6;Extern;70;+;
-8;Abschluss;60;+;V
-9;Abgang;50;+;V

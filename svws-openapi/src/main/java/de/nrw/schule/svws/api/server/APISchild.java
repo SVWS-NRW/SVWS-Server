@@ -6,6 +6,7 @@ import de.nrw.schule.svws.core.data.schild3.Schild3KatalogEintragDQRNiveaus;
 import de.nrw.schule.svws.core.data.schild3.Schild3KatalogEintragDatenart;
 import de.nrw.schule.svws.core.data.schild3.Schild3KatalogEintragFilterFehlendeEintraege;
 import de.nrw.schule.svws.core.data.schild3.Schild3KatalogEintragFilterFeldListe;
+import de.nrw.schule.svws.core.data.schild3.Schild3KatalogEintragLaender;
 import de.nrw.schule.svws.core.data.schild3.Schild3KatalogEintragSchuelerStatus;
 import de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenz;
 import de.nrw.schule.svws.data.schild3.DataSchildAbiturInfos;
@@ -13,6 +14,7 @@ import de.nrw.schule.svws.data.schild3.DataSchildDQRNiveaus;
 import de.nrw.schule.svws.data.schild3.DataSchildDatenart;
 import de.nrw.schule.svws.data.schild3.DataSchildFilterFehlendeEintraege;
 import de.nrw.schule.svws.data.schild3.DataSchildFilterFeldListe;
+import de.nrw.schule.svws.data.schild3.DataSchildLaender;
 import de.nrw.schule.svws.data.schild3.DataSchildSchuelerStatus;
 import de.nrw.schule.svws.db.Benutzer;
 import io.swagger.v3.oas.annotations.Operation;
@@ -157,6 +159,30 @@ public class APISchild {
     public Response getKatalogSchild3FilterFeldListe(@PathParam("schema") String schema, @Context HttpServletRequest request) {
         try (Benutzer user = OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
             return (new DataSchildFilterFeldListe()).getAll();
+        }
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für die Abfrage des Schild3-Kataloges Bundesländer/Nachbarländer.
+     *  
+     * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param request       die Informationen zur HTTP-Anfrage
+     * 
+     * @return der Katalog
+     */
+    @GET
+    @Path("/laender")
+    @Operation(summary = "Die Liste der Einträge aus dem Schild-Katalog Bundesländer/Nachbarländer.",
+               description = "Die Liste der Einträge aus dem Schild-Katalog Bundesländer/Nachbarländer. "
+                           + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
+    @ApiResponse(responseCode = "200", description = "Eine Liste von Katalog-Einträgen für den Schild-Katalog Bundesländer/Nachbarländer",
+                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Schild3KatalogEintragLaender.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
+    @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
+    public Response getKatalogSchild3Laender(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+        try (Benutzer user = OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
+            return (new DataSchildLaender()).getAll();
         }
     }
 

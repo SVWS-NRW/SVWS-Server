@@ -84,6 +84,7 @@ import { Schild3KatalogEintragDatenart, cast_de_nrw_schule_svws_core_data_schild
 import { Schild3KatalogEintragDQRNiveaus, cast_de_nrw_schule_svws_core_data_schild3_Schild3KatalogEintragDQRNiveaus } from '../core/data/schild3/Schild3KatalogEintragDQRNiveaus';
 import { Schild3KatalogEintragFilterFehlendeEintraege, cast_de_nrw_schule_svws_core_data_schild3_Schild3KatalogEintragFilterFehlendeEintraege } from '../core/data/schild3/Schild3KatalogEintragFilterFehlendeEintraege';
 import { Schild3KatalogEintragFilterFeldListe, cast_de_nrw_schule_svws_core_data_schild3_Schild3KatalogEintragFilterFeldListe } from '../core/data/schild3/Schild3KatalogEintragFilterFeldListe';
+import { Schild3KatalogEintragLaender, cast_de_nrw_schule_svws_core_data_schild3_Schild3KatalogEintragLaender } from '../core/data/schild3/Schild3KatalogEintragLaender';
 import { Schild3KatalogEintragSchuelerStatus, cast_de_nrw_schule_svws_core_data_schild3_Schild3KatalogEintragSchuelerStatus } from '../core/data/schild3/Schild3KatalogEintragSchuelerStatus';
 import { SchuelerBetriebsdaten, cast_de_nrw_schule_svws_core_data_schueler_SchuelerBetriebsdaten } from '../core/data/schueler/SchuelerBetriebsdaten';
 import { SchuelerLernabschnittListeEintrag, cast_de_nrw_schule_svws_core_data_schueler_SchuelerLernabschnittListeEintrag } from '../core/data/schueler/SchuelerLernabschnittListeEintrag';
@@ -3647,6 +3648,33 @@ export class ApiServer extends BaseApi {
 		const obj = JSON.parse(result);
 		let ret = new Vector<Schild3KatalogEintragFilterFeldListe>();
 		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(Schild3KatalogEintragFilterFeldListe.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getKatalogSchild3Laender für den Zugriff auf die URL https://{hostname}/db/{schema}/schild3/laender
+	 * 
+	 * Die Liste der Einträge aus dem Schild-Katalog Bundesländer/Nachbarländer. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Eine Liste von Katalog-Einträgen für den Schild-Katalog Bundesländer/Nachbarländer
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<Schild3KatalogEintragLaender>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
+	 *   Code 404: Keine Katalog-Einträge gefunden
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * 
+	 * @returns Eine Liste von Katalog-Einträgen für den Schild-Katalog Bundesländer/Nachbarländer
+	 */
+	public async getKatalogSchild3Laender(schema : string) : Promise<List<Schild3KatalogEintragLaender>> {
+		let path : string = "/db/{schema}/schild3/laender"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		let ret = new Vector<Schild3KatalogEintragLaender>();
+		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(Schild3KatalogEintragLaender.transpilerFromJSON(text)); });
 		return ret;
 	}
 
