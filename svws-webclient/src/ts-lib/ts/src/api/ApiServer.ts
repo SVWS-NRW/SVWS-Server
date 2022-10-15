@@ -84,6 +84,7 @@ import { Schild3KatalogEintragDatenart, cast_de_nrw_schule_svws_core_data_schild
 import { Schild3KatalogEintragDQRNiveaus, cast_de_nrw_schule_svws_core_data_schild3_Schild3KatalogEintragDQRNiveaus } from '../core/data/schild3/Schild3KatalogEintragDQRNiveaus';
 import { Schild3KatalogEintragFilterFehlendeEintraege, cast_de_nrw_schule_svws_core_data_schild3_Schild3KatalogEintragFilterFehlendeEintraege } from '../core/data/schild3/Schild3KatalogEintragFilterFehlendeEintraege';
 import { Schild3KatalogEintragFilterFeldListe, cast_de_nrw_schule_svws_core_data_schild3_Schild3KatalogEintragFilterFeldListe } from '../core/data/schild3/Schild3KatalogEintragFilterFeldListe';
+import { Schild3KatalogEintragFilterSpezial, cast_de_nrw_schule_svws_core_data_schild3_Schild3KatalogEintragFilterSpezial } from '../core/data/schild3/Schild3KatalogEintragFilterSpezial';
 import { Schild3KatalogEintragLaender, cast_de_nrw_schule_svws_core_data_schild3_Schild3KatalogEintragLaender } from '../core/data/schild3/Schild3KatalogEintragLaender';
 import { Schild3KatalogEintragPruefungsordnung, cast_de_nrw_schule_svws_core_data_schild3_Schild3KatalogEintragPruefungsordnung } from '../core/data/schild3/Schild3KatalogEintragPruefungsordnung';
 import { Schild3KatalogEintragPruefungsordnungOption, cast_de_nrw_schule_svws_core_data_schild3_Schild3KatalogEintragPruefungsordnungOption } from '../core/data/schild3/Schild3KatalogEintragPruefungsordnungOption';
@@ -3603,7 +3604,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getKatalogSchild3FilterFehlendeEintraege für den Zugriff auf die URL https://{hostname}/db/{schema}/schild3/filter_fehlende_eintraege
+	 * Implementierung der GET-Methode getKatalogSchild3FilterFehlendeEintraege für den Zugriff auf die URL https://{hostname}/db/{schema}/schild3/filter/fehlende_eintraege
 	 * 
 	 * Die Liste der Einträge aus dem Schild-Katalog Filter Fehlende Einträge. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
 	 * 
@@ -3619,7 +3620,7 @@ export class ApiServer extends BaseApi {
 	 * @returns Eine Liste von Katalog-Einträgen für den Schild-Katalog Filter Fehlende Einträge
 	 */
 	public async getKatalogSchild3FilterFehlendeEintraege(schema : string) : Promise<List<Schild3KatalogEintragFilterFehlendeEintraege>> {
-		let path : string = "/db/{schema}/schild3/filter_fehlende_eintraege"
+		let path : string = "/db/{schema}/schild3/filter/fehlende_eintraege"
 				.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
@@ -3630,7 +3631,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getKatalogSchild3FilterFeldListe für den Zugriff auf die URL https://{hostname}/db/{schema}/schild3/filter_feld_liste
+	 * Implementierung der GET-Methode getKatalogSchild3FilterFeldListe für den Zugriff auf die URL https://{hostname}/db/{schema}/schild3/filter/feldliste
 	 * 
 	 * Die Liste der Einträge aus dem Schild-Katalog Filter Feld Liste. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
 	 * 
@@ -3646,12 +3647,39 @@ export class ApiServer extends BaseApi {
 	 * @returns Eine Liste von Katalog-Einträgen für den Schild-Katalog Filter Feld Liste
 	 */
 	public async getKatalogSchild3FilterFeldListe(schema : string) : Promise<List<Schild3KatalogEintragFilterFeldListe>> {
-		let path : string = "/db/{schema}/schild3/filter_feld_liste"
+		let path : string = "/db/{schema}/schild3/filter/feldliste"
 				.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		let ret = new Vector<Schild3KatalogEintragFilterFeldListe>();
 		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(Schild3KatalogEintragFilterFeldListe.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getKatalogSchild3FilterSpezial für den Zugriff auf die URL https://{hostname}/db/{schema}/schild3/filter/spezial
+	 * 
+	 * Die Liste der Einträge aus dem Schild-Katalog Spezial-Filter. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Eine Liste von Katalog-Einträgen für den Schild-Katalog Spezial-Filter
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<Schild3KatalogEintragFilterSpezial>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
+	 *   Code 404: Keine Katalog-Einträge gefunden
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * 
+	 * @returns Eine Liste von Katalog-Einträgen für den Schild-Katalog Spezial-Filter
+	 */
+	public async getKatalogSchild3FilterSpezial(schema : string) : Promise<List<Schild3KatalogEintragFilterSpezial>> {
+		let path : string = "/db/{schema}/schild3/filter/spezial"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		let ret = new Vector<Schild3KatalogEintragFilterSpezial>();
+		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(Schild3KatalogEintragFilterSpezial.transpilerFromJSON(text)); });
 		return ret;
 	}
 

@@ -194,6 +194,7 @@ export { Schild3KatalogEintragDQRNiveaus } from './core/data/schild3/Schild3Kata
 export { Schild3KatalogEintragDatenart } from './core/data/schild3/Schild3KatalogEintragDatenart';
 export { Schild3KatalogEintragFilterFehlendeEintraege } from './core/data/schild3/Schild3KatalogEintragFilterFehlendeEintraege';
 export { Schild3KatalogEintragFilterFeldListe } from './core/data/schild3/Schild3KatalogEintragFilterFeldListe';
+export { Schild3KatalogEintragFilterSpezial } from './core/data/schild3/Schild3KatalogEintragFilterSpezial';
 export { Schild3KatalogEintragLaender } from './core/data/schild3/Schild3KatalogEintragLaender';
 export { Schild3KatalogEintragPruefungsordnung } from './core/data/schild3/Schild3KatalogEintragPruefungsordnung';
 export { Schild3KatalogEintragPruefungsordnungOption } from './core/data/schild3/Schild3KatalogEintragPruefungsordnungOption';
