@@ -7,6 +7,8 @@ import de.nrw.schule.svws.core.data.schild3.Schild3KatalogEintragDatenart;
 import de.nrw.schule.svws.core.data.schild3.Schild3KatalogEintragFilterFehlendeEintraege;
 import de.nrw.schule.svws.core.data.schild3.Schild3KatalogEintragFilterFeldListe;
 import de.nrw.schule.svws.core.data.schild3.Schild3KatalogEintragLaender;
+import de.nrw.schule.svws.core.data.schild3.Schild3KatalogEintragPruefungsordnung;
+import de.nrw.schule.svws.core.data.schild3.Schild3KatalogEintragPruefungsordnungOption;
 import de.nrw.schule.svws.core.data.schild3.Schild3KatalogEintragSchuelerStatus;
 import de.nrw.schule.svws.core.data.schild3.Schild3KatalogEintragVersetzungsvermerke;
 import de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenz;
@@ -16,6 +18,8 @@ import de.nrw.schule.svws.data.schild3.DataSchildDatenart;
 import de.nrw.schule.svws.data.schild3.DataSchildFilterFehlendeEintraege;
 import de.nrw.schule.svws.data.schild3.DataSchildFilterFeldListe;
 import de.nrw.schule.svws.data.schild3.DataSchildLaender;
+import de.nrw.schule.svws.data.schild3.DataSchildPruefungsordnung;
+import de.nrw.schule.svws.data.schild3.DataSchildPruefungsordnungOptionen;
 import de.nrw.schule.svws.data.schild3.DataSchildSchuelerStatus;
 import de.nrw.schule.svws.data.schild3.DataSchildVersetzungsvermerke;
 import de.nrw.schule.svws.db.Benutzer;
@@ -185,6 +189,54 @@ public class APISchild {
     public Response getKatalogSchild3Laender(@PathParam("schema") String schema, @Context HttpServletRequest request) {
         try (Benutzer user = OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
             return (new DataSchildLaender()).getAll();
+        }
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für die Abfrage des Schild3-Kataloges Bundesländer/Nachbarländer.
+     *  
+     * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param request       die Informationen zur HTTP-Anfrage
+     * 
+     * @return der Katalog
+     */
+    @GET
+    @Path("/pruefungsordnungen")
+    @Operation(summary = "Die Liste der Einträge aus dem Schild-Katalog Prüfungsordnungen.",
+               description = "Die Liste der Einträge aus dem Schild-Katalog Prüfungsordnungen. "
+                           + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
+    @ApiResponse(responseCode = "200", description = "Eine Liste von Katalog-Einträgen für den Schild-Katalog Prüfungsordnungen",
+                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Schild3KatalogEintragPruefungsordnung.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
+    @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
+    public Response getKatalogSchild3Pruefungsordnungen(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+        try (Benutzer user = OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
+            return (new DataSchildPruefungsordnung()).getAll();
+        }
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für die Abfrage des Schild3-Kataloges Prüfungsordnung-Optionen.
+     *  
+     * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param request       die Informationen zur HTTP-Anfrage
+     * 
+     * @return der Katalog
+     */
+    @GET
+    @Path("/pruefungsordnungen/optionen")
+    @Operation(summary = "Die Liste der Einträge aus dem Schild-Katalog Prüfungsordnung-Optionen.",
+               description = "Die Liste der Einträge aus dem Schild-Katalog Prüfungsordnung-Optionen. "
+                           + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
+    @ApiResponse(responseCode = "200", description = "Eine Liste von Katalog-Einträgen für den Schild-Katalog Prüfungsordnung-Optionen",
+                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Schild3KatalogEintragPruefungsordnungOption.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
+    @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
+    public Response getKatalogSchild3PruefungsordnungOptionen(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+        try (Benutzer user = OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
+            return (new DataSchildPruefungsordnungOptionen()).getAll();
         }
     }
 

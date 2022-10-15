@@ -85,6 +85,8 @@ import { Schild3KatalogEintragDQRNiveaus, cast_de_nrw_schule_svws_core_data_schi
 import { Schild3KatalogEintragFilterFehlendeEintraege, cast_de_nrw_schule_svws_core_data_schild3_Schild3KatalogEintragFilterFehlendeEintraege } from '../core/data/schild3/Schild3KatalogEintragFilterFehlendeEintraege';
 import { Schild3KatalogEintragFilterFeldListe, cast_de_nrw_schule_svws_core_data_schild3_Schild3KatalogEintragFilterFeldListe } from '../core/data/schild3/Schild3KatalogEintragFilterFeldListe';
 import { Schild3KatalogEintragLaender, cast_de_nrw_schule_svws_core_data_schild3_Schild3KatalogEintragLaender } from '../core/data/schild3/Schild3KatalogEintragLaender';
+import { Schild3KatalogEintragPruefungsordnung, cast_de_nrw_schule_svws_core_data_schild3_Schild3KatalogEintragPruefungsordnung } from '../core/data/schild3/Schild3KatalogEintragPruefungsordnung';
+import { Schild3KatalogEintragPruefungsordnungOption, cast_de_nrw_schule_svws_core_data_schild3_Schild3KatalogEintragPruefungsordnungOption } from '../core/data/schild3/Schild3KatalogEintragPruefungsordnungOption';
 import { Schild3KatalogEintragSchuelerStatus, cast_de_nrw_schule_svws_core_data_schild3_Schild3KatalogEintragSchuelerStatus } from '../core/data/schild3/Schild3KatalogEintragSchuelerStatus';
 import { Schild3KatalogEintragVersetzungsvermerke, cast_de_nrw_schule_svws_core_data_schild3_Schild3KatalogEintragVersetzungsvermerke } from '../core/data/schild3/Schild3KatalogEintragVersetzungsvermerke';
 import { SchuelerBetriebsdaten, cast_de_nrw_schule_svws_core_data_schueler_SchuelerBetriebsdaten } from '../core/data/schueler/SchuelerBetriebsdaten';
@@ -3676,6 +3678,60 @@ export class ApiServer extends BaseApi {
 		const obj = JSON.parse(result);
 		let ret = new Vector<Schild3KatalogEintragLaender>();
 		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(Schild3KatalogEintragLaender.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getKatalogSchild3Pruefungsordnungen für den Zugriff auf die URL https://{hostname}/db/{schema}/schild3/pruefungsordnungen
+	 * 
+	 * Die Liste der Einträge aus dem Schild-Katalog Prüfungsordnungen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Eine Liste von Katalog-Einträgen für den Schild-Katalog Prüfungsordnungen
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<Schild3KatalogEintragPruefungsordnung>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
+	 *   Code 404: Keine Katalog-Einträge gefunden
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * 
+	 * @returns Eine Liste von Katalog-Einträgen für den Schild-Katalog Prüfungsordnungen
+	 */
+	public async getKatalogSchild3Pruefungsordnungen(schema : string) : Promise<List<Schild3KatalogEintragPruefungsordnung>> {
+		let path : string = "/db/{schema}/schild3/pruefungsordnungen"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		let ret = new Vector<Schild3KatalogEintragPruefungsordnung>();
+		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(Schild3KatalogEintragPruefungsordnung.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getKatalogSchild3PruefungsordnungOptionen für den Zugriff auf die URL https://{hostname}/db/{schema}/schild3/pruefungsordnungen/optionen
+	 * 
+	 * Die Liste der Einträge aus dem Schild-Katalog Prüfungsordnung-Optionen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Eine Liste von Katalog-Einträgen für den Schild-Katalog Prüfungsordnung-Optionen
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<Schild3KatalogEintragPruefungsordnungOption>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
+	 *   Code 404: Keine Katalog-Einträge gefunden
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * 
+	 * @returns Eine Liste von Katalog-Einträgen für den Schild-Katalog Prüfungsordnung-Optionen
+	 */
+	public async getKatalogSchild3PruefungsordnungOptionen(schema : string) : Promise<List<Schild3KatalogEintragPruefungsordnungOption>> {
+		let path : string = "/db/{schema}/schild3/pruefungsordnungen/optionen"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		let ret = new Vector<Schild3KatalogEintragPruefungsordnungOption>();
+		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(Schild3KatalogEintragPruefungsordnungOption.transpilerFromJSON(text)); });
 		return ret;
 	}
 
