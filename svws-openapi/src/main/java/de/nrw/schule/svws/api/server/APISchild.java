@@ -13,6 +13,7 @@ import de.nrw.schule.svws.core.data.schild3.Schild3KatalogEintragPruefungsordnun
 import de.nrw.schule.svws.core.data.schild3.Schild3KatalogEintragPruefungsordnungOption;
 import de.nrw.schule.svws.core.data.schild3.Schild3KatalogEintragSchuelerImportExport;
 import de.nrw.schule.svws.core.data.schild3.Schild3KatalogEintragSchuelerStatus;
+import de.nrw.schule.svws.core.data.schild3.Schild3KatalogEintragUnicodeUmwandlung;
 import de.nrw.schule.svws.core.data.schild3.Schild3KatalogEintragVersetzungsvermerke;
 import de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenz;
 import de.nrw.schule.svws.data.schild3.DataSchildAbiturInfos;
@@ -27,6 +28,7 @@ import de.nrw.schule.svws.data.schild3.DataSchildPruefungsordnung;
 import de.nrw.schule.svws.data.schild3.DataSchildPruefungsordnungOptionen;
 import de.nrw.schule.svws.data.schild3.DataSchildSchuelerImportExport;
 import de.nrw.schule.svws.data.schild3.DataSchildSchuelerStatus;
+import de.nrw.schule.svws.data.schild3.DataSchildUnicodeUmwandlung;
 import de.nrw.schule.svws.data.schild3.DataSchildVersetzungsvermerke;
 import de.nrw.schule.svws.db.Benutzer;
 import io.swagger.v3.oas.annotations.Operation;
@@ -105,7 +107,7 @@ public class APISchild {
 
     /**
      * Die OpenAPI-Methode für die Abfrage des Schild3-Kataloges DQR-Niveaus.
-     *  
+     *
      * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param request       die Informationen zur HTTP-Anfrage
      * 
@@ -129,7 +131,7 @@ public class APISchild {
 
     /**
      * Die OpenAPI-Methode für die Abfrage des Schild3-Kataloges zur Konfiguration des CSV-Exportes von Schild.
-     *  
+     *
      * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param request       die Informationen zur HTTP-Anfrage
      * 
@@ -339,6 +341,30 @@ public class APISchild {
     public Response getKatalogSchild3SchuelerStatus(@PathParam("schema") String schema, @Context HttpServletRequest request) {
         try (Benutzer user = OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
             return (new DataSchildSchuelerStatus()).getAll();
+        }
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für die Abfrage des Schild3-Kataloges für die Unicode-Umwandlung.
+     *  
+     * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param request       die Informationen zur HTTP-Anfrage
+     * 
+     * @return der Katalog
+     */
+    @GET
+    @Path("/unicode/umwandlung")
+    @Operation(summary = "Die Liste der Einträge aus dem Schild-Katalog für die Unicode-Umwandlung.",
+               description = "Die Liste der Einträge aus dem Schild-Katalog für die Unicode-Umwandlung. "
+                           + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
+    @ApiResponse(responseCode = "200", description = "Eine Liste von Katalog-Einträgen für den Schild-Katalog für die Unicode-Umwandlung",
+                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Schild3KatalogEintragUnicodeUmwandlung.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
+    @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
+    public Response getKatalogSchild3UnicodeUmwandlung(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+        try (Benutzer user = OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
+            return (new DataSchildUnicodeUmwandlung()).getAll();
         }
     }
 

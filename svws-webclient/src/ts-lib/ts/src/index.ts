@@ -201,6 +201,7 @@ export { Schild3KatalogEintragPruefungsordnung } from './core/data/schild3/Schil
 export { Schild3KatalogEintragPruefungsordnungOption } from './core/data/schild3/Schild3KatalogEintragPruefungsordnungOption';
 export { Schild3KatalogEintragSchuelerImportExport } from './core/data/schild3/Schild3KatalogEintragSchuelerImportExport';
 export { Schild3KatalogEintragSchuelerStatus } from './core/data/schild3/Schild3KatalogEintragSchuelerStatus';
+export { Schild3KatalogEintragUnicodeUmwandlung } from './core/data/schild3/Schild3KatalogEintragUnicodeUmwandlung';
 export { Schild3KatalogEintragVersetzungsvermerke } from './core/data/schild3/Schild3KatalogEintragVersetzungsvermerke';
 export { Schueler } from './core/data/schueler/Schueler';
 export { SchuelerBetriebsdaten } from './core/data/schueler/SchuelerBetriebsdaten';
