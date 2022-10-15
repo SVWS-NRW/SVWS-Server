@@ -80,6 +80,8 @@ import { PruefungsordnungKatalogEintrag, cast_de_nrw_schule_svws_core_data_schul
 import { ReligionEintrag, cast_de_nrw_schule_svws_core_data_schule_ReligionEintrag } from '../core/data/schule/ReligionEintrag';
 import { ReligionKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_ReligionKatalogEintrag } from '../core/data/schule/ReligionKatalogEintrag';
 import { Schild3KatalogEintragAbiturInfos, cast_de_nrw_schule_svws_core_data_schild3_Schild3KatalogEintragAbiturInfos } from '../core/data/schild3/Schild3KatalogEintragAbiturInfos';
+import { Schild3KatalogEintragDatenart, cast_de_nrw_schule_svws_core_data_schild3_Schild3KatalogEintragDatenart } from '../core/data/schild3/Schild3KatalogEintragDatenart';
+import { Schild3KatalogEintragDQRNiveaus, cast_de_nrw_schule_svws_core_data_schild3_Schild3KatalogEintragDQRNiveaus } from '../core/data/schild3/Schild3KatalogEintragDQRNiveaus';
 import { SchuelerBetriebsdaten, cast_de_nrw_schule_svws_core_data_schueler_SchuelerBetriebsdaten } from '../core/data/schueler/SchuelerBetriebsdaten';
 import { SchuelerLernabschnittListeEintrag, cast_de_nrw_schule_svws_core_data_schueler_SchuelerLernabschnittListeEintrag } from '../core/data/schueler/SchuelerLernabschnittListeEintrag';
 import { SchuelerLernabschnittsdaten, cast_de_nrw_schule_svws_core_data_schueler_SchuelerLernabschnittsdaten } from '../core/data/schueler/SchuelerLernabschnittsdaten';
@@ -3534,6 +3536,60 @@ export class ApiServer extends BaseApi {
 		const obj = JSON.parse(result);
 		let ret = new Vector<Schild3KatalogEintragAbiturInfos>();
 		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(Schild3KatalogEintragAbiturInfos.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getKatalogSchild3DQRNiveaus für den Zugriff auf die URL https://{hostname}/db/{schema}/schild3/abiturinfos
+	 * 
+	 * Die Liste der Einträge aus dem Schild-Katalog DQR-Niveaus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Eine Liste von Katalog-Einträgen für den Schild-Katalog DQR-Niveaus
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<Schild3KatalogEintragDQRNiveaus>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
+	 *   Code 404: Keine Katalog-Einträge gefunden
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * 
+	 * @returns Eine Liste von Katalog-Einträgen für den Schild-Katalog DQR-Niveaus
+	 */
+	public async getKatalogSchild3DQRNiveaus(schema : string) : Promise<List<Schild3KatalogEintragDQRNiveaus>> {
+		let path : string = "/db/{schema}/schild3/abiturinfos"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		let ret = new Vector<Schild3KatalogEintragDQRNiveaus>();
+		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(Schild3KatalogEintragDQRNiveaus.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getKatalogSchild3Datenarten für den Zugriff auf die URL https://{hostname}/db/{schema}/schild3/datenarten
+	 * 
+	 * Die Liste der Einträge aus dem Schild-Katalog Datenart. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Eine Liste von Katalog-Einträgen für den Schild-Katalog Datenart
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<Schild3KatalogEintragDatenart>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
+	 *   Code 404: Keine Katalog-Einträge gefunden
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * 
+	 * @returns Eine Liste von Katalog-Einträgen für den Schild-Katalog Datenart
+	 */
+	public async getKatalogSchild3Datenarten(schema : string) : Promise<List<Schild3KatalogEintragDatenart>> {
+		let path : string = "/db/{schema}/schild3/datenarten"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		let ret = new Vector<Schild3KatalogEintragDatenart>();
+		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(Schild3KatalogEintragDatenart.transpilerFromJSON(text)); });
 		return ret;
 	}
 

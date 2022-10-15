@@ -190,6 +190,8 @@ export { LehrerListeEintrag } from './core/data/lehrer/LehrerListeEintrag';
 export { LehrerPersonaldaten } from './core/data/lehrer/LehrerPersonaldaten';
 export { LehrerStammdaten } from './core/data/lehrer/LehrerStammdaten';
 export { Schild3KatalogEintragAbiturInfos } from './core/data/schild3/Schild3KatalogEintragAbiturInfos';
+export { Schild3KatalogEintragDQRNiveaus } from './core/data/schild3/Schild3KatalogEintragDQRNiveaus';
+export { Schild3KatalogEintragDatenart } from './core/data/schild3/Schild3KatalogEintragDatenart';
 export { Schueler } from './core/data/schueler/Schueler';
 export { SchuelerBetriebsdaten } from './core/data/schueler/SchuelerBetriebsdaten';
 export { SchuelerLeistungsdaten } from './core/data/schueler/SchuelerLeistungsdaten';

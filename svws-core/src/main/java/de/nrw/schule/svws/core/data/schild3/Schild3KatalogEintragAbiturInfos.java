@@ -37,11 +37,11 @@ public class Schild3KatalogEintragAbiturInfos {
     public String AbiInfoText;
 
     /** Gültig ab Schuljahr */
-    @Schema(required = false, description = "Hier stehen neben Regeln für die alte u.a. einige Regeln für die FHR-Berechnung an GY und GE drin")
+    @Schema(required = false, description = "Gültig ab Schuljahr")
     public Integer gueltigVon;
 
     /** Gültig bis Schuljahr */
-    @Schema(required = false, description = "Hier stehen neben Regeln für die alte u.a. einige Regeln für die FHR-Berechnung an GY und GE drin")
+    @Schema(required = false, description = "Gültig bis Schuljahr")
     public Integer gueltigBis;
 
 }
