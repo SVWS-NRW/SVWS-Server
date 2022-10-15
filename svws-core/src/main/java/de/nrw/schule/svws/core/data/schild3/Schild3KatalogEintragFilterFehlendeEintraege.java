@@ -5,10 +5,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
- * Diese Klasse ist eine DTO-Klasse für den Schild3-Katalog Datenart.
+ * Diese Klasse ist eine DTO-Klasse für den Schild3-Katalog Filter Fehlende Einträge.
  */
 @XmlRootElement
-@Schema(description="Schild3-Katalog Datenart")
+@Schema(description="Schild3-Katalog Filter Fehlende Einträge")
 @TranspilerDTO
 public class Schild3KatalogEintragFilterFehlendeEintraege {
 
