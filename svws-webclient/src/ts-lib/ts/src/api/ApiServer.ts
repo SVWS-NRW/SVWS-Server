@@ -82,6 +82,7 @@ import { ReligionKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_Religi
 import { Schild3KatalogEintragAbiturInfos, cast_de_nrw_schule_svws_core_data_schild3_Schild3KatalogEintragAbiturInfos } from '../core/data/schild3/Schild3KatalogEintragAbiturInfos';
 import { Schild3KatalogEintragDatenart, cast_de_nrw_schule_svws_core_data_schild3_Schild3KatalogEintragDatenart } from '../core/data/schild3/Schild3KatalogEintragDatenart';
 import { Schild3KatalogEintragDQRNiveaus, cast_de_nrw_schule_svws_core_data_schild3_Schild3KatalogEintragDQRNiveaus } from '../core/data/schild3/Schild3KatalogEintragDQRNiveaus';
+import { Schild3KatalogEintragExportCSV, cast_de_nrw_schule_svws_core_data_schild3_Schild3KatalogEintragExportCSV } from '../core/data/schild3/Schild3KatalogEintragExportCSV';
 import { Schild3KatalogEintragFilterFehlendeEintraege, cast_de_nrw_schule_svws_core_data_schild3_Schild3KatalogEintragFilterFehlendeEintraege } from '../core/data/schild3/Schild3KatalogEintragFilterFehlendeEintraege';
 import { Schild3KatalogEintragFilterFeldListe, cast_de_nrw_schule_svws_core_data_schild3_Schild3KatalogEintragFilterFeldListe } from '../core/data/schild3/Schild3KatalogEintragFilterFeldListe';
 import { Schild3KatalogEintragFilterSpezial, cast_de_nrw_schule_svws_core_data_schild3_Schild3KatalogEintragFilterSpezial } from '../core/data/schild3/Schild3KatalogEintragFilterSpezial';
@@ -3599,6 +3600,33 @@ export class ApiServer extends BaseApi {
 		const obj = JSON.parse(result);
 		let ret = new Vector<Schild3KatalogEintragDQRNiveaus>();
 		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(Schild3KatalogEintragDQRNiveaus.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getKatalogSchild3ExportCSV für den Zugriff auf die URL https://{hostname}/db/{schema}/schild3/export/csv
+	 * 
+	 * Die Liste der Einträge aus dem Schild-Katalog zur Konfiguration des CSV-Exportes von Schild. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Eine Liste von Katalog-Einträgen für den Schild-Katalog zur Konfiguration des CSV-Exportes von Schild
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<Schild3KatalogEintragExportCSV>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
+	 *   Code 404: Keine Katalog-Einträge gefunden
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * 
+	 * @returns Eine Liste von Katalog-Einträgen für den Schild-Katalog zur Konfiguration des CSV-Exportes von Schild
+	 */
+	public async getKatalogSchild3ExportCSV(schema : string) : Promise<List<Schild3KatalogEintragExportCSV>> {
+		let path : string = "/db/{schema}/schild3/export/csv"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		let ret = new Vector<Schild3KatalogEintragExportCSV>();
+		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(Schild3KatalogEintragExportCSV.transpilerFromJSON(text)); });
 		return ret;
 	}
 

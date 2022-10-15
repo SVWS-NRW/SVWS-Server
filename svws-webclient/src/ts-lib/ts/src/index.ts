@@ -192,6 +192,7 @@ export { LehrerStammdaten } from './core/data/lehrer/LehrerStammdaten';
 export { Schild3KatalogEintragAbiturInfos } from './core/data/schild3/Schild3KatalogEintragAbiturInfos';
 export { Schild3KatalogEintragDQRNiveaus } from './core/data/schild3/Schild3KatalogEintragDQRNiveaus';
 export { Schild3KatalogEintragDatenart } from './core/data/schild3/Schild3KatalogEintragDatenart';
+export { Schild3KatalogEintragExportCSV } from './core/data/schild3/Schild3KatalogEintragExportCSV';
 export { Schild3KatalogEintragFilterFehlendeEintraege } from './core/data/schild3/Schild3KatalogEintragFilterFehlendeEintraege';
 export { Schild3KatalogEintragFilterFeldListe } from './core/data/schild3/Schild3KatalogEintragFilterFeldListe';
 export { Schild3KatalogEintragFilterSpezial } from './core/data/schild3/Schild3KatalogEintragFilterSpezial';

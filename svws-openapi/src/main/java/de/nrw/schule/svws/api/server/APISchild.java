@@ -4,6 +4,7 @@ import de.nrw.schule.svws.api.OpenAPIApplication;
 import de.nrw.schule.svws.core.data.schild3.Schild3KatalogEintragAbiturInfos;
 import de.nrw.schule.svws.core.data.schild3.Schild3KatalogEintragDQRNiveaus;
 import de.nrw.schule.svws.core.data.schild3.Schild3KatalogEintragDatenart;
+import de.nrw.schule.svws.core.data.schild3.Schild3KatalogEintragExportCSV;
 import de.nrw.schule.svws.core.data.schild3.Schild3KatalogEintragFilterFehlendeEintraege;
 import de.nrw.schule.svws.core.data.schild3.Schild3KatalogEintragFilterFeldListe;
 import de.nrw.schule.svws.core.data.schild3.Schild3KatalogEintragFilterSpezial;
@@ -17,6 +18,7 @@ import de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenz;
 import de.nrw.schule.svws.data.schild3.DataSchildAbiturInfos;
 import de.nrw.schule.svws.data.schild3.DataSchildDQRNiveaus;
 import de.nrw.schule.svws.data.schild3.DataSchildDatenart;
+import de.nrw.schule.svws.data.schild3.DataSchildExportCSV;
 import de.nrw.schule.svws.data.schild3.DataSchildFilterFehlendeEintraege;
 import de.nrw.schule.svws.data.schild3.DataSchildFilterFeldListe;
 import de.nrw.schule.svws.data.schild3.DataSchildFilterSpezial;
@@ -121,6 +123,30 @@ public class APISchild {
     public Response getKatalogSchild3DQRNiveaus(@PathParam("schema") String schema, @Context HttpServletRequest request) {
         try (Benutzer user = OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
             return (new DataSchildDQRNiveaus()).getAll();
+        }
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für die Abfrage des Schild3-Kataloges zur Konfiguration des CSV-Exportes von Schild.
+     *  
+     * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param request       die Informationen zur HTTP-Anfrage
+     * 
+     * @return der Katalog
+     */
+    @GET
+    @Path("/export/csv")
+    @Operation(summary = "Die Liste der Einträge aus dem Schild-Katalog zur Konfiguration des CSV-Exportes von Schild.",
+               description = "Die Liste der Einträge aus dem Schild-Katalog zur Konfiguration des CSV-Exportes von Schild. "
+                           + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
+    @ApiResponse(responseCode = "200", description = "Eine Liste von Katalog-Einträgen für den Schild-Katalog zur Konfiguration des CSV-Exportes von Schild",
+                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Schild3KatalogEintragExportCSV.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
+    @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
+    public Response getKatalogSchild3ExportCSV(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+        try (Benutzer user = OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
+            return (new DataSchildExportCSV()).getAll();
         }
     }
 
