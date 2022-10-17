@@ -51,9 +51,6 @@ public class DBDefaultData {
             case "Schildintern_SpezialFilterFelder" -> "daten/csv/schild3/SpezialFilterFelder.csv";
             case "Schildintern_TextExport" -> "daten/csv/schild3/TextExport.csv";
             case "Schildintern_UnicodeUmwandlung" -> "daten/csv/schild3/UnicodeUmwandlung.csv";
-            case "Schildintern_VerfImportFelder" -> "daten/csv/schild3/VerfImportFelder.csv";
-            case "Schildintern_VerfImportTabellen" -> "daten/csv/schild3/VerfImportTabellen.csv";
-            case "Schildintern_Zusatzinfos" -> "daten/csv/schild3/Zusatzinfos.csv";
             default -> "schema/csv/" + tab.javaSubPackage().replace(".", "/") + "/" + tab.name() + ".csv";
         };
     }

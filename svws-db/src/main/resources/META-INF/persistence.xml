@@ -93,9 +93,6 @@
         <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternSpezialFilterFelder</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternTextExport</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternUnicodeUmwandllung</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternVerfImportFelder</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternVerfImportTabellen</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternZusatzinfos</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOKAoAAnschlussoption</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOKAoABerufsfeld</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOKAoAKategorie</class>
@@ -339,9 +336,6 @@
         <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternSpezialFilterFelder</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternTextExport</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternUnicodeUmwandllung</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternVerfImportFelder</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternVerfImportTabellen</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternZusatzinfos</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOKAoAAnschlussoption</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOKAoABerufsfeld</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOKAoAKategorie</class>
@@ -630,9 +624,6 @@
         <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternSpezialFilterFelder</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternTextExport</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternUnicodeUmwandllung</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternVerfImportFelder</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternVerfImportTabellen</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternZusatzinfos</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOKAoAAnschlussoption</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOKAoABerufsfeld</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOKAoAKategorie</class>

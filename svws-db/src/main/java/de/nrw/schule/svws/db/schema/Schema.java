@@ -471,15 +471,6 @@ public class Schema {
 	/** Tabelle Schildintern_UnicodeUmwandlung */
 	public static final Tabelle_Schildintern_UnicodeUmwandlung tab_Schildintern_UnicodeUmwandlung = add(new Tabelle_Schildintern_UnicodeUmwandlung());
 
-	/** Tabelle Schildintern_VerfImportFelder */
-	public static final Tabelle_Schildintern_VerfImportFelder tab_Schildintern_VerfImportFelder = add(new Tabelle_Schildintern_VerfImportFelder());
-
-	/** Tabelle Schildintern_VerfImportTabellen */
-	public static final Tabelle_Schildintern_VerfImportTabellen tab_Schildintern_VerfImportTabellen = add(new Tabelle_Schildintern_VerfImportTabellen());
-
-	/** Tabelle Schildintern_Zusatzinfos */
-	public static final Tabelle_Schildintern_Zusatzinfos tab_Schildintern_Zusatzinfos = add(new Tabelle_Schildintern_Zusatzinfos());
-
 	/** Tabelle SchuelerListe */
 	public static final Tabelle_SchuelerListe tab_SchuelerListe = add(new Tabelle_SchuelerListe());
 
@@ -865,9 +856,6 @@ public class Schema {
 		Schema.tab_Schildintern_SpezialFilterFelder,
 		Schema.tab_Schildintern_TextExport,
 		Schema.tab_Schildintern_UnicodeUmwandlung,
-		Schema.tab_Schildintern_VerfImportFelder,
-		Schema.tab_Schildintern_VerfImportTabellen,
-		Schema.tab_Schildintern_Zusatzinfos,
 		Schema.tab_SchulleitungFunktion,
 		Schema.tab_Schulver_DBS,
 		Schema.tab_Schulver_Schultraeger,

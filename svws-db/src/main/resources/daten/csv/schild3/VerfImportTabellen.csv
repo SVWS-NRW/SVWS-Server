@@ -1,5 +1,0 @@
-"TableName";"DstRequiredFields";"DstIDFieldName";"Sequence";"LookupTable";"LookupFields";"LookupFieldTypes";"LookupResultField";"LookupResultFieldType";"LookupKeyField";"DstDefaultFieldName";"DstDefaultFieldValue";"DstCreateID";"GU_ID_Field"
-Schueler;Name,Vorname,Geburtsdatum;ID;1;Schueler;Name,Vorname,Geburtsdatum;S,S,D;ID;I;ID;"Status;Geschlecht";"0;4";+;GU_ID
-SchuelerErzAdr;Name1,Vorname1;ID;2;SchuelerErzAdr;Name1,Vorname1;S,S;ID;I;Schueler_ID;;;+;
-K_AllgAdresse;AllgAdrName1,AllgAdrTelefon1;ID;3;K_AllgAdresse;AllgAdrName1,AllgAdrTelefon1;S,S;ID;I;Schueler_ID;;;+;
-Schueler_AllgAdr;;ID;4;Schueler_AllgAdr;ID;I;ID;I;Schueler_ID;;;+;
