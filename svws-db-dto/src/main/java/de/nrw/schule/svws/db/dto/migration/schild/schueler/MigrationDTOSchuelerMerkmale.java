@@ -40,18 +40,18 @@ import de.nrw.schule.svws.csv.converter.migration.MigrationDatumConverterDeseria
 @NamedQuery(name="MigrationDTOSchuelerMerkmale.datumvon.multiple", query="SELECT e FROM MigrationDTOSchuelerMerkmale e WHERE e.DatumVon IN :value")
 @NamedQuery(name="MigrationDTOSchuelerMerkmale.datumbis", query="SELECT e FROM MigrationDTOSchuelerMerkmale e WHERE e.DatumBis = :value")
 @NamedQuery(name="MigrationDTOSchuelerMerkmale.datumbis.multiple", query="SELECT e FROM MigrationDTOSchuelerMerkmale e WHERE e.DatumBis IN :value")
-@NamedQuery(name="MigrationDTOSchuelerMerkmale.primaryKeyQuery", query="SELECT e FROM MigrationDTOSchuelerMerkmale e WHERE e.Schueler_ID = ?1")
-@NamedQuery(name="MigrationDTOSchuelerMerkmale.all.migration", query="SELECT e FROM MigrationDTOSchuelerMerkmale e WHERE e.Schueler_ID IS NOT NULL")
+@NamedQuery(name="MigrationDTOSchuelerMerkmale.primaryKeyQuery", query="SELECT e FROM MigrationDTOSchuelerMerkmale e WHERE e.ID = ?1")
+@NamedQuery(name="MigrationDTOSchuelerMerkmale.all.migration", query="SELECT e FROM MigrationDTOSchuelerMerkmale e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID","Schueler_ID","Kurztext","SchulnrEigner","DatumVon","DatumBis"})
 public class MigrationDTOSchuelerMerkmale {
 
 	/** ID des Eintrag bei besondere Merkmale zum Schüler */
+	@Id
 	@Column(name = "ID")
 	@JsonProperty
 	public Long ID;
 
 	/** Schüler-ID des Eintrag bei besondere Merkmale zum Schüler */
-	@Id
 	@Column(name = "Schueler_ID")
 	@JsonProperty
 	public Long Schueler_ID;
@@ -115,10 +115,10 @@ public class MigrationDTOSchuelerMerkmale {
 		if (getClass() != obj.getClass())
 			return false;
 		MigrationDTOSchuelerMerkmale other = (MigrationDTOSchuelerMerkmale) obj;
-		if (Schueler_ID == null) {
-			if (other.Schueler_ID != null)
+		if (ID == null) {
+			if (other.ID != null)
 				return false;
-		} else if (!Schueler_ID.equals(other.Schueler_ID))
+		} else if (!ID.equals(other.ID))
 			return false;
 		return true;
 	}
@@ -127,7 +127,7 @@ public class MigrationDTOSchuelerMerkmale {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((Schueler_ID == null) ? 0 : Schueler_ID.hashCode());
+		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
 		return result;
 	}
 

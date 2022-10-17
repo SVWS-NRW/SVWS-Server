@@ -65,7 +65,7 @@ public class Rev8DTOMerkmale {
 	@JsonDeserialize(using=BooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Schueler;
 
-	/** Kurstext des Merkmals zB OGS */
+	/** Kurztext des Merkmals zB OGS */
 	@Column(name = "Kurztext")
 	@JsonProperty
 	public String Kurztext;

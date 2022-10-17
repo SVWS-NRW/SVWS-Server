@@ -29,7 +29,7 @@ public class Tabelle_EigeneSchule_Merkmale extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte Kurztext */
 	public SchemaTabelleSpalte col_Kurztext = add("Kurztext", SchemaDatentypen.VARCHAR, false).setDatenlaenge(10)
-		.setJavaComment("Kurstext des Merkmals zB OGS");
+		.setJavaComment("Kurztext des Merkmals zB OGS");
 
 	/** Die Definition der Tabellenspalte Langtext */
 	public SchemaTabelleSpalte col_Langtext = add("Langtext", SchemaDatentypen.VARCHAR, false).setDatenlaenge(100)

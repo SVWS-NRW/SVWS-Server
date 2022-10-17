@@ -8,6 +8,7 @@ import de.nrw.schule.svws.db.schema.SchemaRevisionen;
 import de.nrw.schule.svws.db.schema.SchemaTabelle;
 import de.nrw.schule.svws.db.schema.SchemaTabelleFremdschluessel;
 import de.nrw.schule.svws.db.schema.SchemaTabelleSpalte;
+import de.nrw.schule.svws.db.schema.SchemaTabelleUniqueIndex;
 
 /**
  * Diese Klasse beinhaltet die Schema-Definition für die Tabelle SchuelerMerkmale.
@@ -15,12 +16,12 @@ import de.nrw.schule.svws.db.schema.SchemaTabelleSpalte;
 public class Tabelle_SchuelerMerkmale extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte ID */
-	public SchemaTabelleSpalte col_ID = add("ID", SchemaDatentypen.BIGINT, false)
+	public SchemaTabelleSpalte col_ID = add("ID", SchemaDatentypen.BIGINT, true)
 		.setNotNull()
 		.setJavaComment("ID des Eintrag bei besondere Merkmale zum Schüler");
 
 	/** Die Definition der Tabellenspalte Schueler_ID */
-	public SchemaTabelleSpalte col_Schueler_ID = add("Schueler_ID", SchemaDatentypen.BIGINT, true)
+	public SchemaTabelleSpalte col_Schueler_ID = add("Schueler_ID", SchemaDatentypen.BIGINT, false)
 		.setNotNull()
 		.setJavaComment("Schüler-ID des Eintrag bei besondere Merkmale zum Schüler");
 
@@ -46,11 +47,17 @@ public class Tabelle_SchuelerMerkmale extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels SchuelerMerkmale_Schueler_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerMerkmale_Schueler_FK = addForeignKey(
-			"SchuelerMerkmale_Schueler_FK", 
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
-			new Pair<>(col_Schueler_ID, Schema.tab_Schueler.col_ID)
-		);
+		"SchuelerMerkmale_Schueler_FK", 
+		/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
+		/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
+		new Pair<>(col_Schueler_ID, Schema.tab_Schueler.col_ID)
+	);
+
+
+    /** Die Definition des Unique-Index SchuelerMerkmale_UC1 */
+    public SchemaTabelleUniqueIndex unique_SchuelerMerkmale_UC1 = addUniqueIndex("SchuelerMerkmale_UC1", 
+        col_Schueler_ID, col_Kurztext
+    );
 
 
 	/**

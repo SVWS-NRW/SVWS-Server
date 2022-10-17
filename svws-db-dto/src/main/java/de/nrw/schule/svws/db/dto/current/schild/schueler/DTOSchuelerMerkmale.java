@@ -38,18 +38,18 @@ import de.nrw.schule.svws.csv.converter.current.DatumConverterDeserializer;
 @NamedQuery(name="DTOSchuelerMerkmale.datumvon.multiple", query="SELECT e FROM DTOSchuelerMerkmale e WHERE e.DatumVon IN :value")
 @NamedQuery(name="DTOSchuelerMerkmale.datumbis", query="SELECT e FROM DTOSchuelerMerkmale e WHERE e.DatumBis = :value")
 @NamedQuery(name="DTOSchuelerMerkmale.datumbis.multiple", query="SELECT e FROM DTOSchuelerMerkmale e WHERE e.DatumBis IN :value")
-@NamedQuery(name="DTOSchuelerMerkmale.primaryKeyQuery", query="SELECT e FROM DTOSchuelerMerkmale e WHERE e.Schueler_ID = ?1")
-@NamedQuery(name="DTOSchuelerMerkmale.all.migration", query="SELECT e FROM DTOSchuelerMerkmale e WHERE e.Schueler_ID IS NOT NULL")
+@NamedQuery(name="DTOSchuelerMerkmale.primaryKeyQuery", query="SELECT e FROM DTOSchuelerMerkmale e WHERE e.ID = ?1")
+@NamedQuery(name="DTOSchuelerMerkmale.all.migration", query="SELECT e FROM DTOSchuelerMerkmale e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID","Schueler_ID","Kurztext","DatumVon","DatumBis"})
 public class DTOSchuelerMerkmale {
 
 	/** ID des Eintrag bei besondere Merkmale zum Schüler */
+	@Id
 	@Column(name = "ID")
 	@JsonProperty
 	public Long ID;
 
 	/** Schüler-ID des Eintrag bei besondere Merkmale zum Schüler */
-	@Id
 	@Column(name = "Schueler_ID")
 	@JsonProperty
 	public Long Schueler_ID;
@@ -108,10 +108,10 @@ public class DTOSchuelerMerkmale {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOSchuelerMerkmale other = (DTOSchuelerMerkmale) obj;
-		if (Schueler_ID == null) {
-			if (other.Schueler_ID != null)
+		if (ID == null) {
+			if (other.ID != null)
 				return false;
-		} else if (!Schueler_ID.equals(other.Schueler_ID))
+		} else if (!ID.equals(other.ID))
 			return false;
 		return true;
 	}
@@ -120,7 +120,7 @@ public class DTOSchuelerMerkmale {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((Schueler_ID == null) ? 0 : Schueler_ID.hashCode());
+		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
 		return result;
 	}
 
