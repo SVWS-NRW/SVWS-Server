@@ -8,7 +8,6 @@ import de.nrw.schule.svws.db.schema.SchemaRevisionen;
 import de.nrw.schule.svws.db.schema.SchemaTabelle;
 import de.nrw.schule.svws.db.schema.SchemaTabelleFremdschluessel;
 import de.nrw.schule.svws.db.schema.SchemaTabelleSpalte;
-import de.nrw.schule.svws.db.schema.SchemaTabelleUniqueIndex;
 
 /**
  * Diese Klasse beinhaltet die Schema-Definition für die Tabelle SchuelerMerkmale.
@@ -52,12 +51,6 @@ public class Tabelle_SchuelerMerkmale extends SchemaTabelle {
 		/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
 		new Pair<>(col_Schueler_ID, Schema.tab_Schueler.col_ID)
 	);
-
-
-    /** Die Definition des Unique-Index SchuelerMerkmale_UC1 */
-    public SchemaTabelleUniqueIndex unique_SchuelerMerkmale_UC1 = addUniqueIndex("SchuelerMerkmale_UC1", 
-        col_Schueler_ID, col_Kurztext
-    );
 
 
 	/**
