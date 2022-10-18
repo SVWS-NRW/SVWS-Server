@@ -2,31 +2,39 @@ package de.nrw.schule.svws.core.data.kaoa;
 
 import jakarta.xml.bind.annotation.XmlRootElement;
 
+import java.util.List;
+import java.util.Vector;
+
 import de.nrw.schule.svws.core.transpiler.TranspilerDTO;
+import de.nrw.schule.svws.core.types.statkue.Jahrgaenge;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 
 /**
  * Objekte dieser Klasse enthalten die im Rahmen von KAoA 
- * gültigen Berufsfelder.   
+ * gültigen Kategorien.   
  */
 @XmlRootElement
-@Schema(description="ein Eintrag in dem Katalog der KAoA-Berufsfelder.")
+@Schema(description="ein Eintrag in dem Katalog der KAoA-Kategorien.")
 @TranspilerDTO
-public class KAOABerufsfeldEintrag {
+public class KAOAKategorieEintrag {
 
 	/** Die ID des Katalog-Eintrags. */
 	@Schema(required = true, description = "die ID des Katalog-Eintrags", example="1")
 	public long id;
 
-	/** Das Kürzel des Berufsfeldes. */
-	@Schema(required = true, description = "das Kürzel des Berufsfeldes", example="BAV")
+	/** Das Kürzel der Kategorie. */
+	@Schema(required = true, description = "das Kürzel der Kategorie", example="SBO 2")
 	public @NotNull String kuerzel = "";
 	
-	/** Die Beschreibung des Berufsfeldes. */
-	@Schema(required = true, description = "die Beschreibung des Berufsfeldes", example="Bau, Architektur, Vermessung")
+	/** Die Beschreibung der Kategorie. */
+	@Schema(required = true, description = "die Beschreibung der Kategorie", example="Formen der Orientierung und Beratung")
 	public @NotNull String beschreibung = "";
 
+    /** Jahrgangsstufen in denen der Eintrag gemacht werden darf */
+    @Schema(required = true, description = "Jahrgangsstufen in denen der Eintrag gemacht werden darf")  
+    public @NotNull List<@NotNull String> jahrgaenge = new Vector<>();
+	
 	/** Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
 	@Schema(required = false, description = "gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="2020")
 	public Integer gueltigVon = null;
@@ -37,24 +45,28 @@ public class KAOABerufsfeldEintrag {
 
 
 	/**
-	 * Erstellt einen KAoA-Berufsfeld-Eintrag mit Standardwerten
+	 * Erstellt einen KAoA-Kategorie-Eintrag mit Standardwerten
 	 */
-	public KAOABerufsfeldEintrag() {
+	public KAOAKategorieEintrag() {
 	}
 
 	/**
-	 * Erstellt einen KAoA-Berufsfeld-Eintrag mit den angegebenen Werten
+	 * Erstellt einen KAoA-Kategorie-Eintrag mit den angegebenen Werten
 	 * 
 	 * @param id             die ID
 	 * @param kuerzel        das Kürzel 
 	 * @param beschreibung   die Beschreibung
+	 * @param jahrgaenge     die zulässigen Jahrgänge
 	 * @param gueltigVon     das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und "schon immer gültig war"
 	 * @param gueltigBis     das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */
-	public KAOABerufsfeldEintrag(long id, @NotNull String kuerzel, @NotNull String beschreibung, Integer gueltigVon, Integer gueltigBis) {
+	public KAOAKategorieEintrag(long id, @NotNull String kuerzel, @NotNull String beschreibung, 
+	        @NotNull List<@NotNull Jahrgaenge> jahrgaenge, Integer gueltigVon, Integer gueltigBis) {
 		this.id = id;
 		this.kuerzel = kuerzel;
 		this.beschreibung = beschreibung;
+		for (Jahrgaenge j : jahrgaenge)
+		    this.jahrgaenge.add(j.daten.kuerzel);
 		this.gueltigVon = gueltigVon;
 		this.gueltigBis = gueltigBis;
 	}
