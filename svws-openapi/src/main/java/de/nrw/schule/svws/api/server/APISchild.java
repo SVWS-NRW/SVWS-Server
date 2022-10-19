@@ -49,7 +49,6 @@ import jakarta.ws.rs.core.Response;
 
 /**
  * Die Klasse spezifiziert die OpenAPI-Schnittstelle für den Zugriff auf allgemeine Kataloge aus der SVWS-Datenbank.
- * Ein Zugriff erfolgt über den Pfad https://{Hostname}/api/kataloge/...
  */
 @Path("/db/{schema}/schild3")
 @Produces(MediaType.APPLICATION_JSON)

@@ -29,6 +29,7 @@ import de.nrw.schule.svws.api.server.APIFaecher;
 import de.nrw.schule.svws.api.server.APIGesamtschule;
 import de.nrw.schule.svws.api.server.APIGost;
 import de.nrw.schule.svws.api.server.APIJahrgaenge;
+import de.nrw.schule.svws.api.server.APIKAOA;
 import de.nrw.schule.svws.api.server.APIKataloge;
 import de.nrw.schule.svws.api.server.APIKlassen;
 import de.nrw.schule.svws.api.server.APIKurse;
@@ -160,6 +161,7 @@ public class OpenAPIApplication extends Application {
 		classes.add(APISchema.class);
 		classes.add(APIStundenplan.class);
         classes.add(APISchild.class);
+        classes.add(APIKAOA.class);
 		classes.add(APIENM.class);
 		classes.add(APIAdressbuch.class);
 		if (!SVWSKonfiguration.get().isDBRootAccessDisabled())

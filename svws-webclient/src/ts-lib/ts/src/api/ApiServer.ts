@@ -44,6 +44,12 @@ import { JavaInteger, cast_java_lang_Integer } from '../java/lang/JavaInteger';
 import { JahrgangsDaten, cast_de_nrw_schule_svws_core_data_jahrgang_JahrgangsDaten } from '../core/data/jahrgang/JahrgangsDaten';
 import { JahrgangsKatalogEintrag, cast_de_nrw_schule_svws_core_data_jahrgang_JahrgangsKatalogEintrag } from '../core/data/jahrgang/JahrgangsKatalogEintrag';
 import { JahrgangsListeEintrag, cast_de_nrw_schule_svws_core_data_jahrgang_JahrgangsListeEintrag } from '../core/data/jahrgang/JahrgangsListeEintrag';
+import { KAOAAnschlussoptionEintrag, cast_de_nrw_schule_svws_core_data_kaoa_KAOAAnschlussoptionEintrag } from '../core/data/kaoa/KAOAAnschlussoptionEintrag';
+import { KAOABerufsfeldEintrag, cast_de_nrw_schule_svws_core_data_kaoa_KAOABerufsfeldEintrag } from '../core/data/kaoa/KAOABerufsfeldEintrag';
+import { KAOAEbene4Eintrag, cast_de_nrw_schule_svws_core_data_kaoa_KAOAEbene4Eintrag } from '../core/data/kaoa/KAOAEbene4Eintrag';
+import { KAOAKategorieEintrag, cast_de_nrw_schule_svws_core_data_kaoa_KAOAKategorieEintrag } from '../core/data/kaoa/KAOAKategorieEintrag';
+import { KAOAMerkmalEintrag, cast_de_nrw_schule_svws_core_data_kaoa_KAOAMerkmalEintrag } from '../core/data/kaoa/KAOAMerkmalEintrag';
+import { KAOAZusatzmerkmalEintrag, cast_de_nrw_schule_svws_core_data_kaoa_KAOAZusatzmerkmalEintrag } from '../core/data/kaoa/KAOAZusatzmerkmalEintrag';
 import { KatalogEintrag, cast_de_nrw_schule_svws_core_data_kataloge_KatalogEintrag } from '../core/data/kataloge/KatalogEintrag';
 import { KatalogEintragStrassen, cast_de_nrw_schule_svws_core_data_kataloge_KatalogEintragStrassen } from '../core/data/kataloge/KatalogEintragStrassen';
 import { KlassenartKatalogEintrag, cast_de_nrw_schule_svws_core_data_klassen_KlassenartKatalogEintrag } from '../core/data/klassen/KlassenartKatalogEintrag';
@@ -2735,6 +2741,168 @@ export class ApiServer extends BaseApi {
 		const obj = JSON.parse(result);
 		let ret = new Vector<JahrgangsKatalogEintrag>();
 		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(JahrgangsKatalogEintrag.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getKatalogKAoAAnschlussoptionen für den Zugriff auf die URL https://{hostname}/db/{schema}/kaoa/allgemein/anschlussoptionen
+	 * 
+	 * Die Liste der Einträge aus dem KAoA-Katalog Anschlussoptionen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Eine Liste von Katalog-Einträgen für den KAoA-Katalog Anschlussoptionen
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<KAOAAnschlussoptionEintrag>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
+	 *   Code 404: Keine Katalog-Einträge gefunden
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * 
+	 * @returns Eine Liste von Katalog-Einträgen für den KAoA-Katalog Anschlussoptionen
+	 */
+	public async getKatalogKAoAAnschlussoptionen(schema : string) : Promise<List<KAOAAnschlussoptionEintrag>> {
+		let path : string = "/db/{schema}/kaoa/allgemein/anschlussoptionen"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		let ret = new Vector<KAOAAnschlussoptionEintrag>();
+		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(KAOAAnschlussoptionEintrag.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getKatalogKAoABerufsfelder für den Zugriff auf die URL https://{hostname}/db/{schema}/kaoa/allgemein/berufsfelder
+	 * 
+	 * Die Liste der Einträge aus dem KAoA-Katalog Berufsfelder. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Eine Liste von Katalog-Einträgen für den KAoA-Katalog Berufsfelder
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<KAOABerufsfeldEintrag>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
+	 *   Code 404: Keine Katalog-Einträge gefunden
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * 
+	 * @returns Eine Liste von Katalog-Einträgen für den KAoA-Katalog Berufsfelder
+	 */
+	public async getKatalogKAoABerufsfelder(schema : string) : Promise<List<KAOABerufsfeldEintrag>> {
+		let path : string = "/db/{schema}/kaoa/allgemein/berufsfelder"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		let ret = new Vector<KAOABerufsfeldEintrag>();
+		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(KAOABerufsfeldEintrag.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getKatalogKAoAEbene4 für den Zugriff auf die URL https://{hostname}/db/{schema}/kaoa/allgemein/ebene4
+	 * 
+	 * Die Liste der Einträge aus dem KAoA-Katalog Einträge der SBO Ebene 4. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Eine Liste von Katalog-Einträgen für den KAoA-Katalog Einträge der SBO Ebene 4
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<KAOAEbene4Eintrag>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
+	 *   Code 404: Keine Katalog-Einträge gefunden
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * 
+	 * @returns Eine Liste von Katalog-Einträgen für den KAoA-Katalog Einträge der SBO Ebene 4
+	 */
+	public async getKatalogKAoAEbene4(schema : string) : Promise<List<KAOAEbene4Eintrag>> {
+		let path : string = "/db/{schema}/kaoa/allgemein/ebene4"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		let ret = new Vector<KAOAEbene4Eintrag>();
+		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(KAOAEbene4Eintrag.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getKatalogKAoAKategorien für den Zugriff auf die URL https://{hostname}/db/{schema}/kaoa/allgemein/kategorien
+	 * 
+	 * Die Liste der Einträge aus dem KAoA-Katalog Kategorien. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Eine Liste von Katalog-Einträgen für den KAoA-Katalog Kategorien
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<KAOAKategorieEintrag>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
+	 *   Code 404: Keine Katalog-Einträge gefunden
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * 
+	 * @returns Eine Liste von Katalog-Einträgen für den KAoA-Katalog Kategorien
+	 */
+	public async getKatalogKAoAKategorien(schema : string) : Promise<List<KAOAKategorieEintrag>> {
+		let path : string = "/db/{schema}/kaoa/allgemein/kategorien"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		let ret = new Vector<KAOAKategorieEintrag>();
+		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(KAOAKategorieEintrag.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getKatalogKAoAMerkmale für den Zugriff auf die URL https://{hostname}/db/{schema}/kaoa/allgemein/merkmale
+	 * 
+	 * Die Liste der Einträge aus dem KAoA-Katalog Merkmale. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Eine Liste von Katalog-Einträgen für den KAoA-Katalog Merkmale
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<KAOAMerkmalEintrag>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
+	 *   Code 404: Keine Katalog-Einträge gefunden
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * 
+	 * @returns Eine Liste von Katalog-Einträgen für den KAoA-Katalog Merkmale
+	 */
+	public async getKatalogKAoAMerkmale(schema : string) : Promise<List<KAOAMerkmalEintrag>> {
+		let path : string = "/db/{schema}/kaoa/allgemein/merkmale"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		let ret = new Vector<KAOAMerkmalEintrag>();
+		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(KAOAMerkmalEintrag.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getKatalogKAoAZusatzmerkmale für den Zugriff auf die URL https://{hostname}/db/{schema}/kaoa/allgemein/zusatzmerkmale
+	 * 
+	 * Die Liste der Einträge aus dem KAoA-Katalog Zusatzmerkmale. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Eine Liste von Katalog-Einträgen für den KAoA-Katalog Zusatzmerkmale
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<KAOAZusatzmerkmalEintrag>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
+	 *   Code 404: Keine Katalog-Einträge gefunden
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * 
+	 * @returns Eine Liste von Katalog-Einträgen für den KAoA-Katalog Zusatzmerkmale
+	 */
+	public async getKatalogKAoAZusatzmerkmale(schema : string) : Promise<List<KAOAZusatzmerkmalEintrag>> {
+		let path : string = "/db/{schema}/kaoa/allgemein/zusatzmerkmale"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		let ret = new Vector<KAOAZusatzmerkmalEintrag>();
+		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(KAOAZusatzmerkmalEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 
