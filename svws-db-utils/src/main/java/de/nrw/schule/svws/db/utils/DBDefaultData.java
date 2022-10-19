@@ -51,6 +51,12 @@ public class DBDefaultData {
             case "Schildintern_SpezialFilterFelder" -> "daten/csv/schild3/SpezialFilterFelder.csv";
             case "Schildintern_TextExport" -> "daten/csv/schild3/TextExport.csv";
             case "Schildintern_UnicodeUmwandlung" -> "daten/csv/schild3/UnicodeUmwandlung.csv";
+            case "Schildintern_KAoA_Anschlussoption" -> "daten/csv/kaoa/Anschlussoption.csv";
+            case "Schildintern_KAoA_Berufsfeld" -> "daten/csv/kaoa/Berufsfeld.csv";
+            case "Schildintern_KAoA_Kategorie" -> "daten/csv/kaoa/Kategorie.csv";
+            case "Schildintern_KAoA_Merkmal" -> "daten/csv/kaoa/Merkmal.csv";
+            case "Schildintern_KAoA_SBO_Ebene4" -> "daten/csv/kaoa/SBO_Ebene4.csv";
+            case "Schildintern_KAoA_Zusatzmerkmal" -> "daten/csv/kaoa/Zusatzmerkmal.csv";
             default -> "schema/csv/" + tab.javaSubPackage().replace(".", "/") + "/" + tab.name() + ".csv";
         };
     }
