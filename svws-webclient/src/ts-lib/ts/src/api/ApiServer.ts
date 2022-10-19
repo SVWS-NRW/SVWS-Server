@@ -111,6 +111,7 @@ import { SchulabschlussBerufsbildendKatalogEintrag, cast_de_nrw_schule_svws_core
 import { SchuleStammdaten, cast_de_nrw_schule_svws_core_data_schule_SchuleStammdaten } from '../core/data/schule/SchuleStammdaten';
 import { SchulformKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_SchulformKatalogEintrag } from '../core/data/schule/SchulformKatalogEintrag';
 import { SchulgliederungKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_SchulgliederungKatalogEintrag } from '../core/data/schule/SchulgliederungKatalogEintrag';
+import { SchulstufeKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_SchulstufeKatalogEintrag } from '../core/data/schule/SchulstufeKatalogEintrag';
 import { SimpleOperationResponse, cast_de_nrw_schule_svws_core_data_SimpleOperationResponse } from '../core/data/SimpleOperationResponse';
 import { StundenplanListeEintrag, cast_de_nrw_schule_svws_core_data_stundenplan_StundenplanListeEintrag } from '../core/data/stundenplan/StundenplanListeEintrag';
 import { StundenplanZeitraster, cast_de_nrw_schule_svws_core_data_stundenplan_StundenplanZeitraster } from '../core/data/stundenplan/StundenplanZeitraster';
@@ -4826,6 +4827,33 @@ export class ApiServer extends BaseApi {
 		const obj = JSON.parse(result);
 		let ret = new Vector<SchulgliederungKatalogEintrag>();
 		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(SchulgliederungKatalogEintrag.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getSchulstufen für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/allgemein/schulstufen
+	 * 
+	 * Erstellt eine Liste aller in dem Katalog vorhanden gültigen Schulstufen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Eine Liste von Schulstufen-Katalog-Einträgen
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SchulstufeKatalogEintrag>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
+	 *   Code 404: Keine Katalog-Einträge gefunden
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * 
+	 * @returns Eine Liste von Schulstufen-Katalog-Einträgen
+	 */
+	public async getSchulstufen(schema : string) : Promise<List<SchulstufeKatalogEintrag>> {
+		let path : string = "/db/{schema}/schule/allgemein/schulstufen"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		let ret = new Vector<SchulstufeKatalogEintrag>();
+		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(SchulstufeKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 
