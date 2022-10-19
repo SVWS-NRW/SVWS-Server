@@ -125,7 +125,41 @@ public class ABPKursarten {
 	 * @return der Standard-Eintrag für die Tabelle ABPKursarten
 	 */
 	public static List<ABPKursarten> getDefault() {
-		return CsvReader.fromResource("daten/csv/lupo/mdb/ABPKursarten.csv", ABPKursarten.class);
+	    ABPKursarten gkm =  new ABPKursarten();
+	    gkm.Kursart = "GKM";
+	    gkm.Klartext = "Grundkurs mündlich";
+	    gkm.E1 = true;
+	    gkm.E2 = true;
+	    gkm.Q1 = true;
+        gkm.Q2 = true;
+        gkm.Q3 = true;
+        gkm.Q4 = true;
+        gkm.Sortierung = 1;
+        ABPKursarten gks =  new ABPKursarten();
+        gks.Kursart = "GKS";
+        gks.Klartext = "Grundkurs schriftlich";
+        gks.E1 = true;
+        gks.E2 = true;
+        gks.Q1 = true;
+        gks.Q2 = true;
+        gks.Q3 = true;
+        gks.Q4 = true;
+        gks.Sortierung = 2;
+        ABPKursarten lk =  new ABPKursarten();
+        lk.Kursart = "LK";
+        lk.Klartext = "Leistungskurs";
+        lk.E1 = false;
+        lk.E2 = false;
+        lk.Q1 = true;
+        lk.Q2 = true;
+        lk.Q3 = true;
+        lk.Q4 = true;
+        lk.Sortierung = 3;
+        Vector<ABPKursarten> result = new Vector<>();
+        result.add(gkm);
+        result.add(gks);
+        result.add(lk);
+		return result;
 	}
 
 
