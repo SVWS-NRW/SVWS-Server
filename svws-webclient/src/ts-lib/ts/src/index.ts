@@ -205,7 +205,6 @@ export { Schild3KatalogEintragLaender } from './core/data/schild3/Schild3Katalog
 export { Schild3KatalogEintragPruefungsordnung } from './core/data/schild3/Schild3KatalogEintragPruefungsordnung';
 export { Schild3KatalogEintragPruefungsordnungOption } from './core/data/schild3/Schild3KatalogEintragPruefungsordnungOption';
 export { Schild3KatalogEintragSchuelerImportExport } from './core/data/schild3/Schild3KatalogEintragSchuelerImportExport';
-export { Schild3KatalogEintragSchuelerStatus } from './core/data/schild3/Schild3KatalogEintragSchuelerStatus';
 export { Schild3KatalogEintragUnicodeUmwandlung } from './core/data/schild3/Schild3KatalogEintragUnicodeUmwandlung';
 export { Schild3KatalogEintragVersetzungsvermerke } from './core/data/schild3/Schild3KatalogEintragVersetzungsvermerke';
 export { Schueler } from './core/data/schueler/Schueler';
@@ -248,6 +247,7 @@ export { OrganisationsformKatalogEintrag } from './core/data/schule/Organisation
 export { PruefungsordnungKatalogEintrag } from './core/data/schule/PruefungsordnungKatalogEintrag';
 export { ReligionEintrag } from './core/data/schule/ReligionEintrag';
 export { ReligionKatalogEintrag } from './core/data/schule/ReligionKatalogEintrag';
+export { SchuelerstatusKatalogEintrag } from './core/data/schule/SchuelerstatusKatalogEintrag';
 export { SchulabschlussAllgemeinbildendKatalogEintrag } from './core/data/schule/SchulabschlussAllgemeinbildendKatalogEintrag';
 export { SchulabschlussBerufsbildendKatalogEintrag } from './core/data/schule/SchulabschlussBerufsbildendKatalogEintrag';
 export { SchuleAbschnitte } from './core/data/schule/SchuleAbschnitte';

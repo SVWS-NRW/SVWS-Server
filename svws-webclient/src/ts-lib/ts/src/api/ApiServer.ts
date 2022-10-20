@@ -95,7 +95,6 @@ import { Schild3KatalogEintragLaender, cast_de_nrw_schule_svws_core_data_schild3
 import { Schild3KatalogEintragPruefungsordnung, cast_de_nrw_schule_svws_core_data_schild3_Schild3KatalogEintragPruefungsordnung } from '../core/data/schild3/Schild3KatalogEintragPruefungsordnung';
 import { Schild3KatalogEintragPruefungsordnungOption, cast_de_nrw_schule_svws_core_data_schild3_Schild3KatalogEintragPruefungsordnungOption } from '../core/data/schild3/Schild3KatalogEintragPruefungsordnungOption';
 import { Schild3KatalogEintragSchuelerImportExport, cast_de_nrw_schule_svws_core_data_schild3_Schild3KatalogEintragSchuelerImportExport } from '../core/data/schild3/Schild3KatalogEintragSchuelerImportExport';
-import { Schild3KatalogEintragSchuelerStatus, cast_de_nrw_schule_svws_core_data_schild3_Schild3KatalogEintragSchuelerStatus } from '../core/data/schild3/Schild3KatalogEintragSchuelerStatus';
 import { Schild3KatalogEintragUnicodeUmwandlung, cast_de_nrw_schule_svws_core_data_schild3_Schild3KatalogEintragUnicodeUmwandlung } from '../core/data/schild3/Schild3KatalogEintragUnicodeUmwandlung';
 import { Schild3KatalogEintragVersetzungsvermerke, cast_de_nrw_schule_svws_core_data_schild3_Schild3KatalogEintragVersetzungsvermerke } from '../core/data/schild3/Schild3KatalogEintragVersetzungsvermerke';
 import { SchuelerBetriebsdaten, cast_de_nrw_schule_svws_core_data_schueler_SchuelerBetriebsdaten } from '../core/data/schueler/SchuelerBetriebsdaten';
@@ -104,6 +103,7 @@ import { SchuelerLernabschnittsdaten, cast_de_nrw_schule_svws_core_data_schueler
 import { SchuelerListeEintrag, cast_de_nrw_schule_svws_core_data_schueler_SchuelerListeEintrag } from '../core/data/schueler/SchuelerListeEintrag';
 import { SchuelerSchulbesuchsdaten, cast_de_nrw_schule_svws_core_data_schueler_SchuelerSchulbesuchsdaten } from '../core/data/schueler/SchuelerSchulbesuchsdaten';
 import { SchuelerStammdaten, cast_de_nrw_schule_svws_core_data_schueler_SchuelerStammdaten } from '../core/data/schueler/SchuelerStammdaten';
+import { SchuelerstatusKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_SchuelerstatusKatalogEintrag } from '../core/data/schule/SchuelerstatusKatalogEintrag';
 import { SchuelerStundenplan, cast_de_nrw_schule_svws_core_data_stundenplan_SchuelerStundenplan } from '../core/data/stundenplan/SchuelerStundenplan';
 import { SchulabschlussAllgemeinbildendKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_SchulabschlussAllgemeinbildendKatalogEintrag } from '../core/data/schule/SchulabschlussAllgemeinbildendKatalogEintrag';
 import { SchulabschlussBerufsbildendKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_SchulabschlussBerufsbildendKatalogEintrag } from '../core/data/schule/SchulabschlussBerufsbildendKatalogEintrag';
@@ -3965,33 +3965,6 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getKatalogSchild3SchuelerStatus für den Zugriff auf die URL https://{hostname}/db/{schema}/schild3/schueler/status
-	 * 
-	 * Die Liste der Einträge aus dem Schild-Katalog Schüler-Status. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
-	 * 
-	 * Mögliche HTTP-Antworten: 
-	 *   Code 200: Eine Liste von Katalog-Einträgen für den Schild-Katalog Schüler-Status
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<Schild3KatalogEintragSchuelerStatus>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
-	 *   Code 404: Keine Katalog-Einträge gefunden
-	 * 
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * 
-	 * @returns Eine Liste von Katalog-Einträgen für den Schild-Katalog Schüler-Status
-	 */
-	public async getKatalogSchild3SchuelerStatus(schema : string) : Promise<List<Schild3KatalogEintragSchuelerStatus>> {
-		let path : string = "/db/{schema}/schild3/schueler/status"
-				.replace(/{schema\s*(:[^}]+)?}/g, schema);
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		let ret = new Vector<Schild3KatalogEintragSchuelerStatus>();
-		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(Schild3KatalogEintragSchuelerStatus.transpilerFromJSON(text)); });
-		return ret;
-	}
-
-
-	/**
 	 * Implementierung der GET-Methode getKatalogSchild3UnicodeUmwandlung für den Zugriff auf die URL https://{hostname}/db/{schema}/schild3/unicode/umwandlung
 	 * 
 	 * Die Liste der Einträge aus dem Schild-Katalog für die Unicode-Umwandlung. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
@@ -5144,6 +5117,33 @@ export class ApiServer extends BaseApi {
 		const result : string = await super.postJSON(path, body);
 		const text = result;
 		return ReligionEintrag.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getKatalogSchuelerStatus für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/schueler/status
+	 * 
+	 * Die Liste der Einträge aus dem Katalog Schüler-Status. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Eine Liste von Katalog-Einträgen für den Katalog Schüler-Status
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SchuelerstatusKatalogEintrag>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
+	 *   Code 404: Keine Katalog-Einträge gefunden
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * 
+	 * @returns Eine Liste von Katalog-Einträgen für den Katalog Schüler-Status
+	 */
+	public async getKatalogSchuelerStatus(schema : string) : Promise<List<SchuelerstatusKatalogEintrag>> {
+		let path : string = "/db/{schema}/schule/schueler/status"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		let ret = new Vector<SchuelerstatusKatalogEintrag>();
+		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(SchuelerstatusKatalogEintrag.transpilerFromJSON(text)); });
+		return ret;
 	}
 
 

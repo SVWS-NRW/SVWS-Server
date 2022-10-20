@@ -16,6 +16,7 @@ import de.nrw.schule.svws.core.data.schule.OrganisationsformKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.PruefungsordnungKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.ReligionEintrag;
 import de.nrw.schule.svws.core.data.schule.ReligionKatalogEintrag;
+import de.nrw.schule.svws.core.data.schule.SchuelerstatusKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.SchulabschlussAllgemeinbildendKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.SchulabschlussBerufsbildendKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.SchuleStammdaten;
@@ -48,6 +49,7 @@ import de.nrw.schule.svws.data.schule.DataKatalogSchulgliederungen;
 import de.nrw.schule.svws.data.schule.DataKatalogSchultraeger;
 import de.nrw.schule.svws.data.schule.DataKatalogVerkehrssprachen;
 import de.nrw.schule.svws.data.schule.DataReligionen;
+import de.nrw.schule.svws.data.schule.DataSchuelerStatus;
 import de.nrw.schule.svws.data.schule.DataSchuleStammdaten;
 import de.nrw.schule.svws.data.schule.DataSchulstufen;
 import de.nrw.schule.svws.db.Benutzer;
@@ -893,5 +895,28 @@ public class APISchule {
         }
     }
 
-    
+
+    /**
+     * Die OpenAPI-Methode für die Abfrage des Kataloges Schüler-Status.
+     *  
+     * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param request       die Informationen zur HTTP-Anfrage
+     * 
+     * @return der Katalog
+     */
+    @GET
+    @Path("/schueler/status")
+    @Operation(summary = "Die Liste der Einträge aus dem Katalog Schüler-Status.",
+               description = "Die Liste der Einträge aus dem Katalog Schüler-Status. "
+                           + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
+    @ApiResponse(responseCode = "200", description = "Eine Liste von Katalog-Einträgen für den Katalog Schüler-Status",
+                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SchuelerstatusKatalogEintrag.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
+    @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
+    public Response getKatalogSchuelerStatus(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+        try (Benutzer user = OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
+            return (new DataSchuelerStatus()).getAll();
+        }
+    }
+
 }

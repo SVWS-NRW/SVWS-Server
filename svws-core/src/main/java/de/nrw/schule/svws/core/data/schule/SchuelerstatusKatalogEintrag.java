@@ -1,16 +1,16 @@
-package de.nrw.schule.svws.core.data.schild3;
+package de.nrw.schule.svws.core.data.schule;
 
 import de.nrw.schule.svws.core.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
- * Diese Klasse ist eine DTO-Klasse für den Schild3-Katalog Schüler-Status.
+ * Diese Klasse ist eine DTO-Klasse für den Katalog Schüler-Status.
  */
 @XmlRootElement
-@Schema(description="Schild3-Katalog Schüler-Status")
+@Schema(description="Katalog Schüler-Status")
 @TranspilerDTO
-public class Schild3KatalogEintragSchuelerStatus {
+public class SchuelerstatusKatalogEintrag {
 
     /** Die numerische ID des Schüler-Status. */
     @Schema(required = false, description = "Die numerische ID des Schüler-Status")
@@ -23,13 +23,5 @@ public class Schild3KatalogEintragSchuelerStatus {
     /** Sortierung des Schülerstatus */
     @Schema(required = false, description = "Sortierung des Schülerstatus")
     public Integer Sortierung;
-
-    /** Deprecated */
-    @Schema(required = false, description = "Deprecated")
-    public Boolean InSimExp;
-
-    /** Deprecated */
-    @Schema(required = false, description = "Deprecated")
-    public String SIMAbschnitt;
 
 }
