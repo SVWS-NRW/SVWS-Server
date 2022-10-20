@@ -90,7 +90,6 @@
         <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternPruefungsOrdnungOptionen</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternSchuelerImportExport</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternSchuelerStatus</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternSpezialFilterFelder</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternTextExport</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternUnicodeUmwandllung</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOKAoAAnschlussoption</class>
@@ -222,7 +221,6 @@
         <class>de.nrw.schule.svws.db.dto.migration.schule.MigrationDTOVerkehrssprachen</class>
         <class>de.nrw.schule.svws.db.dto.migration.schulver.MigrationDTOSchulverDBS</class>
         <class>de.nrw.schule.svws.db.dto.migration.schulver.MigrationDTOSchulverSchultraeger</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schulver.MigrationDTOSchulverWeitereSF</class>
         <class>de.nrw.schule.svws.db.dto.migration.statkue.MigrationDTOSVWSSprachpruefungNiveaus</class>
         <class>de.nrw.schule.svws.db.dto.migration.statkue.MigrationDTOStatkueAbgangsart</class>
         <class>de.nrw.schule.svws.db.dto.migration.statkue.MigrationDTOStatkueAndereGrundschulen</class>
@@ -333,7 +331,6 @@
         <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternPruefungsOrdnungOptionen</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternSchuelerImportExport</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternSchuelerStatus</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternSpezialFilterFelder</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternTextExport</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternUnicodeUmwandllung</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOKAoAAnschlussoption</class>
@@ -479,7 +476,6 @@
         <class>de.nrw.schule.svws.db.dto.current.schule.DTOVerkehrssprachen</class>
         <class>de.nrw.schule.svws.db.dto.current.schulver.DTOSchulverDBS</class>
         <class>de.nrw.schule.svws.db.dto.current.schulver.DTOSchulverSchultraeger</class>
-        <class>de.nrw.schule.svws.db.dto.current.schulver.DTOSchulverWeitereSF</class>
         <class>de.nrw.schule.svws.db.dto.current.statkue.DTOSVWSSprachpruefungNiveaus</class>
         <class>de.nrw.schule.svws.db.dto.current.statkue.DTOStatkueAbgangsart</class>
         <class>de.nrw.schule.svws.db.dto.current.statkue.DTOStatkueAndereGrundschulen</class>
@@ -621,7 +617,6 @@
         <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternPruefungsOrdnungOptionen</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternSchuelerImportExport</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternSchuelerStatus</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternSpezialFilterFelder</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternTextExport</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternUnicodeUmwandllung</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOKAoAAnschlussoption</class>
@@ -767,7 +762,6 @@
         <class>de.nrw.schule.svws.db.dto.rev8.schule.Rev8DTOVerkehrssprachen</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schulver.Rev8DTOSchulverDBS</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schulver.Rev8DTOSchulverSchultraeger</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schulver.Rev8DTOSchulverWeitereSF</class>
         <class>de.nrw.schule.svws.db.dto.rev8.statkue.Rev8DTOSVWSSprachpruefungNiveaus</class>
         <class>de.nrw.schule.svws.db.dto.rev8.statkue.Rev8DTOStatkueAbgangsart</class>
         <class>de.nrw.schule.svws.db.dto.rev8.statkue.Rev8DTOStatkueAndereGrundschulen</class>

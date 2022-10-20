@@ -462,9 +462,6 @@ public class Schema {
 	/** Tabelle Schildintern_SchuelerImpExp */
 	public static final Tabelle_Schildintern_SchuelerImpExp tab_Schildintern_SchuelerImpExp = add(new Tabelle_Schildintern_SchuelerImpExp());
 
-	/** Tabelle Schildintern_SpezialFilterFelder */
-	public static final Tabelle_Schildintern_SpezialFilterFelder tab_Schildintern_SpezialFilterFelder = add(new Tabelle_Schildintern_SpezialFilterFelder());
-
 	/** Tabelle Schildintern_TextExport */
 	public static final Tabelle_Schildintern_TextExport tab_Schildintern_TextExport = add(new Tabelle_Schildintern_TextExport());
 
@@ -696,9 +693,6 @@ public class Schema {
 	/** Tabelle Schulver_Schultraeger */
 	public static final Tabelle_Schulver_Schultraeger tab_Schulver_Schultraeger = add(new Tabelle_Schulver_Schultraeger());
 
-	/** Tabelle Schulver_WeitereSF */
-	public static final Tabelle_Schulver_WeitereSF tab_Schulver_WeitereSF = add(new Tabelle_Schulver_WeitereSF());
-
 	/** Tabelle Statkue_Abgangsart */
 	public static final Tabelle_Statkue_Abgangsart tab_Statkue_Abgangsart = add(new Tabelle_Statkue_Abgangsart());
 
@@ -853,13 +847,11 @@ public class Schema {
 		Schema.tab_Schildintern_PruefOrd_Optionen,
 		Schema.tab_Schildintern_PruefungsOrdnung,
 		Schema.tab_Schildintern_SchuelerImpExp,
-		Schema.tab_Schildintern_SpezialFilterFelder,
 		Schema.tab_Schildintern_TextExport,
 		Schema.tab_Schildintern_UnicodeUmwandlung,
 		Schema.tab_SchulleitungFunktion,
 		Schema.tab_Schulver_DBS,
 		Schema.tab_Schulver_Schultraeger,
-		Schema.tab_Schulver_WeitereSF,
 		Schema.tab_Statkue_Abgangsart,
 		Schema.tab_Statkue_AndereGrundschulen,
 		Schema.tab_Statkue_Bilingual,

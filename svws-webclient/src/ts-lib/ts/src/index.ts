@@ -201,7 +201,6 @@ export { Schild3KatalogEintragDatenart } from './core/data/schild3/Schild3Katalo
 export { Schild3KatalogEintragExportCSV } from './core/data/schild3/Schild3KatalogEintragExportCSV';
 export { Schild3KatalogEintragFilterFehlendeEintraege } from './core/data/schild3/Schild3KatalogEintragFilterFehlendeEintraege';
 export { Schild3KatalogEintragFilterFeldListe } from './core/data/schild3/Schild3KatalogEintragFilterFeldListe';
-export { Schild3KatalogEintragFilterSpezial } from './core/data/schild3/Schild3KatalogEintragFilterSpezial';
 export { Schild3KatalogEintragLaender } from './core/data/schild3/Schild3KatalogEintragLaender';
 export { Schild3KatalogEintragPruefungsordnung } from './core/data/schild3/Schild3KatalogEintragPruefungsordnung';
 export { Schild3KatalogEintragPruefungsordnungOption } from './core/data/schild3/Schild3KatalogEintragPruefungsordnungOption';
@@ -253,12 +252,14 @@ export { SchulabschlussAllgemeinbildendKatalogEintrag } from './core/data/schule
 export { SchulabschlussBerufsbildendKatalogEintrag } from './core/data/schule/SchulabschlussBerufsbildendKatalogEintrag';
 export { SchuleAbschnitte } from './core/data/schule/SchuleAbschnitte';
 export { SchuleStammdaten } from './core/data/schule/SchuleStammdaten';
+export { SchulenKatalogEintrag } from './core/data/schule/SchulenKatalogEintrag';
 export { SchulformGliederungJahrgaenge } from './core/data/schule/SchulformGliederungJahrgaenge';
 export { SchulformKatalogEintrag } from './core/data/schule/SchulformKatalogEintrag';
 export { SchulformSchulgliederung } from './core/data/schule/SchulformSchulgliederung';
 export { SchulgliederungKatalogEintrag } from './core/data/schule/SchulgliederungKatalogEintrag';
 export { Schuljahresabschnitt } from './core/data/schule/Schuljahresabschnitt';
 export { SchulstufeKatalogEintrag } from './core/data/schule/SchulstufeKatalogEintrag';
+export { SchultraegerKatalogEintrag } from './core/data/schule/SchultraegerKatalogEintrag';
 export { VerkehrsspracheKatalogEintrag } from './core/data/schule/VerkehrsspracheKatalogEintrag';
 export { SchuelerStundenplan } from './core/data/stundenplan/SchuelerStundenplan';
 export { SchuelerStundenplanUnterricht } from './core/data/stundenplan/SchuelerStundenplanUnterricht';

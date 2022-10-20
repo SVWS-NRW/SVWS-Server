@@ -19,10 +19,12 @@ import de.nrw.schule.svws.core.data.schule.ReligionKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.SchulabschlussAllgemeinbildendKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.SchulabschlussBerufsbildendKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.SchuleStammdaten;
+import de.nrw.schule.svws.core.data.schule.SchulenKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.SchulformKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.SchulgliederungKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.Schuljahresabschnitt;
 import de.nrw.schule.svws.core.data.schule.SchulstufeKatalogEintrag;
+import de.nrw.schule.svws.core.data.schule.SchultraegerKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.VerkehrsspracheKatalogEintrag;
 import de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenz;
 import de.nrw.schule.svws.data.schueler.DataKatalogSchuelerFoerderschwerpunkte;
@@ -40,8 +42,10 @@ import de.nrw.schule.svws.data.schule.DataKatalogPruefungsordnungen;
 import de.nrw.schule.svws.data.schule.DataKatalogReligionen;
 import de.nrw.schule.svws.data.schule.DataKatalogSchulabschluesseAllgemeinbildend;
 import de.nrw.schule.svws.data.schule.DataKatalogSchulabschluesseBerufsbildend;
+import de.nrw.schule.svws.data.schule.DataKatalogSchulen;
 import de.nrw.schule.svws.data.schule.DataKatalogSchulformen;
 import de.nrw.schule.svws.data.schule.DataKatalogSchulgliederungen;
+import de.nrw.schule.svws.data.schule.DataKatalogSchultraeger;
 import de.nrw.schule.svws.data.schule.DataKatalogVerkehrssprachen;
 import de.nrw.schule.svws.data.schule.DataReligionen;
 import de.nrw.schule.svws.data.schule.DataSchuleStammdaten;
@@ -841,4 +845,53 @@ public class APISchule {
         }
     }  
 
+
+    /**
+     * Die OpenAPI-Methode für die Abfrage des Schulen-Kataloges.
+     *  
+     * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param request       die Informationen zur HTTP-Anfrage
+     * 
+     * @return die Liste der Schulen
+     */
+    @GET
+    @Path("/allgemein/schulen")
+    @Operation(summary = "Erstellt eine Liste aller in dem Katalog vorhandenen Schulen.",
+               description = "Erstellt eine Liste aller in dem Katalog vorhandenen Schulen. "
+                           + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
+    @ApiResponse(responseCode = "200", description = "Eine Liste von Schulen-Katalog-Einträgen",
+                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SchulenKatalogEintrag.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
+    @ApiResponse(responseCode = "404", description = "Keine Schulen-Katalog-Einträge gefunden")
+    public Response getKatalogSchulen(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+        try (Benutzer user = OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
+            return (new DataKatalogSchulen()).getAll();
+        }
+    }
+
+    
+    /**
+     * Die OpenAPI-Methode für die Abfrage des Schulträger-Kataloges.
+     *  
+     * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param request       die Informationen zur HTTP-Anfrage
+     * 
+     * @return die Liste der Schulträger
+     */
+    @GET
+    @Path("/allgemein/schultraeger")
+    @Operation(summary = "Erstellt eine Liste aller in dem Katalog vorhandenen Schulträger.",
+               description = "Erstellt eine Liste aller in dem Katalog vorhandenen Schulträger. "
+                           + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
+    @ApiResponse(responseCode = "200", description = "Eine Liste von Schulträger-Katalog-Einträgen",
+                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SchultraegerKatalogEintrag.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
+    @ApiResponse(responseCode = "404", description = "Keine Schulträger-Katalog-Einträge gefunden")
+    public Response getKatalogSchultraeger(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+        try (Benutzer user = OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
+            return (new DataKatalogSchultraeger()).getAll();
+        }
+    }
+
+    
 }

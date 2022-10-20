@@ -91,7 +91,6 @@ import { Schild3KatalogEintragDQRNiveaus, cast_de_nrw_schule_svws_core_data_schi
 import { Schild3KatalogEintragExportCSV, cast_de_nrw_schule_svws_core_data_schild3_Schild3KatalogEintragExportCSV } from '../core/data/schild3/Schild3KatalogEintragExportCSV';
 import { Schild3KatalogEintragFilterFehlendeEintraege, cast_de_nrw_schule_svws_core_data_schild3_Schild3KatalogEintragFilterFehlendeEintraege } from '../core/data/schild3/Schild3KatalogEintragFilterFehlendeEintraege';
 import { Schild3KatalogEintragFilterFeldListe, cast_de_nrw_schule_svws_core_data_schild3_Schild3KatalogEintragFilterFeldListe } from '../core/data/schild3/Schild3KatalogEintragFilterFeldListe';
-import { Schild3KatalogEintragFilterSpezial, cast_de_nrw_schule_svws_core_data_schild3_Schild3KatalogEintragFilterSpezial } from '../core/data/schild3/Schild3KatalogEintragFilterSpezial';
 import { Schild3KatalogEintragLaender, cast_de_nrw_schule_svws_core_data_schild3_Schild3KatalogEintragLaender } from '../core/data/schild3/Schild3KatalogEintragLaender';
 import { Schild3KatalogEintragPruefungsordnung, cast_de_nrw_schule_svws_core_data_schild3_Schild3KatalogEintragPruefungsordnung } from '../core/data/schild3/Schild3KatalogEintragPruefungsordnung';
 import { Schild3KatalogEintragPruefungsordnungOption, cast_de_nrw_schule_svws_core_data_schild3_Schild3KatalogEintragPruefungsordnungOption } from '../core/data/schild3/Schild3KatalogEintragPruefungsordnungOption';
@@ -108,10 +107,12 @@ import { SchuelerStammdaten, cast_de_nrw_schule_svws_core_data_schueler_Schueler
 import { SchuelerStundenplan, cast_de_nrw_schule_svws_core_data_stundenplan_SchuelerStundenplan } from '../core/data/stundenplan/SchuelerStundenplan';
 import { SchulabschlussAllgemeinbildendKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_SchulabschlussAllgemeinbildendKatalogEintrag } from '../core/data/schule/SchulabschlussAllgemeinbildendKatalogEintrag';
 import { SchulabschlussBerufsbildendKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_SchulabschlussBerufsbildendKatalogEintrag } from '../core/data/schule/SchulabschlussBerufsbildendKatalogEintrag';
+import { SchulenKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_SchulenKatalogEintrag } from '../core/data/schule/SchulenKatalogEintrag';
 import { SchuleStammdaten, cast_de_nrw_schule_svws_core_data_schule_SchuleStammdaten } from '../core/data/schule/SchuleStammdaten';
 import { SchulformKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_SchulformKatalogEintrag } from '../core/data/schule/SchulformKatalogEintrag';
 import { SchulgliederungKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_SchulgliederungKatalogEintrag } from '../core/data/schule/SchulgliederungKatalogEintrag';
 import { SchulstufeKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_SchulstufeKatalogEintrag } from '../core/data/schule/SchulstufeKatalogEintrag';
+import { SchultraegerKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_SchultraegerKatalogEintrag } from '../core/data/schule/SchultraegerKatalogEintrag';
 import { SimpleOperationResponse, cast_de_nrw_schule_svws_core_data_SimpleOperationResponse } from '../core/data/SimpleOperationResponse';
 import { StundenplanListeEintrag, cast_de_nrw_schule_svws_core_data_stundenplan_StundenplanListeEintrag } from '../core/data/stundenplan/StundenplanListeEintrag';
 import { StundenplanZeitraster, cast_de_nrw_schule_svws_core_data_stundenplan_StundenplanZeitraster } from '../core/data/stundenplan/StundenplanZeitraster';
@@ -3856,33 +3857,6 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getKatalogSchild3FilterSpezial für den Zugriff auf die URL https://{hostname}/db/{schema}/schild3/filter/spezial
-	 * 
-	 * Die Liste der Einträge aus dem Schild-Katalog Spezial-Filter. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
-	 * 
-	 * Mögliche HTTP-Antworten: 
-	 *   Code 200: Eine Liste von Katalog-Einträgen für den Schild-Katalog Spezial-Filter
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<Schild3KatalogEintragFilterSpezial>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
-	 *   Code 404: Keine Katalog-Einträge gefunden
-	 * 
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * 
-	 * @returns Eine Liste von Katalog-Einträgen für den Schild-Katalog Spezial-Filter
-	 */
-	public async getKatalogSchild3FilterSpezial(schema : string) : Promise<List<Schild3KatalogEintragFilterSpezial>> {
-		let path : string = "/db/{schema}/schild3/filter/spezial"
-				.replace(/{schema\s*(:[^}]+)?}/g, schema);
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		let ret = new Vector<Schild3KatalogEintragFilterSpezial>();
-		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(Schild3KatalogEintragFilterSpezial.transpilerFromJSON(text)); });
-		return ret;
-	}
-
-
-	/**
 	 * Implementierung der GET-Methode getKatalogSchild3Laender für den Zugriff auf die URL https://{hostname}/db/{schema}/schild3/laender
 	 * 
 	 * Die Liste der Einträge aus dem Schild-Katalog Bundesländer/Nachbarländer. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
@@ -4778,6 +4752,33 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der GET-Methode getKatalogSchulen für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/allgemein/schulen
+	 * 
+	 * Erstellt eine Liste aller in dem Katalog vorhandenen Schulen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Eine Liste von Schulen-Katalog-Einträgen
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SchulenKatalogEintrag>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
+	 *   Code 404: Keine Schulen-Katalog-Einträge gefunden
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * 
+	 * @returns Eine Liste von Schulen-Katalog-Einträgen
+	 */
+	public async getKatalogSchulen(schema : string) : Promise<List<SchulenKatalogEintrag>> {
+		let path : string = "/db/{schema}/schule/allgemein/schulen"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		let ret = new Vector<SchulenKatalogEintrag>();
+		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(SchulenKatalogEintrag.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getSchulformen für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/allgemein/schulformen
 	 * 
 	 * Erstellt eine Liste aller in dem Katalog vorhanden Schulformen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
@@ -4854,6 +4855,33 @@ export class ApiServer extends BaseApi {
 		const obj = JSON.parse(result);
 		let ret = new Vector<SchulstufeKatalogEintrag>();
 		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(SchulstufeKatalogEintrag.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getKatalogSchultraeger für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/allgemein/schultraeger
+	 * 
+	 * Erstellt eine Liste aller in dem Katalog vorhandenen Schulträger. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Eine Liste von Schulträger-Katalog-Einträgen
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SchultraegerKatalogEintrag>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
+	 *   Code 404: Keine Schulträger-Katalog-Einträge gefunden
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * 
+	 * @returns Eine Liste von Schulträger-Katalog-Einträgen
+	 */
+	public async getKatalogSchultraeger(schema : string) : Promise<List<SchultraegerKatalogEintrag>> {
+		let path : string = "/db/{schema}/schule/allgemein/schultraeger"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		let ret = new Vector<SchultraegerKatalogEintrag>();
+		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(SchultraegerKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 
