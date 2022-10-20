@@ -355,9 +355,7 @@ public class ApiMethod {
 					System.exit(-1);
 				} else {
 					String tsType = getTSType(requestBody.content); 
-					if ("String".equals(tsType)) {
-						result += "\t\tlet body : string = JSON.stringify(data);" + System.lineSeparator();
-					} else if ("Number".equals(tsType)) {
+					if ("String".equals(tsType) || "Number".equals(tsType) || "Boolean".equals(tsType)) {
 						result += "\t\tlet body : string = JSON.stringify(data);" + System.lineSeparator();
 					} else {
 						if (httpMethod == ApiHttpMethod.PATCH) {
@@ -497,6 +495,7 @@ public class ApiMethod {
 					String resultDatatype = switch (datatype) {
 						case "Byte", "Short", "Integer", "Long", "Float", "Double" -> "Number";
 						case "Character", "String" -> "String";
+                        case "Boolean" -> "Boolean";
 						default -> datatype;
 					};
 					if (returnResponse.content.isArrayType) {
