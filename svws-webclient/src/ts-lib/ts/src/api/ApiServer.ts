@@ -3938,6 +3938,33 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der GET-Methode getSchild3ReportingDatenquellen für den Zugriff auf die URL https://{hostname}/db/{schema}/schild3/reporting/
+	 * 
+	 * Die Liste der Einträge aus dem Schild-Katalog Versetzungsvermerke / PrfSemAbschl. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Eine Liste von Katalog-Einträgen für den Schild-Katalog Versetzungsvermerke / PrfSemAbschl
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<Schild3KatalogEintragVersetzungsvermerke>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
+	 *   Code 404: Keine Katalog-Einträge gefunden
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * 
+	 * @returns Eine Liste von Katalog-Einträgen für den Schild-Katalog Versetzungsvermerke / PrfSemAbschl
+	 */
+	public async getSchild3ReportingDatenquellen(schema : string) : Promise<List<Schild3KatalogEintragVersetzungsvermerke>> {
+		let path : string = "/db/{schema}/schild3/reporting/"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		let ret = new Vector<Schild3KatalogEintragVersetzungsvermerke>();
+		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(Schild3KatalogEintragVersetzungsvermerke.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getKatalogSchild3SchuelerImportExport für den Zugriff auf die URL https://{hostname}/db/{schema}/schild3/schueler/import_export
 	 * 
 	 * Die Liste der Einträge aus dem Schild-Katalog Schüler-Import/Export. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.

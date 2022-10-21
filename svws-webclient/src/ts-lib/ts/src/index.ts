@@ -207,6 +207,9 @@ export { Schild3KatalogEintragPruefungsordnungOption } from './core/data/schild3
 export { Schild3KatalogEintragSchuelerImportExport } from './core/data/schild3/Schild3KatalogEintragSchuelerImportExport';
 export { Schild3KatalogEintragUnicodeUmwandlung } from './core/data/schild3/Schild3KatalogEintragUnicodeUmwandlung';
 export { Schild3KatalogEintragVersetzungsvermerke } from './core/data/schild3/Schild3KatalogEintragVersetzungsvermerke';
+export { SchildReportingDatenquelle } from './core/data/schild3/SchildReportingDatenquelle';
+export { SchildReportingDatenquelleAttribut } from './core/data/schild3/SchildReportingDatenquelleAttribut';
+export { SchildReportingSchuelerlernabschnitt } from './core/data/schild3/SchildReportingSchuelerlernabschnitt';
 export { Schueler } from './core/data/schueler/Schueler';
 export { SchuelerBetriebsdaten } from './core/data/schueler/SchuelerBetriebsdaten';
 export { SchuelerLeistungsdaten } from './core/data/schueler/SchuelerLeistungsdaten';
@@ -350,6 +353,7 @@ export { KAOAZusatzmerkmal } from './core/types/kaoa/KAOAZusatzmerkmal';
 export { KAOAZusatzmerkmaleOptionsarten } from './core/types/kaoa/KAOAZusatzmerkmaleOptionsarten';
 export { GostKursblockungRegelParameterTyp } from './core/types/kursblockung/GostKursblockungRegelParameterTyp';
 export { GostKursblockungRegelTyp } from './core/types/kursblockung/GostKursblockungRegelTyp';
+export { SchildReportingAttributTyp } from './core/types/schild3/SchildReportingAttributTyp';
 export { AllgemeinbildendOrganisationsformen } from './core/types/schule/AllgemeinbildendOrganisationsformen';
 export { BerufskollegAnlage } from './core/types/schule/BerufskollegAnlage';
 export { BerufskollegBerufsebene1 } from './core/types/schule/BerufskollegBerufsebene1';

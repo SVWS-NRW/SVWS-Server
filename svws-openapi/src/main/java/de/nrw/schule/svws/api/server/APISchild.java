@@ -26,6 +26,7 @@ import de.nrw.schule.svws.data.schild3.DataSchildPruefungsordnungOptionen;
 import de.nrw.schule.svws.data.schild3.DataSchildSchuelerImportExport;
 import de.nrw.schule.svws.data.schild3.DataSchildUnicodeUmwandlung;
 import de.nrw.schule.svws.data.schild3.DataSchildVersetzungsvermerke;
+import de.nrw.schule.svws.data.schild3.reporting.DataSchildReportingDatenquelle;
 import de.nrw.schule.svws.db.Benutzer;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -339,4 +340,30 @@ public class APISchild {
         }
     }
 
+    
+    
+    /**
+     * Die OpenAPI-Methode für die Abfrage der im SVWS-Server definierten Schild3-Datenquellen 
+     * für das Reporting.
+     *  
+     * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param request       die Informationen zur HTTP-Anfrage
+     * 
+     * @return die Definitionen der Schild3-Report-Datenquellen
+     */
+    @GET
+    @Path("/reporting/")
+    @Operation(summary = "Die Liste der Einträge aus dem Schild-Katalog Versetzungsvermerke / PrfSemAbschl.",
+               description = "Die Liste der Einträge aus dem Schild-Katalog Versetzungsvermerke / PrfSemAbschl. "
+                           + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
+    @ApiResponse(responseCode = "200", description = "Eine Liste von Katalog-Einträgen für den Schild-Katalog Versetzungsvermerke / PrfSemAbschl",
+                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Schild3KatalogEintragVersetzungsvermerke.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
+    @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
+    public Response getSchild3ReportingDatenquellen(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+        try (Benutzer user = OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.BERICHTE_STANDARDFORMULARE_DRUCKEN)) {
+            return DataSchildReportingDatenquelle.getDatenquellen();
+        }
+    }
+    
 }
