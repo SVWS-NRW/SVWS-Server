@@ -69,6 +69,7 @@ public class DataSchuelerStundenplan extends DataManager<Long> {
 		DTOSchuelerLernabschnittsdaten lernabschnitt = lernabschnittsdaten.get(0);
 		
 		Vector<StundenplanZeitraster> zeitraster = (new DataStundenplanZeitraster(conn, idStundenplan)).getZeitraster();
+		Map<Long, StundenplanZeitraster> mapZeitraster = zeitraster.stream().collect(Collectors.toMap(zr -> zr.id , zr -> zr));
 
 		Vector<SchuelerStundenplanUnterricht> spUnterricht = new Vector<>();
 		
@@ -108,6 +109,7 @@ public class DataSchuelerStundenplan extends DataManager<Long> {
 				ssu.idLeistungen = ld.ID;
 				ssu.idUnterricht = u.ID;
 				ssu.idZeitraster = u.Zeitraster_ID;
+				ssu.zeitraster = mapZeitraster.get(u.Zeitraster_ID);
 				ssu.kursart = ld.Kursart;
 				ssu.lehrerKuerzel = (l == null) ? "" : l.Kuerzel;
 				ssu.lehrerNachname = (l == null) ? "" : l.Nachname;

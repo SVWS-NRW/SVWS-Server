@@ -28,6 +28,10 @@ public class SchuelerStundenplanUnterricht {
 	@Schema(required = true, description = "die ID im Zeitraster des Stundenplans", example="1")
 	public long idZeitraster = -1;
 	
+	/** Das zugehörige Zeitraster-Objekt des Stundenplans */
+	@Schema(required = true, description = "das zugehörige Zeitraster-Objekt des Stundenplans")
+	public @NotNull StundenplanZeitraster zeitraster = new StundenplanZeitraster();
+	
 	/** Die Kursart der Unterrichtseinheit. */
 	@Schema(required = false, description = "die Kursart der Unterrichtseinheit", example="GKS")
 	public @NotNull String kursart = "";
