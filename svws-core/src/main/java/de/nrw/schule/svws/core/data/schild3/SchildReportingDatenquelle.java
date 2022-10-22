@@ -23,10 +23,6 @@ public class SchildReportingDatenquelle {
     @Schema(required = true, description = "der Name der Datenquelle", example = "SchülerLernabschnitte")
     public @NotNull String name = "";
 
-    /** Der Teilpfad, unter welchem die Datenquelle zur Verfügung steht */
-    @Schema(required = true, description = "der Teilpfad, unter welchem die Datenquelle zur Verfügung steht", example = "/schueler/lernabschnitte")
-    public @NotNull String path = "";
-
     /** Die Beschreibung der Datenquelle */
     @Schema(required = true, description = "die Beschreibung der Datenquelle", example = "Die Lernabschnitte eines Schülers")
     public @NotNull String beschreibung = "";
@@ -59,17 +55,16 @@ public class SchildReportingDatenquelle {
      * Erstellt eine Datenquelle mit den angegebenen Werten
      * 
      * @param name             der Name der Datenquelle
-     * @param path             der Teilpfad, unter welchem die Datenquelle zur Verfügung steht
      * @param beschreibung     die Beschreibung der Datenquelle
      * @param master           die Master-Datenquelle
      * @param masterattribut   das identifizierende Attribut der Master-Datenquelle
      * @param mastertyp        der Typ des identifizierenden Attributs der Master-Datenquelle
+     * @param attribute        eine Liste der Attribute
      */
-    public SchildReportingDatenquelle(@NotNull String name, @NotNull String path, @NotNull String beschreibung,
+    public SchildReportingDatenquelle(@NotNull String name, @NotNull String beschreibung,
             String master, String masterattribut, SchildReportingAttributTyp mastertyp, 
             @NotNull List<@NotNull SchildReportingDatenquelleAttribut> attribute) {
         this.name = name;
-        this.path = path;
         this.beschreibung = beschreibung;
         this.master = master;
         this.masterattribut = masterattribut;

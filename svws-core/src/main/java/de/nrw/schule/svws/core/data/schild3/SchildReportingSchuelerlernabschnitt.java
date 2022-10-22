@@ -9,7 +9,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
  * Die Klasse enthält den Core-DTO für die Schild-Reporting-Datenquelle Schuelerlernabschnitte.  
  */
 @XmlRootElement
-@Schema(description="Ein Eintrag in der Schild-Reporting-Datenquelle Schuelerlernabschnitte.")
+@Schema(description="Datenquelle Schuelerlernabschnitte.")
 @TranspilerDTO
 public class SchildReportingSchuelerlernabschnitt {
 

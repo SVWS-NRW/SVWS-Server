@@ -1,5 +1,7 @@
 package de.nrw.schule.svws.api.server;
 
+import java.util.List;
+
 import de.nrw.schule.svws.api.OpenAPIApplication;
 import de.nrw.schule.svws.core.data.schild3.Schild3KatalogEintragAbiturInfos;
 import de.nrw.schule.svws.core.data.schild3.Schild3KatalogEintragDQRNiveaus;
@@ -28,15 +30,18 @@ import de.nrw.schule.svws.data.schild3.DataSchildUnicodeUmwandlung;
 import de.nrw.schule.svws.data.schild3.DataSchildVersetzungsvermerke;
 import de.nrw.schule.svws.data.schild3.reporting.DataSchildReportingDatenquelle;
 import de.nrw.schule.svws.db.Benutzer;
+import de.nrw.schule.svws.db.DBEntityManager;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
@@ -353,17 +358,50 @@ public class APISchild {
      */
     @GET
     @Path("/reporting/")
-    @Operation(summary = "Die Liste der Einträge aus dem Schild-Katalog Versetzungsvermerke / PrfSemAbschl.",
-               description = "Die Liste der Einträge aus dem Schild-Katalog Versetzungsvermerke / PrfSemAbschl. "
-                           + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
-    @ApiResponse(responseCode = "200", description = "Eine Liste von Katalog-Einträgen für den Schild-Katalog Versetzungsvermerke / PrfSemAbschl",
+    @Operation(summary = "Die Liste der Einträge im SVWS-Server definierten Schild3-Datenquellen für das Reporting.",
+               description = "Die Liste der Einträge im SVWS-Server definierten Schild3-Datenquellen für das Reporting. "
+                           + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung für den Zugriff auf das Reporting besitzt.")
+    @ApiResponse(responseCode = "200", description = "Eine Liste von Katalog-Einträgen der Einträge im SVWS-Server definierten Schild3-Datenquellen für das Reporting",
                  content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Schild3KatalogEintragVersetzungsvermerke.class))))
-    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
-    @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um auf das Reporting zuzigreifen.")
+    @ApiResponse(responseCode = "404", description = "Keine Datenquellen gefunden")
     public Response getSchild3ReportingDatenquellen(@PathParam("schema") String schema, @Context HttpServletRequest request) {
         try (Benutzer user = OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.BERICHTE_STANDARDFORMULARE_DRUCKEN)) {
             return DataSchildReportingDatenquelle.getDatenquellen();
         }
     }
-    
+
+
+    /**
+     * Die OpenAPI-Methode für die Abfrage der Daten einer im SVWS-Server 
+     * definierten Schild3-Datenquelle des Reportings.
+     *  
+     * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param datenquelle   der Name der Datenquelle
+     * @param params        die Parameter der Datenquelle, d.h. die Werte für das Attribut der 
+     *                      Master-Datenquelle, welche bei dieser Datenquelle berücksichtigt 
+     *                      werden sollen
+     * @param request       die Informationen zur HTTP-Anfrage
+     * 
+     * @return die Definitionen der Schild3-Report-Datenquellen
+     */
+    @POST
+    @Path("/reporting/{datenquelle}")
+    @Operation(summary = "Die Daten einer im SVWS-Server definierten Schild3-Datenquelle für das Reporting.",
+               description = "Die Daten einer im SVWS-Server definierten Schild3-Datenquelle für das Reporting. "
+                           + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung für den Zugriff auf das Reporting besitzt.")
+    @ApiResponse(responseCode = "200", description = "Die Daten der im SVWS-Server definierten Schild3-Datenquelle für das Reporting",
+                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Object.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um auf die Datenquelle zuzugreifen.")
+    @ApiResponse(responseCode = "404", description = "Es wurden keine Daten gefunden oder die Datenquelle wurde nicht gefunden.")
+    public Response getSchild3ReportingDaten(@PathParam("schema") String schema,
+            @PathParam("datenquelle") String datenquelle,
+            @RequestBody(description = "Eine Liste der Attribute der Masterdatenquelle. Wurde keine Masterdatenquelle angegeben, so muss die Liste leer sein.", required = true, content = 
+                    @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Object.class)))) List<Object> params,
+            @Context HttpServletRequest request) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.BERICHTE_STANDARDFORMULARE_DRUCKEN)) {
+            return DataSchildReportingDatenquelle.getDaten(conn, datenquelle, params);
+        }
+    }
+
 }

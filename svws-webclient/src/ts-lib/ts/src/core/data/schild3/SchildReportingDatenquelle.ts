@@ -9,8 +9,6 @@ export class SchildReportingDatenquelle extends JavaObject {
 
 	public name : String = "";
 
-	public path : String = "";
-
 	public beschreibung : String = "";
 
 	public master : String | null = null;
@@ -31,30 +29,28 @@ export class SchildReportingDatenquelle extends JavaObject {
 	 * Erstellt eine Datenquelle mit den angegebenen Werten
 	 * 
 	 * @param name             der Name der Datenquelle
-	 * @param path             der Teilpfad, unter welchem die Datenquelle zur Verfügung steht
 	 * @param beschreibung     die Beschreibung der Datenquelle
 	 * @param master           die Master-Datenquelle
 	 * @param masterattribut   das identifizierende Attribut der Master-Datenquelle
 	 * @param mastertyp        der Typ des identifizierenden Attributs der Master-Datenquelle
+	 * @param attribute        eine Liste der Attribute
 	 */
-	public constructor(name : String, path : String, beschreibung : String, master : String | null, masterattribut : String | null, mastertyp : SchildReportingAttributTyp | null, attribute : List<SchildReportingDatenquelleAttribut>);
+	public constructor(name : String, beschreibung : String, master : String | null, masterattribut : String | null, mastertyp : SchildReportingAttributTyp | null, attribute : List<SchildReportingDatenquelleAttribut>);
 
 	/**
 	 * Implementation for method overloads of 'constructor'
 	 */
-	public constructor(__param0? : String, __param1? : String, __param2? : String, __param3? : String | null, __param4? : String | null, __param5? : SchildReportingAttributTyp | null, __param6? : List<SchildReportingDatenquelleAttribut>) {
+	public constructor(__param0? : String, __param1? : String, __param2? : String | null, __param3? : String | null, __param4? : SchildReportingAttributTyp | null, __param5? : List<SchildReportingDatenquelleAttribut>) {
 		super();
-		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined") && (typeof __param2 === "undefined") && (typeof __param3 === "undefined") && (typeof __param4 === "undefined") && (typeof __param5 === "undefined") && (typeof __param6 === "undefined")) {
-			} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof String) || (typeof __param0 === "string"))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof String) || (typeof __param1 === "string"))) && ((typeof __param2 !== "undefined") && ((__param2 instanceof String) || (typeof __param2 === "string"))) && ((typeof __param3 !== "undefined") && ((__param3 instanceof String) || (typeof __param3 === "string")) || (__param3 === null)) && ((typeof __param4 !== "undefined") && ((__param4 instanceof String) || (typeof __param4 === "string")) || (__param4 === null)) && ((typeof __param5 !== "undefined") && ((__param5 instanceof JavaObject) && (__param5.isTranspiledInstanceOf('de.nrw.schule.svws.core.types.schild3.SchildReportingAttributTyp'))) || (__param5 === null)) && ((typeof __param6 !== "undefined") && ((__param6 instanceof JavaObject) && (__param6.isTranspiledInstanceOf('java.util.List'))) || (__param6 === null))) {
+		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined") && (typeof __param2 === "undefined") && (typeof __param3 === "undefined") && (typeof __param4 === "undefined") && (typeof __param5 === "undefined")) {
+			} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof String) || (typeof __param0 === "string"))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof String) || (typeof __param1 === "string"))) && ((typeof __param2 !== "undefined") && ((__param2 instanceof String) || (typeof __param2 === "string")) || (__param2 === null)) && ((typeof __param3 !== "undefined") && ((__param3 instanceof String) || (typeof __param3 === "string")) || (__param3 === null)) && ((typeof __param4 !== "undefined") && ((__param4 instanceof JavaObject) && (__param4.isTranspiledInstanceOf('de.nrw.schule.svws.core.types.schild3.SchildReportingAttributTyp'))) || (__param4 === null)) && ((typeof __param5 !== "undefined") && ((__param5 instanceof JavaObject) && (__param5.isTranspiledInstanceOf('java.util.List'))) || (__param5 === null))) {
 			let name : String = __param0;
-			let path : String = __param1;
-			let beschreibung : String = __param2;
-			let master : String | null = __param3;
-			let masterattribut : String | null = __param4;
-			let mastertyp : SchildReportingAttributTyp | null = cast_de_nrw_schule_svws_core_types_schild3_SchildReportingAttributTyp(__param5);
-			let attribute : List<SchildReportingDatenquelleAttribut> = cast_java_util_List(__param6);
+			let beschreibung : String = __param1;
+			let master : String | null = __param2;
+			let masterattribut : String | null = __param3;
+			let mastertyp : SchildReportingAttributTyp | null = cast_de_nrw_schule_svws_core_types_schild3_SchildReportingAttributTyp(__param4);
+			let attribute : List<SchildReportingDatenquelleAttribut> = cast_java_util_List(__param5);
 			this.name = name;
-			this.path = path;
 			this.beschreibung = beschreibung;
 			this.master = master;
 			this.masterattribut = masterattribut;
@@ -73,9 +69,6 @@ export class SchildReportingDatenquelle extends JavaObject {
 		if (typeof obj.name === "undefined")
 			 throw new Error('invalid json format, missing attribute name');
 		result.name = obj.name;
-		if (typeof obj.path === "undefined")
-			 throw new Error('invalid json format, missing attribute path');
-		result.path = obj.path;
 		if (typeof obj.beschreibung === "undefined")
 			 throw new Error('invalid json format, missing attribute beschreibung');
 		result.beschreibung = obj.beschreibung;
@@ -93,7 +86,6 @@ export class SchildReportingDatenquelle extends JavaObject {
 	public static transpilerToJSON(obj : SchildReportingDatenquelle) : string {
 		let result = '{';
 		result += '"name" : ' + '"' + obj.name.valueOf() + '"' + ',';
-		result += '"path" : ' + '"' + obj.path.valueOf() + '"' + ',';
 		result += '"beschreibung" : ' + '"' + obj.beschreibung.valueOf() + '"' + ',';
 		result += '"master" : ' + ((!obj.master) ? 'null' : '"' + obj.master.valueOf() + '"') + ',';
 		result += '"masterattribut" : ' + ((!obj.masterattribut) ? 'null' : '"' + obj.masterattribut.valueOf() + '"') + ',';
@@ -119,9 +111,6 @@ export class SchildReportingDatenquelle extends JavaObject {
 		let result = '{';
 		if (typeof obj.name !== "undefined") {
 			result += '"name" : ' + '"' + obj.name.valueOf() + '"' + ',';
-		}
-		if (typeof obj.path !== "undefined") {
-			result += '"path" : ' + '"' + obj.path.valueOf() + '"' + ',';
 		}
 		if (typeof obj.beschreibung !== "undefined") {
 			result += '"beschreibung" : ' + '"' + obj.beschreibung.valueOf() + '"' + ',';

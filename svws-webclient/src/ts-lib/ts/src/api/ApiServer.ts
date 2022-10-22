@@ -79,6 +79,7 @@ import { LehrerStammdaten, cast_de_nrw_schule_svws_core_data_lehrer_LehrerStammd
 import { List, cast_java_util_List } from '../java/util/List';
 import { JavaLong, cast_java_lang_Long } from '../java/lang/JavaLong';
 import { NationalitaetenKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_NationalitaetenKatalogEintrag } from '../core/data/schule/NationalitaetenKatalogEintrag';
+import { JavaObject, cast_java_lang_Object } from '../java/lang/JavaObject';
 import { OrganisationsformKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_OrganisationsformKatalogEintrag } from '../core/data/schule/OrganisationsformKatalogEintrag';
 import { OrtKatalogEintrag, cast_de_nrw_schule_svws_core_data_kataloge_OrtKatalogEintrag } from '../core/data/kataloge/OrtKatalogEintrag';
 import { OrtsteilKatalogEintrag, cast_de_nrw_schule_svws_core_data_kataloge_OrtsteilKatalogEintrag } from '../core/data/kataloge/OrtsteilKatalogEintrag';
@@ -3940,18 +3941,18 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der GET-Methode getSchild3ReportingDatenquellen für den Zugriff auf die URL https://{hostname}/db/{schema}/schild3/reporting/
 	 * 
-	 * Die Liste der Einträge aus dem Schild-Katalog Versetzungsvermerke / PrfSemAbschl. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 * Die Liste der Einträge im SVWS-Server definierten Schild3-Datenquellen für das Reporting. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung für den Zugriff auf das Reporting besitzt.
 	 * 
 	 * Mögliche HTTP-Antworten: 
-	 *   Code 200: Eine Liste von Katalog-Einträgen für den Schild-Katalog Versetzungsvermerke / PrfSemAbschl
+	 *   Code 200: Eine Liste von Katalog-Einträgen der Einträge im SVWS-Server definierten Schild3-Datenquellen für das Reporting
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: List<Schild3KatalogEintragVersetzungsvermerke>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
-	 *   Code 404: Keine Katalog-Einträge gefunden
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um auf das Reporting zuzigreifen.
+	 *   Code 404: Keine Datenquellen gefunden
 	 * 
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * 
-	 * @returns Eine Liste von Katalog-Einträgen für den Schild-Katalog Versetzungsvermerke / PrfSemAbschl
+	 * @returns Eine Liste von Katalog-Einträgen der Einträge im SVWS-Server definierten Schild3-Datenquellen für das Reporting
 	 */
 	public async getSchild3ReportingDatenquellen(schema : string) : Promise<List<Schild3KatalogEintragVersetzungsvermerke>> {
 		let path : string = "/db/{schema}/schild3/reporting/"
@@ -3962,6 +3963,9 @@ export class ApiServer extends BaseApi {
 		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(Schild3KatalogEintragVersetzungsvermerke.transpilerFromJSON(text)); });
 		return ret;
 	}
+
+
+	// API-Methode getSchild3ReportingDaten konnte nicht nach Typescript transpiliert werden
 
 
 	/**

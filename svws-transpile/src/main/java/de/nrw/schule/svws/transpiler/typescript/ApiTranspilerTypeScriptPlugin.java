@@ -85,7 +85,7 @@ public class ApiTranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				// Es müssen nur Methoden beachtet werden.
 				if (!((member instanceof MethodTree method) && (!"<init>".equals(method.getName().toString()))))
 					continue;
-				// Analsiere die Methode und speichere das Ergebnis der Analyse in der Klasse ApiMethod 
+				// Analsiere die Methode und speichere das Ergebnis der Analyse in der Klasse ApiMethod
 				ApiMethod apiMethod = ApiMethod.getMethod(transpiler, classAnnotations, classTree, method);
 				if (apiMethod == null)
 					continue;
@@ -116,7 +116,7 @@ public class ApiTranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			// Schreibe den allgemeinen Code der API-Klasse
 			String fileData = "export class " + apiClassName + " extends BaseApi {" + System.lineSeparator();
 			fileData += System.lineSeparator();
-			
+
 			// Generiere den Konstruktor
 			fileData += """
 					    \t/**
@@ -132,11 +132,18 @@ public class ApiTranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 					    \t}
 					    
 					    """;
-			
+
 			// Generiere den Code für die API-Methoden
-			for (ApiMethod apiMethod : apiMethods)
-				fileData += apiMethod.getTSMethod();
-			
+			for (ApiMethod apiMethod : apiMethods) {
+                System.out.println("    -> " + apiClassName + "." + apiMethod.name);
+			    if (apiMethod.isTranspilable()) {
+			        fileData += apiMethod.getTSMethod();
+			    } else {
+			        System.out.println("      Methode kann nicht transpiliert werden -> sie wird ausgelassen...");
+			        fileData += "\t// API-Methode " + apiMethod.name + " konnte nicht nach Typescript transpiliert werden" + System.lineSeparator() + System.lineSeparator() + System.lineSeparator();
+			    }
+			}
+
 			// Schliesse den Code der API-Klasse ab.
 			fileData += "}" + System.lineSeparator();
 			

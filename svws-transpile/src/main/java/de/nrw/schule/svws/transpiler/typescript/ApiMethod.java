@@ -350,9 +350,7 @@ public class ApiMethod {
 				if (requestBody.content.isArrayType) {
 					if (httpMethod == ApiHttpMethod.PATCH)
 						throw new TranspilerException("Transpiler Error: Patch Methods are currently not supported for array based json objects (method: " + name + " in API " + api + ")");
-					// TODO implement and remove two lines below
-					System.err.println("Transpiler Error: Must be implemented");
-					System.exit(-1);
+                    result += "\t\tlet body : string = \"[\" + data.toArray().map(d => { Object.transpilerToJSON(d) }).join() + \"]\";" + System.lineSeparator();
 				} else {
 					String tsType = getTSType(requestBody.content); 
 					if ("String".equals(tsType) || "Number".equals(tsType) || "Boolean".equals(tsType)) {
@@ -531,6 +529,27 @@ public class ApiMethod {
 	 */
 	public String getTSMethod() {
 		return getJSDoc() + getTSMethodHead() + " " + getTSMethodBody() + System.lineSeparator();
+	}
+
+
+	/**
+	 * Prüft, ob die API-Methode von dem Transpiler transpiliert werden kann.
+	 * 
+	 * @return true, falls die Methode vermutlich transpiliert werden kann und false,
+	 *         falls bekannte Gründe dagegen sprechen (siehe Implementierung)
+	 */
+	public boolean isTranspilable() {
+	    if (requestBody.exists && (requestBody.content != null) && (requestBody.content.mimetype == ApiMimeType.APPLICATION_JSON)) {
+	        String datatype = (requestBody.content.isArrayType) ? requestBody.content.arrayElementType : requestBody.content.datatype;
+	        if ("Object".equals(datatype))
+	            return false;
+        }
+        if ((returnResponse.content != null) && (this.produces == ApiMimeType.APPLICATION_JSON)) {
+            String datatype = (returnResponse.content.isArrayType) ? returnResponse.content.arrayElementType : returnResponse.content.datatype;
+            if ("Object".equals(datatype))
+                return false;
+        }
+        return true;
 	}
 
 }
