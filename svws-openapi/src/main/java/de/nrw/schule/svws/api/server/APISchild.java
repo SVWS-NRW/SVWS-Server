@@ -366,8 +366,8 @@ public class APISchild {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um auf das Reporting zuzigreifen.")
     @ApiResponse(responseCode = "404", description = "Keine Datenquellen gefunden")
     public Response getSchild3ReportingDatenquellen(@PathParam("schema") String schema, @Context HttpServletRequest request) {
-        try (Benutzer user = OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.BERICHTE_STANDARDFORMULARE_DRUCKEN)) {
-            return DataSchildReportingDatenquelle.getDatenquellen();
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.BERICHTE_STANDARDFORMULARE_DRUCKEN)) {
+            return DataSchildReportingDatenquelle.getDatenquellen(conn);
         }
     }
 

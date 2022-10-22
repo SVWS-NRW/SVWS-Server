@@ -1,7 +1,6 @@
 package de.nrw.schule.svws.core.data.schild3;
 
 import de.nrw.schule.svws.core.transpiler.TranspilerDTO;
-import de.nrw.schule.svws.core.types.schild3.SchildReportingAttributTyp;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -27,25 +26,5 @@ public class SchildReportingDatenquelleAttribut {
     /** Die Beschreibung des Attributs */
     @Schema(required = true, description = "die Beschreibung des Attributs", example = "Der Vorname des Schülers")
     public @NotNull String beschreibung = "";
-
-
-    /**
-     * Erstellt einen Attribut mit Standardwerten
-     */
-    public SchildReportingDatenquelleAttribut() {
-    }
-
-    /**
-     * Erstellt einen Eintrag mit den angegebenen Werten
-     * 
-     * @param name           der Name des Attributs
-     * @param typ            der Typ des Attributs
-     * @param beschreibung   die textuelle Beschreibung der Herkunft
-     */
-    public SchildReportingDatenquelleAttribut(@NotNull String name, @NotNull SchildReportingAttributTyp typ, @NotNull String beschreibung) {
-        this.name = name;
-        this.typ = typ.toString();
-        this.beschreibung = beschreibung;
-    }
 
 }

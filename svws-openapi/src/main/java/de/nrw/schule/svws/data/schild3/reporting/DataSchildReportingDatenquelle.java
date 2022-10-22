@@ -1,6 +1,7 @@
 package de.nrw.schule.svws.data.schild3.reporting;
 
 import java.lang.reflect.Field;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Vector;
@@ -8,8 +9,10 @@ import java.util.Vector;
 import de.nrw.schule.svws.core.data.schild3.SchildReportingDatenquelle;
 import de.nrw.schule.svws.core.data.schild3.SchildReportingDatenquelleAttribut;
 import de.nrw.schule.svws.core.types.schild3.SchildReportingAttributTyp;
+import de.nrw.schule.svws.core.types.statkue.Schulform;
 import de.nrw.schule.svws.data.DataManager;
 import de.nrw.schule.svws.db.DBEntityManager;
+import de.nrw.schule.svws.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.nrw.schule.svws.db.utils.OperationError;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
@@ -32,6 +35,11 @@ public abstract class DataSchildReportingDatenquelle {
 
     /** Der Typ der Master-Datenquelle */
     private SchildReportingAttributTyp mastertyp = null;
+
+    /** Enthält die Schulformen, auf welche die Datenquelle eingeschränkt ist. Ist die Menge leer, so steht die
+     * Datenquelle an allen Schulformen zur Verfügung. */
+    private HashSet<Schulform> schulformen = new HashSet<>();
+
 
     /**
      * Erstellt einen neue Datenquelle für Schild-Reports
@@ -57,9 +65,12 @@ public abstract class DataSchildReportingDatenquelle {
      * @param master           der Name der Master-Datenquelle
      * @param masterattribut   das identifizierende Attribut der Master-Datenquelle
      * @param mastertyp        der Datentyp des identifzierenden Master-Attributes
+     * @param linkattribut     der Name des Attributs dieser Datenquelle, welches für 
+     *                         die Verbindung zu der Master-Datenquelle genutzt wird
      */
-    void setMaster(@NotNull String master, @NotNull String masterattribut, @NotNull SchildReportingAttributTyp mastertyp) {
+    void setMaster(@NotNull String linkattribut, @NotNull String master, @NotNull String masterattribut, @NotNull SchildReportingAttributTyp mastertyp) {
         this.mastertyp = mastertyp;
+        this.datenquelle.linkattribut = linkattribut;
         this.datenquelle.master = master;
         this.datenquelle.masterattribut = masterattribut;
         this.datenquelle.mastertyp = mastertyp.toString();
@@ -101,18 +112,38 @@ public abstract class DataSchildReportingDatenquelle {
             addAttribut(field.getName(), typ, schema.description());
         }
     }
+    
+    
+    /**
+     * Beschränkt die Gültigkeit der Datenquelle auf die übergebenen Schulformen.
+     * Sollte die Methode bereits vorher aufgerufen worden sein,
+     * so werden die Schulformen zu den vorher übergebenen Schulformen ergänzt.  
+     * 
+     * @param schulformen   die Schulformen, für welche die Datenquelle zulässig ist
+     */
+    public void restrictTo(Schulform... schulformen) {
+        for (Schulform sf : schulformen)
+            this.schulformen.add(sf);
+    }
 
 
     /**
      * Liefert eine Liste der Definitionen der im SVWS-Server vorhandenen Schild-Datenquellen zurück.
      * 
+     * @param conn   die Datenbankverbindung des aktuellen SVWS-Benutzers
+     * 
      * @return die HTTP-Response mit der Liste der Definitionen der im SVWS-Server vorhandenen Schild-Datenquellen 
      */
-    public static Response getDatenquellen() {
+    public static Response getDatenquellen(DBEntityManager conn) {
         var datenquellen = getMapDatenquellen();
+        DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
+        if (schule == null)
+            return OperationError.INTERNAL_SERVER_ERROR.getResponse("Kein gültiger Eintrag für die Schule in der Datenbank vorhanden");
         Vector<SchildReportingDatenquelle> result = new Vector<>();
-        for (var datenquelle : datenquellen.values())
-            result.add(datenquelle.datenquelle);
+        for (var datenquelle : datenquellen.values()) {
+            if ((datenquelle.schulformen.size() == 0) || (datenquelle.schulformen.contains(schule.Schulform)))
+                result.add(datenquelle.datenquelle);
+        }
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(result).build();
     }
 

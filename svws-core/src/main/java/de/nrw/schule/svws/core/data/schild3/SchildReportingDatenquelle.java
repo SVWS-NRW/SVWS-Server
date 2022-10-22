@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Vector;
 
 import de.nrw.schule.svws.core.transpiler.TranspilerDTO;
-import de.nrw.schule.svws.core.types.schild3.SchildReportingAttributTyp;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
@@ -39,37 +38,13 @@ public class SchildReportingDatenquelle {
     @Schema(required = true, description = "der Typ des Attributs der Master-Datenquelle (z.B. die ID)", example = "integer")
     public String mastertyp = null;
 
+    /** Der Name des Attributs dieser Datenquelle, welches für die Verbindung zu der Master-Datenquelle genutzt wird */
+    @Schema(required = true, description = "der Name des Attributs dieser Datenquelle, welches für die Verbindung zu der Master-Datenquelle genutzt wird", example = "schuelerID")
+    public String linkattribut = null; 
+
     /** Die Liste der JSON-Attribute für diese Datenquelle. */
     @ArraySchema(schema = @Schema(required = true, implementation = SchildReportingDatenquelleAttribut.class, 
             description = "Die Liste der JSON-Attribute für diese Datenquelle."))
     public @NotNull List<@NotNull SchildReportingDatenquelleAttribut> attribute = new Vector<>();
-
-
-    /**
-     * Erstellt eine Datenquelle mit Standardwerten
-     */
-    public SchildReportingDatenquelle() {
-    }
-
-    /**
-     * Erstellt eine Datenquelle mit den angegebenen Werten
-     * 
-     * @param name             der Name der Datenquelle
-     * @param beschreibung     die Beschreibung der Datenquelle
-     * @param master           die Master-Datenquelle
-     * @param masterattribut   das identifizierende Attribut der Master-Datenquelle
-     * @param mastertyp        der Typ des identifizierenden Attributs der Master-Datenquelle
-     * @param attribute        eine Liste der Attribute
-     */
-    public SchildReportingDatenquelle(@NotNull String name, @NotNull String beschreibung,
-            String master, String masterattribut, SchildReportingAttributTyp mastertyp, 
-            @NotNull List<@NotNull SchildReportingDatenquelleAttribut> attribute) {
-        this.name = name;
-        this.beschreibung = beschreibung;
-        this.master = master;
-        this.masterattribut = masterattribut;
-        this.mastertyp = mastertyp.toString();
-        this.attribute.addAll(attribute);
-    }
 
 }
