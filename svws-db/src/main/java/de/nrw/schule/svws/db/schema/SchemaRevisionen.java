@@ -20,19 +20,19 @@ public enum SchemaRevisionen {
 	 * Dummy Revision, welche anzeigt dass keine Revision definiert ist (z.B. zum kennzeichnen, 
 	 * dass ein Datensatz noch nicht veraltet ist) 
 	 */
-	UNDEFINED(-1, "2022-09-29", null),
+	UNDEFINED(-1, "2022-09-29"),
 	
 	/** 
 	 * Erste Version der SVWS-Datenbank. Das Schema wurde von der letzten Schild-NRW Version 2.x übernommen 
 	 */
-	REV_0(0, "2022-09-29", null),
+	REV_0(0, "2022-09-29"),
 	
 	/**
 	 * Korrekturen an aus Schild2 importierten Daten, bevor weitere Fremdschlüssel mit Revision 2 ergänzt werden. 
 	 * Außerdem: Hinzufügen der Tabelle SchildKursSchueler (Erstellen der Tabelle) für den schnellen Zugriff auf die 
 	 * Schüler-Zuordnung zu Kursen.
 	 */
-	REV_1(1, "2022-09-29", new Revision1Updates()),
+	REV_1(1, "2022-09-29"),
 	
 	/**
 	 * Hinzufügen weitere Fremdschlüssel, um die referentielle Integrität in zukünftigen Revisionen zu verbessern.
@@ -40,37 +40,37 @@ public enum SchemaRevisionen {
 	 * der Leistungsdaten eines Schülers.
 	 * Außerdem wird die Tabelle mit den Daten aus den Leistungsdaten eines Schülers initial befüllt. 
 	 */
-	REV_2(2, "2022-09-29", new Revision2Updates()),
+	REV_2(2, "2022-09-29"),
 	
 	/**
 	 * Befüllen der Foreign-Keys auf die Tabelle K_Ort in den Tabellen K_AllgAdresse, K_Lehrer, Schueler, SchuelerErzAdr
 	 */
-	REV_3(3, "2022-09-29", new Revision3Updates()),
+	REV_3(3, "2022-09-29"),
 	
 	/**
 	 * Tabellen für die Laufbahnplanung in der gymnasialen Oberstufe hinzugefügt.
 	 */
-	REV_4(4, "2022-09-29", null),
+	REV_4(4, "2022-09-29"),
 	
 	/**
 	 * Tabellen für Stundenpläne mit Unterrichts- und Pausenzeiten
 	 */
-	REV_5(5, "2022-09-29", null),
+	REV_5(5, "2022-09-29"),
 	
 	/**
 	 * Erstellen von allgemein nutzbaren Views
 	 */
-	REV_6(6, "2022-09-29", null),
+	REV_6(6, "2022-09-29"),
 	
 	/**
 	 * Tabellen für die Kursblockung in der gymnasialen Oberstufe hinzugefügt
 	 */
-	REV_7(7, "2022-09-29", null),
+	REV_7(7, "2022-09-29"),
 	
 	/**
 	 * Tabellen für DavRessourcen und Sammlungen
 	 */
-	REV_8(8, "2022-09-29", null);
+	REV_8(8, "2022-09-29");
 
 
 	/** 
@@ -98,7 +98,8 @@ public enum SchemaRevisionen {
 	public final LocalDate date; 
 
 	/** Das Objekt mit den Update-Befehlen für diese Revision */
-	public final SchemaRevisionUpdateSQL update;
+	private SchemaRevisionUpdateSQL updater;
+
 
 	/**
 	 * Erstellt eine neue Revision mit der angegebenen Nummer und dem
@@ -107,10 +108,10 @@ public enum SchemaRevisionen {
 	 * @param revision   die Revisionsnummer
 	 * @param date       das Datum, wann diese Revision eingeführt wurde
 	 */
-	private SchemaRevisionen(long revision, String date, SchemaRevisionUpdateSQL update) {
+	private SchemaRevisionen(long revision, String date) {
 		this.revision = revision;
 		this.date = LocalDate.parse(date);
-		this.update = update == null ? new RevisionNoUpdates(this) : update;
+		this.updater = null;
 	}
 	
 	
@@ -134,6 +135,24 @@ public enum SchemaRevisionen {
 	 */
 	public static SchemaRevisionen get(long revision) {
 		return getMapByNumber().get(revision);
+	}
+	
+
+	/**
+     * Gibt ein Objekt mit den Update-Befehlen für diese Revision zurück.
+	 * 
+	 * @return das Objekt für die Updates zu dieser Revision
+	 */
+	public final SchemaRevisionUpdateSQL getUpdater() {
+	    if (updater == null) {
+	        updater = switch(this) {
+	            case REV_1 -> new Revision1Updates();
+                case REV_2 -> new Revision2Updates();
+                case REV_3 -> new Revision3Updates();
+                default -> new RevisionNoUpdates(this);
+	        };
+	    }
+	    return updater;
 	}
 
 }

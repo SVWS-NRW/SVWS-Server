@@ -229,7 +229,7 @@ public class DBSchemaManager {
 		boolean result = true;
 		var dbms = conn.getDBDriver();
 		for (long r = 0; r <= revision; r++) {
-			SchemaRevisionUpdateSQL msqlAll = SchemaRevisionen.get(revision).update; 
+			SchemaRevisionUpdateSQL msqlAll = SchemaRevisionen.get(revision).getUpdater(); 
 			for (int i = 0; i < msqlAll.size(); i++) {
 				String script = msqlAll.getSQL(dbms, i);
 				if ((script == null) || "".equals(script))

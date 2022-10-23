@@ -22,6 +22,7 @@ import de.nrw.schule.svws.db.dto.DTOs;
 import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaRevisionen;
 import de.nrw.schule.svws.db.schema.SchemaTabelle;
+import de.nrw.schule.svws.db.utils.DBDefaultData;
 import de.nrw.schule.svws.shell.CommandLineException;
 import de.nrw.schule.svws.shell.CommandLineOption;
 import de.nrw.schule.svws.shell.CommandLineParser;
@@ -76,7 +77,7 @@ public class SQLGenerator {
 		Class<?> dtoClass = DTOs.getFromTableName(tabelle.name());
 		if (dtoClass == null)
 			throw new RuntimeException("Fehler beim Erstellen des SQL-Skriptes für die Revision " + rev + " zum Einfügen der Default-Daten in die Tabelle " + tabelle.name());
-        var data = CsvReader.fromResource("schema/csv/" + tabelle.javaSubPackage().replace(".", "/") + "/" + tabelle.name() + ".csv", dtoClass);
+        var data = CsvReader.fromResource(DBDefaultData.getFileName(tabelle), dtoClass);
         // Erstelle den einzelnen Zeilen für den Einfüge-Befehl
         List<String> rows = data.stream()
         		.map(dto -> {

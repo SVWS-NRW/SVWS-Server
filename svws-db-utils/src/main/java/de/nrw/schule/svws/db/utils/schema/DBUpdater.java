@@ -858,7 +858,7 @@ public class DBUpdater {
 			logger.log("- Fehler beim Ermitteln der Schema-Revision " + revision);
 			return false;
 		}
-		var sqlBefehle = rev.update;
+		var sqlBefehle = rev.getUpdater();
 		if (sqlBefehle == null) {
 			logger.log("- Fehler beim Ermitteln der SQL-Befehle für die Revision " + revision);
 			return false;
