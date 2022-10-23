@@ -113,10 +113,10 @@ import de.nrw.schule.svws.db.dto.migration.schild.lehrer.MigrationDTOLehrerFunkt
 import de.nrw.schule.svws.db.dto.migration.schild.lehrer.MigrationDTOLehrerLehramt;
 import de.nrw.schule.svws.db.dto.migration.schild.lehrer.MigrationDTOLehrerLehramtBefaehigung;
 import de.nrw.schule.svws.db.dto.migration.schild.lehrer.MigrationDTOLehrerLehramtFachrichtung;
+import de.nrw.schule.svws.db.dto.migration.schild.lehrer.MigrationDTOLehrerLeitungsfunktionKeys;
 import de.nrw.schule.svws.db.dto.migration.schild.lehrer.MigrationDTOLehrerLernplattform;
 import de.nrw.schule.svws.db.dto.migration.schild.lehrer.MigrationDTOLehrerMehrleistung;
 import de.nrw.schule.svws.db.dto.migration.schild.lehrer.MigrationDTOSchulleitung;
-import de.nrw.schule.svws.db.dto.migration.schild.lehrer.MigrationDTOSchulleitungFunktion;
 import de.nrw.schule.svws.db.dto.migration.schild.personengruppen.MigrationDTOPersonengruppen;
 import de.nrw.schule.svws.db.dto.migration.schild.personengruppen.MigrationDTOPersonengruppenPersonen;
 import de.nrw.schule.svws.db.dto.migration.schild.schueler.MigrationDTOEinschulungsart;
@@ -364,10 +364,10 @@ public class MigrationDTOs {
              mapDTOName2DTOClass.put(MigrationDTOLehrerLehramt.class.getSimpleName(),MigrationDTOLehrerLehramt.class);
              mapDTOName2DTOClass.put(MigrationDTOLehrerLehramtBefaehigung.class.getSimpleName(),MigrationDTOLehrerLehramtBefaehigung.class);
              mapDTOName2DTOClass.put(MigrationDTOLehrerLehramtFachrichtung.class.getSimpleName(),MigrationDTOLehrerLehramtFachrichtung.class);
+             mapDTOName2DTOClass.put(MigrationDTOLehrerLeitungsfunktionKeys.class.getSimpleName(),MigrationDTOLehrerLeitungsfunktionKeys.class);
              mapDTOName2DTOClass.put(MigrationDTOLehrerLernplattform.class.getSimpleName(),MigrationDTOLehrerLernplattform.class);
              mapDTOName2DTOClass.put(MigrationDTOLehrerMehrleistung.class.getSimpleName(),MigrationDTOLehrerMehrleistung.class);
              mapDTOName2DTOClass.put(MigrationDTOSchulleitung.class.getSimpleName(),MigrationDTOSchulleitung.class);
-             mapDTOName2DTOClass.put(MigrationDTOSchulleitungFunktion.class.getSimpleName(),MigrationDTOSchulleitungFunktion.class);
              mapDTOName2DTOClass.put(MigrationDTOPersonengruppen.class.getSimpleName(),MigrationDTOPersonengruppen.class);
              mapDTOName2DTOClass.put(MigrationDTOPersonengruppenPersonen.class.getSimpleName(),MigrationDTOPersonengruppenPersonen.class);
              mapDTOName2DTOClass.put(MigrationDTOEinschulungsart.class.getSimpleName(),MigrationDTOEinschulungsart.class);
@@ -618,10 +618,10 @@ public class MigrationDTOs {
              mapTablename2DTOClass.put("LehrerLehramt",MigrationDTOLehrerLehramt.class);
              mapTablename2DTOClass.put("LehrerLehramtLehrbef",MigrationDTOLehrerLehramtBefaehigung.class);
              mapTablename2DTOClass.put("LehrerLehramtFachr",MigrationDTOLehrerLehramtFachrichtung.class);
+             mapTablename2DTOClass.put("LehrerLeitungsfunktion_Keys",MigrationDTOLehrerLeitungsfunktionKeys.class);
              mapTablename2DTOClass.put("LehrerLernplattform",MigrationDTOLehrerLernplattform.class);
              mapTablename2DTOClass.put("LehrerMehrleistung",MigrationDTOLehrerMehrleistung.class);
              mapTablename2DTOClass.put("Schulleitung",MigrationDTOSchulleitung.class);
-             mapTablename2DTOClass.put("SchulleitungFunktion",MigrationDTOSchulleitungFunktion.class);
              mapTablename2DTOClass.put("Personengruppen",MigrationDTOPersonengruppen.class);
              mapTablename2DTOClass.put("Personengruppen_Personen",MigrationDTOPersonengruppenPersonen.class);
              mapTablename2DTOClass.put("K_EinschulungsArt",MigrationDTOEinschulungsart.class);

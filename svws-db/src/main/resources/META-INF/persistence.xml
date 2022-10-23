@@ -136,10 +136,10 @@
         <class>de.nrw.schule.svws.db.dto.migration.schild.lehrer.MigrationDTOLehrerLehramt</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.lehrer.MigrationDTOLehrerLehramtBefaehigung</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.lehrer.MigrationDTOLehrerLehramtFachrichtung</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schild.lehrer.MigrationDTOLehrerLeitungsfunktionKeys</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.lehrer.MigrationDTOLehrerLernplattform</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.lehrer.MigrationDTOLehrerMehrleistung</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.lehrer.MigrationDTOSchulleitung</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.lehrer.MigrationDTOSchulleitungFunktion</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.personengruppen.MigrationDTOPersonengruppen</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.personengruppen.MigrationDTOPersonengruppenPersonen</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.schueler.MigrationDTOEinschulungsart</class>
@@ -379,10 +379,10 @@
         <class>de.nrw.schule.svws.db.dto.current.schild.lehrer.DTOLehrerLehramt</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.lehrer.DTOLehrerLehramtBefaehigung</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.lehrer.DTOLehrerLehramtFachrichtung</class>
+        <class>de.nrw.schule.svws.db.dto.current.schild.lehrer.DTOLehrerLeitungsfunktionKeys</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.lehrer.DTOLehrerLernplattform</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.lehrer.DTOLehrerMehrleistung</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.lehrer.DTOSchulleitung</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.lehrer.DTOSchulleitungFunktion</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.personengruppen.DTOPersonengruppen</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.personengruppen.DTOPersonengruppenPersonen</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.schueler.DTOEinschulungsart</class>
@@ -665,10 +665,10 @@
         <class>de.nrw.schule.svws.db.dto.rev8.schild.lehrer.Rev8DTOLehrerLehramt</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.lehrer.Rev8DTOLehrerLehramtBefaehigung</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.lehrer.Rev8DTOLehrerLehramtFachrichtung</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schild.lehrer.Rev8DTOLehrerLeitungsfunktionKeys</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.lehrer.Rev8DTOLehrerLernplattform</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.lehrer.Rev8DTOLehrerMehrleistung</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.lehrer.Rev8DTOSchulleitung</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.lehrer.Rev8DTOSchulleitungFunktion</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.personengruppen.Rev8DTOPersonengruppen</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.personengruppen.Rev8DTOPersonengruppenPersonen</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.schueler.Rev8DTOEinschulungsart</class>

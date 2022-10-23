@@ -48,7 +48,7 @@ public class Tabelle_Schulleitung extends SchemaTabelle {
 			"Schulleitung_Leitungsfunktion_FK", 
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
 			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
-			new Pair<>(col_LeitungsfunktionID, Schema.tab_SchulleitungFunktion.col_ID)
+			new Pair<>(col_LeitungsfunktionID, Schema.tab_LehrerLeitungsfunktion_Keys.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels Schulleitung_Lehrer_FK */

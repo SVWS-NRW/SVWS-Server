@@ -681,8 +681,8 @@ public class Schema {
 	/** Tabelle SchuelerWiedervorlage */
 	public static final Tabelle_SchuelerWiedervorlage tab_SchuelerWiedervorlage = add(new Tabelle_SchuelerWiedervorlage());
 
-	/** Tabelle SchulleitungFunktion */
-	public static final Tabelle_SchulleitungFunktion tab_SchulleitungFunktion = add(new Tabelle_SchulleitungFunktion());
+	/** Tabelle LehrerLeitungsfunktion_Keys */
+	public static final Tabelle_LehrerLeitungsfunktion_Keys tab_LehrerLeitungsfunktion_Keys = add(new Tabelle_LehrerLeitungsfunktion_Keys());
 
 	/** Tabelle Schulleitung */
 	public static final Tabelle_Schulleitung tab_Schulleitung = add(new Tabelle_Schulleitung());
@@ -849,7 +849,6 @@ public class Schema {
 		Schema.tab_Schildintern_SchuelerImpExp,
 		Schema.tab_Schildintern_TextExport,
 		Schema.tab_Schildintern_UnicodeUmwandlung,
-		Schema.tab_SchulleitungFunktion,
 		Schema.tab_Schulver_DBS,
 		Schema.tab_Schulver_Schultraeger,
 		Schema.tab_Statkue_Abgangsart,

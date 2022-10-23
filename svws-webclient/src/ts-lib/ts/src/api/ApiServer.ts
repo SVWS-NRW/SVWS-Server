@@ -68,7 +68,7 @@ import { LehrerKatalogLehramtAnerkennungEintrag, cast_de_nrw_schule_svws_core_da
 import { LehrerKatalogLehramtEintrag, cast_de_nrw_schule_svws_core_data_lehrer_LehrerKatalogLehramtEintrag } from '../core/data/lehrer/LehrerKatalogLehramtEintrag';
 import { LehrerKatalogLehrbefaehigungAnerkennungEintrag, cast_de_nrw_schule_svws_core_data_lehrer_LehrerKatalogLehrbefaehigungAnerkennungEintrag } from '../core/data/lehrer/LehrerKatalogLehrbefaehigungAnerkennungEintrag';
 import { LehrerKatalogLehrbefaehigungEintrag, cast_de_nrw_schule_svws_core_data_lehrer_LehrerKatalogLehrbefaehigungEintrag } from '../core/data/lehrer/LehrerKatalogLehrbefaehigungEintrag';
-import { LehrerKatalogLeitungsfunktionEintrag, cast_de_nrw_schule_svws_core_data_lehrer_LehrerKatalogLeitungsfunktionEintrag } from '../core/data/lehrer/LehrerKatalogLeitungsfunktionEintrag';
+import { LehrerKatalogLeitungsfunktionenEintrag, cast_de_nrw_schule_svws_core_data_lehrer_LehrerKatalogLeitungsfunktionenEintrag } from '../core/data/lehrer/LehrerKatalogLeitungsfunktionenEintrag';
 import { LehrerKatalogMehrleistungsartEintrag, cast_de_nrw_schule_svws_core_data_lehrer_LehrerKatalogMehrleistungsartEintrag } from '../core/data/lehrer/LehrerKatalogMehrleistungsartEintrag';
 import { LehrerKatalogMinderleistungsartEintrag, cast_de_nrw_schule_svws_core_data_lehrer_LehrerKatalogMinderleistungsartEintrag } from '../core/data/lehrer/LehrerKatalogMinderleistungsartEintrag';
 import { LehrerKatalogRechtsverhaeltnisEintrag, cast_de_nrw_schule_svws_core_data_lehrer_LehrerKatalogRechtsverhaeltnisEintrag } from '../core/data/lehrer/LehrerKatalogRechtsverhaeltnisEintrag';
@@ -3622,7 +3622,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten: 
 	 *   Code 200: Eine Liste von Lehrerleitungsfunktion-Katalog-Einträgen
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<LehrerKatalogLeitungsfunktionEintrag>
+	 *     - Rückgabe-Typ: List<LehrerKatalogLeitungsfunktionenEintrag>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
 	 *   Code 404: Keine Lehrerleitungsfunktion-Katalog-Einträge gefunden
 	 * 
@@ -3630,13 +3630,13 @@ export class ApiServer extends BaseApi {
 	 * 
 	 * @returns Eine Liste von Lehrerleitungsfunktion-Katalog-Einträgen
 	 */
-	public async getLehrerLeitungsfunktionen(schema : string) : Promise<List<LehrerKatalogLeitungsfunktionEintrag>> {
+	public async getLehrerLeitungsfunktionen(schema : string) : Promise<List<LehrerKatalogLeitungsfunktionenEintrag>> {
 		let path : string = "/db/{schema}/lehrer/leitungsfunktionen"
 				.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		let ret = new Vector<LehrerKatalogLeitungsfunktionEintrag>();
-		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(LehrerKatalogLeitungsfunktionEintrag.transpilerFromJSON(text)); });
+		let ret = new Vector<LehrerKatalogLeitungsfunktionenEintrag>();
+		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(LehrerKatalogLeitungsfunktionenEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 

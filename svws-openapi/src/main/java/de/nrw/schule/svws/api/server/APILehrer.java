@@ -2,17 +2,6 @@ package de.nrw.schule.svws.api.server;
 
 import java.io.InputStream;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.PATCH;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.Context;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-
 import de.nrw.schule.svws.api.OpenAPIApplication;
 import de.nrw.schule.svws.core.data.lehrer.LehrerKatalogAbgangsgrundEintrag;
 import de.nrw.schule.svws.core.data.lehrer.LehrerKatalogAnrechnungsgrundEintrag;
@@ -24,7 +13,6 @@ import de.nrw.schule.svws.core.data.lehrer.LehrerKatalogLehramtAnerkennungEintra
 import de.nrw.schule.svws.core.data.lehrer.LehrerKatalogLehramtEintrag;
 import de.nrw.schule.svws.core.data.lehrer.LehrerKatalogLehrbefaehigungAnerkennungEintrag;
 import de.nrw.schule.svws.core.data.lehrer.LehrerKatalogLehrbefaehigungEintrag;
-import de.nrw.schule.svws.core.data.lehrer.LehrerKatalogLeitungsfunktionEintrag;
 import de.nrw.schule.svws.core.data.lehrer.LehrerKatalogMehrleistungsartEintrag;
 import de.nrw.schule.svws.core.data.lehrer.LehrerKatalogMinderleistungsartEintrag;
 import de.nrw.schule.svws.core.data.lehrer.LehrerKatalogRechtsverhaeltnisEintrag;
@@ -32,6 +20,7 @@ import de.nrw.schule.svws.core.data.lehrer.LehrerKatalogZugangsgrundEintrag;
 import de.nrw.schule.svws.core.data.lehrer.LehrerListeEintrag;
 import de.nrw.schule.svws.core.data.lehrer.LehrerPersonaldaten;
 import de.nrw.schule.svws.core.data.lehrer.LehrerStammdaten;
+import de.nrw.schule.svws.core.data.lehrer.LehrerKatalogLeitungsfunktionenEintrag;
 import de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenz;
 import de.nrw.schule.svws.data.lehrer.DataKatalogLehrerAbgangsgruende;
 import de.nrw.schule.svws.data.lehrer.DataKatalogLehrerAnrechnungsgruende;
@@ -45,9 +34,9 @@ import de.nrw.schule.svws.data.lehrer.DataKatalogLehrerLehrbefaehigungAnerkennun
 import de.nrw.schule.svws.data.lehrer.DataKatalogLehrerLehrbefaehigungen;
 import de.nrw.schule.svws.data.lehrer.DataKatalogLehrerLeitungsfunktionen;
 import de.nrw.schule.svws.data.lehrer.DataKatalogLehrerMehrleistungsarten;
+import de.nrw.schule.svws.data.lehrer.DataKatalogLehrerMinderleistungsarten;
 import de.nrw.schule.svws.data.lehrer.DataKatalogLehrerRechtsverhaeltnis;
 import de.nrw.schule.svws.data.lehrer.DataKatalogLehrerZugangsgruende;
-import de.nrw.schule.svws.data.lehrer.DataKatalogLehrerMinderleistungsarten;
 import de.nrw.schule.svws.data.lehrer.DataLehrerPersonaldaten;
 import de.nrw.schule.svws.data.lehrer.DataLehrerStammdaten;
 import de.nrw.schule.svws.data.lehrer.DataLehrerliste;
@@ -59,6 +48,16 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.PATCH;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 
 /**
@@ -241,12 +240,12 @@ public class APILehrer {
                		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen "
                		       + "besitzt.")
     @ApiResponse(responseCode = "200", description = "Eine Liste von Lehrerleitungsfunktion-Katalog-Einträgen",
-                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = LehrerKatalogLeitungsfunktionEintrag.class))))
+                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = LehrerKatalogLeitungsfunktionenEintrag.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Lehrerleitungsfunktion-Katalog-Einträge gefunden")
     public Response getLehrerLeitungsfunktionen(@PathParam("schema") String schema, @Context HttpServletRequest request) {
         try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
-            return (new DataKatalogLehrerLeitungsfunktionen(conn)).getList();
+            return (new DataKatalogLehrerLeitungsfunktionen()).getList();
         }
     }
     

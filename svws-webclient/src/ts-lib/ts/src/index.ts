@@ -187,7 +187,7 @@ export { LehrerKatalogLehramtAnerkennungEintrag } from './core/data/lehrer/Lehre
 export { LehrerKatalogLehramtEintrag } from './core/data/lehrer/LehrerKatalogLehramtEintrag';
 export { LehrerKatalogLehrbefaehigungAnerkennungEintrag } from './core/data/lehrer/LehrerKatalogLehrbefaehigungAnerkennungEintrag';
 export { LehrerKatalogLehrbefaehigungEintrag } from './core/data/lehrer/LehrerKatalogLehrbefaehigungEintrag';
-export { LehrerKatalogLeitungsfunktionEintrag } from './core/data/lehrer/LehrerKatalogLeitungsfunktionEintrag';
+export { LehrerKatalogLeitungsfunktionenEintrag } from './core/data/lehrer/LehrerKatalogLeitungsfunktionenEintrag';
 export { LehrerKatalogMehrleistungsartEintrag } from './core/data/lehrer/LehrerKatalogMehrleistungsartEintrag';
 export { LehrerKatalogMinderleistungsartEintrag } from './core/data/lehrer/LehrerKatalogMinderleistungsartEintrag';
 export { LehrerKatalogRechtsverhaeltnisEintrag } from './core/data/lehrer/LehrerKatalogRechtsverhaeltnisEintrag';
@@ -353,6 +353,7 @@ export { KAOAZusatzmerkmal } from './core/types/kaoa/KAOAZusatzmerkmal';
 export { KAOAZusatzmerkmaleOptionsarten } from './core/types/kaoa/KAOAZusatzmerkmaleOptionsarten';
 export { GostKursblockungRegelParameterTyp } from './core/types/kursblockung/GostKursblockungRegelParameterTyp';
 export { GostKursblockungRegelTyp } from './core/types/kursblockung/GostKursblockungRegelTyp';
+export { LehrerLeitungsfunktion } from './core/types/lehrer/LehrerLeitungsfunktion';
 export { SchildReportingAttributTyp } from './core/types/schild3/SchildReportingAttributTyp';
 export { AllgemeinbildendOrganisationsformen } from './core/types/schule/AllgemeinbildendOrganisationsformen';
 export { BerufskollegAnlage } from './core/types/schule/BerufskollegAnlage';

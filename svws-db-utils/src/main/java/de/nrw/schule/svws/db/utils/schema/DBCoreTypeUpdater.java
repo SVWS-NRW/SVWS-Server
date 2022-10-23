@@ -53,6 +53,7 @@ import de.nrw.schule.svws.core.types.PersonalTyp;
 import de.nrw.schule.svws.core.types.SchuelerStatus;
 import de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenz;
 import de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenzGruppe;
+import de.nrw.schule.svws.core.types.lehrer.LehrerLeitungsfunktion;
 import de.nrw.schule.svws.core.types.schule.AllgemeinbildendOrganisationsformen;
 import de.nrw.schule.svws.core.types.schule.BerufskollegAnlage;
 import de.nrw.schule.svws.core.types.schule.BerufskollegBerufsebene1;
@@ -201,6 +202,7 @@ public class DBCoreTypeUpdater {
 		tables.add(new CoreTypeTable("OrganisationsformenKatalog", BerufskollegOrganisationsformen.VERSION + WeiterbildungskollegOrganisationsformen.VERSION + AllgemeinbildendOrganisationsformen.VERSION, updateOrganisationsformen));
 		tables.add(new CoreTypeTable("OrganisationsformenKatalog_Keys", BerufskollegOrganisationsformen.VERSION + WeiterbildungskollegOrganisationsformen.VERSION + AllgemeinbildendOrganisationsformen.VERSION, updateOrganisationsformenKeys));
 		tables.add(new CoreTypeTable("OrganisationsformenKatalog_Schulformen", BerufskollegOrganisationsformen.VERSION + WeiterbildungskollegOrganisationsformen.VERSION + AllgemeinbildendOrganisationsformen.VERSION, updateOrganisationsformenSchulformen));
+        tables.add(new CoreTypeTable("LehrerLeitungsfunktion_Keys", LehrerLeitungsfunktion.VERSION, updateLehrerLeitungsfunktionenKeys));
 	}
 	
 
@@ -2294,6 +2296,19 @@ public class DBCoreTypeUpdater {
 			sql.toString()
 		);
 	};
+
+
+    /**
+     * Aktualisiert die Tabelle für den Core-Type LehrerLeitungsfunktion 
+     */
+    private Consumer<Logger> updateLehrerLeitungsfunktionenKeys = (Logger logger) -> {
+        String tabname = "LehrerLeitungsfunktion_Keys";
+        logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
+        updateCoreTypeTabelle(tabname, LehrerLeitungsfunktion.class.getCanonicalName(), LehrerLeitungsfunktion.VERSION, 
+            Arrays.stream(LehrerLeitungsfunktion.values()).map(h -> "" + h.daten.id).distinct()
+                .collect(Collectors.joining("), (", "INSERT INTO " + tabname + "(ID) VALUES (", ")"))
+        );
+    };
 
 
 	/**
