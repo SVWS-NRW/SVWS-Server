@@ -887,7 +887,7 @@ public class Schema {
 		result.add("INSERT INTO BenutzerAllgemein(ID,AnzeigeName,CredentialID) VALUES "
 				 + "(1,'Administrator',1);");
 		result.add("INSERT INTO Benutzer(ID, Typ, Allgemein_ID, Lehrer_ID, Schueler_ID, Erzieher_ID, IstAdmin) VALUES "
-				 + "(1, 0, 1, NULL, NULL, NULL, 1)");
+				 + "(1, 0, 1, NULL, NULL, NULL, 1);");
 		result.add("INSERT INTO Benutzergruppen(ID, Bezeichnung, IstAdmin) VALUES "
 				 + "(1, 'Administrator', 1),"
 				 + "(2, 'Lehrer', 0),"
