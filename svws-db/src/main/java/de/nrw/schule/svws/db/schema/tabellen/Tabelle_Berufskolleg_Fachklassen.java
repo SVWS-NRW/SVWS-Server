@@ -1,9 +1,14 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
+import java.util.Collection;
+
+import de.nrw.schule.svws.core.utils.schule.BerufskollegFachklassenManager;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaRevisionen;
 import de.nrw.schule.svws.db.schema.SchemaTabelle;
+import de.nrw.schule.svws.db.schema.SchemaTabelleCoreType;
 import de.nrw.schule.svws.db.schema.SchemaTabelleSpalte;
+import de.nrw.schule.svws.json.JsonDaten;
 
 /**
  * Diese Klasse beinhaltet die Schema-Definition für die Tabelle Berufskolleg_Fachklassen.
@@ -96,6 +101,18 @@ public class Tabelle_Berufskolleg_Fachklassen extends SchemaTabelle {
 		setJavaSubPackage("schild.schule");
 		setJavaClassName("DTOBerufskollegFachklassen");
 		setJavaComment("Fachklassen des Berufskollegs");
+        setCoreType(new SchemaTabelleCoreType(this, BerufskollegFachklassenManager.class, JsonDaten.fachklassenManager.getVersion(), (rev) ->
+            JsonDaten.fachklassenManager.getKatalog().indizes.stream()
+            .map(i -> i.fachklassen.stream()
+                .map(f -> f.historie.stream() 
+                    .map(h -> h.id + "," + i.index + ",'" + f.schluessel + "','" + f.schluessel2 + "',"
+                            + (h.istAusgelaufen ? 1 : 0) + ",'" + h.berufsfeldGruppe + "','"
+                            + h.berufsfeld + "','" + h.ebene1 + "','" + h.ebene2 + "','" + h.ebene3 + "','"
+                            + h.bezeichnung + "','" + h.bezeichnungM + "','" + h.bezeichnungW + "',"
+                            + h.gueltigVon + "," + h.gueltigBis)
+                    .toList()
+                ).flatMap(Collection::stream).toList()
+            ).flatMap(Collection::stream).toList()));
 	}
 
 }

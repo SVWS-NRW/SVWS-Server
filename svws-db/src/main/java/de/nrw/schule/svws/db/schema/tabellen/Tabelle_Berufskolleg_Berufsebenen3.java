@@ -1,8 +1,13 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
+import java.util.Arrays;
+import java.util.Collection;
+
+import de.nrw.schule.svws.core.types.schule.BerufskollegBerufsebene3;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaRevisionen;
 import de.nrw.schule.svws.db.schema.SchemaTabelle;
+import de.nrw.schule.svws.db.schema.SchemaTabelleCoreType;
 import de.nrw.schule.svws.db.schema.SchemaTabelleSpalte;
 
 /**
@@ -44,6 +49,12 @@ public class Tabelle_Berufskolleg_Berufsebenen3 extends SchemaTabelle {
 		setJavaSubPackage("schild.schule");
 		setJavaClassName("DTOBerufskollegBerufsebenen3");
 		setJavaComment("Informationen Berufsebenen der Ebene 3 des Berufskollegs");
+        setCoreType(new SchemaTabelleCoreType(this, BerufskollegBerufsebene3.class, BerufskollegBerufsebene3.VERSION, (rev) -> Arrays
+            .stream(BerufskollegBerufsebene3.values())
+            .map(a -> Arrays.stream(a.historie)
+                .map(h -> h.id + ",'" + h.kuerzel + "'" + ",'" + h.bezeichnung + "'" + "," + h.gueltigVon + "," + h.gueltigBis)
+                .toList()
+            ).flatMap(Collection::stream).toList()));
 	}
 
 }

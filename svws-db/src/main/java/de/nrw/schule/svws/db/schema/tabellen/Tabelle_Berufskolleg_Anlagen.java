@@ -1,10 +1,15 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
+import java.util.Arrays;
+import java.util.Collection;
+
+import de.nrw.schule.svws.core.types.schule.BerufskollegAnlage;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaRevisionen;
 import de.nrw.schule.svws.db.schema.SchemaTabelle;
-import de.nrw.schule.svws.db.schema.SchemaTabelleUniqueIndex;
+import de.nrw.schule.svws.db.schema.SchemaTabelleCoreType;
 import de.nrw.schule.svws.db.schema.SchemaTabelleSpalte;
+import de.nrw.schule.svws.db.schema.SchemaTabelleUniqueIndex;
 
 /**
  * Diese Klasse beinhaltet die Schema-Definition für die Tabelle Berufskolleg_Anlagen.
@@ -51,6 +56,12 @@ public class Tabelle_Berufskolleg_Anlagen extends SchemaTabelle {
 		setJavaSubPackage("schild.schule");
 		setJavaClassName("DTOBerufskollegAnlagen");
 		setJavaComment("Informationen Anlagen des Berufskollegs");
+        setCoreType(new SchemaTabelleCoreType(this, BerufskollegAnlage.class, BerufskollegAnlage.VERSION, (rev) -> Arrays
+            .stream(BerufskollegAnlage.values())
+            .map(a -> Arrays.stream(a.historie)
+                .map(h -> h.id + ",'" + h.kuerzel + "'" + ",'" + h.bezeichnung + "'" + "," + h.gueltigVon + "," + h.gueltigBis)
+                .toList()
+            ).flatMap(Collection::stream).toList()));
 	}
 
 }
