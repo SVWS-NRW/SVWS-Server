@@ -63,6 +63,9 @@ public class SchemaTabelle {
 
 	/** Die Trigger, die dieser Tabelle zugeordnet sind */
 	private Vector<SchemaTabelleTrigger> _trigger = new Vector<>();
+	
+	/** Der Core-Type, welcher dieser Tabelle für Update-Prozesse zugeordnet ist. */
+	private SchemaTabelleCoreType _coreType = null;
 
 
 	/**
@@ -386,6 +389,39 @@ public class SchemaTabelle {
 		_trigger.add(trig);
 		return trig;
 	}
+	
+
+	/**
+	 * Ordnet dieser Tabelle einen Core-Type zu.
+	 * 
+	 * @param coreType    die Klasse mit den Informationen zur des Core-Types
+	 */
+	public void setCoreType(SchemaTabelleCoreType coreType) {
+	    if (_coreType != null)
+	        throw new RuntimeException("Der Tabelle wurde bereits zuvor ein Core-Type zugeordnet. Zwei Zuordnungen sind nicht zulässig.");
+	    _coreType = coreType;
+	}
+	
+	
+	/**
+	 * Gibt zurück, ob diese Tabelle einen Core-Type zugeordnet hat oder nicht.
+	 * 
+	 * @return true, falls ein Core-Type zugeordet ist und ansonsten false
+	 */
+	public boolean hasCoreType() {
+	    return (_coreType != null);
+	}
+
+
+    /**
+     * Gibt die Core-Type-Zuordnung dieser Tabelle zurück, falls
+     * einer zugeordnet ist. Ansonsten wird null zurückgegeben.
+     * 
+     * @return die Core-Type-Zuordnung oder null
+     */
+    public SchemaTabelleCoreType getCoreType() {
+        return _coreType;
+    }
 
 
     /**

@@ -1,24 +1,18 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
+import java.util.Arrays;
+
+import de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenzGruppe;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaRevisionen;
 import de.nrw.schule.svws.db.schema.SchemaTabelle;
+import de.nrw.schule.svws.db.schema.SchemaTabelleCoreType;
 import de.nrw.schule.svws.db.schema.SchemaTabelleSpalte;
 
 /**
  * Diese Klasse beinhaltet die Schema-Definition für die Tabelle Kompetenzgruppen.
  */
 public class Tabelle_Kompetenzgruppen extends SchemaTabelle {
-
-	/** Die Definition der Tabellenspalte KG_Spalte */
-	public SchemaTabelleSpalte col_KG_Spalte = add("KG_Spalte", SchemaDatentypen.BIGINT, false)
-		.setNotNull()
-		.setJavaComment("Spalte in der Benutzerverwaltung für die Kompetenzgruppe");
-
-	/** Die Definition der Tabellenspalte KG_Zeile */
-	public SchemaTabelleSpalte col_KG_Zeile = add("KG_Zeile", SchemaDatentypen.BIGINT, false)
-		.setNotNull()
-		.setJavaComment("Zeile in der Benutzerverwaltung für die Kompetenzgruppe");
 
 	/** Die Definition der Tabellenspalte KG_ID */
 	public SchemaTabelleSpalte col_KG_ID = add("KG_ID", SchemaDatentypen.BIGINT, true)
@@ -29,6 +23,16 @@ public class Tabelle_Kompetenzgruppen extends SchemaTabelle {
 	public SchemaTabelleSpalte col_KG_Bezeichnung = add("KG_Bezeichnung", SchemaDatentypen.VARCHAR, false).setDatenlaenge(50)
 		.setNotNull()
 		.setJavaComment("Bezeichnung der Kompetenzgruppe");
+
+    /** Die Definition der Tabellenspalte KG_Spalte */
+    public SchemaTabelleSpalte col_KG_Spalte = add("KG_Spalte", SchemaDatentypen.BIGINT, false)
+        .setNotNull()
+        .setJavaComment("Spalte in der Benutzerverwaltung für die Kompetenzgruppe");
+
+    /** Die Definition der Tabellenspalte KG_Zeile */
+    public SchemaTabelleSpalte col_KG_Zeile = add("KG_Zeile", SchemaDatentypen.BIGINT, false)
+        .setNotNull()
+        .setJavaComment("Zeile in der Benutzerverwaltung für die Kompetenzgruppe");
 
 
 	/**
@@ -41,6 +45,10 @@ public class Tabelle_Kompetenzgruppen extends SchemaTabelle {
 		setJavaSubPackage("schild.benutzer");
 		setJavaClassName("DTOKatalogBenutzerKompetenzGruppe");
 		setJavaComment("definierte Usergruppen, die wiederum die Kompetenzen enthält");
+        setCoreType(new SchemaTabelleCoreType(this, BenutzerKompetenzGruppe.class, BenutzerKompetenzGruppe.VERSION, (rev) -> Arrays
+            .stream(BenutzerKompetenzGruppe.values())
+            .map(k -> k.daten.id + ",'" + k.daten.bezeichnung + "'" + "," + k.daten.spalte + "," + k.daten.zeile)
+            .toList()));
 	}
 
 }

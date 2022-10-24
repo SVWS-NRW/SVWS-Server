@@ -51,8 +51,6 @@ import de.nrw.schule.svws.core.types.KursFortschreibungsart;
 import de.nrw.schule.svws.core.types.Note;
 import de.nrw.schule.svws.core.types.PersonalTyp;
 import de.nrw.schule.svws.core.types.SchuelerStatus;
-import de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenz;
-import de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenzGruppe;
 import de.nrw.schule.svws.core.types.lehrer.LehrerLeitungsfunktion;
 import de.nrw.schule.svws.core.types.schule.AllgemeinbildendOrganisationsformen;
 import de.nrw.schule.svws.core.types.schule.BerufskollegAnlage;
@@ -96,6 +94,9 @@ import de.nrw.schule.svws.core.utils.schule.BerufskollegFachklassenManager;
 import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.DBException;
 import de.nrw.schule.svws.db.dto.current.svws.db.DTOCoreTypeVersion;
+import de.nrw.schule.svws.db.schema.Schema;
+import de.nrw.schule.svws.db.schema.SchemaTabelle;
+import de.nrw.schule.svws.db.schema.SchemaTabelleCoreType;
 import de.nrw.schule.svws.json.JsonDaten;
 import de.nrw.schule.svws.logger.Logger;
 
@@ -135,8 +136,6 @@ public class DBCoreTypeUpdater {
 		this.schemaManager = schemaManager;
 		this.logger = schemaManager.getLogger();
 		this.status = schemaManager.getSchemaStatus();
-		tables.add(new CoreTypeTable("Kompetenzgruppen", BenutzerKompetenzGruppe.VERSION, updateBenutzerKompetenzGruppen));
-		tables.add(new CoreTypeTable("Kompetenzen", BenutzerKompetenz.VERSION, updateBenutzerKompetenzen));
 		tables.add(new CoreTypeTable("Berufskolleg_Anlagen", BerufskollegAnlage.VERSION, updateBerufskollegAnlagen));
 		tables.add(new CoreTypeTable("Berufskolleg_Berufsebenen1", BerufskollegBerufsebene1.VERSION, updateBerufskollegBerufsebene1));
 		tables.add(new CoreTypeTable("Berufskolleg_Berufsebenen2", BerufskollegBerufsebene2.VERSION, updateBerufskollegBerufsebene2));
@@ -234,6 +233,18 @@ public class DBCoreTypeUpdater {
 	public boolean isUpdatable() {
 		// Prüfe zunächst, ob ein Update möglich ist
 		status.update();
+		long status_revision = 0;
+		try { status_revision = status.version.getRevision(); } catch (Exception e) { }
+        for (SchemaTabelle tab : Schema.getTabellen(status_revision)) {
+            if (!tab.hasCoreType())
+                continue;
+            DTOCoreTypeVersion v = status.getCoreTypeVersion(tab.name());
+            if ((v == null) || (v.Version == null))
+                continue; // Bisher keine Version gespeichert - Update also möglich
+            if  (Long.compare(tab.getCoreType().getCoreTypeVersion(), v.Version) < 0)
+                return false;  // Die Version des Core-Types ist kleiner als die Version in der DB
+        }
+        // TODO unten deprecated, oben aktuell
 		for (CoreTypeTable entry : tables) {
 			DTOCoreTypeVersion v = status.getCoreTypeVersion(entry.name);
 			if ((v == null) || (v.Version == null))
@@ -270,7 +281,19 @@ public class DBCoreTypeUpdater {
 				revision = status.getVersion().getRevisionOrDefault(-1);
 			if (revision < 0)
 				throw new DBException("Core-Types können nicht aktualisiert werden, da die Revision der Datenbank nicht bestimmt werden kann.");
-			// Aktualisiere ggf. die Daten der einzelnen Core-Types
+            // Aktualisiere ggf. die Daten der einzelnen Core-Types
+	        long status_revision = 0;
+	        try { status_revision = status.version.getRevision(); } catch (Exception e) { }
+            for (SchemaTabelle tab : Schema.getTabellen(status_revision)) {
+                if (!tab.hasCoreType())
+                    continue;
+                SchemaTabelleCoreType ct = tab.getCoreType();
+                if (pruefeVersion(tab.name(), ct.getCoreTypeVersion()))
+                    continue;
+                logger.logLn("Aktualisiere Core-Type in Tabelle " + tab.name());
+                updateCoreTypeTabelle(tab.name(), ct.getCoreTypeName(), ct.getCoreTypeVersion(), ct.getSQLInsert(status_revision));
+            }
+			// TODO unten deprecated: Aktualisiere ggf. die Daten der einzelnen Core-Types
 			for (CoreTypeTable entry : tables)
 				if (!pruefeVersion(entry.name, entry.version))
 					entry.updater.accept(logger);
@@ -326,53 +349,6 @@ public class DBCoreTypeUpdater {
 	}
 	
 
-	/**
-	 * Aktualisiert die Tabelle für den Core-Type BenutzerKompetenz 
-	 */
-	private Consumer<Logger> updateBenutzerKompetenzen = (Logger logger) -> {
-		String tabname = "Kompetenzen";
-		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
-		StringBuilder sql = new StringBuilder();
-		sql.append("INSERT INTO ");
-		sql.append(tabname); 
-		sql.append("(KO_ID, KO_Gruppe, KO_Bezeichnung) ");
-		BenutzerKompetenz[] values = BenutzerKompetenz.values();
-		boolean isFirst = true;
-		for (int i = 0; i < values.length; i++) {
-			sql.append(isFirst ? "VALUES (" : ", (");
-			isFirst = false;
-			sql.append(values[i].daten.id).append(",");
-			sql.append(values[i].daten.gruppe_id).append(",");
-			sql.append("'").append(values[i].daten.bezeichnung).append("'").append(")");
-		}
-		updateCoreTypeTabelle(tabname, BenutzerKompetenz.class.getCanonicalName(), BenutzerKompetenz.VERSION, sql.toString());
-	};
-
-
-	/**
-	 * Aktualisiert die Tabelle für den Core-Type BenutzerKompetenz 
-	 */
-	private Consumer<Logger> updateBenutzerKompetenzGruppen = (Logger logger) -> {
-		String tabname = "Kompetenzgruppen";
-		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
-		StringBuilder sql = new StringBuilder();
-		sql.append("INSERT INTO ");
-		sql.append(tabname); 
-		sql.append("(KG_ID, KG_Bezeichnung, KG_Spalte, KG_Zeile) ");
-		BenutzerKompetenzGruppe[] values = BenutzerKompetenzGruppe.values();
-		boolean isFirst = true;
-		for (int i = 0; i < values.length; i++) {
-			sql.append(isFirst ? "VALUES (" : ", (");
-			isFirst = false;
-			sql.append(values[i].daten.id).append(",");
-			sql.append("'").append(values[i].daten.bezeichnung).append("'").append(",");
-			sql.append(values[i].daten.spalte).append(",");
-			sql.append(values[i].daten.zeile).append(")");
-		}
-		updateCoreTypeTabelle(tabname, BenutzerKompetenzGruppe.class.getCanonicalName(), BenutzerKompetenzGruppe.VERSION, sql.toString());
-	};
-
-	
 	/**
 	 * Aktualisiert die Tabelle für den Core-Type BerufskollegAnlagen 
 	 */

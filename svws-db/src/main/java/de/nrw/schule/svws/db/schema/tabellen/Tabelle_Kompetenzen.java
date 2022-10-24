@@ -1,11 +1,15 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
+import java.util.Arrays;
+
 import de.nrw.schule.svws.core.adt.Pair;
+import de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenz;
 import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaFremdschluesselAktionen;
 import de.nrw.schule.svws.db.schema.SchemaRevisionen;
 import de.nrw.schule.svws.db.schema.SchemaTabelle;
+import de.nrw.schule.svws.db.schema.SchemaTabelleCoreType;
 import de.nrw.schule.svws.db.schema.SchemaTabelleFremdschluessel;
 import de.nrw.schule.svws.db.schema.SchemaTabelleSpalte;
 
@@ -49,6 +53,10 @@ public class Tabelle_Kompetenzen extends SchemaTabelle {
 		setJavaSubPackage("schild.benutzer");
 		setJavaClassName("DTOKatalogBenutzerKompetenz");
 		setJavaComment("Rechte für die Benutzerverwaltung von Schild-NRW");
+        setCoreType(new SchemaTabelleCoreType(this, BenutzerKompetenz.class, BenutzerKompetenz.VERSION, (rev) -> Arrays
+            .stream(BenutzerKompetenz.values())
+            .map(k -> k.daten.id + "," + k.daten.gruppe_id + ",'" + k.daten.bezeichnung + "'")
+            .toList()));
 	}
 
 }
