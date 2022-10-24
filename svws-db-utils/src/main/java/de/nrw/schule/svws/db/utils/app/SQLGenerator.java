@@ -153,13 +153,18 @@ public class SQLGenerator {
 		StringBuilder result = new StringBuilder();
 		Set<SchemaTabelle> tabsDefaultData = Arrays.stream(Schema.tabellenDefaultDaten).collect(Collectors.toSet());
 		for (SchemaTabelle tab : Schema.tabellen.values()) {
-		    if (!(((rev == -1) && (tab.veraltet().revision == -1)) || ((rev != -1) && (rev >= tab.revision().revision) && ((tab.veraltet().revision == -1) || (rev < tab.veraltet().revision)))))
+		    if (!tab.isDefined(rev))
 		        continue;
-		    if (tabsDefaultData.contains(tab)) {
+		    if (tab.hasCoreType()) {
+		        result.append(tab.getCoreType().getSQLInsert(rev)).append(";");
+	            result.append(System.lineSeparator());
+	            result.append(System.lineSeparator());
+	            result.append(System.lineSeparator());
+		    } else if (tabsDefaultData.contains(tab)) {
 		        result.append(getSQLInsert(tab, rev));
-		        result.append(System.lineSeparator());
-                result.append(System.lineSeparator());
-                result.append(System.lineSeparator());
+	            result.append(System.lineSeparator());
+	            result.append(System.lineSeparator());
+	            result.append(System.lineSeparator());
 		    }
 		}
 		return result.toString();
