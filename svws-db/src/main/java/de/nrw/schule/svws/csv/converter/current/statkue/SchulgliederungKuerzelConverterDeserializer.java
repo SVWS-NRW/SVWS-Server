@@ -7,7 +7,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
-import de.nrw.schule.svws.core.types.statkue.Schulgliederung;
+import de.nrw.schule.svws.core.types.schule.Schulgliederung;
 
 /**
  * Diese Klasse ist ein Deserialisierer und deserialisiert den CoreType 

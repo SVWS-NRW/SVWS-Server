@@ -9,7 +9,7 @@ import de.nrw.schule.svws.core.transpiler.TranspilerDTO;
 import de.nrw.schule.svws.core.types.schule.BerufskollegAnlage;
 import de.nrw.schule.svws.core.types.schule.SchulabschlussAllgemeinbildend;
 import de.nrw.schule.svws.core.types.schule.SchulabschlussBerufsbildend;
-import de.nrw.schule.svws.core.types.statkue.Schulform;
+import de.nrw.schule.svws.core.types.schule.Schulform;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 

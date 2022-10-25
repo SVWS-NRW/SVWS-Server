@@ -5,7 +5,7 @@ import { BerufskollegFachklassenKatalog, cast_de_nrw_schule_svws_core_data_schul
 import { RuntimeException, cast_java_lang_RuntimeException } from '../../../java/lang/RuntimeException';
 import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
 import { JavaLong, cast_java_lang_Long } from '../../../java/lang/JavaLong';
-import { Schulgliederung, cast_de_nrw_schule_svws_core_types_statkue_Schulgliederung } from '../../../core/types/statkue/Schulgliederung';
+import { Schulgliederung, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung } from '../../../core/types/schule/Schulgliederung';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 import { BerufskollegFachklassenKatalogIndex, cast_de_nrw_schule_svws_core_data_schule_BerufskollegFachklassenKatalogIndex } from '../../../core/data/schule/BerufskollegFachklassenKatalogIndex';
 import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
@@ -95,8 +95,8 @@ export class BerufskollegFachklassenManager extends JavaObject {
 			if (katIndex === null) 
 				throw new IllegalArgumentException("Ungültiger Fachklassen-Index.")
 			return katIndex.version;
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.types.statkue.Schulgliederung'))) || (__param0 === null))) {
-			let gliederung : Schulgliederung | null = cast_de_nrw_schule_svws_core_types_statkue_Schulgliederung(__param0);
+		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.types.schule.Schulgliederung'))) || (__param0 === null))) {
+			let gliederung : Schulgliederung | null = cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(__param0);
 			if (gliederung.daten.bkIndex === null) 
 				throw new IllegalArgumentException("Die Schulgliederung " + gliederung.daten.kuerzel + " hat keinen Fachklassen-Index.")
 			let katIndex : BerufskollegFachklassenKatalogIndex | null = this._mapByIndex.get(gliederung.daten.bkIndex);
@@ -214,8 +214,8 @@ export class BerufskollegFachklassenManager extends JavaObject {
 			if (katIndex === null) 
 				throw new IllegalArgumentException("Ungültiger Fachklassen-Index.")
 			return katIndex;
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.types.statkue.Schulgliederung'))) || (__param0 === null))) {
-			let gliederung : Schulgliederung | null = cast_de_nrw_schule_svws_core_types_statkue_Schulgliederung(__param0);
+		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.types.schule.Schulgliederung'))) || (__param0 === null))) {
+			let gliederung : Schulgliederung | null = cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(__param0);
 			if (gliederung.daten.bkIndex === null) 
 				throw new IllegalArgumentException("Die Schulgliederung " + gliederung.daten.kuerzel + " hat keinen Fachklassen-Index.")
 			let katIndex : BerufskollegFachklassenKatalogIndex | null = this._mapByIndex.get(gliederung.daten.bkIndex);

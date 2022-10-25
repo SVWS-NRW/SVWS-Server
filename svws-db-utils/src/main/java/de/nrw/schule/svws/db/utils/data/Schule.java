@@ -2,7 +2,7 @@ package de.nrw.schule.svws.db.utils.data;
 
 import java.util.HashMap;
 
-import de.nrw.schule.svws.core.types.statkue.Schulform;
+import de.nrw.schule.svws.core.types.schule.Schulform;
 import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.nrw.schule.svws.db.dto.current.schild.schule.DTOSchuljahresabschnitte;

@@ -1,7 +1,7 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
 import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
-import { Schulform, cast_de_nrw_schule_svws_core_types_statkue_Schulform } from '../../../core/types/statkue/Schulform';
-import { Schulgliederung, cast_de_nrw_schule_svws_core_types_statkue_Schulgliederung } from '../../../core/types/statkue/Schulgliederung';
+import { Schulform, cast_de_nrw_schule_svws_core_types_schule_Schulform } from '../../../core/types/schule/Schulform';
+import { Schulgliederung, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung } from '../../../core/types/schule/Schulgliederung';
 import { List, cast_java_util_List } from '../../../java/util/List';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
@@ -42,9 +42,9 @@ export class HerkunftBildungsgangKatalogEintrag extends JavaObject {
 	public constructor(__param0? : number, __param1? : Schulgliederung, __param2? : Number | null, __param3? : Number | null) {
 		super();
 		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined") && (typeof __param2 === "undefined") && (typeof __param3 === "undefined")) {
-			} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('de.nrw.schule.svws.core.types.statkue.Schulgliederung')))) && ((typeof __param2 !== "undefined") && ((__param2 instanceof Number) || (typeof __param2 === "number")) || (__param2 === null)) && ((typeof __param3 !== "undefined") && ((__param3 instanceof Number) || (typeof __param3 === "number")) || (__param3 === null))) {
+			} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('de.nrw.schule.svws.core.types.schule.Schulgliederung')))) && ((typeof __param2 !== "undefined") && ((__param2 instanceof Number) || (typeof __param2 === "number")) || (__param2 === null)) && ((typeof __param3 !== "undefined") && ((__param3 instanceof Number) || (typeof __param3 === "number")) || (__param3 === null))) {
 			let id : number = __param0 as number;
-			let gliederung : Schulgliederung = cast_de_nrw_schule_svws_core_types_statkue_Schulgliederung(__param1);
+			let gliederung : Schulgliederung = cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(__param1);
 			let gueltigVon : Number | null = cast_java_lang_Integer(__param2);
 			let gueltigBis : Number | null = cast_java_lang_Integer(__param3);
 			this.id = id;

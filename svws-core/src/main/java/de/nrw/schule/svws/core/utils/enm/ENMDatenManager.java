@@ -15,8 +15,8 @@ import de.nrw.schule.svws.core.data.enm.ENMNote;
 import de.nrw.schule.svws.core.data.enm.ENMSchueler;
 import de.nrw.schule.svws.core.types.Geschlecht;
 import de.nrw.schule.svws.core.types.Note;
-import de.nrw.schule.svws.core.types.statkue.Foerderschwerpunkt;
-import de.nrw.schule.svws.core.types.statkue.Schulform;
+import de.nrw.schule.svws.core.types.schueler.Foerderschwerpunkt;
+import de.nrw.schule.svws.core.types.schule.Schulform;
 import jakarta.validation.constraints.NotNull;
 
 /**

@@ -7,7 +7,7 @@ import de.nrw.schule.svws.core.data.schule.BerufskollegFachklassenKatalog;
 import de.nrw.schule.svws.core.data.schule.BerufskollegFachklassenKatalogDaten;
 import de.nrw.schule.svws.core.data.schule.BerufskollegFachklassenKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.BerufskollegFachklassenKatalogIndex;
-import de.nrw.schule.svws.core.types.statkue.Schulgliederung;
+import de.nrw.schule.svws.core.types.schule.Schulgliederung;
 import jakarta.validation.constraints.NotNull;
 
 /**

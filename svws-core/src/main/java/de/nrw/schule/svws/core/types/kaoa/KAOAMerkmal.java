@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 import de.nrw.schule.svws.core.data.kaoa.KAOAMerkmalEintrag;
-import de.nrw.schule.svws.core.types.statkue.Schulgliederung;
+import de.nrw.schule.svws.core.types.schule.Schulgliederung;
 import jakarta.validation.constraints.NotNull;
 
 /**

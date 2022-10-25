@@ -1,6 +1,6 @@
 package de.nrw.schule.svws.db.converter.current.statkue;
 
-import de.nrw.schule.svws.core.types.statkue.Schulgliederung;
+import de.nrw.schule.svws.core.types.schule.Schulgliederung;
 import de.nrw.schule.svws.db.converter.DBAttributeConverter;
 import jakarta.persistence.Converter;
 

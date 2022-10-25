@@ -18,7 +18,7 @@ import de.nrw.schule.svws.config.SVWSKonfiguration;
 import de.nrw.schule.svws.core.types.KursFortschreibungsart;
 import de.nrw.schule.svws.core.types.PersonalTyp;
 import de.nrw.schule.svws.core.types.SchuelerStatus;
-import de.nrw.schule.svws.core.types.statkue.Schulform;
+import de.nrw.schule.svws.core.types.schule.Schulform;
 import de.nrw.schule.svws.core.utils.AdressenUtils;
 import de.nrw.schule.svws.db.Benutzer;
 import de.nrw.schule.svws.db.DBConfig;

@@ -18,9 +18,9 @@ import de.nrw.schule.svws.core.data.gost.AbiturFachbelegungHalbjahr;
 import de.nrw.schule.svws.core.data.gost.Abiturdaten;
 import de.nrw.schule.svws.core.data.gost.GostFach;
 import de.nrw.schule.svws.core.types.Geschlecht;
+import de.nrw.schule.svws.core.types.fach.ZulaessigesFach;
 import de.nrw.schule.svws.core.types.gost.GostHalbjahr;
 import de.nrw.schule.svws.core.types.gost.GostKursart;
-import de.nrw.schule.svws.core.types.statkue.ZulaessigesFach;
 import de.nrw.schule.svws.core.utils.gost.GostFaecherManager;
 import de.nrw.schule.svws.module.pdf.PDFCreator;
 

@@ -1,5 +1,5 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { Schulform, cast_de_nrw_schule_svws_core_types_statkue_Schulform } from '../../../core/types/statkue/Schulform';
+import { Schulform, cast_de_nrw_schule_svws_core_types_schule_Schulform } from '../../../core/types/schule/Schulform';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 
 export class HerkunftsartKatalogEintragBezeichnung extends JavaObject {
@@ -31,8 +31,8 @@ export class HerkunftsartKatalogEintragBezeichnung extends JavaObject {
 	public constructor(__param0? : Schulform, __param1? : String, __param2? : String) {
 		super();
 		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined") && (typeof __param2 === "undefined")) {
-			} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.types.statkue.Schulform')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof String) || (typeof __param1 === "string"))) && ((typeof __param2 !== "undefined") && ((__param2 instanceof String) || (typeof __param2 === "string")))) {
-			let schulform : Schulform = cast_de_nrw_schule_svws_core_types_statkue_Schulform(__param0);
+			} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.types.schule.Schulform')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof String) || (typeof __param1 === "string"))) && ((typeof __param2 !== "undefined") && ((__param2 instanceof String) || (typeof __param2 === "string")))) {
+			let schulform : Schulform = cast_de_nrw_schule_svws_core_types_schule_Schulform(__param0);
 			let kurzBezeichnung : String = __param1;
 			let bezeichnung : String = __param2;
 			this.schulform = schulform.daten.kuerzel;

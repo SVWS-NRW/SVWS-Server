@@ -1,7 +1,7 @@
 package de.nrw.schule.svws.db.converter.current.statkue;
 
 import jakarta.persistence.Converter;
-import de.nrw.schule.svws.core.types.statkue.ZulaessigesFach;
+import de.nrw.schule.svws.core.types.fach.ZulaessigesFach;
 import de.nrw.schule.svws.db.converter.DBAttributeConverter;
 
 /**

@@ -15,7 +15,7 @@ import com.healthmarketscience.jackcess.Row;
 import com.healthmarketscience.jackcess.Table;
 import com.healthmarketscience.jackcess.TableBuilder;
 
-import de.nrw.schule.svws.core.types.statkue.ZulaessigesFach;
+import de.nrw.schule.svws.core.types.fach.ZulaessigesFach;
 
 /**
  * Diese Klasse wird für den Import der Tabelle ABP_Fachgruppen aus einer LuPO-Datenbank 

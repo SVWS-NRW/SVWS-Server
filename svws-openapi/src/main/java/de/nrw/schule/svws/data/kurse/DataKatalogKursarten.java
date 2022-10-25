@@ -9,7 +9,7 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
 import de.nrw.schule.svws.core.data.kurse.KursartKatalogEintrag;
-import de.nrw.schule.svws.core.types.statkue.ZulaessigeKursart;
+import de.nrw.schule.svws.core.types.kurse.ZulaessigeKursart;
 import de.nrw.schule.svws.data.DataManager;
 
 /**

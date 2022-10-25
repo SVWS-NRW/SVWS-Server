@@ -12,7 +12,7 @@ import de.nrw.schule.svws.core.data.enm.ENMJahrgang;
 import de.nrw.schule.svws.core.data.enm.ENMKlasse;
 import de.nrw.schule.svws.core.data.enm.ENMLerngruppe;
 import de.nrw.schule.svws.core.data.enm.ENMSchueler;
-import de.nrw.schule.svws.core.types.statkue.ZulaessigeKursart;
+import de.nrw.schule.svws.core.types.kurse.ZulaessigeKursart;
 import de.nrw.schule.svws.core.utils.enm.ENMDatenManager;
 import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.dto.current.schild.faecher.DTOFach;

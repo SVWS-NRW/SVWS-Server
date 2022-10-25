@@ -20,7 +20,7 @@ import de.nrw.schule.svws.core.abschluss.gost.AbiturdatenManager;
 import de.nrw.schule.svws.core.abschluss.gost.GostBelegpruefungErgebnis;
 import de.nrw.schule.svws.core.abschluss.gost.GostBelegpruefungsArt;
 import de.nrw.schule.svws.core.data.gost.Abiturdaten;
-import de.nrw.schule.svws.core.types.statkue.Schulform;
+import de.nrw.schule.svws.core.types.schule.Schulform;
 import de.nrw.schule.svws.core.utils.gost.GostFaecherManager;
 import de.nrw.schule.svws.db.Benutzer;
 import de.nrw.schule.svws.db.DBConfig;

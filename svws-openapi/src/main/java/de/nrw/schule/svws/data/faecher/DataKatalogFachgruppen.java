@@ -5,8 +5,7 @@ import java.io.InputStream;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
-
-import de.nrw.schule.svws.core.types.statkue.Fachgruppe;
+import de.nrw.schule.svws.core.types.fach.Fachgruppe;
 import de.nrw.schule.svws.data.DataManager;
 import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.utils.OperationError;

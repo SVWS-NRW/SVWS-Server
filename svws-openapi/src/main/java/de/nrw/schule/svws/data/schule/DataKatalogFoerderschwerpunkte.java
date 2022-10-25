@@ -9,7 +9,7 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
 import de.nrw.schule.svws.core.data.schule.FoerderschwerpunktKatalogEintrag;
-import de.nrw.schule.svws.core.types.statkue.Foerderschwerpunkt;
+import de.nrw.schule.svws.core.types.schueler.Foerderschwerpunkt;
 import de.nrw.schule.svws.data.DataManager;
 
 /**

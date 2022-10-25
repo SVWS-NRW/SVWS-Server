@@ -9,7 +9,7 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
 import de.nrw.schule.svws.core.data.schule.EinschulungsartKatalogEintrag;
-import de.nrw.schule.svws.core.types.statkue.Einschulungsart;
+import de.nrw.schule.svws.core.types.schueler.Einschulungsart;
 import de.nrw.schule.svws.data.DataManager;
 import de.nrw.schule.svws.db.DBEntityManager;
 

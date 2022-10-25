@@ -7,8 +7,8 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 import de.nrw.schule.svws.core.transpiler.TranspilerDTO;
 import de.nrw.schule.svws.core.types.schule.BerufskollegBildungsgangTyp;
+import de.nrw.schule.svws.core.types.schule.Schulform;
 import de.nrw.schule.svws.core.types.schule.WeiterbildungskollegBildungsgangTyp;
-import de.nrw.schule.svws.core.types.statkue.Schulform;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 

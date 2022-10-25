@@ -5,9 +5,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import de.nrw.schule.svws.core.data.gost.GostFach;
-import de.nrw.schule.svws.core.types.statkue.Fachgruppe;
-import de.nrw.schule.svws.core.types.statkue.Jahrgaenge;
-import de.nrw.schule.svws.core.types.statkue.Schulform;
+import de.nrw.schule.svws.core.types.fach.Fachgruppe;
+import de.nrw.schule.svws.core.types.jahrgang.Jahrgaenge;
+import de.nrw.schule.svws.core.types.schule.Schulform;
 import de.nrw.schule.svws.core.utils.gost.GostFaecherManager;
 import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.dto.current.gost.DTOGostJahrgangFaecher;

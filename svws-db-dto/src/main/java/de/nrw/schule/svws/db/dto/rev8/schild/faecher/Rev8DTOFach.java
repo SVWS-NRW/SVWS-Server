@@ -5,7 +5,7 @@ import de.nrw.schule.svws.db.converter.current.BooleanPlusMinusDefaultMinusConve
 import de.nrw.schule.svws.db.converter.current.BooleanPlusMinusDefaultPlusConverter;
 import de.nrw.schule.svws.db.converter.current.statkue.ZulaessigesFachKuerzelASDConverter;
 
-import de.nrw.schule.svws.core.types.statkue.ZulaessigesFach;
+import de.nrw.schule.svws.core.types.fach.ZulaessigesFach;
 
 
 import jakarta.persistence.Cacheable;

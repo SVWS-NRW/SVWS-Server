@@ -27,13 +27,13 @@ import de.nrw.schule.svws.core.data.gost.AbiturFachbelegung;
 import de.nrw.schule.svws.core.data.gost.AbiturFachbelegungHalbjahr;
 import de.nrw.schule.svws.core.data.gost.Abiturdaten;
 import de.nrw.schule.svws.core.data.gost.GostFach;
+import de.nrw.schule.svws.core.types.fach.ZulaessigesFach;
 import de.nrw.schule.svws.core.types.gost.GostAbiturFach;
 import de.nrw.schule.svws.core.types.gost.GostBesondereLernleistung;
 import de.nrw.schule.svws.core.types.gost.GostFachbereich;
 import de.nrw.schule.svws.core.types.gost.GostHalbjahr;
 import de.nrw.schule.svws.core.types.gost.GostKursart;
 import de.nrw.schule.svws.core.types.gost.GostSchriftlichkeit;
-import de.nrw.schule.svws.core.types.statkue.ZulaessigesFach;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -1214,7 +1214,7 @@ public class AbiturdatenManager {
 		if (fachbelegungen == null)
 			return 0;
 		// Bestimme zunächst die Menge der unterschiedlichen Statistik-Fächer
-		@NotNull HashSet<@NotNull ZulaessigesFach> faecher = new HashSet<>();
+		@NotNull HashSet<ZulaessigesFach> faecher = new HashSet<>();
 		for (AbiturFachbelegung fb : fachbelegungen) {
 			GostFach fach = gostFaecher.get(fb.fachID);
 			if (fach == null)
@@ -1265,7 +1265,7 @@ public class AbiturdatenManager {
 		if (fachbelegungen == null)
 			return 0;
 		// Bestimme zunächst die Menge der unterschiedlichen Statistik-Fächer
-		@NotNull HashSet<@NotNull ZulaessigesFach> faecher = new HashSet<>();
+		@NotNull HashSet<ZulaessigesFach> faecher = new HashSet<>();
 		for (AbiturFachbelegung fb : fachbelegungen) {
 			GostFach fach = gostFaecher.get(fb.fachID);
 			if (fach == null)

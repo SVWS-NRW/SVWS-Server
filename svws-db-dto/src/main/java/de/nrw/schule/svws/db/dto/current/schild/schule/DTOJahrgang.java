@@ -4,7 +4,7 @@ import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.converter.current.BooleanPlusMinusDefaultPlusConverter;
 import de.nrw.schule.svws.db.converter.current.statkue.SchulgliederungKuerzelConverter;
 
-import de.nrw.schule.svws.core.types.statkue.Schulgliederung;
+import de.nrw.schule.svws.core.types.schule.Schulgliederung;
 
 
 import jakarta.persistence.Cacheable;

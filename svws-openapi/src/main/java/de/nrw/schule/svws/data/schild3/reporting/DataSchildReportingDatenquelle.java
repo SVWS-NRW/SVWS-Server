@@ -9,7 +9,7 @@ import java.util.Vector;
 import de.nrw.schule.svws.core.data.schild3.SchildReportingDatenquelle;
 import de.nrw.schule.svws.core.data.schild3.SchildReportingDatenquelleAttribut;
 import de.nrw.schule.svws.core.types.schild3.SchildReportingAttributTyp;
-import de.nrw.schule.svws.core.types.statkue.Schulform;
+import de.nrw.schule.svws.core.types.schule.Schulform;
 import de.nrw.schule.svws.data.DataManager;
 import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.dto.current.schild.schule.DTOEigeneSchule;

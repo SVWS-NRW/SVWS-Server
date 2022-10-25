@@ -6,6 +6,9 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import de.nrw.schule.svws.core.types.schule.Schulform;
+import de.nrw.schule.svws.core.types.schule.Schulgliederung;
+
 
 /**
  * Diese Klasse enthält die Testroutinen für Core-Type Schulgliederung.

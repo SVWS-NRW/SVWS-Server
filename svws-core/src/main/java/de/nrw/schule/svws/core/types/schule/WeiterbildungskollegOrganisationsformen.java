@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 import de.nrw.schule.svws.core.data.schule.OrganisationsformKatalogEintrag;
-import de.nrw.schule.svws.core.types.statkue.Schulform;
 import jakarta.validation.constraints.NotNull;
 
 /**

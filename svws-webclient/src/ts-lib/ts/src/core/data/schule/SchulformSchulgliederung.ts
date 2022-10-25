@@ -1,6 +1,6 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { Schulform, cast_de_nrw_schule_svws_core_types_statkue_Schulform } from '../../../core/types/statkue/Schulform';
-import { Schulgliederung, cast_de_nrw_schule_svws_core_types_statkue_Schulgliederung } from '../../../core/types/statkue/Schulgliederung';
+import { Schulform, cast_de_nrw_schule_svws_core_types_schule_Schulform } from '../../../core/types/schule/Schulform';
+import { Schulgliederung, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung } from '../../../core/types/schule/Schulgliederung';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 
 export class SchulformSchulgliederung extends JavaObject {
@@ -29,9 +29,9 @@ export class SchulformSchulgliederung extends JavaObject {
 	public constructor(__param0? : Schulform, __param1? : Schulgliederung | null) {
 		super();
 		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined")) {
-			} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.types.statkue.Schulform')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('de.nrw.schule.svws.core.types.statkue.Schulgliederung'))) || (__param1 === null))) {
-			let schulform : Schulform = cast_de_nrw_schule_svws_core_types_statkue_Schulform(__param0);
-			let gliederung : Schulgliederung | null = cast_de_nrw_schule_svws_core_types_statkue_Schulgliederung(__param1);
+			} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.types.schule.Schulform')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('de.nrw.schule.svws.core.types.schule.Schulgliederung'))) || (__param1 === null))) {
+			let schulform : Schulform = cast_de_nrw_schule_svws_core_types_schule_Schulform(__param0);
+			let gliederung : Schulgliederung | null = cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(__param1);
 			this.schulform = schulform.daten.kuerzel;
 			this.gliederung = (gliederung === null) ? null : gliederung.daten.kuerzel;
 		} else throw new Error('invalid method overload');

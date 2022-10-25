@@ -8,10 +8,10 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import de.nrw.schule.svws.core.adt.Pair;
 import de.nrw.schule.svws.core.data.schule.SchulformSchulgliederung;
 import de.nrw.schule.svws.core.transpiler.TranspilerDTO;
-import de.nrw.schule.svws.core.types.statkue.Fachgruppe;
-import de.nrw.schule.svws.core.types.statkue.Jahrgaenge;
-import de.nrw.schule.svws.core.types.statkue.Schulform;
-import de.nrw.schule.svws.core.types.statkue.Schulgliederung;
+import de.nrw.schule.svws.core.types.fach.Fachgruppe;
+import de.nrw.schule.svws.core.types.jahrgang.Jahrgaenge;
+import de.nrw.schule.svws.core.types.schule.Schulform;
+import de.nrw.schule.svws.core.types.schule.Schulgliederung;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 

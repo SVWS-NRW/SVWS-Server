@@ -2,7 +2,7 @@ import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject
 import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
 import { KAOAKategorie, cast_de_nrw_schule_svws_core_types_kaoa_KAOAKategorie } from '../../../core/types/kaoa/KAOAKategorie';
 import { NullPointerException, cast_java_lang_NullPointerException } from '../../../java/lang/NullPointerException';
-import { Schulgliederung, cast_de_nrw_schule_svws_core_types_statkue_Schulgliederung } from '../../../core/types/statkue/Schulgliederung';
+import { Schulgliederung, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung } from '../../../core/types/schule/Schulgliederung';
 import { List, cast_java_util_List } from '../../../java/util/List';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 import { KAOAMerkmaleOptionsarten, cast_de_nrw_schule_svws_core_types_kaoa_KAOAMerkmaleOptionsarten } from '../../../core/types/kaoa/KAOAMerkmaleOptionsarten';

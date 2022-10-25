@@ -19,7 +19,7 @@ import de.nrw.schule.svws.core.abschluss.gost.GostBelegpruefungErgebnis;
 import de.nrw.schule.svws.core.abschluss.gost.GostBelegpruefungsArt;
 import de.nrw.schule.svws.core.data.gost.Abiturdaten;
 import de.nrw.schule.svws.core.data.gost.GostFach;
-import de.nrw.schule.svws.core.types.statkue.Schulform;
+import de.nrw.schule.svws.core.types.schule.Schulform;
 import de.nrw.schule.svws.db.utils.lupo.mdb.LupoMDB;
 import de.nrw.schule.svws.logger.LogConsumerConsole;
 import de.nrw.schule.svws.logger.Logger;

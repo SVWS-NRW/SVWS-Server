@@ -8,7 +8,7 @@ import de.nrw.schule.svws.db.converter.current.NoteConverterFromInteger;
 import de.nrw.schule.svws.db.converter.current.statkue.SchulgliederungKuerzelConverter;
 
 import de.nrw.schule.svws.core.types.Note;
-import de.nrw.schule.svws.core.types.statkue.Schulgliederung;
+import de.nrw.schule.svws.core.types.schule.Schulgliederung;
 
 
 import jakarta.persistence.Cacheable;

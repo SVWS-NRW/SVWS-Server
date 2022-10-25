@@ -6,8 +6,8 @@ import de.nrw.schule.svws.db.converter.current.statkue.SchulformKuerzelConverter
 import de.nrw.schule.svws.db.converter.current.statkue.SchulgliederungKuerzelConverter;
 
 import de.nrw.schule.svws.core.types.SchuelerStatus;
-import de.nrw.schule.svws.core.types.statkue.Schulform;
-import de.nrw.schule.svws.core.types.statkue.Schulgliederung;
+import de.nrw.schule.svws.core.types.schule.Schulform;
+import de.nrw.schule.svws.core.types.schule.Schulgliederung;
 
 
 import jakarta.persistence.Cacheable;

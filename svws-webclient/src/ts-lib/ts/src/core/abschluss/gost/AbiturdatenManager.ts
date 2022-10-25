@@ -17,7 +17,7 @@ import { Allgemeines, cast_de_nrw_schule_svws_core_abschluss_gost_belegpruefung_
 import { Sport, cast_de_nrw_schule_svws_core_abschluss_gost_belegpruefung_Sport } from '../../../core/abschluss/gost/belegpruefung/Sport';
 import { GostHalbjahr, cast_de_nrw_schule_svws_core_types_gost_GostHalbjahr } from '../../../core/types/gost/GostHalbjahr';
 import { GostSchriftlichkeit, cast_de_nrw_schule_svws_core_types_gost_GostSchriftlichkeit } from '../../../core/types/gost/GostSchriftlichkeit';
-import { ZulaessigesFach, cast_de_nrw_schule_svws_core_types_statkue_ZulaessigesFach } from '../../../core/types/statkue/ZulaessigesFach';
+import { ZulaessigesFach, cast_de_nrw_schule_svws_core_types_fach_ZulaessigesFach } from '../../../core/types/fach/ZulaessigesFach';
 import { List, cast_java_util_List } from '../../../java/util/List';
 import { JavaBoolean, cast_java_lang_Boolean } from '../../../java/lang/JavaBoolean';
 import { Collections, cast_java_util_Collections } from '../../../java/util/Collections';
@@ -1127,7 +1127,7 @@ export class AbiturdatenManager extends JavaObject {
 	public zaehleBelegungenDurchgaengig(fachbelegungen : List<AbiturFachbelegung> | null) : number {
 		if (fachbelegungen === null) 
 			return 0;
-		let faecher : HashSet<ZulaessigesFach> = new HashSet();
+		let faecher : HashSet<ZulaessigesFach | null> = new HashSet();
 		for (let fb of fachbelegungen) {
 			let fach : GostFach | null = this.gostFaecher.get(fb.fachID);
 			if (fach === null) 
@@ -1175,7 +1175,7 @@ export class AbiturdatenManager extends JavaObject {
 	public zaehleBelegungenDurchgaengigSchriftlichInQPhase(fachbelegungen : List<AbiturFachbelegung> | null) : number {
 		if (fachbelegungen === null) 
 			return 0;
-		let faecher : HashSet<ZulaessigesFach> = new HashSet();
+		let faecher : HashSet<ZulaessigesFach | null> = new HashSet();
 		for (let fb of fachbelegungen) {
 			let fach : GostFach | null = this.gostFaecher.get(fb.fachID);
 			if (fach === null) 

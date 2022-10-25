@@ -1,5 +1,5 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { Jahrgaenge, cast_de_nrw_schule_svws_core_types_statkue_Jahrgaenge } from '../../../core/types/statkue/Jahrgaenge';
+import { Jahrgaenge, cast_de_nrw_schule_svws_core_types_jahrgang_Jahrgaenge } from '../../../core/types/jahrgang/Jahrgaenge';
 import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
 import { KAOAKategorieEintrag, cast_de_nrw_schule_svws_core_data_kaoa_KAOAKategorieEintrag } from '../../../core/data/kaoa/KAOAKategorieEintrag';
 import { JavaLong, cast_java_lang_Long } from '../../../java/lang/JavaLong';

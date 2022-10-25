@@ -5,6 +5,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import de.nrw.schule.svws.core.types.lehrer.LehrerZugangsgrund;
+
 
 /**
  * Diese Klasse enthält die Testroutinen für den Core-Type LehrerZugangsgrund.

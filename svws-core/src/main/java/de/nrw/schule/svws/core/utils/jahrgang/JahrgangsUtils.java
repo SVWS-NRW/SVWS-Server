@@ -1,7 +1,7 @@
 package de.nrw.schule.svws.core.utils.jahrgang;
 
-import de.nrw.schule.svws.core.types.statkue.Schulform;
-import de.nrw.schule.svws.core.types.statkue.Schulgliederung;
+import de.nrw.schule.svws.core.types.schule.Schulform;
+import de.nrw.schule.svws.core.types.schule.Schulgliederung;
 import jakarta.validation.constraints.NotNull;
 
 /**

@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.Vector;
 
 import de.nrw.schule.svws.core.data.lehrer.LehrerKatalogMehrleistungsartEintrag;
-import de.nrw.schule.svws.core.types.statkue.LehrerMehrleistungArt;
+import de.nrw.schule.svws.core.types.lehrer.LehrerMehrleistungArt;
 import de.nrw.schule.svws.data.DataManager;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;

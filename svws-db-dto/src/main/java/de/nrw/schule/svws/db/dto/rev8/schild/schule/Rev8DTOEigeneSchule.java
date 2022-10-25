@@ -6,7 +6,7 @@ import de.nrw.schule.svws.db.converter.current.BooleanPlusMinusDefaultPlusConver
 import de.nrw.schule.svws.db.converter.current.StringToIntegerConverter;
 import de.nrw.schule.svws.db.converter.current.statkue.SchulformKuerzelConverter;
 
-import de.nrw.schule.svws.core.types.statkue.Schulform;
+import de.nrw.schule.svws.core.types.schule.Schulform;
 
 
 import jakarta.persistence.Cacheable;

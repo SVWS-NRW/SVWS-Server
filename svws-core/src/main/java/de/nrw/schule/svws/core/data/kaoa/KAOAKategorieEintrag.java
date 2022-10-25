@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Vector;
 
 import de.nrw.schule.svws.core.transpiler.TranspilerDTO;
-import de.nrw.schule.svws.core.types.statkue.Jahrgaenge;
+import de.nrw.schule.svws.core.types.jahrgang.Jahrgaenge;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 
