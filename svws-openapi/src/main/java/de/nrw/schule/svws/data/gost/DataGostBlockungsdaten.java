@@ -665,10 +665,12 @@ public class DataGostBlockungsdaten extends DataManager<Long> {
 			DTODBAutoInkremente dbRegelID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Blockung_Regeln");
 			long idRegelDuplikat = dbRegelID == null ? 1 : dbRegelID.MaxID + 1;
 			HashMap<Long, Long> mapRegelIDs = new HashMap<>();
+			HashMap<Long, GostKursblockungRegelTyp> mapRegelTypen = new HashMap<>(); // Die Typen für die neuen Regel-IDs
 			List<DTOGostBlockungRegel> regelnOriginal = conn.queryNamed("DTOGostBlockungRegel.blockung_id", idBlockungOriginal,
 					DTOGostBlockungRegel.class);
 			List<Long> regelIDsOriginal = regelnOriginal.stream().map(k -> k.ID).collect(Collectors.toList());
 			for (DTOGostBlockungRegel regelOriginal : regelnOriginal) {
+			    mapRegelTypen.put(idRegelDuplikat, regelOriginal.Typ);
 				DTOGostBlockungRegel regelDuplikat = new DTOGostBlockungRegel(idRegelDuplikat, idBlockungDuplikat, regelOriginal.Typ);
 				mapRegelIDs.put(regelOriginal.ID, regelDuplikat.ID);
 				conn.transactionPersist(regelDuplikat);
@@ -679,8 +681,18 @@ public class DataGostBlockungsdaten extends DataManager<Long> {
 				List<DTOGostBlockungRegelParameter> paramListeOriginal = conn.queryNamed("DTOGostBlockungRegelParameter.regel_id.multiple", regelIDsOriginal, DTOGostBlockungRegelParameter.class);
 				for (DTOGostBlockungRegelParameter paramOriginal : paramListeOriginal) {
 					idRegelDuplikat = mapRegelIDs.get(paramOriginal.Regel_ID);
+					// Passe den Parameter an...
+					GostKursblockungRegelTyp typ = mapRegelTypen.get(idRegelDuplikat);
+					GostKursblockungRegelParameterTyp paramTyp = typ.getParamType(paramOriginal.Nummer);
+					Long paramValue = switch(paramTyp) {
+                        case KURSART -> paramOriginal.Parameter;
+                        case KURS_ID -> mapKursIDs.get(paramOriginal.Parameter); 
+                        case SCHIENEN_NR -> paramOriginal.Parameter;
+                        case SCHUELER_ID -> paramOriginal.Parameter;
+                        default -> paramOriginal.Parameter;
+					};
 					DTOGostBlockungRegelParameter paramDuplikat = new DTOGostBlockungRegelParameter(idRegelDuplikat, 
-							paramOriginal.Nummer, paramOriginal.Parameter);
+							paramOriginal.Nummer, paramValue);
 					conn.transactionPersist(paramDuplikat);
 				}
 			}
