@@ -508,7 +508,7 @@ public class SchemaTabelle {
 				+ (((pk == null) || ("".equals(pk))) ? "" : "," + newline + "  " + pk)
 				+ this.getSQLFremdschluessel(rev)
 				+ this.getSQLUniqueContraints(rev)
-				+ newline + ");";
+				+ newline + ")" + ((dbms == DBDriver.MARIA_DB || dbms == DBDriver.MYSQL) ? " COMMENT '" + javaComment().replace("'", "''") + "'" : "") + ";";
     }
 
 

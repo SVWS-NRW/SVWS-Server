@@ -424,7 +424,8 @@ public class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte> {
 	         + (((this._datenlaenge == null) || (this._datenlaenge <= 0) || skipDatenlaenge) ? "" : "(" + this._datenlaenge + ")")
 	         + this.getSQLAutoinkrement(dbms)
 	         + this.getSQLDefault(dbms, _datentyp)
-	         + (this._notNull ? " NOT NULL" : "");
+	         + (this._notNull ? " NOT NULL" : "")
+	         + ((dbms == DBDriver.MARIA_DB || dbms == DBDriver.MYSQL) ? " COMMENT '" + javaComment().replace("'", "''") + "'" : "");
 	}
 	
 	
