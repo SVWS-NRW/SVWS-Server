@@ -1,6 +1,7 @@
 package de.nrw.schule.svws.data.gost;
 
 import java.io.InputStream;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Function;
@@ -8,8 +9,12 @@ import java.util.function.Function;
 import de.nrw.schule.svws.api.JSONMapper;
 import de.nrw.schule.svws.core.data.gost.GostBlockungKurs;
 import de.nrw.schule.svws.core.data.gost.GostBlockungSchiene;
+import de.nrw.schule.svws.core.types.kursblockung.GostKursblockungRegelParameterTyp;
+import de.nrw.schule.svws.core.types.kursblockung.GostKursblockungRegelTyp;
 import de.nrw.schule.svws.data.DataManager;
 import de.nrw.schule.svws.db.DBEntityManager;
+import de.nrw.schule.svws.db.dto.current.gost.kursblockung.DTOGostBlockungRegel;
+import de.nrw.schule.svws.db.dto.current.gost.kursblockung.DTOGostBlockungRegelParameter;
 import de.nrw.schule.svws.db.dto.current.gost.kursblockung.DTOGostBlockungSchiene;
 import de.nrw.schule.svws.db.utils.OperationError;
 import jakarta.ws.rs.WebApplicationException;
@@ -49,6 +54,7 @@ public class DataGostBlockungSchiene extends DataManager<Long> {
 	private Function<DTOGostBlockungSchiene, GostBlockungSchiene> dtoMapper = (DTOGostBlockungSchiene schiene) -> {
 		GostBlockungSchiene daten = new GostBlockungSchiene();
 		daten.id = schiene.ID;
+		daten.nummer = schiene.Nummer;
 		daten.bezeichnung = schiene.Bezeichnung;
 		daten.wochenstunden = schiene.Wochenstunden;
 		return daten;
@@ -125,15 +131,50 @@ public class DataGostBlockungSchiene extends DataManager<Long> {
 	 */
 	public Response delete(Long id) {
 		try {
+		    if (id == null)
+		        return OperationError.CONFLICT.getResponse();
 			// Bestimme die Schiene der Blockung
 			conn.transactionBegin();
 			GostUtils.pruefeSchuleMitGOSt(conn);
 			DTOGostBlockungSchiene schiene = conn.queryByKey(DTOGostBlockungSchiene.class, id);
 			if (schiene == null)
 				return OperationError.NOT_FOUND.getResponse();
-			// Entferne die Schiene
-			GostBlockungSchiene daten = dtoMapper.apply(schiene);
-			conn.transactionRemove(schiene);
+            GostBlockungSchiene daten = dtoMapper.apply(schiene);
+            
+            // Passt die Schienen-Nummern bei den Regeln an.
+			List<DTOGostBlockungSchiene> schienen = conn.queryNamed("DTOGostBlockungSchiene.blockung_id", schiene.Blockung_ID, DTOGostBlockungSchiene.class);
+			for (DTOGostBlockungSchiene tmp : schienen) {
+			    if (daten.id == tmp.ID) {
+		            conn.transactionRemove(tmp); // Entferne die Schiene
+			    } else if (tmp.Nummer.intValue() > daten.nummer) {
+			        tmp.Nummer--; // Reduziere die Nummer dieser Schiene aufgrund der entfernten Schiene 
+			        conn.transactionPersist(tmp);
+			    }
+			}
+			
+			// Passe alle Regeln einem Parametern Schienenanzahl an.
+			List<DTOGostBlockungRegel> regelnAlle = conn.queryNamed("DTOGostBlockungRegel.blockung_id", schiene.Blockung_ID, DTOGostBlockungRegel.class);
+			for (GostKursblockungRegelTyp regeltyp : GostKursblockungRegelTyp.values()) {
+			    // Prüfe ob der Regeltyp als Parameter eine Schienen-Nummer hat
+			    if (regeltyp.hasParamType(GostKursblockungRegelParameterTyp.SCHIENEN_NR)) {
+			        // Bestimme die betroffenen Regeln und korrigiere diese ggf. 
+			        List<Long> regelIDs = regelnAlle.stream().filter(r -> r.Typ == regeltyp).map(r -> r.ID).toList();
+			        if (regelIDs.size() > 0) {
+			            // Bestimme zunächst alle Parameter der betroffenen Regeln 
+    			        List<DTOGostBlockungRegelParameter> regelParams = conn.queryNamed("DTOGostBlockungRegelParameter.regel_id.multiple", regelIDs, DTOGostBlockungRegelParameter.class);
+    			        for (DTOGostBlockungRegelParameter param : regelParams) {
+    			            // Prüfe, ob der Parameter-Type und die Schienennummer eine Anpassung der Regel erfordern
+    			            if ((regeltyp.getParamType(param.Nummer - 1) == GostKursblockungRegelParameterTyp.SCHIENEN_NR)
+    			                && (param.Parameter > daten.nummer)) {
+    			                // Passe die Schienennummer an
+    			                param.Parameter--;
+    			                conn.transactionPersist(param);
+    			            }
+    			        }
+			        }
+			    }
+			}
+			
 			conn.transactionCommit();
 			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 		} catch (Exception exception) {

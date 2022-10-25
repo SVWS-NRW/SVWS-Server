@@ -1,12 +1,11 @@
 package de.nrw.schule.svws.core.types.kursblockung;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-import de.nrw.schule.svws.core.data.gost.GostBlockungRegel;
-import de.nrw.schule.svws.core.data.kursblockung.KursblockungInputRegel;
 import jakarta.validation.constraints.NotNull;
 
 /** 
@@ -111,7 +110,16 @@ public enum GostKursblockungRegelTyp {
 		for (@NotNull GostKursblockungRegelTyp gostTyp : GostKursblockungRegelTyp.values()) 
 			map.put(gostTyp.typ, gostTyp);
 	}
-	
+
+	/**
+	 * Liefert die Menge aller existierender Regeln.
+	 * 
+	 * @return Die Menge aller existierender Regeln.
+	 */
+	public static @NotNull Collection<@NotNull GostKursblockungRegelTyp> getCollection() {
+		return map.values();
+	}
+
 	/** 
 	 * Erstellt einen neuen Regel-Typ mit der angegeben ID.
 	 * 
@@ -166,66 +174,19 @@ public enum GostKursblockungRegelTyp {
 		return paramTypes.get(i);
 	}
 
-	/** 
-	 * Erstellt ein neues Regel-Objekt der Klasse {@link KursblockungInputRegel} mithilfe der angegebenen Parameter.
+
+	/**
+	 * Prüft, ob der Regeltyp einen Parameter von dem angegebenen
+	 * Parametertyp hat.
+	 *  
+	 * @param paramType   der Parametertyp
 	 * 
-	 * @param  databaseID    die ID der Regel aus der Datenbank.
-	 * @param  params        die Parameter für das Regel-Objekt
-	 * 
-	 * @return das Regel-Objekt
-	 * @throws IllegalArgumentException   wenn die Anzahl der Parameter nicht zu diesem Regel-Typ passt 
+	 * @return true, falls die Regel einen solchen Parametertyp hat und ansonsten false 
 	 */
-	private @NotNull KursblockungInputRegel create(long databaseID, @NotNull Long... params)
-			throws IllegalArgumentException {
-		if ((params == null) || (params.length != this.paramTypes.size()))
-			throw new IllegalArgumentException();
-		@NotNull
-		KursblockungInputRegel regel = new KursblockungInputRegel();
-		regel.databaseID = databaseID;
-		regel.typ = this.typ;
-		regel.daten = new Long[params.length];
-		for (int i = 0; i < params.length; i++) {
-			Long data = params[i];
-			if (data == null)
-				throw new NullPointerException();
-			regel.daten[i] = data;
-		}
-		return regel;
+	public boolean hasParamType(GostKursblockungRegelParameterTyp paramType) {
+	    for (GostKursblockungRegelParameterTyp cur : paramTypes)
+	        if (paramType == cur)
+	            return true;
+	    return false;
 	}
-
-	/** 
-	 * Erstellt ein neues Regel-Objekt der Klasse {@link KursblockungInputRegel} mithilfe der angegebenen ID und der
-	 * angegebenen Parameter.
-	 * 
-	 * @param  databaseID   die ID der Regel aus der Datenbank.
-	 * @param  typ          die Nr des Regel-Typs
-	 * @param  params       die Parameter der zu erstellenden Regel
-	 * 
-	 * @return das Regel-Objekt
-	 * 
-	 * @throws IllegalArgumentException   wenn es keine gültige Regel für angegeben ID gibt oder die Anzahl 
-	 *                                    der Parameter nicht zu dem Regel-Typ passt 
-	 */
-	public static @NotNull KursblockungInputRegel createByID(long databaseID, int typ, @NotNull Long... params)
-			throws IllegalArgumentException {
-		@NotNull GostKursblockungRegelTyp gostTyp = GostKursblockungRegelTyp.fromTyp(typ);
-		if (gostTyp.equals(UNDEFINIERT))
-			throw new IllegalArgumentException("Ungültiger Regel-Typ");
-		return gostTyp.create(databaseID, params);
-	}
-
-	/** 
-	 * Erstellt ein neues Regel-Objekt der Klasse {@link KursblockungInputRegel} mithilfe der angegebenen Regel.
-	 * 
-	 * @param regel   die Regel als Core-DTO
-	 * 
-	 * @return das Regel-Objekt
-	 * 
-	 * @throws IllegalArgumentException   wenn es keine gültige Regel für angegeben ID gibt oder die Anzahl der 
-	 *                                    Parameter nicht zu dem Regel-Typ passt */
-	public static @NotNull KursblockungInputRegel createFrom(@NotNull GostBlockungRegel regel)
-			throws IllegalArgumentException {
-		return GostKursblockungRegelTyp.createByID(regel.id, regel.typ, regel.parameter.toArray(new Long[0]));
-	}
-
 }

@@ -41,18 +41,18 @@ import de.nrw.schule.svws.csv.converter.current.kursblockung.GostKursblockungReg
 @JsonPropertyOrder({"ID","Blockung_ID","Typ"})
 public class Rev8DTOGostBlockungRegel {
 
-	/** Kursblockung der Gymnasialen Oberstufe - Regeldefinition der Blockung: ID der Regel (generiert) */
+	/** ID der Regel (generiert) */
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
 	public Long ID;
 
-	/** Kursblockung der Gymnasialen Oberstufe - Regeldefinition der Blockung: ID der Blockung */
+	/** ID der Blockung */
 	@Column(name = "Blockung_ID")
 	@JsonProperty
 	public Long Blockung_ID;
 
-	/** Kursblockung der Gymnasialen Oberstufe - Regeldefinition der Blockung: Die ID des Typs der Regeldefinition (siehe Core-Type GostKursblockungRegeltyp) */
+	/** Die ID des Typs der Regeldefinition (siehe Core-Type GostKursblockungRegeltyp) */
 	@Column(name = "Typ")
 	@JsonProperty
 	@Convert(converter=GostKursblockungRegelTypConverter.class)

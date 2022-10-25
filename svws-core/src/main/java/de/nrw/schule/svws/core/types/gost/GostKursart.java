@@ -5,16 +5,20 @@ import java.util.HashMap;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import de.nrw.schule.svws.core.data.gost.GostBlockungKurs;
+import de.nrw.schule.svws.core.data.gost.GostFachwahl;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Diese Klasse stellt die Core-Types als Auszählung für die Kursarten in 
+ * Diese Klasse stellt die Core-Types als Aufzählung für die Kursarten in 
  * der gymnasialen Oberstufe zur Verfügung.
  * Core-Types dienen als grundlegende abstrakte Datentypen sowohl für die Core-Algorithmen
  * als auch für die OpenAPI-Schnittstelle.
  */
 public class GostKursart {
 
+	private static final long FACHART_ID_FAKTOR = 1000L; 
+	
 	/** Die Zuordnung der Kursarten zu dem Kürzel der Kursart */
 	private static final @NotNull HashMap<@NotNull String, @NotNull GostKursart> map = new HashMap<>();
 
@@ -35,8 +39,7 @@ public class GostKursart {
 	/** Vertiefungskurs = VTF */
 	public static final @NotNull GostKursart VTF = new GostKursart(5, "VTF", "Vertiefungskurs");
 
-	
-	/** Die eindeutige ID der Kursart der Gymnasialen Oberstufe */
+	/** Die eindeutige ID der Kursart der Gymnasialen Oberstufe*/
 	public final @NotNull int id;
 
 	/** Das Kürzel der Kursart der Gymnasialen Oberstufe */
@@ -136,7 +139,6 @@ public class GostKursart {
 		return null;
 	}
 	
-
     /**
      * Gibt die Kursart aus dem Kürzel der Kursart zurück.
      * 
@@ -149,11 +151,67 @@ public class GostKursart {
 	}
 
 	
+	/**
+	 * Berechnet mit der Formel pFachID * {@link #FACHART_ID_FAKTOR} + pKursartID die ID der Fachart.
+	 * 
+	 * @param  pFachID    Die DatenbankID des Faches.
+	 * @param  pKursartID Die DatenbankID der Kursart.
+	 * 
+	 * @return pFachID * {@link #FACHART_ID_FAKTOR} + pKursartID
+	 */
+	public static long getFachartID(long pFachID, int pKursartID) {
+		return pFachID * FACHART_ID_FAKTOR + pKursartID;
+	}
+	
+	/**
+	 * Berechnet anhand des Fachwahl-Objektes die FachartID.
+	 * @param pFachwahl Das Fachwahl-Objekt.
+	 * 
+	 * @return pFachwahl.fachID * {@link #FACHART_ID_FAKTOR} + pFachwahl.kursartID
+	 */
+	public static long getFachartID(@NotNull GostFachwahl pFachwahl) {
+		return getFachartID(pFachwahl.fachID, pFachwahl.kursartID);
+	}
+	
+	/**
+	 * Berechnet anhand des Kurs-Objektes die FachartID.
+	 * @param pKurs Das Kurs-Objekt.
+	 * 
+	 * @return pKurs.fachID * {@link #FACHART_ID_FAKTOR} + pKurs.kursartID
+	 */
+	public static long getFachartID(GostBlockungKurs pKurs) {
+		return getFachartID(pKurs.fach_id, pKurs.kursart);
+	}
+	
+	/**
+	 * Berechnet anhand der Fachart-ID die Fach-ID.
+	 *  
+	 * @param pFachartID Die ID der Fachart, welche das Fach und die Kursart kodiert.
+	 * 
+	 * @return Ganzzahlige Division von pFachartID durch {@link #FACHART_ID_FAKTOR}
+	 */
+	public static long getFachID(long pFachartID) {
+		return pFachartID / FACHART_ID_FAKTOR;
+	}
+
+	/**
+	 * Berechnet anhand der Fachart-ID die Kursart-ID.
+	 *  
+	 * @param pFachartID Die ID der Fachart, welche das Fach und die Kursart kodiert.
+	 * 
+	 * @return Rest der ganzzahligen Division von pFachartID durch {@link #FACHART_ID_FAKTOR}
+	 */
+	public static int getKursartID(long pFachartID) {
+		return (int) (pFachartID % FACHART_ID_FAKTOR);
+	}
+
 	@Override
 	@JsonIgnore
 	public @NotNull String toString() {
 		return kuerzel;
 	}
+
+
 
 
 }

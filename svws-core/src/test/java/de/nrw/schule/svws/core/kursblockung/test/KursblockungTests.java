@@ -2,6 +2,8 @@ package de.nrw.schule.svws.core.kursblockung.test;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Random;
 import java.util.Vector;
 import java.util.function.Consumer;
@@ -12,16 +14,22 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
-import de.nrw.schule.svws.core.data.kursblockung.KursblockungInput;
-import de.nrw.schule.svws.core.data.kursblockung.KursblockungInputFachwahl;
-import de.nrw.schule.svws.core.data.kursblockung.KursblockungInputKurs;
-import de.nrw.schule.svws.core.data.kursblockung.KursblockungOutput;
-import de.nrw.schule.svws.core.data.kursblockung.KursblockungOutputFachwahlZuKurs;
-import de.nrw.schule.svws.core.data.kursblockung.KursblockungOutputKursZuSchiene;
-import de.nrw.schule.svws.core.data.kursblockung.KursblockungOutputs;
+import de.nrw.schule.svws.core.adt.Pair;
+import de.nrw.schule.svws.core.data.gost.GostBlockungKurs;
+import de.nrw.schule.svws.core.data.gost.GostBlockungRegel;
+import de.nrw.schule.svws.core.data.gost.GostBlockungSchiene;
+import de.nrw.schule.svws.core.data.gost.GostBlockungsdaten;
+import de.nrw.schule.svws.core.data.gost.GostFach;
+import de.nrw.schule.svws.core.data.gost.GostFachwahl;
+import de.nrw.schule.svws.core.data.schueler.Schueler;
 import de.nrw.schule.svws.core.kursblockung.KursblockungAlgorithmus;
 import de.nrw.schule.svws.core.kursblockung.KursblockungMatrix;
 import de.nrw.schule.svws.core.kursblockung.KursblockungStatic;
+import de.nrw.schule.svws.core.types.gost.GostKursart;
+import de.nrw.schule.svws.core.types.kursblockung.GostKursblockungRegelTyp;
+import de.nrw.schule.svws.core.utils.gost.GostBlockungsdatenManager;
+import de.nrw.schule.svws.core.utils.gost.GostBlockungsergebnisManager;
+import de.nrw.schule.svws.core.utils.gost.GostFaecherManager;
 import de.nrw.schule.svws.logger.LogData;
 import de.nrw.schule.svws.logger.LogLevel;
 import de.nrw.schule.svws.logger.Logger;
@@ -38,6 +46,102 @@ public class KursblockungTests {
 	/** Initialisiert den Test. Die Methode ist leer. */
 	@BeforeAll
 	static void setup() {
+	}
+
+	/**
+	 * Testet den Algorithmus "Maximum Cardinality Bipartite Matching". Hierfür werden Matrizen unterschiedlicher
+	 * Dimension erzeugt und mit 0en und 1en zufällig gefüllt. Anschließend wird ein maximales Matching berechnet.
+	 * Gleichzeitig wird die negierte Matrix an einen "Minimum Weight Bipartite Matching" übergeben. Die Ergebnisse
+	 * beider Algorithmen muss identisch sein (nicht die Zuordnung selbst, sondern die Größe des Matchings).
+	 */
+	@Test
+	@DisplayName("Maximum Cardinality Bipartite Matching testen.")
+	void test000_max_bipartite_matching() {
+		Random rnd = new Random(1);
+	
+		// Führe viele zufällige Tests durch...
+		for (int i = 0; i < 100000; i++) {
+			int rows = rnd.nextInt(10) + 2;
+			int cols = rnd.nextInt(10) + 2;
+			double percent = rnd.nextDouble();
+	
+			// Erzeuge identische Matrizen mit +1 (m1) und -1 (m2) Werten
+			KursblockungMatrix m1 = new KursblockungMatrix(rnd, rows, cols); // Maximales bipartites Matching
+			KursblockungMatrix m2 = new KursblockungMatrix(rnd, rows, cols); // Minimales gewichtetes bipartites
+																				// Matching
+			for (int r = 0; r < rows; r++) {
+				for (int c = 0; c < cols; c++) {
+					if (rnd.nextDouble() < percent) {
+						m1.getMatrix()[r][c] = 1;
+						m2.getMatrix()[r][c] = -1;
+					}
+				}
+			}
+	
+			// Berechne
+			int[] r2c1 = m1.gibMaximalesBipartitesMatching(true);
+			int[] r2c2 = m2.gibMinimalesBipartitesMatchingGewichtet(true);
+	
+			// Berechne die Summe der Zuordnung
+			int summe1 = 0;
+			int summe2 = 0;
+			for (int r = 0; r < rows; r++) {
+				summe1 += r2c1[r] < 0 ? 0 : m1.getMatrix()[r][r2c1[r]];
+				summe2 += r2c2[r] < 0 ? 0 : -m2.getMatrix()[r][r2c2[r]];
+			}
+	
+			// Die Summe beider Verfahren muss gleich sein
+			if (summe1 != summe2) {
+				fail(m1.convertToString("Summe1(" + summe1 + ") != Summe2(" + summe2 + ")", 5, false));
+			}
+		}
+	
+	}
+
+	/**
+	 * Testet den Algorithmus "Minimum Weight Bipartite Matching". Hierfür werden Matrizen unterschiedlicher Dimension
+	 * erzeugt und mit Zahlen von -9 bis +9 zufällig gefüllt. Ebenso wird durch einen Brute-Force-Algorithmus auch ein
+	 * "Minimum Weight Bipartite Matching" berechnet. Die Ergebnisse beider Algorithmen muss identisch sein (nicht die
+	 * Zuordnung selbst, sondern die Größe des Matchings).
+	 */
+	@Test
+	@DisplayName("Minimum Weight Bipartite Matching testen.")
+	void test000_min_weight_bipartite_matching() {
+		Random rnd = new Random(1);
+	
+		// Zufallsmatrizen testen
+		// Vorsicht mit der Dimension! Zu groß --> exponentielle Laufzeit!
+		for (int i = 0; i < 100000; i++) {
+			// Füllen
+			int rows = rnd.nextInt(5) + 2; // Dimension
+			int cols = rnd.nextInt(5) + 2; // Dimension
+			KursblockungMatrix m = new KursblockungMatrix(rnd, rows, cols);
+			m.fuelleMitZufallszahlenVonBis(-9, 9);
+	
+			// Berechnen
+			int[] r2c = m.gibMinimalesBipartitesMatchingGewichtet(true);
+	
+			// Summe berechnen (Minimum Matching Algorithmus)
+			long wert1 = 0;
+			for (int r = 0; r < r2c.length; r++) {
+				int c = r2c[r];
+				if (c >= 0)
+					wert1 += m.getMatrix()[r][c];
+			}
+	
+			// Summe berechnen (alle Kombinationen durchgehen)
+			long wert2 = rows <= cols ? recursive_min_sum_r(m.getMatrix(), 0, new boolean[cols])
+					: recursive_min_sum_c(m.getMatrix(), 0, new boolean[rows]);
+	
+			// Die Summen müssen gleich sein
+			if (wert1 != wert2) {
+				System.out.println(m.convertToString("Summe1(" + wert1 + ") != Summe2(" + wert2 + ")", 5, false));
+				System.out.println(m.convertToString("Summe1(" + wert1 + ") != Summe2(" + wert2 + ")", 5, true));
+				fail("Summe1(" + wert1 + ") != Summe2(" + wert2 + ")");
+			}
+	
+		}
+	
 	}
 
 	/** Testet das Einlesen und Konvertieren der Daten 001. Diese befinden sich hier {@link #PFAD_DATEN_001}. */
@@ -58,33 +162,38 @@ public class KursblockungTests {
 
 		// Einlesen der Kurs42-Daten aus den Textdateien
 		Kurs42Converter k42Converter = new Kurs42Converter(log, PFAD_DATEN_001, 999, false);
-		KursblockungInput ki = k42Converter.gibKursblockungInput();
+
+		GostBlockungsdatenManager manager = k42Converter.gibKursblockungInput();
 
 		// Überprüfen der Ergebnisse
-		if (ki.maxSchienen != 14)
-			fail("Blockung001 hat nicht 14 Schienen!");
+		if (manager.getSchienenAnzahl() != 14)
+			fail("Blockung001 hat nicht 14 Schienen, sondern " + manager.getSchienenAnzahl() + ".");
 
-		if (ki.schueler.size() != 137)
-			fail("Blockung001 hat nicht 137 SuS!");
+		if (manager.getSchuelerAnzahlMitFachwahlen() != 137)
+			fail("Blockung001 hat nicht 137 SuS mit Fachwahlen, sondern " + manager.getSchuelerAnzahlMitFachwahlen()
+					+ ".");
 
-		if (ki.faecher.size() != 33)
-			fail("Blockung001 hat nicht 33 Fächer!");
+		if (manager.getFaecherAnzahl() != 33)
+			fail("Blockung001 hat nicht 33 Fächer, sondern " + manager.getFaecherAnzahl() + ".");
 
-		if (ki.kursarten.size() != 3)
-			fail("Blockung001 hat nicht 3 Kursarten!");
+		if (manager.getKursartenAnzahl() != 3)
+			fail("Blockung001 hat nicht 3 Kursarten, sondern " + manager.getKursartenAnzahl() + ".");
 
-		if (ki.kurse.size() != 69)
-			fail("Blockung001 hat nicht 69 Kurse!");
+		if (manager.getKursAnzahl() != 69)
+			fail("Blockung001 hat nicht 69 Kurse, sondern " + manager.getKursAnzahl() + ".");
 
-		if (ki.fachwahlen.size() != 1146)
-			fail("Blockung001 hat nicht 1146 Fachwahlen!");
+		if (manager.getFachwahlAnzahl() != 1146)
+			fail("Blockung001 hat nicht 1146 Fachwahlen, " + manager.getFachwahlAnzahl() + ".");
 	}
 
-	/** Liest diese {@link #PFAD_DATEN_001} Daten ein. Fixiert anschließend alle Kurse und lässt dann den
-	 * Kursblockungsalgorithmus lediglich die SuS verteilen. */
+	/**
+	 * Liest diese {@link #PFAD_DATEN_001} Daten ein. Fixiert anschließend alle Kurse und lässt dann den
+	 * Kursblockungsalgorithmus lediglich die SuS verteilen.
+	 */
 	@Test
 	@DisplayName("Daten 001 blocken (nur SuS).")
 	void test001_fixed_complete() {
+
 		// Der Kursblockungsalgorithmus ist ein Service.
 		KursblockungAlgorithmus kbAlgorithmus = new KursblockungAlgorithmus();
 
@@ -105,49 +214,28 @@ public class KursblockungTests {
 		Kurs42Converter k42Converter = new Kurs42Converter(log, PFAD_DATEN_001, maxTimeMillis, true);
 
 		// Umwandlung von 'Kurs42Daten' zu 'KursblockungInput'.
-		KursblockungInput kbInput = k42Converter.gibKursblockungInput();
+		@NotNull GostBlockungsdatenManager kbInput = k42Converter.gibKursblockungInput();
 
 		// Berechnung der Blockung und Rückgabe aller Blockungsergebnisse.
-		KursblockungOutputs kbOutputs = kbAlgorithmus.handle(kbInput);
+		Vector<GostBlockungsergebnisManager> kbOutputs = kbAlgorithmus.handle(kbInput);
 
 		// Blockungsergebnisse vorhanden?
-		if (kbOutputs == null) {
+		if (kbOutputs == null)
 			fail("kbOutputs == null");
-			return;
-		}
 
 		// Jedes einzelne Blockungsergebnis prüfen.
-		for (int i = 0; i < kbOutputs.outputs.size(); i++) {
-			KursblockungOutput kbOutput = kbOutputs.outputs.get(i);
-
-			if (kbOutput.input != kbInput.input)
-				fail("Input-Output-IDs stimmen nicht überein: kbOutput.input != kbInput.input");
-
-			Vector<KursblockungOutputKursZuSchiene> vKursZuSchiene = kbOutput.kursZuSchiene;
-			if (vKursZuSchiene == null)
-				fail("vKursZuSchiene == null");
-
-			int kursAnz = vKursZuSchiene.size();
-			if (kursAnz != 69)
-				fail("Der Blockungsalgorithmus hat nicht 69 Kurse zugeordnet, sondern " + kursAnz + ".");
-
-			Vector<KursblockungOutputFachwahlZuKurs> vFachwahlenZuKurs = kbOutput.fachwahlenZuKurs;
-			if (vFachwahlenZuKurs == null)
-				fail("vFachwahlenZuKurs == null");
-
-			int fachwahlAnz = vFachwahlenZuKurs.size();
-			if (fachwahlAnz != 1146)
-				fail("Der Blockungsalgorithmus hat nicht 1146 Fachwahlen zugeordnet, sondern " + fachwahlAnz + ".");
-
-		}
-
+		for (GostBlockungsergebnisManager kbOutput : kbOutputs)
+			check(kbInput, kbOutput);
 	}
 
-	/** Liest diese {@link #PFAD_DATEN_001} Daten ein. Definiert einige Regeln und lässt dann den
-	 * Kursblockungsalgorithmus Kurse und SuS verteilen. */
+	/**
+	 * Liest diese {@link #PFAD_DATEN_001} Daten ein. Definiert einige Regeln und lässt dann den
+	 * Kursblockungsalgorithmus Kurse und SuS verteilen.
+	 */
 	@Test
 	@DisplayName("Daten 001 blocken (Kurse und SuS).")
 	void test001_fixed_some() {
+
 		// Der Kursblockungsalgorithmus ist ein Service.
 		KursblockungAlgorithmus kbAlgorithmus = new KursblockungAlgorithmus();
 
@@ -167,66 +255,37 @@ public class KursblockungTests {
 		long maxTimeMillis = 1000 * 1;
 		Kurs42Converter k42Converter = new Kurs42Converter(log, PFAD_DATEN_001, maxTimeMillis, false);
 
-		// Umwandlung von 'Kurs42Daten' zu 'KursblockungInput'.
-		KursblockungInput kbInput = k42Converter.gibKursblockungInput();
+		// Kurs42Daten --> GostBlockungsdatenManager
+		@NotNull GostBlockungsdatenManager kbInput = k42Converter.gibKursblockungInput();
 
 		// Fixierungen
-		KursblockungStatic.aktionSperreSchieneFuerKursart(kbInput, "LK", 3, kbInput.maxSchienen);
-		KursblockungStatic.aktionSperreSchieneFuerKursart(kbInput, "GK", 1, 2);
-		KursblockungStatic.aktionSperreSchieneFuerKursart(kbInput, "PJK", 1, 2);
-		KursblockungStatic.aktionFixiereKurseInSchieneSonstNichts(kbInput, new String[] { "SP-GK1", "SP-GK2", "SP-GK3" }, 12);
-		KursblockungStatic.aktionFixiereKurseInSchieneSonstNichts(kbInput, new String[] { "PXSP-PJK1" }, 13);
-		KursblockungStatic.aktionFixiereKurseInSchieneSonstNichts(kbInput, new String[] { "I0-GK1", "S0-GK1" }, 14);
+		regelSperreSchieneFuerKursart(kbInput, "LK", 3, kbInput.getSchienenAnzahl());
+		regelSperreSchieneFuerKursart(kbInput, "GK", 1, 2);
+		regelSperreSchieneFuerKursart(kbInput, "PJK", 1, 2);
+		regelFixiereKurseInSchieneSonstNichts(kbInput, new long[] { 35, 36, 37 }, 12);
+		regelFixiereKurseInSchieneSonstNichts(kbInput, new long[] { 68 }, 13);
+		regelFixiereKurseInSchieneSonstNichts(kbInput, new long[] { 18, 33 }, 14);
 
 		// Berechnung der Blockung und Rückgabe aller Blockungsergebnisse.
-		KursblockungOutputs kbOutputs = kbAlgorithmus.handle(kbInput);
+		Vector<@NotNull GostBlockungsergebnisManager> kbOutputs = kbAlgorithmus.handle(kbInput);
 
 		// Blockungsergebnisse vorhanden?
-		if (kbOutputs == null) {
+		if (kbOutputs == null)
 			fail("kbOutputs == null");
-			return;
-		}
 
 		// Jedes einzelne Blockungsergebnis prüfen.
-		for (int i = 0; i < kbOutputs.outputs.size(); i++) {
-			KursblockungOutput kbOutput = kbOutputs.outputs.get(i);
-
-			if (kbOutput.input != kbInput.input)
-				fail("Input-Output-IDs stimmen nicht überein: kbOutput.input != kbInput.input");
-
-			Vector<KursblockungOutputKursZuSchiene> vKursZuSchiene = kbOutput.kursZuSchiene;
-			if (vKursZuSchiene == null) {
-				fail("vKursZuSchiene == null");
-				return;
-			}
-
-			int kursAnz = vKursZuSchiene.size();
-			if (kursAnz != 69) {
-				fail("Der Blockungsalgorithmus hat nicht 69 Kurse zugeordnet, sondern " + kursAnz + ".");
-				return;
-			}
-
-			Vector<KursblockungOutputFachwahlZuKurs> vFachwahlenZuKurs = kbOutput.fachwahlenZuKurs;
-			if (vFachwahlenZuKurs == null) {
-				fail("vFachwahlenZuKurs == null");
-				return;
-			}
-
-			int fachwahlAnz = vFachwahlenZuKurs.size();
-			if (fachwahlAnz != 1146) {
-				fail("Der Blockungsalgorithmus hat nicht 1146 Fachwahlen zugeordnet, sondern " + fachwahlAnz + ".");
-				return;
-			}
-
-		}
-
+		for (GostBlockungsergebnisManager kbOutput : kbOutputs)
+			check(kbInput, kbOutput);
 	}
 
-	/** Liest diese {@link #PFAD_DATEN_001} Daten ein. Definiert einige Regeln und explizit Regel 5, indem für Schüler
-	 * Nr. 18 alle Kurse gesperrt werden. Lässt dann den Kursblockungsalgorithmus Kurse und SuS verteilen. */
+	/**
+	 * Liest diese {@link #PFAD_DATEN_001} Daten ein. Definiert einige Regeln und explizit Regel 5, indem für Schüler
+	 * Nr. 18 alle Kurse gesperrt werden. Lässt dann den Kursblockungsalgorithmus Kurse und SuS verteilen.
+	 */
 	@Test
 	@DisplayName("Daten 001 blocken mit Regel 5 (Verbiete Schüler X in Kurs Y).")
 	void test001_regel_5() {
+
 		// Der Kursblockungsalgorithmus ist ein Service.
 		KursblockungAlgorithmus kbAlgorithmus = new KursblockungAlgorithmus();
 
@@ -247,69 +306,54 @@ public class KursblockungTests {
 		Kurs42Converter k42Converter = new Kurs42Converter(log, PFAD_DATEN_001, maxTimeMillis, false);
 
 		// Umwandlung von 'Kurs42Daten' zu 'KursblockungInput'.
-		KursblockungInput kbInput = k42Converter.gibKursblockungInput();
+
+		@NotNull GostBlockungsdatenManager kbInput = k42Converter.gibKursblockungInput();
 
 		// Fixierungen
-		KursblockungStatic.aktionSperreSchieneFuerKursart(kbInput, "LK", 3, kbInput.maxSchienen);
-		KursblockungStatic.aktionSperreSchieneFuerKursart(kbInput, "GK", 1, 2);
-		KursblockungStatic.aktionSperreSchieneFuerKursart(kbInput, "PJK", 1, 2);
-		KursblockungStatic.aktionFixiereKurseInSchieneSonstNichts(kbInput, new String[] { "SP-GK1", "SP-GK2", "SP-GK3" }, 12);
-		KursblockungStatic.aktionFixiereKurseInSchieneSonstNichts(kbInput, new String[] { "PXSP-PJK1" }, 13);
-		KursblockungStatic.aktionFixiereKurseInSchieneSonstNichts(kbInput, new String[] { "I0-GK1", "S0-GK1" }, 14);
+		regelSperreSchieneFuerKursart(kbInput, "LK", 3, kbInput.getSchienenAnzahl());
+		regelSperreSchieneFuerKursart(kbInput, "GK", 1, 2);
+		regelSperreSchieneFuerKursart(kbInput, "PJK", 1, 2);
+		regelFixiereKurseInSchieneSonstNichts(kbInput, new long[] { 35, 36, 37 }, 12);
+		regelFixiereKurseInSchieneSonstNichts(kbInput, new long[] { 68 }, 13);
+		regelFixiereKurseInSchieneSonstNichts(kbInput, new long[] { 18, 33 }, 14);
 
-		// Regel 5
-		for (int kursID = 0; kursID < kbInput.kurse.size(); kursID++) {
-			KursblockungStatic.aktionVerbieteSchuelerInKurs(kbInput, 18, kursID);
-		}
+		// Regel 5 --> Sperre einen Schüler in allen Kursen.
+		for (@NotNull GostBlockungKurs gKurs : kbInput.daten().kurse)
+			regelVerbieteSchuelerInKurs(kbInput, 18, gKurs.id);
 
 		// Berechnung der Blockung und Rückgabe aller Blockungsergebnisse.
-		KursblockungOutputs kbOutputs = kbAlgorithmus.handle(kbInput);
+		Vector<@NotNull GostBlockungsergebnisManager> kbOutputs = kbAlgorithmus.handle(kbInput);
 
 		// Blockungsergebnisse vorhanden?
-		if (kbOutputs == null) {
+		if (kbOutputs == null)
 			fail("kbOutputs == null");
-			return;
-		}
 
 		// Jedes einzelne Blockungsergebnis prüfen.
-		for (int i = 0; i < kbOutputs.outputs.size(); i++) {
-			KursblockungOutput kbOutput = kbOutputs.outputs.get(i);
+		for (GostBlockungsergebnisManager kbOutput : kbOutputs) {
+			check(kbInput, kbOutput);
 
-			if (kbOutput.input != kbInput.input)
-				fail("Input-Output-IDs stimmen nicht überein: kbOutput.input != kbInput.input");
+			if (kbOutput.getOfKursOfSchieneIstZugeordnet(35, 12) == false)
+				fail("kbOutput.getIstKursInSchiene(35, 12)");
+			if (kbOutput.getOfKursOfSchieneIstZugeordnet(36, 12) == false)
+				fail("kbOutput.getIstKursInSchiene(36, 12)");
+			if (kbOutput.getOfKursOfSchieneIstZugeordnet(37, 12) == false)
+				fail("kbOutput.getIstKursInSchiene(37, 12)");
+			if (kbOutput.getOfKursOfSchieneIstZugeordnet(68, 13) == false)
+				fail("kbOutput.getIstKursInSchiene(68, 13)");
+			if (kbOutput.getOfKursOfSchieneIstZugeordnet(18, 14) == false)
+				fail("kbOutput.getIstKursInSchiene(18, 14)");
+			if (kbOutput.getOfKursOfSchieneIstZugeordnet(33, 14) == false)
+				fail("kbOutput.getIstKursInSchiene(33, 14)");
 
-			Vector<KursblockungOutputKursZuSchiene> vKursZuSchiene = kbOutput.kursZuSchiene;
-			if (vKursZuSchiene == null) {
-				fail("vKursZuSchiene == null");
-				return;
-			}
-
-			int kursAnz = vKursZuSchiene.size();
-			if (kursAnz != 69) {
-				fail("Der Blockungsalgorithmus hat nicht 69 Kurse zugeordnet, sondern " + kursAnz + ".");
-				return;
-			}
-
-			Vector<KursblockungOutputFachwahlZuKurs> vFachwahlenZuKurs = kbOutput.fachwahlenZuKurs;
-			if (vFachwahlenZuKurs == null) {
-				fail("vFachwahlenZuKurs == null");
-				return;
-			}
-
-			int fachwahlAnz = vFachwahlenZuKurs.size();
-			if (fachwahlAnz != 1146) {
-				fail("Der Blockungsalgorithmus hat nicht 1146 Fachwahlen zugeordnet, sondern " + fachwahlAnz + ".");
-				return;
-			}
-
+			// TODO BAR Sperrungen überprüfen.
 		}
-
 	}
 
 	/** Testet das Einlesen und Konvertieren der Daten 002. Diese befinden sich hier {@link #PFAD_DATEN_002}. */
 	@Test
 	@DisplayName("Daten 002 einlesen.")
 	void test002_data() {
+
 		// Erzeugen eines Loggers mit Consumer.
 		Logger log = new Logger();
 
@@ -325,35 +369,38 @@ public class KursblockungTests {
 		// Einlesen der Kurs42-Daten aus den Textdateien
 		long maxTimeMillis = 1000 * 1;
 		Kurs42Converter k42Converter = new Kurs42Converter(log, PFAD_DATEN_002, maxTimeMillis, false);
-		KursblockungInput ki = k42Converter.gibKursblockungInput();
+		@NotNull GostBlockungsdatenManager manager = k42Converter.gibKursblockungInput();
 
 		// Überprüfen der Ergebnisse
-		if (ki.maxSchienen != 12) {
-			fail("Blockung002 hat nicht 12 Schienen, sondern " + ki.maxSchienen);
-		}
-		if (ki.schueler.size() != 153) {
-			fail("Blockung002 hat nicht 153 SuS, sondern " + ki.schueler.size());
-		}
-		if (ki.faecher.size() != 23) {
-			fail("Blockung002 hat nicht 23 Fächer, sondern " + ki.faecher.size());
-		}
-		if (ki.kursarten.size() != 2) {
-			fail("Blockung002 hat nicht 2 Kursarten, sondern " + ki.kursarten.size());
-		}
-		if (ki.kurse.size() != 86) {
-			fail("Blockung002 hat nicht 86 Kurse, sondern " + ki.kurse.size());
-		}
-		if (ki.fachwahlen.size() != 1798) {
-			fail("Blockung002 hat nicht 1798 Fachwahlen, sondern " + ki.fachwahlen.size());
-		}
+		if (manager.getSchienenAnzahl() != 12)
+			fail("Blockung002 hat nicht 12 Schienen, sondern " + manager.getSchienenAnzahl() + ".");
+
+		if (manager.getSchuelerAnzahlMitFachwahlen() != 150)
+			fail("Blockung002 hat nicht 150 SuS mit Fachwahlen, sondern " + manager.getSchuelerAnzahlMitFachwahlen()
+					+ ".");
+
+		if (manager.getFaecherAnzahl() != 23)
+			fail("Blockung002 hat nicht 23 Fächer, sondern " + manager.getFaecherAnzahl() + ".");
+
+		if (manager.getKursartenAnzahl() != 2)
+			fail("Blockung002 hat nicht 2 Kursarten, sondern " + manager.getKursartenAnzahl() + ".");
+
+		if (manager.getKursAnzahl() != 86)
+			fail("Blockung002 hat nicht 86 Kurse, sondern " + manager.getKursAnzahl());
+
+		if (manager.getFachwahlAnzahl() != 1798)
+			fail("Blockung002 hat nicht 1798 Fachwahlen, sondern " + manager.getFachwahlAnzahl() + ".");
 
 	}
 
-	/** Liest diese {@link #PFAD_DATEN_002} Daten ein. Fixiert anschließend alle Kurse und lässt dann den
-	 * Kursblockungsalgorithmus lediglich die SuS verteilen. */
+	/**
+	 * Liest diese {@link #PFAD_DATEN_002} Daten ein. Fixiert anschließend alle Kurse und lässt dann den
+	 * Kursblockungsalgorithmus lediglich die SuS verteilen.
+	 */
 	@Test
 	@DisplayName("Daten 002 blocken (nur SuS).")
 	void test002_fixed_complete() {
+
 		// Der Kursblockungsalgorithmus ist ein Service.
 		KursblockungAlgorithmus kbAlgorithmus = new KursblockungAlgorithmus();
 
@@ -362,6 +409,7 @@ public class KursblockungTests {
 
 		// Consumer triggert 'fail', wenn etwas kritisches geloggt wurde.
 		log.addConsumer(new Consumer<LogData>() {
+
 			@Override
 			public void accept(LogData t) {
 				if (t.getLevel().compareTo(LogLevel.APP) != 0)
@@ -375,57 +423,29 @@ public class KursblockungTests {
 		Kurs42Converter k42Converter = new Kurs42Converter(log, PFAD_DATEN_002, maxTimeMillis, kurseFixieren);
 
 		// Umwandlung von 'Kurs42Daten' zu 'KursblockungInput'.
-		KursblockungInput kbInput = k42Converter.gibKursblockungInput();
+
+		@NotNull GostBlockungsdatenManager kbInput = k42Converter.gibKursblockungInput();
 
 		// Berechnung der Blockung und Rückgabe aller Blockungsergebnisse.
-		KursblockungOutputs kbOutputs = kbAlgorithmus.handle(kbInput);
+		Vector<@NotNull GostBlockungsergebnisManager> kbOutputs = kbAlgorithmus.handle(kbInput);
 
 		// Blockungsergebnisse vorhanden?
-		if (kbOutputs == null) {
+		if (kbOutputs == null)
 			fail("kbOutputs == null");
-			return;
-		}
 
 		// Jedes einzelne Blockungsergebnis prüfen.
-		for (int i = 0; i < kbOutputs.outputs.size(); i++) {
-			KursblockungOutput kbOutput = kbOutputs.outputs.get(i);
-
-			if (kbOutput.input != kbInput.input)
-				fail("Input-Output-IDs stimmen nicht überein: kbOutput.input != kbInput.input");
-
-			Vector<KursblockungOutputKursZuSchiene> vKursZuSchiene = kbOutput.kursZuSchiene;
-			if (vKursZuSchiene == null) {
-				fail("vKursZuSchiene == null");
-				return;
-			}
-			int kursIn = kbInput.kurse.size();
-			int kursOut = vKursZuSchiene.size();
-			if (kursIn != kursOut) {
-				fail("kursIn != kursOut (" + kursIn + " != " + kursOut + ")");
-				return;
-			}
-
-			Vector<KursblockungOutputFachwahlZuKurs> vFachwahlenZuKurs = kbOutput.fachwahlenZuKurs;
-			if (vFachwahlenZuKurs == null) {
-				fail("vFachwahlenZuKurs == null");
-				return;
-			}
-			int fachwahlIn = kbInput.fachwahlen.size();
-			int fachwahlOut = vFachwahlenZuKurs.size();
-			if (fachwahlIn != fachwahlOut) {
-				fail("fachwahlIn != fachwahlOut (" + fachwahlIn + " != " + fachwahlOut + ")");
-				return;
-			}
-
-		}
-
+		for (GostBlockungsergebnisManager kbOutput : kbOutputs)
+			check(kbInput, kbOutput);
 	}
 
-	/** Liest diese {@link #PFAD_DATEN_002} Daten ein. Definiert einige Regeln und lässt dann den
-	 * Kursblockungsalgorithmus Kurse und SuS verteilen. */
+	/**
+	 * Liest diese {@link #PFAD_DATEN_002} Daten ein. Definiert einige Regeln und lässt dann den
+	 * Kursblockungsalgorithmus Kurse und SuS verteilen.
+	 */
 	@Test
 	@DisplayName("Daten 002 blocken (Kurse und SuS).")
 	void test002_fixed_some() {
+
 		// Der Kursblockungsalgorithmus ist ein Service.
 		KursblockungAlgorithmus kbAlgorithmus = new KursblockungAlgorithmus();
 
@@ -434,6 +454,7 @@ public class KursblockungTests {
 
 		// Consumer triggert 'fail', wenn etwas kritisches geloggt wurde.
 		log.addConsumer(new Consumer<LogData>() {
+
 			@Override
 			public void accept(LogData t) {
 				if (t.getLevel().compareTo(LogLevel.APP) != 0)
@@ -447,60 +468,33 @@ public class KursblockungTests {
 		Kurs42Converter k42Converter = new Kurs42Converter(log, PFAD_DATEN_002, maxTimeMillis, kurseFixieren);
 
 		// Umwandlung von 'Kurs42Daten' zu 'KursblockungInput'.
-		KursblockungInput kbInput = k42Converter.gibKursblockungInput();
-		KursblockungStatic.aktionFixiereKursInSchiene(kbInput, "BI-GK1", 1);
-		KursblockungStatic.aktionFixiereKursInSchiene(kbInput, "M-GK1", 1);
-		KursblockungStatic.aktionFixiereKursInSchiene(kbInput, "L-GK1", 1);
+		@NotNull GostBlockungsdatenManager kbInput = k42Converter.gibKursblockungInput();
+
+		// Regeln
+		regelFixiereKursInSchiene(kbInput, 52, 1);
+		regelFixiereKursInSchiene(kbInput, 44, 1);
+		regelFixiereKursInSchiene(kbInput, 17, 1);
 
 		// Berechnung der Blockung und Rückgabe aller Blockungsergebnisse.
-		KursblockungOutputs kbOutputs = kbAlgorithmus.handle(kbInput);
+		Vector<@NotNull GostBlockungsergebnisManager> kbOutputs = kbAlgorithmus.handle(kbInput);
 
 		// Blockungsergebnisse vorhanden?
-		if (kbOutputs == null) {
+		if (kbOutputs == null)
 			fail("kbOutputs == null");
-			return;
-		}
 
 		// Jedes einzelne Blockungsergebnis prüfen.
-		for (int i = 0; i < kbOutputs.outputs.size(); i++) {
-			KursblockungOutput kbOutput = kbOutputs.outputs.get(i);
-
-			if (kbOutput.input != kbInput.input)
-				fail("Input-Output-IDs stimmen nicht überein: kbOutput.input != kbInput.input");
-
-			Vector<KursblockungOutputKursZuSchiene> vKursZuSchiene = kbOutput.kursZuSchiene;
-			if (vKursZuSchiene == null) {
-				fail("vKursZuSchiene == null");
-				return;
-			}
-			int kursIn = kbInput.kurse.size();
-			int kursOut = vKursZuSchiene.size();
-			if (kursIn != kursOut) {
-				fail("kursIn != kursOut (" + kursIn + " != " + kursOut + ")");
-				return;
-			}
-
-			Vector<KursblockungOutputFachwahlZuKurs> vFachwahlenZuKurs = kbOutput.fachwahlenZuKurs;
-			if (vFachwahlenZuKurs == null) {
-				fail("vFachwahlenZuKurs == null");
-				return;
-			}
-			int fachwahlIn = kbInput.fachwahlen.size();
-			int fachwahlOut = vFachwahlenZuKurs.size();
-			if (fachwahlIn != fachwahlOut) {
-				fail("fachwahlIn != fachwahlOut (" + fachwahlIn + " != " + fachwahlOut + ")");
-				return;
-			}
-
-		}
-
+		for (GostBlockungsergebnisManager kbOutput : kbOutputs)
+			check(kbInput, kbOutput);
 	}
 
-	/** Liest diese {@link #PFAD_DATEN_002} Daten ein. Definiert einige Regeln und explizit Regel 4, die 19 SuS in Kurs
-	 * 0 fixiert. Lässt dann den Kursblockungsalgorithmus Kurse und SuS verteilen. */
+	/**
+	 * Liest diese {@link #PFAD_DATEN_002} Daten ein. Definiert einige Regeln und explizit Regel 4, die 19 SuS in Kurs 0
+	 * fixiert. Lässt dann den Kursblockungsalgorithmus Kurse und SuS verteilen.
+	 */
 	@Test
 	@DisplayName("Daten 002 blocken mit Regel 4 (Schüler-Kurs-Fixierung).")
 	void test002_regel_4() {
+
 		// Der Kursblockungsalgorithmus ist ein Service.
 		KursblockungAlgorithmus kbAlgorithmus = new KursblockungAlgorithmus();
 
@@ -509,6 +503,7 @@ public class KursblockungTests {
 
 		// Consumer triggert 'fail', wenn etwas kritisches geloggt wurde.
 		log.addConsumer(new Consumer<LogData>() {
+
 			@Override
 			public void accept(LogData t) {
 				if (t.getLevel().compareTo(LogLevel.APP) != 0)
@@ -522,237 +517,58 @@ public class KursblockungTests {
 		Kurs42Converter k42Converter = new Kurs42Converter(log, PFAD_DATEN_002, maxTimeMillis, kurseFixieren);
 
 		// Umwandlung von 'Kurs42Daten' zu 'KursblockungInput'.
-		KursblockungInput kbInput = k42Converter.gibKursblockungInput();
+
+		@NotNull GostBlockungsdatenManager kbInput = k42Converter.gibKursblockungInput();
 
 		// Weitere Regeln manuell hinzufügen.
-		KursblockungStatic.aktionFixiereKursInSchiene(kbInput, "BI-GK1", 1);
-		KursblockungStatic.aktionFixiereKursInSchiene(kbInput, "M-GK1", 1);
-		KursblockungStatic.aktionFixiereKursInSchiene(kbInput, "L-GK1", 1);
+		regelFixiereKursInSchiene(kbInput, 52, 1);
+		regelFixiereKursInSchiene(kbInput, 44, 1);
+		regelFixiereKursInSchiene(kbInput, 17, 1);
 
-		KursblockungStatic.aktionFixiereSchuelerInKurs(kbInput, 4, 0);
-		KursblockungStatic.aktionFixiereSchuelerInKurs(kbInput, 10, 0);
-		KursblockungStatic.aktionFixiereSchuelerInKurs(kbInput, 18, 0);
-		KursblockungStatic.aktionFixiereSchuelerInKurs(kbInput, 21, 0);
-		KursblockungStatic.aktionFixiereSchuelerInKurs(kbInput, 22, 0);
-		KursblockungStatic.aktionFixiereSchuelerInKurs(kbInput, 27, 0);
-		KursblockungStatic.aktionFixiereSchuelerInKurs(kbInput, 31, 0);
-		KursblockungStatic.aktionFixiereSchuelerInKurs(kbInput, 55, 0);
-		KursblockungStatic.aktionFixiereSchuelerInKurs(kbInput, 56, 0);
-		KursblockungStatic.aktionFixiereSchuelerInKurs(kbInput, 58, 0);
-		KursblockungStatic.aktionFixiereSchuelerInKurs(kbInput, 59, 0);
-		KursblockungStatic.aktionFixiereSchuelerInKurs(kbInput, 61, 0);
-		KursblockungStatic.aktionFixiereSchuelerInKurs(kbInput, 66, 0);
-		KursblockungStatic.aktionFixiereSchuelerInKurs(kbInput, 78, 0);
-		KursblockungStatic.aktionFixiereSchuelerInKurs(kbInput, 101, 0);
-		KursblockungStatic.aktionFixiereSchuelerInKurs(kbInput, 118, 0);
-		KursblockungStatic.aktionFixiereSchuelerInKurs(kbInput, 122, 0);
-		KursblockungStatic.aktionFixiereSchuelerInKurs(kbInput, 125, 0);
-		KursblockungStatic.aktionFixiereSchuelerInKurs(kbInput, 128, 0);
+		long[] schuelerFixierungen = new long[] { 4, 10, 18, 21, 22, 27, 31, 55, 56, 58, 59, 61, 66, 78, 101, 118, 122,
+				125, 128 };
+		for (long schuelerID : schuelerFixierungen)
+			regelFixiereSchuelerInKurs(kbInput, schuelerID, 0);
 
 		// Berechnung der Blockung und Rückgabe aller Blockungsergebnisse.
-		KursblockungOutputs kbOutputs = kbAlgorithmus.handle(kbInput);
+		Vector<@NotNull GostBlockungsergebnisManager> kbOutputs = kbAlgorithmus.handle(kbInput);
 
 		// Blockungsergebnisse vorhanden?
-		if (kbOutputs == null) {
+		if (kbOutputs == null)
 			fail("kbOutputs == null");
-			return;
-		}
 
 		// Jedes einzelne Blockungsergebnis prüfen.
-		if (kbOutputs.outputs.size() == 0) {
-			fail("Es gab keine Blockungsergebnisse!");
-		}
-		for (int i = 0; i < kbOutputs.outputs.size(); i++) {
-			KursblockungOutput kbOutput = kbOutputs.outputs.get(i);
-
-			if (kbOutput.input != kbInput.input)
-				fail("Input-Output-IDs stimmen nicht überein: kbOutput.input != kbInput.input");
-
-			Vector<KursblockungOutputKursZuSchiene> vKursZuSchiene = kbOutput.kursZuSchiene;
-			if (vKursZuSchiene == null) {
-				fail("vKursZuSchiene == null");
-				return;
-			}
-			int kursIn = kbInput.kurse.size();
-			int kursOut = vKursZuSchiene.size();
-			if (kursIn != kursOut) {
-				fail("kursIn != kursOut (" + kursIn + " != " + kursOut + ")");
-				return;
-			}
-
-			Vector<KursblockungOutputFachwahlZuKurs> vFachwahlenZuKurs = kbOutput.fachwahlenZuKurs;
-			if (vFachwahlenZuKurs == null) {
-				fail("vFachwahlenZuKurs == null");
-				return;
-			}
-			int fachwahlIn = kbInput.fachwahlen.size();
-			int fachwahlOut = vFachwahlenZuKurs.size();
-			if (fachwahlIn != fachwahlOut) {
-				fail("fachwahlIn != fachwahlOut (" + fachwahlIn + " != " + fachwahlOut + ")");
-				return;
-			}
-
-			// Überprüfung der Kursfixierung
-			checkKursfixierung(kbInput, vFachwahlenZuKurs, 4, 0);
-			checkKursfixierung(kbInput, vFachwahlenZuKurs, 10, 0);
-			checkKursfixierung(kbInput, vFachwahlenZuKurs, 18, 0);
-			checkKursfixierung(kbInput, vFachwahlenZuKurs, 21, 0);
-			checkKursfixierung(kbInput, vFachwahlenZuKurs, 22, 0);
-			checkKursfixierung(kbInput, vFachwahlenZuKurs, 27, 0);
-			checkKursfixierung(kbInput, vFachwahlenZuKurs, 31, 0);
-			checkKursfixierung(kbInput, vFachwahlenZuKurs, 55, 0);
-			checkKursfixierung(kbInput, vFachwahlenZuKurs, 56, 0);
-			checkKursfixierung(kbInput, vFachwahlenZuKurs, 58, 0);
-			checkKursfixierung(kbInput, vFachwahlenZuKurs, 59, 0);
-			checkKursfixierung(kbInput, vFachwahlenZuKurs, 61, 0);
-			checkKursfixierung(kbInput, vFachwahlenZuKurs, 66, 0);
-			checkKursfixierung(kbInput, vFachwahlenZuKurs, 78, 0);
-			checkKursfixierung(kbInput, vFachwahlenZuKurs, 101, 0);
-			checkKursfixierung(kbInput, vFachwahlenZuKurs, 118, 0);
-			checkKursfixierung(kbInput, vFachwahlenZuKurs, 122, 0);
-			checkKursfixierung(kbInput, vFachwahlenZuKurs, 125, 0);
-			checkKursfixierung(kbInput, vFachwahlenZuKurs, 128, 0);
-		}
+		for (GostBlockungsergebnisManager kbOutput : kbOutputs)
+			check(kbInput, kbOutput);
 
 	}
 
-	@SuppressWarnings("static-method")
-	private void checkKursfixierung(KursblockungInput kbInput,
-			Vector<KursblockungOutputFachwahlZuKurs> vFachwahlenZuKurs, long schuelerID, long kursID) {
-		// "fachartID" von "kursID" herausfinden
-		long fachartID = -1;
-		long kursartID = -1;
-		for (@NotNull KursblockungInputKurs kurs : kbInput.kurse) {
-			if (kurs.id == kursID) {
-				fachartID = kurs.fach;
-				kursartID = kurs.kursart;
-			}
-		}
-		if ((fachartID < 0) || (kursartID < 0)) {
-			fail("kursID " + kursID + " hat keine zugeordnete fachart/kursart!");
-		}
+	private void check(@NotNull GostBlockungsdatenManager kbInput, GostBlockungsergebnisManager kbOutput) {
 
-		// "fachwahlID" von "fachartID" + "kursartID" + "schuelerID" herausfinden
-		long fachwahlID = -1;
-		for (@NotNull KursblockungInputFachwahl wahlIn : kbInput.fachwahlen) {
-			if ((wahlIn.fach == fachartID) && (wahlIn.kursart == kursartID) && (wahlIn.schueler == schuelerID)) {
-				fachwahlID = wahlIn.id;
-			}
-		}
-		if (fachwahlID < 0) {
-			fail("fachartID=" + fachartID + " + kursartID=" + kursartID + " + schuelerID=" + schuelerID
-					+ " hat keine zugeordnete fachwahlID!");
-		}
+		if (kbInput == null)
+			fail("kbInput == null");
 
-		long zugeordneterKurs = -1;
-		int treffer = 0;
-		for (KursblockungOutputFachwahlZuKurs wahlOut : vFachwahlenZuKurs) {
-			if (wahlOut.fachwahl == fachwahlID) {
-				treffer++;
+		if (kbOutput == null)
+			fail("kbOutput == null");
 
-				zugeordneterKurs = wahlOut.kurs;
-			}
-		}
-		if (treffer != 1) {
-			fail("Die Fachwahl " + fachwahlID + " wurde " + treffer + " mal gefunden, statt 1 Mal!");
-		}
-		if ((zugeordneterKurs >= 0) && (zugeordneterKurs != kursID)) {
-			fail("Kursfixierung von Schüler " + schuelerID + " in Kurs " + kursID + " klappte nicht, stattdessen Kurs "
-					+ zugeordneterKurs + ".");
-		}
+		if (kbOutput.getBlockungsdatenID() != kbInput.getID())
+			fail("kbOutput.getDatenID() != kbInput.getID()");
 
-	}
+		if (kbOutput.getOfBewertungAnzahlNichtZugeordneterKurse() > 0)
+			fail("kbOutput.getAnzahlNichtZugeordneterKurse() > 0");
 
-	/** Testet den Algorithmus "Maximum Cardinality Bipartite Matching". Hierfür werden Matrizen unterschiedlicher
-	 * Dimension erzeugt und mit 0en und 1en zufällig gefüllt. Anschließend wird ein maximales Matching berechnet.
-	 * Gleichzeitig wird die negierte Matrix an einen "Minimum Weight Bipartite Matching" übergeben. Die Ergebnisse
-	 * beider Algorithmen muss identisch sein (nicht die Zuordnung selbst, sondern die Größe des Matchings). */
-	@Test
-	@DisplayName("Maximum Cardinality Bipartite Matching testen.")
-	void test000_max_bipartite_matching() {
-		Random rnd = new Random(1);
+		int kollisionen = kbOutput.getOfBewertungAnzahlKollisionen();
+		if (kollisionen != 0)
+			fail("kbOutput.getAnzahlKollisionen() != 0 --> " + kollisionen);
 
-		// Führe viele zufällige Tests durch...
-		for (int i = 0; i < 100000; i++) {
-			int rows = rnd.nextInt(10) + 2;
-			int cols = rnd.nextInt(10) + 2;
-			double percent = rnd.nextDouble();
-
-			// Erzeuge identische Matrizen mit +1 (m1) und -1 (m2) Werten
-			KursblockungMatrix m1 = new KursblockungMatrix(rnd, rows, cols); // Maximales bipartites Matching
-			KursblockungMatrix m2 = new KursblockungMatrix(rnd, rows, cols); // Minimales gewichtetes bipartites
-																				// Matching
-			for (int r = 0; r < rows; r++) {
-				for (int c = 0; c < cols; c++) {
-					if (rnd.nextDouble() < percent) {
-						m1.getMatrix()[r][c] = 1;
-						m2.getMatrix()[r][c] = -1;
-					}
-				}
-			}
-
-			// Berechne
-			int[] r2c1 = m1.gibMaximalesBipartitesMatching(true);
-			int[] r2c2 = m2.gibMinimalesBipartitesMatchingGewichtet(true);
-
-			// Berechne die Summe der Zuordnung
-			int summe1 = 0;
-			int summe2 = 0;
-			for (int r = 0; r < rows; r++) {
-				summe1 += r2c1[r] < 0 ? 0 : m1.getMatrix()[r][r2c1[r]];
-				summe2 += r2c2[r] < 0 ? 0 : -m2.getMatrix()[r][r2c2[r]];
-			}
-
-			// Die Summe beider Verfahren muss gleich sein
-			if (summe1 != summe2) {
-				fail(m1.convertToString("Summe1(" + summe1 + ") != Summe2(" + summe2 + ")", 5, false));
-			}
-		}
-
-	}
-
-	/** Testet den Algorithmus "Minimum Weight Bipartite Matching". Hierfür werden Matrizen unterschiedlicher Dimension
-	 * erzeugt und mit Zahlen von -9 bis +9 zufällig gefüllt. Ebenso wird durch einen Brute-Force-Algorithmus auch ein
-	 * "Minimum Weight Bipartite Matching" berechnet. Die Ergebnisse beider Algorithmen muss identisch sein (nicht die
-	 * Zuordnung selbst, sondern die Größe des Matchings). */
-	@Test
-	@DisplayName("Minimum Weight Bipartite Matching testen.")
-	void test000_min_weight_bipartite_matching() {
-		Random rnd = new Random(1);
-
-		// Zufallsmatrizen testen
-		// Vorsicht mit der Dimension! Zu groß --> exponentielle Laufzeit!
-		for (int i = 0; i < 100000; i++) {
-			// Füllen
-			int rows = rnd.nextInt(5) + 2; // Dimension
-			int cols = rnd.nextInt(5) + 2; // Dimension
-			KursblockungMatrix m = new KursblockungMatrix(rnd, rows, cols);
-			m.fuelleMitZufallszahlenVonBis(-9, 9);
-
-			// Berechnen
-			int[] r2c = m.gibMinimalesBipartitesMatchingGewichtet(true);
-
-			// Summe berechnen (Minimum Matching Algorithmus)
-			long wert1 = 0;
-			for (int r = 0; r < r2c.length; r++) {
-				int c = r2c[r];
-				if (c >= 0)
-					wert1 += m.getMatrix()[r][c];
-			}
-
-			// Summe berechnen (alle Kombinationen durchgehen)
-			long wert2 = rows <= cols ? recursive_min_sum_r(m.getMatrix(), 0, new boolean[cols])
-					: recursive_min_sum_c(m.getMatrix(), 0, new boolean[rows]);
-
-			// Die Summen müssen gleich sein
-			if (wert1 != wert2) {
-				System.out.println(m.convertToString("Summe1(" + wert1 + ") != Summe2(" + wert2 + ")", 5, false));
-				System.out.println(m.convertToString("Summe1(" + wert1 + ") != Summe2(" + wert2 + ")", 5, true));
-				fail("Summe1(" + wert1 + ") != Summe2(" + wert2 + ")");
-			}
-
-		}
-
+		
+		int nichtwahlen = kbOutput.getOfBewertungAnzahlNichtzugeordneterFachwahlen();
+		if (nichtwahlen < 0)
+			fail("kbOutput.getAnzahlNichtzugeordneterFachwahlen() < 0 --> " + nichtwahlen);
+		
+//		int regelverletzungen = kbOutput.getErgebnis().bewertung.regelVerletzungen.size();
+//		if (regelverletzungen > 0)
+//			System.out.println("Regelverletzungen = " + regelverletzungen);
 	}
 
 	private long recursive_min_sum_r(long[][] matrix, int r, boolean[] usedC) {
@@ -787,6 +603,314 @@ public class KursblockungTests {
 		}
 
 		return min;
+	}
+
+	private void regelSperreSchieneFuerKursart(@NotNull GostBlockungsdatenManager pInput, @NotNull String pKursart,
+			int pVon, int pBis) {
+
+		GostKursart gKursart = GostKursart.fromKuerzel(pKursart);
+		if (gKursart == null)
+			fail("GostKursart '" + pKursart + "' nicht gefunden.");
+
+		GostBlockungRegel gRegel = new GostBlockungRegel();
+		gRegel.id = pInput.getRegelAnzahl();
+		gRegel.typ = GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS.typ;
+		gRegel.parameter.add(Long.valueOf(gKursart.id));
+		gRegel.parameter.add(Long.valueOf(pVon));
+		gRegel.parameter.add(Long.valueOf(pBis));
+		pInput.addRegel(gRegel);
+	}
+
+	private void regelFixiereKurseInSchieneSonstNichts(@NotNull GostBlockungsdatenManager pInput, long[] pKursID,
+			int pSchiene) {
+
+		for (@NotNull GostBlockungKurs gKurs : pInput.daten().kurse) {
+
+			boolean gefunden = false;
+			for (int j = 0; j < pKursID.length; j++)
+				if (gKurs.id == pKursID[j])
+					gefunden = true;
+
+			GostBlockungRegel gRegel = new GostBlockungRegel();
+			gRegel.id = pInput.getRegelAnzahl();
+			gRegel.typ = gefunden ? GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ
+					: GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ;
+			gRegel.parameter.add(gKurs.id);
+			gRegel.parameter.add(Long.valueOf(pSchiene));
+			pInput.addRegel(gRegel);
+		}
+
+	}
+
+	private void regelVerbieteSchuelerInKurs(@NotNull GostBlockungsdatenManager pInput, long pSchuelerID,
+			long pKursID) {
+		GostBlockungRegel gRegel = new GostBlockungRegel();
+		gRegel.id = pInput.getRegelAnzahl();
+		gRegel.typ = GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ;
+		gRegel.parameter.add(pSchuelerID);
+		gRegel.parameter.add(pKursID);
+		pInput.addRegel(gRegel);
+	}
+
+	private void regelFixiereKursInSchiene(@NotNull GostBlockungsdatenManager pInput, long pKursID, int pSchiene) {
+		@NotNull GostBlockungKurs kurs = pInput.getKurs(pKursID); // wirft ggf. Exception
+		GostBlockungRegel gRegel = new GostBlockungRegel();
+		gRegel.id = pInput.getRegelAnzahl();
+		gRegel.typ = GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ;
+		gRegel.parameter.add(kurs.id);
+		gRegel.parameter.add(Long.valueOf(pSchiene));
+		pInput.addRegel(gRegel);
+	}
+
+	private void regelFixiereSchuelerInKurs(@NotNull GostBlockungsdatenManager pInput, long pSchuelerID, long pKursID) {
+		@NotNull GostBlockungKurs kurs = pInput.getKurs(pKursID); // wirft ggf. Exception
+		GostBlockungRegel gRegel = new GostBlockungRegel();
+		gRegel.id = pInput.getRegelAnzahl();
+		gRegel.typ = GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ;
+		gRegel.parameter.add(pSchuelerID);
+		gRegel.parameter.add(kurs.id);
+		pInput.addRegel(gRegel);
+	}
+
+	/** Testet die Kursblockungsalgorithmen mit randomisierten Daten. */
+	@Test
+	@DisplayName("Daten - Random")
+	void testeKursblockungAlgorithmusZufaellig() {
+		Random lRandom = new Random(1);
+		for (int i = 0; i < 10; i++)
+			testeKursblockungAlgorithmusZufaelligEinMal(i, lRandom);
+	}
+
+	private void testeKursblockungAlgorithmusZufaelligEinMal(long pID, Random pRandom) {
+
+		// Der Kursblockungsalgorithmus ist ein Service.
+		KursblockungAlgorithmus kbAlgorithmus = new KursblockungAlgorithmus();
+
+		// Logger vom Service übernehmen
+		Logger log = kbAlgorithmus.getLogger();
+
+		// Consumer triggert 'fail', wenn etwas kritisches geloggt wurde.
+		log.addConsumer(new Consumer<LogData>() {
+			@Override
+			public void accept(LogData t) {
+				if (t.getLevel().compareTo(LogLevel.APP) != 0)
+					fail(t.getText());
+			}
+		});
+
+		// Umwandlung von 'Kurs42Daten' zu 'KursblockungInput'.
+		GostBlockungsdatenManager kbInput = erzeugeZufallsdaten(pID, pRandom);
+
+		// Berechnung der Blockung und Rückgabe aller Blockungsergebnisse.
+		Vector<GostBlockungsergebnisManager> kbOutputs = kbAlgorithmus.handle(kbInput);
+
+		// Blockungsergebnisse vorhanden?
+		if (kbOutputs == null)
+			fail("kbOutputs == null");
+
+		// Jedes einzelne Blockungsergebnis prüfen.
+		for (GostBlockungsergebnisManager kbOutput : kbOutputs)
+			check(kbInput, kbOutput);
+	}
+
+	private GostBlockungsdatenManager erzeugeZufallsdaten(long pID, Random pRandom) {
+
+		int nKurse = pRandom.nextInt(100);
+		int nFaecher = 1 + (nKurse / 2);
+		int nKursarten = 1 + pRandom.nextInt(2);
+		int nSchueler = nKurse * 2;
+		int nSchienen = 1 + pRandom.nextInt(15);
+
+		// Erzeuge alle Schienen.
+		HashMap<Long, GostBlockungSchiene> mapSchienen = new HashMap<>();
+		for (int i = 1; i <= nSchienen; i++) {
+			GostBlockungSchiene gSchiene = new GostBlockungSchiene();
+			gSchiene.id = i; // Pseudo-ID
+			gSchiene.nummer = i;
+			gSchiene.bezeichnung = "Schiene " + i;
+			mapSchienen.put(gSchiene.id, gSchiene);
+		}
+
+		// Erzeuge alle Fächer.
+		HashMap<String, GostFach> mapFaecher = new HashMap<>();
+		for (int fachID = 0; fachID < nFaecher; fachID++) {
+			GostFach gFach = new GostFach();
+			gFach.id = fachID;
+			gFach.kuerzel = "Test-Fach Nr. " + fachID;
+			mapFaecher.put(gFach.kuerzel, gFach);
+		}
+
+		// Erzeuge alle Kursarten.
+		HashMap<Integer, GostKursart> mapKursarten = new HashMap<>();
+		for (int kursartID = 1; kursartID <= nKursarten; kursartID++) {
+			GostKursart gKursart = GostKursart.fromID(kursartID);
+			mapKursarten.put(gKursart.id, gKursart);
+		}
+
+		// Erzeuge alle Kurse und ordne sie einer zufälligen Schiene zu.
+		HashMap<Long, GostBlockungKurs> mapKurse = new HashMap<>();
+		HashMap<Long, GostBlockungSchiene> mapKursIDSchiene = new HashMap<>();
+		for (int kursID = 0; kursID < nKurse; kursID++) {
+			GostBlockungKurs gKurs = new GostBlockungKurs();
+			gKurs.id = kursID;
+			gKurs.fach_id = pRandom.nextLong(nFaecher);
+			gKurs.kursart = pRandom.nextInt(nKursarten) + 1;
+			gKurs.anzahlSchienen = 1;
+			mapKurse.put(gKurs.id, gKurs);
+			long schienenID = pRandom.nextLong(nSchienen) + 1;
+			GostBlockungSchiene gSchiene = mapSchienen.get(schienenID);
+			mapKursIDSchiene.put(gKurs.id, gSchiene);
+		}
+
+		// Erzeuge alle SchülerInnen und zufällige Fachwahlen.
+		HashMap<Long, Schueler> mapSchueler = new HashMap<>();
+		HashMap<Integer, GostFachwahl> mapFachwahlen = new HashMap<>();
+		for (int schuelerID = 0; schuelerID < nSchueler; schuelerID++) {
+			Schueler gSchueler = new Schueler();
+			gSchueler.id = schuelerID;
+			gSchueler.nachname = "Nachname" + schuelerID;
+			gSchueler.vorname = "Vorname" + schuelerID;
+			gSchueler.geschlecht = 3;
+			mapSchueler.put(gSchueler.id, gSchueler);
+
+			HashSet<Long> setUsedSchiene = new HashSet<>();
+			HashSet<Pair<Long, Integer>> setUsedFachart = new HashSet<>();
+			for (int rnd : KursblockungStatic.gibPermutation(pRandom, nKurse)) {
+				// Hole zufälligen Kurs.
+				long kursID = rnd;
+				GostBlockungKurs gKurs = mapKurse.get(kursID);
+
+				// Fachart bereits gewählt?
+				Pair<Long, Integer> fachart = new Pair<>(gKurs.fach_id, gKurs.kursart);
+				if (setUsedFachart.contains(fachart))
+					continue;
+
+				// Schiene bereits gewählt?
+				GostBlockungSchiene gSchiene = mapKursIDSchiene.get(gKurs.id);
+				if (setUsedSchiene.contains(gSchiene.id))
+					continue;
+
+				// Fachwahl hinzufügen.
+				setUsedFachart.add(fachart);
+				setUsedSchiene.add(gSchiene.id);
+				GostFachwahl gFachwahl = new GostFachwahl();
+				gFachwahl.fachID = gKurs.fach_id;
+				gFachwahl.kursartID = gKurs.kursart;
+				gFachwahl.schuelerID = gSchueler.id;
+				mapFachwahlen.put(mapFachwahlen.size(), gFachwahl);
+			}
+
+		}
+
+		// Fixiere alle Kurse in ihren Schienen. Der Algorithmus muss nur die SuS verteilen.
+		HashMap<Long, GostBlockungRegel> mapRegeln = new HashMap<>();
+		for (GostBlockungKurs gKurs : mapKurse.values()) {
+			GostBlockungRegel gRegel = new GostBlockungRegel();
+			gRegel.id = mapRegeln.size();
+			gRegel.typ = GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ;
+			GostBlockungSchiene gSchiene = mapKursIDSchiene.get(gKurs.id);
+			gRegel.parameter.add(gKurs.id);
+			gRegel.parameter.add(gSchiene.id);
+			mapRegeln.put(gRegel.id, gRegel);
+		}
+
+		// Erzeuge GostBlockungsdaten
+		GostBlockungsdaten gDaten = new GostBlockungsdaten();
+		gDaten.id = 1L; // Pseudo-ID
+		gDaten.kurse.addAll(mapKurse.values());
+		gDaten.regeln.addAll(mapRegeln.values());
+		gDaten.schueler.addAll(mapSchueler.values());
+		gDaten.fachwahlen.addAll(mapFachwahlen.values());
+		gDaten.schienen.addAll(mapSchienen.values());
+
+		// Erzeuge GostFaecherManager
+		GostFaecherManager fManager = new GostFaecherManager();
+		fManager.addAll(mapFaecher.values());
+
+		// Erzeuge GostBlockungsdatenManager
+		GostBlockungsdatenManager input = new GostBlockungsdatenManager(gDaten, fManager);
+		input.setMaxTimeMillis(10);
+		return input;
+	}
+
+	/** Testet Wahlen, deren Kurse nicht eingerichtet sind. */
+	@Test
+	@DisplayName("Daten Spezial.")
+	void testeWahlOhneKurs() {
+		// Der Kursblockungsalgorithmus ist ein Service.
+		KursblockungAlgorithmus kbAlgorithmus = new KursblockungAlgorithmus();
+
+		// Logger vom Service übernehmen
+		Logger log = kbAlgorithmus.getLogger();
+
+		// Consumer triggert 'fail', wenn etwas kritisches geloggt wurde.
+		log.addConsumer(new Consumer<LogData>() {
+			@Override
+			public void accept(LogData t) {
+				if (t.getLevel().compareTo(LogLevel.ERROR) == 0)
+					fail(t.getText());
+			}
+		});
+
+		// Erzeuge alle Schienen.
+		int nSchienen = 11;
+		HashMap<Long, GostBlockungSchiene> mapSchienen = new HashMap<>();
+		for (int i = 1; i <= nSchienen; i++) {
+			GostBlockungSchiene gSchiene = new GostBlockungSchiene();
+			gSchiene.id = i; // Pseudo-ID
+			gSchiene.nummer = i;
+			gSchiene.bezeichnung = "Schiene " + i;
+			mapSchienen.put(gSchiene.id, gSchiene);
+		}
+
+		GostFach kbFach1 = new GostFach();
+		kbFach1.id = 1;
+		GostFach kbFach2 = new GostFach();
+		kbFach2.id = 2;
+
+		GostBlockungKurs kbKurs = new GostBlockungKurs();
+		kbKurs.id = 1;
+		kbKurs.fach_id = 1;
+		kbKurs.kursart = GostKursart.GK.id;
+		kbKurs.anzahlSchienen = 1;
+
+		Schueler kbSchueler = new Schueler();
+		kbSchueler.id = 1;
+
+		// Fachwahl ohne Kurs!
+		GostFachwahl kbFachwahl = new GostFachwahl();
+		kbFachwahl.schuelerID = 1;
+		kbFachwahl.fachID = 2;
+		kbFachwahl.kursartID = 2;
+
+		// Erzeuge GostBlockungsdaten
+		GostBlockungsdaten gDaten = new GostBlockungsdaten();
+		gDaten.id = 1L; // Pseudo-ID
+		gDaten.kurse.add(kbKurs);
+		gDaten.schueler.add(kbSchueler);
+		gDaten.fachwahlen.add(kbFachwahl);
+		gDaten.schienen.addAll(mapSchienen.values());
+		// gDaten.regeln.addAll(mapRegeln.values());
+
+		// Erzeuge GostFaecherManager
+		GostFaecherManager fManager = new GostFaecherManager();
+		fManager.add(kbFach1);
+		fManager.add(kbFach2);
+
+		// Erzeuge GostBlockungsdatenManager
+		GostBlockungsdatenManager kbInput = new GostBlockungsdatenManager(gDaten, fManager);
+		kbInput.setMaxTimeMillis(100);
+
+		// Berechnung der Blockung und Rückgabe aller Blockungsergebnisse.
+		Vector<@NotNull GostBlockungsergebnisManager> kbOutputs = kbAlgorithmus.handle(kbInput);
+
+		// Blockungsergebnisse vorhanden?
+		if (kbOutputs == null)
+			fail("kbOutputs == null");
+
+		// Jedes einzelne Blockungsergebnis prüfen.
+		for (GostBlockungsergebnisManager kbOutput : kbOutputs)
+			check(kbInput, kbOutput);
 	}
 
 }

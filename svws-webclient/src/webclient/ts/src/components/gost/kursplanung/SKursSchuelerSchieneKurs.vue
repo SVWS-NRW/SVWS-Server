@@ -23,7 +23,7 @@
 			@drop="drop_aendere_kurszuordnung($event, kurs.id)"
 			@drag-over="drag_over($event, kurs)"
 		>
-			{{ kurs.name }}<span v-if="is_draggable">
+			{{ kurs_name }}<span v-if="is_draggable">
 					<svws-ui-icon class="cursor-pointer" @click="verbieten_regel_toggle" >
 						<i-ri-forbid-fill v-if="verbieten_regel" class="inline-block"/>
 						<i-ri-forbid-line v-if="!verbieten_regel && !fixier_regel" class="inline-block"/>
@@ -45,7 +45,6 @@
 		GostBlockungRegel,
 		GostBlockungsergebnisKurs,
 		GostBlockungsergebnisManager,
-		GostBlockungsergebnisSchuelerzuordnung,
 		GostKursblockungRegelTyp,
 		SchuelerListeEintrag,
 		ZulaessigesFach
@@ -75,27 +74,32 @@
 
 	const is_draggable: ComputedRef<boolean> = computed(() => {
 		return props.kurs.schueler
-			.toArray(new Array<GostBlockungsergebnisSchuelerzuordnung>())
-			.some(s => s.id === props.schueler.id);
+			.toArray(new Array<Number>())
+			.some(s => s === props.schueler.id);
 	});
 
 	const is_drop_zone: ComputedRef<boolean> = computed(() => {
 		const fachID = main.config.drag_and_drop_data?.fachID;
 		const kursart = main.config.drag_and_drop_data?.kursart;
-		if (!fachID || !kursart) {
+		if (!fachID || !kursart)
 			return false;
-		}
-		return (
-			fachID === props.kurs.fachID &&
-			kursart === props.kurs.kursart?.valueOf()
-		);
+		if (fachID !== props.kurs.fachID || kursart !== props.kurs.kursart?.valueOf())
+      return false;
+		const kursID = main.config.drag_and_drop_data?.id;
+		if (kursID === props.kurs.id)
+			return false;
+		return true;
 	});
 
 	const kurs_original: ComputedRef<GostBlockungKurs | undefined> = computed(
 		() => {
-			return manager.value?.getKurs(props.kurs.id);
+			return manager.value?.getKursG(props.kurs.id);
 		}
 	);
+
+	const kurs_name: ComputedRef<String> = computed(()=>
+		manager.value?.getOfKursName(props.kurs.id) || ""
+	)
 
 	const gostfach: ComputedRef<ZulaessigesFach | undefined> = computed(() => {
 		if (!app.dataFaecher.daten) return
@@ -120,19 +124,22 @@
 
 	function drop_aendere_kurszuordnung(kurs: any, id_kurs_neu: number) {
 		const schuelerid = props.schueler.id;
-		if (!schuelerid) return;
+		if (!schuelerid) 
+			return;
+		if (kurs.id === id_kurs_neu)
+		  return;
 		if (kurs.id) {
 			app.dataKursblockungsergebnis.assignSchuelerKurs(
 				schuelerid,
 				kurs.id,
 				true
 			);
-			app.dataKursblockungsergebnis.assignSchuelerKurs(
-				schuelerid,
-				id_kurs_neu,
-				false
-			);
 		}
+		app.dataKursblockungsergebnis.assignSchuelerKurs(
+			schuelerid,
+			id_kurs_neu,
+			false
+		);
 	}
 
 	function drag_over(event: DragEvent, kurs: GostBlockungsergebnisKurs) {

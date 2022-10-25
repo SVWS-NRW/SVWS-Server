@@ -17,21 +17,11 @@ import de.nrw.schule.svws.core.data.gost.GostBlockungKurs;
 import de.nrw.schule.svws.core.data.gost.GostBlockungRegel;
 import de.nrw.schule.svws.core.data.gost.GostBlockungSchiene;
 import de.nrw.schule.svws.core.data.gost.GostBlockungsdaten;
-import de.nrw.schule.svws.core.data.gost.GostFach;
+import de.nrw.schule.svws.core.data.gost.GostBlockungsergebnisSchiene;
 import de.nrw.schule.svws.core.data.gost.GostFachwahl;
 import de.nrw.schule.svws.core.data.gost.GostStatistikFachwahl;
 import de.nrw.schule.svws.core.data.gost.GostStatistikFachwahlHalbjahr;
-import de.nrw.schule.svws.core.data.kursblockung.KursblockungInput;
-import de.nrw.schule.svws.core.data.kursblockung.KursblockungInputFach;
-import de.nrw.schule.svws.core.data.kursblockung.KursblockungInputFachwahl;
-import de.nrw.schule.svws.core.data.kursblockung.KursblockungInputKurs;
-import de.nrw.schule.svws.core.data.kursblockung.KursblockungInputKursart;
-import de.nrw.schule.svws.core.data.kursblockung.KursblockungInputRegel;
-import de.nrw.schule.svws.core.data.kursblockung.KursblockungInputSchueler;
-import de.nrw.schule.svws.core.data.kursblockung.KursblockungOutput;
-import de.nrw.schule.svws.core.data.kursblockung.KursblockungOutputFachwahlZuKurs;
-import de.nrw.schule.svws.core.data.kursblockung.KursblockungOutputKursZuSchiene;
-import de.nrw.schule.svws.core.data.kursblockung.KursblockungOutputs;
+import de.nrw.schule.svws.core.data.schueler.Schueler;
 import de.nrw.schule.svws.core.kursblockung.KursblockungAlgorithmus;
 import de.nrw.schule.svws.core.types.gost.GostHalbjahr;
 import de.nrw.schule.svws.core.types.gost.GostKursart;
@@ -40,6 +30,7 @@ import de.nrw.schule.svws.core.types.kursblockung.GostKursblockungRegelTyp;
 import de.nrw.schule.svws.core.types.statkue.Jahrgaenge;
 import de.nrw.schule.svws.core.types.statkue.ZulaessigesFach;
 import de.nrw.schule.svws.core.utils.gost.GostBlockungsdatenManager;
+import de.nrw.schule.svws.core.utils.gost.GostBlockungsergebnisManager;
 import de.nrw.schule.svws.core.utils.gost.GostFaecherManager;
 import de.nrw.schule.svws.data.DataManager;
 import de.nrw.schule.svws.db.DBEntityManager;
@@ -54,9 +45,11 @@ import de.nrw.schule.svws.db.dto.current.gost.kursblockung.DTOGostBlockungZwisch
 import de.nrw.schule.svws.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergebnisKursSchiene;
 import de.nrw.schule.svws.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergebnisKursSchueler;
 import de.nrw.schule.svws.db.dto.current.schild.faecher.DTOFach;
+import de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchueler;
 import de.nrw.schule.svws.db.dto.current.svws.db.DTODBAutoInkremente;
 import de.nrw.schule.svws.db.dto.current.views.gost.DTOViewGostSchuelerAbiturjahrgang;
 import de.nrw.schule.svws.db.utils.OperationError;
+import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -127,6 +120,7 @@ public class DataGostBlockungsdaten extends DataManager<Long> {
 		daten.nummer = kurs.Kursnummer;
 		daten.istKoopKurs = kurs.IstKoopKurs;
 		daten.suffix = kurs.BezeichnungSuffix == null ? "" : kurs.BezeichnungSuffix;
+		daten.anzahlSchienen = kurs.Schienenanzahl;
 		daten.wochenstunden = kurs.Wochenstunden;
 		return daten;
 	};
@@ -147,24 +141,25 @@ public class DataGostBlockungsdaten extends DataManager<Long> {
 		DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, id);
 		if (blockung == null)
 			throw OperationError.NOT_FOUND.exception();
-		// Bestimme die Fächer des Abiturjahrgangs
+
+		// Fächer hinzufügen.
 		GostFaecherManager faecherManager = (new DataGostFaecher(conn, blockung.Abi_Jahrgang)).getListInternal();
 		if (faecherManager == null)
 			throw OperationError.NOT_FOUND.exception();
 		GostBlockungsdatenManager manager = new GostBlockungsdatenManager(dtoMapper.apply(blockung), faecherManager);
-		// Bestimme alle Schienen
-		List<DTOGostBlockungSchiene> schienen = conn.queryNamed("DTOGostBlockungSchiene.blockung_id", blockung.ID,
-				DTOGostBlockungSchiene.class);
+		
+		// Schienen hinzufügen.
+		List<DTOGostBlockungSchiene> schienen = conn.queryNamed("DTOGostBlockungSchiene.blockung_id", blockung.ID, DTOGostBlockungSchiene.class);
 		for (DTOGostBlockungSchiene schiene : schienen)
 			manager.addSchiene(dtoMapperSchiene.apply(schiene));
-		// Bestimme die Kurse, welche für die Blockung angelegt wurden
-		List<DTOGostBlockungKurs> kurse = conn.queryNamed("DTOGostBlockungKurs.blockung_id", blockung.ID,
-				DTOGostBlockungKurs.class);
+		
+		// Kurse hinzufügen.
+		List<DTOGostBlockungKurs> kurse = conn.queryNamed("DTOGostBlockungKurs.blockung_id", blockung.ID, DTOGostBlockungKurs.class);
 		for (DTOGostBlockungKurs kurs : kurse)
 			manager.addKurs(dtoMapperKurse.apply(kurs));
-		// Bestimme alle Regeln
-		List<DTOGostBlockungRegel> regeln = conn.queryNamed("DTOGostBlockungRegel.blockung_id", blockung.ID,
-				DTOGostBlockungRegel.class);
+		
+		// Regeln hinzufügen.
+		List<DTOGostBlockungRegel> regeln = conn.queryNamed("DTOGostBlockungRegel.blockung_id", blockung.ID, DTOGostBlockungRegel.class);
 		if (regeln.size() > 0) {
 			List<Long> regelIDs = regeln.stream().map(r -> r.ID).collect(Collectors.toList());
 			List<DTOGostBlockungRegelParameter> regelParamsDB = conn.queryNamed(
@@ -182,6 +177,22 @@ public class DataGostBlockungsdaten extends DataManager<Long> {
 				manager.addRegel(eintrag);
 			}
 		}
+		
+		// Schüler-Menge hinzufügen.
+        List<Schueler> schueler = (new DataGostJahrgangSchuelerliste(conn, blockung.Abi_Jahrgang)).getSchuelerDTOs().stream().map((DTOSchueler dto) -> {
+            Schueler daten = new Schueler();
+            daten.id = dto.ID;
+            daten.nachname = dto.Nachname;
+            daten.vorname = dto.Vorname;
+            daten.geschlecht = dto.Geschlecht.id;
+            return daten;
+        }).collect(Collectors.toList());
+        manager.addSchuelerListe(schueler);
+        
+        // Schüler-Fachwahl-Menge hinzufügen.
+        List<GostFachwahl> fachwahlen = (new DataGostAbiturjahrgangFachwahlen(conn, blockung.Abi_Jahrgang)).getSchuelerFachwahlen(blockung.Halbjahr);
+        manager.addFachwahlListe(fachwahlen);
+        
 		return manager;
 	}
 
@@ -195,9 +206,6 @@ public class DataGostBlockungsdaten extends DataManager<Long> {
 			// Erstellen den Manager mit den Blockungsdaten
 			GostBlockungsdatenManager manager = getBlockungsdatenManagerFromDB(id);
             daten = manager.daten();
-			// Bestimme die Fachwahlen aus der DB
-			GostHalbjahr halbjahr = GostHalbjahr.fromID(daten.gostHalbjahr);
-			daten.fachwahlen.addAll((new DataGostAbiturjahrgangFachwahlen(conn, daten.abijahrgang)).getSchuelerFachwahlen(halbjahr));
 			// Ergänze Blockungsliste
 			(new DataGostBlockungsergebnisse(conn)).getErgebnisListe(manager);
 			conn.transactionCommit();
@@ -296,7 +304,7 @@ public class DataGostBlockungsdaten extends DataManager<Long> {
 			while (namen.contains(name + nameIndex))
 				nameIndex++;
 			name += nameIndex;
-			// Lese die Fächer dey gymnasialen Oberstufe ein. Diese müssen für den Abiturjahrgang vorhanden sein, damit eine Blockung angelegt werden darf
+			// Lese die Fächer der gymnasialen Oberstufe ein. Diese müssen für den Abiturjahrgang vorhanden sein, damit eine Blockung angelegt werden darf
 			GostFaecherManager faecherManager = (new DataGostFaecher(conn, abiturjahr)).getListInternal();
 			if (faecherManager == null)
 				return OperationError.NOT_FOUND.getResponse();
@@ -335,7 +343,7 @@ public class DataGostBlockungsdaten extends DataManager<Long> {
 				if ((fwHj.wahlenZK > 0) && (anzahlZK < 1))
 					anzahlZK = 1;
 				for (int i = 1; i <= anzahlLK; i++) {
-					DTOGostBlockungKurs kurs = new DTOGostBlockungKurs(++kurseID, blockungID, fw.id, GostKursart.LK, i, false, 5);
+					DTOGostBlockungKurs kurs = new DTOGostBlockungKurs(++kurseID, blockungID, fw.id, GostKursart.LK, i, false, 1, 5);
 					conn.transactionPersist(kurs);
 					manager.addKurs(dtoMapperKurse.apply(kurs));
 				}
@@ -350,12 +358,12 @@ public class DataGostBlockungsdaten extends DataManager<Long> {
 					} else if (kursart == GostKursart.VTF) {
 						wstd = 2;
 					}
-					DTOGostBlockungKurs kurs = new DTOGostBlockungKurs(++kurseID, blockungID, fw.id, kursart, i, false, wstd);
+					DTOGostBlockungKurs kurs = new DTOGostBlockungKurs(++kurseID, blockungID, fw.id, kursart, i, false, 1, wstd);
 					conn.transactionPersist(kurs);
 					manager.addKurs(dtoMapperKurse.apply(kurs));
 				}
 				for (int i = 1; i <= anzahlZK; i++) {
-					DTOGostBlockungKurs kurs = new DTOGostBlockungKurs(++kurseID, blockungID, fw.id, GostKursart.ZK, i, false, 3);
+					DTOGostBlockungKurs kurs = new DTOGostBlockungKurs(++kurseID, blockungID, fw.id, GostKursart.ZK, i, false, 1, 3);
 					conn.transactionPersist(kurs);
 					manager.addKurs(dtoMapperKurse.apply(kurs));
 				}
@@ -408,7 +416,7 @@ public class DataGostBlockungsdaten extends DataManager<Long> {
 	 * @return die HTTP-Response mit einer Liste von IDs der Zwischenergebnisse 
 	 */
 	public Response berechne(long id, long zeit) {
-		GostUtils.pruefeSchuleMitGOSt(conn);
+		/*GostUtils.pruefeSchuleMitGOSt(conn);
 		// Bestimme die Blockung
 		DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, id);
 		if (blockung == null)
@@ -438,13 +446,22 @@ public class DataGostBlockungsdaten extends DataManager<Long> {
 		List<GostFachwahl> fachwahlen = (new DataGostAbiturjahrgangFachwahlen(conn, blockung.Abi_Jahrgang))
 				.getSchuelerFachwahlen(blockung.Halbjahr);
 		if (fachwahlen == null)
-			return OperationError.NOT_FOUND.getResponse();
+			return OperationError.NOT_FOUND.getResponse();*/
+		
+		
 		// Erzeuge den Input für den Kursblockungsalgorithmus
+		GostBlockungsdatenManager manager = getBlockungsdatenManagerFromDB(id);
+		manager.setMaxTimeMillis(zeit);
+		
+		/*
 		KursblockungInput input = new KursblockungInput();
 		input.input = id;
 		input.maxTimeMillis = zeit;
 		input.maxSchienen = schienen.size();
+		*/
+		
 		// Ergänze die Regeln
+		/*
 		if (regeln.size() > 0) {
 			List<Long> regelIDs = regeln.stream().map(r -> r.ID).collect(Collectors.toList());
 			List<DTOGostBlockungRegelParameter> regelParamsDB = conn.queryNamed(
@@ -463,7 +480,9 @@ public class DataGostBlockungsdaten extends DataManager<Long> {
 				r.daten = params.toArray(new Long[0]);
 				input.regeln.add(r);
 			}
-		}
+		}*/
+		
+		/*
 		for (GostKursart kursart : GostKursart.values()) {
 			KursblockungInputKursart ka = new KursblockungInputKursart();
 			ka.id = kursart.id;
@@ -506,46 +525,40 @@ public class DataGostBlockungsdaten extends DataManager<Long> {
 			s.representation = "Schüler-ID " + fachwahl.schuelerID;
 			input.schueler.add(s);
 		}
+		*/
+		
+		
 		KursblockungAlgorithmus algo = new KursblockungAlgorithmus();
-		KursblockungOutputs outputs = algo.handle(input);
+		Vector<GostBlockungsergebnisManager> outputs = algo.handle(manager);
+		
+		
 		try {
 			Vector<Long> ergebnisse = new Vector<>();
 			conn.transactionBegin();
 			DTODBAutoInkremente lastID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Blockung_Zwischenergebnisse");
 			long ergebnisID = lastID == null ? 1 : lastID.MaxID + 1;
-			for (KursblockungOutput output : outputs.outputs) {
-				// Erstelle die Zurordnungen von Schülern zu Kursen und von Kursen zu Schienen. Ermittle dabei auch die
-				// Anzahl der Umwähler
-				HashSet<Long> setUmwaehler = new HashSet<>();
-				for (KursblockungOutputFachwahlZuKurs fzk : output.fachwahlenZuKurs) {
-					Long schuelerID = fachwahl2schueler.get(fzk.fachwahl);
-					if (fzk.kurs == -1) {
-						setUmwaehler.add(schuelerID);
-					}
-				}
-
-				// Schreiben das Ergebnis in die Datenbank
+			for (GostBlockungsergebnisManager output : outputs) {
+				// Schreibe das Ergebnis in die Datenbank.
 				DTOGostBlockungZwischenergebnis erg = new DTOGostBlockungZwischenergebnis(ergebnisID, id, false, false);
 				conn.transactionPersist(erg);
-				for (KursblockungOutputFachwahlZuKurs fzk : output.fachwahlenZuKurs) {
-					if (fzk.kurs == -1) // Beachte nur Fachwahlen, die zugeordnet werden konnten
-						continue;
-					Long schuelerID = fachwahl2schueler.get(fzk.fachwahl);
-					conn.transactionPersist(
-							new DTOGostBlockungZwischenergebnisKursSchueler(ergebnisID, fzk.kurs, schuelerID));
-				}
-				for (KursblockungOutputKursZuSchiene kzs : output.kursZuSchiene) {
-					for (int schiene : kzs.schienen) {
-						long schienenID = mapSchienenNummerToID.get(schiene + 1);
-						conn.transactionPersist(
-								new DTOGostBlockungZwischenergebnisKursSchiene(ergebnisID, kzs.kurs, schienenID));
-					}
-				}
-
+				
+				// Kurse <--> Schüler
+				HashMap<Long, HashSet<@NotNull Long>> map_KursID_SchuelerIDs = output.getMappingKursIDSchuelerIDs(); 
+				for (long kursID : map_KursID_SchuelerIDs.keySet()) 
+					for (long schuelerID : map_KursID_SchuelerIDs.get(kursID)) 
+						conn.transactionPersist(new DTOGostBlockungZwischenergebnisKursSchueler(ergebnisID, kursID, schuelerID));
+				
+				// Kurse <--> Schienen
+				HashMap<Long, HashSet<@NotNull GostBlockungsergebnisSchiene>> map_KursID_SchienenIDs = output.getMappingKursIDSchienenmenge(); 
+				for (long kursID : map_KursID_SchienenIDs.keySet()) 
+					for (@NotNull GostBlockungsergebnisSchiene schiene : map_KursID_SchienenIDs.get(kursID)) 
+						conn.transactionPersist(new DTOGostBlockungZwischenergebnisKursSchiene(ergebnisID, kursID, schiene.id));
+				
 				// Ergänze die ID bei der Liste der berechneten Ergebnisse
 				ergebnisse.add(ergebnisID);
 				ergebnisID++;
 			}
+			
 			if (conn.transactionCommit())
 				return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(ergebnisse).build();
 			return OperationError.INTERNAL_SERVER_ERROR
@@ -632,7 +645,7 @@ public class DataGostBlockungsdaten extends DataManager<Long> {
 			List<Long> kursIDsOriginal = kurseOriginal.stream().map(k -> k.ID).collect(Collectors.toList());
 			for (DTOGostBlockungKurs kursOriginal : kurseOriginal) {
 				DTOGostBlockungKurs kursDuplikat = new DTOGostBlockungKurs(idKursDuplikat, idBlockungDuplikat, kursOriginal.Fach_ID,
-						kursOriginal.Kursart, kursOriginal.Kursnummer, kursOriginal.IstKoopKurs, kursOriginal.Wochenstunden);
+						kursOriginal.Kursart, kursOriginal.Kursnummer, kursOriginal.IstKoopKurs, kursOriginal.Schienenanzahl, kursOriginal.Wochenstunden);
 				kursDuplikat.BezeichnungSuffix = kursOriginal.BezeichnungSuffix;
 				mapKursIDs.put(kursOriginal.ID, kursDuplikat.ID);
 				conn.transactionPersist(kursDuplikat);
@@ -751,16 +764,16 @@ public class DataGostBlockungsdaten extends DataManager<Long> {
 	    	}
 	    	DTOGostBlockungKurs kurs = null;
 	    	if (kursart == GostKursart.LK) {
-	    		kurs = new DTOGostBlockungKurs(idKurs, idBlockung, idFach, kursart, kursnummer, false, 5);	    		
+	    		kurs = new DTOGostBlockungKurs(idKurs, idBlockung, idFach, kursart, kursnummer, false, 1, 5);	    		
 	    	} else if (kursart == GostKursart.GK) {
-	    		kurs = new DTOGostBlockungKurs(idKurs, idBlockung, idFach, kursart, kursnummer, false, fach.IstMoeglichAlsNeueFremdspracheInSekII ? 4 : 3);
+	    		kurs = new DTOGostBlockungKurs(idKurs, idBlockung, idFach, kursart, kursnummer, false, 1, fach.IstMoeglichAlsNeueFremdspracheInSekII ? 4 : 3);
 	    	} else if (kursart == GostKursart.PJK) {
 	    		// TODO Wochenstunden anhand der Tabelle GostFaecher bestimmen (PJK)
-	    		kurs = new DTOGostBlockungKurs(idKurs, idBlockung, idFach, kursart, kursnummer, false, 3);
+	    		kurs = new DTOGostBlockungKurs(idKurs, idBlockung, idFach, kursart, kursnummer, false, 1, 3);
 	    	} else if (kursart == GostKursart.VTF) {
-	    		kurs = new DTOGostBlockungKurs(idKurs, idBlockung, idFach, kursart, kursnummer, false, 2);	    		
+	    		kurs = new DTOGostBlockungKurs(idKurs, idBlockung, idFach, kursart, kursnummer, false, 1, 2);	    		
 	    	} else if (kursart == GostKursart.ZK) {
-	    		kurs = new DTOGostBlockungKurs(idKurs, idBlockung, idFach, kursart, kursnummer, false, 3);	    		
+	    		kurs = new DTOGostBlockungKurs(idKurs, idBlockung, idFach, kursart, kursnummer, false, 1, 3);	    		
 	    	}
 			conn.transactionPersist(kurs);	    		
 			conn.transactionCommit();

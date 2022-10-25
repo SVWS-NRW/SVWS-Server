@@ -17,30 +17,26 @@ public class Tabelle_Gost_Blockung_Zwischenergebnisse extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte ID */
 	public SchemaTabelleSpalte col_ID = add("ID", SchemaDatentypen.BIGINT, true)
 		.setNotNull()
-		.setJavaComment("Kursblockung der Gymnasialen Oberstufe - Zwischenergebnis einer Blockung: "
-				+ "ID der Zwischenergebnisses (generiert)");
+		.setJavaComment("ID der Zwischenergebnisses einer Blockung (generiert)");
 
 	/** Die Definition der Tabellenspalte Blockung_ID */
 	public SchemaTabelleSpalte col_Blockung_ID = add("Blockung_ID", SchemaDatentypen.BIGINT, false)
 		.setNotNull()
-		.setJavaComment("Kursblockung der Gymnasialen Oberstufe - Zwischenergebnis einer Blockung: "
-				+ "ID der Blockung");
+		.setJavaComment("ID der Blockung");
 
 	/** Die Definition der Tabellenspalte IstMarkiert */
 	public SchemaTabelleSpalte col_IstMarkiert = add("IstMarkiert", SchemaDatentypen.INT, false)
 		.setDefault("0")
 		.setNotNull()
 		.setConverter("Boolean01Converter")
-		.setJavaComment("Kursblockung der Gymnasialen Oberstufe - Zwischenergebnis einer Blockung: "
-				+ "Gibt an, ob das Zwischenergebnis von einem Benutzer markiert wurde oder nicht: 1 - true, 0 - false ");
+		.setJavaComment("Gibt an, ob das Zwischenergebnis von einem Benutzer markiert wurde oder nicht: 1 - true, 0 - false ");
 
 	/** Die Definition der Tabellenspalte IstVorlage */
 	public SchemaTabelleSpalte col_IstVorlage = add("IstVorlage", SchemaDatentypen.INT, false)
 		.setDefault("0")
 		.setNotNull()
 		.setConverter("Boolean01Converter")
-		.setJavaComment("Kursblockung der Gymnasialen Oberstufe - Zwischenergebnis einer Blockung: "
-				+ "Gibt an, ob das Zwischenergebnis im Zusammenhang mit der Erstellen einer Blockung erstellt wurde "
+		.setJavaComment("Gibt an, ob das Zwischenergebnis im Zusammenhang mit der Erstellen einer Blockung erstellt wurde "
 				+ "und somit als Vorlage für Regeldefinitionen dient oder nicht: 1 - true, 0 - false. "
 				+ "Die Vorlage kann zu einem späteren Zeitpunkt ggf. auf ein anderes (berechnetes) Ergebnis umgesetzt werden."
 				+ "In diesem Fall müssten jedoch alle anderen Ergebnisse der Blockungsdefinition entfernt werden.");

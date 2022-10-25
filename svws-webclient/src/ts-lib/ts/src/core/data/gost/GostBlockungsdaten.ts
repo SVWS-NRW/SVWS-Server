@@ -1,4 +1,5 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
+import { Schueler, cast_de_nrw_schule_svws_core_data_schueler_Schueler } from '../../../core/data/schueler/Schueler';
 import { GostBlockungsergebnisListeneintrag, cast_de_nrw_schule_svws_core_data_gost_GostBlockungsergebnisListeneintrag } from '../../../core/data/gost/GostBlockungsergebnisListeneintrag';
 import { GostBlockungSchiene, cast_de_nrw_schule_svws_core_data_gost_GostBlockungSchiene } from '../../../core/data/gost/GostBlockungSchiene';
 import { GostFachwahl, cast_de_nrw_schule_svws_core_data_gost_GostFachwahl } from '../../../core/data/gost/GostFachwahl';
@@ -27,6 +28,8 @@ export class GostBlockungsdaten extends JavaObject {
 	public regeln : List<GostBlockungRegel> = new Vector();
 
 	public kurse : List<GostBlockungKurs> = new Vector();
+
+	public schueler : List<Schueler> = new Vector();
 
 	public fachwahlen : List<GostFachwahl> = new Vector();
 
@@ -75,6 +78,11 @@ export class GostBlockungsdaten extends JavaObject {
 		if (!!obj.kurse) {
 			for (let elem of obj.kurse) {
 				result.kurse?.add(GostBlockungKurs.transpilerFromJSON(JSON.stringify(elem)));
+			}
+		}
+		if (!!obj.schueler) {
+			for (let elem of obj.schueler) {
+				result.schueler?.add(Schueler.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		if (!!obj.fachwahlen) {
@@ -130,6 +138,18 @@ export class GostBlockungsdaten extends JavaObject {
 				let elem = obj.kurse.get(i);
 				result += GostBlockungKurs.transpilerToJSON(elem);
 				if (i < obj.kurse.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
+		}
+		if (!obj.schueler) {
+			result += '"schueler" : []';
+		} else {
+			result += '"schueler" : [ ';
+			for (let i : number = 0; i < obj.schueler.size(); i++) {
+				let elem = obj.schueler.get(i);
+				result += Schueler.transpilerToJSON(elem);
+				if (i < obj.schueler.size() - 1)
 					result += ',';
 			}
 			result += ' ]' + ',';
@@ -220,6 +240,20 @@ export class GostBlockungsdaten extends JavaObject {
 					let elem = obj.kurse.get(i);
 					result += GostBlockungKurs.transpilerToJSON(elem);
 					if (i < obj.kurse.size() - 1)
+						result += ',';
+				}
+				result += ' ]' + ',';
+			}
+		}
+		if (typeof obj.schueler !== "undefined") {
+			if (!obj.schueler) {
+				result += '"schueler" : []';
+			} else {
+				result += '"schueler" : [ ';
+				for (let i : number = 0; i < obj.schueler.size(); i++) {
+					let elem = obj.schueler.get(i);
+					result += Schueler.transpilerToJSON(elem);
+					if (i < obj.schueler.size() - 1)
 						result += ',';
 				}
 				result += ' ]' + ',';

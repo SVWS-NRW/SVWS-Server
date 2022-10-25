@@ -2,15 +2,17 @@ import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject
 import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
 import { GostFach, cast_de_nrw_schule_svws_core_data_gost_GostFach } from '../../../core/data/gost/GostFach';
 import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
+import { NullPointerException, cast_java_lang_NullPointerException } from '../../../java/lang/NullPointerException';
 import { LinkedCollection, cast_de_nrw_schule_svws_core_adt_collection_LinkedCollection } from '../../../core/adt/collection/LinkedCollection';
 import { JavaLong, cast_java_lang_Long } from '../../../java/lang/JavaLong';
+import { Collection, cast_java_util_Collection } from '../../../java/util/Collection';
 import { List, cast_java_util_List } from '../../../java/util/List';
 import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 import { Comparator, cast_java_util_Comparator } from '../../../java/util/Comparator';
 
 export class GostFaecherManager extends JavaObject {
 
-	private static comp : Comparator<GostFach> = { compare : (a: GostFach | null, b: GostFach | null) => {
+	public static comp : Comparator<GostFach> = { compare : (a: GostFach | null, b: GostFach | null) => {
 		let va : number = (a === null) ? Number.MIN_VALUE : a.sortierung;
 		let vb : number = (b === null) ? Number.MIN_VALUE : b.sortierung;
 		return JavaInteger.compare(va, vb);
@@ -89,7 +91,7 @@ export class GostFaecherManager extends JavaObject {
 	 * 
 	 * @return true, falls <i>alle</i> Fächer eingefügt wurden, sonst false 
 	 */
-	public addAll(faecher : List<GostFach>) : boolean {
+	public addAll(faecher : Collection<GostFach>) : boolean {
 		let result : boolean = true;
 		for (let fach of faecher) 
 			if (!this.addInternal(fach)) 
@@ -107,6 +109,22 @@ export class GostFaecherManager extends JavaObject {
 	 */
 	public get(id : number) : GostFach | null {
 		return this._map.get(id);
+	}
+
+	/**
+	 * Gibt das Fach mit der angegebenen ID zurück.
+	 * 
+	 * @param  pFachID              die ID des gesuchten Faches
+	 * 
+	 * @return                      das fach mit der angegebenen ID
+	 * 
+	 * @throws NullPointerException im Falle, dass die ID nicht bekannt ist.
+	 */
+	public getOrException(pFachID : number) : GostFach {
+		let fach : GostFach | null = this._map.get(pFachID);
+		if (fach === null) 
+			throw new NullPointerException("GostFach mit id=" + pFachID + " gibt es nicht.")
+		return fach;
 	}
 
 	/**

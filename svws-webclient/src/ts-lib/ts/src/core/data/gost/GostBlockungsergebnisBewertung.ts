@@ -1,16 +1,20 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
 import { JavaLong, cast_java_lang_Long } from '../../../java/lang/JavaLong';
+import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 
 export class GostBlockungsergebnisBewertung extends JavaObject {
 
-	public regelVerletzungen : Array<Number> = Array(0).fill(null);
+	public regelVerletzungen : Vector<Number> = new Vector();
 
-	public anzahlNichtZugeordnet : number = 0;
+	public anzahlKurseNichtZugeordnet : number = 0;
 
-	public anzahlKollisionen : number = 0;
+	public anzahlSchuelerNichtZugeordnet : number = 0;
 
-	public kursdifferenzen : Array<Number> = Array(0).fill(null);
+	public anzahlSchuelerKollisionen : number = 0;
+
+	public kursdifferenzMax : number = 0;
+
+	public kursdifferenzHistogramm : Array<number> = Array(0).fill(0);
 
 	public anzahlKurseMitGleicherFachartProSchiene : number = 0;
 
@@ -26,17 +30,25 @@ export class GostBlockungsergebnisBewertung extends JavaObject {
 	public static transpilerFromJSON(json : string): GostBlockungsergebnisBewertung {
 		const obj = JSON.parse(json);
 		const result = new GostBlockungsergebnisBewertung();
-		for (let i : number = 0; i < obj.regelVerletzungen.length; i++) {
-			result.regelVerletzungen[i] = obj.regelVerletzungen[i];
+		if (!!obj.regelVerletzungen) {
+			for (let elem of obj.regelVerletzungen) {
+				result.regelVerletzungen?.add(elem);
+			}
 		}
-		if (typeof obj.anzahlNichtZugeordnet === "undefined")
-			 throw new Error('invalid json format, missing attribute anzahlNichtZugeordnet');
-		result.anzahlNichtZugeordnet = obj.anzahlNichtZugeordnet;
-		if (typeof obj.anzahlKollisionen === "undefined")
-			 throw new Error('invalid json format, missing attribute anzahlKollisionen');
-		result.anzahlKollisionen = obj.anzahlKollisionen;
-		for (let i : number = 0; i < obj.kursdifferenzen.length; i++) {
-			result.kursdifferenzen[i] = obj.kursdifferenzen[i];
+		if (typeof obj.anzahlKurseNichtZugeordnet === "undefined")
+			 throw new Error('invalid json format, missing attribute anzahlKurseNichtZugeordnet');
+		result.anzahlKurseNichtZugeordnet = obj.anzahlKurseNichtZugeordnet;
+		if (typeof obj.anzahlSchuelerNichtZugeordnet === "undefined")
+			 throw new Error('invalid json format, missing attribute anzahlSchuelerNichtZugeordnet');
+		result.anzahlSchuelerNichtZugeordnet = obj.anzahlSchuelerNichtZugeordnet;
+		if (typeof obj.anzahlSchuelerKollisionen === "undefined")
+			 throw new Error('invalid json format, missing attribute anzahlSchuelerKollisionen');
+		result.anzahlSchuelerKollisionen = obj.anzahlSchuelerKollisionen;
+		if (typeof obj.kursdifferenzMax === "undefined")
+			 throw new Error('invalid json format, missing attribute kursdifferenzMax');
+		result.kursdifferenzMax = obj.kursdifferenzMax;
+		for (let i : number = 0; i < obj.kursdifferenzHistogramm.length; i++) {
+			result.kursdifferenzHistogramm[i] = obj.kursdifferenzHistogramm[i];
 		}
 		if (typeof obj.anzahlKurseMitGleicherFachartProSchiene === "undefined")
 			 throw new Error('invalid json format, missing attribute anzahlKurseMitGleicherFachartProSchiene');
@@ -50,24 +62,26 @@ export class GostBlockungsergebnisBewertung extends JavaObject {
 			result += '"regelVerletzungen" : []';
 		} else {
 			result += '"regelVerletzungen" : [ ';
-			for (let i : number = 0; i < obj.regelVerletzungen.length; i++) {
-				let elem = obj.regelVerletzungen[i];
+			for (let i : number = 0; i < obj.regelVerletzungen.size(); i++) {
+				let elem = obj.regelVerletzungen.get(i);
 				result += elem;
-				if (i < obj.regelVerletzungen.length - 1)
+				if (i < obj.regelVerletzungen.size() - 1)
 					result += ',';
 			}
 			result += ' ]' + ',';
 		}
-		result += '"anzahlNichtZugeordnet" : ' + obj.anzahlNichtZugeordnet + ',';
-		result += '"anzahlKollisionen" : ' + obj.anzahlKollisionen + ',';
-		if (!obj.kursdifferenzen) {
-			result += '"kursdifferenzen" : []';
+		result += '"anzahlKurseNichtZugeordnet" : ' + obj.anzahlKurseNichtZugeordnet + ',';
+		result += '"anzahlSchuelerNichtZugeordnet" : ' + obj.anzahlSchuelerNichtZugeordnet + ',';
+		result += '"anzahlSchuelerKollisionen" : ' + obj.anzahlSchuelerKollisionen + ',';
+		result += '"kursdifferenzMax" : ' + obj.kursdifferenzMax + ',';
+		if (!obj.kursdifferenzHistogramm) {
+			result += '"kursdifferenzHistogramm" : []';
 		} else {
-			result += '"kursdifferenzen" : [ ';
-			for (let i : number = 0; i < obj.kursdifferenzen.length; i++) {
-				let elem = obj.kursdifferenzen[i];
-				result += elem;
-				if (i < obj.kursdifferenzen.length - 1)
+			result += '"kursdifferenzHistogramm" : [ ';
+			for (let i : number = 0; i < obj.kursdifferenzHistogramm.length; i++) {
+				let elem = obj.kursdifferenzHistogramm[i];
+				result += JSON.stringify(elem);
+				if (i < obj.kursdifferenzHistogramm.length - 1)
 					result += ',';
 			}
 			result += ' ]' + ',';
@@ -81,35 +95,40 @@ export class GostBlockungsergebnisBewertung extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<GostBlockungsergebnisBewertung>) : string {
 		let result = '{';
 		if (typeof obj.regelVerletzungen !== "undefined") {
-			let a = obj.regelVerletzungen;
-			if (!a) {
+			if (!obj.regelVerletzungen) {
 				result += '"regelVerletzungen" : []';
 			} else {
 				result += '"regelVerletzungen" : [ ';
-				for (let i : number = 0; i < a.length; i++) {
-					let elem = a[i];
+				for (let i : number = 0; i < obj.regelVerletzungen.size(); i++) {
+					let elem = obj.regelVerletzungen.get(i);
 					result += elem;
-					if (i < a.length - 1)
+					if (i < obj.regelVerletzungen.size() - 1)
 						result += ',';
 				}
 				result += ' ]' + ',';
 			}
 		}
-		if (typeof obj.anzahlNichtZugeordnet !== "undefined") {
-			result += '"anzahlNichtZugeordnet" : ' + obj.anzahlNichtZugeordnet + ',';
+		if (typeof obj.anzahlKurseNichtZugeordnet !== "undefined") {
+			result += '"anzahlKurseNichtZugeordnet" : ' + obj.anzahlKurseNichtZugeordnet + ',';
 		}
-		if (typeof obj.anzahlKollisionen !== "undefined") {
-			result += '"anzahlKollisionen" : ' + obj.anzahlKollisionen + ',';
+		if (typeof obj.anzahlSchuelerNichtZugeordnet !== "undefined") {
+			result += '"anzahlSchuelerNichtZugeordnet" : ' + obj.anzahlSchuelerNichtZugeordnet + ',';
 		}
-		if (typeof obj.kursdifferenzen !== "undefined") {
-			let a = obj.kursdifferenzen;
+		if (typeof obj.anzahlSchuelerKollisionen !== "undefined") {
+			result += '"anzahlSchuelerKollisionen" : ' + obj.anzahlSchuelerKollisionen + ',';
+		}
+		if (typeof obj.kursdifferenzMax !== "undefined") {
+			result += '"kursdifferenzMax" : ' + obj.kursdifferenzMax + ',';
+		}
+		if (typeof obj.kursdifferenzHistogramm !== "undefined") {
+			let a = obj.kursdifferenzHistogramm;
 			if (!a) {
-				result += '"kursdifferenzen" : []';
+				result += '"kursdifferenzHistogramm" : []';
 			} else {
-				result += '"kursdifferenzen" : [ ';
+				result += '"kursdifferenzHistogramm" : [ ';
 				for (let i : number = 0; i < a.length; i++) {
 					let elem = a[i];
-					result += elem;
+					result += JSON.stringify(elem);
 					if (i < a.length - 1)
 						result += ',';
 				}

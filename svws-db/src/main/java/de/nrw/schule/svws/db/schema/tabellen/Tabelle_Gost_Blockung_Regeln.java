@@ -17,18 +17,18 @@ public class Tabelle_Gost_Blockung_Regeln extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte ID */
 	public SchemaTabelleSpalte col_ID = add("ID", SchemaDatentypen.BIGINT, true)
 		.setNotNull()
-		.setJavaComment("Kursblockung der Gymnasialen Oberstufe - Regeldefinition der Blockung: ID der Regel (generiert)");
+		.setJavaComment("ID der Regel (generiert)");
 
 	/** Die Definition der Tabellenspalte Blockung_ID */
 	public SchemaTabelleSpalte col_Blockung_ID = add("Blockung_ID", SchemaDatentypen.BIGINT, false)
 		.setNotNull()
-		.setJavaComment("Kursblockung der Gymnasialen Oberstufe - Regeldefinition der Blockung: ID der Blockung");
+		.setJavaComment("ID der Blockung");
 
 	/** Die Definition der Tabellenspalte Typ */
 	public SchemaTabelleSpalte col_Typ = add("Typ", SchemaDatentypen.INT, false)
 		.setNotNull()
 		.setConverter("GostKursblockungRegelTypConverter")
-		.setJavaComment("Kursblockung der Gymnasialen Oberstufe - Regeldefinition der Blockung: Die ID des Typs der Regeldefinition (siehe Core-Type GostKursblockungRegeltyp)");
+		.setJavaComment("Die ID des Typs der Regeldefinition (siehe Core-Type GostKursblockungRegeltyp)");
 
 
 	/** Die Definition des Fremdschlüssels Gost_Blockung_Regeln_Blockung_FK */

@@ -14,7 +14,7 @@
 							Nicht in diesem Kurs</svws-ui-checkbox>
 					</div>
 					<div v-if="app.dataKursblockungsergebnis.active_kurs.value" class="px-4">
-						<b>Kursansicht {{app.dataKursblockungsergebnis.active_kurs.value.name}}</b>
+						<b>Kursansicht {{app.dataKursblockungsergebnis.active_kurs.value.fachID}}</b>
 					</div>
 					<svws-ui-text-input v-model="filter_name" type="search" placeholder="Suche nach Namen">
 						<i-ri-search-line />
@@ -109,7 +109,9 @@ const kurse: ComputedRef<List<GostBlockungKurs>> = computed(() =>
 	app.dataKursblockung.daten?.kurse || new Vector<GostBlockungKurs>());
 
 const schienen: ComputedRef<Vector<GostBlockungsergebnisSchiene> | undefined> = computed(() =>
-	app.dataKursblockungsergebnis.daten?.schienen);
+	// app.dataKursblockungsergebnis.daten?.schienen
+	manager.value?.getMengeAllerSchienen()
+	);
 
 const schueler: ComputedRef<Array<SchuelerListeEintrag> | undefined> =
 	computed(() => app.listAbiturjahrgangSchueler.gefiltert);
@@ -137,21 +139,20 @@ const schueler_kollisionen: ComputedRef<{ [index: number]: boolean }> =
 		for (const s of schienen.value)
 			for (const k of s.kurse)
 				for (const ss of k.schueler)
-					if (ss.hatKollisionen) kolls[ss.id] = true;
+					if (manager.value?.getOfSchuelerHatKollision(ss.valueOf())) kolls[ss.valueOf()] = true;
 		return kolls;
 	});
 
 const schueler_negiert: ComputedRef<{ [index: number]: boolean }> = computed(() => {
 	const kurs = app.dataKursblockungsergebnis.active_kurs?.value
 	if (!kurs) return {};
-	const kurse = manager.value?.getKursSchuelerZuordnungenFuerFach(kurs.fachID)
-	console.log(kurse)
+	const kurse = manager.value?.getOfFachKursmenge(kurs.fachID)
 	if (!kurse) return {}
 	const negiert: { [index: number]: boolean } = {};
 	for (const k of kurse)
 		if (kurs !== k && kurs.kursart === k.kursart)
 			for (const ss of k.schueler)
-				negiert[ss.id] = true;
+				negiert[ss.valueOf()] = true;
 	return negiert;
 });
 

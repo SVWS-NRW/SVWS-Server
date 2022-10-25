@@ -12,13 +12,13 @@ public class Rev8DTOGostBlockungZwischenergebnisKursSchienePK implements Seriali
 	/** Die UID für diese Klasse */
 	private static final long serialVersionUID = 1L;
 
-	/** Kursblockung der Gymnasialen Oberstufe - Kurs-Schienen-Zuordnung eines Zwischenergebnisses einer Blockung: ID des Zwischenergebnisses */
+	/** Kurs-Schienen-Zuordnung eines Zwischenergebnisses: ID des Zwischenergebnisses */
 	public Long Zwischenergebnis_ID;
 
-	/** Kursblockung der Gymnasialen Oberstufe - Kurs-Schienen-Zuordnung eines Zwischenergebnisses einer Blockung: ID des Kurses */
+	/** Kurs-Schienen-Zuordnung eines Zwischenergebnisses: ID des Kurses */
 	public Long Blockung_Kurs_ID;
 
-	/** Kursblockung der Gymnasialen Oberstufe - Kurs-Schienen-Zuordnung eines Zwischenergebnisses einer Blockung: ID der Schiene aus der Blockung */
+	/** Kurs-Schienen-Zuordnung eines Zwischenergebnisses: ID der Schiene aus der Blockung */
 	public Long Schienen_ID;
 
 	/**

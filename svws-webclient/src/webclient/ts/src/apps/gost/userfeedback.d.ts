@@ -9,7 +9,7 @@
  * Set von Werten, die den zu kommunizierenden Status von Api-Calls enthalten.
  */
 export interface FeedbackValues {
-	/** Zeigt an, ob der Api-Call gegenwrtig luft. */
+	/** Zeigt an, ob der Api-Call gegenwärtig läuft. */
 	idle: boolean,
 	/** Zeigt an, ob der Api-Call fehlgeschlagen ist. */
 	error: boolean,

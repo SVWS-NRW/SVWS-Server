@@ -35,28 +35,28 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @JsonPropertyOrder({"ID","Blockung_ID","Nummer","Bezeichnung","Wochenstunden"})
 public class DTOGostBlockungSchiene {
 
-	/** Kursblockung der Gymnasialen Oberstufe - Schienen der Blockung: ID der Schiene in der Blockung (generiert) */
+	/** ID der Schiene in der Blockung (generiert) */
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
 	public Long ID;
 
-	/** Kursblockung der Gymnasialen Oberstufe - Schienen der Blockung: ID der Blockung */
+	/** ID der Blockung */
 	@Column(name = "Blockung_ID")
 	@JsonProperty
 	public Long Blockung_ID;
 
-	/** Kursblockung der Gymnasialen Oberstufe - Schienen der Blockung: Die Nummer der Schiene, beginnend bei 1 */
+	/** Die Nummer der Schiene, beginnend bei 1 */
 	@Column(name = "Nummer")
 	@JsonProperty
 	public Integer Nummer;
 
-	/** Kursblockung der Gymnasialen Oberstufe - Schienen der Blockung: Bezeichnung der Schiene (z.B. LK Schiene 1) */
+	/** Bezeichnung der Schiene (z.B. LK Schiene 1) */
 	@Column(name = "Bezeichnung")
 	@JsonProperty
 	public String Bezeichnung;
 
-	/** Kursblockung der Gymnasialen Oberstufe - Schienen der Blockung: Die Anzahl der Wochenstunden, welche der Schiene zugeordnet sind */
+	/** Die Anzahl der Wochenstunden, welche der Schiene zugeordnet sind */
 	@Column(name = "Wochenstunden")
 	@JsonProperty
 	public Integer Wochenstunden;

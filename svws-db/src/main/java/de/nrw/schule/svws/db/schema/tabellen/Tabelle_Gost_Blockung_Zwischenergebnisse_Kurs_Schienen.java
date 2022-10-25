@@ -17,17 +17,17 @@ public class Tabelle_Gost_Blockung_Zwischenergebnisse_Kurs_Schienen extends Sche
 	/** Die Definition der Tabellenspalte Zwischenergebnis_ID */
 	public SchemaTabelleSpalte col_Zwischenergebnis_ID = add("Zwischenergebnis_ID", SchemaDatentypen.BIGINT, true)
 		.setNotNull()
-		.setJavaComment("Kursblockung der Gymnasialen Oberstufe - Kurs-Schienen-Zuordnung eines Zwischenergebnisses einer Blockung: ID des Zwischenergebnisses");
+		.setJavaComment("Kurs-Schienen-Zuordnung eines Zwischenergebnisses: ID des Zwischenergebnisses");
 
 	/** Die Definition der Tabellenspalte Blockung_Kurs_ID */
 	public SchemaTabelleSpalte col_Blockung_Kurs_ID = add("Blockung_Kurs_ID", SchemaDatentypen.BIGINT, true)
 		.setNotNull()
-		.setJavaComment("Kursblockung der Gymnasialen Oberstufe - Kurs-Schienen-Zuordnung eines Zwischenergebnisses einer Blockung: ID des Kurses");
+		.setJavaComment("Kurs-Schienen-Zuordnung eines Zwischenergebnisses: ID des Kurses");
 
 	/** Die Definition der Tabellenspalte Schienen_ID */
 	public SchemaTabelleSpalte col_Schienen_ID = add("Schienen_ID", SchemaDatentypen.BIGINT, true)
 		.setNotNull()
-		.setJavaComment("Kursblockung der Gymnasialen Oberstufe - Kurs-Schienen-Zuordnung eines Zwischenergebnisses einer Blockung: ID der Schiene aus der Blockung");
+		.setJavaComment("Kurs-Schienen-Zuordnung eines Zwischenergebnisses: ID der Schiene aus der Blockung");
 
 
 	/** Die Definition des Fremdschlüssels Gost_Blockung_Zwischenergebnisse_Kurs_Schienen_ErgID_FK */

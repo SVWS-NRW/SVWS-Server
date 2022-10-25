@@ -12,13 +12,13 @@ public class DTOGostBlockungZwischenergebnisKursSchuelerPK implements Serializab
 	/** Die UID für diese Klasse */
 	private static final long serialVersionUID = 1L;
 
-	/** Kursblockung der Gymnasialen Oberstufe - Kurs-Schüler-Zuordnung eines Zwischenergebnisses einer Blockung: ID des Zwischenergebnisses */
+	/** Kurs-Schüler-Zuordnung eines Zwischenergebnisses: ID des Zwischenergebnisses */
 	public Long Zwischenergebnis_ID;
 
-	/** Kursblockung der Gymnasialen Oberstufe - Kurs-Schüler-Zuordnung eines Zwischenergebnisses einer Blockung: ID des Kurses */
+	/** Kurs-Schüler-Zuordnung eines Zwischenergebnisses: ID des Kurses */
 	public Long Blockung_Kurs_ID;
 
-	/** Kursblockung der Gymnasialen Oberstufe - Kurs-Schüler-Zuordnung eines Zwischenergebnisses einer Blockung: ID des Schülers */
+	/** Kurs-Schüler-Zuordnung eines Zwischenergebnisses: ID des Schülers */
 	public Long Schueler_ID;
 
 	/**

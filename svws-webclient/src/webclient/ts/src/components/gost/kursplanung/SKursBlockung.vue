@@ -6,7 +6,7 @@
 		<td class="border border-[#7f7f7f]/20 px-2 whitespace-nowrap" :class="{'border-t-2': kursdifferenz}">
 			<div class="flex gap-1">
 				<template v-if=" kurs === edit_name ">
-					{{ fachKuerzel }}-{{ art }}{{ kurs.nummer }}-
+					{{ fachKuerzel }}-{{ art.kuerzel }}{{ kurs.nummer }}-
 					<svws-ui-text-input
 						v-model="suffix"
 						focus headless
@@ -17,7 +17,7 @@
 				</template>
 				<template v-else>
 					<span class="underline decoration-dashed underline-offset-2 cursor-text" @click="edit_name = kurs">
-						{{ fachKuerzel }}-{{ art }}{{ kurs.nummer }}{{ kurs.suffix ? "-"+kurs.suffix : "" }}
+						{{ fachKuerzel }}-{{ art.kuerzel }}{{ kurs.nummer }}{{ kurs.suffix ? "-"+kurs.suffix : "" }}
 					</span>
 				</template>
 			</div>
@@ -46,7 +46,7 @@
 			@drag-over="drag_over($event)"
 			>
 			<drag-data
-				v-if="kurs_blockungsergebnis?.schienenID === schiene.id"
+				v-if="manager?.getOfKursOfSchieneIstZugeordnet(kurs.id, schiene.id)"
 				:key="kurs.id"
 				tag="div"
 				type="kurs"
@@ -57,7 +57,7 @@
 				:style="{ 'background-color': schiene_gesperrt(schiene)? '':bgColor}"
 			>
 				<svws-ui-badge size="tiny" class="cursor-grab" :variant="fixier_regel ? 'error' : 'highlight'">
-					{{ kurs_blockungsergebnis.schueler.size() }}
+					{{ kurs_blockungsergebnis?.schueler.size() }}
 					<svws-ui-icon class="cursor-pointer" @click="fixieren_regel_toggle" >
 						<i-ri-pushpin-fill v-if="fixier_regel" class="inline-block"/>
 						<i-ri-pushpin-line v-else class="inline-block"/>
@@ -78,7 +78,7 @@
 				:class="{ 'border-t-2': kursdifferenz }"
 			>
 				<svws-ui-badge
-					v-if="kurs_blockungsergebnis?.schienenID === schiene.id"
+					v-if="manager?.getOfKursOfSchieneIstZugeordnet(kurs.id, schiene.id)"
 					size="tiny" :variant="selected_kurs?'primary':'highlight'" class="cursor-pointer"
 					@click="toggle_active_kurs">
 					{{ kurs_blockungsergebnis?.schueler.size() }}
@@ -113,6 +113,7 @@ import {
 	GostBlockungRegel,
 	GostBlockungSchiene,
 	GostBlockungsergebnisKurs,
+	GostBlockungsergebnisManager,
 	GostFach,
 	GostKursart,
 	GostKursblockungRegelTyp,
@@ -166,7 +167,7 @@ const bgColor: ComputedRef<string> = computed(() => {
 	return "#" + (0x1000000 + rgb).toString(16).slice(1);
 });
 
-const art = GostKursart.fromID(props.kurs.kursart).kuerzel
+const art = GostKursart.fromID(props.kurs.kursart)
 
 const koop: WritableComputedRef<boolean> = computed({
 	get(): boolean {
@@ -190,22 +191,28 @@ const suffix: WritableComputedRef<string> = computed({
 		app.dataKursblockung.patch_kurs(kurs);
 	}
 });
+const manager: ComputedRef<GostBlockungsergebnisManager | undefined> = computed(()=>app.dataKursblockungsergebnis.manager)
 
 const schienen = computed(()=>app.dataKursblockung.daten?.schienen || new Vector<GostBlockungSchiene>())
 
 const kurs_blockungsergebnis: ComputedRef<GostBlockungsergebnisKurs|undefined> = computed(()=>{
 	try {
-		return app.dataKursblockungsergebnis.manager?.getKursSchuelerZuordnung(props.kurs.id)
+		// console.log(manager.value?.getKursE(props.kurs.id), props.kurs, manager.value)
+		return manager.value?.getKursE(props.kurs.id)
 	} catch (e) { return undefined }
-	})
+})
 
 const selected_kurs: ComputedRef<boolean> = computed(()=> kurs_blockungsergebnis.value === app.dataKursblockungsergebnis.active_kurs?.value)
 
 const filtered_by_kursart: ComputedRef<GostBlockungsergebnisKurs[]> = computed(()=>{
-	const kurse = app.dataKursblockungsergebnis.manager?.getKursSchuelerZuordnungenFuerFach(props.kurs.fach_id)
+	const kurse = manager.value?.getOfFachKursmenge(props.kurs.fach_id)
 	if (!kurse) return []
 	const arr = kurse.toArray(new Array<GostBlockungsergebnisKurs>())
-	return arr.filter(k => k.kursart === art).sort((a,b)=>a.name.localeCompare(String(b.name), "de-DE"))
+	return arr.filter(k => k.kursart === art.id).sort((a,b)=>{
+		const a_name = manager.value?.getOfKursName(a.id)
+		const b_name = manager.value?.getOfKursName(b.id)
+		return a_name?.localeCompare(String(b_name), "de-DE") || 0
+	})
 })
 
 const setze_kursdifferenz = computed(()=>filtered_by_kursart.value[0]===kurs_blockungsergebnis.value)
@@ -258,7 +265,9 @@ const fixieren_regel_hinzufuegen = async () => {
 	if (!regel) return
 	const kurs = kurs_blockungsergebnis.value
 	if (!kurs) return
-	const schiene = app.dataKursblockungsergebnis.manager?.getSchiene(kurs.schienenID?.valueOf() || -1)
+	const schienen = manager.value?.getOfKursSchienenmenge(kurs.id)
+	if (!schienen) return
+	const schiene = manager.value?.getSchieneG([...schienen][0].id)
 	if (!schiene) return
 	regel.parameter.set(1, schiene.nummer)
 	await regel_speichern(regel)
@@ -291,7 +300,7 @@ const sperren_regel_entfernen = async (nummer: number) => {
 function drop_aendere_kursschiene(drag_data: {kurs: GostBlockungsergebnisKurs; schiene: GostBlockungSchiene}, schiene_id: number) {
 	if (drag_data.kurs.id === kurs_blockungsergebnis.value?.id && schiene_id !== drag_data.schiene.id) {
 		if (fixier_regel.value) fixieren_regel_entfernen()
-		app.dataKursblockungsergebnis.manager?.assignKursSchiene(drag_data.kurs.id, schiene_id)
+		app.dataKursblockungsergebnis.manager?.setKursSchiene(drag_data.kurs.id, schiene_id, true)
 		// fixieren_regel_hinzufuegen()
 	}
 }
@@ -319,8 +328,8 @@ function toggle_active_kurs() {
 		app.dataKursblockungsergebnis.active_kurs.value = kurs_blockungsergebnis.value
 		const schueler: { [index: number]: boolean } = {};
 		if (kurs_blockungsergebnis.value)
-			for (const s of kurs_blockungsergebnis.value.schueler)
-				schueler[s.id] = true;
+			for (const id of kurs_blockungsergebnis.value.schueler)
+				schueler[id.valueOf()] = true;
 		filterValue.kurs = schueler
 	}
 	app.listAbiturjahrgangSchueler.filter = filterValue;

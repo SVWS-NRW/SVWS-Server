@@ -99,28 +99,28 @@ public class DataGostAbiturjahrgangFachwahlen extends DataManager<Long> {
 			return null;
     	// Ermittle die Fachwahlmatrix für alle angegebenen Schüler-IDs
 		HashMap<Long, GostStatistikFachwahl> fachwahlen = new HashMap<>();
-		for (DTOGostSchuelerFachbelegungen fachbelegung: fachbelegungen) {
-			if ((fachbelegung.EF1_Kursart == null) && (fachbelegung.EF2_Kursart == null) && (fachbelegung.Q11_Kursart == null) &&
-				(fachbelegung.Q11_Kursart == null) && (fachbelegung.Q11_Kursart == null) && (fachbelegung.Q11_Kursart == null))
-				continue;
-			GostStatistikFachwahl fachwahl = fachwahlen.get(fachbelegung.Fach_ID);
-			if (fachwahl == null) {
-				DTOFach fach = faecher.get(fachbelegung.Fach_ID);
-				fachwahl = new GostStatistikFachwahl();
-				fachwahl.abiturjahr = abijahr;
-				fachwahl.id = fach.ID;
-				fachwahl.kuerzel = fach.Kuerzel;
-				fachwahl.bezeichnung = fach.Bezeichnung;
-				fachwahl.kuerzelStatistik = fach.StatistikFach.daten.kuerzelASD;
-				fachwahlen.put(fachwahl.id, fachwahl);
-			}
-			GostStatistikFachwahlManager.setFachwahlHalbjahr(fachwahl, GostHalbjahr.EF1, fachbelegung.EF1_Kursart);
-			GostStatistikFachwahlManager.setFachwahlHalbjahr(fachwahl, GostHalbjahr.EF2, fachbelegung.EF2_Kursart);
-			GostStatistikFachwahlManager.setFachwahlHalbjahr(fachwahl, GostHalbjahr.Q11, fachbelegung.Q11_Kursart);
-			GostStatistikFachwahlManager.setFachwahlHalbjahr(fachwahl, GostHalbjahr.Q12, fachbelegung.Q12_Kursart);
-			GostStatistikFachwahlManager.setFachwahlHalbjahr(fachwahl, GostHalbjahr.Q21, fachbelegung.Q21_Kursart);
-			GostStatistikFachwahlManager.setFachwahlHalbjahr(fachwahl, GostHalbjahr.Q22, fachbelegung.Q22_Kursart);
-		}
+	    for (DTOGostSchuelerFachbelegungen fachbelegung: fachbelegungen) {
+	        if ((fachbelegung.EF1_Kursart == null) && (fachbelegung.EF2_Kursart == null) && (fachbelegung.Q11_Kursart == null) &&
+	            (fachbelegung.Q12_Kursart == null) && (fachbelegung.Q21_Kursart == null) && (fachbelegung.Q22_Kursart == null))
+	            continue;
+	        GostStatistikFachwahl fachwahl = fachwahlen.get(fachbelegung.Fach_ID);
+	        if (fachwahl == null) {
+	            DTOFach fach = faecher.get(fachbelegung.Fach_ID);
+	            fachwahl = new GostStatistikFachwahl();
+	            fachwahl.abiturjahr = abijahr;
+	            fachwahl.id = fach.ID;
+	            fachwahl.kuerzel = fach.Kuerzel;
+	            fachwahl.bezeichnung = fach.Bezeichnung;
+	            fachwahl.kuerzelStatistik = fach.StatistikFach.daten.kuerzelASD;
+	            fachwahlen.put(fachwahl.id, fachwahl);
+	        }
+	        GostStatistikFachwahlManager.setFachwahlHalbjahr(fachwahl, GostHalbjahr.EF1, fachbelegung.EF1_Kursart);
+	        GostStatistikFachwahlManager.setFachwahlHalbjahr(fachwahl, GostHalbjahr.EF2, fachbelegung.EF2_Kursart);
+	        GostStatistikFachwahlManager.setFachwahlHalbjahr(fachwahl, GostHalbjahr.Q11, fachbelegung.Q11_Kursart);
+	        GostStatistikFachwahlManager.setFachwahlHalbjahr(fachwahl, GostHalbjahr.Q12, fachbelegung.Q12_Kursart);
+	        GostStatistikFachwahlManager.setFachwahlHalbjahr(fachwahl, GostHalbjahr.Q21, fachbelegung.Q21_Kursart);
+	        GostStatistikFachwahlManager.setFachwahlHalbjahr(fachwahl, GostHalbjahr.Q22, fachbelegung.Q22_Kursart);
+	    }
 		return fachwahlen.values().stream().sorted((a,b) -> { 
     		return Integer.compare(faecher.get(a.id).SortierungSekII, faecher.get(b.id).SortierungSekII); 
     	}).collect(Collectors.toList());

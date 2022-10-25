@@ -1,212 +1,202 @@
 package de.nrw.schule.svws.core.kursblockung.test;
 
 import java.util.HashMap;
-import java.util.TreeSet;
-import java.util.Vector;
 
-import de.nrw.schule.svws.core.data.kursblockung.KursblockungInput;
-import de.nrw.schule.svws.core.data.kursblockung.KursblockungInputFach;
-import de.nrw.schule.svws.core.data.kursblockung.KursblockungInputFachwahl;
-import de.nrw.schule.svws.core.data.kursblockung.KursblockungInputKurs;
-import de.nrw.schule.svws.core.data.kursblockung.KursblockungInputKursart;
-import de.nrw.schule.svws.core.data.kursblockung.KursblockungInputRegel;
-import de.nrw.schule.svws.core.data.kursblockung.KursblockungInputSchueler;
+import de.nrw.schule.svws.core.data.gost.GostBlockungKurs;
+import de.nrw.schule.svws.core.data.gost.GostBlockungRegel;
+import de.nrw.schule.svws.core.data.gost.GostBlockungSchiene;
+import de.nrw.schule.svws.core.data.gost.GostBlockungsdaten;
+import de.nrw.schule.svws.core.data.gost.GostFach;
+import de.nrw.schule.svws.core.data.gost.GostFachwahl;
+import de.nrw.schule.svws.core.data.schueler.Schueler;
 import de.nrw.schule.svws.core.kursblockung.KursblockungException;
+import de.nrw.schule.svws.core.types.gost.GostKursart;
 import de.nrw.schule.svws.core.types.kursblockung.GostKursblockungRegelTyp;
+import de.nrw.schule.svws.core.utils.gost.GostBlockungsdatenManager;
+import de.nrw.schule.svws.core.utils.gost.GostFaecherManager;
 import de.nrw.schule.svws.csv.CsvReader;
 import de.nrw.schule.svws.logger.LogLevel;
 import de.nrw.schule.svws.logger.Logger;
 import jakarta.validation.constraints.NotNull;
 
 /** Eine Klasse zum Einlesen von exportierten Kurs42-Textdateien mit direkter Umwandlung in das Eingabeobjekt
- * {@linkplain KursblockungInput} für die Kursblockung.
+ * {@linkplain GostBlockungsdatenManager} für die Kursblockung.
  * 
  * @author Benjamin A. Bartsch */
 public class Kurs42Converter {
 
 	/** Der Logger für Warnungen und Fehlermeldungen. */
-	private final Logger logger;
+	private final Logger _logger;
 
 	/** Die konvertierten Daten. Diese können an einen Blockungsalgorithmus weitergereicht werden. */
-	private final KursblockungInput ki;
-
-	/** Die Anzahl der Schüler in den Daten. */
-	private long schuelerSumme;
-
-	/** Die Anzahl der Kurse in den Daten. */
-	private long kursSumme;
-
-	/** Die Anzahl der Fächer (z.B. 'D', 'E', 'M', ...) in den Daten. */
-	private long fachSumme;
-
-	/** Die Anzahl der Kursarten (z.B. 'GK', 'LK', 'PJK') in den Daten. */
-	private long kursartSumme;
-
-	/** Die Anzahl der Fachwahlen aller SuS in den Daten. */
-	private long fachWahlSumme;
+	private final GostBlockungsdatenManager _manager;
 
 	/** Der Konstruktor wandelt einen Pfad {@code location} mit exportierten Kurs42-Textdateien in ein Objekt der Klasse
-	 * {@linkplain KursblockungInput} um. Es werden die folgenden Dateien eingelesen:<br>
+	 * {@linkplain GostBlockungsdatenManager} um. Es werden die folgenden Dateien eingelesen:<br>
 	 * {@code 'Schueler.txt', 'Kurse.txt', 'Fachwahlen.txt' und 'Blockplan.txt'}
 	 * 
-	 * @param logger           Der logger.
-	 * @param location         Der Pfad der Kurs42-Exportdateien.
-	 * @param maxTimeMillis    Die maximale Blockungszeit in Millisekunden.
-	 * @param fixiereAlleKurse Falls true, dann wird die aktuelle Kurslage fixiert. */
-	public Kurs42Converter(Logger logger, String location, long maxTimeMillis, boolean fixiereAlleKurse) {
-		this.logger = logger;
+	 * @param pLogger           Der logger.
+	 * @param pPfad             Der Pfad der Kurs42-Exportdateien.
+	 * @param pMaxTimeMillis    Die maximale Blockungszeit in Millisekunden.
+	 * @param pFixiereAlleKurse Falls true, dann wird die aktuelle Kurslage fixiert. */
+	public Kurs42Converter(Logger pLogger, String pPfad, long pMaxTimeMillis, boolean pFixiereAlleKurse) {
+		this._logger = pLogger;
 
-		this.ki = new KursblockungInput();
-		this.ki.input = 1; // Pseudo-ID (kommt eigentlich aus der Datenbank)
-		this.ki.maxTimeMillis = maxTimeMillis;
-		this.ki.maxSchienen = 0; // wird noch erhöht
-		this.ki.schueler = new Vector<>();
-		this.ki.faecher = new Vector<>();
-		this.ki.kursarten = new Vector<>();
-		this.ki.kurse = new Vector<>();
-		this.ki.fachwahlen = new Vector<>();
-		this.ki.regeln = new Vector<>();
-
-		this.schuelerSumme = 0;
-		this.kursSumme = 0;
-		this.fachSumme = 0;
-		this.kursartSumme = 0;
-		this.fachWahlSumme = 0;
-
-		HashMap<String, KursblockungInputSchueler> mapSchueler = new HashMap<>();
-		HashMap<String, KursblockungInputKurs> mapKurse = new HashMap<>();
-		HashMap<String, KursblockungInputFach> mapFaecher = new HashMap<>();
-		HashMap<String, KursblockungInputKursart> mapKursarten = new HashMap<>();
+		HashMap<String, GostFach> mapFaecher = new HashMap<>();
+		HashMap<String, GostKursart> mapKursarten = new HashMap<>();
+		HashMap<String, GostBlockungKurs> mapKurse = new HashMap<>();
+		HashMap<String, Schueler> mapSchueler = new HashMap<>();
+		HashMap<String, GostFachwahl> mapFachwahlen = new HashMap<>();
+		HashMap<Long, GostBlockungRegel> mapRegeln = new HashMap<>();
 
 		// Einlesen der Schüler-Objekte
-		for (Kurs42DataSchueler k42schueler : CsvReader.fromResource(location + "Schueler.txt",
+		for (Kurs42DataSchueler k42schueler : CsvReader.fromResource(pPfad + "Schueler.txt",
 				Kurs42DataSchueler.class)) {
+
 			// Doppelter Schülername?
 			String sKey = getKeySchueler(k42schueler);
 			if (mapSchueler.containsKey(sKey))
 				throw fehler("Kurs42-Schueler-Inkonsistenz: Schüler '" + sKey + "' existiert doppelt.");
-			// Neuen Schüler erzeugen, dem Map und Vector hinzufügen.
-			KursblockungInputSchueler kiSchueler = new KursblockungInputSchueler();
-			kiSchueler.id = schuelerSumme;
-			kiSchueler.representation = sKey;
-			mapSchueler.put(sKey, kiSchueler); // Dem Map hinzufügen.
-			ki.schueler.add(kiSchueler); // Dem Vector hinzufügen.
-			schuelerSumme++;
+
+			Schueler gSchueler = new Schueler();
+			gSchueler.id = mapSchueler.size();
+			gSchueler.vorname = k42schueler.Vorname;
+			gSchueler.nachname = k42schueler.Name;
+			gSchueler.geschlecht = k42schueler.Geschlecht;
+			mapSchueler.put(sKey, gSchueler);
 		}
 
 		// Einlesen der Kurs-Objekte & Fächer & Kursarten
-		for (Kurs42DataKurs k42kurs : CsvReader.fromResource(location + "Kurse.txt", Kurs42DataKurs.class)) {
+		for (Kurs42DataKurs k42kurs : CsvReader.fromResource(pPfad + "Kurse.txt", Kurs42DataKurs.class)) {
+
 			// Doppelter Kursname?
 			String sKursname = k42kurs.Name;
 			if (mapKurse.containsKey(sKursname))
 				throw fehler("Kurs42-Kurse-Inkonsistenz: Kurs '" + sKursname + "' existiert doppelt.");
-			// Neues Fach? --> Den Map und Vector hinzufügen.
+
+			// Neues Fach? --> Map
 			String sFachKuerzel = k42kurs.Fach;
 			if (!mapFaecher.containsKey(sFachKuerzel)) {
-				KursblockungInputFach kiFach = new KursblockungInputFach();
-				kiFach.id = fachSumme;
-				kiFach.representation = sFachKuerzel;
-				mapFaecher.put(sFachKuerzel, kiFach); // Dem Map hinzufügen.
-				ki.faecher.add(kiFach); // Dem Vector hinzufügen.
-				fachSumme++;
+				GostFach gFach = new GostFach();
+				gFach.id = mapFaecher.size();
+				gFach.kuerzel = sFachKuerzel;
+				mapFaecher.put(sFachKuerzel, gFach);
 			}
-			// Neue Kurs art? --> Dem Map und Vector hinzufügen.
+
+			// Neue Kursart? --> Map
 			String sKursartKuerzel = convertKursart(k42kurs.Kursart);
 			if (!mapKursarten.containsKey(sKursartKuerzel)) {
-				KursblockungInputKursart kiKursart = new KursblockungInputKursart();
-				kiKursart.id = kursartSumme;
-				kiKursart.representation = sKursartKuerzel;
-				mapKursarten.put(sKursartKuerzel, kiKursart); // Dem Map hinzufügen.
-				ki.kursarten.add(kiKursart); // Dem Vector hinzufügen.
-				kursartSumme++;
+				GostKursart gKursart = GostKursart.fromKuerzel(sKursartKuerzel);
+				if (gKursart == null)
+					throw new NullPointerException("GostKursart.fromKuerzel(" + sKursartKuerzel + ") == null");
+				mapKursarten.put(sKursartKuerzel, gKursart);
 			}
+
 			// Neuen Kurs erzeugen. Dem Map und Vector hinzufügen.
-			KursblockungInputKurs kiKurs = new KursblockungInputKurs();
-			kiKurs.fach = mapFaecher.get(sFachKuerzel).id;
-			kiKurs.kursart = mapKursarten.get(sKursartKuerzel).id;
-			kiKurs.id = kursSumme;
-			kiKurs.representation = sKursname;
-			kiKurs.schienen = k42kurs.Schienenzahl;
-			mapKurse.put(sKursname, kiKurs); // Dem Map hinzufügen.
-			ki.kurse.add(kiKurs); // Dem Vector hinzufügen.
-			kursSumme++;
+			GostBlockungKurs gKurs = new GostBlockungKurs();
+			gKurs.id = mapKurse.size();
+			// System.out.println("Kursname "+sKursname+" --> "+gKurs.id);
+			gKurs.fach_id = mapFaecher.get(sFachKuerzel).id;
+			gKurs.kursart = mapKursarten.get(sKursartKuerzel).id;
+			gKurs.anzahlSchienen = k42kurs.Schienenzahl;
+			mapKurse.put(sKursname, gKurs);
 		}
 
 		// Einlesen der Fachwahl-Objekte
-		TreeSet<String> schuelerFachwahlen = new TreeSet<>();
-		for (Kurs42DataFachwahl k42fachwahl : CsvReader.fromResource(location + "Fachwahlen.txt",
+		for (Kurs42DataFachwahl k42fachwahl : CsvReader.fromResource(pPfad + "Fachwahlen.txt",
 				Kurs42DataFachwahl.class)) {
 			// Schüler unbekannt?
 			String sSchueler = getKeySchueler(k42fachwahl);
 			if (!mapSchueler.containsKey(sSchueler))
 				throw fehler("Kurs42-Fachwahlen-Inkonsistenz: Schüler '" + sSchueler + "' unbekannt!");
-			// Neues Fach? --> Dem Map und Vector hinzufügen.
+
+			// Neues Fach? --> Map
 			String sFachKuerzel = k42fachwahl.Fachkrz;
 			if (!mapFaecher.containsKey(sFachKuerzel)) {
-				KursblockungInputFach kiFach = new KursblockungInputFach();
-				kiFach.id = fachSumme;
-				kiFach.representation = sFachKuerzel;
-				mapFaecher.put(sFachKuerzel, kiFach); // Dem Map hinzufügen.
-				ki.faecher.add(kiFach); // Dem Vector hinzufügen.
-				fachSumme++;
+				GostFach gFach = new GostFach();
+				gFach.id = mapFaecher.size();
+				gFach.kuerzel = sFachKuerzel;
+				mapFaecher.put(sFachKuerzel, gFach);
 			}
-			// Neue Kursart? --> Dem Map und Vector hinzufügen.
+
+			// Neue Kursart? --> Map
 			String sKursartKuerzel = convertKursart(k42fachwahl.Kursart);
 			if (!mapKursarten.containsKey(sKursartKuerzel)) {
-				KursblockungInputKursart kiKursart = new KursblockungInputKursart();
-				kiKursart.id = kursartSumme;
-				kiKursart.representation = sKursartKuerzel;
-				mapKursarten.put(sKursartKuerzel, kiKursart); // Dem Map hinzufügen.
-				ki.kursarten.add(kiKursart); // Dem Vector hinzufügen.
-				kursartSumme++;
+				GostKursart gKursart = GostKursart.fromKuerzel(sKursartKuerzel);
+				if (gKursart == null)
+					throw new NullPointerException("GostKursart.fromKuerzel(" + sKursartKuerzel + ") == null");
+				mapKursarten.put(sKursartKuerzel, gKursart);
 			}
+
 			// Schüler hat doppelte Fachwahl?
-			String sRepresentation = sSchueler + ";" + sFachKuerzel + ";" + sKursartKuerzel;
-			if (!schuelerFachwahlen.add(sRepresentation))
-				throw fehler("Kurs42-Fachwahlen: Schüler '" + sSchueler + "' hat die Wahl '" + sFachKuerzel + ";"
+			String sFachwahl = sSchueler + ";" + sFachKuerzel + ";" + sKursartKuerzel;
+			if (mapFachwahlen.containsKey(sFachwahl))
+				throw fehler("Kurs42-Fachwahlen: Schüler '" + sSchueler + "' hat die Fachwahl '" + sFachKuerzel + ";"
 						+ sKursartKuerzel + "' doppelt!");
 
-			// Neue Fachwahl erzeugen und dem Vector hinzufügen
-			KursblockungInputFachwahl kiFachwahl = new KursblockungInputFachwahl();
-			kiFachwahl.id = fachWahlSumme;
-			kiFachwahl.schueler = mapSchueler.get(sSchueler).id;
-			kiFachwahl.fach = mapFaecher.get(sFachKuerzel).id;
-			kiFachwahl.kursart = mapKursarten.get(sKursartKuerzel).id;
-			kiFachwahl.representation = sRepresentation;
-			ki.fachwahlen.add(kiFachwahl);
-			fachWahlSumme++;
+			// Fachwahl erzeugen
+			GostFachwahl gFachwahl = new GostFachwahl();
+			gFachwahl.fachID = mapFaecher.get(sFachKuerzel).id;
+			gFachwahl.kursartID = mapKursarten.get(sKursartKuerzel).id;
+			gFachwahl.schuelerID = mapSchueler.get(sSchueler).id;
+			mapFachwahlen.put(sFachwahl, gFachwahl);
 		}
 
 		// Einlesen der Lage der Kurse. Bestimmung der Schienenanzahl
-		for (Kurs42DataBlockplan k42blockplan : CsvReader.fromResource(location + "Blockplan.txt",
+		int schienenAnzahl = 1;
+		for (Kurs42DataBlockplan k42blockplan : CsvReader.fromResource(pPfad + "Blockplan.txt",
 				Kurs42DataBlockplan.class)) {
+
 			// Kurs unbekannt?
 			String sKursname = k42blockplan.Kursbezeichnung;
 			if (!mapKurse.containsKey(sKursname))
 				throw fehler("Kurs42-Blockplan-Inkonsistenz: Kurs '" + sKursname + "' existiert nicht in 'Kurse.txt'.");
+
 			// Schienenanzahl erhöhen?
-			int schiene = k42blockplan.Schiene;
-			ki.maxSchienen = Math.max(ki.maxSchienen, schiene);
+			int gSchiene = k42blockplan.Schiene + 1;
+			schienenAnzahl = Math.max(schienenAnzahl, gSchiene);
+
 			// Regel 2 - Kursfixierung?
-			if (fixiereAlleKurse) {
-				KursblockungInputRegel regel = new KursblockungInputRegel();
-				regel.databaseID = ki.regeln.size();
-				regel.typ = GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ;
-				regel.daten = new Long[] { mapKurse.get(sKursname).id, (long) (schiene + 1) };
-				ki.regeln.add(regel);
+			if (pFixiereAlleKurse) {
+				GostBlockungRegel gRegel = new GostBlockungRegel();
+				gRegel.id = mapRegeln.size();
+				gRegel.typ = GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ;
+				gRegel.parameter.add(mapKurse.get(sKursname).id);
+				gRegel.parameter.add(Long.valueOf(gSchiene));
+				mapRegeln.put(gRegel.id, gRegel);
 			}
 		}
-		ki.maxSchienen = ki.maxSchienen + 1;
 
-		this.logger.modifyIndent(-4);
+		// Temporäre Daten --> Manager
+		GostBlockungsdaten gDaten = new GostBlockungsdaten();
+		gDaten.id = 1L; // Pseudo-ID
+		gDaten.kurse.addAll(mapKurse.values());
+		gDaten.regeln.addAll(mapRegeln.values());
+		gDaten.schueler.addAll(mapSchueler.values());
+		gDaten.fachwahlen.addAll(mapFachwahlen.values());
+		for (int i = 1; i <= schienenAnzahl; i++) {
+			GostBlockungSchiene gSchiene = new GostBlockungSchiene();
+			gSchiene.id = i; // Pseudo-ID
+			gSchiene.nummer = i;
+			gSchiene.bezeichnung = "Schiene " + i;
+			gDaten.schienen.add(gSchiene);
+		}
+
+		GostFaecherManager fManager = new GostFaecherManager();
+		fManager.addAll(mapFaecher.values());
+
+		this._manager = new GostBlockungsdatenManager(gDaten, fManager);
+		this._manager.setMaxTimeMillis(pMaxTimeMillis);
+
+		this._logger.modifyIndent(-4);
 	}
 
-	/** Diese Methode liefert das zuvor im Konstruktor erzeugte Objekt vom Typ {@link KursblockungInput}, welches aus
-	 * den Kurs42-Textdateien konvertiert wurde.
+	/** Diese Methode liefert das zuvor im Konstruktor erzeugte Objekt vom Typ {@link GostBlockungsdatenManager},
+	 * welches aus den Kurs42-Textdateien konvertiert wurde.
 	 * 
 	 * @return Liefert das aus den Kurs42-Textdateien konvertierte Objekt. */
-	public KursblockungInput gibKursblockungInput() {
-		return ki;
+	public GostBlockungsdatenManager gibKursblockungInput() {
+		return _manager;
 	}
 
 	/** Erzeugt aus den vier Attributen (Name, Vorname, GebDat und Geschlecht) des Objektes {@link Kurs42DataSchueler}
@@ -257,7 +247,7 @@ public class Kurs42Converter {
 	 * 
 	 * @param fehlermeldung Die Fehlermeldung. */
 	private KursblockungException fehler(@NotNull String fehlermeldung) {
-		logger.logLn(LogLevel.ERROR, fehlermeldung);
+		_logger.logLn(LogLevel.ERROR, fehlermeldung);
 		return new KursblockungException(fehlermeldung);
 	}
 

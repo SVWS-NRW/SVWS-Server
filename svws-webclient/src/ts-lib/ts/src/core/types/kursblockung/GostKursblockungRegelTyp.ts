@@ -1,14 +1,11 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
 import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
 import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
-import { NullPointerException, cast_java_lang_NullPointerException } from '../../../java/lang/NullPointerException';
-import { KursblockungInputRegel, cast_de_nrw_schule_svws_core_data_kursblockung_KursblockungInputRegel } from '../../../core/data/kursblockung/KursblockungInputRegel';
-import { JavaLong, cast_java_lang_Long } from '../../../java/lang/JavaLong';
+import { Collection, cast_java_util_Collection } from '../../../java/util/Collection';
 import { List, cast_java_util_List } from '../../../java/util/List';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 import { Collections, cast_java_util_Collections } from '../../../java/util/Collections';
 import { Arrays, cast_java_util_Arrays } from '../../../java/util/Arrays';
-import { GostBlockungRegel, cast_de_nrw_schule_svws_core_data_gost_GostBlockungRegel } from '../../../core/data/gost/GostBlockungRegel';
 import { GostKursblockungRegelParameterTyp, cast_de_nrw_schule_svws_core_types_kursblockung_GostKursblockungRegelParameterTyp } from '../../../core/types/kursblockung/GostKursblockungRegelParameterTyp';
 import { IllegalArgumentException, cast_java_lang_IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
 
@@ -68,6 +65,15 @@ export class GostKursblockungRegelTyp extends JavaObject {
 	}
 
 	/**
+	 * Liefert die Menge aller existierender Regeln.
+	 * 
+	 * @return Die Menge aller existierender Regeln.
+	 */
+	public static getCollection() : Collection<GostKursblockungRegelTyp> {
+		return GostKursblockungRegelTyp.map.values();
+	}
+
+	/**
 	 *
 	 * Ermittelt den Regel-Typ anhand seiner ID und gibt diesen zurück.
 	 *
@@ -110,65 +116,18 @@ export class GostKursblockungRegelTyp extends JavaObject {
 	}
 
 	/**
-	 *
-	 * Erstellt ein neues Regel-Objekt der Klasse {@link KursblockungInputRegel} mithilfe der angegebenen Parameter.
+	 * Prüft, ob der Regeltyp einen Parameter von dem angegebenen
+	 * Parametertyp hat.
+	 *  
+	 * @param paramType   der Parametertyp
 	 * 
-	 * @param  databaseID    die ID der Regel aus der Datenbank.
-	 * @param  params        die Parameter für das Regel-Objekt
-	 * 
-	 * @return das Regel-Objekt
-	 * @throws IllegalArgumentException   wenn die Anzahl der Parameter nicht zu diesem Regel-Typ passt 
+	 * @return true, falls die Regel einen solchen Parametertyp hat und ansonsten false 
 	 */
-	private create(databaseID : number, ...params : Array<Number>) : KursblockungInputRegel {
-		if ((params === null) || (params.length !== this.paramTypes.size())) 
-			throw new IllegalArgumentException()
-		let regel : KursblockungInputRegel = new KursblockungInputRegel();
-		regel.databaseID = databaseID;
-		regel.typ = this.typ;
-		regel.daten = Array(params.length).fill(null);
-		for (let i : number = 0; i < params.length; i++){
-			let data : Number | null = params[i];
-			if (data === null) 
-				throw new NullPointerException()
-			regel.daten[i] = data;
-		}
-		return regel;
-	}
-
-	/**
-	 *
-	 * Erstellt ein neues Regel-Objekt der Klasse {@link KursblockungInputRegel} mithilfe der angegebenen ID und der
-	 * angegebenen Parameter.
-	 * 
-	 * @param  databaseID   die ID der Regel aus der Datenbank.
-	 * @param  typ          die Nr des Regel-Typs
-	 * @param  params       die Parameter der zu erstellenden Regel
-	 * 
-	 * @return das Regel-Objekt
-	 * 
-	 * @throws IllegalArgumentException   wenn es keine gültige Regel für angegeben ID gibt oder die Anzahl 
-	 *                                    der Parameter nicht zu dem Regel-Typ passt 
-	 */
-	public static createByID(databaseID : number, typ : number, ...params : Array<Number>) : KursblockungInputRegel {
-		let gostTyp : GostKursblockungRegelTyp = GostKursblockungRegelTyp.fromTyp(typ);
-		if (JavaObject.equalsTranspiler(gostTyp, (GostKursblockungRegelTyp.UNDEFINIERT))) 
-			throw new IllegalArgumentException("Ungültiger Regel-Typ")
-		return gostTyp.create(databaseID, ...params);
-	}
-
-	/**
-	 *
-	 * Erstellt ein neues Regel-Objekt der Klasse {@link KursblockungInputRegel} mithilfe der angegebenen Regel.
-	 * 
-	 * @param regel   die Regel als Core-DTO
-	 * 
-	 * @return das Regel-Objekt
-	 * 
-	 * @throws IllegalArgumentException   wenn es keine gültige Regel für angegeben ID gibt oder die Anzahl der 
-	 *                                    Parameter nicht zu dem Regel-Typ passt 
-	 */
-	public static createFrom(regel : GostBlockungRegel) : KursblockungInputRegel {
-		return GostKursblockungRegelTyp.createByID(regel.id, regel.typ, ...regel.parameter.toArray(Array(0).fill(null)));
+	public hasParamType(paramType : GostKursblockungRegelParameterTyp | null) : boolean {
+		for (let cur of this.paramTypes) 
+			if (paramType as unknown === cur as unknown) 
+				return true;
+		return false;
 	}
 
 	/**

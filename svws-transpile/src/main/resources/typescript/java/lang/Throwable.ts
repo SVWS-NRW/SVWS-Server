@@ -1,5 +1,6 @@
 import { Class } from './Class';
 import { JavaObject } from './JavaObject';
+import { JavaString } from './JavaString';
 import { TranspiledObject } from './TranspiledObject';
 
 
@@ -19,14 +20,19 @@ export class Throwable extends Error implements TranspiledObject {
 
     private _cause : Throwable = this;
 
-    constructor(param1? : String | Throwable, param2? : Throwable) {
+    constructor(param1? : String | Throwable | string, param2? : Throwable) {
         super(param1 instanceof String ? param1.valueOf() : param1?.toString().valueOf());
-        Object.setPrototypeOf(this, new.target.prototype);    
+        Object.setPrototypeOf(this, new.target.prototype);
         this.name = this.constructor.name;
 
         // TODO handle this.stack and .stack from Throwable parameter
         if ((typeof param1 === "undefined") && (typeof param2 === "undefined")) {
             this.message = "";
+        } else if ((typeof param1 === "string") && (typeof param2 === "undefined")) {
+            this.message = param1;
+        } else if ((typeof param1 === "string") && (param2 instanceof Throwable)) {
+            this.message = param1;
+            this._cause = param2;
         } else if ((param1 instanceof String) && (typeof param2 === "undefined")) {
             this.message = param1.valueOf();
         } else if ((param1 instanceof String) && (param2 instanceof Throwable)) {

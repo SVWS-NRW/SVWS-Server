@@ -7,6 +7,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import de.nrw.schule.svws.core.data.schueler.Schueler;
 import de.nrw.schule.svws.core.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
@@ -47,10 +48,13 @@ public class GostBlockungsdaten {
 	/** Die für die Blockung angelegten Kurse */
 	public @NotNull List<@NotNull GostBlockungKurs> kurse = new Vector<>();
 
+	/** Die SchülerInnen für die Blockung. */
+	public @NotNull List<@NotNull Schueler> schueler = new Vector<>();
+	
 	/** Die Fachwahlen für die Blockung */
 	public @NotNull List<@NotNull GostFachwahl> fachwahlen = new Vector<>();
 
-	/** Eine Liste der Ergebnisse, die der Blockungsdefintion zugeordnet sind.  */
+	/** Eine Liste der Ergebnisse, die der Blockungsdefinition zugeordnet sind.  */
 	public final @NotNull List<@NotNull GostBlockungsergebnisListeneintrag> ergebnisse = new Vector<>();
 
 }

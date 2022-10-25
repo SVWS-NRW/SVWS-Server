@@ -1,5 +1,6 @@
 package de.nrw.schule.svws.core.utils.gost;
 
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -18,7 +19,7 @@ public class GostFaecherManager {
 	// TODO create a class for a LinkedCollection with HashMap functionalities and refactor this class
 
 	/** Sortiert die Fächer anhand ihrer konfigurierten Sortierung */
-	private static @NotNull Comparator<@NotNull GostFach> comp = (a, b) -> {
+	public static @NotNull Comparator<@NotNull GostFach> comp = (a, b) -> {
 		int va = (a == null) ? Integer.MIN_VALUE : a.sortierung;
 		int vb = (b == null) ? Integer.MIN_VALUE : b.sortierung;
 		return Integer.compare(va, vb); 
@@ -96,7 +97,7 @@ public class GostFaecherManager {
 	 * 
 	 * @return true, falls <i>alle</i> Fächer eingefügt wurden, sonst false 
 	 */
-	public boolean addAll(@NotNull List<@NotNull GostFach> faecher) {
+	public boolean addAll(@NotNull Collection<@NotNull GostFach> faecher) {
 		boolean result = true;
 		for (@NotNull GostFach fach : faecher)
 			if (!addInternal(fach))
@@ -117,6 +118,22 @@ public class GostFaecherManager {
 		return _map.get(id);
 	}
 
+	/**
+	 * Gibt das Fach mit der angegebenen ID zurück.
+	 * 
+	 * @param  pFachID              die ID des gesuchten Faches
+	 * 
+	 * @return                      das fach mit der angegebenen ID
+	 * 
+	 * @throws NullPointerException im Falle, dass die ID nicht bekannt ist.
+	 */
+	public @NotNull GostFach getOrException(long pFachID) throws NullPointerException {
+		GostFach fach = _map.get(pFachID);
+		if (fach == null)
+			throw new NullPointerException("GostFach mit id=" + pFachID + " gibt es nicht.");
+		return fach;
+	}
+	
 
 	/**
 	 * Gibt zurück, ob die Liste der Fächer leer ist

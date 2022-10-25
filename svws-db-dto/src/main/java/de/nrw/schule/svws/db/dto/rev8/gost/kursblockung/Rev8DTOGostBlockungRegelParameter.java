@@ -33,19 +33,19 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @JsonPropertyOrder({"Regel_ID","Nummer","Parameter"})
 public class Rev8DTOGostBlockungRegelParameter {
 
-	/** Kursblockung der Gymnasialen Oberstufe - Parameterdefinition für Regeln der Blockung: ID der Regel */
+	/** ID des Regel-Parameters */
 	@Id
 	@Column(name = "Regel_ID")
 	@JsonProperty
 	public Long Regel_ID;
 
-	/** Kursblockung der Gymnasialen Oberstufe - Regeldefinition der Blockung: Die Nummer des Parameters der Regel, beginnend bei 1 */
+	/** Die Nummer des Parameters der Regel, beginnend bei 1 */
 	@Id
 	@Column(name = "Nummer")
 	@JsonProperty
 	public Integer Nummer;
 
-	/** Kursblockung der Gymnasialen Oberstufe - Regeldefinition der Blockung: Der Wert des Parameters der Regel (hängt vom Typ der Regel ab) */
+	/** Der Wert des Parameters der Regel (hängt vom Typ der Regel ab) */
 	@Column(name = "Parameter")
 	@JsonProperty
 	public Long Parameter;

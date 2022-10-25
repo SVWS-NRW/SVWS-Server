@@ -41,18 +41,18 @@ import de.nrw.schule.svws.csv.converter.current.Boolean01ConverterDeserializer;
 @JsonPropertyOrder({"ID","Blockung_ID","IstMarkiert","IstVorlage"})
 public class DTOGostBlockungZwischenergebnis {
 
-	/** Kursblockung der Gymnasialen Oberstufe - Zwischenergebnis einer Blockung: ID der Zwischenergebnisses (generiert) */
+	/** ID der Zwischenergebnisses einer Blockung (generiert) */
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
 	public Long ID;
 
-	/** Kursblockung der Gymnasialen Oberstufe - Zwischenergebnis einer Blockung: ID der Blockung */
+	/** ID der Blockung */
 	@Column(name = "Blockung_ID")
 	@JsonProperty
 	public Long Blockung_ID;
 
-	/** Kursblockung der Gymnasialen Oberstufe - Zwischenergebnis einer Blockung: Gibt an, ob das Zwischenergebnis von einem Benutzer markiert wurde oder nicht: 1 - true, 0 - false  */
+	/** Gibt an, ob das Zwischenergebnis von einem Benutzer markiert wurde oder nicht: 1 - true, 0 - false  */
 	@Column(name = "IstMarkiert")
 	@JsonProperty
 	@Convert(converter=Boolean01Converter.class)
@@ -60,7 +60,7 @@ public class DTOGostBlockungZwischenergebnis {
 	@JsonDeserialize(using=Boolean01ConverterDeserializer.class)
 	public Boolean IstMarkiert;
 
-	/** Kursblockung der Gymnasialen Oberstufe - Zwischenergebnis einer Blockung: Gibt an, ob das Zwischenergebnis im Zusammenhang mit der Erstellen einer Blockung erstellt wurde und somit als Vorlage für Regeldefinitionen dient oder nicht: 1 - true, 0 - false. Die Vorlage kann zu einem späteren Zeitpunkt ggf. auf ein anderes (berechnetes) Ergebnis umgesetzt werden.In diesem Fall müssten jedoch alle anderen Ergebnisse der Blockungsdefinition entfernt werden. */
+	/** Gibt an, ob das Zwischenergebnis im Zusammenhang mit der Erstellen einer Blockung erstellt wurde und somit als Vorlage für Regeldefinitionen dient oder nicht: 1 - true, 0 - false. Die Vorlage kann zu einem späteren Zeitpunkt ggf. auf ein anderes (berechnetes) Ergebnis umgesetzt werden.In diesem Fall müssten jedoch alle anderen Ergebnisse der Blockungsdefinition entfernt werden. */
 	@Column(name = "IstVorlage")
 	@JsonProperty
 	@Convert(converter=Boolean01Converter.class)

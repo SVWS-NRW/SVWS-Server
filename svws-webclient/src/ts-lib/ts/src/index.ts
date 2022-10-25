@@ -55,6 +55,7 @@ export { AVLMapSubEntrySetIterator } from './core/adt/map/AVLMapSubEntrySetItera
 export { AVLMapSubKeySet } from './core/adt/map/AVLMapSubKeySet';
 export { AVLMapSubKeySetIterator } from './core/adt/map/AVLMapSubKeySetIterator';
 export { AVLMapSubMap } from './core/adt/map/AVLMapSubMap';
+export { HashMap2D } from './core/adt/map/HashMap2D';
 export { AVLSet } from './core/adt/set/AVLSet';
 export { MinHeap } from './core/adt/tree/MinHeap';
 export { MinHeapIterator } from './core/adt/tree/MinHeapIterator';
@@ -125,7 +126,6 @@ export { GostBlockungsergebnisBewertung } from './core/data/gost/GostBlockungser
 export { GostBlockungsergebnisKurs } from './core/data/gost/GostBlockungsergebnisKurs';
 export { GostBlockungsergebnisListeneintrag } from './core/data/gost/GostBlockungsergebnisListeneintrag';
 export { GostBlockungsergebnisSchiene } from './core/data/gost/GostBlockungsergebnisSchiene';
-export { GostBlockungsergebnisSchuelerzuordnung } from './core/data/gost/GostBlockungsergebnisSchuelerzuordnung';
 export { GostFach } from './core/data/gost/GostFach';
 export { GostFachwahl } from './core/data/gost/GostFachwahl';
 export { GostJahrgang } from './core/data/gost/GostJahrgang';
@@ -158,17 +158,6 @@ export { KlausurblockungSchienenInputSchueler } from './core/data/klausurblockun
 export { KlausurblockungSchienenOutput } from './core/data/klausurblockung/KlausurblockungSchienenOutput';
 export { KlausurblockungSchienenOutputKlausur } from './core/data/klausurblockung/KlausurblockungSchienenOutputKlausur';
 export { KlausurblockungSchienenOutputs } from './core/data/klausurblockung/KlausurblockungSchienenOutputs';
-export { KursblockungInput } from './core/data/kursblockung/KursblockungInput';
-export { KursblockungInputFach } from './core/data/kursblockung/KursblockungInputFach';
-export { KursblockungInputFachwahl } from './core/data/kursblockung/KursblockungInputFachwahl';
-export { KursblockungInputKurs } from './core/data/kursblockung/KursblockungInputKurs';
-export { KursblockungInputKursart } from './core/data/kursblockung/KursblockungInputKursart';
-export { KursblockungInputRegel } from './core/data/kursblockung/KursblockungInputRegel';
-export { KursblockungInputSchueler } from './core/data/kursblockung/KursblockungInputSchueler';
-export { KursblockungOutput } from './core/data/kursblockung/KursblockungOutput';
-export { KursblockungOutputFachwahlZuKurs } from './core/data/kursblockung/KursblockungOutputFachwahlZuKurs';
-export { KursblockungOutputKursZuSchiene } from './core/data/kursblockung/KursblockungOutputKursZuSchiene';
-export { KursblockungOutputs } from './core/data/kursblockung/KursblockungOutputs';
 export { SchuelerblockungInput } from './core/data/kursblockung/SchuelerblockungInput';
 export { SchuelerblockungInputFachwahl } from './core/data/kursblockung/SchuelerblockungInputFachwahl';
 export { SchuelerblockungInputKurs } from './core/data/kursblockung/SchuelerblockungInputKurs';

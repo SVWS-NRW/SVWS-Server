@@ -1,10 +1,14 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
 import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
 import { Collection, cast_java_util_Collection } from '../../../java/util/Collection';
+import { GostFachwahl, cast_de_nrw_schule_svws_core_data_gost_GostFachwahl } from '../../../core/data/gost/GostFachwahl';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 import { IllegalArgumentException, cast_java_lang_IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
+import { GostBlockungKurs, cast_de_nrw_schule_svws_core_data_gost_GostBlockungKurs } from '../../../core/data/gost/GostBlockungKurs';
 
 export class GostKursart extends JavaObject {
+
+	private static readonly FACHART_ID_FAKTOR : number = 1000;
 
 	private static readonly map : HashMap<String, GostKursart> = new HashMap();
 
@@ -129,6 +133,71 @@ export class GostKursart extends JavaObject {
 	 */
 	public static fromKuerzel(kuerzel : String | null) : GostKursart | null {
 		return GostKursart.map.get(kuerzel);
+	}
+
+	/**
+	 * Berechnet mit der Formel pFachID * {@link #FACHART_ID_FAKTOR} + pKursartID die ID der Fachart.
+	 * 
+	 * @param  pFachID    Die DatenbankID des Faches.
+	 * @param  pKursartID Die DatenbankID der Kursart.
+	 * 
+	 * @return pFachID * {@link #FACHART_ID_FAKTOR} + pKursartID
+	 */
+	public static getFachartID(pFachID : number, pKursartID : number) : number;
+
+	/**
+	 * Berechnet anhand des Fachwahl-Objektes die FachartID.
+	 * @param pFachwahl Das Fachwahl-Objekt.
+	 * 
+	 * @return pFachwahl.fachID * {@link #FACHART_ID_FAKTOR} + pFachwahl.kursartID
+	 */
+	public static getFachartID(pFachwahl : GostFachwahl) : number;
+
+	/**
+	 * Berechnet anhand des Kurs-Objektes die FachartID.
+	 * @param pKurs Das Kurs-Objekt.
+	 * 
+	 * @return pKurs.fachID * {@link #FACHART_ID_FAKTOR} + pKurs.kursartID
+	 */
+	public static getFachartID(pKurs : GostBlockungKurs | null) : number;
+
+	/**
+	 * Implementation for method overloads of 'getFachartID'
+	 */
+	public static getFachartID(__param0 : GostBlockungKurs | GostFachwahl | null | number, __param1? : number) : number {
+		if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && typeof __param1 === "number")) {
+			let pFachID : number = __param0 as number;
+			let pKursartID : number = __param1 as number;
+			return pFachID * GostKursart.FACHART_ID_FAKTOR + pKursartID;
+		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.data.gost.GostFachwahl')))) && (typeof __param1 === "undefined")) {
+			let pFachwahl : GostFachwahl = cast_de_nrw_schule_svws_core_data_gost_GostFachwahl(__param0);
+			return GostKursart.getFachartID(pFachwahl.fachID, pFachwahl.kursartID);
+		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.data.gost.GostBlockungKurs'))) || (__param0 === null)) && (typeof __param1 === "undefined")) {
+			let pKurs : GostBlockungKurs | null = cast_de_nrw_schule_svws_core_data_gost_GostBlockungKurs(__param0);
+			return GostKursart.getFachartID(pKurs.fach_id, pKurs.kursart);
+		} else throw new Error('invalid method overload');
+	}
+
+	/**
+	 * Berechnet anhand der Fachart-ID die Fach-ID.
+	 *  
+	 * @param pFachartID Die ID der Fachart, welche das Fach und die Kursart kodiert.
+	 * 
+	 * @return Ganzzahlige Division von pFachartID durch {@link #FACHART_ID_FAKTOR}
+	 */
+	public static getFachID(pFachartID : number) : number {
+		return Math.trunc(pFachartID / GostKursart.FACHART_ID_FAKTOR);
+	}
+
+	/**
+	 * Berechnet anhand der Fachart-ID die Kursart-ID.
+	 *  
+	 * @param pFachartID Die ID der Fachart, welche das Fach und die Kursart kodiert.
+	 * 
+	 * @return Rest der ganzzahligen Division von pFachartID durch {@link #FACHART_ID_FAKTOR}
+	 */
+	public static getKursartID(pFachartID : number) : number {
+		return (pFachartID % GostKursart.FACHART_ID_FAKTOR) as number;
 	}
 
 	public toString() : String {

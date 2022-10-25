@@ -1,19 +1,14 @@
 package de.nrw.schule.svws.data.gost;
 
 import java.io.InputStream;
-import java.text.Collator;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import de.nrw.schule.svws.core.data.gost.GostBlockungsergebnis;
 import de.nrw.schule.svws.core.data.gost.GostBlockungsergebnisListeneintrag;
-import de.nrw.schule.svws.core.data.schueler.Schueler;
 import de.nrw.schule.svws.core.utils.gost.GostBlockungsdatenManager;
 import de.nrw.schule.svws.core.utils.gost.GostBlockungsergebnisManager;
 import de.nrw.schule.svws.data.DataManager;
@@ -60,53 +55,12 @@ public class DataGostBlockungsergebnisse extends DataManager<Long> {
 
 
 	/**
-	 * Lambda-Ausdruck zum Vergleichen/Sortieren der Core-DTOs {@link Schueler}.  
-	 */
-	private static Comparator<Schueler> schuelerComparator = (a,b) -> {
-		Collator collator = Collator.getInstance(Locale.GERMAN);
-		if ((a.nachname == null) && (b.nachname != null))
-			return -1;
-		else if ((a.nachname != null) && (b.nachname == null))
-			return 1;
-		else if ((a.nachname == null) && (b.nachname == null))
-			return 0;
-		int result = collator.compare(a.nachname, b.nachname);
-		if (result == 0) {
-    		if ((a.vorname == null) && (b.vorname != null))
-    			return -1;
-    		else if ((a.vorname != null) && (b.vorname == null))
-    			return 1;
-    		else if ((a.vorname == null) && (b.vorname == null))
-    			return 0;
-    		result = collator.compare(a.vorname, b.vorname);
-		}
-		return result;		
-	};
-	
-	
-	/**
-	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOSchueler} in einen Core-DTO {@link Schueler}.  
-	 */
-	private static Function<DTOSchueler, Schueler> dtoMapperSchueler = (DTOSchueler dto) -> {
-		Schueler daten = new Schueler();
-		daten.id = dto.ID;
-		daten.nachname = dto.Nachname;
-		daten.vorname = dto.Vorname;
-		daten.geschlecht = dto.Geschlecht.id;
-		return daten;
-	};
-
-
-	/**
 	 * Bestimmt die Liste der Blockungsergebnisse und das aktuelle Blockungsergebnis
 	 * für den angegebenen Blockungsdaten-Manager
 	 * 
 	 * @param datenManager   der Blockungsdaten-Manager
 	 */
 	void getErgebnisListe(@NotNull GostBlockungsdatenManager datenManager) {
-        // Bestimme alle Schüler-IDs für den Abiturjahrgang der Blockung
-        List<DTOSchueler> schuelerListe = (new DataGostJahrgangSchuelerliste(conn, datenManager.daten().abijahrgang)).getSchuelerDTOs();
-        List<Schueler> schueler = schuelerListe.stream().map(dtoMapperSchueler).sorted(schuelerComparator).collect(Collectors.toList());
 	    // Bestimme die Liste der Ergebnisse aus der Datenbank
         List<DTOGostBlockungZwischenergebnis> ergebnisse = conn.queryNamed(
                 "DTOGostBlockungZwischenergebnis.blockung_id", datenManager.getID(), DTOGostBlockungZwischenergebnis.class);
@@ -115,11 +69,13 @@ public class DataGostBlockungsergebnisse extends DataManager<Long> {
         List<Long> ergebnisIDs = ergebnisse.stream().map(e -> e.ID).collect(Collectors.toList());
         if (ergebnisIDs.size() == 0) // Es muss immer mindestens ein aktuelles Ergebnis vorliegen
             throw OperationError.INTERNAL_SERVER_ERROR.exception();
+        
         // Bestimme die Kurs-Schienen-Zuordnungen für alle Zwischenergebnisse
         Map<Long, List<DTOGostBlockungZwischenergebnisKursSchiene>> mapKursSchienen = 
             conn.queryNamed("DTOGostBlockungZwischenergebnisKursSchiene.zwischenergebnis_id.multiple", ergebnisIDs,
                     DTOGostBlockungZwischenergebnisKursSchiene.class)
                 .stream().collect(Collectors.groupingBy(e -> e.Zwischenergebnis_ID, Collectors.toList()));
+        
         // Bestimme die Kurs-Schüler-Zuordnungen für alle Zwischenergebnisse
         Map<Long, List<DTOGostBlockungZwischenergebnisKursSchueler>> mapKursSchueler =  
             conn.queryNamed("DTOGostBlockungZwischenergebnisKursSchueler.zwischenergebnis_id.multiple", ergebnisIDs,
@@ -129,13 +85,13 @@ public class DataGostBlockungsergebnisse extends DataManager<Long> {
 	    // Durchwandere alle Ergebnisse
         for (DTOGostBlockungZwischenergebnis erg : ergebnisse) {
             // Erstelle zunächst das Core-DTO für das Ergebnis mit Bewertung
-            var manager = new GostBlockungsergebnisManager(datenManager, erg.ID, erg.Blockung_ID, schueler);
+            var manager = new GostBlockungsergebnisManager(datenManager, erg.ID);
             var listSchienenKurse = mapKursSchienen.getOrDefault(erg.ID, Collections.emptyList());
             var listKursSchueler = mapKursSchueler.getOrDefault(erg.ID, Collections.emptyList());
             for (var ks : listSchienenKurse)
-                manager.assignKursSchiene(ks.Blockung_Kurs_ID, ks.Schienen_ID);
+                manager.setKursSchiene(ks.Blockung_Kurs_ID, ks.Schienen_ID, true);
             for (var ks : listKursSchueler)
-                manager.assignSchuelerKurs(ks.Schueler_ID, ks.Blockung_Kurs_ID, false);
+                manager.setSchuelerKurs(ks.Schueler_ID, ks.Blockung_Kurs_ID, true);
             GostBlockungsergebnis ergebnis = manager.getErgebnis();
             ergebnis.istMarkiert = erg.IstMarkiert == null ? false : erg.IstMarkiert;
             ergebnis.istVorlage = erg.IstVorlage == null ? false : erg.IstVorlage;
@@ -168,8 +124,9 @@ public class DataGostBlockungsergebnisse extends DataManager<Long> {
 	 */
 	GostBlockungsergebnis getErgebnis(@NotNull DTOGostBlockungZwischenergebnis ergebnis, 
 	        @NotNull GostBlockungsdatenManager datenManager, @NotNull List<@NotNull DTOSchueler> schuelerListe) throws WebApplicationException {
-        List<Schueler> schueler = schuelerListe.stream().map(dtoMapperSchueler).sorted(schuelerComparator).collect(Collectors.toList());
-        GostBlockungsergebnisManager manager = new GostBlockungsergebnisManager(datenManager, ergebnis.ID, ergebnis.Blockung_ID, schueler);
+		// Schülerliste ist nun im GostBlockungsdatenManager  
+        // List<Schueler> schueler = schuelerListe.stream().map(dtoMapperSchueler).sorted(schuelerComparator).collect(Collectors.toList());
+        GostBlockungsergebnisManager manager = new GostBlockungsergebnisManager(datenManager, ergebnis.ID);
         // Bestimme alle Kurs-Schienen-Zuordnungen
         List<DTOGostBlockungZwischenergebnisKursSchiene> listSchienenKurse = conn
                 .queryNamed("DTOGostBlockungZwischenergebnisKursSchiene.zwischenergebnis_id", ergebnis.ID, DTOGostBlockungZwischenergebnisKursSchiene.class);
@@ -177,9 +134,9 @@ public class DataGostBlockungsergebnisse extends DataManager<Long> {
         List<DTOGostBlockungZwischenergebnisKursSchueler> listKursSchueler = conn
                 .queryNamed("DTOGostBlockungZwischenergebnisKursSchueler.zwischenergebnis_id", ergebnis.ID, DTOGostBlockungZwischenergebnisKursSchueler.class);
         for (DTOGostBlockungZwischenergebnisKursSchiene ks : listSchienenKurse)
-            manager.assignKursSchiene(ks.Blockung_Kurs_ID, ks.Schienen_ID);
+            manager.setKursSchiene(ks.Blockung_Kurs_ID, ks.Schienen_ID, true);
         for (DTOGostBlockungZwischenergebnisKursSchueler ks : listKursSchueler)
-            manager.assignSchuelerKurs(ks.Schueler_ID, ks.Blockung_Kurs_ID, false);
+            manager.setSchuelerKurs(ks.Schueler_ID, ks.Blockung_Kurs_ID, true);
         GostBlockungsergebnis daten = manager.getErgebnis();
         daten.istMarkiert = ergebnis.IstMarkiert == null ? false : ergebnis.IstMarkiert;
         daten.istVorlage = ergebnis.IstVorlage == null ? false : ergebnis.IstVorlage;

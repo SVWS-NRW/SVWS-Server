@@ -17,24 +17,24 @@ public class Tabelle_Gost_Blockung_Kurslehrer extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte Blockung_Kurs_ID */
 	public SchemaTabelleSpalte col_Blockung_Kurs_ID = add("Blockung_Kurs_ID", SchemaDatentypen.BIGINT, true)
 		.setNotNull()
-		.setJavaComment("Kursblockung der Gymnasialen Oberstufe - Kurslehrer der Blockung: ID des Kurses");
+		.setJavaComment("ID des Kurses");
 
 	/** Die Definition der Tabellenspalte Lehrer_ID */
 	public SchemaTabelleSpalte col_Lehrer_ID = add("Lehrer_ID", SchemaDatentypen.BIGINT, true)
 		.setNotNull()
-		.setJavaComment("Kursblockung der Gymnasialen Oberstufe - Kurslehrer der Blockung: ID des Lehrers, welcher dem Kurs zugeordnet ist");
+		.setJavaComment("ID des Lehrers, welcher dem Kurs zugeordnet ist");
 
 	/** Die Definition der Tabellenspalte Reihenfolge */
 	public SchemaTabelleSpalte col_Reihenfolge = add("Reihenfolge", SchemaDatentypen.INT, false)
 		.setDefault("1")
 		.setNotNull()
-		.setJavaComment("Kursblockung der Gymnasialen Oberstufe - Kurslehrer der Blockung: Eine Reihenfolge für die Lehrer, z.B. zur Unterscheidung des eigentlichen Kurslehrer (z.B. 1) und einer Zusatzkraft (z.B. 2)");
+		.setJavaComment("Eine Reihenfolge für die Lehrer, z.B. zur Unterscheidung des eigentlichen Kurslehrer (z.B. 1) und einer Zusatzkraft (z.B. 2)");
 
 	/** Die Definition der Tabellenspalte Wochenstunden */
 	public SchemaTabelleSpalte col_Wochenstunden = add("Wochenstunden", SchemaDatentypen.INT, false)
 		.setDefault("3")
 		.setNotNull()
-		.setJavaComment("Kursblockung der Gymnasialen Oberstufe - Kurslehrer der Blockung: Die Anzahl der Wochenstunden für die der Lehrer in dem Kurs eingesetzt wird");
+		.setJavaComment("Die Anzahl der Wochenstunden für die der Lehrer in dem Kurs eingesetzt wird");
 
 
 	/** Die Definition des Fremdschlüssels Gost_Blockung_Kurslehrer_Kurs_FK */

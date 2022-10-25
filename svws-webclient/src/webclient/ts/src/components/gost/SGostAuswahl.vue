@@ -60,7 +60,7 @@
 											>
 											<template v-if=" blockung === selected_blockungauswahl ">
 												<div class="float-left flex">
-													<span v-if="!edit_blockungsname" class="px-3 underline decoration-dashed underline-offset-2 cursor-text">{{blockung.name}}</span>
+													<span v-if="!edit_blockungsname" class="px-3 underline decoration-dashed underline-offset-2 cursor-pointer" @click="edit_blockungsname = true">{{blockung.name}}</span>
 													<svws-ui-text-input v-else v-model="blockung.name" style="width: 10rem" headless focus @keyup.enter="edit_blockungsname=false" @input="patch_blockung(blockung)"/>
 												</div>
 												<div class="float-right flex gap-1">
@@ -129,7 +129,7 @@
 														'bg-red-300': ergebnis.bewertung.anzahlKollisionen > 10
 													}"
 													>
-													<svws-ui-icon><i-ri-group-line/></svws-ui-icon>{{ergebnis.bewertung.anzahlKollisionen}}
+													<svws-ui-icon><i-ri-group-line/></svws-ui-icon>{{ergebnis.bewertung.anzahlSchuelerNichtZugeordnet}}
 												</span>
 									</div>
 								</td>
@@ -258,11 +258,9 @@ const selected_blockungauswahl: WritableComputedRef<
 		return app.blockungsauswahl.ausgewaehlt;
 	},
 	set: (value: GostBlockungListeneintrag | undefined) => {
-		if (value === app.blockungsauswahl.ausgewaehlt)
-			edit_blockungsname.value = true;
-		else {
-			edit_blockungsname.value = false
+		if (value !== app.blockungsauswahl.ausgewaehlt) {
 			app.blockungsauswahl.ausgewaehlt = value;
+			edit_blockungsname.value = false
 		}
 	}
 });

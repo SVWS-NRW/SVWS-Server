@@ -18,6 +18,8 @@ export class GostBlockungKurs extends JavaObject {
 
 	public wochenstunden : Number | null = 3;
 
+	public anzahlSchienen : number = 1;
+
 
 	public constructor() {
 		super();
@@ -49,6 +51,9 @@ export class GostBlockungKurs extends JavaObject {
 			 throw new Error('invalid json format, missing attribute suffix');
 		result.suffix = obj.suffix;
 		result.wochenstunden = typeof obj.wochenstunden === "undefined" ? null : obj.wochenstunden;
+		if (typeof obj.anzahlSchienen === "undefined")
+			 throw new Error('invalid json format, missing attribute anzahlSchienen');
+		result.anzahlSchienen = obj.anzahlSchienen;
 		return result;
 	}
 
@@ -61,6 +66,7 @@ export class GostBlockungKurs extends JavaObject {
 		result += '"istKoopKurs" : ' + obj.istKoopKurs + ',';
 		result += '"suffix" : ' + '"' + obj.suffix.valueOf() + '"' + ',';
 		result += '"wochenstunden" : ' + ((!obj.wochenstunden) ? 'null' : obj.wochenstunden.valueOf()) + ',';
+		result += '"anzahlSchienen" : ' + obj.anzahlSchienen + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -88,6 +94,9 @@ export class GostBlockungKurs extends JavaObject {
 		}
 		if (typeof obj.wochenstunden !== "undefined") {
 			result += '"wochenstunden" : ' + ((!obj.wochenstunden) ? 'null' : obj.wochenstunden.valueOf()) + ',';
+		}
+		if (typeof obj.anzahlSchienen !== "undefined") {
+			result += '"anzahlSchienen" : ' + obj.anzahlSchienen + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

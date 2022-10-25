@@ -50,23 +50,23 @@ import de.nrw.schule.svws.csv.converter.current.gost.GOStHalbjahrConverterDeseri
 @JsonPropertyOrder({"ID","Name","Abi_Jahrgang","Halbjahr","IstAktiv","Vorlage_ID"})
 public class Rev8DTOGostBlockung {
 
-	/** Kursblockung der Gymnasialen Oberstufe: ID der Blockung (generiert) */
+	/** ID der Blockung (generiert) */
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
 	public Long ID;
 
-	/** Kursblockung der Gymnasialen Oberstufe: Textuelle Bezeichnung der Blockung */
+	/** Textuelle Bezeichnung der Blockung */
 	@Column(name = "Name")
 	@JsonProperty
 	public String Name;
 
-	/** Kursblockung der Gymnasialen Oberstufe: Der Abiturjahrgang, dem die Blockung zugeordnet ist */
+	/** Der Abiturjahrgang, dem die Blockung zugeordnet ist */
 	@Column(name = "Abi_Jahrgang")
 	@JsonProperty
 	public Integer Abi_Jahrgang;
 
-	/** Kursblockung der Gymnasialen Oberstufe: Das Halbjahr, welchem die Kursblockung zugeordnet ist (0=EF.1, 1=EF.2, 2=Q1.1, 3=Q1.2, 4=Q2.1, 5=Q2.2) */
+	/** Das Halbjahr, welchem die Kursblockung zugeordnet ist (0=EF.1, 1=EF.2, 2=Q1.1, 3=Q1.2, 4=Q2.1, 5=Q2.2) */
 	@Column(name = "Halbjahr")
 	@JsonProperty
 	@Convert(converter=GOStHalbjahrConverter.class)
@@ -74,7 +74,7 @@ public class Rev8DTOGostBlockung {
 	@JsonDeserialize(using=GOStHalbjahrConverterDeserializer.class)
 	public GostHalbjahr Halbjahr;
 
-	/** Kursblockung der Gymnasialen Oberstufe: Gibt an, ob die Blockung aktiviert wurde oder nicht: 1 - true, 0 - false.Bei einer aktivierten Blockung wurde die Vorlage (siehe Vorlage_ID) bereits in die Leistungsdaten übertragen. */
+	/** Gibt an, ob die Blockung aktiviert wurde oder nicht: 1 - true, 0 - false.Bei einer aktivierten Blockung wurde die Vorlage (siehe Vorlage_ID) bereits in die Leistungsdaten übertragen. */
 	@Column(name = "IstAktiv")
 	@JsonProperty
 	@Convert(converter=Boolean01Converter.class)
@@ -82,7 +82,7 @@ public class Rev8DTOGostBlockung {
 	@JsonDeserialize(using=Boolean01ConverterDeserializer.class)
 	public Boolean IstAktiv;
 
-	/** Kursblockung der Gymnasialen Oberstufe: Die ID des als Vorlage ausgewählten Zwischenergebnisses. Dieses gehört zur Definitionder Blockung mit dazu und darf nicht alleine entfernt werden. */
+	/** Die ID des als Vorlage ausgewählten Zwischenergebnisses. Dieses gehört zur Definitionder Blockung mit dazu und darf nicht alleine entfernt werden. */
 	@Column(name = "Vorlage_ID")
 	@JsonProperty
 	public Long Vorlage_ID;

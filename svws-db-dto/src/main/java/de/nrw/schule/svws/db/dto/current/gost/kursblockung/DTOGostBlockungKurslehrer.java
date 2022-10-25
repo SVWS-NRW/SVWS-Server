@@ -35,24 +35,24 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @JsonPropertyOrder({"Blockung_Kurs_ID","Lehrer_ID","Reihenfolge","Wochenstunden"})
 public class DTOGostBlockungKurslehrer {
 
-	/** Kursblockung der Gymnasialen Oberstufe - Kurslehrer der Blockung: ID des Kurses */
+	/** ID des Kurses */
 	@Id
 	@Column(name = "Blockung_Kurs_ID")
 	@JsonProperty
 	public Long Blockung_Kurs_ID;
 
-	/** Kursblockung der Gymnasialen Oberstufe - Kurslehrer der Blockung: ID des Lehrers, welcher dem Kurs zugeordnet ist */
+	/** ID des Lehrers, welcher dem Kurs zugeordnet ist */
 	@Id
 	@Column(name = "Lehrer_ID")
 	@JsonProperty
 	public Long Lehrer_ID;
 
-	/** Kursblockung der Gymnasialen Oberstufe - Kurslehrer der Blockung: Eine Reihenfolge für die Lehrer, z.B. zur Unterscheidung des eigentlichen Kurslehrer (z.B. 1) und einer Zusatzkraft (z.B. 2) */
+	/** Eine Reihenfolge für die Lehrer, z.B. zur Unterscheidung des eigentlichen Kurslehrer (z.B. 1) und einer Zusatzkraft (z.B. 2) */
 	@Column(name = "Reihenfolge")
 	@JsonProperty
 	public Integer Reihenfolge;
 
-	/** Kursblockung der Gymnasialen Oberstufe - Kurslehrer der Blockung: Die Anzahl der Wochenstunden für die der Lehrer in dem Kurs eingesetzt wird */
+	/** Die Anzahl der Wochenstunden für die der Lehrer in dem Kurs eingesetzt wird */
 	@Column(name = "Wochenstunden")
 	@JsonProperty
 	public Integer Wochenstunden;

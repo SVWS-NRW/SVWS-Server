@@ -62,17 +62,17 @@ export class DataGostKursblockungsergebnis extends BaseData<
 			App.apps.gost?.dataKursblockung.daten?.kurse;
 		if (
 			!ergebnis ||
-			schueler.size() === 0 ||
-			faecher.size() === 0 ||
+			!schueler.size() ||
+			!faecher.size() ||
 			!schienen ||
 			!kurse
-		)
-			return undefined;
-		this.manager = (!App.apps.gost.dataKursblockung.manager) ? undefined : new GostBlockungsergebnisManager(
-			App.apps.gost.dataKursblockung.manager,
+		) return undefined;
+		const m =  new GostBlockungsergebnisManager(
+			App.apps.gost.dataKursblockung.manager!,
 			ergebnis,
-			schueler
 		);
+
+		this.manager = (!App.apps.gost.dataKursblockung.manager) ? undefined :	m;
 		return ergebnis;
 	}
 
@@ -101,7 +101,7 @@ export class DataGostKursblockungsergebnis extends BaseData<
 		schienenid: number
 	): Promise<boolean> {
 		// TODO implement methods on server side and call api methods here - see assignSchuelerKurs
-		this.manager?.assignKursSchiene(kursid, schienenid);
+		this.manager?.setKursSchiene(kursid, schienenid, true);
 		return true;
 	}
 
@@ -127,7 +127,9 @@ export class DataGostKursblockungsergebnis extends BaseData<
 				kursid
 			);
 		}
-		this.manager?.assignSchuelerKurs(schuelerid, kursid, undo);
+		this.manager?.setSchuelerKurs(schuelerid, kursid, undo);
+		App.apps.gost.blockungsergebnisauswahl.ausgewaehlt = this.selected_list_item;
+		// TODO remove code above after fixing reactivity in manager
 		return true;
 	}
 }

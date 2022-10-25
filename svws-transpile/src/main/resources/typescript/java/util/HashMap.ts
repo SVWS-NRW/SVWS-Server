@@ -3,6 +3,7 @@ import { JavaMap } from './JavaMap';
 import { JavaMapEntry } from './JavaMapEntry';
 import { JavaSet } from './JavaSet';
 import { HashMapCollection } from './HashMapCollection';
+import { HashSet } from './HashSet';
 
 import { Cloneable } from '../../java/lang/Cloneable';
 import { JavaObject } from '../../java/lang/JavaObject';
@@ -44,16 +45,12 @@ export class HashMap<K, V> extends JavaObject implements JavaMap<K, V>, Cloneabl
         if (key === null)
             return null;
         let value : V | undefined = this._map.get(key);
-        return (!value) ? null : value;
+        return (value === undefined) ? null : value;
     }
 
     public put(key : K, value : V) : V | null {
         let oldValue : V | null = this.get(key);
-        if (value === null) {
-            this._map.delete(key);
-        } else {
-            this._map.set(key, value);
-        }
+        this._map.set(key, value);
         return oldValue;
     }
 
@@ -78,7 +75,10 @@ export class HashMap<K, V> extends JavaObject implements JavaMap<K, V>, Cloneabl
     }
 
     public keySet() : JavaSet<K> {
-        throw new UnsupportedOperationException();
+        let result = new HashSet<K>();
+        for (const [key, value] of this._map)
+            result.add(key);
+        return result;
     }
 
     public values() : Collection<V> {

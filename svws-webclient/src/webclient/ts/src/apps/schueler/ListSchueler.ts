@@ -49,6 +49,7 @@ export class ListSchueler extends BaseList<SchuelerListeEintrag, Filter> {
 		await super._update_list(() =>
 			App.api.getSchuelerFuerAbschnitt(App.schema, App.akt_abschnitt.id)
 		);
+		if (!this.ausgewaehlt) this.ausgewaehlt = this.gefiltert[0]
 	}
 
 	/**
@@ -89,6 +90,7 @@ export class ListSchueler extends BaseList<SchuelerListeEintrag, Filter> {
 					s.schulgliederung ===
 						this.filter.schulgliederung.daten.kuerzel
 			);
+			if (this.ausgewaehlt && !this.gefiltert.includes(this.ausgewaehlt)) this.ausgewaehlt = this.gefiltert[0]
 	}
 
 	/**

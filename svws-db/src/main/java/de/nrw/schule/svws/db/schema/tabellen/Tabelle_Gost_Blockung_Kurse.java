@@ -17,46 +17,52 @@ public class Tabelle_Gost_Blockung_Kurse extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte ID */
 	public SchemaTabelleSpalte col_ID = add("ID", SchemaDatentypen.BIGINT, true)
 		.setNotNull()
-		.setJavaComment("Kursblockung der Gymnasialen Oberstufe - Kurse der Blockung: ID des Kurses in der Blockung (generiert)");
+		.setJavaComment("ID des Kurses in der Blockung (generiert)");
 
 	/** Die Definition der Tabellenspalte Blockung_ID */
 	public SchemaTabelleSpalte col_Blockung_ID = add("Blockung_ID", SchemaDatentypen.BIGINT, false)
 		.setNotNull()
-		.setJavaComment("Kursblockung der Gymnasialen Oberstufe - Kurse der Blockung: ID der Blockung");
+		.setJavaComment("ID der Blockung");
 
 	/** Die Definition der Tabellenspalte Fach_ID */
 	public SchemaTabelleSpalte col_Fach_ID = add("Fach_ID", SchemaDatentypen.BIGINT, false)
 		.setNotNull()
-		.setJavaComment("Kursblockung der Gymnasialen Oberstufe - Kurse der Blockung: ID des Faches");
+		.setJavaComment("ID des Faches");
 
 	/** Die Definition der Tabellenspalte Kursart */
 	public SchemaTabelleSpalte col_Kursart = add("Kursart", SchemaDatentypen.VARCHAR, false).setDatenlaenge(5)
 		.setDefault("GK")
 		.setNotNull()
 		.setConverter("GOStKursartConverter")
-		.setJavaComment("Kursblockung der Gymnasialen Oberstufe - Kurse der Blockung: ID der Kursart (siehe ID des Core-Types GostKursart)");
+		.setJavaComment("ID der Kursart (siehe ID des Core-Types GostKursart)");
 
 	/** Die Definition der Tabellenspalte Kursnummer */
 	public SchemaTabelleSpalte col_Kursnummer = add("Kursnummer", SchemaDatentypen.INT, false)
 		.setNotNull()
-		.setJavaComment("Kursblockung der Gymnasialen Oberstufe - Kurse der Blockung: Die Nummer des Kurses in Bezug auf das Fach (Kurse eines Faches sind in einer Blockung üblicherweise von 1 ab durchnummeriert)");
+		.setJavaComment("Die Nummer des Kurses in Bezug auf das Fach (Kurse eines Faches sind in einer Blockung üblicherweise von 1 ab durchnummeriert)");
 
 	/** Die Definition der Tabellenspalte IstKoopKurs */
 	public SchemaTabelleSpalte col_IstKoopKurs = add("IstKoopKurs", SchemaDatentypen.INT, false)
 		.setDefault("0")
 		.setNotNull()
 		.setConverter("Boolean01Converter")
-		.setJavaComment("Kursblockung der Gymnasialen Oberstufe - Kurse der Blockung: Gibt an, ob es sich um einen Kooperations-Kurs mit einer anderen Schule handelt oder nicht: 1 - true, 0 - false ");
+		.setJavaComment("Gibt an, ob es sich um einen Kooperations-Kurs mit einer anderen Schule handelt oder nicht: 1 - true, 0 - false ");
 
 	/** Die Definition der Tabellenspalte BezeichnungSuffix */
 	public SchemaTabelleSpalte col_BezeichnungSuffix = add("BezeichnungSuffix", SchemaDatentypen.VARCHAR, false).setDatenlaenge(255)
-		.setJavaComment("Kursblockung der Gymnasialen Oberstufe - Kurse der Blockung: Ein Suffix, welches der Kursbezeichnung ggf. angehangen wird (kann z.B. zum Kennzeichnen von Kooperationskursen verwendet werden)");
+		.setJavaComment("Ein Suffix, welches der Kursbezeichnung ggf. angehangen wird (kann z.B. zum Kennzeichnen von Kooperationskursen verwendet werden)");
 
+	/** Die Definition der Tabellenspalte Schienenanzahl */
+	public SchemaTabelleSpalte col_Schienenanzahl = add ("Schienenanzahl", SchemaDatentypen.INT, false)
+	    .setDefault("1")
+	    .setNotNull()
+	    .setJavaComment("Gibt die Anzahl der Schienen an, die für den Kurs in der Blockung verwendet werden soll (normalerweise 1)");
+	
 	/** Die Definition der Tabellenspalte Wochenstunden */
 	public SchemaTabelleSpalte col_Wochenstunden = add("Wochenstunden", SchemaDatentypen.INT, false)
 		.setDefault("3")
 		.setNotNull()
-		.setJavaComment("Kursblockung der Gymnasialen Oberstufe - Kurse der Blockung: Die Anzahl der Wochenstunden für den Kurs");
+		.setJavaComment("Die Anzahl der Wochenstunden für den Kurs");
 
 
 	/** Die Definition des Fremdschlüssels Gost_Blockung_Kurse_Blockung_FK */

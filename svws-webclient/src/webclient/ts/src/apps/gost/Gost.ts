@@ -133,7 +133,7 @@ export class Gost extends App {
 		this.setApiStatusIdle(hjId);
 		try {
 			const res = await App.api.rechneGostBlockung(App.schema, id, 5000)
-			this.blockungsergebnisauswahl.update_list(id);
+			this.blockungsauswahl.ausgewaehlt = this.blockungsauswahl.ausgewaehlt;
 			this.removeApiStatusId(hjId)
 			return res
 		} catch (e) {

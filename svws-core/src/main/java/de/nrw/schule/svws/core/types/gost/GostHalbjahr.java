@@ -194,6 +194,23 @@ public class GostHalbjahr implements Comparable<GostHalbjahr> {
 
 
     /**
+     * Gibt das Halbjahr zurück, welches die übergebene ID hat. <br>
+     * Wirft eine Exception, falls die ID keinem Halbjahr zugeordnet werden kann.
+     * 
+     * @param pGostHalbjahID   Die ID des Halbjahres.
+     * 
+     * @return Das Halbjahr oder eine Exception, falls die ID nicht gültig ist
+     * @throws NullPointerException Falls die ID keinem Halbjahr zugeordnet werden kann.
+     */
+    public static @NotNull GostHalbjahr fromIDorException(int pGostHalbjahID) throws NullPointerException {
+    	GostHalbjahr halbjahr = GostHalbjahr.fromID(pGostHalbjahID);
+		if (halbjahr == null)
+			throw new NullPointerException("GostHalbjahr nicht gefunden!");    	
+		return halbjahr;
+	}
+
+
+	/**
      * Gibt das Halbjahr zurück, welches das übergebene Kürzel hat.
      * 
      * @param kuerzel   das Kürzel

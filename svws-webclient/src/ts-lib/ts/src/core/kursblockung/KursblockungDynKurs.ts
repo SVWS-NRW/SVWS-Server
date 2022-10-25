@@ -1,17 +1,14 @@
 import { JavaObject, cast_java_lang_Object } from '../../java/lang/JavaObject';
+import { JavaInteger, cast_java_lang_Integer } from '../../java/lang/JavaInteger';
 import { KursblockungDynFachart, cast_de_nrw_schule_svws_core_kursblockung_KursblockungDynFachart } from '../../core/kursblockung/KursblockungDynFachart';
-import { KursblockungOutputKursZuSchiene, cast_de_nrw_schule_svws_core_data_kursblockung_KursblockungOutputKursZuSchiene } from '../../core/data/kursblockung/KursblockungOutputKursZuSchiene';
+import { Random, cast_java_util_Random } from '../../java/util/Random';
 import { LinkedCollection, cast_de_nrw_schule_svws_core_adt_collection_LinkedCollection } from '../../core/adt/collection/LinkedCollection';
 import { KursblockungDynSchiene, cast_de_nrw_schule_svws_core_kursblockung_KursblockungDynSchiene } from '../../core/kursblockung/KursblockungDynSchiene';
+import { KursblockungDynSchueler, cast_de_nrw_schule_svws_core_kursblockung_KursblockungDynSchueler } from '../../core/kursblockung/KursblockungDynSchueler';
 import { JavaString, cast_java_lang_String } from '../../java/lang/JavaString';
 import { Logger, cast_de_nrw_schule_svws_logger_Logger } from '../../logger/Logger';
 import { System, cast_java_lang_System } from '../../java/lang/System';
 import { LogLevel, cast_de_nrw_schule_svws_logger_LogLevel } from '../../logger/LogLevel';
-import { KursblockungInputKurs, cast_de_nrw_schule_svws_core_data_kursblockung_KursblockungInputKurs } from '../../core/data/kursblockung/KursblockungInputKurs';
-import { JavaInteger, cast_java_lang_Integer } from '../../java/lang/JavaInteger';
-import { Random, cast_java_util_Random } from '../../java/util/Random';
-import { KursblockungDynSchueler, cast_de_nrw_schule_svws_core_kursblockung_KursblockungDynSchueler } from '../../core/kursblockung/KursblockungDynSchueler';
-import { Vector, cast_java_util_Vector } from '../../java/util/Vector';
 
 export class KursblockungDynKurs extends JavaObject {
 
@@ -19,11 +16,7 @@ export class KursblockungDynKurs extends JavaObject {
 
 	private readonly databaseID : number;
 
-	private readonly databaseKursartID : number;
-
 	private readonly internalID : number;
-
-	private readonly representation : String;
 
 	private readonly fachart : KursblockungDynFachart;
 
@@ -57,20 +50,18 @@ export class KursblockungDynKurs extends JavaObject {
 	 * @param pSchienenLage        Ein Array aller Schienen, in denen der Kurs gerade liegt.
 	 * @param pSchienenLageFixiert Anzahl an Schienen in {@code pSchienenLage}, die fixiert ist.
 	 * @param pSchienenFrei        Ein Array aller Schienen, in die der Kurs wechseln könnte.
-	 * @param iKurs                Alle Informationen zu diesem Kurs. Das Objekt stammt von der GUI.
+	 * @param pKursID              Die ID des Kurses.
 	 * @param pFachart             Die zu diesem Kurs zugehörige Fachart.
 	 * @param pLogger              Logger für Benutzerhinweise, Warnungen und Fehler.
 	 * @param pInternalID          Eine interne ID für schnellen Zugriff. 
 	 */
-	public constructor(pRandom : Random, pSchienenLage : Array<KursblockungDynSchiene>, pSchienenLageFixiert : number, pSchienenFrei : Array<KursblockungDynSchiene>, iKurs : KursblockungInputKurs, pFachart : KursblockungDynFachart, pLogger : Logger, pInternalID : number) {
+	public constructor(pRandom : Random, pSchienenLage : Array<KursblockungDynSchiene>, pSchienenLageFixiert : number, pSchienenFrei : Array<KursblockungDynSchiene>, pKursID : number, pFachart : KursblockungDynFachart, pLogger : Logger, pInternalID : number) {
 		super();
 		this._random = pRandom;
 		this.schienenLage = pSchienenLage;
 		this.schienenLageFixiert = pSchienenLageFixiert;
 		this.schienenFrei = pSchienenFrei;
-		this.databaseID = iKurs.id;
-		this.databaseKursartID = iKurs.kursart;
-		this.representation = iKurs.representation;
+		this.databaseID = pKursID;
 		this.fachart = pFachart;
 		this.schuelerAnz = 0;
 		this.logger = pLogger;
@@ -97,7 +88,7 @@ export class KursblockungDynKurs extends JavaObject {
 	}
 
 	public toString() : String {
-		return this.representation;
+		return "Kurs (dbID=" + this.databaseID + ", intiD=" + this.internalID + ")";
 	}
 
 	/**
@@ -105,17 +96,8 @@ export class KursblockungDynKurs extends JavaObject {
 	 * 
 	 * @return Die Kurs-ID der GUI. 
 	 */
-	public gibID() : number {
+	public gibDatenbankID() : number {
 		return this.databaseID;
-	}
-
-	/**
-	 *Eine String-Darstellung des Kurses, z.B. 'D;GK1'.
-	 * 
-	 * @return Eine String-Darstellung des Kurses, z.B. 'D;GK1'. 
-	 */
-	public gibRepresentation() : String {
-		return this.representation;
 	}
 
 	/**
@@ -393,18 +375,6 @@ export class KursblockungDynKurs extends JavaObject {
 	}
 
 	/**
-	 *Speichert die aktuelle Kurs-Schiene-Zuordnung im Vector {@code vKursZuSchiene}.
-	 * 
-	 * @param vKursZuSchiene Diesem Vektor wird die aktuelle Kurszuordnung hinzugefügt. 
-	 */
-	public aktionOutputErzeugen(vKursZuSchiene : Vector<KursblockungOutputKursZuSchiene>) : void {
-		let kursZuSchiene : KursblockungOutputKursZuSchiene = new KursblockungOutputKursZuSchiene();
-		kursZuSchiene.kurs = this.databaseID;
-		kursZuSchiene.schienen = this.gibSchienenLage();
-		vKursZuSchiene.add(kursZuSchiene);
-	}
-
-	/**
 	 *Entfernt einen Schüler aus diesem Kurs. 
 	 */
 	public aktionSchuelerEntfernen() : void {
@@ -442,24 +412,15 @@ export class KursblockungDynKurs extends JavaObject {
 	 * @param schuelerArr Nötig, um den Kursen SuS zuzuordnen. 
 	 */
 	debug(schuelerArr : Array<KursblockungDynSchueler>) : void {
-		console.log(JSON.stringify("    " + this.representation.valueOf() + " (id=" + this.databaseID + ") --> " + this.schuelerAnz + " SuS."));
+		console.log(JSON.stringify(this.toString().valueOf() + " --> " + this.schuelerAnz + " SuS."));
 		for (let s of schuelerArr) {
 			let kurse : Array<KursblockungDynKurs | null> = s.gibKurswahlen();
 			for (let kurs of kurse) {
 				if (kurs as unknown === this as unknown) {
-					console.log(JSON.stringify("        " + s.gibGuiID()));
+					console.log(JSON.stringify("        " + s.gibDatenbankID()));
 				}
 			}
 		}
-	}
-
-	/**
-	 *Liefert die Datenbank-ID der Kursart.
-	 * 
-	 * @return die Datenbank-ID der Kursart. 
-	 */
-	gibDatabaseKursArtID() : number {
-		return this.databaseKursartID;
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

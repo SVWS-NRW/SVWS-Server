@@ -26,7 +26,7 @@ public class GostFachwahl {
 
 	/** Die ID der Kursart */
 	@Schema(required = true, description = "Die ID der Kursart.", example="4713")
-	public long kursartID = -1;
+	public int kursartID = -1; 
 	
 	/** Gibt an, ob die Fachwahl ein schriftlicher Kurs ist oder nicht */
 	@Schema(required = true, description = "gibt an, ob die Fachwahl ein schriftlicher Kurs ist oder nicht", example="true")

@@ -11,14 +11,15 @@
 			:key="kursid"
 			tag="td"
 			type="kurs"
-			:data="{ id: kursid, fachID: fachid, kursart: kursart }"
+			:data="{ id: kursid, fachID: fach.fachID, kursart: kursartid }"
 			class="select-none px-2"
-			:draggable="true"
+			:class="{'bg-slate-100': belegung, 'cursor-default':!!belegung}"
+			:draggable="!belegung"
 			:style="{
-				'background-color': bgColor
+				'background-color': !belegung ? bgColor : false
 			}"
 		>
-			{{ kursbezeichnung }}
+			{{ get_kurs_name() }}
 		</drag-data>
 	</tr>
 </template>
@@ -30,11 +31,14 @@
 		GostBlockungsergebnisKurs,
 		GostBlockungsergebnisManager,
 		GostFach,
+		GostKursart,
+		KursartKatalogEintrag,
 		ZulaessigesFach
 	} from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef } from "vue";
 
 	import { injectMainApp, Main } from "~/apps/Main";
+import SCardGostKursblockungParameter from "./SCardGostKursblockungParameter.vue";
 
 	const props = defineProps({
 		fach: {
@@ -50,9 +54,6 @@
 		},
 		schuelerId: { type: Number, required: true }
 	});
-	// data() {
-	// 	return {};
-	// },
 
 	const main: Main = injectMainApp();
 	const app = main.apps.gost
@@ -61,41 +62,34 @@
 		return app.dataKursblockungsergebnis.manager;
 	});
 
-	const fachid: ComputedRef<number> = computed(() => {
-		return props.fach.fachID;
-	});
-
 	const kursart: ComputedRef<string | undefined> = computed(() => {
 		const halbjahr = app.dataKursblockung.daten?.gostHalbjahr || 0;
 		const belegung = props.fach.belegungen[halbjahr];
 		if (!belegung)
 			return undefined;
-		return belegung.kursartKuerzel.valueOf();
+		return belegung.kursartKuerzel.toString()
 	});
+
+	const kursartid: ComputedRef<number | undefined> = computed(() => {
+		return GostKursart.fromKuerzel(!kursart.value ? null : kursart.value)?.id;
+	})
 
 	const kursid: ComputedRef<number | undefined> = computed(() => {
 		return belegung.value?.id;
 	});
 
-	const kursbezeichnung: ComputedRef<string> = computed(() => {
-		const belegungValue = belegung.value;
-		if (!belegungValue) {
-			const fachname: string = gostfach.value?.kuerzelAnzeige?.valueOf() || "??";
-			const kursartString: string = (!kursart.value) ? "??" : kursart.value;
-			return fachname + "-" + kursartString;
-		}
-		return belegung.value?.name?.valueOf() || "???";
-	});
-
 	const belegung: ComputedRef<GostBlockungsergebnisKurs | undefined> = computed(() => {
-		return manager.value?.getKursSchuelerZuordnungFuerSchuelerUndFach(props.schuelerId, fachid.value) || undefined;
+		try {
+			return manager.value?.getOfSchuelerOfFachZugeordneterKurs(props.schuelerId, props.fach.fachID) || undefined;
+		} catch (e) {return undefined}
 	});
 
 	const gostfach: ComputedRef<GostFach | undefined> = computed(() => {
-		return manager.value?.getFach(fachid.value);
+		return manager.value?.getFach(props.fach.fachID);
 	});
 
 	const bgColor: ComputedRef<string> = computed(() => {
+		if (belegung.value) return "gray"
 		const zulfach = ZulaessigesFach.getByKuerzelASD(gostfach.value?.kuerzel || null);
 		const fachgruppe = zulfach?.getFachgruppe();
 		if (!fachgruppe)
@@ -106,4 +100,9 @@
 			(fachgruppe.farbe.getBlue() << 0);
 		return "#" + (0x1000000 + rgb).toString(16).slice(1);
 	});
+
+	function get_kurs_name(): String {
+		if (!kursid.value) return manager.value?.getFach(props.fach.fachID).kuerzelAnzeige+"-"+kursart.value || "?"
+		return manager.value?.getOfKursName(kursid.value) || ""
+	}
 </script>

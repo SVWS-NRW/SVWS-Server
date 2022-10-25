@@ -12,10 +12,10 @@ public class DTOGostBlockungRegelParameterPK implements Serializable {
 	/** Die UID für diese Klasse */
 	private static final long serialVersionUID = 1L;
 
-	/** Kursblockung der Gymnasialen Oberstufe - Parameterdefinition für Regeln der Blockung: ID der Regel */
+	/** ID des Regel-Parameters */
 	public Long Regel_ID;
 
-	/** Kursblockung der Gymnasialen Oberstufe - Regeldefinition der Blockung: Die Nummer des Parameters der Regel, beginnend bei 1 */
+	/** Die Nummer des Parameters der Regel, beginnend bei 1 */
 	public Integer Nummer;
 
 	/**

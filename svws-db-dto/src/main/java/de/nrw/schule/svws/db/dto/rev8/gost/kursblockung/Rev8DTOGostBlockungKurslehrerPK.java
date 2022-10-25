@@ -12,10 +12,10 @@ public class Rev8DTOGostBlockungKurslehrerPK implements Serializable {
 	/** Die UID für diese Klasse */
 	private static final long serialVersionUID = 1L;
 
-	/** Kursblockung der Gymnasialen Oberstufe - Kurslehrer der Blockung: ID des Kurses */
+	/** ID des Kurses */
 	public Long Blockung_Kurs_ID;
 
-	/** Kursblockung der Gymnasialen Oberstufe - Kurslehrer der Blockung: ID des Lehrers, welcher dem Kurs zugeordnet ist */
+	/** ID des Lehrers, welcher dem Kurs zugeordnet ist */
 	public Long Lehrer_ID;
 
 	/**

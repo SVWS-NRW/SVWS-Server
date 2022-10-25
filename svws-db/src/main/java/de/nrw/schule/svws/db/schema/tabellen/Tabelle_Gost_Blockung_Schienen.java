@@ -17,29 +17,29 @@ public class Tabelle_Gost_Blockung_Schienen extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte ID */
 	public SchemaTabelleSpalte col_ID = add("ID", SchemaDatentypen.BIGINT, true)
 		.setNotNull()
-		.setJavaComment("Kursblockung der Gymnasialen Oberstufe - Schienen der Blockung: ID der Schiene in der Blockung (generiert)");
+		.setJavaComment("ID der Schiene in der Blockung (generiert)");
 
 	/** Die Definition der Tabellenspalte Blockung_ID */
 	public SchemaTabelleSpalte col_Blockung_ID = add("Blockung_ID", SchemaDatentypen.BIGINT, false)
 		.setNotNull()
-		.setJavaComment("Kursblockung der Gymnasialen Oberstufe - Schienen der Blockung: ID der Blockung");
+		.setJavaComment("ID der Blockung");
 
 	/** Die Definition der Tabellenspalte Nummer */
 	public SchemaTabelleSpalte col_Nummer = add("Nummer", SchemaDatentypen.INT, false)
 		.setNotNull()
-		.setJavaComment("Kursblockung der Gymnasialen Oberstufe - Schienen der Blockung: Die Nummer der Schiene, beginnend bei 1");
+		.setJavaComment("Die Nummer der Schiene, beginnend bei 1");
 
 	/** Die Definition der Tabellenspalte Bezeichnung */
 	public SchemaTabelleSpalte col_Bezeichnung = add("Bezeichnung", SchemaDatentypen.VARCHAR, false).setDatenlaenge(255)
 		.setDefault("Schiene")
 		.setNotNull()
-		.setJavaComment("Kursblockung der Gymnasialen Oberstufe - Schienen der Blockung: Bezeichnung der Schiene (z.B. LK Schiene 1)");
+		.setJavaComment("Bezeichnung der Schiene (z.B. LK Schiene 1)");
 
 	/** Die Definition der Tabellenspalte Wochenstunden */
 	public SchemaTabelleSpalte col_Wochenstunden = add("Wochenstunden", SchemaDatentypen.INT, false)
 		.setDefault("3")
 		.setNotNull()
-		.setJavaComment("Kursblockung der Gymnasialen Oberstufe - Schienen der Blockung: Die Anzahl der Wochenstunden, welche der Schiene zugeordnet sind");
+		.setJavaComment("Die Anzahl der Wochenstunden, welche der Schiene zugeordnet sind");
 
 
 	/** Die Definition des Fremdschlüssels Gost_Blockung_Schienen_Blockung_FK */

@@ -40,14 +40,14 @@ export class DataGostKursblockung extends BaseData<
 	 * @returns {Promise<GostBlockungsdaten>} Die Daten als Promise
 	 */
 	public async on_select(): Promise<GostBlockungsdaten | undefined> {
+		this.manager = undefined;
+		App.apps.gost.dataKursblockungsergebnis.manager = undefined
 		if (!this.selected_list_item) return super.unselect();
 		const blockungsdaten = await super._select((eintrag: GostBlockungListeneintrag) =>
 			App.api.getGostBlockung(App.schema, eintrag.id)
 		);
 		if (blockungsdaten && App.apps.gost.dataFaecher.manager)
 			this.manager = new GostBlockungsdatenManager(blockungsdaten, App.apps.gost.dataFaecher.manager);
-		else 
-			this.manager = undefined;
 		await this.listKursblockungsergebnisse.update_list(
 			blockungsdaten?.id
 		);

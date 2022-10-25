@@ -311,7 +311,9 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		String valueOf = "";
 		if ((type instanceof ExpressionClassType classType) && ((classType.isNumberType()) || (classType.isString()))) {
 			Tree parent = transpiler.getParent(node);
-			if ((parent instanceof BinaryTree bt) && (bt.getKind() == Kind.PLUS))
+			if ((parent instanceof BinaryTree bt) && ((bt.getKind() == Kind.MULTIPLY) || (bt.getKind() == Kind.DIVIDE)
+			    || (bt.getKind() == Kind.REMAINDER) || (bt.getKind() == Kind.PLUS) || (bt.getKind() == Kind.MINUS)
+			    || (bt.getKind() == Kind.LEFT_SHIFT) || (bt.getKind() == Kind.RIGHT_SHIFT) || (bt.getKind() == Kind.UNSIGNED_RIGHT_SHIFT)))
 				valueOf = ".valueOf()";
 		}
 		// check whether we have a case identifier of a switch statement where we have to add the class/enumeration name
@@ -747,9 +749,9 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 	
 	
 	/**
-	 * Transpiles the simple assigment.
+	 * Transpiles the simple assignment.
 	 * 
-	 * @param node   the assigment
+	 * @param node   the assignment
 	 * 
 	 * @return the transpiled simple assignment 
 	 */
@@ -1253,7 +1255,8 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 					String expression = type.toString();
 					return "Java" + expression + "." + identifier + convertMethodInvocationParameters(node.getArguments(), null, null, false);
 				}
-				if ("intValue".equals(identifier) && (type instanceof ExpressionClassType ect)) {
+				//if ("intValue".equals(identifier) && (type instanceof ExpressionClassType ect)) {
+				if (("byteValue".equals(identifier) || "shortValue".equals(identifier) || "intValue".equals(identifier) || "longValue".equals(identifier)) && (type instanceof ExpressionClassType ect)) {
 					String expression = convertExpression(ms.getExpression());
 					if ("java.lang.Double".equals(ect.getFullQualifiedName()) || ("java.lang.Float".equals(ect.getFullQualifiedName())))
 						return "Math.trunc(" + expression + ".valueOf())";

@@ -46,15 +46,14 @@ public class KursblockungDynSchiene {
 	 * 
 	 * @param kurs1 Der Kurs, welcher der Schiene hinzugefügt werden soll. */
 	public void aktionKursHinzufuegen(@NotNull KursblockungDynKurs kurs1) {
-		long kursID = kurs1.gibID();
+		long kursID = kurs1.gibDatenbankID();
 		if (kursMap.containsKey(kursID)) {
-			logger.logLn(LogLevel.ERROR,
-					"Kurs '" + kurs1.gibRepresentation() + "' soll in Schiene " + nr + ", ist aber bereits drin. ");
-			return;
+			String fehler = "Kurs '" + kurs1.toString() + "' soll in Schiene " + nr + ", ist aber bereits drin.";
+			logger.logLn(LogLevel.ERROR, fehler);
+			throw new KursblockungException(fehler);
 		}
 		// Zuerst Kurs-Paarungen hinzufügen.
-		for (@NotNull
-		KursblockungDynKurs kurs2 : kursMap.values()) {
+		for (@NotNull KursblockungDynKurs kurs2 : kursMap.values()) {
 			statistik.aktionKurspaarInSchieneHinzufuegen(kurs1, kurs2);
 		}
 		// Dann der Datenstruktur hinzufügen.
@@ -65,17 +64,17 @@ public class KursblockungDynSchiene {
 	 * 
 	 * @param kurs1 Der Kurs, welcher aus der Schiene entfernt werden soll. */
 	public void aktionKursEntfernen(@NotNull KursblockungDynKurs kurs1) {
-		long kursID = kurs1.gibID();
+		long kursID = kurs1.gibDatenbankID();
 		if (!kursMap.containsKey(kursID)) {
-			logger.logLn(LogLevel.ERROR, "Kurs '" + kurs1.gibRepresentation() + "' soll aus Schiene " + nr
-					+ " enternt werden, ist aber nicht drin.");
-			return;
+			String fehler = "Kurs '" + kurs1.toString() + "' soll aus Schiene " + nr
+					+ " entfernt werden, ist aber nicht drin.";
+			logger.logLn(LogLevel.ERROR, fehler);
+			throw new KursblockungException(fehler);
 		}
 		// Zuerst aus der Datenstruktur entfernen.
 		kursMap.remove(kursID);
 		// Dann Kurs-Paarungen entfernen.
-		for (@NotNull
-		KursblockungDynKurs kurs2 : kursMap.values()) {
+		for (@NotNull KursblockungDynKurs kurs2 : kursMap.values()) {
 			statistik.aktionKurspaarInSchieneEntfernen(kurs1, kurs2);
 		}
 	}
@@ -96,16 +95,15 @@ public class KursblockungDynSchiene {
 
 	/** Debug-Ausgabe. Nur für Testzwecke.
 	 * 
-	 * @param nurMultikurse Fallse TRUE, werden nur Multikurse angezeigt. */
+	 * @param nurMultikurse Falls TRUE, werden nur Multikurse angezeigt. */
 	public void debug(boolean nurMultikurse) {
-		for (@NotNull
-		KursblockungDynKurs k : kursMap.values()) {
+		for (@NotNull KursblockungDynKurs k : kursMap.values()) {
 			if (nurMultikurse) {
 				if (k.gibSchienenAnzahl() < 2) {
 					continue;
 				}
 			}
-			System.out.print("    " + k.gibRepresentation() + "\n");
+			System.out.print("    " + k.toString() + "\n");
 		}
 
 	}
@@ -121,7 +119,7 @@ public class KursblockungDynSchiene {
 		int summe = 0;
 		for (@NotNull KursblockungDynKurs kurs : kursMap.values())
 			if (setFachart.add(kurs.gibFachart().gibNr()) == false) // Wenn es die Fachart bereits gibt, ...
-				summe++; // ...  dann Malus erhöhen.
+				summe++; // ... dann Malus erhöhen.
 
 		return summe;
 	}

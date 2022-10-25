@@ -53,6 +53,7 @@ public class DataGostBlockungKurs extends DataManager<Long> {
 		daten.nummer = kurs.Kursnummer;
 		daten.istKoopKurs = kurs.IstKoopKurs;
 		daten.suffix = kurs.BezeichnungSuffix == null ? "" : kurs.BezeichnungSuffix;
+		daten.anzahlSchienen = kurs.Schienenanzahl;
 		daten.wochenstunden = kurs.Wochenstunden;
 		return daten;
 	};
@@ -107,6 +108,14 @@ public class DataGostBlockungKurs extends DataManager<Long> {
 	    			}
 	    			case "istKoopKurs" -> kurs.IstKoopKurs = JSONMapper.convertToBoolean(value, false);
 	    			case "suffix" -> kurs.BezeichnungSuffix = JSONMapper.convertToString(value, false, true);
+	    			case "anzahlSchienen" -> {
+	    			    int schienenAnzahl = JSONMapper.convertToInteger(value, false);
+	    			    if (schienenAnzahl > kurs.Schienenanzahl) {
+	    			        // TODO lege den Kurs in zusätzlichen Schienen bei dem Vorlagen-Ergebnis an
+	    			    } else if (schienenAnzahl < kurs.Schienenanzahl) {
+	    			        // TODO entferne den Kurs in den Schienen im Vorlage-Ergebnis, wo er zu viel enthalten ist
+	    			    }
+	    			}
 	    			case "wochenstunden" -> {
 	    				kurs.Wochenstunden = JSONMapper.convertToInteger(value, false);
 	    				if ((kurs.Wochenstunden < 1) || (kurs.Wochenstunden > 40)) 

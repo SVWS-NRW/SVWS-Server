@@ -17,17 +17,17 @@ public class Tabelle_Gost_Blockung_Regelparameter extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte Regel_ID */
 	public SchemaTabelleSpalte col_Regel_ID = add("Regel_ID", SchemaDatentypen.BIGINT, true)
 		.setNotNull()
-		.setJavaComment("Kursblockung der Gymnasialen Oberstufe - Parameterdefinition für Regeln der Blockung: ID der Regel");
+		.setJavaComment("ID des Regel-Parameters");
 
 	/** Die Definition der Tabellenspalte Nummer */
 	public SchemaTabelleSpalte col_Nummer = add("Nummer", SchemaDatentypen.INT, true)
 		.setNotNull()
-		.setJavaComment("Kursblockung der Gymnasialen Oberstufe - Regeldefinition der Blockung: Die Nummer des Parameters der Regel, beginnend bei 1");
+		.setJavaComment("Die Nummer des Parameters der Regel, beginnend bei 1");
 
 	/** Die Definition der Tabellenspalte Parameter */
 	public SchemaTabelleSpalte col_Parameter = add("Parameter", SchemaDatentypen.BIGINT, false)
 		.setNotNull()
-		.setJavaComment("Kursblockung der Gymnasialen Oberstufe - Regeldefinition der Blockung: Der Wert des Parameters der Regel (hängt vom Typ der Regel ab)");
+		.setJavaComment("Der Wert des Parameters der Regel (hängt vom Typ der Regel ab)");
 
 
 	/** Die Definition des Fremdschlüssels Gost_Blockung_Regelparameter_Regel_FK */

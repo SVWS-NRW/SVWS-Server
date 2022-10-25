@@ -15,18 +15,12 @@ import jakarta.validation.constraints.NotNull;
  */
 @XmlRootElement
 @Schema(description="Informationen zu einer Schiene eines Ergebnisses einer Blockung der gymnasialen Oberstufe.")
-@JsonPropertyOrder({ "id", "name", "anzahlKollisionen", "kurse" })
+@JsonPropertyOrder({ "id", "kurse" })
 @TranspilerDTO
 public class GostBlockungsergebnisSchiene {
 
 	/** Die ID der Schiene */
 	public long id = -1;
-	
-	/** Der Name der Schiene */
-	public @NotNull String name = "Schiene -1";
-
-	/** Die Anzahl der Kollisionen in dieser Schiene */
-	public int anzahlKollisionen = 0;
 	
 	/** Eine Liste der Kurse, welche dieser Schiene zugeordnet sind. */
 	public final @NotNull Vector<@NotNull GostBlockungsergebnisKurs> kurse = new Vector<>();

@@ -157,11 +157,11 @@
 	const allow_regeln: ComputedRef<boolean> = computed(()=> app.blockungsergebnisauswahl.liste.length === 1)
 
 	function getAnzahlSchuelerSchiene(idSchiene: number): number {
-		return manager.value?.getAnzahlSchuelerSchiene(idSchiene) || 0;
+		return manager.value?.getOfSchieneAnzahlSchueler(idSchiene) || 0;
 	};
 
 	function getAnzahlKollisionenSchiene(idSchiene: number): number {
-		return manager.value?.getAnzahlKollisionenSchiene(idSchiene) || 0;
+		return manager.value?.getOfSchieneAnzahlSchuelerMitKollisionen(idSchiene) || 0;
 	};
 
 	async function patch_schiene(schiene: GostBlockungSchiene) {

@@ -33,19 +33,19 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @JsonPropertyOrder({"Zwischenergebnis_ID","Blockung_Kurs_ID","Schueler_ID"})
 public class Rev8DTOGostBlockungZwischenergebnisKursSchueler {
 
-	/** Kursblockung der Gymnasialen Oberstufe - Kurs-Schüler-Zuordnung eines Zwischenergebnisses einer Blockung: ID des Zwischenergebnisses */
+	/** Kurs-Schüler-Zuordnung eines Zwischenergebnisses: ID des Zwischenergebnisses */
 	@Id
 	@Column(name = "Zwischenergebnis_ID")
 	@JsonProperty
 	public Long Zwischenergebnis_ID;
 
-	/** Kursblockung der Gymnasialen Oberstufe - Kurs-Schüler-Zuordnung eines Zwischenergebnisses einer Blockung: ID des Kurses */
+	/** Kurs-Schüler-Zuordnung eines Zwischenergebnisses: ID des Kurses */
 	@Id
 	@Column(name = "Blockung_Kurs_ID")
 	@JsonProperty
 	public Long Blockung_Kurs_ID;
 
-	/** Kursblockung der Gymnasialen Oberstufe - Kurs-Schüler-Zuordnung eines Zwischenergebnisses einer Blockung: ID des Schülers */
+	/** Kurs-Schüler-Zuordnung eines Zwischenergebnisses: ID des Schülers */
 	@Id
 	@Column(name = "Schueler_ID")
 	@JsonProperty

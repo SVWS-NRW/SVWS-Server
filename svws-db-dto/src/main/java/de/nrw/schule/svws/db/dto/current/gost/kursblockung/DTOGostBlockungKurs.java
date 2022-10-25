@@ -47,30 +47,32 @@ import de.nrw.schule.svws.csv.converter.current.gost.GOStKursartConverterDeseria
 @NamedQuery(name="DTOGostBlockungKurs.istkoopkurs.multiple", query="SELECT e FROM DTOGostBlockungKurs e WHERE e.IstKoopKurs IN :value")
 @NamedQuery(name="DTOGostBlockungKurs.bezeichnungsuffix", query="SELECT e FROM DTOGostBlockungKurs e WHERE e.BezeichnungSuffix = :value")
 @NamedQuery(name="DTOGostBlockungKurs.bezeichnungsuffix.multiple", query="SELECT e FROM DTOGostBlockungKurs e WHERE e.BezeichnungSuffix IN :value")
+@NamedQuery(name="DTOGostBlockungKurs.schienenanzahl", query="SELECT e FROM DTOGostBlockungKurs e WHERE e.Schienenanzahl = :value")
+@NamedQuery(name="DTOGostBlockungKurs.schienenanzahl.multiple", query="SELECT e FROM DTOGostBlockungKurs e WHERE e.Schienenanzahl IN :value")
 @NamedQuery(name="DTOGostBlockungKurs.wochenstunden", query="SELECT e FROM DTOGostBlockungKurs e WHERE e.Wochenstunden = :value")
 @NamedQuery(name="DTOGostBlockungKurs.wochenstunden.multiple", query="SELECT e FROM DTOGostBlockungKurs e WHERE e.Wochenstunden IN :value")
 @NamedQuery(name="DTOGostBlockungKurs.primaryKeyQuery", query="SELECT e FROM DTOGostBlockungKurs e WHERE e.ID = ?1")
 @NamedQuery(name="DTOGostBlockungKurs.all.migration", query="SELECT e FROM DTOGostBlockungKurs e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Blockung_ID","Fach_ID","Kursart","Kursnummer","IstKoopKurs","BezeichnungSuffix","Wochenstunden"})
+@JsonPropertyOrder({"ID","Blockung_ID","Fach_ID","Kursart","Kursnummer","IstKoopKurs","BezeichnungSuffix","Schienenanzahl","Wochenstunden"})
 public class DTOGostBlockungKurs {
 
-	/** Kursblockung der Gymnasialen Oberstufe - Kurse der Blockung: ID des Kurses in der Blockung (generiert) */
+	/** ID des Kurses in der Blockung (generiert) */
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
 	public Long ID;
 
-	/** Kursblockung der Gymnasialen Oberstufe - Kurse der Blockung: ID der Blockung */
+	/** ID der Blockung */
 	@Column(name = "Blockung_ID")
 	@JsonProperty
 	public Long Blockung_ID;
 
-	/** Kursblockung der Gymnasialen Oberstufe - Kurse der Blockung: ID des Faches */
+	/** ID des Faches */
 	@Column(name = "Fach_ID")
 	@JsonProperty
 	public Long Fach_ID;
 
-	/** Kursblockung der Gymnasialen Oberstufe - Kurse der Blockung: ID der Kursart (siehe ID des Core-Types GostKursart) */
+	/** ID der Kursart (siehe ID des Core-Types GostKursart) */
 	@Column(name = "Kursart")
 	@JsonProperty
 	@Convert(converter=GOStKursartConverter.class)
@@ -78,12 +80,12 @@ public class DTOGostBlockungKurs {
 	@JsonDeserialize(using=GOStKursartConverterDeserializer.class)
 	public GostKursart Kursart;
 
-	/** Kursblockung der Gymnasialen Oberstufe - Kurse der Blockung: Die Nummer des Kurses in Bezug auf das Fach (Kurse eines Faches sind in einer Blockung üblicherweise von 1 ab durchnummeriert) */
+	/** Die Nummer des Kurses in Bezug auf das Fach (Kurse eines Faches sind in einer Blockung üblicherweise von 1 ab durchnummeriert) */
 	@Column(name = "Kursnummer")
 	@JsonProperty
 	public Integer Kursnummer;
 
-	/** Kursblockung der Gymnasialen Oberstufe - Kurse der Blockung: Gibt an, ob es sich um einen Kooperations-Kurs mit einer anderen Schule handelt oder nicht: 1 - true, 0 - false  */
+	/** Gibt an, ob es sich um einen Kooperations-Kurs mit einer anderen Schule handelt oder nicht: 1 - true, 0 - false  */
 	@Column(name = "IstKoopKurs")
 	@JsonProperty
 	@Convert(converter=Boolean01Converter.class)
@@ -91,12 +93,17 @@ public class DTOGostBlockungKurs {
 	@JsonDeserialize(using=Boolean01ConverterDeserializer.class)
 	public Boolean IstKoopKurs;
 
-	/** Kursblockung der Gymnasialen Oberstufe - Kurse der Blockung: Ein Suffix, welches der Kursbezeichnung ggf. angehangen wird (kann z.B. zum Kennzeichnen von Kooperationskursen verwendet werden) */
+	/** Ein Suffix, welches der Kursbezeichnung ggf. angehangen wird (kann z.B. zum Kennzeichnen von Kooperationskursen verwendet werden) */
 	@Column(name = "BezeichnungSuffix")
 	@JsonProperty
 	public String BezeichnungSuffix;
 
-	/** Kursblockung der Gymnasialen Oberstufe - Kurse der Blockung: Die Anzahl der Wochenstunden für den Kurs */
+	/** Gibt die Anzahl der Schienen an, die für den Kurs in der Blockung verwendet werden soll (normalerweise 1) */
+	@Column(name = "Schienenanzahl")
+	@JsonProperty
+	public Integer Schienenanzahl;
+
+	/** Die Anzahl der Wochenstunden für den Kurs */
 	@Column(name = "Wochenstunden")
 	@JsonProperty
 	public Integer Wochenstunden;
@@ -116,9 +123,10 @@ public class DTOGostBlockungKurs {
 	 * @param Kursart   der Wert für das Attribut Kursart
 	 * @param Kursnummer   der Wert für das Attribut Kursnummer
 	 * @param IstKoopKurs   der Wert für das Attribut IstKoopKurs
+	 * @param Schienenanzahl   der Wert für das Attribut Schienenanzahl
 	 * @param Wochenstunden   der Wert für das Attribut Wochenstunden
 	 */
-	public DTOGostBlockungKurs(final Long ID, final Long Blockung_ID, final Long Fach_ID, final GostKursart Kursart, final Integer Kursnummer, final Boolean IstKoopKurs, final Integer Wochenstunden) {
+	public DTOGostBlockungKurs(final Long ID, final Long Blockung_ID, final Long Fach_ID, final GostKursart Kursart, final Integer Kursnummer, final Boolean IstKoopKurs, final Integer Schienenanzahl, final Integer Wochenstunden) {
 		if (ID == null) { 
 			throw new NullPointerException("ID must not be null");
 		}
@@ -143,6 +151,10 @@ public class DTOGostBlockungKurs {
 			throw new NullPointerException("IstKoopKurs must not be null");
 		}
 		this.IstKoopKurs = IstKoopKurs;
+		if (Schienenanzahl == null) { 
+			throw new NullPointerException("Schienenanzahl must not be null");
+		}
+		this.Schienenanzahl = Schienenanzahl;
 		if (Wochenstunden == null) { 
 			throw new NullPointerException("Wochenstunden must not be null");
 		}
@@ -183,7 +195,7 @@ public class DTOGostBlockungKurs {
 	 */
 	@Override
 	public String toString() {
-		return "DTOGostBlockungKurs(ID=" + this.ID + ", Blockung_ID=" + this.Blockung_ID + ", Fach_ID=" + this.Fach_ID + ", Kursart=" + this.Kursart + ", Kursnummer=" + this.Kursnummer + ", IstKoopKurs=" + this.IstKoopKurs + ", BezeichnungSuffix=" + this.BezeichnungSuffix + ", Wochenstunden=" + this.Wochenstunden + ")";
+		return "DTOGostBlockungKurs(ID=" + this.ID + ", Blockung_ID=" + this.Blockung_ID + ", Fach_ID=" + this.Fach_ID + ", Kursart=" + this.Kursart + ", Kursnummer=" + this.Kursnummer + ", IstKoopKurs=" + this.IstKoopKurs + ", BezeichnungSuffix=" + this.BezeichnungSuffix + ", Schienenanzahl=" + this.Schienenanzahl + ", Wochenstunden=" + this.Wochenstunden + ")";
 	}
 
 }

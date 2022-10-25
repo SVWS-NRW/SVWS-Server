@@ -4,30 +4,29 @@ import java.util.Random;
 import java.util.Vector;
 
 import de.nrw.schule.svws.core.Service;
-import de.nrw.schule.svws.core.data.kursblockung.KursblockungInput;
-import de.nrw.schule.svws.core.data.kursblockung.KursblockungOutput;
-import de.nrw.schule.svws.core.data.kursblockung.KursblockungOutputs;
+import de.nrw.schule.svws.core.utils.gost.GostBlockungsdatenManager;
+import de.nrw.schule.svws.core.utils.gost.GostBlockungsergebnisManager;
 import de.nrw.schule.svws.logger.LogLevel;
 import jakarta.validation.constraints.NotNull;
 
-/** Dieser Service wandelt die Eingabedaten {@link KursblockungInput} in dynamische Blockungsdaten
+/** Dieser Service wandelt die Eingabedaten {@link GostBlockungsdatenManager} in dynamische Blockungsdaten
  * {@link KursblockungDynDaten} um, startet dann den Kursblockungsalgorithmus, welcher die Blockungsdaten manipuliert
- * und wandelt zuletzt {@link KursblockungDynDaten} in die Ausgabedaten {@link KursblockungOutputs} um. Der Service
- * überschreitet dabei nicht die Zeit, die in {@link KursblockungInput#maxTimeMillis} festgelegt wurde.
+ * und wandelt zuletzt {@link KursblockungDynDaten} in die Ausgabedaten {@link GostBlockungsergebnisManager} um. Der
+ * Service überschreitet dabei nicht die Zeit, die in {@link GostBlockungsdatenManager#getMaxTimeMillis()} festgelegt
+ * wurde.
  * 
  * @author Benjamin A. Bartsch */
-public class KursblockungAlgorithmus extends Service<@NotNull KursblockungInput, @NotNull KursblockungOutputs> {
+public class KursblockungAlgorithmus
+		extends Service<@NotNull GostBlockungsdatenManager, @NotNull Vector<@NotNull GostBlockungsergebnisManager>> {
 
 	@Override
-	public @NotNull KursblockungOutputs handle(@NotNull KursblockungInput pInput) {
+	public @NotNull Vector<@NotNull GostBlockungsergebnisManager> handle(@NotNull GostBlockungsdatenManager pInput) {
 		// Logger-Einrückung (relativ +4).
 		logger.modifyIndent(+4);
 
-		// Random-Objekt erzeugen
-		// Größter Integer Wert in TypeScript --> 9007199254740991L
-		long seed = (pInput.seed == 0) ? (new Random()).nextLong() : pInput.seed;
+		// Random-Objekt erzeugen (Größter Integer Wert in TypeScript --> 9007199254740991L).
+		long seed = new Random().nextLong();
 		@NotNull Random random = new Random(seed);
-		logger.log(LogLevel.APP, "Seed = " + pInput.seed + " wird nicht verwendet --> Transpiler kennt das nicht.");
 		logger.log(LogLevel.APP, "Erster nextInt() Aufruf liefert " + seed);
 
 		// Konvertierung von 'KursblockungInput' zu 'KursblockungDynamischeDaten'.
@@ -36,8 +35,7 @@ public class KursblockungAlgorithmus extends Service<@NotNull KursblockungInput,
 		long zeitEndeGesamt = System.currentTimeMillis() + zeitBedarf;
 
 		// Vorbereitung der Rückgabe an die GUI.
-		@NotNull KursblockungOutputs kursblockungOutputs = new KursblockungOutputs();
-		kursblockungOutputs.outputs = new Vector<>();
+		@NotNull Vector<@NotNull GostBlockungsergebnisManager> kursblockungOutputs = new Vector<>();
 
 		@NotNull KursblockungAlgorithmusK @NotNull [] algorithmenK = new KursblockungAlgorithmusK @NotNull [] {
 				// Alle Algorithmen zur Verteilung von Kursen auf ihre Schienen ...
@@ -69,7 +67,7 @@ public class KursblockungAlgorithmus extends Service<@NotNull KursblockungInput,
 				do {
 					// System.out.println("Zeit " + zeitProK + " Algorithmus " + iK);
 					verwendeAlgorithmusK(algorithmenK[iK], zeitEndeK, dynDaten, algorithmenS, kursblockungOutputs, seed,
-							pInput.input);
+							pInput);
 				} while (System.currentTimeMillis() < zeitEndeK);
 
 				// Zeit abgelaufen?
@@ -90,7 +88,7 @@ public class KursblockungAlgorithmus extends Service<@NotNull KursblockungInput,
 
 	private static void verwendeAlgorithmusK(@NotNull KursblockungAlgorithmusK kursblockungAlgorithmusK, long zeitEndeK,
 			@NotNull KursblockungDynDaten dynDaten, @NotNull KursblockungAlgorithmusS @NotNull [] algorithmenS,
-			@NotNull KursblockungOutputs kursblockungOutputs, long inputSeed, long inputID) {
+			@NotNull Vector<@NotNull GostBlockungsergebnisManager> outputs, long inputSeed, @NotNull GostBlockungsdatenManager pInput) {
 
 		// Verteilung der Kurse.
 		kursblockungAlgorithmusK.berechne(zeitEndeK);
@@ -118,9 +116,8 @@ public class KursblockungAlgorithmus extends Service<@NotNull KursblockungInput,
 		}
 
 		// Aktuellen Stand der Blockung speichern.
-		@NotNull KursblockungOutput out = dynDaten.gibErzeugtesKursblockungOutput(inputSeed, inputID);
-		kursblockungOutputs.outputs.add(out);
-
+		@NotNull GostBlockungsergebnisManager out = dynDaten.gibErzeugtesKursblockungOutput(pInput);
+		outputs.add(out);
 	}
 
 }
