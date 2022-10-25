@@ -139,12 +139,10 @@ public class DataReligionen extends DataManager<Long> {
 						String key = entry.getKey();
 						Object value = entry.getValue();
 						switch(key) {
-							
 							case "id" -> {
 								Long create_id = JSONMapper.convertToLong(value, true) ;
-								create_id = null;  // TODO JSON-Object liefert von der Client-Seite den Attributswert für id die Integerzahl 0.
-								if ( create_id != null )
-									throw OperationError.BAD_REQUEST.exception("Religion-ID muss bei der Erstellung null sein.");
+								if ((create_id != null) && (create_id >= 0))
+									throw OperationError.BAD_REQUEST.exception("Die ID für die Religion darf bei der Erstellung nicht gültig gesetzt sein.");
 							}
 							case "kuerzel" -> {
 								reli.StatistikKrz = JSONMapper.convertToString(value, true, true);

@@ -14,8 +14,6 @@ import com.healthmarketscience.jackcess.Row;
 import com.healthmarketscience.jackcess.Table;
 import com.healthmarketscience.jackcess.TableBuilder;
 
-import de.nrw.schule.svws.csv.CsvReader;
-
 /**
  * Diese Klasse wird für den Import der Tabelle ABP_Kursarten aus einer LuPO-Datenbank 
  * im Access-Format genutzt. 

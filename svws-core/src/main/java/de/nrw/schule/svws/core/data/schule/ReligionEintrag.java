@@ -17,30 +17,30 @@ public class ReligionEintrag {
 
 	/** Die ID des Katalog-Eintrags. */
 	@Schema(required = true, description = "die ID des Katalog-Eintrags", example="4711")
-	public long id;
+	public long id = -1;
 
 	/** Die Bezeichnung bzw. der Name der Religion. */
 	@Schema(required = true, description = "die Bezeichnung bzw. der Name der Religion", example="röm.-kath.")
-	public String text;
+	public String text = "";
 	
 	/** Die Bezeichnung bzw. der Name der Religion, wie sie auf einem Zeugnis erscheint. */
 	@Schema(required = true, description = "die Bezeichnung bzw. der Name der Religion, wie sie auf einem Zeugnis erscheint", example="röm.-kath.")
-	public String textZeugnis;
+	public String textZeugnis = "";
 
 	/** Das Kürzel des Eintrages für die Statistik. */
 	@Schema(required = true, description = "das Kürzel des Eintrages für die Statistik", example="KR")
-	public String kuerzel;
+	public String kuerzel = "";
 
 	/** Gibt die Position in der Sortierreihenfolge für die Katalog-Einträge an. */
 	@Schema(required = true, description = "gibt die Position in der Sortierreihenfolge für die Katalog-Einträge an", example="1")
-	public int sortierung;
+	public int sortierung = 1;
 	
 	/** Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht. */
 	@Schema(required = true, description = "gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht", example="true")
-	public boolean istSichtbar;
+	public boolean istSichtbar = true;
 	
 	/** Gibt an, ob der Eintrag in der Anwendung änderbar sein soll oder nicht. */
 	@Schema(required = true, description = "gibt an, ob der Eintrag in der Anwendung änderbar sein soll oder nicht", example="true")
-	public boolean istAenderbar;
+	public boolean istAenderbar = true;
 
 }

@@ -3,19 +3,19 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class ReligionEintrag extends JavaObject {
 
-	public id : number = 0;
+	public id : number = -1;
 
-	public text : String | null = null;
+	public text : String | null = "";
 
-	public textZeugnis : String | null = null;
+	public textZeugnis : String | null = "";
 
-	public kuerzel : String | null = null;
+	public kuerzel : String | null = "";
 
-	public sortierung : number = 0;
+	public sortierung : number = 1;
 
-	public istSichtbar : boolean = false;
+	public istSichtbar : boolean = true;
 
-	public istAenderbar : boolean = false;
+	public istAenderbar : boolean = true;
 
 
 	public constructor() {

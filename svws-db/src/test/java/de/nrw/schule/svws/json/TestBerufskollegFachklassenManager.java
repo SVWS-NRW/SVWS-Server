@@ -5,13 +5,9 @@ import static org.junit.jupiter.api.Assertions.fail;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import de.nrw.schule.svws.core.data.schule.AbgangsartKatalogEintrag;
-import de.nrw.schule.svws.core.data.schule.BerufskollegFachklassenKatalog;
 import de.nrw.schule.svws.core.data.schule.BerufskollegFachklassenKatalogDaten;
 import de.nrw.schule.svws.core.data.schule.BerufskollegFachklassenKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.BerufskollegFachklassenKatalogIndex;
-import de.nrw.schule.svws.core.types.schule.SchulabschlussBerufsbildend;
-import de.nrw.schule.svws.core.utils.schule.AbgangsartenManager;
 import de.nrw.schule.svws.core.utils.schule.BerufskollegFachklassenManager;
 
 /**
