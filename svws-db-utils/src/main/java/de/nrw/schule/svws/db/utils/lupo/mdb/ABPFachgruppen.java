@@ -122,8 +122,8 @@ public class ABPFachgruppen {
 					ABPFachgruppen fach = new ABPFachgruppen();
 					fach.Fach = f.daten.kuerzelASD;
 					fach.Bezeichnung = f.daten.bezeichnung;
-					fach.FachgruppeKrz = f.getFachgruppe().kuerzel;
-					fach.Aufgabenfeld = f.getFachgruppe().fachbereich;
+					fach.FachgruppeKrz = f.getFachgruppe().daten.kuerzel;
+					fach.Aufgabenfeld = f.getFachgruppe().daten.nummer;
 					return fach;
 				}).collect(Collectors.toMap(f -> f.Fach, f -> f));
 	}

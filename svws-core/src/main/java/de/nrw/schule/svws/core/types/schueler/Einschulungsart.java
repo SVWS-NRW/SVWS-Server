@@ -62,7 +62,6 @@ public enum Einschulungsart {
 	 */
 	private Einschulungsart(@NotNull EinschulungsartKatalogEintrag@NotNull[] historie) {
 		this.historie = historie;
-		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist 
 		this.daten = historie[historie.length - 1];
 	}
 

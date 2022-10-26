@@ -111,7 +111,7 @@ export class FachKatalogEintrag extends JavaObject {
 			this.bezeichnung = bezeichnung;
 			this.kuerzel = kuerzel;
 			this.aufgabenfeld = aufgabenfeld;
-			this.fachgruppe = (fachgruppe === null) ? null : fachgruppe.kuerzel;
+			this.fachgruppe = (fachgruppe === null) ? null : fachgruppe.daten.kuerzel;
 			this.abJahrgang = (abJahrgang === null) ? null : abJahrgang.daten.kuerzel;
 			this.istFremdsprache = istFremdsprache;
 			this.istHKFS = istHKFS;

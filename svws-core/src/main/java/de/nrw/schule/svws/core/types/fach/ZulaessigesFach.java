@@ -26,7 +26,7 @@ public enum ZulaessigesFach {
 	/** Fach Arbeits- und Betriebswirtschaftslehre */
 	AB(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(1000000L, "AB", "Arbeits- und Betriebswirtschaftslehre",
-		"AB", null, Fachgruppe.FG2_AL, null,
+		"AB", null, Fachgruppe.FG_AL, null,
 		false, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.BK, (Schulgliederung) null),
@@ -50,7 +50,7 @@ public enum ZulaessigesFach {
 	/** Fach Arbeitslehre - Schwerpunkt Hauswirtschaft */
 	AH(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(3000000L, "AH", "Arbeitslehre - Schwerpunkt Hauswirtschaft",
-		"AH", null, Fachgruppe.FG2_AL, null,
+		"AH", null, Fachgruppe.FG_AL, null,
 		false, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -67,7 +67,7 @@ public enum ZulaessigesFach {
 	/** Fach Arbeitslehre */
 	AL(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(4000000L, "AL", "Arbeitslehre",
-		"AL", null, Fachgruppe.FG2_AL, null,
+		"AL", null, Fachgruppe.FG_AL, null,
 		false, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -130,7 +130,7 @@ public enum ZulaessigesFach {
 	/** Fach Arbeitslehre - Schwerpunkt Technik */
 	AT(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(7000000L, "AT", "Arbeitslehre - Schwerpunkt Technik",
-		"AT", null, Fachgruppe.FG2_AL, null,
+		"AT", null, Fachgruppe.FG_AL, null,
 		false, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -159,7 +159,7 @@ public enum ZulaessigesFach {
 	/** Fach Arbeitslehre - Schwerpunkt Wirtschaft */
 	AW(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(9000000L, "AW", "Arbeitslehre - Schwerpunkt Wirtschaft",
-		"AW", null, Fachgruppe.FG2_AL, null,
+		"AW", null, Fachgruppe.FG_AL, null,
 		false, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -176,7 +176,7 @@ public enum ZulaessigesFach {
 	/** Fach Arbeitslehre - Technik/Wirtschaft (nur Wahlpflichtunterricht) */
 	AX(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(10000000L, "AX", "Arbeitslehre - Technik/Wirtschaft (nur Wahlpflichtunterricht)",
-		"AX", null, Fachgruppe.FG2_AL, null,
+		"AX", null, Fachgruppe.FG_AL, null,
 		false, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -190,7 +190,7 @@ public enum ZulaessigesFach {
 	/** Fach Arbeitslehre - Hauswirtschaft/Wirtschaft (nur Wahlpflichtunterricht) */
 	AY(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(11000000L, "AY", "Arbeitslehre - Hauswirtschaft/Wirtschaft (nur Wahlpflichtunterricht)",
-		"AY", null, Fachgruppe.FG2_AL, null,
+		"AY", null, Fachgruppe.FG_AL, null,
 		false, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -261,7 +261,7 @@ public enum ZulaessigesFach {
 	/** Fach Biologie */
 	BI(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(16000000L, "BI", "Biologie",
-		"BI", 3, Fachgruppe.FG10_NW, null,
+		"BI", 3, Fachgruppe.FG_NW, null,
 		false, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.BK, (Schulgliederung) null),
@@ -404,7 +404,7 @@ public enum ZulaessigesFach {
 	/** Fach Chinesisch */
 	C(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(26000000L, "C", "Chinesisch",
-		"C", 1, Fachgruppe.FG3_FS, null,
+		"C", 1, Fachgruppe.FG_FS, null,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.BK, (Schulgliederung) null),
@@ -417,7 +417,7 @@ public enum ZulaessigesFach {
 	/** Fach Chinesisch, regulärer Beginn in der Einführungsphase */
 	C0(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(27000000L, "C0", "Chinesisch, regulärer Beginn in der Einführungsphase",
-		"C", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_EF,
+		"C", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_EF,
 		true, false, false, false, false, true, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -432,7 +432,7 @@ public enum ZulaessigesFach {
 	/** Fach Chinesisch, regulärer Beginn in Jahrgang 11 */
 	C1(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(28000000L, "C1", "Chinesisch, regulärer Beginn in Jahrgang 11",
-		"C", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_11,
+		"C", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_11,
 		true, false, false, false, false, true, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -447,7 +447,7 @@ public enum ZulaessigesFach {
 	/** Fach Chinesisch, regulärer Beginn in Jahrgang 5 */
 	C5(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(29000000L, "C5", "Chinesisch, regulärer Beginn in Jahrgang 5",
-		"C", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_05,
+		"C", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_05,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -465,7 +465,7 @@ public enum ZulaessigesFach {
 	/** Fach Chinesisch, regulärer Beginn in Jahrgang 6 */
 	C6(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(30000000L, "C6", "Chinesisch, regulärer Beginn in Jahrgang 6",
-		"C", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_06,
+		"C", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_06,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -483,7 +483,7 @@ public enum ZulaessigesFach {
 	/** Fach Chinesisch, regulärer Beginn in Jahrgang 7 */
 	C7(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(31000000L, "C7", "Chinesisch, regulärer Beginn in Jahrgang 7",
-		"C", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_07,
+		"C", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_07,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -500,7 +500,7 @@ public enum ZulaessigesFach {
 	/** Fach Chinesisch, regulärer Beginn in Jahrgang 8 */
 	C8(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(32000000L, "C8", "Chinesisch, regulärer Beginn in Jahrgang 8",
-		"C", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_08,
+		"C", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_08,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -518,7 +518,7 @@ public enum ZulaessigesFach {
 	/** Fach Chinesisch, regulärer Beginn in Jahrgang 9 */
 	C9(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(33000000L, "C9", "Chinesisch, regulärer Beginn in Jahrgang 9",
-		"C", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_09,
+		"C", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_09,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -534,7 +534,7 @@ public enum ZulaessigesFach {
 	/** Fach Chemie */
 	CH(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(34000000L, "CH", "Chemie",
-		"CH", 3, Fachgruppe.FG10_NW, null,
+		"CH", 3, Fachgruppe.FG_NW, null,
 		false, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.BK, (Schulgliederung) null),
@@ -598,7 +598,7 @@ public enum ZulaessigesFach {
 	/** Fach Deutsch */
 	D(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(37000000L, "D", "Deutsch",
-		"D", 1, Fachgruppe.FG1_D, null,
+		"D", 1, Fachgruppe.FG_D, null,
 		false, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.BK, (Schulgliederung) null),
@@ -696,7 +696,7 @@ public enum ZulaessigesFach {
 	/** Fach Englisch */
 	E(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(43000000L, "E", "Englisch",
-		"E", 1, Fachgruppe.FG3_FS, null,
+		"E", 1, Fachgruppe.FG_FS, null,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.BK, (Schulgliederung) null),
@@ -759,7 +759,7 @@ public enum ZulaessigesFach {
 	/** Fach Erdkunde/ Geographie */
 	EK(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(46000000L, "EK", "Erdkunde/ Geographie",
-		"EK", 2, Fachgruppe.FG6_GS, null,
+		"EK", 2, Fachgruppe.FG_GS, null,
 		false, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.BK, (Schulgliederung) null),
@@ -784,7 +784,7 @@ public enum ZulaessigesFach {
 	/** Fach Ernährungslehre */
 	EL(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(47000000L, "EL", "Ernährungslehre",
-		"EL", null, Fachgruppe.FG11_WN, null,
+		"EL", null, Fachgruppe.FG_WN, null,
 		false, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.BK, (Schulgliederung) null),
@@ -851,7 +851,7 @@ public enum ZulaessigesFach {
 	/** Fach Evangelische Religionslehre */
 	ER(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(50000000L, "ER", "Evangelische Religionslehre",
-		"ER", null, Fachgruppe.FG8_RE, null,
+		"ER", null, Fachgruppe.FG_RE, null,
 		false, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.BK, (Schulgliederung) null),
@@ -877,7 +877,7 @@ public enum ZulaessigesFach {
 	/** Fach Französisch */
 	F(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(51000000L, "F", "Französisch",
-		"F", 1, Fachgruppe.FG3_FS, null,
+		"F", 1, Fachgruppe.FG_FS, null,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.BK, (Schulgliederung) null),
@@ -897,7 +897,7 @@ public enum ZulaessigesFach {
 	/** Fach Französisch, regulärer Beginn in der Einführungsphase */
 	F0(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(52000000L, "F0", "Französisch, regulärer Beginn in der Einführungsphase",
-		"F", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_EF,
+		"F", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_EF,
 		true, false, false, false, false, true, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -912,7 +912,7 @@ public enum ZulaessigesFach {
 	/** Fach Französisch, regulärer Beginn in Jahrgang 11 */
 	F1(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(53000000L, "F1", "Französisch, regulärer Beginn in Jahrgang 11",
-		"F", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_11,
+		"F", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_11,
 		true, false, false, false, false, true, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -927,7 +927,7 @@ public enum ZulaessigesFach {
 	/** Fach Französisch, regulärer Beginn in Jahrgang 5 */
 	F5(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(54000000L, "F5", "Französisch, regulärer Beginn in Jahrgang 5",
-		"F", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_05,
+		"F", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_05,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -945,7 +945,7 @@ public enum ZulaessigesFach {
 	/** Fach Französisch, regulärer Beginn in Jahrgang 6 */
 	F6(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(55000000L, "F6", "Französisch, regulärer Beginn in Jahrgang 6",
-		"F", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_06,
+		"F", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_06,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -963,7 +963,7 @@ public enum ZulaessigesFach {
 	/** Fach Französisch, regulärer Beginn in Jahrgang 7 */
 	F7(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(56000000L, "F7", "Französisch, regulärer Beginn in Jahrgang 7",
-		"F", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_07,
+		"F", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_07,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -980,7 +980,7 @@ public enum ZulaessigesFach {
 	/** Fach Französisch, regulärer Beginn in Jahrgang 8 */
 	F8(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(57000000L, "F8", "Französisch, regulärer Beginn in Jahrgang 8",
-		"F", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_08,
+		"F", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_08,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -998,7 +998,7 @@ public enum ZulaessigesFach {
 	/** Fach Französisch, regulärer Beginn in Jahrgang 9 */
 	F9(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(58000000L, "F9", "Französisch, regulärer Beginn in Jahrgang 9",
-		"F", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_09,
+		"F", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_09,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -1085,7 +1085,7 @@ public enum ZulaessigesFach {
 	/** Fach Griechisch */
 	G(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(64000000L, "G", "Griechisch",
-		"G", null, Fachgruppe.FG3_FS, null,
+		"G", null, Fachgruppe.FG_FS, null,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.FW, (Schulgliederung) null),
@@ -1100,7 +1100,7 @@ public enum ZulaessigesFach {
 	/** Fach Griechisch, regulärer Beginn in der Einführungsphase */
 	G0(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(65000000L, "G0", "Griechisch, regulärer Beginn in der Einführungsphase",
-		"G", null, Fachgruppe.FG3_FS, Jahrgaenge.JG_EF,
+		"G", null, Fachgruppe.FG_FS, Jahrgaenge.JG_EF,
 		true, false, false, false, false, true, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -1115,7 +1115,7 @@ public enum ZulaessigesFach {
 	/** Fach Griechisch, regulärer Beginn in Jahrgang 11 */
 	G1(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(66000000L, "G1", "Griechisch, regulärer Beginn in Jahrgang 11",
-		"G", null, Fachgruppe.FG3_FS, Jahrgaenge.JG_11,
+		"G", null, Fachgruppe.FG_FS, Jahrgaenge.JG_11,
 		true, false, false, false, false, true, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -1130,7 +1130,7 @@ public enum ZulaessigesFach {
 	/** Fach Griechisch, regulärer Beginn in Jahrgang 5 */
 	G5(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(67000000L, "G5", "Griechisch, regulärer Beginn in Jahrgang 5",
-		"G", null, Fachgruppe.FG3_FS, Jahrgaenge.JG_05,
+		"G", null, Fachgruppe.FG_FS, Jahrgaenge.JG_05,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -1146,7 +1146,7 @@ public enum ZulaessigesFach {
 	/** Fach Griechisch, regulärer Beginn in Jahrgang 6 */
 	G6(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(68000000L, "G6", "Griechisch, regulärer Beginn in Jahrgang 6",
-		"G", null, Fachgruppe.FG3_FS, Jahrgaenge.JG_06,
+		"G", null, Fachgruppe.FG_FS, Jahrgaenge.JG_06,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -1162,7 +1162,7 @@ public enum ZulaessigesFach {
 	/** Fach Griechisch, regulärer Beginn in Jahrgang 7 */
 	G7(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(69000000L, "G7", "Griechisch, regulärer Beginn in Jahrgang 7",
-		"G", null, Fachgruppe.FG3_FS, Jahrgaenge.JG_07,
+		"G", null, Fachgruppe.FG_FS, Jahrgaenge.JG_07,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -1177,7 +1177,7 @@ public enum ZulaessigesFach {
 	/** Fach Griechisch, regulärer Beginn in Jahrgang 8 */
 	G8(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(70000000L, "G8", "Griechisch, regulärer Beginn in Jahrgang 8",
-		"G", null, Fachgruppe.FG3_FS, Jahrgaenge.JG_08,
+		"G", null, Fachgruppe.FG_FS, Jahrgaenge.JG_08,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -1193,7 +1193,7 @@ public enum ZulaessigesFach {
 	/** Fach Griechisch, regulärer Beginn in Jahrgang 9 */
 	G9(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(71000000L, "G9", "Griechisch, regulärer Beginn in Jahrgang 9",
-		"G", null, Fachgruppe.FG3_FS, Jahrgaenge.JG_09,
+		"G", null, Fachgruppe.FG_FS, Jahrgaenge.JG_09,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -1233,7 +1233,7 @@ public enum ZulaessigesFach {
 	/** Fach Geschichte */
 	GE(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(74000000L, "GE", "Geschichte",
-		"GE", 2, Fachgruppe.FG6_GS, null,
+		"GE", 2, Fachgruppe.FG_GS, null,
 		false, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.BK, (Schulgliederung) null),
@@ -1279,7 +1279,7 @@ public enum ZulaessigesFach {
 	/** Fach Gesellschaftslehre */
 	GL(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(76000000L, "GL", "Gesellschaftslehre",
-		"GL", null, Fachgruppe.FG6_GS, null,
+		"GL", null, Fachgruppe.FG_GS, null,
 		false, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.BK, (Schulgliederung) null),
@@ -1329,7 +1329,7 @@ public enum ZulaessigesFach {
 	/** Fach Geschichte / Politik */
 	GP(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(79000000L, "GP", "Geschichte / Politik",
-		"GP", null, Fachgruppe.FG6_GS, null,
+		"GP", null, Fachgruppe.FG_GS, null,
 		false, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.KS, (Schulgliederung) null),
@@ -1381,7 +1381,7 @@ public enum ZulaessigesFach {
 	/** Fach Geschichte und Sozialwissenschaft */
 	GW(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(83000000L, "GW", "Geschichte und Sozialwissenschaft",
-		"GW", null, Fachgruppe.FG6_GS, null,
+		"GW", null, Fachgruppe.FG_GS, null,
 		false, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.WB, (Schulgliederung) null)
@@ -1392,7 +1392,7 @@ public enum ZulaessigesFach {
 	/** Fach Hebräisch */
 	H(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(84000000L, "H", "Hebräisch",
-		"H", null, Fachgruppe.FG3_FS, null,
+		"H", null, Fachgruppe.FG_FS, null,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.KS, (Schulgliederung) null),
@@ -1405,7 +1405,7 @@ public enum ZulaessigesFach {
 	/** Fach Hebräisch, regulärer Beginn in der Einführungsphase */
 	H0(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(85000000L, "H0", "Hebräisch, regulärer Beginn in der Einführungsphase",
-		"H", null, Fachgruppe.FG3_FS, Jahrgaenge.JG_EF,
+		"H", null, Fachgruppe.FG_FS, Jahrgaenge.JG_EF,
 		true, false, false, false, false, true, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -1420,7 +1420,7 @@ public enum ZulaessigesFach {
 	/** Fach Hebräisch, regulärer Beginn in Jahrgang 11 */
 	H1(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(86000000L, "H1", "Hebräisch, regulärer Beginn in Jahrgang 11",
-		"H", null, Fachgruppe.FG3_FS, Jahrgaenge.JG_11,
+		"H", null, Fachgruppe.FG_FS, Jahrgaenge.JG_11,
 		true, false, false, false, false, true, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -1435,7 +1435,7 @@ public enum ZulaessigesFach {
 	/** Fach Hebräisch, regulärer Beginn in Jahrgang 5 */
 	H5(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(87000000L, "H5", "Hebräisch, regulärer Beginn in Jahrgang 5",
-		"H", null, Fachgruppe.FG3_FS, Jahrgaenge.JG_05,
+		"H", null, Fachgruppe.FG_FS, Jahrgaenge.JG_05,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -1451,7 +1451,7 @@ public enum ZulaessigesFach {
 	/** Fach Hebräisch, regulärer Beginn in Jahrgang 6 */
 	H6(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(88000000L, "H6", "Hebräisch, regulärer Beginn in Jahrgang 6",
-		"H", null, Fachgruppe.FG3_FS, Jahrgaenge.JG_06,
+		"H", null, Fachgruppe.FG_FS, Jahrgaenge.JG_06,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -1467,7 +1467,7 @@ public enum ZulaessigesFach {
 	/** Fach Hebräisch, regulärer Beginn in Jahrgang 7 */
 	H7(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(89000000L, "H7", "Hebräisch, regulärer Beginn in Jahrgang 7",
-		"H", null, Fachgruppe.FG3_FS, Jahrgaenge.JG_07,
+		"H", null, Fachgruppe.FG_FS, Jahrgaenge.JG_07,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -1482,7 +1482,7 @@ public enum ZulaessigesFach {
 	/** Fach Hebräisch, regulärer Beginn in Jahrgang 8 */
 	H8(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(90000000L, "H8", "Hebräisch, regulärer Beginn in Jahrgang 8",
-		"H", null, Fachgruppe.FG3_FS, Jahrgaenge.JG_08,
+		"H", null, Fachgruppe.FG_FS, Jahrgaenge.JG_08,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -1498,7 +1498,7 @@ public enum ZulaessigesFach {
 	/** Fach Hebräisch, regulärer Beginn in Jahrgang 9 */
 	H9(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(91000000L, "H9", "Hebräisch, regulärer Beginn in Jahrgang 9",
-		"H", null, Fachgruppe.FG3_FS, Jahrgaenge.JG_09,
+		"H", null, Fachgruppe.FG_FS, Jahrgaenge.JG_09,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -1551,7 +1551,7 @@ public enum ZulaessigesFach {
 	/** Fach Jüdische Religionslehre */
 	HR(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(94000000L, "HR", "Jüdische Religionslehre",
-		"HR", null, Fachgruppe.FG8_RE, null,
+		"HR", null, Fachgruppe.FG_RE, null,
 		false, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.BK, (Schulgliederung) null),
@@ -1636,7 +1636,7 @@ public enum ZulaessigesFach {
 	/** Fach Italienisch */
 	I(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(98000000L, "I", "Italienisch",
-		"I", 1, Fachgruppe.FG3_FS, null,
+		"I", 1, Fachgruppe.FG_FS, null,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.BK, (Schulgliederung) null),
@@ -1654,7 +1654,7 @@ public enum ZulaessigesFach {
 	/** Fach Italienisch, regulärer Beginn in der Einführungsphase */
 	I0(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(99000000L, "I0", "Italienisch, regulärer Beginn in der Einführungsphase",
-		"I", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_EF,
+		"I", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_EF,
 		true, false, false, false, false, true, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -1669,7 +1669,7 @@ public enum ZulaessigesFach {
 	/** Fach Italienisch, regulärer Beginn in Jahrgang 11 */
 	I1(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(100000000L, "I1", "Italienisch, regulärer Beginn in Jahrgang 11",
-		"I", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_11,
+		"I", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_11,
 		true, false, false, false, false, true, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -1684,7 +1684,7 @@ public enum ZulaessigesFach {
 	/** Fach Italienisch, regulärer Beginn in Jahrgang 5 */
 	I5(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(101000000L, "I5", "Italienisch, regulärer Beginn in Jahrgang 5",
-		"I", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_05,
+		"I", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_05,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -1702,7 +1702,7 @@ public enum ZulaessigesFach {
 	/** Fach Italienisch, regulärer Beginn in Jahrgang 6 */
 	I6(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(102000000L, "I6", "Italienisch, regulärer Beginn in Jahrgang 6",
-		"I", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_06,
+		"I", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_06,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -1720,7 +1720,7 @@ public enum ZulaessigesFach {
 	/** Fach Italienisch, regulärer Beginn in Jahrgang 7 */
 	I7(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(103000000L, "I7", "Italienisch, regulärer Beginn in Jahrgang 7",
-		"I", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_07,
+		"I", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_07,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -1737,7 +1737,7 @@ public enum ZulaessigesFach {
 	/** Fach Italienisch, regulärer Beginn in Jahrgang 8 */
 	I8(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(104000000L, "I8", "Italienisch, regulärer Beginn in Jahrgang 8",
-		"I", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_08,
+		"I", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_08,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -1755,7 +1755,7 @@ public enum ZulaessigesFach {
 	/** Fach Italienisch, regulärer Beginn in Jahrgang 9 */
 	I9(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(105000000L, "I9", "Italienisch, regulärer Beginn in Jahrgang 9",
-		"I", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_09,
+		"I", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_09,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -1793,7 +1793,7 @@ public enum ZulaessigesFach {
 	/** Fach Informatik */
 	IF(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(107000000L, "IF", "Informatik",
-		"IF", 3, Fachgruppe.FG11_WN, null,
+		"IF", 3, Fachgruppe.FG_WN, null,
 		false, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.BK, (Schulgliederung) null),
@@ -1859,7 +1859,7 @@ public enum ZulaessigesFach {
 	/** Fach Islamische Religionslehre */
 	IL(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(110000000L, "IL", "Islamische Religionslehre",
-		"IL", null, Fachgruppe.FG8_RE, null,
+		"IL", null, Fachgruppe.FG_RE, null,
 		false, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.BK, (Schulgliederung) null),
@@ -1961,7 +1961,7 @@ public enum ZulaessigesFach {
 	/** Fach Japanisch */
 	K(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(115000000L, "K", "Japanisch",
-		"K", 1, Fachgruppe.FG3_FS, null,
+		"K", 1, Fachgruppe.FG_FS, null,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.BK, (Schulgliederung) null),
@@ -1974,7 +1974,7 @@ public enum ZulaessigesFach {
 	/** Fach Japanisch, regulärer Beginn in der Einführungsphase */
 	K0(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(116000000L, "K0", "Japanisch, regulärer Beginn in der Einführungsphase",
-		"K", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_EF,
+		"K", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_EF,
 		true, false, false, false, false, true, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -1989,7 +1989,7 @@ public enum ZulaessigesFach {
 	/** Fach Japanisch, regulärer Beginn in Jahrgang 11 */
 	K1(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(117000000L, "K1", "Japanisch, regulärer Beginn in Jahrgang 11",
-		"K", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_11,
+		"K", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_11,
 		true, false, false, false, false, true, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -2004,7 +2004,7 @@ public enum ZulaessigesFach {
 	/** Fach Japanisch, regulärer Beginn in Jahrgang 5 */
 	K5(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(118000000L, "K5", "Japanisch, regulärer Beginn in Jahrgang 5",
-		"K", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_05,
+		"K", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_05,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -2022,7 +2022,7 @@ public enum ZulaessigesFach {
 	/** Fach Japanisch, regulärer Beginn in Jahrgang 6 */
 	K6(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(119000000L, "K6", "Japanisch, regulärer Beginn in Jahrgang 6",
-		"K", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_06,
+		"K", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_06,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -2040,7 +2040,7 @@ public enum ZulaessigesFach {
 	/** Fach Japanisch, regulärer Beginn in Jahrgang 7 */
 	K7(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(120000000L, "K7", "Japanisch, regulärer Beginn in Jahrgang 7",
-		"K", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_07,
+		"K", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_07,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -2057,7 +2057,7 @@ public enum ZulaessigesFach {
 	/** Fach Japanisch, regulärer Beginn in Jahrgang 8 */
 	K8(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(121000000L, "K8", "Japanisch, regulärer Beginn in Jahrgang 8",
-		"K", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_08,
+		"K", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_08,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -2075,7 +2075,7 @@ public enum ZulaessigesFach {
 	/** Fach Japanisch, regulärer Beginn in Jahrgang 9 */
 	K9(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(122000000L, "K9", "Japanisch, regulärer Beginn in Jahrgang 9",
-		"K", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_09,
+		"K", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_09,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -2145,7 +2145,7 @@ public enum ZulaessigesFach {
 	/** Fach Katholische Religionslehre */
 	KR(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(126000000L, "KR", "Katholische Religionslehre",
-		"KR", null, Fachgruppe.FG8_RE, null,
+		"KR", null, Fachgruppe.FG_RE, null,
 		false, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.BK, (Schulgliederung) null),
@@ -2183,7 +2183,7 @@ public enum ZulaessigesFach {
 	/** Fach Kunst */
 	KU(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(128000000L, "KU", "Kunst",
-		"KU", 1, Fachgruppe.FG4_MS, null,
+		"KU", 1, Fachgruppe.FG_MS, null,
 		false, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.BK, (Schulgliederung) null),
@@ -2209,7 +2209,7 @@ public enum ZulaessigesFach {
 	/** Fach Lateinisch */
 	L(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(129000000L, "L", "Lateinisch",
-		"L", 1, Fachgruppe.FG3_FS, null,
+		"L", 1, Fachgruppe.FG_FS, null,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.BK, (Schulgliederung) null),
@@ -2227,7 +2227,7 @@ public enum ZulaessigesFach {
 	/** Fach Lateinisch, regulärer Beginn in der Einführungsphase */
 	L0(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(130000000L, "L0", "Lateinisch, regulärer Beginn in der Einführungsphase",
-		"L", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_EF,
+		"L", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_EF,
 		true, false, false, false, false, true, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -2242,7 +2242,7 @@ public enum ZulaessigesFach {
 	/** Fach Lateinisch, regulärer Beginn in Jahrgang 11 */
 	L1(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(131000000L, "L1", "Lateinisch, regulärer Beginn in Jahrgang 11",
-		"L", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_11,
+		"L", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_11,
 		true, false, false, false, false, true, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -2257,7 +2257,7 @@ public enum ZulaessigesFach {
 	/** Fach Lateinisch, regulärer Beginn in Jahrgang 5 */
 	L5(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(132000000L, "L5", "Lateinisch, regulärer Beginn in Jahrgang 5",
-		"L", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_05,
+		"L", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_05,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -2275,7 +2275,7 @@ public enum ZulaessigesFach {
 	/** Fach Lateinisch, regulärer Beginn in Jahrgang 6 */
 	L6(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(133000000L, "L6", "Lateinisch, regulärer Beginn in Jahrgang 6",
-		"L", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_06,
+		"L", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_06,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -2293,7 +2293,7 @@ public enum ZulaessigesFach {
 	/** Fach Lateinisch, regulärer Beginn in Jahrgang 7 */
 	L7(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(134000000L, "L7", "Lateinisch, regulärer Beginn in Jahrgang 7",
-		"L", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_07,
+		"L", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_07,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -2310,7 +2310,7 @@ public enum ZulaessigesFach {
 	/** Fach Lateinisch, regulärer Beginn in Jahrgang 8 */
 	L8(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(135000000L, "L8", "Lateinisch, regulärer Beginn in Jahrgang 8",
-		"L", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_08,
+		"L", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_08,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -2328,7 +2328,7 @@ public enum ZulaessigesFach {
 	/** Fach Lateinisch, regulärer Beginn in Jahrgang 9 */
 	L9(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(136000000L, "L9", "Lateinisch, regulärer Beginn in Jahrgang 9",
-		"L", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_09,
+		"L", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_09,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -2426,7 +2426,7 @@ public enum ZulaessigesFach {
 	/** Fach Mathematik */
 	M(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(141000000L, "M", "Mathematik",
-		"M", 3, Fachgruppe.FG9_M, null,
+		"M", 3, Fachgruppe.FG_M, null,
 		false, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.BK, (Schulgliederung) null),
@@ -2543,7 +2543,7 @@ public enum ZulaessigesFach {
 	/** Fach Musik */
 	MU(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(148000000L, "MU", "Musik",
-		"MU", 1, Fachgruppe.FG4_MS, null,
+		"MU", 1, Fachgruppe.FG_MS, null,
 		false, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.BK, (Schulgliederung) null),
@@ -2606,7 +2606,7 @@ public enum ZulaessigesFach {
 	/** Fach Niederländisch */
 	N(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(152000000L, "N", "Niederländisch",
-		"N", 1, Fachgruppe.FG3_FS, null,
+		"N", 1, Fachgruppe.FG_FS, null,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.BK, (Schulgliederung) null),
@@ -2622,7 +2622,7 @@ public enum ZulaessigesFach {
 	/** Fach Niederländisch, regulärer Beginn in der Einführungsphase */
 	N0(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(153000000L, "N0", "Niederländisch, regulärer Beginn in der Einführungsphase",
-		"N", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_EF,
+		"N", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_EF,
 		true, false, false, false, false, true, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -2637,7 +2637,7 @@ public enum ZulaessigesFach {
 	/** Fach Niederländisch, regulärer Beginn in Jahrgang 11 */
 	N1(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(154000000L, "N1", "Niederländisch, regulärer Beginn in Jahrgang 11",
-		"N", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_11,
+		"N", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_11,
 		true, false, false, false, false, true, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -2652,7 +2652,7 @@ public enum ZulaessigesFach {
 	/** Fach Niederländisch, regulärer Beginn in Jahrgang 5 */
 	N5(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(155000000L, "N5", "Niederländisch, regulärer Beginn in Jahrgang 5",
-		"N", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_05,
+		"N", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_05,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -2670,7 +2670,7 @@ public enum ZulaessigesFach {
 	/** Fach Niederländisch, regulärer Beginn in Jahrgang 6 */
 	N6(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(156000000L, "N6", "Niederländisch, regulärer Beginn in Jahrgang 6",
-		"N", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_06,
+		"N", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_06,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -2688,7 +2688,7 @@ public enum ZulaessigesFach {
 	/** Fach Niederländisch, regulärer Beginn in Jahrgang 7 */
 	N7(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(157000000L, "N7", "Niederländisch, regulärer Beginn in Jahrgang 7",
-		"N", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_07,
+		"N", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_07,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -2705,7 +2705,7 @@ public enum ZulaessigesFach {
 	/** Fach Niederländisch, regulärer Beginn in Jahrgang 8 */
 	N8(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(158000000L, "N8", "Niederländisch, regulärer Beginn in Jahrgang 8",
-		"N", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_08,
+		"N", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_08,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -2723,7 +2723,7 @@ public enum ZulaessigesFach {
 	/** Fach Niederländisch, regulärer Beginn in Jahrgang 9 */
 	N9(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(159000000L, "N9", "Niederländisch, regulärer Beginn in Jahrgang 9",
-		"N", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_09,
+		"N", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_09,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -2804,7 +2804,7 @@ public enum ZulaessigesFach {
 	/** Fach Naturwissenschaften */
 	NW(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(163000000L, "NW", "Naturwissenschaften",
-		"NW", null, Fachgruppe.FG10_NW, null,
+		"NW", null, Fachgruppe.FG_NW, null,
 		false, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.BK, (Schulgliederung) null),
@@ -2824,7 +2824,7 @@ public enum ZulaessigesFach {
 	/** Fach Portugiesisch */
 	O(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(164000000L, "O", "Portugiesisch",
-		"O", 1, Fachgruppe.FG3_FS, null,
+		"O", 1, Fachgruppe.FG_FS, null,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.H, Schulgliederung.R),
@@ -2836,7 +2836,7 @@ public enum ZulaessigesFach {
 	/** Fach Portugiesisch, regulärer Beginn in der Einführungsphase */
 	O0(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(165000000L, "O0", "Portugiesisch, regulärer Beginn in der Einführungsphase",
-		"O", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_EF,
+		"O", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_EF,
 		true, false, false, false, false, true, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -2851,7 +2851,7 @@ public enum ZulaessigesFach {
 	/** Fach Portugiesisch, regulärer Beginn in Jahrgang 11 */
 	O1(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(166000000L, "O1", "Portugiesisch, regulärer Beginn in Jahrgang 11",
-		"O", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_11,
+		"O", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_11,
 		true, false, false, false, false, true, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -2866,7 +2866,7 @@ public enum ZulaessigesFach {
 	/** Fach Portugiesisch, regulärer Beginn in Jahrgang 5 */
 	O5(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(167000000L, "O5", "Portugiesisch, regulärer Beginn in Jahrgang 5",
-		"O", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_05,
+		"O", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_05,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -2884,7 +2884,7 @@ public enum ZulaessigesFach {
 	/** Fach Portugiesisch, regulärer Beginn in Jahrgang 6 */
 	O6(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(168000000L, "O6", "Portugiesisch, regulärer Beginn in Jahrgang 6",
-		"O", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_06,
+		"O", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_06,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -2902,7 +2902,7 @@ public enum ZulaessigesFach {
 	/** Fach Portugiesisch, regulärer Beginn in Jahrgang 7 */
 	O7(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(169000000L, "O7", "Portugiesisch, regulärer Beginn in Jahrgang 7",
-		"O", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_07,
+		"O", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_07,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -2919,7 +2919,7 @@ public enum ZulaessigesFach {
 	/** Fach Portugiesisch, regulärer Beginn in Jahrgang 8 */
 	O8(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(170000000L, "O8", "Portugiesisch, regulärer Beginn in Jahrgang 8",
-		"O", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_08,
+		"O", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_08,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -2937,7 +2937,7 @@ public enum ZulaessigesFach {
 	/** Fach Portugiesisch, regulärer Beginn in Jahrgang 9 */
 	O9(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(171000000L, "O9", "Portugiesisch, regulärer Beginn in Jahrgang 9",
-		"O", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_09,
+		"O", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_09,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -3029,7 +3029,7 @@ public enum ZulaessigesFach {
 	/** Fach Orthodoxe Religionslehre */
 	OR(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(176000000L, "OR", "Orthodoxe Religionslehre",
-		"OR", null, Fachgruppe.FG8_RE, null,
+		"OR", null, Fachgruppe.FG_RE, null,
 		false, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.BK, (Schulgliederung) null),
@@ -3055,7 +3055,7 @@ public enum ZulaessigesFach {
 	/** Fach Pädagogik/ Erziehungswissenschaft */
 	PA(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(177000000L, "PA", "Pädagogik/ Erziehungswissenschaft",
-		"PA", 2, Fachgruppe.FG6_GS, null,
+		"PA", 2, Fachgruppe.FG_GS, null,
 		false, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.BK, (Schulgliederung) null),
@@ -3079,7 +3079,7 @@ public enum ZulaessigesFach {
 	/** Fach Physik */
 	PH(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(178000000L, "PH", "Physik",
-		"PH", 3, Fachgruppe.FG10_NW, null,
+		"PH", 3, Fachgruppe.FG_NW, null,
 		false, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.BK, (Schulgliederung) null),
@@ -3104,7 +3104,7 @@ public enum ZulaessigesFach {
 	/** Fach Politik */
 	PK(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(179000000L, "PK", "Politik",
-		"PK", null, Fachgruppe.FG6_GS, null,
+		"PK", null, Fachgruppe.FG_GS, null,
 		false, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.BK, (Schulgliederung) null),
@@ -3129,7 +3129,7 @@ public enum ZulaessigesFach {
 	/** Fach Philosophie */
 	PL(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(180000000L, "PL", "Philosophie",
-		"PL", 2, Fachgruppe.FG7_PL, null,
+		"PL", 2, Fachgruppe.FG_PL, null,
 		false, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.BK, (Schulgliederung) null),
@@ -3198,7 +3198,7 @@ public enum ZulaessigesFach {
 	/** Fach Psychologie */
 	PS(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(183000000L, "PS", "Psychologie",
-		"PS", 2, Fachgruppe.FG6_GS, null,
+		"PS", 2, Fachgruppe.FG_GS, null,
 		false, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.BK, (Schulgliederung) null),
@@ -3246,7 +3246,7 @@ public enum ZulaessigesFach {
 	/** Fach Projektkurs (mit einem oder zwei Leitfächern) */
 	PX(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(186000000L, "PX", "Projektkurs (mit einem oder zwei Leitfächern)",
-		"PX", null, Fachgruppe.FG14_PX, null,
+		"PX", null, Fachgruppe.FG_PX, null,
 		false, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -3322,7 +3322,7 @@ public enum ZulaessigesFach {
 	/** Fach Russisch */
 	R(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(190000000L, "R", "Russisch",
-		"R", 1, Fachgruppe.FG3_FS, null,
+		"R", 1, Fachgruppe.FG_FS, null,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.BK, (Schulgliederung) null),
@@ -3341,7 +3341,7 @@ public enum ZulaessigesFach {
 	/** Fach Russisch, regulärer Beginn in der Einführungsphase */
 	R0(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(191000000L, "R0", "Russisch, regulärer Beginn in der Einführungsphase",
-		"R", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_EF,
+		"R", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_EF,
 		true, false, false, false, false, true, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -3356,7 +3356,7 @@ public enum ZulaessigesFach {
 	/** Fach Russisch, regulärer Beginn in Jahrgang 11 */
 	R1(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(192000000L, "R1", "Russisch, regulärer Beginn in Jahrgang 11",
-		"R", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_11,
+		"R", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_11,
 		true, false, false, false, false, true, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -3371,7 +3371,7 @@ public enum ZulaessigesFach {
 	/** Fach Russisch, regulärer Beginn in Jahrgang 5 */
 	R5(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(193000000L, "R5", "Russisch, regulärer Beginn in Jahrgang 5",
-		"R", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_05,
+		"R", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_05,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -3389,7 +3389,7 @@ public enum ZulaessigesFach {
 	/** Fach Russisch, regulärer Beginn in Jahrgang 6 */
 	R6(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(194000000L, "R6", "Russisch, regulärer Beginn in Jahrgang 6",
-		"R", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_06,
+		"R", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_06,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -3407,7 +3407,7 @@ public enum ZulaessigesFach {
 	/** Fach Russisch, regulärer Beginn in Jahrgang 7 */
 	R7(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(195000000L, "R7", "Russisch, regulärer Beginn in Jahrgang 7",
-		"R", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_07,
+		"R", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_07,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -3424,7 +3424,7 @@ public enum ZulaessigesFach {
 	/** Fach Russisch, regulärer Beginn in Jahrgang 8 */
 	R8(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(196000000L, "R8", "Russisch, regulärer Beginn in Jahrgang 8",
-		"R", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_08,
+		"R", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_08,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -3442,7 +3442,7 @@ public enum ZulaessigesFach {
 	/** Fach Russisch, regulärer Beginn in Jahrgang 9 */
 	R9(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(197000000L, "R9", "Russisch, regulärer Beginn in Jahrgang 9",
-		"R", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_09,
+		"R", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_09,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -3493,7 +3493,7 @@ public enum ZulaessigesFach {
 	/** Fach Rechtskunde */
 	RK(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(200000000L, "RK", "Rechtskunde",
-		"RK", 2, Fachgruppe.FG6_GS, null,
+		"RK", 2, Fachgruppe.FG_GS, null,
 		false, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -3561,7 +3561,7 @@ public enum ZulaessigesFach {
 	/** Fach Spanisch */
 	S(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(204000000L, "S", "Spanisch",
-		"S", 1, Fachgruppe.FG3_FS, null,
+		"S", 1, Fachgruppe.FG_FS, null,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.BK, (Schulgliederung) null),
@@ -3577,7 +3577,7 @@ public enum ZulaessigesFach {
 	/** Fach Spanisch, regulärer Beginn in der Einführungsphase */
 	S0(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(205000000L, "S0", "Spanisch, regulärer Beginn in der Einführungsphase",
-		"S", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_EF,
+		"S", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_EF,
 		true, false, false, false, false, true, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -3592,7 +3592,7 @@ public enum ZulaessigesFach {
 	/** Fach Spanisch, regulärer Beginn in Jahrgang 11 */
 	S1(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(206000000L, "S1", "Spanisch, regulärer Beginn in Jahrgang 11",
-		"S", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_11,
+		"S", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_11,
 		true, false, false, false, false, true, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -3607,7 +3607,7 @@ public enum ZulaessigesFach {
 	/** Fach Sport für Jungen */
 	S3(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(207000000L, "S3", "Sport für Jungen",
-		"S3", null, Fachgruppe.FG12_SP, null,
+		"S3", null, Fachgruppe.FG_SP, null,
 		false, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.G, (Schulgliederung) null),
@@ -3630,7 +3630,7 @@ public enum ZulaessigesFach {
 	/** Fach Sport für Mädchen */
 	S4(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(208000000L, "S4", "Sport für Mädchen",
-		"S4", null, Fachgruppe.FG12_SP, null,
+		"S4", null, Fachgruppe.FG_SP, null,
 		false, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.G, (Schulgliederung) null),
@@ -3653,7 +3653,7 @@ public enum ZulaessigesFach {
 	/** Fach Spanisch, regulärer Beginn in Jahrgang 5 */
 	S5(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(209000000L, "S5", "Spanisch, regulärer Beginn in Jahrgang 5",
-		"S", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_05,
+		"S", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_05,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -3671,7 +3671,7 @@ public enum ZulaessigesFach {
 	/** Fach Spanisch, regulärer Beginn in Jahrgang 6 */
 	S6(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(210000000L, "S6", "Spanisch, regulärer Beginn in Jahrgang 6",
-		"S", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_06,
+		"S", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_06,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -3689,7 +3689,7 @@ public enum ZulaessigesFach {
 	/** Fach Spanisch, regulärer Beginn in Jahrgang 7 */
 	S7(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(211000000L, "S7", "Spanisch, regulärer Beginn in Jahrgang 7",
-		"S", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_07,
+		"S", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_07,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -3706,7 +3706,7 @@ public enum ZulaessigesFach {
 	/** Fach Spanisch, regulärer Beginn in Jahrgang 8 */
 	S8(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(212000000L, "S8", "Spanisch, regulärer Beginn in Jahrgang 8",
-		"S", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_08,
+		"S", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_08,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -3724,7 +3724,7 @@ public enum ZulaessigesFach {
 	/** Fach Spanisch, regulärer Beginn in Jahrgang 9 */
 	S9(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(213000000L, "S9", "Spanisch, regulärer Beginn in Jahrgang 9",
-		"S", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_09,
+		"S", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_09,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -3812,7 +3812,7 @@ public enum ZulaessigesFach {
 	/** Fach Soziologie */
 	SL(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(218000000L, "SL", "Soziologie",
-		"SL", null, Fachgruppe.FG6_GS, null,
+		"SL", null, Fachgruppe.FG_GS, null,
 		false, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.BK, (Schulgliederung) null),
@@ -3848,7 +3848,7 @@ public enum ZulaessigesFach {
 	/** Fach Sport */
 	SP(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(220000000L, "SP", "Sport",
-		"SP", null, Fachgruppe.FG12_SP, null,
+		"SP", null, Fachgruppe.FG_SP, null,
 		false, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.BK, (Schulgliederung) null),
@@ -3934,7 +3934,7 @@ public enum ZulaessigesFach {
 	/** Fach Sozialwissenschaften */
 	SW(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(224000000L, "SW", "Sozialwissenschaften",
-		"SW", 2, Fachgruppe.FG6_GS, null,
+		"SW", 2, Fachgruppe.FG_GS, null,
 		false, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.BK, (Schulgliederung) null),
@@ -3976,7 +3976,7 @@ public enum ZulaessigesFach {
 	/** Fach Türkisch */
 	T(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(226000000L, "T", "Türkisch",
-		"T", 1, Fachgruppe.FG3_FS, null,
+		"T", 1, Fachgruppe.FG_FS, null,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.BK, (Schulgliederung) null),
@@ -3991,7 +3991,7 @@ public enum ZulaessigesFach {
 	/** Fach Türkisch, regulärer Beginn in der Einführungsphase */
 	T0(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(227000000L, "T0", "Türkisch, regulärer Beginn in der Einführungsphase",
-		"T", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_EF,
+		"T", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_EF,
 		true, false, false, false, false, true, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -4006,7 +4006,7 @@ public enum ZulaessigesFach {
 	/** Fach Türkisch, regulärer Beginn in Jahrgang 11 */
 	T1(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(228000000L, "T1", "Türkisch, regulärer Beginn in Jahrgang 11",
-		"T", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_11,
+		"T", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_11,
 		true, false, false, false, false, true, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -4021,7 +4021,7 @@ public enum ZulaessigesFach {
 	/** Fach Türkisch, regulärer Beginn in Jahrgang 5 */
 	T5(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(229000000L, "T5", "Türkisch, regulärer Beginn in Jahrgang 5",
-		"T", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_05,
+		"T", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_05,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -4039,7 +4039,7 @@ public enum ZulaessigesFach {
 	/** Fach Türkisch, regulärer Beginn in Jahrgang 6 */
 	T6(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(230000000L, "T6", "Türkisch, regulärer Beginn in Jahrgang 6",
-		"T", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_06,
+		"T", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_06,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -4057,7 +4057,7 @@ public enum ZulaessigesFach {
 	/** Fach Türkisch, regulärer Beginn in Jahrgang 7 */
 	T7(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(231000000L, "T7", "Türkisch, regulärer Beginn in Jahrgang 7",
-		"T", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_07,
+		"T", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_07,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -4074,7 +4074,7 @@ public enum ZulaessigesFach {
 	/** Fach Türkisch, regulärer Beginn in Jahrgang 8 */
 	T8(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(232000000L, "T8", "Türkisch, regulärer Beginn in Jahrgang 8",
-		"T", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_08,
+		"T", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_08,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -4092,7 +4092,7 @@ public enum ZulaessigesFach {
 	/** Fach Türkisch, regulärer Beginn in Jahrgang 9 */
 	T9(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(233000000L, "T9", "Türkisch, regulärer Beginn in Jahrgang 9",
-		"T", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_09,
+		"T", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_09,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -4110,7 +4110,7 @@ public enum ZulaessigesFach {
 	/** Fach Technik */
 	TC(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(234000000L, "TC", "Technik",
-		"TC", 3, Fachgruppe.FG11_WN, null,
+		"TC", 3, Fachgruppe.FG_WN, null,
 		false, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -4447,7 +4447,7 @@ public enum ZulaessigesFach {
 	/** Fach Volkswirtschaftslehre/Politik */
 	VP(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(253000000L, "VP", "Volkswirtschaftslehre/Politik",
-		"VP", null, Fachgruppe.FG6_GS, null,
+		"VP", null, Fachgruppe.FG_GS, null,
 		false, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.BK, (Schulgliederung) null),
@@ -4471,7 +4471,7 @@ public enum ZulaessigesFach {
 	/** Fach Volkswirtschaftslehre */
 	VW(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(255000000L, "VW", "Volkswirtschaftslehre",
-		"VW", null, Fachgruppe.FG6_GS, null,
+		"VW", null, Fachgruppe.FG_GS, null,
 		false, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.BK, (Schulgliederung) null),
@@ -4484,7 +4484,7 @@ public enum ZulaessigesFach {
 	/** Fach Vertiefungsfach */
 	VX(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(256000000L, "VX", "Vertiefungsfach",
-		"VX", null, Fachgruppe.FG13_VX, null,
+		"VX", null, Fachgruppe.FG_VX, null,
 		false, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -4498,7 +4498,7 @@ public enum ZulaessigesFach {
 	/** Fach Werken */
 	W(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(257000000L, "W", "Werken",
-		"W", null, Fachgruppe.FG4_MS, null,
+		"W", null, Fachgruppe.FG_MS, null,
 		false, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.KS, (Schulgliederung) null),
@@ -4556,7 +4556,7 @@ public enum ZulaessigesFach {
 	/** Fach Wirtschaftslehre */
 	WW(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(261000000L, "WW", "Wirtschaftslehre",
-		"WW", null, Fachgruppe.FG6_GS, null,
+		"WW", null, Fachgruppe.FG_GS, null,
 		false, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.BK, (Schulgliederung) null),
@@ -4580,7 +4580,7 @@ public enum ZulaessigesFach {
 	/** Fach Wirtschaft und Arbeitswelt - Schwerpunkt Hauswirtschaft */
 	WX(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(262000000L, "WX", "Wirtschaft und Arbeitswelt - Schwerpunkt Hauswirtschaft",
-		"WX", null, Fachgruppe.FG6_GS, null,
+		"WX", null, Fachgruppe.FG_GS, null,
 		false, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.H, (Schulgliederung) null),
@@ -4594,7 +4594,7 @@ public enum ZulaessigesFach {
 	/** Fach Wirtschaft und Arbeitswelt - Schwerpunkt Technik */
 	WY(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(263000000L, "WY", "Wirtschaft und Arbeitswelt - Schwerpunkt Technik",
-		"WY", null, Fachgruppe.FG6_GS, null,
+		"WY", null, Fachgruppe.FG_GS, null,
 		false, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.H, (Schulgliederung) null),
@@ -4608,7 +4608,7 @@ public enum ZulaessigesFach {
 	/** Fach Wirtschaft und Arbeitswelt - Schwerpunkt Wirtschaft */
 	WZ(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(264000000L, "WZ", "Wirtschaft und Arbeitswelt - Schwerpunkt Wirtschaft",
-		"WZ", null, Fachgruppe.FG6_GS, null,
+		"WZ", null, Fachgruppe.FG_GS, null,
 		false, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.H, (Schulgliederung) null),
@@ -4723,7 +4723,7 @@ public enum ZulaessigesFach {
 	/** Fach orthodoxe Religionslehre (Syrisch) */
 	YR(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(270000000L, "YR", "orthodoxe Religionslehre (Syrisch)",
-		"YR", null, Fachgruppe.FG8_RE, null,
+		"YR", null, Fachgruppe.FG_RE, null,
 		false, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.BK, (Schulgliederung) null),
@@ -4749,7 +4749,7 @@ public enum ZulaessigesFach {
 	/** Fach Neugriechisch */
 	Z(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(271000000L, "Z", "Neugriechisch",
-		"Z", 1, Fachgruppe.FG3_FS, null,
+		"Z", 1, Fachgruppe.FG_FS, null,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.BK, (Schulgliederung) null),
@@ -4763,7 +4763,7 @@ public enum ZulaessigesFach {
 	/** Fach Neugriechisch, regulärer Beginn in der Einführungsphase */
 	Z0(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(272000000L, "Z0", "Neugriechisch, regulärer Beginn in der Einführungsphase",
-		"Z", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_EF,
+		"Z", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_EF,
 		true, false, false, false, false, true, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -4778,7 +4778,7 @@ public enum ZulaessigesFach {
 	/** Fach Neugriechisch, regulärer Beginn in Jahrgang 11 */
 	Z1(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(273000000L, "Z1", "Neugriechisch, regulärer Beginn in Jahrgang 11",
-		"Z", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_11,
+		"Z", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_11,
 		true, false, false, false, false, true, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -4793,7 +4793,7 @@ public enum ZulaessigesFach {
 	/** Fach Neugriechisch, regulärer Beginn in Jahrgang 5 */
 	Z5(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(274000000L, "Z5", "Neugriechisch, regulärer Beginn in Jahrgang 5",
-		"Z", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_05,
+		"Z", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_05,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -4811,7 +4811,7 @@ public enum ZulaessigesFach {
 	/** Fach Neugriechisch, regulärer Beginn in Jahrgang 6 */
 	Z6(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(275000000L, "Z6", "Neugriechisch, regulärer Beginn in Jahrgang 6",
-		"Z", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_06,
+		"Z", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_06,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -4829,7 +4829,7 @@ public enum ZulaessigesFach {
 	/** Fach Neugriechisch, regulärer Beginn in Jahrgang 7 */
 	Z7(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(276000000L, "Z7", "Neugriechisch, regulärer Beginn in Jahrgang 7",
-		"Z", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_07,
+		"Z", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_07,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -4845,7 +4845,7 @@ public enum ZulaessigesFach {
 	/** Fach Neugriechisch, regulärer Beginn in Jahrgang 8 */
 	Z8(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(277000000L, "Z8", "Neugriechisch, regulärer Beginn in Jahrgang 8",
-		"Z", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_08,
+		"Z", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_08,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -4863,7 +4863,7 @@ public enum ZulaessigesFach {
 	/** Fach Neugriechisch, regulärer Beginn in Jahrgang 9 */
 	Z9(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(278000000L, "Z9", "Neugriechisch, regulärer Beginn in Jahrgang 9",
-		"Z", 1, Fachgruppe.FG3_FS, Jahrgaenge.JG_09,
+		"Z", 1, Fachgruppe.FG_FS, Jahrgaenge.JG_09,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -4959,7 +4959,7 @@ public enum ZulaessigesFach {
 	/** Fach Zeichnen / Werken */
 	ZW(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(283000000L, "ZW", "Zeichnen / Werken",
-		"ZW", null, Fachgruppe.FG4_MS, null,
+		"ZW", null, Fachgruppe.FG_MS, null,
 		false, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.BK, (Schulgliederung) null),
@@ -5000,7 +5000,6 @@ public enum ZulaessigesFach {
 	@SuppressWarnings("unchecked")
 	private ZulaessigesFach(@NotNull FachKatalogEintrag@NotNull[] historie) {
 		this.historie = historie;
-		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist 
 		this.daten = historie[historie.length - 1];
 		// Erzeuge zwei Felder mit den Schulformen und Schulgliederungen für die Historie
 		this.zulaessig = (@NotNull Vector<@NotNull Pair<Schulform, Schulgliederung>>@NotNull[])Array.newInstance(Vector.class, historie.length); 

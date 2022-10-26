@@ -1,13 +1,13 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
 import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
 import { Schulform, cast_de_nrw_schule_svws_core_types_schule_Schulform } from '../../../core/types/schule/Schulform';
+import { FachgruppenKatalogEintrag, cast_de_nrw_schule_svws_core_data_fach_FachgruppenKatalogEintrag } from '../../../core/data/fach/FachgruppenKatalogEintrag';
 import { JavaLong, cast_java_lang_Long } from '../../../java/lang/JavaLong';
 import { List, cast_java_util_List } from '../../../java/util/List';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 import { Arrays, cast_java_util_Arrays } from '../../../java/util/Arrays';
 import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
-import { RGBFarbe, cast_de_nrw_schule_svws_core_types_RGBFarbe } from '../../../core/types/RGBFarbe';
+import { RGBFarbe, cast_de_nrw_schule_svws_core_data_RGBFarbe } from '../../../core/data/RGBFarbe';
 
 export class Fachgruppe extends JavaObject {
 
@@ -23,128 +23,99 @@ export class Fachgruppe extends JavaObject {
 	/** an array containing all values of this enumeration indexed by their name*/
 	private static readonly all_values_by_name : Map<String, Fachgruppe> = new Map<String, Fachgruppe>();
 
-	public static readonly FG1_D : Fachgruppe = new Fachgruppe("FG1_D", 0, 1, 1, 110, "Deutsch", "D", new RGBFarbe(253, 233, 217), Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), 0, true, null, null);
+	public static readonly FG_D : Fachgruppe = new Fachgruppe("FG_D", 0, [new FachgruppenKatalogEintrag(1, 1, 110, "Deutsch", "D", new RGBFarbe(253, 233, 217), Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), 0, true, null, null)]);
 
-	public static readonly FG2_AL : Fachgruppe = new Fachgruppe("FG2_AL", 1, 2, 2, 400, "Arbeitslehre", "AL", new RGBFarbe(253, 221, 195), Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), 12, true, null, null);
+	public static readonly FG_AL : Fachgruppe = new Fachgruppe("FG_AL", 1, [new FachgruppenKatalogEintrag(2, 2, 400, "Arbeitslehre", "AL", new RGBFarbe(253, 221, 195), Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), 12, true, null, null)]);
 
-	public static readonly FG3_FS : Fachgruppe = new Fachgruppe("FG3_FS", 2, 3, 2, 100, "Fremdsprachen", "FS", new RGBFarbe(253, 221, 195), Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), 9, true, null, null);
+	public static readonly FG_FS : Fachgruppe = new Fachgruppe("FG_FS", 2, [new FachgruppenKatalogEintrag(3, 2, 100, "Fremdsprachen", "FS", new RGBFarbe(253, 221, 195), Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), 9, true, null, null)]);
 
-	public static readonly FG4_MS : Fachgruppe = new Fachgruppe("FG4_MS", 3, 4, 3, 500, "Kunst und Musik", "MS", new RGBFarbe(252, 204, 165), Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), 13, true, null, null);
+	public static readonly FG_MS : Fachgruppe = new Fachgruppe("FG_MS", 3, [new FachgruppenKatalogEintrag(4, 3, 500, "Kunst und Musik", "MS", new RGBFarbe(252, 204, 165), Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), 13, true, null, null)]);
 
-	public static readonly FG5_ME : Fachgruppe = new Fachgruppe("FG5_ME", 4, 5, 4, null, "Literatur, instrumental- oder vokalpraktischer Kurs", "ME", new RGBFarbe(252, 204, 165), Arrays.asList(Schulform.BK, Schulform.SB, Schulform.GE, Schulform.GY, Schulform.SG, Schulform.WB), 13, false, null, null);
+	public static readonly FG5_ME : Fachgruppe = new Fachgruppe("FG5_ME", 4, [new FachgruppenKatalogEintrag(5, 4, null, "Literatur, instrumental- oder vokalpraktischer Kurs", "ME", new RGBFarbe(252, 204, 165), Arrays.asList(Schulform.BK, Schulform.SB, Schulform.GE, Schulform.GY, Schulform.SG, Schulform.WB), 13, false, null, null)]);
 
-	public static readonly FG6_GS : Fachgruppe = new Fachgruppe("FG6_GS", 5, 6, 5, 300, "Gesellschaftswissenschaft", "GS", new RGBFarbe(234, 241, 222), Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), 11, true, null, null);
+	public static readonly FG_GS : Fachgruppe = new Fachgruppe("FG_GS", 5, [new FachgruppenKatalogEintrag(6, 5, 300, "Gesellschaftswissenschaft", "GS", new RGBFarbe(234, 241, 222), Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), 11, true, null, null)]);
 
-	public static readonly FG7_PL : Fachgruppe = new Fachgruppe("FG7_PL", 6, 7, 5, null, "Philosophie", "PL", new RGBFarbe(234, 241, 222), Arrays.asList(Schulform.BK, Schulform.SB, Schulform.GE, Schulform.GY, Schulform.SG, Schulform.WB), 11, false, null, null);
+	public static readonly FG_PL : Fachgruppe = new Fachgruppe("FG_PL", 6, [new FachgruppenKatalogEintrag(7, 5, null, "Philosophie", "PL", new RGBFarbe(234, 241, 222), Arrays.asList(Schulform.BK, Schulform.SB, Schulform.GE, Schulform.GY, Schulform.SG, Schulform.WB), 11, false, null, null)]);
 
-	public static readonly FG8_RE : Fachgruppe = new Fachgruppe("FG8_RE", 7, 8, 6, 900, "Religion", "RE", new RGBFarbe(215, 228, 188), Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), 6, true, null, null);
+	public static readonly FG_RE : Fachgruppe = new Fachgruppe("FG_RE", 7, [new FachgruppenKatalogEintrag(8, 6, 900, "Religion", "RE", new RGBFarbe(215, 228, 188), Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), 6, true, null, null)]);
 
-	public static readonly FG9_M : Fachgruppe = new Fachgruppe("FG9_M", 8, 9, 7, 700, "Mathematik", "M", new RGBFarbe(197, 217, 241), Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), 15, true, null, null);
+	public static readonly FG_M : Fachgruppe = new Fachgruppe("FG_M", 8, [new FachgruppenKatalogEintrag(9, 7, 700, "Mathematik", "M", new RGBFarbe(197, 217, 241), Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), 15, true, null, null)]);
 
-	public static readonly FG10_NW : Fachgruppe = new Fachgruppe("FG10_NW", 9, 10, 8, 200, "Naturwissenschaften", "NW", new RGBFarbe(141, 180, 227), Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), 10, true, null, null);
+	public static readonly FG_NW : Fachgruppe = new Fachgruppe("FG_NW", 9, [new FachgruppenKatalogEintrag(10, 8, 200, "Naturwissenschaften", "NW", new RGBFarbe(141, 180, 227), Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), 10, true, null, null)]);
 
-	public static readonly FG11_WN : Fachgruppe = new Fachgruppe("FG11_WN", 10, 11, 8, null, "weiteres naturwissenschaftliches / technisches Fach", "WN", new RGBFarbe(141, 180, 227), Arrays.asList(Schulform.BK, Schulform.SB, Schulform.GE, Schulform.GY, Schulform.SG, Schulform.WB), 10, false, null, null);
+	public static readonly FG_WN : Fachgruppe = new Fachgruppe("FG_WN", 10, [new FachgruppenKatalogEintrag(11, 8, null, "weiteres naturwissenschaftliches / technisches Fach", "WN", new RGBFarbe(141, 180, 227), Arrays.asList(Schulform.BK, Schulform.SB, Schulform.GE, Schulform.GY, Schulform.SG, Schulform.WB), 10, false, null, null)]);
 
-	public static readonly FG12_SP : Fachgruppe = new Fachgruppe("FG12_SP", 11, 12, 9, 600, "Sport", "SP", new RGBFarbe(255, 255, 255), Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), 14, true, null, null);
+	public static readonly FG_SP : Fachgruppe = new Fachgruppe("FG_SP", 11, [new FachgruppenKatalogEintrag(12, 9, 600, "Sport", "SP", new RGBFarbe(255, 255, 255), Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), 14, true, null, null)]);
 
-	public static readonly FG13_VX : Fachgruppe = new Fachgruppe("FG13_VX", 12, 13, 10, 1500, "Vertiefungskurs", "VX", new RGBFarbe(216, 216, 216), Arrays.asList(Schulform.BK, Schulform.SB, Schulform.GE, Schulform.GY, Schulform.SG, Schulform.WB), 0, false, null, null);
+	public static readonly FG_VX : Fachgruppe = new Fachgruppe("FG_VX", 12, [new FachgruppenKatalogEintrag(13, 10, 1500, "Vertiefungskurs", "VX", new RGBFarbe(216, 216, 216), Arrays.asList(Schulform.BK, Schulform.SB, Schulform.GE, Schulform.GY, Schulform.SG, Schulform.WB), 0, false, null, null)]);
 
-	public static readonly FG14_PX : Fachgruppe = new Fachgruppe("FG14_PX", 13, 14, 11, 1600, "Projektkurs", "PX", new RGBFarbe(191, 191, 191), Arrays.asList(Schulform.BK, Schulform.SB, Schulform.GE, Schulform.GY, Schulform.SG, Schulform.WB), 0, false, null, null);
+	public static readonly FG_PX : Fachgruppe = new Fachgruppe("FG_PX", 13, [new FachgruppenKatalogEintrag(14, 11, 1600, "Projektkurs", "PX", new RGBFarbe(191, 191, 191), Arrays.asList(Schulform.BK, Schulform.SB, Schulform.GE, Schulform.GY, Schulform.SG, Schulform.WB), 0, false, null, null)]);
 
-	public static readonly FG15_BUE : Fachgruppe = new Fachgruppe("FG15_BUE", 14, 15, null, 10, "Berufsübergreifender Bereich", "BUE", null, Arrays.asList(Schulform.BK, Schulform.SB), 1, false, null, null);
+	public static readonly FG15_BUE : Fachgruppe = new Fachgruppe("FG15_BUE", 14, [new FachgruppenKatalogEintrag(15, null, 10, "Berufsübergreifender Bereich", "BUE", new RGBFarbe(), Arrays.asList(Schulform.BK, Schulform.SB), 1, false, null, null)]);
 
-	public static readonly FG16_BBS : Fachgruppe = new Fachgruppe("FG16_BBS", 15, 16, null, 20, "Berufsbezogener Bereich", "BBS", null, Arrays.asList(Schulform.BK, Schulform.SB), 2, false, null, null);
+	public static readonly FG_BBS : Fachgruppe = new Fachgruppe("FG_BBS", 15, [new FachgruppenKatalogEintrag(16, null, 20, "Berufsbezogener Bereich", "BBS", new RGBFarbe(), Arrays.asList(Schulform.BK, Schulform.SB), 2, false, null, null)]);
 
-	public static readonly FG17_BBS : Fachgruppe = new Fachgruppe("FG17_BBS", 16, 17, null, 25, "Berufsbezogener Bereich (Schwerpunkt)", "BBS", null, Arrays.asList(Schulform.BK, Schulform.SB), 0, false, null, null);
+	public static readonly FG_BBS_SCHWERPUNKT : Fachgruppe = new Fachgruppe("FG_BBS_SCHWERPUNKT", 16, [new FachgruppenKatalogEintrag(17, null, 25, "Berufsbezogener Bereich (Schwerpunkt)", "BBS", new RGBFarbe(), Arrays.asList(Schulform.BK, Schulform.SB), 0, false, null, null)]);
 
-	public static readonly FG18_DF : Fachgruppe = new Fachgruppe("FG18_DF", 17, 18, null, 30, "Differenzierungsbereich", "DF", null, Arrays.asList(Schulform.BK, Schulform.SB), 3, false, null, null);
+	public static readonly FG_DF : Fachgruppe = new Fachgruppe("FG_DF", 17, [new FachgruppenKatalogEintrag(18, null, 30, "Differenzierungsbereich", "DF", new RGBFarbe(), Arrays.asList(Schulform.BK, Schulform.SB), 3, false, null, null)]);
 
-	public static readonly FG19_BP : Fachgruppe = new Fachgruppe("FG19_BP", 18, 19, null, 40, "Berufspraktikum", "BP", null, Arrays.asList(Schulform.BK, Schulform.SB), 4, false, null, null);
+	public static readonly FG_BP : Fachgruppe = new Fachgruppe("FG_BP", 18, [new FachgruppenKatalogEintrag(19, null, 40, "Berufspraktikum", "BP", new RGBFarbe(), Arrays.asList(Schulform.BK, Schulform.SB), 4, false, null, null)]);
 
-	public static readonly FG20_BLL : Fachgruppe = new Fachgruppe("FG20_BLL", 19, 20, null, 60, "besondere Lernleistung", "BLL", null, Arrays.asList(Schulform.GE, Schulform.GY, Schulform.SG, Schulform.WB), 8, false, null, null);
+	public static readonly FG_BLL : Fachgruppe = new Fachgruppe("FG_BLL", 19, [new FachgruppenKatalogEintrag(20, null, 60, "besondere Lernleistung", "BLL", new RGBFarbe(), Arrays.asList(Schulform.GE, Schulform.GY, Schulform.SG, Schulform.WB), 8, false, null, null)]);
 
-	public static readonly FG21_WP : Fachgruppe = new Fachgruppe("FG21_WP", 20, 21, null, 800, "Wahlpflichtbereich", "WP", null, Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), 16, false, null, null);
+	public static readonly FG_WP : Fachgruppe = new Fachgruppe("FG_WP", 20, [new FachgruppenKatalogEintrag(21, null, 800, "Wahlpflichtbereich", "WP", new RGBFarbe(), Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), 16, false, null, null)]);
 
-	public static readonly FG22_ZUV : Fachgruppe = new Fachgruppe("FG22_ZUV", 21, 22, null, 1000, "Zusätzliche Unterrichtsveranstaltungen", "ZUV", null, Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), 0, false, null, null);
+	public static readonly FG_ZUV : Fachgruppe = new Fachgruppe("FG_ZUV", 21, [new FachgruppenKatalogEintrag(22, null, 1000, "Zusätzliche Unterrichtsveranstaltungen", "ZUV", new RGBFarbe(), Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), 0, false, null, null)]);
 
-	public static readonly FG23_ANG : Fachgruppe = new Fachgruppe("FG23_ANG", 22, 23, null, 1100, "Angleichungskurse", "ANG", null, Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), 0, false, null, null);
+	public static readonly FG_ANG : Fachgruppe = new Fachgruppe("FG_ANG", 22, [new FachgruppenKatalogEintrag(23, null, 1100, "Angleichungskurse", "ANG", new RGBFarbe(), Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), 0, false, null, null)]);
 
-	public static readonly FG24_D_SP : Fachgruppe = new Fachgruppe("FG24_D_SP", 23, 24, null, 1200, "Sprache", "D_SP", null, Arrays.asList(Schulform.G, Schulform.KS, Schulform.S, Schulform.V), 0, true, null, null);
+	public static readonly FG_D_SP : Fachgruppe = new Fachgruppe("FG_D_SP", 23, [new FachgruppenKatalogEintrag(24, null, 1200, "Sprache", "D_SP", new RGBFarbe(), Arrays.asList(Schulform.G, Schulform.KS, Schulform.S, Schulform.V), 0, true, null, null)]);
 
-	public static readonly FG25_SU : Fachgruppe = new Fachgruppe("FG25_SU", 24, 25, null, 1300, "Sachunterricht", "SU", null, Arrays.asList(Schulform.G, Schulform.KS, Schulform.S, Schulform.V), 0, true, null, null);
+	public static readonly FG_SU : Fachgruppe = new Fachgruppe("FG_SU", 24, [new FachgruppenKatalogEintrag(25, null, 1300, "Sachunterricht", "SU", new RGBFarbe(), Arrays.asList(Schulform.G, Schulform.KS, Schulform.S, Schulform.V), 0, true, null, null)]);
 
-	public static readonly FG26_FOE : Fachgruppe = new Fachgruppe("FG26_FOE", 25, 26, null, 1400, "Förderunterricht", "FOE", null, Arrays.asList(Schulform.G, Schulform.KS, Schulform.S, Schulform.V), 0, true, null, null);
+	public static readonly FG_FOE : Fachgruppe = new Fachgruppe("FG_FOE", 25, [new FachgruppenKatalogEintrag(26, null, 1400, "Förderunterricht", "FOE", new RGBFarbe(), Arrays.asList(Schulform.G, Schulform.KS, Schulform.S, Schulform.V), 0, true, null, null)]);
 
-	public static readonly FG27_ABA : Fachgruppe = new Fachgruppe("FG27_ABA", 26, 27, null, 1700, "Abschlussarbeit", "ABA", null, Arrays.asList(Schulform.BK, Schulform.SB), 0, false, null, null);
+	public static readonly FG_ABA : Fachgruppe = new Fachgruppe("FG_ABA", 26, [new FachgruppenKatalogEintrag(27, null, 1700, "Abschlussarbeit", "ABA", new RGBFarbe(), Arrays.asList(Schulform.BK, Schulform.SB), 0, false, null, null)]);
 
-	public static readonly FG28_PA : Fachgruppe = new Fachgruppe("FG28_PA", 27, 28, null, 1800, "Projektarbeit", "PA", null, Arrays.asList(Schulform.BK, Schulform.SB), 0, false, null, null);
+	public static readonly FG_PA : Fachgruppe = new Fachgruppe("FG_PA", 27, [new FachgruppenKatalogEintrag(28, null, 1800, "Projektarbeit", "PA", new RGBFarbe(), Arrays.asList(Schulform.BK, Schulform.SB), 0, false, null, null)]);
 
-	public static readonly FG29_IF : Fachgruppe = new Fachgruppe("FG29_IF", 28, 29, null, 1900, "Informatik (Sek I)", "IF", new RGBFarbe(141, 180, 227), Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), 10, true, null, null);
+	public static readonly FG29_IF : Fachgruppe = new Fachgruppe("FG29_IF", 28, [new FachgruppenKatalogEintrag(29, null, 1900, "Informatik (Sek I)", "IF", new RGBFarbe(141, 180, 227), Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), 10, true, null, null)]);
 
 	public static VERSION : number = 1;
+
+	public readonly daten : FachgruppenKatalogEintrag;
+
+	public readonly historie : Array<FachgruppenKatalogEintrag>;
 
 	private static readonly _mapByID : HashMap<Number, Fachgruppe> = new HashMap();
 
 	private static readonly _mapByKuerzel : HashMap<String, Fachgruppe> = new HashMap();
 
-	public readonly id : number;
-
-	public readonly fachbereich : Number | null;
-
-	public readonly idSchild : Number | null;
-
-	public readonly bezeichnung : String;
-
-	public readonly kuerzel : String;
-
-	public readonly farbe : RGBFarbe;
-
-	public readonly schulformenKuerzel : List<String> = new Vector();
-
-	private schulformen : Vector<Schulform> | null = null;
-
-	public readonly sortierung : number;
-
-	public readonly fuerZeugnis : boolean;
-
-	public readonly gueltigVon : Number | null;
-
-	public readonly gueltigBis : Number | null;
+	private schulformen : Array<Vector<Schulform>>;
 
 	/**
 	 * Erzeugt eine neue Fachgruppe in der Aufzählung.
-	 *  
-	 * @param id               die eindeutige ID der Fachgruppe
-	 * @param fachbereich      die Nummer für den Fachbereich, sofern festgelegt, ansonsten null
-	 * @param idSchild         die alte Fachgruppen-ID, welche in Schild_NRW 2.x verwendet wurde 
-	 * @param bezeichnung      die Bezeichnung der Fachgruppe
-	 * @param kuerzel          das Kürzel der Fachgruppe
-	 * @param farbe            die Farbe, die der Fachgruppe zugeordnet wird oder null, falls die Standard-Farbe Weiss 
-	 *                         zugeordnet werden soll. Diese 
-	 * @param schulformen      eine Liste mit den Schulformen, bei denen die Fachgruppe vorkommt
-	 * @param sortierung       ein Zahlwert, welche die Standard-Reihenfolge der Fachgruppen in der Visualisierung angibt
-	 * @param fuerZeugnis      gibt an, ob die Fachgruppe für die Unterteilung auf Zeugnissen genutzt wird oder nicht
-	 * @param gueltigVon       gibt an, in welchem Schuljahr die Fachgruppe einführt wurde - ist kein Schuljahr bekannt, so wird null gesetzt
-	 * @param gueltigBis       gibt an, bis zu welchem Schuljahr die Fachgruppe gültig ist - ist kein Schuljahr bekannt, so wird null gesetzt
+	 * 
+	 * @param historie   die Historie der Fachgruppe, welche ein Array von 
+	 *                   {@link FachgruppenKatalogEintrag} ist  
 	 */
-	private constructor(name : string, ordinal : number, id : number, fachbereich : Number | null, idSchild : Number | null, bezeichnung : String, kuerzel : String, farbe : RGBFarbe | null, schulformen : List<Schulform>, sortierung : number, fuerZeugnis : boolean, gueltigVon : Number | null, gueltigBis : Number | null) {
+	private constructor(name : string, ordinal : number, historie : Array<FachgruppenKatalogEintrag>) {
 		super();
 		this.__name = name;
 		this.__ordinal = ordinal;
 		Fachgruppe.all_values_by_ordinal.push(this);
 		Fachgruppe.all_values_by_name.set(name, this);
-		for (let schulform of schulformen) 
-			this.schulformenKuerzel.add(schulform.daten.kuerzel);
-		this.id = id;
-		this.fachbereich = fachbereich;
-		this.idSchild = idSchild;
-		this.bezeichnung = bezeichnung;
-		this.kuerzel = kuerzel;
-		this.farbe = (farbe === null) ? new RGBFarbe(255, 255, 255) : farbe;
-		this.sortierung = sortierung;
-		this.fuerZeugnis = fuerZeugnis;
-		this.gueltigVon = null;
-		this.gueltigBis = null;
+		this.historie = historie;
+		this.daten = historie[historie.length - 1];
+		this.schulformen = Array(historie.length).fill(null);
+		for (let i : number = 0; i < historie.length; i++){
+			this.schulformen[i] = new Vector();
+			for (let kuerzel of historie[i].schulformen) {
+				let sf : Schulform | null = Schulform.getByKuerzel(kuerzel);
+				if (sf !== null) 
+					this.schulformen[i].add(sf);
+			}
+		}
 	}
 
 	/**
@@ -156,7 +127,7 @@ export class Fachgruppe extends JavaObject {
 	private static getMapByID() : HashMap<Number, Fachgruppe> {
 		if (Fachgruppe._mapByID.size() === 0) 
 			for (let g of Fachgruppe.values()) 
-				Fachgruppe._mapByID.put(g.id, g);
+				Fachgruppe._mapByID.put(g.daten.id, g);
 		return Fachgruppe._mapByID;
 	}
 
@@ -169,41 +140,33 @@ export class Fachgruppe extends JavaObject {
 	private static getMapByKuerzel() : HashMap<String, Fachgruppe> {
 		if (Fachgruppe._mapByKuerzel.size() === 0) 
 			for (let g of Fachgruppe.values()) 
-				Fachgruppe._mapByKuerzel.put(g.kuerzel, g);
+				Fachgruppe._mapByKuerzel.put(g.daten.kuerzel, g);
 		return Fachgruppe._mapByKuerzel;
 	}
 
 	/**
-	 * Liefert alle Schulformen zurück, bei welchen die Schulgliederung vorkommt.
+	 * Liefert alle Schulformen zurück, bei welchen die Fachgruppe vorkommt.
 	 * 
 	 * @return eine Liste der Schulformen
 	 */
 	public getSchulformen() : List<Schulform> {
-		if (this.schulformen === null) {
-			this.schulformen = new Vector();
-			for (let i : number = 0; i < this.schulformenKuerzel.size(); i++){
-				let schulform : Schulform | null = Schulform.getByKuerzel(this.schulformenKuerzel.get(i));
-				if (schulform !== null) 
-					this.schulformen.add(schulform);
-			}
-		}
-		return this.schulformen;
+		return this.schulformen[this.historie.length - 1];
 	}
 
 	/**
-	 * Prüft, ob die Schulform bei diesem Fach in irgendeiner Gliederung der 
+	 * Prüft, ob die Schulform bei diesem Fach in irgendeiner Fachgruppe der 
 	 * angegebenen Schulform zulässig ist.
 	 * 
 	 * @param schulform    die Schulform
 	 * 
-	 * @return true, falls das Fach in der Schulform zulässig ist, ansonsten false.
+	 * @return true, falls die Fachgruppe in der Schulform zulässig ist, ansonsten false.
 	 */
 	private hasSchulform(schulform : Schulform | null) : boolean {
 		if ((schulform === null) || (schulform.daten === null)) 
 			return false;
-		if (this.schulformenKuerzel !== null) {
-			for (let i : number = 0; i < this.schulformenKuerzel.size(); i++){
-				let sfKuerzel : String | null = this.schulformenKuerzel.get(i);
+		if (this.daten.schulformen !== null) {
+			for (let i : number = 0; i < this.daten.schulformen.size(); i++){
+				let sfKuerzel : String | null = this.daten.schulformen.get(i);
 				if (JavaObject.equalsTranspiler(sfKuerzel, (schulform.daten.kuerzel))) 
 					return true;
 			}
@@ -234,8 +197,7 @@ export class Fachgruppe extends JavaObject {
 	}
 
 	/**
-	 * Bestimmt alle Fachgruppen, die in irgendeiner Gliederung der angegebenen Schulform
-	 * zulässig sind. 
+	 * Bestimmt alle Fachgruppen, die in der angegebenen Schulform zulässig sind. 
 	 *  
 	 * @param schulform    die Schulform
 	 * 

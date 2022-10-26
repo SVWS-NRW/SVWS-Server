@@ -346,19 +346,19 @@ public class DBCoreTypeUpdater {
 		for (int i = 0; i < values.length; i++) {
 			Fachgruppe f = values[i];
 			sql.append(i == 0 ? "VALUES (" : ", (");
-			sql.append(f.id).append(",");
-			sql.append(f.fachbereich).append(",");
-			sql.append(f.idSchild).append(",");
-			sql.append("'").append(f.bezeichnung).append("'").append(",");
-			sql.append("'").append(f.kuerzel).append("'").append(",");
+			sql.append(f.daten.id).append(",");
+			sql.append(f.daten.nummer).append(",");
+			sql.append(f.daten.idSchild).append(",");
+			sql.append("'").append(f.daten.bezeichnung).append("'").append(",");
+			sql.append("'").append(f.daten.kuerzel).append("'").append(",");
 			sql.append("'").append(f.getSchulformen().stream().map(s -> s.daten.kuerzel).collect(Collectors.joining(","))).append("'").append(",");
-			sql.append(f.farbe.getRed()).append(",");
-			sql.append(f.farbe.getGreen()).append(",");
-			sql.append(f.farbe.getBlue()).append(",");
-			sql.append(f.sortierung).append(",");
-			sql.append(f.fuerZeugnis ? 1 : 0).append(",");
-			sql.append(f.gueltigVon).append(",");
-			sql.append(f.gueltigBis).append(")");
+			sql.append(f.daten.farbe.red).append(",");
+			sql.append(f.daten.farbe.green).append(",");
+			sql.append(f.daten.farbe.blue).append(",");
+			sql.append(f.daten.sortierung).append(",");
+			sql.append(f.daten.fuerZeugnis ? 1 : 0).append(",");
+			sql.append(f.daten.gueltigVon).append(",");
+			sql.append(f.daten.gueltigBis).append(")");
 		}
 		updateCoreTypeTabelle(tabname, KursFortschreibungsart.class.getCanonicalName(), KursFortschreibungsart.VERSION, sql.toString());
 	};

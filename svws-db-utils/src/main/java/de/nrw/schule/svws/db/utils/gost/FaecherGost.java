@@ -49,7 +49,7 @@ public class FaecherGost {
 		eintrag.istMoeglichQ12 = fach.IstMoeglichQ12;
 		eintrag.istMoeglichQ21 = fach.IstMoeglichQ21;
 		eintrag.istMoeglichQ22 = fach.IstMoeglichQ22;
-		int defaultWochenstundenEF = (fach.StatistikFach.getFachgruppe() == Fachgruppe.FG13_VX ? 2 : 3);
+		int defaultWochenstundenEF = (fach.StatistikFach.getFachgruppe() == Fachgruppe.FG_VX ? 2 : 3);
 		int defaultWochenstundenQ = (Jahrgaenge.JG_EF == fach.StatistikFach.getJahrgangAb() ? 4 : defaultWochenstundenEF);
 		eintrag.wochenstundenEF1 = fach.WochenstundenEF1 == null ? defaultWochenstundenEF : fach.WochenstundenEF1;
 		eintrag.wochenstundenEF2 = fach.WochenstundenEF2 == null ? defaultWochenstundenEF : fach.WochenstundenEF2;
@@ -105,7 +105,7 @@ public class FaecherGost {
 		eintrag.istMoeglichQ12 = jf.WaehlbarQ12;
 		eintrag.istMoeglichQ21 = jf.WaehlbarQ21;
 		eintrag.istMoeglichQ22 = jf.WaehlbarQ22;
-		int defaultWochenstundenEF = (fach.StatistikFach.getFachgruppe() == Fachgruppe.FG13_VX ? 2 : 3);
+		int defaultWochenstundenEF = (fach.StatistikFach.getFachgruppe() == Fachgruppe.FG_VX ? 2 : 3);
 		int defaultWochenstundenQ = (Jahrgaenge.JG_EF == fach.StatistikFach.getJahrgangAb() ? 4 : defaultWochenstundenEF);
 		eintrag.wochenstundenEF1 = jf.WochenstundenEF1 == null ? defaultWochenstundenEF : jf.WochenstundenEF1;
 		eintrag.wochenstundenEF2 = jf.WochenstundenEF2 == null ? defaultWochenstundenEF : jf.WochenstundenEF2;
