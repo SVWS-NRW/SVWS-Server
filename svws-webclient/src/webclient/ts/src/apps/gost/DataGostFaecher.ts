@@ -163,9 +163,9 @@ export class DataGostFaecher extends BaseData<
 		const fachgruppe = fach.getFachgruppe();
 		if (fachgruppe === null) return "#" + (0x1ffffff).toString(16).slice(1);
 		const rgb =
-			(fachgruppe.farbe.getRed() << 16) |
-			(fachgruppe.farbe.getGreen() << 8) |
-			(fachgruppe.farbe.getBlue() << 0);
+			(fachgruppe.daten.farbe.red << 16) |
+			(fachgruppe.daten.farbe.green << 8) |
+			(fachgruppe.daten.farbe.blue << 0);
 		return "#" + (0x1000000 + rgb).toString(16).slice(1);
 	}
 

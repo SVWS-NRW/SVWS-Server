@@ -120,11 +120,11 @@ export class Gost extends App {
 		if (!fachgruppe) return "rgba(0,0,0,0)";
 		return (
 			"rgb(" +
-			fachgruppe.farbe.getRed() +
+			fachgruppe.daten.farbe.red +
 			", " +
-			fachgruppe.farbe.getGreen() +
+			fachgruppe.daten.farbe.green +
 			", " +
-			fachgruppe.farbe.getBlue() +
+			fachgruppe.daten.farbe.blue +
 			", 1.0)"
 		);
 	}
