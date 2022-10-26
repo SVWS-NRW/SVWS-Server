@@ -1,18 +1,9 @@
 package de.nrw.schule.svws.api.server;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.Context;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-
 import de.nrw.schule.svws.api.OpenAPIApplication;
 import de.nrw.schule.svws.core.data.fach.FachDaten;
 import de.nrw.schule.svws.core.data.fach.FachKatalogEintrag;
+import de.nrw.schule.svws.core.data.fach.FachgruppenKatalogEintrag;
 import de.nrw.schule.svws.core.data.fach.FaecherListeEintrag;
 import de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenz;
 import de.nrw.schule.svws.data.faecher.DataFachdaten;
@@ -27,6 +18,15 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 /**
  * Die Klasse spezifiziert die OpenAPI-Schnittstelle für den Zugriff auf die grundlegenden Fächerdaten aus der SVWS-Datenbank.
@@ -120,33 +120,74 @@ public class APIFaecher {
     }  
 
     
-// TODO die nachfolgende Methode sollten mit speziellen DTOs unter core.data realisiert werden und nicht die Typen aus core.types direkt verwenden
-    
-//	
-//	
-//	
-//    /**
-//     * Die OpenAPI-Methode für die Abfrage der Fachgruppen für die Schulform dieser Schule.
-//     *  
-//     * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-//     * @param request       die Informationen zur HTTP-Anfrage
-//     * 
-//     * @return die Liste mit den Informationen zu den Fachgruppen für die Schulform dieser Schule
-//     */
-//    @GET
-//    @Path("/allgemein/fachgruppen")
-//    @Operation(summary = "Gibt eine Übersicht aller Fachgruppen für die Schulform dieser Schule zurück.",
-//               description = "Erstellt eine Liste aller Fachgruppen für die Schulform dieser Schule. "
-//           		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen "
-//           		       + "besitzt.")
-//    @ApiResponse(responseCode = "200", description = "Eine Liste aller Fachgruppen für die Schulform dieser Schule.",
-//                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Fachgruppe.class))))
-//    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine gültige Anmeldung.")
-//    @ApiResponse(responseCode = "404", description = "Keine Fachgruppen für die Schulform dieser Schule gefunden.")
-//    public Response getFaecherFachgruppen(@PathParam("schema") String schema, @Context HttpServletRequest request) {
-//    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
-//    		return (new DataKatalogFachgruppen(conn)).getList();
-//    	}
-//    }
+    /**
+     * Die OpenAPI-Methode für die Abfrage des Kataloges aller Fachgruppen aller Schulformen.
+     *  
+     * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param request       die Informationen zur HTTP-Anfrage
+     * 
+     * @return der Katalog aller Fachgruppen aller Schulformen
+     */
+    @GET
+    @Path("/allgemein/fachgruppen")
+    @Operation(summary = "Gibt den Katalog aller Fachgruppen aller Schulformen zurück.",
+               description = "Gibt den Katalog aller Fachgruppen aller Schulformen zurück. "
+           		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
+    @ApiResponse(responseCode = "200", description = "Der Katalog aller Fachgruppen aller Schulformen.",
+                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = FachgruppenKatalogEintrag.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine gültige Anmeldung.")
+    @ApiResponse(responseCode = "404", description = "Keine Fachgruppen gefunden.")
+    public Response getKatalogFachgruppen(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
+    		return (new DataKatalogFachgruppen(conn)).getAll();
+    	}
+    }
+
+    /**
+     * Die OpenAPI-Methode für die Abfrage des Kataloges der Fachgruppen für die Schulform dieser Schule.
+     *  
+     * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param request       die Informationen zur HTTP-Anfrage
+     * 
+     * @return die Liste mit den Informationen zu den Fachgruppen für die Schulform dieser Schule
+     */
+    @GET
+    @Path("/fachgruppen")
+    @Operation(summary = "Gibt den Katalog der Fachgruppen für die Schulform dieser Schule zurück.",
+               description = "Gibt den Katalog der Fachgruppen für die Schulform dieser Schule zurück. "
+                       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
+    @ApiResponse(responseCode = "200", description = "Der Katalog der Fachgruppen für die Schulform dieser Schule.",
+                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = FachgruppenKatalogEintrag.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine gültige Anmeldung.")
+    @ApiResponse(responseCode = "404", description = "Keine Fachgruppen für die Schulform dieser Schule gefunden.")
+    public Response getFachgruppen(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
+            return (new DataKatalogFachgruppen(conn)).getList();
+        }
+    }
+
+    /**
+     * Die OpenAPI-Methode für die Abfrage eines Fachgruppen-Katalog-Eintrags für die angegebene ID.
+     *  
+     * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param id        die ID des Fachgruppen-Katalog-Eintrags
+     * @param request   die Informationen zur HTTP-Anfrage
+     * 
+     * @return der Fachgruppen-Katalog-Eintrag
+     */
+    @GET
+    @Path("/allgemein/fachgruppe/{id : \\d+}")
+    @Operation(summary = "Gibt Fachgruppen-Katalog-Eintrag für die angegebene ID zurück.",
+               description = "Gibt Fachgruppen-Katalog-Eintrag für die angegebene ID zurück. "
+                       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
+    @ApiResponse(responseCode = "200", description = "Der Fachgruppen-Katalog-Eintrag für die angegebene ID.",
+                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = FachgruppenKatalogEintrag.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine gültige Anmeldung.")
+    @ApiResponse(responseCode = "404", description = "Kein Fachgruppen-Katalog für die angegebene ID gefunden.")
+    public Response getKatalogFachgruppenEintrag(@PathParam("schema") String schema, @PathParam("id") long id, @Context HttpServletRequest request) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
+            return (new DataKatalogFachgruppen(conn)).get(id);
+        }
+    }
     
 }

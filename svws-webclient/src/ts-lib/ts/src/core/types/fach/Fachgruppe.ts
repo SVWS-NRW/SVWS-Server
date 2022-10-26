@@ -87,6 +87,8 @@ export class Fachgruppe extends JavaObject {
 
 	public readonly historie : Array<FachgruppenKatalogEintrag>;
 
+	private static readonly _mapEintragByID : HashMap<Number, FachgruppenKatalogEintrag> = new HashMap();
+
 	private static readonly _mapByID : HashMap<Number, Fachgruppe> = new HashMap();
 
 	private static readonly _mapByKuerzel : HashMap<String, Fachgruppe> = new HashMap();
@@ -116,6 +118,20 @@ export class Fachgruppe extends JavaObject {
 					this.schulformen[i].add(sf);
 			}
 		}
+	}
+
+	/**
+	 * Gibt eine Map von den IDs der Fachgruppen auf die zugehörigen Katalog-Einträge
+	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
+	 *    
+	 * @return die Map von den IDs der Fachgruppen auf die zugehörigen Katalog-Einträge
+	 */
+	private static getMapEintragByID() : HashMap<Number, FachgruppenKatalogEintrag> {
+		if (Fachgruppe._mapEintragByID.size() === 0) 
+			for (let g of Fachgruppe.values()) 
+				for (let k of g.historie) 
+					Fachgruppe._mapEintragByID.put(k.id, k);
+		return Fachgruppe._mapEintragByID;
 	}
 
 	/**
@@ -172,6 +188,17 @@ export class Fachgruppe extends JavaObject {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Liefert den Katalog-Eintrag der Fachgruppe zu der übergebenen ID zurück.
+	 * 
+	 * @param id   die ID des Fachgruppen-Katalog-Eintrags
+	 * 
+	 * @return der Fachgruppen-Katalog-Eintrag oder null, falls die ID ungültig ist
+	 */
+	public static getKatalogEintragByID(id : number) : FachgruppenKatalogEintrag | null {
+		return Fachgruppe.getMapEintragByID().get(id);
 	}
 
 	/**

@@ -21,6 +21,7 @@ import { Erzieherart, cast_de_nrw_schule_svws_core_data_erzieher_Erzieherart } f
 import { ErzieherListeEintrag, cast_de_nrw_schule_svws_core_data_erzieher_ErzieherListeEintrag } from '../core/data/erzieher/ErzieherListeEintrag';
 import { ErzieherStammdaten, cast_de_nrw_schule_svws_core_data_erzieher_ErzieherStammdaten } from '../core/data/erzieher/ErzieherStammdaten';
 import { FachDaten, cast_de_nrw_schule_svws_core_data_fach_FachDaten } from '../core/data/fach/FachDaten';
+import { FachgruppenKatalogEintrag, cast_de_nrw_schule_svws_core_data_fach_FachgruppenKatalogEintrag } from '../core/data/fach/FachgruppenKatalogEintrag';
 import { FachKatalogEintrag, cast_de_nrw_schule_svws_core_data_fach_FachKatalogEintrag } from '../core/data/fach/FachKatalogEintrag';
 import { FaecherListeEintrag, cast_de_nrw_schule_svws_core_data_fach_FaecherListeEintrag } from '../core/data/fach/FaecherListeEintrag';
 import { FoerderschwerpunktEintrag, cast_de_nrw_schule_svws_core_data_schule_FoerderschwerpunktEintrag } from '../core/data/schule/FoerderschwerpunktEintrag';
@@ -1165,6 +1166,60 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der GET-Methode getKatalogFachgruppenEintrag für den Zugriff auf die URL https://{hostname}/db/{schema}/faecher/allgemein/fachgruppe/{id : \d+}
+	 * 
+	 * Gibt Fachgruppen-Katalog-Eintrag für die angegebene ID zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Der Fachgruppen-Katalog-Eintrag für die angegebene ID.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: FachgruppenKatalogEintrag
+	 *   Code 403: Der SVWS-Benutzer hat keine gültige Anmeldung.
+	 *   Code 404: Kein Fachgruppen-Katalog für die angegebene ID gefunden.
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 * 
+	 * @returns Der Fachgruppen-Katalog-Eintrag für die angegebene ID.
+	 */
+	public async getKatalogFachgruppenEintrag(schema : string, id : number) : Promise<FachgruppenKatalogEintrag> {
+		let path : string = "/db/{schema}/faecher/allgemein/fachgruppe/{id : \d+}"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema)
+				.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return FachgruppenKatalogEintrag.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getKatalogFachgruppen für den Zugriff auf die URL https://{hostname}/db/{schema}/faecher/allgemein/fachgruppen
+	 * 
+	 * Gibt den Katalog aller Fachgruppen aller Schulformen zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Der Katalog aller Fachgruppen aller Schulformen.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<FachgruppenKatalogEintrag>
+	 *   Code 403: Der SVWS-Benutzer hat keine gültige Anmeldung.
+	 *   Code 404: Keine Fachgruppen gefunden.
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * 
+	 * @returns Der Katalog aller Fachgruppen aller Schulformen.
+	 */
+	public async getKatalogFachgruppen(schema : string) : Promise<List<FachgruppenKatalogEintrag>> {
+		let path : string = "/db/{schema}/faecher/allgemein/fachgruppen"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		let ret = new Vector<FachgruppenKatalogEintrag>();
+		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(FachgruppenKatalogEintrag.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getKatalogFaecher für den Zugriff auf die URL https://{hostname}/db/{schema}/faecher/allgemein/faecher
 	 * 
 	 * Erstellt eine Liste aller in dem Katalog vorhanden zulässigen Fächer. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
@@ -1187,6 +1242,33 @@ export class ApiServer extends BaseApi {
 		const obj = JSON.parse(result);
 		let ret = new Vector<FachKatalogEintrag>();
 		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(FachKatalogEintrag.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getFachgruppen für den Zugriff auf die URL https://{hostname}/db/{schema}/faecher/fachgruppen
+	 * 
+	 * Gibt den Katalog der Fachgruppen für die Schulform dieser Schule zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Der Katalog der Fachgruppen für die Schulform dieser Schule.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<FachgruppenKatalogEintrag>
+	 *   Code 403: Der SVWS-Benutzer hat keine gültige Anmeldung.
+	 *   Code 404: Keine Fachgruppen für die Schulform dieser Schule gefunden.
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * 
+	 * @returns Der Katalog der Fachgruppen für die Schulform dieser Schule.
+	 */
+	public async getFachgruppen(schema : string) : Promise<List<FachgruppenKatalogEintrag>> {
+		let path : string = "/db/{schema}/faecher/fachgruppen"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		let ret = new Vector<FachgruppenKatalogEintrag>();
+		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(FachgruppenKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 

@@ -429,7 +429,10 @@ public enum Fachgruppe {
 
     /** Die Historie mit den Einträgen der Fachgruppe */
     public final @NotNull FachgruppenKatalogEintrag@NotNull[] historie; 
-	
+
+    /** Eine Map, welche der ID der Fachgruppe die Instanz dieser Aufzählung zuordnet. */
+    private static final @NotNull HashMap<@NotNull Long, @NotNull FachgruppenKatalogEintrag> _mapEintragByID = new HashMap<>();
+    
 	/** Eine Map, welche der ID der Fachgruppe die Instanz dieser Aufzählung zuordnet. */
 	private static final @NotNull HashMap<@NotNull Long, @NotNull Fachgruppe> _mapByID = new HashMap<>();
 	
@@ -464,19 +467,34 @@ public enum Fachgruppe {
 	
 
 	/**
-	 * Gibt eine Map von den IDs der Fachgruppen auf die zugehörigen Fachgruppen
+	 * Gibt eine Map von den IDs der Fachgruppen auf die zugehörigen Katalog-Einträge
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
 	 *    
-	 * @return die Map von den IDs der Fachgruppen auf die zugehörigen Fachgruppen
+	 * @return die Map von den IDs der Fachgruppen auf die zugehörigen Katalog-Einträge
 	 */
-	private static @NotNull HashMap<@NotNull Long, @NotNull Fachgruppe> getMapByID() {
-		if (_mapByID.size() == 0)
+	private static @NotNull HashMap<@NotNull Long, @NotNull FachgruppenKatalogEintrag> getMapEintragByID() {
+		if (_mapEintragByID.size() == 0)
 			for (Fachgruppe g : Fachgruppe.values())
-				_mapByID.put(g.daten.id, g);				
-		return _mapByID;
+			    for (FachgruppenKatalogEintrag k : g.historie)
+			        _mapEintragByID.put(k.id, k);
+		return _mapEintragByID;
 	}
 
 	
+    /**
+     * Gibt eine Map von den IDs der Fachgruppen auf die zugehörigen Fachgruppen
+     * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
+     *    
+     * @return die Map von den IDs der Fachgruppen auf die zugehörigen Fachgruppen
+     */
+    private static @NotNull HashMap<@NotNull Long, @NotNull Fachgruppe> getMapByID() {
+        if (_mapByID.size() == 0)
+            for (Fachgruppe g : Fachgruppe.values())
+                _mapByID.put(g.daten.id, g);
+        return _mapByID;
+    }
+
+    
 	/**
 	 * Gibt eine Map von den Kürzeln der Fachgruppen auf die zugehörigen Fachgruppen
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
@@ -524,17 +542,29 @@ public enum Fachgruppe {
 
 
 	/**
-	 * Liefert die Fachgruppe zu der übergebenen ID der Fachgruppe zurück.
+	 * Liefert den Katalog-Eintrag der Fachgruppe zu der übergebenen ID zurück.
 	 * 
-	 * @param id   die ID der Fachgruppe
+	 * @param id   die ID des Fachgruppen-Katalog-Eintrags
 	 * 
-	 * @return die Fachgruppe oder null, falls die ID ungültig ist
+	 * @return der Fachgruppen-Katalog-Eintrag oder null, falls die ID ungültig ist
 	 */
-	public static Fachgruppe getByID(final long id) {
-		return getMapByID().get(id);
+	public static FachgruppenKatalogEintrag getKatalogEintragByID(final long id) {
+		return getMapEintragByID().get(id);
 	}
 	
 	
+    /**
+     * Liefert die Fachgruppe zu der übergebenen ID der Fachgruppe zurück.
+     * 
+     * @param id   die ID der Fachgruppe
+     * 
+     * @return die Fachgruppe oder null, falls die ID ungültig ist
+     */
+    public static Fachgruppe getByID(final long id) {
+        return getMapByID().get(id);
+    }
+    
+    
 	/**
 	 * Liefert die Fachgruppe zu der übergebenen ID der Fachgruppe zurück.
 	 * 
