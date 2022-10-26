@@ -24,6 +24,7 @@ export class ListKursblockungen extends BaseList<GostBlockungListeneintrag> {
 			);
 			return;
 		}
+		const id = this.ausgewaehlt?.id
 		await super._update_list(() =>
 			App.api.getGostAbiturjahrgangBlockungsliste(
 				App.schema,
@@ -31,13 +32,11 @@ export class ListKursblockungen extends BaseList<GostBlockungListeneintrag> {
 				halbjahr
 			)
 		);
-		if (this.liste.length)
-			this.ausgewaehlt = this.liste[this.liste.length - 1];
-		else this.ausgewaehlt = undefined
+		this.select_by_id(id)
 	}
 
-	public select_by_id(id: number): void {
+	public select_by_id(id: number|undefined): void {
 		const blockung = this.liste.find(e=>e.id === id)
-		this.ausgewaehlt = blockung
+		this.ausgewaehlt = blockung || this.liste[this.liste.length - 1];
 	}
 }

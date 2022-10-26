@@ -109,7 +109,6 @@ const kurse: ComputedRef<List<GostBlockungKurs>> = computed(() =>
 	app.dataKursblockung.daten?.kurse || new Vector<GostBlockungKurs>());
 
 const schienen: ComputedRef<Vector<GostBlockungsergebnisSchiene> | undefined> = computed(() =>
-	// app.dataKursblockungsergebnis.daten?.schienen
 	manager.value?.getMengeAllerSchienen()
 	);
 

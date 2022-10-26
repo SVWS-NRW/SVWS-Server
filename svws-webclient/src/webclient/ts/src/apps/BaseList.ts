@@ -74,6 +74,10 @@ export abstract class BaseList<ListenEintragTyp, ListenFilterTyp = undefined> {
 		}
 	}
 
+	/**
+	 * Methode, die von allen Subklassen implementiert werden muss.
+	 * Sie ruft _update_list auf und übergibt den Getter für die Listendaten.
+	 */
 	public abstract update_list(...args: unknown[]): Promise<void>
 
 	protected async _update_list(
@@ -96,7 +100,7 @@ export abstract class BaseList<ListenEintragTyp, ListenFilterTyp = undefined> {
 
 	/**
 	 * Diese Methode filtert die Daten der Auswahlliste und wird von dem
-	 * AppState-Objekt dieser Klasse beim Laden des Katalogs automatisch aufgerufen. s*
+	 * AppState-Objekt dieser Klasse beim Laden des Katalogs automatisch aufgerufen.
 	 *
 	 * @returns Void
 	 */

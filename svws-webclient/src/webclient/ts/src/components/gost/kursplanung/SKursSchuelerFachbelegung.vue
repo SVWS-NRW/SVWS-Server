@@ -32,13 +32,11 @@
 		GostBlockungsergebnisManager,
 		GostFach,
 		GostKursart,
-		KursartKatalogEintrag,
 		ZulaessigesFach
 	} from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef } from "vue";
 
 	import { injectMainApp, Main } from "~/apps/Main";
-import SCardGostKursblockungParameter from "./SCardGostKursblockungParameter.vue";
 
 	const props = defineProps({
 		fach: {

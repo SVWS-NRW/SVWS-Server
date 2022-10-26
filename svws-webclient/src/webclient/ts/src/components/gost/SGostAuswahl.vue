@@ -352,10 +352,8 @@ async function remove_ergebnis() {
 		App.schema,
 		selected_ergebnis.value.id
 	);
-	await app.blockungsergebnisauswahl.update_list(
-		app.blockungsauswahl.ausgewaehlt?.id
-	);
-	selected_ergebnis.value = app.blockungsergebnisauswahl.liste.at(-1);
+	const abiturjahr = selected.value?.abiturjahr?.valueOf() || -1;
+	await app.blockungsauswahl.update_list(abiturjahr, selected_hj.value.id)
 }
 
 async function derive_blockung() {
