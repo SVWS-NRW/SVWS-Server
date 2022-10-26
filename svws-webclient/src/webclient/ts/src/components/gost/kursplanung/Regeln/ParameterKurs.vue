@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { injectMainApp, Main } from "~/apps/Main";
-import { GostBlockungKurs } from "@svws-nrw/svws-core-ts";
+import { GostBlockungKurs, GostKursart } from "@svws-nrw/svws-core-ts";
 import { computed } from "vue";
 
 const main: Main = injectMainApp();
@@ -17,8 +17,9 @@ const selected = computed({
 		emit('update:modelValue', val);
 	}
 });
+
 function text(i: GostBlockungKurs) {
-	return `${faechermanager?.get(i.fach_id)?.kuerzel} ${i.kursart}${i.nummer}${i.suffix ? "-"+i.suffix:""}`
+	return `${faechermanager?.get(i.fach_id)?.kuerzel}-${GostKursart.fromID(i.kursart)}${i.nummer}${i.suffix ? "-"+i.suffix:""}`
 }
 </script>
 

@@ -26,9 +26,9 @@ export abstract class BaseData<T, ListItem, U = unknown> {
 	protected selected_list_item: ListItem | undefined;
 
 	/** Constructor für das Datenobjekt
-	 * @param {Boolean} isReactive Legt fest, ob `_state` reaktiv ist
+	 * @param {boolean} isReactive Legt fest, ob `_state` reaktiv ist
 	 */
-	public constructor(isReactive = true) {
+	public constructor(isReactive: boolean = true) {
 		this._state = isReactive
 			? reactive({ data: undefined, manager: undefined })
 			: { data: undefined, manager: undefined };
@@ -43,7 +43,7 @@ export abstract class BaseData<T, ListItem, U = unknown> {
 	}
 
 	/** Setter für dden Manager
-	 * @param {U|undefined} data Der Manager
+	 * @param {U|undefined} manager Der Manager
 	 */
 	public set manager(manager: U | undefined) {
 		this._state.manager = manager;
@@ -87,7 +87,7 @@ export abstract class BaseData<T, ListItem, U = unknown> {
 	/**
 	 * Methode zur Standardselektierung von Getter-Daten
 	 *
-	 * @param {Function} getter Die Methode, die die Daten liefert, übergibt
+	 * @param {(ListItem) => Promise<T>} getter Die Methode, die die Daten liefert, übergibt
 	 * als Parameter ein Listenelement, was dem select aus der Liste entspricht
 	 * @returns {Promise<T|undefined>} Die Daten als Promise
 	 */
