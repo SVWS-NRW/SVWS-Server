@@ -15,16 +15,33 @@
 		</template>
 		<template #content>
 			<div class="container">
-				<svws-ui-table
-					v-model:selected="selected"
-					:cols="cols"
-					:rows="rowsFiltered"
+				<svws-ui-new-table
+					v-model="selected"
+					:columns="cols"
+					:data="rowsFiltered"
 					:footer="false"
-					:actions="actions"
-					:asc="true"
-					:multi-select="true"
-					@action="onAction"
-				/>
+					is-multi-select
+				>
+					<template #cell-actions="{ row }">
+          				<svws-ui-popover :hover="false" placement="left-end" :disable-click-away="false">
+            				<template #trigger>
+              					<Button class="action-button">
+                					<Icon>
+                  						<i-ri-more-2-fill />
+                					</Icon>
+              					</Button>
+            				</template>
+            				<template #content>
+              					<div class="action-items">
+                					<div v-for="action in actions" :key="action.action">
+                  						<Button class="action-item" type="transparent" @click="onAction(action.action, row)">{{ action.label
+                  						}}</Button>
+                					</div>
+              					</div>
+            				</template>
+          				</svws-ui-popover>
+        			</template>
+				</svws-ui-new-table>
 			</div>
 		</template>
 	</svws-ui-secondary-menu>
@@ -37,24 +54,29 @@
 	import { useAuswahlViaRoute } from '~/router/auswahlViaRoute';
 
 	const cols = [
-		{
-			id: "kuerzel",
-			title: "Kuerzel",
+	{
+			key: "kuerzel",
+			label: "Kuerzel",
 			width: "10%",
-			sortable: true
+			sortable: true,
+			defaultSort: "asc"
 		},
 		{
-			id: "nachname",
-			title: "Nachname",
+			key: "nachname",
+			label: "Nachname",
 			width: "45%",
 			sortable: true
 		},
 		{
-			id: "vorname",
-			title: "Vorname",
+			key: "vorname",
+			label: "Vorname",
 			width: "45%",
 			sortable: true
-		}
+		},
+  		{
+    		key: 'actions',
+    		label: ''
+  		}
 	];
 
 	const actions = [
@@ -93,7 +115,7 @@
 
 	const selected = useAuswahlViaRoute('lehrer');
 
-	function onAction(props: Event) {
-		console.log(props);
+	function onAction(action: string, item: LehrerListeEintrag) {
+		console.log(action, item);
 	}
 </script>

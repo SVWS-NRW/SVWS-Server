@@ -23,14 +23,23 @@
 	import { useAuswahlViaRoute } from '~/router/auswahlViaRoute';
 
 	const cols = [
-		{
-			id: "kuerzel",
-			title: "Kuerzel",
+	{
+			key: "kuerzel",
+			label: "Kuerzel",
 			width: "6em",
+			sortable: true,
+			defaultSort: "asc"
+		},
+		{
+			key: "lehrer_name",
+			label: "Fachlehrer",
 			sortable: true
 		},
-		{ id: "lehrer_name", title: "Fachlehrer", sortable: true },
-		{ id: "jahrgang", title: "Jahrgang", sortable: true }
+		{
+			key: "jahrgang",
+			label: "Jahrgang",
+			sortable: true
+		}
 	];
 	const main: Main = injectMainApp();
 	const app = main.apps.kurse;

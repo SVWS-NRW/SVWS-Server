@@ -55,6 +55,8 @@ declare module '@vue/runtime-core' {
     RouterView: typeof import('vue-router')['RouterView']
     SApp: typeof import('./src/components/SApp.vue')['default']
     SAppStatus: typeof import('./src/components/SAppStatus.vue')['default']
+    SBenutzerAuswahl: typeof import('./src/components/schule/benutzerverwaltung/benutzer/SBenutzerAuswahl.vue')['default']
+    SBenutzergruppeAuswahl: typeof import('./src/components/schule/benutzerverwaltung/benutzergruppe/SBenutzergruppeAuswahl.vue')['default']
     SBenutzerverwaltungApp: typeof import('./src/components/schule/benutzerverwaltung/SBenutzerverwaltungApp.vue')['default']
     SBenutzerverwaltungAuswahl: typeof import('./src/components/schule/benutzerverwaltung/SBenutzerverwaltungAuswahl.vue')['default']
     SBenutzerverwaltungDaten: typeof import('./src/components/schule/benutzerverwaltung/daten/SBenutzerverwaltungDaten.vue')['default']

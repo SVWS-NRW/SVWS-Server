@@ -4,12 +4,11 @@
 		<template #header> </template>
 		<template #content>
 			<div class="container">
-				<svws-ui-table
-					v-model:selected="selected"
-					:cols="cols"
-					:rows="rows"
+				<svws-ui-new-table
+					v-model="selected"
+					:columns="cols"
+					:data="rows"
 					:footer="false"
-					asc="true"
 				/>
 			</div>
 		</template>
@@ -24,14 +23,15 @@
 
 	const cols = ref([
 		{
-			id: "kuerzel",
-			title: "Kuerzel",
+			key: "kuerzel",
+			label: "Kuerzel",
 			width: "6em",
-			sortable: true
+			sortable: true,
+			defaultSort: "asc"
 		},
 		{
-			id: "bezeichnung",
-			title: "Bezeichnung",
+			key: "bezeichnung",
+			label: "Bezeichnung",
 			sortable: true
 		}
 	]);

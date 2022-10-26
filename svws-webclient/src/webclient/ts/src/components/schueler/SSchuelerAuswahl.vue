@@ -64,14 +64,37 @@
 			<div class="container">
 				<svws-ui-new-table
 					v-model="selected"
+					:v-model:selection="selectedItems"
 					:data="rowsFiltered"
 					:columns="cols"
 					is-multi-select
+					:footer="true"
 					>
-
+					<!-- Kontextmenü der Zeile für die Spalte Actions -->
+					<template #cell-actions="{ row }">
+          				<svws-ui-popover :hover="false" placement="left-end" :disable-click-away="false">
+            				<template #trigger>
+              					<Button class="action-button">
+                					<Icon>
+                  						<i-ri-more-2-fill />
+                					</Icon>
+              					</Button>
+            				</template>
+            				<template #content>
+              					<div class="action-items">
+                					<div v-for="action in actions" :key="action.action">
+                  						<Button class="action-item" type="transparent" @click="onAction(action.action, row)">{{ action.label
+                  						}}</Button>
+                					</div>
+              					</div>
+            				</template>
+          				</svws-ui-popover>
+        			</template>
+					<!-- Footer mit Button zum Hinzufügen einer Zeile -->
 					<template #footer>
 						<button
 							class="flex h-10 w-10 items-center justify-center"
+							@click="addLine()"
 						>
 							<svws-ui-icon><i-ri-add-line /></svws-ui-icon>
 						</button>
@@ -119,7 +142,8 @@
 	const cols = [
 		{ key: "klasse", label: "Klasse", sortable: true },
 		{ key: "nachname", label: "Nachname", sortable: true },
-		{ key: "vorname", label: "Vorname", sortable: true }
+		{ key: "vorname", label: "Vorname", sortable: true },
+		{ key: "actions", label: '' }
 	]
 	const actions = [
 		{ label: "Löschen", action: "delete" },
@@ -304,22 +328,44 @@
 		return schulgliederung.daten.kuerzel.toString();
 	}
 
-	function updateSelectedItems(selectedItems: SchuelerListeEintrag[]) {
-		if (app) {
-			app.auswahl.ausgewaehlt_gruppe = selectedItems;
+	// function updateSelectedItems(selectedItems: SchuelerListeEintrag[]) {
+	// 	if (app) {
+	// 		app.auswahl.ausgewaehlt_gruppe = selectedItems;
+	// 	}
+	// }
+
+	// Ersatz für updateSelectedItems für neue Tabelle.
+	const selectedItems: WritableComputedRef<SchuelerListeEintrag[]> = computed({
+		get: () => app.auswahl.ausgewaehlt_gruppe,
+		set: (items: SchuelerListeEintrag[]) => {
+			app.auswahl.ausgewaehlt_gruppe = items;
+		}
+	});
+
+	function onAction(action: string, item: SchuelerListeEintrag) {
+		switch(action) {
+			case 'delete':
+				deleteSchueler(item);
+				break;
+			case 'copy':
+				copySchuelerEintrag(item);
+				break;
 		}
 	}
 
-	function deleteSchueler(schueler: SchuelerListeEintrag) {
+	function copySchuelerEintrag(item: SchuelerListeEintrag) {
+		// TODO: Funktion implementieren
+		console.log('copy geklickt', item);
+	}
+
+	function deleteSchueler(item: SchuelerListeEintrag) {
 		// TODO delete Schueler
-		console.log("delete", schueler);
+		console.log("delete", item);
 	}
 
-	function onAction(props: { action: string; item: SchuelerListeEintrag }) {
-		console.log(props);
-		if (props.action === "delete") {
-			deleteSchueler(props.item);
-		}
+	function addLine() {
+		// TODO: Funktion implementieren
+		console.log('addLine geklickt');
 	}
 
 	function filterReset() {
