@@ -70,6 +70,7 @@
 			}
 		}
 	});
+
 	const zul_fach: ComputedRef<ZulaessigesFach | null> = computed(() => {
 		if (appFaecher) {
 			return ZulaessigesFach.getByKuerzelASD(
@@ -79,16 +80,13 @@
 		}
 		return null;
 	});
+
 	const bgColor: ComputedRef<string> = computed<string>(() => {
-		const fachgruppe = zul_fach.value?.getFachgruppe();
-		// FIXME: @hmt Hintergrund auch für null weiß?
-		if (!fachgruppe) return "#ffffff";
-		const rgb =
-			(fachgruppe.daten.farbe.red << 16) |
-			(fachgruppe.daten.farbe.green << 8) |
-			(fachgruppe.daten.farbe.blue << 0);
-		return "#" + (0x1000000 + rgb).toString(16).slice(1);
+		if (!zul_fach.value)
+			return "#ffffff";
+		return zul_fach.value.getHMTLFarbeRGB().valueOf();
 	});
+
 	const visible: ComputedRef<boolean> = computed<boolean>(() => {
 		//return $app.leistungsdaten.visible; //TODO: richtige Bedingung einpflegen
 		return true;

@@ -112,14 +112,9 @@
 	});
 
 	const bgColor: ComputedRef<string> = computed(() => {
-		if (!is_draggable.value) return "";
-		const fachgruppe = gostfach.value?.getFachgruppe();
-		if (!fachgruppe) return "#ffffff";
-		const rgb =
-			(fachgruppe.daten.farbe.red << 16) |
-			(fachgruppe.daten.farbe.green << 8) |
-			(fachgruppe.daten.farbe.blue << 0);
-		return "#" + (0x1000000 + rgb).toString(16).slice(1);
+		if ((!is_draggable.value) || (!gostfach.value))
+			return "";
+		return gostfach.value.getHMTLFarbeRGB().valueOf();
 	});
 
 	function drop_aendere_kurszuordnung(kurs: any, id_kurs_neu: number) {

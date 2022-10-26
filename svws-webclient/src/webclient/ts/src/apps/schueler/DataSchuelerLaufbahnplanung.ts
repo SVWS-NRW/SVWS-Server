@@ -252,14 +252,14 @@ export class DataSchuelerLaufbahnplanung extends BaseData<
 		const fg = ZulaessigesFach.getByKuerzelASD(
 			fach.kuerzel
 		).getFachgruppe();
-		return fg === Fachgruppe.FG13_VX;
+		return fg === Fachgruppe.FG_VX;
 	}
 	public ist_PJK(fach: GostFach): boolean {
 		if (!fach.kuerzel) return false;
 		const fg = ZulaessigesFach.getByKuerzelASD(
 			fach.kuerzel
 		).getFachgruppe();
-		return fg === Fachgruppe.FG14_PX;
+		return fg === Fachgruppe.FG_PX;
 	}
 	public istVertiefungsOderProjektkursfach(fach: GostFach): boolean {
 		return this.ist_VTF(fach) || this.ist_PJK(fach);
@@ -346,14 +346,7 @@ export class DataSchuelerLaufbahnplanung extends BaseData<
 	 * @returns {string}
 	 */
 	public getBgColor(row: GostFach): string {
-		const fach = ZulaessigesFach.getByKuerzelASD(row.kuerzel);
-		const fachgruppe = fach.getFachgruppe();
-		if (fachgruppe === null) return "#" + (0x1ffffff).toString(16).slice(1);
-		const rgb =
-			(fachgruppe.daten.farbe.red << 16) |
-			(fachgruppe.daten.farbe.green << 8) |
-			(fachgruppe.daten.farbe.blue << 0);
-		return "#" + (0x1000000 + rgb).toString(16).slice(1);
+		return ZulaessigesFach.getByKuerzelASD(row.kuerzel).getHMTLFarbeRGB().valueOf();
 	}
 
 	public getBgColorIfLanguage(row: GostFach): string {
@@ -408,8 +401,8 @@ export class DataSchuelerLaufbahnplanung extends BaseData<
 	public getEF1Moeglich(row: GostFach): boolean {
 		const fach = ZulaessigesFach.getByKuerzelASD(row.kuerzel);
 		if (
-			fach.getFachgruppe() === Fachgruppe.FG5_ME ||
-			fach.getFachgruppe() === Fachgruppe.FG14_PX ||
+			fach.getFachgruppe() === Fachgruppe.FG_ME ||
+			fach.getFachgruppe() === Fachgruppe.FG_PX ||
 			(row.istFremdsprache && !this.getFallsSpracheMoeglich(row))
 		)
 			return false;
@@ -424,8 +417,8 @@ export class DataSchuelerLaufbahnplanung extends BaseData<
 	public getEF2Moeglich(row: GostFach): boolean {
 		const fach = ZulaessigesFach.getByKuerzelASD(row.kuerzel);
 		if (
-			fach.getFachgruppe() === Fachgruppe.FG5_ME ||
-			fach.getFachgruppe() === Fachgruppe.FG14_PX ||
+			fach.getFachgruppe() === Fachgruppe.FG_ME ||
+			fach.getFachgruppe() === Fachgruppe.FG_PX ||
 			(row.istFremdsprache && !this.getFallsSpracheMoeglich(row))
 		)
 			return false;
@@ -465,7 +458,7 @@ export class DataSchuelerLaufbahnplanung extends BaseData<
 	 */
 	public getQ21Moeglich(row: GostFach): boolean {
 		const fach = ZulaessigesFach.getByKuerzelASD(row.kuerzel);
-		if (fach.getFachgruppe() === Fachgruppe.FG5_ME) return false;
+		if (fach.getFachgruppe() === Fachgruppe.FG_ME) return false;
 		if (row.istMoeglichQ21) {
 			return row.istFremdsprache
 				? this.getFallsSpracheMoeglich(row)
@@ -480,7 +473,7 @@ export class DataSchuelerLaufbahnplanung extends BaseData<
 	 */
 	public getQ22Moeglich(row: GostFach): boolean {
 		const fach = ZulaessigesFach.getByKuerzelASD(row.kuerzel);
-		if (fach.getFachgruppe() === Fachgruppe.FG5_ME) return false;
+		if (fach.getFachgruppe() === Fachgruppe.FG_ME) return false;
 		if (row.istMoeglichQ22) {
 			return row.istFremdsprache
 				? this.getFallsSpracheMoeglich(row)
@@ -496,9 +489,9 @@ export class DataSchuelerLaufbahnplanung extends BaseData<
 	public getAbiGKMoeglich(row: GostFach): boolean {
 		const fach = ZulaessigesFach.getByKuerzelASD(row.kuerzel);
 		if (
-			fach.getFachgruppe() === Fachgruppe.FG5_ME ||
-			fach.getFachgruppe() === Fachgruppe.FG13_VX ||
-			fach.getFachgruppe() === Fachgruppe.FG14_PX
+			fach.getFachgruppe() === Fachgruppe.FG_ME ||
+			fach.getFachgruppe() === Fachgruppe.FG_VX ||
+			fach.getFachgruppe() === Fachgruppe.FG_PX
 		)
 			return false;
 		return row.istMoeglichAbiGK;
@@ -512,9 +505,9 @@ export class DataSchuelerLaufbahnplanung extends BaseData<
 	public getAbiLKMoeglich(row: GostFach): boolean {
 		const fach = ZulaessigesFach.getByKuerzelASD(row.kuerzel);
 		if (
-			fach.getFachgruppe() === Fachgruppe.FG5_ME ||
-			fach.getFachgruppe() === Fachgruppe.FG13_VX ||
-			fach.getFachgruppe() === Fachgruppe.FG14_PX ||
+			fach.getFachgruppe() === Fachgruppe.FG_ME ||
+			fach.getFachgruppe() === Fachgruppe.FG_VX ||
+			fach.getFachgruppe() === Fachgruppe.FG_PX ||
 			fach.getJahrgangAb() === Jahrgaenge.JG_EF ||
 			(row.biliSprache === null && row.biliSprache === "D")
 		)

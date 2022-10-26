@@ -91,14 +91,9 @@ import SCardGostKursblockungParameter from "./SCardGostKursblockungParameter.vue
 	const bgColor: ComputedRef<string> = computed(() => {
 		if (belegung.value) return "gray"
 		const zulfach = ZulaessigesFach.getByKuerzelASD(gostfach.value?.kuerzel || null);
-		const fachgruppe = zulfach?.getFachgruppe();
-		if (!fachgruppe)
+		if (!zulfach)
 			return "#ffffff";
-		const rgb =
-			(fachgruppe.daten.farbe.red << 16) |
-			(fachgruppe.daten.farbe.green << 8) |
-			(fachgruppe.daten.farbe.blue << 0);
-		return "#" + (0x1000000 + rgb).toString(16).slice(1);
+		return zulfach.getHMTLFarbeRGB().valueOf();
 	});
 
 	function get_kurs_name(): String {

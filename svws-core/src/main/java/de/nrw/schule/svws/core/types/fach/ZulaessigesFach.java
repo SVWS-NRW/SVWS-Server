@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Vector;
 
 import de.nrw.schule.svws.core.adt.Pair;
+import de.nrw.schule.svws.core.data.RGBFarbe;
 import de.nrw.schule.svws.core.data.fach.FachKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.SchulformSchulgliederung;
 import de.nrw.schule.svws.core.types.jahrgang.Jahrgaenge;
@@ -1908,7 +1909,7 @@ public enum ZulaessigesFach {
 	/** Fach Instrumentalpraktischer Grundkurs */
 	IN(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(112000000L, "IN", "Instrumentalpraktischer Grundkurs",
-		"IN", null, Fachgruppe.FG5_ME, null,
+		"IN", null, Fachgruppe.FG_ME, null,
 		false, false, false, false, false, true, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -2367,7 +2368,7 @@ public enum ZulaessigesFach {
 	/** Fach Literatur */
 	LI(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(138000000L, "LI", "Literatur",
-		"LI", null, Fachgruppe.FG5_ME, null,
+		"LI", null, Fachgruppe.FG_ME, null,
 		false, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.BK, (Schulgliederung) null),
@@ -4432,7 +4433,7 @@ public enum ZulaessigesFach {
 	/** Fach vokalpraktischer Grundkurs */
 	VO(new FachKatalogEintrag[] {
 		new FachKatalogEintrag(252000000L, "VO", "vokalpraktischer Grundkurs",
-		"VO", null, Fachgruppe.FG5_ME, null,
+		"VO", null, Fachgruppe.FG_ME, null,
 		false, false, false, false, false, false, true, 
 		Arrays.asList(
 			new Pair<>(Schulform.GE, (Schulgliederung) null),
@@ -5105,5 +5106,39 @@ public enum ZulaessigesFach {
 		ZulaessigesFach result = getMapByASDKuerzel().get(kuerzel);
 		return (result == null) ? ZulaessigesFach.DEFAULT : result;
 	}
-	
+
+
+	/**
+	 * Gibt die Farbe des zulässigen Faches zurück.
+	 * 
+	 * @return die Farbe des zulässigen Faches
+	 */
+	public @NotNull RGBFarbe getFarbe() {
+	    Fachgruppe gruppe = Fachgruppe.getByKuerzel(this.daten.fachgruppe);
+	    return gruppe == null ? new RGBFarbe() : gruppe.daten.farbe;
+	}
+
+
+    /**
+     * Gibt die HTML-Farbe des zulässigen Faches als Aufruf der rgb-Funktion
+     * mit der übergebenen Transparenz zurück.
+     */
+    public @NotNull String getHMTLFarbeRGB() {
+        @NotNull RGBFarbe farbe = getFarbe();
+        return "rgba(" + farbe.red + "," + farbe.green + "," + farbe.blue + ")";
+    }
+
+
+	/**
+	 * Gibt die HTML-Farbe des zulässigen Faches als Aufruf der rgba-Funktion
+	 * mit der übergebenen Transparenz zurück.
+	 * 
+	 * @param alpha   gibt die Deckkraft der Farbe an 
+	 */
+	public @NotNull String getHMTLFarbeRGBA(double alpha) {
+	    @NotNull RGBFarbe farbe = getFarbe();
+	    double a = (alpha < 0.0) ? 0.0 : ((alpha > 1.0) ? 1.0 : alpha);
+	    return "rgba(" + farbe.red + "," + farbe.green + "," + farbe.blue + ", " + a + ")";
+	}
+
 }

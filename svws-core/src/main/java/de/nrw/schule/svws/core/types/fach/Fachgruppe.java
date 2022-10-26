@@ -100,7 +100,7 @@ public enum Fachgruppe {
 	}),
 
 	/** Fachgruppe Literatur, instrumental- oder vokalpraktischer Kurs */
-	FG5_ME(new FachgruppenKatalogEintrag[] {
+	FG_ME(new FachgruppenKatalogEintrag[] {
 	    new FachgruppenKatalogEintrag(5L, 4, null, "Literatur, instrumental- oder vokalpraktischer Kurs", "ME", new RGBFarbe(252, 204, 165), Arrays.asList(
     			Schulform.BK, Schulform.SB,
     			Schulform.GE, 
@@ -255,7 +255,7 @@ public enum Fachgruppe {
     }),
 
 	/** Fachgruppe Berufsübergreifender Bereich */
-	FG15_BUE(new FachgruppenKatalogEintrag[] {
+	FG_BUE(new FachgruppenKatalogEintrag[] {
 	    new FachgruppenKatalogEintrag(15L, null, 10, "Berufsübergreifender Bereich", "BUE", new RGBFarbe(), Arrays.asList(
     			Schulform.BK, Schulform.SB
     		), 1, false, null, null)
@@ -401,7 +401,7 @@ public enum Fachgruppe {
 	}),
 
 	/** Fachgruppe Informatik (Sek I) */
-	FG29_IF(new FachgruppenKatalogEintrag[] {
+	FG_IF(new FachgruppenKatalogEintrag[] {
 	    new FachgruppenKatalogEintrag(29L, null, 1900, "Informatik (Sek I)", "IF", new RGBFarbe(141, 180, 227), Arrays.asList(
     			Schulform.BK, Schulform.SB,
     			Schulform.FW, Schulform.HI, Schulform.WF,

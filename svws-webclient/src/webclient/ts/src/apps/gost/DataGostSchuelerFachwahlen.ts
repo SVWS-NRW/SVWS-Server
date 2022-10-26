@@ -23,14 +23,7 @@ export class DataGostSchuelerFachwahlen extends BaseData<
 	 * @returns {string}
 	 */
 	public getBgColor(f: GostStatistikFachwahl): string {
-		const fach = ZulaessigesFach.getByKuerzelASD(f.kuerzel);
-		const fachgruppe = fach.getFachgruppe();
-		if (!fachgruppe) return "#ffffff";
-		const rgb =
-			(fachgruppe.daten.farbe.red << 16) |
-			(fachgruppe.daten.farbe.green << 8) |
-			(fachgruppe.daten.farbe.blue << 0);
-		return "#" + (0x1000000 + rgb).toString(16).slice(1);
+		return ZulaessigesFach.getByKuerzelASD(f.kuerzel).getHMTLFarbeRGB().valueOf();
 	}
 
 	/**

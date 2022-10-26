@@ -113,21 +113,10 @@ export class Gost extends App {
 		]);
 	}
 
-	//TODO gleiche Funktion wie in Schueler.ts
 	public getBgColor(row: GostStatistikFachwahl): string {
-		const fach = ZulaessigesFach.getByKuerzelASD(row.kuerzelStatistik);
-		const fachgruppe = fach.getFachgruppe();
-		if (!fachgruppe) return "rgba(0,0,0,0)";
-		return (
-			"rgb(" +
-			fachgruppe.daten.farbe.red +
-			", " +
-			fachgruppe.daten.farbe.green +
-			", " +
-			fachgruppe.daten.farbe.blue +
-			", 1.0)"
-		);
+		return ZulaessigesFach.getByKuerzelASD(row.kuerzelStatistik).getHMTLFarbeRGBA(1.0).valueOf();
 	}
+
 	async create_blockung(id: number, hjId: number): Promise<List<Number>|void> {
 		this.addIdToApiStatus(hjId);
 		this.setApiStatusIdle(hjId);

@@ -158,13 +158,9 @@ const fach: ComputedRef<ZulaessigesFach> = computed(() => {
 });
 
 const bgColor: ComputedRef<string> = computed(() => {
-	const fachgruppe = fach.value?.getFachgruppe();
-	if (!fachgruppe) return "#ffffff";
-	const rgb =
-		(fachgruppe.daten.farbe.red << 16) |
-		(fachgruppe.daten.farbe.green << 8) |
-		(fachgruppe.daten.farbe.blue << 0);
-	return "#" + (0x1000000 + rgb).toString(16).slice(1);
+	if (!fach.value)
+		return "#ffffff";
+	return fach.value.getHMTLFarbeRGB().valueOf();
 });
 
 const art = GostKursart.fromID(props.kurs.kursart)

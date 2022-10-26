@@ -31,7 +31,7 @@ export class Fachgruppe extends JavaObject {
 
 	public static readonly FG_MS : Fachgruppe = new Fachgruppe("FG_MS", 3, [new FachgruppenKatalogEintrag(4, 3, 500, "Kunst und Musik", "MS", new RGBFarbe(252, 204, 165), Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), 13, true, null, null)]);
 
-	public static readonly FG5_ME : Fachgruppe = new Fachgruppe("FG5_ME", 4, [new FachgruppenKatalogEintrag(5, 4, null, "Literatur, instrumental- oder vokalpraktischer Kurs", "ME", new RGBFarbe(252, 204, 165), Arrays.asList(Schulform.BK, Schulform.SB, Schulform.GE, Schulform.GY, Schulform.SG, Schulform.WB), 13, false, null, null)]);
+	public static readonly FG_ME : Fachgruppe = new Fachgruppe("FG_ME", 4, [new FachgruppenKatalogEintrag(5, 4, null, "Literatur, instrumental- oder vokalpraktischer Kurs", "ME", new RGBFarbe(252, 204, 165), Arrays.asList(Schulform.BK, Schulform.SB, Schulform.GE, Schulform.GY, Schulform.SG, Schulform.WB), 13, false, null, null)]);
 
 	public static readonly FG_GS : Fachgruppe = new Fachgruppe("FG_GS", 5, [new FachgruppenKatalogEintrag(6, 5, 300, "Gesellschaftswissenschaft", "GS", new RGBFarbe(234, 241, 222), Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), 11, true, null, null)]);
 
@@ -51,7 +51,7 @@ export class Fachgruppe extends JavaObject {
 
 	public static readonly FG_PX : Fachgruppe = new Fachgruppe("FG_PX", 13, [new FachgruppenKatalogEintrag(14, 11, 1600, "Projektkurs", "PX", new RGBFarbe(191, 191, 191), Arrays.asList(Schulform.BK, Schulform.SB, Schulform.GE, Schulform.GY, Schulform.SG, Schulform.WB), 0, false, null, null)]);
 
-	public static readonly FG15_BUE : Fachgruppe = new Fachgruppe("FG15_BUE", 14, [new FachgruppenKatalogEintrag(15, null, 10, "Berufsübergreifender Bereich", "BUE", new RGBFarbe(), Arrays.asList(Schulform.BK, Schulform.SB), 1, false, null, null)]);
+	public static readonly FG_BUE : Fachgruppe = new Fachgruppe("FG_BUE", 14, [new FachgruppenKatalogEintrag(15, null, 10, "Berufsübergreifender Bereich", "BUE", new RGBFarbe(), Arrays.asList(Schulform.BK, Schulform.SB), 1, false, null, null)]);
 
 	public static readonly FG_BBS : Fachgruppe = new Fachgruppe("FG_BBS", 15, [new FachgruppenKatalogEintrag(16, null, 20, "Berufsbezogener Bereich", "BBS", new RGBFarbe(), Arrays.asList(Schulform.BK, Schulform.SB), 2, false, null, null)]);
 
@@ -79,7 +79,7 @@ export class Fachgruppe extends JavaObject {
 
 	public static readonly FG_PA : Fachgruppe = new Fachgruppe("FG_PA", 27, [new FachgruppenKatalogEintrag(28, null, 1800, "Projektarbeit", "PA", new RGBFarbe(), Arrays.asList(Schulform.BK, Schulform.SB), 0, false, null, null)]);
 
-	public static readonly FG29_IF : Fachgruppe = new Fachgruppe("FG29_IF", 28, [new FachgruppenKatalogEintrag(29, null, 1900, "Informatik (Sek I)", "IF", new RGBFarbe(141, 180, 227), Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), 10, true, null, null)]);
+	public static readonly FG_IF : Fachgruppe = new Fachgruppe("FG_IF", 28, [new FachgruppenKatalogEintrag(29, null, 1900, "Informatik (Sek I)", "IF", new RGBFarbe(141, 180, 227), Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), 10, true, null, null)]);
 
 	public static VERSION : number = 1;
 

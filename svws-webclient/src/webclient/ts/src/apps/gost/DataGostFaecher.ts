@@ -87,7 +87,7 @@ export class DataGostFaecher extends BaseData<
 		const fg = ZulaessigesFach.getByKuerzelASD(
 			fach.kuerzel
 		).getFachgruppe();
-		return fg == Fachgruppe.FG13_VX || fg == Fachgruppe.FG14_PX;
+		return fg == Fachgruppe.FG_VX || fg == Fachgruppe.FG_PX;
 	}
 
 	/**
@@ -159,14 +159,7 @@ export class DataGostFaecher extends BaseData<
 	 * @returns {string}
 	 */
 	public getBgColor(row: GostFach): string {
-		const fach = ZulaessigesFach.getByKuerzelASD(row.kuerzel);
-		const fachgruppe = fach.getFachgruppe();
-		if (fachgruppe === null) return "#" + (0x1ffffff).toString(16).slice(1);
-		const rgb =
-			(fachgruppe.daten.farbe.red << 16) |
-			(fachgruppe.daten.farbe.green << 8) |
-			(fachgruppe.daten.farbe.blue << 0);
-		return "#" + (0x1000000 + rgb).toString(16).slice(1);
+		return ZulaessigesFach.getByKuerzelASD(row.kuerzel).getHMTLFarbeRGB().valueOf();
 	}
 
 	public ist_PJK(fach: GostFach): boolean {
@@ -174,14 +167,14 @@ export class DataGostFaecher extends BaseData<
 		const fg = ZulaessigesFach.getByKuerzelASD(
 			fach.kuerzel
 		).getFachgruppe();
-		return fg === Fachgruppe.FG14_PX;
+		return fg === Fachgruppe.FG_PX;
 	}
 
 	hatLeitfach1(fach: GostFach): boolean {
 		const f = ZulaessigesFach.getByKuerzelASD(fach.kuerzel);
 		return (
-			f.getFachgruppe() == Fachgruppe.FG13_VX ||
-			f.getFachgruppe() == Fachgruppe.FG14_PX
+			f.getFachgruppe() == Fachgruppe.FG_VX ||
+			f.getFachgruppe() == Fachgruppe.FG_PX
 		);
 	}
 	/**
@@ -193,8 +186,8 @@ export class DataGostFaecher extends BaseData<
 	public getEF1Moeglich(row: GostFach): boolean {
 		const fach = ZulaessigesFach.getByKuerzelASD(row.kuerzel);
 		return !(
-			fach.getFachgruppe() == Fachgruppe.FG5_ME ||
-			fach.getFachgruppe() == Fachgruppe.FG14_PX
+			fach.getFachgruppe() == Fachgruppe.FG_ME ||
+			fach.getFachgruppe() == Fachgruppe.FG_PX
 		);
 	}
 	/**
@@ -206,8 +199,8 @@ export class DataGostFaecher extends BaseData<
 	public getEF2Moeglich(row: GostFach): boolean {
 		const fach = ZulaessigesFach.getByKuerzelASD(row.kuerzel);
 		return !(
-			fach.getFachgruppe() == Fachgruppe.FG5_ME ||
-			fach.getFachgruppe() == Fachgruppe.FG14_PX
+			fach.getFachgruppe() == Fachgruppe.FG_ME ||
+			fach.getFachgruppe() == Fachgruppe.FG_PX
 		);
 	}
 	/**
@@ -240,7 +233,7 @@ export class DataGostFaecher extends BaseData<
 	 */
 	public getQ21Moeglich(row: GostFach): boolean {
 		const fach = ZulaessigesFach.getByKuerzelASD(row.kuerzel);
-		return !(fach.getFachgruppe() == Fachgruppe.FG5_ME);
+		return !(fach.getFachgruppe() == Fachgruppe.FG_ME);
 	}
 	/**
 	 * Gibt an, ob die Fachwahl in der Q22 möglich ist
@@ -250,7 +243,7 @@ export class DataGostFaecher extends BaseData<
 	 */
 	public getQ22Moeglich(row: GostFach): boolean {
 		const fach = ZulaessigesFach.getByKuerzelASD(row.kuerzel);
-		return !(fach.getFachgruppe() == Fachgruppe.FG5_ME);
+		return !(fach.getFachgruppe() == Fachgruppe.FG_ME);
 	}
 	/**
 	 * Gibt an, ob die Fachwahl als Grundkurs möglich ist
@@ -261,9 +254,9 @@ export class DataGostFaecher extends BaseData<
 	public getAbiGKMoeglich(row: GostFach): boolean {
 		const fach = ZulaessigesFach.getByKuerzelASD(row.kuerzel);
 		return !(
-			fach.getFachgruppe() == Fachgruppe.FG5_ME ||
-			fach.getFachgruppe() == Fachgruppe.FG13_VX ||
-			fach.getFachgruppe() == Fachgruppe.FG14_PX
+			fach.getFachgruppe() == Fachgruppe.FG_ME ||
+			fach.getFachgruppe() == Fachgruppe.FG_VX ||
+			fach.getFachgruppe() == Fachgruppe.FG_PX
 		);
 	}
 	/**
@@ -275,9 +268,9 @@ export class DataGostFaecher extends BaseData<
 	public getAbiLKMoeglich(row: GostFach): boolean {
 		const fach = ZulaessigesFach.getByKuerzelASD(row.kuerzel);
 		return !(
-			fach.getFachgruppe() == Fachgruppe.FG5_ME ||
-			fach.getFachgruppe() == Fachgruppe.FG13_VX ||
-			fach.getFachgruppe() == Fachgruppe.FG14_PX ||
+			fach.getFachgruppe() == Fachgruppe.FG_ME ||
+			fach.getFachgruppe() == Fachgruppe.FG_VX ||
+			fach.getFachgruppe() == Fachgruppe.FG_PX ||
 			fach.getJahrgangAb() == Jahrgaenge.JG_EF ||
 			(row.biliSprache != null && row.biliSprache != "D")
 		);

@@ -3,6 +3,7 @@ import { Fachgruppe, cast_de_nrw_schule_svws_core_types_fach_Fachgruppe } from '
 import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
 import { Schulform, cast_de_nrw_schule_svws_core_types_schule_Schulform } from '../../../core/types/schule/Schulform';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
+import { RGBFarbe, cast_de_nrw_schule_svws_core_data_RGBFarbe } from '../../../core/data/RGBFarbe';
 import { Jahrgaenge, cast_de_nrw_schule_svws_core_types_jahrgang_Jahrgaenge } from '../../../core/types/jahrgang/Jahrgaenge';
 import { SchulformSchulgliederung, cast_de_nrw_schule_svws_core_data_schule_SchulformSchulgliederung } from '../../../core/data/schule/SchulformSchulgliederung';
 import { JavaLong, cast_java_lang_Long } from '../../../java/lang/JavaLong';
@@ -249,7 +250,7 @@ export class ZulaessigesFach extends JavaObject {
 
 	public static readonly IM : ZulaessigesFach = new ZulaessigesFach("IM", 110, [new FachKatalogEintrag(111000000, "IM", "Unterricht in der Herkunftssprache - Italienisch", "IM", null, null, null, true, true, false, false, false, false, true, Arrays.asList(new Pair(Schulform.G, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.GE, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.GM, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.GY, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.H, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.PS, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.R, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.KS, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.S, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.SG, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.SK, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.SR, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.V, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null))), null, null)]);
 
-	public static readonly IN : ZulaessigesFach = new ZulaessigesFach("IN", 111, [new FachKatalogEintrag(112000000, "IN", "Instrumentalpraktischer Grundkurs", "IN", null, Fachgruppe.FG5_ME, null, false, false, false, false, false, true, true, Arrays.asList(new Pair(Schulform.GE, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.GM, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.GY, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.PS, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.SG, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null))), null, null)]);
+	public static readonly IN : ZulaessigesFach = new ZulaessigesFach("IN", 111, [new FachKatalogEintrag(112000000, "IN", "Instrumentalpraktischer Grundkurs", "IN", null, Fachgruppe.FG_ME, null, false, false, false, false, false, true, true, Arrays.asList(new Pair(Schulform.GE, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.GM, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.GY, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.PS, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.SG, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null))), null, null)]);
 
 	public static readonly IQ : ZulaessigesFach = new ZulaessigesFach("IQ", 112, [new FachKatalogEintrag(113000000, "IQ", "Italienisch, außerhalb des regulären Fachunterrichts", "I", null, null, null, false, false, false, false, false, false, true, Arrays.asList(new Pair(Schulform.GE, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.GM, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.GY, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.PS, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.R, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.SG, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.SK, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.SR, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null))), null, null)]);
 
@@ -301,7 +302,7 @@ export class ZulaessigesFach extends JavaObject {
 
 	public static readonly LH : ZulaessigesFach = new ZulaessigesFach("LH", 136, [new FachKatalogEintrag(137000000, "LH", "Herkunftssprache anstelle einer Pflichtfremdsprache - Albanisch", "LH", null, null, null, true, true, false, true, false, false, true, Arrays.asList(new Pair(Schulform.GE, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.GM, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.GY, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.H, Schulgliederung.R), new Pair(Schulform.PS, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.R, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.KS, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.S, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.SG, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.SK, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.SR, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null))), null, null)]);
 
-	public static readonly LI : ZulaessigesFach = new ZulaessigesFach("LI", 137, [new FachKatalogEintrag(138000000, "LI", "Literatur", "LI", null, Fachgruppe.FG5_ME, null, false, false, false, false, false, false, true, Arrays.asList(new Pair(Schulform.BK, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.GE, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.GM, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.GY, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.PS, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.SB, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.SG, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.WB, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null))), null, null)]);
+	public static readonly LI : ZulaessigesFach = new ZulaessigesFach("LI", 137, [new FachKatalogEintrag(138000000, "LI", "Literatur", "LI", null, Fachgruppe.FG_ME, null, false, false, false, false, false, false, true, Arrays.asList(new Pair(Schulform.BK, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.GE, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.GM, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.GY, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.PS, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.SB, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.SG, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.WB, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null))), null, null)]);
 
 	public static readonly LM : ZulaessigesFach = new ZulaessigesFach("LM", 138, [new FachKatalogEintrag(139000000, "LM", "Unterricht in der Herkunftssprache - Albanisch", "LM", null, null, null, true, true, false, false, false, false, true, Arrays.asList(new Pair(Schulform.G, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.GE, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.GM, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.GY, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.H, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.PS, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.R, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.KS, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.S, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.SG, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.SK, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.SR, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.V, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null))), null, null)]);
 
@@ -529,7 +530,7 @@ export class ZulaessigesFach extends JavaObject {
 
 	public static readonly VM : ZulaessigesFach = new ZulaessigesFach("VM", 250, [new FachKatalogEintrag(251000000, "VM", "Unterricht in der Herkunftssprache - Bulgarisch", "VM", null, null, null, true, true, false, false, false, false, true, Arrays.asList(new Pair(Schulform.BK, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.G, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.GE, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.GM, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.GY, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.H, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.PS, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.R, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.KS, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.S, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.SG, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.SK, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.SR, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.V, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null))), null, null)]);
 
-	public static readonly VO : ZulaessigesFach = new ZulaessigesFach("VO", 251, [new FachKatalogEintrag(252000000, "VO", "vokalpraktischer Grundkurs", "VO", null, Fachgruppe.FG5_ME, null, false, false, false, false, false, false, true, Arrays.asList(new Pair(Schulform.GE, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.GM, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.GY, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.PS, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.SG, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null))), null, null)]);
+	public static readonly VO : ZulaessigesFach = new ZulaessigesFach("VO", 251, [new FachKatalogEintrag(252000000, "VO", "vokalpraktischer Grundkurs", "VO", null, Fachgruppe.FG_ME, null, false, false, false, false, false, false, true, Arrays.asList(new Pair(Schulform.GE, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.GM, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.GY, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.PS, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.SG, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null))), null, null)]);
 
 	public static readonly VP : ZulaessigesFach = new ZulaessigesFach("VP", 252, [new FachKatalogEintrag(253000000, "VP", "Volkswirtschaftslehre/Politik", "VP", null, Fachgruppe.FG_GS, null, false, false, false, false, false, false, true, Arrays.asList(new Pair(Schulform.BK, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null)), new Pair(Schulform.SB, cast_de_nrw_schule_svws_core_types_schule_Schulgliederung(null))), null, null)]);
 
@@ -716,6 +717,37 @@ export class ZulaessigesFach extends JavaObject {
 	public static getByKuerzelASD(kuerzel : String | null) : ZulaessigesFach {
 		let result : ZulaessigesFach | null = ZulaessigesFach.getMapByASDKuerzel().get(kuerzel);
 		return (result === null) ? ZulaessigesFach.DEFAULT : result;
+	}
+
+	/**
+	 * Gibt die Farbe des zulässigen Faches zurück.
+	 * 
+	 * @return die Farbe des zulässigen Faches
+	 */
+	public getFarbe() : RGBFarbe {
+		let gruppe : Fachgruppe | null = Fachgruppe.getByKuerzel(this.daten.fachgruppe);
+		return gruppe === null ? new RGBFarbe() : gruppe.daten.farbe;
+	}
+
+	/**
+	 * Gibt die HTML-Farbe des zulässigen Faches als Aufruf der rgb-Funktion
+	 * mit der übergebenen Transparenz zurück.
+	 */
+	public getHMTLFarbeRGB() : String {
+		let farbe : RGBFarbe = this.getFarbe();
+		return "rgba(" + farbe.red + "," + farbe.green + "," + farbe.blue + ")";
+	}
+
+	/**
+	 * Gibt die HTML-Farbe des zulässigen Faches als Aufruf der rgba-Funktion
+	 * mit der übergebenen Transparenz zurück.
+	 * 
+	 * @param alpha   gibt die Deckkraft der Farbe an 
+	 */
+	public getHMTLFarbeRGBA(alpha : number) : String {
+		let farbe : RGBFarbe = this.getFarbe();
+		let a : number = (alpha < 0.0) ? 0.0 : ((alpha > 1.0) ? 1.0 : alpha);
+		return "rgba(" + farbe.red + "," + farbe.green + "," + farbe.blue + ", " + a + ")";
 	}
 
 	/**
