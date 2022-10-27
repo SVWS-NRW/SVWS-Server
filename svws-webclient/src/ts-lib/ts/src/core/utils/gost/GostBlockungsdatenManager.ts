@@ -601,6 +601,26 @@ export class GostBlockungsdatenManager extends JavaObject {
 		return gFach.kuerzel + "-" + GostKursart.fromID(kurs.kursart).kuerzel + kurs.nummer;
 	}
 
+	/**
+	 * Liefert die zu (Schüler, Fach) die jeweilige Kursart. <br>
+	 * Liefert eine Exception, falls (Schüler, Fach) nicht existiert.
+	 * 
+	 * @param pSchuelerID Die Datenbank-ID des Schülers.
+	 * @param pFachID     Die Datenbank-ID des Faches.
+	 * 
+	 * @return Die zu (Schüler, Fach) die jeweilige Kursart.
+	 */
+	public getOfSchuelerOfFachKursart(pSchuelerID : number, pFachID : number) : GostKursart {
+		let mapFachFachwahl : HashMap<Number, GostFachwahl> | null = this._map_fachwahlen.get(pSchuelerID);
+		if (mapFachFachwahl === null) 
+			throw new NullPointerException("Schüler-ID=" + pSchuelerID + " unbekannt!")
+		let fachwahl : GostFachwahl | null = mapFachFachwahl.get(pFachID);
+		if (fachwahl === null) 
+			throw new NullPointerException("Schüler-ID=" + pSchuelerID + ", Fach=" + pFachID + " unbekannt!")
+		let kursart : GostKursart = GostKursart.fromFachwahlOrException(fachwahl);
+		return kursart;
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.nrw.schule.svws.core.utils.gost.GostBlockungsdatenManager'].includes(name);
 	}

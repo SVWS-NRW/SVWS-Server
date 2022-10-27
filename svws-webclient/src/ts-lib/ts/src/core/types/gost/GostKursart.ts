@@ -102,6 +102,17 @@ export class GostKursart extends JavaObject {
 	}
 
 	/**
+	 * Liefert die Kursart anhand der Kursart-ID der Fachwahl.
+	 * 
+	 * @param pFachwahl Das Fachwahl-Objekt.
+	 * @return die Kursart anhand der Kursart-ID der Fachwahl.
+	 * @throws IllegalArgumentException falls die ID ungültig ist 
+	 */
+	public static fromFachwahlOrException(pFachwahl : GostFachwahl) : GostKursart {
+		return GostKursart.fromID(pFachwahl.kursartID);
+	}
+
+	/**
 	 * Gibt die Kursart aus der ID Kursart zurück.
 	 * 
 	 * @param id    die ID der Kursart

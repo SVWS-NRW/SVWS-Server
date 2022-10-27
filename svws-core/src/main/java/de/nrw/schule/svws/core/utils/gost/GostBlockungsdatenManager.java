@@ -489,8 +489,6 @@ public class GostBlockungsdatenManager {
 	 * @return Die Anzahl an Schienen. */
 	public int getSchienenAnzahl() {
 		return _mapSchienen.size();
-		// TODO Problematisch, der Blockungsalgorithmus kennt nur durchgehende Schienen, z.B. von 1 bis 12
-		// Aber in dieser Datenstruktur kann eine Schienen Nr. mittendrin fehlen.
 	}
 
 	/** Liefert die Anzahl an Kursen.
@@ -564,6 +562,28 @@ public class GostBlockungsdatenManager {
 		@NotNull GostBlockungKurs kurs = getKurs(pKursID);
 		@NotNull GostFach gFach = _faecherManager.getOrException(kurs.fach_id);
 		return gFach.kuerzel + "-" + GostKursart.fromID(kurs.kursart).kuerzel + kurs.nummer;
+	}
+
+	/**
+	 * Liefert die zu (Schüler, Fach) die jeweilige Kursart. <br>
+	 * Liefert eine Exception, falls (Schüler, Fach) nicht existiert.
+	 * 
+	 * @param pSchuelerID Die Datenbank-ID des Schülers.
+	 * @param pFachID     Die Datenbank-ID des Faches.
+	 * 
+	 * @return Die zu (Schüler, Fach) die jeweilige Kursart.
+	 */
+	public @NotNull GostKursart getOfSchuelerOfFachKursart(long pSchuelerID, long pFachID) {
+		HashMap<@NotNull Long, @NotNull GostFachwahl> mapFachFachwahl = _map_fachwahlen.get(pSchuelerID);
+		if (mapFachFachwahl == null)
+			throw new NullPointerException("Schüler-ID=" + pSchuelerID +" unbekannt!");
+
+		GostFachwahl fachwahl = mapFachFachwahl.get(pFachID);
+		if (fachwahl == null)
+			throw new NullPointerException("Schüler-ID=" + pSchuelerID +", Fach="+pFachID+" unbekannt!");
+
+		@NotNull GostKursart kursart = GostKursart.fromFachwahlOrException(fachwahl);
+		return kursart;
 	}
 
 }

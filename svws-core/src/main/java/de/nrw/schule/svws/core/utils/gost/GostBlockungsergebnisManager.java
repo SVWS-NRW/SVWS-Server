@@ -214,13 +214,13 @@ public class GostBlockungsergebnisManager {
 
 		// Fachwahlen kopieren und hinzufügen.
 		for (@NotNull GostFachwahl gFachwahl : _parent.daten().fachwahlen) {
-			HashMap<@NotNull Long, GostBlockungsergebnisKurs> mapFK = _map_schuelerID_fachID_kurs.get(gFachwahl.schuelerID);
-			if (mapFK == null) {
-				mapFK = new HashMap<>();
-				_map_schuelerID_fachID_kurs.put(gFachwahl.schuelerID, mapFK);
+			HashMap<@NotNull Long, GostBlockungsergebnisKurs> mapFachKurs = _map_schuelerID_fachID_kurs.get(gFachwahl.schuelerID);
+			if (mapFachKurs == null) {
+				mapFachKurs = new HashMap<>();
+				_map_schuelerID_fachID_kurs.put(gFachwahl.schuelerID, mapFachKurs);
 			}
-			if (mapFK.put(gFachwahl.fachID, null) != null)
-				throw new NullPointerException("Schüler "+gFachwahl.schuelerID+" hat Fach "+gFachwahl.fachID+" doppelt!");
+			if (mapFachKurs.put(gFachwahl.fachID, null) != null)
+				throw new NullPointerException("Schüler " + gFachwahl.schuelerID + " hat Fach " + gFachwahl.fachID + " doppelt!");
 		}
 
 		// _map_schuelerID_schienenID_kurse
@@ -245,8 +245,6 @@ public class GostBlockungsergebnisManager {
 		// Regelverletzungen überprüfen.
 		stateRegelvalidierung();
 	}
-	
-	// TODO BAR getOfSchülerFachKursart(schuelerid, fachid) 
 
 	private void stateRegelvalidierung() {
 		// Clear
@@ -910,6 +908,20 @@ public class GostBlockungsergebnisManager {
 		if (kursmenge == null)
 			throw new NullPointerException("Schüler-ID=" + pSchuelerID +", Schienen-ID=" + pSchienenID +  " unbekannt!");
 		return kursmenge;
+	}
+
+	
+	/**
+	 * Liefert die zu (Schüler, Fach) die jeweilige Kursart. <br>
+	 * Liefert eine Exception, falls (Schüler, Fach) nicht existiert.
+	 * 
+	 * @param pSchuelerID Die Datenbank-ID des Schülers.
+	 * @param pFachID     Die Datenbank-ID des Faches.
+	 * 
+	 * @return Die zu (Schüler, Fach) die jeweilige Kursart.
+	 */
+	public @NotNull GostKursart getOfSchuelerOfFachKursart(long pSchuelerID, long pFachID) {
+		return _parent.getOfSchuelerOfFachKursart(pSchuelerID, pFachID);
 	}
 
 	/**

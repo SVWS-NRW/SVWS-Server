@@ -120,6 +120,16 @@ public class GostKursart {
 		throw new IllegalArgumentException("Invalid ID value.");
 	}
 	
+    /**
+     * Liefert die Kursart anhand der Kursart-ID der Fachwahl.
+     * 
+     * @param pFachwahl Das Fachwahl-Objekt.
+     * @return die Kursart anhand der Kursart-ID der Fachwahl.
+     * @throws IllegalArgumentException falls die ID ungültig ist 
+     */
+	public static @NotNull GostKursart fromFachwahlOrException(@NotNull GostFachwahl pFachwahl) throws IllegalArgumentException {
+		return fromID(pFachwahl.kursartID);
+	}
 
     /**
      * Gibt die Kursart aus der ID Kursart zurück.

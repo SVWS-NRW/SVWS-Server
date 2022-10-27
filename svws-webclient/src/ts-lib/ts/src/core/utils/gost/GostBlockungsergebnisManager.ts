@@ -168,12 +168,12 @@ export class GostBlockungsergebnisManager extends JavaObject {
 				throw new NullPointerException("Schüler ID " + eSchuelerID.valueOf() + " doppelt!")
 		}
 		for (let gFachwahl of this._parent.daten().fachwahlen) {
-			let mapFK : HashMap<Number, GostBlockungsergebnisKurs | null> | null = this._map_schuelerID_fachID_kurs.get(gFachwahl.schuelerID);
-			if (mapFK === null) {
-				mapFK = new HashMap();
-				this._map_schuelerID_fachID_kurs.put(gFachwahl.schuelerID, mapFK);
+			let mapFachKurs : HashMap<Number, GostBlockungsergebnisKurs | null> | null = this._map_schuelerID_fachID_kurs.get(gFachwahl.schuelerID);
+			if (mapFachKurs === null) {
+				mapFachKurs = new HashMap();
+				this._map_schuelerID_fachID_kurs.put(gFachwahl.schuelerID, mapFachKurs);
 			}
-			if (mapFK.put(gFachwahl.fachID, null) !== null) 
+			if (mapFachKurs.put(gFachwahl.fachID, null) !== null) 
 				throw new NullPointerException("Schüler " + gFachwahl.schuelerID + " hat Fach " + gFachwahl.fachID + " doppelt!")
 		}
 		for (let gSchueler of this._parent.daten().schueler) {
@@ -774,6 +774,19 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		if (kursmenge === null) 
 			throw new NullPointerException("Schüler-ID=" + pSchuelerID + ", Schienen-ID=" + pSchienenID + " unbekannt!")
 		return kursmenge;
+	}
+
+	/**
+	 * Liefert die zu (Schüler, Fach) die jeweilige Kursart. <br>
+	 * Liefert eine Exception, falls (Schüler, Fach) nicht existiert.
+	 * 
+	 * @param pSchuelerID Die Datenbank-ID des Schülers.
+	 * @param pFachID     Die Datenbank-ID des Faches.
+	 * 
+	 * @return Die zu (Schüler, Fach) die jeweilige Kursart.
+	 */
+	public getOfSchuelerOfFachKursart(pSchuelerID : number, pFachID : number) : GostKursart {
+		return this._parent.getOfSchuelerOfFachKursart(pSchuelerID, pFachID);
 	}
 
 	/**
