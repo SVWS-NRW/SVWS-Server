@@ -53,6 +53,7 @@ import { KAOAKategorieEintrag, cast_de_nrw_schule_svws_core_data_kaoa_KAOAKatego
 import { KAOAMerkmalEintrag, cast_de_nrw_schule_svws_core_data_kaoa_KAOAMerkmalEintrag } from '../core/data/kaoa/KAOAMerkmalEintrag';
 import { KAOAZusatzmerkmalEintrag, cast_de_nrw_schule_svws_core_data_kaoa_KAOAZusatzmerkmalEintrag } from '../core/data/kaoa/KAOAZusatzmerkmalEintrag';
 import { KatalogEintrag, cast_de_nrw_schule_svws_core_data_kataloge_KatalogEintrag } from '../core/data/kataloge/KatalogEintrag';
+import { KatalogEintragOrte, cast_de_nrw_schule_svws_core_data_kataloge_KatalogEintragOrte } from '../core/data/kataloge/KatalogEintragOrte';
 import { KatalogEintragStrassen, cast_de_nrw_schule_svws_core_data_kataloge_KatalogEintragStrassen } from '../core/data/kataloge/KatalogEintragStrassen';
 import { KlassenartKatalogEintrag, cast_de_nrw_schule_svws_core_data_klassen_KlassenartKatalogEintrag } from '../core/data/klassen/KlassenartKatalogEintrag';
 import { KlassenDaten, cast_de_nrw_schule_svws_core_data_klassen_KlassenDaten } from '../core/data/klassen/KlassenDaten';
@@ -215,6 +216,33 @@ export class ApiServer extends BaseApi {
 		let path : string = "/config/publickey_base64";
 		const text : string = await super.getText(path);
 		return String(text);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getKatalogOrte für den Zugriff auf die URL https://{hostname}/db/{schema}/allgemein/orte
+	 * 
+	 * Erstellt eine Liste aller in dem Katalog vorhandenen Orte. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Eine Liste von Orts-Katalog-Einträgen
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<KatalogEintragOrte>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
+	 *   Code 404: Keine Orts-Katalog-Einträge gefunden
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * 
+	 * @returns Eine Liste von Orts-Katalog-Einträgen
+	 */
+	public async getKatalogOrte(schema : string) : Promise<List<KatalogEintragOrte>> {
+		let path : string = "/db/{schema}/allgemein/orte"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		let ret = new Vector<KatalogEintragOrte>();
+		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(KatalogEintragOrte.transpilerFromJSON(text)); });
+		return ret;
 	}
 
 
@@ -2804,7 +2832,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getKatalogHaltestellen für den Zugriff auf die URL https://{hostname}/db/{schema}/haltestellen
+	 * Implementierung der GET-Methode getHaltestellen für den Zugriff auf die URL https://{hostname}/db/{schema}/haltestellen
 	 * 
 	 * Erstellt eine Liste aller in dem Katalog vorhanden Haltestellen unter Angabe der ID, eines Kürzels und der textuellen Beschreibung sowie der Information, ob der Eintrag in der Anwendung sichtbar bzw. änderbar sein soll, undgibt diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
 	 * 
@@ -2819,7 +2847,7 @@ export class ApiServer extends BaseApi {
 	 * 
 	 * @returns Eine Liste von Katalog-Einträgen zu den Haltestellen.
 	 */
-	public async getKatalogHaltestellen(schema : string) : Promise<List<KatalogEintrag>> {
+	public async getHaltestellen(schema : string) : Promise<List<KatalogEintrag>> {
 		let path : string = "/db/{schema}/haltestellen"
 				.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
@@ -3805,7 +3833,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getKatalogOrte für den Zugriff auf die URL https://{hostname}/db/{schema}/orte
+	 * Implementierung der GET-Methode getOrte für den Zugriff auf die URL https://{hostname}/db/{schema}/orte
 	 * 
 	 * Erstellt eine Liste aller in dem Katalog vorhanden Orte unter Angabe der ID, der PLZ, des Ortes, ggf. des Kreises, dem Bundesland, einer Sortierreihenfolge und ob sie in der Anwendung sichtbar bzw. änderbar sein sollen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
 	 * 
@@ -3820,7 +3848,7 @@ export class ApiServer extends BaseApi {
 	 * 
 	 * @returns Eine Liste von Orts-Katalog-Einträgen
 	 */
-	public async getKatalogOrte(schema : string) : Promise<List<OrtKatalogEintrag>> {
+	public async getOrte(schema : string) : Promise<List<OrtKatalogEintrag>> {
 		let path : string = "/db/{schema}/orte"
 				.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
@@ -3832,7 +3860,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getKatalogOrtsteile für den Zugriff auf die URL https://{hostname}/db/{schema}/ortsteile
+	 * Implementierung der GET-Methode getOrtsteile für den Zugriff auf die URL https://{hostname}/db/{schema}/ortsteile
 	 * 
 	 * Erstellt eine Liste aller in dem Katalog vorhanden Ortsteile unter Angabe der ID, der zugehörigenOrt-ID, dem Namen des Ortsteils, einer Sortierreihenfolge und ob sie in der Anwendung sichtbar bzw. änderbar sein sollen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
 	 * 
@@ -3847,7 +3875,7 @@ export class ApiServer extends BaseApi {
 	 * 
 	 * @returns Eine Liste von Ortsteil-Katalog-Einträgen
 	 */
-	public async getKatalogOrtsteile(schema : string) : Promise<List<OrtsteilKatalogEintrag>> {
+	public async getOrtsteile(schema : string) : Promise<List<OrtsteilKatalogEintrag>> {
 		let path : string = "/db/{schema}/ortsteile"
 				.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);

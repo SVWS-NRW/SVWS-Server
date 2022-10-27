@@ -149,6 +149,7 @@ export { KAOAKategorieEintrag } from './core/data/kaoa/KAOAKategorieEintrag';
 export { KAOAMerkmalEintrag } from './core/data/kaoa/KAOAMerkmalEintrag';
 export { KAOAZusatzmerkmalEintrag } from './core/data/kaoa/KAOAZusatzmerkmalEintrag';
 export { KatalogEintrag } from './core/data/kataloge/KatalogEintrag';
+export { KatalogEintragOrte } from './core/data/kataloge/KatalogEintragOrte';
 export { KatalogEintragStrassen } from './core/data/kataloge/KatalogEintragStrassen';
 export { OrtKatalogEintrag } from './core/data/kataloge/OrtKatalogEintrag';
 export { OrtsteilKatalogEintrag } from './core/data/kataloge/OrtsteilKatalogEintrag';

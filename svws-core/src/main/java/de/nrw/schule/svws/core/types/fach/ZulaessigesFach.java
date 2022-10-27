@@ -5122,6 +5122,8 @@ public enum ZulaessigesFach {
     /**
      * Gibt die HTML-Farbe des zulässigen Faches als Aufruf der rgb-Funktion
      * mit der übergebenen Transparenz zurück.
+     * 
+     * @return die RGB-HTML-Farbdefinition als String
      */
     public @NotNull String getHMTLFarbeRGB() {
         @NotNull RGBFarbe farbe = getFarbe();
@@ -5134,6 +5136,8 @@ public enum ZulaessigesFach {
 	 * mit der übergebenen Transparenz zurück.
 	 * 
 	 * @param alpha   gibt die Deckkraft der Farbe an 
+     * 
+     * @return die RGBA-HTML-Farbdefinition als String
 	 */
 	public @NotNull String getHMTLFarbeRGBA(double alpha) {
 	    @NotNull RGBFarbe farbe = getFarbe();

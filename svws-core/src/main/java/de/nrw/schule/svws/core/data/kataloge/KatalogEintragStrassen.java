@@ -9,7 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * Diese Klasse ist eine DTO-Klasse für den Strassen-Katalog von IT.NRW. Der
- * Katalog wird in den Java-Resourcen unter "daten/csv/statkue/Strassen.csv"
+ * Katalog wird in den Java-Resourcen unter "daten/csv/Strassen.csv"
  * erwartet.
  */
 @JsonPropertyOrder({"Ort","RegSchl","Strasse","Stand"})

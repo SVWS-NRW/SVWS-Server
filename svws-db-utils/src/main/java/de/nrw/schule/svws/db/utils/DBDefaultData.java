@@ -36,6 +36,7 @@ public class DBDefaultData {
 	 */
 	public static String getFileName(SchemaTabelle tab) {
 	    return switch (tab.name()) {
+            case "Statkue_PLZOrt" -> "daten/csv/Orte.csv";
             case "Schildintern_AbiturInfos" -> "daten/csv/schild3/AbiturInfos.csv";
             case "Schildintern_Datenart" -> "daten/csv/schild3/Datenart.csv";
             case "Schildintern_DQR_Niveaus" -> "daten/csv/schild3/DQRNiveaus.csv";

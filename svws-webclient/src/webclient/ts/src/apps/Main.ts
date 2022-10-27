@@ -243,7 +243,7 @@ export class Main {
 		const o = App.schema;
 		this._pending.push(
 			App.api
-				.getKatalogOrte(o)
+				.getOrte(o)
 				.then(
 					r =>
 						(this.kataloge.orte = r)
@@ -251,7 +251,7 @@ export class Main {
 		);
 		this._pending.push(
 			App.api
-				.getKatalogOrtsteile(o)
+				.getOrtsteile(o)
 				.then(
 					r =>
 						(this.kataloge.ortsteile = r)
@@ -268,7 +268,7 @@ export class Main {
 		);
 		this._pending.push(
 			App.api
-				.getKatalogHaltestellen(o)
+				.getHaltestellen(o)
 				.then(
 					r =>
 						(this.kataloge.haltestellen = r)
