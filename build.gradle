@@ -27,7 +27,7 @@ allprojects {
 	// TODO Support JPMS-Modules
 	// apply plugin: 'de.jjohannes.extra-java-module-info'
 
-	version = '0.2.20'
+	version = '0.2.21'
 	group = 'de.nrw.schule.svws'
 
     repositories {
