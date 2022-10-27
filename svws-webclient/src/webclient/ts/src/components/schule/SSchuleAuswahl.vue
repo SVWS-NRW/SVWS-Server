@@ -19,10 +19,7 @@
 </template>
 
 <script setup lang="ts">
-	import { computed, WritableComputedRef } from "vue";
-	import { injectMainApp, Main } from "~/apps/Main";
 	import { router } from "~/router";
-	import { useAuswahlViaRoute } from "~/router/auswahlViaRoute";
 
 	const menu_items = [
 		{ title: "Schule bearbeiten", value: "schule_bearbeiten" },

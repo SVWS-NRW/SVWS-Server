@@ -2,34 +2,98 @@
 	<svws-ui-secondary-menu>
 		<template #headline>
 			<div>
-				<i-ri-arrow-left-line
-					class="inline-block cursor-pointer"
-					@click="router.push({ name: name })"
-				/>Benutzerverwaltung
+				<i-ri-arrow-left-line class="inline-block cursor-pointer" @click="router.push({ name: menu_previous })" />
+				Benutzerverwaltung
 			</div>
 		</template>
-		<template #header> </template>
+		<template #header>
+		</template>
 		<template #content>
-			<div class="container mt-2">
-				<svws-ui-sidebar-menu-item
-					v-for="item in menu_items"
-					:key="item.value"
-					@click="router.push({ name: item.value })"
-				>
-					<template #label>
-						<span>{{ item.title }}</span>
-					</template>
-				</svws-ui-sidebar-menu-item>
+			<!-- Auswahlliste für die Benutzer -->
+			<div class="px-1 pt-3 text-lg font-bold"> Benutzer: </div>
+			<div class="px-6 mt-4">
+				<svws-ui-text-input v-model="benutzer_suche" type="search" placeholder="Suche nach Namen oder Kürzel">
+					<i-ri-search-line />
+				</svws-ui-text-input>
+			</div>
+			<div class="pl-3 pt-6 pb-6 container">
+				<svws-ui-new-table v-model="benutzer_ausgewaehlt" :data="benutzer_rows_gefiltert" :columns="benutzer_cols" is-multi-select />
+			</div>
+			<!-- Auswahlliste für die Benutzergruppen -->
+			<div class="px-1 pt-3 text-lg font-bold"> Benutzergruppen: </div>
+			<div class="px-6 mt-4">
+				<svws-ui-text-input v-model="benutzergruppen_suche" type="search" placeholder="Suche nach Namen oder Kürzel">
+					<i-ri-search-line />
+				</svws-ui-text-input>
+			</div>
+			<div class="pl-3 pt-6 container">
+				<svws-ui-new-table v-model="benutzergruppen_ausgewaehlt" v-model:selection="benutzergruppen_selection" :data="benutzergruppen_rows_gefiltert" :columns="benutzergruppen_cols" is-multi-select />
 			</div>
 		</template>
 	</svws-ui-secondary-menu>
 </template>
+
 <script setup lang="ts">
-	import { ref } from "vue";
+	import type { BenutzerListeEintrag, BenutzergruppeListeEintrag } from "@svws-nrw/svws-core-ts";
+	import { computed, ComputedRef, Ref, ref } from "vue";
+	import { injectMainApp, Main } from "~/apps/Main";
+	import { useAuswahlViaRoute } from "~/router/auswahlViaRoute";
 	import { router } from "~/router";
-	const name = ref("schule");
-	const menu_items = [
-		{ title: "Benutzer", value: "benutzer" },
-		{ title: "Benutzergruppe", value: "benutzergruppe" }
+
+	// Allgemeines
+
+	const main: Main = injectMainApp();
+	const menu_previous = ref("schule");
+
+	// Auswahlliste der Benutzer
+
+	const benutzer_cols = [
+		{ key: "id", label: "ID", sortable: true },
+		{ key: "anzeigename", label: "Anzeigename", sortable: true },
+		{ key: "name", label: "Name", sortable: true }
 	];
+
+	const benutzer_suche: Ref<string> = ref("");
+
+	const benutzer_rows: ComputedRef<BenutzerListeEintrag[] | undefined> = computed(() => {
+		return main.apps.benutzer.auswahl.liste;
+	});
+
+	const benutzer_rows_gefiltert: ComputedRef<BenutzerListeEintrag[] | undefined> = computed(() => {
+		if (benutzer_rows.value === undefined)
+			return undefined;
+		const rowsValue: BenutzerListeEintrag[] = benutzer_rows.value;
+		return (benutzer_suche.value) 
+			? rowsValue.filter((e: BenutzerListeEintrag) => e.name.toLocaleLowerCase().includes(benutzer_suche.value.toLocaleLowerCase())) 
+			: rowsValue;
+	});
+
+	const benutzer_ausgewaehlt = useAuswahlViaRoute('benutzer');
+
+
+	// Auswahlliste der Benutzergruppen
+
+	const benutzergruppen_cols = [
+		{ key: "id", label: "ID", sortable: true },
+		{ key: "bezeichnung", label: "Bezeichnung", sortable: true }
+	];
+
+	const benutzergruppen_suche: Ref<string> = ref("");
+
+	const benutzergruppen_rows: ComputedRef<BenutzergruppeListeEintrag[] | undefined> = computed(() => {
+		return main.apps.benutzergruppe.auswahl.liste;
+	});
+
+	const benutzergruppen_rows_gefiltert: ComputedRef<BenutzergruppeListeEintrag[] | undefined> = computed(() => {
+		if (benutzergruppen_rows.value === undefined) 
+			return undefined;
+		const rowsValue: BenutzergruppeListeEintrag[] = benutzergruppen_rows.value;
+		return (benutzergruppen_suche.value) 
+			? rowsValue.filter((e: BenutzergruppeListeEintrag) => e.bezeichnung.toLocaleLowerCase().includes(benutzergruppen_suche.value.toLocaleLowerCase()))
+			: rowsValue;
+	});
+
+	const benutzergruppen_ausgewaehlt = useAuswahlViaRoute('benutzergruppe');
+	const benutzergruppen_selection = ref([]);
+
 </script>

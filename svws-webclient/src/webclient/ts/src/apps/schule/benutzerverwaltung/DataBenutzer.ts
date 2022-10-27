@@ -1,7 +1,7 @@
-import { App } from "../../../BaseApp";
+import { App } from "~/apps/BaseApp";
+import { BaseData } from "~/apps/BaseData";
 
 import {BenutzerDaten, BenutzerListeEintrag} from "@svws-nrw/svws-core-ts";
-import { BaseData } from "../../../BaseData";
 
 export class DataBenutzer extends BaseData<BenutzerDaten, BenutzerListeEintrag> {
 
@@ -28,14 +28,11 @@ export class DataBenutzer extends BaseData<BenutzerDaten, BenutzerListeEintrag> 
 	 * Aktualisierung von Auswahllisten zusätzlich zu den Daten, etc.).
 	 *
 	 * @param {Partial<BenutzerDaten>} data Die Daten, die aktualisiert werden sollen
+	 * 
 	 * @returns {Promise<boolean>} True, wenn die Daten aktualisiert wurden, sonst false
 	 */
-	 public async patch(data: Partial<BenutzerDaten>,
-	 ): Promise<boolean> {
+	 public async patch(data: Partial<BenutzerDaten>): Promise<boolean> {
 		 return false;
-		// const daten = this._daten;
-		// if (!daten)
-		// 	return false;
-		// return this._patch(data, () => App.api.patchReligion(data, App.schema, Number(daten.id)));
 	}
+
 }

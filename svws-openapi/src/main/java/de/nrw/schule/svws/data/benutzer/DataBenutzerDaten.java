@@ -7,12 +7,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import jakarta.ws.rs.WebApplicationException;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.Response.Status;
-
-import de.nrw.schule.svws.api.JSONMapper;
 import de.nrw.schule.svws.core.data.benutzer.BenutzerDaten;
 import de.nrw.schule.svws.core.data.benutzer.BenutzergruppeDaten;
 import de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenz;
@@ -26,6 +20,10 @@ import de.nrw.schule.svws.db.dto.current.schild.benutzer.DTOBenutzergruppenMitgl
 import de.nrw.schule.svws.db.dto.current.svws.auth.DTOCredentials;
 import de.nrw.schule.svws.db.dto.current.views.benutzer.DTOViewBenutzerdetails;
 import de.nrw.schule.svws.db.utils.OperationError;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
@@ -108,7 +106,7 @@ public class DataBenutzerDaten extends DataManager<Long> {
     		List<DTOBenutzergruppenKompetenz> gruppenkompetenzen = mapGruppenKompetenzen.get(gruppe.ID);
     		if (gruppenkompetenzen != null)
     		    for (Long kompetenzID : gruppenkompetenzen.stream().map(k -> k.Kompetenz_ID).distinct().sorted().toList())
-    		        gdaten.kompetenzen.add(BenutzerKompetenz.getByID(kompetenzID).daten);
+    		        gdaten.kompetenzen.add(kompetenzID);
     		daten.gruppen.add(gdaten);
     	}
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
@@ -125,13 +123,12 @@ public class DataBenutzerDaten extends DataManager<Long> {
 	 * basierend auf dem übergebenen Kennwort
 	 * 
 	 * @param id         die ID des Benutzers, dessen Kennwort neu gesetzt werden soll
-	 * @param is         der Input-Stream mit dem Kennwort
+	 * @param password   das Kennwort
 	 * 
 	 * @return die HTTP-Response, welche einen Erfolg bzw. Misserfolg angibt. 
 	 */
-	public Response setPassword(Long id, InputStream is) {
+	public Response setPassword(Long id, String password) {
 		try {
-			String password = JSONMapper.toString(is);
 			// Bestimme die Schiene der Blockung
 			conn.transactionBegin();
 			String hash = Benutzer.erstellePasswortHash(password);

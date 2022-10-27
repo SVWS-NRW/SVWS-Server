@@ -393,6 +393,7 @@ export { Verkehrssprache } from './core/types/schule/Verkehrssprache';
 export { WeiterbildungskollegBildungsgangTyp } from './core/types/schule/WeiterbildungskollegBildungsgangTyp';
 export { WeiterbildungskollegOrganisationsformen } from './core/types/schule/WeiterbildungskollegOrganisationsformen';
 export { AdressenUtils } from './core/utils/AdressenUtils';
+export { BenutzergruppenManager } from './core/utils/benutzer/BenutzergruppenManager';
 export { ENMDatenManager } from './core/utils/enm/ENMDatenManager';
 export { GostAbiturjahrUtils } from './core/utils/gost/GostAbiturjahrUtils';
 export { GostBlockungsdatenManager } from './core/utils/gost/GostBlockungsdatenManager';

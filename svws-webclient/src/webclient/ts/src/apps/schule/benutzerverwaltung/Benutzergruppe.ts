@@ -1,7 +1,6 @@
-import { App } from "../../../BaseApp";
+import { App } from "~/apps/BaseApp";
 import { DataBenutzergruppe } from "./DataBenutzergruppe";
 import {ListBenutzergruppe } from "./ListBenutzergruppe";
-import { ListBenutzergruppenBenutzer } from "./ListBenutzergruppenBenutzer";
 
 
 
@@ -22,8 +21,6 @@ export class Benutzergruppe extends App {
 	 * SVWS-Server
 	 */
 	public dataBenutzergruppe!: DataBenutzergruppe;
-	
-
 
 	/**
 	 * Initialisiert die Klasse und holt die relevanten Daten vom Server
@@ -34,6 +31,17 @@ export class Benutzergruppe extends App {
 		this.auswahl = new ListBenutzergruppe;
 		this.dataBenutzergruppe = new DataBenutzergruppe();
 		this.auswahl.add_data([this.dataBenutzergruppe]);
+	}
+
+	/**
+	 * Gibt zurück, ob diese App eine gültige Auswahl in der Liste enthält.
+	 * 
+	 * @returns true, falls diese App eine gültige Auswahl in der Liste enthält
+	 */
+	 public hatAuswahl() : boolean {
+		if (this.auswahl === undefined)
+			return false;
+		return (this.auswahl.ausgewaehlt !== undefined);
 	}
 
 }

@@ -1,6 +1,8 @@
 package de.nrw.schule.svws.core.types.benutzer;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.Vector;
 
 import de.nrw.schule.svws.core.data.benutzer.BenutzerKompetenzKatalogEintrag;
 import jakarta.validation.constraints.NotNull;
@@ -237,6 +239,9 @@ public enum BenutzerKompetenz {
 
 	/** Eine HashMap zum schnellen Zugriff auf ein Aufzählungobjekt anhand der ID der Benutzerkompetenz */
 	private static final @NotNull HashMap<@NotNull Long, @NotNull BenutzerKompetenz> _mapID = new HashMap<>();
+	
+	/** Eine HashMap zum schnellen Zugriff auf die Benutzer-Kompetenzen anhand der Benutzer-Kompetenz-Gruppe*/
+	private static final @NotNull HashMap<@NotNull BenutzerKompetenzGruppe, @NotNull List<@NotNull BenutzerKompetenz>> _mapGruppenZuordnung = new HashMap<>();;
 
 
     /**
@@ -260,10 +265,33 @@ public enum BenutzerKompetenz {
 	private static @NotNull HashMap<@NotNull Long, @NotNull BenutzerKompetenz> getMapID() {
 		if (_mapID.size() == 0)
 			for (BenutzerKompetenz p : BenutzerKompetenz.values())
-				_mapID.put(p.daten.id, p);				
+				_mapID.put(p.daten.id, p);
 		return _mapID;
 	}
 	
+
+    /**
+     * Gibt eine Map von den Benutzerkompetenzen-Gruppen auf die zugehörigen Benutzerkompetenzen
+     * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
+     *    
+     * @return die Map von den Benutzerkompetenzen-Gruppen auf die zugehörigen Benutzerkompetenzen
+     */
+    private static @NotNull HashMap<@NotNull BenutzerKompetenzGruppe, @NotNull List<@NotNull BenutzerKompetenz>> getMapGruppenZuordnung() {
+        if (_mapGruppenZuordnung.size() == 0) {
+            for (@NotNull BenutzerKompetenzGruppe g : BenutzerKompetenzGruppe.values())
+                _mapGruppenZuordnung.put(g, new Vector<>());
+            for (@NotNull BenutzerKompetenz p : BenutzerKompetenz.values()) {
+                BenutzerKompetenzGruppe gruppe = BenutzerKompetenzGruppe.getByID(p.daten.gruppe_id);
+                if (gruppe == null)
+                    gruppe = BenutzerKompetenzGruppe.KEINE;
+                List<@NotNull BenutzerKompetenz> liste = _mapGruppenZuordnung.get(gruppe);
+                if (liste != null)
+                    liste.add(p);
+            }
+        }
+        return _mapGruppenZuordnung;
+    }
+    
 
     /** 
      * Gibt die Benutzerkompetenz anhand der übergebenen ID zurück. 
@@ -274,6 +302,22 @@ public enum BenutzerKompetenz {
      */
     public static BenutzerKompetenz getByID(long id) {
     	return getMapID().get(id);
+    }
+
+
+    /**
+     * Gibt die Liste aller Benutzerkompetenzen zurück, welche der übergebenen Gruppe
+     * zugeordnet sind.
+     *  
+     * @param gruppe   die Benutzerkompetenz-Gruppe
+     * 
+     * @return die Liste der Benutzerkompetenzen
+     */
+    public static @NotNull List<@NotNull BenutzerKompetenz> getKompetenzen(@NotNull BenutzerKompetenzGruppe gruppe) {
+        List<@NotNull BenutzerKompetenz> liste = getMapGruppenZuordnung().get(gruppe);
+        if (liste == null)
+            return new Vector<>();
+        return liste;
     }
 
 }

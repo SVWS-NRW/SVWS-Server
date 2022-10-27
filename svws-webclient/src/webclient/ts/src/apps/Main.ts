@@ -11,8 +11,8 @@ import { App } from "./BaseApp";
 import { Schule } from "./schule/Schule";
 
 import type { Apps } from "./BaseApp";
-import { Benutzer } from "./schule/benutzerverwaltung/benutzer/Benutzer";
-import { Benutzergruppe } from "./schule/benutzerverwaltung/benutzergruppen/Benutzergruppe";
+import { Benutzer } from "./schule/benutzerverwaltung/Benutzer";
+import { Benutzergruppe } from "./schule/benutzerverwaltung/Benutzergruppe";
 import { Schueler } from "./schueler/Schueler";
 import { Faecher } from "./faecher/Faecher";
 import { Gost } from "./gost/Gost";
@@ -201,6 +201,7 @@ export class Main {
 			//this.schemaRevision = -1;
 		}
 	}
+
 	/**
 	 * Diese Methode startet alle Apps, die in dieser App enthalten sind. Holt mit
 	 * einem Worker die größeren Kataloge ab.

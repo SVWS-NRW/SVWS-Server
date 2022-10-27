@@ -14,6 +14,7 @@ import { BerufskollegFachklassenKatalog, cast_de_nrw_schule_svws_core_data_schul
 import { BetriebAnsprechpartner, cast_de_nrw_schule_svws_core_data_betrieb_BetriebAnsprechpartner } from '../core/data/betrieb/BetriebAnsprechpartner';
 import { BetriebListeEintrag, cast_de_nrw_schule_svws_core_data_betrieb_BetriebListeEintrag } from '../core/data/betrieb/BetriebListeEintrag';
 import { BetriebStammdaten, cast_de_nrw_schule_svws_core_data_betrieb_BetriebStammdaten } from '../core/data/betrieb/BetriebStammdaten';
+import { JavaBoolean, cast_java_lang_Boolean } from '../java/lang/JavaBoolean';
 import { DBSchemaListeEintrag, cast_de_nrw_schule_svws_core_data_db_DBSchemaListeEintrag } from '../core/data/db/DBSchemaListeEintrag';
 import { EinschulungsartKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_EinschulungsartKatalogEintrag } from '../core/data/schule/EinschulungsartKatalogEintrag';
 import { ENMDaten, cast_de_nrw_schule_svws_core_data_enm_ENMDaten } from '../core/data/enm/ENMDaten';
@@ -456,6 +457,86 @@ export class ApiServer extends BaseApi {
 		let ret = new Vector<BenutzerListeEintrag>();
 		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(BenutzerListeEintrag.transpilerFromJSON(text)); });
 		return ret;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode setBenutzergruppeBezeichnung für den Zugriff auf die URL https://{hostname}/db/{schema}/benutzer/gruppe/{id : \d+}/bezeichnung
+	 * 
+	 * Setzt die Bezeichnung der Benutzergruppe.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 204: Die Information wurde erfolgreich gesetzt.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Bezeichnung der Gruppe zu setzen
+	 *   Code 404: Die Benutzergruppe ist nicht vorhanden.
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 * 
+	 * @param {String} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async setBenutzergruppeBezeichnung(data : String, schema : string, id : number) : Promise<void> {
+		let path : string = "/db/{schema}/benutzer/gruppe/{id : \d+}/bezeichnung"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema)
+				.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		let body : string = JSON.stringify(data);
+		await super.postJSON(path, body);
+		return;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode setBenutzergruppeAdmin für den Zugriff auf die URL https://{hostname}/db/{schema}/benutzer/gruppe/{id : \d+}/istAdmin
+	 * 
+	 * Setzt ob die Benutzergruppe eine administrative Benutzergruppe ist oder nicht.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 204: Die Information wurde erfolgreich gesetzt.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Gruppe als administrative Gruppe zu setzen
+	 *   Code 404: Die Benutzergruppe ist nicht vorhanden.
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 * 
+	 * @param {Boolean} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async setBenutzergruppeAdmin(data : Boolean, schema : string, id : number) : Promise<void> {
+		let path : string = "/db/{schema}/benutzer/gruppe/{id : \d+}/istAdmin"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema)
+				.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		let body : string = JSON.stringify(data);
+		await super.postJSON(path, body);
+		return;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode setBenutzergruppeKompetenz für den Zugriff auf die URL https://{hostname}/db/{schema}/benutzer/gruppe/{id : \d+}/kompetenz/{kid : \d+}
+	 * 
+	 * Setzt ob die Kompetenz bei der Benutzergruppe vorhanden  ist oder nicht.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 204: Die Information wurde erfolgreich gesetzt.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Kompetenz bei der Gruppe zu setzen
+	 *   Code 404: Die Benutzergruppe ist nicht vorhanden.
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 * 
+	 * @param {Boolean} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 * @param {number} kid - der Pfad-Parameter kid
+	 */
+	public async setBenutzergruppeKompetenz(data : Boolean, schema : string, id : number, kid : number) : Promise<void> {
+		let path : string = "/db/{schema}/benutzer/gruppe/{id : \d+}/kompetenz/{kid : \d+}"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema)
+				.replace(/{id\s*(:[^}]+)?}/g, id.toString())
+				.replace(/{kid\s*(:[^}]+)?}/g, kid.toString());
+		let body : string = JSON.stringify(data);
+		await super.postJSON(path, body);
+		return;
 	}
 
 

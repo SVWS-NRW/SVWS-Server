@@ -1,4 +1,5 @@
-import { App } from "../../../BaseApp";
+import { App } from "~/apps/BaseApp";
+
 import { DataBenutzer } from "./DataBenutzer";
 import { ListBenutzer } from "./ListBenutzer";
 
@@ -31,6 +32,17 @@ export class Benutzer extends App {
 		this.auswahl = new ListBenutzer;
 		this.dataBenutzer = new DataBenutzer();
 		this.auswahl.add_data([this.dataBenutzer]);
+	}
+
+	/**
+	 * Gibt zurück, ob diese App eine gültige Auswahl in der Liste enthält.
+	 * 
+	 * @returns true, falls diese App eine gültige Auswahl in der Liste enthält
+	 */
+	public hatAuswahl() : boolean {
+		if (this.auswahl === undefined)
+			return false;
+		return (this.auswahl.ausgewaehlt !== undefined);
 	}
 
 }

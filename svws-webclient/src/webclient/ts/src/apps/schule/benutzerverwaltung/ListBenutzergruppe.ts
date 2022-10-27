@@ -1,13 +1,20 @@
+import { App } from "~/apps/BaseApp";
+import { BaseList } from "~/apps/BaseList";
+
 import { BenutzergruppeListeEintrag} from "@svws-nrw/svws-core-ts";
-import { App } from "../../../BaseApp";
-import { BaseList } from "../../../BaseList";
-import { ListBenutzergruppenBenutzer } from "./ListBenutzergruppenBenutzer";
+
 
 export class ListBenutzergruppe extends BaseList<BenutzergruppeListeEintrag, undefined> {
-	protected _filter = undefined;
-	protected _ready = true;
 
-	public lehrer : ListBenutzergruppenBenutzer = new ListBenutzergruppenBenutzer();
+	protected _filter = undefined;
+
+	public async on_select(): Promise<void> {
+		if (this.ausgewaehlt !== undefined)
+			return;
+		if (App.apps.benutzer.auswahl.ausgewaehlt !== undefined)
+			App.apps.benutzer.auswahl.ausgewaehlt = undefined;
+		return;
+	}
 
 	/**
 	 * Aktualisiert die Liste für die Auswahl der Benutzer
@@ -17,4 +24,5 @@ export class ListBenutzergruppe extends BaseList<BenutzergruppeListeEintrag, und
 	public async update_list(): Promise<void> {
 		await super._update_list(() => App.api.getBenutzergruppenliste(App.schema));
 	}
+
 }

@@ -2,17 +2,7 @@ package de.nrw.schule.svws.api.server;
 
 import java.io.InputStream;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.Context;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-
+import de.nrw.schule.svws.api.JSONMapper;
 import de.nrw.schule.svws.api.OpenAPIApplication;
 import de.nrw.schule.svws.core.data.benutzer.BenutzerDaten;
 import de.nrw.schule.svws.core.data.benutzer.BenutzerKompetenzGruppenKatalogEintrag;
@@ -35,6 +25,16 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 /**
  * Die Klasse spezifiziert die OpenAPI-Schnittstelle für den Zugriff auf die
@@ -139,11 +139,12 @@ public class APIBenutzer {
     @ApiResponse(responseCode = "404", description = "Kein Benutzergruppen-Eintrag mit der angegebenen ID gefunden")
     public Response getBenutzergruppeDaten(@PathParam("schema") String schema, @PathParam("id") long id,
             @Context HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnectionAllowSelf(request, BenutzerKompetenz.ADMIN, id)) {
+       try (DBEntityManager conn = OpenAPIApplication.getDBConnectionAllowSelf(request, BenutzerKompetenz.ADMIN, id)) {
             return (new DataBenutzergruppeDaten(conn).get(id));
         }
     }
-
+    
+    
     /**
      * Die OpenAPI-Methode für die Abfrage der Benutzer einer Gruppe.
      * 
@@ -169,6 +170,7 @@ public class APIBenutzer {
         }
     }
 
+
     /**
      * Die OpenAPI-Methode für Setzen eines Benutzerkennwortes.
      * 
@@ -193,7 +195,7 @@ public class APIBenutzer {
             @RequestBody(description = "Das Kennwort", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = String.class))) InputStream is,
             @Context HttpServletRequest request) {
         try (DBEntityManager conn = OpenAPIApplication.getDBConnectionAllowSelf(request, BenutzerKompetenz.ADMIN, id)) {
-            return (new DataBenutzerDaten(conn)).setPassword(id, is);
+            return (new DataBenutzerDaten(conn)).setPassword(id, JSONMapper.toString(is));
         }
     }
 
@@ -218,7 +220,7 @@ public class APIBenutzer {
             return (new DataBenutzerkompetenzliste().getList());
         }
     }
-
+    
     /**
      * Die OpenAPI-Methode für die Abfrage des Katalogs der
      * Benutzerkompetenzgruppen.
@@ -239,6 +241,102 @@ public class APIBenutzer {
             @Context HttpServletRequest request) {
         try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KEINE)) {
             return (new DataBenutzerkompetenzGruppenliste().getList());
+        }
+    }
+    
+    
+    /**
+     * Die OpenAPI-Methode für Setzen der Bezeichnung einer Benutzergruppen.
+     * 
+     * @param schema   das Datenbankschema
+     * @param id       die ID der Benutzergruppe
+     * @param is       der Input-Stream mit der Bezeichnung der Benutzergruppe
+     * @param request  die Informationen zur HTTP-Anfrage
+     * 
+     * 
+     * @return die HTTP-Antwort
+     */
+    @POST
+    @Path("/gruppe/{id : \\d+}/bezeichnung")
+    @Operation(summary = "Setzt die Bezeichnung der Benutzergruppe.", 
+                          description = "Setzt die Bezeichnung der Benutzergruppe."
+            + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung besitzt.")
+    @ApiResponse(responseCode = "204", description = "Die Information wurde erfolgreich gesetzt.")
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Bezeichnung der Gruppe zu setzen")
+    @ApiResponse(responseCode = "404", description = "Die Benutzergruppe ist nicht vorhanden.")
+    @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response setBenutzergruppeBezeichnung(
+            @PathParam("schema") String schema, @PathParam("id") long id,
+            @RequestBody(description = "Die Bezeichnung der Benutzergruppe.", required = true, 
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = String.class))) InputStream is,
+            @Context HttpServletRequest request) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnectionAllowSelf(request, BenutzerKompetenz.ADMIN, id)) {
+            return (new DataBenutzergruppeDaten(conn)).setBezeichnung(id, JSONMapper.toString(is));
+        }
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für Setzen des Admin-Flags bei einer Benutzergruppen.
+     * 
+     * @param schema    das Datenbankschema
+     * @param id        die ID der Benutzergruppe
+     * @param is        der Input-Stream mit dem Boolean-Wert, on das Admin-Flag gesetzt oder gelöscht werden soll
+     * @param request   die Informationen zur HTTP-Anfrage
+     * 
+     * 
+     * @return die HTTP-Antwort
+     */
+    @POST
+    @Path("/gruppe/{id : \\d+}/istAdmin")
+    @Operation(summary = "Setzt ob die Benutzergruppe eine administrative Benutzergruppe ist oder nicht.", 
+                          description = "Setzt ob die Benutzergruppe eine administrative Benutzergruppe ist oder nicht."
+            + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung besitzt.")
+    @ApiResponse(responseCode = "204", description = "Die Information wurde erfolgreich gesetzt.")
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Gruppe als administrative Gruppe zu setzen")
+    @ApiResponse(responseCode = "404", description = "Die Benutzergruppe ist nicht vorhanden.")
+    @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response setBenutzergruppeAdmin(
+            @PathParam("schema") String schema, @PathParam("id") long id,
+            @RequestBody(description = "Der Status, ob es sich um eine administrative Gruppe handelt oder nicht.", required = true, 
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Boolean.class))) InputStream is,
+            @Context HttpServletRequest request) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnectionAllowSelf(request, BenutzerKompetenz.ADMIN, id)) {
+            return (new DataBenutzergruppeDaten(conn)).setAdmin(id, JSONMapper.toBoolean(is));
+        }
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für Setzen einer Kompetenz bei einer Benutzergruppe.
+     * 
+     * @param schema    das Datenbankschema
+     * @param id        die ID der Benutzergruppe
+     * @param kid       die ID der Kompetenz
+     * @param is        der Input-Stream mit dem Boolean-Wert, ob die Kompetenz gelöscht oder hinzugeüfgt werden soll
+     * @param request   die Informationen zur HTTP-Anfrage
+     * 
+     * @return die HTTP-Antwort
+     */
+    @POST
+    @Path("/gruppe/{id : \\d+}/kompetenz/{kid : \\d+}")
+    @Operation(summary = "Setzt ob die Kompetenz bei der Benutzergruppe vorhanden  ist oder nicht.", 
+                          description = "Setzt ob die Kompetenz bei der Benutzergruppe vorhanden  ist oder nicht."
+            + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung besitzt.")
+    @ApiResponse(responseCode = "204", description = "Die Information wurde erfolgreich gesetzt.")
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Kompetenz bei der Gruppe zu setzen")
+    @ApiResponse(responseCode = "404", description = "Die Benutzergruppe ist nicht vorhanden.")
+    @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response setBenutzergruppeKompetenz(
+            @PathParam("schema") String schema, @PathParam("id") long id, @PathParam("kid") long kid,
+            @RequestBody(description = "Der Status, ob die Kompetenz vorhanden ist oder nicht.", required = true, 
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Boolean.class))) InputStream is,
+            @Context HttpServletRequest request) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnectionAllowSelf(request, BenutzerKompetenz.ADMIN, id)) {
+            return (new DataBenutzergruppeDaten(conn)).setKompetenz(id, kid, JSONMapper.toBoolean(is));
         }
     }
 

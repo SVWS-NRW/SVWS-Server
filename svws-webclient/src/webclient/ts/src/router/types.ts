@@ -17,8 +17,8 @@ import type { Klassen } from '../apps/klassen/Klassen'
 import type { Faecher } from '../apps/faecher/Faecher'
 import type { Jahrgaenge } from '../apps/jahrgaenge/Jahrgaenge'
 import type { Religionen } from '../apps/kataloge/religionen/Religionen'
-import { Benutzer } from '~/apps/schule/benutzerverwaltung/benutzer/Benutzer'
-import { Benutzergruppe } from '~/apps/schule/benutzerverwaltung/benutzergruppen/Benutzergruppe'
+import { Benutzer } from '~/apps/schule/benutzerverwaltung/Benutzer'
+import { Benutzergruppe } from '~/apps/schule/benutzerverwaltung/Benutzergruppe'
 
 // Das sind nur die Routen, die auch dynamische IDs haben können
 export type RouteAppTypesMap = {

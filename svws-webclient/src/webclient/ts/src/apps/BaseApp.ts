@@ -9,8 +9,8 @@ import type { Klassen } from "./klassen/Klassen";
 import type { Kurse } from "./kurse/Kurse";
 import type { Lehrer } from "./lehrer/Lehrer";
 import type { Schueler } from "./schueler/Schueler";
-import { Benutzer } from "./schule/benutzerverwaltung/benutzer/Benutzer";
-import { Benutzergruppe } from "./schule/benutzerverwaltung/benutzergruppen/Benutzergruppe";
+import { Benutzer } from "./schule/benutzerverwaltung/Benutzer";
+import { Benutzergruppe } from "./schule/benutzerverwaltung/Benutzergruppe";
 import type { Schule } from "./schule/Schule";
 
 /** Der Typ mit allen Apps als App */

@@ -2,7 +2,9 @@ import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject
 import { BenutzerKompetenzKatalogEintrag, cast_de_nrw_schule_svws_core_data_benutzer_BenutzerKompetenzKatalogEintrag } from '../../../core/data/benutzer/BenutzerKompetenzKatalogEintrag';
 import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
 import { JavaLong, cast_java_lang_Long } from '../../../java/lang/JavaLong';
+import { List, cast_java_util_List } from '../../../java/util/List';
 import { BenutzerKompetenzGruppe, cast_de_nrw_schule_svws_core_types_benutzer_BenutzerKompetenzGruppe } from '../../../core/types/benutzer/BenutzerKompetenzGruppe';
+import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 
 export class BenutzerKompetenz extends JavaObject {
 
@@ -112,6 +114,8 @@ export class BenutzerKompetenz extends JavaObject {
 
 	private static readonly _mapID : HashMap<Number, BenutzerKompetenz> = new HashMap();
 
+	private static readonly _mapGruppenZuordnung : HashMap<BenutzerKompetenzGruppe, List<BenutzerKompetenz>> = new HashMap();
+
 	/**
 	 * Erzeugt eine neue Benutzerkompetenz für die Aufzählung.
 	 *
@@ -142,6 +146,28 @@ export class BenutzerKompetenz extends JavaObject {
 	}
 
 	/**
+	 * Gibt eine Map von den Benutzerkompetenzen-Gruppen auf die zugehörigen Benutzerkompetenzen
+	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
+	 *    
+	 * @return die Map von den Benutzerkompetenzen-Gruppen auf die zugehörigen Benutzerkompetenzen
+	 */
+	private static getMapGruppenZuordnung() : HashMap<BenutzerKompetenzGruppe, List<BenutzerKompetenz>> {
+		if (BenutzerKompetenz._mapGruppenZuordnung.size() === 0) {
+			for (let g of BenutzerKompetenzGruppe.values()) 
+				BenutzerKompetenz._mapGruppenZuordnung.put(g, new Vector());
+			for (let p of BenutzerKompetenz.values()) {
+				let gruppe : BenutzerKompetenzGruppe | null = BenutzerKompetenzGruppe.getByID(p.daten.gruppe_id);
+				if (gruppe === null) 
+					gruppe = BenutzerKompetenzGruppe.KEINE;
+				let liste : List<BenutzerKompetenz> | null = BenutzerKompetenz._mapGruppenZuordnung.get(gruppe);
+				if (liste !== null) 
+					liste.add(p);
+			}
+		}
+		return BenutzerKompetenz._mapGruppenZuordnung;
+	}
+
+	/**
 	 *
 	 * Gibt die Benutzerkompetenz anhand der übergebenen ID zurück. 
 	 * 
@@ -151,6 +177,21 @@ export class BenutzerKompetenz extends JavaObject {
 	 */
 	public static getByID(id : number) : BenutzerKompetenz | null {
 		return BenutzerKompetenz.getMapID().get(id);
+	}
+
+	/**
+	 * Gibt die Liste aller Benutzerkompetenzen zurück, welche der übergebenen Gruppe
+	 * zugeordnet sind.
+	 *  
+	 * @param gruppe   die Benutzerkompetenz-Gruppe
+	 * 
+	 * @return die Liste der Benutzerkompetenzen
+	 */
+	public static getKompetenzen(gruppe : BenutzerKompetenzGruppe) : List<BenutzerKompetenz> {
+		let liste : List<BenutzerKompetenz> | null = BenutzerKompetenz.getMapGruppenZuordnung().get(gruppe);
+		if (liste === null) 
+			return new Vector();
+		return liste;
 	}
 
 	/**
