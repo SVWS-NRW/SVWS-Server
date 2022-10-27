@@ -445,13 +445,15 @@ public class GostBlockungsdatenManager {
 	 * @throws NullPointerException  Falls es eine FachwahlDopplung gibt.
 	 */
 	public void addFachwahl(@NotNull GostFachwahl pFachwahl) throws NullPointerException {
-		// Pfad: Schüler-ID
+		// Pfad: Schüler-ID --> Fachart --> Fachwahl 
 		HashMap<@NotNull Long, @NotNull GostFachwahl> mapSW = _map_fachwahlen.get(pFachwahl.schuelerID);
-		HashMap<@NotNull Long, @NotNull GostKursart> mapSFA = _map_schulerID_fachID_kursart.get(pFachwahl.schuelerID);
 		if (mapSW == null) {
 			mapSW = new HashMap<>();
 			_map_fachwahlen.put(pFachwahl.schuelerID, mapSW);
 		}
+		
+		// Pfad: Schüler-ID --> Fach --> Kursart 
+		HashMap<@NotNull Long, @NotNull GostKursart> mapSFA = _map_schulerID_fachID_kursart.get(pFachwahl.schuelerID);
 		if (mapSFA == null) {
 			mapSFA = new HashMap<>();
 			_map_schulerID_fachID_kursart.put(pFachwahl.schuelerID, mapSFA);

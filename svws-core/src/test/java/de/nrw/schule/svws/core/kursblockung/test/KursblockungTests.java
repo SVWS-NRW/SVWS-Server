@@ -774,15 +774,14 @@ public class KursblockungTests {
 			mapSchueler.put(gSchueler.id, gSchueler);
 
 			HashSet<Long> setUsedSchiene = new HashSet<>();
-			HashSet<Pair<Long, Integer>> setUsedFachart = new HashSet<>();
+			HashSet<Long> setUsedFach = new HashSet<>();
 			for (int rnd : KursblockungStatic.gibPermutation(pRandom, nKurse)) {
 				// Hole zufälligen Kurs.
 				long kursID = rnd;
 				GostBlockungKurs gKurs = mapKurse.get(kursID);
 
-				// Fachart bereits gewählt?
-				Pair<Long, Integer> fachart = new Pair<>(gKurs.fach_id, gKurs.kursart);
-				if (setUsedFachart.contains(fachart))
+				// Fach bereits gewählt?
+				if (setUsedFach.contains(gKurs.fach_id))
 					continue;
 
 				// Schiene bereits gewählt?
@@ -791,7 +790,7 @@ public class KursblockungTests {
 					continue;
 
 				// Fachwahl hinzufügen.
-				setUsedFachart.add(fachart);
+				setUsedFach.add(gKurs.fach_id);
 				setUsedSchiene.add(gSchiene.id);
 				GostFachwahl gFachwahl = new GostFachwahl();
 				gFachwahl.fachID = gKurs.fach_id;

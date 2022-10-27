@@ -47,6 +47,8 @@ export class GostBlockungsdatenManager extends JavaObject {
 
 	private readonly _map_fachwahlen : HashMap<Number, HashMap<Number, GostFachwahl>> = new HashMap();
 
+	private readonly _map_schulerID_fachID_kursart : HashMap<Number, HashMap<Number, GostKursart>> = new HashMap();
+
 	private readonly _compKurs_fach_kursart_kursnummer : Comparator<GostBlockungKurs>;
 
 	private _kurse_sortiert_fach_kursart_kursnummer : Vector<GostBlockungKurs> | null = null;
@@ -474,10 +476,18 @@ export class GostBlockungsdatenManager extends JavaObject {
 			mapSW = new HashMap();
 			this._map_fachwahlen.put(pFachwahl.schuelerID, mapSW);
 		}
+		let mapSFA : HashMap<Number, GostKursart> | null = this._map_schulerID_fachID_kursart.get(pFachwahl.schuelerID);
+		if (mapSFA === null) {
+			mapSFA = new HashMap();
+			this._map_schulerID_fachID_kursart.put(pFachwahl.schuelerID, mapSFA);
+		}
 		let fachartID : number = GostKursart.getFachartID(pFachwahl);
-		if (mapSW.containsKey(fachartID)) 
-			throw new NullPointerException("Fachwahl " + pFachwahl.schuelerID + "," + fachartID + " doppelt!")
-		mapSW.put(fachartID, pFachwahl);
+		if (mapSW.put(fachartID, pFachwahl) !== null) 
+			throw new NullPointerException("Schüler-ID=" + pFachwahl.schuelerID + ", Fachart-ID=" + fachartID + " doppelt!")
+		let fachID : number = pFachwahl.fachID;
+		let kursart : GostKursart = GostKursart.fromFachwahlOrException(pFachwahl);
+		if (mapSFA.put(fachID, kursart) !== null) 
+			throw new NullPointerException("Schüler-ID=" + pFachwahl.schuelerID + ", Fach-ID=" + fachID + " doppelt!")
 		this._daten.fachwahlen.add(pFachwahl);
 	}
 
@@ -611,13 +621,12 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @return Die zu (Schüler, Fach) die jeweilige Kursart.
 	 */
 	public getOfSchuelerOfFachKursart(pSchuelerID : number, pFachID : number) : GostKursart {
-		let mapFachFachwahl : HashMap<Number, GostFachwahl> | null = this._map_fachwahlen.get(pSchuelerID);
-		if (mapFachFachwahl === null) 
+		let mapFachKursart : HashMap<Number, GostKursart> | null = this._map_schulerID_fachID_kursart.get(pSchuelerID);
+		if (mapFachKursart === null) 
 			throw new NullPointerException("Schüler-ID=" + pSchuelerID + " unbekannt!")
-		let fachwahl : GostFachwahl | null = mapFachFachwahl.get(pFachID);
-		if (fachwahl === null) 
-			throw new NullPointerException("Schüler-ID=" + pSchuelerID + ", Fach=" + pFachID + " unbekannt!")
-		let kursart : GostKursart = GostKursart.fromFachwahlOrException(fachwahl);
+		let kursart : GostKursart | null = mapFachKursart.get(pFachID);
+		if (kursart === null) 
+			throw new NullPointerException("Schüler-ID=" + pSchuelerID + ", Fach-ID=" + pFachID + " unbekannt!")
 		return kursart;
 	}
 
