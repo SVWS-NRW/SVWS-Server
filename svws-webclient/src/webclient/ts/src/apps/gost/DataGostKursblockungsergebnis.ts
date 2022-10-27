@@ -37,30 +37,6 @@ export class DataGostKursblockungsergebnis extends BaseData<
 			this.manager = undefined;
 			return ergebnis;
 		}
-		// Hole die Daten für den Manager
-		// TODO, brauchen wir das?
-		// const schueler: Vector<Schueler> = new Vector<Schueler>();
-		// App.apps.gost?.listAbiturjahrgangSchueler.liste.forEach(s => {
-		// 	const entry = new Schueler();
-		// 	entry.id = s.id;
-		// 	entry.nachname = s.nachname;
-		// 	entry.vorname = s.vorname;
-		// 	entry.geschlecht = 0;
-		// 	schueler.add(entry);
-		// });
-		// const faecher: Vector<GostFach> = new Vector<GostFach>();
-		// if (App.apps.gost?.dataFaecher.daten) faecher.addAll(App.apps.gost.dataFaecher.daten)
-		// const schienen: List<GostBlockungSchiene> | undefined =
-		// 	App.apps.gost?.dataKursblockung.daten?.schienen;
-		// const kurse: List<GostBlockungKurs> | undefined =
-		// 	App.apps.gost?.dataKursblockung.daten?.kurse;
-		// if (
-		// 	!ergebnis ||
-		// 	!schueler.size() ||
-		// 	!faecher.size() ||
-		// 	!schienen ||
-		// 	!kurse
-		// ) return undefined;
 		this.manager = App.apps.gost.dataKursblockung.manager
 			? new GostBlockungsergebnisManager(App.apps.gost.dataKursblockung.manager, ergebnis)
 			: undefined

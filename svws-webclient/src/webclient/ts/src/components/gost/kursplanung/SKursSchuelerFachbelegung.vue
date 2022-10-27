@@ -60,13 +60,9 @@
 		return app.dataKursblockungsergebnis.manager;
 	});
 
-	const kursart: ComputedRef<string | undefined> = computed(() => {
-		const halbjahr = app.dataKursblockung.daten?.gostHalbjahr || 0;
-		const belegung = props.fach.belegungen[halbjahr];
-		if (!belegung)
-			return undefined;
-		return belegung.kursartKuerzel.toString()
-	});
+	const kursart: ComputedRef<string | undefined> = computed(() =>
+		manager.value?.getOfSchuelerOfFachKursart(props.schuelerId, props.fach.fachID).kuerzel.toString()
+	);
 
 	const kursartid: ComputedRef<number | undefined> = computed(() => {
 		return GostKursart.fromKuerzel(!kursart.value ? null : kursart.value)?.id;
