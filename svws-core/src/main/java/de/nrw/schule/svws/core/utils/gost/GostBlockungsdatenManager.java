@@ -59,6 +59,8 @@ public class GostBlockungsdatenManager {
 	/** Schüler-ID --> FachartID --> Fachwahl = Die Fachwahl des Schülers mit Fachart. */
 	private final @NotNull HashMap<@NotNull Long, @NotNull HashMap<@NotNull Long, @NotNull GostFachwahl>> _map_fachwahlen = new HashMap<>();
 	
+	/** Schüler-ID --> Fach-ID --> Kursart = Die Fachwahl des Schülers die dem Fach die Kursart zuordnet. */
+	private final @NotNull HashMap<@NotNull Long, @NotNull HashMap<@NotNull Long, @NotNull GostKursart>> _map_schulerID_fachID_kursart = new HashMap<>();
 
 	/** Ein Comparator für Kurse der Blockung (FACH, KURSART, KURSNUMMER) */
 	private final @NotNull Comparator<@NotNull GostBlockungKurs> _compKurs_fach_kursart_kursnummer;
@@ -445,18 +447,28 @@ public class GostBlockungsdatenManager {
 	public void addFachwahl(@NotNull GostFachwahl pFachwahl) throws NullPointerException {
 		// Pfad: Schüler-ID
 		HashMap<@NotNull Long, @NotNull GostFachwahl> mapSW = _map_fachwahlen.get(pFachwahl.schuelerID);
+		HashMap<@NotNull Long, @NotNull GostKursart> mapSFA = _map_schulerID_fachID_kursart.get(pFachwahl.schuelerID);
 		if (mapSW == null) {
 			mapSW = new HashMap<>();
 			_map_fachwahlen.put(pFachwahl.schuelerID, mapSW);
 		}
+		if (mapSFA == null) {
+			mapSFA = new HashMap<>();
+			_map_schulerID_fachID_kursart.put(pFachwahl.schuelerID, mapSFA);
+		}
 		
-		// Pfad: Schüler-ID --> FachartID --> Fachwahl
+		// Hinzufügen '_map_fachwahlen'
 		long fachartID = GostKursart.getFachartID(pFachwahl);
-		if (mapSW.containsKey(fachartID))
-			throw new NullPointerException("Fachwahl " + pFachwahl.schuelerID + "," + fachartID + " doppelt!");
+		if (mapSW.put(fachartID, pFachwahl) != null) 
+			throw new NullPointerException("Schüler-ID=" + pFachwahl.schuelerID + ", Fachart-ID=" + fachartID + " doppelt!");
+
+		// Hinzufügen '_map_schulerID_fachID_kursart'
+		long fachID = pFachwahl.fachID;
+		@NotNull GostKursart kursart = GostKursart.fromFachwahlOrException(pFachwahl);
+		if (mapSFA.put(fachID, kursart) != null) 
+			throw new NullPointerException("Schüler-ID=" + pFachwahl.schuelerID + ", Fach-ID=" + fachID + " doppelt!");
 		
-		// Hinzufügen
-		mapSW.put(fachartID, pFachwahl);
+		// Hinzufügen '_daten.fachwahlen'
 		_daten.fachwahlen.add(pFachwahl);
 	}
 
@@ -574,15 +586,15 @@ public class GostBlockungsdatenManager {
 	 * @return Die zu (Schüler, Fach) die jeweilige Kursart.
 	 */
 	public @NotNull GostKursart getOfSchuelerOfFachKursart(long pSchuelerID, long pFachID) {
-		HashMap<@NotNull Long, @NotNull GostFachwahl> mapFachFachwahl = _map_fachwahlen.get(pSchuelerID);
-		if (mapFachFachwahl == null)
-			throw new NullPointerException("Schüler-ID=" + pSchuelerID +" unbekannt!");
 
-		GostFachwahl fachwahl = mapFachFachwahl.get(pFachID);
-		if (fachwahl == null)
-			throw new NullPointerException("Schüler-ID=" + pSchuelerID +", Fach="+pFachID+" unbekannt!");
+		HashMap<@NotNull Long, @NotNull GostKursart> mapFachKursart = _map_schulerID_fachID_kursart.get(pSchuelerID);
+		if (mapFachKursart == null)
+			throw new NullPointerException("Schüler-ID=" + pSchuelerID + " unbekannt!");
 
-		@NotNull GostKursart kursart = GostKursart.fromFachwahlOrException(fachwahl);
+		GostKursart kursart = mapFachKursart.get(pFachID);
+		if (kursart == null)
+			throw new NullPointerException("Schüler-ID=" + pSchuelerID + ", Fach-ID=" + pFachID + " unbekannt!");
+
 		return kursart;
 	}
 
