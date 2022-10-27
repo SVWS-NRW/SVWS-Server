@@ -25,17 +25,17 @@
 					<template #cell-actions="{ row }">
           				<svws-ui-popover :hover="false" placement="left-end" :disable-click-away="false">
             				<template #trigger>
-              					<Button class="action-button">
+              					<button class="action-button">
                 					<Icon>
                   						<i-ri-more-2-fill />
                 					</Icon>
-              					</Button>
+              					</button>
             				</template>
             				<template #content>
               					<div class="action-items">
                 					<div v-for="action in actions" :key="action.action">
-                  						<Button class="action-item" type="transparent" @click="onAction(action.action, row)">{{ action.label
-                  						}}</Button>
+                  						<button class="action-item" @click="onAction(action.action, row)">{{ action.label
+                  						}}</button>
                 					</div>
               					</div>
             				</template>
@@ -119,3 +119,19 @@
 		console.log(action, item);
 	}
 </script>
+<style>
+.action-button {
+  @apply h-6 w-6;
+}
+
+.action-items {
+  @apply bg-white;
+  @apply flex flex-col;
+  @apply px-2 py-1;
+  @apply ring-1;
+  @apply ring-black ring-opacity-5;
+  @apply rounded-md;
+  @apply shadow-lg;
+  @apply w-48;
+}
+</style>
