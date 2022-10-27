@@ -55,8 +55,6 @@ export class GostBlockungsdatenManager extends JavaObject {
 
 	private _kurse_sortiert_kursart_fach_kursnummer : Vector<GostBlockungKurs> | null = null;
 
-	private _halbjahr : GostHalbjahr;
-
 	private _maxTimeMillis : number = 1000;
 
 
@@ -81,13 +79,12 @@ export class GostBlockungsdatenManager extends JavaObject {
 		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined")) {
 			this._daten = new GostBlockungsdaten();
 			this._faecherManager = new GostFaecherManager();
-			this._halbjahr = GostHalbjahr.EF1;
+			this._daten.gostHalbjahr = GostHalbjahr.EF1.id;
 			this._compKurs_fach_kursart_kursnummer = this.createComparatorKursFachKursartNummer();
 			this._compKurs_kursart_fach_kursnummer = this.createComparatorKursKursartFachNummer();
 		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.data.gost.GostBlockungsdaten')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('de.nrw.schule.svws.core.utils.gost.GostFaecherManager'))))) {
 			let pDaten : GostBlockungsdaten = cast_de_nrw_schule_svws_core_data_gost_GostBlockungsdaten(__param0);
 			let pFaecherManager : GostFaecherManager = cast_de_nrw_schule_svws_core_utils_gost_GostFaecherManager(__param1);
-			this._halbjahr = GostHalbjahr.fromIDorException(pDaten.gostHalbjahr);
 			this._faecherManager = pFaecherManager;
 			this._compKurs_fach_kursart_kursnummer = this.createComparatorKursFachKursartNummer();
 			this._compKurs_kursart_fach_kursnummer = this.createComparatorKursKursartFachNummer();
@@ -163,7 +160,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @return das Halbjahr der gymnasialen Oberstufe 
 	 */
 	public getHalbjahr() : GostHalbjahr {
-		return this._halbjahr;
+		return GostHalbjahr.fromIDorException(this._daten.gostHalbjahr);
 	}
 
 	/**
@@ -172,7 +169,6 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @param halbjahr das Halbjahr der gymnasialen Oberstufe 
 	 */
 	public setHalbjahr(halbjahr : GostHalbjahr) : void {
-		this._halbjahr = halbjahr;
 		this._daten.gostHalbjahr = halbjahr.id;
 	}
 

@@ -72,11 +72,6 @@ public class GostBlockungsdatenManager {
 	/** Eine sortierte, gecachte Menge der Kurse nach: (KURSART, FACH, KURSNUMMER) */
 	private Vector<@NotNull GostBlockungKurs> _kurse_sortiert_kursart_fach_kursnummer = null;
 
-	// TODO BARTSCH-BACHRAN: Das ist doch falsch als Attribut? Das Halbjahr ist doch im Daten-Objekt gespeichert?  
-	/** Das Halbjahr, für welches die Blockung angelegt wurde. */
-	private @NotNull GostHalbjahr _halbjahr;
-
-	// TODO BARTSCH-BACHRAN: Das würde ich gerne in das Datenobjekt ziehen, okay?  
 	/** Die maximale Zeit in Millisekunden die der Blockungsalgorithmus verwenden darf. */
 	private long _maxTimeMillis = 1000;
 
@@ -84,7 +79,7 @@ public class GostBlockungsdatenManager {
 	public GostBlockungsdatenManager() {
 		_daten = new GostBlockungsdaten();
 		_faecherManager = new GostFaecherManager();
-		_halbjahr = GostHalbjahr.EF1;
+		_daten.gostHalbjahr = GostHalbjahr.EF1.id;
 		_compKurs_fach_kursart_kursnummer = createComparatorKursFachKursartNummer();
 		_compKurs_kursart_fach_kursnummer = createComparatorKursKursartFachNummer();
 	}
@@ -95,7 +90,6 @@ public class GostBlockungsdatenManager {
 	 * @param pFaecherManager der Fächer-Manager 
 	 */
 	public GostBlockungsdatenManager(@NotNull GostBlockungsdaten pDaten, @NotNull GostFaecherManager pFaecherManager) {
-		_halbjahr = GostHalbjahr.fromIDorException(pDaten.gostHalbjahr);
 		_faecherManager = pFaecherManager;
 		_compKurs_fach_kursart_kursnummer = createComparatorKursFachKursartNummer();
 		_compKurs_kursart_fach_kursnummer = createComparatorKursKursartFachNummer();
@@ -170,14 +164,13 @@ public class GostBlockungsdatenManager {
 	 * 
 	 * @return das Halbjahr der gymnasialen Oberstufe */
 	public @NotNull GostHalbjahr getHalbjahr() {
-		return _halbjahr;
+		return GostHalbjahr.fromIDorException(_daten.gostHalbjahr);
 	}
 
 	/** Setzt das Halbjahr der gymnasialen Oberstufe, für welches die Blockung angelegt wurde.
 	 * 
 	 * @param halbjahr das Halbjahr der gymnasialen Oberstufe */
 	public void setHalbjahr(@NotNull GostHalbjahr halbjahr) {
-		_halbjahr = halbjahr;
 		_daten.gostHalbjahr = halbjahr.id;
 	}
 

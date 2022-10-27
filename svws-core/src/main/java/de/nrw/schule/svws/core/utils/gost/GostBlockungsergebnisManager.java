@@ -108,8 +108,13 @@ public class GostBlockungsergebnisManager {
 		_parent = pParent;
 		_ergebnis = new GostBlockungsergebnis();
 		stateClear(pErgebnis);
+		// Idee1: Trennen in Maps erstellen und revalidate
+		// "stateRevalidate": Alles neubewerten anhand der Daten von _ergebnis 
 	}
 
+//	private void stateRevalidate() {
+//	}
+	
 	private void stateClear(GostBlockungsergebnis pErgebnis) {
 		_ergebnis.id = (pErgebnis == null) ? -1 : pErgebnis.id;
 		_ergebnis.blockungID = _parent.getID();
@@ -240,6 +245,8 @@ public class GostBlockungsergebnisManager {
 		// Regelverletzungen überprüfen.
 		stateRegelvalidierung();
 	}
+	
+	// TODO BAR getOfSchülerFachKursart(schuelerid, fachid) 
 
 	private void stateRegelvalidierung() {
 		// Clear
