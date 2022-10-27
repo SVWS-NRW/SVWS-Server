@@ -54,21 +54,21 @@ task createScripts {
 	dependsOn compileJava
 	doLast {
 		if (OperatingSystem.current().isLinux()) {
-			file("../start_server.sh").text = 
+			file("./start_server.sh").text = 
 			  '#! /bin/bash\n' +
 			  'java --class-path ' + sourceSets.main.runtimeClasspath.getAsPath() + ' de.nrw.schule.svws.server.jetty.Main\n'
 			project.exec {
-				commandLine('chmod',  '+x', '../start_server.sh')
+				commandLine('chmod',  '+x', './start_server.sh')
 			}		
 		} else if (OperatingSystem.current().isWindows()) {
-			file("../start_server.cmd").text = 
+			file("./start_server.cmd").text = 
 			  'java --class-path "' + sourceSets.main.runtimeClasspath.getAsPath() + '" de.nrw.schule.svws.server.jetty.Main\n'
 		} else if (OperatingSystem.current().isMacOsX()) {
-			file("../start_server.sh").text = 
+			file("./start_server.sh").text = 
 			  '#! /bin/zsh\n' +
 			  'java --class-path ' + sourceSets.main.runtimeClasspath.getAsPath() + ' de.nrw.schule.svws.server.jetty.Main\n'
 			project.exec {
-				commandLine('chmod',  '+x', '../start_server.sh')
+				commandLine('chmod',  '+x', './start_server.sh')
 			}		
 		} else {
 			// TODO
