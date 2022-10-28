@@ -139,7 +139,7 @@ public class APIBenutzer {
     @ApiResponse(responseCode = "404", description = "Kein Benutzergruppen-Eintrag mit der angegebenen ID gefunden")
     public Response getBenutzergruppeDaten(@PathParam("schema") String schema, @PathParam("id") long id,
             @Context HttpServletRequest request) {
-       try (DBEntityManager conn = OpenAPIApplication.getDBConnectionAllowSelf(request, BenutzerKompetenz.ADMIN, id)) {
+       try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADMIN)) {
             return (new DataBenutzergruppeDaten(conn).get(id));
         }
     }
@@ -165,7 +165,7 @@ public class APIBenutzer {
     @ApiResponse(responseCode = "404", description = "Kein Benutzergruppen-Eintrag mit der angegebenen ID gefunden")
     public Response getBenutzerMitGruppenID(@PathParam("schema") String schema, @PathParam("id") long id,
             @Context HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnectionAllowSelf(request, BenutzerKompetenz.ADMIN, id)) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADMIN)) {
             return (new DataBenutzerliste(conn).getListMitGruppenID(id));
         }
     }
@@ -246,7 +246,7 @@ public class APIBenutzer {
     
     
     /**
-     * Die OpenAPI-Methode für Setzen der Bezeichnung einer Benutzergruppen.
+     * Die OpenAPI-Methode für das Setzen der Bezeichnung einer Benutzergruppen.
      * 
      * @param schema   das Datenbankschema
      * @param id       die ID der Benutzergruppe
@@ -271,7 +271,7 @@ public class APIBenutzer {
             @RequestBody(description = "Die Bezeichnung der Benutzergruppe.", required = true, 
                     content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = String.class))) InputStream is,
             @Context HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnectionAllowSelf(request, BenutzerKompetenz.ADMIN, id)) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADMIN)) {
             return (new DataBenutzergruppeDaten(conn)).setBezeichnung(id, JSONMapper.toString(is));
         }
     }
@@ -303,7 +303,7 @@ public class APIBenutzer {
             @RequestBody(description = "Der Status, ob es sich um eine administrative Gruppe handelt oder nicht.", required = true, 
                     content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Boolean.class))) InputStream is,
             @Context HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnectionAllowSelf(request, BenutzerKompetenz.ADMIN, id)) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADMIN)) {
             return (new DataBenutzergruppeDaten(conn)).setAdmin(id, JSONMapper.toBoolean(is));
         }
     }
@@ -335,7 +335,7 @@ public class APIBenutzer {
             @RequestBody(description = "Der Status, ob die Kompetenz vorhanden ist oder nicht.", required = true, 
                     content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Boolean.class))) InputStream is,
             @Context HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnectionAllowSelf(request, BenutzerKompetenz.ADMIN, id)) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADMIN)) {
             return (new DataBenutzergruppeDaten(conn)).setKompetenz(id, kid, JSONMapper.toBoolean(is));
         }
     }
