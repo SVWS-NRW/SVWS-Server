@@ -3,7 +3,7 @@
 	"description": "SVWS-Server-Projekt: UI-Komponenten",
 	"author": "MSB NRW",
 	"license": "BSD-3-Clause",
-	"version": "0.2.21",
+	"version": "0.2.22-SNAPSHOT",
   "scripts": {
     "format": "prettier --write ./src/main/ts ./*.config.js",
     "build": "vite build && tsc --emitDeclarationOnly",

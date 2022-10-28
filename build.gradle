@@ -7,6 +7,9 @@ plugins {
 	id 'org.sonarqube' version '3.4.0.2513'
 }
 
+def config = new groovy.json.JsonSlurper().parseText(file("buildconfig.json").text)
+println "Version " + config.project.version
+
 String osName = OperatingSystem.current().getName();
 String osVersion = OperatingSystem.current().getVersion();
 String os = OperatingSystem.current().isMacOsX()
@@ -27,7 +30,7 @@ allprojects {
 	// TODO Support JPMS-Modules
 	// apply plugin: 'de.jjohannes.extra-java-module-info'
 
-	version = '0.2.21'
+	version = config.project.version
 	group = 'de.nrw.schule.svws'
 
     repositories {
