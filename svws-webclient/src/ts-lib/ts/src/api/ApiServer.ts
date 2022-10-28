@@ -5553,4 +5553,24 @@ export class ApiServer extends BaseApi {
 	}
 
 
+	/**
+	 * Implementierung der GET-Methode getServerVersion für den Zugriff auf die URL https://{hostname}/status/version
+	 * 
+	 * Gibt die Version des SVWS-Servers zurück.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Die SVWS-Server-Version
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: String
+	 * 
+	 * @returns Die SVWS-Server-Version
+	 */
+	public async getServerVersion() : Promise<String> {
+		let path : string = "/status/version";
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return JSON.parse(text).toString();
+	}
+
+
 }

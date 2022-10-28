@@ -4,6 +4,17 @@ import java.security.KeyStoreException;
 import java.security.cert.Certificate;
 import java.util.List;
 
+import de.nrw.schule.svws.api.JSONMapper;
+import de.nrw.schule.svws.api.SVWSVersion;
+import de.nrw.schule.svws.config.SVWSKonfiguration;
+import de.nrw.schule.svws.core.data.db.DBSchemaListeEintrag;
+import de.nrw.schule.svws.db.utils.OperationError;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -11,15 +22,6 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
-
-import de.nrw.schule.svws.config.SVWSKonfiguration;
-import de.nrw.schule.svws.core.data.db.DBSchemaListeEintrag;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
  * Die Klasse spezifiziert die OpenAPI-Schnittstelle für den Zugriff auf die Konfiguration 
@@ -51,6 +53,28 @@ public class APIConfig {
     }
     
     
+    /**
+     * Die OpenAPI-Methode für die Abfrage der Version des SVWS-Servers.
+     *  
+     * @return die Version des SVWS-Servers
+     */
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/status/version")
+    @Operation(summary = "Gibt die Version des SVWS-Servers zurück.",
+               description = "Gibt die Version des SVWS-Servers zurück.")
+    @ApiResponse(responseCode = "200", description = "Die SVWS-Server-Version",
+                 content = @Content(mediaType = MediaType.APPLICATION_JSON, 
+                 schema = @Schema(implementation = String.class)))
+    public Response getServerVersion() {
+        String version = SVWSVersion.version();
+        if (version == null)
+            return OperationError.NOT_FOUND.getResponse();
+        return JSONMapper.fromString(version);
+    }
+
+
+
     /**
      * Diese Methode liefert den öffentlichen Schlüssel des Servers in Base64-Kodierung
      * 

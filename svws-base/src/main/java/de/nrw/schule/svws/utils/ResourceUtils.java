@@ -81,9 +81,37 @@ public class ResourceUtils {
 			}
 		}
 	}	
-	
-	
-	
+
+
+	/**
+	 * Ermittelt das Path-Objekt für den Zugriff auf die Datei mit dem angegebenen Dateinamen.
+	 *  
+	 * @param filename   der Dateiname
+	 * 
+	 * @return das Path-Objekt
+	 */
+	public static Path getFile(String filename) {
+        Path path = null;
+        try {
+            URL url = ResourceUtils.class.getClassLoader().getResource(filename);
+            URI uri = url.toURI();
+            if ("jar".equals(uri.getScheme())) {
+                try (FileSystem fs = getJARFileSystem(uri)) {
+                    String[] array = uri.toString().split("!");
+                    path = fs.getPath(array[1]);
+                }
+            } else {
+                path = Paths.get(uri);
+            }
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }           
+        return path;
+	}
+
+
 	/**
 	 * Ermittelt alle Dateien, die mit dem Classloader dieser Klasse in dem Classpath in 
 	 * dem Package packageName oder einem Sub-Package davon verfügbar sind sowie

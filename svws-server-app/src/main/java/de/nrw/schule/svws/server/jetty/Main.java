@@ -4,6 +4,7 @@ import java.util.List;
 
 import de.nrw.schule.svws.api.OpenAPIApplication;
 import de.nrw.schule.svws.api.ResourceFile;
+import de.nrw.schule.svws.api.SVWSVersion;
 import de.nrw.schule.svws.config.SVWSKonfiguration;
 import de.nrw.schule.svws.core.data.db.DBSchemaListeEintrag;
 import de.nrw.schule.svws.db.Benutzer;
@@ -39,6 +40,7 @@ public class Main {
 		logger.addConsumer(new LogConsumerConsole(false, false));
 		
 		// Gebe ein paar Status-Informationen beim Start des Servers aus
+		logger.logLn("SVWS-Server Version " + SVWSVersion.version());
 		logger.logLn("Heap-Speicher: ");
 		logger.logLn("  Gesamt: " + (Math.round(Runtime.getRuntime().maxMemory() / 10000000.0) / 100.0) + "G");
 		logger.logLn("  Belegt: " + (Math.round(Runtime.getRuntime().totalMemory() / 10000000.0) / 100.0) + "G");		
