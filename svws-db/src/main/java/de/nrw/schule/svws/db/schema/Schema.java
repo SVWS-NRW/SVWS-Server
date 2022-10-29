@@ -60,9 +60,6 @@ public class Schema {
 	/** Tabelle Berufskolleg_Berufsebenen3 */
 	public static final Tabelle_Berufskolleg_Berufsebenen3 tab_Berufskolleg_Berufsebenen3 = add(new Tabelle_Berufskolleg_Berufsebenen3());
 
-	/** Tabelle Berufskolleg_Fachklassen */
-	public static final Tabelle_Berufskolleg_Fachklassen tab_Berufskolleg_Fachklassen = add(new Tabelle_Berufskolleg_Fachklassen());
-
 	/** Tabelle Berufskolleg_Fachklassen_Keys */
 	public static final Tabelle_Berufskolleg_Fachklassen_Keys tab_Berufskolleg_Fachklassen_Keys = add(new Tabelle_Berufskolleg_Fachklassen_Keys());
 

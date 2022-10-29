@@ -189,7 +189,6 @@
         <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOBerufskollegBerufsebenen1</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOBerufskollegBerufsebenen2</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOBerufskollegBerufsebenen3</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOBerufskollegFachklassen</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOBerufskollegFachklassenKeys</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOEigeneSchule</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOEigeneSchuleKAoADaten</class>
@@ -432,7 +431,6 @@
         <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOBerufskollegBerufsebenen1</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOBerufskollegBerufsebenen2</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOBerufskollegBerufsebenen3</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOBerufskollegFachklassen</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOBerufskollegFachklassenKeys</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOEigeneSchule</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOEigeneSchuleKAoADaten</class>
@@ -517,7 +515,6 @@
         <class>de.nrw.schule.svws.db.dto.current.views.schildintern.DTOSchildInternFachgruppen</class>
         <class>de.nrw.schule.svws.db.dto.current.views.schildintern.DTOSchildInternNote</class>
         <class>de.nrw.schule.svws.db.dto.current.views.schulver.DTOSchulverSchulformen</class>
-        <class>de.nrw.schule.svws.db.dto.current.views.statkue.DTOStatkueFachklasse</class>
         <class>de.nrw.schule.svws.db.dto.current.views.statkue.DTOStatkueFoerderschwerpunkte</class>
         <class>de.nrw.schule.svws.db.dto.current.views.statkue.DTOStatkueSchulformen</class>
         <class>de.nrw.schule.svws.db.dto.current.views.statkue.DTOStatkueGliederung</class>
@@ -718,7 +715,6 @@
         <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOBerufskollegBerufsebenen1</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOBerufskollegBerufsebenen2</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOBerufskollegBerufsebenen3</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOBerufskollegFachklassen</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOBerufskollegFachklassenKeys</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOEigeneSchule</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOEigeneSchuleKAoADaten</class>
@@ -803,7 +799,6 @@
         <class>de.nrw.schule.svws.db.dto.rev8.views.schildintern.Rev8DTOSchildInternFachgruppen</class>
         <class>de.nrw.schule.svws.db.dto.rev8.views.schildintern.Rev8DTOSchildInternNote</class>
         <class>de.nrw.schule.svws.db.dto.rev8.views.schulver.Rev8DTOSchulverSchulformen</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.views.statkue.Rev8DTOStatkueFachklasse</class>
         <class>de.nrw.schule.svws.db.dto.rev8.views.statkue.Rev8DTOStatkueFoerderschwerpunkte</class>
         <class>de.nrw.schule.svws.db.dto.rev8.views.statkue.Rev8DTOStatkueSchulformen</class>
         <class>de.nrw.schule.svws.db.dto.rev8.views.statkue.Rev8DTOStatkueGliederung</class>

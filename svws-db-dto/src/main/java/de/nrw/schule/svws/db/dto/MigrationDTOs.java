@@ -166,7 +166,6 @@ import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOBerufskolle
 import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOBerufskollegBerufsebenen1;
 import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOBerufskollegBerufsebenen2;
 import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOBerufskollegBerufsebenen3;
-import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOBerufskollegFachklassen;
 import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOBerufskollegFachklassenKeys;
 import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOEigeneSchule;
 import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOEigeneSchuleKAoADaten;
@@ -417,7 +416,6 @@ public class MigrationDTOs {
              mapDTOName2DTOClass.put(MigrationDTOBerufskollegBerufsebenen1.class.getSimpleName(),MigrationDTOBerufskollegBerufsebenen1.class);
              mapDTOName2DTOClass.put(MigrationDTOBerufskollegBerufsebenen2.class.getSimpleName(),MigrationDTOBerufskollegBerufsebenen2.class);
              mapDTOName2DTOClass.put(MigrationDTOBerufskollegBerufsebenen3.class.getSimpleName(),MigrationDTOBerufskollegBerufsebenen3.class);
-             mapDTOName2DTOClass.put(MigrationDTOBerufskollegFachklassen.class.getSimpleName(),MigrationDTOBerufskollegFachklassen.class);
              mapDTOName2DTOClass.put(MigrationDTOBerufskollegFachklassenKeys.class.getSimpleName(),MigrationDTOBerufskollegFachklassenKeys.class);
              mapDTOName2DTOClass.put(MigrationDTOEigeneSchule.class.getSimpleName(),MigrationDTOEigeneSchule.class);
              mapDTOName2DTOClass.put(MigrationDTOEigeneSchuleKAoADaten.class.getSimpleName(),MigrationDTOEigeneSchuleKAoADaten.class);
@@ -671,7 +669,6 @@ public class MigrationDTOs {
              mapTablename2DTOClass.put("Berufskolleg_Berufsebenen1",MigrationDTOBerufskollegBerufsebenen1.class);
              mapTablename2DTOClass.put("Berufskolleg_Berufsebenen2",MigrationDTOBerufskollegBerufsebenen2.class);
              mapTablename2DTOClass.put("Berufskolleg_Berufsebenen3",MigrationDTOBerufskollegBerufsebenen3.class);
-             mapTablename2DTOClass.put("Berufskolleg_Fachklassen",MigrationDTOBerufskollegFachklassen.class);
              mapTablename2DTOClass.put("Berufskolleg_Fachklassen_Keys",MigrationDTOBerufskollegFachklassenKeys.class);
              mapTablename2DTOClass.put("EigeneSchule",MigrationDTOEigeneSchule.class);
              mapTablename2DTOClass.put("EigeneSchule_KAoADaten",MigrationDTOEigeneSchuleKAoADaten.class);

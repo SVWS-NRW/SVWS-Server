@@ -33,7 +33,6 @@ public class DBSchemaViews {
 		add_Schildintern_Fachgruppen();
 		add_Schildintern_K_Schulnote();
 		add_Schulver_Schulformen();
-		add_Statkue_Fachklassen();
 		add_Statkue_Foerderschwerpunkt();
 		add_Statkue_Schulformen();
 		add_Statkue_Gliederung();
@@ -421,40 +420,6 @@ public class DBSchemaViews {
 		 .add("gueltigVon", "Gibt die Gültigkeit ab welchem Schuljahr an (hier zur Kompatibilität vorhanden)", "String", "NULL", null, false)
 		 .add("gueltigBis", "Gibt die Gültigkeit bis zu welchem Schuljahr an (hier zur Kompatibilität vorhanden)", "String", "NULL", null, false);
 		addView(view);		
-	}
-
-
-	private void add_Statkue_Fachklassen() {
-		View view = new View(
-				"Statkue_Fachklasse", "views.statkue", "DTOStatkueFachklasse", 
-				"View zur Simulation einer Statkue-Tabelle: Fachklassen am Berufskolleg",
-				0, null,
-                """
-                Berufskolleg_Fachklassen
-                """
-		).add("BKIndex", "Schild-ID der Fachgruppe", "Integer", "FachklassenIndex", null, true)
-		 .add("FKS", "Fachklassenschlüssel Teil 1", "String", "Schluessel", null, true)
-		 .add("AP", "Fachklassenschlüssel Teil 2", "String", "Schluessel2", null, true)
-		 .add("Flag", "Flag: 1 - KLD und SCD012, 2 - nur SCD012, 3 - Ausgelaufen, 4 - nur KLD im Jahr der Einführung", "String", "CASE WHEN gueltigBis IS NULL THEN '1' WHEN gueltigBis >= (SELECT Jahr FROM Schuljahresabschnitte WHERE ID IN (SELECT Schuljahresabschnitts_ID FROM EigeneSchule)) THEN '2' WHEN gueltigVon = (SELECT Jahr FROM Schuljahresabschnitte WHERE ID IN (SELECT Schuljahresabschnitts_ID FROM EigeneSchule)) THEN '4' ELSE '3' END", null, false)
-		 .add("BGrp", "Die Gruppe des zugehörigen Berufsfelds", "String", "BerufsfeldGruppe", null, false)
-		 .add("BFeld", "Das zugehörigen Berufsfelds", "String", "Berufsfeld", null, false)
-		 .add("Ebene1", "Die Berufsebene 1", "String", "Berufsebene1", null, false)
-		 .add("Ebene2", "Die Berufsebene 2", "String", "Berufsebene2", null, false)
-		 .add("Ebene3", "Die Berufsebene 3", "String", "Berufsebene3", null, false)
-		 .add("Sortierung", "Die Sortierung (orientiert sich am Index)", "Integer", "FachklassenIndex", null, false)
-		 .add("Beschreibung_MW", "Die textuelle Beschreibung der Fachklasse (m/w)", "String", "Bezeichnung", null, false)
-		 .add("Beschreibung", "Die textuelle Beschreibung der Fachklasse", "String", "BezeichnungM", null, false)
-		 .add("Beschreibung_W", "Die textuelle Beschreibung der Fachklasse (w)", "String", "BezeichnungW", null, false)
-		 .add("Status", "zur Kompatibilität (hier leer)", "String", "''", null, false)
-		 .add("Flag_APOBK", "zur Kompatibilität (hier leer)", "String", "''", null, false)
-		 .add("BAKL", "zur Kompatibilität (hier leer)", "String", "''", null, false)
-		 .add("BAGR", "zur Kompatibilität (hier leer)", "String", "''", null, false)
-		 .add("BAKLALT", "zur Kompatibilität (hier leer)", "String", "''", null, false)
-		 .add("BAGRALT", "zur Kompatibilität (hier leer)", "String", "''", null, false)
-		 .add("geaendert", "Datum der letzten Änderung (hier zur Kompatibilität vorhanden)", "String", "NULL", null, false)
-		 .add("gueltigVon", "Gibt die Gültigkeit ab welchem Schuljahr an", "String", "gueltigVon", null, false)
-		 .add("gueltigBis", "Gibt die Gültigkeit bis zu welchem Schuljahr an", "String", "gueltigBis", null, false);
-		addView(view);
 	}
 
 

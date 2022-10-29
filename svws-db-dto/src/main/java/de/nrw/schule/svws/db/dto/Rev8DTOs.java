@@ -181,7 +181,6 @@ import de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOBerufskollegAnlagen;
 import de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOBerufskollegBerufsebenen1;
 import de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOBerufskollegBerufsebenen2;
 import de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOBerufskollegBerufsebenen3;
-import de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOBerufskollegFachklassen;
 import de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOBerufskollegFachklassenKeys;
 import de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOEigeneSchule;
 import de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOEigeneSchuleKAoADaten;
@@ -266,7 +265,6 @@ import de.nrw.schule.svws.db.dto.rev8.views.schildintern.Rev8DTOSchildInternBeru
 import de.nrw.schule.svws.db.dto.rev8.views.schildintern.Rev8DTOSchildInternFachgruppen;
 import de.nrw.schule.svws.db.dto.rev8.views.schildintern.Rev8DTOSchildInternNote;
 import de.nrw.schule.svws.db.dto.rev8.views.schulver.Rev8DTOSchulverSchulformen;
-import de.nrw.schule.svws.db.dto.rev8.views.statkue.Rev8DTOStatkueFachklasse;
 import de.nrw.schule.svws.db.dto.rev8.views.statkue.Rev8DTOStatkueFoerderschwerpunkte;
 import de.nrw.schule.svws.db.dto.rev8.views.statkue.Rev8DTOStatkueSchulformen;
 import de.nrw.schule.svws.db.dto.rev8.views.statkue.Rev8DTOStatkueGliederung;
@@ -490,7 +488,6 @@ public class Rev8DTOs {
              mapDTOName2DTOClass.put(Rev8DTOBerufskollegBerufsebenen1.class.getSimpleName(),Rev8DTOBerufskollegBerufsebenen1.class);
              mapDTOName2DTOClass.put(Rev8DTOBerufskollegBerufsebenen2.class.getSimpleName(),Rev8DTOBerufskollegBerufsebenen2.class);
              mapDTOName2DTOClass.put(Rev8DTOBerufskollegBerufsebenen3.class.getSimpleName(),Rev8DTOBerufskollegBerufsebenen3.class);
-             mapDTOName2DTOClass.put(Rev8DTOBerufskollegFachklassen.class.getSimpleName(),Rev8DTOBerufskollegFachklassen.class);
              mapDTOName2DTOClass.put(Rev8DTOBerufskollegFachklassenKeys.class.getSimpleName(),Rev8DTOBerufskollegFachklassenKeys.class);
              mapDTOName2DTOClass.put(Rev8DTOEigeneSchule.class.getSimpleName(),Rev8DTOEigeneSchule.class);
              mapDTOName2DTOClass.put(Rev8DTOEigeneSchuleKAoADaten.class.getSimpleName(),Rev8DTOEigeneSchuleKAoADaten.class);
@@ -575,7 +572,6 @@ public class Rev8DTOs {
              mapDTOName2DTOClass.put(Rev8DTOSchildInternFachgruppen.class.getSimpleName(),Rev8DTOSchildInternFachgruppen.class);
              mapDTOName2DTOClass.put(Rev8DTOSchildInternNote.class.getSimpleName(),Rev8DTOSchildInternNote.class);
              mapDTOName2DTOClass.put(Rev8DTOSchulverSchulformen.class.getSimpleName(),Rev8DTOSchulverSchulformen.class);
-             mapDTOName2DTOClass.put(Rev8DTOStatkueFachklasse.class.getSimpleName(),Rev8DTOStatkueFachklasse.class);
              mapDTOName2DTOClass.put(Rev8DTOStatkueFoerderschwerpunkte.class.getSimpleName(),Rev8DTOStatkueFoerderschwerpunkte.class);
              mapDTOName2DTOClass.put(Rev8DTOStatkueSchulformen.class.getSimpleName(),Rev8DTOStatkueSchulformen.class);
              mapDTOName2DTOClass.put(Rev8DTOStatkueGliederung.class.getSimpleName(),Rev8DTOStatkueGliederung.class);
@@ -802,7 +798,6 @@ public class Rev8DTOs {
              mapTablename2DTOClass.put("Berufskolleg_Berufsebenen1",Rev8DTOBerufskollegBerufsebenen1.class);
              mapTablename2DTOClass.put("Berufskolleg_Berufsebenen2",Rev8DTOBerufskollegBerufsebenen2.class);
              mapTablename2DTOClass.put("Berufskolleg_Berufsebenen3",Rev8DTOBerufskollegBerufsebenen3.class);
-             mapTablename2DTOClass.put("Berufskolleg_Fachklassen",Rev8DTOBerufskollegFachklassen.class);
              mapTablename2DTOClass.put("Berufskolleg_Fachklassen_Keys",Rev8DTOBerufskollegFachklassenKeys.class);
              mapTablename2DTOClass.put("EigeneSchule",Rev8DTOEigeneSchule.class);
              mapTablename2DTOClass.put("EigeneSchule_KAoADaten",Rev8DTOEigeneSchuleKAoADaten.class);
@@ -887,7 +882,6 @@ public class Rev8DTOs {
              mapTablename2DTOClass.put("Schildintern_Fachgruppen",Rev8DTOSchildInternFachgruppen.class);
              mapTablename2DTOClass.put("Schildintern_K_Schulnote",Rev8DTOSchildInternNote.class);
              mapTablename2DTOClass.put("Schulver_Schulformen",Rev8DTOSchulverSchulformen.class);
-             mapTablename2DTOClass.put("Statkue_Fachklasse",Rev8DTOStatkueFachklasse.class);
              mapTablename2DTOClass.put("Statkue_Foerderschwerpunkt",Rev8DTOStatkueFoerderschwerpunkte.class);
              mapTablename2DTOClass.put("Statkue_Schulformen",Rev8DTOStatkueSchulformen.class);
              mapTablename2DTOClass.put("Statkue_Gliederung",Rev8DTOStatkueGliederung.class);
