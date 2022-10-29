@@ -176,9 +176,7 @@ import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOHerkunftsar
 import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOHerkunftsartSchulformen;
 import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOJahrgang;
 import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOMerkmale;
-import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOOrganisationsformenKatalog;
 import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOOrganisationsformenKatalogKeys;
-import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOOrganisationsformenKatalogSchulformen;
 import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOSchulabschluesse_Allgemeinbildend;
 import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOSchulabschluesse_Berufsbildend;
 import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOSchulformen;
@@ -425,9 +423,7 @@ public class MigrationDTOs {
              mapDTOName2DTOClass.put(MigrationDTOHerkunftsartSchulformen.class.getSimpleName(),MigrationDTOHerkunftsartSchulformen.class);
              mapDTOName2DTOClass.put(MigrationDTOJahrgang.class.getSimpleName(),MigrationDTOJahrgang.class);
              mapDTOName2DTOClass.put(MigrationDTOMerkmale.class.getSimpleName(),MigrationDTOMerkmale.class);
-             mapDTOName2DTOClass.put(MigrationDTOOrganisationsformenKatalog.class.getSimpleName(),MigrationDTOOrganisationsformenKatalog.class);
              mapDTOName2DTOClass.put(MigrationDTOOrganisationsformenKatalogKeys.class.getSimpleName(),MigrationDTOOrganisationsformenKatalogKeys.class);
-             mapDTOName2DTOClass.put(MigrationDTOOrganisationsformenKatalogSchulformen.class.getSimpleName(),MigrationDTOOrganisationsformenKatalogSchulformen.class);
              mapDTOName2DTOClass.put(MigrationDTOSchulabschluesse_Allgemeinbildend.class.getSimpleName(),MigrationDTOSchulabschluesse_Allgemeinbildend.class);
              mapDTOName2DTOClass.put(MigrationDTOSchulabschluesse_Berufsbildend.class.getSimpleName(),MigrationDTOSchulabschluesse_Berufsbildend.class);
              mapDTOName2DTOClass.put(MigrationDTOSchulformen.class.getSimpleName(),MigrationDTOSchulformen.class);
@@ -677,9 +673,7 @@ public class MigrationDTOs {
              mapTablename2DTOClass.put("Herkunftsart_Schulformen",MigrationDTOHerkunftsartSchulformen.class);
              mapTablename2DTOClass.put("EigeneSchule_Jahrgaenge",MigrationDTOJahrgang.class);
              mapTablename2DTOClass.put("EigeneSchule_Merkmale",MigrationDTOMerkmale.class);
-             mapTablename2DTOClass.put("OrganisationsformenKatalog",MigrationDTOOrganisationsformenKatalog.class);
              mapTablename2DTOClass.put("OrganisationsformenKatalog_Keys",MigrationDTOOrganisationsformenKatalogKeys.class);
-             mapTablename2DTOClass.put("OrganisationsformenKatalog_Schulformen",MigrationDTOOrganisationsformenKatalogSchulformen.class);
              mapTablename2DTOClass.put("Schulabschluesse_Allgemeinbildend",MigrationDTOSchulabschluesse_Allgemeinbildend.class);
              mapTablename2DTOClass.put("Schulabschluesse_Berufsbildend",MigrationDTOSchulabschluesse_Berufsbildend.class);
              mapTablename2DTOClass.put("EigeneSchule_Schulformen",MigrationDTOSchulformen.class);

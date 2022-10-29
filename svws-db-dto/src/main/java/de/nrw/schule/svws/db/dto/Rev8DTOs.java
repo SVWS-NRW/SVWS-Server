@@ -191,9 +191,7 @@ import de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOHerkunftsart;
 import de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOHerkunftsartSchulformen;
 import de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOJahrgang;
 import de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOMerkmale;
-import de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOOrganisationsformenKatalog;
 import de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOOrganisationsformenKatalogKeys;
-import de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOOrganisationsformenKatalogSchulformen;
 import de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOSchulabschluesse_Allgemeinbildend;
 import de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOSchulabschluesse_Berufsbildend;
 import de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOSchulformen;
@@ -279,7 +277,6 @@ import de.nrw.schule.svws.db.dto.rev8.views.statkue.Rev8DTOStatkueZulaessigesFac
 import de.nrw.schule.svws.db.dto.rev8.views.statkue.Rev8DTOSVWSZulaessigeFaecherMapping;
 import de.nrw.schule.svws.db.dto.rev8.views.statkue.Rev8DTOStatkueAllgMerkmale;
 import de.nrw.schule.svws.db.dto.rev8.views.statkue.Rev8DTOStatkueReligion;
-import de.nrw.schule.svws.db.dto.rev8.views.statkue.Rev8DTOStatkueOrganisationsform;
 import de.nrw.schule.svws.db.dto.rev8.views.benutzer.Rev8DTOViewBenutzer;
 import de.nrw.schule.svws.db.dto.rev8.views.benutzer.Rev8DTOViewBenutzerKompetenz;
 import de.nrw.schule.svws.db.dto.rev8.views.benutzer.Rev8DTOViewBenutzerdetails;
@@ -496,9 +493,7 @@ public class Rev8DTOs {
              mapDTOName2DTOClass.put(Rev8DTOHerkunftsartSchulformen.class.getSimpleName(),Rev8DTOHerkunftsartSchulformen.class);
              mapDTOName2DTOClass.put(Rev8DTOJahrgang.class.getSimpleName(),Rev8DTOJahrgang.class);
              mapDTOName2DTOClass.put(Rev8DTOMerkmale.class.getSimpleName(),Rev8DTOMerkmale.class);
-             mapDTOName2DTOClass.put(Rev8DTOOrganisationsformenKatalog.class.getSimpleName(),Rev8DTOOrganisationsformenKatalog.class);
              mapDTOName2DTOClass.put(Rev8DTOOrganisationsformenKatalogKeys.class.getSimpleName(),Rev8DTOOrganisationsformenKatalogKeys.class);
-             mapDTOName2DTOClass.put(Rev8DTOOrganisationsformenKatalogSchulformen.class.getSimpleName(),Rev8DTOOrganisationsformenKatalogSchulformen.class);
              mapDTOName2DTOClass.put(Rev8DTOSchulabschluesse_Allgemeinbildend.class.getSimpleName(),Rev8DTOSchulabschluesse_Allgemeinbildend.class);
              mapDTOName2DTOClass.put(Rev8DTOSchulabschluesse_Berufsbildend.class.getSimpleName(),Rev8DTOSchulabschluesse_Berufsbildend.class);
              mapDTOName2DTOClass.put(Rev8DTOSchulformen.class.getSimpleName(),Rev8DTOSchulformen.class);
@@ -584,7 +579,6 @@ public class Rev8DTOs {
              mapDTOName2DTOClass.put(Rev8DTOSVWSZulaessigeFaecherMapping.class.getSimpleName(),Rev8DTOSVWSZulaessigeFaecherMapping.class);
              mapDTOName2DTOClass.put(Rev8DTOStatkueAllgMerkmale.class.getSimpleName(),Rev8DTOStatkueAllgMerkmale.class);
              mapDTOName2DTOClass.put(Rev8DTOStatkueReligion.class.getSimpleName(),Rev8DTOStatkueReligion.class);
-             mapDTOName2DTOClass.put(Rev8DTOStatkueOrganisationsform.class.getSimpleName(),Rev8DTOStatkueOrganisationsform.class);
              mapDTOName2DTOClass.put(Rev8DTOViewBenutzer.class.getSimpleName(),Rev8DTOViewBenutzer.class);
              mapDTOName2DTOClass.put(Rev8DTOViewBenutzerKompetenz.class.getSimpleName(),Rev8DTOViewBenutzerKompetenz.class);
              mapDTOName2DTOClass.put(Rev8DTOViewBenutzerdetails.class.getSimpleName(),Rev8DTOViewBenutzerdetails.class);
@@ -804,9 +798,7 @@ public class Rev8DTOs {
              mapTablename2DTOClass.put("Herkunftsart_Schulformen",Rev8DTOHerkunftsartSchulformen.class);
              mapTablename2DTOClass.put("EigeneSchule_Jahrgaenge",Rev8DTOJahrgang.class);
              mapTablename2DTOClass.put("EigeneSchule_Merkmale",Rev8DTOMerkmale.class);
-             mapTablename2DTOClass.put("OrganisationsformenKatalog",Rev8DTOOrganisationsformenKatalog.class);
              mapTablename2DTOClass.put("OrganisationsformenKatalog_Keys",Rev8DTOOrganisationsformenKatalogKeys.class);
-             mapTablename2DTOClass.put("OrganisationsformenKatalog_Schulformen",Rev8DTOOrganisationsformenKatalogSchulformen.class);
              mapTablename2DTOClass.put("Schulabschluesse_Allgemeinbildend",Rev8DTOSchulabschluesse_Allgemeinbildend.class);
              mapTablename2DTOClass.put("Schulabschluesse_Berufsbildend",Rev8DTOSchulabschluesse_Berufsbildend.class);
              mapTablename2DTOClass.put("EigeneSchule_Schulformen",Rev8DTOSchulformen.class);
@@ -892,7 +884,6 @@ public class Rev8DTOs {
              mapTablename2DTOClass.put("Statkue_SVWS_ZulaessigeFaecher",Rev8DTOSVWSZulaessigeFaecherMapping.class);
              mapTablename2DTOClass.put("Statkue_AllgMerkmale",Rev8DTOStatkueAllgMerkmale.class);
              mapTablename2DTOClass.put("Statkue_Religionen",Rev8DTOStatkueReligion.class);
-             mapTablename2DTOClass.put("Statkue_Organisationsform",Rev8DTOStatkueOrganisationsform.class);
              mapTablename2DTOClass.put("V_Benutzer",Rev8DTOViewBenutzer.class);
              mapTablename2DTOClass.put("V_Benutzerkompetenzen",Rev8DTOViewBenutzerKompetenz.class);
              mapTablename2DTOClass.put("V_BenutzerDetails",Rev8DTOViewBenutzerdetails.class);

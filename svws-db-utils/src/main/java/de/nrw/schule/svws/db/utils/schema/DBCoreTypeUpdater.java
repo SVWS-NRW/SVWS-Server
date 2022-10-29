@@ -28,13 +28,11 @@ import de.nrw.schule.svws.core.data.lehrer.LehrerKatalogMinderleistungsartEintra
 import de.nrw.schule.svws.core.data.lehrer.LehrerKatalogRechtsverhaeltnisEintrag;
 import de.nrw.schule.svws.core.data.lehrer.LehrerKatalogZugangsgrundEintrag;
 import de.nrw.schule.svws.core.data.schule.AllgemeineMerkmaleKatalogEintrag;
-import de.nrw.schule.svws.core.data.schule.EinschulungsartKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.FoerderschwerpunktKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.HerkunftKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.HerkunftsartKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.HerkunftsartKatalogEintragBezeichnung;
 import de.nrw.schule.svws.core.data.schule.NationalitaetenKatalogEintrag;
-import de.nrw.schule.svws.core.data.schule.OrganisationsformKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.ReligionKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.SchulabschlussAllgemeinbildendKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.SchulabschlussBerufsbildendKatalogEintrag;
@@ -174,16 +172,13 @@ public class DBCoreTypeUpdater {
 		tables.add(new CoreTypeTable("FachKatalog", ZulaessigesFach.VERSION, updateZulaessigeFaecher));
 		tables.add(new CoreTypeTable("FachKatalog_Keys", ZulaessigesFach.VERSION, updateZulaessigeFaecherKeys));
 		tables.add(new CoreTypeTable("FachKatalog_Schulformen", ZulaessigesFach.VERSION, updateZulaessigeFaecherSchulformen));
-		tables.add(new CoreTypeTable("EinschulungsartKatalog", Einschulungsart.VERSION, updateEinschulungsarten));
 		tables.add(new CoreTypeTable("EinschulungsartKatalog_Keys", Einschulungsart.VERSION, updateEinschulungsartenKeys));
 		tables.add(new CoreTypeTable("Religionen", Religion.VERSION, updateReligionen));
 		tables.add(new CoreTypeTable("Religionen_Keys", Religion.VERSION, updateReligionenKeys));
 		tables.add(new CoreTypeTable("AllgemeineMerkmaleKatalog", AllgemeineMerkmale.VERSION, updateAllgemeineMerkmale));
 		tables.add(new CoreTypeTable("AllgemeineMerkmaleKatalog_Keys", AllgemeineMerkmale.VERSION, updateAllgemeineMerkmaleKeys));
 		tables.add(new CoreTypeTable("AllgemeineMerkmaleKatalog_Schulformen", AllgemeineMerkmale.VERSION, updateAllgemeineMerkmaleSchulformen));
-		tables.add(new CoreTypeTable("OrganisationsformenKatalog", BerufskollegOrganisationsformen.VERSION + WeiterbildungskollegOrganisationsformen.VERSION + AllgemeinbildendOrganisationsformen.VERSION, updateOrganisationsformen));
 		tables.add(new CoreTypeTable("OrganisationsformenKatalog_Keys", BerufskollegOrganisationsformen.VERSION + WeiterbildungskollegOrganisationsformen.VERSION + AllgemeinbildendOrganisationsformen.VERSION, updateOrganisationsformenKeys));
-		tables.add(new CoreTypeTable("OrganisationsformenKatalog_Schulformen", BerufskollegOrganisationsformen.VERSION + WeiterbildungskollegOrganisationsformen.VERSION + AllgemeinbildendOrganisationsformen.VERSION, updateOrganisationsformenSchulformen));
         tables.add(new CoreTypeTable("LehrerLeitungsfunktion_Keys", LehrerLeitungsfunktion.VERSION, updateLehrerLeitungsfunktionenKeys));
 	}
 	
@@ -1797,35 +1792,6 @@ public class DBCoreTypeUpdater {
 
 
 	/**
-	 * Aktualisiert die Tabelle für den Core-Type Einschulungsart
-	 */
-	private Consumer<Logger> updateEinschulungsarten = (Logger logger) -> {
-		String tabname = "EinschulungsartKatalog";
-		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
-		StringBuilder sql = new StringBuilder();
-		sql.append("INSERT INTO ");
-		sql.append(tabname); 
-		sql.append("(ID, Kuerzel, Bezeichnung, Beschreibung, gueltigVon, gueltigBis) ");
-		Einschulungsart[] values = Einschulungsart.values();
-		boolean isFirst = true;
-		for (int i = 0; i < values.length; i++) {
-			Einschulungsart art = values[i];
-			for (EinschulungsartKatalogEintrag a : art.historie) {
-				sql.append(isFirst ? "VALUES (" : ", (");
-				isFirst = false;
-				sql.append(a.id).append(",");
-				sql.append("'").append(a.kuerzel).append("'").append(",");
-				sql.append("'").append(a.bezeichnung.replace("'", "''")).append("'").append(",");
-				sql.append("'").append(a.beschreibung.replace("'", "''")).append("'").append(",");
-				sql.append(a.gueltigVon).append(",");
-				sql.append(a.gueltigBis).append(")");
-			}
-		}
-		updateCoreTypeTabelle(tabname, Einschulungsart.class.getCanonicalName(), Einschulungsart.VERSION, sql.toString());
-	};
-
-	
-	/**
 	 * Aktualisiert die Tabelle für den Core-Type Einschulungsart 
 	 */
 	private Consumer<Logger> updateEinschulungsartenKeys = (Logger logger) -> {
@@ -1980,40 +1946,7 @@ public class DBCoreTypeUpdater {
 	};
 
 
-	/**
-	 * Aktualisiert die Tabelle für die Core-Types BerufskollegOrganisationsformen,
-	 * WeiterbildungskollegOrganisationsformen und AllgemeinbildendOrganisationsformen
-	 */
-	private Consumer<Logger> updateOrganisationsformen = (Logger logger) -> {
-		String tabname = "OrganisationsformenKatalog";
-		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
-		StringBuilder sql = new StringBuilder();
-		sql.append("INSERT INTO ");
-		sql.append(tabname); 
-		sql.append("(ID, Kuerzel, Beschreibung, gueltigVon, gueltigBis) ");
-		boolean isFirst = true;
-		List<OrganisationsformKatalogEintrag> values = Stream.of(
-			Stream.of(BerufskollegOrganisationsformen.values()).flatMap(o -> Stream.of(o.historie)), 
-			Stream.of(WeiterbildungskollegOrganisationsformen.values()).flatMap(o -> Stream.of(o.historie)), 
-			Stream.of(AllgemeinbildendOrganisationsformen.values()).flatMap(o -> Stream.of(o.historie))
-		).flatMap(o -> o).toList();
-		for (OrganisationsformKatalogEintrag f : values) {
-			sql.append(isFirst ? "VALUES (" : ", (");
-			isFirst = false;
-			sql.append(f.id).append(",");
-			sql.append("'").append(f.kuerzel).append("'").append(",");
-			sql.append("'").append(f.beschreibung.replace("'", "''")).append("'").append(",");
-			sql.append(f.gueltigVon).append(",");
-			sql.append(f.gueltigBis).append(")");
-		}
-		updateCoreTypeTabelle(tabname, 
-			BerufskollegOrganisationsformen.class.getCanonicalName() + ", " + WeiterbildungskollegOrganisationsformen.class.getCanonicalName() + ", " + AllgemeinbildendOrganisationsformen.class.getCanonicalName(), 
-			BerufskollegOrganisationsformen.VERSION + WeiterbildungskollegOrganisationsformen.VERSION + AllgemeinbildendOrganisationsformen.VERSION, 
-			sql.toString()
-		);
-	};
 
-	
 	/**
 	 * Aktualisiert die Tabelle für die Core-Types BerufskollegOrganisationsformen,
 	 * WeiterbildungskollegOrganisationsformen und AllgemeinbildendOrganisationsformen
@@ -2036,42 +1969,6 @@ public class DBCoreTypeUpdater {
 			sql.append(isFirst ? "VALUES (" : ", (");
 			isFirst = false;
 			sql.append("'").append(k).append("')");
-		}
-		updateCoreTypeTabelle(tabname, 
-			BerufskollegOrganisationsformen.class.getCanonicalName() + ", " + WeiterbildungskollegOrganisationsformen.class.getCanonicalName() + ", " + AllgemeinbildendOrganisationsformen.class.getCanonicalName(), 
-			BerufskollegOrganisationsformen.VERSION + WeiterbildungskollegOrganisationsformen.VERSION + AllgemeinbildendOrganisationsformen.VERSION, 
-			sql.toString()
-		);
-	};
-	
-	
-	/**
-	 * Aktualisiert die Tabelle für die Core-Types BerufskollegOrganisationsformen,
-	 * WeiterbildungskollegOrganisationsformen und AllgemeinbildendOrganisationsformen
-	 */
-	private Consumer<Logger> updateOrganisationsformenSchulformen = (Logger logger) -> {
-		String tabname = "OrganisationsformenKatalog_Schulformen";
-		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
-		StringBuilder sql = new StringBuilder();
-		sql.append("INSERT INTO ");
-		sql.append(tabname); 
-		sql.append("(Organisationsform_ID, Schulform_Kuerzel) ");
-		boolean isFirst = true;
-		List<OrganisationsformKatalogEintrag> values = Stream.of(
-				Stream.of(BerufskollegOrganisationsformen.values()).flatMap(o -> Stream.of(o.historie)), 
-				Stream.of(WeiterbildungskollegOrganisationsformen.values()).flatMap(o -> Stream.of(o.historie)), 
-				Stream.of(AllgemeinbildendOrganisationsformen.values()).flatMap(o -> Stream.of(o.historie))
-			).flatMap(o -> o).toList();
-		for (OrganisationsformKatalogEintrag f : values) {
-			for (String sf : f.schulformen) {
-				sql.append(isFirst ? "VALUES (" : ", (");
-				isFirst = false;
-				sql.append(f.id).append(",");
-				if (sf == null)
-					sql.append("null)");
-				else
-					sql.append("'").append(Schulform.getByKuerzel(sf).daten.kuerzel).append("'").append(")");
-			}
 		}
 		updateCoreTypeTabelle(tabname, 
 			BerufskollegOrganisationsformen.class.getCanonicalName() + ", " + WeiterbildungskollegOrganisationsformen.class.getCanonicalName() + ", " + AllgemeinbildendOrganisationsformen.class.getCanonicalName(), 

@@ -191,9 +191,7 @@ import de.nrw.schule.svws.db.dto.current.schild.schule.DTOHerkunftsart;
 import de.nrw.schule.svws.db.dto.current.schild.schule.DTOHerkunftsartSchulformen;
 import de.nrw.schule.svws.db.dto.current.schild.schule.DTOJahrgang;
 import de.nrw.schule.svws.db.dto.current.schild.schule.DTOMerkmale;
-import de.nrw.schule.svws.db.dto.current.schild.schule.DTOOrganisationsformenKatalog;
 import de.nrw.schule.svws.db.dto.current.schild.schule.DTOOrganisationsformenKatalogKeys;
-import de.nrw.schule.svws.db.dto.current.schild.schule.DTOOrganisationsformenKatalogSchulformen;
 import de.nrw.schule.svws.db.dto.current.schild.schule.DTOSchulabschluesse_Allgemeinbildend;
 import de.nrw.schule.svws.db.dto.current.schild.schule.DTOSchulabschluesse_Berufsbildend;
 import de.nrw.schule.svws.db.dto.current.schild.schule.DTOSchulformen;
@@ -279,7 +277,6 @@ import de.nrw.schule.svws.db.dto.current.views.statkue.DTOStatkueZulaessigesFach
 import de.nrw.schule.svws.db.dto.current.views.statkue.DTOSVWSZulaessigeFaecherMapping;
 import de.nrw.schule.svws.db.dto.current.views.statkue.DTOStatkueAllgMerkmale;
 import de.nrw.schule.svws.db.dto.current.views.statkue.DTOStatkueReligion;
-import de.nrw.schule.svws.db.dto.current.views.statkue.DTOStatkueOrganisationsform;
 import de.nrw.schule.svws.db.dto.current.views.benutzer.DTOViewBenutzer;
 import de.nrw.schule.svws.db.dto.current.views.benutzer.DTOViewBenutzerKompetenz;
 import de.nrw.schule.svws.db.dto.current.views.benutzer.DTOViewBenutzerdetails;
@@ -496,9 +493,7 @@ public class DTOs {
              mapDTOName2DTOClass.put(DTOHerkunftsartSchulformen.class.getSimpleName(),DTOHerkunftsartSchulformen.class);
              mapDTOName2DTOClass.put(DTOJahrgang.class.getSimpleName(),DTOJahrgang.class);
              mapDTOName2DTOClass.put(DTOMerkmale.class.getSimpleName(),DTOMerkmale.class);
-             mapDTOName2DTOClass.put(DTOOrganisationsformenKatalog.class.getSimpleName(),DTOOrganisationsformenKatalog.class);
              mapDTOName2DTOClass.put(DTOOrganisationsformenKatalogKeys.class.getSimpleName(),DTOOrganisationsformenKatalogKeys.class);
-             mapDTOName2DTOClass.put(DTOOrganisationsformenKatalogSchulformen.class.getSimpleName(),DTOOrganisationsformenKatalogSchulformen.class);
              mapDTOName2DTOClass.put(DTOSchulabschluesse_Allgemeinbildend.class.getSimpleName(),DTOSchulabschluesse_Allgemeinbildend.class);
              mapDTOName2DTOClass.put(DTOSchulabschluesse_Berufsbildend.class.getSimpleName(),DTOSchulabschluesse_Berufsbildend.class);
              mapDTOName2DTOClass.put(DTOSchulformen.class.getSimpleName(),DTOSchulformen.class);
@@ -584,7 +579,6 @@ public class DTOs {
              mapDTOName2DTOClass.put(DTOSVWSZulaessigeFaecherMapping.class.getSimpleName(),DTOSVWSZulaessigeFaecherMapping.class);
              mapDTOName2DTOClass.put(DTOStatkueAllgMerkmale.class.getSimpleName(),DTOStatkueAllgMerkmale.class);
              mapDTOName2DTOClass.put(DTOStatkueReligion.class.getSimpleName(),DTOStatkueReligion.class);
-             mapDTOName2DTOClass.put(DTOStatkueOrganisationsform.class.getSimpleName(),DTOStatkueOrganisationsform.class);
              mapDTOName2DTOClass.put(DTOViewBenutzer.class.getSimpleName(),DTOViewBenutzer.class);
              mapDTOName2DTOClass.put(DTOViewBenutzerKompetenz.class.getSimpleName(),DTOViewBenutzerKompetenz.class);
              mapDTOName2DTOClass.put(DTOViewBenutzerdetails.class.getSimpleName(),DTOViewBenutzerdetails.class);
@@ -804,9 +798,7 @@ public class DTOs {
              mapTablename2DTOClass.put("Herkunftsart_Schulformen",DTOHerkunftsartSchulformen.class);
              mapTablename2DTOClass.put("EigeneSchule_Jahrgaenge",DTOJahrgang.class);
              mapTablename2DTOClass.put("EigeneSchule_Merkmale",DTOMerkmale.class);
-             mapTablename2DTOClass.put("OrganisationsformenKatalog",DTOOrganisationsformenKatalog.class);
              mapTablename2DTOClass.put("OrganisationsformenKatalog_Keys",DTOOrganisationsformenKatalogKeys.class);
-             mapTablename2DTOClass.put("OrganisationsformenKatalog_Schulformen",DTOOrganisationsformenKatalogSchulformen.class);
              mapTablename2DTOClass.put("Schulabschluesse_Allgemeinbildend",DTOSchulabschluesse_Allgemeinbildend.class);
              mapTablename2DTOClass.put("Schulabschluesse_Berufsbildend",DTOSchulabschluesse_Berufsbildend.class);
              mapTablename2DTOClass.put("EigeneSchule_Schulformen",DTOSchulformen.class);
@@ -892,7 +884,6 @@ public class DTOs {
              mapTablename2DTOClass.put("Statkue_SVWS_ZulaessigeFaecher",DTOSVWSZulaessigeFaecherMapping.class);
              mapTablename2DTOClass.put("Statkue_AllgMerkmale",DTOStatkueAllgMerkmale.class);
              mapTablename2DTOClass.put("Statkue_Religionen",DTOStatkueReligion.class);
-             mapTablename2DTOClass.put("Statkue_Organisationsform",DTOStatkueOrganisationsform.class);
              mapTablename2DTOClass.put("V_Benutzer",DTOViewBenutzer.class);
              mapTablename2DTOClass.put("V_Benutzerkompetenzen",DTOViewBenutzerKompetenz.class);
              mapTablename2DTOClass.put("V_BenutzerDetails",DTOViewBenutzerdetails.class);

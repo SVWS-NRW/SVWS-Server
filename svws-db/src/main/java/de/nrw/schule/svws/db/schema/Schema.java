@@ -336,14 +336,8 @@ public class Schema {
 	/** Tabelle Noten */
 	public static final Tabelle_Noten tab_Noten = add(new Tabelle_Noten());
 
-	/** Tabelle OrganisationsformenKatalog */
-	public static final Tabelle_OrganisationsformenKatalog tab_OrganisationsformenKatalog = add(new Tabelle_OrganisationsformenKatalog());
-
 	/** Tabelle OrganisationsformenKatalog_Keys */
 	public static final Tabelle_OrganisationsformenKatalog_Keys tab_OrganisationsformenKatalog_Keys = add(new Tabelle_OrganisationsformenKatalog_Keys());
-
-	/** Tabelle OrganisationsformenKatalog_Schulformen */
-	public static final Tabelle_OrganisationsformenKatalog_Schulformen tab_OrganisationsformenKatalog_Schulformen = add(new Tabelle_OrganisationsformenKatalog_Schulformen());
 
 	/** Tabelle PersonalTypen */
 	public static final Tabelle_PersonalTypen tab_PersonalTypen = add(new Tabelle_PersonalTypen());

@@ -48,7 +48,6 @@ public class DBSchemaViews {
 		add_Statkue_SVWS_ZulaessigeFaecher();
 		add_Statkue_AllgMerkmale();
 		add_Statkue_Religionen();
-		add_Statkue_Organisationsform();
 		// Revision 6
 		add_V_Benutzer();
 		add_V_Benutzerkompetenzen();
@@ -562,26 +561,6 @@ public class DBSchemaViews {
 		 .add("geaendert", "Datum der letzten Änderung (hier zur Kompatibilität vorhanden)", "String", "NULL", null, false)
 		 .add("gueltigVon", "Gibt die Gültigkeit ab welchem Schuljahr an", "String", "r.gueltigVon", null, false)
 		 .add("gueltigBis", "Gibt die Gültigkeit bis zu welchem Schuljahr an", "String", "r.gueltigBis", null, false);
-		addView(view);
-	}
-
-
-	private void add_Statkue_Organisationsform() {
-		View view = new View(
-				"Statkue_Organisationsform", "views.statkue", "DTOStatkueOrganisationsform", 
-				"View zur Simulation einer Statkue-Tabelle: Organisationsformen",
-				0, null,
-                """
-                OrganisationsformenKatalog o JOIN OrganisationsformenKatalog_Schulformen os ON o.ID = os.Organisationsform_ID AND o.gueltigBis IS NULL
-                """
-		).add("SF", "Die Schulform für welche die Organisationsform zur Verfügung steht", "String", "os.Schulform_Kuerzel", null, true)
-		 .add("OrgForm", "Das Kürzel der Organisationsform", "String", "o.Kuerzel", null, true)
-		 .add("FSP", "Eine Einschränkung auf einen Förderschwerpunkt (hier nur Kompatibilität angegeben)", "String", "NULL", null, true)
-		 .add("Beschreibung", "Die Beschreibung der Organisationsform", "String", "o.Beschreibung", null, false)
-		 .add("Flag", "Flag - zur Kompatibilität (hier 1)", "String", "'1'", null, true)
-		 .add("geaendert", "Datum der letzten Änderung (hier zur Kompatibilität vorhanden)", "String", "NULL", null, false)
-		 .add("gueltigVon", "Gibt die Gültigkeit ab welchem Schuljahr an", "String", "o.gueltigVon", null, false)
-		 .add("gueltigBis", "Gibt die Gültigkeit bis zu welchem Schuljahr an", "String", "o.gueltigBis", null, false);
 		addView(view);
 	}
 
