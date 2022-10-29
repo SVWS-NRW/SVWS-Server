@@ -1502,8 +1502,8 @@ public class APIGost {
      *  
      * @param schema       das Datenbankschema, in welchem die Blockung erstellt wird
      * @param idErgebnis   die ID des Blockungsergebnisses
-     * @param idSchueler   die ID des Blockungsergebnisses
-     * @param idKurs       die ID des Blockungsergebnisses
+     * @param idSchueler   die ID der Schiene der Blockung
+     * @param idKurs       die ID des Kurses der Blockung
      * @param request      die Informationen zur HTTP-Anfrage
      * 
      * @return die HTTP-Antwort
@@ -1536,16 +1536,16 @@ public class APIGost {
      *  
      * @param schema       das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param idErgebnis   die ID des Blockungsergebnisses
-     * @param idSchueler   die ID des Blockungsergebnisses
-     * @param idKurs       die ID des Blockungsergebnisses
+     * @param idSchueler   die ID der Schiene der Blockung
+     * @param idKurs       die ID des Kurses der Blockung
      * @param request      die Informationen zur HTTP-Anfrage
      * 
      * @return eine Response mit dem Status-Code
      */
     @DELETE
     @Path("/blockungen/zwischenergebnisse/{ergebnisid : \\d+}/schueler/{schuelerid : \\d+}/kurs/{kursid: \\d+}")
-    @Operation(summary = "Entfernt eine Kurszuordnung zu einem Scüler bei einem Blockungsergebniss einer Blockung der Gymnasialen Oberstufe.",
-               description = "Entfernt eine Kurszuordnung zu einem Scüler bei einem Blockungsergebniss einer Blockung der Gymnasialen Oberstufe. "
+    @Operation(summary = "Entfernt eine Kurszuordnung zu einem Schüler bei einem Blockungsergebniss einer Blockung der Gymnasialen Oberstufe.",
+               description = "Entfernt eine Kurszuordnung zu einem Schüler bei einem Blockungsergebniss einer Blockung der Gymnasialen Oberstufe. "
     		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen besitzt.")
     @ApiResponse(responseCode = "204", description = "Die Zuordnung wurde erfolgreich gelöscht.")
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Zuordnung zu löschen.")
@@ -1559,5 +1559,68 @@ public class APIGost {
     	}
     }
 
+
+    /**
+     * Die OpenAPI-Methode für das Erstellen einer Kurszuordnung zu einer Schiene bei einem Blockungsergebnis einer 
+     * Blockung der Gymnasialen Oberstufe.
+     *  
+     * @param schema       das Datenbankschema, in welchem die Blockung erstellt wird
+     * @param idErgebnis   die ID des Blockungsergebnisses
+     * @param idSchiene    die ID der Schiene der Blockung
+     * @param idKurs       die ID des Kurses der Blockung
+     * @param request      die Informationen zur HTTP-Anfrage
+     * 
+     * @return die HTTP-Antwort
+     */
+    @POST
+    @Path("/blockungen/zwischenergebnisse/{ergebnisid : \\d+}/schiene/{schienenid : \\d+}/kurs/{kursid: \\d+}")
+    @Operation(summary = "Erstellt eine Kurszuordnung zu einer Schiene bei einem Blockungsergebnis einer Blockung der Gymnasialen Oberstufe.",
+    description = "Erstellt eine Kurszuordnung zu einer Schiene bei einem Blockungsergebnis einer Blockung der Gymnasialen Oberstufe."
+                + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen der Zuordnung "
+                + "besitzt.")
+    @ApiResponse(responseCode = "204", description = "Die Zuordnung wurde erfolgreich angelegt.")
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um eine Zuordnung anzulegen.")
+    @ApiResponse(responseCode = "404", description = "Kein geeignetes Zwischenergebnis, Schiene oder Kurs für die Zuordnung vorhanden")
+    @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response createGostBlockungsergebnisKursSchieneZuordnung(
+            @PathParam("schema") String schema, @PathParam("ergebnisid") long idErgebnis, 
+            @PathParam("schienenid") long idSchiene, @PathParam("kursid") long idKurs,
+            @Context HttpServletRequest request) {
+        // TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) {
+            return (new DataGostBlockungsergebnisse(conn)).createKursSchieneZuordnung(idErgebnis, idSchiene, idKurs);
+        }
+    }
+    
+    
+    /**
+     * Die OpenAPI-Methode für das Löschen einer Kurszuordnung zu einer Schiene bei einem Blockungsergebnis einer 
+     * Blockung der Gymnasialen Oberstufe.
+     *  
+     * @param schema       das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param idErgebnis   die ID des Blockungsergebnisses
+     * @param idSchiene    die ID der Schiene der Blockung
+     * @param idKurs       die ID des Kurses der Blockung
+     * @param request      die Informationen zur HTTP-Anfrage
+     * 
+     * @return eine Response mit dem Status-Code
+     */
+    @DELETE
+    @Path("/blockungen/zwischenergebnisse/{ergebnisid : \\d+}/schiene/{schienenid : \\d+}/kurs/{kursid: \\d+}")
+    @Operation(summary = "Entfernt eine Kurszuordnung zu einer Schiene bei einem Blockungsergebniss einer Blockung der Gymnasialen Oberstufe.",
+               description = "Entfernt eine Kurszuordnung zu einer Schiene bei einem Blockungsergebniss einer Blockung der Gymnasialen Oberstufe. "
+                + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen besitzt.")
+    @ApiResponse(responseCode = "204", description = "Die Zuordnung wurde erfolgreich gelöscht.")
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Zuordnung zu löschen.")
+    @ApiResponse(responseCode = "404", description = "Das Zwischenergebnis, der Schiene oder der Kurs wurde nicht in einer gültigen Zuordnung gefunden.")
+    public Response deleteGostBlockungsergebnisKursSchieneZuordnung(@PathParam("schema") String schema, @PathParam("ergebnisid") long idErgebnis, 
+                                                @PathParam("schienenid") long idSchiene, @PathParam("kursid") long idKurs, 
+                                                @Context HttpServletRequest request) {
+        // TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) {
+            return (new DataGostBlockungsergebnisse(conn)).deleteKursSchieneZuordnung(idErgebnis, idSchiene, idKurs);
+        }
+    }
 
 }

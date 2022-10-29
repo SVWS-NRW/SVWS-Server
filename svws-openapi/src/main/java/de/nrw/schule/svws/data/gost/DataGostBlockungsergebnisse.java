@@ -15,6 +15,7 @@ import de.nrw.schule.svws.data.DataManager;
 import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.dto.current.gost.kursblockung.DTOGostBlockung;
 import de.nrw.schule.svws.db.dto.current.gost.kursblockung.DTOGostBlockungKurs;
+import de.nrw.schule.svws.db.dto.current.gost.kursblockung.DTOGostBlockungSchiene;
 import de.nrw.schule.svws.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergebnis;
 import de.nrw.schule.svws.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergebnisKursSchiene;
 import de.nrw.schule.svws.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergebnisKursSchueler;
@@ -307,4 +308,123 @@ public class DataGostBlockungsergebnisse extends DataManager<Long> {
 		}
 	}
 
+	
+	
+    private void _createKursSchieneZuordnung(Long idZwischenergebnis, Long idSchiene, Long idKurs) {
+        GostUtils.pruefeSchuleMitGOSt(conn);
+        if (idSchiene == null)
+            throw OperationError.CONFLICT.exception();
+        // Bestimme das Blockungs-Zwischenergebnis
+        DTOGostBlockungZwischenergebnis ergebnis = conn.queryByKey(DTOGostBlockungZwischenergebnis.class, idZwischenergebnis);
+        if (ergebnis == null)
+            throw OperationError.NOT_FOUND.exception();
+        // Bestimme die zugehörige Blockung
+        DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, ergebnis.Blockung_ID);
+        if (blockung == null)
+            throw OperationError.NOT_FOUND.exception();
+        // Bestimme Schienen-IDs der Blockung
+        DTOGostBlockungSchiene schiene = conn.queryByKey(DTOGostBlockungSchiene.class, idSchiene);
+        if (schiene == null)
+            throw OperationError.NOT_FOUND.exception();
+        if (schiene.Blockung_ID != ergebnis.Blockung_ID) // Fehler in der DB
+            throw OperationError.CONFLICT.exception();
+        // Bestimme die Kurse, welche für die Blockung angelegt wurden
+        DTOGostBlockungKurs kurs = conn.queryByKey(DTOGostBlockungKurs.class, idKurs);
+        if (kurs == null)
+            throw OperationError.NOT_FOUND.exception();
+        if (kurs.Blockung_ID != ergebnis.Blockung_ID)
+            throw OperationError.CONFLICT.exception(); // Fehler in der DB
+        // Füge die neue Kurs-Schienen-Zuordnung hinzu
+        conn.transactionPersist(new DTOGostBlockungZwischenergebnisKursSchiene(idZwischenergebnis, idKurs, idSchiene));
+    }
+
+
+
+    private void _deleteKursSchieneZuordnung(Long idZwischenergebnis, Long idSchiene, Long idKurs) {
+        GostUtils.pruefeSchuleMitGOSt(conn);
+        if ((idSchiene == null) || (idKurs == null))
+            throw OperationError.CONFLICT.exception();
+        // Entferne die Zuordnung
+        DTOGostBlockungZwischenergebnisKursSchiene dto = conn.queryByKey(DTOGostBlockungZwischenergebnisKursSchiene.class, idZwischenergebnis, idKurs, idSchiene);
+        if (dto == null)
+            throw OperationError.NOT_FOUND.exception();
+        conn.transactionRemove(dto);
+    }
+
+
+    /**
+     * Erstellt eine Kurs-Schienen-Zuordnung in der Datenbank.
+     * 
+     * @param idZwischenergebnis   die ID der Zwischenergebnis
+     * @param idSchiene            die ID der Schiene 
+     * @param idKurs               die ID des neuen Kurses
+     * 
+     * @return die HTTP-Response, welchen den Erfolg der Update-Operation angibt.
+     */
+    public Response createKursSchieneZuordnung(Long idZwischenergebnis, Long idSchiene, Long idKurs) {
+        try {
+            conn.transactionBegin();
+            this._createKursSchieneZuordnung(idZwischenergebnis, idSchiene, idKurs);
+            conn.transactionCommit();
+            return Response.status(Status.NO_CONTENT).build();
+        } catch (Exception exception) {
+            conn.transactionRollback();
+            if (exception instanceof WebApplicationException webex)
+                return webex.getResponse();
+            throw exception;            
+        }
+    }
+    
+    
+    /**
+     * Aktualisiert eine Kurs-Schiene-Zuordnung in der Datenbank.
+     * 
+     * @param idZwischenergebnis   die ID der Zwischenergebnis
+     * @param idKurs               die ID des Kurses 
+     * @param idSchieneAlt         die ID der alten Schiene
+     * @param idSchieneNeu         die ID der neuen Schiene
+     * 
+     * @return die HTTP-Response, welchen den Erfolg der Update-Operation angibt.
+     */
+    public Response updateKursSchieneZuordnung(Long idZwischenergebnis, Long idKurs, Long idSchieneAlt, Long idSchieneNeu) {
+        if (idSchieneNeu == null)
+            return deleteKursSchieneZuordnung(idZwischenergebnis, idSchieneAlt, idKurs);
+        try {
+            conn.transactionBegin();
+            this._deleteKursSchieneZuordnung(idZwischenergebnis, idSchieneAlt, idKurs);
+            this._createKursSchieneZuordnung(idZwischenergebnis, idSchieneNeu, idKurs);           
+            conn.transactionCommit();
+            return Response.status(Status.NO_CONTENT).build();
+        } catch (Exception exception) {
+            conn.transactionRollback();
+            if (exception instanceof WebApplicationException webex)
+                return webex.getResponse();
+            throw exception;            
+        }
+    }
+    
+    
+    /**
+     * Entfernt die die Zuordnung des Kurses zu der Schiene bei einem Zwischenergebnis.
+     *  
+     * @param idZwischenergebnis   die ID der Zwischenergebnis
+     * @param idSchiene            die ID der Schiene 
+     * @param idKurs               die ID des Kurses
+     * 
+     * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+     */
+    public Response deleteKursSchieneZuordnung(Long idZwischenergebnis, Long idSchiene, Long idKurs) {
+        try {
+            conn.transactionBegin();
+            this._deleteKursSchieneZuordnung(idZwischenergebnis, idSchiene, idKurs);
+            conn.transactionCommit();
+            return Response.status(Status.NO_CONTENT).build();
+        } catch (Exception exception) {
+            conn.transactionRollback();
+            if (exception instanceof WebApplicationException webex)
+                return webex.getResponse();
+            throw exception;
+        }
+    }
+	
 }

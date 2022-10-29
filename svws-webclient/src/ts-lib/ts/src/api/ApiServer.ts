@@ -2453,6 +2453,60 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode createGostBlockungsergebnisKursSchieneZuordnung für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \d+}/schiene/{schienenid : \d+}/kurs/{kursid: \d+}
+	 * 
+	 * Erstellt eine Kurszuordnung zu einer Schiene bei einem Blockungsergebnis einer Blockung der Gymnasialen Oberstufe.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen der Zuordnung besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 204: Die Zuordnung wurde erfolgreich angelegt.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um eine Zuordnung anzulegen.
+	 *   Code 404: Kein geeignetes Zwischenergebnis, Schiene oder Kurs für die Zuordnung vorhanden
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} ergebnisid - der Pfad-Parameter ergebnisid
+	 * @param {number} schienenid - der Pfad-Parameter schienenid
+	 * @param {number} kursid - der Pfad-Parameter kursid
+	 */
+	public async createGostBlockungsergebnisKursSchieneZuordnung(schema : string, ergebnisid : number, schienenid : number, kursid : number) : Promise<void> {
+		let path : string = "/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \d+}/schiene/{schienenid : \d+}/kurs/{kursid: \d+}"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema)
+				.replace(/{ergebnisid\s*(:[^}]+)?}/g, ergebnisid.toString())
+				.replace(/{schienenid\s*(:[^}]+)?}/g, schienenid.toString())
+				.replace(/{kursid\s*(:[^}]+)?}/g, kursid.toString());
+		await super.postJSON(path, null);
+		return;
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteGostBlockungsergebnisKursSchieneZuordnung für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \d+}/schiene/{schienenid : \d+}/kurs/{kursid: \d+}
+	 * 
+	 * Entfernt eine Kurszuordnung zu einer Schiene bei einem Blockungsergebniss einer Blockung der Gymnasialen Oberstufe. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 204: Die Zuordnung wurde erfolgreich gelöscht.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Zuordnung zu löschen.
+	 *   Code 404: Das Zwischenergebnis, der Schiene oder der Kurs wurde nicht in einer gültigen Zuordnung gefunden.
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} ergebnisid - der Pfad-Parameter ergebnisid
+	 * @param {number} schienenid - der Pfad-Parameter schienenid
+	 * @param {number} kursid - der Pfad-Parameter kursid
+	 */
+	public async deleteGostBlockungsergebnisKursSchieneZuordnung(schema : string, ergebnisid : number, schienenid : number, kursid : number) : Promise<void> {
+		let path : string = "/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \d+}/schiene/{schienenid : \d+}/kurs/{kursid: \d+}"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema)
+				.replace(/{ergebnisid\s*(:[^}]+)?}/g, ergebnisid.toString())
+				.replace(/{schienenid\s*(:[^}]+)?}/g, schienenid.toString())
+				.replace(/{kursid\s*(:[^}]+)?}/g, kursid.toString());
+		await super.deleteJSON(path, null);
+		return;
+	}
+
+
+	/**
 	 * Implementierung der POST-Methode createGostBlockungsergebnisKursSchuelerZuordnung für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \d+}/schueler/{schuelerid : \d+}/kurs/{kursid: \d+}
 	 * 
 	 * Erstellt eine Kurszuordnung zu einem Schüler bei einem Blockungsergebnis einer Blockung der Gymnasialen Oberstufe.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen der Zuordnung besitzt.
@@ -2483,7 +2537,7 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der DELETE-Methode deleteGostBlockungsergebnisKursSchuelerZuordnung für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \d+}/schueler/{schuelerid : \d+}/kurs/{kursid: \d+}
 	 * 
-	 * Entfernt eine Kurszuordnung zu einem Scüler bei einem Blockungsergebniss einer Blockung der Gymnasialen Oberstufe. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen besitzt.
+	 * Entfernt eine Kurszuordnung zu einem Schüler bei einem Blockungsergebniss einer Blockung der Gymnasialen Oberstufe. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen besitzt.
 	 * 
 	 * Mögliche HTTP-Antworten: 
 	 *   Code 204: Die Zuordnung wurde erfolgreich gelöscht.
