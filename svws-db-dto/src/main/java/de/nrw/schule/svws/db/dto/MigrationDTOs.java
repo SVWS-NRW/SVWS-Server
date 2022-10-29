@@ -169,7 +169,6 @@ import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOBerufskolle
 import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOBerufskollegFachklassenKeys;
 import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOEigeneSchule;
 import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOEigeneSchuleKAoADaten;
-import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOEinschulungsartenKatalog;
 import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOEinschulungsartenKatalogKeys;
 import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOHerkunft;
 import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOHerkunftSchulformen;
@@ -419,7 +418,6 @@ public class MigrationDTOs {
              mapDTOName2DTOClass.put(MigrationDTOBerufskollegFachklassenKeys.class.getSimpleName(),MigrationDTOBerufskollegFachklassenKeys.class);
              mapDTOName2DTOClass.put(MigrationDTOEigeneSchule.class.getSimpleName(),MigrationDTOEigeneSchule.class);
              mapDTOName2DTOClass.put(MigrationDTOEigeneSchuleKAoADaten.class.getSimpleName(),MigrationDTOEigeneSchuleKAoADaten.class);
-             mapDTOName2DTOClass.put(MigrationDTOEinschulungsartenKatalog.class.getSimpleName(),MigrationDTOEinschulungsartenKatalog.class);
              mapDTOName2DTOClass.put(MigrationDTOEinschulungsartenKatalogKeys.class.getSimpleName(),MigrationDTOEinschulungsartenKatalogKeys.class);
              mapDTOName2DTOClass.put(MigrationDTOHerkunft.class.getSimpleName(),MigrationDTOHerkunft.class);
              mapDTOName2DTOClass.put(MigrationDTOHerkunftSchulformen.class.getSimpleName(),MigrationDTOHerkunftSchulformen.class);
@@ -672,7 +670,6 @@ public class MigrationDTOs {
              mapTablename2DTOClass.put("Berufskolleg_Fachklassen_Keys",MigrationDTOBerufskollegFachklassenKeys.class);
              mapTablename2DTOClass.put("EigeneSchule",MigrationDTOEigeneSchule.class);
              mapTablename2DTOClass.put("EigeneSchule_KAoADaten",MigrationDTOEigeneSchuleKAoADaten.class);
-             mapTablename2DTOClass.put("EinschulungsartKatalog",MigrationDTOEinschulungsartenKatalog.class);
              mapTablename2DTOClass.put("EinschulungsartKatalog_Keys",MigrationDTOEinschulungsartenKatalogKeys.class);
              mapTablename2DTOClass.put("Herkunft",MigrationDTOHerkunft.class);
              mapTablename2DTOClass.put("Herkunft_Schulformen",MigrationDTOHerkunftSchulformen.class);

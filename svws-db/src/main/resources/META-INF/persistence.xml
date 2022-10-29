@@ -192,7 +192,6 @@
         <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOBerufskollegFachklassenKeys</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOEigeneSchule</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOEigeneSchuleKAoADaten</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOEinschulungsartenKatalog</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOEinschulungsartenKatalogKeys</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOHerkunft</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOHerkunftSchulformen</class>
@@ -434,7 +433,6 @@
         <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOBerufskollegFachklassenKeys</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOEigeneSchule</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOEigeneSchuleKAoADaten</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOEinschulungsartenKatalog</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOEinschulungsartenKatalogKeys</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOHerkunft</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOHerkunftSchulformen</class>
@@ -528,7 +526,6 @@
         <class>de.nrw.schule.svws.db.dto.current.views.statkue.DTOStatkueZulaessigeKursart</class>
         <class>de.nrw.schule.svws.db.dto.current.views.statkue.DTOStatkueZulaessigesFach</class>
         <class>de.nrw.schule.svws.db.dto.current.views.statkue.DTOSVWSZulaessigeFaecherMapping</class>
-        <class>de.nrw.schule.svws.db.dto.current.views.statkue.DTOStatkueEinschulungsart</class>
         <class>de.nrw.schule.svws.db.dto.current.views.statkue.DTOStatkueAllgMerkmale</class>
         <class>de.nrw.schule.svws.db.dto.current.views.statkue.DTOStatkueReligion</class>
         <class>de.nrw.schule.svws.db.dto.current.views.statkue.DTOStatkueOrganisationsform</class>
@@ -718,7 +715,6 @@
         <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOBerufskollegFachklassenKeys</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOEigeneSchule</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOEigeneSchuleKAoADaten</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOEinschulungsartenKatalog</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOEinschulungsartenKatalogKeys</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOHerkunft</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOHerkunftSchulformen</class>
@@ -812,7 +808,6 @@
         <class>de.nrw.schule.svws.db.dto.rev8.views.statkue.Rev8DTOStatkueZulaessigeKursart</class>
         <class>de.nrw.schule.svws.db.dto.rev8.views.statkue.Rev8DTOStatkueZulaessigesFach</class>
         <class>de.nrw.schule.svws.db.dto.rev8.views.statkue.Rev8DTOSVWSZulaessigeFaecherMapping</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.views.statkue.Rev8DTOStatkueEinschulungsart</class>
         <class>de.nrw.schule.svws.db.dto.rev8.views.statkue.Rev8DTOStatkueAllgMerkmale</class>
         <class>de.nrw.schule.svws.db.dto.rev8.views.statkue.Rev8DTOStatkueReligion</class>
         <class>de.nrw.schule.svws.db.dto.rev8.views.statkue.Rev8DTOStatkueOrganisationsform</class>

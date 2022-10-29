@@ -93,9 +93,6 @@ public class Schema {
 	/** Tabelle EigeneSchule_Zertifikate */
 	public static final Tabelle_EigeneSchule_Zertifikate tab_EigeneSchule_Zertifikate = add(new Tabelle_EigeneSchule_Zertifikate());
 
-	/** Tabelle EinschulungsartKatalog */
-	public static final Tabelle_EinschulungsartKatalog tab_EinschulungsartKatalog = add(new Tabelle_EinschulungsartKatalog());
-
 	/** Tabelle EinschulungsartKatalog_Keys */
 	public static final Tabelle_EinschulungsartKatalog_Keys tab_EinschulungsartKatalog_Keys = add(new Tabelle_EinschulungsartKatalog_Keys());
 

@@ -46,7 +46,6 @@ public class DBSchemaViews {
 		add_Statkue_ZulKuArt();
 		add_Statkue_ZulFaecher();
 		add_Statkue_SVWS_ZulaessigeFaecher();
-		add_Statkue_Einschulungsart();
 		add_Statkue_AllgMerkmale();
 		add_Statkue_Religionen();
 		add_Statkue_Organisationsform();
@@ -519,24 +518,6 @@ public class DBSchemaViews {
 		 .add("ExportASD", "Boolscher Wert ob das Fach für den ASDExport vorgesehen ist", "Boolean", "f.ExportASD", "Boolean01Converter", false)
 		 .add("gueltigVon", "Gibt die Gültigkeit ab welchem Schuljahr an", "String", "f.gueltigVon", null, false)
 		 .add("gueltigBis", "Gibt die Gültigkeit bis zu welchem Schuljahr an", "String", "f.gueltigBis", null, false);
-		addView(view);
-	}
-
-
-	private void add_Statkue_Einschulungsart() {
-		View view = new View(
-				"Statkue_Einschulungsart", "views.statkue", "DTOStatkueEinschulungsart", 
-				"View zur Simulation einer Statkue-Tabelle: Einschulungsarten",
-				0, null,
-                """
-                EinschulungsartKatalog e WHERE e.GueltigBis IS NULL
-                """
-		).add("Art", "Das Kürzel der Einschulungsart.", "String", "e.Kuerzel", null, true)
-		 .add("Sortierung", "Zur Kompatibilität vorhanden", "Integer", "e.ID", null, false)
-		 .add("Beschreibung", "Die textuelle Beschreibung der Einschulungsart", "String", "e.Beschreibung", null, false)
-		 .add("geaendert", "Datum der letzten Änderung (hier zur Kompatibilität vorhanden)", "String", "NULL", null, false)
-		 .add("gueltigVon", "Gibt die Gültigkeit ab welchem Schuljahr an", "String", "e.gueltigVon", null, false)
-		 .add("gueltigBis", "Gibt die Gültigkeit bis zu welchem Schuljahr an", "String", "e.gueltigBis", null, false);
 		addView(view);
 	}
 
