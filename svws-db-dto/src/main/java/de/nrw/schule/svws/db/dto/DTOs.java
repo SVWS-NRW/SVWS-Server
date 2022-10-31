@@ -72,7 +72,6 @@ import de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternFilterFeldListe;
 import de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternPruefungsOrdnung;
 import de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternPruefungsOrdnungOptionen;
 import de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternSchuelerImportExport;
-import de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternUnicodeUmwandllung;
 import de.nrw.schule.svws.db.dto.current.schild.intern.DTOKAoAAnschlussoption;
 import de.nrw.schule.svws.db.dto.current.schild.intern.DTOKAoABerufsfeld;
 import de.nrw.schule.svws.db.dto.current.schild.intern.DTOKAoAKategorie;
@@ -366,7 +365,6 @@ public class DTOs {
              mapDTOName2DTOClass.put(DTOInternPruefungsOrdnung.class.getSimpleName(),DTOInternPruefungsOrdnung.class);
              mapDTOName2DTOClass.put(DTOInternPruefungsOrdnungOptionen.class.getSimpleName(),DTOInternPruefungsOrdnungOptionen.class);
              mapDTOName2DTOClass.put(DTOInternSchuelerImportExport.class.getSimpleName(),DTOInternSchuelerImportExport.class);
-             mapDTOName2DTOClass.put(DTOInternUnicodeUmwandllung.class.getSimpleName(),DTOInternUnicodeUmwandllung.class);
              mapDTOName2DTOClass.put(DTOKAoAAnschlussoption.class.getSimpleName(),DTOKAoAAnschlussoption.class);
              mapDTOName2DTOClass.put(DTOKAoABerufsfeld.class.getSimpleName(),DTOKAoABerufsfeld.class);
              mapDTOName2DTOClass.put(DTOKAoAKategorie.class.getSimpleName(),DTOKAoAKategorie.class);
@@ -663,7 +661,6 @@ public class DTOs {
              mapTablename2DTOClass.put("Schildintern_PruefungsOrdnung",DTOInternPruefungsOrdnung.class);
              mapTablename2DTOClass.put("Schildintern_PruefOrd_Optionen",DTOInternPruefungsOrdnungOptionen.class);
              mapTablename2DTOClass.put("Schildintern_SchuelerImpExp",DTOInternSchuelerImportExport.class);
-             mapTablename2DTOClass.put("Schildintern_UnicodeUmwandlung",DTOInternUnicodeUmwandllung.class);
              mapTablename2DTOClass.put("Schildintern_KAoA_Anschlussoption",DTOKAoAAnschlussoption.class);
              mapTablename2DTOClass.put("Schildintern_KAoA_Berufsfeld",DTOKAoABerufsfeld.class);
              mapTablename2DTOClass.put("Schildintern_KAoA_Kategorie",DTOKAoAKategorie.class);

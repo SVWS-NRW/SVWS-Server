@@ -429,9 +429,6 @@ public class Schema {
 	/** Tabelle Schildintern_SchuelerImpExp */
 	public static final Tabelle_Schildintern_SchuelerImpExp tab_Schildintern_SchuelerImpExp = add(new Tabelle_Schildintern_SchuelerImpExp());
 
-	/** Tabelle Schildintern_UnicodeUmwandlung */
-	public static final Tabelle_Schildintern_UnicodeUmwandlung tab_Schildintern_UnicodeUmwandlung = add(new Tabelle_Schildintern_UnicodeUmwandlung());
-
 	/** Tabelle SchuelerListe */
 	public static final Tabelle_SchuelerListe tab_SchuelerListe = add(new Tabelle_SchuelerListe());
 
@@ -804,7 +801,6 @@ public class Schema {
 		Schema.tab_Schildintern_PruefOrd_Optionen,
 		Schema.tab_Schildintern_PruefungsOrdnung,
 		Schema.tab_Schildintern_SchuelerImpExp,
-		Schema.tab_Schildintern_UnicodeUmwandlung,
 		Schema.tab_Schulver_DBS,
 		Schema.tab_Schulver_Schultraeger,
 		Schema.tab_Statkue_Abgangsart,

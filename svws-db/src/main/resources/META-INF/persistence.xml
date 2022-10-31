@@ -82,7 +82,6 @@
         <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternPruefungsOrdnung</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternPruefungsOrdnungOptionen</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternSchuelerImportExport</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternUnicodeUmwandllung</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOKAoAAnschlussoption</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOKAoABerufsfeld</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOKAoAKategorie</class>
@@ -311,7 +310,6 @@
         <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternPruefungsOrdnung</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternPruefungsOrdnungOptionen</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternSchuelerImportExport</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternUnicodeUmwandllung</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOKAoAAnschlussoption</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOKAoABerufsfeld</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOKAoAKategorie</class>
@@ -582,7 +580,6 @@
         <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternPruefungsOrdnung</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternPruefungsOrdnungOptionen</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternSchuelerImportExport</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternUnicodeUmwandllung</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOKAoAAnschlussoption</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOKAoABerufsfeld</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOKAoAKategorie</class>
