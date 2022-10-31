@@ -396,9 +396,6 @@ public class Schema {
 	/** Tabelle SchildFilter */
 	public static final Tabelle_SchildFilter tab_SchildFilter = add(new Tabelle_SchildFilter());
 
-	/** Tabelle Schildintern_DQR_Niveaus */
-	public static final Tabelle_Schildintern_DQR_Niveaus tab_Schildintern_DQR_Niveaus = add(new Tabelle_Schildintern_DQR_Niveaus());
-
 	/** Tabelle Schildintern_FaecherSortierung */
 	public static final Tabelle_Schildintern_FaecherSortierung tab_Schildintern_FaecherSortierung = add(new Tabelle_Schildintern_FaecherSortierung());
 
@@ -802,7 +799,6 @@ public class Schema {
 	// TODO Passe dieses Attribut an, sobald die Default-Daten nicht mehr über CSV-Dateien eingelesen werden
 	/** Die Tabellen, welche Default-Daten beinhalten und in diesem Zusammenhang aktualisiert werden sollen */
 	public static final SchemaTabelle[] tabellenDefaultDaten = new SchemaTabelle[] {
-		Schema.tab_Schildintern_DQR_Niveaus,
 		Schema.tab_Schildintern_FaecherSortierung,
 		Schema.tab_Schildintern_FilterFehlendeEintraegeSchild3,
 		Schema.tab_Schildintern_FilterFeldListe,
