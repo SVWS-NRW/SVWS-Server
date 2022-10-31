@@ -43,7 +43,6 @@ import de.nrw.schule.svws.core.data.schule.VerkehrsspracheKatalogEintrag;
 import de.nrw.schule.svws.core.types.KursFortschreibungsart;
 import de.nrw.schule.svws.core.types.Note;
 import de.nrw.schule.svws.core.types.PersonalTyp;
-import de.nrw.schule.svws.core.types.SchuelerStatus;
 import de.nrw.schule.svws.core.types.fach.Fachgruppe;
 import de.nrw.schule.svws.core.types.fach.ZulaessigesFach;
 import de.nrw.schule.svws.core.types.jahrgang.Jahrgaenge;
@@ -155,7 +154,6 @@ public class DBCoreTypeUpdater {
 		tables.add(new CoreTypeTable("Jahrgaenge_Bezeichnungen", Jahrgaenge.VERSION, updateJahrgaengeBezeichnungen));
 		tables.add(new CoreTypeTable("Jahrgaenge_Keys", Jahrgaenge.VERSION, updateJahrgaengeKeys));
 		tables.add(new CoreTypeTable("Noten", Note.VERSION, updateNoten));
-		tables.add(new CoreTypeTable("SchuelerStatus", SchuelerStatus.VERSION, updateSchuelerStatus));
 		tables.add(new CoreTypeTable("Verkehrssprachen", Verkehrssprache.VERSION, updateVerkehrssprachen));
 		tables.add(new CoreTypeTable("Herkunft", Herkunft.VERSION, updateHerkuenfte));
 		tables.add(new CoreTypeTable("Herkunft_Keys", Herkunft.VERSION, updateHerkuenfteKeys));
@@ -1074,29 +1072,6 @@ public class DBCoreTypeUpdater {
 			sql.append(p.gueltigBis).append(")");
 		}
 		updateCoreTypeTabelle(tabname, PersonalTyp.class.getCanonicalName(), PersonalTyp.VERSION, sql.toString());
-	};
-
-
-	/**
-	 * Aktualisiert die Tabelle für den Core-Type SchuelerStatus 
-	 */
-	private Consumer<Logger> updateSchuelerStatus = (Logger logger) -> {
-		String tabname = "SchuelerStatus";
-		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
-		StringBuilder sql = new StringBuilder();
-		sql.append("INSERT INTO ");
-		sql.append(tabname); 
-		sql.append("(ID, Bezeichnung, gueltigVon, gueltigBis) ");
-		SchuelerStatus[] values = SchuelerStatus.values();
-		for (int i = 0; i < values.length; i++) {
-			SchuelerStatus p = values[i];
-			sql.append(i == 0 ? "VALUES (" : ", (");
-			sql.append(p.id).append(",");
-			sql.append("'").append(p.bezeichnung).append("'").append(",");
-			sql.append(p.gueltigVon).append(",");
-			sql.append(p.gueltigBis).append(")");
-		}
-		updateCoreTypeTabelle(tabname, SchuelerStatus.class.getCanonicalName(), SchuelerStatus.VERSION, sql.toString());
 	};
 
 

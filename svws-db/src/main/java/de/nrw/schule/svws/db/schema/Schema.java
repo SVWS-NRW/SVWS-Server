@@ -414,9 +414,6 @@ public class Schema {
 	/** Tabelle Schildintern_FilterFeldListe */
 	public static final Tabelle_Schildintern_FilterFeldListe tab_Schildintern_FilterFeldListe = add(new Tabelle_Schildintern_FilterFeldListe());
 
-	/** Tabelle Schildintern_HSchStatus */
-	public static final Tabelle_Schildintern_HSchStatus tab_Schildintern_HSchStatus = add(new Tabelle_Schildintern_HSchStatus());
-
 	/** Tabelle Schildintern_KAoA_Anschlussoption */
 	public static final Tabelle_Schildintern_KAoA_Anschlussoption tab_Schildintern_KAoA_Anschlussoption = add(new Tabelle_Schildintern_KAoA_Anschlussoption());
 
@@ -460,7 +457,7 @@ public class Schema {
 	public static final Tabelle_SchuelerListe tab_SchuelerListe = add(new Tabelle_SchuelerListe());
 
 	/** Tabelle SchuelerStatus */
-	public static final Tabelle_SchuelerStatus tab_SchuelerStatus = add(new Tabelle_SchuelerStatus());
+	public static final Tabelle_SchuelerStatus_Keys tab_SchuelerStatus = add(new Tabelle_SchuelerStatus_Keys());
 
 	/** Tabelle Schulabschluesse_Allgemeinbildend */
 	public static final Tabelle_Schulabschluesse_Allgemeinbildend tab_Schulabschluesse_Allgemeinbildend = add(new Tabelle_Schulabschluesse_Allgemeinbildend());
@@ -823,7 +820,6 @@ public class Schema {
 		Schema.tab_Schildintern_FaecherSortierung,
 		Schema.tab_Schildintern_FilterFehlendeEintraegeSchild3,
 		Schema.tab_Schildintern_FilterFeldListe,
-		Schema.tab_Schildintern_HSchStatus,
 		Schema.tab_Schildintern_KAoA_Anschlussoption,
 		Schema.tab_Schildintern_KAoA_Berufsfeld,
 		Schema.tab_Schildintern_KAoA_Kategorie,

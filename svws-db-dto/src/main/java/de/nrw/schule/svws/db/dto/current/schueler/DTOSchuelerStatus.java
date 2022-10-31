@@ -1,4 +1,4 @@
-package de.nrw.schule.svws.db.dto.current.coretypes;
+package de.nrw.schule.svws.db.dto.current.schueler;
 
 import de.nrw.schule.svws.db.DBEntityManager;
 
@@ -12,25 +12,19 @@ import jakarta.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
- * Diese Klasse dient als DTO für die Datenbanktabelle SchuelerStatus.
+ * Diese Klasse dient als DTO für die Datenbanktabelle SchuelerStatus_Keys.
  * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
-@Table(name = "SchuelerStatus")
+@Table(name = "SchuelerStatus_Keys")
 @NamedQuery(name="DTOSchuelerStatus.all", query="SELECT e FROM DTOSchuelerStatus e")
 @NamedQuery(name="DTOSchuelerStatus.id", query="SELECT e FROM DTOSchuelerStatus e WHERE e.ID = :value")
 @NamedQuery(name="DTOSchuelerStatus.id.multiple", query="SELECT e FROM DTOSchuelerStatus e WHERE e.ID IN :value")
-@NamedQuery(name="DTOSchuelerStatus.bezeichnung", query="SELECT e FROM DTOSchuelerStatus e WHERE e.Bezeichnung = :value")
-@NamedQuery(name="DTOSchuelerStatus.bezeichnung.multiple", query="SELECT e FROM DTOSchuelerStatus e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name="DTOSchuelerStatus.gueltigvon", query="SELECT e FROM DTOSchuelerStatus e WHERE e.gueltigVon = :value")
-@NamedQuery(name="DTOSchuelerStatus.gueltigvon.multiple", query="SELECT e FROM DTOSchuelerStatus e WHERE e.gueltigVon IN :value")
-@NamedQuery(name="DTOSchuelerStatus.gueltigbis", query="SELECT e FROM DTOSchuelerStatus e WHERE e.gueltigBis = :value")
-@NamedQuery(name="DTOSchuelerStatus.gueltigbis.multiple", query="SELECT e FROM DTOSchuelerStatus e WHERE e.gueltigBis IN :value")
 @NamedQuery(name="DTOSchuelerStatus.primaryKeyQuery", query="SELECT e FROM DTOSchuelerStatus e WHERE e.ID = ?1")
 @NamedQuery(name="DTOSchuelerStatus.all.migration", query="SELECT e FROM DTOSchuelerStatus e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Bezeichnung","gueltigVon","gueltigBis"})
+@JsonPropertyOrder({"ID"})
 public class DTOSchuelerStatus {
 
 	/** ID des Schüler-Status */
@@ -38,21 +32,6 @@ public class DTOSchuelerStatus {
 	@Column(name = "ID")
 	@JsonProperty
 	public Integer ID;
-
-	/** Die Bezeichnung des Schüler-Status */
-	@Column(name = "Bezeichnung")
-	@JsonProperty
-	public String Bezeichnung;
-
-	/** Der Datensatz ist gültig ab dem Schuljahr */
-	@Column(name = "gueltigVon")
-	@JsonProperty
-	public Integer gueltigVon;
-
-	/** Der Datensatz ist gültig bis zu dem Schuljahr */
-	@Column(name = "gueltigBis")
-	@JsonProperty
-	public Integer gueltigBis;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOSchuelerStatus ohne eine Initialisierung der Attribute.
@@ -106,7 +85,7 @@ public class DTOSchuelerStatus {
 	 */
 	@Override
 	public String toString() {
-		return "DTOSchuelerStatus(ID=" + this.ID + ", Bezeichnung=" + this.Bezeichnung + ", gueltigVon=" + this.gueltigVon + ", gueltigBis=" + this.gueltigBis + ")";
+		return "DTOSchuelerStatus(ID=" + this.ID + ")";
 	}
 
 }

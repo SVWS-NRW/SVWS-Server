@@ -28,7 +28,6 @@
         <class>de.nrw.schule.svws.db.dto.migration.coretypes.MigrationDTOKursFortschreibungsart</class>
         <class>de.nrw.schule.svws.db.dto.migration.coretypes.MigrationDTONote</class>
         <class>de.nrw.schule.svws.db.dto.migration.coretypes.MigrationDTOPersonalTyp</class>
-        <class>de.nrw.schule.svws.db.dto.migration.coretypes.MigrationDTOSchuelerStatus</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.MigrationDTOSchildAuswahlFilter</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.MigrationDTOSchildVerwaltung</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.MigrationDTOSchuelerIndividuelleGruppe</class>
@@ -89,7 +88,6 @@
         <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternPruefungsOrdnung</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternPruefungsOrdnungOptionen</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternSchuelerImportExport</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternSchuelerStatus</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternTextExport</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternUnicodeUmwandllung</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOKAoAAnschlussoption</class>
@@ -208,6 +206,7 @@
         <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOStundentafel</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOStundentafelFaecher</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOTeilstandorte</class>
+        <class>de.nrw.schule.svws.db.dto.migration.schueler.MigrationDTOSchuelerStatus</class>
         <class>de.nrw.schule.svws.db.dto.migration.schule.MigrationDTOHerkunftKeys</class>
         <class>de.nrw.schule.svws.db.dto.migration.schule.MigrationDTOHerkunftsartKeys</class>
         <class>de.nrw.schule.svws.db.dto.migration.schule.MigrationDTONationalitaeten</class>
@@ -252,7 +251,6 @@
         <class>de.nrw.schule.svws.db.dto.current.coretypes.DTOKursFortschreibungsart</class>
         <class>de.nrw.schule.svws.db.dto.current.coretypes.DTONote</class>
         <class>de.nrw.schule.svws.db.dto.current.coretypes.DTOPersonalTyp</class>
-        <class>de.nrw.schule.svws.db.dto.current.coretypes.DTOSchuelerStatus</class>
         <class>de.nrw.schule.svws.db.dto.current.gost.DTOGostJahrgangBeratungslehrer</class>
         <class>de.nrw.schule.svws.db.dto.current.gost.DTOGostJahrgangFachkombinationen</class>
         <class>de.nrw.schule.svws.db.dto.current.gost.DTOGostJahrgangFaecher</class>
@@ -326,7 +324,6 @@
         <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternPruefungsOrdnung</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternPruefungsOrdnungOptionen</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternSchuelerImportExport</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternSchuelerStatus</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternTextExport</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternUnicodeUmwandllung</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOKAoAAnschlussoption</class>
@@ -459,6 +456,7 @@
         <class>de.nrw.schule.svws.db.dto.current.schild.stundenplan.DTOStundenplanUnterrichtLehrer</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.stundenplan.DTOStundenplanUnterrichtRaum</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.stundenplan.DTOStundenplanZeitraster</class>
+        <class>de.nrw.schule.svws.db.dto.current.schueler.DTOSchuelerStatus</class>
         <class>de.nrw.schule.svws.db.dto.current.schule.DTOHerkunftKeys</class>
         <class>de.nrw.schule.svws.db.dto.current.schule.DTOHerkunftsartKeys</class>
         <class>de.nrw.schule.svws.db.dto.current.schule.DTONationalitaeten</class>
@@ -531,7 +529,6 @@
         <class>de.nrw.schule.svws.db.dto.rev8.coretypes.Rev8DTOKursFortschreibungsart</class>
         <class>de.nrw.schule.svws.db.dto.rev8.coretypes.Rev8DTONote</class>
         <class>de.nrw.schule.svws.db.dto.rev8.coretypes.Rev8DTOPersonalTyp</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.coretypes.Rev8DTOSchuelerStatus</class>
         <class>de.nrw.schule.svws.db.dto.rev8.gost.Rev8DTOGostJahrgangBeratungslehrer</class>
         <class>de.nrw.schule.svws.db.dto.rev8.gost.Rev8DTOGostJahrgangFachkombinationen</class>
         <class>de.nrw.schule.svws.db.dto.rev8.gost.Rev8DTOGostJahrgangFaecher</class>
@@ -605,7 +602,6 @@
         <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternPruefungsOrdnung</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternPruefungsOrdnungOptionen</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternSchuelerImportExport</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternSchuelerStatus</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternTextExport</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternUnicodeUmwandllung</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOKAoAAnschlussoption</class>
@@ -738,6 +734,7 @@
         <class>de.nrw.schule.svws.db.dto.rev8.schild.stundenplan.Rev8DTOStundenplanUnterrichtLehrer</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.stundenplan.Rev8DTOStundenplanUnterrichtRaum</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.stundenplan.Rev8DTOStundenplanZeitraster</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.schueler.Rev8DTOSchuelerStatus</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schule.Rev8DTOHerkunftKeys</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schule.Rev8DTOHerkunftsartKeys</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schule.Rev8DTONationalitaeten</class>

@@ -5,7 +5,6 @@ import java.util.HashMap;
 import de.nrw.schule.svws.db.dto.migration.coretypes.MigrationDTOKursFortschreibungsart;
 import de.nrw.schule.svws.db.dto.migration.coretypes.MigrationDTONote;
 import de.nrw.schule.svws.db.dto.migration.coretypes.MigrationDTOPersonalTyp;
-import de.nrw.schule.svws.db.dto.migration.coretypes.MigrationDTOSchuelerStatus;
 import de.nrw.schule.svws.db.dto.migration.schild.MigrationDTOSchildAuswahlFilter;
 import de.nrw.schule.svws.db.dto.migration.schild.MigrationDTOSchildVerwaltung;
 import de.nrw.schule.svws.db.dto.migration.schild.MigrationDTOSchuelerIndividuelleGruppe;
@@ -66,7 +65,6 @@ import de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternPrfSe
 import de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternPruefungsOrdnung;
 import de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternPruefungsOrdnungOptionen;
 import de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternSchuelerImportExport;
-import de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternSchuelerStatus;
 import de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternTextExport;
 import de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternUnicodeUmwandllung;
 import de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOKAoAAnschlussoption;
@@ -185,6 +183,7 @@ import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOSchultexte;
 import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOStundentafel;
 import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOStundentafelFaecher;
 import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOTeilstandorte;
+import de.nrw.schule.svws.db.dto.migration.schueler.MigrationDTOSchuelerStatus;
 import de.nrw.schule.svws.db.dto.migration.schule.MigrationDTOHerkunftKeys;
 import de.nrw.schule.svws.db.dto.migration.schule.MigrationDTOHerkunftsartKeys;
 import de.nrw.schule.svws.db.dto.migration.schule.MigrationDTONationalitaeten;
@@ -252,7 +251,6 @@ public class MigrationDTOs {
              mapDTOName2DTOClass.put(MigrationDTOKursFortschreibungsart.class.getSimpleName(),MigrationDTOKursFortschreibungsart.class);
              mapDTOName2DTOClass.put(MigrationDTONote.class.getSimpleName(),MigrationDTONote.class);
              mapDTOName2DTOClass.put(MigrationDTOPersonalTyp.class.getSimpleName(),MigrationDTOPersonalTyp.class);
-             mapDTOName2DTOClass.put(MigrationDTOSchuelerStatus.class.getSimpleName(),MigrationDTOSchuelerStatus.class);
              mapDTOName2DTOClass.put(MigrationDTOSchildAuswahlFilter.class.getSimpleName(),MigrationDTOSchildAuswahlFilter.class);
              mapDTOName2DTOClass.put(MigrationDTOSchildVerwaltung.class.getSimpleName(),MigrationDTOSchildVerwaltung.class);
              mapDTOName2DTOClass.put(MigrationDTOSchuelerIndividuelleGruppe.class.getSimpleName(),MigrationDTOSchuelerIndividuelleGruppe.class);
@@ -313,7 +311,6 @@ public class MigrationDTOs {
              mapDTOName2DTOClass.put(MigrationDTOInternPruefungsOrdnung.class.getSimpleName(),MigrationDTOInternPruefungsOrdnung.class);
              mapDTOName2DTOClass.put(MigrationDTOInternPruefungsOrdnungOptionen.class.getSimpleName(),MigrationDTOInternPruefungsOrdnungOptionen.class);
              mapDTOName2DTOClass.put(MigrationDTOInternSchuelerImportExport.class.getSimpleName(),MigrationDTOInternSchuelerImportExport.class);
-             mapDTOName2DTOClass.put(MigrationDTOInternSchuelerStatus.class.getSimpleName(),MigrationDTOInternSchuelerStatus.class);
              mapDTOName2DTOClass.put(MigrationDTOInternTextExport.class.getSimpleName(),MigrationDTOInternTextExport.class);
              mapDTOName2DTOClass.put(MigrationDTOInternUnicodeUmwandllung.class.getSimpleName(),MigrationDTOInternUnicodeUmwandllung.class);
              mapDTOName2DTOClass.put(MigrationDTOKAoAAnschlussoption.class.getSimpleName(),MigrationDTOKAoAAnschlussoption.class);
@@ -432,6 +429,7 @@ public class MigrationDTOs {
              mapDTOName2DTOClass.put(MigrationDTOStundentafel.class.getSimpleName(),MigrationDTOStundentafel.class);
              mapDTOName2DTOClass.put(MigrationDTOStundentafelFaecher.class.getSimpleName(),MigrationDTOStundentafelFaecher.class);
              mapDTOName2DTOClass.put(MigrationDTOTeilstandorte.class.getSimpleName(),MigrationDTOTeilstandorte.class);
+             mapDTOName2DTOClass.put(MigrationDTOSchuelerStatus.class.getSimpleName(),MigrationDTOSchuelerStatus.class);
              mapDTOName2DTOClass.put(MigrationDTOHerkunftKeys.class.getSimpleName(),MigrationDTOHerkunftKeys.class);
              mapDTOName2DTOClass.put(MigrationDTOHerkunftsartKeys.class.getSimpleName(),MigrationDTOHerkunftsartKeys.class);
              mapDTOName2DTOClass.put(MigrationDTONationalitaeten.class.getSimpleName(),MigrationDTONationalitaeten.class);
@@ -502,7 +500,6 @@ public class MigrationDTOs {
              mapTablename2DTOClass.put("KursFortschreibungsarten",MigrationDTOKursFortschreibungsart.class);
              mapTablename2DTOClass.put("Noten",MigrationDTONote.class);
              mapTablename2DTOClass.put("PersonalTypen",MigrationDTOPersonalTyp.class);
-             mapTablename2DTOClass.put("SchuelerStatus",MigrationDTOSchuelerStatus.class);
              mapTablename2DTOClass.put("SchildFilter",MigrationDTOSchildAuswahlFilter.class);
              mapTablename2DTOClass.put("Schild_Verwaltung",MigrationDTOSchildVerwaltung.class);
              mapTablename2DTOClass.put("SchuelerListe",MigrationDTOSchuelerIndividuelleGruppe.class);
@@ -563,7 +560,6 @@ public class MigrationDTOs {
              mapTablename2DTOClass.put("Schildintern_PruefungsOrdnung",MigrationDTOInternPruefungsOrdnung.class);
              mapTablename2DTOClass.put("Schildintern_PruefOrd_Optionen",MigrationDTOInternPruefungsOrdnungOptionen.class);
              mapTablename2DTOClass.put("Schildintern_SchuelerImpExp",MigrationDTOInternSchuelerImportExport.class);
-             mapTablename2DTOClass.put("Schildintern_HSchStatus",MigrationDTOInternSchuelerStatus.class);
              mapTablename2DTOClass.put("Schildintern_TextExport",MigrationDTOInternTextExport.class);
              mapTablename2DTOClass.put("Schildintern_UnicodeUmwandlung",MigrationDTOInternUnicodeUmwandllung.class);
              mapTablename2DTOClass.put("Schildintern_KAoA_Anschlussoption",MigrationDTOKAoAAnschlussoption.class);
@@ -682,6 +678,7 @@ public class MigrationDTOs {
              mapTablename2DTOClass.put("Stundentafel",MigrationDTOStundentafel.class);
              mapTablename2DTOClass.put("Stundentafel_Faecher",MigrationDTOStundentafelFaecher.class);
              mapTablename2DTOClass.put("EigeneSchule_Teilstandorte",MigrationDTOTeilstandorte.class);
+             mapTablename2DTOClass.put("SchuelerStatus_Keys",MigrationDTOSchuelerStatus.class);
              mapTablename2DTOClass.put("Herkunft_Keys",MigrationDTOHerkunftKeys.class);
              mapTablename2DTOClass.put("Herkunftsart_Keys",MigrationDTOHerkunftsartKeys.class);
              mapTablename2DTOClass.put("Nationalitaeten",MigrationDTONationalitaeten.class);

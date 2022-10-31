@@ -5,7 +5,6 @@ import java.util.HashMap;
 import de.nrw.schule.svws.db.dto.rev8.coretypes.Rev8DTOKursFortschreibungsart;
 import de.nrw.schule.svws.db.dto.rev8.coretypes.Rev8DTONote;
 import de.nrw.schule.svws.db.dto.rev8.coretypes.Rev8DTOPersonalTyp;
-import de.nrw.schule.svws.db.dto.rev8.coretypes.Rev8DTOSchuelerStatus;
 import de.nrw.schule.svws.db.dto.rev8.gost.Rev8DTOGostJahrgangBeratungslehrer;
 import de.nrw.schule.svws.db.dto.rev8.gost.Rev8DTOGostJahrgangFachkombinationen;
 import de.nrw.schule.svws.db.dto.rev8.gost.Rev8DTOGostJahrgangFaecher;
@@ -79,7 +78,6 @@ import de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternPrfSemesterAbsc
 import de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternPruefungsOrdnung;
 import de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternPruefungsOrdnungOptionen;
 import de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternSchuelerImportExport;
-import de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternSchuelerStatus;
 import de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternTextExport;
 import de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternUnicodeUmwandllung;
 import de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOKAoAAnschlussoption;
@@ -212,6 +210,7 @@ import de.nrw.schule.svws.db.dto.rev8.schild.stundenplan.Rev8DTOStundenplanUnter
 import de.nrw.schule.svws.db.dto.rev8.schild.stundenplan.Rev8DTOStundenplanUnterrichtLehrer;
 import de.nrw.schule.svws.db.dto.rev8.schild.stundenplan.Rev8DTOStundenplanUnterrichtRaum;
 import de.nrw.schule.svws.db.dto.rev8.schild.stundenplan.Rev8DTOStundenplanZeitraster;
+import de.nrw.schule.svws.db.dto.rev8.schueler.Rev8DTOSchuelerStatus;
 import de.nrw.schule.svws.db.dto.rev8.schule.Rev8DTOHerkunftKeys;
 import de.nrw.schule.svws.db.dto.rev8.schule.Rev8DTOHerkunftsartKeys;
 import de.nrw.schule.svws.db.dto.rev8.schule.Rev8DTONationalitaeten;
@@ -307,7 +306,6 @@ public class Rev8DTOs {
              mapDTOName2DTOClass.put(Rev8DTOKursFortschreibungsart.class.getSimpleName(),Rev8DTOKursFortschreibungsart.class);
              mapDTOName2DTOClass.put(Rev8DTONote.class.getSimpleName(),Rev8DTONote.class);
              mapDTOName2DTOClass.put(Rev8DTOPersonalTyp.class.getSimpleName(),Rev8DTOPersonalTyp.class);
-             mapDTOName2DTOClass.put(Rev8DTOSchuelerStatus.class.getSimpleName(),Rev8DTOSchuelerStatus.class);
              mapDTOName2DTOClass.put(Rev8DTOGostJahrgangBeratungslehrer.class.getSimpleName(),Rev8DTOGostJahrgangBeratungslehrer.class);
              mapDTOName2DTOClass.put(Rev8DTOGostJahrgangFachkombinationen.class.getSimpleName(),Rev8DTOGostJahrgangFachkombinationen.class);
              mapDTOName2DTOClass.put(Rev8DTOGostJahrgangFaecher.class.getSimpleName(),Rev8DTOGostJahrgangFaecher.class);
@@ -381,7 +379,6 @@ public class Rev8DTOs {
              mapDTOName2DTOClass.put(Rev8DTOInternPruefungsOrdnung.class.getSimpleName(),Rev8DTOInternPruefungsOrdnung.class);
              mapDTOName2DTOClass.put(Rev8DTOInternPruefungsOrdnungOptionen.class.getSimpleName(),Rev8DTOInternPruefungsOrdnungOptionen.class);
              mapDTOName2DTOClass.put(Rev8DTOInternSchuelerImportExport.class.getSimpleName(),Rev8DTOInternSchuelerImportExport.class);
-             mapDTOName2DTOClass.put(Rev8DTOInternSchuelerStatus.class.getSimpleName(),Rev8DTOInternSchuelerStatus.class);
              mapDTOName2DTOClass.put(Rev8DTOInternTextExport.class.getSimpleName(),Rev8DTOInternTextExport.class);
              mapDTOName2DTOClass.put(Rev8DTOInternUnicodeUmwandllung.class.getSimpleName(),Rev8DTOInternUnicodeUmwandllung.class);
              mapDTOName2DTOClass.put(Rev8DTOKAoAAnschlussoption.class.getSimpleName(),Rev8DTOKAoAAnschlussoption.class);
@@ -514,6 +511,7 @@ public class Rev8DTOs {
              mapDTOName2DTOClass.put(Rev8DTOStundenplanUnterrichtLehrer.class.getSimpleName(),Rev8DTOStundenplanUnterrichtLehrer.class);
              mapDTOName2DTOClass.put(Rev8DTOStundenplanUnterrichtRaum.class.getSimpleName(),Rev8DTOStundenplanUnterrichtRaum.class);
              mapDTOName2DTOClass.put(Rev8DTOStundenplanZeitraster.class.getSimpleName(),Rev8DTOStundenplanZeitraster.class);
+             mapDTOName2DTOClass.put(Rev8DTOSchuelerStatus.class.getSimpleName(),Rev8DTOSchuelerStatus.class);
              mapDTOName2DTOClass.put(Rev8DTOHerkunftKeys.class.getSimpleName(),Rev8DTOHerkunftKeys.class);
              mapDTOName2DTOClass.put(Rev8DTOHerkunftsartKeys.class.getSimpleName(),Rev8DTOHerkunftsartKeys.class);
              mapDTOName2DTOClass.put(Rev8DTONationalitaeten.class.getSimpleName(),Rev8DTONationalitaeten.class);
@@ -612,7 +610,6 @@ public class Rev8DTOs {
              mapTablename2DTOClass.put("KursFortschreibungsarten",Rev8DTOKursFortschreibungsart.class);
              mapTablename2DTOClass.put("Noten",Rev8DTONote.class);
              mapTablename2DTOClass.put("PersonalTypen",Rev8DTOPersonalTyp.class);
-             mapTablename2DTOClass.put("SchuelerStatus",Rev8DTOSchuelerStatus.class);
              mapTablename2DTOClass.put("Gost_Jahrgang_Beratungslehrer",Rev8DTOGostJahrgangBeratungslehrer.class);
              mapTablename2DTOClass.put("Gost_Jahrgang_Fachkombinationen",Rev8DTOGostJahrgangFachkombinationen.class);
              mapTablename2DTOClass.put("Gost_Jahrgang_Faecher",Rev8DTOGostJahrgangFaecher.class);
@@ -686,7 +683,6 @@ public class Rev8DTOs {
              mapTablename2DTOClass.put("Schildintern_PruefungsOrdnung",Rev8DTOInternPruefungsOrdnung.class);
              mapTablename2DTOClass.put("Schildintern_PruefOrd_Optionen",Rev8DTOInternPruefungsOrdnungOptionen.class);
              mapTablename2DTOClass.put("Schildintern_SchuelerImpExp",Rev8DTOInternSchuelerImportExport.class);
-             mapTablename2DTOClass.put("Schildintern_HSchStatus",Rev8DTOInternSchuelerStatus.class);
              mapTablename2DTOClass.put("Schildintern_TextExport",Rev8DTOInternTextExport.class);
              mapTablename2DTOClass.put("Schildintern_UnicodeUmwandlung",Rev8DTOInternUnicodeUmwandllung.class);
              mapTablename2DTOClass.put("Schildintern_KAoA_Anschlussoption",Rev8DTOKAoAAnschlussoption.class);
@@ -819,6 +815,7 @@ public class Rev8DTOs {
              mapTablename2DTOClass.put("Stundenplan_UnterrichtLehrer",Rev8DTOStundenplanUnterrichtLehrer.class);
              mapTablename2DTOClass.put("Stundenplan_UnterrichtRaum",Rev8DTOStundenplanUnterrichtRaum.class);
              mapTablename2DTOClass.put("Stundenplan_Zeitraster",Rev8DTOStundenplanZeitraster.class);
+             mapTablename2DTOClass.put("SchuelerStatus_Keys",Rev8DTOSchuelerStatus.class);
              mapTablename2DTOClass.put("Herkunft_Keys",Rev8DTOHerkunftKeys.class);
              mapTablename2DTOClass.put("Herkunftsart_Keys",Rev8DTOHerkunftsartKeys.class);
              mapTablename2DTOClass.put("Nationalitaeten",Rev8DTONationalitaeten.class);
