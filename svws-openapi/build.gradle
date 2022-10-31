@@ -60,7 +60,8 @@ configurations.implementation {
 }
 
 task createVersionProperties() {
-    outputs.files "src/main/resources/version.properties"
+	inputs.files "$rootDir/buildconfig.json"
+    outputs.files "$projectDir/src/main/resources/version.properties"
     doLast {
         file("src/main/resources/version.properties").text = "svws.version=" + project.version.toString()
     }
