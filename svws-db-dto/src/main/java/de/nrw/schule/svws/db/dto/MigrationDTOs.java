@@ -175,7 +175,6 @@ import de.nrw.schule.svws.db.dto.migration.schueler.MigrationDTOSchuelerStatus;
 import de.nrw.schule.svws.db.dto.migration.schule.MigrationDTOHerkunftKeys;
 import de.nrw.schule.svws.db.dto.migration.schule.MigrationDTOHerkunftsartKeys;
 import de.nrw.schule.svws.db.dto.migration.schule.MigrationDTONationalitaetenKeys;
-import de.nrw.schule.svws.db.dto.migration.schule.MigrationDTOReligion;
 import de.nrw.schule.svws.db.dto.migration.schule.MigrationDTOReligionKeys;
 import de.nrw.schule.svws.db.dto.migration.schulver.MigrationDTOSchulverDBS;
 import de.nrw.schule.svws.db.dto.migration.schulver.MigrationDTOSchulverSchultraeger;
@@ -407,7 +406,6 @@ public class MigrationDTOs {
              mapDTOName2DTOClass.put(MigrationDTOHerkunftKeys.class.getSimpleName(),MigrationDTOHerkunftKeys.class);
              mapDTOName2DTOClass.put(MigrationDTOHerkunftsartKeys.class.getSimpleName(),MigrationDTOHerkunftsartKeys.class);
              mapDTOName2DTOClass.put(MigrationDTONationalitaetenKeys.class.getSimpleName(),MigrationDTONationalitaetenKeys.class);
-             mapDTOName2DTOClass.put(MigrationDTOReligion.class.getSimpleName(),MigrationDTOReligion.class);
              mapDTOName2DTOClass.put(MigrationDTOReligionKeys.class.getSimpleName(),MigrationDTOReligionKeys.class);
              mapDTOName2DTOClass.put(MigrationDTOSchulverDBS.class.getSimpleName(),MigrationDTOSchulverDBS.class);
              mapDTOName2DTOClass.put(MigrationDTOSchulverSchultraeger.class.getSimpleName(),MigrationDTOSchulverSchultraeger.class);
@@ -642,7 +640,6 @@ public class MigrationDTOs {
              mapTablename2DTOClass.put("Herkunft_Keys",MigrationDTOHerkunftKeys.class);
              mapTablename2DTOClass.put("Herkunftsart_Keys",MigrationDTOHerkunftsartKeys.class);
              mapTablename2DTOClass.put("Nationalitaeten_Keys",MigrationDTONationalitaetenKeys.class);
-             mapTablename2DTOClass.put("Religionen",MigrationDTOReligion.class);
              mapTablename2DTOClass.put("Religionen_Keys",MigrationDTOReligionKeys.class);
              mapTablename2DTOClass.put("Schulver_DBS",MigrationDTOSchulverDBS.class);
              mapTablename2DTOClass.put("Schulver_Schultraeger",MigrationDTOSchulverSchultraeger.class);

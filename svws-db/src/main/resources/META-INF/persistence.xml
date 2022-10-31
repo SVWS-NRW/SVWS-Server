@@ -198,7 +198,6 @@
         <class>de.nrw.schule.svws.db.dto.migration.schule.MigrationDTOHerkunftKeys</class>
         <class>de.nrw.schule.svws.db.dto.migration.schule.MigrationDTOHerkunftsartKeys</class>
         <class>de.nrw.schule.svws.db.dto.migration.schule.MigrationDTONationalitaetenKeys</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schule.MigrationDTOReligion</class>
         <class>de.nrw.schule.svws.db.dto.migration.schule.MigrationDTOReligionKeys</class>
         <class>de.nrw.schule.svws.db.dto.migration.schulver.MigrationDTOSchulverDBS</class>
         <class>de.nrw.schule.svws.db.dto.migration.schulver.MigrationDTOSchulverSchultraeger</class>
@@ -434,7 +433,6 @@
         <class>de.nrw.schule.svws.db.dto.current.schule.DTOHerkunftKeys</class>
         <class>de.nrw.schule.svws.db.dto.current.schule.DTOHerkunftsartKeys</class>
         <class>de.nrw.schule.svws.db.dto.current.schule.DTONationalitaetenKeys</class>
-        <class>de.nrw.schule.svws.db.dto.current.schule.DTOReligion</class>
         <class>de.nrw.schule.svws.db.dto.current.schule.DTOReligionKeys</class>
         <class>de.nrw.schule.svws.db.dto.current.schulver.DTOSchulverDBS</class>
         <class>de.nrw.schule.svws.db.dto.current.schulver.DTOSchulverSchultraeger</class>
@@ -488,7 +486,6 @@
         <class>de.nrw.schule.svws.db.dto.current.views.statkue.DTOStatkueZulaessigesFach</class>
         <class>de.nrw.schule.svws.db.dto.current.views.statkue.DTOSVWSZulaessigeFaecherMapping</class>
         <class>de.nrw.schule.svws.db.dto.current.views.statkue.DTOStatkueAllgMerkmale</class>
-        <class>de.nrw.schule.svws.db.dto.current.views.statkue.DTOStatkueReligion</class>
         <class>de.nrw.schule.svws.db.dto.current.views.benutzer.DTOViewBenutzer</class>
         <class>de.nrw.schule.svws.db.dto.current.views.benutzer.DTOViewBenutzerKompetenz</class>
         <class>de.nrw.schule.svws.db.dto.current.views.benutzer.DTOViewBenutzerdetails</class>
@@ -693,7 +690,6 @@
         <class>de.nrw.schule.svws.db.dto.rev8.schule.Rev8DTOHerkunftKeys</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schule.Rev8DTOHerkunftsartKeys</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schule.Rev8DTONationalitaetenKeys</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schule.Rev8DTOReligion</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schule.Rev8DTOReligionKeys</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schulver.Rev8DTOSchulverDBS</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schulver.Rev8DTOSchulverSchultraeger</class>
@@ -747,7 +743,6 @@
         <class>de.nrw.schule.svws.db.dto.rev8.views.statkue.Rev8DTOStatkueZulaessigesFach</class>
         <class>de.nrw.schule.svws.db.dto.rev8.views.statkue.Rev8DTOSVWSZulaessigeFaecherMapping</class>
         <class>de.nrw.schule.svws.db.dto.rev8.views.statkue.Rev8DTOStatkueAllgMerkmale</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.views.statkue.Rev8DTOStatkueReligion</class>
         <class>de.nrw.schule.svws.db.dto.rev8.views.benutzer.Rev8DTOViewBenutzer</class>
         <class>de.nrw.schule.svws.db.dto.rev8.views.benutzer.Rev8DTOViewBenutzerKompetenz</class>
         <class>de.nrw.schule.svws.db.dto.rev8.views.benutzer.Rev8DTOViewBenutzerdetails</class>

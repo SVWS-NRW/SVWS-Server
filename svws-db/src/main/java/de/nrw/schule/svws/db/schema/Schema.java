@@ -360,9 +360,6 @@ public class Schema {
 	/** Tabelle Personengruppen_Personen */
 	public static final Tabelle_Personengruppen_Personen tab_Personengruppen_Personen = add(new Tabelle_Personengruppen_Personen());
 
-	/** Tabelle Religionen */
-	public static final Tabelle_Religionen tab_Religionen = add(new Tabelle_Religionen());
-
 	/** Tabelle Religionen_Keys */
 	public static final Tabelle_Religionen_Keys tab_Religionen_Keys = add(new Tabelle_Religionen_Keys());
 

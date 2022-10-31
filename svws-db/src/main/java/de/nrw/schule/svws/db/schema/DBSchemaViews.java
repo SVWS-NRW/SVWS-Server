@@ -42,7 +42,6 @@ public class DBSchemaViews {
 		add_Statkue_ZulFaecher();
 		add_Statkue_SVWS_ZulaessigeFaecher();
 		add_Statkue_AllgMerkmale();
-		add_Statkue_Religionen();
 		// Revision 6
 		add_V_Benutzer();
 		add_V_Benutzerkompetenzen();
@@ -438,23 +437,6 @@ public class DBSchemaViews {
 		 .add("Sort", "Zur Kompatibilität vorhanden", "Integer", "am.ID", null, false)
 		 .add("gueltigVon", "Gibt die Gültigkeit ab welchem Schuljahr an", "String", "am.gueltigVon", null, false)
 		 .add("gueltigBis", "Gibt die Gültigkeit bis zu welchem Schuljahr an", "String", "am.gueltigBis", null, false);
-		addView(view);
-	}
-
-
-	private void add_Statkue_Religionen() {
-		View view = new View(
-				"Statkue_Religionen", "views.statkue", "DTOStatkueReligion", 
-				"View zur Simulation einer Statkue-Tabelle: Religionen und Konfessionen",
-				0, null,
-                """
-                Religionen r WHERE r.gueltigBis IS NULL
-                """
-		).add("Schluessel", "Das Kürzel der Religion bzw. Konfession", "String", "r.Kuerzel", null, true)
-		 .add("Klartext", "Die Beschreibung der Religion bzw. Konfession", "String", "r.Bezeichnung", null, false)
-		 .add("geaendert", "Datum der letzten Änderung (hier zur Kompatibilität vorhanden)", "String", "NULL", null, false)
-		 .add("gueltigVon", "Gibt die Gültigkeit ab welchem Schuljahr an", "String", "r.gueltigVon", null, false)
-		 .add("gueltigBis", "Gibt die Gültigkeit bis zu welchem Schuljahr an", "String", "r.gueltigBis", null, false);
 		addView(view);
 	}
 

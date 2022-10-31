@@ -202,7 +202,6 @@ import de.nrw.schule.svws.db.dto.current.schueler.DTOSchuelerStatus;
 import de.nrw.schule.svws.db.dto.current.schule.DTOHerkunftKeys;
 import de.nrw.schule.svws.db.dto.current.schule.DTOHerkunftsartKeys;
 import de.nrw.schule.svws.db.dto.current.schule.DTONationalitaetenKeys;
-import de.nrw.schule.svws.db.dto.current.schule.DTOReligion;
 import de.nrw.schule.svws.db.dto.current.schule.DTOReligionKeys;
 import de.nrw.schule.svws.db.dto.current.schulver.DTOSchulverDBS;
 import de.nrw.schule.svws.db.dto.current.schulver.DTOSchulverSchultraeger;
@@ -256,7 +255,6 @@ import de.nrw.schule.svws.db.dto.current.views.statkue.DTOStatkueZulaessigeKursa
 import de.nrw.schule.svws.db.dto.current.views.statkue.DTOStatkueZulaessigesFach;
 import de.nrw.schule.svws.db.dto.current.views.statkue.DTOSVWSZulaessigeFaecherMapping;
 import de.nrw.schule.svws.db.dto.current.views.statkue.DTOStatkueAllgMerkmale;
-import de.nrw.schule.svws.db.dto.current.views.statkue.DTOStatkueReligion;
 import de.nrw.schule.svws.db.dto.current.views.benutzer.DTOViewBenutzer;
 import de.nrw.schule.svws.db.dto.current.views.benutzer.DTOViewBenutzerKompetenz;
 import de.nrw.schule.svws.db.dto.current.views.benutzer.DTOViewBenutzerdetails;
@@ -484,7 +482,6 @@ public class DTOs {
              mapDTOName2DTOClass.put(DTOHerkunftKeys.class.getSimpleName(),DTOHerkunftKeys.class);
              mapDTOName2DTOClass.put(DTOHerkunftsartKeys.class.getSimpleName(),DTOHerkunftsartKeys.class);
              mapDTOName2DTOClass.put(DTONationalitaetenKeys.class.getSimpleName(),DTONationalitaetenKeys.class);
-             mapDTOName2DTOClass.put(DTOReligion.class.getSimpleName(),DTOReligion.class);
              mapDTOName2DTOClass.put(DTOReligionKeys.class.getSimpleName(),DTOReligionKeys.class);
              mapDTOName2DTOClass.put(DTOSchulverDBS.class.getSimpleName(),DTOSchulverDBS.class);
              mapDTOName2DTOClass.put(DTOSchulverSchultraeger.class.getSimpleName(),DTOSchulverSchultraeger.class);
@@ -538,7 +535,6 @@ public class DTOs {
              mapDTOName2DTOClass.put(DTOStatkueZulaessigesFach.class.getSimpleName(),DTOStatkueZulaessigesFach.class);
              mapDTOName2DTOClass.put(DTOSVWSZulaessigeFaecherMapping.class.getSimpleName(),DTOSVWSZulaessigeFaecherMapping.class);
              mapDTOName2DTOClass.put(DTOStatkueAllgMerkmale.class.getSimpleName(),DTOStatkueAllgMerkmale.class);
-             mapDTOName2DTOClass.put(DTOStatkueReligion.class.getSimpleName(),DTOStatkueReligion.class);
              mapDTOName2DTOClass.put(DTOViewBenutzer.class.getSimpleName(),DTOViewBenutzer.class);
              mapDTOName2DTOClass.put(DTOViewBenutzerKompetenz.class.getSimpleName(),DTOViewBenutzerKompetenz.class);
              mapDTOName2DTOClass.put(DTOViewBenutzerdetails.class.getSimpleName(),DTOViewBenutzerdetails.class);
@@ -769,7 +765,6 @@ public class DTOs {
              mapTablename2DTOClass.put("Herkunft_Keys",DTOHerkunftKeys.class);
              mapTablename2DTOClass.put("Herkunftsart_Keys",DTOHerkunftsartKeys.class);
              mapTablename2DTOClass.put("Nationalitaeten_Keys",DTONationalitaetenKeys.class);
-             mapTablename2DTOClass.put("Religionen",DTOReligion.class);
              mapTablename2DTOClass.put("Religionen_Keys",DTOReligionKeys.class);
              mapTablename2DTOClass.put("Schulver_DBS",DTOSchulverDBS.class);
              mapTablename2DTOClass.put("Schulver_Schultraeger",DTOSchulverSchultraeger.class);
@@ -823,7 +818,6 @@ public class DTOs {
              mapTablename2DTOClass.put("Statkue_ZulFaecher",DTOStatkueZulaessigesFach.class);
              mapTablename2DTOClass.put("Statkue_SVWS_ZulaessigeFaecher",DTOSVWSZulaessigeFaecherMapping.class);
              mapTablename2DTOClass.put("Statkue_AllgMerkmale",DTOStatkueAllgMerkmale.class);
-             mapTablename2DTOClass.put("Statkue_Religionen",DTOStatkueReligion.class);
              mapTablename2DTOClass.put("V_Benutzer",DTOViewBenutzer.class);
              mapTablename2DTOClass.put("V_Benutzerkompetenzen",DTOViewBenutzerKompetenz.class);
              mapTablename2DTOClass.put("V_BenutzerDetails",DTOViewBenutzerdetails.class);

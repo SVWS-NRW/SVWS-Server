@@ -30,7 +30,6 @@ import de.nrw.schule.svws.core.data.schule.AllgemeineMerkmaleKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.HerkunftKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.HerkunftsartKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.HerkunftsartKatalogEintragBezeichnung;
-import de.nrw.schule.svws.core.data.schule.ReligionKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.SchulabschlussAllgemeinbildendKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.SchulabschlussBerufsbildendKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.SchulformKatalogEintrag;
@@ -159,7 +158,6 @@ public class DBCoreTypeUpdater {
 		tables.add(new CoreTypeTable("FachKatalog_Keys", ZulaessigesFach.VERSION, updateZulaessigeFaecherKeys));
 		tables.add(new CoreTypeTable("FachKatalog_Schulformen", ZulaessigesFach.VERSION, updateZulaessigeFaecherSchulformen));
 		tables.add(new CoreTypeTable("EinschulungsartKatalog_Keys", Einschulungsart.VERSION, updateEinschulungsartenKeys));
-		tables.add(new CoreTypeTable("Religionen", Religion.VERSION, updateReligionen));
 		tables.add(new CoreTypeTable("Religionen_Keys", Religion.VERSION, updateReligionenKeys));
 		tables.add(new CoreTypeTable("AllgemeineMerkmaleKatalog", AllgemeineMerkmale.VERSION, updateAllgemeineMerkmale));
 		tables.add(new CoreTypeTable("AllgemeineMerkmaleKatalog_Keys", AllgemeineMerkmale.VERSION, updateAllgemeineMerkmaleKeys));
@@ -1591,35 +1589,7 @@ public class DBCoreTypeUpdater {
 		updateCoreTypeTabelle(tabname, Einschulungsart.class.getCanonicalName(), Einschulungsart.VERSION, sql.toString());
 	};
 
-	
-	/**
-	 * Aktualisiert die Tabelle für den Core-Type Religion
-	 */
-	private Consumer<Logger> updateReligionen = (Logger logger) -> {
-		String tabname = "Religionen";
-		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
-		StringBuilder sql = new StringBuilder();
-		sql.append("INSERT INTO ");
-		sql.append(tabname); 
-		sql.append("(ID, Kuerzel, Bezeichnung, gueltigVon, gueltigBis) ");
-		Religion[] values = Religion.values();
-		boolean isFirst = true;
-		for (int i = 0; i < values.length; i++) {
-			Religion religion = values[i];
-			for (ReligionKatalogEintrag r : religion.historie) {
-				sql.append(isFirst ? "VALUES (" : ", (");
-				isFirst = false;
-				sql.append(r.id).append(",");
-				sql.append("'").append(r.kuerzel).append("'").append(",");
-				sql.append("'").append(r.bezeichnung.replace("'", "''")).append("'").append(",");
-				sql.append(r.gueltigVon).append(",");
-				sql.append(r.gueltigBis).append(")");
-			}
-		}
-		updateCoreTypeTabelle(tabname, Religion.class.getCanonicalName(), Religion.VERSION, sql.toString());
-	};
 
-	
 	/**
 	 * Aktualisiert die Tabelle für den Core-Type Religion 
 	 */
