@@ -83,7 +83,6 @@
         <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternFaecherSortierung</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternFilterFehlendeEintraegeSchild3</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternFilterFeldListe</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternPrfSemesterAbschluss</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternPruefungsOrdnung</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternPruefungsOrdnungOptionen</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternSchuelerImportExport</class>
@@ -318,7 +317,6 @@
         <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternFaecherSortierung</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternFilterFehlendeEintraegeSchild3</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternFilterFeldListe</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternPrfSemesterAbschluss</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternPruefungsOrdnung</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternPruefungsOrdnungOptionen</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternSchuelerImportExport</class>
@@ -595,7 +593,6 @@
         <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternFaecherSortierung</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternFilterFehlendeEintraegeSchild3</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternFilterFeldListe</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternPrfSemesterAbschluss</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternPruefungsOrdnung</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternPruefungsOrdnungOptionen</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternSchuelerImportExport</class>

@@ -432,9 +432,6 @@ public class Schema {
 	/** Tabelle Schildintern_KAoA_SBO_Ebene4 */
 	public static final Tabelle_Schildintern_KAoA_SBO_Ebene4 tab_Schildintern_KAoA_SBO_Ebene4 = add(new Tabelle_Schildintern_KAoA_SBO_Ebene4());
 
-	/** Tabelle Schildintern_PrfSemAbschl */
-	public static final Tabelle_Schildintern_PrfSemAbschl tab_Schildintern_PrfSemAbschl = add(new Tabelle_Schildintern_PrfSemAbschl());
-
 	/** Tabelle Schildintern_PruefOrd_Optionen */
 	public static final Tabelle_Schildintern_PruefOrd_Optionen tab_Schildintern_PruefOrd_Optionen = add(new Tabelle_Schildintern_PruefOrd_Optionen());
 
@@ -823,7 +820,6 @@ public class Schema {
 		Schema.tab_Schildintern_KAoA_Merkmal,
 		Schema.tab_Schildintern_KAoA_Zusatzmerkmal,
 		Schema.tab_Schildintern_KAoA_SBO_Ebene4,
-		Schema.tab_Schildintern_PrfSemAbschl,
 		Schema.tab_Schildintern_PruefOrd_Optionen,
 		Schema.tab_Schildintern_PruefungsOrdnung,
 		Schema.tab_Schildintern_SchuelerImpExp,
