@@ -68,7 +68,6 @@ import de.nrw.schule.svws.db.dto.current.schild.impexp.DTOEigeneImporte;
 import de.nrw.schule.svws.db.dto.current.schild.impexp.DTOEigeneImporteFelder;
 import de.nrw.schule.svws.db.dto.current.schild.impexp.DTOEigeneImporteTabellen;
 import de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternDQRNiveaus;
-import de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternDatenart;
 import de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternFaecherSortierung;
 import de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternFilterFehlendeEintraegeSchild3;
 import de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternFilterFeldListe;
@@ -366,7 +365,6 @@ public class DTOs {
              mapDTOName2DTOClass.put(DTOEigeneImporteFelder.class.getSimpleName(),DTOEigeneImporteFelder.class);
              mapDTOName2DTOClass.put(DTOEigeneImporteTabellen.class.getSimpleName(),DTOEigeneImporteTabellen.class);
              mapDTOName2DTOClass.put(DTOInternDQRNiveaus.class.getSimpleName(),DTOInternDQRNiveaus.class);
-             mapDTOName2DTOClass.put(DTOInternDatenart.class.getSimpleName(),DTOInternDatenart.class);
              mapDTOName2DTOClass.put(DTOInternFaecherSortierung.class.getSimpleName(),DTOInternFaecherSortierung.class);
              mapDTOName2DTOClass.put(DTOInternFilterFehlendeEintraegeSchild3.class.getSimpleName(),DTOInternFilterFehlendeEintraegeSchild3.class);
              mapDTOName2DTOClass.put(DTOInternFilterFeldListe.class.getSimpleName(),DTOInternFilterFeldListe.class);
@@ -667,7 +665,6 @@ public class DTOs {
              mapTablename2DTOClass.put("ImpExp_EigeneImporte_Felder",DTOEigeneImporteFelder.class);
              mapTablename2DTOClass.put("ImpExp_EigeneImporte_Tabellen",DTOEigeneImporteTabellen.class);
              mapTablename2DTOClass.put("Schildintern_DQR_Niveaus",DTOInternDQRNiveaus.class);
-             mapTablename2DTOClass.put("Schildintern_Datenart",DTOInternDatenart.class);
              mapTablename2DTOClass.put("Schildintern_FaecherSortierung",DTOInternFaecherSortierung.class);
              mapTablename2DTOClass.put("Schildintern_FilterFehlendeEintraegeSchild3",DTOInternFilterFehlendeEintraegeSchild3.class);
              mapTablename2DTOClass.put("Schildintern_FilterFeldListe",DTOInternFilterFeldListe.class);

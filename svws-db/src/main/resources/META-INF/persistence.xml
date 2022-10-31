@@ -78,7 +78,6 @@
         <class>de.nrw.schule.svws.db.dto.migration.schild.impexp.MigrationDTOEigeneImporteFelder</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.impexp.MigrationDTOEigeneImporteTabellen</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternDQRNiveaus</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternDatenart</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternFaecherSortierung</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternFilterFehlendeEintraegeSchild3</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternFilterFeldListe</class>
@@ -311,7 +310,6 @@
         <class>de.nrw.schule.svws.db.dto.current.schild.impexp.DTOEigeneImporteFelder</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.impexp.DTOEigeneImporteTabellen</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternDQRNiveaus</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternDatenart</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternFaecherSortierung</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternFilterFehlendeEintraegeSchild3</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternFilterFeldListe</class>
@@ -586,7 +584,6 @@
         <class>de.nrw.schule.svws.db.dto.rev8.schild.impexp.Rev8DTOEigeneImporteFelder</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.impexp.Rev8DTOEigeneImporteTabellen</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternDQRNiveaus</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternDatenart</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternFaecherSortierung</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternFilterFehlendeEintraegeSchild3</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternFilterFeldListe</class>
