@@ -1,0 +1,291 @@
+import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
+import { BilingualeSpracheKatalogEintrag, cast_de_nrw_schule_svws_core_data_fach_BilingualeSpracheKatalogEintrag } from '../../../core/data/fach/BilingualeSpracheKatalogEintrag';
+import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
+import { Schulform, cast_de_nrw_schule_svws_core_types_schule_Schulform } from '../../../core/types/schule/Schulform';
+import { ZulaessigesFach, cast_de_nrw_schule_svws_core_types_fach_ZulaessigesFach } from '../../../core/types/fach/ZulaessigesFach';
+import { JavaLong, cast_java_lang_Long } from '../../../java/lang/JavaLong';
+import { List, cast_java_util_List } from '../../../java/util/List';
+import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
+import { Arrays, cast_java_util_Arrays } from '../../../java/util/Arrays';
+import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
+
+export class BilingualeSprache extends JavaObject {
+
+	/** the name of the enumeration value */
+	private readonly __name : String;
+
+	/** the ordinal value for the enumeration value */
+	private readonly __ordinal : number;
+
+	/** an array containing all values of this enumeration */
+	private static readonly all_values_by_ordinal : Array<BilingualeSprache> = [];
+
+	/** an array containing all values of this enumeration indexed by their name*/
+	private static readonly all_values_by_name : Map<String, BilingualeSprache> = new Map<String, BilingualeSprache>();
+
+	public static readonly ENGLISCH : BilingualeSprache = new BilingualeSprache("ENGLISCH", 0, [new BilingualeSpracheKatalogEintrag(1000, ZulaessigesFach.E, Arrays.asList(Schulform.BK, Schulform.SB, Schulform.G, Schulform.GE, Schulform.GY, Schulform.GM, Schulform.R, Schulform.SG, Schulform.SK, Schulform.SR), null, null)]);
+
+	public static readonly FRANZOESISCH : BilingualeSprache = new BilingualeSprache("FRANZOESISCH", 1, [new BilingualeSpracheKatalogEintrag(2000, ZulaessigesFach.F, Arrays.asList(Schulform.BK, Schulform.SB, Schulform.G, Schulform.GE, Schulform.GY, Schulform.GM, Schulform.R, Schulform.SG, Schulform.SK, Schulform.SR), null, null)]);
+
+	public static readonly ITALIENISCH : BilingualeSprache = new BilingualeSprache("ITALIENISCH", 2, [new BilingualeSpracheKatalogEintrag(3000, ZulaessigesFach.I, Arrays.asList(Schulform.BK, Schulform.SB, Schulform.G, Schulform.GE, Schulform.GY, Schulform.GM, Schulform.R, Schulform.SG, Schulform.SK, Schulform.SR), null, null)]);
+
+	public static readonly NIEDERLAENDISCH : BilingualeSprache = new BilingualeSprache("NIEDERLAENDISCH", 3, [new BilingualeSpracheKatalogEintrag(4000, ZulaessigesFach.N, Arrays.asList(Schulform.BK, Schulform.SB, Schulform.G, Schulform.GE, Schulform.GY, Schulform.GM, Schulform.R, Schulform.SG, Schulform.SK, Schulform.SR), null, null)]);
+
+	public static readonly SPANISCH : BilingualeSprache = new BilingualeSprache("SPANISCH", 4, [new BilingualeSpracheKatalogEintrag(5000, ZulaessigesFach.S, Arrays.asList(Schulform.BK, Schulform.SB, Schulform.G, Schulform.GE, Schulform.GY, Schulform.GM, Schulform.R, Schulform.SG, Schulform.SK, Schulform.SR), null, null)]);
+
+	public static readonly TUERKISCH : BilingualeSprache = new BilingualeSprache("TUERKISCH", 5, [new BilingualeSpracheKatalogEintrag(6000, ZulaessigesFach.T, Arrays.asList(Schulform.BK, Schulform.SB, Schulform.G, Schulform.GE, Schulform.GY, Schulform.GM, Schulform.R, Schulform.SG, Schulform.SK, Schulform.SR), null, null)]);
+
+	public static readonly NEUGRIECHIESCH : BilingualeSprache = new BilingualeSprache("NEUGRIECHIESCH", 6, [new BilingualeSpracheKatalogEintrag(7000, ZulaessigesFach.Z, Arrays.asList(Schulform.BK, Schulform.SB, Schulform.G, Schulform.GE, Schulform.GY, Schulform.GM, Schulform.R, Schulform.SG, Schulform.SK, Schulform.SR), null, null)]);
+
+	public static VERSION : number = 1;
+
+	public readonly daten : BilingualeSpracheKatalogEintrag;
+
+	public readonly historie : Array<BilingualeSpracheKatalogEintrag>;
+
+	private static readonly _mapEintragByID : HashMap<Number, BilingualeSpracheKatalogEintrag> = new HashMap();
+
+	private static readonly _mapByID : HashMap<Number, BilingualeSprache> = new HashMap();
+
+	private static readonly _mapByKuerzel : HashMap<String, BilingualeSprache> = new HashMap();
+
+	private schulformen : Array<Vector<Schulform>>;
+
+	/**
+	 * Erzeugt eine bilingualen Sprache in der Aufzählung.
+	 * 
+	 * @param historie   die Historie der bilingualen Sprache, welche ein Array von 
+	 *                   {@link BilingualeSpracheKatalogEintrag} ist  
+	 */
+	private constructor(name : string, ordinal : number, historie : Array<BilingualeSpracheKatalogEintrag>) {
+		super();
+		this.__name = name;
+		this.__ordinal = ordinal;
+		BilingualeSprache.all_values_by_ordinal.push(this);
+		BilingualeSprache.all_values_by_name.set(name, this);
+		this.historie = historie;
+		this.daten = historie[historie.length - 1];
+		this.schulformen = Array(historie.length).fill(null);
+		for (let i : number = 0; i < historie.length; i++){
+			this.schulformen[i] = new Vector();
+			for (let kuerzel of historie[i].schulformen) {
+				let sf : Schulform | null = Schulform.getByKuerzel(kuerzel);
+				if (sf !== null) 
+					this.schulformen[i].add(sf);
+			}
+		}
+	}
+
+	/**
+	 * Gibt eine Map von den IDs der bilingualen Sprachen auf die zugehörigen Katalog-Einträge
+	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
+	 *    
+	 * @return die Map von den IDs der bilingualen Sprachen auf die zugehörigen Katalog-Einträge
+	 */
+	private static getMapEintragByID() : HashMap<Number, BilingualeSpracheKatalogEintrag> {
+		if (BilingualeSprache._mapEintragByID.size() === 0) 
+			for (let s of BilingualeSprache.values()) 
+				for (let k of s.historie) 
+					BilingualeSprache._mapEintragByID.put(k.id, k);
+		return BilingualeSprache._mapEintragByID;
+	}
+
+	/**
+	 * Gibt eine Map von den IDs der bilingualen Sprachen auf die zugehörigen bilingualen Sprachen
+	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
+	 *    
+	 * @return die Map von den IDs der bilingualen Sprachen auf die zugehörigen bilingualen Sprachen
+	 */
+	private static getMapByID() : HashMap<Number, BilingualeSprache> {
+		if (BilingualeSprache._mapByID.size() === 0) 
+			for (let s of BilingualeSprache.values()) 
+				BilingualeSprache._mapByID.put(s.daten.id, s);
+		return BilingualeSprache._mapByID;
+	}
+
+	/**
+	 * Gibt eine Map von den Kürzeln der bilingualen Sprachen auf die zugehörigen bilingualen Sprachen
+	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
+	 *    
+	 * @return die Map von den Kürzeln der bilingualen Sprachen auf die zugehörigen bilingualen Sprachen
+	 */
+	private static getMapByKuerzel() : HashMap<String, BilingualeSprache> {
+		if (BilingualeSprache._mapByKuerzel.size() === 0) 
+			for (let s of BilingualeSprache.values()) 
+				BilingualeSprache._mapByKuerzel.put(s.daten.kuerzel, s);
+		return BilingualeSprache._mapByKuerzel;
+	}
+
+	/**
+	 * Liefert alle Schulformen zurück, bei welchen die bilingualen Sprache vorkommt.
+	 * 
+	 * @return eine Liste der Schulformen
+	 */
+	public getSchulformen() : List<Schulform> {
+		return this.schulformen[this.historie.length - 1];
+	}
+
+	/**
+	 * Prüft, ob die Schulform bei dieser bilingualen Sprache zulässig ist.
+	 * 
+	 * @param schulform    die Schulform
+	 * 
+	 * @return true, falls die bilingualen Sprache in der Schulform zulässig ist, ansonsten false.
+	 */
+	private hasSchulform(schulform : Schulform | null) : boolean {
+		if ((schulform === null) || (schulform.daten === null)) 
+			return false;
+		if (this.daten.schulformen !== null) {
+			for (let i : number = 0; i < this.daten.schulformen.size(); i++){
+				let sfKuerzel : String | null = this.daten.schulformen.get(i);
+				if (JavaObject.equalsTranspiler(sfKuerzel, (schulform.daten.kuerzel))) 
+					return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Liefert den Katalog-Eintrag der bilingualen Sprache zu der übergebenen ID zurück.
+	 * 
+	 * @param id   die ID des Katalog-Eintrags
+	 * 
+	 * @return der Katalog-Eintrag der bilingualen Sprache oder null, falls die ID ungültig ist
+	 */
+	public static getKatalogEintragByID(id : number) : BilingualeSpracheKatalogEintrag | null {
+		return BilingualeSprache.getMapEintragByID().get(id);
+	}
+
+	/**
+	 * Liefert die bilingualen Sprache zu der übergebenen ID der bilingualen Sprache zurück.
+	 * 
+	 * @param id   die ID der bilingualen Sprache
+	 * 
+	 * @return die bilingualen Sprache oder null, falls die ID ungültig ist
+	 */
+	public static getByID(id : number) : BilingualeSprache | null {
+		return BilingualeSprache.getMapByID().get(id);
+	}
+
+	/**
+	 * Liefert die bilingualen Sprache zu der übergebenen ID der bilingualen Sprache zurück.
+	 * 
+	 * @param kuerzel   das Kürzel der bilingualen Sprache
+	 * 
+	 * @return die bilingualen Sprache oder null, falls das Kürzel ungültig ist
+	 */
+	public static getByKuerzel(kuerzel : String | null) : BilingualeSprache | null {
+		return BilingualeSprache.getMapByKuerzel().get(kuerzel);
+	}
+
+	/**
+	 * Bestimmt alle bilingualen Sprachen, die in der angegebenen Schulform zulässig sind. 
+	 *  
+	 * @param schulform    die Schulform
+	 * 
+	 * @return die bilingualen Sprache in der angegebenen Schulform
+	 */
+	public static get(schulform : Schulform | null) : List<BilingualeSprache> {
+		let faecher : Vector<BilingualeSprache> = new Vector();
+		if (schulform === null) 
+			return faecher;
+		let fachgruppen : Array<BilingualeSprache> = BilingualeSprache.values();
+		for (let i : number = 0; i < fachgruppen.length; i++){
+			let fg : BilingualeSprache | null = fachgruppen[i];
+			if (fg.hasSchulform(schulform)) 
+				faecher.add(fg);
+		}
+		return faecher;
+	}
+
+	/**
+	 * Returns the name of this enumeration value.
+	 *
+	 * @returns the name
+	 */
+	private name() : String {
+		return this.__name;
+	}
+
+	/**
+	 * Returns the ordinal value of this enumeration value.
+	 *
+	 * @returns the ordinal value
+	 */
+	private ordinal() : number {
+		return this.__ordinal;
+	}
+
+	/**
+	 * Returns the name of this enumeration value.
+	 *
+	 * @returns the name
+	 */
+	public toString() : String {
+		return this.__name;
+	}
+
+	/**
+	 * Returns true if this and the other enumeration values are equal.
+	 *
+	 * @param other   the other enumeration value
+	 *
+	 * @returns true if they are equal and false otherwise
+	 */
+	public equals(other : JavaObject) : boolean {
+		if (!(other instanceof BilingualeSprache))
+			return false;
+		return this === other;
+	}
+
+	/**
+	 * Returns the ordinal value as hashcode, since the ordinal value is unique.
+	 *
+	 * @returns the ordinal value as hashcode
+	 */
+	public hashCode() : number {
+		return this.__ordinal;
+	}
+
+	/**
+	 * Compares this enumeration value with the other enumeration value by their ordinal value.
+	 *
+	 * @param other   the other enumeration value
+	 *
+	 * @returns a negative, zero or postive value as this enumeration value is less than, equal to
+	 *          or greater than the other enumeration value
+	 */
+	public compareTo(other : BilingualeSprache) : number {
+		return this.__ordinal - other.__ordinal;
+	}
+
+	/**
+	 * Returns an array with enumeration values.
+	 *
+	 * @returns the array with enumeration values
+	 */
+	public static values() : Array<BilingualeSprache> {
+		return [...this.all_values_by_ordinal];
+	}
+
+	/**
+	 * Returns the enumeration value with the specified name.
+	 *
+	 * @param name   the name of the enumeration value
+	 *
+	 * @returns the enumeration values or null
+	 */
+	public static valueOf(name : String) : BilingualeSprache | null {
+		let tmp : BilingualeSprache | undefined = this.all_values_by_name.get(name);
+		return (!tmp) ? null : tmp;
+	}
+
+	isTranspiledInstanceOf(name : string): boolean {
+		return ['de.nrw.schule.svws.core.types.fach.BilingualeSprache'].includes(name);
+	}
+
+}
+
+export function cast_de_nrw_schule_svws_core_types_fach_BilingualeSprache(obj : unknown) : BilingualeSprache {
+	return obj as BilingualeSprache;
+}

@@ -1,6 +1,7 @@
 package de.nrw.schule.svws.api.server;
 
 import de.nrw.schule.svws.api.OpenAPIApplication;
+import de.nrw.schule.svws.core.data.fach.BilingualeSpracheKatalogEintrag;
 import de.nrw.schule.svws.core.data.fach.FachDaten;
 import de.nrw.schule.svws.core.data.fach.FachKatalogEintrag;
 import de.nrw.schule.svws.core.data.fach.FachgruppenKatalogEintrag;
@@ -8,6 +9,7 @@ import de.nrw.schule.svws.core.data.fach.FaecherListeEintrag;
 import de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenz;
 import de.nrw.schule.svws.data.faecher.DataFachdaten;
 import de.nrw.schule.svws.data.faecher.DataFaecherliste;
+import de.nrw.schule.svws.data.faecher.DataKatalogBilingualeSprachen;
 import de.nrw.schule.svws.data.faecher.DataKatalogFachgruppen;
 import de.nrw.schule.svws.data.faecher.DataKatalogZulaessigeFaecher;
 import de.nrw.schule.svws.db.Benutzer;
@@ -177,17 +179,87 @@ public class APIFaecher {
      */
     @GET
     @Path("/allgemein/fachgruppe/{id : \\d+}")
-    @Operation(summary = "Gibt Fachgruppen-Katalog-Eintrag für die angegebene ID zurück.",
-               description = "Gibt Fachgruppen-Katalog-Eintrag für die angegebene ID zurück. "
+    @Operation(summary = "Gibt den Fachgruppen-Katalog-Eintrag für die angegebene ID zurück.",
+               description = "Gibt den Fachgruppen-Katalog-Eintrag für die angegebene ID zurück. "
                        + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
     @ApiResponse(responseCode = "200", description = "Der Fachgruppen-Katalog-Eintrag für die angegebene ID.",
                  content = @Content(mediaType = "application/json", schema = @Schema(implementation = FachgruppenKatalogEintrag.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine gültige Anmeldung.")
-    @ApiResponse(responseCode = "404", description = "Kein Fachgruppen-Katalog für die angegebene ID gefunden.")
+    @ApiResponse(responseCode = "404", description = "Kein Fachgruppen-Katalog-Eintrag für die angegebene ID gefunden.")
     public Response getKatalogFachgruppenEintrag(@PathParam("schema") String schema, @PathParam("id") long id, @Context HttpServletRequest request) {
         try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
             return (new DataKatalogFachgruppen(conn)).get(id);
         }
     }
-    
+
+    /**
+     * Die OpenAPI-Methode für die Abfrage des Kataloges aller bilingualen Sprachen aller Schulformen.
+     *  
+     * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param request       die Informationen zur HTTP-Anfrage
+     * 
+     * @return der Katalog aller bilingualen Sprachen aller Schulformen
+     */
+    @GET
+    @Path("/allgemein/sprachen/bilingual/alle")
+    @Operation(summary = "Gibt den Katalog aller bilingualen Sprachen aller Schulformen zurück.",
+               description = "Gibt den Katalog aller bilingualen Sprachen aller Schulformen zurück. "
+                       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
+    @ApiResponse(responseCode = "200", description = "Der Katalog aller bilingualen Sprachen aller Schulformen.",
+                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = BilingualeSpracheKatalogEintrag.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine gültige Anmeldung.")
+    @ApiResponse(responseCode = "404", description = "Keine Fachgruppen gefunden.")
+    public Response getKatalogBilingualeSprachenAlle(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
+            return (new DataKatalogBilingualeSprachen(conn)).getAll();
+        }
+    }
+
+    /**
+     * Die OpenAPI-Methode für die Abfrage des Kataloges der bilingualen Sprachen für die Schulform dieser Schule.
+     *  
+     * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param request       die Informationen zur HTTP-Anfrage
+     * 
+     * @return die Liste mit den Informationen zu den bilingualen Sprachen für die Schulform dieser Schule
+     */
+    @GET
+    @Path("/allgemein/sprachen/bilingual")
+    @Operation(summary = "Gibt den Katalog der bilingualen Sprachen für die Schulform dieser Schule zurück.",
+               description = "Gibt den Katalog der bilingualen Sprachen für die Schulform dieser Schule zurück. "
+                       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
+    @ApiResponse(responseCode = "200", description = "Der Katalog der bilingualen Sprachen für die Schulform dieser Schule.",
+                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = BilingualeSpracheKatalogEintrag.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine gültige Anmeldung.")
+    @ApiResponse(responseCode = "404", description = "Keine bilingualen Sprachen für die Schulform dieser Schule gefunden.")
+    public Response getKatalogBilingualeSprachen(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
+            return (new DataKatalogBilingualeSprachen(conn)).getList();
+        }
+    }
+
+    /**
+     * Die OpenAPI-Methode für die Abfrage des Katalog-Eintrags einer bilingualen Sprache für die angegebene ID.
+     *  
+     * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param id        die ID des Fachgruppen-Katalog-Eintrags
+     * @param request   die Informationen zur HTTP-Anfrage
+     * 
+     * @return der Katalog-Eintrag einer bilingualen Sprache
+     */
+    @GET
+    @Path("/allgemein/sprachen/bilingual/{id : \\d+}")
+    @Operation(summary = "Gibt den Katalog-Eintrag einer bilingualen Sprache für die angegebene ID zurück.",
+               description = "Gibt den Katalog-Eintrag einer bilingualen Sprache für die angegebene ID zurück. "
+                       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
+    @ApiResponse(responseCode = "200", description = "Der Katalog-Eintrag einer bilingualen Sprache für die angegebene ID.",
+                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = BilingualeSpracheKatalogEintrag.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine gültige Anmeldung.")
+    @ApiResponse(responseCode = "404", description = "Kein Katalog-Eintrag einer bilingualen Sprache für die angegebene ID gefunden.")
+    public Response getKatalogBilingualeSprachenEintrag(@PathParam("schema") String schema, @PathParam("id") long id, @Context HttpServletRequest request) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
+            return (new DataKatalogBilingualeSprachen(conn)).get(id);
+        }
+    }
+
 }

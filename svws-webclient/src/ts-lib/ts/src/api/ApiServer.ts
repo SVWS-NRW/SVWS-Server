@@ -14,6 +14,7 @@ import { BerufskollegFachklassenKatalog, cast_de_nrw_schule_svws_core_data_schul
 import { BetriebAnsprechpartner, cast_de_nrw_schule_svws_core_data_betrieb_BetriebAnsprechpartner } from '../core/data/betrieb/BetriebAnsprechpartner';
 import { BetriebListeEintrag, cast_de_nrw_schule_svws_core_data_betrieb_BetriebListeEintrag } from '../core/data/betrieb/BetriebListeEintrag';
 import { BetriebStammdaten, cast_de_nrw_schule_svws_core_data_betrieb_BetriebStammdaten } from '../core/data/betrieb/BetriebStammdaten';
+import { BilingualeSpracheKatalogEintrag, cast_de_nrw_schule_svws_core_data_fach_BilingualeSpracheKatalogEintrag } from '../core/data/fach/BilingualeSpracheKatalogEintrag';
 import { JavaBoolean, cast_java_lang_Boolean } from '../java/lang/JavaBoolean';
 import { DBSchemaListeEintrag, cast_de_nrw_schule_svws_core_data_db_DBSchemaListeEintrag } from '../core/data/db/DBSchemaListeEintrag';
 import { EinschulungsartKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_EinschulungsartKatalogEintrag } from '../core/data/schule/EinschulungsartKatalogEintrag';
@@ -1278,14 +1279,14 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der GET-Methode getKatalogFachgruppenEintrag für den Zugriff auf die URL https://{hostname}/db/{schema}/faecher/allgemein/fachgruppe/{id : \d+}
 	 * 
-	 * Gibt Fachgruppen-Katalog-Eintrag für die angegebene ID zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 * Gibt den Fachgruppen-Katalog-Eintrag für die angegebene ID zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
 	 * 
 	 * Mögliche HTTP-Antworten: 
 	 *   Code 200: Der Fachgruppen-Katalog-Eintrag für die angegebene ID.
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: FachgruppenKatalogEintrag
 	 *   Code 403: Der SVWS-Benutzer hat keine gültige Anmeldung.
-	 *   Code 404: Kein Fachgruppen-Katalog für die angegebene ID gefunden.
+	 *   Code 404: Kein Fachgruppen-Katalog-Eintrag für die angegebene ID gefunden.
 	 * 
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
@@ -1352,6 +1353,87 @@ export class ApiServer extends BaseApi {
 		const obj = JSON.parse(result);
 		let ret = new Vector<FachKatalogEintrag>();
 		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(FachKatalogEintrag.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getKatalogBilingualeSprachen für den Zugriff auf die URL https://{hostname}/db/{schema}/faecher/allgemein/sprachen/bilingual
+	 * 
+	 * Gibt den Katalog der bilingualen Sprachen für die Schulform dieser Schule zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Der Katalog der bilingualen Sprachen für die Schulform dieser Schule.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<BilingualeSpracheKatalogEintrag>
+	 *   Code 403: Der SVWS-Benutzer hat keine gültige Anmeldung.
+	 *   Code 404: Keine bilingualen Sprachen für die Schulform dieser Schule gefunden.
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * 
+	 * @returns Der Katalog der bilingualen Sprachen für die Schulform dieser Schule.
+	 */
+	public async getKatalogBilingualeSprachen(schema : string) : Promise<List<BilingualeSpracheKatalogEintrag>> {
+		let path : string = "/db/{schema}/faecher/allgemein/sprachen/bilingual"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		let ret = new Vector<BilingualeSpracheKatalogEintrag>();
+		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(BilingualeSpracheKatalogEintrag.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getKatalogBilingualeSprachenEintrag für den Zugriff auf die URL https://{hostname}/db/{schema}/faecher/allgemein/sprachen/bilingual/{id : \d+}
+	 * 
+	 * Gibt den Katalog-Eintrag einer bilingualen Sprache für die angegebene ID zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Der Katalog-Eintrag einer bilingualen Sprache für die angegebene ID.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: BilingualeSpracheKatalogEintrag
+	 *   Code 403: Der SVWS-Benutzer hat keine gültige Anmeldung.
+	 *   Code 404: Kein Katalog-Eintrag einer bilingualen Sprache für die angegebene ID gefunden.
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 * 
+	 * @returns Der Katalog-Eintrag einer bilingualen Sprache für die angegebene ID.
+	 */
+	public async getKatalogBilingualeSprachenEintrag(schema : string, id : number) : Promise<BilingualeSpracheKatalogEintrag> {
+		let path : string = "/db/{schema}/faecher/allgemein/sprachen/bilingual/{id : \d+}"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema)
+				.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return BilingualeSpracheKatalogEintrag.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getKatalogBilingualeSprachenAlle für den Zugriff auf die URL https://{hostname}/db/{schema}/faecher/allgemein/sprachen/bilingual/alle
+	 * 
+	 * Gibt den Katalog aller bilingualen Sprachen aller Schulformen zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Der Katalog aller bilingualen Sprachen aller Schulformen.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<BilingualeSpracheKatalogEintrag>
+	 *   Code 403: Der SVWS-Benutzer hat keine gültige Anmeldung.
+	 *   Code 404: Keine Fachgruppen gefunden.
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * 
+	 * @returns Der Katalog aller bilingualen Sprachen aller Schulformen.
+	 */
+	public async getKatalogBilingualeSprachenAlle(schema : string) : Promise<List<BilingualeSpracheKatalogEintrag>> {
+		let path : string = "/db/{schema}/faecher/allgemein/sprachen/bilingual/alle"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		let ret = new Vector<BilingualeSpracheKatalogEintrag>();
+		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(BilingualeSpracheKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 
