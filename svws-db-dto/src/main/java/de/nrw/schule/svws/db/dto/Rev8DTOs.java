@@ -156,9 +156,7 @@ import de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOAlleJahrgaenge;
 import de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOAlleJahrgaengeBezeichnungen;
 import de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOAlleJahrgaengeKeys;
 import de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOAlleSchulformen;
-import de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOAllgemeineMerkmaleKatalog;
 import de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOAllgemeineMerkmaleKatalogKeys;
-import de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOAllgemeineMerkmaleKatalogSchulformen;
 import de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOBerufskollegAnlagen;
 import de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOBerufskollegBerufsebenen1;
 import de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOBerufskollegBerufsebenen2;
@@ -248,7 +246,6 @@ import de.nrw.schule.svws.db.dto.rev8.views.statkue.Rev8DTOStatkueZulaessigerJah
 import de.nrw.schule.svws.db.dto.rev8.views.statkue.Rev8DTOStatkueZulaessigeKursart;
 import de.nrw.schule.svws.db.dto.rev8.views.statkue.Rev8DTOStatkueZulaessigesFach;
 import de.nrw.schule.svws.db.dto.rev8.views.statkue.Rev8DTOSVWSZulaessigeFaecherMapping;
-import de.nrw.schule.svws.db.dto.rev8.views.statkue.Rev8DTOStatkueAllgMerkmale;
 import de.nrw.schule.svws.db.dto.rev8.views.benutzer.Rev8DTOViewBenutzer;
 import de.nrw.schule.svws.db.dto.rev8.views.benutzer.Rev8DTOViewBenutzerKompetenz;
 import de.nrw.schule.svws.db.dto.rev8.views.benutzer.Rev8DTOViewBenutzerdetails;
@@ -430,9 +427,7 @@ public class Rev8DTOs {
              mapDTOName2DTOClass.put(Rev8DTOAlleJahrgaengeBezeichnungen.class.getSimpleName(),Rev8DTOAlleJahrgaengeBezeichnungen.class);
              mapDTOName2DTOClass.put(Rev8DTOAlleJahrgaengeKeys.class.getSimpleName(),Rev8DTOAlleJahrgaengeKeys.class);
              mapDTOName2DTOClass.put(Rev8DTOAlleSchulformen.class.getSimpleName(),Rev8DTOAlleSchulformen.class);
-             mapDTOName2DTOClass.put(Rev8DTOAllgemeineMerkmaleKatalog.class.getSimpleName(),Rev8DTOAllgemeineMerkmaleKatalog.class);
              mapDTOName2DTOClass.put(Rev8DTOAllgemeineMerkmaleKatalogKeys.class.getSimpleName(),Rev8DTOAllgemeineMerkmaleKatalogKeys.class);
-             mapDTOName2DTOClass.put(Rev8DTOAllgemeineMerkmaleKatalogSchulformen.class.getSimpleName(),Rev8DTOAllgemeineMerkmaleKatalogSchulformen.class);
              mapDTOName2DTOClass.put(Rev8DTOBerufskollegAnlagen.class.getSimpleName(),Rev8DTOBerufskollegAnlagen.class);
              mapDTOName2DTOClass.put(Rev8DTOBerufskollegBerufsebenen1.class.getSimpleName(),Rev8DTOBerufskollegBerufsebenen1.class);
              mapDTOName2DTOClass.put(Rev8DTOBerufskollegBerufsebenen2.class.getSimpleName(),Rev8DTOBerufskollegBerufsebenen2.class);
@@ -522,7 +517,6 @@ public class Rev8DTOs {
              mapDTOName2DTOClass.put(Rev8DTOStatkueZulaessigeKursart.class.getSimpleName(),Rev8DTOStatkueZulaessigeKursart.class);
              mapDTOName2DTOClass.put(Rev8DTOStatkueZulaessigesFach.class.getSimpleName(),Rev8DTOStatkueZulaessigesFach.class);
              mapDTOName2DTOClass.put(Rev8DTOSVWSZulaessigeFaecherMapping.class.getSimpleName(),Rev8DTOSVWSZulaessigeFaecherMapping.class);
-             mapDTOName2DTOClass.put(Rev8DTOStatkueAllgMerkmale.class.getSimpleName(),Rev8DTOStatkueAllgMerkmale.class);
              mapDTOName2DTOClass.put(Rev8DTOViewBenutzer.class.getSimpleName(),Rev8DTOViewBenutzer.class);
              mapDTOName2DTOClass.put(Rev8DTOViewBenutzerKompetenz.class.getSimpleName(),Rev8DTOViewBenutzerKompetenz.class);
              mapDTOName2DTOClass.put(Rev8DTOViewBenutzerdetails.class.getSimpleName(),Rev8DTOViewBenutzerdetails.class);
@@ -707,9 +701,7 @@ public class Rev8DTOs {
              mapTablename2DTOClass.put("Jahrgaenge_Bezeichnungen",Rev8DTOAlleJahrgaengeBezeichnungen.class);
              mapTablename2DTOClass.put("Jahrgaenge_Keys",Rev8DTOAlleJahrgaengeKeys.class);
              mapTablename2DTOClass.put("Schulformen",Rev8DTOAlleSchulformen.class);
-             mapTablename2DTOClass.put("AllgemeineMerkmaleKatalog",Rev8DTOAllgemeineMerkmaleKatalog.class);
              mapTablename2DTOClass.put("AllgemeineMerkmaleKatalog_Keys",Rev8DTOAllgemeineMerkmaleKatalogKeys.class);
-             mapTablename2DTOClass.put("AllgemeineMerkmaleKatalog_Schulformen",Rev8DTOAllgemeineMerkmaleKatalogSchulformen.class);
              mapTablename2DTOClass.put("Berufskolleg_Anlagen",Rev8DTOBerufskollegAnlagen.class);
              mapTablename2DTOClass.put("Berufskolleg_Berufsebenen1",Rev8DTOBerufskollegBerufsebenen1.class);
              mapTablename2DTOClass.put("Berufskolleg_Berufsebenen2",Rev8DTOBerufskollegBerufsebenen2.class);
@@ -799,7 +791,6 @@ public class Rev8DTOs {
              mapTablename2DTOClass.put("Statkue_ZulKuArt",Rev8DTOStatkueZulaessigeKursart.class);
              mapTablename2DTOClass.put("Statkue_ZulFaecher",Rev8DTOStatkueZulaessigesFach.class);
              mapTablename2DTOClass.put("Statkue_SVWS_ZulaessigeFaecher",Rev8DTOSVWSZulaessigeFaecherMapping.class);
-             mapTablename2DTOClass.put("Statkue_AllgMerkmale",Rev8DTOStatkueAllgMerkmale.class);
              mapTablename2DTOClass.put("V_Benutzer",Rev8DTOViewBenutzer.class);
              mapTablename2DTOClass.put("V_Benutzerkompetenzen",Rev8DTOViewBenutzerKompetenz.class);
              mapTablename2DTOClass.put("V_BenutzerDetails",Rev8DTOViewBenutzerdetails.class);

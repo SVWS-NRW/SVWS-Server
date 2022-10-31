@@ -164,9 +164,7 @@
         <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAlleJahrgaengeBezeichnungen</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAlleJahrgaengeKeys</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAlleSchulformen</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAllgemeineMerkmaleKatalog</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAllgemeineMerkmaleKatalogKeys</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAllgemeineMerkmaleKatalogSchulformen</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOBerufskollegAnlagen</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOBerufskollegBerufsebenen1</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOBerufskollegBerufsebenen2</class>
@@ -383,9 +381,7 @@
         <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOAlleJahrgaengeBezeichnungen</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOAlleJahrgaengeKeys</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOAlleSchulformen</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOAllgemeineMerkmaleKatalog</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOAllgemeineMerkmaleKatalogKeys</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOAllgemeineMerkmaleKatalogSchulformen</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOBerufskollegAnlagen</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOBerufskollegBerufsebenen1</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOBerufskollegBerufsebenen2</class>
@@ -475,7 +471,6 @@
         <class>de.nrw.schule.svws.db.dto.current.views.statkue.DTOStatkueZulaessigeKursart</class>
         <class>de.nrw.schule.svws.db.dto.current.views.statkue.DTOStatkueZulaessigesFach</class>
         <class>de.nrw.schule.svws.db.dto.current.views.statkue.DTOSVWSZulaessigeFaecherMapping</class>
-        <class>de.nrw.schule.svws.db.dto.current.views.statkue.DTOStatkueAllgMerkmale</class>
         <class>de.nrw.schule.svws.db.dto.current.views.benutzer.DTOViewBenutzer</class>
         <class>de.nrw.schule.svws.db.dto.current.views.benutzer.DTOViewBenutzerKompetenz</class>
         <class>de.nrw.schule.svws.db.dto.current.views.benutzer.DTOViewBenutzerdetails</class>
@@ -634,9 +629,7 @@
         <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOAlleJahrgaengeBezeichnungen</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOAlleJahrgaengeKeys</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOAlleSchulformen</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOAllgemeineMerkmaleKatalog</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOAllgemeineMerkmaleKatalogKeys</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOAllgemeineMerkmaleKatalogSchulformen</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOBerufskollegAnlagen</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOBerufskollegBerufsebenen1</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOBerufskollegBerufsebenen2</class>
@@ -726,7 +719,6 @@
         <class>de.nrw.schule.svws.db.dto.rev8.views.statkue.Rev8DTOStatkueZulaessigeKursart</class>
         <class>de.nrw.schule.svws.db.dto.rev8.views.statkue.Rev8DTOStatkueZulaessigesFach</class>
         <class>de.nrw.schule.svws.db.dto.rev8.views.statkue.Rev8DTOSVWSZulaessigeFaecherMapping</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.views.statkue.Rev8DTOStatkueAllgMerkmale</class>
         <class>de.nrw.schule.svws.db.dto.rev8.views.benutzer.Rev8DTOViewBenutzer</class>
         <class>de.nrw.schule.svws.db.dto.rev8.views.benutzer.Rev8DTOViewBenutzerKompetenz</class>
         <class>de.nrw.schule.svws.db.dto.rev8.views.benutzer.Rev8DTOViewBenutzerdetails</class>

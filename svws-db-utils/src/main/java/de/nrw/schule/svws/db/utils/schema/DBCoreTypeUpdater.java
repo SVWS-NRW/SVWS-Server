@@ -26,7 +26,6 @@ import de.nrw.schule.svws.core.data.lehrer.LehrerKatalogMehrleistungsartEintrag;
 import de.nrw.schule.svws.core.data.lehrer.LehrerKatalogMinderleistungsartEintrag;
 import de.nrw.schule.svws.core.data.lehrer.LehrerKatalogRechtsverhaeltnisEintrag;
 import de.nrw.schule.svws.core.data.lehrer.LehrerKatalogZugangsgrundEintrag;
-import de.nrw.schule.svws.core.data.schule.AllgemeineMerkmaleKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.HerkunftKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.HerkunftsartKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.HerkunftsartKatalogEintragBezeichnung;
@@ -154,9 +153,7 @@ public class DBCoreTypeUpdater {
 		tables.add(new CoreTypeTable("FachKatalog_Schulformen", ZulaessigesFach.VERSION, updateZulaessigeFaecherSchulformen));
 		tables.add(new CoreTypeTable("EinschulungsartKatalog_Keys", Einschulungsart.VERSION, updateEinschulungsartenKeys));
 		tables.add(new CoreTypeTable("Religionen_Keys", Religion.VERSION, updateReligionenKeys));
-		tables.add(new CoreTypeTable("AllgemeineMerkmaleKatalog", AllgemeineMerkmale.VERSION, updateAllgemeineMerkmale));
 		tables.add(new CoreTypeTable("AllgemeineMerkmaleKatalog_Keys", AllgemeineMerkmale.VERSION, updateAllgemeineMerkmaleKeys));
-		tables.add(new CoreTypeTable("AllgemeineMerkmaleKatalog_Schulformen", AllgemeineMerkmale.VERSION, updateAllgemeineMerkmaleSchulformen));
 		tables.add(new CoreTypeTable("OrganisationsformenKatalog_Keys", BerufskollegOrganisationsformen.VERSION + WeiterbildungskollegOrganisationsformen.VERSION + AllgemeinbildendOrganisationsformen.VERSION, updateOrganisationsformenKeys));
         tables.add(new CoreTypeTable("LehrerLeitungsfunktion_Keys", LehrerLeitungsfunktion.VERSION, updateLehrerLeitungsfunktionenKeys));
 	}
@@ -1480,40 +1477,6 @@ public class DBCoreTypeUpdater {
 
 	
 	/**
-	 * Aktualisiert die Tabelle für den Core-Type AllgemeineMerkmale
-	 */
-	private Consumer<Logger> updateAllgemeineMerkmale = (Logger logger) -> {
-		String tabname = "AllgemeineMerkmaleKatalog";
-		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
-		StringBuilder sql = new StringBuilder();
-		sql.append("INSERT INTO ");
-		sql.append(tabname); 
-		sql.append("(ID, Kuerzel, Bezeichnung, beiSchule, beiSchueler, KuerzelASD, gueltigVon, gueltigBis) ");
-		AllgemeineMerkmale[] values = AllgemeineMerkmale.values();
-		boolean isFirst = true;
-		for (int i = 0; i < values.length; i++) {
-			AllgemeineMerkmale merkmal = values[i];
-			for (AllgemeineMerkmaleKatalogEintrag m : merkmal.historie) {
-				sql.append(isFirst ? "VALUES (" : ", (");
-				isFirst = false;
-				sql.append(m.id).append(",");
-				sql.append("'").append(m.kuerzel).append("'").append(",");
-				sql.append("'").append(m.bezeichnung).append("'").append(",");
-				sql.append(m.beiSchule).append(",");
-				sql.append(m.beiSchueler).append(",");
-				if (m.kuerzelASD == null)
-					sql.append("null,");
-				else
-					sql.append("'").append(m.kuerzelASD).append("'").append(",");
-				sql.append(m.gueltigVon).append(",");
-				sql.append(m.gueltigBis).append(")");
-			}
-		}
-		updateCoreTypeTabelle(tabname, AllgemeineMerkmale.class.getCanonicalName(), AllgemeineMerkmale.VERSION, sql.toString());
-	};
-
-	
-	/**
 	 * Aktualisiert die Tabelle für den Core-Type AllgemeineMerkmale 
 	 */
 	private Consumer<Logger> updateAllgemeineMerkmaleKeys = (Logger logger) -> {
@@ -1533,34 +1496,6 @@ public class DBCoreTypeUpdater {
 		}
 		updateCoreTypeTabelle(tabname, AllgemeineMerkmale.class.getCanonicalName(), AllgemeineMerkmale.VERSION, sql.toString());
 	};
-	
-	
-	/**
-	 * Aktualisiert die Tabelle für den Core-Type AllgemeineMerkmale
-	 */
-	private Consumer<Logger> updateAllgemeineMerkmaleSchulformen = (Logger logger) -> {
-		String tabname = "AllgemeineMerkmaleKatalog_Schulformen";
-		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
-		StringBuilder sql = new StringBuilder();
-		sql.append("INSERT INTO ");
-		sql.append(tabname); 
-		sql.append("(Merkmal_ID, Schulform_Kuerzel) ");
-		AllgemeineMerkmale[] values = AllgemeineMerkmale.values();
-		boolean isFirst = true;
-		for (int i = 0; i < values.length; i++) {
-			AllgemeineMerkmale merkmal = values[i];
-			for (AllgemeineMerkmaleKatalogEintrag am : merkmal.historie) {
-				for (String schulform : am.schulformen) {
-					sql.append(isFirst ? "VALUES (" : ", (");
-					isFirst = false;
-					sql.append(am.id).append(",");
-					sql.append("'").append(Schulform.getByKuerzel(schulform).daten.kuerzel).append("'").append(")");
-				}
-			}
-		}
-		updateCoreTypeTabelle(tabname, AllgemeineMerkmale.class.getCanonicalName(), AllgemeineMerkmale.VERSION, sql.toString());
-	};
-
 
 
 	/**

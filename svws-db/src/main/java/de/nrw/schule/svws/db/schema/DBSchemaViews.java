@@ -39,7 +39,6 @@ public class DBSchemaViews {
 		add_Statkue_ZulKuArt();
 		add_Statkue_ZulFaecher();
 		add_Statkue_SVWS_ZulaessigeFaecher();
-		add_Statkue_AllgMerkmale();
 		// Revision 6
 		add_V_Benutzer();
 		add_V_Benutzerkompetenzen();
@@ -357,33 +356,6 @@ public class DBSchemaViews {
 		 .add("ExportASD", "Boolscher Wert ob das Fach für den ASDExport vorgesehen ist", "Boolean", "f.ExportASD", "Boolean01Converter", false)
 		 .add("gueltigVon", "Gibt die Gültigkeit ab welchem Schuljahr an", "String", "f.gueltigVon", null, false)
 		 .add("gueltigBis", "Gibt die Gültigkeit bis zu welchem Schuljahr an", "String", "f.gueltigBis", null, false);
-		addView(view);
-	}
-
-
-	private void add_Statkue_AllgMerkmale() {
-		View view = new View(
-				"Statkue_AllgMerkmale", "views.statkue", "DTOStatkueAllgMerkmale", 
-				"View zur Simulation einer Statkue-Tabelle: Allgemeine Merkmale bei Schulen und Schülern",
-				0, null,
-                """
-                AllgemeineMerkmaleKatalog am 
-                JOIN AllgemeineMerkmaleKatalog_Schulformen as2 ON am.ID = as2.Merkmal_ID AND am.GueltigBis IS NULL
-                JOIN Schulformen s ON as2.Schulform_Kuerzel = s.Kuerzel AND s.gueltigBis IS NULL
-                ORDER BY am.ID, s.Kuerzel, s.Nummer 
-                """
-		).add("ID", "Die ID des Merkmals.", "String", "CAST(s.Nummer AS INTEGER) + am.ID * 100", null, true)
-		 .add("SF", "Die Schulform für welche das Merkmal zur Verfügung steht", "String", "as2.Schulform_Kuerzel", null, false)
-		 .add("Kurztext", "Das Kürzel des Merkmals", "String", "am.Kuerzel", null, false)
-		 .add("StatistikKuerzel", "Ggf. das Statistikkürzel des Merkmals", "String", "am.KuerzelASD", null, false)
-		 .add("Langtext", "Die Beschreibung des Merkmals", "String", "am.Bezeichnung", null, false)
-		 .add("Schule", "Gibt an, ob das Merkmal bei einer Schule gesetzt werden kann", "Integer", "CASE WHEN am.beiSchule THEN 1 ELSE 0 END", null, false)
-		 .add("Schueler", "Gibt an, ob das Merkmal bei einem Schüler gesetzt werden kann", "Integer", "CASE WHEN am.beiSchueler THEN 1 ELSE 0 END", null, false)
-		 .add("Beginn", "Zur Kompatibilität vorhanden", "String", "NULL", null, false)
-		 .add("Ende", "Zur Kompatibilität vorhanden", "String", "NULL", null, false)
-		 .add("Sort", "Zur Kompatibilität vorhanden", "Integer", "am.ID", null, false)
-		 .add("gueltigVon", "Gibt die Gültigkeit ab welchem Schuljahr an", "String", "am.gueltigVon", null, false)
-		 .add("gueltigBis", "Gibt die Gültigkeit bis zu welchem Schuljahr an", "String", "am.gueltigBis", null, false);
 		addView(view);
 	}
 

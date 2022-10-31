@@ -36,14 +36,8 @@ public class Schema {
 	}
 
 
-	/** Tabelle AllgemeineMerkmaleKatalog */
-	public static final Tabelle_AllgemeineMerkmaleKatalog tab_AllgemeineMerkmaleKatalog = add(new Tabelle_AllgemeineMerkmaleKatalog());
-
 	/** Tabelle AllgemeineMerkmaleKatalog_Keys */
 	public static final Tabelle_AllgemeineMerkmaleKatalog_Keys tab_AllgemeineMerkmaleKatalog_Keys = add(new Tabelle_AllgemeineMerkmaleKatalog_Keys());
-
-	/** Tabelle AllgemeineMerkmaleKatalog_Schulformen */
-	public static final Tabelle_AllgemeineMerkmaleKatalog_Schulformen tab_AllgemeineMerkmaleKatalog_Schulformen = add(new Tabelle_AllgemeineMerkmaleKatalog_Schulformen());
 
 	/** Tabelle Benutzergruppen */
 	public static final Tabelle_Benutzergruppen tab_Benutzergruppen = add(new Tabelle_Benutzergruppen());
