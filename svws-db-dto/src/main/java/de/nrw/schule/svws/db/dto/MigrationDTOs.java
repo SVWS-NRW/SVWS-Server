@@ -179,7 +179,6 @@ import de.nrw.schule.svws.db.dto.migration.schule.MigrationDTOHerkunftsartKeys;
 import de.nrw.schule.svws.db.dto.migration.schule.MigrationDTONationalitaetenKeys;
 import de.nrw.schule.svws.db.dto.migration.schule.MigrationDTOReligion;
 import de.nrw.schule.svws.db.dto.migration.schule.MigrationDTOReligionKeys;
-import de.nrw.schule.svws.db.dto.migration.schule.MigrationDTOVerkehrssprachen;
 import de.nrw.schule.svws.db.dto.migration.schulver.MigrationDTOSchulverDBS;
 import de.nrw.schule.svws.db.dto.migration.schulver.MigrationDTOSchulverSchultraeger;
 import de.nrw.schule.svws.db.dto.migration.statkue.MigrationDTOSVWSSprachpruefungNiveaus;
@@ -414,7 +413,6 @@ public class MigrationDTOs {
              mapDTOName2DTOClass.put(MigrationDTONationalitaetenKeys.class.getSimpleName(),MigrationDTONationalitaetenKeys.class);
              mapDTOName2DTOClass.put(MigrationDTOReligion.class.getSimpleName(),MigrationDTOReligion.class);
              mapDTOName2DTOClass.put(MigrationDTOReligionKeys.class.getSimpleName(),MigrationDTOReligionKeys.class);
-             mapDTOName2DTOClass.put(MigrationDTOVerkehrssprachen.class.getSimpleName(),MigrationDTOVerkehrssprachen.class);
              mapDTOName2DTOClass.put(MigrationDTOSchulverDBS.class.getSimpleName(),MigrationDTOSchulverDBS.class);
              mapDTOName2DTOClass.put(MigrationDTOSchulverSchultraeger.class.getSimpleName(),MigrationDTOSchulverSchultraeger.class);
              mapDTOName2DTOClass.put(MigrationDTOSVWSSprachpruefungNiveaus.class.getSimpleName(),MigrationDTOSVWSSprachpruefungNiveaus.class);
@@ -652,7 +650,6 @@ public class MigrationDTOs {
              mapTablename2DTOClass.put("Nationalitaeten_Keys",MigrationDTONationalitaetenKeys.class);
              mapTablename2DTOClass.put("Religionen",MigrationDTOReligion.class);
              mapTablename2DTOClass.put("Religionen_Keys",MigrationDTOReligionKeys.class);
-             mapTablename2DTOClass.put("Verkehrssprachen",MigrationDTOVerkehrssprachen.class);
              mapTablename2DTOClass.put("Schulver_DBS",MigrationDTOSchulverDBS.class);
              mapTablename2DTOClass.put("Schulver_Schultraeger",MigrationDTOSchulverSchultraeger.class);
              mapTablename2DTOClass.put("Statkue_SVWS_SprachpruefungNiveaus",MigrationDTOSVWSSprachpruefungNiveaus.class);

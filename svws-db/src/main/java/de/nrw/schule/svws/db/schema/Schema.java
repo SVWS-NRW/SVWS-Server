@@ -759,9 +759,6 @@ public class Schema {
 	/** Tabelle Users */
 	public static final Tabelle_Users tab_Users = add(new Tabelle_Users());
 
-	/** Tabelle Verkehrssprachen */
-	public static final Tabelle_Verkehrssprachen tab_Verkehrssprachen = add(new Tabelle_Verkehrssprachen());
-
 	/** Tabelle Versetzung */
 	public static final Tabelle_Versetzung tab_Versetzung = add(new Tabelle_Versetzung());
 
@@ -805,7 +802,7 @@ public class Schema {
 		Schema.tab_Statkue_SVWS_SprachpruefungNiveaus
 	};
 
-	
+
     /**
      * Liefert die SQL-Befehle zum Anlegen von Default-SVWS-Benutzern
      * bei einem leeren Schema in Abhängigkeit von der übergebenen Revision.

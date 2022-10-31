@@ -38,7 +38,6 @@ public class DBSchemaViews {
 		add_Statkue_Herkunftsschulform();
 		add_Statkue_Herkunftsart();
 		add_Statkue_SVWS_Schulgliederungen();
-		add_Statkue_SchuelerVerkehrssprache();
 		add_Statkue_ZulJahrgaenge();
 		add_Statkue_ZulKuArt();
 		add_Statkue_ZulFaecher();
@@ -352,26 +351,6 @@ public class DBSchemaViews {
 		 .add("geaendert", "Datum der letzten Änderung (hier zur Kompatibilität vorhanden)", "String", "NULL", null, false)
 		 .add("gueltigVon", "Gibt die Gültigkeit ab welchem Schuljahr an", "String", "jg.gueltigVon", null, false)
 		 .add("gueltigBis", "Gibt die Gültigkeit bis zu welchem Schuljahr an", "String", "jg.gueltigBis", null, false);
-		addView(view);		
-	}
-
-
-	private void add_Statkue_SchuelerVerkehrssprache() {
-		View view = new View(
-				"Statkue_SchuelerVerkehrssprache", "views.statkue", "DTOStatkueSchuelerVerkehrssprache", 
-				"View zur Simulation einer Statkue-Tabelle: SchuelerVerkehrssprache",
-				0, null,
-                """
-                Verkehrssprachen vs WHERE vs.Iso2 IS NOT NULL
-                """
-		).add("ID", "Die ID der Verkehrssprache", "Integer", "vs.ID", null, true)
-		 .add("Kurztext", "Das Kürzel der Verkehrssprache", "String", "vs.Iso2", null, false)
-		 .add("Langtext", "Die Bezeichnung der Verkehrssprache", "String", "vs.Bezeichnung", null, false)
-		 .add("Gesprochen_in", "Die Länder, in denen die Sprache gesprochen wird", "String", "''", null, false)
-		 .add("Beginn", "Beginn der Gültigkeit (hier zur Kompatibilität vorhanden)", "String", "NULL", null, false)
-		 .add("Ende", "Ende der Gültigkeit (hier zur Kompatibilität vorhanden)", "String", "NULL", null, false)
-		 .add("gueltigVon", "Gibt die Gültigkeit ab welchem Schuljahr an (hier zur Kompatibilität vorhanden)", "String", "NULL", null, false)
-		 .add("gueltigBis", "Gibt die Gültigkeit bis zu welchem Schuljahr an (hier zur Kompatibilität vorhanden)", "String", "NULL", null, false);
 		addView(view);		
 	}
 

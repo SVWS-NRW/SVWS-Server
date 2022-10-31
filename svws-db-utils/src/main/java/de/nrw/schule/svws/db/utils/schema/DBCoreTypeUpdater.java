@@ -37,7 +37,6 @@ import de.nrw.schule.svws.core.data.schule.SchulabschlussBerufsbildendKatalogEin
 import de.nrw.schule.svws.core.data.schule.SchulformKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.SchulformSchulgliederung;
 import de.nrw.schule.svws.core.data.schule.SchulgliederungKatalogEintrag;
-import de.nrw.schule.svws.core.data.schule.VerkehrsspracheKatalogEintrag;
 import de.nrw.schule.svws.core.types.KursFortschreibungsart;
 import de.nrw.schule.svws.core.types.Note;
 import de.nrw.schule.svws.core.types.PersonalTyp;
@@ -74,7 +73,6 @@ import de.nrw.schule.svws.core.types.schule.SchulabschlussAllgemeinbildend;
 import de.nrw.schule.svws.core.types.schule.SchulabschlussBerufsbildend;
 import de.nrw.schule.svws.core.types.schule.Schulform;
 import de.nrw.schule.svws.core.types.schule.Schulgliederung;
-import de.nrw.schule.svws.core.types.schule.Verkehrssprache;
 import de.nrw.schule.svws.core.types.schule.WeiterbildungskollegOrganisationsformen;
 import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.DBException;
@@ -151,7 +149,6 @@ public class DBCoreTypeUpdater {
 		tables.add(new CoreTypeTable("Jahrgaenge_Bezeichnungen", Jahrgaenge.VERSION, updateJahrgaengeBezeichnungen));
 		tables.add(new CoreTypeTable("Jahrgaenge_Keys", Jahrgaenge.VERSION, updateJahrgaengeKeys));
 		tables.add(new CoreTypeTable("Noten", Note.VERSION, updateNoten));
-		tables.add(new CoreTypeTable("Verkehrssprachen", Verkehrssprache.VERSION, updateVerkehrssprachen));
 		tables.add(new CoreTypeTable("Herkunft", Herkunft.VERSION, updateHerkuenfte));
 		tables.add(new CoreTypeTable("Herkunft_Keys", Herkunft.VERSION, updateHerkuenfteKeys));
 		tables.add(new CoreTypeTable("Herkunft_Schulformen", Herkunft.VERSION, updateHerkuenfteSchulformen));
@@ -1253,36 +1250,6 @@ public class DBCoreTypeUpdater {
 	};
 
 
-	/**
-	 * Aktualisiert die Tabelle für den Core-Type Verkehrssprache 
-	 */
-	private Consumer<Logger> updateVerkehrssprachen = (Logger logger) -> {
-		String tabname = "Verkehrssprachen";
-		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
-		StringBuilder sql = new StringBuilder();
-		sql.append("INSERT INTO ");
-		sql.append(tabname); 
-		sql.append("(ID, Iso3, Iso2, Bezeichnung) ");
-		Verkehrssprache[] values = Verkehrssprache.values();
-		boolean isFirst = true;
-		for (int i = 0; i < values.length; i++) {
-			Verkehrssprache sprache = values[i];
-			VerkehrsspracheKatalogEintrag spr = sprache.daten;
-			sql.append(isFirst ? "VALUES (" : ", (");
-			isFirst = false;
-			sql.append(spr.id).append(",");
-			sql.append("'").append(spr.kuerzel).append("'").append(",");
-			if (spr.iso2 == null)
-				sql.append("'").append(Verkehrssprache.UND.daten.iso2).append("'").append(",");
-			else
-				sql.append("'").append(spr.iso2).append("'").append(",");
-			sql.append("'").append(spr.bezeichnung.replace("'", "''")).append("'").append(")");
-		}
-		updateCoreTypeTabelle(tabname, Verkehrssprache.class.getCanonicalName(), Verkehrssprache.VERSION, sql.toString());
-	};
-
-	
-	
 	/**
 	 * Aktualisiert die Tabelle für den Core-Type Herkunft 
 	 */

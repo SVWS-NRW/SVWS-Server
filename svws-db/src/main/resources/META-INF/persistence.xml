@@ -202,7 +202,6 @@
         <class>de.nrw.schule.svws.db.dto.migration.schule.MigrationDTONationalitaetenKeys</class>
         <class>de.nrw.schule.svws.db.dto.migration.schule.MigrationDTOReligion</class>
         <class>de.nrw.schule.svws.db.dto.migration.schule.MigrationDTOReligionKeys</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schule.MigrationDTOVerkehrssprachen</class>
         <class>de.nrw.schule.svws.db.dto.migration.schulver.MigrationDTOSchulverDBS</class>
         <class>de.nrw.schule.svws.db.dto.migration.schulver.MigrationDTOSchulverSchultraeger</class>
         <class>de.nrw.schule.svws.db.dto.migration.statkue.MigrationDTOSVWSSprachpruefungNiveaus</class>
@@ -441,7 +440,6 @@
         <class>de.nrw.schule.svws.db.dto.current.schule.DTONationalitaetenKeys</class>
         <class>de.nrw.schule.svws.db.dto.current.schule.DTOReligion</class>
         <class>de.nrw.schule.svws.db.dto.current.schule.DTOReligionKeys</class>
-        <class>de.nrw.schule.svws.db.dto.current.schule.DTOVerkehrssprachen</class>
         <class>de.nrw.schule.svws.db.dto.current.schulver.DTOSchulverDBS</class>
         <class>de.nrw.schule.svws.db.dto.current.schulver.DTOSchulverSchultraeger</class>
         <class>de.nrw.schule.svws.db.dto.current.statkue.DTOSVWSSprachpruefungNiveaus</class>
@@ -490,7 +488,6 @@
         <class>de.nrw.schule.svws.db.dto.current.views.statkue.DTOStatkueHerkunftsschulform</class>
         <class>de.nrw.schule.svws.db.dto.current.views.statkue.DTOStatkueHerkunftsart</class>
         <class>de.nrw.schule.svws.db.dto.current.views.statkue.DTOSVWSSchulgliederungen</class>
-        <class>de.nrw.schule.svws.db.dto.current.views.statkue.DTOStatkueSchuelerVerkehrssprache</class>
         <class>de.nrw.schule.svws.db.dto.current.views.statkue.DTOStatkueZulaessigerJahrgang</class>
         <class>de.nrw.schule.svws.db.dto.current.views.statkue.DTOStatkueZulaessigeKursart</class>
         <class>de.nrw.schule.svws.db.dto.current.views.statkue.DTOStatkueZulaessigesFach</class>
@@ -705,7 +702,6 @@
         <class>de.nrw.schule.svws.db.dto.rev8.schule.Rev8DTONationalitaetenKeys</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schule.Rev8DTOReligion</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schule.Rev8DTOReligionKeys</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schule.Rev8DTOVerkehrssprachen</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schulver.Rev8DTOSchulverDBS</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schulver.Rev8DTOSchulverSchultraeger</class>
         <class>de.nrw.schule.svws.db.dto.rev8.statkue.Rev8DTOSVWSSprachpruefungNiveaus</class>
@@ -754,7 +750,6 @@
         <class>de.nrw.schule.svws.db.dto.rev8.views.statkue.Rev8DTOStatkueHerkunftsschulform</class>
         <class>de.nrw.schule.svws.db.dto.rev8.views.statkue.Rev8DTOStatkueHerkunftsart</class>
         <class>de.nrw.schule.svws.db.dto.rev8.views.statkue.Rev8DTOSVWSSchulgliederungen</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.views.statkue.Rev8DTOStatkueSchuelerVerkehrssprache</class>
         <class>de.nrw.schule.svws.db.dto.rev8.views.statkue.Rev8DTOStatkueZulaessigerJahrgang</class>
         <class>de.nrw.schule.svws.db.dto.rev8.views.statkue.Rev8DTOStatkueZulaessigeKursart</class>
         <class>de.nrw.schule.svws.db.dto.rev8.views.statkue.Rev8DTOStatkueZulaessigesFach</class>
