@@ -399,9 +399,6 @@ public class Schema {
 	/** Tabelle Schildintern_FaecherSortierung */
 	public static final Tabelle_Schildintern_FaecherSortierung tab_Schildintern_FaecherSortierung = add(new Tabelle_Schildintern_FaecherSortierung());
 
-	/** Tabelle Schildintern_FilterFehlendeEintraegeSchild3 */
-	public static final Tabelle_Schildintern_FilterFehlendeEintraegeSchild3 tab_Schildintern_FilterFehlendeEintraegeSchild3 = add(new Tabelle_Schildintern_FilterFehlendeEintraegeSchild3());
-
 	/** Tabelle Schildintern_FilterFeldListe */
 	public static final Tabelle_Schildintern_FilterFeldListe tab_Schildintern_FilterFeldListe = add(new Tabelle_Schildintern_FilterFeldListe());
 
@@ -797,7 +794,6 @@ public class Schema {
 	/** Die Tabellen, welche Default-Daten beinhalten und in diesem Zusammenhang aktualisiert werden sollen */
 	public static final SchemaTabelle[] tabellenDefaultDaten = new SchemaTabelle[] {
 		Schema.tab_Schildintern_FaecherSortierung,
-		Schema.tab_Schildintern_FilterFehlendeEintraegeSchild3,
 		Schema.tab_Schildintern_FilterFeldListe,
 		Schema.tab_Schildintern_KAoA_Anschlussoption,
 		Schema.tab_Schildintern_KAoA_Berufsfeld,
