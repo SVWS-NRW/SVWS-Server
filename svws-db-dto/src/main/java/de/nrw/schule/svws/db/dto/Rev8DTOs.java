@@ -99,9 +99,7 @@ import de.nrw.schule.svws.db.dto.rev8.schild.katalog.Rev8DTOTextDateien;
 import de.nrw.schule.svws.db.dto.rev8.schild.katalog.Rev8DTOVermerkArt;
 import de.nrw.schule.svws.db.dto.rev8.schild.klassen.Rev8DTOKlassen;
 import de.nrw.schule.svws.db.dto.rev8.schild.klassen.Rev8DTOKlassenLeitung;
-import de.nrw.schule.svws.db.dto.rev8.schild.klassen.Rev8DTOKlassenartenKatalog;
 import de.nrw.schule.svws.db.dto.rev8.schild.klassen.Rev8DTOKlassenartenKatalogKeys;
-import de.nrw.schule.svws.db.dto.rev8.schild.klassen.Rev8DTOKlassenartenKatalogSchulformen;
 import de.nrw.schule.svws.db.dto.rev8.schild.kurse.Rev8DTOKurs;
 import de.nrw.schule.svws.db.dto.rev8.schild.kurse.Rev8DTOKursLehrer;
 import de.nrw.schule.svws.db.dto.rev8.schild.kurse.Rev8DTOKursSchueler;
@@ -261,7 +259,6 @@ import de.nrw.schule.svws.db.dto.rev8.views.statkue.Rev8DTOSVWSSchulgliederungen
 import de.nrw.schule.svws.db.dto.rev8.views.statkue.Rev8DTOStatkueNationalitaeten;
 import de.nrw.schule.svws.db.dto.rev8.views.statkue.Rev8DTOStatkueSchuelerVerkehrssprache;
 import de.nrw.schule.svws.db.dto.rev8.views.statkue.Rev8DTOStatkueZulaessigerJahrgang;
-import de.nrw.schule.svws.db.dto.rev8.views.statkue.Rev8DTOStatkueZulaessigeKlassenart;
 import de.nrw.schule.svws.db.dto.rev8.views.statkue.Rev8DTOStatkueZulaessigeKursart;
 import de.nrw.schule.svws.db.dto.rev8.views.statkue.Rev8DTOStatkueZulaessigesFach;
 import de.nrw.schule.svws.db.dto.rev8.views.statkue.Rev8DTOSVWSZulaessigeFaecherMapping;
@@ -391,9 +388,7 @@ public class Rev8DTOs {
              mapDTOName2DTOClass.put(Rev8DTOVermerkArt.class.getSimpleName(),Rev8DTOVermerkArt.class);
              mapDTOName2DTOClass.put(Rev8DTOKlassen.class.getSimpleName(),Rev8DTOKlassen.class);
              mapDTOName2DTOClass.put(Rev8DTOKlassenLeitung.class.getSimpleName(),Rev8DTOKlassenLeitung.class);
-             mapDTOName2DTOClass.put(Rev8DTOKlassenartenKatalog.class.getSimpleName(),Rev8DTOKlassenartenKatalog.class);
              mapDTOName2DTOClass.put(Rev8DTOKlassenartenKatalogKeys.class.getSimpleName(),Rev8DTOKlassenartenKatalogKeys.class);
-             mapDTOName2DTOClass.put(Rev8DTOKlassenartenKatalogSchulformen.class.getSimpleName(),Rev8DTOKlassenartenKatalogSchulformen.class);
              mapDTOName2DTOClass.put(Rev8DTOKurs.class.getSimpleName(),Rev8DTOKurs.class);
              mapDTOName2DTOClass.put(Rev8DTOKursLehrer.class.getSimpleName(),Rev8DTOKursLehrer.class);
              mapDTOName2DTOClass.put(Rev8DTOKursSchueler.class.getSimpleName(),Rev8DTOKursSchueler.class);
@@ -553,7 +548,6 @@ public class Rev8DTOs {
              mapDTOName2DTOClass.put(Rev8DTOStatkueNationalitaeten.class.getSimpleName(),Rev8DTOStatkueNationalitaeten.class);
              mapDTOName2DTOClass.put(Rev8DTOStatkueSchuelerVerkehrssprache.class.getSimpleName(),Rev8DTOStatkueSchuelerVerkehrssprache.class);
              mapDTOName2DTOClass.put(Rev8DTOStatkueZulaessigerJahrgang.class.getSimpleName(),Rev8DTOStatkueZulaessigerJahrgang.class);
-             mapDTOName2DTOClass.put(Rev8DTOStatkueZulaessigeKlassenart.class.getSimpleName(),Rev8DTOStatkueZulaessigeKlassenart.class);
              mapDTOName2DTOClass.put(Rev8DTOStatkueZulaessigeKursart.class.getSimpleName(),Rev8DTOStatkueZulaessigeKursart.class);
              mapDTOName2DTOClass.put(Rev8DTOStatkueZulaessigesFach.class.getSimpleName(),Rev8DTOStatkueZulaessigesFach.class);
              mapDTOName2DTOClass.put(Rev8DTOSVWSZulaessigeFaecherMapping.class.getSimpleName(),Rev8DTOSVWSZulaessigeFaecherMapping.class);
@@ -686,9 +680,7 @@ public class Rev8DTOs {
              mapTablename2DTOClass.put("K_Vermerkart",Rev8DTOVermerkArt.class);
              mapTablename2DTOClass.put("Klassen",Rev8DTOKlassen.class);
              mapTablename2DTOClass.put("KlassenLehrer",Rev8DTOKlassenLeitung.class);
-             mapTablename2DTOClass.put("KlassenartenKatalog",Rev8DTOKlassenartenKatalog.class);
              mapTablename2DTOClass.put("KlassenartenKatalog_Keys",Rev8DTOKlassenartenKatalogKeys.class);
-             mapTablename2DTOClass.put("KlassenartenKatalog_Schulformen",Rev8DTOKlassenartenKatalogSchulformen.class);
              mapTablename2DTOClass.put("Kurse",Rev8DTOKurs.class);
              mapTablename2DTOClass.put("KursLehrer",Rev8DTOKursLehrer.class);
              mapTablename2DTOClass.put("Kurs_Schueler",Rev8DTOKursSchueler.class);
@@ -848,7 +840,6 @@ public class Rev8DTOs {
              mapTablename2DTOClass.put("Statkue_Nationalitaeten",Rev8DTOStatkueNationalitaeten.class);
              mapTablename2DTOClass.put("Statkue_SchuelerVerkehrssprache",Rev8DTOStatkueSchuelerVerkehrssprache.class);
              mapTablename2DTOClass.put("Statkue_ZulJahrgaenge",Rev8DTOStatkueZulaessigerJahrgang.class);
-             mapTablename2DTOClass.put("Statkue_ZulKlArt",Rev8DTOStatkueZulaessigeKlassenart.class);
              mapTablename2DTOClass.put("Statkue_ZulKuArt",Rev8DTOStatkueZulaessigeKursart.class);
              mapTablename2DTOClass.put("Statkue_ZulFaecher",Rev8DTOStatkueZulaessigesFach.class);
              mapTablename2DTOClass.put("Statkue_SVWS_ZulaessigeFaecher",Rev8DTOSVWSZulaessigeFaecherMapping.class);

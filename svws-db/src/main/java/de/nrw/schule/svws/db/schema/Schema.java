@@ -288,14 +288,8 @@ public class Schema {
 	/** Tabelle Katalog_Zeitraster */
 	public static final Tabelle_Katalog_Zeitraster tab_Katalog_Zeitraster = add(new Tabelle_Katalog_Zeitraster());
 
-	/** Tabelle KlassenartenKatalog */
-	public static final Tabelle_KlassenartenKatalog tab_KlassenartenKatalog = add(new Tabelle_KlassenartenKatalog());
-
 	/** Tabelle KlassenartenKatalog_Keys */
 	public static final Tabelle_KlassenartenKatalog_Keys tab_KlassenartenKatalog_Keys = add(new Tabelle_KlassenartenKatalog_Keys());
-
-	/** Tabelle KlassenartenKatalog_Schulformen */
-	public static final Tabelle_KlassenartenKatalog_Schulformen tab_KlassenartenKatalog_Schulformen = add(new Tabelle_KlassenartenKatalog_Schulformen());
 
 	/** Tabelle Kompetenzgruppen */
 	public static final Tabelle_Kompetenzgruppen tab_Kompetenzgruppen = add(new Tabelle_Kompetenzgruppen());

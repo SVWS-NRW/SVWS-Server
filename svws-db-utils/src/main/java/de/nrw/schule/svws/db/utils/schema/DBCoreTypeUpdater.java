@@ -11,7 +11,6 @@ import de.nrw.schule.svws.config.SVWSKonfiguration;
 import de.nrw.schule.svws.core.data.fach.FachKatalogEintrag;
 import de.nrw.schule.svws.core.data.jahrgang.JahrgangsKatalogEintrag;
 import de.nrw.schule.svws.core.data.jahrgang.JahrgangsKatalogEintragBezeichnung;
-import de.nrw.schule.svws.core.data.klassen.KlassenartKatalogEintrag;
 import de.nrw.schule.svws.core.data.kurse.KursartKatalogEintrag;
 import de.nrw.schule.svws.core.data.lehrer.LehrerKatalogAbgangsgrundEintrag;
 import de.nrw.schule.svws.core.data.lehrer.LehrerKatalogAnrechnungsgrundEintrag;
@@ -161,9 +160,7 @@ public class DBCoreTypeUpdater {
 		tables.add(new CoreTypeTable("Herkunftsart", Herkunftsarten.VERSION, updateHerkunftsarten));
 		tables.add(new CoreTypeTable("Herkunftsart_Keys", Herkunftsarten.VERSION, updateHerkunftsartenKeys));
 		tables.add(new CoreTypeTable("Herkunftsart_Schulformen", Herkunftsarten.VERSION, updateHerkunftsartenSchulformen));
-		tables.add(new CoreTypeTable("KlassenartenKatalog", Klassenart.VERSION, updateKlassenarten));
 		tables.add(new CoreTypeTable("KlassenartenKatalog_Keys", Klassenart.VERSION, updateKlassenartenKeys));
-		tables.add(new CoreTypeTable("KlassenartenKatalog_Schulformen", Klassenart.VERSION, updateKlassenartenSchulformen));
 		tables.add(new CoreTypeTable("KursartenKatalog", ZulaessigeKursart.VERSION, updateKursarten));
 		tables.add(new CoreTypeTable("KursartenKatalog_Keys", ZulaessigeKursart.VERSION, updateKursartenKeys));
 		tables.add(new CoreTypeTable("KursartenKatalog_Schulformen", ZulaessigeKursart.VERSION, updateKursartenSchulformen));
@@ -1481,34 +1478,6 @@ public class DBCoreTypeUpdater {
 
 
 	/**
-	 * Aktualisiert die Tabelle für den Core-Type Klassenart
-	 */
-	private Consumer<Logger> updateKlassenarten = (Logger logger) -> {
-		String tabname = "KlassenartenKatalog";
-		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
-		StringBuilder sql = new StringBuilder();
-		sql.append("INSERT INTO ");
-		sql.append(tabname); 
-		sql.append("(ID, Kuerzel, Bezeichnung, gueltigVon, gueltigBis) ");
-		Klassenart[] values = Klassenart.values();
-		boolean isFirst = true;
-		for (int i = 0; i < values.length; i++) {
-			Klassenart klassenart = values[i];
-			for (KlassenartKatalogEintrag k : klassenart.historie) {
-				sql.append(isFirst ? "VALUES (" : ", (");
-				isFirst = false;
-				sql.append(k.id).append(",");
-				sql.append("'").append(k.kuerzel).append("'").append(",");
-				sql.append("'").append(k.bezeichnung).append("'").append(",");
-				sql.append(k.gueltigVon).append(",");
-				sql.append(k.gueltigBis).append(")");
-			}
-		}
-		updateCoreTypeTabelle(tabname, Klassenart.class.getCanonicalName(), Klassenart.VERSION, sql.toString());
-	};
-
-	
-	/**
 	 * Aktualisiert die Tabelle für den Core-Type Klassenart 
 	 */
 	private Consumer<Logger> updateKlassenartenKeys = (Logger logger) -> {
@@ -1530,40 +1499,6 @@ public class DBCoreTypeUpdater {
 	};
 	
 	
-	/**
-	 * Aktualisiert die Tabelle für den Core-Type Klassenart
-	 */
-	private Consumer<Logger> updateKlassenartenSchulformen = (Logger logger) -> {
-		String tabname = "KlassenartenKatalog_Schulformen";
-		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
-		StringBuilder sql = new StringBuilder();
-		sql.append("INSERT INTO ");
-		sql.append(tabname); 
-		sql.append("(Klassenart_ID, Schulform_Kuerzel, Schulgliederung_Kuerzel) ");
-		Klassenart[] values = Klassenart.values();
-		boolean isFirst = true;
-		for (int i = 0; i < values.length; i++) {
-			Klassenart klassenart = values[i];
-			for (KlassenartKatalogEintrag k : klassenart.historie) {
-				for (SchulformSchulgliederung sfsg : k.zulaessig) {
-					sql.append(isFirst ? "VALUES (" : ", (");
-					isFirst = false;
-					sql.append(k.id).append(",");
-					if (sfsg.schulform == null)
-						sql.append("null,");
-					else
-						sql.append("'").append(Schulform.getByKuerzel(sfsg.schulform).daten.kuerzel).append("'").append(",");
-					if (sfsg.gliederung == null)
-						sql.append("'')");
-					else
-						sql.append("'").append(Schulgliederung.getByKuerzel(sfsg.gliederung)).append("'").append(")");
-				}
-			}
-		}
-		updateCoreTypeTabelle(tabname, Klassenart.class.getCanonicalName(), Klassenart.VERSION, sql.toString());
-	};
-
-
 	/**
 	 * Aktualisiert die Tabelle für den Core-Type ZulaessigeKursart
 	 */

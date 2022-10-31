@@ -41,7 +41,6 @@ public class DBSchemaViews {
 		add_Statkue_Nationalitaeten();
 		add_Statkue_SchuelerVerkehrssprache();
 		add_Statkue_ZulJahrgaenge();
-		add_Statkue_ZulKlArt();
 		add_Statkue_ZulKuArt();
 		add_Statkue_ZulFaecher();
 		add_Statkue_SVWS_ZulaessigeFaecher();
@@ -396,25 +395,6 @@ public class DBSchemaViews {
 		 .add("gueltigVon", "Gibt die Gültigkeit ab welchem Schuljahr an (hier zur Kompatibilität vorhanden)", "String", "NULL", null, false)
 		 .add("gueltigBis", "Gibt die Gültigkeit bis zu welchem Schuljahr an (hier zur Kompatibilität vorhanden)", "String", "NULL", null, false);
 		addView(view);		
-	}
-
-
-	private void add_Statkue_ZulKlArt() {
-		View view = new View(
-				"Statkue_ZulKlArt", "views.statkue", "DTOStatkueZulaessigeKlassenart", 
-				"View zur Simulation einer Statkue-Tabelle: Zulässige Klassenarten",
-				0, null,
-                """
-                KlassenartenKatalog k JOIN KlassenartenKatalog_Schulformen ks ON k.ID = ks.Klassenart_ID AND k.gueltigBis IS NULL
-                """
-		).add("KlArt", "Das Kürzel der Klassenart", "String", "k.Kuerzel", null, true)
-		 .add("Schulform", "Die Schulform bei der die Kursart zulässig ist.", "String", "ks.Schulform_Kuerzel", null, true)
-		 .add("FSP", "Eine Einschränkung der Zulässigkeit der Kusart auf einen Förderschwerpunkt (hier nur Kompatibilität angegeben)", "String", "'**'", null, true)
-		 .add("Bezeichnung", "Die Bezeichnung der Kursart", "String", "k.Bezeichnung", null, true)
-		 .add("geaendert", "Datum der letzten Änderung (hier zur Kompatibilität vorhanden)", "String", "NULL", null, false)
-		 .add("gueltigVon", "Gibt die Gültigkeit ab welchem Schuljahr an", "String", "k.gueltigVon", null, false)
-		 .add("gueltigBis", "Gibt die Gültigkeit bis zu welchem Schuljahr an", "String", "k.gueltigBis", null, false);
-		addView(view);
 	}
 
 

@@ -84,9 +84,7 @@ import de.nrw.schule.svws.db.dto.migration.schild.katalog.MigrationDTOTextDateie
 import de.nrw.schule.svws.db.dto.migration.schild.katalog.MigrationDTOVermerkArt;
 import de.nrw.schule.svws.db.dto.migration.schild.klassen.MigrationDTOKlassen;
 import de.nrw.schule.svws.db.dto.migration.schild.klassen.MigrationDTOKlassenLeitung;
-import de.nrw.schule.svws.db.dto.migration.schild.klassen.MigrationDTOKlassenartenKatalog;
 import de.nrw.schule.svws.db.dto.migration.schild.klassen.MigrationDTOKlassenartenKatalogKeys;
-import de.nrw.schule.svws.db.dto.migration.schild.klassen.MigrationDTOKlassenartenKatalogSchulformen;
 import de.nrw.schule.svws.db.dto.migration.schild.klassen.MigrationDTOVersetzung;
 import de.nrw.schule.svws.db.dto.migration.schild.kurse.MigrationDTOKurs;
 import de.nrw.schule.svws.db.dto.migration.schild.kurse.MigrationDTOKursLehrer;
@@ -322,9 +320,7 @@ public class MigrationDTOs {
              mapDTOName2DTOClass.put(MigrationDTOVermerkArt.class.getSimpleName(),MigrationDTOVermerkArt.class);
              mapDTOName2DTOClass.put(MigrationDTOKlassen.class.getSimpleName(),MigrationDTOKlassen.class);
              mapDTOName2DTOClass.put(MigrationDTOKlassenLeitung.class.getSimpleName(),MigrationDTOKlassenLeitung.class);
-             mapDTOName2DTOClass.put(MigrationDTOKlassenartenKatalog.class.getSimpleName(),MigrationDTOKlassenartenKatalog.class);
              mapDTOName2DTOClass.put(MigrationDTOKlassenartenKatalogKeys.class.getSimpleName(),MigrationDTOKlassenartenKatalogKeys.class);
-             mapDTOName2DTOClass.put(MigrationDTOKlassenartenKatalogSchulformen.class.getSimpleName(),MigrationDTOKlassenartenKatalogSchulformen.class);
              mapDTOName2DTOClass.put(MigrationDTOVersetzung.class.getSimpleName(),MigrationDTOVersetzung.class);
              mapDTOName2DTOClass.put(MigrationDTOKurs.class.getSimpleName(),MigrationDTOKurs.class);
              mapDTOName2DTOClass.put(MigrationDTOKursLehrer.class.getSimpleName(),MigrationDTOKursLehrer.class);
@@ -563,9 +559,7 @@ public class MigrationDTOs {
              mapTablename2DTOClass.put("K_Vermerkart",MigrationDTOVermerkArt.class);
              mapTablename2DTOClass.put("Klassen",MigrationDTOKlassen.class);
              mapTablename2DTOClass.put("KlassenLehrer",MigrationDTOKlassenLeitung.class);
-             mapTablename2DTOClass.put("KlassenartenKatalog",MigrationDTOKlassenartenKatalog.class);
              mapTablename2DTOClass.put("KlassenartenKatalog_Keys",MigrationDTOKlassenartenKatalogKeys.class);
-             mapTablename2DTOClass.put("KlassenartenKatalog_Schulformen",MigrationDTOKlassenartenKatalogSchulformen.class);
              mapTablename2DTOClass.put("Versetzung",MigrationDTOVersetzung.class);
              mapTablename2DTOClass.put("Kurse",MigrationDTOKurs.class);
              mapTablename2DTOClass.put("KursLehrer",MigrationDTOKursLehrer.class);
