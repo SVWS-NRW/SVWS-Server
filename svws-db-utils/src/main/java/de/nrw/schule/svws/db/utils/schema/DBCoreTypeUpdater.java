@@ -27,7 +27,6 @@ import de.nrw.schule.svws.core.data.lehrer.LehrerKatalogMinderleistungsartEintra
 import de.nrw.schule.svws.core.data.lehrer.LehrerKatalogRechtsverhaeltnisEintrag;
 import de.nrw.schule.svws.core.data.lehrer.LehrerKatalogZugangsgrundEintrag;
 import de.nrw.schule.svws.core.data.schule.AllgemeineMerkmaleKatalogEintrag;
-import de.nrw.schule.svws.core.data.schule.FoerderschwerpunktKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.HerkunftKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.HerkunftsartKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.HerkunftsartKatalogEintragBezeichnung;
@@ -61,7 +60,6 @@ import de.nrw.schule.svws.core.types.lehrer.LehrerMinderleistungArt;
 import de.nrw.schule.svws.core.types.lehrer.LehrerRechtsverhaeltnis;
 import de.nrw.schule.svws.core.types.lehrer.LehrerZugangsgrund;
 import de.nrw.schule.svws.core.types.schueler.Einschulungsart;
-import de.nrw.schule.svws.core.types.schueler.Foerderschwerpunkt;
 import de.nrw.schule.svws.core.types.schueler.Herkunft;
 import de.nrw.schule.svws.core.types.schueler.Herkunftsarten;
 import de.nrw.schule.svws.core.types.schule.AllgemeinbildendOrganisationsformen;
@@ -127,8 +125,6 @@ public class DBCoreTypeUpdater {
 		tables.add(new CoreTypeTable("Schulgliederungen_Schulformen", Schulgliederung.VERSION, updateSchulgliederungenSchulformen));
 		tables.add(new CoreTypeTable("Schulgliederungen_Abschluesse_Allgemeinbildend", Schulgliederung.VERSION, updateSchulgliederungenAbschluesseAllg));
 		tables.add(new CoreTypeTable("Schulgliederungen_Abschluesse_Berufsbildend", Schulgliederung.VERSION, updateSchulgliederungenAbschluesseBeruf));
-		tables.add(new CoreTypeTable("Foerderschwerpunkte", Foerderschwerpunkt.VERSION, updateFoerderschwerpunkte));
-		tables.add(new CoreTypeTable("Foerderschwerpunkte_Schulformen", Foerderschwerpunkt.VERSION, updateFoerderschwerpunkteSchulformen));
 		tables.add(new CoreTypeTable("Statkue_LehrerAbgang", LehrerAbgangsgrund.VERSION, updateLehrerAbgangsgruende));
 		tables.add(new CoreTypeTable("Statkue_LehrerAnrechnung", LehrerAnrechnungsgrund.VERSION, updateLehrerAnrechnungsgruende));
 		tables.add(new CoreTypeTable("Statkue_LehrerBeschaeftigungsart", LehrerBeschaeftigungsart.VERSION, updateLehrerBeschaeftigungsarten));
@@ -346,62 +342,6 @@ public class DBCoreTypeUpdater {
 			sql.append(f.daten.gueltigBis).append(")");
 		}
 		updateCoreTypeTabelle(tabname, KursFortschreibungsart.class.getCanonicalName(), KursFortschreibungsart.VERSION, sql.toString());
-	};
-
-
-	/**
-	 * Aktualisiert die Tabelle für den Core-Type Foerderschwerpunkt 
-	 */
-	private Consumer<Logger> updateFoerderschwerpunkte = (Logger logger) -> {
-		String tabname = "Foerderschwerpunkte";
-		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
-		StringBuilder sql = new StringBuilder();
-		sql.append("INSERT INTO ");
-		sql.append(tabname); 
-		sql.append("(ID, Kuerzel, Beschreibung, gueltigVon, gueltigBis) ");
-		Foerderschwerpunkt[] values = Foerderschwerpunkt.values();
-		boolean isFirst = true;
-		for (int i = 0; i < values.length; i++) {
-			Foerderschwerpunkt foerderschwerpunkt = values[i];
-			for (FoerderschwerpunktKatalogEintrag fs : foerderschwerpunkt.historie) {
-				sql.append(isFirst ? "VALUES (" : ", (");
-				isFirst = false;
-				sql.append(fs.id).append(",");
-				sql.append("'").append(fs.kuerzel).append("'").append(",");
-				sql.append("'").append(fs.beschreibung).append("'").append(",");
-				sql.append(fs.gueltigVon).append(",");
-				sql.append(fs.gueltigBis).append(")");
-			}
-		}
-		updateCoreTypeTabelle(tabname, Foerderschwerpunkt.class.getCanonicalName(), Foerderschwerpunkt.VERSION, sql.toString());
-	};
-
-	
-	/**
-	 * Aktualisiert die Tabelle für den Core-Type Foerderschwerpunkt 
-	 */
-	private Consumer<Logger> updateFoerderschwerpunkteSchulformen = (Logger logger) -> {
-		String tabname = "Foerderschwerpunkte_Schulformen";
-		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
-		StringBuilder sql = new StringBuilder();
-		sql.append("INSERT INTO ");
-		sql.append(tabname); 
-		sql.append("(Foerderschwerpunkt_ID, Schulform_Kuerzel) ");
-		Foerderschwerpunkt[] values = Foerderschwerpunkt.values();
-		boolean isFirst = true;
-		for (int i = 0; i < values.length; i++) {
-			Foerderschwerpunkt foerderschwerpunkt = values[i];
-			for (FoerderschwerpunktKatalogEintrag fs : foerderschwerpunkt.historie) {
-				List<Schulform> schulformen = fs.schulformen.stream().map(s -> Schulform.getByKuerzel(s)).collect(Collectors.toList());
-				for (Schulform sf : schulformen) {
-					sql.append(isFirst ? "VALUES (" : ", (");
-					isFirst = false;
-					sql.append(fs.id).append(",");
-					sql.append("'").append(sf.daten.kuerzel).append("'").append(")");
-				}
-			}
-		}
-		updateCoreTypeTabelle(tabname, Foerderschwerpunkt.class.getCanonicalName(), Foerderschwerpunkt.VERSION, sql.toString());
 	};
 
 

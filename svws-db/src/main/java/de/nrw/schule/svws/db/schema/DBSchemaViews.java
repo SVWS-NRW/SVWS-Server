@@ -32,7 +32,6 @@ public class DBSchemaViews {
 		add_Schildintern_Berufsebene();
 		add_Schildintern_K_Schulnote();
 		add_Schulver_Schulformen();
-		add_Statkue_Foerderschwerpunkt();
 		add_Statkue_Schulformen();
 		add_Statkue_Gliederung();
 		add_Statkue_Herkunftsschulform();
@@ -312,27 +311,7 @@ public class DBSchemaViews {
 		addView(view);
 	}
 
-	
-	private void add_Statkue_Foerderschwerpunkt() {
-		View view = new View(
-				"Statkue_Foerderschwerpunkt", "views.statkue", "DTOStatkueFoerderschwerpunkte", 
-				"View zur Simulation einer Statkue-Tabelle: Foerderschwerpunkt",
-				0, null,
-                """
-                Foerderschwerpunkte fs
-                LEFT JOIN Foerderschwerpunkte_Schulformen sf on fs.ID = sf.Foerderschwerpunkt_ID
-                """
-		).add("SF", "Zulässige Schulform des Förderschwerpunktes", "String", "sf.Schulform_Kuerzel", null, true)
-		 .add("FSP", "Das Statistik-Kürzel des Förderschwerpunktes", "String", "fs.Kuerzel", null, true)
-		 .add("Beschreibung", "Textuelle Beschreibung des Förderschwerpunktes", "String", "fs.Beschreibung", null, false)
-		 .add("Flag", "Ein Flag (hier zur Kompatibilität vorhanden)", "String", "CASE WHEN fs.gueltigVon IS NULL THEN '2' ELSE '1' END", null, true)
-		 .add("geaendert", "Das Datum der letzten Änderung (hier zur Kompatibilität vorhanden)", "String", "NULL", null, false)
-		 .add("gueltigVon", "Gibt die Gültigkeit ab welchem Schuljahr an", "String", "fs.gueltigVon", null, false)
-		 .add("gueltigBis", "Gibt die Gültigkeit bis zu welchem Schuljahr an", "String", "fs.gueltigBis", null, false);
-		addView(view);
-	}
-	
-	
+
 	private void add_Statkue_ZulJahrgaenge() {
 		View view = new View(
 				"Statkue_ZulJahrgaenge", "views.statkue", "DTOStatkueZulaessigerJahrgang", 

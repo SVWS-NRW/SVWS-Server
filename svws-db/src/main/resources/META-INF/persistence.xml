@@ -160,8 +160,6 @@
         <class>de.nrw.schule.svws.db.dto.migration.schild.schueler.fhr.MigrationDTOSchuelerFHRFach</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAbteilungen</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAbteilungsKlassen</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAlleFoerderschwerpunkte</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAlleFoerderschwerpunkteSchulformen</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAlleJahrgaenge</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAlleJahrgaengeBezeichnungen</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAlleJahrgaengeKeys</class>
@@ -386,8 +384,6 @@
         <class>de.nrw.schule.svws.db.dto.current.schild.schueler.fhr.DTOSchuelerFHRFach</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOAbteilungen</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOAbteilungsKlassen</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOAlleFoerderschwerpunkte</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOAlleFoerderschwerpunkteSchulformen</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOAlleJahrgaenge</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOAlleJahrgaengeBezeichnungen</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOAlleJahrgaengeKeys</class>
@@ -482,7 +478,6 @@
         <class>de.nrw.schule.svws.db.dto.current.views.schildintern.DTOSchildInternBerufsebenen</class>
         <class>de.nrw.schule.svws.db.dto.current.views.schildintern.DTOSchildInternNote</class>
         <class>de.nrw.schule.svws.db.dto.current.views.schulver.DTOSchulverSchulformen</class>
-        <class>de.nrw.schule.svws.db.dto.current.views.statkue.DTOStatkueFoerderschwerpunkte</class>
         <class>de.nrw.schule.svws.db.dto.current.views.statkue.DTOStatkueSchulformen</class>
         <class>de.nrw.schule.svws.db.dto.current.views.statkue.DTOStatkueGliederung</class>
         <class>de.nrw.schule.svws.db.dto.current.views.statkue.DTOStatkueHerkunftsschulform</class>
@@ -648,8 +643,6 @@
         <class>de.nrw.schule.svws.db.dto.rev8.schild.schueler.fhr.Rev8DTOSchuelerFHRFach</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOAbteilungen</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOAbteilungsKlassen</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOAlleFoerderschwerpunkte</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOAlleFoerderschwerpunkteSchulformen</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOAlleJahrgaenge</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOAlleJahrgaengeBezeichnungen</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOAlleJahrgaengeKeys</class>
@@ -744,7 +737,6 @@
         <class>de.nrw.schule.svws.db.dto.rev8.views.schildintern.Rev8DTOSchildInternBerufsebenen</class>
         <class>de.nrw.schule.svws.db.dto.rev8.views.schildintern.Rev8DTOSchildInternNote</class>
         <class>de.nrw.schule.svws.db.dto.rev8.views.schulver.Rev8DTOSchulverSchulformen</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.views.statkue.Rev8DTOStatkueFoerderschwerpunkte</class>
         <class>de.nrw.schule.svws.db.dto.rev8.views.statkue.Rev8DTOStatkueSchulformen</class>
         <class>de.nrw.schule.svws.db.dto.rev8.views.statkue.Rev8DTOStatkueGliederung</class>
         <class>de.nrw.schule.svws.db.dto.rev8.views.statkue.Rev8DTOStatkueHerkunftsschulform</class>

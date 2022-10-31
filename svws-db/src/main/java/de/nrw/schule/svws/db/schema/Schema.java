@@ -123,12 +123,6 @@ public class Schema {
 	/** Tabelle Floskeln */
 	public static final Tabelle_Floskeln tab_Floskeln = add(new Tabelle_Floskeln());
 
-	/** Tabelle Foerderschwerpunkte */
-	public static final Tabelle_Foerderschwerpunkte tab_Foerderschwerpunkte = add(new Tabelle_Foerderschwerpunkte());
-
-	/** Tabelle Foerderschwerpunkte_Schulformen */
-	public static final Tabelle_Foerderschwerpunkte_Schulformen tab_Foerderschwerpunkte_Schulformen = add(new Tabelle_Foerderschwerpunkte_Schulformen());
-
 	/** Tabelle Gost_Jahrgangsdaten */
 	public static final Tabelle_Gost_Jahrgangsdaten tab_Gost_Jahrgangsdaten = add(new Tabelle_Gost_Jahrgangsdaten());
 

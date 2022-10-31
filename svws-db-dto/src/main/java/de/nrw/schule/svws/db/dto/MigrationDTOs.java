@@ -137,8 +137,6 @@ import de.nrw.schule.svws.db.dto.migration.schild.schueler.fhr.MigrationDTOSchue
 import de.nrw.schule.svws.db.dto.migration.schild.schueler.fhr.MigrationDTOSchuelerFHRFach;
 import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAbteilungen;
 import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAbteilungsKlassen;
-import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAlleFoerderschwerpunkte;
-import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAlleFoerderschwerpunkteSchulformen;
 import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAlleJahrgaenge;
 import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAlleJahrgaengeBezeichnungen;
 import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAlleJahrgaengeKeys;
@@ -371,8 +369,6 @@ public class MigrationDTOs {
              mapDTOName2DTOClass.put(MigrationDTOSchuelerFHRFach.class.getSimpleName(),MigrationDTOSchuelerFHRFach.class);
              mapDTOName2DTOClass.put(MigrationDTOAbteilungen.class.getSimpleName(),MigrationDTOAbteilungen.class);
              mapDTOName2DTOClass.put(MigrationDTOAbteilungsKlassen.class.getSimpleName(),MigrationDTOAbteilungsKlassen.class);
-             mapDTOName2DTOClass.put(MigrationDTOAlleFoerderschwerpunkte.class.getSimpleName(),MigrationDTOAlleFoerderschwerpunkte.class);
-             mapDTOName2DTOClass.put(MigrationDTOAlleFoerderschwerpunkteSchulformen.class.getSimpleName(),MigrationDTOAlleFoerderschwerpunkteSchulformen.class);
              mapDTOName2DTOClass.put(MigrationDTOAlleJahrgaenge.class.getSimpleName(),MigrationDTOAlleJahrgaenge.class);
              mapDTOName2DTOClass.put(MigrationDTOAlleJahrgaengeBezeichnungen.class.getSimpleName(),MigrationDTOAlleJahrgaengeBezeichnungen.class);
              mapDTOName2DTOClass.put(MigrationDTOAlleJahrgaengeKeys.class.getSimpleName(),MigrationDTOAlleJahrgaengeKeys.class);
@@ -608,8 +604,6 @@ public class MigrationDTOs {
              mapTablename2DTOClass.put("SchuelerFHRFaecher",MigrationDTOSchuelerFHRFach.class);
              mapTablename2DTOClass.put("EigeneSchule_Abteilungen",MigrationDTOAbteilungen.class);
              mapTablename2DTOClass.put("EigeneSchule_Abt_Kl",MigrationDTOAbteilungsKlassen.class);
-             mapTablename2DTOClass.put("Foerderschwerpunkte",MigrationDTOAlleFoerderschwerpunkte.class);
-             mapTablename2DTOClass.put("Foerderschwerpunkte_Schulformen",MigrationDTOAlleFoerderschwerpunkteSchulformen.class);
              mapTablename2DTOClass.put("Jahrgaenge",MigrationDTOAlleJahrgaenge.class);
              mapTablename2DTOClass.put("Jahrgaenge_Bezeichnungen",MigrationDTOAlleJahrgaengeBezeichnungen.class);
              mapTablename2DTOClass.put("Jahrgaenge_Keys",MigrationDTOAlleJahrgaengeKeys.class);
