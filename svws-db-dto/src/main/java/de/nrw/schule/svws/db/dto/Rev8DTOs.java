@@ -73,7 +73,6 @@ import de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternFilterFeldListe
 import de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternPruefungsOrdnung;
 import de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternPruefungsOrdnungOptionen;
 import de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternSchuelerImportExport;
-import de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternTextExport;
 import de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternUnicodeUmwandllung;
 import de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOKAoAAnschlussoption;
 import de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOKAoABerufsfeld;
@@ -369,7 +368,6 @@ public class Rev8DTOs {
              mapDTOName2DTOClass.put(Rev8DTOInternPruefungsOrdnung.class.getSimpleName(),Rev8DTOInternPruefungsOrdnung.class);
              mapDTOName2DTOClass.put(Rev8DTOInternPruefungsOrdnungOptionen.class.getSimpleName(),Rev8DTOInternPruefungsOrdnungOptionen.class);
              mapDTOName2DTOClass.put(Rev8DTOInternSchuelerImportExport.class.getSimpleName(),Rev8DTOInternSchuelerImportExport.class);
-             mapDTOName2DTOClass.put(Rev8DTOInternTextExport.class.getSimpleName(),Rev8DTOInternTextExport.class);
              mapDTOName2DTOClass.put(Rev8DTOInternUnicodeUmwandllung.class.getSimpleName(),Rev8DTOInternUnicodeUmwandllung.class);
              mapDTOName2DTOClass.put(Rev8DTOKAoAAnschlussoption.class.getSimpleName(),Rev8DTOKAoAAnschlussoption.class);
              mapDTOName2DTOClass.put(Rev8DTOKAoABerufsfeld.class.getSimpleName(),Rev8DTOKAoABerufsfeld.class);
@@ -668,7 +666,6 @@ public class Rev8DTOs {
              mapTablename2DTOClass.put("Schildintern_PruefungsOrdnung",Rev8DTOInternPruefungsOrdnung.class);
              mapTablename2DTOClass.put("Schildintern_PruefOrd_Optionen",Rev8DTOInternPruefungsOrdnungOptionen.class);
              mapTablename2DTOClass.put("Schildintern_SchuelerImpExp",Rev8DTOInternSchuelerImportExport.class);
-             mapTablename2DTOClass.put("Schildintern_TextExport",Rev8DTOInternTextExport.class);
              mapTablename2DTOClass.put("Schildintern_UnicodeUmwandlung",Rev8DTOInternUnicodeUmwandllung.class);
              mapTablename2DTOClass.put("Schildintern_KAoA_Anschlussoption",Rev8DTOKAoAAnschlussoption.class);
              mapTablename2DTOClass.put("Schildintern_KAoA_Berufsfeld",Rev8DTOKAoABerufsfeld.class);
