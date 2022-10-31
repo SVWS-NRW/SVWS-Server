@@ -77,7 +77,6 @@
         <class>de.nrw.schule.svws.db.dto.migration.schild.impexp.MigrationDTOEigeneImporte</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.impexp.MigrationDTOEigeneImporteFelder</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.impexp.MigrationDTOEigeneImporteTabellen</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternAbiturInfos</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternDQRNiveaus</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternDatenart</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternFaecherSortierung</class>
@@ -311,7 +310,6 @@
         <class>de.nrw.schule.svws.db.dto.current.schild.impexp.DTOEigeneImporte</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.impexp.DTOEigeneImporteFelder</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.impexp.DTOEigeneImporteTabellen</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternAbiturInfos</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternDQRNiveaus</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternDatenart</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternFaecherSortierung</class>
@@ -587,7 +585,6 @@
         <class>de.nrw.schule.svws.db.dto.rev8.schild.impexp.Rev8DTOEigeneImporte</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.impexp.Rev8DTOEigeneImporteFelder</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.impexp.Rev8DTOEigeneImporteTabellen</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternAbiturInfos</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternDQRNiveaus</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternDatenart</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternFaecherSortierung</class>

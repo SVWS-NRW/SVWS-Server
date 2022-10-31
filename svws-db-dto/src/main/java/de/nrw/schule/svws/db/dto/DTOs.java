@@ -67,7 +67,6 @@ import de.nrw.schule.svws.db.dto.current.schild.grundschule.DTOSchuelerAnkreuzfl
 import de.nrw.schule.svws.db.dto.current.schild.impexp.DTOEigeneImporte;
 import de.nrw.schule.svws.db.dto.current.schild.impexp.DTOEigeneImporteFelder;
 import de.nrw.schule.svws.db.dto.current.schild.impexp.DTOEigeneImporteTabellen;
-import de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternAbiturInfos;
 import de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternDQRNiveaus;
 import de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternDatenart;
 import de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternFaecherSortierung;
@@ -366,7 +365,6 @@ public class DTOs {
              mapDTOName2DTOClass.put(DTOEigeneImporte.class.getSimpleName(),DTOEigeneImporte.class);
              mapDTOName2DTOClass.put(DTOEigeneImporteFelder.class.getSimpleName(),DTOEigeneImporteFelder.class);
              mapDTOName2DTOClass.put(DTOEigeneImporteTabellen.class.getSimpleName(),DTOEigeneImporteTabellen.class);
-             mapDTOName2DTOClass.put(DTOInternAbiturInfos.class.getSimpleName(),DTOInternAbiturInfos.class);
              mapDTOName2DTOClass.put(DTOInternDQRNiveaus.class.getSimpleName(),DTOInternDQRNiveaus.class);
              mapDTOName2DTOClass.put(DTOInternDatenart.class.getSimpleName(),DTOInternDatenart.class);
              mapDTOName2DTOClass.put(DTOInternFaecherSortierung.class.getSimpleName(),DTOInternFaecherSortierung.class);
@@ -668,7 +666,6 @@ public class DTOs {
              mapTablename2DTOClass.put("ImpExp_EigeneImporte",DTOEigeneImporte.class);
              mapTablename2DTOClass.put("ImpExp_EigeneImporte_Felder",DTOEigeneImporteFelder.class);
              mapTablename2DTOClass.put("ImpExp_EigeneImporte_Tabellen",DTOEigeneImporteTabellen.class);
-             mapTablename2DTOClass.put("Schildintern_AbiturInfos",DTOInternAbiturInfos.class);
              mapTablename2DTOClass.put("Schildintern_DQR_Niveaus",DTOInternDQRNiveaus.class);
              mapTablename2DTOClass.put("Schildintern_Datenart",DTOInternDatenart.class);
              mapTablename2DTOClass.put("Schildintern_FaecherSortierung",DTOInternFaecherSortierung.class);

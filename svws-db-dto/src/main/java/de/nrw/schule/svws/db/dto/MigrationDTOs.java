@@ -54,7 +54,6 @@ import de.nrw.schule.svws.db.dto.migration.schild.grundschule.MigrationDTOSchuel
 import de.nrw.schule.svws.db.dto.migration.schild.impexp.MigrationDTOEigeneImporte;
 import de.nrw.schule.svws.db.dto.migration.schild.impexp.MigrationDTOEigeneImporteFelder;
 import de.nrw.schule.svws.db.dto.migration.schild.impexp.MigrationDTOEigeneImporteTabellen;
-import de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternAbiturInfos;
 import de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternDQRNiveaus;
 import de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternDatenart;
 import de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternFaecherSortierung;
@@ -298,7 +297,6 @@ public class MigrationDTOs {
              mapDTOName2DTOClass.put(MigrationDTOEigeneImporte.class.getSimpleName(),MigrationDTOEigeneImporte.class);
              mapDTOName2DTOClass.put(MigrationDTOEigeneImporteFelder.class.getSimpleName(),MigrationDTOEigeneImporteFelder.class);
              mapDTOName2DTOClass.put(MigrationDTOEigeneImporteTabellen.class.getSimpleName(),MigrationDTOEigeneImporteTabellen.class);
-             mapDTOName2DTOClass.put(MigrationDTOInternAbiturInfos.class.getSimpleName(),MigrationDTOInternAbiturInfos.class);
              mapDTOName2DTOClass.put(MigrationDTOInternDQRNiveaus.class.getSimpleName(),MigrationDTOInternDQRNiveaus.class);
              mapDTOName2DTOClass.put(MigrationDTOInternDatenart.class.getSimpleName(),MigrationDTOInternDatenart.class);
              mapDTOName2DTOClass.put(MigrationDTOInternFaecherSortierung.class.getSimpleName(),MigrationDTOInternFaecherSortierung.class);
@@ -545,7 +543,6 @@ public class MigrationDTOs {
              mapTablename2DTOClass.put("ImpExp_EigeneImporte",MigrationDTOEigeneImporte.class);
              mapTablename2DTOClass.put("ImpExp_EigeneImporte_Felder",MigrationDTOEigeneImporteFelder.class);
              mapTablename2DTOClass.put("ImpExp_EigeneImporte_Tabellen",MigrationDTOEigeneImporteTabellen.class);
-             mapTablename2DTOClass.put("Schildintern_AbiturInfos",MigrationDTOInternAbiturInfos.class);
              mapTablename2DTOClass.put("Schildintern_DQR_Niveaus",MigrationDTOInternDQRNiveaus.class);
              mapTablename2DTOClass.put("Schildintern_Datenart",MigrationDTOInternDatenart.class);
              mapTablename2DTOClass.put("Schildintern_FaecherSortierung",MigrationDTOInternFaecherSortierung.class);

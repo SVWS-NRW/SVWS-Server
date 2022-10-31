@@ -396,9 +396,6 @@ public class Schema {
 	/** Tabelle SchildFilter */
 	public static final Tabelle_SchildFilter tab_SchildFilter = add(new Tabelle_SchildFilter());
 
-	/** Tabelle Schildintern_AbiturInfos */
-	public static final Tabelle_Schildintern_AbiturInfos tab_Schildintern_AbiturInfos = add(new Tabelle_Schildintern_AbiturInfos());
-
 	/** Tabelle Schildintern_DQR_Niveaus */
 	public static final Tabelle_Schildintern_DQR_Niveaus tab_Schildintern_DQR_Niveaus = add(new Tabelle_Schildintern_DQR_Niveaus());
 
@@ -808,7 +805,6 @@ public class Schema {
 	// TODO Passe dieses Attribut an, sobald die Default-Daten nicht mehr über CSV-Dateien eingelesen werden
 	/** Die Tabellen, welche Default-Daten beinhalten und in diesem Zusammenhang aktualisiert werden sollen */
 	public static final SchemaTabelle[] tabellenDefaultDaten = new SchemaTabelle[] {
-		Schema.tab_Schildintern_AbiturInfos,
 		Schema.tab_Schildintern_Datenart,
 		Schema.tab_Schildintern_DQR_Niveaus,
 		Schema.tab_Schildintern_FaecherSortierung,
