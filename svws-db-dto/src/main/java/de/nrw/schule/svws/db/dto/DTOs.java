@@ -73,7 +73,6 @@ import de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternDatenart;
 import de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternFaecherSortierung;
 import de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternFilterFehlendeEintraegeSchild3;
 import de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternFilterFeldListe;
-import de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternLaender;
 import de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternPrfSemesterAbschluss;
 import de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternPruefungsOrdnung;
 import de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternPruefungsOrdnungOptionen;
@@ -374,7 +373,6 @@ public class DTOs {
              mapDTOName2DTOClass.put(DTOInternFaecherSortierung.class.getSimpleName(),DTOInternFaecherSortierung.class);
              mapDTOName2DTOClass.put(DTOInternFilterFehlendeEintraegeSchild3.class.getSimpleName(),DTOInternFilterFehlendeEintraegeSchild3.class);
              mapDTOName2DTOClass.put(DTOInternFilterFeldListe.class.getSimpleName(),DTOInternFilterFeldListe.class);
-             mapDTOName2DTOClass.put(DTOInternLaender.class.getSimpleName(),DTOInternLaender.class);
              mapDTOName2DTOClass.put(DTOInternPrfSemesterAbschluss.class.getSimpleName(),DTOInternPrfSemesterAbschluss.class);
              mapDTOName2DTOClass.put(DTOInternPruefungsOrdnung.class.getSimpleName(),DTOInternPruefungsOrdnung.class);
              mapDTOName2DTOClass.put(DTOInternPruefungsOrdnungOptionen.class.getSimpleName(),DTOInternPruefungsOrdnungOptionen.class);
@@ -678,7 +676,6 @@ public class DTOs {
              mapTablename2DTOClass.put("Schildintern_FaecherSortierung",DTOInternFaecherSortierung.class);
              mapTablename2DTOClass.put("Schildintern_FilterFehlendeEintraegeSchild3",DTOInternFilterFehlendeEintraegeSchild3.class);
              mapTablename2DTOClass.put("Schildintern_FilterFeldListe",DTOInternFilterFeldListe.class);
-             mapTablename2DTOClass.put("Schildintern_Laender",DTOInternLaender.class);
              mapTablename2DTOClass.put("Schildintern_PrfSemAbschl",DTOInternPrfSemesterAbschluss.class);
              mapTablename2DTOClass.put("Schildintern_PruefungsOrdnung",DTOInternPruefungsOrdnung.class);
              mapTablename2DTOClass.put("Schildintern_PruefOrd_Optionen",DTOInternPruefungsOrdnungOptionen.class);
