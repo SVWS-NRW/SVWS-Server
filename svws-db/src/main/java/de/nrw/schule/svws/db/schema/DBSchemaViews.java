@@ -38,7 +38,6 @@ public class DBSchemaViews {
 		add_Statkue_Herkunftsschulform();
 		add_Statkue_Herkunftsart();
 		add_Statkue_SVWS_Schulgliederungen();
-		add_Statkue_Nationalitaeten();
 		add_Statkue_SchuelerVerkehrssprache();
 		add_Statkue_ZulJahrgaenge();
 		add_Statkue_ZulKuArt();
@@ -353,27 +352,6 @@ public class DBSchemaViews {
 		 .add("geaendert", "Datum der letzten Änderung (hier zur Kompatibilität vorhanden)", "String", "NULL", null, false)
 		 .add("gueltigVon", "Gibt die Gültigkeit ab welchem Schuljahr an", "String", "jg.gueltigVon", null, false)
 		 .add("gueltigBis", "Gibt die Gültigkeit bis zu welchem Schuljahr an", "String", "jg.gueltigBis", null, false);
-		addView(view);		
-	}
-
-
-	private void add_Statkue_Nationalitaeten() {
-		View view = new View(
-				"Statkue_Nationalitaeten", "views.statkue", "DTOStatkueNationalitaeten", 
-				"View zur Simulation einer Statkue-Tabelle: Nationalitaeten",
-				0, null,
-                """
-                Nationalitaeten nat WHERE nat.gueltigBis IS NULL
-                """
-		).add("Schluessel", "Der Statisik-Schlüssel (DESTATIS)", "String", "nat.DEStatisCode", null, true)
-		 .add("Land", "Die Bezeichnung des Landes", "String", "nat.Bezeichnung", null, false)
-		 .add("Nationalitaet", "Die Bezeichnung der Staatsangehörigkeit", "String", "nat.Staatsangehoerigkeit", null, false)
-		 .add("Flag", "Simulation des Flags aus der Statkue", "String", "'1'", null, false)
-		 .add("geaendert", "Datum der letzten Änderung (hier zur Kompatibilität vorhanden)", "String", "NULL", null, false)
-		 .add("Beginn", "Beginn der Gültigkeit (hier zur Kompatibilität vorhanden)", "String", "NULL", null, false)
-		 .add("Ende", "Ende der Gültigkeit (hier zur Kompatibilität vorhanden)", "String", "NULL", null, false)
-		 .add("gueltigVon", "Gibt die Gültigkeit ab welchem Schuljahr an", "String", "nat.gueltigVon", null, false)
-		 .add("gueltigBis", "Gibt die Gültigkeit bis zu welchem Schuljahr an", "String", "nat.gueltigBis", null, false);
 		addView(view);		
 	}
 

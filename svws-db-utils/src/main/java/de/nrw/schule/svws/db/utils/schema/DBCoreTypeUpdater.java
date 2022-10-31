@@ -31,7 +31,6 @@ import de.nrw.schule.svws.core.data.schule.FoerderschwerpunktKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.HerkunftKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.HerkunftsartKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.HerkunftsartKatalogEintragBezeichnung;
-import de.nrw.schule.svws.core.data.schule.NationalitaetenKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.ReligionKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.SchulabschlussAllgemeinbildendKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.SchulabschlussBerufsbildendKatalogEintrag;
@@ -147,7 +146,6 @@ public class DBCoreTypeUpdater {
 		tables.add(new CoreTypeTable("Statkue_LehrerRechtsverhaeltnis", LehrerRechtsverhaeltnis.VERSION, updateLehrerRechtsverhaeltnisse));
 		tables.add(new CoreTypeTable("Statkue_LehrerZugang", LehrerZugangsgrund.VERSION, updateLehrerZugangsgruende));
 		tables.add(new CoreTypeTable("PersonalTypen", PersonalTyp.VERSION, updatePersonalTypen));
-		tables.add(new CoreTypeTable("Nationalitaeten", Nationalitaeten.VERSION, updateNationalitaeten));
 		tables.add(new CoreTypeTable("Nationalitaeten_Keys", Nationalitaeten.VERSION, updateNationalitaeten_Keys));
 		tables.add(new CoreTypeTable("Jahrgaenge", Jahrgaenge.VERSION, updateJahrgaenge));
 		tables.add(new CoreTypeTable("Jahrgaenge_Bezeichnungen", Jahrgaenge.VERSION, updateJahrgaengeBezeichnungen));
@@ -944,42 +942,6 @@ public class DBCoreTypeUpdater {
 			}
 		}
 		updateCoreTypeTabelle(tabname, LehrerZugangsgrund.class.getCanonicalName(), LehrerZugangsgrund.VERSION, sql.toString());
-	};
-	
-	
-	/**
-	 * Aktualisiert die Tabelle für den Core-Type Nationalitaeten 
-	 */
-	private Consumer<Logger> updateNationalitaeten = (Logger logger) -> {
-		String tabname = "Nationalitaeten";
-		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
-		StringBuilder sql = new StringBuilder();
-		sql.append("INSERT INTO ");
-		sql.append(tabname); 
-		sql.append("(ID, Iso3Code, Iso2Code, Iso3Numerisch, DEStatisCode, BezeichnungSuche, Bezeichnung, BezeichnungLang, Staatsangehoerigkeit, gueltigVon, gueltigBis) ");
-		Nationalitaeten[] values = Nationalitaeten.values();
-		boolean isFirst = true;
-		for (int i = 0; i < values.length; i++) {
-			Nationalitaeten nationalitaeten = values[i];
-			NationalitaetenKatalogEintrag nat = nationalitaeten.daten;
-			sql.append(isFirst ? "VALUES (" : ", (");
-			isFirst = false;
-			sql.append(nat.id).append(",");
-			sql.append("'").append(nat.iso3).append("'").append(",");
-			sql.append("'").append(nat.iso2).append("'").append(",");
-			if (nat.isoNumerisch == null)
-				sql.append("null,");
-			else
-				sql.append("'").append(nat.isoNumerisch).append("'").append(",");
-			sql.append("'").append(nat.codeDEStatis).append("'").append(",");
-			sql.append("'").append(nat.bezeichnungSuche).append("'").append(",");
-			sql.append("'").append(nat.bezeichnung).append("'").append(",");
-			sql.append("'").append(nat.bezeichnungLang).append("'").append(",");
-			sql.append("'").append(nat.staatsangehoerigkeit).append("'").append(",");
-			sql.append(nat.gueltigVon).append(",");
-			sql.append(nat.gueltigBis).append(")");
-		}
-		updateCoreTypeTabelle(tabname, Nationalitaeten.class.getCanonicalName(), Nationalitaeten.VERSION, sql.toString());
 	};
 	
 	

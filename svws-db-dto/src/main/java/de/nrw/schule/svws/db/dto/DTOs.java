@@ -203,7 +203,6 @@ import de.nrw.schule.svws.db.dto.current.schild.stundenplan.DTOStundenplanZeitra
 import de.nrw.schule.svws.db.dto.current.schueler.DTOSchuelerStatus;
 import de.nrw.schule.svws.db.dto.current.schule.DTOHerkunftKeys;
 import de.nrw.schule.svws.db.dto.current.schule.DTOHerkunftsartKeys;
-import de.nrw.schule.svws.db.dto.current.schule.DTONationalitaeten;
 import de.nrw.schule.svws.db.dto.current.schule.DTONationalitaetenKeys;
 import de.nrw.schule.svws.db.dto.current.schule.DTOReligion;
 import de.nrw.schule.svws.db.dto.current.schule.DTOReligionKeys;
@@ -256,7 +255,6 @@ import de.nrw.schule.svws.db.dto.current.views.statkue.DTOStatkueGliederung;
 import de.nrw.schule.svws.db.dto.current.views.statkue.DTOStatkueHerkunftsschulform;
 import de.nrw.schule.svws.db.dto.current.views.statkue.DTOStatkueHerkunftsart;
 import de.nrw.schule.svws.db.dto.current.views.statkue.DTOSVWSSchulgliederungen;
-import de.nrw.schule.svws.db.dto.current.views.statkue.DTOStatkueNationalitaeten;
 import de.nrw.schule.svws.db.dto.current.views.statkue.DTOStatkueSchuelerVerkehrssprache;
 import de.nrw.schule.svws.db.dto.current.views.statkue.DTOStatkueZulaessigerJahrgang;
 import de.nrw.schule.svws.db.dto.current.views.statkue.DTOStatkueZulaessigeKursart;
@@ -492,7 +490,6 @@ public class DTOs {
              mapDTOName2DTOClass.put(DTOSchuelerStatus.class.getSimpleName(),DTOSchuelerStatus.class);
              mapDTOName2DTOClass.put(DTOHerkunftKeys.class.getSimpleName(),DTOHerkunftKeys.class);
              mapDTOName2DTOClass.put(DTOHerkunftsartKeys.class.getSimpleName(),DTOHerkunftsartKeys.class);
-             mapDTOName2DTOClass.put(DTONationalitaeten.class.getSimpleName(),DTONationalitaeten.class);
              mapDTOName2DTOClass.put(DTONationalitaetenKeys.class.getSimpleName(),DTONationalitaetenKeys.class);
              mapDTOName2DTOClass.put(DTOReligion.class.getSimpleName(),DTOReligion.class);
              mapDTOName2DTOClass.put(DTOReligionKeys.class.getSimpleName(),DTOReligionKeys.class);
@@ -545,7 +542,6 @@ public class DTOs {
              mapDTOName2DTOClass.put(DTOStatkueHerkunftsschulform.class.getSimpleName(),DTOStatkueHerkunftsschulform.class);
              mapDTOName2DTOClass.put(DTOStatkueHerkunftsart.class.getSimpleName(),DTOStatkueHerkunftsart.class);
              mapDTOName2DTOClass.put(DTOSVWSSchulgliederungen.class.getSimpleName(),DTOSVWSSchulgliederungen.class);
-             mapDTOName2DTOClass.put(DTOStatkueNationalitaeten.class.getSimpleName(),DTOStatkueNationalitaeten.class);
              mapDTOName2DTOClass.put(DTOStatkueSchuelerVerkehrssprache.class.getSimpleName(),DTOStatkueSchuelerVerkehrssprache.class);
              mapDTOName2DTOClass.put(DTOStatkueZulaessigerJahrgang.class.getSimpleName(),DTOStatkueZulaessigerJahrgang.class);
              mapDTOName2DTOClass.put(DTOStatkueZulaessigeKursart.class.getSimpleName(),DTOStatkueZulaessigeKursart.class);
@@ -784,7 +780,6 @@ public class DTOs {
              mapTablename2DTOClass.put("SchuelerStatus_Keys",DTOSchuelerStatus.class);
              mapTablename2DTOClass.put("Herkunft_Keys",DTOHerkunftKeys.class);
              mapTablename2DTOClass.put("Herkunftsart_Keys",DTOHerkunftsartKeys.class);
-             mapTablename2DTOClass.put("Nationalitaeten",DTONationalitaeten.class);
              mapTablename2DTOClass.put("Nationalitaeten_Keys",DTONationalitaetenKeys.class);
              mapTablename2DTOClass.put("Religionen",DTOReligion.class);
              mapTablename2DTOClass.put("Religionen_Keys",DTOReligionKeys.class);
@@ -837,7 +832,6 @@ public class DTOs {
              mapTablename2DTOClass.put("Statkue_Herkunftsschulform",DTOStatkueHerkunftsschulform.class);
              mapTablename2DTOClass.put("Statkue_Herkunftsart",DTOStatkueHerkunftsart.class);
              mapTablename2DTOClass.put("Statkue_SVWS_Schulgliederungen",DTOSVWSSchulgliederungen.class);
-             mapTablename2DTOClass.put("Statkue_Nationalitaeten",DTOStatkueNationalitaeten.class);
              mapTablename2DTOClass.put("Statkue_SchuelerVerkehrssprache",DTOStatkueSchuelerVerkehrssprache.class);
              mapTablename2DTOClass.put("Statkue_ZulJahrgaenge",DTOStatkueZulaessigerJahrgang.class);
              mapTablename2DTOClass.put("Statkue_ZulKuArt",DTOStatkueZulaessigeKursart.class);

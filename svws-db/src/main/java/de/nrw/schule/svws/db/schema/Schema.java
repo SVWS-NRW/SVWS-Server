@@ -318,9 +318,6 @@ public class Schema {
 	/** Tabelle CredentialsLernplattformen */
 	public static final Tabelle_CredentialsLernplattformen tab_CredentialsLernplattformen = add(new Tabelle_CredentialsLernplattformen());
 
-	/** Tabelle Nationalitaeten */
-	public static final Tabelle_Nationalitaeten tab_Nationalitaeten = add(new Tabelle_Nationalitaeten());
-
 	/** Tabelle Nationalitaeten_Keys */
 	public static final Tabelle_Nationalitaeten_Keys tab_Nationalitaeten_Keys = add(new Tabelle_Nationalitaeten_Keys());
 
