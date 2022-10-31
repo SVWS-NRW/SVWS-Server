@@ -164,10 +164,6 @@
         <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAlleJahrgaengeBezeichnungen</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAlleJahrgaengeKeys</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAlleSchulformen</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAlleSchulgliederungen</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAlleSchulgliederungenAbschluesseAllgmeinbildend</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAlleSchulgliederungenAbschluesseBerufsbildend</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAlleSchulgliederungenSchulformen</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAllgemeineMerkmaleKatalog</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAllgemeineMerkmaleKatalogKeys</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAllgemeineMerkmaleKatalogSchulformen</class>
@@ -387,10 +383,6 @@
         <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOAlleJahrgaengeBezeichnungen</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOAlleJahrgaengeKeys</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOAlleSchulformen</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOAlleSchulgliederungen</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOAlleSchulgliederungenAbschluesseAllgmeinbildend</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOAlleSchulgliederungenAbschluesseBerufsbildend</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOAlleSchulgliederungenSchulformen</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOAllgemeineMerkmaleKatalog</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOAllgemeineMerkmaleKatalogKeys</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.schule.DTOAllgemeineMerkmaleKatalogSchulformen</class>
@@ -477,10 +469,8 @@
         <class>de.nrw.schule.svws.db.dto.current.views.schildintern.DTOSchildInternNote</class>
         <class>de.nrw.schule.svws.db.dto.current.views.schulver.DTOSchulverSchulformen</class>
         <class>de.nrw.schule.svws.db.dto.current.views.statkue.DTOStatkueSchulformen</class>
-        <class>de.nrw.schule.svws.db.dto.current.views.statkue.DTOStatkueGliederung</class>
         <class>de.nrw.schule.svws.db.dto.current.views.statkue.DTOStatkueHerkunftsschulform</class>
         <class>de.nrw.schule.svws.db.dto.current.views.statkue.DTOStatkueHerkunftsart</class>
-        <class>de.nrw.schule.svws.db.dto.current.views.statkue.DTOSVWSSchulgliederungen</class>
         <class>de.nrw.schule.svws.db.dto.current.views.statkue.DTOStatkueZulaessigerJahrgang</class>
         <class>de.nrw.schule.svws.db.dto.current.views.statkue.DTOStatkueZulaessigeKursart</class>
         <class>de.nrw.schule.svws.db.dto.current.views.statkue.DTOStatkueZulaessigesFach</class>
@@ -644,10 +634,6 @@
         <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOAlleJahrgaengeBezeichnungen</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOAlleJahrgaengeKeys</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOAlleSchulformen</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOAlleSchulgliederungen</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOAlleSchulgliederungenAbschluesseAllgmeinbildend</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOAlleSchulgliederungenAbschluesseBerufsbildend</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOAlleSchulgliederungenSchulformen</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOAllgemeineMerkmaleKatalog</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOAllgemeineMerkmaleKatalogKeys</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.schule.Rev8DTOAllgemeineMerkmaleKatalogSchulformen</class>
@@ -734,10 +720,8 @@
         <class>de.nrw.schule.svws.db.dto.rev8.views.schildintern.Rev8DTOSchildInternNote</class>
         <class>de.nrw.schule.svws.db.dto.rev8.views.schulver.Rev8DTOSchulverSchulformen</class>
         <class>de.nrw.schule.svws.db.dto.rev8.views.statkue.Rev8DTOStatkueSchulformen</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.views.statkue.Rev8DTOStatkueGliederung</class>
         <class>de.nrw.schule.svws.db.dto.rev8.views.statkue.Rev8DTOStatkueHerkunftsschulform</class>
         <class>de.nrw.schule.svws.db.dto.rev8.views.statkue.Rev8DTOStatkueHerkunftsart</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.views.statkue.Rev8DTOSVWSSchulgliederungen</class>
         <class>de.nrw.schule.svws.db.dto.rev8.views.statkue.Rev8DTOStatkueZulaessigerJahrgang</class>
         <class>de.nrw.schule.svws.db.dto.rev8.views.statkue.Rev8DTOStatkueZulaessigeKursart</class>
         <class>de.nrw.schule.svws.db.dto.rev8.views.statkue.Rev8DTOStatkueZulaessigesFach</class>

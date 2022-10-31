@@ -33,10 +33,8 @@ public class DBSchemaViews {
 		add_Schildintern_K_Schulnote();
 		add_Schulver_Schulformen();
 		add_Statkue_Schulformen();
-		add_Statkue_Gliederung();
 		add_Statkue_Herkunftsschulform();
 		add_Statkue_Herkunftsart();
-		add_Statkue_SVWS_Schulgliederungen();
 		add_Statkue_ZulJahrgaenge();
 		add_Statkue_ZulKuArt();
 		add_Statkue_ZulFaecher();
@@ -221,27 +219,6 @@ public class DBSchemaViews {
 		addView(view);
 	}
 
-	private void add_Statkue_Gliederung() {
-		View view = new View(
-				"Statkue_Gliederung", "views.statkue", "DTOStatkueGliederung", 
-				"View zur Simulation einer Statkue-Tabelle: Gliederung",
-				0, null,
-                """
-                Schulgliederungen sg
-                LEFT JOIN Schulgliederungen_Schulformen ssf on sg.ID = ssf.Schulgliederung_ID and sg.gueltigBis IS NULL
-                """
-		).add("SF", "Zulässige Schulform der Gliederung", "String", "ssf.Schulform_Kuerzel", null, true)
-		 .add("Flag", "Ein Flag (hier zur Kompatibilität vorhanden)", "String", "'1'", null, true)
-		 .add("BKAnlage", "Die Anlage bei einem Bildungsgang des Berufskollegs", "String", "CASE WHEN sg.BKAnlage IS NULL THEN substr(sg.Kuerzel,1,1) ELSE sg.BKAnlage END", null, true)
-		 .add("BKTyp", "Der Typ der Anlage bei einem Bildungsgang des Berufskollegs", "String", "CASE WHEN sg.BKTyp IS NULL THEN substr(sg.Kuerzel,2) ELSE sg.BKTyp END", null, true)
-		 .add("BKIndex", "Der Index in die Fachklassen-Tabelle einem Bildungsgang des Berufskollegs", "String", "sg.BKIndex", null, false)
-		 .add("Beschreibung", "Textuelle Beschreibung der Schulgliederung", "String", "sg.Bezeichnung", null, false)
-		 .add("geaendert", "Das Datum der letzten Änderung (hier zur Kompatibilität vorhanden)", "String", "NULL", null, false)
-		 .add("gueltigVon", "Gibt die Gültigkeit ab welchem Schuljahr an", "String", "sg.gueltigVon", null, false)
-		 .add("gueltigBis", "Gibt die Gültigkeit bis zu welchem Schuljahr an", "String", "sg.gueltigBis", null, false);
-		addView(view);
-	}
-	
 	private void add_Statkue_Herkunftsschulform() {
 		View view = new View(
 				"Statkue_Herkunftsschulform", "views.statkue", "DTOStatkueHerkunftsschulform", 
@@ -280,36 +257,6 @@ public class DBSchemaViews {
 		 .add("gueltigBis", "Gibt die Gültigkeit bis zu welchem Schuljahr an", "String", "h.gueltigBis", null, false);
 		addView(view);
 	}
-
-	private void add_Statkue_SVWS_Schulgliederungen() {
-		View view = new View(
-				"Statkue_SVWS_Schulgliederungen", "views.statkue", "DTOSVWSSchulgliederungen", 
-				"View zur Simulation einer Statkue-Tabelle: SVWS_Schulgliederungen",
-				0, null,
-                """
-                Schulgliederungen sg
-                LEFT JOIN (SELECT ssf.Schulgliederung_ID, group_concat(ssf.Schulform_Kuerzel) AS sf FROM Schulgliederungen_Schulformen ssf GROUP BY ssf.Schulgliederung_ID) sf 
-                    ON sg.ID = sf.Schulgliederung_ID and sg.gueltigBis IS NULL
-                LEFT JOIN (SELECT saa.Schulgliederung_ID, group_concat(saa.Abschluss_Kuerzel) AS aa FROM Schulgliederungen_Abschluesse_Allgemeinbildend saa GROUP BY saa.Schulgliederung_ID) aa 
-                    ON sg.ID = aa.Schulgliederung_ID and sg.gueltigBis IS NULL
-                LEFT JOIN (SELECT sab.Schulgliederung_ID, group_concat(sab.Abschluss_Kuerzel) AS ab FROM Schulgliederungen_Abschluesse_Berufsbildend sab GROUP BY sab.Schulgliederung_ID) ab 
-                    ON sg.ID = ab.Schulgliederung_ID and sg.gueltigBis IS NULL
-                """
-		).add("SGL", "Das dreistellige Kürzel der Schulgliederung bzw. des Bildungsganges", "String", "sg.Kuerzel", null, true)
-		 .add("istBK", "Boolscher Wert ob es sich um eine Schulgliederung einer BK-Anlage handelt", "Boolean", "sg.IstBKBildungsgang", "Boolean01Converter", false)
-		 .add("Schulformen", "Eine Komma-separierte Liste der Schulform-Kürzel, bei denen der Bildungsgang vorhanden ist", "String", "sf.sf", null, false)
-		 .add("istAuslaufend", "Boolscher Wert, ob es sich um eine auslaufende Schulgliederung handelt", "Boolean", "sg.IstAuslaufend", "Boolean01Converter", false)
-		 .add("istAusgelaufen", "Boolscher Wert, ob die Schulgliederung bereits ausgelaufen ist", "Boolean", "sg.IstAusgelaufen", "Boolean01Converter", false)
-		 .add("Beschreibung", "Textuelle Beschreibung der Schulgliederung", "String", "sg.Bezeichnung", null, false)
-		 .add("BKAnlage", "Die Anlage bei einem Bildungsgang des Berufskollegs", "String", "sg.BKAnlage", null, false)
-		 .add("BKTyp", "Der Typ der Anlage bei einem Bildungsgang des Berufskollegs", "String", "sg.BKTyp", null, false)
-		 .add("BKIndex", "Der Index in die Fachklassen-Tabelle einem Bildungsgang des Berufskollegs", "String", "sg.BKIndex", null, false)
-		 .add("istVZ", "Boolscher Wert, ob ein Bildungsgang des Berufskollegs Vollzeit erfordert", "Boolean", "sg.IstVZ", "Boolean01Converter", false)
-		 .add("BKAbschlussBeruf", "Eine Komma-separierte Liste der Kürzel der möglichen berufsbildenden Abschlüsse bei einem Bildungsgang des Berufskollegs", "String", "ab.ab", null, false)
-		 .add("BKAbschlussAllg", "Eine Komma-separierte Liste der Kürzel der möglichen allgemeinbildenden Abschlüsse bei einem Bildungsgang des Berufskollegs", "String", "aa.aa", null, false);
-		addView(view);
-	}
-
 
 	private void add_Statkue_ZulJahrgaenge() {
 		View view = new View(

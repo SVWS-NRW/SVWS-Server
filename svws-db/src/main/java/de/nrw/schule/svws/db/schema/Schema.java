@@ -429,18 +429,6 @@ public class Schema {
 	/** Tabelle Schulformen */
 	public static final Tabelle_Schulformen tab_Schulformen = add(new Tabelle_Schulformen());
 
-	/** Tabelle Schulgliederungen */
-	public static final Tabelle_Schulgliederungen tab_Schulgliederungen = add(new Tabelle_Schulgliederungen());
-
-	/** Tabelle Schulgliederungen_Abschluesse_Allgemeinbildend */
-	public static final Tabelle_Schulgliederungen_Abschluesse_Allgemeinbildend tab_Schulgliederungen_Abschluesse_Allgemeinbildend = add(new Tabelle_Schulgliederungen_Abschluesse_Allgemeinbildend());
-
-	/** Tabelle Schulgliederungen_Abschluesse_Berufsbildend */
-	public static final Tabelle_Schulgliederungen_Abschluesse_Berufsbildend tab_Schulgliederungen_Abschluesse_Berufsbildend = add(new Tabelle_Schulgliederungen_Abschluesse_Berufsbildend());
-
-	/** Tabelle Schulgliederungen_Schulformen */
-	public static final Tabelle_Schulgliederungen_Schulformen tab_Schulgliederungen_Schulformen = add(new Tabelle_Schulgliederungen_Schulformen());
-
 	/** Tabelle Schuljahresabschnitte */
 	public static final Tabelle_Schuljahresabschnitte tab_Schuljahresabschnitte = add(new Tabelle_Schuljahresabschnitte());
 

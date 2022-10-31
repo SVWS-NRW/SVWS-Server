@@ -141,10 +141,6 @@ import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAlleJahrgae
 import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAlleJahrgaengeBezeichnungen;
 import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAlleJahrgaengeKeys;
 import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAlleSchulformen;
-import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAlleSchulgliederungen;
-import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAlleSchulgliederungenAbschluesseAllgmeinbildend;
-import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAlleSchulgliederungenAbschluesseBerufsbildend;
-import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAlleSchulgliederungenSchulformen;
 import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAllgemeineMerkmaleKatalog;
 import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAllgemeineMerkmaleKatalogKeys;
 import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAllgemeineMerkmaleKatalogSchulformen;
@@ -372,10 +368,6 @@ public class MigrationDTOs {
              mapDTOName2DTOClass.put(MigrationDTOAlleJahrgaengeBezeichnungen.class.getSimpleName(),MigrationDTOAlleJahrgaengeBezeichnungen.class);
              mapDTOName2DTOClass.put(MigrationDTOAlleJahrgaengeKeys.class.getSimpleName(),MigrationDTOAlleJahrgaengeKeys.class);
              mapDTOName2DTOClass.put(MigrationDTOAlleSchulformen.class.getSimpleName(),MigrationDTOAlleSchulformen.class);
-             mapDTOName2DTOClass.put(MigrationDTOAlleSchulgliederungen.class.getSimpleName(),MigrationDTOAlleSchulgliederungen.class);
-             mapDTOName2DTOClass.put(MigrationDTOAlleSchulgliederungenAbschluesseAllgmeinbildend.class.getSimpleName(),MigrationDTOAlleSchulgliederungenAbschluesseAllgmeinbildend.class);
-             mapDTOName2DTOClass.put(MigrationDTOAlleSchulgliederungenAbschluesseBerufsbildend.class.getSimpleName(),MigrationDTOAlleSchulgliederungenAbschluesseBerufsbildend.class);
-             mapDTOName2DTOClass.put(MigrationDTOAlleSchulgliederungenSchulformen.class.getSimpleName(),MigrationDTOAlleSchulgliederungenSchulformen.class);
              mapDTOName2DTOClass.put(MigrationDTOAllgemeineMerkmaleKatalog.class.getSimpleName(),MigrationDTOAllgemeineMerkmaleKatalog.class);
              mapDTOName2DTOClass.put(MigrationDTOAllgemeineMerkmaleKatalogKeys.class.getSimpleName(),MigrationDTOAllgemeineMerkmaleKatalogKeys.class);
              mapDTOName2DTOClass.put(MigrationDTOAllgemeineMerkmaleKatalogSchulformen.class.getSimpleName(),MigrationDTOAllgemeineMerkmaleKatalogSchulformen.class);
@@ -606,10 +598,6 @@ public class MigrationDTOs {
              mapTablename2DTOClass.put("Jahrgaenge_Bezeichnungen",MigrationDTOAlleJahrgaengeBezeichnungen.class);
              mapTablename2DTOClass.put("Jahrgaenge_Keys",MigrationDTOAlleJahrgaengeKeys.class);
              mapTablename2DTOClass.put("Schulformen",MigrationDTOAlleSchulformen.class);
-             mapTablename2DTOClass.put("Schulgliederungen",MigrationDTOAlleSchulgliederungen.class);
-             mapTablename2DTOClass.put("Schulgliederungen_Abschluesse_Allgemeinbildend",MigrationDTOAlleSchulgliederungenAbschluesseAllgmeinbildend.class);
-             mapTablename2DTOClass.put("Schulgliederungen_Abschluesse_Berufsbildend",MigrationDTOAlleSchulgliederungenAbschluesseBerufsbildend.class);
-             mapTablename2DTOClass.put("Schulgliederungen_Schulformen",MigrationDTOAlleSchulgliederungenSchulformen.class);
              mapTablename2DTOClass.put("AllgemeineMerkmaleKatalog",MigrationDTOAllgemeineMerkmaleKatalog.class);
              mapTablename2DTOClass.put("AllgemeineMerkmaleKatalog_Keys",MigrationDTOAllgemeineMerkmaleKatalogKeys.class);
              mapTablename2DTOClass.put("AllgemeineMerkmaleKatalog_Schulformen",MigrationDTOAllgemeineMerkmaleKatalogSchulformen.class);

@@ -1,5 +1,10 @@
 package de.nrw.schule.svws.db.schema.revisionen;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import de.nrw.schule.svws.core.types.schule.Schulgliederung;
 import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaRevisionUpdateSQL;
 import de.nrw.schule.svws.db.schema.SchemaRevisionen;
@@ -1403,17 +1408,16 @@ public class Revision1Updates extends SchemaRevisionUpdateSQL {
 			Schema.tab_Kurse
 		);
 		// TODO Prüfe
+		String alleSchulgliederungen = Arrays.stream(Schulgliederung.values())
+		        .map(sgl -> Arrays.stream(sgl.historie).toList()).flatMap(List::stream)
+		        .map(h -> h.kuerzel).distinct().collect(Collectors.joining("','", "('", "')"));
 		add("Überprüfung der Schulgliederung",
-			"""
-			UPDATE EigeneSchule_Jahrgaenge SET SGL = '***' WHERE SGL NOT IN (SELECT SGL FROM Statkue_SVWS_Schulgliederungen)
-			""",
+			"UPDATE EigeneSchule_Jahrgaenge SET SGL = '***' WHERE SGL NOT IN " + alleSchulgliederungen,
 			Schema.tab_EigeneSchule_Jahrgaenge
 		);
 		// TODO Prüfe
 		add("Überprüfung der Schulgliederung",
-			"""
-			UPDATE Schueler SET ASDSchulform = '***' WHERE ASDSchulform NOT IN (SELECT SGL FROM Statkue_SVWS_Schulgliederungen)
-			""",
+			"UPDATE Schueler SET ASDSchulform = '***' WHERE ASDSchulform NOT IN " + alleSchulgliederungen,
 			Schema.tab_Schueler
 		);
 		add("Anpassen des Fremdschlüssels für den Fremdschluessel von K_AllgAdresse auf die ID von K_AdressArt statt der Bezeichnung",
