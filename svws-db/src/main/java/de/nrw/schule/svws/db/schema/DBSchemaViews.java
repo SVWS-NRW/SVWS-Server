@@ -30,7 +30,6 @@ public class DBSchemaViews {
 	private DBSchemaViews() {
 		// Revision 0
 		add_Schildintern_Berufsebene();
-		add_Schildintern_Fachgruppen();
 		add_Schildintern_K_Schulnote();
 		add_Schulver_Schulformen();
 		add_Statkue_Foerderschwerpunkt();
@@ -155,27 +154,6 @@ public class DBSchemaViews {
 		 .add("gueltigBis", "Gibt das Schuljahr an, bis zu welchem die Berufsebene verwendet werden kann oder null, falls es keine Einschränkung gibt", "Integer", "gueltigBis", null, false);
 		addView(view);
 	}
-
-	private void add_Schildintern_Fachgruppen() {
-		View view = new View(
-				"Schildintern_Fachgruppen", "views.schildintern", "DTOSchildInternFachgruppen", 
-				"View zur Simulation einer Schildintern-Tabelle: Fächergruppen Schulformbezogen für Eintragungen bei den Unterrichtsfächern",
-				0, null,
-                """
-                Fachgruppen WHERE SchildFgID IS NOT NULL
-                """
-		).add("FG_ID", "Schild-ID der Fachgruppe", "Long", "SchildFgID", null, true)
-		 .add("FG_SF", "Schulformen der Fachgruppe", "String", "CONCAT('-', REPLACE(Schulformen,',','-'), '-')", null, false)
-		 .add("FG_Bezeichnung", "Bezeichnung der Fachgruppe", "String", "FG_Bezeichnung", null, false)
-		 .add("FG_Farbe", "Farbe der Fachgruppe (Deprecated)", "Long", "FarbeR * 65536 + FarbeG + 256 + FarbeB", null, false)
-		 .add("FG_Sortierung", "Standard-Sortierung der Fachgruppe (Deprecated)", "Integer", "Sortierung", null, false)
-		 .add("FG_Kuerzel", "Kürzel der Fachgruppe", "String", "FG_Kuerzel", null, false)
-		 .add("FG_Zeugnis", "Gibt an, ob die Fachgruppe für die Unterteilung auf Zeugnissen genutzt wird oder nicht", "Boolean", "CASE WHEN FuerZeugnis = 1 THEN '+' ELSE '-' END", "BooleanPlusMinusDefaultPlusConverter", false)
-		 .add("gueltigVon", "Gibt das Schuljahr an, ab dem die Fachgruppe verwendet werden kann oder null, falls es keine Einschränkung gibt", "Integer", "gueltigVon", null, false)
-		 .add("gueltigBis", "Gibt das Schuljahr an, bis zu welchem die Fachgruppe verwendet werden kann oder null, falls es keine Einschränkung gibt", "Integer", "gueltigBis", null, false);
-		addView(view);
-	}
-
 
 	private void add_Schildintern_K_Schulnote() {
 		View view = new View(

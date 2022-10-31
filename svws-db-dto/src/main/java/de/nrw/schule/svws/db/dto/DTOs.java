@@ -250,7 +250,6 @@ import de.nrw.schule.svws.db.dto.current.svws.db.DTOCoreTypeVersion;
 import de.nrw.schule.svws.db.dto.current.svws.db.DTODBAutoInkremente;
 import de.nrw.schule.svws.db.dto.current.svws.db.DTODBVersion;
 import de.nrw.schule.svws.db.dto.current.views.schildintern.DTOSchildInternBerufsebenen;
-import de.nrw.schule.svws.db.dto.current.views.schildintern.DTOSchildInternFachgruppen;
 import de.nrw.schule.svws.db.dto.current.views.schildintern.DTOSchildInternNote;
 import de.nrw.schule.svws.db.dto.current.views.schulver.DTOSchulverSchulformen;
 import de.nrw.schule.svws.db.dto.current.views.statkue.DTOStatkueFoerderschwerpunkte;
@@ -543,7 +542,6 @@ public class DTOs {
              mapDTOName2DTOClass.put(DTODBAutoInkremente.class.getSimpleName(),DTODBAutoInkremente.class);
              mapDTOName2DTOClass.put(DTODBVersion.class.getSimpleName(),DTODBVersion.class);
              mapDTOName2DTOClass.put(DTOSchildInternBerufsebenen.class.getSimpleName(),DTOSchildInternBerufsebenen.class);
-             mapDTOName2DTOClass.put(DTOSchildInternFachgruppen.class.getSimpleName(),DTOSchildInternFachgruppen.class);
              mapDTOName2DTOClass.put(DTOSchildInternNote.class.getSimpleName(),DTOSchildInternNote.class);
              mapDTOName2DTOClass.put(DTOSchulverSchulformen.class.getSimpleName(),DTOSchulverSchulformen.class);
              mapDTOName2DTOClass.put(DTOStatkueFoerderschwerpunkte.class.getSimpleName(),DTOStatkueFoerderschwerpunkte.class);
@@ -839,7 +837,6 @@ public class DTOs {
              mapTablename2DTOClass.put("SVWS_DB_AutoInkremente",DTODBAutoInkremente.class);
              mapTablename2DTOClass.put("SVWS_DB_Version",DTODBVersion.class);
              mapTablename2DTOClass.put("Schildintern_Berufsebene",DTOSchildInternBerufsebenen.class);
-             mapTablename2DTOClass.put("Schildintern_Fachgruppen",DTOSchildInternFachgruppen.class);
              mapTablename2DTOClass.put("Schildintern_K_Schulnote",DTOSchildInternNote.class);
              mapTablename2DTOClass.put("Schulver_Schulformen",DTOSchulverSchulformen.class);
              mapTablename2DTOClass.put("Statkue_Foerderschwerpunkt",DTOStatkueFoerderschwerpunkte.class);
