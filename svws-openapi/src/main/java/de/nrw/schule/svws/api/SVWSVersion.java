@@ -24,7 +24,7 @@ public class SVWSVersion {
     public static String version() {
         if (_version == null) {
             Properties versionProperties = new Properties();
-            Path path = ResourceUtils.getFile("version.properties");
+            Path path = ResourceUtils.getFile("config/version.properties");
             try (InputStream is = Files.newInputStream(path)) {
                 versionProperties.load(is);
                 _version = versionProperties.getProperty("svws.version");

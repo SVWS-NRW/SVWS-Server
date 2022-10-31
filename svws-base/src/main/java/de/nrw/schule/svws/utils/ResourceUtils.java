@@ -25,8 +25,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * Eine Klasse mit Hilfsfunktionen zum Zugriff auf Java-Resourcen
  */
 public class ResourceUtils {
+
+    /** Eine Map für die bereits geöffneten Jar-Dateisysteme */
+    private static HashMap<String, FileSystem> jarFS = new HashMap<>();
 	
-	
+
 	/**
 	 * Ermittelt alle Dateien, die in dem angebenen Pfad path liegen und zu dem
 	 * Package mit dem Name packageName oder einem Sub-Package davon gehören
@@ -69,13 +72,20 @@ public class ResourceUtils {
 	 */
 	private static FileSystem getJARFileSystem(URI uri) {
 		String[] array = uri.toString().split("!");
+        FileSystem fs = jarFS.get(array[0]);
+        if (fs != null)
+            return fs;
 		try {
-			return FileSystems.getFileSystem(URI.create(array[0]));
+		    fs = FileSystems.getFileSystem(URI.create(array[0]));
+		    jarFS.put(array[0], fs);
+			return fs;
 		} catch (RuntimeException e) {
 			// try to create a new Filesystem...
 			Map<String, String> env = new HashMap<>();
 			try {
-				return FileSystems.newFileSystem(URI.create(array[0]), env);
+			    fs = FileSystems.newFileSystem(URI.create(array[0]), env);
+	            jarFS.put(array[0], fs);
+				return fs;
 			} catch (IOException exc) {
 				throw new RuntimeException(exc);
 			}
@@ -96,18 +106,15 @@ public class ResourceUtils {
             URL url = ResourceUtils.class.getClassLoader().getResource(filename);
             URI uri = url.toURI();
             if ("jar".equals(uri.getScheme())) {
-                try (FileSystem fs = getJARFileSystem(uri)) {
-                    String[] array = uri.toString().split("!");
-                    path = fs.getPath(array[1]);
-                }
+                FileSystem fs = getJARFileSystem(uri);
+                String[] array = uri.toString().split("!");
+                path = fs.getPath(array[1]);
             } else {
                 path = Paths.get(uri);
             }
         } catch (URISyntaxException e) {
             e.printStackTrace();
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }           
+        }
         return path;
 	}
 
@@ -137,14 +144,13 @@ public class ResourceUtils {
 				}
 				Path path = null;
 				if ("jar".equals(uri.getScheme())) {
-					try (FileSystem fs = getJARFileSystem(uri)) {
-						String[] array = uri.toString().split("!");
-						path = fs.getPath(array[1]);
-						int j = Paths.get(packagePath).getNameCount();
-						for (int i = 0; i < j; i++)
-							path = path.getParent();
-						result.addAll(getFilesInPath(fs, path.toString(), packagePath, fileextension));
-					}
+					FileSystem fs = getJARFileSystem(uri);
+					String[] array = uri.toString().split("!");
+					path = fs.getPath(array[1]);
+					int j = Paths.get(packagePath).getNameCount();
+					for (int i = 0; i < j; i++)
+						path = path.getParent();
+					result.addAll(getFilesInPath(fs, path.toString(), packagePath, fileextension));
 				} else {
 					path = Paths.get(uri);
 					int j = Paths.get(packagePath).getNameCount();
