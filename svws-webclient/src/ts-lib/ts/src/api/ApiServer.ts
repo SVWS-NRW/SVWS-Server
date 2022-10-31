@@ -42,6 +42,7 @@ import { GostJahrgangsdaten, cast_de_nrw_schule_svws_core_data_gost_GostJahrgang
 import { GostLeistungen, cast_de_nrw_schule_svws_core_data_gost_GostLeistungen } from '../core/data/gost/GostLeistungen';
 import { GostSchuelerFachwahl, cast_de_nrw_schule_svws_core_data_gost_GostSchuelerFachwahl } from '../core/data/gost/GostSchuelerFachwahl';
 import { GostStatistikFachwahl, cast_de_nrw_schule_svws_core_data_gost_GostStatistikFachwahl } from '../core/data/gost/GostStatistikFachwahl';
+import { HerkunftsschulnummerKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_HerkunftsschulnummerKatalogEintrag } from '../core/data/schule/HerkunftsschulnummerKatalogEintrag';
 import { JavaInteger, cast_java_lang_Integer } from '../java/lang/JavaInteger';
 import { JahrgangsDaten, cast_de_nrw_schule_svws_core_data_jahrgang_JahrgangsDaten } from '../core/data/jahrgang/JahrgangsDaten';
 import { JahrgangsKatalogEintrag, cast_de_nrw_schule_svws_core_data_jahrgang_JahrgangsKatalogEintrag } from '../core/data/jahrgang/JahrgangsKatalogEintrag';
@@ -4894,6 +4895,33 @@ export class ApiServer extends BaseApi {
 		const obj = JSON.parse(result);
 		let ret = new Vector<FoerderschwerpunktKatalogEintrag>();
 		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(FoerderschwerpunktKatalogEintrag.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getKatalogHerkunftsschulnummern für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/allgemein/herkunftsschulnummern
+	 * 
+	 * Die Liste der Einträge aus dem Katalog der zusätzlichen Herkunftsschulnummern. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Eine Liste von Katalog-Einträgen für den Katalog der zusätzlichen Herkunftsschulnummern
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<HerkunftsschulnummerKatalogEintrag>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
+	 *   Code 404: Keine Katalog-Einträge gefunden
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * 
+	 * @returns Eine Liste von Katalog-Einträgen für den Katalog der zusätzlichen Herkunftsschulnummern
+	 */
+	public async getKatalogHerkunftsschulnummern(schema : string) : Promise<List<HerkunftsschulnummerKatalogEintrag>> {
+		let path : string = "/db/{schema}/schule/allgemein/herkunftsschulnummern"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		let ret = new Vector<HerkunftsschulnummerKatalogEintrag>();
+		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(HerkunftsschulnummerKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 

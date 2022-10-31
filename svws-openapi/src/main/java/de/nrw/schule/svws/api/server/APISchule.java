@@ -11,6 +11,7 @@ import de.nrw.schule.svws.core.data.schule.BerufskollegFachklassenKatalog;
 import de.nrw.schule.svws.core.data.schule.EinschulungsartKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.FoerderschwerpunktEintrag;
 import de.nrw.schule.svws.core.data.schule.FoerderschwerpunktKatalogEintrag;
+import de.nrw.schule.svws.core.data.schule.HerkunftsschulnummerKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.NationalitaetenKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.OrganisationsformKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.PruefungsordnungKatalogEintrag;
@@ -37,6 +38,7 @@ import de.nrw.schule.svws.data.schule.DataKatalogBerufskollegBerufsebenen;
 import de.nrw.schule.svws.data.schule.DataKatalogBerufskollegFachklassen;
 import de.nrw.schule.svws.data.schule.DataKatalogEinschulungsarten;
 import de.nrw.schule.svws.data.schule.DataKatalogFoerderschwerpunkte;
+import de.nrw.schule.svws.data.schule.DataKatalogHerkunftsschulnummern;
 import de.nrw.schule.svws.data.schule.DataKatalogNationalitaeten;
 import de.nrw.schule.svws.data.schule.DataKatalogOrganisationsformen;
 import de.nrw.schule.svws.data.schule.DataKatalogPruefungsordnungen;
@@ -916,6 +918,29 @@ public class APISchule {
     public Response getKatalogSchuelerStatus(@PathParam("schema") String schema, @Context HttpServletRequest request) {
         try (Benutzer user = OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
             return (new DataSchuelerStatus()).getAll();
+        }
+    }
+
+    /**
+     * Die OpenAPI-Methode für die Abfrage des Kataloges der zusätzlichen Herkunftsschulnummern
+     *  
+     * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param request       die Informationen zur HTTP-Anfrage
+     * 
+     * @return der Katalog
+     */
+    @GET
+    @Path("/allgemein/herkunftsschulnummern")
+    @Operation(summary = "Die Liste der Einträge aus dem Katalog der zusätzlichen Herkunftsschulnummern.",
+               description = "Die Liste der Einträge aus dem Katalog der zusätzlichen Herkunftsschulnummern. "
+                           + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
+    @ApiResponse(responseCode = "200", description = "Eine Liste von Katalog-Einträgen für den Katalog der zusätzlichen Herkunftsschulnummern",
+                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = HerkunftsschulnummerKatalogEintrag.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
+    @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
+    public Response getKatalogHerkunftsschulnummern(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+        try (Benutzer user = OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
+            return (new DataKatalogHerkunftsschulnummern()).getAll();
         }
     }
 
