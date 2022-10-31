@@ -2507,6 +2507,36 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode updateGostBlockungsergebnisKursSchieneZuordnung für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \d+}/schiene/{schienenid: \d+}/kurs/{kursid: \d+}/zu/{schienenidneu: \d+}
+	 * 
+	 * Verschiebt einen Kurse zwischen zwei Schienen bei einem Blockungsergebnis einer Blockung der Gymnasialen Oberstufe.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Verschieben besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 204: Die Zuordnung wurde erfolgreich angelegt.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um den Kurs zu verschieben.
+	 *   Code 404: Kein geeignetes Zwischenergebnis, Schiene oder Kurs für die Zuordnung vorhanden
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} ergebnisid - der Pfad-Parameter ergebnisid
+	 * @param {number} schienenid - der Pfad-Parameter schienenid
+	 * @param {number} kursid - der Pfad-Parameter kursid
+	 * @param {number} schienenidneu - der Pfad-Parameter schienenidneu
+	 */
+	public async updateGostBlockungsergebnisKursSchieneZuordnung(schema : string, ergebnisid : number, schienenid : number, kursid : number, schienenidneu : number) : Promise<void> {
+		let path : string = "/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \d+}/schiene/{schienenid: \d+}/kurs/{kursid: \d+}/zu/{schienenidneu: \d+}"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema)
+				.replace(/{ergebnisid\s*(:[^}]+)?}/g, ergebnisid.toString())
+				.replace(/{schienenid\s*(:[^}]+)?}/g, schienenid.toString())
+				.replace(/{kursid\s*(:[^}]+)?}/g, kursid.toString())
+				.replace(/{schienenidneu\s*(:[^}]+)?}/g, schienenidneu.toString());
+		await super.postJSON(path, null);
+		return;
+	}
+
+
+	/**
 	 * Implementierung der POST-Methode createGostBlockungsergebnisKursSchuelerZuordnung für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \d+}/schueler/{schuelerid : \d+}/kurs/{kursid: \d+}
 	 * 
 	 * Erstellt eine Kurszuordnung zu einem Schüler bei einem Blockungsergebnis einer Blockung der Gymnasialen Oberstufe.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen der Zuordnung besitzt.
@@ -2556,6 +2586,36 @@ export class ApiServer extends BaseApi {
 				.replace(/{schuelerid\s*(:[^}]+)?}/g, schuelerid.toString())
 				.replace(/{kursid\s*(:[^}]+)?}/g, kursid.toString());
 		await super.deleteJSON(path, null);
+		return;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode updateGostBlockungsergebnisKursSchuelerZuordnung für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \d+}/schueler/{schuelerid : \d+}/kurs/{kursid: \d+}/zu/{kursidneu: \d+}
+	 * 
+	 * Verschiebt einen Schüler zwischen zwei Kursen bei einem Blockungsergebnis einer Blockung der Gymnasialen Oberstufe.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Verschieben besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 204: Die Zuordnung wurde erfolgreich angelegt.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um das Verschieben vorzunehmen.
+	 *   Code 404: Kein geeignetes Zwischenergebnis, Schüler oder Kurs für die Zuordnung vorhanden
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} ergebnisid - der Pfad-Parameter ergebnisid
+	 * @param {number} schuelerid - der Pfad-Parameter schuelerid
+	 * @param {number} kursid - der Pfad-Parameter kursid
+	 * @param {number} kursidneu - der Pfad-Parameter kursidneu
+	 */
+	public async updateGostBlockungsergebnisKursSchuelerZuordnung(schema : string, ergebnisid : number, schuelerid : number, kursid : number, kursidneu : number) : Promise<void> {
+		let path : string = "/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \d+}/schueler/{schuelerid : \d+}/kurs/{kursid: \d+}/zu/{kursidneu: \d+}"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema)
+				.replace(/{ergebnisid\s*(:[^}]+)?}/g, ergebnisid.toString())
+				.replace(/{schuelerid\s*(:[^}]+)?}/g, schuelerid.toString())
+				.replace(/{kursid\s*(:[^}]+)?}/g, kursid.toString())
+				.replace(/{kursidneu\s*(:[^}]+)?}/g, kursidneu.toString());
+		await super.postJSON(path, null);
 		return;
 	}
 

@@ -1528,6 +1528,40 @@ public class APIGost {
     		return (new DataGostBlockungsergebnisse(conn)).createKursSchuelerZuordnung(idErgebnis, idSchueler, idKurs);
     	}
     }
+
+    
+    /**
+     * Die OpenAPI-Methode für das Verschieben eines Schüler zwischen zwei Kursen bei einem Blockungsergebnis einer 
+     * Blockung der Gymnasialen Oberstufe.
+     *  
+     * @param schema       das Datenbankschema, in welchem die Blockung erstellt wird
+     * @param idErgebnis   die ID des Blockungsergebnisses
+     * @param idSchueler   die ID der Schiene der Blockung
+     * @param idKursAlt    die ID des Kurses der Blockung in Bezug auf die alte Zuordnung
+     * @param idKursNeu    die ID des Kurses der Blockung in Bezug auf die neue Zuordnung
+     * @param request      die Informationen zur HTTP-Anfrage
+     * 
+     * @return die HTTP-Antwort
+     */
+    @POST
+    @Path("/blockungen/zwischenergebnisse/{ergebnisid : \\d+}/schueler/{schuelerid : \\d+}/kurs/{kursid: \\d+}/zu/{kursidneu: \\d+}")
+    @Operation(summary = "Verschiebt einen Schüler zwischen zwei Kursen bei einem Blockungsergebnis einer Blockung der Gymnasialen Oberstufe.",
+    description = "Verschiebt einen Schüler zwischen zwei Kursen bei einem Blockungsergebnis einer Blockung der Gymnasialen Oberstufe."
+                + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Verschieben besitzt.")
+    @ApiResponse(responseCode = "204", description = "Die Zuordnung wurde erfolgreich angelegt.")
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um das Verschieben vorzunehmen.")
+    @ApiResponse(responseCode = "404", description = "Kein geeignetes Zwischenergebnis, Schüler oder Kurs für die Zuordnung vorhanden")
+    @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response updateGostBlockungsergebnisKursSchuelerZuordnung(
+            @PathParam("schema") String schema, @PathParam("ergebnisid") long idErgebnis, 
+            @PathParam("schuelerid") long idSchueler, @PathParam("kursid") long idKursAlt, @PathParam("kursidneu") long idKursNeu,
+            @Context HttpServletRequest request) {
+        // TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) {
+            return (new DataGostBlockungsergebnisse(conn)).updateKursSchuelerZuordnung(idErgebnis, idSchueler, idKursAlt, idKursNeu);
+        }
+    }
     
     
     /**
@@ -1590,6 +1624,40 @@ public class APIGost {
         // TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
         try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) {
             return (new DataGostBlockungsergebnisse(conn)).createKursSchieneZuordnung(idErgebnis, idSchiene, idKurs);
+        }
+    }
+    
+    
+    /**
+     * Die OpenAPI-Methode für das Verschieben eines Kurse von einer Schiene zu einer anderen Schiene 
+     * bei einem Blockungsergebnis einer Blockung der Gymnasialen Oberstufe.
+     *  
+     * @param schema         das Datenbankschema, in welchem die Blockung erstellt wird
+     * @param idErgebnis     die ID des Blockungsergebnisses
+     * @param idSchieneAlt   die ID der Schiene der Blockung in Bezug auf die alten Zuordnung
+     * @param idKurs         die ID des Kurses der Blockung
+     * @param idSchieneNeu   die ID der Schiene der Blockung in Bezug auf die neue Zuordnung
+     * @param request        die Informationen zur HTTP-Anfrage
+     * 
+     * @return die HTTP-Antwort
+     */
+    @POST
+    @Path("/blockungen/zwischenergebnisse/{ergebnisid : \\d+}/schiene/{schienenid: \\d+}/kurs/{kursid: \\d+}/zu/{schienenidneu: \\d+}")
+    @Operation(summary = "Verschiebt einen Kurse zwischen zwei Schienen bei einem Blockungsergebnis einer Blockung der Gymnasialen Oberstufe.",
+    description = "Verschiebt einen Kurse zwischen zwei Schienen bei einem Blockungsergebnis einer Blockung der Gymnasialen Oberstufe."
+                + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Verschieben besitzt.")
+    @ApiResponse(responseCode = "204", description = "Die Zuordnung wurde erfolgreich angelegt.")
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um den Kurs zu verschieben.")
+    @ApiResponse(responseCode = "404", description = "Kein geeignetes Zwischenergebnis, Schiene oder Kurs für die Zuordnung vorhanden")
+    @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response updateGostBlockungsergebnisKursSchieneZuordnung(
+            @PathParam("schema") String schema, @PathParam("ergebnisid") long idErgebnis, 
+            @PathParam("schienenid") long idSchieneAlt, @PathParam("kursid") long idKurs, @PathParam("schienenidneu") long idSchieneNeu, 
+            @Context HttpServletRequest request) {
+        // TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) {
+            return (new DataGostBlockungsergebnisse(conn)).updateKursSchieneZuordnung(idErgebnis, idKurs, idSchieneAlt, idSchieneNeu);
         }
     }
     
