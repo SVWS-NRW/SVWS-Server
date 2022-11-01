@@ -89,6 +89,7 @@ import { OrganisationsformKatalogEintrag, cast_de_nrw_schule_svws_core_data_schu
 import { OrtKatalogEintrag, cast_de_nrw_schule_svws_core_data_kataloge_OrtKatalogEintrag } from '../core/data/kataloge/OrtKatalogEintrag';
 import { OrtsteilKatalogEintrag, cast_de_nrw_schule_svws_core_data_kataloge_OrtsteilKatalogEintrag } from '../core/data/kataloge/OrtsteilKatalogEintrag';
 import { PruefungsordnungKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_PruefungsordnungKatalogEintrag } from '../core/data/schule/PruefungsordnungKatalogEintrag';
+import { ReformpaedagogikKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_ReformpaedagogikKatalogEintrag } from '../core/data/schule/ReformpaedagogikKatalogEintrag';
 import { ReligionEintrag, cast_de_nrw_schule_svws_core_data_schule_ReligionEintrag } from '../core/data/schule/ReligionEintrag';
 import { ReligionKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_ReligionKatalogEintrag } from '../core/data/schule/ReligionKatalogEintrag';
 import { Schild3KatalogEintragAbiturInfos, cast_de_nrw_schule_svws_core_data_schild3_Schild3KatalogEintragAbiturInfos } from '../core/data/schild3/Schild3KatalogEintragAbiturInfos';
@@ -5085,6 +5086,87 @@ export class ApiServer extends BaseApi {
 		const obj = JSON.parse(result);
 		let ret = new Vector<PruefungsordnungKatalogEintrag>();
 		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(PruefungsordnungKatalogEintrag.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getKatalogReformpaedagogik für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/allgemein/reformpaedagogik
+	 * 
+	 * Gibt den Reformpädagogik-Katalog für die Schulform dieser Schule zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Der Reformpädagogik-Katalog für die Schulform dieser Schule.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<ReformpaedagogikKatalogEintrag>
+	 *   Code 403: Der SVWS-Benutzer hat keine gültige Anmeldung.
+	 *   Code 404: Keine Reformpädagogik-Einträge für die Schulform dieser Schule gefunden.
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * 
+	 * @returns Der Reformpädagogik-Katalog für die Schulform dieser Schule.
+	 */
+	public async getKatalogReformpaedagogik(schema : string) : Promise<List<ReformpaedagogikKatalogEintrag>> {
+		let path : string = "/db/{schema}/schule/allgemein/reformpaedagogik"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		let ret = new Vector<ReformpaedagogikKatalogEintrag>();
+		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(ReformpaedagogikKatalogEintrag.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getKatalogReformpaedagogikEintrag für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/allgemein/reformpaedagogik/{id : \d+}
+	 * 
+	 * Gibt den Reformpädagogik-Katalog-Eintrag für die angegebene ID zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Der Reformpädagogik-Katalog-Eintrag für die angegebene ID.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: ReformpaedagogikKatalogEintrag
+	 *   Code 403: Der SVWS-Benutzer hat keine gültige Anmeldung.
+	 *   Code 404: Kein Reformpädagogik-Katalog-Eintrag für die angegebene ID gefunden.
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 * 
+	 * @returns Der Reformpädagogik-Katalog-Eintrag für die angegebene ID.
+	 */
+	public async getKatalogReformpaedagogikEintrag(schema : string, id : number) : Promise<ReformpaedagogikKatalogEintrag> {
+		let path : string = "/db/{schema}/schule/allgemein/reformpaedagogik/{id : \d+}"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema)
+				.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return ReformpaedagogikKatalogEintrag.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getKatalogReformpaedagogikAlle für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/allgemein/reformpaedagogik/alle
+	 * 
+	 * Gibt den Reformpädagogik-Katalog aller Schulformen zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Der Reformpädagogik-Katalog aller Schulformen.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<ReformpaedagogikKatalogEintrag>
+	 *   Code 403: Der SVWS-Benutzer hat keine gültige Anmeldung.
+	 *   Code 404: Keine Fachgruppen gefunden.
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * 
+	 * @returns Der Reformpädagogik-Katalog aller Schulformen.
+	 */
+	public async getKatalogReformpaedagogikAlle(schema : string) : Promise<List<ReformpaedagogikKatalogEintrag>> {
+		let path : string = "/db/{schema}/schule/allgemein/reformpaedagogik/alle"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		let ret = new Vector<ReformpaedagogikKatalogEintrag>();
+		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(ReformpaedagogikKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 

@@ -242,7 +242,7 @@ public class APIFaecher {
      * Die OpenAPI-Methode für die Abfrage des Katalog-Eintrags einer bilingualen Sprache für die angegebene ID.
      *  
      * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-     * @param id        die ID des Fachgruppen-Katalog-Eintrags
+     * @param id        die ID des Katalog-Eintrags der bilingualen Sprache
      * @param request   die Informationen zur HTTP-Anfrage
      * 
      * @return der Katalog-Eintrag einer bilingualen Sprache

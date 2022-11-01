@@ -15,6 +15,7 @@ import de.nrw.schule.svws.core.data.schule.HerkunftsschulnummerKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.NationalitaetenKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.OrganisationsformKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.PruefungsordnungKatalogEintrag;
+import de.nrw.schule.svws.core.data.schule.ReformpaedagogikKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.ReligionEintrag;
 import de.nrw.schule.svws.core.data.schule.ReligionKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.SchuelerstatusKatalogEintrag;
@@ -42,6 +43,7 @@ import de.nrw.schule.svws.data.schule.DataKatalogHerkunftsschulnummern;
 import de.nrw.schule.svws.data.schule.DataKatalogNationalitaeten;
 import de.nrw.schule.svws.data.schule.DataKatalogOrganisationsformen;
 import de.nrw.schule.svws.data.schule.DataKatalogPruefungsordnungen;
+import de.nrw.schule.svws.data.schule.DataKatalogReformpaedagogik;
 import de.nrw.schule.svws.data.schule.DataKatalogReligionen;
 import de.nrw.schule.svws.data.schule.DataKatalogSchulabschluesseAllgemeinbildend;
 import de.nrw.schule.svws.data.schule.DataKatalogSchulabschluesseBerufsbildend;
@@ -944,4 +946,75 @@ public class APISchule {
         }
     }
 
+
+    /**
+     * Die OpenAPI-Methode für die Abfrage des Reformpädagogik-Kataloges aller Schulformen.
+     *  
+     * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param request       die Informationen zur HTTP-Anfrage
+     * 
+     * @return der Reformpädagogik-Katalog aller Schulformen
+     */
+    @GET
+    @Path("/allgemein/reformpaedagogik/alle")
+    @Operation(summary = "Gibt den Reformpädagogik-Katalog aller Schulformen zurück.",
+               description = "Gibt den Reformpädagogik-Katalog aller Schulformen zurück. "
+                       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
+    @ApiResponse(responseCode = "200", description = "Der Reformpädagogik-Katalog aller Schulformen.",
+                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ReformpaedagogikKatalogEintrag.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine gültige Anmeldung.")
+    @ApiResponse(responseCode = "404", description = "Keine Fachgruppen gefunden.")
+    public Response getKatalogReformpaedagogikAlle(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
+            return (new DataKatalogReformpaedagogik(conn)).getAll();
+        }
+    }
+
+    /**
+     * Die OpenAPI-Methode für die Abfrage des Reformpädagogik-Kataloges für die Schulform dieser Schule.
+     *  
+     * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param request       die Informationen zur HTTP-Anfrage
+     * 
+     * @return die Liste mit den Einträgen des Reformpädagogik-Kataloges für die Schulform dieser Schule
+     */
+    @GET
+    @Path("/allgemein/reformpaedagogik")
+    @Operation(summary = "Gibt den Reformpädagogik-Katalog für die Schulform dieser Schule zurück.",
+               description = "Gibt den Reformpädagogik-Katalog für die Schulform dieser Schule zurück. "
+                       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
+    @ApiResponse(responseCode = "200", description = "Der Reformpädagogik-Katalog für die Schulform dieser Schule.",
+                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ReformpaedagogikKatalogEintrag.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine gültige Anmeldung.")
+    @ApiResponse(responseCode = "404", description = "Keine Reformpädagogik-Einträge für die Schulform dieser Schule gefunden.")
+    public Response getKatalogReformpaedagogik(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
+            return (new DataKatalogReformpaedagogik(conn)).getList();
+        }
+    }
+
+    /**
+     * Die OpenAPI-Methode für die Abfrage des Reformpädagogik-Katalog-Eintrags für die angegebene ID.
+     *  
+     * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param id        die ID des Reformpädagogik-Katalog-Eintrags
+     * @param request   die Informationen zur HTTP-Anfrage
+     * 
+     * @return der Reformpädagogik-Katalog-Eintrag
+     */
+    @GET
+    @Path("/allgemein/reformpaedagogik/{id : \\d+}")
+    @Operation(summary = "Gibt den Reformpädagogik-Katalog-Eintrag für die angegebene ID zurück.",
+               description = "Gibt den Reformpädagogik-Katalog-Eintrag für die angegebene ID zurück. "
+                       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
+    @ApiResponse(responseCode = "200", description = "Der Reformpädagogik-Katalog-Eintrag für die angegebene ID.",
+                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = ReformpaedagogikKatalogEintrag.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine gültige Anmeldung.")
+    @ApiResponse(responseCode = "404", description = "Kein Reformpädagogik-Katalog-Eintrag für die angegebene ID gefunden.")
+    public Response getKatalogReformpaedagogikEintrag(@PathParam("schema") String schema, @PathParam("id") long id, @Context HttpServletRequest request) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
+            return (new DataKatalogReformpaedagogik(conn)).get(id);
+        }
+    }
+    
 }

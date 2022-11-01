@@ -241,6 +241,7 @@ export { HerkunftsschulnummerKatalogEintrag } from './core/data/schule/Herkunfts
 export { NationalitaetenKatalogEintrag } from './core/data/schule/NationalitaetenKatalogEintrag';
 export { OrganisationsformKatalogEintrag } from './core/data/schule/OrganisationsformKatalogEintrag';
 export { PruefungsordnungKatalogEintrag } from './core/data/schule/PruefungsordnungKatalogEintrag';
+export { ReformpaedagogikKatalogEintrag } from './core/data/schule/ReformpaedagogikKatalogEintrag';
 export { ReligionEintrag } from './core/data/schule/ReligionEintrag';
 export { ReligionKatalogEintrag } from './core/data/schule/ReligionKatalogEintrag';
 export { SchuelerstatusKatalogEintrag } from './core/data/schule/SchuelerstatusKatalogEintrag';
@@ -386,6 +387,7 @@ export { BerufskollegOrganisationsformen } from './core/types/schule/Berufskolle
 export { Herkunftsschulnummern } from './core/types/schule/Herkunftsschulnummern';
 export { Nationalitaeten } from './core/types/schule/Nationalitaeten';
 export { Pruefungsordnung } from './core/types/schule/Pruefungsordnung';
+export { Reformpaedagogik } from './core/types/schule/Reformpaedagogik';
 export { Religion } from './core/types/schule/Religion';
 export { SchulabschlussAllgemeinbildend } from './core/types/schule/SchulabschlussAllgemeinbildend';
 export { SchulabschlussBerufsbildend } from './core/types/schule/SchulabschlussBerufsbildend';
