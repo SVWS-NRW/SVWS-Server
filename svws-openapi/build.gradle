@@ -67,7 +67,8 @@ task createVersionProperties() {
     }
 }
 
-compileJava.dependsOn createVersionProperties
+processResources.dependsOn createVersionProperties
+sourcesJar.dependsOn createVersionProperties
 
 publishing {
     repositories {
