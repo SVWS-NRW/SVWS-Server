@@ -1,5 +1,6 @@
 package de.nrw.schule.svws.core.types.schule;
 
+import java.util.Arrays;
 import java.util.HashMap;
 
 import de.nrw.schule.svws.core.data.schule.SchulstufeKatalogEintrag;
@@ -12,27 +13,56 @@ public enum Schulstufe {
 
     /** Die Vorschulstufe */
     VORSCHULSTUFE(new SchulstufeKatalogEintrag[] {
-        new SchulstufeKatalogEintrag(0, "V", "Vorschulstufe", null, null)
+        new SchulstufeKatalogEintrag(0, "V", "Vorschulstufe", Arrays.asList(
+                Schulform.S, Schulform.KS
+            ), null, null)
     }),
 
     /** Die Primarstufe */
     PRIMARSTUFE(new SchulstufeKatalogEintrag[] {
-        new SchulstufeKatalogEintrag(1000, "P", "Primarstufe", null, null)
+        new SchulstufeKatalogEintrag(1000, "P", "Primarstufe", Arrays.asList(
+                Schulform.FW, Schulform.HI, Schulform.WF,
+                Schulform.G, 
+                Schulform.PS, 
+                Schulform.R, 
+                Schulform.S, Schulform.KS, 
+                Schulform.V
+            ), null, null)
     }),
 
     /** Die Sekundarstufe I */
     SEKUNDARSTUFE_I(new SchulstufeKatalogEintrag[] {
-        new SchulstufeKatalogEintrag(2000, "SI", "Sekundarstufe I", null, null)
+        new SchulstufeKatalogEintrag(2000, "SI", "Sekundarstufe I", Arrays.asList(
+                Schulform.FW, Schulform.HI, Schulform.WF,
+                Schulform.PS, 
+                Schulform.S, Schulform.KS, 
+                Schulform.GE, 
+                Schulform.GM, 
+                Schulform.GY, 
+                Schulform.H, 
+                Schulform.R, 
+                Schulform.SG, 
+                Schulform.SK, 
+                Schulform.SR, 
+                Schulform.V
+            ), null, null)
     }),
 
     /** Die Sekundarstufe II */
     SEKUNDARSTUFE_II(new SchulstufeKatalogEintrag[] {
-        new SchulstufeKatalogEintrag(3000, "SII", "Sekundarstufe II", null, null)
+        new SchulstufeKatalogEintrag(3000, "SII", "Sekundarstufe II", Arrays.asList(
+                Schulform.FW, Schulform.HI, Schulform.WF,
+                Schulform.GE, 
+                Schulform.GM, 
+                Schulform.GY, 
+                Schulform.PS, 
+                Schulform.SG 
+            ),null, null)
     }),
 
     /** Die Tertiärstufe */
     TERTIAERSTUFE(new SchulstufeKatalogEintrag[] {
-        new SchulstufeKatalogEintrag(4000, "T", "Tertiärstufe", null, null)
+        new SchulstufeKatalogEintrag(4000, "T", "Tertiärstufe", Arrays.asList(), null, null)
     });
 
 

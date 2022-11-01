@@ -1,6 +1,8 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
 import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
+import { Schulform, cast_de_nrw_schule_svws_core_types_schule_Schulform } from '../../../core/types/schule/Schulform';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
+import { Arrays, cast_java_util_Arrays } from '../../../java/util/Arrays';
 import { SchulstufeKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_SchulstufeKatalogEintrag } from '../../../core/data/schule/SchulstufeKatalogEintrag';
 
 export class Schulstufe extends JavaObject {
@@ -17,15 +19,15 @@ export class Schulstufe extends JavaObject {
 	/** an array containing all values of this enumeration indexed by their name*/
 	private static readonly all_values_by_name : Map<String, Schulstufe> = new Map<String, Schulstufe>();
 
-	public static readonly VORSCHULSTUFE : Schulstufe = new Schulstufe("VORSCHULSTUFE", 0, [new SchulstufeKatalogEintrag(0, "V", "Vorschulstufe", null, null)]);
+	public static readonly VORSCHULSTUFE : Schulstufe = new Schulstufe("VORSCHULSTUFE", 0, [new SchulstufeKatalogEintrag(0, "V", "Vorschulstufe", Arrays.asList(Schulform.S, Schulform.KS), null, null)]);
 
-	public static readonly PRIMARSTUFE : Schulstufe = new Schulstufe("PRIMARSTUFE", 1, [new SchulstufeKatalogEintrag(1000, "P", "Primarstufe", null, null)]);
+	public static readonly PRIMARSTUFE : Schulstufe = new Schulstufe("PRIMARSTUFE", 1, [new SchulstufeKatalogEintrag(1000, "P", "Primarstufe", Arrays.asList(Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.PS, Schulform.R, Schulform.S, Schulform.KS, Schulform.V), null, null)]);
 
-	public static readonly SEKUNDARSTUFE_I : Schulstufe = new Schulstufe("SEKUNDARSTUFE_I", 2, [new SchulstufeKatalogEintrag(2000, "SI", "Sekundarstufe I", null, null)]);
+	public static readonly SEKUNDARSTUFE_I : Schulstufe = new Schulstufe("SEKUNDARSTUFE_I", 2, [new SchulstufeKatalogEintrag(2000, "SI", "Sekundarstufe I", Arrays.asList(Schulform.FW, Schulform.HI, Schulform.WF, Schulform.PS, Schulform.S, Schulform.KS, Schulform.GE, Schulform.GM, Schulform.GY, Schulform.H, Schulform.R, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V), null, null)]);
 
-	public static readonly SEKUNDARSTUFE_II : Schulstufe = new Schulstufe("SEKUNDARSTUFE_II", 3, [new SchulstufeKatalogEintrag(3000, "SII", "Sekundarstufe II", null, null)]);
+	public static readonly SEKUNDARSTUFE_II : Schulstufe = new Schulstufe("SEKUNDARSTUFE_II", 3, [new SchulstufeKatalogEintrag(3000, "SII", "Sekundarstufe II", Arrays.asList(Schulform.FW, Schulform.HI, Schulform.WF, Schulform.GE, Schulform.GM, Schulform.GY, Schulform.PS, Schulform.SG), null, null)]);
 
-	public static readonly TERTIAERSTUFE : Schulstufe = new Schulstufe("TERTIAERSTUFE", 4, [new SchulstufeKatalogEintrag(4000, "T", "Tertiärstufe", null, null)]);
+	public static readonly TERTIAERSTUFE : Schulstufe = new Schulstufe("TERTIAERSTUFE", 4, [new SchulstufeKatalogEintrag(4000, "T", "Tertiärstufe", Arrays.asList(), null, null)]);
 
 	public static VERSION : number = 1;
 
