@@ -26,9 +26,9 @@
           				<svws-ui-popover :hover="false" placement="left-end" :disable-click-away="false">
             				<template #trigger>
               					<button class="action-button">
-                					<Icon>
+                					<svws-ui-icon>
                   						<i-ri-more-2-fill />
-                					</Icon>
+                					</svws-ui-icon>
               					</button>
             				</template>
             				<template #content>
