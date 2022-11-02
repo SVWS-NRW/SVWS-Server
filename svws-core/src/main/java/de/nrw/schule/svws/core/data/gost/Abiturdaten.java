@@ -6,7 +6,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-import de.nrw.schule.svws.core.data.Sprachendaten;
+import de.nrw.schule.svws.core.data.schueler.Sprachendaten;
 import de.nrw.schule.svws.core.transpiler.TranspilerDTO;
 import de.nrw.schule.svws.core.types.gost.GostBesondereLernleistung;
 import de.nrw.schule.svws.core.types.gost.GostHalbjahr;

@@ -1,9 +1,9 @@
-package de.nrw.schule.svws.core.data;
+package de.nrw.schule.svws.core.data.schueler;
 
 import de.nrw.schule.svws.core.transpiler.TranspilerDTO;
 
 /**
- * Diese Klasse beinhaltet die Sprachbelegungsinformationen eines Schülers.
+ * Dieser Core-DTO beinhaltet die Sprachbelegungsinformationen eines Schülers.
  */
 @TranspilerDTO
 public class Sprachpruefung {

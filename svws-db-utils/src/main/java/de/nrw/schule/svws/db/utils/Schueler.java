@@ -2,9 +2,9 @@ package de.nrw.schule.svws.db.utils;
 
 import java.util.List;
 
-import de.nrw.schule.svws.core.data.Sprachbelegung;
-import de.nrw.schule.svws.core.data.Sprachendaten;
-import de.nrw.schule.svws.core.data.Sprachpruefung;
+import de.nrw.schule.svws.core.data.schueler.Sprachbelegung;
+import de.nrw.schule.svws.core.data.schueler.Sprachendaten;
+import de.nrw.schule.svws.core.data.schueler.Sprachpruefung;
 import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchuelerSprachenfolge;
 import de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchuelerSprachpruefungen;

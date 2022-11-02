@@ -1,11 +1,11 @@
-package de.nrw.schule.svws.core.data;
+package de.nrw.schule.svws.core.data.schueler;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import de.nrw.schule.svws.core.transpiler.TranspilerDTO;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Diese Klasse beinhaltet die Sprachbelegungsinformationen eines Schülers. 
+ * Dieser Core-DTO beinhaltet die Sprachbelegungsinformationen eines Schülers. 
  */
 @TranspilerDTO
 @JsonIgnoreProperties(ignoreUnknown = true)

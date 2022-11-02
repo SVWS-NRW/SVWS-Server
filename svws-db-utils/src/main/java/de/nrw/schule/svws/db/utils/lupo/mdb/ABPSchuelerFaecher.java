@@ -16,10 +16,10 @@ import com.healthmarketscience.jackcess.Table;
 import com.healthmarketscience.jackcess.TableBuilder;
 
 import de.nrw.schule.svws.core.SprachendatenManager;
-import de.nrw.schule.svws.core.data.Sprachbelegung;
 import de.nrw.schule.svws.core.data.gost.GostLeistungen;
 import de.nrw.schule.svws.core.data.gost.GostLeistungenFachbelegung;
 import de.nrw.schule.svws.core.data.gost.GostLeistungenFachwahl;
+import de.nrw.schule.svws.core.data.schueler.Sprachbelegung;
 import de.nrw.schule.svws.core.types.Note;
 import de.nrw.schule.svws.core.types.gost.GostAbiturFach;
 import de.nrw.schule.svws.core.types.gost.GostHalbjahr;

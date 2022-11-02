@@ -14,13 +14,13 @@ import com.healthmarketscience.jackcess.Database;
 import com.healthmarketscience.jackcess.DatabaseBuilder;
 import com.healthmarketscience.jackcess.DateTimeType;
 
-import de.nrw.schule.svws.core.data.Sprachbelegung;
-import de.nrw.schule.svws.core.data.Sprachendaten;
 import de.nrw.schule.svws.core.data.gost.AbiturFachbelegung;
 import de.nrw.schule.svws.core.data.gost.AbiturFachbelegungHalbjahr;
 import de.nrw.schule.svws.core.data.gost.Abiturdaten;
 import de.nrw.schule.svws.core.data.gost.GostFach;
 import de.nrw.schule.svws.core.data.gost.GostLeistungen;
+import de.nrw.schule.svws.core.data.schueler.Sprachbelegung;
+import de.nrw.schule.svws.core.data.schueler.Sprachendaten;
 import de.nrw.schule.svws.core.types.Note;
 import de.nrw.schule.svws.core.types.SchuelerStatus;
 import de.nrw.schule.svws.core.types.fach.ZulaessigesFach;

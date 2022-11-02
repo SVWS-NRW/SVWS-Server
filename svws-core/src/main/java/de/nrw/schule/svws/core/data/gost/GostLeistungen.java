@@ -3,8 +3,7 @@ package de.nrw.schule.svws.core.data.gost;
 import java.util.Vector;
 
 import jakarta.xml.bind.annotation.XmlRootElement;
-
-import de.nrw.schule.svws.core.data.Sprachendaten;
+import de.nrw.schule.svws.core.data.schueler.Sprachendaten;
 import de.nrw.schule.svws.core.transpiler.TranspilerDTO;
 import de.nrw.schule.svws.core.types.gost.GostHalbjahr;
 import io.swagger.v3.oas.annotations.media.ArraySchema;

@@ -7,11 +7,11 @@ import java.util.stream.Collectors;
 
 import de.nrw.schule.svws.core.SprachendatenManager;
 import de.nrw.schule.svws.core.abschluss.gost.GostFachManager;
-import de.nrw.schule.svws.core.data.Sprachendaten;
 import de.nrw.schule.svws.core.data.gost.GostFach;
 import de.nrw.schule.svws.core.data.gost.GostLeistungen;
 import de.nrw.schule.svws.core.data.gost.GostLeistungenFachbelegung;
 import de.nrw.schule.svws.core.data.gost.GostLeistungenFachwahl;
+import de.nrw.schule.svws.core.data.schueler.Sprachendaten;
 import de.nrw.schule.svws.core.types.gost.GostAbiturFach;
 import de.nrw.schule.svws.core.types.gost.GostHalbjahr;
 import de.nrw.schule.svws.core.types.gost.GostKursart;
