@@ -238,6 +238,7 @@ export { HerkunftSonstigeKatalogEintrag } from './core/data/schule/HerkunftSonst
 export { HerkunftsartKatalogEintrag } from './core/data/schule/HerkunftsartKatalogEintrag';
 export { HerkunftsartKatalogEintragBezeichnung } from './core/data/schule/HerkunftsartKatalogEintragBezeichnung';
 export { HerkunftsschulnummerKatalogEintrag } from './core/data/schule/HerkunftsschulnummerKatalogEintrag';
+export { KindergartenbesuchKatalogEintrag } from './core/data/schule/KindergartenbesuchKatalogEintrag';
 export { NationalitaetenKatalogEintrag } from './core/data/schule/NationalitaetenKatalogEintrag';
 export { OrganisationsformKatalogEintrag } from './core/data/schule/OrganisationsformKatalogEintrag';
 export { PruefungsordnungKatalogEintrag } from './core/data/schule/PruefungsordnungKatalogEintrag';
@@ -385,6 +386,7 @@ export { BerufskollegBerufsebene3 } from './core/types/schule/BerufskollegBerufs
 export { BerufskollegBildungsgangTyp } from './core/types/schule/BerufskollegBildungsgangTyp';
 export { BerufskollegOrganisationsformen } from './core/types/schule/BerufskollegOrganisationsformen';
 export { Herkunftsschulnummern } from './core/types/schule/Herkunftsschulnummern';
+export { Kindergartenbesuch } from './core/types/schule/Kindergartenbesuch';
 export { Nationalitaeten } from './core/types/schule/Nationalitaeten';
 export { Pruefungsordnung } from './core/types/schule/Pruefungsordnung';
 export { Reformpaedagogik } from './core/types/schule/Reformpaedagogik';
