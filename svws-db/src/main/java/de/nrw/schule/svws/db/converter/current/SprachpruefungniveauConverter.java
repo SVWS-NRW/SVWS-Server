@@ -20,7 +20,7 @@ public class SprachpruefungniveauConverter extends DBAttributeConverter<Sprachpr
 	
 	@Override
 	public Integer convertToDatabaseColumn(Sprachpruefungniveau attribute) {
-		return attribute.id;
+		return attribute.daten.id;
 	}
 
 	@Override

@@ -229,14 +229,14 @@ public class SprachendatenManager {
                 }
 
                 // Prüfe auf erfolgreiche HSU Prüfung auf HA10/MSA-Niveau
-                if (pruefung.istHSUPruefung && (pruefung.anspruchsniveauId == Sprachpruefungniveau.NIVEAU_HA10.id || pruefung.anspruchsniveauId == Sprachpruefungniveau.NIVEAU_MSA.id) && (pruefung.note != null) && (pruefung.note <= 4)) {
+                if (pruefung.istHSUPruefung && (pruefung.anspruchsniveauId == Sprachpruefungniveau.HA10.daten.id || pruefung.anspruchsniveauId == Sprachpruefungniveau.MSA.daten.id) && (pruefung.note != null) && (pruefung.note <= 4)) {
                     return true;
                 }
 
                 // Prüfe auf erfolgreiche Feststellungsprüfung auf HA10/MSA-Niveau
                 if (pruefung.istFeststellungspruefung  && (pruefung.note != null) && (pruefung.note <= 4)
-                    && ((pruefung.kannBelegungAlsFortgefuehrteSpracheErlauben && pruefung.anspruchsniveauId == Sprachpruefungniveau.NIVEAU_MSA.id)
-                         || ((pruefung.kannErstePflichtfremdspracheErsetzen || pruefung.kannZweitePflichtfremdspracheErsetzen || pruefung.kannWahlpflichtfremdspracheErsetzen) && (pruefung.anspruchsniveauId == Sprachpruefungniveau.NIVEAU_HA10.id || pruefung.anspruchsniveauId == Sprachpruefungniveau.NIVEAU_MSA.id)))) {
+                    && ((pruefung.kannBelegungAlsFortgefuehrteSpracheErlauben && pruefung.anspruchsniveauId == Sprachpruefungniveau.MSA.daten.id)
+                         || ((pruefung.kannErstePflichtfremdspracheErsetzen || pruefung.kannZweitePflichtfremdspracheErsetzen || pruefung.kannWahlpflichtfremdspracheErsetzen) && (pruefung.anspruchsniveauId == Sprachpruefungniveau.HA10.daten.id || pruefung.anspruchsniveauId == Sprachpruefungniveau.MSA.daten.id)))) {
                     return true;
                 }
             }
@@ -273,7 +273,7 @@ public class SprachendatenManager {
                 for (Sprachpruefung pruefung : pruefungen) {
 
                     // Prüfe auf erfolgreiche HSU Prüfung auf HA10/MSA-Niveau
-                    if (pruefung.istHSUPruefung && (pruefung.anspruchsniveauId == Sprachpruefungniveau.NIVEAU_HA10.id || pruefung.anspruchsniveauId == Sprachpruefungniveau.NIVEAU_MSA.id) && (pruefung.note != null) && (pruefung.note <= 4)) {
+                    if (pruefung.istHSUPruefung && (pruefung.anspruchsniveauId == Sprachpruefungniveau.HA10.daten.id || pruefung.anspruchsniveauId == Sprachpruefungniveau.MSA.daten.id) && (pruefung.note != null) && (pruefung.note <= 4)) {
 						if (!(pruefung.ersetzteSprache == null || pruefung.ersetzteSprache.equals(""))){
 							sprachen.add(pruefung.ersetzteSprache);
 						}
@@ -286,8 +286,8 @@ public class SprachendatenManager {
 
                     // Prüfe auf erfolgreiche Feststellungsprüfung auf HA10/MSA-Niveau
                     if (pruefung.istFeststellungspruefung  && (pruefung.note != null) && (pruefung.note <= 4)
-                        && ((pruefung.kannBelegungAlsFortgefuehrteSpracheErlauben && pruefung.anspruchsniveauId == Sprachpruefungniveau.NIVEAU_MSA.id)
-                        || ((pruefung.kannErstePflichtfremdspracheErsetzen || pruefung.kannZweitePflichtfremdspracheErsetzen || pruefung.kannWahlpflichtfremdspracheErsetzen) && (pruefung.anspruchsniveauId == Sprachpruefungniveau.NIVEAU_HA10.id || pruefung.anspruchsniveauId == Sprachpruefungniveau.NIVEAU_MSA.id)))) {
+                        && ((pruefung.kannBelegungAlsFortgefuehrteSpracheErlauben && pruefung.anspruchsniveauId == Sprachpruefungniveau.MSA.daten.id)
+                        || ((pruefung.kannErstePflichtfremdspracheErsetzen || pruefung.kannZweitePflichtfremdspracheErsetzen || pruefung.kannWahlpflichtfremdspracheErsetzen) && (pruefung.anspruchsniveauId == Sprachpruefungniveau.HA10.daten.id || pruefung.anspruchsniveauId == Sprachpruefungniveau.MSA.daten.id)))) {
 						if (!(pruefung.ersetzteSprache == null || pruefung.ersetzteSprache.equals(""))){
 							sprachen.add(pruefung.ersetzteSprache);
 						}
@@ -333,7 +333,7 @@ public class SprachendatenManager {
         if (pruefungen != null) {
             for (Sprachpruefung pruefung : pruefungen) {
                 // Prüfe auf erfolgreiche Feststellungsprüfung auf HA10/MSA-Niveau, die eine vierjährige Sprachen ersetzen kann
-                if (pruefung.istFeststellungspruefung && (pruefung.kannErstePflichtfremdspracheErsetzen || pruefung.kannZweitePflichtfremdspracheErsetzen || pruefung.kannWahlpflichtfremdspracheErsetzen) && (pruefung.anspruchsniveauId == Sprachpruefungniveau.NIVEAU_HA10.id || pruefung.anspruchsniveauId == Sprachpruefungniveau.NIVEAU_MSA.id) && (pruefung.note != null) && (pruefung.note <= 4)) {
+                if (pruefung.istFeststellungspruefung && (pruefung.kannErstePflichtfremdspracheErsetzen || pruefung.kannZweitePflichtfremdspracheErsetzen || pruefung.kannWahlpflichtfremdspracheErsetzen) && (pruefung.anspruchsniveauId == Sprachpruefungniveau.HA10.daten.id || pruefung.anspruchsniveauId == Sprachpruefungniveau.MSA.daten.id) && (pruefung.note != null) && (pruefung.note <= 4)) {
                     return true;
                 }
             }
@@ -373,7 +373,7 @@ public class SprachendatenManager {
             if (pruefungen != null) {
                 for (Sprachpruefung pruefung : pruefungen) {
                     // Prüfe auf erfolgreiche Feststellungsprüfung auf HA10/MSA-Niveau, die eine vierjährige Sprachen ersetzen kann
-                    if (pruefung.istFeststellungspruefung && (pruefung.kannErstePflichtfremdspracheErsetzen || pruefung.kannZweitePflichtfremdspracheErsetzen || pruefung.kannWahlpflichtfremdspracheErsetzen) && (pruefung.anspruchsniveauId == Sprachpruefungniveau.NIVEAU_HA10.id || pruefung.anspruchsniveauId == Sprachpruefungniveau.NIVEAU_MSA.id) && (pruefung.note != null) && (pruefung.note <= 4)) {
+                    if (pruefung.istFeststellungspruefung && (pruefung.kannErstePflichtfremdspracheErsetzen || pruefung.kannZweitePflichtfremdspracheErsetzen || pruefung.kannWahlpflichtfremdspracheErsetzen) && (pruefung.anspruchsniveauId == Sprachpruefungniveau.HA10.daten.id || pruefung.anspruchsniveauId == Sprachpruefungniveau.MSA.daten.id) && (pruefung.note != null) && (pruefung.note <= 4)) {
                         // Evtl. doppelte Eintragungen bei Belegung und Prüfung abfangen
                         if (!belegungen.get(0).sprache.equals(pruefung.sprache)) {
                             return true;
@@ -434,10 +434,10 @@ public class SprachendatenManager {
         if (pruefungen != null) {
             for (Sprachpruefung pruefungS1 : pruefungen) {
                 // Prüfe auf erfolgreiche Feststellungsprüfung auf HA10/MSA-Niveau
-                if (pruefungS1.istFeststellungspruefung && (pruefungS1.kannErstePflichtfremdspracheErsetzen || pruefungS1.kannZweitePflichtfremdspracheErsetzen || pruefungS1.kannWahlpflichtfremdspracheErsetzen) && (pruefungS1.anspruchsniveauId == Sprachpruefungniveau.NIVEAU_HA10.id || pruefungS1.anspruchsniveauId == Sprachpruefungniveau.NIVEAU_MSA.id) && (pruefungS1.note != null) && (pruefungS1.note <= 4)) {
+                if (pruefungS1.istFeststellungspruefung && (pruefungS1.kannErstePflichtfremdspracheErsetzen || pruefungS1.kannZweitePflichtfremdspracheErsetzen || pruefungS1.kannWahlpflichtfremdspracheErsetzen) && (pruefungS1.anspruchsniveauId == Sprachpruefungniveau.HA10.daten.id || pruefungS1.anspruchsniveauId == Sprachpruefungniveau.MSA.daten.id) && (pruefungS1.note != null) && (pruefungS1.note <= 4)) {
                     for (Sprachpruefung pruefungEF : pruefungen) {
                         // Prüfe auf erfolgreiche Feststellungsprüfung auf EF-Niveau zur gefundenen Prüfungssprache
-                        if (pruefungEF.istFeststellungspruefung && pruefungEF.ersetzteSprache.equals(pruefungS1.ersetzteSprache) && (pruefungEF.kannErstePflichtfremdspracheErsetzen || pruefungEF.kannZweitePflichtfremdspracheErsetzen || pruefungEF.kannWahlpflichtfremdspracheErsetzen) && pruefungEF.anspruchsniveauId == Sprachpruefungniveau.NIVEAU_EF.id && (pruefungEF.note != null) && (pruefungEF.note <= 4)) {
+                        if (pruefungEF.istFeststellungspruefung && pruefungEF.ersetzteSprache.equals(pruefungS1.ersetzteSprache) && (pruefungEF.kannErstePflichtfremdspracheErsetzen || pruefungEF.kannZweitePflichtfremdspracheErsetzen || pruefungEF.kannWahlpflichtfremdspracheErsetzen) && pruefungEF.anspruchsniveauId == Sprachpruefungniveau.EF.daten.id && (pruefungEF.note != null) && (pruefungEF.note <= 4)) {
                             return true;
                         }
                     }
@@ -467,7 +467,7 @@ public class SprachendatenManager {
         @NotNull Vector<@NotNull Sprachpruefung> pruefungen = sprachendaten.pruefungen;
         if (pruefungen != null) {
             for (Sprachpruefung pruefung : pruefungen) {
-                if (pruefung.istFeststellungspruefung && pruefung.kannErstePflichtfremdspracheErsetzen && (pruefung.anspruchsniveauId == Sprachpruefungniveau.NIVEAU_HA10.id || pruefung.anspruchsniveauId == Sprachpruefungniveau.NIVEAU_MSA.id) && (pruefung.note != null) && (pruefung.note <= 4)) {
+                if (pruefung.istFeststellungspruefung && pruefung.kannErstePflichtfremdspracheErsetzen && (pruefung.anspruchsniveauId == Sprachpruefungniveau.HA10.daten.id || pruefung.anspruchsniveauId == Sprachpruefungniveau.MSA.daten.id) && (pruefung.note != null) && (pruefung.note <= 4)) {
                     return pruefung.ersetzteSprache;
                 }
             }
@@ -508,10 +508,10 @@ public class SprachendatenManager {
         @NotNull Vector<@NotNull Sprachpruefung> pruefungen = sprachendaten.pruefungen;
         if (pruefungen != null) {
             for (Sprachpruefung pruefung : pruefungen) {
-                if (pruefung.istFeststellungspruefung && pruefung.kannErstePflichtfremdspracheErsetzen && (pruefung.anspruchsniveauId == Sprachpruefungniveau.NIVEAU_HA10.id || pruefung.anspruchsniveauId == Sprachpruefungniveau.NIVEAU_MSA.id) && (pruefung.note != null) && (pruefung.note <= 4)) {
+                if (pruefung.istFeststellungspruefung && pruefung.kannErstePflichtfremdspracheErsetzen && (pruefung.anspruchsniveauId == Sprachpruefungniveau.HA10.daten.id || pruefung.anspruchsniveauId == Sprachpruefungniveau.MSA.daten.id) && (pruefung.note != null) && (pruefung.note <= 4)) {
                     pruefungErsteSprache = pruefung.ersetzteSprache;
                 }
-                if (pruefung.istFeststellungspruefung && (pruefung.kannZweitePflichtfremdspracheErsetzen || pruefung.kannWahlpflichtfremdspracheErsetzen) && (pruefung.anspruchsniveauId == Sprachpruefungniveau.NIVEAU_HA10.id || pruefung.anspruchsniveauId == Sprachpruefungniveau.NIVEAU_MSA.id) && (pruefung.note != null) && (pruefung.note <= 4)) {
+                if (pruefung.istFeststellungspruefung && (pruefung.kannZweitePflichtfremdspracheErsetzen || pruefung.kannWahlpflichtfremdspracheErsetzen) && (pruefung.anspruchsniveauId == Sprachpruefungniveau.HA10.daten.id || pruefung.anspruchsniveauId == Sprachpruefungniveau.MSA.daten.id) && (pruefung.note != null) && (pruefung.note <= 4)) {
                     pruefungZweiteSprache = pruefung.ersetzteSprache;
                 }
             }

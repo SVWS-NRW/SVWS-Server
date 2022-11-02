@@ -1,5 +1,6 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
 import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
+import { SprachpruefungsniveauKatalogEintrag, cast_de_nrw_schule_svws_core_data_fach_SprachpruefungsniveauKatalogEintrag } from '../../../core/data/fach/SprachpruefungsniveauKatalogEintrag';
 import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 
@@ -17,78 +18,68 @@ export class Sprachpruefungniveau extends JavaObject {
 	/** an array containing all values of this enumeration indexed by their name*/
 	private static readonly all_values_by_name : Map<String, Sprachpruefungniveau> = new Map<String, Sprachpruefungniveau>();
 
-	public static readonly NIVEAU_HA9 : Sprachpruefungniveau = new Sprachpruefungniveau("NIVEAU_HA9", 0, 1, "NIVEAU_HA9", "Hauptschulabschluss nach Klasse 9", null, null);
+	public static readonly HA9 : Sprachpruefungniveau = new Sprachpruefungniveau("HA9", 0, [new SprachpruefungsniveauKatalogEintrag(1, "NIVEAU_HA9", "Hauptschulabschluss nach Klasse 9", null, null)]);
 
-	public static readonly NIVEAU_HA10 : Sprachpruefungniveau = new Sprachpruefungniveau("NIVEAU_HA10", 1, 2, "NIVEAU_HA10", "Hauptschulabschluss nach Klasse 10", null, null);
+	public static readonly HA10 : Sprachpruefungniveau = new Sprachpruefungniveau("HA10", 1, [new SprachpruefungsniveauKatalogEintrag(2, "NIVEAU_HA10", "Hauptschulabschluss nach Klasse 10", null, null)]);
 
-	public static readonly NIVEAU_MSA : Sprachpruefungniveau = new Sprachpruefungniveau("NIVEAU_MSA", 2, 3, "NIVEAU_MSA", "Mittlerer Schulabschluss (Fachoberschulreife) / Berechtigung zum Besuch der gymnasialen Oberstufe (Gymnasium G8 Klasse 9)", null, null);
+	public static readonly MSA : Sprachpruefungniveau = new Sprachpruefungniveau("MSA", 2, [new SprachpruefungsniveauKatalogEintrag(3, "NIVEAU_MSA", "Mittlerer Schulabschluss (Fachoberschulreife) / Berechtigung zum Besuch der gymnasialen Oberstufe (Gymnasium G8 Klasse 9)", null, null)]);
 
-	public static readonly NIVEAU_EF : Sprachpruefungniveau = new Sprachpruefungniveau("NIVEAU_EF", 3, 4, "NIVEAU_EF", "Ende der Einführungsphase der gymnasialen Oberstufe in einer fortgeführten Fremdsprache (Gymnasium und Gesamtschule)", null, null);
+	public static readonly EF : Sprachpruefungniveau = new Sprachpruefungniveau("EF", 3, [new SprachpruefungsniveauKatalogEintrag(4, "NIVEAU_EF", "Ende der Einführungsphase der gymnasialen Oberstufe in einer fortgeführten Fremdsprache (Gymnasium und Gesamtschule)", null, null)]);
 
-	public static readonly NIVEAU_FHR : Sprachpruefungniveau = new Sprachpruefungniveau("NIVEAU_FHR", 4, 5, "NIVEAU_FHR", "Fachhochschulreife (Abschluss an berufsbildenden Schulen)", null, null);
+	public static readonly FHR : Sprachpruefungniveau = new Sprachpruefungniveau("FHR", 4, [new SprachpruefungsniveauKatalogEintrag(5, "NIVEAU_FHR", "Fachhochschulreife (Abschluss an berufsbildenden Schulen)", null, null)]);
 
-	public static readonly NIVEAU_WBK_FF : Sprachpruefungniveau = new Sprachpruefungniveau("NIVEAU_WBK_FF", 5, 6, "NIVEAU_WBK_FF", "Fortgeführte Fremdsprache gemäß § 34 Abs. 4 APO-WbK (nur zweite Pflichtfremdsprache)", null, null);
+	public static readonly WBK_FF : Sprachpruefungniveau = new Sprachpruefungniveau("WBK_FF", 5, [new SprachpruefungsniveauKatalogEintrag(6, "NIVEAU_WBK_FF", "Fortgeführte Fremdsprache gemäß § 34 Abs. 4 APO-WbK (nur zweite Pflichtfremdsprache)", null, null)]);
 
-	private static _mapID : HashMap<Number, Sprachpruefungniveau> = new HashMap();
+	public static VERSION : number = 1;
 
-	private static _mapBezeichnung : HashMap<String, Sprachpruefungniveau> = new HashMap();
+	public readonly daten : SprachpruefungsniveauKatalogEintrag;
 
-	public readonly id : number;
+	public readonly historie : Array<SprachpruefungsniveauKatalogEintrag>;
 
-	public readonly bezeichnung : String;
+	private static readonly _mapID : HashMap<Number, Sprachpruefungniveau> = new HashMap();
 
-	public readonly beschreibung : String;
-
-	public readonly gueltigVon : Number | null;
-
-	public readonly gueltigBis : Number | null;
+	private static readonly _mapKuerzel : HashMap<String, Sprachpruefungniveau> = new HashMap();
 
 	/**
 	 * Erstellt ein neues Prüfungsniveau dieser Aufzählung.
 	 *
-	 * @param id            die ID des Prüfungsniveaus
-	 * @param bezeichnung   die Bezeichnung des Prüfungsniveaus
-	 * @param beschreibung  die Beschreibung des Prüfungsniveaus
-	 * @param gueltigVon	Schuljahr, ab dem das Niveau gültig ist
-	 * @param gueltigBis	Schuljahr, bis zu dem das Niveau gültig war
+	 * @param historie   die Historie des Sprachreferenzniveaus, welche ein Array von 
+	 *                   {@link SprachpruefungsniveauKatalogEintrag} ist  
 	 */
-	private constructor(name : string, ordinal : number, id : number, bezeichnung : String, beschreibung : String, gueltigVon : Number | null, gueltigBis : Number | null) {
+	private constructor(name : string, ordinal : number, historie : Array<SprachpruefungsniveauKatalogEintrag>) {
 		super();
 		this.__name = name;
 		this.__ordinal = ordinal;
 		Sprachpruefungniveau.all_values_by_ordinal.push(this);
 		Sprachpruefungniveau.all_values_by_name.set(name, this);
-		this.id = id;
-		this.bezeichnung = bezeichnung;
-		this.beschreibung = beschreibung;
-		this.gueltigVon = gueltigVon;
-		this.gueltigBis = gueltigBis;
+		this.historie = historie;
+		this.daten = historie[historie.length - 1];
 	}
 
 	/**
 	 * Gibt eine Map von den IDs der Sprachprüfungsniveaus auf die zugehörigen Sprachprüfungsniveaus
-	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
+	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
 	 *    
 	 * @return die Map von den IDs der Sprachprüfungsniveaus auf die zugehörigen Sprachprüfungsniveaus
 	 */
-	private static getMapSprachpruefungniveauByID() : HashMap<Number, Sprachpruefungniveau> {
+	private static getMapByID() : HashMap<Number, Sprachpruefungniveau> {
 		if (Sprachpruefungniveau._mapID.size() === 0) 
 			for (let l of Sprachpruefungniveau.values()) 
-				Sprachpruefungniveau._mapID.put(l.id, l);
+				Sprachpruefungniveau._mapID.put(l.daten.id, l);
 		return Sprachpruefungniveau._mapID;
 	}
 
 	/**
 	 * Gibt eine Map von den Bezeichnungen der Sprachprüfungsniveaus auf die zugehörigen Sprachprüfungsniveaus
-	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
+	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
 	 *    
 	 * @return die Map von den Bezeichnungen der Sprachprüfungsniveaus auf die zugehörigen Sprachprüfungsniveaus
 	 */
-	private static getMapSprachpruefungniveauByBezeichnung() : HashMap<String, Sprachpruefungniveau> {
-		if (Sprachpruefungniveau._mapBezeichnung.size() === 0) 
+	private static getMapByKuerzel() : HashMap<String, Sprachpruefungniveau> {
+		if (Sprachpruefungniveau._mapKuerzel.size() === 0) 
 			for (let l of Sprachpruefungniveau.values()) 
-				Sprachpruefungniveau._mapBezeichnung.put(l.bezeichnung, l);
-		return Sprachpruefungniveau._mapBezeichnung;
+				Sprachpruefungniveau._mapKuerzel.put(l.daten.kuerzel, l);
+		return Sprachpruefungniveau._mapKuerzel;
 	}
 
 	/**
@@ -99,18 +90,18 @@ export class Sprachpruefungniveau extends JavaObject {
 	 * @return das Prüfungsniveaus oder null, wenn die ID ungültig ist
 	 */
 	public static getByID(id : Number | null) : Sprachpruefungniveau | null {
-		return Sprachpruefungniveau.getMapSprachpruefungniveauByID().get(id);
+		return Sprachpruefungniveau.getMapByID().get(id);
 	}
 
 	/**
-	 * Gibt das Prüfungsniveau für die übergebene Bezeichnung zurück.
+	 * Gibt das Prüfungsniveau für das übergebene Kürzel zurück.
 	 * 
-	 * @param bezeichnung   die Bezeichnung des Prüfungsniveaus
+	 * @param kuerzel   das Kürzel des Prüfungsniveaus
 	 * 
-	 * @return das Prüfungsniveaus oder null, wenn die Bezeichnung ungültig ist
+	 * @return das Prüfungsniveaus oder null, wenn das Kürzel ungültig ist
 	 */
-	public static getByBezeichnung(bezeichnung : String | null) : Sprachpruefungniveau | null {
-		return Sprachpruefungniveau.getMapSprachpruefungniveauByBezeichnung().get(bezeichnung);
+	public static getByKuerzel(kuerzel : String | null) : Sprachpruefungniveau | null {
+		return Sprachpruefungniveau.getMapByKuerzel().get(kuerzel);
 	}
 
 	/**

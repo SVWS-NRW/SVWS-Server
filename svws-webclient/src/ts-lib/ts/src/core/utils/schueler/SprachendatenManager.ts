@@ -182,10 +182,10 @@ export class SprachendatenManager extends JavaObject {
 				if (!JavaObject.equalsTranspiler(sprache, (pruefung.sprache)) && !JavaObject.equalsTranspiler(sprache, (pruefung.ersetzteSprache))) {
 					continue;
 				}
-				if (pruefung.istHSUPruefung && (pruefung.anspruchsniveauId === Sprachpruefungniveau.NIVEAU_HA10.id || pruefung.anspruchsniveauId === Sprachpruefungniveau.NIVEAU_MSA.id) && (pruefung.note !== null) && (pruefung.note <= 4)) {
+				if (pruefung.istHSUPruefung && (pruefung.anspruchsniveauId === Sprachpruefungniveau.HA10.daten.id || pruefung.anspruchsniveauId === Sprachpruefungniveau.MSA.daten.id) && (pruefung.note !== null) && (pruefung.note <= 4)) {
 					return true;
 				}
-				if (pruefung.istFeststellungspruefung && (pruefung.note !== null) && (pruefung.note <= 4) && ((pruefung.kannBelegungAlsFortgefuehrteSpracheErlauben && pruefung.anspruchsniveauId === Sprachpruefungniveau.NIVEAU_MSA.id) || ((pruefung.kannErstePflichtfremdspracheErsetzen || pruefung.kannZweitePflichtfremdspracheErsetzen || pruefung.kannWahlpflichtfremdspracheErsetzen) && (pruefung.anspruchsniveauId === Sprachpruefungniveau.NIVEAU_HA10.id || pruefung.anspruchsniveauId === Sprachpruefungniveau.NIVEAU_MSA.id)))) {
+				if (pruefung.istFeststellungspruefung && (pruefung.note !== null) && (pruefung.note <= 4) && ((pruefung.kannBelegungAlsFortgefuehrteSpracheErlauben && pruefung.anspruchsniveauId === Sprachpruefungniveau.MSA.daten.id) || ((pruefung.kannErstePflichtfremdspracheErsetzen || pruefung.kannZweitePflichtfremdspracheErsetzen || pruefung.kannWahlpflichtfremdspracheErsetzen) && (pruefung.anspruchsniveauId === Sprachpruefungniveau.HA10.daten.id || pruefung.anspruchsniveauId === Sprachpruefungniveau.MSA.daten.id)))) {
 					return true;
 				}
 			}
@@ -211,7 +211,7 @@ export class SprachendatenManager extends JavaObject {
 			let pruefungen : Vector<Sprachpruefung> = sprachendaten.pruefungen;
 			if (pruefungen !== null) {
 				for (let pruefung of pruefungen) {
-					if (pruefung.istHSUPruefung && (pruefung.anspruchsniveauId === Sprachpruefungniveau.NIVEAU_HA10.id || pruefung.anspruchsniveauId === Sprachpruefungniveau.NIVEAU_MSA.id) && (pruefung.note !== null) && (pruefung.note <= 4)) {
+					if (pruefung.istHSUPruefung && (pruefung.anspruchsniveauId === Sprachpruefungniveau.HA10.daten.id || pruefung.anspruchsniveauId === Sprachpruefungniveau.MSA.daten.id) && (pruefung.note !== null) && (pruefung.note <= 4)) {
 						if (!(pruefung.ersetzteSprache === null || JavaObject.equalsTranspiler(pruefung.ersetzteSprache, ("")))) {
 							sprachen.add(pruefung.ersetzteSprache);
 						} else {
@@ -220,7 +220,7 @@ export class SprachendatenManager extends JavaObject {
 							}
 						}
 					}
-					if (pruefung.istFeststellungspruefung && (pruefung.note !== null) && (pruefung.note <= 4) && ((pruefung.kannBelegungAlsFortgefuehrteSpracheErlauben && pruefung.anspruchsniveauId === Sprachpruefungniveau.NIVEAU_MSA.id) || ((pruefung.kannErstePflichtfremdspracheErsetzen || pruefung.kannZweitePflichtfremdspracheErsetzen || pruefung.kannWahlpflichtfremdspracheErsetzen) && (pruefung.anspruchsniveauId === Sprachpruefungniveau.NIVEAU_HA10.id || pruefung.anspruchsniveauId === Sprachpruefungniveau.NIVEAU_MSA.id)))) {
+					if (pruefung.istFeststellungspruefung && (pruefung.note !== null) && (pruefung.note <= 4) && ((pruefung.kannBelegungAlsFortgefuehrteSpracheErlauben && pruefung.anspruchsniveauId === Sprachpruefungniveau.MSA.daten.id) || ((pruefung.kannErstePflichtfremdspracheErsetzen || pruefung.kannZweitePflichtfremdspracheErsetzen || pruefung.kannWahlpflichtfremdspracheErsetzen) && (pruefung.anspruchsniveauId === Sprachpruefungniveau.HA10.daten.id || pruefung.anspruchsniveauId === Sprachpruefungniveau.MSA.daten.id)))) {
 						if (!(pruefung.ersetzteSprache === null || JavaObject.equalsTranspiler(pruefung.ersetzteSprache, ("")))) {
 							sprachen.add(pruefung.ersetzteSprache);
 						} else {
@@ -255,7 +255,7 @@ export class SprachendatenManager extends JavaObject {
 		let pruefungen : Vector<Sprachpruefung> = sprachendaten.pruefungen;
 		if (pruefungen !== null) {
 			for (let pruefung of pruefungen) {
-				if (pruefung.istFeststellungspruefung && (pruefung.kannErstePflichtfremdspracheErsetzen || pruefung.kannZweitePflichtfremdspracheErsetzen || pruefung.kannWahlpflichtfremdspracheErsetzen) && (pruefung.anspruchsniveauId === Sprachpruefungniveau.NIVEAU_HA10.id || pruefung.anspruchsniveauId === Sprachpruefungniveau.NIVEAU_MSA.id) && (pruefung.note !== null) && (pruefung.note <= 4)) {
+				if (pruefung.istFeststellungspruefung && (pruefung.kannErstePflichtfremdspracheErsetzen || pruefung.kannZweitePflichtfremdspracheErsetzen || pruefung.kannWahlpflichtfremdspracheErsetzen) && (pruefung.anspruchsniveauId === Sprachpruefungniveau.HA10.daten.id || pruefung.anspruchsniveauId === Sprachpruefungniveau.MSA.daten.id) && (pruefung.note !== null) && (pruefung.note <= 4)) {
 					return true;
 				}
 			}
@@ -285,7 +285,7 @@ export class SprachendatenManager extends JavaObject {
 			let pruefungen : Vector<Sprachpruefung> = sprachendaten.pruefungen;
 			if (pruefungen !== null) {
 				for (let pruefung of pruefungen) {
-					if (pruefung.istFeststellungspruefung && (pruefung.kannErstePflichtfremdspracheErsetzen || pruefung.kannZweitePflichtfremdspracheErsetzen || pruefung.kannWahlpflichtfremdspracheErsetzen) && (pruefung.anspruchsniveauId === Sprachpruefungniveau.NIVEAU_HA10.id || pruefung.anspruchsniveauId === Sprachpruefungniveau.NIVEAU_MSA.id) && (pruefung.note !== null) && (pruefung.note <= 4)) {
+					if (pruefung.istFeststellungspruefung && (pruefung.kannErstePflichtfremdspracheErsetzen || pruefung.kannZweitePflichtfremdspracheErsetzen || pruefung.kannWahlpflichtfremdspracheErsetzen) && (pruefung.anspruchsniveauId === Sprachpruefungniveau.HA10.daten.id || pruefung.anspruchsniveauId === Sprachpruefungniveau.MSA.daten.id) && (pruefung.note !== null) && (pruefung.note <= 4)) {
 						if (!JavaObject.equalsTranspiler(belegungen.get(0).sprache, (pruefung.sprache))) {
 							return true;
 						}
@@ -330,9 +330,9 @@ export class SprachendatenManager extends JavaObject {
 		let pruefungen : Vector<Sprachpruefung> = sprachendaten.pruefungen;
 		if (pruefungen !== null) {
 			for (let pruefungS1 of pruefungen) {
-				if (pruefungS1.istFeststellungspruefung && (pruefungS1.kannErstePflichtfremdspracheErsetzen || pruefungS1.kannZweitePflichtfremdspracheErsetzen || pruefungS1.kannWahlpflichtfremdspracheErsetzen) && (pruefungS1.anspruchsniveauId === Sprachpruefungniveau.NIVEAU_HA10.id || pruefungS1.anspruchsniveauId === Sprachpruefungniveau.NIVEAU_MSA.id) && (pruefungS1.note !== null) && (pruefungS1.note <= 4)) {
+				if (pruefungS1.istFeststellungspruefung && (pruefungS1.kannErstePflichtfremdspracheErsetzen || pruefungS1.kannZweitePflichtfremdspracheErsetzen || pruefungS1.kannWahlpflichtfremdspracheErsetzen) && (pruefungS1.anspruchsniveauId === Sprachpruefungniveau.HA10.daten.id || pruefungS1.anspruchsniveauId === Sprachpruefungniveau.MSA.daten.id) && (pruefungS1.note !== null) && (pruefungS1.note <= 4)) {
 					for (let pruefungEF of pruefungen) {
-						if (pruefungEF.istFeststellungspruefung && JavaObject.equalsTranspiler(pruefungEF.ersetzteSprache, (pruefungS1.ersetzteSprache)) && (pruefungEF.kannErstePflichtfremdspracheErsetzen || pruefungEF.kannZweitePflichtfremdspracheErsetzen || pruefungEF.kannWahlpflichtfremdspracheErsetzen) && pruefungEF.anspruchsniveauId === Sprachpruefungniveau.NIVEAU_EF.id && (pruefungEF.note !== null) && (pruefungEF.note <= 4)) {
+						if (pruefungEF.istFeststellungspruefung && JavaObject.equalsTranspiler(pruefungEF.ersetzteSprache, (pruefungS1.ersetzteSprache)) && (pruefungEF.kannErstePflichtfremdspracheErsetzen || pruefungEF.kannZweitePflichtfremdspracheErsetzen || pruefungEF.kannWahlpflichtfremdspracheErsetzen) && pruefungEF.anspruchsniveauId === Sprachpruefungniveau.EF.daten.id && (pruefungEF.note !== null) && (pruefungEF.note <= 4)) {
 							return true;
 						}
 					}
@@ -359,7 +359,7 @@ export class SprachendatenManager extends JavaObject {
 		let pruefungen : Vector<Sprachpruefung> = sprachendaten.pruefungen;
 		if (pruefungen !== null) {
 			for (let pruefung of pruefungen) {
-				if (pruefung.istFeststellungspruefung && pruefung.kannErstePflichtfremdspracheErsetzen && (pruefung.anspruchsniveauId === Sprachpruefungniveau.NIVEAU_HA10.id || pruefung.anspruchsniveauId === Sprachpruefungniveau.NIVEAU_MSA.id) && (pruefung.note !== null) && (pruefung.note <= 4)) {
+				if (pruefung.istFeststellungspruefung && pruefung.kannErstePflichtfremdspracheErsetzen && (pruefung.anspruchsniveauId === Sprachpruefungniveau.HA10.daten.id || pruefung.anspruchsniveauId === Sprachpruefungniveau.MSA.daten.id) && (pruefung.note !== null) && (pruefung.note <= 4)) {
 					return pruefung.ersetzteSprache;
 				}
 			}
@@ -393,10 +393,10 @@ export class SprachendatenManager extends JavaObject {
 		let pruefungen : Vector<Sprachpruefung> = sprachendaten.pruefungen;
 		if (pruefungen !== null) {
 			for (let pruefung of pruefungen) {
-				if (pruefung.istFeststellungspruefung && pruefung.kannErstePflichtfremdspracheErsetzen && (pruefung.anspruchsniveauId === Sprachpruefungniveau.NIVEAU_HA10.id || pruefung.anspruchsniveauId === Sprachpruefungniveau.NIVEAU_MSA.id) && (pruefung.note !== null) && (pruefung.note <= 4)) {
+				if (pruefung.istFeststellungspruefung && pruefung.kannErstePflichtfremdspracheErsetzen && (pruefung.anspruchsniveauId === Sprachpruefungniveau.HA10.daten.id || pruefung.anspruchsniveauId === Sprachpruefungniveau.MSA.daten.id) && (pruefung.note !== null) && (pruefung.note <= 4)) {
 					pruefungErsteSprache = pruefung.ersetzteSprache;
 				}
-				if (pruefung.istFeststellungspruefung && (pruefung.kannZweitePflichtfremdspracheErsetzen || pruefung.kannWahlpflichtfremdspracheErsetzen) && (pruefung.anspruchsniveauId === Sprachpruefungniveau.NIVEAU_HA10.id || pruefung.anspruchsniveauId === Sprachpruefungniveau.NIVEAU_MSA.id) && (pruefung.note !== null) && (pruefung.note <= 4)) {
+				if (pruefung.istFeststellungspruefung && (pruefung.kannZweitePflichtfremdspracheErsetzen || pruefung.kannWahlpflichtfremdspracheErsetzen) && (pruefung.anspruchsniveauId === Sprachpruefungniveau.HA10.daten.id || pruefung.anspruchsniveauId === Sprachpruefungniveau.MSA.daten.id) && (pruefung.note !== null) && (pruefung.note <= 4)) {
 					pruefungZweiteSprache = pruefung.ersetzteSprache;
 				}
 			}

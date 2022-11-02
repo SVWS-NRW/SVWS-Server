@@ -12,11 +12,11 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie liefert den Katalog der Fächer und die Information für welche Schulformen
+ * Sie liefert den Katalog der Bilingualen Sprachfächer und die Information für welche Schulformen
  * diese zulässig sind.  
  */
 @XmlRootElement
-@Schema(description="ein Eintrag in dem Katalog der Fächer.")
+@Schema(description="ein Eintrag in dem Katalog der Bilingualen Sprachfächer.")
 @TranspilerDTO
 public class BilingualeSpracheKatalogEintrag {
 
@@ -33,11 +33,11 @@ public class BilingualeSpracheKatalogEintrag {
 	public @NotNull List<@NotNull String> schulformen = new Vector<>();
 
 	/** Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(required = false, description = "gibt an, in welchem die Kursart einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
+	@Schema(required = false, description = "gibt an, in welchem der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
 	public Integer gueltigVon = null;
 
 	/** Gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(required = false, description = "gibt an, bis zu welchem die Kursart gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example="2025")
+	@Schema(required = false, description = "gibt an, bis zu welchem der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example="2025")
 	public Integer gueltigBis = null;
 
 

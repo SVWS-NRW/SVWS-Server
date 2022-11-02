@@ -57,7 +57,7 @@ public class Schueler {
                 continue;
             Sprachpruefung pruefung = new Sprachpruefung();
             pruefung.sprache = dtoSprachpruefung.Sprache;
-            pruefung.anspruchsniveauId = dtoSprachpruefung.Anspruchsniveau.id;
+            pruefung.anspruchsniveauId = dtoSprachpruefung.Anspruchsniveau.daten.id;
             pruefung.ersetzteSprache =dtoSprachpruefung.ErsetzteSprache;
             pruefung.jahrgang =dtoSprachpruefung.ASDJahrgang;
             pruefung.istHSUPruefung = dtoSprachpruefung.IstHSUPruefung;
