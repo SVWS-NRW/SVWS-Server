@@ -202,7 +202,39 @@ public enum BenutzerKompetenz {
     /** Es werden Rechte zum Löschen von Daten des Verfahrens Schulpflichtverletzung benötigt. */
     SCHULPFLICHTVERLETZUNG_LOESCHEN(new BenutzerKompetenzKatalogEintrag(
     	103, BenutzerKompetenzGruppe.SCHULPFLICHTVERLETZUNG, "Löschen"
-    )), 
+    )),
+    
+    /** Es werden Rechte zum Ansehen von Stundenplänen (allgemein) benötigt. */
+    STUNDENPLAN_ALLGEMEIN_ANSEHEN(new BenutzerKompetenzKatalogEintrag(
+    	111, BenutzerKompetenzGruppe.STUNDENPLANUNG, "Ansehen"
+    )),
+    
+    /** Es werden Rechte zum Ansehen von Stundenplänen (funktionsbezogen) benötigt. */
+    STUNDENPLAN_FUNKTIONSBEZOGEN_ANSEHEN(new BenutzerKompetenzKatalogEintrag(
+    	112, BenutzerKompetenzGruppe.STUNDENPLANUNG, "Ansehen"
+    )),
+    
+    /** Es werden Rechte zum Importieren von Stundenplänen benötigt. */
+    STUNDENPLAN_IMPORT(new BenutzerKompetenzKatalogEintrag(
+    	113, BenutzerKompetenzGruppe.STUNDENPLANUNG, "Stundenpläne importieren"
+    )),
+    
+    /** Es werden Rechte zum Exportieren von Stundenplänen benötigt. */
+    STUNDENPLAN_EXPORT(new BenutzerKompetenzKatalogEintrag(
+    	114, BenutzerKompetenzGruppe.STUNDENPLANUNG, "Stundenpläne exportieren"
+    )),
+    
+    /** Es werden Rechte zum Erstellen von Stundenplänen benötigt. */
+    STUNDENPLAN_ERSTELLEN(new BenutzerKompetenzKatalogEintrag(
+    	115, BenutzerKompetenzGruppe.STUNDENPLANUNG, "Stundenpläne erstellen"
+    )),
+    
+    /** Es werden Rechte zum Aktivieren von Stundenplänen benötigt. */
+    STUNDENPLAN_AKTIVIEREN(new BenutzerKompetenzKatalogEintrag(
+    	113, BenutzerKompetenzGruppe.STUNDENPLANUNG, "Stundenpläne aktivieren"
+    )),
+    
+    //TODO OBERSTUFE 121...., Notenmodul 131....., Datenbank-Management 141.........
     
     /** Es werden Rechte zum Ansehen der Adressdaten eines von Erziehungsberechtigten benötigt*/
     ADRESSDATEN_ERZIEHER_ANSEHEN(new BenutzerKompetenzKatalogEintrag(
