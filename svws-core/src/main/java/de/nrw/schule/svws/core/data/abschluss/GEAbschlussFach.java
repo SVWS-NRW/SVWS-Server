@@ -1,5 +1,6 @@
 package de.nrw.schule.svws.core.data.abschluss;
 
+import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -19,7 +20,7 @@ public class GEAbschlussFach {
 
 	/** Das Kürzel des Faches */
 	@Schema(required = true, description = "Das Kürzel des Faches", example="D")	
-    public String kuerzel = null;
+    public @NotNull String kuerzel = "";
 
 	/** Die Bezeichnung des Faches */
 	@Schema(required = false, defaultValue = "", description = "Die Bezeichnung des Faches", example="Deutsch")	

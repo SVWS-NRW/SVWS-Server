@@ -450,6 +450,17 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			if (leftType.isIntegerType() && rightType.isIntegerType())
 				return "Math.trunc(%s %s %s)".formatted(leftExpression, op, rightExpression);
 		}
+// TODO Einbinden, nachdem ExpressionType um eine Unterscheidung zwischen string und String in Typescript erweitert wurde
+//		if (node.getKind() == Kind.PLUS) {
+//            // TODO Überprüfung, ob es sich beim Typ um string oder String handelt hier nicht endgültig erkennbar. 
+//		      // TODO ExpressionType muss zur Unterscheidung erweitert werden, um eine tiefe Analyse zuzulassen
+//            ExpressionType leftType = transpiler.getExpressionType(node.getLeftOperand());
+//            ExpressionType rightType = transpiler.getExpressionType(node.getRightOperand());
+//            if (leftType.isString() && (node.getLeftOperand().getKind() != Kind.STRING_LITERAL))
+//                leftExpression = "(" + leftExpression + ").valueOf()";
+//            if (rightType.isString() && (node.getRightOperand().getKind() != Kind.STRING_LITERAL))
+//                rightExpression = "(" + rightExpression + ").valueOf()";
+//		}
 		return "%s %s %s".formatted(leftExpression, op, rightExpression);
 	}
 

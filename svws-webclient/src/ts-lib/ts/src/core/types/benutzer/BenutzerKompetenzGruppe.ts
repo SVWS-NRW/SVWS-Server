@@ -41,9 +41,17 @@ export class BenutzerKompetenzGruppe extends JavaObject {
 
 	public static readonly SCHULPFLICHTVERLETZUNG : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("SCHULPFLICHTVERLETZUNG", 11, new BenutzerKompetenzGruppenKatalogEintrag(1000, "Verfahren Schulpflichtverletzung", 2, 3));
 
-	public static readonly CARDDAV : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("CARDDAV", 12, new BenutzerKompetenzGruppenKatalogEintrag(2000, "Addressbuch (CardDAV)", 1, 4));
+	public static readonly STUNDENPLANUNG : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("STUNDENPLANUNG", 12, new BenutzerKompetenzGruppenKatalogEintrag(1100, "Stundenplanung", 4, 1));
 
-	public static readonly CALDAV : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("CALDAV", 13, new BenutzerKompetenzGruppenKatalogEintrag(3000, "Kalender (CaldDAV)", 1, 5));
+	public static readonly OBERTSTUFE : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("OBERTSTUFE", 13, new BenutzerKompetenzGruppenKatalogEintrag(1200, "Oberstufenplanung", 4, 2));
+
+	public static readonly NOTENMODUL : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("NOTENMODUL", 14, new BenutzerKompetenzGruppenKatalogEintrag(1100, "Notenmodul", 4, 3));
+
+	public static readonly DATENBANK : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("DATENBANK", 15, new BenutzerKompetenzGruppenKatalogEintrag(1100, "Datenbank-Management", 4, 4));
+
+	public static readonly CARDDAV : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("CARDDAV", 16, new BenutzerKompetenzGruppenKatalogEintrag(2000, "Addressbuch (CardDAV)", 1, 4));
+
+	public static readonly CALDAV : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("CALDAV", 17, new BenutzerKompetenzGruppenKatalogEintrag(3000, "Kalender (CaldDAV)", 1, 5));
 
 	public static VERSION : number = 1;
 

@@ -19,11 +19,11 @@ public class BerufskollegFachklassenKatalogEintrag {
 
 	/** Der Fachklassenschlüssel. */
 	@Schema(required = true, description = "der Fachklassenschlüssel - Teil 1", example="620")
-	public String schluessel;
+	public @NotNull String schluessel = "";
 
 	/** Der Fachklassenschlüssel - Teil 2. */
 	@Schema(required = true, description = "der Fachklassenschlüssel - Teil 2", example="00")
-	public String schluessel2;
+	public @NotNull String schluessel2 = "";
 
 	/** Die Historie des Katalog-Eintrags. */
 	@Schema(required = true, description = "die Historie des Katalog-Eintrags")

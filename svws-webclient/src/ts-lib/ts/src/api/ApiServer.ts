@@ -124,6 +124,7 @@ import { SchultraegerKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_Sc
 import { SimpleOperationResponse, cast_de_nrw_schule_svws_core_data_SimpleOperationResponse } from '../core/data/SimpleOperationResponse';
 import { StundenplanListeEintrag, cast_de_nrw_schule_svws_core_data_stundenplan_StundenplanListeEintrag } from '../core/data/stundenplan/StundenplanListeEintrag';
 import { StundenplanZeitraster, cast_de_nrw_schule_svws_core_data_stundenplan_StundenplanZeitraster } from '../core/data/stundenplan/StundenplanZeitraster';
+import { UebergangsempfehlungKatalogEintrag, cast_de_nrw_schule_svws_core_data_schueler_UebergangsempfehlungKatalogEintrag } from '../core/data/schueler/UebergangsempfehlungKatalogEintrag';
 import { Vector, cast_java_util_Vector } from '../java/util/Vector';
 import { VerkehrsspracheKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_VerkehrsspracheKatalogEintrag } from '../core/data/schule/VerkehrsspracheKatalogEintrag';
 
@@ -4742,6 +4743,33 @@ export class ApiServer extends BaseApi {
 		const obj = JSON.parse(result);
 		let ret = new Vector<SchuelerListeEintrag>();
 		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(SchuelerListeEintrag.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getKatalogUebergangsempfehlung für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/allgemein/kindergartenbesuch
+	 * 
+	 * Erstellt eine Liste aller in dem Katalog vorhandenen Übergangsempfehlungen der Grundschule für die Sekundarstufe I. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Eine Liste von Katalog-Einträgen
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<UebergangsempfehlungKatalogEintrag>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
+	 *   Code 404: Keine Katalog-Einträge gefunden
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * 
+	 * @returns Eine Liste von Katalog-Einträgen
+	 */
+	public async getKatalogUebergangsempfehlung(schema : string) : Promise<List<UebergangsempfehlungKatalogEintrag>> {
+		let path : string = "/db/{schema}/schueler/allgemein/kindergartenbesuch"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		let ret = new Vector<UebergangsempfehlungKatalogEintrag>();
+		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(UebergangsempfehlungKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 

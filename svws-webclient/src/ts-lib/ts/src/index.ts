@@ -216,6 +216,7 @@ export { SchuelerSchulbesuchMerkmal } from './core/data/schueler/SchuelerSchulbe
 export { SchuelerSchulbesuchSchule } from './core/data/schueler/SchuelerSchulbesuchSchule';
 export { SchuelerSchulbesuchsdaten } from './core/data/schueler/SchuelerSchulbesuchsdaten';
 export { SchuelerStammdaten } from './core/data/schueler/SchuelerStammdaten';
+export { UebergangsempfehlungKatalogEintrag } from './core/data/schueler/UebergangsempfehlungKatalogEintrag';
 export { AbgangsartKatalog } from './core/data/schule/AbgangsartKatalog';
 export { AbgangsartKatalogDaten } from './core/data/schule/AbgangsartKatalogDaten';
 export { AbgangsartKatalogEintrag } from './core/data/schule/AbgangsartKatalogEintrag';
@@ -377,6 +378,7 @@ export { HerkunftBildungsgangsTyp } from './core/types/schueler/HerkunftBildungs
 export { HerkunftSchulform } from './core/types/schueler/HerkunftSchulform';
 export { HerkunftSonstige } from './core/types/schueler/HerkunftSonstige';
 export { Herkunftsarten } from './core/types/schueler/Herkunftsarten';
+export { Uebergangsempfehlung } from './core/types/schueler/Uebergangsempfehlung';
 export { AllgemeinbildendOrganisationsformen } from './core/types/schule/AllgemeinbildendOrganisationsformen';
 export { AllgemeineMerkmale } from './core/types/schule/AllgemeineMerkmale';
 export { BerufskollegAnlage } from './core/types/schule/BerufskollegAnlage';

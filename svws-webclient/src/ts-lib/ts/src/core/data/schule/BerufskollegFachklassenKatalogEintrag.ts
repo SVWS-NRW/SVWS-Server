@@ -6,9 +6,9 @@ import { BerufskollegFachklassenKatalogDaten, cast_de_nrw_schule_svws_core_data_
 
 export class BerufskollegFachklassenKatalogEintrag extends JavaObject {
 
-	public schluessel : String | null = null;
+	public schluessel : String = "";
 
-	public schluessel2 : String | null = null;
+	public schluessel2 : String = "";
 
 	public historie : List<BerufskollegFachklassenKatalogDaten> = new Vector();
 
@@ -24,8 +24,12 @@ export class BerufskollegFachklassenKatalogEintrag extends JavaObject {
 	public static transpilerFromJSON(json : string): BerufskollegFachklassenKatalogEintrag {
 		const obj = JSON.parse(json);
 		const result = new BerufskollegFachklassenKatalogEintrag();
-		result.schluessel = typeof obj.schluessel === "undefined" ? null : obj.schluessel;
-		result.schluessel2 = typeof obj.schluessel2 === "undefined" ? null : obj.schluessel2;
+		if (typeof obj.schluessel === "undefined")
+			 throw new Error('invalid json format, missing attribute schluessel');
+		result.schluessel = obj.schluessel;
+		if (typeof obj.schluessel2 === "undefined")
+			 throw new Error('invalid json format, missing attribute schluessel2');
+		result.schluessel2 = obj.schluessel2;
 		if (!!obj.historie) {
 			for (let elem of obj.historie) {
 				result.historie?.add(BerufskollegFachklassenKatalogDaten.transpilerFromJSON(JSON.stringify(elem)));
@@ -36,8 +40,8 @@ export class BerufskollegFachklassenKatalogEintrag extends JavaObject {
 
 	public static transpilerToJSON(obj : BerufskollegFachklassenKatalogEintrag) : string {
 		let result = '{';
-		result += '"schluessel" : ' + ((!obj.schluessel) ? 'null' : '"' + obj.schluessel.valueOf() + '"') + ',';
-		result += '"schluessel2" : ' + ((!obj.schluessel2) ? 'null' : '"' + obj.schluessel2.valueOf() + '"') + ',';
+		result += '"schluessel" : ' + '"' + obj.schluessel.valueOf() + '"' + ',';
+		result += '"schluessel2" : ' + '"' + obj.schluessel2.valueOf() + '"' + ',';
 		if (!obj.historie) {
 			result += '"historie" : []';
 		} else {
@@ -58,10 +62,10 @@ export class BerufskollegFachklassenKatalogEintrag extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<BerufskollegFachklassenKatalogEintrag>) : string {
 		let result = '{';
 		if (typeof obj.schluessel !== "undefined") {
-			result += '"schluessel" : ' + ((!obj.schluessel) ? 'null' : '"' + obj.schluessel.valueOf() + '"') + ',';
+			result += '"schluessel" : ' + '"' + obj.schluessel.valueOf() + '"' + ',';
 		}
 		if (typeof obj.schluessel2 !== "undefined") {
-			result += '"schluessel2" : ' + ((!obj.schluessel2) ? 'null' : '"' + obj.schluessel2.valueOf() + '"') + ',';
+			result += '"schluessel2" : ' + '"' + obj.schluessel2.valueOf() + '"' + ',';
 		}
 		if (typeof obj.historie !== "undefined") {
 			if (!obj.historie) {

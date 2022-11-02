@@ -15,8 +15,6 @@ import jakarta.validation.constraints.NotNull;
  */
 public enum Schulform {
 
-	// reguläre Schulformen
-	
 	/** Schulform Berufskolleg */
 	BK(new SchulformKatalogEintrag[]{
 		new SchulformKatalogEintrag(1000, "BK", "30", "Berufskolleg", false, null, null)

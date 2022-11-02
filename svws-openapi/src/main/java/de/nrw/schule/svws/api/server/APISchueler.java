@@ -2,17 +2,6 @@ package de.nrw.schule.svws.api.server;
 
 import java.io.InputStream;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.PATCH;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.Context;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-
 import de.nrw.schule.svws.api.OpenAPIApplication;
 import de.nrw.schule.svws.core.data.betrieb.BetriebStammdaten;
 import de.nrw.schule.svws.core.data.erzieher.ErzieherStammdaten;
@@ -23,10 +12,12 @@ import de.nrw.schule.svws.core.data.schueler.SchuelerLernabschnittsdaten;
 import de.nrw.schule.svws.core.data.schueler.SchuelerListeEintrag;
 import de.nrw.schule.svws.core.data.schueler.SchuelerSchulbesuchsdaten;
 import de.nrw.schule.svws.core.data.schueler.SchuelerStammdaten;
+import de.nrw.schule.svws.core.data.schueler.UebergangsempfehlungKatalogEintrag;
 import de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenz;
 import de.nrw.schule.svws.data.betriebe.DataBetriebsStammdaten;
 import de.nrw.schule.svws.data.erzieher.DataErzieherStammdaten;
 import de.nrw.schule.svws.data.schueler.DataKatalogSchuelerFahrschuelerarten;
+import de.nrw.schule.svws.data.schueler.DataKatalogUebergangsempfehlung;
 import de.nrw.schule.svws.data.schueler.DataSchuelerBetriebsdaten;
 import de.nrw.schule.svws.data.schueler.DataSchuelerLernabschnittsdaten;
 import de.nrw.schule.svws.data.schueler.DataSchuelerLernabschnittsliste;
@@ -41,6 +32,16 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.PATCH;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 
 /**
@@ -379,7 +380,9 @@ public class APISchueler {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN)) {
     		return (new DataSchuelerBetriebsdaten(conn)).getListFromSchueler(id);
         }
-    }    
+    }
+
+
     /**
      * Die OpenAPI-Methode für die Abfrage der Liste aller Betriebsstammdaten eines Schülers.
      *  
@@ -405,4 +408,30 @@ public class APISchueler {
             return (new DataBetriebsStammdaten(conn)).getSchuelerBetriebe(id);
         }        
     }
+    
+    
+    /**
+     * Die OpenAPI-Methode für die Abfrage des Katalogs der Übergangsempfehlungen der 
+     * Grundschule für die Sekundarstufe I.
+     *  
+     * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param request   die Informationen zur HTTP-Anfrage
+     * 
+     * @return die Liste mit dem Katalog der Übergangsempfehlungen der Grundschule für die Sekundarstufe I.
+     */
+    @GET
+    @Path("/allgemein/kindergartenbesuch")
+    @Operation(summary = "Gibt den Katalog der Übergangsempfehlungen der Grundschule für die Sekundarstufe I zurück.",
+               description = "Erstellt eine Liste aller in dem Katalog vorhandenen Übergangsempfehlungen der Grundschule für die Sekundarstufe I. "
+                           + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
+    @ApiResponse(responseCode = "200", description = "Eine Liste von Katalog-Einträgen",
+                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = UebergangsempfehlungKatalogEintrag.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
+    @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
+    public Response getKatalogUebergangsempfehlung(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
+            return (new DataKatalogUebergangsempfehlung()).getList();
+        }
+    }
+    
 }

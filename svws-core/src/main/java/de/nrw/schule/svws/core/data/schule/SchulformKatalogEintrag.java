@@ -34,7 +34,7 @@ public class SchulformKatalogEintrag {
 	 *                 diese somit nicht korrekt erfasst werden. 
 	 */
 	@Schema(required = false, description = "die Nummer der Schulform, welche im Rahmen der amtlichen Schulstatistik verwendet wird", example="17")
-	public String nummer;
+	public @NotNull String nummer = "";
 
 	/** Die Bezeichnung der Schulform. */
 	@Schema(required = true, description = "die Bezeichnung der Schulform", example="Gesamtschule")
@@ -71,7 +71,7 @@ public class SchulformKatalogEintrag {
 	 * @param gueltigVon   das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und "schon immer gültig war"
 	 * @param gueltigBis   das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */
-	public SchulformKatalogEintrag(long id, @NotNull String kuerzel, String nummer, @NotNull String bezeichnung, boolean hatGymOb, Integer gueltigVon, Integer gueltigBis) {
+	public SchulformKatalogEintrag(long id, @NotNull String kuerzel, @NotNull String nummer, @NotNull String bezeichnung, boolean hatGymOb, Integer gueltigVon, Integer gueltigBis) {
 		this.id = id;
 		this.kuerzel = kuerzel;
 		this.nummer = nummer;

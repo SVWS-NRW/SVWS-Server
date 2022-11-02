@@ -4,7 +4,7 @@ import { JavaBoolean, cast_java_lang_Boolean } from '../../../java/lang/JavaBool
 
 export class GEAbschlussFach extends JavaObject {
 
-	public kuerzel : String | null = null;
+	public kuerzel : String = "";
 
 	public bezeichnung : String | null = null;
 
@@ -30,7 +30,9 @@ export class GEAbschlussFach extends JavaObject {
 	public static transpilerFromJSON(json : string): GEAbschlussFach {
 		const obj = JSON.parse(json);
 		const result = new GEAbschlussFach();
-		result.kuerzel = typeof obj.kuerzel === "undefined" ? null : obj.kuerzel;
+		if (typeof obj.kuerzel === "undefined")
+			 throw new Error('invalid json format, missing attribute kuerzel');
+		result.kuerzel = obj.kuerzel;
 		result.bezeichnung = typeof obj.bezeichnung === "undefined" ? null : obj.bezeichnung;
 		if (typeof obj.note === "undefined")
 			 throw new Error('invalid json format, missing attribute note');
@@ -44,7 +46,7 @@ export class GEAbschlussFach extends JavaObject {
 
 	public static transpilerToJSON(obj : GEAbschlussFach) : string {
 		let result = '{';
-		result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : '"' + obj.kuerzel.valueOf() + '"') + ',';
+		result += '"kuerzel" : ' + '"' + obj.kuerzel.valueOf() + '"' + ',';
 		result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : '"' + obj.bezeichnung.valueOf() + '"') + ',';
 		result += '"note" : ' + obj.note + ',';
 		result += '"istFremdsprache" : ' + ((!obj.istFremdsprache) ? 'null' : obj.istFremdsprache.valueOf()) + ',';
@@ -59,7 +61,7 @@ export class GEAbschlussFach extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<GEAbschlussFach>) : string {
 		let result = '{';
 		if (typeof obj.kuerzel !== "undefined") {
-			result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : '"' + obj.kuerzel.valueOf() + '"') + ',';
+			result += '"kuerzel" : ' + '"' + obj.kuerzel.valueOf() + '"' + ',';
 		}
 		if (typeof obj.bezeichnung !== "undefined") {
 			result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : '"' + obj.bezeichnung.valueOf() + '"') + ',';

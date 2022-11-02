@@ -123,7 +123,7 @@ public class SchuelerblockungDynDaten {
 			if (kurs.anzahlSuS < 0)
 				throw fehler("kurs.anzahlSuS ist zu gering! --> " + kurs.anzahlSuS);
 			if (kurs.representation == null)
-				throw fehler("kurs.representation ist undefiniert! --> " + kurs.representation);
+				throw fehler("kurs.representation ist undefiniert!");
 			if (kurs.representation.equals(""))
 				throw fehler("kurs.representation ist leer! --> " + kurs.representation);
 			if (kurs.schienen.length < 1)
@@ -156,7 +156,7 @@ public class SchuelerblockungDynDaten {
 			if (fachwahl.kursart < 0)
 				throw fehler("fachwahl.kursart ist zu gering! --> " + fachwahl.kursart);
 			if (fachwahl.representation == null)
-				throw fehler("fachwahl.representation ist undefiniert! --> " + fachwahl.representation);
+				throw fehler("fachwahl.representation ist undefiniert!");
 			if (fachwahl.representation.equals(""))
 				throw fehler("fachwahl.representation ist leer! --> " + fachwahl.representation);
 		}

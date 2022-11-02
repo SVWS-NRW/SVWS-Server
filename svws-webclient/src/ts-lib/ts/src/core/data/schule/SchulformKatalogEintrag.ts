@@ -8,7 +8,7 @@ export class SchulformKatalogEintrag extends JavaObject {
 
 	public kuerzel : String = "";
 
-	public nummer : String | null = null;
+	public nummer : String = "";
 
 	public bezeichnung : String = "";
 
@@ -35,18 +35,18 @@ export class SchulformKatalogEintrag extends JavaObject {
 	 * @param gueltigVon   das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und "schon immer gültig war"
 	 * @param gueltigBis   das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */
-	public constructor(id : number, kuerzel : String, nummer : String | null, bezeichnung : String, hatGymOb : boolean, gueltigVon : Number | null, gueltigBis : Number | null);
+	public constructor(id : number, kuerzel : String, nummer : String, bezeichnung : String, hatGymOb : boolean, gueltigVon : Number | null, gueltigBis : Number | null);
 
 	/**
 	 * Implementation for method overloads of 'constructor'
 	 */
-	public constructor(__param0? : number, __param1? : String, __param2? : String | null, __param3? : String, __param4? : boolean, __param5? : Number | null, __param6? : Number | null) {
+	public constructor(__param0? : number, __param1? : String, __param2? : String, __param3? : String, __param4? : boolean, __param5? : Number | null, __param6? : Number | null) {
 		super();
 		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined") && (typeof __param2 === "undefined") && (typeof __param3 === "undefined") && (typeof __param4 === "undefined") && (typeof __param5 === "undefined") && (typeof __param6 === "undefined")) {
-			} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && ((__param1 instanceof String) || (typeof __param1 === "string"))) && ((typeof __param2 !== "undefined") && ((__param2 instanceof String) || (typeof __param2 === "string")) || (__param2 === null)) && ((typeof __param3 !== "undefined") && ((__param3 instanceof String) || (typeof __param3 === "string"))) && ((typeof __param4 !== "undefined") && typeof __param4 === "boolean") && ((typeof __param5 !== "undefined") && ((__param5 instanceof Number) || (typeof __param5 === "number")) || (__param5 === null)) && ((typeof __param6 !== "undefined") && ((__param6 instanceof Number) || (typeof __param6 === "number")) || (__param6 === null))) {
+			} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && ((__param1 instanceof String) || (typeof __param1 === "string"))) && ((typeof __param2 !== "undefined") && ((__param2 instanceof String) || (typeof __param2 === "string"))) && ((typeof __param3 !== "undefined") && ((__param3 instanceof String) || (typeof __param3 === "string"))) && ((typeof __param4 !== "undefined") && typeof __param4 === "boolean") && ((typeof __param5 !== "undefined") && ((__param5 instanceof Number) || (typeof __param5 === "number")) || (__param5 === null)) && ((typeof __param6 !== "undefined") && ((__param6 instanceof Number) || (typeof __param6 === "number")) || (__param6 === null))) {
 			let id : number = __param0 as number;
 			let kuerzel : String = __param1;
-			let nummer : String | null = __param2;
+			let nummer : String = __param2;
 			let bezeichnung : String = __param3;
 			let hatGymOb : boolean = __param4 as boolean;
 			let gueltigVon : Number | null = cast_java_lang_Integer(__param5);
@@ -74,7 +74,9 @@ export class SchulformKatalogEintrag extends JavaObject {
 		if (typeof obj.kuerzel === "undefined")
 			 throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = obj.kuerzel;
-		result.nummer = typeof obj.nummer === "undefined" ? null : obj.nummer;
+		if (typeof obj.nummer === "undefined")
+			 throw new Error('invalid json format, missing attribute nummer');
+		result.nummer = obj.nummer;
 		if (typeof obj.bezeichnung === "undefined")
 			 throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
@@ -90,7 +92,7 @@ export class SchulformKatalogEintrag extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
 		result += '"kuerzel" : ' + '"' + obj.kuerzel.valueOf() + '"' + ',';
-		result += '"nummer" : ' + ((!obj.nummer) ? 'null' : '"' + obj.nummer.valueOf() + '"') + ',';
+		result += '"nummer" : ' + '"' + obj.nummer.valueOf() + '"' + ',';
 		result += '"bezeichnung" : ' + '"' + obj.bezeichnung.valueOf() + '"' + ',';
 		result += '"hatGymOb" : ' + obj.hatGymOb + ',';
 		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.valueOf()) + ',';
@@ -109,7 +111,7 @@ export class SchulformKatalogEintrag extends JavaObject {
 			result += '"kuerzel" : ' + '"' + obj.kuerzel.valueOf() + '"' + ',';
 		}
 		if (typeof obj.nummer !== "undefined") {
-			result += '"nummer" : ' + ((!obj.nummer) ? 'null' : '"' + obj.nummer.valueOf() + '"') + ',';
+			result += '"nummer" : ' + '"' + obj.nummer.valueOf() + '"' + ',';
 		}
 		if (typeof obj.bezeichnung !== "undefined") {
 			result += '"bezeichnung" : ' + '"' + obj.bezeichnung.valueOf() + '"' + ',';

@@ -113,7 +113,7 @@ export class SchuelerblockungDynDaten extends JavaObject {
 			if (kurs.anzahlSuS < 0) 
 				throw this.fehler("kurs.anzahlSuS ist zu gering! --> " + kurs.anzahlSuS)
 			if (kurs.representation === null) 
-				throw this.fehler("kurs.representation ist undefiniert! --> " + kurs.representation)
+				throw this.fehler("kurs.representation ist undefiniert!")
 			if (JavaObject.equalsTranspiler(kurs.representation, (""))) 
 				throw this.fehler("kurs.representation ist leer! --> " + kurs.representation)
 			if (kurs.schienen.length < 1) 
@@ -144,7 +144,7 @@ export class SchuelerblockungDynDaten extends JavaObject {
 			if (fachwahl.kursart < 0) 
 				throw this.fehler("fachwahl.kursart ist zu gering! --> " + fachwahl.kursart)
 			if (fachwahl.representation === null) 
-				throw this.fehler("fachwahl.representation ist undefiniert! --> " + fachwahl.representation)
+				throw this.fehler("fachwahl.representation ist undefiniert!")
 			if (JavaObject.equalsTranspiler(fachwahl.representation, (""))) 
 				throw this.fehler("fachwahl.representation ist leer! --> " + fachwahl.representation)
 		}
