@@ -29,6 +29,8 @@ export class Schulstufe extends JavaObject {
 
 	public static readonly TERTIAERSTUFE : Schulstufe = new Schulstufe("TERTIAERSTUFE", 4, [new SchulstufeKatalogEintrag(4000, "T", "Tertiärstufe", Arrays.asList(), null, null)]);
 
+	public static readonly QUARTAERSTUFE : Schulstufe = new Schulstufe("QUARTAERSTUFE", 5, [new SchulstufeKatalogEintrag(4000, "Q", "Quartärstufe", Arrays.asList(Schulform.WB), null, null)]);
+
 	public static VERSION : number = 1;
 
 	public readonly daten : SchulstufeKatalogEintrag;
