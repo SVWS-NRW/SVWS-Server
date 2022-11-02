@@ -65,9 +65,11 @@ export class DataGostKursblockungsergebnis extends BaseData<
 
 	public async assignKursSchiene(
 		kursid: number,
-		schienenid: number
+		schienenid: number,
+		schienenidneu: number
 	): Promise<boolean> {
-		// TODO implement methods on server side and call api methods here - see assignSchuelerKurs
+		if (!this._daten?.id) return false
+		await App.api.updateGostBlockungsergebnisKursSchieneZuordnung(App.schema, this._daten.id, schienenid, kursid, schienenidneu)
 		this.manager?.setKursSchiene(kursid, schienenid, true);
 		return true;
 	}

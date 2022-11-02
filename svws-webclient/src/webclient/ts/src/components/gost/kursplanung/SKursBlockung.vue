@@ -296,7 +296,7 @@ const sperren_regel_entfernen = async (nummer: number) => {
 function drop_aendere_kursschiene(drag_data: {kurs: GostBlockungsergebnisKurs; schiene: GostBlockungSchiene}, schiene_id: number) {
 	if (drag_data.kurs.id === kurs_blockungsergebnis.value?.id && schiene_id !== drag_data.schiene.id) {
 		if (fixier_regel.value) fixieren_regel_entfernen()
-		app.dataKursblockungsergebnis.manager?.setKursSchiene(drag_data.kurs.id, schiene_id, true)
+		app.dataKursblockungsergebnis.assignKursSchiene(drag_data.kurs.id, drag_data.schiene.id, schiene_id)
 		// fixieren_regel_hinzufuegen()
 	}
 }
