@@ -278,8 +278,31 @@ public enum BenutzerKompetenz {
     OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION(new BenutzerKompetenzKatalogEintrag(
     	129, BenutzerKompetenzGruppe.OBERSTUFE, "Klausurplanung ansehen (funktionsbezogen)"
     )),
+    
+    /** Es werden Rechte zur Administration des Notenmoduls benötigt. */
+    NOTENMODUL_ADMINISTRATION(new BenutzerKompetenzKatalogEintrag(
+    	131, BenutzerKompetenzGruppe.NOTENMODUL, "Administration Notenmodul"
+    )),
+    
+    /** Es werden Rechte zur Änderung von Noten im Notenmodul (allgemein) benötigt. */
+    NOTENMODUL_NOTEN_AENDERN_ALLGEMEIN(new BenutzerKompetenzKatalogEintrag(
+    	132, BenutzerKompetenzGruppe.NOTENMODUL, "Noten ändern (allgemein)"
+    )),
+    /** Es werden Rechte zur Änderung von Noten im Notenmodul (funktionsbezogen) benötigt. */
+    NOTENMODUL_NOTEN_AENDERN_FUNKTION(new BenutzerKompetenzKatalogEintrag(
+    	133, BenutzerKompetenzGruppe.NOTENMODUL, "Noten ändern (funktionsbezogen)"
+    )), 
+    
+    /** Es werden Rechte zum Ansehen von Noten im Notenmodul (allgemein) benötigt. */
+    NOTENMODUL_NOTEN_ANSEHEN_ALLGEMEIN(new BenutzerKompetenzKatalogEintrag(
+    	134, BenutzerKompetenzGruppe.NOTENMODUL, "Noten ansehen (allgemein)"
+    )),
+    /** Es werden Rechte zum Ansehen von Noten im Notenmodul (funktionsbezogen) benötigt. */
+    NOTENMODUL_NOTEN_ANSEHEN_FUNKTION(new BenutzerKompetenzKatalogEintrag(
+    	135, BenutzerKompetenzGruppe.NOTENMODUL, "Noten ansehen (funktionsbezogen)"
+    )), 
         
-    //TODO Notenmodul 131....., Datenbank-Management 141.........
+    //TODO Datenbank-Management 141.........
     
     /** Es werden Rechte zum Ansehen der Adressdaten eines von Erziehungsberechtigten benötigt*/
     ADRESSDATEN_ERZIEHER_ANSEHEN(new BenutzerKompetenzKatalogEintrag(
