@@ -7,7 +7,10 @@ import de.nrw.schule.svws.core.data.schule.SchulstufeKatalogEintrag;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Dieser Core-Type enthält die unterschiedlichen Schulstufen. 
+ * Dieser Core-Type enthält die unterschiedlichen Schulstufen.
+ * Siehe auch: 
+ * - https://de.wikipedia.org/wiki/Bildungssystem_in_Deutschland
+ * - https://www.schulministerium.nrw/schule-bildung/schulorganisation/schulformen
  */
 public enum Schulstufe {
 
@@ -62,9 +65,16 @@ public enum Schulstufe {
 
     /** Die Tertiärstufe */
     TERTIAERSTUFE(new SchulstufeKatalogEintrag[] {
-        new SchulstufeKatalogEintrag(4000, "T", "Tertiärstufe", Arrays.asList(), null, null)
-    });
+        new SchulstufeKatalogEintrag(4000, "T", "Tertiärstufe", Arrays.asList(
+            ), null, null)
+    }),
 
+    /** Die Quartärstufe */
+    QUARTAERSTUFE(new SchulstufeKatalogEintrag[] {
+        new SchulstufeKatalogEintrag(4000, "Q", "Quartärstufe", Arrays.asList(
+                Schulform.WB
+            ), null, null)
+    });
 
     /** Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. */
     public static long VERSION = 1;
