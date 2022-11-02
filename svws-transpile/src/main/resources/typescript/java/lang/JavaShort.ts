@@ -10,7 +10,7 @@ export class JavaShort extends JavaObject {
 
     public static parseShort(s : String) : number {
         let a : number = parseInt(s.valueOf(), 10);
-        if ((a === NaN) || (a < this.MIN_VALUE) || (a > this.MAX_VALUE))
+        if (Number.isNaN(a) || (a < this.MIN_VALUE) || (a > this.MAX_VALUE))
             throw new NumberFormatException();
         return a;
     }

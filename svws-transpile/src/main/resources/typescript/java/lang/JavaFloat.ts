@@ -10,7 +10,7 @@ export class JavaFloat extends JavaObject {
 
     public static parseFloat(s : String) : number {
         let a : number = parseFloat(s.valueOf());
-        if ((a === NaN) || (a < this.MIN_VALUE) || (a > this.MAX_VALUE))
+        if (Number.isNaN(a) || (a < this.MIN_VALUE) || (a > this.MAX_VALUE))
             throw new NumberFormatException();
         return a;
     }
