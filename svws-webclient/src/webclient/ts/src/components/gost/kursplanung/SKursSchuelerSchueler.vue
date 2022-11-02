@@ -41,11 +41,13 @@ import { ComputedRef, computed } from "vue";
 
 	const selected_kurs: ComputedRef<boolean> = computed(()=> app.dataKursblockungsergebnis.active_kurs?.value ? true : false)
 	const verbieten_regel: ComputedRef<GostBlockungRegel | undefined> = computed(() => {
+		//TODO M
 		const regeln = app.dataKursblockung.daten?.regeln.toArray(new Array<GostBlockungRegel>())
 		const regel = regeln?.find(r => r.typ === GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ && r.parameter.get(0) === schueler.id)
 		return regel
 	})
 	const fixier_regel: ComputedRef<GostBlockungRegel | undefined> = computed(() => {
+		//TODO M
 		const regeln = app.dataKursblockung.daten?.regeln.toArray(new Array<GostBlockungRegel>())
 		const regel = regeln?.find(r => r.typ === GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ && r.parameter.get(0) === schueler.id)
 		return regel

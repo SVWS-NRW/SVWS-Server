@@ -10,12 +10,14 @@
 	// public static readonly KURSART_ALLEIN_IN_SCHIENEN_VON_BIS : GostKursblockungRegelTyp =
 	//new GostKursblockungRegelTyp("KURSART_ALLEIN_IN_SCHIENEN_VON_BIS", 2, 6, "Kursart: Allein in Schienen (von/bis)",
 	//Arrays.asList(GostKursblockungRegelParameterTyp.KURSART, GostKursblockungRegelParameterTyp.SCHIENEN_NR, GostKursblockungRegelParameterTyp.SCHIENEN_NR));
+	//TODO M
 	const schienen = app.dataKursblockung.daten?.schienen || new Vector<GostBlockungSchiene>()
 	const kursart: Ref<GostKursart> = ref(GostKursart.GK)
 	const start: Ref<GostBlockungSchiene> = ref(schienen.get(0))
 	const ende: Ref<GostBlockungSchiene> = ref(schienen.get(0))
 	const regeln: ComputedRef<GostBlockungRegel[]> = computed(()=> {
 		const arr = []
+		//TODO M
 		if (!app.dataKursblockung.daten?.regeln) return []
 		for (const r of app.dataKursblockung.daten.regeln) if (r.typ === regel_typ.typ) arr.push(r)
 		return arr

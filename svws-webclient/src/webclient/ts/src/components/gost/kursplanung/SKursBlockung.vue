@@ -140,8 +140,8 @@ const toggle_kurszahl_anzeige = () => kurszahl_anzeige.value = !kurszahl_anzeige
 
 const gostFach: ComputedRef<GostFach | null> = computed(() => {
 	let fach: GostFach | null = null
-	if (!app.dataFaecher.daten) return null
-	for (const f of app.dataFaecher.daten)
+	if (!app.dataFaecher.manager) return null
+	for (const f of app.dataFaecher.manager.values())
 		if (f.id === props.kurs.fach_id) {
 			fach = f
 			break
@@ -189,6 +189,7 @@ const suffix: WritableComputedRef<string> = computed({
 });
 const manager: ComputedRef<GostBlockungsergebnisManager | undefined> = computed(()=>app.dataKursblockungsergebnis.manager)
 
+	//TODO M
 const schienen = computed(()=>app.dataKursblockung.daten?.schienen || new Vector<GostBlockungSchiene>())
 
 const kurs_blockungsergebnis: ComputedRef<GostBlockungsergebnisKurs|undefined> = computed(()=>{
@@ -222,12 +223,14 @@ const kursdifferenz: ComputedRef<[number, number, number]> = computed(() => {
 })
 
 const sperr_regeln: ComputedRef<GostBlockungRegel[]> = computed(() => {
+	//TODO M
 	const alle_regeln = app.dataKursblockung.daten?.regeln.toArray(new Array<GostBlockungRegel>())
 	const regeln = alle_regeln?.filter(r => r.typ === GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ && r.parameter.get(0) === props.kurs.id)
 	return regeln || []
 })
 
 const fixier_regel: ComputedRef<GostBlockungRegel | undefined> = computed(() => {
+	//TODO M
 	const regeln = app.dataKursblockung.daten?.regeln.toArray(new Array<GostBlockungRegel>())
 	const regel = regeln?.find(r => r.typ === GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ && r.parameter.get(0) === props.kurs.id)
 	return regel
@@ -242,6 +245,7 @@ const is_drop_zone = (schiene: GostBlockungSchiene) => {
 };
 
 const schiene_gesperrt = (schiene: GostBlockungSchiene): boolean => {
+	//TODO M
 	const regeln = app.dataKursblockung.daten?.regeln.toArray(new Array<GostBlockungRegel>())
 	const alleine_regeln = regeln?.filter(r=>r.typ === GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS.typ)
 	const sperr_regeln = regeln?.filter(r=>r.typ === GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS.typ)

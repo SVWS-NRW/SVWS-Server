@@ -13,13 +13,15 @@ const regel_typ = GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE
 // public static readonly KURS_FIXIERE_IN_SCHIENE : GostKursblockungRegelTyp = 
 // new GostKursblockungRegelTyp("KURS_FIXIERE_IN_SCHIENE", 2, 2, "Kurs: Fixiere in Schiene", 
 //Arrays.asList(GostKursblockungRegelParameterTyp.KURS_ID, GostKursblockungRegelParameterTyp.SCHIENEN_NR));
-const kurse = app.dataKursblockung.daten?.kurse || new Vector<GostBlockungKurs>()
+//TODO M
+const kurse = app.dataKursblockung.manager?.getKursmengeSortiertNachKursartFachNummer() || new Vector<GostBlockungKurs>() 
 const schienen = app.dataKursblockung.daten?.schienen || new Vector<GostBlockungSchiene>()
 
 const kurs: Ref<GostBlockungKurs> = ref(kurse.get(0))
 const schiene: Ref<GostBlockungSchiene> = ref(schienen.get(0))
 const regeln: ComputedRef<GostBlockungRegel[]> = computed(() => {
 	const arr = []
+	//TODO M
 	if (!app.dataKursblockung.daten?.regeln) return []
 	for (const r of app.dataKursblockung.daten.regeln) if (r.typ === regel_typ.typ) arr.push(r)
 	return arr

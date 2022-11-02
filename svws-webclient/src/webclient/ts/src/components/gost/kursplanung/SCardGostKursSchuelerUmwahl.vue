@@ -106,7 +106,8 @@ const is_dragging: ComputedRef<boolean> = computed(() => {
 });
 
 const kurse: ComputedRef<List<GostBlockungKurs>> = computed(() => 
-	app.dataKursblockung.daten?.kurse || new Vector<GostBlockungKurs>());
+	app.dataKursblockung.manager?.getKursmengeSortiertNachKursartFachNummer() || new Vector<GostBlockungKurs>() 
+)
 
 const schienen: ComputedRef<Vector<GostBlockungsergebnisSchiene> | undefined> = computed(() =>
 	manager.value?.getMengeAllerSchienen()
@@ -156,6 +157,7 @@ const schueler_negiert: ComputedRef<{ [index: number]: boolean }> = computed(() 
 });
 
 const blockungsergebnisse: ComputedRef<Map<GostBlockungKurs, GostBlockungsergebnisKurs[]>> = computed(() => {
+	//TODO M
 	const v = app.dataKursblockungsergebnis.daten?.schienen
 	if (!v) return new Map();
 	const schienen = v.toArray(new Array<GostBlockungsergebnisSchiene>())
@@ -168,6 +170,7 @@ const blockungsergebnisse: ComputedRef<Map<GostBlockungKurs, GostBlockungsergebn
 const fachbelegungen: ComputedRef<Vector<AbiturFachbelegung> | undefined> =
 	computed(() => {
 		const belegungen: Vector<AbiturFachbelegung> | undefined =
+			//TODO M?
 			app.dataSchuelerLaufbahndaten.daten?.fachbelegungen
 		if (!belegungen?.size) return undefined;
 		const comp: Comparator<AbiturFachbelegung> = class {

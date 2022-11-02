@@ -137,15 +137,17 @@
 			);
 		});
 
-	const sorted_kurse: ComputedRef<Array<GostBlockungKurs>|List<GostBlockungKurs>> = computed(() => {
+	const sorted_kurse: ComputedRef<List<GostBlockungKurs>> = computed(() => {
+		let list
 		if (sort_by.value === 'kursart') {
-			const arr = kurse.value.toArray(new Array<GostBlockungKurs>())
-			return arr.sort((a,b)=>a.kursart-b.kursart)
+			list = app.dataKursblockung.manager?.getKursmengeSortiertNachKursartFachNummer()
 		}
-		else return kurse.value
+		else list = app.dataKursblockung.manager?.getKursmengeSortiertNachFachKursartNummer()
+		return list || new Vector<GostBlockungKurs>()
 	})
 
 	const schienen: ComputedRef<GostBlockungSchiene[]> = computed(() => {
+		//TODO M
 		const result = app.dataKursblockung.daten?.schienen || new Vector<GostBlockungSchiene>();
 		return result.toArray(new Array<GostBlockungSchiene>());
 	});

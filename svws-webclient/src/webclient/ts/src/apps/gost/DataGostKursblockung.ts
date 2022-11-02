@@ -48,9 +48,7 @@ export class DataGostKursblockung extends BaseData<
 		);
 		if (blockungsdaten && App.apps.gost.dataFaecher.manager)
 			this.manager = new GostBlockungsdatenManager(blockungsdaten, App.apps.gost.dataFaecher.manager);
-		await this.listKursblockungsergebnisse.update_list(
-			blockungsdaten?.id
-		);
+		await this.listKursblockungsergebnisse.update_list(blockungsdaten?.id);
 		return blockungsdaten;
 	}
 
@@ -84,13 +82,7 @@ export class DataGostKursblockung extends BaseData<
 		if (!daten || daten.id === null) return false;
 		const id = daten.id;
 		console.log("patch", data, id);
-		return this._patch(data, () =>
-			App.api.patchGostBlockung(
-				data as GostBlockungsdaten,
-				App.schema,
-				id
-			)
-		);
+		return this._patch(data, () => App.api.patchGostBlockung(data, App.schema, id));
 	}
 
 	/**Ergänzt einen Kurs in der Blockung für das angegebene fach_id

@@ -3,13 +3,13 @@
 		<tr class="text-left" :style="{
 			'background-color': bgColor
 		}">
-			<td class="px-2 border-y border-[#7f7f7f]/20 border-r" :colspan="daten.schienen.size()+4">{{ fach.bezeichnung }} </td>
+			<td class="px-2 border-y border-[#7f7f7f]/20 border-r" :colspan="schienen.size()+4">{{ fach.bezeichnung }} </td>
 			<td class="bg-white"></td>
 		</tr>
 		<tr v-if="lk_kurszahl === 0 && lk" class="text-left" :style="{
 			'background-color': bgColor
 		}">
-			<td class="px-4 border-y border-[#7f7f7f]/20" :colspan="daten.schienen.size()">
+			<td class="px-4 border-y border-[#7f7f7f]/20" :colspan="schienen.size()">
 				{{ fach.kuerzel }}-LK: {{lk}} Kurswahlen
 			</td>
 			<td class="px-2 border-y border-[#7f7f7f]/20 border-r" colspan="4">
@@ -20,7 +20,7 @@
 		<tr v-if="gk_kurszahl === 0 && gk" class="text-left" :style="{
 			'background-color': bgColor
 		}">
-			<td class="px-4 border-y border-[#7f7f7f]/20" :colspan="daten.schienen.size()">
+			<td class="px-4 border-y border-[#7f7f7f]/20" :colspan="schienen.size()">
 				{{ fach.kuerzel }}-GK: {{gk}} Kurswahlen
 			</td>
 			<td class="px-2 border-y border-[#7f7f7f]/20 border-r" colspan="4">
@@ -31,7 +31,7 @@
 		<tr v-if="zk_kurszahl === 0 && zk" class="text-left" :style="{
 			'background-color': bgColor
 		}">
-			<td class="px-4 border-y border-[#7f7f7f]/20" :colspan="daten.schienen.size()">
+			<td class="px-4 border-y border-[#7f7f7f]/20" :colspan="schienen.size()">
 				{{ fach.kuerzel }}-ZK: {{zk}} Kurswahlen
 			</td>
 			<td class="px-2 border-y border-[#7f7f7f]/20 border-r" colspan="4">
@@ -44,9 +44,12 @@
 
 <script setup lang="ts">
 import {
-	GostBlockungsdaten,
+	GostBlockungKurs,
+	GostBlockungSchiene,
 	GostStatistikFachwahl,
-	GostStatistikFachwahlHalbjahr
+	GostStatistikFachwahlHalbjahr,
+	List,
+	Vector
 } from "@svws-nrw/svws-core-ts";
 import { computed, ComputedRef } from "vue";
 
@@ -69,7 +72,7 @@ const app = main.apps.gost;
 const kursezaehler: ComputedRef<{ lk: number; gk: number; zk: number }> =
 	computed(() => {
 		const zaehler = { lk: 0, gk: 0, zk: 0 };
-		for (const k of daten.value.kurse) {
+		for (const k of kurse.value) {
 			if (k.fach_id === props.fach.id)
 				switch (k.kursart) {
 					case 1:
@@ -90,10 +93,13 @@ async function add_kurs(art: "lk" | "gk" | "zk") {
 	const nr = art === "lk" ? 1 : art === "gk" ? 2 : 3;
 	await app.dataKursblockung.add_blockung_kurse(props.fach.id, nr)
 }
-
-const daten: ComputedRef<GostBlockungsdaten> = computed(() => {
-	return app.dataKursblockung.daten || new GostBlockungsdaten();
-});
+//TODO M
+const kurse: ComputedRef<Vector<GostBlockungKurs>> = computed(()=>
+	app.dataKursblockung.manager?.getKursmengeSortiertNachKursartFachNummer() || new Vector<GostBlockungKurs>()
+)
+const schienen: ComputedRef<List<GostBlockungSchiene>> = computed(()=>
+	app.dataKursblockung.daten?.schienen || new Vector<GostBlockungSchiene>()
+)
 
 const fach_halbjahr: ComputedRef<GostStatistikFachwahlHalbjahr> = computed(
 	() =>

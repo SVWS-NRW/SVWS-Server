@@ -102,9 +102,9 @@
 	)
 
 	const gostfach: ComputedRef<ZulaessigesFach | undefined> = computed(() => {
-		if (!app.dataFaecher.daten) return
+		if (!app.dataFaecher.manager) return
 		let fach
-		for (const f of app.dataFaecher.daten)
+		for (const f of app.dataFaecher.manager.values())
 			if (f.id === kurs_original.value?.fach_id) {
 				fach = f; break
 			}
@@ -151,6 +151,7 @@
 	}
 	
 	const verbieten_regel: ComputedRef<GostBlockungRegel | undefined> = computed(() => {
+		//TODO M
 		const regeln = app.dataKursblockung.daten?.regeln.toArray(new Array<GostBlockungRegel>())
 		const regel = regeln?.find(r => r.typ === GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ
 			&& r.parameter.get(0) === props.schueler.id
@@ -158,6 +159,7 @@
 		return regel
 	})
 	const fixier_regel: ComputedRef<GostBlockungRegel | undefined> = computed(() => {
+		//TODO M
 		const regeln = app.dataKursblockung.daten?.regeln.toArray(new Array<GostBlockungRegel>())
 		const regel = regeln?.find(r => r.typ === GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ
 			&& r.parameter.get(0) === props.schueler.id

@@ -1,9 +1,6 @@
 <template>
 	<tr
-		v-if="
-			app.dataKursblockung.daten?.gostHalbjahr != null &&
-			!!fach.belegungen[app.dataKursblockung.daten?.gostHalbjahr]
-		"
+		v-if="visible"
 		class="cursor-pointer border border-[#7f7f7f]/20 px-2 text-left"
 		:class="{ 'bg-red-400': !belegung }"
 	>
@@ -55,6 +52,12 @@
 
 	const main: Main = injectMainApp();
 	const app = main.apps.gost
+
+	const visible: ComputedRef<boolean> = computed(()=> {
+		const halbjahr = app.dataKursblockung.manager?.getHalbjahr()
+		const belegung = halbjahr && props.fach.belegungen[halbjahr.halbjahr]
+		return belegung ? true : false
+	})
 
 	const manager: ComputedRef<GostBlockungsergebnisManager | undefined> = computed(() => {
 		return app.dataKursblockungsergebnis.manager;

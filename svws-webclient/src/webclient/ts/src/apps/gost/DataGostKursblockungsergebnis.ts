@@ -68,8 +68,14 @@ export class DataGostKursblockungsergebnis extends BaseData<
 		schienenid: number,
 		schienenidneu: number
 	): Promise<boolean> {
-		if (!this._daten?.id) return false
-		await App.api.updateGostBlockungsergebnisKursSchieneZuordnung(App.schema, this._daten.id, schienenid, kursid, schienenidneu)
+		if (!this._daten?.id) return false;
+		await App.api.updateGostBlockungsergebnisKursSchieneZuordnung(
+			App.schema,
+			this._daten.id,
+			schienenid,
+			kursid,
+			schienenidneu
+		);
 		this.manager?.setKursSchiene(kursid, schienenid, true);
 		return true;
 	}

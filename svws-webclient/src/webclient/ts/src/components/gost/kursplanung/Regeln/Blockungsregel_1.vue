@@ -10,13 +10,16 @@ const regel_typ = GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS
 //public static readonly KURSART_SPERRE_SCHIENEN_VON_BIS : GostKursblockungRegelTyp = 
 //new GostKursblockungRegelTyp("KURSART_SPERRE_SCHIENEN_VON_BIS", 1, 1, 
 //"Kursart: Sperre Schienen (von/bis)", Arrays.asList(GostKursblockungRegelParameterTyp.KURSART, GostKursblockungRegelParameterTyp.SCHIENEN_NR, GostKursblockungRegelParameterTyp.SCHIENEN_NR));
-const schienen = app.dataKursblockung.daten?.schienen || new Vector<GostBlockungSchiene>()
+//TODO M
+//const schienen = app.dataKursblockung.manager?.getSchienen()
+	const schienen = app.dataKursblockung.daten?.schienen || new Vector<GostBlockungSchiene>()
 const kursart: Ref<GostKursart> = ref(GostKursart.GK)
 const start: Ref<GostBlockungSchiene> = ref(schienen.get(0))
 const ende: Ref<GostBlockungSchiene> = ref(schienen.get(0))
 const regeln: ComputedRef<GostBlockungRegel[]> = computed(()=> {
 	const arr = []
 	if (!app.dataKursblockung.daten?.regeln) return []
+	//TODO M
 	for (const r of app.dataKursblockung.daten.regeln) if (r.typ === regel_typ.typ) arr.push(r)
 	return arr
 })
