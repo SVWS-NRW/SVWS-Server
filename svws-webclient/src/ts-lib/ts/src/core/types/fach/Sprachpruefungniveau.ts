@@ -1,7 +1,7 @@
-import { JavaObject, cast_java_lang_Object } from '../../java/lang/JavaObject';
-import { JavaInteger, cast_java_lang_Integer } from '../../java/lang/JavaInteger';
-import { HashMap, cast_java_util_HashMap } from '../../java/util/HashMap';
-import { JavaString, cast_java_lang_String } from '../../java/lang/JavaString';
+import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
+import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
+import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
+import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 
 export class Sprachpruefungniveau extends JavaObject {
 
@@ -196,11 +196,11 @@ export class Sprachpruefungniveau extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.types.Sprachpruefungniveau'].includes(name);
+		return ['de.nrw.schule.svws.core.types.fach.Sprachpruefungniveau'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_types_Sprachpruefungniveau(obj : unknown) : Sprachpruefungniveau {
+export function cast_de_nrw_schule_svws_core_types_fach_Sprachpruefungniveau(obj : unknown) : Sprachpruefungniveau {
 	return obj as Sprachpruefungniveau;
 }

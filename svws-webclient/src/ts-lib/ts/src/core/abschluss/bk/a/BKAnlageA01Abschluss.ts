@@ -2,7 +2,7 @@ import { JavaObject, cast_java_lang_Object } from '../../../../java/lang/JavaObj
 import { AbschlussManagerBerufsbildend, cast_de_nrw_schule_svws_core_abschluss_AbschlussManagerBerufsbildend } from '../../../../core/abschluss/AbschlussManagerBerufsbildend';
 import { SchulabschlussAllgemeinbildend, cast_de_nrw_schule_svws_core_types_schule_SchulabschlussAllgemeinbildend } from '../../../../core/types/schule/SchulabschlussAllgemeinbildend';
 import { Service, cast_de_nrw_schule_svws_core_Service } from '../../../../core/Service';
-import { Sprachreferenzniveau, cast_de_nrw_schule_svws_core_types_Sprachreferenzniveau } from '../../../../core/types/Sprachreferenzniveau';
+import { Sprachreferenzniveau, cast_de_nrw_schule_svws_core_types_fach_Sprachreferenzniveau } from '../../../../core/types/fach/Sprachreferenzniveau';
 import { AbschlussErgebnisBerufsbildend, cast_de_nrw_schule_svws_core_data_abschluss_AbschlussErgebnisBerufsbildend } from '../../../../core/data/abschluss/AbschlussErgebnisBerufsbildend';
 import { BKAnlageAFaecher, cast_de_nrw_schule_svws_core_abschluss_bk_a_BKAnlageAFaecher } from '../../../../core/abschluss/bk/a/BKAnlageAFaecher';
 import { LogLevel, cast_de_nrw_schule_svws_logger_LogLevel } from '../../../../logger/LogLevel';

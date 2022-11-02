@@ -1,6 +1,6 @@
 package de.nrw.schule.svws.db.converter.current;
 
-import de.nrw.schule.svws.core.types.Sprachpruefungniveau;
+import de.nrw.schule.svws.core.types.fach.Sprachpruefungniveau;
 import de.nrw.schule.svws.db.converter.DBAttributeConverter;
 import jakarta.persistence.Converter;
 

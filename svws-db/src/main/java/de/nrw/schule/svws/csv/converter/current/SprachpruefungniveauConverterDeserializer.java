@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import de.nrw.schule.svws.core.types.Sprachpruefungniveau;
+import de.nrw.schule.svws.core.types.fach.Sprachpruefungniveau;
 import de.nrw.schule.svws.db.converter.current.SprachpruefungniveauConverter;
 
 import java.io.IOException;

@@ -7,7 +7,7 @@ import java.util.Comparator;
 import de.nrw.schule.svws.core.data.Sprachbelegung;
 import de.nrw.schule.svws.core.data.Sprachendaten;
 import de.nrw.schule.svws.core.data.Sprachpruefung;
-import de.nrw.schule.svws.core.types.Sprachpruefungniveau;
+import de.nrw.schule.svws.core.types.fach.Sprachpruefungniveau;
 import jakarta.validation.constraints.NotNull;
 
 

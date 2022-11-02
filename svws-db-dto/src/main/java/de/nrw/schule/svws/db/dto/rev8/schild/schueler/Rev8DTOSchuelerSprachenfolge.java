@@ -4,7 +4,7 @@ import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.converter.current.Boolean01Converter;
 import de.nrw.schule.svws.db.converter.current.SprachreferenzniveauConverter;
 
-import de.nrw.schule.svws.core.types.Sprachreferenzniveau;
+import de.nrw.schule.svws.core.types.fach.Sprachreferenzniveau;
 
 
 import jakarta.persistence.Cacheable;

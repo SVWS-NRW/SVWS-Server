@@ -7,8 +7,8 @@ import de.nrw.schule.svws.db.converter.current.SprachpruefungniveauConverter;
 import de.nrw.schule.svws.db.converter.current.SprachreferenzniveauConverter;
 
 import de.nrw.schule.svws.core.types.Note;
-import de.nrw.schule.svws.core.types.Sprachpruefungniveau;
-import de.nrw.schule.svws.core.types.Sprachreferenzniveau;
+import de.nrw.schule.svws.core.types.fach.Sprachpruefungniveau;
+import de.nrw.schule.svws.core.types.fach.Sprachreferenzniveau;
 
 
 import jakarta.persistence.Cacheable;

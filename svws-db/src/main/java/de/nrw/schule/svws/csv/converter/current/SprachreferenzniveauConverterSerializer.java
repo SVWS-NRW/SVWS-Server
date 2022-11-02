@@ -3,7 +3,7 @@ package de.nrw.schule.svws.csv.converter.current;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
-import de.nrw.schule.svws.core.types.Sprachreferenzniveau;
+import de.nrw.schule.svws.core.types.fach.Sprachreferenzniveau;
 
 import java.io.IOException;
 

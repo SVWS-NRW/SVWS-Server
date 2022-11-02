@@ -1,4 +1,4 @@
-package de.nrw.schule.svws.core.types;
+package de.nrw.schule.svws.core.types.fach;
 
 import java.util.HashMap;
 

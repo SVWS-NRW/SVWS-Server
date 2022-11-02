@@ -1,8 +1,8 @@
-import { JavaObject, cast_java_lang_Object } from '../../java/lang/JavaObject';
-import { JavaInteger, cast_java_lang_Integer } from '../../java/lang/JavaInteger';
-import { Comparable, cast_java_lang_Comparable } from '../../java/lang/Comparable';
-import { HashMap, cast_java_util_HashMap } from '../../java/util/HashMap';
-import { JavaString, cast_java_lang_String } from '../../java/lang/JavaString';
+import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
+import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
+import { Comparable, cast_java_lang_Comparable } from '../../../java/lang/Comparable';
+import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
+import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 
 export class Sprachreferenzniveau extends JavaObject implements Comparable<Sprachreferenzniveau | null> {
 
@@ -80,8 +80,8 @@ export class Sprachreferenzniveau extends JavaObject implements Comparable<Sprac
 	 * Implementation for method overloads of 'compareTo'
 	 */
 	public compareTo(__param0 : Sprachreferenzniveau | String | null) : number {
-		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.types.Sprachreferenzniveau'))) || (__param0 === null))) {
-			let other : Sprachreferenzniveau | null = cast_de_nrw_schule_svws_core_types_Sprachreferenzniveau(__param0);
+		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.types.fach.Sprachreferenzniveau'))) || (__param0 === null))) {
+			let other : Sprachreferenzniveau | null = cast_de_nrw_schule_svws_core_types_fach_Sprachreferenzniveau(__param0);
 			if (other === null) 
 				return 1;
 			return JavaInteger.compare(this.sortierung, other.sortierung);
@@ -92,11 +92,11 @@ export class Sprachreferenzniveau extends JavaObject implements Comparable<Sprac
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['java.lang.Comparable', 'de.nrw.schule.svws.core.types.Sprachreferenzniveau'].includes(name);
+		return ['de.nrw.schule.svws.core.types.fach.Sprachreferenzniveau', 'java.lang.Comparable'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_types_Sprachreferenzniveau(obj : unknown) : Sprachreferenzniveau {
+export function cast_de_nrw_schule_svws_core_types_fach_Sprachreferenzniveau(obj : unknown) : Sprachreferenzniveau {
 	return obj as Sprachreferenzniveau;
 }

@@ -1,7 +1,7 @@
-import { JavaObject, cast_java_lang_Object } from '../../java/lang/JavaObject';
-import { JavaInteger, cast_java_lang_Integer } from '../../java/lang/JavaInteger';
-import { Comparable, cast_java_lang_Comparable } from '../../java/lang/Comparable';
-import { JavaString, cast_java_lang_String } from '../../java/lang/JavaString';
+import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
+import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
+import { Comparable, cast_java_lang_Comparable } from '../../../java/lang/Comparable';
+import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 
 export class SprachBelegungSekI extends JavaObject implements Comparable<SprachBelegungSekI | null> {
 
@@ -73,11 +73,11 @@ export class SprachBelegungSekI extends JavaObject implements Comparable<SprachB
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['java.lang.Comparable', 'de.nrw.schule.svws.core.types.SprachBelegungSekI'].includes(name);
+		return ['de.nrw.schule.svws.core.types.fach.SprachBelegungSekI', 'java.lang.Comparable'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_types_SprachBelegungSekI(obj : unknown) : SprachBelegungSekI {
+export function cast_de_nrw_schule_svws_core_types_fach_SprachBelegungSekI(obj : unknown) : SprachBelegungSekI {
 	return obj as SprachBelegungSekI;
 }

@@ -2,7 +2,7 @@ import { JavaObject, cast_java_lang_Object } from '../java/lang/JavaObject';
 import { JavaInteger, cast_java_lang_Integer } from '../java/lang/JavaInteger';
 import { Sprachbelegung, cast_de_nrw_schule_svws_core_data_Sprachbelegung } from '../core/data/Sprachbelegung';
 import { Sprachpruefung, cast_de_nrw_schule_svws_core_data_Sprachpruefung } from '../core/data/Sprachpruefung';
-import { Sprachpruefungniveau, cast_de_nrw_schule_svws_core_types_Sprachpruefungniveau } from '../core/types/Sprachpruefungniveau';
+import { Sprachpruefungniveau, cast_de_nrw_schule_svws_core_types_fach_Sprachpruefungniveau } from '../core/types/fach/Sprachpruefungniveau';
 import { NumberFormatException, cast_java_lang_NumberFormatException } from '../java/lang/NumberFormatException';
 import { JavaString, cast_java_lang_String } from '../java/lang/JavaString';
 import { Vector, cast_java_util_Vector } from '../java/util/Vector';
