@@ -234,7 +234,52 @@ public enum BenutzerKompetenz {
     	113, BenutzerKompetenzGruppe.STUNDENPLANUNG, "Stundenpläne aktivieren"
     )),
     
-    //TODO OBERSTUFE 121...., Notenmodul 131....., Datenbank-Management 141.........
+    /** Es werden Rechte zur Durchführung der Laufbahnplanung (allgemein) benötigt. */
+    OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN(new BenutzerKompetenzKatalogEintrag(
+    	121, BenutzerKompetenzGruppe.OBERSTUFE, "Laufbahnplanung (allgemein)"
+    )),
+    
+    /** Es werden Rechte zur Durchführung der Laufbahnplanung (stufenbezogen) benötigt. */
+    OBERSTUFE_LAUFBAHNPLANUNG_STUFE(new BenutzerKompetenzKatalogEintrag(
+    	122, BenutzerKompetenzGruppe.OBERSTUFE, "Laufbahnplanung (stufenbezogen)"
+    )),
+    
+    /** Es werden Rechte zum Import von Laufbahnpdaten aus LuPO benötigt. */
+    OBERSTUFE_LUPO_IMPORT(new BenutzerKompetenzKatalogEintrag(
+    	123, BenutzerKompetenzGruppe.OBERSTUFE, "Laufbahnplanung aus LuPO importieren"
+    )),
+    
+    /** Es werden Rechte zur Kursverwaltung - Blocken (allgemein) benötigt. */
+    OBERSTUFE_BLOCKEN_ALLGEMEIN(new BenutzerKompetenzKatalogEintrag(
+    	124, BenutzerKompetenzGruppe.OBERSTUFE, "Kursverwaltung - Blocken (allgemein)"
+    )),
+    
+    /** Es werden Rechte zur Kursverwaltung - Blocken (stufenbezogen) benötigt. */
+    OBERSTUFE_BLOCKEN_STUFE(new BenutzerKompetenzKatalogEintrag(
+    	125, BenutzerKompetenzGruppe.OBERSTUFE, "Kursverwaltung - Blocken (stufenbezogen)"
+    )),
+    
+    /** Es werden Rechte zur Aktivierung einer Blockung benötigt. */
+    OBERSTUFE_BLOCKUNG_AKTIVIEREN(new BenutzerKompetenzKatalogEintrag(
+    	126, BenutzerKompetenzGruppe.OBERSTUFE, "Kursverwaltung - Blockung aktivieren"
+    )),
+    
+    /** Es werden Rechte zur Bearbeitung einer KLausurplanung benötigt. */
+    OBERSTUFE_KLAUSURPLANUNG_AENDERN(new BenutzerKompetenzKatalogEintrag(
+    	127, BenutzerKompetenzGruppe.OBERSTUFE, "Klausurplanung ändern"
+    )),
+    
+    /** Es werden Rechte zum Ansehen einer KLausurplanung (allgemein) benötigt. */
+    OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN(new BenutzerKompetenzKatalogEintrag(
+    	128, BenutzerKompetenzGruppe.OBERSTUFE, "Klausurplanung ansehen (allgemein)"
+    )),
+    
+    /** Es werden Rechte zum Ansehen einer KLausurplanung (funktionsbezogen) benötigt. */
+    OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION(new BenutzerKompetenzKatalogEintrag(
+    	129, BenutzerKompetenzGruppe.OBERSTUFE, "Klausurplanung ansehen (funktionsbezogen)"
+    )),
+        
+    //TODO Notenmodul 131....., Datenbank-Management 141.........
     
     /** Es werden Rechte zum Ansehen der Adressdaten eines von Erziehungsberechtigten benötigt*/
     ADRESSDATEN_ERZIEHER_ANSEHEN(new BenutzerKompetenzKatalogEintrag(

@@ -51,7 +51,7 @@ public enum BenutzerKompetenzGruppe {
     STUNDENPLANUNG(new BenutzerKompetenzGruppenKatalogEintrag(1100, "Stundenplanung", 4, 1)),
     
     /** Gruppe für Rechte bezüglich des Verfahrens zur Schulpflichverletzung. */
-    OBERTSTUFE(new BenutzerKompetenzGruppenKatalogEintrag(1200, "Oberstufenplanung", 4, 2)),
+    OBERSTUFE(new BenutzerKompetenzGruppenKatalogEintrag(1200, "Oberstufenplanung", 4, 2)),
     
     /** Gruppe für Rechte bezüglich des Verfahrens zur Schulpflichverletzung. */
     NOTENMODUL(new BenutzerKompetenzGruppenKatalogEintrag(1100, "Notenmodul", 4, 3)),
