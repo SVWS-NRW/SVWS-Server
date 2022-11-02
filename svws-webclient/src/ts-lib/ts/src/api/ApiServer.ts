@@ -4804,7 +4804,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getKatalogUebergangsempfehlung für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/allgemein/kindergartenbesuch
+	 * Implementierung der GET-Methode getKatalogUebergangsempfehlung für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/allgemein/uebergangsempfehlung
 	 * 
 	 * Erstellt eine Liste aller in dem Katalog vorhandenen Übergangsempfehlungen der Grundschule für die Sekundarstufe I. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
 	 * 
@@ -4820,7 +4820,7 @@ export class ApiServer extends BaseApi {
 	 * @returns Eine Liste von Katalog-Einträgen
 	 */
 	public async getKatalogUebergangsempfehlung(schema : string) : Promise<List<UebergangsempfehlungKatalogEintrag>> {
-		let path : string = "/db/{schema}/schueler/allgemein/kindergartenbesuch"
+		let path : string = "/db/{schema}/schueler/allgemein/uebergangsempfehlung"
 				.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
