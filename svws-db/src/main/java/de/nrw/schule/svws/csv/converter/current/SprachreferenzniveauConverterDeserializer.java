@@ -34,7 +34,7 @@ public class SprachreferenzniveauConverterDeserializer extends StdDeserializer<S
 
     @Override
     public Sprachreferenzniveau deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
-        return Sprachreferenzniveau.getByBezeichnung(p.getText());
+        return Sprachreferenzniveau.getByKuerzel(p.getText());
     }
 
 }

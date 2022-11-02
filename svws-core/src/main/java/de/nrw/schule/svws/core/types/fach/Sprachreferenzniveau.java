@@ -2,109 +2,172 @@ package de.nrw.schule.svws.core.types.fach;
 
 import java.util.HashMap;
 
+import de.nrw.schule.svws.core.data.fach.SprachreferenzniveauKatalogEintrag;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Diese Klasse stellt die Core-Types als Ennummeration für 
- * die AbiturBelegungsart zur Verfügung.
- * Core-Types dienen als grundlegende abstrakte Datentypen sowohl für die Core-Algorithmen
- * als auch für die OpenAPI-Schnittstelle.
+ * Der Core-Type für die Sprachreferenznniveaus.
  */
-public class Sprachreferenzniveau implements Comparable<Sprachreferenzniveau> {
+public enum Sprachreferenzniveau  {
 	
-	/** Die Zuordnung der Sprachreferenzniveaus zu ihren Bezeichnungen */
-	private static @NotNull HashMap<@NotNull String, @NotNull Sprachreferenzniveau> mapBezeichnung = new HashMap<>();
-	
-
 	/** Referenzniveau nach GeR A1. */
-	public static final @NotNull Sprachreferenzniveau A1 = new Sprachreferenzniveau(1, "A1");
+	A1(new SprachreferenzniveauKatalogEintrag[] {
+	    new SprachreferenzniveauKatalogEintrag(1, "A1", null, null)
+	}),
 	
 	/** Referenzniveau nach GeR A1 Plus */
-	public static final @NotNull Sprachreferenzniveau A1P = new Sprachreferenzniveau(2, "A1+");
+	A1P(new SprachreferenzniveauKatalogEintrag[] {
+	    new SprachreferenzniveauKatalogEintrag(2, "A1+", null, null)
+	}),
 	
 	/** Referenzniveau nach GeR A1A2 */
-	public static final @NotNull Sprachreferenzniveau A1A2 = new Sprachreferenzniveau(3, "A1/A2");
+	A1A2(new SprachreferenzniveauKatalogEintrag[] {
+	    new SprachreferenzniveauKatalogEintrag(3, "A1/A2", null, null)
+    }),
 	
 	/** Referenzniveau nach GeR A2 */
-	public static final @NotNull Sprachreferenzniveau A2 = new Sprachreferenzniveau(4, "A2");
+	A2(new SprachreferenzniveauKatalogEintrag[] {
+	    new SprachreferenzniveauKatalogEintrag(4, "A2", null, null)
+    }),
 	
 	/** Referenzniveau nach GeR A2 Plus */
-	public static final @NotNull Sprachreferenzniveau A2P = new Sprachreferenzniveau(5, "A2+");
+	A2P(new SprachreferenzniveauKatalogEintrag[] {
+	    new SprachreferenzniveauKatalogEintrag(5, "A2+", null, null)
+    }),
 	
 	/** Referenzniveau nach GeR A2B1. */
-	public static final @NotNull Sprachreferenzniveau A2B1 = new Sprachreferenzniveau(6, "A2/B1");
+	A2B1(new SprachreferenzniveauKatalogEintrag[] {
+	    new SprachreferenzniveauKatalogEintrag(6, "A2/B1", null, null)
+    }),
 	
 	/** Referenzniveau nach GeR B1. */
-	public static final @NotNull Sprachreferenzniveau B1 = new Sprachreferenzniveau(7, "B1");
+	B1(new SprachreferenzniveauKatalogEintrag[] {
+	    new SprachreferenzniveauKatalogEintrag(7, "B1", null, null)
+    }),
 	
 	/** Referenzniveau nach GeR B1 Plus. */
-	public static final @NotNull Sprachreferenzniveau B1P = new Sprachreferenzniveau(8, "B1+");
+	B1P(new SprachreferenzniveauKatalogEintrag[] {
+	    new SprachreferenzniveauKatalogEintrag(8, "B1+", null, null)
+    }),
 	
 	/** Referenzniveau nach GeR B1B2. */
-	public static final @NotNull Sprachreferenzniveau B1B2 = new Sprachreferenzniveau(9, "B1/B2");
+	B1B2(new SprachreferenzniveauKatalogEintrag[] {
+	    new SprachreferenzniveauKatalogEintrag(9, "B1/B2", null, null)
+    }),
 	
 	/** Referenzniveau nach GeR B2. */
-	public static final @NotNull Sprachreferenzniveau B2 = new Sprachreferenzniveau(10, "B2");
+	B2(new SprachreferenzniveauKatalogEintrag[] {
+	    new SprachreferenzniveauKatalogEintrag(10, "B2", null, null)
+    }),
 	
 	/** Referenzniveau nach GeR B2C1. */
-	public static final @NotNull Sprachreferenzniveau B2C1 = new Sprachreferenzniveau(11, "B2/C1");
+	B2C1(new SprachreferenzniveauKatalogEintrag[] {
+	    new SprachreferenzniveauKatalogEintrag(11, "B2/C1", null, null)
+    }),
 	
 	/** Referenzniveau nach GeR C1. */
-	public static final @NotNull Sprachreferenzniveau C1 = new Sprachreferenzniveau(12, "C1");
+	C1(new SprachreferenzniveauKatalogEintrag[] {
+	    new SprachreferenzniveauKatalogEintrag(12, "C1", null, null)
+    }),
 	
 	/** Referenzniveau nach GeR C2. */
-	public static final @NotNull Sprachreferenzniveau C2 = new Sprachreferenzniveau(13, "C2");
+	C2(new SprachreferenzniveauKatalogEintrag[] {
+	    new SprachreferenzniveauKatalogEintrag(13, "C2", null, null)
+    });
 
 
-	/** Die Sortierung der referenzniveaus, welche intern für vergleiche genutzt wird. */
-	private final int sortierung;
+    /** Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. */
+    public static long VERSION = 1;
 
-	/** Die Bezeichnung des Referenzniveaus als Text */
-	public final @NotNull String bezeichnung;
+    /** Der aktuellen Daten des Sprachprüfungsniveaus */
+    public final @NotNull SprachreferenzniveauKatalogEintrag daten;
+
+    /** Die Historie mit den Einträgen des Sprachprüfungsniveaus */
+    public final @NotNull SprachreferenzniveauKatalogEintrag@NotNull[] historie; 
+
+    /** Die Zuordnung der Sprachreferenzniveaus zu ihren IDs */
+    private static final @NotNull HashMap<@NotNull Integer, @NotNull Sprachreferenzniveau> _mapID = new HashMap<>();
+
+    /** Die Zuordnung der Sprachreferenzniveaus zu ihren Bezeichnungen */
+    private static final @NotNull HashMap<@NotNull String, @NotNull Sprachreferenzniveau> _mapKuerzel = new HashMap<>();
 
 
 	/** 
 	 * Erstellt ein neues Sprachreferenzniveau dieser Aufzählung.
 
-	 * @param sortierung    die Sortierung, welche nur intern für den vergleich von 
-	 *                      Referenzniveaus genutzt wird. 
-	 * @param bezeichnung   die Bezeichnung des Sprachreferenzniveaus
+     * @param historie   die Historie des Sprachreferenzniveaus, welche ein Array von 
+     *                   {@link SprachreferenzniveauKatalogEintrag} ist  
 	 */
-	private Sprachreferenzniveau(final int sortierung, final @NotNull String bezeichnung) {
-		this.sortierung = sortierung;
-		this.bezeichnung = bezeichnung;
-		mapBezeichnung.put(bezeichnung, this);
+	private Sprachreferenzniveau(@NotNull SprachreferenzniveauKatalogEintrag@NotNull[] historie) {
+        this.historie = historie;
+        this.daten = historie[historie.length - 1];
 	}
 
 	
-	/**
-	 * Gibt das Sprachreferenzniveau für die übergebene Bezeichnung zurück.
-	 * 
-	 * @param bezeichnung   die Bezeichnung des Sprachreferenzniveaus
-	 * 
-	 * @return das Sprachreferenzniveau oder null im Fehlerfall
-	 */
-	public static Sprachreferenzniveau getByBezeichnung(String bezeichnung) {
-		return mapBezeichnung.get(bezeichnung);
-	}
-	
+    /**
+     * Gibt eine Map von den IDs der Sprachreferenzniveaus auf die zugehörigen Sprachreferenzniveaus
+     * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
+     *    
+     * @return die Map von den IDs der Sprachreferenzniveaus auf die zugehörigen Sprachreferenzniveaus
+     */
+    private static @NotNull HashMap<@NotNull Integer, @NotNull Sprachreferenzniveau> getMapByID() {
+        if (_mapID.size() == 0)
+            for (Sprachreferenzniveau l : Sprachreferenzniveau.values())
+                _mapID.put(l.daten.id, l);              
+        return _mapID;
+    }
 
-	@Override
-	public int compareTo(Sprachreferenzniveau other) {
-		if (other == null)
-			return 1;   // irgendetwas ist besser als kein Sprachreferenzniveau
-		return Integer.compare(sortierung, other.sortierung);
-	}
+    
+    /**
+     * Gibt eine Map von den Bezeichnungen der Sprachreferenzniveaus auf die zugehörigen Sprachreferenzniveaus
+     * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
+     *    
+     * @return die Map von den Bezeichnungen der Sprachreferenzniveaus auf die zugehörigen Sprachreferenzniveaus
+     */
+    private static @NotNull HashMap<@NotNull String, @NotNull Sprachreferenzniveau> getMapByKuerzel() {
+        if (_mapKuerzel.size() == 0)
+            for (Sprachreferenzniveau l : Sprachreferenzniveau.values())
+                _mapKuerzel.put(l.daten.kuerzel, l);                
+        return _mapKuerzel;
+    }
+        
 
+    /**
+     * Gibt das Sprachreferenzniveau für die übergebene ID zurück.
+     *
+     * @param id   die ID des Sprachreferenzniveaus
+     *
+     * @return das Sprachreferenzniveau oder null, wenn die ID ungültig ist
+     */
+    public static Sprachreferenzniveau getByID(Integer id) {
+        return getMapByID().get(id);
+    }
+
+
+    /**
+     * Gibt das Sprachreferenzniveau für das übergebene Kürzel zurück.
+     * 
+     * @param kuerzel   das Kürzel des Sprachreferenzniveaus
+     * 
+     * @return das Sprachreferenzniveau oder null, wenn das Kürzel ungültig ist
+     */
+    public static Sprachreferenzniveau getByKuerzel(String kuerzel) {
+        return getMapByKuerzel().get(kuerzel);
+    }
+
+    
 	/**
-	 * Vergleicht dieses Sprachreferenzniveau mit dem Niveau der übergebenen Bezeichnung.
+	 * Vergleicht dieses Sprachreferenzniveau mit dem Niveau des übergebenen Kürzels.
 	 * 
-	 * @param bezeichnung   die Bezeichnung des anderen Sprachreferenzniveaus
+	 * @param kuerzel   das Kürzel des anderen Sprachreferenzniveaus
 	 * 
-	 * @return siehe {@link Sprachreferenzniveau#compareTo(Sprachreferenzniveau)}
+	 * @return -1 (kleiner), 0 (gleich) oder 1 (größer)
 	 */
-	public int compareTo(String bezeichnung) {
-		return compareTo(getByBezeichnung(bezeichnung));
+	public int vergleiche(String kuerzel) {
+	    Sprachreferenzniveau other = getByKuerzel(kuerzel);
+	    if (other == null)
+	        return 1;
+	    return this.compareTo(other);
 	}
 	
 }

@@ -1,98 +1,222 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
 import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
-import { Comparable, cast_java_lang_Comparable } from '../../../java/lang/Comparable';
 import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
+import { SprachreferenzniveauKatalogEintrag, cast_de_nrw_schule_svws_core_data_fach_SprachreferenzniveauKatalogEintrag } from '../../../core/data/fach/SprachreferenzniveauKatalogEintrag';
 
-export class Sprachreferenzniveau extends JavaObject implements Comparable<Sprachreferenzniveau | null> {
+export class Sprachreferenzniveau extends JavaObject {
 
-	private static mapBezeichnung : HashMap<String, Sprachreferenzniveau> = new HashMap();
+	/** the name of the enumeration value */
+	private readonly __name : String;
 
-	public static readonly A1 : Sprachreferenzniveau = new Sprachreferenzniveau(1, "A1");
+	/** the ordinal value for the enumeration value */
+	private readonly __ordinal : number;
 
-	public static readonly A1P : Sprachreferenzniveau = new Sprachreferenzniveau(2, "A1+");
+	/** an array containing all values of this enumeration */
+	private static readonly all_values_by_ordinal : Array<Sprachreferenzniveau> = [];
 
-	public static readonly A1A2 : Sprachreferenzniveau = new Sprachreferenzniveau(3, "A1/A2");
+	/** an array containing all values of this enumeration indexed by their name*/
+	private static readonly all_values_by_name : Map<String, Sprachreferenzniveau> = new Map<String, Sprachreferenzniveau>();
 
-	public static readonly A2 : Sprachreferenzniveau = new Sprachreferenzniveau(4, "A2");
+	public static readonly A1 : Sprachreferenzniveau = new Sprachreferenzniveau("A1", 0, [new SprachreferenzniveauKatalogEintrag(1, "A1", null, null)]);
 
-	public static readonly A2P : Sprachreferenzniveau = new Sprachreferenzniveau(5, "A2+");
+	public static readonly A1P : Sprachreferenzniveau = new Sprachreferenzniveau("A1P", 1, [new SprachreferenzniveauKatalogEintrag(2, "A1+", null, null)]);
 
-	public static readonly A2B1 : Sprachreferenzniveau = new Sprachreferenzniveau(6, "A2/B1");
+	public static readonly A1A2 : Sprachreferenzniveau = new Sprachreferenzniveau("A1A2", 2, [new SprachreferenzniveauKatalogEintrag(3, "A1/A2", null, null)]);
 
-	public static readonly B1 : Sprachreferenzniveau = new Sprachreferenzniveau(7, "B1");
+	public static readonly A2 : Sprachreferenzniveau = new Sprachreferenzniveau("A2", 3, [new SprachreferenzniveauKatalogEintrag(4, "A2", null, null)]);
 
-	public static readonly B1P : Sprachreferenzniveau = new Sprachreferenzniveau(8, "B1+");
+	public static readonly A2P : Sprachreferenzniveau = new Sprachreferenzniveau("A2P", 4, [new SprachreferenzniveauKatalogEintrag(5, "A2+", null, null)]);
 
-	public static readonly B1B2 : Sprachreferenzniveau = new Sprachreferenzniveau(9, "B1/B2");
+	public static readonly A2B1 : Sprachreferenzniveau = new Sprachreferenzniveau("A2B1", 5, [new SprachreferenzniveauKatalogEintrag(6, "A2/B1", null, null)]);
 
-	public static readonly B2 : Sprachreferenzniveau = new Sprachreferenzniveau(10, "B2");
+	public static readonly B1 : Sprachreferenzniveau = new Sprachreferenzniveau("B1", 6, [new SprachreferenzniveauKatalogEintrag(7, "B1", null, null)]);
 
-	public static readonly B2C1 : Sprachreferenzniveau = new Sprachreferenzniveau(11, "B2/C1");
+	public static readonly B1P : Sprachreferenzniveau = new Sprachreferenzniveau("B1P", 7, [new SprachreferenzniveauKatalogEintrag(8, "B1+", null, null)]);
 
-	public static readonly C1 : Sprachreferenzniveau = new Sprachreferenzniveau(12, "C1");
+	public static readonly B1B2 : Sprachreferenzniveau = new Sprachreferenzniveau("B1B2", 8, [new SprachreferenzniveauKatalogEintrag(9, "B1/B2", null, null)]);
 
-	public static readonly C2 : Sprachreferenzniveau = new Sprachreferenzniveau(13, "C2");
+	public static readonly B2 : Sprachreferenzniveau = new Sprachreferenzniveau("B2", 9, [new SprachreferenzniveauKatalogEintrag(10, "B2", null, null)]);
 
-	private readonly sortierung : number;
+	public static readonly B2C1 : Sprachreferenzniveau = new Sprachreferenzniveau("B2C1", 10, [new SprachreferenzniveauKatalogEintrag(11, "B2/C1", null, null)]);
 
-	public readonly bezeichnung : String;
+	public static readonly C1 : Sprachreferenzniveau = new Sprachreferenzniveau("C1", 11, [new SprachreferenzniveauKatalogEintrag(12, "C1", null, null)]);
 
+	public static readonly C2 : Sprachreferenzniveau = new Sprachreferenzniveau("C2", 12, [new SprachreferenzniveauKatalogEintrag(13, "C2", null, null)]);
+
+	public static VERSION : number = 1;
+
+	public readonly daten : SprachreferenzniveauKatalogEintrag;
+
+	public readonly historie : Array<SprachreferenzniveauKatalogEintrag>;
+
+	private static readonly _mapID : HashMap<Number, Sprachreferenzniveau> = new HashMap();
+
+	private static readonly _mapKuerzel : HashMap<String, Sprachreferenzniveau> = new HashMap();
 
 	/**
 	 *
 	 * Erstellt ein neues Sprachreferenzniveau dieser Aufzählung.
 	 *
-	 * @param sortierung    die Sortierung, welche nur intern für den vergleich von 
-	 *                      Referenzniveaus genutzt wird. 
-	 * @param bezeichnung   die Bezeichnung des Sprachreferenzniveaus
+	 * @param historie   die Historie des Sprachreferenzniveaus, welche ein Array von 
+	 *                   {@link SprachreferenzniveauKatalogEintrag} ist  
 	 */
-	private constructor(sortierung : number, bezeichnung : String) {
+	private constructor(name : string, ordinal : number, historie : Array<SprachreferenzniveauKatalogEintrag>) {
 		super();
-		this.sortierung = sortierung;
-		this.bezeichnung = bezeichnung;
-		Sprachreferenzniveau.mapBezeichnung.put(bezeichnung, this);
+		this.__name = name;
+		this.__ordinal = ordinal;
+		Sprachreferenzniveau.all_values_by_ordinal.push(this);
+		Sprachreferenzniveau.all_values_by_name.set(name, this);
+		this.historie = historie;
+		this.daten = historie[historie.length - 1];
 	}
 
 	/**
-	 * Gibt das Sprachreferenzniveau für die übergebene Bezeichnung zurück.
-	 * 
-	 * @param bezeichnung   die Bezeichnung des Sprachreferenzniveaus
-	 * 
-	 * @return das Sprachreferenzniveau oder null im Fehlerfall
+	 * Gibt eine Map von den IDs der Sprachreferenzniveaus auf die zugehörigen Sprachreferenzniveaus
+	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
+	 *    
+	 * @return die Map von den IDs der Sprachreferenzniveaus auf die zugehörigen Sprachreferenzniveaus
 	 */
-	public static getByBezeichnung(bezeichnung : String | null) : Sprachreferenzniveau | null {
-		return Sprachreferenzniveau.mapBezeichnung.get(bezeichnung);
+	private static getMapByID() : HashMap<Number, Sprachreferenzniveau> {
+		if (Sprachreferenzniveau._mapID.size() === 0) 
+			for (let l of Sprachreferenzniveau.values()) 
+				Sprachreferenzniveau._mapID.put(l.daten.id, l);
+		return Sprachreferenzniveau._mapID;
 	}
 
-	public compareTo(other : Sprachreferenzniveau | null) : number;
+	/**
+	 * Gibt eine Map von den Bezeichnungen der Sprachreferenzniveaus auf die zugehörigen Sprachreferenzniveaus
+	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
+	 *    
+	 * @return die Map von den Bezeichnungen der Sprachreferenzniveaus auf die zugehörigen Sprachreferenzniveaus
+	 */
+	private static getMapByKuerzel() : HashMap<String, Sprachreferenzniveau> {
+		if (Sprachreferenzniveau._mapKuerzel.size() === 0) 
+			for (let l of Sprachreferenzniveau.values()) 
+				Sprachreferenzniveau._mapKuerzel.put(l.daten.kuerzel, l);
+		return Sprachreferenzniveau._mapKuerzel;
+	}
 
 	/**
-	 * Vergleicht dieses Sprachreferenzniveau mit dem Niveau der übergebenen Bezeichnung.
-	 * 
-	 * @param bezeichnung   die Bezeichnung des anderen Sprachreferenzniveaus
-	 * 
-	 * @return siehe {@link Sprachreferenzniveau#compareTo(Sprachreferenzniveau)}
+	 * Gibt das Sprachreferenzniveau für die übergebene ID zurück.
+	 *
+	 * @param id   die ID des Sprachreferenzniveaus
+	 *
+	 * @return das Sprachreferenzniveau oder null, wenn die ID ungültig ist
 	 */
-	public compareTo(bezeichnung : String | null) : number;
+	public static getByID(id : Number | null) : Sprachreferenzniveau | null {
+		return Sprachreferenzniveau.getMapByID().get(id);
+	}
 
 	/**
-	 * Implementation for method overloads of 'compareTo'
+	 * Gibt das Sprachreferenzniveau für das übergebene Kürzel zurück.
+	 * 
+	 * @param kuerzel   das Kürzel des Sprachreferenzniveaus
+	 * 
+	 * @return das Sprachreferenzniveau oder null, wenn das Kürzel ungültig ist
 	 */
-	public compareTo(__param0 : Sprachreferenzniveau | String | null) : number {
-		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.types.fach.Sprachreferenzniveau'))) || (__param0 === null))) {
-			let other : Sprachreferenzniveau | null = cast_de_nrw_schule_svws_core_types_fach_Sprachreferenzniveau(__param0);
-			if (other === null) 
-				return 1;
-			return JavaInteger.compare(this.sortierung, other.sortierung);
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof String) || (typeof __param0 === "string")) || (__param0 === null))) {
-			let bezeichnung : String | null = __param0;
-			return this.compareTo(Sprachreferenzniveau.getByBezeichnung(bezeichnung));
-		} else throw new Error('invalid method overload');
+	public static getByKuerzel(kuerzel : String | null) : Sprachreferenzniveau | null {
+		return Sprachreferenzniveau.getMapByKuerzel().get(kuerzel);
+	}
+
+	/**
+	 * Vergleicht dieses Sprachreferenzniveau mit dem Niveau des übergebenen Kürzels.
+	 * 
+	 * @param kuerzel   das Kürzel des anderen Sprachreferenzniveaus
+	 * 
+	 * @return -1 (kleiner), 0 (gleich) oder 1 (größer)
+	 */
+	public vergleiche(kuerzel : String | null) : number {
+		let other : Sprachreferenzniveau | null = Sprachreferenzniveau.getByKuerzel(kuerzel);
+		if (other === null) 
+			return 1;
+		return this.compareTo(other);
+	}
+
+	/**
+	 * Returns the name of this enumeration value.
+	 *
+	 * @returns the name
+	 */
+	private name() : String {
+		return this.__name;
+	}
+
+	/**
+	 * Returns the ordinal value of this enumeration value.
+	 *
+	 * @returns the ordinal value
+	 */
+	private ordinal() : number {
+		return this.__ordinal;
+	}
+
+	/**
+	 * Returns the name of this enumeration value.
+	 *
+	 * @returns the name
+	 */
+	public toString() : String {
+		return this.__name;
+	}
+
+	/**
+	 * Returns true if this and the other enumeration values are equal.
+	 *
+	 * @param other   the other enumeration value
+	 *
+	 * @returns true if they are equal and false otherwise
+	 */
+	public equals(other : JavaObject) : boolean {
+		if (!(other instanceof Sprachreferenzniveau))
+			return false;
+		return this === other;
+	}
+
+	/**
+	 * Returns the ordinal value as hashcode, since the ordinal value is unique.
+	 *
+	 * @returns the ordinal value as hashcode
+	 */
+	public hashCode() : number {
+		return this.__ordinal;
+	}
+
+	/**
+	 * Compares this enumeration value with the other enumeration value by their ordinal value.
+	 *
+	 * @param other   the other enumeration value
+	 *
+	 * @returns a negative, zero or postive value as this enumeration value is less than, equal to
+	 *          or greater than the other enumeration value
+	 */
+	public compareTo(other : Sprachreferenzniveau) : number {
+		return this.__ordinal - other.__ordinal;
+	}
+
+	/**
+	 * Returns an array with enumeration values.
+	 *
+	 * @returns the array with enumeration values
+	 */
+	public static values() : Array<Sprachreferenzniveau> {
+		return [...this.all_values_by_ordinal];
+	}
+
+	/**
+	 * Returns the enumeration value with the specified name.
+	 *
+	 * @param name   the name of the enumeration value
+	 *
+	 * @returns the enumeration values or null
+	 */
+	public static valueOf(name : String) : Sprachreferenzniveau | null {
+		let tmp : Sprachreferenzniveau | undefined = this.all_values_by_name.get(name);
+		return (!tmp) ? null : tmp;
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.types.fach.Sprachreferenzniveau', 'java.lang.Comparable'].includes(name);
+		return ['de.nrw.schule.svws.core.types.fach.Sprachreferenzniveau'].includes(name);
 	}
 
 }

@@ -46,7 +46,7 @@ public class BKAnlageA01Abschluss extends Service<@NotNull BKAnlageAFaecher, @No
         logger.logLn(LogLevel.INFO, " erreicht.");        	
         
         // HSA wird automatisch vergeben, wenn BSA erworben wurde, für einen höheren Abschluss ist ein GeR-Niveau von mind. B1 nötig
-        if ((input.englischGeR == null) || (Sprachreferenzniveau.B1.compareTo(input.englischGeR) < 0)) {
+        if ((input.englischGeR == null) || (Sprachreferenzniveau.B1.vergleiche(input.englischGeR) < 0)) {
         	if (input.englischGeR == null) {
         		logger.logLn(LogLevel.INFO, "Das Sprachreferenzniveau in Englisch wurde nicht angegeben. Eine Prüfung auf MSA ist daher nicht möglich.");        		
         	} else {

@@ -25,7 +25,7 @@ export class BKAnlageA01Abschluss extends Service<BKAnlageAFaecher, AbschlussErg
 				return AbschlussManagerBerufsbildend.getErgebnis(false, AbschlussManagerBerufsbildend.getDurchschnitt(input), false, SchulabschlussAllgemeinbildend.OA);
 			}
 		this.logger.logLn(LogLevel.INFO, " erreicht.");
-		if ((input.englischGeR === null) || (Sprachreferenzniveau.B1.compareTo(input.englischGeR) < 0)) {
+		if ((input.englischGeR === null) || (Sprachreferenzniveau.B1.vergleiche(input.englischGeR) < 0)) {
 			if (input.englischGeR === null) {
 				this.logger.logLn(LogLevel.INFO, "Das Sprachreferenzniveau in Englisch wurde nicht angegeben. Eine Prüfung auf MSA ist daher nicht möglich.");
 			} else {

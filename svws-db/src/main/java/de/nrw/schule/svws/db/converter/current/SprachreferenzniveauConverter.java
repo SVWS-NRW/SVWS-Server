@@ -20,12 +20,12 @@ public class SprachreferenzniveauConverter extends DBAttributeConverter<Sprachre
 
     @Override
     public String convertToDatabaseColumn(Sprachreferenzniveau attribute) {
-        return attribute == null ? null : attribute.bezeichnung;
+        return attribute == null ? null : attribute.daten.kuerzel;
     }
 
     @Override
     public Sprachreferenzniveau convertToEntityAttribute(String dbData) {
-        return Sprachreferenzniveau.getByBezeichnung(dbData);
+        return Sprachreferenzniveau.getByKuerzel(dbData);
     }
 
     @Override

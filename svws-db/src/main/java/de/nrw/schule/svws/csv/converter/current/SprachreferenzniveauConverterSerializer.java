@@ -33,7 +33,7 @@ public class SprachreferenzniveauConverterSerializer extends StdSerializer<Sprac
 
     @Override
     public void serialize(Sprachreferenzniveau value, JsonGenerator gen, SerializerProvider provider) throws IOException {
-        gen.writeString(value == null ? null : value.bezeichnung);
+        gen.writeString(value == null ? null : value.daten.kuerzel);
     }
 
 }

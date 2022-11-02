@@ -15,11 +15,11 @@ public class SprachreferenzniveauKatalogEintrag {
 
 	/** Die ID des Katalog-Eintrags. */
 	@Schema(required = true, description = "die ID des Katalog-Eintrags", example="4711")
-	public long id = -1;
+	public int id = -1;
 
-	/** Die Bezeichnung des Sprachreferenzniveaus */
-	@Schema(required = true, description = "die Bezeichnung des Sprachreferenzniveaus", example="A1")
-	public @NotNull String bezeichnung = "";
+	/** Das Kürzel des Sprachreferenzniveaus */
+	@Schema(required = true, description = "das Kürzel des Sprachreferenzniveaus", example="A1")
+	public @NotNull String kuerzel = "";
 	
 	/** Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
 	@Schema(required = false, description = "gibt an, in welchem der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example="null")
@@ -41,15 +41,15 @@ public class SprachreferenzniveauKatalogEintrag {
 	 * Erstellt einen Eintrag mit den angegebenen Werten
 	 * 
 	 * @param id            die ID
-	 * @param bezeichnung   die Bezeichnung 
+	 * @param kuerzel       das Kürzel 
 	 * @param gueltigVon    das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und 
 	 *                      "schon immer gültig war"
 	 * @param gueltigBis    das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */	
-	public SprachreferenzniveauKatalogEintrag(long id, @NotNull String bezeichnung, 
+	public SprachreferenzniveauKatalogEintrag(int id, @NotNull String kuerzel, 
 			Integer gueltigVon, Integer gueltigBis) {
 		this.id = id;
-		this.bezeichnung = bezeichnung;
+		this.kuerzel = kuerzel;
 		this.gueltigVon = gueltigVon;
 		this.gueltigBis = gueltigBis;
 	}

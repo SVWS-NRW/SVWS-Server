@@ -747,6 +747,11 @@ public final class TranspilerUnit {
 		ExpressionType result = transpiler.getMethodReturnType(this, node, typeOfClass, member, paramTypes);
 		if (result != null)
 			return result;
+		if ("this".equals(name)) {
+		    // TODO Prüfe zusätzlich, ob es sich um einen Enum-Type handelt. Ansonsten könnte compareTo nicht definiert sein
+		    if ("compareTo".equals(member))
+		        return new ExpressionPrimitiveType(TypeKind.INT);
+		}
 		throw new TranspilerException("Transpiler Error: Cannot determine method return type for " + name + "." + member + " : " + packageName + "." + typeName);
 	}
 	

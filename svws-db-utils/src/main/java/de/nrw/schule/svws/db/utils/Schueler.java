@@ -42,9 +42,8 @@ public class Schueler {
 			belegung.belegungBisJahrgang = dtoSprachbelegung.ASDJahrgangBis;
 			belegung.belegungBisAbschnitt = dtoSprachbelegung.AbschnittBis;
 			if (dtoSprachbelegung.Referenzniveau != null) {
-				belegung.referenzniveau = dtoSprachbelegung.Referenzniveau.bezeichnung;
-			}
-			else {
+				belegung.referenzniveau = dtoSprachbelegung.Referenzniveau.daten.kuerzel;
+			} else {
 				belegung.referenzniveau = null;
 			}
 			sprachendaten.belegungen.add(belegung);
@@ -68,9 +67,8 @@ public class Schueler {
             pruefung.kannBelegungAlsFortgefuehrteSpracheErlauben = dtoSprachpruefung.KannBelegungAlsFortgefuehrteSpracheErlauben;
             pruefung.note = dtoSprachpruefung.NotePruefung == null ? null : dtoSprachpruefung.NotePruefung.getNoteSekI();
             if (dtoSprachpruefung.Referenzniveau != null) {
-                pruefung.referenzniveau = dtoSprachpruefung.Referenzniveau.bezeichnung;
-            }
-            else {
+                pruefung.referenzniveau = dtoSprachpruefung.Referenzniveau.daten.kuerzel;
+            } else {
                 pruefung.referenzniveau = null;
             }
             sprachendaten.pruefungen.add(pruefung);

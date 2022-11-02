@@ -6,7 +6,7 @@ export class SprachreferenzniveauKatalogEintrag extends JavaObject {
 
 	public id : number = -1;
 
-	public bezeichnung : String = "";
+	public kuerzel : String = "";
 
 	public gueltigVon : Number | null = null;
 
@@ -22,12 +22,12 @@ export class SprachreferenzniveauKatalogEintrag extends JavaObject {
 	 * Erstellt einen Eintrag mit den angegebenen Werten
 	 * 
 	 * @param id            die ID
-	 * @param bezeichnung   die Bezeichnung 
+	 * @param kuerzel       das Kürzel 
 	 * @param gueltigVon    das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und 
 	 *                      "schon immer gültig war"
 	 * @param gueltigBis    das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */
-	public constructor(id : number, bezeichnung : String, gueltigVon : Number | null, gueltigBis : Number | null);
+	public constructor(id : number, kuerzel : String, gueltigVon : Number | null, gueltigBis : Number | null);
 
 	/**
 	 * Implementation for method overloads of 'constructor'
@@ -37,11 +37,11 @@ export class SprachreferenzniveauKatalogEintrag extends JavaObject {
 		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined") && (typeof __param2 === "undefined") && (typeof __param3 === "undefined")) {
 			} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && ((__param1 instanceof String) || (typeof __param1 === "string"))) && ((typeof __param2 !== "undefined") && ((__param2 instanceof Number) || (typeof __param2 === "number")) || (__param2 === null)) && ((typeof __param3 !== "undefined") && ((__param3 instanceof Number) || (typeof __param3 === "number")) || (__param3 === null))) {
 			let id : number = __param0 as number;
-			let bezeichnung : String = __param1;
+			let kuerzel : String = __param1;
 			let gueltigVon : Number | null = cast_java_lang_Integer(__param2);
 			let gueltigBis : Number | null = cast_java_lang_Integer(__param3);
 			this.id = id;
-			this.bezeichnung = bezeichnung;
+			this.kuerzel = kuerzel;
 			this.gueltigVon = gueltigVon;
 			this.gueltigBis = gueltigBis;
 		} else throw new Error('invalid method overload');
@@ -57,9 +57,9 @@ export class SprachreferenzniveauKatalogEintrag extends JavaObject {
 		if (typeof obj.id === "undefined")
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (typeof obj.bezeichnung === "undefined")
-			 throw new Error('invalid json format, missing attribute bezeichnung');
-		result.bezeichnung = obj.bezeichnung;
+		if (typeof obj.kuerzel === "undefined")
+			 throw new Error('invalid json format, missing attribute kuerzel');
+		result.kuerzel = obj.kuerzel;
 		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon;
 		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis;
 		return result;
@@ -68,7 +68,7 @@ export class SprachreferenzniveauKatalogEintrag extends JavaObject {
 	public static transpilerToJSON(obj : SprachreferenzniveauKatalogEintrag) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"bezeichnung" : ' + '"' + obj.bezeichnung.valueOf() + '"' + ',';
+		result += '"kuerzel" : ' + '"' + obj.kuerzel.valueOf() + '"' + ',';
 		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.valueOf()) + ',';
 		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.valueOf()) + ',';
 		result = result.slice(0, -1);
@@ -81,8 +81,8 @@ export class SprachreferenzniveauKatalogEintrag extends JavaObject {
 		if (typeof obj.id !== "undefined") {
 			result += '"id" : ' + obj.id + ',';
 		}
-		if (typeof obj.bezeichnung !== "undefined") {
-			result += '"bezeichnung" : ' + '"' + obj.bezeichnung.valueOf() + '"' + ',';
+		if (typeof obj.kuerzel !== "undefined") {
+			result += '"kuerzel" : ' + '"' + obj.kuerzel.valueOf() + '"' + ',';
 		}
 		if (typeof obj.gueltigVon !== "undefined") {
 			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.valueOf()) + ',';
