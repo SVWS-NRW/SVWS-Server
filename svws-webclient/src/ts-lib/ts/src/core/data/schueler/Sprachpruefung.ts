@@ -1,6 +1,6 @@
-import { JavaObject, cast_java_lang_Object } from '../../java/lang/JavaObject';
-import { JavaInteger, cast_java_lang_Integer } from '../../java/lang/JavaInteger';
-import { JavaString, cast_java_lang_String } from '../../java/lang/JavaString';
+import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
+import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
+import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 
 export class Sprachpruefung extends JavaObject {
 
@@ -34,7 +34,7 @@ export class Sprachpruefung extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.Sprachpruefung'].includes(name);
+		return ['de.nrw.schule.svws.core.data.schueler.Sprachpruefung'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): Sprachpruefung {
@@ -131,6 +131,6 @@ export class Sprachpruefung extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_Sprachpruefung(obj : unknown) : Sprachpruefung {
+export function cast_de_nrw_schule_svws_core_data_schueler_Sprachpruefung(obj : unknown) : Sprachpruefung {
 	return obj as Sprachpruefung;
 }

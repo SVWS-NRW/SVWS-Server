@@ -3,7 +3,6 @@ package de.nrw.schule.svws.core.abschluss.gost.belegpruefung;
 import java.util.List;
 import java.util.Vector;
 
-import de.nrw.schule.svws.core.SprachendatenManager;
 import de.nrw.schule.svws.core.abschluss.gost.AbiturdatenManager;
 import de.nrw.schule.svws.core.abschluss.gost.GostBelegpruefung;
 import de.nrw.schule.svws.core.abschluss.gost.GostBelegpruefungsArt;
@@ -16,6 +15,7 @@ import de.nrw.schule.svws.core.types.gost.GostFachbereich;
 import de.nrw.schule.svws.core.types.gost.GostHalbjahr;
 import de.nrw.schule.svws.core.types.gost.GostKursart;
 import de.nrw.schule.svws.core.types.gost.GostSchriftlichkeit;
+import de.nrw.schule.svws.core.utils.schueler.SprachendatenManager;
 import jakarta.validation.constraints.NotNull;
 
 /**

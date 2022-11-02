@@ -1,5 +1,5 @@
 import { JavaObject, cast_java_lang_Object } from '../../../../java/lang/JavaObject';
-import { SprachendatenManager, cast_de_nrw_schule_svws_core_SprachendatenManager } from '../../../../core/SprachendatenManager';
+import { SprachendatenManager, cast_de_nrw_schule_svws_core_utils_schueler_SprachendatenManager } from '../../../../core/utils/schueler/SprachendatenManager';
 import { AbiturFachbelegung, cast_de_nrw_schule_svws_core_data_gost_AbiturFachbelegung } from '../../../../core/data/gost/AbiturFachbelegung';
 import { GostBelegpruefungsArt, cast_de_nrw_schule_svws_core_abschluss_gost_GostBelegpruefungsArt } from '../../../../core/abschluss/gost/GostBelegpruefungsArt';
 import { GostHalbjahr, cast_de_nrw_schule_svws_core_types_gost_GostHalbjahr } from '../../../../core/types/gost/GostHalbjahr';

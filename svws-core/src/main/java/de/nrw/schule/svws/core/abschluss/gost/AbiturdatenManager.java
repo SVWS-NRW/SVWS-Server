@@ -8,7 +8,6 @@ import java.util.Vector;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import de.nrw.schule.svws.core.SprachendatenManager;
 import de.nrw.schule.svws.core.abschluss.gost.belegpruefung.AbiFaecher;
 import de.nrw.schule.svws.core.abschluss.gost.belegpruefung.Allgemeines;
 import de.nrw.schule.svws.core.abschluss.gost.belegpruefung.Deutsch;
@@ -34,6 +33,7 @@ import de.nrw.schule.svws.core.types.gost.GostFachbereich;
 import de.nrw.schule.svws.core.types.gost.GostHalbjahr;
 import de.nrw.schule.svws.core.types.gost.GostKursart;
 import de.nrw.schule.svws.core.types.gost.GostSchriftlichkeit;
+import de.nrw.schule.svws.core.utils.schueler.SprachendatenManager;
 import jakarta.validation.constraints.NotNull;
 
 /**

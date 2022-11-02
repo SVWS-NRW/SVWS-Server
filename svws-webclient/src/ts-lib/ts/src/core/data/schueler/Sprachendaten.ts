@@ -1,7 +1,7 @@
-import { JavaObject, cast_java_lang_Object } from '../../java/lang/JavaObject';
-import { Sprachbelegung, cast_de_nrw_schule_svws_core_data_Sprachbelegung } from '../../core/data/Sprachbelegung';
-import { Sprachpruefung, cast_de_nrw_schule_svws_core_data_Sprachpruefung } from '../../core/data/Sprachpruefung';
-import { Vector, cast_java_util_Vector } from '../../java/util/Vector';
+import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
+import { Sprachbelegung, cast_de_nrw_schule_svws_core_data_schueler_Sprachbelegung } from '../../../core/data/schueler/Sprachbelegung';
+import { Sprachpruefung, cast_de_nrw_schule_svws_core_data_schueler_Sprachpruefung } from '../../../core/data/schueler/Sprachpruefung';
+import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 
 export class Sprachendaten extends JavaObject {
 
@@ -17,7 +17,7 @@ export class Sprachendaten extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.Sprachendaten'].includes(name);
+		return ['de.nrw.schule.svws.core.data.schueler.Sprachendaten'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): Sprachendaten {
@@ -111,6 +111,6 @@ export class Sprachendaten extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_Sprachendaten(obj : unknown) : Sprachendaten {
+export function cast_de_nrw_schule_svws_core_data_schueler_Sprachendaten(obj : unknown) : Sprachendaten {
 	return obj as Sprachendaten;
 }

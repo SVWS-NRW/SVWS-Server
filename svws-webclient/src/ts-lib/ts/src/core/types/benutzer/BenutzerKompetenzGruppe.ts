@@ -43,7 +43,7 @@ export class BenutzerKompetenzGruppe extends JavaObject {
 
 	public static readonly STUNDENPLANUNG : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("STUNDENPLANUNG", 12, new BenutzerKompetenzGruppenKatalogEintrag(1100, "Stundenplanung", 4, 1));
 
-	public static readonly OBERTSTUFE : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("OBERTSTUFE", 13, new BenutzerKompetenzGruppenKatalogEintrag(1200, "Oberstufenplanung", 4, 2));
+	public static readonly OBERSTUFE : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("OBERSTUFE", 13, new BenutzerKompetenzGruppenKatalogEintrag(1200, "Oberstufenplanung", 4, 2));
 
 	public static readonly NOTENMODUL : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("NOTENMODUL", 14, new BenutzerKompetenzGruppenKatalogEintrag(1100, "Notenmodul", 4, 3));
 

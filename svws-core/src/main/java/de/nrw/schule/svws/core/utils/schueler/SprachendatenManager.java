@@ -1,4 +1,4 @@
-package de.nrw.schule.svws.core;
+package de.nrw.schule.svws.core.utils.schueler;
 
 import java.util.HashSet;
 import java.util.Vector;
@@ -121,7 +121,7 @@ public class SprachendatenManager {
             return null;
         }
 
-        @NotNull Vector<de.nrw.schule.svws.core.data.schueler.Sprachbelegung> belegungen = sprachendaten.belegungen;
+        @NotNull Vector<@NotNull Sprachbelegung> belegungen = sprachendaten.belegungen;
         for (Sprachbelegung belegung : belegungen) {
             if (sprache.equals(belegung.sprache)) {
                 return belegung;
@@ -145,9 +145,9 @@ public class SprachendatenManager {
      *
      * @return Vector mit Sprachbelegungen, die die Kriterien erfüllen. Die Liste ist nach Belegungsbeginn aufsteigend sortiert
      */
-    public static @NotNull Vector<de.nrw.schule.svws.core.data.schueler.Sprachbelegung> getSprachlegungenNachBeginnUndDauerEndeSekI(Sprachendaten sprachendaten, String belegungbeginnStart, String belegungbeginnEnde, Integer mindestBelegdauer) {
+    public static @NotNull Vector<@NotNull Sprachbelegung> getSprachlegungenNachBeginnUndDauerEndeSekI(Sprachendaten sprachendaten, String belegungbeginnStart, String belegungbeginnEnde, Integer mindestBelegdauer) {
 
-        @NotNull Vector<de.nrw.schule.svws.core.data.schueler.Sprachbelegung> belegungen = new Vector<>();
+        @NotNull Vector<@NotNull Sprachbelegung> belegungen = new Vector<>();
 
         if (sprachendaten != null && sprachendaten.belegungen != null
             && belegungbeginnStart != null && !belegungbeginnStart.equals("")
@@ -159,7 +159,7 @@ public class SprachendatenManager {
             int letzterJahrgangSekI;
             HashSet<String> gefundeneSprachen = new HashSet<>();
 
-            @NotNull Vector<de.nrw.schule.svws.core.data.schueler.Sprachbelegung> alleBelegungen = sprachendaten.belegungen;
+            @NotNull Vector<@NotNull Sprachbelegung> alleBelegungen = sprachendaten.belegungen;
             for (Sprachbelegung belegung : alleBelegungen) {
                 if (belegung.belegungVonJahrgang != null) {
                     belegtVonJahrgangNumerisch = ASDJahrgangNumerisch(belegung.belegungVonJahrgang);
@@ -189,7 +189,7 @@ public class SprachendatenManager {
         }
 
         if (belegungen.size() > 0) {
-        	Comparator<de.nrw.schule.svws.core.data.schueler.Sprachbelegung> comparator = (@NotNull Sprachbelegung a, @NotNull Sprachbelegung b) -> Integer.compare(ASDJahrgangNumerisch(a.belegungVonJahrgang), ASDJahrgangNumerisch(b.belegungVonJahrgang));
+        	Comparator<@NotNull Sprachbelegung> comparator = (@NotNull Sprachbelegung a, @NotNull Sprachbelegung b) -> Integer.compare(ASDJahrgangNumerisch(a.belegungVonJahrgang), ASDJahrgangNumerisch(b.belegungVonJahrgang));
             belegungen.sort(comparator);
         }
 
@@ -219,7 +219,7 @@ public class SprachendatenManager {
 
         // Sofern bisher keine fortgeführte Fremdsprache zur übergebenen Sprache gefunden wurde,
         // durchsuche nun die Sprachprüfungen.
-        @NotNull Vector<de.nrw.schule.svws.core.data.schueler.Sprachpruefung> pruefungen = sprachendaten.pruefungen;
+        @NotNull Vector<@NotNull Sprachpruefung> pruefungen = sprachendaten.pruefungen;
         if (pruefungen != null) {
             for (Sprachpruefung pruefung : pruefungen) {
 
@@ -261,14 +261,14 @@ public class SprachendatenManager {
 
         // Sammle die Sprachen mit einer Belegung von mindestens zwei Jahren
         if (sprachendaten != null) {
-            @NotNull Vector<de.nrw.schule.svws.core.data.schueler.Sprachbelegung> belegungen = getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten,"05","10",2);
+            @NotNull Vector<@NotNull Sprachbelegung> belegungen = getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten,"05","10",2);
 
             for(Sprachbelegung belegung : belegungen) {
                 sprachen.add(belegung.sprache);
             }
 
             // Ergänze evtl. vorhandene Sprachprüfungen, die die Fortführung in der Oberstufe ermöglichen
-            @NotNull Vector<de.nrw.schule.svws.core.data.schueler.Sprachpruefung> pruefungen = sprachendaten.pruefungen;
+            @NotNull Vector<@NotNull Sprachpruefung> pruefungen = sprachendaten.pruefungen;
             if (pruefungen != null) {
                 for (Sprachpruefung pruefung : pruefungen) {
 
@@ -329,7 +329,7 @@ public class SprachendatenManager {
         }
 
         // Sofern bisher keine fortgeführte Fremdsprache gefunden wurde, durchsuche nun die Sprachprüfungen.
-        @NotNull Vector<de.nrw.schule.svws.core.data.schueler.Sprachpruefung> pruefungen = sprachendaten.pruefungen;
+        @NotNull Vector<@NotNull Sprachpruefung> pruefungen = sprachendaten.pruefungen;
         if (pruefungen != null) {
             for (Sprachpruefung pruefung : pruefungen) {
                 // Prüfe auf erfolgreiche Feststellungsprüfung auf HA10/MSA-Niveau, die eine vierjährige Sprachen ersetzen kann
@@ -360,7 +360,7 @@ public class SprachendatenManager {
 
         // Alle Sprachen, die bis einschließlich Klasse 7 gestartet werden, erfüllen die Bedingung von mindestens 4 Jahren Dauer, wenn sie nicht vorher abgewählt werden konnten.
         // Im Gymnasium G8 gibt es keinen Beginn in der Klasse 7, aber die Bedingung wird durch den Beginn in Stufe 6 ebenfalls erfüllt.
-        @NotNull Vector<de.nrw.schule.svws.core.data.schueler.Sprachbelegung> belegungen = getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten, "05", "07", 4);
+        @NotNull Vector<@NotNull Sprachbelegung> belegungen = getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten, "05", "07", 4);
         int anzahlSprachen = belegungen.size();
 
         if (anzahlSprachen >= 2){
@@ -369,7 +369,7 @@ public class SprachendatenManager {
 
         // Sofern bisher keine oder nur eine fortgeführte Fremdsprache gefunden wurde, durchsuche nun die Sprachprüfungen.
         if (anzahlSprachen == 1) {
-            @NotNull Vector<de.nrw.schule.svws.core.data.schueler.Sprachpruefung> pruefungen = sprachendaten.pruefungen;
+            @NotNull Vector<@NotNull Sprachpruefung> pruefungen = sprachendaten.pruefungen;
             if (pruefungen != null) {
                 for (Sprachpruefung pruefung : pruefungen) {
                     // Prüfe auf erfolgreiche Feststellungsprüfung auf HA10/MSA-Niveau, die eine vierjährige Sprachen ersetzen kann
@@ -430,7 +430,7 @@ public class SprachendatenManager {
         }
 
         // Sofern bisher keine fortgeführte Fremdsprache gefunden wurde, durchsuche nun die Sprachprüfungen.
-        @NotNull Vector<de.nrw.schule.svws.core.data.schueler.Sprachpruefung> pruefungen = sprachendaten.pruefungen;
+        @NotNull Vector<@NotNull Sprachpruefung> pruefungen = sprachendaten.pruefungen;
         if (pruefungen != null) {
             for (Sprachpruefung pruefungS1 : pruefungen) {
                 // Prüfe auf erfolgreiche Feststellungsprüfung auf HA10/MSA-Niveau
@@ -464,7 +464,7 @@ public class SprachendatenManager {
             return null;
         }
 
-        @NotNull Vector<de.nrw.schule.svws.core.data.schueler.Sprachpruefung> pruefungen = sprachendaten.pruefungen;
+        @NotNull Vector<@NotNull Sprachpruefung> pruefungen = sprachendaten.pruefungen;
         if (pruefungen != null) {
             for (Sprachpruefung pruefung : pruefungen) {
                 if (pruefung.istFeststellungspruefung && pruefung.kannErstePflichtfremdspracheErsetzen && (pruefung.anspruchsniveauId == Sprachpruefungniveau.NIVEAU_HA10.id || pruefung.anspruchsniveauId == Sprachpruefungniveau.NIVEAU_MSA.id) && (pruefung.note != null) && (pruefung.note <= 4)) {
@@ -473,10 +473,10 @@ public class SprachendatenManager {
             }
         }
 
-        @NotNull Vector<de.nrw.schule.svws.core.data.schueler.Sprachbelegung> belegungen = sprachendaten.belegungen;
+        @NotNull Vector<@NotNull Sprachbelegung> belegungen = sprachendaten.belegungen;
         if (belegungen != null ) {
             // Wähle alle Sprachen mit Beginn in der Sekundarstufe I aus
-            @NotNull Vector<de.nrw.schule.svws.core.data.schueler.Sprachbelegung> sprachbelegungen = getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten, "05","10",0);
+            @NotNull Vector<@NotNull Sprachbelegung> sprachbelegungen = getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten, "05","10",0);
             if (sprachbelegungen.size() > 0) {
                 return sprachbelegungen.get(0).sprache;
             }
@@ -505,7 +505,7 @@ public class SprachendatenManager {
         String pruefungErsteSprache = "";
         String pruefungZweiteSprache = "";
 
-        @NotNull Vector<de.nrw.schule.svws.core.data.schueler.Sprachpruefung> pruefungen = sprachendaten.pruefungen;
+        @NotNull Vector<@NotNull Sprachpruefung> pruefungen = sprachendaten.pruefungen;
         if (pruefungen != null) {
             for (Sprachpruefung pruefung : pruefungen) {
                 if (pruefung.istFeststellungspruefung && pruefung.kannErstePflichtfremdspracheErsetzen && (pruefung.anspruchsniveauId == Sprachpruefungniveau.NIVEAU_HA10.id || pruefung.anspruchsniveauId == Sprachpruefungniveau.NIVEAU_MSA.id) && (pruefung.note != null) && (pruefung.note <= 4)) {
@@ -521,10 +521,10 @@ public class SprachendatenManager {
             return pruefungZweiteSprache;
         }
 
-        @NotNull Vector<de.nrw.schule.svws.core.data.schueler.Sprachbelegung> belegungen = sprachendaten.belegungen;
+        @NotNull Vector<@NotNull Sprachbelegung> belegungen = sprachendaten.belegungen;
         if (belegungen != null ) {
             // Wähle alle Sprachen mit Beginn in der Sekundarstufe I aus
-        	@NotNull Vector<de.nrw.schule.svws.core.data.schueler.Sprachbelegung> sprachbelegungen = getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten, "05","10",0);
+        	@NotNull Vector<@NotNull Sprachbelegung> sprachbelegungen = getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten, "05","10",0);
 
             if (!pruefungErsteSprache.equals("")){
                 // Eine Prüfung für die erste Fremdsprache ist vorhanden, daher muss die erste Sprache in der Sprachenfolge ungleich der Prüfungssprache die zweite Fremdsprache sein.
@@ -561,10 +561,10 @@ public class SprachendatenManager {
             return null;
         }
 
-        @NotNull Vector<de.nrw.schule.svws.core.data.schueler.Sprachbelegung> belegungen = sprachendaten.belegungen;
+        @NotNull Vector<@NotNull Sprachbelegung> belegungen = sprachendaten.belegungen;
         if (belegungen != null ) {
             // Wähle alle Sprachen mit Beginn in der Sekundarstufe I aus, die in Klassen 8, 9 oder 10 begonnen wurden.
-        	@NotNull Vector<de.nrw.schule.svws.core.data.schueler.Sprachbelegung> sprachbelegungen = getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten, "08", "10", 2);
+        	@NotNull Vector<@NotNull Sprachbelegung> sprachbelegungen = getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten, "08", "10", 2);
 
             if (sprachbelegungen.size() > 0) {
                 return sprachbelegungen.get(0).sprache;

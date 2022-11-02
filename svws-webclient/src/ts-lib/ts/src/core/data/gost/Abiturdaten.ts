@@ -6,7 +6,7 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 import { JavaBoolean, cast_java_lang_Boolean } from '../../../java/lang/JavaBoolean';
 import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 import { JavaDouble, cast_java_lang_Double } from '../../../java/lang/JavaDouble';
-import { Sprachendaten, cast_de_nrw_schule_svws_core_data_Sprachendaten } from '../../../core/data/Sprachendaten';
+import { Sprachendaten, cast_de_nrw_schule_svws_core_data_schueler_Sprachendaten } from '../../../core/data/schueler/Sprachendaten';
 
 export class Abiturdaten extends JavaObject {
 

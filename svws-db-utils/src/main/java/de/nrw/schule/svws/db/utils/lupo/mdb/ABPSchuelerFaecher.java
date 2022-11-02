@@ -15,7 +15,6 @@ import com.healthmarketscience.jackcess.Row;
 import com.healthmarketscience.jackcess.Table;
 import com.healthmarketscience.jackcess.TableBuilder;
 
-import de.nrw.schule.svws.core.SprachendatenManager;
 import de.nrw.schule.svws.core.data.gost.GostLeistungen;
 import de.nrw.schule.svws.core.data.gost.GostLeistungenFachbelegung;
 import de.nrw.schule.svws.core.data.gost.GostLeistungenFachwahl;
@@ -24,6 +23,7 @@ import de.nrw.schule.svws.core.types.Note;
 import de.nrw.schule.svws.core.types.gost.GostAbiturFach;
 import de.nrw.schule.svws.core.types.gost.GostHalbjahr;
 import de.nrw.schule.svws.core.types.gost.GostKursart;
+import de.nrw.schule.svws.core.utils.schueler.SprachendatenManager;
 import de.nrw.schule.svws.db.dto.current.gost.DTOGostSchueler;
 import de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchueler;
 

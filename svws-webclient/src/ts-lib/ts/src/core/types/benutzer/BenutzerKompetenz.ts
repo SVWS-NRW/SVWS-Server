@@ -110,15 +110,33 @@ export class BenutzerKompetenz extends JavaObject {
 
 	public static readonly STUNDENPLAN_AKTIVIEREN : BenutzerKompetenz = new BenutzerKompetenz("STUNDENPLAN_AKTIVIEREN", 44, new BenutzerKompetenzKatalogEintrag(113, BenutzerKompetenzGruppe.STUNDENPLANUNG, "Stundenpläne aktivieren"));
 
-	public static readonly ADRESSDATEN_ERZIEHER_ANSEHEN : BenutzerKompetenz = new BenutzerKompetenz("ADRESSDATEN_ERZIEHER_ANSEHEN", 45, new BenutzerKompetenzKatalogEintrag(201, BenutzerKompetenzGruppe.CARDDAV, "Ansehen"));
+	public static readonly OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN : BenutzerKompetenz = new BenutzerKompetenz("OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN", 45, new BenutzerKompetenzKatalogEintrag(121, BenutzerKompetenzGruppe.OBERSTUFE, "Laufbahnplanung (allgemein)"));
 
-	public static readonly ADRESSDATEN_ANSEHEN : BenutzerKompetenz = new BenutzerKompetenz("ADRESSDATEN_ANSEHEN", 46, new BenutzerKompetenzKatalogEintrag(202, BenutzerKompetenzGruppe.CARDDAV, "Ansehen"));
+	public static readonly OBERSTUFE_LAUFBAHNPLANUNG_STUFE : BenutzerKompetenz = new BenutzerKompetenz("OBERSTUFE_LAUFBAHNPLANUNG_STUFE", 46, new BenutzerKompetenzKatalogEintrag(122, BenutzerKompetenzGruppe.OBERSTUFE, "Laufbahnplanung (stufenbezogen)"));
 
-	public static readonly KALENDER_ANSEHEN : BenutzerKompetenz = new BenutzerKompetenz("KALENDER_ANSEHEN", 47, new BenutzerKompetenzKatalogEintrag(301, BenutzerKompetenzGruppe.CALDAV, "Ansehen"));
+	public static readonly OBERSTUFE_LUPO_IMPORT : BenutzerKompetenz = new BenutzerKompetenz("OBERSTUFE_LUPO_IMPORT", 47, new BenutzerKompetenzKatalogEintrag(123, BenutzerKompetenzGruppe.OBERSTUFE, "Laufbahnplanung aus LuPO importieren"));
 
-	public static readonly EIGENEN_KALENDER_BEARBEITEN : BenutzerKompetenz = new BenutzerKompetenz("EIGENEN_KALENDER_BEARBEITEN", 48, new BenutzerKompetenzKatalogEintrag(302, BenutzerKompetenzGruppe.CALDAV, "Bearbeiten"));
+	public static readonly OBERSTUFE_BLOCKEN_ALLGEMEIN : BenutzerKompetenz = new BenutzerKompetenz("OBERSTUFE_BLOCKEN_ALLGEMEIN", 48, new BenutzerKompetenzKatalogEintrag(124, BenutzerKompetenzGruppe.OBERSTUFE, "Kursverwaltung - Blocken (allgemein)"));
 
-	public static readonly KALENDER_FUNKTIONSBEZOGEN_ANSEHEN : BenutzerKompetenz = new BenutzerKompetenz("KALENDER_FUNKTIONSBEZOGEN_ANSEHEN", 49, new BenutzerKompetenzKatalogEintrag(303, BenutzerKompetenzGruppe.CALDAV, "Ansehen"));
+	public static readonly OBERSTUFE_BLOCKEN_STUFE : BenutzerKompetenz = new BenutzerKompetenz("OBERSTUFE_BLOCKEN_STUFE", 49, new BenutzerKompetenzKatalogEintrag(125, BenutzerKompetenzGruppe.OBERSTUFE, "Kursverwaltung - Blocken (stufenbezogen)"));
+
+	public static readonly OBERSTUFE_BLOCKUNG_AKTIVIEREN : BenutzerKompetenz = new BenutzerKompetenz("OBERSTUFE_BLOCKUNG_AKTIVIEREN", 50, new BenutzerKompetenzKatalogEintrag(126, BenutzerKompetenzGruppe.OBERSTUFE, "Kursverwaltung - Blockung aktivieren"));
+
+	public static readonly OBERSTUFE_KLAUSURPLANUNG_AENDERN : BenutzerKompetenz = new BenutzerKompetenz("OBERSTUFE_KLAUSURPLANUNG_AENDERN", 51, new BenutzerKompetenzKatalogEintrag(127, BenutzerKompetenzGruppe.OBERSTUFE, "Klausurplanung ändern"));
+
+	public static readonly OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN : BenutzerKompetenz = new BenutzerKompetenz("OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN", 52, new BenutzerKompetenzKatalogEintrag(128, BenutzerKompetenzGruppe.OBERSTUFE, "Klausurplanung ansehen (allgemein)"));
+
+	public static readonly OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION : BenutzerKompetenz = new BenutzerKompetenz("OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION", 53, new BenutzerKompetenzKatalogEintrag(129, BenutzerKompetenzGruppe.OBERSTUFE, "Klausurplanung ansehen (funktionsbezogen)"));
+
+	public static readonly ADRESSDATEN_ERZIEHER_ANSEHEN : BenutzerKompetenz = new BenutzerKompetenz("ADRESSDATEN_ERZIEHER_ANSEHEN", 54, new BenutzerKompetenzKatalogEintrag(201, BenutzerKompetenzGruppe.CARDDAV, "Ansehen"));
+
+	public static readonly ADRESSDATEN_ANSEHEN : BenutzerKompetenz = new BenutzerKompetenz("ADRESSDATEN_ANSEHEN", 55, new BenutzerKompetenzKatalogEintrag(202, BenutzerKompetenzGruppe.CARDDAV, "Ansehen"));
+
+	public static readonly KALENDER_ANSEHEN : BenutzerKompetenz = new BenutzerKompetenz("KALENDER_ANSEHEN", 56, new BenutzerKompetenzKatalogEintrag(301, BenutzerKompetenzGruppe.CALDAV, "Ansehen"));
+
+	public static readonly EIGENEN_KALENDER_BEARBEITEN : BenutzerKompetenz = new BenutzerKompetenz("EIGENEN_KALENDER_BEARBEITEN", 57, new BenutzerKompetenzKatalogEintrag(302, BenutzerKompetenzGruppe.CALDAV, "Bearbeiten"));
+
+	public static readonly KALENDER_FUNKTIONSBEZOGEN_ANSEHEN : BenutzerKompetenz = new BenutzerKompetenz("KALENDER_FUNKTIONSBEZOGEN_ANSEHEN", 58, new BenutzerKompetenzKatalogEintrag(303, BenutzerKompetenzGruppe.CALDAV, "Ansehen"));
 
 	public static VERSION : number = 1;
 

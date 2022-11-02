@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import de.nrw.schule.svws.core.SprachendatenManager;
 import de.nrw.schule.svws.core.abschluss.gost.GostFachManager;
 import de.nrw.schule.svws.core.data.gost.GostFach;
 import de.nrw.schule.svws.core.data.gost.GostLeistungen;
@@ -17,6 +16,7 @@ import de.nrw.schule.svws.core.types.gost.GostHalbjahr;
 import de.nrw.schule.svws.core.types.gost.GostKursart;
 import de.nrw.schule.svws.core.utils.gost.GostAbiturjahrUtils;
 import de.nrw.schule.svws.core.utils.gost.GostFaecherManager;
+import de.nrw.schule.svws.core.utils.schueler.SprachendatenManager;
 import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchueler;
 import de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;

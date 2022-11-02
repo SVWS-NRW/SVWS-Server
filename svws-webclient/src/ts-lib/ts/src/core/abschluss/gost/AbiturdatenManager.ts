@@ -1,6 +1,6 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
 import { Naturwissenschaften, cast_de_nrw_schule_svws_core_abschluss_gost_belegpruefung_Naturwissenschaften } from '../../../core/abschluss/gost/belegpruefung/Naturwissenschaften';
-import { SprachendatenManager, cast_de_nrw_schule_svws_core_SprachendatenManager } from '../../../core/SprachendatenManager';
+import { SprachendatenManager, cast_de_nrw_schule_svws_core_utils_schueler_SprachendatenManager } from '../../../core/utils/schueler/SprachendatenManager';
 import { Schwerpunkt, cast_de_nrw_schule_svws_core_abschluss_gost_belegpruefung_Schwerpunkt } from '../../../core/abschluss/gost/belegpruefung/Schwerpunkt';
 import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
 import { KurszahlenUndWochenstunden, cast_de_nrw_schule_svws_core_abschluss_gost_belegpruefung_KurszahlenUndWochenstunden } from '../../../core/abschluss/gost/belegpruefung/KurszahlenUndWochenstunden';
@@ -11,7 +11,7 @@ import { GostBelegpruefungErgebnis, cast_de_nrw_schule_svws_core_abschluss_gost_
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 import { GostKursart, cast_de_nrw_schule_svws_core_types_gost_GostKursart } from '../../../core/types/gost/GostKursart';
 import { Latinum, cast_de_nrw_schule_svws_core_abschluss_gost_belegpruefung_Latinum } from '../../../core/abschluss/gost/belegpruefung/Latinum';
-import { Sprachendaten, cast_de_nrw_schule_svws_core_data_Sprachendaten } from '../../../core/data/Sprachendaten';
+import { Sprachendaten, cast_de_nrw_schule_svws_core_data_schueler_Sprachendaten } from '../../../core/data/schueler/Sprachendaten';
 import { GostFachbereich, cast_de_nrw_schule_svws_core_types_gost_GostFachbereich } from '../../../core/types/gost/GostFachbereich';
 import { Allgemeines, cast_de_nrw_schule_svws_core_abschluss_gost_belegpruefung_Allgemeines } from '../../../core/abschluss/gost/belegpruefung/Allgemeines';
 import { Sport, cast_de_nrw_schule_svws_core_abschluss_gost_belegpruefung_Sport } from '../../../core/abschluss/gost/belegpruefung/Sport';

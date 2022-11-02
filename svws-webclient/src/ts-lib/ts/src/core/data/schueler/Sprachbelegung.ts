@@ -1,6 +1,6 @@
-import { JavaObject, cast_java_lang_Object } from '../../java/lang/JavaObject';
-import { JavaInteger, cast_java_lang_Integer } from '../../java/lang/JavaInteger';
-import { JavaString, cast_java_lang_String } from '../../java/lang/JavaString';
+import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
+import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
+import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 
 export class Sprachbelegung extends JavaObject {
 
@@ -24,7 +24,7 @@ export class Sprachbelegung extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.Sprachbelegung'].includes(name);
+		return ['de.nrw.schule.svws.core.data.schueler.Sprachbelegung'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): Sprachbelegung {
@@ -86,6 +86,6 @@ export class Sprachbelegung extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_Sprachbelegung(obj : unknown) : Sprachbelegung {
+export function cast_de_nrw_schule_svws_core_data_schueler_Sprachbelegung(obj : unknown) : Sprachbelegung {
 	return obj as Sprachbelegung;
 }
