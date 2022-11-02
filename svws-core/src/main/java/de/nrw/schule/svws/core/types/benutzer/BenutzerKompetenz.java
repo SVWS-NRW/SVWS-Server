@@ -206,12 +206,12 @@ public enum BenutzerKompetenz {
     
     /** Es werden Rechte zum Ansehen von Stundenplänen (allgemein) benötigt. */
     STUNDENPLAN_ALLGEMEIN_ANSEHEN(new BenutzerKompetenzKatalogEintrag(
-    	111, BenutzerKompetenzGruppe.STUNDENPLANUNG, "Ansehen"
+    	111, BenutzerKompetenzGruppe.STUNDENPLANUNG, "Stundenplan ansehen (allgemein)"
     )),
     
     /** Es werden Rechte zum Ansehen von Stundenplänen (funktionsbezogen) benötigt. */
     STUNDENPLAN_FUNKTIONSBEZOGEN_ANSEHEN(new BenutzerKompetenzKatalogEintrag(
-    	112, BenutzerKompetenzGruppe.STUNDENPLANUNG, "Ansehen"
+    	112, BenutzerKompetenzGruppe.STUNDENPLANUNG, "Stundneplan ansehen (funktionsbezogen)"
     )),
     
     /** Es werden Rechte zum Importieren von Stundenplänen benötigt. */
@@ -301,9 +301,21 @@ public enum BenutzerKompetenz {
     NOTENMODUL_NOTEN_ANSEHEN_FUNKTION(new BenutzerKompetenzKatalogEintrag(
     	135, BenutzerKompetenzGruppe.NOTENMODUL, "Noten ansehen (funktionsbezogen)"
     )), 
-        
-    //TODO Datenbank-Management 141.........
     
+    /** Es werden Rechte zur Administration der Datenbanken (Schema ertsellen/migrieren) benötigt. DB_Root-Rechte erforderlich. */
+    DATENBANK_SCHEMA_ERSTELLEN(new BenutzerKompetenzKatalogEintrag(
+    	141, BenutzerKompetenzGruppe.DATENBANK, "Schema erstellen und migrieren"
+    )),
+    
+    /** Es werden Rechte zum Import von SQLite-Backups benötigt. DB_Root-Rechte erforderlich.*/
+    DATENBANK_SQLITE_IMPORT(new BenutzerKompetenzKatalogEintrag(
+    	142, BenutzerKompetenzGruppe.DATENBANK, "SQLite importieren (Backup einspielen)"
+    )),
+    /** Es werden Rechte zum Export von SQLite-Backups benötigt. */
+    DATENBANK_SQLITE_EXPORT(new BenutzerKompetenzKatalogEintrag(
+    	143, BenutzerKompetenzGruppe.DATENBANK, "SQLite exportieren (Backup erstellen)"
+    )),   
+
     /** Es werden Rechte zum Ansehen der Adressdaten eines von Erziehungsberechtigten benötigt*/
     ADRESSDATEN_ERZIEHER_ANSEHEN(new BenutzerKompetenzKatalogEintrag(
     	201, BenutzerKompetenzGruppe.CARDDAV, "Ansehen"
