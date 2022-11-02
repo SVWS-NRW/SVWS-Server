@@ -130,7 +130,7 @@ public enum Sprachreferenzniveau  {
                 _mapKuerzel.put(l.daten.kuerzel, l);                
         return _mapKuerzel;
     }
-        
+
 
     /**
      * Gibt das Sprachreferenzniveau für die übergebene ID zurück.

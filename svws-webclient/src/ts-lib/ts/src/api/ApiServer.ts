@@ -122,6 +122,8 @@ import { SchulgliederungKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule
 import { SchulstufeKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_SchulstufeKatalogEintrag } from '../core/data/schule/SchulstufeKatalogEintrag';
 import { SchultraegerKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_SchultraegerKatalogEintrag } from '../core/data/schule/SchultraegerKatalogEintrag';
 import { SimpleOperationResponse, cast_de_nrw_schule_svws_core_data_SimpleOperationResponse } from '../core/data/SimpleOperationResponse';
+import { SprachpruefungsniveauKatalogEintrag, cast_de_nrw_schule_svws_core_data_fach_SprachpruefungsniveauKatalogEintrag } from '../core/data/fach/SprachpruefungsniveauKatalogEintrag';
+import { SprachreferenzniveauKatalogEintrag, cast_de_nrw_schule_svws_core_data_fach_SprachreferenzniveauKatalogEintrag } from '../core/data/fach/SprachreferenzniveauKatalogEintrag';
 import { StundenplanListeEintrag, cast_de_nrw_schule_svws_core_data_stundenplan_StundenplanListeEintrag } from '../core/data/stundenplan/StundenplanListeEintrag';
 import { StundenplanZeitraster, cast_de_nrw_schule_svws_core_data_stundenplan_StundenplanZeitraster } from '../core/data/stundenplan/StundenplanZeitraster';
 import { UebergangsempfehlungKatalogEintrag, cast_de_nrw_schule_svws_core_data_schueler_UebergangsempfehlungKatalogEintrag } from '../core/data/schueler/UebergangsempfehlungKatalogEintrag';
@@ -1437,6 +1439,60 @@ export class ApiServer extends BaseApi {
 		const obj = JSON.parse(result);
 		let ret = new Vector<BilingualeSpracheKatalogEintrag>();
 		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(BilingualeSpracheKatalogEintrag.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getKatalogSprachpruefungsniveaus für den Zugriff auf die URL https://{hostname}/db/{schema}/faecher/allgemein/sprachen/pruefungsniveaus
+	 * 
+	 * Gibt den Katalog der Sprachprüfungsniveaus zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Der Katalog der Sprachprüfungsniveaus.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SprachpruefungsniveauKatalogEintrag>
+	 *   Code 403: Der SVWS-Benutzer hat keine gültige Anmeldung.
+	 *   Code 404: Keine Fachgruppen gefunden.
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * 
+	 * @returns Der Katalog der Sprachprüfungsniveaus.
+	 */
+	public async getKatalogSprachpruefungsniveaus(schema : string) : Promise<List<SprachpruefungsniveauKatalogEintrag>> {
+		let path : string = "/db/{schema}/faecher/allgemein/sprachen/pruefungsniveaus"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		let ret = new Vector<SprachpruefungsniveauKatalogEintrag>();
+		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(SprachpruefungsniveauKatalogEintrag.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getKatalogSprachreferenzniveaus für den Zugriff auf die URL https://{hostname}/db/{schema}/faecher/allgemein/sprachen/referenzniveaus
+	 * 
+	 * Gibt den Katalog der Sprachreferenzniveaus zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Der Katalog der Sprachreferenzniveaus.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SprachreferenzniveauKatalogEintrag>
+	 *   Code 403: Der SVWS-Benutzer hat keine gültige Anmeldung.
+	 *   Code 404: Keine Fachgruppen gefunden.
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * 
+	 * @returns Der Katalog der Sprachreferenzniveaus.
+	 */
+	public async getKatalogSprachreferenzniveaus(schema : string) : Promise<List<SprachreferenzniveauKatalogEintrag>> {
+		let path : string = "/db/{schema}/faecher/allgemein/sprachen/referenzniveaus"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		let ret = new Vector<SprachreferenzniveauKatalogEintrag>();
+		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(SprachreferenzniveauKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 

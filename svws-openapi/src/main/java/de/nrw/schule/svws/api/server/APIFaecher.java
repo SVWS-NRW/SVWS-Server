@@ -6,11 +6,15 @@ import de.nrw.schule.svws.core.data.fach.FachDaten;
 import de.nrw.schule.svws.core.data.fach.FachKatalogEintrag;
 import de.nrw.schule.svws.core.data.fach.FachgruppenKatalogEintrag;
 import de.nrw.schule.svws.core.data.fach.FaecherListeEintrag;
+import de.nrw.schule.svws.core.data.fach.SprachpruefungsniveauKatalogEintrag;
+import de.nrw.schule.svws.core.data.fach.SprachreferenzniveauKatalogEintrag;
 import de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenz;
 import de.nrw.schule.svws.data.faecher.DataFachdaten;
 import de.nrw.schule.svws.data.faecher.DataFaecherliste;
 import de.nrw.schule.svws.data.faecher.DataKatalogBilingualeSprachen;
 import de.nrw.schule.svws.data.faecher.DataKatalogFachgruppen;
+import de.nrw.schule.svws.data.faecher.DataKatalogSprachpruefungsniveaus;
+import de.nrw.schule.svws.data.faecher.DataKatalogSprachreferenzniveaus;
 import de.nrw.schule.svws.data.faecher.DataKatalogZulaessigeFaecher;
 import de.nrw.schule.svws.db.Benutzer;
 import de.nrw.schule.svws.db.DBEntityManager;
@@ -259,6 +263,52 @@ public class APIFaecher {
     public Response getKatalogBilingualeSprachenEintrag(@PathParam("schema") String schema, @PathParam("id") long id, @Context HttpServletRequest request) {
         try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
             return (new DataKatalogBilingualeSprachen(conn)).get(id);
+        }
+    }
+
+    /**
+     * Die OpenAPI-Methode für die Abfrage des Kataloges der Sprachprüfungsniveaus.
+     *  
+     * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param request       die Informationen zur HTTP-Anfrage
+     * 
+     * @return der Katalog der Sprachprüfungsniveaus
+     */
+    @GET
+    @Path("/allgemein/sprachen/pruefungsniveaus")
+    @Operation(summary = "Gibt den Katalog der Sprachprüfungsniveaus zurück.",
+               description = "Gibt den Katalog der Sprachprüfungsniveaus zurück. "
+                       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
+    @ApiResponse(responseCode = "200", description = "Der Katalog der Sprachprüfungsniveaus.",
+                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SprachpruefungsniveauKatalogEintrag.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine gültige Anmeldung.")
+    @ApiResponse(responseCode = "404", description = "Keine Fachgruppen gefunden.")
+    public Response getKatalogSprachpruefungsniveaus(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
+            return (new DataKatalogSprachpruefungsniveaus()).getAll();
+        }
+    }
+
+    /**
+     * Die OpenAPI-Methode für die Abfrage des Kataloges der Sprachreferenzniveaus.
+     *  
+     * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param request       die Informationen zur HTTP-Anfrage
+     * 
+     * @return der Katalog der Sprachreferenzniveaus
+     */
+    @GET
+    @Path("/allgemein/sprachen/referenzniveaus")
+    @Operation(summary = "Gibt den Katalog der Sprachreferenzniveaus zurück.",
+               description = "Gibt den Katalog der Sprachreferenzniveaus zurück. "
+                       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
+    @ApiResponse(responseCode = "200", description = "Der Katalog der Sprachreferenzniveaus.",
+                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SprachreferenzniveauKatalogEintrag.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine gültige Anmeldung.")
+    @ApiResponse(responseCode = "404", description = "Keine Fachgruppen gefunden.")
+    public Response getKatalogSprachreferenzniveaus(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
+            return (new DataKatalogSprachreferenzniveaus()).getAll();
         }
     }
 
