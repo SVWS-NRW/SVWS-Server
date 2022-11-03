@@ -76,7 +76,7 @@
 										:key="s.id"
 										:schiene="s"
 									/>
-									<td v-else :colspan="schienen.length" class="text-center">Regeln können nicht in Ergebnissen erstellt werden</td>
+									<td v-else :colspan="schienen.size()" class="text-center">Regeln können nicht in Ergebnissen erstellt werden</td>
 								</tr>
 							</thead>
 							<tbody>
@@ -86,7 +86,7 @@
 									:kurs="kurs"
 								></s-kurs-blockung>
 								<template v-if="allow_regeln">
-									<td class="border border-[#7f7f7f]/20 text-center bg-white" :colspan="schienen.length+4">Fächer ohne Kurse</td>
+									<td class="border border-[#7f7f7f]/20 text-center bg-white" :colspan="schienen.size()+4">Fächer ohne Kurse</td>
 									<td class="bg-white"></td>
 									<s-fach-kurs
 										v-for="fach in faecher"
@@ -146,11 +146,9 @@
 		return list || new Vector<GostBlockungKurs>()
 	})
 
-	const schienen: ComputedRef<GostBlockungSchiene[]> = computed(() => {
-		//TODO M
-		const result = app.dataKursblockung.daten?.schienen || new Vector<GostBlockungSchiene>();
-		return result.toArray(new Array<GostBlockungSchiene>());
-	});
+	const schienen: ComputedRef<List<GostBlockungSchiene>> = computed(() =>
+		app.dataKursblockung.manager?.getMengeOfSchienen() || new Vector<GostBlockungSchiene>()
+	);
 
 	const manager: ComputedRef<GostBlockungsergebnisManager | undefined> = computed(() => {
 		return app.dataKursblockungsergebnis.manager
