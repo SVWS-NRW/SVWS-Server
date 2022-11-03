@@ -56,10 +56,10 @@
 				:class="{'bg-slate-500': schiene_gesperrt(schiene) }"
 				:style="{ 'background-color': schiene_gesperrt(schiene)? '':bgColor}"
 			>
-				<svws-ui-badge size="tiny" class="cursor-grab" :variant="fixier_regel ? 'error' : 'highlight'">
+				<svws-ui-badge size="tiny" class="cursor-grab" :variant="fixier_regeln ? 'error' : 'highlight'">
 					{{ kurs_blockungsergebnis?.schueler.size() }}
 					<svws-ui-icon class="cursor-pointer" @click="fixieren_regel_toggle" >
-						<i-ri-pushpin-fill v-if="fixier_regel" class="inline-block"/>
+						<i-ri-pushpin-fill v-if="fixier_regeln" class="inline-block"/>
 						<i-ri-pushpin-line v-else class="inline-block"/>
 					</svws-ui-icon>
 				</svws-ui-badge>
@@ -117,6 +117,7 @@ import {
 	GostFach,
 	GostKursart,
 	GostKursblockungRegelTyp,
+	List,
 	Vector,
 	ZulaessigesFach
 } from "@svws-nrw/svws-core-ts";
@@ -189,8 +190,8 @@ const suffix: WritableComputedRef<string> = computed({
 });
 const manager: ComputedRef<GostBlockungsergebnisManager | undefined> = computed(()=>app.dataKursblockungsergebnis.manager)
 
-	//TODO M
-const schienen = computed(()=>app.dataKursblockung.daten?.schienen || new Vector<GostBlockungSchiene>())
+	const schienen: ComputedRef<List<GostBlockungSchiene>> =
+	computed(()=> app.dataKursblockung.manager?.getMengeOfSchienen() || new Vector<GostBlockungSchiene>())
 
 const kurs_blockungsergebnis: ComputedRef<GostBlockungsergebnisKurs|undefined> = computed(()=>{
 	try {
@@ -212,31 +213,40 @@ const filtered_by_kursart: ComputedRef<GostBlockungsergebnisKurs[]> = computed((
 	})
 })
 
-const setze_kursdifferenz = computed(()=>filtered_by_kursart.value[0]===kurs_blockungsergebnis.value)
+const setze_kursdifferenz: ComputedRef<boolean> =
+	computed(()=>filtered_by_kursart.value[0]===kurs_blockungsergebnis.value)
 
-const kursdifferenz: ComputedRef<[number, number, number]> = computed(() => {
+const kursdifferenz: ComputedRef<[number, number, number]> =
+	computed(() => {
 	if (!filtered_by_kursart.value.length) return [-1,-1, -1]
 	const wahlen = filtered_by_kursart.value.reduce((previousValue, currentValue) => previousValue + currentValue.schueler.size(), 0)
 	if (filtered_by_kursart.value.length === 2) return [2, Math.abs(filtered_by_kursart.value[0].schueler.size() - filtered_by_kursart.value[1].schueler.size()), wahlen]
 	const sorted = [...filtered_by_kursart.value].sort((a, b) => b.schueler.size() - a.schueler.size())
-	return [filtered_by_kursart.value.length, sorted[0].schueler.size() - sorted[sorted.length - 1].schueler.size(), wahlen]
-})
+	return [filtered_by_kursart.value.length, sorted[0].schueler.size() - sorted[sorted.length - 1].schueler.size(), wahlen]})
 
-const sperr_regeln: ComputedRef<GostBlockungRegel[]> = computed(() => {
-	//TODO M
-	const alle_regeln = app.dataKursblockung.daten?.regeln.toArray(new Array<GostBlockungRegel>())
-	const regeln = alle_regeln?.filter(r => r.typ === GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ && r.parameter.get(0) === props.kurs.id)
-	return regeln || []
-})
+const regeln: ComputedRef<List<GostBlockungRegel>> =
+	computed(()=> app.dataKursblockung.manager?.getMengeOfRegeln() || new Vector<GostBlockungRegel>())
 
-const fixier_regel: ComputedRef<GostBlockungRegel | undefined> = computed(() => {
-	//TODO M
-	const regeln = app.dataKursblockung.daten?.regeln.toArray(new Array<GostBlockungRegel>())
-	const regel = regeln?.find(r => r.typ === GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ && r.parameter.get(0) === props.kurs.id)
-	return regel
-})
+const sperr_regeln: ComputedRef<GostBlockungRegel[]> =
+	computed(() => {
+	const arr = []
+	for (const regel of regeln.value)
+		if (regel.typ === GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ
+				&& regel.parameter.get(0) === props.kurs.id)
+			arr.push(regel)
+	return arr})
 
-const allow_regeln: ComputedRef<boolean> = computed(()=> app.blockungsergebnisauswahl.liste.length === 1)
+const fixier_regeln: ComputedRef<GostBlockungRegel[]> =
+	computed(() => {
+	const arr = []
+	for (const regel of regeln.value)
+		if (regel.typ === GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ
+				&& regel.parameter.get(0) === props.kurs.id)
+			arr.push(regel)
+	return arr})
+
+const allow_regeln: ComputedRef<boolean> =
+	computed(()=> app.blockungsergebnisauswahl.liste.length === 1)
 
 const is_drop_zone = (schiene: GostBlockungSchiene) => {
 	const kurs = main.config.drag_and_drop_data?.kurs;
@@ -245,12 +255,16 @@ const is_drop_zone = (schiene: GostBlockungSchiene) => {
 };
 
 const schiene_gesperrt = (schiene: GostBlockungSchiene): boolean => {
-	//TODO M
-	const regeln = app.dataKursblockung.daten?.regeln.toArray(new Array<GostBlockungRegel>())
-	const alleine_regeln = regeln?.filter(r=>r.typ === GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS.typ)
-	const sperr_regeln = regeln?.filter(r=>r.typ === GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS.typ)
-	if (alleine_regeln?.find(r=>r.parameter.get(0) !== props.kurs.kursart && (schiene.nummer >= r.parameter.get(1) && schiene.nummer <= r.parameter.get(2)))) return true
-	if (sperr_regeln?.find(r=>r.parameter.get(0) === props.kurs.kursart && (schiene.nummer >= r.parameter.get(1) && schiene.nummer <= r.parameter.get(2)))) return true
+	for (const regel of regeln.value) {
+		if (regel.typ === GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS.typ
+			&& regel.parameter.get(0) !== props.kurs.kursart 
+			&& (schiene.nummer >= regel.parameter.get(1) && schiene.nummer <= regel.parameter.get(2)))
+			return true
+		else if (regel.typ === GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS.typ
+			&& regel.parameter.get(0) === props.kurs.kursart
+			&& (schiene.nummer >= regel.parameter.get(1) && schiene.nummer <= regel.parameter.get(2)))
+			return true
+	}
 	return false
 }
 
@@ -259,7 +273,7 @@ const regel_speichern = async (regel: GostBlockungRegel) => {
 	await app.dataKursblockung.patch_blockung_regel(regel)
 }
 
-const fixieren_regel_toggle = () => fixier_regel.value ? fixieren_regel_entfernen() : fixieren_regel_hinzufuegen()
+const fixieren_regel_toggle = () => fixier_regeln.value ? fixieren_regel_entfernen() : fixieren_regel_hinzufuegen()
 const fixieren_regel_hinzufuegen = async () => {
 	const regel = await app.dataKursblockung.add_blockung_regel(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ)
 	if (!regel) return
@@ -274,8 +288,9 @@ const fixieren_regel_hinzufuegen = async () => {
 	app.dataKursblockung.manager?.addRegel(regel)
 }
 const fixieren_regel_entfernen = async () => {
-	if (!fixier_regel.value) return
-	app.dataKursblockung.del_blockung_regel(fixier_regel.value.id)
+	if (!fixier_regeln.value) return
+	for (const regel of fixier_regeln.value)
+		app.dataKursblockung.del_blockung_regel(regel.id)
 }
 
 const sperren_regel_toggle = (nummer: number) =>
@@ -299,7 +314,7 @@ const sperren_regel_entfernen = async (nummer: number) => {
 
 function drop_aendere_kursschiene(drag_data: {kurs: GostBlockungsergebnisKurs; schiene: GostBlockungSchiene}, schiene_id: number) {
 	if (drag_data.kurs.id === kurs_blockungsergebnis.value?.id && schiene_id !== drag_data.schiene.id) {
-		if (fixier_regel.value) fixieren_regel_entfernen()
+		if (fixier_regeln.value) fixieren_regel_entfernen()
 		app.dataKursblockungsergebnis.assignKursSchiene(drag_data.kurs.id, drag_data.schiene.id, schiene_id)
 		// fixieren_regel_hinzufuegen()
 	}

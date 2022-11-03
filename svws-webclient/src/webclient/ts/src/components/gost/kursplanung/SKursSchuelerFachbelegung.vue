@@ -23,11 +23,11 @@
 
 <script setup lang="ts">
 	import {
-		AbiturFachbelegung,
 		GostBlockungKurs,
 		GostBlockungsergebnisKurs,
 		GostBlockungsergebnisManager,
 		GostFach,
+		GostFachwahl,
 		GostKursart,
 		ZulaessigesFach
 	} from "@svws-nrw/svws-core-ts";
@@ -37,7 +37,7 @@
 
 	const props = defineProps({
 		fach: {
-			type: AbiturFachbelegung,
+			type: GostFachwahl,
 			required: true
 		},
 		kurse: {
@@ -53,45 +53,38 @@
 	const main: Main = injectMainApp();
 	const app = main.apps.gost
 
-	const visible: ComputedRef<boolean> = computed(()=> {
-		const halbjahr = app.dataKursblockung.manager?.getHalbjahr()
-		const belegung = halbjahr && props.fach.belegungen[halbjahr.halbjahr]
-		return belegung ? true : false
-	})
+	const visible: ComputedRef<boolean> =
+		computed(()=> true)
 
-	const manager: ComputedRef<GostBlockungsergebnisManager | undefined> = computed(() => {
-		return app.dataKursblockungsergebnis.manager;
-	});
+	const manager: ComputedRef<GostBlockungsergebnisManager | undefined> =
+		computed(() => app.dataKursblockungsergebnis.manager);
 
-	const kursart: ComputedRef<string | undefined> = computed(() =>
-		manager.value?.getOfSchuelerOfFachKursart(props.schuelerId, props.fach.fachID).kuerzel.toString()
-	);
+	const kursart: ComputedRef<string | undefined> =
+		computed(() =>
+		manager.value?.getOfSchuelerOfFachKursart(props.schuelerId, props.fach.fachID).kuerzel.toString());
 
-	const kursartid: ComputedRef<number | undefined> = computed(() => {
-		return GostKursart.fromKuerzel(!kursart.value ? null : kursart.value)?.id;
-	})
+	const kursartid: ComputedRef<number | undefined> =
+		computed(() => GostKursart.fromKuerzel(!kursart.value ? null : kursart.value)?.id)
 
-	const kursid: ComputedRef<number | undefined> = computed(() => {
-		return belegung.value?.id;
-	});
+	const kursid: ComputedRef<number | undefined> =
+		computed(() => belegung.value?.id);
 
-	const belegung: ComputedRef<GostBlockungsergebnisKurs | undefined> = computed(() => {
+	const belegung: ComputedRef<GostBlockungsergebnisKurs | undefined> =
+		computed(() => {
 		try {
 			return manager.value?.getOfSchuelerOfFachZugeordneterKurs(props.schuelerId, props.fach.fachID) || undefined;
-		} catch (e) {return undefined}
-	});
+		} catch (e) {return undefined}});
 
-	const gostfach: ComputedRef<GostFach | undefined> = computed(() => {
-		return manager.value?.getFach(props.fach.fachID);
-	});
+	const gostfach: ComputedRef<GostFach | undefined> =
+		computed(() => manager.value?.getFach(props.fach.fachID));
 
-	const bgColor: ComputedRef<string> = computed(() => {
+	const bgColor: ComputedRef<string> =
+		computed(() => {
 		if (belegung.value) return "gray"
 		const zulfach = ZulaessigesFach.getByKuerzelASD(gostfach.value?.kuerzel || null);
 		if (!zulfach)
 			return "#ffffff";
-		return zulfach.getHMTLFarbeRGB().valueOf();
-	});
+		return zulfach.getHMTLFarbeRGB().valueOf()});
 
 	function get_kurs_name(): String {
 		if (!kursid.value) return manager.value?.getFach(props.fach.fachID).kuerzelAnzeige+"-"+kursart.value || "?"

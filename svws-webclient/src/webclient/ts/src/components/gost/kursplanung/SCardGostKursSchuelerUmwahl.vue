@@ -79,12 +79,11 @@
 
 <script setup lang="ts">
 import {
-	AbiturFachbelegung,
-	Comparator,
 	GostBlockungKurs,
 	GostBlockungsergebnisKurs,
 	GostBlockungsergebnisManager,
 	GostBlockungsergebnisSchiene,
+	GostFachwahl,
 	List,
 	SchuelerListeEintrag,
 	Vector
@@ -97,28 +96,20 @@ const main: Main = injectMainApp();
 const app = main.apps.gost;
 
 const manager: ComputedRef<GostBlockungsergebnisManager | undefined> =
-	computed(() => {
-		return app.dataKursblockungsergebnis.manager;
-	});
+	computed(() => app.dataKursblockungsergebnis.manager);
 
-const is_dragging: ComputedRef<boolean> = computed(() => {
-	return !!main.config.drag_and_drop_data;
-});
+const is_dragging: ComputedRef<boolean> =
+	computed(() => !!main.config.drag_and_drop_data);
 
-const kurse: ComputedRef<List<GostBlockungKurs>> = computed(() => 
-	app.dataKursblockung.manager?.getKursmengeSortiertNachKursartFachNummer() || new Vector<GostBlockungKurs>() 
-)
+const kurse: ComputedRef<List<GostBlockungKurs>> =
+	computed(() => app.dataKursblockung.manager?.getKursmengeSortiertNachKursartFachNummer()
+		|| new Vector<GostBlockungKurs>())
 
-const schienen: ComputedRef<Vector<GostBlockungsergebnisSchiene> | undefined> = computed(() =>
-	manager.value?.getMengeAllerSchienen()
-	);
+const schienen: ComputedRef<List<GostBlockungsergebnisSchiene>> = 
+	computed(() => manager.value?.getMengeAllerSchienen() || new Vector<GostBlockungsergebnisSchiene>())
 
 const schueler: ComputedRef<Array<SchuelerListeEintrag> | undefined> =
 	computed(() => app.listAbiturjahrgangSchueler.gefiltert);
-
-watch(()=>schueler.value, (new_val)=>{
-	selected.value = new_val ? new_val[0] : undefined;
-})
 
 const selected: WritableComputedRef<SchuelerListeEintrag | undefined> =
 	computed({
@@ -143,7 +134,8 @@ const schueler_kollisionen: ComputedRef<{ [index: number]: boolean }> =
 		return kolls;
 	});
 
-const schueler_negiert: ComputedRef<{ [index: number]: boolean }> = computed(() => {
+const schueler_negiert: ComputedRef<{ [index: number]: boolean }> =
+	computed(() => {
 	const kurs = app.dataKursblockungsergebnis.active_kurs?.value
 	if (!kurs) return {};
 	const kurse = manager.value?.getOfFachKursmenge(kurs.fachID)
@@ -156,35 +148,28 @@ const schueler_negiert: ComputedRef<{ [index: number]: boolean }> = computed(() 
 	return negiert;
 });
 
-const blockungsergebnisse: ComputedRef<Map<GostBlockungKurs, GostBlockungsergebnisKurs[]>> = computed(() => {
-	//TODO M
-	const v = app.dataKursblockungsergebnis.daten?.schienen
-	if (!v) return new Map();
-	const schienen = v.toArray(new Array<GostBlockungsergebnisSchiene>())
+const blockungsergebnisse: ComputedRef<Map<GostBlockungKurs, GostBlockungsergebnisKurs[]>> =
+	computed(() => {
 	const map = new Map();
+	if (!schienen.value?.size()) return map;
 	for (const k of kurse.value)
-		map.set(k, schienen.map(s => s.kurse.toArray(new Array<GostBlockungsergebnisKurs>()).find(kk => k.id === kk.id)));
+		for (const s of schienen.value) {
+			const arr = []
+			for (const kk of s.kurse)
+				kk.id === k.id ? arr.push(kk) : arr.push(undefined)
+			map.set(k, arr)
+		}
 	return map;
 });
 
-const fachbelegungen: ComputedRef<Vector<AbiturFachbelegung> | undefined> =
+const fachbelegungen: ComputedRef<List<GostFachwahl> | undefined> =
 	computed(() => {
-		const belegungen: Vector<AbiturFachbelegung> | undefined =
-			//TODO M?
-			app.dataSchuelerLaufbahndaten.daten?.fachbelegungen
-		if (!belegungen?.size) return undefined;
-		const comp: Comparator<AbiturFachbelegung> = class {
-			static compare(a: AbiturFachbelegung, b: AbiturFachbelegung): number {
-				const sortA = manager.value?.getFach(a.fachID).sortierung || -1;
-				const sortB = manager.value?.getFach(b.fachID).sortierung || -1;
-				return sortA - sortB;
-			}
-		}
-		belegungen.sort(comp);
-		return belegungen;
-	});
+	if (!selected.value?.id) return new Vector<GostFachwahl>()
+	return app.dataKursblockung.manager?.getOfSchuelerFacharten(selected.value?.id)
+});
 
-const filter_kollision: WritableComputedRef<boolean> = computed({
+const filter_kollision: WritableComputedRef<boolean> =
+	computed({
 	get(): boolean {
 		return !!app.listAbiturjahrgangSchueler.filter.kollision;
 	},
@@ -197,7 +182,8 @@ const filter_kollision: WritableComputedRef<boolean> = computed({
 	}
 });
 
-const filter_negiert: WritableComputedRef<boolean> = computed({
+const filter_negiert: WritableComputedRef<boolean> =
+	computed({
 	get(): boolean {
 		return !!app.listAbiturjahrgangSchueler.filter.negiert;
 	},
@@ -210,7 +196,8 @@ const filter_negiert: WritableComputedRef<boolean> = computed({
 	}
 });
 
-const filter_name: WritableComputedRef<string> = computed({
+const filter_name: WritableComputedRef<string> =
+	computed({
 	get(): string {
 		return app.listAbiturjahrgangSchueler?.filter?.name;
 	},
@@ -220,6 +207,8 @@ const filter_name: WritableComputedRef<string> = computed({
 		app.listAbiturjahrgangSchueler.filter = filter;
 	}
 });
+
+watch(()=>schueler.value, (new_val)=> selected.value = new_val ? new_val[0] : undefined)
 
 function drop_entferne_kurszuordnung(kurs: any) {
 	const schuelerid = selected.value?.id;
