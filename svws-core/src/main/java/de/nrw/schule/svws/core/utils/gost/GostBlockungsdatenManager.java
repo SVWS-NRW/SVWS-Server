@@ -332,6 +332,7 @@ public class GostBlockungsdatenManager {
 	public void removeSchieneByID(long id) {
 		@NotNull GostBlockungSchiene schiene = this.getSchiene(id);
 		_daten.schienen.remove(schiene);
+		_daten.schienen.sort(compSchiene);
 		_mapSchienen.remove(id);
 	}
 
@@ -598,6 +599,17 @@ public class GostBlockungsdatenManager {
 			throw new NullPointerException("Schüler-ID=" + pSchuelerID + ", Fach-ID=" + pFachID + " unbekannt!");
 
 		return kursart;
+	}
+
+	/**
+	 * Liefert die aktuelle Menge aller Schienen. 
+	 * Das ist die interne Referenz zur Liste der Schienen im {@link GostBlockungsdaten}-Objekt. 
+	 * Diese Liste ist stets sortiert nach der Schienen-Nummer.
+	 * 
+	 * @return Die aktuelle Menge aller Schienen sortiert nach der Schienen-Nummer.
+	 */
+	public @NotNull List<@NotNull GostBlockungSchiene> getMengeOfSchienen() {
+		return _daten.schienen;
 	}
 
 }

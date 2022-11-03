@@ -346,6 +346,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	public removeSchieneByID(id : number) : void {
 		let schiene : GostBlockungSchiene = this.getSchiene(id);
 		this._daten.schienen.remove(schiene);
+		this._daten.schienen.sort(GostBlockungsdatenManager.compSchiene);
 		this._mapSchienen.remove(id);
 	}
 
@@ -628,6 +629,17 @@ export class GostBlockungsdatenManager extends JavaObject {
 		if (kursart === null) 
 			throw new NullPointerException("Schüler-ID=" + pSchuelerID + ", Fach-ID=" + pFachID + " unbekannt!")
 		return kursart;
+	}
+
+	/**
+	 * Liefert die aktuelle Menge aller Schienen. 
+	 * Das ist die interne Referenz zur Liste der Schienen im {@link GostBlockungsdaten}-Objekt. 
+	 * Diese Liste ist stets sortiert nach der Schienen-Nummer.
+	 * 
+	 * @return Die aktuelle Menge aller Schienen sortiert nach der Schienen-Nummer.
+	 */
+	public getMengeOfSchienen() : List<GostBlockungSchiene> {
+		return this._daten.schienen;
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
