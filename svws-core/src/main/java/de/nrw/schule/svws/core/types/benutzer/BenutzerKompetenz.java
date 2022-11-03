@@ -376,7 +376,7 @@ public enum BenutzerKompetenz {
 	 */
 	private static @NotNull HashMap<@NotNull Long, @NotNull BenutzerKompetenz> getMapID() {
 		if (_mapID.size() == 0)
-			for (BenutzerKompetenz p : BenutzerKompetenz.values())
+			for (@NotNull BenutzerKompetenz p : BenutzerKompetenz.values())
 				_mapID.put(p.daten.id, p);
 		return _mapID;
 	}
@@ -384,7 +384,7 @@ public enum BenutzerKompetenz {
 
     /**
      * Gibt eine Map von den Benutzerkompetenzen-Gruppen auf die zugehörigen Benutzerkompetenzen
-     * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
+     * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
      *    
      * @return die Map von den Benutzerkompetenzen-Gruppen auf die zugehörigen Benutzerkompetenzen
      */

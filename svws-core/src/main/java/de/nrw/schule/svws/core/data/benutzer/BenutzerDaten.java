@@ -52,10 +52,6 @@ public class BenutzerDaten {
 	
 	/** Die Kompetenzen, die speziell diesem Benutzer zugeordnet sind. */
 	@Schema(required = true, description = "die Kompetenzen, die speziell diesem Benutzer zugeordnet sind")
-	public @NotNull List<@NotNull BenutzerKompetenzKatalogEintrag> kompetenzen = new Vector<>();
-
-	/** Die Kompetenzen, die entweder diesem Benutzer speziell oder über Gruppen zugeordnet sind. */
-	@Schema(required = true, description = "die Kompetenzen, die entweder diesem Benutzer speziell oder über Gruppen zugeordnet sind")
-	public @NotNull List<@NotNull BenutzerKompetenzKatalogEintrag> kompetenzenAlle = new Vector<>();
+	public @NotNull List<@NotNull Long> kompetenzen = new Vector<>();
 
 }

@@ -1,6 +1,7 @@
 package de.nrw.schule.svws.api.server;
 
 import java.io.InputStream;
+import java.util.List;
 
 import de.nrw.schule.svws.api.JSONMapper;
 import de.nrw.schule.svws.api.OpenAPIApplication;
@@ -27,6 +28,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -169,8 +171,155 @@ public class APIBenutzer {
             return (new DataBenutzerliste(conn).getListMitGruppenID(id));
         }
     }
+    
+    
+    /**
+     * Die OpenAPI-Methode für Setzen eines Anzeigenamens.
+     * 
+     * @param schema  das Datenbankschema, in welchem der Benutzer ist.
+     * @param id      die ID des Benutzers
+     * @param is      der Input-Stream mit dem Azeigenamen
+     * @param request die Informationen zur HTTP-Anfrage
+     * 
+     * @return die HTTP-Antwort
+     */
+    @POST
+    @Path("/{id : \\d+}/anzeigename")
+    @Operation(summary = "Setzt den Anzeigenamen eines Benutzers.", description = "Setzt den Anzeigenamen eines Benutzers."
+            + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Setzen des Anzeigenamens besitzt.")
+    @ApiResponse(responseCode = "204", description = "Der Anzeigename wurde erfolgreich gesetzt.")
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um den Anzeigenamen zu setzen.")
+    @ApiResponse(responseCode = "404", description = "Der Anzeigename zu dem Benutzer sind nicht vorhanden.")
+    @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response setAnzeigename(
+            @PathParam("schema") String schema, @PathParam("id") long id,
+            @RequestBody(description = "Der Anzeigename", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = String.class))) InputStream is,
+            @Context HttpServletRequest request) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnectionAllowSelf(request, BenutzerKompetenz.ADMIN, id)) {
+            return (new DataBenutzerDaten(conn)).setAnzeigename(id, JSONMapper.toString(is));
+        }
+    }
+    
+    
+    /**
+     * Die OpenAPI-Methode für Setzen eines Anmeldenamens.
+     * 
+     * @param schema  das Datenbankschema, in welchem der Benutzer ist.
+     * @param id      die ID des Benutzers
+     * @param is      der Input-Stream mit dem Anmeldenamen
+     * @param request die Informationen zur HTTP-Anfrage
+     * 
+     * @return die HTTP-Antwort
+     */
+    @POST
+    @Path("/{id : \\d+}/anmeldename")
+    @Operation(summary = "Setzt den Anmeldenamen eines Benutzers.", description = "Setzt den Anmeldenamen eines Benutzers."
+            + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Setzen des Kennwortes besitzt.")
+    @ApiResponse(responseCode = "204", description = "Der Anmeldename wurde erfolgreich gesetzt.")
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um das Kennwort zu setzen.")
+    @ApiResponse(responseCode = "404", description = "Der Anmeldename zu dem Benutzer sind nicht vorhanden.")
+    @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response setAnmeldename(
+            @PathParam("schema") String schema, @PathParam("id") long id,
+            @RequestBody(description = "Der Anmeldename", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = String.class))) InputStream is,
+            @Context HttpServletRequest request) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnectionAllowSelf(request, BenutzerKompetenz.ADMIN, id)) {
+            return (new DataBenutzerDaten(conn)).setAnmeldename(id, JSONMapper.toString(is));
+        }
+    }
+    
+    /**
+     * Die OpenAPI-Methode für Setzen des Admin-Flags bei einem Benutzer.
+     * 
+     * @param schema    das Datenbankschema
+     * @param id        die ID des Benutzers
+     * @param is        der Input-Stream mit dem Boolean-Wert, on das Admin-Flag gesetzt oder gelöscht werden soll
+     * @param request   die Informationen zur HTTP-Anfrage
+     * 
+     * 
+     * @return die HTTP-Antwort
+     */
+    @POST
+    @Path("/{id : \\d+}/istAdmin")
+    @Operation(summary = "Setzt ob der Benutzer  administrativ ist oder nicht.", 
+                          description = "Setzt ob der Benutzer administrativ ist oder nicht."
+            + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung besitzt.")
+    @ApiResponse(responseCode = "204", description = "Die Information wurde erfolgreich gesetzt.")
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um den Benutzer als administrativer Benutzer zu setzen")
+    @ApiResponse(responseCode = "400", description = "Fehler beim Konvertieren des JSON-Textes in einen Boolean-Wert. Ein Boolen-Wert wird erwartet.")
+    @ApiResponse(responseCode = "404", description = "Der Benutzer ist nicht vorhanden.")
+    @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response setBenutzerAdmin(
+            @PathParam("schema") String schema, @PathParam("id") long id,
+            @RequestBody(description = "Der Status, ob es sich um einen administrativen Benutzer handelt oder nicht.", required = true, 
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Boolean.class))) InputStream is,
+            @Context HttpServletRequest request) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADMIN)) {
+            return (new DataBenutzerDaten(conn)).setAdmin(id, JSONMapper.toBoolean(is));
+        }
+    }
+
+    /**
+     * Die OpenAPI-Methode zum Hinzufügen von einer oder mehreren Kompetenzen bei einem Benutzer
+     * 
+     * @param schema    das Datenbankschema, in welchem die Blockung erstellt wird
+     * @param id        die ID des Benutzers
+     * @param kids      die IDs der Kompetenzen
+     * @param request   die Informationen zur HTTP-Anfrage
+     * 
+     * @return die HTTP-Antwort
+     */
+    @POST
+    @Path("/{id : \\d+}/kompetenz/add")
+    @Operation(summary = "Fügt Kompetenzen bei einem Benutzer hinzu.", description = "Fügt Kompetenzen bei einem Benutzer hinzu."
+            + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Setzen der Kompetenzen besitzt.")
+    @ApiResponse(responseCode = "204", description = "Die Kompetenzen wurden erfolgreich hinzugefügt.")
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Kompetenzen zu hinzuzufügen.")
+    @ApiResponse(responseCode = "404", description = "Benötigte Information zum Benutzer wurden nicht in der DB gefunden.")
+    @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response addBenutzerKompetenzen(
+            @PathParam("schema") String schema, @PathParam("id") long id,
+            @RequestBody(description = "Die Kompetenzen", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class)))) List<Long> kids,
+            @Context HttpServletRequest request) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnectionAllowSelf(request, BenutzerKompetenz.ADMIN, id)) {
+            return (new DataBenutzerDaten(conn)).addKompetenzen(id, kids);
+        }
+    }
 
 
+    /**
+     * Die OpenAPI-Methode zum Entfernen von einer oder mehreren Kompetenzen bei einem Benutzer
+     * 
+     * @param schema   das Datenbankschema, in welchem die Blockung erstellt wird
+     * @param id       die ID des Benutzers
+     * @param kids     die IDs der Kompetenzen
+     * @param request  die Informationen zur HTTP-Anfrage
+     * 
+     * @return die HTTP-Antwort
+     */
+    @DELETE
+    @Path("/{id : \\d+}/kompetenz/remove")
+    @Operation(summary = "Entfernt Kompetenzen bei einem Benutzer.", description = "Entfernt Kompetenzen bei einem Benutzer."
+            + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen der Kompetenzen besitzt.")
+    @ApiResponse(responseCode = "204", description = "Die Kompetenzen wurden erfolgreich entfernt.")
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Kompetenzen zu entfernen.")
+    @ApiResponse(responseCode = "404", description = "Benötigte Information zum Benutzer wurden nicht in der DB gefunden.")
+    @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response removeBenutzerKompetenzen(
+            @PathParam("schema") String schema, @PathParam("id") long id,
+            @RequestBody(description = "Die Kompetenzen", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class)))) List<Long> kids,
+            @Context HttpServletRequest request) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnectionAllowSelf(request, BenutzerKompetenz.ADMIN, id)) {
+            return (new DataBenutzerDaten(conn)).removeKompetenzen(id, kids);
+        }
+    }
+
+    
     /**
      * Die OpenAPI-Methode für Setzen eines Benutzerkennwortes.
      * 
@@ -182,7 +331,7 @@ public class APIBenutzer {
      * @return die HTTP-Antwort
      */
     @POST
-    @Path("/{id : \\d+}/set_password")
+    @Path("/{id : \\d+}/password")
     @Operation(summary = "Setzt das Kennwort eines Benutzers.", description = "Setzt das Kennwort eines Benutzers."
             + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Setzen des Kennwortes besitzt.")
     @ApiResponse(responseCode = "204", description = "Das Kennwort wurde erfolgreich gesetzt.")
@@ -198,7 +347,10 @@ public class APIBenutzer {
             return (new DataBenutzerDaten(conn)).setPassword(id, JSONMapper.toString(is));
         }
     }
-
+    
+    
+    
+    
     /**
      * Die OpenAPI-Methode für die Abfrage des Katalogs der Benutzerkompetenzen.
      * 
@@ -339,5 +491,8 @@ public class APIBenutzer {
             return (new DataBenutzergruppeDaten(conn)).setKompetenz(id, kid, JSONMapper.toBoolean(is));
         }
     }
+
+
+    // TODO Methode setBenutzergruppeKompetenz aufteilen (siehe bei Benutzer) in zwei API-Methoden: addBenutzergruppeKompetenz (POST) und removeBenutzergruppeKompetenz (DELETE)
 
 }

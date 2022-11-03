@@ -335,7 +335,138 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode setBenutzerPasswort für den Zugriff auf die URL https://{hostname}/db/{schema}/benutzer/{id : \d+}/set_password
+	 * Implementierung der POST-Methode setAnmeldename für den Zugriff auf die URL https://{hostname}/db/{schema}/benutzer/{id : \d+}/anmeldename
+	 * 
+	 * Setzt den Anmeldenamen eines Benutzers.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Setzen des Kennwortes besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 204: Der Anmeldename wurde erfolgreich gesetzt.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um das Kennwort zu setzen.
+	 *   Code 404: Der Anmeldename zu dem Benutzer sind nicht vorhanden.
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 * 
+	 * @param {String} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async setAnmeldename(data : String, schema : string, id : number) : Promise<void> {
+		let path : string = "/db/{schema}/benutzer/{id : \d+}/anmeldename"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema)
+				.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		let body : string = JSON.stringify(data);
+		await super.postJSON(path, body);
+		return;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode setAnzeigename für den Zugriff auf die URL https://{hostname}/db/{schema}/benutzer/{id : \d+}/anzeigename
+	 * 
+	 * Setzt den Anzeigenamen eines Benutzers.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Setzen des Anzeigenamens besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 204: Der Anzeigename wurde erfolgreich gesetzt.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um den Anzeigenamen zu setzen.
+	 *   Code 404: Der Anzeigename zu dem Benutzer sind nicht vorhanden.
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 * 
+	 * @param {String} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async setAnzeigename(data : String, schema : string, id : number) : Promise<void> {
+		let path : string = "/db/{schema}/benutzer/{id : \d+}/anzeigename"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema)
+				.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		let body : string = JSON.stringify(data);
+		await super.postJSON(path, body);
+		return;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode setBenutzerAdmin für den Zugriff auf die URL https://{hostname}/db/{schema}/benutzer/{id : \d+}/istAdmin
+	 * 
+	 * Setzt ob der Benutzer administrativ ist oder nicht.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 204: Die Information wurde erfolgreich gesetzt.
+	 *   Code 400: Fehler beim Konvertieren des JSON-Textes in einen Boolean-Wert. Ein Boolen-Wert wird erwartet.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um den Benutzer als administrativer Benutzer zu setzen
+	 *   Code 404: Der Benutzer ist nicht vorhanden.
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 * 
+	 * @param {Boolean} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async setBenutzerAdmin(data : Boolean, schema : string, id : number) : Promise<void> {
+		let path : string = "/db/{schema}/benutzer/{id : \d+}/istAdmin"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema)
+				.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		let body : string = JSON.stringify(data);
+		await super.postJSON(path, body);
+		return;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addBenutzerKompetenzen für den Zugriff auf die URL https://{hostname}/db/{schema}/benutzer/{id : \d+}/kompetenz/add
+	 * 
+	 * Fügt Kompetenzen bei einem Benutzer hinzu.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Setzen der Kompetenzen besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 204: Die Kompetenzen wurden erfolgreich hinzugefügt.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Kompetenzen zu hinzuzufügen.
+	 *   Code 404: Benötigte Information zum Benutzer wurden nicht in der DB gefunden.
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 * 
+	 * @param {List<Long>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async addBenutzerKompetenzen(data : List<Number>, schema : string, id : number) : Promise<void> {
+		let path : string = "/db/{schema}/benutzer/{id : \d+}/kompetenz/add"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema)
+				.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		let body : string = "[" + data.toArray().map(d => { JSON.stringify(d) }).join() + "]";
+		await super.postJSON(path, body);
+		return;
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode removeBenutzerKompetenzen für den Zugriff auf die URL https://{hostname}/db/{schema}/benutzer/{id : \d+}/kompetenz/remove
+	 * 
+	 * Entfernt Kompetenzen bei einem Benutzer.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen der Kompetenzen besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 204: Die Kompetenzen wurden erfolgreich entfernt.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Kompetenzen zu entfernen.
+	 *   Code 404: Benötigte Information zum Benutzer wurden nicht in der DB gefunden.
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 * 
+	 * @param {List<Long>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async removeBenutzerKompetenzen(data : List<Number>, schema : string, id : number) : Promise<void> {
+		let path : string = "/db/{schema}/benutzer/{id : \d+}/kompetenz/remove"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema)
+				.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		let body : string = "[" + data.toArray().map(d => { JSON.stringify(d) }).join() + "]";
+		await super.deleteJSON(path, body);
+		return;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode setBenutzerPasswort für den Zugriff auf die URL https://{hostname}/db/{schema}/benutzer/{id : \d+}/password
 	 * 
 	 * Setzt das Kennwort eines Benutzers.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Setzen des Kennwortes besitzt.
 	 * 
@@ -351,7 +482,7 @@ export class ApiServer extends BaseApi {
 	 * @param {number} id - der Pfad-Parameter id
 	 */
 	public async setBenutzerPasswort(data : String, schema : string, id : number) : Promise<void> {
-		let path : string = "/db/{schema}/benutzer/{id : \d+}/set_password"
+		let path : string = "/db/{schema}/benutzer/{id : \d+}/password"
 				.replace(/{schema\s*(:[^}]+)?}/g, schema)
 				.replace(/{id\s*(:[^}]+)?}/g, id.toString());
 		let body : string = JSON.stringify(data);

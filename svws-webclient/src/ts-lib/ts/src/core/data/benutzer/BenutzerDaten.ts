@@ -1,6 +1,6 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { BenutzerKompetenzKatalogEintrag, cast_de_nrw_schule_svws_core_data_benutzer_BenutzerKompetenzKatalogEintrag } from '../../../core/data/benutzer/BenutzerKompetenzKatalogEintrag';
 import { BenutzergruppeDaten, cast_de_nrw_schule_svws_core_data_benutzer_BenutzergruppeDaten } from '../../../core/data/benutzer/BenutzergruppeDaten';
+import { JavaLong, cast_java_lang_Long } from '../../../java/lang/JavaLong';
 import { List, cast_java_util_List } from '../../../java/util/List';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
@@ -23,9 +23,7 @@ export class BenutzerDaten extends JavaObject {
 
 	public gruppen : List<BenutzergruppeDaten> = new Vector();
 
-	public kompetenzen : List<BenutzerKompetenzKatalogEintrag> = new Vector();
-
-	public kompetenzenAlle : List<BenutzerKompetenzKatalogEintrag> = new Vector();
+	public kompetenzen : List<Number> = new Vector();
 
 
 	public constructor() {
@@ -67,12 +65,7 @@ export class BenutzerDaten extends JavaObject {
 		}
 		if (!!obj.kompetenzen) {
 			for (let elem of obj.kompetenzen) {
-				result.kompetenzen?.add(BenutzerKompetenzKatalogEintrag.transpilerFromJSON(JSON.stringify(elem)));
-			}
-		}
-		if (!!obj.kompetenzenAlle) {
-			for (let elem of obj.kompetenzenAlle) {
-				result.kompetenzenAlle?.add(BenutzerKompetenzKatalogEintrag.transpilerFromJSON(JSON.stringify(elem)));
+				result.kompetenzen?.add(elem);
 			}
 		}
 		return result;
@@ -105,20 +98,8 @@ export class BenutzerDaten extends JavaObject {
 			result += '"kompetenzen" : [ ';
 			for (let i : number = 0; i < obj.kompetenzen.size(); i++) {
 				let elem = obj.kompetenzen.get(i);
-				result += BenutzerKompetenzKatalogEintrag.transpilerToJSON(elem);
+				result += elem;
 				if (i < obj.kompetenzen.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
-		}
-		if (!obj.kompetenzenAlle) {
-			result += '"kompetenzenAlle" : []';
-		} else {
-			result += '"kompetenzenAlle" : [ ';
-			for (let i : number = 0; i < obj.kompetenzenAlle.size(); i++) {
-				let elem = obj.kompetenzenAlle.get(i);
-				result += BenutzerKompetenzKatalogEintrag.transpilerToJSON(elem);
-				if (i < obj.kompetenzenAlle.size() - 1)
 					result += ',';
 			}
 			result += ' ]' + ',';
@@ -172,22 +153,8 @@ export class BenutzerDaten extends JavaObject {
 				result += '"kompetenzen" : [ ';
 				for (let i : number = 0; i < obj.kompetenzen.size(); i++) {
 					let elem = obj.kompetenzen.get(i);
-					result += BenutzerKompetenzKatalogEintrag.transpilerToJSON(elem);
+					result += elem;
 					if (i < obj.kompetenzen.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
-		}
-		if (typeof obj.kompetenzenAlle !== "undefined") {
-			if (!obj.kompetenzenAlle) {
-				result += '"kompetenzenAlle" : []';
-			} else {
-				result += '"kompetenzenAlle" : [ ';
-				for (let i : number = 0; i < obj.kompetenzenAlle.size(); i++) {
-					let elem = obj.kompetenzenAlle.get(i);
-					result += BenutzerKompetenzKatalogEintrag.transpilerToJSON(elem);
-					if (i < obj.kompetenzenAlle.size() - 1)
 						result += ',';
 				}
 				result += ' ]' + ',';

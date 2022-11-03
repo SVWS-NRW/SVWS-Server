@@ -12,7 +12,7 @@ export class BenutzergruppenManager extends JavaObject {
 
 	private readonly _daten : BenutzergruppeDaten;
 
-	private readonly _setKompentenzen : HashSet<Number> = new HashSet();
+	private readonly _setKompetenzen : HashSet<Number> = new HashSet();
 
 
 	/**
@@ -28,7 +28,7 @@ export class BenutzergruppenManager extends JavaObject {
 	 *
 	 * Erstellt einen neuen Manager mit den Daten einer Benutzergruppe
 	 * 
-	 * @param pDaten          die Blockungsdaten
+	 * @param pDaten          die Benutzergruppendaten
 	 */
 	public constructor(pDaten : BenutzergruppeDaten);
 
@@ -50,9 +50,9 @@ export class BenutzergruppenManager extends JavaObject {
 			for (let kID of pDaten.kompetenzen) {
 				if (kID === null) 
 					throw new NullPointerException("Fehlerhafte Daten: Die Liste der Kompetenzen darf keine Null-Werte enthalten.")
-				if (this._setKompentenzen.contains(kID)) 
+				if (this._setKompetenzen.contains(kID)) 
 					throw new IllegalArgumentException("Die Kompetenz mit der ID " + kID.valueOf() + " wurde mehrfach bei der Gruppe eingetragen.")
-				this._setKompentenzen.add(kID);
+				this._setKompetenzen.add(kID);
 			}
 		} else throw new Error('invalid method overload');
 	}
@@ -124,7 +124,7 @@ export class BenutzergruppenManager extends JavaObject {
 	public hatKompetenz(kompetenz : BenutzerKompetenz) : boolean {
 		if (this._daten.istAdmin) 
 			return true;
-		return this._setKompentenzen.contains(kompetenz.daten.id);
+		return this._setKompetenzen.contains(kompetenz.daten.id);
 	}
 
 	/**
@@ -138,7 +138,7 @@ export class BenutzergruppenManager extends JavaObject {
 		if (this._daten.istAdmin) 
 			return true;
 		for (let kompetenz of kompetenzen) 
-			if (!this._setKompentenzen.contains(kompetenz.daten.id)) 
+			if (!this._setKompetenzen.contains(kompetenz.daten.id)) 
 				return false;
 		return true;
 	}
@@ -154,7 +154,7 @@ export class BenutzergruppenManager extends JavaObject {
 		if (this._daten.istAdmin) 
 			return true;
 		for (let kompetenz of kompetenzen) 
-			if (this._setKompentenzen.contains(kompetenz.daten.id)) 
+			if (this._setKompetenzen.contains(kompetenz.daten.id)) 
 				return true;
 		return false;
 	}
@@ -169,10 +169,10 @@ export class BenutzergruppenManager extends JavaObject {
 	public addKompetenz(kompetenz : BenutzerKompetenz | null) : void {
 		if (kompetenz === null) 
 			throw new NullPointerException("Die übergenene Kompetenz darf nicht null sein.")
-		if (this._setKompentenzen.contains(kompetenz.daten.id)) 
+		if (this._setKompetenzen.contains(kompetenz.daten.id)) 
 			throw new IllegalArgumentException("Die Kompetenz mit der ID " + kompetenz.daten.id + " wurde bereits zuvor zu der Gruppe hinzugefügt.")
 		this._daten.kompetenzen.add(kompetenz.daten.id);
-		this._setKompentenzen.add(kompetenz.daten.id);
+		this._setKompetenzen.add(kompetenz.daten.id);
 	}
 
 	/**
@@ -183,10 +183,10 @@ export class BenutzergruppenManager extends JavaObject {
 	 * @throws IllegalArgumentException   wenn die Gruppe die Kompetenz nicht enthält 
 	 */
 	public removeKompetenz(kompetenz : BenutzerKompetenz) : void {
-		if (!this._setKompentenzen.contains(kompetenz.daten.id)) 
+		if (!this._setKompetenzen.contains(kompetenz.daten.id)) 
 			throw new IllegalArgumentException("Die Kompetenz mit der ID " + kompetenz.daten.id + " ist in der Gruppe nicht vorhanden.")
 		this._daten.kompetenzen.remove(kompetenz.daten.id);
-		this._setKompentenzen.remove(kompetenz.daten.id);
+		this._setKompetenzen.remove(kompetenz.daten.id);
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

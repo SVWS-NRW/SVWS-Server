@@ -30,7 +30,7 @@ public class BenutzergruppeDaten {
 	@Schema(required = true, description = "gibt an, ob es sich um eine Administrative Benutzergruppe handelt oder nicht.", example="true")
 	public @NotNull boolean istAdmin = false;
 
-	/** Die IDs der Kompetenzen, die speziell diesem Benutzer zugeordnet sind. */
+	/** Die IDs der Kompetenzen, die speziell dieser Benutzergruppe zugeordnet sind. */
 	@Schema(required = true, description = "die IDs der Kompetenzen, die speziell diesem Benutzer zugeordnet sind")
 	public @NotNull List<@NotNull Long> kompetenzen = new Vector<>();
 

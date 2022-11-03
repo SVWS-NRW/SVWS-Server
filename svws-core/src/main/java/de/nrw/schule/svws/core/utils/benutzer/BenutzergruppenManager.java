@@ -17,7 +17,7 @@ public class BenutzergruppenManager {
     private final @NotNull BenutzergruppeDaten _daten;
 
     /** Die Menge an Kompetenzen, die dieser Gruppe zugeordnet ist. */
-    private final @NotNull HashSet<@NotNull Long> _setKompentenzen = new HashSet<>();
+    private final @NotNull HashSet<@NotNull Long> _setKompetenzen = new HashSet<>();
 
 
     /** 
@@ -36,7 +36,7 @@ public class BenutzergruppenManager {
     /** 
      * Erstellt einen neuen Manager mit den Daten einer Benutzergruppe
      * 
-     * @param pDaten          die Blockungsdaten
+     * @param pDaten          die Benutzergruppendaten
      */
     public BenutzergruppenManager(@NotNull BenutzergruppeDaten pDaten) {
         this._daten = pDaten;
@@ -44,9 +44,9 @@ public class BenutzergruppenManager {
         for (Long kID : pDaten.kompetenzen) {
             if (kID == null)
                 throw new NullPointerException("Fehlerhafte Daten: Die Liste der Kompetenzen darf keine Null-Werte enthalten.");
-            if (_setKompentenzen.contains(kID))
+            if (_setKompetenzen.contains(kID))
                 throw new IllegalArgumentException("Die Kompetenz mit der ID " + kID + " wurde mehrfach bei der Gruppe eingetragen.");
-            _setKompentenzen.add(kID);
+            _setKompetenzen.add(kID);
         }
     }
 
@@ -121,7 +121,7 @@ public class BenutzergruppenManager {
     public boolean hatKompetenz(@NotNull BenutzerKompetenz kompetenz) {
         if (this._daten.istAdmin)
             return true;
-        return _setKompentenzen.contains(kompetenz.daten.id);
+        return _setKompetenzen.contains(kompetenz.daten.id);
     }
 
     /**
@@ -135,7 +135,7 @@ public class BenutzergruppenManager {
         if (this._daten.istAdmin)
             return true;
         for (@NotNull BenutzerKompetenz kompetenz : kompetenzen)
-            if (!_setKompentenzen.contains(kompetenz.daten.id))
+            if (!_setKompetenzen.contains(kompetenz.daten.id))
                 return false;
         return true;
     }
@@ -152,7 +152,7 @@ public class BenutzergruppenManager {
         if (this._daten.istAdmin)
             return true;
         for (@NotNull BenutzerKompetenz kompetenz : kompetenzen)
-            if (_setKompentenzen.contains(kompetenz.daten.id))
+            if (_setKompetenzen.contains(kompetenz.daten.id))
                 return true;
         return false;
     }
@@ -168,10 +168,10 @@ public class BenutzergruppenManager {
     public void addKompetenz(BenutzerKompetenz kompetenz) throws IllegalArgumentException {
         if (kompetenz == null)
             throw new NullPointerException("Die übergenene Kompetenz darf nicht null sein.");
-        if (_setKompentenzen.contains(kompetenz.daten.id))
+        if (_setKompetenzen.contains(kompetenz.daten.id))
             throw new IllegalArgumentException("Die Kompetenz mit der ID " + kompetenz.daten.id + " wurde bereits zuvor zu der Gruppe hinzugefügt.");
         this._daten.kompetenzen.add(kompetenz.daten.id);
-        _setKompentenzen.add(kompetenz.daten.id);
+        _setKompetenzen.add(kompetenz.daten.id);
     }
 
 
@@ -183,10 +183,10 @@ public class BenutzergruppenManager {
      * @throws IllegalArgumentException   wenn die Gruppe die Kompetenz nicht enthält 
      */
     public void removeKompetenz(@NotNull BenutzerKompetenz kompetenz) throws IllegalArgumentException {
-        if (!_setKompentenzen.contains(kompetenz.daten.id))
+        if (!_setKompetenzen.contains(kompetenz.daten.id))
             throw new IllegalArgumentException("Die Kompetenz mit der ID " + kompetenz.daten.id + " ist in der Gruppe nicht vorhanden.");
         this._daten.kompetenzen.remove(kompetenz.daten.id);
-        _setKompentenzen.remove(kompetenz.daten.id);
+        _setKompetenzen.remove(kompetenz.daten.id);
     }
     
 }

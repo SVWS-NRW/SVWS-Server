@@ -288,17 +288,32 @@ public class ApiMethod {
 	public String getRequestBodyType() {
 		if ((!requestBody.exists) || (requestBody.content == null))
 			return null;
-		return requestBody.content.datatype;
+		return getTSType(requestBody.content);
 	}
 	
 	
 	private static String getTSType(ApiContent content) {
-		return switch (content.datatype) {
+	    String datatype = (content.isArrayType) ? content.arrayElementType : content.datatype;
+	    datatype = switch (datatype) {
 			case "Byte", "Short", "Integer", "Long", "Float", "Double" -> "Number";
 			case "Character", "String" -> "String";
-			default -> content.datatype;
-		};			
+			default -> datatype;
+		};
+		if (content.isArrayType)
+		    return "List<" + datatype + ">";
+		return datatype;
 	}
+
+	
+    private static String getTSArrayElementType(ApiContent content) {
+        if (!content.isArrayType)
+            throw new TranspilerException("Transpiler Error: getTSArrayElementType invoked on non-array content.");
+        return switch (content.arrayElementType) {
+            case "Byte", "Short", "Integer", "Long", "Float", "Double" -> "Number";
+            case "Character", "String" -> "String";
+            default -> content.arrayElementType;
+        };
+    }
 	
 	
 	private String getTSMethodHead() {
@@ -348,9 +363,16 @@ public class ApiMethod {
 			// Prüfe, ob der Request-Body in JSON umgewandelt werden muss
 			if (requestBody.content.mimetype == ApiMimeType.APPLICATION_JSON) {
 				if (requestBody.content.isArrayType) {
-					if (httpMethod == ApiHttpMethod.PATCH)
-						throw new TranspilerException("Transpiler Error: Patch Methods are currently not supported for array based json objects (method: " + name + " in API " + api + ")");
-                    result += "\t\tlet body : string = \"[\" + data.toArray().map(d => { Object.transpilerToJSON(d) }).join() + \"]\";" + System.lineSeparator();
+                    String tsType = getTSArrayElementType(requestBody.content); 
+                    if ("String".equals(tsType) || "Number".equals(tsType) || "Boolean".equals(tsType)) {
+                        result += "\t\tlet body : string = \"[\" + data.toArray().map(d => { JSON.stringify(d) }).join() + \"]\";" + System.lineSeparator();
+                    } else {
+    					if (httpMethod == ApiHttpMethod.PATCH) {
+    						throw new TranspilerException("Transpiler Error: Patch Methods are currently not supported for array based json objects (method: " + name + " in API " + api + ")");
+    					} else {
+    					    result += "\t\tlet body : string = \"[\" + data.toArray().map(d => { Object.transpilerToJSON(d) }).join() + \"]\";" + System.lineSeparator();
+    					}
+                    }
 				} else {
 					String tsType = getTSType(requestBody.content); 
 					if ("String".equals(tsType) || "Number".equals(tsType) || "Boolean".equals(tsType)) {
