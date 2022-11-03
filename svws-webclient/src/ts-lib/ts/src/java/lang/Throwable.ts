@@ -1,6 +1,5 @@
 import { Class } from './Class';
 import { JavaObject } from './JavaObject';
-import { JavaString } from './JavaString';
 import { TranspiledObject } from './TranspiledObject';
 
 
@@ -18,7 +17,7 @@ function prepareAttributeOrderForStringify() {
 
 export class Throwable extends Error implements TranspiledObject {
 
-    private _cause : Throwable = this;
+    private _cause : Throwable | null = null;
 
     constructor(param1? : String | Throwable | string, param2? : Throwable) {
         super(param1 instanceof String ? param1.valueOf() : param1?.toString().valueOf());
@@ -53,7 +52,7 @@ export class Throwable extends Error implements TranspiledObject {
     }
 
     public getCause() : Throwable | null {
-        return this._cause === this ? null : this._cause;
+        return this._cause;
     }
 
     public printStackTrace() : void {
@@ -82,7 +81,7 @@ export class Throwable extends Error implements TranspiledObject {
         return { ...this };
     }
 
-    public toString() : String {
+    public toString() : string {
         return JSON.stringify(this, prepareAttributeOrderForStringify());
     }
 

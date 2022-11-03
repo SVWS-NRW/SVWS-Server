@@ -16,10 +16,13 @@ describe("Different cases of Throwable Errors", ()=>{
 		expect(() => {throw new NullPointerException(String("Thrown"), e)}).toThrow(NullPointerException);
 	});
 	// hier kommt als Fehler: "[RangeError: Maximum call stack size exceeded]"
-	test.todo("Throwable, with Throwable", () => {
+	test("Throwable, with Throwable", () => {
 		expect(() => {throw new NullPointerException(e)}).toThrow(NullPointerException);
 	});
 	test("Throwable, with string and Throwable", () => {
 		expect(() => {throw new NullPointerException("Thrown", e)}).toThrow(NullPointerException);
+	});
+	test("Throwable.toString() returns a String", () => {
+		expect(e.toString()).toBeTypeOf("string")
 	});
 })
