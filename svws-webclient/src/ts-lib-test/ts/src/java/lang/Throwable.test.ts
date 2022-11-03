@@ -1,9 +1,10 @@
 import { describe, test, expect } from "vitest";
-import { NullPointerException, Throwable } from "~/index";
+import { NullPointerException } from "~/index";
 
 describe("Different cases of Throwable Errors", ()=>{
+	const e = new NullPointerException()
 	test("Throwable, plain", () => {
-		expect(() => {throw new NullPointerException()}).toThrow(NullPointerException);
+		expect(() => {throw e}).toThrow(NullPointerException);
 	});
 	test("Throwable, with string", () => {
 		expect(() => {throw new NullPointerException('Thrown')}).toThrow(NullPointerException);
@@ -12,28 +13,13 @@ describe("Different cases of Throwable Errors", ()=>{
 		expect(() => {throw new NullPointerException(String('Thrown'))}).toThrow(NullPointerException);
 	});
 	test("Throwable, with String and Throwable", () => {
-		try {
-			throw new NullPointerException()
-		} catch (e: unknown) {
-			expect(e).toBeInstanceOf(Throwable)
-			expect(() => {throw new NullPointerException(String("Thrown"), e as NullPointerException)}).toThrow(NullPointerException);
-		}
+		expect(() => {throw new NullPointerException(String("Thrown"), e)}).toThrow(NullPointerException);
 	});
 	// hier kommt als Fehler: "[RangeError: Maximum call stack size exceeded]"
 	test.todo("Throwable, with Throwable", () => {
-		try {
-			throw new NullPointerException()
-		} catch (e: unknown) {
-			expect(e).toBeInstanceOf(Throwable)
-			expect(() => {throw new NullPointerException(e as NullPointerException)}).toThrow(NullPointerException);
-		}
+		expect(() => {throw new NullPointerException(e)}).toThrow(NullPointerException);
 	});
 	test("Throwable, with string and Throwable", () => {
-		try {
-			throw new NullPointerException()
-		} catch (e: unknown) {
-			expect(e).toBeInstanceOf(Throwable)
-			expect(() => {throw new NullPointerException("Thrown", e as NullPointerException)}).toThrow(NullPointerException);
-		}
+		expect(() => {throw new NullPointerException("Thrown", e)}).toThrow(NullPointerException);
 	});
 })
