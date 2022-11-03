@@ -414,6 +414,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	public removeRegelByID(id : number) : void {
 		let regel : GostBlockungRegel = this.getRegel(id);
 		this._daten.regeln.remove(regel);
+		this._daten.regeln.sort(GostBlockungsdatenManager.compRegel);
 		this._mapRegeln.remove(id);
 	}
 
@@ -640,6 +641,17 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public getMengeOfSchienen() : List<GostBlockungSchiene> {
 		return this._daten.schienen;
+	}
+
+	/**
+	 * Liefert die aktuelle Menge aller Regeln. 
+	 * Das ist die interne Referenz zur Liste der Regeln im {@link GostBlockungsdaten}-Objekt. 
+	 * Diese Liste ist stets sortiert nach (TYP, ID).
+	 * 
+	 * @return Die aktuelle Menge aller Regeln sortiert nach (TYP, id).
+	 */
+	public getMengeOfRegeln() : List<GostBlockungRegel> {
+		return this._daten.regeln;
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

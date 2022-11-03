@@ -391,6 +391,7 @@ public class GostBlockungsdatenManager {
 	public void removeRegelByID(long id) {
 		@NotNull GostBlockungRegel regel = this.getRegel(id);
 		_daten.regeln.remove(regel);
+		_daten.regeln.sort(compRegel);		
 		_mapRegeln.remove(id);
 	}
 
@@ -610,6 +611,17 @@ public class GostBlockungsdatenManager {
 	 */
 	public @NotNull List<@NotNull GostBlockungSchiene> getMengeOfSchienen() {
 		return _daten.schienen;
+	}
+
+	/**
+	 * Liefert die aktuelle Menge aller Regeln. 
+	 * Das ist die interne Referenz zur Liste der Regeln im {@link GostBlockungsdaten}-Objekt. 
+	 * Diese Liste ist stets sortiert nach (TYP, ID).
+	 * 
+	 * @return Die aktuelle Menge aller Regeln sortiert nach (TYP, id).
+	 */
+	public @NotNull List<@NotNull GostBlockungRegel> getMengeOfRegeln() {
+		return _daten.regeln;
 	}
 
 }
