@@ -22,7 +22,6 @@ import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.dto.current.schild.faecher.DTOFach;
 import de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchueler;
 import de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchuelerSprachenfolge;
-import de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchuelerSprachpruefungen;
 import de.nrw.schule.svws.db.dto.current.schild.schueler.abitur.DTOSchuelerAbitur;
 import de.nrw.schule.svws.db.dto.current.schild.schueler.abitur.DTOSchuelerAbiturFach;
 import de.nrw.schule.svws.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
@@ -155,7 +154,6 @@ public class GostSchuelerAbitur {
 
         // Lese beide Tabellen mit den Informationen zu den belegten oder geprüften Sprachen aus.
 		List<DTOSchuelerSprachenfolge> sprachenfolge = conn.queryNamed("DTOSchuelerSprachenfolge.schueler_id", id, DTOSchuelerSprachenfolge.class);
-        List<DTOSchuelerSprachpruefungen> sprachpruefungen = conn.queryNamed("DTOSchuelerSprachpruefungen.schueler_id", id, DTOSchuelerSprachpruefungen.class);
 		
 		DTOSchuljahresabschnitte dtoAbschnittPruefung = schuljahresabschnitte.get(dtoSchuelerAbitur.Schuljahresabschnitts_ID);
 		
