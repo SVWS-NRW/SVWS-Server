@@ -59,7 +59,7 @@ public class AbiturFachbelegung {
 	/** Gibt an, ob eine freiwillige mündliche Prüfung angesetzt wurde, sofern dies die Belegung eines schriftlichen Abiturfaches ist. */
 	public Boolean block2MuendlichePruefungFreiwillig = null;
 	
-	/** Gibt die Reihenfolge bei den angestezten mündlichen Prüfungen an, sofern dies die Belegung eines schriftlichen Abiturfaches ist. */
+	/** Gibt die Reihenfolge bei den angesetzten mündlichen Prüfungen an, sofern dies die Belegung eines schriftlichen Abiturfaches ist. */
 	public Integer block2MuendlichePruefungReihenfolge = null;
 	
 	/** Das Notenkürzel der mündlichen Abiturprüfung, sofern es sich um eine mündliche Prüfung bei einer Belegung eines schriftlichen Abiturfaches handelt. */

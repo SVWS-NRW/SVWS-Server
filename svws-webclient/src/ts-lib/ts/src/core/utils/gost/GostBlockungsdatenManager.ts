@@ -45,9 +45,11 @@ export class GostBlockungsdatenManager extends JavaObject {
 
 	private readonly _map_ID_schueler : HashMap<Number, Schueler> = new HashMap();
 
-	private readonly _map_fachwahlen : HashMap<Number, HashMap<Number, GostFachwahl>> = new HashMap();
+	private readonly _map_schuelerID_fachwahlen : HashMap<Number, Vector<GostFachwahl>> = new HashMap();
 
 	private readonly _map_schulerID_fachID_kursart : HashMap<Number, HashMap<Number, GostKursart>> = new HashMap();
+
+	private readonly _map_schulerID_facharten : HashMap<Number, Vector<Number>> = new HashMap();
 
 	private readonly _compKurs_fach_kursart_kursnummer : Comparator<GostBlockungKurs>;
 
@@ -56,6 +58,8 @@ export class GostBlockungsdatenManager extends JavaObject {
 	private readonly _compKurs_kursart_fach_kursnummer : Comparator<GostBlockungKurs>;
 
 	private _kurse_sortiert_kursart_fach_kursnummer : Vector<GostBlockungKurs> | null = null;
+
+	private readonly _compFachwahlen : Comparator<GostFachwahl>;
 
 	private _maxTimeMillis : number = 1000;
 
@@ -79,17 +83,19 @@ export class GostBlockungsdatenManager extends JavaObject {
 	public constructor(__param0? : GostBlockungsdaten, __param1? : GostFaecherManager) {
 		super();
 		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined")) {
-			this._daten = new GostBlockungsdaten();
 			this._faecherManager = new GostFaecherManager();
+			this._daten = new GostBlockungsdaten();
 			this._daten.gostHalbjahr = GostHalbjahr.EF1.id;
 			this._compKurs_fach_kursart_kursnummer = this.createComparatorKursFachKursartNummer();
 			this._compKurs_kursart_fach_kursnummer = this.createComparatorKursKursartFachNummer();
+			this._compFachwahlen = this.createComparatorFachwahlen();
 		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.data.gost.GostBlockungsdaten')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('de.nrw.schule.svws.core.utils.gost.GostFaecherManager'))))) {
 			let pDaten : GostBlockungsdaten = cast_de_nrw_schule_svws_core_data_gost_GostBlockungsdaten(__param0);
 			let pFaecherManager : GostFaecherManager = cast_de_nrw_schule_svws_core_utils_gost_GostFaecherManager(__param1);
 			this._faecherManager = pFaecherManager;
 			this._compKurs_fach_kursart_kursnummer = this.createComparatorKursFachKursartNummer();
 			this._compKurs_kursart_fach_kursnummer = this.createComparatorKursKursartFachNummer();
+			this._compFachwahlen = this.createComparatorFachwahlen();
 			this._daten = new GostBlockungsdaten();
 			this._daten.id = pDaten.id;
 			this._daten.name = pDaten.name;
@@ -134,6 +140,23 @@ export class GostBlockungsdatenManager extends JavaObject {
 			if (cmpFach !== 0) 
 				return cmpFach;
 			return JavaInteger.compare(a.nummer, b.nummer);
+		} };
+		return comp;
+	}
+
+	private createComparatorFachwahlen() : Comparator<GostFachwahl> {
+		let comp : Comparator<GostFachwahl> = { compare : (a: GostFachwahl, b: GostFachwahl) => {
+			if (a.schuelerID < b.schuelerID) 
+				return -1;
+			if (a.schuelerID > b.schuelerID) 
+				return +1;
+			if (a.kursartID < b.kursartID) 
+				return -1;
+			if (a.kursartID > b.kursartID) 
+				return +1;
+			let aFach : GostFach = this._faecherManager.getOrException(a.fachID);
+			let bFach : GostFach = this._faecherManager.getOrException(b.fachID);
+			return GostFaecherManager.comp.compare(aFach, bFach);
 		} };
 		return comp;
 	}
@@ -473,23 +496,22 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws NullPointerException  Falls es eine FachwahlDopplung gibt.
 	 */
 	public addFachwahl(pFachwahl : GostFachwahl) : void {
-		let mapSW : HashMap<Number, GostFachwahl> | null = this._map_fachwahlen.get(pFachwahl.schuelerID);
-		if (mapSW === null) {
-			mapSW = new HashMap();
-			this._map_fachwahlen.put(pFachwahl.schuelerID, mapSW);
-		}
 		let mapSFA : HashMap<Number, GostKursart> | null = this._map_schulerID_fachID_kursart.get(pFachwahl.schuelerID);
 		if (mapSFA === null) {
 			mapSFA = new HashMap();
 			this._map_schulerID_fachID_kursart.put(pFachwahl.schuelerID, mapSFA);
 		}
-		let fachartID : number = GostKursart.getFachartID(pFachwahl);
-		if (mapSW.put(fachartID, pFachwahl) !== null) 
-			throw new NullPointerException("Schüler-ID=" + pFachwahl.schuelerID + ", Fachart-ID=" + fachartID + " doppelt!")
 		let fachID : number = pFachwahl.fachID;
 		let kursart : GostKursart = GostKursart.fromFachwahlOrException(pFachwahl);
 		if (mapSFA.put(fachID, kursart) !== null) 
 			throw new NullPointerException("Schüler-ID=" + pFachwahl.schuelerID + ", Fach-ID=" + fachID + " doppelt!")
+		let fachwahlenDesSchuelers : Vector<GostFachwahl> | null = this._map_schuelerID_fachwahlen.get(pFachwahl.schuelerID);
+		if (fachwahlenDesSchuelers === null) {
+			fachwahlenDesSchuelers = new Vector();
+			this._map_schuelerID_fachwahlen.put(pFachwahl.schuelerID, fachwahlenDesSchuelers);
+		}
+		fachwahlenDesSchuelers.add(pFachwahl);
+		fachwahlenDesSchuelers.sort(this._compFachwahlen);
 		this._daten.fachwahlen.add(pFachwahl);
 	}
 
@@ -652,6 +674,20 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public getMengeOfRegeln() : List<GostBlockungRegel> {
 		return this._daten.regeln;
+	}
+
+	/**
+	 * Liefert die Menge aller {@link GostFachwahl} des Schülers. 
+	 * Diese Liste ist stets sortiert nach (KURSART, FACH.sortierung).
+	 * 
+	 * @param pSchuelerID Die Datenbank-ID des Schülers.
+	 * @return Die Menge aller {@link GostFachwahl} des Schülers, sortiert (KURSART, FACH.sortierung).
+	 */
+	public getOfSchuelerFacharten(pSchuelerID : number) : Vector<GostFachwahl> {
+		let fachwahlenDesSchuelers : Vector<GostFachwahl> | null = this._map_schuelerID_fachwahlen.get(pSchuelerID);
+		if (fachwahlenDesSchuelers === null) 
+			throw new NullPointerException("Schüler-ID=" + pSchuelerID + " unbekannt!")
+		return fachwahlenDesSchuelers;
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

@@ -56,11 +56,14 @@ public class GostBlockungsdatenManager {
 	/** Eine interne Hashmap zum schnellen Zugriff auf die Schueler anhand ihrer Datenbank-ID. */
 	private final @NotNull HashMap<@NotNull Long, @NotNull Schueler> _map_ID_schueler = new HashMap<>();
 
-	/** Schüler-ID --> FachartID --> Fachwahl = Die Fachwahl des Schülers mit Fachart. */
-	private final @NotNull HashMap<@NotNull Long, @NotNull HashMap<@NotNull Long, @NotNull GostFachwahl>> _map_fachwahlen = new HashMap<>();
+	/** Schüler-ID --> Vector<Fachwahl> = Die Fachwahlen des Schülers der jeweiligen Fachart. */
+	private final @NotNull HashMap<@NotNull Long, @NotNull Vector<@NotNull GostFachwahl>> _map_schuelerID_fachwahlen = new HashMap<>();
 	
 	/** Schüler-ID --> Fach-ID --> Kursart = Die Fachwahl des Schülers die dem Fach die Kursart zuordnet. */
 	private final @NotNull HashMap<@NotNull Long, @NotNull HashMap<@NotNull Long, @NotNull GostKursart>> _map_schulerID_fachID_kursart = new HashMap<>();
+
+	/** Schüler-ID --> Vector<Facharten> */
+	private final @NotNull HashMap<@NotNull Long, @NotNull Vector<@NotNull Long>> _map_schulerID_facharten = new HashMap<>();
 
 	/** Ein Comparator für Kurse der Blockung (FACH, KURSART, KURSNUMMER) */
 	private final @NotNull Comparator<@NotNull GostBlockungKurs> _compKurs_fach_kursart_kursnummer;
@@ -74,16 +77,20 @@ public class GostBlockungsdatenManager {
 	/** Eine sortierte, gecachte Menge der Kurse nach: (KURSART, FACH, KURSNUMMER) */
 	private Vector<@NotNull GostBlockungKurs> _kurse_sortiert_kursart_fach_kursnummer = null;
 
+	/** Ein Comparator für die Fachwahlen (SCHÜLERID, FACH, KURSART) */
+	private final @NotNull Comparator<@NotNull GostFachwahl> _compFachwahlen;
+
 	/** Die maximale Zeit in Millisekunden die der Blockungsalgorithmus verwenden darf. */
 	private long _maxTimeMillis = 1000;
 
 	/** Erstellt einen neuen Manager mit leeren Blockungsdaten und einem leeren Fächer-Manager. */
 	public GostBlockungsdatenManager() {
-		_daten = new GostBlockungsdaten();
 		_faecherManager = new GostFaecherManager();
+		_daten = new GostBlockungsdaten();
 		_daten.gostHalbjahr = GostHalbjahr.EF1.id;
 		_compKurs_fach_kursart_kursnummer = createComparatorKursFachKursartNummer();
 		_compKurs_kursart_fach_kursnummer = createComparatorKursKursartFachNummer();
+		_compFachwahlen = createComparatorFachwahlen();
 	}
 
 	/** Erstellt einen neuen Manager mit den angegebenen Blockungsdaten und dem Fächer-Manager
@@ -95,6 +102,7 @@ public class GostBlockungsdatenManager {
 		_faecherManager = pFaecherManager;
 		_compKurs_fach_kursart_kursnummer = createComparatorKursFachKursartNummer();
 		_compKurs_kursart_fach_kursnummer = createComparatorKursKursartFachNummer();
+		_compFachwahlen = createComparatorFachwahlen();
 		
 		// Tiefe Kopie (deep copy) der GostBlockungsdaten.
 		_daten = new GostBlockungsdaten();
@@ -148,6 +156,23 @@ public class GostBlockungsdatenManager {
 		return comp;
 	}
 
+	private @NotNull Comparator<@NotNull GostFachwahl> createComparatorFachwahlen() {
+		@NotNull Comparator<@NotNull GostFachwahl> comp = 
+		(@NotNull GostFachwahl a, @NotNull GostFachwahl b) -> 
+		{
+			if (a.schuelerID < b.schuelerID) return -1;
+			if (a.schuelerID > b.schuelerID) return +1;
+			
+			if (a.kursartID < b.kursartID) return -1;
+			if (a.kursartID > b.kursartID) return +1;
+			
+			@NotNull GostFach aFach = _faecherManager.getOrException(a.fachID);
+			@NotNull GostFach bFach = _faecherManager.getOrException(b.fachID);
+			return GostFaecherManager.comp.compare(aFach, bFach);
+		};
+		return comp;
+	}
+	
 	/** Gibt den Fächer-Manager zurück, der für die Blockungsdaten verwendet wird.
 	 * 
 	 * @return der Fächer-Manager (siehe {@link GostFaecherManager}) */
@@ -447,12 +472,7 @@ public class GostBlockungsdatenManager {
 	 * @throws NullPointerException  Falls es eine FachwahlDopplung gibt.
 	 */
 	public void addFachwahl(@NotNull GostFachwahl pFachwahl) throws NullPointerException {
-		// Pfad: Schüler-ID --> Fachart --> Fachwahl 
-		HashMap<@NotNull Long, @NotNull GostFachwahl> mapSW = _map_fachwahlen.get(pFachwahl.schuelerID);
-		if (mapSW == null) {
-			mapSW = new HashMap<>();
-			_map_fachwahlen.put(pFachwahl.schuelerID, mapSW);
-		}
+		// ########## _map_schulerID_fachID_kursart ##########
 		
 		// Pfad: Schüler-ID --> Fach --> Kursart 
 		HashMap<@NotNull Long, @NotNull GostKursart> mapSFA = _map_schulerID_fachID_kursart.get(pFachwahl.schuelerID);
@@ -460,11 +480,6 @@ public class GostBlockungsdatenManager {
 			mapSFA = new HashMap<>();
 			_map_schulerID_fachID_kursart.put(pFachwahl.schuelerID, mapSFA);
 		}
-		
-		// Hinzufügen '_map_fachwahlen'
-		long fachartID = GostKursart.getFachartID(pFachwahl);
-		if (mapSW.put(fachartID, pFachwahl) != null) 
-			throw new NullPointerException("Schüler-ID=" + pFachwahl.schuelerID + ", Fachart-ID=" + fachartID + " doppelt!");
 
 		// Hinzufügen '_map_schulerID_fachID_kursart'
 		long fachID = pFachwahl.fachID;
@@ -472,7 +487,18 @@ public class GostBlockungsdatenManager {
 		if (mapSFA.put(fachID, kursart) != null) 
 			throw new NullPointerException("Schüler-ID=" + pFachwahl.schuelerID + ", Fach-ID=" + fachID + " doppelt!");
 		
-		// Hinzufügen '_daten.fachwahlen'
+		// ########## _map_schuelerID_fachwahlen ##########
+		
+		// Pfad: Schüler-ID --> Vector<GostFachwahl>
+		Vector<@NotNull GostFachwahl> fachwahlenDesSchuelers = _map_schuelerID_fachwahlen.get(pFachwahl.schuelerID);
+		if (fachwahlenDesSchuelers == null) {
+			fachwahlenDesSchuelers = new Vector<>();
+			_map_schuelerID_fachwahlen.put(pFachwahl.schuelerID, fachwahlenDesSchuelers);
+		}
+		fachwahlenDesSchuelers.add(pFachwahl);
+		fachwahlenDesSchuelers.sort(_compFachwahlen);
+		
+		// ########## _daten.fachwahlen ##########
 		_daten.fachwahlen.add(pFachwahl);
 	}
 
@@ -622,6 +648,20 @@ public class GostBlockungsdatenManager {
 	 */
 	public @NotNull List<@NotNull GostBlockungRegel> getMengeOfRegeln() {
 		return _daten.regeln;
+	}
+
+	/**
+	 * Liefert die Menge aller {@link GostFachwahl} des Schülers. 
+	 * Diese Liste ist stets sortiert nach (KURSART, FACH.sortierung).
+	 * 
+	 * @param pSchuelerID Die Datenbank-ID des Schülers.
+	 * @return Die Menge aller {@link GostFachwahl} des Schülers, sortiert (KURSART, FACH.sortierung).
+	 */
+	public @NotNull Vector<@NotNull GostFachwahl> getOfSchuelerFacharten(long pSchuelerID) {
+		Vector<@NotNull GostFachwahl> fachwahlenDesSchuelers = _map_schuelerID_fachwahlen.get(pSchuelerID);
+		if (fachwahlenDesSchuelers == null)
+			throw new NullPointerException("Schüler-ID=" + pSchuelerID + " unbekannt!");
+		return fachwahlenDesSchuelers;
 	}
 
 }
