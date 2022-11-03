@@ -45,19 +45,19 @@ export class GostBlockungsdatenManager extends JavaObject {
 
 	private readonly _map_ID_schueler : HashMap<Number, Schueler> = new HashMap();
 
-	private readonly _map_schuelerID_fachwahlen : HashMap<Number, Vector<GostFachwahl>> = new HashMap();
+	private readonly _map_schuelerID_fachwahlen : HashMap<Number, List<GostFachwahl>> = new HashMap();
 
 	private readonly _map_schulerID_fachID_kursart : HashMap<Number, HashMap<Number, GostKursart>> = new HashMap();
 
-	private readonly _map_schulerID_facharten : HashMap<Number, Vector<Number>> = new HashMap();
+	private readonly _map_schulerID_facharten : HashMap<Number, List<Number>> = new HashMap();
 
 	private readonly _compKurs_fach_kursart_kursnummer : Comparator<GostBlockungKurs>;
 
-	private _kurse_sortiert_fach_kursart_kursnummer : Vector<GostBlockungKurs> | null = null;
+	private _kurse_sortiert_fach_kursart_kursnummer : List<GostBlockungKurs> | null = null;
 
 	private readonly _compKurs_kursart_fach_kursnummer : Comparator<GostBlockungKurs>;
 
-	private _kurse_sortiert_kursart_fach_kursnummer : Vector<GostBlockungKurs> | null = null;
+	private _kurse_sortiert_kursart_fach_kursnummer : List<GostBlockungKurs> | null = null;
 
 	private readonly _compFachwahlen : Comparator<GostFachwahl>;
 
@@ -280,7 +280,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * 
 	 * @return Eine nach 'Fach, Kursart, Kursnummer' sortierte Kopie der Menge der Kurse.
 	 */
-	public getKursmengeSortiertNachFachKursartNummer() : Vector<GostBlockungKurs> {
+	public getKursmengeSortiertNachFachKursartNummer() : List<GostBlockungKurs> {
 		if (this._kurse_sortiert_fach_kursart_kursnummer === null) {
 			this._kurse_sortiert_fach_kursart_kursnummer = new Vector(this._daten.kurse);
 			this._kurse_sortiert_fach_kursart_kursnummer.sort(this._compKurs_fach_kursart_kursnummer);
@@ -293,7 +293,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * 
 	 * @return Eine nach 'Kursart, Fach, Kursnummer' sortierte Kopie der Menge der Kurse.
 	 */
-	public getKursmengeSortiertNachKursartFachNummer() : Vector<GostBlockungKurs> {
+	public getKursmengeSortiertNachKursartFachNummer() : List<GostBlockungKurs> {
 		if (this._kurse_sortiert_kursart_fach_kursnummer === null) {
 			this._kurse_sortiert_kursart_fach_kursnummer = new Vector(this._daten.kurse);
 			this._kurse_sortiert_kursart_fach_kursnummer.sort(this._compKurs_kursart_fach_kursnummer);
@@ -505,7 +505,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 		let kursart : GostKursart = GostKursart.fromFachwahlOrException(pFachwahl);
 		if (mapSFA.put(fachID, kursart) !== null) 
 			throw new NullPointerException("Schüler-ID=" + pFachwahl.schuelerID + ", Fach-ID=" + fachID + " doppelt!")
-		let fachwahlenDesSchuelers : Vector<GostFachwahl> | null = this._map_schuelerID_fachwahlen.get(pFachwahl.schuelerID);
+		let fachwahlenDesSchuelers : List<GostFachwahl> | null = this._map_schuelerID_fachwahlen.get(pFachwahl.schuelerID);
 		if (fachwahlenDesSchuelers === null) {
 			fachwahlenDesSchuelers = new Vector();
 			this._map_schuelerID_fachwahlen.put(pFachwahl.schuelerID, fachwahlenDesSchuelers);
@@ -683,8 +683,8 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @param pSchuelerID Die Datenbank-ID des Schülers.
 	 * @return Die Menge aller {@link GostFachwahl} des Schülers, sortiert (KURSART, FACH.sortierung).
 	 */
-	public getOfSchuelerFacharten(pSchuelerID : number) : Vector<GostFachwahl> {
-		let fachwahlenDesSchuelers : Vector<GostFachwahl> | null = this._map_schuelerID_fachwahlen.get(pSchuelerID);
+	public getOfSchuelerFacharten(pSchuelerID : number) : List<GostFachwahl> {
+		let fachwahlenDesSchuelers : List<GostFachwahl> | null = this._map_schuelerID_fachwahlen.get(pSchuelerID);
 		if (fachwahlenDesSchuelers === null) 
 			throw new NullPointerException("Schüler-ID=" + pSchuelerID + " unbekannt!")
 		return fachwahlenDesSchuelers;
