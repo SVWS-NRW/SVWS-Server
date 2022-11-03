@@ -4,12 +4,11 @@
 		<template #header> </template>
 		<template #content>
 			<div class="container">
-				<svws-ui-table
-					v-model:selected="selected"
-					:cols="cols"
-					:rows="rows"
+				<svws-ui-new-table
+					v-model="selected"
+					:columns="cols"
+					:data="rows"
 					:footer="false"
-					asc="true"
 				/>
 			</div>
 		</template>
