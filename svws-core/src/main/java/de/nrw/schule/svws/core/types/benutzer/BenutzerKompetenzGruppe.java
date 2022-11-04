@@ -54,10 +54,10 @@ public enum BenutzerKompetenzGruppe {
     OBERSTUFE(new BenutzerKompetenzGruppenKatalogEintrag(1200, "Oberstufenplanung", 4, 2)),
     
     /** Gruppe für Rechte bezüglich des Verfahrens zur Schulpflichverletzung. */
-    NOTENMODUL(new BenutzerKompetenzGruppenKatalogEintrag(1100, "Notenmodul", 4, 3)),
+    NOTENMODUL(new BenutzerKompetenzGruppenKatalogEintrag(1300, "Notenmodul", 4, 3)),
     
     /** Gruppe für Rechte bezüglich des Verfahrens zur Schulpflichverletzung. */
-    DATENBANK(new BenutzerKompetenzGruppenKatalogEintrag(1100, "Datenbank-Management", 4, 4)),
+    DATENBANK(new BenutzerKompetenzGruppenKatalogEintrag(1400, "Datenbank-Management", 4, 4)),
 
     /** Gruppe für Rechte bezüglich des Adressbuchs. */
     CARDDAV(new BenutzerKompetenzGruppenKatalogEintrag(2000, "Addressbuch (CardDAV)", 1, 4)),

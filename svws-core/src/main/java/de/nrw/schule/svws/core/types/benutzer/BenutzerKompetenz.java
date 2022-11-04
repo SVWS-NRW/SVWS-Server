@@ -231,7 +231,7 @@ public enum BenutzerKompetenz {
     
     /** Es werden Rechte zum Aktivieren von Stundenplänen benötigt. */
     STUNDENPLAN_AKTIVIEREN(new BenutzerKompetenzKatalogEintrag(
-    	113, BenutzerKompetenzGruppe.STUNDENPLANUNG, "Stundenpläne aktivieren"
+    	116, BenutzerKompetenzGruppe.STUNDENPLANUNG, "Stundenpläne aktivieren"
     )),
     
     /** Es werden Rechte zur Durchführung der Laufbahnplanung (allgemein) benötigt. */
