@@ -26,7 +26,7 @@ public class Tabelle_EigeneSchule_FachTeilleistungen extends SchemaTabelle {
 		.setJavaComment("Die eindeutige ID des Faches – verweist auf das Fach");
 
 	/** Die Definition der Tabellenspalte Kursart */
-	public SchemaTabelleSpalte col_Kursart = add("Kursart", SchemaDatentypen.VARCHAR, true).setDatenlaenge(5)
+	public SchemaTabelleSpalte col_Kursart = add("Kursart", SchemaDatentypen.VARCHAR, true).setDatenlaenge(10)
 		.setJavaComment("Gibt an, bei welcher Kursart die Teilleistungsart zugeordnet werden soll");
 
 	/** Die Definition der Tabellenspalte SchulnrEigner */

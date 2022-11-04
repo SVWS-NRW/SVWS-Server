@@ -30,7 +30,7 @@ public class Tabelle_SchuelerFHRFaecher extends SchemaTabelle {
 		.setJavaComment("ID des Faches");
 
 	/** Die Definition der Tabellenspalte KursartAllg */
-	public SchemaTabelleSpalte col_KursartAllg = add("KursartAllg", SchemaDatentypen.VARCHAR, false).setDatenlaenge(5)
+	public SchemaTabelleSpalte col_KursartAllg = add("KursartAllg", SchemaDatentypen.VARCHAR, false).setDatenlaenge(10)
 		.setJavaComment("Kursart des Faches im Klartext");
 
 	/** Die Definition der Tabellenspalte FachKrz */

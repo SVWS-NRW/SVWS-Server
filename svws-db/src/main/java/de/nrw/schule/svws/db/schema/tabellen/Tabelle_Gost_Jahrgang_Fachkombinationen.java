@@ -35,11 +35,11 @@ public class Tabelle_Gost_Jahrgang_Fachkombinationen extends SchemaTabelle {
 		.setJavaComment("Gymnasiale Oberstufe - Jahrgangsdaten: Die ID des zweiten Faches der nicht möglichen Fächerkombination / eines Fächerprofils");
 
 	/** Die Definition der Tabellenspalte Kursart1 */
-	public SchemaTabelleSpalte col_Kursart1 = add("Kursart1", SchemaDatentypen.VARCHAR, false).setDatenlaenge(5)
+	public SchemaTabelleSpalte col_Kursart1 = add("Kursart1", SchemaDatentypen.VARCHAR, false).setDatenlaenge(10)
 		.setJavaComment("Gymnasiale Oberstufe - Jahrgangsdaten: Die Kursart des ersten Faches der nicht möglichen Fächerkombination / eines Fächerprofils");
 
 	/** Die Definition der Tabellenspalte Kursart2 */
-	public SchemaTabelleSpalte col_Kursart2 = add("Kursart2", SchemaDatentypen.VARCHAR, false).setDatenlaenge(5)
+	public SchemaTabelleSpalte col_Kursart2 = add("Kursart2", SchemaDatentypen.VARCHAR, false).setDatenlaenge(10)
 		.setJavaComment("Gymnasiale Oberstufe - Jahrgangsdaten: Die Kursart des zweiten Faches der nicht möglichen Fächerkombination / eines Fächerprofils");
 
 	/** Die Definition der Tabellenspalte Phase */

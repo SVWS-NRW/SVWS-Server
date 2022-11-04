@@ -44,7 +44,7 @@ public class Tabelle_Kurse extends SchemaTabelle {
 		.setJavaComment("Fach_ID des Kurses");
 
 	/** Die Definition der Tabellenspalte KursartAllg */
-	public SchemaTabelleSpalte col_KursartAllg = add("KursartAllg", SchemaDatentypen.VARCHAR, false).setDatenlaenge(5)
+	public SchemaTabelleSpalte col_KursartAllg = add("KursartAllg", SchemaDatentypen.VARCHAR, false).setDatenlaenge(10)
 		.setJavaComment("Allgemeine Kursart des Kurses");
 
 	/** Die Definition der Tabellenspalte WochenStd */

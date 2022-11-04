@@ -324,7 +324,7 @@ public class Benutzer implements AutoCloseable {
 //		propertyMap.put("eclipselink.logging.level", "ALL");
 //		propertyMap.put("eclipselink.profiler","PerformanceProfiler");
 		propertyMap.put("eclipselink.cache.shared.default", "false");
-		propertyMap.put("eclipselink.exception-handler", "de.nrw.schule.svws.db.DBExceptionHandler");
+//		propertyMap.put("eclipselink.exception-handler", "de.nrw.schule.svws.db.DBExceptionHandler");
 		if (config.getDBDriver() == DBDriver.SQLITE) {
 			propertyMap.put("eclipselink.target-database", "Database");
 			// Einstellungen des SQ-Lite-Treibers

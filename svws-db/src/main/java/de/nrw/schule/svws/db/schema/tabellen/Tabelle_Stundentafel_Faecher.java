@@ -31,7 +31,7 @@ public class Tabelle_Stundentafel_Faecher extends SchemaTabelle {
 		.setJavaComment("FachID das in der Stundentafel ist");
 
 	/** Die Definition der Tabellenspalte KursartAllg */
-	public SchemaTabelleSpalte col_KursartAllg = add("KursartAllg", SchemaDatentypen.VARCHAR, false).setDatenlaenge(5)
+	public SchemaTabelleSpalte col_KursartAllg = add("KursartAllg", SchemaDatentypen.VARCHAR, false).setDatenlaenge(10)
 		.setJavaComment("Kursart des Faches in der Stundentafel");
 
 	/** Die Definition der Tabellenspalte WochenStd */

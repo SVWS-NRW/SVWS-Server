@@ -30,7 +30,7 @@ public class Tabelle_Gost_Blockung_Kurse extends SchemaTabelle {
 		.setJavaComment("ID des Faches");
 
 	/** Die Definition der Tabellenspalte Kursart */
-	public SchemaTabelleSpalte col_Kursart = add("Kursart", SchemaDatentypen.VARCHAR, false).setDatenlaenge(5)
+	public SchemaTabelleSpalte col_Kursart = add("Kursart", SchemaDatentypen.VARCHAR, false).setDatenlaenge(10)
 		.setDefault("GK")
 		.setNotNull()
 		.setConverter("GOStKursartConverter")

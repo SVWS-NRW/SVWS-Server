@@ -25,7 +25,7 @@ public class Tabelle_SchuelerZuweisungen extends SchemaTabelle {
 		.setJavaComment("FachID der Zuweisung");
 
 	/** Die Definition der Tabellenspalte Kursart */
-	public SchemaTabelleSpalte col_Kursart = add("Kursart", SchemaDatentypen.VARCHAR, false).setDatenlaenge(5)
+	public SchemaTabelleSpalte col_Kursart = add("Kursart", SchemaDatentypen.VARCHAR, false).setDatenlaenge(10)
 		.setJavaComment("Kursart der Zuweisung");
 
 	/** Die Definition der Tabellenspalte SchulnrEigner */

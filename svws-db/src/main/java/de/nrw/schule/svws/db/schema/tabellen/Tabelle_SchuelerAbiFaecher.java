@@ -44,7 +44,7 @@ public class Tabelle_SchuelerAbiFaecher extends SchemaTabelle {
 		.setJavaComment("Letzer Kurs Q2, 2.Hj: Die Kurs ID - verweist auf Kurse");
 
 	/** Die Definition der Tabellenspalte KursartAllg */
-	public SchemaTabelleSpalte col_KursartAllg = add("KursartAllg", SchemaDatentypen.VARCHAR, false).setDatenlaenge(5)
+	public SchemaTabelleSpalte col_KursartAllg = add("KursartAllg", SchemaDatentypen.VARCHAR, false).setDatenlaenge(10)
 		.setJavaName("KursartAllgemein")
 		.setConverter("GOStKursartConverter")
 		.setConverterRevision(SchemaRevisionen.REV_1)

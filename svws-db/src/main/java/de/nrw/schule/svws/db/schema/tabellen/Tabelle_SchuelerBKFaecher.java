@@ -95,7 +95,7 @@ public class Tabelle_SchuelerBKFaecher extends SchemaTabelle {
 		.setJavaComment("Abschlussnote berufsbezogen  des Facheintrags für den BKAbschlussReiter");
 
 	/** Die Definition der Tabellenspalte Kursart */
-	public SchemaTabelleSpalte col_Kursart = add("Kursart", SchemaDatentypen.VARCHAR, false).setDatenlaenge(5)
+	public SchemaTabelleSpalte col_Kursart = add("Kursart", SchemaDatentypen.VARCHAR, false).setDatenlaenge(10)
 		.setJavaComment("Kursart des Facheintrags für den BKAbschlussReiter");
 
 	/** Die Definition der Tabellenspalte Jahr */

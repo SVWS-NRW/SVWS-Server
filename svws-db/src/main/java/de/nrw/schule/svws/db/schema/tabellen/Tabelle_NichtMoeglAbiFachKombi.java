@@ -31,11 +31,11 @@ public class Tabelle_NichtMoeglAbiFachKombi extends SchemaTabelle {
 		.setJavaComment("Die Schulnummer zu welcher der Datensatz gehört – wird benötigt, wenn mehrere Schulen in einem Schema der Datenbank gespeichert werden");
 
 	/** Die Definition der Tabellenspalte Kursart1 */
-	public SchemaTabelleSpalte col_Kursart1 = add("Kursart1", SchemaDatentypen.VARCHAR, false).setDatenlaenge(5)
+	public SchemaTabelleSpalte col_Kursart1 = add("Kursart1", SchemaDatentypen.VARCHAR, false).setDatenlaenge(10)
 		.setJavaComment("Kursart Fach1");
 
 	/** Die Definition der Tabellenspalte Kursart2 */
-	public SchemaTabelleSpalte col_Kursart2 = add("Kursart2", SchemaDatentypen.VARCHAR, false).setDatenlaenge(5)
+	public SchemaTabelleSpalte col_Kursart2 = add("Kursart2", SchemaDatentypen.VARCHAR, false).setDatenlaenge(10)
 		.setJavaComment("Kursart Fach2");
 
 	/** Die Definition der Tabellenspalte PK */

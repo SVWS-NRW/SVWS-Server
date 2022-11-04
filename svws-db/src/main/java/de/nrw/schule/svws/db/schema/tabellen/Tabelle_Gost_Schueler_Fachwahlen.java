@@ -25,7 +25,7 @@ public class Tabelle_Gost_Schueler_Fachwahlen extends SchemaTabelle {
 		.setJavaComment("Gymnasiale Oberstufe - Schülerdaten - Fachwahlen: ID des Faches in der Fächertabelle");
 
 	/** Die Definition der Tabellenspalte EF1_Kursart */
-	public SchemaTabelleSpalte col_EF1_Kursart = add("EF1_Kursart", SchemaDatentypen.VARCHAR, false).setDatenlaenge(5)
+	public SchemaTabelleSpalte col_EF1_Kursart = add("EF1_Kursart", SchemaDatentypen.VARCHAR, false).setDatenlaenge(10)
 		.setJavaComment("Gymnasiale Oberstufe - Schülerdaten - Fachwahlen: Kursart des belegten Faches in EF.1");
 
 	/** Die Definition der Tabellenspalte EF1_Punkte */
@@ -33,7 +33,7 @@ public class Tabelle_Gost_Schueler_Fachwahlen extends SchemaTabelle {
 		.setJavaComment("Gymnasiale Oberstufe - Schülerdaten - Fachwahlen: Notenpunkte des belegten faches in EF.1");
 
 	/** Die Definition der Tabellenspalte EF2_Kursart */
-	public SchemaTabelleSpalte col_EF2_Kursart = add("EF2_Kursart", SchemaDatentypen.VARCHAR, false).setDatenlaenge(5)
+	public SchemaTabelleSpalte col_EF2_Kursart = add("EF2_Kursart", SchemaDatentypen.VARCHAR, false).setDatenlaenge(10)
 		.setJavaComment("Gymnasiale Oberstufe - Schülerdaten - Fachwahlen: Kursart des belegten Faches in EF.2");
 
 	/** Die Definition der Tabellenspalte EF2_Punkte */
@@ -41,7 +41,7 @@ public class Tabelle_Gost_Schueler_Fachwahlen extends SchemaTabelle {
 		.setJavaComment("Gymnasiale Oberstufe - Schülerdaten - Fachwahlen: Notenpunkte des belegten faches in EF.2");
 
 	/** Die Definition der Tabellenspalte Q11_Kursart */
-	public SchemaTabelleSpalte col_Q11_Kursart = add("Q11_Kursart", SchemaDatentypen.VARCHAR, false).setDatenlaenge(5)
+	public SchemaTabelleSpalte col_Q11_Kursart = add("Q11_Kursart", SchemaDatentypen.VARCHAR, false).setDatenlaenge(10)
 		.setJavaComment("Gymnasiale Oberstufe - Schülerdaten - Fachwahlen: Kursart des belegten Faches in Q1.1");
 
 	/** Die Definition der Tabellenspalte Q11_Punkte */
@@ -49,7 +49,7 @@ public class Tabelle_Gost_Schueler_Fachwahlen extends SchemaTabelle {
 		.setJavaComment("Gymnasiale Oberstufe - Schülerdaten - Fachwahlen: Notenpunkte des belegten faches in Q1.1");
 
 	/** Die Definition der Tabellenspalte Q12_Kursart */
-	public SchemaTabelleSpalte col_Q12_Kursart = add("Q12_Kursart", SchemaDatentypen.VARCHAR, false).setDatenlaenge(5)
+	public SchemaTabelleSpalte col_Q12_Kursart = add("Q12_Kursart", SchemaDatentypen.VARCHAR, false).setDatenlaenge(10)
 		.setJavaComment("Gymnasiale Oberstufe - Schülerdaten - Fachwahlen: Kursart des belegten Faches in Q1.2");
 
 	/** Die Definition der Tabellenspalte Q12_Punkte */
@@ -57,7 +57,7 @@ public class Tabelle_Gost_Schueler_Fachwahlen extends SchemaTabelle {
 		.setJavaComment("Gymnasiale Oberstufe - Schülerdaten - Fachwahlen: Notenpunkte des belegten faches in Q1.2");
 
 	/** Die Definition der Tabellenspalte Q21_Kursart */
-	public SchemaTabelleSpalte col_Q21_Kursart = add("Q21_Kursart", SchemaDatentypen.VARCHAR, false).setDatenlaenge(5)
+	public SchemaTabelleSpalte col_Q21_Kursart = add("Q21_Kursart", SchemaDatentypen.VARCHAR, false).setDatenlaenge(10)
 		.setJavaComment("Gymnasiale Oberstufe - Schülerdaten - Fachwahlen: Kursart des belegten Faches in Q2.1");
 
 	/** Die Definition der Tabellenspalte Q21_Punkte */
@@ -65,7 +65,7 @@ public class Tabelle_Gost_Schueler_Fachwahlen extends SchemaTabelle {
 		.setJavaComment("Gymnasiale Oberstufe - Schülerdaten - Fachwahlen: Notenpunkte des belegten faches in Q2.1");
 
 	/** Die Definition der Tabellenspalte Q22_Kursart */
-	public SchemaTabelleSpalte col_Q22_Kursart = add("Q22_Kursart", SchemaDatentypen.VARCHAR, false).setDatenlaenge(5)
+	public SchemaTabelleSpalte col_Q22_Kursart = add("Q22_Kursart", SchemaDatentypen.VARCHAR, false).setDatenlaenge(10)
 		.setJavaComment("Gymnasiale Oberstufe - Schülerdaten - Fachwahlen: Kursart des belegten Faches in Q2.2");
 
 	/** Die Definition der Tabellenspalte Q22_Punkte */
