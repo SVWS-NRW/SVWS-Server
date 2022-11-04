@@ -2321,11 +2321,12 @@ public class Revision1Updates extends SchemaRevisionUpdateSQL {
 		);
 		add("Benutzer: Erstelle Benutzer-Einträge für allgemeine Benutzer, die nicht in der Lehrer-Tabelle vorkommen",
 			"""
-			INSERT INTO Benutzer(ID, Typ, Allgemein_ID)
+			INSERT INTO Benutzer(ID, Typ, Allgemein_ID, IstAdmin)
 			SELECT 
 				ID, 
 				0, 
-				ID 
+				ID,
+				CASE WHEN INSTR(US_Privileges, '$') > 0 THEN 1 ELSE 0 END
 			FROM 
 				Users 
 			WHERE 
@@ -2338,11 +2339,12 @@ public class Revision1Updates extends SchemaRevisionUpdateSQL {
 		);
 		add("Benutzer: Erstelle Benutzer-Einträge für Benutzer, die in der Lehrer-Tabelle vorkommen",
 			"""
-			INSERT INTO Benutzer(ID, Typ, Lehrer_ID)
+			INSERT INTO Benutzer(ID, Typ, Lehrer_ID, IstAdmin)
 			SELECT 
 				Users.ID, 
 				1, 
-				K_Lehrer.ID 
+				K_Lehrer.ID, 
+                CASE WHEN INSTR(US_Privileges, '$') > 0 THEN 1 ELSE 0 END
 			FROM Users 
 				JOIN K_Lehrer ON Users.US_LoginName = K_Lehrer.Kuerzel
 			""",
