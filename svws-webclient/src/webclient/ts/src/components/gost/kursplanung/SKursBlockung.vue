@@ -190,7 +190,7 @@ const suffix: WritableComputedRef<string> = computed({
 });
 const manager: ComputedRef<GostBlockungsergebnisManager | undefined> = computed(()=>app.dataKursblockungsergebnis.manager)
 
-	const schienen: ComputedRef<List<GostBlockungSchiene>> =
+const schienen: ComputedRef<List<GostBlockungSchiene>> =
 	computed(()=> app.dataKursblockung.manager?.getMengeOfSchienen() || new Vector<GostBlockungSchiene>())
 
 const kurs_blockungsergebnis: ComputedRef<GostBlockungsergebnisKurs|undefined> = computed(()=>{

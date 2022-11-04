@@ -12,22 +12,26 @@ const regel_typ = GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS
 // public static readonly SCHUELER_FIXIEREN_IN_KURS : GostKursblockungRegelTyp =
 // new GostKursblockungRegelTyp("SCHUELER_FIXIEREN_IN_KURS", 4, 4, "Schüler: Fixiere in Kurs",
 // Arrays.asList(GostKursblockungRegelParameterTyp.SCHUELER_ID, GostKursblockungRegelParameterTyp.KURS_ID));
-//TODO M
 const kurse = app.dataKursblockung.manager?.getKursmengeSortiertNachKursartFachNummer() || new Vector<GostBlockungKurs>() 
 const schuelerliste = app.listAbiturjahrgangSchueler.liste || []
 
 const kurs: Ref<GostBlockungKurs> = ref(kurse.get(0))
 const schueler = ref(schuelerliste[0]) as Ref<SchuelerListeEintrag>
-const regeln: ComputedRef<GostBlockungRegel[]> = computed(() => {
-	const arr = []
-	//TODO M
-	if (!app.dataKursblockung.daten?.regeln) return []
-	for (const r of app.dataKursblockung.daten.regeln) if (r.typ === regel_typ.typ) arr.push(r)
-	return arr
-})
-
 const regel: Ref<GostBlockungRegel | undefined> = ref(undefined)
-const allow_regeln: ComputedRef<boolean> = computed(()=> app.blockungsergebnisauswahl.liste.length === 1)
+
+const regeln: ComputedRef<GostBlockungRegel[]> =
+	computed(()=> {
+	const arr = []
+	const regeln = app.dataKursblockung.manager?.getMengeOfRegeln()
+	if (!regeln) return []
+	for (const r of regeln)
+		if (r.typ === regel_typ.typ)
+			arr.push(r)
+	return arr })
+
+const allow_regeln: ComputedRef<boolean> =
+	computed(()=> app.blockungsergebnisauswahl.liste.length === 1)
+
 const speichern = async () => {
 	if (!regel.value) return
 	regel.value.parameter.set(0, schueler.value.id)

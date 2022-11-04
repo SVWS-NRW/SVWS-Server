@@ -11,19 +11,25 @@
 	//new GostKursblockungRegelTyp("KURSART_ALLEIN_IN_SCHIENEN_VON_BIS", 2, 6, "Kursart: Allein in Schienen (von/bis)",
 	//Arrays.asList(GostKursblockungRegelParameterTyp.KURSART, GostKursblockungRegelParameterTyp.SCHIENEN_NR, GostKursblockungRegelParameterTyp.SCHIENEN_NR));
 	const schienen = app.dataKursblockung.manager?.getMengeOfSchienen() || new Vector<GostBlockungSchiene>()
+	
 	const kursart: Ref<GostKursart> = ref(GostKursart.GK)
 	const start: Ref<GostBlockungSchiene> = ref(schienen.get(0))
 	const ende: Ref<GostBlockungSchiene> = ref(schienen.get(0))
-	const regeln: ComputedRef<GostBlockungRegel[]> = computed(()=> {
-		const arr = []
-		//TODO M
-		if (!app.dataKursblockung.daten?.regeln) return []
-		for (const r of app.dataKursblockung.daten.regeln) if (r.typ === regel_typ.typ) arr.push(r)
-		return arr
-	})
-	
 	const regel: Ref<GostBlockungRegel | undefined> = ref(undefined)
-	const allow_regeln: ComputedRef<boolean> = computed(()=> app.blockungsergebnisauswahl.liste.length === 1)
+
+	const regeln: ComputedRef<GostBlockungRegel[]> =
+		computed(()=> {
+		const arr = []
+		const regeln = app.dataKursblockung.manager?.getMengeOfRegeln()
+		if (!regeln) return []
+		for (const r of regeln)
+			if (r.typ === regel_typ.typ)
+				arr.push(r)
+		return arr })
+
+	const allow_regeln: ComputedRef<boolean> =
+		computed(()=> app.blockungsergebnisauswahl.liste.length === 1)
+
 	const speichern = async () => {
 		if (!regel.value) return
 		regel.value.parameter.set(0, kursart.value.id)
@@ -40,9 +46,9 @@
 	}
 	
 	const regel_entfernen = async (r: GostBlockungRegel) => {
-	await app.dataKursblockung.del_blockung_regel(r.id)
-	if (r === regel.value) regel.value = undefined
-}
+		await app.dataKursblockung.del_blockung_regel(r.id)
+		if (r === regel.value) regel.value = undefined
+	}
 	</script>
 	
 	<template>

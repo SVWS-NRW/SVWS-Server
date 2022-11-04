@@ -22,8 +22,8 @@
 </template>
 
 <script setup lang="ts">
-	import { GostBlockungRegel, GostKursblockungRegelTyp, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
-import { ComputedRef, computed } from "vue";
+	import { GostBlockungRegel, GostKursblockungRegelTyp, List, SchuelerListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
+	import { ComputedRef, computed } from "vue";
 
 	import { injectMainApp, Main } from "~/apps/Main";
 
@@ -39,19 +39,25 @@ import { ComputedRef, computed } from "vue";
 	const main: Main = injectMainApp();
 	const app = main.apps.gost;
 
-	const selected_kurs: ComputedRef<boolean> = computed(()=> app.dataKursblockungsergebnis.active_kurs?.value ? true : false)
-	const verbieten_regel: ComputedRef<GostBlockungRegel | undefined> = computed(() => {
-		//TODO M
-		const regeln = app.dataKursblockung.daten?.regeln.toArray(new Array<GostBlockungRegel>())
-		const regel = regeln?.find(r => r.typ === GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ && r.parameter.get(0) === schueler.id)
-		return regel
-	})
-	const fixier_regel: ComputedRef<GostBlockungRegel | undefined> = computed(() => {
-		//TODO M
-		const regeln = app.dataKursblockung.daten?.regeln.toArray(new Array<GostBlockungRegel>())
-		const regel = regeln?.find(r => r.typ === GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ && r.parameter.get(0) === schueler.id)
-		return regel
-	})
+	const selected_kurs: ComputedRef<boolean> =
+		computed(()=> app.dataKursblockungsergebnis.active_kurs?.value ? true : false)
+	
+	const regeln: ComputedRef<List<GostBlockungRegel>> =
+		computed(()=> app.dataKursblockung.manager?.getMengeOfRegeln() || new Vector<GostBlockungRegel>())
+
+	const verbieten_regel: ComputedRef<GostBlockungRegel | undefined> =
+		computed(() => {
+		for (const regel of regeln.value)
+			if (regel.typ === GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ
+					&& regel.parameter.get(0) === schueler.id)
+				return regel})
+
+	const fixier_regel: ComputedRef<GostBlockungRegel | undefined> =
+		computed(() => {
+		for (const regel of regeln.value)
+			if (regel.typ === GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ
+					&& regel.parameter.get(0) === schueler.id)
+				return regel})
 
 	const fixieren_regel_toggle = () => fixier_regel.value ? fixieren_regel_entfernen() : fixieren_regel_hinzufuegen()
 	const verbieten_regel_toggle = () => verbieten_regel.value ? verbieten_regel_entfernen() : verbieten_regel_hinzufuegen()

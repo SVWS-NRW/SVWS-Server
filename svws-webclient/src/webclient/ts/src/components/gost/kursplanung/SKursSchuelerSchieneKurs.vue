@@ -46,7 +46,9 @@
 		GostBlockungsergebnisKurs,
 		GostBlockungsergebnisManager,
 		GostKursblockungRegelTyp,
+		List,
 		SchuelerListeEintrag,
+		Vector,
 		ZulaessigesFach
 	} from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef } from "vue";
@@ -68,17 +70,13 @@
 	const app = main.apps.gost;
 
 	const manager: ComputedRef<GostBlockungsergebnisManager | undefined> =
+		computed(() => app.dataKursblockungsergebnis.manager);
+
+	const is_draggable: ComputedRef<boolean> =
+		computed(() => props.kurs.schueler.toArray(new Array<Number>()).some(s => s === props.schueler.id));
+
+	const is_drop_zone: ComputedRef<boolean> =
 		computed(() => {
-			return app.dataKursblockungsergebnis.manager;
-		});
-
-	const is_draggable: ComputedRef<boolean> = computed(() => {
-		return props.kurs.schueler
-			.toArray(new Array<Number>())
-			.some(s => s === props.schueler.id);
-	});
-
-	const is_drop_zone: ComputedRef<boolean> = computed(() => {
 		const fachID = main.config.drag_and_drop_data?.fachID;
 		const kursart = main.config.drag_and_drop_data?.kursart;
 		if (!fachID || !kursart)
@@ -88,34 +86,76 @@
 		const kursID = main.config.drag_and_drop_data?.id;
 		if (kursID === props.kurs.id)
 			return false;
-		return true;
-	});
+		return true; });
 
-	const kurs_original: ComputedRef<GostBlockungKurs | undefined> = computed(
-		() => {
-			return manager.value?.getKursG(props.kurs.id);
-		}
-	);
+	const kurs_original: ComputedRef<GostBlockungKurs | undefined> =
+		computed( () => manager.value?.getKursG(props.kurs.id));
 
-	const kurs_name: ComputedRef<String> = computed(()=>
-		manager.value?.getOfKursName(props.kurs.id) || ""
-	)
+	const kurs_name: ComputedRef<String> =
+		computed(()=> manager.value?.getOfKursName(props.kurs.id) || "")
 
-	const gostfach: ComputedRef<ZulaessigesFach | undefined> = computed(() => {
+	const gostfach: ComputedRef<ZulaessigesFach | undefined> =
+		computed(() => {
 		if (!app.dataFaecher.manager) return
 		let fach
 		for (const f of app.dataFaecher.manager.values())
 			if (f.id === kurs_original.value?.fach_id) {
 				fach = f; break
 			}
-		return ZulaessigesFach.getByKuerzelASD(fach?.kuerzel || null);
-	});
+		return ZulaessigesFach.getByKuerzelASD(fach?.kuerzel || null); });
 
-	const bgColor: ComputedRef<string> = computed(() => {
+	const bgColor: ComputedRef<string> =
+		computed(() => {
 		if ((!is_draggable.value) || (!gostfach.value))
 			return "";
-		return gostfach.value.getHMTLFarbeRGB().valueOf();
-	});
+		return gostfach.value.getHMTLFarbeRGB().valueOf(); });
+	
+	const regeln: ComputedRef<List<GostBlockungRegel>> =
+		computed(()=> app.dataKursblockung.manager?.getMengeOfRegeln() || new Vector<GostBlockungRegel>())
+
+	const verbieten_regel: ComputedRef<GostBlockungRegel | undefined> =
+		computed(() => {
+		for (const regel of regeln.value)
+			if (regel.typ === GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ
+					&& regel.parameter.get(0) === props.schueler.id
+					&& regel.parameter.get(1) === props.kurs.id)
+				return regel})
+	
+	const fixier_regel: ComputedRef<GostBlockungRegel | undefined> =
+		computed(() => {
+		for (const regel of regeln.value)
+			if (regel.typ === GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ
+					&& regel.parameter.get(0) === props.schueler.id
+					&& regel.parameter.get(1) === props.kurs.id)
+				return regel})
+
+	const fixieren_regel_toggle = () => fixier_regel.value ? fixieren_regel_entfernen() : fixieren_regel_hinzufuegen()
+	const verbieten_regel_toggle = () => verbieten_regel.value ? verbieten_regel_entfernen() : verbieten_regel_hinzufuegen()
+
+	const regel_speichern = async (regel: GostBlockungRegel) => {
+		regel.parameter.set(0, props.schueler.id)
+		regel.parameter.set(1, props.kurs.id)
+		await app.dataKursblockung.patch_blockung_regel(regel)
+		app.dataKursblockung.manager?.addRegel(regel)
+	}
+	const fixieren_regel_hinzufuegen = async () => {
+		const regel = await app.dataKursblockung.add_blockung_regel(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ)
+		if (!regel) return
+		await regel_speichern(regel)
+	}
+	const fixieren_regel_entfernen = async () => {
+		if (!fixier_regel.value) return
+		await app.dataKursblockung.del_blockung_regel(fixier_regel.value.id)
+	}
+	const verbieten_regel_hinzufuegen = async () => {
+		const regel = await app.dataKursblockung.add_blockung_regel(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ)
+		if (!regel) return
+		await regel_speichern(regel)
+	}
+	const verbieten_regel_entfernen = async () => {
+		if (!verbieten_regel.value) return
+		await app.dataKursblockung.del_blockung_regel(verbieten_regel.value.id)
+	}
 
 	function drop_aendere_kurszuordnung(kurs: any, id_kurs_neu: number) {
 		const schuelerid = props.schueler.id;
@@ -148,50 +188,5 @@
 		)
 			return;
 		event.preventDefault();
-	}
-	
-	const verbieten_regel: ComputedRef<GostBlockungRegel | undefined> = computed(() => {
-		//TODO M
-		const regeln = app.dataKursblockung.daten?.regeln.toArray(new Array<GostBlockungRegel>())
-		const regel = regeln?.find(r => r.typ === GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ
-			&& r.parameter.get(0) === props.schueler.id
-			&& r.parameter.get(1) === props.kurs.id)
-		return regel
-	})
-	const fixier_regel: ComputedRef<GostBlockungRegel | undefined> = computed(() => {
-		//TODO M
-		const regeln = app.dataKursblockung.daten?.regeln.toArray(new Array<GostBlockungRegel>())
-		const regel = regeln?.find(r => r.typ === GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ
-			&& r.parameter.get(0) === props.schueler.id
-			&& r.parameter.get(1) === props.kurs.id)
-		return regel
-	})
-
-	const fixieren_regel_toggle = () => fixier_regel.value ? fixieren_regel_entfernen() : fixieren_regel_hinzufuegen()
-	const verbieten_regel_toggle = () => verbieten_regel.value ? verbieten_regel_entfernen() : verbieten_regel_hinzufuegen()
-
-	const regel_speichern = async (regel: GostBlockungRegel) => {
-		regel.parameter.set(0, props.schueler.id)
-		regel.parameter.set(1, props.kurs.id)
-		await app.dataKursblockung.patch_blockung_regel(regel)
-		app.dataKursblockung.manager?.addRegel(regel)
-	}
-	const fixieren_regel_hinzufuegen = async () => {
-		const regel = await app.dataKursblockung.add_blockung_regel(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ)
-		if (!regel) return
-		await regel_speichern(regel)
-	}
-	const fixieren_regel_entfernen = async () => {
-		if (!fixier_regel.value) return
-		await app.dataKursblockung.del_blockung_regel(fixier_regel.value.id)
-	}
-	const verbieten_regel_hinzufuegen = async () => {
-		const regel = await app.dataKursblockung.add_blockung_regel(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ)
-		if (!regel) return
-		await regel_speichern(regel)
-	}
-	const verbieten_regel_entfernen = async () => {
-		if (!verbieten_regel.value) return
-		await app.dataKursblockung.del_blockung_regel(verbieten_regel.value.id)
 	}
 </script>
