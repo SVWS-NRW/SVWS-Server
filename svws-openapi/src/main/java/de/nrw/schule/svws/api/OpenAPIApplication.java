@@ -70,9 +70,6 @@ import io.swagger.v3.oas.models.servers.Server;
 @ApplicationPath("/")
 public class OpenAPIApplication extends Application {
 
-	/// Enthält alle Singletons, die für die OpenAPI eingebunden werden
-	private Set<Object> singletons = new HashSet<>();
-	
 	/// Enthält alle Klassen, die für die OpenAPI eingebunden werden
     private Set<Class<?>> classes = new HashSet<>();
     
@@ -136,48 +133,43 @@ public class OpenAPIApplication extends Application {
 			throw new RuntimeException(e.getMessage(), e);
 		}
 
-		singletons.add(new OpenAPICorsFilter());
+		this.classes.add(OpenAPICorsFilter.class);
 
-		classes.add(APIConfig.class);
-		classes.add(APIDebug.class);
-		classes.add(APISVWSClient.class);
-		classes.add(APIAlgoGesamtschuleAbschluss.class);
-		classes.add(APIAlgoGostAbschluss.class);
-		classes.add(APIBenutzer.class);
-		classes.add(APIClientConfig.class);
-		classes.add(APISchule.class);
-		classes.add(APIJahrgaenge.class);
-		classes.add(APIKlassen.class);
-		classes.add(APIKurse.class);
-		classes.add(APIFaecher.class);
-		classes.add(APISchueler.class);
-		classes.add(APIGesamtschule.class);
-		classes.add(APILupo.class);
-		classes.add(APIGost.class);
-		classes.add(APILehrer.class);
-		classes.add(APIErzieher.class);
-		classes.add(APIBetrieb.class);
-		classes.add(APIKataloge.class);
-		classes.add(APISchema.class);
-		classes.add(APIStundenplan.class);
-        classes.add(APISchild.class);
-        classes.add(APIKAOA.class);
-		classes.add(APIENM.class);
-		classes.add(APIAdressbuch.class);
+		this.classes.add(APIConfig.class);
+		this.classes.add(APIDebug.class);
+		this.classes.add(APISVWSClient.class);
+		this.classes.add(APIAlgoGesamtschuleAbschluss.class);
+		this.classes.add(APIAlgoGostAbschluss.class);
+		this.classes.add(APIBenutzer.class);
+		this.classes.add(APIClientConfig.class);
+		this.classes.add(APISchule.class);
+		this.classes.add(APIJahrgaenge.class);
+		this.classes.add(APIKlassen.class);
+		this.classes.add(APIKurse.class);
+		this.classes.add(APIFaecher.class);
+		this.classes.add(APISchueler.class);
+		this.classes.add(APIGesamtschule.class);
+		this.classes.add(APILupo.class);
+		this.classes.add(APIGost.class);
+		this.classes.add(APILehrer.class);
+		this.classes.add(APIErzieher.class);
+		this.classes.add(APIBetrieb.class);
+		this.classes.add(APIKataloge.class);
+		this.classes.add(APISchema.class);
+		this.classes.add(APIStundenplan.class);
+        this.classes.add(APISchild.class);
+        this.classes.add(APIKAOA.class);
+		this.classes.add(APIENM.class);
+		this.classes.add(APIAdressbuch.class);
 		if (!SVWSKonfiguration.get().isDBRootAccessDisabled())
-			classes.add(APISchemaRoot.class);
+			this.classes.add(APISchemaRoot.class);
 
-		classes.add(OpenApiResource.class);
-	}
-
-	@Override
-	public Set<Object> getSingletons() {
-		return singletons;
+		this.classes.add(OpenApiResource.class);
 	}
 
 	@Override
 	public Set<Class<?>> getClasses() {
-		return classes;
+		return this.classes;
 	}
 
 	/**
