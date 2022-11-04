@@ -71,10 +71,14 @@ public class CoreTranspiler {
 					tmpApiFiles = null;
 				}
 			}
-			if ((tmpJavaFiles == null) || (tmpJavaFiles.length == 0) || ((tmpJavaFiles.length == 1) && (tmpJavaFiles[0].trim().equals(""))))
+			if ((tmpJavaFiles == null) || (tmpJavaFiles.length == 0) || ((tmpJavaFiles.length == 1) && (tmpJavaFiles[0].trim().equals("")))) {
 				cmdLine.printOptionsAndExit(1, "Es wurden keine Java-Quellcode-Dateien angegeben.");
-			if ((tmpApiFiles == null) || (tmpApiFiles.length == 0) || ((tmpApiFiles.length == 1) && (tmpApiFiles[0].trim().equals(""))))
+				return;
+			}
+			if ((tmpApiFiles == null) || (tmpApiFiles.length == 0) || ((tmpApiFiles.length == 1) && (tmpApiFiles[0].trim().equals("")))) {
 				cmdLine.printOptionsAndExit(1, "Es wurden keine Api-Dateien angegeben.");
+				return;
+			}
 			coreJavaSources = new File[tmpJavaFiles.length];
 			for (int i = 0; i < tmpJavaFiles.length; i++) {
 				Path p = Paths.get(tmpJavaFiles[i].trim());

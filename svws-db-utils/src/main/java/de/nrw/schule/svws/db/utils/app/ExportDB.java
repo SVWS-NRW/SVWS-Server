@@ -118,7 +118,7 @@ public class ExportDB {
 		    // Lese den Namen für die SQLite-Datenbank ein
 			String filename = cmdLine.getValue("f", "svws_export.sqlite");
 	
-			logger.logLn("-> Verbinde zur Quell-Datenbank (" + srcDrv.toString() + ":" + srcLoc + "/" + srcLoc + ")... ");
+			logger.logLn("-> Verbinde zur Quell-Datenbank (" + srcConfig.getDBDriver().toString() + ":" + srcLoc + "/" + srcLoc + ")... ");
 			try (Benutzer srcUser = Benutzer.create(srcConfig)) { 
 				try (DBEntityManager srcConn = srcUser.getEntityManager()) {
 					if (srcConn == null) {

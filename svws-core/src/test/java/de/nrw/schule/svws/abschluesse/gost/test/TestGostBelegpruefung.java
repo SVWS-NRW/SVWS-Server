@@ -52,16 +52,14 @@ public class TestGostBelegpruefung {
     static void setup() {
         System.out.println("- Lade die Gost-Jahrgänge aus den JSON-Resourcen...");
         Map<String, GostFach[]> tempTestGostJahrgaengeFaecher = ResourceUtils.json2Classes("de.nrw.schule.svws.abschluesse.gost.test", "Jahrgang_", "_GostFaecher", GostFach[].class);
-        if ((tempTestGostJahrgaengeFaecher == null) || tempTestGostJahrgaengeFaecher.size() == 0)
-        	fail("Fehler beim Laden der Gost-Fächer der Testjahrgänge!");
+        assert (tempTestGostJahrgaengeFaecher != null) && tempTestGostJahrgaengeFaecher.size() != 0 : "Fehler beim Laden der Gost-Fächer der Testjahrgänge!";
         for (Map.Entry<String, GostFach[]> entry : tempTestGostJahrgaengeFaecher.entrySet())
         	testGostJahrgaengeFaecher.put(entry.getKey(), Arrays.asList(entry.getValue()));
         System.out.println("  FERTIG!");
         
         System.out.println("- Lade die Abiturdaten aus den JSON-Resourcen und ordne sie den Jahrgängen zu...");
         Map<String, Abiturdaten> tempTestAbiturdaten = ResourceUtils.json2Classes("de.nrw.schule.svws.abschluesse.gost.test", "Jahrgang_", "_Abiturdaten", Abiturdaten.class);
-        if ((tempTestAbiturdaten == null) || tempTestAbiturdaten.size() == 0)
-        	fail("Fehler beim Laden der Abiturdaten!");
+        assert (tempTestAbiturdaten != null) && tempTestAbiturdaten.size() != 0 : "Fehler beim Laden der Abiturdaten!";
         for (Map.Entry<String, Abiturdaten> entry : tempTestAbiturdaten.entrySet()) {
         	String[] ids = entry.getKey().split("_");
         	if (ids.length != 2)
@@ -77,8 +75,7 @@ public class TestGostBelegpruefung {
         
         System.out.println("- Lade die Gesamt-Belegprüfungsergebnisse aus den JSON-Resourcen und ordne sie den Jahrgängen zu...");
         Map<String, GostBelegpruefungErgebnis> tempTestBelegpruefungsergebnisseGesamt = ResourceUtils.json2Classes("de.nrw.schule.svws.abschluesse.gost.test", "Jahrgang_", "_Belegpruefungsergebnis_Gesamt", GostBelegpruefungErgebnis.class);
-        if ((tempTestBelegpruefungsergebnisseGesamt == null) || tempTestBelegpruefungsergebnisseGesamt.size() == 0)
-        	fail("Fehler beim Laden der Gesamt-Belegprüfungsergebnisse!");
+        assert (tempTestBelegpruefungsergebnisseGesamt != null) && tempTestBelegpruefungsergebnisseGesamt.size() != 0 : "Fehler beim Laden der Gesamt-Belegprüfungsergebnisse!";
         for (Map.Entry<String, GostBelegpruefungErgebnis> entry : tempTestBelegpruefungsergebnisseGesamt.entrySet()) {
         	String[] ids = entry.getKey().split("_");
         	if (ids.length != 2)
@@ -94,8 +91,7 @@ public class TestGostBelegpruefung {
         
         System.out.println("- Lade die EF1-Belegprüfungsergebnisse aus den JSON-Resourcen und ordne sie den Jahrgängen zu...");
         Map<String, GostBelegpruefungErgebnis> tempTestBelegpruefungsergebnisseEF1 = ResourceUtils.json2Classes("de.nrw.schule.svws.abschluesse.gost.test", "Jahrgang_", "_Belegpruefungsergebnis_EF1", GostBelegpruefungErgebnis.class);
-        if ((tempTestBelegpruefungsergebnisseEF1 == null) || tempTestBelegpruefungsergebnisseEF1.size() == 0)
-        	fail("Fehler beim Laden der EF1-Belegprüfungsergebnisse!");
+        assert (tempTestBelegpruefungsergebnisseEF1 != null) && tempTestBelegpruefungsergebnisseEF1.size() != 0 : "Fehler beim Laden der EF1-Belegprüfungsergebnisse!";
         for (Map.Entry<String, GostBelegpruefungErgebnis> entry : tempTestBelegpruefungsergebnisseEF1.entrySet()) {
         	String[] ids = entry.getKey().split("_");
         	if (ids.length != 2)
@@ -125,22 +121,17 @@ public class TestGostBelegpruefung {
         	mapSchuelerJahrgang.forEach((schueler_id, abidaten) -> {
         		// Lese GostFaecher
         		List<GostFach> gostFaecher = testGostJahrgaengeFaecher.get(jahrgang);
-        		if (gostFaecher == null)
-        			fail("Fehler bei den Testfällen: Für den Abiturjahrgang '" + jahrgang + "' der Test-Abiturdaten '" + schueler_id + "' wurden keine Test-Fächerdaten der gymnasialen Oberstufe gefunden.");
+        		assert gostFaecher != null : "Fehler bei den Testfällen: Für den Abiturjahrgang '" + jahrgang + "' der Test-Abiturdaten '" + schueler_id + "' wurden keine Test-Fächerdaten der gymnasialen Oberstufe gefunden.";
         		// Lese EF1-Belegprüefungsergebnis
         		var testJahrgangBelegpruefungsergebnisseEF1 = testBelegpruefungsergebnisseEF1.get(jahrgang);
-        		if (testJahrgangBelegpruefungsergebnisseEF1 == null)
-        			fail("Es konnte kein Jahrgang " + jahrgang + " mit EF1-Belegprüfungsergebnissen als json-Dateien für den Vergleich bei den Abiturdaten " + schueler_id + " gefunden werden.");
+        		assert testJahrgangBelegpruefungsergebnisseEF1 != null : "Es konnte kein Jahrgang " + jahrgang + " mit EF1-Belegprüfungsergebnissen als json-Dateien für den Vergleich bei den Abiturdaten " + schueler_id + " gefunden werden.";
         		var vergleichErgebnisEF1 = testJahrgangBelegpruefungsergebnisseEF1.get(schueler_id);
-        		if (vergleichErgebnisEF1 == null)
-        			fail("Es konnte kein EF1-Belegprüfungsergebnis für die Abiturdaten " + schueler_id + " (Jahrgang " + jahrgang + ") als json-Datei für den Vergleich gefunden werden.");
+        		assert vergleichErgebnisEF1 != null : "Es konnte kein EF1-Belegprüfungsergebnis für die Abiturdaten " + schueler_id + " (Jahrgang " + jahrgang + ") als json-Datei für den Vergleich gefunden werden.";
         		// Lese Gesamt-Belegprüefungsergebnis
         		var testJahrgangBelegpruefungsergebnisseGesamt = testBelegpruefungsergebnisseGesamt.get(jahrgang);
-        		if (testJahrgangBelegpruefungsergebnisseGesamt == null)
-        			fail("Es konnte kein Jahrgang " + jahrgang + " mit Gesamt-Belegprüfungsergebnissen als json-Dateien für den Vergleich bei den Abiturdaten " + schueler_id + " gefunden werden.");
+        		assert testJahrgangBelegpruefungsergebnisseGesamt != null : "Es konnte kein Jahrgang " + jahrgang + " mit Gesamt-Belegprüfungsergebnissen als json-Dateien für den Vergleich bei den Abiturdaten " + schueler_id + " gefunden werden.";
         		var vergleichErgebnisGesamt = testJahrgangBelegpruefungsergebnisseGesamt.get(schueler_id);
-        		if (vergleichErgebnisGesamt == null)
-        			fail("Es konnte kein Gesamt-Belegprüfungsergebnis für die Abiturdaten " + schueler_id + " (Jahrgang " + jahrgang + ") als json-Datei für den Vergleich gefunden werden.");
+        		assert vergleichErgebnisGesamt != null : "Es konnte kein Gesamt-Belegprüfungsergebnis für die Abiturdaten " + schueler_id + " (Jahrgang " + jahrgang + ") als json-Datei für den Vergleich gefunden werden.";
         		// Füge Test für die EF1-Belegprüfung hinzu
         		tests.add(DynamicTest.dynamicTest(
         			"Testjahrgang " + jahrgang + " - Abiturdaten " + schueler_id + " - Belegprüfung EF1",

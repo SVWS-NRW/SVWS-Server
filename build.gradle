@@ -81,6 +81,7 @@ allprojects {
         		beforeMerged { gp ->
 					setEclipsePreference(file('.settings/org.eclipse.core.resources.prefs'), 'encoding/<project>', 'UTF-8')
 					setEclipsePreference(file('.settings/org.eclipse.core.runtime.prefs'), 'line.separator', '\\n')
+					setEclipsePreference(file('.settings/org.eclipse.jdt.core.prefs'), 'org.eclipse.jdt.core.compiler.problem.potentialNullReference', 'info')
 				}
         	}
 		}

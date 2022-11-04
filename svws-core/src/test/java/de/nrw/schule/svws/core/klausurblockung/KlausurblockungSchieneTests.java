@@ -185,8 +185,7 @@ public class KlausurblockungSchieneTests {
 		log.addConsumer(new Consumer<LogData>() {
 			@Override
 			public void accept(LogData t) {
-				if (t.getLevel().compareTo(LogLevel.APP) != 0)
-					fail(t.getText());
+				assert t.getLevel().compareTo(LogLevel.APP) == 0 : t.getText();
 			}
 		});
 
@@ -234,8 +233,7 @@ public class KlausurblockungSchieneTests {
 		log.addConsumer(new Consumer<LogData>() {
 			@Override
 			public void accept(LogData t) {
-				if (t.getLevel().compareTo(LogLevel.APP) != 0)
-					fail(t.getText());
+				assert t.getLevel().compareTo(LogLevel.APP) == 0 : t.getText();
 			}
 		});
 
@@ -283,8 +281,7 @@ public class KlausurblockungSchieneTests {
 		KlausurblockungSchienenOutputs outputs = alg.handle(input);
 
 		// Gibt es Ergebnisse?
-		if (outputs.ergebnisse.isEmpty())
-			fail("'KlausurblockungSchienenOutputs.klausuren' ist leer.");
+		assert !outputs.ergebnisse.isEmpty() : "'KlausurblockungSchienenOutputs.klausuren' ist leer.";
 
 		int max = 0;
 		for (KlausurblockungSchienenInputSchueler schueler : input.schueler)
@@ -299,35 +296,28 @@ public class KlausurblockungSchieneTests {
 
 	private void check(KlausurblockungSchienenInput input, KlausurblockungSchienenOutput output) {
 		// Überprüfe 'output.datenbankID'.
-		if (output.datenbankID < 0)
-			fail("'KlausurblockungSchienenOutput.datenbankID' ist negativ --> " + output.datenbankID);
+		assert output.datenbankID >= 0 : "'KlausurblockungSchienenOutput.datenbankID' ist negativ --> " + output.datenbankID;
 
 		// Überprüfe 'output.schienenAnzahl'.
-		if (output.schienenAnzahl < 0)
-			fail("'KlausurblockungSchienenOutput.schienenAnzahl' ist negativ --> " + output.datenbankID);
+		assert output.schienenAnzahl >= 0 : "'KlausurblockungSchienenOutput.schienenAnzahl' ist negativ --> " + output.datenbankID;
 
 		// Überprüfe 'output.klausuren'.
-		if (output.klausuren.isEmpty())
-			fail("'KlausurblockungSchienenOutput.klausuren' ist leer.");
+		assert !output.klausuren.isEmpty() : "'KlausurblockungSchienenOutput.klausuren' ist leer.";
 
 		// Überprüfe jede einzelne Klausur...
 		HashMap<Long, Integer> mapKlausurZuSchiene = new HashMap<>();
 		for (KlausurblockungSchienenOutputKlausur klausur : output.klausuren) {
 			// Überprüfe 'klausur.id'.
-			if (klausur.id < 0)
-				fail("'KlausurblockungSchienenOutputKlausur.id' ist negativ --> " + klausur.id);
+		    assert klausur.id >= 0 : "'KlausurblockungSchienenOutputKlausur.id' ist negativ --> " + klausur.id;
 
 			// Überprüfe 'klausur.schiene'.
-			if (klausur.schiene < 0)
-				fail("'KlausurblockungSchienenOutputKlausur.schiene' ist zu klein --> " + klausur.schiene);
+			assert klausur.schiene >= 0 : "'KlausurblockungSchienenOutputKlausur.schiene' ist zu klein --> " + klausur.schiene;
 
 			// Überprüfe 'klausur.schiene'.
-			if (klausur.schiene >= output.schienenAnzahl)
-				fail("'KlausurblockungSchienenOutputKlausur.schiene' ist zu groß --> " + klausur.schiene);
+			assert klausur.schiene < output.schienenAnzahl : "'KlausurblockungSchienenOutputKlausur.schiene' ist zu groß --> " + klausur.schiene;
 
 			// Map füllen.
-			if (mapKlausurZuSchiene.containsKey(klausur.id))
-				fail("'KlausurblockungSchienenOutputKlausur' --> Zwei Klausuren haben die selbe ID.");
+			assert !mapKlausurZuSchiene.containsKey(klausur.id) : "'KlausurblockungSchienenOutputKlausur' --> Zwei Klausuren haben die selbe ID.";
 			mapKlausurZuSchiene.put(klausur.id, klausur.schiene);
 		}
 
@@ -339,15 +329,9 @@ public class KlausurblockungSchieneTests {
 					// Pro Klausur-Paar des Schülers müssen die Klausur-Schienen verschieden sein.
 					Integer schiene1 = mapKlausurZuSchiene.get(klausuren.get(i1));
 					Integer schiene2 = mapKlausurZuSchiene.get(klausuren.get(i2));
-
-					if (schiene1 == null)
-						fail("Klausur " + klausuren.get(i1) + " hat keine zugeordnete Schiene!");
-
-					if (schiene2 == null)
-						fail("Klausur " + klausuren.get(i2) + " hat keine zugeordnete Schiene!");
-
-					if (schiene1.equals(schiene2))
-						fail("Schüler " + schueler.id + " hat zwei Klausuruen in der selben Schiene.");
+					assert schiene1 != null : "Klausur " + klausuren.get(i1) + " hat keine zugeordnete Schiene!";
+					assert schiene2 != null : "Klausur " + klausuren.get(i2) + " hat keine zugeordnete Schiene!";
+					assert !schiene1.equals(schiene2) : "Schüler " + schueler.id + " hat zwei Klausuruen in der selben Schiene.";
 				}
 		}
 		// System.out.println(" Output hat " + output.schienenAnzahl + " Schienen");

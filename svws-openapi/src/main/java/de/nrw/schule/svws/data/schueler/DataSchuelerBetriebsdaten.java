@@ -265,67 +265,65 @@ public class DataSchuelerBetriebsdaten extends DataManager<Long> {
 						String key = entry.getKey();
 						Object value = entry.getValue();
 						switch(key) {
-							
-						case "id" -> {
-							Long create_id = JSONMapper.convertToLong(value, true);
-							if ( create_id != null )
-								throw OperationError.BAD_REQUEST.exception("ID muss leer sein.");
-						}
-						case "schueler_id" -> {
-							Long sid = JSONMapper.convertToLong(value, true);
-							if (sid == null)
-								throw OperationError.BAD_REQUEST.exception("SchülerID darf nicht fehlen.");
-							if (sid != schueler_id)
-								throw OperationError.BAD_REQUEST.exception("SchülerID aus dem JSON-Objekt stimmt mit dem übergebenen Argument nicht überein.");
-						}	
-						case "betrieb_id" -> {
-							
-							Long bid = JSONMapper.convertToLong(value, true);
-							if (bid == null) 	
-								s_betrieb.Adresse_ID = null;
-							if(bid != betrieb_id)
-								throw OperationError.BAD_REQUEST.exception("Betrieb-ID aus dem JSON-Objekt stimmt mit dem übergebenen Argument nicht überein.");
-						}
-						case "beschaeftigungsart_id" -> {
-							Long art_id = JSONMapper.convertToLong(value, true);
-							if (art_id == null) {	//TODO Darf eine Beschäftigung ohne Art angeleget werden?
-								s_betrieb.Vertragsart_ID = null;
-							} else {
-								DTOBeschaeftigungsart b_art = conn.queryByKey(DTOBeschaeftigungsart.class, art_id);
-								if (b_art == null)
-									throw OperationError.NOT_FOUND.exception("Beschäftigungsart mit der ID " + art_id + " wurde nicht gefunden.");
-								s_betrieb.Vertragsart_ID = art_id;
-							}
-						}
-						case "vertragsbeginn" -> s_betrieb.Vertragsbeginn = JSONMapper.convertToString(value, true, true);
-						case "vertragsende" -> s_betrieb.Vertragsende = JSONMapper.convertToString(value, true, true);
-						case "ausbilder" -> s_betrieb.Ausbilder = JSONMapper.convertToString(value, true, true);
-						case "allgadranschreiben" -> s_betrieb.AllgAdrAnschreiben = JSONMapper.convertToBoolean(value, true);
-						case "praktikum" -> s_betrieb.Praktikum = JSONMapper.convertToBoolean(value, true);
-						case "sortierung" -> s_betrieb.Sortierung = JSONMapper.convertToInteger(value, true);
-						case "ansprechpartner_id" -> {
-							Long a_id = JSONMapper.convertToLong(value, true);
-							if (a_id == null) {	//TODO Darf eine Beschäftigung ohne Ansprechpartner angeleget werden?
-								s_betrieb.Ansprechpartner_ID = null;
-							} else {
-								DTOAnsprechpartnerAllgemeineAdresse ansprechpartner = conn.queryByKey(DTOAnsprechpartnerAllgemeineAdresse.class, a_id);
-								if (ansprechpartner == null)
-									throw OperationError.NOT_FOUND.exception();
-								s_betrieb.Ansprechpartner_ID = a_id;
-							}
-						}
-						case "betreuungslehrer_id" -> {
-							Long lehrer_id = JSONMapper.convertToLong(value, true);
-							if (lehrer_id == null) {	//TODO Darf eine Beschäftigung ohne Betreuungslehrer angeleget werden?
-								s_betrieb.Betreuungslehrer_ID = null;
-							} else {
-								DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, lehrer_id);
-								if (lehrer == null)
-									throw OperationError.NOT_FOUND.exception();
-								s_betrieb.Betreuungslehrer_ID = lehrer_id;
-							}
-						}
-						default -> throw OperationError.BAD_REQUEST.exception();
+    						case "id" -> {
+    							Long create_id = JSONMapper.convertToLong(value, true);
+    							if ( create_id != null )
+    								throw OperationError.BAD_REQUEST.exception("ID muss leer sein.");
+    						}
+    						case "schueler_id" -> {
+    							Long sid = JSONMapper.convertToLong(value, true);
+    							if (sid == null)
+    								throw OperationError.BAD_REQUEST.exception("SchülerID darf nicht fehlen.");
+    							if (sid != schueler_id)
+    								throw OperationError.BAD_REQUEST.exception("SchülerID aus dem JSON-Objekt stimmt mit dem übergebenen Argument nicht überein.");
+    						}	
+    						case "betrieb_id" -> {
+    							Long bid = JSONMapper.convertToLong(value, true);
+    							if (bid == null) 	
+    								s_betrieb.Adresse_ID = null;
+    							if ((bid == null) || (bid != betrieb_id))
+    								throw OperationError.BAD_REQUEST.exception("Betrieb-ID aus dem JSON-Objekt stimmt mit dem übergebenen Argument nicht überein.");
+    						}
+    						case "beschaeftigungsart_id" -> {
+    							Long art_id = JSONMapper.convertToLong(value, true);
+    							if (art_id == null) {	//TODO Darf eine Beschäftigung ohne Art angeleget werden?
+    								s_betrieb.Vertragsart_ID = null;
+    							} else {
+    								DTOBeschaeftigungsart b_art = conn.queryByKey(DTOBeschaeftigungsart.class, art_id);
+    								if (b_art == null)
+    									throw OperationError.NOT_FOUND.exception("Beschäftigungsart mit der ID " + art_id + " wurde nicht gefunden.");
+    								s_betrieb.Vertragsart_ID = art_id;
+    							}
+    						}
+    						case "vertragsbeginn" -> s_betrieb.Vertragsbeginn = JSONMapper.convertToString(value, true, true);
+    						case "vertragsende" -> s_betrieb.Vertragsende = JSONMapper.convertToString(value, true, true);
+    						case "ausbilder" -> s_betrieb.Ausbilder = JSONMapper.convertToString(value, true, true);
+    						case "allgadranschreiben" -> s_betrieb.AllgAdrAnschreiben = JSONMapper.convertToBoolean(value, true);
+    						case "praktikum" -> s_betrieb.Praktikum = JSONMapper.convertToBoolean(value, true);
+    						case "sortierung" -> s_betrieb.Sortierung = JSONMapper.convertToInteger(value, true);
+    						case "ansprechpartner_id" -> {
+    							Long a_id = JSONMapper.convertToLong(value, true);
+    							if (a_id == null) {	//TODO Darf eine Beschäftigung ohne Ansprechpartner angeleget werden?
+    								s_betrieb.Ansprechpartner_ID = null;
+    							} else {
+    								DTOAnsprechpartnerAllgemeineAdresse ansprechpartner = conn.queryByKey(DTOAnsprechpartnerAllgemeineAdresse.class, a_id);
+    								if (ansprechpartner == null)
+    									throw OperationError.NOT_FOUND.exception();
+    								s_betrieb.Ansprechpartner_ID = a_id;
+    							}
+    						}
+    						case "betreuungslehrer_id" -> {
+    							Long lehrer_id = JSONMapper.convertToLong(value, true);
+    							if (lehrer_id == null) {	//TODO Darf eine Beschäftigung ohne Betreuungslehrer angeleget werden?
+    								s_betrieb.Betreuungslehrer_ID = null;
+    							} else {
+    								DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, lehrer_id);
+    								if (lehrer == null)
+    									throw OperationError.NOT_FOUND.exception();
+    								s_betrieb.Betreuungslehrer_ID = lehrer_id;
+    							}
+    						}
+    						default -> throw OperationError.BAD_REQUEST.exception();
 						}
 					}
 					conn.transactionPersist(s_betrieb);

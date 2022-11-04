@@ -285,7 +285,7 @@ public class GostBlockungsergebnisManagerTest {
 			fail("sum4 != sum4out (" + sum4 + " != " + sum4out + ")");
 	}
 
-	private long getRandom(Set<Long> keySet, Random rnd) {
+	private Long getRandom(Set<Long> keySet, Random rnd) {
 		double max = 1.0;
 		Long winner = null;
 		for (Long current : keySet) {

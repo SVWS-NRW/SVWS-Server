@@ -219,8 +219,7 @@ public class KursblockungTests {
 		Vector<GostBlockungsergebnisManager> kbOutputs = kbAlgorithmus.handle(kbInput);
 
 		// Blockungsergebnisse vorhanden?
-		if (kbOutputs == null)
-			fail("kbOutputs == null");
+		assert kbOutputs != null : "kbOutputs == null";
 
 		// Jedes einzelne Blockungsergebnis prüfen.
 		for (GostBlockungsergebnisManager kbOutput : kbOutputs)
@@ -269,8 +268,7 @@ public class KursblockungTests {
 		Vector<@NotNull GostBlockungsergebnisManager> kbOutputs = kbAlgorithmus.handle(kbInput);
 
 		// Blockungsergebnisse vorhanden?
-		if (kbOutputs == null)
-			fail("kbOutputs == null");
+		assert kbOutputs != null : "kbOutputs == null";
 
 		// Jedes einzelne Blockungsergebnis prüfen.
 		for (GostBlockungsergebnisManager kbOutput : kbOutputs)
@@ -324,8 +322,7 @@ public class KursblockungTests {
 		Vector<@NotNull GostBlockungsergebnisManager> kbOutputs = kbAlgorithmus.handle(kbInput);
 
 		// Blockungsergebnisse vorhanden?
-		if (kbOutputs == null)
-			fail("kbOutputs == null");
+		assert kbOutputs != null : "kbOutputs == null";
 
 		// Jedes einzelne Blockungsergebnis prüfen.
 		for (GostBlockungsergebnisManager kbOutput : kbOutputs) {
@@ -429,8 +426,7 @@ public class KursblockungTests {
 		Vector<@NotNull GostBlockungsergebnisManager> kbOutputs = kbAlgorithmus.handle(kbInput);
 
 		// Blockungsergebnisse vorhanden?
-		if (kbOutputs == null)
-			fail("kbOutputs == null");
+		assert kbOutputs != null : "kbOutputs == null";
 
 		// Jedes einzelne Blockungsergebnis prüfen.
 		for (GostBlockungsergebnisManager kbOutput : kbOutputs)
@@ -478,8 +474,7 @@ public class KursblockungTests {
 		Vector<@NotNull GostBlockungsergebnisManager> kbOutputs = kbAlgorithmus.handle(kbInput);
 
 		// Blockungsergebnisse vorhanden?
-		if (kbOutputs == null)
-			fail("kbOutputs == null");
+		assert kbOutputs != null : "kbOutputs == null";
 
 		// Jedes einzelne Blockungsergebnis prüfen.
 		for (GostBlockungsergebnisManager kbOutput : kbOutputs)
@@ -533,8 +528,7 @@ public class KursblockungTests {
 		Vector<@NotNull GostBlockungsergebnisManager> kbOutputs = kbAlgorithmus.handle(kbInput);
 
 		// Blockungsergebnisse vorhanden?
-		if (kbOutputs == null)
-			fail("kbOutputs == null");
+		assert kbOutputs != null : "kbOutputs == null";
 
 		// Jedes einzelne Blockungsergebnis prüfen.
 		for (GostBlockungsergebnisManager kbOutput : kbOutputs)
@@ -543,27 +537,16 @@ public class KursblockungTests {
 	}
 
 	private void check(@NotNull GostBlockungsdatenManager kbInput, GostBlockungsergebnisManager kbOutput) {
-
-		if (kbInput == null)
-			fail("kbInput == null");
-
-		if (kbOutput == null)
-			fail("kbOutput == null");
-
-		if (kbOutput.getBlockungsdatenID() != kbInput.getID())
-			fail("kbOutput.getDatenID() != kbInput.getID()");
-
-		if (kbOutput.getOfBewertungAnzahlNichtZugeordneterKurse() > 0)
-			fail("kbOutput.getAnzahlNichtZugeordneterKurse() > 0");
+		assert kbInput != null : "kbInput == null";
+		assert kbOutput != null : "kbOutput == null";
+		assert kbOutput.getBlockungsdatenID() == kbInput.getID() : "kbOutput.getDatenID() != kbInput.getID()";
+		assert kbOutput.getOfBewertungAnzahlNichtZugeordneterKurse() <= 0 : "kbOutput.getAnzahlNichtZugeordneterKurse() > 0";
 
 		int kollisionen = kbOutput.getOfBewertungAnzahlKollisionen();
-		if (kollisionen != 0)
-			fail("kbOutput.getAnzahlKollisionen() != 0 --> " + kollisionen);
-
+		assert kollisionen == 0 : "kbOutput.getAnzahlKollisionen() != 0 --> " + kollisionen;
 		
 		int nichtwahlen = kbOutput.getOfBewertungAnzahlNichtzugeordneterFachwahlen();
-		if (nichtwahlen < 0)
-			fail("kbOutput.getAnzahlNichtzugeordneterFachwahlen() < 0 --> " + nichtwahlen);
+		assert nichtwahlen >= 0 : "kbOutput.getAnzahlNichtzugeordneterFachwahlen() < 0 --> " + nichtwahlen;
 		
 //		int regelverletzungen = kbOutput.getErgebnis().bewertung.regelVerletzungen.size();
 //		if (regelverletzungen > 0)
@@ -604,12 +587,10 @@ public class KursblockungTests {
 		return min;
 	}
 
-	private void regelSperreSchieneFuerKursart(@NotNull GostBlockungsdatenManager pInput, @NotNull String pKursart,
-			int pVon, int pBis) {
-
+	private void regelSperreSchieneFuerKursart(@NotNull GostBlockungsdatenManager pInput, @NotNull String pKursart, int pVon, int pBis) {
 		GostKursart gKursart = GostKursart.fromKuerzel(pKursart);
 		if (gKursart == null)
-			fail("GostKursart '" + pKursart + "' nicht gefunden.");
+			throw new AssertionError("GostKursart '" + pKursart + "' nicht gefunden.");
 
 		GostBlockungRegel gRegel = new GostBlockungRegel();
 		gRegel.id = pInput.getRegelAnzahl();
@@ -705,7 +686,7 @@ public class KursblockungTests {
 
 		// Blockungsergebnisse vorhanden?
 		if (kbOutputs == null)
-			fail("kbOutputs == null");
+			throw new AssertionError("kbOutputs == null");
 
 		// Jedes einzelne Blockungsergebnis prüfen.
 		for (GostBlockungsergebnisManager kbOutput : kbOutputs)
@@ -903,8 +884,7 @@ public class KursblockungTests {
 		Vector<@NotNull GostBlockungsergebnisManager> kbOutputs = kbAlgorithmus.handle(kbInput);
 
 		// Blockungsergebnisse vorhanden?
-		if (kbOutputs == null)
-			fail("kbOutputs == null");
+		assert kbOutputs != null : "kbOutputs == null";
 
 		// Jedes einzelne Blockungsergebnis prüfen.
 		for (GostBlockungsergebnisManager kbOutput : kbOutputs)

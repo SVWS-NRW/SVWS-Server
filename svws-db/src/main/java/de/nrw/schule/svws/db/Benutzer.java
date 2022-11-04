@@ -86,18 +86,20 @@ public class Benutzer implements AutoCloseable {
     	// Führe eine Dummy-DB-Abfrage aus, um Probleme mit der Server-seitigen Beendung einer Verbindung zu erkennen
     	DBEntityManager conn = benutzer.getEntityManager();
     	
-    	// Bestimme die Anzahl der verfügbaren Verbindungen
-    	ServerSession serverSession = conn.em.unwrap(ServerSession.class);
-    	ConnectionPool pool = serverSession.getConnectionPools().get("default");
-    	if (pool == null)
-    		System.err.println("Fehler beim Zugriff auf den DB-Connection-Pool default");
     	try {
     		conn.executeWithJDBCConnection("SELECT 1");
     	} catch (DatabaseException e) {
-        	System.err.println("INFO: Verbindung zur Datenbank unterbrochen - versuche sie neu aufzubauen...");
-        	System.err.println("Total number of connections: " + pool.getTotalNumberOfConnections());
-        	System.err.println("Available number of connections: " + pool.getConnectionsAvailable().size());
-        	pool.resetConnections();
+            // Bestimme die Anzahl der verfügbaren Verbindungen
+            ServerSession serverSession = conn.em.unwrap(ServerSession.class);
+            ConnectionPool pool = serverSession.getConnectionPools().get("default");
+            if (pool == null) {
+                System.err.println("Fehler beim Zugriff auf den DB-Connection-Pool default");
+            } else {
+            	System.err.println("INFO: Verbindung zur Datenbank unterbrochen - versuche sie neu aufzubauen...");
+            	System.err.println("Total number of connections: " + pool.getTotalNumberOfConnections());
+            	System.err.println("Available number of connections: " + pool.getConnectionsAvailable().size());
+            	pool.resetConnections();
+            }
     	}
     	return benutzer;
     }
