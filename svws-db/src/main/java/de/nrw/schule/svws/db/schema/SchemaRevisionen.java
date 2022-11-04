@@ -58,7 +58,7 @@ public enum SchemaRevisionen {
 	REV_5(5, "2022-09-29"),
 	
 	/**
-	 * Erstellen von allgemein nutzbaren Views
+	 * Erstellen von allgemein nutzbaren Views und Tabelle für das ENM
 	 */
 	REV_6(6, "2022-09-29"),
 	
