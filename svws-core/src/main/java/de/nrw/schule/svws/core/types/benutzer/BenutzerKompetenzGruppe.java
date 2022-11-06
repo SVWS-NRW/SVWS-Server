@@ -47,18 +47,21 @@ public enum BenutzerKompetenzGruppe {
     /** Gruppe für Rechte bezüglich des Verfahrens zur Schulpflichverletzung. */
     SCHULPFLICHTVERLETZUNG(new BenutzerKompetenzGruppenKatalogEintrag(1000, "Verfahren Schulpflichtverletzung", 2, 3)),
     
-    /** Gruppe für Rechte bezüglich des Verfahrens zur Schulpflichverletzung. */
+    /** Gruppe für Rechte bezüglich der Stundenplanung. */
     STUNDENPLANUNG(new BenutzerKompetenzGruppenKatalogEintrag(1100, "Stundenplanung", 4, 1)),
     
-    /** Gruppe für Rechte bezüglich des Verfahrens zur Schulpflichverletzung. */
-    OBERSTUFE(new BenutzerKompetenzGruppenKatalogEintrag(1200, "Oberstufenplanung", 4, 2)),
+    /** Gruppe für Rechte bezüglich des externen Notenmoduls. */
+    NOTENMODUL(new BenutzerKompetenzGruppenKatalogEintrag(1300, "Notenmodul", 4, 2)),
     
-    /** Gruppe für Rechte bezüglich des Verfahrens zur Schulpflichverletzung. */
-    NOTENMODUL(new BenutzerKompetenzGruppenKatalogEintrag(1300, "Notenmodul", 4, 3)),
-    
-    /** Gruppe für Rechte bezüglich des Verfahrens zur Schulpflichverletzung. */
-    DATENBANK(new BenutzerKompetenzGruppenKatalogEintrag(1400, "Datenbank-Management", 4, 4)),
+    /** Gruppe für Rechte bezüglich des Datenbank-Managements. */
+    DATENBANK(new BenutzerKompetenzGruppenKatalogEintrag(1400, "Datenbank-Management", 4, 3)),
 
+    /** Gruppe für Rechte bezüglich der Oberstufe. */
+    OBERSTUFE(new BenutzerKompetenzGruppenKatalogEintrag(1800, "Oberstufenplanung", 5, 1)),
+    
+    /** Gruppe für Rechte bezüglich des Abiturs. */
+    ABITUR(new BenutzerKompetenzGruppenKatalogEintrag(1900, "Abitur", 5, 2)),
+    
     /** Gruppe für Rechte bezüglich des Adressbuchs. */
     CARDDAV(new BenutzerKompetenzGruppenKatalogEintrag(2000, "Addressbuch (CardDAV)", 1, 4)),
     

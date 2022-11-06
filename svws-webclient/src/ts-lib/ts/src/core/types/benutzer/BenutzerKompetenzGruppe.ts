@@ -43,15 +43,17 @@ export class BenutzerKompetenzGruppe extends JavaObject {
 
 	public static readonly STUNDENPLANUNG : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("STUNDENPLANUNG", 12, new BenutzerKompetenzGruppenKatalogEintrag(1100, "Stundenplanung", 4, 1));
 
-	public static readonly OBERSTUFE : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("OBERSTUFE", 13, new BenutzerKompetenzGruppenKatalogEintrag(1200, "Oberstufenplanung", 4, 2));
+	public static readonly NOTENMODUL : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("NOTENMODUL", 13, new BenutzerKompetenzGruppenKatalogEintrag(1300, "Notenmodul", 4, 2));
 
-	public static readonly NOTENMODUL : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("NOTENMODUL", 14, new BenutzerKompetenzGruppenKatalogEintrag(1300, "Notenmodul", 4, 3));
+	public static readonly DATENBANK : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("DATENBANK", 14, new BenutzerKompetenzGruppenKatalogEintrag(1400, "Datenbank-Management", 4, 3));
 
-	public static readonly DATENBANK : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("DATENBANK", 15, new BenutzerKompetenzGruppenKatalogEintrag(1400, "Datenbank-Management", 4, 4));
+	public static readonly OBERSTUFE : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("OBERSTUFE", 15, new BenutzerKompetenzGruppenKatalogEintrag(1800, "Oberstufenplanung", 5, 1));
 
-	public static readonly CARDDAV : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("CARDDAV", 16, new BenutzerKompetenzGruppenKatalogEintrag(2000, "Addressbuch (CardDAV)", 1, 4));
+	public static readonly ABITUR : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("ABITUR", 16, new BenutzerKompetenzGruppenKatalogEintrag(1900, "Abitur", 5, 2));
 
-	public static readonly CALDAV : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("CALDAV", 17, new BenutzerKompetenzGruppenKatalogEintrag(3000, "Kalender (CaldDAV)", 1, 5));
+	public static readonly CARDDAV : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("CARDDAV", 17, new BenutzerKompetenzGruppenKatalogEintrag(2000, "Addressbuch (CardDAV)", 1, 4));
+
+	public static readonly CALDAV : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("CALDAV", 18, new BenutzerKompetenzGruppenKatalogEintrag(3000, "Kalender (CaldDAV)", 1, 5));
 
 	public static VERSION : number = 1;
 
