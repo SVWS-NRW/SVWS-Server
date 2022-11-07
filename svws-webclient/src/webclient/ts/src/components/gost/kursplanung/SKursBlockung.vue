@@ -56,7 +56,7 @@
 				:class="{'bg-slate-500': schiene_gesperrt(schiene) }"
 				:style="{ 'background-color': schiene_gesperrt(schiene)? '':bgColor}"
 			>
-				<svws-ui-badge size="tiny" class="cursor-grab" :variant="fixier_regeln.length ? 'error' : 'highlight'">
+				<svws-ui-badge size="tiny" class="cursor-grab" :variant="selected_kurs ? 'primary' : fixier_regeln.length ? 'error' : 'highlight'" @click="toggle_active_kurs">
 					{{ kurs_blockungsergebnis?.schueler.size() }}
 					<svws-ui-icon class="cursor-pointer" @click="fixieren_regel_toggle" >
 						<i-ri-pushpin-fill v-if="fixier_regeln.length" class="inline-block"/>
@@ -132,14 +132,16 @@ const props = defineProps({
 	}
 });
 
+const art = GostKursart.fromID(props.kurs.kursart)
+
 const main: Main = injectMainApp();
 const app = main.apps.gost;
 
 const edit_name: Ref<GostBlockungKurs | undefined> = ref(undefined)
 const kurszahl_anzeige: Ref<boolean> = ref(false)
-const toggle_kurszahl_anzeige = () => kurszahl_anzeige.value = !kurszahl_anzeige.value
 
-const gostFach: ComputedRef<GostFach | null> = computed(() => {
+const gostFach: ComputedRef<GostFach | null> =
+	computed(() => {
 	let fach: GostFach | null = null
 	if (!app.dataFaecher.manager) return null
 	for (const f of app.dataFaecher.manager.values())
@@ -147,26 +149,20 @@ const gostFach: ComputedRef<GostFach | null> = computed(() => {
 			fach = f
 			break
 		}
-	return fach
-});
+	return fach});
 
-const fachKuerzel: ComputedRef<string> = computed(() => {
-	return gostFach.value?.kuerzelAnzeige?.toString() || "?";
-});
+const fachKuerzel: ComputedRef<string> =
+	computed(() => gostFach.value?.kuerzelAnzeige?.toString() || "?");
 
-const fach: ComputedRef<ZulaessigesFach> = computed(() => {
-	return ZulaessigesFach.getByKuerzelASD(gostFach.value?.kuerzel || null);
-});
+const fach: ComputedRef<ZulaessigesFach> =
+	computed(() => ZulaessigesFach.getByKuerzelASD(gostFach.value?.kuerzel || null));
 
-const bgColor: ComputedRef<string> = computed(() => {
-	if (!fach.value)
-		return "#ffffff";
-	return fach.value.getHMTLFarbeRGB().valueOf();
-});
+const bgColor: ComputedRef<string> =
+	computed(() => fach.value ? fach.value.getHMTLFarbeRGB().valueOf() : "#ffffff");
 
-const art = GostKursart.fromID(props.kurs.kursart)
 
-const koop: WritableComputedRef<boolean> = computed({
+const koop: WritableComputedRef<boolean> =
+	computed({
 	get(): boolean {
 		return props.kurs.istKoopKurs.valueOf();
 	},
@@ -175,9 +171,9 @@ const koop: WritableComputedRef<boolean> = computed({
 		if (!kurs) return
 		kurs.istKoopKurs = Boolean(value);
 		app.dataKursblockung.patch_kurs(kurs);
-	}
-});
-const suffix: WritableComputedRef<string> = computed({
+	}});
+const suffix: WritableComputedRef<string> =
+	computed({
 	get(): string {
 		return props.kurs.suffix.toString();
 	},
@@ -186,23 +182,24 @@ const suffix: WritableComputedRef<string> = computed({
 		if (!kurs) return
 		kurs.suffix = String(value);
 		app.dataKursblockung.patch_kurs(kurs);
-	}
-});
-const manager: ComputedRef<GostBlockungsergebnisManager | undefined> = computed(()=>app.dataKursblockungsergebnis.manager)
+	}});
+const manager: ComputedRef<GostBlockungsergebnisManager | undefined> =
+	computed(()=>app.dataKursblockungsergebnis.manager)
 
 const schienen: ComputedRef<List<GostBlockungSchiene>> =
 	computed(()=> app.dataKursblockung.manager?.getMengeOfSchienen() || new Vector<GostBlockungSchiene>())
 
-const kurs_blockungsergebnis: ComputedRef<GostBlockungsergebnisKurs|undefined> = computed(()=>{
+const kurs_blockungsergebnis: ComputedRef<GostBlockungsergebnisKurs|undefined> =
+	computed(()=>{
 	try {
-		// console.log(manager.value?.getKursE(props.kurs.id), props.kurs, manager.value)
 		return manager.value?.getKursE(props.kurs.id)
-	} catch (e) { return undefined }
-})
+	} catch (e) { return undefined }})
 
-const selected_kurs: ComputedRef<boolean> = computed(()=> kurs_blockungsergebnis.value === app.dataKursblockungsergebnis.active_kurs?.value)
+const selected_kurs: ComputedRef<boolean> =
+	computed(()=> kurs_blockungsergebnis.value === app.dataKursblockungsergebnis.active_kurs?.value)
 
-const filtered_by_kursart: ComputedRef<GostBlockungsergebnisKurs[]> = computed(()=>{
+const filtered_by_kursart: ComputedRef<GostBlockungsergebnisKurs[]> =
+	computed(()=>{
 	const kurse = manager.value?.getOfFachKursmenge(props.kurs.fach_id)
 	if (!kurse) return []
 	const arr = kurse.toArray(new Array<GostBlockungsergebnisKurs>())
@@ -210,8 +207,7 @@ const filtered_by_kursart: ComputedRef<GostBlockungsergebnisKurs[]> = computed((
 		const a_name = manager.value?.getOfKursName(a.id)
 		const b_name = manager.value?.getOfKursName(b.id)
 		return a_name?.localeCompare(String(b_name), "de-DE") || 0
-	})
-})
+	})})
 
 const setze_kursdifferenz: ComputedRef<boolean> =
 	computed(()=>filtered_by_kursart.value[0]===kurs_blockungsergebnis.value)
@@ -247,6 +243,8 @@ const fixier_regeln: ComputedRef<GostBlockungRegel[]> =
 
 const allow_regeln: ComputedRef<boolean> =
 	computed(()=> app.blockungsergebnisauswahl.liste.length === 1)
+
+const toggle_kurszahl_anzeige = () => kurszahl_anzeige.value = !kurszahl_anzeige.value
 
 const is_drop_zone = (schiene: GostBlockungSchiene) => {
 	const kurs = main.config.drag_and_drop_data?.kurs;

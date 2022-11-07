@@ -20,6 +20,12 @@ export class ListAbiturjahrgangSchueler extends BaseList<
 		kurs: undefined 
 	});
 
+	public reset_filter() {
+		this._filter.kollision = undefined;
+		this._filter.kurs = undefined;
+		this._filter.name = "";
+		this._filter.negiert = undefined;
+	}
 	/**
 	 * Diese Methode filtert die Daten der Auswahlliste und wird von dem
 	 * AppState-Objekt dieser Klasse beim Laden des Katalogs automatisch aufgerufen.

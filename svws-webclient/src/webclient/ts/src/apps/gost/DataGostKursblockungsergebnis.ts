@@ -86,21 +86,20 @@ export class DataGostKursblockungsergebnis extends BaseData<
 		const ergebnisid: number | undefined = this._daten?.id;
 		if (!ergebnisid) return false;
 		if (undo) {
-			await App.api.deleteGostBlockungsergebnisKursSchuelerZuordnung(
+			App.api.deleteGostBlockungsergebnisKursSchuelerZuordnung(
 				App.schema,
 				ergebnisid,
 				schuelerid,
 				kursid
 			);
 		} else {
-			await App.api.createGostBlockungsergebnisKursSchuelerZuordnung(
+			App.api.createGostBlockungsergebnisKursSchuelerZuordnung(
 				App.schema,
 				ergebnisid,
 				schuelerid,
 				kursid
 			);
 		}
-		this.manager?.setSchuelerKurs(schuelerid, kursid, undo);
 		App.apps.gost.blockungsergebnisauswahl.ausgewaehlt = this.selected_list_item;
 		// TODO remove code above after fixing reactivity in manager
 		return true;

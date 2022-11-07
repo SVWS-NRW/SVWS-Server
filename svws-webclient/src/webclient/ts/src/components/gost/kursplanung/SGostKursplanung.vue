@@ -4,7 +4,7 @@
 		class="flex flex-row flex-wrap gap-4"
 	>
 		<s-card-gost-blockung />
-		<s-card-gost-kurs-schueler-umwahl v-if="!app.blockungsergebnisauswahl.ausgewaehlt?.istVorlage" />
+		<s-card-gost-kurs-schueler-umwahl />
 		<s-card-gost-kursblockung-parameter />
 	</div>
 	<div v-else>

@@ -33,6 +33,7 @@ export class ListGost extends BaseList<GostJahrgang> {
 		const abijahr = this._state.ausgewaehlt?.abiturjahr?.valueOf();
 		if (!abijahr) return;
 		await this.listAbiturjahrgangSchueler.update_list(abijahr);
+		this.listAbiturjahrgangSchueler.reset_filter();
 		const hj = abijahr 
 			? GostHalbjahr.getPlanungshalbjahrFromAbiturjahrSchuljahrUndHalbjahr(
 					abijahr,

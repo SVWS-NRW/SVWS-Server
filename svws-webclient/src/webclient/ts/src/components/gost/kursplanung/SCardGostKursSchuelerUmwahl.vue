@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-content-card title="Schüler und Kurszuordnungen">
+	<svws-ui-content-card title="Schüler und Kurszuordnungen" v-if="schueler?.length">
 	<div class="flex flex-row gap-4">
 		<div class="flex-none">
 			<div class="sticky">
@@ -22,8 +22,8 @@
 					<div class="max-h-screen overflow-auto">
 						<table class="w-full border-collapse text-sm">
 							<s-kurs-schueler-schueler
-								v-for="(s, i) in schueler"
-								:key="i"
+								v-for="s in schueler"
+								:key="s.id"
 								:schueler="s"
 								:kollision="!!schueler_kollisionen[s.id]"
 								:selected="selected === s"
@@ -46,9 +46,9 @@
 				<div class="overflow-hidden rounded-lg shadow">
 					<table class="w-full border-collapse text-sm">
 						<s-kurs-schueler-fachbelegung
-							v-for="(f, i) in fachbelegungen"
-							:key="i"
-							:fach="f"
+							v-for="fach in fachbelegungen"
+							:key="fach.fachID"
+							:fach="fach"
 							:kurse="blockungsergebnisse"
 							:schueler-id="selected.id"
 							/>
@@ -64,9 +64,9 @@
 				<div class="overflow-hidden rounded-lg shadow">
 					<table class="border-collapse text-sm">
 						<s-kurs-schueler-schiene
-							v-for="(s, i) in schienen"
-							:key="i"
-							:schiene="s"
+							v-for="schiene in schienen"
+							:key="schiene.id"
+							:schiene="schiene"
 							:selected="selected"
 							/>
 					</table>
@@ -162,10 +162,10 @@ const blockungsergebnisse: ComputedRef<Map<GostBlockungKurs, GostBlockungsergebn
 	return map;
 });
 
-const fachbelegungen: ComputedRef<List<GostFachwahl> | undefined> =
+const fachbelegungen: ComputedRef<List<GostFachwahl>> =
 	computed(() => {
-	if (!selected.value?.id) return new Vector<GostFachwahl>()
-	return app.dataKursblockung.manager?.getOfSchuelerFacharten(selected.value?.id)
+	if (!selected.value?.id || !app.dataKursblockung.manager) return new Vector<GostFachwahl>()
+	return app.dataKursblockung.manager.getOfSchuelerFacharten(selected.value.id)
 });
 
 const filter_kollision: WritableComputedRef<boolean> =
@@ -218,6 +218,7 @@ function drop_entferne_kurszuordnung(kurs: any) {
 		kurs.id,
 		true
 	);
+	manager.value?.setSchuelerKurs(schuelerid, kurs.id, true);
 }
 
 // Zweites Argument (kurs: GostBlockungsergebnisKurs) entfernt, da in Template nicht verwendet.
