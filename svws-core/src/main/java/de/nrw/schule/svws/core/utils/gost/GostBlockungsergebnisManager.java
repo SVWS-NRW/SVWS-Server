@@ -366,7 +366,7 @@ public class GostBlockungsergebnisManager {
 		long fachartID = GostKursart.getFachartID(fachID, kurs.kursart);
 
 		// Hinzufügen
-		kurs.schueler.remove(pSchuelerID); // Data-Objekt aktualisieren
+		kurs.schueler.removeElement(pSchuelerID); // Data-Objekt aktualisieren
 		kurseOfSchueler.remove(kurs);
 		schuelerIDsOfKurs.remove(pSchuelerID);
 		_ergebnis.bewertung.anzahlSchuelerNichtZugeordnet++;
@@ -440,13 +440,13 @@ public class GostBlockungsergebnisManager {
 		
 		// Entfernen
 		_ergebnis.bewertung.anzahlKurseNichtZugeordnet -= Math.abs(kurs.anzahlSchienen - schienenOfKurs.size());
-		kurs.schienen.remove(schiene.id);   // Data-Objekt aktualisieren
-		schiene.kurse.remove(kurs);      // Data-Objekt aktualisieren
+		kurs.schienen.removeElement(schiene.id);   // Data-Objekt aktualisieren
+		schiene.kurse.removeElement(kurs);      // Data-Objekt aktualisieren
 		schienenOfKurs.remove(schiene);
 		for (@NotNull Long schuelerID : kurs.schueler)
 			stateSchuelerSchieneEntfernen(schuelerID, schiene.id, kurs);
 		_ergebnis.bewertung.anzahlKurseNichtZugeordnet += Math.abs(kurs.anzahlSchienen - schienenOfKurs.size());
-		kursGruppe.remove(kurs); // Muss vor der Bewertung passieren.
+		kursGruppe.removeElement(kurs); // Muss vor der Bewertung passieren.
 		_ergebnis.bewertung.anzahlKurseMitGleicherFachartProSchiene -= kursGruppe.isEmpty() ? 0 : 1;
 		stateRegelvalidierung();
 

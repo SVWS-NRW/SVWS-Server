@@ -293,7 +293,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		let schuelerIDsOfKurs : HashSet<Number> = this.getOfKursSchuelerIDmenge(pKursID);
 		let mapSFK : HashMap<Number, GostBlockungsergebnisKurs | null> = this.getOfSchuelerFachIDKursMap(pSchuelerID);
 		let fachartID : number = GostKursart.getFachartID(fachID, kurs.kursart);
-		kurs.schueler.remove(pSchuelerID);
+		kurs.schueler.removeElement(pSchuelerID);
 		kurseOfSchueler.remove(kurs);
 		schuelerIDsOfKurs.remove(pSchuelerID);
 		this._ergebnis.bewertung.anzahlSchuelerNichtZugeordnet++;
@@ -357,13 +357,13 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		if (kursGruppe === null) 
 			throw new NullPointerException("SchieneID=" + pSchienenID + " --> FachartID=" + fachartID + " --> NULL")
 		this._ergebnis.bewertung.anzahlKurseNichtZugeordnet -= Math.abs(kurs.anzahlSchienen - schienenOfKurs.size());
-		kurs.schienen.remove(schiene.id);
-		schiene.kurse.remove(kurs);
+		kurs.schienen.removeElement(schiene.id);
+		schiene.kurse.removeElement(kurs);
 		schienenOfKurs.remove(schiene);
 		for (let schuelerID of kurs.schueler) 
 			this.stateSchuelerSchieneEntfernen(schuelerID.valueOf(), schiene.id, kurs);
 		this._ergebnis.bewertung.anzahlKurseNichtZugeordnet += Math.abs(kurs.anzahlSchienen - schienenOfKurs.size());
-		kursGruppe.remove(kurs);
+		kursGruppe.removeElement(kurs);
 		this._ergebnis.bewertung.anzahlKurseMitGleicherFachartProSchiene -= kursGruppe.isEmpty() ? 0 : 1;
 		this.stateRegelvalidierung();
 		return true;
