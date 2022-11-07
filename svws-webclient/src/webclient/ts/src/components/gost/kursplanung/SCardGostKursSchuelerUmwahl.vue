@@ -212,7 +212,7 @@ watch(()=>schueler.value, (new_val)=> selected.value = new_val ? new_val[0] : un
 
 function drop_entferne_kurszuordnung(kurs: any) {
 	const schuelerid = selected.value?.id;
-	if (!schuelerid) return;
+	if (!schuelerid || !kurs?.id) return;
 	app.dataKursblockungsergebnis.assignSchuelerKurs(
 		schuelerid,
 		kurs.id,

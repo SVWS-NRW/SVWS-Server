@@ -70,7 +70,7 @@
 		return app.stammdaten.daten || new SchuelerStammdaten();
 	});
 
-	const inputKatalogFahrschuelerarten: ComputedRef<KatalogEintrag[]> =
+	const inputKatalogFahrschuelerarten: ComputedRef<List<KatalogEintrag>> =
 		computed(() => {
 			return app.katalogFahrschuelerarten;
 		});
@@ -102,7 +102,9 @@
 	> = computed({
 		get(): KatalogEintrag | undefined {
 			const id = daten.value.fahrschuelerArtID;
-			return inputKatalogFahrschuelerarten.value.find(n => n.id === id);
+			for (const art of inputKatalogFahrschuelerarten.value)
+				if (art.id === id)
+					return art
 		},
 		set(val) {
 			app.stammdaten.patch({ fahrschuelerArtID: val?.id });
@@ -112,9 +114,9 @@
 		computed({
 			get(): KatalogEintrag | undefined {
 				const id = daten.value.haltestelleID;
-				let o;
-				for (const r of inputKatalogHaltestellen.value) { if (r.id === id) { o = r; break } }
-				return o;
+				for (const r of inputKatalogHaltestellen.value) 
+					if (r.id === id)
+						return r;
 			},
 			set(val) {
 				app.stammdaten.patch({ haltestelleID: val?.id });

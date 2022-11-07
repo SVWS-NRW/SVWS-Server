@@ -1,5 +1,9 @@
-import { ApiSchema, ApiServer, List, ReligionEintrag, Vector } from "@svws-nrw/svws-core-ts";
 import {
+	ApiSchema,
+	ApiServer,
+	List,
+	ReligionEintrag,
+	Vector,
 	DBSchemaListeEintrag,
 	Schuljahresabschnitt,
 	KatalogEintrag,
@@ -7,10 +11,9 @@ import {
 	OrtsteilKatalogEintrag,
 } from "@svws-nrw/svws-core-ts";
 
-import { App } from "./BaseApp";
+import { type Apps, App } from "./BaseApp";
 import { Schule } from "./schule/Schule";
 
-import type { Apps } from "./BaseApp";
 import { Benutzer } from "./schule/benutzerverwaltung/Benutzer";
 import { Benutzergruppe } from "./schule/benutzerverwaltung/Benutzergruppe";
 import { Schueler } from "./schueler/Schueler";
@@ -20,12 +23,12 @@ import { Jahrgaenge } from "./jahrgaenge/Jahrgaenge";
 import { Klassen } from "./klassen/Klassen";
 import { Kurse } from "./kurse/Kurse";
 import { Lehrer } from "./lehrer/Lehrer";
-import { ComputedRef, inject, InjectionKey, provide, reactive } from "vue";
 import { BaseList } from "./BaseList";
 import { Foerderschwerpunkte } from "./kataloge/foerderschwerpunkt/Foerderschwerpunkte";
 import { Religionen } from "./kataloge/religionen/Religionen";
 import { ApiLoadingStatus } from "./core/ApiLoadingStatus.class";
 import { MAIN_LOADING_SYMBOL } from "./core/LoadingSymbols";
+import { ComputedRef, inject, InjectionKey, provide, reactive } from "vue";
 
 export type Kataloge = {
 	orte: List<OrtKatalogEintrag>;

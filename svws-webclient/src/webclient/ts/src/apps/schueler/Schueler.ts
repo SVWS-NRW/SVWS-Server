@@ -1,4 +1,4 @@
-import { Erzieherart, FoerderschwerpunktEintrag, KatalogEintrag, List, SchuelerBetriebsdaten, Vector } from "@svws-nrw/svws-core-ts";
+import { Erzieherart, FoerderschwerpunktEintrag, KatalogEintrag, List, Vector } from "@svws-nrw/svws-core-ts";
 import { App } from "../BaseApp";
 import { ListSchueler } from "./ListSchueler";
 import { DataSchuelerStammdaten } from "./DataSchuelerStammdaten";
