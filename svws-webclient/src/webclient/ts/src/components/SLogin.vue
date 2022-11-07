@@ -49,7 +49,7 @@
 						Lehrkräfte, Klassenleitung, Erzieher usw.
 						zurückgegriffen. An Stellen, wo das nicht möglich ist,
 						wird versucht alle Geschlechter gleichermaßen zu
-						verwenden.
+						berücksichtigen.
 					</p>
 					<nav class="login-footer-links">
 						<a class="login-footer-link" href="#">Impressum</a>
