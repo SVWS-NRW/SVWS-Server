@@ -124,8 +124,8 @@ public class DataGostBlockungRegel extends DataManager<Long> {
 									List<DTOGostBlockungSchiene> dtos = conn.queryNamed("DTOGostBlockungSchiene.blockung_id", regel.Blockung_ID, DTOGostBlockungSchiene.class);
 									if ((dtos == null) || (dtos.size() <= 0))
 										throw OperationError.BAD_REQUEST.exception();
-									Set<Long> schienen = dtos.stream().map(s -> s.ID).collect(Collectors.toSet());
-									if (!schienen.contains(pvalue))
+									Set<Integer> schienen = dtos.stream().map(s -> s.Nummer).collect(Collectors.toSet());
+									if (!schienen.contains((int)pvalue))
 										throw OperationError.BAD_REQUEST.exception();
 								}
 								case SCHUELER_ID -> {
