@@ -25,8 +25,6 @@
 		return true;
 	});
 
-	const allow_regeln: ComputedRef<boolean> = computed(()=> app.blockungsergebnisauswahl.liste.length === 1)
-
 	const self = Symbol("kursplanung");
 
 	onMounted(() => main.config.kursblockung_aktiv.add(self));

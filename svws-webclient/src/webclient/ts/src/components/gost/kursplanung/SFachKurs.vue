@@ -112,5 +112,6 @@ const bgColor: ComputedRef<string | undefined> =
 async function add_kurs(art: "lk" | "gk" | "zk") {
 	const nr = art === "lk" ? 1 : art === "gk" ? 2 : 3;
 	await app.dataKursblockung.add_blockung_kurse(props.fach.id, nr)
+	//löst ein Neuladen der Blockung aus
 }
 </script>

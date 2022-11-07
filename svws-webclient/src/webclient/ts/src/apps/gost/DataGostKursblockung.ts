@@ -101,7 +101,8 @@ export class DataGostKursblockung extends BaseData<
 			fach_id,
 			kursart_id
 		);
-		this.manager?.addKurs(kurs)
+		this.select(this.selected_list_item)
+		// this.manager?.addKurs(kurs)
 		return kurs
 	}
 	/**Löscht einen Kurs in der Blockung für das angegebene fach_id
@@ -174,7 +175,7 @@ export class DataGostKursblockung extends BaseData<
 			App.schema,
 			this.daten.id,
 		);
-		this.manager?.addSchiene(schiene)
+		this.select(this.selected_list_item)
 		return schiene
 	}
 
@@ -185,7 +186,6 @@ export class DataGostKursblockung extends BaseData<
 			App.schema,
 			s.id,
 		);
-		this.manager?.removeSchiene(schiene)
 	}
 
 	/** passt eine Schiene an */

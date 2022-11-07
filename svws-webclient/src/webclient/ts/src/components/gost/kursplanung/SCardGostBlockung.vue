@@ -123,13 +123,6 @@
 	const sort_by: Ref<'kursart'|'fach_id'> = ref('fach_id')
 	const edit_schienenname: Ref<GostBlockungSchiene|undefined> = ref()
 
-	const kurse: ComputedRef<List<GostBlockungKurs>> = computed(() => {
-		return (
-			app.dataKursblockung.daten?.kurse ||
-			new Vector<GostBlockungKurs>()
-		);
-	});
-
 	const faecher: ComputedRef<Array<GostStatistikFachwahl>> = computed(() => {
 			return (
 				app.dataFachwahlen.daten?.toArray(new Array<GostStatistikFachwahl>) ||
@@ -157,11 +150,19 @@
 	const allow_regeln: ComputedRef<boolean> = computed(()=> app.blockungsergebnisauswahl.liste.length === 1)
 
 	function getAnzahlSchuelerSchiene(idSchiene: number): number {
-		return manager.value?.getOfSchieneAnzahlSchueler(idSchiene) || 0;
+		try {
+			return manager.value?.getOfSchieneAnzahlSchueler(idSchiene) || 0;
+		} catch (e) {
+			return 0
+		}
 	};
 
 	function getAnzahlKollisionenSchiene(idSchiene: number): number {
-		return manager.value?.getOfSchieneAnzahlSchuelerMitKollisionen(idSchiene) || 0;
+		try {
+			return manager.value?.getOfSchieneAnzahlSchuelerMitKollisionen(idSchiene) || 0;
+		} catch (e) {
+			return 0
+		}
 	};
 
 	async function patch_schiene(schiene: GostBlockungSchiene) {
@@ -174,9 +175,11 @@
 			console.log("Fehler beim Hinzufügen einer Schiene")
 			return
 		}
+		//löst ein Neuladen der Blockung aus
 	}
 
 	async function del_schiene(s: GostBlockungSchiene) {
 		await app.dataKursblockung.del_blockung_schiene(s)
+		app.dataKursblockung.manager?.removeSchiene(s)
 	}
 </script>

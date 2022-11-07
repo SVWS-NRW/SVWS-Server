@@ -28,15 +28,14 @@ export class DataGostKursblockungsergebnis extends BaseData<
 	 * @returns {Promise<GostBlockungsergebnis> | undefined} Die Daten als Promise
 	 */
 	public async on_select(): Promise<GostBlockungsergebnis | undefined> {
+		this.manager = undefined
 		if (!this.selected_list_item) return super.unselect();
 		const ergebnis: GostBlockungsergebnis | undefined = await super._select(
 			(eintrag: GostBlockungsergebnisListeneintrag) =>
 				App.api.getGostBlockungsergebnis(App.schema, eintrag.id)
 		);
-		if (ergebnis === undefined) {
-			this.manager = undefined;
+		if (ergebnis === undefined)
 			return ergebnis;
-		}
 		this.manager = App.apps.gost.dataKursblockung.manager
 			? new GostBlockungsergebnisManager(App.apps.gost.dataKursblockung.manager, ergebnis)
 			: undefined
@@ -76,7 +75,6 @@ export class DataGostKursblockungsergebnis extends BaseData<
 			kursid,
 			schienenidneu
 		);
-		this.manager?.setKursSchiene(kursid, schienenid, true);
 		return true;
 	}
 

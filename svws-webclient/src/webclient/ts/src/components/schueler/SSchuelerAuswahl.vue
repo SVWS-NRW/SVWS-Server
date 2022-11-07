@@ -72,24 +72,21 @@
 					>
 					<!-- Kontextmenü der Zeile für die Spalte Actions -->
 					<template #cell-actions="{ row }">
-          				<svws-ui-popover :hover="false" placement="left-end" :disable-click-away="false">
-            				<template #trigger>
-              					<button class="action-button">
-                					<svws-ui-icon>
-                  						<i-ri-more-2-fill />
-                					</svws-ui-icon>
-              					</button>
-            				</template>
-            				<template #content>
-              					<div class="action-items">
-                					<div v-for="action in actions" :key="action.action">
-                  						<button class="action-item" @click="onAction(action.action, row)">{{ action.label
-                  						}}</button>
-                					</div>
-              					</div>
-            				</template>
-          				</svws-ui-popover>
-        			</template>
+						<svws-ui-popover :hover="false" placement="left-end" :disable-click-away="false">
+							<template #trigger>
+								<button class="action-button">
+									<svws-ui-icon> <i-ri-more-2-fill /> </svws-ui-icon>
+								</button>
+							</template>
+							<template #content>
+								<div class="action-items">
+									<div v-for="action in actions" :key="action.action">
+										<button class="action-item" @click="onAction(action.action, row)">{{ action.label }}</button>
+									</div>
+								</div>
+							</template>
+						</svws-ui-popover>
+					</template>
 					<!-- Footer mit Button zum Hinzufügen einer Zeile -->
 					<template #footer>
 						<button
@@ -98,14 +95,10 @@
 						>
 							<svws-ui-icon><i-ri-add-line /></svws-ui-icon>
 						</button>
-						<button
-							class="flex h-10 w-10 items-center justify-center"
-						>
+						<button class="flex h-10 w-10 items-center justify-center">
 							<svws-ui-icon><i-ri-file-copy-line /></svws-ui-icon>
 						</button>
-						<button
-							class="flex h-10 w-10 items-center justify-center"
-						>
+						<button class="flex h-10 w-10 items-center justify-center">
 							<svws-ui-icon><i-ri-more-2-line /></svws-ui-icon>
 						</button>
 					</template>

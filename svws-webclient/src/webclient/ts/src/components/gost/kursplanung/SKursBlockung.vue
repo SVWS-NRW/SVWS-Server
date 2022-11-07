@@ -56,10 +56,10 @@
 				:class="{'bg-slate-500': schiene_gesperrt(schiene) }"
 				:style="{ 'background-color': schiene_gesperrt(schiene)? '':bgColor}"
 			>
-				<svws-ui-badge size="tiny" class="cursor-grab" :variant="fixier_regeln ? 'error' : 'highlight'">
+				<svws-ui-badge size="tiny" class="cursor-grab" :variant="fixier_regeln.length ? 'error' : 'highlight'">
 					{{ kurs_blockungsergebnis?.schueler.size() }}
 					<svws-ui-icon class="cursor-pointer" @click="fixieren_regel_toggle" >
-						<i-ri-pushpin-fill v-if="fixier_regeln" class="inline-block"/>
+						<i-ri-pushpin-fill v-if="fixier_regeln.length" class="inline-block"/>
 						<i-ri-pushpin-line v-else class="inline-block"/>
 					</svws-ui-icon>
 				</svws-ui-badge>
@@ -273,7 +273,7 @@ const regel_speichern = async (regel: GostBlockungRegel) => {
 	await app.dataKursblockung.patch_blockung_regel(regel)
 }
 
-const fixieren_regel_toggle = () => fixier_regeln.value ? fixieren_regel_entfernen() : fixieren_regel_hinzufuegen()
+const fixieren_regel_toggle = () => fixier_regeln.value.length ? fixieren_regel_entfernen() : fixieren_regel_hinzufuegen()
 const fixieren_regel_hinzufuegen = async () => {
 	const regel = await app.dataKursblockung.add_blockung_regel(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ)
 	if (!regel) return
@@ -316,6 +316,8 @@ function drop_aendere_kursschiene(drag_data: {kurs: GostBlockungsergebnisKurs; s
 	if (drag_data.kurs.id === kurs_blockungsergebnis.value?.id && schiene_id !== drag_data.schiene.id) {
 		if (fixier_regeln.value) fixieren_regel_entfernen()
 		app.dataKursblockungsergebnis.assignKursSchiene(drag_data.kurs.id, drag_data.schiene.id, schiene_id)
+		manager.value?.setKursSchiene(drag_data.kurs.id, drag_data.schiene.id, false);
+		manager.value?.setKursSchiene(drag_data.kurs.id, schiene_id, true);
 		// fixieren_regel_hinzufuegen()
 	}
 }
