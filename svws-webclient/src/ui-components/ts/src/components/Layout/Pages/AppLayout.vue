@@ -28,7 +28,7 @@
 	}
 
 	.app-layout--pattern {
-		background-image: url("/img/pattern.png");
+		background-image: url("../../../assets/img/pattern.png");
 		background-size: 12.5rem;
 
 		@apply absolute inset-0 z-20;
