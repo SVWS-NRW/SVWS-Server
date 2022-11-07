@@ -7,9 +7,10 @@ import { ENMLerngruppe, cast_de_nrw_schule_svws_core_data_enm_ENMLerngruppe } fr
 import { ENMLehrer, cast_de_nrw_schule_svws_core_data_enm_ENMLehrer } from '../../../core/data/enm/ENMLehrer';
 import { ENMSchueler, cast_de_nrw_schule_svws_core_data_enm_ENMSchueler } from '../../../core/data/enm/ENMSchueler';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
+import { ENMFoerderschwerpunkt, cast_de_nrw_schule_svws_core_data_enm_ENMFoerderschwerpunkt } from '../../../core/data/enm/ENMFoerderschwerpunkt';
+import { JavaLong, cast_java_lang_Long } from '../../../java/lang/JavaLong';
 import { ENMNote, cast_de_nrw_schule_svws_core_data_enm_ENMNote } from '../../../core/data/enm/ENMNote';
 import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
-import { ENMFoerderschwerpunkt, cast_de_nrw_schule_svws_core_data_enm_ENMFoerderschwerpunkt } from '../../../core/data/enm/ENMFoerderschwerpunkt';
 import { ENMFloskelgruppe, cast_de_nrw_schule_svws_core_data_enm_ENMFloskelgruppe } from '../../../core/data/enm/ENMFloskelgruppe';
 
 export class ENMDaten extends JavaObject {
@@ -26,7 +27,7 @@ export class ENMDaten extends JavaObject {
 
 	public publicKey : String | null = null;
 
-	public lehrerID : number = 0;
+	public lehrerID : Number | null = null;
 
 	public fehlstundenEingabe : boolean = false;
 
@@ -86,9 +87,7 @@ export class ENMDaten extends JavaObject {
 			 throw new Error('invalid json format, missing attribute aktuellerAbschnitt');
 		result.aktuellerAbschnitt = obj.aktuellerAbschnitt;
 		result.publicKey = typeof obj.publicKey === "undefined" ? null : obj.publicKey;
-		if (typeof obj.lehrerID === "undefined")
-			 throw new Error('invalid json format, missing attribute lehrerID');
-		result.lehrerID = obj.lehrerID;
+		result.lehrerID = typeof obj.lehrerID === "undefined" ? null : obj.lehrerID;
 		if (typeof obj.fehlstundenEingabe === "undefined")
 			 throw new Error('invalid json format, missing attribute fehlstundenEingabe');
 		result.fehlstundenEingabe = obj.fehlstundenEingabe;
@@ -161,7 +160,7 @@ export class ENMDaten extends JavaObject {
 		result += '"anzahlAbschnitte" : ' + obj.anzahlAbschnitte + ',';
 		result += '"aktuellerAbschnitt" : ' + obj.aktuellerAbschnitt + ',';
 		result += '"publicKey" : ' + ((!obj.publicKey) ? 'null' : '"' + obj.publicKey.valueOf() + '"') + ',';
-		result += '"lehrerID" : ' + obj.lehrerID + ',';
+		result += '"lehrerID" : ' + ((!obj.lehrerID) ? 'null' : obj.lehrerID.valueOf()) + ',';
 		result += '"fehlstundenEingabe" : ' + obj.fehlstundenEingabe + ',';
 		result += '"fehlstundenSIFachbezogen" : ' + obj.fehlstundenSIFachbezogen + ',';
 		result += '"fehlstundenSIIFachbezogen" : ' + obj.fehlstundenSIIFachbezogen + ',';
@@ -313,7 +312,7 @@ export class ENMDaten extends JavaObject {
 			result += '"publicKey" : ' + ((!obj.publicKey) ? 'null' : '"' + obj.publicKey.valueOf() + '"') + ',';
 		}
 		if (typeof obj.lehrerID !== "undefined") {
-			result += '"lehrerID" : ' + obj.lehrerID + ',';
+			result += '"lehrerID" : ' + ((!obj.lehrerID) ? 'null' : obj.lehrerID.valueOf()) + ',';
 		}
 		if (typeof obj.fehlstundenEingabe !== "undefined") {
 			result += '"fehlstundenEingabe" : ' + obj.fehlstundenEingabe + ',';

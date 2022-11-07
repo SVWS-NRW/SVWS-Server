@@ -43,9 +43,9 @@ public class ENMDaten {
 	@Schema(required = false, description = "Gibt den öffentlichen Schlüssel an, welcher für die Verschlüsselung und den Rückversand der Datei genutzt werden soll.", example="")
 	public String publicKey;
 	
-	/** Gibt die SVWS-ID des Lehrers an, für den die externe Notendatei generiert wurde. */
-	@Schema(required = true, description = "Gibt die SVWS-ID des Lehrers an, für den die externe Notendatei generiert wurde.", example="42")
-	public long lehrerID;
+	/** Gibt die SVWS-ID des Lehrers an, für den die externe Notendatei generiert wurde. Ist die ID = NULL, enthält das Objekt alle Lehrerdaten. */
+	@Schema(required = true, description = "Gibt die SVWS-ID des Lehrers an, für den die externe Notendatei generiert wurde. Ist die ID = NULL, enthält das Objekt alle Lehrerdaten.", example="42")
+	public Long lehrerID;
 
 	/** Gibt an, ob die Fehlstunden-Eingabe durch das externe Notenmodul erlaubt ist oder nicht. */
 	@Schema(required = true, description = "Gibt an, ob die Fehlstunden-Eingabe durch das externe Notenmodul erlaubt ist oder nicht. ", example="true")
