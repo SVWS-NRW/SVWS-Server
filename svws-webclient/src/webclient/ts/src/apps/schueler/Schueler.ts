@@ -1,4 +1,4 @@
-import { Erzieherart, FoerderschwerpunktEintrag, KatalogEintrag, SchuelerBetriebsdaten } from "@svws-nrw/svws-core-ts";
+import { Erzieherart, FoerderschwerpunktEintrag, KatalogEintrag, List, SchuelerBetriebsdaten, Vector } from "@svws-nrw/svws-core-ts";
 import { App } from "../BaseApp";
 import { ListSchueler } from "./ListSchueler";
 import { DataSchuelerStammdaten } from "./DataSchuelerStammdaten";
@@ -54,12 +54,12 @@ export class Schueler extends App {
 	public dataSchuelerAbschnittsdaten!: DataSchuelerAbschnittsdaten;
 
 	/** Der Katalog der Fahrschülerarten */
-	public katalogFahrschuelerarten: Array<KatalogEintrag> = [];
+	public katalogFahrschuelerarten: List<KatalogEintrag> = new Vector<KatalogEintrag>();
 	/** Der Katalog der Förderschwerpunkte */
-	public katalogFoerderschwerpunkte: Array<FoerderschwerpunktEintrag> = [];
+	public katalogFoerderschwerpunkte: List<FoerderschwerpunktEintrag> = new Vector<FoerderschwerpunktEintrag>();
 
 	/** Der Katalog für Erzieherarten eines Erziehers*/
-	public katalogErzieherarten: Array<Erzieherart> = [];
+	public katalogErzieherarten: List<Erzieherart> = new Vector<Erzieherart>();
 
 	/** Liste der Schülerbetriebe */
 	public listSchuelerbetriebe : ListSchuelerBetriebsdaten | undefined = undefined;
@@ -102,14 +102,8 @@ export class Schueler extends App {
 		this.betriebsStammdaten = new DataBetriebsstammdaten();
 		this.listSchuelerbetriebe.add_data(this.betriebsStammdaten);
 
-		this.katalogFahrschuelerarten = (
-			await App.api.getSchuelerFahrschuelerarten(App.schema)
-		).toArray(new Array<KatalogEintrag>());
-		this.katalogFoerderschwerpunkte = (
-			await App.api.getSchuelerFoerderschwerpunkte(App.schema)
-		).toArray(new Array<FoerderschwerpunktEintrag>());
-		this.katalogErzieherarten = (
-			await App.api.getErzieherArten(App.schema)
-		).toArray(new Array<Erzieherart>());
+		this.katalogFahrschuelerarten = await App.api.getSchuelerFahrschuelerarten(App.schema);
+		this.katalogFoerderschwerpunkte = await App.api.getSchuelerFoerderschwerpunkte(App.schema);
+		this.katalogErzieherarten = await App.api.getErzieherArten(App.schema);
 	}
 }

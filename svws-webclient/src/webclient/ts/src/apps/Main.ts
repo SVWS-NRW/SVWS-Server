@@ -1,4 +1,4 @@
-import { ApiSchema, ApiServer, LehrerKatalogBeschaeftigungsartEintrag, List, ReligionEintrag, Vector } from "@svws-nrw/svws-core-ts";
+import { ApiSchema, ApiServer, List, ReligionEintrag, Vector } from "@svws-nrw/svws-core-ts";
 import {
 	DBSchemaListeEintrag,
 	Schuljahresabschnitt,
@@ -241,51 +241,13 @@ export class Main {
 			}
 		}
 		const o = App.schema;
-		this._pending.push(
-			App.api
-				.getOrte(o)
-				.then(
-					r =>
-						(this.kataloge.orte = r)
-				)
-		);
-		this._pending.push(
-			App.api
-				.getOrtsteile(o)
-				.then(
-					r =>
-						(this.kataloge.ortsteile = r)
-				)
-		);
-		this._pending.push(
-			App.api
-				.getReligionen(o)
-				.then(
-					r =>
-					(this.kataloge.religionen = r
-					)
-				)
-		);
-		this._pending.push(
-			App.api
-				.getHaltestellen(o)
-				.then(
-					r =>
-						(this.kataloge.haltestellen = r)
-				)
-		);
-		this._pending.push(
-			App.api
-				.getKatalogBeschaeftigungsart(o)
-				.then(
-					r =>
-						(this.kataloge.beschaeftigungsarten = r)
-				)
-		);
+		this._pending.push(App.api.getOrte(o).then(r => this.kataloge.orte = r));
+		this._pending.push(App.api.getOrtsteile(o).then(r => this.kataloge.ortsteile = r));
+		this._pending.push(App.api.getReligionen(o).then(r => this.kataloge.religionen = r));
+		this._pending.push(App.api.getHaltestellen(o).then(r => this.kataloge.haltestellen = r));
+		this._pending.push(App.api.getKatalogBeschaeftigungsart(o).then(r => this.kataloge.beschaeftigungsarten = r));
 
-		const prom = Promise.all(this._pending)
-			.finally(() => (this.config.selected_app = "Schueler"));
-
+		const prom = Promise.all(this._pending).finally(() => (this.config.selected_app = "Schueler"));
 		this.config.apiLoadingStatus.addStatusByPromise(
 			prom,
 			{
@@ -312,7 +274,6 @@ export class Main {
 	 */
 	public logout(): void {
 		this.config.selected_app = "Schueler";
-		//this.connection = new Connection();
 		this.connectTo(this.hostname);
 	}
 }
@@ -321,9 +282,7 @@ export const mainApp = new Main();
 
 function requireInjection<T>(key: InjectionKey<T>, defaultValue?: T) {
 	const resolved = inject(key, defaultValue);
-	if (!resolved) {
-		throw new Error(`${key} was not provided.`);
-	}
+	if (!resolved) throw new Error(`${key} was not provided.`);
 	return resolved;
 }
 
