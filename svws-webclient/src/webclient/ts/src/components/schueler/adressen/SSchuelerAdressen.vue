@@ -9,7 +9,7 @@
 			<s-card-schueler-beschaeftigung />
 			<s-card-schueler-adresse />
 		</div>
-		<div v-else><h1><strong><center>Noch kein Schülerbetrieb vorhanden</center></strong> </h1></div>
+		<div v-else><h1><strong><div style="text-align: center;">Noch kein Schülerbetrieb vorhanden</div></strong> </h1></div>
 	</div>
 </template>
 
