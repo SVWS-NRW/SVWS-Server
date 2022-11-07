@@ -273,103 +273,163 @@ public enum BenutzerKompetenz {
 
     /** Es werden Rechte zur Durchführung der Laufbahnplanung (allgemein) benötigt. */
     OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN(new BenutzerKompetenzKatalogEintrag(
-        181, BenutzerKompetenzGruppe.OBERSTUFE, "Laufbahnplanung (allgemein)"
+        161, BenutzerKompetenzGruppe.OBERSTUFE_LAUFBAHNPLANUNG, "Laufbahnplanung (allgemein)"
     )),
-    
+
     /** Es werden Rechte zur Durchführung der Laufbahnplanung (stufenbezogen) benötigt. */
-    OBERSTUFE_LAUFBAHNPLANUNG_STUFE(new BenutzerKompetenzKatalogEintrag(
-        182, BenutzerKompetenzGruppe.OBERSTUFE, "Laufbahnplanung (stufenbezogen)"
+    OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN(new BenutzerKompetenzKatalogEintrag(
+        162, BenutzerKompetenzGruppe.OBERSTUFE_LAUFBAHNPLANUNG, "Laufbahnplanung (funktionsbezogen)"
     )),
-    
+
     /** Es werden Rechte zum Import von Laufbahnpdaten aus LuPO benötigt. */
     OBERSTUFE_LUPO_IMPORT(new BenutzerKompetenzKatalogEintrag(
-        183, BenutzerKompetenzGruppe.OBERSTUFE, "Laufbahnplanung aus LuPO importieren"
+        163, BenutzerKompetenzGruppe.OBERSTUFE_LAUFBAHNPLANUNG, "Laufbahnplanung aus LuPO importieren"
     )),
-    
+
     /** Es werden Rechte zur Kursverwaltung - Blocken (allgemein) benötigt. */
-    OBERSTUFE_BLOCKEN_ALLGEMEIN(new BenutzerKompetenzKatalogEintrag(
-        184, BenutzerKompetenzGruppe.OBERSTUFE, "Kursverwaltung - Blocken (allgemein)"
+    OBERSTUFE_KURSPLANUNG_ALLGEMEIN(new BenutzerKompetenzKatalogEintrag(
+        171, BenutzerKompetenzGruppe.OBERSTUFE_KURSPLANUNG, "Kursverwaltung - Blocken (allgemein)"
     )),
-    
+
     /** Es werden Rechte zur Kursverwaltung - Blocken (stufenbezogen) benötigt. */
-    OBERSTUFE_BLOCKEN_STUFE(new BenutzerKompetenzKatalogEintrag(
-        185, BenutzerKompetenzGruppe.OBERSTUFE, "Kursverwaltung - Blocken (stufenbezogen)"
+    OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN(new BenutzerKompetenzKatalogEintrag(
+        172, BenutzerKompetenzGruppe.OBERSTUFE_KURSPLANUNG, "Kursverwaltung - Blocken (funktionsbezogen)"
     )),
-    
+
     /** Es werden Rechte zur Aktivierung einer Blockung benötigt. */
-    OBERSTUFE_BLOCKUNG_AKTIVIEREN(new BenutzerKompetenzKatalogEintrag(
-        186, BenutzerKompetenzGruppe.OBERSTUFE, "Kursverwaltung - Blockung aktivieren"
+    OBERSTUFE_KURSPLANUNG_BLOCKUNG_AKTIVIEREN(new BenutzerKompetenzKatalogEintrag(
+        173, BenutzerKompetenzGruppe.OBERSTUFE_KURSPLANUNG, "Kursverwaltung - Blockung aktivieren"
     )),
-    
+
     /** Es werden Rechte zur Bearbeitung einer Klausurplanung benötigt. */
     OBERSTUFE_KLAUSURPLANUNG_AENDERN(new BenutzerKompetenzKatalogEintrag(
-        187, BenutzerKompetenzGruppe.OBERSTUFE, "Klausurplanung ändern"
+        181, BenutzerKompetenzGruppe.OBERSTUFE_KLAUSURPLANUNG, "Klausurplanung ändern"
     )),
-    
+
     /** Es werden Rechte zum Ansehen einer Klausurplanung (allgemein) benötigt. */
     OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN(new BenutzerKompetenzKatalogEintrag(
-        188, BenutzerKompetenzGruppe.OBERSTUFE, "Klausurplanung ansehen (allgemein)"
+        182, BenutzerKompetenzGruppe.OBERSTUFE_KLAUSURPLANUNG, "Klausurplanung ansehen (allgemein)"
     )),
-    
+
     /** Es werden Rechte zum Ansehen einer Klausurplanung (funktionsbezogen) benötigt. */
     OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION(new BenutzerKompetenzKatalogEintrag(
-        189, BenutzerKompetenzGruppe.OBERSTUFE, "Klausurplanung ansehen (funktionsbezogen)"
+        183, BenutzerKompetenzGruppe.OBERSTUFE_KLAUSURPLANUNG, "Klausurplanung ansehen (funktionsbezogen)"
     )),
-    
+
     /** Berechtigung zum Ansehen von Abiturdaten der Oberstufe (allgemein). */
     ABITUR_ANSEHEN_ALLGEMEIN(new BenutzerKompetenzKatalogEintrag(
         191, BenutzerKompetenzGruppe.ABITUR, "Abiturdaten ansehen (allgemein)"
     )),
-    
-    /** Berechtigung zum Ansehen von Abiturdaten der Oberstufe (stufenbezogen). */
-    ABITUR_ANSEHEN_STUFENBEZOGEN(new BenutzerKompetenzKatalogEintrag(
-        192, BenutzerKompetenzGruppe.ABITUR, "Abiturdaten ansehen (stufenbezogen)"
+
+    /** Berechtigung zum Ansehen von Abiturdaten der Oberstufe (funktionsbezogen). */
+    ABITUR_ANSEHEN_FUNKTIONSBEZOGEN(new BenutzerKompetenzKatalogEintrag(
+        192, BenutzerKompetenzGruppe.ABITUR, "Abiturdaten ansehen (funktionsbezogen)"
     )),
-    
+
     /** Berechtigung zum Ändern aller Daten zum Abitur (allgemein). */
     ABITUR_AENDERN_ALLGEMEIN(new BenutzerKompetenzKatalogEintrag(
         193, BenutzerKompetenzGruppe.ABITUR, "Abiturdaten ändern (allgemein)"
     )),
-    
-    /** Berechtigung zum Ändern aller Daten zum Abitur (stufenbezogen). */
-    ABITUR_AENDERN_STUFENBEZOGEN(new BenutzerKompetenzKatalogEintrag(
-        194, BenutzerKompetenzGruppe.ABITUR, "Abiturdaten ändern (stufenbezogen)"
+
+    /** Berechtigung zum Ändern aller Daten zum Abitur (funktionsbezogen). */
+    ABITUR_AENDERN_FUNKTIONSBEZOGEN(new BenutzerKompetenzKatalogEintrag(
+        194, BenutzerKompetenzGruppe.ABITUR, "Abiturdaten ändern (funktionsbezogen)"
     )),
-    
+
     /** Berechtigung zum Eingeben von Prüfungsergebnissen (allgemein). */
     ABITUR_EINGABE_ERGEBNISSE_ALLGEMEIN(new BenutzerKompetenzKatalogEintrag(
         195, BenutzerKompetenzGruppe.ABITUR, "Prüfungsergebnisse eingeben (allgemein)"
     )),
-    
-    /** Berechtigung zum Eingeben von Prüfungsergebnissen (stufenbezogen). */
-    ABITUR_EINGABE_ERGEBNISSE_STUFENBEZOGEN(new BenutzerKompetenzKatalogEintrag(
-        196, BenutzerKompetenzGruppe.ABITUR, "Prüfungsergebnisse eingeben (stufenbezogen)"
+
+    /** Berechtigung zum Eingeben von Prüfungsergebnissen (funktionsbezogen). */
+    ABITUR_EINGABE_ERGEBNISSE_FUNKTIONSBEZOGEN(new BenutzerKompetenzKatalogEintrag(
+        196, BenutzerKompetenzGruppe.ABITUR, "Prüfungsergebnisse eingeben (funktionsbezogen)"
     )),
-    
+
     /** Es werden Rechte zum Ansehen der Adressdaten eines von Erziehungsberechtigten benötigt*/
     ADRESSDATEN_ERZIEHER_ANSEHEN(new BenutzerKompetenzKatalogEintrag(
     	201, BenutzerKompetenzGruppe.CARDDAV, "Ansehen"
     )), 
-    
+
     /** Allgemeine Berechtigung für das Einsehen von Adressdaten über die CardDav API */
     ADRESSDATEN_ANSEHEN(new BenutzerKompetenzKatalogEintrag(
     	202, BenutzerKompetenzGruppe.CARDDAV, "Ansehen"
     )),
-    
+
     /** Allgemeine Berechtigung für den Zugriff auf die CalDav API */
     KALENDER_ANSEHEN(new BenutzerKompetenzKatalogEintrag(
 		301, BenutzerKompetenzGruppe.CALDAV, "Ansehen"
 	)), 
-    
+
     /** Berechtigung für den Besitz und das Bearbeiten eines eigenen Kalenders über die CalDav API. */
     EIGENEN_KALENDER_BEARBEITEN(
 		new BenutzerKompetenzKatalogEintrag(302, BenutzerKompetenzGruppe.CALDAV, "Bearbeiten"
 	)), 
-    
+
     /** Allgemeine Berechtigung zum Ansehen generierter Kalender abhängig von der Funktion des Nutzers */
     KALENDER_FUNKTIONSBEZOGEN_ANSEHEN(
 		new BenutzerKompetenzKatalogEintrag(303, BenutzerKompetenzGruppe.CALDAV, "Ansehen"
-	));
+	)),
+
+    /** Berechtigung zum Ansehen von Abschlussdaten der Sekundarstufe I (allgemein). */
+    ABSCHLUSS_SEKI_ANSEHEN_ALLGEMEIN(new BenutzerKompetenzKatalogEintrag(
+        401, BenutzerKompetenzGruppe.ABSCHLUSS_SEKI, "Abschlussdaten ansehen (allgemein)"
+    )),
+
+    /** Berechtigung zum Ansehen von Abschlussdaten der Sekundarstufe I (funktionsbezogen). */
+    ABSCHLUSS_SEKI_ANSEHEN_FUNKTIONSBEZOGEN(new BenutzerKompetenzKatalogEintrag(
+        402, BenutzerKompetenzGruppe.ABSCHLUSS_SEKI, "Abschlussdaten ansehen (funktionsbezogen)"
+    )),
+
+    /** Berechtigung zum Ändern aller Abschlussdaten der Sekundarstufe I (allgemein). */
+    ABSCHLUSS_SEKI_AENDERN_ALLGEMEIN(new BenutzerKompetenzKatalogEintrag(
+        403, BenutzerKompetenzGruppe.ABSCHLUSS_SEKI, "Abschlussdaten ändern (allgemein)"
+    )),
+
+    /** Berechtigung zum Ändern aller Abschlussdaten der Sekundarstufe I (funktionsbezogen). */
+    ABSCHLUSS_SEKI_AENDERN_FUNKTIONSBEZOGEN(new BenutzerKompetenzKatalogEintrag(
+        404, BenutzerKompetenzGruppe.ABSCHLUSS_SEKI, "Abschlussdaten ändern (funktionsbezogen)"
+    )),
+
+    /** Berechtigung zum Eingeben von Prüfungsergebnissen (allgemein). */
+    ABSCHLUSS_SEKI_EINGABE_ERGEBNISSE_ALLGEMEIN(new BenutzerKompetenzKatalogEintrag(
+        405, BenutzerKompetenzGruppe.ABSCHLUSS_SEKI, "Prüfungsergebnisse eingeben (allgemein)"
+    )),
+
+    /** Berechtigung zum Eingeben von Prüfungsergebnissen (funktionsbezogen). */
+    ABSCHLUSS_SEKI_EINGABE_ERGEBNISSE_FUNKTIONSBEZOGEN(new BenutzerKompetenzKatalogEintrag(
+        406, BenutzerKompetenzGruppe.ABSCHLUSS_SEKI, "Prüfungsergebnisse eingeben (funktionsbezogen)"
+    )),
+
+    /** Berechtigung zum Ansehen von Abschlussdaten an einer berufsbildenden Schule (allgemein). */
+    ABSCHLUSS_BK_ANSEHEN_ALLGEMEIN(new BenutzerKompetenzKatalogEintrag(
+        501, BenutzerKompetenzGruppe.ABSCHLUSS_BK, "Abschlussdaten ansehen (allgemein)"
+    )),
+
+    /** Berechtigung zum Ansehen von Abschlussdaten an einer berufsbildenden Schule (funktionsbezogen). */
+    ABSCHLUSS_BK_ANSEHEN_FUNKTIONSBEZOGEN(new BenutzerKompetenzKatalogEintrag(
+        502, BenutzerKompetenzGruppe.ABSCHLUSS_BK, "Abschlussdaten ansehen (funktionsbezogen)"
+    )),
+
+    /** Berechtigung zum Ändern aller Abschlussdaten an einer berufsbildenden Schule (allgemein). */
+    ABSCHLUSS_BK_AENDERN_ALLGEMEIN(new BenutzerKompetenzKatalogEintrag(
+        503, BenutzerKompetenzGruppe.ABSCHLUSS_BK, "Abschlussdaten ändern (allgemein)"
+    )),
+
+    /** Berechtigung zum Ändern aller Abschlussdaten an einer berufsbildenden Schule (funktionsbezogen). */
+    ABSCHLUSS_BK_AENDERN_FUNKTIONSBEZOGEN(new BenutzerKompetenzKatalogEintrag(
+        504, BenutzerKompetenzGruppe.ABSCHLUSS_BK, "Abschlussdaten ändern (funktionsbezogen)"
+    )),
+
+    /** Berechtigung zum Eingeben von Prüfungsergebnissen (allgemein). */
+    ABSCHLUSS_BK_EINGABE_ERGEBNISSE_ALLGEMEIN(new BenutzerKompetenzKatalogEintrag(
+        505, BenutzerKompetenzGruppe.ABSCHLUSS_BK, "Prüfungsergebnisse eingeben (allgemein)"
+    )),
+
+    /** Berechtigung zum Eingeben von Prüfungsergebnissen (funktionsbezogen). */
+    ABSCHLUSS_BK_EINGABE_ERGEBNISSE_FUNKTIONSBEZOGEN(new BenutzerKompetenzKatalogEintrag(
+        506, BenutzerKompetenzGruppe.ABSCHLUSS_BK, "Prüfungsergebnisse eingeben (funktionsbezogen)"
+    ));
 
 
 	/** Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. */

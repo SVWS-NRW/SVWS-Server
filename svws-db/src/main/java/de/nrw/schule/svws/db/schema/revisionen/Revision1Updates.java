@@ -2504,7 +2504,7 @@ public class Revision1Updates extends SchemaRevisionUpdateSQL {
             " FROM " + Schema.tab_BenutzergruppenKompetenzen.name() +
             " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN.daten.id + ", " + BenutzerKompetenz.ADMIN.daten.id + ")" +
             " UNION " +
-            "SELECT Gruppe_ID, " + BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_STUFE.daten.id + 
+            "SELECT Gruppe_ID, " + BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN.daten.id + 
             " FROM " + Schema.tab_BenutzergruppenKompetenzen.name() + 
             " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN.daten.id + ", " + BenutzerKompetenz.ADMIN.daten.id + ")" +
             " UNION " +
@@ -2512,15 +2512,15 @@ public class Revision1Updates extends SchemaRevisionUpdateSQL {
             " FROM " + Schema.tab_BenutzergruppenKompetenzen.name() + 
             " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN.daten.id + ", " + BenutzerKompetenz.ADMIN.daten.id + ")" +
             " UNION " +
-            "SELECT Gruppe_ID, " + BenutzerKompetenz.OBERSTUFE_BLOCKEN_ALLGEMEIN.daten.id + 
+            "SELECT Gruppe_ID, " + BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN.daten.id + 
             " FROM " + Schema.tab_BenutzergruppenKompetenzen.name() + 
             " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN.daten.id + ", " + BenutzerKompetenz.ADMIN.daten.id + ")" +
             " UNION " +
-            "SELECT Gruppe_ID, " + BenutzerKompetenz.OBERSTUFE_BLOCKEN_STUFE.daten.id + 
+            "SELECT Gruppe_ID, " + BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN.daten.id + 
             " FROM " + Schema.tab_BenutzergruppenKompetenzen.name() + 
             " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN.daten.id + ", " + BenutzerKompetenz.ADMIN.daten.id + ")" +
             " UNION " +
-            "SELECT Gruppe_ID, " + BenutzerKompetenz.OBERSTUFE_BLOCKUNG_AKTIVIEREN.daten.id + 
+            "SELECT Gruppe_ID, " + BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_BLOCKUNG_AKTIVIEREN.daten.id + 
             " FROM " + Schema.tab_BenutzergruppenKompetenzen.name() + 
             " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN.daten.id + ", " + BenutzerKompetenz.ADMIN.daten.id + ")" +
             " UNION " +
@@ -2543,7 +2543,7 @@ public class Revision1Updates extends SchemaRevisionUpdateSQL {
             " FROM " + Schema.tab_BenutzergruppenKompetenzen.name() +
             " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN.daten.id + ", " + BenutzerKompetenz.ADMIN.daten.id + ")" +
             " UNION " +
-            "SELECT Gruppe_ID, " + BenutzerKompetenz.ABITUR_ANSEHEN_STUFENBEZOGEN.daten.id + 
+            "SELECT Gruppe_ID, " + BenutzerKompetenz.ABITUR_ANSEHEN_FUNKTIONSBEZOGEN.daten.id + 
             " FROM " + Schema.tab_BenutzergruppenKompetenzen.name() + 
             " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN.daten.id + ", " + BenutzerKompetenz.ADMIN.daten.id + ")" +
             " UNION " +
@@ -2551,7 +2551,7 @@ public class Revision1Updates extends SchemaRevisionUpdateSQL {
             " FROM " + Schema.tab_BenutzergruppenKompetenzen.name() + 
             " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN.daten.id + ", " + BenutzerKompetenz.ADMIN.daten.id + ")" +
             " UNION " +
-            "SELECT Gruppe_ID, " + BenutzerKompetenz.ABITUR_AENDERN_STUFENBEZOGEN.daten.id + 
+            "SELECT Gruppe_ID, " + BenutzerKompetenz.ABITUR_AENDERN_FUNKTIONSBEZOGEN.daten.id + 
             " FROM " + Schema.tab_BenutzergruppenKompetenzen.name() + 
             " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN.daten.id + ", " + BenutzerKompetenz.ADMIN.daten.id + ")" +
             " UNION " +
@@ -2559,7 +2559,7 @@ public class Revision1Updates extends SchemaRevisionUpdateSQL {
             " FROM " + Schema.tab_BenutzergruppenKompetenzen.name() + 
             " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN.daten.id + ", " + BenutzerKompetenz.ADMIN.daten.id + ")" +
             " UNION " +
-            "SELECT Gruppe_ID, " + BenutzerKompetenz.ABITUR_EINGABE_ERGEBNISSE_STUFENBEZOGEN.daten.id + 
+            "SELECT Gruppe_ID, " + BenutzerKompetenz.ABITUR_EINGABE_ERGEBNISSE_FUNKTIONSBEZOGEN.daten.id + 
             " FROM " + Schema.tab_BenutzergruppenKompetenzen.name() +
             " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN.daten.id + ", " + BenutzerKompetenz.ADMIN.daten.id + ")",
             Schema.tab_BenutzergruppenKompetenzen

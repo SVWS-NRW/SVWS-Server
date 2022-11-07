@@ -24,7 +24,7 @@ public enum BenutzerKompetenzGruppe {
     SCHUELER_LEISTUNGSDATEN(new BenutzerKompetenzGruppenKatalogEintrag(200, "Schüler Leistungsdaten", 1, 2)),
     
     /** Gruppe für Rechte für Berichte. */
-    BERICHTE(new BenutzerKompetenzGruppenKatalogEintrag(300, "Berichte", 2, 1)),
+    BERICHTE(new BenutzerKompetenzGruppenKatalogEintrag(300, "Berichte", 2, 3)),
     
     /** Gruppe für Rechte für den Import/Export von Daten. */
     IMPORT_EXPORT(new BenutzerKompetenzGruppenKatalogEintrag(400, "Import/Export", 3, 1)),
@@ -56,17 +56,29 @@ public enum BenutzerKompetenzGruppe {
     /** Gruppe für Rechte bezüglich des Datenbank-Managements. */
     DATENBANK(new BenutzerKompetenzGruppenKatalogEintrag(1400, "Datenbank-Management", 4, 3)),
 
-    /** Gruppe für Rechte bezüglich der Oberstufe. */
-    OBERSTUFE(new BenutzerKompetenzGruppenKatalogEintrag(1800, "Oberstufenplanung", 5, 1)),
+    /** Gruppe für Rechte bezüglich der Laufbahnplanung der Gymnasialen Oberstufe. */
+    OBERSTUFE_LAUFBAHNPLANUNG(new BenutzerKompetenzGruppenKatalogEintrag(1600, "Oberstufe - Laufbahnplanung", 5, 1)),
+    
+    /** Gruppe für Rechte bezüglich der Kursplanung der Gymnasialen Oberstufe. */
+    OBERSTUFE_KURSPLANUNG(new BenutzerKompetenzGruppenKatalogEintrag(1700, "Oberstufe - Kursplanung", 5, 2)),
+    
+    /** Gruppe für Rechte bezüglich der Klausurplanung der Gymnasialen Oberstufe. */
+    OBERSTUFE_KLAUSURPLANUNG(new BenutzerKompetenzGruppenKatalogEintrag(1800, "Oberstufe - -Klausurplanung", 5, 3)),
     
     /** Gruppe für Rechte bezüglich des Abiturs. */
-    ABITUR(new BenutzerKompetenzGruppenKatalogEintrag(1900, "Abitur", 5, 2)),
+    ABITUR(new BenutzerKompetenzGruppenKatalogEintrag(1900, "Abitur", 5, 4)),
     
     /** Gruppe für Rechte bezüglich des Adressbuchs. */
     CARDDAV(new BenutzerKompetenzGruppenKatalogEintrag(2000, "Addressbuch (CardDAV)", 1, 4)),
     
     /** Gruppe für Rechte bezüglich der Kalender. */
-    CALDAV(new BenutzerKompetenzGruppenKatalogEintrag(3000, "Kalender (CaldDAV)", 1, 5));
+    CALDAV(new BenutzerKompetenzGruppenKatalogEintrag(3000, "Kalender (CaldDAV)", 1, 5)),
+    /** Gruppe für Rechte für die Abschlussberechnung in der Sekundarstufe I. */
+    ABSCHLUSS_SEKI(new BenutzerKompetenzGruppenKatalogEintrag(4000, "Abschlussberechnung Sek I", 2, 1)),
+
+    /** Gruppe für Rechte für die Abschlussberechnung an berufsbildenden Schulen. */
+    ABSCHLUSS_BK(new BenutzerKompetenzGruppenKatalogEintrag(5000, "Abschlussberechnung berufsbildende Schule", 2, 2));
+
 
 
 	/** Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. */
