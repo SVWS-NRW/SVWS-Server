@@ -21,7 +21,6 @@
 	const props = defineProps({
 		tag: { type: String, default: "div" },
 		draggable: { type: Boolean, default: true },
-		type: { type: String, default: "data" },
 		data: { type: Object, required: true }
 	});
 
@@ -38,7 +37,7 @@
 	function start(e: DragEvent) {
 		const transfer = e.dataTransfer;
 		if (!transfer) return;
-		transfer.setData(props.type, JSON.stringify(props.data));
+		transfer.setData('text/plain', JSON.stringify(props.data));
 		if (main) {
 			main.config.drag_and_drop_data = props.data;
 		}

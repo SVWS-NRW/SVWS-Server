@@ -11,9 +11,9 @@
 			{{ anzahl_schueler }} Schüler
 		</td>
 		<s-kurs-schueler-schiene-kurs
-			v-for="k of getSchieneKurseArray"
-			:key="k.id"
-			:kurs="k"
+			v-for="kurs of getSchieneKurse"
+			:key="kurs.id"
+			:kurs="kurs"
 			:schueler="selected"
 		/>
 	</tr>
@@ -21,7 +21,7 @@
 
 <script setup lang="ts">
 	import {
-GostBlockungSchiene,
+		GostBlockungSchiene,
 		GostBlockungsergebnisKurs,
 		GostBlockungsergebnisManager,
 		GostBlockungsergebnisSchiene,
@@ -47,24 +47,17 @@ GostBlockungSchiene,
 	const app = main.apps.gost;
 
 	const manager: ComputedRef<GostBlockungsergebnisManager | undefined> =
-		computed(() => {
-			return app.dataKursblockungsergebnis.manager;
-		});
+		computed(() => app.dataKursblockungsergebnis.manager);
 
-	const anzahl_schueler: ComputedRef<number> = computed(() => {
-		return manager.value?.getOfSchieneAnzahlSchueler(props.schiene.id) || 0;
-	});
-	
-	const schiene_g: ComputedRef<GostBlockungSchiene | undefined> = computed(() =>
-		manager.value?.getSchieneG(props.schiene.id)
-		)
-		
-	const schiene_hat_kollisionen: ComputedRef<boolean> = computed(() => 
-  	manager.value?.getOfSchieneHatKollision(props.schiene.id) || false
-	)
+	const anzahl_schueler: ComputedRef<number> =
+		computed(() => manager.value?.getOfSchieneAnzahlSchueler(props.schiene.id) || 0);
 
-	const getSchieneKurseArray: ComputedRef<GostBlockungsergebnisKurs[]> = computed(()=> {
-		return props.schiene.kurse.toArray(new Array<GostBlockungsergebnisKurs>())
-	}
-	)
+	const schiene_g: ComputedRef<GostBlockungSchiene | undefined> =
+		computed(() => manager.value?.getSchieneG(props.schiene.id))
+
+	const schiene_hat_kollisionen: ComputedRef<boolean> =
+		computed(() => manager.value?.getOfSchieneHatKollision(props.schiene.id) || false)
+
+	const getSchieneKurse: ComputedRef<Vector<GostBlockungsergebnisKurs>> =
+		computed(()=> props.schiene.kurse)
 </script>

@@ -2,15 +2,13 @@
 		<drop-data 
 			class="border border-[#7f7f7f]/20 text-center"
 			:class="{'bg-yellow-200': is_drop_zone }"
-				type="schiene"
-				tag="td"
-				@drop="regel_schiene($event)"
-				@drag-over="drag_over($event)"
+			tag="td"
+			@drop="regel_schiene($event)"
+			@drag-over="drag_over($event)"
 			>
 			<drag-data
 				:key="schiene.id"
 				tag="div"
-				type="schiene"
 				:data="{schiene}"
 				class="select-none cursor-grab"
 				:draggable="true" 

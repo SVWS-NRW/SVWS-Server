@@ -2,7 +2,6 @@
 	<drag-data
 		:key="kurs.id"
 		tag="td"
-		type="kurs"
 		:data="{
 			id: kurs.id,
 			fachID: kurs.fachID,
@@ -19,7 +18,6 @@
 		}"
 	>
 		<drop-data
-			type="kurs"
 			@drop="drop_aendere_kurszuordnung($event, kurs.id)"
 			@drag-over="drag_over($event, kurs)"
 		>

@@ -7,7 +7,6 @@
 		<drag-data
 			:key="kursid"
 			tag="td"
-			type="kurs"
 			:data="{ id: kursid, fachID: fach.fachID, kursart: kursartid }"
 			class="select-none px-2"
 			:class="{'bg-slate-100': belegung, 'cursor-default':!!belegung}"

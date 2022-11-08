@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-content-card title="Schüler und Kurszuordnungen" v-if="schueler?.length">
+	<svws-ui-content-card title="Schüler und Kurszuordnungen" v-if="visible">
 	<div class="flex flex-row gap-4">
 		<div class="flex-none">
 			<div class="sticky">
@@ -37,7 +37,6 @@
 		<drop-data
 			v-if="selected"
 			v-slot="{ active }"
-			type="kurs"
 			class="w-40 flex-none"
 			@drop="drop_entferne_kurszuordnung"
 			@drag-over="drag_over($event)"
@@ -95,6 +94,9 @@ import { injectMainApp, Main } from "~/apps/Main";
 const main: Main = injectMainApp();
 const app = main.apps.gost;
 
+const visible: ComputedRef<boolean> =
+	computed(()=> !!manager.value && !manager.value.getOfSchuelerAlleFachwahlenNichtZugeordnet())
+
 const manager: ComputedRef<GostBlockungsergebnisManager | undefined> =
 	computed(() => app.dataKursblockungsergebnis.manager);
 
@@ -105,7 +107,7 @@ const kurse: ComputedRef<List<GostBlockungKurs>> =
 	computed(() => app.dataKursblockung.manager?.getKursmengeSortiertNachKursartFachNummer()
 		|| new Vector<GostBlockungKurs>())
 
-const schienen: ComputedRef<List<GostBlockungsergebnisSchiene>> = 
+const schienen: ComputedRef<List<GostBlockungsergebnisSchiene>> =
 	computed(() => manager.value?.getMengeAllerSchienen() || new Vector<GostBlockungsergebnisSchiene>())
 
 const schueler: ComputedRef<Array<SchuelerListeEintrag> | undefined> =
