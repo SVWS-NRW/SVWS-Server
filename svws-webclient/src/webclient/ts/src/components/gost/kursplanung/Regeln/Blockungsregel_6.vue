@@ -59,7 +59,7 @@
 			</div>
 			<div v-for="r in regeln" :key="r.id" class="flex justify-between">
 				<div class="cursor-pointer" @click="regel = (regel !== r) ? r:undefined" :class="{'bg-slate-200':r===regel}">
-					{{GostKursart.fromID(r.parameter.get(0).valueOf()).beschreibung}}, von Schiene {{r.parameter.get(1)}} bis {{r.parameter.get(2)}} gesperrt
+					{{GostKursart.fromID(r.parameter.get(0).valueOf()).beschreibung}} alleine in Schiene {{r.parameter.get(1)}} bis {{r.parameter.get(2)}}
 				</div>
 				<svws-ui-icon v-if="allow_regeln" type="danger" class="cursor-pointer" @click="regel_entfernen(r)">
 					<i-ri-delete-bin-2-line />
