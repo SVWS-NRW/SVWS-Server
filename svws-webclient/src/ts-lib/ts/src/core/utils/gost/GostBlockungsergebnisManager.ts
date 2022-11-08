@@ -737,6 +737,15 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert TRUE, falls alle Schüler-Fachwahlen noch nicht zugeordnet sind.
+	 * 
+	 * @return TRUE, falls alle Schüler-Fachwahlen noch nicht zugeordnet sind.
+	 */
+	public getOfSchuelerAlleFachwahlenNichtZugeordnet() : boolean {
+		return this._ergebnis.bewertung.anzahlSchuelerNichtZugeordnet === this._parent.daten().fachwahlen.size();
+	}
+
+	/**
 	 * Liefert die Map die jedem Fach eines Schülers seinen Kurs zuordnet (oder null).
 	 * 
 	 * @param  pSchuelerID Die Datenbank-ID des Schülers.

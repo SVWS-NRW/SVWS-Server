@@ -49,9 +49,6 @@ public class GostBlockungsergebnisManager {
 	/** Schüler-ID --> Set<GostBlockungsergebnisKurs> */
 	private final @NotNull HashMap<@NotNull Long, @NotNull HashSet<@NotNull GostBlockungsergebnisKurs>> _map_schuelerID_kurse = new HashMap<>();
 
-//	/** Schüler-ID */
-//	private final @NotNull HashSet<@NotNull Long> _set_schuelerID = new HashSet<>();
-
 	/** Schüler-ID --> Integer (Kollisionen) */
 	private final @NotNull HashMap<@NotNull Long, @NotNull Integer> _map_schuelerID_kollisionen = new HashMap<>();
 
@@ -108,13 +105,8 @@ public class GostBlockungsergebnisManager {
 		_parent = pParent;
 		_ergebnis = new GostBlockungsergebnis();
 		stateClear(pErgebnis);
-		// Idee1: Trennen in Maps erstellen und revalidate
-		// "stateRevalidate": Alles neubewerten anhand der Daten von _ergebnis 
 	}
 
-//	private void stateRevalidate() {
-//	}
-	
 	private void stateClear(GostBlockungsergebnis pErgebnis) {
 		_ergebnis.id = (pErgebnis == null) ? -1 : pErgebnis.id;
 		_ergebnis.blockungID = _parent.getID();
@@ -868,6 +860,15 @@ public class GostBlockungsergebnisManager {
 		if (anzahl == null)
 			throw new NullPointerException("Schüler-ID " + pSchuelerID + " unbekannt!");
 		return anzahl;
+	}
+
+	/**
+	 * Liefert TRUE, falls alle Schüler-Fachwahlen noch nicht zugeordnet sind.
+	 * 
+	 * @return TRUE, falls alle Schüler-Fachwahlen noch nicht zugeordnet sind.
+	 */
+	public boolean getOfSchuelerAlleFachwahlenNichtZugeordnet() {
+		return _ergebnis.bewertung.anzahlSchuelerNichtZugeordnet == _parent.daten().fachwahlen.size();
 	}
 
 	/**
