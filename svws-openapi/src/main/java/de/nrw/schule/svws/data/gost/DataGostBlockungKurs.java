@@ -88,22 +88,22 @@ public class DataGostBlockungKurs extends DataManager<Long> {
 	    		switch (key) {
 					case "id" -> {
 						Long patch_id = JSONMapper.convertToLong(value, true);
-						if ((patch_id == null) || (patch_id != id))
+						if ((patch_id == null) || (patch_id.longValue() != id.longValue()))
 							throw OperationError.BAD_REQUEST.exception();
 					}
 	    			case "fach_id" -> {
 						Long patch_fach_id = JSONMapper.convertToLong(value, true);
-						if ((patch_fach_id == null) || (patch_fach_id != kurs.Fach_ID))
+						if ((patch_fach_id == null) || (patch_fach_id.longValue() != kurs.Fach_ID.longValue()))
 							throw OperationError.BAD_REQUEST.exception();
 	    			}
 	    			case "kursart" -> {
 	    				Integer patch_kursart = JSONMapper.convertToInteger(value, true);
-						if ((patch_kursart == null) || (patch_kursart != kurs.Kursart.id))
+						if ((patch_kursart == null) || (patch_kursart.intValue() != kurs.Kursart.id))
 							throw OperationError.BAD_REQUEST.exception();
 	    			}
 	    			case "nummer" -> {
 	    				Integer patch_nummer = JSONMapper.convertToInteger(value, true);
-						if ((patch_nummer == null) || (patch_nummer != kurs.Kursnummer))
+						if ((patch_nummer == null) || (patch_nummer.intValue() != kurs.Kursnummer.intValue()))
 							throw OperationError.BAD_REQUEST.exception();
 	    			}
 	    			case "istKoopKurs" -> kurs.IstKoopKurs = JSONMapper.convertToBoolean(value, false);

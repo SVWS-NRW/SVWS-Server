@@ -164,7 +164,7 @@ public class DataGostBlockungSchiene extends DataManager<Long> {
     			        List<DTOGostBlockungRegelParameter> regelParams = conn.queryNamed("DTOGostBlockungRegelParameter.regel_id.multiple", regelIDs, DTOGostBlockungRegelParameter.class);
     			        for (DTOGostBlockungRegelParameter param : regelParams) {
     			            // Prüfe, ob der Parameter-Type und die Schienennummer eine Anpassung der Regel erfordern
-    			            if ((regeltyp.getParamType(param.Nummer - 1) == GostKursblockungRegelParameterTyp.SCHIENEN_NR)
+    			            if ((regeltyp.getParamType(param.Nummer) == GostKursblockungRegelParameterTyp.SCHIENEN_NR)
     			                && (param.Parameter > daten.nummer)) {
     			                // Passe die Schienennummer an
     			                param.Parameter--;
