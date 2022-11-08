@@ -1,5 +1,6 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
+import { StundenplanZeitraster, cast_de_nrw_schule_svws_core_data_stundenplan_StundenplanZeitraster } from '../../../core/data/stundenplan/StundenplanZeitraster';
 
 export class SchuelerStundenplanUnterricht extends JavaObject {
 
@@ -8,6 +9,8 @@ export class SchuelerStundenplanUnterricht extends JavaObject {
 	public idUnterricht : number = -1;
 
 	public idZeitraster : number = -1;
+
+	public zeitraster : StundenplanZeitraster = new StundenplanZeitraster();
 
 	public kursart : String = "";
 
@@ -50,6 +53,9 @@ export class SchuelerStundenplanUnterricht extends JavaObject {
 		if (typeof obj.idZeitraster === "undefined")
 			 throw new Error('invalid json format, missing attribute idZeitraster');
 		result.idZeitraster = obj.idZeitraster;
+		if (typeof obj.zeitraster === "undefined")
+			 throw new Error('invalid json format, missing attribute zeitraster');
+		result.zeitraster = StundenplanZeitraster.transpilerFromJSON(JSON.stringify(obj.zeitraster));
 		if (typeof obj.kursart === "undefined")
 			 throw new Error('invalid json format, missing attribute kursart');
 		result.kursart = obj.kursart;
@@ -88,6 +94,7 @@ export class SchuelerStundenplanUnterricht extends JavaObject {
 		result += '"idLeistungen" : ' + obj.idLeistungen + ',';
 		result += '"idUnterricht" : ' + obj.idUnterricht + ',';
 		result += '"idZeitraster" : ' + obj.idZeitraster + ',';
+		result += '"zeitraster" : ' + StundenplanZeitraster.transpilerToJSON(obj.zeitraster) + ',';
 		result += '"kursart" : ' + '"' + obj.kursart.valueOf() + '"' + ',';
 		result += '"wochentyp" : ' + obj.wochentyp + ',';
 		result += '"idFach" : ' + obj.idFach + ',';
@@ -113,6 +120,9 @@ export class SchuelerStundenplanUnterricht extends JavaObject {
 		}
 		if (typeof obj.idZeitraster !== "undefined") {
 			result += '"idZeitraster" : ' + obj.idZeitraster + ',';
+		}
+		if (typeof obj.zeitraster !== "undefined") {
+			result += '"zeitraster" : ' + StundenplanZeitraster.transpilerToJSON(obj.zeitraster) + ',';
 		}
 		if (typeof obj.kursart !== "undefined") {
 			result += '"kursart" : ' + '"' + obj.kursart.valueOf() + '"' + ',';
