@@ -1,6 +1,5 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
 import { Naturwissenschaften, cast_de_nrw_schule_svws_core_abschluss_gost_belegpruefung_Naturwissenschaften } from '../../../core/abschluss/gost/belegpruefung/Naturwissenschaften';
-import { SprachendatenManager, cast_de_nrw_schule_svws_core_utils_schueler_SprachendatenManager } from '../../../core/utils/schueler/SprachendatenManager';
 import { Schwerpunkt, cast_de_nrw_schule_svws_core_abschluss_gost_belegpruefung_Schwerpunkt } from '../../../core/abschluss/gost/belegpruefung/Schwerpunkt';
 import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
 import { KurszahlenUndWochenstunden, cast_de_nrw_schule_svws_core_abschluss_gost_belegpruefung_KurszahlenUndWochenstunden } from '../../../core/abschluss/gost/belegpruefung/KurszahlenUndWochenstunden';
@@ -34,6 +33,7 @@ import { GostBelegpruefung, cast_de_nrw_schule_svws_core_abschluss_gost_GostBele
 import { GostFachManager, cast_de_nrw_schule_svws_core_abschluss_gost_GostFachManager } from '../../../core/abschluss/gost/GostFachManager';
 import { Abiturdaten, cast_de_nrw_schule_svws_core_data_gost_Abiturdaten } from '../../../core/data/gost/Abiturdaten';
 import { Projektkurse, cast_de_nrw_schule_svws_core_abschluss_gost_belegpruefung_Projektkurse } from '../../../core/abschluss/gost/belegpruefung/Projektkurse';
+import { SprachendatenUtils, cast_de_nrw_schule_svws_core_utils_schueler_SprachendatenUtils } from '../../../core/utils/schueler/SprachendatenUtils';
 import { Deutsch, cast_de_nrw_schule_svws_core_abschluss_gost_belegpruefung_Deutsch } from '../../../core/abschluss/gost/belegpruefung/Deutsch';
 import { Fremdsprachen, cast_de_nrw_schule_svws_core_abschluss_gost_belegpruefung_Fremdsprachen } from '../../../core/abschluss/gost/belegpruefung/Fremdsprachen';
 import { GostBelegpruefungErgebnisFehler, cast_de_nrw_schule_svws_core_abschluss_gost_GostBelegpruefungErgebnisFehler } from '../../../core/abschluss/gost/GostBelegpruefungErgebnisFehler';
@@ -1372,7 +1372,7 @@ export class AbiturdatenManager extends JavaObject {
 			let fach : GostFach | null = this.getFach(fs);
 			if ((fach === null) || (!fach.istFremdsprache)) 
 				continue;
-			if (SprachendatenManager.istFortfuehrbareSpracheInGOSt(this.abidaten.sprachendaten, GostFachManager.getFremdsprache(fach))) {
+			if (SprachendatenUtils.istFortfuehrbareSpracheInGOSt(this.abidaten.sprachendaten, GostFachManager.getFremdsprache(fach))) {
 				return true;
 			}
 		}
@@ -1398,7 +1398,7 @@ export class AbiturdatenManager extends JavaObject {
 			let fach : GostFach | null = this.getFach(fs);
 			if ((fach === null) || (!fach.istFremdsprache)) 
 				continue;
-			if (!SprachendatenManager.istFortfuehrbareSpracheInGOSt(this.abidaten.sprachendaten, GostFachManager.getFremdsprache(fach))) {
+			if (!SprachendatenUtils.istFortfuehrbareSpracheInGOSt(this.abidaten.sprachendaten, GostFachManager.getFremdsprache(fach))) {
 				return true;
 			}
 		}

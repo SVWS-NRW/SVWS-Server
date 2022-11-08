@@ -19,7 +19,7 @@ import com.healthmarketscience.jackcess.TableBuilder;
 
 import de.nrw.schule.svws.core.data.gost.GostLeistungen;
 import de.nrw.schule.svws.core.types.Geschlecht;
-import de.nrw.schule.svws.core.utils.schueler.SprachendatenManager;
+import de.nrw.schule.svws.core.utils.schueler.SprachendatenUtils;
 import de.nrw.schule.svws.db.dto.current.gost.DTOGostSchueler;
 import de.nrw.schule.svws.db.dto.current.schild.klassen.DTOKlassen;
 import de.nrw.schule.svws.db.dto.current.schild.lehrer.DTOLehrer;
@@ -387,8 +387,8 @@ public class ABPSchueler {
 			if (gostLeistungen != null) {
 				eintrag.Bilingual = gostLeistungen.bilingualeSprache;
 				if (gostLeistungen.sprachendaten != null) {
-					eintrag.Latein = SprachendatenManager.hatSprachbelegungInSekI(gostLeistungen.sprachendaten, "L");
-					eintrag.Einsprachler_S1 = !(SprachendatenManager.hatZweiSprachenMitMin4JahrenDauerEndeSekI(gostLeistungen.sprachendaten) || SprachendatenManager.hatSpracheMit2JahrenDauerEndeSekI(gostLeistungen.sprachendaten));
+					eintrag.Latein = SprachendatenUtils.hatSprachbelegungInSekI(gostLeistungen.sprachendaten, "L");
+					eintrag.Einsprachler_S1 = !(SprachendatenUtils.hatZweiSprachenMitMin4JahrenDauerEndeSekI(gostLeistungen.sprachendaten) || SprachendatenUtils.hatSpracheMit2JahrenDauerEndeSekI(gostLeistungen.sprachendaten));
 				}
 			}
 			liste.add(eintrag);

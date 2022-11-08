@@ -6,7 +6,7 @@ import de.nrw.schule.svws.core.abschluss.gost.GostBelegpruefungsArt;
 import de.nrw.schule.svws.core.abschluss.gost.GostBelegungsfehler;
 import de.nrw.schule.svws.core.data.gost.AbiturFachbelegung;
 import de.nrw.schule.svws.core.types.gost.GostHalbjahr;
-import de.nrw.schule.svws.core.utils.schueler.SprachendatenManager;
+import de.nrw.schule.svws.core.utils.schueler.SprachendatenUtils;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -38,7 +38,7 @@ public class Latinum extends GostBelegpruefung {
 	@Override
 	protected void pruefeEF1() {
 		// Prüfe, ob Latein in der SI belegt wurde, aber nicht in EF.1.		
-		if (SprachendatenManager.hatSprachbelegungInSekI(manager.getSprachendaten(), "L") && (!manager.pruefeBelegung(latein, GostHalbjahr.EF1)))
+		if (SprachendatenUtils.hatSprachbelegungInSekI(manager.getSprachendaten(), "L") && (!manager.pruefeBelegung(latein, GostHalbjahr.EF1)))
 			addFehler(GostBelegungsfehler.L_10_INFO);
 	}
 
@@ -46,18 +46,18 @@ public class Latinum extends GostBelegpruefung {
 	@Override
 	protected void pruefeGesamt() {
 		/// Prüfe, ob Latein in der SI belegt wurde
-        if (!SprachendatenManager.hatSprachbelegungInSekI(manager.getSprachendaten(), "L")){
+        if (!SprachendatenUtils.hatSprachbelegungInSekI(manager.getSprachendaten(), "L")){
             return;
         }
 
-        if (SprachendatenManager.hatSprachbelegungInSekIMitDauer(manager.getSprachendaten(), "L", 4)){
+        if (SprachendatenUtils.hatSprachbelegungInSekIMitDauer(manager.getSprachendaten(), "L", 4)){
             if (!manager.pruefeBelegung(latein, GostHalbjahr.EF1, GostHalbjahr.EF2)) {
                 addFehler(GostBelegungsfehler.L_10_INFO);
             }
             return;
         }
 
-        if (SprachendatenManager.hatSprachbelegungInSekIMitDauer(manager.getSprachendaten(), "L", 2)){
+        if (SprachendatenUtils.hatSprachbelegungInSekIMitDauer(manager.getSprachendaten(), "L", 2)){
             if (!manager.pruefeBelegung(latein, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22))
                 addFehler(GostBelegungsfehler.L_11_INFO);
         }

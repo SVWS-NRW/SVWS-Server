@@ -23,7 +23,7 @@ import de.nrw.schule.svws.core.types.Note;
 import de.nrw.schule.svws.core.types.gost.GostAbiturFach;
 import de.nrw.schule.svws.core.types.gost.GostHalbjahr;
 import de.nrw.schule.svws.core.types.gost.GostKursart;
-import de.nrw.schule.svws.core.utils.schueler.SprachendatenManager;
+import de.nrw.schule.svws.core.utils.schueler.SprachendatenUtils;
 import de.nrw.schule.svws.db.dto.current.gost.DTOGostSchueler;
 import de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchueler;
 
@@ -404,7 +404,7 @@ public class ABPSchuelerFaecher {
 				ABPFaecher fach = faecher.get(eintrag.FachKrz);
 				eintrag.Fach_ID = fach.ID;
 				if (fach.IstSprache) {
-					Sprachbelegung belegung = SprachendatenManager.getSprachbelegung(gostLeistungen.sprachendaten, fach.StatistikKrz.toUpperCase().substring(0, 1));
+					Sprachbelegung belegung = SprachendatenUtils.getSprachbelegung(gostLeistungen.sprachendaten, fach.StatistikKrz.toUpperCase().substring(0, 1));
 					if (belegung != null) {
 						eintrag.FS_BeginnJg = "" + belegung.belegungVonJahrgang;
 						eintrag.Sprachenfolge = "" + belegung.reihenfolge;

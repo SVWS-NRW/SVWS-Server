@@ -10,7 +10,7 @@ import { Sprachendaten, cast_de_nrw_schule_svws_core_data_schueler_Sprachendaten
 import { HashSet, cast_java_util_HashSet } from '../../../java/util/HashSet';
 import { Comparator, cast_java_util_Comparator } from '../../../java/util/Comparator';
 
-export class SprachendatenManager extends JavaObject {
+export class SprachendatenUtils extends JavaObject {
 
 
 	public constructor() {
@@ -29,7 +29,7 @@ export class SprachendatenManager extends JavaObject {
 		if (sprachendaten === null || sprachendaten.belegungen === null || sprache === null || JavaObject.equalsTranspiler("", (sprache))) {
 			return false;
 		}
-		return SprachendatenManager.getSprachbelegung(sprachendaten, sprache) !== null;
+		return SprachendatenUtils.getSprachbelegung(sprachendaten, sprache) !== null;
 	}
 
 	/**
@@ -44,9 +44,9 @@ export class SprachendatenManager extends JavaObject {
 		if (sprachendaten === null || sprachendaten.belegungen === null || sprache === null || JavaObject.equalsTranspiler("", (sprache))) {
 			return false;
 		}
-		let belegung : Sprachbelegung | null = SprachendatenManager.getSprachbelegung(sprachendaten, sprache);
-		if (belegung !== null && SprachendatenManager.ASDJahrgangNumerisch(belegung.belegungVonJahrgang) > 0) {
-			return SprachendatenManager.ASDJahrgangNumerisch(belegung.belegungVonJahrgang) <= 10;
+		let belegung : Sprachbelegung | null = SprachendatenUtils.getSprachbelegung(sprachendaten, sprache);
+		if (belegung !== null && SprachendatenUtils.ASDJahrgangNumerisch(belegung.belegungVonJahrgang) > 0) {
+			return SprachendatenUtils.ASDJahrgangNumerisch(belegung.belegungVonJahrgang) <= 10;
 		}
 		return false;
 	}
@@ -64,7 +64,7 @@ export class SprachendatenManager extends JavaObject {
 		if (sprachendaten === null || sprachendaten.belegungen === null || sprache === null || JavaObject.equalsTranspiler("", (sprache)) || mindestBelegdauer === null || mindestBelegdauer <= 0) {
 			return false;
 		}
-		let belegung : Sprachbelegung | null = SprachendatenManager.getSprachbelegung(sprachendaten, sprache);
+		let belegung : Sprachbelegung | null = SprachendatenUtils.getSprachbelegung(sprachendaten, sprache);
 		if (belegung === null) {
 			return false;
 		}
@@ -72,8 +72,8 @@ export class SprachendatenManager extends JavaObject {
 		let belegtBisJahrgangNumerisch : number;
 		let letzterJahrgangSekI : number;
 		if (belegung.belegungVonJahrgang !== null) {
-			belegtVonJahrgangNumerisch = SprachendatenManager.ASDJahrgangNumerisch(belegung.belegungVonJahrgang);
-			belegtBisJahrgangNumerisch = SprachendatenManager.ASDJahrgangNumerisch(belegung.belegungBisJahrgang);
+			belegtVonJahrgangNumerisch = SprachendatenUtils.ASDJahrgangNumerisch(belegung.belegungVonJahrgang);
+			belegtBisJahrgangNumerisch = SprachendatenUtils.ASDJahrgangNumerisch(belegung.belegungBisJahrgang);
 			letzterJahrgangSekI = 10;
 			if (belegtVonJahrgangNumerisch === 6 || belegtVonJahrgangNumerisch === 8) {
 				letzterJahrgangSekI = 9;
@@ -132,13 +132,13 @@ export class SprachendatenManager extends JavaObject {
 			let alleBelegungen : Vector<Sprachbelegung> = sprachendaten.belegungen;
 			for (let belegung of alleBelegungen) {
 				if (belegung.belegungVonJahrgang !== null) {
-					belegtVonJahrgangNumerisch = SprachendatenManager.ASDJahrgangNumerisch(belegung.belegungVonJahrgang);
-					belegtBisJahrgangNumerisch = SprachendatenManager.ASDJahrgangNumerisch(belegung.belegungBisJahrgang);
+					belegtVonJahrgangNumerisch = SprachendatenUtils.ASDJahrgangNumerisch(belegung.belegungVonJahrgang);
+					belegtBisJahrgangNumerisch = SprachendatenUtils.ASDJahrgangNumerisch(belegung.belegungBisJahrgang);
 					letzterJahrgangSekI = 10;
 					if (belegtVonJahrgangNumerisch === 6 || belegtVonJahrgangNumerisch === 8) {
 						letzterJahrgangSekI = 9;
 					}
-					if (belegtVonJahrgangNumerisch > 0 && SprachendatenManager.ASDJahrgangNumerisch(belegungbeginnStart) <= belegtVonJahrgangNumerisch && belegtVonJahrgangNumerisch <= SprachendatenManager.ASDJahrgangNumerisch(belegungbeginnEnde)) {
+					if (belegtVonJahrgangNumerisch > 0 && SprachendatenUtils.ASDJahrgangNumerisch(belegungbeginnStart) <= belegtVonJahrgangNumerisch && belegtVonJahrgangNumerisch <= SprachendatenUtils.ASDJahrgangNumerisch(belegungbeginnEnde)) {
 						if (belegtBisJahrgangNumerisch === 0 || belegtBisJahrgangNumerisch > letzterJahrgangSekI) {
 							belegtBisJahrgangNumerisch = letzterJahrgangSekI;
 						}
@@ -153,7 +153,7 @@ export class SprachendatenManager extends JavaObject {
 			}
 		}
 		if (belegungen.size() > 0) {
-			let comparator : Comparator<Sprachbelegung> | null = { compare : (a: Sprachbelegung, b: Sprachbelegung) => JavaInteger.compare(SprachendatenManager.ASDJahrgangNumerisch(a.belegungVonJahrgang), SprachendatenManager.ASDJahrgangNumerisch(b.belegungVonJahrgang)) };
+			let comparator : Comparator<Sprachbelegung> | null = { compare : (a: Sprachbelegung, b: Sprachbelegung) => JavaInteger.compare(SprachendatenUtils.ASDJahrgangNumerisch(a.belegungVonJahrgang), SprachendatenUtils.ASDJahrgangNumerisch(b.belegungVonJahrgang)) };
 			belegungen.sort(comparator);
 		}
 		return belegungen;
@@ -173,7 +173,7 @@ export class SprachendatenManager extends JavaObject {
 		if (sprachendaten === null || sprache === null || JavaObject.equalsTranspiler("", (sprache))) {
 			return false;
 		}
-		if (SprachendatenManager.hatSprachbelegungInSekIMitDauer(sprachendaten, sprache, 2)) {
+		if (SprachendatenUtils.hatSprachbelegungInSekIMitDauer(sprachendaten, sprache, 2)) {
 			return true;
 		}
 		let pruefungen : Vector<Sprachpruefung> = sprachendaten.pruefungen;
@@ -204,7 +204,7 @@ export class SprachendatenManager extends JavaObject {
 	public static getFortfuehrbareSprachenInGOSt(sprachendaten : Sprachendaten | null) : Vector<String> {
 		let sprachen : Vector<String> = new Vector();
 		if (sprachendaten !== null) {
-			let belegungen : Vector<Sprachbelegung> = SprachendatenManager.getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten, "05", "10", 2);
+			let belegungen : Vector<Sprachbelegung> = SprachendatenUtils.getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten, "05", "10", 2);
 			for (let belegung of belegungen) {
 				sprachen.add(belegung.sprache);
 			}
@@ -248,7 +248,7 @@ export class SprachendatenManager extends JavaObject {
 		if (sprachendaten === null) {
 			return false;
 		}
-		let anzahlSprachen : number = SprachendatenManager.getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten, "05", "07", 4).size();
+		let anzahlSprachen : number = SprachendatenUtils.getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten, "05", "07", 4).size();
 		if (anzahlSprachen >= 1) {
 			return true;
 		}
@@ -276,7 +276,7 @@ export class SprachendatenManager extends JavaObject {
 		if (sprachendaten === null) {
 			return false;
 		}
-		let belegungen : Vector<Sprachbelegung> = SprachendatenManager.getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten, "05", "07", 4);
+		let belegungen : Vector<Sprachbelegung> = SprachendatenUtils.getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten, "05", "07", 4);
 		let anzahlSprachen : number = belegungen.size();
 		if (anzahlSprachen >= 2) {
 			return true;
@@ -308,7 +308,7 @@ export class SprachendatenManager extends JavaObject {
 		if (sprachendaten === null) {
 			return false;
 		}
-		let anzahlSprachen : number = SprachendatenManager.getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten, "08", "10", 2).size();
+		let anzahlSprachen : number = SprachendatenUtils.getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten, "08", "10", 2).size();
 		if (anzahlSprachen >= 1) {
 			return true;
 		}
@@ -366,7 +366,7 @@ export class SprachendatenManager extends JavaObject {
 		}
 		let belegungen : Vector<Sprachbelegung> = sprachendaten.belegungen;
 		if (belegungen !== null) {
-			let sprachbelegungen : Vector<Sprachbelegung> = SprachendatenManager.getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten, "05", "10", 0);
+			let sprachbelegungen : Vector<Sprachbelegung> = SprachendatenUtils.getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten, "05", "10", 0);
 			if (sprachbelegungen.size() > 0) {
 				return sprachbelegungen.get(0).sprache;
 			}
@@ -406,7 +406,7 @@ export class SprachendatenManager extends JavaObject {
 		}
 		let belegungen : Vector<Sprachbelegung> = sprachendaten.belegungen;
 		if (belegungen !== null) {
-			let sprachbelegungen : Vector<Sprachbelegung> = SprachendatenManager.getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten, "05", "10", 0);
+			let sprachbelegungen : Vector<Sprachbelegung> = SprachendatenUtils.getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten, "05", "10", 0);
 			if (!JavaObject.equalsTranspiler(pruefungErsteSprache, (""))) {
 				for (let sprachbelegung of sprachbelegungen) {
 					if (!JavaObject.equalsTranspiler(sprachbelegung.sprache, (pruefungErsteSprache))) {
@@ -436,7 +436,7 @@ export class SprachendatenManager extends JavaObject {
 		}
 		let belegungen : Vector<Sprachbelegung> = sprachendaten.belegungen;
 		if (belegungen !== null) {
-			let sprachbelegungen : Vector<Sprachbelegung> = SprachendatenManager.getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten, "08", "10", 2);
+			let sprachbelegungen : Vector<Sprachbelegung> = SprachendatenUtils.getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten, "08", "10", 2);
 			if (sprachbelegungen.size() > 0) {
 				return sprachbelegungen.get(0).sprache;
 			}
@@ -473,11 +473,11 @@ export class SprachendatenManager extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.utils.schueler.SprachendatenManager'].includes(name);
+		return ['de.nrw.schule.svws.core.utils.schueler.SprachendatenUtils'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_core_utils_schueler_SprachendatenManager(obj : unknown) : SprachendatenManager {
-	return obj as SprachendatenManager;
+export function cast_de_nrw_schule_svws_core_utils_schueler_SprachendatenUtils(obj : unknown) : SprachendatenUtils {
+	return obj as SprachendatenUtils;
 }

@@ -413,7 +413,7 @@ export { GostBlockungsergebnisManager } from './core/utils/gost/GostBlockungserg
 export { GostFaecherManager } from './core/utils/gost/GostFaecherManager';
 export { GostStatistikFachwahlManager } from './core/utils/gost/GostStatistikFachwahlManager';
 export { JahrgangsUtils } from './core/utils/jahrgang/JahrgangsUtils';
-export { SprachendatenManager } from './core/utils/schueler/SprachendatenManager';
+export { SprachendatenUtils } from './core/utils/schueler/SprachendatenUtils';
 export { AbgangsartenManager } from './core/utils/schule/AbgangsartenManager';
 export { BerufskollegFachklassenManager } from './core/utils/schule/BerufskollegFachklassenManager';
 export { SchuljahresAbschnittsManager } from './core/utils/schule/SchuljahresAbschnittsManager';

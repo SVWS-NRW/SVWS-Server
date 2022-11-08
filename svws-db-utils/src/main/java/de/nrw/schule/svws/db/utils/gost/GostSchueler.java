@@ -16,7 +16,7 @@ import de.nrw.schule.svws.core.types.gost.GostHalbjahr;
 import de.nrw.schule.svws.core.types.gost.GostKursart;
 import de.nrw.schule.svws.core.utils.gost.GostAbiturjahrUtils;
 import de.nrw.schule.svws.core.utils.gost.GostFaecherManager;
-import de.nrw.schule.svws.core.utils.schueler.SprachendatenManager;
+import de.nrw.schule.svws.core.utils.schueler.SprachendatenUtils;
 import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchueler;
 import de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
@@ -133,7 +133,7 @@ public class GostSchueler {
 				// Prüfe ggf., ob eine Sprache fortgeführt wurde oder nicht
 				String fremdsprache = GostFachManager.getFremdsprache(gostFach); 
 				if (fremdsprache != null)
-					fach.istFSNeu = (!SprachendatenManager.istFortfuehrbareSpracheInGOSt(sprachendaten, fremdsprache));
+					fach.istFSNeu = (!SprachendatenUtils.istFortfuehrbareSpracheInGOSt(sprachendaten, fremdsprache));
 				
 				GostAbiturFach tmpAbiFach = GostAbiturFach.fromIDString(leistung.AbiFach);
 				fach.abiturfach = (tmpAbiFach == null) ? null : tmpAbiFach.id;
@@ -263,7 +263,7 @@ public class GostSchueler {
 					// Prüfe ggf., ob eine Sprache fortgeführt wurde oder nicht
 					String fremdsprache = GostFachManager.getFremdsprache(gostFach); 
 					if (fremdsprache != null)
-						fach.istFSNeu = (!SprachendatenManager.istFortfuehrbareSpracheInGOSt(sprachendaten, fremdsprache));
+						fach.istFSNeu = (!SprachendatenUtils.istFortfuehrbareSpracheInGOSt(sprachendaten, fremdsprache));
 					
 					GostAbiturFach tmpAbiFach = GostAbiturFach.fromIDString(leistung.AbiFach);
 					fach.abiturfach = (tmpAbiFach == null) ? null : tmpAbiFach.id;

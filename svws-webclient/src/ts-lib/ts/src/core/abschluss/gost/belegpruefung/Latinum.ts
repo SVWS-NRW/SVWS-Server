@@ -1,10 +1,10 @@
 import { JavaObject, cast_java_lang_Object } from '../../../../java/lang/JavaObject';
-import { SprachendatenManager, cast_de_nrw_schule_svws_core_utils_schueler_SprachendatenManager } from '../../../../core/utils/schueler/SprachendatenManager';
 import { AbiturFachbelegung, cast_de_nrw_schule_svws_core_data_gost_AbiturFachbelegung } from '../../../../core/data/gost/AbiturFachbelegung';
 import { GostBelegpruefungsArt, cast_de_nrw_schule_svws_core_abschluss_gost_GostBelegpruefungsArt } from '../../../../core/abschluss/gost/GostBelegpruefungsArt';
 import { GostHalbjahr, cast_de_nrw_schule_svws_core_types_gost_GostHalbjahr } from '../../../../core/types/gost/GostHalbjahr';
 import { GostBelegpruefung, cast_de_nrw_schule_svws_core_abschluss_gost_GostBelegpruefung } from '../../../../core/abschluss/gost/GostBelegpruefung';
 import { AbiturdatenManager, cast_de_nrw_schule_svws_core_abschluss_gost_AbiturdatenManager } from '../../../../core/abschluss/gost/AbiturdatenManager';
+import { SprachendatenUtils, cast_de_nrw_schule_svws_core_utils_schueler_SprachendatenUtils } from '../../../../core/utils/schueler/SprachendatenUtils';
 import { GostBelegungsfehler, cast_de_nrw_schule_svws_core_abschluss_gost_GostBelegungsfehler } from '../../../../core/abschluss/gost/GostBelegungsfehler';
 
 export class Latinum extends GostBelegpruefung {
@@ -27,21 +27,21 @@ export class Latinum extends GostBelegpruefung {
 	}
 
 	protected pruefeEF1() : void {
-		if (SprachendatenManager.hatSprachbelegungInSekI(this.manager.getSprachendaten(), "L") && (!this.manager.pruefeBelegung(this.latein, GostHalbjahr.EF1))) 
+		if (SprachendatenUtils.hatSprachbelegungInSekI(this.manager.getSprachendaten(), "L") && (!this.manager.pruefeBelegung(this.latein, GostHalbjahr.EF1))) 
 			this.addFehler(GostBelegungsfehler.L_10_INFO);
 	}
 
 	protected pruefeGesamt() : void {
-		if (!SprachendatenManager.hatSprachbelegungInSekI(this.manager.getSprachendaten(), "L")) {
+		if (!SprachendatenUtils.hatSprachbelegungInSekI(this.manager.getSprachendaten(), "L")) {
 			return;
 		}
-		if (SprachendatenManager.hatSprachbelegungInSekIMitDauer(this.manager.getSprachendaten(), "L", 4)) {
+		if (SprachendatenUtils.hatSprachbelegungInSekIMitDauer(this.manager.getSprachendaten(), "L", 4)) {
 			if (!this.manager.pruefeBelegung(this.latein, GostHalbjahr.EF1, GostHalbjahr.EF2)) {
 				this.addFehler(GostBelegungsfehler.L_10_INFO);
 			}
 			return;
 		}
-		if (SprachendatenManager.hatSprachbelegungInSekIMitDauer(this.manager.getSprachendaten(), "L", 2)) {
+		if (SprachendatenUtils.hatSprachbelegungInSekIMitDauer(this.manager.getSprachendaten(), "L", 2)) {
 			if (!this.manager.pruefeBelegung(this.latein, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22)) 
 				this.addFehler(GostBelegungsfehler.L_11_INFO);
 		}

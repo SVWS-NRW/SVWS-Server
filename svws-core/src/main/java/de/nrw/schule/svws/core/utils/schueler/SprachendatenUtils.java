@@ -15,7 +15,7 @@ import jakarta.validation.constraints.NotNull;
  * Diese Klasse stellt Methoden zur Verfügung um Daten zur Sprachenfolge und den Sprachprüfungen zu
  * bearbeiten und Auswertungen durchzuführen.
  */
-public class SprachendatenManager {
+public class SprachendatenUtils {
 
     /**
      * Prüft, ob eine unterrichtliche Belegung der übergebenen Sprache existiert.

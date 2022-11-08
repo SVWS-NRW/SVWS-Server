@@ -33,7 +33,7 @@ import de.nrw.schule.svws.core.types.gost.GostFachbereich;
 import de.nrw.schule.svws.core.types.gost.GostHalbjahr;
 import de.nrw.schule.svws.core.types.gost.GostKursart;
 import de.nrw.schule.svws.core.types.gost.GostSchriftlichkeit;
-import de.nrw.schule.svws.core.utils.schueler.SprachendatenManager;
+import de.nrw.schule.svws.core.utils.schueler.SprachendatenUtils;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -1478,7 +1478,7 @@ public class AbiturdatenManager {
 			GostFach fach = getFach(fs);
 			if ((fach == null) || (!fach.istFremdsprache))
 				continue;
-			if (SprachendatenManager.istFortfuehrbareSpracheInGOSt(abidaten.sprachendaten, GostFachManager.getFremdsprache(fach))) {
+			if (SprachendatenUtils.istFortfuehrbareSpracheInGOSt(abidaten.sprachendaten, GostFachManager.getFremdsprache(fach))) {
                 return true;
             }
 		}
@@ -1505,7 +1505,7 @@ public class AbiturdatenManager {
 			GostFach fach = getFach(fs);
 			if ((fach == null) || (!fach.istFremdsprache))
 				continue;
-            if (!SprachendatenManager.istFortfuehrbareSpracheInGOSt(abidaten.sprachendaten, GostFachManager.getFremdsprache(fach))) {
+            if (!SprachendatenUtils.istFortfuehrbareSpracheInGOSt(abidaten.sprachendaten, GostFachManager.getFremdsprache(fach))) {
                 return true;
             }
 		}

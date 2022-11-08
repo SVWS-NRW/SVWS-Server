@@ -19,7 +19,7 @@ import {
 	SchuelerListeEintrag,
 	Schulgliederung,
 	Sprachbelegung,
-	SprachendatenManager,
+	SprachendatenUtils,
 	Vector,
 	ZulaessigesFach
 } from "@svws-nrw/svws-core-ts";
@@ -381,7 +381,7 @@ export class DataSchuelerLaufbahnplanung extends BaseData<
 	public getFallsSpracheMoeglich(row: GostFach): boolean {
 		if (!this._daten) return false;
 		const ist_fortfuehrbar =
-			SprachendatenManager.istFortfuehrbareSpracheInGOSt(
+			SprachendatenUtils.istFortfuehrbareSpracheInGOSt(
 				this._daten.sprachendaten,
 				ZulaessigesFach.getByKuerzelASD(row.kuerzel).daten.kuerzel
 			);
