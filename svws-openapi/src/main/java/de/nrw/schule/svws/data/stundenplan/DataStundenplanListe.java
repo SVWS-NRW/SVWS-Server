@@ -62,17 +62,19 @@ public class DataStundenplanListe extends DataManager<Long> {
 	 * @return die Liste der Stundenpläne
 	 */
 	public List<StundenplanListeEintrag> getStundenplaene(Long idSchuljahresabschnitt) {
+		Vector<StundenplanListeEintrag> daten = new Vector<>();
 		List<DTOStundenplan> plaene = (idSchuljahresabschnitt == null) 
 			? conn.queryAll(DTOStundenplan.class)
 			: conn.queryNamed("DTOStundenplan.schuljahresabschnitts_id", idSchuljahresabschnitt, DTOStundenplan.class);
 		if (plaene.size() == 0)
-			throw OperationError.NOT_FOUND.exception("Keine Stundenpläne gefunden.");
+			//throw OperationError.NOT_FOUND.exception("Keine Stundenpläne gefunden.");
+			return daten;
 		List<Long> idsSchuljahresabschnitte = plaene.stream().map(p -> p.Schuljahresabschnitts_ID).distinct().toList();
 		Map<Long, DTOSchuljahresabschnitte> mapAbschnitte = conn
 			.queryNamed("DTOSchuljahresabschnitte.id.multiple", idsSchuljahresabschnitte, DTOSchuljahresabschnitte.class)
 			.stream()
 			.collect(Collectors.toMap(a -> a.ID, a -> a));
-		Vector<StundenplanListeEintrag> daten = new Vector<>();
+		
 		for (DTOStundenplan s : plaene) {
 			DTOSchuljahresabschnitte a = mapAbschnitte.get(s.Schuljahresabschnitts_ID);
 			StundenplanListeEintrag e = dtoMapper.apply(s);
