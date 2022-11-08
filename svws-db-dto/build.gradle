@@ -1,6 +1,6 @@
 configurations {
 	implementation.extendsFrom(crypto, database, jackson, validation)
-} 
+}
 
 dependencies {
     implementation project(':svws-core')
@@ -11,16 +11,6 @@ compileJava.dependsOn ':svws-db:assemble'
 sourcesJar.dependsOn ':svws-db:assemble'
 
 publishing {
-    repositories {
-        maven {
-            name = "GitHub"
-            url = "https://maven.pkg.github.com/SVWS-NRW/SVWS-Packages"
-            credentials {
-            	username = getGithubActor()
-                password = getGithubToken()
-            }
-        }
-    }
     publications {
         mavenSVWSDB(MavenPublication) {
             artifactId = 'svws-db-dto'

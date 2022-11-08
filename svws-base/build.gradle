@@ -15,16 +15,6 @@ extraJavaModuleInfo {
 */
 
 publishing {
-    repositories {
-        maven {
-            name = "GitHub"
-            url = "https://maven.pkg.github.com/SVWS-NRW/SVWS-Packages"
-            credentials {
-            	username = getGithubActor()
-                password = getGithubToken()
-            }
-        }
-    }
     publications {
         mavenSVWSDBUtils(MavenPublication) {
             artifactId = 'svws-base'

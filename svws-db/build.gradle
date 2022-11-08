@@ -1,26 +1,16 @@
 configurations {
 	implementation.extendsFrom(crypto, database, jackson, validation)
 	dto
-} 
+}
 
 dependencies {
     implementation project(':svws-base')
     implementation project(':svws-core')
-    
+
     dto fileTree(dir: "${project.rootProject.projectDir}/svws-base/src/main/resources/schema", includes: ['**/*.csv'])
 }
 
 publishing {
-    repositories {
-        maven {
-            name = "GitHub"
-            url = "https://maven.pkg.github.com/SVWS-NRW/SVWS-Packages"
-            credentials {
-            	username = getGithubActor()
-                password = getGithubToken()
-            }
-        }
-    }
     publications {
         mavenSVWSDB(MavenPublication) {
             artifactId = 'svws-db'

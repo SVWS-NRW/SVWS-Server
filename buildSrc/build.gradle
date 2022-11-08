@@ -18,5 +18,17 @@ gradlePlugin {
             id = 'svws.gradle.javalib.plugin'
             implementationClass = 'svws.gradle.java.JavaLibPlugin'
         }
+		svwsMavenRepoPlugin {
+			id = 'svws.gradle.svwsmavenrepo.plugin'
+			implementationClass = 'svws.gradle.java.SvwsMavenRepoPlugin'
+		}
+		svwsMavenPublishPlugin {
+			id = 'svws.gradle.svwsmavenpublish.plugin'
+			implementationClass = 'svws.gradle.java.SvwsMavenPublishPlugin'
+		}
+		svwsEclipsePlugin {
+			id = 'svws.gradle.svwseclipse.plugin'
+			implementationClass = 'svws.gradle.java.SvwsEclipsePlugin'
+		}
     }
 }

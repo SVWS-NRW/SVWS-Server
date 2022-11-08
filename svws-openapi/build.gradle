@@ -1,7 +1,7 @@
 configurations {
 	implementation.extendsFrom(crypto, database, jetty, resteasy, swagger, pdf)
 }
- 
+
 compileJava.dependsOn(":svws-db:assemble")
 compileJava.dependsOn(":svws-db-utils:assemble")
 compileJava.dependsOn(":svws-module-pdf:assemble")
@@ -53,7 +53,7 @@ dependencies {
 }
 // TODO xml-apis belegt namespaces org.w3c.dom und javax.xml.namespace
 // dies führt zu eclipse problemen (package accesible from more than one module),
-// allerdings nicht zu problemen im gradle build. 
+// allerdings nicht zu problemen im gradle build.
 // mit Herrn bachran absprechen, ob das so iO ist.
 configurations.implementation {
   exclude group: 'xml-apis'
@@ -71,16 +71,6 @@ processResources.dependsOn createVersionProperties
 sourcesJar.dependsOn createVersionProperties
 
 publishing {
-    repositories {
-        maven {
-            name = "GitHub"
-            url = "https://maven.pkg.github.com/SVWS-NRW/SVWS-Packages"
-            credentials {
-            	username = getGithubActor()
-                password = getGithubToken()
-            }
-        }
-    }
     publications {
         mavenSVWSOpenAPI(MavenPublication) {
             artifactId = 'svws-openapi'

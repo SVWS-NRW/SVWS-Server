@@ -1,17 +1,17 @@
 package svws.gradle.java;
 
 import org.gradle.api.GradleException
-import org.gradle.api.Plugin 
-import org.gradle.api.Project 
-import org.gradle.api.tasks.Exec 
+import org.gradle.api.Plugin
+import org.gradle.api.Project
+import org.gradle.api.tasks.Exec
 import org.gradle.api.tasks.compile.JavaCompile
 import org.gradle.api.tasks.JavaExec
 
 
 /**
- * Dieses Plugin fasst die grundlegende Konfiguration für die 
- * Java-basierte-Bibliotheken des SVWS-Projektes zusammen. Die dient der 
- * Vereinheitlichung der Java-Teilprojekte. 
+ * Dieses Plugin fasst die grundlegende Konfiguration für die
+ * Java-basierte-Bibliotheken des SVWS-Projektes zusammen. Die dient der
+ * Vereinheitlichung der Java-Teilprojekte.
  */
 class JavaLibPlugin implements Plugin<Project> {
 
@@ -21,7 +21,7 @@ class JavaLibPlugin implements Plugin<Project> {
 	void addCrypto() {
 	    def versionJCCrypt = '0.4.0';
 	    project.configurations.create('crypto');
-	    project.dependencies.add('crypto', 'de.nrw.schule.svws.ext.jbcrypt:jbcrypt:' + versionJCCrypt); 
+	    project.dependencies.add('crypto', 'de.nrw.schule.svws.ext.jbcrypt:jbcrypt:' + versionJCCrypt);
     }
 
 
@@ -29,12 +29,12 @@ class JavaLibPlugin implements Plugin<Project> {
 		def versionPersistenceAPI = '3.0.0';
 		def versionEclipsePersistence = '2.2.3';
 		def versionEclipselink = '3.1.0-M1';
-		def versionMariaDB = '2.7.4';  
-		def versionSQLite = '3.36.0.3';  
-		def versionUCanAccess = '5.0.1';  
-		def versionJackcess = '4.0.1';  
-		def versionMySQL = '8.0.29';  
-		def versionMSSQL = '9.4.1.jre16';  
+		def versionMariaDB = '2.7.4';
+		def versionSQLite = '3.36.0.3';
+		def versionUCanAccess = '5.0.1';
+		def versionJackcess = '4.0.1';
+		def versionMySQL = '8.0.29';
+		def versionMSSQL = '9.4.1.jre16';
 		project.configurations.create('database');
 		project.dependencies.add('database', 'jakarta.persistence:jakarta.persistence-api:' + versionPersistenceAPI);
 	    project.dependencies.add('database', 'org.eclipse.persistence:jakarta.persistence:' + versionEclipsePersistence);
@@ -58,8 +58,8 @@ class JavaLibPlugin implements Plugin<Project> {
     	project.dependencies.add('jackson', 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:' + version);
     	project.dependencies.add('jackson', 'com.fasterxml.jackson.module:jackson-module-jakarta-xmlbind-annotations:' + version);
 	}
-	
-	
+
+
 	void addJetty10Configuration() {
 		// TODO replace with addJetty11Configuration as soon as all dependency conflicts with the jakarta name space are solved
 		def version = "10.0.9";
@@ -128,48 +128,26 @@ class JavaLibPlugin implements Plugin<Project> {
 		project.dependencies.add('validation', 'jakarta.validation:jakarta.validation-api:' + version);
     }
 
-	void addGithubActor() {
-		project.ext.getGithubActor = { ->
-			if (project.hasProperty('github_actor'))
-				return project.github_actor;
-			def username = System.getenv("GITHUB_ACTOR")
-			if (username != null)
-				return username;
-			throw new GradleException('Fehler: Der Github-Benutzer wurde weder in USERHOME/.gradle/gradle.properties als github_actor, noch als Umgebungsvariable GITHUB_ACTOR festgelegt!')
-		}
-	}
-
-	void addGithubToken() {
-		project.ext.getGithubToken = { ->
-			if (project.hasProperty('github_token'))
-				return project.github_token;
-			def token = System.getenv("GITHUB_TOKEN")
-			if (token != null)
-				return token;
-			throw new GradleException('Fehler: Der Github-Token wurde weder in USERHOME/.gradle/gradle.properties als github_token, noch als Umgebungsvariable GITHUB_TOKEN festgelegt!')
-		}
-	}
-
   	void apply(Project project) {
     	this.project = project;
     	project.pluginManager.apply "java"
-    	
+
     	project.dependencies.add('testImplementation', 'org.junit.jupiter:junit-jupiter:5.8.2');
     	project.dependencies.add('testImplementation', 'org.junit.platform:junit-platform-launcher:1.8.2');
 
 		project.sourceCompatibility = 17
 		project.targetCompatibility = 17
-    	
+
 		project.tasks.withType(JavaCompile.class, {
 			options.encoding = 'UTF-8'
 		    options.warnings = true
 		})
-		
+
 		project.tasks.withType(JavaExec.class, {
 			jvmArgs '-Dfile.encoding=UTF-8', '-Dline.separator=\n'
 		})
 
-		this.addCrypto();		
+		this.addCrypto();
 		this.addDatabase();
 		this.addJacksonConfiguration();
 		this.addJettyConfiguration();
@@ -177,8 +155,6 @@ class JavaLibPlugin implements Plugin<Project> {
 		this.addRestEasyConfiguration();
 		this.addSwagger();
 		this.addValidation();
-		this.addGithubActor();
-		this.addGithubToken();
     }
-    
+
 }

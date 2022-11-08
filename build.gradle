@@ -7,8 +7,8 @@ plugins {
 	id 'org.sonarqube' version '3.4.0.2513'
 }
 
-def config = new groovy.json.JsonSlurper().parseText(file("buildconfig.json").text)
-println "Version " + config.project.version
+//def config = new groovy.json.JsonSlurper().parseText(file("buildconfig.json").text)
+println "Version " + project.version
 
 String osName = OperatingSystem.current().getName();
 String osVersion = OperatingSystem.current().getVersion();
@@ -24,26 +24,14 @@ wrapper {
 
 allprojects {
     apply plugin: 'svws.gradle.javalib.plugin'
-	apply plugin: 'maven-publish'
-	apply plugin: 'eclipse'
+	apply plugin: 'svws.gradle.svwsmavenrepo.plugin'
+	apply plugin: 'svws.gradle.svwseclipse.plugin'
 	apply plugin: 'org.sonarqube'
 	// TODO Support JPMS-Modules
 	// apply plugin: 'de.jjohannes.extra-java-module-info'
 
-	version = config.project.version
+	//version = config.project.version
 	group = 'de.nrw.schule.svws'
-
-    repositories {
-        mavenCentral()
-        maven {
-	    	name = "GitHubPackagesJBCrypt"
-	        url = "https://maven.pkg.github.com/SVWS-NRW/SVWS-Packages"
-	        credentials {
-	        	username = getGithubActor()
-	            password = getGithubToken()
-	        }
-	    }
-	}
 
 	java {
 	    withJavadocJar()
@@ -59,32 +47,6 @@ allprojects {
 	    if (JavaVersion.current().isJava9Compatible()) {
 	        options.addBooleanOption('html5', true)
 	    }
-	}
-
-	project.ext.setProperty = { File file, String key, String value ->
-	    def s = file.text.replaceAll("(?ms)(^\\Q${key}\\E\\s*=).*?\$", '')
-	    s = s.replaceAll('\n{2,}', '\n')
-	    file.text = s + key + '=' + value + '\n'
-	}
-
-	project.ext.setEclipsePreference = { File prefsFile, String key, String value ->
-	    if (!prefsFile.exists()) {
-	        prefsFile.parentFile.mkdirs()
-	        prefsFile.write("eclipse.preferences.version=1\n")
-	    }
-	    setProperty(prefsFile, key, value)
-	}
-
-	eclipse {
-		project {
-        	file {
-        		beforeMerged { gp ->
-					setEclipsePreference(file('.settings/org.eclipse.core.resources.prefs'), 'encoding/<project>', 'UTF-8')
-					setEclipsePreference(file('.settings/org.eclipse.core.runtime.prefs'), 'line.separator', '\\n')
-					setEclipsePreference(file('.settings/org.eclipse.jdt.core.prefs'), 'org.eclipse.jdt.core.compiler.problem.potentialNullReference', 'info')
-				}
-        	}
-		}
 	}
 
 	sonarqube {
@@ -133,6 +95,10 @@ allprojects {
 
 }
 
+subprojects {
+	apply plugin: 'svws.gradle.svwsmavenpublish.plugin'
+}
+
 task rebuild(type: GradleBuild) {
 	tasks = ['clean', 'build']
 	group "build"
@@ -165,6 +131,8 @@ task buildTS() {
 	dependsOn(':svws-webclient:build')
 	group "build"
 }
+
+
 
 
 

@@ -1,0 +1,76 @@
+package svws.gradle.java
+
+import org.gradle.api.GradleException
+import org.gradle.api.Plugin
+import org.gradle.api.Project
+
+/**
+ * Diese Klasse dient der Ermittlung von Credentials und URLs
+ * für den Zugriff auf Maven-Repositories in der SVWS-Entwicklung.
+ */
+class SvwsMavenRepoCredentialsPlugin implements Plugin<Project> {
+
+	//TODO: URLs+ Repo-Namen umstellen auf https://artifactory.svws-nrw.de/
+	//TODO: Evtl. Plugin-Extension für Auslagerung der URLs als Konfiguration in gradle.build
+	final SVWS_MAVEN_CENTRAL_PROXY_URL = "http://localhost:54401/repository/maven-central"
+	final SVWS_MAVEN_SNAPSHOTS_URL = "http://localhost:54401/repository/svws-maven-snapshots"
+	final SVWS_MAVEN_RELEASES_URL = "http://localhost:54401/repository/svws-maven-releases"
+	final GITHUB_PACKAGES_URL = "https://maven.pkg.github.com/SVWS-NRW/SVWS-Packages"
+
+	def project
+
+	void addGithubActor() {
+		project.ext.getGithubActor = { ->
+			if (project.hasProperty('github_actor'))
+				return project.github_actor
+			def username = System.getenv("GITHUB_ACTOR")
+			if (username != null)
+				return username
+			throw new GradleException('Fehler: Der Github-Benutzer wurde weder in USERHOME/.gradle/gradle.properties als github_actor, noch als Umgebungsvariable GITHUB_ACTOR festgelegt!')
+		}
+	}
+
+	void addGithubToken() {
+		project.ext.getGithubToken = { ->
+			if (project.hasProperty('github_token'))
+				return project.github_token
+			def token = System.getenv("GITHUB_TOKEN")
+			if (token != null)
+				return token
+			throw new GradleException('Fehler: Der Github-Token wurde weder in USERHOME/.gradle/gradle.properties als github_token, noch als Umgebungsvariable GITHUB_TOKEN festgelegt!')
+		}
+	}
+
+	void addNexusActor() {
+		project.ext.getNexusActor = { ->
+			if (project.hasProperty('nexus_actor'))
+				return project.nexus_actor
+			def username = System.getenv("NEXUS_ACTOR")
+			if (username != null)
+				return username
+			project.logger.info('Info: Der Nexus Repository Manager kann nicht genutzt werden, weil die Zugangsdaten nicht hinterlegt sind. Der Nexus-Benutzer wurde weder in USERHOME/.gradle/gradle.properties als nexus_actor, noch als Umgebungsvariable NEXUS_ACTOR festgelegt!')
+			return null
+		}
+	}
+
+	void addNexusToken() {
+		project.ext.getNexusToken = { ->
+			if (project.hasProperty('nexus_token'))
+				return project.nexus_token
+			def token = System.getenv("NEXUS_TOKEN")
+			if (token != null)
+				return token
+			project.logger.info('Info: Der Nexus Repository Manager kann nicht genutzt werden, weil die Zugangsdaten nicht hinterlegt sind. Der Nexus-Token wurde weder in USERHOME/.gradle/gradle.properties als nexus_token, noch als Umgebungsvariable NEXUS_TOKEN festgelegt!')
+			return null
+		}
+	}
+
+  	void apply(Project project) {
+    	this.project = project
+		this.addGithubActor()
+		this.addGithubToken()
+		this.addNexusActor()
+		this.addNexusToken()
+    }
+
+}

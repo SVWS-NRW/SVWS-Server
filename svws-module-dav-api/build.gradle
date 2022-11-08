@@ -46,18 +46,8 @@ dependencies {
 }
 
 publishing {
-    repositories {
-        maven {
-            name = "GitHub"
-            url = "https://maven.pkg.github.com/SVWS-NRW/SVWS-Packages"
-            credentials {
-                username = getGithubActor()
-                password = getGithubToken()
-            }
-        }
-    }
     publications {
-        mavenSVWSOpenAPI(MavenPublication) {
+        mavenSVWSDavAPI(MavenPublication) {
             artifactId = 'svws-module-dav-api'
             from components.java
             versionMapping {

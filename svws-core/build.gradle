@@ -1,7 +1,7 @@
 configurations {
 	coretypedefinition
 	implementation.extendsFrom(resteasy, validation, swagger)
-} 
+}
 
 dependencies {
 	coretypedefinition project(':svws-base')
@@ -25,16 +25,6 @@ task createCoreTypes(type: JavaExec) {
 // sourcesJar.dependsOn createCoreTypes
 
 publishing {
-    repositories {
-        maven {
-            name = "GitHub"
-            url = "https://maven.pkg.github.com/SVWS-NRW/SVWS-Packages"
-            credentials {
-            	username = getGithubActor()
-                password = getGithubToken()
-            }
-        }
-    }
     publications {
         mavenSVWSCore(MavenPublication) {
             artifactId = 'svws-core'
