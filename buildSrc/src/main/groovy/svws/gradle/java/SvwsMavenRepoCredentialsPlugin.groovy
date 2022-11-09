@@ -8,14 +8,7 @@ import org.gradle.api.Project
  * Diese Klasse dient der Ermittlung von Credentials und URLs
  * für den Zugriff auf Maven-Repositories in der SVWS-Entwicklung.
  */
-class SvwsMavenRepoCredentialsPlugin implements Plugin<Project> {
-
-	//TODO: URLs+ Repo-Namen umstellen auf https://artifactory.svws-nrw.de/
-	//TODO: Evtl. Plugin-Extension für Auslagerung der URLs als Konfiguration in gradle.build
-	final SVWS_MAVEN_CENTRAL_PROXY_URL = "http://localhost:54401/repository/maven-central"
-	final SVWS_MAVEN_SNAPSHOTS_URL = "http://localhost:54401/repository/svws-maven-snapshots"
-	final SVWS_MAVEN_RELEASES_URL = "http://localhost:54401/repository/svws-maven-releases"
-	final GITHUB_PACKAGES_URL = "https://maven.pkg.github.com/SVWS-NRW/SVWS-Packages"
+abstract class SvwsMavenRepoCredentialsPlugin implements Plugin<Project> {
 
 	def project
 

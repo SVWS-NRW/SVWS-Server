@@ -9,7 +9,18 @@ import org.gradle.api.Project
  */
 class SvwsMavenRepoPlugin extends SvwsMavenRepoCredentialsPlugin implements Plugin<Project> {
 
-	void chooseMavenRepository(Project project) {
+	// Extension zur Konfiguration des Plugins
+	SvwsMavenRepoPluginExtension extension
+
+	/**
+	 * Legt die Maven-Repos für den Download von dependencies fest.
+	 * Standard: Nutzung von Maven-Central.
+	 * Alternativ: SVWS-Nexus als Maven-Proxy, sofern entsprechende Zugangsdaten
+	 * hinterlegt sind.
+	 *
+	 * @param project Projekt
+	 */
+	void chooseMavenRepository() {
 		def nexus_user = project.ext.getNexusActor()
 		def nexus_token = project.ext.getNexusToken()
 
@@ -18,8 +29,7 @@ class SvwsMavenRepoPlugin extends SvwsMavenRepoCredentialsPlugin implements Plug
 			project.repositories {
 				maven {
 					name = "svwsmavencentral"
-					url = SVWS_MAVEN_CENTRAL_PROXY_URL
-					allowInsecureProtocol = true //TODO: Option entfernen, wenn von lokaler entwicklung auf svws-nexus umgestellt wird
+					url = this.extension.getNexusMavenCentralProxyRepositoryUrl()
 					credentials {
 						username = nexus_user
 						password = nexus_token
@@ -27,7 +37,7 @@ class SvwsMavenRepoPlugin extends SvwsMavenRepoCredentialsPlugin implements Plug
 				}
 				maven {
 					name = "githubpackages"
-					url = GITHUB_PACKAGES_URL
+					url = this.extension.getGithubMavenPackagesUrl()
 					credentials {
 						username = project.ext.getGithubActor()
 						password = project.ext.getGithubToken()
@@ -40,7 +50,7 @@ class SvwsMavenRepoPlugin extends SvwsMavenRepoCredentialsPlugin implements Plug
 				mavenCentral()
 				maven {
 					name = "githubpackages"
-					url = GITHUB_PACKAGES_URL
+					url = this.extension.getGithubMavenPackagesUrl()
 					credentials {
 						username = project.ext.getGithubActor()
 						password = project.ext.getGithubToken()
@@ -48,13 +58,17 @@ class SvwsMavenRepoPlugin extends SvwsMavenRepoCredentialsPlugin implements Plug
 				}
 			}
 		}
-
 	}
 
   	void apply(Project project) {
-    	this.project = project
 		super.apply(project)
-		this.chooseMavenRepository(project)
+		this.project = project
+		this.extension = project.getExtensions()
+			.create("svwsmavenrepo", SvwsMavenRepoPluginExtension.class)
+
+		project.gradle.projectsEvaluated {
+			this.chooseMavenRepository()
+		}
     }
 
 }
