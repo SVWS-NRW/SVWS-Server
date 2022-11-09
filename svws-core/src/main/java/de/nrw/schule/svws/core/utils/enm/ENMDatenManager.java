@@ -52,9 +52,12 @@ public class ENMDatenManager {
 
 	/**
 	 * Erzeugt einen neuen ENM-Daten-Manager mit leeren ENM-Daten.
+	 * 
+	 * @param lehrerID   die ID des Lehrers für welchen die ENM-Daten erzeugt werden oder null für alle Lehrer 
 	 */
-	public ENMDatenManager() {
+	public ENMDatenManager(Long lehrerID) {
 		this.daten = new ENMDaten();
+		this.daten.lehrerID = lehrerID;
 	}
 	
 	

@@ -13,6 +13,7 @@ import de.nrw.schule.svws.core.data.enm.ENMJahrgang;
 import de.nrw.schule.svws.core.data.enm.ENMKlasse;
 import de.nrw.schule.svws.core.data.enm.ENMLerngruppe;
 import de.nrw.schule.svws.core.data.enm.ENMSchueler;
+import de.nrw.schule.svws.core.types.SchuelerStatus;
 import de.nrw.schule.svws.core.types.kurse.ZulaessigeKursart;
 import de.nrw.schule.svws.core.utils.enm.ENMDatenManager;
 import de.nrw.schule.svws.data.DataManager;
@@ -51,7 +52,8 @@ public class DataENMDaten extends DataManager<Long> {
 	
 	@Override
 	public Response getAll() {
-		throw new UnsupportedOperationException();
+		ENMDaten daten = getDaten(null);
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
@@ -61,68 +63,54 @@ public class DataENMDaten extends DataManager<Long> {
 
 	@Override
 	public Response get(Long id) {
-		DTOLehrer dtoLehrer = conn.queryByKey(DTOLehrer.class, id);
-    	if (dtoLehrer == null)
-    		throw OperationError.NOT_FOUND.exception();    	
-		DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
-    	if (schule == null)
-    		throw OperationError.NOT_FOUND.exception();
-    	DTOSchuljahresabschnitte abschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schule.Schuljahresabschnitts_ID);
-    	if (abschnitt == null)
-    		throw OperationError.NOT_FOUND.exception();
+		if (id == null)
+			return OperationError.NOT_FOUND.getResponse();
+		ENMDaten daten = getDaten(id);
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+	}
 
-    	// TODO Optimierung: Lese nur die benötigen Schueler und Lehrer und Kurse aus der Datenbank aus.
-    	List<DTOLehrer> lehrer = conn.queryAll(DTOLehrer.class);
-    	if (lehrer.size() == 0) 
-    		throw OperationError.NOT_FOUND.exception();
-    	Map<Long, DTOLehrer> mapLehrer = lehrer.stream().collect(Collectors.toMap(e -> e.ID, e -> e));
-    	
-    	Map<Long, DTOSchueler> mapSchueler = conn.queryAll(DTOSchueler.class).stream().collect(Collectors.toMap(s -> s.ID, s -> s)); 
-    	if (mapSchueler.size() == 0) 
-    		throw OperationError.NOT_FOUND.exception();
-    	
-    	Map<Long, DTOFach> mapFaecher = conn.queryAll(DTOFach.class).stream().collect(Collectors.toMap(f -> f.ID, f -> f));
-    	if (mapFaecher.size() == 0) 
-    		throw OperationError.NOT_FOUND.exception();
-    	
-    	Map<Long, DTOJahrgang> mapJahrgaenge = conn.queryAll(DTOJahrgang.class).stream().collect(Collectors.toMap(j -> j.ID, j -> j));
-    	if (mapJahrgaenge.size() == 0) 
-    		throw OperationError.NOT_FOUND.exception();
-    	
-    	List<DTOKlassen> klassen = conn.queryNamed("DTOKlassen.schuljahresabschnitts_id", schule.Schuljahresabschnitts_ID, DTOKlassen.class);
-    	if (klassen.size() == 0) 
-    		throw OperationError.NOT_FOUND.exception();
-    	Map<String, DTOKlassen> mapKlassen = klassen.stream().collect(Collectors.toMap(e -> e.Klasse, e -> e));
-    	List<Long> klassenIDs = klassen.stream().map(kl -> kl.ID).collect(Collectors.toList());
-    	Map<Long, List<DTOKlassenLeitung>> mapKlassenLeitung = conn.queryNamed("DTOKlassenLeitung.klassen_id.multiple", klassenIDs, DTOKlassenLeitung.class).stream().collect(Collectors.groupingBy(kl -> kl.Klassen_ID));
-    	
-    	Map<Long, DTOKurs> mapKurse = conn.queryAll(DTOKurs.class).stream().collect(Collectors.toMap(k -> k.ID, k -> k));
-    	if (mapKurse == null) 
-    		throw OperationError.NOT_FOUND.exception();
-    	
-    	ENMDatenManager manager = new ENMDatenManager();
-    	manager.setSchuldaten(schule.SchulNr, abschnitt.Jahr, schule.AnzahlAbschnitte, abschnitt.Abschnitt,
-    			/** TODO */ null, /** TODO */ true, /** TODO */ false, /** TODO */ true,
-    			schule.Schulform.daten.kuerzel, /** TODO */ null);
-    	
-    	// Lehrer hinzufügen, für den die ENM Datei erstellt wird. 
-		manager.daten.lehrerID = dtoLehrer.ID;
-		manager.addLehrer(manager.daten.lehrerID, dtoLehrer.Kuerzel, dtoLehrer.Nachname, dtoLehrer.Vorname, dtoLehrer.Geschlecht, dtoLehrer.eMailDienstlich);
 
-    	// Kopiere den Noten-Katalog aus dem Core-type in die ENM-Daten
-		manager.addNoten();
+	@Override
+	public Response patch(Long id, InputStream is) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * Ermittelt die ENM-Daten zu dem Lehrer mit der angegebenen ID.
+	 * Ist die ID null so werden die ENM-Daten für alle Lehrer des aktuellen
+	 * Schuljahresabschnitts generiert.
+	 * 
+	 * @param id   die ID des Lehrers oder null
+	 * 
+	 * @return die ENMDaten
+	 */
+	private ENMDaten getDaten(Long id) {
+		// Lese die Daten aus der Datenbank ein
+		DTOEigeneSchule schule = getSchule();
+    	DTOSchuljahresabschnitte abschnitt = getSchuljahresabschnitt(schule); 
+    	Map<Long, DTOLehrer> mapLehrer = getLehrerListe();
+		DTOLehrer dtoLehrer = (id == null) ? null : mapLehrer.get(id);   // Ermittle den Lehrer nur, falls ENM-Daten für einen speziellen Lehrer bestimt werden.
+    	if ((id != null) && (dtoLehrer == null))
+    		throw OperationError.NOT_FOUND.exception();
+    	Map<Long, DTOSchueler> mapSchueler = getSchuelerListe(schule);
+    	Map<Long, DTOFach> mapFaecher = getFaecherListe();
+    	Map<Long, DTOJahrgang> mapJahrgaenge = getJahrgangsListe();
+    	Map<String, DTOKlassen> mapKlassen = getKlassenListe(schule);
+    	Map<Long, List<DTOKlassenLeitung>> mapKlassenLeitung = getKlassenleitungen(mapKlassen);
+    	Map<Long, DTOKurs> mapKurse = getKurse(schule);
     	
-    	// Kopiere den Förderschwerpunkt-Katalog aus dem Core-type in die ENM-Daten
-		manager.addFoerderschwerpunkte(schule.Schulform);
-    	
-    	// Kopiere den Floskel-Katalog in die ENM-Daten
-    	getFloskeln(manager);
-    	
+    	// Erstelle einen ENM-Daten-Manager und füge ggf. den Lehrer hinzu für welchen die ENM-Daten erzeugt werden
+    	ENMDatenManager manager = new ENMDatenManager(id);
+    	if (dtoLehrer != null)
+    		manager.addLehrer(manager.daten.lehrerID, dtoLehrer.Kuerzel, dtoLehrer.Nachname, dtoLehrer.Vorname, dtoLehrer.Geschlecht, dtoLehrer.eMailDienstlich);
+		initManager(manager, schule, abschnitt);
+		
    	    // Aggregiert aus den Schülerabschnittsdaten und -leistungsdaten die einzelnen Informationen für das ENM. 
     	// Dabei wird unter anderem auch ermittelt, welche Kataloginformationen (Klassen, Lehrer, Jahrgänge) 
    	    // bei den Daten für das ENM einzutragen sind.
-    	List<DTOENMLehrerSchuelerAbschnittsdaten> schuelerabschnitte = 
-    			DTOENMLehrerSchuelerAbschnittsdaten.query(conn, schule.Schuljahresabschnitts_ID, dtoLehrer.Kuerzel);
+    	List<DTOENMLehrerSchuelerAbschnittsdaten> schuelerabschnitte = dtoLehrer == null
+    			? DTOENMLehrerSchuelerAbschnittsdaten.queryAll(conn, schule.Schuljahresabschnitts_ID)
+    			: DTOENMLehrerSchuelerAbschnittsdaten.query(conn, schule.Schuljahresabschnitts_ID, dtoLehrer.Kuerzel);
     	for (DTOENMLehrerSchuelerAbschnittsdaten schuelerabschnitt : schuelerabschnitte) {
     		DTOKlassen dtoKlasse = mapKlassen.get(schuelerabschnitt.klasse);
 			if (dtoKlasse == null) {
@@ -200,7 +188,7 @@ public class DataENMDaten extends DataManager<Long> {
         					fach.Unterichtssprache, kurs.WochenStd);
     			}
     			lerngruppe = manager.getLerngruppe(strLerngruppenID);
-    			lerngruppe.lehrerID.add(dtoLehrer.ID);
+    			lerngruppe.lehrerID.add(schuelerabschnitt.lehrerID);
 				// TODO ggf. im Team-Teaching unterrichtende Lehrer hinzufügen (Zusatzkraft in Leistungsdaten bzw. weitere Lehrkraft bei Kursen)
     		}
     		
@@ -229,15 +217,88 @@ public class DataENMDaten extends DataManager<Long> {
     		// TODO check and add BKAbschluss - Data
     	}
     	
-    	return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(manager.daten).build();
+    	return manager.daten;
 	}
 
 
-	@Override
-	public Response patch(Long id, InputStream is) {
-		throw new UnsupportedOperationException();
+	private void initManager(ENMDatenManager manager, DTOEigeneSchule schule, DTOSchuljahresabschnitte abschnitt) {
+		// Setze die grundlegenden Schuldaten
+    	manager.setSchuldaten(schule.SchulNr, abschnitt.Jahr, schule.AnzahlAbschnitte, abschnitt.Abschnitt,
+    			/** TODO */ null, /** TODO */ true, /** TODO */ false, /** TODO */ true,
+    			schule.Schulform.daten.kuerzel, /** TODO */ null);
+    	// Kopiere den Noten-Katalog aus dem Core-type in die ENM-Daten
+		manager.addNoten();
+    	// Kopiere den Förderschwerpunkt-Katalog aus dem Core-type in die ENM-Daten
+		manager.addFoerderschwerpunkte(schule.Schulform);
+    	// Kopiere den Floskel-Katalog in die ENM-Daten
+    	getFloskeln(manager);
 	}
 
+	private DTOEigeneSchule getSchule() {
+		DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
+		if (schule == null)
+			throw OperationError.NOT_FOUND.exception();
+		return schule;
+	}
+	
+	private DTOSchuljahresabschnitte getSchuljahresabschnitt(DTOEigeneSchule schule) {
+		DTOSchuljahresabschnitte abschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schule.Schuljahresabschnitts_ID);
+		if (abschnitt == null)
+			throw OperationError.NOT_FOUND.exception();
+		return abschnitt;
+	}
+	
+	// TODO Optimierung: Lese nur die aktiven Lehrer aus der Datenbank aus.
+	private Map<Long, DTOLehrer> getLehrerListe() {
+		List<DTOLehrer> lehrer = conn.queryAll(DTOLehrer.class);
+		if (lehrer.size() == 0) 
+			throw OperationError.NOT_FOUND.exception();
+		return lehrer.stream().collect(Collectors.toMap(e -> e.ID, e -> e));
+	}
+	
+	private Map<Long, DTOSchueler> getSchuelerListe(DTOEigeneSchule schule) {
+		List<DTOSchueler> schueler = conn.queryNamed("DTOSchueler.schuljahresabschnitts_id", schule.Schuljahresabschnitts_ID, DTOSchueler.class);
+		if (schueler.size() == 0)
+			throw OperationError.NOT_FOUND.exception();
+		return schueler.stream()
+				.filter(s -> s.Status == SchuelerStatus.AKTIV || s.Status == SchuelerStatus.EXTERN)
+				.collect(Collectors.toMap(s -> s.ID, s -> s)); 
+	}
+
+	private Map<Long, DTOFach> getFaecherListe() {
+		List<DTOFach> faecher = conn.queryAll(DTOFach.class);
+		if (faecher.size() == 0) 
+			throw OperationError.NOT_FOUND.exception();
+		return faecher.stream().collect(Collectors.toMap(f -> f.ID, f -> f));
+	}
+
+	private Map<Long, DTOJahrgang> getJahrgangsListe() {
+		List<DTOJahrgang> jahrgaenge = conn.queryAll(DTOJahrgang.class);
+		if (jahrgaenge.size() == 0) 
+			throw OperationError.NOT_FOUND.exception();
+		return jahrgaenge.stream().collect(Collectors.toMap(j -> j.ID, j -> j));
+	}
+	
+	private Map<String, DTOKlassen> getKlassenListe(DTOEigeneSchule schule) {
+		List<DTOKlassen> klassen = conn.queryNamed("DTOKlassen.schuljahresabschnitts_id", schule.Schuljahresabschnitts_ID, DTOKlassen.class);
+		if (klassen.size() == 0) 
+			throw OperationError.NOT_FOUND.exception();
+		return klassen.stream().collect(Collectors.toMap(e -> e.Klasse, e -> e));
+	}
+
+	private Map<Long, List<DTOKlassenLeitung>> getKlassenleitungen(Map<String, DTOKlassen> mapKlassen) {
+		List<Long> klassenIDs = mapKlassen.values().stream().map(kl -> kl.ID).collect(Collectors.toList());
+		return conn.queryNamed("DTOKlassenLeitung.klassen_id.multiple", klassenIDs, DTOKlassenLeitung.class).stream()
+				.collect(Collectors.groupingBy(kl -> kl.Klassen_ID));
+	}
+	
+	private Map<Long, DTOKurs> getKurse(DTOEigeneSchule schule) {
+		List<DTOKurs> kurse = conn.queryNamed("DTOKurs.schuljahresabschnitts_id", schule.Schuljahresabschnitts_ID, DTOKurs.class);
+		if (kurse == null) 
+			throw OperationError.NOT_FOUND.exception();
+		return conn.queryAll(DTOKurs.class).stream().collect(Collectors.toMap(k -> k.ID, k -> k));
+	}
+	
 
 	/**
 	 * Füllt die Datenstruktur für die Floskelgruppen des ENM mit den in der SVWS-DB hinterlegten 
@@ -274,6 +335,5 @@ public class DataENMDaten extends DataManager<Long> {
 			}
 		}
 	}
-
 
 }

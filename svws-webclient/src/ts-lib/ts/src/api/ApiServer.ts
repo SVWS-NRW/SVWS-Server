@@ -1225,6 +1225,31 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der GET-Methode getENMDaten für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/alle
+	 * 
+	 * Liest die Daten des Externen Notenmoduls (ENM) aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Notendaten besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Die Daten des Externen Notenmoduls (ENM)
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: ENMDaten
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten des ENM auszulesen.
+	 *   Code 404: Es wurden nicht alle benötigten Daten für das Erstellen der ENM-Daten gefunden.
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * 
+	 * @returns Die Daten des Externen Notenmoduls (ENM)
+	 */
+	public async getENMDaten(schema : string) : Promise<ENMDaten> {
+		let path : string = "/db/{schema}/enm/alle"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return ENMDaten.transpilerFromJSON(text);
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getLehrerENMDaten für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/lehrer/{id : \d+}
 	 * 
 	 * Liest die Daten des Externen Notenmoduls (ENM) des Lehrers zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Notendaten besitzt.

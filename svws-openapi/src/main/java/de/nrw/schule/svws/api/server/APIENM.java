@@ -33,6 +33,33 @@ public class APIENM {
 
 	
     /**
+     * Die OpenAPI-Methode für die Abfrage der Daten für das Externe Datenmodul (ENM) in Bezug auf alle Lehrer
+     * des aktuellen Schuljahresabschnitts der Schule.
+     *  
+     * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param request   die Informationen zur HTTP-Anfrage
+     * 
+     * @return die ENM-Daten
+     */
+    @GET
+    @Path("/alle")
+    @Operation(summary = "Liefert die Daten des Externen Notenmoduls (ENM).",
+    description = "Liest die Daten des Externen Notenmoduls (ENM) aus der Datenbank "
+    			+ "und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum "
+    			+ "Auslesen der Notendaten besitzt.")
+    @ApiResponse(responseCode = "200", description = "Die Daten des Externen Notenmoduls (ENM)",
+                 content = @Content(mediaType = "application/json",
+                 schema = @Schema(implementation = ENMDaten.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten des ENM auszulesen.")
+    @ApiResponse(responseCode = "404", description = "Es wurden nicht alle benötigten Daten für das Erstellen der ENM-Daten gefunden.")
+    public Response getENMDaten(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.IMPORT_EXPORT_DATEN_IMPORTIEREN)) {
+	    	return (new DataENMDaten(conn)).getAll();
+    	}
+    }
+
+
+    /**
      * Die OpenAPI-Methode für die Abfrage der Daten für das Externe Datenmodul (ENM) in Bezug auf einen Lehrer.
      *  
      * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll

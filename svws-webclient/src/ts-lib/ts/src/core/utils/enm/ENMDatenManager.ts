@@ -40,8 +40,10 @@ export class ENMDatenManager extends JavaObject {
 
 	/**
 	 * Erzeugt einen neuen ENM-Daten-Manager mit leeren ENM-Daten.
+	 * 
+	 * @param lehrerID   die ID des Lehrers für welchen die ENM-Daten erzeugt werden oder null für alle Lehrer 
 	 */
-	public constructor();
+	public constructor(lehrerID : Number | null);
 
 	/**
 	 * Erzeugt einen neuen ENM-Daten-Manager für die übergebenen Daten.
@@ -53,14 +55,48 @@ export class ENMDatenManager extends JavaObject {
 	/**
 	 * Implementation for method overloads of 'constructor'
 	 */
-	public constructor(__param0? : ENMDaten) {
+	public constructor(__param0 : ENMDaten | Number | null) {
 		super();
-		if ((typeof __param0 === "undefined")) {
+		if (((typeof __param0 !== "undefined") && ((__param0 instanceof Number) || (typeof __param0 === "number")) || (__param0 === null))) {
+			let lehrerID : Number | null = cast_java_lang_Long(__param0);
 			this.daten = new ENMDaten();
+			this.daten.lehrerID = lehrerID;
 		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.data.enm.ENMDaten'))))) {
 			let daten : ENMDaten = cast_de_nrw_schule_svws_core_data_enm_ENMDaten(__param0);
 			this.daten = daten;
 		} else throw new Error('invalid method overload');
+	}
+
+	/**
+	 * Setzt die grundlegenden Daten zur Schule und zu dem Schuljahresabschnitts für welchen
+	 * die ENM-Daten generiert wurden.
+	 * 
+	 * @param schulnummer                 die Schulnummer
+	 * @param schuljahr                   das Schuljahr 
+	 * @param anzahlAbschnitte            die Anzahl der Abschnitte an der Schule (2: Halbjahrsmodus, 4: Quartalsmodus)
+	 * @param abschnitt                   die Nummer des Abschnittes im Schuljahr
+	 * @param publicKey                   der öffentlichen Schlüssel, welcher für die Verschlüsselung und den 
+	 *                                    Rückversand der Datei genutzt werden soll
+	 * @param fehlstundenEingabe          gibt an, ob die Fehlstunden-Eingabe durch das externe Notenmodul erlaubt ist 
+	 *                                    oder nicht
+	 * @param fehlstundenSIFachbezogen    gibt an, ob die Fehlstunden für die Sekundarstufe I fachbezogen eingetragen 
+	 *                                    werden oder nicht
+	 * @param fehlstundenSIIFachbezogen   gibt an, ob die Fehlstunden für die Sekundarstufe II fachbezogen eingetragen 
+	 *                                    werden oder nicht
+	 * @param schulform                   das Kürzel der Schulform der Schule
+	 * @param mailadresse                 gibt die Mailadresse an, an welche die verschlüsselte Datei zurückgesendet werden soll (z.B. mail@schule.nrw.de)
+	 */
+	public setSchuldaten(schulnummer : number, schuljahr : number, anzahlAbschnitte : number, abschnitt : number, publicKey : String | null, fehlstundenEingabe : boolean, fehlstundenSIFachbezogen : boolean, fehlstundenSIIFachbezogen : boolean, schulform : String, mailadresse : String | null) : void {
+		this.daten.schulnummer = schulnummer;
+		this.daten.schuljahr = schuljahr;
+		this.daten.anzahlAbschnitte = anzahlAbschnitte;
+		this.daten.aktuellerAbschnitt = abschnitt;
+		this.daten.publicKey = publicKey;
+		this.daten.fehlstundenEingabe = fehlstundenEingabe;
+		this.daten.fehlstundenSIFachbezogen = fehlstundenSIFachbezogen;
+		this.daten.fehlstundenSIIFachbezogen = fehlstundenSIIFachbezogen;
+		this.daten.schulform = schulform;
+		this.daten.mailadresse = mailadresse;
 	}
 
 	/**

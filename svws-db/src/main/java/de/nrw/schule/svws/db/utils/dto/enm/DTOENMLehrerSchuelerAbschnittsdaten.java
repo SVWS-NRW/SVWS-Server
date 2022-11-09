@@ -44,6 +44,9 @@ public class DTOENMLehrerSchuelerAbschnittsdaten {
 	/** gibt an, ob das Fach als Abiturfach belegt wurde (NULL, 1, 2, 3, 4) */
 	public String AbiturFach;
 	
+	/** die ID des Fachlehrers */
+	public Long lehrerID;
+	
 	/** die ID des Kurses, sofern es sich um Kursunterricht handelt - ansonsten null */
 	public Long kursID;
 	
@@ -142,6 +145,7 @@ public class DTOENMLehrerSchuelerAbschnittsdaten {
 					ld.ID as leistungID,
 					ld.NotenKrz as notenKrz,
 					ld.Kursart as kursart,
+					ld.Fachlehrer_ID as lehrerID,
 					ld.Kurs_ID as kursID,
 					ld.Fach_ID as fachID,
 					ld.Wochenstunden as wochenstunden,
@@ -162,6 +166,59 @@ public class DTOENMLehrerSchuelerAbschnittsdaten {
 				ORDER BY
 					 la.Schueler_ID, la.ID, ld.ID 
 				;""".formatted(schuljahresabschnitt, lehrerKrz),
+				DTOENMLehrerSchuelerAbschnittsdaten.class);
+		return results;
+	}
+
+
+	/**
+	 * Stellt eine Anfrage nach den Daten des Externen Notenmoduls (ENM) zu dem 
+	 * angegebenen Abschnitt aus dem angegebenen Schuljahr bezogen auf den Lehrer,
+	 * dessen Kürzel angegeben ist.
+	 *
+	 * @param conn                   die Datenbankverbindung
+	 * @param schuljahresabschnitt   der Schuljahres-Abschnitt aus dem Schuljahr, zu dem die ENM-Daten ermittelt werden sollen
+	 *
+	 * @return eine Liste mit den DTOs
+	 */
+	public static List<DTOENMLehrerSchuelerAbschnittsdaten> queryAll(DBEntityManager conn, long schuljahresabschnitt) {
+		List<DTOENMLehrerSchuelerAbschnittsdaten> results = conn.queryNative("""
+				SELECT
+					la.Schueler_ID as schuelerID,
+					la.ID as abschnittID,
+					la.Jahrgang_ID as jahrgangID,
+					k.Klasse as klasse,
+				    la.PruefOrdnung as pruefungsordnung,
+				    la.BilingualerZweig as BilingualerZweig,
+					la.Gesamtnote_GS as lernbereich1note,
+					la.Gesamtnote_NW as lernbereich2note,
+					fs1.StatistikKrz as foerderschwerpunkt1Kuerzel,
+					fs2.StatistikKrz as foerderschwerpunkt2Kuerzel,
+					la.ZieldifferentesLernen as ZieldifferentesLernen,
+					ld.ID as leistungID,
+					ld.NotenKrz as notenKrz,
+					ld.Kursart as kursart,
+					ld.Fachlehrer_ID as lehrerID,
+					ld.Kurs_ID as kursID,
+					ld.Fach_ID as fachID,
+					ld.Wochenstunden as wochenstunden,
+					ld.AbiFach as abiturfach,
+					ld.FehlStd as fehlstundenGesamt,
+					ld.uFehlStd as fehlstundenUnentschuldigt,
+					ld.Lernentw as fachbezogeneBemerkungen,
+					ld.Warnung as istGemahnt,
+					ld.Warndatum as mahndatum
+				FROM
+					SchuelerLernabschnittsdaten la
+						JOIN SchuelerLeistungsdaten ld ON la.ID = ld.Abschnitt_ID
+					 		AND la.Schuljahresabschnitts_ID = %d
+					 	JOIN K_Lehrer kl ON ld.Fachlehrer_ID = kl.ID
+					 	LEFT JOIN K_Foerderschwerpunkt fs1 ON la.Foerderschwerpunkt_ID = fs1.ID
+					 	LEFT JOIN K_Foerderschwerpunkt fs2 ON la.Foerderschwerpunkt2_ID = fs2.ID
+					 	LEFT JOIN Klassen k ON la.Klassen_ID = k.ID 
+				ORDER BY
+					 la.Schueler_ID, la.ID, ld.ID 
+				;""".formatted(schuljahresabschnitt),
 				DTOENMLehrerSchuelerAbschnittsdaten.class);
 		return results;
 	}
