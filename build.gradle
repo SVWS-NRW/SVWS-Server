@@ -7,8 +7,8 @@ plugins {
 	id 'org.sonarqube' version '3.4.0.2513'
 }
 
-//def config = new groovy.json.JsonSlurper().parseText(file("buildconfig.json").text)
-println "Version " + project.version
+def config = new groovy.json.JsonSlurper().parseText(file("buildconfig.json").text)
+println "Version " + config.project.version
 
 String osName = OperatingSystem.current().getName();
 String osVersion = OperatingSystem.current().getVersion();
@@ -30,8 +30,13 @@ allprojects {
 	// TODO Support JPMS-Modules
 	// apply plugin: 'de.jjohannes.extra-java-module-info'
 
-	//version = config.project.version
+	version = config.project.version
 	group = 'de.nrw.schule.svws'
+
+	svwsmavenrepo {
+		nexusMavenCentralProxyRepositoryUrl = 'https://artifactory.svws-nrw.de/repository/maven-central'
+		githubMavenPackagesUrl = 'https://maven.pkg.github.com/SVWS-NRW/SVWS-Packages'
+	}
 
 	java {
 	    withJavadocJar()
@@ -97,6 +102,12 @@ allprojects {
 
 subprojects {
 	apply plugin: 'svws.gradle.svwsmavenpublish.plugin'
+
+	svwsmavenpublish {
+		nexusSnapshotRepositoryUrl = 'https://artifactory.svws-nrw.de/repository/svws-maven-snapshots'
+		nexusReleasesRepositoryUrl = 'https://artifactory.svws-nrw.de/repository/svws-maven-releases'
+		githubReleasesRepositoryUrl =  'https://maven.pkg.github.com/SVWS-NRW/SVWS-Packages'
+	}
 }
 
 task rebuild(type: GradleBuild) {
