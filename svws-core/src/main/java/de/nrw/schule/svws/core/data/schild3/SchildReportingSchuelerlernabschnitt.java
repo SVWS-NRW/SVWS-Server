@@ -60,5 +60,6 @@ public class SchildReportingSchuelerlernabschnitt {
     /** Die Statistik-Bezeichnung des Jahrgangs */
     @Schema(required = true, description = "die Statistik-Bezeichnung des Jahrgangs", example="EF")    
     public @NotNull String jahrgangStatistik = "";
+    // TODO weitere Attribute
 
 }

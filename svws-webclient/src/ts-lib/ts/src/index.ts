@@ -200,6 +200,7 @@ export { Schild3KatalogEintragUnicodeUmwandlung } from './core/data/schild3/Schi
 export { Schild3KatalogEintragVersetzungsvermerke } from './core/data/schild3/Schild3KatalogEintragVersetzungsvermerke';
 export { SchildReportingDatenquelle } from './core/data/schild3/SchildReportingDatenquelle';
 export { SchildReportingDatenquelleAttribut } from './core/data/schild3/SchildReportingDatenquelleAttribut';
+export { SchildReportingSchuelerleistungsdaten } from './core/data/schild3/SchildReportingSchuelerleistungsdaten';
 export { SchildReportingSchuelerlernabschnitt } from './core/data/schild3/SchildReportingSchuelerlernabschnitt';
 export { Schueler } from './core/data/schueler/Schueler';
 export { SchuelerBetriebsdaten } from './core/data/schueler/SchuelerBetriebsdaten';

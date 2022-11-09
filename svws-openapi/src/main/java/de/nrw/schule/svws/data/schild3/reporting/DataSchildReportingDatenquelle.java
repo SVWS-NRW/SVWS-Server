@@ -315,10 +315,12 @@ public abstract class DataSchildReportingDatenquelle {
      *  
      * @return die Liste der im SVWS-Server verfügbaren Datenquellen
      */
-    private static LinkedHashMap<String, DataSchildReportingDatenquelle> getMapDatenquellen() {
+    @SuppressWarnings("unused")
+	private static LinkedHashMap<String, DataSchildReportingDatenquelle> getMapDatenquellen() {
         if (datenquellen == null) {
             datenquellen = new LinkedHashMap<>();
             new DataSchildReportingDatenquelleSchuelerlernabschnitte();
+            new DataSchildReportingDatenquelleSchuelerleistungsdaten();
         }
         return datenquellen;
     }
