@@ -1,5 +1,15 @@
 package de.nrw.schule.svws.api.server;
 
+import de.nrw.schule.svws.api.OpenAPIApplication;
+import de.nrw.schule.svws.core.data.enm.ENMDaten;
+import de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenz;
+import de.nrw.schule.svws.data.enm.DataENMDaten;
+import de.nrw.schule.svws.db.DBEntityManager;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
@@ -8,17 +18,7 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
-
-import de.nrw.schule.svws.api.OpenAPIApplication;
-import de.nrw.schule.svws.core.data.enm.ENMDaten;
-import de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenz;
-import de.nrw.schule.svws.db.DBEntityManager;
-import de.nrw.schule.svws.db.utils.enm.ENMDatabaseReader;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.ws.rs.core.Response;
 
 /**
  * Die Klasse spezifiziert die OpenAPI-Schnittstelle für die Arbeit mit den 
@@ -52,10 +52,10 @@ public class APIENM {
                  schema = @Schema(implementation = ENMDaten.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten des ENM auszulesen.")
     @ApiResponse(responseCode = "404", description = "Kein Lehrer-Eintrag mit der angegebenen ID gefunden")
-    public ENMDaten getLehrerENMDaten(@PathParam("schema") String schema, @PathParam("id") long id, 
+    public Response getLehrerENMDaten(@PathParam("schema") String schema, @PathParam("id") long id, 
     		                                    @Context HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.IMPORT_EXPORT_DATEN_IMPORTIEREN)) {
-	    	return (new ENMDatabaseReader(conn, id)).getENMDaten();
+	    	return (new DataENMDaten(conn)).get(id);
     	}
     }
 	

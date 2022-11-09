@@ -66,7 +66,42 @@ public class ENMDatenManager {
 	public ENMDatenManager(@NotNull ENMDaten daten) {
 		this.daten = daten;
 	}
-	
+
+
+	/**
+	 * Setzt die grundlegenden Daten zur Schule und zu dem Schuljahresabschnitts für welchen
+	 * die ENM-Daten generiert wurden.
+	 * 
+	 * @param schulnummer                 die Schulnummer
+	 * @param schuljahr                   das Schuljahr 
+	 * @param anzahlAbschnitte            die Anzahl der Abschnitte an der Schule (2: Halbjahrsmodus, 4: Quartalsmodus)
+	 * @param abschnitt                   die Nummer des Abschnittes im Schuljahr
+	 * @param publicKey                   der öffentlichen Schlüssel, welcher für die Verschlüsselung und den 
+	 *                                    Rückversand der Datei genutzt werden soll
+	 * @param fehlstundenEingabe          gibt an, ob die Fehlstunden-Eingabe durch das externe Notenmodul erlaubt ist 
+	 *                                    oder nicht
+	 * @param fehlstundenSIFachbezogen    gibt an, ob die Fehlstunden für die Sekundarstufe I fachbezogen eingetragen 
+	 *                                    werden oder nicht
+	 * @param fehlstundenSIIFachbezogen   gibt an, ob die Fehlstunden für die Sekundarstufe II fachbezogen eingetragen 
+	 *                                    werden oder nicht
+	 * @param schulform                   das Kürzel der Schulform der Schule
+	 * @param mailadresse                 gibt die Mailadresse an, an welche die verschlüsselte Datei zurückgesendet werden soll (z.B. mail@schule.nrw.de)
+	 */
+	public void setSchuldaten(int schulnummer, int schuljahr, int anzahlAbschnitte, int abschnitt, String publicKey,
+			boolean fehlstundenEingabe, boolean fehlstundenSIFachbezogen, boolean fehlstundenSIIFachbezogen,
+			@NotNull String schulform, String mailadresse) {
+		daten.schulnummer = schulnummer;
+		daten.schuljahr = schuljahr;
+		daten.anzahlAbschnitte = anzahlAbschnitte;
+		daten.aktuellerAbschnitt = abschnitt;
+		daten.publicKey = publicKey;
+		daten.fehlstundenEingabe = fehlstundenEingabe;
+		daten.fehlstundenSIFachbezogen = fehlstundenSIFachbezogen;
+		daten.fehlstundenSIIFachbezogen = fehlstundenSIIFachbezogen;
+		daten.schulform = schulform;
+		daten.mailadresse = mailadresse;		
+	}
+
 
 	/**
 	 * Fügt alle Noten des Core-Type {@link Note} zu dem Noten-Katalog der ENM-Datei hinzu.
