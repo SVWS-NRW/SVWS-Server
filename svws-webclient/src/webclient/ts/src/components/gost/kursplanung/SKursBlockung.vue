@@ -39,10 +39,9 @@
 			v-for="(schiene) in schienen"
 			:key="schiene.id"
 			class="border border-[#7f7f7f]/20 text-center"
-			:class="{'border-t-2': kursdifferenz, 'bg-yellow-200': is_drop_zone(schiene), 'bg-slate-500': schiene_gesperrt(schiene)}"
+			:class="{'border-t-2': kursdifferenz, 'bg-yellow-200': drag_data.kurs?.id === kurs.id && drag_data.schiene?.id !== schiene.id, 'bg-slate-500': schiene_gesperrt(schiene)}"
 			tag="td"
 			@drop="drop_aendere_kursschiene($event, schiene.id)"
-			@drag-over="drag_over($event)"
 			>
 			<drag-data
 				v-if="manager?.getOfKursOfSchieneIstZugeordnet(kurs.id, schiene.id)"
@@ -50,9 +49,11 @@
 				tag="div"
 				:data="{kurs, schiene}"
 				class="select-none"
-				:draggable="true" 
+				:draggable="true"
 				:class="{'bg-slate-500': schiene_gesperrt(schiene) }"
 				:style="{ 'background-color': schiene_gesperrt(schiene)? '':bgColor}"
+				@drag-start="drag_started"
+				@dragEnd="drag_ended"
 			>
 				<svws-ui-badge size="tiny" class="cursor-grab" :variant="selected_kurs ? 'primary' : fixier_regeln.length ? 'error' : 'highlight'" @click="toggle_active_kurs">
 					{{ kurs_blockungsergebnis?.schueler.size() }}
@@ -137,6 +138,8 @@ const app = main.apps.gost;
 
 const edit_name: Ref<GostBlockungKurs | undefined> = ref(undefined)
 const kurszahl_anzeige: Ref<boolean> = ref(false)
+
+const drag_data: Ref<{kurs: GostBlockungKurs|undefined; schiene: GostBlockungSchiene|undefined}> = ref({schiene: undefined, kurs: undefined})
 
 const gostFach: ComputedRef<GostFach | null> =
 	computed(() => {
@@ -244,11 +247,17 @@ const allow_regeln: ComputedRef<boolean> =
 
 const toggle_kurszahl_anzeige = () => kurszahl_anzeige.value = !kurszahl_anzeige.value
 
-const is_drop_zone = (schiene: GostBlockungSchiene) => {
-	const kurs = main.config.drag_and_drop_data?.kurs;
-	const drag_schiene = main.config.drag_and_drop_data?.schiene;
-	return kurs?.id === props.kurs.id && schiene.id !== drag_schiene.id
-};
+function drag_started(e: DragEvent) {
+	const transfer = e.dataTransfer;
+	const data = JSON.parse(transfer?.getData('text/plain') || "") as {kurs: GostBlockungKurs; schiene: GostBlockungSchiene} | undefined;
+	if (!data) return;
+	drag_data.value.kurs = data.kurs;
+	drag_data.value.schiene = data.schiene;
+}
+function drag_ended() {
+	drag_data.value.kurs = undefined;
+	drag_data.value.schiene = undefined;
+}
 
 const schiene_gesperrt = (schiene: GostBlockungSchiene): boolean => {
 	for (const regel of regeln.value) {
@@ -307,24 +316,17 @@ const sperren_regel_entfernen = async (nummer: number) => {
 	if (!regel) return
 	await app.dataKursblockung.del_blockung_regel(regel.id)
 }
-
 function drop_aendere_kursschiene(drag_data: {kurs: GostBlockungsergebnisKurs; schiene: GostBlockungSchiene}, schiene_id: number) {
+	if (!drag_data.kurs || !drag_data.schiene) return
 	if (drag_data.kurs.id === kurs_blockungsergebnis.value?.id && schiene_id !== drag_data.schiene.id) {
 		if (fixier_regeln.value) fixieren_regel_entfernen()
 		app.dataKursblockungsergebnis.assignKursSchiene(drag_data.kurs.id, drag_data.schiene.id, schiene_id)
 		manager.value?.setKursSchiene(drag_data.kurs.id, drag_data.schiene.id, false);
 		manager.value?.setKursSchiene(drag_data.kurs.id, schiene_id, true);
+		drag_ended()
 		// fixieren_regel_hinzufuegen()
 	}
 }
-function drag_over(event: DragEvent) {
-	const transfer = event.dataTransfer;
-	if (!transfer) return;
-	const data = main.config.drag_and_drop_data;
-	if (!data) return;
-	event.preventDefault();
-}
-
 async function add_kurs() {
 	await app.dataKursblockung.add_blockung_kurse(props.kurs.fach_id, props.kurs.kursart)
 }

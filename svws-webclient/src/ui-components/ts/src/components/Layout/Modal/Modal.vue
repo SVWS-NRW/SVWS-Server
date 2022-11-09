@@ -22,7 +22,8 @@ function openModal() {
 
 defineExpose({
 	openModal,
-	closeModal
+	closeModal,
+	isOpen
 });
 </script>
 

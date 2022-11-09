@@ -19,7 +19,6 @@
 	>
 		<drop-data
 			@drop="drop_aendere_kurszuordnung($event, kurs.id)"
-			@drag-over="drag_over($event, kurs)"
 		>
 			{{ kurs_name }}<span v-if="is_draggable">
 					<svws-ui-icon class="cursor-pointer" @click="verbieten_regel_toggle" >
@@ -49,7 +48,7 @@
 		Vector,
 		ZulaessigesFach
 	} from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef } from "vue";
+	import { computed, ComputedRef, Ref, ref } from "vue";
 
 	import { injectMainApp, Main } from "~/apps/Main";
 
@@ -67,21 +66,27 @@
 	const main: Main = injectMainApp();
 	const app = main.apps.gost;
 
+	const drag_data: Ref<{ id?: number, fachID?: number, kursart?: number }> = ref({id: undefined, fachID: undefined, kursart: undefined})
+
 	const manager: ComputedRef<GostBlockungsergebnisManager | undefined> =
 		computed(() => app.dataKursblockungsergebnis.manager);
 
 	const is_draggable: ComputedRef<boolean> =
-		computed(() => props.kurs.schueler.toArray(new Array<Number>()).some(s => s === props.schueler.id));
+		computed(() => {
+			for (const s of props.kurs.schueler)
+				if (s === props.schueler.id)
+					return true;
+			return false; });
 
 	const is_drop_zone: ComputedRef<boolean> =
 		computed(() => {
-		const fachID = main.config.drag_and_drop_data?.fachID;
-		const kursart = main.config.drag_and_drop_data?.kursart;
+		const fachID = drag_data.value?.fachID;
+		const kursart = drag_data.value?.kursart;
 		if (!fachID || !kursart)
 			return false;
 		if (fachID !== props.kurs.fachID || kursart !== props.kurs.kursart?.valueOf())
       return false;
-		const kursID = main.config.drag_and_drop_data?.id;
+		const kursID = drag_data.value?.id;
 		if (kursID === props.kurs.id)
 			return false;
 		return true; });
@@ -173,18 +178,5 @@
 			id_kurs_neu,
 			false
 		);
-	}
-
-	function drag_over(event: DragEvent, kurs: GostBlockungsergebnisKurs) {
-		const transfer = event.dataTransfer;
-		if (!transfer) return;
-		const data = main.config.drag_and_drop_data;
-		if (
-			!data ||
-			kurs.fachID != data.fachID ||
-			kurs.kursart?.valueOf() != data.kursart
-		)
-			return;
-		event.preventDefault();
 	}
 </script>

@@ -8,15 +8,12 @@
 		@dragleave="leave"
 		@dragend="end"
 	>
-		<slot></slot>
+		<slot :dragging="dragging"></slot>
 	</component>
 </template>
 
 <script setup lang="ts">
 	import { ref } from "vue";
-	import { injectMainApp, Main } from "~/apps/Main";
-
-	const main: Main = injectMainApp();
 
 	const props = defineProps({
 		tag: { type: String, default: "div" },
@@ -37,10 +34,9 @@
 	function start(e: DragEvent) {
 		const transfer = e.dataTransfer;
 		if (!transfer) return;
+		transfer.dropEffect = "move";
+		dragging.value = true
 		transfer.setData('text/plain', JSON.stringify(props.data));
-		if (main) {
-			main.config.drag_and_drop_data = props.data;
-		}
 		emits("dragStart", e);
 	}
 
@@ -65,9 +61,7 @@
 	function end(e: DragEvent) {
 		const transfer = e.dataTransfer;
 		if (!transfer) return;
+		dragging.value = false
 		emits("dragEnd", e);
-		if (main) {
-			main.config.drag_and_drop_data = undefined;
-		}
 	}
 </script>

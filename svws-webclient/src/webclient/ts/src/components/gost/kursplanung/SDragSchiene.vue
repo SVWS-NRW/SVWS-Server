@@ -1,10 +1,9 @@
 <template>
 		<drop-data 
 			class="border border-[#7f7f7f]/20 text-center"
-			:class="{'bg-yellow-200': is_drop_zone }"
+			:class="{'bg-yellow-200': drag_data.schiene && drag_data.schiene?.id !== schiene.id }"
 			tag="td"
-			@drop="regel_schiene($event)"
-			@drag-over="drag_over($event)"
+			@drop="regel_schiene"
 			>
 			<drag-data
 				:key="schiene.id"
@@ -12,6 +11,8 @@
 				:data="{schiene}"
 				class="select-none cursor-grab"
 				:draggable="true" 
+				@drag-start="drag_started"
+				@drag-end="drag_data.schiene=undefined"
 			>
 					<svws-ui-icon >
 						<i-ri-lock-unlock-line class="inline-block"/>
@@ -58,13 +59,13 @@ const kursart: Ref<GostKursart> = ref(GostKursart.GK)
 const von: Ref<GostBlockungSchiene> = ref(schiene)
 const bis: Ref<GostBlockungSchiene> = ref(schiene)
 
-function toggle_modal() {
-	modal.value.isOpen ? modal.value.closeModal() : modal.value.openModal()
-};
-
-const is_drop_zone = computed(() => {
-	const drag_schiene = main.config.drag_and_drop_data?.schiene;
-	return drag_schiene && schiene.id !== drag_schiene.id
+const drag_data = computed({
+	get(): {schiene: GostBlockungSchiene|undefined; kurs?: undefined} {
+		return main.config.drag_and_drop_data || {schiene: undefined} as {schiene: GostBlockungSchiene|undefined};
+	},
+	set(value: {schiene: GostBlockungSchiene|undefined; kurs?: undefined}) {
+		main.config.drag_and_drop_data = value
+	}
 });
 
 const regel_hinzufuegen = async (regeltyp: GostKursblockungRegelTyp) => {
@@ -78,22 +79,23 @@ const regel_hinzufuegen = async (regeltyp: GostKursblockungRegelTyp) => {
 	app.dataKursblockung.manager?.addRegel(regel)
 }
 
-function regel_schiene(drag_data: {schiene: GostBlockungSchiene}) {
-	if (schiene.id !== drag_data.schiene.id) {
-		von.value = drag_data.schiene
-		bis.value = schiene
-		toggle_modal()
+function regel_schiene() {
+	if (drag_data.value.kurs) return
+	if (drag_data.value?.schiene && schiene.id !== drag_data.value?.schiene.id) {
+		von.value = drag_data.value.schiene;
+		bis.value = schiene;
+		toggle_modal();
+		drag_data.value.schiene = undefined
 }}
 
-function drag_over(event: DragEvent) {
-		const transfer = event.dataTransfer;
-		if (!transfer) return;
-		const data = main.config.drag_and_drop_data;
-		if (
-			!data 
-		)
-			return;
-		event.preventDefault();
-	}
+function drag_started(e: DragEvent) {
+	const transfer = e.dataTransfer;
+	const data = JSON.parse(transfer?.getData('text/plain') || "") as {schiene: GostBlockungSchiene|undefined};
+	if (!data) return;
+	drag_data.value = data;
+}
 
+function toggle_modal() {
+	modal.value.isOpen ? modal.value.closeModal() : modal.value.openModal();
+};
 </script>

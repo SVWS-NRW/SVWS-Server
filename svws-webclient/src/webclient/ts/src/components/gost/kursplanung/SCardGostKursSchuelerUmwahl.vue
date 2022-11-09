@@ -39,7 +39,8 @@
 			v-slot="{ active }"
 			class="w-40 flex-none"
 			@drop="drop_entferne_kurszuordnung"
-			@drag-over="drag_over($event)"
+			@dragStart="is_dragging = true"
+			@dragEnd="is_dragging = false"
 			>
 			<div :class="{ 'border-2 border-dashed border-red-700': active }">
 				<div class="overflow-hidden rounded-lg shadow">
@@ -87,21 +88,20 @@ import {
 	SchuelerListeEintrag,
 	Vector
 } from "@svws-nrw/svws-core-ts";
-import { computed, ComputedRef, watch, WritableComputedRef } from "vue";
+import { computed, ComputedRef, Ref, ref, watch, WritableComputedRef } from "vue";
 
 import { injectMainApp, Main } from "~/apps/Main";
 
 const main: Main = injectMainApp();
 const app = main.apps.gost;
 
+const is_dragging: Ref<boolean> = ref(false)
+
 const visible: ComputedRef<boolean> =
 	computed(()=> !!manager.value && !manager.value.getOfSchuelerAlleFachwahlenNichtZugeordnet())
 
 const manager: ComputedRef<GostBlockungsergebnisManager | undefined> =
 	computed(() => app.dataKursblockungsergebnis.manager);
-
-const is_dragging: ComputedRef<boolean> =
-	computed(() => !!main.config.drag_and_drop_data);
 
 const kurse: ComputedRef<List<GostBlockungKurs>> =
 	computed(() => app.dataKursblockung.manager?.getKursmengeSortiertNachKursartFachNummer()
