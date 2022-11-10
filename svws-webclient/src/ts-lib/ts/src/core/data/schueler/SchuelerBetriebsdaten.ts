@@ -42,18 +42,18 @@ export class SchuelerBetriebsdaten extends JavaObject {
 	public static transpilerFromJSON(json : string): SchuelerBetriebsdaten {
 		const obj = JSON.parse(json);
 		const result = new SchuelerBetriebsdaten();
-		result.id = typeof obj.id === "undefined" ? null : obj.id;
-		result.schueler_id = typeof obj.schueler_id === "undefined" ? null : obj.schueler_id;
-		result.betrieb_id = typeof obj.betrieb_id === "undefined" ? null : obj.betrieb_id;
-		result.beschaeftigungsart_id = typeof obj.beschaeftigungsart_id === "undefined" ? null : obj.beschaeftigungsart_id;
-		result.vertragsbeginn = typeof obj.vertragsbeginn === "undefined" ? null : obj.vertragsbeginn;
-		result.vertragsende = typeof obj.vertragsende === "undefined" ? null : obj.vertragsende;
-		result.ausbilder = typeof obj.ausbilder === "undefined" ? null : obj.ausbilder;
-		result.allgadranschreiben = typeof obj.allgadranschreiben === "undefined" ? null : obj.allgadranschreiben;
-		result.praktikum = typeof obj.praktikum === "undefined" ? null : obj.praktikum;
-		result.sortierung = typeof obj.sortierung === "undefined" ? null : obj.sortierung;
-		result.ansprechpartner_id = typeof obj.ansprechpartner_id === "undefined" ? null : obj.ansprechpartner_id;
-		result.betreuungslehrer_id = typeof obj.betreuungslehrer_id === "undefined" ? null : obj.betreuungslehrer_id;
+		result.id = typeof obj.id === "undefined" ? null : obj.id === null ? null : Number(obj.id);
+		result.schueler_id = typeof obj.schueler_id === "undefined" ? null : obj.schueler_id === null ? null : Number(obj.schueler_id);
+		result.betrieb_id = typeof obj.betrieb_id === "undefined" ? null : obj.betrieb_id === null ? null : Number(obj.betrieb_id);
+		result.beschaeftigungsart_id = typeof obj.beschaeftigungsart_id === "undefined" ? null : obj.beschaeftigungsart_id === null ? null : Number(obj.beschaeftigungsart_id);
+		result.vertragsbeginn = typeof obj.vertragsbeginn === "undefined" ? null : obj.vertragsbeginn === null ? null : String(obj.vertragsbeginn);
+		result.vertragsende = typeof obj.vertragsende === "undefined" ? null : obj.vertragsende === null ? null : String(obj.vertragsende);
+		result.ausbilder = typeof obj.ausbilder === "undefined" ? null : obj.ausbilder === null ? null : String(obj.ausbilder);
+		result.allgadranschreiben = typeof obj.allgadranschreiben === "undefined" ? null : obj.allgadranschreiben === null ? null : Boolean(obj.allgadranschreiben);
+		result.praktikum = typeof obj.praktikum === "undefined" ? null : obj.praktikum === null ? null : Boolean(obj.praktikum);
+		result.sortierung = typeof obj.sortierung === "undefined" ? null : obj.sortierung === null ? null : Number(obj.sortierung);
+		result.ansprechpartner_id = typeof obj.ansprechpartner_id === "undefined" ? null : obj.ansprechpartner_id === null ? null : Number(obj.ansprechpartner_id);
+		result.betreuungslehrer_id = typeof obj.betreuungslehrer_id === "undefined" ? null : obj.betreuungslehrer_id === null ? null : Number(obj.betreuungslehrer_id);
 		return result;
 	}
 

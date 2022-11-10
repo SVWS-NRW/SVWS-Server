@@ -32,7 +32,7 @@ export class GEAbschlussFaecher extends JavaObject {
 		if (typeof obj.abschnitt === "undefined")
 			 throw new Error('invalid json format, missing attribute abschnitt');
 		result.abschnitt = obj.abschnitt;
-		result.jahrgang = typeof obj.jahrgang === "undefined" ? null : obj.jahrgang;
+		result.jahrgang = typeof obj.jahrgang === "undefined" ? null : obj.jahrgang === null ? null : String(obj.jahrgang);
 		if (!!obj.faecher) {
 			for (let elem of obj.faecher) {
 				result.faecher?.add(GEAbschlussFach.transpilerFromJSON(JSON.stringify(elem)));

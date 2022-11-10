@@ -55,19 +55,19 @@ export class ENMBKAbschluss extends JavaObject {
 		if (typeof obj.hatErworbenErweiterteBeruflicheKenntnisse === "undefined")
 			 throw new Error('invalid json format, missing attribute hatErworbenErweiterteBeruflicheKenntnisse');
 		result.hatErworbenErweiterteBeruflicheKenntnisse = obj.hatErworbenErweiterteBeruflicheKenntnisse;
-		result.notePraktischePruefung = typeof obj.notePraktischePruefung === "undefined" ? null : obj.notePraktischePruefung;
-		result.noteKolloqium = typeof obj.noteKolloqium === "undefined" ? null : obj.noteKolloqium;
+		result.notePraktischePruefung = typeof obj.notePraktischePruefung === "undefined" ? null : obj.notePraktischePruefung === null ? null : String(obj.notePraktischePruefung);
+		result.noteKolloqium = typeof obj.noteKolloqium === "undefined" ? null : obj.noteKolloqium === null ? null : String(obj.noteKolloqium);
 		if (typeof obj.hatZulassungBerufsabschlusspruefung === "undefined")
 			 throw new Error('invalid json format, missing attribute hatZulassungBerufsabschlusspruefung');
 		result.hatZulassungBerufsabschlusspruefung = obj.hatZulassungBerufsabschlusspruefung;
 		if (typeof obj.hatBestandenBerufsabschlusspruefung === "undefined")
 			 throw new Error('invalid json format, missing attribute hatBestandenBerufsabschlusspruefung');
 		result.hatBestandenBerufsabschlusspruefung = obj.hatBestandenBerufsabschlusspruefung;
-		result.themaAbschlussarbeit = typeof obj.themaAbschlussarbeit === "undefined" ? null : obj.themaAbschlussarbeit;
+		result.themaAbschlussarbeit = typeof obj.themaAbschlussarbeit === "undefined" ? null : obj.themaAbschlussarbeit === null ? null : String(obj.themaAbschlussarbeit);
 		if (typeof obj.istVorhandenBerufsabschlusspruefung === "undefined")
 			 throw new Error('invalid json format, missing attribute istVorhandenBerufsabschlusspruefung');
 		result.istVorhandenBerufsabschlusspruefung = obj.istVorhandenBerufsabschlusspruefung;
-		result.noteFachpraxis = typeof obj.noteFachpraxis === "undefined" ? null : obj.noteFachpraxis;
+		result.noteFachpraxis = typeof obj.noteFachpraxis === "undefined" ? null : obj.noteFachpraxis === null ? null : String(obj.noteFachpraxis);
 		if (typeof obj.istFachpraktischerTeilAusreichend === "undefined")
 			 throw new Error('invalid json format, missing attribute istFachpraktischerTeilAusreichend');
 		result.istFachpraktischerTeilAusreichend = obj.istFachpraktischerTeilAusreichend;

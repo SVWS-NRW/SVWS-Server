@@ -1503,12 +1503,25 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				result += getIndent() + "\t throw new Error('invalid json format, missing attribute " + attribute.getName() + "');" + System.lineSeparator();
 				result += getIndent() + "result." + attribute.getName() + " = obj." + attribute.getName() + ";" + System.lineSeparator();
 			} else if (type.isString() || type.isNumberClass() || type.isBoolean()) {
+				String tmpAttribute = "obj." + attribute.getName();
 				if (type.isNotNull()) {
+					if (type.isString())
+						tmpAttribute = "String(" + tmpAttribute + ")";
+					else if (type.isNumberClass())
+						tmpAttribute = "Number(" + tmpAttribute + ")";
+					else if (type.isBoolean())
+						tmpAttribute = "Boolean(" + tmpAttribute + ")";
 					result += getIndent() + "if (typeof obj." + attribute.getName() + " === \"undefined\")" + System.lineSeparator();
 					result += getIndent() + "\t throw new Error('invalid json format, missing attribute " + attribute.getName() + "');" + System.lineSeparator();
-					result += getIndent() + "result." + attribute.getName() + " = obj." + attribute.getName() + ";" + System.lineSeparator();
+					result += getIndent() + "result." + attribute.getName() + " = " + tmpAttribute + ";" + System.lineSeparator();
 				} else { 
-					result += getIndent() + "result." + attribute.getName() + " = typeof obj." + attribute.getName() + " === \"undefined\" ? null : obj." + attribute.getName() + ";" + System.lineSeparator();
+					if (type.isString())
+						tmpAttribute = "" + tmpAttribute + " === null ? null : String(" + tmpAttribute + ")";
+					else if (type.isNumberClass())
+						tmpAttribute = "" + tmpAttribute + " === null ? null : Number(" + tmpAttribute + ")";
+					else if (type.isBoolean())
+						tmpAttribute = "" + tmpAttribute + " === null ? null : Boolean(" + tmpAttribute + ")";
+					result += getIndent() + "result." + attribute.getName() + " = typeof obj." + attribute.getName() + " === \"undefined\" ? null : " + tmpAttribute + ";" + System.lineSeparator();
 				}
 			} else if (type.isCollectionType()) {
 				// TODO notNull, Collection initialisiert
@@ -1519,9 +1532,19 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				indentC++;
 				result += getIndent() + "for (let elem of obj." + attribute.getName() + ") {" + System.lineSeparator();
 				indentC++;
-				if (paramType.isString() || paramType.isNumberClass()) {
-					result += getIndent() + "result." + attribute.getName() + "?.add(elem);" + System.lineSeparator();
-				} else 
+				if (paramType.isString() && paramType.isNotNull())
+					result += getIndent() + "result." + attribute.getName() + "?.add(String(elem));" + System.lineSeparator();
+				else if (paramType.isNumberClass() && paramType.isNotNull())
+					result += getIndent() + "result." + attribute.getName() + "?.add(Number(elem));" + System.lineSeparator();
+				else if (paramType.isBoolean() && paramType.isNotNull())
+					result += getIndent() + "result." + attribute.getName() + "?.add(Boolean(elem));" + System.lineSeparator();
+				else if (paramType.isString())
+					result += getIndent() + "result." + attribute.getName() + "?.add(elem === null ? null : String(elem));" + System.lineSeparator();
+				else if (paramType.isNumberClass())
+					result += getIndent() + "result." + attribute.getName() + "?.add(elem === null ? null : Number(elem));" + System.lineSeparator();
+				else if (paramType.isBoolean())
+					result += getIndent() + "result." + attribute.getName() + "?.add(elem === null ? null : Boolean(elem));" + System.lineSeparator();
+				else 
 					result += getIndent() + "result." + attribute.getName() + "?.add(" + paramType.transpile(true) + ".transpilerFromJSON(JSON.stringify(elem)));" + System.lineSeparator();
 				indentC--;
 				result += getIndent() + "}" + System.lineSeparator();
@@ -1537,15 +1560,25 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				if (contentType.isPrimitive()) {
 					result += getIndent() + "result." + attribute.getName() + "[i] = obj." + attribute.getName() + "[i];" + System.lineSeparator();
 				} else if (contentType.isNotNull()) {
-					if (contentType.isString() || contentType.isNumberClass()) {
-						result += getIndent() + "result." + attribute.getName() + "[i] = obj." + attribute.getName() + "[i];" + System.lineSeparator();
-					} else 
-						result += getIndent() + "result." + attribute.getName() + "[i] = (" + contentType.transpile(true) + ".transpilerFromJSON(JSON.stringify(obj." + attribute.getName() + "[i])));" + System.lineSeparator();
+					String tmpAttribute = "obj." + attribute.getName() + "[i]";
+					if (contentType.isString())
+						result += getIndent() + "result." + attribute.getName() + "[i] = String(" + tmpAttribute + ");" + System.lineSeparator();
+					else if (contentType.isNumberClass())
+						result += getIndent() + "result." + attribute.getName() + "[i] = Number(" + tmpAttribute + ");" + System.lineSeparator();
+					else if (contentType.isBoolean())
+						result += getIndent() + "result." + attribute.getName() + "[i] = Boolean(" + tmpAttribute + ");" + System.lineSeparator();
+					else 
+						result += getIndent() + "result." + attribute.getName() + "[i] = (" + contentType.transpile(true) + ".transpilerFromJSON(JSON.stringify(" + tmpAttribute + ")));" + System.lineSeparator();
 				} else {
-					if (contentType.isString() || contentType.isNumberClass()) {
-						result += getIndent() + "result." + attribute.getName() + "[i] = obj." + attribute.getName() + "[i];" + System.lineSeparator();
-					} else 
-						result += getIndent() + "result." + attribute.getName() + "[i] = obj." + attribute.getName() + "[i] == null ? null : (" + contentType.transpile(true) + ".transpilerFromJSON(JSON.stringify(obj." + attribute.getName() + "[i])));" + System.lineSeparator();
+					String tmpAttribute = "obj." + attribute.getName() + "[i]";
+					if (contentType.isString())
+						result += getIndent() + "result." + attribute.getName() + "[i] = " + tmpAttribute + " === null ? null : String(" + tmpAttribute + ");" + System.lineSeparator();
+					else if (contentType.isNumberClass())
+						result += getIndent() + "result." + attribute.getName() + "[i] = " + tmpAttribute + " === null ? null : Number(" + tmpAttribute + ");" + System.lineSeparator();
+					else if (contentType.isBoolean())
+						result += getIndent() + "result." + attribute.getName() + "[i] = " + tmpAttribute + " === null ? null : Boolean(" + tmpAttribute + ");" + System.lineSeparator();
+					else 
+						result += getIndent() + "result." + attribute.getName() + "[i] = " + tmpAttribute + " == null ? null : (" + contentType.transpile(true) + ".transpilerFromJSON(JSON.stringify(" + tmpAttribute + ")));" + System.lineSeparator();
 				}
 				indentC--;
 				result += getIndent() + "}" + System.lineSeparator();

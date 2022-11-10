@@ -32,13 +32,13 @@ export class Sprachbelegung extends JavaObject {
 		const result = new Sprachbelegung();
 		if (typeof obj.sprache === "undefined")
 			 throw new Error('invalid json format, missing attribute sprache');
-		result.sprache = obj.sprache;
-		result.reihenfolge = typeof obj.reihenfolge === "undefined" ? null : obj.reihenfolge;
-		result.belegungVonJahrgang = typeof obj.belegungVonJahrgang === "undefined" ? null : obj.belegungVonJahrgang;
-		result.belegungVonAbschnitt = typeof obj.belegungVonAbschnitt === "undefined" ? null : obj.belegungVonAbschnitt;
-		result.belegungBisJahrgang = typeof obj.belegungBisJahrgang === "undefined" ? null : obj.belegungBisJahrgang;
-		result.belegungBisAbschnitt = typeof obj.belegungBisAbschnitt === "undefined" ? null : obj.belegungBisAbschnitt;
-		result.referenzniveau = typeof obj.referenzniveau === "undefined" ? null : obj.referenzniveau;
+		result.sprache = String(obj.sprache);
+		result.reihenfolge = typeof obj.reihenfolge === "undefined" ? null : obj.reihenfolge === null ? null : Number(obj.reihenfolge);
+		result.belegungVonJahrgang = typeof obj.belegungVonJahrgang === "undefined" ? null : obj.belegungVonJahrgang === null ? null : String(obj.belegungVonJahrgang);
+		result.belegungVonAbschnitt = typeof obj.belegungVonAbschnitt === "undefined" ? null : obj.belegungVonAbschnitt === null ? null : Number(obj.belegungVonAbschnitt);
+		result.belegungBisJahrgang = typeof obj.belegungBisJahrgang === "undefined" ? null : obj.belegungBisJahrgang === null ? null : String(obj.belegungBisJahrgang);
+		result.belegungBisAbschnitt = typeof obj.belegungBisAbschnitt === "undefined" ? null : obj.belegungBisAbschnitt === null ? null : Number(obj.belegungBisAbschnitt);
+		result.referenzniveau = typeof obj.referenzniveau === "undefined" ? null : obj.referenzniveau === null ? null : String(obj.referenzniveau);
 		return result;
 	}
 

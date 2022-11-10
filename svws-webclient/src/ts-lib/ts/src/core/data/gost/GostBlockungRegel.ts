@@ -30,7 +30,7 @@ export class GostBlockungRegel extends JavaObject {
 		result.typ = obj.typ;
 		if (!!obj.parameter) {
 			for (let elem of obj.parameter) {
-				result.parameter?.add(elem);
+				result.parameter?.add(Number(elem));
 			}
 		}
 		return result;

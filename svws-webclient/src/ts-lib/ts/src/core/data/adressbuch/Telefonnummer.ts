@@ -21,10 +21,10 @@ export class Telefonnummer extends JavaObject {
 		const result = new Telefonnummer();
 		if (typeof obj.type === "undefined")
 			 throw new Error('invalid json format, missing attribute type');
-		result.type = obj.type;
+		result.type = String(obj.type);
 		if (typeof obj.number === "undefined")
 			 throw new Error('invalid json format, missing attribute number');
-		result.number = obj.number;
+		result.number = String(obj.number);
 		return result;
 	}
 

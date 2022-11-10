@@ -74,43 +74,43 @@ export class SchuelerLeistungsdaten extends JavaObject {
 		if (typeof obj.fachID === "undefined")
 			 throw new Error('invalid json format, missing attribute fachID');
 		result.fachID = obj.fachID;
-		result.kursID = typeof obj.kursID === "undefined" ? null : obj.kursID;
-		result.kursart = typeof obj.kursart === "undefined" ? null : obj.kursart;
-		result.abifach = typeof obj.abifach === "undefined" ? null : obj.abifach;
+		result.kursID = typeof obj.kursID === "undefined" ? null : obj.kursID === null ? null : Number(obj.kursID);
+		result.kursart = typeof obj.kursart === "undefined" ? null : obj.kursart === null ? null : String(obj.kursart);
+		result.abifach = typeof obj.abifach === "undefined" ? null : obj.abifach === null ? null : String(obj.abifach);
 		if (typeof obj.istZP10oderZK10 === "undefined")
 			 throw new Error('invalid json format, missing attribute istZP10oderZK10');
 		result.istZP10oderZK10 = obj.istZP10oderZK10;
-		result.koopSchule = typeof obj.koopSchule === "undefined" ? null : obj.koopSchule;
-		result.lehrerID = typeof obj.lehrerID === "undefined" ? null : obj.lehrerID;
+		result.koopSchule = typeof obj.koopSchule === "undefined" ? null : obj.koopSchule === null ? null : Number(obj.koopSchule);
+		result.lehrerID = typeof obj.lehrerID === "undefined" ? null : obj.lehrerID === null ? null : Number(obj.lehrerID);
 		if (typeof obj.wochenstunden === "undefined")
 			 throw new Error('invalid json format, missing attribute wochenstunden');
 		result.wochenstunden = obj.wochenstunden;
-		result.zusatzkraftID = typeof obj.zusatzkraftID === "undefined" ? null : obj.zusatzkraftID;
+		result.zusatzkraftID = typeof obj.zusatzkraftID === "undefined" ? null : obj.zusatzkraftID === null ? null : Number(obj.zusatzkraftID);
 		if (typeof obj.zusatzkraftWochenstunden === "undefined")
 			 throw new Error('invalid json format, missing attribute zusatzkraftWochenstunden');
 		result.zusatzkraftWochenstunden = obj.zusatzkraftWochenstunden;
 		if (typeof obj.aufZeugnis === "undefined")
 			 throw new Error('invalid json format, missing attribute aufZeugnis');
 		result.aufZeugnis = obj.aufZeugnis;
-		result.note = typeof obj.note === "undefined" ? null : obj.note;
+		result.note = typeof obj.note === "undefined" ? null : obj.note === null ? null : String(obj.note);
 		if (typeof obj.istGemahnt === "undefined")
 			 throw new Error('invalid json format, missing attribute istGemahnt');
 		result.istGemahnt = obj.istGemahnt;
-		result.Mahndatum = typeof obj.Mahndatum === "undefined" ? null : obj.Mahndatum;
+		result.Mahndatum = typeof obj.Mahndatum === "undefined" ? null : obj.Mahndatum === null ? null : String(obj.Mahndatum);
 		if (typeof obj.istEpochal === "undefined")
 			 throw new Error('invalid json format, missing attribute istEpochal');
 		result.istEpochal = obj.istEpochal;
-		result.geholtJahrgangAbgeschlossen = typeof obj.geholtJahrgangAbgeschlossen === "undefined" ? null : obj.geholtJahrgangAbgeschlossen;
+		result.geholtJahrgangAbgeschlossen = typeof obj.geholtJahrgangAbgeschlossen === "undefined" ? null : obj.geholtJahrgangAbgeschlossen === null ? null : String(obj.geholtJahrgangAbgeschlossen);
 		if (typeof obj.gewichtungAllgemeinbildend === "undefined")
 			 throw new Error('invalid json format, missing attribute gewichtungAllgemeinbildend');
 		result.gewichtungAllgemeinbildend = obj.gewichtungAllgemeinbildend;
-		result.noteBerufsabschluss = typeof obj.noteBerufsabschluss === "undefined" ? null : obj.noteBerufsabschluss;
+		result.noteBerufsabschluss = typeof obj.noteBerufsabschluss === "undefined" ? null : obj.noteBerufsabschluss === null ? null : String(obj.noteBerufsabschluss);
 		if (typeof obj.textFachbezogeneLernentwicklung === "undefined")
 			 throw new Error('invalid json format, missing attribute textFachbezogeneLernentwicklung');
-		result.textFachbezogeneLernentwicklung = obj.textFachbezogeneLernentwicklung;
+		result.textFachbezogeneLernentwicklung = String(obj.textFachbezogeneLernentwicklung);
 		if (typeof obj.umfangLernstandsbericht === "undefined")
 			 throw new Error('invalid json format, missing attribute umfangLernstandsbericht');
-		result.umfangLernstandsbericht = obj.umfangLernstandsbericht;
+		result.umfangLernstandsbericht = String(obj.umfangLernstandsbericht);
 		if (typeof obj.fehlstundenGesamt === "undefined")
 			 throw new Error('invalid json format, missing attribute fehlstundenGesamt');
 		result.fehlstundenGesamt = obj.fehlstundenGesamt;

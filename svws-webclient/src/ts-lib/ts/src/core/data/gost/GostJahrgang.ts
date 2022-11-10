@@ -24,9 +24,9 @@ export class GostJahrgang extends JavaObject {
 	public static transpilerFromJSON(json : string): GostJahrgang {
 		const obj = JSON.parse(json);
 		const result = new GostJahrgang();
-		result.abiturjahr = typeof obj.abiturjahr === "undefined" ? null : obj.abiturjahr;
-		result.jahrgang = typeof obj.jahrgang === "undefined" ? null : obj.jahrgang;
-		result.bezeichnung = typeof obj.bezeichnung === "undefined" ? null : obj.bezeichnung;
+		result.abiturjahr = typeof obj.abiturjahr === "undefined" ? null : obj.abiturjahr === null ? null : Number(obj.abiturjahr);
+		result.jahrgang = typeof obj.jahrgang === "undefined" ? null : obj.jahrgang === null ? null : String(obj.jahrgang);
+		result.bezeichnung = typeof obj.bezeichnung === "undefined" ? null : obj.bezeichnung === null ? null : String(obj.bezeichnung);
 		if (typeof obj.istAbgeschlossen === "undefined")
 			 throw new Error('invalid json format, missing attribute istAbgeschlossen');
 		result.istAbgeschlossen = obj.istAbgeschlossen;

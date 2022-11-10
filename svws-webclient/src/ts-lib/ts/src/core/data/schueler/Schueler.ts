@@ -28,10 +28,10 @@ export class Schueler extends JavaObject {
 		result.id = obj.id;
 		if (typeof obj.nachname === "undefined")
 			 throw new Error('invalid json format, missing attribute nachname');
-		result.nachname = obj.nachname;
+		result.nachname = String(obj.nachname);
 		if (typeof obj.vorname === "undefined")
 			 throw new Error('invalid json format, missing attribute vorname');
-		result.vorname = obj.vorname;
+		result.vorname = String(obj.vorname);
 		if (typeof obj.geschlecht === "undefined")
 			 throw new Error('invalid json format, missing attribute geschlecht');
 		result.geschlecht = obj.geschlecht;

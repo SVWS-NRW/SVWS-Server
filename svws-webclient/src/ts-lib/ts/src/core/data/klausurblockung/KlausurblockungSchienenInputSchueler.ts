@@ -25,7 +25,7 @@ export class KlausurblockungSchienenInputSchueler extends JavaObject {
 		result.id = obj.id;
 		if (!!obj.klausuren) {
 			for (let elem of obj.klausuren) {
-				result.klausuren?.add(elem);
+				result.klausuren?.add(Number(elem));
 			}
 		}
 		return result;

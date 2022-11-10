@@ -20,8 +20,8 @@ export class Erzieherart extends JavaObject {
 	public static transpilerFromJSON(json : string): Erzieherart {
 		const obj = JSON.parse(json);
 		const result = new Erzieherart();
-		result.id = typeof obj.id === "undefined" ? null : obj.id;
-		result.bezeichnung = typeof obj.bezeichnung === "undefined" ? null : obj.bezeichnung;
+		result.id = typeof obj.id === "undefined" ? null : obj.id === null ? null : Number(obj.id);
+		result.bezeichnung = typeof obj.bezeichnung === "undefined" ? null : obj.bezeichnung === null ? null : String(obj.bezeichnung);
 		return result;
 	}
 

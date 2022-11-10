@@ -26,9 +26,9 @@ export class GostBeratungslehrer extends JavaObject {
 		if (typeof obj.id === "undefined")
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		result.kuerzel = typeof obj.kuerzel === "undefined" ? null : obj.kuerzel;
-		result.nachname = typeof obj.nachname === "undefined" ? null : obj.nachname;
-		result.vorname = typeof obj.vorname === "undefined" ? null : obj.vorname;
+		result.kuerzel = typeof obj.kuerzel === "undefined" ? null : obj.kuerzel === null ? null : String(obj.kuerzel);
+		result.nachname = typeof obj.nachname === "undefined" ? null : obj.nachname === null ? null : String(obj.nachname);
+		result.vorname = typeof obj.vorname === "undefined" ? null : obj.vorname === null ? null : String(obj.vorname);
 		return result;
 	}
 

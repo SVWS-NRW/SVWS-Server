@@ -19,8 +19,8 @@ export class BenutzerKennwort extends JavaObject {
 	public static transpilerFromJSON(json : string): BenutzerKennwort {
 		const obj = JSON.parse(json);
 		const result = new BenutzerKennwort();
-		result.user = typeof obj.user === "undefined" ? null : obj.user;
-		result.password = typeof obj.password === "undefined" ? null : obj.password;
+		result.user = typeof obj.user === "undefined" ? null : obj.user === null ? null : String(obj.user);
+		result.password = typeof obj.password === "undefined" ? null : obj.password === null ? null : String(obj.password);
 		return result;
 	}
 

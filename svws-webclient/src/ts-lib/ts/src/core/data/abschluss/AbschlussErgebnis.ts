@@ -27,15 +27,15 @@ export class AbschlussErgebnis extends JavaObject {
 		if (typeof obj.erworben === "undefined")
 			 throw new Error('invalid json format, missing attribute erworben');
 		result.erworben = obj.erworben;
-		result.abschluss = typeof obj.abschluss === "undefined" ? null : obj.abschluss;
+		result.abschluss = typeof obj.abschluss === "undefined" ? null : obj.abschluss === null ? null : String(obj.abschluss);
 		if (!!obj.npFaecher) {
 			for (let elem of obj.npFaecher) {
-				result.npFaecher?.add(elem);
+				result.npFaecher?.add(String(elem));
 			}
 		}
 		if (!!obj.log) {
 			for (let elem of obj.log) {
-				result.log?.add(elem);
+				result.log?.add(String(elem));
 			}
 		}
 		return result;

@@ -58,7 +58,7 @@ export class BenutzerKompetenzGruppenKatalogEintrag extends JavaObject {
 		result.id = obj.id;
 		if (typeof obj.bezeichnung === "undefined")
 			 throw new Error('invalid json format, missing attribute bezeichnung');
-		result.bezeichnung = obj.bezeichnung;
+		result.bezeichnung = String(obj.bezeichnung);
 		if (typeof obj.spalte === "undefined")
 			 throw new Error('invalid json format, missing attribute spalte');
 		result.spalte = obj.spalte;

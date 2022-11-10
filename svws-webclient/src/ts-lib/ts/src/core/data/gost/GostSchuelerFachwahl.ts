@@ -30,13 +30,13 @@ export class GostSchuelerFachwahl extends JavaObject {
 	public static transpilerFromJSON(json : string): GostSchuelerFachwahl {
 		const obj = JSON.parse(json);
 		const result = new GostSchuelerFachwahl();
-		result.EF1 = typeof obj.EF1 === "undefined" ? null : obj.EF1;
-		result.EF2 = typeof obj.EF2 === "undefined" ? null : obj.EF2;
-		result.Q11 = typeof obj.Q11 === "undefined" ? null : obj.Q11;
-		result.Q12 = typeof obj.Q12 === "undefined" ? null : obj.Q12;
-		result.Q21 = typeof obj.Q21 === "undefined" ? null : obj.Q21;
-		result.Q22 = typeof obj.Q22 === "undefined" ? null : obj.Q22;
-		result.abiturFach = typeof obj.abiturFach === "undefined" ? null : obj.abiturFach;
+		result.EF1 = typeof obj.EF1 === "undefined" ? null : obj.EF1 === null ? null : String(obj.EF1);
+		result.EF2 = typeof obj.EF2 === "undefined" ? null : obj.EF2 === null ? null : String(obj.EF2);
+		result.Q11 = typeof obj.Q11 === "undefined" ? null : obj.Q11 === null ? null : String(obj.Q11);
+		result.Q12 = typeof obj.Q12 === "undefined" ? null : obj.Q12 === null ? null : String(obj.Q12);
+		result.Q21 = typeof obj.Q21 === "undefined" ? null : obj.Q21 === null ? null : String(obj.Q21);
+		result.Q22 = typeof obj.Q22 === "undefined" ? null : obj.Q22 === null ? null : String(obj.Q22);
+		result.abiturFach = typeof obj.abiturFach === "undefined" ? null : obj.abiturFach === null ? null : Number(obj.abiturFach);
 		return result;
 	}
 

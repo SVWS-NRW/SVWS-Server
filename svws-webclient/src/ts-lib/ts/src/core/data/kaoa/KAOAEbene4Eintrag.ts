@@ -69,15 +69,15 @@ export class KAOAEbene4Eintrag extends JavaObject {
 		result.id = obj.id;
 		if (typeof obj.kuerzel === "undefined")
 			 throw new Error('invalid json format, missing attribute kuerzel');
-		result.kuerzel = obj.kuerzel;
+		result.kuerzel = String(obj.kuerzel);
 		if (typeof obj.beschreibung === "undefined")
 			 throw new Error('invalid json format, missing attribute beschreibung');
-		result.beschreibung = obj.beschreibung;
+		result.beschreibung = String(obj.beschreibung);
 		if (typeof obj.zusatzmerkmal === "undefined")
 			 throw new Error('invalid json format, missing attribute zusatzmerkmal');
-		result.zusatzmerkmal = obj.zusatzmerkmal;
-		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon;
-		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis;
+		result.zusatzmerkmal = String(obj.zusatzmerkmal);
+		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : Number(obj.gueltigVon);
+		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : Number(obj.gueltigBis);
 		return result;
 	}
 

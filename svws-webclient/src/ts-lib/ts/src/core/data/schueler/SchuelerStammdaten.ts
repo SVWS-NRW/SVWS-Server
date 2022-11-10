@@ -118,62 +118,62 @@ export class SchuelerStammdaten extends JavaObject {
 		if (typeof obj.id === "undefined")
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		result.foto = typeof obj.foto === "undefined" ? null : obj.foto;
+		result.foto = typeof obj.foto === "undefined" ? null : obj.foto === null ? null : String(obj.foto);
 		if (typeof obj.nachname === "undefined")
 			 throw new Error('invalid json format, missing attribute nachname');
-		result.nachname = obj.nachname;
+		result.nachname = String(obj.nachname);
 		if (typeof obj.zusatzNachname === "undefined")
 			 throw new Error('invalid json format, missing attribute zusatzNachname');
-		result.zusatzNachname = obj.zusatzNachname;
+		result.zusatzNachname = String(obj.zusatzNachname);
 		if (typeof obj.vorname === "undefined")
 			 throw new Error('invalid json format, missing attribute vorname');
-		result.vorname = obj.vorname;
+		result.vorname = String(obj.vorname);
 		if (typeof obj.alleVornamen === "undefined")
 			 throw new Error('invalid json format, missing attribute alleVornamen');
-		result.alleVornamen = obj.alleVornamen;
+		result.alleVornamen = String(obj.alleVornamen);
 		if (typeof obj.geschlecht === "undefined")
 			 throw new Error('invalid json format, missing attribute geschlecht');
 		result.geschlecht = obj.geschlecht;
-		result.geburtsdatum = typeof obj.geburtsdatum === "undefined" ? null : obj.geburtsdatum;
-		result.geburtsort = typeof obj.geburtsort === "undefined" ? null : obj.geburtsort;
-		result.geburtsname = typeof obj.geburtsname === "undefined" ? null : obj.geburtsname;
-		result.strassenname = typeof obj.strassenname === "undefined" ? null : obj.strassenname;
-		result.hausnummer = typeof obj.hausnummer === "undefined" ? null : obj.hausnummer;
-		result.hausnummerZusatz = typeof obj.hausnummerZusatz === "undefined" ? null : obj.hausnummerZusatz;
-		result.wohnortID = typeof obj.wohnortID === "undefined" ? null : obj.wohnortID;
-		result.ortsteilID = typeof obj.ortsteilID === "undefined" ? null : obj.ortsteilID;
-		result.telefon = typeof obj.telefon === "undefined" ? null : obj.telefon;
-		result.telefonMobil = typeof obj.telefonMobil === "undefined" ? null : obj.telefonMobil;
-		result.emailPrivat = typeof obj.emailPrivat === "undefined" ? null : obj.emailPrivat;
-		result.emailSchule = typeof obj.emailSchule === "undefined" ? null : obj.emailSchule;
-		result.staatsangehoerigkeitID = typeof obj.staatsangehoerigkeitID === "undefined" ? null : obj.staatsangehoerigkeitID;
-		result.staatsangehoerigkeit2ID = typeof obj.staatsangehoerigkeit2ID === "undefined" ? null : obj.staatsangehoerigkeit2ID;
-		result.religionID = typeof obj.religionID === "undefined" ? null : obj.religionID;
+		result.geburtsdatum = typeof obj.geburtsdatum === "undefined" ? null : obj.geburtsdatum === null ? null : String(obj.geburtsdatum);
+		result.geburtsort = typeof obj.geburtsort === "undefined" ? null : obj.geburtsort === null ? null : String(obj.geburtsort);
+		result.geburtsname = typeof obj.geburtsname === "undefined" ? null : obj.geburtsname === null ? null : String(obj.geburtsname);
+		result.strassenname = typeof obj.strassenname === "undefined" ? null : obj.strassenname === null ? null : String(obj.strassenname);
+		result.hausnummer = typeof obj.hausnummer === "undefined" ? null : obj.hausnummer === null ? null : String(obj.hausnummer);
+		result.hausnummerZusatz = typeof obj.hausnummerZusatz === "undefined" ? null : obj.hausnummerZusatz === null ? null : String(obj.hausnummerZusatz);
+		result.wohnortID = typeof obj.wohnortID === "undefined" ? null : obj.wohnortID === null ? null : Number(obj.wohnortID);
+		result.ortsteilID = typeof obj.ortsteilID === "undefined" ? null : obj.ortsteilID === null ? null : Number(obj.ortsteilID);
+		result.telefon = typeof obj.telefon === "undefined" ? null : obj.telefon === null ? null : String(obj.telefon);
+		result.telefonMobil = typeof obj.telefonMobil === "undefined" ? null : obj.telefonMobil === null ? null : String(obj.telefonMobil);
+		result.emailPrivat = typeof obj.emailPrivat === "undefined" ? null : obj.emailPrivat === null ? null : String(obj.emailPrivat);
+		result.emailSchule = typeof obj.emailSchule === "undefined" ? null : obj.emailSchule === null ? null : String(obj.emailSchule);
+		result.staatsangehoerigkeitID = typeof obj.staatsangehoerigkeitID === "undefined" ? null : obj.staatsangehoerigkeitID === null ? null : String(obj.staatsangehoerigkeitID);
+		result.staatsangehoerigkeit2ID = typeof obj.staatsangehoerigkeit2ID === "undefined" ? null : obj.staatsangehoerigkeit2ID === null ? null : String(obj.staatsangehoerigkeit2ID);
+		result.religionID = typeof obj.religionID === "undefined" ? null : obj.religionID === null ? null : Number(obj.religionID);
 		if (typeof obj.druckeKonfessionAufZeugnisse === "undefined")
 			 throw new Error('invalid json format, missing attribute druckeKonfessionAufZeugnisse');
 		result.druckeKonfessionAufZeugnisse = obj.druckeKonfessionAufZeugnisse;
-		result.religionabmeldung = typeof obj.religionabmeldung === "undefined" ? null : obj.religionabmeldung;
-		result.religionanmeldung = typeof obj.religionanmeldung === "undefined" ? null : obj.religionanmeldung;
+		result.religionabmeldung = typeof obj.religionabmeldung === "undefined" ? null : obj.religionabmeldung === null ? null : String(obj.religionabmeldung);
+		result.religionanmeldung = typeof obj.religionanmeldung === "undefined" ? null : obj.religionanmeldung === null ? null : String(obj.religionanmeldung);
 		if (typeof obj.hatMigrationshintergrund === "undefined")
 			 throw new Error('invalid json format, missing attribute hatMigrationshintergrund');
 		result.hatMigrationshintergrund = obj.hatMigrationshintergrund;
-		result.zuzugsjahr = typeof obj.zuzugsjahr === "undefined" ? null : obj.zuzugsjahr;
-		result.geburtsland = typeof obj.geburtsland === "undefined" ? null : obj.geburtsland;
-		result.verkehrspracheFamilie = typeof obj.verkehrspracheFamilie === "undefined" ? null : obj.verkehrspracheFamilie;
-		result.geburtslandVater = typeof obj.geburtslandVater === "undefined" ? null : obj.geburtslandVater;
-		result.geburtslandMutter = typeof obj.geburtslandMutter === "undefined" ? null : obj.geburtslandMutter;
-		result.foerderschwerpunktID = typeof obj.foerderschwerpunktID === "undefined" ? null : obj.foerderschwerpunktID;
-		result.foerderschwerpunkt2ID = typeof obj.foerderschwerpunkt2ID === "undefined" ? null : obj.foerderschwerpunkt2ID;
-		result.istAOSF = typeof obj.istAOSF === "undefined" ? null : obj.istAOSF;
-		result.istLernenZieldifferent = typeof obj.istLernenZieldifferent === "undefined" ? null : obj.istLernenZieldifferent;
-		result.status = typeof obj.status === "undefined" ? null : obj.status;
-		result.fahrschuelerArtID = typeof obj.fahrschuelerArtID === "undefined" ? null : obj.fahrschuelerArtID;
-		result.haltestelleID = typeof obj.haltestelleID === "undefined" ? null : obj.haltestelleID;
-		result.anmeldedatum = typeof obj.anmeldedatum === "undefined" ? null : obj.anmeldedatum;
-		result.aufnahmedatum = typeof obj.aufnahmedatum === "undefined" ? null : obj.aufnahmedatum;
-		result.istVolljaehrig = typeof obj.istVolljaehrig === "undefined" ? null : obj.istVolljaehrig;
-		result.istSchulpflichtErfuellt = typeof obj.istSchulpflichtErfuellt === "undefined" ? null : obj.istSchulpflichtErfuellt;
-		result.istBerufsschulpflichtErfuellt = typeof obj.istBerufsschulpflichtErfuellt === "undefined" ? null : obj.istBerufsschulpflichtErfuellt;
+		result.zuzugsjahr = typeof obj.zuzugsjahr === "undefined" ? null : obj.zuzugsjahr === null ? null : String(obj.zuzugsjahr);
+		result.geburtsland = typeof obj.geburtsland === "undefined" ? null : obj.geburtsland === null ? null : String(obj.geburtsland);
+		result.verkehrspracheFamilie = typeof obj.verkehrspracheFamilie === "undefined" ? null : obj.verkehrspracheFamilie === null ? null : String(obj.verkehrspracheFamilie);
+		result.geburtslandVater = typeof obj.geburtslandVater === "undefined" ? null : obj.geburtslandVater === null ? null : String(obj.geburtslandVater);
+		result.geburtslandMutter = typeof obj.geburtslandMutter === "undefined" ? null : obj.geburtslandMutter === null ? null : String(obj.geburtslandMutter);
+		result.foerderschwerpunktID = typeof obj.foerderschwerpunktID === "undefined" ? null : obj.foerderschwerpunktID === null ? null : Number(obj.foerderschwerpunktID);
+		result.foerderschwerpunkt2ID = typeof obj.foerderschwerpunkt2ID === "undefined" ? null : obj.foerderschwerpunkt2ID === null ? null : Number(obj.foerderschwerpunkt2ID);
+		result.istAOSF = typeof obj.istAOSF === "undefined" ? null : obj.istAOSF === null ? null : Boolean(obj.istAOSF);
+		result.istLernenZieldifferent = typeof obj.istLernenZieldifferent === "undefined" ? null : obj.istLernenZieldifferent === null ? null : Boolean(obj.istLernenZieldifferent);
+		result.status = typeof obj.status === "undefined" ? null : obj.status === null ? null : String(obj.status);
+		result.fahrschuelerArtID = typeof obj.fahrschuelerArtID === "undefined" ? null : obj.fahrschuelerArtID === null ? null : Number(obj.fahrschuelerArtID);
+		result.haltestelleID = typeof obj.haltestelleID === "undefined" ? null : obj.haltestelleID === null ? null : Number(obj.haltestelleID);
+		result.anmeldedatum = typeof obj.anmeldedatum === "undefined" ? null : obj.anmeldedatum === null ? null : String(obj.anmeldedatum);
+		result.aufnahmedatum = typeof obj.aufnahmedatum === "undefined" ? null : obj.aufnahmedatum === null ? null : String(obj.aufnahmedatum);
+		result.istVolljaehrig = typeof obj.istVolljaehrig === "undefined" ? null : obj.istVolljaehrig === null ? null : Boolean(obj.istVolljaehrig);
+		result.istSchulpflichtErfuellt = typeof obj.istSchulpflichtErfuellt === "undefined" ? null : obj.istSchulpflichtErfuellt === null ? null : Boolean(obj.istSchulpflichtErfuellt);
+		result.istBerufsschulpflichtErfuellt = typeof obj.istBerufsschulpflichtErfuellt === "undefined" ? null : obj.istBerufsschulpflichtErfuellt === null ? null : Boolean(obj.istBerufsschulpflichtErfuellt);
 		if (typeof obj.hatMasernimpfnachweis === "undefined")
 			 throw new Error('invalid json format, missing attribute hatMasernimpfnachweis');
 		result.hatMasernimpfnachweis = obj.hatMasernimpfnachweis;
@@ -189,7 +189,7 @@ export class SchuelerStammdaten extends JavaObject {
 		if (typeof obj.istDuplikat === "undefined")
 			 throw new Error('invalid json format, missing attribute istDuplikat');
 		result.istDuplikat = obj.istDuplikat;
-		result.bemerkungen = typeof obj.bemerkungen === "undefined" ? null : obj.bemerkungen;
+		result.bemerkungen = typeof obj.bemerkungen === "undefined" ? null : obj.bemerkungen === null ? null : String(obj.bemerkungen);
 		return result;
 	}
 

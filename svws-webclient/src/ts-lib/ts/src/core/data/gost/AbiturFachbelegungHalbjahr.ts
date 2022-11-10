@@ -41,13 +41,13 @@ export class AbiturFachbelegungHalbjahr extends JavaObject {
 		const result = new AbiturFachbelegungHalbjahr();
 		if (typeof obj.halbjahrKuerzel === "undefined")
 			 throw new Error('invalid json format, missing attribute halbjahrKuerzel');
-		result.halbjahrKuerzel = obj.halbjahrKuerzel;
+		result.halbjahrKuerzel = String(obj.halbjahrKuerzel);
 		if (typeof obj.kursartKuerzel === "undefined")
 			 throw new Error('invalid json format, missing attribute kursartKuerzel');
-		result.kursartKuerzel = obj.kursartKuerzel;
-		result.schriftlich = typeof obj.schriftlich === "undefined" ? null : obj.schriftlich;
-		result.biliSprache = typeof obj.biliSprache === "undefined" ? null : obj.biliSprache;
-		result.lehrer = typeof obj.lehrer === "undefined" ? null : obj.lehrer;
+		result.kursartKuerzel = String(obj.kursartKuerzel);
+		result.schriftlich = typeof obj.schriftlich === "undefined" ? null : obj.schriftlich === null ? null : Boolean(obj.schriftlich);
+		result.biliSprache = typeof obj.biliSprache === "undefined" ? null : obj.biliSprache === null ? null : String(obj.biliSprache);
+		result.lehrer = typeof obj.lehrer === "undefined" ? null : obj.lehrer === null ? null : Number(obj.lehrer);
 		if (typeof obj.wochenstunden === "undefined")
 			 throw new Error('invalid json format, missing attribute wochenstunden');
 		result.wochenstunden = obj.wochenstunden;
@@ -57,9 +57,9 @@ export class AbiturFachbelegungHalbjahr extends JavaObject {
 		if (typeof obj.fehlstundenUnentschuldigt === "undefined")
 			 throw new Error('invalid json format, missing attribute fehlstundenUnentschuldigt');
 		result.fehlstundenUnentschuldigt = obj.fehlstundenUnentschuldigt;
-		result.notenkuerzel = typeof obj.notenkuerzel === "undefined" ? null : obj.notenkuerzel;
-		result.block1gewertet = typeof obj.block1gewertet === "undefined" ? null : obj.block1gewertet;
-		result.block1kursAufZeugnis = typeof obj.block1kursAufZeugnis === "undefined" ? null : obj.block1kursAufZeugnis;
+		result.notenkuerzel = typeof obj.notenkuerzel === "undefined" ? null : obj.notenkuerzel === null ? null : String(obj.notenkuerzel);
+		result.block1gewertet = typeof obj.block1gewertet === "undefined" ? null : obj.block1gewertet === null ? null : Boolean(obj.block1gewertet);
+		result.block1kursAufZeugnis = typeof obj.block1kursAufZeugnis === "undefined" ? null : obj.block1kursAufZeugnis === null ? null : Boolean(obj.block1kursAufZeugnis);
 		return result;
 	}
 

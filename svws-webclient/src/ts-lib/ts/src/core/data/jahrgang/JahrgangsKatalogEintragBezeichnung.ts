@@ -45,10 +45,10 @@ export class JahrgangsKatalogEintragBezeichnung extends JavaObject {
 		const result = new JahrgangsKatalogEintragBezeichnung();
 		if (typeof obj.schulform === "undefined")
 			 throw new Error('invalid json format, missing attribute schulform');
-		result.schulform = obj.schulform;
+		result.schulform = String(obj.schulform);
 		if (typeof obj.bezeichnung === "undefined")
 			 throw new Error('invalid json format, missing attribute bezeichnung');
-		result.bezeichnung = obj.bezeichnung;
+		result.bezeichnung = String(obj.bezeichnung);
 		return result;
 	}
 

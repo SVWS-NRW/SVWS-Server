@@ -86,8 +86,8 @@ export class ENMDaten extends JavaObject {
 		if (typeof obj.aktuellerAbschnitt === "undefined")
 			 throw new Error('invalid json format, missing attribute aktuellerAbschnitt');
 		result.aktuellerAbschnitt = obj.aktuellerAbschnitt;
-		result.publicKey = typeof obj.publicKey === "undefined" ? null : obj.publicKey;
-		result.lehrerID = typeof obj.lehrerID === "undefined" ? null : obj.lehrerID;
+		result.publicKey = typeof obj.publicKey === "undefined" ? null : obj.publicKey === null ? null : String(obj.publicKey);
+		result.lehrerID = typeof obj.lehrerID === "undefined" ? null : obj.lehrerID === null ? null : Number(obj.lehrerID);
 		if (typeof obj.fehlstundenEingabe === "undefined")
 			 throw new Error('invalid json format, missing attribute fehlstundenEingabe');
 		result.fehlstundenEingabe = obj.fehlstundenEingabe;
@@ -97,8 +97,8 @@ export class ENMDaten extends JavaObject {
 		if (typeof obj.fehlstundenSIIFachbezogen === "undefined")
 			 throw new Error('invalid json format, missing attribute fehlstundenSIIFachbezogen');
 		result.fehlstundenSIIFachbezogen = obj.fehlstundenSIIFachbezogen;
-		result.schulform = typeof obj.schulform === "undefined" ? null : obj.schulform;
-		result.mailadresse = typeof obj.mailadresse === "undefined" ? null : obj.mailadresse;
+		result.schulform = typeof obj.schulform === "undefined" ? null : obj.schulform === null ? null : String(obj.schulform);
+		result.mailadresse = typeof obj.mailadresse === "undefined" ? null : obj.mailadresse === null ? null : String(obj.mailadresse);
 		if (!!obj.noten) {
 			for (let elem of obj.noten) {
 				result.noten?.add(ENMNote.transpilerFromJSON(JSON.stringify(elem)));

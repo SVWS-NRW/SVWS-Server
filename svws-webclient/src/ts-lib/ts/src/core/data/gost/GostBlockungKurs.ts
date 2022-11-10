@@ -49,8 +49,8 @@ export class GostBlockungKurs extends JavaObject {
 		result.istKoopKurs = obj.istKoopKurs;
 		if (typeof obj.suffix === "undefined")
 			 throw new Error('invalid json format, missing attribute suffix');
-		result.suffix = obj.suffix;
-		result.wochenstunden = typeof obj.wochenstunden === "undefined" ? null : obj.wochenstunden;
+		result.suffix = String(obj.suffix);
+		result.wochenstunden = typeof obj.wochenstunden === "undefined" ? null : obj.wochenstunden === null ? null : Number(obj.wochenstunden);
 		if (typeof obj.anzahlSchienen === "undefined")
 			 throw new Error('invalid json format, missing attribute anzahlSchienen');
 		result.anzahlSchienen = obj.anzahlSchienen;

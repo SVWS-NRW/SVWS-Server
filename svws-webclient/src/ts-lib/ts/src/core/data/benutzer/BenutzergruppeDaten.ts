@@ -31,13 +31,13 @@ export class BenutzergruppeDaten extends JavaObject {
 		result.id = obj.id;
 		if (typeof obj.bezeichnung === "undefined")
 			 throw new Error('invalid json format, missing attribute bezeichnung');
-		result.bezeichnung = obj.bezeichnung;
+		result.bezeichnung = String(obj.bezeichnung);
 		if (typeof obj.istAdmin === "undefined")
 			 throw new Error('invalid json format, missing attribute istAdmin');
 		result.istAdmin = obj.istAdmin;
 		if (!!obj.kompetenzen) {
 			for (let elem of obj.kompetenzen) {
-				result.kompetenzen?.add(elem);
+				result.kompetenzen?.add(Number(elem));
 			}
 		}
 		return result;

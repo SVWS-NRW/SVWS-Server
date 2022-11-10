@@ -28,12 +28,12 @@ export class Schild3KatalogEintragDatenart extends JavaObject {
 	public static transpilerFromJSON(json : string): Schild3KatalogEintragDatenart {
 		const obj = JSON.parse(json);
 		const result = new Schild3KatalogEintragDatenart();
-		result.DatenartKrz = typeof obj.DatenartKrz === "undefined" ? null : obj.DatenartKrz;
-		result.Datenart = typeof obj.Datenart === "undefined" ? null : obj.Datenart;
-		result.Tabellenname = typeof obj.Tabellenname === "undefined" ? null : obj.Tabellenname;
-		result.Reihenfolge = typeof obj.Reihenfolge === "undefined" ? null : obj.Reihenfolge;
-		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon;
-		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis;
+		result.DatenartKrz = typeof obj.DatenartKrz === "undefined" ? null : obj.DatenartKrz === null ? null : String(obj.DatenartKrz);
+		result.Datenart = typeof obj.Datenart === "undefined" ? null : obj.Datenart === null ? null : String(obj.Datenart);
+		result.Tabellenname = typeof obj.Tabellenname === "undefined" ? null : obj.Tabellenname === null ? null : String(obj.Tabellenname);
+		result.Reihenfolge = typeof obj.Reihenfolge === "undefined" ? null : obj.Reihenfolge === null ? null : Number(obj.Reihenfolge);
+		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : Number(obj.gueltigVon);
+		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : Number(obj.gueltigBis);
 		return result;
 	}
 

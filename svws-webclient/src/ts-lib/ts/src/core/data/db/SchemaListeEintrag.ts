@@ -21,7 +21,7 @@ export class SchemaListeEintrag extends JavaObject {
 	public static transpilerFromJSON(json : string): SchemaListeEintrag {
 		const obj = JSON.parse(json);
 		const result = new SchemaListeEintrag();
-		result.name = typeof obj.name === "undefined" ? null : obj.name;
+		result.name = typeof obj.name === "undefined" ? null : obj.name === null ? null : String(obj.name);
 		if (typeof obj.revision === "undefined")
 			 throw new Error('invalid json format, missing attribute revision');
 		result.revision = obj.revision;

@@ -25,12 +25,12 @@ export class SchuelerLernabschnittNachpruefung extends JavaObject {
 		const result = new SchuelerLernabschnittNachpruefung();
 		if (typeof obj.grund === "undefined")
 			 throw new Error('invalid json format, missing attribute grund');
-		result.grund = obj.grund;
+		result.grund = String(obj.grund);
 		if (typeof obj.fachID === "undefined")
 			 throw new Error('invalid json format, missing attribute fachID');
 		result.fachID = obj.fachID;
-		result.note = typeof obj.note === "undefined" ? null : obj.note;
-		result.datum = typeof obj.datum === "undefined" ? null : obj.datum;
+		result.note = typeof obj.note === "undefined" ? null : obj.note === null ? null : String(obj.note);
+		result.datum = typeof obj.datum === "undefined" ? null : obj.datum === null ? null : String(obj.datum);
 		return result;
 	}
 

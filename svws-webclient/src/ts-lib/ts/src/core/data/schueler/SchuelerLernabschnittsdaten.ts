@@ -120,12 +120,12 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 		if (typeof obj.schuljahresabschnitt === "undefined")
 			 throw new Error('invalid json format, missing attribute schuljahresabschnitt');
 		result.schuljahresabschnitt = obj.schuljahresabschnitt;
-		result.wechselNr = typeof obj.wechselNr === "undefined" ? null : obj.wechselNr;
-		result.datumAnfang = typeof obj.datumAnfang === "undefined" ? null : obj.datumAnfang;
-		result.datumEnde = typeof obj.datumEnde === "undefined" ? null : obj.datumEnde;
-		result.datumKonferenz = typeof obj.datumKonferenz === "undefined" ? null : obj.datumKonferenz;
-		result.datumZeugnis = typeof obj.datumZeugnis === "undefined" ? null : obj.datumZeugnis;
-		result.anzahlSchulbesuchsjahre = typeof obj.anzahlSchulbesuchsjahre === "undefined" ? null : obj.anzahlSchulbesuchsjahre;
+		result.wechselNr = typeof obj.wechselNr === "undefined" ? null : obj.wechselNr === null ? null : Number(obj.wechselNr);
+		result.datumAnfang = typeof obj.datumAnfang === "undefined" ? null : obj.datumAnfang === null ? null : String(obj.datumAnfang);
+		result.datumEnde = typeof obj.datumEnde === "undefined" ? null : obj.datumEnde === null ? null : String(obj.datumEnde);
+		result.datumKonferenz = typeof obj.datumKonferenz === "undefined" ? null : obj.datumKonferenz === null ? null : String(obj.datumKonferenz);
+		result.datumZeugnis = typeof obj.datumZeugnis === "undefined" ? null : obj.datumZeugnis === null ? null : String(obj.datumZeugnis);
+		result.anzahlSchulbesuchsjahre = typeof obj.anzahlSchulbesuchsjahre === "undefined" ? null : obj.anzahlSchulbesuchsjahre === null ? null : Number(obj.anzahlSchulbesuchsjahre);
 		if (typeof obj.istGewertet === "undefined")
 			 throw new Error('invalid json format, missing attribute istGewertet');
 		result.istGewertet = obj.istGewertet;
@@ -134,26 +134,26 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 		result.istWiederholung = obj.istWiederholung;
 		if (typeof obj.pruefungsOrdnung === "undefined")
 			 throw new Error('invalid json format, missing attribute pruefungsOrdnung');
-		result.pruefungsOrdnung = obj.pruefungsOrdnung;
+		result.pruefungsOrdnung = String(obj.pruefungsOrdnung);
 		if (typeof obj.klassenID === "undefined")
 			 throw new Error('invalid json format, missing attribute klassenID');
 		result.klassenID = obj.klassenID;
-		result.folgeklassenID = typeof obj.folgeklassenID === "undefined" ? null : obj.folgeklassenID;
-		result.schulgliederung = typeof obj.schulgliederung === "undefined" ? null : obj.schulgliederung;
+		result.folgeklassenID = typeof obj.folgeklassenID === "undefined" ? null : obj.folgeklassenID === null ? null : Number(obj.folgeklassenID);
+		result.schulgliederung = typeof obj.schulgliederung === "undefined" ? null : obj.schulgliederung === null ? null : String(obj.schulgliederung);
 		if (typeof obj.jahrgangID === "undefined")
 			 throw new Error('invalid json format, missing attribute jahrgangID');
 		result.jahrgangID = obj.jahrgangID;
-		result.fachklasseID = typeof obj.fachklasseID === "undefined" ? null : obj.fachklasseID;
-		result.schwerpunktID = typeof obj.schwerpunktID === "undefined" ? null : obj.schwerpunktID;
-		result.organisationsform = typeof obj.organisationsform === "undefined" ? null : obj.organisationsform;
-		result.Klassenart = typeof obj.Klassenart === "undefined" ? null : obj.Klassenart;
+		result.fachklasseID = typeof obj.fachklasseID === "undefined" ? null : obj.fachklasseID === null ? null : Number(obj.fachklasseID);
+		result.schwerpunktID = typeof obj.schwerpunktID === "undefined" ? null : obj.schwerpunktID === null ? null : Number(obj.schwerpunktID);
+		result.organisationsform = typeof obj.organisationsform === "undefined" ? null : obj.organisationsform === null ? null : String(obj.organisationsform);
+		result.Klassenart = typeof obj.Klassenart === "undefined" ? null : obj.Klassenart === null ? null : String(obj.Klassenart);
 		if (typeof obj.fehlstundenGesamt === "undefined")
 			 throw new Error('invalid json format, missing attribute fehlstundenGesamt');
 		result.fehlstundenGesamt = obj.fehlstundenGesamt;
 		if (typeof obj.fehlstundenUnentschuldigt === "undefined")
 			 throw new Error('invalid json format, missing attribute fehlstundenUnentschuldigt');
 		result.fehlstundenUnentschuldigt = obj.fehlstundenUnentschuldigt;
-		result.fehlstundenGrenzwert = typeof obj.fehlstundenGrenzwert === "undefined" ? null : obj.fehlstundenGrenzwert;
+		result.fehlstundenGrenzwert = typeof obj.fehlstundenGrenzwert === "undefined" ? null : obj.fehlstundenGrenzwert === null ? null : Number(obj.fehlstundenGrenzwert);
 		if (typeof obj.hatSchwerbehinderungsNachweis === "undefined")
 			 throw new Error('invalid json format, missing attribute hatSchwerbehinderungsNachweis');
 		result.hatSchwerbehinderungsNachweis = obj.hatSchwerbehinderungsNachweis;
@@ -166,25 +166,25 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 		if (typeof obj.hatZieldifferentenUnterricht === "undefined")
 			 throw new Error('invalid json format, missing attribute hatZieldifferentenUnterricht');
 		result.hatZieldifferentenUnterricht = obj.hatZieldifferentenUnterricht;
-		result.foerderschwerpunkt1ID = typeof obj.foerderschwerpunkt1ID === "undefined" ? null : obj.foerderschwerpunkt1ID;
-		result.foerderschwerpunkt2ID = typeof obj.foerderschwerpunkt2ID === "undefined" ? null : obj.foerderschwerpunkt2ID;
-		result.sonderpaedagogeID = typeof obj.sonderpaedagogeID === "undefined" ? null : obj.sonderpaedagogeID;
-		result.bilingualerZweig = typeof obj.bilingualerZweig === "undefined" ? null : obj.bilingualerZweig;
+		result.foerderschwerpunkt1ID = typeof obj.foerderschwerpunkt1ID === "undefined" ? null : obj.foerderschwerpunkt1ID === null ? null : Number(obj.foerderschwerpunkt1ID);
+		result.foerderschwerpunkt2ID = typeof obj.foerderschwerpunkt2ID === "undefined" ? null : obj.foerderschwerpunkt2ID === null ? null : Number(obj.foerderschwerpunkt2ID);
+		result.sonderpaedagogeID = typeof obj.sonderpaedagogeID === "undefined" ? null : obj.sonderpaedagogeID === null ? null : Number(obj.sonderpaedagogeID);
+		result.bilingualerZweig = typeof obj.bilingualerZweig === "undefined" ? null : obj.bilingualerZweig === null ? null : String(obj.bilingualerZweig);
 		if (typeof obj.istFachpraktischerAnteilAusreichend === "undefined")
 			 throw new Error('invalid json format, missing attribute istFachpraktischerAnteilAusreichend');
 		result.istFachpraktischerAnteilAusreichend = obj.istFachpraktischerAnteilAusreichend;
-		result.versetzungsvermerk = typeof obj.versetzungsvermerk === "undefined" ? null : obj.versetzungsvermerk;
-		result.noteDurchschnitt = typeof obj.noteDurchschnitt === "undefined" ? null : obj.noteDurchschnitt;
-		result.noteLernbereichGSbzwAL = typeof obj.noteLernbereichGSbzwAL === "undefined" ? null : obj.noteLernbereichGSbzwAL;
-		result.noteLernbereichNW = typeof obj.noteLernbereichNW === "undefined" ? null : obj.noteLernbereichNW;
-		result.abschlussart = typeof obj.abschlussart === "undefined" ? null : obj.abschlussart;
+		result.versetzungsvermerk = typeof obj.versetzungsvermerk === "undefined" ? null : obj.versetzungsvermerk === null ? null : String(obj.versetzungsvermerk);
+		result.noteDurchschnitt = typeof obj.noteDurchschnitt === "undefined" ? null : obj.noteDurchschnitt === null ? null : String(obj.noteDurchschnitt);
+		result.noteLernbereichGSbzwAL = typeof obj.noteLernbereichGSbzwAL === "undefined" ? null : obj.noteLernbereichGSbzwAL === null ? null : Number(obj.noteLernbereichGSbzwAL);
+		result.noteLernbereichNW = typeof obj.noteLernbereichNW === "undefined" ? null : obj.noteLernbereichNW === null ? null : Number(obj.noteLernbereichNW);
+		result.abschlussart = typeof obj.abschlussart === "undefined" ? null : obj.abschlussart === null ? null : Number(obj.abschlussart);
 		if (typeof obj.istAbschlussPrognose === "undefined")
 			 throw new Error('invalid json format, missing attribute istAbschlussPrognose');
 		result.istAbschlussPrognose = obj.istAbschlussPrognose;
-		result.abschluss = typeof obj.abschluss === "undefined" ? null : obj.abschluss;
-		result.abschlussBerufsbildend = typeof obj.abschlussBerufsbildend === "undefined" ? null : obj.abschlussBerufsbildend;
-		result.textErgebnisPruefungsalgorithmus = typeof obj.textErgebnisPruefungsalgorithmus === "undefined" ? null : obj.textErgebnisPruefungsalgorithmus;
-		result.zeugnisart = typeof obj.zeugnisart === "undefined" ? null : obj.zeugnisart;
+		result.abschluss = typeof obj.abschluss === "undefined" ? null : obj.abschluss === null ? null : String(obj.abschluss);
+		result.abschlussBerufsbildend = typeof obj.abschlussBerufsbildend === "undefined" ? null : obj.abschlussBerufsbildend === null ? null : String(obj.abschlussBerufsbildend);
+		result.textErgebnisPruefungsalgorithmus = typeof obj.textErgebnisPruefungsalgorithmus === "undefined" ? null : obj.textErgebnisPruefungsalgorithmus === null ? null : String(obj.textErgebnisPruefungsalgorithmus);
+		result.zeugnisart = typeof obj.zeugnisart === "undefined" ? null : obj.zeugnisart === null ? null : String(obj.zeugnisart);
 		result.nachpruefungen = ((typeof obj.nachpruefungen === "undefined") || (obj.nachpruefungen === null)) ? null : SchuelerLernabschnittNachpruefungsdaten.transpilerFromJSON(JSON.stringify(obj.nachpruefungen));
 		if (typeof obj.bemerkungen === "undefined")
 			 throw new Error('invalid json format, missing attribute bemerkungen');

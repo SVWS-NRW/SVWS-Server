@@ -34,14 +34,14 @@ export class SchildReportingDatenquelle extends JavaObject {
 		const result = new SchildReportingDatenquelle();
 		if (typeof obj.name === "undefined")
 			 throw new Error('invalid json format, missing attribute name');
-		result.name = obj.name;
+		result.name = String(obj.name);
 		if (typeof obj.beschreibung === "undefined")
 			 throw new Error('invalid json format, missing attribute beschreibung');
-		result.beschreibung = obj.beschreibung;
-		result.master = typeof obj.master === "undefined" ? null : obj.master;
-		result.masterattribut = typeof obj.masterattribut === "undefined" ? null : obj.masterattribut;
-		result.mastertyp = typeof obj.mastertyp === "undefined" ? null : obj.mastertyp;
-		result.linkattribut = typeof obj.linkattribut === "undefined" ? null : obj.linkattribut;
+		result.beschreibung = String(obj.beschreibung);
+		result.master = typeof obj.master === "undefined" ? null : obj.master === null ? null : String(obj.master);
+		result.masterattribut = typeof obj.masterattribut === "undefined" ? null : obj.masterattribut === null ? null : String(obj.masterattribut);
+		result.mastertyp = typeof obj.mastertyp === "undefined" ? null : obj.mastertyp === null ? null : String(obj.mastertyp);
+		result.linkattribut = typeof obj.linkattribut === "undefined" ? null : obj.linkattribut === null ? null : String(obj.linkattribut);
 		if (!!obj.attribute) {
 			for (let elem of obj.attribute) {
 				result.attribute?.add(SchildReportingDatenquelleAttribut.transpilerFromJSON(JSON.stringify(elem)));

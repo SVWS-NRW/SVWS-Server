@@ -26,7 +26,7 @@ export class GostBlockungListeneintrag extends JavaObject {
 		result.id = obj.id;
 		if (typeof obj.name === "undefined")
 			 throw new Error('invalid json format, missing attribute name');
-		result.name = obj.name;
+		result.name = String(obj.name);
 		if (typeof obj.gostHalbjahr === "undefined")
 			 throw new Error('invalid json format, missing attribute gostHalbjahr');
 		result.gostHalbjahr = obj.gostHalbjahr;

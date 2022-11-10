@@ -32,16 +32,16 @@ export class ENMZP10 extends JavaObject {
 		if (typeof obj.fachID === "undefined")
 			 throw new Error('invalid json format, missing attribute fachID');
 		result.fachID = obj.fachID;
-		result.vornote = typeof obj.vornote === "undefined" ? null : obj.vornote;
-		result.noteSchriftlichePruefung = typeof obj.noteSchriftlichePruefung === "undefined" ? null : obj.noteSchriftlichePruefung;
+		result.vornote = typeof obj.vornote === "undefined" ? null : obj.vornote === null ? null : String(obj.vornote);
+		result.noteSchriftlichePruefung = typeof obj.noteSchriftlichePruefung === "undefined" ? null : obj.noteSchriftlichePruefung === null ? null : String(obj.noteSchriftlichePruefung);
 		if (typeof obj.muendlichePruefung === "undefined")
 			 throw new Error('invalid json format, missing attribute muendlichePruefung');
 		result.muendlichePruefung = obj.muendlichePruefung;
 		if (typeof obj.muendlichePruefungFreiwillig === "undefined")
 			 throw new Error('invalid json format, missing attribute muendlichePruefungFreiwillig');
 		result.muendlichePruefungFreiwillig = obj.muendlichePruefungFreiwillig;
-		result.noteMuendlichePruefung = typeof obj.noteMuendlichePruefung === "undefined" ? null : obj.noteMuendlichePruefung;
-		result.abschlussnote = typeof obj.abschlussnote === "undefined" ? null : obj.abschlussnote;
+		result.noteMuendlichePruefung = typeof obj.noteMuendlichePruefung === "undefined" ? null : obj.noteMuendlichePruefung === null ? null : String(obj.noteMuendlichePruefung);
+		result.abschlussnote = typeof obj.abschlussnote === "undefined" ? null : obj.abschlussnote === null ? null : String(obj.abschlussnote);
 		return result;
 	}
 

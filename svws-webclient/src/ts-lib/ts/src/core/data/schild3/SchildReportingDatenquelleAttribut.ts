@@ -23,13 +23,13 @@ export class SchildReportingDatenquelleAttribut extends JavaObject {
 		const result = new SchildReportingDatenquelleAttribut();
 		if (typeof obj.name === "undefined")
 			 throw new Error('invalid json format, missing attribute name');
-		result.name = obj.name;
+		result.name = String(obj.name);
 		if (typeof obj.typ === "undefined")
 			 throw new Error('invalid json format, missing attribute typ');
-		result.typ = obj.typ;
+		result.typ = String(obj.typ);
 		if (typeof obj.beschreibung === "undefined")
 			 throw new Error('invalid json format, missing attribute beschreibung');
-		result.beschreibung = obj.beschreibung;
+		result.beschreibung = String(obj.beschreibung);
 		return result;
 	}
 

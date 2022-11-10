@@ -42,12 +42,12 @@ export class GostBlockungsergebnisKurs extends JavaObject {
 		result.anzahlSchienen = obj.anzahlSchienen;
 		if (!!obj.schueler) {
 			for (let elem of obj.schueler) {
-				result.schueler?.add(elem);
+				result.schueler?.add(Number(elem));
 			}
 		}
 		if (!!obj.schienen) {
 			for (let elem of obj.schienen) {
-				result.schienen?.add(elem);
+				result.schienen?.add(Number(elem));
 			}
 		}
 		return result;

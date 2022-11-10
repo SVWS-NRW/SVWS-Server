@@ -26,11 +26,11 @@ export class Schild3KatalogEintragDQRNiveaus extends JavaObject {
 	public static transpilerFromJSON(json : string): Schild3KatalogEintragDQRNiveaus {
 		const obj = JSON.parse(json);
 		const result = new Schild3KatalogEintragDQRNiveaus();
-		result.Gliederung = typeof obj.Gliederung === "undefined" ? null : obj.Gliederung;
-		result.FKS = typeof obj.FKS === "undefined" ? null : obj.FKS;
-		result.DQR_Niveau = typeof obj.DQR_Niveau === "undefined" ? null : obj.DQR_Niveau;
-		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon;
-		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis;
+		result.Gliederung = typeof obj.Gliederung === "undefined" ? null : obj.Gliederung === null ? null : String(obj.Gliederung);
+		result.FKS = typeof obj.FKS === "undefined" ? null : obj.FKS === null ? null : String(obj.FKS);
+		result.DQR_Niveau = typeof obj.DQR_Niveau === "undefined" ? null : obj.DQR_Niveau === null ? null : Number(obj.DQR_Niveau);
+		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : Number(obj.gueltigVon);
+		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : Number(obj.gueltigBis);
 		return result;
 	}
 

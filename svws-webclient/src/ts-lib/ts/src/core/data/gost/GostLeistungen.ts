@@ -43,13 +43,13 @@ export class GostLeistungen extends JavaObject {
 		if (typeof obj.id === "undefined")
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		result.aktuellesSchuljahr = typeof obj.aktuellesSchuljahr === "undefined" ? null : obj.aktuellesSchuljahr;
-		result.aktuellerJahrgang = typeof obj.aktuellerJahrgang === "undefined" ? null : obj.aktuellerJahrgang;
+		result.aktuellesSchuljahr = typeof obj.aktuellesSchuljahr === "undefined" ? null : obj.aktuellesSchuljahr === null ? null : Number(obj.aktuellesSchuljahr);
+		result.aktuellerJahrgang = typeof obj.aktuellerJahrgang === "undefined" ? null : obj.aktuellerJahrgang === null ? null : String(obj.aktuellerJahrgang);
 		result.sprachendaten = ((typeof obj.sprachendaten === "undefined") || (obj.sprachendaten === null)) ? null : Sprachendaten.transpilerFromJSON(JSON.stringify(obj.sprachendaten));
-		result.bilingualeSprache = typeof obj.bilingualeSprache === "undefined" ? null : obj.bilingualeSprache;
-		result.projektkursThema = typeof obj.projektkursThema === "undefined" ? null : obj.projektkursThema;
-		result.projektkursLeitfach1Kuerzel = typeof obj.projektkursLeitfach1Kuerzel === "undefined" ? null : obj.projektkursLeitfach1Kuerzel;
-		result.projektkursLeitfach2Kuerzel = typeof obj.projektkursLeitfach2Kuerzel === "undefined" ? null : obj.projektkursLeitfach2Kuerzel;
+		result.bilingualeSprache = typeof obj.bilingualeSprache === "undefined" ? null : obj.bilingualeSprache === null ? null : String(obj.bilingualeSprache);
+		result.projektkursThema = typeof obj.projektkursThema === "undefined" ? null : obj.projektkursThema === null ? null : String(obj.projektkursThema);
+		result.projektkursLeitfach1Kuerzel = typeof obj.projektkursLeitfach1Kuerzel === "undefined" ? null : obj.projektkursLeitfach1Kuerzel === null ? null : String(obj.projektkursLeitfach1Kuerzel);
+		result.projektkursLeitfach2Kuerzel = typeof obj.projektkursLeitfach2Kuerzel === "undefined" ? null : obj.projektkursLeitfach2Kuerzel === null ? null : String(obj.projektkursLeitfach2Kuerzel);
 		for (let i : number = 0; i < obj.bewertetesHalbjahr.length; i++) {
 			result.bewertetesHalbjahr[i] = obj.bewertetesHalbjahr[i];
 		}

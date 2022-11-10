@@ -40,10 +40,10 @@ export class Sprachpruefung extends JavaObject {
 	public static transpilerFromJSON(json : string): Sprachpruefung {
 		const obj = JSON.parse(json);
 		const result = new Sprachpruefung();
-		result.sprache = typeof obj.sprache === "undefined" ? null : obj.sprache;
-		result.jahrgang = typeof obj.jahrgang === "undefined" ? null : obj.jahrgang;
-		result.anspruchsniveauId = typeof obj.anspruchsniveauId === "undefined" ? null : obj.anspruchsniveauId;
-		result.ersetzteSprache = typeof obj.ersetzteSprache === "undefined" ? null : obj.ersetzteSprache;
+		result.sprache = typeof obj.sprache === "undefined" ? null : obj.sprache === null ? null : String(obj.sprache);
+		result.jahrgang = typeof obj.jahrgang === "undefined" ? null : obj.jahrgang === null ? null : String(obj.jahrgang);
+		result.anspruchsniveauId = typeof obj.anspruchsniveauId === "undefined" ? null : obj.anspruchsniveauId === null ? null : Number(obj.anspruchsniveauId);
+		result.ersetzteSprache = typeof obj.ersetzteSprache === "undefined" ? null : obj.ersetzteSprache === null ? null : String(obj.ersetzteSprache);
 		if (typeof obj.istHSUPruefung === "undefined")
 			 throw new Error('invalid json format, missing attribute istHSUPruefung');
 		result.istHSUPruefung = obj.istHSUPruefung;
@@ -62,8 +62,8 @@ export class Sprachpruefung extends JavaObject {
 		if (typeof obj.kannBelegungAlsFortgefuehrteSpracheErlauben === "undefined")
 			 throw new Error('invalid json format, missing attribute kannBelegungAlsFortgefuehrteSpracheErlauben');
 		result.kannBelegungAlsFortgefuehrteSpracheErlauben = obj.kannBelegungAlsFortgefuehrteSpracheErlauben;
-		result.referenzniveau = typeof obj.referenzniveau === "undefined" ? null : obj.referenzniveau;
-		result.note = typeof obj.note === "undefined" ? null : obj.note;
+		result.referenzniveau = typeof obj.referenzniveau === "undefined" ? null : obj.referenzniveau === null ? null : String(obj.referenzniveau);
+		result.note = typeof obj.note === "undefined" ? null : obj.note === null ? null : Number(obj.note);
 		return result;
 	}
 

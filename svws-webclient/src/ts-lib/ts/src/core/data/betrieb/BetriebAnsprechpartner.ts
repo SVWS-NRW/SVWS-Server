@@ -36,16 +36,16 @@ export class BetriebAnsprechpartner extends JavaObject {
 	public static transpilerFromJSON(json : string): BetriebAnsprechpartner {
 		const obj = JSON.parse(json);
 		const result = new BetriebAnsprechpartner();
-		result.id = typeof obj.id === "undefined" ? null : obj.id;
-		result.betrieb_id = typeof obj.betrieb_id === "undefined" ? null : obj.betrieb_id;
-		result.name = typeof obj.name === "undefined" ? null : obj.name;
-		result.vorname = typeof obj.vorname === "undefined" ? null : obj.vorname;
-		result.anrede = typeof obj.anrede === "undefined" ? null : obj.anrede;
-		result.telefon = typeof obj.telefon === "undefined" ? null : obj.telefon;
-		result.email = typeof obj.email === "undefined" ? null : obj.email;
-		result.abteilung = typeof obj.abteilung === "undefined" ? null : obj.abteilung;
-		result.titel = typeof obj.titel === "undefined" ? null : obj.titel;
-		result.GU_ID = typeof obj.GU_ID === "undefined" ? null : obj.GU_ID;
+		result.id = typeof obj.id === "undefined" ? null : obj.id === null ? null : Number(obj.id);
+		result.betrieb_id = typeof obj.betrieb_id === "undefined" ? null : obj.betrieb_id === null ? null : Number(obj.betrieb_id);
+		result.name = typeof obj.name === "undefined" ? null : obj.name === null ? null : String(obj.name);
+		result.vorname = typeof obj.vorname === "undefined" ? null : obj.vorname === null ? null : String(obj.vorname);
+		result.anrede = typeof obj.anrede === "undefined" ? null : obj.anrede === null ? null : String(obj.anrede);
+		result.telefon = typeof obj.telefon === "undefined" ? null : obj.telefon === null ? null : String(obj.telefon);
+		result.email = typeof obj.email === "undefined" ? null : obj.email === null ? null : String(obj.email);
+		result.abteilung = typeof obj.abteilung === "undefined" ? null : obj.abteilung === null ? null : String(obj.abteilung);
+		result.titel = typeof obj.titel === "undefined" ? null : obj.titel === null ? null : String(obj.titel);
+		result.GU_ID = typeof obj.GU_ID === "undefined" ? null : obj.GU_ID === null ? null : String(obj.GU_ID);
 		return result;
 	}
 

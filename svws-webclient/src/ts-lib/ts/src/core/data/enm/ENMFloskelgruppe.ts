@@ -25,9 +25,9 @@ export class ENMFloskelgruppe extends JavaObject {
 	public static transpilerFromJSON(json : string): ENMFloskelgruppe {
 		const obj = JSON.parse(json);
 		const result = new ENMFloskelgruppe();
-		result.kuerzel = typeof obj.kuerzel === "undefined" ? null : obj.kuerzel;
-		result.bezeichnung = typeof obj.bezeichnung === "undefined" ? null : obj.bezeichnung;
-		result.hauptgruppe = typeof obj.hauptgruppe === "undefined" ? null : obj.hauptgruppe;
+		result.kuerzel = typeof obj.kuerzel === "undefined" ? null : obj.kuerzel === null ? null : String(obj.kuerzel);
+		result.bezeichnung = typeof obj.bezeichnung === "undefined" ? null : obj.bezeichnung === null ? null : String(obj.bezeichnung);
+		result.hauptgruppe = typeof obj.hauptgruppe === "undefined" ? null : obj.hauptgruppe === null ? null : String(obj.hauptgruppe);
 		if (!!obj.floskeln) {
 			for (let elem of obj.floskeln) {
 				result.floskeln?.add(ENMFloskel.transpilerFromJSON(JSON.stringify(elem)));

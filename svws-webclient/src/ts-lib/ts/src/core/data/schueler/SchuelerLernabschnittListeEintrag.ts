@@ -49,7 +49,7 @@ export class SchuelerLernabschnittListeEintrag extends JavaObject {
 		if (typeof obj.schuljahresabschnitt === "undefined")
 			 throw new Error('invalid json format, missing attribute schuljahresabschnitt');
 		result.schuljahresabschnitt = obj.schuljahresabschnitt;
-		result.wechselNr = typeof obj.wechselNr === "undefined" ? null : obj.wechselNr;
+		result.wechselNr = typeof obj.wechselNr === "undefined" ? null : obj.wechselNr === null ? null : Number(obj.wechselNr);
 		if (typeof obj.istGewertet === "undefined")
 			 throw new Error('invalid json format, missing attribute istGewertet');
 		result.istGewertet = obj.istGewertet;
@@ -58,22 +58,22 @@ export class SchuelerLernabschnittListeEintrag extends JavaObject {
 		result.istWiederholung = obj.istWiederholung;
 		if (typeof obj.pruefungsOrdnung === "undefined")
 			 throw new Error('invalid json format, missing attribute pruefungsOrdnung');
-		result.pruefungsOrdnung = obj.pruefungsOrdnung;
+		result.pruefungsOrdnung = String(obj.pruefungsOrdnung);
 		if (typeof obj.klassenID === "undefined")
 			 throw new Error('invalid json format, missing attribute klassenID');
 		result.klassenID = obj.klassenID;
 		if (typeof obj.klasse === "undefined")
 			 throw new Error('invalid json format, missing attribute klasse');
-		result.klasse = obj.klasse;
+		result.klasse = String(obj.klasse);
 		if (typeof obj.klasseStatistik === "undefined")
 			 throw new Error('invalid json format, missing attribute klasseStatistik');
-		result.klasseStatistik = obj.klasseStatistik;
+		result.klasseStatistik = String(obj.klasseStatistik);
 		if (typeof obj.jahrgangID === "undefined")
 			 throw new Error('invalid json format, missing attribute jahrgangID');
 		result.jahrgangID = obj.jahrgangID;
 		if (typeof obj.jahrgang === "undefined")
 			 throw new Error('invalid json format, missing attribute jahrgang');
-		result.jahrgang = obj.jahrgang;
+		result.jahrgang = String(obj.jahrgang);
 		return result;
 	}
 

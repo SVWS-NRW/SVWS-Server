@@ -50,13 +50,13 @@ export class HerkunftsartKatalogEintragBezeichnung extends JavaObject {
 		const result = new HerkunftsartKatalogEintragBezeichnung();
 		if (typeof obj.schulform === "undefined")
 			 throw new Error('invalid json format, missing attribute schulform');
-		result.schulform = obj.schulform;
+		result.schulform = String(obj.schulform);
 		if (typeof obj.kurzBezeichnung === "undefined")
 			 throw new Error('invalid json format, missing attribute kurzBezeichnung');
-		result.kurzBezeichnung = obj.kurzBezeichnung;
+		result.kurzBezeichnung = String(obj.kurzBezeichnung);
 		if (typeof obj.bezeichnung === "undefined")
 			 throw new Error('invalid json format, missing attribute bezeichnung');
-		result.bezeichnung = obj.bezeichnung;
+		result.bezeichnung = String(obj.bezeichnung);
 		return result;
 	}
 

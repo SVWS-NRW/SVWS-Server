@@ -48,7 +48,7 @@ export class SchuelerStundenplan extends JavaObject {
 		result.idStundenplan = obj.idStundenplan;
 		if (typeof obj.bezeichnungStundenplan === "undefined")
 			 throw new Error('invalid json format, missing attribute bezeichnungStundenplan');
-		result.bezeichnungStundenplan = obj.bezeichnungStundenplan;
+		result.bezeichnungStundenplan = String(obj.bezeichnungStundenplan);
 		if (typeof obj.idSchuljahresabschnitt === "undefined")
 			 throw new Error('invalid json format, missing attribute idSchuljahresabschnitt');
 		result.idSchuljahresabschnitt = obj.idSchuljahresabschnitt;
@@ -59,25 +59,25 @@ export class SchuelerStundenplan extends JavaObject {
 		}
 		if (typeof obj.gueltigAb === "undefined")
 			 throw new Error('invalid json format, missing attribute gueltigAb');
-		result.gueltigAb = obj.gueltigAb;
+		result.gueltigAb = String(obj.gueltigAb);
 		if (typeof obj.gueltigBis === "undefined")
 			 throw new Error('invalid json format, missing attribute gueltigBis');
-		result.gueltigBis = obj.gueltigBis;
+		result.gueltigBis = String(obj.gueltigBis);
 		if (typeof obj.idSchueler === "undefined")
 			 throw new Error('invalid json format, missing attribute idSchueler');
 		result.idSchueler = obj.idSchueler;
 		if (typeof obj.nachname === "undefined")
 			 throw new Error('invalid json format, missing attribute nachname');
-		result.nachname = obj.nachname;
+		result.nachname = String(obj.nachname);
 		if (typeof obj.vorname === "undefined")
 			 throw new Error('invalid json format, missing attribute vorname');
-		result.vorname = obj.vorname;
+		result.vorname = String(obj.vorname);
 		if (typeof obj.idKlasse === "undefined")
 			 throw new Error('invalid json format, missing attribute idKlasse');
 		result.idKlasse = obj.idKlasse;
 		if (typeof obj.jahrgang === "undefined")
 			 throw new Error('invalid json format, missing attribute jahrgang');
-		result.jahrgang = obj.jahrgang;
+		result.jahrgang = String(obj.jahrgang);
 		if (!!obj.unterricht) {
 			for (let elem of obj.unterricht) {
 				result.unterricht?.add(SchuelerStundenplanUnterricht.transpilerFromJSON(JSON.stringify(elem)));

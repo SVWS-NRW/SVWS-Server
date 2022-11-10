@@ -46,8 +46,8 @@ export class SchulformSchulgliederung extends JavaObject {
 		const result = new SchulformSchulgliederung();
 		if (typeof obj.schulform === "undefined")
 			 throw new Error('invalid json format, missing attribute schulform');
-		result.schulform = obj.schulform;
-		result.gliederung = typeof obj.gliederung === "undefined" ? null : obj.gliederung;
+		result.schulform = String(obj.schulform);
+		result.gliederung = typeof obj.gliederung === "undefined" ? null : obj.gliederung === null ? null : String(obj.gliederung);
 		return result;
 	}
 

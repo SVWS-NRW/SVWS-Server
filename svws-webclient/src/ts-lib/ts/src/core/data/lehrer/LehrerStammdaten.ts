@@ -63,34 +63,34 @@ export class LehrerStammdaten extends JavaObject {
 		result.id = obj.id;
 		if (typeof obj.kuerzel === "undefined")
 			 throw new Error('invalid json format, missing attribute kuerzel');
-		result.kuerzel = obj.kuerzel;
+		result.kuerzel = String(obj.kuerzel);
 		if (typeof obj.personalTyp === "undefined")
 			 throw new Error('invalid json format, missing attribute personalTyp');
-		result.personalTyp = obj.personalTyp;
-		result.anrede = typeof obj.anrede === "undefined" ? null : obj.anrede;
-		result.titel = typeof obj.titel === "undefined" ? null : obj.titel;
-		result.amtsbezeichnung = typeof obj.amtsbezeichnung === "undefined" ? null : obj.amtsbezeichnung;
+		result.personalTyp = String(obj.personalTyp);
+		result.anrede = typeof obj.anrede === "undefined" ? null : obj.anrede === null ? null : String(obj.anrede);
+		result.titel = typeof obj.titel === "undefined" ? null : obj.titel === null ? null : String(obj.titel);
+		result.amtsbezeichnung = typeof obj.amtsbezeichnung === "undefined" ? null : obj.amtsbezeichnung === null ? null : String(obj.amtsbezeichnung);
 		if (typeof obj.nachname === "undefined")
 			 throw new Error('invalid json format, missing attribute nachname');
-		result.nachname = obj.nachname;
+		result.nachname = String(obj.nachname);
 		if (typeof obj.vorname === "undefined")
 			 throw new Error('invalid json format, missing attribute vorname');
-		result.vorname = obj.vorname;
+		result.vorname = String(obj.vorname);
 		if (typeof obj.geschlecht === "undefined")
 			 throw new Error('invalid json format, missing attribute geschlecht');
 		result.geschlecht = obj.geschlecht;
-		result.geburtsdatum = typeof obj.geburtsdatum === "undefined" ? null : obj.geburtsdatum;
-		result.staatsangehoerigkeitID = typeof obj.staatsangehoerigkeitID === "undefined" ? null : obj.staatsangehoerigkeitID;
-		result.strassenname = typeof obj.strassenname === "undefined" ? null : obj.strassenname;
-		result.hausnummer = typeof obj.hausnummer === "undefined" ? null : obj.hausnummer;
-		result.hausnummerZusatz = typeof obj.hausnummerZusatz === "undefined" ? null : obj.hausnummerZusatz;
-		result.wohnortID = typeof obj.wohnortID === "undefined" ? null : obj.wohnortID;
-		result.ortsteilID = typeof obj.ortsteilID === "undefined" ? null : obj.ortsteilID;
-		result.telefon = typeof obj.telefon === "undefined" ? null : obj.telefon;
-		result.telefonMobil = typeof obj.telefonMobil === "undefined" ? null : obj.telefonMobil;
-		result.emailPrivat = typeof obj.emailPrivat === "undefined" ? null : obj.emailPrivat;
-		result.emailDienstlich = typeof obj.emailDienstlich === "undefined" ? null : obj.emailDienstlich;
-		result.foto = typeof obj.foto === "undefined" ? null : obj.foto;
+		result.geburtsdatum = typeof obj.geburtsdatum === "undefined" ? null : obj.geburtsdatum === null ? null : String(obj.geburtsdatum);
+		result.staatsangehoerigkeitID = typeof obj.staatsangehoerigkeitID === "undefined" ? null : obj.staatsangehoerigkeitID === null ? null : String(obj.staatsangehoerigkeitID);
+		result.strassenname = typeof obj.strassenname === "undefined" ? null : obj.strassenname === null ? null : String(obj.strassenname);
+		result.hausnummer = typeof obj.hausnummer === "undefined" ? null : obj.hausnummer === null ? null : String(obj.hausnummer);
+		result.hausnummerZusatz = typeof obj.hausnummerZusatz === "undefined" ? null : obj.hausnummerZusatz === null ? null : String(obj.hausnummerZusatz);
+		result.wohnortID = typeof obj.wohnortID === "undefined" ? null : obj.wohnortID === null ? null : Number(obj.wohnortID);
+		result.ortsteilID = typeof obj.ortsteilID === "undefined" ? null : obj.ortsteilID === null ? null : Number(obj.ortsteilID);
+		result.telefon = typeof obj.telefon === "undefined" ? null : obj.telefon === null ? null : String(obj.telefon);
+		result.telefonMobil = typeof obj.telefonMobil === "undefined" ? null : obj.telefonMobil === null ? null : String(obj.telefonMobil);
+		result.emailPrivat = typeof obj.emailPrivat === "undefined" ? null : obj.emailPrivat === null ? null : String(obj.emailPrivat);
+		result.emailDienstlich = typeof obj.emailDienstlich === "undefined" ? null : obj.emailDienstlich === null ? null : String(obj.emailDienstlich);
+		result.foto = typeof obj.foto === "undefined" ? null : obj.foto === null ? null : String(obj.foto);
 		return result;
 	}
 

@@ -32,14 +32,14 @@ export class BetriebListeEintrag extends JavaObject {
 	public static transpilerFromJSON(json : string): BetriebListeEintrag {
 		const obj = JSON.parse(json);
 		const result = new BetriebListeEintrag();
-		result.id = typeof obj.id === "undefined" ? null : obj.id;
-		result.adressArt = typeof obj.adressArt === "undefined" ? null : obj.adressArt;
-		result.name1 = typeof obj.name1 === "undefined" ? null : obj.name1;
-		result.strassenname = typeof obj.strassenname === "undefined" ? null : obj.strassenname;
-		result.hausnr = typeof obj.hausnr === "undefined" ? null : obj.hausnr;
-		result.hausnrzusatz = typeof obj.hausnrzusatz === "undefined" ? null : obj.hausnrzusatz;
-		result.ort_id = typeof obj.ort_id === "undefined" ? null : obj.ort_id;
-		result.branche = typeof obj.branche === "undefined" ? null : obj.branche;
+		result.id = typeof obj.id === "undefined" ? null : obj.id === null ? null : Number(obj.id);
+		result.adressArt = typeof obj.adressArt === "undefined" ? null : obj.adressArt === null ? null : Number(obj.adressArt);
+		result.name1 = typeof obj.name1 === "undefined" ? null : obj.name1 === null ? null : String(obj.name1);
+		result.strassenname = typeof obj.strassenname === "undefined" ? null : obj.strassenname === null ? null : String(obj.strassenname);
+		result.hausnr = typeof obj.hausnr === "undefined" ? null : obj.hausnr === null ? null : String(obj.hausnr);
+		result.hausnrzusatz = typeof obj.hausnrzusatz === "undefined" ? null : obj.hausnrzusatz === null ? null : String(obj.hausnrzusatz);
+		result.ort_id = typeof obj.ort_id === "undefined" ? null : obj.ort_id === null ? null : Number(obj.ort_id);
+		result.branche = typeof obj.branche === "undefined" ? null : obj.branche === null ? null : String(obj.branche);
 		return result;
 	}
 

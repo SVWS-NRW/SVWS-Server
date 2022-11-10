@@ -36,11 +36,11 @@ export class ErzieherListeEintrag extends JavaObject {
 		if (typeof obj.idSchueler === "undefined")
 			 throw new Error('invalid json format, missing attribute idSchueler');
 		result.idSchueler = obj.idSchueler;
-		result.idErzieherArt = typeof obj.idErzieherArt === "undefined" ? null : obj.idErzieherArt;
-		result.anrede = typeof obj.anrede === "undefined" ? null : obj.anrede;
-		result.name = typeof obj.name === "undefined" ? null : obj.name;
-		result.vorname = typeof obj.vorname === "undefined" ? null : obj.vorname;
-		result.email = typeof obj.email === "undefined" ? null : obj.email;
+		result.idErzieherArt = typeof obj.idErzieherArt === "undefined" ? null : obj.idErzieherArt === null ? null : Number(obj.idErzieherArt);
+		result.anrede = typeof obj.anrede === "undefined" ? null : obj.anrede === null ? null : String(obj.anrede);
+		result.name = typeof obj.name === "undefined" ? null : obj.name === null ? null : String(obj.name);
+		result.vorname = typeof obj.vorname === "undefined" ? null : obj.vorname === null ? null : String(obj.vorname);
+		result.email = typeof obj.email === "undefined" ? null : obj.email === null ? null : String(obj.email);
 		return result;
 	}
 

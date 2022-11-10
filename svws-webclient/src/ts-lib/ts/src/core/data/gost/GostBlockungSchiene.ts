@@ -32,8 +32,8 @@ export class GostBlockungSchiene extends JavaObject {
 		result.nummer = obj.nummer;
 		if (typeof obj.bezeichnung === "undefined")
 			 throw new Error('invalid json format, missing attribute bezeichnung');
-		result.bezeichnung = obj.bezeichnung;
-		result.wochenstunden = typeof obj.wochenstunden === "undefined" ? null : obj.wochenstunden;
+		result.bezeichnung = String(obj.bezeichnung);
+		result.wochenstunden = typeof obj.wochenstunden === "undefined" ? null : obj.wochenstunden === null ? null : Number(obj.wochenstunden);
 		return result;
 	}
 

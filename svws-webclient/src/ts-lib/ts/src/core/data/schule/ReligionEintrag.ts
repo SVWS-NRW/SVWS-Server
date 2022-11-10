@@ -32,9 +32,9 @@ export class ReligionEintrag extends JavaObject {
 		if (typeof obj.id === "undefined")
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		result.text = typeof obj.text === "undefined" ? null : obj.text;
-		result.textZeugnis = typeof obj.textZeugnis === "undefined" ? null : obj.textZeugnis;
-		result.kuerzel = typeof obj.kuerzel === "undefined" ? null : obj.kuerzel;
+		result.text = typeof obj.text === "undefined" ? null : obj.text === null ? null : String(obj.text);
+		result.textZeugnis = typeof obj.textZeugnis === "undefined" ? null : obj.textZeugnis === null ? null : String(obj.textZeugnis);
+		result.kuerzel = typeof obj.kuerzel === "undefined" ? null : obj.kuerzel === null ? null : String(obj.kuerzel);
 		if (typeof obj.sortierung === "undefined")
 			 throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;

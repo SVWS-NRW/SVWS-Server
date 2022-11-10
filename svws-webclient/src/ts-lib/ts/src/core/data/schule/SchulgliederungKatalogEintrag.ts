@@ -129,13 +129,13 @@ export class SchulgliederungKatalogEintrag extends JavaObject {
 		result.id = obj.id;
 		if (typeof obj.kuerzel === "undefined")
 			 throw new Error('invalid json format, missing attribute kuerzel');
-		result.kuerzel = obj.kuerzel;
+		result.kuerzel = String(obj.kuerzel);
 		if (typeof obj.istBK === "undefined")
 			 throw new Error('invalid json format, missing attribute istBK');
 		result.istBK = obj.istBK;
 		if (!!obj.schulformen) {
 			for (let elem of obj.schulformen) {
-				result.schulformen?.add(elem);
+				result.schulformen?.add(String(elem));
 			}
 		}
 		if (typeof obj.istAuslaufend === "undefined")
@@ -146,25 +146,25 @@ export class SchulgliederungKatalogEintrag extends JavaObject {
 		result.istAusgelaufen = obj.istAusgelaufen;
 		if (typeof obj.beschreibung === "undefined")
 			 throw new Error('invalid json format, missing attribute beschreibung');
-		result.beschreibung = obj.beschreibung;
-		result.bkAnlage = typeof obj.bkAnlage === "undefined" ? null : obj.bkAnlage;
-		result.bkTyp = typeof obj.bkTyp === "undefined" ? null : obj.bkTyp;
-		result.bkIndex = typeof obj.bkIndex === "undefined" ? null : obj.bkIndex;
+		result.beschreibung = String(obj.beschreibung);
+		result.bkAnlage = typeof obj.bkAnlage === "undefined" ? null : obj.bkAnlage === null ? null : String(obj.bkAnlage);
+		result.bkTyp = typeof obj.bkTyp === "undefined" ? null : obj.bkTyp === null ? null : String(obj.bkTyp);
+		result.bkIndex = typeof obj.bkIndex === "undefined" ? null : obj.bkIndex === null ? null : Number(obj.bkIndex);
 		if (typeof obj.istVZ === "undefined")
 			 throw new Error('invalid json format, missing attribute istVZ');
 		result.istVZ = obj.istVZ;
 		if (!!obj.bkAbschlussBerufsbildend) {
 			for (let elem of obj.bkAbschlussBerufsbildend) {
-				result.bkAbschlussBerufsbildend?.add(elem);
+				result.bkAbschlussBerufsbildend?.add(String(elem));
 			}
 		}
 		if (!!obj.bkAbschlussAllgemeinbildend) {
 			for (let elem of obj.bkAbschlussAllgemeinbildend) {
-				result.bkAbschlussAllgemeinbildend?.add(elem);
+				result.bkAbschlussAllgemeinbildend?.add(String(elem));
 			}
 		}
-		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon;
-		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis;
+		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : Number(obj.gueltigVon);
+		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : Number(obj.gueltigBis);
 		return result;
 	}
 

@@ -40,10 +40,10 @@ export class BenutzerListeEintrag extends JavaObject {
 		result.typID = obj.typID;
 		if (typeof obj.anzeigename === "undefined")
 			 throw new Error('invalid json format, missing attribute anzeigename');
-		result.anzeigename = obj.anzeigename;
+		result.anzeigename = String(obj.anzeigename);
 		if (typeof obj.name === "undefined")
 			 throw new Error('invalid json format, missing attribute name');
-		result.name = obj.name;
+		result.name = String(obj.name);
 		if (typeof obj.istAdmin === "undefined")
 			 throw new Error('invalid json format, missing attribute istAdmin');
 		result.istAdmin = obj.istAdmin;

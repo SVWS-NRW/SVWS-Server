@@ -32,15 +32,15 @@ export class GEAbschlussFach extends JavaObject {
 		const result = new GEAbschlussFach();
 		if (typeof obj.kuerzel === "undefined")
 			 throw new Error('invalid json format, missing attribute kuerzel');
-		result.kuerzel = obj.kuerzel;
-		result.bezeichnung = typeof obj.bezeichnung === "undefined" ? null : obj.bezeichnung;
+		result.kuerzel = String(obj.kuerzel);
+		result.bezeichnung = typeof obj.bezeichnung === "undefined" ? null : obj.bezeichnung === null ? null : String(obj.bezeichnung);
 		if (typeof obj.note === "undefined")
 			 throw new Error('invalid json format, missing attribute note');
 		result.note = obj.note;
-		result.istFremdsprache = typeof obj.istFremdsprache === "undefined" ? null : obj.istFremdsprache;
-		result.kursart = typeof obj.kursart === "undefined" ? null : obj.kursart;
-		result.ausgleich = typeof obj.ausgleich === "undefined" ? null : obj.ausgleich;
-		result.ausgeglichen = typeof obj.ausgeglichen === "undefined" ? null : obj.ausgeglichen;
+		result.istFremdsprache = typeof obj.istFremdsprache === "undefined" ? null : obj.istFremdsprache === null ? null : Boolean(obj.istFremdsprache);
+		result.kursart = typeof obj.kursart === "undefined" ? null : obj.kursart === null ? null : String(obj.kursart);
+		result.ausgleich = typeof obj.ausgleich === "undefined" ? null : obj.ausgleich === null ? null : Boolean(obj.ausgleich);
+		result.ausgeglichen = typeof obj.ausgeglichen === "undefined" ? null : obj.ausgeglichen === null ? null : Boolean(obj.ausgeglichen);
 		return result;
 	}
 

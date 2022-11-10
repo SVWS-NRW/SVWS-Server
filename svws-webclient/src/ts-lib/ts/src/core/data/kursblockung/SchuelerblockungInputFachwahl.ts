@@ -34,7 +34,7 @@ export class SchuelerblockungInputFachwahl extends JavaObject {
 		result.kursart = obj.kursart;
 		if (typeof obj.representation === "undefined")
 			 throw new Error('invalid json format, missing attribute representation');
-		result.representation = obj.representation;
+		result.representation = String(obj.representation);
 		return result;
 	}
 

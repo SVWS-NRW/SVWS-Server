@@ -31,25 +31,25 @@ export class SchuelerLernabschnittBemerkungen extends JavaObject {
 		const result = new SchuelerLernabschnittBemerkungen();
 		if (typeof obj.zeugnisAllgemein === "undefined")
 			 throw new Error('invalid json format, missing attribute zeugnisAllgemein');
-		result.zeugnisAllgemein = obj.zeugnisAllgemein;
+		result.zeugnisAllgemein = String(obj.zeugnisAllgemein);
 		if (typeof obj.zeugnisASV === "undefined")
 			 throw new Error('invalid json format, missing attribute zeugnisASV');
-		result.zeugnisASV = obj.zeugnisASV;
+		result.zeugnisASV = String(obj.zeugnisASV);
 		if (typeof obj.zeugnisLELS === "undefined")
 			 throw new Error('invalid json format, missing attribute zeugnisLELS');
-		result.zeugnisLELS = obj.zeugnisLELS;
+		result.zeugnisLELS = String(obj.zeugnisLELS);
 		if (typeof obj.zeugnisAUE === "undefined")
 			 throw new Error('invalid json format, missing attribute zeugnisAUE');
-		result.zeugnisAUE = obj.zeugnisAUE;
+		result.zeugnisAUE = String(obj.zeugnisAUE);
 		if (typeof obj.uebergangESF === "undefined")
 			 throw new Error('invalid json format, missing attribute uebergangESF');
-		result.uebergangESF = obj.uebergangESF;
+		result.uebergangESF = String(obj.uebergangESF);
 		if (typeof obj.foerderschwerpunkt === "undefined")
 			 throw new Error('invalid json format, missing attribute foerderschwerpunkt');
-		result.foerderschwerpunkt = obj.foerderschwerpunkt;
+		result.foerderschwerpunkt = String(obj.foerderschwerpunkt);
 		if (typeof obj.versetzungsentscheidung === "undefined")
 			 throw new Error('invalid json format, missing attribute versetzungsentscheidung');
-		result.versetzungsentscheidung = obj.versetzungsentscheidung;
+		result.versetzungsentscheidung = String(obj.versetzungsentscheidung);
 		return result;
 	}
 

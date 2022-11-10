@@ -30,13 +30,13 @@ export class Schild3KatalogEintragUnicodeUmwandlung extends JavaObject {
 	public static transpilerFromJSON(json : string): Schild3KatalogEintragUnicodeUmwandlung {
 		const obj = JSON.parse(json);
 		const result = new Schild3KatalogEintragUnicodeUmwandlung();
-		result.ID = typeof obj.ID === "undefined" ? null : obj.ID;
-		result.Unicodezeichen = typeof obj.Unicodezeichen === "undefined" ? null : obj.Unicodezeichen;
-		result.Ersatzzeichen = typeof obj.Ersatzzeichen === "undefined" ? null : obj.Ersatzzeichen;
-		result.DecimalZeichen = typeof obj.DecimalZeichen === "undefined" ? null : obj.DecimalZeichen;
-		result.DecimalErsatzzeichen = typeof obj.DecimalErsatzzeichen === "undefined" ? null : obj.DecimalErsatzzeichen;
-		result.Hexzeichen = typeof obj.Hexzeichen === "undefined" ? null : obj.Hexzeichen;
-		result.HexErsatzzeichen = typeof obj.HexErsatzzeichen === "undefined" ? null : obj.HexErsatzzeichen;
+		result.ID = typeof obj.ID === "undefined" ? null : obj.ID === null ? null : Number(obj.ID);
+		result.Unicodezeichen = typeof obj.Unicodezeichen === "undefined" ? null : obj.Unicodezeichen === null ? null : String(obj.Unicodezeichen);
+		result.Ersatzzeichen = typeof obj.Ersatzzeichen === "undefined" ? null : obj.Ersatzzeichen === null ? null : String(obj.Ersatzzeichen);
+		result.DecimalZeichen = typeof obj.DecimalZeichen === "undefined" ? null : obj.DecimalZeichen === null ? null : String(obj.DecimalZeichen);
+		result.DecimalErsatzzeichen = typeof obj.DecimalErsatzzeichen === "undefined" ? null : obj.DecimalErsatzzeichen === null ? null : String(obj.DecimalErsatzzeichen);
+		result.Hexzeichen = typeof obj.Hexzeichen === "undefined" ? null : obj.Hexzeichen === null ? null : String(obj.Hexzeichen);
+		result.HexErsatzzeichen = typeof obj.HexErsatzzeichen === "undefined" ? null : obj.HexErsatzzeichen === null ? null : String(obj.HexErsatzzeichen);
 		return result;
 	}
 

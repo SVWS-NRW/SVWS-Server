@@ -58,7 +58,7 @@ export class SchuelerStundenplanUnterricht extends JavaObject {
 		result.zeitraster = StundenplanZeitraster.transpilerFromJSON(JSON.stringify(obj.zeitraster));
 		if (typeof obj.kursart === "undefined")
 			 throw new Error('invalid json format, missing attribute kursart');
-		result.kursart = obj.kursart;
+		result.kursart = String(obj.kursart);
 		if (typeof obj.wochentyp === "undefined")
 			 throw new Error('invalid json format, missing attribute wochentyp');
 		result.wochentyp = obj.wochentyp;
@@ -67,25 +67,25 @@ export class SchuelerStundenplanUnterricht extends JavaObject {
 		result.idFach = obj.idFach;
 		if (typeof obj.fachKuerzel === "undefined")
 			 throw new Error('invalid json format, missing attribute fachKuerzel');
-		result.fachKuerzel = obj.fachKuerzel;
+		result.fachKuerzel = String(obj.fachKuerzel);
 		if (typeof obj.fachBezeichnung === "undefined")
 			 throw new Error('invalid json format, missing attribute fachBezeichnung');
-		result.fachBezeichnung = obj.fachBezeichnung;
+		result.fachBezeichnung = String(obj.fachBezeichnung);
 		if (typeof obj.fachKuerzelStatistik === "undefined")
 			 throw new Error('invalid json format, missing attribute fachKuerzelStatistik');
-		result.fachKuerzelStatistik = obj.fachKuerzelStatistik;
+		result.fachKuerzelStatistik = String(obj.fachKuerzelStatistik);
 		if (typeof obj.idLehrer === "undefined")
 			 throw new Error('invalid json format, missing attribute idLehrer');
 		result.idLehrer = obj.idLehrer;
 		if (typeof obj.lehrerKuerzel === "undefined")
 			 throw new Error('invalid json format, missing attribute lehrerKuerzel');
-		result.lehrerKuerzel = obj.lehrerKuerzel;
+		result.lehrerKuerzel = String(obj.lehrerKuerzel);
 		if (typeof obj.lehrerNachname === "undefined")
 			 throw new Error('invalid json format, missing attribute lehrerNachname');
-		result.lehrerNachname = obj.lehrerNachname;
+		result.lehrerNachname = String(obj.lehrerNachname);
 		if (typeof obj.lehrerVorname === "undefined")
 			 throw new Error('invalid json format, missing attribute lehrerVorname');
-		result.lehrerVorname = obj.lehrerVorname;
+		result.lehrerVorname = String(obj.lehrerVorname);
 		return result;
 	}
 

@@ -23,10 +23,10 @@ export class KatalogEintragStrassen extends JavaObject {
 	public static transpilerFromJSON(json : string): KatalogEintragStrassen {
 		const obj = JSON.parse(json);
 		const result = new KatalogEintragStrassen();
-		result.Ort = typeof obj.Ort === "undefined" ? null : obj.Ort;
-		result.RegSchl = typeof obj.RegSchl === "undefined" ? null : obj.RegSchl;
-		result.Strasse = typeof obj.Strasse === "undefined" ? null : obj.Strasse;
-		result.Stand = typeof obj.Stand === "undefined" ? null : obj.Stand;
+		result.Ort = typeof obj.Ort === "undefined" ? null : obj.Ort === null ? null : String(obj.Ort);
+		result.RegSchl = typeof obj.RegSchl === "undefined" ? null : obj.RegSchl === null ? null : String(obj.RegSchl);
+		result.Strasse = typeof obj.Strasse === "undefined" ? null : obj.Strasse === null ? null : String(obj.Strasse);
+		result.Stand = typeof obj.Stand === "undefined" ? null : obj.Stand === null ? null : String(obj.Stand);
 		return result;
 	}
 

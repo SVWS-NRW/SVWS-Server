@@ -26,7 +26,7 @@ export class StundenplanInputSimpleKopplung extends JavaObject {
 		result.id = obj.id;
 		if (typeof obj.kuerzel === "undefined")
 			 throw new Error('invalid json format, missing attribute kuerzel');
-		result.kuerzel = obj.kuerzel;
+		result.kuerzel = String(obj.kuerzel);
 		if (typeof obj.stunden === "undefined")
 			 throw new Error('invalid json format, missing attribute stunden');
 		result.stunden = obj.stunden;

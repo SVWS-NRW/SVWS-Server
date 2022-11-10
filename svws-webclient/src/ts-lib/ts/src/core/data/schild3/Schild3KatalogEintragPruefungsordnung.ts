@@ -34,15 +34,15 @@ export class Schild3KatalogEintragPruefungsordnung extends JavaObject {
 	public static transpilerFromJSON(json : string): Schild3KatalogEintragPruefungsordnung {
 		const obj = JSON.parse(json);
 		const result = new Schild3KatalogEintragPruefungsordnung();
-		result.PO_Schulform = typeof obj.PO_Schulform === "undefined" ? null : obj.PO_Schulform;
-		result.PO_Krz = typeof obj.PO_Krz === "undefined" ? null : obj.PO_Krz;
-		result.PO_Name = typeof obj.PO_Name === "undefined" ? null : obj.PO_Name;
-		result.PO_SGL = typeof obj.PO_SGL === "undefined" ? null : obj.PO_SGL;
-		result.PO_MinJahrgang = typeof obj.PO_MinJahrgang === "undefined" ? null : obj.PO_MinJahrgang;
-		result.PO_MaxJahrgang = typeof obj.PO_MaxJahrgang === "undefined" ? null : obj.PO_MaxJahrgang;
-		result.PO_Jahrgaenge = typeof obj.PO_Jahrgaenge === "undefined" ? null : obj.PO_Jahrgaenge;
-		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon;
-		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis;
+		result.PO_Schulform = typeof obj.PO_Schulform === "undefined" ? null : obj.PO_Schulform === null ? null : String(obj.PO_Schulform);
+		result.PO_Krz = typeof obj.PO_Krz === "undefined" ? null : obj.PO_Krz === null ? null : String(obj.PO_Krz);
+		result.PO_Name = typeof obj.PO_Name === "undefined" ? null : obj.PO_Name === null ? null : String(obj.PO_Name);
+		result.PO_SGL = typeof obj.PO_SGL === "undefined" ? null : obj.PO_SGL === null ? null : String(obj.PO_SGL);
+		result.PO_MinJahrgang = typeof obj.PO_MinJahrgang === "undefined" ? null : obj.PO_MinJahrgang === null ? null : Number(obj.PO_MinJahrgang);
+		result.PO_MaxJahrgang = typeof obj.PO_MaxJahrgang === "undefined" ? null : obj.PO_MaxJahrgang === null ? null : Number(obj.PO_MaxJahrgang);
+		result.PO_Jahrgaenge = typeof obj.PO_Jahrgaenge === "undefined" ? null : obj.PO_Jahrgaenge === null ? null : String(obj.PO_Jahrgaenge);
+		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : Number(obj.gueltigVon);
+		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : Number(obj.gueltigBis);
 		return result;
 	}
 

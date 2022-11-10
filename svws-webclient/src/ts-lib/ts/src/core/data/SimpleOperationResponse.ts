@@ -26,7 +26,7 @@ export class SimpleOperationResponse extends JavaObject {
 		result.success = obj.success;
 		if (!!obj.log) {
 			for (let elem of obj.log) {
-				result.log?.add(elem);
+				result.log?.add(elem === null ? null : String(elem));
 			}
 		}
 		return result;

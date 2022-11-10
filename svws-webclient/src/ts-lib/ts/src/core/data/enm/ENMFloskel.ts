@@ -26,11 +26,11 @@ export class ENMFloskel extends JavaObject {
 	public static transpilerFromJSON(json : string): ENMFloskel {
 		const obj = JSON.parse(json);
 		const result = new ENMFloskel();
-		result.kuerzel = typeof obj.kuerzel === "undefined" ? null : obj.kuerzel;
-		result.text = typeof obj.text === "undefined" ? null : obj.text;
-		result.fachID = typeof obj.fachID === "undefined" ? null : obj.fachID;
-		result.niveau = typeof obj.niveau === "undefined" ? null : obj.niveau;
-		result.jahrgangID = typeof obj.jahrgangID === "undefined" ? null : obj.jahrgangID;
+		result.kuerzel = typeof obj.kuerzel === "undefined" ? null : obj.kuerzel === null ? null : String(obj.kuerzel);
+		result.text = typeof obj.text === "undefined" ? null : obj.text === null ? null : String(obj.text);
+		result.fachID = typeof obj.fachID === "undefined" ? null : obj.fachID === null ? null : Number(obj.fachID);
+		result.niveau = typeof obj.niveau === "undefined" ? null : obj.niveau === null ? null : Number(obj.niveau);
+		result.jahrgangID = typeof obj.jahrgangID === "undefined" ? null : obj.jahrgangID === null ? null : Number(obj.jahrgangID);
 		return result;
 	}
 

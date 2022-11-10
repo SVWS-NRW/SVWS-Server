@@ -73,18 +73,18 @@ export class SchulformKatalogEintrag extends JavaObject {
 		result.id = obj.id;
 		if (typeof obj.kuerzel === "undefined")
 			 throw new Error('invalid json format, missing attribute kuerzel');
-		result.kuerzel = obj.kuerzel;
+		result.kuerzel = String(obj.kuerzel);
 		if (typeof obj.nummer === "undefined")
 			 throw new Error('invalid json format, missing attribute nummer');
-		result.nummer = obj.nummer;
+		result.nummer = String(obj.nummer);
 		if (typeof obj.bezeichnung === "undefined")
 			 throw new Error('invalid json format, missing attribute bezeichnung');
-		result.bezeichnung = obj.bezeichnung;
+		result.bezeichnung = String(obj.bezeichnung);
 		if (typeof obj.hatGymOb === "undefined")
 			 throw new Error('invalid json format, missing attribute hatGymOb');
 		result.hatGymOb = obj.hatGymOb;
-		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon;
-		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis;
+		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : Number(obj.gueltigVon);
+		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : Number(obj.gueltigBis);
 		return result;
 	}
 

@@ -28,9 +28,9 @@ export class ENMTeilleistungsart extends JavaObject {
 		if (typeof obj.id === "undefined")
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		result.bezeichnung = typeof obj.bezeichnung === "undefined" ? null : obj.bezeichnung;
-		result.sortierung = typeof obj.sortierung === "undefined" ? null : obj.sortierung;
-		result.gewichtung = typeof obj.gewichtung === "undefined" ? null : obj.gewichtung;
+		result.bezeichnung = typeof obj.bezeichnung === "undefined" ? null : obj.bezeichnung === null ? null : String(obj.bezeichnung);
+		result.sortierung = typeof obj.sortierung === "undefined" ? null : obj.sortierung === null ? null : Number(obj.sortierung);
+		result.gewichtung = typeof obj.gewichtung === "undefined" ? null : obj.gewichtung === null ? null : Number(obj.gewichtung);
 		return result;
 	}
 

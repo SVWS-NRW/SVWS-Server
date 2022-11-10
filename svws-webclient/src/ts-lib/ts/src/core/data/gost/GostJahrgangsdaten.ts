@@ -36,16 +36,16 @@ export class GostJahrgangsdaten extends JavaObject {
 	public static transpilerFromJSON(json : string): GostJahrgangsdaten {
 		const obj = JSON.parse(json);
 		const result = new GostJahrgangsdaten();
-		result.abiturjahr = typeof obj.abiturjahr === "undefined" ? null : obj.abiturjahr;
-		result.jahrgang = typeof obj.jahrgang === "undefined" ? null : obj.jahrgang;
-		result.bezeichnung = typeof obj.bezeichnung === "undefined" ? null : obj.bezeichnung;
+		result.abiturjahr = typeof obj.abiturjahr === "undefined" ? null : obj.abiturjahr === null ? null : Number(obj.abiturjahr);
+		result.jahrgang = typeof obj.jahrgang === "undefined" ? null : obj.jahrgang === null ? null : String(obj.jahrgang);
+		result.bezeichnung = typeof obj.bezeichnung === "undefined" ? null : obj.bezeichnung === null ? null : String(obj.bezeichnung);
 		if (typeof obj.istAbgeschlossen === "undefined")
 			 throw new Error('invalid json format, missing attribute istAbgeschlossen');
 		result.istAbgeschlossen = obj.istAbgeschlossen;
-		result.textBeratungsbogen = typeof obj.textBeratungsbogen === "undefined" ? null : obj.textBeratungsbogen;
-		result.textMailversand = typeof obj.textMailversand === "undefined" ? null : obj.textMailversand;
-		result.beginnZusatzkursGE = typeof obj.beginnZusatzkursGE === "undefined" ? null : obj.beginnZusatzkursGE;
-		result.beginnZusatzkursSW = typeof obj.beginnZusatzkursSW === "undefined" ? null : obj.beginnZusatzkursSW;
+		result.textBeratungsbogen = typeof obj.textBeratungsbogen === "undefined" ? null : obj.textBeratungsbogen === null ? null : String(obj.textBeratungsbogen);
+		result.textMailversand = typeof obj.textMailversand === "undefined" ? null : obj.textMailversand === null ? null : String(obj.textMailversand);
+		result.beginnZusatzkursGE = typeof obj.beginnZusatzkursGE === "undefined" ? null : obj.beginnZusatzkursGE === null ? null : String(obj.beginnZusatzkursGE);
+		result.beginnZusatzkursSW = typeof obj.beginnZusatzkursSW === "undefined" ? null : obj.beginnZusatzkursSW === null ? null : String(obj.beginnZusatzkursSW);
 		if (!!obj.beratungslehrer) {
 			for (let elem of obj.beratungslehrer) {
 				result.beratungslehrer?.add(GostBeratungslehrer.transpilerFromJSON(JSON.stringify(elem)));

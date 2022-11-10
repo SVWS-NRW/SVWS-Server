@@ -30,11 +30,11 @@ export class ENMLernabschnitt extends JavaObject {
 		if (typeof obj.id === "undefined")
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		result.pruefungsordnung = typeof obj.pruefungsordnung === "undefined" ? null : obj.pruefungsordnung;
-		result.lernbereich1note = typeof obj.lernbereich1note === "undefined" ? null : obj.lernbereich1note;
-		result.lernbereich2note = typeof obj.lernbereich2note === "undefined" ? null : obj.lernbereich2note;
-		result.foerderschwerpunkt1 = typeof obj.foerderschwerpunkt1 === "undefined" ? null : obj.foerderschwerpunkt1;
-		result.foerderschwerpunkt2 = typeof obj.foerderschwerpunkt2 === "undefined" ? null : obj.foerderschwerpunkt2;
+		result.pruefungsordnung = typeof obj.pruefungsordnung === "undefined" ? null : obj.pruefungsordnung === null ? null : String(obj.pruefungsordnung);
+		result.lernbereich1note = typeof obj.lernbereich1note === "undefined" ? null : obj.lernbereich1note === null ? null : String(obj.lernbereich1note);
+		result.lernbereich2note = typeof obj.lernbereich2note === "undefined" ? null : obj.lernbereich2note === null ? null : String(obj.lernbereich2note);
+		result.foerderschwerpunkt1 = typeof obj.foerderschwerpunkt1 === "undefined" ? null : obj.foerderschwerpunkt1 === null ? null : String(obj.foerderschwerpunkt1);
+		result.foerderschwerpunkt2 = typeof obj.foerderschwerpunkt2 === "undefined" ? null : obj.foerderschwerpunkt2 === null ? null : String(obj.foerderschwerpunkt2);
 		return result;
 	}
 

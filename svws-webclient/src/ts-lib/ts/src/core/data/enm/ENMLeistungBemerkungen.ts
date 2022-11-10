@@ -29,13 +29,13 @@ export class ENMLeistungBemerkungen extends JavaObject {
 	public static transpilerFromJSON(json : string): ENMLeistungBemerkungen {
 		const obj = JSON.parse(json);
 		const result = new ENMLeistungBemerkungen();
-		result.ASV = typeof obj.ASV === "undefined" ? null : obj.ASV;
-		result.AUE = typeof obj.AUE === "undefined" ? null : obj.AUE;
-		result.ZB = typeof obj.ZB === "undefined" ? null : obj.ZB;
-		result.LELS = typeof obj.LELS === "undefined" ? null : obj.LELS;
-		result.schulformEmpf = typeof obj.schulformEmpf === "undefined" ? null : obj.schulformEmpf;
-		result.individuelleVersetzungsbemerkungen = typeof obj.individuelleVersetzungsbemerkungen === "undefined" ? null : obj.individuelleVersetzungsbemerkungen;
-		result.foerderbemerkungen = typeof obj.foerderbemerkungen === "undefined" ? null : obj.foerderbemerkungen;
+		result.ASV = typeof obj.ASV === "undefined" ? null : obj.ASV === null ? null : String(obj.ASV);
+		result.AUE = typeof obj.AUE === "undefined" ? null : obj.AUE === null ? null : String(obj.AUE);
+		result.ZB = typeof obj.ZB === "undefined" ? null : obj.ZB === null ? null : String(obj.ZB);
+		result.LELS = typeof obj.LELS === "undefined" ? null : obj.LELS === null ? null : String(obj.LELS);
+		result.schulformEmpf = typeof obj.schulformEmpf === "undefined" ? null : obj.schulformEmpf === null ? null : String(obj.schulformEmpf);
+		result.individuelleVersetzungsbemerkungen = typeof obj.individuelleVersetzungsbemerkungen === "undefined" ? null : obj.individuelleVersetzungsbemerkungen === null ? null : String(obj.individuelleVersetzungsbemerkungen);
+		result.foerderbemerkungen = typeof obj.foerderbemerkungen === "undefined" ? null : obj.foerderbemerkungen === null ? null : String(obj.foerderbemerkungen);
 		return result;
 	}
 

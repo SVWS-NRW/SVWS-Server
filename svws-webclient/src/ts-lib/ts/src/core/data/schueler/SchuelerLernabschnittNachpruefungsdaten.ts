@@ -23,7 +23,7 @@ export class SchuelerLernabschnittNachpruefungsdaten extends JavaObject {
 		const result = new SchuelerLernabschnittNachpruefungsdaten();
 		if (!!obj.moegliche) {
 			for (let elem of obj.moegliche) {
-				result.moegliche?.add(elem);
+				result.moegliche?.add(String(elem));
 			}
 		}
 		if (!!obj.pruefungen) {

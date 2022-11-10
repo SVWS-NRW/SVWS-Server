@@ -22,9 +22,9 @@ export class ENMNote extends JavaObject {
 	public static transpilerFromJSON(json : string): ENMNote {
 		const obj = JSON.parse(json);
 		const result = new ENMNote();
-		result.kuerzel = typeof obj.kuerzel === "undefined" ? null : obj.kuerzel;
-		result.notenpunkte = typeof obj.notenpunkte === "undefined" ? null : obj.notenpunkte;
-		result.text = typeof obj.text === "undefined" ? null : obj.text;
+		result.kuerzel = typeof obj.kuerzel === "undefined" ? null : obj.kuerzel === null ? null : String(obj.kuerzel);
+		result.notenpunkte = typeof obj.notenpunkte === "undefined" ? null : obj.notenpunkte === null ? null : Number(obj.notenpunkte);
+		result.text = typeof obj.text === "undefined" ? null : obj.text === null ? null : String(obj.text);
 		return result;
 	}
 

@@ -34,7 +34,7 @@ export class StundenplanListeEintrag extends JavaObject {
 		result.id = obj.id;
 		if (typeof obj.bezeichnung === "undefined")
 			 throw new Error('invalid json format, missing attribute bezeichnung');
-		result.bezeichnung = obj.bezeichnung;
+		result.bezeichnung = String(obj.bezeichnung);
 		if (typeof obj.idSchuljahresabschnitt === "undefined")
 			 throw new Error('invalid json format, missing attribute idSchuljahresabschnitt');
 		result.idSchuljahresabschnitt = obj.idSchuljahresabschnitt;
@@ -46,10 +46,10 @@ export class StundenplanListeEintrag extends JavaObject {
 		result.abschnitt = obj.abschnitt;
 		if (typeof obj.gueltigAb === "undefined")
 			 throw new Error('invalid json format, missing attribute gueltigAb');
-		result.gueltigAb = obj.gueltigAb;
+		result.gueltigAb = String(obj.gueltigAb);
 		if (typeof obj.gueltigBis === "undefined")
 			 throw new Error('invalid json format, missing attribute gueltigBis');
-		result.gueltigBis = obj.gueltigBis;
+		result.gueltigBis = String(obj.gueltigBis);
 		return result;
 	}
 

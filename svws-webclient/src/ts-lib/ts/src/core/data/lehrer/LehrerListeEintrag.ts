@@ -38,16 +38,16 @@ export class LehrerListeEintrag extends JavaObject {
 		result.id = obj.id;
 		if (typeof obj.kuerzel === "undefined")
 			 throw new Error('invalid json format, missing attribute kuerzel');
-		result.kuerzel = obj.kuerzel;
+		result.kuerzel = String(obj.kuerzel);
 		if (typeof obj.nachname === "undefined")
 			 throw new Error('invalid json format, missing attribute nachname');
-		result.nachname = obj.nachname;
+		result.nachname = String(obj.nachname);
 		if (typeof obj.vorname === "undefined")
 			 throw new Error('invalid json format, missing attribute vorname');
-		result.vorname = obj.vorname;
+		result.vorname = String(obj.vorname);
 		if (typeof obj.personTyp === "undefined")
 			 throw new Error('invalid json format, missing attribute personTyp');
-		result.personTyp = obj.personTyp;
+		result.personTyp = String(obj.personTyp);
 		if (typeof obj.sortierung === "undefined")
 			 throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;

@@ -40,28 +40,28 @@ export class SchuelerListeEintrag extends JavaObject {
 		result.id = obj.id;
 		if (typeof obj.nachname === "undefined")
 			 throw new Error('invalid json format, missing attribute nachname');
-		result.nachname = obj.nachname;
+		result.nachname = String(obj.nachname);
 		if (typeof obj.vorname === "undefined")
 			 throw new Error('invalid json format, missing attribute vorname');
-		result.vorname = obj.vorname;
+		result.vorname = String(obj.vorname);
 		if (typeof obj.idKlasse === "undefined")
 			 throw new Error('invalid json format, missing attribute idKlasse');
-		result.idKlasse = obj.idKlasse;
+		result.idKlasse = Number(obj.idKlasse);
 		if (typeof obj.jahrgang === "undefined")
 			 throw new Error('invalid json format, missing attribute jahrgang');
-		result.jahrgang = obj.jahrgang;
+		result.jahrgang = String(obj.jahrgang);
 		if (typeof obj.schulgliederung === "undefined")
 			 throw new Error('invalid json format, missing attribute schulgliederung');
-		result.schulgliederung = obj.schulgliederung;
+		result.schulgliederung = String(obj.schulgliederung);
 		if (typeof obj.status === "undefined")
 			 throw new Error('invalid json format, missing attribute status');
-		result.status = obj.status;
+		result.status = String(obj.status);
 		if (typeof obj.idSchuljahresabschnitt === "undefined")
 			 throw new Error('invalid json format, missing attribute idSchuljahresabschnitt');
-		result.idSchuljahresabschnitt = obj.idSchuljahresabschnitt;
+		result.idSchuljahresabschnitt = Number(obj.idSchuljahresabschnitt);
 		if (!!obj.kurse) {
 			for (let elem of obj.kurse) {
-				result.kurse?.add(elem);
+				result.kurse?.add(Number(elem));
 			}
 		}
 		return result;

@@ -52,13 +52,13 @@ export class GostBelegpruefungErgebnisFehler extends JavaObject {
 		const result = new GostBelegpruefungErgebnisFehler();
 		if (typeof obj.code === "undefined")
 			 throw new Error('invalid json format, missing attribute code');
-		result.code = obj.code;
+		result.code = String(obj.code);
 		if (typeof obj.art === "undefined")
 			 throw new Error('invalid json format, missing attribute art');
-		result.art = obj.art;
+		result.art = String(obj.art);
 		if (typeof obj.beschreibung === "undefined")
 			 throw new Error('invalid json format, missing attribute beschreibung');
-		result.beschreibung = obj.beschreibung;
+		result.beschreibung = String(obj.beschreibung);
 		return result;
 	}
 

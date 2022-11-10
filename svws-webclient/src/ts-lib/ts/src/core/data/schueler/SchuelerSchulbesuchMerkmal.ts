@@ -24,8 +24,8 @@ export class SchuelerSchulbesuchMerkmal extends JavaObject {
 		if (typeof obj.id === "undefined")
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		result.datumVon = typeof obj.datumVon === "undefined" ? null : obj.datumVon;
-		result.datumBis = typeof obj.datumBis === "undefined" ? null : obj.datumBis;
+		result.datumVon = typeof obj.datumVon === "undefined" ? null : obj.datumVon === null ? null : String(obj.datumVon);
+		result.datumBis = typeof obj.datumBis === "undefined" ? null : obj.datumBis === null ? null : String(obj.datumBis);
 		return result;
 	}
 

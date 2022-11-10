@@ -93,28 +93,28 @@ export class NationalitaetenKatalogEintrag extends JavaObject {
 		result.id = obj.id;
 		if (typeof obj.iso3 === "undefined")
 			 throw new Error('invalid json format, missing attribute iso3');
-		result.iso3 = obj.iso3;
+		result.iso3 = String(obj.iso3);
 		if (typeof obj.iso2 === "undefined")
 			 throw new Error('invalid json format, missing attribute iso2');
-		result.iso2 = obj.iso2;
-		result.isoNumerisch = typeof obj.isoNumerisch === "undefined" ? null : obj.isoNumerisch;
+		result.iso2 = String(obj.iso2);
+		result.isoNumerisch = typeof obj.isoNumerisch === "undefined" ? null : obj.isoNumerisch === null ? null : String(obj.isoNumerisch);
 		if (typeof obj.codeDEStatis === "undefined")
 			 throw new Error('invalid json format, missing attribute codeDEStatis');
-		result.codeDEStatis = obj.codeDEStatis;
+		result.codeDEStatis = String(obj.codeDEStatis);
 		if (typeof obj.bezeichnungSuche === "undefined")
 			 throw new Error('invalid json format, missing attribute bezeichnungSuche');
-		result.bezeichnungSuche = obj.bezeichnungSuche;
+		result.bezeichnungSuche = String(obj.bezeichnungSuche);
 		if (typeof obj.bezeichnung === "undefined")
 			 throw new Error('invalid json format, missing attribute bezeichnung');
-		result.bezeichnung = obj.bezeichnung;
+		result.bezeichnung = String(obj.bezeichnung);
 		if (typeof obj.bezeichnungLang === "undefined")
 			 throw new Error('invalid json format, missing attribute bezeichnungLang');
-		result.bezeichnungLang = obj.bezeichnungLang;
+		result.bezeichnungLang = String(obj.bezeichnungLang);
 		if (typeof obj.staatsangehoerigkeit === "undefined")
 			 throw new Error('invalid json format, missing attribute staatsangehoerigkeit');
-		result.staatsangehoerigkeit = obj.staatsangehoerigkeit;
-		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon;
-		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis;
+		result.staatsangehoerigkeit = String(obj.staatsangehoerigkeit);
+		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : Number(obj.gueltigVon);
+		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : Number(obj.gueltigBis);
 		return result;
 	}
 

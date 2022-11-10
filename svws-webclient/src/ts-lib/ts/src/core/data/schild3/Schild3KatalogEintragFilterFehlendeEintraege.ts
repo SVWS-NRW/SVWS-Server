@@ -30,13 +30,13 @@ export class Schild3KatalogEintragFilterFehlendeEintraege extends JavaObject {
 	public static transpilerFromJSON(json : string): Schild3KatalogEintragFilterFehlendeEintraege {
 		const obj = JSON.parse(json);
 		const result = new Schild3KatalogEintragFilterFehlendeEintraege();
-		result.ID = typeof obj.ID === "undefined" ? null : obj.ID;
-		result.Beschreibung = typeof obj.Beschreibung === "undefined" ? null : obj.Beschreibung;
-		result.Feldname = typeof obj.Feldname === "undefined" ? null : obj.Feldname;
-		result.Tabellen = typeof obj.Tabellen === "undefined" ? null : obj.Tabellen;
-		result.SQLText = typeof obj.SQLText === "undefined" ? null : obj.SQLText;
-		result.Schulform = typeof obj.Schulform === "undefined" ? null : obj.Schulform;
-		result.Feldtyp = typeof obj.Feldtyp === "undefined" ? null : obj.Feldtyp;
+		result.ID = typeof obj.ID === "undefined" ? null : obj.ID === null ? null : Number(obj.ID);
+		result.Beschreibung = typeof obj.Beschreibung === "undefined" ? null : obj.Beschreibung === null ? null : String(obj.Beschreibung);
+		result.Feldname = typeof obj.Feldname === "undefined" ? null : obj.Feldname === null ? null : String(obj.Feldname);
+		result.Tabellen = typeof obj.Tabellen === "undefined" ? null : obj.Tabellen === null ? null : String(obj.Tabellen);
+		result.SQLText = typeof obj.SQLText === "undefined" ? null : obj.SQLText === null ? null : String(obj.SQLText);
+		result.Schulform = typeof obj.Schulform === "undefined" ? null : obj.Schulform === null ? null : String(obj.Schulform);
+		result.Feldtyp = typeof obj.Feldtyp === "undefined" ? null : obj.Feldtyp === null ? null : String(obj.Feldtyp);
 		return result;
 	}
 

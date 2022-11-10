@@ -26,11 +26,11 @@ export class Schild3KatalogEintragLaender extends JavaObject {
 	public static transpilerFromJSON(json : string): Schild3KatalogEintragLaender {
 		const obj = JSON.parse(json);
 		const result = new Schild3KatalogEintragLaender();
-		result.Kurztext = typeof obj.Kurztext === "undefined" ? null : obj.Kurztext;
-		result.Langtext = typeof obj.Langtext === "undefined" ? null : obj.Langtext;
-		result.Sortierung = typeof obj.Sortierung === "undefined" ? null : obj.Sortierung;
-		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon;
-		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis;
+		result.Kurztext = typeof obj.Kurztext === "undefined" ? null : obj.Kurztext === null ? null : String(obj.Kurztext);
+		result.Langtext = typeof obj.Langtext === "undefined" ? null : obj.Langtext === null ? null : String(obj.Langtext);
+		result.Sortierung = typeof obj.Sortierung === "undefined" ? null : obj.Sortierung === null ? null : Number(obj.Sortierung);
+		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : Number(obj.gueltigVon);
+		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : Number(obj.gueltigBis);
 		return result;
 	}
 

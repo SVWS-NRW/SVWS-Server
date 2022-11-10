@@ -36,11 +36,11 @@ export class ENMSprachenfolge extends JavaObject {
 	public static transpilerFromJSON(json : string): ENMSprachenfolge {
 		const obj = JSON.parse(json);
 		const result = new ENMSprachenfolge();
-		result.sprache = typeof obj.sprache === "undefined" ? null : obj.sprache;
+		result.sprache = typeof obj.sprache === "undefined" ? null : obj.sprache === null ? null : String(obj.sprache);
 		if (typeof obj.fachID === "undefined")
 			 throw new Error('invalid json format, missing attribute fachID');
 		result.fachID = obj.fachID;
-		result.fachKuerzel = typeof obj.fachKuerzel === "undefined" ? null : obj.fachKuerzel;
+		result.fachKuerzel = typeof obj.fachKuerzel === "undefined" ? null : obj.fachKuerzel === null ? null : String(obj.fachKuerzel);
 		if (typeof obj.reihenfolge === "undefined")
 			 throw new Error('invalid json format, missing attribute reihenfolge');
 		result.reihenfolge = obj.reihenfolge;
@@ -50,10 +50,10 @@ export class ENMSprachenfolge extends JavaObject {
 		if (typeof obj.belegungVonAbschnitt === "undefined")
 			 throw new Error('invalid json format, missing attribute belegungVonAbschnitt');
 		result.belegungVonAbschnitt = obj.belegungVonAbschnitt;
-		result.belegungBisJahrgang = typeof obj.belegungBisJahrgang === "undefined" ? null : obj.belegungBisJahrgang;
-		result.belegungBisAbschnitt = typeof obj.belegungBisAbschnitt === "undefined" ? null : obj.belegungBisAbschnitt;
-		result.referenzniveau = typeof obj.referenzniveau === "undefined" ? null : obj.referenzniveau;
-		result.belegungSekI = typeof obj.belegungSekI === "undefined" ? null : obj.belegungSekI;
+		result.belegungBisJahrgang = typeof obj.belegungBisJahrgang === "undefined" ? null : obj.belegungBisJahrgang === null ? null : Number(obj.belegungBisJahrgang);
+		result.belegungBisAbschnitt = typeof obj.belegungBisAbschnitt === "undefined" ? null : obj.belegungBisAbschnitt === null ? null : Number(obj.belegungBisAbschnitt);
+		result.referenzniveau = typeof obj.referenzniveau === "undefined" ? null : obj.referenzniveau === null ? null : String(obj.referenzniveau);
+		result.belegungSekI = typeof obj.belegungSekI === "undefined" ? null : obj.belegungSekI === null ? null : Number(obj.belegungSekI);
 		return result;
 	}
 

@@ -49,15 +49,15 @@ export class ENMLeistung extends JavaObject {
 		if (typeof obj.lerngruppenID === "undefined")
 			 throw new Error('invalid json format, missing attribute lerngruppenID');
 		result.lerngruppenID = obj.lerngruppenID;
-		result.note = typeof obj.note === "undefined" ? null : obj.note;
-		result.istSchriftlich = typeof obj.istSchriftlich === "undefined" ? null : obj.istSchriftlich;
-		result.abiturfach = typeof obj.abiturfach === "undefined" ? null : obj.abiturfach;
-		result.fehlstundenGesamt = typeof obj.fehlstundenGesamt === "undefined" ? null : obj.fehlstundenGesamt;
-		result.fehlstundenUnentschuldigt = typeof obj.fehlstundenUnentschuldigt === "undefined" ? null : obj.fehlstundenUnentschuldigt;
-		result.fachbezogeneBemerkungen = typeof obj.fachbezogeneBemerkungen === "undefined" ? null : obj.fachbezogeneBemerkungen;
-		result.neueZuweisungKursart = typeof obj.neueZuweisungKursart === "undefined" ? null : obj.neueZuweisungKursart;
-		result.istGemahnt = typeof obj.istGemahnt === "undefined" ? null : obj.istGemahnt;
-		result.mahndatum = typeof obj.mahndatum === "undefined" ? null : obj.mahndatum;
+		result.note = typeof obj.note === "undefined" ? null : obj.note === null ? null : String(obj.note);
+		result.istSchriftlich = typeof obj.istSchriftlich === "undefined" ? null : obj.istSchriftlich === null ? null : Boolean(obj.istSchriftlich);
+		result.abiturfach = typeof obj.abiturfach === "undefined" ? null : obj.abiturfach === null ? null : Number(obj.abiturfach);
+		result.fehlstundenGesamt = typeof obj.fehlstundenGesamt === "undefined" ? null : obj.fehlstundenGesamt === null ? null : Number(obj.fehlstundenGesamt);
+		result.fehlstundenUnentschuldigt = typeof obj.fehlstundenUnentschuldigt === "undefined" ? null : obj.fehlstundenUnentschuldigt === null ? null : Number(obj.fehlstundenUnentschuldigt);
+		result.fachbezogeneBemerkungen = typeof obj.fachbezogeneBemerkungen === "undefined" ? null : obj.fachbezogeneBemerkungen === null ? null : String(obj.fachbezogeneBemerkungen);
+		result.neueZuweisungKursart = typeof obj.neueZuweisungKursart === "undefined" ? null : obj.neueZuweisungKursart === null ? null : String(obj.neueZuweisungKursart);
+		result.istGemahnt = typeof obj.istGemahnt === "undefined" ? null : obj.istGemahnt === null ? null : Boolean(obj.istGemahnt);
+		result.mahndatum = typeof obj.mahndatum === "undefined" ? null : obj.mahndatum === null ? null : String(obj.mahndatum);
 		if (!!obj.teilleistungen) {
 			for (let elem of obj.teilleistungen) {
 				result.teilleistungen?.add(ENMTeilleistung.transpilerFromJSON(JSON.stringify(elem)));

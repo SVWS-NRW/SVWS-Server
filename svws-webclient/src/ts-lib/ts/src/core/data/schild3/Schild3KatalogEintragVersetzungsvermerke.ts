@@ -32,14 +32,14 @@ export class Schild3KatalogEintragVersetzungsvermerke extends JavaObject {
 	public static transpilerFromJSON(json : string): Schild3KatalogEintragVersetzungsvermerke {
 		const obj = JSON.parse(json);
 		const result = new Schild3KatalogEintragVersetzungsvermerke();
-		result.Nr = typeof obj.Nr === "undefined" ? null : obj.Nr;
-		result.Klartext = typeof obj.Klartext === "undefined" ? null : obj.Klartext;
-		result.StatistikKrz = typeof obj.StatistikKrz === "undefined" ? null : obj.StatistikKrz;
-		result.Sortierung = typeof obj.Sortierung === "undefined" ? null : obj.Sortierung;
-		result.Schulform = typeof obj.Schulform === "undefined" ? null : obj.Schulform;
-		result.StatistikKrzNeu = typeof obj.StatistikKrzNeu === "undefined" ? null : obj.StatistikKrzNeu;
-		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon;
-		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis;
+		result.Nr = typeof obj.Nr === "undefined" ? null : obj.Nr === null ? null : String(obj.Nr);
+		result.Klartext = typeof obj.Klartext === "undefined" ? null : obj.Klartext === null ? null : String(obj.Klartext);
+		result.StatistikKrz = typeof obj.StatistikKrz === "undefined" ? null : obj.StatistikKrz === null ? null : String(obj.StatistikKrz);
+		result.Sortierung = typeof obj.Sortierung === "undefined" ? null : obj.Sortierung === null ? null : Number(obj.Sortierung);
+		result.Schulform = typeof obj.Schulform === "undefined" ? null : obj.Schulform === null ? null : String(obj.Schulform);
+		result.StatistikKrzNeu = typeof obj.StatistikKrzNeu === "undefined" ? null : obj.StatistikKrzNeu === null ? null : String(obj.StatistikKrzNeu);
+		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : Number(obj.gueltigVon);
+		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : Number(obj.gueltigBis);
 		return result;
 	}
 

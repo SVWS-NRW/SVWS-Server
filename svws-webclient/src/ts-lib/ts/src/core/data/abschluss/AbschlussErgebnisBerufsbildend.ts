@@ -33,11 +33,11 @@ export class AbschlussErgebnisBerufsbildend extends JavaObject {
 		if (typeof obj.note === "undefined")
 			 throw new Error('invalid json format, missing attribute note');
 		result.note = obj.note;
-		result.hatBA = typeof obj.hatBA === "undefined" ? null : obj.hatBA;
-		result.abschlussAllgemeinbildend = typeof obj.abschlussAllgemeinbildend === "undefined" ? null : obj.abschlussAllgemeinbildend;
+		result.hatBA = typeof obj.hatBA === "undefined" ? null : obj.hatBA === null ? null : Boolean(obj.hatBA);
+		result.abschlussAllgemeinbildend = typeof obj.abschlussAllgemeinbildend === "undefined" ? null : obj.abschlussAllgemeinbildend === null ? null : String(obj.abschlussAllgemeinbildend);
 		if (!!obj.log) {
 			for (let elem of obj.log) {
-				result.log?.add(elem);
+				result.log?.add(String(elem));
 			}
 		}
 		return result;

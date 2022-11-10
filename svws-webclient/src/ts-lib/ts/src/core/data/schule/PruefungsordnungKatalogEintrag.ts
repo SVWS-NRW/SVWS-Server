@@ -88,23 +88,23 @@ export class PruefungsordnungKatalogEintrag extends JavaObject {
 		result.id = obj.id;
 		if (typeof obj.kuerzel === "undefined")
 			 throw new Error('invalid json format, missing attribute kuerzel');
-		result.kuerzel = obj.kuerzel;
-		result.kuerzelSchild = typeof obj.kuerzelSchild === "undefined" ? null : obj.kuerzelSchild;
+		result.kuerzel = String(obj.kuerzel);
+		result.kuerzelSchild = typeof obj.kuerzelSchild === "undefined" ? null : obj.kuerzelSchild === null ? null : String(obj.kuerzelSchild);
 		if (typeof obj.bezeichnung === "undefined")
 			 throw new Error('invalid json format, missing attribute bezeichnung');
-		result.bezeichnung = obj.bezeichnung;
-		result.gvJahr = typeof obj.gvJahr === "undefined" ? null : obj.gvJahr;
+		result.bezeichnung = String(obj.bezeichnung);
+		result.gvJahr = typeof obj.gvJahr === "undefined" ? null : obj.gvJahr === null ? null : Number(obj.gvJahr);
 		if (typeof obj.gvNr === "undefined")
 			 throw new Error('invalid json format, missing attribute gvNr');
-		result.gvNr = obj.gvNr;
+		result.gvNr = String(obj.gvNr);
 		if (typeof obj.gvSeiten === "undefined")
 			 throw new Error('invalid json format, missing attribute gvSeiten');
-		result.gvSeiten = obj.gvSeiten;
+		result.gvSeiten = String(obj.gvSeiten);
 		if (typeof obj.link === "undefined")
 			 throw new Error('invalid json format, missing attribute link');
-		result.link = obj.link;
-		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon;
-		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis;
+		result.link = String(obj.link);
+		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : Number(obj.gueltigVon);
+		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : Number(obj.gueltigBis);
 		return result;
 	}
 

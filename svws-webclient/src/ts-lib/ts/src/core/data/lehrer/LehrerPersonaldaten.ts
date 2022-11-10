@@ -52,21 +52,21 @@ export class LehrerPersonaldaten extends JavaObject {
 		if (typeof obj.id === "undefined")
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		result.identNrTeil1 = typeof obj.identNrTeil1 === "undefined" ? null : obj.identNrTeil1;
-		result.identNrTeil2SerNr = typeof obj.identNrTeil2SerNr === "undefined" ? null : obj.identNrTeil2SerNr;
-		result.personalaktennummer = typeof obj.personalaktennummer === "undefined" ? null : obj.personalaktennummer;
-		result.lbvPersonalnummer = typeof obj.lbvPersonalnummer === "undefined" ? null : obj.lbvPersonalnummer;
-		result.lbvVerguetungsschluessel = typeof obj.lbvVerguetungsschluessel === "undefined" ? null : obj.lbvVerguetungsschluessel;
-		result.zugangsdatum = typeof obj.zugangsdatum === "undefined" ? null : obj.zugangsdatum;
-		result.zugangsgrund = typeof obj.zugangsgrund === "undefined" ? null : obj.zugangsgrund;
-		result.abgangsdatum = typeof obj.abgangsdatum === "undefined" ? null : obj.abgangsdatum;
-		result.abgangsgrund = typeof obj.abgangsgrund === "undefined" ? null : obj.abgangsgrund;
-		result.pflichtstundensoll = typeof obj.pflichtstundensoll === "undefined" ? null : obj.pflichtstundensoll;
-		result.rechtsverhaeltnis = typeof obj.rechtsverhaeltnis === "undefined" ? null : obj.rechtsverhaeltnis;
-		result.beschaeftigungsart = typeof obj.beschaeftigungsart === "undefined" ? null : obj.beschaeftigungsart;
-		result.einsatzstatus = typeof obj.einsatzstatus === "undefined" ? null : obj.einsatzstatus;
-		result.stammschulnummer = typeof obj.stammschulnummer === "undefined" ? null : obj.stammschulnummer;
-		result.masernImpfnachweis = typeof obj.masernImpfnachweis === "undefined" ? null : obj.masernImpfnachweis;
+		result.identNrTeil1 = typeof obj.identNrTeil1 === "undefined" ? null : obj.identNrTeil1 === null ? null : String(obj.identNrTeil1);
+		result.identNrTeil2SerNr = typeof obj.identNrTeil2SerNr === "undefined" ? null : obj.identNrTeil2SerNr === null ? null : String(obj.identNrTeil2SerNr);
+		result.personalaktennummer = typeof obj.personalaktennummer === "undefined" ? null : obj.personalaktennummer === null ? null : String(obj.personalaktennummer);
+		result.lbvPersonalnummer = typeof obj.lbvPersonalnummer === "undefined" ? null : obj.lbvPersonalnummer === null ? null : String(obj.lbvPersonalnummer);
+		result.lbvVerguetungsschluessel = typeof obj.lbvVerguetungsschluessel === "undefined" ? null : obj.lbvVerguetungsschluessel === null ? null : String(obj.lbvVerguetungsschluessel);
+		result.zugangsdatum = typeof obj.zugangsdatum === "undefined" ? null : obj.zugangsdatum === null ? null : String(obj.zugangsdatum);
+		result.zugangsgrund = typeof obj.zugangsgrund === "undefined" ? null : obj.zugangsgrund === null ? null : String(obj.zugangsgrund);
+		result.abgangsdatum = typeof obj.abgangsdatum === "undefined" ? null : obj.abgangsdatum === null ? null : String(obj.abgangsdatum);
+		result.abgangsgrund = typeof obj.abgangsgrund === "undefined" ? null : obj.abgangsgrund === null ? null : String(obj.abgangsgrund);
+		result.pflichtstundensoll = typeof obj.pflichtstundensoll === "undefined" ? null : obj.pflichtstundensoll === null ? null : Number(obj.pflichtstundensoll);
+		result.rechtsverhaeltnis = typeof obj.rechtsverhaeltnis === "undefined" ? null : obj.rechtsverhaeltnis === null ? null : String(obj.rechtsverhaeltnis);
+		result.beschaeftigungsart = typeof obj.beschaeftigungsart === "undefined" ? null : obj.beschaeftigungsart === null ? null : String(obj.beschaeftigungsart);
+		result.einsatzstatus = typeof obj.einsatzstatus === "undefined" ? null : obj.einsatzstatus === null ? null : String(obj.einsatzstatus);
+		result.stammschulnummer = typeof obj.stammschulnummer === "undefined" ? null : obj.stammschulnummer === null ? null : String(obj.stammschulnummer);
+		result.masernImpfnachweis = typeof obj.masernImpfnachweis === "undefined" ? null : obj.masernImpfnachweis === null ? null : Boolean(obj.masernImpfnachweis);
 		return result;
 	}
 

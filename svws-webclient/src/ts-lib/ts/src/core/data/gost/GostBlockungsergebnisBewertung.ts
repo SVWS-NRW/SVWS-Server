@@ -32,7 +32,7 @@ export class GostBlockungsergebnisBewertung extends JavaObject {
 		const result = new GostBlockungsergebnisBewertung();
 		if (!!obj.regelVerletzungen) {
 			for (let elem of obj.regelVerletzungen) {
-				result.regelVerletzungen?.add(elem);
+				result.regelVerletzungen?.add(Number(elem));
 			}
 		}
 		if (typeof obj.anzahlKurseNichtZugeordnet === "undefined")

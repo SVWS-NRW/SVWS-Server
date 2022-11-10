@@ -31,8 +31,8 @@ export class OrtsteilKatalogEintrag extends JavaObject {
 		if (typeof obj.id === "undefined")
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		result.ort_id = typeof obj.ort_id === "undefined" ? null : obj.ort_id;
-		result.ortsteil = typeof obj.ortsteil === "undefined" ? null : obj.ortsteil;
+		result.ort_id = typeof obj.ort_id === "undefined" ? null : obj.ort_id === null ? null : Number(obj.ort_id);
+		result.ortsteil = typeof obj.ortsteil === "undefined" ? null : obj.ortsteil === null ? null : String(obj.ortsteil);
 		if (typeof obj.sortierung === "undefined")
 			 throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;

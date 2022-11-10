@@ -32,14 +32,14 @@ export class Schild3KatalogEintragFilterFeldListe extends JavaObject {
 	public static transpilerFromJSON(json : string): Schild3KatalogEintragFilterFeldListe {
 		const obj = JSON.parse(json);
 		const result = new Schild3KatalogEintragFilterFeldListe();
-		result.ID = typeof obj.ID === "undefined" ? null : obj.ID;
-		result.Bezeichnung = typeof obj.Bezeichnung === "undefined" ? null : obj.Bezeichnung;
-		result.DBFeld = typeof obj.DBFeld === "undefined" ? null : obj.DBFeld;
-		result.Typ = typeof obj.Typ === "undefined" ? null : obj.Typ;
-		result.Werte = typeof obj.Werte === "undefined" ? null : obj.Werte;
-		result.StdWert = typeof obj.StdWert === "undefined" ? null : obj.StdWert;
-		result.Operator = typeof obj.Operator === "undefined" ? null : obj.Operator;
-		result.Zusatzbedingung = typeof obj.Zusatzbedingung === "undefined" ? null : obj.Zusatzbedingung;
+		result.ID = typeof obj.ID === "undefined" ? null : obj.ID === null ? null : Number(obj.ID);
+		result.Bezeichnung = typeof obj.Bezeichnung === "undefined" ? null : obj.Bezeichnung === null ? null : String(obj.Bezeichnung);
+		result.DBFeld = typeof obj.DBFeld === "undefined" ? null : obj.DBFeld === null ? null : String(obj.DBFeld);
+		result.Typ = typeof obj.Typ === "undefined" ? null : obj.Typ === null ? null : String(obj.Typ);
+		result.Werte = typeof obj.Werte === "undefined" ? null : obj.Werte === null ? null : String(obj.Werte);
+		result.StdWert = typeof obj.StdWert === "undefined" ? null : obj.StdWert === null ? null : String(obj.StdWert);
+		result.Operator = typeof obj.Operator === "undefined" ? null : obj.Operator === null ? null : String(obj.Operator);
+		result.Zusatzbedingung = typeof obj.Zusatzbedingung === "undefined" ? null : obj.Zusatzbedingung === null ? null : String(obj.Zusatzbedingung);
 		return result;
 	}
 

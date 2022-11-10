@@ -48,22 +48,22 @@ export class Schild3KatalogEintragPruefungsordnungOption extends JavaObject {
 	public static transpilerFromJSON(json : string): Schild3KatalogEintragPruefungsordnungOption {
 		const obj = JSON.parse(json);
 		const result = new Schild3KatalogEintragPruefungsordnungOption();
-		result.OP_Schulformen = typeof obj.OP_Schulformen === "undefined" ? null : obj.OP_Schulformen;
-		result.OP_POKrz = typeof obj.OP_POKrz === "undefined" ? null : obj.OP_POKrz;
-		result.OP_Krz = typeof obj.OP_Krz === "undefined" ? null : obj.OP_Krz;
-		result.OP_Abgangsart_B = typeof obj.OP_Abgangsart_B === "undefined" ? null : obj.OP_Abgangsart_B;
-		result.OP_Abgangsart_NB = typeof obj.OP_Abgangsart_NB === "undefined" ? null : obj.OP_Abgangsart_NB;
-		result.OP_Art = typeof obj.OP_Art === "undefined" ? null : obj.OP_Art;
-		result.OP_Typ = typeof obj.OP_Typ === "undefined" ? null : obj.OP_Typ;
-		result.OP_Bildungsgang = typeof obj.OP_Bildungsgang === "undefined" ? null : obj.OP_Bildungsgang;
-		result.OP_Name = typeof obj.OP_Name === "undefined" ? null : obj.OP_Name;
-		result.OP_Kommentar = typeof obj.OP_Kommentar === "undefined" ? null : obj.OP_Kommentar;
-		result.OP_Jahrgaenge = typeof obj.OP_Jahrgaenge === "undefined" ? null : obj.OP_Jahrgaenge;
-		result.OP_BKIndex = typeof obj.OP_BKIndex === "undefined" ? null : obj.OP_BKIndex;
-		result.OP_BKAnl_Typ = typeof obj.OP_BKAnl_Typ === "undefined" ? null : obj.OP_BKAnl_Typ;
-		result.OP_Reihenfolge = typeof obj.OP_Reihenfolge === "undefined" ? null : obj.OP_Reihenfolge;
-		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon;
-		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis;
+		result.OP_Schulformen = typeof obj.OP_Schulformen === "undefined" ? null : obj.OP_Schulformen === null ? null : String(obj.OP_Schulformen);
+		result.OP_POKrz = typeof obj.OP_POKrz === "undefined" ? null : obj.OP_POKrz === null ? null : String(obj.OP_POKrz);
+		result.OP_Krz = typeof obj.OP_Krz === "undefined" ? null : obj.OP_Krz === null ? null : String(obj.OP_Krz);
+		result.OP_Abgangsart_B = typeof obj.OP_Abgangsart_B === "undefined" ? null : obj.OP_Abgangsart_B === null ? null : String(obj.OP_Abgangsart_B);
+		result.OP_Abgangsart_NB = typeof obj.OP_Abgangsart_NB === "undefined" ? null : obj.OP_Abgangsart_NB === null ? null : String(obj.OP_Abgangsart_NB);
+		result.OP_Art = typeof obj.OP_Art === "undefined" ? null : obj.OP_Art === null ? null : String(obj.OP_Art);
+		result.OP_Typ = typeof obj.OP_Typ === "undefined" ? null : obj.OP_Typ === null ? null : String(obj.OP_Typ);
+		result.OP_Bildungsgang = typeof obj.OP_Bildungsgang === "undefined" ? null : obj.OP_Bildungsgang === null ? null : String(obj.OP_Bildungsgang);
+		result.OP_Name = typeof obj.OP_Name === "undefined" ? null : obj.OP_Name === null ? null : String(obj.OP_Name);
+		result.OP_Kommentar = typeof obj.OP_Kommentar === "undefined" ? null : obj.OP_Kommentar === null ? null : String(obj.OP_Kommentar);
+		result.OP_Jahrgaenge = typeof obj.OP_Jahrgaenge === "undefined" ? null : obj.OP_Jahrgaenge === null ? null : String(obj.OP_Jahrgaenge);
+		result.OP_BKIndex = typeof obj.OP_BKIndex === "undefined" ? null : obj.OP_BKIndex === null ? null : String(obj.OP_BKIndex);
+		result.OP_BKAnl_Typ = typeof obj.OP_BKAnl_Typ === "undefined" ? null : obj.OP_BKAnl_Typ === null ? null : String(obj.OP_BKAnl_Typ);
+		result.OP_Reihenfolge = typeof obj.OP_Reihenfolge === "undefined" ? null : obj.OP_Reihenfolge === null ? null : Number(obj.OP_Reihenfolge);
+		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : Number(obj.gueltigVon);
+		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : Number(obj.gueltigBis);
 		return result;
 	}
 

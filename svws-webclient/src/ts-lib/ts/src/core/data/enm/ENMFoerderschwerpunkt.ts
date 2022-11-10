@@ -19,8 +19,8 @@ export class ENMFoerderschwerpunkt extends JavaObject {
 	public static transpilerFromJSON(json : string): ENMFoerderschwerpunkt {
 		const obj = JSON.parse(json);
 		const result = new ENMFoerderschwerpunkt();
-		result.kuerzel = typeof obj.kuerzel === "undefined" ? null : obj.kuerzel;
-		result.beschreibung = typeof obj.beschreibung === "undefined" ? null : obj.beschreibung;
+		result.kuerzel = typeof obj.kuerzel === "undefined" ? null : obj.kuerzel === null ? null : String(obj.kuerzel);
+		result.beschreibung = typeof obj.beschreibung === "undefined" ? null : obj.beschreibung === null ? null : String(obj.beschreibung);
 		return result;
 	}
 

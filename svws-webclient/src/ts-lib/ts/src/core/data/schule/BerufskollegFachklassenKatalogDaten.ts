@@ -46,22 +46,22 @@ export class BerufskollegFachklassenKatalogDaten extends JavaObject {
 		if (typeof obj.istAusgelaufen === "undefined")
 			 throw new Error('invalid json format, missing attribute istAusgelaufen');
 		result.istAusgelaufen = obj.istAusgelaufen;
-		result.berufsfeldGruppe = typeof obj.berufsfeldGruppe === "undefined" ? null : obj.berufsfeldGruppe;
-		result.berufsfeld = typeof obj.berufsfeld === "undefined" ? null : obj.berufsfeld;
-		result.ebene1 = typeof obj.ebene1 === "undefined" ? null : obj.ebene1;
-		result.ebene2 = typeof obj.ebene2 === "undefined" ? null : obj.ebene2;
-		result.ebene3 = typeof obj.ebene3 === "undefined" ? null : obj.ebene3;
+		result.berufsfeldGruppe = typeof obj.berufsfeldGruppe === "undefined" ? null : obj.berufsfeldGruppe === null ? null : String(obj.berufsfeldGruppe);
+		result.berufsfeld = typeof obj.berufsfeld === "undefined" ? null : obj.berufsfeld === null ? null : String(obj.berufsfeld);
+		result.ebene1 = typeof obj.ebene1 === "undefined" ? null : obj.ebene1 === null ? null : String(obj.ebene1);
+		result.ebene2 = typeof obj.ebene2 === "undefined" ? null : obj.ebene2 === null ? null : String(obj.ebene2);
+		result.ebene3 = typeof obj.ebene3 === "undefined" ? null : obj.ebene3 === null ? null : String(obj.ebene3);
 		if (typeof obj.bezeichnung === "undefined")
 			 throw new Error('invalid json format, missing attribute bezeichnung');
-		result.bezeichnung = obj.bezeichnung;
+		result.bezeichnung = String(obj.bezeichnung);
 		if (typeof obj.bezeichnungM === "undefined")
 			 throw new Error('invalid json format, missing attribute bezeichnungM');
-		result.bezeichnungM = obj.bezeichnungM;
+		result.bezeichnungM = String(obj.bezeichnungM);
 		if (typeof obj.bezeichnungW === "undefined")
 			 throw new Error('invalid json format, missing attribute bezeichnungW');
-		result.bezeichnungW = obj.bezeichnungW;
-		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon;
-		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis;
+		result.bezeichnungW = String(obj.bezeichnungW);
+		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : Number(obj.gueltigVon);
+		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : Number(obj.gueltigBis);
 		return result;
 	}
 

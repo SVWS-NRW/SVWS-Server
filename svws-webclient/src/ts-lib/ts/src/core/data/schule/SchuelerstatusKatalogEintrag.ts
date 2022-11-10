@@ -22,9 +22,9 @@ export class SchuelerstatusKatalogEintrag extends JavaObject {
 	public static transpilerFromJSON(json : string): SchuelerstatusKatalogEintrag {
 		const obj = JSON.parse(json);
 		const result = new SchuelerstatusKatalogEintrag();
-		result.StatusNr = typeof obj.StatusNr === "undefined" ? null : obj.StatusNr;
-		result.Bezeichnung = typeof obj.Bezeichnung === "undefined" ? null : obj.Bezeichnung;
-		result.Sortierung = typeof obj.Sortierung === "undefined" ? null : obj.Sortierung;
+		result.StatusNr = typeof obj.StatusNr === "undefined" ? null : obj.StatusNr === null ? null : Number(obj.StatusNr);
+		result.Bezeichnung = typeof obj.Bezeichnung === "undefined" ? null : obj.Bezeichnung === null ? null : String(obj.Bezeichnung);
+		result.Sortierung = typeof obj.Sortierung === "undefined" ? null : obj.Sortierung === null ? null : Number(obj.Sortierung);
 		return result;
 	}
 

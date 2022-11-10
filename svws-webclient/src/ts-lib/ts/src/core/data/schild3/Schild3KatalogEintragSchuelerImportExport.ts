@@ -36,16 +36,16 @@ export class Schild3KatalogEintragSchuelerImportExport extends JavaObject {
 	public static transpilerFromJSON(json : string): Schild3KatalogEintragSchuelerImportExport {
 		const obj = JSON.parse(json);
 		const result = new Schild3KatalogEintragSchuelerImportExport();
-		result.Tabelle = typeof obj.Tabelle === "undefined" ? null : obj.Tabelle;
-		result.TabellenAnzeige = typeof obj.TabellenAnzeige === "undefined" ? null : obj.TabellenAnzeige;
-		result.MasterTable = typeof obj.MasterTable === "undefined" ? null : obj.MasterTable;
-		result.ExpCmd = typeof obj.ExpCmd === "undefined" ? null : obj.ExpCmd;
-		result.SrcGetFieldsSQL = typeof obj.SrcGetFieldsSQL === "undefined" ? null : obj.SrcGetFieldsSQL;
-		result.DeleteSQL = typeof obj.DeleteSQL === "undefined" ? null : obj.DeleteSQL;
-		result.DstGetIDSQL = typeof obj.DstGetIDSQL === "undefined" ? null : obj.DstGetIDSQL;
-		result.HauptFeld = typeof obj.HauptFeld === "undefined" ? null : obj.HauptFeld;
-		result.DetailFeld = typeof obj.DetailFeld === "undefined" ? null : obj.DetailFeld;
-		result.Reihenfolge = typeof obj.Reihenfolge === "undefined" ? null : obj.Reihenfolge;
+		result.Tabelle = typeof obj.Tabelle === "undefined" ? null : obj.Tabelle === null ? null : String(obj.Tabelle);
+		result.TabellenAnzeige = typeof obj.TabellenAnzeige === "undefined" ? null : obj.TabellenAnzeige === null ? null : String(obj.TabellenAnzeige);
+		result.MasterTable = typeof obj.MasterTable === "undefined" ? null : obj.MasterTable === null ? null : String(obj.MasterTable);
+		result.ExpCmd = typeof obj.ExpCmd === "undefined" ? null : obj.ExpCmd === null ? null : String(obj.ExpCmd);
+		result.SrcGetFieldsSQL = typeof obj.SrcGetFieldsSQL === "undefined" ? null : obj.SrcGetFieldsSQL === null ? null : String(obj.SrcGetFieldsSQL);
+		result.DeleteSQL = typeof obj.DeleteSQL === "undefined" ? null : obj.DeleteSQL === null ? null : String(obj.DeleteSQL);
+		result.DstGetIDSQL = typeof obj.DstGetIDSQL === "undefined" ? null : obj.DstGetIDSQL === null ? null : String(obj.DstGetIDSQL);
+		result.HauptFeld = typeof obj.HauptFeld === "undefined" ? null : obj.HauptFeld === null ? null : String(obj.HauptFeld);
+		result.DetailFeld = typeof obj.DetailFeld === "undefined" ? null : obj.DetailFeld === null ? null : String(obj.DetailFeld);
+		result.Reihenfolge = typeof obj.Reihenfolge === "undefined" ? null : obj.Reihenfolge === null ? null : Number(obj.Reihenfolge);
 		return result;
 	}
 

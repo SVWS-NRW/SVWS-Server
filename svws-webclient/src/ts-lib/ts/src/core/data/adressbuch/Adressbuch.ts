@@ -32,15 +32,15 @@ export class Adressbuch extends JavaObject {
 		const result = new Adressbuch();
 		if (typeof obj.id === "undefined")
 			 throw new Error('invalid json format, missing attribute id');
-		result.id = obj.id;
-		result.displayname = typeof obj.displayname === "undefined" ? null : obj.displayname;
-		result.beschreibung = typeof obj.beschreibung === "undefined" ? null : obj.beschreibung;
+		result.id = String(obj.id);
+		result.displayname = typeof obj.displayname === "undefined" ? null : obj.displayname === null ? null : String(obj.displayname);
+		result.beschreibung = typeof obj.beschreibung === "undefined" ? null : obj.beschreibung === null ? null : String(obj.beschreibung);
 		if (typeof obj.synctoken === "undefined")
 			 throw new Error('invalid json format, missing attribute synctoken');
 		result.synctoken = obj.synctoken;
 		if (typeof obj.adressbuchTyp === "undefined")
 			 throw new Error('invalid json format, missing attribute adressbuchTyp');
-		result.adressbuchTyp = obj.adressbuchTyp;
+		result.adressbuchTyp = String(obj.adressbuchTyp);
 		if (!!obj.adressbuchEintraege) {
 			for (let elem of obj.adressbuchEintraege) {
 				result.adressbuchEintraege?.add(AdressbuchEintrag.transpilerFromJSON(JSON.stringify(elem)));

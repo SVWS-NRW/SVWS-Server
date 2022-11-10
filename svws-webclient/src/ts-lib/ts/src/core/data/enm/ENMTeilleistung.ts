@@ -31,9 +31,9 @@ export class ENMTeilleistung extends JavaObject {
 		if (typeof obj.artID === "undefined")
 			 throw new Error('invalid json format, missing attribute artID');
 		result.artID = obj.artID;
-		result.datum = typeof obj.datum === "undefined" ? null : obj.datum;
-		result.bemerkung = typeof obj.bemerkung === "undefined" ? null : obj.bemerkung;
-		result.notenKuerzel = typeof obj.notenKuerzel === "undefined" ? null : obj.notenKuerzel;
+		result.datum = typeof obj.datum === "undefined" ? null : obj.datum === null ? null : String(obj.datum);
+		result.bemerkung = typeof obj.bemerkung === "undefined" ? null : obj.bemerkung === null ? null : String(obj.bemerkung);
+		result.notenKuerzel = typeof obj.notenKuerzel === "undefined" ? null : obj.notenKuerzel === null ? null : String(obj.notenKuerzel);
 		return result;
 	}
 

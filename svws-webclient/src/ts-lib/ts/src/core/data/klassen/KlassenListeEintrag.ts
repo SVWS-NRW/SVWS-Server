@@ -34,9 +34,9 @@ export class KlassenListeEintrag extends JavaObject {
 		if (typeof obj.id === "undefined")
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		result.kuerzel = typeof obj.kuerzel === "undefined" ? null : obj.kuerzel;
-		result.idJahrgang = typeof obj.idJahrgang === "undefined" ? null : obj.idJahrgang;
-		result.parallelitaet = typeof obj.parallelitaet === "undefined" ? null : obj.parallelitaet;
+		result.kuerzel = typeof obj.kuerzel === "undefined" ? null : obj.kuerzel === null ? null : String(obj.kuerzel);
+		result.idJahrgang = typeof obj.idJahrgang === "undefined" ? null : obj.idJahrgang === null ? null : Number(obj.idJahrgang);
+		result.parallelitaet = typeof obj.parallelitaet === "undefined" ? null : obj.parallelitaet === null ? null : String(obj.parallelitaet);
 		if (typeof obj.sortierung === "undefined")
 			 throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
@@ -45,7 +45,7 @@ export class KlassenListeEintrag extends JavaObject {
 		result.istSichtbar = obj.istSichtbar;
 		if (!!obj.klassenLehrer) {
 			for (let elem of obj.klassenLehrer) {
-				result.klassenLehrer?.add(elem);
+				result.klassenLehrer?.add(elem === null ? null : Number(elem));
 			}
 		}
 		return result;

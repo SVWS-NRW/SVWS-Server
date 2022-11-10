@@ -45,13 +45,13 @@ export class ENMLerngruppe extends JavaObject {
 		if (typeof obj.fachID === "undefined")
 			 throw new Error('invalid json format, missing attribute fachID');
 		result.fachID = obj.fachID;
-		result.kursartID = typeof obj.kursartID === "undefined" ? null : obj.kursartID;
-		result.bezeichnung = typeof obj.bezeichnung === "undefined" ? null : obj.bezeichnung;
-		result.kursartKuerzel = typeof obj.kursartKuerzel === "undefined" ? null : obj.kursartKuerzel;
-		result.bilingualeSprache = typeof obj.bilingualeSprache === "undefined" ? null : obj.bilingualeSprache;
+		result.kursartID = typeof obj.kursartID === "undefined" ? null : obj.kursartID === null ? null : Number(obj.kursartID);
+		result.bezeichnung = typeof obj.bezeichnung === "undefined" ? null : obj.bezeichnung === null ? null : String(obj.bezeichnung);
+		result.kursartKuerzel = typeof obj.kursartKuerzel === "undefined" ? null : obj.kursartKuerzel === null ? null : String(obj.kursartKuerzel);
+		result.bilingualeSprache = typeof obj.bilingualeSprache === "undefined" ? null : obj.bilingualeSprache === null ? null : String(obj.bilingualeSprache);
 		if (!!obj.lehrerID) {
 			for (let elem of obj.lehrerID) {
-				result.lehrerID?.add(elem);
+				result.lehrerID?.add(Number(elem));
 			}
 		}
 		if (typeof obj.wochenstunden === "undefined")

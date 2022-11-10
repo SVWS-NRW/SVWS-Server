@@ -61,21 +61,21 @@ export class SchuleStammdaten extends JavaObject {
 		result.schulNr = obj.schulNr;
 		if (typeof obj.schulform === "undefined")
 			 throw new Error('invalid json format, missing attribute schulform');
-		result.schulform = obj.schulform;
+		result.schulform = String(obj.schulform);
 		if (typeof obj.bezeichnung1 === "undefined")
 			 throw new Error('invalid json format, missing attribute bezeichnung1');
-		result.bezeichnung1 = obj.bezeichnung1;
-		result.bezeichnung2 = typeof obj.bezeichnung2 === "undefined" ? null : obj.bezeichnung2;
-		result.bezeichnung3 = typeof obj.bezeichnung3 === "undefined" ? null : obj.bezeichnung3;
-		result.strassenname = typeof obj.strassenname === "undefined" ? null : obj.strassenname;
-		result.hausnummer = typeof obj.hausnummer === "undefined" ? null : obj.hausnummer;
-		result.hausnummerZusatz = typeof obj.hausnummerZusatz === "undefined" ? null : obj.hausnummerZusatz;
-		result.plz = typeof obj.plz === "undefined" ? null : obj.plz;
-		result.ort = typeof obj.ort === "undefined" ? null : obj.ort;
-		result.telefon = typeof obj.telefon === "undefined" ? null : obj.telefon;
-		result.fax = typeof obj.fax === "undefined" ? null : obj.fax;
-		result.email = typeof obj.email === "undefined" ? null : obj.email;
-		result.webAdresse = typeof obj.webAdresse === "undefined" ? null : obj.webAdresse;
+		result.bezeichnung1 = String(obj.bezeichnung1);
+		result.bezeichnung2 = typeof obj.bezeichnung2 === "undefined" ? null : obj.bezeichnung2 === null ? null : String(obj.bezeichnung2);
+		result.bezeichnung3 = typeof obj.bezeichnung3 === "undefined" ? null : obj.bezeichnung3 === null ? null : String(obj.bezeichnung3);
+		result.strassenname = typeof obj.strassenname === "undefined" ? null : obj.strassenname === null ? null : String(obj.strassenname);
+		result.hausnummer = typeof obj.hausnummer === "undefined" ? null : obj.hausnummer === null ? null : String(obj.hausnummer);
+		result.hausnummerZusatz = typeof obj.hausnummerZusatz === "undefined" ? null : obj.hausnummerZusatz === null ? null : String(obj.hausnummerZusatz);
+		result.plz = typeof obj.plz === "undefined" ? null : obj.plz === null ? null : String(obj.plz);
+		result.ort = typeof obj.ort === "undefined" ? null : obj.ort === null ? null : String(obj.ort);
+		result.telefon = typeof obj.telefon === "undefined" ? null : obj.telefon === null ? null : String(obj.telefon);
+		result.fax = typeof obj.fax === "undefined" ? null : obj.fax === null ? null : String(obj.fax);
+		result.email = typeof obj.email === "undefined" ? null : obj.email === null ? null : String(obj.email);
+		result.webAdresse = typeof obj.webAdresse === "undefined" ? null : obj.webAdresse === null ? null : String(obj.webAdresse);
 		if (typeof obj.idSchuljahresabschnitt === "undefined")
 			 throw new Error('invalid json format, missing attribute idSchuljahresabschnitt');
 		result.idSchuljahresabschnitt = obj.idSchuljahresabschnitt;

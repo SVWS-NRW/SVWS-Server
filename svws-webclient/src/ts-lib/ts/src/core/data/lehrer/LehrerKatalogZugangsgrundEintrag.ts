@@ -68,15 +68,15 @@ export class LehrerKatalogZugangsgrundEintrag extends JavaObject {
 		result.id = obj.id;
 		if (typeof obj.kuerzel === "undefined")
 			 throw new Error('invalid json format, missing attribute kuerzel');
-		result.kuerzel = obj.kuerzel;
+		result.kuerzel = String(obj.kuerzel);
 		if (typeof obj.text === "undefined")
 			 throw new Error('invalid json format, missing attribute text');
-		result.text = obj.text;
+		result.text = String(obj.text);
 		if (typeof obj.schluessel === "undefined")
 			 throw new Error('invalid json format, missing attribute schluessel');
-		result.schluessel = obj.schluessel;
-		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon;
-		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis;
+		result.schluessel = String(obj.schluessel);
+		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : Number(obj.gueltigVon);
+		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : Number(obj.gueltigBis);
 		return result;
 	}
 

@@ -53,34 +53,34 @@ export class AdressbuchKontakt extends AdressbuchEintrag {
 		const result = new AdressbuchKontakt();
 		if (typeof obj.nachname === "undefined")
 			 throw new Error('invalid json format, missing attribute nachname');
-		result.nachname = obj.nachname;
+		result.nachname = String(obj.nachname);
 		if (typeof obj.zusatzNachname === "undefined")
 			 throw new Error('invalid json format, missing attribute zusatzNachname');
-		result.zusatzNachname = obj.zusatzNachname;
+		result.zusatzNachname = String(obj.zusatzNachname);
 		if (typeof obj.vorname === "undefined")
 			 throw new Error('invalid json format, missing attribute vorname');
-		result.vorname = obj.vorname;
-		result.strassenname = typeof obj.strassenname === "undefined" ? null : obj.strassenname;
-		result.hausnummer = typeof obj.hausnummer === "undefined" ? null : obj.hausnummer;
-		result.hausnummerZusatz = typeof obj.hausnummerZusatz === "undefined" ? null : obj.hausnummerZusatz;
-		result.plz = typeof obj.plz === "undefined" ? null : obj.plz;
-		result.ort = typeof obj.ort === "undefined" ? null : obj.ort;
+		result.vorname = String(obj.vorname);
+		result.strassenname = typeof obj.strassenname === "undefined" ? null : obj.strassenname === null ? null : String(obj.strassenname);
+		result.hausnummer = typeof obj.hausnummer === "undefined" ? null : obj.hausnummer === null ? null : String(obj.hausnummer);
+		result.hausnummerZusatz = typeof obj.hausnummerZusatz === "undefined" ? null : obj.hausnummerZusatz === null ? null : String(obj.hausnummerZusatz);
+		result.plz = typeof obj.plz === "undefined" ? null : obj.plz === null ? null : String(obj.plz);
+		result.ort = typeof obj.ort === "undefined" ? null : obj.ort === null ? null : String(obj.ort);
 		if (!!obj.telefonnummern) {
 			for (let elem of obj.telefonnummern) {
 				result.telefonnummern?.add(Telefonnummer.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		result.email = typeof obj.email === "undefined" ? null : obj.email;
-		result.webAdresse = typeof obj.webAdresse === "undefined" ? null : obj.webAdresse;
+		result.email = typeof obj.email === "undefined" ? null : obj.email === null ? null : String(obj.email);
+		result.webAdresse = typeof obj.webAdresse === "undefined" ? null : obj.webAdresse === null ? null : String(obj.webAdresse);
 		if (!!obj.kategorien) {
 			for (let elem of obj.kategorien) {
-				result.kategorien?.add(elem);
+				result.kategorien?.add(elem === null ? null : String(elem));
 			}
 		}
-		result.organisation = typeof obj.organisation === "undefined" ? null : obj.organisation;
-		result.rolle = typeof obj.rolle === "undefined" ? null : obj.rolle;
-		result.idKind = typeof obj.idKind === "undefined" ? null : obj.idKind;
-		result.idEltern = typeof obj.idEltern === "undefined" ? null : obj.idEltern;
+		result.organisation = typeof obj.organisation === "undefined" ? null : obj.organisation === null ? null : String(obj.organisation);
+		result.rolle = typeof obj.rolle === "undefined" ? null : obj.rolle === null ? null : String(obj.rolle);
+		result.idKind = typeof obj.idKind === "undefined" ? null : obj.idKind === null ? null : String(obj.idKind);
+		result.idEltern = typeof obj.idEltern === "undefined" ? null : obj.idEltern === null ? null : String(obj.idEltern);
 		return result;
 	}
 

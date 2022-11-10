@@ -71,9 +71,9 @@ export class GostFach extends JavaObject {
 		result.id = obj.id;
 		if (typeof obj.kuerzel === "undefined")
 			 throw new Error('invalid json format, missing attribute kuerzel');
-		result.kuerzel = obj.kuerzel;
-		result.kuerzelAnzeige = typeof obj.kuerzelAnzeige === "undefined" ? null : obj.kuerzelAnzeige;
-		result.bezeichnung = typeof obj.bezeichnung === "undefined" ? null : obj.bezeichnung;
+		result.kuerzel = String(obj.kuerzel);
+		result.kuerzelAnzeige = typeof obj.kuerzelAnzeige === "undefined" ? null : obj.kuerzelAnzeige === null ? null : String(obj.kuerzelAnzeige);
+		result.bezeichnung = typeof obj.bezeichnung === "undefined" ? null : obj.bezeichnung === null ? null : String(obj.bezeichnung);
 		if (typeof obj.sortierung === "undefined")
 			 throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
@@ -83,7 +83,7 @@ export class GostFach extends JavaObject {
 		if (typeof obj.istFremdSpracheNeuEinsetzend === "undefined")
 			 throw new Error('invalid json format, missing attribute istFremdSpracheNeuEinsetzend');
 		result.istFremdSpracheNeuEinsetzend = obj.istFremdSpracheNeuEinsetzend;
-		result.biliSprache = typeof obj.biliSprache === "undefined" ? null : obj.biliSprache;
+		result.biliSprache = typeof obj.biliSprache === "undefined" ? null : obj.biliSprache === null ? null : String(obj.biliSprache);
 		if (typeof obj.istMoeglichAbiLK === "undefined")
 			 throw new Error('invalid json format, missing attribute istMoeglichAbiLK');
 		result.istMoeglichAbiLK = obj.istMoeglichAbiLK;
@@ -123,10 +123,10 @@ export class GostFach extends JavaObject {
 		if (typeof obj.mussSchriftlichEF2 === "undefined")
 			 throw new Error('invalid json format, missing attribute mussSchriftlichEF2');
 		result.mussSchriftlichEF2 = obj.mussSchriftlichEF2;
-		result.projektKursLeitfach1ID = typeof obj.projektKursLeitfach1ID === "undefined" ? null : obj.projektKursLeitfach1ID;
-		result.projektKursLeitfach1Kuerzel = typeof obj.projektKursLeitfach1Kuerzel === "undefined" ? null : obj.projektKursLeitfach1Kuerzel;
-		result.projektKursLeitfach2ID = typeof obj.projektKursLeitfach2ID === "undefined" ? null : obj.projektKursLeitfach2ID;
-		result.projektKursLeitfach2Kuerzel = typeof obj.projektKursLeitfach2Kuerzel === "undefined" ? null : obj.projektKursLeitfach2Kuerzel;
+		result.projektKursLeitfach1ID = typeof obj.projektKursLeitfach1ID === "undefined" ? null : obj.projektKursLeitfach1ID === null ? null : Number(obj.projektKursLeitfach1ID);
+		result.projektKursLeitfach1Kuerzel = typeof obj.projektKursLeitfach1Kuerzel === "undefined" ? null : obj.projektKursLeitfach1Kuerzel === null ? null : String(obj.projektKursLeitfach1Kuerzel);
+		result.projektKursLeitfach2ID = typeof obj.projektKursLeitfach2ID === "undefined" ? null : obj.projektKursLeitfach2ID === null ? null : Number(obj.projektKursLeitfach2ID);
+		result.projektKursLeitfach2Kuerzel = typeof obj.projektKursLeitfach2Kuerzel === "undefined" ? null : obj.projektKursLeitfach2Kuerzel === null ? null : String(obj.projektKursLeitfach2Kuerzel);
 		return result;
 	}
 

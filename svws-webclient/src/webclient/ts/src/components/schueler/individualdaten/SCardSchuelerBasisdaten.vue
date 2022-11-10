@@ -4,32 +4,32 @@
 			<div class="flex-shrink-0">
 				<svws-ui-avatar
 					:src="'data:image/png;base64, ' + foto"
-					:alt="'Foto ' + inputVorname + ' ' + inputNachname"
+					:alt="'Foto ' + vorname + ' ' + nachname"
 				/>
 			</div>
 			<div class="input-wrapper">
 				<svws-ui-text-input
-					v-model="inputNachname"
+					v-model="nachname"
 					type="text"
 					placeholder="Nachname"
 				/>
 				<svws-ui-text-input
-					v-model="inputZusatzNachname"
+					v-model="zusatzNachname"
 					type="text"
 					placeholder="Zusatz"
 				/>
 				<svws-ui-text-input
-					v-model="inputVorname"
+					v-model="vorname"
 					type="text"
 					placeholder="Vorname"
 				/>
 				<svws-ui-text-input
-					v-model="inputAlleVornamen"
+					v-model="alleVornamen"
 					type="text"
 					placeholder="Alle Vornamen"
 				/>
 				<svws-ui-multi-select
-					v-model="inputGeschlecht"
+					v-model="geschlecht"
 					title="Geschlecht"
 					:items="inputKatalogGeschlecht"
 					statistics
@@ -62,10 +62,14 @@
 
 	import { Geschlecht, SchuelerStammdaten } from "@svws-nrw/svws-core-ts";
 	import { injectMainApp, Main } from "~/apps/Main";
+	import { UseSchuelerStammdaten } from "~/utils/composables/stammdaten"
 
 	const main: Main = injectMainApp();
 	const app = main.apps.schueler;
 
+	const use = new UseSchuelerStammdaten(app.stammdaten)
+
+	const {vorname, alleVornamen, nachname, zusatzNachname, geschlecht} = use
 	const daten: ComputedRef<SchuelerStammdaten> = computed(() => {
 		return app.stammdaten.daten || new SchuelerStammdaten();
 	});
@@ -82,60 +86,7 @@
 		return daten.value.foto?.toString();
 	});
 
-	const inputNachname: WritableComputedRef<string | undefined> = computed({
-		get(): string | undefined {
-			return daten.value.nachname.toString();
-		},
-		set(val: string | undefined) {
-			app.stammdaten.patch({ nachname: val });
-		}
-	});
 
-	const inputZusatzNachname: WritableComputedRef<string | undefined> =
-		computed({
-			get(): string | undefined {
-				return daten.value.zusatzNachname?.toString();
-			},
-			set(val) {
-				app.stammdaten.patch({ zusatzNachname: val });
-			}
-		});
-
-	const inputVorname: WritableComputedRef<string | undefined> = computed({
-		get(): string | undefined {
-			return daten.value.vorname.toString();
-		},
-		set(val) {
-			app.stammdaten.patch({ vorname: val });
-		}
-	});
-
-	const inputAlleVornamen: WritableComputedRef<string | undefined> = computed(
-		{
-			get(): string | undefined {
-				return daten.value.alleVornamen?.toString();
-			},
-			set(val) {
-				app.stammdaten.patch({ alleVornamen: val });
-			}
-		}
-	);
-
-	const inputGeschlecht: WritableComputedRef<Geschlecht | undefined> =
-		computed({
-			get(): Geschlecht | undefined {
-				if (daten.value.geschlecht) {
-					return (
-						Geschlecht.fromValue(daten.value.geschlecht) ||
-						undefined
-					);
-				}
-				return Geschlecht.X;
-			},
-			set(val: Geschlecht | undefined) {
-				app.stammdaten.patch({ geschlecht: val?.id });
-			}
-		});
 
 	const inputGeburtsdatum: WritableComputedRef<string | undefined> = computed(
 		{

@@ -27,10 +27,10 @@ export class SchuleAbschnitte extends JavaObject {
 		result.anzahlAbschnitte = obj.anzahlAbschnitte;
 		if (typeof obj.abschnittBez === "undefined")
 			 throw new Error('invalid json format, missing attribute abschnittBez');
-		result.abschnittBez = obj.abschnittBez;
+		result.abschnittBez = String(obj.abschnittBez);
 		if (!!obj.bezAbschnitte) {
 			for (let elem of obj.bezAbschnitte) {
-				result.bezAbschnitte?.add(elem);
+				result.bezAbschnitte?.add(String(elem));
 			}
 		}
 		return result;

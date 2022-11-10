@@ -147,16 +147,16 @@ export class FachKatalogEintrag extends JavaObject {
 		result.id = obj.id;
 		if (typeof obj.kuerzelASD === "undefined")
 			 throw new Error('invalid json format, missing attribute kuerzelASD');
-		result.kuerzelASD = obj.kuerzelASD;
+		result.kuerzelASD = String(obj.kuerzelASD);
 		if (typeof obj.bezeichnung === "undefined")
 			 throw new Error('invalid json format, missing attribute bezeichnung');
-		result.bezeichnung = obj.bezeichnung;
+		result.bezeichnung = String(obj.bezeichnung);
 		if (typeof obj.kuerzel === "undefined")
 			 throw new Error('invalid json format, missing attribute kuerzel');
-		result.kuerzel = obj.kuerzel;
-		result.aufgabenfeld = typeof obj.aufgabenfeld === "undefined" ? null : obj.aufgabenfeld;
-		result.fachgruppe = typeof obj.fachgruppe === "undefined" ? null : obj.fachgruppe;
-		result.abJahrgang = typeof obj.abJahrgang === "undefined" ? null : obj.abJahrgang;
+		result.kuerzel = String(obj.kuerzel);
+		result.aufgabenfeld = typeof obj.aufgabenfeld === "undefined" ? null : obj.aufgabenfeld === null ? null : Number(obj.aufgabenfeld);
+		result.fachgruppe = typeof obj.fachgruppe === "undefined" ? null : obj.fachgruppe === null ? null : String(obj.fachgruppe);
+		result.abJahrgang = typeof obj.abJahrgang === "undefined" ? null : obj.abJahrgang === null ? null : String(obj.abJahrgang);
 		if (typeof obj.istFremdsprache === "undefined")
 			 throw new Error('invalid json format, missing attribute istFremdsprache');
 		result.istFremdsprache = obj.istFremdsprache;
@@ -183,8 +183,8 @@ export class FachKatalogEintrag extends JavaObject {
 				result.zulaessig?.add(SchulformSchulgliederung.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon;
-		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis;
+		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : Number(obj.gueltigVon);
+		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : Number(obj.gueltigBis);
 		return result;
 	}
 

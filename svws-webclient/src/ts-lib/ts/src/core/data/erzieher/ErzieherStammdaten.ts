@@ -57,21 +57,21 @@ export class ErzieherStammdaten extends JavaObject {
 		if (typeof obj.idSchueler === "undefined")
 			 throw new Error('invalid json format, missing attribute idSchueler');
 		result.idSchueler = obj.idSchueler;
-		result.idErzieherArt = typeof obj.idErzieherArt === "undefined" ? null : obj.idErzieherArt;
-		result.titel = typeof obj.titel === "undefined" ? null : obj.titel;
-		result.anrede = typeof obj.anrede === "undefined" ? null : obj.anrede;
-		result.nachname = typeof obj.nachname === "undefined" ? null : obj.nachname;
-		result.zusatzNachname = typeof obj.zusatzNachname === "undefined" ? null : obj.zusatzNachname;
-		result.vorname = typeof obj.vorname === "undefined" ? null : obj.vorname;
-		result.strassenname = typeof obj.strassenname === "undefined" ? null : obj.strassenname;
-		result.hausnummer = typeof obj.hausnummer === "undefined" ? null : obj.hausnummer;
-		result.hausnummerZusatz = typeof obj.hausnummerZusatz === "undefined" ? null : obj.hausnummerZusatz;
-		result.wohnortID = typeof obj.wohnortID === "undefined" ? null : obj.wohnortID;
-		result.ortsteilID = typeof obj.ortsteilID === "undefined" ? null : obj.ortsteilID;
-		result.erhaeltAnschreiben = typeof obj.erhaeltAnschreiben === "undefined" ? null : obj.erhaeltAnschreiben;
-		result.eMail = typeof obj.eMail === "undefined" ? null : obj.eMail;
-		result.staatsangehoerigkeitID = typeof obj.staatsangehoerigkeitID === "undefined" ? null : obj.staatsangehoerigkeitID;
-		result.bemerkungen = typeof obj.bemerkungen === "undefined" ? null : obj.bemerkungen;
+		result.idErzieherArt = typeof obj.idErzieherArt === "undefined" ? null : obj.idErzieherArt === null ? null : Number(obj.idErzieherArt);
+		result.titel = typeof obj.titel === "undefined" ? null : obj.titel === null ? null : String(obj.titel);
+		result.anrede = typeof obj.anrede === "undefined" ? null : obj.anrede === null ? null : String(obj.anrede);
+		result.nachname = typeof obj.nachname === "undefined" ? null : obj.nachname === null ? null : String(obj.nachname);
+		result.zusatzNachname = typeof obj.zusatzNachname === "undefined" ? null : obj.zusatzNachname === null ? null : String(obj.zusatzNachname);
+		result.vorname = typeof obj.vorname === "undefined" ? null : obj.vorname === null ? null : String(obj.vorname);
+		result.strassenname = typeof obj.strassenname === "undefined" ? null : obj.strassenname === null ? null : String(obj.strassenname);
+		result.hausnummer = typeof obj.hausnummer === "undefined" ? null : obj.hausnummer === null ? null : String(obj.hausnummer);
+		result.hausnummerZusatz = typeof obj.hausnummerZusatz === "undefined" ? null : obj.hausnummerZusatz === null ? null : String(obj.hausnummerZusatz);
+		result.wohnortID = typeof obj.wohnortID === "undefined" ? null : obj.wohnortID === null ? null : Number(obj.wohnortID);
+		result.ortsteilID = typeof obj.ortsteilID === "undefined" ? null : obj.ortsteilID === null ? null : Number(obj.ortsteilID);
+		result.erhaeltAnschreiben = typeof obj.erhaeltAnschreiben === "undefined" ? null : obj.erhaeltAnschreiben === null ? null : Boolean(obj.erhaeltAnschreiben);
+		result.eMail = typeof obj.eMail === "undefined" ? null : obj.eMail === null ? null : String(obj.eMail);
+		result.staatsangehoerigkeitID = typeof obj.staatsangehoerigkeitID === "undefined" ? null : obj.staatsangehoerigkeitID === null ? null : String(obj.staatsangehoerigkeitID);
+		result.bemerkungen = typeof obj.bemerkungen === "undefined" ? null : obj.bemerkungen === null ? null : String(obj.bemerkungen);
 		return result;
 	}
 

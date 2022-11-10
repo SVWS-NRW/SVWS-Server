@@ -27,7 +27,7 @@ export class GostLeistungenFachwahl extends JavaObject {
 		const obj = JSON.parse(json);
 		const result = new GostLeistungenFachwahl();
 		result.fach = ((typeof obj.fach === "undefined") || (obj.fach === null)) ? null : GostFach.transpilerFromJSON(JSON.stringify(obj.fach));
-		result.abiturfach = typeof obj.abiturfach === "undefined" ? null : obj.abiturfach;
+		result.abiturfach = typeof obj.abiturfach === "undefined" ? null : obj.abiturfach === null ? null : Number(obj.abiturfach);
 		if (typeof obj.istFSNeu === "undefined")
 			 throw new Error('invalid json format, missing attribute istFSNeu');
 		result.istFSNeu = obj.istFSNeu;

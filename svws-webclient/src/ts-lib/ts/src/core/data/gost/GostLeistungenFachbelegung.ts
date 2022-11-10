@@ -50,21 +50,21 @@ export class GostLeistungenFachbelegung extends JavaObject {
 		if (typeof obj.schuljahr === "undefined")
 			 throw new Error('invalid json format, missing attribute schuljahr');
 		result.schuljahr = obj.schuljahr;
-		result.halbjahrKuerzel = typeof obj.halbjahrKuerzel === "undefined" ? null : obj.halbjahrKuerzel;
+		result.halbjahrKuerzel = typeof obj.halbjahrKuerzel === "undefined" ? null : obj.halbjahrKuerzel === null ? null : String(obj.halbjahrKuerzel);
 		if (typeof obj.abschnitt === "undefined")
 			 throw new Error('invalid json format, missing attribute abschnitt');
 		result.abschnitt = obj.abschnitt;
 		if (typeof obj.abschnittGewertet === "undefined")
 			 throw new Error('invalid json format, missing attribute abschnittGewertet');
 		result.abschnittGewertet = obj.abschnittGewertet;
-		result.jahrgang = typeof obj.jahrgang === "undefined" ? null : obj.jahrgang;
-		result.lehrer = typeof obj.lehrer === "undefined" ? null : obj.lehrer;
-		result.notenKuerzel = typeof obj.notenKuerzel === "undefined" ? null : obj.notenKuerzel;
-		result.kursartKuerzel = typeof obj.kursartKuerzel === "undefined" ? null : obj.kursartKuerzel;
+		result.jahrgang = typeof obj.jahrgang === "undefined" ? null : obj.jahrgang === null ? null : String(obj.jahrgang);
+		result.lehrer = typeof obj.lehrer === "undefined" ? null : obj.lehrer === null ? null : Number(obj.lehrer);
+		result.notenKuerzel = typeof obj.notenKuerzel === "undefined" ? null : obj.notenKuerzel === null ? null : String(obj.notenKuerzel);
+		result.kursartKuerzel = typeof obj.kursartKuerzel === "undefined" ? null : obj.kursartKuerzel === null ? null : String(obj.kursartKuerzel);
 		if (typeof obj.istSchriftlich === "undefined")
 			 throw new Error('invalid json format, missing attribute istSchriftlich');
 		result.istSchriftlich = obj.istSchriftlich;
-		result.bilingualeSprache = typeof obj.bilingualeSprache === "undefined" ? null : obj.bilingualeSprache;
+		result.bilingualeSprache = typeof obj.bilingualeSprache === "undefined" ? null : obj.bilingualeSprache === null ? null : String(obj.bilingualeSprache);
 		if (typeof obj.wochenstunden === "undefined")
 			 throw new Error('invalid json format, missing attribute wochenstunden');
 		result.wochenstunden = obj.wochenstunden;

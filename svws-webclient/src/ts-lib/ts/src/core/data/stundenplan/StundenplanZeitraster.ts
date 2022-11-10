@@ -68,10 +68,10 @@ export class StundenplanZeitraster extends JavaObject {
 		result.unterrichtstunde = obj.unterrichtstunde;
 		if (typeof obj.stundenbeginn === "undefined")
 			 throw new Error('invalid json format, missing attribute stundenbeginn');
-		result.stundenbeginn = obj.stundenbeginn;
+		result.stundenbeginn = String(obj.stundenbeginn);
 		if (typeof obj.stundenende === "undefined")
 			 throw new Error('invalid json format, missing attribute stundenende');
-		result.stundenende = obj.stundenende;
+		result.stundenende = String(obj.stundenende);
 		return result;
 	}
 

@@ -46,20 +46,20 @@ export class ENMBKFach extends JavaObject {
 		if (typeof obj.istSchriftlich === "undefined")
 			 throw new Error('invalid json format, missing attribute istSchriftlich');
 		result.istSchriftlich = obj.istSchriftlich;
-		result.vornote = typeof obj.vornote === "undefined" ? null : obj.vornote;
-		result.noteSchriftlichePruefung = typeof obj.noteSchriftlichePruefung === "undefined" ? null : obj.noteSchriftlichePruefung;
+		result.vornote = typeof obj.vornote === "undefined" ? null : obj.vornote === null ? null : String(obj.vornote);
+		result.noteSchriftlichePruefung = typeof obj.noteSchriftlichePruefung === "undefined" ? null : obj.noteSchriftlichePruefung === null ? null : String(obj.noteSchriftlichePruefung);
 		if (typeof obj.muendlichePruefung === "undefined")
 			 throw new Error('invalid json format, missing attribute muendlichePruefung');
 		result.muendlichePruefung = obj.muendlichePruefung;
 		if (typeof obj.muendlichePruefungFreiwillig === "undefined")
 			 throw new Error('invalid json format, missing attribute muendlichePruefungFreiwillig');
 		result.muendlichePruefungFreiwillig = obj.muendlichePruefungFreiwillig;
-		result.noteMuendlichePruefung = typeof obj.noteMuendlichePruefung === "undefined" ? null : obj.noteMuendlichePruefung;
+		result.noteMuendlichePruefung = typeof obj.noteMuendlichePruefung === "undefined" ? null : obj.noteMuendlichePruefung === null ? null : String(obj.noteMuendlichePruefung);
 		if (typeof obj.istSchriftlichBerufsabschluss === "undefined")
 			 throw new Error('invalid json format, missing attribute istSchriftlichBerufsabschluss');
 		result.istSchriftlichBerufsabschluss = obj.istSchriftlichBerufsabschluss;
-		result.noteBerufsabschluss = typeof obj.noteBerufsabschluss === "undefined" ? null : obj.noteBerufsabschluss;
-		result.abschlussnote = typeof obj.abschlussnote === "undefined" ? null : obj.abschlussnote;
+		result.noteBerufsabschluss = typeof obj.noteBerufsabschluss === "undefined" ? null : obj.noteBerufsabschluss === null ? null : String(obj.noteBerufsabschluss);
+		result.abschlussnote = typeof obj.abschlussnote === "undefined" ? null : obj.abschlussnote === null ? null : String(obj.abschlussnote);
 		return result;
 	}
 

@@ -56,33 +56,33 @@ export class SchildReportingSchuelerleistungsdaten extends JavaObject {
 		result.fachID = obj.fachID;
 		if (typeof obj.fachKuerzel === "undefined")
 			 throw new Error('invalid json format, missing attribute fachKuerzel');
-		result.fachKuerzel = obj.fachKuerzel;
+		result.fachKuerzel = String(obj.fachKuerzel);
 		if (typeof obj.fach === "undefined")
 			 throw new Error('invalid json format, missing attribute fach');
-		result.fach = obj.fach;
+		result.fach = String(obj.fach);
 		if (typeof obj.lehrerID === "undefined")
 			 throw new Error('invalid json format, missing attribute lehrerID');
 		result.lehrerID = obj.lehrerID;
 		if (typeof obj.lehrerKuerzel === "undefined")
 			 throw new Error('invalid json format, missing attribute lehrerKuerzel');
-		result.lehrerKuerzel = obj.lehrerKuerzel;
-		result.kursID = typeof obj.kursID === "undefined" ? null : obj.kursID;
+		result.lehrerKuerzel = String(obj.lehrerKuerzel);
+		result.kursID = typeof obj.kursID === "undefined" ? null : obj.kursID === null ? null : Number(obj.kursID);
 		if (typeof obj.kurs === "undefined")
 			 throw new Error('invalid json format, missing attribute kurs');
-		result.kurs = obj.kurs;
+		result.kurs = String(obj.kurs);
 		if (typeof obj.kursart === "undefined")
 			 throw new Error('invalid json format, missing attribute kursart');
-		result.kursart = obj.kursart;
+		result.kursart = String(obj.kursart);
 		if (typeof obj.kursartAllg === "undefined")
 			 throw new Error('invalid json format, missing attribute kursartAllg');
-		result.kursartAllg = obj.kursartAllg;
+		result.kursartAllg = String(obj.kursartAllg);
 		if (typeof obj.note === "undefined")
 			 throw new Error('invalid json format, missing attribute note');
-		result.note = obj.note;
+		result.note = String(obj.note);
 		if (typeof obj.noteKuerzel === "undefined")
 			 throw new Error('invalid json format, missing attribute noteKuerzel');
-		result.noteKuerzel = obj.noteKuerzel;
-		result.notePunkte = typeof obj.notePunkte === "undefined" ? null : obj.notePunkte;
+		result.noteKuerzel = String(obj.noteKuerzel);
+		result.notePunkte = typeof obj.notePunkte === "undefined" ? null : obj.notePunkte === null ? null : Number(obj.notePunkte);
 		return result;
 	}
 

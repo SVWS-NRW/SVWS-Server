@@ -25,16 +25,16 @@ export class AdressbuchEintrag extends JavaObject {
 		const result = new AdressbuchEintrag();
 		if (typeof obj.id === "undefined")
 			 throw new Error('invalid json format, missing attribute id');
-		result.id = obj.id;
+		result.id = String(obj.id);
 		if (typeof obj.adressbuchId === "undefined")
 			 throw new Error('invalid json format, missing attribute adressbuchId');
-		result.adressbuchId = obj.adressbuchId;
+		result.adressbuchId = String(obj.adressbuchId);
 		if (typeof obj.uri === "undefined")
 			 throw new Error('invalid json format, missing attribute uri');
-		result.uri = obj.uri;
+		result.uri = String(obj.uri);
 		if (typeof obj.version === "undefined")
 			 throw new Error('invalid json format, missing attribute version');
-		result.version = obj.version;
+		result.version = String(obj.version);
 		return result;
 	}
 

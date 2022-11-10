@@ -34,7 +34,7 @@ export class GostBelegpruefungErgebnis extends JavaObject {
 		}
 		if (!!obj.log) {
 			for (let elem of obj.log) {
-				result.log?.add(elem);
+				result.log?.add(String(elem));
 			}
 		}
 		return result;

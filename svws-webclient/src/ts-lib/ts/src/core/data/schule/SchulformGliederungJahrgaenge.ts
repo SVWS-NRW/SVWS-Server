@@ -25,11 +25,11 @@ export class SchulformGliederungJahrgaenge extends JavaObject {
 		const result = new SchulformGliederungJahrgaenge();
 		if (typeof obj.schulform === "undefined")
 			 throw new Error('invalid json format, missing attribute schulform');
-		result.schulform = obj.schulform;
-		result.gliederung = typeof obj.gliederung === "undefined" ? null : obj.gliederung;
+		result.schulform = String(obj.schulform);
+		result.gliederung = typeof obj.gliederung === "undefined" ? null : obj.gliederung === null ? null : String(obj.gliederung);
 		if (!!obj.jahrgaenge) {
 			for (let elem of obj.jahrgaenge) {
-				result.jahrgaenge?.add(elem);
+				result.jahrgaenge?.add(String(elem));
 			}
 		}
 		return result;

@@ -61,10 +61,10 @@ export class ENMSchueler extends JavaObject {
 		if (typeof obj.klasseID === "undefined")
 			 throw new Error('invalid json format, missing attribute klasseID');
 		result.klasseID = obj.klasseID;
-		result.nachname = typeof obj.nachname === "undefined" ? null : obj.nachname;
-		result.vorname = typeof obj.vorname === "undefined" ? null : obj.vorname;
-		result.geschlecht = typeof obj.geschlecht === "undefined" ? null : obj.geschlecht;
-		result.bilingualeSprache = typeof obj.bilingualeSprache === "undefined" ? null : obj.bilingualeSprache;
+		result.nachname = typeof obj.nachname === "undefined" ? null : obj.nachname === null ? null : String(obj.nachname);
+		result.vorname = typeof obj.vorname === "undefined" ? null : obj.vorname === null ? null : String(obj.vorname);
+		result.geschlecht = typeof obj.geschlecht === "undefined" ? null : obj.geschlecht === null ? null : String(obj.geschlecht);
+		result.bilingualeSprache = typeof obj.bilingualeSprache === "undefined" ? null : obj.bilingualeSprache === null ? null : String(obj.bilingualeSprache);
 		if (typeof obj.istZieldifferent === "undefined")
 			 throw new Error('invalid json format, missing attribute istZieldifferent');
 		result.istZieldifferent = obj.istZieldifferent;

@@ -31,13 +31,13 @@ export class KatalogEintragOrte extends JavaObject {
 	public static transpilerFromJSON(json : string): KatalogEintragOrte {
 		const obj = JSON.parse(json);
 		const result = new KatalogEintragOrte();
-		result.ID = typeof obj.ID === "undefined" ? null : obj.ID;
-		result.PLZ = typeof obj.PLZ === "undefined" ? null : obj.PLZ;
-		result.RegSchl = typeof obj.RegSchl === "undefined" ? null : obj.RegSchl;
-		result.Ort = typeof obj.Ort === "undefined" ? null : obj.Ort;
-		result.Sortierung = typeof obj.Sortierung === "undefined" ? null : obj.Sortierung;
-		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon;
-		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis;
+		result.ID = typeof obj.ID === "undefined" ? null : obj.ID === null ? null : Number(obj.ID);
+		result.PLZ = typeof obj.PLZ === "undefined" ? null : obj.PLZ === null ? null : String(obj.PLZ);
+		result.RegSchl = typeof obj.RegSchl === "undefined" ? null : obj.RegSchl === null ? null : String(obj.RegSchl);
+		result.Ort = typeof obj.Ort === "undefined" ? null : obj.Ort === null ? null : String(obj.Ort);
+		result.Sortierung = typeof obj.Sortierung === "undefined" ? null : obj.Sortierung === null ? null : Number(obj.Sortierung);
+		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : Number(obj.gueltigVon);
+		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : Number(obj.gueltigBis);
 		return result;
 	}
 

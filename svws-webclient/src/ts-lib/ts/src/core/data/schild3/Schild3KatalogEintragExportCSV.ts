@@ -33,15 +33,15 @@ export class Schild3KatalogEintragExportCSV extends JavaObject {
 	public static transpilerFromJSON(json : string): Schild3KatalogEintragExportCSV {
 		const obj = JSON.parse(json);
 		const result = new Schild3KatalogEintragExportCSV();
-		result.DatenartKrz = typeof obj.DatenartKrz === "undefined" ? null : obj.DatenartKrz;
-		result.Feldname = typeof obj.Feldname === "undefined" ? null : obj.Feldname;
-		result.AnzeigeText = typeof obj.AnzeigeText === "undefined" ? null : obj.AnzeigeText;
-		result.Feldtyp = typeof obj.Feldtyp === "undefined" ? null : obj.Feldtyp;
-		result.Feldwerte = typeof obj.Feldwerte === "undefined" ? null : obj.Feldwerte;
-		result.ErgebnisWerte = typeof obj.ErgebnisWerte === "undefined" ? null : obj.ErgebnisWerte;
-		result.LookupFeldname = typeof obj.LookupFeldname === "undefined" ? null : obj.LookupFeldname;
-		result.LookupSQLText = typeof obj.LookupSQLText === "undefined" ? null : obj.LookupSQLText;
-		result.DBFormat = typeof obj.DBFormat === "undefined" ? null : obj.DBFormat;
+		result.DatenartKrz = typeof obj.DatenartKrz === "undefined" ? null : obj.DatenartKrz === null ? null : String(obj.DatenartKrz);
+		result.Feldname = typeof obj.Feldname === "undefined" ? null : obj.Feldname === null ? null : String(obj.Feldname);
+		result.AnzeigeText = typeof obj.AnzeigeText === "undefined" ? null : obj.AnzeigeText === null ? null : String(obj.AnzeigeText);
+		result.Feldtyp = typeof obj.Feldtyp === "undefined" ? null : obj.Feldtyp === null ? null : String(obj.Feldtyp);
+		result.Feldwerte = typeof obj.Feldwerte === "undefined" ? null : obj.Feldwerte === null ? null : String(obj.Feldwerte);
+		result.ErgebnisWerte = typeof obj.ErgebnisWerte === "undefined" ? null : obj.ErgebnisWerte === null ? null : String(obj.ErgebnisWerte);
+		result.LookupFeldname = typeof obj.LookupFeldname === "undefined" ? null : obj.LookupFeldname === null ? null : String(obj.LookupFeldname);
+		result.LookupSQLText = typeof obj.LookupSQLText === "undefined" ? null : obj.LookupSQLText === null ? null : String(obj.LookupSQLText);
+		result.DBFormat = typeof obj.DBFormat === "undefined" ? null : obj.DBFormat === null ? null : String(obj.DBFormat);
 		return result;
 	}
 

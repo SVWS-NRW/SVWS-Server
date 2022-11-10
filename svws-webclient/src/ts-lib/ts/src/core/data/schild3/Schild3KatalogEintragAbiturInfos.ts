@@ -32,14 +32,14 @@ export class Schild3KatalogEintragAbiturInfos extends JavaObject {
 	public static transpilerFromJSON(json : string): Schild3KatalogEintragAbiturInfos {
 		const obj = JSON.parse(json);
 		const result = new Schild3KatalogEintragAbiturInfos();
-		result.PrfOrdnung = typeof obj.PrfOrdnung === "undefined" ? null : obj.PrfOrdnung;
-		result.AbiFach = typeof obj.AbiFach === "undefined" ? null : obj.AbiFach;
-		result.Bedingung = typeof obj.Bedingung === "undefined" ? null : obj.Bedingung;
-		result.AbiInfoKrz = typeof obj.AbiInfoKrz === "undefined" ? null : obj.AbiInfoKrz;
-		result.AbiInfoBeschreibung = typeof obj.AbiInfoBeschreibung === "undefined" ? null : obj.AbiInfoBeschreibung;
-		result.AbiInfoText = typeof obj.AbiInfoText === "undefined" ? null : obj.AbiInfoText;
-		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon;
-		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis;
+		result.PrfOrdnung = typeof obj.PrfOrdnung === "undefined" ? null : obj.PrfOrdnung === null ? null : String(obj.PrfOrdnung);
+		result.AbiFach = typeof obj.AbiFach === "undefined" ? null : obj.AbiFach === null ? null : String(obj.AbiFach);
+		result.Bedingung = typeof obj.Bedingung === "undefined" ? null : obj.Bedingung === null ? null : String(obj.Bedingung);
+		result.AbiInfoKrz = typeof obj.AbiInfoKrz === "undefined" ? null : obj.AbiInfoKrz === null ? null : String(obj.AbiInfoKrz);
+		result.AbiInfoBeschreibung = typeof obj.AbiInfoBeschreibung === "undefined" ? null : obj.AbiInfoBeschreibung === null ? null : String(obj.AbiInfoBeschreibung);
+		result.AbiInfoText = typeof obj.AbiInfoText === "undefined" ? null : obj.AbiInfoText === null ? null : String(obj.AbiInfoText);
+		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : Number(obj.gueltigVon);
+		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : Number(obj.gueltigBis);
 		return result;
 	}
 

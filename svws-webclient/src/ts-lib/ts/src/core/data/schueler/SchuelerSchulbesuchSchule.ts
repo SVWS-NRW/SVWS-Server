@@ -36,15 +36,15 @@ export class SchuelerSchulbesuchSchule extends JavaObject {
 		const result = new SchuelerSchulbesuchSchule();
 		if (typeof obj.schulnummer === "undefined")
 			 throw new Error('invalid json format, missing attribute schulnummer');
-		result.schulnummer = obj.schulnummer;
-		result.schulgliederung = typeof obj.schulgliederung === "undefined" ? null : obj.schulgliederung;
-		result.entlassgrundID = typeof obj.entlassgrundID === "undefined" ? null : obj.entlassgrundID;
-		result.abschlussartID = typeof obj.abschlussartID === "undefined" ? null : obj.abschlussartID;
-		result.organisationsFormID = typeof obj.organisationsFormID === "undefined" ? null : obj.organisationsFormID;
-		result.datumVon = typeof obj.datumVon === "undefined" ? null : obj.datumVon;
-		result.datumBis = typeof obj.datumBis === "undefined" ? null : obj.datumBis;
-		result.jahrgangVon = typeof obj.jahrgangVon === "undefined" ? null : obj.jahrgangVon;
-		result.jahrgangBis = typeof obj.jahrgangBis === "undefined" ? null : obj.jahrgangBis;
+		result.schulnummer = String(obj.schulnummer);
+		result.schulgliederung = typeof obj.schulgliederung === "undefined" ? null : obj.schulgliederung === null ? null : String(obj.schulgliederung);
+		result.entlassgrundID = typeof obj.entlassgrundID === "undefined" ? null : obj.entlassgrundID === null ? null : Number(obj.entlassgrundID);
+		result.abschlussartID = typeof obj.abschlussartID === "undefined" ? null : obj.abschlussartID === null ? null : String(obj.abschlussartID);
+		result.organisationsFormID = typeof obj.organisationsFormID === "undefined" ? null : obj.organisationsFormID === null ? null : String(obj.organisationsFormID);
+		result.datumVon = typeof obj.datumVon === "undefined" ? null : obj.datumVon === null ? null : String(obj.datumVon);
+		result.datumBis = typeof obj.datumBis === "undefined" ? null : obj.datumBis === null ? null : String(obj.datumBis);
+		result.jahrgangVon = typeof obj.jahrgangVon === "undefined" ? null : obj.jahrgangVon === null ? null : String(obj.jahrgangVon);
+		result.jahrgangBis = typeof obj.jahrgangBis === "undefined" ? null : obj.jahrgangBis === null ? null : String(obj.jahrgangBis);
 		return result;
 	}
 

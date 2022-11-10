@@ -56,22 +56,22 @@ export class AbiturFachbelegung extends JavaObject {
 		if (typeof obj.fachID === "undefined")
 			 throw new Error('invalid json format, missing attribute fachID');
 		result.fachID = obj.fachID;
-		result.letzteKursart = typeof obj.letzteKursart === "undefined" ? null : obj.letzteKursart;
-		result.abiturFach = typeof obj.abiturFach === "undefined" ? null : obj.abiturFach;
+		result.letzteKursart = typeof obj.letzteKursart === "undefined" ? null : obj.letzteKursart === null ? null : String(obj.letzteKursart);
+		result.abiturFach = typeof obj.abiturFach === "undefined" ? null : obj.abiturFach === null ? null : Number(obj.abiturFach);
 		if (typeof obj.istFSNeu === "undefined")
 			 throw new Error('invalid json format, missing attribute istFSNeu');
 		result.istFSNeu = obj.istFSNeu;
-		result.block1PunktSumme = typeof obj.block1PunktSumme === "undefined" ? null : obj.block1PunktSumme;
-		result.block1NotenpunkteDurchschnitt = typeof obj.block1NotenpunkteDurchschnitt === "undefined" ? null : obj.block1NotenpunkteDurchschnitt;
-		result.block2NotenKuerzelPruefung = typeof obj.block2NotenKuerzelPruefung === "undefined" ? null : obj.block2NotenKuerzelPruefung;
-		result.block2PunkteZwischenstand = typeof obj.block2PunkteZwischenstand === "undefined" ? null : obj.block2PunkteZwischenstand;
-		result.block2MuendlichePruefungAbweichung = typeof obj.block2MuendlichePruefungAbweichung === "undefined" ? null : obj.block2MuendlichePruefungAbweichung;
-		result.block2MuendlichePruefungBestehen = typeof obj.block2MuendlichePruefungBestehen === "undefined" ? null : obj.block2MuendlichePruefungBestehen;
-		result.block2MuendlichePruefungFreiwillig = typeof obj.block2MuendlichePruefungFreiwillig === "undefined" ? null : obj.block2MuendlichePruefungFreiwillig;
-		result.block2MuendlichePruefungReihenfolge = typeof obj.block2MuendlichePruefungReihenfolge === "undefined" ? null : obj.block2MuendlichePruefungReihenfolge;
-		result.block2MuendlichePruefungNotenKuerzel = typeof obj.block2MuendlichePruefungNotenKuerzel === "undefined" ? null : obj.block2MuendlichePruefungNotenKuerzel;
-		result.block2Punkte = typeof obj.block2Punkte === "undefined" ? null : obj.block2Punkte;
-		result.block2Pruefer = typeof obj.block2Pruefer === "undefined" ? null : obj.block2Pruefer;
+		result.block1PunktSumme = typeof obj.block1PunktSumme === "undefined" ? null : obj.block1PunktSumme === null ? null : Number(obj.block1PunktSumme);
+		result.block1NotenpunkteDurchschnitt = typeof obj.block1NotenpunkteDurchschnitt === "undefined" ? null : obj.block1NotenpunkteDurchschnitt === null ? null : Number(obj.block1NotenpunkteDurchschnitt);
+		result.block2NotenKuerzelPruefung = typeof obj.block2NotenKuerzelPruefung === "undefined" ? null : obj.block2NotenKuerzelPruefung === null ? null : String(obj.block2NotenKuerzelPruefung);
+		result.block2PunkteZwischenstand = typeof obj.block2PunkteZwischenstand === "undefined" ? null : obj.block2PunkteZwischenstand === null ? null : Number(obj.block2PunkteZwischenstand);
+		result.block2MuendlichePruefungAbweichung = typeof obj.block2MuendlichePruefungAbweichung === "undefined" ? null : obj.block2MuendlichePruefungAbweichung === null ? null : Boolean(obj.block2MuendlichePruefungAbweichung);
+		result.block2MuendlichePruefungBestehen = typeof obj.block2MuendlichePruefungBestehen === "undefined" ? null : obj.block2MuendlichePruefungBestehen === null ? null : Boolean(obj.block2MuendlichePruefungBestehen);
+		result.block2MuendlichePruefungFreiwillig = typeof obj.block2MuendlichePruefungFreiwillig === "undefined" ? null : obj.block2MuendlichePruefungFreiwillig === null ? null : Boolean(obj.block2MuendlichePruefungFreiwillig);
+		result.block2MuendlichePruefungReihenfolge = typeof obj.block2MuendlichePruefungReihenfolge === "undefined" ? null : obj.block2MuendlichePruefungReihenfolge === null ? null : Number(obj.block2MuendlichePruefungReihenfolge);
+		result.block2MuendlichePruefungNotenKuerzel = typeof obj.block2MuendlichePruefungNotenKuerzel === "undefined" ? null : obj.block2MuendlichePruefungNotenKuerzel === null ? null : String(obj.block2MuendlichePruefungNotenKuerzel);
+		result.block2Punkte = typeof obj.block2Punkte === "undefined" ? null : obj.block2Punkte === null ? null : Number(obj.block2Punkte);
+		result.block2Pruefer = typeof obj.block2Pruefer === "undefined" ? null : obj.block2Pruefer === null ? null : Number(obj.block2Pruefer);
 		for (let i : number = 0; i < obj.belegungen.length; i++) {
 			result.belegungen[i] = obj.belegungen[i] == null ? null : (AbiturFachbelegungHalbjahr.transpilerFromJSON(JSON.stringify(obj.belegungen[i])));
 		}

@@ -3,7 +3,7 @@ import { List, Vector } from "@svws-nrw/svws-core-ts";
 
 type ListElement<T> = T extends List<(infer ElementType)> ? ElementType : T;
 
-export interface BaseDataState<T, U> {
+export interface BaseDataState<T, U=undefined> {
 	data: T | undefined;
 	manager: U | undefined;
 }
@@ -135,7 +135,7 @@ export abstract class BaseData<T, ListItem, U = unknown> {
 	 */
 	public abstract patch(
 		data: T|ListElement<T>|Partial<T|ListElement<T>>,
-		id1: ListElement<T>|number,
+		id1?: ListElement<T>|number,
 		id2?: number
 	): Promise<boolean>;
 

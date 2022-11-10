@@ -19,7 +19,7 @@ export class DBSchemaListeEintrag extends JavaObject {
 	public static transpilerFromJSON(json : string): DBSchemaListeEintrag {
 		const obj = JSON.parse(json);
 		const result = new DBSchemaListeEintrag();
-		result.name = typeof obj.name === "undefined" ? null : obj.name;
+		result.name = typeof obj.name === "undefined" ? null : obj.name === null ? null : String(obj.name);
 		if (typeof obj.isDefault === "undefined")
 			 throw new Error('invalid json format, missing attribute isDefault');
 		result.isDefault = obj.isDefault;

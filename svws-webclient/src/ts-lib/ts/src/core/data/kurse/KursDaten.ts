@@ -41,16 +41,16 @@ export class KursDaten extends JavaObject {
 		result.idSchuljahresabschnitt = obj.idSchuljahresabschnitt;
 		if (typeof obj.kuerzel === "undefined")
 			 throw new Error('invalid json format, missing attribute kuerzel');
-		result.kuerzel = obj.kuerzel;
+		result.kuerzel = String(obj.kuerzel);
 		if (!!obj.idJahrgaenge) {
 			for (let elem of obj.idJahrgaenge) {
-				result.idJahrgaenge?.add(elem);
+				result.idJahrgaenge?.add(Number(elem));
 			}
 		}
 		if (typeof obj.idFach === "undefined")
 			 throw new Error('invalid json format, missing attribute idFach');
 		result.idFach = obj.idFach;
-		result.lehrer = typeof obj.lehrer === "undefined" ? null : obj.lehrer;
+		result.lehrer = typeof obj.lehrer === "undefined" ? null : obj.lehrer === null ? null : Number(obj.lehrer);
 		if (typeof obj.sortierung === "undefined")
 			 throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;

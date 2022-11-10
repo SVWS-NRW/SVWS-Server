@@ -34,10 +34,10 @@ export class OrtKatalogEintrag extends JavaObject {
 		if (typeof obj.id === "undefined")
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		result.plz = typeof obj.plz === "undefined" ? null : obj.plz;
-		result.ortsname = typeof obj.ortsname === "undefined" ? null : obj.ortsname;
-		result.kreis = typeof obj.kreis === "undefined" ? null : obj.kreis;
-		result.kuerzelBundesland = typeof obj.kuerzelBundesland === "undefined" ? null : obj.kuerzelBundesland;
+		result.plz = typeof obj.plz === "undefined" ? null : obj.plz === null ? null : String(obj.plz);
+		result.ortsname = typeof obj.ortsname === "undefined" ? null : obj.ortsname === null ? null : String(obj.ortsname);
+		result.kreis = typeof obj.kreis === "undefined" ? null : obj.kreis === null ? null : String(obj.kreis);
+		result.kuerzelBundesland = typeof obj.kuerzelBundesland === "undefined" ? null : obj.kuerzelBundesland === null ? null : String(obj.kuerzelBundesland);
 		if (typeof obj.sortierung === "undefined")
 			 throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
