@@ -11,6 +11,7 @@ import de.nrw.schule.svws.core.data.benutzer.BenutzerKompetenzKatalogEintrag;
 import de.nrw.schule.svws.core.data.benutzer.BenutzerListeEintrag;
 import de.nrw.schule.svws.core.data.benutzer.BenutzergruppeDaten;
 import de.nrw.schule.svws.core.data.benutzer.BenutzergruppeListeEintrag;
+import de.nrw.schule.svws.core.data.gost.GostBlockungSchiene;
 import de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenz;
 import de.nrw.schule.svws.data.benutzer.DataBenutzerDaten;
 import de.nrw.schule.svws.data.benutzer.DataBenutzergruppeDaten;
@@ -235,31 +236,55 @@ public class APIBenutzer {
      * 
      * @param schema    das Datenbankschema
      * @param id        die ID des Benutzers
-     * @param is        der Input-Stream mit dem Boolean-Wert, on das Admin-Flag gesetzt oder gelöscht werden soll
      * @param request   die Informationen zur HTTP-Anfrage
      * 
      * 
      * @return die HTTP-Antwort
      */
     @POST
-    @Path("/{id : \\d+}/istAdmin")
-    @Operation(summary = "Setzt ob der Benutzer  administrativ ist oder nicht.", 
-                          description = "Setzt ob der Benutzer administrativ ist oder nicht."
+    @Path("/{id : \\d+}/addAdmin")
+    @Operation(summary = "Setzt Admin-Berechtiung für den Benutzer", 
+                          description = "Setzt Admin-Berechtigung für den Benutzer."
             + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung besitzt.")
     @ApiResponse(responseCode = "204", description = "Die Information wurde erfolgreich gesetzt.")
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um den Benutzer als administrativer Benutzer zu setzen")
-    @ApiResponse(responseCode = "400", description = "Fehler beim Konvertieren des JSON-Textes in einen Boolean-Wert. Ein Boolen-Wert wird erwartet.")
     @ApiResponse(responseCode = "404", description = "Der Benutzer ist nicht vorhanden.")
     @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-    public Response setBenutzerAdmin(
+    public Response addBenutzerAdmin(
             @PathParam("schema") String schema, @PathParam("id") long id,
-            @RequestBody(description = "Der Status, ob es sich um einen administrativen Benutzer handelt oder nicht.", required = true, 
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Boolean.class))) InputStream is,
             @Context HttpServletRequest request) {
         try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADMIN)) {
-            return (new DataBenutzerDaten(conn)).setAdmin(id, JSONMapper.toBoolean(is));
+            return (new DataBenutzerDaten(conn)).addAdmin(id);
         }
+    }
+    
+    /**
+     * Die OpenAPI-Methode für das Löschen der Admin-Berechtiung eines Benutzers
+     *  
+     * @param schema       das Datenbankschema
+     * @param id   die ID des Benutzers
+     * @param request      die Informationen zur HTTP-Anfrage
+     * 
+     * @return die HTTP-Antwort
+     */
+    @DELETE
+    @Path("/{id : \\d+}/removeAdmin")
+    @Operation(summary = "Entfernt die Admin-Berechtigung des Benutzers mit der id",
+    description = "Entfernt die Admin-Berechtigung des Benutzers mit der id."
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen  der Admin-Berechtigung hat.")
+    @ApiResponse(responseCode = "200", description = "Die Admin-Berechtigung wurde erfolgreich entfernt.",
+                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = GostBlockungSchiene.class)))    
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Admin-Berechtigung zu entfernen.")
+    @ApiResponse(responseCode = "404", description = "Der Benutzer ist nicht vorhanden.")
+    @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response removeBenutzerAdmin(
+    		@PathParam("schema") String schema, @PathParam("id") long id, 
+    		@Context HttpServletRequest request) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADMIN)) {
+    		return (new DataBenutzerDaten(conn)).removeAdmin(id);
+    	}
     }
 
     /**
@@ -305,7 +330,9 @@ public class APIBenutzer {
     @Path("/{id : \\d+}/kompetenz/remove")
     @Operation(summary = "Entfernt Kompetenzen bei einem Benutzer.", description = "Entfernt Kompetenzen bei einem Benutzer."
             + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen der Kompetenzen besitzt.")
-    @ApiResponse(responseCode = "204", description = "Die Kompetenzen wurden erfolgreich entfernt.")
+    
+    @ApiResponse(responseCode = "200", description = "Die Kompetenzen wurden erfolgreich entfernt.",
+    			 content = @Content(mediaType = "application/json", schema = @Schema(implementation = Long.class)))  
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Kompetenzen zu entfernen.")
     @ApiResponse(responseCode = "404", description = "Benötigte Information zum Benutzer wurden nicht in der DB gefunden.")
     @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
@@ -434,14 +461,13 @@ public class APIBenutzer {
      * 
      * @param schema    das Datenbankschema
      * @param id        die ID der Benutzergruppe
-     * @param is        der Input-Stream mit dem Boolean-Wert, on das Admin-Flag gesetzt oder gelöscht werden soll
      * @param request   die Informationen zur HTTP-Anfrage
      * 
      * 
      * @return die HTTP-Antwort
      */
     @POST
-    @Path("/gruppe/{id : \\d+}/istAdmin")
+    @Path("/gruppe/{id : \\d+}/addAdmin")
     @Operation(summary = "Setzt ob die Benutzergruppe eine administrative Benutzergruppe ist oder nicht.", 
                           description = "Setzt ob die Benutzergruppe eine administrative Benutzergruppe ist oder nicht."
             + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung besitzt.")
@@ -450,48 +476,154 @@ public class APIBenutzer {
     @ApiResponse(responseCode = "404", description = "Die Benutzergruppe ist nicht vorhanden.")
     @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-    public Response setBenutzergruppeAdmin(
+    public Response addBenutzergruppeAdmin(
             @PathParam("schema") String schema, @PathParam("id") long id,
-            @RequestBody(description = "Der Status, ob es sich um eine administrative Gruppe handelt oder nicht.", required = true, 
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Boolean.class))) InputStream is,
-            @Context HttpServletRequest request) {
+           @Context HttpServletRequest request) {
         try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADMIN)) {
-            return (new DataBenutzergruppeDaten(conn)).setAdmin(id, JSONMapper.toBoolean(is));
+            return (new DataBenutzergruppeDaten(conn)).addAdmin(id);
         }
     }
 
+    
+    /**
+     * Die OpenAPI-Methode für das Löschen der Admin-Berechtiung einer Benutzergruppe
+     *  
+     * @param schema       das Datenbankschema
+     * @param id   die ID der Benutzergruppe
+     * @param request      die Informationen zur HTTP-Anfrage
+     * 
+     * @return die HTTP-Antwort
+     */
+    @DELETE
+    @Path("/gruppe/{id : \\d+}/removeAdmin")
+    @Operation(summary = "Entfernt die Admin-Berechtigung er Benutzergruppe mit der id",
+    description = "Entfernt die Admin-Berechtigung er Benutzergruppe mit der id"
+                + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen  der Admin-Berechtigung hat.")
+    @ApiResponse(responseCode = "200", description = "Die Admin-Berechtigung wurde erfolgreich entfernt.",
+                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = GostBlockungSchiene.class)))    
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Admin-Berechtigung zu entfernen.")
+    @ApiResponse(responseCode = "404", description = "Die Benutzergruppe ist nicht vorhanden.")
+    @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response removeBenutzergruppeAdmin(
+            @PathParam("schema") String schema, @PathParam("id") long id, 
+            @Context HttpServletRequest request) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADMIN)) {
+            return (new DataBenutzergruppeDaten(conn)).removeAdmin(id);
+        }
+    }
 
     /**
-     * Die OpenAPI-Methode für Setzen einer Kompetenz bei einer Benutzergruppe.
+     * Die OpenAPI-Methode zum Hinzufügen von einer oder mehreren Kompetenzen bei einer Benutzergruppe
      * 
      * @param schema    das Datenbankschema
      * @param id        die ID der Benutzergruppe
-     * @param kid       die ID der Kompetenz
-     * @param is        der Input-Stream mit dem Boolean-Wert, ob die Kompetenz gelöscht oder hinzugeüfgt werden soll
+     * @param kids      die IDs der Kompetenzen
      * @param request   die Informationen zur HTTP-Anfrage
      * 
      * @return die HTTP-Antwort
      */
     @POST
-    @Path("/gruppe/{id : \\d+}/kompetenz/{kid : \\d+}")
-    @Operation(summary = "Setzt ob die Kompetenz bei der Benutzergruppe vorhanden  ist oder nicht.", 
-                          description = "Setzt ob die Kompetenz bei der Benutzergruppe vorhanden  ist oder nicht."
-            + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung besitzt.")
-    @ApiResponse(responseCode = "204", description = "Die Information wurde erfolgreich gesetzt.")
-    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Kompetenz bei der Gruppe zu setzen")
-    @ApiResponse(responseCode = "404", description = "Die Benutzergruppe ist nicht vorhanden.")
+    @Path("/gruppe/{id : \\d+}/kompetenz/add")
+    @Operation(summary = "Fügt Kompetenzen bei einer Benutzergruppe hinzu.", description = "Fügt Kompetenzen bei einer Benutzergruppe hinzu."
+            + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Setzen der Kompetenzen besitzt.")
+    @ApiResponse(responseCode = "204", description = "Die Kompetenzen wurden erfolgreich hinzugefügt.")
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Kompetenzen zu hinzuzufügen.")
+    @ApiResponse(responseCode = "404", description = "Benötigte Information zum Benutzer wurden nicht in der DB gefunden.")
     @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-    public Response setBenutzergruppeKompetenz(
-            @PathParam("schema") String schema, @PathParam("id") long id, @PathParam("kid") long kid,
-            @RequestBody(description = "Der Status, ob die Kompetenz vorhanden ist oder nicht.", required = true, 
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Boolean.class))) InputStream is,
+    public Response addBenutzergruppeKompetenzen(
+            @PathParam("schema") String schema, @PathParam("id") long id,
+            @RequestBody(description = "Die Kompetenzen", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class)))) List<Long> kids,
             @Context HttpServletRequest request) {
         try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADMIN)) {
-            return (new DataBenutzergruppeDaten(conn)).setKompetenz(id, kid, JSONMapper.toBoolean(is));
+            return (new DataBenutzergruppeDaten(conn)).addKompetenzen(id, kids);
+        }
+    }
+    
+    /**
+     * Die OpenAPI-Methode zum Entfernen von einer oder mehreren Kompetenzen bei einer Benutzergruppe
+     * 
+     * @param schema    das Datenbankschema
+     * @param id        die ID der Benutzergruppe
+     * @param kids      die IDs der Kompetenzen
+     * @param request   die Informationen zur HTTP-Anfrage
+     * 
+     * @return die HTTP-Antwort
+     */
+    @DELETE
+    @Path("/gruppe/{id : \\d+}/kompetenz/remove")
+    @Operation(summary = "Entfernt Kompetenzen bei einer Benutzergruppe.", description = "Entfernt Kompetenzen bei einer Benutzergruppe hinzu."
+            + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entferen der Kompetenzen besitzt.")
+    @ApiResponse(responseCode = "204", description = "Die Kompetenzen wurden erfolgreich hinzugefügt.")
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Kompetenzen zu entfernen.")
+    @ApiResponse(responseCode = "404", description = "Benötigte Information zum Benutzer wurden nicht in der DB gefunden.")
+    @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response removeBenutzergruppeKompetenzen(
+            @PathParam("schema") String schema, @PathParam("id") long id,
+            @RequestBody(description = "Die Kompetenzen", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class)))) List<Long> kids,
+            @Context HttpServletRequest request) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADMIN)) {
+            return (new DataBenutzergruppeDaten(conn)).removeKompetenzen(id, kids);
+        }
+    }
+    
+    /**
+     * Die OpenAPI-Methode zum Hinzufügen von einen oder mehreren Benutzern bei einer Benutzergruppe
+     * 
+     * @param schema    das Datenbankschema
+     * @param id        die ID der Benutzergruppe
+     * @param bids      die IDs der Benutzer
+     * @param request   die Informationen zur HTTP-Anfrage
+     * 
+     * @return die HTTP-Antwort
+     */
+    @POST
+    @Path("/gruppe/{id : \\d+}/benutzer/add")
+    @Operation(summary = "Fügt Benutzer bei einer Benutzergruppe hinzu.", description = "Fügt Benutzer bei einer Benutzergruppe hinzu."
+            + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Hinzufügen der Benutzer besitzt.")
+    @ApiResponse(responseCode = "204", description = "Die Benutzer wurden erfolgreich hinzugefügt.")
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um neue Benutzer hinzuzufügen.")
+    @ApiResponse(responseCode = "404", description = "Benötigte Information zum Benutzer wurden nicht in der DB gefunden.")
+    @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response addBenutzergruppeBenutzer(
+            @PathParam("schema") String schema, @PathParam("id") long id,
+            @RequestBody(description = "Die Benutzer", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class)))) List<Long> bids,
+            @Context HttpServletRequest request) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADMIN)) {
+            return (new DataBenutzergruppeDaten(conn)).addBenutzer(id, bids);
         }
     }
 
+    /**
+     * Die OpenAPI-Methode zum Entfernen von einem oder mehreren Benutzern bei einer Benutzergruppe
+     * 
+     * @param schema    das Datenbankschema
+     * @param id        die ID der Benutzergruppe
+     * @param bids      die IDs der Benutzer
+     * @param request   die Informationen zur HTTP-Anfrage
+     * 
+     * @return die HTTP-Antwort
+     */
+    @DELETE
+    @Path("/gruppe/{id : \\d+}/benutzer/remove")
+    @Operation(summary = "Entfernt Benutzer bei einer Benutzergruppe hinzu.", description = "Entfernt Benutzer bei einer Benutzergruppe hinzu."
+            + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen der Benutzer besitzt.")
+    @ApiResponse(responseCode = "204", description = "Die Benutzer wurden erfolgreich hinzugefügt.")
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um neue Benutzer zu entfernen.")
+    @ApiResponse(responseCode = "404", description = "Benötigte Information zum Benutzer wurden nicht in der DB gefunden.")
+    @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response removeBenutzergruppeBenutzer(
+            @PathParam("schema") String schema, @PathParam("id") long id,
+            @RequestBody(description = "Die Benutzer", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class)))) List<Long> bids,
+            @Context HttpServletRequest request) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADMIN)) {
+            return (new DataBenutzergruppeDaten(conn)).removeBenutzer(id, bids);
+        }
+    }
 
     // TODO Methode setBenutzergruppeKompetenz aufteilen (siehe bei Benutzer) in zwei API-Methoden: addBenutzergruppeKompetenz (POST) und removeBenutzergruppeKompetenz (DELETE)
 

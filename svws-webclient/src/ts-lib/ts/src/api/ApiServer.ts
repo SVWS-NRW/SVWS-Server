@@ -15,7 +15,6 @@ import { BetriebAnsprechpartner, cast_de_nrw_schule_svws_core_data_betrieb_Betri
 import { BetriebListeEintrag, cast_de_nrw_schule_svws_core_data_betrieb_BetriebListeEintrag } from '../core/data/betrieb/BetriebListeEintrag';
 import { BetriebStammdaten, cast_de_nrw_schule_svws_core_data_betrieb_BetriebStammdaten } from '../core/data/betrieb/BetriebStammdaten';
 import { BilingualeSpracheKatalogEintrag, cast_de_nrw_schule_svws_core_data_fach_BilingualeSpracheKatalogEintrag } from '../core/data/fach/BilingualeSpracheKatalogEintrag';
-import { JavaBoolean, cast_java_lang_Boolean } from '../java/lang/JavaBoolean';
 import { DBSchemaListeEintrag, cast_de_nrw_schule_svws_core_data_db_DBSchemaListeEintrag } from '../core/data/db/DBSchemaListeEintrag';
 import { EinschulungsartKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_EinschulungsartKatalogEintrag } from '../core/data/schule/EinschulungsartKatalogEintrag';
 import { ENMDaten, cast_de_nrw_schule_svws_core_data_enm_ENMDaten } from '../core/data/enm/ENMDaten';
@@ -335,6 +334,30 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode addBenutzerAdmin für den Zugriff auf die URL https://{hostname}/db/{schema}/benutzer/{id : \d+}/addAdmin
+	 * 
+	 * Setzt Admin-Berechtigung für den Benutzer.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 204: Die Information wurde erfolgreich gesetzt.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um den Benutzer als administrativer Benutzer zu setzen
+	 *   Code 404: Der Benutzer ist nicht vorhanden.
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async addBenutzerAdmin(schema : string, id : number) : Promise<void> {
+		let path : string = "/db/{schema}/benutzer/{id : \d+}/addAdmin"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema)
+				.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		await super.postJSON(path, null);
+		return;
+	}
+
+
+	/**
 	 * Implementierung der POST-Methode setAnmeldename für den Zugriff auf die URL https://{hostname}/db/{schema}/benutzer/{id : \d+}/anmeldename
 	 * 
 	 * Setzt den Anmeldenamen eines Benutzers.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Setzen des Kennwortes besitzt.
@@ -387,33 +410,6 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode setBenutzerAdmin für den Zugriff auf die URL https://{hostname}/db/{schema}/benutzer/{id : \d+}/istAdmin
-	 * 
-	 * Setzt ob der Benutzer administrativ ist oder nicht.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung besitzt.
-	 * 
-	 * Mögliche HTTP-Antworten: 
-	 *   Code 204: Die Information wurde erfolgreich gesetzt.
-	 *   Code 400: Fehler beim Konvertieren des JSON-Textes in einen Boolean-Wert. Ein Boolen-Wert wird erwartet.
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um den Benutzer als administrativer Benutzer zu setzen
-	 *   Code 404: Der Benutzer ist nicht vorhanden.
-	 *   Code 409: Die übergebenen Daten sind fehlerhaft
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 * 
-	 * @param {Boolean} data - der Request-Body für die HTTP-Methode
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 */
-	public async setBenutzerAdmin(data : Boolean, schema : string, id : number) : Promise<void> {
-		let path : string = "/db/{schema}/benutzer/{id : \d+}/istAdmin"
-				.replace(/{schema\s*(:[^}]+)?}/g, schema)
-				.replace(/{id\s*(:[^}]+)?}/g, id.toString());
-		let body : string = JSON.stringify(data);
-		await super.postJSON(path, body);
-		return;
-	}
-
-
-	/**
 	 * Implementierung der POST-Methode addBenutzerKompetenzen für den Zugriff auf die URL https://{hostname}/db/{schema}/benutzer/{id : \d+}/kompetenz/add
 	 * 
 	 * Fügt Kompetenzen bei einem Benutzer hinzu.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Setzen der Kompetenzen besitzt.
@@ -445,7 +441,9 @@ export class ApiServer extends BaseApi {
 	 * Entfernt Kompetenzen bei einem Benutzer.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen der Kompetenzen besitzt.
 	 * 
 	 * Mögliche HTTP-Antworten: 
-	 *   Code 204: Die Kompetenzen wurden erfolgreich entfernt.
+	 *   Code 200: Die Kompetenzen wurden erfolgreich entfernt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Long
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Kompetenzen zu entfernen.
 	 *   Code 404: Benötigte Information zum Benutzer wurden nicht in der DB gefunden.
 	 *   Code 409: Die übergebenen Daten sind fehlerhaft
@@ -454,14 +452,17 @@ export class ApiServer extends BaseApi {
 	 * @param {List<Long>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
+	 * 
+	 * @returns Die Kompetenzen wurden erfolgreich entfernt.
 	 */
-	public async removeBenutzerKompetenzen(data : List<Number>, schema : string, id : number) : Promise<void> {
+	public async removeBenutzerKompetenzen(data : List<Number>, schema : string, id : number) : Promise<Number> {
 		let path : string = "/db/{schema}/benutzer/{id : \d+}/kompetenz/remove"
 				.replace(/{schema\s*(:[^}]+)?}/g, schema)
 				.replace(/{id\s*(:[^}]+)?}/g, id.toString());
 		let body : string = "[" + data.toArray().map(d => { JSON.stringify(d) }).join() + "]";
-		await super.deleteJSON(path, body);
-		return;
+		const result : string = await super.deleteJSON(path, body);
+		const text = result;
+		return parseFloat(JSON.parse(text));
 	}
 
 
@@ -488,6 +489,35 @@ export class ApiServer extends BaseApi {
 		let body : string = JSON.stringify(data);
 		await super.postJSON(path, body);
 		return;
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode removeBenutzerAdmin für den Zugriff auf die URL https://{hostname}/db/{schema}/benutzer/{id : \d+}/removeAdmin
+	 * 
+	 * Entfernt die Admin-Berechtigung des Benutzers mit der id.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen  der Admin-Berechtigung hat.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Die Admin-Berechtigung wurde erfolgreich entfernt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: GostBlockungSchiene
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Admin-Berechtigung zu entfernen.
+	 *   Code 404: Der Benutzer ist nicht vorhanden.
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 * 
+	 * @returns Die Admin-Berechtigung wurde erfolgreich entfernt.
+	 */
+	public async removeBenutzerAdmin(schema : string, id : number) : Promise<GostBlockungSchiene> {
+		let path : string = "/db/{schema}/benutzer/{id : \d+}/removeAdmin"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema)
+				.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const result : string = await super.deleteJSON(path, null);
+		const text = result;
+		return GostBlockungSchiene.transpilerFromJSON(text);
 	}
 
 
@@ -598,6 +628,30 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode addBenutzergruppeAdmin für den Zugriff auf die URL https://{hostname}/db/{schema}/benutzer/gruppe/{id : \d+}/addAdmin
+	 * 
+	 * Setzt ob die Benutzergruppe eine administrative Benutzergruppe ist oder nicht.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 204: Die Information wurde erfolgreich gesetzt.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Gruppe als administrative Gruppe zu setzen
+	 *   Code 404: Die Benutzergruppe ist nicht vorhanden.
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async addBenutzergruppeAdmin(schema : string, id : number) : Promise<void> {
+		let path : string = "/db/{schema}/benutzer/gruppe/{id : \d+}/addAdmin"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema)
+				.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		await super.postJSON(path, null);
+		return;
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getBenutzerMitGruppenID für den Zugriff auf die URL https://{hostname}/db/{schema}/benutzer/gruppe/{id : \d+}/benutzer
 	 * 
 	 * Liest die Benutzer der Benutzergruppe zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Benutzergruppendaten besitzt.
@@ -623,6 +677,58 @@ export class ApiServer extends BaseApi {
 		let ret = new Vector<BenutzerListeEintrag>();
 		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(BenutzerListeEintrag.transpilerFromJSON(text)); });
 		return ret;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addBenutzergruppeBenutzer für den Zugriff auf die URL https://{hostname}/db/{schema}/benutzer/gruppe/{id : \d+}/benutzer/add
+	 * 
+	 * Fügt Benutzer bei einer Benutzergruppe hinzu.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Hinzufügen der Benutzer besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 204: Die Benutzer wurden erfolgreich hinzugefügt.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um neue Benutzer hinzuzufügen.
+	 *   Code 404: Benötigte Information zum Benutzer wurden nicht in der DB gefunden.
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 * 
+	 * @param {List<Long>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async addBenutzergruppeBenutzer(data : List<Number>, schema : string, id : number) : Promise<void> {
+		let path : string = "/db/{schema}/benutzer/gruppe/{id : \d+}/benutzer/add"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema)
+				.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		let body : string = "[" + data.toArray().map(d => { JSON.stringify(d) }).join() + "]";
+		await super.postJSON(path, body);
+		return;
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode removeBenutzergruppeBenutzer für den Zugriff auf die URL https://{hostname}/db/{schema}/benutzer/gruppe/{id : \d+}/benutzer/remove
+	 * 
+	 * Entfernt Benutzer bei einer Benutzergruppe hinzu.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen der Benutzer besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 204: Die Benutzer wurden erfolgreich hinzugefügt.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um neue Benutzer zu entfernen.
+	 *   Code 404: Benötigte Information zum Benutzer wurden nicht in der DB gefunden.
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 * 
+	 * @param {List<Long>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async removeBenutzergruppeBenutzer(data : List<Number>, schema : string, id : number) : Promise<void> {
+		let path : string = "/db/{schema}/benutzer/gruppe/{id : \d+}/benutzer/remove"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema)
+				.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		let body : string = "[" + data.toArray().map(d => { JSON.stringify(d) }).join() + "]";
+		await super.deleteJSON(path, body);
+		return;
 	}
 
 
@@ -653,56 +759,83 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode setBenutzergruppeAdmin für den Zugriff auf die URL https://{hostname}/db/{schema}/benutzer/gruppe/{id : \d+}/istAdmin
+	 * Implementierung der POST-Methode addBenutzergruppeKompetenzen für den Zugriff auf die URL https://{hostname}/db/{schema}/benutzer/gruppe/{id : \d+}/kompetenz/add
 	 * 
-	 * Setzt ob die Benutzergruppe eine administrative Benutzergruppe ist oder nicht.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung besitzt.
+	 * Fügt Kompetenzen bei einer Benutzergruppe hinzu.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Setzen der Kompetenzen besitzt.
 	 * 
 	 * Mögliche HTTP-Antworten: 
-	 *   Code 204: Die Information wurde erfolgreich gesetzt.
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Gruppe als administrative Gruppe zu setzen
-	 *   Code 404: Die Benutzergruppe ist nicht vorhanden.
+	 *   Code 204: Die Kompetenzen wurden erfolgreich hinzugefügt.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Kompetenzen zu hinzuzufügen.
+	 *   Code 404: Benötigte Information zum Benutzer wurden nicht in der DB gefunden.
 	 *   Code 409: Die übergebenen Daten sind fehlerhaft
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 * 
-	 * @param {Boolean} data - der Request-Body für die HTTP-Methode
+	 * @param {List<Long>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async setBenutzergruppeAdmin(data : Boolean, schema : string, id : number) : Promise<void> {
-		let path : string = "/db/{schema}/benutzer/gruppe/{id : \d+}/istAdmin"
+	public async addBenutzergruppeKompetenzen(data : List<Number>, schema : string, id : number) : Promise<void> {
+		let path : string = "/db/{schema}/benutzer/gruppe/{id : \d+}/kompetenz/add"
 				.replace(/{schema\s*(:[^}]+)?}/g, schema)
 				.replace(/{id\s*(:[^}]+)?}/g, id.toString());
-		let body : string = JSON.stringify(data);
+		let body : string = "[" + data.toArray().map(d => { JSON.stringify(d) }).join() + "]";
 		await super.postJSON(path, body);
 		return;
 	}
 
 
 	/**
-	 * Implementierung der POST-Methode setBenutzergruppeKompetenz für den Zugriff auf die URL https://{hostname}/db/{schema}/benutzer/gruppe/{id : \d+}/kompetenz/{kid : \d+}
+	 * Implementierung der DELETE-Methode removeBenutzergruppeKompetenzen für den Zugriff auf die URL https://{hostname}/db/{schema}/benutzer/gruppe/{id : \d+}/kompetenz/remove
 	 * 
-	 * Setzt ob die Kompetenz bei der Benutzergruppe vorhanden  ist oder nicht.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung besitzt.
+	 * Entfernt Kompetenzen bei einer Benutzergruppe hinzu.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entferen der Kompetenzen besitzt.
 	 * 
 	 * Mögliche HTTP-Antworten: 
-	 *   Code 204: Die Information wurde erfolgreich gesetzt.
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Kompetenz bei der Gruppe zu setzen
+	 *   Code 204: Die Kompetenzen wurden erfolgreich hinzugefügt.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Kompetenzen zu entfernen.
+	 *   Code 404: Benötigte Information zum Benutzer wurden nicht in der DB gefunden.
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 * 
+	 * @param {List<Long>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async removeBenutzergruppeKompetenzen(data : List<Number>, schema : string, id : number) : Promise<void> {
+		let path : string = "/db/{schema}/benutzer/gruppe/{id : \d+}/kompetenz/remove"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema)
+				.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		let body : string = "[" + data.toArray().map(d => { JSON.stringify(d) }).join() + "]";
+		await super.deleteJSON(path, body);
+		return;
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode removeBenutzergruppeAdmin für den Zugriff auf die URL https://{hostname}/db/{schema}/benutzer/gruppe/{id : \d+}/removeAdmin
+	 * 
+	 * Entfernt die Admin-Berechtigung er Benutzergruppe mit der idDabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen  der Admin-Berechtigung hat.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Die Admin-Berechtigung wurde erfolgreich entfernt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: GostBlockungSchiene
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Admin-Berechtigung zu entfernen.
 	 *   Code 404: Die Benutzergruppe ist nicht vorhanden.
 	 *   Code 409: Die übergebenen Daten sind fehlerhaft
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 * 
-	 * @param {Boolean} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
-	 * @param {number} kid - der Pfad-Parameter kid
+	 * 
+	 * @returns Die Admin-Berechtigung wurde erfolgreich entfernt.
 	 */
-	public async setBenutzergruppeKompetenz(data : Boolean, schema : string, id : number, kid : number) : Promise<void> {
-		let path : string = "/db/{schema}/benutzer/gruppe/{id : \d+}/kompetenz/{kid : \d+}"
+	public async removeBenutzergruppeAdmin(schema : string, id : number) : Promise<GostBlockungSchiene> {
+		let path : string = "/db/{schema}/benutzer/gruppe/{id : \d+}/removeAdmin"
 				.replace(/{schema\s*(:[^}]+)?}/g, schema)
-				.replace(/{id\s*(:[^}]+)?}/g, id.toString())
-				.replace(/{kid\s*(:[^}]+)?}/g, kid.toString());
-		let body : string = JSON.stringify(data);
-		await super.postJSON(path, body);
-		return;
+				.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const result : string = await super.deleteJSON(path, null);
+		const text = result;
+		return GostBlockungSchiene.transpilerFromJSON(text);
 	}
 
 
