@@ -332,7 +332,7 @@ public class DataBenutzergruppeDaten extends DataManager<Long> {
                     	throw OperationError.NOT_FOUND.exception("Der Benutzer mit der ID " + bid + " kann nicht aus der Gruppe "
                     			+ "mit der ID " + id + " entfernt werden, da dieser nicht Mitglied in der Gruppe ist.");
                 	// Prüfe, ob der zu entfernende Benutzer der aktuelle Benutzer und die betroffene Gruppe administrativ ist...
-                    if ((conn.getUser().getId() == bid) && (!getDTO(id).IstAdmin))
+                    if ((conn.getUser().getId() == bid) && (getDTO(id).IstAdmin))
                     	pruefeAdminUeberGruppe(id);
                 	conn.transactionRemove(bgm);
                 }
