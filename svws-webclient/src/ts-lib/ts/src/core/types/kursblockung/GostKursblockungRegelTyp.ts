@@ -1,12 +1,16 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
+import { IllegalStateException, cast_java_lang_IllegalStateException } from '../../../java/lang/IllegalStateException';
 import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
+import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
+import { GostBlockungRegel, cast_de_nrw_schule_svws_core_data_gost_GostBlockungRegel } from '../../../core/data/gost/GostBlockungRegel';
+import { GostKursblockungRegelParameterTyp, cast_de_nrw_schule_svws_core_types_kursblockung_GostKursblockungRegelParameterTyp } from '../../../core/types/kursblockung/GostKursblockungRegelParameterTyp';
+import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
+import { JavaLong, cast_java_lang_Long } from '../../../java/lang/JavaLong';
 import { Collection, cast_java_util_Collection } from '../../../java/util/Collection';
 import { List, cast_java_util_List } from '../../../java/util/List';
-import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 import { Collections, cast_java_util_Collections } from '../../../java/util/Collections';
 import { Arrays, cast_java_util_Arrays } from '../../../java/util/Arrays';
-import { GostKursblockungRegelParameterTyp, cast_de_nrw_schule_svws_core_types_kursblockung_GostKursblockungRegelParameterTyp } from '../../../core/types/kursblockung/GostKursblockungRegelParameterTyp';
+import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 import { IllegalArgumentException, cast_java_lang_IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
 
 export class GostKursblockungRegelTyp extends JavaObject {
@@ -128,6 +132,52 @@ export class GostKursblockungRegelTyp extends JavaObject {
 			if (paramType as unknown === cur as unknown) 
 				return true;
 		return false;
+	}
+
+	/**
+	 * Simuliert ein Löschen der Schienen-Nummer und 
+	 * liefert die ggf. veränderten Parameterwerte zurück, oder NULL wenn die Regel gelöscht werden muss.  
+	 *
+	 * @param pRegel      Die Regel, die von einer Schienen-Löschung ggf. betroffen ist.
+	 * @param pSchienenNr Die Schiene deren Nummer gelöscht werden soll.
+	 *
+	 * @return die ggf. veränderten Parameter, oder NULL wenn die Regel gelöscht werden muss.
+	 */
+	public static getNeueParameterBeiSchienenLoeschung(pRegel : GostBlockungRegel, pSchienenNr : number) : Array<number> | null {
+		let typ : GostKursblockungRegelTyp = GostKursblockungRegelTyp.fromTyp(pRegel.typ);
+		let param : Vector<Number> = pRegel.parameter;
+		switch (typ) {
+			case GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS:
+			case GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS: {
+				let p0 : number = param.get(0).valueOf();
+				let p1 : number = param.get(1).valueOf();
+				return [p0, p1];
+			}
+			case GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE:
+			case GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE: {
+				let p0 : number = param.get(0).valueOf();
+				let p1 : number = param.get(1).valueOf();
+				if (p1 < pSchienenNr) 
+					return [p0, p1];
+				if (p1 > pSchienenNr) 
+					return [p0, p1 - 1];
+				return null;
+			}
+			case GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS:
+			case GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS: {
+				let p0 : number = param.get(0).valueOf();
+				let von : number = param.get(1).valueOf();
+				let bis : number = param.get(2).valueOf();
+				von = pSchienenNr < von ? von - 1 : von;
+				bis = pSchienenNr <= bis ? bis - 1 : bis;
+				if (von <= bis) 
+					return [p0, von, bis];
+				return null;
+			}
+			default: {
+				throw new IllegalStateException("Der Regel-Typ ist unbekannt: " + typ)
+			}
+		}
 	}
 
 	/**

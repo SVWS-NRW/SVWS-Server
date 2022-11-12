@@ -1006,7 +1006,7 @@ public class APIGost {
     		@Context HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) {
-    		return (new DataGostBlockungsdaten(conn)).addKurs(idBlockung, idFach, idKursart);
+    		return (new DataGostBlockungKurs(conn)).addKurs(idBlockung, idFach, idKursart);
     	}
     }
 
@@ -1040,7 +1040,7 @@ public class APIGost {
     		@Context HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) {
-    		return (new DataGostBlockungsdaten(conn)).deleteKurs(idBlockung, idFach, idKursart);
+    		return (new DataGostBlockungKurs(conn)).deleteKurs(idBlockung, idFach, idKursart);
     	}
     }
 
@@ -1161,7 +1161,7 @@ public class APIGost {
     		@Context HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) {
-    		return (new DataGostBlockungsdaten(conn)).addSchiene(idBlockung);
+    		return (new DataGostBlockungSchiene(conn)).addSchiene(idBlockung);
     	}
     }
 
@@ -1192,7 +1192,7 @@ public class APIGost {
     		@Context HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) {
-    		return (new DataGostBlockungsdaten(conn)).deleteSchiene(idBlockung);
+    		return (new DataGostBlockungSchiene(conn)).deleteSchiene(idBlockung);
     	}
     }
 
@@ -1314,7 +1314,7 @@ public class APIGost {
     		@PathParam("regeltyp") int typRegel, @Context HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) {
-    		return (new DataGostBlockungsdaten(conn)).addRegel(idBlockung, typRegel);
+    		return (new DataGostBlockungRegel(conn)).addRegel(idBlockung, typRegel);
     	}
     }
 

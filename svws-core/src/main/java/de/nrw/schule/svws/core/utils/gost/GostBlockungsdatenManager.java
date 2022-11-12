@@ -3,6 +3,7 @@ package de.nrw.schule.svws.core.utils.gost;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
@@ -15,6 +16,7 @@ import de.nrw.schule.svws.core.data.gost.GostFachwahl;
 import de.nrw.schule.svws.core.data.schueler.Schueler;
 import de.nrw.schule.svws.core.types.gost.GostHalbjahr;
 import de.nrw.schule.svws.core.types.gost.GostKursart;
+import de.nrw.schule.svws.core.types.kursblockung.GostKursblockungRegelTyp;
 import jakarta.validation.constraints.NotNull;
 
 /** Ein Manager zur Handhabung von Daten des Typs {@link GostBlockungsdaten}. Hierbei werden auch Hilfsmethoden zur
@@ -173,6 +175,14 @@ public class GostBlockungsdatenManager {
 		return comp;
 	}
 	
+	private boolean getIstBlockungsVorlage() {
+		if (_daten.ergebnisse.size() != 1)
+			return false;
+		if (_daten.ergebnisse.get(0).istVorlage == false)
+			return false;
+		return true;
+	}
+
 	/** Gibt den Fächer-Manager zurück, der für die Blockungsdaten verwendet wird.
 	 * 
 	 * @return der Fächer-Manager (siehe {@link GostFaecherManager}) */
@@ -272,6 +282,17 @@ public class GostBlockungsdatenManager {
 	}
 	
 	/**
+	 * Liefert TRUE, falls der Kurs mit der übergebenen ID existiert.
+	 * 
+	 * @param pKursID  Die Datenbank-ID des Kurses.
+	 * @return         TRUE, falls der Kurs mit der übergebenen ID existiert.
+	 */
+	public boolean getKursExistiert(long pKursID) {
+		GostBlockungKurs kurs = _mapKurse.get(pKursID);
+		return kurs != null;
+	}
+
+	/**
 	 * Liefert eine nach 'Fach, Kursart, Kursnummer' sortierte Kopie der Menge der Kurse.   
 	 * 
 	 * @return Eine nach 'Fach, Kursart, Kursnummer' sortierte Kopie der Menge der Kurse.
@@ -297,13 +318,33 @@ public class GostBlockungsdatenManager {
 		return _kurse_sortiert_kursart_fach_kursnummer;
 	}
 
-	/** Entfernt den Kurs mit der übergebenen ID aus der Blockung
+	/** 
+	 * Liefert TRUE, falls ein Löschen des Kurses erlaubt ist. <br>
+	 * Kriterium: Das aktuelle Ergebnis muss eine Vorlage sein.
 	 * 
-	 * @param id die ID des zu entfernenden Kurses */
-	public void removeKursByID(long id) {
-		@NotNull GostBlockungKurs kurs = this.getKurs(id);
+	 * @param  pKursID               Die Datenbank-ID des Kurses.
+	 * @return                       TRUE, falls ein Löschen des Kurses erlaubt ist.
+	 * @throws NullPointerException  Falls der Kurs nicht existiert.
+	 */
+	public boolean removeKursAllowed(long pKursID) throws NullPointerException {
+		if (_mapKurse.containsKey(pKursID) == false)
+			throw new NullPointerException("Ein Kurs mit ID=" + pKursID + " existiert nicht!");
+		return getIstBlockungsVorlage();
+	}
+
+	
+	/** 
+	 * Entfernt den Kurs mit der übergebenen ID aus der Blockung.
+	 * 
+	 * @param pKursID Die Datenbank-ID des zu entfernenden Kurses.
+	 */
+	public void removeKursByID(long pKursID) {
+		if (getIstBlockungsVorlage() == false)
+			throw new NullPointerException("Ein Löschen des Kurses ist nur bei einer Blockungsvorlage erlaubt!");
+		
+		@NotNull GostBlockungKurs kurs = this.getKurs(pKursID);
 		_daten.kurse.remove(kurs);
-		_mapKurse.remove(id);
+		_mapKurse.remove(pKursID);
 		// Cache der sortierten Kurslisten löschen. 
 		_kurse_sortiert_fach_kursart_kursnummer = null;
 		_kurse_sortiert_kursart_fach_kursnummer = null;
@@ -339,33 +380,96 @@ public class GostBlockungsdatenManager {
 			addSchiene(schiene);
 	}
 
-	/** Gibt die Schiene der Blockung anhand von deren ID zurück.
+	/** 
+	 * Gibt die Schiene der Blockung anhand von deren ID zurück.
 	 * 
-	 * @param  id                   die ID der Schiene
+	 * @param  pSchienenID          Die Datenbank-ID der Schiene.
 	 * @return                      die Schiene
-	 * @throws NullPointerException falls die Schiene nicht in der Blockung existiert */
-	public @NotNull GostBlockungSchiene getSchiene(long id) throws NullPointerException {
-		GostBlockungSchiene schiene = _mapSchienen.get(id);
+	 * @throws NullPointerException falls die Schiene nicht in der Blockung existiert
+	 */
+	public @NotNull GostBlockungSchiene getSchiene(long pSchienenID) throws NullPointerException {
+		GostBlockungSchiene schiene = _mapSchienen.get(pSchienenID);
 		if (schiene == null)
 			throw new NullPointerException("Eine Schiene mit der angegebenen ID existiert nicht in der Blockung.");
 		return schiene;
 	}
 
-	/** Entfernt die Schiene mit der übergebenen ID aus der Blockung
+	/**
+	 * Liefert TRUE, falls die Schiene mit der übergebenen ID existiert.
 	 * 
-	 * @param id die ID der zu entfernenden Schiene */
-	public void removeSchieneByID(long id) {
-		@NotNull GostBlockungSchiene schiene = this.getSchiene(id);
-		_daten.schienen.remove(schiene);
-		_daten.schienen.sort(compSchiene);
-		_mapSchienen.remove(id);
+	 * @param pSchienenID  Die Datenbank-ID der Schiene.
+	 * @return             TRUE, falls die Schiene mit der übergebenen ID existiert.
+	 */
+	public boolean getSchieneExistiert(long pSchienenID) {
+		GostBlockungSchiene schiene = _mapSchienen.get(pSchienenID);
+		return schiene != null;
 	}
 
-	/** Entfernt die übergebene Schiene aus der Blockung
+	/** 
+	 * Liefert TRUE, falls ein Löschen der Schiene erlaubt ist. <br>
+	 * Kriterium: Das aktuelle Ergebnis muss eine Vorlage sein.
 	 * 
-	 * @param schiene die zu entfernende Schiene */
-	public void removeSchiene(@NotNull GostBlockungSchiene schiene) {
-		removeSchieneByID(schiene.id);
+	 * @param  pSchienenID           Die Datenbank-ID der Schiene.
+	 * @return                       TRUE, falls ein Löschen der Schiene erlaubt ist.
+	 * @throws NullPointerException  Falls die Schiene nicht existiert.
+	 */
+	public boolean removeSchieneAllowed(long pSchienenID) throws NullPointerException {
+		if (_mapSchienen.containsKey(pSchienenID) == false)
+			throw new NullPointerException("Eine Schiene mit ID=" + pSchienenID + " existiert nicht!");
+		return getIstBlockungsVorlage();
+	}
+	
+	/** 
+	 * Entfernt die Schiene mit der übergebenen ID aus der Blockung.
+	 * Konsequenz: <br>
+	 * (1) Das Löschen der Schiene muss erlaubt sein, sonst Exception.
+	 * (2) Die Schienen werden neu nummeriert. <br> 
+	 * (3) Die Konsistenz der sortierten Schienen muss überprüft werden. <br>
+	 * (4) Die Regeln müssen bei Schienen-Nummern angepasst werden. <br>
+	 * 
+	 * @param pSchienenID           Die Datenbank-ID der zu entfernenden Schiene.
+	 * @throws NullPointerException Falls die Schiene nicht existiert oder ein Löschen nicht erlaubt ist.
+	 */
+	public void removeSchieneByID(long pSchienenID) throws NullPointerException {
+		// (1)
+		if (getIstBlockungsVorlage() == false)
+			throw new NullPointerException("Ein Löschen einer Schiene ist nur bei einer Blockungsvorlage erlaubt!");
+		@NotNull GostBlockungSchiene schieneR = this.getSchiene(pSchienenID);
+		
+		// (2)
+		_daten.schienen.remove(schieneR);
+		_mapSchienen.remove(pSchienenID);
+		for (@NotNull GostBlockungSchiene schiene : _daten.schienen)
+			if (schiene.nummer > schieneR.nummer)
+				schiene.nummer--;
+
+		// (3)
+		_daten.schienen.sort(compSchiene);
+		for (int index = 0; index <= _daten.schienen.size(); index++)
+			if (_daten.schienen.get(index).nummer != index + 1)
+				throw new NullPointerException("Schiene am Index " + index + " hat nicht Nr. " + (index + 1));
+
+		// (4)
+		Iterator<@NotNull GostBlockungRegel> iRegel = _daten.regeln.iterator();
+		while (iRegel.hasNext()) {
+			@NotNull GostBlockungRegel r = iRegel.next();
+			long[] a = GostKursblockungRegelTyp.getNeueParameterBeiSchienenLoeschung(r, schieneR.nummer);
+			if (a == null)
+				iRegel.remove();
+			else
+				for (int i = 0; i < a.length; i++)
+					r.parameter.set(i, a[i]);
+		}
+
+	}
+
+	/** 
+	 * Entfernt die übergebene Schiene aus der Blockung.
+	 * 
+	 * @param pSchiene Die zu entfernende Schiene. 
+	 */
+	public void removeSchiene(@NotNull GostBlockungSchiene pSchiene) {
+		removeSchieneByID(pSchiene.id);
 	}
 
 	/** Gibt die Default-Anzahl von Schienen zurück, die für die eine neue Blockung verwendet wird.
@@ -398,26 +502,60 @@ public class GostBlockungsdatenManager {
 			addRegel(regel);
 	}
 
-	/** Gibt die Regel der Blockung anhand von deren ID zurück.
+	/** 
+	 * Gibt die Regel der Blockung anhand von deren ID zurück.
 	 * 
-	 * @param  id                   die ID der Regel
+	 * @param  pRegelID             Die Datenbank-ID der Regel.
 	 * @return                      die Regel
-	 * @throws NullPointerException falls die Regel nicht in der Blockung existiert */
-	public @NotNull GostBlockungRegel getRegel(long id) throws NullPointerException {
-		GostBlockungRegel regel = _mapRegeln.get(id);
+	 * @throws NullPointerException falls die Regel nicht in der Blockung existiert.
+	 */
+	public @NotNull GostBlockungRegel getRegel(long pRegelID) throws NullPointerException {
+		GostBlockungRegel regel = _mapRegeln.get(pRegelID);
 		if (regel == null)
 			throw new NullPointerException("Eine Regel mit der angegebenen ID existiert nicht in der Blockung.");
 		return regel;
 	}
 
-	/** Entfernt die Regel mit der übergebenen ID aus der Blockung
+	/**
+	 * Liefert TRUE, falls die Regel mit der übergebenen ID existiert.
 	 * 
-	 * @param id die ID der zu entfernenden Regel */
-	public void removeRegelByID(long id) {
-		@NotNull GostBlockungRegel regel = this.getRegel(id);
+	 * @param pRegelID  Die Datenbank-ID der Regel.
+	 * @return          TRUE, falls die Regel mit der übergebenen ID existiert.
+	 */
+	public boolean getRegelExistiert(long pRegelID) {
+		GostBlockungRegel regel = _mapRegeln.get(pRegelID);
+		return regel != null;
+	}
+
+	/** 
+	 * Liefert TRUE, falls ein Löschen der Regel erlaubt ist. <br>
+	 * Kriterium: Das aktuelle Ergebnis muss eine Vorlage sein.
+	 * 
+	 * @param  pRegelID              Die Datenbank-ID der Regel.
+	 * @return                       TRUE, falls ein Löschen der Regel erlaubt ist.
+	 * @throws NullPointerException  Falls die Regel nicht existiert.
+	 */
+	public boolean removeRegelAllowed(long pRegelID) throws NullPointerException {
+		if (_mapRegeln.containsKey(pRegelID) == false)
+			throw new NullPointerException("Eine Regel mit ID=" + pRegelID + " existiert nicht!");
+		return getIstBlockungsVorlage();
+	}
+
+	/** 
+	 * Entfernt die Regel mit der übergebenen ID aus der Blockung.
+	 * Wirft eine Exception, falls es sich nicht um eine Blockungsvorlage handelt.
+	 * 
+	 * @param pRegelID              Die Datenbank-ID der zu entfernenden Regel. 
+	 * @throws NullPointerException Falls es sich nicht um eine Blockungsvorlage handelt.
+	 */
+	public void removeRegelByID(long pRegelID) throws NullPointerException {
+		if (getIstBlockungsVorlage() == false)
+			throw new NullPointerException("Ein Löschen einer Regel ist nur bei einer Blockungsvorlage erlaubt!");
+
+		@NotNull GostBlockungRegel regel = this.getRegel(pRegelID);
 		_daten.regeln.remove(regel);
-		_daten.regeln.sort(compRegel);		
-		_mapRegeln.remove(id);
+		_daten.regeln.sort(compRegel);
+		_mapRegeln.remove(pRegelID);
 	}
 
 	/** Entfernt die übergebene Regel aus der Blockung

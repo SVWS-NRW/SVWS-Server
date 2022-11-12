@@ -29,7 +29,7 @@ public class GostBlockungsergebnisManager {
 	private final @NotNull GostBlockungsdatenManager _parent;
 
 	/** Das Blockungsergebnis ist das zugehörige Eltern-Datenobjekt. */
-	private final @NotNull GostBlockungsergebnis _ergebnis;
+	private @NotNull GostBlockungsergebnis _ergebnis;
 
 	/** Schienen-Nummer --> GostBlockungsergebnisSchiene */
 	private final @NotNull HashMap<@NotNull Integer, @NotNull GostBlockungsergebnisSchiene> _map_schienenNr_schiene = new HashMap<>();
@@ -76,10 +76,6 @@ public class GostBlockungsergebnisManager {
 	/** Fachart-ID --> Integer = Kursdifferenz der Fachart. */
 	private final @NotNull HashMap<@NotNull Long, @NotNull Integer> _map_fachartID_kursdifferenz = new HashMap<>();
 
-	/** GostKursblockungRegelTyp --> Set<GostBlockungRegel> = Alle Regeln eines Typs. */
-	private final @NotNull HashMap<@NotNull GostKursblockungRegelTyp, @NotNull HashSet<@NotNull GostBlockungRegel>> _map_regeltyp_regeln = new HashMap<>();
-
-	
 	/**
 	 * Erstellt einen leeren GostBlockungsergebnisManager in Bezug auf GostBlockungsdatenManager. Die ID des leeren
 	 * Ergebnisses ist -1 und muss noch gesetzt werden.
@@ -107,6 +103,15 @@ public class GostBlockungsergebnisManager {
 		stateClear(pErgebnis);
 	}
 
+	/**
+	 * Baut alle Datenstrukturen neu auf.
+	 */
+	private void stateRevalidateEverything() {
+		@NotNull GostBlockungsergebnis old = _ergebnis;
+		_ergebnis = new GostBlockungsergebnis();
+		stateClear(old);
+	}
+	
 	private void stateClear(GostBlockungsergebnis pErgebnis) {
 		_ergebnis.id = (pErgebnis == null) ? -1 : pErgebnis.id;
 		_ergebnis.blockungID = _parent.getID();
@@ -122,12 +127,6 @@ public class GostBlockungsergebnisManager {
 		// Bewertungskriterium 2a (Nicht zugeordnete Fachwahlen)
 		_ergebnis.bewertung.anzahlSchuelerNichtZugeordnet += _parent.daten().fachwahlen.size();
 
-		// Regeln kopieren und hinzufügen.
-		for (@NotNull GostKursblockungRegelTyp gRegelTyp : GostKursblockungRegelTyp.getCollection())
-			_map_regeltyp_regeln.put(gRegelTyp, new HashSet<>());
-		for (@NotNull GostBlockungRegel gRegel : _parent.daten().regeln)
-			getOfRegeltypRegelmenge(GostKursblockungRegelTyp.fromTyp(gRegel.typ)).add(gRegel);
-			
 		// Schienen kopieren und hinzufügen.
 		for (@NotNull GostBlockungSchiene gSchiene : _parent.daten().schienen) {
 			// GostBlockungSchiene --> GostBlockungsergebnisSchiene
@@ -196,8 +195,6 @@ public class GostBlockungsergebnisManager {
 			@NotNull Long eSchuelerID = gSchueler.id;
 			
 			// Hinzufügen.
-//			if (!_set_schuelerID.add(eSchuelerID))
-//				throw new NullPointerException("Schüler ID " + eSchuelerID + " doppelt!");
 			if (_map_schuelerID_kurse.put(eSchuelerID, new HashSet<>()) != null)
 				throw new NullPointerException("Schüler ID " + eSchuelerID + " doppelt!");
 			if (_map_schuelerID_kollisionen.put(eSchuelerID, 0) != null)
@@ -243,66 +240,71 @@ public class GostBlockungsergebnisManager {
 		@NotNull Vector<@NotNull Long> regelVerletzungen = _ergebnis.bewertung.regelVerletzungen;
 		regelVerletzungen.clear();
 		
-		// 4: SCHUELER_FIXIEREN_IN_KURS
-		for (@NotNull GostBlockungRegel r : getOfRegeltypRegelmenge(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS)) {
-			long schuelerID = r.parameter.get(0);
-			long kursID = r.parameter.get(1);
-			if (!getOfSchuelerOfKursIstZugeordnet(schuelerID, kursID))
-				regelVerletzungen.add(r.id);
-		}
-	
-		// 5: SCHUELER_VERBIETEN_IN_KURS
-		for (@NotNull GostBlockungRegel r : getOfRegeltypRegelmenge(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS)) {
-			long schuelerID = r.parameter.get(0);
-			long kursID = r.parameter.get(1);
-			if (getOfSchuelerOfKursIstZugeordnet(schuelerID, kursID))
-				regelVerletzungen.add(r.id);
-		}
-
-		// 2: KURS_FIXIERE_IN_SCHIENE
-		for (@NotNull GostBlockungRegel r : getOfRegeltypRegelmenge(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE)) {
-			long kursID = r.parameter.get(0);
-			int schienenNr = r.parameter.get(1).intValue();
-			GostBlockungsergebnisSchiene schiene = getSchieneEmitNr(schienenNr);
-			if (!getOfKursSchienenmenge(kursID).contains(schiene))
-				regelVerletzungen.add(r.id);
-		}
-	
-		// 3: KURS_SPERRE_IN_SCHIENE
-		for (@NotNull GostBlockungRegel r : getOfRegeltypRegelmenge(GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE)) {
-			long kursID = r.parameter.get(0);
-			int schienenNr = r.parameter.get(1).intValue();
-			GostBlockungsergebnisSchiene schiene = getSchieneEmitNr(schienenNr);
-			if (getOfKursSchienenmenge(kursID).contains(schiene))
-				regelVerletzungen.add(r.id);
+		for (@NotNull GostBlockungRegel r : _parent.getMengeOfRegeln()) {
+			@NotNull GostKursblockungRegelTyp typ = GostKursblockungRegelTyp.fromTyp(r.typ);
+			
+			switch (typ) {
+	            case SCHUELER_FIXIEREN_IN_KURS: { // 4
+	            	long schuelerID = r.parameter.get(0);
+	            	long kursID = r.parameter.get(1);
+	            	if (!getOfSchuelerOfKursIstZugeordnet(schuelerID, kursID))
+	            		regelVerletzungen.add(r.id);
+	            	break;
+	            }
+	            case SCHUELER_VERBIETEN_IN_KURS: { // 5
+	            	long schuelerID = r.parameter.get(0);
+	            	long kursID = r.parameter.get(1);
+	            	if (getOfSchuelerOfKursIstZugeordnet(schuelerID, kursID))
+	            		regelVerletzungen.add(r.id);
+	            	break;
+	            }
+	            case KURS_FIXIERE_IN_SCHIENE: { // 2
+	            	long kursID = r.parameter.get(0);
+	            	int schienenNr = r.parameter.get(1).intValue();
+	            	GostBlockungsergebnisSchiene schiene = getSchieneEmitNr(schienenNr);
+	            	if (!getOfKursSchienenmenge(kursID).contains(schiene))
+	            		regelVerletzungen.add(r.id);
+	            	break;
+	            }
+	            case KURS_SPERRE_IN_SCHIENE: { // 3
+	            	long kursID = r.parameter.get(0);
+	            	int schienenNr = r.parameter.get(1).intValue();
+	            	GostBlockungsergebnisSchiene schiene = getSchieneEmitNr(schienenNr);
+	            	if (getOfKursSchienenmenge(kursID).contains(schiene))
+	            		regelVerletzungen.add(r.id);
+	            	break;
+	            }
+	            case KURSART_SPERRE_SCHIENEN_VON_BIS: { // 1
+	            	int kursart = r.parameter.get(0).intValue();
+	            	int schienenNrVon = r.parameter.get(1).intValue();
+	            	int schienenNrBis = r.parameter.get(2).intValue();
+	            	for (int schienenNr = schienenNrVon;  schienenNr <=  schienenNrBis; schienenNr++) 
+	            		for (GostBlockungsergebnisKurs eKurs : getSchieneEmitNr(schienenNr).kurse) 
+	            			if (eKurs.kursart == kursart)
+	            				regelVerletzungen.add(r.id);
+	            	break;
+	            }
+	            case KURSART_ALLEIN_IN_SCHIENEN_VON_BIS: { // 6
+	            	int kursart = r.parameter.get(0).intValue();
+	            	int schienenNrVon = r.parameter.get(1).intValue();
+	            	int schienenNrBis = r.parameter.get(2).intValue();
+	            	for (GostBlockungsergebnisKurs eKurs : _map_kursID_kurs.values()) 
+	            		for (@NotNull Long eSchieneID : eKurs.schienen) {
+	            			int nr  = getSchieneG(eSchieneID).nummer;
+	            			boolean b1 = eKurs.kursart == kursart;
+	            			boolean b2 = (schienenNrVon <= nr) && (nr <= schienenNrBis);
+	            			if (b1 != b2)
+	            				regelVerletzungen.add(r.id);
+	            		}
+	            	break;
+	            }
+	            default: {
+	            	throw new IllegalStateException("Der Regel-Typ ist unbekannt: " + typ);
+	            }
+	        }
+			
 		}
 		
-		// 1: KURSART_SPERRE_SCHIENEN_VON_BIS
-		for (@NotNull GostBlockungRegel r : getOfRegeltypRegelmenge(GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS)) {
-			int kursart = r.parameter.get(0).intValue();
-			int schienenNrVon = r.parameter.get(1).intValue();
-			int schienenNrBis = r.parameter.get(2).intValue();
-			for (int schienenNr = schienenNrVon;  schienenNr <=  schienenNrBis; schienenNr++) 
-				for (GostBlockungsergebnisKurs eKurs : getSchieneEmitNr(schienenNr).kurse) 
-					if (eKurs.kursart == kursart)
-						regelVerletzungen.add(r.id);
-		}
-		
-		// 6: KURSART_ALLEIN_IN_SCHIENEN_VON_BIS
-		for (@NotNull GostBlockungRegel r : getOfRegeltypRegelmenge(GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS)) {
-			int kursart = r.parameter.get(0).intValue();
-			int schienenNrVon = r.parameter.get(1).intValue();
-			int schienenNrBis = r.parameter.get(2).intValue();
-			for (GostBlockungsergebnisKurs eKurs : _map_kursID_kurs.values()) 
-				for (@NotNull Long eSchieneID : eKurs.schienen) {
-					int nr  = getSchieneG(eSchieneID).nummer;
-					boolean b1 = eKurs.kursart == kursart;
-					boolean b2 = (schienenNrVon <= nr) && (nr <= schienenNrBis);
-					if (b1 != b2)
-						regelVerletzungen.add(r.id);
-				}
-		}
-	
 	}
 
 	/**
@@ -692,20 +694,6 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
-	 * Liefert die Menge der Regeln des angegebenen Typs. <br>
-	 * Wenn es zu dem Typ keine Regel gibt, ist die Menge leer.
-	 * 
-	 * @param pTyp Der Typ der Regel.
-	 * @return Die Menge der Regeln des angegebenen Typs.
-	 */
-	public @NotNull HashSet<@NotNull GostBlockungRegel> getOfRegeltypRegelmenge(@NotNull GostKursblockungRegelTyp pTyp) {
-		HashSet<@NotNull GostBlockungRegel> set = _map_regeltyp_regeln.get(pTyp);
-		if (set == null)
-			return new HashSet<>();
-		return set;
-	}
-
-	/**
 	 * Ermittelt das Fach für die angegebene ID. Delegiert den Aufruf an den Fächer-Manager des Eltern-Objektes {@link GostBlockungsdatenManager}.
 	 * Erzeugt eine NullPointerException im Fehlerfall, dass die ID nicht bekannt ist.
 	 * 
@@ -777,21 +765,6 @@ public class GostBlockungsergebnisManager {
 	public @NotNull Schueler getSchuelerG(long pSchuelerID) throws NullPointerException {
 		return _parent.getSchueler(pSchuelerID);
 	}
-
-// Diese Methode ist nicht nötig, da nicht mehr das Objekt zurückgegeben wird. 
-//	/**
-//	 * Liefert die Schüler-ID (des Blockungsergebnisses) zur übergebenen Schüler-ID. <br>
-//	 * Wirft eine Exception, wenn der ID keine Schüler-ID zugeordnet ist.
-//	 * 
-//	 * @param  pSchuelerID Die Datenbank-ID des Schülers.
-//	 * 
-//	 * @return             Die Schüler-ID (des Blockungsergebnisses) zur übergebenen Schüler-ID.
-//	 */
-//	public long getSchuelerE(long pSchuelerID) {
-//		if (!_set_schuelerID.contains(pSchuelerID))
-//			throw new NullPointerException("Schüler-ID " + pSchuelerID + " unbekannt!");
-//		return pSchuelerID;
-//	}
 
 	/**
 	 * Liefert einen Schüler-String im Format: 'Nachname, Vorname'.
@@ -1097,6 +1070,18 @@ public class GostBlockungsergebnisManager {
 					set.add(schuelerID);
 		return set;
 	}
+	
+	/** 
+	 * Liefert TRUE, falls ein Löschen des Kurses erlaubt ist. <br> 
+	 * Kriterium: Es dürfen keine Schüler dem Kurs zugeordnet sein.
+	 * 
+	 * @param  pKursID               Die Datenbank-ID des Kurses.
+	 * @return                       TRUE, falls ein Löschen des Kurses erlaubt ist.
+	 * @throws NullPointerException  Falls der Kurs nicht existiert.
+	 */
+	public boolean getOfKursRemoveAllowed(long pKursID) throws NullPointerException {
+		return getKursE(pKursID).schueler.isEmpty();
+	}
 
 	/**
 	 * Ermittelt die Schiene für die angegebene ID. Delegiert den Aufruf an den Fächer-Manager des Eltern-Objektes
@@ -1237,10 +1222,22 @@ public class GostBlockungsergebnisManager {
 	public @NotNull HashMap<@NotNull Long, @NotNull Vector<@NotNull GostBlockungsergebnisKurs>> getOfSchieneFachartKursmengeMap(long pSchienenID) {
 		HashMap<@NotNull Long, @NotNull Vector<@NotNull GostBlockungsergebnisKurs>> map = _map_schienenID_fachartID_kurse.get(pSchienenID);
 		if (map == null)
-			throw new NullPointerException("Die Schienen-ID "+pSchienenID+" ist unbekannt!"); 
+			throw new NullPointerException("Die Schienen-ID " + pSchienenID + " ist unbekannt!");
 		return map;
 	}
-
+	
+	/** 
+	 * Liefert TRUE, falls ein Löschen der Schiene erlaubt ist. <br>
+	 * Kriterium: Es dürfen keine Kurse der Schiene zugeordnet sein.
+	 * 
+	 * @param  pSchienenID          Die Datenbank-ID der Schiene.
+	 * @return                      TRUE, falls ein Löschen der Schiene erlaubt ist.
+	 * @throws NullPointerException Falls die Schiene nicht existiert.
+	 */
+	public boolean getOfSchieneRemoveAllowed(long pSchienenID) throws NullPointerException {
+		return getSchieneE(pSchienenID).kurse.isEmpty();
+	}
+	
 	/**
 	 * Liefert die Map, welche jedem Kurs seine Schülermenge zuordnet.
 	 * 
@@ -1360,6 +1357,86 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
+	 * Löscht die übergebene Schiene.
+	 * 
+	 * @param  pSchienenID           Die Datenbank-ID der Schiene.
+	 * @throws NullPointerException  Falls die Schiene nicht zuerst beim Datenmanager entfernt wurde, oder 
+	 *                               falls die Schiene noch Kurszuordnungen hat.
+	 */
+	public void setRemoveSchieneByID(long pSchienenID) throws NullPointerException {
+		if (_parent.getSchieneExistiert(pSchienenID) == true)
+			throw new NullPointerException("Die Schiene " + pSchienenID + " muss erst beim Datenmanager entfernt werden!");
+		int nKurse = getSchieneE(pSchienenID).kurse.size();
+		if (nKurse > 0)
+			throw new NullPointerException("Entfernen unmöglich: Schiene " + pSchienenID + " hat noch " + nKurse + " Kurse!");
+		stateRevalidateEverything();
+	}
+
+	/**
+	 * Fügt die übergebene Schiene hinzu.
+	 * 
+	 * @param  pSchienenID           Die Datenbank-ID der Schiene.
+	 * @throws NullPointerException  Falls die Schiene nicht zuerst im Datenmanager hinzugefügt wurde.
+	 */
+	public void setAddSchieneByID(long pSchienenID) throws NullPointerException {
+		if (_parent.getSchieneExistiert(pSchienenID) == false)
+			throw new NullPointerException("Die Schiene " + pSchienenID + " muss erst beim Datenmanager hinzugefügt werden!");
+		stateRevalidateEverything();
+	}
+
+	/**
+	 * Löscht die übergebene Regel.
+	 * 
+	 * @param  pRegelID              Die Datenbank-ID der Regel.
+	 * @throws NullPointerException  Falls die Regel nicht zuerst beim Datenmanager entfernt wurde.
+	 */
+	public void setRemoveRegelByID(long pRegelID) throws NullPointerException {
+		if (_parent.getRegelExistiert(pRegelID) == true)
+			throw new NullPointerException("Die Regel " + pRegelID + " muss erst beim Datenmanager entfernt werden!");
+		stateRevalidateEverything();
+	}
+
+	/**
+	 * Fügt die übergebene Regel hinzu.
+	 * 
+	 * @param  pRegelID              Die Datenbank-ID der Regel.
+	 * @throws NullPointerException  Falls die Regel nicht zuerst im Datenmanager hinzugefügt wurde.
+	 */
+	public void setAddRegelByID(long pRegelID) throws NullPointerException {
+		if (_parent.getRegelExistiert(pRegelID) == false)
+			throw new NullPointerException("Die Regel " + pRegelID + " muss erst beim Datenmanager hinzugefügt werden!");
+		stateRevalidateEverything();
+	}
+
+	/**
+	 * Löscht den übergebenen Kurs.
+	 * 
+	 * @param  pKursID               Die Datenbank-ID des Kurses.
+	 * @throws NullPointerException  Falls der Kurs nicht zuerst beim Datenmanager entfernt wurde, oder 
+	 *                               falls der Kurs noch Schülerzuordnungen hat.
+	 */
+	public void setRemoveKursByID(long pKursID) throws NullPointerException {
+		if (_parent.getKursExistiert(pKursID) == true)
+			throw new NullPointerException("Der Kurs " + pKursID + " muss erst beim Datenmanager entfernt werden!");
+		int nSchueler = getKursE(pKursID).schueler.size();
+		if (nSchueler > 0)
+			throw new NullPointerException("Entfernen unmöglich: Kurs " + pKursID + " hat noch " + nSchueler + " Schüler!");
+		stateRevalidateEverything();
+	}
+
+	/**
+	 * Fügt den übergebenen Kurs hinzu.
+	 * 
+	 * @param  pKursID               Die Datenbank-ID des Kurses.
+	 * @throws NullPointerException  Falls der Kurs nicht zuerst beim Datenmanager hinzugefügt wurde.
+	 */
+	public void setAddKursByID(long pKursID) throws NullPointerException {
+		if (_parent.getKursExistiert(pKursID) == false)
+			throw new NullPointerException("Der Kurs " + pKursID + " muss erst beim Datenmanager hinzugefügt werden!");
+		stateRevalidateEverything();
+	}
+
+	/**
 	 * Nur für Debug-Zwecke.
 	 */
 	public void debug() {
@@ -1375,141 +1452,5 @@ public class GostBlockungsergebnisManager {
 		System.out.println("KursdifferenzHistogramm = " + Arrays.toString(_ergebnis.bewertung.kursdifferenzHistogramm));
 	}
 
-//	/**
-//	 * Ermittelt die Kurs-Schüler-Zuordnungen für den Kurs mit der angegebenen ID. <br>
-//	 * Erzeugt eine NullPointerException im Fehlerfall, dass die ID nicht bekannt ist.
-//	 * 
-//	 * @deprecated                      Bitte {@link #getKursE(long)} verwenden!
-//	 * 
-//	 * @param      pKursID              die ID des Kurses
-//	 * 
-//	 * @return                          die Kurs-Schüler-Zuordnungen des Kurses
-//	 * 
-//	 * @throws     NullPointerException im Falle, dass die ID nicht bekannt ist
-//	 */
-//	public @NotNull GostBlockungsergebnisKurs getKursSchuelerZuordnung(long pKursID) throws NullPointerException {
-//		return getKursE(pKursID);
-//	}
-//
-//	/**
-//	 * Ordnet einen Kurs einer Schiene zu. <br>
-//	 * Ist die ID der Schiene null, so wird eine vorherige Zuordnung aufgehoben.
-//	 * 
-//	 * @deprecated           Diese Methode kann nicht mehr verwendet werden. Das Problem liegt darin, dass bei
-//	 *                       Multikursen nicht klar ist, welche Schienenzuordnung aufgehoben werden soll. Bitte
-//	 *                       {@link #setKursSchiene(long, long, boolean)} verwenden.
-//	 * 
-//	 * @param      idKurs    die ID des Kurses
-//	 * @param      idSchiene die ID der Schiene
-//	 * 
-//	 * @return               true, falls der Kurs der Schiene zugeordnet wurde
-//	 */
-//	public boolean assignKursSchiene(long idKurs, Long idSchiene) {
-//		if (idSchiene == null)
-//			throw new NullPointerException("Funktioniert nicht mit Multikurses. ");
-//		return setKursSchiene(idKurs, idSchiene, true);
-//	}
-//
-//	/**
-//	 * Ordnet einen Schüler einem Kurs zu.
-//	 * 
-//	 * @deprecated            Bitte nicht mehr verwenden, stattdessen {@link #setSchuelerKurs(long, long, boolean)} -->
-//	 *                        Vorsicht der boolean-Wert ist genau anders herum gemeint!
-//	 * 
-//	 * @param      idSchueler die ID des Schüler
-//	 * @param      idKurs     die ID des Kurses
-//	 * @param      undo       normally false, but true if the assignment should be removed
-//	 * 
-//	 * @return                true, falls der Schüler dem Kurs zugeordnet wurde
-//	 */
-//	public boolean assignSchuelerKurs(long idSchueler, long idKurs, boolean undo) {
-//		return setSchuelerKurs(idSchueler, idKurs, !undo);
-//	}
-//
-//	/**
-//	 * Ermittelt die Schienen-Zuordnung des Kurses mit der angegebenen ID. Liegt keine Zuordnung vor, so wird null
-//	 * zurückgegeben.
-//	 * 
-//	 * @deprecated         Diese Methode sollte auf gar keinen Fall mehr benutzt werden, da ein Kurs (Multikurs) in mehr
-//	 *                     als in einer Schiene liegen kann! --> {@link #getOfKursSchienenmenge(long)}
-//	 * 
-//	 * @param      pKursID die ID des Kurses
-//	 * 
-//	 * @return             die Kurs-Schienen-Zuordnungen der Schiene, zu welcher der Kurs zugeordnet ist
-//	 */
-//	public GostBlockungsergebnisSchiene getKursSchienenZuordnung(long pKursID) {
-//		HashSet<@NotNull GostBlockungsergebnisSchiene> schienenOfKurs = getOfKursSchienenmenge(pKursID);
-//		for (@NotNull GostBlockungsergebnisSchiene schiene : schienenOfKurs)
-//			return schiene;
-//		return null;
-//	}
-//
-//	/**
-//	 * Ermittelt die Kurs-Schülermenge für den Kurs mit der angegebenen ID. <br>
-//	 * Erzeugt eine NullPointerException im Fehlerfall, dass die ID nicht bekannt ist.
-//	 * 
-//	 * @deprecated                      Bitte {@link #getOfKursSchuelerIDmenge(long)} verwenden.
-//	 * 
-//	 * @param      pKursID              die ID des Kurses
-//	 * 
-//	 * @return                          die Kurs-Schülermenge des Kurses
-//	 * 
-//	 * @throws     NullPointerException im Falle, dass die ID nicht bekannt ist
-//	 */
-//	public @NotNull HashSet<@NotNull Long> getKursSchuelermenge(long pKursID) throws NullPointerException {
-//		@NotNull HashSet<@NotNull Long> schuelerIDsOfKurs = getOfKursSchuelerIDmenge(pKursID);
-//		return schuelerIDsOfKurs;
-//	}
-//
-//	/**
-//	 * Ermittelt die Kurs-Schüler-Zuordnungen für die Kurse mit der angegebenen Fach-ID. <br>
-//	 * Erzeugt eine NullPointerException im Fehlerfall, dass die ID nicht bekannt ist.
-//	 * 
-//	 * @deprecated                      Bitte {@link #getOfFachKursmenge(long)} verwenden.
-//	 * 
-//	 * @param      pFachID              die ID des Faches
-//	 * 
-//	 * @return                          die Kurs-Schüler-Zuordnungen der Kurse mit der angegebenen Fach-ID
-//	 * 
-//	 * @throws     NullPointerException im Falle, dass die ID nicht bekannt ist
-//	 */
-//	public @NotNull Vector<@NotNull GostBlockungsergebnisKurs> getKursSchuelerZuordnungenFuerFach(long pFachID)
-//			throws NullPointerException {
-//		return getOfFachKursmenge(pFachID);
-//	}
-//
-//	/**
-//	 * Ermittelt die Schüler-Kurs-Zuordnungen für den Schüler mit der angegebenen ID. <br>
-//	 * Erzeugt eine NullPointerException im Fehlerfall, dass die ID nicht bekannt ist.
-//	 * 
-//	 * @deprecated                      Bitte {@link #getOfSchuelerKursmenge(long)} verwenden.
-//	 * 
-//	 * @param      pSchuelerID          die ID des Schülers
-//	 * 
-//	 * @return                          die Schüler-Kurs-Zuordnungen des Schülers
-//	 * 
-//	 * @throws     NullPointerException im Falle, dass die ID nicht bekannt ist
-//	 */
-//	public @NotNull HashSet<@NotNull GostBlockungsergebnisKurs> getSchuelerKursZuordnung(long pSchuelerID)
-//			throws NullPointerException {
-//		return getOfSchuelerKursmenge(pSchuelerID);
-//	}
-//
-//	/**
-//	 * Ermittelt die Schienen-Kurs-Zuordnungen für die Schiene mit der angegebenen ID. <br>
-//	 * Erzeugt eine NullPointerException im Fehlerfall, dass die ID nicht bekannt ist.
-//	 * 
-//	 * @deprecated                      Bitte {@link #getSchieneE(long) verwenden.}
-//	 * 
-//	 * @param      pSchienenID          die ID der Schiene
-//	 * 
-//	 * @return                          die Schienen-Kurs-Zuordnungen zu der Schiene
-//	 * 
-//	 * @throws     NullPointerException im Falle, dass die ID nicht bekannt ist
-//	 */
-//	public @NotNull GostBlockungsergebnisSchiene getSchienenKursZuordnung(long pSchienenID)
-//			throws NullPointerException {
-//		return getSchieneE(pSchienenID);
-//	}
-//
+	
 }

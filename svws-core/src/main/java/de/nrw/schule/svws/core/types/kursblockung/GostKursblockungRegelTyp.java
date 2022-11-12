@@ -5,7 +5,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Vector;
 
+import de.nrw.schule.svws.core.data.gost.GostBlockungRegel;
 import jakarta.validation.constraints.NotNull;
 
 /** 
@@ -189,4 +191,48 @@ public enum GostKursblockungRegelTyp {
 	            return true;
 	    return false;
 	}
+
+	/**
+	 * Simuliert ein Löschen der Schienen-Nummer und 
+	 * liefert die ggf. veränderten Parameterwerte zurück, oder NULL wenn die Regel gelöscht werden muss.  
+	 *
+	 * @param pRegel      Die Regel, die von einer Schienen-Löschung ggf. betroffen ist.
+	 * @param pSchienenNr Die Schiene deren Nummer gelöscht werden soll.
+	 *
+	 * @return die ggf. veränderten Parameter, oder NULL wenn die Regel gelöscht werden muss.
+	 */
+	public static long[] getNeueParameterBeiSchienenLoeschung(@NotNull GostBlockungRegel pRegel, int pSchienenNr) {
+		@NotNull GostKursblockungRegelTyp typ = fromTyp(pRegel.typ);
+		@NotNull Vector<@NotNull Long> param = pRegel.parameter;
+		switch (typ) {
+            case SCHUELER_FIXIEREN_IN_KURS, SCHUELER_VERBIETEN_IN_KURS: { // 4, 5
+            	long p0 = param.get(0);
+            	long p1 = param.get(1);
+            	return new long[] {p0, p1};
+            }
+            case KURS_FIXIERE_IN_SCHIENE, KURS_SPERRE_IN_SCHIENE: { // 2, 3
+            	long p0 = param.get(0);
+            	long p1 = param.get(1);
+            	if (p1 < pSchienenNr) 
+                	return new long[] {p0, p1};
+            	if (p1 > pSchienenNr) 
+            		return new long[] {p0, p1 - 1};
+        		return null;
+            }
+            case KURSART_SPERRE_SCHIENEN_VON_BIS, KURSART_ALLEIN_IN_SCHIENEN_VON_BIS: { // 1, 6
+            	long p0 = param.get(0);
+            	long von = param.get(1);
+            	long bis = param.get(2);
+            	von = pSchienenNr < von  ? von - 1 : von; 
+            	bis = pSchienenNr <= bis  ? bis - 1 : bis;
+            	if (von <= bis)
+                	return new long[] {p0, von, bis};
+        		return null;
+            }
+			default: {
+				throw new IllegalStateException("Der Regel-Typ ist unbekannt: " + typ);
+			}
+        }
+	}
+	
 }

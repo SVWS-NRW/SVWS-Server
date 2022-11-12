@@ -1,23 +1,32 @@
 package de.nrw.schule.svws.data.gost;
 
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.Vector;
+import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
 import de.nrw.schule.svws.api.JSONMapper;
 import de.nrw.schule.svws.core.data.gost.GostBlockungRegel;
 import de.nrw.schule.svws.core.types.gost.GostKursart;
 import de.nrw.schule.svws.core.types.kursblockung.GostKursblockungRegelParameterTyp;
+import de.nrw.schule.svws.core.types.kursblockung.GostKursblockungRegelTyp;
 import de.nrw.schule.svws.data.DataManager;
 import de.nrw.schule.svws.db.DBEntityManager;
+import de.nrw.schule.svws.db.dto.current.gost.kursblockung.DTOGostBlockung;
 import de.nrw.schule.svws.db.dto.current.gost.kursblockung.DTOGostBlockungKurs;
 import de.nrw.schule.svws.db.dto.current.gost.kursblockung.DTOGostBlockungRegel;
 import de.nrw.schule.svws.db.dto.current.gost.kursblockung.DTOGostBlockungRegelParameter;
 import de.nrw.schule.svws.db.dto.current.gost.kursblockung.DTOGostBlockungSchiene;
+import de.nrw.schule.svws.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergebnis;
 import de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchueler;
+import de.nrw.schule.svws.db.dto.current.svws.db.DTODBAutoInkremente;
+import de.nrw.schule.svws.db.dto.current.views.gost.DTOViewGostSchuelerAbiturjahrgang;
 import de.nrw.schule.svws.db.utils.OperationError;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
@@ -29,6 +38,17 @@ import jakarta.ws.rs.core.Response.Status;
  * Core-DTO {@link GostBlockungRegel}.
  */
 public class DataGostBlockungRegel extends DataManager<Long> {
+
+	/** Ein Mapper von den DB-DTOs der Blockungsregeln ({@link DTOGostBlockungRegel}, {@link DTOGostBlockungRegelParameter}) zu dem Core-Type {@link GostBlockungRegel}. */
+	public static BiFunction<DTOGostBlockungRegel, List<DTOGostBlockungRegelParameter>, GostBlockungRegel> dtoMapper = (regel, params) -> {
+		GostBlockungRegel daten = new GostBlockungRegel();
+		daten.id = regel.ID;
+		daten.typ = regel.Typ.typ;
+		if ((params != null) && (params.size() > 0))
+			daten.parameter.addAll(params.stream().sorted((a, b) -> Integer.compare(a.Nummer, b.Nummer)).map(r -> r.Parameter).collect(Collectors.toList()));
+		return daten;
+	};
+
 
 	/**
 	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link GostBlockungRegel}.
@@ -57,13 +77,8 @@ public class DataGostBlockungRegel extends DataManager<Long> {
 		DTOGostBlockungRegel regel = conn.queryByKey(DTOGostBlockungRegel.class, id);
 		if (regel == null)
 			return OperationError.NOT_FOUND.getResponse();
-		GostBlockungRegel daten = new GostBlockungRegel();
-		daten.id = regel.ID;
-		daten.typ = regel.Typ.typ;
-		List<DTOGostBlockungRegelParameter> p = conn.queryNamed("DTOGostBlockungRegelParameter.regel_id", daten.id, DTOGostBlockungRegelParameter.class);
-		if ((p != null) && (p.size() > 0))
-			daten.parameter.addAll(p.stream().sorted((a, b) -> Integer.compare(a.Nummer, b.Nummer)).map(r -> r.Parameter).collect(Collectors.toList()));
-		
+		List<DTOGostBlockungRegelParameter> params = conn.queryNamed("DTOGostBlockungRegelParameter.regel_id", regel.ID, DTOGostBlockungRegelParameter.class);
+		GostBlockungRegel daten = dtoMapper.apply(regel, params);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
@@ -80,6 +95,11 @@ public class DataGostBlockungRegel extends DataManager<Long> {
 			DTOGostBlockungRegel regel = conn.queryByKey(DTOGostBlockungRegel.class, id);
 			if (regel == null)
 				return OperationError.NOT_FOUND.getResponse();
+	        // Prüfe, ob die Blockung nur das Vorlage-Ergebnis hat
+	        DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, regel.Blockung_ID);
+	        DTOGostBlockungZwischenergebnis vorlage = DataGostBlockungsdaten.pruefeNurVorlageErgebnis(conn, blockung);
+	        if (vorlage == null)
+	        	throw OperationError.BAD_REQUEST.exception("Die Regel kann nicht angepasst werden, da bei der Blockungsdefinition schon berechnete Ergebnisse existieren.");
 	    	for (Entry<String, Object> entry : map.entrySet()) {
 	    		String key = entry.getKey();
 	    		Object value = entry.getValue();
@@ -157,7 +177,79 @@ public class DataGostBlockungRegel extends DataManager<Long> {
 		}
     	return Response.status(Status.OK).build();
 	}
-	
+
+
+	/** 
+     * Fügt eine Regel mit Default-Werten zu einer Blockung der Gymnasialen Oberstufe hinzu.
+	 * 
+     * @param idBlockung   die ID der Blockung
+	 * @param idRegelTyp   die ID des Typs der Blockungsregel (siehe {@link GostKursblockungRegelTyp})
+	 * 
+	 * @return Eine Response mit der neuen Regel 
+	 */
+	public Response addRegel(long idBlockung, int idRegelTyp) {
+		try {
+			conn.transactionBegin();
+			// Prüfe, ob die Schule eine gymnasiale Oberstufe hat
+			GostUtils.pruefeSchuleMitGOSt(conn);
+	        // Prüfe, ob die Blockung nur das Vorlage-Ergebnis hat
+	        DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, idBlockung);
+	        DTOGostBlockungZwischenergebnis vorlage = DataGostBlockungsdaten.pruefeNurVorlageErgebnis(conn, blockung);
+	        if (vorlage == null)
+	        	throw OperationError.BAD_REQUEST.exception("Die Regel kann nicht hinzugefügt werden, da bei der Blockungsdefinition schon berechnete Ergebnisse existieren.");
+			// Prüfe ob die ID des Typs korrekt ist
+			GostKursblockungRegelTyp regelTyp = GostKursblockungRegelTyp.fromTyp(idRegelTyp);
+			if (regelTyp == GostKursblockungRegelTyp.UNDEFINIERT)
+				throw OperationError.CONFLICT.exception();
+			// Bestimme die ID, für welche der Datensatz eingefügt wird
+			DTODBAutoInkremente dbRegelID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Blockung_Regeln");
+			long idRegel = dbRegelID == null ? 1 : dbRegelID.MaxID + 1;
+			// Füge die Regel hinzu
+	    	DTOGostBlockungRegel regel = new DTOGostBlockungRegel(idRegel, idBlockung, regelTyp);
+	    	conn.transactionPersist(regel);
+	    	GostBlockungRegel daten = new GostBlockungRegel();
+	    	daten.id = idRegel;
+	    	daten.typ = regelTyp.typ;
+	    	// Füge Default-Parameter zu der Regel hinzu.
+	    	for (int i = 0; i < regelTyp.getParamCount(); i++) {
+	    		GostKursblockungRegelParameterTyp paramType = regelTyp.getParamType(i);
+	    		long paramValue = switch (paramType) {
+					case KURSART -> GostKursart.LK.id;
+					case KURS_ID -> {
+				    	List<DTOGostBlockungKurs> kurse = conn.queryNamed("DTOGostBlockungKurs.blockung_id", idBlockung, DTOGostBlockungKurs.class);
+						if ((kurse == null) || (kurse.size() == 0))
+							throw OperationError.NOT_FOUND.exception();
+						yield kurse.get(0).ID;
+					}
+					case SCHIENEN_NR -> {
+						Optional<Integer> minSchiene = conn.queryNamed("DTOGostBlockungSchiene.blockung_id", idBlockung, DTOGostBlockungSchiene.class).stream().map(s -> s.Nummer).min((a,b) -> Integer.compare(a, b));
+						if (minSchiene.isEmpty())
+							throw OperationError.NOT_FOUND.exception();
+						yield minSchiene.get();
+					}
+					case SCHUELER_ID -> {
+						List<DTOViewGostSchuelerAbiturjahrgang> schueler = conn.queryNamed("DTOViewGostSchuelerAbiturjahrgang.abiturjahr", blockung.Abi_Jahrgang, DTOViewGostSchuelerAbiturjahrgang.class);
+						if ((schueler == null) || (schueler.size() == 0))
+							throw OperationError.NOT_FOUND.exception();
+						yield schueler.get(0).ID;
+					}
+	    		};
+	    		DTOGostBlockungRegelParameter param = new DTOGostBlockungRegelParameter(idRegel, i, paramValue);
+	    		conn.transactionPersist(param);
+	    		daten.parameter.add(paramValue);
+	    	}
+			conn.transactionCommit();
+			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		} catch (Exception exception) {
+			conn.transactionRollback();
+			if (exception instanceof IllegalArgumentException e)
+				throw OperationError.NOT_FOUND.exception(e);
+			if (exception instanceof WebApplicationException webex)
+				return webex.getResponse();
+			throw exception;
+		}
+	}
+
 
 	/**
 	 * Löscht eine Regel einer Blockung der Gymnasialen Oberstufe
@@ -171,7 +263,16 @@ public class DataGostBlockungRegel extends DataManager<Long> {
 			// Prüfe, ob die Schule eine gymnasiale Oberstufe hat
 			conn.transactionBegin();
 			GostUtils.pruefeSchuleMitGOSt(conn);
-			// Bestimme zunächst die Regel-Parameter (diese werden beim Entfernen der Regel automatisch mit entfernt.
+			// Bestimme die Regel
+			DTOGostBlockungRegel regel = conn.queryByKey(DTOGostBlockungRegel.class, id);
+			if (regel == null)
+	    		throw OperationError.NOT_FOUND.exception();
+	        // Prüfe, ob die Blockung nur das Vorlage-Ergebnis hat
+	        DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, regel.Blockung_ID);
+	        DTOGostBlockungZwischenergebnis vorlage = DataGostBlockungsdaten.pruefeNurVorlageErgebnis(conn, blockung);
+	        if (vorlage == null)
+	        	throw OperationError.BAD_REQUEST.exception("Die Regel kann nicht entfernt werden, da bei der Blockungsdefinition schon berechnete Ergebnisse existieren.");
+			// Bestimme die Regel-Parameter (diese werden beim Entfernen der Regel automatisch mit entfernt.
 			GostBlockungRegel daten = new GostBlockungRegel();
 			daten.id = id;
 	    	List<DTOGostBlockungRegelParameter> params = conn.queryNamed("DTOGostBlockungRegelParameter.regel_id", id, DTOGostBlockungRegelParameter.class);
@@ -180,10 +281,6 @@ public class DataGostBlockungRegel extends DataManager<Long> {
 	    	params.sort((a,b) -> Integer.compare(a.Nummer, b.Nummer));
 			for (DTOGostBlockungRegelParameter param : params)
 				daten.parameter.add(param.Parameter);
-			// Bestimme die Regel
-			DTOGostBlockungRegel regel = conn.queryByKey(DTOGostBlockungRegel.class, id);
-			if (regel == null)
-	    		throw OperationError.NOT_FOUND.exception();
 			daten.typ = regel.Typ.typ;
 			// Entferne die Regel
 			conn.transactionRemove(regel);
@@ -195,6 +292,45 @@ public class DataGostBlockungRegel extends DataManager<Long> {
 				return webex.getResponse();
 			throw exception;
 		}
+	}
+
+
+	/**
+	 * Erstellt eine Liste von Core-Type-Blockungsregeln zu den angegebenen Datenbank-DTOs
+	 * 
+	 * @param regeln         eine Liste der Regeln (Datenbank-DTOs)
+	 * @param parameter   eine Liste mit allen Parametern der Regeln
+	 * 
+	 * @return die Liste der Blockungsregeln
+	 */
+	public static List<GostBlockungRegel> getBlockungsregeln(List<DTOGostBlockungRegel> regeln, List<DTOGostBlockungRegelParameter> parameter) {
+		if ((regeln == null) || (parameter == null) || (regeln.size() == 0))
+			return Collections.emptyList();
+		Map<Long, List<DTOGostBlockungRegelParameter>> mapParameter = parameter.stream().collect(Collectors.groupingBy(r -> r.Regel_ID));
+		// Erzeuge die Liste der Core-Types
+		List<GostBlockungRegel> result = new Vector<>();
+		for (DTOGostBlockungRegel regel : regeln)
+			result.add(dtoMapper.apply(regel, mapParameter.get(regel.ID)));
+        return result;
+	}
+
+
+	/**
+	 * Erstellt eine Liste von Blockungsregeln zu der angegebenen Blockungs-ID
+	 * 
+	 * @param idBlockung   die ID der Blockung
+	 * 
+	 * @return die Liste der Blockungsregeln
+	 */
+	public List<GostBlockungRegel> getBlockungsregeln(long idBlockung) {
+		// Bestimme alle Regeln der Blockung
+		List<DTOGostBlockungRegel> regeln = conn.queryNamed("DTOGostBlockungRegel.blockung_id", idBlockung, DTOGostBlockungRegel.class);
+		// Bestimme die IDs dieser Regeln
+		List<Long> regelIDs = regeln.stream().map(r -> r.ID).toList();
+		// Bestimme die RegelParameter dieser Regeln
+		List<DTOGostBlockungRegelParameter> parameter = conn
+				.queryNamed("DTOGostBlockungRegelParameter.regel_id.multiple", regelIDs, DTOGostBlockungRegelParameter.class);
+		return getBlockungsregeln(regeln, parameter);
 	}
 	
 }

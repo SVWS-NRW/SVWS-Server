@@ -1,5 +1,6 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
 import { GostBlockungsergebnisSchiene, cast_de_nrw_schule_svws_core_data_gost_GostBlockungsergebnisSchiene } from '../../../core/data/gost/GostBlockungsergebnisSchiene';
+import { IllegalStateException, cast_java_lang_IllegalStateException } from '../../../java/lang/IllegalStateException';
 import { GostFach, cast_de_nrw_schule_svws_core_data_gost_GostFach } from '../../../core/data/gost/GostFach';
 import { GostBlockungsdatenManager, cast_de_nrw_schule_svws_core_utils_gost_GostBlockungsdatenManager } from '../../../core/utils/gost/GostBlockungsdatenManager';
 import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
@@ -25,7 +26,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	private readonly _parent : GostBlockungsdatenManager;
 
-	private readonly _ergebnis : GostBlockungsergebnis;
+	private _ergebnis : GostBlockungsergebnis;
 
 	private readonly _map_schienenNr_schiene : HashMap<Number, GostBlockungsergebnisSchiene> = new HashMap();
 
@@ -56,8 +57,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	private readonly _map_fachartID_kurse : HashMap<Number, Vector<GostBlockungsergebnisKurs>> = new HashMap();
 
 	private readonly _map_fachartID_kursdifferenz : HashMap<Number, Number> = new HashMap();
-
-	private readonly _map_regeltyp_regeln : HashMap<GostKursblockungRegelTyp, HashSet<GostBlockungRegel>> = new HashMap();
 
 
 	/**
@@ -99,6 +98,15 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		} else throw new Error('invalid method overload');
 	}
 
+	/**
+	 * Baut alle Datenstrukturen neu auf.
+	 */
+	private stateRevalidateEverything() : void {
+		let old : GostBlockungsergebnis = this._ergebnis;
+		this._ergebnis = new GostBlockungsergebnis();
+		this.stateClear(old);
+	}
+
 	private stateClear(pErgebnis : GostBlockungsergebnis | null) : void {
 		this._ergebnis.id = (pErgebnis === null) ? -1 : pErgebnis.id;
 		this._ergebnis.blockungID = this._parent.getID();
@@ -109,10 +117,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		this._ergebnis.bewertung.kursdifferenzMax = 0;
 		this._ergebnis.bewertung.kursdifferenzHistogramm = Array(this._parent.getSchuelerAnzahl() + 1).fill(0);
 		this._ergebnis.bewertung.anzahlSchuelerNichtZugeordnet += this._parent.daten().fachwahlen.size();
-		for (let gRegelTyp of GostKursblockungRegelTyp.getCollection()) 
-			this._map_regeltyp_regeln.put(gRegelTyp, new HashSet());
-		for (let gRegel of this._parent.daten().regeln) 
-			this.getOfRegeltypRegelmenge(GostKursblockungRegelTyp.fromTyp(gRegel.typ)).add(gRegel);
 		for (let gSchiene of this._parent.daten().schienen) {
 			let eSchiene : GostBlockungsergebnisSchiene = new GostBlockungsergebnisSchiene();
 			eSchiene.id = gSchiene.id;
@@ -197,53 +201,67 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	private stateRegelvalidierung() : void {
 		let regelVerletzungen : Vector<Number> = this._ergebnis.bewertung.regelVerletzungen;
 		regelVerletzungen.clear();
-		for (let r of this.getOfRegeltypRegelmenge(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS)) {
-			let schuelerID : number = r.parameter.get(0).valueOf();
-			let kursID : number = r.parameter.get(1).valueOf();
-			if (!this.getOfSchuelerOfKursIstZugeordnet(schuelerID, kursID)) 
-				regelVerletzungen.add(r.id);
-		}
-		for (let r of this.getOfRegeltypRegelmenge(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS)) {
-			let schuelerID : number = r.parameter.get(0).valueOf();
-			let kursID : number = r.parameter.get(1).valueOf();
-			if (this.getOfSchuelerOfKursIstZugeordnet(schuelerID, kursID)) 
-				regelVerletzungen.add(r.id);
-		}
-		for (let r of this.getOfRegeltypRegelmenge(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE)) {
-			let kursID : number = r.parameter.get(0).valueOf();
-			let schienenNr : number = r.parameter.get(1).valueOf();
-			let schiene : GostBlockungsergebnisSchiene | null = this.getSchieneEmitNr(schienenNr);
-			if (!this.getOfKursSchienenmenge(kursID).contains(schiene)) 
-				regelVerletzungen.add(r.id);
-		}
-		for (let r of this.getOfRegeltypRegelmenge(GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE)) {
-			let kursID : number = r.parameter.get(0).valueOf();
-			let schienenNr : number = r.parameter.get(1).valueOf();
-			let schiene : GostBlockungsergebnisSchiene | null = this.getSchieneEmitNr(schienenNr);
-			if (this.getOfKursSchienenmenge(kursID).contains(schiene)) 
-				regelVerletzungen.add(r.id);
-		}
-		for (let r of this.getOfRegeltypRegelmenge(GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS)) {
-			let kursart : number = r.parameter.get(0).valueOf();
-			let schienenNrVon : number = r.parameter.get(1).valueOf();
-			let schienenNrBis : number = r.parameter.get(2).valueOf();
-			for (let schienenNr : number = schienenNrVon; schienenNr <= schienenNrBis; schienenNr++)
-				for (let eKurs of this.getSchieneEmitNr(schienenNr).kurse) 
-					if (eKurs.kursart === kursart) 
+		for (let r of this._parent.getMengeOfRegeln()) {
+			let typ : GostKursblockungRegelTyp = GostKursblockungRegelTyp.fromTyp(r.typ);
+			switch (typ) {
+				case GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS: {
+					let schuelerID : number = r.parameter.get(0).valueOf();
+					let kursID : number = r.parameter.get(1).valueOf();
+					if (!this.getOfSchuelerOfKursIstZugeordnet(schuelerID, kursID)) 
 						regelVerletzungen.add(r.id);
-		}
-		for (let r of this.getOfRegeltypRegelmenge(GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS)) {
-			let kursart : number = r.parameter.get(0).valueOf();
-			let schienenNrVon : number = r.parameter.get(1).valueOf();
-			let schienenNrBis : number = r.parameter.get(2).valueOf();
-			for (let eKurs of this._map_kursID_kurs.values()) 
-				for (let eSchieneID of eKurs.schienen) {
-					let nr : number = this.getSchieneG(eSchieneID.valueOf()).nummer;
-					let b1 : boolean = eKurs.kursart === kursart;
-					let b2 : boolean = (schienenNrVon <= nr) && (nr <= schienenNrBis);
-					if (b1 !== b2) 
-						regelVerletzungen.add(r.id);
+					break;
 				}
+				case GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS: {
+					let schuelerID : number = r.parameter.get(0).valueOf();
+					let kursID : number = r.parameter.get(1).valueOf();
+					if (this.getOfSchuelerOfKursIstZugeordnet(schuelerID, kursID)) 
+						regelVerletzungen.add(r.id);
+					break;
+				}
+				case GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE: {
+					let kursID : number = r.parameter.get(0).valueOf();
+					let schienenNr : number = r.parameter.get(1).valueOf();
+					let schiene : GostBlockungsergebnisSchiene | null = this.getSchieneEmitNr(schienenNr);
+					if (!this.getOfKursSchienenmenge(kursID).contains(schiene)) 
+						regelVerletzungen.add(r.id);
+					break;
+				}
+				case GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE: {
+					let kursID : number = r.parameter.get(0).valueOf();
+					let schienenNr : number = r.parameter.get(1).valueOf();
+					let schiene : GostBlockungsergebnisSchiene | null = this.getSchieneEmitNr(schienenNr);
+					if (this.getOfKursSchienenmenge(kursID).contains(schiene)) 
+						regelVerletzungen.add(r.id);
+					break;
+				}
+				case GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS: {
+					let kursart : number = r.parameter.get(0).valueOf();
+					let schienenNrVon : number = r.parameter.get(1).valueOf();
+					let schienenNrBis : number = r.parameter.get(2).valueOf();
+					for (let schienenNr : number = schienenNrVon; schienenNr <= schienenNrBis; schienenNr++)
+						for (let eKurs of this.getSchieneEmitNr(schienenNr).kurse) 
+							if (eKurs.kursart === kursart) 
+								regelVerletzungen.add(r.id);
+					break;
+				}
+				case GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS: {
+					let kursart : number = r.parameter.get(0).valueOf();
+					let schienenNrVon : number = r.parameter.get(1).valueOf();
+					let schienenNrBis : number = r.parameter.get(2).valueOf();
+					for (let eKurs of this._map_kursID_kurs.values()) 
+						for (let eSchieneID of eKurs.schienen) {
+							let nr : number = this.getSchieneG(eSchieneID.valueOf()).nummer;
+							let b1 : boolean = eKurs.kursart === kursart;
+							let b2 : boolean = (schienenNrVon <= nr) && (nr <= schienenNrBis);
+							if (b1 !== b2) 
+								regelVerletzungen.add(r.id);
+						}
+					break;
+				}
+				default: {
+					throw new IllegalStateException("Der Regel-Typ ist unbekannt: " + typ)
+				}
+			}
 		}
 	}
 
@@ -582,20 +600,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 */
 	public getOfBewertungAnzahlNichtzugeordneterFachwahlen() : number {
 		return this._ergebnis.bewertung.anzahlSchuelerNichtZugeordnet;
-	}
-
-	/**
-	 * Liefert die Menge der Regeln des angegebenen Typs. <br>
-	 * Wenn es zu dem Typ keine Regel gibt, ist die Menge leer.
-	 * 
-	 * @param pTyp Der Typ der Regel.
-	 * @return Die Menge der Regeln des angegebenen Typs.
-	 */
-	public getOfRegeltypRegelmenge(pTyp : GostKursblockungRegelTyp) : HashSet<GostBlockungRegel> {
-		let set : HashSet<GostBlockungRegel> | null = this._map_regeltyp_regeln.get(pTyp);
-		if (set === null) 
-			return new HashSet();
-		return set;
 	}
 
 	/**
@@ -972,6 +976,19 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
+	 *
+	 * Liefert TRUE, falls ein Löschen des Kurses erlaubt ist. <br> 
+	 * Kriterium: Es dürfen keine Schüler dem Kurs zugeordnet sein.
+	 * 
+	 * @param  pKursID               Die Datenbank-ID des Kurses.
+	 * @return                       TRUE, falls ein Löschen des Kurses erlaubt ist.
+	 * @throws NullPointerException  Falls der Kurs nicht existiert.
+	 */
+	public getOfKursRemoveAllowed(pKursID : number) : boolean {
+		return this.getKursE(pKursID).schueler.isEmpty();
+	}
+
+	/**
 	 * Ermittelt die Schiene für die angegebene ID. Delegiert den Aufruf an den Fächer-Manager des Eltern-Objektes
 	 * {@link GostBlockungsdatenManager}. <br>
 	 * Erzeugt eine NullPointerException im Fehlerfall, dass die ID nicht bekannt ist.
@@ -1115,6 +1132,19 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
+	 *
+	 * Liefert TRUE, falls ein Löschen der Schiene erlaubt ist. <br>
+	 * Kriterium: Es dürfen keine Kurse der Schiene zugeordnet sein.
+	 * 
+	 * @param  pSchienenID          Die Datenbank-ID der Schiene.
+	 * @return                      TRUE, falls ein Löschen der Schiene erlaubt ist.
+	 * @throws NullPointerException Falls die Schiene nicht existiert.
+	 */
+	public getOfSchieneRemoveAllowed(pSchienenID : number) : boolean {
+		return this.getSchieneE(pSchienenID).kurse.isEmpty();
+	}
+
+	/**
 	 * Liefert die Map, welche jedem Kurs seine Schülermenge zuordnet.
 	 * 
 	 * @return Die Map, welche jedem Kurs seine Schülermenge zuordnet.
@@ -1228,6 +1258,86 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		if (pHinzufuegenOderEntfernen) 
 			return this.stateSchuelerKursHinzufuegen(pSchuelerID, pKursID);
 		return this.stateSchuelerKursEntfernen(pSchuelerID, pKursID);
+	}
+
+	/**
+	 * Löscht die übergebene Schiene.
+	 * 
+	 * @param  pSchienenID           Die Datenbank-ID der Schiene.
+	 * @throws NullPointerException  Falls die Schiene nicht zuerst beim Datenmanager entfernt wurde, oder 
+	 *                               falls die Schiene noch Kurszuordnungen hat.
+	 */
+	public setRemoveSchieneByID(pSchienenID : number) : void {
+		if (this._parent.getSchieneExistiert(pSchienenID) === true) 
+			throw new NullPointerException("Die Schiene " + pSchienenID + " muss erst beim Datenmanager entfernt werden!")
+		let nKurse : number = this.getSchieneE(pSchienenID).kurse.size();
+		if (nKurse > 0) 
+			throw new NullPointerException("Entfernen unmöglich: Schiene " + pSchienenID + " hat noch " + nKurse + " Kurse!")
+		this.stateRevalidateEverything();
+	}
+
+	/**
+	 * Fügt die übergebene Schiene hinzu.
+	 * 
+	 * @param  pSchienenID           Die Datenbank-ID der Schiene.
+	 * @throws NullPointerException  Falls die Schiene nicht zuerst im Datenmanager hinzugefügt wurde.
+	 */
+	public setAddSchieneByID(pSchienenID : number) : void {
+		if (this._parent.getSchieneExistiert(pSchienenID) === false) 
+			throw new NullPointerException("Die Schiene " + pSchienenID + " muss erst beim Datenmanager hinzugefügt werden!")
+		this.stateRevalidateEverything();
+	}
+
+	/**
+	 * Löscht die übergebene Regel.
+	 * 
+	 * @param  pRegelID              Die Datenbank-ID der Regel.
+	 * @throws NullPointerException  Falls die Regel nicht zuerst beim Datenmanager entfernt wurde.
+	 */
+	public setRemoveRegelByID(pRegelID : number) : void {
+		if (this._parent.getRegelExistiert(pRegelID) === true) 
+			throw new NullPointerException("Die Regel " + pRegelID + " muss erst beim Datenmanager entfernt werden!")
+		this.stateRevalidateEverything();
+	}
+
+	/**
+	 * Fügt die übergebene Regel hinzu.
+	 * 
+	 * @param  pRegelID              Die Datenbank-ID der Regel.
+	 * @throws NullPointerException  Falls die Regel nicht zuerst im Datenmanager hinzugefügt wurde.
+	 */
+	public setAddRegelByID(pRegelID : number) : void {
+		if (this._parent.getRegelExistiert(pRegelID) === false) 
+			throw new NullPointerException("Die Regel " + pRegelID + " muss erst beim Datenmanager hinzugefügt werden!")
+		this.stateRevalidateEverything();
+	}
+
+	/**
+	 * Löscht den übergebenen Kurs.
+	 * 
+	 * @param  pKursID               Die Datenbank-ID des Kurses.
+	 * @throws NullPointerException  Falls der Kurs nicht zuerst beim Datenmanager entfernt wurde, oder 
+	 *                               falls der Kurs noch Schülerzuordnungen hat.
+	 */
+	public setRemoveKursByID(pKursID : number) : void {
+		if (this._parent.getKursExistiert(pKursID) === true) 
+			throw new NullPointerException("Der Kurs " + pKursID + " muss erst beim Datenmanager entfernt werden!")
+		let nSchueler : number = this.getKursE(pKursID).schueler.size();
+		if (nSchueler > 0) 
+			throw new NullPointerException("Entfernen unmöglich: Kurs " + pKursID + " hat noch " + nSchueler + " Schüler!")
+		this.stateRevalidateEverything();
+	}
+
+	/**
+	 * Fügt den übergebenen Kurs hinzu.
+	 * 
+	 * @param  pKursID               Die Datenbank-ID des Kurses.
+	 * @throws NullPointerException  Falls der Kurs nicht zuerst beim Datenmanager hinzugefügt wurde.
+	 */
+	public setAddKursByID(pKursID : number) : void {
+		if (this._parent.getKursExistiert(pKursID) === false) 
+			throw new NullPointerException("Der Kurs " + pKursID + " muss erst beim Datenmanager hinzugefügt werden!")
+		this.stateRevalidateEverything();
 	}
 
 	/**
