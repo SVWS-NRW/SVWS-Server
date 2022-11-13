@@ -148,7 +148,7 @@ public class DataSchuelerStammdaten extends DataManager<Long> {
 		    			// Basisdaten
 						case "id" -> {
 							Long patch_id = JSONMapper.convertToLong(value, true);
-							if ((patch_id == null) || (patch_id != id))
+							if ((patch_id == null) || (patch_id.longValue() != id.longValue()))
 								throw OperationError.BAD_REQUEST.exception();
 						}
 		    			case "foto" -> {

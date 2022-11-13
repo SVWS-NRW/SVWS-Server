@@ -103,7 +103,7 @@ public class DataGostJahrgangsdaten extends DataManager<Integer> {
 	    		switch (key) {
 					case "abiturjahr" -> {
 						Integer patch_abiturjahr = JSONMapper.convertToInteger(value, true);
-						if ((patch_abiturjahr == null) || (patch_abiturjahr != abiturjahr))
+						if ((patch_abiturjahr == null) || (patch_abiturjahr.intValue() != abiturjahr.intValue()))
 							throw OperationError.BAD_REQUEST.exception();
 					}
     				case "jahrgang" -> throw OperationError.BAD_REQUEST.exception();

@@ -92,7 +92,7 @@ public class DataReligionen extends DataManager<Long> {
                     switch (key){
 						case "id" -> {
 							Long patch_id = JSONMapper.convertToLong(value, true);
-							if ((patch_id == null) || (patch_id != id))
+							if ((patch_id == null) || (patch_id.longValue() != id.longValue()))
 								throw OperationError.BAD_REQUEST.exception();
 						}
 						case "kuerzel" -> reli.StatistikKrz = JSONMapper.convertToString(value, true, true);

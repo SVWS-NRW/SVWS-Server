@@ -104,19 +104,17 @@ public class DataSchuelerBetriebsdaten extends DataManager<Long> {
 					switch (key){
 						case "id" -> {
 							Long patch_id = JSONMapper.convertToLong(value, true);
-							if ((patch_id == null) || (patch_id.intValue() != id))
+							if ((patch_id == null) || (patch_id.intValue() != id.intValue()))
 								throw OperationError.BAD_REQUEST.exception();
 						}
 						case "schueler_id" -> {
 							Long schueler_id = JSONMapper.convertToLong(value, true);
-							if (schueler_id == null) {	//TODO Darf eine Beschäftigung ohne Betrieb angeleget werden?
+							if (schueler_id == null)	//TODO Darf eine Beschäftigung ohne Betrieb angeleget werden?
 								throw OperationError.BAD_REQUEST.exception("SchülerID darf nicht fehlen.");
-							} else {
-								DTOSchueler schueler = conn.queryByKey(DTOSchueler.class,schueler_id);
-								if (schueler == null)
-									throw OperationError.NOT_FOUND.exception("Schüler mit der ID " + schueler_id + " wurde nicht gefunden.");
-								s_betrieb.Schueler_ID = schueler_id;
-							}
+							DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, schueler_id);
+							if (schueler == null)
+								throw OperationError.NOT_FOUND.exception("Schüler mit der ID " + schueler_id + " wurde nicht gefunden.");
+							s_betrieb.Schueler_ID = schueler_id;
 						}	
 						case "betrieb_id" -> {
 							
