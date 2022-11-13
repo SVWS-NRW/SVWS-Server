@@ -1,7 +1,0 @@
-ID;Kurztext;Langtext;Beginn;Ende;Sort;gueltigVon;gueltigBis
-1;100;Beschäftigungsphase Sabbatjahr;1900-01-01 00:00:00.000;;100;;
-2;110;Mehrarbeit (angeordnet und regelmäßig);1900-01-01 00:00:00.000;;110;;
-3;150;Aufrundung der Pflichtstundenzahl wegen Abrundung im folgenden Schuljahr ;1900-01-01 00:00:00.000;;150;;
-4;160;Überschreitung der Pflichtstundenzahl aus organisatorischen Gründen (z. B. Epochenunterricht);1900-01-01 00:00:00.000;;160;;
-6;165;Überschreitung der Pflichtstundenzahl wegen COVID-19;2020-08-01 00:00:00.001;;165;;
-5;170;Überschreitung der Pflichtstundenzahl wegen Pflichstunden-Bandbreite;1900-01-01 00:00:00.000;;170;;

@@ -1,6 +1,0 @@
-ID;Kurztext;Langtext;Beginn;Ende;Sort;ASDSchluessel;gueltigVon;gueltigBis
-1;NEU;Neueintritt in den Schuldienst mit abgelegter 2. Staatsprüfung oder anderweitig erfüllter Eingangsvoraussetzung;1900-01-01 00:00:00.000;;100;01;;
-2;AndBuLand;Übertritt aus dem Schuldienst eines anderen Bundeslandes;1900-01-01 00:00:00.000;;200;02;;
-3;WECHSEL;Wechsel innerhalb des Landes von einer anderen Schule an die berichtende Schule;1900-01-01 00:00:00.000;;300;03;;
-4;WIEDER;Wiedereintritt in den Schuldienst;1900-01-01 00:00:00.000;;400;04;;
-5;SONSTIG;Sonstige Zugänge;1900-01-01 00:00:00.000;;500;05;;
