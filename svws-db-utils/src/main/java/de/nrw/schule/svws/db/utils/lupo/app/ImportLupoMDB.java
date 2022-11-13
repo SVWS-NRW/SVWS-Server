@@ -2,6 +2,9 @@ package de.nrw.schule.svws.db.utils.lupo.app;
 
 import java.io.IOException;
 
+import de.nrw.schule.svws.base.shell.CommandLineException;
+import de.nrw.schule.svws.base.shell.CommandLineOption;
+import de.nrw.schule.svws.base.shell.CommandLineParser;
 import de.nrw.schule.svws.config.SVWSKonfiguration;
 import de.nrw.schule.svws.core.logger.LogConsumerConsole;
 import de.nrw.schule.svws.core.logger.Logger;
@@ -10,9 +13,6 @@ import de.nrw.schule.svws.db.DBConfig;
 import de.nrw.schule.svws.db.DBDriver;
 import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.utils.lupo.mdb.LupoMDB;
-import de.nrw.schule.svws.shell.CommandLineException;
-import de.nrw.schule.svws.shell.CommandLineOption;
-import de.nrw.schule.svws.shell.CommandLineParser;
 
 
 /**

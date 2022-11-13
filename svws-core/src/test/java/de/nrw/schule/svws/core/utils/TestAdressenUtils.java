@@ -12,7 +12,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
 
-import de.nrw.schule.svws.csv.CsvReader;
+import de.nrw.schule.svws.base.CsvReader;
 
 /**
  * Diese Klasse enthält die Testroutinen für die Klasse {@link AdressenUtils}

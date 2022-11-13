@@ -3,8 +3,8 @@ package de.nrw.schule.svws.data.schule;
 import java.io.InputStream;
 import java.util.List;
 
+import de.nrw.schule.svws.base.CsvReader;
 import de.nrw.schule.svws.core.data.schule.SchulenKatalogEintrag;
-import de.nrw.schule.svws.csv.CsvReader;
 import de.nrw.schule.svws.data.DataManager;
 import de.nrw.schule.svws.db.utils.OperationError;
 import jakarta.ws.rs.core.MediaType;

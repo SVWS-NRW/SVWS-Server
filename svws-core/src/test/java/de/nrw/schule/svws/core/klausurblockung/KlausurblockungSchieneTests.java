@@ -15,6 +15,7 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
+import de.nrw.schule.svws.base.CsvReader;
 import de.nrw.schule.svws.core.data.klausurblockung.KlausurblockungSchienenInput;
 import de.nrw.schule.svws.core.data.klausurblockung.KlausurblockungSchienenInputSchueler;
 import de.nrw.schule.svws.core.data.klausurblockung.KlausurblockungSchienenOutput;
@@ -23,7 +24,6 @@ import de.nrw.schule.svws.core.data.klausurblockung.KlausurblockungSchienenOutpu
 import de.nrw.schule.svws.core.logger.LogData;
 import de.nrw.schule.svws.core.logger.LogLevel;
 import de.nrw.schule.svws.core.logger.Logger;
-import de.nrw.schule.svws.csv.CsvReader;
 import jakarta.validation.constraints.NotNull;
 
 /** Diese Klasse testet die Klasse {@link KlausurblockungSchienenAlgorithmus}. */

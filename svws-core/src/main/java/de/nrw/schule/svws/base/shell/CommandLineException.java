@@ -1,4 +1,4 @@
-package de.nrw.schule.svws.shell;
+package de.nrw.schule.svws.base.shell;
 
 import java.io.IOException;
 

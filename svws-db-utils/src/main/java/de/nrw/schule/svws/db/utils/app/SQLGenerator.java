@@ -17,16 +17,16 @@ import java.util.stream.Collectors;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
-import de.nrw.schule.svws.csv.CsvReader;
+import de.nrw.schule.svws.base.CsvReader;
+import de.nrw.schule.svws.base.shell.CommandLineException;
+import de.nrw.schule.svws.base.shell.CommandLineOption;
+import de.nrw.schule.svws.base.shell.CommandLineParser;
 import de.nrw.schule.svws.db.DBDriver;
 import de.nrw.schule.svws.db.dto.DTOs;
 import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaRevisionen;
 import de.nrw.schule.svws.db.schema.SchemaTabelle;
 import de.nrw.schule.svws.db.utils.DBDefaultData;
-import de.nrw.schule.svws.shell.CommandLineException;
-import de.nrw.schule.svws.shell.CommandLineOption;
-import de.nrw.schule.svws.shell.CommandLineParser;
 
 /**
  * Dieses Programm erstellt die Skripte für die aktuelle Revision in dem Verzeichnis 

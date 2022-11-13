@@ -2,6 +2,7 @@ package de.nrw.schule.svws.core.kursblockung.test;
 
 import java.util.HashMap;
 
+import de.nrw.schule.svws.base.CsvReader;
 import de.nrw.schule.svws.core.data.gost.GostBlockungKurs;
 import de.nrw.schule.svws.core.data.gost.GostBlockungRegel;
 import de.nrw.schule.svws.core.data.gost.GostBlockungSchiene;
@@ -16,7 +17,6 @@ import de.nrw.schule.svws.core.types.gost.GostKursart;
 import de.nrw.schule.svws.core.types.kursblockung.GostKursblockungRegelTyp;
 import de.nrw.schule.svws.core.utils.gost.GostBlockungsdatenManager;
 import de.nrw.schule.svws.core.utils.gost.GostFaecherManager;
-import de.nrw.schule.svws.csv.CsvReader;
 import jakarta.validation.constraints.NotNull;
 
 /** Eine Klasse zum Einlesen von exportierten Kurs42-Textdateien mit direkter Umwandlung in das Eingabeobjekt

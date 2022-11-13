@@ -4,10 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 
+import de.nrw.schule.svws.base.FileUtils;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
-
-import de.nrw.schule.svws.utils.FileUtils;
 
 /**
  * Diese Klasse dient als Cache für Datei-Ressourcen, wie dem SVWS-Client, die über

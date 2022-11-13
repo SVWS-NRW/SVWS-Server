@@ -1,28 +1,13 @@
 configurations {
-	coretypedefinition
-	implementation.extendsFrom(resteasy, validation, swagger)
+	implementation.extendsFrom(jackson, resteasy, validation, swagger)
 } 
 
 dependencies {
-	coretypedefinition project(':svws-base')
-    implementation project(':svws-base')
-
+	implementation(configurations.jackson)
 	implementation(configurations.resteasy)
 	implementation(configurations.validation)
 	implementation(configurations.swagger)
 }
-
-task createCoreTypes(type: JavaExec) {
-	group = 'svws'
-	classpath = configurations.coretypedefinition
-//    outputs.dir file(project.projectDir.toString() + '/src/main/java/de/nrw/schule/svws/core/types')
-    description "Erzeugt Core-Types anhand der zugehörigen CSV-Dateien"
-    mainClass = 'de.nrw.schule.svws.app.coregen.CoreTypeWriter'
-    jvmArgs '-Dfile.encoding=UTF-8', '-Dline.separator="\n"'
-}
-
-// compileJava.dependsOn createCoreTypes
-// sourcesJar.dependsOn createCoreTypes
 
 publishing {
     repositories {

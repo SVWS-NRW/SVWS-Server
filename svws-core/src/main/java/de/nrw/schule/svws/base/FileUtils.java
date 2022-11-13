@@ -1,4 +1,4 @@
-package de.nrw.schule.svws.utils;
+package de.nrw.schule.svws.base;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;

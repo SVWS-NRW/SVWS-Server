@@ -9,9 +9,9 @@ import java.nio.file.StandardOpenOption;
 import java.util.Vector;
 import java.util.stream.Collectors;
 
-import de.nrw.schule.svws.shell.CommandLineException;
-import de.nrw.schule.svws.shell.CommandLineOption;
-import de.nrw.schule.svws.shell.CommandLineParser;
+import de.nrw.schule.svws.base.shell.CommandLineException;
+import de.nrw.schule.svws.base.shell.CommandLineOption;
+import de.nrw.schule.svws.base.shell.CommandLineParser;
 import de.nrw.schule.svws.transpiler.Transpiler;
 import de.nrw.schule.svws.transpiler.TranspilerException;
 import de.nrw.schule.svws.transpiler.typescript.ApiTranspilerTypeScriptPlugin;

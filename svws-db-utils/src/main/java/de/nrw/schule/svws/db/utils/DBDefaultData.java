@@ -3,8 +3,8 @@ package de.nrw.schule.svws.db.utils;
 import java.util.HashMap;
 import java.util.List;
 
+import de.nrw.schule.svws.base.CsvReader;
 import de.nrw.schule.svws.core.logger.Logger;
-import de.nrw.schule.svws.csv.CsvReader;
 import de.nrw.schule.svws.db.dto.DTOHelper;
 import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaRevisionen;
@@ -59,7 +59,7 @@ public class DBDefaultData {
             case "Schildintern_KAoA_Zusatzmerkmal" -> "daten/csv/kaoa/Zusatzmerkmal.csv";
             case "Schulver_DBS" -> "daten/csv/schulver/Schulen.csv";
             case "Schulver_Schultraeger" -> "daten/csv/schulver/Schultraeger.csv";
-            default -> "schema/csv/" + tab.javaSubPackage().replace(".", "/") + "/" + tab.name() + ".csv";
+            default -> "daten/csv/" + tab.javaSubPackage().replace(".", "/") + "/" + tab.name() + ".csv";
         };
     }
 

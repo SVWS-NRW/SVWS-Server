@@ -4,8 +4,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import de.nrw.schule.svws.base.CsvReader;
 import de.nrw.schule.svws.core.logger.Logger;
-import de.nrw.schule.svws.csv.CsvReader;
 import de.nrw.schule.svws.db.DBDriver;
 import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.dto.DTOHelper;

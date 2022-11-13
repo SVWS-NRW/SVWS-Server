@@ -6,7 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Properties;
 
-import de.nrw.schule.svws.utils.ResourceUtils;
+import de.nrw.schule.svws.base.ResourceUtils;
 
 /**
  * Diese Klasse stellt Hilfs-Methoden rund um die SVWS-Version zur Verfügung. 

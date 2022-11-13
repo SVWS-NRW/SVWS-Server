@@ -1,4 +1,4 @@
-package de.nrw.schule.svws.utils;
+package de.nrw.schule.svws.base;
 
 import java.io.IOException;
 import java.net.URI;

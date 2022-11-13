@@ -15,6 +15,9 @@ import org.apache.commons.io.IOUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
+import de.nrw.schule.svws.base.shell.CommandLineException;
+import de.nrw.schule.svws.base.shell.CommandLineOption;
+import de.nrw.schule.svws.base.shell.CommandLineParser;
 import de.nrw.schule.svws.config.SVWSKonfiguration;
 import de.nrw.schule.svws.core.abschluss.gost.AbiturdatenManager;
 import de.nrw.schule.svws.core.abschluss.gost.GostBelegpruefungErgebnis;
@@ -32,9 +35,6 @@ import de.nrw.schule.svws.db.dto.current.gost.DTOGostSchueler;
 import de.nrw.schule.svws.db.utils.data.Schule;
 import de.nrw.schule.svws.db.utils.gost.FaecherGost;
 import de.nrw.schule.svws.db.utils.gost.GostSchuelerLaufbahn;
-import de.nrw.schule.svws.shell.CommandLineException;
-import de.nrw.schule.svws.shell.CommandLineOption;
-import de.nrw.schule.svws.shell.CommandLineParser;
 
 /**
  * Diese Klasse stellt eine Kommandozeilen-Anwendung zur Verfügung, die dem 

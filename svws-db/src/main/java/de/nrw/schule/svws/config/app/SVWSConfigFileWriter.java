@@ -4,10 +4,10 @@ import java.io.IOException;
 
 import org.apache.commons.lang3.math.NumberUtils;
 
+import de.nrw.schule.svws.base.shell.CommandLineOption;
+import de.nrw.schule.svws.base.shell.CommandLineParser;
 import de.nrw.schule.svws.config.SVWSKonfiguration;
 import de.nrw.schule.svws.db.DBDriver;
-import de.nrw.schule.svws.shell.CommandLineOption;
-import de.nrw.schule.svws.shell.CommandLineParser;
 
 /**
  * Diese Klasse stellt ein Kommandozeilenprogramm zum Erzeugen einer SVWS-Konfiguration mit Default-Einstellungen

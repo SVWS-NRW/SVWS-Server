@@ -3,7 +3,6 @@ configurations {
 } 
 
 dependencies {
-    implementation project(':svws-base')
     implementation project(':svws-core')
     implementation project(':svws-db')
     implementation project(':svws-db-dto')

@@ -3,7 +3,6 @@ rootProject.name = 'svws-server'
 include "buildSrc"
 rootProject.children.find{ it.name == "buildSrc" }.name = "gradle-build-src"
 
-include 'svws-base'
 include 'svws-core'
 include 'svws-db'
 include 'svws-db-dto'

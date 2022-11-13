@@ -1,5 +1,6 @@
 package de.nrw.schule.svws.abschluesse.ge.test;
 
+import de.nrw.schule.svws.base.ResourceUtils;
 import de.nrw.schule.svws.core.abschluss.AbschlussManager;
 import de.nrw.schule.svws.core.abschluss.ge.ServiceAbschlussHA10;
 import de.nrw.schule.svws.core.abschluss.ge.ServiceAbschlussHA9;
@@ -8,7 +9,6 @@ import de.nrw.schule.svws.core.abschluss.ge.ServiceBerechtigungMSAQ;
 import de.nrw.schule.svws.core.abschluss.ge.ServicePrognose;
 import de.nrw.schule.svws.core.data.abschluss.AbschlussErgebnis;
 import de.nrw.schule.svws.core.logger.LogLevel;
-import de.nrw.schule.svws.utils.ResourceUtils;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;

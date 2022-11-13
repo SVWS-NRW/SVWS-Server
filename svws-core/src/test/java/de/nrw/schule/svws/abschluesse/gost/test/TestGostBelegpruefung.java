@@ -16,13 +16,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
 
+import de.nrw.schule.svws.base.ResourceUtils;
 import de.nrw.schule.svws.core.abschluss.gost.AbiturdatenManager;
 import de.nrw.schule.svws.core.abschluss.gost.GostBelegpruefungErgebnis;
 import de.nrw.schule.svws.core.abschluss.gost.GostBelegpruefungErgebnisFehler;
 import de.nrw.schule.svws.core.abschluss.gost.GostBelegpruefungsArt;
 import de.nrw.schule.svws.core.data.gost.Abiturdaten;
 import de.nrw.schule.svws.core.data.gost.GostFach;
-import de.nrw.schule.svws.utils.ResourceUtils;
 
 /**
  * Diese Klasse enthält die Testroutinen für den Belegprüfungsalgorithmus

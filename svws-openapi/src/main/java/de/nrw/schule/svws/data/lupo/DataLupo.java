@@ -11,7 +11,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 import jakarta.ws.rs.core.StreamingOutput;
-
+import de.nrw.schule.svws.base.FileUtils;
 import de.nrw.schule.svws.config.SVWSKonfiguration;
 import de.nrw.schule.svws.core.data.SimpleOperationResponse;
 import de.nrw.schule.svws.core.logger.LogConsumerConsole;
@@ -20,7 +20,6 @@ import de.nrw.schule.svws.core.logger.Logger;
 import de.nrw.schule.svws.data.SimpleBinaryMultipartBody;
 import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.utils.lupo.mdb.LupoMDB;
-import de.nrw.schule.svws.utils.FileUtils;
 
 /**
  * Diese Klasse stellt Methoden für den Import und Export von LuPO-MDB-Datenbanken 

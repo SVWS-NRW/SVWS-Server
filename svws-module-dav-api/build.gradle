@@ -32,7 +32,6 @@ compileJava.dependsOn(":svws-db:assemble")
 compileJava.dependsOn(":svws-db-utils:assemble")
 
 dependencies {
-    implementation project(':svws-base')
     implementation project(':svws-core')
     implementation project(':svws-db')
     implementation project(':svws-db-dto')

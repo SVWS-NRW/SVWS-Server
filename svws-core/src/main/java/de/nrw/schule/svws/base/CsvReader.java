@@ -1,4 +1,4 @@
-package de.nrw.schule.svws.csv;
+package de.nrw.schule.svws.base;
 
 import java.io.IOException;
 import java.io.InputStream;
