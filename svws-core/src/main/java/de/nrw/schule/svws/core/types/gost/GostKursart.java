@@ -1,12 +1,12 @@
 package de.nrw.schule.svws.core.types.gost;
 
-import java.util.Collection;
+import java.util.Arrays;
 import java.util.HashMap;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.List;
 
 import de.nrw.schule.svws.core.data.gost.GostBlockungKurs;
 import de.nrw.schule.svws.core.data.gost.GostFachwahl;
+import de.nrw.schule.svws.core.types.kurse.ZulaessigeKursart;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -15,29 +15,41 @@ import jakarta.validation.constraints.NotNull;
  * Core-Types dienen als grundlegende abstrakte Datentypen sowohl für die Core-Algorithmen
  * als auch für die OpenAPI-Schnittstelle.
  */
-public class GostKursart {
+public enum GostKursart {
+
+	/** Leistungskurs = LK */
+	LK(1, "LK", "Leistungskurs", Arrays.asList(
+		ZulaessigeKursart.LK1, ZulaessigeKursart.LK2
+	)),
+
+	/** Grundkurs = GK */
+	GK(2, "GK", "Grundkurs", Arrays.asList(
+		ZulaessigeKursart.GKM, ZulaessigeKursart.GKS, ZulaessigeKursart.AB3, ZulaessigeKursart.AB4, ZulaessigeKursart.EFSP
+	)),
+
+	/** Zusatzkurs = ZK */
+	ZK(3, "ZK", "Zusatzkurs", Arrays.asList(
+		ZulaessigeKursart.ZK
+	)),
+
+	/** Projektkurs = PJK */
+	PJK(4, "PJK", "Projektkurs", Arrays.asList(
+		ZulaessigeKursart.PJK
+	)),
+
+	/** Vertiefungskurs = VTF */
+	VTF(5, "VTF", "Vertiefungskurs", Arrays.asList(
+		ZulaessigeKursart.VTF
+	));
+
 
 	private static final long FACHART_ID_FAKTOR = 1000L; 
 	
 	/** Die Zuordnung der Kursarten zu dem Kürzel der Kursart */
-	private static final @NotNull HashMap<@NotNull String, @NotNull GostKursart> map = new HashMap<>();
+	private static final @NotNull HashMap<@NotNull String, @NotNull GostKursart> _mapKuerzel = new HashMap<>();
 
-
-
-	/** Leistungskurs = LK */
-	public static final @NotNull GostKursart LK = new GostKursart(1, "LK", "Leistungskurs");
-
-	/** Grundkurs = GK */
-	public static final @NotNull GostKursart GK = new GostKursart(2, "GK", "Grundkurs");
-
-	/** Zusatzkurs = ZK */
-	public static final @NotNull GostKursart ZK = new GostKursart(3, "ZK", "Zusatzkurs");
-
-	/** Projektkurs = PJK */
-	public static final @NotNull GostKursart PJK = new GostKursart(4, "PJK", "Projektkurs");
-
-	/** Vertiefungskurs = VTF */
-	public static final @NotNull GostKursart VTF = new GostKursart(5, "VTF", "Vertiefungskurs");
+	/** Die Zuordnung der Kursarten zu der jeweiligen zulässigen Kursart */
+	private static final @NotNull HashMap<@NotNull ZulaessigeKursart, @NotNull GostKursart> _mapZulKursart = new HashMap<>();
 
 	/** Die eindeutige ID der Kursart der Gymnasialen Oberstufe*/
 	public final @NotNull int id;
@@ -48,6 +60,8 @@ public class GostKursart {
 	/** Die textuelle Beschreibung der allgemeinen Kursart der Gymnasialen Oberstufe */
 	public final @NotNull String beschreibung; 
 
+	/** Die Liste der Kursarten, welche zu dieser Gost-Kursart gehören */
+	private final @NotNull List<@NotNull ZulaessigeKursart> kursarten;
 
 
 	/**
@@ -57,11 +71,12 @@ public class GostKursart {
 	 * @param kuerzel        das Kürzel der Kursart der Gymnasialen Oberstufe
 	 * @param beschreibung   die textuelle Beschreibung der allgemeinen Kursart der Gymnasialen Oberstufe
 	 */
-	private GostKursart(final @NotNull int id, final @NotNull String kuerzel, final @NotNull String beschreibung) {
+	private GostKursart(final @NotNull int id, final @NotNull String kuerzel, final @NotNull String beschreibung, 
+			final @NotNull List<@NotNull ZulaessigeKursart> kursarten) {
 		this.id = id;
 		this.kuerzel = kuerzel;
 		this.beschreibung = beschreibung;
-		map.put(kuerzel, this);
+		this.kursarten = kursarten;
 	}
 
 
@@ -72,34 +87,57 @@ public class GostKursart {
      * 
      * @return         Anzahl der Wochenstunden der Kursart korrekt, true oder false
      */
-	@JsonIgnore
 	public boolean pruefeWochenstunden(int anzahl) {
 		switch (kuerzel) {
-			case "GK":
-				return (anzahl == 3) || (anzahl == 4);  // neu einsetzende Fremdsprachen können 4-stündig sein
-			case "LK":
-				return (anzahl == 5);
-			case "PJK":
-				return (anzahl == 2) || (anzahl == 3);
-			case "VTF":
-				return (anzahl == 2);
-			case "ZK":
-				return (anzahl == 3);
+			case "GK":  return (anzahl == 3) || (anzahl == 4);  // neu einsetzende Fremdsprachen können 4-stündig sein
+			case "LK":  return (anzahl == 5);
+			case "PJK": return (anzahl == 2) || (anzahl == 3);
+			case "VTF": return (anzahl == 2);
+			case "ZK":  return (anzahl == 3);
+			default:    return false;
 		}
-		return false;
 	}
 
 
 	/**
-	 * Gibt alle Kursarten der gymnasialen Oberstufe zurück.
-	 * 
-	 * @return eine {@link Collection} mit den Kursarten.
+	 * Gibt eine Map von den Kürzeln auf die Gost-Kursart zurück. 
+	 * Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
+	 *    
+	 * @return die Map von den Kürzeln auf die Gost-Kursarten
 	 */
-	public static final @NotNull Collection<@NotNull GostKursart> values() {
-		return map.values();
+	private static @NotNull HashMap<@NotNull String, @NotNull GostKursart> getMapByKuerzel() {
+		if (_mapKuerzel.size() == 0)
+			for (@NotNull GostKursart k : GostKursart.values())
+				_mapKuerzel.put(k.kuerzel, k);
+		return _mapKuerzel;
 	}
 
-	
+
+	/**
+	 * Gibt eine Map von den zulässigen Kursarten auf die Gost-Kursart zurück. 
+	 * Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
+	 *    
+	 * @return die Map von den zulässigen Kursarten auf die Gost-Kursarten
+	 */
+	private static @NotNull HashMap<@NotNull ZulaessigeKursart, @NotNull GostKursart> getMapByZulKursart() {
+		if (_mapZulKursart.size() == 0)
+			for (@NotNull GostKursart k : GostKursart.values())
+				for (@NotNull ZulaessigeKursart zulKursart : k.kursarten) 
+					_mapZulKursart.put(zulKursart, k);
+		return _mapZulKursart;
+	}
+
+
+	/**
+	 * Gibt die Liste der zulässigen Kursarten zurück. 
+	 * 
+	 * @return die Liste der zulässigen Kursarten
+	 */
+	public @NotNull List<@NotNull ZulaessigeKursart> getKursarten() {
+		return kursarten;
+	}
+
+
     /**
      * Gibt die Kursart aus der ID Kursart zurück.
      * 
@@ -115,9 +153,9 @@ public class GostKursart {
 			case 2: return GostKursart.GK; 
 			case 3: return GostKursart.ZK; 
 			case 4: return GostKursart.PJK; 
-			case 5: return GostKursart.VTF; 
+			case 5: return GostKursart.VTF;
+			default: throw new IllegalArgumentException("Invalid ID value.");
 		}
-		throw new IllegalArgumentException("Invalid ID value.");
 	}
 	
     /**
@@ -145,22 +183,34 @@ public class GostKursart {
 			case 3: return GostKursart.ZK; 
 			case 4: return GostKursart.PJK; 
 			case 5: return GostKursart.VTF; 
+			default: return null;
 		}
-		return null;
 	}
 	
     /**
-     * Gibt die Kursart aus dem Kürzel der Kursart zurück.
+     * Gibt die Gost-Kursart aus dem Kürzel der Kursart zurück.
      * 
      * @param kuerzel    das Kürzel der Kursart
      * 
      * @return die Kursart oder null, falls das Kürzel ungültig ist 
      */
 	public static GostKursart fromKuerzel(String kuerzel) {
-		return map.get(kuerzel);
+		return getMapByKuerzel().get(kuerzel);
 	}
 
-	
+
+	/**
+	 * Bestimmt die Gost-Kursart anhand der übergebenen zulässigen Kursart
+	 * 
+	 * @param kursart   die Kursart
+	 * 
+	 * @return die Gost-Kursart
+	 */
+	public static GostKursart fromKursart(ZulaessigeKursart kursart) {
+		return getMapByZulKursart().get(kursart);
+	}
+
+
 	/**
 	 * Berechnet mit der Formel pFachID * {@link #FACHART_ID_FAKTOR} + pKursartID die ID der Fachart.
 	 * 
@@ -185,6 +235,7 @@ public class GostKursart {
 	
 	/**
 	 * Berechnet anhand des Kurs-Objektes die FachartID.
+	 *
 	 * @param pKurs Das Kurs-Objekt.
 	 * 
 	 * @return pKurs.fachID * {@link #FACHART_ID_FAKTOR} + pKurs.kursartID
@@ -215,13 +266,10 @@ public class GostKursart {
 		return (int) (pFachartID % FACHART_ID_FAKTOR);
 	}
 
+
 	@Override
-	@JsonIgnore
 	public @NotNull String toString() {
 		return kuerzel;
 	}
-
-
-
 
 }

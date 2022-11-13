@@ -203,8 +203,8 @@ public class KursblockungDynDaten {
 		if (pInput.faecherManager().faecher().size() <= 0)
 			throw fehler("GostBlockungsdatenManager.faecherManager().faecher().size() <= 0");
 
-		if (GostKursart.values().size() <= 0)
-			throw fehler("GostKursart.values().size() <= 0");
+		if (GostKursart.values().length <= 0)
+			throw fehler("GostKursart.values().length <= 0");
 
 		if (pInput.daten().kurse.size() <= 0)
 			throw fehler("GostBlockungsdatenManager.daten().kurse.size() <= 0");

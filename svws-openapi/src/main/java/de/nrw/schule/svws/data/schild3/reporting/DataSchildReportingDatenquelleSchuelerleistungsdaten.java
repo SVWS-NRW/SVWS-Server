@@ -6,22 +6,14 @@ import java.util.Vector;
 import java.util.stream.Collectors;
 
 import de.nrw.schule.svws.core.data.schild3.SchildReportingSchuelerleistungsdaten;
-import de.nrw.schule.svws.core.data.schild3.SchildReportingSchuelerlernabschnitt;
-import de.nrw.schule.svws.core.types.Note;
 import de.nrw.schule.svws.core.types.schild3.SchildReportingAttributTyp;
 import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.dto.current.schild.faecher.DTOFach;
-import de.nrw.schule.svws.db.dto.current.schild.klassen.DTOKlassen;
 import de.nrw.schule.svws.db.dto.current.schild.kurse.DTOKurs;
 import de.nrw.schule.svws.db.dto.current.schild.lehrer.DTOLehrer;
-import de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchueler;
 import de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
 import de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
-import de.nrw.schule.svws.db.dto.current.schild.schule.DTOJahrgang;
-import de.nrw.schule.svws.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.nrw.schule.svws.db.utils.OperationError;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotNull;
 
 /**
  * Die Definition der Schild-Reporting-Datenquelle "Schuelerleistungsdaten" 

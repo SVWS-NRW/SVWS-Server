@@ -1,6 +1,5 @@
 package de.nrw.schule.svws.core.abschluss.gost.belegpruefung;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -11,9 +10,9 @@ import de.nrw.schule.svws.core.abschluss.gost.GostBelegungsfehler;
 import de.nrw.schule.svws.core.data.gost.AbiturFachbelegung;
 import de.nrw.schule.svws.core.data.gost.AbiturFachbelegungHalbjahr;
 import de.nrw.schule.svws.core.data.gost.GostFach;
+import de.nrw.schule.svws.core.types.Note;
 import de.nrw.schule.svws.core.types.gost.GostFachbereich;
 import de.nrw.schule.svws.core.types.gost.GostHalbjahr;
-import de.nrw.schule.svws.core.types.Note;
 import de.nrw.schule.svws.core.types.gost.GostKursart;
 import jakarta.validation.constraints.NotNull;
 
@@ -93,13 +92,12 @@ public class KurszahlenUndWochenstunden extends GostBelegpruefung {
 		@NotNull Projektkurse projektkurse = ((@NotNull Projektkurse)pruefungen_vorher[0]);
 		
 		// Erzeuge zunächst Einträge mit 0 für die Kurszahlen und Wochenstunden in allen HashMaps
-		@NotNull Collection<@NotNull GostKursart> kursarten = GostKursart.values();
+		@NotNull GostKursart@NotNull[] kursarten = GostKursart.values();
 		for (GostHalbjahr halbjahr : GostHalbjahr.values()) {
 			@NotNull HashMap<@NotNull GostKursart, @NotNull Integer> kurszahlenHalbjahr = new HashMap<>();
 			kurszahlen.put(halbjahr, kurszahlenHalbjahr);
-			for (GostKursart kursart : kursarten) {
+			for (GostKursart kursart : kursarten)
 				kurszahlenHalbjahr.put(kursart, 0);
-			}
 			kurszahlenGrundkurse.put(halbjahr, 0);
 			kurszahlenLeistungskurse.put(halbjahr, 0);
 			kurszahlenAnrechenbar.put(halbjahr, 0);
