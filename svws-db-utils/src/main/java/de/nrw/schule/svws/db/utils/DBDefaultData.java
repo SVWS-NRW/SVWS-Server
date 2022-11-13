@@ -3,12 +3,12 @@ package de.nrw.schule.svws.db.utils;
 import java.util.HashMap;
 import java.util.List;
 
+import de.nrw.schule.svws.core.logger.Logger;
 import de.nrw.schule.svws.csv.CsvReader;
 import de.nrw.schule.svws.db.dto.DTOHelper;
 import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaRevisionen;
 import de.nrw.schule.svws.db.schema.SchemaTabelle;
-import de.nrw.schule.svws.logger.Logger;
 
 /**
  * Diese Klasse stellt den Zugriff auf alle Default-Daten aus der CSV-Schema-Definition

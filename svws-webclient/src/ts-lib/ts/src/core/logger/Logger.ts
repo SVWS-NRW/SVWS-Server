@@ -1,9 +1,9 @@
-import { JavaObject, cast_java_lang_Object } from '../java/lang/JavaObject';
-import { LogData, cast_de_nrw_schule_svws_logger_LogData } from '../logger/LogData';
-import { Consumer, cast_java_util_function_Consumer } from '../java/util/function/Consumer';
-import { JavaString, cast_java_lang_String } from '../java/lang/JavaString';
-import { Vector, cast_java_util_Vector } from '../java/util/Vector';
-import { LogLevel, cast_de_nrw_schule_svws_logger_LogLevel } from '../logger/LogLevel';
+import { JavaObject, cast_java_lang_Object } from '../../java/lang/JavaObject';
+import { LogData, cast_de_nrw_schule_svws_core_logger_LogData } from '../../core/logger/LogData';
+import { Consumer, cast_java_util_function_Consumer } from '../../java/util/function/Consumer';
+import { JavaString, cast_java_lang_String } from '../../java/lang/JavaString';
+import { Vector, cast_java_util_Vector } from '../../java/util/Vector';
+import { LogLevel, cast_de_nrw_schule_svws_core_logger_LogLevel } from '../../core/logger/LogLevel';
 
 export class Logger extends JavaObject {
 
@@ -126,21 +126,21 @@ export class Logger extends JavaObject {
 	 * Implementation for method overloads of 'log'
 	 */
 	public log(__param0 : LogData | LogLevel | String | number, __param1? : String | number, __param2? : String) : void {
-		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.logger.LogData')))) && (typeof __param1 === "undefined") && (typeof __param2 === "undefined")) {
-			let data : LogData = cast_de_nrw_schule_svws_logger_LogData(__param0);
+		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.logger.LogData')))) && (typeof __param1 === "undefined") && (typeof __param2 === "undefined")) {
+			let data : LogData = cast_de_nrw_schule_svws_core_logger_LogData(__param0);
 			for (let i : number = 0; i < this.consumer.size(); i++){
 				let c : Consumer<LogData> = this.consumer.get(i);
 				if (c === null) 
 					continue;
 				c.accept(data);
 			}
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.logger.LogLevel')))) && ((typeof __param1 !== "undefined") && typeof __param1 === "number") && ((typeof __param2 !== "undefined") && ((__param2 instanceof String) || (typeof __param2 === "string")))) {
-			let level : LogLevel = cast_de_nrw_schule_svws_logger_LogLevel(__param0);
+		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.logger.LogLevel')))) && ((typeof __param1 !== "undefined") && typeof __param1 === "number") && ((typeof __param2 !== "undefined") && ((__param2 instanceof String) || (typeof __param2 === "string")))) {
+			let level : LogLevel = cast_de_nrw_schule_svws_core_logger_LogLevel(__param0);
 			let indent : number = __param1 as number;
 			let text : String = __param2;
 			this.log(new LogData(level, indent, false, text));
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.logger.LogLevel')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof String) || (typeof __param1 === "string"))) && (typeof __param2 === "undefined")) {
-			let level : LogLevel = cast_de_nrw_schule_svws_logger_LogLevel(__param0);
+		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.logger.LogLevel')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof String) || (typeof __param1 === "string"))) && (typeof __param2 === "undefined")) {
+			let level : LogLevel = cast_de_nrw_schule_svws_core_logger_LogLevel(__param0);
 			let text : String = __param1;
 			this.log(level, this.indent, text);
 		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && ((__param1 instanceof String) || (typeof __param1 === "string"))) && (typeof __param2 === "undefined")) {
@@ -194,13 +194,13 @@ export class Logger extends JavaObject {
 	 * Implementation for method overloads of 'logLn'
 	 */
 	public logLn(__param0 : LogLevel | String | number, __param1? : String | number, __param2? : String) : void {
-		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.logger.LogLevel')))) && ((typeof __param1 !== "undefined") && typeof __param1 === "number") && ((typeof __param2 !== "undefined") && ((__param2 instanceof String) || (typeof __param2 === "string")))) {
-			let level : LogLevel = cast_de_nrw_schule_svws_logger_LogLevel(__param0);
+		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.logger.LogLevel')))) && ((typeof __param1 !== "undefined") && typeof __param1 === "number") && ((typeof __param2 !== "undefined") && ((__param2 instanceof String) || (typeof __param2 === "string")))) {
+			let level : LogLevel = cast_de_nrw_schule_svws_core_logger_LogLevel(__param0);
 			let indent : number = __param1 as number;
 			let text : String = __param2;
 			this.log(new LogData(level, indent, true, text));
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.logger.LogLevel')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof String) || (typeof __param1 === "string"))) && (typeof __param2 === "undefined")) {
-			let level : LogLevel = cast_de_nrw_schule_svws_logger_LogLevel(__param0);
+		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.logger.LogLevel')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof String) || (typeof __param1 === "string"))) && (typeof __param2 === "undefined")) {
+			let level : LogLevel = cast_de_nrw_schule_svws_core_logger_LogLevel(__param0);
 			let text : String = __param1;
 			this.logLn(level, this.indent, text);
 		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && ((__param1 instanceof String) || (typeof __param1 === "string"))) && (typeof __param2 === "undefined")) {
@@ -214,11 +214,11 @@ export class Logger extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.logger.Logger'].includes(name);
+		return ['de.nrw.schule.svws.core.logger.Logger'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_logger_Logger(obj : unknown) : Logger {
+export function cast_de_nrw_schule_svws_core_logger_Logger(obj : unknown) : Logger {
 	return obj as Logger;
 }

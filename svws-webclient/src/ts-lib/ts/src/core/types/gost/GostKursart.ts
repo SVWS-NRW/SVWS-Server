@@ -1,26 +1,42 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
 import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
-import { Collection, cast_java_util_Collection } from '../../../java/util/Collection';
 import { GostFachwahl, cast_de_nrw_schule_svws_core_data_gost_GostFachwahl } from '../../../core/data/gost/GostFachwahl';
+import { List, cast_java_util_List } from '../../../java/util/List';
+import { ZulaessigeKursart, cast_de_nrw_schule_svws_core_types_kurse_ZulaessigeKursart } from '../../../core/types/kurse/ZulaessigeKursart';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
+import { Arrays, cast_java_util_Arrays } from '../../../java/util/Arrays';
 import { IllegalArgumentException, cast_java_lang_IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
 import { GostBlockungKurs, cast_de_nrw_schule_svws_core_data_gost_GostBlockungKurs } from '../../../core/data/gost/GostBlockungKurs';
 
 export class GostKursart extends JavaObject {
 
+	/** the name of the enumeration value */
+	private readonly __name : String;
+
+	/** the ordinal value for the enumeration value */
+	private readonly __ordinal : number;
+
+	/** an array containing all values of this enumeration */
+	private static readonly all_values_by_ordinal : Array<GostKursart> = [];
+
+	/** an array containing all values of this enumeration indexed by their name*/
+	private static readonly all_values_by_name : Map<String, GostKursart> = new Map<String, GostKursart>();
+
+	public static readonly LK : GostKursart = new GostKursart("LK", 0, 1, "LK", "Leistungskurs", Arrays.asList(ZulaessigeKursart.LK1, ZulaessigeKursart.LK2));
+
+	public static readonly GK : GostKursart = new GostKursart("GK", 1, 2, "GK", "Grundkurs", Arrays.asList(ZulaessigeKursart.GKM, ZulaessigeKursart.GKS, ZulaessigeKursart.AB3, ZulaessigeKursart.AB4, ZulaessigeKursart.EFSP));
+
+	public static readonly ZK : GostKursart = new GostKursart("ZK", 2, 3, "ZK", "Zusatzkurs", Arrays.asList(ZulaessigeKursart.ZK));
+
+	public static readonly PJK : GostKursart = new GostKursart("PJK", 3, 4, "PJK", "Projektkurs", Arrays.asList(ZulaessigeKursart.PJK));
+
+	public static readonly VTF : GostKursart = new GostKursart("VTF", 4, 5, "VTF", "Vertiefungskurs", Arrays.asList(ZulaessigeKursart.VTF));
+
 	private static readonly FACHART_ID_FAKTOR : number = 1000;
 
-	private static readonly map : HashMap<String, GostKursart> = new HashMap();
+	private static readonly _mapKuerzel : HashMap<String, GostKursart> = new HashMap();
 
-	public static readonly LK : GostKursart = new GostKursart(1, "LK", "Leistungskurs");
-
-	public static readonly GK : GostKursart = new GostKursart(2, "GK", "Grundkurs");
-
-	public static readonly ZK : GostKursart = new GostKursart(3, "ZK", "Zusatzkurs");
-
-	public static readonly PJK : GostKursart = new GostKursart(4, "PJK", "Projektkurs");
-
-	public static readonly VTF : GostKursart = new GostKursart(5, "VTF", "Vertiefungskurs");
+	private static readonly _mapZulKursart : HashMap<ZulaessigeKursart, GostKursart> = new HashMap();
 
 	public readonly id : number;
 
@@ -28,6 +44,7 @@ export class GostKursart extends JavaObject {
 
 	public readonly beschreibung : String;
 
+	private readonly kursarten : List<ZulaessigeKursart>;
 
 	/**
 	 * Erzeugt eine neue Kursart für die Aufzählung.
@@ -36,12 +53,16 @@ export class GostKursart extends JavaObject {
 	 * @param kuerzel        das Kürzel der Kursart der Gymnasialen Oberstufe
 	 * @param beschreibung   die textuelle Beschreibung der allgemeinen Kursart der Gymnasialen Oberstufe
 	 */
-	private constructor(id : number, kuerzel : String, beschreibung : String) {
+	private constructor(name : string, ordinal : number, id : number, kuerzel : String, beschreibung : String, kursarten : List<ZulaessigeKursart>) {
 		super();
+		this.__name = name;
+		this.__ordinal = ordinal;
+		GostKursart.all_values_by_ordinal.push(this);
+		GostKursart.all_values_by_name.set(name, this);
 		this.id = id;
 		this.kuerzel = kuerzel;
 		this.beschreibung = beschreibung;
-		GostKursart.map.put(kuerzel, this);
+		this.kursarten = kursarten;
 	}
 
 	/**
@@ -63,17 +84,45 @@ export class GostKursart extends JavaObject {
 				return (anzahl === 2);
 			case "ZK": 
 				return (anzahl === 3);
+			default: 
+				return false;
 		}
-		return false;
 	}
 
 	/**
-	 * Gibt alle Kursarten der gymnasialen Oberstufe zurück.
-	 * 
-	 * @return eine {@link Collection} mit den Kursarten.
+	 * Gibt eine Map von den Kürzeln auf die Gost-Kursart zurück. 
+	 * Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
+	 *    
+	 * @return die Map von den Kürzeln auf die Gost-Kursarten
 	 */
-	public static values() : Collection<GostKursart> {
-		return GostKursart.map.values();
+	private static getMapByKuerzel() : HashMap<String, GostKursart> {
+		if (GostKursart._mapKuerzel.size() === 0) 
+			for (let k of GostKursart.values()) 
+				GostKursart._mapKuerzel.put(k.kuerzel, k);
+		return GostKursart._mapKuerzel;
+	}
+
+	/**
+	 * Gibt eine Map von den zulässigen Kursarten auf die Gost-Kursart zurück. 
+	 * Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
+	 *    
+	 * @return die Map von den zulässigen Kursarten auf die Gost-Kursarten
+	 */
+	private static getMapByZulKursart() : HashMap<ZulaessigeKursart, GostKursart> {
+		if (GostKursart._mapZulKursart.size() === 0) 
+			for (let k of GostKursart.values()) 
+				for (let zulKursart of k.kursarten) 
+					GostKursart._mapZulKursart.put(zulKursart, k);
+		return GostKursart._mapZulKursart;
+	}
+
+	/**
+	 * Gibt die Liste der zulässigen Kursarten zurück. 
+	 * 
+	 * @return die Liste der zulässigen Kursarten
+	 */
+	public getKursarten() : List<ZulaessigeKursart> {
+		return this.kursarten;
 	}
 
 	/**
@@ -97,8 +146,9 @@ export class GostKursart extends JavaObject {
 				return GostKursart.PJK;
 			case 5: 
 				return GostKursart.VTF;
+			default: 
+				throw new IllegalArgumentException("Invalid ID value.")
 		}
-		throw new IllegalArgumentException("Invalid ID value.")
 	}
 
 	/**
@@ -131,19 +181,31 @@ export class GostKursart extends JavaObject {
 				return GostKursart.PJK;
 			case 5: 
 				return GostKursart.VTF;
+			default: 
+				return null;
 		}
-		return null;
 	}
 
 	/**
-	 * Gibt die Kursart aus dem Kürzel der Kursart zurück.
+	 * Gibt die Gost-Kursart aus dem Kürzel der Kursart zurück.
 	 * 
 	 * @param kuerzel    das Kürzel der Kursart
 	 * 
 	 * @return die Kursart oder null, falls das Kürzel ungültig ist 
 	 */
 	public static fromKuerzel(kuerzel : String | null) : GostKursart | null {
-		return GostKursart.map.get(kuerzel);
+		return GostKursart.getMapByKuerzel().get(kuerzel);
+	}
+
+	/**
+	 * Bestimmt die Gost-Kursart anhand der übergebenen zulässigen Kursart
+	 * 
+	 * @param kursart   die Kursart
+	 * 
+	 * @return die Gost-Kursart
+	 */
+	public static fromKursart(kursart : ZulaessigeKursart | null) : GostKursart | null {
+		return GostKursart.getMapByZulKursart().get(kursart);
 	}
 
 	/**
@@ -166,6 +228,7 @@ export class GostKursart extends JavaObject {
 
 	/**
 	 * Berechnet anhand des Kurs-Objektes die FachartID.
+	 *
 	 * @param pKurs Das Kurs-Objekt.
 	 * 
 	 * @return pKurs.fachID * {@link #FACHART_ID_FAKTOR} + pKurs.kursartID
@@ -213,6 +276,79 @@ export class GostKursart extends JavaObject {
 
 	public toString() : String {
 		return this.kuerzel;
+	}
+
+	/**
+	 * Returns the name of this enumeration value.
+	 *
+	 * @returns the name
+	 */
+	private name() : String {
+		return this.__name;
+	}
+
+	/**
+	 * Returns the ordinal value of this enumeration value.
+	 *
+	 * @returns the ordinal value
+	 */
+	private ordinal() : number {
+		return this.__ordinal;
+	}
+
+	/**
+	 * Returns true if this and the other enumeration values are equal.
+	 *
+	 * @param other   the other enumeration value
+	 *
+	 * @returns true if they are equal and false otherwise
+	 */
+	public equals(other : JavaObject) : boolean {
+		if (!(other instanceof GostKursart))
+			return false;
+		return this === other;
+	}
+
+	/**
+	 * Returns the ordinal value as hashcode, since the ordinal value is unique.
+	 *
+	 * @returns the ordinal value as hashcode
+	 */
+	public hashCode() : number {
+		return this.__ordinal;
+	}
+
+	/**
+	 * Compares this enumeration value with the other enumeration value by their ordinal value.
+	 *
+	 * @param other   the other enumeration value
+	 *
+	 * @returns a negative, zero or postive value as this enumeration value is less than, equal to
+	 *          or greater than the other enumeration value
+	 */
+	public compareTo(other : GostKursart) : number {
+		return this.__ordinal - other.__ordinal;
+	}
+
+	/**
+	 * Returns an array with enumeration values.
+	 *
+	 * @returns the array with enumeration values
+	 */
+	public static values() : Array<GostKursart> {
+		return [...this.all_values_by_ordinal];
+	}
+
+	/**
+	 * Returns the enumeration value with the specified name.
+	 *
+	 * @param name   the name of the enumeration value
+	 *
+	 * @returns the enumeration values or null
+	 */
+	public static valueOf(name : String) : GostKursart | null {
+		let tmp : GostKursart | undefined = this.all_values_by_name.get(name);
+		return (!tmp) ? null : tmp;
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

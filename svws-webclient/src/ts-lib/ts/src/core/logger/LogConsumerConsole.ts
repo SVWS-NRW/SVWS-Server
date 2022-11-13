@@ -1,8 +1,8 @@
-import { JavaObject, cast_java_lang_Object } from '../java/lang/JavaObject';
-import { LogData, cast_de_nrw_schule_svws_logger_LogData } from '../logger/LogData';
-import { Consumer, cast_java_util_function_Consumer } from '../java/util/function/Consumer';
-import { JavaString, cast_java_lang_String } from '../java/lang/JavaString';
-import { System, cast_java_lang_System } from '../java/lang/System';
+import { JavaObject, cast_java_lang_Object } from '../../java/lang/JavaObject';
+import { LogData, cast_de_nrw_schule_svws_core_logger_LogData } from '../../core/logger/LogData';
+import { Consumer, cast_java_util_function_Consumer } from '../../java/util/function/Consumer';
+import { JavaString, cast_java_lang_String } from '../../java/lang/JavaString';
+import { System, cast_java_lang_System } from '../../java/lang/System';
 
 export class LogConsumerConsole extends JavaObject implements Consumer<LogData> {
 
@@ -57,11 +57,11 @@ export class LogConsumerConsole extends JavaObject implements Consumer<LogData> 
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.logger.LogConsumerConsole', 'java.util.function.Consumer'].includes(name);
+		return ['java.util.function.Consumer', 'de.nrw.schule.svws.core.logger.LogConsumerConsole'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_logger_LogConsumerConsole(obj : unknown) : LogConsumerConsole {
+export function cast_de_nrw_schule_svws_core_logger_LogConsumerConsole(obj : unknown) : LogConsumerConsole {
 	return obj as LogConsumerConsole;
 }

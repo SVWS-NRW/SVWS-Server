@@ -6,14 +6,14 @@ import java.util.Vector;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+import de.nrw.schule.svws.core.logger.LogConsumerConsole;
+import de.nrw.schule.svws.core.logger.LogConsumerVector;
+import de.nrw.schule.svws.core.logger.LogData;
+import de.nrw.schule.svws.core.logger.Logger;
 import de.nrw.schule.svws.db.converter.DBAttributeConverter;
 import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaTabelle;
 import de.nrw.schule.svws.db.schema.SchemaTabelleSpalte;
-import de.nrw.schule.svws.logger.LogConsumerConsole;
-import de.nrw.schule.svws.logger.LogConsumerVector;
-import de.nrw.schule.svws.logger.LogData;
-import de.nrw.schule.svws.logger.Logger;
 
 /**
  * Diese Klasse stellt Methoden zum Erstellen des Java Quellcodes

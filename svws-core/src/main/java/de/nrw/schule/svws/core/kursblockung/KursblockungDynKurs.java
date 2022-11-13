@@ -3,8 +3,8 @@ package de.nrw.schule.svws.core.kursblockung;
 import java.util.Random;
 
 import de.nrw.schule.svws.core.adt.collection.LinkedCollection;
-import de.nrw.schule.svws.logger.LogLevel;
-import de.nrw.schule.svws.logger.Logger;
+import de.nrw.schule.svws.core.logger.LogLevel;
+import de.nrw.schule.svws.core.logger.Logger;
 import jakarta.validation.constraints.NotNull;
 
 /** Ein Kurs-Objekt (während des Blockungsvorganges).

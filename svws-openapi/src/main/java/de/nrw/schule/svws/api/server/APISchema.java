@@ -3,14 +3,14 @@ package de.nrw.schule.svws.api.server;
 import java.util.List;
 
 import de.nrw.schule.svws.api.OpenAPIApplication;
+import de.nrw.schule.svws.core.logger.LogConsumerVector;
+import de.nrw.schule.svws.core.logger.Logger;
 import de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenz;
 import de.nrw.schule.svws.data.schema.DataSQLite;
 import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.dto.current.svws.db.DTODBVersion;
 import de.nrw.schule.svws.db.schema.SchemaRevisionen;
 import de.nrw.schule.svws.db.utils.schema.DBSchemaManager;
-import de.nrw.schule.svws.logger.LogConsumerVector;
-import de.nrw.schule.svws.logger.Logger;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;

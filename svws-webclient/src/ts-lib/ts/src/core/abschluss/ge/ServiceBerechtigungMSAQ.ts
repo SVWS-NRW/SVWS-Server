@@ -3,7 +3,7 @@ import { GEAbschlussFach, cast_de_nrw_schule_svws_core_data_abschluss_GEAbschlus
 import { Service, cast_de_nrw_schule_svws_core_Service } from '../../../core/Service';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 import { GELeistungsdifferenzierteKursart, cast_de_nrw_schule_svws_core_types_ge_GELeistungsdifferenzierteKursart } from '../../../core/types/ge/GELeistungsdifferenzierteKursart';
-import { LogLevel, cast_de_nrw_schule_svws_logger_LogLevel } from '../../../logger/LogLevel';
+import { LogLevel, cast_de_nrw_schule_svws_core_logger_LogLevel } from '../../../core/logger/LogLevel';
 import { Predicate, cast_java_util_function_Predicate } from '../../../java/util/function/Predicate';
 import { GEAbschlussFaecher, cast_de_nrw_schule_svws_core_data_abschluss_GEAbschlussFaecher } from '../../../core/data/abschluss/GEAbschlussFaecher';
 import { AbschlussErgebnis, cast_de_nrw_schule_svws_core_data_abschluss_AbschlussErgebnis } from '../../../core/data/abschluss/AbschlussErgebnis';

@@ -8,12 +8,12 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.Vector;
 
+import de.nrw.schule.svws.core.logger.LogConsumerConsole;
+import de.nrw.schule.svws.core.logger.Logger;
 import de.nrw.schule.svws.db.schema.DBSchemaViews;
 import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaRevisionen;
 import de.nrw.schule.svws.db.schema.View;
-import de.nrw.schule.svws.logger.LogConsumerConsole;
-import de.nrw.schule.svws.logger.Logger;
 import de.nrw.schule.svws.shell.CommandLineException;
 import de.nrw.schule.svws.shell.CommandLineOption;
 import de.nrw.schule.svws.shell.CommandLineParser;

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import de.nrw.schule.svws.config.SVWSKonfiguration;
+import de.nrw.schule.svws.core.logger.Logger;
 import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.DBException;
 import de.nrw.schule.svws.db.schema.DBSchemaViews;
@@ -17,7 +18,6 @@ import de.nrw.schule.svws.db.schema.SchemaTabelleSpalte;
 import de.nrw.schule.svws.db.schema.SchemaTabelleTrigger;
 import de.nrw.schule.svws.db.schema.SchemaTabelleUniqueIndex;
 import de.nrw.schule.svws.db.schema.View;
-import de.nrw.schule.svws.logger.Logger;
 
 /**
  * Diese Klasse enthält die Methode zur Durchführung von Datenbank-Updates 

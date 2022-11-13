@@ -2,7 +2,7 @@ package de.nrw.schule.svws.core.kursblockung;
 
 import java.util.Random;
 
-import de.nrw.schule.svws.logger.Logger;
+import de.nrw.schule.svws.core.logger.Logger;
 import jakarta.validation.constraints.NotNull;
 
 /** Ein Algorithmus des <b>Typs K</b> dient dazu Kurse auf Schienen zu verteilen. Dabei dürfen Kurse über 1 oder mehr

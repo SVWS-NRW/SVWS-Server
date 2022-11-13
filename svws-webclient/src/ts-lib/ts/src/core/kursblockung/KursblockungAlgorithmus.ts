@@ -10,7 +10,7 @@ import { KursblockungAlgorithmusKFachwahlmatrix, cast_de_nrw_schule_svws_core_ku
 import { Service, cast_de_nrw_schule_svws_core_Service } from '../../core/Service';
 import { KursblockungAlgorithmusSMatching, cast_de_nrw_schule_svws_core_kursblockung_KursblockungAlgorithmusSMatching } from '../../core/kursblockung/KursblockungAlgorithmusSMatching';
 import { KursblockungAlgorithmusKSchuelervorschlag, cast_de_nrw_schule_svws_core_kursblockung_KursblockungAlgorithmusKSchuelervorschlag } from '../../core/kursblockung/KursblockungAlgorithmusKSchuelervorschlag';
-import { LogLevel, cast_de_nrw_schule_svws_logger_LogLevel } from '../../logger/LogLevel';
+import { LogLevel, cast_de_nrw_schule_svws_core_logger_LogLevel } from '../../core/logger/LogLevel';
 import { System, cast_java_lang_System } from '../../java/lang/System';
 import { KursblockungAlgorithmusSMatchingW, cast_de_nrw_schule_svws_core_kursblockung_KursblockungAlgorithmusSMatchingW } from '../../core/kursblockung/KursblockungAlgorithmusSMatchingW';
 import { Random, cast_java_util_Random } from '../../java/util/Random';

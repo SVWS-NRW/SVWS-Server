@@ -15,6 +15,8 @@ import java.util.Vector;
 import java.util.stream.Collectors;
 
 import de.nrw.schule.svws.config.SVWSKonfiguration;
+import de.nrw.schule.svws.core.logger.LogLevel;
+import de.nrw.schule.svws.core.logger.Logger;
 import de.nrw.schule.svws.core.types.KursFortschreibungsart;
 import de.nrw.schule.svws.core.types.PersonalTyp;
 import de.nrw.schule.svws.core.types.SchuelerStatus;
@@ -68,8 +70,6 @@ import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaTabelle;
 import de.nrw.schule.svws.db.schema.SchemaTabelleSpalte;
 import de.nrw.schule.svws.db.utils.data.Schule;
-import de.nrw.schule.svws.logger.LogLevel;
-import de.nrw.schule.svws.logger.Logger;
 import jakarta.persistence.Column;
 import jakarta.persistence.PersistenceException;
 

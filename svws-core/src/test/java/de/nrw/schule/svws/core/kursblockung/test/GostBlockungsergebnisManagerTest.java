@@ -20,12 +20,12 @@ import de.nrw.schule.svws.core.data.gost.GostBlockungsergebnisKurs;
 import de.nrw.schule.svws.core.data.gost.GostBlockungsergebnisSchiene;
 import de.nrw.schule.svws.core.data.gost.GostFachwahl;
 import de.nrw.schule.svws.core.kursblockung.KursblockungAlgorithmus;
+import de.nrw.schule.svws.core.logger.LogData;
+import de.nrw.schule.svws.core.logger.LogLevel;
+import de.nrw.schule.svws.core.logger.Logger;
 import de.nrw.schule.svws.core.types.gost.GostKursart;
 import de.nrw.schule.svws.core.utils.gost.GostBlockungsdatenManager;
 import de.nrw.schule.svws.core.utils.gost.GostBlockungsergebnisManager;
-import de.nrw.schule.svws.logger.LogData;
-import de.nrw.schule.svws.logger.LogLevel;
-import de.nrw.schule.svws.logger.Logger;
 
 /** 
  * Testet den {@link GostBlockungsergebnisManager}. 

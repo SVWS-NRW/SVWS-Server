@@ -2,7 +2,7 @@ package de.nrw.schule.svws.core.klausurblockung;
 
 import java.util.Random;
 
-import de.nrw.schule.svws.logger.Logger;
+import de.nrw.schule.svws.core.logger.Logger;
 import jakarta.validation.constraints.NotNull;
 
 /** Die Strategie 'Greedy2' verteilt die Klausuren <b>mit einem höheren Knotengrad</b> auf bereits existierende Schienen

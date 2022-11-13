@@ -19,9 +19,9 @@ import com.healthmarketscience.jackcess.DatabaseBuilder;
 import com.healthmarketscience.jackcess.Row;
 import com.healthmarketscience.jackcess.Table;
 
-import de.nrw.schule.svws.logger.LogConsumerConsole;
-import de.nrw.schule.svws.logger.LogLevel;
-import de.nrw.schule.svws.logger.Logger;
+import de.nrw.schule.svws.core.logger.LogConsumerConsole;
+import de.nrw.schule.svws.core.logger.LogLevel;
+import de.nrw.schule.svws.core.logger.Logger;
 import de.nrw.schule.svws.shell.CommandLineException;
 import de.nrw.schule.svws.shell.CommandLineOption;
 import de.nrw.schule.svws.shell.CommandLineParser;

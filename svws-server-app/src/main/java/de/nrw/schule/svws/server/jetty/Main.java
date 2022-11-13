@@ -7,13 +7,13 @@ import de.nrw.schule.svws.api.ResourceFile;
 import de.nrw.schule.svws.api.SVWSVersion;
 import de.nrw.schule.svws.config.SVWSKonfiguration;
 import de.nrw.schule.svws.core.data.db.DBSchemaListeEintrag;
+import de.nrw.schule.svws.core.logger.LogConsumerConsole;
+import de.nrw.schule.svws.core.logger.Logger;
 import de.nrw.schule.svws.db.Benutzer;
 import de.nrw.schule.svws.db.DBConfig;
 import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.utils.DBDefaultData;
 import de.nrw.schule.svws.db.utils.schema.DBSchemaManager;
-import de.nrw.schule.svws.logger.LogConsumerConsole;
-import de.nrw.schule.svws.logger.Logger;
 
 /**
  * Diese Klasse stellt die main-Methode für die Kommandozeilen-Applikation

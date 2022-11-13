@@ -4,9 +4,9 @@ import java.util.Random;
 import java.util.Vector;
 
 import de.nrw.schule.svws.core.Service;
+import de.nrw.schule.svws.core.logger.LogLevel;
 import de.nrw.schule.svws.core.utils.gost.GostBlockungsdatenManager;
 import de.nrw.schule.svws.core.utils.gost.GostBlockungsergebnisManager;
-import de.nrw.schule.svws.logger.LogLevel;
 import jakarta.validation.constraints.NotNull;
 
 /** Dieser Service wandelt die Eingabedaten {@link GostBlockungsdatenManager} in dynamische Blockungsdaten

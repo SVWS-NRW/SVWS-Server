@@ -2,7 +2,7 @@ package de.nrw.schule.svws.core.klausurblockung;
 
 import java.util.Random;
 
-import de.nrw.schule.svws.logger.Logger;
+import de.nrw.schule.svws.core.logger.Logger;
 import jakarta.validation.constraints.NotNull;
 
 /** Die Strategie verteilt wie die Strategie {@link KlausurblockungSchienenAlgorithmusGreedy1}, nur werden bei dieser

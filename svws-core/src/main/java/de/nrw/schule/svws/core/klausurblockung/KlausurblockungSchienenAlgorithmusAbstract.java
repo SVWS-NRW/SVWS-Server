@@ -2,7 +2,7 @@ package de.nrw.schule.svws.core.klausurblockung;
 
 import java.util.Random;
 
-import de.nrw.schule.svws.logger.Logger;
+import de.nrw.schule.svws.core.logger.Logger;
 import jakarta.validation.constraints.NotNull;
 
 /** Ein Algorithmus der diese Klasse erweitert dient dazu Klausuren auf Schienen zu verteilen. Ziel ist es die minimale

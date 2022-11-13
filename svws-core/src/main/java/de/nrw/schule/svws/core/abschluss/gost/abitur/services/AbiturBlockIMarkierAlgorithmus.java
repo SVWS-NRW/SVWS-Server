@@ -3,7 +3,7 @@ package de.nrw.schule.svws.core.abschluss.gost.abitur.services;
 
 import de.nrw.schule.svws.core.Service;
 import de.nrw.schule.svws.core.data.gost.Abiturdaten;
-import de.nrw.schule.svws.logger.LogLevel;
+import de.nrw.schule.svws.core.logger.LogLevel;
 
 
 /**

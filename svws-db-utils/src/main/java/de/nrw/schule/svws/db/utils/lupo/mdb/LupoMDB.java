@@ -21,6 +21,7 @@ import de.nrw.schule.svws.core.data.gost.GostFach;
 import de.nrw.schule.svws.core.data.gost.GostLeistungen;
 import de.nrw.schule.svws.core.data.schueler.Sprachbelegung;
 import de.nrw.schule.svws.core.data.schueler.Sprachendaten;
+import de.nrw.schule.svws.core.logger.Logger;
 import de.nrw.schule.svws.core.types.Note;
 import de.nrw.schule.svws.core.types.SchuelerStatus;
 import de.nrw.schule.svws.core.types.fach.ZulaessigesFach;
@@ -46,7 +47,6 @@ import de.nrw.schule.svws.db.dto.current.schild.schule.DTOJahrgang;
 import de.nrw.schule.svws.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.nrw.schule.svws.db.utils.data.Schule;
 import de.nrw.schule.svws.db.utils.gost.GostSchueler;
-import de.nrw.schule.svws.logger.Logger;
 import jakarta.persistence.TypedQuery;
 
 

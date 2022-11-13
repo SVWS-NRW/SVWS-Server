@@ -5,7 +5,7 @@ import java.util.Random;
 import de.nrw.schule.svws.core.Service;
 import de.nrw.schule.svws.core.data.klausurblockung.KlausurblockungSchienenInput;
 import de.nrw.schule.svws.core.data.klausurblockung.KlausurblockungSchienenOutputs;
-import de.nrw.schule.svws.logger.LogLevel;
+import de.nrw.schule.svws.core.logger.LogLevel;
 import jakarta.validation.constraints.NotNull;
 
 /** Algorithmus zur Blockung von Klausuren auf eine minimale Anzahl von Schienen (ergo Klausurtage).

@@ -5,9 +5,9 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Scanner;
 
+import de.nrw.schule.svws.core.logger.LogConsumerConsole;
+import de.nrw.schule.svws.core.logger.Logger;
 import de.nrw.schule.svws.db.utils.lupo.mdb.LupoMDB;
-import de.nrw.schule.svws.logger.LogConsumerConsole;
-import de.nrw.schule.svws.logger.Logger;
 import de.nrw.schule.svws.shell.CommandLineException;
 import de.nrw.schule.svws.shell.CommandLineOption;
 import de.nrw.schule.svws.shell.CommandLineParser;

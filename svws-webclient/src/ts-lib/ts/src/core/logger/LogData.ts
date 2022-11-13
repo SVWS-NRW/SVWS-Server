@@ -1,9 +1,9 @@
-import { JavaObject, cast_java_lang_Object } from '../java/lang/JavaObject';
-import { Comparable, cast_java_lang_Comparable } from '../java/lang/Comparable';
-import { JavaString, cast_java_lang_String } from '../java/lang/JavaString';
-import { Arrays, cast_java_util_Arrays } from '../java/util/Arrays';
-import { LogLevel, cast_de_nrw_schule_svws_logger_LogLevel } from '../logger/LogLevel';
-import { System, cast_java_lang_System } from '../java/lang/System';
+import { JavaObject, cast_java_lang_Object } from '../../java/lang/JavaObject';
+import { Comparable, cast_java_lang_Comparable } from '../../java/lang/Comparable';
+import { JavaString, cast_java_lang_String } from '../../java/lang/JavaString';
+import { Arrays, cast_java_util_Arrays } from '../../java/util/Arrays';
+import { LogLevel, cast_de_nrw_schule_svws_core_logger_LogLevel } from '../../core/logger/LogLevel';
+import { System, cast_java_lang_System } from '../../java/lang/System';
 
 export class LogData extends JavaObject implements Comparable<LogData | null> {
 
@@ -112,11 +112,11 @@ export class LogData extends JavaObject implements Comparable<LogData | null> {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.logger.LogData', 'java.lang.Comparable'].includes(name);
+		return ['de.nrw.schule.svws.core.logger.LogData', 'java.lang.Comparable'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_logger_LogData(obj : unknown) : LogData {
+export function cast_de_nrw_schule_svws_core_logger_LogData(obj : unknown) : LogData {
 	return obj as LogData;
 }

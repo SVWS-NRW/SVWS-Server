@@ -5,15 +5,15 @@ import java.util.Scanner;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import de.nrw.schule.svws.config.SVWSKonfiguration;
+import de.nrw.schule.svws.core.logger.LogConsumerConsole;
+import de.nrw.schule.svws.core.logger.LogLevel;
+import de.nrw.schule.svws.core.logger.Logger;
 import de.nrw.schule.svws.db.Benutzer;
 import de.nrw.schule.svws.db.DBConfig;
 import de.nrw.schule.svws.db.DBDriver;
 import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.DBException;
 import de.nrw.schule.svws.db.utils.schema.DBSchemaManager;
-import de.nrw.schule.svws.logger.LogConsumerConsole;
-import de.nrw.schule.svws.logger.LogLevel;
-import de.nrw.schule.svws.logger.Logger;
 import de.nrw.schule.svws.shell.CommandLineException;
 import de.nrw.schule.svws.shell.CommandLineOption;
 import de.nrw.schule.svws.shell.CommandLineParser;

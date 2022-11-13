@@ -3,9 +3,9 @@ package de.nrw.schule.svws.core.abschluss.bk.a;
 import de.nrw.schule.svws.core.Service;
 import de.nrw.schule.svws.core.abschluss.AbschlussManagerBerufsbildend;
 import de.nrw.schule.svws.core.data.abschluss.AbschlussErgebnisBerufsbildend;
+import de.nrw.schule.svws.core.logger.LogLevel;
 import de.nrw.schule.svws.core.types.fach.Sprachreferenzniveau;
 import de.nrw.schule.svws.core.types.schule.SchulabschlussAllgemeinbildend;
-import de.nrw.schule.svws.logger.LogLevel;
 import jakarta.validation.constraints.NotNull;
 
 

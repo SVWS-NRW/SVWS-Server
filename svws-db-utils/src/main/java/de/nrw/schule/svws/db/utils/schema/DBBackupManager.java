@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import de.nrw.schule.svws.config.SVWSKonfiguration;
+import de.nrw.schule.svws.core.logger.LogLevel;
+import de.nrw.schule.svws.core.logger.Logger;
 import de.nrw.schule.svws.db.Benutzer;
 import de.nrw.schule.svws.db.DBConfig;
 import de.nrw.schule.svws.db.DBDriver;
@@ -14,8 +16,6 @@ import de.nrw.schule.svws.db.DBException;
 import de.nrw.schule.svws.db.dto.current.svws.db.DTODBVersion;
 import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaTabelle;
-import de.nrw.schule.svws.logger.LogLevel;
-import de.nrw.schule.svws.logger.Logger;
 
 /**
  * Diese Klasse stellt Methoden für den Export in eine SQLite-Datenbank und

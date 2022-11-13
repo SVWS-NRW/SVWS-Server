@@ -1,6 +1,6 @@
 import { JavaObject, cast_java_lang_Object } from '../java/lang/JavaObject';
-import { Logger, cast_de_nrw_schule_svws_logger_Logger } from '../logger/Logger';
-import { LogConsumerVector, cast_de_nrw_schule_svws_logger_LogConsumerVector } from '../logger/LogConsumerVector';
+import { Logger, cast_de_nrw_schule_svws_core_logger_Logger } from '../core/logger/Logger';
+import { LogConsumerVector, cast_de_nrw_schule_svws_core_logger_LogConsumerVector } from '../core/logger/LogConsumerVector';
 
 export abstract class Service<T_IN, T_OUT> extends JavaObject {
 

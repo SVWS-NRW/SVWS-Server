@@ -7,7 +7,7 @@ import de.nrw.schule.svws.core.adt.collection.LinkedCollection;
 import de.nrw.schule.svws.core.kursblockung.satsolver.SatSolver3;
 import de.nrw.schule.svws.core.kursblockung.satsolver.SatSolverA;
 import de.nrw.schule.svws.core.kursblockung.satsolver.SatSolverWrapper;
-import de.nrw.schule.svws.logger.Logger;
+import de.nrw.schule.svws.core.logger.Logger;
 import jakarta.validation.constraints.NotNull;
 
 /**

@@ -5,9 +5,9 @@ import de.nrw.schule.svws.core.abschluss.AbschlussManager;
 import de.nrw.schule.svws.core.data.abschluss.AbschlussErgebnis;
 import de.nrw.schule.svws.core.data.abschluss.GEAbschlussFach;
 import de.nrw.schule.svws.core.data.abschluss.GEAbschlussFaecher;
+import de.nrw.schule.svws.core.logger.LogLevel;
 import de.nrw.schule.svws.core.types.ge.GELeistungsdifferenzierteKursart;
 import de.nrw.schule.svws.core.types.schule.SchulabschlussAllgemeinbildend;
-import de.nrw.schule.svws.logger.LogLevel;
 import jakarta.validation.constraints.NotNull;
 
 import java.util.Arrays;

@@ -4,7 +4,7 @@ import { ServiceAbschlussHA10, cast_de_nrw_schule_svws_core_abschluss_ge_Service
 import { Service, cast_de_nrw_schule_svws_core_Service } from '../../../core/Service';
 import { ServiceBerechtigungMSAQ, cast_de_nrw_schule_svws_core_abschluss_ge_ServiceBerechtigungMSAQ } from '../../../core/abschluss/ge/ServiceBerechtigungMSAQ';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
-import { LogLevel, cast_de_nrw_schule_svws_logger_LogLevel } from '../../../logger/LogLevel';
+import { LogLevel, cast_de_nrw_schule_svws_core_logger_LogLevel } from '../../../core/logger/LogLevel';
 import { GEAbschlussFaecher, cast_de_nrw_schule_svws_core_data_abschluss_GEAbschlussFaecher } from '../../../core/data/abschluss/GEAbschlussFaecher';
 import { AbschlussErgebnis, cast_de_nrw_schule_svws_core_data_abschluss_AbschlussErgebnis } from '../../../core/data/abschluss/AbschlussErgebnis';
 import { SchulabschlussAllgemeinbildend, cast_de_nrw_schule_svws_core_types_schule_SchulabschlussAllgemeinbildend } from '../../../core/types/schule/SchulabschlussAllgemeinbildend';

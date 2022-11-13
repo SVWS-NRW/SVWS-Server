@@ -5,7 +5,7 @@ import { Service, cast_de_nrw_schule_svws_core_Service } from '../../../../core/
 import { Sprachreferenzniveau, cast_de_nrw_schule_svws_core_types_fach_Sprachreferenzniveau } from '../../../../core/types/fach/Sprachreferenzniveau';
 import { AbschlussErgebnisBerufsbildend, cast_de_nrw_schule_svws_core_data_abschluss_AbschlussErgebnisBerufsbildend } from '../../../../core/data/abschluss/AbschlussErgebnisBerufsbildend';
 import { BKAnlageAFaecher, cast_de_nrw_schule_svws_core_abschluss_bk_a_BKAnlageAFaecher } from '../../../../core/abschluss/bk/a/BKAnlageAFaecher';
-import { LogLevel, cast_de_nrw_schule_svws_logger_LogLevel } from '../../../../logger/LogLevel';
+import { LogLevel, cast_de_nrw_schule_svws_core_logger_LogLevel } from '../../../../core/logger/LogLevel';
 
 export class BKAnlageA01Abschluss extends Service<BKAnlageAFaecher, AbschlussErgebnisBerufsbildend> {
 

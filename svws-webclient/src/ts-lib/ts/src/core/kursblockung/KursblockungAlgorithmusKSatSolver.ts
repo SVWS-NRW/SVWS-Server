@@ -5,7 +5,7 @@ import { HashMap, cast_java_util_HashMap } from '../../java/util/HashMap';
 import { SatSolverWrapper, cast_de_nrw_schule_svws_core_kursblockung_satsolver_SatSolverWrapper } from '../../core/kursblockung/satsolver/SatSolverWrapper';
 import { LinkedCollection, cast_de_nrw_schule_svws_core_adt_collection_LinkedCollection } from '../../core/adt/collection/LinkedCollection';
 import { KursblockungDynKurs, cast_de_nrw_schule_svws_core_kursblockung_KursblockungDynKurs } from '../../core/kursblockung/KursblockungDynKurs';
-import { Logger, cast_de_nrw_schule_svws_logger_Logger } from '../../logger/Logger';
+import { Logger, cast_de_nrw_schule_svws_core_logger_Logger } from '../../core/logger/Logger';
 import { System, cast_java_lang_System } from '../../java/lang/System';
 import { JavaInteger, cast_java_lang_Integer } from '../../java/lang/JavaInteger';
 import { Random, cast_java_util_Random } from '../../java/util/Random';

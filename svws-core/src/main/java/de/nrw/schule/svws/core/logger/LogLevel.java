@@ -1,4 +1,4 @@
-package de.nrw.schule.svws.logger;
+package de.nrw.schule.svws.core.logger;
 
 /**
  * Eine Aufzählung mit den unterschiedlichen Log-Leveln für das Logging 

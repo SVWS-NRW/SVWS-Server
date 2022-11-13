@@ -1,4 +1,4 @@
-import { JavaObject, cast_java_lang_Object } from '../java/lang/JavaObject';
+import { JavaObject, cast_java_lang_Object } from '../../java/lang/JavaObject';
 
 export class LogLevel extends JavaObject {
 
@@ -132,11 +132,11 @@ export class LogLevel extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.logger.LogLevel'].includes(name);
+		return ['de.nrw.schule.svws.core.logger.LogLevel'].includes(name);
 	}
 
 }
 
-export function cast_de_nrw_schule_svws_logger_LogLevel(obj : unknown) : LogLevel {
+export function cast_de_nrw_schule_svws_core_logger_LogLevel(obj : unknown) : LogLevel {
 	return obj as LogLevel;
 }

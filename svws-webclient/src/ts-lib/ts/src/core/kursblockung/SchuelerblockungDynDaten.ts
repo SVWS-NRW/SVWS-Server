@@ -6,8 +6,8 @@ import { SchuelerblockungOutputFachwahlZuKurs, cast_de_nrw_schule_svws_core_data
 import { SchuelerblockungInputFachwahl, cast_de_nrw_schule_svws_core_data_kursblockung_SchuelerblockungInputFachwahl } from '../../core/data/kursblockung/SchuelerblockungInputFachwahl';
 import { SchuelerblockungException, cast_de_nrw_schule_svws_core_kursblockung_SchuelerblockungException } from '../../core/kursblockung/SchuelerblockungException';
 import { JavaString, cast_java_lang_String } from '../../java/lang/JavaString';
-import { Logger, cast_de_nrw_schule_svws_logger_Logger } from '../../logger/Logger';
-import { LogLevel, cast_de_nrw_schule_svws_logger_LogLevel } from '../../logger/LogLevel';
+import { Logger, cast_de_nrw_schule_svws_core_logger_Logger } from '../../core/logger/Logger';
+import { LogLevel, cast_de_nrw_schule_svws_core_logger_LogLevel } from '../../core/logger/LogLevel';
 import { System, cast_java_lang_System } from '../../java/lang/System';
 import { JavaInteger, cast_java_lang_Integer } from '../../java/lang/JavaInteger';
 import { SchuelerblockungInput, cast_de_nrw_schule_svws_core_data_kursblockung_SchuelerblockungInput } from '../../core/data/kursblockung/SchuelerblockungInput';

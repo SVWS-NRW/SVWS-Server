@@ -1,7 +1,7 @@
 package de.nrw.schule.svws.core;
 
-import de.nrw.schule.svws.logger.LogConsumerVector;
-import de.nrw.schule.svws.logger.Logger;
+import de.nrw.schule.svws.core.logger.LogConsumerVector;
+import de.nrw.schule.svws.core.logger.Logger;
 import jakarta.validation.constraints.NotNull;
 
 /**

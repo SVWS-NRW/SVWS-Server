@@ -9,7 +9,7 @@ import { KlausurblockungSchienenAlgorithmusGreedy1, cast_de_nrw_schule_svws_core
 import { Service, cast_de_nrw_schule_svws_core_Service } from '../../core/Service';
 import { KlausurblockungSchienenAlgorithmusGreedy6, cast_de_nrw_schule_svws_core_klausurblockung_KlausurblockungSchienenAlgorithmusGreedy6 } from '../../core/klausurblockung/KlausurblockungSchienenAlgorithmusGreedy6';
 import { System, cast_java_lang_System } from '../../java/lang/System';
-import { LogLevel, cast_de_nrw_schule_svws_logger_LogLevel } from '../../logger/LogLevel';
+import { LogLevel, cast_de_nrw_schule_svws_core_logger_LogLevel } from '../../core/logger/LogLevel';
 import { KlausurblockungSchienenAlgorithmusGreedy1b, cast_de_nrw_schule_svws_core_klausurblockung_KlausurblockungSchienenAlgorithmusGreedy1b } from '../../core/klausurblockung/KlausurblockungSchienenAlgorithmusGreedy1b';
 import { KlausurblockungSchienenAlgorithmusAbstract, cast_de_nrw_schule_svws_core_klausurblockung_KlausurblockungSchienenAlgorithmusAbstract } from '../../core/klausurblockung/KlausurblockungSchienenAlgorithmusAbstract';
 import { KlausurblockungSchienenAlgorithmusGreedy2b, cast_de_nrw_schule_svws_core_klausurblockung_KlausurblockungSchienenAlgorithmusGreedy2b } from '../../core/klausurblockung/KlausurblockungSchienenAlgorithmusGreedy2b';

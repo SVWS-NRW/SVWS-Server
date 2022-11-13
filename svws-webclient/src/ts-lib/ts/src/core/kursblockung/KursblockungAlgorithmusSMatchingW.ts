@@ -4,7 +4,7 @@ import { KursblockungStatic, cast_de_nrw_schule_svws_core_kursblockung_Kursblock
 import { Random, cast_java_util_Random } from '../../java/util/Random';
 import { KursblockungDynDaten, cast_de_nrw_schule_svws_core_kursblockung_KursblockungDynDaten } from '../../core/kursblockung/KursblockungDynDaten';
 import { KursblockungDynSchueler, cast_de_nrw_schule_svws_core_kursblockung_KursblockungDynSchueler } from '../../core/kursblockung/KursblockungDynSchueler';
-import { Logger, cast_de_nrw_schule_svws_logger_Logger } from '../../logger/Logger';
+import { Logger, cast_de_nrw_schule_svws_core_logger_Logger } from '../../core/logger/Logger';
 
 export class KursblockungAlgorithmusSMatchingW extends KursblockungAlgorithmusS {
 

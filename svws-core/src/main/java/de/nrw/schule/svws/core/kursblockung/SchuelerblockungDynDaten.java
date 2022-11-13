@@ -10,8 +10,8 @@ import de.nrw.schule.svws.core.data.kursblockung.SchuelerblockungInputFachwahl;
 import de.nrw.schule.svws.core.data.kursblockung.SchuelerblockungInputKurs;
 import de.nrw.schule.svws.core.data.kursblockung.SchuelerblockungOutput;
 import de.nrw.schule.svws.core.data.kursblockung.SchuelerblockungOutputFachwahlZuKurs;
-import de.nrw.schule.svws.logger.LogLevel;
-import de.nrw.schule.svws.logger.Logger;
+import de.nrw.schule.svws.core.logger.LogLevel;
+import de.nrw.schule.svws.core.logger.Logger;
 import jakarta.validation.constraints.NotNull;
 
 /**

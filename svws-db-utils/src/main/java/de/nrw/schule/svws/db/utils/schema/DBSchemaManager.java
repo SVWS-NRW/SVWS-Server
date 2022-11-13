@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import de.nrw.schule.svws.core.logger.Logger;
 import de.nrw.schule.svws.csv.CsvReader;
 import de.nrw.schule.svws.db.DBDriver;
 import de.nrw.schule.svws.db.DBEntityManager;
@@ -18,7 +19,6 @@ import de.nrw.schule.svws.db.schema.SchemaTabelleIndex;
 import de.nrw.schule.svws.db.schema.SchemaTabelleTrigger;
 import de.nrw.schule.svws.db.schema.View;
 import de.nrw.schule.svws.db.utils.DBDefaultData;
-import de.nrw.schule.svws.logger.Logger;
 
 /**
  * Diese Klasse stellt Hilfs-Funktionen zur Verfügung, um auf ein SVWS-Datenbank-Schema zuzugreifen und dieses zu bearbeiten.

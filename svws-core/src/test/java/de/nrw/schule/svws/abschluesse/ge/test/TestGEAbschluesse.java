@@ -7,7 +7,7 @@ import de.nrw.schule.svws.core.abschluss.ge.ServiceAbschlussMSA;
 import de.nrw.schule.svws.core.abschluss.ge.ServiceBerechtigungMSAQ;
 import de.nrw.schule.svws.core.abschluss.ge.ServicePrognose;
 import de.nrw.schule.svws.core.data.abschluss.AbschlussErgebnis;
-import de.nrw.schule.svws.logger.LogLevel;
+import de.nrw.schule.svws.core.logger.LogLevel;
 import de.nrw.schule.svws.utils.ResourceUtils;
 
 import org.junit.jupiter.api.BeforeAll;

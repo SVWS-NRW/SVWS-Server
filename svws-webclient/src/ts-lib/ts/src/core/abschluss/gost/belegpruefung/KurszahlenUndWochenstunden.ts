@@ -13,7 +13,6 @@ import { GostFachbereich, cast_de_nrw_schule_svws_core_types_gost_GostFachbereic
 import { NullPointerException, cast_java_lang_NullPointerException } from '../../../../java/lang/NullPointerException';
 import { Note, cast_de_nrw_schule_svws_core_types_Note } from '../../../../core/types/Note';
 import { GostHalbjahr, cast_de_nrw_schule_svws_core_types_gost_GostHalbjahr } from '../../../../core/types/gost/GostHalbjahr';
-import { Collection, cast_java_util_Collection } from '../../../../java/util/Collection';
 import { List, cast_java_util_List } from '../../../../java/util/List';
 import { GostBelegungsfehler, cast_de_nrw_schule_svws_core_abschluss_gost_GostBelegungsfehler } from '../../../../core/abschluss/gost/GostBelegungsfehler';
 
@@ -72,13 +71,12 @@ export class KurszahlenUndWochenstunden extends GostBelegpruefung {
 		this.wochenstundenEinfuehrungsphase = 0;
 		this.wochenstundenQualifikationsphase = 0;
 		let projektkurse : Projektkurse = (cast_de_nrw_schule_svws_core_abschluss_gost_belegpruefung_Projektkurse(this.pruefungen_vorher[0]));
-		let kursarten : Collection<GostKursart> = GostKursart.values();
+		let kursarten : Array<GostKursart> = GostKursart.values();
 		for (let halbjahr of GostHalbjahr.values()) {
 			let kurszahlenHalbjahr : HashMap<GostKursart, Number> = new HashMap();
 			this.kurszahlen.put(halbjahr, kurszahlenHalbjahr);
-			for (let kursart of kursarten) {
+			for (let kursart of kursarten) 
 				kurszahlenHalbjahr.put(kursart, 0);
-			}
 			this.kurszahlenGrundkurse.put(halbjahr, 0);
 			this.kurszahlenLeistungskurse.put(halbjahr, 0);
 			this.kurszahlenAnrechenbar.put(halbjahr, 0);

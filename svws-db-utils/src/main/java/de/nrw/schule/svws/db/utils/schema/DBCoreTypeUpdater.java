@@ -33,6 +33,7 @@ import de.nrw.schule.svws.core.data.schule.SchulabschlussAllgemeinbildendKatalog
 import de.nrw.schule.svws.core.data.schule.SchulabschlussBerufsbildendKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.SchulformKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.SchulformSchulgliederung;
+import de.nrw.schule.svws.core.logger.Logger;
 import de.nrw.schule.svws.core.types.KursFortschreibungsart;
 import de.nrw.schule.svws.core.types.Note;
 import de.nrw.schule.svws.core.types.PersonalTyp;
@@ -75,7 +76,6 @@ import de.nrw.schule.svws.db.dto.current.svws.db.DTOCoreTypeVersion;
 import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaTabelle;
 import de.nrw.schule.svws.db.schema.SchemaTabelleCoreType;
-import de.nrw.schule.svws.logger.Logger;
 
 /**
  * Diese Klasse dient der Aktualisierung von Core-Type-Daten in der

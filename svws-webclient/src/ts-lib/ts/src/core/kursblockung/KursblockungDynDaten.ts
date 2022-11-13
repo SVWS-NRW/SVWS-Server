@@ -6,11 +6,11 @@ import { HashMap, cast_java_util_HashMap } from '../../java/util/HashMap';
 import { KursblockungDynSchiene, cast_de_nrw_schule_svws_core_kursblockung_KursblockungDynSchiene } from '../../core/kursblockung/KursblockungDynSchiene';
 import { KursblockungDynKurs, cast_de_nrw_schule_svws_core_kursblockung_KursblockungDynKurs } from '../../core/kursblockung/KursblockungDynKurs';
 import { JavaString, cast_java_lang_String } from '../../java/lang/JavaString';
-import { Logger, cast_de_nrw_schule_svws_logger_Logger } from '../../logger/Logger';
+import { Logger, cast_de_nrw_schule_svws_core_logger_Logger } from '../../core/logger/Logger';
 import { GostBlockungRegel, cast_de_nrw_schule_svws_core_data_gost_GostBlockungRegel } from '../../core/data/gost/GostBlockungRegel';
 import { KursblockungException, cast_de_nrw_schule_svws_core_kursblockung_KursblockungException } from '../../core/kursblockung/KursblockungException';
 import { GostKursart, cast_de_nrw_schule_svws_core_types_gost_GostKursart } from '../../core/types/gost/GostKursart';
-import { LogLevel, cast_de_nrw_schule_svws_logger_LogLevel } from '../../logger/LogLevel';
+import { LogLevel, cast_de_nrw_schule_svws_core_logger_LogLevel } from '../../core/logger/LogLevel';
 import { System, cast_java_lang_System } from '../../java/lang/System';
 import { GostKursblockungRegelTyp, cast_de_nrw_schule_svws_core_types_kursblockung_GostKursblockungRegelTyp } from '../../core/types/kursblockung/GostKursblockungRegelTyp';
 import { Random, cast_java_util_Random } from '../../java/util/Random';
@@ -144,8 +144,8 @@ export class KursblockungDynDaten extends JavaObject {
 			throw this.fehler("GostBlockungsdatenManager.daten().fachwahlen.size() <= 0")
 		if (pInput.faecherManager().faecher().size() <= 0) 
 			throw this.fehler("GostBlockungsdatenManager.faecherManager().faecher().size() <= 0")
-		if (GostKursart.values().size() <= 0) 
-			throw this.fehler("GostKursart.values().size() <= 0")
+		if (GostKursart.values().length <= 0) 
+			throw this.fehler("GostKursart.values().length <= 0")
 		if (pInput.daten().kurse.size() <= 0) 
 			throw this.fehler("GostBlockungsdatenManager.daten().kurse.size() <= 0")
 		let schienenAnzahl : number = pInput.getSchienenAnzahl();

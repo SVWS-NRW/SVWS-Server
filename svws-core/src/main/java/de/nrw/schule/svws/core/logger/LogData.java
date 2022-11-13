@@ -1,4 +1,4 @@
-package de.nrw.schule.svws.logger;
+package de.nrw.schule.svws.core.logger;
 
 import java.util.Arrays;
 

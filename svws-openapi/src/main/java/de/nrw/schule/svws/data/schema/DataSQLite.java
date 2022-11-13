@@ -8,11 +8,11 @@ import jakarta.ws.rs.core.Response.Status;
 import jakarta.ws.rs.core.StreamingOutput;
 
 import de.nrw.schule.svws.config.SVWSKonfiguration;
+import de.nrw.schule.svws.core.logger.LogConsumerConsole;
+import de.nrw.schule.svws.core.logger.LogConsumerVector;
+import de.nrw.schule.svws.core.logger.Logger;
 import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.utils.schema.DBSchemaManager;
-import de.nrw.schule.svws.logger.LogConsumerConsole;
-import de.nrw.schule.svws.logger.LogConsumerVector;
-import de.nrw.schule.svws.logger.Logger;
 import de.nrw.schule.svws.utils.FileUtils;
 
 /**

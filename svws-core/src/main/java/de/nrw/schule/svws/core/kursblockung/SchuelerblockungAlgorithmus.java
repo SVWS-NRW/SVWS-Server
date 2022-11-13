@@ -5,7 +5,7 @@ import java.util.Random;
 import de.nrw.schule.svws.core.Service;
 import de.nrw.schule.svws.core.data.kursblockung.SchuelerblockungInput;
 import de.nrw.schule.svws.core.data.kursblockung.SchuelerblockungOutput;
-import de.nrw.schule.svws.logger.LogLevel;
+import de.nrw.schule.svws.core.logger.LogLevel;
 import jakarta.validation.constraints.NotNull;
 
 /** Dieser Service teilt EINEN Schüler anhand seiner Fachwahlen auf Kurse zu. Dabei geht der Algorithmus davon aus, dass

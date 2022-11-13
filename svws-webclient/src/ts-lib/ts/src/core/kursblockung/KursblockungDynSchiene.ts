@@ -6,9 +6,9 @@ import { HashMap, cast_java_util_HashMap } from '../../java/util/HashMap';
 import { JavaLong, cast_java_lang_Long } from '../../java/lang/JavaLong';
 import { KursblockungDynKurs, cast_de_nrw_schule_svws_core_kursblockung_KursblockungDynKurs } from '../../core/kursblockung/KursblockungDynKurs';
 import { JavaString, cast_java_lang_String } from '../../java/lang/JavaString';
-import { Logger, cast_de_nrw_schule_svws_logger_Logger } from '../../logger/Logger';
+import { Logger, cast_de_nrw_schule_svws_core_logger_Logger } from '../../core/logger/Logger';
 import { KursblockungException, cast_de_nrw_schule_svws_core_kursblockung_KursblockungException } from '../../core/kursblockung/KursblockungException';
-import { LogLevel, cast_de_nrw_schule_svws_logger_LogLevel } from '../../logger/LogLevel';
+import { LogLevel, cast_de_nrw_schule_svws_core_logger_LogLevel } from '../../core/logger/LogLevel';
 import { System, cast_java_lang_System } from '../../java/lang/System';
 
 export class KursblockungDynSchiene extends JavaObject {

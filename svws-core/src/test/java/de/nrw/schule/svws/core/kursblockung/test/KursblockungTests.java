@@ -24,14 +24,14 @@ import de.nrw.schule.svws.core.data.schueler.Schueler;
 import de.nrw.schule.svws.core.kursblockung.KursblockungAlgorithmus;
 import de.nrw.schule.svws.core.kursblockung.KursblockungMatrix;
 import de.nrw.schule.svws.core.kursblockung.KursblockungStatic;
+import de.nrw.schule.svws.core.logger.LogData;
+import de.nrw.schule.svws.core.logger.LogLevel;
+import de.nrw.schule.svws.core.logger.Logger;
 import de.nrw.schule.svws.core.types.gost.GostKursart;
 import de.nrw.schule.svws.core.types.kursblockung.GostKursblockungRegelTyp;
 import de.nrw.schule.svws.core.utils.gost.GostBlockungsdatenManager;
 import de.nrw.schule.svws.core.utils.gost.GostBlockungsergebnisManager;
 import de.nrw.schule.svws.core.utils.gost.GostFaecherManager;
-import de.nrw.schule.svws.logger.LogData;
-import de.nrw.schule.svws.logger.LogLevel;
-import de.nrw.schule.svws.logger.Logger;
 import jakarta.validation.constraints.NotNull;
 
 /** Diese Klasse testet <b>alle</b> relevanten Methoden, die für die Kursblockung benötigt werden. */
