@@ -147,6 +147,15 @@ public class Tabelle_Kurse extends SchemaTabelle {
 		)
 		.setRevision(SchemaRevisionen.REV_2);
 
+	/** Die Definition des Fremdschlüssels Kurse_Lehrer_FK */
+	public SchemaTabelleFremdschluessel fk_Kurse_Lehrer_FK = addForeignKey(
+			"Kurse_Lehrer_FK", 
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
+			new Pair<>(col_Lehrer_ID, Schema.tab_K_Lehrer.col_ID)
+		)
+		.setRevision(SchemaRevisionen.REV_2);
+
 	/** Die Definition des Fremdschlüssels Kurse_Fortschreibungsart_FK */
 	public SchemaTabelleFremdschluessel fk_Kurse_Fortschreibungsart_FK = addForeignKey(
 			"Kurse_Fortschreibungsart_FK", 
