@@ -1,99 +1,126 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
 import { GostFach, cast_de_nrw_schule_svws_core_data_gost_GostFach } from '../../../core/data/gost/GostFach';
+import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
+import { ZulaessigesFach, cast_de_nrw_schule_svws_core_types_fach_ZulaessigesFach } from '../../../core/types/fach/ZulaessigesFach';
 import { List, cast_java_util_List } from '../../../java/util/List';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
+import { Arrays, cast_java_util_Arrays } from '../../../java/util/Arrays';
 import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
-import { System, cast_java_lang_System } from '../../../java/lang/System';
 
 export class GostFachbereich extends JavaObject {
 
-	private static all : Vector<GostFachbereich> = new Vector();
+	/** the name of the enumeration value */
+	private readonly __name : String;
 
-	private static kuerzel_DEUTSCH : Array<String> = ["D"];
+	/** the ordinal value for the enumeration value */
+	private readonly __ordinal : number;
 
-	private static kuerzel_FREMDSPRACHE : Array<String> = ["A", "A0", "A5", "A6", "A7", "A8", "A9", "C", "C0", "C5", "C6", "C7", "C8", "C9", "E", "E0", "E5", "E6", "E7", "E8", "E9", "F", "F0", "F5", "F6", "F7", "F8", "F9", "G", "G0", "G5", "G6", "G7", "G8", "G9", "H", "H0", "H5", "H6", "H7", "H8", "H9", "I", "I0", "I5", "I6", "I7", "I8", "I9", "K", "K0", "K5", "K6", "K7", "K8", "K9", "L", "L0", "L5", "L6", "L7", "L8", "L9", "N", "N0", "N5", "N6", "N7", "N8", "N9", "O", "O0", "O5", "O6", "O7", "O8", "O9", "P", "P0", "P5", "P6", "P7", "P8", "P9", "R", "R0", "R5", "R6", "R7", "R8", "R9", "S", "S0", "S5", "S6", "S7", "S8", "S9", "T", "T0", "T5", "T6", "T7", "T8", "T9", "U", "U0", "U5", "U6", "U7", "U8", "U9", "Z", "Z0", "Z5", "Z6", "Z7", "Z8", "Z9"];
+	/** an array containing all values of this enumeration */
+	private static readonly all_values_by_ordinal : Array<GostFachbereich> = [];
 
-	private static kuerzel_KUNST_MUSIK : Array<String> = ["KU", "MU"];
+	/** an array containing all values of this enumeration indexed by their name*/
+	private static readonly all_values_by_name : Map<String, GostFachbereich> = new Map<String, GostFachbereich>();
 
-	private static kuerzel_LITERARISCH_KUENSTLERISCH_ERSATZ : Array<String> = ["LI", "IN", "IV", "VO"];
+	public static readonly DEUTSCH : GostFachbereich = new GostFachbereich("DEUTSCH", 0, null, ZulaessigesFach.D);
 
-	private static kuerzel_GESCHICHTE : Array<String> = ["GE"];
+	public static readonly FREMDSPRACHE : GostFachbereich = new GostFachbereich("FREMDSPRACHE", 1, null, ZulaessigesFach.C, ZulaessigesFach.C0, ZulaessigesFach.C5, ZulaessigesFach.C6, ZulaessigesFach.C7, ZulaessigesFach.C8, ZulaessigesFach.C9, ZulaessigesFach.E, ZulaessigesFach.F, ZulaessigesFach.F0, ZulaessigesFach.F5, ZulaessigesFach.F6, ZulaessigesFach.F7, ZulaessigesFach.F8, ZulaessigesFach.F9, ZulaessigesFach.G, ZulaessigesFach.G0, ZulaessigesFach.G5, ZulaessigesFach.G6, ZulaessigesFach.G7, ZulaessigesFach.G8, ZulaessigesFach.G9, ZulaessigesFach.H, ZulaessigesFach.H0, ZulaessigesFach.H5, ZulaessigesFach.H6, ZulaessigesFach.H7, ZulaessigesFach.H8, ZulaessigesFach.H9, ZulaessigesFach.I, ZulaessigesFach.I0, ZulaessigesFach.I5, ZulaessigesFach.I6, ZulaessigesFach.I7, ZulaessigesFach.I8, ZulaessigesFach.I9, ZulaessigesFach.K, ZulaessigesFach.K0, ZulaessigesFach.K5, ZulaessigesFach.K6, ZulaessigesFach.K7, ZulaessigesFach.K8, ZulaessigesFach.K9, ZulaessigesFach.L, ZulaessigesFach.L0, ZulaessigesFach.L5, ZulaessigesFach.L6, ZulaessigesFach.L7, ZulaessigesFach.L8, ZulaessigesFach.L9, ZulaessigesFach.N, ZulaessigesFach.N0, ZulaessigesFach.N5, ZulaessigesFach.N6, ZulaessigesFach.N7, ZulaessigesFach.N8, ZulaessigesFach.N9, ZulaessigesFach.O, ZulaessigesFach.O0, ZulaessigesFach.O5, ZulaessigesFach.O6, ZulaessigesFach.O7, ZulaessigesFach.O8, ZulaessigesFach.O9, ZulaessigesFach.R, ZulaessigesFach.R0, ZulaessigesFach.R5, ZulaessigesFach.R6, ZulaessigesFach.R7, ZulaessigesFach.R8, ZulaessigesFach.R9, ZulaessigesFach.S, ZulaessigesFach.S0, ZulaessigesFach.S5, ZulaessigesFach.S6, ZulaessigesFach.S7, ZulaessigesFach.S8, ZulaessigesFach.S9, ZulaessigesFach.T, ZulaessigesFach.T0, ZulaessigesFach.T5, ZulaessigesFach.T6, ZulaessigesFach.T7, ZulaessigesFach.T8, ZulaessigesFach.T9, ZulaessigesFach.Z, ZulaessigesFach.Z0, ZulaessigesFach.Z5, ZulaessigesFach.Z6, ZulaessigesFach.Z7, ZulaessigesFach.Z8, ZulaessigesFach.Z9);
 
-	private static kuerzel_SOZIALWISSENSCHAFTEN : Array<String> = ["SW"];
+	public static readonly KUNST_MUSIK : GostFachbereich = new GostFachbereich("KUNST_MUSIK", 2, null, ZulaessigesFach.KU, ZulaessigesFach.MU);
 
-	private static kuerzel_PHILOSOPHIE : Array<String> = ["PL"];
+	public static readonly LITERARISCH_KUENSTLERISCH_ERSATZ : GostFachbereich = new GostFachbereich("LITERARISCH_KUENSTLERISCH_ERSATZ", 3, null, ZulaessigesFach.LI, ZulaessigesFach.IN, ZulaessigesFach.VO);
 
-	private static kuerzel_GESELLSCHAFTSWISSENSCHAFTLICH_SONSTIGE : Array<String> = ["EK", "PA", "PS", "RK"];
+	public static readonly LITERARISCH_KUENSTLERISCH : GostFachbereich = new GostFachbereich("LITERARISCH_KUENSTLERISCH", 4, Arrays.asList(GostFachbereich.KUNST_MUSIK, GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ));
 
-	private static kuerzel_MATHEMATIK : Array<String> = ["M"];
+	public static readonly SPRACHLICH_LITERARISCH_KUENSTLERISCH : GostFachbereich = new GostFachbereich("SPRACHLICH_LITERARISCH_KUENSTLERISCH", 5, Arrays.asList(GostFachbereich.DEUTSCH, GostFachbereich.FREMDSPRACHE, GostFachbereich.KUNST_MUSIK, GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ));
 
-	private static kuerzel_NATURWISSENSCHAFTLICH_KLASSISCH : Array<String> = ["BI", "CH", "PH"];
+	public static readonly GESCHICHTE : GostFachbereich = new GostFachbereich("GESCHICHTE", 6, null, ZulaessigesFach.GE);
 
-	private static kuerzel_NATURWISSENSCHAFTLICH_NEU_EINSETZEND : Array<String> = ["EL", "IF", "TC"];
+	public static readonly SOZIALWISSENSCHAFTEN : GostFachbereich = new GostFachbereich("SOZIALWISSENSCHAFTEN", 7, null, ZulaessigesFach.SW);
 
-	private static kuerzel_RELIGION : Array<String> = ["HR", "OR", "YR", "ER", "KR", "IL"];
+	public static readonly PHILOSOPHIE : GostFachbereich = new GostFachbereich("PHILOSOPHIE", 8, null, ZulaessigesFach.PL);
 
-	private static kuerzel_SPORT : Array<String> = ["SP"];
+	public static readonly GESELLSCHAFTSWISSENSCHAFTLICH_SONSTIGE : GostFachbereich = new GostFachbereich("GESELLSCHAFTSWISSENSCHAFTLICH_SONSTIGE", 9, null, ZulaessigesFach.EK, ZulaessigesFach.PA, ZulaessigesFach.PS, ZulaessigesFach.RK);
 
-	public static readonly SPRACHLICH_LITERARISCH_KUENSTLERISCH : GostFachbereich = new GostFachbereich(GostFachbereich.kuerzel_DEUTSCH, GostFachbereich.kuerzel_FREMDSPRACHE, GostFachbereich.kuerzel_KUNST_MUSIK, GostFachbereich.kuerzel_LITERARISCH_KUENSTLERISCH_ERSATZ);
+	public static readonly GESELLSCHAFTSWISSENSCHAFTLICH : GostFachbereich = new GostFachbereich("GESELLSCHAFTSWISSENSCHAFTLICH", 10, Arrays.asList(GostFachbereich.GESCHICHTE, GostFachbereich.SOZIALWISSENSCHAFTEN, GostFachbereich.PHILOSOPHIE, GostFachbereich.GESELLSCHAFTSWISSENSCHAFTLICH_SONSTIGE));
 
-	public static readonly DEUTSCH : GostFachbereich = new GostFachbereich(GostFachbereich.kuerzel_DEUTSCH);
+	public static readonly RELIGION : GostFachbereich = new GostFachbereich("RELIGION", 11, null, ZulaessigesFach.HR, ZulaessigesFach.OR, ZulaessigesFach.YR, ZulaessigesFach.ER, ZulaessigesFach.KR, ZulaessigesFach.IL);
 
-	public static readonly FREMDSPRACHE : GostFachbereich = new GostFachbereich(GostFachbereich.kuerzel_FREMDSPRACHE);
+	public static readonly GESELLSCHAFTSWISSENSCHAFTLICH_MIT_RELIGION : GostFachbereich = new GostFachbereich("GESELLSCHAFTSWISSENSCHAFTLICH_MIT_RELIGION", 12, Arrays.asList(GostFachbereich.GESCHICHTE, GostFachbereich.SOZIALWISSENSCHAFTEN, GostFachbereich.PHILOSOPHIE, GostFachbereich.GESELLSCHAFTSWISSENSCHAFTLICH_SONSTIGE, GostFachbereich.RELIGION));
 
-	public static readonly KUNST_MUSIK : GostFachbereich = new GostFachbereich(GostFachbereich.kuerzel_KUNST_MUSIK);
+	public static readonly MATHEMATIK : GostFachbereich = new GostFachbereich("MATHEMATIK", 13, null, ZulaessigesFach.M);
 
-	public static readonly LITERARISCH_KUENSTLERISCH : GostFachbereich = new GostFachbereich(GostFachbereich.kuerzel_KUNST_MUSIK, GostFachbereich.kuerzel_LITERARISCH_KUENSTLERISCH_ERSATZ);
+	public static readonly NATURWISSENSCHAFTLICH_KLASSISCH : GostFachbereich = new GostFachbereich("NATURWISSENSCHAFTLICH_KLASSISCH", 14, null, ZulaessigesFach.BI, ZulaessigesFach.CH, ZulaessigesFach.PH);
 
-	public static readonly LITERARISCH_KUENSTLERISCH_ERSATZ : GostFachbereich = new GostFachbereich(GostFachbereich.kuerzel_LITERARISCH_KUENSTLERISCH_ERSATZ);
+	public static readonly NATURWISSENSCHAFTLICH_NEU_EINSETZEND : GostFachbereich = new GostFachbereich("NATURWISSENSCHAFTLICH_NEU_EINSETZEND", 15, null, ZulaessigesFach.EL, ZulaessigesFach.IF, ZulaessigesFach.TC);
 
-	public static readonly GESELLSCHAFTSWISSENSCHAFTLICH : GostFachbereich = new GostFachbereich(GostFachbereich.kuerzel_GESCHICHTE, GostFachbereich.kuerzel_SOZIALWISSENSCHAFTEN, GostFachbereich.kuerzel_PHILOSOPHIE, GostFachbereich.kuerzel_GESELLSCHAFTSWISSENSCHAFTLICH_SONSTIGE);
+	public static readonly NATURWISSENSCHAFTLICH : GostFachbereich = new GostFachbereich("NATURWISSENSCHAFTLICH", 16, Arrays.asList(GostFachbereich.NATURWISSENSCHAFTLICH_KLASSISCH, GostFachbereich.NATURWISSENSCHAFTLICH_NEU_EINSETZEND));
 
-	public static readonly GESCHICHTE : GostFachbereich = new GostFachbereich(GostFachbereich.kuerzel_GESCHICHTE);
+	public static readonly MATHEMATISCH_NATURWISSENSCHAFTLICH : GostFachbereich = new GostFachbereich("MATHEMATISCH_NATURWISSENSCHAFTLICH", 17, Arrays.asList(GostFachbereich.MATHEMATIK, GostFachbereich.NATURWISSENSCHAFTLICH_KLASSISCH, GostFachbereich.NATURWISSENSCHAFTLICH_NEU_EINSETZEND));
 
-	public static readonly SOZIALWISSENSCHAFTEN : GostFachbereich = new GostFachbereich(GostFachbereich.kuerzel_SOZIALWISSENSCHAFTEN);
+	public static readonly SPORT : GostFachbereich = new GostFachbereich("SPORT", 18, null, ZulaessigesFach.SP);
 
-	public static readonly PHILOSOPHIE : GostFachbereich = new GostFachbereich(GostFachbereich.kuerzel_PHILOSOPHIE);
+	private static readonly _mapFachbereichByFach : HashMap<ZulaessigesFach, List<GostFachbereich>> = new HashMap();
 
-	public static readonly GESELLSCHAFTSWISSENSCHAFTLICH_SONSTIGE : GostFachbereich = new GostFachbereich(GostFachbereich.kuerzel_GESELLSCHAFTSWISSENSCHAFTLICH_SONSTIGE);
+	private readonly faecher : Vector<ZulaessigesFach> = new Vector();
 
-	public static readonly GESELLSCHAFTSWISSENSCHAFTLICH_MIT_RELIGION : GostFachbereich = new GostFachbereich(GostFachbereich.kuerzel_GESCHICHTE, GostFachbereich.kuerzel_SOZIALWISSENSCHAFTEN, GostFachbereich.kuerzel_PHILOSOPHIE, GostFachbereich.kuerzel_GESELLSCHAFTSWISSENSCHAFTLICH_SONSTIGE, GostFachbereich.kuerzel_RELIGION);
-
-	public static readonly MATHEMATIK : GostFachbereich = new GostFachbereich(GostFachbereich.kuerzel_MATHEMATIK);
-
-	public static readonly MATHEMATISCH_NATURWISSENSCHAFTLICH : GostFachbereich = new GostFachbereich(GostFachbereich.kuerzel_MATHEMATIK, GostFachbereich.kuerzel_NATURWISSENSCHAFTLICH_KLASSISCH, GostFachbereich.kuerzel_NATURWISSENSCHAFTLICH_NEU_EINSETZEND);
-
-	public static readonly NATURWISSENSCHAFTLICH : GostFachbereich = new GostFachbereich(GostFachbereich.kuerzel_NATURWISSENSCHAFTLICH_KLASSISCH, GostFachbereich.kuerzel_NATURWISSENSCHAFTLICH_NEU_EINSETZEND);
-
-	public static readonly NATURWISSENSCHAFTLICH_KLASSISCH : GostFachbereich = new GostFachbereich(GostFachbereich.kuerzel_NATURWISSENSCHAFTLICH_KLASSISCH);
-
-	public static readonly NATURWISSENSCHAFTLICH_NEU_EINSETZEND : GostFachbereich = new GostFachbereich(GostFachbereich.kuerzel_NATURWISSENSCHAFTLICH_NEU_EINSETZEND);
-
-	public static readonly RELIGION : GostFachbereich = new GostFachbereich(GostFachbereich.kuerzel_RELIGION);
-
-	public static readonly SPORT : GostFachbereich = new GostFachbereich(GostFachbereich.kuerzel_SPORT);
-
-	private readonly kuerzel : Array<String>;
-
+	private readonly kuerzel : Vector<String> = new Vector();
 
 	/**
-	 * Erstellt einen neuen Fachbereich mit den übergebenen Kürzeln von Fächern
+	 * Erstellt einen neuen Fachbereich als Kombination der übergebenen Fachbereiche
+	 * und der übergebenen Fächer
 	 * 
-	 * @param kuerzel   die Kürzel der Fächer des Fachbereichs
+	 * @param fachbereiche   die Fachbereiche
+	 * @param kuerzel        die zusätzlichen Kürzel des Fachbereichs
 	 */
-	private constructor(...kuerzelArrays : Array<Array<String | null>>) {
+	private constructor(name : string, ordinal : number, fachbereiche : List<GostFachbereich> | null, ...faecher : Array<ZulaessigesFach>) {
 		super();
-		let pos : number = 0;
-		for (let a of kuerzelArrays) {
-			pos += a.length;
+		this.__name = name;
+		this.__ordinal = ordinal;
+		GostFachbereich.all_values_by_ordinal.push(this);
+		GostFachbereich.all_values_by_name.set(name, this);
+		if (fachbereiche !== null) {
+			for (let fb of fachbereiche) {
+				for (let fach of fb.faecher) {
+					this.faecher.add(fach);
+					this.kuerzel.add(fach.daten.kuerzelASD);
+				}
+			}
 		}
-		this.kuerzel = Array(pos).fill(null);
-		pos = 0;
-		for (let a of kuerzelArrays) {
-			System.arraycopy(a, 0, this.kuerzel, pos, a.length);
-			pos += a.length;
+		for (let fach of faecher) {
+			this.faecher.add(fach);
+			this.kuerzel.add(fach.daten.kuerzelASD);
 		}
-		GostFachbereich.all.add(this);
+	}
+
+	/**
+	 * Gibt eine Map von den Fächern auf die zugehörigen Fachbereiche
+	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
+	 *    
+	 * @return die Map von den Fächern auf die zugehörigen Fachbereiche
+	 */
+	private static getMapFachbereichByFach() : HashMap<ZulaessigesFach, List<GostFachbereich>> {
+		if (GostFachbereich._mapFachbereichByFach.size() === 0) {
+			for (let fb of GostFachbereich.values()) {
+				for (let fach of fb.faecher) {
+					let listFachbereichByFach : List<GostFachbereich> | null = GostFachbereich._mapFachbereichByFach.get(fach);
+					if (listFachbereichByFach === null) {
+						listFachbereichByFach = new Vector();
+						GostFachbereich._mapFachbereichByFach.put(fach, listFachbereichByFach);
+					}
+					listFachbereichByFach.add(fb);
+				}
+			}
+		}
+		return GostFachbereich._mapFachbereichByFach;
+	}
+
+	/**
+	 * Gibt die Liste der Fächer des Fachbereichs zurück.
+	 * 
+	 * @return die Liste der Fächer des Fachbereichs
+	 */
+	public getFaecher() : List<ZulaessigesFach> {
+		return this.faecher;
 	}
 
 	/**
@@ -125,32 +152,9 @@ export class GostFachbereich extends JavaObject {
 			let kuerzel : String | null = __param0;
 			if (kuerzel === null) 
 				return false;
-			let fbAlleKuerzel : Array<String> = this.getAlleKuerzel();
-			for (let fbKuerzel of fbAlleKuerzel) {
-				if (JavaObject.equalsTranspiler(kuerzel, (fbKuerzel))) 
-					return true;
-			}
-			return false;
+			return this.kuerzel.contains(kuerzel);
 		} else throw new Error('invalid method overload');
 	}
-
-	/**
-	 * Liefert alle Kürzel der Fächer zurück, die zu diesem Fachbereich gehören.
-	 *  
-	 * @return alle Kürzel der Fächer dieses Fachbereichs
-	 */
-	public getAlleKuerzel() : Array<String> {
-		return this.kuerzel;
-	}
-
-	/**
-	 * Ermittelt die, dem Fach zugehörigen, Fachbereiche anhand des Statistik-Kürzels
-	 *  
-	 * @param kuerzel   das Statistik-Kürzel des Faches
-	 * 
-	 * @return die zugehörigen Fachbereiche
-	 */
-	public static getBereiche(kuerzel : String | null) : List<GostFachbereich>;
 
 	/**
 	 * Ermittelt die, dem Fach zugehörigen, Fachbereiche
@@ -159,38 +163,96 @@ export class GostFachbereich extends JavaObject {
 	 * 
 	 * @return die zugehörigen Fachbereiche
 	 */
-	public static getBereiche(fach : GostFach | null) : List<GostFachbereich>;
-
-	/**
-	 * Implementation for method overloads of 'getBereiche'
-	 */
-	public static getBereiche(__param0 : GostFach | String | null) : List<GostFachbereich> {
-		if (((typeof __param0 !== "undefined") && ((__param0 instanceof String) || (typeof __param0 === "string")) || (__param0 === null))) {
-			let kuerzel : String | null = __param0;
-			let result : Vector<GostFachbereich> = new Vector();
-			for (let i : number = 0; i < GostFachbereich.all.size(); i++){
-				if (GostFachbereich.all.get(i).hat(kuerzel)) 
-					result.add(GostFachbereich.all.get(i));
-			}
-			return result;
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.data.gost.GostFach'))) || (__param0 === null))) {
-			let fach : GostFach | null = cast_de_nrw_schule_svws_core_data_gost_GostFach(__param0);
-			let result : Vector<GostFachbereich> = new Vector();
-			for (let i : number = 0; i < GostFachbereich.all.size(); i++){
-				if (GostFachbereich.all.get(i).hat(fach)) 
-					result.add(GostFachbereich.all.get(i));
-			}
-			return result;
-		} else throw new Error('invalid method overload');
+	public static getBereiche(fach : GostFach | null) : List<GostFachbereich> {
+		if (fach === null) 
+			return new Vector();
+		let zulFach : ZulaessigesFach = ZulaessigesFach.getByKuerzelASD(fach.kuerzel);
+		let bereiche : List<GostFachbereich> | null = GostFachbereich.getMapFachbereichByFach().get(zulFach);
+		if (bereiche !== null) 
+			return bereiche;
+		return new Vector();
 	}
 
 	/**
-	 * Liefert eine Liste mit allen Fachbereichen zurück.
-	 *  
-	 * @return eine Liste mit allen Fachbereichen.
+	 * Returns the name of this enumeration value.
+	 *
+	 * @returns the name
 	 */
-	public static values() : List<GostFachbereich> {
-		return new Vector(GostFachbereich.all);
+	private name() : String {
+		return this.__name;
+	}
+
+	/**
+	 * Returns the ordinal value of this enumeration value.
+	 *
+	 * @returns the ordinal value
+	 */
+	private ordinal() : number {
+		return this.__ordinal;
+	}
+
+	/**
+	 * Returns the name of this enumeration value.
+	 *
+	 * @returns the name
+	 */
+	public toString() : String {
+		return this.__name;
+	}
+
+	/**
+	 * Returns true if this and the other enumeration values are equal.
+	 *
+	 * @param other   the other enumeration value
+	 *
+	 * @returns true if they are equal and false otherwise
+	 */
+	public equals(other : JavaObject) : boolean {
+		if (!(other instanceof GostFachbereich))
+			return false;
+		return this === other;
+	}
+
+	/**
+	 * Returns the ordinal value as hashcode, since the ordinal value is unique.
+	 *
+	 * @returns the ordinal value as hashcode
+	 */
+	public hashCode() : number {
+		return this.__ordinal;
+	}
+
+	/**
+	 * Compares this enumeration value with the other enumeration value by their ordinal value.
+	 *
+	 * @param other   the other enumeration value
+	 *
+	 * @returns a negative, zero or postive value as this enumeration value is less than, equal to
+	 *          or greater than the other enumeration value
+	 */
+	public compareTo(other : GostFachbereich) : number {
+		return this.__ordinal - other.__ordinal;
+	}
+
+	/**
+	 * Returns an array with enumeration values.
+	 *
+	 * @returns the array with enumeration values
+	 */
+	public static values() : Array<GostFachbereich> {
+		return [...this.all_values_by_ordinal];
+	}
+
+	/**
+	 * Returns the enumeration value with the specified name.
+	 *
+	 * @param name   the name of the enumeration value
+	 *
+	 * @returns the enumeration values or null
+	 */
+	public static valueOf(name : String) : GostFachbereich | null {
+		let tmp : GostFachbereich | undefined = this.all_values_by_name.get(name);
+		return (!tmp) ? null : tmp;
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

@@ -129,14 +129,13 @@ export class AbiturdatenManager extends JavaObject {
 	 */
 	private initMapFachbereiche() : void {
 		this.mapFachbereiche.clear();
-		let fachbereiche : List<GostFachbereich> = GostFachbereich.values();
-		for (let fachbereich of fachbereiche) {
+		for (let fachbereich of GostFachbereich.values()) 
 			this.mapFachbereiche.put(fachbereich, new Vector<AbiturFachbelegung>());
-		}
 		let fachbelegungen : Vector<AbiturFachbelegung> = this.abidaten.fachbelegungen;
 		for (let fachbelegung of fachbelegungen) {
 			if (this.zaehleBelegung(fachbelegung) > 0) {
-				fachbereiche = GostFachbereich.getBereiche(this.getFach(fachbelegung));
+				let fach : GostFach | null = this.getFach(fachbelegung);
+				let fachbereiche : List<GostFachbereich> = GostFachbereich.getBereiche(fach);
 				for (let fachbereich of fachbereiche) {
 					let listFachbelegungen : Vector<AbiturFachbelegung> | null = this.mapFachbereiche.get(fachbereich);
 					if (listFachbelegungen === null) 

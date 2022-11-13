@@ -144,15 +144,15 @@ public class AbiturdatenManager {
 	private void initMapFachbereiche() {
 		// Leere die HashMap und erstelle neue Vektoren für die Zuordnung von Abitur-Fachbelegungen 
 		mapFachbereiche.clear();
-		@NotNull List<@NotNull GostFachbereich> fachbereiche = GostFachbereich.values();
-		for (@NotNull GostFachbereich fachbereich : fachbereiche) {
+		for (@NotNull GostFachbereich fachbereich : GostFachbereich.values())
 			mapFachbereiche.put(fachbereich, new Vector<@NotNull AbiturFachbelegung>());
-		}
+
 		// Durchwandere alle belegten Fächer und weise diese den Fachbereichen zu
 		@NotNull Vector<@NotNull AbiturFachbelegung> fachbelegungen = abidaten.fachbelegungen;
 		for (AbiturFachbelegung fachbelegung : fachbelegungen) {
 			if (zaehleBelegung(fachbelegung) > 0) { // Filtere ggf. leere Belegungen
-				fachbereiche = GostFachbereich.getBereiche(getFach(fachbelegung));
+				GostFach fach = getFach(fachbelegung);
+				@NotNull List<@NotNull GostFachbereich> fachbereiche = GostFachbereich.getBereiche(fach);
 				for (@NotNull GostFachbereich fachbereich : fachbereiche) {
 					Vector<@NotNull AbiturFachbelegung> listFachbelegungen = mapFachbereiche.get(fachbereich);
 					if (listFachbelegungen == null)
