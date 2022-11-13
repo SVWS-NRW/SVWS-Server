@@ -8,7 +8,6 @@ dependencies {
     implementation project(':svws-db-dto')
 }
 
-compileJava.dependsOn(":svws-base:assemble")
 compileJava.dependsOn(":svws-core:assemble")
 compileJava.dependsOn(":svws-db-dto:assemble")
 
