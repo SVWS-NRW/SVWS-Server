@@ -118,9 +118,10 @@ public class CommandLineParser {
 			String result = getValue(tag);
 			if (result != null)
 				return result;
-		} catch (CommandLineException e) {
+			return def;
+		} catch (@SuppressWarnings("unused") CommandLineException e) {
+			return def;
 		}
-		return def;
 	}
 
 	
@@ -137,7 +138,7 @@ public class CommandLineParser {
 		if (!parsed) {
 			try {
 				parse();
-			} catch (CommandLineException e) {
+			} catch (@SuppressWarnings("unused") CommandLineException e) {
 				return false;
 			}
 		}

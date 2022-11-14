@@ -1,7 +1,7 @@
 package de.nrw.schule.svws.core.types.statkue;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import org.junit.jupiter.api.BeforeAll;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -14,14 +14,6 @@ import de.nrw.schule.svws.core.types.lehrer.LehrerRechtsverhaeltnis;
 @DisplayName("Teste den Core-Type LehrerRechtsverhaeltnis")
 public class TestCoreTypeLehrerRechtsverhaeltnis {
 	
-    /**
-     * Initialisiert den Test
-     */
-    @BeforeAll
-    static void setup() {
-    }
-
-    
     @Test
     @DisplayName("Teste den Typ LehrerRechtsverhaeltnis")
     void testLehrerRechtsverhaeltnis() {

@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.Random;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -17,11 +16,6 @@ import de.nrw.schule.svws.core.kursblockung.satsolver.SatSolverWrapper;
  * geschickt werden. */
 @DisplayName("SAT-Solver-Test.")
 public class KursblockungSatSolverTest {
-
-	/** Initialisiert den Test. Die Methode ist leer. */
-	@BeforeAll
-	static void setup() {
-	}
 
 	/** Erzeugt eine leere Formel und überprüft, ob die Formel lösbar bzw. {@link SatSolverA#RESULT_SATISFIABLE} ist. */
 	@Test

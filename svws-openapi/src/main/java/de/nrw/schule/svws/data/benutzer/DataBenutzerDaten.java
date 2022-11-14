@@ -224,6 +224,8 @@ public class DataBenutzerDaten extends DataManager<Long> {
      * @param kids die IDs der Kompetenzen
      * 
      * @return bei Erfolg eine HTTP-Response 200
+     * 
+     * @throws WebApplicationException eine Exception mit dem entsprechenden HTTP-Fehlercode im Fehlerfall 
      */
     public Response addKompetenzen(Long id, List<Long> kids) throws WebApplicationException {
         if ((id == null) || (kids == null))

@@ -38,7 +38,7 @@ public class JSONMapper {
 	public static String toString(InputStream in) {
 	    try {
 			return mapper.readValue(in, String.class);
-		} catch (IOException e) {
+		} catch (@SuppressWarnings("unused") IOException e) {
 			throw new WebApplicationException("Fehler beim Konvertieren des JSON-Textes", Response.Status.BAD_REQUEST);
 		}
 	}
@@ -57,7 +57,7 @@ public class JSONMapper {
 			return null;
 	    try {
 	    	return Long.parseLong(text);
-		} catch (NumberFormatException e) {
+		} catch (@SuppressWarnings("unused") NumberFormatException e) {
 			throw new WebApplicationException("Fehler beim Konvertieren des JSON-Textes in einen Long-Wert", Response.Status.BAD_REQUEST);
 		}
 	}
@@ -99,7 +99,7 @@ public class JSONMapper {
 			if (rfc8259compliance && !text.matches("-*(0|[1-9][0-9]*)([.][0-9]+)?([eE][+-][0-9]*)?"))
 				throw new WebApplicationException("Fehler beim Konvertieren des JSON-Textes nach RFC 8259 in einen Double-Wert", Response.Status.BAD_REQUEST); 
 	    	return Double.valueOf(text);
-		} catch (NumberFormatException e) {
+		} catch (@SuppressWarnings("unused") NumberFormatException e) {
 			throw new WebApplicationException("Fehler beim Konvertieren des JSON-Textes in einen Double-Wert", Response.Status.BAD_REQUEST);
 		}
 	}
@@ -118,7 +118,7 @@ public class JSONMapper {
 			return null;
 	    try {
 			return Integer.parseInt(text);
-		} catch (NumberFormatException e) {
+		} catch (@SuppressWarnings("unused") NumberFormatException e) {
 			throw new WebApplicationException("Fehler beim Konvertieren des JSON-Textes", Response.Status.BAD_REQUEST);
 		}
 	}
@@ -134,7 +134,7 @@ public class JSONMapper {
 	public static Map<String, Object> toMap(InputStream in) {
 		String json = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8)).lines().collect(Collectors.joining("")).trim();
 		try {
-			return mapper.readValue(json, new TypeReference<Map<String,Object>>(){});
+			return mapper.readValue(json, new TypeReference<Map<String,Object>>(){/**/});
 		} catch (JsonProcessingException e) {
 			throw new WebApplicationException("Fehler beim Parsen des JSON-Strings.", e, Response.Status.BAD_REQUEST);
 		}

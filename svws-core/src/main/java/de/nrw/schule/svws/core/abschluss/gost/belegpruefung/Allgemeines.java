@@ -32,6 +32,7 @@ public class Allgemeines extends GostBelegpruefung {
 	
 	@Override
 	protected void init() {
+		// Keine Initialisierung notwendig
 	}
 
 	

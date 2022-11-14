@@ -36,12 +36,12 @@ public class BenutzerTypConverterDeserializer extends StdDeserializer<BenutzerTy
 
 	@Override
 	public BenutzerTyp deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
-		Integer i = null;
 		try {
-			i = Integer.parseInt(p.getText());
+			return BenutzerTypConverter.instance.convertToEntityAttribute(Integer.parseInt(p.getText()));
 		} catch (NumberFormatException e) {
+			e.printStackTrace();
+			return null;
 		}
-		return BenutzerTypConverter.instance.convertToEntityAttribute(i);
 	}
 	
 }

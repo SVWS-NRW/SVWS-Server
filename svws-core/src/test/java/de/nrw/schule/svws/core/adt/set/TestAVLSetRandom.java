@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Random;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -26,13 +25,6 @@ public class TestAVLSetRandom {
 	private final DummySet set2 = new DummySet(MAX_VALUE);
 
 	/**
-	 * Initialisiert den Test
-	 */
-	@BeforeAll
-	static void setup() {
-	}
-
-	/**
 	 * Testet die Klasse {@link AVLSet} mit randomisierten Daten, indem alle Operationen auf der Dummy-Klasse
 	 * {@link DummySet} simultan durchgeführt werden.
 	 */
@@ -47,7 +39,7 @@ public class TestAVLSetRandom {
 	}
 
 	private void testeEineRunde() {
-		switch (RANDOM.nextInt(30)) {
+		switch (RANDOM.nextInt(21)) {
 			case 0 -> { // first
 				if (set1.size() > 0)
 					if (unequal(set1.first(), set2.first()))
@@ -205,7 +197,7 @@ public class TestAVLSetRandom {
 						fail("iter1.next() != iter2.next() --> " + i1 + " != " + i2);
 				}
 			}
-
+			default -> throw new IllegalArgumentException("Unexpected value");
 		}
 	}
 

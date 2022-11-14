@@ -2,7 +2,6 @@ package de.nrw.schule.svws.core.types.statkue;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -16,13 +15,6 @@ import de.nrw.schule.svws.core.types.schule.Schulgliederung;
 @DisplayName("Teste den Core-Type Schulgliederung")
 public class TestCoreTypeSchulgliederung {
 	
-    /**
-     * Initialisiert den Test
-     */
-    @BeforeAll
-    static void setup() {
-    }
-
     /**
      * Prüft, ob die Schulformen mindestens eine Schulgliederungen haben.
      */

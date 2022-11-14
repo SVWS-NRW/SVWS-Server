@@ -35,10 +35,11 @@ public class SprachpruefungniveauConverterDeserializer extends StdDeserializer<S
 
 	@Override
 	public Sprachpruefungniveau deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
-		Integer i = null;
+		Integer i;
 		try {
 			i = Integer.parseInt(p.getText());
-		} catch (NumberFormatException e) {
+		} catch (@SuppressWarnings("unused") NumberFormatException e) {
+			i = null;
 		}
 		return SprachpruefungniveauConverter.instance.convertToEntityAttribute(i);
 	}

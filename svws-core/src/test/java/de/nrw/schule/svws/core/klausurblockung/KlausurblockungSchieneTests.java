@@ -9,7 +9,6 @@ import java.util.TreeSet;
 import java.util.Vector;
 import java.util.function.Consumer;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
@@ -37,11 +36,6 @@ public class KlausurblockungSchieneTests {
 	private static final String PFAD_DATEN_002 = "de/nrw/schule/svws/core/klausurblockung/blockungschiene002/";
 	private static final String PFAD_DATEN_003 = "de/nrw/schule/svws/core/klausurblockung/blockungschiene003/";
 
-
-	/** Initialisiert den Test. Die Methode ist leer. */
-	@BeforeAll
-	static void setup() {
-	}
 
 	/** Testet das Einlesen und Konvertieren der Daten 001. Diese befinden sich hier {@link #PFAD_DATEN_001}. */
 	@Test
@@ -129,13 +123,13 @@ public class KlausurblockungSchieneTests {
 							.get(stufe);
 
 					// Blockungsalgorithmus...
-					klausurblockung(halbjahr, klausnr, stufe, termine.size(), klausuren, mapKursSuS1, mapKursSuS2);
+					klausurblockung(halbjahr, klausnr, stufe, klausuren, mapKursSuS1, mapKursSuS2);
 
 				}
 
 	}
 
-	private void klausurblockung(int halbjahr, int klausnr, String stufe, int termine,
+	private static void klausurblockung(int halbjahr, int klausnr, String stufe, 
 			LinkedList<EsserFormatKlausur> klausuren,
 			HashMap<Integer, LinkedList<EsserFormatSchueler>> mapKursSuSschriftlich1,
 			HashMap<Integer, LinkedList<EsserFormatSchueler>> mapKursSuSschriftlich2) {
@@ -273,7 +267,7 @@ public class KlausurblockungSchieneTests {
 	}
 
 	
-	private void starteKlausurblockungSchiene(KlausurblockungSchienenInput input) {
+	private static void starteKlausurblockungSchiene(KlausurblockungSchienenInput input) {
 		// Algorithmus-Objekt erzeugen.
 		KlausurblockungSchienenAlgorithmus alg = new KlausurblockungSchienenAlgorithmus();
 
@@ -294,7 +288,7 @@ public class KlausurblockungSchieneTests {
 
 	}
 
-	private void check(KlausurblockungSchienenInput input, KlausurblockungSchienenOutput output) {
+	private static void check(KlausurblockungSchienenInput input, KlausurblockungSchienenOutput output) {
 		// Überprüfe 'output.datenbankID'.
 		assert output.datenbankID >= 0 : "'KlausurblockungSchienenOutput.datenbankID' ist negativ --> " + output.datenbankID;
 

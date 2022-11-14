@@ -139,7 +139,7 @@ public class DataSchuelerSchulbesuchsdaten extends DataManager<Long> {
 
 		    			// Informationen zu der Schule, die vor der Aufnahme besucht wurde
 		    			case "vorigeSchulnummer" -> schueler.LSSchulNr = JSONMapper.convertToString(value, true, true);
-		    			case "vorigeAllgHerkunft" -> { }   // TODO zur Zeit noch nicht implementiert
+		    			case "vorigeAllgHerkunft" -> { /* TODO zur Zeit noch nicht implementiert */ }   
 		    			case "vorigeEntlassdatum" -> schueler.LSSchulEntlassDatum = JSONMapper.convertToString(value, true, true);
 		    			case "vorigeEntlassjahrgang" -> schueler.LSJahrgang = JSONMapper.convertToString(value, true, true);    // TODO Katalog ...
 		    			case "vorigeArtLetzteVersetzung" -> schueler.LSVersetzung = JSONMapper.convertToString(value, true, true);

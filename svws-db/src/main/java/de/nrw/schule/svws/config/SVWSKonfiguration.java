@@ -135,10 +135,10 @@ public class SVWSKonfiguration {
 			URL url = classLoader.getResource(filename);
 			if (url != null)
 				return Paths.get(url.toURI());
+	       	throw new IOException("File not found");
 		} catch (URISyntaxException e) {
+	       	throw new IOException("File not found", e);
 		}
-		
-       	throw new IOException("File not found");
 	}
 	
 

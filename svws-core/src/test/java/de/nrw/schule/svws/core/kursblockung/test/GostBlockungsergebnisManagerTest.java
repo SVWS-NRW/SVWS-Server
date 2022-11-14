@@ -9,7 +9,6 @@ import java.util.Set;
 import java.util.Vector;
 import java.util.function.Consumer;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
@@ -36,11 +35,6 @@ public class GostBlockungsergebnisManagerTest {
 
 	private static final String PFAD_DATEN_001 = "de/nrw/schule/svws/core/kursblockung/blockung001/";
 	private static final String PFAD_DATEN_002 = "de/nrw/schule/svws/core/kursblockung/blockung002/";
-
-	/** Initialisiert den Test. Die Methode ist leer. */
-	@BeforeAll
-	static void setup() {
-	}
 
 	/** 
 	 * Testet das Einlesen und Konvertieren der Daten 001. Diese befinden sich hier {@link #PFAD_DATEN_001}. 
@@ -101,7 +95,7 @@ public class GostBlockungsergebnisManagerTest {
 		teste_in_out(input, out);
 	}
 
-	private void teste_in_out(GostBlockungsdatenManager input, GostBlockungsergebnisManager out) {
+	private static void teste_in_out(GostBlockungsdatenManager input, GostBlockungsergebnisManager out) {
 		// Die Kurs-Map erstellen.
 		HashMap<Long, HashSet<Long>> mapFaKu = new HashMap<>();
 		HashMap<Long, HashSet<Long>> mapKuSchiene = new HashMap<>();
@@ -188,7 +182,7 @@ public class GostBlockungsergebnisManagerTest {
 
 	}
 
-	private void check_conistency(HashMap<Long, HashSet<Long>> mapFaKu, HashMap<Long, HashMap<Long, Long>> mapScFaKu,
+	private static void check_conistency(HashMap<Long, HashSet<Long>> mapFaKu, HashMap<Long, HashMap<Long, Long>> mapScFaKu,
 			HashMap<Long, HashSet<Long>> mapKuSchiene, GostBlockungsergebnisManager out) {
 		// 1a) ergebnis.bewertung.anzahlKurseNichtZugeordnet;
 		int sum1a = 0;
@@ -285,7 +279,7 @@ public class GostBlockungsergebnisManagerTest {
 			fail("sum4 != sum4out (" + sum4 + " != " + sum4out + ")");
 	}
 
-	private Long getRandom(Set<Long> keySet, Random rnd) {
+	private static Long getRandom(Set<Long> keySet, Random rnd) {
 		double max = 1.0;
 		Long winner = null;
 		for (Long current : keySet) {
@@ -298,7 +292,7 @@ public class GostBlockungsergebnisManagerTest {
 		return winner;
 	}
 
-	private GostBlockungsergebnisSchiene getRandom(Vector<GostBlockungsergebnisSchiene> vSchienen, Random rnd) {
+	private static GostBlockungsergebnisSchiene getRandom(Vector<GostBlockungsergebnisSchiene> vSchienen, Random rnd) {
 		int i = rnd.nextInt(vSchienen.size());
 		return vSchienen.get(i);
 	}

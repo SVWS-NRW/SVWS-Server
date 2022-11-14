@@ -39,7 +39,8 @@ public class SchuelerStatusConverterDeserializer extends StdDeserializer<Schuele
 		Integer i = null;
 		try {
 			i = Integer.parseInt(p.getText());
-		} catch (NumberFormatException e) {
+		} catch (@SuppressWarnings("unused") NumberFormatException e) {
+			i = null;
 		}
 		return SchuelerStatusConverter.instance.convertToEntityAttribute(i);
 	}

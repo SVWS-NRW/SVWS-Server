@@ -106,10 +106,11 @@ public class GenerateTestdatenLaufbahn {
 			DBEntityManager conn = user.getEntityManager();
 			
 			// Lese die ID für den ersten generierten Jahrgang ein
-			int jahrgangID = 1; 
+			int jahrgangID; 
 			try {
 				jahrgangID = Integer.parseInt(cmdLine.getValue("js", "1"));
-			} catch (NumberFormatException e) {
+			} catch (@SuppressWarnings("unused") NumberFormatException e) {
+				jahrgangID = 1;
 			}
 			
 			// Prüfe die Schulform
@@ -142,10 +143,11 @@ public class GenerateTestdatenLaufbahn {
 			List<DTOGostSchueler> schuelerListe = conn.queryAll(DTOGostSchueler.class);
 			for (DTOGostSchueler schueler : schuelerListe) {
 				String strSchuelerID = String.format("%04d", schueler.Schueler_ID);
-				Abiturdaten abiturdaten = null;
+				Abiturdaten abiturdaten;
 				try {
 					abiturdaten = GostSchuelerLaufbahn.get(conn, schueler.Schueler_ID);
-				} catch (Exception e) {
+				} catch (@SuppressWarnings("unused") Exception e) {
+					abiturdaten = null;
 				}
 				if (abiturdaten == null)
 					continue;

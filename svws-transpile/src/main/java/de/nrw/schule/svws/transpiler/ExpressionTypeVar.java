@@ -74,7 +74,7 @@ public class ExpressionTypeVar extends ExpressionType {
 		if (type instanceof WildcardTree wt) {
 			ExpressionTypeVar result = new ExpressionTypeVar(null);
 			switch (wt.getKind()) {
-				case UNBOUNDED_WILDCARD -> {}
+				case UNBOUNDED_WILDCARD -> { /**/ }
 				case EXTENDS_WILDCARD -> result.extendsBound = ExpressionType.getExpressionType(transpiler, wt.getBound());
 				case SUPER_WILDCARD -> result.superBound = ExpressionType.getExpressionType(transpiler, wt.getBound());
 				default ->

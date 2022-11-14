@@ -83,10 +83,11 @@ public class GenerateTestdatenLaufbahnFromLupoMDB {
 			lupoMDB.importFrom();
 			
 			// Lese die ID für den ersten generierten Jahrgang ein
-			int jahrgangID = 1; 
+			int jahrgangID; 
 			try {
 				jahrgangID = Integer.parseInt(cmdLine.getValue("js", "1"));
-			} catch (NumberFormatException e) {
+			} catch (@SuppressWarnings("unused") NumberFormatException e) {
+				jahrgangID = 1;
 			}
 			
 			// Prüfe die Schulform

@@ -36,10 +36,11 @@ public class GOStHalbjahrConverterDeserializer extends StdDeserializer<GostHalbj
 
 	@Override
 	public GostHalbjahr deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
-		Integer i = null;
+		Integer i;
 		try {
 			i = Integer.parseInt(p.getText());
-		} catch (NumberFormatException e) {
+		} catch (@SuppressWarnings("unused") NumberFormatException e) {
+			i = null;
 		}		
 		return GOStHalbjahrConverter.instance.convertToEntityAttribute(i);
 	}
