@@ -23,7 +23,8 @@ module.exports = {
 				"types": {
 					// un-ban a type that's banned by default
 					"Number": false,
-					"String": false
+					"String": false,
+					"Boolean": false
 				},
 				"extendDefaults": true
 			}
