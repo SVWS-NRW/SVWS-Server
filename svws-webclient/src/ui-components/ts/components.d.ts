@@ -13,7 +13,6 @@ declare module '@vue/runtime-core' {
     Button: typeof import('./src/components/Controls/Button.vue')['default']
     Checkbox: typeof import('./src/components/Controls/Checkbox.vue')['default']
     ContentCard: typeof import('./src/components/Layout/ContentCard.vue')['default']
-    ContentSidebar: typeof import('./src/components/Layout/ContentSidebar.vue')['default']
     Dropdown: typeof import('./src/components/Controls/Dropdown.vue')['default']
     DropdownItem: typeof import('./src/components/Controls/DropdownItem.vue')['default']
     DropdownWithAction: typeof import('./src/components/Controls/DropdownWithAction.vue')['default']

@@ -16,7 +16,6 @@ export { default as SvwsUiTextInput } from "~/Controls/TextInput.vue";
 export { default as SvwsUiToggle } from "~/Controls/Toggle.vue";
 export { default as SvwsUiAvatar } from "~/Layout/Avatar.vue";
 export { default as SvwsUiContentCard } from "~/Layout/ContentCard.vue";
-export { default as SvwsUiContentSidebar } from "~/Layout/ContentSidebar.vue";
 export { default as SvwsUiHeader } from "~/Layout/Header.vue";
 export { default as SvwsUiIcon } from "~/Layout/Icon.vue";
 export { default as SvwsUiTable } from "~/Layout/Table.vue";
