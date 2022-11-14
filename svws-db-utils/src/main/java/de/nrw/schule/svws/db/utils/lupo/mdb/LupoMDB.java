@@ -618,10 +618,10 @@ public class LupoMDB {
 			
 			abidaten.besondereLernleistung = GostBesondereLernleistung.fromKuerzel(lupoSchueler.BLL_Art).kuerzel;
 			abidaten.besondereLernleistungNotenKuerzel = Note.fromNotenpunkte(lupoSchueler.BLL_Punkte).kuerzel;
-			abidaten.block1AnzahlKurse = null;
 			try {
 				abidaten.block1AnzahlKurse = Integer.parseInt(lupoSchueler.AnzK_Summe);
-			} catch (NumberFormatException e) {
+			} catch (@SuppressWarnings("unused") NumberFormatException e) {
+				abidaten.block1AnzahlKurse = null;
 			}
 			abidaten.block1Zulassung = lupoSchueler.Zulassung;
 			abidaten.sprachendaten = new Sprachendaten();
@@ -706,10 +706,10 @@ public class LupoMDB {
 			if ((lupoSchuelerFach.FS_BeginnJg != null) && (lupoSchuelerFach.Sprachenfolge != null) && zulFach.daten.istFremdsprache) {
 				Sprachbelegung sprachbelegung = new Sprachbelegung();
 				sprachbelegung.sprache = zulFach.daten.kuerzel;
-				sprachbelegung.reihenfolge = -1;
 				try {
 					sprachbelegung.reihenfolge = Integer.parseInt(lupoSchuelerFach.Sprachenfolge);
-				} catch (NumberFormatException e) {
+				} catch (@SuppressWarnings("unused") NumberFormatException e) {
+					sprachbelegung.reihenfolge = -1;
 				}
 				sprachbelegung.belegungVonJahrgang = lupoSchuelerFach.FS_BeginnJg;
 				if (sprachbelegung.belegungVonJahrgang.length() == 1)
@@ -742,10 +742,10 @@ public class LupoMDB {
 			if ((lupoSchuelerSprachenfolge.JahrgangVon != null) && (lupoSchuelerSprachenfolge.Reihenfolge != null) && zulFach.daten.istFremdsprache) {
 				Sprachbelegung sprachbelegung = new Sprachbelegung();
 				sprachbelegung.sprache = zulFach.daten.kuerzel;
-				sprachbelegung.reihenfolge = -1;
 				try {
 					sprachbelegung.reihenfolge = Integer.parseInt(lupoSchuelerSprachenfolge.Reihenfolge);
-				} catch (NumberFormatException e) {
+				} catch (@SuppressWarnings("unused") NumberFormatException e) {
+					sprachbelegung.reihenfolge = -1;
 				}
 				sprachbelegung.belegungVonJahrgang = "" + lupoSchuelerSprachenfolge.JahrgangVon;
 				if (sprachbelegung.belegungVonJahrgang.length() == 1)

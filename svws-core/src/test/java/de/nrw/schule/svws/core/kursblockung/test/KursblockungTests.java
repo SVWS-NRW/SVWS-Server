@@ -8,7 +8,6 @@ import java.util.Random;
 import java.util.Vector;
 import java.util.function.Consumer;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
@@ -41,11 +40,6 @@ public class KursblockungTests {
 
 	private static final String PFAD_DATEN_001 = "de/nrw/schule/svws/core/kursblockung/blockung001/";
 	private static final String PFAD_DATEN_002 = "de/nrw/schule/svws/core/kursblockung/blockung002/";
-
-	/** Initialisiert den Test. Die Methode ist leer. */
-	@BeforeAll
-	static void setup() {
-	}
 
 	/**
 	 * Testet den Algorithmus "Maximum Cardinality Bipartite Matching". Hierfür werden Matrizen unterschiedlicher

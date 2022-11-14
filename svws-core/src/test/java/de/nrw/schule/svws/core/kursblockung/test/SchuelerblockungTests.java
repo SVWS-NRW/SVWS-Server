@@ -6,7 +6,6 @@ import java.util.Random;
 import java.util.Vector;
 import java.util.function.Consumer;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
@@ -33,11 +32,6 @@ public class SchuelerblockungTests {
 
 	private static final long _SEED = 1L;
 	private static final int _ANZAHL_AN_ZUFALLSTESTS = 1000;
-
-	/** Initialisiert den Test. Die Methode ist leer. */
-	@BeforeAll
-	static void setup() {
-	}
 
 	/** Testet den Schülerblockungs-Algorithmus mit randomisierten Daten. */
 	@Test

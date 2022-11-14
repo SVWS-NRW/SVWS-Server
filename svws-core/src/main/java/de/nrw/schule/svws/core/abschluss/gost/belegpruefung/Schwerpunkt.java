@@ -29,6 +29,7 @@ public class Schwerpunkt extends GostBelegpruefung {
 
 	@Override
 	protected void init() {
+		// Keine Initialisierung notwendig
 	}
 
 

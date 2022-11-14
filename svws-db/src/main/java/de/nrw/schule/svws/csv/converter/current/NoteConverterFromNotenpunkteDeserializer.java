@@ -37,10 +37,11 @@ public class NoteConverterFromNotenpunkteDeserializer extends StdDeserializer<No
 
 	@Override
 	public Note deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
-		Integer i = null;
+		Integer i;
 		try {
 			i = Integer.parseInt(p.getText());
-		} catch (NumberFormatException e) {
+		} catch (@SuppressWarnings("unused") NumberFormatException e) {
+			i = null;
 		}
 		return NoteConverterFromNotenpunkte.instance.convertToEntityAttribute(i);
 	}

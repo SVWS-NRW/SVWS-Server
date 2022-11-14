@@ -9,7 +9,6 @@ import java.util.LinkedList;
 import java.util.NoSuchElementException;
 import java.util.Random;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -25,13 +24,6 @@ public class TestDequeRandom {
 	private final Random RND = new Random(1l);
 	private final Deque<Integer> d1 = new LinkedCollection<>();
 	private final Deque<Integer> d2 = new LinkedList<>();
-
-	/**
-	 * Initialisiert den Test
-	 */
-	@BeforeAll
-	static void setup() {
-	}
 
 	/**
 	 * Folgende Methoden werden zufällig getestet. <br>
@@ -90,143 +82,60 @@ public class TestDequeRandom {
 			int type = RND.nextInt(3);
 			if (type == 0) { // Adding
 				switch (RND.nextInt(9)) {
-				case 0:
-					testAddFirst();
-					break;
-				case 1:
-					testAddFirst();
-					break;
-				case 2:
-					testAddLast();
-					break;
-				case 3:
-					testOfferFirst();
-					break;
-				case 4:
-					testOfferLast();
-					break;
-				case 5:
-					testAdd();
-					break;
-				case 6:
-					testOffer();
-					break;
-				case 7:
-					testAddAll();
-					break;
-				case 8:
-					testPush();
-					break;
+					case 0 -> testAddFirst();
+					case 1 -> testAddFirst();
+					case 2 -> testAddLast();
+					case 3 -> testOfferFirst();
+					case 4 -> testOfferLast();
+					case 5 -> testAdd();
+					case 6 -> testOffer();
+					case 7 -> testAddAll();
+					case 8 -> testPush();
+					default -> throw new IllegalArgumentException("Unexpected value");
 				}
 			}
 			if (type == 1) { // Removing
 				switch (RND.nextInt(15)) {
-				case 0:
-					testRemoveFirst();
-					break;
-				case 1:
-					testRemoveLast();
-					break;
-				case 2:
-					testPollFirst();
-					break;
-				case 3:
-					testPollLast();
-					break;
-				case 4:
-					testRemoveFirstOccurrence();
-					break;
-				case 5:
-					testRemoveLastOccurrence();
-					break;
-				case 6:
-					testRemoveToBoolean();
-					break;
-				case 7:
-					testPoll();
-					break;
-				case 8:
-					testPop();
-					break;
-				case 9:
-					testRemoveObject();
-					break;
-				case 10:
-					testRemoveAll();
-					break;
-				case 11:
-					testRetainAll();
-					break;
-				case 12:
-					testRemoveAllSelf();
-					break;
-				case 13:
-					testRetainAllSelfOrNull();
-					break;
-				case 14:
-					testRemoveToElement();
-					break;
+					case 0 -> testRemoveFirst();
+					case 1 -> testRemoveLast();
+					case 2 -> testPollFirst();
+					case 3 -> testPollLast();
+					case 4 -> testRemoveFirstOccurrence();
+					case 5 -> testRemoveLastOccurrence();
+					case 6 -> testRemoveToBoolean();
+					case 7 -> testPoll();
+					case 8 -> testPop();
+					case 9 -> testRemoveObject();
+					case 10 -> testRemoveAll();
+					case 11 -> testRetainAll();
+					case 12 -> testRemoveAllSelf();
+					case 13 -> testRetainAllSelfOrNull();
+					case 14 -> testRemoveToElement();
+					default -> throw new IllegalArgumentException("Unexpected value");
 				}
 			}
 			if (type == 2) { // Misc
 				switch (RND.nextInt(19)) {
-				case 0:
-					testSize();
-					break;
-				case 1:
-					testGetFirst();
-					break;
-				case 2:
-					testGetLast();
-					break;
-				case 3:
-					testPeekFirst();
-					break;
-				case 4:
-					testPeekLast();
-					break;
-				case 5:
-					testElement();
-					break;
-				case 6:
-					testPeek();
-					break;
-				case 7:
-					testContains();
-					break;
-				case 8:
-					testDescendingIterator();
-					break;
-				case 9:
-					testClear();
-					break;
-				case 10:
-					testIsEmpty();
-					break;
-				case 11:
-					testToArray();
-					break;
-				case 12:
-					testToArrayWithType();
-					break;
-				case 13:
-					testContainsAll();
-					break;
-				case 14:
-					testEquals();
-					break;
-				case 15:
-					testSpecialIndex();
-					break;
-				case 16:
-					testSpecialSort();
-					break;
-				case 17:
-					testToString();
-					break;
-				case 18:
-					testHashCode();
-					break;
+					case 0 -> testSize();
+					case 1 -> testGetFirst();
+					case 2 -> testGetLast();
+					case 3 -> testPeekFirst();
+					case 4 -> testPeekLast();
+					case 5 -> testElement();
+					case 6 -> testPeek();
+					case 7 -> testContains();
+					case 8 -> testDescendingIterator();
+					case 9 -> testClear();
+					case 10 -> testIsEmpty();
+					case 11 -> testToArray();
+					case 12 -> testToArrayWithType();
+					case 13 -> testContainsAll();
+					case 14 -> testEquals();
+					case 15 -> testSpecialIndex();
+					case 16 -> testSpecialSort();
+					case 17 -> testToString();
+					case 18 -> testHashCode();
+					default -> throw new IllegalArgumentException("Unexpected value");
 				}
 			}
 		}
@@ -254,12 +163,14 @@ public class TestDequeRandom {
 			try {
 				d1.remove();
 				fail("d1.remove() != NoSuchElementException");
-			} catch (NoSuchElementException ex) {
+			} catch (@SuppressWarnings("unused") NoSuchElementException ex) {
+				// success
 			}
 			try {
 				d2.remove();
 				fail("d2.remove() != NoSuchElementException");
-			} catch (NoSuchElementException ex) {
+			} catch (@SuppressWarnings("unused") NoSuchElementException ex) {
+				// success
 			}
 		}
 	}
@@ -498,12 +409,14 @@ public class TestDequeRandom {
 			try {
 				d1.pop();
 				fail("d1.pop() != NoSuchElementException");
-			} catch (NoSuchElementException ex) {
+			} catch (@SuppressWarnings("unused") NoSuchElementException ex) {
+				// success
 			}
 			try {
 				d2.pop();
 				fail("d2.pop() != NoSuchElementException");
-			} catch (NoSuchElementException ex) {
+			} catch (@SuppressWarnings("unused") NoSuchElementException ex) {
+				// success
 			}
 		}
 	}
@@ -557,12 +470,14 @@ public class TestDequeRandom {
 			try {
 				d1.element();
 				fail("d1.element() != NoSuchElementException");
-			} catch (NoSuchElementException ex) {
+			} catch (@SuppressWarnings("unused") NoSuchElementException ex) {
+				// success
 			}
 			try {
 				d2.element();
 				fail("d2.element() != NoSuchElementException");
-			} catch (NoSuchElementException ex) {
+			} catch (@SuppressWarnings("unused") NoSuchElementException ex) {
+				// success
 			}
 		}
 	}
@@ -637,12 +552,14 @@ public class TestDequeRandom {
 			try {
 				d1.getFirst();
 				fail("d1.getFirst() != NoSuchElementException");
-			} catch (NoSuchElementException ex) {
+			} catch (@SuppressWarnings("unused") NoSuchElementException ex) {
+				// success
 			}
 			try {
 				d2.getFirst();
 				fail("d2.getFirst() != NoSuchElementException");
-			} catch (NoSuchElementException ex) {
+			} catch (@SuppressWarnings("unused") NoSuchElementException ex) {
+				// success
 			}
 		}
 	}
@@ -657,12 +574,14 @@ public class TestDequeRandom {
 			try {
 				d1.getLast();
 				fail("d1.getLast() != NoSuchElementException");
-			} catch (NoSuchElementException ex) {
+			} catch (@SuppressWarnings("unused") NoSuchElementException ex) {
+				// success
 			}
 			try {
 				d2.getLast();
 				fail("d2.getLast() != NoSuchElementException");
-			} catch (NoSuchElementException ex) {
+			} catch (@SuppressWarnings("unused") NoSuchElementException ex) {
+				// success
 			}
 		}
 	}
@@ -705,12 +624,14 @@ public class TestDequeRandom {
 			try {
 				d1.removeFirst();
 				fail("d1.removeFirst() != NoSuchElementException");
-			} catch (NoSuchElementException ex) {
+			} catch (@SuppressWarnings("unused") NoSuchElementException ex) {
+				// success
 			}
 			try {
 				d2.removeFirst();
 				fail("d2.removeFirst() != NoSuchElementException");
-			} catch (NoSuchElementException ex) {
+			} catch (@SuppressWarnings("unused") NoSuchElementException ex) {
+				// success
 			}
 		}
 	}
@@ -725,12 +646,14 @@ public class TestDequeRandom {
 			try {
 				d1.removeLast();
 				fail("d1.removeLast() != NoSuchElementException");
-			} catch (NoSuchElementException ex) {
+			} catch (@SuppressWarnings("unused") NoSuchElementException ex) {
+				// success
 			}
 			try {
 				d2.removeLast();
 				fail("d2.removeLast() != NoSuchElementException");
-			} catch (NoSuchElementException ex) {
+			} catch (@SuppressWarnings("unused") NoSuchElementException ex) {
+				// success
 			}
 		}
 	}

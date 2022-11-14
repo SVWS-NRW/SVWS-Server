@@ -13,7 +13,6 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.SortedSet;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -41,13 +40,6 @@ public class TestAVLMapRandom {
 	private Set<Entry<Integer, Integer>> ent2 = map2.entrySet();
 
 	/**
-	 * Initialisiert den Test
-	 */
-	@BeforeAll
-	static void setup() {
-	}
-
-	/**
 	 * Testet die Klasse {@link AVLMap}, deren Methoden und ihre abhängige Klassen.
 	 */
 	@Test
@@ -73,12 +65,14 @@ public class TestAVLMapRandom {
 					try {
 						map1.firstKey();
 						fail("map1.firstKey() --> Sollte eine NoSuchElementException werfen!");
-					} catch (NoSuchElementException ex) {
+					} catch (@SuppressWarnings("unused") NoSuchElementException ex) {
+						// success
 					}
 					try {
 						map2.firstKey();
 						fail("map2.firstKey() --> Sollte eine NoSuchElementException werfen!");
-					} catch (NoSuchElementException ex) {
+					} catch (@SuppressWarnings("unused") NoSuchElementException ex) {
+						// success
 					}
 				} else {
 					if (unequalObjects(map1.firstKey(), map2.firstKey()))
@@ -90,12 +84,14 @@ public class TestAVLMapRandom {
 					try {
 						map1.lastKey();
 						fail("map1.lastKey() --> Sollte eine NoSuchElementException werfen!");
-					} catch (NoSuchElementException ex) {
+					} catch (@SuppressWarnings("unused") NoSuchElementException ex) {
+						// success
 					}
 					try {
 						map2.lastKey();
 						fail("map2.lastKey() --> Sollte eine NoSuchElementException werfen!");
-					} catch (NoSuchElementException ex) {
+					} catch (@SuppressWarnings("unused") NoSuchElementException ex) {
+						// success
 					}
 				} else {
 					if (unequalObjects(map1.lastKey(), map2.lastKey()))
@@ -433,24 +429,28 @@ public class TestAVLMapRandom {
 				try {
 					i1.next();
 					fail("col1.iterator.next() --> sollte eine NoSuchElementException werfen!");
-				} catch (NoSuchElementException ex) {
+				} catch (@SuppressWarnings("unused") NoSuchElementException ex) {
+					// success
 				}
 				try {
 					i2.next();
 					fail("col2.iterator.next() --> sollte eine NoSuchElementException werfen!");
-				} catch (NoSuchElementException ex) {
+				} catch (@SuppressWarnings("unused") NoSuchElementException ex) {
+					// success
 				}
 				try {
 					i1.remove(); // Der erste Aufruf könnte noch klappen.
 					i1.remove();
 					fail("col1.iterator.remove() --> sollte eine IllegalStateException werfen!");
-				} catch (IllegalStateException ex) {
+				} catch (@SuppressWarnings("unused") IllegalStateException ex) {
+					// success
 				}
 				try {
 					i2.remove(); // Der erste Aufruf könnte noch klappen.
 					i2.remove();
 					fail("col2.iterator.remove() --> sollte eine IllegalStateException werfen!");
-				} catch (IllegalStateException ex) {
+				} catch (@SuppressWarnings("unused") IllegalStateException ex) {
+					// success
 				}
 			}
 			case 44 -> { // toArray
@@ -470,12 +470,14 @@ public class TestAVLMapRandom {
 				try {
 					col1.add(v);
 					fail("col1.add(v) --> Sollte eine UnsupportedOperationException werfen!");
-				} catch (UnsupportedOperationException ex) {
+				} catch (@SuppressWarnings("unused") UnsupportedOperationException ex) {
+					// success
 				}
 				try {
 					col2.add(v);
 					fail("col2.add(v) --> Sollte eine UnsupportedOperationException werfen!");
-				} catch (UnsupportedOperationException ex) {
+				} catch (@SuppressWarnings("unused") UnsupportedOperationException ex) {
+					// success
 				}
 			}
 			case 47 -> { // remove
@@ -483,12 +485,14 @@ public class TestAVLMapRandom {
 				try {
 					col1.remove(v);
 					fail("col1.remove(v) --> Sollte eine UnsupportedOperationException werfen!");
-				} catch (UnsupportedOperationException ex) {
+				} catch (@SuppressWarnings("unused") UnsupportedOperationException ex) {
+					// success
 				}
 				try {
 					col2.remove(v);
 					fail("col2.remove(v) --> Sollte eine UnsupportedOperationException werfen!");
-				} catch (UnsupportedOperationException ex) {
+				} catch (@SuppressWarnings("unused") UnsupportedOperationException ex) {
+					// success
 				}
 			}
 			case 48 -> { // containsAll
@@ -507,12 +511,14 @@ public class TestAVLMapRandom {
 				try {
 					col1.addAll(col);
 					fail("col1.addAll(col) --> Sollte eine UnsupportedOperationException werfen!");
-				} catch (UnsupportedOperationException ex) {
+				} catch (@SuppressWarnings("unused") UnsupportedOperationException ex) {
+					// success
 				}
 				try {
 					col2.addAll(col);
 					fail("col2.addAll(col) --> Sollte eine UnsupportedOperationException werfen!");
-				} catch (UnsupportedOperationException ex) {
+				} catch (@SuppressWarnings("unused") UnsupportedOperationException ex) {
+					// success
 				}
 			}
 			case 50 -> { // removeAll
@@ -522,12 +528,14 @@ public class TestAVLMapRandom {
 				try {
 					col1.removeAll(col);
 					fail("col1.removeAll(col) --> Sollte eine UnsupportedOperationException werfen!");
-				} catch (UnsupportedOperationException ex) {
+				} catch (@SuppressWarnings("unused") UnsupportedOperationException ex) {
+					// success
 				}
 				try {
 					col2.removeAll(col);
 					fail("col2.removeAll(col) --> Sollte eine UnsupportedOperationException werfen!");
-				} catch (UnsupportedOperationException ex) {
+				} catch (@SuppressWarnings("unused") UnsupportedOperationException ex) {
+					// success
 				}
 			}
 			case 51 -> { // retainAll
@@ -537,12 +545,14 @@ public class TestAVLMapRandom {
 				try {
 					col1.retainAll(col);
 					fail("col1.retainAll(col) --> Sollte eine UnsupportedOperationException werfen!");
-				} catch (UnsupportedOperationException ex) {
+				} catch (@SuppressWarnings("unused") UnsupportedOperationException ex) {
+					// success
 				}
 				try {
 					col2.retainAll(col);
 					fail("col2.retainAll(col) --> Sollte eine UnsupportedOperationException werfen!");
-				} catch (UnsupportedOperationException ex) {
+				} catch (@SuppressWarnings("unused") UnsupportedOperationException ex) {
+					// success
 				}
 			}
 			case 52 -> { // clear
@@ -563,12 +573,14 @@ public class TestAVLMapRandom {
 					try {
 						set1.first();
 						fail("set1.first() --> Sollte eine NoSuchElementException statt " + set1.first() + " werfen!");
-					} catch (NoSuchElementException ex) {
+					} catch (@SuppressWarnings("unused") NoSuchElementException ex) {
+						// success
 					}
 					try {
 						set2.first();
 						fail("set2.first() --> Sollte eine NoSuchElementException statt " + set2.first() + " werfen! ");
-					} catch (NoSuchElementException ex) {
+					} catch (@SuppressWarnings("unused") NoSuchElementException ex) {
+						// success
 					}
 				} else {
 					int i1 = set1.first();
@@ -582,12 +594,14 @@ public class TestAVLMapRandom {
 					try {
 						set1.last();
 						fail("set1.last() --> Sollte eine NoSuchElementException statt " + set1.first() + " werfen!");
-					} catch (NoSuchElementException ex) {
+					} catch (@SuppressWarnings("unused") NoSuchElementException ex) {
+						// success
 					}
 					try {
 						set2.last();
 						fail("set2.last() --> Sollte eine NoSuchElementException statt " + set2.first() + " werfen! ");
-					} catch (NoSuchElementException ex) {
+					} catch (@SuppressWarnings("unused") NoSuchElementException ex) {
+						// success
 					}
 				} else {
 					int i1 = set1.last();
@@ -638,12 +652,14 @@ public class TestAVLMapRandom {
 				try {
 					set1.add(v);
 					fail("set1.add() --> solle eine UnsupportedOperationException werfen!");
-				} catch (UnsupportedOperationException ex) {
+				} catch (@SuppressWarnings("unused") UnsupportedOperationException ex) {
+					// success
 				}
 				try {
 					set2.add(v);
 					fail("set2.add() --> solle eine UnsupportedOperationException werfen!");
-				} catch (UnsupportedOperationException ex) {
+				} catch (@SuppressWarnings("unused") UnsupportedOperationException ex) {
+					// success
 				}
 				map1.allowKeyAlone(true);
 				map2.allowKeyAlone(true);
@@ -655,13 +671,13 @@ public class TestAVLMapRandom {
 				try {
 					b1 = set1.add(v);
 					set1.remove(v); // Sofort entfernen, da verschiedene Dummy-Values sonst zu ungleicher col führt!
-				} catch (IllegalArgumentException ex) {
+				} catch (@SuppressWarnings("unused") IllegalArgumentException ex) {
 					f1 = true;
 				}
 				try {
 					b2 = set2.add(v);
 					set2.remove(v); // Sofort entfernen, da verschiedene Dummy-Values sonst zu ungleicher col führt!
-				} catch (IllegalArgumentException ex) {
+				} catch (@SuppressWarnings("unused") IllegalArgumentException ex) {
 					f2 = true;
 				}
 				if (f1 != f2)
@@ -677,12 +693,12 @@ public class TestAVLMapRandom {
 				boolean f2 = false;
 				try {
 					b1 = set1.remove(v);
-				} catch (IllegalArgumentException ex) {
+				} catch (@SuppressWarnings("unused") IllegalArgumentException ex) {
 					f1 = true;
 				}
 				try {
 					b2 = set2.remove(v);
-				} catch (IllegalArgumentException ex) {
+				} catch (@SuppressWarnings("unused") IllegalArgumentException ex) {
 					f2 = true;
 				}
 				if (f1 != f2)
@@ -708,15 +724,15 @@ public class TestAVLMapRandom {
 				map2.allowKeyAlone(false);
 				try {
 					set1.addAll(col);
-
 					fail("set1.addAll(col) --> Sollte eine UnsupportedOperationException werfen!");
-				} catch (UnsupportedOperationException ex) {
+				} catch (@SuppressWarnings("unused") UnsupportedOperationException ex) {
+					// success
 				}
 				try {
 					set2.addAll(col);
-
 					fail("set2.addAll(col) --> Sollte eine UnsupportedOperationException werfen!");
-				} catch (UnsupportedOperationException ex) {
+				} catch (@SuppressWarnings("unused") UnsupportedOperationException ex) {
+					// success
 				}
 				// case allowKeyAlone(true)
 				map1.allowKeyAlone(true);
@@ -728,13 +744,13 @@ public class TestAVLMapRandom {
 				try {
 					b1 = set1.addAll(col);
 					set1.remove(v); // Sofort entfernen, da verschiedene Dummy-Values sonst zu ungleicher col führt!
-				} catch (IllegalArgumentException ex) {
+				} catch (@SuppressWarnings("unused") IllegalArgumentException ex) {
 					f1 = true;
 				}
 				try {
 					b2 = set2.addAll(col);
 					set2.remove(v); // Sofort entfernen, da verschiedene Dummy-Values sonst zu ungleicher col führt!
-				} catch (IllegalArgumentException ex) {
+				} catch (@SuppressWarnings("unused") IllegalArgumentException ex) {
 					f2 = true;
 				}
 
@@ -848,24 +864,28 @@ public class TestAVLMapRandom {
 				try {
 					i1.next();
 					fail("set1.iterator.next() --> Sollte eine NoSuchElementException werfen!");
-				} catch (NoSuchElementException ex) {
+				} catch (@SuppressWarnings("unused") NoSuchElementException ex) {
+					// success
 				}
 				try {
 					i2.next();
 					fail("set2.iterator.next() --> Sollte eine NoSuchElementException werfen!");
-				} catch (NoSuchElementException ex) {
+				} catch (@SuppressWarnings("unused") NoSuchElementException ex) {
+					// success
 				}
 				try {
 					i1.remove(); // Der erste Aufruf könnte noch klappen.
 					i1.remove();
 					fail("set1.iterator.remove() --> Sollte eine IllegalStateException werfen!");
-				} catch (IllegalStateException ex) {
+				} catch (@SuppressWarnings("unused") IllegalStateException ex) {
+					// success
 				}
 				try {
 					i2.remove(); // Der erste Aufruf könnte noch klappen.
 					i2.remove();
 					fail("set2.iterator.remove() --> Sollte eine IllegalStateException werfen!");
-				} catch (IllegalStateException ex) {
+				} catch (@SuppressWarnings("unused") IllegalStateException ex) {
+					// success
 				}
 			}
 			case 74 -> { // descendingSet
@@ -899,24 +919,28 @@ public class TestAVLMapRandom {
 				try {
 					i1.next();
 					fail("set1.descendingIterator.next() --> Sollte eine NoSuchElementException werfen!");
-				} catch (NoSuchElementException ex) {
+				} catch (@SuppressWarnings("unused") NoSuchElementException ex) {
+					// success
 				}
 				try {
 					i2.next();
 					fail("set2.descendingIterator.next() --> Sollte eine NoSuchElementException werfen!");
-				} catch (NoSuchElementException ex) {
+				} catch (@SuppressWarnings("unused") NoSuchElementException ex) {
+					// success
 				}
 				try {
 					i1.remove(); // Der erste Aufruf könnte noch klappen.
 					i1.remove();
 					fail("set1.descendingIterator.remove() --> Sollte eine IllegalStateException werfen!");
-				} catch (IllegalStateException ex) {
+				} catch (@SuppressWarnings("unused") IllegalStateException ex) {
+					// success
 				}
 				try {
 					i2.remove(); // Der erste Aufruf könnte noch klappen.
 					i2.remove();
 					fail("set2.descendingIterator.remove() --> Sollte eine IllegalStateException werfen!");
-				} catch (IllegalStateException ex) {
+				} catch (@SuppressWarnings("unused") IllegalStateException ex) {
+					// success
 				}
 			}
 			case 76 -> { // subSet(4 params)
@@ -933,12 +957,12 @@ public class TestAVLMapRandom {
 				NavigableSet<Integer> s2 = null;
 				try {
 					s1 = set1.subSet(from, fromInc, to, toInc);
-				} catch (IllegalArgumentException e) {
+				} catch (@SuppressWarnings("unused") IllegalArgumentException e) {
 					f1 = true;
 				}
 				try {
 					s2 = set2.subSet(from, fromInc, to, toInc);
-				} catch (IllegalArgumentException e) {
+				} catch (@SuppressWarnings("unused") IllegalArgumentException e) {
 					f2 = true;
 				}
 
@@ -957,12 +981,12 @@ public class TestAVLMapRandom {
 				NavigableSet<Integer> s2 = null;
 				try {
 					s1 = set1.headSet(to, toInc);
-				} catch (IllegalArgumentException e) {
+				} catch (@SuppressWarnings("unused") IllegalArgumentException e) {
 					f1 = true;
 				}
 				try {
 					s2 = set2.headSet(to, toInc);
-				} catch (IllegalArgumentException e) {
+				} catch (@SuppressWarnings("unused") IllegalArgumentException e) {
 					f2 = true;
 				}
 
@@ -981,12 +1005,12 @@ public class TestAVLMapRandom {
 				NavigableSet<Integer> s2 = null;
 				try {
 					s1 = set1.tailSet(from, toInc);
-				} catch (IllegalArgumentException e) {
+				} catch (@SuppressWarnings("unused") IllegalArgumentException e) {
 					f1 = true;
 				}
 				try {
 					s2 = set2.tailSet(from, toInc);
-				} catch (IllegalArgumentException e) {
+				} catch (@SuppressWarnings("unused") IllegalArgumentException e) {
 					f2 = true;
 				}
 
@@ -1005,12 +1029,12 @@ public class TestAVLMapRandom {
 				SortedSet<Integer> s2 = null;
 				try {
 					s1 = set1.subSet(from, to);
-				} catch (IllegalArgumentException e) {
+				} catch (@SuppressWarnings("unused") IllegalArgumentException e) {
 					f1 = true;
 				}
 				try {
 					s2 = set2.subSet(from, to);
-				} catch (IllegalArgumentException e) {
+				} catch (@SuppressWarnings("unused") IllegalArgumentException e) {
 					f2 = true;
 				}
 
@@ -1028,12 +1052,12 @@ public class TestAVLMapRandom {
 				SortedSet<Integer> s2 = null;
 				try {
 					s1 = set1.headSet(to);
-				} catch (IllegalArgumentException e) {
+				} catch (@SuppressWarnings("unused") IllegalArgumentException e) {
 					f1 = true;
 				}
 				try {
 					s2 = set2.headSet(to);
-				} catch (IllegalArgumentException e) {
+				} catch (@SuppressWarnings("unused") IllegalArgumentException e) {
 					f2 = true;
 				}
 
@@ -1051,12 +1075,12 @@ public class TestAVLMapRandom {
 				SortedSet<Integer> s2 = null;
 				try {
 					s1 = set1.tailSet(from);
-				} catch (IllegalArgumentException e) {
+				} catch (@SuppressWarnings("unused") IllegalArgumentException e) {
 					f1 = true;
 				}
 				try {
 					s2 = set2.tailSet(from);
-				} catch (IllegalArgumentException e) {
+				} catch (@SuppressWarnings("unused") IllegalArgumentException e) {
 					f2 = true;
 				}
 
@@ -1117,12 +1141,12 @@ public class TestAVLMapRandom {
 				boolean f2 = false;
 				try {
 					b1 = ent1.add(e);
-				} catch (IllegalArgumentException ex) {
+				} catch (@SuppressWarnings("unused") IllegalArgumentException ex) {
 					f1 = true;
 				}
 				try {
 					b2 = ent2.add(e);
-				} catch (IllegalArgumentException ex) {
+				} catch (@SuppressWarnings("unused") IllegalArgumentException ex) {
 					f2 = true;
 				}
 
@@ -1142,12 +1166,12 @@ public class TestAVLMapRandom {
 				boolean f2 = false;
 				try {
 					b1 = ent1.remove(e);
-				} catch (IllegalArgumentException ex) {
+				} catch (@SuppressWarnings("unused") IllegalArgumentException ex) {
 					f1 = true;
 				}
 				try {
 					b2 = ent2.remove(e);
-				} catch (IllegalArgumentException ex) {
+				} catch (@SuppressWarnings("unused") IllegalArgumentException ex) {
 					f2 = true;
 				}
 
@@ -1185,12 +1209,12 @@ public class TestAVLMapRandom {
 				boolean f2 = false;
 				try {
 					b1 = ent1.addAll(c);
-				} catch (IllegalArgumentException ex) {
+				} catch (@SuppressWarnings("unused") IllegalArgumentException ex) {
 					f1 = true;
 				}
 				try {
 					b2 = ent2.addAll(c);
-				} catch (IllegalArgumentException ex) {
+				} catch (@SuppressWarnings("unused") IllegalArgumentException ex) {
 					f2 = true;
 				}
 
@@ -1269,24 +1293,28 @@ public class TestAVLMapRandom {
 				try {
 					i1.next();
 					fail("ent1.iterator.next() --> sollte eine NoSuchElementException werfen!");
-				} catch (NoSuchElementException ex) {
+				} catch (@SuppressWarnings("unused") NoSuchElementException ex) {
+					// success
 				}
 				try {
 					i2.next();
 					fail("ent2.iterator.next() --> sollte eine NoSuchElementException werfen!");
-				} catch (NoSuchElementException ex) {
+				} catch (@SuppressWarnings("unused") NoSuchElementException ex) {
+					// success
 				}
 				try {
 					i1.remove(); // Der erste Aufruf könnte noch klappen.
 					i1.remove();
 					fail("ent1.iterator.remove() --> sollte eine IllegalStateException werfen!");
-				} catch (IllegalStateException ex) {
+				} catch (@SuppressWarnings("unused") IllegalStateException ex) {
+					// success
 				}
 				try {
 					i2.remove(); // Der erste Aufruf könnte noch klappen.
 					i2.remove();
 					fail("ent2.iterator.remove() --> sollte eine IllegalStateException werfen!");
-				} catch (IllegalStateException ex) {
+				} catch (@SuppressWarnings("unused") IllegalStateException ex) {
+					// success
 				}
 			}
 			case 98 -> { // misc
@@ -1297,12 +1325,14 @@ public class TestAVLMapRandom {
 					try {
 						e1.setValue(value);
 						fail("nav1.firstEntry().setValue(value) --> Sollte eine UnsupportedOperationException werfen!");
-					} catch (UnsupportedOperationException ex) {
+					} catch (@SuppressWarnings("unused") UnsupportedOperationException ex) {
+						// success
 					}
 					try {
 						e2.setValue(value);
 						fail("nav2.firstEntry().setValue(value) --> Sollte eine UnsupportedOperationException werfen!");
-					} catch (UnsupportedOperationException ex) {
+					} catch (@SuppressWarnings("unused") UnsupportedOperationException ex) {
+						// success
 					}
 					if (e1.equals(new Object()) == true)
 						fail("e1.equals(new Object()) --> Sollte FALSE sein!");
@@ -1319,21 +1349,24 @@ public class TestAVLMapRandom {
 					try {
 						map2.comparator();
 						fail("map2.comparator() --> Sollte eine UnsupportedOperationException werfen!");
-					} catch (UnsupportedOperationException ex) {
+					} catch (@SuppressWarnings("unused") UnsupportedOperationException ex) {
+						// success
 					}
 
 					set1.comparator();
 					try {
 						set2.comparator();
 						fail("set2.comparator() --> Sollte eine UnsupportedOperationException werfen!");
-					} catch (UnsupportedOperationException ex) {
+					} catch (@SuppressWarnings("unused") UnsupportedOperationException ex) {
+						// success
 					}
 
 					nav1.comparator();
 					try {
 						nav2.comparator();
 						fail("nav2.comparator() --> Sollte eine UnsupportedOperationException werfen!");
-					} catch (UnsupportedOperationException ex) {
+					} catch (@SuppressWarnings("unused") UnsupportedOperationException ex) {
+						// success
 					}
 				}
 
@@ -1347,6 +1380,7 @@ public class TestAVLMapRandom {
 					fail("map2.equals(map2) == false");
 
 			}
+			default -> { /**/ }
 		} // ... end of switch
 	}
 

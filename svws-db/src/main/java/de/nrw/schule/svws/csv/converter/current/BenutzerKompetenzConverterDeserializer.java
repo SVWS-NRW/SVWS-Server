@@ -35,12 +35,12 @@ public class BenutzerKompetenzConverterDeserializer extends StdDeserializer<Benu
 
 	@Override
 	public BenutzerKompetenz deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
-		Long i = null;
 		try {
-			i = Long.parseLong(p.getText());
+			return BenutzerKompetenzConverter.instance.convertToEntityAttribute(Long.parseLong(p.getText()));
 		} catch (NumberFormatException e) {
+			e.printStackTrace();
+			return null;
 		}
-		return BenutzerKompetenzConverter.instance.convertToEntityAttribute(i);
 	}
 	
 }

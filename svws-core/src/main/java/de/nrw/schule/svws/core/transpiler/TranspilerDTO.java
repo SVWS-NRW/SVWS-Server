@@ -7,5 +7,5 @@ package de.nrw.schule.svws.core.transpiler;
  * 'transpilerFromJSON' and 'transpilerToJSON' for the class.  
  */
 public @interface TranspilerDTO {
-
+	// nur eine einfache Annotation
 }

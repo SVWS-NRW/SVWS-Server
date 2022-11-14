@@ -245,6 +245,7 @@ public class MinHeap<@NotNull T> implements Queue<@NotNull T>, Cloneable {
 			if (this.remove(o)) {
 				result = true;
 				while (this.remove(o)) {
+					// Entferne ggf. noch weitere vorkommen...
 				}
 			}
 		}

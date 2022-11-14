@@ -2304,10 +2304,10 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 					result += "import { Java%s, %s } from '%s';".formatted(key, importCast, importPathPrefix + "java/lang/Java" + key);
 					result += System.lineSeparator();
 				}
-				case "java.lang.reflect.Array" -> {}
-				case "java.lang.Character" -> {}
-				case "java.lang.Math" -> {}
-				case "java.io.PrintStream" -> {}
+				case "java.lang.reflect.Array" -> { /**/ }
+				case "java.lang.Character" -> { /**/ }
+				case "java.lang.Math" -> { /**/ }
+				case "java.io.PrintStream" -> { /**/ }
 				default -> {
 					String importName = getImportName(key, value);
 					String importPackage = getImportPackageName(key, value).replace(strIgnoreJavaPackagePrefix + ".", "");

@@ -97,7 +97,7 @@ public class DBCoreTypeUpdater {
 	private final DBSchemaStatus status;
 	
 	/** Ein Record mit dem Tabellen-Namen, der Version des Core-Types und einem Lambda für die Aktualisierung der Tabelle mit den Core-Type-Daten */
-	private record CoreTypeTable(String name, long version, Consumer<Logger> updater) {}
+	private record CoreTypeTable(String name, long version, Consumer<Logger> updater) { /**/ }
 
 	/** Eine Liste von Records mit den zu aktualisierenden Tabellen - siehe auch {@link CoreTypeTable} */
 	private final Vector<CoreTypeTable> tables = new Vector<>();
@@ -187,8 +187,12 @@ public class DBCoreTypeUpdater {
 	public boolean isUpdatable() {
 		// Prüfe zunächst, ob ein Update möglich ist
 		status.update();
-		long status_revision = 0;
-		try { status_revision = status.version.getRevision(); } catch (Exception e) { }
+		long status_revision;
+		try { 
+			status_revision = status.version.getRevision(); 
+		} catch (@SuppressWarnings("unused") Exception e) { 
+			status_revision = 0; 
+		}
         for (SchemaTabelle tab : Schema.getTabellen(status_revision)) {
             if (!tab.hasCoreType())
                 continue;
@@ -215,11 +219,11 @@ public class DBCoreTypeUpdater {
 	 * 
 	 * @param lockSchema          gibt an, on das Schema für den Update-Prozess gesperrt werden soll. Dies ist z.B. nicht 
 	 *                            notwendig, wenn der Update-Prozess im Rahmen einer Migration gestartet wird.  
-	 * @param revision            die Datenbank-Revision auf welche aktualisiert wird
+	 * @param rev                 die Datenbank-Revision auf welche aktualisiert wird
 	 * 
 	 * @return true im Erfolgsfall, sonst false
 	 */
-	public boolean update(boolean lockSchema, long revision) {
+	public boolean update(boolean lockSchema, long rev) {
 		// Sperre ggf. das Datenbankschema
 		if ((lockSchema) && (!SVWSKonfiguration.get().lockSchema(schemaManager.getSchemaStatus().schemaName))) {
 			logger.logLn("-> Update fehlgeschlagen! (Schema ist aktuell gesperrt und kann daher nicht aktualisiert werden)");
@@ -227,6 +231,7 @@ public class DBCoreTypeUpdater {
 		}
 		
 		try {
+			long revision = rev;
 			// Prüfe zunächst, ob ein Update möglich ist
 			if (!isUpdatable())
 				throw new DBException("Core-Types können nicht aktualisiert werden, da die Core-Type-Version in der Datenbank neuer sind als die des Servers.");
@@ -236,8 +241,12 @@ public class DBCoreTypeUpdater {
 			if (revision < 0)
 				throw new DBException("Core-Types können nicht aktualisiert werden, da die Revision der Datenbank nicht bestimmt werden kann.");
             // Aktualisiere ggf. die Daten der einzelnen Core-Types
-	        long status_revision = 0;
-	        try { status_revision = status.version.getRevision(); } catch (Exception e) { }
+	        long status_revision;
+	        try { 
+	        	status_revision = status.version.getRevision(); 
+	        } catch (@SuppressWarnings("unused") Exception e) {
+	        	status_revision = 0;
+	        }
             for (SchemaTabelle tab : Schema.getTabellen(status_revision)) {
                 if (!tab.hasCoreType())
                     continue;
@@ -252,7 +261,7 @@ public class DBCoreTypeUpdater {
 				if (!pruefeVersion(entry.name, entry.version))
 					entry.updater.accept(logger);
 			return true;
-		} catch (Exception e) {
+		} catch (@SuppressWarnings("unused") Exception e) {
 			return false;
 		} finally {
 			// Entsperre ggf. das Datenbankschema

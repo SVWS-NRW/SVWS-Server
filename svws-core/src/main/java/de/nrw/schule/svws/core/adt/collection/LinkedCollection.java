@@ -261,6 +261,7 @@ public class LinkedCollection<@NotNull E> implements Deque<@NotNull E>, Cloneabl
 			if (this.remove(o)) {
 				result = true;
 				while (this.remove(o)) {
+					// Entferne ggf. noch weitere vorkommen...
 				}
 			}
 		}
