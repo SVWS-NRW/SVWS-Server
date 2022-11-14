@@ -45,11 +45,11 @@ public abstract class DataSchildReportingDatenquelle {
      * Erstellt einen neue Datenquelle für Schild-Reports
      * 
      * @param clazz   die Klasse des Core-DTOs
-     * @param path    der Pfad der Datenquelle
      */
     DataSchildReportingDatenquelle(Class<?> clazz) {
         this.datenquelle = new SchildReportingDatenquelle();
-        this.datenquelle.name = clazz.getSimpleName().replace("SchildReporting", "");
+        this.datenquelle.name = this.getClass().getSimpleName().replace("DataSchildReportingDatenquelle", "");
+        this.datenquelle.datenart = clazz.getSimpleName().replace("SchildReporting", "");
         Schema schema = clazz.getAnnotation(Schema.class);
         if ((schema == null) || (schema.description() == null))
             throw new NullPointerException("Im Core-DTO musse eine Schema-Definition mit einer 'description' vorhanden sein");

@@ -26,6 +26,10 @@ public class SchildReportingDatenquelle {
     @Schema(required = true, description = "die Beschreibung der Datenquelle", example = "Die Lernabschnitte eines Schülers")
     public @NotNull String beschreibung = "";
     
+    /** Die Art der Daten, welche von der Datenquelle verwaltet werden */
+    @Schema(required = true, description = "die Art der Daten, welche von der Datenquelle verwaltet werden", example = "SchildReportingSchuelerlernabschnitt")
+    public @NotNull String datenart = "";
+    
     /** Der Name der Master-Datenquelle */
     @Schema(required = false, description = "der Name der Master-Datenquelle", example = "Schueler")
     public String master = null;
