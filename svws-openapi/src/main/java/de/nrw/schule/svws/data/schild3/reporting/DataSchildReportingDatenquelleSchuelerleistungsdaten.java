@@ -25,7 +25,7 @@ public class DataSchildReportingDatenquelleSchuelerleistungsdaten extends DataSc
      */
     DataSchildReportingDatenquelleSchuelerleistungsdaten() {
         super(SchildReportingSchuelerleistungsdaten.class);
-        this.setMaster("abschnittID", "Schuelerlernabschnitt", "id", SchildReportingAttributTyp.INT);
+        this.setMaster("abschnittID", "Schuelerlernabschnitte", "id", SchildReportingAttributTyp.INT);
         // Beispiel für die Einschränkung auf Schulformen: this.restrictTo(Schulform.GY, Schulform.GE);
     }
 
