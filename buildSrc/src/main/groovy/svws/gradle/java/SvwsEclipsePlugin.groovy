@@ -32,10 +32,13 @@ class SvwsEclipsePlugin implements Plugin<Project> {
 	}
 
 	void configureEclipse(){
-		project.eclipse.project.file.beforeMerged { gp ->
-			setEclipsePreference(file('.settings/org.eclipse.core.resources.prefs'), 'encoding/<project>', 'UTF-8')
-			setEclipsePreference(file('.settings/org.eclipse.core.runtime.prefs'), 'line.separator', '\\n')
-			setEclipsePreference(file('.settings/org.eclipse.jdt.core.prefs'), 'org.eclipse.jdt.core.compiler.problem.potentialNullReference', 'info')
+		project.eclipse.project.file.whenMerged { gp ->
+			if (gp.name != null) {
+				project.logger.info('Info: Aktualisiere Eclipse-Konfiguration für Projekt ' + gp.name);
+				project.ext.setEclipsePreference(project.file('.settings/org.eclipse.core.resources.prefs'), 'encoding/<project>', 'UTF-8')
+				project.ext.setEclipsePreference(project.file('.settings/org.eclipse.core.runtime.prefs'), 'line.separator', '\\n')
+				project.ext.setEclipsePreference(project.file('.settings/org.eclipse.jdt.core.prefs'), 'org.eclipse.jdt.core.compiler.problem.potentialNullReference', 'info')
+			}
 		}
 	}
 
