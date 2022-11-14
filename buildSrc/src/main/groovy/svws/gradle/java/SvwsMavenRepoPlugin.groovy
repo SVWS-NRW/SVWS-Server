@@ -23,13 +23,15 @@ class SvwsMavenRepoPlugin extends SvwsMavenRepoCredentialsPlugin implements Plug
 	void chooseMavenRepository() {
 		def nexus_user = project.ext.getNexusActor()
 		def nexus_token = project.ext.getNexusToken()
+		def maven_proxy_url = this.extension.getNexusMavenCentralProxyRepositoryUrl();
 
-		if (nexus_user?.trim() && nexus_token?.trim()) {
+		if (nexus_user?.trim() && nexus_token?.trim() && maven_proxy_url.trim()) {
 			project.logger.lifecycle('Projekt {} verwendet das Artefakt-Repository: SVWS-Nexus', project.name)
 			project.repositories {
 				maven {
 					name = "svwsmavencentral"
 					url = this.extension.getNexusMavenCentralProxyRepositoryUrl()
+					allowInsecureProtocol = true
 					credentials {
 						username = nexus_user
 						password = nexus_token

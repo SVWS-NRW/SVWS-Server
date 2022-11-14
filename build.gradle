@@ -34,7 +34,7 @@ allprojects {
 	group = 'de.nrw.schule.svws'
 
 	svwsmavenrepo {
-		nexusMavenCentralProxyRepositoryUrl = 'https://artifactory.svws-nrw.de/repository/maven-central'
+		//nexusMavenCentralProxyRepositoryUrl = 'https://artifactory.svws-nrw.de/repository/maven-central'
 		githubMavenPackagesUrl = 'https://maven.pkg.github.com/SVWS-NRW/SVWS-Packages'
 	}
 

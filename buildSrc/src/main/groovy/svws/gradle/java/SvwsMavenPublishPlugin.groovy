@@ -40,6 +40,7 @@ class SvwsMavenPublishPlugin extends SvwsMavenRepoCredentialsPlugin implements P
 				maven {
 					name = "svwssnapshots"
 					url = this.extension.getNexusSnapshotRepositoryUrl()
+					allowInsecureProtocol = true
 					credentials {
 						username = nexus_user
 						password = nexus_token
@@ -48,6 +49,7 @@ class SvwsMavenPublishPlugin extends SvwsMavenRepoCredentialsPlugin implements P
 				maven {
 					name = "svwsreleases"
 					url = this.extension.getNexusReleasesRepositoryUrl()
+					allowInsecureProtocol = true
 					credentials {
 						username = nexus_user
 						password = nexus_token
