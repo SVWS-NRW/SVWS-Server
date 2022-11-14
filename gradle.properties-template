@@ -1,0 +1,17 @@
+# Zugangsdaten zu Github Packages des SVWSs
+#github_actor=<Persönlicher Github-Benutzername>
+#github_token=<Github-Zugriffstoken, siehe https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token>
+
+# Zugangsdaten zum Nexus Repository Manager des SVWSs
+# Zugangsdaten werden benötigt, um Release- und Snapshot-Artefakte im SVWS-Nexus zu veröffentlichen oder
+# um den SVWS-Nexus als Proxy-Repository für Maven-Central zu nutzen
+#nexus_actor=<Persönlicher Nexus-Benutzername>
+#nexus_token=<Persönliches Nexus-Passwort>
+
+# Zertifikatsinformationen für die Signierung von JARs
+#signing.keyId=<Die letzten 8 Stellen der Schlüssel-Kennung des Zertifikats>
+#signing.password=<Das Passwort für den Zugriff auf den Schlüssel>
+#signing.secretKeyRingFile=<Pfad zur Zertifikatsdatei, z.B. C:/Code/SVWS-Server/publish-gpg-zertifikat.gpg>
+
+# Schild Zugangsdaten
+#schild2_access_password=<Passwort für den Zugriff auf Schild>
