@@ -1,5 +1,6 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
 import { GostFach, cast_de_nrw_schule_svws_core_data_gost_GostFach } from '../../../core/data/gost/GostFach';
+import { GostBlockungsergebnisListeneintrag, cast_de_nrw_schule_svws_core_data_gost_GostBlockungsergebnisListeneintrag } from '../../../core/data/gost/GostBlockungsergebnisListeneintrag';
 import { GostFaecherManager, cast_de_nrw_schule_svws_core_utils_gost_GostFaecherManager } from '../../../core/utils/gost/GostFaecherManager';
 import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
 import { GostFachwahl, cast_de_nrw_schule_svws_core_data_gost_GostFachwahl } from '../../../core/data/gost/GostFachwahl';
@@ -161,6 +162,129 @@ export class GostBlockungsdatenManager extends JavaObject {
 			return GostFaecherManager.comp.compare(aFach, bFach);
 		} };
 		return comp;
+	}
+
+	/**
+	 * Liefert den Wert des 1. Bewertungskriteriums. Darin enthalten sind: <br>
+	 * - Die Anzahl der Regelverletzungen. <br>
+	 * - Die Anzahl der nicht genügend gesetzten Kurse. <br>
+	 * 
+	 * @param pErgebnisID Die Datenbank-ID des Listeneintrages. 
+	 * @return Den Wert des 1. Bewertungskriteriums.
+	 */
+	public getOfBewertung1Wert(pErgebnisID : number) : number {
+		let e : GostBlockungsergebnisListeneintrag = this.getEintrag(pErgebnisID);
+		let summe : number = 0;
+		summe += e.bewertung.anzahlKurseNichtZugeordnet;
+		summe += e.bewertung.regelVerletzungen.size();
+		return summe;
+	}
+
+	/**
+	 * Liefert eine Güte des 1. Bewertungskriteriums im Bereich [0;1], mit 0=optimal. Darin enthalten sind: <br>
+	 * - Die Anzahl der Regelverletzungen. <br>
+	 * - Die Anzahl der nicht genügend gesetzten Kurse. <br>
+	 * 
+	 * @param pErgebnisID Die Datenbank-ID des Listeneintrages. 
+	 * @return Eine Güte des 1. Bewertungskriteriums im Bereich [0;1], mit 0=optimal.
+	 */
+	public getOfBewertung1Intervall(pErgebnisID : number) : number {
+		let summe : number = this.getOfBewertung1Wert(pErgebnisID);
+		return 1 - 1 / (0.25 * summe + 1);
+	}
+
+	/**
+	 * Liefert den Wert des 2. Bewertungskriteriums. Darin enthalten sind: <br>
+	 * - Die Anzahl der nicht zugeordneten Schülerfachwahlen. <br>
+	 * - Die Anzahl der Schülerkollisionen. <br>
+	 * 
+	 * @param pErgebnisID Die Datenbank-ID des Listeneintrages. 
+	 * @return Den Wert des 2. Bewertungskriteriums.
+	 */
+	public getOfBewertung2Wert(pErgebnisID : number) : number {
+		let e : GostBlockungsergebnisListeneintrag = this.getEintrag(pErgebnisID);
+		let summe : number = 0;
+		summe += e.bewertung.anzahlSchuelerNichtZugeordnet;
+		summe += e.bewertung.anzahlSchuelerKollisionen;
+		return summe;
+	}
+
+	/**
+	 * Liefert eine Güte des 2. Bewertungskriteriums im Bereich [0;1], mit 0=optimal. Darin enthalten sind: <br>
+	 * - Die Anzahl der nicht zugeordneten Schülerfachwahlen. <br>
+	 * - Die Anzahl der Schülerkollisionen. <br>
+	 * 
+	 * @param pErgebnisID Die Datenbank-ID des Listeneintrages. 
+	 * @return Eine Güte des 2. Bewertungskriteriums im Bereich [0;1], mit 0=optimal.
+	 */
+	public getOfBewertung2Intervall(pErgebnisID : number) : number {
+		let summe : number = this.getOfBewertung2Wert(pErgebnisID);
+		return 1 - 1 / (0.25 * summe + 1);
+	}
+
+	/**
+	 * Liefert den Wert des 3. Bewertungskriteriums. Darin enthalten sind: <br>
+	 * - Die Größte Kursdifferenz. <br>
+	 * Der Wert 0 und 1 werden unterschieden, sind aber von der Bewertung her Äquivalent.
+	 * 
+	 * @param pErgebnisID Die Datenbank-ID des Listeneintrages. 
+	 * @return Den Wert des 3. Bewertungskriteriums.
+	 */
+	public getOfBewertung3Wert(pErgebnisID : number) : number {
+		let e : GostBlockungsergebnisListeneintrag = this.getEintrag(pErgebnisID);
+		return e.bewertung.kursdifferenzMax;
+	}
+
+	/**
+	 * Liefert eine Güte des 3. Bewertungskriteriums im Bereich [0;1], mit 0=optimal. Darin enthalten sind: <br>
+	 * - Die Größte Kursdifferenz. <br>
+	 * Der Wert 0 und 1 werden unterschieden, sind aber von der Bewertung her Äquivalent.
+	 * 
+	 * @param pErgebnisID Die Datenbank-ID des Listeneintrages. 
+	 * @return Eine Güte des 3. Bewertungskriteriums im Bereich [0;1], mit 0=optimal.
+	 */
+	public getOfBewertung3Intervall(pErgebnisID : number) : number {
+		let wert : number = this.getOfBewertung3Wert(pErgebnisID);
+		if (wert > 0) 
+			wert--;
+		return 1 - 1 / (0.25 * wert + 1);
+	}
+
+	/**
+	 * Liefert den Wert des 4. Bewertungskriteriums. Darin enthalten sind: <br>
+	 * - Die Anzahl an Kursen mit gleicher Fachart (Fach, Kursart) in einer Schiene. <br>
+	 * Dieses Bewertungskriterium wird teilweise absichtlich verletzt, wenn z. B. Schienen erzeugt werden mit dem selben
+	 * Fach (Sport-Schiene). Nichtsdestotrotz möchte man häufig nicht die selben Fächer in einer Schiene, aufgrund von
+	 * Raumkapazitäten (Fachräume).
+	 * 
+	 * @param pErgebnisID Die Datenbank-ID des Listeneintrages. 
+	 * @return Den Wert des 4. Bewertungskriteriums.
+	 */
+	public getOfBewertung4Wert(pErgebnisID : number) : number {
+		let e : GostBlockungsergebnisListeneintrag = this.getEintrag(pErgebnisID);
+		return e.bewertung.anzahlKurseMitGleicherFachartProSchiene;
+	}
+
+	/**
+	 * Liefert eine Güte des 4. Bewertungskriteriums im Bereich [0;1], mit 0=optimal. Darin enthalten sind: <br>
+	 * - Die Anzahl an Kursen mit gleicher Fachart (Fach, Kursart) in einer Schiene. <br>
+	 * Dieses Bewertungskriterium wird teilweise absichtlich verletzt, wenn z. B. Schienen erzeugt werden mit dem selben
+	 * Fach (Sport-Schiene). Nichtsdestotrotz möchte man häufig nicht die selben Fächer in einer Schiene, aufgrund von
+	 * Raumkapazitäten (Fachräume).
+	 * 
+	 * @param pErgebnisID Die Datenbank-ID des Listeneintrages. 
+	 * @return Eine Güte des 4. Bewertungskriteriums im Bereich [0;1], mit 0=optimal.
+	 */
+	public getOfBewertung4Intervall(pErgebnisID : number) : number {
+		let wert : number = this.getOfBewertung4Wert(pErgebnisID);
+		return 1 - 1 / (0.25 * wert + 1);
+	}
+
+	private getEintrag(pErgebnisID : number) : GostBlockungsergebnisListeneintrag {
+		for (let e of this._daten.ergebnisse) 
+			if (e.id === pErgebnisID) 
+				return e;
+		throw new NullPointerException("Listeneintrag mit ID=" + pErgebnisID + " nicht vorhanden")
 	}
 
 	private getIstBlockungsVorlage() : boolean {

@@ -26,7 +26,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	private readonly _parent : GostBlockungsdatenManager;
 
-	private _ergebnis : GostBlockungsergebnis;
+	private _ergebnis : GostBlockungsergebnis = new GostBlockungsergebnis();
 
 	private readonly _map_schienenNr_schiene : HashMap<Number, GostBlockungsergebnisSchiene> = new HashMap();
 
@@ -86,15 +86,12 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			let pParent : GostBlockungsdatenManager = cast_de_nrw_schule_svws_core_utils_gost_GostBlockungsdatenManager(__param0);
 			let pGostBlockungsergebnisID : number = __param1 as number;
 			this._parent = pParent;
-			this._ergebnis = new GostBlockungsergebnis();
-			this._ergebnis.id = pGostBlockungsergebnisID;
-			this.stateClear(this._ergebnis);
+			this.stateClear(new GostBlockungsergebnis(), pGostBlockungsergebnisID);
 		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.utils.gost.GostBlockungsdatenManager')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('de.nrw.schule.svws.core.data.gost.GostBlockungsergebnis'))))) {
 			let pParent : GostBlockungsdatenManager = cast_de_nrw_schule_svws_core_utils_gost_GostBlockungsdatenManager(__param0);
 			let pErgebnis : GostBlockungsergebnis = cast_de_nrw_schule_svws_core_data_gost_GostBlockungsergebnis(__param1);
 			this._parent = pParent;
-			this._ergebnis = new GostBlockungsergebnis();
-			this.stateClear(pErgebnis);
+			this.stateClear(pErgebnis, pErgebnis.id);
 		} else throw new Error('invalid method overload');
 	}
 
@@ -102,18 +99,32 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * Baut alle Datenstrukturen neu auf.
 	 */
 	private stateRevalidateEverything() : void {
-		let old : GostBlockungsergebnis = this._ergebnis;
-		this._ergebnis = new GostBlockungsergebnis();
-		this.stateClear(old);
+		this.stateClear(this._ergebnis, this._ergebnis.id);
 	}
 
-	private stateClear(pErgebnis : GostBlockungsergebnis | null) : void {
-		this._ergebnis.id = (pErgebnis === null) ? -1 : pErgebnis.id;
+	private stateClear(pOld : GostBlockungsergebnis, pGostBlockungsergebnisID : number) : void {
+		this._map_schienenNr_schiene.clear();
+		this._map_schienenID_schiene.clear();
+		this._map_schienenID_schuelerAnzahl.clear();
+		this._map_schienenID_kollisionen.clear();
+		this._map_schienenID_fachartID_kurse.clear();
+		this._map_schuelerID_kurse.clear();
+		this._map_schuelerID_kollisionen.clear();
+		this._map_schuelerID_fachID_kurs.clear();
+		this._map_schuelerID_schienenID_kurse.clear();
+		this._map_kursID_schienen.clear();
+		this._map_kursID_kurs.clear();
+		this._map_kursID_schuelerIDs.clear();
+		this._map_fachID_kurse.clear();
+		this._map_fachartID_kurse.clear();
+		this._map_fachartID_kursdifferenz.clear();
+		this._ergebnis = new GostBlockungsergebnis();
+		this._ergebnis.id = pGostBlockungsergebnisID;
 		this._ergebnis.blockungID = this._parent.getID();
-		this._ergebnis.name = (pErgebnis === null) ? "Ergebnis (ID noch nicht initialisiert)" : pErgebnis.name;
+		this._ergebnis.name = pOld.name;
 		this._ergebnis.gostHalbjahr = this._parent.daten().gostHalbjahr;
-		this._ergebnis.istMarkiert = (pErgebnis === null) ? false : pErgebnis.istMarkiert;
-		this._ergebnis.istVorlage = (pErgebnis === null) ? false : pErgebnis.istVorlage;
+		this._ergebnis.istMarkiert = pOld.istMarkiert;
+		this._ergebnis.istVorlage = pOld.istVorlage;
 		this._ergebnis.bewertung.kursdifferenzMax = 0;
 		this._ergebnis.bewertung.kursdifferenzHistogramm = Array(this._parent.getSchuelerAnzahl() + 1).fill(0);
 		this._ergebnis.bewertung.anzahlSchuelerNichtZugeordnet += this._parent.daten().fachwahlen.size();
@@ -185,16 +196,14 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			for (let gSchiene of this._parent.daten().schienen) 
 				this.getOfSchuelerSchienenKursmengeMap(gSchueler.id).put(gSchiene.id, new HashSet());
 		}
-		if (pErgebnis !== null) {
-			let kursBearbeitet : HashSet<Number> | null = new HashSet();
-			for (let schiene of pErgebnis.schienen) 
-				for (let kurs of schiene.kurse) {
-					this.setKursSchiene(kurs.id, schiene.id, true);
-					if (kursBearbeitet.add(kurs.id)) 
-						for (let schuelerID of kurs.schueler) 
-							this.setSchuelerKurs(schuelerID.valueOf(), kurs.id, true);
-				}
-		}
+		let kursBearbeitet : HashSet<Number> | null = new HashSet();
+		for (let schiene of pOld.schienen) 
+			for (let kurs of schiene.kurse) {
+				this.setKursSchiene(kurs.id, schiene.id, true);
+				if (kursBearbeitet.add(kurs.id)) 
+					for (let schuelerID of kurs.schueler) 
+						this.setSchuelerKurs(schuelerID.valueOf(), kurs.id, true);
+			}
 		this.stateRegelvalidierung();
 	}
 

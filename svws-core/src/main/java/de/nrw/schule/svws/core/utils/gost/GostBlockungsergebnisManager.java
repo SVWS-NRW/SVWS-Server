@@ -29,7 +29,7 @@ public class GostBlockungsergebnisManager {
 	private final @NotNull GostBlockungsdatenManager _parent;
 
 	/** Das Blockungsergebnis ist das zugehörige Eltern-Datenobjekt. */
-	private @NotNull GostBlockungsergebnis _ergebnis;
+	private @NotNull GostBlockungsergebnis _ergebnis = new GostBlockungsergebnis();
 
 	/** Schienen-Nummer --> GostBlockungsergebnisSchiene */
 	private final @NotNull HashMap<@NotNull Integer, @NotNull GostBlockungsergebnisSchiene> _map_schienenNr_schiene = new HashMap<>();
@@ -86,9 +86,7 @@ public class GostBlockungsergebnisManager {
 	 */
 	public GostBlockungsergebnisManager(@NotNull GostBlockungsdatenManager pParent, long pGostBlockungsergebnisID) {
 		_parent = pParent;
-		_ergebnis = new GostBlockungsergebnis();
-		_ergebnis.id = pGostBlockungsergebnisID;
-		stateClear(_ergebnis);
+		stateClear(new GostBlockungsergebnis(), pGostBlockungsergebnisID);
 	}
 
 	/**
@@ -99,26 +97,42 @@ public class GostBlockungsergebnisManager {
 	 */
 	public GostBlockungsergebnisManager(@NotNull GostBlockungsdatenManager pParent, @NotNull GostBlockungsergebnis pErgebnis) {
 		_parent = pParent;
-		_ergebnis = new GostBlockungsergebnis();
-		stateClear(pErgebnis);
+		stateClear(pErgebnis, pErgebnis.id);
 	}
 
 	/**
 	 * Baut alle Datenstrukturen neu auf.
 	 */
 	private void stateRevalidateEverything() {
-		@NotNull GostBlockungsergebnis old = _ergebnis;
-		_ergebnis = new GostBlockungsergebnis();
-		stateClear(old);
+		stateClear(_ergebnis, _ergebnis.id);
 	}
 	
-	private void stateClear(GostBlockungsergebnis pErgebnis) {
-		_ergebnis.id = (pErgebnis == null) ? -1 : pErgebnis.id;
+	private void stateClear(@NotNull GostBlockungsergebnis pOld, long pGostBlockungsergebnisID) {
+		// clear maps
+		_map_schienenNr_schiene.clear();
+		_map_schienenID_schiene.clear();
+		_map_schienenID_schuelerAnzahl.clear();
+		_map_schienenID_kollisionen.clear();
+		_map_schienenID_fachartID_kurse.clear();
+		_map_schuelerID_kurse.clear();
+		_map_schuelerID_kollisionen.clear();
+		_map_schuelerID_fachID_kurs.clear();
+		_map_schuelerID_schienenID_kurse.clear();
+		_map_kursID_schienen.clear();
+		_map_kursID_kurs.clear();
+		_map_kursID_schuelerIDs.clear();
+		_map_fachID_kurse.clear();
+		_map_fachartID_kurse.clear();
+		_map_fachartID_kursdifferenz.clear();
+
+		// copy attributes
+		_ergebnis = new GostBlockungsergebnis();
+		_ergebnis.id = pGostBlockungsergebnisID;
 		_ergebnis.blockungID = _parent.getID();
-		_ergebnis.name = (pErgebnis == null) ? "Ergebnis (ID noch nicht initialisiert)" : pErgebnis.name;
+		_ergebnis.name = pOld.name;
 		_ergebnis.gostHalbjahr = _parent.daten().gostHalbjahr;
-		_ergebnis.istMarkiert = (pErgebnis == null) ? false : pErgebnis.istMarkiert;
-		_ergebnis.istVorlage = (pErgebnis == null) ? false : pErgebnis.istVorlage;
+		_ergebnis.istMarkiert = pOld.istMarkiert;
+		_ergebnis.istVorlage = pOld.istVorlage;
 
 		// Bewertungskriterium 3a und 3b (Kursdifferenzen)
 		_ergebnis.bewertung.kursdifferenzMax = 0;
@@ -219,17 +233,15 @@ public class GostBlockungsergebnisManager {
 				getOfSchuelerSchienenKursmengeMap(gSchueler.id).put(gSchiene.id, new HashSet<>());
 		}
 		
-		// Die übergebenen Zuordnungen des GostBlockungsergebnis kopieren?
-		if (pErgebnis != null) {
-			HashSet<@NotNull Long> kursBearbeitet = new HashSet<>();
-			for (@NotNull GostBlockungsergebnisSchiene schiene : pErgebnis.schienen)
-				for (@NotNull GostBlockungsergebnisKurs kurs : schiene.kurse) {
-					setKursSchiene(kurs.id, schiene.id, true);
-					if (kursBearbeitet.add(kurs.id))
-						for (@NotNull Long schuelerID : kurs.schueler)
-							setSchuelerKurs(schuelerID, kurs.id, true);
-				}
-		}
+		// Zuordnungen kopieren (diese können leer sein).
+		HashSet<@NotNull Long> kursBearbeitet = new HashSet<>();
+		for (@NotNull GostBlockungsergebnisSchiene schiene : pOld.schienen)
+			for (@NotNull GostBlockungsergebnisKurs kurs : schiene.kurse) {
+				setKursSchiene(kurs.id, schiene.id, true);
+				if (kursBearbeitet.add(kurs.id))
+					for (@NotNull Long schuelerID : kurs.schueler)
+						setSchuelerKurs(schuelerID, kurs.id, true);
+			}
 		
 		// Regelverletzungen überprüfen.
 		stateRegelvalidierung();
