@@ -10,6 +10,8 @@ export class SchildReportingDatenquelle extends JavaObject {
 
 	public beschreibung : String = "";
 
+	public datenart : String = "";
+
 	public master : String | null = null;
 
 	public masterattribut : String | null = null;
@@ -38,6 +40,9 @@ export class SchildReportingDatenquelle extends JavaObject {
 		if (typeof obj.beschreibung === "undefined")
 			 throw new Error('invalid json format, missing attribute beschreibung');
 		result.beschreibung = String(obj.beschreibung);
+		if (typeof obj.datenart === "undefined")
+			 throw new Error('invalid json format, missing attribute datenart');
+		result.datenart = String(obj.datenart);
 		result.master = typeof obj.master === "undefined" ? null : obj.master === null ? null : String(obj.master);
 		result.masterattribut = typeof obj.masterattribut === "undefined" ? null : obj.masterattribut === null ? null : String(obj.masterattribut);
 		result.mastertyp = typeof obj.mastertyp === "undefined" ? null : obj.mastertyp === null ? null : String(obj.mastertyp);
@@ -54,6 +59,7 @@ export class SchildReportingDatenquelle extends JavaObject {
 		let result = '{';
 		result += '"name" : ' + '"' + obj.name.valueOf() + '"' + ',';
 		result += '"beschreibung" : ' + '"' + obj.beschreibung.valueOf() + '"' + ',';
+		result += '"datenart" : ' + '"' + obj.datenart.valueOf() + '"' + ',';
 		result += '"master" : ' + ((!obj.master) ? 'null' : '"' + obj.master.valueOf() + '"') + ',';
 		result += '"masterattribut" : ' + ((!obj.masterattribut) ? 'null' : '"' + obj.masterattribut.valueOf() + '"') + ',';
 		result += '"mastertyp" : ' + ((!obj.mastertyp) ? 'null' : '"' + obj.mastertyp.valueOf() + '"') + ',';
@@ -82,6 +88,9 @@ export class SchildReportingDatenquelle extends JavaObject {
 		}
 		if (typeof obj.beschreibung !== "undefined") {
 			result += '"beschreibung" : ' + '"' + obj.beschreibung.valueOf() + '"' + ',';
+		}
+		if (typeof obj.datenart !== "undefined") {
+			result += '"datenart" : ' + '"' + obj.datenart.valueOf() + '"' + ',';
 		}
 		if (typeof obj.master !== "undefined") {
 			result += '"master" : ' + ((!obj.master) ? 'null' : '"' + obj.master.valueOf() + '"') + ',';
