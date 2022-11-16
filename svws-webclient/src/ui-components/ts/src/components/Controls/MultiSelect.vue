@@ -31,7 +31,7 @@ const selectedItemIndex = ref(0);
 const focused = ref(false);
 const input = ref(!tags);
 const searchText = ref('');
-const itemRefs = ref([]);
+const itemRefs = shallowRef([]);
 
 const search = computed({
 	get(): string {
@@ -244,7 +244,7 @@ v-for="(item, index) in filteredList" :key="index" ref="itemRefs" class="multise
 	</div>
 </template>
 
-<style scoped>
+<style scoped lang="postcss">
 .text-input-component {
 	@apply overflow-visible;
 }
