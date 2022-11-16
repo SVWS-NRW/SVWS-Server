@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import de.nrw.schule.svws.core.data.schueler.Schueler;
 import de.nrw.schule.svws.core.transpiler.TranspilerDTO;
+import de.nrw.schule.svws.core.types.gost.GostHalbjahr;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 
@@ -31,7 +32,7 @@ public class GostBlockungsdaten {
 	public int abijahrgang = -1;
 	
 	/** Das Halbjahr, welchem die Kursblockung zugeordnet ist (0=EF.1, 1=EF.2, 2=Q1.1, 3=Q1.2, 4=Q2.1, 5=Q2.2) */
-	public int gostHalbjahr = 0;
+	public int gostHalbjahr = GostHalbjahr.EF1.id;
 	
 	/** Gibt an, ob diese Blockung aktiviert wurde, d.h. bereits in die Leistungsdaten übertragen wurde. */
 	public boolean istAktiv = false;

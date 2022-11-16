@@ -1240,7 +1240,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	public setKursSchienenNr(pKursID : number, pSchienenNr : number) : void {
 		let eSchiene : GostBlockungsergebnisSchiene | null = this._map_schienenNr_schiene.get(pSchienenNr);
 		if (eSchiene === null) 
-			throw new NullPointerException("SchienenNr. " + pSchienenNr + " unbekannt!")
+			throw new NullPointerException("Schienen-Nr. " + pSchienenNr + " unbekannt!")
 		this.stateKursSchieneHinzufuegen(pKursID, eSchiene.id);
 	}
 
@@ -1355,6 +1355,12 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	public setAddKursByID(pKursID : number) : void {
 		if (this._parent.getKursExistiert(pKursID) === false) 
 			throw new NullPointerException("Der Kurs " + pKursID + " muss erst beim Datenmanager hinzugefügt werden!")
+		let kurs : GostBlockungKurs = this._parent.getKurs(pKursID);
+		let nSchienen : number = this._parent.getSchienenAnzahl();
+		if (nSchienen < kurs.anzahlSchienen) 
+			throw new NullPointerException("Es gibt " + nSchienen + " Schienen, da passt ein Kurs mit " + kurs.anzahlSchienen + " nicht hinein!")
+		for (let nr : number = 1; nr <= kurs.anzahlSchienen; nr++)
+			this.setKursSchienenNr(pKursID, nr);
 		this.stateRevalidateEverything();
 	}
 

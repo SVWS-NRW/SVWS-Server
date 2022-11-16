@@ -587,7 +587,7 @@ public class KursblockungTests {
 			throw new AssertionError("GostKursart '" + pKursart + "' nicht gefunden.");
 
 		GostBlockungRegel gRegel = new GostBlockungRegel();
-		gRegel.id = pInput.getRegelAnzahl();
+		gRegel.id = pInput.getRegelAnzahl() + 1;
 		gRegel.typ = GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS.typ;
 		gRegel.parameter.add(Long.valueOf(gKursart.id));
 		gRegel.parameter.add(Long.valueOf(pVon));
@@ -606,7 +606,7 @@ public class KursblockungTests {
 					gefunden = true;
 
 			GostBlockungRegel gRegel = new GostBlockungRegel();
-			gRegel.id = pInput.getRegelAnzahl();
+			gRegel.id = pInput.getRegelAnzahl() + 1;
 			gRegel.typ = gefunden ? GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ
 					: GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ;
 			gRegel.parameter.add(gKurs.id);
@@ -619,7 +619,7 @@ public class KursblockungTests {
 	private void regelVerbieteSchuelerInKurs(@NotNull GostBlockungsdatenManager pInput, long pSchuelerID,
 			long pKursID) {
 		GostBlockungRegel gRegel = new GostBlockungRegel();
-		gRegel.id = pInput.getRegelAnzahl();
+		gRegel.id = pInput.getRegelAnzahl() + 1;
 		gRegel.typ = GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ;
 		gRegel.parameter.add(pSchuelerID);
 		gRegel.parameter.add(pKursID);
@@ -629,7 +629,7 @@ public class KursblockungTests {
 	private void regelFixiereKursInSchiene(@NotNull GostBlockungsdatenManager pInput, long pKursID, int pSchiene) {
 		@NotNull GostBlockungKurs kurs = pInput.getKurs(pKursID); // wirft ggf. Exception
 		GostBlockungRegel gRegel = new GostBlockungRegel();
-		gRegel.id = pInput.getRegelAnzahl();
+		gRegel.id = pInput.getRegelAnzahl() + 1;
 		gRegel.typ = GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ;
 		gRegel.parameter.add(kurs.id);
 		gRegel.parameter.add(Long.valueOf(pSchiene));
@@ -639,7 +639,7 @@ public class KursblockungTests {
 	private void regelFixiereSchuelerInKurs(@NotNull GostBlockungsdatenManager pInput, long pSchuelerID, long pKursID) {
 		@NotNull GostBlockungKurs kurs = pInput.getKurs(pKursID); // wirft ggf. Exception
 		GostBlockungRegel gRegel = new GostBlockungRegel();
-		gRegel.id = pInput.getRegelAnzahl();
+		gRegel.id = pInput.getRegelAnzahl() + 1;
 		gRegel.typ = GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ;
 		gRegel.parameter.add(pSchuelerID);
 		gRegel.parameter.add(kurs.id);
@@ -727,6 +727,7 @@ public class KursblockungTests {
 		for (int kursID = 0; kursID < nKurse; kursID++) {
 			GostBlockungKurs gKurs = new GostBlockungKurs();
 			gKurs.id = kursID;
+			gKurs.nummer = 1;
 			gKurs.fach_id = pRandom.nextLong(nFaecher);
 			gKurs.kursart = pRandom.nextInt(nKursarten) + 1;
 			gKurs.anzahlSchienen = 1;
@@ -739,7 +740,7 @@ public class KursblockungTests {
 		// Erzeuge alle SchülerInnen und zufällige Fachwahlen.
 		HashMap<Long, Schueler> mapSchueler = new HashMap<>();
 		HashMap<Integer, GostFachwahl> mapFachwahlen = new HashMap<>();
-		for (int schuelerID = 0; schuelerID < nSchueler; schuelerID++) {
+		for (int schuelerID = 1; schuelerID <= nSchueler; schuelerID++) {
 			Schueler gSchueler = new Schueler();
 			gSchueler.id = schuelerID;
 			gSchueler.nachname = "Nachname" + schuelerID;
@@ -779,7 +780,7 @@ public class KursblockungTests {
 		HashMap<Long, GostBlockungRegel> mapRegeln = new HashMap<>();
 		for (GostBlockungKurs gKurs : mapKurse.values()) {
 			GostBlockungRegel gRegel = new GostBlockungRegel();
-			gRegel.id = mapRegeln.size();
+			gRegel.id = mapRegeln.size() + 1;
 			gRegel.typ = GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ;
 			GostBlockungSchiene gSchiene = mapKursIDSchiene.get(gKurs.id);
 			gRegel.parameter.add(gKurs.id);
@@ -843,6 +844,7 @@ public class KursblockungTests {
 
 		GostBlockungKurs kbKurs = new GostBlockungKurs();
 		kbKurs.id = 1;
+		kbKurs.nummer = 1;
 		kbKurs.fach_id = 1;
 		kbKurs.kursart = GostKursart.GK.id;
 		kbKurs.anzahlSchienen = 1;

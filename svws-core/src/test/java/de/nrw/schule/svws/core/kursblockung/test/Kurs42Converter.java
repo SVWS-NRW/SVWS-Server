@@ -59,7 +59,7 @@ public class Kurs42Converter {
 				throw fehler("Kurs42-Schueler-Inkonsistenz: Schüler '" + sKey + "' existiert doppelt.");
 
 			Schueler gSchueler = new Schueler();
-			gSchueler.id = mapSchueler.size();
+			gSchueler.id = mapSchueler.size() + 1;
 			gSchueler.vorname = k42schueler.Vorname;
 			gSchueler.nachname = k42schueler.Name;
 			gSchueler.geschlecht = k42schueler.Geschlecht;
@@ -95,6 +95,7 @@ public class Kurs42Converter {
 			// Neuen Kurs erzeugen. Dem Map und Vector hinzufügen.
 			GostBlockungKurs gKurs = new GostBlockungKurs();
 			gKurs.id = mapKurse.size();
+			gKurs.nummer = 1; // TODO BAR sinnvolle nr?
 			// System.out.println("Kursname "+sKursname+" --> "+gKurs.id);
 			gKurs.fach_id = mapFaecher.get(sFachKuerzel).id;
 			gKurs.kursart = mapKursarten.get(sKursartKuerzel).id;
@@ -159,7 +160,7 @@ public class Kurs42Converter {
 			// Regel 2 - Kursfixierung?
 			if (pFixiereAlleKurse) {
 				GostBlockungRegel gRegel = new GostBlockungRegel();
-				gRegel.id = mapRegeln.size();
+				gRegel.id = mapRegeln.size() + 1;
 				gRegel.typ = GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ;
 				gRegel.parameter.add(mapKurse.get(sKursname).id);
 				gRegel.parameter.add(Long.valueOf(gSchiene));

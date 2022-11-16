@@ -19,6 +19,7 @@ import { GostHalbjahr, cast_de_nrw_schule_svws_core_types_gost_GostHalbjahr } fr
 import { JavaIterator, cast_java_util_Iterator } from '../../../java/util/JavaIterator';
 import { List, cast_java_util_List } from '../../../java/util/List';
 import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
+import { GostBlockungsergebnisComparator, cast_de_nrw_schule_svws_core_utils_gost_GostBlockungsergebnisComparator } from '../../../core/utils/gost/GostBlockungsergebnisComparator';
 import { IllegalArgumentException, cast_java_lang_IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
 import { GostBlockungKurs, cast_de_nrw_schule_svws_core_data_gost_GostBlockungKurs } from '../../../core/data/gost/GostBlockungKurs';
 import { HashSet, cast_java_util_HashSet } from '../../../java/util/HashSet';
@@ -46,13 +47,15 @@ export class GostBlockungsdatenManager extends JavaObject {
 
 	private readonly _mapRegeln : HashMap<Number, GostBlockungRegel> = new HashMap();
 
-	private readonly _map_ID_schueler : HashMap<Number, Schueler> = new HashMap();
+	private readonly _map_id_schueler : HashMap<Number, Schueler> = new HashMap();
 
 	private readonly _map_schuelerID_fachwahlen : HashMap<Number, List<GostFachwahl>> = new HashMap();
 
 	private readonly _map_schulerID_fachID_kursart : HashMap<Number, HashMap<Number, GostKursart>> = new HashMap();
 
 	private readonly _map_schulerID_facharten : HashMap<Number, List<Number>> = new HashMap();
+
+	private readonly _mapErgebnis : HashMap<Number, GostBlockungsergebnisListeneintrag> = new HashMap();
 
 	private readonly _compKurs_fach_kursart_kursnummer : Comparator<GostBlockungKurs>;
 
@@ -64,16 +67,21 @@ export class GostBlockungsdatenManager extends JavaObject {
 
 	private readonly _compFachwahlen : Comparator<GostFachwahl>;
 
+	private _ergebnisse_sortiert_nach_bewertung : List<GostBlockungsergebnisListeneintrag> | null = null;
+
+	private readonly _compErgebnisse : Comparator<GostBlockungsergebnisListeneintrag> = new GostBlockungsergebnisComparator();
+
 	private _maxTimeMillis : number = 1000;
 
 
 	/**
-	 *Erstellt einen neuen Manager mit leeren Blockungsdaten und einem leeren Fächer-Manager. 
+	 *
+	 * Erstellt einen neuen Manager mit leeren Blockungsdaten und einem leeren Fächer-Manager.
 	 */
 	public constructor();
 
 	/**
-	 *Erstellt einen neuen Manager mit den angegebenen Blockungsdaten und dem Fächer-Manager
+	 *Erstellt einen neuen Manager mit den angegebenen Blockungsdaten und dem Fächer-Manager.
 	 * 
 	 * @param pDaten          die Blockungsdaten
 	 * @param pFaecherManager der Fächer-Manager 
@@ -106,12 +114,12 @@ export class GostBlockungsdatenManager extends JavaObject {
 			this._daten.gostHalbjahr = pDaten.gostHalbjahr;
 			this._daten.istAktiv = pDaten.istAktiv;
 			this._daten.vorlageID = pDaten.vorlageID;
-			this._daten.ergebnisse.addAll(pDaten.ergebnisse);
 			this.addSchienListe(pDaten.schienen);
 			this.addRegelListe(pDaten.regeln);
 			this.addKursListe(pDaten.kurse);
 			this.addSchuelerListe(pDaten.schueler);
 			this.addFachwahlListe(pDaten.fachwahlen);
+			this.addErgebnisListe(pDaten.ergebnisse);
 		} else throw new Error('invalid method overload');
 	}
 
@@ -164,16 +172,24 @@ export class GostBlockungsdatenManager extends JavaObject {
 		return comp;
 	}
 
+	private getIstBlockungsVorlage() : boolean {
+		if (this._daten.ergebnisse.size() !== 1) 
+			return false;
+		if (this._daten.ergebnisse.get(0).istVorlage === false) 
+			return false;
+		return true;
+	}
+
 	/**
 	 * Liefert den Wert des 1. Bewertungskriteriums. Darin enthalten sind: <br>
-	 * - Die Anzahl der Regelverletzungen. <br>
 	 * - Die Anzahl der nicht genügend gesetzten Kurse. <br>
+	 * - Die Anzahl der Regelverletzungen. <br>
 	 * 
 	 * @param pErgebnisID Die Datenbank-ID des Listeneintrages. 
 	 * @return Den Wert des 1. Bewertungskriteriums.
 	 */
 	public getOfBewertung1Wert(pErgebnisID : number) : number {
-		let e : GostBlockungsergebnisListeneintrag = this.getEintrag(pErgebnisID);
+		let e : GostBlockungsergebnisListeneintrag = this.getErgebnis(pErgebnisID);
 		let summe : number = 0;
 		summe += e.bewertung.anzahlKurseNichtZugeordnet;
 		summe += e.bewertung.regelVerletzungen.size();
@@ -202,7 +218,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @return Den Wert des 2. Bewertungskriteriums.
 	 */
 	public getOfBewertung2Wert(pErgebnisID : number) : number {
-		let e : GostBlockungsergebnisListeneintrag = this.getEintrag(pErgebnisID);
+		let e : GostBlockungsergebnisListeneintrag = this.getErgebnis(pErgebnisID);
 		let summe : number = 0;
 		summe += e.bewertung.anzahlSchuelerNichtZugeordnet;
 		summe += e.bewertung.anzahlSchuelerKollisionen;
@@ -231,7 +247,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @return Den Wert des 3. Bewertungskriteriums.
 	 */
 	public getOfBewertung3Wert(pErgebnisID : number) : number {
-		let e : GostBlockungsergebnisListeneintrag = this.getEintrag(pErgebnisID);
+		let e : GostBlockungsergebnisListeneintrag = this.getErgebnis(pErgebnisID);
 		return e.bewertung.kursdifferenzMax;
 	}
 
@@ -261,7 +277,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @return Den Wert des 4. Bewertungskriteriums.
 	 */
 	public getOfBewertung4Wert(pErgebnisID : number) : number {
-		let e : GostBlockungsergebnisListeneintrag = this.getEintrag(pErgebnisID);
+		let e : GostBlockungsergebnisListeneintrag = this.getErgebnis(pErgebnisID);
 		return e.bewertung.anzahlKurseMitGleicherFachartProSchiene;
 	}
 
@@ -280,21 +296,6 @@ export class GostBlockungsdatenManager extends JavaObject {
 		return 1 - 1 / (0.25 * wert + 1);
 	}
 
-	private getEintrag(pErgebnisID : number) : GostBlockungsergebnisListeneintrag {
-		for (let e of this._daten.ergebnisse) 
-			if (e.id === pErgebnisID) 
-				return e;
-		throw new NullPointerException("Listeneintrag mit ID=" + pErgebnisID + " nicht vorhanden")
-	}
-
-	private getIstBlockungsVorlage() : boolean {
-		if (this._daten.ergebnisse.size() !== 1) 
-			return false;
-		if (this._daten.ergebnisse.get(0).istVorlage === false) 
-			return false;
-		return true;
-	}
-
 	/**
 	 *Gibt den Fächer-Manager zurück, der für die Blockungsdaten verwendet wird.
 	 * 
@@ -302,6 +303,27 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public faecherManager() : GostFaecherManager {
 		return this._faecherManager;
+	}
+
+	/**
+	 *Liefert die Anzahl an Fächern.
+	 * 
+	 * @return Die Anzahl an Fächern. 
+	 */
+	public getFaecherAnzahl() : number {
+		return this._faecherManager.faecher().size();
+	}
+
+	/**
+	 *Liefert die Anzahl verschiedenen Kursarten. Dies passiert indem über alle Fachwahlen summiert wird.
+	 * 
+	 * @return Die Anzahl verschiedenen Kursarten. 
+	 */
+	public getKursartenAnzahl() : number {
+		let setKursartenIDs : HashSet<Number> | null = new HashSet();
+		for (let fachwahl of this._daten.fachwahlen) 
+			setKursartenIDs.add(fachwahl.kursartID);
+		return setKursartenIDs.size();
 	}
 
 	/**
@@ -325,10 +347,10 @@ export class GostBlockungsdatenManager extends JavaObject {
 	/**
 	 *Setzt das Halbjahr der gymnasialen Oberstufe, für welches die Blockung angelegt wurde.
 	 * 
-	 * @param halbjahr das Halbjahr der gymnasialen Oberstufe 
+	 * @param pHalbjahr das Halbjahr der gymnasialen Oberstufe 
 	 */
-	public setHalbjahr(halbjahr : GostHalbjahr) : void {
-		this._daten.gostHalbjahr = halbjahr.id;
+	public setHalbjahr(pHalbjahr : GostHalbjahr) : void {
+		this._daten.gostHalbjahr = pHalbjahr.id;
 	}
 
 	/**
@@ -343,12 +365,12 @@ export class GostBlockungsdatenManager extends JavaObject {
 	/**
 	 *Setzt die ID der Blockung
 	 * 
-	 * @param id die ID, welche der Blockung zugewiesen wird. 
+	 * @param pBlockungsID die ID, welche der Blockung zugewiesen wird. 
 	 */
-	public setID(id : number) : void {
-		if (id < 0) 
-			throw new IllegalArgumentException("Die Blockungs-ID muss positiv sein und ist daher ungültig.")
-		this._daten.id = id;
+	public setID(pBlockungsID : number) : void {
+		if (pBlockungsID < 0) 
+			throw new IllegalArgumentException("Die Blockungs-ID ist " + pBlockungsID + ", sie muss aber positiv sein!")
+		this._daten.id = pBlockungsID;
 	}
 
 	/**
@@ -363,24 +385,138 @@ export class GostBlockungsdatenManager extends JavaObject {
 	/**
 	 *Setzt den Namen der Blockung
 	 * 
-	 * @param name der Name, welcher der Blockung zugewiesen wird. 
+	 * @param pName der Name, welcher der Blockung zugewiesen wird. 
 	 */
-	public setName(name : String) : void {
-		if (JavaObject.equalsTranspiler("", (name))) 
+	public setName(pName : String) : void {
+		if (JavaObject.equalsTranspiler("", (pName))) 
 			throw new IllegalArgumentException("Ein leerer Name ist für die Blockung nicht zulässig.")
-		this._daten.name = name;
+		this._daten.name = pName;
 	}
 
 	/**
-	 *Fügt den übergebenen Kurs zu der Blockung hinzu
+	 *Liefert die maximale Blockungszeit in Millisekunden.
 	 * 
-	 * @param kurs der hinzuzufügende Kurs 
+	 * @return Die maximale Blockungszeit in Millisekunden. 
 	 */
-	public addKurs(kurs : GostBlockungKurs) : void {
-		if (this._mapKurse.containsKey(kurs.id)) 
-			throw new NullPointerException("Kurs " + kurs.id + " doppelt!")
-		this._daten.kurse.add(kurs);
-		this._mapKurse.put(kurs.id, kurs);
+	public getMaxTimeMillis() : number {
+		return this._maxTimeMillis;
+	}
+
+	/**
+	 *Setzt die maximale Blockungszeit in Millisekunden.
+	 * 
+	 * @param pZeit die maximale Blockungszeit in Millisekunden. 
+	 */
+	public setMaxTimeMillis(pZeit : number) : void {
+		this._maxTimeMillis = pZeit;
+	}
+
+	/**
+	 *
+	 * Fügt das übergebenen Ergebnis der Blockung hinzu.
+	 * 
+	 * @param pErgebnis Das {@link GostBlockungsergebnisListeneintrag}-Objekt, welches hinzugefügt wird.
+	 */
+	public addErgebnis(pErgebnis : GostBlockungsergebnisListeneintrag) : void {
+		if (pErgebnis.id < 1) 
+			throw new NullPointerException("Ergebnis.id = " + pErgebnis.id + " --> zu gering!")
+		if (this._mapErgebnis.containsKey(pErgebnis.id)) 
+			throw new NullPointerException("Ergebnis.id =  " + pErgebnis.id + " --> doppelt!")
+		if (pErgebnis.blockungID < 1) 
+			throw new NullPointerException("Ergebnis.blockungID = " + pErgebnis.blockungID + " --> zu gering!")
+		if (GostHalbjahr.fromID(pErgebnis.gostHalbjahr) === null) 
+			throw new NullPointerException("Ergebnis.gostHalbjahr = " + pErgebnis.gostHalbjahr + " --> unbekannt!")
+		this._daten.ergebnisse.add(pErgebnis);
+		this._mapErgebnis.put(pErgebnis.id, pErgebnis);
+		this._ergebnisse_sortiert_nach_bewertung = null;
+	}
+
+	/**
+	 * Fügt die Menge an Ergebnissen {@link GostBlockungsergebnisListeneintrag} hinzu.
+	 * 
+	 * @param pErgebnisse Die Menge an Ergebnissen.
+	 */
+	public addErgebnisListe(pErgebnisse : List<GostBlockungsergebnisListeneintrag>) : void {
+		for (let ergebnis of pErgebnisse) 
+			this.addErgebnis(ergebnis);
+	}
+
+	/**
+	 * Liefert einen {@link GostBlockungsergebnisListeneintrag} aus der Liste der Ergebnisse.
+	 * Wirft eine Exception, falls es keinen Listeneintrag mit dieser ID gibt.
+	 * 
+	 * @param pErgebnisID           Die Datenbank-ID des Ergebnisses. 
+	 * @return                      Liefert einen {@link GostBlockungsergebnisListeneintrag} aus der Liste der Ergebnisse.
+	 * @throws NullPointerException Falls es keinen Listeneintrag mit dieser ID gibt.
+	 */
+	public getErgebnis(pErgebnisID : number) : GostBlockungsergebnisListeneintrag {
+		let e : GostBlockungsergebnisListeneintrag | null = this._mapErgebnis.get(pErgebnisID);
+		if (e === null) 
+			throw new NullPointerException("Ergebnis mit ID = " + pErgebnisID + " nicht vorhanden!")
+		return e;
+	}
+
+	/**
+	 * Liefert eine sortierte Menge der {@link GostBlockungsergebnisListeneintrag} nach ihrer Bewertung.    
+	 * 
+	 * @return Eine sortierte Menge der {@link GostBlockungsergebnisListeneintrag} nach ihrer Bewertung.
+	 */
+	public getErgebnisseSortiertNachBewertung() : List<GostBlockungsergebnisListeneintrag> {
+		if (this._ergebnisse_sortiert_nach_bewertung === null) {
+			this._ergebnisse_sortiert_nach_bewertung = new Vector(this._daten.ergebnisse);
+			this._ergebnisse_sortiert_nach_bewertung.sort(this._compErgebnisse);
+		}
+		return this._ergebnisse_sortiert_nach_bewertung;
+	}
+
+	/**
+	 *
+	 * Entfernt das Ergebnis mit der übergebenen ID aus der Blockung.
+	 * 
+	 * @param pErgebnisID Die Datenbank-ID des zu entfernenden Ergebnisses.
+	 */
+	public removeErgebnisByID(pErgebnisID : number) : void {
+		let e : GostBlockungsergebnisListeneintrag = this.getErgebnis(pErgebnisID);
+		this._daten.ergebnisse.remove(e);
+		this._mapErgebnis.remove(pErgebnisID);
+		this._ergebnisse_sortiert_nach_bewertung = null;
+	}
+
+	/**
+	 * Entfernt das übergebenen Ergebnis aus der Blockung.
+	 * 
+	 * @param pErgebnis Das zu entfernende Ergebnis.
+	 */
+	public removeErgebnis(pErgebnis : GostBlockungsergebnisListeneintrag) : void {
+		this.removeErgebnisByID(pErgebnis.id);
+	}
+
+	/**
+	 *
+	 * Fügt den übergebenen Kurs zu der Blockung hinzu
+	 * 
+	 * @param pKurs Das {@link GostBlockungKurs}-Objekt, welches hinzugefügt wird.
+	 */
+	public addKurs(pKurs : GostBlockungKurs) : void {
+		if (this._mapKurse.containsKey(pKurs.id)) 
+			throw new NullPointerException("Kurs.id =  " + pKurs.id + " --> doppelt!")
+		if (pKurs.anzahlSchienen < 1) 
+			throw new NullPointerException("Kurs.anzahlSchienen = " + pKurs.anzahlSchienen + " --> zu gering!")
+		let nSchienen : number = this.getSchienenAnzahl();
+		if (pKurs.anzahlSchienen > nSchienen) 
+			throw new NullPointerException("Kurs.anzahlSchienen = " + nSchienen + " --> zu groß!")
+		if (pKurs.nummer < 1) 
+			throw new NullPointerException("Kurs.nummer = " + pKurs.nummer + " --> zu gering!")
+		if (this._faecherManager.get(pKurs.fach_id) === null) 
+			throw new NullPointerException("Kurs.fach_id = " + pKurs.fach_id + " --> unbekannt!")
+		if (GostKursart.fromIDorNull(pKurs.kursart) === null) 
+			throw new NullPointerException("Kurs.kursart = " + pKurs.kursart + " --> unbekannt!")
+		if (pKurs.wochenstunden === null) 
+			throw new NullPointerException("Kurs.wochenstunden = null --> nicht erlaubt!")
+		if (pKurs.wochenstunden < 0) 
+			throw new NullPointerException("Kurs.wochenstunden = " + pKurs.wochenstunden + " --> zu gering!")
+		this._daten.kurse.add(pKurs);
+		this._mapKurse.put(pKurs.id, pKurs);
 		this._kurse_sortiert_fach_kursart_kursnummer = null;
 		this._kurse_sortiert_kursart_fach_kursnummer = null;
 	}
@@ -398,14 +534,14 @@ export class GostBlockungsdatenManager extends JavaObject {
 	/**
 	 *Gibt den Kurs der Blockung anhand von dessen ID zurück.
 	 * 
-	 * @param  id                   die ID des Kurses
+	 * @param  pKursID                   die ID des Kurses
 	 * @return                      der Kurs
 	 * @throws NullPointerException falls der Kurs nicht in der Blockung existiert 
 	 */
-	public getKurs(id : number) : GostBlockungKurs {
-		let kurs : GostBlockungKurs | null = this._mapKurse.get(id);
+	public getKurs(pKursID : number) : GostBlockungKurs {
+		let kurs : GostBlockungKurs | null = this._mapKurse.get(pKursID);
 		if (kurs === null) 
-			throw new NullPointerException("Ein Kurs mit der angegebenen ID existiert nicht in der Blockung.")
+			throw new NullPointerException("Kurs mit ID = " + pKursID + " existiert nicht in der Blockung!")
 		return kurs;
 	}
 
@@ -418,6 +554,29 @@ export class GostBlockungsdatenManager extends JavaObject {
 	public getKursExistiert(pKursID : number) : boolean {
 		let kurs : GostBlockungKurs | null = this._mapKurse.get(pKursID);
 		return kurs !== null;
+	}
+
+	/**
+	 *Liefert die Anzahl an Kursen.
+	 * 
+	 * @return Die Anzahl an Kursen. 
+	 */
+	public getKursAnzahl() : number {
+		return this._mapKurse.size();
+	}
+
+	/**
+	 * Liefert den Namen des Kurses. Der Name wird automatisch erzeugt aus dem Fach, der Kursart und der Nummer,
+	 * beispielsweise D-GK1.
+	 * 
+	 * @param  pKursID Die Datenbank-ID des Kurses.
+	 * 
+	 * @return         Die Datenbank-ID des Kurses.
+	 */
+	public getNameOfKurs(pKursID : number) : String {
+		let kurs : GostBlockungKurs = this.getKurs(pKursID);
+		let gFach : GostFach = this._faecherManager.getOrException(kurs.fach_id);
+		return gFach.kuerzel + "-" + GostKursart.fromID(kurs.kursart).kuerzel + kurs.nummer;
 	}
 
 	/**
@@ -480,19 +639,27 @@ export class GostBlockungsdatenManager extends JavaObject {
 	/**
 	 *Entfernt den übergebenen Kurs aus der Blockung
 	 * 
-	 * @param kurs der zu entfernende Kurs 
+	 * @param pKurs der zu entfernende Kurs 
 	 */
-	public removeKurs(kurs : GostBlockungKurs) : void {
-		this.removeKursByID(kurs.id);
+	public removeKurs(pKurs : GostBlockungKurs) : void {
+		this.removeKursByID(pKurs.id);
 	}
 
 	/**
-	 *Fügt die übergebene Schiene zu der Blockung hinzu
+	 *Fügt die übergebene Schiene zu der Blockung hinzu.
 	 * 
 	 * @param pSchiene die hinzuzufügende Schiene
 	 * @throws NullPointerException Falls es eine Schienen-ID-Dopplung gibt. 
 	 */
 	public addSchiene(pSchiene : GostBlockungSchiene) : void {
+		if (pSchiene.id < 1) 
+			throw new NullPointerException("Schiene.id =  " + pSchiene.id + " --> zu klein!")
+		if (pSchiene.nummer < 1) 
+			throw new NullPointerException("Schiene.nummer =  " + pSchiene.nummer + " --> zu klein!")
+		if (pSchiene.wochenstunden === null) 
+			throw new NullPointerException("Schiene.wochenstunden = null --> nicht erlaubt!")
+		if (pSchiene.wochenstunden < 1) 
+			throw new NullPointerException("Schiene.wochenstunden =  " + pSchiene.wochenstunden + " --> zu klein!")
 		if (this._mapSchienen.containsKey(pSchiene.id)) 
 			throw new NullPointerException("Schiene " + pSchiene.id + " doppelt!")
 		this._daten.schienen.add(pSchiene);
@@ -534,6 +701,26 @@ export class GostBlockungsdatenManager extends JavaObject {
 	public getSchieneExistiert(pSchienenID : number) : boolean {
 		let schiene : GostBlockungSchiene | null = this._mapSchienen.get(pSchienenID);
 		return schiene !== null;
+	}
+
+	/**
+	 *Liefert die Anzahl an Schienen.
+	 * 
+	 * @return Die Anzahl an Schienen. 
+	 */
+	public getSchienenAnzahl() : number {
+		return this._mapSchienen.size();
+	}
+
+	/**
+	 * Liefert die aktuelle Menge aller Schienen. 
+	 * Das ist die interne Referenz zur Liste der Schienen im {@link GostBlockungsdaten}-Objekt. 
+	 * Diese Liste ist stets sortiert nach der Schienen-Nummer.
+	 * 
+	 * @return Die aktuelle Menge aller Schienen sortiert nach der Schienen-Nummer.
+	 */
+	public getMengeOfSchienen() : List<GostBlockungSchiene> {
+		return this._daten.schienen;
 	}
 
 	/**
@@ -600,11 +787,11 @@ export class GostBlockungsdatenManager extends JavaObject {
 	/**
 	 *Gibt die Default-Anzahl von Schienen zurück, die für die eine neue Blockung verwendet wird.
 	 * 
-	 * @param  halbjahr das Halbjahr, für welches die Blockung angelegt werden soll
+	 * @param  pHalbjahr das Halbjahr, für welches die Blockung angelegt werden soll
 	 * @return          die Anzahl an Schienen für eine Vorauswahl 
 	 */
-	public static getDefaultSchienenAnzahl(halbjahr : GostHalbjahr) : number {
-		return (halbjahr.id < 2) ? 13 : 11;
+	public static getDefaultSchienenAnzahl(pHalbjahr : GostHalbjahr) : number {
+		return (pHalbjahr.id < 2) ? 13 : 11;
 	}
 
 	/**
@@ -613,8 +800,12 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @param pRegel die hinzuzufügende Regel 
 	 */
 	public addRegel(pRegel : GostBlockungRegel) : void {
+		if (pRegel.id < 1) 
+			throw new NullPointerException("Regel.id =  " + pRegel.id + " --> zu klein!")
+		if (GostKursblockungRegelTyp.fromTyp(pRegel.typ) as unknown === GostKursblockungRegelTyp.UNDEFINIERT as unknown) 
+			throw new NullPointerException("Regel.typ = " + pRegel.typ + " --> unbekannt!")
 		if (this._mapRegeln.containsKey(pRegel.id)) 
-			throw new NullPointerException("Regel " + pRegel.id + " doppelt!")
+			throw new NullPointerException("Regel.id = " + pRegel.id + " --> doppelt!")
 		this._daten.regeln.add(pRegel);
 		this._daten.regeln.sort(GostBlockungsdatenManager.compRegel);
 		this._mapRegeln.put(pRegel.id, pRegel);
@@ -623,10 +814,10 @@ export class GostBlockungsdatenManager extends JavaObject {
 	/**
 	 * Fügt eine Menge an Regeln hinzu.
 	 * 
-	 * @param regeln Die Menge an Regeln.
+	 * @param pRegeln Die Menge an Regeln.
 	 */
-	public addRegelListe(regeln : List<GostBlockungRegel>) : void {
-		for (let regel of regeln) 
+	public addRegelListe(pRegeln : List<GostBlockungRegel>) : void {
+		for (let regel of pRegeln) 
 			this.addRegel(regel);
 	}
 
@@ -641,7 +832,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	public getRegel(pRegelID : number) : GostBlockungRegel {
 		let regel : GostBlockungRegel | null = this._mapRegeln.get(pRegelID);
 		if (regel === null) 
-			throw new NullPointerException("Eine Regel mit der angegebenen ID existiert nicht in der Blockung.")
+			throw new NullPointerException("Regel.id = " + pRegelID + " existiert nicht in der Blockung.")
 		return regel;
 	}
 
@@ -657,6 +848,26 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
+	 *Liefert die Anzahl an Regeln.
+	 * 
+	 * @return Die Anzahl an Regeln. 
+	 */
+	public getRegelAnzahl() : number {
+		return this._mapRegeln.size();
+	}
+
+	/**
+	 * Liefert die aktuelle Menge aller Regeln. 
+	 * Das ist die interne Referenz zur Liste der Regeln im {@link GostBlockungsdaten}-Objekt. 
+	 * Diese Liste ist stets sortiert nach (TYP, ID).
+	 * 
+	 * @return Die aktuelle Menge aller Regeln sortiert nach (TYP, id).
+	 */
+	public getMengeOfRegeln() : List<GostBlockungRegel> {
+		return this._daten.regeln;
+	}
+
+	/**
 	 *
 	 * Liefert TRUE, falls ein Löschen der Regel erlaubt ist. <br>
 	 * Kriterium: Das aktuelle Ergebnis muss eine Vorlage sein.
@@ -667,7 +878,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public removeRegelAllowed(pRegelID : number) : boolean {
 		if (this._mapRegeln.containsKey(pRegelID) === false) 
-			throw new NullPointerException("Eine Regel mit ID=" + pRegelID + " existiert nicht!")
+			throw new NullPointerException("Regel.id = " + pRegelID + " existiert nicht in der Blockung.")
 		return this.getIstBlockungsVorlage();
 	}
 
@@ -698,31 +909,21 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
-	 *Ermittelt den Schüler für die angegebene ID. Erzeugt eine NullPointerException im Fehlerfall, dass die ID nicht
-	 * bekannt ist.
-	 * 
-	 * @param  id                   die ID des Schülers
-	 * @return                      die Daten zu dem Schüler der Blockung
-	 * @throws NullPointerException im Falle, dass die ID nicht bekannt ist 
-	 */
-	public getSchueler(id : number) : Schueler {
-		let schueler : Schueler | null = this._map_ID_schueler.get(id);
-		if (schueler === null) 
-			throw new NullPointerException("ID des Schülers ist nicht bekannt. Dies ist auf inkonsistente Daten oder einen Programmierfehler zurückzuführen.")
-		return schueler;
-	}
-
-	/**
 	 * Fügt einen Schüler hinzu.<br>
 	 * Wirft eine Exception, falls es eine Schüler-ID-Dopplung gibt. 
 	 * 
-	 * @param pSchueler Der Schüler, der hinzugefügt wird.
+	 * @param pSchueler             Der Schüler, der hinzugefügt wird.
 	 * @throws NullPointerException Falls es eine Schüler-ID-Dopplung gibt.
 	 */
 	public addSchueler(pSchueler : Schueler) : void {
-		if (this._map_ID_schueler.containsKey(pSchueler.id)) 
-			throw new NullPointerException("Schüler " + pSchueler.id + " doppelt!")
+		if (pSchueler.id < 1) 
+			throw new NullPointerException("Schüler.id =  " + pSchueler.id + " --> zu klein!")
+		if (pSchueler.geschlecht < 0) 
+			throw new NullPointerException("Schüler.geschlecht =  " + pSchueler.geschlecht + " --> zu klein!")
+		if (this._map_id_schueler.containsKey(pSchueler.id)) 
+			throw new NullPointerException("Schüler.id =  " + pSchueler.id + " --> doppelt!")
 		this._daten.schueler.add(pSchueler);
+		this._map_id_schueler.put(pSchueler.id, pSchueler);
 	}
 
 	/**
@@ -736,10 +937,79 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
+	 *Ermittelt den Schüler für die angegebene ID. <br>
+	 * Erzeugt eine NullPointerException im Fehlerfall, dass die ID nicht bekannt ist.
+	 * 
+	 * @param  pSchuelerID          die ID des Schülers.
+	 * @return                      die Daten zu dem Schüler der Blockung.
+	 * @throws NullPointerException im Falle, dass die ID nicht bekannt ist. 
+	 */
+	public getSchueler(pSchuelerID : number) : Schueler {
+		let schueler : Schueler | null = this._map_id_schueler.get(pSchuelerID);
+		if (schueler === null) 
+			throw new NullPointerException("Schüler-ID = " + pSchuelerID + " existiert nicht!")
+		return schueler;
+	}
+
+	/**
+	 * Liefert nur die Anzahl an Schülern, die mindestens eine Fachwahl haben.
+	 * 
+	 * @return die Anzahl an Schülern, die mindestens eine Fachwahl haben.
+	 */
+	public getSchuelerAnzahlMitFachwahlen() : number {
+		let setSchuelerIDs : HashSet<Number> | null = new HashSet();
+		for (let fachwahl of this._daten.fachwahlen) 
+			setSchuelerIDs.add(fachwahl.schuelerID);
+		return setSchuelerIDs.size();
+	}
+
+	/**
+	 * Liefert die Anzahl an Schülern.
+	 * 
+	 * @return Die Anzahl an Schülern.
+	 */
+	public getSchuelerAnzahl() : number {
+		return this._daten.schueler.size();
+	}
+
+	/**
+	 * Liefert die zu (Schüler, Fach) die jeweilige Kursart. <br>
+	 * Liefert eine Exception, falls (Schüler, Fach) nicht existiert.
+	 * 
+	 * @param pSchuelerID Die Datenbank-ID des Schülers.
+	 * @param pFachID     Die Datenbank-ID des Faches.
+	 * 
+	 * @return Die zu (Schüler, Fach) die jeweilige Kursart.
+	 */
+	public getOfSchuelerOfFachKursart(pSchuelerID : number, pFachID : number) : GostKursart {
+		let mapFachKursart : HashMap<Number, GostKursart> | null = this._map_schulerID_fachID_kursart.get(pSchuelerID);
+		if (mapFachKursart === null) 
+			throw new NullPointerException("Schüler-ID=" + pSchuelerID + " unbekannt!")
+		let kursart : GostKursart | null = mapFachKursart.get(pFachID);
+		if (kursart === null) 
+			throw new NullPointerException("Schüler-ID=" + pSchuelerID + ", Fach-ID=" + pFachID + " unbekannt!")
+		return kursart;
+	}
+
+	/**
+	 * Liefert die Menge aller {@link GostFachwahl} des Schülers. 
+	 * Diese Liste ist stets sortiert nach (KURSART, FACH.sortierung).
+	 * 
+	 * @param pSchuelerID Die Datenbank-ID des Schülers.
+	 * @return Die Menge aller {@link GostFachwahl} des Schülers, sortiert (KURSART, FACH.sortierung).
+	 */
+	public getOfSchuelerFacharten(pSchuelerID : number) : List<GostFachwahl> {
+		let fachwahlenDesSchuelers : List<GostFachwahl> | null = this._map_schuelerID_fachwahlen.get(pSchuelerID);
+		if (fachwahlenDesSchuelers === null) 
+			throw new NullPointerException("Schüler-ID=" + pSchuelerID + " unbekannt!")
+		return fachwahlenDesSchuelers;
+	}
+
+	/**
 	 * Fügt eine Fachwahl hinzu.
 	 * Wirft eine Exception, falls das Paar (Schüler-ID, FachartID) doppelt existiert. 
 	 * 
-	 * @param pFachwahl Die Fachwahl, die hinzugefügt wird.
+	 * @param pFachwahl              Die Fachwahl, die hinzugefügt wird.
 	 * @throws NullPointerException  Falls es eine FachwahlDopplung gibt.
 	 */
 	public addFachwahl(pFachwahl : GostFachwahl) : void {
@@ -773,168 +1043,12 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
-	 *Liefert die maximale Blockungszeit in Millisekunden.
-	 * 
-	 * @return Die maximale Blockungszeit in Millisekunden. 
-	 */
-	public getMaxTimeMillis() : number {
-		return this._maxTimeMillis;
-	}
-
-	/**
-	 *Setzt die maximale Blockungszeit in Millisekunden.
-	 * 
-	 * @param pZeit die maximale Blockungszeit in Millisekunden. 
-	 */
-	public setMaxTimeMillis(pZeit : number) : void {
-		this._maxTimeMillis = pZeit;
-	}
-
-	/**
-	 *Liefert die Anzahl an Schienen.
-	 * 
-	 * @return Die Anzahl an Schienen. 
-	 */
-	public getSchienenAnzahl() : number {
-		return this._mapSchienen.size();
-	}
-
-	/**
-	 *Liefert die Anzahl an Kursen.
-	 * 
-	 * @return Die Anzahl an Kursen. 
-	 */
-	public getKursAnzahl() : number {
-		return this._mapKurse.size();
-	}
-
-	/**
-	 * Liefert nur die Anzahl an Schülern, die mindestens eine Fachwahl haben.
-	 * 
-	 * @return die Anzahl an Schülern, die mindestens eine Fachwahl haben.
-	 */
-	public getSchuelerAnzahlMitFachwahlen() : number {
-		let setSchuelerIDs : HashSet<Number> | null = new HashSet();
-		for (let fachwahl of this._daten.fachwahlen) 
-			setSchuelerIDs.add(fachwahl.schuelerID);
-		return setSchuelerIDs.size();
-	}
-
-	/**
-	 * Liefert die Anzahl an Schülern.
-	 * 
-	 * @return Die Anzahl an Schülern.
-	 */
-	public getSchuelerAnzahl() : number {
-		return this._daten.schueler.size();
-	}
-
-	/**
-	 *Liefert die Anzahl an Fächern.
-	 * 
-	 * @return Die Anzahl an Fächern. 
-	 */
-	public getFaecherAnzahl() : number {
-		return this._faecherManager.faecher().size();
-	}
-
-	/**
-	 *Liefert die Anzahl verschiedenen Kursarten. Dies passiert indem über alle Fachwahlen summiert wird.
-	 * 
-	 * @return Die Anzahl verschiedenen Kursarten. 
-	 */
-	public getKursartenAnzahl() : number {
-		let setKursartenIDs : HashSet<Number> | null = new HashSet();
-		for (let fachwahl of this._daten.fachwahlen) 
-			setKursartenIDs.add(fachwahl.kursartID);
-		return setKursartenIDs.size();
-	}
-
-	/**
 	 *Liefert die Anzahl an Fachwahlen.
 	 * 
-	 * @return Die Anzahl an Fachwahlen. 
+	 * @return Die Anzahl an Fachwahlen.
 	 */
 	public getFachwahlAnzahl() : number {
 		return this._daten.fachwahlen.size();
-	}
-
-	/**
-	 *Liefert die Anzahl an Regeln.
-	 * 
-	 * @return Die Anzahl an Regeln. 
-	 */
-	public getRegelAnzahl() : number {
-		return this._mapRegeln.size();
-	}
-
-	/**
-	 * Liefert den Namen des Kurses. Der Name wird automatisch erzeugt aus dem Fach, der Kursart und der Nummer,
-	 * beispielsweise D-GK1.
-	 * 
-	 * @param  pKursID Die Datenbank-ID des Kurses.
-	 * 
-	 * @return         Die Datenbank-ID des Kurses.
-	 */
-	public getNameOfKurs(pKursID : number) : String {
-		let kurs : GostBlockungKurs = this.getKurs(pKursID);
-		let gFach : GostFach = this._faecherManager.getOrException(kurs.fach_id);
-		return gFach.kuerzel + "-" + GostKursart.fromID(kurs.kursart).kuerzel + kurs.nummer;
-	}
-
-	/**
-	 * Liefert die zu (Schüler, Fach) die jeweilige Kursart. <br>
-	 * Liefert eine Exception, falls (Schüler, Fach) nicht existiert.
-	 * 
-	 * @param pSchuelerID Die Datenbank-ID des Schülers.
-	 * @param pFachID     Die Datenbank-ID des Faches.
-	 * 
-	 * @return Die zu (Schüler, Fach) die jeweilige Kursart.
-	 */
-	public getOfSchuelerOfFachKursart(pSchuelerID : number, pFachID : number) : GostKursart {
-		let mapFachKursart : HashMap<Number, GostKursart> | null = this._map_schulerID_fachID_kursart.get(pSchuelerID);
-		if (mapFachKursart === null) 
-			throw new NullPointerException("Schüler-ID=" + pSchuelerID + " unbekannt!")
-		let kursart : GostKursart | null = mapFachKursart.get(pFachID);
-		if (kursart === null) 
-			throw new NullPointerException("Schüler-ID=" + pSchuelerID + ", Fach-ID=" + pFachID + " unbekannt!")
-		return kursart;
-	}
-
-	/**
-	 * Liefert die aktuelle Menge aller Schienen. 
-	 * Das ist die interne Referenz zur Liste der Schienen im {@link GostBlockungsdaten}-Objekt. 
-	 * Diese Liste ist stets sortiert nach der Schienen-Nummer.
-	 * 
-	 * @return Die aktuelle Menge aller Schienen sortiert nach der Schienen-Nummer.
-	 */
-	public getMengeOfSchienen() : List<GostBlockungSchiene> {
-		return this._daten.schienen;
-	}
-
-	/**
-	 * Liefert die aktuelle Menge aller Regeln. 
-	 * Das ist die interne Referenz zur Liste der Regeln im {@link GostBlockungsdaten}-Objekt. 
-	 * Diese Liste ist stets sortiert nach (TYP, ID).
-	 * 
-	 * @return Die aktuelle Menge aller Regeln sortiert nach (TYP, id).
-	 */
-	public getMengeOfRegeln() : List<GostBlockungRegel> {
-		return this._daten.regeln;
-	}
-
-	/**
-	 * Liefert die Menge aller {@link GostFachwahl} des Schülers. 
-	 * Diese Liste ist stets sortiert nach (KURSART, FACH.sortierung).
-	 * 
-	 * @param pSchuelerID Die Datenbank-ID des Schülers.
-	 * @return Die Menge aller {@link GostFachwahl} des Schülers, sortiert (KURSART, FACH.sortierung).
-	 */
-	public getOfSchuelerFacharten(pSchuelerID : number) : List<GostFachwahl> {
-		let fachwahlenDesSchuelers : List<GostFachwahl> | null = this._map_schuelerID_fachwahlen.get(pSchuelerID);
-		if (fachwahlenDesSchuelers === null) 
-			throw new NullPointerException("Schüler-ID=" + pSchuelerID + " unbekannt!")
-		return fachwahlenDesSchuelers;
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

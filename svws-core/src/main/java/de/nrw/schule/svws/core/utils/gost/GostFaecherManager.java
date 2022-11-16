@@ -108,11 +108,10 @@ public class GostFaecherManager {
 
 
 	/**
-	 * Gibt das Fach mit der angegebenen ID zurück.
+	 * Gibt das Fach mit der angegebenen ID zurück oder null, falls es das Fach nicht gibt.
 	 *  
 	 * @param id   die ID des gesuchten Faches
-	 * 
-	 * @return das fach mit der angegebenen ID
+	 * @return Das fach mit der angegebenen ID oder null, falls es das Fach nicht gibt.
 	 */
 	public GostFach get(long id) {
 		return _map.get(id);

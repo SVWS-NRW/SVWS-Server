@@ -1337,7 +1337,7 @@ public class GostBlockungsergebnisManager {
 	public void setKursSchienenNr(long pKursID, int pSchienenNr) throws NullPointerException {
 		GostBlockungsergebnisSchiene eSchiene = _map_schienenNr_schiene.get(pSchienenNr);
 		if (eSchiene == null)
-			throw new NullPointerException("SchienenNr. " + pSchienenNr + " unbekannt!");
+			throw new NullPointerException("Schienen-Nr. " + pSchienenNr + " unbekannt!");
 		stateKursSchieneHinzufuegen(pKursID, eSchiene.id);
 	}
 
@@ -1454,6 +1454,16 @@ public class GostBlockungsergebnisManager {
 	public void setAddKursByID(long pKursID) throws NullPointerException {
 		if (_parent.getKursExistiert(pKursID) == false)
 			throw new NullPointerException("Der Kurs " + pKursID + " muss erst beim Datenmanager hinzugefügt werden!");
+		
+		@NotNull GostBlockungKurs kurs = _parent.getKurs(pKursID);
+		int nSchienen = _parent.getSchienenAnzahl(); 
+		if (nSchienen < kurs.anzahlSchienen)
+			throw new NullPointerException("Es gibt " + nSchienen + " Schienen, da passt ein Kurs mit " + kurs.anzahlSchienen + " nicht hinein!");
+		
+		// Kurs automatisch in die ersten 'kurs.anzahlSchienen' Schienen hinzufügen.
+		for (int nr = 1; nr <= kurs.anzahlSchienen; nr++) 
+			setKursSchienenNr(pKursID, nr);
+		
 		stateRevalidateEverything();
 	}
 
