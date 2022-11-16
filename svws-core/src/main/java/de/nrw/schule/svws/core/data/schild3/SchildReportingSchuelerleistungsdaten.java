@@ -68,7 +68,7 @@ public class SchildReportingSchuelerleistungsdaten {
     /** Die Notenpunkte, sofern eine Note gesetzt ist */
     @Schema(required = false, description = "Die Notenpunkte, sofern eine Note gesetzt ist", example="6")
     public Integer notePunkte = null;
-    
+
     // TODO weitere Attribute
 
 }

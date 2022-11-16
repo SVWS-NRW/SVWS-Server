@@ -23,6 +23,10 @@ export class SchildReportingAttributTyp extends JavaObject {
 
 	public static readonly STRING : SchildReportingAttributTyp = new SchildReportingAttributTyp("STRING", 3, "string");
 
+	public static readonly MEMO : SchildReportingAttributTyp = new SchildReportingAttributTyp("MEMO", 4, "memo");
+
+	public static readonly DATE : SchildReportingAttributTyp = new SchildReportingAttributTyp("DATE", 5, "date");
+
 	private readonly type : String;
 
 	/**

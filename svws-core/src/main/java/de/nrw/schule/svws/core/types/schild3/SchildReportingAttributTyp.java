@@ -18,7 +18,12 @@ public enum SchildReportingAttributTyp {
     NUMBER("number"),
 
     /** Zeichenkette */
-    STRING("string");
+    STRING("string"),
+    /** Mehrzeilige Zeichenkette */
+    MEMO("memo"),
+    
+    /** Datumsangabe */
+    DATE("date");
 
 
     /** Der JSON-Typ als String */

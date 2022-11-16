@@ -1,5 +1,7 @@
 package de.nrw.schule.svws.core.data.schild3;
 
+import de.nrw.schule.svws.base.annotations.SchildReportingDate;
+import de.nrw.schule.svws.base.annotations.SchildReportingMemo;
 import de.nrw.schule.svws.core.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
@@ -60,6 +62,21 @@ public class SchildReportingSchuelerlernabschnitt {
     /** Die Statistik-Bezeichnung des Jahrgangs */
     @Schema(required = true, description = "die Statistik-Bezeichnung des Jahrgangs", example="EF")    
     public @NotNull String jahrgangStatistik = "";
+    /** Das Datum der Zeugniskonferenz */
+    @SchildReportingDate
+    @Schema(required = false, description = "Das Datum der Zeugniskonferenz", example="2021-06-26")
+    public @NotNull String datumZeugniskonferenz = "";
+
+    /** Das Datum des Zeugnisses */
+    @SchildReportingDate
+    @Schema(required = false, description = "Das Datum der Zeugnisses", example="2021-06-28")
+    public @NotNull String datumZeugnis = "";
+
+    /** Das Ergebnis des Prüfungs-Algorithmus */
+    @SchildReportingMemo
+    @Schema(required = false, description = "Das Ergebnis des Prüfungs-Algorithmus", example="Hier steht das Ergebnis des angewendeten Prüfungsalgorithmus")
+    public @NotNull String logPruefungsalgorithmus = "";
+        
     // TODO weitere Attribute
 
 }

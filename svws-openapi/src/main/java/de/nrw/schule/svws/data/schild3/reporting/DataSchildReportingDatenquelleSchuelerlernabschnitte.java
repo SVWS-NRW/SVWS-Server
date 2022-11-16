@@ -80,6 +80,9 @@ public class DataSchildReportingDatenquelleSchuelerlernabschnitte extends DataSc
             data.klasseStatistik = dtoKlasse.ASDKlasse;
             data.jahrgang = dtoJahrgang.InternKrz;
             data.jahrgangStatistik = dtoJahrgang.ASDJahrgang;
+            data.datumZeugniskonferenz = dto.Konferenzdatum;
+            data.datumZeugnis = dto.ZeugnisDatum;
+            data.logPruefungsalgorithmus = dto.PruefAlgoErgebnis;
             result.add(data);
         }
         // Geben die Ergebnis-Liste mit den Core-DTOs zurück

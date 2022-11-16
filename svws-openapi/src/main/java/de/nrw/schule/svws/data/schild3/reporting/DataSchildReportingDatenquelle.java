@@ -6,6 +6,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Vector;
 
+import de.nrw.schule.svws.base.annotations.SchildReportingDate;
+import de.nrw.schule.svws.base.annotations.SchildReportingMemo;
 import de.nrw.schule.svws.core.data.schild3.SchildReportingDatenquelle;
 import de.nrw.schule.svws.core.data.schild3.SchildReportingDatenquelleAttribut;
 import de.nrw.schule.svws.core.types.schild3.SchildReportingAttributTyp;
@@ -104,7 +106,13 @@ public abstract class DataSchildReportingDatenquelle {
                 case "long", "int", "short", "byte", "Long", "Integer", "Short", "Byte" -> SchildReportingAttributTyp.INT;
                 case "float", "double", "Float", "Double" -> SchildReportingAttributTyp.NUMBER;
                 case "boolean", "Boolean" -> SchildReportingAttributTyp.BOOLEAN;
-                default -> SchildReportingAttributTyp.STRING;
+                default -> {
+                	if (field.getAnnotation(SchildReportingDate.class) != null)
+                		yield SchildReportingAttributTyp.DATE;
+                	if (field.getAnnotation(SchildReportingMemo.class) != null)
+                		yield SchildReportingAttributTyp.MEMO;
+                	yield SchildReportingAttributTyp.STRING;
+                }
             };
             Schema schema = field.getAnnotation(Schema.class);
             if ((schema == null) || (schema.description() == null))

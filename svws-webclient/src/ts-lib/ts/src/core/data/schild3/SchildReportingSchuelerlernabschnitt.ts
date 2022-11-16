@@ -28,6 +28,12 @@ export class SchildReportingSchuelerlernabschnitt extends JavaObject {
 
 	public jahrgangStatistik : String = "";
 
+	public datumZeugniskonferenz : String = "";
+
+	public datumZeugnis : String = "";
+
+	public logPruefungsalgorithmus : String = "";
+
 
 	public constructor() {
 		super();
@@ -74,6 +80,15 @@ export class SchildReportingSchuelerlernabschnitt extends JavaObject {
 		if (typeof obj.jahrgangStatistik === "undefined")
 			 throw new Error('invalid json format, missing attribute jahrgangStatistik');
 		result.jahrgangStatistik = String(obj.jahrgangStatistik);
+		if (typeof obj.datumZeugniskonferenz === "undefined")
+			 throw new Error('invalid json format, missing attribute datumZeugniskonferenz');
+		result.datumZeugniskonferenz = String(obj.datumZeugniskonferenz);
+		if (typeof obj.datumZeugnis === "undefined")
+			 throw new Error('invalid json format, missing attribute datumZeugnis');
+		result.datumZeugnis = String(obj.datumZeugnis);
+		if (typeof obj.logPruefungsalgorithmus === "undefined")
+			 throw new Error('invalid json format, missing attribute logPruefungsalgorithmus');
+		result.logPruefungsalgorithmus = String(obj.logPruefungsalgorithmus);
 		return result;
 	}
 
@@ -91,6 +106,9 @@ export class SchildReportingSchuelerlernabschnitt extends JavaObject {
 		result += '"klasseStatistik" : ' + '"' + obj.klasseStatistik.valueOf() + '"' + ',';
 		result += '"jahrgang" : ' + '"' + obj.jahrgang.valueOf() + '"' + ',';
 		result += '"jahrgangStatistik" : ' + '"' + obj.jahrgangStatistik.valueOf() + '"' + ',';
+		result += '"datumZeugniskonferenz" : ' + '"' + obj.datumZeugniskonferenz.valueOf() + '"' + ',';
+		result += '"datumZeugnis" : ' + '"' + obj.datumZeugnis.valueOf() + '"' + ',';
+		result += '"logPruefungsalgorithmus" : ' + '"' + obj.logPruefungsalgorithmus.valueOf() + '"' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -133,6 +151,15 @@ export class SchildReportingSchuelerlernabschnitt extends JavaObject {
 		}
 		if (typeof obj.jahrgangStatistik !== "undefined") {
 			result += '"jahrgangStatistik" : ' + '"' + obj.jahrgangStatistik.valueOf() + '"' + ',';
+		}
+		if (typeof obj.datumZeugniskonferenz !== "undefined") {
+			result += '"datumZeugniskonferenz" : ' + '"' + obj.datumZeugniskonferenz.valueOf() + '"' + ',';
+		}
+		if (typeof obj.datumZeugnis !== "undefined") {
+			result += '"datumZeugnis" : ' + '"' + obj.datumZeugnis.valueOf() + '"' + ',';
+		}
+		if (typeof obj.logPruefungsalgorithmus !== "undefined") {
+			result += '"logPruefungsalgorithmus" : ' + '"' + obj.logPruefungsalgorithmus.valueOf() + '"' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';
