@@ -30,10 +30,11 @@ const model = computed({
 
 <template>
 	<label
-class="checkbox" :class="{
-		'checkbox--disabled': disabled,
-		'checkbox--statistics': statistics
-	}">
+		class="checkbox" 
+		:class="{
+			'checkbox--disabled': disabled,
+			'checkbox--statistics': statistics
+		}">
 		<input v-model="model" class="checkbox--control" type="checkbox" :value="value" :disabled="disabled" />
 		<span class="checkbox--indicator">
 			<Icon>
@@ -60,6 +61,11 @@ class="checkbox" :class="{
 	@apply hidden;
 }
 
+.checkbox--diabled {
+	@apply border-gray;
+	@apply text-gray;
+}
+
 .checkbox--indicator {
 	@apply bg-white;
 	@apply border-2 border-black;
@@ -67,6 +73,9 @@ class="checkbox" :class="{
 	@apply h-5 w-5;
 }
 
+.checkbox--disabled .checkbox--indicator {
+	@apply border-gray;
+}
 .checkbox--statistics .checkbox--indicator {
 	@apply border-purple;
 }
@@ -87,6 +96,12 @@ class="checkbox" :class="{
 	@apply text-black;
 }
 
+.checkbox--disabled input:checked+.checkbox--indicator .icon {
+	@apply opacity-100;
+	@apply text-gray;
+	@apply bg-gray;
+	@apply bg-opacity-5;
+}
 .checkbox--statistics input:checked+.checkbox--indicator .icon {
 	@apply opacity-100;
 	@apply text-purple;
@@ -100,6 +115,9 @@ class="checkbox" :class="{
 	@apply flex items-center;
 }
 
+.checkbox--disabled .checkbox--label {
+	@apply text-gray;
+}
 .checkbox--statistics .checkbox--label {
 	@apply text-purple;
 }
