@@ -33,7 +33,7 @@ abstract class NodePluginConfig {
     	url.convention('https://nodejs.org/dist/v');
     	version.convention('18.12.1'); // https://nodejs.org/en/download/
     	npmVersion.convention('8.19.2');
-    	tsVersion.convention('4.8.4'); // https://github.com/microsoft/TypeScript/releases
+    	tsVersion.convention('4.9.3'); // https://github.com/microsoft/TypeScript/releases
     	tsNodeTypesVersion.convention('18.11.9'); // https://www.npmjs.com/package/@types/node
     }
     
