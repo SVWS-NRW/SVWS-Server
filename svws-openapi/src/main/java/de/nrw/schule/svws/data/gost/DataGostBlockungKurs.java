@@ -16,7 +16,9 @@ import de.nrw.schule.svws.data.DataManager;
 import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.dto.current.gost.kursblockung.DTOGostBlockung;
 import de.nrw.schule.svws.db.dto.current.gost.kursblockung.DTOGostBlockungKurs;
+import de.nrw.schule.svws.db.dto.current.gost.kursblockung.DTOGostBlockungSchiene;
 import de.nrw.schule.svws.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergebnis;
+import de.nrw.schule.svws.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergebnisKursSchiene;
 import de.nrw.schule.svws.db.dto.current.schild.faecher.DTOFach;
 import de.nrw.schule.svws.db.dto.current.svws.db.DTODBAutoInkremente;
 import de.nrw.schule.svws.db.utils.OperationError;
@@ -211,7 +213,15 @@ public class DataGostBlockungKurs extends DataManager<Long> {
 	    	} else if (kursart == GostKursart.ZK) {
 	    		kurs = new DTOGostBlockungKurs(idKurs, idBlockung, idFach, kursart, kursnummer, false, 1, 3);	    		
 	    	}
-			conn.transactionPersist(kurs);	    		
+			conn.transactionPersist(kurs);
+			// Füge den Kurs in die erste Schiene des Zwischenergebnisses ein
+			List<DTOGostBlockungSchiene> schienen = conn.queryList("SELECT e FROM DTOGostBlockungSchiene e WHERE e.Blockung_ID = ?1 AND e.Nummer = ?2", DTOGostBlockungSchiene.class, blockung.ID, 1);
+			if (schienen.size() != 1)
+				throw OperationError.INTERNAL_SERVER_ERROR.exception();
+			DTODBAutoInkremente dbKursSchieneID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Blockung_Zwischenergebnisse_Kurs_Schienen");
+			long idKursSchiene = dbKursSchieneID == null ? 1 : dbKursSchieneID.MaxID + 1;
+			DTOGostBlockungZwischenergebnisKursSchiene ks = new DTOGostBlockungZwischenergebnisKursSchiene(idKursSchiene, idKurs, schienen.get(0).ID);
+			conn.transactionPersist(ks);
 			conn.transactionCommit();
 			GostBlockungKurs daten = dtoMapper.apply(kurs);
 			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
