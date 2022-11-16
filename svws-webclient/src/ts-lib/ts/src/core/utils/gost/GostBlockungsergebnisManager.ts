@@ -461,6 +461,15 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert den zugehörigen Daten-Manager für diesen Ergebnis-Manager zurück.
+	 * 
+	 * @return Der Daten-Manager, der zu diesem Ergebnis-Manager gehört.
+	 */
+	public getParent() : GostBlockungsdatenManager | null {
+		return this._parent;
+	}
+
+	/**
 	 * Liefert die Blockungs-ID. Das ist die ID des Elternteils.
 	 * 
 	 * @return Liefert die Blockungs-ID. Das ist die ID des Elternteils.

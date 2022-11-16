@@ -173,32 +173,34 @@ public class DataGostBlockungSchiene extends DataManager<Long> {
 		// Passe alle Regeln einem Parametern Schienenanzahl an.
 		// Bestimme alle Regeln der Blockung
 		List<DTOGostBlockungRegel> dtoRegeln = conn.queryNamed("DTOGostBlockungRegel.blockung_id", schiene.Blockung_ID, DTOGostBlockungRegel.class);
-		List<Long> regelIDs = dtoRegeln.stream().map(r -> r.ID).toList();
-		// Bestimme die RegelParameter dieser Regeln
-		List<DTOGostBlockungRegelParameter> dtoRegelParameter = conn
-				.queryNamed("DTOGostBlockungRegelParameter.regel_id.multiple", regelIDs, DTOGostBlockungRegelParameter.class);
-		Map<Long, List<DTOGostBlockungRegelParameter>> mapParameter = dtoRegelParameter.stream().collect(Collectors.groupingBy(r -> r.Regel_ID));
-		// Erstelle die Core-Types und prüfe auf neue Parameter-Werte (verwende hierbei den gleichen Algorithmus, wie im zugehörigen Daten-Manager..
-		List<GostBlockungRegel> regeln = DataGostBlockungRegel.getBlockungsregeln(dtoRegeln, dtoRegelParameter);
-		// Übertrage die Anpassungen in die Datenbank
-		for (GostBlockungRegel regel : regeln) {
-			if (regel.parameter.size() == 0)
-				continue;
-			List<DTOGostBlockungRegelParameter> dtoParams = mapParameter.get(regel.id);
-			if ((dtoParams == null) || (dtoParams.size() == 0))
-				throw OperationError.INTERNAL_SERVER_ERROR.exception();
-			Map<Integer, DTOGostBlockungRegelParameter> mapParam = dtoParams.stream().collect(Collectors.toMap(p -> p.Nummer, p -> p));
-			long[] newParams = GostKursblockungRegelTyp.getNeueParameterBeiSchienenLoeschung(regel, daten.nummer);
-			if (newParams == null) { // Lösche die Regel in der DB und gehe zur nächsten über
-				conn.transactionRemove(regel);
-				continue;
-			}
-			// Prüfe, ob die Parameter der Regel verändert wurden und aktualisiere diese ggf. in der DB 
-			for (int i = 0; i < newParams.length; i++) {
-				if (newParams[i] != regel.parameter.get(i)) {
-					DTOGostBlockungRegelParameter dtoParam = mapParam.get(i);
-					dtoParam.Parameter = newParams[i];
-					conn.transactionPersist(dtoParam);
+		if (dtoRegeln.size() > 0) {
+			List<Long> regelIDs = dtoRegeln.stream().map(r -> r.ID).toList();
+			// Bestimme die RegelParameter dieser Regeln
+			List<DTOGostBlockungRegelParameter> dtoRegelParameter = conn
+					.queryNamed("DTOGostBlockungRegelParameter.regel_id.multiple", regelIDs, DTOGostBlockungRegelParameter.class);
+			Map<Long, List<DTOGostBlockungRegelParameter>> mapParameter = dtoRegelParameter.stream().collect(Collectors.groupingBy(r -> r.Regel_ID));
+			// Erstelle die Core-Types und prüfe auf neue Parameter-Werte (verwende hierbei den gleichen Algorithmus, wie im zugehörigen Daten-Manager..
+			List<GostBlockungRegel> regeln = DataGostBlockungRegel.getBlockungsregeln(dtoRegeln, dtoRegelParameter);
+			// Übertrage die Anpassungen in die Datenbank
+			for (GostBlockungRegel regel : regeln) {
+				if (regel.parameter.size() == 0)
+					continue;
+				List<DTOGostBlockungRegelParameter> dtoParams = mapParameter.get(regel.id);
+				if ((dtoParams == null) || (dtoParams.size() == 0))
+					throw OperationError.INTERNAL_SERVER_ERROR.exception();
+				Map<Integer, DTOGostBlockungRegelParameter> mapParam = dtoParams.stream().collect(Collectors.toMap(p -> p.Nummer, p -> p));
+				long[] newParams = GostKursblockungRegelTyp.getNeueParameterBeiSchienenLoeschung(regel, daten.nummer);
+				if (newParams == null) { // Lösche die Regel in der DB und gehe zur nächsten über
+					conn.transactionRemove(regel);
+					continue;
+				}
+				// Prüfe, ob die Parameter der Regel verändert wurden und aktualisiere diese ggf. in der DB 
+				for (int i = 0; i < newParams.length; i++) {
+					if (newParams[i] != regel.parameter.get(i)) {
+						DTOGostBlockungRegelParameter dtoParam = mapParam.get(i);
+						dtoParam.Parameter = newParams[i];
+						conn.transactionPersist(dtoParam);
+					}
 				}
 			}
 		}

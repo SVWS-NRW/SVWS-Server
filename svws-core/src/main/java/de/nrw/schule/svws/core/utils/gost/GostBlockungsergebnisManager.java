@@ -555,6 +555,15 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
+	 * Liefert den zugehörigen Daten-Manager für diesen Ergebnis-Manager zurück.
+	 * 
+	 * @return Der Daten-Manager, der zu diesem Ergebnis-Manager gehört.
+	 */
+	public GostBlockungsdatenManager getParent() {
+		return _parent;
+	}
+	
+	/**
 	 * Liefert die Blockungs-ID. Das ist die ID des Elternteils.
 	 * 
 	 * @return Liefert die Blockungs-ID. Das ist die ID des Elternteils.
