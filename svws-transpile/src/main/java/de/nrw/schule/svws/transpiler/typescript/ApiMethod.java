@@ -236,12 +236,13 @@ public class ApiMethod {
 			}
 		}
 		boolean isFirstParam = true;
-		if (requestBody.exists && (requestBody.content != null)) {
+		String requestBodyType = getRequestBodyType();
+		if (requestBodyType != null) {
 			if (isFirstParam) {
 				result += "\t * " + System.lineSeparator();
 				isFirstParam = false;
 			}
-			result += "\t * @param {" + requestBody.content.datatype + "} data - der Request-Body für die HTTP-Methode" + System.lineSeparator();
+			result += "\t * @param {" + requestBodyType + "} data - der Request-Body für die HTTP-Methode" + System.lineSeparator();
 		}
 		for (Map.Entry<String, String> pathParam : this.pathParams.params) {
 			if (isFirstParam) {
@@ -288,7 +289,10 @@ public class ApiMethod {
 	public String getRequestBodyType() {
 		if ((!requestBody.exists) || (requestBody.content == null))
 			return null;
-		return getTSType(requestBody.content);
+		String tstype = getTSType(requestBody.content);			
+		if (httpMethod == ApiHttpMethod.PATCH)
+			tstype = "Partial<" + tstype + ">";
+		return tstype;
 	}
 	
 	
@@ -319,13 +323,9 @@ public class ApiMethod {
 	private String getTSMethodHead() {
 		String result = "\tpublic async " + this.name + "(";
 		boolean notFirstParam = false;
-		if (requestBody.exists && (requestBody.content != null)) {
-			result += "data : ";
-			String tstype = getTSType(requestBody.content);			
-			if (httpMethod == ApiHttpMethod.PATCH)
-				result += "Partial<" + tstype + ">";
-			else 
-				result += tstype;
+		String requestBodyType = getRequestBodyType();
+		if (requestBodyType != null) {
+			result += "data : " + requestBodyType;
 			notFirstParam = true;
 		}
 		for (Map.Entry<String, String> pathParam : this.pathParams.params) {
