@@ -14,39 +14,39 @@ import jakarta.validation.constraints.NotNull;
  * Core-Types dienen als grundlegende abstrakte Datentypen sowohl für die Core-Algorithmen
  * als auch für die OpenAPI-Schnittstelle.
  */
-public class GostHalbjahr implements Comparable<GostHalbjahr> {
+public enum GostHalbjahr implements Comparable<GostHalbjahr> {
+
+	/** Einführungsphase 1. Halbjahr = EF1 */
+	EF1(0, "EF", 1, "EF.1", "E1", "Einführungsphase 1. Halbjahr"),
+
+	/** Einführungsphase 2. Halbjahr = EF2 */
+	EF2(1, "EF", 2, "EF.2", "E2", "Einführungsphase 2. Halbjahr"),
+
+	/** Qualifikationsphase 1. Jahr, 1. Halbjahr = Q1.1 */
+	Q11(2, "Q1", 1, "Q1.1", "Q1", "Qualifikationsphase 1. Jahr, 1. Halbjahr"),
+
+	/** Qualifikationsphase 1. Jahr, 2. Halbjahr = Q1.2 */
+	Q12(3, "Q1", 2, "Q1.2", "Q2", "Qualifikationsphase 1. Jahr, 2. Halbjahr"),
+
+	/** Qualifikationsphase 2. Jahr, 1. Halbjahr = Q2.1 */
+	Q21(4, "Q2", 1, "Q2.1", "Q3", "Qualifikationsphase 2. Jahr, 1. Halbjahr"),
+
+	/** Qualifikationsphase 2. Jahr, 2. Halbjahr = Q2.2 */
+	Q22(5, "Q2", 2, "Q2.2", "Q4", "Qualifikationsphase 2. Jahr, 2. Halbjahr");
+
 
 	/** Eine Zuordnung der Halbjahre zu der ID, welche die Reihenfolge der Halbjahre angibt. */
-	private final static @NotNull HashMap<@NotNull Integer, @NotNull GostHalbjahr> map = new HashMap<>();
+	private final static @NotNull HashMap<@NotNull Integer, @NotNull GostHalbjahr> _mapID = new HashMap<>();
 	
 	/** Eine Zuordnung der Halbjahre zu dem Kürzel. */
-	private final static @NotNull HashMap<@NotNull String, @NotNull GostHalbjahr> mapKuerzel = new HashMap<>();
+	private final static @NotNull HashMap<@NotNull String, @NotNull GostHalbjahr> _mapKuerzel = new HashMap<>();
 
 	/** Eine Zuordnung der Halbjahre zu dem alten Kürzel. */
-	private final static @NotNull HashMap<@NotNull String, @NotNull GostHalbjahr> mapKuerzelAlt = new HashMap<>();
+	private final static @NotNull HashMap<@NotNull String, @NotNull GostHalbjahr> _mapKuerzelAlt = new HashMap<>();
 	
 	
 	/** Die maximale Anzahl an Halbjahren in der gymnasialen Oberstufe */
 	public static final int maxHalbjahre = 6;
-	
-	
-	/** Einführungsphase 1. Halbjahr = EF1 */
-	public static final @NotNull GostHalbjahr EF1 = new GostHalbjahr(0, "EF", 1, "EF.1", "E1", "Einführungsphase 1. Halbjahr");
-
-	/** Einführungsphase 2. Halbjahr = EF2 */
-	public static final @NotNull GostHalbjahr EF2 = new GostHalbjahr(1, "EF", 2, "EF.2", "E2", "Einführungsphase 2. Halbjahr");
-
-	/** Qualifikationsphase 1. Jahr, 1. Halbjahr = Q1.1 */
-	public static final @NotNull GostHalbjahr Q11 = new GostHalbjahr(2, "Q1", 1, "Q1.1", "Q1", "Qualifikationsphase 1. Jahr, 1. Halbjahr");
-
-	/** Qualifikationsphase 1. Jahr, 2. Halbjahr = Q1.2 */
-	public static final @NotNull GostHalbjahr Q12 = new GostHalbjahr(3, "Q1", 2, "Q1.2", "Q2", "Qualifikationsphase 1. Jahr, 2. Halbjahr");
-
-	/** Qualifikationsphase 2. Jahr, 1. Halbjahr = Q2.1 */
-	public static final @NotNull GostHalbjahr Q21 = new GostHalbjahr(4, "Q2", 1, "Q2.1", "Q3", "Qualifikationsphase 2. Jahr, 1. Halbjahr");
-
-	/** Qualifikationsphase 2. Jahr, 2. Halbjahr = Q2.2 */
-	public static final @NotNull GostHalbjahr Q22 = new GostHalbjahr(5, "Q2", 2, "Q2.2", "Q4", "Qualifikationsphase 2. Jahr, 2. Halbjahr");
 
 
 	/** Eine ID für das Halbjahr, welches die Reihenfolge der Halbjahre wiederspiegelt und als Index für Arrays verwendet werden kann. */
@@ -87,9 +87,48 @@ public class GostHalbjahr implements Comparable<GostHalbjahr> {
 		this.kuerzel = kuerzel;
 		this.kuerzelAlt = kuerzelAlt;
 		this.beschreibung = beschreibung;
-		map.put(id, this);
-		mapKuerzel.put(kuerzel, this);
-		mapKuerzelAlt.put(kuerzelAlt, this);
+	}
+
+
+	/**
+	 * Gibt eine Map von den IDs auf das Gost-Halbjahr zurück. 
+	 * Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
+	 *    
+	 * @return die Map von den IDs auf das Gost-Halbjahr
+	 */
+	private static @NotNull HashMap<@NotNull Integer, @NotNull GostHalbjahr> getMapByID() {
+		if (_mapID.size() == 0)
+			for (@NotNull GostHalbjahr h : GostHalbjahr.values())
+				_mapID.put(h.id, h);
+		return _mapID;
+	}
+
+
+	/**
+	 * Gibt eine Map von den Kürzeln auf das Gost-Halbjahr zurück. 
+	 * Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
+	 *    
+	 * @return die Map von den Kürzeln auf das Gost-Halbjahr
+	 */
+	private static @NotNull HashMap<@NotNull String, @NotNull GostHalbjahr> getMapByKuerzel() {
+		if (_mapKuerzel.size() == 0)
+			for (@NotNull GostHalbjahr h : GostHalbjahr.values())
+				_mapKuerzel.put(h.kuerzel, h);
+		return _mapKuerzel;
+	}
+
+
+	/**
+	 * Gibt eine Map von den alten Kürzeln auf das Gost-Halbjahr zurück. 
+	 * Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
+	 *    
+	 * @return die Map von den alten Kürzeln auf das Gost-Halbjahr
+	 */
+	private static @NotNull HashMap<@NotNull String, @NotNull GostHalbjahr> getMapByKuerzelAlt() {
+		if (_mapKuerzelAlt.size() == 0)
+			for (@NotNull GostHalbjahr h : GostHalbjahr.values())
+				_mapKuerzelAlt.put(h.kuerzelAlt, h);
+		return _mapKuerzelAlt;
 	}
 
 
@@ -100,7 +139,7 @@ public class GostHalbjahr implements Comparable<GostHalbjahr> {
      */
 	@JsonIgnore
 	public GostHalbjahr next() {
-		return map.get(this.id + 1);
+		return getMapByID().get(this.id + 1);
 	}
 	
 	
@@ -111,21 +150,10 @@ public class GostHalbjahr implements Comparable<GostHalbjahr> {
      */
 	@JsonIgnore
 	public GostHalbjahr previous() {
-		return map.get(this.id - 1);
+		return getMapByID().get(this.id - 1);
 	}
 	
 	
-    /**
-     * Gibt alle Halbjahre zurück.
-     * 
-     * @return ein Array mit allen Halbjahren der gymnasialen Oberstufe
-     */
-	public static @NotNull GostHalbjahr@NotNull [] values() {
-		@NotNull GostHalbjahr@NotNull [] alle = { GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22 };
-		return alle;
-	}
-
-
     /**
      * Gibt alle Halbjahre der Einführungsphase zurück.
      * 
@@ -166,8 +194,9 @@ public class GostHalbjahr implements Comparable<GostHalbjahr> {
 			case "Q2":
 				@NotNull GostHalbjahr@NotNull[] q2 = { GostHalbjahr.Q21, GostHalbjahr.Q22 };
 				return q2;
+			default:
+				throw new IllegalArgumentException("Der angegebene Jahrgang ist kein gültiger Jahrgang der gymnasialen Oberstufe"); 
 		}
-		throw new IllegalArgumentException("Der angegebene Jahrgang ist kein gültiger Jahrgang der gymnasialen Oberstufe"); 
 	}
 
 
@@ -188,8 +217,8 @@ public class GostHalbjahr implements Comparable<GostHalbjahr> {
 			case 3: return GostHalbjahr.Q12;
 			case 4: return GostHalbjahr.Q21;
 			case 5: return GostHalbjahr.Q22;
+			default: return null;
 		}
-		return null;
 	}
 
 
@@ -218,7 +247,7 @@ public class GostHalbjahr implements Comparable<GostHalbjahr> {
      * @return das Halbjahr oder null, falls das Kürzel nicht gültig ist
      */
 	public static GostHalbjahr fromKuerzel(String kuerzel) {
-		return mapKuerzel.get(kuerzel);
+		return getMapByKuerzel().get(kuerzel);
 	}
 
 
@@ -230,7 +259,7 @@ public class GostHalbjahr implements Comparable<GostHalbjahr> {
      * @return das Halbjahr oder null, falls das Kürzel nicht gültig ist
      */
 	public static GostHalbjahr fromKuerzelAlt(String kuerzelAlt) {
-		return mapKuerzelAlt.get(kuerzelAlt);
+		return getMapByKuerzelAlt().get(kuerzelAlt);
 	}
 
 
@@ -249,8 +278,8 @@ public class GostHalbjahr implements Comparable<GostHalbjahr> {
 			case "EF": return (halbjahr == 1) ? EF1 : EF2;
 			case "Q1": return (halbjahr == 1) ? Q11 : Q12;
 			case "Q2": return (halbjahr == 1) ? Q21 : Q22;		
+			default: return null;
 		}
-		return null;
 	}
 
 	
@@ -345,14 +374,6 @@ public class GostHalbjahr implements Comparable<GostHalbjahr> {
 			return false;
 		@NotNull List<@NotNull GostHalbjahr> list = Arrays.asList(halbjahre);
 		return (list.contains(GostHalbjahr.Q11) && list.contains(GostHalbjahr.Q12) && list.contains(GostHalbjahr.Q21) && list.contains(GostHalbjahr.Q22));
-	}
-
-
-	@Override
-	public int compareTo(GostHalbjahr other) {
-		if (other == null)
-			return -1;
-		return Integer.compare(id, other.id);
 	}
 
 }

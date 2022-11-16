@@ -8,27 +8,39 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 import { Arrays, cast_java_util_Arrays } from '../../../java/util/Arrays';
 import { IllegalArgumentException, cast_java_lang_IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
 
-export class GostHalbjahr extends JavaObject implements Comparable<GostHalbjahr | null> {
+export class GostHalbjahr extends JavaObject {
 
-	private static readonly map : HashMap<Number, GostHalbjahr> = new HashMap();
+	/** the name of the enumeration value */
+	private readonly __name : String;
 
-	private static readonly mapKuerzel : HashMap<String, GostHalbjahr> = new HashMap();
+	/** the ordinal value for the enumeration value */
+	private readonly __ordinal : number;
 
-	private static readonly mapKuerzelAlt : HashMap<String, GostHalbjahr> = new HashMap();
+	/** an array containing all values of this enumeration */
+	private static readonly all_values_by_ordinal : Array<GostHalbjahr> = [];
+
+	/** an array containing all values of this enumeration indexed by their name*/
+	private static readonly all_values_by_name : Map<String, GostHalbjahr> = new Map<String, GostHalbjahr>();
+
+	public static readonly EF1 : GostHalbjahr = new GostHalbjahr("EF1", 0, 0, "EF", 1, "EF.1", "E1", "Einführungsphase 1. Halbjahr");
+
+	public static readonly EF2 : GostHalbjahr = new GostHalbjahr("EF2", 1, 1, "EF", 2, "EF.2", "E2", "Einführungsphase 2. Halbjahr");
+
+	public static readonly Q11 : GostHalbjahr = new GostHalbjahr("Q11", 2, 2, "Q1", 1, "Q1.1", "Q1", "Qualifikationsphase 1. Jahr, 1. Halbjahr");
+
+	public static readonly Q12 : GostHalbjahr = new GostHalbjahr("Q12", 3, 3, "Q1", 2, "Q1.2", "Q2", "Qualifikationsphase 1. Jahr, 2. Halbjahr");
+
+	public static readonly Q21 : GostHalbjahr = new GostHalbjahr("Q21", 4, 4, "Q2", 1, "Q2.1", "Q3", "Qualifikationsphase 2. Jahr, 1. Halbjahr");
+
+	public static readonly Q22 : GostHalbjahr = new GostHalbjahr("Q22", 5, 5, "Q2", 2, "Q2.2", "Q4", "Qualifikationsphase 2. Jahr, 2. Halbjahr");
+
+	private static readonly _mapID : HashMap<Number, GostHalbjahr> = new HashMap();
+
+	private static readonly _mapKuerzel : HashMap<String, GostHalbjahr> = new HashMap();
+
+	private static readonly _mapKuerzelAlt : HashMap<String, GostHalbjahr> = new HashMap();
 
 	public static readonly maxHalbjahre : number = 6;
-
-	public static readonly EF1 : GostHalbjahr = new GostHalbjahr(0, "EF", 1, "EF.1", "E1", "Einführungsphase 1. Halbjahr");
-
-	public static readonly EF2 : GostHalbjahr = new GostHalbjahr(1, "EF", 2, "EF.2", "E2", "Einführungsphase 2. Halbjahr");
-
-	public static readonly Q11 : GostHalbjahr = new GostHalbjahr(2, "Q1", 1, "Q1.1", "Q1", "Qualifikationsphase 1. Jahr, 1. Halbjahr");
-
-	public static readonly Q12 : GostHalbjahr = new GostHalbjahr(3, "Q1", 2, "Q1.2", "Q2", "Qualifikationsphase 1. Jahr, 2. Halbjahr");
-
-	public static readonly Q21 : GostHalbjahr = new GostHalbjahr(4, "Q2", 1, "Q2.1", "Q3", "Qualifikationsphase 2. Jahr, 1. Halbjahr");
-
-	public static readonly Q22 : GostHalbjahr = new GostHalbjahr(5, "Q2", 2, "Q2.2", "Q4", "Qualifikationsphase 2. Jahr, 2. Halbjahr");
 
 	public readonly id : number;
 
@@ -42,7 +54,6 @@ export class GostHalbjahr extends JavaObject implements Comparable<GostHalbjahr 
 
 	public readonly beschreibung : String;
 
-
 	/**
 	 * Erzeugt ein neues Halbjahr der Gymnasialen Oberstufe für diese Aufzählung.
 	 * 
@@ -53,17 +64,57 @@ export class GostHalbjahr extends JavaObject implements Comparable<GostHalbjahr 
 	 * @param kuerzelAlt     ein eindeutiges Kürzel, welche in alten Tabellen verwendet wurde.
 	 * @param beschreibung   die textuelle Beschreibung für das Halbjahr der gymnasialen Oberstufe
 	 */
-	private constructor(id : number, jahrgang : String, halbjahr : number, kuerzel : String, kuerzelAlt : String, beschreibung : String) {
+	private constructor(name : string, ordinal : number, id : number, jahrgang : String, halbjahr : number, kuerzel : String, kuerzelAlt : String, beschreibung : String) {
 		super();
+		this.__name = name;
+		this.__ordinal = ordinal;
+		GostHalbjahr.all_values_by_ordinal.push(this);
+		GostHalbjahr.all_values_by_name.set(name, this);
 		this.id = id;
 		this.jahrgang = jahrgang;
 		this.halbjahr = halbjahr;
 		this.kuerzel = kuerzel;
 		this.kuerzelAlt = kuerzelAlt;
 		this.beschreibung = beschreibung;
-		GostHalbjahr.map.put(id, this);
-		GostHalbjahr.mapKuerzel.put(kuerzel, this);
-		GostHalbjahr.mapKuerzelAlt.put(kuerzelAlt, this);
+	}
+
+	/**
+	 * Gibt eine Map von den IDs auf das Gost-Halbjahr zurück. 
+	 * Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
+	 *    
+	 * @return die Map von den IDs auf das Gost-Halbjahr
+	 */
+	private static getMapByID() : HashMap<Number, GostHalbjahr> {
+		if (GostHalbjahr._mapID.size() === 0) 
+			for (let h of GostHalbjahr.values()) 
+				GostHalbjahr._mapID.put(h.id, h);
+		return GostHalbjahr._mapID;
+	}
+
+	/**
+	 * Gibt eine Map von den Kürzeln auf das Gost-Halbjahr zurück. 
+	 * Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
+	 *    
+	 * @return die Map von den Kürzeln auf das Gost-Halbjahr
+	 */
+	private static getMapByKuerzel() : HashMap<String, GostHalbjahr> {
+		if (GostHalbjahr._mapKuerzel.size() === 0) 
+			for (let h of GostHalbjahr.values()) 
+				GostHalbjahr._mapKuerzel.put(h.kuerzel, h);
+		return GostHalbjahr._mapKuerzel;
+	}
+
+	/**
+	 * Gibt eine Map von den alten Kürzeln auf das Gost-Halbjahr zurück. 
+	 * Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
+	 *    
+	 * @return die Map von den alten Kürzeln auf das Gost-Halbjahr
+	 */
+	private static getMapByKuerzelAlt() : HashMap<String, GostHalbjahr> {
+		if (GostHalbjahr._mapKuerzelAlt.size() === 0) 
+			for (let h of GostHalbjahr.values()) 
+				GostHalbjahr._mapKuerzelAlt.put(h.kuerzelAlt, h);
+		return GostHalbjahr._mapKuerzelAlt;
 	}
 
 	/**
@@ -72,7 +123,7 @@ export class GostHalbjahr extends JavaObject implements Comparable<GostHalbjahr 
 	 * @return das nachfolgende Halbjahr oder null, wenn es keines mehr gibt
 	 */
 	public next() : GostHalbjahr | null {
-		return GostHalbjahr.map.get(this.id + 1);
+		return GostHalbjahr.getMapByID().get(this.id + 1);
 	}
 
 	/**
@@ -81,17 +132,7 @@ export class GostHalbjahr extends JavaObject implements Comparable<GostHalbjahr 
 	 * @return das vorherige Halbjahr oder null, wenn es keines mehr gibt
 	 */
 	public previous() : GostHalbjahr | null {
-		return GostHalbjahr.map.get(this.id - 1);
-	}
-
-	/**
-	 * Gibt alle Halbjahre zurück.
-	 * 
-	 * @return ein Array mit allen Halbjahren der gymnasialen Oberstufe
-	 */
-	public static values() : Array<GostHalbjahr> {
-		let alle : Array<GostHalbjahr> = [GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22];
-		return alle;
+		return GostHalbjahr.getMapByID().get(this.id - 1);
 	}
 
 	/**
@@ -132,8 +173,9 @@ export class GostHalbjahr extends JavaObject implements Comparable<GostHalbjahr 
 			case "Q2": 
 				let q2 : Array<GostHalbjahr> = [GostHalbjahr.Q21, GostHalbjahr.Q22]
 				return q2;
+			default: 
+				throw new IllegalArgumentException("Der angegebene Jahrgang ist kein gültiger Jahrgang der gymnasialen Oberstufe")
 		}
-		throw new IllegalArgumentException("Der angegebene Jahrgang ist kein gültiger Jahrgang der gymnasialen Oberstufe")
 	}
 
 	/**
@@ -159,8 +201,9 @@ export class GostHalbjahr extends JavaObject implements Comparable<GostHalbjahr 
 				return GostHalbjahr.Q21;
 			case 5: 
 				return GostHalbjahr.Q22;
+			default: 
+				return null;
 		}
-		return null;
 	}
 
 	/**
@@ -187,7 +230,7 @@ export class GostHalbjahr extends JavaObject implements Comparable<GostHalbjahr 
 	 * @return das Halbjahr oder null, falls das Kürzel nicht gültig ist
 	 */
 	public static fromKuerzel(kuerzel : String | null) : GostHalbjahr | null {
-		return GostHalbjahr.mapKuerzel.get(kuerzel);
+		return GostHalbjahr.getMapByKuerzel().get(kuerzel);
 	}
 
 	/**
@@ -198,7 +241,7 @@ export class GostHalbjahr extends JavaObject implements Comparable<GostHalbjahr 
 	 * @return das Halbjahr oder null, falls das Kürzel nicht gültig ist
 	 */
 	public static fromKuerzelAlt(kuerzelAlt : String | null) : GostHalbjahr | null {
-		return GostHalbjahr.mapKuerzelAlt.get(kuerzelAlt);
+		return GostHalbjahr.getMapByKuerzelAlt().get(kuerzelAlt);
 	}
 
 	/**
@@ -219,8 +262,9 @@ export class GostHalbjahr extends JavaObject implements Comparable<GostHalbjahr 
 				return (halbjahr === 1) ? GostHalbjahr.Q11 : GostHalbjahr.Q12;
 			case "Q2": 
 				return (halbjahr === 1) ? GostHalbjahr.Q21 : GostHalbjahr.Q22;
+			default: 
+				return null;
 		}
-		return null;
 	}
 
 	/**
@@ -306,10 +350,86 @@ export class GostHalbjahr extends JavaObject implements Comparable<GostHalbjahr 
 		return (list.contains(GostHalbjahr.Q11) && list.contains(GostHalbjahr.Q12) && list.contains(GostHalbjahr.Q21) && list.contains(GostHalbjahr.Q22));
 	}
 
-	public compareTo(other : GostHalbjahr | null) : number {
-		if (other === null) 
-			return -1;
-		return JavaInteger.compare(this.id, other.id);
+	/**
+	 * Returns the name of this enumeration value.
+	 *
+	 * @returns the name
+	 */
+	private name() : String {
+		return this.__name;
+	}
+
+	/**
+	 * Returns the ordinal value of this enumeration value.
+	 *
+	 * @returns the ordinal value
+	 */
+	private ordinal() : number {
+		return this.__ordinal;
+	}
+
+	/**
+	 * Returns the name of this enumeration value.
+	 *
+	 * @returns the name
+	 */
+	public toString() : String {
+		return this.__name;
+	}
+
+	/**
+	 * Returns true if this and the other enumeration values are equal.
+	 *
+	 * @param other   the other enumeration value
+	 *
+	 * @returns true if they are equal and false otherwise
+	 */
+	public equals(other : JavaObject) : boolean {
+		if (!(other instanceof GostHalbjahr))
+			return false;
+		return this === other;
+	}
+
+	/**
+	 * Returns the ordinal value as hashcode, since the ordinal value is unique.
+	 *
+	 * @returns the ordinal value as hashcode
+	 */
+	public hashCode() : number {
+		return this.__ordinal;
+	}
+
+	/**
+	 * Compares this enumeration value with the other enumeration value by their ordinal value.
+	 *
+	 * @param other   the other enumeration value
+	 *
+	 * @returns a negative, zero or postive value as this enumeration value is less than, equal to
+	 *          or greater than the other enumeration value
+	 */
+	public compareTo(other : GostHalbjahr) : number {
+		return this.__ordinal - other.__ordinal;
+	}
+
+	/**
+	 * Returns an array with enumeration values.
+	 *
+	 * @returns the array with enumeration values
+	 */
+	public static values() : Array<GostHalbjahr> {
+		return [...this.all_values_by_ordinal];
+	}
+
+	/**
+	 * Returns the enumeration value with the specified name.
+	 *
+	 * @param name   the name of the enumeration value
+	 *
+	 * @returns the enumeration values or null
+	 */
+	public static valueOf(name : String) : GostHalbjahr | null {
+		let tmp : GostHalbjahr | undefined = this.all_values_by_name.get(name);
+		return (!tmp) ? null : tmp;
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

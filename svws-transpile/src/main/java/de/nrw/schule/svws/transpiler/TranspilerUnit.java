@@ -48,6 +48,7 @@ import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.TypeCastTree;
 import com.sun.source.tree.UnaryTree;
 import com.sun.source.tree.VariableTree;
@@ -749,6 +750,10 @@ public final class TranspilerUnit {
 			return result;
 		if ("this".equals(name)) {
 		    // TODO Prüfe zusätzlich, ob es sich um einen Enum-Type handelt. Ansonsten könnte compareTo nicht definiert sein
+		    if ("compareTo".equals(member))
+		        return new ExpressionPrimitiveType(TypeKind.INT);
+		}
+		if (typeOfClass.getKind() == Kind.ENUM) {
 		    if ("compareTo".equals(member))
 		        return new ExpressionPrimitiveType(TypeKind.INT);
 		}

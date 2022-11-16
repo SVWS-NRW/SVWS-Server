@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.type.ArrayType;
@@ -132,7 +133,7 @@ public class ExpressionClassType extends ExpressionType {
 		if ((transpiler == null) || (elem == null))
 			throw new NullPointerException();
 		ExpressionClassType result = new ExpressionClassType(
-			elem.getTypeParameters().size() == 0 ? Kind.CLASS : Kind.PARAMETERIZED_TYPE,
+			elem.getTypeParameters().size() == 0 ? (elem.getKind() == ElementKind.ENUM ? Kind.ENUM : Kind.CLASS) : Kind.PARAMETERIZED_TYPE,
 			elem.getSimpleName().toString(),
 			getPackageName(elem.getQualifiedName().toString())
 		);
