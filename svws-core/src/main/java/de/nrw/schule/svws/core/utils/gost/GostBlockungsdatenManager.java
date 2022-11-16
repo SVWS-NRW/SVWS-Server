@@ -569,7 +569,7 @@ public class GostBlockungsdatenManager {
 
 		// (3)
 		_daten.schienen.sort(compSchiene);
-		for (int index = 0; index <= _daten.schienen.size(); index++)
+		for (int index = 0; index < _daten.schienen.size(); index++)
 			if (_daten.schienen.get(index).nummer != index + 1)
 				throw new NullPointerException("Schiene am Index " + index + " hat nicht Nr. " + (index + 1));
 
