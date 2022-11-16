@@ -18,7 +18,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 public class KatalogEintragOrte {
 
 	/** Katalog von IT.NRW PLZ Ort: die ID des Katalog-Eintrags */
-	@Schema(required = true, description = "der zugehörige Ort des Katalog-Eintrags", example="44012")
+	@Schema(required = true, description = "der ID des Katalog-Eintrags", example="44012")
 	public Long ID;
 
 	/** Katalog von IT.NRW PLZ Ort: die Postleitzahl */

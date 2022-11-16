@@ -55,6 +55,7 @@ import { KAOAMerkmalEintrag, cast_de_nrw_schule_svws_core_data_kaoa_KAOAMerkmalE
 import { KAOAZusatzmerkmalEintrag, cast_de_nrw_schule_svws_core_data_kaoa_KAOAZusatzmerkmalEintrag } from '../core/data/kaoa/KAOAZusatzmerkmalEintrag';
 import { KatalogEintrag, cast_de_nrw_schule_svws_core_data_kataloge_KatalogEintrag } from '../core/data/kataloge/KatalogEintrag';
 import { KatalogEintragOrte, cast_de_nrw_schule_svws_core_data_kataloge_KatalogEintragOrte } from '../core/data/kataloge/KatalogEintragOrte';
+import { KatalogEintragOrtsteile, cast_de_nrw_schule_svws_core_data_kataloge_KatalogEintragOrtsteile } from '../core/data/kataloge/KatalogEintragOrtsteile';
 import { KatalogEintragStrassen, cast_de_nrw_schule_svws_core_data_kataloge_KatalogEintragStrassen } from '../core/data/kataloge/KatalogEintragStrassen';
 import { KindergartenbesuchKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_KindergartenbesuchKatalogEintrag } from '../core/data/schule/KindergartenbesuchKatalogEintrag';
 import { KlassenartKatalogEintrag, cast_de_nrw_schule_svws_core_data_klassen_KlassenartKatalogEintrag } from '../core/data/klassen/KlassenartKatalogEintrag';
@@ -248,6 +249,33 @@ export class ApiServer extends BaseApi {
 		const obj = JSON.parse(result);
 		let ret = new Vector<KatalogEintragOrte>();
 		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(KatalogEintragOrte.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getKatalogOrtsteile für den Zugriff auf die URL https://{hostname}/db/{schema}/allgemein/ortsteile
+	 * 
+	 * Erstellt eine Liste aller in dem Katalog vorhandenen Ortsteile. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Eine Liste von Ortsteil-Katalog-Einträgen
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<KatalogEintragOrtsteile>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
+	 *   Code 404: Keine Ortsteil-Katalog-Einträge gefunden
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * 
+	 * @returns Eine Liste von Ortsteil-Katalog-Einträgen
+	 */
+	public async getKatalogOrtsteile(schema : string) : Promise<List<KatalogEintragOrtsteile>> {
+		let path : string = "/db/{schema}/allgemein/ortsteile"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		let ret = new Vector<KatalogEintragOrtsteile>();
+		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(KatalogEintragOrtsteile.transpilerFromJSON(text)); });
 		return ret;
 	}
 

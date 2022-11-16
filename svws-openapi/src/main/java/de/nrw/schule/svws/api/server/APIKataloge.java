@@ -3,12 +3,14 @@ package de.nrw.schule.svws.api.server;
 import de.nrw.schule.svws.api.OpenAPIApplication;
 import de.nrw.schule.svws.core.data.kataloge.KatalogEintrag;
 import de.nrw.schule.svws.core.data.kataloge.KatalogEintragOrte;
+import de.nrw.schule.svws.core.data.kataloge.KatalogEintragOrtsteile;
 import de.nrw.schule.svws.core.data.kataloge.KatalogEintragStrassen;
 import de.nrw.schule.svws.core.data.kataloge.OrtKatalogEintrag;
 import de.nrw.schule.svws.core.data.kataloge.OrtsteilKatalogEintrag;
 import de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenz;
 import de.nrw.schule.svws.data.kataloge.DataHaltestellen;
 import de.nrw.schule.svws.data.kataloge.DataKatalogOrte;
+import de.nrw.schule.svws.data.kataloge.DataKatalogOrtsteile;
 import de.nrw.schule.svws.data.kataloge.DataOrte;
 import de.nrw.schule.svws.data.kataloge.DataOrtsteile;
 import de.nrw.schule.svws.data.kataloge.DataStrassen;
@@ -113,6 +115,30 @@ public class APIKataloge {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
         	return (new DataOrte(conn)).getAll();
     	}
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für die Abfrage des Ortsteil-Kataloges von IT.NRW.
+     *  
+     * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param request       die Informationen zur HTTP-Anfrage
+     * 
+     * @return die die Ortsteil-Katalog-Einträge
+     */
+    @GET
+    @Path("/allgemein/ortsteile")
+    @Operation(summary = "Erstellt eine Liste aller in dem Katalog vorhandenen Ortsteile.",
+               description = "Erstellt eine Liste aller in dem Katalog vorhandenen Ortsteile. "
+                           + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
+    @ApiResponse(responseCode = "200", description = "Eine Liste von Ortsteil-Katalog-Einträgen",
+                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = KatalogEintragOrtsteile.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
+    @ApiResponse(responseCode = "404", description = "Keine Ortsteil-Katalog-Einträge gefunden")
+    public Response getKatalogOrtsteile(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+        try (Benutzer user = OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
+            return (new DataKatalogOrtsteile()).getAll();
+        }
     }
 
 
