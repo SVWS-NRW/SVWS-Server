@@ -365,12 +365,12 @@ public class ApiMethod {
 				if (requestBody.content.isArrayType) {
                     String tsType = getTSArrayElementType(requestBody.content); 
                     if ("String".equals(tsType) || "Number".equals(tsType) || "Boolean".equals(tsType)) {
-                        result += "\t\tlet body : string = \"[\" + data.toArray().map(d => { JSON.stringify(d) }).join() + \"]\";" + System.lineSeparator();
+                        result += "\t\tlet body : string = \"[\" + data.toArray().map(d => JSON.stringify(d)).join() + \"]\";" + System.lineSeparator();
                     } else {
     					if (httpMethod == ApiHttpMethod.PATCH) {
     						throw new TranspilerException("Transpiler Error: Patch Methods are currently not supported for array based json objects (method: " + name + " in API " + api + ")");
     					} else {
-    					    result += "\t\tlet body : string = \"[\" + data.toArray().map(d => { Object.transpilerToJSON(d) }).join() + \"]\";" + System.lineSeparator();
+    					    result += "\t\tlet body : string = \"[\" + data.toArray().map(d => Object.transpilerToJSON(d)).join() + \"]\";" + System.lineSeparator();
     					}
                     }
 				} else {

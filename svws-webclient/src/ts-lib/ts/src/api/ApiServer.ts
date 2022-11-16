@@ -457,7 +457,7 @@ export class ApiServer extends BaseApi {
 		let path : string = "/db/{schema}/benutzer/{id : \d+}/kompetenz/add"
 				.replace(/{schema\s*(:[^}]+)?}/g, schema)
 				.replace(/{id\s*(:[^}]+)?}/g, id.toString());
-		let body : string = "[" + data.toArray().map(d => { JSON.stringify(d) }).join() + "]";
+		let body : string = "[" + data.toArray().map(d => JSON.stringify(d)).join() + "]";
 		await super.postJSON(path, body);
 		return;
 	}
@@ -487,7 +487,7 @@ export class ApiServer extends BaseApi {
 		let path : string = "/db/{schema}/benutzer/{id : \d+}/kompetenz/remove"
 				.replace(/{schema\s*(:[^}]+)?}/g, schema)
 				.replace(/{id\s*(:[^}]+)?}/g, id.toString());
-		let body : string = "[" + data.toArray().map(d => { JSON.stringify(d) }).join() + "]";
+		let body : string = "[" + data.toArray().map(d => JSON.stringify(d)).join() + "]";
 		const result : string = await super.deleteJSON(path, body);
 		const text = result;
 		return parseFloat(JSON.parse(text));
@@ -728,7 +728,7 @@ export class ApiServer extends BaseApi {
 		let path : string = "/db/{schema}/benutzer/gruppe/{id : \d+}/benutzer/add"
 				.replace(/{schema\s*(:[^}]+)?}/g, schema)
 				.replace(/{id\s*(:[^}]+)?}/g, id.toString());
-		let body : string = "[" + data.toArray().map(d => { JSON.stringify(d) }).join() + "]";
+		let body : string = "[" + data.toArray().map(d => JSON.stringify(d)).join() + "]";
 		await super.postJSON(path, body);
 		return;
 	}
@@ -754,7 +754,7 @@ export class ApiServer extends BaseApi {
 		let path : string = "/db/{schema}/benutzer/gruppe/{id : \d+}/benutzer/remove"
 				.replace(/{schema\s*(:[^}]+)?}/g, schema)
 				.replace(/{id\s*(:[^}]+)?}/g, id.toString());
-		let body : string = "[" + data.toArray().map(d => { JSON.stringify(d) }).join() + "]";
+		let body : string = "[" + data.toArray().map(d => JSON.stringify(d)).join() + "]";
 		await super.deleteJSON(path, body);
 		return;
 	}
@@ -806,7 +806,7 @@ export class ApiServer extends BaseApi {
 		let path : string = "/db/{schema}/benutzer/gruppe/{id : \d+}/kompetenz/add"
 				.replace(/{schema\s*(:[^}]+)?}/g, schema)
 				.replace(/{id\s*(:[^}]+)?}/g, id.toString());
-		let body : string = "[" + data.toArray().map(d => { JSON.stringify(d) }).join() + "]";
+		let body : string = "[" + data.toArray().map(d => JSON.stringify(d)).join() + "]";
 		await super.postJSON(path, body);
 		return;
 	}
@@ -832,7 +832,7 @@ export class ApiServer extends BaseApi {
 		let path : string = "/db/{schema}/benutzer/gruppe/{id : \d+}/kompetenz/remove"
 				.replace(/{schema\s*(:[^}]+)?}/g, schema)
 				.replace(/{id\s*(:[^}]+)?}/g, id.toString());
-		let body : string = "[" + data.toArray().map(d => { JSON.stringify(d) }).join() + "]";
+		let body : string = "[" + data.toArray().map(d => JSON.stringify(d)).join() + "]";
 		await super.deleteJSON(path, body);
 		return;
 	}
