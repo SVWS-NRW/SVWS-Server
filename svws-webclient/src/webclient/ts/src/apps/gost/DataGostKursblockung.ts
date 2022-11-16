@@ -8,6 +8,7 @@ import {
 	GostBlockungsdaten,
 	GostBlockungsdatenManager,
 	GostBlockungsergebnisListeneintrag,
+	GostBlockungsergebnisManager,
 	List,
 	Vector
 } from "@svws-nrw/svws-core-ts";
@@ -19,14 +20,16 @@ export class DataGostKursblockung extends BaseData<
 	GostBlockungListeneintrag,
 	GostBlockungsdatenManager
 > {
+	private ergebnismanager: GostBlockungsergebnisManager | undefined
 
 	protected listKursblockungsergebnisse: ListKursblockungsergebnisse;
 
 	public constructor(
 		listKursblockungsergebnisse: ListKursblockungsergebnisse
-	) {
-		super();
-		this.listKursblockungsergebnisse = listKursblockungsergebnisse;
+		) {
+			super();
+			this.listKursblockungsergebnisse = listKursblockungsergebnisse;
+			this.ergebnismanager = App.apps.gost.dataKursblockungsergebnis.manager;
 	}
 
 	protected on_update(daten: Partial<GostBlockungsdaten>): void {
@@ -41,14 +44,16 @@ export class DataGostKursblockung extends BaseData<
 	 */
 	public async on_select(): Promise<GostBlockungsdaten | undefined> {
 		this.manager = undefined;
-		App.apps.gost.dataKursblockungsergebnis.manager = undefined
+		this.ergebnismanager = undefined
 		if (!this.selected_list_item) return super.unselect();
 		const blockungsdaten = await super._select((eintrag: GostBlockungListeneintrag) =>
-			App.api.getGostBlockung(App.schema, eintrag.id)
-		);
-		if (blockungsdaten && App.apps.gost.dataFaecher.manager)
+			App.api.getGostBlockung(App.schema, eintrag.id));
+		if (blockungsdaten && App.apps.gost.dataFaecher.manager){
+			await this.listKursblockungsergebnisse.update_list(blockungsdaten.id);
 			this.manager = new GostBlockungsdatenManager(blockungsdaten, App.apps.gost.dataFaecher.manager);
-		await this.listKursblockungsergebnisse.update_list(blockungsdaten?.id);
+			if (this.listKursblockungsergebnisse.liste.length)
+				this.listKursblockungsergebnisse.ausgewaehlt = this.listKursblockungsergebnisse.liste[0];
+		}
 		return blockungsdaten;
 	}
 
@@ -101,8 +106,6 @@ export class DataGostKursblockung extends BaseData<
 			fach_id,
 			kursart_id
 		);
-		this.select(this.selected_list_item)
-		// this.manager?.addKurs(kurs)
 		return kurs
 	}
 	/**Löscht einen Kurs in der Blockung für das angegebene fach_id
@@ -121,7 +124,6 @@ export class DataGostKursblockung extends BaseData<
 			fach_id,
 			kursart_id
 		);
-		this.manager?.removeKurs(kurs)
 		return kurs
 	}
 
@@ -175,14 +177,14 @@ export class DataGostKursblockung extends BaseData<
 			App.schema,
 			this.daten.id,
 		);
-		this.select(this.selected_list_item)
+		// this.select(this.selected_list_item)
 		return schiene
 	}
 
 	/** Entfernt eine Schiene aus der Blockung */
 	public async del_blockung_schiene(s: GostBlockungSchiene): Promise<void> {
 		if (!this.daten?.id) return;
-		const schiene = await App.api.deleteGostBlockungSchieneByID(
+		await App.api.deleteGostBlockungSchieneByID(
 			App.schema,
 			s.id,
 		);
@@ -192,7 +194,7 @@ export class DataGostKursblockung extends BaseData<
 	public async patch_schiene(
 		data: GostBlockungSchiene
 	): Promise<void> {
-		return await App.api.patchGostBlockungSchiene(
+		await App.api.patchGostBlockungSchiene(
 			data,
 			App.schema,
 			data.id
@@ -200,7 +202,7 @@ export class DataGostKursblockung extends BaseData<
 	}
 	/** passt einen Kurs an */
 	public async patch_kurs(data: GostBlockungKurs): Promise<void> {
-		return await App.api.patchGostBlockungKurs(
+		await App.api.patchGostBlockungKurs(
 			data,
 			App.schema,
 			data.id

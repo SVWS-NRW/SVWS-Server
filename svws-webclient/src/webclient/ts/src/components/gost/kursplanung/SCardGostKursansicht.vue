@@ -16,26 +16,27 @@
 										:key="s.id"
 										class="border border-[#7f7f7f]/20 text-center"
 									>
-									<div class="flex gap-1">
-										<template v-if=" s === edit_schienenname ">
-											<svws-ui-text-input
-												v-model="s.bezeichnung"
-												focus headless
-												style="width: 6rem"
-												@blur="edit_schienenname=undefined"
-												@keyup.enter="edit_schienenname=undefined"
-												@input="patch_schiene(s)"
-											/>
-										</template>
-										<template v-else>
-											<span class="px-3 underline decoration-dashed underline-offset-2 cursor-text" @click="edit_schienenname = s">{{s.nummer}}</span>
-										</template>
-										<svws-ui-icon v-if="allow_regeln" class="text-red-500 cursor-pointer" @click="del_schiene(s)"><i-ri-delete-bin-2-line/></svws-ui-icon>
-									</div>
+										<div class="flex gap-1">
+											<template v-if="s === edit_schienenname">
+												<svws-ui-text-input
+													v-model="s.bezeichnung"
+													focus headless
+													style="width: 6rem"
+													@blur="edit_schienenname=undefined"
+													@keyup.enter="edit_schienenname=undefined"
+													@input="patch_schiene(s)"
+												/>
+											</template>
+											<template v-else>
+												<span class="px-3 underline decoration-dashed underline-offset-2 cursor-text" @click="edit_schienenname = s">{{s.nummer}}</span>
+											</template>
+											<svws-ui-icon v-if="allow_del_schiene(s)" class="text-red-500 cursor-pointer" @click="del_schiene(s)"><i-ri-delete-bin-2-line/></svws-ui-icon>
+										</div>
 									</td>
 									<template v-if="allow_regeln">
 										<td class="bg-[#329cd5] rounded-l-none rounded-lg border-none cursor-pointer" rowspan="4" @click="add_schiene">
-											<div class="px-2" >+</div></td><td rowspan="4" class="bg-white"></td>
+											<div class="px-2" >+</div></td><td rowspan="4" class="bg-white">
+										</td>
 									</template>
 								</tr>
 								<tr>
@@ -157,6 +158,17 @@
 		}
 	};
 
+	function allow_del_schiene(schiene: GostBlockungSchiene): boolean {
+		try {
+			const m1 = app.dataKursblockung.manager?.removeSchieneAllowed(schiene.id)
+			const m2 = manager.value?.getOfSchieneRemoveAllowed(schiene.id)
+			if (!m1 || !m2) return false
+		} catch (e) {
+			return false
+		}
+		return true
+	}
+
 	function getAnzahlKollisionenSchiene(idSchiene: number): number {
 		try {
 			return manager.value?.getOfSchieneAnzahlSchuelerMitKollisionen(idSchiene) || 0;
@@ -171,15 +183,15 @@
 
 	async function add_schiene() {
 		const schiene = await app.dataKursblockung.add_blockung_schiene()
-		if (!schiene) {
-			console.log("Fehler beim Hinzufügen einer Schiene")
+		if (!schiene)
 			return
-		}
-		//löst ein Neuladen der Blockung aus
+		app.dataKursblockung.manager?.addSchiene(schiene)
+		manager.value?.setAddSchieneByID(schiene.id)
 	}
 
 	async function del_schiene(s: GostBlockungSchiene) {
 		await app.dataKursblockung.del_blockung_schiene(s)
-		app.dataKursblockung.manager?.removeSchiene(s)
+		app.dataKursblockung.manager?.removeSchieneByID(s.id)
+		manager.value?.setRemoveSchieneByID(s.id)
 	}
 </script>

@@ -121,15 +121,11 @@
 								</td>
 								<td class="table--cell table--cell-padded table--border" >
 									<div class="flex">
-										<span
-													class="inline-flex"
-													:class="{
-														'bg-yellow-300': ergebnis.bewertung.anzahlKollisionen <= 10 && ergebnis.bewertung.anzahlKollisionen > 0,
-														'bg-green-300': ergebnis.bewertung.anzahlKollisionen === 0,
-														'bg-red-300': ergebnis.bewertung.anzahlKollisionen > 10
-													}"
-													>
-													<svws-ui-icon><i-ri-group-line/></svws-ui-icon>{{ergebnis.bewertung.anzahlSchuelerNichtZugeordnet}}
+										<span class="inline-flex font-semibold" >
+													<span :style="{'background-color': color1(ergebnis)}">{{manager?.getOfBewertung1Wert(ergebnis.id)}}</span>&nbsp
+													<span :style="{'background-color': color2(ergebnis)}">{{manager?.getOfBewertung2Wert(ergebnis.id)}}</span>&nbsp
+													<span :style="{'background-color': color3(ergebnis)}">{{manager?.getOfBewertung3Wert(ergebnis.id)}}</span>&nbsp
+													<span :style="{'background-color': color4(ergebnis)}">{{manager?.getOfBewertung4Wert(ergebnis.id)}}</span>
 												</span>
 									</div>
 								</td>
@@ -163,6 +159,7 @@
 <script setup lang="ts">
 import {
 	GostBlockungListeneintrag,
+	GostBlockungsdatenManager,
 	GostBlockungsergebnisListeneintrag,
 	GostHalbjahr,
 	GostJahrgang,
@@ -206,24 +203,25 @@ const halbjahre = GostHalbjahr.values();
 const hj_memo: Ref<number | undefined> = ref(undefined)
 const edit_blockungsname: Ref<boolean> = ref(false)
 
-const rows: ComputedRef<GostJahrgang[]> = computed(() => {
+const rows: ComputedRef<GostJahrgang[]> = 
+	computed(() => {
 	const list = [...app.auswahl.liste];
 	return list.sort((a, b) =>
 		(a?.bezeichnung || "") < (b?.bezeichnung || "") ? 1 : -1
-	);
-});
+	)});
 
+const manager: ComputedRef<GostBlockungsdatenManager | undefined> =
+	computed(()=>app.dataKursblockung.manager);
 const rows_blockungsswahl: ComputedRef<GostBlockungListeneintrag[]> =
 	computed(() => app.blockungsauswahl.liste);
 const rows_ergebnisse: ComputedRef<GostBlockungsergebnisListeneintrag[]> =
 	computed(() => app.blockungsergebnisauswahl.liste);
-const abiturjahr: ComputedRef<number> = computed(() =>
-	Number(app.dataJahrgang.daten?.abiturjahr)
-);
-const jahrgaenge: ComputedRef<JahrgangsListeEintrag[]> = computed(
-	() => appJahrgaenge.auswahl.liste
-);
-const selected_hj: WritableComputedRef<GostHalbjahr> = computed({
+const abiturjahr: ComputedRef<number> =
+	computed(() => Number(app.dataJahrgang.daten?.abiturjahr));
+const jahrgaenge: ComputedRef<JahrgangsListeEintrag[]> =
+	computed( () => appJahrgaenge.auswahl.liste);
+
+	const selected_hj: WritableComputedRef<GostHalbjahr> = computed({
 	get(): GostHalbjahr {
 		const hj = hj_memo.value || app.dataKursblockung.daten?.gostHalbjahr || null
 		return GostHalbjahr.fromID(hj)
@@ -248,12 +246,10 @@ const selected_hj: WritableComputedRef<GostHalbjahr> = computed({
 					wait.value = false;
 				});
 		else wait.value = false;
-	}
-});
+	}});
 
-const selected_blockungauswahl: WritableComputedRef<
-	GostBlockungListeneintrag | undefined
-> = computed({
+const selected_blockungauswahl: WritableComputedRef<GostBlockungListeneintrag | undefined> =
+	computed({
 	get(): GostBlockungListeneintrag | undefined {
 		return app.blockungsauswahl.ausgewaehlt;
 	},
@@ -265,9 +261,8 @@ const selected_blockungauswahl: WritableComputedRef<
 	}
 });
 
-const selected_ergebnis: WritableComputedRef<
-	GostBlockungsergebnisListeneintrag | undefined
-> = computed({
+const selected_ergebnis: WritableComputedRef<GostBlockungsergebnisListeneintrag | undefined> =
+	computed({
 	get(): GostBlockungsergebnisListeneintrag | undefined {
 		return app.blockungsergebnisauswahl.ausgewaehlt;
 	},
@@ -278,93 +273,69 @@ const selected_ergebnis: WritableComputedRef<
 	}
 });
 
-const selected: WritableComputedRef<GostJahrgang | undefined> = computed({
+const selected: WritableComputedRef<GostJahrgang | undefined> =
+	computed({
 	get(): GostJahrgang | undefined {
 		return app.auswahl.ausgewaehlt;
 	},
 	set(value: GostJahrgang | undefined) {
-		if (app.auswahl) {
-			app.auswahl.ausgewaehlt = value;
-		}
+		if (app.auswahl) app.auswahl.ausgewaehlt = value
 	}
 });
 
 async function abiturjahr_hinzufuegen(jahrgang: JahrgangsListeEintrag) {
 	try {
-		const abiturjahr = await app.dataJahrgang.post_jahrgang(
-			jahrgang.id
-		);
+		const abiturjahr = await app.dataJahrgang.post_jahrgang(jahrgang.id);
 		await app.auswahl.update_list();
-		const jahr = app.auswahl.liste?.find(
-			j => j.abiturjahr === abiturjahr
-		);
+		const jahr = app.auswahl.liste?.find(j => j.abiturjahr === abiturjahr);
 		selected.value = jahr;
 	} catch (e) {
 		console.log("Fehler: ", e);
 	}
 }
-		const create_blockung = () => {
-			const halbjahresHashCode: number = app.blockungsauswahl.ausgewaehlt?.hashCode() ? app.blockungsauswahl.ausgewaehlt.hashCode() : -1;
-			const id = app.blockungsauswahl.ausgewaehlt?.id;
-			if (!id) return;
-			const apiCall = app.create_blockung(id, halbjahresHashCode);
-			main.config.apiLoadingStatus.addStatusByPromise(apiCall, {message: 'Blockung wird berechnet...', caller: 'Kursplanung (Gost)', categories: [GOST_CREATE_BLOCKUNG_SYMBOL]});
-		};
+const create_blockung = () => {
+	const halbjahresHashCode: number = app.blockungsauswahl.ausgewaehlt?.hashCode() ? app.blockungsauswahl.ausgewaehlt.hashCode() : -1;
+	const id = app.blockungsauswahl.ausgewaehlt?.id;
+	if (!id)
+		return;
+	const apiCall = app.create_blockung(id, halbjahresHashCode);
+	main.config.apiLoadingStatus.addStatusByPromise(apiCall, {message: 'Blockung wird berechnet...', caller: 'Kursplanung (Gost)', categories: [GOST_CREATE_BLOCKUNG_SYMBOL]});
+};
 
 async function blockung_hinzufuegen() {
-	if (
-		!selected.value?.abiturjahr
-	)
+	if (!selected.value?.abiturjahr)
 		return;
-	const daten = await App.api.createGostAbiturjahrgangBlockung(
-		App.schema,
-		selected.value.abiturjahr.valueOf(),
-		selected_hj.value.id
-	);
+	await App.api.createGostAbiturjahrgangBlockung(App.schema, selected.value.abiturjahr.valueOf(), selected_hj.value.id);
 	const abiturjahr = selected.value.abiturjahr.valueOf();
-	if (!abiturjahr) return;
-	await app.blockungsauswahl.update_list(
-		abiturjahr,
-		selected_hj.value.id
-	);
-	selected_blockungauswahl.value = app.blockungsauswahl.liste.find(
-		b => b.id === daten.id
-	);
+	if (!abiturjahr)
+		return;
+	await app.blockungsauswahl.update_list(abiturjahr, selected_hj.value.id, true);
 }
 
 async function remove_blockung() {
-	if (!selected_blockungauswahl.value) return;
-	await App.api.deleteGostBlockung(
-		App.schema,
-		selected_blockungauswahl.value?.id
-	);
+	if (!selected_blockungauswahl.value)
+		return;
+	await App.api.deleteGostBlockung(App.schema, selected_blockungauswahl.value?.id);
 	const abiturjahr = selected.value?.abiturjahr?.valueOf();
-	if (!abiturjahr) return;
-	await app.blockungsauswahl.update_list(
-		abiturjahr,
-		selected_hj.value.id
-	);
+	if (!abiturjahr)
+		return;
+	await app.blockungsauswahl.update_list(abiturjahr, selected_hj.value.id);
 }
 
 async function remove_ergebnis() {
-	if (!selected_ergebnis.value) return;
-	await App.api.deleteGostBlockungsergebnis(
-		App.schema,
-		selected_ergebnis.value.id
-	);
+	if (!selected_ergebnis.value)
+		return;
+	await App.api.deleteGostBlockungsergebnis(App.schema, selected_ergebnis.value.id);
 	const abiturjahr = selected.value?.abiturjahr?.valueOf() || -1;
 	await app.blockungsauswahl.update_list(abiturjahr, selected_hj.value.id)
 }
 
 async function derive_blockung() {
-	if (!selected_ergebnis.value) return;
-	const blockungsdaten = await App.api.dupliziereGostBlockungMitErgebnis(
-		App.schema,
-		selected_ergebnis.value.id
-	);
+	if (!selected_ergebnis.value)
+		return;
+	await App.api.dupliziereGostBlockungMitErgebnis(App.schema, selected_ergebnis.value.id);
 	const abiturjahr = selected.value?.abiturjahr?.valueOf() || -1;
-	await app.blockungsauswahl.update_list(abiturjahr, selected_hj.value.id);
-	app.blockungsauswahl.select_by_id(blockungsdaten.id)
+	await app.blockungsauswahl.update_list(abiturjahr, selected_hj.value.id, true);
 }
 async function patch_blockung(blockung: GostBlockungListeneintrag) {
 	await app.dataKursblockung.patch({name: blockung.name});
@@ -372,10 +343,24 @@ async function patch_blockung(blockung: GostBlockungListeneintrag) {
 
 function make_vorlage(ergebnis: GostBlockungsergebnisListeneintrag) {
 	const bisher = rows_ergebnisse.value.find(e=>e.istVorlage)
-	if (!bisher) return
+	if (!bisher)
+		return
 	bisher.istVorlage = false
 	ergebnis.istVorlage = true
 	//TODO zum Server schicken
+}
+
+function color1(ergebnis: GostBlockungsergebnisListeneintrag): string {
+	return `hsl(${Math.round((1 - (manager.value?.getOfBewertung1Intervall(ergebnis.id)||0)) * 120)},100%,80%)`
+}
+function color2(ergebnis: GostBlockungsergebnisListeneintrag): string {
+	return `hsl(${Math.round((1 - (manager.value?.getOfBewertung2Intervall(ergebnis.id)||0)) * 120)},100%,80%)`
+}
+function color3(ergebnis: GostBlockungsergebnisListeneintrag): string {
+	return `hsl(${Math.round((1 - (manager.value?.getOfBewertung3Intervall(ergebnis.id)||0)) * 120)},100%,80%)`
+}
+function color4(ergebnis: GostBlockungsergebnisListeneintrag): string {
+	return `hsl(${Math.round((1 - (manager.value?.getOfBewertung4Intervall(ergebnis.id)||0)) * 120)},100%,80%)`
 }
 </script>
 

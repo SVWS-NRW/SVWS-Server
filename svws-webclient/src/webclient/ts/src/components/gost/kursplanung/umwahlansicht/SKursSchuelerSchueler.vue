@@ -69,6 +69,7 @@
 		regel.parameter.set(1, kurs.id)
 		await app.dataKursblockung.patch_blockung_regel(regel)
 		app.dataKursblockung.manager?.addRegel(regel)
+		app.dataKursblockungsergebnis.manager?.setAddRegelByID(regel.id)
 	}
 	const fixieren_regel_hinzufuegen = async () => {
 		const regel = await app.dataKursblockung.add_blockung_regel(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ)

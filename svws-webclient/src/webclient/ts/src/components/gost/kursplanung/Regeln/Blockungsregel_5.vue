@@ -12,10 +12,10 @@ const regel_typ = GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS
 // public static readonly SCHUELER_VERBIETEN_IN_KURS : GostKursblockungRegelTyp =
 // new GostKursblockungRegelTyp("SCHUELER_VERBIETEN_IN_KURS", 5, 5, "Schüler: Verbiete in Kurs",
 // Arrays.asList(GostKursblockungRegelParameterTyp.SCHUELER_ID, GostKursblockungRegelParameterTyp.KURS_ID));
-const kurse = app.dataKursblockung.manager?.getKursmengeSortiertNachKursartFachNummer() || new Vector<GostBlockungKurs>() 
+const kurse = app.dataKursblockung.manager?.getKursmengeSortiertNachKursartFachNummer()
 const schuelerliste = app.listAbiturjahrgangSchueler.liste || []
 
-const kurs: Ref<GostBlockungKurs> = ref(kurse.get(0))
+const kurs: Ref<GostBlockungKurs> = ref(kurse?.get(0)||new GostBlockungKurs())
 const schueler = ref(schuelerliste[0]) as Ref<SchuelerListeEintrag>
 const regel: Ref<GostBlockungRegel | undefined> = ref(undefined)
 
@@ -44,6 +44,7 @@ const regel_hinzufuegen = async () => {
 	regel.value = await app.dataKursblockung.add_blockung_regel(regel_typ.typ)
 	if (!regel.value) return
 	app.dataKursblockung.manager?.addRegel(regel.value)
+	app.dataKursblockungsergebnis.manager?.setAddRegelByID(regel.value.id)
 }
 
 const regel_entfernen = async (r: GostBlockungRegel) => {

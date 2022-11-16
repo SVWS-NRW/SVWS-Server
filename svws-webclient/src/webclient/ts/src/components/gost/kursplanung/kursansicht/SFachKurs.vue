@@ -13,7 +13,7 @@
 				{{ fach.kuerzel }}-LK: {{lk}} Kurswahlen
 			</td>
 			<td class="px-2 border-y border-[#7f7f7f]/20 border-r" colspan="4">
-				<svws-ui-button class="" size="small" @click="add_kurs('lk')">Kurs hinzufügen</svws-ui-button>
+				<svws-ui-button class="" size="small" @click="add_kurs(GostKursart.LK)">Kurs hinzufügen</svws-ui-button>
 			</td>
 			<td class="bg-white"></td>
 		</tr>
@@ -24,7 +24,7 @@
 				{{ fach.kuerzel }}-GK: {{gk}} Kurswahlen
 			</td>
 			<td class="px-2 border-y border-[#7f7f7f]/20 border-r" colspan="4">
-				<svws-ui-button class="" size="small" @click="add_kurs('gk')">Kurs hinzufügen</svws-ui-button>
+				<svws-ui-button class="" size="small" @click="add_kurs(GostKursart.GK)">Kurs hinzufügen</svws-ui-button>
 			</td>
 			<td class="bg-white"></td>
 		</tr>
@@ -35,7 +35,7 @@
 				{{ fach.kuerzel }}-ZK: {{zk}} Kurswahlen
 			</td>
 			<td class="px-2 border-y border-[#7f7f7f]/20 border-r" colspan="4">
-				<svws-ui-button class="" size="small" @click="add_kurs('zk')">Kurs hinzufügen</svws-ui-button>
+				<svws-ui-button class="" size="small" @click="add_kurs(GostKursart.ZK)">Kurs hinzufügen</svws-ui-button>
 			</td>
 			<td class="bg-white"></td>
 		</tr>
@@ -46,6 +46,7 @@
 import {
 	GostBlockungKurs,
 	GostBlockungSchiene,
+	GostKursart,
 	GostStatistikFachwahl,
 	GostStatistikFachwahlHalbjahr,
 	List,
@@ -109,9 +110,11 @@ const zk_kurszahl: ComputedRef<number> = computed(() => kursezaehler.value.zk);
 const bgColor: ComputedRef<string | undefined> =
 	computed(() => app.dataFachwahlen.getBgColor(props.fach));
 
-async function add_kurs(art: "lk" | "gk" | "zk") {
-	const nr = art === "lk" ? 1 : art === "gk" ? 2 : 3;
-	await app.dataKursblockung.add_blockung_kurse(props.fach.id, nr)
-	//löst ein Neuladen der Blockung aus
+async function add_kurs(art: GostKursart) {
+	const kurs = await app.dataKursblockung.add_blockung_kurse(props.fach.id, art.id)
+	if (!kurs || !app.dataKursblockung.manager || !app.dataKursblockungsergebnis.manager)
+		return
+	app.dataKursblockung.manager?.addKurs(kurs)
+	app.dataKursblockungsergebnis.manager.setAddKursByID(kurs.id)
 }
 </script>

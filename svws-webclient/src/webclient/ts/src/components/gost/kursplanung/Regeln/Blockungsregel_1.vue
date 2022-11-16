@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { injectMainApp, Main } from "~/apps/Main";
-import { GostBlockungRegel, GostBlockungSchiene, GostKursart, GostKursblockungRegelTyp, Vector } from "@svws-nrw/svws-core-ts";
+import { GostBlockungRegel, GostBlockungSchiene, GostKursart, GostKursblockungRegelTyp } from "@svws-nrw/svws-core-ts";
 import { computed, ComputedRef, Ref, ref } from "vue";
 
 const main: Main = injectMainApp();
@@ -10,10 +10,10 @@ const regel_typ = GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS
 //public static readonly KURSART_SPERRE_SCHIENEN_VON_BIS : GostKursblockungRegelTyp = 
 //new GostKursblockungRegelTyp("KURSART_SPERRE_SCHIENEN_VON_BIS", 1, 1, 
 //"Kursart: Sperre Schienen (von/bis)", Arrays.asList(GostKursblockungRegelParameterTyp.KURSART, GostKursblockungRegelParameterTyp.SCHIENEN_NR, GostKursblockungRegelParameterTyp.SCHIENEN_NR));
-const schienen = app.dataKursblockung.manager?.getMengeOfSchienen() || new Vector<GostBlockungSchiene>()
+const schienen = app.dataKursblockung.manager?.getMengeOfSchienen()
 const kursart: Ref<GostKursart> = ref(GostKursart.GK)
-const start: Ref<GostBlockungSchiene> = ref(schienen.get(0))
-const ende: Ref<GostBlockungSchiene> = ref(schienen.get(0))
+const start: Ref<GostBlockungSchiene> = ref(schienen?.get(0) || new GostBlockungSchiene())
+const ende: Ref<GostBlockungSchiene> = ref(schienen?.get(0) || new GostBlockungSchiene())
 const regel: Ref<GostBlockungRegel | undefined> = ref(undefined)
 
 const regeln: ComputedRef<GostBlockungRegel[]> =
@@ -42,6 +42,7 @@ const regel_hinzufuegen = async () => {
 	regel.value = await app.dataKursblockung.add_blockung_regel(regel_typ.typ)
 	if (!regel.value) return
 	app.dataKursblockung.manager?.addRegel(regel.value)
+	app.dataKursblockungsergebnis.manager?.setAddRegelByID(regel.value.id)
 }
 
 const regel_entfernen = async (r: GostBlockungRegel) => {

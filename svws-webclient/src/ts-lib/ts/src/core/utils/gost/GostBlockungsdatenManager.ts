@@ -573,7 +573,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 			if (schiene.nummer > schieneR.nummer) 
 				schiene.nummer--;
 		this._daten.schienen.sort(GostBlockungsdatenManager.compSchiene);
-		for (let index : number = 0; index <= this._daten.schienen.size(); index++)
+		for (let index : number = 0; index < this._daten.schienen.size(); index++)
 			if (this._daten.schienen.get(index).nummer !== index + 1) 
 				throw new NullPointerException("Schiene am Index " + index + " hat nicht Nr. " + (index + 1))
 		let iRegel : JavaIterator<GostBlockungRegel> | null = this._daten.regeln.iterator();
