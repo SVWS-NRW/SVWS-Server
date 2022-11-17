@@ -218,9 +218,7 @@ public class DataGostBlockungKurs extends DataManager<Long> {
 			List<DTOGostBlockungSchiene> schienen = conn.queryList("SELECT e FROM DTOGostBlockungSchiene e WHERE e.Blockung_ID = ?1 AND e.Nummer = ?2", DTOGostBlockungSchiene.class, blockung.ID, 1);
 			if (schienen.size() != 1)
 				throw OperationError.INTERNAL_SERVER_ERROR.exception();
-			DTODBAutoInkremente dbKursSchieneID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Blockung_Zwischenergebnisse_Kurs_Schienen");
-			long idKursSchiene = dbKursSchieneID == null ? 1 : dbKursSchieneID.MaxID + 1;
-			DTOGostBlockungZwischenergebnisKursSchiene ks = new DTOGostBlockungZwischenergebnisKursSchiene(idKursSchiene, idKurs, schienen.get(0).ID);
+			DTOGostBlockungZwischenergebnisKursSchiene ks = new DTOGostBlockungZwischenergebnisKursSchiene(vorlage.ID, idKurs, schienen.get(0).ID);
 			conn.transactionPersist(ks);
 			conn.transactionCommit();
 			GostBlockungKurs daten = dtoMapper.apply(kurs);
