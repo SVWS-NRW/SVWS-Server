@@ -1460,11 +1460,11 @@ public class GostBlockungsergebnisManager {
 		if (nSchienen < kurs.anzahlSchienen)
 			throw new NullPointerException("Es gibt " + nSchienen + " Schienen, da passt ein Kurs mit " + kurs.anzahlSchienen + " nicht hinein!");
 		
+		stateRevalidateEverything(); // Muss vor 'setKursSchienenNr' aufgerufen werden.
+		
 		// Kurs automatisch in die ersten 'kurs.anzahlSchienen' Schienen hinzufügen.
 		for (int nr = 1; nr <= kurs.anzahlSchienen; nr++) 
 			setKursSchienenNr(pKursID, nr);
-		
-		stateRevalidateEverything();
 	}
 
 	/**

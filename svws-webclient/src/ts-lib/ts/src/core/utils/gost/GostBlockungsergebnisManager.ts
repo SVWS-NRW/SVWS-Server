@@ -1359,9 +1359,9 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		let nSchienen : number = this._parent.getSchienenAnzahl();
 		if (nSchienen < kurs.anzahlSchienen) 
 			throw new NullPointerException("Es gibt " + nSchienen + " Schienen, da passt ein Kurs mit " + kurs.anzahlSchienen + " nicht hinein!")
+		this.stateRevalidateEverything();
 		for (let nr : number = 1; nr <= kurs.anzahlSchienen; nr++)
 			this.setKursSchienenNr(pKursID, nr);
-		this.stateRevalidateEverything();
 	}
 
 	/**
