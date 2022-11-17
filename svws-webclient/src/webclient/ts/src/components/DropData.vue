@@ -2,6 +2,7 @@
 	<component
 		:is="tag"
 		@dragover.prevent="over"
+		@dragenter="active = true"
 		@dragleave.prevent="active = false"
 		@drop.prevent="drop"
 	>

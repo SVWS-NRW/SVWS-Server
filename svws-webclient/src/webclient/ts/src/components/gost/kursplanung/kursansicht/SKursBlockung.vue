@@ -202,7 +202,12 @@ const selected_kurs: ComputedRef<boolean> =
 
 const filtered_by_kursart: ComputedRef<GostBlockungsergebnisKurs[]> =
 	computed(()=>{
-	const kurse = manager.value?.getOfFachKursmenge(props.kurs.fach_id)
+	let kurse: Vector<GostBlockungsergebnisKurs>|undefined
+	try {
+		kurse = manager.value?.getOfFachKursmenge(props.kurs.fach_id)
+	} catch(e) {
+		kurse = undefined
+	}
 	if (!kurse) return []
 	const arr = kurse.toArray(new Array<GostBlockungsergebnisKurs>())
 	return arr.filter(k => k.kursart === art.id).sort((a,b)=>{

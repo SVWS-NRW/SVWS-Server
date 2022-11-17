@@ -17,12 +17,14 @@
 			'background-color': bgColor
 		}"
 		@drag-start="drag_started"
-		@dragEnd="drag_ended"
+		@drag-end="drag_ended"
 	>
 		<drop-data
 			@drop="drop_aendere_kurszuordnung($event, kurs.id)"
+			v-slot="{active}"
 		>
-			{{ kurs_name }}<span v-if="is_draggable">
+			<span :class="{'bg-red-400': active && is_drop_zone}">{{ kurs_name }}</span>
+			<span v-if="is_draggable && allow_regeln">
 					<svws-ui-icon class="cursor-pointer" @click="verbieten_regel_toggle" >
 						<i-ri-forbid-fill v-if="verbieten_regel" class="inline-block"/>
 						<i-ri-forbid-line v-if="!verbieten_regel && !fixier_regel" class="inline-block"/>
@@ -50,7 +52,7 @@
 		Vector,
 		ZulaessigesFach
 	} from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, WritableComputedRef } from "vue";
+	import { computed, ComputedRef, WritableComputedRef, ref } from "vue";
 
 	import { injectMainApp, Main } from "~/apps/Main";
 
@@ -79,6 +81,9 @@
 
 	const manager: ComputedRef<GostBlockungsergebnisManager | undefined> =
 		computed(() => app.dataKursblockungsergebnis.manager);
+
+	const allow_regeln: ComputedRef<boolean> =
+		computed(()=> app.blockungsergebnisauswahl.liste.length === 1)
 
 	const is_draggable: ComputedRef<boolean> =
 		computed(() => {
@@ -195,5 +200,6 @@
 			id_kurs_neu,
 			false
 		);
+		drag_ended();
 	}
 </script>

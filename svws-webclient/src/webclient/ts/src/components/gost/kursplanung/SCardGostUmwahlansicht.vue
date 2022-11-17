@@ -41,8 +41,6 @@
 			v-slot="{ active }"
 			class="w-40 flex-none"
 			@drop="drop_entferne_kurszuordnung"
-			@dragStart="is_dragging = true"
-			@dragEnd="is_dragging = false"
 			>
 			<div :class="{ 'border-2 border-dashed border-red-700': active }">
 				<div class="overflow-hidden rounded-lg shadow">
@@ -80,161 +78,158 @@
 </template>
 
 <script setup lang="ts">
-import {
-	GostBlockungKurs,
-	GostBlockungsergebnisKurs,
-	GostBlockungsergebnisManager,
-	GostBlockungsergebnisSchiene,
-	GostFachwahl,
-	List,
-	SchuelerListeEintrag,
-	Vector
-} from "@svws-nrw/svws-core-ts";
-import { computed, ComputedRef, Ref, ref, watch, WritableComputedRef } from "vue";
+	import {
+		GostBlockungKurs,
+		GostBlockungsergebnisKurs,
+		GostBlockungsergebnisManager,
+		GostBlockungsergebnisSchiene,
+		GostFachwahl,
+		List,
+		SchuelerListeEintrag,
+		Vector
+	} from "@svws-nrw/svws-core-ts";
+	import { computed, ComputedRef, Ref, ref, watch, WritableComputedRef } from "vue";
 
-import { injectMainApp, Main } from "~/apps/Main";
+	import { injectMainApp, Main } from "~/apps/Main";
 
-const main: Main = injectMainApp();
-const app = main.apps.gost;
+	const main: Main = injectMainApp();
+	const app = main.apps.gost;
 
-const is_dragging: Ref<boolean> = ref(false)
+	const is_dragging: Ref<boolean> = ref(false)
 
-const visible: ComputedRef<boolean> =
-	computed(()=> !!manager.value && !manager.value.getOfSchuelerAlleFachwahlenNichtZugeordnet())
+	const visible: ComputedRef<boolean> =
+		computed(()=> !!manager.value && !manager.value.getOfSchuelerAlleFachwahlenNichtZugeordnet())
 
-const manager: ComputedRef<GostBlockungsergebnisManager | undefined> =
-	computed(() => app.dataKursblockungsergebnis.manager);
+	const manager: ComputedRef<GostBlockungsergebnisManager | undefined> =
+		computed(() => app.dataKursblockungsergebnis.manager);
 
-const kurse: ComputedRef<List<GostBlockungKurs>> =
-	computed(() => app.dataKursblockung.manager?.getKursmengeSortiertNachKursartFachNummer()
-		|| new Vector<GostBlockungKurs>())
+	const kurse: ComputedRef<List<GostBlockungKurs>> =
+		computed(() => app.dataKursblockung.manager?.getKursmengeSortiertNachKursartFachNummer()
+			|| new Vector<GostBlockungKurs>())
 
-const schienen: ComputedRef<List<GostBlockungsergebnisSchiene>> =
-	computed(() => manager.value?.getMengeAllerSchienen() || new Vector<GostBlockungsergebnisSchiene>())
+	const schienen: ComputedRef<List<GostBlockungsergebnisSchiene>> =
+		computed(() => manager.value?.getMengeAllerSchienen() || new Vector<GostBlockungsergebnisSchiene>())
 
-const schueler: ComputedRef<Array<SchuelerListeEintrag> | undefined> =
-	computed(() => app.listAbiturjahrgangSchueler.gefiltert);
+	const schueler: ComputedRef<Array<SchuelerListeEintrag> | undefined> =
+		computed(() => app.listAbiturjahrgangSchueler.gefiltert);
 
-const selected: WritableComputedRef<SchuelerListeEintrag | undefined> =
-	computed({
-		get(): SchuelerListeEintrag | undefined {
-			return app.listAbiturjahrgangSchueler.ausgewaehlt;
-		},
-		set(value: SchuelerListeEintrag | undefined) {
-			if (app) {
-				app.listAbiturjahrgangSchueler.ausgewaehlt = value;
+	const selected: WritableComputedRef<SchuelerListeEintrag | undefined> =
+		computed({
+			get(): SchuelerListeEintrag | undefined {
+				return app.listAbiturjahrgangSchueler.ausgewaehlt;
+			},
+			set(value: SchuelerListeEintrag | undefined) {
+				if (app) {
+					app.listAbiturjahrgangSchueler.ausgewaehlt = value;
+				}
 			}
-		}
-	});
+		});
 
-const aktiver_kurs: ComputedRef<GostBlockungsergebnisKurs|undefined> =
-	computed(()=>app.dataKursblockungsergebnis.active_kurs.value)
+	const aktiver_kurs: ComputedRef<GostBlockungsergebnisKurs|undefined> =
+		computed(()=>app.dataKursblockungsergebnis.active_kurs.value)
 
-const aktiver_kursname: ComputedRef<String | undefined> =
-	computed(()=> app.dataKursblockungsergebnis.active_kurs.value?.id
-		? manager.value?.getOfKursName(app.dataKursblockungsergebnis.active_kurs.value?.id)
-		: undefined)
+	const aktiver_kursname: ComputedRef<String | undefined> =
+		computed(()=> app.dataKursblockungsergebnis.active_kurs.value?.id
+			? manager.value?.getOfKursName(app.dataKursblockungsergebnis.active_kurs.value?.id)
+			: undefined)
 
-const schueler_kollisionen: ComputedRef<{ [index: number]: boolean }> =
-	computed(() => {
-		if (!schienen.value) return {};
-		const kolls: { [index: number]: boolean } = {};
-		for (const s of schienen.value)
-			for (const k of s.kurse)
+	const schueler_kollisionen: ComputedRef<{ [index: number]: boolean }> =
+		computed(() => {
+			if (!schienen.value) return {};
+			const kolls: { [index: number]: boolean } = {};
+			for (const s of schienen.value)
+				for (const k of s.kurse)
+					for (const ss of k.schueler)
+						if (manager.value?.getOfSchuelerHatKollision(ss.valueOf())) kolls[ss.valueOf()] = true;
+			return kolls;
+		});
+
+	const schueler_negiert: ComputedRef<{ [index: number]: boolean }> =
+		computed(() => {
+		const kurs = app.dataKursblockungsergebnis.active_kurs?.value
+		if (!kurs) return {};
+		const kurse = manager.value?.getOfFachKursmenge(kurs.fachID)
+		if (!kurse) return {}
+		const negiert: { [index: number]: boolean } = {};
+		for (const k of kurse)
+			if (kurs !== k && kurs.kursart === k.kursart)
 				for (const ss of k.schueler)
-					if (manager.value?.getOfSchuelerHatKollision(ss.valueOf())) kolls[ss.valueOf()] = true;
-		return kolls;
+					negiert[ss.valueOf()] = true;
+		return negiert;
 	});
 
-const schueler_negiert: ComputedRef<{ [index: number]: boolean }> =
-	computed(() => {
-	const kurs = app.dataKursblockungsergebnis.active_kurs?.value
-	if (!kurs) return {};
-	const kurse = manager.value?.getOfFachKursmenge(kurs.fachID)
-	if (!kurse) return {}
-	const negiert: { [index: number]: boolean } = {};
-	for (const k of kurse)
-		if (kurs !== k && kurs.kursart === k.kursart)
-			for (const ss of k.schueler)
-				negiert[ss.valueOf()] = true;
-	return negiert;
-});
+	const blockungsergebnisse: ComputedRef<Map<GostBlockungKurs, GostBlockungsergebnisKurs[]>> =
+		computed(() => {
+		const map = new Map();
+		if (!schienen.value?.size()) return map;
+		for (const k of kurse.value)
+			for (const s of schienen.value) {
+				const arr = []
+				for (const kk of s.kurse)
+					kk.id === k.id ? arr.push(kk) : arr.push(undefined)
+				map.set(k, arr)
+			}
+		return map;
+	});
 
-const blockungsergebnisse: ComputedRef<Map<GostBlockungKurs, GostBlockungsergebnisKurs[]>> =
-	computed(() => {
-	const map = new Map();
-	if (!schienen.value?.size()) return map;
-	for (const k of kurse.value)
-		for (const s of schienen.value) {
-			const arr = []
-			for (const kk of s.kurse)
-				kk.id === k.id ? arr.push(kk) : arr.push(undefined)
-			map.set(k, arr)
+	const fachbelegungen: ComputedRef<List<GostFachwahl>> =
+		computed(() => {
+		if (!selected.value?.id || !app.dataKursblockung.manager) return new Vector<GostFachwahl>()
+		return app.dataKursblockung.manager.getOfSchuelerFacharten(selected.value.id)
+	});
+
+	const filter_kollision: WritableComputedRef<boolean> =
+		computed({
+		get(): boolean {
+			return !!app.listAbiturjahrgangSchueler.filter.kollision;
+		},
+		set(value: boolean) {
+			const filterValue = app.listAbiturjahrgangSchueler.filter;
+			filterValue.kollision = value
+				? schueler_kollisionen.value
+				: undefined;
+			app.listAbiturjahrgangSchueler.filter = filterValue;
 		}
-	return map;
-});
+	});
 
-const fachbelegungen: ComputedRef<List<GostFachwahl>> =
-	computed(() => {
-	if (!selected.value?.id || !app.dataKursblockung.manager) return new Vector<GostFachwahl>()
-	return app.dataKursblockung.manager.getOfSchuelerFacharten(selected.value.id)
-});
+	const filter_negiert: WritableComputedRef<boolean> =
+		computed({
+		get(): boolean {
+			return !!app.listAbiturjahrgangSchueler.filter.negiert;
+		},
+		set(value: boolean) {
+			const filterValue = app.listAbiturjahrgangSchueler.filter;
+			filterValue.negiert = value
+				? schueler_negiert.value
+				: undefined;
+			app.listAbiturjahrgangSchueler.filter = filterValue;
+		}
+	});
 
-const filter_kollision: WritableComputedRef<boolean> =
-	computed({
-	get(): boolean {
-		return !!app.listAbiturjahrgangSchueler.filter.kollision;
-	},
-	set(value: boolean) {
-		const filterValue = app.listAbiturjahrgangSchueler.filter;
-		filterValue.kollision = value
-			? schueler_kollisionen.value
-			: undefined;
-		app.listAbiturjahrgangSchueler.filter = filterValue;
+	const filter_name: WritableComputedRef<string> =
+		computed({
+		get(): string {
+			return app.listAbiturjahrgangSchueler?.filter?.name;
+		},
+		set(value: string) {
+			const filter = app.listAbiturjahrgangSchueler.filter;
+			filter.name = value;
+			app.listAbiturjahrgangSchueler.filter = filter;
+		}
+	});
+
+	watch(()=>schueler.value, (new_val)=> selected.value = new_val ? new_val[0] : undefined)
+
+	async function drop_entferne_kurszuordnung(kurs: any) {
+		const schuelerid = selected.value?.id;
+		if (!schuelerid || !kurs?.id) return;
+		let ok = false
+		ok = await app.dataKursblockungsergebnis.assignSchuelerKurs(
+			schuelerid,
+			kurs.id,
+			true
+		);
+		if (ok) ok = manager.value?.setSchuelerKurs(schuelerid, kurs.id, false) || false;
+		if (ok) main.config.drag_and_drop_data = undefined;
 	}
-});
-
-const filter_negiert: WritableComputedRef<boolean> =
-	computed({
-	get(): boolean {
-		return !!app.listAbiturjahrgangSchueler.filter.negiert;
-	},
-	set(value: boolean) {
-		const filterValue = app.listAbiturjahrgangSchueler.filter;
-		filterValue.negiert = value
-			? schueler_negiert.value
-			: undefined;
-		app.listAbiturjahrgangSchueler.filter = filterValue;
-	}
-});
-
-const filter_name: WritableComputedRef<string> =
-	computed({
-	get(): string {
-		return app.listAbiturjahrgangSchueler?.filter?.name;
-	},
-	set(value: string) {
-		const filter = app.listAbiturjahrgangSchueler.filter;
-		filter.name = value;
-		app.listAbiturjahrgangSchueler.filter = filter;
-	}
-});
-
-watch(()=>schueler.value, (new_val)=> selected.value = new_val ? new_val[0] : undefined)
-
-function drop_entferne_kurszuordnung(kurs: any) {
-	const schuelerid = selected.value?.id;
-	if (!schuelerid || !kurs?.id) return;
-	app.dataKursblockungsergebnis.assignSchuelerKurs(
-		schuelerid,
-		kurs.id,
-		true
-	);
-	manager.value?.setSchuelerKurs(schuelerid, kurs.id, true);
-}
-
-// Zweites Argument (kurs: GostBlockungsergebnisKurs) entfernt, da in Template nicht verwendet.
-function drag_over(event: DragEvent) {
-	event.preventDefault();
-}
 </script>
