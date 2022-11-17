@@ -101,12 +101,15 @@ allprojects {
 }
 
 subprojects {
-	apply plugin: 'svws.gradle.svwsmavenpublish.plugin'
+	// Publishing-Plugin für alle Module aktivieren (mit Ausnahme des Moduls 'gradle-build-src')
+	if (it.name != 'gradle-build-src') {
+		apply plugin: 'svws.gradle.svwsmavenpublish.plugin'
 
-	svwsmavenpublish {
-		nexusSnapshotRepositoryUrl = 'https://artifactory.svws-nrw.de/repository/svws-maven-snapshots'
-		nexusReleasesRepositoryUrl = 'https://artifactory.svws-nrw.de/repository/svws-maven-releases'
-		githubReleasesRepositoryUrl =  'https://maven.pkg.github.com/SVWS-NRW/SVWS-Packages'
+		svwsmavenpublish {
+			nexusSnapshotRepositoryUrl = 'https://artifactory.svws-nrw.de/repository/svws-maven-snapshots'
+			nexusReleasesRepositoryUrl = 'https://artifactory.svws-nrw.de/repository/svws-maven-releases'
+			githubReleasesRepositoryUrl =  'https://maven.pkg.github.com/SVWS-NRW/SVWS-Packages'
+		}
 	}
 }
 

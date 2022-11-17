@@ -32,17 +32,46 @@ class SvwsMavenPublishPlugin extends SvwsMavenRepoCredentialsPlugin implements P
 	 * @param project Projekt
 	 */
 	void chooseMavenRepository() {
-		def nexus_user = project.ext.getNexusActor()
+		def nexus_actor = project.ext.getNexusActor()
 		def nexus_token = project.ext.getNexusToken()
+		def github_actor = project.ext.getGithubActor()
+		def github_token = project.ext.getGithubToken()
+		def nexus_publish_ready = false
+		def github_publish_ready = false
 
-		if (nexus_user?.trim() && nexus_token?.trim()) {
+		if (nexus_actor?.trim() && nexus_token?.trim()) {
+			if (this.extension.getNexusSnapshotRepositoryUrl()?.trim() &&
+				this.extension.getNexusReleasesRepositoryUrl()?.trim()){
+				nexus_publish_ready = true
+			} else{
+				project.logger.info('Der Nexus Repository Manager kann nicht für die Publishing von SVWS-Artefakten genutzt werden, ' +
+					'weil die URLs der Repositories nicht hinterlegt sind.')
+			}
+		} else {
+			project.logger.info('Der Nexus Repository Manager kann nicht für die Publishing von SVWS-Artefakten genutzt werden, ' +
+				'weil die Zugangsdaten nicht hinterlegt sind.')
+		}
+
+		if (github_actor?.trim() && github_token?.trim()) {
+			if (this.extension.getGithubReleasesRepositoryUrl()?.trim()) {
+				github_publish_ready = true
+			} else {
+				project.logger.info('GitHub Package Repository kann nicht für die Publishing von SVWS-Artefakten genutzt werden, ' +
+					'weil die URL des Repository nicht hinterlegt sind.')
+			}
+		} else {
+			project.logger.info('Das GitHub Package Repository kann nicht für die Publishing von SVWS-Artefakten genutzt werden, ' +
+				'weil die Zugangsdaten nicht hinterlegt sind.')
+		}
+
+		if (nexus_publish_ready && github_publish_ready) {
 			project.publishing.repositories {
 				maven {
 					name = "svwssnapshots"
 					url = this.extension.getNexusSnapshotRepositoryUrl()
 					allowInsecureProtocol = true
 					credentials {
-						username = nexus_user
+						username = nexus_actor
 						password = nexus_token
 					}
 				}
@@ -51,7 +80,7 @@ class SvwsMavenPublishPlugin extends SvwsMavenRepoCredentialsPlugin implements P
 					url = this.extension.getNexusReleasesRepositoryUrl()
 					allowInsecureProtocol = true
 					credentials {
-						username = nexus_user
+						username = nexus_actor
 						password = nexus_token
 					}
 				}
@@ -59,13 +88,13 @@ class SvwsMavenPublishPlugin extends SvwsMavenRepoCredentialsPlugin implements P
 					name = "githubreleases"
 					url = this.extension.getGithubReleasesRepositoryUrl()
 					credentials {
-						username = project.ext.getGithubActor()
-						password = project.ext.getGithubToken()
+						username = github_actor
+						password = github_token
 					}
 				}
 			}
 		} else {
-			project.logger.warn('WARNUNG: Der Nexus Repository Manager kann nicht für die Veröffentlichung von SVWS-Artefakten genutzt werden, weil die Zugangsdaten nicht hinterlegt sind.')
+			project.logger.lifecycle('Projekt {}: Publishing kann wegen unvollständiger Konfiguration der Maven-Repositories nicht durchgeführt werden.', project.name)
 		}
 	}
 

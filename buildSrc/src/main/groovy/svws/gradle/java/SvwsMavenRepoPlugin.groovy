@@ -23,10 +23,10 @@ class SvwsMavenRepoPlugin extends SvwsMavenRepoCredentialsPlugin implements Plug
 	void chooseMavenRepository() {
 		def nexus_user = project.ext.getNexusActor()
 		def nexus_token = project.ext.getNexusToken()
-		def maven_proxy_url = this.extension.getNexusMavenCentralProxyRepositoryUrl();
+		def maven_proxy_url = this.extension.getNexusMavenCentralProxyRepositoryUrl()
 
 		if (nexus_user?.trim() && nexus_token?.trim() && maven_proxy_url.trim()) {
-			project.logger.lifecycle('Projekt {} verwendet das Artefakt-Repository: SVWS-Nexus', project.name)
+			project.logger.info('Projekt {} verwendet das Artefakt-Repository: SVWS-Nexus', project.name)
 			project.repositories {
 				maven {
 					name = "svwsmavencentral"
@@ -40,23 +40,15 @@ class SvwsMavenRepoPlugin extends SvwsMavenRepoCredentialsPlugin implements Plug
 				maven {
 					name = "githubpackages"
 					url = this.extension.getGithubMavenPackagesUrl()
-					credentials {
-						username = project.ext.getGithubActor()
-						password = project.ext.getGithubToken()
-					}
 				}
 			}
 		} else {
 			project.repositories {
-				project.logger.lifecycle('Projekt {} verwendet das Artefakt-Repository: Maven-Central', project.name)
+				project.logger.info('Projekt {} verwendet das Artefakt-Repository: Maven-Central', project.name)
 				mavenCentral()
 				maven {
 					name = "githubpackages"
 					url = this.extension.getGithubMavenPackagesUrl()
-					credentials {
-						username = project.ext.getGithubActor()
-						password = project.ext.getGithubToken()
-					}
 				}
 			}
 		}

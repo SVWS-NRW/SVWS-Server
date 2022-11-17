@@ -1,6 +1,5 @@
 package svws.gradle.java
 
-import org.gradle.api.GradleException
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
@@ -19,7 +18,8 @@ abstract class SvwsMavenRepoCredentialsPlugin implements Plugin<Project> {
 			def username = System.getenv("GITHUB_ACTOR")
 			if (username != null)
 				return username
-			throw new GradleException('Fehler: Der Github-Benutzer wurde weder in USERHOME/.gradle/gradle.properties als github_actor, noch als Umgebungsvariable GITHUB_ACTOR festgelegt!')
+			project.logger.info('GitHub kann nicht für Publishing verwendet werden. Der Github-Benutzer wurde weder in USERHOME/.gradle/gradle.properties als github_actor, noch als Umgebungsvariable GITHUB_ACTOR festgelegt!')
+			return null
 		}
 	}
 
@@ -30,7 +30,8 @@ abstract class SvwsMavenRepoCredentialsPlugin implements Plugin<Project> {
 			def token = System.getenv("GITHUB_TOKEN")
 			if (token != null)
 				return token
-			throw new GradleException('Fehler: Der Github-Token wurde weder in USERHOME/.gradle/gradle.properties als github_token, noch als Umgebungsvariable GITHUB_TOKEN festgelegt!')
+			project.logger.info('GitHub kann nicht für Publishing verwendet werden. Der Github-Token wurde weder in USERHOME/.gradle/gradle.properties als github_token, noch als Umgebungsvariable GITHUB_TOKEN festgelegt!')
+			return null
 		}
 	}
 
