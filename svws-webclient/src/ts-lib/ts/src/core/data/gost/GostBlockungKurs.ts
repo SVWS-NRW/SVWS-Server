@@ -1,5 +1,4 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 
 export class GostBlockungKurs extends JavaObject {
@@ -16,7 +15,7 @@ export class GostBlockungKurs extends JavaObject {
 
 	public suffix : String = "";
 
-	public wochenstunden : Number | null = 3;
+	public wochenstunden : number = 3;
 
 	public anzahlSchienen : number = 1;
 
@@ -50,7 +49,9 @@ export class GostBlockungKurs extends JavaObject {
 		if (typeof obj.suffix === "undefined")
 			 throw new Error('invalid json format, missing attribute suffix');
 		result.suffix = String(obj.suffix);
-		result.wochenstunden = typeof obj.wochenstunden === "undefined" ? null : obj.wochenstunden === null ? null : Number(obj.wochenstunden);
+		if (typeof obj.wochenstunden === "undefined")
+			 throw new Error('invalid json format, missing attribute wochenstunden');
+		result.wochenstunden = obj.wochenstunden;
 		if (typeof obj.anzahlSchienen === "undefined")
 			 throw new Error('invalid json format, missing attribute anzahlSchienen');
 		result.anzahlSchienen = obj.anzahlSchienen;
@@ -65,7 +66,7 @@ export class GostBlockungKurs extends JavaObject {
 		result += '"nummer" : ' + obj.nummer + ',';
 		result += '"istKoopKurs" : ' + obj.istKoopKurs + ',';
 		result += '"suffix" : ' + '"' + obj.suffix.valueOf() + '"' + ',';
-		result += '"wochenstunden" : ' + ((!obj.wochenstunden) ? 'null' : obj.wochenstunden.valueOf()) + ',';
+		result += '"wochenstunden" : ' + obj.wochenstunden + ',';
 		result += '"anzahlSchienen" : ' + obj.anzahlSchienen + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -93,7 +94,7 @@ export class GostBlockungKurs extends JavaObject {
 			result += '"suffix" : ' + '"' + obj.suffix.valueOf() + '"' + ',';
 		}
 		if (typeof obj.wochenstunden !== "undefined") {
-			result += '"wochenstunden" : ' + ((!obj.wochenstunden) ? 'null' : obj.wochenstunden.valueOf()) + ',';
+			result += '"wochenstunden" : ' + obj.wochenstunden + ',';
 		}
 		if (typeof obj.anzahlSchienen !== "undefined") {
 			result += '"anzahlSchienen" : ' + obj.anzahlSchienen + ',';

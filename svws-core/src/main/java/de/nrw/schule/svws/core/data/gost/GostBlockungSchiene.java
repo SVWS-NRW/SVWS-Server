@@ -27,6 +27,6 @@ public class GostBlockungSchiene {
 	public @NotNull String bezeichnung = "Neue Schiene";
 
 	/** Die Anzahl der Wochenstunden, welche der Schiene zugeordnet sind */
-	public Integer wochenstunden = 3;
+	public int wochenstunden = 3;
 
 }

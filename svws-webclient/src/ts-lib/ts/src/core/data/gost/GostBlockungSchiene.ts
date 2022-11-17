@@ -1,5 +1,4 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 
 export class GostBlockungSchiene extends JavaObject {
@@ -10,7 +9,7 @@ export class GostBlockungSchiene extends JavaObject {
 
 	public bezeichnung : String = "Neue Schiene";
 
-	public wochenstunden : Number | null = 3;
+	public wochenstunden : number = 3;
 
 
 	public constructor() {
@@ -33,7 +32,9 @@ export class GostBlockungSchiene extends JavaObject {
 		if (typeof obj.bezeichnung === "undefined")
 			 throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = String(obj.bezeichnung);
-		result.wochenstunden = typeof obj.wochenstunden === "undefined" ? null : obj.wochenstunden === null ? null : Number(obj.wochenstunden);
+		if (typeof obj.wochenstunden === "undefined")
+			 throw new Error('invalid json format, missing attribute wochenstunden');
+		result.wochenstunden = obj.wochenstunden;
 		return result;
 	}
 
@@ -42,7 +43,7 @@ export class GostBlockungSchiene extends JavaObject {
 		result += '"id" : ' + obj.id + ',';
 		result += '"nummer" : ' + obj.nummer + ',';
 		result += '"bezeichnung" : ' + '"' + obj.bezeichnung.valueOf() + '"' + ',';
-		result += '"wochenstunden" : ' + ((!obj.wochenstunden) ? 'null' : obj.wochenstunden.valueOf()) + ',';
+		result += '"wochenstunden" : ' + obj.wochenstunden + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -60,7 +61,7 @@ export class GostBlockungSchiene extends JavaObject {
 			result += '"bezeichnung" : ' + '"' + obj.bezeichnung.valueOf() + '"' + ',';
 		}
 		if (typeof obj.wochenstunden !== "undefined") {
-			result += '"wochenstunden" : ' + ((!obj.wochenstunden) ? 'null' : obj.wochenstunden.valueOf()) + ',';
+			result += '"wochenstunden" : ' + obj.wochenstunden + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

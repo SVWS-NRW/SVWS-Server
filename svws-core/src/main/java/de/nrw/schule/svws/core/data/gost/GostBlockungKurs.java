@@ -37,7 +37,7 @@ public class GostBlockungKurs {
 	public @NotNull String suffix = "";
 
 	/** Die Anzahl der Wochenstunden, welche dem Kurs zugeordnet */
-	public Integer wochenstunden = 3;
+	public int wochenstunden = 3;
 
 	/** Die Anzahl an Schienen, die der Kurs belegt, meistens =1. Falls > 1 ist es ein 'Multikurs'.*/
 	public int anzahlSchienen = 1;
