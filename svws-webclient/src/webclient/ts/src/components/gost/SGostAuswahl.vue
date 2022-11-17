@@ -163,7 +163,9 @@ import {
 	GostBlockungsergebnisListeneintrag,
 	GostHalbjahr,
 	GostJahrgang,
-	JahrgangsListeEintrag
+	JahrgangsListeEintrag,
+	List,
+	Vector
 } from "@svws-nrw/svws-core-ts";
 import {
 	computed,
@@ -214,14 +216,14 @@ const manager: ComputedRef<GostBlockungsdatenManager | undefined> =
 	computed(()=>app.dataKursblockung.manager);
 const rows_blockungsswahl: ComputedRef<GostBlockungListeneintrag[]> =
 	computed(() => app.blockungsauswahl.liste);
-const rows_ergebnisse: ComputedRef<GostBlockungsergebnisListeneintrag[]> =
-	computed(() => app.blockungsergebnisauswahl.liste);
+const rows_ergebnisse: ComputedRef<List<GostBlockungsergebnisListeneintrag>> =
+	computed(() => manager.value?.getErgebnisseSortiertNachBewertung() || new Vector<GostBlockungsergebnisListeneintrag>());
 const abiturjahr: ComputedRef<number> =
 	computed(() => Number(app.dataJahrgang.daten?.abiturjahr));
 const jahrgaenge: ComputedRef<JahrgangsListeEintrag[]> =
 	computed( () => appJahrgaenge.auswahl.liste);
 
-	const selected_hj: WritableComputedRef<GostHalbjahr> = computed({
+const selected_hj: WritableComputedRef<GostHalbjahr> = computed({
 	get(): GostHalbjahr {
 		const hj = hj_memo.value || app.dataKursblockung.daten?.gostHalbjahr || null
 		return GostHalbjahr.fromID(hj)
@@ -342,11 +344,13 @@ async function patch_blockung(blockung: GostBlockungListeneintrag) {
 }
 
 function make_vorlage(ergebnis: GostBlockungsergebnisListeneintrag) {
-	const bisher = rows_ergebnisse.value.find(e=>e.istVorlage)
-	if (!bisher)
-		return
-	bisher.istVorlage = false
-	ergebnis.istVorlage = true
+	for (const e of rows_ergebnisse.value) {
+		if (e.istVorlage) {
+			e.istVorlage = false;
+			ergebnis.istVorlage = true;
+			break;
+		}
+	}
 	//TODO zum Server schicken
 }
 
