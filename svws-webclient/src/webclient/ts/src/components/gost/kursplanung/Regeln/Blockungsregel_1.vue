@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { injectMainApp, Main } from "~/apps/Main";
 import { GostBlockungRegel, GostBlockungSchiene, GostKursart, GostKursblockungRegelTyp } from "@svws-nrw/svws-core-ts";
-import { computed, ComputedRef, Ref, ref } from "vue";
+import { computed, ComputedRef, Ref, ref, shallowRef } from "vue";
 
 const main: Main = injectMainApp();
 const app = main.apps.gost;
@@ -11,7 +11,7 @@ const regel_typ = GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS
 //new GostKursblockungRegelTyp("KURSART_SPERRE_SCHIENEN_VON_BIS", 1, 1, 
 //"Kursart: Sperre Schienen (von/bis)", Arrays.asList(GostKursblockungRegelParameterTyp.KURSART, GostKursblockungRegelParameterTyp.SCHIENEN_NR, GostKursblockungRegelParameterTyp.SCHIENEN_NR));
 const schienen = app.dataKursblockung.manager?.getMengeOfSchienen()
-const kursart: Ref<GostKursart> = ref(GostKursart.GK)
+const kursart: Ref<GostKursart> = shallowRef(GostKursart.GK)
 const start: Ref<GostBlockungSchiene> = ref(schienen?.get(0) || new GostBlockungSchiene())
 const ende: Ref<GostBlockungSchiene> = ref(schienen?.get(0) || new GostBlockungSchiene())
 const regel: Ref<GostBlockungRegel | undefined> = ref(undefined)

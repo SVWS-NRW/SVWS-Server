@@ -40,7 +40,7 @@ import {
 	GostKursart,
 	GostKursblockungRegelTyp,
 } from "@svws-nrw/svws-core-ts";
-import { computed, ref, Ref } from "vue";
+import { computed, ref, Ref, shallowRef } from "vue";
 
 import { injectMainApp, Main } from "~/apps/Main";
 
@@ -55,7 +55,7 @@ const main: Main = injectMainApp();
 const app = main.apps.gost;
 
 const modal: Ref<any> = ref(null);
-const kursart: Ref<GostKursart> = ref(GostKursart.GK)
+const kursart: Ref<GostKursart> = shallowRef(GostKursart.GK)
 const von: Ref<GostBlockungSchiene> = ref(schiene)
 const bis: Ref<GostBlockungSchiene> = ref(schiene)
 
