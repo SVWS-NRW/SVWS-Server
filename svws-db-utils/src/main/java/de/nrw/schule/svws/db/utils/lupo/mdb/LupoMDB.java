@@ -45,6 +45,7 @@ import de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchueler;
 import de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
 import de.nrw.schule.svws.db.dto.current.schild.schule.DTOJahrgang;
 import de.nrw.schule.svws.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
+import de.nrw.schule.svws.db.dto.current.svws.db.DTODBAutoInkremente;
 import de.nrw.schule.svws.db.utils.data.Schule;
 import de.nrw.schule.svws.db.utils.gost.GostSchueler;
 import jakarta.persistence.TypedQuery;
@@ -341,24 +342,43 @@ public class LupoMDB {
 		
 		logger.logLn("- die nicht möglichen Abitur-Fachkombinationen für den Jahrgang");
 		logger.modifyIndent(2);
-		for (ABPNichtMoeglAbiFachKombi nmk : nichtMoeglicheKombinationen) {
-			logger.log("- Fachkombination " + nmk.Fach1_Krz + " (" + nmk.Kursart1 + ") <-> " + nmk.Fach2_Krz + " (" + nmk.Kursart2 + "): ");
-			DTOFach dtoFach1 = dtoFaecher.get(nmk.Fach1_Krz);
-			if (dtoFach1 == null) {
-				logger.logLn(0, "FEHLER - Fach 1 der Kombination in der DB nicht definiert!");
-				continue;
+		if (nichtMoeglicheKombinationen.size() > 0) {
+			// Bestimme die ID, für welche der Datensatz eingefügt wird
+			DTODBAutoInkremente dbNmkID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Jahrgang_Fachkombinationen");
+			long idNMK = dbNmkID == null ? 1 : dbNmkID.MaxID + 1;
+			for (ABPNichtMoeglAbiFachKombi nmk : nichtMoeglicheKombinationen) {
+				logger.log("- Fachkombination " + nmk.Fach1_Krz + " (" + nmk.Kursart1 + ") <-> " + nmk.Fach2_Krz + " (" + nmk.Kursart2 + "): ");
+				DTOFach dtoFach1 = dtoFaecher.get(nmk.Fach1_Krz);
+				if (dtoFach1 == null) {
+					logger.logLn(0, "FEHLER - Fach 1 der Kombination in der DB nicht definiert!");
+					continue;
+				}
+				DTOFach dtoFach2 = dtoFaecher.get(nmk.Fach2_Krz);
+				if (dtoFach2 == null) {
+					logger.logLn(0, "FEHLER - Fach 2 der Kombination in der DB nicht definiert!");
+					continue;
+				}
+				String f1 = dtoFach1.Kuerzel + ((nmk.Kursart1 == null || "".equals(nmk.Kursart1)) ? "" : " als " + nmk.Kursart1);
+				String f2 = dtoFach2.Kuerzel + ((nmk.Kursart2 == null || "".equals(nmk.Kursart2)) ? "" : " als " + nmk.Kursart2);
+				String hinweistext = "+".equals(nmk.Typ)
+					? ("" + f1 + " erfordert " + f2)
+					: ("" + f1 + " erlaubt kein " + f2);
+				DTOGostJahrgangFachkombinationen lupoNMK = new DTOGostJahrgangFachkombinationen(idNMK++, 
+						dtoFach1.ID, dtoFach2.ID, !"Q1Q4".equals(nmk.Phase), !"Q1Q4".equals(nmk.Phase), true, true, true, true,  
+						nmk.Typ == null ? null : ("+".equals(nmk.Typ) ? 1 : 0), hinweistext);
+				lupoNMK.Abi_Jahrgang = abiJahrgang;
+				lupoNMK.Kursart1 = nmk.Kursart1;
+				lupoNMK.Kursart2 = nmk.Kursart2;
+				conn.persist(lupoNMK);
+				DTOGostJahrgangFachkombinationen lupoNMK2 = new DTOGostJahrgangFachkombinationen(idNMK++, 
+						dtoFach2.ID, dtoFach1.ID, !"Q1Q4".equals(nmk.Phase), !"Q1Q4".equals(nmk.Phase), true, true, true, true,  
+						nmk.Typ == null ? null : ("+".equals(nmk.Typ) ? 1 : 0), hinweistext);
+				lupoNMK2.Abi_Jahrgang = abiJahrgang;
+				lupoNMK2.Kursart1 = nmk.Kursart2;
+				lupoNMK2.Kursart2 = nmk.Kursart1;
+				conn.persist(lupoNMK2);
+				logger.logLn(0, "OK");
 			}
-			DTOFach dtoFach2 = dtoFaecher.get(nmk.Fach2_Krz);
-			if (dtoFach2 == null) {
-				logger.logLn(0, "FEHLER - Fach 2 der Kombination in der DB nicht definiert!");
-				continue;
-			}
-			DTOGostJahrgangFachkombinationen lupoNMK = new DTOGostJahrgangFachkombinationen(abiJahrgang, nmk.PK, 
-					dtoFach1.ID, dtoFach2.ID, nmk.Phase, nmk.Typ == null ? null : ("+".equals(nmk.Typ) ? 1 : 0));
-			lupoNMK.Kursart1 = nmk.Kursart1;
-			lupoNMK.Kursart2 = nmk.Kursart2;
-			conn.persist(lupoNMK);
-			logger.logLn(0, "OK");
 		}
 		logger.modifyIndent(-2);
 

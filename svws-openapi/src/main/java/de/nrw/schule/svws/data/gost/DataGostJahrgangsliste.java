@@ -14,10 +14,10 @@ import de.nrw.schule.svws.db.dto.current.gost.DTOGostJahrgangFachkombinationen;
 import de.nrw.schule.svws.db.dto.current.gost.DTOGostJahrgangFaecher;
 import de.nrw.schule.svws.db.dto.current.gost.DTOGostJahrgangsdaten;
 import de.nrw.schule.svws.db.dto.current.schild.faecher.DTOFach;
-import de.nrw.schule.svws.db.dto.current.schild.gost.DTOFaecherNichtMoeglicheKombination;
 import de.nrw.schule.svws.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.nrw.schule.svws.db.dto.current.schild.schule.DTOJahrgang;
 import de.nrw.schule.svws.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
+import de.nrw.schule.svws.db.dto.current.svws.db.DTODBAutoInkremente;
 import de.nrw.schule.svws.db.utils.OperationError;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -158,18 +158,27 @@ public class DataGostJahrgangsliste extends DataManager<Integer> {
 		if ((gostFaecher.size() > 0) && (!conn.persistAll(gostFaecher)))
 			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
 		// Kopiere die Informationen zu nicht möglichen und geforderten Fachkombinationen aus der Vorlage
-		List<DTOFaecherNichtMoeglicheKombination> faecherKombis = conn.queryAll(DTOFaecherNichtMoeglicheKombination.class);
+		List<DTOGostJahrgangFachkombinationen> faecherKombis = 
+				conn.queryNamed("DTOGostJahrgangFachkombinationen.abi_jahrgang", null, DTOGostJahrgangFachkombinationen.class);
 		if (faecherKombis == null)
 			throw new NullPointerException();
-		Vector<DTOGostJahrgangFachkombinationen> gostFaecherKombis = new Vector<>();
-		for (DTOFaecherNichtMoeglicheKombination kombi : faecherKombis) {
-			int typ = "+".equals(kombi.Typ) ? 1 : 2; 
-			DTOGostJahrgangFachkombinationen k = new DTOGostJahrgangFachkombinationen(abiturjahr, kombi.PK, 
-					kombi.Fach1_ID, kombi.Fach2_ID, kombi.Phase, typ);
-			gostFaecherKombis.add(k);
+		if (faecherKombis.size() > 0) { 
+			Vector<DTOGostJahrgangFachkombinationen> gostFaecherKombis = new Vector<>();
+			// Bestimme die ID, für welche der Datensatz eingefügt wird
+			DTODBAutoInkremente dbNmkID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Jahrgang_Fachkombinationen");
+			long idNMK = dbNmkID == null ? 1 : dbNmkID.MaxID + 1;
+			for (DTOGostJahrgangFachkombinationen kombi : faecherKombis) {
+				DTOGostJahrgangFachkombinationen k = new DTOGostJahrgangFachkombinationen(idNMK++, 
+						kombi.Fach1_ID, kombi.Fach2_ID, kombi.EF1, kombi.EF2, kombi.Q11, kombi.Q12, kombi.Q21, kombi.Q22,  
+						kombi.Typ, kombi.Hinweistext);
+				k.Abi_Jahrgang = kombi.Abi_Jahrgang;
+				k.Kursart1 = kombi.Kursart1;
+				k.Kursart2 = kombi.Kursart2;
+				gostFaecherKombis.add(k);
+			}
+			if (!conn.persistAll(gostFaecherKombis))
+				return OperationError.INTERNAL_SERVER_ERROR.getResponse();
 		}
-		if ((gostFaecherKombis.size() > 0) && (!conn.persistAll(gostFaecherKombis)))
-			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(abiturjahr).build();
 	}
 	

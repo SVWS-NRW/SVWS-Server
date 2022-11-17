@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import de.nrw.schule.svws.db.schema.revisionen.Revision1Updates;
 import de.nrw.schule.svws.db.schema.revisionen.Revision2Updates;
 import de.nrw.schule.svws.db.schema.revisionen.Revision3Updates;
+import de.nrw.schule.svws.db.schema.revisionen.Revision4Updates;
 import de.nrw.schule.svws.db.schema.revisionen.RevisionNoUpdates;
 
 /**
@@ -149,6 +150,7 @@ public enum SchemaRevisionen {
 	            case REV_1 -> new Revision1Updates();
                 case REV_2 -> new Revision2Updates();
                 case REV_3 -> new Revision3Updates();
+                case REV_4 -> new Revision4Updates();
                 default -> new RevisionNoUpdates(this);
 	        };
 	    }
