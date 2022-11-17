@@ -47,7 +47,7 @@ export class GostKursblockungRegelTyp extends JavaObject {
 
 	private readonly paramTypes : List<GostKursblockungRegelParameterTyp>;
 
-	private static readonly map : HashMap<Number, GostKursblockungRegelTyp> = new HashMap();
+	private static readonly _map_id_regel : HashMap<Number, GostKursblockungRegelTyp> = new HashMap();
 
 	/**
 	 *
@@ -68,13 +68,20 @@ export class GostKursblockungRegelTyp extends JavaObject {
 		this.paramTypes = paramTypes;
 	}
 
+	private static getMap() : HashMap<Number, GostKursblockungRegelTyp> {
+		if (GostKursblockungRegelTyp._map_id_regel.isEmpty()) 
+			for (let gostTyp of GostKursblockungRegelTyp.values()) 
+				GostKursblockungRegelTyp._map_id_regel.put(gostTyp.typ, gostTyp);
+		return GostKursblockungRegelTyp._map_id_regel;
+	}
+
 	/**
 	 * Liefert die Menge aller existierender Regeln.
 	 * 
 	 * @return Die Menge aller existierender Regeln.
 	 */
 	public static getCollection() : Collection<GostKursblockungRegelTyp> {
-		return GostKursblockungRegelTyp.map.values();
+		return GostKursblockungRegelTyp.getMap().values();
 	}
 
 	/**
@@ -88,7 +95,7 @@ export class GostKursblockungRegelTyp extends JavaObject {
 	public static fromTyp(id : Number | null) : GostKursblockungRegelTyp {
 		if (id === null) 
 			return GostKursblockungRegelTyp.UNDEFINIERT;
-		let gostTyp : GostKursblockungRegelTyp | null = GostKursblockungRegelTyp.map.get(id);
+		let gostTyp : GostKursblockungRegelTyp | null = GostKursblockungRegelTyp.getMap().get(id);
 		if (gostTyp === null) 
 			return GostKursblockungRegelTyp.UNDEFINIERT;
 		return gostTyp;

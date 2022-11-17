@@ -105,21 +105,22 @@ public enum GostKursblockungRegelTyp {
 	private final @NotNull List<@NotNull GostKursblockungRegelParameterTyp> paramTypes;
 	
 	/** Mapping von "Typ --> GostKursblockungRegelTyp". */
-	private static final @NotNull HashMap<@NotNull Integer, @NotNull GostKursblockungRegelTyp> map = new HashMap<>();
-	
-	static {
-		// Fülle Map.
-		for (@NotNull GostKursblockungRegelTyp gostTyp : GostKursblockungRegelTyp.values()) 
-			map.put(gostTyp.typ, gostTyp);
-	}
+	private static final @NotNull HashMap<@NotNull Integer, @NotNull GostKursblockungRegelTyp> _map_id_regel = new HashMap<>();
 
+	private static @NotNull HashMap<@NotNull Integer, @NotNull GostKursblockungRegelTyp> getMap() {
+		if (_map_id_regel.isEmpty()) 
+			for (@NotNull GostKursblockungRegelTyp gostTyp : GostKursblockungRegelTyp.values()) 
+				_map_id_regel.put(gostTyp.typ, gostTyp);
+		return _map_id_regel;
+	}
+	
 	/**
 	 * Liefert die Menge aller existierender Regeln.
 	 * 
 	 * @return Die Menge aller existierender Regeln.
 	 */
 	public static @NotNull Collection<@NotNull GostKursblockungRegelTyp> getCollection() {
-		return map.values();
+		return getMap().values();
 	}
 
 	/** 
@@ -145,7 +146,7 @@ public enum GostKursblockungRegelTyp {
 	public static @NotNull GostKursblockungRegelTyp fromTyp(Integer id) {
 		if (id == null)
 			return GostKursblockungRegelTyp.UNDEFINIERT;
-		GostKursblockungRegelTyp gostTyp = map.get(id);
+		GostKursblockungRegelTyp gostTyp = getMap().get(id);
 		if (gostTyp == null)
 			return GostKursblockungRegelTyp.UNDEFINIERT;
 		return gostTyp;
