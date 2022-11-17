@@ -1,6 +1,8 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
 import de.nrw.schule.svws.core.adt.Pair;
+import de.nrw.schule.svws.db.converter.current.Boolean01Converter;
+import de.nrw.schule.svws.db.converter.current.SprachreferenzniveauConverter;
 import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaFremdschluesselAktionen;
@@ -56,32 +58,32 @@ public class Tabelle_SchuelerSprachenfolge extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte Referenzniveau */
 	public SchemaTabelleSpalte col_Referenzniveau = add("Referenzniveau", SchemaDatentypen.VARCHAR, false).setDatenlaenge(5)
-		.setConverter("SprachreferenzniveauConverter")
+		.setConverter(SprachreferenzniveauConverter.class)
 		.setConverterRevision(SchemaRevisionen.REV_1)
 		.setJavaComment("Referenzniveau GeR des Sprachenfolgeeintrags");
 
 	/** Die Definition der Tabellenspalte KleinesLatinumErreicht */
 	public SchemaTabelleSpalte col_KleinesLatinumErreicht = add("KleinesLatinumErreicht", SchemaDatentypen.INT, false)
 		.setRevision(SchemaRevisionen.REV_1)
-		.setConverter("Boolean01Converter")
+		.setConverter(Boolean01Converter.class)
 		.setJavaComment("Gibt an, ob der Schüler das kleine Latinum erreicht hat");
 
 	/** Die Definition der Tabellenspalte LatinumErreicht */
 	public SchemaTabelleSpalte col_LatinumErreicht = add("LatinumErreicht", SchemaDatentypen.INT, false)
 		.setRevision(SchemaRevisionen.REV_1)
-		.setConverter("Boolean01Converter")
+		.setConverter(Boolean01Converter.class)
 		.setJavaComment("Gibt an, ob der Schüler das Latinum erreicht hat");
 
 	/** Die Definition der Tabellenspalte GraecumErreicht */
 	public SchemaTabelleSpalte col_GraecumErreicht = add("GraecumErreicht", SchemaDatentypen.INT, false)
 		.setRevision(SchemaRevisionen.REV_1)
-		.setConverter("Boolean01Converter")
+		.setConverter(Boolean01Converter.class)
 		.setJavaComment("Gibt an, ob der Schüler das Graecum erreicht hat");
 
 	/** Die Definition der Tabellenspalte HebraicumErreicht */
 	public SchemaTabelleSpalte col_HebraicumErreicht = add("HebraicumErreicht", SchemaDatentypen.INT, false)
 		.setRevision(SchemaRevisionen.REV_1)
-		.setConverter("Boolean01Converter")
+		.setConverter(Boolean01Converter.class)
 		.setJavaComment("Gibt an, ob der Schüler das Hebraicum erreicht hat");
 
 	/** Die Definition der Tabellenspalte SchulnrEigner */

@@ -1,6 +1,7 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
 import de.nrw.schule.svws.core.adt.Pair;
+import de.nrw.schule.svws.db.converter.current.kursblockung.GostKursblockungRegelTypConverter;
 import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaFremdschluesselAktionen;
@@ -27,7 +28,7 @@ public class Tabelle_Gost_Blockung_Regeln extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte Typ */
 	public SchemaTabelleSpalte col_Typ = add("Typ", SchemaDatentypen.INT, false)
 		.setNotNull()
-		.setConverter("GostKursblockungRegelTypConverter")
+		.setConverter(GostKursblockungRegelTypConverter.class)
 		.setJavaComment("Die ID des Typs der Regeldefinition (siehe Core-Type GostKursblockungRegeltyp)");
 
 

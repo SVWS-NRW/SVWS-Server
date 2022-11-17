@@ -1,6 +1,7 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
 import de.nrw.schule.svws.core.adt.Pair;
+import de.nrw.schule.svws.db.converter.current.Boolean01Converter;
 import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaFremdschluesselAktionen;
@@ -28,14 +29,14 @@ public class Tabelle_LehrerDatenschutz extends SchemaTabelle {
 	public SchemaTabelleSpalte col_Status = add("Status", SchemaDatentypen.INT, false)
 		.setDefault("0")
 		.setNotNull()
-		.setConverter("Boolean01Converter")
+		.setConverter(Boolean01Converter.class)
 		.setJavaComment("Status des Datenschutz-Eintrags (true/false)");
 
 	/** Die Definition der Tabellenspalte Abgefragt */
 	public SchemaTabelleSpalte col_Abgefragt = add("Abgefragt", SchemaDatentypen.INT, false)
 		.setDefault("0")
 		.setNotNull()
-		.setConverter("Boolean01Converter")
+		.setConverter(Boolean01Converter.class)
 		.setJavaComment("Status der Abfrage Datenschutz-Eintrags (true/false)");
 
 

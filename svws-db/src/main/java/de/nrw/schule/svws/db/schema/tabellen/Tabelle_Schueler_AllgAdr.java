@@ -1,6 +1,8 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
 import de.nrw.schule.svws.core.adt.Pair;
+import de.nrw.schule.svws.db.converter.current.BooleanPlusMinusDefaultMinusConverter;
+import de.nrw.schule.svws.db.converter.current.DatumConverter;
 import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaFremdschluesselAktionen;
@@ -36,12 +38,12 @@ public class Tabelle_Schueler_AllgAdr extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte Vertragsbeginn */
 	public SchemaTabelleSpalte col_Vertragsbeginn = add("Vertragsbeginn", SchemaDatentypen.DATE, false)
-		.setConverter("DatumConverter")
+		.setConverter(DatumConverter.class)
 		.setJavaComment("Datum Vertragsbeginn des Betriebeeintrags beim Schüler");
 
 	/** Die Definition der Tabellenspalte Vertragsende */
 	public SchemaTabelleSpalte col_Vertragsende = add("Vertragsende", SchemaDatentypen.DATE, false)
-		.setConverter("DatumConverter")
+		.setConverter(DatumConverter.class)
 		.setJavaComment("Datum des Vertragsende des Betriebeeintrags beim Schüler");
 
 	/** Die Definition der Tabellenspalte Ausbilder */
@@ -51,13 +53,13 @@ public class Tabelle_Schueler_AllgAdr extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte AllgAdrAnschreiben */
 	public SchemaTabelleSpalte col_AllgAdrAnschreiben = add("AllgAdrAnschreiben", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Betrieb erhält Anschreiben Ja/Nein");
 
 	/** Die Definition der Tabellenspalte Praktikum */
 	public SchemaTabelleSpalte col_Praktikum = add("Praktikum", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Gibt an ob es ein Praktikum ist beim Betriebeeintrags beim Schüler");
 
 	/** Die Definition der Tabellenspalte Sortierung */

@@ -1,6 +1,7 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
 import de.nrw.schule.svws.core.adt.Pair;
+import de.nrw.schule.svws.db.converter.current.Boolean01Converter;
 import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaFremdschluesselAktionen;
@@ -28,14 +29,14 @@ public class Tabelle_Gost_Blockung_Zwischenergebnisse extends SchemaTabelle {
 	public SchemaTabelleSpalte col_IstMarkiert = add("IstMarkiert", SchemaDatentypen.INT, false)
 		.setDefault("0")
 		.setNotNull()
-		.setConverter("Boolean01Converter")
+		.setConverter(Boolean01Converter.class)
 		.setJavaComment("Gibt an, ob das Zwischenergebnis von einem Benutzer markiert wurde oder nicht: 1 - true, 0 - false ");
 
 	/** Die Definition der Tabellenspalte IstVorlage */
 	public SchemaTabelleSpalte col_IstVorlage = add("IstVorlage", SchemaDatentypen.INT, false)
 		.setDefault("0")
 		.setNotNull()
-		.setConverter("Boolean01Converter")
+		.setConverter(Boolean01Converter.class)
 		.setJavaComment("Gibt an, ob das Zwischenergebnis im Zusammenhang mit der Erstellen einer Blockung erstellt wurde "
 				+ "und somit als Vorlage für Regeldefinitionen dient oder nicht: 1 - true, 0 - false. "
 				+ "Die Vorlage kann zu einem späteren Zeitpunkt ggf. auf ein anderes (berechnetes) Ergebnis umgesetzt werden."

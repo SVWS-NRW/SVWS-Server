@@ -1,14 +1,16 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
 import de.nrw.schule.svws.core.adt.Pair;
+import de.nrw.schule.svws.db.converter.current.BooleanPlusMinusDefaultMinusConverter;
+import de.nrw.schule.svws.db.converter.current.BooleanPlusMinusDefaultPlusConverter;
 import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaFremdschluesselAktionen;
 import de.nrw.schule.svws.db.schema.SchemaRevisionen;
 import de.nrw.schule.svws.db.schema.SchemaTabelle;
 import de.nrw.schule.svws.db.schema.SchemaTabelleFremdschluessel;
-import de.nrw.schule.svws.db.schema.SchemaTabelleUniqueIndex;
 import de.nrw.schule.svws.db.schema.SchemaTabelleSpalte;
+import de.nrw.schule.svws.db.schema.SchemaTabelleUniqueIndex;
 
 /**
  * Diese Klasse beinhaltet die Schema-Definition für die Tabelle Klassen.
@@ -69,7 +71,7 @@ public class Tabelle_Klassen extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte Sichtbar */
 	public SchemaTabelleSpalte col_Sichtbar = add("Sichtbar", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("+")
-		.setConverter("BooleanPlusMinusDefaultPlusConverter")
+		.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
 		.setJavaComment("Gibt an ob eine Klasse sichtbar ist");
 
 	/** Die Definition der Tabellenspalte Sortierung */
@@ -84,13 +86,13 @@ public class Tabelle_Klassen extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte SommerSem */
 	public SchemaTabelleSpalte col_SommerSem = add("SommerSem", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Beginn im Sommersemester nur WBK");
 
 	/** Die Definition der Tabellenspalte NotenGesperrt */
 	public SchemaTabelleSpalte col_NotenGesperrt = add("NotenGesperrt", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Noteneingabe für die Klasse gesperrt");
 
 	/** Die Definition der Tabellenspalte AdrMerkmal */
@@ -101,13 +103,13 @@ public class Tabelle_Klassen extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte KoopKlasse */
 	public SchemaTabelleSpalte col_KoopKlasse = add("KoopKlasse", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Gibt an ob die Klasse eine KOOP-Klasse ist");
 
 	/** Die Definition der Tabellenspalte Ankreuzzeugnisse */
 	public SchemaTabelleSpalte col_Ankreuzzeugnisse = add("Ankreuzzeugnisse", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Gibt an ob in der Klasse Ankreuzeugnisse (GS) oder Kompentenzschreiben (andere) verwendet werden");
 
 

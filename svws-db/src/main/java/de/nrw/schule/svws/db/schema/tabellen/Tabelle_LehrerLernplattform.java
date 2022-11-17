@@ -1,6 +1,7 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
 import de.nrw.schule.svws.core.adt.Pair;
+import de.nrw.schule.svws.db.converter.current.Boolean01Converter;
 import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaFremdschluesselAktionen;
@@ -32,28 +33,28 @@ public class Tabelle_LehrerLernplattform extends SchemaTabelle {
 	public SchemaTabelleSpalte col_EinwilligungAbgefragt = add("EinwilligungAbgefragt", SchemaDatentypen.INT, false)
 		.setDefault("0")
 		.setNotNull()
-		.setConverter("Boolean01Converter")
+		.setConverter(Boolean01Converter.class)
 		.setJavaComment("Einwilligung wurde abgefragt");
 
 	/** Die Definition der Tabellenspalte EinwilligungNutzung */
 	public SchemaTabelleSpalte col_EinwilligungNutzung = add("EinwilligungNutzung", SchemaDatentypen.INT, false)
 		.setDefault("0")
 		.setNotNull()
-		.setConverter("Boolean01Converter")
+		.setConverter(Boolean01Converter.class)
 		.setJavaComment("Einwilligung zur Nutzung liegt vor");
 
 	/** Die Definition der Tabellenspalte EinwilligungAudiokonferenz */
 	public SchemaTabelleSpalte col_EinwilligungAudiokonferenz = add("EinwilligungAudiokonferenz", SchemaDatentypen.INT, false)
 		.setDefault("0")
 		.setNotNull()
-		.setConverter("Boolean01Converter")
+		.setConverter(Boolean01Converter.class)
 		.setJavaComment("Einwilligung zur Audiokonferenz liegt vor");
 
 	/** Die Definition der Tabellenspalte EinwilligungVideokonferenz */
 	public SchemaTabelleSpalte col_EinwilligungVideokonferenz = add("EinwilligungVideokonferenz", SchemaDatentypen.INT, false)
 		.setDefault("0")
 		.setNotNull()
-		.setConverter("Boolean01Converter")
+		.setConverter(Boolean01Converter.class)
 		.setJavaComment("Einwilligung zur Videokonferenz liegt vor");
 
 

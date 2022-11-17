@@ -1,10 +1,11 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
+import de.nrw.schule.svws.db.converter.current.Boolean01Converter;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaRevisionen;
 import de.nrw.schule.svws.db.schema.SchemaTabelle;
-import de.nrw.schule.svws.db.schema.SchemaTabelleUniqueIndex;
 import de.nrw.schule.svws.db.schema.SchemaTabelleSpalte;
+import de.nrw.schule.svws.db.schema.SchemaTabelleUniqueIndex;
 
 /**
  * Diese Klasse beinhaltet die Schema-Definition für die Tabelle Noten.
@@ -25,7 +26,7 @@ public class Tabelle_Noten extends SchemaTabelle {
 	public SchemaTabelleSpalte col_IstTendenznote = add("IstTendenznote", SchemaDatentypen.INT, false)
 		.setDefault("0")
 		.setNotNull()
-		.setConverter("Boolean01Converter")
+		.setConverter(Boolean01Converter.class)
 		.setJavaComment("Gibt an, ob es sich um eine Tendenznote (plus) oder (minus) handelt");
 
 	/** Die Definition der Tabellenspalte Text */
@@ -36,7 +37,7 @@ public class Tabelle_Noten extends SchemaTabelle {
 	public SchemaTabelleSpalte col_AufZeugnis = add("AufZeugnis", SchemaDatentypen.INT, false)
 		.setDefault("0")
 		.setNotNull()
-		.setConverter("Boolean01Converter")
+		.setConverter(Boolean01Converter.class)
 		.setJavaComment("Gibt an, ob die Note auf einem Zeugnis als erteilte Note gedruckt wird oder nicht.");
 
 	/** Die Definition der Tabellenspalte Notenpunkte */
@@ -51,7 +52,7 @@ public class Tabelle_Noten extends SchemaTabelle {
 	public SchemaTabelleSpalte col_AufLaufbahnSII = add("AufLaufbahnSII", SchemaDatentypen.INT, false)
 		.setDefault("0")
 		.setNotNull()
-		.setConverter("Boolean01Converter")
+		.setConverter(Boolean01Converter.class)
 		.setJavaComment("Gibt an, ob die Note bei der Laufbahn in der Sekundarstufe II gedruckt wird oder nicht.");
 
 	/** Die Definition der Tabellenspalte Sortierung */

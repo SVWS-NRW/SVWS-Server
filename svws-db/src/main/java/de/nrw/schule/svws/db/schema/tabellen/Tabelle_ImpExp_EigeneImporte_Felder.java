@@ -1,5 +1,6 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
+import de.nrw.schule.svws.db.converter.current.Boolean01Converter;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaRevisionen;
 import de.nrw.schule.svws.db.schema.SchemaTabelle;
@@ -48,7 +49,7 @@ public class Tabelle_ImpExp_EigeneImporte_Felder extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte DstFieldIsIdentifier */
 	public SchemaTabelleSpalte col_DstFieldIsIdentifier = add("DstFieldIsIdentifier", SchemaDatentypen.INT, false)
-		.setConverter("Boolean01Converter")
+		.setConverter(Boolean01Converter.class)
 		.setJavaComment("externen Textimport Felder");
 
 	/** Die Definition der Tabellenspalte DstLookupDir */
@@ -73,17 +74,17 @@ public class Tabelle_ImpExp_EigeneImporte_Felder extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte DstKeyLookupInsert */
 	public SchemaTabelleSpalte col_DstKeyLookupInsert = add("DstKeyLookupInsert", SchemaDatentypen.INT, false)
-		.setConverter("Boolean01Converter")
+		.setConverter(Boolean01Converter.class)
 		.setJavaComment("externen Textimport Felder");
 
 	/** Die Definition der Tabellenspalte DstKeyLookupNameCreateID */
 	public SchemaTabelleSpalte col_DstKeyLookupNameCreateID = add("DstKeyLookupNameCreateID", SchemaDatentypen.INT, false)
-		.setConverter("Boolean01Converter")
+		.setConverter(Boolean01Converter.class)
 		.setJavaComment("externen Textimport Felder");
 
 	/** Die Definition der Tabellenspalte DstForceNumeric */
 	public SchemaTabelleSpalte col_DstForceNumeric = add("DstForceNumeric", SchemaDatentypen.INT, false)
-		.setConverter("Boolean01Converter")
+		.setConverter(Boolean01Converter.class)
 		.setJavaComment("externen Textimport Felder");
 
 

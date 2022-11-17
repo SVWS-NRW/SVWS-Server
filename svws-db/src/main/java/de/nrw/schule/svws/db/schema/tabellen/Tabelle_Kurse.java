@@ -1,14 +1,17 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
 import de.nrw.schule.svws.core.adt.Pair;
+import de.nrw.schule.svws.db.converter.current.BooleanPlusMinusDefaultMinusConverter;
+import de.nrw.schule.svws.db.converter.current.BooleanPlusMinusDefaultPlusConverter;
+import de.nrw.schule.svws.db.converter.current.KursFortschreibungsartConverter;
 import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaFremdschluesselAktionen;
 import de.nrw.schule.svws.db.schema.SchemaRevisionen;
 import de.nrw.schule.svws.db.schema.SchemaTabelle;
 import de.nrw.schule.svws.db.schema.SchemaTabelleFremdschluessel;
-import de.nrw.schule.svws.db.schema.SchemaTabelleUniqueIndex;
 import de.nrw.schule.svws.db.schema.SchemaTabelleSpalte;
+import de.nrw.schule.svws.db.schema.SchemaTabelleUniqueIndex;
 
 /**
  * Diese Klasse beinhaltet die Schema-Definition für die Tabelle Kurse.
@@ -68,7 +71,7 @@ public class Tabelle_Kurse extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte Sichtbar */
 	public SchemaTabelleSpalte col_Sichtbar = add("Sichtbar", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("+")
-		.setConverter("BooleanPlusMinusDefaultPlusConverter")
+		.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
 		.setJavaComment("Sichtbarkeit des Kurses");
 
 	/** Die Definition der Tabellenspalte Schienen */
@@ -77,7 +80,7 @@ public class Tabelle_Kurse extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte Fortschreibungsart */
 	public SchemaTabelleSpalte col_Fortschreibungsart = add("Fortschreibungsart", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
-		.setConverter("KursFortschreibungsartConverter")
+		.setConverter(KursFortschreibungsartConverter.class)
 		.setConverterRevision(SchemaRevisionen.REV_1)
 		.setJavaComment("Fortschreibungsart des Kurses für die Hochschreibung in den nächsten Abschnitt");
 
@@ -92,7 +95,7 @@ public class Tabelle_Kurse extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte EpochU */
 	public SchemaTabelleSpalte col_EpochU = add("EpochU", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Gibt an ob ein Kurs Epochal unterrichtet wird");
 
 	/** Die Definition der Tabellenspalte SchulnrEigner */

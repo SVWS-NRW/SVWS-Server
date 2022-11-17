@@ -13,7 +13,7 @@ import jakarta.persistence.Converter;
  * {@link Timestamp}) in der Datenbank. Sie ist abgeleitet von der Basisklasse
  * {@link DBAttributeConverter}, welche die grundlegende Funktionalität von
  * Konvertern zur Verfügung stellt. Dort muss der Konverter auch in der Methode
- * {@link DBAttributeConverter#getByClassName} registriert werden.
+ * {@link DBAttributeConverter#getByClass} registriert werden.
  */
 @Converter
 public class DatumUhrzeitConverter extends DBAttributeConverter<String, Timestamp> {

@@ -1,6 +1,7 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
 import de.nrw.schule.svws.core.adt.Pair;
+import de.nrw.schule.svws.db.converter.current.BooleanPlusMinusConverter;
 import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaFremdschluesselAktionen;
@@ -39,12 +40,12 @@ public class Tabelle_SchuelerBKFaecher extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte FachSchriftlich */
 	public SchemaTabelleSpalte col_FachSchriftlich = add("FachSchriftlich", SchemaDatentypen.CHAR, false).setDatenlaenge(1)
-		.setConverter("BooleanPlusMinusConverter")
+		.setConverter(BooleanPlusMinusConverter.class)
 		.setJavaComment("Schriftlichkeit Allgemeinbildend  des Facheintrags für den BKAbschlussReiter");
 
 	/** Die Definition der Tabellenspalte FachSchriftlichBA */
 	public SchemaTabelleSpalte col_FachSchriftlichBA = add("FachSchriftlichBA", SchemaDatentypen.CHAR, false).setDatenlaenge(1)
-		.setConverter("BooleanPlusMinusConverter")
+		.setConverter(BooleanPlusMinusConverter.class)
 		.setJavaComment("Schriftlichkeit Berufsbezogen des Facheintrags für den BKAbschlussReiter");
 
 	/** Die Definition der Tabellenspalte Vornote */
@@ -57,12 +58,12 @@ public class Tabelle_SchuelerBKFaecher extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte MdlPruefung */
 	public SchemaTabelleSpalte col_MdlPruefung = add("MdlPruefung", SchemaDatentypen.CHAR, false).setDatenlaenge(1)
-		.setConverter("BooleanPlusMinusConverter")
+		.setConverter(BooleanPlusMinusConverter.class)
 		.setJavaComment("Mündliche Prüfung angesetzt Ja Nein  des Facheintrags für den BKAbschlussReiter");
 
 	/** Die Definition der Tabellenspalte MdlPruefungFW */
 	public SchemaTabelleSpalte col_MdlPruefungFW = add("MdlPruefungFW", SchemaDatentypen.CHAR, false).setDatenlaenge(1)
-		.setConverter("BooleanPlusMinusConverter")
+		.setConverter(BooleanPlusMinusConverter.class)
 		.setJavaComment("Freiwilliege mündliche Prüfung angesetzt Ja Nein  des Facheintrags für den BKAbschlussReiter");
 
 	/** Die Definition der Tabellenspalte NoteMuendlich */

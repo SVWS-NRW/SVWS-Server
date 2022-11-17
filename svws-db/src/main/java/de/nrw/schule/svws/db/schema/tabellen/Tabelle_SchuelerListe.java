@@ -1,10 +1,11 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
+import de.nrw.schule.svws.db.converter.current.BooleanPlusMinusDefaultPlusConverter;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaRevisionen;
 import de.nrw.schule.svws.db.schema.SchemaTabelle;
-import de.nrw.schule.svws.db.schema.SchemaTabelleUniqueIndex;
 import de.nrw.schule.svws.db.schema.SchemaTabelleSpalte;
+import de.nrw.schule.svws.db.schema.SchemaTabelleUniqueIndex;
 
 /**
  * Diese Klasse beinhaltet die Schema-Definition für die Tabelle SchuelerListe.
@@ -28,7 +29,7 @@ public class Tabelle_SchuelerListe extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte Privat */
 	public SchemaTabelleSpalte col_Privat = add("Privat", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("+")
-		.setConverter("BooleanPlusMinusDefaultPlusConverter")
+		.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
 		.setJavaComment("Schülerliste Privat oder Öffentlich");
 
 	/** Die Definition der Tabellenspalte SchulnrEigner */

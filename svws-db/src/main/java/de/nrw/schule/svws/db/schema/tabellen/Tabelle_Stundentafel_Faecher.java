@@ -1,14 +1,16 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
 import de.nrw.schule.svws.core.adt.Pair;
+import de.nrw.schule.svws.db.converter.current.BooleanPlusMinusDefaultMinusConverter;
+import de.nrw.schule.svws.db.converter.current.BooleanPlusMinusDefaultPlusConverter;
 import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaFremdschluesselAktionen;
 import de.nrw.schule.svws.db.schema.SchemaRevisionen;
 import de.nrw.schule.svws.db.schema.SchemaTabelle;
 import de.nrw.schule.svws.db.schema.SchemaTabelleFremdschluessel;
-import de.nrw.schule.svws.db.schema.SchemaTabelleUniqueIndex;
 import de.nrw.schule.svws.db.schema.SchemaTabelleSpalte;
+import de.nrw.schule.svws.db.schema.SchemaTabelleUniqueIndex;
 
 /**
  * Diese Klasse beinhaltet die Schema-Definition für die Tabelle Stundentafel_Faecher.
@@ -45,7 +47,7 @@ public class Tabelle_Stundentafel_Faecher extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte EpochenUnterricht */
 	public SchemaTabelleSpalte col_EpochenUnterricht = add("EpochenUnterricht", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Merkmal Epochenunterricht des Faches in der Stundentafel");
 
 	/** Die Definition der Tabellenspalte Sortierung */
@@ -56,7 +58,7 @@ public class Tabelle_Stundentafel_Faecher extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte Sichtbar */
 	public SchemaTabelleSpalte col_Sichtbar = add("Sichtbar", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("+")
-		.setConverter("BooleanPlusMinusDefaultPlusConverter")
+		.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
 		.setJavaComment("Sichtbarkeit des Faches in der Stundentafel");
 
 	/** Die Definition der Tabellenspalte Gewichtung */

@@ -1,6 +1,8 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
 import de.nrw.schule.svws.core.adt.Pair;
+import de.nrw.schule.svws.db.converter.current.BooleanPlusMinusDefaultMinusConverter;
+import de.nrw.schule.svws.db.converter.current.DatumConverter;
 import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaFremdschluesselAktionen;
@@ -32,7 +34,7 @@ public class Tabelle_SchuelerFoerderempfehlungen extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte DatumAngelegt */
 	public SchemaTabelleSpalte col_DatumAngelegt = add("DatumAngelegt", SchemaDatentypen.DATE, false)
 		.setNotNull()
-		.setConverter("DatumConverter")
+		.setConverter(DatumConverter.class)
 		.setJavaComment("Anlegedatum der Förderempfehlung");
 
 	/** Die Definition der Tabellenspalte Klassen_ID */
@@ -85,28 +87,28 @@ public class Tabelle_SchuelerFoerderempfehlungen extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte Zeitrahmen_von_Datum */
 	public SchemaTabelleSpalte col_Zeitrahmen_von_Datum = add("Zeitrahmen_von_Datum", SchemaDatentypen.DATE, false)
-		.setConverter("DatumConverter")
+		.setConverter(DatumConverter.class)
 		.setJavaComment("Zeitrahmen Datum von der Förderempfehlung");
 
 	/** Die Definition der Tabellenspalte Zeitrahmen_bis_Datum */
 	public SchemaTabelleSpalte col_Zeitrahmen_bis_Datum = add("Zeitrahmen_bis_Datum", SchemaDatentypen.DATE, false)
-		.setConverter("DatumConverter")
+		.setConverter(DatumConverter.class)
 		.setJavaComment("Zeitrahmen Datum bis der Förderempfehlung");
 
 	/** Die Definition der Tabellenspalte Ueberpruefung_Datum */
 	public SchemaTabelleSpalte col_Ueberpruefung_Datum = add("Ueberpruefung_Datum", SchemaDatentypen.DATE, false)
-		.setConverter("DatumConverter")
+		.setConverter(DatumConverter.class)
 		.setJavaComment("Datum der Überprüfung der Förderempfehlung");
 
 	/** Die Definition der Tabellenspalte Naechstes_Beratungsgespraech */
 	public SchemaTabelleSpalte col_Naechstes_Beratungsgespraech = add("Naechstes_Beratungsgespraech", SchemaDatentypen.DATE, false)
-		.setConverter("DatumConverter")
+		.setConverter(DatumConverter.class)
 		.setJavaComment("Datum nächstes Beratungsgespräch der Förderempfehlung");
 
 	/** Die Definition der Tabellenspalte EingabeFertig */
 	public SchemaTabelleSpalte col_EingabeFertig = add("EingabeFertig", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Eingabe abgeschlossen Ja Nein  der Förderempfehlung");
 
 	/** Die Definition der Tabellenspalte Faecher */
@@ -116,7 +118,7 @@ public class Tabelle_SchuelerFoerderempfehlungen extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte Abgeschlossen */
 	public SchemaTabelleSpalte col_Abgeschlossen = add("Abgeschlossen", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Datum Abgeschlossen der Förderempfehlung");
 
 	/** Die Definition der Tabellenspalte Jahr */

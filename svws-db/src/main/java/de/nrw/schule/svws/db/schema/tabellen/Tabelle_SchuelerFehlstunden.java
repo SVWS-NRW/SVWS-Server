@@ -1,6 +1,8 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
 import de.nrw.schule.svws.core.adt.Pair;
+import de.nrw.schule.svws.db.converter.current.BooleanPlusMinusDefaultMinusConverter;
+import de.nrw.schule.svws.db.converter.current.DatumConverter;
 import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaFremdschluesselAktionen;
@@ -33,7 +35,7 @@ public class Tabelle_SchuelerFehlstunden extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte Datum */
 	public SchemaTabelleSpalte col_Datum = add("Datum", SchemaDatentypen.DATE, false)
 		.setNotNull()
-		.setConverter("DatumConverter")
+		.setConverter(DatumConverter.class)
 		.setJavaComment("Datum der Fehlzeit");
 
 	/** Die Definition der Tabellenspalte Fach_ID */
@@ -56,7 +58,7 @@ public class Tabelle_SchuelerFehlstunden extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte Entschuldigt */
 	public SchemaTabelleSpalte col_Entschuldigt = add("Entschuldigt", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Entschuldigt Ja Nein");
 
 	/** Die Definition der Tabellenspalte Lehrer_ID */

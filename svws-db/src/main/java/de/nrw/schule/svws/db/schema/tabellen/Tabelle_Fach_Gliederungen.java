@@ -1,5 +1,6 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
+import de.nrw.schule.svws.db.converter.current.BooleanPlusMinusDefaultMinusConverter;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaRevisionen;
 import de.nrw.schule.svws.db.schema.SchemaTabelle;
@@ -41,19 +42,19 @@ public class Tabelle_Fach_Gliederungen extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte SchriftlichAB */
 	public SchemaTabelleSpalte col_SchriftlichAB = add("SchriftlichAB", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Ist schriftliches Fach Allgemeinbildend für die gliederungsbezogenen Einstellungen zum Fach (BK)");
 
 	/** Die Definition der Tabellenspalte SchriftlichBB */
 	public SchemaTabelleSpalte col_SchriftlichBB = add("SchriftlichBB", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Ist schriftliches Fach Berufsbildend für die gliederungsbezogenen Einstellungen zum Fach (BK)");
 
 	/** Die Definition der Tabellenspalte GymOSFach */
 	public SchemaTabelleSpalte col_GymOSFach = add("GymOSFach", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Ist Fach der GymOB für die gliederungsbezogenen Einstellungen zum Fach (BK)");
 
 	/** Die Definition der Tabellenspalte ZeugnisBez */

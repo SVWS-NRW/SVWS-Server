@@ -1,6 +1,10 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
 import de.nrw.schule.svws.core.adt.Pair;
+import de.nrw.schule.svws.db.converter.current.BooleanPlusMinusDefaultMinusConverter;
+import de.nrw.schule.svws.db.converter.current.BooleanPlusMinusDefaultPlusConverter;
+import de.nrw.schule.svws.db.converter.current.DatumConverter;
+import de.nrw.schule.svws.db.converter.current.NoteConverterFromKuerzel;
 import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaFremdschluesselAktionen;
@@ -8,8 +12,8 @@ import de.nrw.schule.svws.db.schema.SchemaRevisionen;
 import de.nrw.schule.svws.db.schema.SchemaTabelle;
 import de.nrw.schule.svws.db.schema.SchemaTabelleFremdschluessel;
 import de.nrw.schule.svws.db.schema.SchemaTabelleIndex;
-import de.nrw.schule.svws.db.schema.SchemaTabelleUniqueIndex;
 import de.nrw.schule.svws.db.schema.SchemaTabelleSpalte;
+import de.nrw.schule.svws.db.schema.SchemaTabelleUniqueIndex;
 
 /**
  * Diese Klasse beinhaltet die Schema-Definition für die Tabelle SchuelerLeistungsdaten.
@@ -53,19 +57,19 @@ public class Tabelle_SchuelerLeistungsdaten extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte NotenKrz */
 	public SchemaTabelleSpalte col_NotenKrz = add("NotenKrz", SchemaDatentypen.VARCHAR, false).setDatenlaenge(2)
-		.setConverter("NoteConverterFromKuerzel")
+		.setConverter(NoteConverterFromKuerzel.class)
 		.setConverterRevision(SchemaRevisionen.REV_1)
 		.setJavaComment("Das Notenkürzel der erteilten Note");
 
 	/** Die Definition der Tabellenspalte Warnung */
 	public SchemaTabelleSpalte col_Warnung = add("Warnung", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("gibt an, ob die Leistung gemahnt wurde bzw. gemahnt werden soll – sie Mahndatum");
 
 	/** Die Definition der Tabellenspalte Warndatum */
 	public SchemaTabelleSpalte col_Warndatum = add("Warndatum", SchemaDatentypen.DATE, false)
-		.setConverter("DatumConverter")
+		.setConverter(DatumConverter.class)
 		.setJavaComment("gibt das Datum an, wann die Leistung gemahnt wurde");
 
 	/** Die Definition der Tabellenspalte AbiFach */
@@ -79,7 +83,7 @@ public class Tabelle_SchuelerLeistungsdaten extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte AbiZeugnis */
 	public SchemaTabelleSpalte col_AbiZeugnis = add("AbiZeugnis", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("DEPRECATED: Relikt aus Winschild nicht mehr benötigt");
 
 	/** Die Definition der Tabellenspalte Prognose */
@@ -106,13 +110,13 @@ public class Tabelle_SchuelerLeistungsdaten extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte Gekoppelt */
 	public SchemaTabelleSpalte col_Gekoppelt = add("Gekoppelt", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("DEPRECATED: Relikt aus Winschild nicht mehr benötigt");
 
 	/** Die Definition der Tabellenspalte VorherAbgeschl */
 	public SchemaTabelleSpalte col_VorherAbgeschl = add("VorherAbgeschl", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Gibt an ob das Fach Epochal war oder ist");
 
 	/** Die Definition der Tabellenspalte AbschlussJahrgang */
@@ -138,13 +142,13 @@ public class Tabelle_SchuelerLeistungsdaten extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte Prf10Fach */
 	public SchemaTabelleSpalte col_Prf10Fach = add("Prf10Fach", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Ist Fach für ZP10 / ZK10");
 
 	/** Die Definition der Tabellenspalte AufZeugnis */
 	public SchemaTabelleSpalte col_AufZeugnis = add("AufZeugnis", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("+")
-		.setConverter("BooleanPlusMinusDefaultPlusConverter")
+		.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
 		.setJavaComment("Fach kommt aufs Zeugnnis Ja Nein");
 
 	/** Die Definition der Tabellenspalte Gewichtung */

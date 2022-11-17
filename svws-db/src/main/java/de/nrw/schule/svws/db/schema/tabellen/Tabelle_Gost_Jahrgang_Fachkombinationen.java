@@ -1,6 +1,8 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
 import de.nrw.schule.svws.core.adt.Pair;
+import de.nrw.schule.svws.db.converter.current.Boolean01Converter;
+import de.nrw.schule.svws.db.converter.current.gost.GostLaufbahnplanungFachkombinationTypConverter;
 import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaFremdschluesselAktionen;
@@ -43,21 +45,21 @@ public class Tabelle_Gost_Jahrgang_Fachkombinationen extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte EF1 */
 	public SchemaTabelleSpalte col_EF1 = add("EF1", SchemaDatentypen.INT, false)
-			.setConverter("Boolean01Converter")
+			.setConverter(Boolean01Converter.class)
 			.setNotNull()
 			.setDefault("1")
 			.setJavaComment("Gibt an, ob die Regel in EF.1 angewendet werden soll.");
 	
 	/** Die Definition der Tabellenspalte EF2 */
 	public SchemaTabelleSpalte col_EF2 = add("EF2", SchemaDatentypen.INT, false)
-			.setConverter("Boolean01Converter")
+			.setConverter(Boolean01Converter.class)
 			.setNotNull()
 			.setDefault("1")
 			.setJavaComment("Gibt an, ob die Regel in EF.2 angewendet werden soll.");
 	
 	/** Die Definition der Tabellenspalte Q11 */
 	public SchemaTabelleSpalte col_Q11 = add("Q11", SchemaDatentypen.INT, false)
-			.setConverter("Boolean01Converter")
+			.setConverter(Boolean01Converter.class)
 			.setNotNull()
 			.setDefault("1")
 			.setJavaComment("Gibt an, ob die Regel in Q1.1 angewendet werden soll.");
@@ -65,28 +67,28 @@ public class Tabelle_Gost_Jahrgang_Fachkombinationen extends SchemaTabelle {
 	
 	/** Die Definition der Tabellenspalte Q12 */
 	public SchemaTabelleSpalte col_Q12 = add("Q12", SchemaDatentypen.INT, false)
-			.setConverter("Boolean01Converter")
+			.setConverter(Boolean01Converter.class)
 			.setNotNull()
 			.setDefault("1")
 			.setJavaComment("Gibt an, ob die Regel in Q1.2 angewendet werden soll.");
 	
 	/** Die Definition der Tabellenspalte Q21 */
 	public SchemaTabelleSpalte col_Q21 = add("Q21", SchemaDatentypen.INT, false)
-			.setConverter("Boolean01Converter")
+			.setConverter(Boolean01Converter.class)
 			.setNotNull()
 			.setDefault("1")
 			.setJavaComment("Gibt an, ob die Regel in Q2.1 angewendet werden soll.");
 	
 	/** Die Definition der Tabellenspalte Q22 */
 	public SchemaTabelleSpalte col_Q22 = add("Q22", SchemaDatentypen.INT, false)
-			.setConverter("Boolean01Converter")
+			.setConverter(Boolean01Converter.class)
 			.setNotNull()
 			.setDefault("1")
 			.setJavaComment("Gibt an, ob die Regel in Q2.2 angewendet werden soll.");
 
 	/** Die Definition der Tabellenspalte Typ */
 	public SchemaTabelleSpalte col_Typ = add("Typ", SchemaDatentypen.INT, false)
-		.setConverter("GostLaufbahnplanungFachkombinationTypConverter")
+		.setConverter(GostLaufbahnplanungFachkombinationTypConverter.class)
 		.setDefault("0")
 		.setNotNull()
 		.setJavaComment("Gibt an, ob es sich um eine nicht mögliche Fächerkombination (0) oder ein Fächerprofil handelt (1)");

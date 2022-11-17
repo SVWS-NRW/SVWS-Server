@@ -41,7 +41,7 @@ public class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte> {
     private String _javaAttributName;
 	  
 	/** Gibt an, ob (null) und welcher Java-Converter-Klasse genutzt werden soll, um dass Attribut in einen zuhörigen Java-Datentyp umzuwandeln */  
-    private String _javaConverter;
+    private Class<? extends DBAttributeConverter<?, ?>> _javaConverter;
     
     /** Gibt an, ab welcher Revision der Attribut-Converter eingesetzt werden soll.*/
     private SchemaRevisionen _javaConverterRevision;
@@ -158,7 +158,7 @@ public class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte> {
 	 * 
 	 * @return dieses Objekt
 	 */
-	public SchemaTabelleSpalte setConverter(String converter) {
+	public SchemaTabelleSpalte setConverter(Class<? extends DBAttributeConverter<?, ?>> converter) {
 		this._javaConverter = converter;
 		return this;
 	}
@@ -298,10 +298,23 @@ public class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte> {
 	 * in den zuhörigen Java-Datentyp umzuwandeln.
 	 * Wird kein Converter genutzt, so wird null zurückgegeben.
 	 * 
+	 * @param rev   die Revision, für welche der Attribute-Converter bestimmt werden soll.
+	 * 
 	 * @return der Converter oder null
 	 */
-	public String javaConverter() {
-    	return this._javaConverter;
+	public DBAttributeConverter<?, ?> javaConverter(final long rev) {
+		final long revision = (rev < 0) ? SchemaRevisionen.maxRevision.revision : rev;
+		if (_javaConverter == null)
+			return null;
+		if ((_javaConverterRevision != null) && (revision < _javaConverterRevision.revision))
+			return null;
+		if ((_javaConverterVeraltet != null) && (_javaConverterVeraltet.revision >= 0) && (revision >= _javaConverterVeraltet.revision))
+			return null;
+		if (rev == 0)
+			return DBAttributeConverter.getByClassName("Migration" + _javaConverter.getSimpleName());
+		if (rev <= SchemaRevisionen.maxRevision.revision)
+			return DBAttributeConverter.getByClass(_javaConverter);
+		return DBAttributeConverter.getByClassName("Rev" + rev + _javaConverter.getSimpleName());
     }
 
     /** 
@@ -347,17 +360,17 @@ public class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte> {
 	 */
 	public String getJavaAttributConverter(final long rev) {
 		final long revision = (rev < 0) ? SchemaRevisionen.maxRevision.revision : rev;
-		if ((_javaConverter == null) || ("".equals(_javaConverter)))
+		if (_javaConverter == null)
 			return null;
 		if ((_javaConverterRevision != null) && (revision < _javaConverterRevision.revision))
 			return null;
 		if ((_javaConverterVeraltet != null) && (_javaConverterVeraltet.revision >= 0) && (revision >= _javaConverterVeraltet.revision))
 			return null;
 		if (rev < 0)
-			return _javaConverter;
+			return _javaConverter.getSimpleName();
 		if (rev == 0)
-			return "Migration" + _javaConverter;
-		return "Rev" + rev + _javaConverter;
+			return "Migration" + _javaConverter.getSimpleName();
+		return "Rev" + rev + _javaConverter.getSimpleName();
 	}
 	
 	
@@ -407,7 +420,7 @@ public class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte> {
 		}
 		if (_javaConverter == null)
 			return result;
-		return DBAttributeConverter.getByClassName(_javaConverter).convertToEntityAttributeFromObject(result);
+		return DBAttributeConverter.getByClass(_javaConverter).convertToEntityAttributeFromObject(result);
 	}
 	
 	

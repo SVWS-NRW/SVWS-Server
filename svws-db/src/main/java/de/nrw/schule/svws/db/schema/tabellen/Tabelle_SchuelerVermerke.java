@@ -1,6 +1,7 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
 import de.nrw.schule.svws.core.adt.Pair;
+import de.nrw.schule.svws.db.converter.current.DatumConverter;
 import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaFremdschluesselAktionen;
@@ -31,7 +32,7 @@ public class Tabelle_SchuelerVermerke extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte Datum */
 	public SchemaTabelleSpalte col_Datum = add("Datum", SchemaDatentypen.DATE, false)
-		.setConverter("DatumConverter")
+		.setConverter(DatumConverter.class)
 		.setJavaComment("Datum des Vermerkeintrages beim Schüler");
 
 	/** Die Definition der Tabellenspalte Bemerkung */

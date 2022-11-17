@@ -1,6 +1,13 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
 import de.nrw.schule.svws.core.adt.Pair;
+import de.nrw.schule.svws.db.converter.current.BooleanPlusMinusDefaultMinusConverter;
+import de.nrw.schule.svws.db.converter.current.NoteConverterFromNotenpunkte;
+import de.nrw.schule.svws.db.converter.current.NoteConverterFromNotenpunkteString;
+import de.nrw.schule.svws.db.converter.current.gost.AbiturBelegungsartConverter;
+import de.nrw.schule.svws.db.converter.current.gost.AbiturKursMarkierungConverter;
+import de.nrw.schule.svws.db.converter.current.gost.GOStAbiturFachConverter;
+import de.nrw.schule.svws.db.converter.current.gost.GOStKursartConverter;
 import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaFremdschluesselAktionen;
@@ -46,7 +53,7 @@ public class Tabelle_SchuelerAbiFaecher extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte KursartAllg */
 	public SchemaTabelleSpalte col_KursartAllg = add("KursartAllg", SchemaDatentypen.VARCHAR, false).setDatenlaenge(10)
 		.setJavaName("KursartAllgemein")
-		.setConverter("GOStKursartConverter")
+		.setConverter(GOStKursartConverter.class)
 		.setConverterRevision(SchemaRevisionen.REV_1)
 		.setJavaComment("Die allgemeine Kursart des Faches (z.B. GK, LK)");
 
@@ -57,14 +64,14 @@ public class Tabelle_SchuelerAbiFaecher extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte AbiFach */
 	public SchemaTabelleSpalte col_AbiFach = add("AbiFach", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setJavaName("AbiturFach")
-		.setConverter("GOStAbiturFachConverter")
+		.setConverter(GOStAbiturFachConverter.class)
 		.setConverterRevision(SchemaRevisionen.REV_1)
 		.setJavaComment("Gibt an, ob das Fach bei der Abiturprüfung gewählt wurde und dann die Nummer des Abiturfaches (1-4)");
 
 	/** Die Definition der Tabellenspalte P11_1 */
 	public SchemaTabelleSpalte col_P11_1 = add("P11_1", SchemaDatentypen.VARCHAR, false).setDatenlaenge(2)
 		.setJavaName("EF_HJ1_Notenpunkte")
-		.setConverter("NoteConverterFromNotenpunkteString")
+		.setConverter(NoteConverterFromNotenpunkteString.class)
 		.setConverterRevision(SchemaRevisionen.REV_1)
 		.setJavaComment("EF, 1. HJ: Die Notenpunkte für das Fach, NULL falls das Fach in dieserm Halbjahr nicht belegt wurde");
 
@@ -72,14 +79,14 @@ public class Tabelle_SchuelerAbiFaecher extends SchemaTabelle {
 	public SchemaTabelleSpalte col_S11_1 = add("S11_1", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
 		.setJavaName("EF_HJ1_BelegungArt")
-		.setConverter("AbiturBelegungsartConverter")
+		.setConverter(AbiturBelegungsartConverter.class)
 		.setConverterRevision(SchemaRevisionen.REV_1)
 		.setJavaComment("EF, 1. HJ: Gibt die Art und Schriftlichkeit des Kurses an (-: nicht belegt, M: GK mündlich, S: GK schriftlich)");
 
 	/** Die Definition der Tabellenspalte P11_2 */
 	public SchemaTabelleSpalte col_P11_2 = add("P11_2", SchemaDatentypen.VARCHAR, false).setDatenlaenge(2)
 		.setJavaName("EF_HJ2_Notenpunkte")
-		.setConverter("NoteConverterFromNotenpunkteString")
+		.setConverter(NoteConverterFromNotenpunkteString.class)
 		.setConverterRevision(SchemaRevisionen.REV_1)
 		.setJavaComment("EF, 2. HJ: Die Notenpunkte für das Fach, NULL falls das Fach in dieserm Halbjahr nicht belegt wurde");
 
@@ -87,14 +94,14 @@ public class Tabelle_SchuelerAbiFaecher extends SchemaTabelle {
 	public SchemaTabelleSpalte col_S11_2 = add("S11_2", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
 		.setJavaName("EF_HJ2_BelegungArt")
-		.setConverter("AbiturBelegungsartConverter")
+		.setConverter(AbiturBelegungsartConverter.class)
 		.setConverterRevision(SchemaRevisionen.REV_1)
 		.setJavaComment("EF, 2. HJ: Gibt die Art und Schriftlichkeit des Kurses an (-: nicht belegt, M: GK mündlich, S: GK schriftlich)");
 
 	/** Die Definition der Tabellenspalte P_FA */
 	public SchemaTabelleSpalte col_P_FA = add("P_FA", SchemaDatentypen.VARCHAR, false).setDatenlaenge(2)
 		.setJavaName("Facharbeit_Notenpunkte")
-		.setConverter("NoteConverterFromNotenpunkteString")
+		.setConverter(NoteConverterFromNotenpunkteString.class)
 		.setConverterRevision(SchemaRevisionen.REV_1)
 		.setJavaComment("BK: eingebrachte Facharbeit – Notenpunkte");
 
@@ -102,7 +109,7 @@ public class Tabelle_SchuelerAbiFaecher extends SchemaTabelle {
 	public SchemaTabelleSpalte col_R_FA = add("R_FA", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
 		.setJavaName("Facharbeit_MarkiertFuerAbiturBerechnung")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("BK: eingebrachte Facharbeit – Gibt an, ob die Notenpunkte bei der Abiturberechnung genutzt werden, d.h. zur Nutzung markiert wurden. (+: Nutze für Berechnung, -: Nutze nicht für die Berechnung; /: Für die Nutzung zur Berechnung gesperrt)");
 
 	/** Die Definition der Tabellenspalte W12_1 */
@@ -113,7 +120,7 @@ public class Tabelle_SchuelerAbiFaecher extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte P12_1 */
 	public SchemaTabelleSpalte col_P12_1 = add("P12_1", SchemaDatentypen.VARCHAR, false).setDatenlaenge(2)
 		.setJavaName("Q1_HJ1_Notenpunkte")
-		.setConverter("NoteConverterFromNotenpunkteString")
+		.setConverter(NoteConverterFromNotenpunkteString.class)
 		.setConverterRevision(SchemaRevisionen.REV_1)
 		.setJavaComment("Q1, 1. Hj: Die Notenpunkte für das Fach, NULL falls das Fach in dieserm Halbjahr nicht belegt wurde");
 
@@ -126,7 +133,7 @@ public class Tabelle_SchuelerAbiFaecher extends SchemaTabelle {
 	public SchemaTabelleSpalte col_R12_1 = add("R12_1", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
 		.setJavaName("Q1_HJ1_MarkiertFuerAbiturBerechnung")
-		.setConverter("AbiturKursMarkierungConverter")
+		.setConverter(AbiturKursMarkierungConverter.class)
 		.setConverterRevision(SchemaRevisionen.REV_1)
 		.setJavaComment("Q1, 1. Hj: Gibt an, ob die Notenpunkte bei der Abiturberechnung genutzt werden, d.h. zur Nutzung markiert wurden. (+: Nutze für Berechnung, -: Nutze nicht für die Berechnung; /: Für die Nutzung zur Berechnung gesperrt)");
 
@@ -134,7 +141,7 @@ public class Tabelle_SchuelerAbiFaecher extends SchemaTabelle {
 	public SchemaTabelleSpalte col_S12_1 = add("S12_1", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
 		.setJavaName("Q1_HJ1_BelegungArt")
-		.setConverter("AbiturBelegungsartConverter")
+		.setConverter(AbiturBelegungsartConverter.class)
 		.setConverterRevision(SchemaRevisionen.REV_1)
 		.setJavaComment("Q1, 1. Hj: Gibt die Art und Schriftlichkeit des Kurses an (-: nicht belegt, M: GK mündlich, S: GK schriftlich, Z: Zusatzkurs, L: LK)");
 
@@ -146,7 +153,7 @@ public class Tabelle_SchuelerAbiFaecher extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte P12_2 */
 	public SchemaTabelleSpalte col_P12_2 = add("P12_2", SchemaDatentypen.VARCHAR, false).setDatenlaenge(2)
 		.setJavaName("Q1_HJ2_Notenpunkte")
-		.setConverter("NoteConverterFromNotenpunkteString")
+		.setConverter(NoteConverterFromNotenpunkteString.class)
 		.setConverterRevision(SchemaRevisionen.REV_1)
 		.setJavaComment("Q1, 2. Hj: Die Notenpunkte für das Fach, NULL falls das Fach in dieserm Halbjahr nicht belegt wurde");
 
@@ -159,7 +166,7 @@ public class Tabelle_SchuelerAbiFaecher extends SchemaTabelle {
 	public SchemaTabelleSpalte col_R12_2 = add("R12_2", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
 		.setJavaName("Q1_HJ2_MarkiertFuerAbiturBerechnung")
-		.setConverter("AbiturKursMarkierungConverter")
+		.setConverter(AbiturKursMarkierungConverter.class)
 		.setConverterRevision(SchemaRevisionen.REV_1)
 		.setJavaComment("Q1, 2. Hj: Gibt an, ob die Notenpunkte bei der Abiturberechnung genutzt werden, d.h. zur Nutzung markiert wurden. (+: Nutze für Berechnung, -: Nutze nicht für die Berechnung; /: Für die Nutzung zur Berechnung gesperrt)");
 
@@ -167,7 +174,7 @@ public class Tabelle_SchuelerAbiFaecher extends SchemaTabelle {
 	public SchemaTabelleSpalte col_S12_2 = add("S12_2", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
 		.setJavaName("Q1_HJ2_BelegungArt")
-		.setConverter("AbiturBelegungsartConverter")
+		.setConverter(AbiturBelegungsartConverter.class)
 		.setConverterRevision(SchemaRevisionen.REV_1)
 		.setJavaComment("Q1, 2. Hj: Gibt die Art und Schriftlichkeit des Kurses an (-: nicht belegt, M: GK mündlich, S: GK schriftlich, Z: Zusatzkurs, L: LK)");
 
@@ -179,7 +186,7 @@ public class Tabelle_SchuelerAbiFaecher extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte P13_1 */
 	public SchemaTabelleSpalte col_P13_1 = add("P13_1", SchemaDatentypen.VARCHAR, false).setDatenlaenge(2)
 		.setJavaName("Q2_HJ1_Notenpunkte")
-		.setConverter("NoteConverterFromNotenpunkteString")
+		.setConverter(NoteConverterFromNotenpunkteString.class)
 		.setConverterRevision(SchemaRevisionen.REV_1)
 		.setJavaComment("Q2, 1. Hj: Die Notenpunkte für das Fach, NULL falls das Fach in dieserm Halbjahr nicht belegt wurde");
 
@@ -192,7 +199,7 @@ public class Tabelle_SchuelerAbiFaecher extends SchemaTabelle {
 	public SchemaTabelleSpalte col_R13_1 = add("R13_1", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
 		.setJavaName("Q2_HJ1_MarkiertFuerAbiturBerechnung")
-		.setConverter("AbiturKursMarkierungConverter")
+		.setConverter(AbiturKursMarkierungConverter.class)
 		.setConverterRevision(SchemaRevisionen.REV_1)
 		.setJavaComment("Q2, 1. Hj: Gibt an, ob die Notenpunkte bei der Abiturberechnung genutzt werden, d.h. zur Nutzung markiert wurden. (+: Nutze für Berechnung, -: Nutze nicht für die Berechnung; /: Für die Nutzung zur Berechnung gesperrt)");
 
@@ -200,7 +207,7 @@ public class Tabelle_SchuelerAbiFaecher extends SchemaTabelle {
 	public SchemaTabelleSpalte col_S13_1 = add("S13_1", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
 		.setJavaName("Q2_HJ1_BelegungArt")
-		.setConverter("AbiturBelegungsartConverter")
+		.setConverter(AbiturBelegungsartConverter.class)
 		.setConverterRevision(SchemaRevisionen.REV_1)
 		.setJavaComment("Q2, 1. Hj: Gibt die Art und Schriftlichkeit des Kurses an (-: nicht belegt, M: GK mündlich, S: GK schriftlich, Z: Zusatzkurs, L: LK)");
 
@@ -212,7 +219,7 @@ public class Tabelle_SchuelerAbiFaecher extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte P13_2 */
 	public SchemaTabelleSpalte col_P13_2 = add("P13_2", SchemaDatentypen.VARCHAR, false).setDatenlaenge(2)
 		.setJavaName("Q2_HJ2_Notenpunkte")
-		.setConverter("NoteConverterFromNotenpunkteString")
+		.setConverter(NoteConverterFromNotenpunkteString.class)
 		.setConverterRevision(SchemaRevisionen.REV_1)
 		.setJavaComment("Q2, 2. Hj: Die Notenpunkte für das Fach, NULL falls das Fach in dieserm Halbjahr nicht belegt wurde");
 
@@ -225,7 +232,7 @@ public class Tabelle_SchuelerAbiFaecher extends SchemaTabelle {
 	public SchemaTabelleSpalte col_R13_2 = add("R13_2", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
 		.setJavaName("Q2_HJ2_MarkiertFuerAbiturBerechnung")
-		.setConverter("AbiturKursMarkierungConverter")
+		.setConverter(AbiturKursMarkierungConverter.class)
 		.setConverterRevision(SchemaRevisionen.REV_1)
 		.setJavaComment("Q2, 2. Hj: Gibt an, ob die Notenpunkte bei der Abiturberechnung genutzt werden, d.h. zur Nutzung markiert wurden. (+: Nutze für Berechnung, -: Nutze nicht für die Berechnung; /: Für die Nutzung zur Berechnung gesperrt)");
 
@@ -233,7 +240,7 @@ public class Tabelle_SchuelerAbiFaecher extends SchemaTabelle {
 	public SchemaTabelleSpalte col_S13_2 = add("S13_2", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
 		.setJavaName("Q2_HJ2_BelegungArt")
-		.setConverter("AbiturBelegungsartConverter")
+		.setConverter(AbiturBelegungsartConverter.class)
 		.setConverterRevision(SchemaRevisionen.REV_1)
 		.setJavaComment("Q2, 2. Hj: Gibt die Art und Schriftlichkeit des Kurses an (-: nicht belegt, M: GK mündlich, S: GK schriftlich, Z: Zusatzkurs, L: LK)");
 
@@ -250,7 +257,7 @@ public class Tabelle_SchuelerAbiFaecher extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte AbiPruefErgebnis */
 	public SchemaTabelleSpalte col_AbiPruefErgebnis = add("AbiPruefErgebnis", SchemaDatentypen.SMALLINT, false)
 		.setJavaName("PruefungNotenpunkte")
-		.setConverter("NoteConverterFromNotenpunkte")
+		.setConverter(NoteConverterFromNotenpunkte.class)
 		.setConverterRevision(SchemaRevisionen.REV_1)
 		.setJavaComment("Die Notenpunkte aus der Abiturprüfung, falls das Fach eines der vier Abiturfächer ist");
 
@@ -263,27 +270,27 @@ public class Tabelle_SchuelerAbiFaecher extends SchemaTabelle {
 	public SchemaTabelleSpalte col_MdlPflichtPruefung = add("MdlPflichtPruefung", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
 		.setJavaName("PruefungMuendlichAbweichung")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("true, falls eine mündliche Abweichungsprüfung in einem der ersten drei Abiturfächer nötig ist.");
 
 	/** Die Definition der Tabellenspalte MdlBestPruefung */
 	public SchemaTabelleSpalte col_MdlBestPruefung = add("MdlBestPruefung", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
 		.setJavaName("PruefungMuendlichBestehen")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("true, falls eine mündliche Bestehensprüfung in den ersten drei Abiturfächern notwendig ist, damit das Abitur noch bestanden werden kann.");
 
 	/** Die Definition der Tabellenspalte MdlFreiwPruefung */
 	public SchemaTabelleSpalte col_MdlFreiwPruefung = add("MdlFreiwPruefung", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
 		.setJavaName("PruefungMuendlichFreiwillig")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("true, falls eine freiwillige Prüfung in einem der ersten drei Abiturfächer stattfindet.");
 
 	/** Die Definition der Tabellenspalte MdlPruefErgebnis */
 	public SchemaTabelleSpalte col_MdlPruefErgebnis = add("MdlPruefErgebnis", SchemaDatentypen.SMALLINT, false)
 		.setJavaName("PruefungMuendlichNotenpunkte")
-		.setConverter("NoteConverterFromNotenpunkte")
+		.setConverter(NoteConverterFromNotenpunkte.class)
 		.setConverterRevision(SchemaRevisionen.REV_1)
 		.setJavaComment("enthält die Notenpunkte aus der mündlichen Abiturprüfung in einem der ersten drei Abiturfächer, falls diese durchgeführt wird, ansonsten NULL");
 

@@ -1,5 +1,6 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
+import de.nrw.schule.svws.db.converter.current.BooleanPlusMinusDefaultPlusConverter;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaRevisionen;
 import de.nrw.schule.svws.db.schema.SchemaTabelle;
@@ -41,7 +42,7 @@ public class Tabelle_Personengruppen extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte XMLExport */
 	public SchemaTabelleSpalte col_XMLExport = add("XMLExport", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("+")
-		.setConverter("BooleanPlusMinusDefaultPlusConverter")
+		.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
 		.setJavaComment("Steuert den LogineoXML-Export");
 
 	/** Die Definition der Tabellenspalte Sortierung */
@@ -52,7 +53,7 @@ public class Tabelle_Personengruppen extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte Sichtbar */
 	public SchemaTabelleSpalte col_Sichtbar = add("Sichtbar", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("+")
-		.setConverter("BooleanPlusMinusDefaultPlusConverter")
+		.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
 		.setJavaComment("Sichtbarkeit der Personengruppe");
 
 

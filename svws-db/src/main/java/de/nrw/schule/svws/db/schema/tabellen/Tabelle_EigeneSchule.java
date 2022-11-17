@@ -1,6 +1,10 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
 import de.nrw.schule.svws.core.adt.Pair;
+import de.nrw.schule.svws.db.converter.current.BooleanPlusMinusDefaultMinusConverter;
+import de.nrw.schule.svws.db.converter.current.BooleanPlusMinusDefaultPlusConverter;
+import de.nrw.schule.svws.db.converter.current.StringToIntegerConverter;
+import de.nrw.schule.svws.db.converter.current.statkue.SchulformKuerzelConverter;
 import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaFremdschluesselAktionen;
@@ -26,7 +30,7 @@ public class Tabelle_EigeneSchule extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte SchulformKrz */
 	public SchemaTabelleSpalte col_SchulformKrz = add("SchulformKrz", SchemaDatentypen.VARCHAR, false).setDatenlaenge(3)
 		.setJavaName("Schulform")
-		.setConverter("SchulformKuerzelConverter")
+		.setConverter(SchulformKuerzelConverter.class)
 		.setConverterRevision(SchemaRevisionen.REV_1)
 		.setJavaComment("Schulformkürzel der eigenen Schule (Statkue IT.NRW)");
 
@@ -44,7 +48,7 @@ public class Tabelle_EigeneSchule extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte SchulNr */
 	public SchemaTabelleSpalte col_SchulNr = add("SchulNr", SchemaDatentypen.VARCHAR, false).setDatenlaenge(6)
-		.setConverter("StringToIntegerConverter")
+		.setConverter(StringToIntegerConverter.class)
 		.setJavaComment("Eindeutige Schulnummer der eigenen Schule aus der Schulver IT.NRW");
 
 	/** Die Definition der Tabellenspalte Bezeichnung1 */
@@ -99,7 +103,7 @@ public class Tabelle_EigeneSchule extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte Ganztags */
 	public SchemaTabelleSpalte col_Ganztags = add("Ganztags", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("+")
-		.setConverter("BooleanPlusMinusDefaultPlusConverter")
+		.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
 		.setJavaComment("Gibt an, ob die Schule Ganztagsbetrieb hat");
 
 	/** Die Definition der Tabellenspalte Schuljahresabschnitts_ID */
@@ -114,19 +118,19 @@ public class Tabelle_EigeneSchule extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte Fremdsprachen */
 	public SchemaTabelleSpalte col_Fremdsprachen = add("Fremdsprachen", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("+")
-		.setConverter("BooleanPlusMinusDefaultPlusConverter")
+		.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
 		.setJavaComment("Welche Fremdsprachen werden unterrichtet");
 
 	/** Die Definition der Tabellenspalte JVAZeigen */
 	public SchemaTabelleSpalte col_JVAZeigen = add("JVAZeigen", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Schule unterrichtet in der Justizvollzugsanstalt");
 
 	/** Die Definition der Tabellenspalte RefPaedagogikZeigen */
 	public SchemaTabelleSpalte col_RefPaedagogikZeigen = add("RefPaedagogikZeigen", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Schule hat Reformpädagogischen-Zweig");
 
 	/** Die Definition der Tabellenspalte AnzJGS_Jahr */
@@ -152,13 +156,13 @@ public class Tabelle_EigeneSchule extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte IstHauptsitz */
 	public SchemaTabelleSpalte col_IstHauptsitz = add("IstHauptsitz", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("+")
-		.setConverter("BooleanPlusMinusDefaultPlusConverter")
+		.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
 		.setJavaComment("Gibt an, ob die Datenbank am Hauptsitzder Schule ist (Dependancebetrieb)");
 
 	/** Die Definition der Tabellenspalte NotenGesperrt */
 	public SchemaTabelleSpalte col_NotenGesperrt = add("NotenGesperrt", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Sperrt die Noteneingabe");
 
 	/** Die Definition der Tabellenspalte BezAbschnitt3 */
@@ -196,13 +200,13 @@ public class Tabelle_EigeneSchule extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte TeamTeaching */
 	public SchemaTabelleSpalte col_TeamTeaching = add("TeamTeaching", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("+")
-		.setConverter("BooleanPlusMinusDefaultPlusConverter")
+		.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
 		.setJavaComment("Aktiviert das Teamteaching");
 
 	/** Die Definition der Tabellenspalte AbiGruppenprozess */
 	public SchemaTabelleSpalte col_AbiGruppenprozess = add("AbiGruppenprozess", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("+")
-		.setConverter("BooleanPlusMinusDefaultPlusConverter")
+		.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
 		.setJavaComment("Sperrt oder erlaubt die Gruppenprozesse für das Abitur");
 
 	/** Die Definition der Tabellenspalte DauerUnterrichtseinheit */

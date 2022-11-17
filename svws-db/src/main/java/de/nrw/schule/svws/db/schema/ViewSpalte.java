@@ -1,5 +1,6 @@
 package de.nrw.schule.svws.db.schema;
 
+import de.nrw.schule.svws.db.converter.DBAttributeConverter;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -19,8 +20,8 @@ public class ViewSpalte {
 	/** Der SQL-Code für die Spaltendefinition */
 	public final @NotNull String sql;
 	
-	/** Der Name eines Konverter zum automatischen Umwandeln des Datenbank-Wertes beim Einlesen in Java oder null */
-	public final String converter;
+	/** Der Konverter zum automatischen Umwandeln des Datenbank-Wertes beim Einlesen in Java oder null */
+	public final Class<? extends DBAttributeConverter<?, ?>> converter;
 
 
 	/**
@@ -30,9 +31,9 @@ public class ViewSpalte {
 	 * @param beschreibung    die Beschreibung der Spalte zur Dokumentation
 	 * @param datentyp        der Java-Datentyp der Spalte
 	 * @param sql             der SQL-Code für die Spaltendefinition
-	 * @param converter       der Name eines Konverter zum automatischen Umwandeln des Datenbank-Wertes beim Einlesen in Java oder null
+	 * @param converter       der Konverter zum automatischen Umwandeln des Datenbank-Wertes beim Einlesen in Java oder null
 	 */
-	public ViewSpalte(@NotNull String name, @NotNull String beschreibung, @NotNull String datentyp, @NotNull String sql, String converter) {
+	public ViewSpalte(@NotNull String name, @NotNull String beschreibung, @NotNull String datentyp, @NotNull String sql, Class<? extends DBAttributeConverter<?, ?>> converter) {
 		this.name = name;
 		this.beschreibung = beschreibung;
 		this.datentyp = datentyp;

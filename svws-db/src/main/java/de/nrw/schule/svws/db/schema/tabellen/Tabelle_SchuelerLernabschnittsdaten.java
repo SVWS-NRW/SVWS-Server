@@ -1,14 +1,19 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
 import de.nrw.schule.svws.core.adt.Pair;
+import de.nrw.schule.svws.db.converter.current.BooleanPlusMinusDefaultMinusConverter;
+import de.nrw.schule.svws.db.converter.current.BooleanPlusMinusDefaultPlusConverter;
+import de.nrw.schule.svws.db.converter.current.DatumConverter;
+import de.nrw.schule.svws.db.converter.current.NoteConverterFromInteger;
+import de.nrw.schule.svws.db.converter.current.statkue.SchulgliederungKuerzelConverter;
 import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaFremdschluesselAktionen;
 import de.nrw.schule.svws.db.schema.SchemaRevisionen;
 import de.nrw.schule.svws.db.schema.SchemaTabelle;
 import de.nrw.schule.svws.db.schema.SchemaTabelleFremdschluessel;
-import de.nrw.schule.svws.db.schema.SchemaTabelleUniqueIndex;
 import de.nrw.schule.svws.db.schema.SchemaTabelleSpalte;
+import de.nrw.schule.svws.db.schema.SchemaTabelleUniqueIndex;
 
 /**
  * Diese Klasse beinhaltet die Schema-Definition für die Tabelle SchuelerLernabschnittsdaten.
@@ -45,7 +50,7 @@ public class Tabelle_SchuelerLernabschnittsdaten extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte SemesterWertung */
 	public SchemaTabelleSpalte col_SemesterWertung = add("SemesterWertung", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("+")
-		.setConverter("BooleanPlusMinusDefaultPlusConverter")
+		.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
 		.setJavaComment("Gewerteter Abschnitt (Ja/Nein)");
 
 	/** Die Definition der Tabellenspalte PruefOrdnung */
@@ -70,7 +75,7 @@ public class Tabelle_SchuelerLernabschnittsdaten extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte NPV_Datum */
 	public SchemaTabelleSpalte col_NPV_Datum = add("NPV_Datum", SchemaDatentypen.DATE, false)
-		.setConverter("DatumConverter")
+		.setConverter(DatumConverter.class)
 		.setJavaComment("TODO: BK: ID des Nachprüfungsfaches für den allgemein-bildenen Abschluss");
 
 	/** Die Definition der Tabellenspalte NPAA_Fach_ID */
@@ -83,7 +88,7 @@ public class Tabelle_SchuelerLernabschnittsdaten extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte NPAA_Datum */
 	public SchemaTabelleSpalte col_NPAA_Datum = add("NPAA_Datum", SchemaDatentypen.DATE, false)
-		.setConverter("DatumConverter")
+		.setConverter(DatumConverter.class)
 		.setJavaComment("TODO: BK: dito für berufs-qualifizierende Nachprüfung");
 
 	/** Die Definition der Tabellenspalte NPBQ_Fach_ID */
@@ -96,7 +101,7 @@ public class Tabelle_SchuelerLernabschnittsdaten extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte NPBQ_Datum */
 	public SchemaTabelleSpalte col_NPBQ_Datum = add("NPBQ_Datum", SchemaDatentypen.DATE, false)
-		.setConverter("DatumConverter")
+		.setConverter(DatumConverter.class)
 		.setJavaComment("TODO: ID des Nachprüfungsfaches");
 
 	/** Die Definition der Tabellenspalte VersetzungKrz */
@@ -110,17 +115,17 @@ public class Tabelle_SchuelerLernabschnittsdaten extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte AbschlIstPrognose */
 	public SchemaTabelleSpalte col_AbschlIstPrognose = add("AbschlIstPrognose", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Gibt an ob Abschluss Prognose ist (GE, PS und SK)");
 
 	/** Die Definition der Tabellenspalte Konferenzdatum */
 	public SchemaTabelleSpalte col_Konferenzdatum = add("Konferenzdatum", SchemaDatentypen.DATE, false)
-		.setConverter("DatumConverter")
+		.setConverter(DatumConverter.class)
 		.setJavaComment("Konferenzdatum");
 
 	/** Die Definition der Tabellenspalte ZeugnisDatum */
 	public SchemaTabelleSpalte col_ZeugnisDatum = add("ZeugnisDatum", SchemaDatentypen.DATE, false)
-		.setConverter("DatumConverter")
+		.setConverter(DatumConverter.class)
 		.setJavaComment("Zeugnisdatum");
 
 	/** Die Definition der Tabellenspalte Klassenlehrer */
@@ -131,7 +136,7 @@ public class Tabelle_SchuelerLernabschnittsdaten extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte ASDSchulgliederung */
 	public SchemaTabelleSpalte col_ASDSchulgliederung = add("ASDSchulgliederung", SchemaDatentypen.VARCHAR, false).setDatenlaenge(3)
 		.setJavaName("Schulgliederung")
-		.setConverter("SchulgliederungKuerzelConverter")
+		.setConverter(SchulgliederungKuerzelConverter.class)
 		.setConverterRevision(SchemaRevisionen.REV_1)
 		.setJavaComment("ASD-Kürzel SGL");
 
@@ -158,7 +163,7 @@ public class Tabelle_SchuelerLernabschnittsdaten extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte Schwerbehinderung */
 	public SchemaTabelleSpalte col_Schwerbehinderung = add("Schwerbehinderung", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Schwerbehinderung (Ja/Nein)");
 
 	/** Die Definition der Tabellenspalte Foerderschwerpunkt_ID */
@@ -172,7 +177,7 @@ public class Tabelle_SchuelerLernabschnittsdaten extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte RefPaed */
 	public SchemaTabelleSpalte col_RefPaed = add("RefPaed", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("TODO DEPRECATED: Reformpädagogik");
 
 	/** Die Definition der Tabellenspalte Klassenart */
@@ -190,18 +195,18 @@ public class Tabelle_SchuelerLernabschnittsdaten extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte Wiederholung */
 	public SchemaTabelleSpalte col_Wiederholung = add("Wiederholung", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Lernabschnitt wurde wiederholt (Ja/Nein)");
 
 	/** Die Definition der Tabellenspalte Gesamtnote_GS */
 	public SchemaTabelleSpalte col_Gesamtnote_GS = add("Gesamtnote_GS", SchemaDatentypen.INT, false)
-		.setConverter("NoteConverterFromInteger")
+		.setConverter(NoteConverterFromInteger.class)
 		.setConverterRevision(SchemaRevisionen.REV_1)
 		.setJavaComment("Lernbereichnote Gesellschaftswissenschaft oder Arbeitlehre HA10");
 
 	/** Die Definition der Tabellenspalte Gesamtnote_NW */
 	public SchemaTabelleSpalte col_Gesamtnote_NW = add("Gesamtnote_NW", SchemaDatentypen.INT, false)
-		.setConverter("NoteConverterFromInteger")
+		.setConverter(NoteConverterFromInteger.class)
 		.setConverterRevision(SchemaRevisionen.REV_1)
 		.setJavaComment("Lernbereichnote Naturwissenschaft HA10");
 
@@ -264,7 +269,7 @@ public class Tabelle_SchuelerLernabschnittsdaten extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte DatumFHR */
 	public SchemaTabelleSpalte col_DatumFHR = add("DatumFHR", SchemaDatentypen.DATE, false)
-		.setConverter("DatumConverter")
+		.setConverter(DatumConverter.class)
 		.setJavaComment("Datum FHR");
 
 	/** Die Definition der Tabellenspalte PruefAlgoErgebnis */
@@ -277,12 +282,12 @@ public class Tabelle_SchuelerLernabschnittsdaten extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte DatumVon */
 	public SchemaTabelleSpalte col_DatumVon = add("DatumVon", SchemaDatentypen.DATE, false)
-		.setConverter("DatumConverter")
+		.setConverter(DatumConverter.class)
 		.setJavaComment("Beginn Lernabschnitt");
 
 	/** Die Definition der Tabellenspalte DatumBis */
 	public SchemaTabelleSpalte col_DatumBis = add("DatumBis", SchemaDatentypen.DATE, false)
-		.setConverter("DatumConverter")
+		.setConverter(DatumConverter.class)
 		.setJavaComment("Ende Lernabschnitt");
 
 	/** Die Definition der Tabellenspalte FehlstundenGrenzwert */
@@ -297,7 +302,7 @@ public class Tabelle_SchuelerLernabschnittsdaten extends SchemaTabelle {
 	public SchemaTabelleSpalte col_FachPraktAnteilAusr = add("FachPraktAnteilAusr", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("+")
 		.setNotNull()
-		.setConverter("BooleanPlusMinusDefaultPlusConverter")
+		.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
 		.setJavaComment("Enthält die Angabe, ob die Fachpraktischen Anteile in Anlage B08 B09 B10 ausreichend sind für Versetzung (BK)");
 
 	/** Die Definition der Tabellenspalte BilingualerZweig */
@@ -307,19 +312,19 @@ public class Tabelle_SchuelerLernabschnittsdaten extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte AOSF */
 	public SchemaTabelleSpalte col_AOSF = add("AOSF", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Gibt an ob der Schüler ein AOSF hat");
 
 	/** Die Definition der Tabellenspalte Autist */
 	public SchemaTabelleSpalte col_Autist = add("Autist", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Gibt an ob Autismuss vorliegt (Ja/Nein)");
 
 	/** Die Definition der Tabellenspalte ZieldifferentesLernen */
 	public SchemaTabelleSpalte col_ZieldifferentesLernen = add("ZieldifferentesLernen", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Gibt an ob der Schüler zieldifferent unterrichtet wird");
 
 	/** Die Definition der Tabellenspalte Jahr */

@@ -1,6 +1,8 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
 import de.nrw.schule.svws.core.adt.Pair;
+import de.nrw.schule.svws.db.converter.current.BooleanPlusMinusDefaultMinusConverter;
+import de.nrw.schule.svws.db.converter.current.BooleanPlusMinusDefaultPlusConverter;
 import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaFremdschluesselAktionen;
@@ -53,7 +55,7 @@ public class Tabelle_SchuelerWiedervorlage extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte Sekretariat */
 	public SchemaTabelleSpalte col_Sekretariat = add("Sekretariat", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("+")
-		.setConverter("BooleanPlusMinusDefaultPlusConverter")
+		.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
 		.setJavaComment("Steuert die Sichtbarkeit für den User Sekretariat");
 
 	/** Die Definition der Tabellenspalte Typ */
@@ -63,7 +65,7 @@ public class Tabelle_SchuelerWiedervorlage extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte NichtLoeschen */
 	public SchemaTabelleSpalte col_NichtLoeschen = add("NichtLoeschen", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Steuert die automatische Löschung der Einträge");
 
 

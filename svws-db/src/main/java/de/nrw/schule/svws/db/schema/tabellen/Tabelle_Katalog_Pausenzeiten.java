@@ -1,10 +1,11 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
+import de.nrw.schule.svws.db.converter.current.DatumConverter;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaRevisionen;
 import de.nrw.schule.svws.db.schema.SchemaTabelle;
-import de.nrw.schule.svws.db.schema.SchemaTabelleUniqueIndex;
 import de.nrw.schule.svws.db.schema.SchemaTabelleSpalte;
+import de.nrw.schule.svws.db.schema.SchemaTabelleUniqueIndex;
 
 /**
  * Diese Klasse beinhaltet die Schema-Definition für die Tabelle Katalog_Pausenzeiten.
@@ -24,13 +25,13 @@ public class Tabelle_Katalog_Pausenzeiten extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte Beginn */
 	public SchemaTabelleSpalte col_Beginn = add("Beginn", SchemaDatentypen.TIME, false)
 		.setNotNull()
-		.setConverter("DatumConverter")
+		.setConverter(DatumConverter.class)
 		.setJavaComment("Die Uhrzeit, wann die Pausenzeit beginnt");
 
 	/** Die Definition der Tabellenspalte Ende */
 	public SchemaTabelleSpalte col_Ende = add("Ende", SchemaDatentypen.TIME, false)
 		.setNotNull()
-		.setConverter("DatumConverter")
+		.setConverter(DatumConverter.class)
 		.setJavaComment("Die Uhrzeit, wann die Pausenzeit endet");
 
 

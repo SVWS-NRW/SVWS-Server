@@ -4,6 +4,7 @@ import java.util.Vector;
 
 import de.nrw.schule.svws.db.DBDriver;
 import de.nrw.schule.svws.db.SQLiteUtils;
+import de.nrw.schule.svws.db.converter.DBAttributeConverter;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -69,12 +70,12 @@ public class View {
 	 * @param beschreibung    die Beschreibung der Spalte zur Dokumentation
 	 * @param datentyp        der Java-Datentyp der Spalte
 	 * @param sql             der SQL-Code für die Spaltendefinition
-	 * @param converter       der Name eines Konverter zum automatischen Umwandeln des Datenbank-Wertes beim Einlesen in Java oder null
+	 * @param converter       der Konverter zum automatischen Umwandeln des Datenbank-Wertes beim Einlesen in Java oder null
 	 * @param istPrimaryKey   gibt an, ob die Spalte Bestandteil des Primärschlüssels der View ist
 	 * 
 	 * @return diese View-Definition 
 	 */
-	public View add(@NotNull String name, @NotNull String beschreibung, @NotNull String datentyp, @NotNull String sql, String converter, boolean istPrimaryKey) {
+	public View add(@NotNull String name, @NotNull String beschreibung, @NotNull String datentyp, @NotNull String sql, Class<? extends DBAttributeConverter<?, ?>> converter, boolean istPrimaryKey) {
 		ViewSpalte spalte = new ViewSpalte(name, beschreibung, datentyp, sql, converter);
 		spalten.add(spalte);
 		if (istPrimaryKey)

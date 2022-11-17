@@ -122,9 +122,9 @@ public class DTOCreatorView {
 	 * @return eine Liste mit den Attribut-Konvertern.
 	 */
 	private List<DBAttributeConverter<?,?>> getAttributeConverter(final long rev) {
-		return view.spalten.stream().map(spalte -> spalte.converter)
-				.filter(acName -> acName != null)
-				.map(acName -> DBAttributeConverter.getByClassName(acName))
+		return view.spalten.stream()
+				.filter(spalte -> spalte.converter != null)
+				.map(spalte -> DBAttributeConverter.getByClass(spalte.converter))
 				.filter(ac -> ac != null)
 				.collect(Collectors.toList());
 	}
@@ -221,7 +221,7 @@ public class DTOCreatorView {
 		}
 		if (spalte.converter != null) {
 			if (withAnnotations) {
-				var simpleConverterClassName = DBAttributeConverter.getByClassName(spalte.converter).getClass().getSimpleName();
+				var simpleConverterClassName = DBAttributeConverter.getByClass(spalte.converter).getClass().getSimpleName();
 				sb.append("\t@Convert(converter=" + simpleConverterClassName + ".class)" + System.lineSeparator());
 				sb.append("\t@JsonSerialize(using=" + simpleConverterClassName + "Serializer.class)" + System.lineSeparator());
 				sb.append("\t@JsonDeserialize(using=" + simpleConverterClassName + "Deserializer.class)" + System.lineSeparator());				

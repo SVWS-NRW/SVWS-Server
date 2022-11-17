@@ -1,5 +1,6 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
+import de.nrw.schule.svws.db.converter.current.Boolean01Converter;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaRevisionen;
 import de.nrw.schule.svws.db.schema.SchemaTabelle;
@@ -22,7 +23,7 @@ public class Tabelle_ImpExp_EigeneImporte_Tabellen extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte DstCreateID */
 	public SchemaTabelleSpalte col_DstCreateID = add("DstCreateID", SchemaDatentypen.INT, false)
-		.setConverter("Boolean01Converter")
+		.setConverter(Boolean01Converter.class)
 		.setJavaComment("externen Textimport Tabellen");
 
 	/** Die Definition der Tabellenspalte DstIDFieldName */

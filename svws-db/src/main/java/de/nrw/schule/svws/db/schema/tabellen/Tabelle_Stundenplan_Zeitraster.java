@@ -1,14 +1,15 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
 import de.nrw.schule.svws.core.adt.Pair;
+import de.nrw.schule.svws.db.converter.current.UhrzeitConverter;
 import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaFremdschluesselAktionen;
 import de.nrw.schule.svws.db.schema.SchemaRevisionen;
 import de.nrw.schule.svws.db.schema.SchemaTabelle;
 import de.nrw.schule.svws.db.schema.SchemaTabelleFremdschluessel;
-import de.nrw.schule.svws.db.schema.SchemaTabelleUniqueIndex;
 import de.nrw.schule.svws.db.schema.SchemaTabelleSpalte;
+import de.nrw.schule.svws.db.schema.SchemaTabelleUniqueIndex;
 
 /**
  * Diese Klasse beinhaltet die Schema-Definition für die Tabelle Stundenplan_Zeitraster.
@@ -38,13 +39,13 @@ public class Tabelle_Stundenplan_Zeitraster extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte Beginn */
 	public SchemaTabelleSpalte col_Beginn = add("Beginn", SchemaDatentypen.TIME, false)
 		.setNotNull()
-		.setConverter("UhrzeitConverter")
+		.setConverter(UhrzeitConverter.class)
 		.setJavaComment("Die Uhrzeit, wann die Stunde beginnt");
 
 	/** Die Definition der Tabellenspalte Ende */
 	public SchemaTabelleSpalte col_Ende = add("Ende", SchemaDatentypen.TIME, false)
 		.setNotNull()
-		.setConverter("UhrzeitConverter")
+		.setConverter(UhrzeitConverter.class)
 		.setJavaComment("Die Uhrzeit, wann die Stunde endet");
 
 

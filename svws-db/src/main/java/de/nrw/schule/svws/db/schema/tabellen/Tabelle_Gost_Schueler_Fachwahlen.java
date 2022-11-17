@@ -1,6 +1,7 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
 import de.nrw.schule.svws.core.adt.Pair;
+import de.nrw.schule.svws.db.converter.current.Boolean01Converter;
 import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaFremdschluesselAktionen;
@@ -82,22 +83,22 @@ public class Tabelle_Gost_Schueler_Fachwahlen extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte Markiert_Q1 */
 	public SchemaTabelleSpalte col_Markiert_Q1 = add("Markiert_Q1", SchemaDatentypen.INT, false)
-		.setConverter("Boolean01Converter")
+		.setConverter(Boolean01Converter.class)
 		.setJavaComment("Gymnasiale Oberstufe - Schülerdaten - Fachwahlen - Abiturberechnung: Gibt an, ob das belegte Fach in der Q1.1 für die Einbringung in das Abitur markiert wurde");
 
 	/** Die Definition der Tabellenspalte Markiert_Q2 */
 	public SchemaTabelleSpalte col_Markiert_Q2 = add("Markiert_Q2", SchemaDatentypen.INT, false)
-		.setConverter("Boolean01Converter")
+		.setConverter(Boolean01Converter.class)
 		.setJavaComment("Gymnasiale Oberstufe - Schülerdaten - Fachwahlen - Abiturberechnung: Gibt an, ob das belegte Fach in der Q1.2 für die Einbringung in das Abitur markiert wurde");
 
 	/** Die Definition der Tabellenspalte Markiert_Q3 */
 	public SchemaTabelleSpalte col_Markiert_Q3 = add("Markiert_Q3", SchemaDatentypen.INT, false)
-		.setConverter("Boolean01Converter")
+		.setConverter(Boolean01Converter.class)
 		.setJavaComment("Gymnasiale Oberstufe - Schülerdaten - Fachwahlen - Abiturberechnung: Gibt an, ob das belegte Fach in der Q2.1 für die Einbringung in das Abitur markiert wurde");
 
 	/** Die Definition der Tabellenspalte Markiert_Q4 */
 	public SchemaTabelleSpalte col_Markiert_Q4 = add("Markiert_Q4", SchemaDatentypen.INT, false)
-		.setConverter("Boolean01Converter")
+		.setConverter(Boolean01Converter.class)
 		.setJavaComment("Gymnasiale Oberstufe - Schülerdaten - Fachwahlen - Abiturberechnung: Gibt an, ob das belegte Fach in der Q2.2 für die Einbringung in das Abitur markiert wurde");
 
 	/** Die Definition der Tabellenspalte ergebnisAbiturpruefung */
@@ -106,7 +107,7 @@ public class Tabelle_Gost_Schueler_Fachwahlen extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte hatMuendlichePflichtpruefung */
 	public SchemaTabelleSpalte col_hatMuendlichePflichtpruefung = add("hatMuendlichePflichtpruefung", SchemaDatentypen.INT, false)
-		.setConverter("Boolean01Converter")
+		.setConverter(Boolean01Converter.class)
 		.setJavaComment("Gymnasiale Oberstufe - Schülerdaten - Fachwahlen - Abiturberechnung: Gibt an, ob eine mündliche Pflichtprüfung im 1. - 3. Fach angesetzt werden muss (null - unbekannt, 0 - Nein, 1 - Ja)  ");
 
 	/** Die Definition der Tabellenspalte ergebnisMuendlichePruefung */

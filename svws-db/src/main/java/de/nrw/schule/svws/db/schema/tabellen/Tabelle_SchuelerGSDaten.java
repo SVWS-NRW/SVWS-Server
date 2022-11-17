@@ -1,6 +1,7 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
 import de.nrw.schule.svws.core.adt.Pair;
+import de.nrw.schule.svws.db.converter.current.BooleanPlusMinusDefaultMinusConverter;
 import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaFremdschluesselAktionen;
@@ -96,7 +97,7 @@ public class Tabelle_SchuelerGSDaten extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte Geschwisterkind */
 	public SchemaTabelleSpalte col_Geschwisterkind = add("Geschwisterkind", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Angabe Geschwisterkind Ja Nein  zum GS-Daten-Eintrag");
 
 

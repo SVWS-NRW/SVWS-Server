@@ -1,7 +1,6 @@
 package de.nrw.schule.svws.db.converter;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import de.nrw.schule.svws.db.converter.current.BenutzerKompetenzConverter;
 import de.nrw.schule.svws.db.converter.current.BenutzerTypConverter;
@@ -57,75 +56,114 @@ import jakarta.persistence.AttributeConverter;
 public abstract class DBAttributeConverter<X, Y> implements AttributeConverter<X, Y> {
 
 	/** 
-	 * Eine Map, welche dem "SimpleName" der Java-Klasse des Attribut-Konverters eine 
-	 * Instanz der Klasse des Attribut-Konverters zuordnet. Dies wird von
-	 * dem Java-DTO-Creator benötigt.
+	 * Eine Map, welche einer Attribut-Konverter-Klasse eine Instanz der Klasse 
+	 * zuordnet. Dies wird von dem Java-DTO-Creator benötigt.
 	 */  
 	@SuppressWarnings("rawtypes")
-	private static Map<String, DBAttributeConverter> converter = null;
+	private static HashMap<Class<? extends DBAttributeConverter>, DBAttributeConverter> converter = new HashMap<>();
+	/** 
+	 * Eine Map, welche dem Namen einer Attribut-Konverter-Klasse eine 
+	 * Instanz der Klasse zuordnet. Dies wird von dem Java-DTO-Creator benötigt.
+	 */  
+	@SuppressWarnings("rawtypes")
+	private static HashMap<String, DBAttributeConverter> converterByName = new HashMap<>();
+	
+	/**
+	 * Fügt einen neuen Attribut-Konverter hinzu
+	 * 
+	 * @param <T>   der Typ des Attribut-Konverters 
+	 * 
+	 * @param conv   die Instanz des Konverters
+	 */
+	private static <T extends DBAttributeConverter<?,?>> void add(T conv) {
+		converter.put(conv.getClass(), conv);
+		converterByName.put(conv.getClass().getSimpleName(), conv);
+	}
+	
+	
+	/**
+	 * Initialisiert die Attribut-Konverter
+	 */
+	private static void init() {
+		// Revision 0 - Migration: Die Konverter befinden sich im Sub-Package migration und beginnen mit dem Präfix Migration
+		add(new MigrationBoolean01Converter());
+		add(new MigrationBoolean01StringConverter());
+		add(new MigrationBooleanPlusMinusConverter());
+		add(new MigrationBooleanPlusMinusDefaultMinusConverter());
+		add(new MigrationBooleanPlusMinusDefaultPlusConverter());
+		add(new MigrationDatumConverter());
+		add(new MigrationStringToIntegerConverter());
+		// Aktuelle Revision: Hier befinden sich die Konverter für die aktuelle Revision
+		add(new BenutzerKompetenzConverter());
+		add(new BenutzerTypConverter());
+		add(new Boolean01Converter());
+		add(new Boolean01StringConverter());
+		add(new BooleanPlusMinusConverter());
+		add(new BooleanPlusMinusDefaultMinusConverter());
+		add(new BooleanPlusMinusDefaultPlusConverter());
+		add(new DatumConverter());
+		add(new DatumUhrzeitConverter());
+		add(new DavRessourceCollectionTypConverter());
+		add(new GeschlechtConverter());
+		add(new GeschlechtConverterFromString());
+		add(new KursFortschreibungsartConverter());
+		add(new NationalitaetenConverter());
+		add(new NoteConverterFromInteger());
+		add(new NoteConverterFromKuerzel());
+		add(new NoteConverterFromNotenpunkte());
+		add(new NoteConverterFromNotenpunkteString());
+		add(new PersonalTypConverter());
+		add(new SchuelerStatusConverter());
+		add(new StringToIntegerConverter());
+		add(new AbiturBelegungsartConverter());
+		add(new AbiturKursMarkierungConverter());
+		add(new GOStAbiturFachConverter());
+		add(new GOStBesondereLernleistungConverter());
+		add(new GOStHalbjahrConverter());
+		add(new GOStKursartConverter());
+		add(new GostKursblockungRegelTypConverter());
+		add(new GostLaufbahnplanungFachkombinationTypConverter());
+		add(new SchulformKuerzelConverter());
+		add(new SchulgliederungKuerzelConverter());
+		add(new SprachreferenzniveauConverter());
+		add(new SprachpruefungniveauConverter());
+		add(new UhrzeitConverter());
+		add(new ZulaessigesFachKuerzelASDConverter());
+		
+		// Zukünftige Revisionen: Konverter für zukünftige Revision liegen im Sub-Package revNNN und beginnen mit dem Präfix RevNNN		
+	}
+	
+	
+	/**
+	 * Bestimmt den Attributkonverter anhand der Klasse.
+	 * 
+	 * @param <T>     der Typ des Attribut-Konverters 
+	 * @param clazz   die Converter-Klasse
+	 * 
+	 * @return eine Instanz der Converter-Klasse
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T extends DBAttributeConverter<?,?>> T getByClass(Class<T> clazz) {
+		if (converter.size() == 0)
+			init();
+		return (T) converter.get(clazz);
+	}	
+	
 	
 	
 	/**
 	 * Bestimmt den Attributkonverter anhand des Klassennamens.
 	 * 
-	 * @param classname   the Name der Converter-Klasse
+	 * @param <T>         der Typ des Attribut-Konverters 
+	 * @param classname   der Name der Converter-Klasse
 	 * 
 	 * @return eine Instanz der Converter-Klasse
 	 */
-	public static DBAttributeConverter<?,?> getByClassName(String classname) {
-		if (converter == null) {
-			converter = new HashMap<>();
-			// Revision 0 - Migration: Die Konverter befinden sich im Sub-Package migration und beginnen mit dem Präfix Migration
-			converter.put(MigrationBoolean01Converter.class.getSimpleName(), new MigrationBoolean01Converter());
-			converter.put(MigrationBoolean01StringConverter.class.getSimpleName(), new MigrationBoolean01StringConverter());
-			converter.put(MigrationBooleanPlusMinusConverter.class.getSimpleName(), new MigrationBooleanPlusMinusConverter());
-			converter.put(MigrationBooleanPlusMinusDefaultMinusConverter.class.getSimpleName(), new MigrationBooleanPlusMinusDefaultMinusConverter());
-			converter.put(MigrationBooleanPlusMinusDefaultPlusConverter.class.getSimpleName(), new MigrationBooleanPlusMinusDefaultPlusConverter());
-			converter.put(MigrationDatumConverter.class.getSimpleName(), new MigrationDatumConverter());
-			converter.put(MigrationStringToIntegerConverter.class.getSimpleName(), new MigrationStringToIntegerConverter());
-			// Aktuelle Revision: Hier befinden sich die Konverter für die aktuelle Revision
-			converter.put(BenutzerKompetenzConverter.class.getSimpleName(), new BenutzerKompetenzConverter());
-			converter.put(BenutzerTypConverter.class.getSimpleName(), new BenutzerTypConverter());
-			converter.put(Boolean01Converter.class.getSimpleName(), new Boolean01Converter());
-			converter.put(Boolean01StringConverter.class.getSimpleName(), new Boolean01StringConverter());
-			converter.put(BooleanPlusMinusConverter.class.getSimpleName(), new BooleanPlusMinusConverter());
-			converter.put(BooleanPlusMinusDefaultMinusConverter.class.getSimpleName(), new BooleanPlusMinusDefaultMinusConverter());
-			converter.put(BooleanPlusMinusDefaultPlusConverter.class.getSimpleName(), new BooleanPlusMinusDefaultPlusConverter());
-			converter.put(DatumConverter.class.getSimpleName(), new DatumConverter());
-			converter.put(DatumUhrzeitConverter.class.getSimpleName(), new DatumUhrzeitConverter());
-			converter.put(DavRessourceCollectionTypConverter.class.getSimpleName(), new DavRessourceCollectionTypConverter());
-			converter.put(GeschlechtConverter.class.getSimpleName(), new GeschlechtConverter());
-			converter.put(GeschlechtConverterFromString.class.getSimpleName(), new GeschlechtConverterFromString());
-			converter.put(KursFortschreibungsartConverter.class.getSimpleName(), new KursFortschreibungsartConverter());
-			converter.put(NationalitaetenConverter.class.getSimpleName(), new NationalitaetenConverter());
-			converter.put(NoteConverterFromInteger.class.getSimpleName(), new NoteConverterFromInteger());
-			converter.put(NoteConverterFromKuerzel.class.getSimpleName(), new NoteConverterFromKuerzel());
-			converter.put(NoteConverterFromNotenpunkte.class.getSimpleName(), new NoteConverterFromNotenpunkte());
-			converter.put(NoteConverterFromNotenpunkteString.class.getSimpleName(), new NoteConverterFromNotenpunkteString());
-			converter.put(PersonalTypConverter.class.getSimpleName(), new PersonalTypConverter());
-			converter.put(SchuelerStatusConverter.class.getSimpleName(), new SchuelerStatusConverter());
-			converter.put(StringToIntegerConverter.class.getSimpleName(), new StringToIntegerConverter());
-			converter.put(AbiturBelegungsartConverter.class.getSimpleName(), new AbiturBelegungsartConverter());
-			converter.put(AbiturKursMarkierungConverter.class.getSimpleName(), new AbiturKursMarkierungConverter());
-			converter.put(GOStAbiturFachConverter.class.getSimpleName(), new GOStAbiturFachConverter());
-			converter.put(GOStBesondereLernleistungConverter.class.getSimpleName(), new GOStBesondereLernleistungConverter());
-			converter.put(GOStHalbjahrConverter.class.getSimpleName(), new GOStHalbjahrConverter());
-			converter.put(GOStKursartConverter.class.getSimpleName(), new GOStKursartConverter());
-			converter.put(GostKursblockungRegelTypConverter.class.getSimpleName(), new GostKursblockungRegelTypConverter());
-			converter.put(GostLaufbahnplanungFachkombinationTypConverter.class.getSimpleName(), new GostLaufbahnplanungFachkombinationTypConverter());
-			converter.put(SchulformKuerzelConverter.class.getSimpleName(), new SchulformKuerzelConverter());
-			converter.put(SchulgliederungKuerzelConverter.class.getSimpleName(), new SchulgliederungKuerzelConverter());
-			converter.put(SprachreferenzniveauConverter.class.getSimpleName(), new SprachreferenzniveauConverter());
-			converter.put(SprachpruefungniveauConverter.class.getSimpleName(), new SprachpruefungniveauConverter());
-			converter.put(UhrzeitConverter.class.getSimpleName(), new UhrzeitConverter());
-			converter.put(ZulaessigesFachKuerzelASDConverter.class.getSimpleName(), new ZulaessigesFachKuerzelASDConverter());
-			
-			// Zukünftige Revisionen: Konverter für zukünftige Revision liegen im Sub-Package revNNN und beginnen mit dem Präfix RevNNN
-		}
-		DBAttributeConverter<?,?> tmp = converter.get(classname);
-		if ((tmp == null) && (classname.startsWith("Rev")))
-			return converter.get(classname.replaceFirst("Rev\\d+", ""));
-		return tmp;
+	@SuppressWarnings("unchecked")
+	public static <T extends DBAttributeConverter<?,?>> T getByClassName(String classname) {
+		if (converter.size() == 0)
+			init();
+		return (T) converterByName.get(classname);
 	}	
 	
 	

@@ -1,6 +1,8 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
 import de.nrw.schule.svws.core.adt.Pair;
+import de.nrw.schule.svws.db.converter.current.Boolean01Converter;
+import de.nrw.schule.svws.db.converter.current.BooleanPlusMinusDefaultMinusConverter;
 import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaFremdschluesselAktionen;
@@ -28,7 +30,7 @@ public class Tabelle_SchuelerDatenschutz extends SchemaTabelle {
 	public SchemaTabelleSpalte col_Status = add("Status", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
 		.setNotNull()
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Gibt an ob eine Zustimmung zum Merkmal vorliegt.");
 
 	/** Die Definition der Tabellenspalte SchulnrEigner */
@@ -41,7 +43,7 @@ public class Tabelle_SchuelerDatenschutz extends SchemaTabelle {
 	public SchemaTabelleSpalte col_Abgefragt = add("Abgefragt", SchemaDatentypen.INT, false)
 		.setDefault("0")
 		.setNotNull()
-		.setConverter("Boolean01Converter")
+		.setConverter(Boolean01Converter.class)
 		.setJavaComment("Status der Abfrage Datenschutz-Eintrags (true/false)");
 
 

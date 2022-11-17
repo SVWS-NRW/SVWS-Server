@@ -1,5 +1,6 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
+import de.nrw.schule.svws.db.converter.current.Boolean01Converter;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaRevisionen;
 import de.nrw.schule.svws.db.schema.SchemaTabelle;
@@ -46,49 +47,49 @@ public class Tabelle_FachKatalog extends SchemaTabelle {
 	public SchemaTabelleSpalte col_IstFremdsprache = add("IstFremdsprache", SchemaDatentypen.INT, false)
 		.setDefault("0")
 		.setNotNull()
-		.setConverter("Boolean01Converter")
+		.setConverter(Boolean01Converter.class)
 		.setJavaComment("Gibt an, ob es sich um ein Fach der Herkuntftsprache handelt (Unterrichts in der Herkunftssprache oder Herkunftssprache anstelle einer Pflichtfremdsprache)");
 
 	/** Die Definition der Tabellenspalte IstHKFS */
 	public SchemaTabelleSpalte col_IstHKFS = add("IstHKFS", SchemaDatentypen.INT, false)
 		.setDefault("0")
 		.setNotNull()
-		.setConverter("Boolean01Converter")
+		.setConverter(Boolean01Converter.class)
 		.setJavaComment("Gibt an, ob es sich um ein Fach der Herkuntftsprache handelt (Unterrichts in der Herkunftssprache oder Herkunftssprache anstelle einer Pflichtfremdsprache)");
 
 	/** Die Definition der Tabellenspalte IstAusRegUFach */
 	public SchemaTabelleSpalte col_IstAusRegUFach = add("IstAusRegUFach", SchemaDatentypen.INT, false)
 		.setDefault("0")
 		.setNotNull()
-		.setConverter("Boolean01Converter")
+		.setConverter(Boolean01Converter.class)
 		.setJavaComment("Gibt an, ob das Fach außerhalb des regulären Fachunterichts unterrichtet wird");
 
 	/** Die Definition der Tabellenspalte IstErsatzPflichtFS */
 	public SchemaTabelleSpalte col_IstErsatzPflichtFS = add("IstErsatzPflichtFS", SchemaDatentypen.INT, false)
 		.setDefault("0")
 		.setNotNull()
-		.setConverter("Boolean01Converter")
+		.setConverter(Boolean01Converter.class)
 		.setJavaComment("Gibt an, ob es sich bei dem Fach um einen Ersatz für eine Pflichtfremdsprache handelt (siehe auch istHKFS)");
 
 	/** Die Definition der Tabellenspalte IstKonfKoop */
 	public SchemaTabelleSpalte col_IstKonfKoop = add("IstKonfKoop", SchemaDatentypen.INT, false)
 		.setDefault("0")
 		.setNotNull()
-		.setConverter("Boolean01Converter")
+		.setConverter(Boolean01Converter.class)
 		.setJavaComment("Gibt an, ob das Religionsfach konfessionell kooperativ unterrichtet wird oder nicht - Teil des Kürzels für die amtliche Schulstatistik");
 
 	/** Die Definition der Tabellenspalte NurSII */
 	public SchemaTabelleSpalte col_NurSII = add("NurSII", SchemaDatentypen.INT, false)
 		.setDefault("0")
 		.setNotNull()
-		.setConverter("Boolean01Converter")
+		.setConverter(Boolean01Converter.class)
 		.setJavaComment("Gibt an, ob das Fach nur in der Sekundarstufe II unterrichtet wird");
 
 	/** Die Definition der Tabellenspalte ExportASD */
 	public SchemaTabelleSpalte col_ExportASD = add("ExportASD", SchemaDatentypen.INT, false)
 		.setDefault("0")
 		.setNotNull()
-		.setConverter("Boolean01Converter")
+		.setConverter(Boolean01Converter.class)
 		.setJavaComment("Gibt an, ob das Fach bei Export der amtlichen Schulstatistik berücksichtigt werden soll oder nicht");
 
 	/** Die Definition der Tabellenspalte gueltigVon */

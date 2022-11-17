@@ -1,6 +1,7 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
 import de.nrw.schule.svws.core.adt.Pair;
+import de.nrw.schule.svws.db.converter.current.DatumConverter;
 import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaFremdschluesselAktionen;
@@ -28,12 +29,12 @@ public class Tabelle_Stundenplan extends SchemaTabelle {
 	public SchemaTabelleSpalte col_Beginn = add("Beginn", SchemaDatentypen.DATE, false)
 		.setDefault("1899-01-01")
 		.setNotNull()
-		.setConverter("DatumConverter")
+		.setConverter(DatumConverter.class)
 		.setJavaComment("Das Datum, ab dem der Stundenplan gültig ist");
 
 	/** Die Definition der Tabellenspalte Ende */
 	public SchemaTabelleSpalte col_Ende = add("Ende", SchemaDatentypen.DATE, false)
-		.setConverter("DatumConverter")
+		.setConverter(DatumConverter.class)
 		.setJavaComment("Das Datum, bis wann der Stundenplan gültig ist - null, wenn kein Ende innerhalb des Abschnitts festgelegt wurde (letzter Stundenplan im Abschnitt)");
 
 	/** Die Definition der Tabellenspalte Beschreibung */

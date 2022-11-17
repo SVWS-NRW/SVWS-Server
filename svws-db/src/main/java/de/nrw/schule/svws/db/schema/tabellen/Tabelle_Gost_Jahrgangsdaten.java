@@ -1,5 +1,6 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
+import de.nrw.schule.svws.db.converter.current.Boolean01Converter;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaRevisionen;
 import de.nrw.schule.svws.db.schema.SchemaTabelle;
@@ -18,7 +19,7 @@ public class Tabelle_Gost_Jahrgangsdaten extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte ZusatzkursGEVorhanden */
 	public SchemaTabelleSpalte col_ZusatzkursGEVorhanden = add("ZusatzkursGEVorhanden", SchemaDatentypen.INT, false)
 		.setDefault("1")
-		.setConverter("Boolean01Converter")
+		.setConverter(Boolean01Converter.class)
 		.setJavaComment("Gymnasiale Oberstufe - Jahrgangsdaten: Legt fest, ob ein Zusatzkurs in Geschichte angeboten wird");
 
 	/** Die Definition der Tabellenspalte ZusatzkursGEErstesHalbjahr */
@@ -29,7 +30,7 @@ public class Tabelle_Gost_Jahrgangsdaten extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte ZusatzkursSWVorhanden */
 	public SchemaTabelleSpalte col_ZusatzkursSWVorhanden = add("ZusatzkursSWVorhanden", SchemaDatentypen.INT, false)
 		.setDefault("1")
-		.setConverter("Boolean01Converter")
+		.setConverter(Boolean01Converter.class)
 		.setJavaComment("Gymnasiale Oberstufe - Jahrgangsdaten: Legt fest, ob ein Zusatzkurs in Sozialwissenschaften angeboten wird");
 
 	/** Die Definition der Tabellenspalte ZusatzkursSWErstesHalbjahr */

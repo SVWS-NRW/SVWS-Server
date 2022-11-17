@@ -1,6 +1,8 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
 import de.nrw.schule.svws.core.adt.Pair;
+import de.nrw.schule.svws.db.converter.current.BooleanPlusMinusDefaultMinusConverter;
+import de.nrw.schule.svws.db.converter.current.BooleanPlusMinusDefaultPlusConverter;
 import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaFremdschluesselAktionen;
@@ -107,14 +109,14 @@ public class Tabelle_K_AllgAdresse extends SchemaTabelle {
 	public SchemaTabelleSpalte col_AllgAdrAusbildungsBetrieb = add("AllgAdrAusbildungsBetrieb", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
 		.setJavaName("ausbildungsbetrieb")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Gibt an ob der Betrieb ausbildet Ja Nein");
 
 	/** Die Definition der Tabellenspalte AllgAdrBietetPraktika */
 	public SchemaTabelleSpalte col_AllgAdrBietetPraktika = add("AllgAdrBietetPraktika", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
 		.setJavaName("bietetPraktika")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Gibt an ob der Betrieb Praktikumsplätze bietet Ja Nein");
 
 	/** Die Definition der Tabellenspalte AllgAdrBranche */
@@ -135,13 +137,13 @@ public class Tabelle_K_AllgAdresse extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte Sichtbar */
 	public SchemaTabelleSpalte col_Sichtbar = add("Sichtbar", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("+")
-		.setConverter("BooleanPlusMinusDefaultPlusConverter")
+		.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
 		.setJavaComment("Sichtbarkeit des Datensatzes");
 
 	/** Die Definition der Tabellenspalte Aenderbar */
 	public SchemaTabelleSpalte col_Aenderbar = add("Aenderbar", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("+")
-		.setConverter("BooleanPlusMinusDefaultPlusConverter")
+		.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
 		.setJavaComment("Datensatz ist änderbar Ja Nein");
 
 	/** Die Definition der Tabellenspalte SchulnrEigner */
@@ -152,13 +154,13 @@ public class Tabelle_K_AllgAdresse extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte Massnahmentraeger */
 	public SchemaTabelleSpalte col_Massnahmentraeger = add("Massnahmentraeger", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Bezeichnung des Maßnahmenträgers");
 
 	/** Die Definition der Tabellenspalte BelehrungISG */
 	public SchemaTabelleSpalte col_BelehrungISG = add("BelehrungISG", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Belehrung nach Infektionsschutzgesetz notwendig Ja Nein");
 
 	/** Die Definition der Tabellenspalte GU_ID */
@@ -168,7 +170,7 @@ public class Tabelle_K_AllgAdresse extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte ErwFuehrungszeugnis */
 	public SchemaTabelleSpalte col_ErwFuehrungszeugnis = add("ErwFuehrungszeugnis", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Wird für diesen Betrieb ein Erweitertes Führungszeugnis benötigt?");
 
 	/** Die Definition der Tabellenspalte ExtID */

@@ -1,5 +1,6 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
+import de.nrw.schule.svws.db.converter.current.Boolean01Converter;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaRevisionen;
 import de.nrw.schule.svws.db.schema.SchemaTabelle;
@@ -33,7 +34,7 @@ public class Tabelle_Statkue_AndereGrundschulen extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte Auswahl */
 	public SchemaTabelleSpalte col_Auswahl = add("Auswahl", SchemaDatentypen.INT, false)
-		.setConverter("Boolean01Converter")
+		.setConverter(Boolean01Converter.class)
 		.setJavaComment("Statkue Tabelle IT.NRW: imme r0  anderer Schulen oder Herkunftsformen");
 
 	/** Die Definition der Tabellenspalte RegSchl */

@@ -1,5 +1,6 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
+import de.nrw.schule.svws.db.converter.current.Boolean01Converter;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaRevisionen;
 import de.nrw.schule.svws.db.schema.SchemaTabelle;
@@ -46,7 +47,7 @@ public class Tabelle_KursartenKatalog extends SchemaTabelle {
 	public SchemaTabelleSpalte col_ErlaubtGOSt = add("ErlaubtGOSt", SchemaDatentypen.INT, false)
 		.setDefault("0")
 		.setNotNull()
-		.setConverter("Boolean01Converter")
+		.setConverter(Boolean01Converter.class)
 		.setJavaComment("Gibt an, ob die Kursart in der gymnasialen Oberstufe erlaubt ist oder nicht (1 - true / 0 - false)");
 
 	/** Die Definition der Tabellenspalte gueltigVon */

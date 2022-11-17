@@ -1,6 +1,7 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
 import de.nrw.schule.svws.core.adt.Pair;
+import de.nrw.schule.svws.db.converter.current.BooleanPlusMinusDefaultMinusConverter;
 import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaFremdschluesselAktionen;
@@ -38,31 +39,31 @@ public class Tabelle_SchuelerAnkreuzfloskeln extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte Stufe1 */
 	public SchemaTabelleSpalte col_Stufe1 = add("Stufe1", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Gibt an ob diese Stufe angekreuzt ist");
 
 	/** Die Definition der Tabellenspalte Stufe2 */
 	public SchemaTabelleSpalte col_Stufe2 = add("Stufe2", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Gibt an ob diese Stufe angekreuzt ist");
 
 	/** Die Definition der Tabellenspalte Stufe3 */
 	public SchemaTabelleSpalte col_Stufe3 = add("Stufe3", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Gibt an ob diese Stufe angekreuzt ist");
 
 	/** Die Definition der Tabellenspalte Stufe4 */
 	public SchemaTabelleSpalte col_Stufe4 = add("Stufe4", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Gibt an ob diese Stufe angekreuzt ist");
 
 	/** Die Definition der Tabellenspalte Stufe5 */
 	public SchemaTabelleSpalte col_Stufe5 = add("Stufe5", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Gibt an ob diese Stufe angekreuzt ist");
 
 	/** Die Definition der Tabellenspalte SchulnrEigner */

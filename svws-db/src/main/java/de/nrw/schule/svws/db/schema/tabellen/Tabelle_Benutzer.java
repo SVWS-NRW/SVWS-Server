@@ -1,6 +1,8 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
 import de.nrw.schule.svws.core.adt.Pair;
+import de.nrw.schule.svws.db.converter.current.BenutzerTypConverter;
+import de.nrw.schule.svws.db.converter.current.Boolean01Converter;
 import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaFremdschluesselAktionen;
@@ -23,7 +25,7 @@ public class Tabelle_Benutzer extends SchemaTabelle {
 	public SchemaTabelleSpalte col_Typ = add("Typ", SchemaDatentypen.SMALLINT, false)
 		.setDefault("0")
 		.setNotNull()
-		.setConverter("BenutzerTypConverter")
+		.setConverter(BenutzerTypConverter.class)
 		.setConverterRevision(SchemaRevisionen.REV_1)
 		.setJavaComment("Der Typ des Benutzers (0 = Allgemeiner Benutzer, 1 = Lehrer bzw. Personal aus K_Lehrer, 2 = Schueler, 3 = Erzieher)");
 
@@ -47,7 +49,7 @@ public class Tabelle_Benutzer extends SchemaTabelle {
 	public SchemaTabelleSpalte col_IstAdmin = add("IstAdmin", SchemaDatentypen.INT, false)
 		.setDefault("0")
 		.setNotNull()
-		.setConverter("Boolean01Converter")
+		.setConverter(Boolean01Converter.class)
 		.setJavaComment("Gibt an, ob der Benutzer Administrator-Rechte hat (1) oder nicht (0)");
 
 

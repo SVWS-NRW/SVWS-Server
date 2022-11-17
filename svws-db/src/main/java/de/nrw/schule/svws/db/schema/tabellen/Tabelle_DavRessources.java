@@ -1,6 +1,7 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
 import de.nrw.schule.svws.core.adt.Pair;
+import de.nrw.schule.svws.db.converter.current.DatumUhrzeitConverter;
 import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaFremdschluesselAktionen;
@@ -32,7 +33,7 @@ public class Tabelle_DavRessources extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte lastModified */
 	public SchemaTabelleSpalte col_lastModified = add("lastModified", SchemaDatentypen.DATETIME, false)
 		.setNotNull()
-		.setConverter("DatumUhrzeitConverter")
+		.setConverter(DatumUhrzeitConverter.class)
 		.setJavaComment("Das Datum an dem die Ressource zuletzt geändert wurde, als Synctoken einsetzbar");
 
 	/** Die Definition der Tabellenspalte KalenderTyp */
@@ -43,13 +44,13 @@ public class Tabelle_DavRessources extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte KalenderStart */
 	public SchemaTabelleSpalte col_KalenderStart = add("KalenderStart", SchemaDatentypen.DATETIME, false)
 		.setNotNull()
-		.setConverter("DatumUhrzeitConverter")
+		.setConverter(DatumUhrzeitConverter.class)
 		.setJavaComment("Der Start der Kalenderressource, wenn es eine Kalenderressource ist");
 
 	/** Die Definition der Tabellenspalte KalenderEnde */
 	public SchemaTabelleSpalte col_KalenderEnde = add("KalenderEnde", SchemaDatentypen.DATETIME, false)
 		.setNotNull()
-		.setConverter("DatumUhrzeitConverter")
+		.setConverter(DatumUhrzeitConverter.class)
 		.setJavaComment("Das Ende der Kalenderressource, wenn es eines Kalenderressource ist");
 
 	/** Die Definition der Tabellenspalte ressource */

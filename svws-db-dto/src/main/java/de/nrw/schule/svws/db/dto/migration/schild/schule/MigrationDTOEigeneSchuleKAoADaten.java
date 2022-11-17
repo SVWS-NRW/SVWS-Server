@@ -89,7 +89,7 @@ public class MigrationDTOEigeneSchuleKAoADaten {
 	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean KooperationsvereinbarungAA;
 
-	/** Refflexionsworkshops werden genutzt */
+	/** Reflexionsworkshops werden genutzt */
 	@Column(name = "NutzungReflexionsworkshop")
 	@JsonProperty
 	@Convert(converter=MigrationBooleanPlusMinusDefaultPlusConverter.class)

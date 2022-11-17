@@ -1,5 +1,7 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
+import de.nrw.schule.svws.db.converter.current.Boolean01Converter;
+import de.nrw.schule.svws.db.converter.current.Boolean01StringConverter;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaRevisionen;
 import de.nrw.schule.svws.db.schema.SchemaTabelle;
@@ -157,12 +159,12 @@ public class Tabelle_Schulver_DBS extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte CD */
 	public SchemaTabelleSpalte col_CD = add("CD", SchemaDatentypen.INT, false)
-		.setConverter("Boolean01Converter")
+		.setConverter(Boolean01Converter.class)
 		.setJavaComment("Schulver Tabelle IT.NRW: Gibt an ob die Schule eine CD für ASDPC32 möchte");
 
 	/** Die Definition der Tabellenspalte Stift */
 	public SchemaTabelleSpalte col_Stift = add("Stift", SchemaDatentypen.INT, false)
-		.setConverter("Boolean01Converter")
+		.setConverter(Boolean01Converter.class)
 		.setJavaComment("Schulver Tabelle IT.NRW: ???");
 
 	/** Die Definition der Tabellenspalte OGTS */
@@ -190,21 +192,21 @@ public class Tabelle_Schulver_DBS extends SchemaTabelle {
 	public SchemaTabelleSpalte col_SportImAbi = add("SportImAbi", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("0")
 		.setNotNull()
-		.setConverter("Boolean01StringConverter")
+		.setConverter(Boolean01StringConverter.class)
 		.setJavaComment("Schulver Tabelle IT.NRW: Hat die Schule Sport im Abitur?");
 
 	/** Die Definition der Tabellenspalte Tal */
 	public SchemaTabelleSpalte col_Tal = add("Tal", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("0")
 		.setNotNull()
-		.setConverter("Boolean01StringConverter")
+		.setConverter(Boolean01StringConverter.class)
 		.setJavaComment("Schulver Tabelle IT.NRW: Nimmt die Schule am Projekt Talentschule teil?");
 
 	/** Die Definition der Tabellenspalte KonKop */
 	public SchemaTabelleSpalte col_KonKop = add("KonKop", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("0")
 		.setNotNull()
-		.setConverter("Boolean01StringConverter")
+		.setConverter(Boolean01StringConverter.class)
 		.setJavaComment("Schulver Tabelle IT.NRW: Ist die konfessionelle Kooperation an dieser Schule genehmigt?");
 
 	/** Die Definition der Tabellenspalte gueltigVon */

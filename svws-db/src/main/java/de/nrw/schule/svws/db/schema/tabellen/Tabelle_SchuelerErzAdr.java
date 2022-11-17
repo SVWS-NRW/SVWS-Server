@@ -1,6 +1,8 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
 import de.nrw.schule.svws.core.adt.Pair;
+import de.nrw.schule.svws.db.converter.current.BooleanPlusMinusDefaultPlusConverter;
+import de.nrw.schule.svws.db.converter.current.NationalitaetenConverter;
 import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaFremdschluesselAktionen;
@@ -94,7 +96,7 @@ public class Tabelle_SchuelerErzAdr extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte ErzAnschreiben */
 	public SchemaTabelleSpalte col_ErzAnschreiben = add("ErzAnschreiben", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("+")
-		.setConverter("BooleanPlusMinusDefaultPlusConverter")
+		.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
 		.setJavaComment("Erhältanschreiben Ja Nein zum Erzieherdatensatz");
 
 	/** Die Definition der Tabellenspalte Sortierung */
@@ -116,13 +118,13 @@ public class Tabelle_SchuelerErzAdr extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte Erz1StaatKrz */
 	public SchemaTabelleSpalte col_Erz1StaatKrz = add("Erz1StaatKrz", SchemaDatentypen.VARCHAR, false).setDatenlaenge(3)
-		.setConverter("NationalitaetenConverter")
+		.setConverter(NationalitaetenConverter.class)
 		.setConverterRevision(SchemaRevisionen.REV_1)
 		.setJavaComment("Staatangehörigkeit1 zum Erzieherdatensatz");
 
 	/** Die Definition der Tabellenspalte Erz2StaatKrz */
 	public SchemaTabelleSpalte col_Erz2StaatKrz = add("Erz2StaatKrz", SchemaDatentypen.VARCHAR, false).setDatenlaenge(3)
-		.setConverter("NationalitaetenConverter")
+		.setConverter(NationalitaetenConverter.class)
 		.setConverterRevision(SchemaRevisionen.REV_1)
 		.setJavaComment("Staatangehörigkeit2 zum Erzieherdatensatz");
 

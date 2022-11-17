@@ -1,6 +1,9 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
 import de.nrw.schule.svws.core.adt.Pair;
+import de.nrw.schule.svws.db.converter.current.BooleanPlusMinusDefaultMinusConverter;
+import de.nrw.schule.svws.db.converter.current.BooleanPlusMinusDefaultPlusConverter;
+import de.nrw.schule.svws.db.converter.current.statkue.ZulaessigesFachKuerzelASDConverter;
 import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaFremdschluesselAktionen;
@@ -51,7 +54,7 @@ public class Tabelle_EigeneSchule_Faecher extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte StatistikKrz */
 	public SchemaTabelleSpalte col_StatistikKrz = add("StatistikKrz", SchemaDatentypen.VARCHAR, false).setDatenlaenge(2)
 		.setJavaName("StatistikFach")
-		.setConverter("ZulaessigesFachKuerzelASDConverter")
+		.setConverter(ZulaessigesFachKuerzelASDConverter.class)
 		.setConverterRevision(SchemaRevisionen.REV_1)
 		.setJavaComment("Das Statistik-Kürzel des Faches");
 
@@ -59,14 +62,14 @@ public class Tabelle_EigeneSchule_Faecher extends SchemaTabelle {
 	public SchemaTabelleSpalte col_BasisFach = add("BasisFach", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
 		.setJavaName("IstOberstufenFach")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Gibt an, ob das Fach in der Oberstufe unterrichtet wird");
 
 	/** Die Definition der Tabellenspalte IstSprache */
 	public SchemaTabelleSpalte col_IstSprache = add("IstSprache", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
 		.setJavaName("IstFremdsprache")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Gibt an, ob das Fach eine Fremdsprache ist");
 
 	/** Die Definition der Tabellenspalte Sortierung */
@@ -85,19 +88,19 @@ public class Tabelle_EigeneSchule_Faecher extends SchemaTabelle {
 	public SchemaTabelleSpalte col_NachprErlaubt = add("NachprErlaubt", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("+")
 		.setJavaName("IstNachpruefungErlaubt")
-		.setConverter("BooleanPlusMinusDefaultPlusConverter")
+		.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
 		.setJavaComment("Gibt an, ob in dem Fach eine Nachprüfung erlaubt ist.");
 
 	/** Die Definition der Tabellenspalte Sichtbar */
 	public SchemaTabelleSpalte col_Sichtbar = add("Sichtbar", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("+")
-		.setConverter("BooleanPlusMinusDefaultPlusConverter")
+		.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
 		.setJavaComment("Gibt an, ob der Datensatz in der Oberfläche sichtbar sein soll und bei einer Auswahl zur Verfügung steht. ");
 
 	/** Die Definition der Tabellenspalte Aenderbar */
 	public SchemaTabelleSpalte col_Aenderbar = add("Aenderbar", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("+")
-		.setConverter("BooleanPlusMinusDefaultPlusConverter")
+		.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
 		.setJavaComment("Gibt an, ob Änderungen am Datensatz erlaubt sind.");
 
 	/** Die Definition der Tabellenspalte Gewichtung */
@@ -114,19 +117,19 @@ public class Tabelle_EigeneSchule_Faecher extends SchemaTabelle {
 	public SchemaTabelleSpalte col_IstSchriftlich = add("IstSchriftlich", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
 		.setJavaName("IstSchriftlichZK")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("gibt an, ob das Fach ein schritliches Fach für ZK ist oder nicht");
 
 	/** Die Definition der Tabellenspalte IstSchriftlichBA */
 	public SchemaTabelleSpalte col_IstSchriftlichBA = add("IstSchriftlichBA", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("gibt an, ob ein Fach am BK für den beruflichen Abschluss schriftlich gewertet wird");
 
 	/** Die Definition der Tabellenspalte AufZeugnis */
 	public SchemaTabelleSpalte col_AufZeugnis = add("AufZeugnis", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("+")
-		.setConverter("BooleanPlusMinusDefaultPlusConverter")
+		.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
 		.setJavaComment("Gibt an, ob das Fach auf dem Zeugnis erscheinen soll");
 
 	/** Die Definition der Tabellenspalte Lernfelder */
@@ -142,63 +145,63 @@ public class Tabelle_EigeneSchule_Faecher extends SchemaTabelle {
 	public SchemaTabelleSpalte col_LK_Moegl = add("LK_Moegl", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("+")
 		.setJavaName("IstMoeglichAbiLK")
-		.setConverter("BooleanPlusMinusDefaultPlusConverter")
+		.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
 		.setJavaComment("gibt an, ob das Fach als Leistungskurs belegt werden kann.");
 
 	/** Die Definition der Tabellenspalte Abi_Moegl */
 	public SchemaTabelleSpalte col_Abi_Moegl = add("Abi_Moegl", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("+")
 		.setJavaName("IstMoeglichAbiGK")
-		.setConverter("BooleanPlusMinusDefaultPlusConverter")
+		.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
 		.setJavaComment("gibt an, ob das Fach als drittes oder viertes Abiturfach belegt werden kann.");
 
 	/** Die Definition der Tabellenspalte E1 */
 	public SchemaTabelleSpalte col_E1 = add("E1", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("+")
 		.setJavaName("IstMoeglichEF1")
-		.setConverter("BooleanPlusMinusDefaultPlusConverter")
+		.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
 		.setJavaComment("gibt an, ob das Fach im 1. Halbjahr der Einführungsphase belegt werden kann,");
 
 	/** Die Definition der Tabellenspalte E2 */
 	public SchemaTabelleSpalte col_E2 = add("E2", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("+")
 		.setJavaName("IstMoeglichEF2")
-		.setConverter("BooleanPlusMinusDefaultPlusConverter")
+		.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
 		.setJavaComment("gibt an, ob das Fach im 2. Halbjahr der Einführungsphase belegt werden kann,");
 
 	/** Die Definition der Tabellenspalte Q1 */
 	public SchemaTabelleSpalte col_Q1 = add("Q1", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("+")
 		.setJavaName("IstMoeglichQ11")
-		.setConverter("BooleanPlusMinusDefaultPlusConverter")
+		.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
 		.setJavaComment("gibt an, ob das Fach im 1. Halbjahr des 1. Jahres der Qualifikationsphase belegt werden kann,");
 
 	/** Die Definition der Tabellenspalte Q2 */
 	public SchemaTabelleSpalte col_Q2 = add("Q2", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("+")
 		.setJavaName("IstMoeglichQ12")
-		.setConverter("BooleanPlusMinusDefaultPlusConverter")
+		.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
 		.setJavaComment("gibt an, ob das Fach im 2. Halbjahr des 1. Jahres der Qualifikationsphase belegt werden kann,");
 
 	/** Die Definition der Tabellenspalte Q3 */
 	public SchemaTabelleSpalte col_Q3 = add("Q3", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("+")
 		.setJavaName("IstMoeglichQ21")
-		.setConverter("BooleanPlusMinusDefaultPlusConverter")
+		.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
 		.setJavaComment("gibt an, ob das Fach im 1. Halbjahr des 2. Jahres der Qualifikationsphase belegt werden kann,");
 
 	/** Die Definition der Tabellenspalte Q4 */
 	public SchemaTabelleSpalte col_Q4 = add("Q4", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("+")
 		.setJavaName("IstMoeglichQ22")
-		.setConverter("BooleanPlusMinusDefaultPlusConverter")
+		.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
 		.setJavaComment("gibt an, ob das Fach im 2. Halbjahr des 2. Jahres der Qualifikationsphase belegt werden kann,");
 
 	/** Die Definition der Tabellenspalte AlsNeueFSInSII */
 	public SchemaTabelleSpalte col_AlsNeueFSInSII = add("AlsNeueFSInSII", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
 		.setJavaName("IstMoeglichAlsNeueFremdspracheInSekII")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("gibt an, ob das Fach als neue Fremdsprache in der Sekundarstufe zählt.");
 
 	/** Die Definition der Tabellenspalte Leitfach_ID */
@@ -230,21 +233,21 @@ public class Tabelle_EigeneSchule_Faecher extends SchemaTabelle {
 	public SchemaTabelleSpalte col_E1_S = add("E1_S", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
 		.setJavaName("MussSchriftlichEF1")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Beim WBK: Gibt an, ob das Fach in dem 1. Halbjahr der Einführungsphase schriftlich belegt werden muss");
 
 	/** Die Definition der Tabellenspalte E2_S */
 	public SchemaTabelleSpalte col_E2_S = add("E2_S", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
 		.setJavaName("MussSchriftlichEF2")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Beim WBK: Gibt an, ob das Fach in dem 2. Halbjahr der Einführungsphase schriftlich belegt werden muss");
 
 	/** Die Definition der Tabellenspalte NurMuendlich */
 	public SchemaTabelleSpalte col_NurMuendlich = add("NurMuendlich", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
 		.setJavaName("MussMuendlich")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Beim WBK: Gibt an, ob das Fach nur muendlich belegt werden darf");
 
 	/** Die Definition der Tabellenspalte Aufgabenfeld */
@@ -254,7 +257,7 @@ public class Tabelle_EigeneSchule_Faecher extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte AbgeschlFaecherHolen */
 	public SchemaTabelleSpalte col_AbgeschlFaecherHolen = add("AbgeschlFaecherHolen", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("+")
-		.setConverter("BooleanPlusMinusDefaultPlusConverter")
+		.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
 		.setJavaComment("Gibt an, ob das Fach bei der Operation „Abgeschlossene Fächer holen“ berücksichtigt werden soll.");
 
 	/** Die Definition der Tabellenspalte GewichtungFHR */

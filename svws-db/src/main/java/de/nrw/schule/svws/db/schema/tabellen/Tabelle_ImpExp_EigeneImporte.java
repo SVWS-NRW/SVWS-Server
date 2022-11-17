@@ -1,5 +1,6 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
+import de.nrw.schule.svws.db.converter.current.Boolean01Converter;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaRevisionen;
 import de.nrw.schule.svws.db.schema.SchemaTabelle;
@@ -55,7 +56,7 @@ public class Tabelle_ImpExp_EigeneImporte extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte InsertMode */
 	public SchemaTabelleSpalte col_InsertMode = add("InsertMode", SchemaDatentypen.INT, false)
-		.setConverter("Boolean01Converter")
+		.setConverter(Boolean01Converter.class)
 		.setJavaComment("externen Textimport");
 
 	/** Die Definition der Tabellenspalte LookupTableDir */

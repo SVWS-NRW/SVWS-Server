@@ -1,6 +1,10 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
 import de.nrw.schule.svws.core.adt.Pair;
+import de.nrw.schule.svws.db.converter.current.Boolean01Converter;
+import de.nrw.schule.svws.db.converter.current.NoteConverterFromInteger;
+import de.nrw.schule.svws.db.converter.current.SprachpruefungniveauConverter;
+import de.nrw.schule.svws.db.converter.current.SprachreferenzniveauConverter;
 import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaFremdschluesselAktionen;
@@ -36,7 +40,7 @@ public class Tabelle_SchuelerSprachpruefungen extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte Anspruchsniveau_ID */
 	public SchemaTabelleSpalte col_Anspruchsniveau_ID = add("Anspruchsniveau_ID", SchemaDatentypen.BIGINT, false)
 		.setJavaName("Anspruchsniveau")
-		.setConverter("SprachpruefungniveauConverter")
+		.setConverter(SprachpruefungniveauConverter.class)
 		.setConverterRevision(SchemaRevisionen.REV_1)
 		.setJavaComment("Das Anspruchsniveau der Sprachprüfung (angelehnt an einen entsprechenden Schulabschluss)");
 
@@ -50,43 +54,43 @@ public class Tabelle_SchuelerSprachpruefungen extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte IstHSUPruefung */
 	public SchemaTabelleSpalte col_IstHSUPruefung = add("IstHSUPruefung", SchemaDatentypen.INT, false)
-		.setConverter("Boolean01Converter")
+		.setConverter(Boolean01Converter.class)
 		.setJavaComment("Gibt an, dass die Prüfung eine Prüfung in der Herkunftssprache ist (BASS 13-61 Nr. 2). Entspricht dem Eintrag P in Schild 2");
 
 	/** Die Definition der Tabellenspalte IstFeststellungspruefung */
 	public SchemaTabelleSpalte col_IstFeststellungspruefung = add("IstFeststellungspruefung", SchemaDatentypen.INT, false)
-		.setConverter("Boolean01Converter")
+		.setConverter(Boolean01Converter.class)
 		.setJavaComment("Gibt an, ob die Prüfung eine Sprachfeststellungsprüfung ist (BASS 13-61 Nr. 1). Entspricht N in Schild 2");
 
 	/** Die Definition der Tabellenspalte KannErstePflichtfremdspracheErsetzen */
 	public SchemaTabelleSpalte col_KannErstePflichtfremdspracheErsetzen = add("KannErstePflichtfremdspracheErsetzen", SchemaDatentypen.INT, false)
-		.setConverter("Boolean01Converter")
+		.setConverter(Boolean01Converter.class)
 		.setJavaComment("Gibt an, ob die Sprachprüfung an die Stelle der ersten Pflichtfremdsprache treten kann");
 
 	/** Die Definition der Tabellenspalte KannZweitePflichtfremdspracheErsetzen */
 	public SchemaTabelleSpalte col_KannZweitePflichtfremdspracheErsetzen = add("KannZweitePflichtfremdspracheErsetzen", SchemaDatentypen.INT, false)
-		.setConverter("Boolean01Converter")
+		.setConverter(Boolean01Converter.class)
 		.setJavaComment("Gibt an, ob die Sprachprüfung an die Stelle der zweiten Pflichtfremdsprache treten kann");
 
 	/** Die Definition der Tabellenspalte KannWahlpflichtfremdspracheErsetzen */
 	public SchemaTabelleSpalte col_KannWahlpflichtfremdspracheErsetzen = add("KannWahlpflichtfremdspracheErsetzen", SchemaDatentypen.INT, false)
-		.setConverter("Boolean01Converter")
+		.setConverter(Boolean01Converter.class)
 		.setJavaComment("Gibt an, ob die Sprachprüfung an die Stelle einer Wahlpflichtfremdsprache der Klassen 05-07 treten kann");
 
 	/** Die Definition der Tabellenspalte KannBelegungAlsFortgefuehrteSpracheErlauben */
 	public SchemaTabelleSpalte col_KannBelegungAlsFortgefuehrteSpracheErlauben = add("KannBelegungAlsFortgefuehrteSpracheErlauben", SchemaDatentypen.INT, false)
-		.setConverter("Boolean01Converter")
+		.setConverter(Boolean01Converter.class)
 		.setJavaComment("Gibt an, ob die Sprachprüfung nachweist, dass die Sprache als fortgeführte Fremdsprache in der Oberstufe belegt werden kann (BASS 13-61 Nr. 1 Abs. 11)");
 
 	/** Die Definition der Tabellenspalte Referenzniveau */
 	public SchemaTabelleSpalte col_Referenzniveau = add("Referenzniveau", SchemaDatentypen.VARCHAR, false).setDatenlaenge(5)
-		.setConverter("SprachreferenzniveauConverter")
+		.setConverter(SprachreferenzniveauConverter.class)
 		.setConverterRevision(SchemaRevisionen.REV_1)
 		.setJavaComment("Das Sprachreferenzniveau der Sprachprüfung gemäß GeR");
 
 	/** Die Definition der Tabellenspalte NotePruefung */
 	public SchemaTabelleSpalte col_NotePruefung = add("NotePruefung", SchemaDatentypen.INT, false)
-		.setConverter("NoteConverterFromInteger")
+		.setConverter(NoteConverterFromInteger.class)
 		.setConverterRevision(SchemaRevisionen.REV_1)
 		.setJavaComment("Note der Sprachprüfung, die herangezogen werden kann, falls die Note der Sprachprüfung an die Stelle einer Fremdsprachennote tritt");
 

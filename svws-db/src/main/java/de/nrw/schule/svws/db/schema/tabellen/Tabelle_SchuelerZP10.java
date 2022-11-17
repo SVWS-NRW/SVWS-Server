@@ -1,6 +1,7 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
 import de.nrw.schule.svws.core.adt.Pair;
+import de.nrw.schule.svws.db.converter.current.BooleanPlusMinusConverter;
 import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaFremdschluesselAktionen;
@@ -8,8 +9,8 @@ import de.nrw.schule.svws.db.schema.SchemaRevisionen;
 import de.nrw.schule.svws.db.schema.SchemaTabelle;
 import de.nrw.schule.svws.db.schema.SchemaTabelleFremdschluessel;
 import de.nrw.schule.svws.db.schema.SchemaTabelleIndex;
-import de.nrw.schule.svws.db.schema.SchemaTabelleUniqueIndex;
 import de.nrw.schule.svws.db.schema.SchemaTabelleSpalte;
+import de.nrw.schule.svws.db.schema.SchemaTabelleUniqueIndex;
 
 /**
  * Diese Klasse beinhaltet die Schema-Definition für die Tabelle SchuelerZP10.
@@ -45,12 +46,12 @@ public class Tabelle_SchuelerZP10 extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte MdlPruefung */
 	public SchemaTabelleSpalte col_MdlPruefung = add("MdlPruefung", SchemaDatentypen.CHAR, false).setDatenlaenge(1)
-		.setConverter("BooleanPlusMinusConverter")
+		.setConverter(BooleanPlusMinusConverter.class)
 		.setJavaComment("Gibt an, ob zum ZP10-Facheintrag eine mündliche Prüfung angesetzt ist");
 
 	/** Die Definition der Tabellenspalte MdlPruefungFW */
 	public SchemaTabelleSpalte col_MdlPruefungFW = add("MdlPruefungFW", SchemaDatentypen.CHAR, false).setDatenlaenge(1)
-		.setConverter("BooleanPlusMinusConverter")
+		.setConverter(BooleanPlusMinusConverter.class)
 		.setJavaComment("Gibt an, ob zum ZP10-Facheintrag eine freiwilliege mündliche Prüfung angesetzt ist");
 
 	/** Die Definition der Tabellenspalte NoteMuendlich */

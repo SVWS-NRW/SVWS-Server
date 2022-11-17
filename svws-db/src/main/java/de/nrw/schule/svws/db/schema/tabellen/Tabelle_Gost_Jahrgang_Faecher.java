@@ -1,6 +1,7 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
 import de.nrw.schule.svws.core.adt.Pair;
+import de.nrw.schule.svws.db.converter.current.Boolean01Converter;
 import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaFremdschluesselAktionen;
@@ -28,56 +29,56 @@ public class Tabelle_Gost_Jahrgang_Faecher extends SchemaTabelle {
 	public SchemaTabelleSpalte col_WaehlbarEF1 = add("WaehlbarEF1", SchemaDatentypen.INT, false)
 		.setDefault("1")
 		.setNotNull()
-		.setConverter("Boolean01Converter")
+		.setConverter(Boolean01Converter.class)
 		.setJavaComment("Gymnasiale Oberstufe - Jahrgangsdaten: Belegung des Faches in der EF.1 möglich: 1 - true, 0 - false ");
 
 	/** Die Definition der Tabellenspalte WaehlbarEF2 */
 	public SchemaTabelleSpalte col_WaehlbarEF2 = add("WaehlbarEF2", SchemaDatentypen.INT, false)
 		.setDefault("1")
 		.setNotNull()
-		.setConverter("Boolean01Converter")
+		.setConverter(Boolean01Converter.class)
 		.setJavaComment("Gymnasiale Oberstufe - Jahrgangsdaten: Belegung des Faches in der EF.2 möglich: 1 - true, 0 - false");
 
 	/** Die Definition der Tabellenspalte WaehlbarQ11 */
 	public SchemaTabelleSpalte col_WaehlbarQ11 = add("WaehlbarQ11", SchemaDatentypen.INT, false)
 		.setDefault("1")
 		.setNotNull()
-		.setConverter("Boolean01Converter")
+		.setConverter(Boolean01Converter.class)
 		.setJavaComment("Gymnasiale Oberstufe - Jahrgangsdaten: Belegung des Faches in der Q1.1 möglich: 1 - true, 0 - false");
 
 	/** Die Definition der Tabellenspalte WaehlbarQ12 */
 	public SchemaTabelleSpalte col_WaehlbarQ12 = add("WaehlbarQ12", SchemaDatentypen.INT, false)
 		.setDefault("1")
 		.setNotNull()
-		.setConverter("Boolean01Converter")
+		.setConverter(Boolean01Converter.class)
 		.setJavaComment("Gymnasiale Oberstufe - Jahrgangsdaten: Belegung des Faches in der Q1.2 möglich: 1 - true, 0 - false");
 
 	/** Die Definition der Tabellenspalte WaehlbarQ21 */
 	public SchemaTabelleSpalte col_WaehlbarQ21 = add("WaehlbarQ21", SchemaDatentypen.INT, false)
 		.setDefault("1")
 		.setNotNull()
-		.setConverter("Boolean01Converter")
+		.setConverter(Boolean01Converter.class)
 		.setJavaComment("Gymnasiale Oberstufe - Jahrgangsdaten: Belegung des Faches in der Q2.1 möglich: 1 - true, 0 - false");
 
 	/** Die Definition der Tabellenspalte WaehlbarQ22 */
 	public SchemaTabelleSpalte col_WaehlbarQ22 = add("WaehlbarQ22", SchemaDatentypen.INT, false)
 		.setDefault("1")
 		.setNotNull()
-		.setConverter("Boolean01Converter")
+		.setConverter(Boolean01Converter.class)
 		.setJavaComment("Gymnasiale Oberstufe - Jahrgangsdaten: Belegung des Faches in der Q2.2 möglich: 1 - true, 0 - false");
 
 	/** Die Definition der Tabellenspalte WaehlbarAbiGK */
 	public SchemaTabelleSpalte col_WaehlbarAbiGK = add("WaehlbarAbiGK", SchemaDatentypen.INT, false)
 		.setDefault("1")
 		.setNotNull()
-		.setConverter("Boolean01Converter")
+		.setConverter(Boolean01Converter.class)
 		.setJavaComment("Gymnasiale Oberstufe - Jahrgangsdaten: Eintrag, ob das Fach als 3. oder 4. Abiturfach gewählt werden kann: 1 - true, 0 - false");
 
 	/** Die Definition der Tabellenspalte WaehlbarAbiLK */
 	public SchemaTabelleSpalte col_WaehlbarAbiLK = add("WaehlbarAbiLK", SchemaDatentypen.INT, false)
 		.setDefault("1")
 		.setNotNull()
-		.setConverter("Boolean01Converter")
+		.setConverter(Boolean01Converter.class)
 		.setJavaComment("Gymnasiale Oberstufe - Jahrgangsdaten: Eintrag, ob das Fach als 1. oder 2. Abiturfach (LK) gewählt werden kann: 1 - true, 0 - false");
 
 	/** Die Definition der Tabellenspalte WochenstundenEF1 */
@@ -104,7 +105,7 @@ public class Tabelle_Gost_Jahrgang_Faecher extends SchemaTabelle {
 	public SchemaTabelleSpalte col_NurMuendlich = add("NurMuendlich", SchemaDatentypen.INT, false)
 		.setDefault("0")
 		.setNotNull()
-		.setConverter("Boolean01Converter")
+		.setConverter(Boolean01Converter.class)
 		.setJavaComment("Gymnasiale Oberstufe - Jahrgangsdaten: Gibt an, ob das Fach nur mündlich belegt werden kann: 1 - true, 0 - false");
 
 

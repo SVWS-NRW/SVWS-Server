@@ -1,5 +1,6 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
+import de.nrw.schule.svws.db.converter.current.BooleanPlusMinusDefaultPlusConverter;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaRevisionen;
 import de.nrw.schule.svws.db.schema.SchemaTabelle;
@@ -19,49 +20,49 @@ public class Tabelle_EigeneSchule_KAoADaten extends SchemaTabelle {
 	public SchemaTabelleSpalte col_Curriculum = add("Curriculum", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("+")
 		.setNotNull()
-		.setConverter("BooleanPlusMinusDefaultPlusConverter")
+		.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
 		.setJavaComment("KAOA Curriculumsangaben");
 
 	/** Die Definition der Tabellenspalte Koordinator */
 	public SchemaTabelleSpalte col_Koordinator = add("Koordinator", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("+")
 		.setNotNull()
-		.setConverter("BooleanPlusMinusDefaultPlusConverter")
+		.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
 		.setJavaComment("KAOA Koordinator");
 
 	/** Die Definition der Tabellenspalte Berufsorientierungsbuero */
 	public SchemaTabelleSpalte col_Berufsorientierungsbuero = add("Berufsorientierungsbuero", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("+")
 		.setNotNull()
-		.setConverter("BooleanPlusMinusDefaultPlusConverter")
+		.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
 		.setJavaComment("Schule hat Beruforientierungsbüro");
 
 	/** Die Definition der Tabellenspalte KooperationsvereinbarungAA */
 	public SchemaTabelleSpalte col_KooperationsvereinbarungAA = add("KooperationsvereinbarungAA", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("+")
 		.setNotNull()
-		.setConverter("BooleanPlusMinusDefaultPlusConverter")
+		.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
 		.setJavaComment("Kooperationsvereinbarung KAOA geschlossen");
 
 	/** Die Definition der Tabellenspalte NutzungReflexionsworkshop */
 	public SchemaTabelleSpalte col_NutzungReflexionsworkshop = add("NutzungReflexionsworkshop", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("+")
 		.setNotNull()
-		.setConverter("BooleanPlusMinusDefaultPlusConverter")
-		.setJavaComment("Refflexionsworkshops werden genutzt");
+		.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
+		.setJavaComment("Reflexionsworkshops werden genutzt");
 
 	/** Die Definition der Tabellenspalte NutzungEntscheidungskompetenzI */
 	public SchemaTabelleSpalte col_NutzungEntscheidungskompetenzI = add("NutzungEntscheidungskompetenzI", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("+")
 		.setNotNull()
-		.setConverter("BooleanPlusMinusDefaultPlusConverter")
+		.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
 		.setJavaComment("Nutzung der Entscheidungskompetenzen 1");
 
 	/** Die Definition der Tabellenspalte NutzungEntscheidungskompetenzII */
 	public SchemaTabelleSpalte col_NutzungEntscheidungskompetenzII = add("NutzungEntscheidungskompetenzII", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("+")
 		.setNotNull()
-		.setConverter("BooleanPlusMinusDefaultPlusConverter")
+		.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
 		.setJavaComment("Nutzung der Entscheidungskompetenzen 2");
 
 	/** Die Definition der Tabellenspalte SchulnrEigner */

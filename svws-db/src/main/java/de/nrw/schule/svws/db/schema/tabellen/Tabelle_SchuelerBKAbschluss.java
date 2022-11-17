@@ -1,6 +1,7 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
 import de.nrw.schule.svws.core.adt.Pair;
+import de.nrw.schule.svws.db.converter.current.BooleanPlusMinusConverter;
 import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaFremdschluesselAktionen;
@@ -25,37 +26,37 @@ public class Tabelle_SchuelerBKAbschluss extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte Zulassung */
 	public SchemaTabelleSpalte col_Zulassung = add("Zulassung", SchemaDatentypen.CHAR, false).setDatenlaenge(1)
-		.setConverter("BooleanPlusMinusConverter")
+		.setConverter(BooleanPlusMinusConverter.class)
 		.setJavaComment("Zulassung Ja Nein für den BKAbschlussReiter");
 
 	/** Die Definition der Tabellenspalte Bestanden */
 	public SchemaTabelleSpalte col_Bestanden = add("Bestanden", SchemaDatentypen.CHAR, false).setDatenlaenge(1)
-		.setConverter("BooleanPlusMinusConverter")
+		.setConverter(BooleanPlusMinusConverter.class)
 		.setJavaComment("Bestanden Ja Nein  für den BKAbschlussReiter");
 
 	/** Die Definition der Tabellenspalte ZertifikatBK */
 	public SchemaTabelleSpalte col_ZertifikatBK = add("ZertifikatBK", SchemaDatentypen.CHAR, false).setDatenlaenge(1)
-		.setConverter("BooleanPlusMinusConverter")
+		.setConverter(BooleanPlusMinusConverter.class)
 		.setJavaComment("DEPRECATED: Zertifikat für den BKAbschlussReiter");
 
 	/** Die Definition der Tabellenspalte ZulassungErwBK */
 	public SchemaTabelleSpalte col_ZulassungErwBK = add("ZulassungErwBK", SchemaDatentypen.CHAR, false).setDatenlaenge(1)
-		.setConverter("BooleanPlusMinusConverter")
+		.setConverter(BooleanPlusMinusConverter.class)
 		.setJavaComment("Zulassung erweiterte Beruflliche Kenntnisse");
 
 	/** Die Definition der Tabellenspalte BestandenErwBK */
 	public SchemaTabelleSpalte col_BestandenErwBK = add("BestandenErwBK", SchemaDatentypen.CHAR, false).setDatenlaenge(1)
-		.setConverter("BooleanPlusMinusConverter")
+		.setConverter(BooleanPlusMinusConverter.class)
 		.setJavaComment("Bestanden erweiterte Beruflliche Kenntnisse");
 
 	/** Die Definition der Tabellenspalte ZulassungBA */
 	public SchemaTabelleSpalte col_ZulassungBA = add("ZulassungBA", SchemaDatentypen.CHAR, false).setDatenlaenge(1)
-		.setConverter("BooleanPlusMinusConverter")
+		.setConverter(BooleanPlusMinusConverter.class)
 		.setJavaComment("Zulassung Berufsabschluss  für den BKAbschlussReiter");
 
 	/** Die Definition der Tabellenspalte BestandenBA */
 	public SchemaTabelleSpalte col_BestandenBA = add("BestandenBA", SchemaDatentypen.CHAR, false).setDatenlaenge(1)
-		.setConverter("BooleanPlusMinusConverter")
+		.setConverter(BooleanPlusMinusConverter.class)
 		.setJavaComment("Bestanden Berufsabschluss für den BKAbschlussReiter");
 
 	/** Die Definition der Tabellenspalte PraktPrfNote */
@@ -85,7 +86,7 @@ public class Tabelle_SchuelerBKAbschluss extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte FachPraktAnteilAusr */
 	public SchemaTabelleSpalte col_FachPraktAnteilAusr = add("FachPraktAnteilAusr", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
-		.setConverter("BooleanPlusMinusConverter")
+		.setConverter(BooleanPlusMinusConverter.class)
 		.setJavaComment("Fachpraktische Anteile mindestens ausreichend für den BKAbschlussReiter");
 
 	/** Die Definition der Tabellenspalte Jahr */

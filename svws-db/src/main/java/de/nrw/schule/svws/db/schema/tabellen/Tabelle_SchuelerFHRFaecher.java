@@ -1,6 +1,7 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
 import de.nrw.schule.svws.core.adt.Pair;
+import de.nrw.schule.svws.db.converter.current.BooleanPlusMinusDefaultMinusConverter;
 import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaFremdschluesselAktionen;
@@ -48,7 +49,7 @@ public class Tabelle_SchuelerFHRFaecher extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte RSII_2_1 */
 	public SchemaTabelleSpalte col_RSII_2_1 = add("RSII_2_1", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("R: Relevanz für Berechnung (+ wenn das Fach im betreffenden Abschnitt in die Berechnung eingeht, in SchILD wird das dann hellblau im Grid dargestellt) ");
 
 	/** Die Definition der Tabellenspalte PSII_2_2 */
@@ -62,7 +63,7 @@ public class Tabelle_SchuelerFHRFaecher extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte RSII_2_2 */
 	public SchemaTabelleSpalte col_RSII_2_2 = add("RSII_2_2", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("R: Relevanz für Berechnung (+ wenn das Fach im betreffenden Abschnitt in die Berechnung eingeht, in SchILD wird das dann hellblau im Grid dargestellt) ");
 
 	/** Die Definition der Tabellenspalte PSII_2_1_W */
@@ -76,7 +77,7 @@ public class Tabelle_SchuelerFHRFaecher extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte RSII_2_1_W */
 	public SchemaTabelleSpalte col_RSII_2_1_W = add("RSII_2_1_W", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("R: Relevanz für Berechnung (+ wenn das Fach im betreffenden Abschnitt in die Berechnung eingeht, in SchILD wird das dann hellblau im Grid dargestellt) W=wiederholt");
 
 	/** Die Definition der Tabellenspalte PSII_2_2_W */
@@ -90,7 +91,7 @@ public class Tabelle_SchuelerFHRFaecher extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte RSII_2_2_W */
 	public SchemaTabelleSpalte col_RSII_2_2_W = add("RSII_2_2_W", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("R: Relevanz für Berechnung (+ wenn das Fach im betreffenden Abschnitt in die Berechnung eingeht, in SchILD wird das dann hellblau im Grid dargestellt) W=wiederholt");
 
 	/** Die Definition der Tabellenspalte PSII_3_1 */
@@ -104,7 +105,7 @@ public class Tabelle_SchuelerFHRFaecher extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte RSII_3_1 */
 	public SchemaTabelleSpalte col_RSII_3_1 = add("RSII_3_1", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("R: Relevanz für Berechnung (+ wenn das Fach im betreffenden Abschnitt in die Berechnung eingeht, in SchILD wird das dann hellblau im Grid dargestellt) ");
 
 	/** Die Definition der Tabellenspalte PSII_3_2 */
@@ -118,7 +119,7 @@ public class Tabelle_SchuelerFHRFaecher extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte RSII_3_2 */
 	public SchemaTabelleSpalte col_RSII_3_2 = add("RSII_3_2", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("R: Relevanz für Berechnung (+ wenn das Fach im betreffenden Abschnitt in die Berechnung eingeht, in SchILD wird das dann hellblau im Grid dargestellt) ");
 
 	/** Die Definition der Tabellenspalte PSII_3_1_W */
@@ -132,7 +133,7 @@ public class Tabelle_SchuelerFHRFaecher extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte RSII_3_1_W */
 	public SchemaTabelleSpalte col_RSII_3_1_W = add("RSII_3_1_W", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("R: Relevanz für Berechnung (+ wenn das Fach im betreffenden Abschnitt in die Berechnung eingeht, in SchILD wird das dann hellblau im Grid dargestellt) W=wiederholt");
 
 	/** Die Definition der Tabellenspalte PSII_3_2_W */
@@ -146,7 +147,7 @@ public class Tabelle_SchuelerFHRFaecher extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte RSII_3_2_W */
 	public SchemaTabelleSpalte col_RSII_3_2_W = add("RSII_3_2_W", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("R: Relevanz für Berechnung (+ wenn das Fach im betreffenden Abschnitt in die Berechnung eingeht, in SchILD wird das dann hellblau im Grid dargestellt) W=wiederholt");
 
 	/** Die Definition der Tabellenspalte KSII_2_1 */

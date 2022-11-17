@@ -1,6 +1,7 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
 import de.nrw.schule.svws.core.adt.Pair;
+import de.nrw.schule.svws.db.converter.current.BooleanPlusMinusDefaultMinusConverter;
 import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaFremdschluesselAktionen;
@@ -41,7 +42,7 @@ public class Tabelle_Schild_Verwaltung extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte DatenGeprueft */
 	public SchemaTabelleSpalte col_DatenGeprueft = add("DatenGeprueft", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Stößt eine Datenprüfung nach großen Importen an");
 
 	/** Die Definition der Tabellenspalte Version */

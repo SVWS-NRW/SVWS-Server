@@ -126,10 +126,9 @@ public class DTOCreatorTable {
 	 */
 	private static String getDataType(SchemaTabelleSpalte spalte, final long rev) {		
 		String dataType = spalte.datentyp().java();
-		String attrConverter = spalte.getJavaAttributConverter(rev);
-		if (attrConverter != null) {
-			dataType = DBAttributeConverter.getByClassName(attrConverter).getResultType().getSimpleName();
-		}
+		DBAttributeConverter<?, ?> attrConverter = spalte.javaConverter(rev);
+		if (attrConverter != null)
+			dataType = attrConverter.getResultType().getSimpleName();
 		return dataType;
 	}
 	
@@ -194,9 +193,8 @@ public class DTOCreatorTable {
 	 */
 	private List<DBAttributeConverter<?,?>> getAttributeConverter(final long rev) {
 		return tabelle.getSpalten(rev).stream()
-				.map(spalte -> spalte.getJavaAttributConverter(rev))
-				.filter(acName -> acName != null)
-				.map(acName -> DBAttributeConverter.getByClassName(acName))
+				.map(spalte -> spalte.javaConverter(rev))
+				.filter(conv -> conv != null)
 				.filter(ac -> ac != null)
 				.collect(Collectors.toList());
 	}
@@ -304,15 +302,15 @@ public class DTOCreatorTable {
 			sb.append("\t@JsonProperty" + System.lineSeparator());
 		}
 		String dataType = spalte.datentyp().java(); 
-		String attrConverter = spalte.getJavaAttributConverter(rev); 
+		DBAttributeConverter<?, ?> attrConverter = spalte.javaConverter(rev);
 		if (attrConverter != null) {
 			if (withAnnotations) {
-				var simpleConverterClassName = DBAttributeConverter.getByClassName(attrConverter).getClass().getSimpleName();
+				var simpleConverterClassName = attrConverter.getClass().getSimpleName();
 				sb.append("\t@Convert(converter=" + simpleConverterClassName + ".class)" + System.lineSeparator());
 				sb.append("\t@JsonSerialize(using=" + simpleConverterClassName + "Serializer.class)" + System.lineSeparator());
 				sb.append("\t@JsonDeserialize(using=" + simpleConverterClassName + "Deserializer.class)" + System.lineSeparator());				
 			}
-			dataType = DBAttributeConverter.getByClassName(attrConverter).getResultType().getSimpleName();
+			dataType = attrConverter.getResultType().getSimpleName();
 		}
 		sb.append("\tpublic " + dataType + " " + javaAttributName + ";" + System.lineSeparator());
 		return sb.toString();

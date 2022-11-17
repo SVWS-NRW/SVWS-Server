@@ -1,14 +1,22 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
 import de.nrw.schule.svws.core.adt.Pair;
+import de.nrw.schule.svws.db.converter.current.Boolean01Converter;
+import de.nrw.schule.svws.db.converter.current.BooleanPlusMinusDefaultMinusConverter;
+import de.nrw.schule.svws.db.converter.current.BooleanPlusMinusDefaultPlusConverter;
+import de.nrw.schule.svws.db.converter.current.DatumConverter;
+import de.nrw.schule.svws.db.converter.current.GeschlechtConverter;
+import de.nrw.schule.svws.db.converter.current.NationalitaetenConverter;
+import de.nrw.schule.svws.db.converter.current.SchuelerStatusConverter;
+import de.nrw.schule.svws.db.converter.current.statkue.SchulgliederungKuerzelConverter;
 import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaFremdschluesselAktionen;
 import de.nrw.schule.svws.db.schema.SchemaRevisionen;
 import de.nrw.schule.svws.db.schema.SchemaTabelle;
 import de.nrw.schule.svws.db.schema.SchemaTabelleFremdschluessel;
-import de.nrw.schule.svws.db.schema.SchemaTabelleUniqueIndex;
 import de.nrw.schule.svws.db.schema.SchemaTabelleSpalte;
+import de.nrw.schule.svws.db.schema.SchemaTabelleUniqueIndex;
 
 /**
  * Diese Klasse beinhaltet die Schema-Definition für die Tabelle Schueler.
@@ -39,7 +47,7 @@ public class Tabelle_Schueler extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte Status */
 	public SchemaTabelleSpalte col_Status = add("Status", SchemaDatentypen.INT, false)
-		.setConverter("SchuelerStatusConverter")
+		.setConverter(SchuelerStatusConverter.class)
 		.setConverterRevision(SchemaRevisionen.REV_1)
 		.setJavaComment("Status des Schüler steuert die Einordnung in die Kästen Aktiv Neuaufnahme Abschluss usw.");
 
@@ -126,7 +134,7 @@ public class Tabelle_Schueler extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte Geburtsdatum */
 	public SchemaTabelleSpalte col_Geburtsdatum = add("Geburtsdatum", SchemaDatentypen.DATE, false)
-		.setConverter("DatumConverter")
+		.setConverter(DatumConverter.class)
 		.setJavaComment("Geburtsdatum des Schülers");
 
 	/** Die Definition der Tabellenspalte Geburtsort */
@@ -136,24 +144,24 @@ public class Tabelle_Schueler extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte Volljaehrig */
 	public SchemaTabelleSpalte col_Volljaehrig = add("Volljaehrig", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Gibt an ob der Schüler volljährig ist");
 
 	/** Die Definition der Tabellenspalte Geschlecht */
 	public SchemaTabelleSpalte col_Geschlecht = add("Geschlecht", SchemaDatentypen.SMALLINT, false)
-		.setConverter("GeschlechtConverter")
+		.setConverter(GeschlechtConverter.class)
 		.setConverterRevision(SchemaRevisionen.REV_1)
 		.setJavaComment("Geschlecht des Schülers");
 
 	/** Die Definition der Tabellenspalte StaatKrz */
 	public SchemaTabelleSpalte col_StaatKrz = add("StaatKrz", SchemaDatentypen.VARCHAR, false).setDatenlaenge(3)
-		.setConverter("NationalitaetenConverter")
+		.setConverter(NationalitaetenConverter.class)
 		.setConverterRevision(SchemaRevisionen.REV_1)
 		.setJavaComment("Kürzel der 1. Staatsangehörigkeit");
 
 	/** Die Definition der Tabellenspalte StaatKrz2 */
 	public SchemaTabelleSpalte col_StaatKrz2 = add("StaatKrz2", SchemaDatentypen.VARCHAR, false).setDatenlaenge(3)
-		.setConverter("NationalitaetenConverter")
+		.setConverter(NationalitaetenConverter.class)
 		.setConverterRevision(SchemaRevisionen.REV_1)
 		.setJavaComment("Kürzel der 2. Staatsangehörigkeit");
 
@@ -165,7 +173,7 @@ public class Tabelle_Schueler extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte Aussiedler */
 	public SchemaTabelleSpalte col_Aussiedler = add("Aussiedler", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("DEPRECATED: Gibt an ob der Schüler ausgesiedelt ist (wird nicht mehr erfasst)");
 
 	/** Die Definition der Tabellenspalte Religion_ID */
@@ -179,25 +187,25 @@ public class Tabelle_Schueler extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte Religionsabmeldung */
 	public SchemaTabelleSpalte col_Religionsabmeldung = add("Religionsabmeldung", SchemaDatentypen.DATE, false)
-		.setConverter("DatumConverter")
+		.setConverter(DatumConverter.class)
 		.setJavaComment("Abmeldetdateum vom Religionsunterricht");
 
 	/** Die Definition der Tabellenspalte Religionsanmeldung */
 	public SchemaTabelleSpalte col_Religionsanmeldung = add("Religionsanmeldung", SchemaDatentypen.DATE, false)
-		.setConverter("DatumConverter")
+		.setConverter(DatumConverter.class)
 		.setJavaComment("Anmeldedatum zum Religionsunterricht wenn vorher abgemeldet");
 
 	/** Die Definition der Tabellenspalte Bafoeg */
 	public SchemaTabelleSpalte col_Bafoeg = add("Bafoeg", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Gibt an ob ein Schüler BAFög bezieht");
 
 	/** Die Definition der Tabellenspalte Schwerbehinderung */
 	public SchemaTabelleSpalte col_Schwerbehinderung = add("Schwerbehinderung", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
 		.setVeraltet(SchemaRevisionen.REV_1)
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("DEPRECATED: Gibt an ob eine Schwerbehinderung vorliegt Ja Nein - verschoben nach SchuelerLernabschittsdaten");
 
 	/** Die Definition der Tabellenspalte Sportbefreiung_ID */
@@ -221,7 +229,7 @@ public class Tabelle_Schueler extends SchemaTabelle {
 	public SchemaTabelleSpalte col_ASDSchulform = add("ASDSchulform", SchemaDatentypen.VARCHAR, false).setDatenlaenge(3)
 		.setVeraltet(SchemaRevisionen.REV_1)
 		.setJavaName("Schulgliederung")
-		.setConverter("SchulgliederungKuerzelConverter")
+		.setConverter(SchulgliederungKuerzelConverter.class)
 		.setConverterRevision(SchemaRevisionen.REV_1)
 		.setJavaComment("DEPRECATED: ASD-Kürzel der Schulgliederung - Spalte fehlerhaft benannt! - verschoben nach SchuelerLernabschittsdaten");
 
@@ -243,12 +251,12 @@ public class Tabelle_Schueler extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte SchulpflichtErf */
 	public SchemaTabelleSpalte col_SchulpflichtErf = add("SchulpflichtErf", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Gibt an ob die Vollzeitschulpflicht erfüllt ist Ja Nein");
 
 	/** Die Definition der Tabellenspalte Aufnahmedatum */
 	public SchemaTabelleSpalte col_Aufnahmedatum = add("Aufnahmedatum", SchemaDatentypen.DATE, false)
-		.setConverter("DatumConverter")
+		.setConverter(DatumConverter.class)
 		.setJavaComment("Aufnahmedatum");
 
 	/** Die Definition der Tabellenspalte Einschulungsjahr */
@@ -273,7 +281,7 @@ public class Tabelle_Schueler extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte LSSchulEntlassDatum */
 	public SchemaTabelleSpalte col_LSSchulEntlassDatum = add("LSSchulEntlassDatum", SchemaDatentypen.DATE, false)
-		.setConverter("DatumConverter")
+		.setConverter(DatumConverter.class)
 		.setJavaComment("letzte Schule Entlassdatum");
 
 	/** Die Definition der Tabellenspalte LSVersetzung */
@@ -303,7 +311,7 @@ public class Tabelle_Schueler extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte LSRefPaed */
 	public SchemaTabelleSpalte col_LSRefPaed = add("LSRefPaed", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("letzte Schule Reformpädagogik");
 
 	/** Die Definition der Tabellenspalte Entlassjahrgang */
@@ -316,7 +324,7 @@ public class Tabelle_Schueler extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte Entlassdatum */
 	public SchemaTabelleSpalte col_Entlassdatum = add("Entlassdatum", SchemaDatentypen.DATE, false)
-		.setConverter("DatumConverter")
+		.setConverter(DatumConverter.class)
 		.setJavaComment("Entlassdatum");
 
 	/** Die Definition der Tabellenspalte Entlassgrund */
@@ -333,24 +341,24 @@ public class Tabelle_Schueler extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte Schulwechseldatum */
 	public SchemaTabelleSpalte col_Schulwechseldatum = add("Schulwechseldatum", SchemaDatentypen.DATE, false)
-		.setConverter("DatumConverter")
+		.setConverter(DatumConverter.class)
 		.setJavaComment("Datum des Schulwechsels");
 
 	/** Die Definition der Tabellenspalte Geloescht */
 	public SchemaTabelleSpalte col_Geloescht = add("Geloescht", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Löschmarkierung Schülerdatensatz");
 
 	/** Die Definition der Tabellenspalte Gesperrt */
 	public SchemaTabelleSpalte col_Gesperrt = add("Gesperrt", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Datensatz gesperrt Ja Nein");
 
 	/** Die Definition der Tabellenspalte ModifiziertAm */
 	public SchemaTabelleSpalte col_ModifiziertAm = add("ModifiziertAm", SchemaDatentypen.DATETIME, false)
-		.setConverter("DatumConverter")
+		.setConverter(DatumConverter.class)
 		.setJavaComment("zuletzt geändert Datum");
 
 	/** Die Definition der Tabellenspalte ModifiziertVon */
@@ -360,32 +368,32 @@ public class Tabelle_Schueler extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte Markiert */
 	public SchemaTabelleSpalte col_Markiert = add("Markiert", SchemaDatentypen.VARCHAR, false).setDatenlaenge(21)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Datensatz ist markiert");
 
 	/** Die Definition der Tabellenspalte FotoVorhanden */
 	public SchemaTabelleSpalte col_FotoVorhanden = add("FotoVorhanden", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("DEPRECATED: nicht mehr genutzt Zustimmung Foto");
 
 	/** Die Definition der Tabellenspalte JVA */
 	public SchemaTabelleSpalte col_JVA = add("JVA", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Ist Schüler einer Justizvollzugsanstalt");
 
 	/** Die Definition der Tabellenspalte RefPaed */
 	public SchemaTabelleSpalte col_RefPaed = add("RefPaed", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
 		.setVeraltet(SchemaRevisionen.REV_1)
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("DEPRECATED: Teilnahme an Reformpädagogik - verschoben nach SchuelerLernabschittsdaten");
 
 	/** Die Definition der Tabellenspalte KeineAuskunft */
 	public SchemaTabelleSpalte col_KeineAuskunft = add("KeineAuskunft", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Keine Auskunft an Dritte Ja Nein");
 
 	/** Die Definition der Tabellenspalte Beruf */
@@ -402,7 +410,7 @@ public class Tabelle_Schueler extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte BeginnBildungsgang */
 	public SchemaTabelleSpalte col_BeginnBildungsgang = add("BeginnBildungsgang", SchemaDatentypen.DATE, false)
-		.setConverter("DatumConverter")
+		.setConverter(DatumConverter.class)
 		.setJavaComment("Beginn des Bildungsgangs BK");
 
 	/** Die Definition der Tabellenspalte OrgFormKrz */
@@ -430,7 +438,7 @@ public class Tabelle_Schueler extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte KonfDruck */
 	public SchemaTabelleSpalte col_KonfDruck = add("KonfDruck", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("+")
-		.setConverter("BooleanPlusMinusDefaultPlusConverter")
+		.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
 		.setJavaComment("Konfession aufs Zeugnis für den Druck");
 
 	/** Die Definition der Tabellenspalte DSN_Text */
@@ -453,7 +461,7 @@ public class Tabelle_Schueler extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte BerufsschulpflErf */
 	public SchemaTabelleSpalte col_BerufsschulpflErf = add("BerufsschulpflErf", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Gibt an ob die Berufsschulpflicht erfüllt ist (Ja/Nein)");
 
 	/** Die Definition der Tabellenspalte StatusNSJ */
@@ -484,43 +492,43 @@ public class Tabelle_Schueler extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte VerpflichtungSprachfoerderkurs */
 	public SchemaTabelleSpalte col_VerpflichtungSprachfoerderkurs = add("VerpflichtungSprachfoerderkurs", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Wurde zu einem Sprachförderkurs verpflichtet (Ja/Nein)");
 
 	/** Die Definition der Tabellenspalte TeilnahmeSprachfoerderkurs */
 	public SchemaTabelleSpalte col_TeilnahmeSprachfoerderkurs = add("TeilnahmeSprachfoerderkurs", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Teilnahme an einen Sprachförderkurs (Ja/Nein)");
 
 	/** Die Definition der Tabellenspalte SchulbuchgeldBefreit */
 	public SchemaTabelleSpalte col_SchulbuchgeldBefreit = add("SchulbuchgeldBefreit", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Vom Schulbuchgeld befreit (Ja/Nein)");
 
 	/** Die Definition der Tabellenspalte Autist */
 	public SchemaTabelleSpalte col_Autist = add("Autist", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
 		.setVeraltet(SchemaRevisionen.REV_1)
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("DEPRECATED: Gibt an ob Autismuss vorliegt (Ja/Nein) - verschoben nach Tabelle SchuelerLernabschnittsdaten");
 
 	/** Die Definition der Tabellenspalte GeburtslandSchueler */
 	public SchemaTabelleSpalte col_GeburtslandSchueler = add("GeburtslandSchueler", SchemaDatentypen.VARCHAR, false).setDatenlaenge(10)
-		.setConverter("NationalitaetenConverter")
+		.setConverter(NationalitaetenConverter.class)
 		.setConverterRevision(SchemaRevisionen.REV_1)
 		.setJavaComment("Migrationshintergrund Geburtsland des Schülers");
 
 	/** Die Definition der Tabellenspalte GeburtslandVater */
 	public SchemaTabelleSpalte col_GeburtslandVater = add("GeburtslandVater", SchemaDatentypen.VARCHAR, false).setDatenlaenge(10)
-		.setConverter("NationalitaetenConverter")
+		.setConverter(NationalitaetenConverter.class)
 		.setConverterRevision(SchemaRevisionen.REV_1)
 		.setJavaComment("Migrationshintergrund Geburtsland des Vaters");
 
 	/** Die Definition der Tabellenspalte GeburtslandMutter */
 	public SchemaTabelleSpalte col_GeburtslandMutter = add("GeburtslandMutter", SchemaDatentypen.VARCHAR, false).setDatenlaenge(10)
-		.setConverter("NationalitaetenConverter")
+		.setConverter(NationalitaetenConverter.class)
 		.setConverterRevision(SchemaRevisionen.REV_1)
 		.setJavaComment("Migrationshintergrund Geburtsland der Mutter");
 
@@ -543,7 +551,7 @@ public class Tabelle_Schueler extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte Migrationshintergrund */
 	public SchemaTabelleSpalte col_Migrationshintergrund = add("Migrationshintergrund", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Migrationshintergrund vorhanden (Ja/Nein)");
 
 	/** Die Definition der Tabellenspalte ExterneSchulNr */
@@ -569,7 +577,7 @@ public class Tabelle_Schueler extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte Duplikat */
 	public SchemaTabelleSpalte col_Duplikat = add("Duplikat", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Gibt an ob der Datensatz ein Duplikat ist");
 
 	/** Die Definition der Tabellenspalte EinschulungsartASD */
@@ -610,7 +618,7 @@ public class Tabelle_Schueler extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte HatBerufsausbildung */
 	public SchemaTabelleSpalte col_HatBerufsausbildung = add("HatBerufsausbildung", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Gibt an ob der Schüler eine Berufsausbildung hat (BK)");
 
 	/** Die Definition der Tabellenspalte Ausweisnummer */
@@ -621,7 +629,7 @@ public class Tabelle_Schueler extends SchemaTabelle {
 	public SchemaTabelleSpalte col_AOSF = add("AOSF", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
 		.setVeraltet(SchemaRevisionen.REV_1)
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("DEPRECATED Gibt an ob der Schüler ein AOSF hat - verschoben nach Tabelle SchuelerLernabschnittsdaten ");
 
 	/** Die Definition der Tabellenspalte EPJahre */
@@ -636,7 +644,7 @@ public class Tabelle_Schueler extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte WechselBestaetigt */
 	public SchemaTabelleSpalte col_WechselBestaetigt = add("WechselBestaetigt", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Wechsel zur aufnehmenden Schule bestätigt");
 
 	/** Die Definition der Tabellenspalte DauerBildungsgang */
@@ -645,19 +653,19 @@ public class Tabelle_Schueler extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte AnmeldeDatum */
 	public SchemaTabelleSpalte col_AnmeldeDatum = add("AnmeldeDatum", SchemaDatentypen.DATE, false)
-		.setConverter("DatumConverter")
+		.setConverter(DatumConverter.class)
 		.setJavaComment("Anmeldedatum des Schülers");
 
 	/** Die Definition der Tabellenspalte MeisterBafoeg */
 	public SchemaTabelleSpalte col_MeisterBafoeg = add("MeisterBafoeg", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Gibt an ob ein Schüler MeisterBafög bezieht BK");
 
 	/** Die Definition der Tabellenspalte OnlineAnmeldung */
 	public SchemaTabelleSpalte col_OnlineAnmeldung = add("OnlineAnmeldung", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Schüler hat sich Online angemeldet (Ja/Nein)");
 
 	/** Die Definition der Tabellenspalte Dokumentenverzeichnis */
@@ -672,7 +680,7 @@ public class Tabelle_Schueler extends SchemaTabelle {
 	public SchemaTabelleSpalte col_ZieldifferentesLernen = add("ZieldifferentesLernen", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
 		.setVeraltet(SchemaRevisionen.REV_1)
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("DEPRECATED: Gibt an ob der Schüler zieldifferent unterrichtet wird - verschoben nach Tabelle SchuelerLernabschnittsdaten");
 
 	/** Die Definition der Tabellenspalte ZusatzNachname */
@@ -681,7 +689,7 @@ public class Tabelle_Schueler extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte EndeEingliederung */
 	public SchemaTabelleSpalte col_EndeEingliederung = add("EndeEingliederung", SchemaDatentypen.DATE, false)
-		.setConverter("DatumConverter")
+		.setConverter(DatumConverter.class)
 		.setJavaComment("Ende der Eingliederung bei zugezogenen Schülern (Flüchtlingen)");
 
 	/** Die Definition der Tabellenspalte SchulEmail */
@@ -690,29 +698,29 @@ public class Tabelle_Schueler extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte EndeAnschlussfoerderung */
 	public SchemaTabelleSpalte col_EndeAnschlussfoerderung = add("EndeAnschlussfoerderung", SchemaDatentypen.DATE, false)
-		.setConverter("DatumConverter")
+		.setConverter(DatumConverter.class)
 		.setJavaComment("Ende der Anschlussförderung bei zugezogenen Schülern (Flüchtlingen)");
 
 	/** Die Definition der Tabellenspalte MasernImpfnachweis */
 	public SchemaTabelleSpalte col_MasernImpfnachweis = add("MasernImpfnachweis", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Gibt an, ob ein Nachweis über die Masern-Impfung erbracht wurde");
 
 	/** Die Definition der Tabellenspalte Lernstandsbericht */
 	public SchemaTabelleSpalte col_Lernstandsbericht = add("Lernstandsbericht", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Gibt an ob ein Schüler Sprachförderung in Deutsch (DAZ) erhält und somit Lernstandsberichte statt Zeugnisse");
 
 	/** Die Definition der Tabellenspalte SprachfoerderungVon */
 	public SchemaTabelleSpalte col_SprachfoerderungVon = add("SprachfoerderungVon", SchemaDatentypen.DATE, false)
-		.setConverter("DatumConverter")
+		.setConverter(DatumConverter.class)
 		.setJavaComment("Datum des Beginns der Sprachförderung");
 
 	/** Die Definition der Tabellenspalte SprachfoerderungBis */
 	public SchemaTabelleSpalte col_SprachfoerderungBis = add("SprachfoerderungBis", SchemaDatentypen.DATE, false)
-		.setConverter("DatumConverter")
+		.setConverter(DatumConverter.class)
 		.setJavaComment("Datum des Endes der Sprachförderung");
 
 	/** Die Definition der Tabellenspalte EntlassungBemerkung */
@@ -742,7 +750,7 @@ public class Tabelle_Schueler extends SchemaTabelle {
 	public SchemaTabelleSpalte col_NeuZugewandert = add("NeuZugewandert", SchemaDatentypen.INT, false)
 		.setDefault("0")
 		.setNotNull()
-		.setConverter("Boolean01Converter")
+		.setConverter(Boolean01Converter.class)
 		.setJavaComment("Gibt an, ob der Schueler neu zugewandert ist (1) oder nicht (0). Wurde in der Ukraine Krise im Migrationshintergrund geschaffen.");
 
 

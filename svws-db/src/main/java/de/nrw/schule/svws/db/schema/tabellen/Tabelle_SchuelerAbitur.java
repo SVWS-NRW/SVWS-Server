@@ -1,14 +1,17 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
 import de.nrw.schule.svws.core.adt.Pair;
+import de.nrw.schule.svws.db.converter.current.BooleanPlusMinusDefaultMinusConverter;
+import de.nrw.schule.svws.db.converter.current.NoteConverterFromNotenpunkte;
+import de.nrw.schule.svws.db.converter.current.gost.GOStBesondereLernleistungConverter;
 import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaFremdschluesselAktionen;
 import de.nrw.schule.svws.db.schema.SchemaRevisionen;
 import de.nrw.schule.svws.db.schema.SchemaTabelle;
 import de.nrw.schule.svws.db.schema.SchemaTabelleFremdschluessel;
-import de.nrw.schule.svws.db.schema.SchemaTabelleUniqueIndex;
 import de.nrw.schule.svws.db.schema.SchemaTabelleSpalte;
+import de.nrw.schule.svws.db.schema.SchemaTabelleUniqueIndex;
 
 /**
  * Diese Klasse beinhaltet die Schema-Definition für die Tabelle SchuelerAbitur.
@@ -54,7 +57,7 @@ public class Tabelle_SchuelerAbitur extends SchemaTabelle {
 		.setDefault("-")
 		.setVeraltet(SchemaRevisionen.REV_1)
 		.setJavaName("hatLatinum")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Sprachqualifikation: Latinum");
 
 	/** Die Definition der Tabellenspalte KlLatinum */
@@ -62,7 +65,7 @@ public class Tabelle_SchuelerAbitur extends SchemaTabelle {
 		.setDefault("-")
 		.setVeraltet(SchemaRevisionen.REV_1)
 		.setJavaName("hatKleinesLatinum")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Sprachqualifikation: Kleines Latinum");
 
 	/** Die Definition der Tabellenspalte Graecum */
@@ -70,7 +73,7 @@ public class Tabelle_SchuelerAbitur extends SchemaTabelle {
 		.setDefault("-")
 		.setVeraltet(SchemaRevisionen.REV_1)
 		.setJavaName("hatGraecum")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Sprachqualifikation: Graecum");
 
 	/** Die Definition der Tabellenspalte Hebraicum */
@@ -78,21 +81,21 @@ public class Tabelle_SchuelerAbitur extends SchemaTabelle {
 		.setDefault("-")
 		.setVeraltet(SchemaRevisionen.REV_1)
 		.setJavaName("hatHebraicum")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Sprachqualifikation: Hebraicum");
 
 	/** Die Definition der Tabellenspalte FranzBilingual */
 	public SchemaTabelleSpalte col_FranzBilingual = add("FranzBilingual", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
 		.setJavaName("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("DEPRECATED, nicht mehr genutzt");
 
 	/** Die Definition der Tabellenspalte BesondereLernleistung */
 	public SchemaTabelleSpalte col_BesondereLernleistung = add("BesondereLernleistung", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
 		.setJavaName("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("DEPRECATED, nur für alte APO, markiert, ob eine besondere Lernleistung vorliegt");
 
 	/** Die Definition der Tabellenspalte AnzRelLK */
@@ -129,7 +132,7 @@ public class Tabelle_SchuelerAbitur extends SchemaTabelle {
 	public SchemaTabelleSpalte col_FS2_SekI_Manuell = add("FS2_SekI_Manuell", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
 		.setJavaName("FremdspracheSekIManuellGeprueft")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("true, falls die zweite Fremsprache in der Sekundarstufe 1 manuell geprüft wurde und vom Algorithmus als gegeben angesehen werden kann.");
 
 	/** Die Definition der Tabellenspalte Kurse_I */
@@ -187,14 +190,14 @@ public class Tabelle_SchuelerAbitur extends SchemaTabelle {
 	public SchemaTabelleSpalte col_BLL_Art = add("BLL_Art", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("K")
 		.setJavaName("BesondereLernleistungArt")
-		.setConverter("GOStBesondereLernleistungConverter")
+		.setConverter(GOStBesondereLernleistungConverter.class)
 		.setConverterRevision(SchemaRevisionen.REV_1)
 		.setJavaComment("Besondere Lernleistung: Die Art der besonderen Lernleistung(K: Keine, E: Externe, P: in einem Projektkurs)");
 
 	/** Die Definition der Tabellenspalte BLL_Punkte */
 	public SchemaTabelleSpalte col_BLL_Punkte = add("BLL_Punkte", SchemaDatentypen.INT, false)
 		.setJavaName("BesondereLernleistungNotenpunkte")
-		.setConverter("NoteConverterFromNotenpunkte")
+		.setConverter(NoteConverterFromNotenpunkte.class)
 		.setConverterRevision(SchemaRevisionen.REV_1)
 		.setJavaComment("Besondere Lernleistung: Die Notenpunkte, welche bei der besonderen Lernleistung erreicht wurden – einfach gewichtet");
 
@@ -222,7 +225,7 @@ public class Tabelle_SchuelerAbitur extends SchemaTabelle {
 	public SchemaTabelleSpalte col_PruefungBestanden = add("PruefungBestanden", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
 		.setJavaName("Pruefung_hatBestanden")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Gesamt: Gibt an, ob die Abiturprüfung bestanden wurde");
 
 	/** Die Definition der Tabellenspalte Note */

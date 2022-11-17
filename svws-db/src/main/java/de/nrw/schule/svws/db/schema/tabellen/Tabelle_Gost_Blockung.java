@@ -1,6 +1,8 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
 import de.nrw.schule.svws.core.adt.Pair;
+import de.nrw.schule.svws.db.converter.current.Boolean01Converter;
+import de.nrw.schule.svws.db.converter.current.gost.GOStHalbjahrConverter;
 import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaFremdschluesselAktionen;
@@ -33,14 +35,14 @@ public class Tabelle_Gost_Blockung extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte Halbjahr */
 	public SchemaTabelleSpalte col_Halbjahr = add("Halbjahr", SchemaDatentypen.INT, false)
 		.setNotNull()
-		.setConverter("GOStHalbjahrConverter")
+		.setConverter(GOStHalbjahrConverter.class)
 		.setJavaComment("Das Halbjahr, welchem die Kursblockung zugeordnet ist (0=EF.1, 1=EF.2, 2=Q1.1, 3=Q1.2, 4=Q2.1, 5=Q2.2)");
 
 	/** Die Definition der Tabellenspalte IstAktiv */
 	public SchemaTabelleSpalte col_IstAktiv = add("IstAktiv", SchemaDatentypen.INT, false)
 		.setDefault("0")
 		.setNotNull()
-		.setConverter("Boolean01Converter")
+		.setConverter(Boolean01Converter.class)
 		.setJavaComment("Gibt an, ob die Blockung aktiviert wurde oder nicht: 1 - true, 0 - false."
 				+ "Bei einer aktivierten Blockung wurde die Vorlage (siehe Vorlage_ID) bereits "
 				+ "in die Leistungsdaten übertragen.");

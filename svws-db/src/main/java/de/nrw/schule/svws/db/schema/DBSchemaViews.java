@@ -4,6 +4,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
 
+import de.nrw.schule.svws.db.converter.current.BenutzerTypConverter;
+import de.nrw.schule.svws.db.converter.current.Boolean01Converter;
+import de.nrw.schule.svws.db.converter.current.BooleanPlusMinusDefaultPlusConverter;
+import de.nrw.schule.svws.db.converter.current.SchuelerStatusConverter;
+import de.nrw.schule.svws.db.converter.current.statkue.SchulformKuerzelConverter;
+import de.nrw.schule.svws.db.converter.current.statkue.SchulgliederungKuerzelConverter;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -172,8 +178,8 @@ public class DBSchemaViews {
                                            """, null, false)
 		 .add("Punkte", "Die Bezeichnung der Note in einer Laufbahn der Sekundarstufe II", "String", "CASE WHEN TextLaufbahnSII IS NULL THEN '--' ELSE TextLaufbahnSII END", null, false)
 		 .add("Sortierung", "Ein Zahlwert, welcher die Sortierreihenfolge der einzelnen Noten spezifiziert", "Integer", "Sortierung", null, false)
-		 .add("Sichtbar", "Gibt an, ob der Noteneintrag sichtbar ist", "Boolean", "'+'", "BooleanPlusMinusDefaultPlusConverter", false)
-		 .add("Aenderbar", "Gibt an, ob der Noteneintrag änderbar ist", "Boolean", "'+'", "BooleanPlusMinusDefaultPlusConverter", false)
+		 .add("Sichtbar", "Gibt an, ob der Noteneintrag sichtbar ist", "Boolean", "'+'", BooleanPlusMinusDefaultPlusConverter.class, false)
+		 .add("Aenderbar", "Gibt an, ob der Noteneintrag änderbar ist", "Boolean", "'+'", BooleanPlusMinusDefaultPlusConverter.class, false)
 		 .add("gueltigVon", "Gibt das Schuljahr an, ab dem die Note verwendet werden kann oder null, falls es keine Einschränkung gibt", "Integer", "gueltigVon", null, false)
 		 .add("gueltigBis", "Gibt das Schuljahr an, bis zu welchem die Note verwendet werden kann oder null, falls es keine Einschränkung gibt", "Integer", "gueltigBis", null, false);
 		addView(view);
@@ -347,13 +353,13 @@ public class DBSchemaViews {
 		 .add("SchulformenAusgelaufen", "zur Kompatibilität", "String", "NULL", null, false)
 		 .add("AusgelaufenInSchuljahr", "zur Kompatibilität", "String", "NULL", null, false)
 		 .add("AbJahrgang", "Jahrgang ab dem das Fach unterrichtet werden darf", "String", "f.JahrgangAb", null, false)		
-		 .add("IstFremdsprache", "Boolscher Wert ob es eine Fremdsprache ist", "Boolean", "f.IstFremdsprache", "Boolean01Converter", false)
-		 .add("IstHKFS", "Boolscher Wert ob es eine HerkunftsFremdsprache ist", "Boolean", "f.IstHKFS", "Boolean01Converter", false)
-		 .add("IstAusRegUFach", "Boolscher Wert ob es eine reguläres Unterrichtsfach ist", "Boolean", "f.IstAusRegUFach", "Boolean01Converter", false)
-		 .add("IstErsatzPflichtFS", "Boolscher Wert ob es eine Ersatzpflichfremdsprache ist", "Boolean", "f.IstErsatzPflichtFS", "Boolean01Converter", false)
-		 .add("IstKonfKoop", "Boolscher Wert ob es eine eine Religionslehre im KOOP ist", "Boolean", "f.IstKonfKoop", "Boolean01Converter", false)
-		 .add("NurSII", "Boolscher Wert ob das Fach nur in der SII unterrichtet werden darf", "Boolean", "f.NurSII", "Boolean01Converter", false)
-		 .add("ExportASD", "Boolscher Wert ob das Fach für den ASDExport vorgesehen ist", "Boolean", "f.ExportASD", "Boolean01Converter", false)
+		 .add("IstFremdsprache", "Boolscher Wert ob es eine Fremdsprache ist", "Boolean", "f.IstFremdsprache", Boolean01Converter.class, false)
+		 .add("IstHKFS", "Boolscher Wert ob es eine HerkunftsFremdsprache ist", "Boolean", "f.IstHKFS", Boolean01Converter.class, false)
+		 .add("IstAusRegUFach", "Boolscher Wert ob es eine reguläres Unterrichtsfach ist", "Boolean", "f.IstAusRegUFach", Boolean01Converter.class, false)
+		 .add("IstErsatzPflichtFS", "Boolscher Wert ob es eine Ersatzpflichfremdsprache ist", "Boolean", "f.IstErsatzPflichtFS", Boolean01Converter.class, false)
+		 .add("IstKonfKoop", "Boolscher Wert ob es eine eine Religionslehre im KOOP ist", "Boolean", "f.IstKonfKoop", Boolean01Converter.class, false)
+		 .add("NurSII", "Boolscher Wert ob das Fach nur in der SII unterrichtet werden darf", "Boolean", "f.NurSII", Boolean01Converter.class, false)
+		 .add("ExportASD", "Boolscher Wert ob das Fach für den ASDExport vorgesehen ist", "Boolean", "f.ExportASD", Boolean01Converter.class, false)
 		 .add("gueltigVon", "Gibt die Gültigkeit ab welchem Schuljahr an", "String", "f.gueltigVon", null, false)
 		 .add("gueltigBis", "Gibt die Gültigkeit bis zu welchem Schuljahr an", "String", "f.gueltigBis", null, false);
 		addView(view);
@@ -383,7 +389,7 @@ public class DBSchemaViews {
 		 .add("AnzeigeName", "Der Anzeige-Name des Benutzers (z.B. Max Mustermann)", "String", "creds.AnzeigeName", null, false)
 		 .add("Benutzername", "Der Anmeldename des Benutzers (z.B. max.mustermann)", "String", "creds.Benutzername", null, false)
 		 .add("PasswordHash", "Der bcrypt-Password-Hash zur Überprüfung des Benutzer-Kennwortes", "String", "creds.PasswordHash", null, false)
-		 .add("IstAdmin", "Gibt an, ob es sich um einen administrativen Benutzer handelt oder nicht", "Boolean", "admins.IstAdmin", "Boolean01Converter", false);
+		 .add("IstAdmin", "Gibt an, ob es sich um einen administrativen Benutzer handelt oder nicht", "Boolean", "admins.IstAdmin", Boolean01Converter.class, false);
 		addView(view);
 	}
 	
@@ -427,12 +433,12 @@ public class DBSchemaViews {
                 """
 		).add("ID", "Die eindeutige ID des Benutzers", "Long", "creds.ID", null, true)
 		 .add("credentialID", "Die ID der Benutzer-Credentials", "Long", "creds.credentialID", null, false)
-		 .add("Typ", "Der Typ des Benutzers", "BenutzerTyp", "creds.Typ", "BenutzerTypConverter", false)
+		 .add("Typ", "Der Typ des Benutzers", "BenutzerTyp", "creds.Typ", BenutzerTypConverter.class, false)
 		 .add("TypID", "Die ID des Benutzers in der Benutzer-Typ-spezifischen Tabelle (z.B. eine Schüler-ID)", "Long", "creds.TypID", null, false)
 		 .add("AnzeigeName", "Der Anzeige-Name des Benutzers (z.B. Max Mustermann)", "String", "creds.AnzeigeName", null, false)
 		 .add("Benutzername", "Der Anmeldename des Benutzers (z.B. max.mustermann)", "String", "creds.Benutzername", null, false)
 		 .add("PasswordHash", "Der bcrypt-Password-Hash zur Überprüfung des Benutzer-Kennwortes", "String", "creds.PasswordHash", null, false)
-		 .add("IstAdmin", "Gibt an, ob es sich um einen administrativen Benutzer handelt oder nicht", "Boolean", "admins.IstAdmin", "Boolean01Converter", false);
+		 .add("IstAdmin", "Gibt an, ob es sich um einen administrativen Benutzer handelt oder nicht", "Boolean", "admins.IstAdmin", Boolean01Converter.class, false);
 		addView(view);
 	}
 	
@@ -450,9 +456,9 @@ public class DBSchemaViews {
                 JOIN EigeneSchule
                 """
 		).add("ID", "Die ID des Schülers", "Long", "Schueler.ID", null, true)
-		 .add("Status", "Der Status des Schülers", "SchuelerStatus", "Schueler.Status", "SchuelerStatusConverter", false)
-		 .add("Schulform", "Die Schulform des Schülers", "Schulform", "EigeneSchule.SchulformKrz", "SchulformKuerzelConverter", false)
-		 .add("Schulgliederung", "Die Schulgliederung des Schülers", "Schulgliederung", "SchuelerLernabschnittsdaten.ASDSchulgliederung", "SchulgliederungKuerzelConverter", false)
+		 .add("Status", "Der Status des Schülers", "SchuelerStatus", "Schueler.Status", SchuelerStatusConverter.class, false)
+		 .add("Schulform", "Die Schulform des Schülers", "Schulform", "EigeneSchule.SchulformKrz", SchulformKuerzelConverter.class, false)
+		 .add("Schulgliederung", "Die Schulgliederung des Schülers", "Schulgliederung", "SchuelerLernabschnittsdaten.ASDSchulgliederung", SchulgliederungKuerzelConverter.class, false)
 		 .add("Abiturjahr", "Das Abiturjahr des Schülers", "Long", "(EigeneSchule_Jahrgaenge.Restabschnitte / EigeneSchule.AnzahlAbschnitte) + Schuljahresabschnitte.Jahr", null, false);
 		addView(view);
 	}

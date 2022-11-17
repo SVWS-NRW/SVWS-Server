@@ -1,6 +1,8 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
 import de.nrw.schule.svws.core.adt.Pair;
+import de.nrw.schule.svws.db.converter.current.BooleanPlusMinusDefaultMinusConverter;
+import de.nrw.schule.svws.db.converter.current.DatumConverter;
 import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaFremdschluesselAktionen;
@@ -67,7 +69,7 @@ public class Tabelle_SchuelerAbgaenge extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte LSSchulEntlassDatum */
 	public SchemaTabelleSpalte col_LSSchulEntlassDatum = add("LSSchulEntlassDatum", SchemaDatentypen.DATE, false)
-		.setConverter("DatumConverter")
+		.setConverter(DatumConverter.class)
 		.setJavaComment("Entalssdtaum zur abgebenden Schule");
 
 	/** Die Definition der Tabellenspalte LSVersetzung */
@@ -89,12 +91,12 @@ public class Tabelle_SchuelerAbgaenge extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte FuerSIMExport */
 	public SchemaTabelleSpalte col_FuerSIMExport = add("FuerSIMExport", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("SIM-Export zur abgebenden Schule");
 
 	/** Die Definition der Tabellenspalte LSBeginnDatum */
 	public SchemaTabelleSpalte col_LSBeginnDatum = add("LSBeginnDatum", SchemaDatentypen.DATE, false)
-		.setConverter("DatumConverter")
+		.setConverter(DatumConverter.class)
 		.setJavaComment("Aufnahmedatum zur abgebenden Schule");
 
 	/** Die Definition der Tabellenspalte LSBeginnJahrgang */

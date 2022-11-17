@@ -1,6 +1,8 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
 import de.nrw.schule.svws.core.adt.Pair;
+import de.nrw.schule.svws.db.converter.current.DatumUhrzeitConverter;
+import de.nrw.schule.svws.db.converter.current.DavRessourceCollectionTypConverter;
 import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaFremdschluesselAktionen;
@@ -27,7 +29,7 @@ public class Tabelle_DavRessourceCollections extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte Typ */
 	public SchemaTabelleSpalte col_Typ = add("Typ", SchemaDatentypen.VARCHAR, false).setDatenlaenge(80)
 		.setNotNull()
-		.setConverter("DavRessourceCollectionTypConverter")
+		.setConverter(DavRessourceCollectionTypConverter.class)
 		.setJavaComment("Gibt den Typ dieser Sammlung an, bspw Adressbuch oder Kalender");
 
 	/** Die Definition der Tabellenspalte Anzeigename */
@@ -42,7 +44,7 @@ public class Tabelle_DavRessourceCollections extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte SyncToken */
 	public SchemaTabelleSpalte col_SyncToken = add("SyncToken", SchemaDatentypen.DATETIME, false)
 		.setNotNull()
-		.setConverter("DatumUhrzeitConverter")
+		.setConverter(DatumUhrzeitConverter.class)
 		.setJavaComment("Das SyncToken der Ressourcensammlung");
 
 

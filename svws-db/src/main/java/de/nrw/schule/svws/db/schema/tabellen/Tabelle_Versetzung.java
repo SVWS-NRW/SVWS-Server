@@ -1,5 +1,7 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
+import de.nrw.schule.svws.db.converter.current.BooleanPlusMinusDefaultMinusConverter;
+import de.nrw.schule.svws.db.converter.current.BooleanPlusMinusDefaultPlusConverter;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaRevisionen;
 import de.nrw.schule.svws.db.schema.SchemaTabelle;
@@ -71,7 +73,7 @@ public class Tabelle_Versetzung extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte Sichtbar */
 	public SchemaTabelleSpalte col_Sichtbar = add("Sichtbar", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("+")
-		.setConverter("BooleanPlusMinusDefaultPlusConverter")
+		.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
 		.setJavaComment("Gibt an ob eine Klasse sichtbar ist");
 
 	/** Die Definition der Tabellenspalte Sortierung */
@@ -86,13 +88,13 @@ public class Tabelle_Versetzung extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte SommerSem */
 	public SchemaTabelleSpalte col_SommerSem = add("SommerSem", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Beginn im Sommersemester nur WBK");
 
 	/** Die Definition der Tabellenspalte NotenGesperrt */
 	public SchemaTabelleSpalte col_NotenGesperrt = add("NotenGesperrt", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Noteneingabe für die Klasse gesperrt");
 
 	/** Die Definition der Tabellenspalte SchulnrEigner */
@@ -107,19 +109,19 @@ public class Tabelle_Versetzung extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte WebNotenGesperrt */
 	public SchemaTabelleSpalte col_WebNotenGesperrt = add("WebNotenGesperrt", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("DEPRECATED: nicht mehr genutzt SchildWeb");
 
 	/** Die Definition der Tabellenspalte KoopKlasse */
 	public SchemaTabelleSpalte col_KoopKlasse = add("KoopKlasse", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Gibt an ob die Klasse eine KOOP-Klasse ist");
 
 	/** Die Definition der Tabellenspalte Ankreuzzeugnisse */
 	public SchemaTabelleSpalte col_Ankreuzzeugnisse = add("Ankreuzzeugnisse", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Gibt an ob in der Klasse Ankreuzeugnisse (GS) oder Kompentenzschreiben (andere) verwendet werden");
 
 

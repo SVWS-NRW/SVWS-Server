@@ -1,6 +1,8 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
 import de.nrw.schule.svws.core.adt.Pair;
+import de.nrw.schule.svws.db.converter.current.BooleanPlusMinusDefaultPlusConverter;
+import de.nrw.schule.svws.db.converter.current.statkue.SchulgliederungKuerzelConverter;
 import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaFremdschluesselAktionen;
@@ -43,7 +45,7 @@ public class Tabelle_EigeneSchule_Jahrgaenge extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte Sichtbar */
 	public SchemaTabelleSpalte col_Sichtbar = add("Sichtbar", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("+")
-		.setConverter("BooleanPlusMinusDefaultPlusConverter")
+		.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
 		.setJavaComment("true, falls der Jahrgang bei Auswahlen angezeigt werden soll oder nicht.");
 
 	/** Die Definition der Tabellenspalte Sortierung */
@@ -54,7 +56,7 @@ public class Tabelle_EigeneSchule_Jahrgaenge extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte IstChronologisch */
 	public SchemaTabelleSpalte col_IstChronologisch = add("IstChronologisch", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("+")
-		.setConverter("BooleanPlusMinusDefaultPlusConverter")
+		.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
 		.setJavaComment("Gibt an ob ein Jahrgang zu einer chronologischen Reihenfolge gehört");
 
 	/** Die Definition der Tabellenspalte Spaltentitel */
@@ -70,7 +72,7 @@ public class Tabelle_EigeneSchule_Jahrgaenge extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte SGL */
 	public SchemaTabelleSpalte col_SGL = add("SGL", SchemaDatentypen.VARCHAR, false).setDatenlaenge(3)
 		.setJavaName("Gliederung")
-		.setConverter("SchulgliederungKuerzelConverter")
+		.setConverter(SchulgliederungKuerzelConverter.class)
 		.setConverterRevision(SchemaRevisionen.REV_1)
 		.setJavaComment("Schulgliederung des Jahrgangs");
 

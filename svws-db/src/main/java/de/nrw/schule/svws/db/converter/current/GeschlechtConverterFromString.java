@@ -13,7 +13,7 @@ import de.nrw.schule.svws.db.converter.DBAttributeConverter;
  * als String dar.
  * Sie ist abgeleitet von der Basisklasse {@link DBAttributeConverter}, welche
  * die grundlegende Funktionalität von Konvertern zur Verfügung stellt. Dort muss
- * der Konverter auch in der Methode {@link DBAttributeConverter#getByClassName} 
+ * der Konverter auch in der Methode {@link DBAttributeConverter#getByClass} 
  * registriert werden. 
  */
 @Converter

@@ -1,14 +1,20 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
 import de.nrw.schule.svws.core.adt.Pair;
+import de.nrw.schule.svws.db.converter.current.BooleanPlusMinusDefaultMinusConverter;
+import de.nrw.schule.svws.db.converter.current.BooleanPlusMinusDefaultPlusConverter;
+import de.nrw.schule.svws.db.converter.current.DatumConverter;
+import de.nrw.schule.svws.db.converter.current.GeschlechtConverterFromString;
+import de.nrw.schule.svws.db.converter.current.NationalitaetenConverter;
+import de.nrw.schule.svws.db.converter.current.PersonalTypConverter;
 import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaFremdschluesselAktionen;
 import de.nrw.schule.svws.db.schema.SchemaRevisionen;
 import de.nrw.schule.svws.db.schema.SchemaTabelle;
 import de.nrw.schule.svws.db.schema.SchemaTabelleFremdschluessel;
-import de.nrw.schule.svws.db.schema.SchemaTabelleUniqueIndex;
 import de.nrw.schule.svws.db.schema.SchemaTabelleSpalte;
+import de.nrw.schule.svws.db.schema.SchemaTabelleUniqueIndex;
 
 /**
  * Diese Klasse beinhaltet die Schema-Definition für die Tabelle K_Lehrer.
@@ -46,7 +52,7 @@ public class Tabelle_K_Lehrer extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte PersonTyp */
 	public SchemaTabelleSpalte col_PersonTyp = add("PersonTyp", SchemaDatentypen.VARCHAR, false).setDatenlaenge(20)
 		.setDefault("LEHRKRAFT")
-		.setConverter("PersonalTypConverter")
+		.setConverter(PersonalTypConverter.class)
 		.setConverterRevision(SchemaRevisionen.REV_1)
 		.setJavaComment("Die Art der Person – wurde nachträglich hinzugefügt, damit auch Nicht-Lehrer in die Liste aufgenommen und unterschieden werden können");
 
@@ -63,26 +69,26 @@ public class Tabelle_K_Lehrer extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte Sichtbar */
 	public SchemaTabelleSpalte col_Sichtbar = add("Sichtbar", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("+")
-		.setConverter("BooleanPlusMinusDefaultPlusConverter")
+		.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
 		.setJavaComment("Gibt an, ob der Lehrer-Datensatz in der Oberfläche sichtbar sein soll und bei einer Auswahl zur Verfügung steht. ");
 
 	/** Die Definition der Tabellenspalte Aenderbar */
 	public SchemaTabelleSpalte col_Aenderbar = add("Aenderbar", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("+")
-		.setConverter("BooleanPlusMinusDefaultPlusConverter")
+		.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
 		.setJavaComment("Gibt an, ob Änderungen am Lehrer-Datensatz erlaubt sind.");
 
 	/** Die Definition der Tabellenspalte FuerExport */
 	public SchemaTabelleSpalte col_FuerExport = add("FuerExport", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("+")
-		.setConverter("BooleanPlusMinusDefaultPlusConverter")
+		.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
 		.setJavaComment("Gibt an, ob der Lehrer-Datensatz für den Export in andere Software verwendet werden soll - TODO fuer welche(n) Zweck(e) wird dies gespeichert - gehört dies an diese Stelle? ");
 
 	/** Die Definition der Tabellenspalte Statistik */
 	public SchemaTabelleSpalte col_Statistik = add("Statistik", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("+")
 		.setJavaName("statistikRelevant")
-		.setConverter("BooleanPlusMinusDefaultPlusConverter")
+		.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
 		.setJavaComment("Gibt an, ob der Lehrer-Datensatz bei der Statistik berücksichtigt werden soll.");
 
 	/** Die Definition der Tabellenspalte Strasse */
@@ -138,18 +144,18 @@ public class Tabelle_K_Lehrer extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte StaatKrz */
 	public SchemaTabelleSpalte col_StaatKrz = add("StaatKrz", SchemaDatentypen.VARCHAR, false).setDatenlaenge(3)
 		.setJavaName("staatsangehoerigkeit")
-		.setConverter("NationalitaetenConverter")
+		.setConverter(NationalitaetenConverter.class)
 		.setConverterRevision(SchemaRevisionen.REV_1)
 		.setJavaComment("Die erste Staatsangehörigkeit des Lehrers");
 
 	/** Die Definition der Tabellenspalte Geburtsdatum */
 	public SchemaTabelleSpalte col_Geburtsdatum = add("Geburtsdatum", SchemaDatentypen.DATE, false)
-		.setConverter("DatumConverter")
+		.setConverter(DatumConverter.class)
 		.setJavaComment("Das Geburtsdatum des Lehrers");
 
 	/** Die Definition der Tabellenspalte Geschlecht */
 	public SchemaTabelleSpalte col_Geschlecht = add("Geschlecht", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
-		.setConverter("GeschlechtConverterFromString")
+		.setConverter(GeschlechtConverterFromString.class)
 		.setConverterRevision(SchemaRevisionen.REV_1)
 		.setJavaComment("Das Geschlecht des Lehrers - TODO ist in der Datenbank als String und nicht als Integer (3/4) hinterlegt, dies sollte in allen Tabellen einheitlich sein");
 
@@ -195,7 +201,7 @@ public class Tabelle_K_Lehrer extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte DatumZugang */
 	public SchemaTabelleSpalte col_DatumZugang = add("DatumZugang", SchemaDatentypen.DATE, false)
-		.setConverter("DatumConverter")
+		.setConverter(DatumConverter.class)
 		.setJavaComment("Das Datum, wann der Lehrer an die Schule gekommen ist.");
 
 	/** Die Definition der Tabellenspalte GrundZugang */
@@ -204,7 +210,7 @@ public class Tabelle_K_Lehrer extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte DatumAbgang */
 	public SchemaTabelleSpalte col_DatumAbgang = add("DatumAbgang", SchemaDatentypen.DATE, false)
-		.setConverter("DatumConverter")
+		.setConverter(DatumConverter.class)
 		.setJavaComment("Das Datum, wann der Lehrer die Schule verlassen hat.");
 
 	/** Die Definition der Tabellenspalte GrundAbgang */
@@ -234,7 +240,7 @@ public class Tabelle_K_Lehrer extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte MasernImpfnachweis */
 	public SchemaTabelleSpalte col_MasernImpfnachweis = add("MasernImpfnachweis", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("-")
-		.setConverter("BooleanPlusMinusDefaultMinusConverter")
+		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 		.setJavaComment("Gibt an, ob ein Nachweis über die Masern-Impfung erbracht wurde");
 
 	/** Die Definition der Tabellenspalte UnterrichtsStd */
@@ -269,13 +275,13 @@ public class Tabelle_K_Lehrer extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte SchILDweb_FL */
 	public SchemaTabelleSpalte col_SchILDweb_FL = add("SchILDweb_FL", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("+")
-		.setConverter("BooleanPlusMinusDefaultPlusConverter")
+		.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
 		.setJavaComment("DEPRECATED: nicht mehr genutzt SchildWeb");
 
 	/** Die Definition der Tabellenspalte SchILDweb_KL */
 	public SchemaTabelleSpalte col_SchILDweb_KL = add("SchILDweb_KL", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("+")
-		.setConverter("BooleanPlusMinusDefaultPlusConverter")
+		.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
 		.setJavaComment("DEPRECATED: nicht mehr genutzt SchildWeb");
 
 	/** Die Definition der Tabellenspalte SchILDweb_Config */

@@ -87,7 +87,7 @@ public class DTOEigeneSchuleKAoADaten {
 	@JsonDeserialize(using=BooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean KooperationsvereinbarungAA;
 
-	/** Refflexionsworkshops werden genutzt */
+	/** Reflexionsworkshops werden genutzt */
 	@Column(name = "NutzungReflexionsworkshop")
 	@JsonProperty
 	@Convert(converter=BooleanPlusMinusDefaultPlusConverter.class)

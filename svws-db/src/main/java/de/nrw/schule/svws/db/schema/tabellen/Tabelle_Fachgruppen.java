@@ -1,5 +1,6 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
+import de.nrw.schule.svws.db.converter.current.Boolean01Converter;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaRevisionen;
 import de.nrw.schule.svws.db.schema.SchemaTabelle;
@@ -56,7 +57,7 @@ public class Tabelle_Fachgruppen extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte FuerZeugnis */
 	public SchemaTabelleSpalte col_FuerZeugnis = add("FuerZeugnis", SchemaDatentypen.INT, false)
 		.setNotNull()
-		.setConverter("Boolean01Converter")
+		.setConverter(Boolean01Converter.class)
 		.setJavaComment("Gibt an, ob die Fachgruppe für Unterteilungen auf Zeugnissen verwendet wird");
 
 	/** Die Definition der Tabellenspalte gueltigVon */

@@ -1,6 +1,8 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
 import de.nrw.schule.svws.core.adt.Pair;
+import de.nrw.schule.svws.db.converter.current.Boolean01Converter;
+import de.nrw.schule.svws.db.converter.current.gost.GOStKursartConverter;
 import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaFremdschluesselAktionen;
@@ -33,7 +35,7 @@ public class Tabelle_Gost_Blockung_Kurse extends SchemaTabelle {
 	public SchemaTabelleSpalte col_Kursart = add("Kursart", SchemaDatentypen.VARCHAR, false).setDatenlaenge(10)
 		.setDefault("GK")
 		.setNotNull()
-		.setConverter("GOStKursartConverter")
+		.setConverter(GOStKursartConverter.class)
 		.setJavaComment("ID der Kursart (siehe ID des Core-Types GostKursart)");
 
 	/** Die Definition der Tabellenspalte Kursnummer */
@@ -45,7 +47,7 @@ public class Tabelle_Gost_Blockung_Kurse extends SchemaTabelle {
 	public SchemaTabelleSpalte col_IstKoopKurs = add("IstKoopKurs", SchemaDatentypen.INT, false)
 		.setDefault("0")
 		.setNotNull()
-		.setConverter("Boolean01Converter")
+		.setConverter(Boolean01Converter.class)
 		.setJavaComment("Gibt an, ob es sich um einen Kooperations-Kurs mit einer anderen Schule handelt oder nicht: 1 - true, 0 - false ");
 
 	/** Die Definition der Tabellenspalte BezeichnungSuffix */

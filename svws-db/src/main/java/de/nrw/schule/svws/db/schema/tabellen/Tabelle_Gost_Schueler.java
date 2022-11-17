@@ -1,6 +1,8 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
 import de.nrw.schule.svws.core.adt.Pair;
+import de.nrw.schule.svws.db.converter.current.Boolean01Converter;
+import de.nrw.schule.svws.db.converter.current.DatumConverter;
 import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaFremdschluesselAktionen;
@@ -21,26 +23,26 @@ public class Tabelle_Gost_Schueler extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte DatumBeratung */
 	public SchemaTabelleSpalte col_DatumBeratung = add("DatumBeratung", SchemaDatentypen.DATETIME, false)
-		.setConverter("DatumConverter")
+		.setConverter(DatumConverter.class)
 		.setJavaComment("Gymnasiale Oberstufe - Schülerdaten: Das Datum der letzten Beratung des Schülers");
 
 	/** Die Definition der Tabellenspalte DatumRuecklauf */
 	public SchemaTabelleSpalte col_DatumRuecklauf = add("DatumRuecklauf", SchemaDatentypen.DATETIME, false)
-		.setConverter("DatumConverter")
+		.setConverter(DatumConverter.class)
 		.setJavaComment("Gymnasiale Oberstufe - Schülerdaten: Das Datum an dem der letzte Beratungsbogen des Schülersmit seiner Fächerwahl in der Schule eingereicht wurde");
 
 	/** Die Definition der Tabellenspalte HatSprachPraktischePruefung */
 	public SchemaTabelleSpalte col_HatSprachPraktischePruefung = add("HatSprachPraktischePruefung", SchemaDatentypen.INT, false)
 		.setDefault("0")
 		.setNotNull()
-		.setConverter("Boolean01Converter")
+		.setConverter(Boolean01Converter.class)
 		.setJavaComment("Gymnasiale Oberstufe - Schülerdaten: Gibt an, ob eine Teilnahme an einer sprachpraktischen Prüfung erfolgt ist: 1 - true, 0 - false");
 
 	/** Die Definition der Tabellenspalte HatSportattest */
 	public SchemaTabelleSpalte col_HatSportattest = add("HatSportattest", SchemaDatentypen.INT, false)
 		.setDefault("0")
 		.setNotNull()
-		.setConverter("Boolean01Converter")
+		.setConverter(Boolean01Converter.class)
 		.setJavaComment("Gymnasiale Oberstufe - Schülerdaten: Gibt an, ob ein Sportattest bei dem Schüler vorliegt oder nicht und die Wahl eines Ersatzfaches zulässig ist: 1 - true, 0 - false");
 
 	/** Die Definition der Tabellenspalte Kommentar */
@@ -67,7 +69,7 @@ public class Tabelle_Gost_Schueler extends SchemaTabelle {
 	public SchemaTabelleSpalte col_ZweiteFremdpracheInSekIVorhanden = add("ZweiteFremdpracheInSekIVorhanden", SchemaDatentypen.INT, false)
 		.setDefault("0")
 		.setNotNull()
-		.setConverter("Boolean01Converter")
+		.setConverter(Boolean01Converter.class)
 		.setJavaComment("Gymnasiale Oberstufe - Schülerdaten: Gibt an, ob die Belegung der zweiten Fremdsprache in der Sek I manuell geprüft wurde und eine Prüfung bei der Laufbahnplanung entfallen kann: 1 - true, 0 - false");
 
 
