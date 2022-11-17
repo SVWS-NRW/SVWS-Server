@@ -38,6 +38,7 @@ import { GostBlockungsergebnis, cast_de_nrw_schule_svws_core_data_gost_GostBlock
 import { GostFach, cast_de_nrw_schule_svws_core_data_gost_GostFach } from '../core/data/gost/GostFach';
 import { GostFachwahl, cast_de_nrw_schule_svws_core_data_gost_GostFachwahl } from '../core/data/gost/GostFachwahl';
 import { GostJahrgang, cast_de_nrw_schule_svws_core_data_gost_GostJahrgang } from '../core/data/gost/GostJahrgang';
+import { GostJahrgangFachkombinationen, cast_de_nrw_schule_svws_core_data_gost_GostJahrgangFachkombinationen } from '../core/data/gost/GostJahrgangFachkombinationen';
 import { GostJahrgangsdaten, cast_de_nrw_schule_svws_core_data_gost_GostJahrgangsdaten } from '../core/data/gost/GostJahrgangsdaten';
 import { GostLeistungen, cast_de_nrw_schule_svws_core_data_gost_GostLeistungen } from '../core/data/gost/GostLeistungen';
 import { GostSchuelerFachwahl, cast_de_nrw_schule_svws_core_data_gost_GostSchuelerFachwahl } from '../core/data/gost/GostSchuelerFachwahl';
@@ -2151,6 +2152,35 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der GET-Methode getGostAbiturjahrgangFachkombinationen für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgang/{abiturjahr : \d+}/fachkombinationen
+	 * 
+	 * Erstellt eine Liste mit den Informationen zu den Fachkombinationen für die Laufbahnplanung des Abitur-Jahrganges der gymnasialen Oberstufe. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Fachkombinationen besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Die Liste der Fachkombinationen
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<GostJahrgangFachkombinationen>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Fachkombinationen anzusehen.
+	 *   Code 404: Keine Fachkombinationen gefunden oder keine gymnasiale Oberstufe bei der Schulform vorhanden
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
+	 * 
+	 * @returns Die Liste der Fachkombinationen
+	 */
+	public async getGostAbiturjahrgangFachkombinationen(schema : string, abiturjahr : number) : Promise<List<GostJahrgangFachkombinationen>> {
+		let path : string = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : \d+}/fachkombinationen"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema)
+				.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString());
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		let ret = new Vector<GostJahrgangFachkombinationen>();
+		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(GostJahrgangFachkombinationen.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getGostAbiturjahrgangFachwahlstatistik für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgang/{abiturjahr : \d+}/fachwahlstatistik
 	 * 
 	 * Erstellt eine Liste aller in der Datenbank für den angebenen Abitur-Jahrgang vorhanden Fachwahlen der gymnasialen Oberstufe. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Fächerdaten besitzt.
@@ -3129,6 +3159,33 @@ export class ApiServer extends BaseApi {
 				.replace(/{id\s*(:[^}]+)?}/g, id.toString());
 		let body : string = GostFach.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getGostFachkombinationen für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/fachkombinationen
+	 * 
+	 * Erstellt eine Liste mit den Informationen zu den Fachkombinationen für die Laufbahnplanung der gymnasialen Oberstufe aus der Vorlage für neue Abiturjahrgänge. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Fachkombinationen besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Die Liste der Fachkombinationen
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<GostJahrgangFachkombinationen>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Fachkombinationen anzusehen.
+	 *   Code 404: Keine Fachkombinationen gefunden oder keine gymnasiale Oberstufe bei der Schulform vorhanden
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * 
+	 * @returns Die Liste der Fachkombinationen
+	 */
+	public async getGostFachkombinationen(schema : string) : Promise<List<GostJahrgangFachkombinationen>> {
+		let path : string = "/db/{schema}/gost/fachkombinationen"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		let ret = new Vector<GostJahrgangFachkombinationen>();
+		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(GostJahrgangFachkombinationen.transpilerFromJSON(text)); });
+		return ret;
 	}
 
 

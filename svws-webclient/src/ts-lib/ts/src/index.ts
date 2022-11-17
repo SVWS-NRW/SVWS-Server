@@ -130,6 +130,7 @@ export { GostBlockungsergebnisSchiene } from './core/data/gost/GostBlockungserge
 export { GostFach } from './core/data/gost/GostFach';
 export { GostFachwahl } from './core/data/gost/GostFachwahl';
 export { GostJahrgang } from './core/data/gost/GostJahrgang';
+export { GostJahrgangFachkombinationen } from './core/data/gost/GostJahrgangFachkombinationen';
 export { GostJahrgangsdaten } from './core/data/gost/GostJahrgangsdaten';
 export { GostLeistungen } from './core/data/gost/GostLeistungen';
 export { GostLeistungenFachbelegung } from './core/data/gost/GostLeistungenFachbelegung';
