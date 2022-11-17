@@ -44,7 +44,7 @@
 			@drop="drop_aendere_kursschiene($event, schiene.id)"
 			>
 			<drag-data
-				v-if="manager?.getOfKursOfSchieneIstZugeordnet(kurs.id, schiene.id)"
+				v-if="kurs_schiene_zugeordnet(schiene)"
 				:key="kurs.id"
 				tag="div"
 				:data="{kurs, schiene}"
@@ -77,7 +77,7 @@
 				:class="{ 'border-t-2': kursdifferenz }"
 			>
 				<svws-ui-badge
-					v-if="manager?.getOfKursOfSchieneIstZugeordnet(kurs.id, schiene.id)"
+					v-if="kurs_schiene_zugeordnet(schiene)"
 					size="tiny" :variant="selected_kurs?'primary':'highlight'" class="cursor-pointer"
 					@click="toggle_active_kurs">
 					{{ kurs_blockungsergebnis?.schueler.size() }}
@@ -366,5 +366,14 @@ function toggle_active_kurs() {
 		filterValue.kurs = schueler
 	}
 	app.listAbiturjahrgangSchueler.filter = filterValue;
+}
+function kurs_schiene_zugeordnet(schiene: GostBlockungsergebnisSchiene): boolean {
+	let ret = false
+	try {
+		ret = manager.value?.getOfKursOfSchieneIstZugeordnet(props.kurs.id, schiene.id) || false
+	} catch (e) {
+		return false
+	}
+	return ret
 }
 </script>
