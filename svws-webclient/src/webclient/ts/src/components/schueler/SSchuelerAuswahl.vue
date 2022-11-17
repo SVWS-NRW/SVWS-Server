@@ -71,7 +71,7 @@
 					:footer="true"
 					>
 					<!-- Kontextmenü der Zeile für die Spalte Actions -->
-					<template #cell-actions="{ row }">
+					<!-- <template #cell-actions="{ row }">
 						<svws-ui-popover :hover="false" placement="left-end" :disable-click-away="false">
 							<template #trigger>
 								<button class="action-button">
@@ -86,7 +86,7 @@
 								</div>
 							</template>
 						</svws-ui-popover>
-					</template>
+					</template> -->
 					<!-- Footer mit Button zum Hinzufügen einer Zeile -->
 					<template #footer>
 						<button
