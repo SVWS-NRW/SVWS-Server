@@ -519,8 +519,6 @@ public class GostBlockungsdatenManager {
 			throw new NullPointerException("Kurs.fach_id = " + pKurs.fach_id + " --> unbekannt!");
 		if (GostKursart.fromIDorNull(pKurs.kursart) == null)
 			throw new NullPointerException("Kurs.kursart = " + pKurs.kursart + " --> unbekannt!");
-		if (pKurs.wochenstunden == null)
-			throw new NullPointerException("Kurs.wochenstunden = " + "null" + " --> nicht erlaubt!");
 		if (pKurs.wochenstunden < 0)
 			throw new NullPointerException("Kurs.wochenstunden = " + pKurs.wochenstunden + " --> zu gering!");
 		// Hinzufügen des Kurses.
@@ -662,8 +660,6 @@ public class GostBlockungsdatenManager {
 			throw new NullPointerException("Schiene.id =  " + pSchiene.id + " --> zu klein!");
 		if (pSchiene.nummer < 1)
 			throw new NullPointerException("Schiene.nummer =  " + pSchiene.nummer + " --> zu klein!");
-		if (pSchiene.wochenstunden == null)
-			throw new NullPointerException("Schiene.wochenstunden = " + "null" + " --> nicht erlaubt!");
 		if (pSchiene.wochenstunden < 1)
 			throw new NullPointerException("Schiene.wochenstunden =  " + pSchiene.wochenstunden + " --> zu klein!");
 		if (_mapSchienen.containsKey(pSchiene.id))
