@@ -7,15 +7,17 @@
 					<svws-ui-checkbox v-model="filter_kollision" class="px-4">
 						Nur Kollisionen ({{Object.values(schueler_kollisionen).length}}/{{schueler?.length || 0}})
 					</svws-ui-checkbox>
-					<div>
-						<svws-ui-checkbox
-							v-if="app.dataKursblockungsergebnis.active_kurs.value"
-							v-model="filter_negiert" class="px-4">
-							Nicht in diesem Kurs</svws-ui-checkbox>
-					</div>
-					<div v-if="app.dataKursblockungsergebnis.active_kurs.value" class="px-4">
-						<b>Kursansicht {{app.dataKursblockungsergebnis.active_kurs.value.fachID}}</b>
-					</div>
+					<template v-if="aktiver_kurs">
+						<div>
+							<svws-ui-checkbox
+								v-if="aktiver_kurs"
+								v-model="filter_negiert" class="px-4"
+							>
+								Nicht in diesem Kurs
+							</svws-ui-checkbox>
+						</div>
+						<div class="px-4 font-bold"> Kursansicht {{aktiver_kursname}} </div>
+					</template>
 					<svws-ui-text-input v-model="filter_name" type="search" placeholder="Suche nach Namen">
 						<i-ri-search-line />
 					</svws-ui-text-input>
@@ -124,6 +126,14 @@ const selected: WritableComputedRef<SchuelerListeEintrag | undefined> =
 			}
 		}
 	});
+
+const aktiver_kurs: ComputedRef<GostBlockungsergebnisKurs|undefined> =
+	computed(()=>app.dataKursblockungsergebnis.active_kurs.value)
+
+const aktiver_kursname: ComputedRef<String | undefined> =
+	computed(()=> app.dataKursblockungsergebnis.active_kurs.value?.id
+		? manager.value?.getOfKursName(app.dataKursblockungsergebnis.active_kurs.value?.id)
+		: undefined)
 
 const schueler_kollisionen: ComputedRef<{ [index: number]: boolean }> =
 	computed(() => {
