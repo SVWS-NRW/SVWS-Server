@@ -348,6 +348,7 @@ export { GostFachbereich } from './core/types/gost/GostFachbereich';
 export { GostFremdsprachenart } from './core/types/gost/GostFremdsprachenart';
 export { GostHalbjahr } from './core/types/gost/GostHalbjahr';
 export { GostKursart } from './core/types/gost/GostKursart';
+export { GostLaufbahnplanungFachkombinationTyp } from './core/types/gost/GostLaufbahnplanungFachkombinationTyp';
 export { GostSchriftlichkeit } from './core/types/gost/GostSchriftlichkeit';
 export { Jahrgaenge } from './core/types/jahrgang/Jahrgaenge';
 export { KAOAAnschlussoptionen } from './core/types/kaoa/KAOAAnschlussoptionen';

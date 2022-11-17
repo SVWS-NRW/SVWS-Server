@@ -2,6 +2,9 @@ package de.nrw.schule.svws.db.dto.current.gost;
 
 import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.converter.current.Boolean01Converter;
+import de.nrw.schule.svws.db.converter.current.gost.GostLaufbahnplanungFachkombinationTypConverter;
+
+import de.nrw.schule.svws.core.types.gost.GostLaufbahnplanungFachkombinationTyp;
 
 
 import jakarta.persistence.Cacheable;
@@ -18,6 +21,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import de.nrw.schule.svws.csv.converter.current.Boolean01ConverterSerializer;
 import de.nrw.schule.svws.csv.converter.current.Boolean01ConverterDeserializer;
+import de.nrw.schule.svws.csv.converter.current.gost.GostLaufbahnplanungFachkombinationTypConverterSerializer;
+import de.nrw.schule.svws.csv.converter.current.gost.GostLaufbahnplanungFachkombinationTypConverterDeserializer;
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Gost_Jahrgang_Fachkombinationen.
@@ -143,7 +148,10 @@ public class DTOGostJahrgangFachkombinationen {
 	/** Gibt an, ob es sich um eine nicht mögliche Fächerkombination (0) oder ein Fächerprofil handelt (1) */
 	@Column(name = "Typ")
 	@JsonProperty
-	public Integer Typ;
+	@Convert(converter=GostLaufbahnplanungFachkombinationTypConverter.class)
+	@JsonSerialize(using=GostLaufbahnplanungFachkombinationTypConverterSerializer.class)
+	@JsonDeserialize(using=GostLaufbahnplanungFachkombinationTypConverterDeserializer.class)
+	public GostLaufbahnplanungFachkombinationTyp Typ;
 
 	/** Hinweistext, der ausgegeben wird, wenn das Fachprofil / die nicht mögliche Fächerkombination nicht erfüllt wird. */
 	@Column(name = "Hinweistext")
@@ -171,7 +179,7 @@ public class DTOGostJahrgangFachkombinationen {
 	 * @param Typ   der Wert für das Attribut Typ
 	 * @param Hinweistext   der Wert für das Attribut Hinweistext
 	 */
-	public DTOGostJahrgangFachkombinationen(final Long ID, final Long Fach1_ID, final Long Fach2_ID, final Boolean EF1, final Boolean EF2, final Boolean Q11, final Boolean Q12, final Boolean Q21, final Boolean Q22, final Integer Typ, final String Hinweistext) {
+	public DTOGostJahrgangFachkombinationen(final Long ID, final Long Fach1_ID, final Long Fach2_ID, final Boolean EF1, final Boolean EF2, final Boolean Q11, final Boolean Q12, final Boolean Q21, final Boolean Q22, final GostLaufbahnplanungFachkombinationTyp Typ, final String Hinweistext) {
 		if (ID == null) { 
 			throw new NullPointerException("ID must not be null");
 		}

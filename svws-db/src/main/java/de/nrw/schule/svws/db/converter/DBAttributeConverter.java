@@ -33,6 +33,7 @@ import de.nrw.schule.svws.db.converter.current.gost.GOStAbiturFachConverter;
 import de.nrw.schule.svws.db.converter.current.gost.GOStBesondereLernleistungConverter;
 import de.nrw.schule.svws.db.converter.current.gost.GOStHalbjahrConverter;
 import de.nrw.schule.svws.db.converter.current.gost.GOStKursartConverter;
+import de.nrw.schule.svws.db.converter.current.gost.GostLaufbahnplanungFachkombinationTypConverter;
 import de.nrw.schule.svws.db.converter.current.kursblockung.GostKursblockungRegelTypConverter;
 import de.nrw.schule.svws.db.converter.current.statkue.SchulformKuerzelConverter;
 import de.nrw.schule.svws.db.converter.current.statkue.SchulgliederungKuerzelConverter;
@@ -111,6 +112,7 @@ public abstract class DBAttributeConverter<X, Y> implements AttributeConverter<X
 			converter.put(GOStHalbjahrConverter.class.getSimpleName(), new GOStHalbjahrConverter());
 			converter.put(GOStKursartConverter.class.getSimpleName(), new GOStKursartConverter());
 			converter.put(GostKursblockungRegelTypConverter.class.getSimpleName(), new GostKursblockungRegelTypConverter());
+			converter.put(GostLaufbahnplanungFachkombinationTypConverter.class.getSimpleName(), new GostLaufbahnplanungFachkombinationTypConverter());
 			converter.put(SchulformKuerzelConverter.class.getSimpleName(), new SchulformKuerzelConverter());
 			converter.put(SchulgliederungKuerzelConverter.class.getSimpleName(), new SchulgliederungKuerzelConverter());
 			converter.put(SprachreferenzniveauConverter.class.getSimpleName(), new SprachreferenzniveauConverter());

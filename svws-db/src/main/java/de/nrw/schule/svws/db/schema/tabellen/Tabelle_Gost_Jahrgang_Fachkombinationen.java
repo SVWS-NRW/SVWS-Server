@@ -86,6 +86,7 @@ public class Tabelle_Gost_Jahrgang_Fachkombinationen extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte Typ */
 	public SchemaTabelleSpalte col_Typ = add("Typ", SchemaDatentypen.INT, false)
+		.setConverter("GostLaufbahnplanungFachkombinationTypConverter")
 		.setDefault("0")
 		.setNotNull()
 		.setJavaComment("Gibt an, ob es sich um eine nicht mögliche Fächerkombination (0) oder ein Fächerprofil handelt (1)");
