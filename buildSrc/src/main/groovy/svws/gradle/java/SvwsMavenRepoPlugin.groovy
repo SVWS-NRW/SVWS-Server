@@ -40,6 +40,10 @@ class SvwsMavenRepoPlugin extends SvwsMavenRepoCredentialsPlugin implements Plug
 				maven {
 					name = "githubpackages"
 					url = this.extension.getGithubMavenPackagesUrl()
+					credentials {
+						username = project.ext.getGithubActor()
+						password = project.ext.getGithubToken()
+					}
 				}
 			}
 		} else {
@@ -49,6 +53,10 @@ class SvwsMavenRepoPlugin extends SvwsMavenRepoCredentialsPlugin implements Plug
 				maven {
 					name = "githubpackages"
 					url = this.extension.getGithubMavenPackagesUrl()
+					credentials {
+						username = project.ext.getGithubActor()
+						password = project.ext.getGithubToken()
+					}
 				}
 			}
 		}
