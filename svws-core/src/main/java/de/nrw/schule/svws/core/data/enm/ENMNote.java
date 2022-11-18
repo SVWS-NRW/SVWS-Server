@@ -14,6 +14,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @TranspilerDTO
 public class ENMNote {
 
+    /** Die ID der Note. */
+    @Schema(required = true, description = "Die ID der Note.", example="42")
+    public int id;
+    
 	/** Die Kurzschreibweise der Note als Zahl ggf. mit Tendenz (+/-), ggf. auch ein Kürzel für PseudoNoten */
 	@Schema(required = true, description = "Das eindeutige Kürzel der Note: Die Kurzschreibweise der Note als Zahl ggf. mit Tendenz (+/-) oder das Kürzel einer Pseudo-Note", example="AT")
 	public String kuerzel;

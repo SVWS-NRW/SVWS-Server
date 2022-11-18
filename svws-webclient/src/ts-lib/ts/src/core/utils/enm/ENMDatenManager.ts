@@ -29,6 +29,8 @@ export class ENMDatenManager extends JavaObject {
 
 	private mapFaecher : HashMap<Number, ENMFach> = new HashMap();
 
+	private mapFaecherByKuerzel : HashMap<String, ENMFach> = new HashMap();
+
 	private mapJahrgaenge : HashMap<Number, ENMJahrgang> = new HashMap();
 
 	private mapKlassen : HashMap<Number, ENMKlasse> = new HashMap();
@@ -109,6 +111,7 @@ export class ENMDatenManager extends JavaObject {
 		for (let i : number = 0; i < noten.length; i++){
 			let note : Note = noten[i];
 			let enmNote : ENMNote = new ENMNote();
+			enmNote.id = note.id;
 			enmNote.kuerzel = note.kuerzel;
 			enmNote.notenpunkte = note.notenpunkte;
 			enmNote.text = note.text;
@@ -130,6 +133,7 @@ export class ENMDatenManager extends JavaObject {
 		for (let i : number = 0; i < foerderschwerpunkte.size(); i++){
 			let foerderschwerpunkt : Foerderschwerpunkt | null = foerderschwerpunkte.get(i);
 			let enmFoerderschwerpunkt : ENMFoerderschwerpunkt | null = new ENMFoerderschwerpunkt();
+			enmFoerderschwerpunkt.id = foerderschwerpunkt.daten.id;
 			enmFoerderschwerpunkt.kuerzel = foerderschwerpunkt.daten.kuerzel;
 			enmFoerderschwerpunkt.beschreibung = foerderschwerpunkt.daten.beschreibung;
 			this.daten.foerderschwerpunkte.add(enmFoerderschwerpunkt);
@@ -209,7 +213,7 @@ export class ENMDatenManager extends JavaObject {
 	 * 
 	 * @return true, falls das Fach hinzugefügt wurde, ansonsten false  
 	 */
-	public addFach(id : number, kuerzel : String | null, kuerzelAnzeige : String | null, sortierung : number, istFremdsprache : boolean) : boolean {
+	public addFach(id : number, kuerzel : String, kuerzelAnzeige : String, sortierung : number, istFremdsprache : boolean) : boolean {
 		if (this.mapFaecher.get(id) !== null) 
 			return false;
 		let enmFach : ENMFach = new ENMFach();
@@ -220,6 +224,7 @@ export class ENMDatenManager extends JavaObject {
 		enmFach.istFremdsprache = istFremdsprache;
 		this.daten.faecher.add(enmFach);
 		this.mapFaecher.put(id, enmFach);
+		this.mapFaecherByKuerzel.put(kuerzelAnzeige, enmFach);
 		return true;
 	}
 
@@ -310,6 +315,19 @@ export class ENMDatenManager extends JavaObject {
 	 */
 	public getFach(id : number) : ENMFach | null {
 		return this.mapFaecher.get(id);
+	}
+
+	/**
+	 * Liefert das ENM-Fächer-Objekt für das angegebene Fächer-Kürzel zurück,
+	 * sofern die Fächer über die Methode {@link ENMDatenManager#addFach(long, String, String, int, boolean)}
+	 * hinzugefügt wurden.
+	 * 
+	 * @param kuerzel   das Kürzel des Faches
+	 * 
+	 * @return das ENM-Fächer-Objekt
+	 */
+	public getFachByKuerzel(kuerzel : String) : ENMFach | null {
+		return this.mapFaecherByKuerzel.get(kuerzel);
 	}
 
 	/**

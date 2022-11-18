@@ -5,9 +5,9 @@ export class ENMFach extends JavaObject {
 
 	public id : number = 0;
 
-	public kuerzel : String | null = null;
+	public kuerzel : String = "";
 
-	public kuerzelAnzeige : String | null = null;
+	public kuerzelAnzeige : String = "";
 
 	public sortierung : number = 0;
 
@@ -28,8 +28,12 @@ export class ENMFach extends JavaObject {
 		if (typeof obj.id === "undefined")
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		result.kuerzel = typeof obj.kuerzel === "undefined" ? null : obj.kuerzel === null ? null : String(obj.kuerzel);
-		result.kuerzelAnzeige = typeof obj.kuerzelAnzeige === "undefined" ? null : obj.kuerzelAnzeige === null ? null : String(obj.kuerzelAnzeige);
+		if (typeof obj.kuerzel === "undefined")
+			 throw new Error('invalid json format, missing attribute kuerzel');
+		result.kuerzel = String(obj.kuerzel);
+		if (typeof obj.kuerzelAnzeige === "undefined")
+			 throw new Error('invalid json format, missing attribute kuerzelAnzeige');
+		result.kuerzelAnzeige = String(obj.kuerzelAnzeige);
 		if (typeof obj.sortierung === "undefined")
 			 throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
@@ -42,8 +46,8 @@ export class ENMFach extends JavaObject {
 	public static transpilerToJSON(obj : ENMFach) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : '"' + obj.kuerzel.valueOf() + '"') + ',';
-		result += '"kuerzelAnzeige" : ' + ((!obj.kuerzelAnzeige) ? 'null' : '"' + obj.kuerzelAnzeige.valueOf() + '"') + ',';
+		result += '"kuerzel" : ' + '"' + obj.kuerzel.valueOf() + '"' + ',';
+		result += '"kuerzelAnzeige" : ' + '"' + obj.kuerzelAnzeige.valueOf() + '"' + ',';
 		result += '"sortierung" : ' + obj.sortierung + ',';
 		result += '"istFremdsprache" : ' + obj.istFremdsprache + ',';
 		result = result.slice(0, -1);
@@ -57,10 +61,10 @@ export class ENMFach extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.kuerzel !== "undefined") {
-			result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : '"' + obj.kuerzel.valueOf() + '"') + ',';
+			result += '"kuerzel" : ' + '"' + obj.kuerzel.valueOf() + '"' + ',';
 		}
 		if (typeof obj.kuerzelAnzeige !== "undefined") {
-			result += '"kuerzelAnzeige" : ' + ((!obj.kuerzelAnzeige) ? 'null' : '"' + obj.kuerzelAnzeige.valueOf() + '"') + ',';
+			result += '"kuerzelAnzeige" : ' + '"' + obj.kuerzelAnzeige.valueOf() + '"' + ',';
 		}
 		if (typeof obj.sortierung !== "undefined") {
 			result += '"sortierung" : ' + obj.sortierung + ',';

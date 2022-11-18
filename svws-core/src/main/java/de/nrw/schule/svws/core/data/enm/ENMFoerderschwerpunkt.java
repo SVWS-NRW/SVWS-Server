@@ -14,6 +14,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @TranspilerDTO
 public class ENMFoerderschwerpunkt {
 
+    /** Die ID des Förderschwerpunktes. */
+    @Schema(required = true, description = "die ID des Förderschwerpunktes", example="42")
+    public long id;
+    
 	/** Das Kürzel, welche im Rahmen der amtlichen Schulstatistik verwendet wird */
 	@Schema(required = true, description = "Das Kürzel, welche im Rahmen der amtlichen Schulstatistik verwendet wird", example="SH")
 	public String kuerzel;

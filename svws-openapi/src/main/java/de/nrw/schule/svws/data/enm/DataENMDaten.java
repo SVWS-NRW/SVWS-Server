@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import de.nrw.schule.svws.core.data.enm.ENMDaten;
+import de.nrw.schule.svws.core.data.enm.ENMFach;
 import de.nrw.schule.svws.core.data.enm.ENMFloskel;
 import de.nrw.schule.svws.core.data.enm.ENMFloskelgruppe;
 import de.nrw.schule.svws.core.data.enm.ENMJahrgang;
@@ -317,10 +318,11 @@ public class DataENMDaten extends DataManager<Long> {
 		}
 		List<DTOFloskeln> dtoFloskeln = conn.queryAll(DTOFloskeln.class);
 		for (DTOFloskeln dto : dtoFloskeln) {
+		    ENMFach fach = manager.getFachByKuerzel(dto.FloskelFach);
 			ENMFloskel enmFl = new ENMFloskel();
 			enmFl.kuerzel = dto.Kuerzel;
 			enmFl.text = dto.FloskelText;
-			// TODO	enmFl.fachID = dto.FloskelFach();
+			enmFl.fachID = (fach == null) ? null : fach.id;
 			try {
 				enmFl.niveau = Long.parseLong(dto.FloskelNiveau);
 			} catch (NumberFormatException e) {

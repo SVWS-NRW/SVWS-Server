@@ -1,5 +1,6 @@
 package de.nrw.schule.svws.core.data.enm;
 
+import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 import de.nrw.schule.svws.core.transpiler.TranspilerDTO;
@@ -20,11 +21,11 @@ public class ENMFach {
 	
 	/** Das Kürzel des Faches, wie es im Rahmen der amtlichen Schulstatistik verwendet wird. (z.B. D) */
 	@Schema(required = true, description = "Das Kürzel des Faches, wie es im Rahmen der amtlichen Schulstatistik verwendet wird.", example="D")
-	public String kuerzel;
+	public @NotNull String kuerzel = "";
 
 	/** Das Kürzel des Faches, wie es im Rahmen der Schule benannt wird und angezeigt werden soll. (z.B. D) */
 	@Schema(required = true, description = "Das Kürzel des Faches, wie es im Rahmen der Schule benannt wird und angezeigt werden soll.", example="D")
-	public String kuerzelAnzeige;
+	public @NotNull String kuerzelAnzeige = "";
 
 	/** Die Reihenfolge des Faches bei der Sortierung der Fächer. (z.B. 37) */
 	@Schema(required = true, description = "Die Reihenfolge des Faches bei der Sortierung der Fächer.", example="37")

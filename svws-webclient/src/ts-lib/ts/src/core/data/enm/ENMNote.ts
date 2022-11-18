@@ -4,6 +4,8 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class ENMNote extends JavaObject {
 
+	public id : number = 0;
+
 	public kuerzel : String | null = null;
 
 	public notenpunkte : Number | null = null;
@@ -22,6 +24,9 @@ export class ENMNote extends JavaObject {
 	public static transpilerFromJSON(json : string): ENMNote {
 		const obj = JSON.parse(json);
 		const result = new ENMNote();
+		if (typeof obj.id === "undefined")
+			 throw new Error('invalid json format, missing attribute id');
+		result.id = obj.id;
 		result.kuerzel = typeof obj.kuerzel === "undefined" ? null : obj.kuerzel === null ? null : String(obj.kuerzel);
 		result.notenpunkte = typeof obj.notenpunkte === "undefined" ? null : obj.notenpunkte === null ? null : Number(obj.notenpunkte);
 		result.text = typeof obj.text === "undefined" ? null : obj.text === null ? null : String(obj.text);
@@ -30,6 +35,7 @@ export class ENMNote extends JavaObject {
 
 	public static transpilerToJSON(obj : ENMNote) : string {
 		let result = '{';
+		result += '"id" : ' + obj.id + ',';
 		result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : '"' + obj.kuerzel.valueOf() + '"') + ',';
 		result += '"notenpunkte" : ' + ((!obj.notenpunkte) ? 'null' : obj.notenpunkte.valueOf()) + ',';
 		result += '"text" : ' + ((!obj.text) ? 'null' : '"' + obj.text.valueOf() + '"') + ',';
@@ -40,6 +46,9 @@ export class ENMNote extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<ENMNote>) : string {
 		let result = '{';
+		if (typeof obj.id !== "undefined") {
+			result += '"id" : ' + obj.id + ',';
+		}
 		if (typeof obj.kuerzel !== "undefined") {
 			result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : '"' + obj.kuerzel.valueOf() + '"') + ',';
 		}

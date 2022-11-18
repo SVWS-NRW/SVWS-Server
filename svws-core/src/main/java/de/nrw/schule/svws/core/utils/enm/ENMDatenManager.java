@@ -37,6 +37,9 @@ public class ENMDatenManager {
 	/** Temporäre Map für das Befüllen des ENMFach-Vektors.*/
 	private @NotNull HashMap<@NotNull Long, @NotNull ENMFach> mapFaecher = new HashMap<>();
 
+    /** Temporäre Map für das Befüllen des ENMFach-Vektors.*/
+    private @NotNull HashMap<@NotNull String, @NotNull ENMFach> mapFaecherByKuerzel = new HashMap<>();
+
 	/** Temporäre Map für das Befüllen des ENMJahrgang-Vektors.*/
 	private @NotNull HashMap<@NotNull Long, @NotNull ENMJahrgang> mapJahrgaenge = new HashMap<>();
 
@@ -116,6 +119,7 @@ public class ENMDatenManager {
     	for (int i = 0; i < noten.length; i++) {
     		@NotNull Note note = noten[i]; 
     		@NotNull ENMNote enmNote = new ENMNote();
+    		enmNote.id = note.id;
     		enmNote.kuerzel = note.kuerzel;
     		enmNote.notenpunkte = note.notenpunkte;
     		enmNote.text = note.text;
@@ -138,6 +142,7 @@ public class ENMDatenManager {
     	for (int i = 0; i < foerderschwerpunkte.size(); i++) {
     		Foerderschwerpunkt foerderschwerpunkt = foerderschwerpunkte.get(i);
     		ENMFoerderschwerpunkt enmFoerderschwerpunkt = new ENMFoerderschwerpunkt();
+    		enmFoerderschwerpunkt.id = foerderschwerpunkt.daten.id;
     		enmFoerderschwerpunkt.kuerzel = foerderschwerpunkt.daten.kuerzel;
     		enmFoerderschwerpunkt.beschreibung = foerderschwerpunkt.daten.beschreibung;
     		daten.foerderschwerpunkte.add(enmFoerderschwerpunkt);
@@ -221,7 +226,7 @@ public class ENMDatenManager {
 	 * 
 	 * @return true, falls das Fach hinzugefügt wurde, ansonsten false  
 	 */
-	public boolean addFach(long id, String kuerzel, String kuerzelAnzeige, int sortierung, boolean istFremdsprache) {
+	public boolean addFach(long id, @NotNull String kuerzel, @NotNull String kuerzelAnzeige, int sortierung, boolean istFremdsprache) {
 		if (mapFaecher.get(id) != null) 
 			return false;		
 		@NotNull ENMFach enmFach = new ENMFach();
@@ -232,6 +237,7 @@ public class ENMDatenManager {
 		enmFach.istFremdsprache = istFremdsprache;
 		daten.faecher.add(enmFach);
     	mapFaecher.put(id, enmFach);
+    	mapFaecherByKuerzel.put(kuerzelAnzeige, enmFach);
     	return true;
 	}
 	
@@ -330,6 +336,20 @@ public class ENMDatenManager {
 	}
 
 		
+    /**
+     * Liefert das ENM-Fächer-Objekt für das angegebene Fächer-Kürzel zurück,
+     * sofern die Fächer über die Methode {@link ENMDatenManager#addFach(long, String, String, int, boolean)}
+     * hinzugefügt wurden.
+     * 
+     * @param kuerzel   das Kürzel des Faches
+     * 
+     * @return das ENM-Fächer-Objekt
+     */
+    public ENMFach getFachByKuerzel(@NotNull String kuerzel) {
+        return mapFaecherByKuerzel.get(kuerzel);
+    }
+
+        
 	/**
 	 * Liefert das ENM-Jahrgänge-Objekt für die angegebene Jahrgangs-ID zurück,
 	 * sofern die Jahrgänge über die Methode {@link ENMDatenManager#addJahrgang(long, String, String, String, String, int)}
