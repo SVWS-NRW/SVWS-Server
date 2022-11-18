@@ -218,11 +218,14 @@ public class DataENMDaten extends DataManager<Long> {
     		// TODO check and add BKAbschluss - Data
     	}
     	
+    	// Kopiere den Floskel-Katalog in die ENM-Daten
+    	getFloskeln(manager);
+    	
     	return manager.daten;
 	}
 
 
-	private void initManager(ENMDatenManager manager, DTOEigeneSchule schule, DTOSchuljahresabschnitte abschnitt) {
+	private static void initManager(ENMDatenManager manager, DTOEigeneSchule schule, DTOSchuljahresabschnitte abschnitt) {
 		// Setze die grundlegenden Schuldaten
     	manager.setSchuldaten(schule.SchulNr, abschnitt.Jahr, schule.AnzahlAbschnitte, abschnitt.Abschnitt,
     			/** TODO */ null, /** TODO */ true, /** TODO */ false, /** TODO */ true,
@@ -231,8 +234,6 @@ public class DataENMDaten extends DataManager<Long> {
 		manager.addNoten();
     	// Kopiere den Förderschwerpunkt-Katalog aus dem Core-type in die ENM-Daten
 		manager.addFoerderschwerpunkte(schule.Schulform);
-    	// Kopiere den Floskel-Katalog in die ENM-Daten
-    	getFloskeln(manager);
 	}
 
 	private DTOEigeneSchule getSchule() {
@@ -325,7 +326,7 @@ public class DataENMDaten extends DataManager<Long> {
 			enmFl.fachID = (fach == null) ? null : fach.id;
 			try {
 				enmFl.niveau = Long.parseLong(dto.FloskelNiveau);
-			} catch (NumberFormatException e) {
+			} catch (@SuppressWarnings("unused") NumberFormatException e) {
 				enmFl.niveau = null;
 			}
 			// TODO	enmFl.jahrgangID = dto.FloskelJahrgang();
