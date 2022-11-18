@@ -3,7 +3,7 @@
 	"description": "SVWS-Server-Projekt: Generierter Code für die Client-API und transpilierter Server-Code zur Verwendung in Clients",
 	"author": "MSB NRW",
 	"license": "BSD-3-Clause",
-	"version": "0.2.29-SNAPSHOT",
+	"version": "0.3.1",
 	"main": "./dist/index.js",
 	"types": "./dist/index.d.ts",
 	"files": [
