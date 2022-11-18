@@ -104,7 +104,7 @@ public class Tabelle_SchuelerKAoADaten extends SchemaTabelle {
 			"SchuelerKAoADaten_Kategorie_FK", 
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
 			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE, 
-			new Pair<>(col_KategorieID, Schema.tab_Schildintern_KAoA_Kategorie.col_ID)
+			new Pair<>(col_KategorieID, Schema.tab_KAoA_Kategorie_Keys.col_ID)
 		);
 
 	/** Die Definition des Fremdschlüssels SchuelerKAoADaten_Merkmal_FK */
@@ -112,7 +112,7 @@ public class Tabelle_SchuelerKAoADaten extends SchemaTabelle {
 			"SchuelerKAoADaten_Merkmal_FK", 
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
 			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
-			new Pair<>(col_MerkmalID, Schema.tab_Schildintern_KAoA_Merkmal.col_ID)
+			new Pair<>(col_MerkmalID, Schema.tab_KAoA_Merkmal_Keys.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);
 
@@ -121,7 +121,7 @@ public class Tabelle_SchuelerKAoADaten extends SchemaTabelle {
 			"SchuelerKAoADaten_Zusatzmerkmal_FK", 
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
 			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
-			new Pair<>(col_ZusatzmerkmalID, Schema.tab_Schildintern_KAoA_Zusatzmerkmal.col_ID)
+			new Pair<>(col_ZusatzmerkmalID, Schema.tab_KAoA_Zusatzmerkmal_Keys.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);
 
@@ -130,7 +130,7 @@ public class Tabelle_SchuelerKAoADaten extends SchemaTabelle {
 			"SchuelerKAoADaten_Anschlussoption_FK", 
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
 			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
-			new Pair<>(col_AnschlussoptionID, Schema.tab_Schildintern_KAoA_Anschlussoption.col_ID)
+			new Pair<>(col_AnschlussoptionID, Schema.tab_KAoA_Anschlussoption_Keys.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);
 
@@ -139,7 +139,7 @@ public class Tabelle_SchuelerKAoADaten extends SchemaTabelle {
 			"SchuelerKAoADaten_Berufsfeld_FK", 
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
 			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
-			new Pair<>(col_BerufsfeldID, Schema.tab_Schildintern_KAoA_Berufsfeld.col_ID)
+			new Pair<>(col_BerufsfeldID, Schema.tab_KAoA_Berufsfeld_Keys.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);
 
@@ -148,7 +148,7 @@ public class Tabelle_SchuelerKAoADaten extends SchemaTabelle {
 			"SchuelerKAoADaten_SBO_Ebene4_FK", 
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE, 
 			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL, 
-			new Pair<>(col_SBO_Ebene4ID, Schema.tab_Schildintern_KAoA_SBO_Ebene4.col_ID)
+			new Pair<>(col_SBO_Ebene4ID, Schema.tab_KAoA_SBO_Ebene4_Keys.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);
 

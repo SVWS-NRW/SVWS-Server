@@ -379,28 +379,22 @@ public class Schema {
 	public static final Tabelle_Schildintern_FilterFeldListe tab_Schildintern_FilterFeldListe = add(new Tabelle_Schildintern_FilterFeldListe());
 
 	/** Tabelle Schildintern_KAoA_Anschlussoption */
-	public static final Tabelle_Schildintern_KAoA_Anschlussoption tab_Schildintern_KAoA_Anschlussoption = add(new Tabelle_Schildintern_KAoA_Anschlussoption());
+	public static final Tabelle_KAoA_Anschlussoption_Keys tab_KAoA_Anschlussoption_Keys = add(new Tabelle_KAoA_Anschlussoption_Keys());
 
 	/** Tabelle Schildintern_KAoA_Berufsfeld */
-	public static final Tabelle_Schildintern_KAoA_Berufsfeld tab_Schildintern_KAoA_Berufsfeld = add(new Tabelle_Schildintern_KAoA_Berufsfeld());
+	public static final Tabelle_KAoA_Berufsfeld_Keys tab_KAoA_Berufsfeld_Keys = add(new Tabelle_KAoA_Berufsfeld_Keys());
 
 	/** Tabelle Schildintern_KAoA_Kategorie */
-	public static final Tabelle_Schildintern_KAoA_Kategorie tab_Schildintern_KAoA_Kategorie = add(new Tabelle_Schildintern_KAoA_Kategorie());
+	public static final Tabelle_KAoA_Kategorie_Keys tab_KAoA_Kategorie_Keys = add(new Tabelle_KAoA_Kategorie_Keys());
 
 	/** Tabelle Schildintern_KAoA_Merkmal */
-	public static final Tabelle_Schildintern_KAoA_Merkmal tab_Schildintern_KAoA_Merkmal = add(new Tabelle_Schildintern_KAoA_Merkmal());
+	public static final Tabelle_KAoA_Merkmal_Keys tab_KAoA_Merkmal_Keys = add(new Tabelle_KAoA_Merkmal_Keys());
 
 	/** Tabelle Schildintern_KAoA_Zusatzmerkmal */
-	public static final Tabelle_Schildintern_KAoA_Zusatzmerkmal tab_Schildintern_KAoA_Zusatzmerkmal = add(new Tabelle_Schildintern_KAoA_Zusatzmerkmal());
+	public static final Tabelle_KAoA_Zusatzmerkmal_Keys tab_KAoA_Zusatzmerkmal_Keys = add(new Tabelle_KAoA_Zusatzmerkmal_Keys());
 
 	/** Tabelle Schildintern_KAoA_SBO_Ebene4 */
-	public static final Tabelle_Schildintern_KAoA_SBO_Ebene4 tab_Schildintern_KAoA_SBO_Ebene4 = add(new Tabelle_Schildintern_KAoA_SBO_Ebene4());
-
-	/** Tabelle Schildintern_PruefOrd_Optionen */
-	public static final Tabelle_Schildintern_PruefOrd_Optionen tab_Schildintern_PruefOrd_Optionen = add(new Tabelle_Schildintern_PruefOrd_Optionen());
-
-	/** Tabelle Schildintern_PruefungsOrdnung */
-	public static final Tabelle_Schildintern_PruefungsOrdnung tab_Schildintern_PruefungsOrdnung = add(new Tabelle_Schildintern_PruefungsOrdnung());
+	public static final Tabelle_KAoA_SBO_Ebene4_Keys tab_KAoA_SBO_Ebene4_Keys = add(new Tabelle_KAoA_SBO_Ebene4_Keys());
 
 	/** Tabelle Schildintern_SchuelerImpExp */
 	public static final Tabelle_Schildintern_SchuelerImpExp tab_Schildintern_SchuelerImpExp = add(new Tabelle_Schildintern_SchuelerImpExp());
@@ -672,9 +666,6 @@ public class Schema {
 	/** Tabelle Statkue_PLZOrt */
 	public static final Tabelle_Statkue_PLZOrt tab_Statkue_PLZOrt = add(new Tabelle_Statkue_PLZOrt());
 
-	/** Tabelle Statkue_Reformpaedagogik */
-	public static final Tabelle_Statkue_Reformpaedagogik tab_Statkue_Reformpaedagogik = add(new Tabelle_Statkue_Reformpaedagogik());
-
 	/** Tabelle Statkue_SVWS_SprachpruefungNiveaus */
 	public static final Tabelle_Statkue_SVWS_SprachpruefungNiveaus tab_Statkue_SVWS_SprachpruefungNiveaus = add(new Tabelle_Statkue_SVWS_SprachpruefungNiveaus());
 
@@ -683,9 +674,6 @@ public class Schema {
 
 	/** Tabelle Statkue_SchuelerKindergartenbesuch */
 	public static final Tabelle_Statkue_SchuelerKindergartenbesuch tab_Statkue_SchuelerKindergartenbesuch = add(new Tabelle_Statkue_SchuelerKindergartenbesuch());
-
-	/** Tabelle Statkue_SchuelerUebergangsempfehlung5Jg */
-	public static final Tabelle_Statkue_SchuelerUebergangsempfehlung5Jg tab_Statkue_SchuelerUebergangsempfehlung5Jg = add(new Tabelle_Statkue_SchuelerUebergangsempfehlung5Jg());
 
 	/** Tabelle Stundenplan */
 	public static final Tabelle_Stundenplan tab_Stundenplan = add(new Tabelle_Stundenplan());
@@ -756,14 +744,6 @@ public class Schema {
 	public static final SchemaTabelle[] tabellenDefaultDaten = new SchemaTabelle[] {
 		Schema.tab_Schildintern_FaecherSortierung,
 		Schema.tab_Schildintern_FilterFeldListe,
-		Schema.tab_Schildintern_KAoA_Anschlussoption,
-		Schema.tab_Schildintern_KAoA_Berufsfeld,
-		Schema.tab_Schildintern_KAoA_Kategorie,
-		Schema.tab_Schildintern_KAoA_Merkmal,
-		Schema.tab_Schildintern_KAoA_Zusatzmerkmal,
-		Schema.tab_Schildintern_KAoA_SBO_Ebene4,
-		Schema.tab_Schildintern_PruefOrd_Optionen,
-		Schema.tab_Schildintern_PruefungsOrdnung,
 		Schema.tab_Schildintern_SchuelerImpExp,
 		Schema.tab_Schulver_DBS,
 		Schema.tab_Schulver_Schultraeger,
@@ -771,10 +751,8 @@ public class Schema {
 		Schema.tab_Statkue_AndereGrundschulen,
 		Schema.tab_Statkue_Bilingual,
 		Schema.tab_Statkue_PLZOrt,
-		Schema.tab_Statkue_Reformpaedagogik,
 		Schema.tab_Statkue_SchuelerErsteSchulformSekI,
 		Schema.tab_Statkue_SchuelerKindergartenbesuch,
-		Schema.tab_Statkue_SchuelerUebergangsempfehlung5Jg,
 		Schema.tab_Statkue_SVWS_SprachpruefungNiveaus
 	};
 

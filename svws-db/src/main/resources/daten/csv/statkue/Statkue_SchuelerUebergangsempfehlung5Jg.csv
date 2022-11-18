@@ -1,7 +1,0 @@
-ID;SF;Kurztext;Langtext;Beginn;Ende;Sort;HGSEM;gueltigVon;gueltigBis
-1;;H;Hauptschule;1900-01-01 00:00:00;;100;04XX;;
-2;;R;Realschule;1900-01-01 00:00:00;;300;10XX;;
-3;;GY;Gymnasium;1900-01-01 00:00:00;;500;20XX;;
-4;;OHNE;Keine Empfehlung;1900-01-01 00:00:00;;600;****;;
-5;;H/R;Hauptschule / Realschule (eingeschränkt);1900-01-01 00:00:00;;200;0410;;
-6;;R/GY;Realschule / Gymnasium (eingeschränkt);1900-01-01 00:00:00;;400;1020;;

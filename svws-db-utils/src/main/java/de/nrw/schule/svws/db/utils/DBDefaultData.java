@@ -46,17 +46,9 @@ public class DBDefaultData {
             case "Schildintern_HSchStatus" -> "daten/csv/schild3/HSchStatus.csv";
             case "Schildintern_Laender" -> "daten/csv/schild3/Laender.csv";
             case "Schildintern_PrfSemAbschl" -> "daten/csv/schild3/PrfSemAbschl.csv";
-            case "Schildintern_PruefOrd_Optionen" -> "daten/csv/schild3/PruefOrd_Optionen.csv";
-            case "Schildintern_PruefungsOrdnung" -> "daten/csv/schild3/PruefungsOrdnung.csv";
             case "Schildintern_SchuelerImpExp" -> "daten/csv/schild3/SchuelerImpExp.csv";
             case "Schildintern_TextExport" -> "daten/csv/schild3/TextExport.csv";
             case "Schildintern_UnicodeUmwandlung" -> "daten/csv/schild3/UnicodeUmwandlung.csv";
-            case "Schildintern_KAoA_Anschlussoption" -> "daten/csv/kaoa/Anschlussoption.csv";
-            case "Schildintern_KAoA_Berufsfeld" -> "daten/csv/kaoa/Berufsfeld.csv";
-            case "Schildintern_KAoA_Kategorie" -> "daten/csv/kaoa/Kategorie.csv";
-            case "Schildintern_KAoA_Merkmal" -> "daten/csv/kaoa/Merkmal.csv";
-            case "Schildintern_KAoA_SBO_Ebene4" -> "daten/csv/kaoa/SBO_Ebene4.csv";
-            case "Schildintern_KAoA_Zusatzmerkmal" -> "daten/csv/kaoa/Zusatzmerkmal.csv";
             case "Schulver_DBS" -> "daten/csv/schulver/Schulen.csv";
             case "Schulver_Schultraeger" -> "daten/csv/schulver/Schultraeger.csv";
             default -> "daten/csv/" + tab.javaSubPackage().replace(".", "/") + "/" + tab.name() + ".csv";

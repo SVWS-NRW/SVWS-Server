@@ -35,7 +35,6 @@ public class DBSchemaViews {
 	 */
 	private DBSchemaViews() {
 		// Revision 0
-		add_Schildintern_Berufsebene();
 		add_Schildintern_K_Schulnote();
 		add_Schulver_Schulformen();
 		add_Statkue_Schulformen();
@@ -134,24 +133,6 @@ public class DBSchemaViews {
 		return instance;
 	}
 
-
-	private void add_Schildintern_Berufsebene() {
-		View view = new View(
-				"Schildintern_Berufsebene", "views.schildintern", "DTOSchildInternBerufsebenen", 
-				"View zur Simulation einer Schildintern-Tabelle: Berufsebenen für die Fachklassen an BK – Zeugnisdruck",
-				0, null,
-                """
-				((SELECT *, 1 AS Berufsebene FROM Berufskolleg_Berufsebenen1) UNION
-				 (SELECT *, 2 AS Berufsebene FROM Berufskolleg_Berufsebenen2) UNION
-				 (SELECT *, 3 AS Berufsebene FROM Berufskolleg_Berufsebenen3)) bbe
-                """
-		).add("Berufsebene", "Die Berufsebene für Fachklassen", "Integer", "Berufsebene", null, true)
-		 .add("Kuerzel", "Das Kürzel der Berufsebene", "String", "Kuerzel", null, true)
-		 .add("Klartext", "Die Bezeichnung der Berufsebene", "String", "Bezeichnung", null, false)
-		 .add("gueltigVon", "Gibt das Schuljahr an, ab dem die Berufsebene verwendet werden kann oder null, falls es keine Einschränkung gibt", "Integer", "gueltigVon", null, false)
-		 .add("gueltigBis", "Gibt das Schuljahr an, bis zu welchem die Berufsebene verwendet werden kann oder null, falls es keine Einschränkung gibt", "Integer", "gueltigBis", null, false);
-		addView(view);
-	}
 
 	private void add_Schildintern_K_Schulnote() {
 		View view = new View(

@@ -582,16 +582,27 @@ public class Revision1Updates extends SchemaRevisionUpdateSQL {
 			""",
 			Schema.tab_SchuelerFoerderempfehlungen, Schema.tab_K_Lehrer
 		);
+		add("Korrektur für den Fremdschluessel auf die Spalte KategorieID der Tabelle SchuelerKAoADaten",
+				"""
+				UPDATE SchuelerKAoADaten 
+				SET KategorieID = NULL 
+				WHERE KategorieID NOT IN (
+					SELECT ID 
+					FROM KAoA_Kategorie_Keys
+				)
+				""",
+				Schema.tab_SchuelerKAoADaten, Schema.tab_KAoA_Kategorie_Keys
+			);
 		add("Korrektur für den Fremdschluessel auf die Spalte MerkmalID der Tabelle SchuelerKAoADaten",
 			"""
 			UPDATE SchuelerKAoADaten 
 			SET MerkmalID = NULL 
 			WHERE MerkmalID NOT IN (
 				SELECT ID 
-				FROM Schildintern_KAoA_Merkmal
+				FROM KAoA_Merkmal_Keys
 			)
 			""",
-			Schema.tab_SchuelerKAoADaten, Schema.tab_Schildintern_KAoA_Merkmal
+			Schema.tab_SchuelerKAoADaten, Schema.tab_KAoA_Merkmal_Keys
 		);
 		add("Korrektur für den Fremdschluessel auf die Spalte ZusatzmerkmalID der Tabelle SchuelerKAoADaten",
 			"""
@@ -599,10 +610,10 @@ public class Revision1Updates extends SchemaRevisionUpdateSQL {
 			SET ZusatzmerkmalID = NULL 
 			WHERE ZusatzmerkmalID NOT IN (
 				SELECT ID 
-				FROM Schildintern_KAoA_Zusatzmerkmal
+				FROM KAoA_Zusatzmerkmal_Keys
 			)
 			""",
-			Schema.tab_SchuelerKAoADaten, Schema.tab_Schildintern_KAoA_Zusatzmerkmal
+			Schema.tab_SchuelerKAoADaten, Schema.tab_KAoA_Zusatzmerkmal_Keys
 		);
 		add("Korrektur für den Fremdschluessel auf die Spalte AnschlussoptionID der Tabelle SchuelerKAoADaten",
 			"""
@@ -610,10 +621,10 @@ public class Revision1Updates extends SchemaRevisionUpdateSQL {
 			SET AnschlussoptionID = NULL 
 			WHERE AnschlussoptionID NOT IN (
 				SELECT ID 
-				FROM Schildintern_KAoA_Anschlussoption
+				FROM KAoA_Anschlussoption_Keys
 			)
 			""",
-			Schema.tab_SchuelerKAoADaten, Schema.tab_Schildintern_KAoA_Anschlussoption
+			Schema.tab_SchuelerKAoADaten, Schema.tab_KAoA_Anschlussoption_Keys
 		);
 		add("Korrektur für den Fremdschluessel auf die Spalte BerufsfeldID der Tabelle SchuelerKAoADaten",
 			"""
@@ -621,10 +632,10 @@ public class Revision1Updates extends SchemaRevisionUpdateSQL {
 			SET BerufsfeldID = NULL 
 			WHERE BerufsfeldID NOT IN (
 				SELECT ID 
-				FROM Schildintern_KAoA_Berufsfeld
+				FROM KAoA_Berufsfeld_Keys
 			)
 			""",
-			Schema.tab_SchuelerKAoADaten, Schema.tab_Schildintern_KAoA_Berufsfeld
+			Schema.tab_SchuelerKAoADaten, Schema.tab_KAoA_Berufsfeld_Keys
 		);
 		add("Korrektur für den Fremdschluessel auf die Spalte SBO_Ebene4ID der Tabelle SchuelerKAoADaten",
 			"""
@@ -632,10 +643,10 @@ public class Revision1Updates extends SchemaRevisionUpdateSQL {
 			SET SBO_Ebene4ID = NULL 
 			WHERE SBO_Ebene4ID NOT IN (
 				SELECT ID 
-				FROM Schildintern_KAoA_SBO_Ebene4
+				FROM KAoA_SBO_Ebene4_Keys
 			)
 			""",
-			Schema.tab_SchuelerKAoADaten, Schema.tab_Schildintern_KAoA_SBO_Ebene4
+			Schema.tab_SchuelerKAoADaten, Schema.tab_KAoA_SBO_Ebene4_Keys
 		);
 		add("Korrektur für den Fremdschluessel auf die Spalte Fachlehrer der Tabelle SchuelerLeistungsdaten",
 			"""
