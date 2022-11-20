@@ -745,6 +745,20 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert TRUE, falls der Schüler mindestens eine Nichtwahl hat. <br>
+	 * 
+	 * @param pSchuelerID  Die Datenbank-ID des Schülers.
+	 * @return             TRUE, falls der Schüler mindestens eine Nichtwahl hat.
+	 */
+	public getOfSchuelerHatNichtwahl(pSchuelerID : number) : boolean {
+		let map : HashMap<Number, GostBlockungsergebnisKurs | null> = this.getOfSchuelerFachIDKursMap(pSchuelerID);
+		for (let fachID of map.keySet()) 
+			if (map.get(fachID) === null) 
+				return true;
+		return false;
+	}
+
+	/**
 	 * Liefert die Anzahl an Kollisionen des Schülers. <br>
 	 * Ein Schüler, der N>1 Mal in einer Schiene ist, erzeugt N-1 Kollisionen.
 	 * 
@@ -1189,6 +1203,19 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		let set : HashSet<Number> = new HashSet();
 		for (let schuelerID of this._map_schuelerID_kollisionen.keySet()) 
 			if (this.getOfSchuelerHatKollision(schuelerID.valueOf())) 
+				set.add(schuelerID);
+		return set;
+	}
+
+	/**
+	 * Liefert eine Menge aller Schüler-IDs mit mindestens einer Kollision oder Nichtwahl.
+	 * 
+	 * @return Eine Menge aller Schüler-IDs mit mindestens einer Kollision oder Nichtwahl.
+	 */
+	public getMengeDerSchuelerMitKollisionenOderNichtwahlen() : HashSet<Number> {
+		let set : HashSet<Number> = new HashSet();
+		for (let schuelerID of this._map_schuelerID_kollisionen.keySet()) 
+			if (this.getOfSchuelerHatKollision(schuelerID.valueOf()) || this.getOfSchuelerHatNichtwahl(schuelerID.valueOf())) 
 				set.add(schuelerID);
 		return set;
 	}

@@ -843,6 +843,22 @@ public class GostBlockungsergebnisManager {
 	}
 	
 	/**
+	 * Liefert TRUE, falls der Schüler mindestens eine Nichtwahl hat. <br>
+	 * 
+	 * @param pSchuelerID  Die Datenbank-ID des Schülers.
+	 * @return             TRUE, falls der Schüler mindestens eine Nichtwahl hat.
+	 */
+	public boolean getOfSchuelerHatNichtwahl(long pSchuelerID) {
+		@NotNull HashMap<@NotNull Long, GostBlockungsergebnisKurs> map = getOfSchuelerFachIDKursMap(pSchuelerID);
+	
+		for (@NotNull Long fachID : map.keySet()) 
+			if (map.get(fachID) == null)
+				return true; 
+		
+		return false;
+	}
+	
+	/**
 	 * Liefert die Anzahl an Kollisionen des Schülers. <br>
 	 * Ein Schüler, der N>1 Mal in einer Schiene ist, erzeugt N-1 Kollisionen.
 	 * 
@@ -1284,9 +1300,26 @@ public class GostBlockungsergebnisManager {
 	 */
 	public @NotNull HashSet<@NotNull Long> getMengeDerSchuelerMitKollisionen() {
 		@NotNull HashSet<@NotNull Long> set = new HashSet<>();
+		
 		for (@NotNull Long schuelerID : _map_schuelerID_kollisionen.keySet()) 
 			if (getOfSchuelerHatKollision(schuelerID))
 				set.add(schuelerID);
+		
+		return set;
+	}
+
+	/**
+	 * Liefert eine Menge aller Schüler-IDs mit mindestens einer Kollision oder Nichtwahl.
+	 * 
+	 * @return Eine Menge aller Schüler-IDs mit mindestens einer Kollision oder Nichtwahl.
+	 */
+	public @NotNull HashSet<@NotNull Long> getMengeDerSchuelerMitKollisionenOderNichtwahlen() {
+		@NotNull HashSet<@NotNull Long> set = new HashSet<>();
+		
+		for (@NotNull Long schuelerID : _map_schuelerID_kollisionen.keySet()) 
+			if (getOfSchuelerHatKollision(schuelerID) || getOfSchuelerHatNichtwahl(schuelerID))
+				set.add(schuelerID);
+		
 		return set;
 	}
 
