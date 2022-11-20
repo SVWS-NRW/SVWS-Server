@@ -123,15 +123,18 @@ public class DataENMDaten extends DataManager<Long> {
 				manager.addKlasse(dtoKlasse.ID, dtoKlasse.ASDKlasse, dtoKlasse.Klasse,
 						dtoKlasse.Sortierung);
 				enmKlasse = manager.getKlasse(dtoKlasse.ID);
-				for (DTOKlassenLeitung kl : mapKlassenLeitung.get(dtoKlasse.ID)) {
-					if (manager.getLehrer(kl.Lehrer_ID) == null) {
-						DTOLehrer dtoKlassenlehrer = mapLehrer.get(kl.Lehrer_ID);
-						if (dtoKlassenlehrer != null) {
-							manager.addLehrer(dtoKlassenlehrer.ID, dtoKlassenlehrer.Kuerzel, 
-									          dtoKlassenlehrer.Nachname, dtoKlassenlehrer.Vorname, dtoKlassenlehrer.Geschlecht, dtoKlassenlehrer.eMailDienstlich);
-						}
-					}					
-					enmKlasse.klassenlehrer.add(kl.Lehrer_ID);
+				List<DTOKlassenLeitung> klassenleitungen = mapKlassenLeitung.get(dtoKlasse.ID);
+				if (klassenleitungen != null) {
+					for (DTOKlassenLeitung kl : klassenleitungen) {
+						if (manager.getLehrer(kl.Lehrer_ID) == null) {
+							DTOLehrer dtoKlassenlehrer = mapLehrer.get(kl.Lehrer_ID);
+							if (dtoKlassenlehrer != null) {
+								manager.addLehrer(dtoKlassenlehrer.ID, dtoKlassenlehrer.Kuerzel, 
+										          dtoKlassenlehrer.Nachname, dtoKlassenlehrer.Vorname, dtoKlassenlehrer.Geschlecht, dtoKlassenlehrer.eMailDienstlich);
+							}
+						}					
+						enmKlasse.klassenlehrer.add(kl.Lehrer_ID);
+					}
 				}
 			}
     		
