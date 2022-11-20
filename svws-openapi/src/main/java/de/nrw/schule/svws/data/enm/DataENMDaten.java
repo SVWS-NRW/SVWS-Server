@@ -222,7 +222,7 @@ public class DataENMDaten extends DataManager<Long> {
     	}
     	
     	// Kopiere den Floskel-Katalog in die ENM-Daten
-    	getFloskeln(manager);
+    	getFloskeln(manager, mapJahrgaenge);
     	
     	return manager.daten;
 	}
@@ -308,8 +308,12 @@ public class DataENMDaten extends DataManager<Long> {
 	/**
 	 * Füllt die Datenstruktur für die Floskelgruppen des ENM mit den in der SVWS-DB hinterlegten 
 	 * Floskelgruppen und den zugehörigen Floskeln.
+	 * 
+	 * @param manager         der ENM-Daten-Manager
+	 * @param mapJahrgaenge   eine Map mit den jeweiligen Jahrgängen 
 	 */
-	private void getFloskeln(ENMDatenManager manager) {
+	private void getFloskeln(ENMDatenManager manager, Map<Long, DTOJahrgang> mapJahrgaenge) {
+		Map<String, DTOJahrgang> mapJG = mapJahrgaenge.values().stream().collect(Collectors.toMap(j -> j.ASDJahrgang, j -> j));
 		List<DTOFloskelgruppen> dtoFloskelgruppen = conn.queryAll(DTOFloskelgruppen.class);
 		HashMap<String, ENMFloskelgruppe> map = new HashMap<>();
 		for (DTOFloskelgruppen dto : dtoFloskelgruppen) {
@@ -332,7 +336,8 @@ public class DataENMDaten extends DataManager<Long> {
 			} catch (@SuppressWarnings("unused") NumberFormatException e) {
 				enmFl.niveau = null;
 			}
-			// TODO	enmFl.jahrgangID = dto.FloskelJahrgang();
+			DTOJahrgang jg = mapJG.get(dto.FloskelJahrgang);
+			enmFl.jahrgangID = (jg == null) ? null : jg.ID;
 			ENMFloskelgruppe enmFG = map.get(dto.FloskelGruppe);
 			if (enmFG != null) {
 				enmFG.floskeln.add(enmFl);

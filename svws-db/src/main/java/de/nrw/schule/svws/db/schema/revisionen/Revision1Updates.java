@@ -200,6 +200,17 @@ public class Revision1Updates extends SchemaRevisionUpdateSQL {
 			""",
 			Schema.tab_Floskeln, Schema.tab_Floskelgruppen
 		);
+		add("Korrektur für den Fremdschluessel auf die Spalte EigeneSchule_Jahrgaenge der Tabelle Floskeln",
+				"""
+				UPDATE Floskeln 
+				SET FloskelJahrgang = NULL 
+				WHERE FloskelJahrgang NOT IN (
+					SELECT ASDJahrgang 
+					FROM EigeneSchule_Jahrgaenge
+				) 
+				""",
+				Schema.tab_Floskeln, Schema.tab_EigeneSchule_Jahrgaenge
+			);
 		add("Korrektur für den Fremdschluessel auf die Spalte AllgAdrAdressArt der Tabelle K_AllgAdresse",
 			"""
 			UPDATE K_AllgAdresse 

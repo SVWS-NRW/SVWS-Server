@@ -111,12 +111,6 @@ public class Schema {
 	/** Tabelle EigeneSchule_FachTeilleistungen */
 	public static final Tabelle_EigeneSchule_FachTeilleistungen tab_EigeneSchule_FachTeilleistungen = add(new Tabelle_EigeneSchule_FachTeilleistungen());
 
-	/** Tabelle Floskelgruppen */
-	public static final Tabelle_Floskelgruppen tab_Floskelgruppen = add(new Tabelle_Floskelgruppen());
-
-	/** Tabelle Floskeln */
-	public static final Tabelle_Floskeln tab_Floskeln = add(new Tabelle_Floskeln());
-
 	/** Tabelle Gost_Jahrgangsdaten */
 	public static final Tabelle_Gost_Jahrgangsdaten tab_Gost_Jahrgangsdaten = add(new Tabelle_Gost_Jahrgangsdaten());
 
@@ -698,6 +692,12 @@ public class Schema {
 
 	/** Tabelle Stundentafel_Faecher */
 	public static final Tabelle_Stundentafel_Faecher tab_Stundentafel_Faecher = add(new Tabelle_Stundentafel_Faecher());
+
+	/** Tabelle Floskelgruppen */
+	public static final Tabelle_Floskelgruppen tab_Floskelgruppen = add(new Tabelle_Floskelgruppen());
+
+	/** Tabelle Floskeln */
+	public static final Tabelle_Floskeln tab_Floskeln = add(new Tabelle_Floskeln());
 
 	/** Tabelle TextExportVorlagen */
 	public static final Tabelle_TextExportVorlagen tab_TextExportVorlagen = add(new Tabelle_TextExportVorlagen());

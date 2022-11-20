@@ -56,7 +56,6 @@ public class Tabelle_Floskeln extends SchemaTabelle {
 		)
 		.setRevision(SchemaRevisionen.REV_2);
 
-
 	/**
 	 * Erstellt die Schema-Defintion für die Tabelle Floskeln.
 	 */
