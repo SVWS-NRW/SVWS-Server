@@ -67,9 +67,6 @@ import de.nrw.schule.svws.db.dto.current.schild.grundschule.DTOSchuelerAnkreuzfl
 import de.nrw.schule.svws.db.dto.current.schild.impexp.DTOEigeneImporte;
 import de.nrw.schule.svws.db.dto.current.schild.impexp.DTOEigeneImporteFelder;
 import de.nrw.schule.svws.db.dto.current.schild.impexp.DTOEigeneImporteTabellen;
-import de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternFaecherSortierung;
-import de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternFilterFeldListe;
-import de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternSchuelerImportExport;
 import de.nrw.schule.svws.db.dto.current.schild.katalog.DTOAnsprechpartnerAllgemeineAdresse;
 import de.nrw.schule.svws.db.dto.current.schild.katalog.DTOFahrschuelerart;
 import de.nrw.schule.svws.db.dto.current.schild.katalog.DTOFloskelgruppen;
@@ -215,7 +212,6 @@ import de.nrw.schule.svws.db.dto.current.statkue.DTOStatkueLehrerMehrleistung;
 import de.nrw.schule.svws.db.dto.current.statkue.DTOStatkueLehrerMinderleistung;
 import de.nrw.schule.svws.db.dto.current.statkue.DTOStatkueLehrerRechtsverhaeltnis;
 import de.nrw.schule.svws.db.dto.current.statkue.DTOStatkueLehrerZugang;
-import de.nrw.schule.svws.db.dto.current.statkue.DTOStatkuePLZOrt;
 import de.nrw.schule.svws.db.dto.current.statkue.DTOStatkueSchuelerErsteSchulformSekI;
 import de.nrw.schule.svws.db.dto.current.statkue.DTOStatkueSchuelerKindergartenbesuch;
 import de.nrw.schule.svws.db.dto.current.svws.auth.DTOCredentials;
@@ -334,9 +330,6 @@ public class DTOs {
              mapDTOName2DTOClass.put(DTOEigeneImporte.class.getSimpleName(),DTOEigeneImporte.class);
              mapDTOName2DTOClass.put(DTOEigeneImporteFelder.class.getSimpleName(),DTOEigeneImporteFelder.class);
              mapDTOName2DTOClass.put(DTOEigeneImporteTabellen.class.getSimpleName(),DTOEigeneImporteTabellen.class);
-             mapDTOName2DTOClass.put(DTOInternFaecherSortierung.class.getSimpleName(),DTOInternFaecherSortierung.class);
-             mapDTOName2DTOClass.put(DTOInternFilterFeldListe.class.getSimpleName(),DTOInternFilterFeldListe.class);
-             mapDTOName2DTOClass.put(DTOInternSchuelerImportExport.class.getSimpleName(),DTOInternSchuelerImportExport.class);
              mapDTOName2DTOClass.put(DTOAnsprechpartnerAllgemeineAdresse.class.getSimpleName(),DTOAnsprechpartnerAllgemeineAdresse.class);
              mapDTOName2DTOClass.put(DTOFahrschuelerart.class.getSimpleName(),DTOFahrschuelerart.class);
              mapDTOName2DTOClass.put(DTOFloskelgruppen.class.getSimpleName(),DTOFloskelgruppen.class);
@@ -482,7 +475,6 @@ public class DTOs {
              mapDTOName2DTOClass.put(DTOStatkueLehrerMinderleistung.class.getSimpleName(),DTOStatkueLehrerMinderleistung.class);
              mapDTOName2DTOClass.put(DTOStatkueLehrerRechtsverhaeltnis.class.getSimpleName(),DTOStatkueLehrerRechtsverhaeltnis.class);
              mapDTOName2DTOClass.put(DTOStatkueLehrerZugang.class.getSimpleName(),DTOStatkueLehrerZugang.class);
-             mapDTOName2DTOClass.put(DTOStatkuePLZOrt.class.getSimpleName(),DTOStatkuePLZOrt.class);
              mapDTOName2DTOClass.put(DTOStatkueSchuelerErsteSchulformSekI.class.getSimpleName(),DTOStatkueSchuelerErsteSchulformSekI.class);
              mapDTOName2DTOClass.put(DTOStatkueSchuelerKindergartenbesuch.class.getSimpleName(),DTOStatkueSchuelerKindergartenbesuch.class);
              mapDTOName2DTOClass.put(DTOCredentials.class.getSimpleName(),DTOCredentials.class);
@@ -604,9 +596,6 @@ public class DTOs {
              mapTablename2DTOClass.put("ImpExp_EigeneImporte",DTOEigeneImporte.class);
              mapTablename2DTOClass.put("ImpExp_EigeneImporte_Felder",DTOEigeneImporteFelder.class);
              mapTablename2DTOClass.put("ImpExp_EigeneImporte_Tabellen",DTOEigeneImporteTabellen.class);
-             mapTablename2DTOClass.put("Schildintern_FaecherSortierung",DTOInternFaecherSortierung.class);
-             mapTablename2DTOClass.put("Schildintern_FilterFeldListe",DTOInternFilterFeldListe.class);
-             mapTablename2DTOClass.put("Schildintern_SchuelerImpExp",DTOInternSchuelerImportExport.class);
              mapTablename2DTOClass.put("AllgAdrAnsprechpartner",DTOAnsprechpartnerAllgemeineAdresse.class);
              mapTablename2DTOClass.put("K_FahrschuelerArt",DTOFahrschuelerart.class);
              mapTablename2DTOClass.put("Floskelgruppen",DTOFloskelgruppen.class);
@@ -752,7 +741,6 @@ public class DTOs {
              mapTablename2DTOClass.put("Statkue_LehrerMinderleistung",DTOStatkueLehrerMinderleistung.class);
              mapTablename2DTOClass.put("Statkue_LehrerRechtsverhaeltnis",DTOStatkueLehrerRechtsverhaeltnis.class);
              mapTablename2DTOClass.put("Statkue_LehrerZugang",DTOStatkueLehrerZugang.class);
-             mapTablename2DTOClass.put("Statkue_PLZOrt",DTOStatkuePLZOrt.class);
              mapTablename2DTOClass.put("Statkue_SchuelerErsteSchulformSekI",DTOStatkueSchuelerErsteSchulformSekI.class);
              mapTablename2DTOClass.put("Statkue_SchuelerKindergartenbesuch",DTOStatkueSchuelerKindergartenbesuch.class);
              mapTablename2DTOClass.put("Credentials",DTOCredentials.class);

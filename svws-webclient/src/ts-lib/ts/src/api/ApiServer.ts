@@ -99,11 +99,9 @@ import { Schild3KatalogEintragDatenart, cast_de_nrw_schule_svws_core_data_schild
 import { Schild3KatalogEintragDQRNiveaus, cast_de_nrw_schule_svws_core_data_schild3_Schild3KatalogEintragDQRNiveaus } from '../core/data/schild3/Schild3KatalogEintragDQRNiveaus';
 import { Schild3KatalogEintragExportCSV, cast_de_nrw_schule_svws_core_data_schild3_Schild3KatalogEintragExportCSV } from '../core/data/schild3/Schild3KatalogEintragExportCSV';
 import { Schild3KatalogEintragFilterFehlendeEintraege, cast_de_nrw_schule_svws_core_data_schild3_Schild3KatalogEintragFilterFehlendeEintraege } from '../core/data/schild3/Schild3KatalogEintragFilterFehlendeEintraege';
-import { Schild3KatalogEintragFilterFeldListe, cast_de_nrw_schule_svws_core_data_schild3_Schild3KatalogEintragFilterFeldListe } from '../core/data/schild3/Schild3KatalogEintragFilterFeldListe';
 import { Schild3KatalogEintragLaender, cast_de_nrw_schule_svws_core_data_schild3_Schild3KatalogEintragLaender } from '../core/data/schild3/Schild3KatalogEintragLaender';
 import { Schild3KatalogEintragPruefungsordnung, cast_de_nrw_schule_svws_core_data_schild3_Schild3KatalogEintragPruefungsordnung } from '../core/data/schild3/Schild3KatalogEintragPruefungsordnung';
 import { Schild3KatalogEintragPruefungsordnungOption, cast_de_nrw_schule_svws_core_data_schild3_Schild3KatalogEintragPruefungsordnungOption } from '../core/data/schild3/Schild3KatalogEintragPruefungsordnungOption';
-import { Schild3KatalogEintragSchuelerImportExport, cast_de_nrw_schule_svws_core_data_schild3_Schild3KatalogEintragSchuelerImportExport } from '../core/data/schild3/Schild3KatalogEintragSchuelerImportExport';
 import { Schild3KatalogEintragUnicodeUmwandlung, cast_de_nrw_schule_svws_core_data_schild3_Schild3KatalogEintragUnicodeUmwandlung } from '../core/data/schild3/Schild3KatalogEintragUnicodeUmwandlung';
 import { Schild3KatalogEintragVersetzungsvermerke, cast_de_nrw_schule_svws_core_data_schild3_Schild3KatalogEintragVersetzungsvermerke } from '../core/data/schild3/Schild3KatalogEintragVersetzungsvermerke';
 import { SchuelerBetriebsdaten, cast_de_nrw_schule_svws_core_data_schueler_SchuelerBetriebsdaten } from '../core/data/schueler/SchuelerBetriebsdaten';
@@ -4652,33 +4650,6 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getKatalogSchild3FilterFeldListe für den Zugriff auf die URL https://{hostname}/db/{schema}/schild3/filter/feldliste
-	 * 
-	 * Die Liste der Einträge aus dem Schild-Katalog Filter Feld Liste. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
-	 * 
-	 * Mögliche HTTP-Antworten: 
-	 *   Code 200: Eine Liste von Katalog-Einträgen für den Schild-Katalog Filter Feld Liste
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<Schild3KatalogEintragFilterFeldListe>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
-	 *   Code 404: Keine Katalog-Einträge gefunden
-	 * 
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * 
-	 * @returns Eine Liste von Katalog-Einträgen für den Schild-Katalog Filter Feld Liste
-	 */
-	public async getKatalogSchild3FilterFeldListe(schema : string) : Promise<List<Schild3KatalogEintragFilterFeldListe>> {
-		let path : string = "/db/{schema}/schild3/filter/feldliste"
-				.replace(/{schema\s*(:[^}]+)?}/g, schema);
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		let ret = new Vector<Schild3KatalogEintragFilterFeldListe>();
-		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(Schild3KatalogEintragFilterFeldListe.transpilerFromJSON(text)); });
-		return ret;
-	}
-
-
-	/**
 	 * Implementierung der GET-Methode getKatalogSchild3Laender für den Zugriff auf die URL https://{hostname}/db/{schema}/schild3/laender
 	 * 
 	 * Die Liste der Einträge aus dem Schild-Katalog Bundesländer/Nachbarländer. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
@@ -4787,33 +4758,6 @@ export class ApiServer extends BaseApi {
 
 
 	// API-Methode getSchild3ReportingDaten konnte nicht nach Typescript transpiliert werden
-
-
-	/**
-	 * Implementierung der GET-Methode getKatalogSchild3SchuelerImportExport für den Zugriff auf die URL https://{hostname}/db/{schema}/schild3/schueler/import_export
-	 * 
-	 * Die Liste der Einträge aus dem Schild-Katalog Schüler-Import/Export. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
-	 * 
-	 * Mögliche HTTP-Antworten: 
-	 *   Code 200: Eine Liste von Katalog-Einträgen für den Schild-Katalog Schüler-Import/Export
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<Schild3KatalogEintragSchuelerImportExport>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
-	 *   Code 404: Keine Katalog-Einträge gefunden
-	 * 
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * 
-	 * @returns Eine Liste von Katalog-Einträgen für den Schild-Katalog Schüler-Import/Export
-	 */
-	public async getKatalogSchild3SchuelerImportExport(schema : string) : Promise<List<Schild3KatalogEintragSchuelerImportExport>> {
-		let path : string = "/db/{schema}/schild3/schueler/import_export"
-				.replace(/{schema\s*(:[^}]+)?}/g, schema);
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		let ret = new Vector<Schild3KatalogEintragSchuelerImportExport>();
-		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(Schild3KatalogEintragSchuelerImportExport.transpilerFromJSON(text)); });
-		return ret;
-	}
 
 
 	/**

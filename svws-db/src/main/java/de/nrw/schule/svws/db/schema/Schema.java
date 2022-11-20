@@ -372,12 +372,6 @@ public class Schema {
 	/** Tabelle SchildFilter */
 	public static final Tabelle_SchildFilter tab_SchildFilter = add(new Tabelle_SchildFilter());
 
-	/** Tabelle Schildintern_FaecherSortierung */
-	public static final Tabelle_Schildintern_FaecherSortierung tab_Schildintern_FaecherSortierung = add(new Tabelle_Schildintern_FaecherSortierung());
-
-	/** Tabelle Schildintern_FilterFeldListe */
-	public static final Tabelle_Schildintern_FilterFeldListe tab_Schildintern_FilterFeldListe = add(new Tabelle_Schildintern_FilterFeldListe());
-
 	/** Tabelle Schildintern_KAoA_Anschlussoption */
 	public static final Tabelle_KAoA_Anschlussoption_Keys tab_KAoA_Anschlussoption_Keys = add(new Tabelle_KAoA_Anschlussoption_Keys());
 
@@ -395,9 +389,6 @@ public class Schema {
 
 	/** Tabelle Schildintern_KAoA_SBO_Ebene4 */
 	public static final Tabelle_KAoA_SBO_Ebene4_Keys tab_KAoA_SBO_Ebene4_Keys = add(new Tabelle_KAoA_SBO_Ebene4_Keys());
-
-	/** Tabelle Schildintern_SchuelerImpExp */
-	public static final Tabelle_Schildintern_SchuelerImpExp tab_Schildintern_SchuelerImpExp = add(new Tabelle_Schildintern_SchuelerImpExp());
 
 	/** Tabelle SchuelerListe */
 	public static final Tabelle_SchuelerListe tab_SchuelerListe = add(new Tabelle_SchuelerListe());
@@ -739,9 +730,6 @@ public class Schema {
 	// TODO Passe dieses Attribut an, sobald die Default-Daten nicht mehr über CSV-Dateien eingelesen werden
 	/** Die Tabellen, welche Default-Daten beinhalten und in diesem Zusammenhang aktualisiert werden sollen */
 	public static final SchemaTabelle[] tabellenDefaultDaten = new SchemaTabelle[] {
-		Schema.tab_Schildintern_FaecherSortierung,
-		Schema.tab_Schildintern_FilterFeldListe,
-		Schema.tab_Schildintern_SchuelerImpExp,
 		Schema.tab_Schulver_DBS,
 		Schema.tab_Schulver_Schultraeger,
 		Schema.tab_Statkue_Abgangsart,

@@ -39,13 +39,10 @@ public class DBDefaultData {
             case "Schildintern_AbiturInfos" -> "daten/csv/schild3/AbiturInfos.csv";
             case "Schildintern_Datenart" -> "daten/csv/schild3/Datenart.csv";
             case "Schildintern_DQR_Niveaus" -> "daten/csv/schild3/DQRNiveaus.csv";
-            case "Schildintern_FaecherSortierung" -> "daten/csv/schild3/FaecherSortierung.csv";
             case "Schildintern_FilterFehlendeEintraegeSchild3" -> "daten/csv/schild3/FilterFehlendeEintraege.csv";
-            case "Schildintern_FilterFeldListe" -> "daten/csv/schild3/FilterFeldListe.csv";
             case "Schildintern_HSchStatus" -> "daten/csv/schild3/HSchStatus.csv";
             case "Schildintern_Laender" -> "daten/csv/schild3/Laender.csv";
             case "Schildintern_PrfSemAbschl" -> "daten/csv/schild3/PrfSemAbschl.csv";
-            case "Schildintern_SchuelerImpExp" -> "daten/csv/schild3/SchuelerImpExp.csv";
             case "Schildintern_TextExport" -> "daten/csv/schild3/TextExport.csv";
             case "Schildintern_UnicodeUmwandlung" -> "daten/csv/schild3/UnicodeUmwandlung.csv";
             case "Schulver_DBS" -> "daten/csv/schulver/Schulen.csv";

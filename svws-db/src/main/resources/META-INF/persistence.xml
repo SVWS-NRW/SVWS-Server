@@ -77,9 +77,6 @@
         <class>de.nrw.schule.svws.db.dto.migration.schild.impexp.MigrationDTOEigeneImporte</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.impexp.MigrationDTOEigeneImporteFelder</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.impexp.MigrationDTOEigeneImporteTabellen</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternFaecherSortierung</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternFilterFeldListe</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternSchuelerImportExport</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.katalog.MigrationDTOAnsprechpartnerAllgemeineAdresse</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.katalog.MigrationDTOFahrschuelerart</class>
         <class>de.nrw.schule.svws.db.dto.migration.schild.katalog.MigrationDTOFloskelgruppen</class>
@@ -211,7 +208,6 @@
         <class>de.nrw.schule.svws.db.dto.migration.statkue.MigrationDTOStatkueLehrerMinderleistung</class>
         <class>de.nrw.schule.svws.db.dto.migration.statkue.MigrationDTOStatkueLehrerRechtsverhaeltnis</class>
         <class>de.nrw.schule.svws.db.dto.migration.statkue.MigrationDTOStatkueLehrerZugang</class>
-        <class>de.nrw.schule.svws.db.dto.migration.statkue.MigrationDTOStatkuePLZOrt</class>
         <class>de.nrw.schule.svws.db.dto.migration.statkue.MigrationDTOStatkueSchuelerErsteSchulformSekI</class>
         <class>de.nrw.schule.svws.db.dto.migration.statkue.MigrationDTOStatkueSchuelerKindergartenbesuch</class>
         <class>de.nrw.schule.svws.db.dto.migration.svws.auth.MigrationDTOCredentials</class>
@@ -288,9 +284,6 @@
         <class>de.nrw.schule.svws.db.dto.current.schild.impexp.DTOEigeneImporte</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.impexp.DTOEigeneImporteFelder</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.impexp.DTOEigeneImporteTabellen</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternFaecherSortierung</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternFilterFeldListe</class>
-        <class>de.nrw.schule.svws.db.dto.current.schild.intern.DTOInternSchuelerImportExport</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.katalog.DTOAnsprechpartnerAllgemeineAdresse</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.katalog.DTOFahrschuelerart</class>
         <class>de.nrw.schule.svws.db.dto.current.schild.katalog.DTOFloskelgruppen</class>
@@ -436,7 +429,6 @@
         <class>de.nrw.schule.svws.db.dto.current.statkue.DTOStatkueLehrerMinderleistung</class>
         <class>de.nrw.schule.svws.db.dto.current.statkue.DTOStatkueLehrerRechtsverhaeltnis</class>
         <class>de.nrw.schule.svws.db.dto.current.statkue.DTOStatkueLehrerZugang</class>
-        <class>de.nrw.schule.svws.db.dto.current.statkue.DTOStatkuePLZOrt</class>
         <class>de.nrw.schule.svws.db.dto.current.statkue.DTOStatkueSchuelerErsteSchulformSekI</class>
         <class>de.nrw.schule.svws.db.dto.current.statkue.DTOStatkueSchuelerKindergartenbesuch</class>
         <class>de.nrw.schule.svws.db.dto.current.svws.auth.DTOCredentials</class>
@@ -532,9 +524,6 @@
         <class>de.nrw.schule.svws.db.dto.rev8.schild.impexp.Rev8DTOEigeneImporte</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.impexp.Rev8DTOEigeneImporteFelder</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.impexp.Rev8DTOEigeneImporteTabellen</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternFaecherSortierung</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternFilterFeldListe</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schild.intern.Rev8DTOInternSchuelerImportExport</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.katalog.Rev8DTOAnsprechpartnerAllgemeineAdresse</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.katalog.Rev8DTOFahrschuelerart</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schild.katalog.Rev8DTOFloskelgruppen</class>
@@ -680,7 +669,6 @@
         <class>de.nrw.schule.svws.db.dto.rev8.statkue.Rev8DTOStatkueLehrerMinderleistung</class>
         <class>de.nrw.schule.svws.db.dto.rev8.statkue.Rev8DTOStatkueLehrerRechtsverhaeltnis</class>
         <class>de.nrw.schule.svws.db.dto.rev8.statkue.Rev8DTOStatkueLehrerZugang</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.statkue.Rev8DTOStatkuePLZOrt</class>
         <class>de.nrw.schule.svws.db.dto.rev8.statkue.Rev8DTOStatkueSchuelerErsteSchulformSekI</class>
         <class>de.nrw.schule.svws.db.dto.rev8.statkue.Rev8DTOStatkueSchuelerKindergartenbesuch</class>
         <class>de.nrw.schule.svws.db.dto.rev8.svws.auth.Rev8DTOCredentials</class>

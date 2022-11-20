@@ -54,9 +54,6 @@ import de.nrw.schule.svws.db.dto.migration.schild.grundschule.MigrationDTOSchuel
 import de.nrw.schule.svws.db.dto.migration.schild.impexp.MigrationDTOEigeneImporte;
 import de.nrw.schule.svws.db.dto.migration.schild.impexp.MigrationDTOEigeneImporteFelder;
 import de.nrw.schule.svws.db.dto.migration.schild.impexp.MigrationDTOEigeneImporteTabellen;
-import de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternFaecherSortierung;
-import de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternFilterFeldListe;
-import de.nrw.schule.svws.db.dto.migration.schild.intern.MigrationDTOInternSchuelerImportExport;
 import de.nrw.schule.svws.db.dto.migration.schild.katalog.MigrationDTOAnsprechpartnerAllgemeineAdresse;
 import de.nrw.schule.svws.db.dto.migration.schild.katalog.MigrationDTOFahrschuelerart;
 import de.nrw.schule.svws.db.dto.migration.schild.katalog.MigrationDTOFloskelgruppen;
@@ -188,7 +185,6 @@ import de.nrw.schule.svws.db.dto.migration.statkue.MigrationDTOStatkueLehrerMehr
 import de.nrw.schule.svws.db.dto.migration.statkue.MigrationDTOStatkueLehrerMinderleistung;
 import de.nrw.schule.svws.db.dto.migration.statkue.MigrationDTOStatkueLehrerRechtsverhaeltnis;
 import de.nrw.schule.svws.db.dto.migration.statkue.MigrationDTOStatkueLehrerZugang;
-import de.nrw.schule.svws.db.dto.migration.statkue.MigrationDTOStatkuePLZOrt;
 import de.nrw.schule.svws.db.dto.migration.statkue.MigrationDTOStatkueSchuelerErsteSchulformSekI;
 import de.nrw.schule.svws.db.dto.migration.statkue.MigrationDTOStatkueSchuelerKindergartenbesuch;
 import de.nrw.schule.svws.db.dto.migration.svws.auth.MigrationDTOCredentials;
@@ -275,9 +271,6 @@ public class MigrationDTOs {
              mapDTOName2DTOClass.put(MigrationDTOEigeneImporte.class.getSimpleName(),MigrationDTOEigeneImporte.class);
              mapDTOName2DTOClass.put(MigrationDTOEigeneImporteFelder.class.getSimpleName(),MigrationDTOEigeneImporteFelder.class);
              mapDTOName2DTOClass.put(MigrationDTOEigeneImporteTabellen.class.getSimpleName(),MigrationDTOEigeneImporteTabellen.class);
-             mapDTOName2DTOClass.put(MigrationDTOInternFaecherSortierung.class.getSimpleName(),MigrationDTOInternFaecherSortierung.class);
-             mapDTOName2DTOClass.put(MigrationDTOInternFilterFeldListe.class.getSimpleName(),MigrationDTOInternFilterFeldListe.class);
-             mapDTOName2DTOClass.put(MigrationDTOInternSchuelerImportExport.class.getSimpleName(),MigrationDTOInternSchuelerImportExport.class);
              mapDTOName2DTOClass.put(MigrationDTOAnsprechpartnerAllgemeineAdresse.class.getSimpleName(),MigrationDTOAnsprechpartnerAllgemeineAdresse.class);
              mapDTOName2DTOClass.put(MigrationDTOFahrschuelerart.class.getSimpleName(),MigrationDTOFahrschuelerart.class);
              mapDTOName2DTOClass.put(MigrationDTOFloskelgruppen.class.getSimpleName(),MigrationDTOFloskelgruppen.class);
@@ -409,7 +402,6 @@ public class MigrationDTOs {
              mapDTOName2DTOClass.put(MigrationDTOStatkueLehrerMinderleistung.class.getSimpleName(),MigrationDTOStatkueLehrerMinderleistung.class);
              mapDTOName2DTOClass.put(MigrationDTOStatkueLehrerRechtsverhaeltnis.class.getSimpleName(),MigrationDTOStatkueLehrerRechtsverhaeltnis.class);
              mapDTOName2DTOClass.put(MigrationDTOStatkueLehrerZugang.class.getSimpleName(),MigrationDTOStatkueLehrerZugang.class);
-             mapDTOName2DTOClass.put(MigrationDTOStatkuePLZOrt.class.getSimpleName(),MigrationDTOStatkuePLZOrt.class);
              mapDTOName2DTOClass.put(MigrationDTOStatkueSchuelerErsteSchulformSekI.class.getSimpleName(),MigrationDTOStatkueSchuelerErsteSchulformSekI.class);
              mapDTOName2DTOClass.put(MigrationDTOStatkueSchuelerKindergartenbesuch.class.getSimpleName(),MigrationDTOStatkueSchuelerKindergartenbesuch.class);
              mapDTOName2DTOClass.put(MigrationDTOCredentials.class.getSimpleName(),MigrationDTOCredentials.class);
@@ -499,9 +491,6 @@ public class MigrationDTOs {
              mapTablename2DTOClass.put("ImpExp_EigeneImporte",MigrationDTOEigeneImporte.class);
              mapTablename2DTOClass.put("ImpExp_EigeneImporte_Felder",MigrationDTOEigeneImporteFelder.class);
              mapTablename2DTOClass.put("ImpExp_EigeneImporte_Tabellen",MigrationDTOEigeneImporteTabellen.class);
-             mapTablename2DTOClass.put("Schildintern_FaecherSortierung",MigrationDTOInternFaecherSortierung.class);
-             mapTablename2DTOClass.put("Schildintern_FilterFeldListe",MigrationDTOInternFilterFeldListe.class);
-             mapTablename2DTOClass.put("Schildintern_SchuelerImpExp",MigrationDTOInternSchuelerImportExport.class);
              mapTablename2DTOClass.put("AllgAdrAnsprechpartner",MigrationDTOAnsprechpartnerAllgemeineAdresse.class);
              mapTablename2DTOClass.put("K_FahrschuelerArt",MigrationDTOFahrschuelerart.class);
              mapTablename2DTOClass.put("Floskelgruppen",MigrationDTOFloskelgruppen.class);
@@ -633,7 +622,6 @@ public class MigrationDTOs {
              mapTablename2DTOClass.put("Statkue_LehrerMinderleistung",MigrationDTOStatkueLehrerMinderleistung.class);
              mapTablename2DTOClass.put("Statkue_LehrerRechtsverhaeltnis",MigrationDTOStatkueLehrerRechtsverhaeltnis.class);
              mapTablename2DTOClass.put("Statkue_LehrerZugang",MigrationDTOStatkueLehrerZugang.class);
-             mapTablename2DTOClass.put("Statkue_PLZOrt",MigrationDTOStatkuePLZOrt.class);
              mapTablename2DTOClass.put("Statkue_SchuelerErsteSchulformSekI",MigrationDTOStatkueSchuelerErsteSchulformSekI.class);
              mapTablename2DTOClass.put("Statkue_SchuelerKindergartenbesuch",MigrationDTOStatkueSchuelerKindergartenbesuch.class);
              mapTablename2DTOClass.put("Credentials",MigrationDTOCredentials.class);
