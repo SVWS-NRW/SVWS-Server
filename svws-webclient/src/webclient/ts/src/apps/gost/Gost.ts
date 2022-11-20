@@ -14,6 +14,7 @@ import { ListAbiturjahrgangSchueler } from "./ListAbiturjahrgangSchueler";
 import { DataSchuelerLaufbahndaten } from "./DataSchuelerLaufbahnplanung";
 import { FeedbackValues, ApiStatus } from "./userfeedback";
 import { reactive } from "vue";
+import { DataGostFachkombinationen } from "./DataGostFachkombinationen";
 
 /**
  * Diese Klasse enthält den Abiturjahrgangsspezifischen Teil der gymnasialen
@@ -40,6 +41,12 @@ export class Gost extends App {
 	public dataFaecher!: DataGostFaecher;
 
 	/**
+	 * Das Objekt zur Verwaltung der Kommunikation bezüglich der Fachkombinationen
+	 * der Fächer der gymnasialen Oberstufe mit dem SVWS-Server
+	 */
+	 public dataFachkombinationen!: DataGostFachkombinationen;
+
+	 /**
 	 * Das Objekt zur Verwaltung der Kommunikation bezüglich der Fächer der
 	 * gymnasialen Oberstufe mit dem SVWS-Server
 	 */
@@ -104,11 +111,13 @@ export class Gost extends App {
 
 		this.auswahl = new ListGost(this.listAbiturjahrgangSchueler, this.blockungsauswahl);
 		this.dataFaecher = new DataGostFaecher();
+		this.dataFachkombinationen = new DataGostFachkombinationen();
 		this.dataJahrgang = new DataGostJahrgang();
 		this.dataFachwahlen = new DataGostSchuelerFachwahlen();
 		this.auswahl.add_data([
 			this.dataJahrgang,
 			this.dataFaecher,
+			this.dataFachkombinationen,
 			this.dataFachwahlen
 		]);
 	}
