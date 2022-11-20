@@ -663,9 +663,6 @@ public class Schema {
 	/** Tabelle Statkue_LehrerZugang */
 	public static final Tabelle_Statkue_LehrerZugang tab_Statkue_LehrerZugang = add(new Tabelle_Statkue_LehrerZugang());
 
-	/** Tabelle Statkue_PLZOrt */
-	public static final Tabelle_Statkue_PLZOrt tab_Statkue_PLZOrt = add(new Tabelle_Statkue_PLZOrt());
-
 	/** Tabelle Statkue_SVWS_SprachpruefungNiveaus */
 	public static final Tabelle_Statkue_SVWS_SprachpruefungNiveaus tab_Statkue_SVWS_SprachpruefungNiveaus = add(new Tabelle_Statkue_SVWS_SprachpruefungNiveaus());
 
@@ -750,7 +747,6 @@ public class Schema {
 		Schema.tab_Statkue_Abgangsart,
 		Schema.tab_Statkue_AndereGrundschulen,
 		Schema.tab_Statkue_Bilingual,
-		Schema.tab_Statkue_PLZOrt,
 		Schema.tab_Statkue_SchuelerErsteSchulformSekI,
 		Schema.tab_Statkue_SchuelerKindergartenbesuch,
 		Schema.tab_Statkue_SVWS_SprachpruefungNiveaus
