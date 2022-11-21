@@ -1,14 +1,15 @@
 <template>
-	<td> <svws-ui-multi-select v-model="fach1" title="Fach" :items="faecher" :item-text="(i: GostFach) => i.kuerzelAnzeige" /> </td>
-	<td> <svws-ui-multi-select v-model="kursart1" title="Kursart" :items="kursarten" :item-text="(i: GostKursart) => i.kuerzel" /> </td>
-	<td> <svws-ui-multi-select v-model="fach2" title="Fach" :items="faecher" :item-text="(i: GostFach) => i.kuerzelAnzeige" /> </td>
-	<td> <svws-ui-multi-select v-model="kursart2" title="Kursart" :items="kursarten" :item-text="(i: GostKursart) => i.kuerzel" /> </td>
-	<td> <svws-ui-checkbox v-model="gueltigEF1"></svws-ui-checkbox> </td>
-	<td> <svws-ui-checkbox v-model="gueltigEF2"></svws-ui-checkbox> </td>
-	<td> <svws-ui-checkbox v-model="gueltigQ11"></svws-ui-checkbox> </td>
-	<td> <svws-ui-checkbox v-model="gueltigQ12"></svws-ui-checkbox> </td>
-	<td> <svws-ui-checkbox v-model="gueltigQ21"></svws-ui-checkbox> </td>
-	<td> <svws-ui-checkbox v-model="gueltigQ22"></svws-ui-checkbox> </td>
+	<td> <svws-ui-multi-select v-model="fach1" title="Fach" :items="faecher" :item-text="(i: GostFach) => i.kuerzelAnzeige" headless/> </td>
+	<td> <svws-ui-multi-select v-model="kursart1" title="Kursart" :items="kursarten" :item-text="(i: GostKursart) => i.kuerzel" headless/> </td>
+	<td> <svws-ui-multi-select v-model="fach2" title="Fach" :items="faecher" :item-text="(i: GostFach) => i.kuerzelAnzeige" headless/> </td>
+	<td> <svws-ui-multi-select v-model="kursart2" title="Kursart" :items="kursarten" :item-text="(i: GostKursart) => i.kuerzel" headless /> </td>
+	<td> <svws-ui-checkbox v-model="gueltigEF1" headless></svws-ui-checkbox> </td>
+	<td> <svws-ui-checkbox v-model="gueltigEF2" headless></svws-ui-checkbox> </td>
+	<td> <svws-ui-checkbox v-model="gueltigQ11" headless></svws-ui-checkbox> </td>
+	<td> <svws-ui-checkbox v-model="gueltigQ12" headless></svws-ui-checkbox> </td>
+	<td> <svws-ui-checkbox v-model="gueltigQ21" headless></svws-ui-checkbox> </td>
+	<td> <svws-ui-checkbox v-model="gueltigQ22" headless></svws-ui-checkbox> </td>
+	<td> <svws-ui-icon class="cursor-pointer text-red-400" @click="del_fachkombi"><i-ri-delete-bin-2-line /></svws-ui-icon> </td>
 </template>
 
 <script setup lang="ts">
@@ -163,5 +164,9 @@
 			);
 		}
 	});
+
+	const del_fachkombi = () => {
+		//TODO app.dataFachkombinationen.del_fachkombi(props.kombination.id)
+	}
 
 </script>

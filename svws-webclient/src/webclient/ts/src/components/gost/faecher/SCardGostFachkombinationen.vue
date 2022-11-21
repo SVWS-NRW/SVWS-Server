@@ -7,6 +7,7 @@
 						<tr>
 							<td class="border border-[#7f7f7f]/20 text-center" colspan="4"> Fach/Kursart => Fach/Kursart </td>
 							<td class="border border-[#7f7f7f]/20 text-center" colspan="6"> Gültig in </td>
+							<td class="border border-[#7f7f7f]/20 text-center" rowspan="2"></td>
 						</tr>
 						<tr>
 							<td class="border border-[#7f7f7f]/20 text-center">Fach</td>
@@ -25,6 +26,7 @@
 						<s-row-gost-fachkombination :kombination="row"></s-row-gost-fachkombination>
 					</tr>
 				</table>
+				<svws-ui-button class="pl-2 pt-2" @click="add_kurskombi">Hinzufügen</svws-ui-button>
 			</div>
 		</div>
 	</svws-ui-content-card>
@@ -66,5 +68,9 @@
 					result.add(kombi);
 		return result;
 	});
+
+	const add_kurskombi = () => {
+		//TODO app.dataFachkombinationen.add_fachkombi(props.typ)
+	}
 
 </script>
