@@ -33,7 +33,7 @@ export class Herkunftsschulnummern extends JavaObject {
 
 	public static readonly HESSEN : Herkunftsschulnummern = new Herkunftsschulnummern("HESSEN", 5, [new HerkunftsschulnummerKatalogEintrag(999006000, 999006, "Schule aus Hessen", null, null, null)]);
 
-	public static readonly RHEINLANDPFALZ : Herkunftsschulnummern = new Herkunftsschulnummern("RHEINLANDPFALZ", 6, [new HerkunftsschulnummerKatalogEintrag(999007000, 999007, "Schule aus Rheinlandpfalz", null, null, null)]);
+	public static readonly RHEINLANDPFALZ : Herkunftsschulnummern = new Herkunftsschulnummern("RHEINLANDPFALZ", 6, [new HerkunftsschulnummerKatalogEintrag(999007000, 999007, "Schule aus Rheinland-Pfalz", null, null, null)]);
 
 	public static readonly BADEN_WUERTTEMBERG : Herkunftsschulnummern = new Herkunftsschulnummern("BADEN_WUERTTEMBERG", 7, [new HerkunftsschulnummerKatalogEintrag(999008000, 999008, "Schule aus Baden-Württemberg", null, null, null)]);
 
