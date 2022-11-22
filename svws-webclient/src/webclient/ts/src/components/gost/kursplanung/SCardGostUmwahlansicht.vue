@@ -145,20 +145,6 @@
 			return kolls;
 		});
 
-	const schueler_negiert: ComputedRef<{ [index: number]: boolean }> =
-		computed(() => {
-		const kurs = app.dataKursblockungsergebnis.active_kurs?.value
-		if (!kurs) return {};
-		const kurse = manager.value?.getOfFachKursmenge(kurs.fachID)
-		if (!kurse) return {}
-		const negiert: { [index: number]: boolean } = {};
-		for (const k of kurse)
-			if (kurs !== k && kurs.kursart === k.kursart)
-				for (const ss of k.schueler)
-					negiert[ss.valueOf()] = true;
-		return negiert;
-	});
-
 	const blockungsergebnisse: ComputedRef<Map<GostBlockungKurs, GostBlockungsergebnisKurs[]>> =
 		computed(() => {
 		const map = new Map();
@@ -194,12 +180,11 @@
 	const filter_negiert: WritableComputedRef<boolean> =
 		computed({
 		get(): boolean {
-			return !!schueler_filter.negiert;
+			return schueler_filter.kursfilter_negiert;
 		},
 		set(value: boolean) {
-			const filterValue = schueler_filter;
-			filterValue.negiert = value ? schueler_negiert.value : undefined;
-			app.listAbiturjahrgangSchueler.filter = filterValue;
+			schueler_filter.kursfilter_negiert = value;
+			app.listAbiturjahrgangSchueler.filter = schueler_filter;
 		}
 	});
 

@@ -5,9 +5,8 @@ import { BaseList } from "../BaseList";
 
 interface Filter {
 	kollision: { [index: number]: boolean } | undefined;
-	negiert: { [index: number]: boolean } | undefined;
-	kurs: { [index: number]: boolean } | undefined;
 	kursid: number | undefined;
+	kursfilter_negiert: boolean;
 	name: string;
 }
 
@@ -15,18 +14,16 @@ export class ListAbiturjahrgangSchueler extends BaseList<SchuelerListeEintrag, F
 
 	protected _filter: Filter = reactive({
 		kollision: undefined,
-		negiert: undefined,
-		kurs: undefined,
 		kursid: undefined,
+		kursfilter_negiert: false,
 		name: ""
 	});
 
 	public reset_filter() {
 		this._filter.kollision = undefined;
-		this._filter.kurs = undefined;
-		this._filter.negiert = undefined;
 		this._filter.name = "";
 		this._filter.kursid = undefined;
+		this._filter.kursfilter_negiert = false;
 		this._state.gefiltert = this.liste;
 	}
 
@@ -40,9 +37,9 @@ export class ListAbiturjahrgangSchueler extends BaseList<SchuelerListeEintrag, F
 		const man = App.apps.gost.dataKursblockung.ergebnismanager;
 		this._state.gefiltert = this.liste
 			.filter(s => (this.filter.kollision) ? this.filter.kollision[s.id] : s)
-			.filter(s => (this.filter.kursid == undefined) || (man?.getOfKursSchuelerIDmenge(this.filter.kursid).contains(s.id) || false) ? s : undefined)
-//			.filter(s => (this.filter.kurs && !this.filter.negiert) ? this.filter.kurs[s.id] : s)
-//			.filter(s => (this.filter.negiert) ? this.filter.negiert[s.id] : s)
+			.filter(s => (this.filter.kursid == undefined) || (man?.getOfKursSchuelerIDmenge(this.filter.kursid).contains(s.id) || false) 
+				? ((this.filter.kursfilter_negiert) ? undefined : s)
+				: ((this.filter.kursfilter_negiert) ? s : undefined))
 			.filter(s => 
 				s.nachname.toLocaleLowerCase().includes(this.filter.name.toLocaleLowerCase()) ||
 				s.vorname.toLocaleLowerCase().includes(this.filter.name.toLocaleLowerCase()));
