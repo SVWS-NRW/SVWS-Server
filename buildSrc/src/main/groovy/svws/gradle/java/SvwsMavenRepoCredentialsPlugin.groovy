@@ -58,13 +58,25 @@ abstract class SvwsMavenRepoCredentialsPlugin implements Plugin<Project> {
 			return null
 		}
 	}
+	
+	void addNexusNpmBase64Token() {
+		def nexus_actor = project.ext.getNexusActor()
+		def nexus_token = project.ext.getNexusToken()
+		project.ext.getNexusNpmToken = { ->
+	    	if ((nexus_actor == null) || (nexus_token == null)) 
+		    	return null
+		    return (nexus_actor + ':' + nexus_token).bytes.encodeBase64().toString()
+		}
+    }
 
+	
   	void apply(Project project) {
     	this.project = project
 		this.addGithubActor()
 		this.addGithubToken()
 		this.addNexusActor()
 		this.addNexusToken()
+		this.addNexusNpmBase64Token()
     }
 
 }
