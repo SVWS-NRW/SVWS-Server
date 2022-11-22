@@ -56,7 +56,11 @@
 		computed(() => manager.value?.getSchieneG(props.schiene.id))
 
 	const schiene_hat_kollisionen: ComputedRef<boolean> =
-		computed(() => manager.value?.getOfSchieneHatKollision(props.schiene.id) || false)
+		computed(() => {
+			if (manager.value === undefined)
+				return false;
+			return manager.value.getOfSchieneSchuelermengeMitKollisionen(props.schiene.id).contains(props.selected.id);
+		});
 
 	const getSchieneKurse: ComputedRef<Vector<GostBlockungsergebnisKurs>> =
 		computed(()=> props.schiene.kurse)
