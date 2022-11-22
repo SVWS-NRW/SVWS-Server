@@ -72,6 +72,7 @@ export class DataGostKursblockung extends BaseData<
 		const blockungsdaten = await super._select((eintrag: GostBlockungListeneintrag) =>
 			App.api.getGostBlockung(App.schema, eintrag.id));
 		if (blockungsdaten && App.apps.gost.dataFaecher.manager){
+			App.apps.gost.listAbiturjahrgangSchueler.reset_filter();
 			this.ergebnismanager = undefined;
 			this.datenmanager = new GostBlockungsdatenManager(blockungsdaten, App.apps.gost.dataFaecher.manager);
 			this.commit();

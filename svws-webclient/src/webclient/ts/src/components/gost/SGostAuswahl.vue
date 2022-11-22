@@ -114,37 +114,24 @@
 								@click="selected_ergebnis = ergebnis"
 							>
 								<td class="table--cell table--cell-padded table--border" >
-										{{ ergebnis.id }}
-										<svws-ui-icon v-if="ergebnis.istVorlage" class="inline-block"><i-ri-pushpin-fill/></svws-ui-icon>
-										<svws-ui-icon v-if="!ergebnis.istVorlage && ergebnis === selected_ergebnis" @click="make_vorlage(ergebnis)" class="inline-block opacity-0 hover:opacity-25"><i-ri-pushpin-line/></svws-ui-icon>
-
+									{{ ergebnis.id }}
 								</td>
 								<td class="table--cell table--cell-padded table--border" >
 									<div class="flex">
 										<span class="inline-flex font-semibold" >
-													<span :style="{'background-color': color1(ergebnis)}">{{manager?.getOfBewertung1Wert(ergebnis.id)}}</span>&nbsp
-													<span :style="{'background-color': color2(ergebnis)}">{{manager?.getOfBewertung2Wert(ergebnis.id)}}</span>&nbsp
-													<span :style="{'background-color': color3(ergebnis)}">{{manager?.getOfBewertung3Wert(ergebnis.id)}}</span>&nbsp
-													<span :style="{'background-color': color4(ergebnis)}">{{manager?.getOfBewertung4Wert(ergebnis.id)}}</span>
-												</span>
+											<span :style="{'background-color': color1(ergebnis)}">{{manager?.getOfBewertung1Wert(ergebnis.id)}}</span>&nbsp
+											<span :style="{'background-color': color2(ergebnis)}">{{manager?.getOfBewertung2Wert(ergebnis.id)}}</span>&nbsp
+											<span :style="{'background-color': color3(ergebnis)}">{{manager?.getOfBewertung3Wert(ergebnis.id)}}</span>&nbsp
+											<span :style="{'background-color': color4(ergebnis)}">{{manager?.getOfBewertung4Wert(ergebnis.id)}}</span>
+										</span>
 									</div>
 								</td>
 								<td class="table--cell table--cell-padded table--border" >
 									<div v-if="ergebnis === selected_ergebnis" class="flex gap-1 float-right ">
-										<svws-ui-button
-										v-if="ergebnis.istVorlage"
-										size="small"
-										type="primary"
-										class="cursor-pointer"
-										@click="derive_blockung"
-										>Ableiten</svws-ui-button>
-										<svws-ui-button
-										v-if="!ergebnis.istVorlage"
-										size="small"
-										type="danger"
-										class="cursor-pointer"
-										@click="remove_ergebnis"
-										>Löschen</svws-ui-button>
+										<svws-ui-button size="small" type="primary" class="cursor-pointer" @click="derive_blockung"> Ableiten </svws-ui-button>
+										<svws-ui-button v-if="rows_ergebnisse.size() > 1" size="small" type="danger" class="cursor-pointer" @click="remove_ergebnis">
+											<svws-ui-icon><i-ri-delete-bin-2-line/></svws-ui-icon>
+										</svws-ui-button>
 									</div>
 								</td>
 							</tr>
@@ -344,17 +331,6 @@ async function derive_blockung() {
 }
 async function patch_blockung(blockung: GostBlockungListeneintrag) {
 	await app.dataKursblockung.patch({name: blockung.name});
-}
-
-function make_vorlage(ergebnis: GostBlockungsergebnisListeneintrag) {
-	for (const e of rows_ergebnisse.value) {
-		if (e.istVorlage) {
-			e.istVorlage = false;
-			ergebnis.istVorlage = true;
-			break;
-		}
-	}
-	//TODO zum Server schicken
 }
 
 function color1(ergebnis: GostBlockungsergebnisListeneintrag): string {

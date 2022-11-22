@@ -27,6 +27,7 @@ export class ListAbiturjahrgangSchueler extends BaseList<SchuelerListeEintrag, F
 		this._filter.negiert = undefined;
 		this._filter.name = "";
 		this._filter.kursid = undefined;
+		this._state.gefiltert = this.liste;
 	}
 
 	/**

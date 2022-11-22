@@ -121,7 +121,7 @@ import {
 	Vector,
 	ZulaessigesFach
 } from "@svws-nrw/svws-core-ts";
-import { computed, ComputedRef, reactive, Ref, ref, WritableComputedRef } from "vue";
+import { computed, ComputedRef, Ref, ref, WritableComputedRef } from "vue";
 
 import { injectMainApp, Main } from "~/apps/Main";
 
@@ -196,7 +196,8 @@ const kurs_blockungsergebnis: ComputedRef<GostBlockungsergebnisKurs|undefined> =
 	computed(()=> manager.value?.getKursE(props.kurs.id))
 
 const selected_kurs: ComputedRef<boolean> =
-	computed(()=> kurs_blockungsergebnis.value === app.dataKursblockungsergebnis.active_kurs?.value)
+	computed(() => (kurs_blockungsergebnis.value !== undefined)
+		&& (kurs_blockungsergebnis.value?.id === app.listAbiturjahrgangSchueler.filter.kursid))
 
 const filtered_by_kursart: ComputedRef<GostBlockungsergebnisKurs[]> =
 	computed(()=>{
