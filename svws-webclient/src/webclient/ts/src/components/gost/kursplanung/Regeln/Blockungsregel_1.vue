@@ -10,7 +10,7 @@ const regel_typ = GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS
 //public static readonly KURSART_SPERRE_SCHIENEN_VON_BIS : GostKursblockungRegelTyp = 
 //new GostKursblockungRegelTyp("KURSART_SPERRE_SCHIENEN_VON_BIS", 1, 1, 
 //"Kursart: Sperre Schienen (von/bis)", Arrays.asList(GostKursblockungRegelParameterTyp.KURSART, GostKursblockungRegelParameterTyp.SCHIENEN_NR, GostKursblockungRegelParameterTyp.SCHIENEN_NR));
-const schienen = app.dataKursblockung.manager?.getMengeOfSchienen()
+const schienen = app.dataKursblockung.datenmanager?.getMengeOfSchienen()
 const kursart: Ref<GostKursart> = shallowRef(GostKursart.GK)
 const start: Ref<GostBlockungSchiene> = ref(schienen?.get(0) || new GostBlockungSchiene())
 const ende: Ref<GostBlockungSchiene> = ref(schienen?.get(0) || new GostBlockungSchiene())
@@ -19,7 +19,7 @@ const regel: Ref<GostBlockungRegel | undefined> = ref(undefined)
 const regeln: ComputedRef<GostBlockungRegel[]> =
 	computed(()=> {
 	const arr = []
-	const regeln = app.dataKursblockung.manager?.getMengeOfRegeln()
+	const regeln = app.dataKursblockung.datenmanager?.getMengeOfRegeln()
 	if (!regeln) return []
 	for (const r of regeln)
 		if (r.typ === regel_typ.typ)
@@ -40,9 +40,6 @@ const allow_regeln: ComputedRef<boolean> =
 
 const regel_hinzufuegen = async () => {
 	regel.value = await app.dataKursblockung.add_blockung_regel(regel_typ.typ)
-	if (!regel.value) return
-	app.dataKursblockung.manager?.addRegel(regel.value)
-	app.dataKursblockungsergebnis.manager?.setAddRegelByID(regel.value.id)
 }
 
 const regel_entfernen = async (r: GostBlockungRegel) => {

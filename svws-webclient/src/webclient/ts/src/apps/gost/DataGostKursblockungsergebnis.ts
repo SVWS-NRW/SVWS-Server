@@ -28,17 +28,16 @@ export class DataGostKursblockungsergebnis extends BaseData<
 	 * @returns {Promise<GostBlockungsergebnis> | undefined} Die Daten als Promise
 	 */
 	public async on_select(): Promise<GostBlockungsergebnis | undefined> {
-		this.manager = undefined
-		if (!this.selected_list_item) return super.unselect();
+		if (!this.selected_list_item)
+			return super.unselect();
 		const ergebnis: GostBlockungsergebnis | undefined = await super._select(
-			(eintrag: GostBlockungsergebnisListeneintrag) =>
-				App.api.getGostBlockungsergebnis(App.schema, eintrag.id)
-		);
+			(eintrag: GostBlockungsergebnisListeneintrag) => App.api.getGostBlockungsergebnis(App.schema, eintrag.id));
 		if (ergebnis === undefined)
 			return ergebnis;
-		this.manager = App.apps.gost.dataKursblockung.manager
-			? new GostBlockungsergebnisManager(App.apps.gost.dataKursblockung.manager, ergebnis)
-			: undefined
+		App.apps.gost.dataKursblockung.ergebnismanager = (App.apps.gost.dataKursblockung.datenmanager !== undefined)
+			? new GostBlockungsergebnisManager(App.apps.gost.dataKursblockung.datenmanager, ergebnis)
+			: undefined;
+		App.apps.gost.dataKursblockung.commit();
 		return ergebnis;
 	}
 
@@ -54,7 +53,8 @@ export class DataGostKursblockungsergebnis extends BaseData<
 	 */
 	public async patch(data: Partial<GostBlockungsergebnis>): Promise<boolean> {
 		const daten = this._daten;
-		if (!daten || daten.id === null) return false;
+		if (!daten || daten.id === null)
+			return false;
 		const id = daten.id;
 		console.log("patch", data, id);
 		// TODO
@@ -62,46 +62,40 @@ export class DataGostKursblockungsergebnis extends BaseData<
 		return false;
 	}
 
-	public async assignKursSchiene(
-		kursid: number,
-		schienenid: number,
-		schienenidneu: number
-	): Promise<boolean> {
-		if (!this._daten?.id) return false;
-		await App.api.updateGostBlockungsergebnisKursSchieneZuordnung(
-			App.schema,
-			this._daten.id,
-			schienenid,
-			kursid,
-			schienenidneu
-		);
+	public async assignKursSchiene(kursid: number, schienenid: number, schienenidneu: number): Promise<boolean> {
+		if (!this._daten?.id)
+			return false;
+		await App.api.updateGostBlockungsergebnisKursSchieneZuordnung(App.schema, this._daten.id, schienenid, kursid, schienenidneu);
+		App.apps.gost.dataKursblockung.ergebnismanager?.setKursSchiene(kursid, schienenid, false);
+		App.apps.gost.dataKursblockung.ergebnismanager?.setKursSchiene(kursid, schienenidneu, true);
+		App.apps.gost.dataKursblockung.commit();
 		return true;
 	}
 
-	public async assignSchuelerKurs(
-		schuelerid: number,
-		kursid: number,
-		undo: boolean
-	): Promise<boolean> {
-		const ergebnisid: number | undefined = this._daten?.id;
-		if (!ergebnisid) return false;
-		if (undo) {
-			App.api.deleteGostBlockungsergebnisKursSchuelerZuordnung(
-				App.schema,
-				ergebnisid,
-				schuelerid,
-				kursid
-			);
-		} else {
-			App.api.createGostBlockungsergebnisKursSchuelerZuordnung(
-				App.schema,
-				ergebnisid,
-				schuelerid,
-				kursid
-			);
+	public async removeSchuelerKurs(schuelerid: number, kursid: number): Promise<boolean> {
+		const ergebnisid = this._daten?.id;
+		if (ergebnisid === undefined || App.apps.gost.dataKursblockung.ergebnismanager === undefined)
+			return false;
+		await App.api.deleteGostBlockungsergebnisKursSchuelerZuordnung(App.schema, ergebnisid, schuelerid, kursid);
+		App.apps.gost.dataKursblockung.ergebnismanager.setSchuelerKurs(schuelerid, kursid, false);
+		App.apps.gost.dataKursblockung.commit();
+		return true;
+	}
+
+	public async assignSchuelerKurs(schuelerid: number, kursid_neu: number, kursid_alt?: number): Promise<boolean> {
+		const ergebnisid = this._daten?.id;
+		if (!ergebnisid)
+			return false;
+		if (kursid_alt) {
+			await App.api.deleteGostBlockungsergebnisKursSchuelerZuordnung(App.schema, ergebnisid, schuelerid, kursid_alt);
+			await App.api.createGostBlockungsergebnisKursSchuelerZuordnung(App.schema, ergebnisid, schuelerid, kursid_neu);
+			App.apps.gost.dataKursblockung.ergebnismanager?.setSchuelerKurs(schuelerid, kursid_alt, false);
 		}
-		App.apps.gost.blockungsergebnisauswahl.ausgewaehlt = this.selected_list_item;
-		// TODO remove code above after fixing reactivity in manager
+		else {
+			await App.api.createGostBlockungsergebnisKursSchuelerZuordnung(App.schema, ergebnisid, schuelerid, kursid_neu);
+		}
+		App.apps.gost.dataKursblockung.ergebnismanager?.setSchuelerKurs(schuelerid, kursid_neu, true);
+		App.apps.gost.dataKursblockung.commit();
 		return true;
 	}
 }

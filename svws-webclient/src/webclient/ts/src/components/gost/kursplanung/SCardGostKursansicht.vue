@@ -124,57 +124,39 @@
 	const sort_by: Ref<'kursart'|'fach_id'> = ref('fach_id')
 	const edit_schienenname: Ref<GostBlockungSchiene|undefined> = ref()
 
-	const faecher: ComputedRef<Array<GostStatistikFachwahl>> = computed(() => {
-			return (
-				app.dataFachwahlen.daten?.toArray(new Array<GostStatistikFachwahl>) ||
-				new Array<GostStatistikFachwahl>()
-			);
-		});
+	const faecher: ComputedRef<List<GostStatistikFachwahl>> =
+		computed(() => app.dataFachwahlen.daten || new Vector<GostStatistikFachwahl>());
 
-	const sorted_kurse: ComputedRef<List<GostBlockungKurs>> = computed(() => {
-		let list
-		if (sort_by.value === 'kursart') {
-			list = app.dataKursblockung.manager?.getKursmengeSortiertNachKursartFachNummer()
-		}
-		else list = app.dataKursblockung.manager?.getKursmengeSortiertNachFachKursartNummer()
-		return list || new Vector<GostBlockungKurs>()
-	})
+	const sorted_kurse: ComputedRef<List<GostBlockungKurs>> =
+		computed(() => {
+			let list
+			if (sort_by.value === 'kursart')
+				list = app.dataKursblockung.datenmanager?.getKursmengeSortiertNachKursartFachNummer()
+			else list = app.dataKursblockung.datenmanager?.getKursmengeSortiertNachFachKursartNummer()
+			return list || new Vector<GostBlockungKurs>()})
 
-	const schienen: ComputedRef<List<GostBlockungSchiene>> = computed(() =>
-		app.dataKursblockung.manager?.getMengeOfSchienen() || new Vector<GostBlockungSchiene>()
-	);
+	const schienen: ComputedRef<List<GostBlockungSchiene>> =
+		computed(() => app.dataKursblockung.datenmanager?.getMengeOfSchienen() || new Vector<GostBlockungSchiene>());
 
-	const manager: ComputedRef<GostBlockungsergebnisManager | undefined> = computed(() => {
-		return app.dataKursblockungsergebnis.manager
-	});
+	const manager: ComputedRef<GostBlockungsergebnisManager | undefined> =
+		computed(() => app.dataKursblockung.ergebnismanager);
 
-	const allow_regeln: ComputedRef<boolean> = computed(()=> app.blockungsergebnisauswahl.liste.length === 1)
+	const allow_regeln: ComputedRef<boolean> =
+		computed(()=> app.blockungsergebnisauswahl.liste.length === 1)
 
 	function getAnzahlSchuelerSchiene(idSchiene: number): number {
-		try {
-			return manager.value?.getOfSchieneAnzahlSchueler(idSchiene) || 0;
-		} catch (e) {
-			return 0
-		}
+		return manager.value?.getOfSchieneAnzahlSchueler(idSchiene) || 0;
 	};
 
 	function allow_del_schiene(schiene: GostBlockungSchiene): boolean {
-		try {
-			const m1 = app.dataKursblockung.manager?.removeSchieneAllowed(schiene.id)
-			const m2 = manager.value?.getOfSchieneRemoveAllowed(schiene.id)
-			if (!m1 || !m2) return false
-		} catch (e) {
-			return false
-		}
-		return true
+		return app.dataKursblockung.datenmanager?.removeSchieneAllowed(schiene.id)
+						&& manager.value?.getOfSchieneRemoveAllowed(schiene.id)
+			? true
+			:false
 	}
 
 	function getAnzahlKollisionenSchiene(idSchiene: number): number {
-		try {
-			return manager.value?.getOfSchieneAnzahlSchuelerMitKollisionen(idSchiene) || 0;
-		} catch (e) {
-			return 0
-		}
+		return manager.value?.getOfSchieneAnzahlSchuelerMitKollisionen(idSchiene) || 0;
 	};
 
 	async function patch_schiene(schiene: GostBlockungSchiene) {
@@ -182,16 +164,10 @@
 	}
 
 	async function add_schiene() {
-		const schiene = await app.dataKursblockung.add_blockung_schiene()
-		if (!schiene)
-			return
-		app.dataKursblockung.manager?.addSchiene(schiene)
-		manager.value?.setAddSchieneByID(schiene.id)
+		await app.dataKursblockung.add_blockung_schiene()
 	}
 
 	async function del_schiene(s: GostBlockungSchiene) {
 		await app.dataKursblockung.del_blockung_schiene(s)
-		app.dataKursblockung.manager?.removeSchieneByID(s.id)
-		manager.value?.setRemoveSchieneByID(s.id)
 	}
 </script>

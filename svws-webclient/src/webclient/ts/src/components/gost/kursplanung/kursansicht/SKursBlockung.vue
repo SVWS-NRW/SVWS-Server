@@ -121,7 +121,7 @@ import {
 	Vector,
 	ZulaessigesFach
 } from "@svws-nrw/svws-core-ts";
-import { computed, ComputedRef, Ref, ref, WritableComputedRef } from "vue";
+import { computed, ComputedRef, reactive, Ref, ref, WritableComputedRef } from "vue";
 
 import { injectMainApp, Main } from "~/apps/Main";
 
@@ -169,7 +169,7 @@ const koop: WritableComputedRef<boolean> =
 		return props.kurs.istKoopKurs.valueOf();
 	},
 	set(value: boolean) {
-		const kurs = app.dataKursblockung.manager?.getKurs(props.kurs.id)
+		const kurs = app.dataKursblockung.datenmanager?.getKurs(props.kurs.id)
 		if (!kurs) return
 		kurs.istKoopKurs = Boolean(value);
 		app.dataKursblockung.patch_kurs(kurs);
@@ -180,22 +180,20 @@ const suffix: WritableComputedRef<string> =
 		return props.kurs.suffix.toString();
 	},
 	set(value: string) {
-		const kurs = app.dataKursblockung.manager?.getKurs(props.kurs.id)
+		const kurs = app.dataKursblockung.datenmanager?.getKurs(props.kurs.id)
 		if (!kurs) return
 		kurs.suffix = String(value);
 		app.dataKursblockung.patch_kurs(kurs);
 	}});
 const manager: ComputedRef<GostBlockungsergebnisManager | undefined> =
-	computed(()=>app.dataKursblockungsergebnis.manager)
+	computed(()=> app.dataKursblockung.manager_container.manager ? app.dataKursblockung.ergebnismanager : undefined);
 
 const schienen: ComputedRef<List<GostBlockungsergebnisSchiene>> =
-	computed(()=> manager.value?.getMengeAllerSchienen() || new Vector<GostBlockungsergebnisSchiene>())
+	computed(()=> {
+		return manager.value?.getMengeAllerSchienen() || new Vector<GostBlockungsergebnisSchiene>()})
 
 const kurs_blockungsergebnis: ComputedRef<GostBlockungsergebnisKurs|undefined> =
-	computed(()=>{
-	try {
-		return manager.value?.getKursE(props.kurs.id)
-	} catch (e) { return undefined }})
+	computed(()=> manager.value?.getKursE(props.kurs.id))
 
 const selected_kurs: ComputedRef<boolean> =
 	computed(()=> kurs_blockungsergebnis.value === app.dataKursblockungsergebnis.active_kurs?.value)
@@ -203,11 +201,7 @@ const selected_kurs: ComputedRef<boolean> =
 const filtered_by_kursart: ComputedRef<GostBlockungsergebnisKurs[]> =
 	computed(()=>{
 	let kurse: Vector<GostBlockungsergebnisKurs>|undefined
-	try {
 		kurse = manager.value?.getOfFachKursmenge(props.kurs.fach_id)
-	} catch(e) {
-		kurse = undefined
-	}
 	if (!kurse) return []
 	const arr = kurse.toArray(new Array<GostBlockungsergebnisKurs>())
 	return arr.filter(k => k.kursart === art.id).sort((a,b)=>{
@@ -228,7 +222,7 @@ const kursdifferenz: ComputedRef<[number, number, number]> =
 	return [filtered_by_kursart.value.length, sorted[0].schueler.size() - sorted[sorted.length - 1].schueler.size(), wahlen]})
 
 const regeln: ComputedRef<List<GostBlockungRegel>> =
-	computed(()=> app.dataKursblockung.manager?.getMengeOfRegeln() || new Vector<GostBlockungRegel>())
+	computed(()=> app.dataKursblockung.datenmanager?.getMengeOfRegeln() || new Vector<GostBlockungRegel>())
 
 const sperr_regeln: ComputedRef<GostBlockungRegel[]> =
 	computed(() => {
@@ -289,8 +283,6 @@ const ermittel_parent_schiene = (ergebnis_schiene: GostBlockungsergebnisSchiene)
 const regel_speichern = async (regel: GostBlockungRegel) => {
 	regel.parameter.set(0, props.kurs.id)
 	await app.dataKursblockung.patch_blockung_regel(regel)
-	app.dataKursblockung.manager?.addRegel(regel)
-	app.dataKursblockungsergebnis.manager?.setAddRegelByID(regel.id)
 }
 
 const fixieren_regel_toggle = () => fixier_regeln.value.length ? fixieren_regel_entfernen() : fixieren_regel_hinzufuegen()
@@ -336,25 +328,15 @@ function drop_aendere_kursschiene(drag_data: {kurs: GostBlockungsergebnisKurs; s
 	if (drag_data.kurs.id === kurs_blockungsergebnis.value?.id && schiene_id !== drag_data.schiene.id) {
 		if (fixier_regeln.value) fixieren_regel_entfernen()
 		app.dataKursblockungsergebnis.assignKursSchiene(drag_data.kurs.id, drag_data.schiene.id, schiene_id)
-		manager.value?.setKursSchiene(drag_data.kurs.id, drag_data.schiene.id, false);
-		manager.value?.setKursSchiene(drag_data.kurs.id, schiene_id, true);
 		drag_ended()
 		// fixieren_regel_hinzufuegen()
 	}
 }
 async function add_kurs() {
-	const kurs = await app.dataKursblockung.add_blockung_kurse(props.kurs.fach_id, props.kurs.kursart)
-	if (!kurs || !app.dataKursblockung.manager || !manager.value)
-		return
-	app.dataKursblockung.manager.addKurs(kurs)
-	manager.value.setAddKursByID(kurs.id)
+	await app.dataKursblockung.add_blockung_kurse(props.kurs.fach_id, props.kurs.kursart)
 }
-async function del_kurs() {
-	const kurs = await app.dataKursblockung.del_blockung_kurse(props.kurs.fach_id, props.kurs.kursart)
-	if (!kurs || !app.dataKursblockung.manager || !manager.value)
-		return
-	app.dataKursblockung.manager.removeKurs(kurs)
-	manager.value.setRemoveKursByID(kurs.id)
+function del_kurs() {
+	app.dataKursblockung.del_blockung_kurse(props.kurs.fach_id, props.kurs.kursart)
 }
 
 function toggle_active_kurs() {
@@ -373,12 +355,6 @@ function toggle_active_kurs() {
 	app.listAbiturjahrgangSchueler.filter = filterValue;
 }
 function kurs_schiene_zugeordnet(schiene: GostBlockungsergebnisSchiene): boolean {
-	let ret = false
-	try {
-		ret = manager.value?.getOfKursOfSchieneIstZugeordnet(props.kurs.id, schiene.id) || false
-	} catch (e) {
-		return false
-	}
-	return ret
+	return manager.value?.getOfKursOfSchieneIstZugeordnet(props.kurs.id, schiene.id) || false
 }
 </script>

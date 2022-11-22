@@ -12,7 +12,7 @@
 		</td>
 		<s-kurs-schueler-schiene-kurs
 			v-for="kurs of getSchieneKurse"
-			:key="kurs.id"
+			:key="kurs.hashCode()"
 			:kurs="kurs"
 			:schueler="selected"
 		/>
@@ -47,7 +47,7 @@
 	const app = main.apps.gost;
 
 	const manager: ComputedRef<GostBlockungsergebnisManager | undefined> =
-		computed(() => app.dataKursblockungsergebnis.manager);
+		computed(() => app.dataKursblockung.ergebnismanager);
 
 	const anzahl_schueler: ComputedRef<number> =
 		computed(() => manager.value?.getOfSchieneAnzahlSchueler(props.schiene.id) || 0);

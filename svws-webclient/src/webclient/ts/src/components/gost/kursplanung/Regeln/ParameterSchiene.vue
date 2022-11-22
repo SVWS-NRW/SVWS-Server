@@ -22,7 +22,7 @@ const selected = computed({
 <template>
 	<svws-ui-multi-select
 		v-model="selected"
-		:items="app.dataKursblockung.daten?.schienen.toArray() || []"
+		:items="app.dataKursblockung.datenmanager?.getMengeOfSchienen() || []"
 		:item-text="(i: GostBlockungSchiene) => i.bezeichnung"
 		/>
 </template>

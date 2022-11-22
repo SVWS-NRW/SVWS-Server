@@ -60,7 +60,7 @@
 											>
 											<template v-if=" blockung === selected_blockungauswahl ">
 												<div class="float-left flex">
-													<span v-if="!edit_blockungsname" class="px-3 underline decoration-dashed underline-offset-2 cursor-pointer" @click="edit_blockungsname = true">{{blockung.name}}</span>
+													<span v-if="!edit_blockungsname" class="px-3 underline decoration-dashed underline-offset-2 cursor-pointer" @click="edit_blockungsname = true">{{blockung.name}}--{{blockung.id}}</span>
 													<svws-ui-text-input v-else v-model="blockung.name" style="width: 10rem" headless focus @keyup.enter="edit_blockungsname=false" @input="patch_blockung(blockung)"/>
 												</div>
 												<div class="float-right flex gap-1">
@@ -170,6 +170,7 @@ import {
 import {
 	computed,
 	ComputedRef,
+	reactive,
 	ref,
 	Ref,
 	WritableComputedRef
@@ -200,9 +201,10 @@ const cols = [
 	}
 ];
 
+// const manager = reactive(app.dataKursblockung.datenmanager);
 const wait: Ref<boolean> = ref(false);
 const halbjahre = GostHalbjahr.values();
-const hj_memo: Ref<number | undefined> = ref(undefined)
+const hj_memo: Ref<GostHalbjahr | undefined> = ref(undefined)
 const edit_blockungsname: Ref<boolean> = ref(false)
 
 const rows: ComputedRef<GostJahrgang[]> = 
@@ -213,7 +215,7 @@ const rows: ComputedRef<GostJahrgang[]> =
 	)});
 
 const manager: ComputedRef<GostBlockungsdatenManager | undefined> =
-	computed(()=>app.dataKursblockung.manager);
+	computed(()=> app.dataKursblockung.manager_container ? app.dataKursblockung.datenmanager : undefined);
 const rows_blockungsswahl: ComputedRef<GostBlockungListeneintrag[]> =
 	computed(() => app.blockungsauswahl.liste);
 const rows_ergebnisse: ComputedRef<List<GostBlockungsergebnisListeneintrag>> =
@@ -225,8 +227,9 @@ const jahrgaenge: ComputedRef<JahrgangsListeEintrag[]> =
 
 const selected_hj: WritableComputedRef<GostHalbjahr> = computed({
 	get(): GostHalbjahr {
-		const hj = hj_memo.value || app.dataKursblockung.daten?.gostHalbjahr || null
-		return GostHalbjahr.fromID(hj)
+		manager.value?.getHalbjahr()
+		const hj = hj_memo.value || manager.value?.getHalbjahr()
+		return hj
 			|| GostHalbjahr.getPlanungshalbjahrFromAbiturjahrSchuljahrUndHalbjahr(
 				abiturjahr.value,
 				App.akt_abschnitt.schuljahr,
@@ -236,7 +239,7 @@ const selected_hj: WritableComputedRef<GostHalbjahr> = computed({
 	},
 	set(hj: GostHalbjahr) {
 		if (hj === selected_hj.value || !hj) return;
-		hj_memo.value = hj.id
+		hj_memo.value = hj
 		wait.value = true;
 		if (selected.value?.abiturjahr)
 			app.blockungsauswahl

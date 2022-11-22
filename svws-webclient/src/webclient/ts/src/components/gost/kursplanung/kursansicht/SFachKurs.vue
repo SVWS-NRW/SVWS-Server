@@ -91,10 +91,10 @@ const kursezaehler: ComputedRef<{ lk: number; gk: number; zk: number }> =
 	});
 
 const kurse: ComputedRef<List<GostBlockungKurs>> = computed(()=>
-	app.dataKursblockung.manager?.getKursmengeSortiertNachKursartFachNummer() || new Vector<GostBlockungKurs>())
+	app.dataKursblockung.datenmanager?.getKursmengeSortiertNachKursartFachNummer() || new Vector<GostBlockungKurs>())
 
 const schienen: ComputedRef<List<GostBlockungSchiene>> =
-	computed(()=> app.dataKursblockung.manager?.getMengeOfSchienen() || new Vector<GostBlockungSchiene>())
+	computed(()=> app.dataKursblockung.datenmanager?.getMengeOfSchienen() || new Vector<GostBlockungSchiene>())
 
 const fach_halbjahr: ComputedRef<GostStatistikFachwahlHalbjahr> =
 	computed(() => props.fach.fachwahlen[props.halbjahr] ||	new GostStatistikFachwahlHalbjahr());
@@ -110,11 +110,7 @@ const zk_kurszahl: ComputedRef<number> = computed(() => kursezaehler.value.zk);
 const bgColor: ComputedRef<string | undefined> =
 	computed(() => app.dataFachwahlen.getBgColor(props.fach));
 
-async function add_kurs(art: GostKursart) {
-	const kurs = await app.dataKursblockung.add_blockung_kurse(props.fach.id, art.id)
-	if (!kurs || !app.dataKursblockung.manager || !app.dataKursblockungsergebnis.manager)
-		return
-	app.dataKursblockung.manager?.addKurs(kurs)
-	app.dataKursblockungsergebnis.manager.setAddKursByID(kurs.id)
+function add_kurs(art: GostKursart) {
+	app.dataKursblockung.add_blockung_kurse(props.fach.id, art.id)
 }
 </script>

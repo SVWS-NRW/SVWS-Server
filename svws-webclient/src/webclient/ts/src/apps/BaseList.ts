@@ -158,7 +158,7 @@ export abstract class BaseList<ListenEintragTyp, ListenFilterTyp = undefined> {
 		else this._pending = this.daten.map(d => d.unselect());
 		this._pending.push(this.on_select());
 		Promise.allSettled(this._pending).then(
-			() => (this._state.pending = false)
+			() => { this._state.pending = false}
 		);
 	}
 
@@ -171,5 +171,10 @@ export abstract class BaseList<ListenEintragTyp, ListenFilterTyp = undefined> {
 	public set filter(value: ListenFilterTyp) {
 		this._filter = value;
 		this.filter_liste();
+	}
+
+	public async pending(): Promise<void> {
+		// console.log(this._pending)
+		await Promise.allSettled(this._pending)
 	}
 }

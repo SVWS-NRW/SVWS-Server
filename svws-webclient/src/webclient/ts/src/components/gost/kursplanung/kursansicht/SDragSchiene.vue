@@ -76,8 +76,6 @@ const regel_hinzufuegen = async (regeltyp: GostKursblockungRegelTyp) => {
 	regel.parameter.set(1, von.value.nummer)
 	regel.parameter.set(2, bis.value.nummer)
 	await app.dataKursblockung.patch_blockung_regel(regel)
-	app.dataKursblockung.manager?.addRegel(regel)
-	app.dataKursblockungsergebnis.manager?.setAddRegelByID(regel.id)
 }
 
 function regel_schiene() {

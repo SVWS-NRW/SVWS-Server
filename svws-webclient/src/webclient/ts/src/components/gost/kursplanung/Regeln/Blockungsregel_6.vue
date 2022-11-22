@@ -10,7 +10,7 @@
 	// public static readonly KURSART_ALLEIN_IN_SCHIENEN_VON_BIS : GostKursblockungRegelTyp =
 	//new GostKursblockungRegelTyp("KURSART_ALLEIN_IN_SCHIENEN_VON_BIS", 2, 6, "Kursart: Allein in Schienen (von/bis)",
 	//Arrays.asList(GostKursblockungRegelParameterTyp.KURSART, GostKursblockungRegelParameterTyp.SCHIENEN_NR, GostKursblockungRegelParameterTyp.SCHIENEN_NR));
-	const schienen = app.dataKursblockung.manager?.getMengeOfSchienen()
+	const schienen = app.dataKursblockung.datenmanager?.getMengeOfSchienen()
 	const kursart: Ref<GostKursart> = shallowRef(GostKursart.GK)
 	const start: Ref<GostBlockungSchiene> = ref(schienen?.get(0) || new GostBlockungSchiene())
 	const ende: Ref<GostBlockungSchiene> = ref(schienen?.get(0) || new GostBlockungSchiene())
@@ -19,7 +19,7 @@
 	const regeln: ComputedRef<GostBlockungRegel[]> =
 		computed(()=> {
 		const arr = []
-		const regeln = app.dataKursblockung.manager?.getMengeOfRegeln()
+		const regeln = app.dataKursblockung.datenmanager?.getMengeOfRegeln()
 		if (!regeln) return []
 		for (const r of regeln)
 			if (r.typ === regel_typ.typ)
@@ -39,10 +39,7 @@
 	}
 	
 	const regel_hinzufuegen = async () => {
-		regel.value = await app.dataKursblockung.add_blockung_regel(regel_typ.typ)
-		if (!regel.value) return
-		app.dataKursblockung.manager?.addRegel(regel.value)
-		app.dataKursblockungsergebnis.manager?.setAddRegelByID(regel.value.id)
+		await app.dataKursblockung.add_blockung_regel(regel_typ.typ)
 	}
 	
 	const regel_entfernen = async (r: GostBlockungRegel) => {

@@ -43,7 +43,7 @@
 		computed(()=> app.dataKursblockungsergebnis.active_kurs?.value ? true : false)
 	
 	const regeln: ComputedRef<List<GostBlockungRegel>> =
-		computed(()=> app.dataKursblockung.manager?.getMengeOfRegeln() || new Vector<GostBlockungRegel>())
+		computed(()=> app.dataKursblockung.datenmanager?.getMengeOfRegeln() || new Vector<GostBlockungRegel>())
 
 	const verbieten_regel: ComputedRef<GostBlockungRegel | undefined> =
 		computed(() => {
@@ -68,8 +68,6 @@
 		regel.parameter.set(0, schueler.id)
 		regel.parameter.set(1, kurs.id)
 		await app.dataKursblockung.patch_blockung_regel(regel)
-		app.dataKursblockung.manager?.addRegel(regel)
-		app.dataKursblockungsergebnis.manager?.setAddRegelByID(regel.id)
 	}
 	const fixieren_regel_hinzufuegen = async () => {
 		const regel = await app.dataKursblockung.add_blockung_regel(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ)

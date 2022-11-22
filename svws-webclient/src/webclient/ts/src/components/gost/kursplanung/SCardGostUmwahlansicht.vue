@@ -101,10 +101,10 @@
 		computed(()=> !!manager.value && !manager.value.getOfSchuelerAlleFachwahlenNichtZugeordnet())
 
 	const manager: ComputedRef<GostBlockungsergebnisManager | undefined> =
-		computed(() => app.dataKursblockungsergebnis.manager);
+		computed(() => app.dataKursblockung.ergebnismanager);
 
 	const kurse: ComputedRef<List<GostBlockungKurs>> =
-		computed(() => app.dataKursblockung.manager?.getKursmengeSortiertNachKursartFachNummer()
+		computed(() => app.dataKursblockung.datenmanager?.getKursmengeSortiertNachKursartFachNummer()
 			|| new Vector<GostBlockungKurs>())
 
 	const schienen: ComputedRef<List<GostBlockungsergebnisSchiene>> =
@@ -174,8 +174,8 @@
 
 	const fachbelegungen: ComputedRef<List<GostFachwahl>> =
 		computed(() => {
-		if (!selected.value?.id || !app.dataKursblockung.manager) return new Vector<GostFachwahl>()
-		return app.dataKursblockung.manager.getOfSchuelerFacharten(selected.value.id)
+		if (!selected.value?.id || !app.dataKursblockung.datenmanager) return new Vector<GostFachwahl>()
+		return app.dataKursblockung.datenmanager.getOfSchuelerFacharten(selected.value.id)
 	});
 
 	const filter_kollision: WritableComputedRef<boolean> =
@@ -224,12 +224,7 @@
 		const schuelerid = selected.value?.id;
 		if (!schuelerid || !kurs?.id) return;
 		let ok = false
-		ok = await app.dataKursblockungsergebnis.assignSchuelerKurs(
-			schuelerid,
-			kurs.id,
-			true
-		);
-		if (ok) ok = manager.value?.setSchuelerKurs(schuelerid, kurs.id, false) || false;
+		ok = await app.dataKursblockungsergebnis.removeSchuelerKurs(schuelerid, kurs.id);
 		if (ok) main.config.drag_and_drop_data = undefined;
 	}
 </script>

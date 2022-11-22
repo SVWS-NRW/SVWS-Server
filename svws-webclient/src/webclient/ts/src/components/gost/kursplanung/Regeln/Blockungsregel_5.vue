@@ -5,14 +5,14 @@ import { computed, ComputedRef, Ref, ref } from "vue";
 
 const main: Main = injectMainApp();
 const app = main.apps.gost;
-const manager = app.dataKursblockung.manager
+const manager = app.dataKursblockung.datenmanager
 const faechermanager = app.dataFaecher.manager
 
 const regel_typ = GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS
 // public static readonly SCHUELER_VERBIETEN_IN_KURS : GostKursblockungRegelTyp =
 // new GostKursblockungRegelTyp("SCHUELER_VERBIETEN_IN_KURS", 5, 5, "Schüler: Verbiete in Kurs",
 // Arrays.asList(GostKursblockungRegelParameterTyp.SCHUELER_ID, GostKursblockungRegelParameterTyp.KURS_ID));
-const kurse = app.dataKursblockung.manager?.getKursmengeSortiertNachKursartFachNummer()
+const kurse = app.dataKursblockung.datenmanager?.getKursmengeSortiertNachKursartFachNummer()
 const schuelerliste = app.listAbiturjahrgangSchueler.liste || []
 
 const kurs: Ref<GostBlockungKurs> = ref(kurse?.get(0)||new GostBlockungKurs())
@@ -22,7 +22,7 @@ const regel: Ref<GostBlockungRegel | undefined> = ref(undefined)
 const regeln: ComputedRef<GostBlockungRegel[]> =
 	computed(()=> {
 	const arr = []
-	const regeln = app.dataKursblockung.manager?.getMengeOfRegeln()
+	const regeln = app.dataKursblockung.datenmanager?.getMengeOfRegeln()
 	if (!regeln) return []
 	for (const r of regeln)
 		if (r.typ === regel_typ.typ)
@@ -41,10 +41,7 @@ const speichern = async () => {
 }
 
 const regel_hinzufuegen = async () => {
-	regel.value = await app.dataKursblockung.add_blockung_regel(regel_typ.typ)
-	if (!regel.value) return
-	app.dataKursblockung.manager?.addRegel(regel.value)
-	app.dataKursblockungsergebnis.manager?.setAddRegelByID(regel.value.id)
+	await app.dataKursblockung.add_blockung_regel(regel_typ.typ)
 }
 
 const regel_entfernen = async (r: GostBlockungRegel) => {

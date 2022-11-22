@@ -10,32 +10,57 @@ import {
 	GostBlockungsergebnisListeneintrag,
 	GostBlockungsergebnisManager,
 	List,
-	Vector
+	Vector,
 } from "@svws-nrw/svws-core-ts";
 import { BaseData } from "../BaseData";
 import { ListKursblockungsergebnisse } from "./ListKursblockungsergebnisse";
+import { Ref, ShallowReactive, shallowReactive, shallowRef } from "vue";
+
+interface DataGostKursblockungManagerContainer {
+	manager: {
+
+		daten: GostBlockungsdatenManager|undefined;
+		ergebnis: GostBlockungsergebnisManager|undefined;
+	}
+}
 
 export class DataGostKursblockung extends BaseData<
 	GostBlockungsdaten,
 	GostBlockungListeneintrag,
-	GostBlockungsdatenManager
+	unknown
 > {
-	private ergebnismanager: GostBlockungsergebnisManager | undefined
-
 	protected listKursblockungsergebnisse: ListKursblockungsergebnisse;
 
-	public constructor(
-		listKursblockungsergebnisse: ListKursblockungsergebnisse
-		) {
-			super();
-			this.listKursblockungsergebnisse = listKursblockungsergebnisse;
-			this.ergebnismanager = App.apps.gost.dataKursblockungsergebnis.manager;
+	public manager_container : ShallowReactive<DataGostKursblockungManagerContainer> = shallowReactive({manager: {daten: undefined, ergebnis: undefined}});
+
+	public constructor(listKursblockungsergebnisse: ListKursblockungsergebnisse) {
+		super();
+		this.listKursblockungsergebnisse = listKursblockungsergebnisse;
 	}
 
 	protected on_update(daten: Partial<GostBlockungsdaten>): void {
 		return void daten;
 	}
 	
+	public commit() {
+    this.manager_container.manager = {...this.manager_container.manager};
+	}
+
+	public get datenmanager() : GostBlockungsdatenManager | undefined {
+		return this.manager_container.manager.daten;
+	}
+
+	public set datenmanager(man : GostBlockungsdatenManager | undefined) {
+		this.manager_container.manager.daten = man;
+	}
+	public get ergebnismanager() : GostBlockungsergebnisManager | undefined {
+		return this.manager_container.manager.ergebnis;
+	}
+
+	public set ergebnismanager(man : GostBlockungsergebnisManager | undefined) {
+		this.manager_container.manager.ergebnis = man;
+	}
+
 	/**
 	 * Wird bei einer Änderung des ausgewählten Listeneintrags aufgerufen und holt
 	 * die Daten vom SVWS-Server.
@@ -43,18 +68,22 @@ export class DataGostKursblockung extends BaseData<
 	 * @returns {Promise<GostBlockungsdaten>} Die Daten als Promise
 	 */
 	public async on_select(): Promise<GostBlockungsdaten | undefined> {
-		this.manager = undefined;
-		this.ergebnismanager = undefined
 		if (!this.selected_list_item) return super.unselect();
 		const blockungsdaten = await super._select((eintrag: GostBlockungListeneintrag) =>
 			App.api.getGostBlockung(App.schema, eintrag.id));
 		if (blockungsdaten && App.apps.gost.dataFaecher.manager){
+			this.ergebnismanager = undefined;
+			this.datenmanager = new GostBlockungsdatenManager(blockungsdaten, App.apps.gost.dataFaecher.manager);
+			this.commit();
 			await this.listKursblockungsergebnisse.update_list(blockungsdaten.id);
-			this.manager = new GostBlockungsdatenManager(blockungsdaten, App.apps.gost.dataFaecher.manager);
 			if (this.listKursblockungsergebnisse.liste.length)
 				this.listKursblockungsergebnisse.ausgewaehlt = this.listKursblockungsergebnisse.liste[0];
 		}
 		return blockungsdaten;
+	}
+
+	public async ergebnisse(): Promise<List<GostBlockungsergebnisListeneintrag>> {
+		return this.datenmanager?.getErgebnisseSortiertNachBewertung() || new Vector<GostBlockungsergebnisListeneintrag>()
 	}
 
 	/**
@@ -68,10 +97,6 @@ export class DataGostKursblockung extends BaseData<
 		return undefined;
 	}
 	
-	/** Übergibt als Promise die Listeneinträge  */
-	public async ergebnisse(): Promise<List<GostBlockungsergebnisListeneintrag>> {
-		return this._daten?.ergebnisse || new Vector<GostBlockungsergebnisListeneintrag>()
-	}
 	/**
 	 * Aktualisiert die übergebenen Felder der Daten mit dem übergebenen Objekt.
 	 * Ruft ggf. einen Callback bei Änderungen an den Daten auf, so dass eine
@@ -95,117 +120,104 @@ export class DataGostKursblockung extends BaseData<
 	 * @param {number} kursart_id
 	 * @returns {Promise<GostBlockungKurs|undefined>} Ein Kursobjekt bei Erfolg
 	 */
-	public async add_blockung_kurse(
-		fach_id: number,
-		kursart_id: number
-	): Promise<GostBlockungKurs | undefined> {
+	public async add_blockung_kurse(fach_id: number, kursart_id: number): Promise<GostBlockungKurs | undefined> {
 		if (!this.daten?.id) return;
-		const kurs = await App.api.addGostBlockungKurs(
-			App.schema,
-			this.daten.id,
-			fach_id,
-			kursart_id
-		);
+		const kurs = await App.api.addGostBlockungKurs(App.schema, this.daten.id, fach_id, kursart_id);
+		if (!kurs) return
+		this.datenmanager?.addKurs(kurs)
+		this.ergebnismanager?.setAddKursByID(kurs.id)
+		this.commit()
 		return kurs
 	}
+	
 	/**Löscht einen Kurs in der Blockung für das angegebene fach_id
 	 * @param {number} fach_id
 	 * @param {number} kursart_id
 	 * @returns {Promise<GostBlockungKurs|undefined>} Ein Kursobjekt bei Erfolg
 	 */
-	public async del_blockung_kurse(
-		fach_id: number,
-		kursart_id: number
-	): Promise<GostBlockungKurs | undefined> {
+	public async del_blockung_kurse(fach_id: number, kursart_id: number): Promise<GostBlockungKurs | undefined> {
 		if (!this.daten?.id) return;
-		const kurs = await App.api.deleteGostBlockungKurs(
-			App.schema,
-			this.daten.id,
-			fach_id,
-			kursart_id
-		);
+		const kurs = await App.api.deleteGostBlockungKurs(App.schema, this.daten.id, fach_id, kursart_id);
+		if (!kurs) return
+		this.datenmanager?.removeKurs(kurs)
+		this.ergebnismanager?.setRemoveKursByID(kurs.id)
+		this.commit()
 		return kurs
+	}
+
+	/** passt einen Kurs an */
+	public async patch_kurs(data: GostBlockungKurs): Promise<void> {
+		await App.api.patchGostBlockungKurs(data, App.schema, data.id);
 	}
 
 	/**Ergänzt eine Regel in der Blockung
 	 * @param {number} regel_typ
 	 * @returns {Promise<GostBlockungRegel|undefined>} Ein Kursobjekt bei Erfolg
 	 */
-	public async add_blockung_regel(
-		regel_typ: number,
-	): Promise<GostBlockungRegel | undefined> {
+	public async add_blockung_regel(regel_typ: number): Promise<GostBlockungRegel | undefined> {
 		if (!this.daten?.id) return;
-		const regel = await App.api.addGostBlockungRegel(
-			App.schema,
-			this.daten.id,
-			regel_typ
-		);
+		const regel = await App.api.addGostBlockungRegel(App.schema, this.daten.id, regel_typ);
+		if (!regel) return
+		this.datenmanager?.addRegel(regel)
+		this.ergebnismanager?.setAddRegelByID(regel.id)
+		this.commit()
 		return regel
 	}
+
 	/**Löscht eine Regel in der Blockung mit der jeweiligen id
 	 * @param {number} regel_id
 	 * @returns {Promise<GostBlockungRegel|undefined>} Ein Kursobjekt bei Erfolg
 	 */
-	public async del_blockung_regel(
-		regel_id: number,
-	): Promise<GostBlockungRegel | undefined> {
+	public async del_blockung_regel(regel_id: number): Promise<GostBlockungRegel | undefined> {
 		if (!this.daten?.id) return;
-		const regel = await App.api.deleteGostBlockungRegelByID(
-			App.schema,
-			regel_id
-		);
-		if (regel) this.manager?.removeRegel(regel)
+		const regel = await App.api.deleteGostBlockungRegelByID(App.schema, regel_id);
+		if (!regel) return
+		this.datenmanager?.removeRegel(regel);
+		this.ergebnismanager?.setRemoveRegelByID(regel.id);
+		this.commit();
 		return regel
 	}
-		/**passt die Regel einer Blockung an */
-		public async patch_blockung_regel(
-			data: GostBlockungRegel
-		): Promise<void> {
-			return await App.api.patchGostBlockungRegel(
-				data,
-				App.schema,
-				data.id
-			);
-		}
+
+	/**passt die Regel einer Blockung an */
+	public async patch_blockung_regel(data: GostBlockungRegel): Promise<GostBlockungRegel | undefined> {
+		await App.api.patchGostBlockungRegel(data, App.schema, data.id);
+		const regel = this.datenmanager?.getRegel(data.id)
+		if (!regel) return
+		this.datenmanager?.removeRegel(regel);
+		this.ergebnismanager?.setRemoveRegelByID(regel.id);
+		this.datenmanager?.addRegel(data);
+		this.ergebnismanager?.setAddRegelByID(data.id)
+		this.commit();
+		return regel;
+	}
 
 	/**Ergänzt eine Schiene in der Blockung für das angegebene
 	 * @returns {Promise<GostBlockungSchiene|undefined>} Ein Schienenobjekt bei Erfolg
 	 */	
 	public async add_blockung_schiene(): Promise<GostBlockungSchiene | undefined> {
 		if (!this.daten?.id) return;
-		const schiene = await App.api.addGostBlockungSchiene(
-			App.schema,
-			this.daten.id,
-		);
-		// this.select(this.selected_list_item)
+		const schiene = await App.api.addGostBlockungSchiene(App.schema, this.daten.id);
+		if (!schiene) return
+		this.datenmanager?.addSchiene(schiene);
+		this.ergebnismanager?.setAddSchieneByID(schiene.id)
+		this.commit();
 		return schiene
 	}
 
 	/** Entfernt eine Schiene aus der Blockung */
-	public async del_blockung_schiene(s: GostBlockungSchiene): Promise<void> {
+	public async del_blockung_schiene(schiene: GostBlockungSchiene): Promise<GostBlockungSchiene|undefined> {
 		if (!this.daten?.id) return;
-		await App.api.deleteGostBlockungSchieneByID(
-			App.schema,
-			s.id,
-		);
+		const s = await App.api.deleteGostBlockungSchieneByID(App.schema, schiene.id);
+		if (!s) return
+		this.datenmanager?.removeSchieneByID(s.id);
+		this.ergebnismanager?.setRemoveSchieneByID(s.id)
+		this.commit();
+		return s;
 	}
 
 	/** passt eine Schiene an */
-	public async patch_schiene(
-		data: GostBlockungSchiene
-	): Promise<void> {
-		await App.api.patchGostBlockungSchiene(
-			data,
-			App.schema,
-			data.id
-		);
-	}
-	/** passt einen Kurs an */
-	public async patch_kurs(data: GostBlockungKurs): Promise<void> {
-		await App.api.patchGostBlockungKurs(
-			data,
-			App.schema,
-			data.id
-		);
+	public async patch_schiene(data: GostBlockungSchiene): Promise<void> {
+		await App.api.patchGostBlockungSchiene(data, App.schema, data.id);
+		//TODO, der Manager sollte was tun..
 	}
 }

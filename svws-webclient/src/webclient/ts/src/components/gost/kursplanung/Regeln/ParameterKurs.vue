@@ -26,7 +26,7 @@ function text(i: GostBlockungKurs) {
 <template>
 	<svws-ui-multi-select
 		v-model="selected"
-		:items="app.dataKursblockung.daten?.kurse.toArray() || []"
+		:items="app.dataKursblockung.datenmanager?.getKursmengeSortiertNachKursartFachNummer() || []"
 		:item-text="text"
 		/>
 </template>

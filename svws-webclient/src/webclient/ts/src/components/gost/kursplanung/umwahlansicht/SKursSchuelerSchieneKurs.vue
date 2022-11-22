@@ -80,7 +80,7 @@
 			}});
 
 	const manager: ComputedRef<GostBlockungsergebnisManager | undefined> =
-		computed(() => app.dataKursblockungsergebnis.manager);
+		computed(() => app.dataKursblockung.ergebnismanager);
 
 	const allow_regeln: ComputedRef<boolean> =
 		computed(()=> app.blockungsergebnisauswahl.liste.length === 1)
@@ -110,9 +110,9 @@
 
 	const gostfach: ComputedRef<ZulaessigesFach | undefined> =
 		computed(() => {
-			if (!app.dataFaecher.manager) return
+			if (app.dataKursblockung.datenmanager === undefined) return
 			let fach
-			for (const f of app.dataFaecher.manager.values())
+			for (const f of app.dataKursblockung.datenmanager.faecherManager().values())
 				if (f.id === kurs_original.value?.fach_id) {
 					fach = f; break
 				}
@@ -125,7 +125,7 @@
 			return gostfach.value.getHMTLFarbeRGB().valueOf(); });
 	
 	const regeln: ComputedRef<List<GostBlockungRegel>> =
-		computed(()=> app.dataKursblockung.manager?.getMengeOfRegeln() || new Vector<GostBlockungRegel>())
+		computed(()=> app.dataKursblockung.datenmanager?.getMengeOfRegeln() || new Vector<GostBlockungRegel>())
 
 	const verbieten_regel: ComputedRef<GostBlockungRegel | undefined> =
 		computed(() => {
@@ -150,8 +150,6 @@
 		regel.parameter.set(0, props.schueler.id)
 		regel.parameter.set(1, props.kurs.id)
 		await app.dataKursblockung.patch_blockung_regel(regel)
-		app.dataKursblockung.manager?.addRegel(regel)
-		manager.value?.setAddRegelByID(regel.id)
 	}
 	const fixieren_regel_hinzufuegen = async () => {
 		const regel = await app.dataKursblockung.add_blockung_regel(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ)
@@ -182,24 +180,10 @@
 		drag_data.value = undefined;
 	}
 
-	function drop_aendere_kurszuordnung(kurs: any, id_kurs_neu: number) {
-		const schuelerid = props.schueler.id;
-		if (!schuelerid) 
+	async function drop_aendere_kurszuordnung(kurs: any, id_kurs_neu: number) {
+		if (!is_drop_zone.value) 
 			return;
-		if (!is_drop_zone.value)
-		  return;
-		if (kurs.id) {
-			app.dataKursblockungsergebnis.assignSchuelerKurs(
-				schuelerid,
-				kurs.id,
-				true
-			);
-		}
-		app.dataKursblockungsergebnis.assignSchuelerKurs(
-			schuelerid,
-			id_kurs_neu,
-			false
-		);
+		await app.dataKursblockungsergebnis.assignSchuelerKurs(props.schueler.id, id_kurs_neu, kurs.id);
 		drag_ended();
 	}
 </script>
