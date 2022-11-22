@@ -22,8 +22,6 @@ export class GostBlockungsdaten extends JavaObject {
 
 	public istAktiv : boolean = false;
 
-	public vorlageID : number = -1;
-
 	public schienen : List<GostBlockungSchiene> = new Vector();
 
 	public regeln : List<GostBlockungRegel> = new Vector();
@@ -63,9 +61,6 @@ export class GostBlockungsdaten extends JavaObject {
 		if (typeof obj.istAktiv === "undefined")
 			 throw new Error('invalid json format, missing attribute istAktiv');
 		result.istAktiv = obj.istAktiv;
-		if (typeof obj.vorlageID === "undefined")
-			 throw new Error('invalid json format, missing attribute vorlageID');
-		result.vorlageID = obj.vorlageID;
 		if (!!obj.schienen) {
 			for (let elem of obj.schienen) {
 				result.schienen?.add(GostBlockungSchiene.transpilerFromJSON(JSON.stringify(elem)));
@@ -106,7 +101,6 @@ export class GostBlockungsdaten extends JavaObject {
 		result += '"abijahrgang" : ' + obj.abijahrgang + ',';
 		result += '"gostHalbjahr" : ' + obj.gostHalbjahr + ',';
 		result += '"istAktiv" : ' + obj.istAktiv + ',';
-		result += '"vorlageID" : ' + obj.vorlageID + ',';
 		if (!obj.schienen) {
 			result += '"schienen" : []';
 		} else {
@@ -200,9 +194,6 @@ export class GostBlockungsdaten extends JavaObject {
 		}
 		if (typeof obj.istAktiv !== "undefined") {
 			result += '"istAktiv" : ' + obj.istAktiv + ',';
-		}
-		if (typeof obj.vorlageID !== "undefined") {
-			result += '"vorlageID" : ' + obj.vorlageID + ',';
 		}
 		if (typeof obj.schienen !== "undefined") {
 			if (!obj.schienen) {

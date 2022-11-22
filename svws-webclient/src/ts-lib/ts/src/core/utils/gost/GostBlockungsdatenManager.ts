@@ -113,7 +113,6 @@ export class GostBlockungsdatenManager extends JavaObject {
 			this._daten.abijahrgang = pDaten.abijahrgang;
 			this._daten.gostHalbjahr = pDaten.gostHalbjahr;
 			this._daten.istAktiv = pDaten.istAktiv;
-			this._daten.vorlageID = pDaten.vorlageID;
 			this.addSchienListe(pDaten.schienen);
 			this.addRegelListe(pDaten.regeln);
 			this.addKursListe(pDaten.kurse);

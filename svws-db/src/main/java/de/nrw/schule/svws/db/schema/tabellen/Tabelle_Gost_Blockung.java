@@ -47,13 +47,6 @@ public class Tabelle_Gost_Blockung extends SchemaTabelle {
 				+ "Bei einer aktivierten Blockung wurde die Vorlage (siehe Vorlage_ID) bereits "
 				+ "in die Leistungsdaten übertragen.");
 
-	/** Die Definition der Tabellenspalte Vorlage_ID */
-	public SchemaTabelleSpalte col_Vorlage_ID = add("Vorlage_ID", SchemaDatentypen.BIGINT, false)
-		.setNotNull()
-		.setJavaComment("Die ID des als Vorlage ausgewählten Zwischenergebnisses. Dieses gehört zur Definition"
-				+ "der Blockung mit dazu und darf nicht alleine entfernt werden.");
-
-
 	/** Die Definition des Fremdschlüssels Gost_Blockung_Abi_Jahrgang_FK */
 	public SchemaTabelleFremdschluessel fk_Gost_Blockung_Abi_Jahrgang_FK = addForeignKey(
 			"Gost_Blockung_Abi_Jahrgang_FK", 

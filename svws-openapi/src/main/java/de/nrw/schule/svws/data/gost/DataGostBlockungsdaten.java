@@ -86,7 +86,6 @@ public class DataGostBlockungsdaten extends DataManager<Long> {
 		daten.abijahrgang = blockung.Abi_Jahrgang;
 		daten.gostHalbjahr = blockung.Halbjahr.id;
 		daten.istAktiv = blockung.IstAktiv;
-		daten.vorlageID = blockung.Vorlage_ID;
 		return daten;
 	};
 
@@ -108,10 +107,7 @@ public class DataGostBlockungsdaten extends DataManager<Long> {
 			throw OperationError.INTERNAL_SERVER_ERROR.exception("Kein Vorlage-Ergebnis für die Blockung in der Datenbank vorhanden.");
 		if (ergebnisse.size() > 1)
 			return null;
-		DTOGostBlockungZwischenergebnis ergebnis = ergebnisse.get(0);
-		if ((ergebnisse.size() == 1) && (ergebnis.ID != blockung.Vorlage_ID))
-			return null;
-		return ergebnis;
+		return ergebnisse.get(0);
 	}
 
 	
@@ -302,7 +298,7 @@ public class DataGostBlockungsdaten extends DataManager<Long> {
 			long ergebnisID = lastErgebnisID == null ? 1 : lastErgebnisID.MaxID + 1;
 			DTOGostBlockungZwischenergebnis erg = new DTOGostBlockungZwischenergebnis(ergebnisID, blockungID, false, true);
 			// Blockung anlegen
-			DTOGostBlockung blockung = new DTOGostBlockung(blockungID, name, abiturjahr, gostHalbjahr, false, ergebnisID);
+			DTOGostBlockung blockung = new DTOGostBlockung(blockungID, name, abiturjahr, gostHalbjahr, false);
 			conn.transactionPersist(blockung);
 			conn.transactionPersist(erg);
 			GostBlockungsdaten daten = dtoMapper.apply(blockung);
@@ -453,48 +449,26 @@ public class DataGostBlockungsdaten extends DataManager<Long> {
 
 	
 	/**
-	 * Erzeugt ein Duplikat der angegebenen Blockung und für den
-	 * Fall das ein Ergebnis angegeben wurde auch des Ergebnisses.
-	 * Ist kein Ergebnis angegeben, so wird nur die Blockungsdefinition
-	 * ohne ein Ergebnis dupliziert.
+	 * Erzeugt ein Duplikat der Blockung des angegebenen Ergebnis.
+	 * Dabei wird auch das Ergebnis dupliziert.
 	 * 
-	 * @param idBlockungOriginal   die ID der zu duplizierenden Blockungsdefinition
 	 * @param idErgebnisOriginal   das zu duplizierende Blockungsergebnis
 	 * 
 	 * @return die Blockungsdaten der duplizierten Blockung
 	 */
-	public Response dupliziere(Long idBlockungOriginal, Long idErgebnisOriginal) {
+	public Response dupliziere(long idErgebnisOriginal) {
 		try {
-			if ((idBlockungOriginal == null) && (idErgebnisOriginal == null))
-				throw OperationError.CONFLICT.exception();
 			conn.transactionBegin();
 			GostUtils.pruefeSchuleMitGOSt(conn);
 			// Bestimme die Blockung und das zugehörige Ergebnis
-			DTOGostBlockungZwischenergebnis ergebnisOriginal;
 			DTOGostBlockung blockungOriginal;
-			if (idErgebnisOriginal != null) {
-				ergebnisOriginal = conn.queryByKey(DTOGostBlockungZwischenergebnis.class, idErgebnisOriginal);
-				if (ergebnisOriginal == null)
-					throw OperationError.NOT_FOUND.exception();
-				if (idBlockungOriginal == null)
-					idBlockungOriginal = ergebnisOriginal.Blockung_ID;
-				if (idBlockungOriginal != ergebnisOriginal.Blockung_ID)
-					throw OperationError.CONFLICT.exception();
-				// Bestimme die Blockung			
-				blockungOriginal = conn.queryByKey(DTOGostBlockung.class, idBlockungOriginal);
-				if (blockungOriginal == null)
-					throw OperationError.NOT_FOUND.exception();
-			} else {
-				blockungOriginal = conn.queryByKey(DTOGostBlockung.class, idBlockungOriginal);
-				if (blockungOriginal == null)
-					throw OperationError.NOT_FOUND.exception();
-				idErgebnisOriginal = blockungOriginal.Vorlage_ID;
-				ergebnisOriginal = conn.queryByKey(DTOGostBlockungZwischenergebnis.class, idErgebnisOriginal);
-				if (ergebnisOriginal == null)
-					throw OperationError.NOT_FOUND.exception();
-				if (idBlockungOriginal != ergebnisOriginal.Blockung_ID)
-					throw OperationError.CONFLICT.exception();
-			}
+			DTOGostBlockungZwischenergebnis ergebnisOriginal = conn.queryByKey(DTOGostBlockungZwischenergebnis.class, idErgebnisOriginal);
+			if (ergebnisOriginal == null)
+				throw OperationError.NOT_FOUND.exception();
+			// Bestimme die Blockung			
+			blockungOriginal = conn.queryByKey(DTOGostBlockung.class, ergebnisOriginal.Blockung_ID);
+			if (blockungOriginal == null)
+				throw OperationError.NOT_FOUND.exception();
 			// Bestimme die ID für das Duplikat der Blockung
 			DTODBAutoInkremente lastID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Blockung");
 			Long idBlockungDuplikat = lastID == null ? 1 : lastID.MaxID + 1;
@@ -502,13 +476,13 @@ public class DataGostBlockungsdaten extends DataManager<Long> {
 			DTODBAutoInkremente dbErgebnisID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Blockung_Zwischenergebnisse");
 			long idErgebnisDuplikat = dbErgebnisID == null ? 1 : dbErgebnisID.MaxID + 1;
 			// Erstelle das Duplikat
-			DTOGostBlockung blockungDuplikat = new DTOGostBlockung(idBlockungDuplikat, blockungOriginal.Name + " (Duplikat)", blockungOriginal.Abi_Jahrgang, blockungOriginal.Halbjahr, false, idErgebnisDuplikat);
+			DTOGostBlockung blockungDuplikat = new DTOGostBlockung(idBlockungDuplikat, blockungOriginal.Name + " (Duplikat)", blockungOriginal.Abi_Jahrgang, blockungOriginal.Halbjahr, false);
 			conn.transactionPersist(blockungDuplikat);
 			// Dupliziere die Schienen
 			DTODBAutoInkremente dbSchienenID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Blockung_Schienen");
 			long idSchieneDuplikat = dbSchienenID == null ? 0 : dbSchienenID.MaxID + 1;
 			HashMap<Long, Long> mapSchienenIDs = new HashMap<>();
-			List<DTOGostBlockungSchiene> schienenOriginal = conn.queryNamed("DTOGostBlockungSchiene.blockung_id", idBlockungOriginal,
+			List<DTOGostBlockungSchiene> schienenOriginal = conn.queryNamed("DTOGostBlockungSchiene.blockung_id", ergebnisOriginal.Blockung_ID,
 					DTOGostBlockungSchiene.class);
 			for (DTOGostBlockungSchiene schieneOriginal : schienenOriginal) {
 				DTOGostBlockungSchiene schieneDuplikat = new DTOGostBlockungSchiene(idSchieneDuplikat, idBlockungDuplikat, schieneOriginal.Nummer, schieneOriginal.Bezeichnung, schieneOriginal.Wochenstunden);
@@ -520,7 +494,7 @@ public class DataGostBlockungsdaten extends DataManager<Long> {
 			DTODBAutoInkremente dbKurseID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Blockung_Kurse");
 			long idKursDuplikat = dbKurseID == null ? 0 : dbKurseID.MaxID + 1;
 			HashMap<Long, Long> mapKursIDs = new HashMap<>();
-			List<DTOGostBlockungKurs> kurseOriginal = conn.queryNamed("DTOGostBlockungKurs.blockung_id", idBlockungOriginal,
+			List<DTOGostBlockungKurs> kurseOriginal = conn.queryNamed("DTOGostBlockungKurs.blockung_id", ergebnisOriginal.Blockung_ID,
 					DTOGostBlockungKurs.class);
 			List<Long> kursIDsOriginal = kurseOriginal.stream().map(k -> k.ID).collect(Collectors.toList());
 			for (DTOGostBlockungKurs kursOriginal : kurseOriginal) {
@@ -546,7 +520,7 @@ public class DataGostBlockungsdaten extends DataManager<Long> {
 			long idRegelDuplikat = dbRegelID == null ? 1 : dbRegelID.MaxID + 1;
 			HashMap<Long, Long> mapRegelIDs = new HashMap<>();
 			HashMap<Long, GostKursblockungRegelTyp> mapRegelTypen = new HashMap<>(); // Die Typen für die neuen Regel-IDs
-			List<DTOGostBlockungRegel> regelnOriginal = conn.queryNamed("DTOGostBlockungRegel.blockung_id", idBlockungOriginal,
+			List<DTOGostBlockungRegel> regelnOriginal = conn.queryNamed("DTOGostBlockungRegel.blockung_id", ergebnisOriginal.Blockung_ID,
 					DTOGostBlockungRegel.class);
 			List<Long> regelIDsOriginal = regelnOriginal.stream().map(k -> k.ID).collect(Collectors.toList());
 			for (DTOGostBlockungRegel regelOriginal : regelnOriginal) {

@@ -127,7 +127,6 @@ public class GostBlockungsdatenManager {
 		_daten.abijahrgang = pDaten.abijahrgang;
 		_daten.gostHalbjahr = pDaten.gostHalbjahr;
 		_daten.istAktiv = pDaten.istAktiv;
-		_daten.vorlageID = pDaten.vorlageID;
 		
 		// Kopieren und Mappings aufbauen. 
 		addSchienListe(pDaten.schienen); // Muss vor den Kursen erzeugt werden.

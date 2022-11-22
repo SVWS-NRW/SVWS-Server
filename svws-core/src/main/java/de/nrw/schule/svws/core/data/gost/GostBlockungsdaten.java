@@ -37,9 +37,6 @@ public class GostBlockungsdaten {
 	/** Gibt an, ob diese Blockung aktiviert wurde, d.h. bereits in die Leistungsdaten übertragen wurde. */
 	public boolean istAktiv = false;
 	
-	/** Die ID des als Vorlage gesetzten Zwischenergebnisses */
-	public long vorlageID = -1;
-	
 	/** Die Definition der Schienen */
 	public @NotNull List<@NotNull GostBlockungSchiene> schienen = new Vector<>();
 

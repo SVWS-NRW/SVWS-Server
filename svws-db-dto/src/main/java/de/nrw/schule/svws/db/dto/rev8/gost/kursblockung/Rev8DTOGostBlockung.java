@@ -43,11 +43,9 @@ import de.nrw.schule.svws.csv.converter.current.gost.GOStHalbjahrConverterDeseri
 @NamedQuery(name="Rev8DTOGostBlockung.halbjahr.multiple", query="SELECT e FROM Rev8DTOGostBlockung e WHERE e.Halbjahr IN :value")
 @NamedQuery(name="Rev8DTOGostBlockung.istaktiv", query="SELECT e FROM Rev8DTOGostBlockung e WHERE e.IstAktiv = :value")
 @NamedQuery(name="Rev8DTOGostBlockung.istaktiv.multiple", query="SELECT e FROM Rev8DTOGostBlockung e WHERE e.IstAktiv IN :value")
-@NamedQuery(name="Rev8DTOGostBlockung.vorlage_id", query="SELECT e FROM Rev8DTOGostBlockung e WHERE e.Vorlage_ID = :value")
-@NamedQuery(name="Rev8DTOGostBlockung.vorlage_id.multiple", query="SELECT e FROM Rev8DTOGostBlockung e WHERE e.Vorlage_ID IN :value")
 @NamedQuery(name="Rev8DTOGostBlockung.primaryKeyQuery", query="SELECT e FROM Rev8DTOGostBlockung e WHERE e.ID = ?1")
 @NamedQuery(name="Rev8DTOGostBlockung.all.migration", query="SELECT e FROM Rev8DTOGostBlockung e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Name","Abi_Jahrgang","Halbjahr","IstAktiv","Vorlage_ID"})
+@JsonPropertyOrder({"ID","Name","Abi_Jahrgang","Halbjahr","IstAktiv"})
 public class Rev8DTOGostBlockung {
 
 	/** ID der Blockung (generiert) */
@@ -82,11 +80,6 @@ public class Rev8DTOGostBlockung {
 	@JsonDeserialize(using=Boolean01ConverterDeserializer.class)
 	public Boolean IstAktiv;
 
-	/** Die ID des als Vorlage ausgewählten Zwischenergebnisses. Dieses gehört zur Definitionder Blockung mit dazu und darf nicht alleine entfernt werden. */
-	@Column(name = "Vorlage_ID")
-	@JsonProperty
-	public Long Vorlage_ID;
-
 	/**
 	 * Erstellt ein neues Objekt der Klasse Rev8DTOGostBlockung ohne eine Initialisierung der Attribute.
 	 */
@@ -101,9 +94,8 @@ public class Rev8DTOGostBlockung {
 	 * @param Abi_Jahrgang   der Wert für das Attribut Abi_Jahrgang
 	 * @param Halbjahr   der Wert für das Attribut Halbjahr
 	 * @param IstAktiv   der Wert für das Attribut IstAktiv
-	 * @param Vorlage_ID   der Wert für das Attribut Vorlage_ID
 	 */
-	public Rev8DTOGostBlockung(final Long ID, final String Name, final Integer Abi_Jahrgang, final GostHalbjahr Halbjahr, final Boolean IstAktiv, final Long Vorlage_ID) {
+	public Rev8DTOGostBlockung(final Long ID, final String Name, final Integer Abi_Jahrgang, final GostHalbjahr Halbjahr, final Boolean IstAktiv) {
 		if (ID == null) { 
 			throw new NullPointerException("ID must not be null");
 		}
@@ -124,10 +116,6 @@ public class Rev8DTOGostBlockung {
 			throw new NullPointerException("IstAktiv must not be null");
 		}
 		this.IstAktiv = IstAktiv;
-		if (Vorlage_ID == null) { 
-			throw new NullPointerException("Vorlage_ID must not be null");
-		}
-		this.Vorlage_ID = Vorlage_ID;
 	}
 
 
@@ -164,7 +152,7 @@ public class Rev8DTOGostBlockung {
 	 */
 	@Override
 	public String toString() {
-		return "Rev8DTOGostBlockung(ID=" + this.ID + ", Name=" + this.Name + ", Abi_Jahrgang=" + this.Abi_Jahrgang + ", Halbjahr=" + this.Halbjahr + ", IstAktiv=" + this.IstAktiv + ", Vorlage_ID=" + this.Vorlage_ID + ")";
+		return "Rev8DTOGostBlockung(ID=" + this.ID + ", Name=" + this.Name + ", Abi_Jahrgang=" + this.Abi_Jahrgang + ", Halbjahr=" + this.Halbjahr + ", IstAktiv=" + this.IstAktiv + ")";
 	}
 
 }
