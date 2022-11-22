@@ -5,7 +5,7 @@
 			<div class="sticky">
 				<div class="rounded-lg shadow">
 					<svws-ui-checkbox v-model="filter_kollision" class="px-4">
-						Nur Kollisionen ({{Object.values(schueler_kollisionen).length}}/{{schueler?.length || 0}})
+						Nur Kollisionen ({{schueler_kollisionen}}/{{schueler?.length || 0}})
 					</svws-ui-checkbox>
 <!--					<svws-ui-checkbox v-model="kursfilter" class="px-4"> Kursfilter: {{aktiver_kursname}} </svws-ui-checkbox>
 -->	
@@ -30,7 +30,6 @@
 								v-for="s in schueler"
 								:key="s.id"
 								:schueler="s"
-								:kollision="!!schueler_kollisionen[s.id]"
 								:selected="selected === s"
 								@click="selected = s"
 								/>
@@ -134,15 +133,13 @@
 	const aktiver_kursname: ComputedRef<String | undefined> =
 		computed(() => schueler_filter.kursid === undefined ? undefined : manager.value?.getOfKursName(schueler_filter.kursid));
 
-	const schueler_kollisionen: ComputedRef<{ [index: number]: boolean }> =
+	const schueler_kollisionen: ComputedRef<number> =
 		computed(() => {
-			if (!schienen.value) return {};
-			const kolls: { [index: number]: boolean } = {};
-			for (const s of schienen.value)
-				for (const k of s.kurse)
-					for (const ss of k.schueler)
-						if (manager.value?.getOfSchuelerHatKollision(ss.valueOf())) kolls[ss.valueOf()] = true;
-			return kolls;
+			if (manager.value === undefined)
+				return 0;
+			if (schueler_filter.kursid !== undefined)
+				return manager.value.getOfKursAnzahlKollisionen(schueler_filter.kursid);
+			return manager.value.getMengeDerSchuelerMitKollisionen().size();
 		});
 
 	const blockungsergebnisse: ComputedRef<Map<GostBlockungKurs, GostBlockungsergebnisKurs[]>> =
@@ -168,12 +165,11 @@
 	const filter_kollision: WritableComputedRef<boolean> =
 		computed({
 		get(): boolean {
-			return !!schueler_filter.kollision;
+			return schueler_filter.kollisionsfilter;
 		},
 		set(value: boolean) {
-			const filterValue = schueler_filter;
-			filterValue.kollision = value ? schueler_kollisionen.value : undefined;
-			app.listAbiturjahrgangSchueler.filter = filterValue;
+			schueler_filter.kollisionsfilter = value;
+			app.listAbiturjahrgangSchueler.filter = schueler_filter;
 		}
 	});
 

@@ -22,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-	import { GostBlockungRegel, GostKursblockungRegelTyp, List, SchuelerListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
+	import { GostBlockungRegel, GostBlockungsergebnisManager, GostKursblockungRegelTyp, List, SchuelerListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
 	import { ComputedRef, computed } from "vue";
 
 	import { injectMainApp, Main } from "~/apps/Main";
@@ -32,12 +32,24 @@
 			type: SchuelerListeEintrag,
 			required: true
 		},
-		kollision: { type: Boolean, required: true },
 		selected: { type: Boolean, required: true }
 	});
 
 	const main: Main = injectMainApp();
 	const app = main.apps.gost;
+	
+	const manager: ComputedRef<GostBlockungsergebnisManager | undefined> =
+		computed(() => app.dataKursblockung.ergebnismanager);
+
+	const kollision: ComputedRef<boolean> =
+		computed(()=> {
+			if (manager.value === undefined)
+				return false;
+			const kursid = app.listAbiturjahrgangSchueler.filter.kursid;
+			if (kursid === undefined)
+				return manager.value.getOfSchuelerHatKollision(schueler.id);
+			return manager.value.getOfKursSchuelermengeMitKollisionen(kursid).contains(schueler.id);
+		});
 
 	const selected_kurs: ComputedRef<boolean> =
 		computed(()=> app.dataKursblockungsergebnis.active_kurs?.value ? true : false)
