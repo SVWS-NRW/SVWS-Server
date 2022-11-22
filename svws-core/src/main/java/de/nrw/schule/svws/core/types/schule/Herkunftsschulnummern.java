@@ -43,9 +43,9 @@ public enum Herkunftsschulnummern {
 		new HerkunftsschulnummerKatalogEintrag(999006000L, 999006, "Schule aus Hessen", null, null, null)
 	}),
 
-	/** Herkunft Schulnummer : Schule aus Rheinlandpfalz */
+	/** Herkunft Schulnummer : Schule aus Rheinland-Pfalz */
 	RHEINLANDPFALZ(new HerkunftsschulnummerKatalogEintrag[] {
-		new HerkunftsschulnummerKatalogEintrag(999007000L, 999007, "Schule aus Rheinlandpfalz", null, null, null)
+		new HerkunftsschulnummerKatalogEintrag(999007000L, 999007, "Schule aus Rheinland-Pfalz", null, null, null)
 	}),
 
 	/** Herkunft Schulnummer : Schule aus Baden-Württemberg */
