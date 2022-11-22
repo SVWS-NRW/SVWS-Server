@@ -245,7 +245,7 @@ task cleanTsLib(type: Delete) {
 }
 
 task cleanUIComponents(type: Delete) {
-	delete 'src/ui-component/ts/dist'
+	delete 'src/ui-components/ts/dist'
 }
 
 task cleanWebClient(type: Delete) {
@@ -257,7 +257,7 @@ clean.dependsOn cleanUIComponents
 clean.dependsOn cleanWebClient
 
 
-task publishTsLib(type: NpmPublish) {
+task publishNexusTsLib(type: NpmPublish) {
 	dependsOn assembleTSLib
 	group "publishing"
 	workingDir = file("$projectDir/src/ts-lib/ts")
@@ -265,6 +265,28 @@ task publishTsLib(type: NpmPublish) {
 	actor = project.ext.getNexusActor()
 	token = project.ext.getNexusToken()
 }
+
+task publishNexusUiComponents(type: NpmPublish) {
+	dependsOn assembleUIComponents
+	group "publishing"
+	workingDir = file("$projectDir/src/ui-components/ts")
+	repository = "https://artifactory.svws-nrw.de/repository/npm-private/"
+	actor = project.ext.getNexusActor()
+	token = project.ext.getNexusToken()
+}
+
+task publishNexusWebClient(type: NpmPublish) {
+	dependsOn assembleWebClient
+	group "publishing"
+	workingDir = file("$projectDir/src/webclient/ts")
+	repository = "https://artifactory.svws-nrw.de/repository/npm-private/"
+	actor = project.ext.getNexusActor()
+	token = project.ext.getNexusToken()
+}
+
+publishReleaseAll.dependsOn publishNexusTsLib
+publishReleaseAll.dependsOn publishNexusUiComponents
+publishReleaseAll.dependsOn publishNexusWebClient
 
 
 publishing {
