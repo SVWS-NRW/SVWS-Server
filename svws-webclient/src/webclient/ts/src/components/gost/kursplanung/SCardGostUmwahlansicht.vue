@@ -7,16 +7,19 @@
 					<svws-ui-checkbox v-model="filter_kollision" class="px-4">
 						Nur Kollisionen ({{Object.values(schueler_kollisionen).length}}/{{schueler?.length || 0}})
 					</svws-ui-checkbox>
-					<template v-if="aktiver_kurs">
+<!--					<svws-ui-checkbox v-model="kursfilter" class="px-4"> Kursfilter: {{aktiver_kursname}} </svws-ui-checkbox>
+-->	
+					<template v-if="kursfilter">
 						<div>
 							<svws-ui-checkbox
-								v-if="aktiver_kurs"
+								v-if="kursfilter"
 								v-model="filter_negiert" class="px-4"
 							>
 								Nicht in diesem Kurs
 							</svws-ui-checkbox>
 						</div>
-						<div class="px-4 font-bold"> Kursansicht {{aktiver_kursname}} </div>
+						<div class="px-4 font-bold"> Kursansicht {{aktiver_kursname}} 
+						</div>
 					</template>
 					<svws-ui-text-input v-model="filter_name" type="search" placeholder="Suche nach Namen">
 						<i-ri-search-line />
@@ -94,6 +97,7 @@
 
 	const main: Main = injectMainApp();
 	const app = main.apps.gost;
+	const schueler_filter = app.listAbiturjahrgangSchueler.filter;
 
 	const is_dragging: Ref<boolean> = ref(false)
 
@@ -125,13 +129,10 @@
 			}
 		});
 
-	const aktiver_kurs: ComputedRef<GostBlockungsergebnisKurs|undefined> =
-		computed(()=>app.dataKursblockungsergebnis.active_kurs.value)
+	const kursfilter: ComputedRef<boolean> = computed(() => schueler_filter.kursid !== undefined)
 
 	const aktiver_kursname: ComputedRef<String | undefined> =
-		computed(()=> app.dataKursblockungsergebnis.active_kurs.value?.id
-			? manager.value?.getOfKursName(app.dataKursblockungsergebnis.active_kurs.value?.id)
-			: undefined)
+		computed(() => schueler_filter.kursid === undefined ? undefined : manager.value?.getOfKursName(schueler_filter.kursid));
 
 	const schueler_kollisionen: ComputedRef<{ [index: number]: boolean }> =
 		computed(() => {
@@ -181,13 +182,11 @@
 	const filter_kollision: WritableComputedRef<boolean> =
 		computed({
 		get(): boolean {
-			return !!app.listAbiturjahrgangSchueler.filter.kollision;
+			return !!schueler_filter.kollision;
 		},
 		set(value: boolean) {
-			const filterValue = app.listAbiturjahrgangSchueler.filter;
-			filterValue.kollision = value
-				? schueler_kollisionen.value
-				: undefined;
+			const filterValue = schueler_filter;
+			filterValue.kollision = value ? schueler_kollisionen.value : undefined;
 			app.listAbiturjahrgangSchueler.filter = filterValue;
 		}
 	});
@@ -195,13 +194,11 @@
 	const filter_negiert: WritableComputedRef<boolean> =
 		computed({
 		get(): boolean {
-			return !!app.listAbiturjahrgangSchueler.filter.negiert;
+			return !!schueler_filter.negiert;
 		},
 		set(value: boolean) {
-			const filterValue = app.listAbiturjahrgangSchueler.filter;
-			filterValue.negiert = value
-				? schueler_negiert.value
-				: undefined;
+			const filterValue = schueler_filter;
+			filterValue.negiert = value ? schueler_negiert.value : undefined;
 			app.listAbiturjahrgangSchueler.filter = filterValue;
 		}
 	});
@@ -212,7 +209,7 @@
 			return app.listAbiturjahrgangSchueler?.filter?.name;
 		},
 		set(value: string) {
-			const filter = app.listAbiturjahrgangSchueler.filter;
+			const filter = schueler_filter;
 			filter.name = value;
 			app.listAbiturjahrgangSchueler.filter = filter;
 		}

@@ -298,6 +298,7 @@ const fixieren_regel_hinzufuegen = async () => {
 	regel.parameter.set(1, schiene.nummer)
 	await regel_speichern(regel)
 }
+
 const fixieren_regel_entfernen = async () => {
 	if (!fixier_regeln.value) return
 	for (const regel of fixier_regeln.value)
@@ -317,12 +318,14 @@ const sperren_regel_hinzufuegen = async (nummer: number) => {
 	regel.parameter.set(1, nummer)
 	await regel_speichern(regel)
 }
+
 const sperren_regel_entfernen = async (nummer: number) => {
 	if (!sperr_regeln.value.length) return
 	const regel = sperr_regeln.value.find(r=>r.parameter.get(1) === nummer)
 	if (!regel) return
 	await app.dataKursblockung.del_blockung_regel(regel.id)
 }
+
 function drop_aendere_kursschiene(drag_data: {kurs: GostBlockungsergebnisKurs; schiene: GostBlockungSchiene}, schiene_id: number) {
 	if (!drag_data.kurs || !drag_data.schiene) return
 	if (drag_data.kurs.id === kurs_blockungsergebnis.value?.id && schiene_id !== drag_data.schiene.id) {
@@ -332,29 +335,23 @@ function drop_aendere_kursschiene(drag_data: {kurs: GostBlockungsergebnisKurs; s
 		// fixieren_regel_hinzufuegen()
 	}
 }
+
 async function add_kurs() {
 	await app.dataKursblockung.add_blockung_kurse(props.kurs.fach_id, props.kurs.kursart)
 }
+
 function del_kurs() {
 	app.dataKursblockung.del_blockung_kurse(props.kurs.fach_id, props.kurs.kursart)
 }
 
 function toggle_active_kurs() {
 	const filterValue = app.listAbiturjahrgangSchueler.filter;
-	if (app.dataKursblockungsergebnis.active_kurs.value === kurs_blockungsergebnis.value) {
-		app.dataKursblockungsergebnis.active_kurs.value = undefined
-		filterValue.kurs = undefined
-	} else {
-		app.dataKursblockungsergebnis.active_kurs.value = kurs_blockungsergebnis.value
-		const schueler: { [index: number]: boolean } = {};
-		if (kurs_blockungsergebnis.value)
-			for (const id of kurs_blockungsergebnis.value.schueler)
-				schueler[id.valueOf()] = true;
-		filterValue.kurs = schueler
-	}
+	filterValue.kursid = (filterValue.kursid === kurs_blockungsergebnis.value?.id) ? undefined :  kurs_blockungsergebnis.value?.id;
 	app.listAbiturjahrgangSchueler.filter = filterValue;
 }
+
 function kurs_schiene_zugeordnet(schiene: GostBlockungsergebnisSchiene): boolean {
 	return manager.value?.getOfKursOfSchieneIstZugeordnet(props.kurs.id, schiene.id) || false
 }
+
 </script>
