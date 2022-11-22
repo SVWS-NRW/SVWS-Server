@@ -21,7 +21,7 @@ class NodePlugin implements Plugin<Project> {
 		def cfg = project.extensions.create('nodeconfig', NodePluginConfig, project);
  
  		// Füge Tasks als globale Typen für gradle hinzu
-		[ NpmGlobalInstall.class, NpmInstall.class, NpmRun.class, NpmTask.class, NpxTask.class, PnpmTask.class, PnpxTask.class ].each { 
+		[ NpmGlobalInstall.class, NpmInstall.class, NpmRun.class, NpmPublish.class, NpmTask.class, NpxTask.class, PnpmTask.class, PnpxTask.class ].each { 
 			clazz -> this.project.extensions.extraProperties[clazz.getSimpleName()] = clazz;
 		};
         

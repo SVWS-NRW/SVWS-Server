@@ -245,16 +245,26 @@ task cleanTsLib(type: Delete) {
 }
 
 task cleanUIComponents(type: Delete) {
-	delete 'src/ts-lib/ts/dist'
+	delete 'src/ui-component/ts/dist'
 }
 
 task cleanWebClient(type: Delete) {
-	delete 'src/ts-lib/ts/dist'
+	delete 'src/webclient/ts/dist'
 }
 
 clean.dependsOn cleanTsLib
 clean.dependsOn cleanUIComponents
 clean.dependsOn cleanWebClient
+
+
+task publishTsLib(type: NpmPublish) {
+	dependsOn assembleTSLib
+	group "publishing"
+	workingDir = file("$projectDir/src/ts-lib/ts")
+	repository = "https://artifactory.svws-nrw.de/repository/npm-private/"
+	actor = project.ext.getNexusActor()
+	token = project.ext.getNexusToken()
+}
 
 
 publishing {
