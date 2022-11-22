@@ -21,7 +21,7 @@ export class PersonalTyp extends JavaObject {
 
 	public static readonly SEKRETARIAT : PersonalTyp = new PersonalTyp("SEKRETARIAT", 1, 2, "SEKRETARIAT", "Sekretär/Sekretärin", null, null);
 
-	public static readonly PERSONAL : PersonalTyp = new PersonalTyp("PERSONAL", 2, 3, "PERSONAL", "Weiteres Personal", null, null);
+	public static readonly PERSONAL : PersonalTyp = new PersonalTyp("PERSONAL", 2, 3, "PERSONAL", "Angestelltes Personal ohne Identnummer", null, null);
 
 	public static readonly EXTERN : PersonalTyp = new PersonalTyp("EXTERN", 3, 4, "EXTERN", "Externe Lehrkraft, z.B. abgeordnet oder im Rahmen einer Kooperation", null, null);
 

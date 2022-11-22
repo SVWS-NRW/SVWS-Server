@@ -53,8 +53,7 @@ public class DataLehrerPersonaldaten extends DataManager<Long> {
 		daten.rechtsverhaeltnis = lehrer.Rechtsverhaeltnis;
 		daten.beschaeftigungsart = lehrer.Beschaeftigungsart;
 		daten.einsatzstatus = lehrer.Einsatzstatus;
-		daten.stammschulnummer = lehrer.StammschulNr;
-		daten.masernImpfnachweis = lehrer.MasernImpfnachweis;
+		daten.stammschulnummer = lehrer.StammschulNr;		
 		return daten;
 	};
 
@@ -116,7 +115,6 @@ public class DataLehrerPersonaldaten extends DataManager<Long> {
 		    			case "einsatzstatus" -> lehrer.Einsatzstatus = JSONMapper.convertToString(value, true, true);   // TODO Katalog prüfen ...
 
 		    			case "stammschulnummer" -> lehrer.StammschulNr = JSONMapper.convertToString(value, true, false);
-		    			case "hatMasernimpfnachweis" -> lehrer.MasernImpfnachweis = JSONMapper.convertToBoolean(value, false);
 
 		    			default -> throw OperationError.BAD_REQUEST.exception();
 		    		}

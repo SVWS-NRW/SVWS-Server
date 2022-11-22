@@ -1,7 +1,6 @@
 package de.nrw.schule.svws.db.dto.rev8.schild.lehrer;
 
 import de.nrw.schule.svws.db.DBEntityManager;
-import de.nrw.schule.svws.db.converter.current.BooleanPlusMinusDefaultMinusConverter;
 import de.nrw.schule.svws.db.converter.current.BooleanPlusMinusDefaultPlusConverter;
 import de.nrw.schule.svws.db.converter.current.DatumConverter;
 import de.nrw.schule.svws.db.converter.current.GeschlechtConverterFromString;
@@ -25,8 +24,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import de.nrw.schule.svws.csv.converter.current.BooleanPlusMinusDefaultMinusConverterSerializer;
-import de.nrw.schule.svws.csv.converter.current.BooleanPlusMinusDefaultMinusConverterDeserializer;
 import de.nrw.schule.svws.csv.converter.current.BooleanPlusMinusDefaultPlusConverterSerializer;
 import de.nrw.schule.svws.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDeserializer;
 import de.nrw.schule.svws.csv.converter.current.DatumConverterSerializer;
@@ -131,8 +128,6 @@ import de.nrw.schule.svws.csv.converter.current.PersonalTypConverterDeserializer
 @NamedQuery(name="Rev8DTOLehrer.einsatzstatus.multiple", query="SELECT e FROM Rev8DTOLehrer e WHERE e.Einsatzstatus IN :value")
 @NamedQuery(name="Rev8DTOLehrer.stammschulnr", query="SELECT e FROM Rev8DTOLehrer e WHERE e.StammschulNr = :value")
 @NamedQuery(name="Rev8DTOLehrer.stammschulnr.multiple", query="SELECT e FROM Rev8DTOLehrer e WHERE e.StammschulNr IN :value")
-@NamedQuery(name="Rev8DTOLehrer.masernimpfnachweis", query="SELECT e FROM Rev8DTOLehrer e WHERE e.MasernImpfnachweis = :value")
-@NamedQuery(name="Rev8DTOLehrer.masernimpfnachweis.multiple", query="SELECT e FROM Rev8DTOLehrer e WHERE e.MasernImpfnachweis IN :value")
 @NamedQuery(name="Rev8DTOLehrer.unterrichtsstd", query="SELECT e FROM Rev8DTOLehrer e WHERE e.UnterrichtsStd = :value")
 @NamedQuery(name="Rev8DTOLehrer.unterrichtsstd.multiple", query="SELECT e FROM Rev8DTOLehrer e WHERE e.UnterrichtsStd IN :value")
 @NamedQuery(name="Rev8DTOLehrer.mehrleistungstd", query="SELECT e FROM Rev8DTOLehrer e WHERE e.MehrleistungStd = :value")
@@ -169,7 +164,7 @@ import de.nrw.schule.svws.csv.converter.current.PersonalTypConverterDeserializer
 @NamedQuery(name="Rev8DTOLehrer.credentialid.multiple", query="SELECT e FROM Rev8DTOLehrer e WHERE e.CredentialID IN :value")
 @NamedQuery(name="Rev8DTOLehrer.primaryKeyQuery", query="SELECT e FROM Rev8DTOLehrer e WHERE e.ID = ?1")
 @NamedQuery(name="Rev8DTOLehrer.all.migration", query="SELECT e FROM Rev8DTOLehrer e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","GU_ID","Kuerzel","kuerzelLID","Nachname","Vorname","PersonTyp","Sortierung","Sichtbar","Aenderbar","FuerExport","statistikRelevant","Strassenname","HausNr","HausNrZusatz","Ort_ID","Ortsteil_ID","telefon","telefonMobil","eMailPrivat","eMailDienstlich","staatsangehoerigkeit","Geburtsdatum","Geschlecht","Anrede","Amtsbezeichnung","Titel","Faecher","identNrTeil1","identNrTeil2SerNr","PANr","personalNrLBV","verguetungsSchluessel","DatumZugang","GrundZugang","DatumAbgang","GrundAbgang","PflichtstdSoll","Rechtsverhaeltnis","Beschaeftigungsart","Einsatzstatus","StammschulNr","MasernImpfnachweis","UnterrichtsStd","MehrleistungStd","EntlastungStd","AnrechnungStd","RestStd","LPassword","PWAktuell","SchILDweb_FL","SchILDweb_KL","SchILDweb_Config","KennwortTools","Antwort1","Antwort2","KennwortToolsAktuell","XNMPassword","XNMPassword2","CredentialID"})
+@JsonPropertyOrder({"ID","GU_ID","Kuerzel","kuerzelLID","Nachname","Vorname","PersonTyp","Sortierung","Sichtbar","Aenderbar","FuerExport","statistikRelevant","Strassenname","HausNr","HausNrZusatz","Ort_ID","Ortsteil_ID","telefon","telefonMobil","eMailPrivat","eMailDienstlich","staatsangehoerigkeit","Geburtsdatum","Geschlecht","Anrede","Amtsbezeichnung","Titel","Faecher","identNrTeil1","identNrTeil2SerNr","PANr","personalNrLBV","verguetungsSchluessel","DatumZugang","GrundZugang","DatumAbgang","GrundAbgang","PflichtstdSoll","Rechtsverhaeltnis","Beschaeftigungsart","Einsatzstatus","StammschulNr","UnterrichtsStd","MehrleistungStd","EntlastungStd","AnrechnungStd","RestStd","LPassword","PWAktuell","SchILDweb_FL","SchILDweb_KL","SchILDweb_Config","KennwortTools","Antwort1","Antwort2","KennwortToolsAktuell","XNMPassword","XNMPassword2","CredentialID"})
 public class Rev8DTOLehrer {
 
 	/** Eindeutige ID zur Kennzeichnung des Lehrer-Datensatzes */
@@ -413,14 +408,6 @@ public class Rev8DTOLehrer {
 	@JsonProperty
 	public String StammschulNr;
 
-	/** Gibt an, ob ein Nachweis über die Masern-Impfung erbracht wurde */
-	@Column(name = "MasernImpfnachweis")
-	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultMinusConverterDeserializer.class)
-	public Boolean MasernImpfnachweis;
-
 	/** Berechnetes Feld: Die Anzahl der unterrichteten Stunden */
 	@Column(name = "UnterrichtsStd")
 	@JsonProperty
@@ -574,7 +561,7 @@ public class Rev8DTOLehrer {
 	 */
 	@Override
 	public String toString() {
-		return "Rev8DTOLehrer(ID=" + this.ID + ", GU_ID=" + this.GU_ID + ", Kuerzel=" + this.Kuerzel + ", kuerzelLID=" + this.kuerzelLID + ", Nachname=" + this.Nachname + ", Vorname=" + this.Vorname + ", PersonTyp=" + this.PersonTyp + ", Sortierung=" + this.Sortierung + ", Sichtbar=" + this.Sichtbar + ", Aenderbar=" + this.Aenderbar + ", FuerExport=" + this.FuerExport + ", statistikRelevant=" + this.statistikRelevant + ", Strassenname=" + this.Strassenname + ", HausNr=" + this.HausNr + ", HausNrZusatz=" + this.HausNrZusatz + ", Ort_ID=" + this.Ort_ID + ", Ortsteil_ID=" + this.Ortsteil_ID + ", telefon=" + this.telefon + ", telefonMobil=" + this.telefonMobil + ", eMailPrivat=" + this.eMailPrivat + ", eMailDienstlich=" + this.eMailDienstlich + ", staatsangehoerigkeit=" + this.staatsangehoerigkeit + ", Geburtsdatum=" + this.Geburtsdatum + ", Geschlecht=" + this.Geschlecht + ", Anrede=" + this.Anrede + ", Amtsbezeichnung=" + this.Amtsbezeichnung + ", Titel=" + this.Titel + ", Faecher=" + this.Faecher + ", identNrTeil1=" + this.identNrTeil1 + ", identNrTeil2SerNr=" + this.identNrTeil2SerNr + ", PANr=" + this.PANr + ", personalNrLBV=" + this.personalNrLBV + ", verguetungsSchluessel=" + this.verguetungsSchluessel + ", DatumZugang=" + this.DatumZugang + ", GrundZugang=" + this.GrundZugang + ", DatumAbgang=" + this.DatumAbgang + ", GrundAbgang=" + this.GrundAbgang + ", PflichtstdSoll=" + this.PflichtstdSoll + ", Rechtsverhaeltnis=" + this.Rechtsverhaeltnis + ", Beschaeftigungsart=" + this.Beschaeftigungsart + ", Einsatzstatus=" + this.Einsatzstatus + ", StammschulNr=" + this.StammschulNr + ", MasernImpfnachweis=" + this.MasernImpfnachweis + ", UnterrichtsStd=" + this.UnterrichtsStd + ", MehrleistungStd=" + this.MehrleistungStd + ", EntlastungStd=" + this.EntlastungStd + ", AnrechnungStd=" + this.AnrechnungStd + ", RestStd=" + this.RestStd + ", LPassword=" + this.LPassword + ", PWAktuell=" + this.PWAktuell + ", SchILDweb_FL=" + this.SchILDweb_FL + ", SchILDweb_KL=" + this.SchILDweb_KL + ", SchILDweb_Config=" + this.SchILDweb_Config + ", KennwortTools=" + this.KennwortTools + ", Antwort1=" + this.Antwort1 + ", Antwort2=" + this.Antwort2 + ", KennwortToolsAktuell=" + this.KennwortToolsAktuell + ", XNMPassword=" + this.XNMPassword + ", XNMPassword2=" + this.XNMPassword2 + ", CredentialID=" + this.CredentialID + ")";
+		return "Rev8DTOLehrer(ID=" + this.ID + ", GU_ID=" + this.GU_ID + ", Kuerzel=" + this.Kuerzel + ", kuerzelLID=" + this.kuerzelLID + ", Nachname=" + this.Nachname + ", Vorname=" + this.Vorname + ", PersonTyp=" + this.PersonTyp + ", Sortierung=" + this.Sortierung + ", Sichtbar=" + this.Sichtbar + ", Aenderbar=" + this.Aenderbar + ", FuerExport=" + this.FuerExport + ", statistikRelevant=" + this.statistikRelevant + ", Strassenname=" + this.Strassenname + ", HausNr=" + this.HausNr + ", HausNrZusatz=" + this.HausNrZusatz + ", Ort_ID=" + this.Ort_ID + ", Ortsteil_ID=" + this.Ortsteil_ID + ", telefon=" + this.telefon + ", telefonMobil=" + this.telefonMobil + ", eMailPrivat=" + this.eMailPrivat + ", eMailDienstlich=" + this.eMailDienstlich + ", staatsangehoerigkeit=" + this.staatsangehoerigkeit + ", Geburtsdatum=" + this.Geburtsdatum + ", Geschlecht=" + this.Geschlecht + ", Anrede=" + this.Anrede + ", Amtsbezeichnung=" + this.Amtsbezeichnung + ", Titel=" + this.Titel + ", Faecher=" + this.Faecher + ", identNrTeil1=" + this.identNrTeil1 + ", identNrTeil2SerNr=" + this.identNrTeil2SerNr + ", PANr=" + this.PANr + ", personalNrLBV=" + this.personalNrLBV + ", verguetungsSchluessel=" + this.verguetungsSchluessel + ", DatumZugang=" + this.DatumZugang + ", GrundZugang=" + this.GrundZugang + ", DatumAbgang=" + this.DatumAbgang + ", GrundAbgang=" + this.GrundAbgang + ", PflichtstdSoll=" + this.PflichtstdSoll + ", Rechtsverhaeltnis=" + this.Rechtsverhaeltnis + ", Beschaeftigungsart=" + this.Beschaeftigungsart + ", Einsatzstatus=" + this.Einsatzstatus + ", StammschulNr=" + this.StammschulNr + ", UnterrichtsStd=" + this.UnterrichtsStd + ", MehrleistungStd=" + this.MehrleistungStd + ", EntlastungStd=" + this.EntlastungStd + ", AnrechnungStd=" + this.AnrechnungStd + ", RestStd=" + this.RestStd + ", LPassword=" + this.LPassword + ", PWAktuell=" + this.PWAktuell + ", SchILDweb_FL=" + this.SchILDweb_FL + ", SchILDweb_KL=" + this.SchILDweb_KL + ", SchILDweb_Config=" + this.SchILDweb_Config + ", KennwortTools=" + this.KennwortTools + ", Antwort1=" + this.Antwort1 + ", Antwort2=" + this.Antwort2 + ", KennwortToolsAktuell=" + this.KennwortToolsAktuell + ", XNMPassword=" + this.XNMPassword + ", XNMPassword2=" + this.XNMPassword2 + ", CredentialID=" + this.CredentialID + ")";
 	}
 
 }

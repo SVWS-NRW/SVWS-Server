@@ -1,6 +1,5 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
-import { JavaBoolean, cast_java_lang_Boolean } from '../../../java/lang/JavaBoolean';
 import { JavaDouble, cast_java_lang_Double } from '../../../java/lang/JavaDouble';
 
 export class LehrerPersonaldaten extends JavaObject {
@@ -35,8 +34,6 @@ export class LehrerPersonaldaten extends JavaObject {
 
 	public stammschulnummer : String | null = null;
 
-	public masernImpfnachweis : Boolean | null = null;
-
 
 	public constructor() {
 		super();
@@ -66,7 +63,6 @@ export class LehrerPersonaldaten extends JavaObject {
 		result.beschaeftigungsart = typeof obj.beschaeftigungsart === "undefined" ? null : obj.beschaeftigungsart === null ? null : String(obj.beschaeftigungsart);
 		result.einsatzstatus = typeof obj.einsatzstatus === "undefined" ? null : obj.einsatzstatus === null ? null : String(obj.einsatzstatus);
 		result.stammschulnummer = typeof obj.stammschulnummer === "undefined" ? null : obj.stammschulnummer === null ? null : String(obj.stammschulnummer);
-		result.masernImpfnachweis = typeof obj.masernImpfnachweis === "undefined" ? null : obj.masernImpfnachweis === null ? null : Boolean(obj.masernImpfnachweis);
 		return result;
 	}
 
@@ -87,7 +83,6 @@ export class LehrerPersonaldaten extends JavaObject {
 		result += '"beschaeftigungsart" : ' + ((!obj.beschaeftigungsart) ? 'null' : '"' + obj.beschaeftigungsart.valueOf() + '"') + ',';
 		result += '"einsatzstatus" : ' + ((!obj.einsatzstatus) ? 'null' : '"' + obj.einsatzstatus.valueOf() + '"') + ',';
 		result += '"stammschulnummer" : ' + ((!obj.stammschulnummer) ? 'null' : '"' + obj.stammschulnummer.valueOf() + '"') + ',';
-		result += '"masernImpfnachweis" : ' + ((!obj.masernImpfnachweis) ? 'null' : obj.masernImpfnachweis.valueOf()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -139,9 +134,6 @@ export class LehrerPersonaldaten extends JavaObject {
 		}
 		if (typeof obj.stammschulnummer !== "undefined") {
 			result += '"stammschulnummer" : ' + ((!obj.stammschulnummer) ? 'null' : '"' + obj.stammschulnummer.valueOf() + '"') + ',';
-		}
-		if (typeof obj.masernImpfnachweis !== "undefined") {
-			result += '"masernImpfnachweis" : ' + ((!obj.masernImpfnachweis) ? 'null' : obj.masernImpfnachweis.valueOf()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

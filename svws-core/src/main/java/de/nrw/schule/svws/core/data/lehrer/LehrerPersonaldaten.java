@@ -74,9 +74,6 @@ public class LehrerPersonaldaten {
 	@Schema(required = false, description = "Die Schulnummer der Stammschule, sofern diese abweicht.", example="168890")
 	public String stammschulnummer;
 
-	/** Gibt an, ob ein Nachweis über die Masern-Impfung erbracht wurde. */
-	@Schema(required = false, description = "Gibt an, ob ein Nachweis über die Masern-Impfung erbracht wurde.", example="true")
-	public Boolean masernImpfnachweis;
 	
 	// TODO Lehrämter mit Array und weiteren DTO-Klassen
 	

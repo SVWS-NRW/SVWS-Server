@@ -18,8 +18,8 @@ public enum PersonalTyp {
 	/** Verwaltungskraft ohne Identnummer */
 	SEKRETARIAT(2, "SEKRETARIAT", "Sekretär/Sekretärin", null, null),
 	
-	/** Personal (z.B. Sozialarbeiter*in ohne Identnummer */
-	PERSONAL(3, "PERSONAL", "Weiteres Personal", null, null),
+	/** angestelltes Personal (z.B. Sozialarbeiter*in ohne Identnummer */
+	PERSONAL(3, "PERSONAL", "Angestelltes Personal ohne Identnummer", null, null),
 	
 	/** externe Lehrkräfte mit Identnummer von anderen Schulen abgeordnet */
 	EXTERN(4, "EXTERN", "Externe Lehrkraft, z.B. abgeordnet oder im Rahmen einer Kooperation", null, null),

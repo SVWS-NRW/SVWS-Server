@@ -237,12 +237,6 @@ public class Tabelle_K_Lehrer extends SchemaTabelle {
 	public SchemaTabelleSpalte col_StammschulNr = add("StammschulNr", SchemaDatentypen.VARCHAR, false).setDatenlaenge(6)
 		.setJavaComment("Die Schulnummer der Stammschule, sofern diese abweicht");
 
-	/** Die Definition der Tabellenspalte MasernImpfnachweis */
-	public SchemaTabelleSpalte col_MasernImpfnachweis = add("MasernImpfnachweis", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
-		.setDefault("-")
-		.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
-		.setJavaComment("Gibt an, ob ein Nachweis über die Masern-Impfung erbracht wurde");
-
 	/** Die Definition der Tabellenspalte UnterrichtsStd */
 	public SchemaTabelleSpalte col_UnterrichtsStd = add("UnterrichtsStd", SchemaDatentypen.FLOAT, false)
 		.setJavaComment("Berechnetes Feld: Die Anzahl der unterrichteten Stunden");
