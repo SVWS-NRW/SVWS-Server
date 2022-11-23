@@ -12,10 +12,10 @@ public class Rev8DTOGostJahrgangFaecherPK implements Serializable {
 	/** Die UID für diese Klasse */
 	private static final long serialVersionUID = 1L;
 
-	/** Gymnasiale Oberstufe - Jahrgangsdaten: Schuljahr, in welchem der Jahrgang das Abitur macht */
+	/** Schuljahr, in welchem der Jahrgang das Abitur macht */
 	public Integer Abi_Jahrgang;
 
-	/** Gymnasiale Oberstufe - Jahrgangsdaten: ID des Faches in der Fächertabelle */
+	/** ID des Faches in der Fächertabelle */
 	public Long Fach_ID;
 
 	/**

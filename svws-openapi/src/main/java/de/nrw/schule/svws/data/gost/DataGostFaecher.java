@@ -136,8 +136,6 @@ public class DataGostFaecher extends DataManager<Long> {
 			    				// TODO Prüfe, ob die Wochenstunden bei dem Fach gesetzt werden dürfen (z.B. PJK) sonst: throw OperationError.BAD_REQUEST.exception();  
 			    				fach.WochenstundenQualifikationsphase = JSONMapper.convertToInteger(value, false);
 			    			}
-			    			case "mussSchriftlichEF1" -> fach.MussSchriftlichEF1 = JSONMapper.convertToBoolean(value, false);
-			    			case "mussSchriftlichEF2" -> fach.MussSchriftlichEF2 = JSONMapper.convertToBoolean(value, false);
 			    			case "projektKursLeitfach1ID" -> {
 			    				fach.ProjektKursLeitfach1_ID = JSONMapper.convertToLong(value, false);
 			    		    	if ((fach.ProjektKursLeitfach1_ID != null) && (fach.ProjektKursLeitfach1_ID < 0))
@@ -194,8 +192,6 @@ public class DataGostFaecher extends DataManager<Long> {
 			    				// TODO Prüfe, ob die Wochenstunden bei dem Fach gesetzt werden dürfen (z.B. PJK) sonst: throw OperationError.BAD_REQUEST.exception();  
 			    				jf.WochenstundenQPhase = JSONMapper.convertToInteger(value, false);
 			    			}
-			    			case "mussSchriftlichEF1" -> jf.SchiftlichkeitEF1 = JSONMapper.convertToBoolean(value, false) ? "J" : "N";
-			    			case "mussSchriftlichEF2" -> jf.SchiftlichkeitEF2 = JSONMapper.convertToBoolean(value, false) ? "J" : "N";
 			    			case "projektKursLeitfach1ID" -> throw OperationError.BAD_REQUEST.exception();
 			    			case "projektKursLeitfach2ID" -> throw OperationError.BAD_REQUEST.exception();
 			    			case "projektKursLeitfach1Kuerzel" -> throw OperationError.BAD_REQUEST.exception();  

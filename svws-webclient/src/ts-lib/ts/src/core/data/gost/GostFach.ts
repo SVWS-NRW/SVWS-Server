@@ -36,15 +36,7 @@ export class GostFach extends JavaObject {
 
 	public istMoeglichQ22 : boolean = false;
 
-	public wochenstundenEF1 : number = 3;
-
-	public wochenstundenEF2 : number = 3;
-
 	public wochenstundenQualifikationsphase : number = 3;
-
-	public mussSchriftlichEF1 : boolean = false;
-
-	public mussSchriftlichEF2 : boolean = false;
 
 	public projektKursLeitfach1ID : Number | null = null;
 
@@ -108,21 +100,9 @@ export class GostFach extends JavaObject {
 		if (typeof obj.istMoeglichQ22 === "undefined")
 			 throw new Error('invalid json format, missing attribute istMoeglichQ22');
 		result.istMoeglichQ22 = obj.istMoeglichQ22;
-		if (typeof obj.wochenstundenEF1 === "undefined")
-			 throw new Error('invalid json format, missing attribute wochenstundenEF1');
-		result.wochenstundenEF1 = obj.wochenstundenEF1;
-		if (typeof obj.wochenstundenEF2 === "undefined")
-			 throw new Error('invalid json format, missing attribute wochenstundenEF2');
-		result.wochenstundenEF2 = obj.wochenstundenEF2;
 		if (typeof obj.wochenstundenQualifikationsphase === "undefined")
 			 throw new Error('invalid json format, missing attribute wochenstundenQualifikationsphase');
 		result.wochenstundenQualifikationsphase = obj.wochenstundenQualifikationsphase;
-		if (typeof obj.mussSchriftlichEF1 === "undefined")
-			 throw new Error('invalid json format, missing attribute mussSchriftlichEF1');
-		result.mussSchriftlichEF1 = obj.mussSchriftlichEF1;
-		if (typeof obj.mussSchriftlichEF2 === "undefined")
-			 throw new Error('invalid json format, missing attribute mussSchriftlichEF2');
-		result.mussSchriftlichEF2 = obj.mussSchriftlichEF2;
 		result.projektKursLeitfach1ID = typeof obj.projektKursLeitfach1ID === "undefined" ? null : obj.projektKursLeitfach1ID === null ? null : Number(obj.projektKursLeitfach1ID);
 		result.projektKursLeitfach1Kuerzel = typeof obj.projektKursLeitfach1Kuerzel === "undefined" ? null : obj.projektKursLeitfach1Kuerzel === null ? null : String(obj.projektKursLeitfach1Kuerzel);
 		result.projektKursLeitfach2ID = typeof obj.projektKursLeitfach2ID === "undefined" ? null : obj.projektKursLeitfach2ID === null ? null : Number(obj.projektKursLeitfach2ID);
@@ -148,11 +128,7 @@ export class GostFach extends JavaObject {
 		result += '"istMoeglichQ12" : ' + obj.istMoeglichQ12 + ',';
 		result += '"istMoeglichQ21" : ' + obj.istMoeglichQ21 + ',';
 		result += '"istMoeglichQ22" : ' + obj.istMoeglichQ22 + ',';
-		result += '"wochenstundenEF1" : ' + obj.wochenstundenEF1 + ',';
-		result += '"wochenstundenEF2" : ' + obj.wochenstundenEF2 + ',';
 		result += '"wochenstundenQualifikationsphase" : ' + obj.wochenstundenQualifikationsphase + ',';
-		result += '"mussSchriftlichEF1" : ' + obj.mussSchriftlichEF1 + ',';
-		result += '"mussSchriftlichEF2" : ' + obj.mussSchriftlichEF2 + ',';
 		result += '"projektKursLeitfach1ID" : ' + ((!obj.projektKursLeitfach1ID) ? 'null' : obj.projektKursLeitfach1ID.valueOf()) + ',';
 		result += '"projektKursLeitfach1Kuerzel" : ' + ((!obj.projektKursLeitfach1Kuerzel) ? 'null' : '"' + obj.projektKursLeitfach1Kuerzel.valueOf() + '"') + ',';
 		result += '"projektKursLeitfach2ID" : ' + ((!obj.projektKursLeitfach2ID) ? 'null' : obj.projektKursLeitfach2ID.valueOf()) + ',';
@@ -212,20 +188,8 @@ export class GostFach extends JavaObject {
 		if (typeof obj.istMoeglichQ22 !== "undefined") {
 			result += '"istMoeglichQ22" : ' + obj.istMoeglichQ22 + ',';
 		}
-		if (typeof obj.wochenstundenEF1 !== "undefined") {
-			result += '"wochenstundenEF1" : ' + obj.wochenstundenEF1 + ',';
-		}
-		if (typeof obj.wochenstundenEF2 !== "undefined") {
-			result += '"wochenstundenEF2" : ' + obj.wochenstundenEF2 + ',';
-		}
 		if (typeof obj.wochenstundenQualifikationsphase !== "undefined") {
 			result += '"wochenstundenQualifikationsphase" : ' + obj.wochenstundenQualifikationsphase + ',';
-		}
-		if (typeof obj.mussSchriftlichEF1 !== "undefined") {
-			result += '"mussSchriftlichEF1" : ' + obj.mussSchriftlichEF1 + ',';
-		}
-		if (typeof obj.mussSchriftlichEF2 !== "undefined") {
-			result += '"mussSchriftlichEF2" : ' + obj.mussSchriftlichEF2 + ',';
 		}
 		if (typeof obj.projektKursLeitfach1ID !== "undefined") {
 			result += '"projektKursLeitfach1ID" : ' + ((!obj.projektKursLeitfach1ID) ? 'null' : obj.projektKursLeitfach1ID.valueOf()) + ',';

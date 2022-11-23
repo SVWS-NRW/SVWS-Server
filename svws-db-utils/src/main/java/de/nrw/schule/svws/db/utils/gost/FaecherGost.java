@@ -49,13 +49,8 @@ public class FaecherGost {
 		eintrag.istMoeglichQ12 = fach.IstMoeglichQ12;
 		eintrag.istMoeglichQ21 = fach.IstMoeglichQ21;
 		eintrag.istMoeglichQ22 = fach.IstMoeglichQ22;
-		int defaultWochenstundenEF = (fach.StatistikFach.getFachgruppe() == Fachgruppe.FG_VX ? 2 : 3);
-		int defaultWochenstundenQ = (Jahrgaenge.JG_EF == fach.StatistikFach.getJahrgangAb() ? 4 : defaultWochenstundenEF);
-		eintrag.wochenstundenEF1 = fach.WochenstundenEF1 == null ? defaultWochenstundenEF : fach.WochenstundenEF1;
-		eintrag.wochenstundenEF2 = fach.WochenstundenEF2 == null ? defaultWochenstundenEF : fach.WochenstundenEF2;
+		int defaultWochenstundenQ = (Jahrgaenge.JG_EF == fach.StatistikFach.getJahrgangAb() ? 4 : (fach.StatistikFach.getFachgruppe() == Fachgruppe.FG_VX ? 2 : 3));
 		eintrag.wochenstundenQualifikationsphase = fach.WochenstundenQualifikationsphase == null ? defaultWochenstundenQ : fach.WochenstundenQualifikationsphase;
-		eintrag.mussSchriftlichEF1 = fach.MussSchriftlichEF1;
-		eintrag.mussSchriftlichEF2 = fach.MussSchriftlichEF2;			
 		eintrag.projektKursLeitfach1ID = fach.ProjektKursLeitfach1_ID;
 		if (fach.ProjektKursLeitfach1_ID == null) {
 			eintrag.projektKursLeitfach1Kuerzel = null;
@@ -105,13 +100,8 @@ public class FaecherGost {
 		eintrag.istMoeglichQ12 = jf.WaehlbarQ12;
 		eintrag.istMoeglichQ21 = jf.WaehlbarQ21;
 		eintrag.istMoeglichQ22 = jf.WaehlbarQ22;
-		int defaultWochenstundenEF = (fach.StatistikFach.getFachgruppe() == Fachgruppe.FG_VX ? 2 : 3);
-		int defaultWochenstundenQ = (Jahrgaenge.JG_EF == fach.StatistikFach.getJahrgangAb() ? 4 : defaultWochenstundenEF);
-		eintrag.wochenstundenEF1 = jf.WochenstundenEF1 == null ? defaultWochenstundenEF : jf.WochenstundenEF1;
-		eintrag.wochenstundenEF2 = jf.WochenstundenEF2 == null ? defaultWochenstundenEF : jf.WochenstundenEF2;
+		int defaultWochenstundenQ = (Jahrgaenge.JG_EF == fach.StatistikFach.getJahrgangAb() ? 4 : (fach.StatistikFach.getFachgruppe() == Fachgruppe.FG_VX ? 2 : 3));
 		eintrag.wochenstundenQualifikationsphase = jf.WochenstundenQPhase == null ? defaultWochenstundenQ : jf.WochenstundenQPhase;
-		eintrag.mussSchriftlichEF1 = "J".equals(jf.SchiftlichkeitEF1);
-		eintrag.mussSchriftlichEF2 = "J".equals(jf.SchiftlichkeitEF2);			
 		eintrag.projektKursLeitfach1ID = fach.ProjektKursLeitfach1_ID;
 		eintrag.projektKursLeitfach1Kuerzel = fach.ProjektKursLeitfach1_ID == null ? null : faecher.get(fach.ProjektKursLeitfach1_ID).StatistikFach.daten.kuerzelASD;
 		eintrag.projektKursLeitfach2ID = fach.ProjektKursLeitfach2_ID;

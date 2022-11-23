@@ -308,11 +308,11 @@
 								</tr>
 							</thead>
 							<tbody>
-						<tr v-for="pruefung in app.dataGostLaufbahndaten?.daten?.sprachendaten.pruefungen" :key="pruefung.sprache" class="border bottom-1  border-[#7f7f7f]/20">
+						<tr v-for="pruefung in app.dataGostLaufbahndaten?.daten?.sprachendaten.pruefungen" :key="pruefung.sprache?.valueOf()" class="border bottom-1  border-[#7f7f7f]/20">
 							<td class="px-2">{{pruefung.sprache}}</td>
 							<td class="px-2">{{pruefung.istHSUPruefung ? "HSU":''}}{{pruefung.istFeststellungspruefung ? 'SFP':''}}</td>
-							<td class="px-2">{{Sprachpruefungniveau.getByID(pruefung.anspruchsniveauId || null)?.beschreibung}}</td>
-							<td class="px-2">{{pruefung.istHKUPruefung?'–':''}}{{pruefung.kannErstePflichtfremdspracheErsetzen ? 'Erste Fremdsprache':''}}{{pruefung.kannZweitePflichtfremdspracheErsetzen ? 'Zweite Fremdsprache':''}}{{pruefung.kannWahlpflichtfremdspracheErsetzen ? 'Wahlpflichtfremdsprache':''}}</td>
+							<td class="px-2">{{Sprachpruefungniveau.getByID(pruefung.anspruchsniveauId || null)?.daten.beschreibung}}</td>
+							<td class="px-2">{{pruefung.istHSUPruefung?'–':''}}{{pruefung.kannErstePflichtfremdspracheErsetzen ? 'Erste Fremdsprache':''}}{{pruefung.kannZweitePflichtfremdspracheErsetzen ? 'Zweite Fremdsprache':''}}{{pruefung.kannWahlpflichtfremdspracheErsetzen ? 'Wahlpflichtfremdsprache':''}}</td>
 							<td class="text-center">{{pruefung.note}}</td>
 						</tr>
 							</tbody>

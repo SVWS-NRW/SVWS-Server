@@ -146,12 +146,7 @@ public class DataGostJahrgangsliste extends DataManager<Integer> {
 				continue;
 			DTOGostJahrgangFaecher gostFach = new DTOGostJahrgangFaecher(abiturjahr, fach.ID, 
 					fach.IstMoeglichEF1, fach.IstMoeglichEF2, fach.IstMoeglichQ11, fach.IstMoeglichQ12, 
-					fach.IstMoeglichQ21, fach.IstMoeglichQ22,fach.IstMoeglichAbiGK, fach.IstMoeglichAbiLK,
-					fach.MussMuendlich);
-			gostFach.SchiftlichkeitEF1 = fach.MussSchriftlichEF1 ? "J" : "N";
-			gostFach.SchiftlichkeitEF2 = fach.MussSchriftlichEF2 ? "J" : "N";
-			gostFach.WochenstundenEF1 = fach.WochenstundenEF1;
-			gostFach.WochenstundenEF2 = fach.WochenstundenEF2;
+					fach.IstMoeglichQ21, fach.IstMoeglichQ22,fach.IstMoeglichAbiGK, fach.IstMoeglichAbiLK);
 			gostFach.WochenstundenQPhase = fach.WochenstundenQualifikationsphase;
 			gostFaecher.add(gostFach);
 		}

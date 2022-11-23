@@ -678,7 +678,7 @@ export class DataSchuelerLaufbahnplanung extends BaseData<
 				wahl.EF1 = ist_PJK_VTF ? "M" : "S";
 				break;
 			case "S":
-				wahl.EF1 = row.mussSchriftlichEF1 ? null : "M";
+				wahl.EF1 = "M";
 				break;
 			case "M":
 				wahl.EF1 = null;
@@ -709,7 +709,7 @@ export class DataSchuelerLaufbahnplanung extends BaseData<
 				wahl.EF2 = ist_PJK_VTF ? "M" : "S";
 				break;
 			case "S":
-				wahl.EF2 = row.mussSchriftlichEF2 ? null : "M";
+				wahl.EF2 = "M";
 				break;
 			case "M":
 				wahl.EF2 = null;

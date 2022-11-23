@@ -330,11 +330,7 @@ public class LupoMDB {
 			}
 			DTOGostJahrgangFaecher lupoFach = new DTOGostJahrgangFaecher(abiJahrgang, dtoFach.ID,
 					abpFach.E1, abpFach.E2, abpFach.Q1, abpFach.Q2, abpFach.Q3, abpFach.Q4, abpFach.Abi_Moegl,
-					abpFach.LK_Moegl, abpFach.NurMuendlich);
-			lupoFach.WochenstundenEF1 = dtoFach.WochenstundenEF1;
-			lupoFach.WochenstundenEF2 = dtoFach.WochenstundenEF2;
-			lupoFach.SchiftlichkeitEF1 = abpFach.E1_S_M ? "J" : "N";   // TODO Konverter
-			lupoFach.SchiftlichkeitEF2 = abpFach.E2_S_M ? "J" : "N";   // TODO Konverter
+					abpFach.LK_Moegl);
 			lupoFach.WochenstundenQPhase = dtoFach.WochenstundenQualifikationsphase;
 			conn.persist(lupoFach);
 			logger.logLn(0, "OK");
@@ -590,11 +586,7 @@ public class LupoMDB {
 			gostFach.istMoeglichQ21 = lupoFach.Q3;
 			gostFach.istMoeglichQ22 = lupoFach.Q4;
 			
-			gostFach.wochenstundenEF1 = lupoFach.E1_WStd != null ? lupoFach.E1_WStd : ("VX".equals(lupoFach.StatistikKrz) ? 2 : 3);
-			gostFach.wochenstundenEF2 = lupoFach.E2_WStd != null ? lupoFach.E2_WStd : ("VX".equals(lupoFach.StatistikKrz) ? 2 : 3);
 			gostFach.wochenstundenQualifikationsphase = lupoFach.Q_WStd != null ? lupoFach.Q_WStd : ("VX".equals(lupoFach.StatistikKrz) ? 2 : 3);
-			gostFach.mussSchriftlichEF1 = lupoFach.E1_S_M;
-			gostFach.mussSchriftlichEF2 = lupoFach.E2_S_M;
 
 			ABPFaecher leitfach1 = faecher.get(lupoFach.Leitfach);
 			ABPFaecher leitfach2 = faecher.get(lupoFach.Leitfach2);

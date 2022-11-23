@@ -22,8 +22,7 @@ import jakarta.validation.constraints.NotNull;
 	"istMoeglichEF1", "istMoeglichEF2", "istMoeglichQ11", "istMoeglichQ12", 
 	"istMoeglichQ21", "istMoeglichQ22", "istMoeglichAbiLK", "istMoeglichAbiGK", 
 	"wochenstundenEF1", "wochenstundenEF2", "wochenstundenQualifikationsphase", 
-	"mussSchriftlichEF1", "mussSchriftlichEF2", "projektKursLeitfach1ID", 
-	"projektKursLeitfach1Kuerzel", "projektKursLeitfach2ID", "projektKursLeitfach2Kuerzel" })
+	"projektKursLeitfach1ID", "projektKursLeitfach1Kuerzel", "projektKursLeitfach2ID", "projektKursLeitfach2Kuerzel" })
 @TranspilerDTO
 public class GostFach {
 
@@ -76,22 +75,9 @@ public class GostFach {
 
 	/** Gibt an, ob das Fach in der Q2.2 gewählt werden kann. */
 	public boolean istMoeglichQ22 = false;
-	
-	/** Die Wochenstundenzahl des Faches in der EF.1 */
-	public int wochenstundenEF1 = 3;
-
-	/** Die Wochenstundenzahl des Faches in der EF.2 */
-	public int wochenstundenEF2 = 3;
 
 	/** Die Wochenstundenzahl des Faches in der Qualifikationsphase */
 	public int wochenstundenQualifikationsphase = 3;
-
-	/** Gibt an, ob das Fach in der EF.1 schriftlich belegt werden muss */
-	public boolean mussSchriftlichEF1 = false;
-
-	/** Gibt an, ob das Fach in der EF.2 schriftlich belegt werden muss */
-	public boolean mussSchriftlichEF2 = false;
-
 
 	/** Die Fach-ID des Leitfaches eines Projektkurses oder Vertiefungsfaches */
 	public Long projektKursLeitfach1ID = null;
