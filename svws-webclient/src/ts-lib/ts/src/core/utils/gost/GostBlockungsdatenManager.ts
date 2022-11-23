@@ -520,6 +520,8 @@ export class GostBlockungsdatenManager extends JavaObject {
 			throw new NullPointerException("Kurs.wochenstunden = " + pKurs.wochenstunden + " --> zu gering!")
 		this._daten.kurse.add(pKurs);
 		this._mapKurse.put(pKurs.id, pKurs);
+		this._kurse_sortiert_fach_kursart_kursnummer.add(pKurs);
+		this._kurse_sortiert_kursart_fach_kursnummer.add(pKurs);
 	}
 
 	/**
