@@ -11,6 +11,7 @@ import de.nrw.schule.svws.core.data.gost.GostBlockungKurs;
 import de.nrw.schule.svws.core.data.gost.GostBlockungRegel;
 import de.nrw.schule.svws.core.data.gost.GostBlockungSchiene;
 import de.nrw.schule.svws.core.data.gost.GostBlockungsdaten;
+import de.nrw.schule.svws.core.data.gost.GostBlockungsergebnis;
 import de.nrw.schule.svws.core.data.gost.GostBlockungsergebnisListeneintrag;
 import de.nrw.schule.svws.core.data.gost.GostFach;
 import de.nrw.schule.svws.core.data.gost.GostFachwahl;
@@ -496,9 +497,24 @@ public class GostBlockungsdatenManager {
 	public void removeErgebnis(@NotNull GostBlockungsergebnisListeneintrag pErgebnis) {
 		removeErgebnisByID(pErgebnis.id);
 	}
+	
+	/**
+	 * Aktualisiert die Bewertung im {@link GostBlockungsdatenManager} 
+	 * mit der aus dem {@link GostBlockungsergebnisManager}. 
+	 *  
+	 * @param pErgebnis Das Ergebnis mit der neuen Bewertung.
+	 */
+	public void updateErgebnisBewertung(@NotNull GostBlockungsergebnis pErgebnis) {
+		for (@NotNull GostBlockungsergebnisListeneintrag eintrag : _daten.ergebnisse)
+			if (eintrag.id == pErgebnis.id)
+				eintrag.bewertung = pErgebnis.bewertung;
+		
+		// Cache der sortierten Ergebnisse löschen.
+		_ergebnisse_sortiert_nach_bewertung = null;
+	}
 
 	// ##### GostBlockungKurs #####
-	
+
 	/** 
 	 * Fügt den übergebenen Kurs zu der Blockung hinzu
 	 * 

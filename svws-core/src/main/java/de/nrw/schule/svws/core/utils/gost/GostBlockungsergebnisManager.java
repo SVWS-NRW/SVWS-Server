@@ -245,6 +245,9 @@ public class GostBlockungsergebnisManager {
 		
 		// Regelverletzungen überprüfen.
 		stateRegelvalidierung();
+		
+		// Die Bewertung im DatenManager aktualisieren.
+		_parent.updateErgebnisBewertung(_ergebnis);
 	}
 
 	private void stateRegelvalidierung() {

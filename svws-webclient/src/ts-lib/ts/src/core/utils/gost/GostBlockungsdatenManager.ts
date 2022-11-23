@@ -1,28 +1,29 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { GostFach, cast_de_nrw_schule_svws_core_data_gost_GostFach } from '../../../core/data/gost/GostFach';
 import { GostBlockungsergebnisListeneintrag, cast_de_nrw_schule_svws_core_data_gost_GostBlockungsergebnisListeneintrag } from '../../../core/data/gost/GostBlockungsergebnisListeneintrag';
 import { GostFaecherManager, cast_de_nrw_schule_svws_core_utils_gost_GostFaecherManager } from '../../../core/utils/gost/GostFaecherManager';
 import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
-import { GostFachwahl, cast_de_nrw_schule_svws_core_data_gost_GostFachwahl } from '../../../core/data/gost/GostFachwahl';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 import { GostBlockungRegel, cast_de_nrw_schule_svws_core_data_gost_GostBlockungRegel } from '../../../core/data/gost/GostBlockungRegel';
 import { GostKursart, cast_de_nrw_schule_svws_core_types_gost_GostKursart } from '../../../core/types/gost/GostKursart';
 import { Comparator, cast_java_util_Comparator } from '../../../java/util/Comparator';
-import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
 import { GostKursblockungRegelTyp, cast_de_nrw_schule_svws_core_types_kursblockung_GostKursblockungRegelTyp } from '../../../core/types/kursblockung/GostKursblockungRegelTyp';
-import { GostBlockungsdaten, cast_de_nrw_schule_svws_core_data_gost_GostBlockungsdaten } from '../../../core/data/gost/GostBlockungsdaten';
-import { Schueler, cast_de_nrw_schule_svws_core_data_schueler_Schueler } from '../../../core/data/schueler/Schueler';
 import { NullPointerException, cast_java_lang_NullPointerException } from '../../../java/lang/NullPointerException';
-import { GostBlockungSchiene, cast_de_nrw_schule_svws_core_data_gost_GostBlockungSchiene } from '../../../core/data/gost/GostBlockungSchiene';
-import { JavaLong, cast_java_lang_Long } from '../../../java/lang/JavaLong';
 import { GostHalbjahr, cast_de_nrw_schule_svws_core_types_gost_GostHalbjahr } from '../../../core/types/gost/GostHalbjahr';
 import { JavaIterator, cast_java_util_Iterator } from '../../../java/util/JavaIterator';
 import { List, cast_java_util_List } from '../../../java/util/List';
 import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
-import { GostBlockungsergebnisComparator, cast_de_nrw_schule_svws_core_utils_gost_GostBlockungsergebnisComparator } from '../../../core/utils/gost/GostBlockungsergebnisComparator';
 import { IllegalArgumentException, cast_java_lang_IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
 import { GostBlockungKurs, cast_de_nrw_schule_svws_core_data_gost_GostBlockungKurs } from '../../../core/data/gost/GostBlockungKurs';
 import { HashSet, cast_java_util_HashSet } from '../../../java/util/HashSet';
+import { GostFach, cast_de_nrw_schule_svws_core_data_gost_GostFach } from '../../../core/data/gost/GostFach';
+import { GostFachwahl, cast_de_nrw_schule_svws_core_data_gost_GostFachwahl } from '../../../core/data/gost/GostFachwahl';
+import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
+import { GostBlockungsergebnis, cast_de_nrw_schule_svws_core_data_gost_GostBlockungsergebnis } from '../../../core/data/gost/GostBlockungsergebnis';
+import { GostBlockungsdaten, cast_de_nrw_schule_svws_core_data_gost_GostBlockungsdaten } from '../../../core/data/gost/GostBlockungsdaten';
+import { Schueler, cast_de_nrw_schule_svws_core_data_schueler_Schueler } from '../../../core/data/schueler/Schueler';
+import { GostBlockungSchiene, cast_de_nrw_schule_svws_core_data_gost_GostBlockungSchiene } from '../../../core/data/gost/GostBlockungSchiene';
+import { JavaLong, cast_java_lang_Long } from '../../../java/lang/JavaLong';
+import { GostBlockungsergebnisComparator, cast_de_nrw_schule_svws_core_utils_gost_GostBlockungsergebnisComparator } from '../../../core/utils/gost/GostBlockungsergebnisComparator';
 
 export class GostBlockungsdatenManager extends JavaObject {
 
@@ -488,6 +489,19 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public removeErgebnis(pErgebnis : GostBlockungsergebnisListeneintrag) : void {
 		this.removeErgebnisByID(pErgebnis.id);
+	}
+
+	/**
+	 * Aktualisiert die Bewertung im {@link GostBlockungsdatenManager} 
+	 * mit der aus dem {@link GostBlockungsergebnisManager}. 
+	 *  
+	 * @param pErgebnis Das Ergebnis mit der neuen Bewertung.
+	 */
+	public updateErgebnisBewertung(pErgebnis : GostBlockungsergebnis) : void {
+		for (let eintrag of this._daten.ergebnisse) 
+			if (eintrag.id === pErgebnis.id) 
+				eintrag.bewertung = pErgebnis.bewertung;
+		this._ergebnisse_sortiert_nach_bewertung = null;
 	}
 
 	/**
