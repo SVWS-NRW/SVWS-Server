@@ -12,7 +12,7 @@
 		<template #header> </template>
 		<template #content>
 			<div class="container">
-				<svws-ui-new-table
+				<svws-ui-table
 					v-model="selected"
 					:columns="cols"
 					:data="rows"
@@ -26,7 +26,7 @@
 							<svws-ui-icon><i-ri-add-line /></svws-ui-icon>
 						</button>
 					</template>
-				</svws-ui-new-table>
+				</svws-ui-table>
 			</div>
 		</template>
 	</svws-ui-secondary-menu>

@@ -4,7 +4,7 @@
 		<template #header> </template>
 		<template #content>
 			<div class="container">
-				<svws-ui-new-table
+				<svws-ui-table
 					v-model="selected"
 					:columns="cols"
 					:data="rows"

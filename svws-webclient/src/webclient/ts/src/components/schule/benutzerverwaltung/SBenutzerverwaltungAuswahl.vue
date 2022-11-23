@@ -17,7 +17,7 @@
 				</svws-ui-text-input>
 			</div>
 			<div class="pl-3 pt-6 pb-6 container">
-				<svws-ui-new-table v-model="benutzer_ausgewaehlt" :data="benutzer_rows_gefiltert" :columns="benutzer_cols" is-multi-select />
+				<svws-ui-table v-model="benutzer_ausgewaehlt" :data="benutzer_rows_gefiltert" :columns="benutzer_cols" is-multi-select />
 			</div>
 			<!-- Auswahlliste für die Benutzergruppen -->
 			<div class="px-1 pt-3 text-lg font-bold"> Benutzergruppen: </div>
@@ -27,7 +27,7 @@
 				</svws-ui-text-input>
 			</div>
 			<div class="pl-3 pt-6 container">
-				<svws-ui-new-table v-model="benutzergruppen_ausgewaehlt" v-model:selection="benutzergruppen_selection" :data="benutzergruppen_rows_gefiltert" :columns="benutzergruppen_cols" is-multi-select />
+				<svws-ui-table v-model="benutzergruppen_ausgewaehlt" v-model:selection="benutzergruppen_selection" :data="benutzergruppen_rows_gefiltert" :columns="benutzergruppen_cols" is-multi-select />
 			</div>
 		</template>
 	</svws-ui-secondary-menu>

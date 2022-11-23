@@ -15,7 +15,7 @@
 		</template>
 		<template #content>
 			<div class="container">
-				<svws-ui-new-table
+				<svws-ui-table
 					v-model="selected"
 					:columns="cols"
 					:data="rowsFiltered"
@@ -41,7 +41,7 @@
             				</template>
           				</svws-ui-popover>
         			</template>
-				</svws-ui-new-table>
+				</svws-ui-table>
 			</div>
 		</template>
 	</svws-ui-secondary-menu>

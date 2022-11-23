@@ -10,7 +10,7 @@
 				<svws-ui-checkbox v-model="inputIstAdmin">
 					Admin ?
 				</svws-ui-checkbox>
-				<svws-ui-new-table
+				<svws-ui-table
 					v-model="selected"
 					v-model:selection="selection"
 					:columns="cols"

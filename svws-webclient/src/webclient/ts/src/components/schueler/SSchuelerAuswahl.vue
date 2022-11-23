@@ -62,7 +62,7 @@
 		</template>
 		<template #content>
 			<div class="container">
-				<svws-ui-new-table
+				<svws-ui-table
 					v-model="selected"
 					:v-model:selection="selectedItems"
 					:data="rowsFiltered"
@@ -102,7 +102,7 @@
 							<svws-ui-icon><i-ri-more-2-line /></svws-ui-icon>
 						</button>
 					</template>
-				</svws-ui-new-table>
+				</svws-ui-table>
 			</div>
 		</template>
 	</svws-ui-secondary-menu>
