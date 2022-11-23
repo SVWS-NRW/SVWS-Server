@@ -3,6 +3,7 @@ import { useRouterHelpers } from "./routeHelpers";
 import { injectMainApp } from "../apps/Main";
 
 import type { RouteNames, RouteItemTypesMap } from "./types";
+import { GostJahrgang } from "@svws-nrw/svws-core-ts";
 
 // FIXME: Bug in ui table component
 /**
@@ -25,11 +26,16 @@ export function useAuswahlViaRoute<
 	 * Sucht das zur ID passende item aus der jeweiligen app und setzt es als "ausgewählt"
 	 */
 	const updateAuswahl = (id: string) => {
-		/* eslint-disable @typescript-eslint/no-explicit-any */
-		// @ts-expect-error .find() seems to be incompatible between apps on a type level
-		const item = app.auswahl.liste.find((item: any) => item.id === +id);
-		/* eslint-enable @typescript-eslint/no-explicit-any */
-
+		let item
+		for (const i of app.auswahl.liste) {
+			console.log(id, item)
+			if ((i instanceof GostJahrgang) 
+				? i.abiturjahr?.valueOf() === +id
+				: i.id === +id) {
+					item = i;
+					break
+				}
+		};
 		// console.log(`route id update for ${routeName}-${id}:`, item);
 		app.auswahl.ausgewaehlt = item;
 	};

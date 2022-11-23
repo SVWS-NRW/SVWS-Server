@@ -4,8 +4,12 @@
 		<template #header> </template>
 		<template #content>
 			<div class="container">
-				<svws-ui-table v-model:selected="selected" :cols="cols" :rows="rows" :footer="false" asc="false">
-				</svws-ui-table>
+				<svws-ui-new-table
+					v-model="selected"
+					:columns="cols"
+					:data="rows"
+					:footer="false"
+				/>
 			</div>
 			<svws-ui-dropdown variant="secondary" class="float-right m-4">
 				<template #dropdownButton>Abiturjahr hinzufügen</template>
@@ -157,38 +161,24 @@ import {
 import {
 	computed,
 	ComputedRef,
-	reactive,
 	ref,
 	Ref,
 	WritableComputedRef
 } from "vue";
 import { App } from "~/apps/BaseApp";
+import { useAuswahlViaRoute } from '~/router/auswahlViaRoute';
 import { GOST_CREATE_BLOCKUNG_SYMBOL } from "~/apps/core/LoadingSymbols";
 import { injectMainApp, Main } from "~/apps/Main";
 
+const selected = useAuswahlViaRoute('gost')
 const main: Main = injectMainApp();
 const app = main.apps.gost;
 const appJahrgaenge = main.apps.jahrgaenge;
-const cols = [
-	{
-		id: "bezeichnung",
-		title: "Bezeichnung",
-		width: "10em",
-		sortable: true
-	},
-	{
-		id: "abiturjahr",
-		title: "Abiturjahr",
-		sortable: true
-	},
-	{
-		id: "jahrgang",
-		title: "Stufe",
-		sortable: true
-	}
-];
+const cols = ref([
+	{ key: "bezeichnung", label: "Bezeichnung", sortable: true },
+	{ key: "abiturjahr", label: "Abiturjahr", sortable: true },
+	{ key: "jahrgang", label: "Stufe", sortable: true }]);
 
-// const manager = reactive(app.dataKursblockung.datenmanager);
 const wait: Ref<boolean> = ref(false);
 const halbjahre = GostHalbjahr.values();
 const hj_memo: Ref<GostHalbjahr | undefined> = ref(undefined)
@@ -265,15 +255,15 @@ const selected_ergebnis: WritableComputedRef<GostBlockungsergebnisListeneintrag 
 	}
 });
 
-const selected: WritableComputedRef<GostJahrgang | undefined> =
-	computed({
-	get(): GostJahrgang | undefined {
-		return app.auswahl.ausgewaehlt;
-	},
-	set(value: GostJahrgang | undefined) {
-		if (app.auswahl) app.auswahl.ausgewaehlt = value
-	}
-});
+// const selected: WritableComputedRef<GostJahrgang | undefined> =
+// 	computed({
+// 	get(): GostJahrgang | undefined {
+// 		return app.auswahl.ausgewaehlt;
+// 	},
+// 	set(value: GostJahrgang | undefined) {
+// 		if (app.auswahl) app.auswahl.ausgewaehlt = value
+// 	}
+// });
 
 async function abiturjahr_hinzufuegen(jahrgang: JahrgangsListeEintrag) {
 	try {

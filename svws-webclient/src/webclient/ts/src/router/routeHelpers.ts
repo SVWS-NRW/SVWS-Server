@@ -1,3 +1,4 @@
+import { GostJahrgang } from '@svws-nrw/svws-core-ts';
 import { useRoute, useRouter, Router, RouteLocationNormalizedLoaded } from 'vue-router'
 // import slugify from "slugify";
 
@@ -12,8 +13,11 @@ const slugPropertiesMap = {
 	klassen: ["kuerzel"],
 	kurse: ["kuerzel"],
 	jahrgaenge: ["kuerzel"],
-	// gost: ['kuerzel'],
-	faecher: ["kuerzel"]
+	gost: ['kuerzel'],
+	faecher: ["kuerzel"],
+	religionen: ['religion'],
+	benutzer: ["nachname", "vorname"],
+	benutzergruppe: ["name"]
 } as const;
 
 type RouteNames = keyof typeof slugPropertiesMap;
@@ -45,7 +49,7 @@ export function useRouterHelpers(): {
 		router.push({
 			name: routeName,
 			params: {
-				id: item.id,
+				id: (item instanceof GostJahrgang) ? item.abiturjahr?.valueOf() : item.id,
 				// slug: slugify(slugProps.map(p => item[p] ?? "").join(" "), {
 				// 	locale: "de"
 				// })

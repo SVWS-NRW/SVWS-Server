@@ -29,6 +29,10 @@
 	import { injectMainApp, Main } from "~/apps/Main";
 	import { useAuswahlViaRoute } from '~/router/auswahlViaRoute';
 	import { router } from "~/router"
+	
+	const selected = useAuswahlViaRoute('faecher')
+	const main: Main = injectMainApp();
+	const app = main.apps.faecher;
 
 	const cols = ref([
 		{
@@ -44,14 +48,6 @@
 		}
 	]);
 
-	const main: Main = injectMainApp();
-	const app = main.apps.faecher;
-
-	const rows: ComputedRef<FaecherListeEintrag[] | undefined> = computed(
-		() => {
-			return app.auswahl.liste;
-		}
-	);
-
-	const selected = useAuswahlViaRoute('faecher')
+	const rows: ComputedRef<FaecherListeEintrag[] | undefined> =
+		computed(() => app.auswahl.liste);
 </script>
