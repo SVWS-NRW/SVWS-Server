@@ -1,5 +1,6 @@
 <script setup lang='ts'>
 import { hstEvent } from 'histoire/client';
+import { ref } from 'vue';
 import { type DataTableItem } from './types';
 
 const data = ref([
@@ -88,12 +89,12 @@ function execute(action: string, row: DataTableItem) {
 </script>
 
 <template>
-  <Story title="SVWS UI/Layout/NewTable">
+  <Story title="SVWS UI/Layout/Table">
     <Variant title="Basic">
-      <NewTable :data="data" />
+      <Table :data="data" />
     </Variant>
     <Variant title="Simple Row Click Selection">
-      <NewTable v-model="clickedRow" :data="data" />
+      <Table v-model="clickedRow" :data="data" />
       <br />
       <Button @click="updateSelectedRow">Update Selection</Button>
       <br />
@@ -102,7 +103,7 @@ function execute(action: string, row: DataTableItem) {
       <span v-else>{{ clickedRow }}</span>
     </Variant>
     <Variant title="Selection Multi">
-      <NewTable v-model:selection="selectedRows2" v-model="clickedRow" :data="data" is-multi-select />
+      <Table v-model:selection="selectedRows2" v-model="clickedRow" :data="data" is-multi-select />
       <br />
       <strong>Selected:</strong>
       <div v-if="selectedRows2.length === 0">No rows selected</div>
@@ -112,14 +113,14 @@ function execute(action: string, row: DataTableItem) {
       <span v-else>{{ clickedRow }}</span>
     </Variant>
     <Variant title="Sorting + Selection + Header Labels">
-      <NewTable v-model:selection="selectedRows3" :data="data" :columns="columns" is-multi-select />
+      <Table v-model:selection="selectedRows3" :data="data" :columns="columns" is-multi-select />
       <br />
       <strong>Selected:</strong>
       <div v-if="selectedRows3.length === 0">No rows selected</div>
       <span v-else>{{ selectedRows3 }}</span>
     </Variant>
     <Variant title="Basic + Custom Head Cell">
-      <NewTable :data="data">
+      <Table :data="data">
         <template #head-age="{ column }">
           <div class="flex">
             <Icon>
@@ -128,10 +129,10 @@ function execute(action: string, row: DataTableItem) {
             {{ column.label }} 🥳
           </div>
         </template>
-      </NewTable>
+      </Table>
     </Variant>
     <Variant title="Basic + Custom Cell Content">
-      <NewTable :data="data" :columns="columns">
+      <Table :data="data" :columns="columns">
         <template #cell-email="{ row }">
           <TextInput v-model="row.email" />
         </template>
@@ -143,10 +144,10 @@ function execute(action: string, row: DataTableItem) {
             <i-ri-battery-fill />
           </Icon>
         </template>
-      </NewTable>
+      </Table>
     </Variant>
     <Variant title="Basic + Inline Editing">
-      <NewTable :data="data" :columns="columns2">
+      <Table :data="data" :columns="columns2">
         <template #cell-name="{ row }">
           <span v-if="!row.isEditing">{{ row.name }}</span>
           <TextInput v-else v-model="row.name" />
@@ -178,10 +179,10 @@ function execute(action: string, row: DataTableItem) {
             </template>
           </Popover>
         </template>
-      </NewTable>
+      </Table>
     </Variant>
     <Variant title="Headless Inputs">
-      <NewTable :data="data" :columns="columns2">
+      <Table :data="data" :columns="columns2">
         <template #cell-name="{ row }">
           <span v-if="!row.isEditing" class="table__cell-content">{{ row.name }}</span>
           <TextInput v-else v-model="row.name" headless />
@@ -217,7 +218,7 @@ function execute(action: string, row: DataTableItem) {
             </template>
           </Popover>
         </template>
-      </NewTable>
+      </Table>
     </Variant>
   </Story>
 </template>

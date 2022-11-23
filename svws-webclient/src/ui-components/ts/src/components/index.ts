@@ -18,8 +18,6 @@ export { default as SvwsUiAvatar } from "~/Layout/Avatar.vue";
 export { default as SvwsUiContentCard } from "~/Layout/ContentCard.vue";
 export { default as SvwsUiHeader } from "~/Layout/Header.vue";
 export { default as SvwsUiIcon } from "~/Layout/Icon.vue";
-export { default as SvwsUiTable } from "~/Layout/Table.vue";
-export { default as SvwsUiTableInput } from "~/Layout/TableInput.vue";
 export { default as SvwsUiModal } from "~/Layout/Modal/Modal.vue";
 export { default as SvwsUiOverlay } from "~/Layout/Modal/Overlay.vue";
 export { default as SvwsUiAppLayout } from "~/Layout/Pages/AppLayout.vue";
@@ -30,4 +28,4 @@ export { default as SvwsUiSecondaryMenu } from "~/Layout/Sidebar/SecondaryMenu.v
 export { default as SvwsUiBadge } from "~/Typography/Badge.vue";
 export { default as SvwsUiTooltip } from "~/Tooltip.vue";
 export { default as SvwsUiPopover } from "~/Popover.vue";
-export { default as SvwsUiNewTable } from "~/Layout/Table/NewTable.vue";
+export { default as SvwsUiTable } from "~/Layout/Table/Table.vue";
