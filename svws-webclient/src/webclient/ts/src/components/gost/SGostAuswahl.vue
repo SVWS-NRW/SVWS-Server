@@ -400,4 +400,105 @@ function color4(ergebnis: GostBlockungsergebnisListeneintrag): string {
 		-webkit-transform: rotate(360deg);
 	}
 }
+
+	.table--header {
+		@apply sticky top-px left-0 z-10 bg-white;
+		position: -webkit-sticky;
+	}
+
+	.table--header-col {
+		@apply inline-flex flex-row items-center;
+		@apply select-none;
+		@apply space-x-2;
+		@apply font-bold text-black;
+	}
+
+	.table--row {
+		@apply text-black;
+	}
+
+	.table--row:hover {
+		@apply cursor-pointer;
+	}
+
+	.table--row:focus {
+		@apply outline-none;
+	}
+
+	.table--row-selected {
+		@apply font-bold ;
+	}
+
+	.table--row-selected .checkbox {
+		@apply font-normal;
+	}
+
+	.table--row-selected
+		.checkbox
+		.checkbox--indicator {
+	}
+
+	.table--cell {
+		@apply bg-white;
+	}
+
+	.table--border {
+		@apply border;
+	}
+
+	.table--cell-padded {
+		@apply px-3 py-1;
+	}
+
+	.table {
+		width: calc(100% - 1px);
+	}
+
+	.table--action-button {
+		@apply h-6 w-6;
+	}
+
+	.table--action-items {
+		@apply bg-white;
+		@apply flex flex-col;
+		@apply px-2 py-1;
+		@apply ring-1;
+		@apply ring-black ring-opacity-5;
+		@apply rounded-md;
+		@apply shadow-lg;
+		@apply w-48;
+	}
+
+	.table--action-item {
+		@apply block;
+		@apply w-full;
+	}
+
+	.table--action-items:focus {
+		@apply outline-none;
+	}
+
+	.table--action-button:focus {
+		@apply outline-none ring-2 ring-inset;
+	}
+
+	.table--footer {
+		@apply flex justify-between;
+		@apply w-full;
+	}
+
+	.table--footer-wrapper {
+		@apply sticky bottom-0 left-0 z-10  bg-white;
+		position: -webkit-sticky;
+	}
+
+	.table--footer-row {
+		@apply bg-white;
+		@apply py-2 px-3;
+	}
+
+	.table--footer--actions {
+		@apply flex flex-row items-center space-x-2;
+	}
+
 </style>
