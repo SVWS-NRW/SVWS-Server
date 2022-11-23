@@ -1,5 +1,20 @@
 package de.nrw.schule.svws.api.server;
 
+import de.nrw.schule.svws.api.OpenAPIApplication;
+import de.nrw.schule.svws.core.data.kurse.KursDaten;
+import de.nrw.schule.svws.core.data.kurse.KursListeEintrag;
+import de.nrw.schule.svws.core.data.kurse.KursartKatalogEintrag;
+import de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenz;
+import de.nrw.schule.svws.data.kurse.DataKatalogKursarten;
+import de.nrw.schule.svws.data.kurse.DataKursdaten;
+import de.nrw.schule.svws.data.kurse.DataKursliste;
+import de.nrw.schule.svws.db.DBEntityManager;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
@@ -9,23 +24,6 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-
-import de.nrw.schule.svws.api.OpenAPIApplication;
-import de.nrw.schule.svws.core.data.kurse.KursDaten;
-import de.nrw.schule.svws.core.data.kurse.KursListeEintrag;
-import de.nrw.schule.svws.core.data.kurse.KursartKatalogEintrag;
-import de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenz;
-import de.nrw.schule.svws.data.kurse.DataKatalogKursarten;
-import de.nrw.schule.svws.data.kurse.DataKursdaten;
-import de.nrw.schule.svws.data.kurse.DataKursliste;
-import de.nrw.schule.svws.db.Benutzer;
-import de.nrw.schule.svws.db.DBEntityManager;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
  * Die Klasse spezifiziert die OpenAPI-Schnittstelle für den Zugriff auf die grundlegenden Daten von Kursen aus der SVWS-Datenbank.
@@ -140,9 +138,8 @@ public class APIKurse {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Kursart-Katalog-Einträge gefunden")
     public Response getKatalogKursarten(@PathParam("schema") String schema, @Context HttpServletRequest request) {
-        try (Benutzer user = OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
-            return (new DataKatalogKursarten()).getAll();
-        }
+        OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+        return (new DataKatalogKursarten()).getAll();
     }  
 
 }

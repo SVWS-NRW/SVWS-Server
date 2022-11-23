@@ -64,12 +64,11 @@ public class DBEntityManager implements AutoCloseable {
 	 * 
 	 * @param user     der Benutzer, der dieser Verbindung zugeordnet ist.
 	 * @param config   die Datenbank-Konfiguration
-	 * @param em       der zugehörige Entity Manager
 	 */
-	DBEntityManager(Benutzer user, DBConfig config, EntityManager em) {
+	DBEntityManager(Benutzer user, DBConfig config) {
 		this.user = user;
 		this.config = config;
-		this.em = em;
+		this.em = user.connectionManager.getNewJPAEntityManager();
 	}
 	
 	
@@ -96,7 +95,7 @@ public class DBEntityManager implements AutoCloseable {
 			em.close();
 		}
 		try {
-			em = user.getNewJPAEntityManager();
+			em = user.connectionManager.getNewJPAEntityManager();
 		} catch (IllegalStateException e) {
 			throw new DBConnectionException(e);
 		}
@@ -210,7 +209,7 @@ public class DBEntityManager implements AutoCloseable {
 			if (em.getTransaction().isActive())
 				em.getTransaction().commit();
 			return true;
-		} catch (RollbackException | IllegalStateException e) {
+		} catch (@SuppressWarnings("unused") RollbackException | IllegalStateException e) {
 			return false;
 		} finally {
 			this.unlock();
@@ -228,7 +227,7 @@ public class DBEntityManager implements AutoCloseable {
 			if (em.getTransaction().isActive())
 				em.getTransaction().rollback();
 			return true;
-		} catch (PersistenceException e) {
+		} catch (@SuppressWarnings("unused") PersistenceException e) {
 			return false;
 		} finally {
 			this.unlock();
@@ -247,7 +246,7 @@ public class DBEntityManager implements AutoCloseable {
 	public int transactionNativeUpdate(final String sqlQuery) {
 		try {
 			return em.createNativeQuery(sqlQuery).executeUpdate();
-		} catch (PersistenceException  | IllegalStateException e) {
+		} catch (@SuppressWarnings("unused") PersistenceException  | IllegalStateException e) {
 			return Integer.MIN_VALUE;
 		}
 	}
@@ -278,7 +277,7 @@ public class DBEntityManager implements AutoCloseable {
 		try {
 			em.persist(entity);
 			return true;
-		} catch (TransactionRequiredException | EntityExistsException | IllegalArgumentException e) {
+		} catch (@SuppressWarnings("unused") TransactionRequiredException | EntityExistsException | IllegalArgumentException e) {
 			return false;
 		}
 	}
@@ -296,7 +295,7 @@ public class DBEntityManager implements AutoCloseable {
 		try {
 			em.remove(entity);
 			return true;
-		} catch (TransactionRequiredException | IllegalArgumentException e) {
+		} catch (@SuppressWarnings("unused") TransactionRequiredException | IllegalArgumentException e) {
 			return false;
 		}
 	}
@@ -322,7 +321,7 @@ public class DBEntityManager implements AutoCloseable {
 				return true;
 			this.transactionRollback();
 			return false;
-		} catch (TransactionRequiredException | EntityExistsException | RollbackException | IllegalStateException e) {
+		} catch (@SuppressWarnings("unused") TransactionRequiredException | EntityExistsException | RollbackException | IllegalStateException e) {
 			this.transactionRollback();
 			return false;
 		} finally {
@@ -335,17 +334,17 @@ public class DBEntityManager implements AutoCloseable {
 	 * Persistiert die Entities aus dem angegebenen Bereich der übergebenen Liste in der Datenbank. Die 
 	 * zugehörige Transaktion wird durch diese Methode gehandhabt.  
 	 * 
-	 * @param entities   die zu persistierenden Entities
-	 * @param first      der Index der ersten zu persistierenden Entity
-	 * @param last       der Index der letzten zu persistierenden Entity
+	 * @param entities    die zu persistierenden Entities
+	 * @param indexFirst  der Index der ersten zu persistierenden Entity
+	 * @param indexLast   der Index der letzten zu persistierenden Entity
 	 *  
 	 * @return true, falls die Entities erfolgreich persistiert wurde und ansonsten false 
 	 */
-	public boolean persistRange(final List<? extends Object> entities, int first, int last) {
+	public boolean persistRange(final List<? extends Object> entities, int indexFirst, int indexLast) {
 		if (entities == null)
 			return false;
-		first = (first < 0) ? 0 : first;
-		last = (last >= entities.size()) ? entities.size() - 1 : last;
+		int first = (indexFirst < 0) ? 0 : indexFirst;
+		int last = (indexLast >= entities.size()) ? entities.size() - 1 : indexLast;
 		try {
 			this.lock();
 			this.transactionBegin();
@@ -355,7 +354,7 @@ public class DBEntityManager implements AutoCloseable {
 				return true;
 			this.transactionRollback();
 			return false;
-		} catch (TransactionRequiredException | EntityExistsException | RollbackException | IllegalStateException e) {
+		} catch (@SuppressWarnings("unused") TransactionRequiredException | EntityExistsException | RollbackException | IllegalStateException e) {
 			this.transactionRollback();
 			return false;
 		} finally {
@@ -381,7 +380,7 @@ public class DBEntityManager implements AutoCloseable {
 				return true;
 			this.transactionRollback();
 			return false;
-		} catch (TransactionRequiredException | EntityExistsException | RollbackException | IllegalStateException e) {
+		} catch (@SuppressWarnings("unused") TransactionRequiredException | EntityExistsException | RollbackException | IllegalStateException e) {
 			return false;
 		} finally {
 			this.unlock();
@@ -406,7 +405,7 @@ public class DBEntityManager implements AutoCloseable {
 				return true;
 			this.transactionRollback();
 			return false;
-		} catch (TransactionRequiredException | EntityExistsException | RollbackException | IllegalStateException e) {
+		} catch (@SuppressWarnings("unused") TransactionRequiredException | EntityExistsException | RollbackException | IllegalStateException e) {
 			this.transactionRollback();
 			return false;
 		} finally {
@@ -434,7 +433,7 @@ public class DBEntityManager implements AutoCloseable {
 				return true;
 			this.transactionRollback();
 			return false;
-		} catch (TransactionRequiredException | EntityExistsException | RollbackException | IllegalStateException e) {
+		} catch (@SuppressWarnings("unused") TransactionRequiredException | EntityExistsException | RollbackException | IllegalStateException e) {
 			this.transactionRollback();
 			return false;
 		} finally {
@@ -473,7 +472,7 @@ public class DBEntityManager implements AutoCloseable {
 				return count;
 			this.transactionRollback();
 			return Integer.MIN_VALUE;
-		} catch (TransactionRequiredException | EntityExistsException | RollbackException | IllegalStateException e) {
+		} catch (@SuppressWarnings("unused") TransactionRequiredException | EntityExistsException | RollbackException | IllegalStateException e) {
 			this.transactionRollback();
 			return Integer.MIN_VALUE;
 		} finally {
@@ -512,7 +511,7 @@ public class DBEntityManager implements AutoCloseable {
 				return count;
 			this.transactionRollback();
 			return Integer.MIN_VALUE;
-		} catch (TransactionRequiredException | EntityExistsException | RollbackException | IllegalStateException e) {
+		} catch (@SuppressWarnings("unused") TransactionRequiredException | EntityExistsException | RollbackException | IllegalStateException e) {
 			this.transactionRollback();
 			return Integer.MIN_VALUE;
 		} finally {
@@ -535,13 +534,14 @@ public class DBEntityManager implements AutoCloseable {
 			this.lock();
 			this.transactionBegin();
 			Connection conn = em.unwrap(Connection.class);
-			Statement stmt = conn.createStatement();
-			int count = stmt.executeUpdate(query); 
-			if (this.transactionCommit())
-				return count;
-			this.transactionRollback();
-			return Integer.MIN_VALUE;
-		} catch (SQLException e) {
+			try (Statement stmt = conn.createStatement()) {
+				int count = stmt.executeUpdate(query); 
+				if (this.transactionCommit())
+					return count;
+				this.transactionRollback();
+				return Integer.MIN_VALUE;
+			}
+		} catch (@SuppressWarnings("unused") SQLException e) {
 			this.transactionRollback();
 			return Integer.MIN_VALUE;
 		} finally {
@@ -575,48 +575,49 @@ public class DBEntityManager implements AutoCloseable {
 	 * @param colnames    die Liste mit den Spaltennamen, die zu der Reihenfolge der Object-Array-Elementen 
 	 *                    der Entitäten passen muss   
 	 * @param entities    die Liste mit den einzelnen Datensätzen in Form von Object-Arrays
-	 * @param first       der Index des ersten Datensatzes aus der Entitätenliste, der geschrieben wird 
-	 * @param last        der Index des letzten Datensatzes aus der Entitätenliste, der geschrieben wird
+	 * @param indexFirst  der Index des ersten Datensatzes aus der Entitätenliste, der geschrieben wird 
+	 * @param indexLast   der Index des letzten Datensatzes aus der Entitätenliste, der geschrieben wird
 	 * 
 	 * @return true, falls die SQL-Anfrage erfolgreich ausgeführt wurde und ansonsten false
 	 */
-	public boolean insertRangeNative(final String tablename, final List<String> colnames, final List<Object[]> entities, int first, int last) {
+	public boolean insertRangeNative(final String tablename, final List<String> colnames, final List<Object[]> entities, int indexFirst, int indexLast) {
 		if ((entities == null) || (colnames == null) || (tablename == null) ||
 				(colnames.size() == 0) || (entities.size() == 0))
 			return false;
-		first = (first < 0) ? 0 : first;
-		last = (last >= entities.size()) ? entities.size() - 1 : last;
+		int first = (indexFirst < 0) ? 0 : indexFirst;
+		int last = (indexLast >= entities.size()) ? entities.size() - 1 : indexLast;
 		try {
 			this.lock();
 			this.transactionBegin();
-			Connection conn = em.unwrap(Connection.class);
-			String sql = "INSERT INTO " + tablename + "("
-					+ colnames.stream().collect(Collectors.joining(", ")) 
-					+ ") VALUES ("
-					+ colnames.stream().map(col -> "?").collect(Collectors.joining(", "))
-					+ ")";
-			try (PreparedStatement prepared = conn.prepareStatement(sql)) {
-				for (int i = first; i <= last; i++) {
-					Object[] data = entities.get(i);
-					for (int j = 0; j < colnames.size(); j++) {
-						if ((config.getDBDriver() == DBDriver.SQLITE) && (data[j] instanceof Timestamp)) {
-							prepared.setString(j+1, datetime_formatter.format(((Timestamp)data[j]).toLocalDateTime()));
-						} else if ((config.getDBDriver() == DBDriver.SQLITE) && (data[j] instanceof Date)) {
-							prepared.setString(j+1, date_formatter.format(((Date)data[j]).toLocalDate()));
-						} else {
-							prepared.setObject(j+1, data[j]);
+			try (Connection conn = em.unwrap(Connection.class)) {
+				String sql = "INSERT INTO " + tablename + "("
+						+ colnames.stream().collect(Collectors.joining(", ")) 
+						+ ") VALUES ("
+						+ colnames.stream().map(col -> "?").collect(Collectors.joining(", "))
+						+ ")";
+				try (PreparedStatement prepared = conn.prepareStatement(sql)) {
+					for (int i = first; i <= last; i++) {
+						Object[] data = entities.get(i);
+						for (int j = 0; j < colnames.size(); j++) {
+							if ((config.getDBDriver() == DBDriver.SQLITE) && (data[j] instanceof Timestamp)) {
+								prepared.setString(j+1, datetime_formatter.format(((Timestamp)data[j]).toLocalDateTime()));
+							} else if ((config.getDBDriver() == DBDriver.SQLITE) && (data[j] instanceof Date)) {
+								prepared.setString(j+1, date_formatter.format(((Date)data[j]).toLocalDate()));
+							} else {
+								prepared.setObject(j+1, data[j]);
+							}
 						}
+						prepared.addBatch();
 					}
-					prepared.addBatch();
+					prepared.executeBatch();
+					prepared.close();
 				}
-				prepared.executeBatch();
-				prepared.close();
 			}
 			if (this.transactionCommit())
 				return true;
 			this.transactionRollback();
 			return false;
-		} catch (SQLException | PersistenceException | IllegalStateException e) {
+		} catch (@SuppressWarnings("unused") SQLException | PersistenceException | IllegalStateException e) {
 			this.transactionRollback();
 			return false;
 		} finally {

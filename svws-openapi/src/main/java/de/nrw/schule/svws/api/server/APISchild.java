@@ -25,7 +25,6 @@ import de.nrw.schule.svws.data.schild3.DataSchildPruefungsordnungOptionen;
 import de.nrw.schule.svws.data.schild3.DataSchildUnicodeUmwandlung;
 import de.nrw.schule.svws.data.schild3.DataSchildVersetzungsvermerke;
 import de.nrw.schule.svws.data.schild3.reporting.DataSchildReportingDatenquelle;
-import de.nrw.schule.svws.db.Benutzer;
 import de.nrw.schule.svws.db.DBEntityManager;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -72,9 +71,8 @@ public class APISchild {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
     public Response getKatalogSchild3AbiturInfos(@PathParam("schema") String schema, @Context HttpServletRequest request) {
-    	try (Benutzer user = OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
-    		return (new DataSchildAbiturInfos()).getAll();
-    	}
+    	OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+    	return (new DataSchildAbiturInfos()).getAll();
     }
 
 
@@ -96,9 +94,8 @@ public class APISchild {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
     public Response getKatalogSchild3Datenarten(@PathParam("schema") String schema, @Context HttpServletRequest request) {
-        try (Benutzer user = OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
-            return (new DataSchildDatenart()).getAll();
-        }
+        OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+        return (new DataSchildDatenart()).getAll();
     }
 
 
@@ -120,9 +117,8 @@ public class APISchild {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
     public Response getKatalogSchild3DQRNiveaus(@PathParam("schema") String schema, @Context HttpServletRequest request) {
-        try (Benutzer user = OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
-            return (new DataSchildDQRNiveaus()).getAll();
-        }
+        OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+        return (new DataSchildDQRNiveaus()).getAll();
     }
 
 
@@ -144,9 +140,8 @@ public class APISchild {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
     public Response getKatalogSchild3ExportCSV(@PathParam("schema") String schema, @Context HttpServletRequest request) {
-        try (Benutzer user = OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
-            return (new DataSchildExportCSV()).getAll();
-        }
+        OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+        return (new DataSchildExportCSV()).getAll();
     }
 
 
@@ -168,9 +163,8 @@ public class APISchild {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
     public Response getKatalogSchild3FilterFehlendeEintraege(@PathParam("schema") String schema, @Context HttpServletRequest request) {
-        try (Benutzer user = OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
-            return (new DataSchildFilterFehlendeEintraege()).getAll();
-        }
+        OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+        return (new DataSchildFilterFehlendeEintraege()).getAll();
     }
 
 
@@ -192,9 +186,8 @@ public class APISchild {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
     public Response getKatalogSchild3Laender(@PathParam("schema") String schema, @Context HttpServletRequest request) {
-        try (Benutzer user = OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
-            return (new DataSchildLaender()).getAll();
-        }
+        OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+        return (new DataSchildLaender()).getAll();
     }
 
 
@@ -216,9 +209,8 @@ public class APISchild {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
     public Response getKatalogSchild3Pruefungsordnungen(@PathParam("schema") String schema, @Context HttpServletRequest request) {
-        try (Benutzer user = OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
-            return (new DataSchildPruefungsordnung()).getAll();
-        }
+        OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+        return (new DataSchildPruefungsordnung()).getAll();
     }
 
 
@@ -240,9 +232,8 @@ public class APISchild {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
     public Response getKatalogSchild3PruefungsordnungOptionen(@PathParam("schema") String schema, @Context HttpServletRequest request) {
-        try (Benutzer user = OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
-            return (new DataSchildPruefungsordnungOptionen()).getAll();
-        }
+        OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+        return (new DataSchildPruefungsordnungOptionen()).getAll();
     }
 
 
@@ -264,9 +255,8 @@ public class APISchild {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
     public Response getKatalogSchild3UnicodeUmwandlung(@PathParam("schema") String schema, @Context HttpServletRequest request) {
-        try (Benutzer user = OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
-            return (new DataSchildUnicodeUmwandlung()).getAll();
-        }
+        OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+        return (new DataSchildUnicodeUmwandlung()).getAll();
     }
 
 
@@ -288,9 +278,8 @@ public class APISchild {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
     public Response getKatalogSchild3Versetzungsvermerke(@PathParam("schema") String schema, @Context HttpServletRequest request) {
-        try (Benutzer user = OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
-            return (new DataSchildVersetzungsvermerke()).getAll();
-        }
+        OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+        return (new DataSchildVersetzungsvermerke()).getAll();
     }
 
     

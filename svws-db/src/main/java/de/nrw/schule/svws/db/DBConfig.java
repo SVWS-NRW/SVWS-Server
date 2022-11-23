@@ -1,5 +1,7 @@
 package de.nrw.schule.svws.db;
 
+import java.util.Objects;
+
 /**
  * Diese Klasse repräsentiert die Datenbank-Konfiguration für den Zugriff auf eine
  * SVWS-Datenbank. 
@@ -189,5 +191,26 @@ public class DBConfig {
 	public DBConfig switchSchema(String db_schema) {
 		return new DBConfig(db_driver, db_location, db_schema, use_db_login, username, password, use_db_logging, create_db_file);
 	}
-	
+
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(create_db_file, db_driver, db_location, db_schema, password, use_db_logging, use_db_login, username);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		DBConfig other = (DBConfig) obj;
+		return create_db_file == other.create_db_file && db_driver == other.db_driver
+				&& Objects.equals(db_location, other.db_location) && Objects.equals(db_schema, other.db_schema)
+				&& Objects.equals(password, other.password) && use_db_logging == other.use_db_logging
+				&& use_db_login == other.use_db_login && Objects.equals(username, other.username);
+	}
+
 }

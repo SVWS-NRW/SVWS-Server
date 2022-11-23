@@ -66,27 +66,26 @@ public class Main {
 				logger.logLn("-> zu Schema " + schema.name); 
 				logger.modifyIndent(2);
 				DBConfig dbconfig = svwsconfig.getDBConfig(schema.name);
-				try (Benutzer dbUser = Benutzer.create(dbconfig)) {
-					try (DBEntityManager dbConn = dbUser.getEntityManager()) {
-						if (dbConn == null) {
-							logger.logLn("Verbindung zu dem Schema "+ schema.name + " nicht möglich!");
-							continue;
-						}
-						DBSchemaManager dbManager = DBSchemaManager.create(dbConn, true, logger);
-						if (!dbManager.updater.isUptodate(-1, false)) {
-							logger.logLn("Revision veraltet - führe Update aus...");
-							logger.modifyIndent(2);
-							dbManager.updater.update(-1, false, true);
-							logger.modifyIndent(-2);				
-						}
-						if (!dbManager.updater.coreTypes.isUptodate()) {
-							logger.logLn("Core-Types veraltet - führe Update aus...");
-							logger.modifyIndent(2);
-							dbManager.updater.coreTypes.update(true, -1);
-							logger.modifyIndent(-2);											
-						}
-						logger.modifyIndent(-2);
+				Benutzer dbUser = Benutzer.create(dbconfig);
+				try (DBEntityManager dbConn = dbUser.getEntityManager()) {
+					if (dbConn == null) {
+						logger.logLn("Verbindung zu dem Schema "+ schema.name + " nicht möglich!");
+						continue;
 					}
+					DBSchemaManager dbManager = DBSchemaManager.create(dbConn, true, logger);
+					if (!dbManager.updater.isUptodate(-1, false)) {
+						logger.logLn("Revision veraltet - führe Update aus...");
+						logger.modifyIndent(2);
+						dbManager.updater.update(-1, false, true);
+						logger.modifyIndent(-2);				
+					}
+					if (!dbManager.updater.coreTypes.isUptodate()) {
+						logger.logLn("Core-Types veraltet - führe Update aus...");
+						logger.modifyIndent(2);
+						dbManager.updater.coreTypes.update(true, -1);
+						logger.modifyIndent(-2);											
+					}
+					logger.modifyIndent(-2);
 				}
 			}
 			logger.modifyIndent(-2);

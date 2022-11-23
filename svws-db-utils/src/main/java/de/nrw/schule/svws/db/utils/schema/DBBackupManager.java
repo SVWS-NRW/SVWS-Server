@@ -89,58 +89,57 @@ public class DBBackupManager {
 			logger.modifyIndent(-2);			
 	
 			logger.log("-> Verbinde zum Ziel-Schema mit dem Datenbank-Test-Benutzer...");
-			try (Benutzer tgtUser = Benutzer.create(tgtConfig)) { 
-				try (DBEntityManager tgtConn = tgtUser.getEntityManager()) {
-					if (tgtConn == null) {
-						logger.logLn(0, " [Fehler]");
-						logger.log(LogLevel.ERROR, "Fehler bei der Erstellung der Datenbank-Verbindung (driver='" + tgtConfig.getDBDriver() + "', schema='" + tgtConfig.getDBSchema() + "', location='" + tgtConfig.getDBLocation() + "', user='" + tgtConfig.getUsername() + "')" + System.lineSeparator());
-						throw new DBException("Fehler beim Verbinden zur Zieldatenbank");
-					}
-					logger.logLn(0, " [OK]");
-					logger.log(LogLevel.INFO, "Datenbank-Verbindung erfolgreich aufgebaut (driver='" + tgtConfig.getDBDriver() + "', schema='" + tgtConfig.getDBSchema() + "', location='" + tgtConfig.getDBLocation() + "', user='" + tgtConfig.getUsername() + "')" + System.lineSeparator());
-					
-					tgtManager = DBSchemaManager.create(tgtConn, true, logger);
-					if (tgtManager == null) {
-						logger.logLn(0, " [Fehler]");
-						throw new DBException("Fehler beim Verbinden zur Zieldatenbank");
-					}
-					logger.logLn(0, " [OK]");
-					
-					logger.logLn("-> Erstelle für den Import in die Ziel-DB ein SVWS-Schema der entsprechenden Revision " + version.Revision);
-					logger.modifyIndent(2);
-					boolean result = tgtManager.createSVWSSchema(version.Revision, false);
-					logger.modifyIndent(-2);
-					if (!result) {
-						logger.logLn(" [Fehler]");
-						throw new DBException("Fehler beim Erstelen des Schemas mit der Revision " + version.Revision);				
-					}
-					logger.logLn("[OK]");
-
-					logger.logLn("-> Kopiere die Daten aus der Quell-DB in die Ziel-DB...");
-					logger.modifyIndent(2);
-					result = expimpCopyFrom(tgtManager, version.Revision);
-					logger.modifyIndent(-2);
-					if (!result) {
-						logger.logLn(" [Fehler]");
-						throw new DBException("Grober Fehler beim Kopieren der zu migrierenden Daten");				
-					}
-					logger.logLn("[OK]");
-		
-					if (maxUpdateRevision != 0) {
-						logger.logLn("-> Aktualisiere die Ziel-DB auf die " + ((maxUpdateRevision < 0) ? "neueste " : "") + "DB-Revision" + ((maxUpdateRevision > 0) ? " " + maxUpdateRevision : "") + "...");
-						logger.modifyIndent(2);
-						result = tgtManager.updater.update(maxUpdateRevision < 0 ? -1 : maxUpdateRevision, devMode, false);
-						logger.modifyIndent(-2);
-						if (!result) {
-							logger.logLn("[Fehler]");
-							throw new DBException("Fehler beim Aktualsieren der Ziel-DB");
-						}
-						logger.logLn("[OK]");
-					}
-			
-					logger.logLn("-> Speicherbelegung (frei/verfügbar/gesamt): " + (Math.round(Runtime.getRuntime().freeMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().totalMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().maxMemory() / 10000000.0) / 100.0) + "G");
-					logger.logLn("-> Import erfolgreich in " + ((System.currentTimeMillis() - timeStart) / 1000.0) + " Sekunden abgeschlossen.");
+			Benutzer tgtUser = Benutzer.create(tgtConfig); 
+			try (DBEntityManager tgtConn = tgtUser.getEntityManager()) {
+				if (tgtConn == null) {
+					logger.logLn(0, " [Fehler]");
+					logger.log(LogLevel.ERROR, "Fehler bei der Erstellung der Datenbank-Verbindung (driver='" + tgtConfig.getDBDriver() + "', schema='" + tgtConfig.getDBSchema() + "', location='" + tgtConfig.getDBLocation() + "', user='" + tgtConfig.getUsername() + "')" + System.lineSeparator());
+					throw new DBException("Fehler beim Verbinden zur Zieldatenbank");
 				}
+				logger.logLn(0, " [OK]");
+				logger.log(LogLevel.INFO, "Datenbank-Verbindung erfolgreich aufgebaut (driver='" + tgtConfig.getDBDriver() + "', schema='" + tgtConfig.getDBSchema() + "', location='" + tgtConfig.getDBLocation() + "', user='" + tgtConfig.getUsername() + "')" + System.lineSeparator());
+				
+				tgtManager = DBSchemaManager.create(tgtConn, true, logger);
+				if (tgtManager == null) {
+					logger.logLn(0, " [Fehler]");
+					throw new DBException("Fehler beim Verbinden zur Zieldatenbank");
+				}
+				logger.logLn(0, " [OK]");
+				
+				logger.logLn("-> Erstelle für den Import in die Ziel-DB ein SVWS-Schema der entsprechenden Revision " + version.Revision);
+				logger.modifyIndent(2);
+				boolean result = tgtManager.createSVWSSchema(version.Revision, false);
+				logger.modifyIndent(-2);
+				if (!result) {
+					logger.logLn(" [Fehler]");
+					throw new DBException("Fehler beim Erstelen des Schemas mit der Revision " + version.Revision);				
+				}
+				logger.logLn("[OK]");
+
+				logger.logLn("-> Kopiere die Daten aus der Quell-DB in die Ziel-DB...");
+				logger.modifyIndent(2);
+				result = expimpCopyFrom(tgtManager, version.Revision);
+				logger.modifyIndent(-2);
+				if (!result) {
+					logger.logLn(" [Fehler]");
+					throw new DBException("Grober Fehler beim Kopieren der zu migrierenden Daten");				
+				}
+				logger.logLn("[OK]");
+	
+				if (maxUpdateRevision != 0) {
+					logger.logLn("-> Aktualisiere die Ziel-DB auf die " + ((maxUpdateRevision < 0) ? "neueste " : "") + "DB-Revision" + ((maxUpdateRevision > 0) ? " " + maxUpdateRevision : "") + "...");
+					logger.modifyIndent(2);
+					result = tgtManager.updater.update(maxUpdateRevision < 0 ? -1 : maxUpdateRevision, devMode, false);
+					logger.modifyIndent(-2);
+					if (!result) {
+						logger.logLn("[Fehler]");
+						throw new DBException("Fehler beim Aktualsieren der Ziel-DB");
+					}
+					logger.logLn("[OK]");
+				}
+		
+				logger.logLn("-> Speicherbelegung (frei/verfügbar/gesamt): " + (Math.round(Runtime.getRuntime().freeMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().totalMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().maxMemory() / 10000000.0) / 100.0) + "G");
+				logger.logLn("-> Import erfolgreich in " + ((System.currentTimeMillis() - timeStart) / 1000.0) + " Sekunden abgeschlossen.");
 			}
 		} catch (DBException e) {
 			logger.logLn("-> Import fehlgeschlagen! (" + e.getMessage() + ")");
@@ -182,52 +181,51 @@ public class DBBackupManager {
 				throw new DBException("Fehler beim Anlegen des Schemas in der SQlite-Export-Datei");
 
 			logger.log("-> Verbinde zur SQLite-Export-Datenbank...");
-			try (Benutzer tgtUser = Benutzer.create(tgtConfig)) { 
-				try (DBEntityManager tgtConn = tgtUser.getEntityManager()) {
-					if (tgtConn == null) {
-						logger.logLn(0, " [Fehler]");
-						logger.log(LogLevel.ERROR, "Fehler bei der Erstellung der Datenbank-Verbindung (driver='" + tgtConfig.getDBDriver() + "', location='" + tgtConfig.getDBLocation() + "', user='" + tgtConfig.getUsername() + "')" + System.lineSeparator());
-						throw new DBException("Fehler beim Verbinden zur SQLite-Export-Datenbank");
-					}
-					logger.logLn(0, " [OK]");
-					logger.log(LogLevel.INFO, "Datenbank-Verbindung erfolgreich aufgebaut (driver='" + tgtConfig.getDBDriver() + "', location='" + tgtConfig.getDBLocation() + "', user='" + tgtConfig.getUsername() + "')" + System.lineSeparator());
-			
-					tgtManager = DBSchemaManager.create(tgtConn, true, logger);
-					if (tgtManager == null) {
-						logger.logLn(0, " [Fehler]");
-						throw new DBException("Fehler beim Verbinden zur SQLite-Export-Datenbank");
-					}
-					logger.logLn(0, " [OK]");
-		
-					logger.logLn("-> Bestimme die Revision der QuellDatenbank...");
-					logger.modifyIndent(2);
-					DTODBVersion version = conn.querySingle(DTODBVersion.class);
-					logger.logLn(" - Revision " + version.Revision);
-					logger.modifyIndent(-2);
-		
-					logger.logLn("-> Erstelle für den Export ein SVWS-Schema in der SQLite-Datenbank");
-					logger.modifyIndent(2);
-					boolean result = tgtManager.createSVWSSchema(version.Revision, false);
-					logger.modifyIndent(-2);
-					if (!result) {
-						logger.logLn(" [Fehler]");
-						throw new DBException("Fehler beim Erstelen des Schemas");				
-					}
-					logger.logLn("[OK]");
-
-					logger.logLn("-> Kopiere die Daten aus der Quell-DB in die Ziel-DB...");
-					logger.modifyIndent(2);
-					result = expimpCopyFrom(tgtManager, version.Revision);
-					logger.modifyIndent(-2);
-					if (!result) {
-						logger.logLn(" [Fehler]");
-						throw new DBException("Grober Fehler beim Kopieren der zu migrierenden Daten");				
-					}
-					logger.logLn("[OK]");
-
-					logger.logLn("-> Speicherbelegung (frei/verfügbar/gesamt): " + (Math.round(Runtime.getRuntime().freeMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().totalMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().maxMemory() / 10000000.0) / 100.0) + "G");
-					logger.logLn("-> Export erfolgreich in " + ((System.currentTimeMillis() - timeStart) / 1000.0) + " Sekunden abgeschlossen.");
+			Benutzer tgtUser = Benutzer.create(tgtConfig); 
+			try (DBEntityManager tgtConn = tgtUser.getEntityManager()) {
+				if (tgtConn == null) {
+					logger.logLn(0, " [Fehler]");
+					logger.log(LogLevel.ERROR, "Fehler bei der Erstellung der Datenbank-Verbindung (driver='" + tgtConfig.getDBDriver() + "', location='" + tgtConfig.getDBLocation() + "', user='" + tgtConfig.getUsername() + "')" + System.lineSeparator());
+					throw new DBException("Fehler beim Verbinden zur SQLite-Export-Datenbank");
 				}
+				logger.logLn(0, " [OK]");
+				logger.log(LogLevel.INFO, "Datenbank-Verbindung erfolgreich aufgebaut (driver='" + tgtConfig.getDBDriver() + "', location='" + tgtConfig.getDBLocation() + "', user='" + tgtConfig.getUsername() + "')" + System.lineSeparator());
+		
+				tgtManager = DBSchemaManager.create(tgtConn, true, logger);
+				if (tgtManager == null) {
+					logger.logLn(0, " [Fehler]");
+					throw new DBException("Fehler beim Verbinden zur SQLite-Export-Datenbank");
+				}
+				logger.logLn(0, " [OK]");
+	
+				logger.logLn("-> Bestimme die Revision der QuellDatenbank...");
+				logger.modifyIndent(2);
+				DTODBVersion version = conn.querySingle(DTODBVersion.class);
+				logger.logLn(" - Revision " + version.Revision);
+				logger.modifyIndent(-2);
+	
+				logger.logLn("-> Erstelle für den Export ein SVWS-Schema in der SQLite-Datenbank");
+				logger.modifyIndent(2);
+				boolean result = tgtManager.createSVWSSchema(version.Revision, false);
+				logger.modifyIndent(-2);
+				if (!result) {
+					logger.logLn(" [Fehler]");
+					throw new DBException("Fehler beim Erstelen des Schemas");				
+				}
+				logger.logLn("[OK]");
+
+				logger.logLn("-> Kopiere die Daten aus der Quell-DB in die Ziel-DB...");
+				logger.modifyIndent(2);
+				result = expimpCopyFrom(tgtManager, version.Revision);
+				logger.modifyIndent(-2);
+				if (!result) {
+					logger.logLn(" [Fehler]");
+					throw new DBException("Grober Fehler beim Kopieren der zu migrierenden Daten");				
+				}
+				logger.logLn("[OK]");
+
+				logger.logLn("-> Speicherbelegung (frei/verfügbar/gesamt): " + (Math.round(Runtime.getRuntime().freeMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().totalMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().maxMemory() / 10000000.0) / 100.0) + "G");
+				logger.logLn("-> Export erfolgreich in " + ((System.currentTimeMillis() - timeStart) / 1000.0) + " Sekunden abgeschlossen.");
 			}
 		} catch (DBException e) {
 			logger.logLn("-> Export fehlgeschlagen! (" + e.getMessage() + ")");

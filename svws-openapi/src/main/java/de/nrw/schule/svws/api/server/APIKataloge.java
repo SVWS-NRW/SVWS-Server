@@ -14,7 +14,6 @@ import de.nrw.schule.svws.data.kataloge.DataKatalogOrtsteile;
 import de.nrw.schule.svws.data.kataloge.DataOrte;
 import de.nrw.schule.svws.data.kataloge.DataOrtsteile;
 import de.nrw.schule.svws.data.kataloge.DataStrassen;
-import de.nrw.schule.svws.db.Benutzer;
 import de.nrw.schule.svws.db.DBEntityManager;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -61,9 +60,8 @@ public class APIKataloge {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Straßen-Katalog-Einträge gefunden")
     public Response getKatalogStrassen(@PathParam("schema") String schema, @Context HttpServletRequest request) {
-    	try (Benutzer user = OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
-    		return (new DataStrassen()).getAll();
-    	}
+    	OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+    	return (new DataStrassen()).getAll();
     }
 
 
@@ -85,9 +83,8 @@ public class APIKataloge {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Orts-Katalog-Einträge gefunden")
     public Response getKatalogOrte(@PathParam("schema") String schema, @Context HttpServletRequest request) {
-        try (Benutzer user = OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
-            return (new DataKatalogOrte()).getAll();
-        }
+        OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+        return (new DataKatalogOrte()).getAll();
     }
 
 
@@ -136,9 +133,8 @@ public class APIKataloge {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Ortsteil-Katalog-Einträge gefunden")
     public Response getKatalogOrtsteile(@PathParam("schema") String schema, @Context HttpServletRequest request) {
-        try (Benutzer user = OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
-            return (new DataKatalogOrtsteile()).getAll();
-        }
+        OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+        return (new DataKatalogOrtsteile()).getAll();
     }
 
 

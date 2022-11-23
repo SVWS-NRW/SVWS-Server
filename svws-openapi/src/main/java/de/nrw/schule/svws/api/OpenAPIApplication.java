@@ -6,13 +6,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import jakarta.servlet.ServletConfig;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.ws.rs.ApplicationPath;
-import jakarta.ws.rs.WebApplicationException;
-import jakarta.ws.rs.core.Application;
-import jakarta.ws.rs.core.Context;
-
 import de.nrw.schule.svws.api.client.APISVWSClient;
 import de.nrw.schule.svws.api.debug.APIDebug;
 import de.nrw.schule.svws.api.schema.APISchemaRoot;
@@ -58,6 +51,12 @@ import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.ws.rs.ApplicationPath;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Application;
+import jakarta.ws.rs.core.Context;
 
 
 /**
@@ -185,7 +184,7 @@ public class OpenAPIApplication extends Application {
 			Benutzer user = ((OpenAPIPrincipal) principal).getUser();
 			if (user == null)
 				return null;
-			DBConfig config = user.getDBConfig();
+			DBConfig config = user.connectionManager.getConfig();
 			if ((config == null) || (config.getDBSchema() == null))
 				return user;
 			if (SVWSKonfiguration.get().isLockedSchema(config.getDBSchema()))
@@ -216,6 +215,28 @@ public class OpenAPIApplication extends Application {
 
 	/**
 	 * Ermittelt den aktuellen SVWS-Benutzer anhand des HTTP-Requests und überprüft, ob der Benutzer
+	 * entweder Admin-Rechte oder die übergebene Kompetenz besitzt. Erlaubt wird auch der Zugriff von 
+	 * dem Benutzer mit der übergebenen Benutzer-ID.  
+	 * 
+	 * @param request     das HTTP-Request-Objekt
+	 * @param kompetenz   die zu prüfende Kompetenz
+	 * @param user_id     die zu prüfende Benutzer-ID (ist dies die ID des angemeldeten Benutzers?)
+	 * 
+	 * @return der aktuelle SVWS-Benutzer, falls ein Benutzer mit der Kompetenz angemeldet ist
+	 * 
+	 * @throws WebApplicationException   Ist kein Benutzer angemeldet oder besitzt nicht die erforderliche Kompetenz,
+	 *                                   so wird eine WebApplicationException mit dem HTTP Status Code FORBIDDEN (403) generiert
+	 */
+	public static Benutzer getSVWSUserAllowSelf(HttpServletRequest request, BenutzerKompetenz kompetenz, long user_id) throws WebApplicationException {
+		Benutzer user = getSVWSUser(request);
+		if ((user == null) || (kompetenz != BenutzerKompetenz.KEINE) && (!user.pruefeKompetenz(kompetenz)) && (user.getId() != user_id))
+			throw OperationError.FORBIDDEN.exception();
+		return user;
+	}
+
+	
+	/**
+	 * Ermittelt den aktuellen SVWS-Benutzer anhand des HTTP-Requests und überprüft, ob der Benutzer
 	 * entweder Admin-Rechte oder die übergebene Kompetenz besitzt. Anschließend wird eine
 	 * {@link DBEntityManager} Instanz für den Datenbankzugriff zurückgegeben.
 	 * 
@@ -228,10 +249,7 @@ public class OpenAPIApplication extends Application {
 	 *                                   so wird eine WebApplicationException mit dem HTTP Status Code FORBIDDEN (403) generiert
 	 */
 	public static DBEntityManager getDBConnection(HttpServletRequest request, BenutzerKompetenz kompetenz) throws WebApplicationException {
-		Benutzer user = getSVWSUser(request);
-		if ((user == null) || (kompetenz != BenutzerKompetenz.KEINE) && (!user.pruefeKompetenz(kompetenz)))
-			throw OperationError.FORBIDDEN.exception();
-		return user.getEntityManager();
+		return getSVWSUser(request, kompetenz).getEntityManager();
 	}
 
 
@@ -251,11 +269,7 @@ public class OpenAPIApplication extends Application {
 	 *                                   so wird eine WebApplicationException mit dem HTTP Status Code FORBIDDEN (403) generiert
 	 */
 	public static DBEntityManager getDBConnectionAllowSelf(HttpServletRequest request, BenutzerKompetenz kompetenz, long user_id) throws WebApplicationException {
-		Benutzer user = getSVWSUser(request);
-		if ((user == null) || (kompetenz != BenutzerKompetenz.KEINE) && (!user.pruefeKompetenz(kompetenz)) && (user.getId() != user_id))
-			throw OperationError.FORBIDDEN.exception();
-		return user.getEntityManager();
+		return getSVWSUserAllowSelf(request, kompetenz, user_id).getEntityManager();
 	}
-
 	
 }

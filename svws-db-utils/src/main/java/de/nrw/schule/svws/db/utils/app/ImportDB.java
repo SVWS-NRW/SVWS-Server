@@ -129,23 +129,22 @@ public class ImportDB {
 	
 			logger.log("-> Verbinde zur SQLite-Import-Datenbank " + filename + "...");
 			DBConfig srcConfig = new DBConfig(DBDriver.SQLITE, filename, null, false, null, null, true, false);
-			try (Benutzer srcUser = Benutzer.create(srcConfig)) { 
-				try (DBEntityManager srcConn = srcUser.getEntityManager()) {
-					if (srcConn == null) {
-						logger.logLn(0, " [Fehler]");
-						logger.log(LogLevel.ERROR, "Fehler bei der Erstellung der Datenbank-Verbindung (driver='" + srcConfig.getDBDriver() + "', location='" + srcConfig.getDBLocation() + "', user='" + srcConfig.getUsername() + "')" + System.lineSeparator());
-						throw new DBException("Fehler beim Verbinden zur SQLite-Export-Datenbank");
-					}
-					logger.logLn(0, " [OK]");
-					logger.log(LogLevel.INFO, "Datenbank-Verbindung erfolgreich aufgebaut (driver='" + srcConfig.getDBDriver() + "', location='" + srcConfig.getDBLocation() + "', user='" + srcConfig.getUsername() + "')" + System.lineSeparator());
-					
-					DBSchemaManager srcManager = DBSchemaManager.create(srcConn, true, logger);
-					
-					// Führe die Migration mithilfe des Schema-Managers durch.
-					logger.modifyIndent(2);
-					srcManager.backup.importDB(tgtConfig, tgtRootPwd, maxUpdateRevision, devMode, logger);
-					logger.modifyIndent(-2);
+			Benutzer srcUser = Benutzer.create(srcConfig); 
+			try (DBEntityManager srcConn = srcUser.getEntityManager()) {
+				if (srcConn == null) {
+					logger.logLn(0, " [Fehler]");
+					logger.log(LogLevel.ERROR, "Fehler bei der Erstellung der Datenbank-Verbindung (driver='" + srcConfig.getDBDriver() + "', location='" + srcConfig.getDBLocation() + "', user='" + srcConfig.getUsername() + "')" + System.lineSeparator());
+					throw new DBException("Fehler beim Verbinden zur SQLite-Export-Datenbank");
 				}
+				logger.logLn(0, " [OK]");
+				logger.log(LogLevel.INFO, "Datenbank-Verbindung erfolgreich aufgebaut (driver='" + srcConfig.getDBDriver() + "', location='" + srcConfig.getDBLocation() + "', user='" + srcConfig.getUsername() + "')" + System.lineSeparator());
+				
+				DBSchemaManager srcManager = DBSchemaManager.create(srcConn, true, logger);
+				
+				// Führe die Migration mithilfe des Schema-Managers durch.
+				logger.modifyIndent(2);
+				srcManager.backup.importDB(tgtConfig, tgtRootPwd, maxUpdateRevision, devMode, logger);
+				logger.modifyIndent(-2);
 			}
 		} catch (DBException e) {
 			cmdLine.printOptionsAndExit(2, e.getMessage());

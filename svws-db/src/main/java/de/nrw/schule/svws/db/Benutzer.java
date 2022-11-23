@@ -1,18 +1,10 @@
 package de.nrw.schule.svws.db;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
 
-import org.eclipse.persistence.exceptions.DatabaseException;
-import org.eclipse.persistence.sessions.server.ConnectionPool;
-import org.eclipse.persistence.sessions.server.ServerSession;
-
 import de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenz;
 import de.nrw.schule.svws.ext.jbcrypt.BCrypt;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
 
 
 /**
@@ -20,7 +12,7 @@ import jakarta.persistence.Persistence;
  * bei einer SVWS-Datenbank. Für den Datenbankzugriff wird intern eine Instanz der Klasse
  * {@link DBEntityManager} verwendet.
  */
-public class Benutzer implements AutoCloseable {
+public class Benutzer {
 
 	/** Der Benutzername des angemeldeten Benutzers. */
     private String username;
@@ -34,8 +26,8 @@ public class Benutzer implements AutoCloseable {
 	/** Die verwendete Datenbank-Konfiguration {@link DBConfig} */
 	private final DBConfig config;
   
-	/** Die zum Erzeugen der {@link EntityManager} verwendete Instanz der {@link EntityManagerFactory} */
-	private EntityManagerFactory emf;
+	/** Der Managaer für dei Datenbank-Verbindungen */
+	public final ConnectionManager connectionManager;
 	
 	
     
@@ -59,18 +51,9 @@ public class Benutzer implements AutoCloseable {
     	this.username = "niemand";
     	this.password = "keines";
     	this.config = config;
-		this.emf = createEntityManagerFactory();
+    	this.connectionManager = ConnectionManager.get(config);
     }
 
-    
-	@Override
-	public void close() {
-		if (emf != null) {			
-			emf.close();
-			emf = null;
-		}
-	}	
-    
     
 	/**
 	 * Erstellt basierend auf der übergebenen Datenbank-Konfiguration {@link DBConfig} 
@@ -81,27 +64,7 @@ public class Benutzer implements AutoCloseable {
 	 * @return die neue Instanz des {@link Benutzer}
 	 */
     public static Benutzer create(DBConfig config) {
-    	// Erstelle den DB-Benutzer mithilfe der Konfiguration
-    	Benutzer benutzer = new Benutzer(config);
-    	// Führe eine Dummy-DB-Abfrage aus, um Probleme mit der Server-seitigen Beendung einer Verbindung zu erkennen
-    	DBEntityManager conn = benutzer.getEntityManager();
-    	
-    	try {
-    		conn.executeWithJDBCConnection("SELECT 1");
-    	} catch (DatabaseException e) {
-            // Bestimme die Anzahl der verfügbaren Verbindungen
-            ServerSession serverSession = conn.em.unwrap(ServerSession.class);
-            ConnectionPool pool = serverSession.getConnectionPools().get("default");
-            if (pool == null) {
-                System.err.println("Fehler beim Zugriff auf den DB-Connection-Pool default");
-            } else {
-            	System.err.println("INFO: Verbindung zur Datenbank unterbrochen - versuche sie neu aufzubauen...");
-            	System.err.println("Total number of connections: " + pool.getTotalNumberOfConnections());
-            	System.err.println("Available number of connections: " + pool.getConnectionsAvailable().size());
-            	pool.resetConnections();
-            }
-    	}
-    	return benutzer;
+    	return new Benutzer(config);
     }
     
     
@@ -260,16 +223,6 @@ public class Benutzer implements AutoCloseable {
 		this.kompetenzen = kompetenzen;
 	}
 
-
-	/**
-	 * Gibt die Konfiguration für den Datenbank-Zugriff zurück.
-	 * 
-	 * @return die Konfiguration für den Datenbank-Zugriff
-	 */
-	public final DBConfig getDBConfig() {
-		return this.config;
-	}
-	
 	
 	/**
 	 * Gibt eine neue Instanz des {@link DBEntityManager} zurück, die diesem Benutzer 
@@ -280,59 +233,11 @@ public class Benutzer implements AutoCloseable {
 	 */
 	public DBEntityManager getEntityManager() {
 		try {
-			return new DBEntityManager(this, config, emf.createEntityManager());
-		} catch(IllegalStateException e) {
+			return new DBEntityManager(this, config);
+		} catch(@SuppressWarnings("unused") IllegalStateException e) {
 			// TODO error handling
 			return null;
 		}
-	}
-	
-	
-	/**
-	 * Gibt einen neuen JPA {@link EntityManager} zurück. Diese Methode wird innerhalb dieses
-	 * Packages vom DBEntityManager bei der Erneuerung der Verbindung verwendet.
-	 *  
-	 * @return der neue JPA {@link EntityManager}
-	 */
-	EntityManager getNewJPAEntityManager() {
-		return emf.createEntityManager();
-	}
-
-	
-	/**
-	 * Intern genutzte Methode, um eine {@link EntityManagerFactory} für diesen 
-	 * {@link DBEntityManager} zu erstellen. Hierbei werden auch die Standardeinstellungen
-	 * für die Datenbankverbindung in Form der Property-Map hinzugefügt
-	 * (siehe {@link Persistence#createEntityManagerFactory(String, java.util.Map)})
-	 * 
-	 * @return die {@link EntityManagerFactory}
-	 */
-	private EntityManagerFactory createEntityManagerFactory() {
-		HashMap<String,Object> propertyMap = new HashMap<>();
-		propertyMap.put("jakarta.persistence.jdbc.driver", config.getDBDriver().getJDBCDriver());
-		String url = config.getDBDriver().getJDBCUrl(config.getDBLocation(), config.getDBSchema());
-		if (config.getDBDriver() == DBDriver.MDB && config.createDBFile())
-			url += ";newdatabaseversion=V2000";
-		propertyMap.put("jakarta.persistence.jdbc.url", url);
-		propertyMap.put("jakarta.persistence.jdbc.user", config.getUsername());
-		propertyMap.put("jakarta.persistence.jdbc.password", config.getPassword());
-		propertyMap.put("eclipselink.flush", "true");
-		propertyMap.put("eclipselink.persistence-context.flush-mode", "commit");
-		propertyMap.put("eclipselink.allow-zero-id", "true");
-		propertyMap.put("eclipselink.logging.level", config.useDBLogging() ? "WARNING" : "OFF");
-//		propertyMap.put("eclipselink.logging.level", config.useDBLogging() ? "INFO" : "OFF");
-//		propertyMap.put("eclipselink.logging.level", "ALL");
-//		propertyMap.put("eclipselink.profiler","PerformanceProfiler");
-		propertyMap.put("eclipselink.cache.shared.default", "false");
-//		propertyMap.put("eclipselink.exception-handler", "de.nrw.schule.svws.db.DBExceptionHandler");
-		if (config.getDBDriver() == DBDriver.SQLITE) {
-			propertyMap.put("eclipselink.target-database", "Database");
-			// Einstellungen des SQ-Lite-Treibers
-			propertyMap.put("open_mode", (config.createDBFile()) ? "70" : "66");   // READWRITE (2) + CREATE (4) + OPEN_URI (64) = 70 bzw. // READWRITE (2) + OPEN_URI (64)  = 66  
-			propertyMap.put("foreign_keys", "true");
-		}
-		return Persistence.createEntityManagerFactory("SVWSDB", propertyMap);
-		// TODO avoid Persistence Unit "SVWSDB" as xml file
 	}
 	
 }

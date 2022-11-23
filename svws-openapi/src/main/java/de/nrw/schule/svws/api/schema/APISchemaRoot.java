@@ -270,7 +270,7 @@ public class APISchemaRoot {
 			if (root_manager == null)
 				throw OperationError.FORBIDDEN.exception(simpleResponse(false, log));
 	
-			if ((root_manager.isReservedSchemaName(schemaname)) || root_manager.isReservedUserName(kennwort.user))
+			if ((DBRootManager.isReservedSchemaName(schemaname)) || DBRootManager.isReservedUserName(kennwort.user))
 				throw OperationError.BAD_REQUEST.exception(simpleResponse(false, log));
 	    	
 			logger.logLn("Prüfe, ob das Schema bereits existiert...");
@@ -286,27 +286,26 @@ public class APISchemaRoot {
 				return simpleResponse(false, log);			
 	
 			DBConfig dbconfig = new DBConfig(conn.getDBDriver(), conn.getDBLocation(), schemaname, conn.useDBLogin(), kennwort.user, kennwort.password, true, true);
-			try (Benutzer schemaUser = Benutzer.create(dbconfig)) {
-				try (DBEntityManager schemaConn = schemaUser.getEntityManager()) {
-					DBSchemaManager manager = DBSchemaManager.create(schemaConn, true, logger);
-					if (manager == null)
-						throw OperationError.INTERNAL_SERVER_ERROR.exception(simpleResponse(false, log));
+			Benutzer schemaUser = Benutzer.create(dbconfig);
+			try (DBEntityManager schemaConn = schemaUser.getEntityManager()) {
+				DBSchemaManager manager = DBSchemaManager.create(schemaConn, true, logger);
+				if (manager == null)
+					throw OperationError.INTERNAL_SERVER_ERROR.exception(simpleResponse(false, log));
 
-					logger.logLn("Erstelle das Schema zunächst in der Revision 0.");
-					logger.modifyIndent(2);
-					if (!manager.createSVWSSchema(0, true)) 
-						throw OperationError.INTERNAL_SERVER_ERROR.exception(simpleResponse(false, log));
-					logger.modifyIndent(-2);
+				logger.logLn("Erstelle das Schema zunächst in der Revision 0.");
+				logger.modifyIndent(2);
+				if (!manager.createSVWSSchema(0, true)) 
+					throw OperationError.INTERNAL_SERVER_ERROR.exception(simpleResponse(false, log));
+				logger.modifyIndent(-2);
 
-					logger.logLn("Aktualisiere das Schema schrittweise auf Revision " + revision + ".");
-					logger.modifyIndent(2);
-					if (!manager.updater.update(revision, false, true))
-						throw OperationError.INTERNAL_SERVER_ERROR.exception(simpleResponse(false, log));
-					logger.modifyIndent(-2);
-					
-					return simpleResponse(true, log);
-				}
-			}			
+				logger.logLn("Aktualisiere das Schema schrittweise auf Revision " + revision + ".");
+				logger.modifyIndent(2);
+				if (!manager.updater.update(revision, false, true))
+					throw OperationError.INTERNAL_SERVER_ERROR.exception(simpleResponse(false, log));
+				logger.modifyIndent(-2);
+				
+				return simpleResponse(true, log);
+			}
     	}
     }
     
@@ -500,22 +499,21 @@ public class APISchemaRoot {
 			DBConfig srcConfig = new DBConfig(DBDriver.SQLITE, tmpDirectory + "/" + tmpFilename, null, false, null, null, true, false);
 			DBConfig tgtConfig = new DBConfig(conn.getDBDriver(), conn.getDBLocation(), schemaname, false, multipart.schemaUsername, multipart.schemaUserPassword, true, true);
 			
-			try (Benutzer srcUser = Benutzer.create(srcConfig)) {
-				try (DBEntityManager srcConn = srcUser.getEntityManager()) {
-					if (srcConn == null) {
-						logger.logLn(0, " [Fehler]");
-						throw new DBException("Fehler beim Verbinden zur SQLite-Export-Datenbank");
-					}
-					logger.logLn(0, " [OK]");
-					
-					DBSchemaManager srcManager = DBSchemaManager.create(srcConn, true, logger);
-					logger.modifyIndent(2);
-					if (!srcManager.backup.importDB(tgtConfig, conn.getUser().getPassword(), maxUpdateRevision, false, logger))
-						throw OperationError.INTERNAL_SERVER_ERROR.exception(simpleResponse(false, log));				
-					logger.modifyIndent(-2);
-				} catch(DBException e) {
-					throw OperationError.INTERNAL_SERVER_ERROR.exception(simpleResponse(false, log));
+			Benutzer srcUser = Benutzer.create(srcConfig);
+			try (DBEntityManager srcConn = srcUser.getEntityManager()) {
+				if (srcConn == null) {
+					logger.logLn(0, " [Fehler]");
+					throw new DBException("Fehler beim Verbinden zur SQLite-Export-Datenbank");
 				}
+				logger.logLn(0, " [OK]");
+				
+				DBSchemaManager srcManager = DBSchemaManager.create(srcConn, true, logger);
+				logger.modifyIndent(2);
+				if (!srcManager.backup.importDB(tgtConfig, conn.getUser().getPassword(), maxUpdateRevision, false, logger))
+					throw OperationError.INTERNAL_SERVER_ERROR.exception(simpleResponse(false, log));				
+				logger.modifyIndent(-2);
+			} catch(DBException e) {
+				throw OperationError.INTERNAL_SERVER_ERROR.exception(simpleResponse(false, log));
 			}
 			
 			// Entferne die temporär angelegte Datenbank wieder...

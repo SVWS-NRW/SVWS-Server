@@ -1,5 +1,20 @@
 package de.nrw.schule.svws.api.server;
 
+import de.nrw.schule.svws.api.OpenAPIApplication;
+import de.nrw.schule.svws.core.data.jahrgang.JahrgangsDaten;
+import de.nrw.schule.svws.core.data.jahrgang.JahrgangsKatalogEintrag;
+import de.nrw.schule.svws.core.data.jahrgang.JahrgangsListeEintrag;
+import de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenz;
+import de.nrw.schule.svws.data.jahrgaenge.DataJahrgangsdaten;
+import de.nrw.schule.svws.data.jahrgaenge.DataJahrgangsliste;
+import de.nrw.schule.svws.data.jahrgaenge.DataKatalogJahrgaenge;
+import de.nrw.schule.svws.db.DBEntityManager;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
@@ -9,23 +24,6 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-
-import de.nrw.schule.svws.api.OpenAPIApplication;
-import de.nrw.schule.svws.core.data.jahrgang.JahrgangsDaten;
-import de.nrw.schule.svws.core.data.jahrgang.JahrgangsKatalogEintrag;
-import de.nrw.schule.svws.core.data.jahrgang.JahrgangsListeEintrag;
-import de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenz;
-import de.nrw.schule.svws.data.jahrgaenge.DataJahrgangsdaten;
-import de.nrw.schule.svws.data.jahrgaenge.DataJahrgangsliste;
-import de.nrw.schule.svws.data.jahrgaenge.DataKatalogJahrgaenge;
-import de.nrw.schule.svws.db.Benutzer;
-import de.nrw.schule.svws.db.DBEntityManager;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
  * Die Klasse spezifiziert die OpenAPI-Schnittstelle für den Zugriff auf die grundlegenden Jahrgangsdaten aus der SVWS-Datenbank.
@@ -112,9 +110,8 @@ public class APIJahrgaenge {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Jahrgangs-Katalog-Einträge gefunden")
     public Response getKatalogJahrgaenge(@PathParam("schema") String schema, @Context HttpServletRequest request) {
-        try (Benutzer user = OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
-            return (new DataKatalogJahrgaenge()).getAll();
-        }
+        OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+        return (new DataKatalogJahrgaenge()).getAll();
     }  
 
 }

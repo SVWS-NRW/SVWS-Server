@@ -16,7 +16,6 @@ import de.nrw.schule.svws.data.faecher.DataKatalogFachgruppen;
 import de.nrw.schule.svws.data.faecher.DataKatalogSprachpruefungsniveaus;
 import de.nrw.schule.svws.data.faecher.DataKatalogSprachreferenzniveaus;
 import de.nrw.schule.svws.data.faecher.DataKatalogZulaessigeFaecher;
-import de.nrw.schule.svws.db.Benutzer;
 import de.nrw.schule.svws.db.DBEntityManager;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -120,9 +119,8 @@ public class APIFaecher {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Fach-Katalog-Einträge gefunden")
     public Response getKatalogFaecher(@PathParam("schema") String schema, @Context HttpServletRequest request) {
-        try (Benutzer user = OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
-            return (new DataKatalogZulaessigeFaecher()).getAll();
-        }
+        OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+        return (new DataKatalogZulaessigeFaecher()).getAll();
     }  
 
     

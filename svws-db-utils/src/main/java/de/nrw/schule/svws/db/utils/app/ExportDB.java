@@ -119,23 +119,22 @@ public class ExportDB {
 			String filename = cmdLine.getValue("f", "svws_export.sqlite");
 	
 			logger.logLn("-> Verbinde zur Quell-Datenbank (" + srcConfig.getDBDriver().toString() + ":" + srcLoc + "/" + srcLoc + ")... ");
-			try (Benutzer srcUser = Benutzer.create(srcConfig)) { 
-				try (DBEntityManager srcConn = srcUser.getEntityManager()) {
-					if (srcConn == null) {
-						logger.logLn(0, " [Fehler]");
-						logger.log(LogLevel.ERROR, "Fehler bei der Erstellung der Datenbank-Verbindung (driver='" + srcConfig.getDBDriver() + "', schema='" + srcConfig.getDBSchema() + "', location='" + srcConfig.getDBLocation() + "', user='" + srcConfig.getUsername() + "')" + System.lineSeparator());
-						throw new DBException("Fehler beim Verbinden zur Quelldatenbank");
-					}
-					logger.logLn(0, " [OK]");
-					logger.log(LogLevel.INFO, "Datenbank-Verbindung erfolgreich aufgebaut (driver='" + srcConfig.getDBDriver() + "', schema='" + srcConfig.getDBSchema() + "', location='" + srcConfig.getDBLocation() + "', user='" + srcConfig.getUsername() + "')" + System.lineSeparator());
-			
-					DBSchemaManager srcManager = DBSchemaManager.create(srcConn, true, logger); 
-					
-					// Führe den Export mithilfe des Schema-Managers durch.
-					logger.modifyIndent(2);
-					srcManager.backup.exportDB(filename, logger);
-					logger.modifyIndent(-2);
+			Benutzer srcUser = Benutzer.create(srcConfig); 
+			try (DBEntityManager srcConn = srcUser.getEntityManager()) {
+				if (srcConn == null) {
+					logger.logLn(0, " [Fehler]");
+					logger.log(LogLevel.ERROR, "Fehler bei der Erstellung der Datenbank-Verbindung (driver='" + srcConfig.getDBDriver() + "', schema='" + srcConfig.getDBSchema() + "', location='" + srcConfig.getDBLocation() + "', user='" + srcConfig.getUsername() + "')" + System.lineSeparator());
+					throw new DBException("Fehler beim Verbinden zur Quelldatenbank");
 				}
+				logger.logLn(0, " [OK]");
+				logger.log(LogLevel.INFO, "Datenbank-Verbindung erfolgreich aufgebaut (driver='" + srcConfig.getDBDriver() + "', schema='" + srcConfig.getDBSchema() + "', location='" + srcConfig.getDBLocation() + "', user='" + srcConfig.getUsername() + "')" + System.lineSeparator());
+		
+				DBSchemaManager srcManager = DBSchemaManager.create(srcConn, true, logger); 
+				
+				// Führe den Export mithilfe des Schema-Managers durch.
+				logger.modifyIndent(2);
+				srcManager.backup.exportDB(filename, logger);
+				logger.modifyIndent(-2);
 			}
 		} catch (DBException e) {
 			cmdLine.printOptionsAndExit(2, e.getMessage());

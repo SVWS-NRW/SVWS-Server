@@ -67,7 +67,7 @@ public class DBRootManager {
 	 * 
 	 * @return true, falls der Name reserviert oder ungültig ist.
 	 */
-	public boolean isReservedSchemaName(String name) {
+	public static boolean isReservedSchemaName(String name) {
 		if (name == null)
 			return true;
 		switch (name) {
@@ -94,7 +94,7 @@ public class DBRootManager {
 	 * 
 	 * @return true, falls der Name reserviert oder ungültig ist.
 	 */
-	public boolean isReservedUserName(String name) {
+	public static boolean isReservedUserName(String name) {
 		if (name == null)
 			return true;
 		switch (name) {
@@ -155,18 +155,17 @@ public class DBRootManager {
 		if ((conn == null) || !conn.getDBDriver().hasMultiSchemaSupport())
 			return false;
 		// Prüfe, ob der aktuelle Datenbank-Benutzer überhaupt Rechte auf das Schema hat und sich verbinden kann
-		try (Benutzer user = this.conn.getUser().connectTo(nameSchema)) {
-			try (DBEntityManager conn = user.getEntityManager()) {
-				if (conn == null)
-					return false;
-				// Prüfe, ob der Benutzer bereits existiert und erstelle nur einen, wenn keiner existiert
-				List<String> benutzer = DTOInformationUser.queryNames(conn);
-				if (!benutzer.contains(nameUser) && !createDBUser(conn, nameUser, pwUser, nameSchema)) 
-					return false;
-				
-				// Gibt dem Benutzer administrative Rechte auf das Schema
-				return grantAdminRights(conn, nameUser, nameSchema);
-			}
+		Benutzer user = this.conn.getUser().connectTo(nameSchema);
+		try (DBEntityManager conn = user.getEntityManager()) {
+			if (conn == null)
+				return false;
+			// Prüfe, ob der Benutzer bereits existiert und erstelle nur einen, wenn keiner existiert
+			List<String> benutzer = DTOInformationUser.queryNames(conn);
+			if (!benutzer.contains(nameUser) && !createDBUser(conn, nameUser, pwUser, nameSchema)) 
+				return false;
+			
+			// Gibt dem Benutzer administrative Rechte auf das Schema
+			return grantAdminRights(conn, nameUser, nameSchema);
 		}
 	}
 
@@ -389,7 +388,7 @@ public class DBRootManager {
 			return true;
 		try {
 			return file.delete();
-		} catch (SecurityException e) {
+		} catch (@SuppressWarnings("unused") SecurityException e) {
 			return false;
 		}
 	}
@@ -443,35 +442,34 @@ public class DBRootManager {
 		if (config.getDBDriver().hasMultiSchemaSupport()) {
 			logger.logLn("-> Verbinde mit einem DB-Root-Manager zu der Ziel-DB...");
 			DBConfig rootConfig = getDBRootConfig(config.getDBDriver(), config.getDBLocation(), pw_root);
-			try (Benutzer rootUser = Benutzer.create(rootConfig)) {
-				try (DBEntityManager rootConn = rootUser.getEntityManager()) {
-					logger.modifyIndent(2);
-					logger.log("- ");
-					if (rootConn == null) {
-						logger.logLn(0, " [Fehler]");
-						logger.log(LogLevel.ERROR, 0, "Fehler bei der Erstellung der Datenbank-Verbindung (driver='" + config.getDBDriver() + "', schema='" + config.getDBSchema() + "', location='" + config.getDBLocation() + "', user='" + config.getUsername() + "')");
-						throw new SQLException();
-					}
-					logger.logLn(0, "Datenbank-Verbindung erfolgreich aufgebaut (driver='" + config.getDBDriver() + "', schema='" + config.getDBSchema() + "', location='" + config.getDBLocation() + "', user='" + config.getUsername() + "')");
-					DBRootManager root_manager = new DBRootManager(rootConn);
-				
-					logger.log("- Entferne aus der Ziel-DB das alte Schema, falls vorhanden...");
-					if (!root_manager.dropDBSchemaIfExists(config.getDBSchema()))
-						throw new SQLException();
-					logger.logLn(0, " [OK]");
-	 				
-					logger.log("- Erstelle in der Ziel-DB das Schema und den Admin-Benutzer:");
-					if (!root_manager.createDBSchemaWithAdminUser(config.getUsername(), config.getPassword(), config.getDBSchema()))
-						throw new SQLException();
-					logger.logLn(0, " [OK]");
-					
-					logger.modifyIndent(-2);
-					return true;
-				} catch(SQLException e) {
+			Benutzer rootUser = Benutzer.create(rootConfig);
+			try (DBEntityManager rootConn = rootUser.getEntityManager()) {
+				logger.modifyIndent(2);
+				logger.log("- ");
+				if (rootConn == null) {
 					logger.logLn(0, " [Fehler]");
-					logger.modifyIndent(-2);
-					return false;
+					logger.log(LogLevel.ERROR, 0, "Fehler bei der Erstellung der Datenbank-Verbindung (driver='" + config.getDBDriver() + "', schema='" + config.getDBSchema() + "', location='" + config.getDBLocation() + "', user='" + config.getUsername() + "')");
+					throw new SQLException();
 				}
+				logger.logLn(0, "Datenbank-Verbindung erfolgreich aufgebaut (driver='" + config.getDBDriver() + "', schema='" + config.getDBSchema() + "', location='" + config.getDBLocation() + "', user='" + config.getUsername() + "')");
+				DBRootManager root_manager = new DBRootManager(rootConn);
+			
+				logger.log("- Entferne aus der Ziel-DB das alte Schema, falls vorhanden...");
+				if (!root_manager.dropDBSchemaIfExists(config.getDBSchema()))
+					throw new SQLException();
+				logger.logLn(0, " [OK]");
+ 				
+				logger.log("- Erstelle in der Ziel-DB das Schema und den Admin-Benutzer:");
+				if (!root_manager.createDBSchemaWithAdminUser(config.getUsername(), config.getPassword(), config.getDBSchema()))
+					throw new SQLException();
+				logger.logLn(0, " [OK]");
+				
+				logger.modifyIndent(-2);
+				return true;
+			} catch(@SuppressWarnings("unused") SQLException e) {
+				logger.logLn(0, " [Fehler]");
+				logger.modifyIndent(-2);
+				return false;
 			}
 		}
 		

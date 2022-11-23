@@ -265,81 +265,79 @@ public class DBMigrationManager {
 		
 		try {
 			logger.log("-> Verbinde zur Quell-Datenbank... ");
-			try (Benutzer srcUser = Benutzer.create(srcConfig)) { 
-				try (DBEntityManager srcConn = srcUser.getEntityManager()) {
-					srcManager = getSchemaManager(srcConfig, srcConn, true); 
+			Benutzer srcUser = Benutzer.create(srcConfig); 
+			try (DBEntityManager srcConn = srcUser.getEntityManager()) {
+				srcManager = getSchemaManager(srcConfig, srcConn, true); 
 
-					logger.log("-> Verbinde zum Ziel-Schema mit dem Datenbank-Test-Benutzer...");
-					try (Benutzer tgtUser = Benutzer.create(tgtConfig)) {
-						try (DBEntityManager tgtConn = tgtUser.getEntityManager()) {
-							tgtManager = getSchemaManager(tgtConfig, tgtConn, false);
-							
-							logger.logLn("-> Erstelle für die Migration in die Ziel-DB ein SVWS-Schema der Revision 0");
-							logger.modifyIndent(2);
-							boolean result = tgtManager.createSVWSSchema(0, false);
-							logger.modifyIndent(-2);
-							if (!result) {
-								logger.logLn(" [Fehler]");
-								throw new DBException("Fehler beim Erstelen des Schemas mit der Revision 0");				
-							}
-							logger.logLn("[OK]");
-							
-							try {
-								tgtConn.reconnect();
-							} catch (DBConnectionException e) {
-								logger.logLn(" [Fehler] Erneuter Verbindungsaufbau zur Zieldatenbank fehlgeschlagen!");
-							}
-							
-							logger.logLn("-> Kopiere die Daten aus der Quell-DB in die Ziel-DB...");
-							logger.modifyIndent(2);
-							result = copy();
-							logger.modifyIndent(-2);
-							if (!result) {
-								logger.logLn(" [Fehler]");
-								throw new DBException("Fehler beim Kopieren der zu migrierenden Daten");				
-							}
-							logger.logLn("[OK]");
-							
-							try {
-								tgtConn.reconnect();
-							} catch (DBConnectionException e) {
-								logger.logLn(" [Fehler] Erneuter Verbindungsaufbau zur Zieldatenbank fehlgeschlagen!");
-							}
-										
-							logger.logLn("-> Überprüfe die in der DB eingetragene Schulform anhand der Statistik-Vorgaben und korrigiere diese ggf. ...");
-							logger.modifyIndent(2);
-							result = fixSchulform();
-							logger.modifyIndent(-2);
-							logger.logLn(result ? "[OK]" : "[Fehler]");
-							
-							logger.logLn("-> Konvertiere die Bilder als Base64-kodiertes Text-Format...");
-							logger.modifyIndent(2);
-							convertImages();
-							logger.modifyIndent(-2);
-							logger.logLn(result ? "[OK]" : "[Fehler]");
-				
-							if (maxUpdateRevision != 0) {
-								logger.logLn("-> Aktualisiere die Ziel-DB auf die " + ((maxUpdateRevision < 0) ? "neueste " : "") + "DB-Revision" + ((maxUpdateRevision > 0) ? " " + maxUpdateRevision : "") + "...");
-								logger.modifyIndent(2);
-								result = tgtManager.updater.update(maxUpdateRevision < 0 ? -1 : maxUpdateRevision, devMode, false);
-								logger.modifyIndent(-2);
-								if (!result) {
-									logger.logLn("[Fehler]");
-									throw new DBException("Fehler beim Aktualsieren der Ziel-DB");				
-								}			
-								logger.logLn("[OK]");
-							}
+				logger.log("-> Verbinde zum Ziel-Schema mit dem Datenbank-Test-Benutzer...");
+				Benutzer tgtUser = Benutzer.create(tgtConfig);
+				try (DBEntityManager tgtConn = tgtUser.getEntityManager()) {
+					tgtManager = getSchemaManager(tgtConfig, tgtConn, false);
 					
-							logger.logLn("-> Speicherbelegung (frei/verfügbar/gesamt): " + (Math.round(Runtime.getRuntime().freeMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().totalMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().maxMemory() / 10000000.0) / 100.0) + "G");
-							logger.logLn("-> Migration erfolgreich in " + ((System.currentTimeMillis() - timeStart) / 1000.0) + " Sekunden abgeschlossen.");
-						} finally {
-							tgtManager = null;
-						}
+					logger.logLn("-> Erstelle für die Migration in die Ziel-DB ein SVWS-Schema der Revision 0");
+					logger.modifyIndent(2);
+					boolean result = tgtManager.createSVWSSchema(0, false);
+					logger.modifyIndent(-2);
+					if (!result) {
+						logger.logLn(" [Fehler]");
+						throw new DBException("Fehler beim Erstelen des Schemas mit der Revision 0");				
 					}
+					logger.logLn("[OK]");
+					
+					try {
+						tgtConn.reconnect();
+					} catch (DBConnectionException e) {
+						logger.logLn(" [Fehler] Erneuter Verbindungsaufbau zur Zieldatenbank fehlgeschlagen!");
+					}
+					
+					logger.logLn("-> Kopiere die Daten aus der Quell-DB in die Ziel-DB...");
+					logger.modifyIndent(2);
+					result = copy();
+					logger.modifyIndent(-2);
+					if (!result) {
+						logger.logLn(" [Fehler]");
+						throw new DBException("Fehler beim Kopieren der zu migrierenden Daten");				
+					}
+					logger.logLn("[OK]");
+					
+					try {
+						tgtConn.reconnect();
+					} catch (DBConnectionException e) {
+						logger.logLn(" [Fehler] Erneuter Verbindungsaufbau zur Zieldatenbank fehlgeschlagen!");
+					}
+								
+					logger.logLn("-> Überprüfe die in der DB eingetragene Schulform anhand der Statistik-Vorgaben und korrigiere diese ggf. ...");
+					logger.modifyIndent(2);
+					result = fixSchulform();
+					logger.modifyIndent(-2);
+					logger.logLn(result ? "[OK]" : "[Fehler]");
+					
+					logger.logLn("-> Konvertiere die Bilder als Base64-kodiertes Text-Format...");
+					logger.modifyIndent(2);
+					convertImages();
+					logger.modifyIndent(-2);
+					logger.logLn(result ? "[OK]" : "[Fehler]");
+		
+					if (maxUpdateRevision != 0) {
+						logger.logLn("-> Aktualisiere die Ziel-DB auf die " + ((maxUpdateRevision < 0) ? "neueste " : "") + "DB-Revision" + ((maxUpdateRevision > 0) ? " " + maxUpdateRevision : "") + "...");
+						logger.modifyIndent(2);
+						result = tgtManager.updater.update(maxUpdateRevision < 0 ? -1 : maxUpdateRevision, devMode, false);
+						logger.modifyIndent(-2);
+						if (!result) {
+							logger.logLn("[Fehler]");
+							throw new DBException("Fehler beim Aktualsieren der Ziel-DB");				
+						}			
+						logger.logLn("[OK]");
+					}
+			
+					logger.logLn("-> Speicherbelegung (frei/verfügbar/gesamt): " + (Math.round(Runtime.getRuntime().freeMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().totalMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().maxMemory() / 10000000.0) / 100.0) + "G");
+					logger.logLn("-> Migration erfolgreich in " + ((System.currentTimeMillis() - timeStart) / 1000.0) + " Sekunden abgeschlossen.");
 				} finally {
-					srcManager = null;
+					tgtManager = null;
 				}
-			}			
+			} finally {
+				srcManager = null;
+			}
 		} catch (DBException e) {
 			logger.logLn("-> Migration fehlgeschlagen! (" + e.getMessage() + ")");
 			success = false;
