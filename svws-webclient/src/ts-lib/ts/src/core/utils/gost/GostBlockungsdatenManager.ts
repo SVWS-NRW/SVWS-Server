@@ -68,8 +68,6 @@ export class GostBlockungsdatenManager extends JavaObject {
 
 	private readonly _compFachwahlen : Comparator<GostFachwahl>;
 
-	private _ergebnisse_sortiert_nach_bewertung : List<GostBlockungsergebnisListeneintrag> | null = null;
-
 	private readonly _compErgebnisse : Comparator<GostBlockungsergebnisListeneintrag> = new GostBlockungsergebnisComparator();
 
 	private _maxTimeMillis : number = 1000;
@@ -428,7 +426,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 			throw new NullPointerException("Ergebnis.gostHalbjahr = " + pErgebnis.gostHalbjahr + " --> unbekannt!")
 		this._daten.ergebnisse.add(pErgebnis);
 		this._mapErgebnis.put(pErgebnis.id, pErgebnis);
-		this._ergebnisse_sortiert_nach_bewertung = null;
+		this._daten.ergebnisse.sort(this._compErgebnisse);
 	}
 
 	/**
@@ -462,11 +460,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @return Eine sortierte Menge der {@link GostBlockungsergebnisListeneintrag} nach ihrer Bewertung.
 	 */
 	public getErgebnisseSortiertNachBewertung() : List<GostBlockungsergebnisListeneintrag> {
-		if (this._ergebnisse_sortiert_nach_bewertung === null) {
-			this._ergebnisse_sortiert_nach_bewertung = new Vector(this._daten.ergebnisse);
-			this._ergebnisse_sortiert_nach_bewertung.sort(this._compErgebnisse);
-		}
-		return this._ergebnisse_sortiert_nach_bewertung;
+		return this._daten.ergebnisse;
 	}
 
 	/**
@@ -479,7 +473,6 @@ export class GostBlockungsdatenManager extends JavaObject {
 		let e : GostBlockungsergebnisListeneintrag = this.getErgebnis(pErgebnisID);
 		this._daten.ergebnisse.remove(e);
 		this._mapErgebnis.remove(pErgebnisID);
-		this._ergebnisse_sortiert_nach_bewertung = null;
 	}
 
 	/**
@@ -501,7 +494,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 		for (let eintrag of this._daten.ergebnisse) 
 			if (eintrag.id === pErgebnis.id) 
 				eintrag.bewertung = pErgebnis.bewertung;
-		this._ergebnisse_sortiert_nach_bewertung = null;
+		this._daten.ergebnisse.sort(this._compErgebnisse);
 	}
 
 	/**

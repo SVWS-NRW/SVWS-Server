@@ -89,8 +89,8 @@ public class GostBlockungsdatenManager {
 	/** Ein Comparator für die Fachwahlen (SCHÜLERID, FACH, KURSART) */
 	private final @NotNull Comparator<@NotNull GostFachwahl> _compFachwahlen;
 
-	/** Eine sortierte, gecachte Menge der {@link GostBlockungsergebnisListeneintrag} nach ihrer Bewertung. */
-	private List<@NotNull GostBlockungsergebnisListeneintrag> _ergebnisse_sortiert_nach_bewertung = null;
+//	/** Eine sortierte, gecachte Menge der {@link GostBlockungsergebnisListeneintrag} nach ihrer Bewertung. */
+//	private List<@NotNull GostBlockungsergebnisListeneintrag> _ergebnisse_sortiert_nach_bewertung = null;
 
 	/** Ein Comparator für die {@link GostBlockungsergebnisListeneintrag} nach ihrer Bewertung. */
 	private final @NotNull Comparator<@NotNull GostBlockungsergebnisListeneintrag> _compErgebnisse = new GostBlockungsergebnisComparator();
@@ -430,8 +430,9 @@ public class GostBlockungsdatenManager {
 		_daten.ergebnisse.add(pErgebnis);
 		_mapErgebnis.put(pErgebnis.id, pErgebnis);
 		
-		// Cache der sortierten Ergebnisse löschen.
-		_ergebnisse_sortiert_nach_bewertung = null;
+		// Liste sortieren
+		_daten.ergebnisse.sort(_compErgebnisse);
+		//_ergebnisse_sortiert_nach_bewertung = null;
 	}
 	
 	/**
@@ -465,11 +466,12 @@ public class GostBlockungsdatenManager {
 	 * @return Eine sortierte Menge der {@link GostBlockungsergebnisListeneintrag} nach ihrer Bewertung.
 	 */
 	public @NotNull List<@NotNull GostBlockungsergebnisListeneintrag> getErgebnisseSortiertNachBewertung() {
-		if (_ergebnisse_sortiert_nach_bewertung == null) {
-			_ergebnisse_sortiert_nach_bewertung = new Vector<>(_daten.ergebnisse);
-			_ergebnisse_sortiert_nach_bewertung.sort(_compErgebnisse);
-		}
-		return _ergebnisse_sortiert_nach_bewertung;
+		return _daten.ergebnisse;
+//		if (_ergebnisse_sortiert_nach_bewertung == null) {
+//			_ergebnisse_sortiert_nach_bewertung = new Vector<>(_daten.ergebnisse);
+//			_ergebnisse_sortiert_nach_bewertung.sort(_compErgebnisse);
+//		}
+//		return _ergebnisse_sortiert_nach_bewertung;
 	}
 	
 	/** 
@@ -485,8 +487,9 @@ public class GostBlockungsdatenManager {
 		_daten.ergebnisse.remove(e);
 		_mapErgebnis.remove(pErgebnisID);
 		
-		// Cache der sortierten Ergebnisse löschen.
-	    _ergebnisse_sortiert_nach_bewertung = null;
+		// Ergebnisse sortieren nicht nötig. 
+		// _daten.ergebnisse.sort(_compErgebnisse);
+	    //_ergebnisse_sortiert_nach_bewertung = null;
 	}
 
 	/**
@@ -509,8 +512,9 @@ public class GostBlockungsdatenManager {
 			if (eintrag.id == pErgebnis.id)
 				eintrag.bewertung = pErgebnis.bewertung;
 		
-		// Cache der sortierten Ergebnisse löschen.
-		_ergebnisse_sortiert_nach_bewertung = null;
+		// Ergebnisse sortieren.
+		_daten.ergebnisse.sort(_compErgebnisse);
+		//_ergebnisse_sortiert_nach_bewertung = null;
 	}
 
 	// ##### GostBlockungKurs #####
