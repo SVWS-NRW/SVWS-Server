@@ -60,11 +60,11 @@ export class GostBlockungsdatenManager extends JavaObject {
 
 	private readonly _compKurs_fach_kursart_kursnummer : Comparator<GostBlockungKurs>;
 
-	private _kurse_sortiert_fach_kursart_kursnummer : List<GostBlockungKurs> | null = null;
+	private _kurse_sortiert_fach_kursart_kursnummer : List<GostBlockungKurs> = new Vector();
 
 	private readonly _compKurs_kursart_fach_kursnummer : Comparator<GostBlockungKurs>;
 
-	private _kurse_sortiert_kursart_fach_kursnummer : List<GostBlockungKurs> | null = null;
+	private _kurse_sortiert_kursart_fach_kursnummer : List<GostBlockungKurs> = new Vector();
 
 	private readonly _compFachwahlen : Comparator<GostFachwahl>;
 
@@ -409,13 +409,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 		this._maxTimeMillis = pZeit;
 	}
 
-	/**
-	 *
-	 * Fügt das übergebenen Ergebnis der Blockung hinzu.
-	 * 
-	 * @param pErgebnis Das {@link GostBlockungsergebnisListeneintrag}-Objekt, welches hinzugefügt wird.
-	 */
-	public addErgebnis(pErgebnis : GostBlockungsergebnisListeneintrag) : void {
+	private addErgebnisOhneSortierung(pErgebnis : GostBlockungsergebnisListeneintrag) : void {
 		if (pErgebnis.id < 1) 
 			throw new NullPointerException("Ergebnis.id = " + pErgebnis.id + " --> zu gering!")
 		if (this._mapErgebnis.containsKey(pErgebnis.id)) 
@@ -426,6 +420,16 @@ export class GostBlockungsdatenManager extends JavaObject {
 			throw new NullPointerException("Ergebnis.gostHalbjahr = " + pErgebnis.gostHalbjahr + " --> unbekannt!")
 		this._daten.ergebnisse.add(pErgebnis);
 		this._mapErgebnis.put(pErgebnis.id, pErgebnis);
+	}
+
+	/**
+	 *
+	 * Fügt das übergebenen Ergebnis der Blockung hinzu.
+	 * 
+	 * @param pErgebnis Das {@link GostBlockungsergebnisListeneintrag}-Objekt, welches hinzugefügt wird.
+	 */
+	public addErgebnis(pErgebnis : GostBlockungsergebnisListeneintrag) : void {
+		this.addErgebnisOhneSortierung(pErgebnis);
 		this._daten.ergebnisse.sort(this._compErgebnisse);
 	}
 
@@ -436,7 +440,8 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public addErgebnisListe(pErgebnisse : List<GostBlockungsergebnisListeneintrag>) : void {
 		for (let ergebnis of pErgebnisse) 
-			this.addErgebnis(ergebnis);
+			this.addErgebnisOhneSortierung(ergebnis);
+		this._daten.ergebnisse.sort(this._compErgebnisse);
 	}
 
 	/**
@@ -497,13 +502,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 		this._daten.ergebnisse.sort(this._compErgebnisse);
 	}
 
-	/**
-	 *
-	 * Fügt den übergebenen Kurs zu der Blockung hinzu
-	 * 
-	 * @param pKurs Das {@link GostBlockungKurs}-Objekt, welches hinzugefügt wird.
-	 */
-	public addKurs(pKurs : GostBlockungKurs) : void {
+	private addKursOhneSortierung(pKurs : GostBlockungKurs) : void {
 		if (this._mapKurse.containsKey(pKurs.id)) 
 			throw new NullPointerException("Kurs.id =  " + pKurs.id + " --> doppelt!")
 		if (pKurs.anzahlSchienen < 1) 
@@ -521,8 +520,18 @@ export class GostBlockungsdatenManager extends JavaObject {
 			throw new NullPointerException("Kurs.wochenstunden = " + pKurs.wochenstunden + " --> zu gering!")
 		this._daten.kurse.add(pKurs);
 		this._mapKurse.put(pKurs.id, pKurs);
-		this._kurse_sortiert_fach_kursart_kursnummer = null;
-		this._kurse_sortiert_kursart_fach_kursnummer = null;
+	}
+
+	/**
+	 *
+	 * Fügt den übergebenen Kurs zu der Blockung hinzu
+	 * 
+	 * @param pKurs Das {@link GostBlockungKurs}-Objekt, welches hinzugefügt wird.
+	 */
+	public addKurs(pKurs : GostBlockungKurs) : void {
+		this.addKursOhneSortierung(pKurs);
+		this._kurse_sortiert_fach_kursart_kursnummer.sort(this._compKurs_fach_kursart_kursnummer);
+		this._kurse_sortiert_kursart_fach_kursnummer.sort(this._compKurs_kursart_fach_kursnummer);
 	}
 
 	/**
@@ -532,7 +541,9 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public addKursListe(pKurse : List<GostBlockungKurs>) : void {
 		for (let gKurs of pKurse) 
-			this.addKurs(gKurs);
+			this.addKursOhneSortierung(gKurs);
+		this._kurse_sortiert_fach_kursart_kursnummer.sort(this._compKurs_fach_kursart_kursnummer);
+		this._kurse_sortiert_kursart_fach_kursnummer.sort(this._compKurs_kursart_fach_kursnummer);
 	}
 
 	/**
@@ -589,10 +600,6 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @return Eine nach 'Fach, Kursart, Kursnummer' sortierte Kopie der Menge der Kurse.
 	 */
 	public getKursmengeSortiertNachFachKursartNummer() : List<GostBlockungKurs> {
-		if (this._kurse_sortiert_fach_kursart_kursnummer === null) {
-			this._kurse_sortiert_fach_kursart_kursnummer = new Vector(this._daten.kurse);
-			this._kurse_sortiert_fach_kursart_kursnummer.sort(this._compKurs_fach_kursart_kursnummer);
-		}
 		return this._kurse_sortiert_fach_kursart_kursnummer;
 	}
 
@@ -602,10 +609,6 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @return Eine nach 'Kursart, Fach, Kursnummer' sortierte Kopie der Menge der Kurse.
 	 */
 	public getKursmengeSortiertNachKursartFachNummer() : List<GostBlockungKurs> {
-		if (this._kurse_sortiert_kursart_fach_kursnummer === null) {
-			this._kurse_sortiert_kursart_fach_kursnummer = new Vector(this._daten.kurse);
-			this._kurse_sortiert_kursart_fach_kursnummer.sort(this._compKurs_kursart_fach_kursnummer);
-		}
 		return this._kurse_sortiert_kursart_fach_kursnummer;
 	}
 
@@ -636,8 +639,8 @@ export class GostBlockungsdatenManager extends JavaObject {
 		let kurs : GostBlockungKurs = this.getKurs(pKursID);
 		this._daten.kurse.remove(kurs);
 		this._mapKurse.remove(pKursID);
-		this._kurse_sortiert_fach_kursart_kursnummer = null;
-		this._kurse_sortiert_kursart_fach_kursnummer = null;
+		this._kurse_sortiert_fach_kursart_kursnummer.remove(kurs);
+		this._kurse_sortiert_kursart_fach_kursnummer.remove(kurs);
 	}
 
 	/**
@@ -649,13 +652,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 		this.removeKursByID(pKurs.id);
 	}
 
-	/**
-	 *Fügt die übergebene Schiene zu der Blockung hinzu.
-	 * 
-	 * @param pSchiene die hinzuzufügende Schiene
-	 * @throws NullPointerException Falls es eine Schienen-ID-Dopplung gibt. 
-	 */
-	public addSchiene(pSchiene : GostBlockungSchiene) : void {
+	private addSchieneOhneSortierung(pSchiene : GostBlockungSchiene) : void {
 		if (pSchiene.id < 1) 
 			throw new NullPointerException("Schiene.id =  " + pSchiene.id + " --> zu klein!")
 		if (pSchiene.nummer < 1) 
@@ -665,8 +662,18 @@ export class GostBlockungsdatenManager extends JavaObject {
 		if (this._mapSchienen.containsKey(pSchiene.id)) 
 			throw new NullPointerException("Schiene " + pSchiene.id + " doppelt!")
 		this._daten.schienen.add(pSchiene);
-		this._daten.schienen.sort(GostBlockungsdatenManager.compSchiene);
 		this._mapSchienen.put(pSchiene.id, pSchiene);
+	}
+
+	/**
+	 *Fügt die übergebene Schiene zu der Blockung hinzu.
+	 * 
+	 * @param pSchiene die hinzuzufügende Schiene
+	 * @throws NullPointerException Falls es eine Schienen-ID-Dopplung gibt. 
+	 */
+	public addSchiene(pSchiene : GostBlockungSchiene) : void {
+		this.addSchieneOhneSortierung(pSchiene);
+		this._daten.schienen.sort(GostBlockungsdatenManager.compSchiene);
 	}
 
 	/**
@@ -676,7 +683,8 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public addSchienListe(pSchienen : List<GostBlockungSchiene>) : void {
 		for (let schiene of pSchienen) 
-			this.addSchiene(schiene);
+			this.addSchieneOhneSortierung(schiene);
+		this._daten.schienen.sort(GostBlockungsdatenManager.compSchiene);
 	}
 
 	/**
@@ -761,7 +769,6 @@ export class GostBlockungsdatenManager extends JavaObject {
 		for (let schiene of this._daten.schienen) 
 			if (schiene.nummer > schieneR.nummer) 
 				schiene.nummer--;
-		this._daten.schienen.sort(GostBlockungsdatenManager.compSchiene);
 		for (let index : number = 0; index < this._daten.schienen.size(); index++)
 			if (this._daten.schienen.get(index).nummer !== index + 1) 
 				throw new NullPointerException("Schiene am Index " + index + " hat nicht Nr. " + (index + 1))
@@ -796,12 +803,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 		return (pHalbjahr.id < 2) ? 13 : 11;
 	}
 
-	/**
-	 *Fügt die übergebene Regel zu der Blockung hinzu
-	 * 
-	 * @param pRegel die hinzuzufügende Regel 
-	 */
-	public addRegel(pRegel : GostBlockungRegel) : void {
+	private addRegelOhneSortierung(pRegel : GostBlockungRegel) : void {
 		if (pRegel.id < 1) 
 			throw new NullPointerException("Regel.id =  " + pRegel.id + " --> zu klein!")
 		if (GostKursblockungRegelTyp.fromTyp(pRegel.typ) as unknown === GostKursblockungRegelTyp.UNDEFINIERT as unknown) 
@@ -809,8 +811,17 @@ export class GostBlockungsdatenManager extends JavaObject {
 		if (this._mapRegeln.containsKey(pRegel.id)) 
 			throw new NullPointerException("Regel.id = " + pRegel.id + " --> doppelt!")
 		this._daten.regeln.add(pRegel);
-		this._daten.regeln.sort(GostBlockungsdatenManager.compRegel);
 		this._mapRegeln.put(pRegel.id, pRegel);
+	}
+
+	/**
+	 *Fügt die übergebene Regel zu der Blockung hinzu
+	 * 
+	 * @param pRegel die hinzuzufügende Regel 
+	 */
+	public addRegel(pRegel : GostBlockungRegel) : void {
+		this.addRegelOhneSortierung(pRegel);
+		this._daten.regeln.sort(GostBlockungsdatenManager.compRegel);
 	}
 
 	/**
@@ -820,7 +831,8 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public addRegelListe(pRegeln : List<GostBlockungRegel>) : void {
 		for (let regel of pRegeln) 
-			this.addRegel(regel);
+			this.addRegelOhneSortierung(regel);
+		this._daten.regeln.sort(GostBlockungsdatenManager.compRegel);
 	}
 
 	/**
@@ -897,7 +909,6 @@ export class GostBlockungsdatenManager extends JavaObject {
 			throw new NullPointerException("Ein Löschen einer Regel ist nur bei einer Blockungsvorlage erlaubt!")
 		let regel : GostBlockungRegel = this.getRegel(pRegelID);
 		this._daten.regeln.remove(regel);
-		this._daten.regeln.sort(GostBlockungsdatenManager.compRegel);
 		this._mapRegeln.remove(pRegelID);
 	}
 

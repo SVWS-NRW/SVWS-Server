@@ -78,13 +78,13 @@ public class GostBlockungsdatenManager {
 	private final @NotNull Comparator<@NotNull GostBlockungKurs> _compKurs_fach_kursart_kursnummer;
 
 	/** Eine sortierte, gecachte Menge der Kurse nach: (FACH, KURSART, KURSNUMMER). */
-	private List<@NotNull GostBlockungKurs> _kurse_sortiert_fach_kursart_kursnummer = null;
+	private @NotNull List<@NotNull GostBlockungKurs> _kurse_sortiert_fach_kursart_kursnummer = new Vector<>();
 
 	/** Ein Comparator für Kurse der Blockung (KURSART, FACH, KURSNUMMER) */
 	private final @NotNull Comparator<@NotNull GostBlockungKurs> _compKurs_kursart_fach_kursnummer;
 
 	/** Eine sortierte, gecachte Menge der Kurse nach: (KURSART, FACH, KURSNUMMER) */
-	private List<@NotNull GostBlockungKurs> _kurse_sortiert_kursart_fach_kursnummer = null;
+	private @NotNull List<@NotNull GostBlockungKurs> _kurse_sortiert_kursart_fach_kursnummer = new Vector<>();
 
 	/** Ein Comparator für die Fachwahlen (SCHÜLERID, FACH, KURSART) */
 	private final @NotNull Comparator<@NotNull GostFachwahl> _compFachwahlen;
@@ -410,12 +410,7 @@ public class GostBlockungsdatenManager {
 
 	// ##### GostBlockungsergebnisListeneintrag #####
 	
-	/** 
-	 * Fügt das übergebenen Ergebnis der Blockung hinzu.
-	 * 
-	 * @param pErgebnis Das {@link GostBlockungsergebnisListeneintrag}-Objekt, welches hinzugefügt wird.
-	 */
-	public void addErgebnis(@NotNull GostBlockungsergebnisListeneintrag pErgebnis) {
+	private void addErgebnisOhneSortierung(@NotNull GostBlockungsergebnisListeneintrag pErgebnis) {
 		// Datenkonsistenz überprüfen. 
 		if (pErgebnis.id < 1)
 			throw new NullPointerException("Ergebnis.id = " + pErgebnis.id + " --> zu gering!");
@@ -425,16 +420,24 @@ public class GostBlockungsdatenManager {
 			throw new NullPointerException("Ergebnis.blockungID = " + pErgebnis.blockungID + " --> zu gering!");
 		if (GostHalbjahr.fromID(pErgebnis.gostHalbjahr) == null)
 			throw new NullPointerException("Ergebnis.gostHalbjahr = " + pErgebnis.gostHalbjahr + " --> unbekannt!");
-
+	
 		// Hinzufügen des Kurses.
 		_daten.ergebnisse.add(pErgebnis);
 		_mapErgebnis.put(pErgebnis.id, pErgebnis);
+	}
+
+	/** 
+	 * Fügt das übergebenen Ergebnis der Blockung hinzu.
+	 * 
+	 * @param pErgebnis Das {@link GostBlockungsergebnisListeneintrag}-Objekt, welches hinzugefügt wird.
+	 */
+	public void addErgebnis(@NotNull GostBlockungsergebnisListeneintrag pErgebnis) {
+		addErgebnisOhneSortierung(pErgebnis);
 		
 		// Liste sortieren
 		_daten.ergebnisse.sort(_compErgebnisse);
-		//_ergebnisse_sortiert_nach_bewertung = null;
 	}
-	
+
 	/**
 	 * Fügt die Menge an Ergebnissen {@link GostBlockungsergebnisListeneintrag} hinzu.
 	 * 
@@ -442,7 +445,10 @@ public class GostBlockungsdatenManager {
 	 */
 	public void addErgebnisListe(@NotNull List<@NotNull GostBlockungsergebnisListeneintrag> pErgebnisse) {
 		for (@NotNull GostBlockungsergebnisListeneintrag ergebnis : pErgebnisse)
-			addErgebnis(ergebnis);
+			addErgebnisOhneSortierung(ergebnis);
+		
+		// Liste sortieren
+		_daten.ergebnisse.sort(_compErgebnisse);
 	}
 	
 	/**
@@ -517,14 +523,7 @@ public class GostBlockungsdatenManager {
 		//_ergebnisse_sortiert_nach_bewertung = null;
 	}
 
-	// ##### GostBlockungKurs #####
-
-	/** 
-	 * Fügt den übergebenen Kurs zu der Blockung hinzu
-	 * 
-	 * @param pKurs Das {@link GostBlockungKurs}-Objekt, welches hinzugefügt wird.
-	 */
-	public void addKurs(@NotNull GostBlockungKurs pKurs) {
+	private void addKursOhneSortierung(@NotNull GostBlockungKurs pKurs) {
 		if (_mapKurse.containsKey(pKurs.id))
 			throw new NullPointerException("Kurs.id =  " + pKurs.id + " --> doppelt!");
 		if (pKurs.anzahlSchienen < 1)
@@ -540,14 +539,26 @@ public class GostBlockungsdatenManager {
 			throw new NullPointerException("Kurs.kursart = " + pKurs.kursart + " --> unbekannt!");
 		if (pKurs.wochenstunden < 0)
 			throw new NullPointerException("Kurs.wochenstunden = " + pKurs.wochenstunden + " --> zu gering!");
+		
 		// Hinzufügen des Kurses.
 		_daten.kurse.add(pKurs);
 		_mapKurse.put(pKurs.id, pKurs);
-		// Cache der sortierten Kurslisten löschen. 
-		_kurse_sortiert_fach_kursart_kursnummer = null;
-		_kurse_sortiert_kursart_fach_kursnummer = null;
 	}
-
+	
+	// ##### GostBlockungKurs #####
+	
+	/** 
+	 * Fügt den übergebenen Kurs zu der Blockung hinzu
+	 * 
+	 * @param pKurs Das {@link GostBlockungKurs}-Objekt, welches hinzugefügt wird.
+	 */
+	public void addKurs(@NotNull GostBlockungKurs pKurs) {
+		addKursOhneSortierung(pKurs);
+		
+		// Kurse sortieren.
+		_kurse_sortiert_fach_kursart_kursnummer.sort(_compKurs_fach_kursart_kursnummer);
+		_kurse_sortiert_kursart_fach_kursnummer.sort(_compKurs_kursart_fach_kursnummer);
+	}
 
 	/**
 	 * Fügt die Menge an Kursen hinzu.
@@ -556,8 +567,14 @@ public class GostBlockungsdatenManager {
 	 */
 	public void addKursListe(@NotNull List<@NotNull GostBlockungKurs> pKurse) {
 		for (@NotNull GostBlockungKurs gKurs : pKurse) 
-			addKurs(gKurs);
+			addKursOhneSortierung(gKurs);
+
+		// Kurse sortieren.
+		_kurse_sortiert_fach_kursart_kursnummer.sort(_compKurs_fach_kursart_kursnummer);
+		_kurse_sortiert_kursart_fach_kursnummer.sort(_compKurs_kursart_fach_kursnummer);
 	}
+	
+	// ##### GostBlockungKurs #####
 	
 	/** Gibt den Kurs der Blockung anhand von dessen ID zurück.
 	 * 
@@ -609,10 +626,6 @@ public class GostBlockungsdatenManager {
 	 * @return Eine nach 'Fach, Kursart, Kursnummer' sortierte Kopie der Menge der Kurse.
 	 */
 	public @NotNull List<@NotNull GostBlockungKurs> getKursmengeSortiertNachFachKursartNummer() {
-		if (_kurse_sortiert_fach_kursart_kursnummer == null) {
-			_kurse_sortiert_fach_kursart_kursnummer = new Vector<>(_daten.kurse);
-			_kurse_sortiert_fach_kursart_kursnummer.sort(_compKurs_fach_kursart_kursnummer);
-		}
 		return _kurse_sortiert_fach_kursart_kursnummer;
 	}
 
@@ -622,10 +635,6 @@ public class GostBlockungsdatenManager {
 	 * @return Eine nach 'Kursart, Fach, Kursnummer' sortierte Kopie der Menge der Kurse.
 	 */
 	public @NotNull List<@NotNull GostBlockungKurs> getKursmengeSortiertNachKursartFachNummer() {
-		if (_kurse_sortiert_kursart_fach_kursnummer == null) {
-			_kurse_sortiert_kursart_fach_kursnummer = new Vector<>(_daten.kurse);
-			_kurse_sortiert_kursart_fach_kursnummer.sort(_compKurs_kursart_fach_kursnummer);
-		}
 		return _kurse_sortiert_kursart_fach_kursnummer;
 	}
 
@@ -651,13 +660,15 @@ public class GostBlockungsdatenManager {
 	public void removeKursByID(long pKursID) {
 		if (getIstBlockungsVorlage() == false)
 			throw new NullPointerException("Ein Löschen des Kurses ist nur bei einer Blockungsvorlage erlaubt!");
+		
 		// Entfernen des Kurses.
 		@NotNull GostBlockungKurs kurs = this.getKurs(pKursID);
 		_daten.kurse.remove(kurs);
 		_mapKurse.remove(pKursID);
-		// Cache der sortierten Kurslisten löschen. 
-		_kurse_sortiert_fach_kursart_kursnummer = null;
-		_kurse_sortiert_kursart_fach_kursnummer = null;
+		
+		// Die sortierte Listen bleiben sortiert nach dem Entfernen.
+		_kurse_sortiert_fach_kursart_kursnummer.remove(kurs);
+		_kurse_sortiert_kursart_fach_kursnummer.remove(kurs);
 	}
 
 	/** Entfernt den übergebenen Kurs aus der Blockung
@@ -669,12 +680,7 @@ public class GostBlockungsdatenManager {
 
 	// ##### GostBlockungSchiene #####
 
-	/** Fügt die übergebene Schiene zu der Blockung hinzu.
-	 * 
-	 * @param pSchiene die hinzuzufügende Schiene
-	 * @throws NullPointerException Falls es eine Schienen-ID-Dopplung gibt. 
-	 */
-	public void addSchiene(@NotNull GostBlockungSchiene pSchiene) {
+	private void addSchieneOhneSortierung(@NotNull GostBlockungSchiene pSchiene) {
 		if (pSchiene.id < 1)
 			throw new NullPointerException("Schiene.id =  " + pSchiene.id + " --> zu klein!");
 		if (pSchiene.nummer < 1)
@@ -686,8 +692,19 @@ public class GostBlockungsdatenManager {
 		
 		// Hinzufügen der Schiene.
 		_daten.schienen.add(pSchiene);
-		_daten.schienen.sort(compSchiene);
 		_mapSchienen.put(pSchiene.id, pSchiene);
+	}
+	
+	/** Fügt die übergebene Schiene zu der Blockung hinzu.
+	 * 
+	 * @param pSchiene die hinzuzufügende Schiene
+	 * @throws NullPointerException Falls es eine Schienen-ID-Dopplung gibt. 
+	 */
+	public void addSchiene(@NotNull GostBlockungSchiene pSchiene) {
+		addSchieneOhneSortierung(pSchiene);
+		
+		// Sortieren der Schienen.
+		_daten.schienen.sort(compSchiene);
 	}
 
 	/**
@@ -697,7 +714,10 @@ public class GostBlockungsdatenManager {
 	 */
 	public void addSchienListe(@NotNull List<@NotNull GostBlockungSchiene> pSchienen) {
 		for (@NotNull GostBlockungSchiene schiene : pSchienen)
-			addSchiene(schiene);
+			addSchieneOhneSortierung(schiene);
+		
+		// Sortieren der Schienen.
+		_daten.schienen.sort(compSchiene);
 	}
 
 	/** 
@@ -782,7 +802,7 @@ public class GostBlockungsdatenManager {
 				schiene.nummer--;
 
 		// (3)
-		_daten.schienen.sort(compSchiene);
+		// _daten.schienen.sort(compSchiene); // nicht nötig
 		for (int index = 0; index < _daten.schienen.size(); index++)
 			if (_daten.schienen.get(index).nummer != index + 1)
 				throw new NullPointerException("Schiene am Index " + index + " hat nicht Nr. " + (index + 1));
@@ -819,22 +839,30 @@ public class GostBlockungsdatenManager {
 	}
 
 	// ##### GostBlockungRegel #####
-	
-	/** Fügt die übergebene Regel zu der Blockung hinzu
-	 * 
-	 * @param pRegel die hinzuzufügende Regel 
-	 */
-	public void addRegel(@NotNull GostBlockungRegel pRegel) {
+
+	private void addRegelOhneSortierung(@NotNull GostBlockungRegel pRegel) {
 		if (pRegel.id < 1)
 			throw new NullPointerException("Regel.id =  " + pRegel.id + " --> zu klein!");
 		if (GostKursblockungRegelTyp.fromTyp(pRegel.typ) == GostKursblockungRegelTyp.UNDEFINIERT)
 			throw new NullPointerException("Regel.typ = " + pRegel.typ + " --> unbekannt!");
 		if (_mapRegeln.containsKey(pRegel.id))
 			throw new NullPointerException("Regel.id = " + pRegel.id + " --> doppelt!");
+		
 		// Hinzufügen der Regel.
 		_daten.regeln.add(pRegel);
-		_daten.regeln.sort(compRegel);
 		_mapRegeln.put(pRegel.id, pRegel);
+	}
+
+	
+	/** Fügt die übergebene Regel zu der Blockung hinzu
+	 * 
+	 * @param pRegel die hinzuzufügende Regel 
+	 */
+	public void addRegel(@NotNull GostBlockungRegel pRegel) {
+		addRegelOhneSortierung(pRegel);
+		
+		// Sortieren der Regeln.
+		_daten.regeln.sort(compRegel);
 	}
 
 	/**
@@ -844,7 +872,10 @@ public class GostBlockungsdatenManager {
 	 */
 	public void addRegelListe(@NotNull List<@NotNull GostBlockungRegel> pRegeln) {
 		for (@NotNull GostBlockungRegel regel : pRegeln)
-			addRegel(regel);
+			addRegelOhneSortierung(regel);
+		
+		// Sortieren der Regeln.
+		_daten.regeln.sort(compRegel);
 	}
 
 	/** 
@@ -917,7 +948,7 @@ public class GostBlockungsdatenManager {
 		// Regel entfernen.
 		@NotNull GostBlockungRegel regel = this.getRegel(pRegelID);
 		_daten.regeln.remove(regel);
-		_daten.regeln.sort(compRegel);
+		// _daten.regeln.sort(compRegel); // nicht nötig
 		_mapRegeln.remove(pRegelID);
 	}
 
