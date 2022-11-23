@@ -197,12 +197,12 @@ export class GostBlockungsergebnisManager extends JavaObject {
 				this.getOfSchuelerSchienenKursmengeMap(gSchueler.id).put(gSchiene.id, new HashSet());
 		}
 		let kursBearbeitet : HashSet<Number> | null = new HashSet();
-		for (let schiene of pOld.schienen) 
-			for (let kurs of schiene.kurse) {
-				this.setKursSchiene(kurs.id, schiene.id, true);
-				if (kursBearbeitet.add(kurs.id)) 
-					for (let schuelerID of kurs.schueler) 
-						this.setSchuelerKurs(schuelerID.valueOf(), kurs.id, true);
+		for (let schieneOld of pOld.schienen) 
+			for (let kursOld of schieneOld.kurse) {
+				this.setKursSchiene(kursOld.id, schieneOld.id, true);
+				if (kursBearbeitet.add(kursOld.id)) 
+					for (let schuelerID of kursOld.schueler) 
+						this.setSchuelerKurs(schuelerID.valueOf(), kursOld.id, true);
 			}
 		this.stateRegelvalidierung();
 	}
@@ -1306,6 +1306,18 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
+	 * Fügt die übergebene Schiene hinzu.
+	 * 
+	 * @param  pSchienenID           Die Datenbank-ID der Schiene.
+	 * @throws NullPointerException  Falls die Schiene nicht zuerst im Datenmanager hinzugefügt wurde.
+	 */
+	public setAddSchieneByID(pSchienenID : number) : void {
+		if (this._parent.getSchieneExistiert(pSchienenID) === false) 
+			throw new NullPointerException("Die Schiene " + pSchienenID + " muss erst beim Datenmanager hinzugefügt werden!")
+		this.stateRevalidateEverything();
+	}
+
+	/**
 	 * Löscht die übergebene Schiene.
 	 * 
 	 * @param  pSchienenID           Die Datenbank-ID der Schiene.
@@ -1322,30 +1334,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 * Fügt die übergebene Schiene hinzu.
-	 * 
-	 * @param  pSchienenID           Die Datenbank-ID der Schiene.
-	 * @throws NullPointerException  Falls die Schiene nicht zuerst im Datenmanager hinzugefügt wurde.
-	 */
-	public setAddSchieneByID(pSchienenID : number) : void {
-		if (this._parent.getSchieneExistiert(pSchienenID) === false) 
-			throw new NullPointerException("Die Schiene " + pSchienenID + " muss erst beim Datenmanager hinzugefügt werden!")
-		this.stateRevalidateEverything();
-	}
-
-	/**
-	 * Löscht die übergebene Regel.
-	 * 
-	 * @param  pRegelID              Die Datenbank-ID der Regel.
-	 * @throws NullPointerException  Falls die Regel nicht zuerst beim Datenmanager entfernt wurde.
-	 */
-	public setRemoveRegelByID(pRegelID : number) : void {
-		if (this._parent.getRegelExistiert(pRegelID) === true) 
-			throw new NullPointerException("Die Regel " + pRegelID + " muss erst beim Datenmanager entfernt werden!")
-		this.stateRevalidateEverything();
-	}
-
-	/**
 	 * Fügt die übergebene Regel hinzu.
 	 * 
 	 * @param  pRegelID              Die Datenbank-ID der Regel.
@@ -1358,18 +1346,14 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 * Löscht den übergebenen Kurs.
+	 * Löscht die übergebene Regel.
 	 * 
-	 * @param  pKursID               Die Datenbank-ID des Kurses.
-	 * @throws NullPointerException  Falls der Kurs nicht zuerst beim Datenmanager entfernt wurde, oder 
-	 *                               falls der Kurs noch Schülerzuordnungen hat.
+	 * @param  pRegelID              Die Datenbank-ID der Regel.
+	 * @throws NullPointerException  Falls die Regel nicht zuerst beim Datenmanager entfernt wurde.
 	 */
-	public setRemoveKursByID(pKursID : number) : void {
-		if (this._parent.getKursExistiert(pKursID) === true) 
-			throw new NullPointerException("Der Kurs " + pKursID + " muss erst beim Datenmanager entfernt werden!")
-		let nSchueler : number = this.getKursE(pKursID).schueler.size();
-		if (nSchueler > 0) 
-			throw new NullPointerException("Entfernen unmöglich: Kurs " + pKursID + " hat noch " + nSchueler + " Schüler!")
+	public setRemoveRegelByID(pRegelID : number) : void {
+		if (this._parent.getRegelExistiert(pRegelID) === true) 
+			throw new NullPointerException("Die Regel " + pRegelID + " muss erst beim Datenmanager entfernt werden!")
 		this.stateRevalidateEverything();
 	}
 
@@ -1389,6 +1373,26 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		this.stateRevalidateEverything();
 		for (let nr : number = 1; nr <= kurs.anzahlSchienen; nr++)
 			this.setKursSchienenNr(pKursID, nr);
+	}
+
+	/**
+	 * Löscht den übergebenen Kurs.
+	 * 
+	 * @param  pKursID               Die Datenbank-ID des Kurses.
+	 * @throws NullPointerException  Falls der Kurs nicht zuerst beim Datenmanager entfernt wurde, oder 
+	 *                               falls der Kurs noch Schülerzuordnungen hat.
+	 */
+	public setRemoveKursByID(pKursID : number) : void {
+		if (this._parent.getKursExistiert(pKursID) === true) 
+			throw new NullPointerException("Der Kurs " + pKursID + " muss erst beim Datenmanager entfernt werden!")
+		let nSchueler : number = this.getKursE(pKursID).schueler.size();
+		if (nSchueler > 0) 
+			throw new NullPointerException("Entfernen unmöglich: Kurs " + pKursID + " hat noch " + nSchueler + " Schüler!")
+		let kurs : GostBlockungsergebnisKurs = this.getKursE(pKursID);
+		for (let schienenID of kurs.schienen) 
+			this.getSchieneE(schienenID.valueOf()).kurse.removeElement(kurs);
+		kurs.schienen.clear();
+		this.stateRevalidateEverything();
 	}
 
 	/**

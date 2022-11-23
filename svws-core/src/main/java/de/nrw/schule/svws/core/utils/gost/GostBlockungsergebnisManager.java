@@ -141,7 +141,7 @@ public class GostBlockungsergebnisManager {
 		// Bewertungskriterium 2a (Nicht zugeordnete Fachwahlen)
 		_ergebnis.bewertung.anzahlSchuelerNichtZugeordnet += _parent.daten().fachwahlen.size();
 
-		// Schienen kopieren und hinzufügen.
+		// Schienen von '_parent' kopieren und hinzufügen.
 		for (@NotNull GostBlockungSchiene gSchiene : _parent.daten().schienen) {
 			// GostBlockungSchiene --> GostBlockungsergebnisSchiene
 			@NotNull GostBlockungsergebnisSchiene eSchiene = new GostBlockungsergebnisSchiene();
@@ -159,7 +159,7 @@ public class GostBlockungsergebnisManager {
 				throw new NullPointerException("Schienen ID " + gSchiene.id + " doppelt!");
 		}
 
-		// Kurse kopieren und hinzufügen. Fachart-IDs erzeugen.
+		// Kurse von '_parent' kopieren und hinzufügen. Fachart-IDs erzeugen.
 		for (@NotNull GostBlockungKurs gKurs : _parent.daten().kurse) {
 			// GostBlockungKurs --> GostBlockungsergebnisKurs
 			@NotNull GostBlockungsergebnisKurs eKurs = new GostBlockungsergebnisKurs();
@@ -235,12 +235,12 @@ public class GostBlockungsergebnisManager {
 		
 		// Zuordnungen kopieren (diese können leer sein).
 		HashSet<@NotNull Long> kursBearbeitet = new HashSet<>();
-		for (@NotNull GostBlockungsergebnisSchiene schiene : pOld.schienen)
-			for (@NotNull GostBlockungsergebnisKurs kurs : schiene.kurse) {
-				setKursSchiene(kurs.id, schiene.id, true);
-				if (kursBearbeitet.add(kurs.id))
-					for (@NotNull Long schuelerID : kurs.schueler)
-						setSchuelerKurs(schuelerID, kurs.id, true);
+		for (@NotNull GostBlockungsergebnisSchiene schieneOld : pOld.schienen)
+			for (@NotNull GostBlockungsergebnisKurs kursOld : schieneOld.kurse) {
+				setKursSchiene(kursOld.id, schieneOld.id, true);
+				if (kursBearbeitet.add(kursOld.id))
+					for (@NotNull Long schuelerID : kursOld.schueler)
+						setSchuelerKurs(schuelerID, kursOld.id, true);
 			}
 		
 		// Regelverletzungen überprüfen.
@@ -1411,6 +1411,19 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
+	 * Fügt die übergebene Schiene hinzu.
+	 * 
+	 * @param  pSchienenID           Die Datenbank-ID der Schiene.
+	 * @throws NullPointerException  Falls die Schiene nicht zuerst im Datenmanager hinzugefügt wurde.
+	 */
+	public void setAddSchieneByID(long pSchienenID) throws NullPointerException {
+		if (_parent.getSchieneExistiert(pSchienenID) == false)
+			throw new NullPointerException("Die Schiene " + pSchienenID + " muss erst beim Datenmanager hinzugefügt werden!");
+		
+		stateRevalidateEverything();
+	}
+
+	/**
 	 * Löscht die übergebene Schiene.
 	 * 
 	 * @param  pSchienenID           Die Datenbank-ID der Schiene.
@@ -1420,33 +1433,11 @@ public class GostBlockungsergebnisManager {
 	public void setRemoveSchieneByID(long pSchienenID) throws NullPointerException {
 		if (_parent.getSchieneExistiert(pSchienenID) == true)
 			throw new NullPointerException("Die Schiene " + pSchienenID + " muss erst beim Datenmanager entfernt werden!");
+		
 		int nKurse = getSchieneE(pSchienenID).kurse.size();
 		if (nKurse > 0)
 			throw new NullPointerException("Entfernen unmöglich: Schiene " + pSchienenID + " hat noch " + nKurse + " Kurse!");
-		stateRevalidateEverything();
-	}
-
-	/**
-	 * Fügt die übergebene Schiene hinzu.
-	 * 
-	 * @param  pSchienenID           Die Datenbank-ID der Schiene.
-	 * @throws NullPointerException  Falls die Schiene nicht zuerst im Datenmanager hinzugefügt wurde.
-	 */
-	public void setAddSchieneByID(long pSchienenID) throws NullPointerException {
-		if (_parent.getSchieneExistiert(pSchienenID) == false)
-			throw new NullPointerException("Die Schiene " + pSchienenID + " muss erst beim Datenmanager hinzugefügt werden!");
-		stateRevalidateEverything();
-	}
-
-	/**
-	 * Löscht die übergebene Regel.
-	 * 
-	 * @param  pRegelID              Die Datenbank-ID der Regel.
-	 * @throws NullPointerException  Falls die Regel nicht zuerst beim Datenmanager entfernt wurde.
-	 */
-	public void setRemoveRegelByID(long pRegelID) throws NullPointerException {
-		if (_parent.getRegelExistiert(pRegelID) == true)
-			throw new NullPointerException("Die Regel " + pRegelID + " muss erst beim Datenmanager entfernt werden!");
+		
 		stateRevalidateEverything();
 	}
 
@@ -1459,22 +1450,20 @@ public class GostBlockungsergebnisManager {
 	public void setAddRegelByID(long pRegelID) throws NullPointerException {
 		if (_parent.getRegelExistiert(pRegelID) == false)
 			throw new NullPointerException("Die Regel " + pRegelID + " muss erst beim Datenmanager hinzugefügt werden!");
+		
 		stateRevalidateEverything();
 	}
 
 	/**
-	 * Löscht den übergebenen Kurs.
+	 * Löscht die übergebene Regel.
 	 * 
-	 * @param  pKursID               Die Datenbank-ID des Kurses.
-	 * @throws NullPointerException  Falls der Kurs nicht zuerst beim Datenmanager entfernt wurde, oder 
-	 *                               falls der Kurs noch Schülerzuordnungen hat.
+	 * @param  pRegelID              Die Datenbank-ID der Regel.
+	 * @throws NullPointerException  Falls die Regel nicht zuerst beim Datenmanager entfernt wurde.
 	 */
-	public void setRemoveKursByID(long pKursID) throws NullPointerException {
-		if (_parent.getKursExistiert(pKursID) == true)
-			throw new NullPointerException("Der Kurs " + pKursID + " muss erst beim Datenmanager entfernt werden!");
-		int nSchueler = getKursE(pKursID).schueler.size();
-		if (nSchueler > 0)
-			throw new NullPointerException("Entfernen unmöglich: Kurs " + pKursID + " hat noch " + nSchueler + " Schüler!");
+	public void setRemoveRegelByID(long pRegelID) throws NullPointerException {
+		if (_parent.getRegelExistiert(pRegelID) == true)
+			throw new NullPointerException("Die Regel " + pRegelID + " muss erst beim Datenmanager entfernt werden!");
+		
 		stateRevalidateEverything();
 	}
 
@@ -1498,6 +1487,30 @@ public class GostBlockungsergebnisManager {
 		// Kurs automatisch in die ersten 'kurs.anzahlSchienen' Schienen hinzufügen.
 		for (int nr = 1; nr <= kurs.anzahlSchienen; nr++) 
 			setKursSchienenNr(pKursID, nr);
+	}
+
+	/**
+	 * Löscht den übergebenen Kurs.
+	 * 
+	 * @param  pKursID               Die Datenbank-ID des Kurses.
+	 * @throws NullPointerException  Falls der Kurs nicht zuerst beim Datenmanager entfernt wurde, oder 
+	 *                               falls der Kurs noch Schülerzuordnungen hat.
+	 */
+	public void setRemoveKursByID(long pKursID) throws NullPointerException {
+		if (_parent.getKursExistiert(pKursID) == true)
+			throw new NullPointerException("Der Kurs " + pKursID + " muss erst beim Datenmanager entfernt werden!");
+		
+		int nSchueler = getKursE(pKursID).schueler.size();
+		if (nSchueler > 0)
+			throw new NullPointerException("Entfernen unmöglich: Kurs " + pKursID + " hat noch " + nSchueler + " Schüler!");
+		
+		// Kurs aus den Daten löschen, sonst wird die Kurs-Schienen-Zuordnung kopiert.
+		@NotNull GostBlockungsergebnisKurs kurs = getKursE(pKursID);
+		for (@NotNull Long schienenID : kurs.schienen) 
+			getSchieneE(schienenID).kurse.removeElement(kurs);
+		kurs.schienen.clear();
+		
+		stateRevalidateEverything();
 	}
 
 	/**
