@@ -93,17 +93,45 @@ Beispiel einer svwsconfig.json, bitte die Userdaten und Passwörter entspechend 
 "DBKonfiguration": {
 	"dbms": "MARIA_DB",
 	"location": "localhost",
-	"SchemaKonfiguration": [
-		{
-		"name": "schildtest",
-		"svwslogin": false,
-		"username": "svwsadmin",
-		"password": "svwsadmin"
-		}
-		]
+	"SchemaKonfiguration": []
 	}
 }
 ```
+
+## Migration einer Schild2-DB
+
+Ausführen von MigrateDB unter svws-db-utils.
+Pfad de.nrw.schule.svws.db.utils.app!
+run as Java-Application mit folgenden run configurations:
+
+```
+-j
+-r -1
+-d
+-sd "MDB"
+-sl "C:\Schild-NRW\DB\Schild2000n.mdb"
+-ss "PUBLIC"
+-su "admin"
+-sp "Access-Kennwort"
+-td "MARIA_DB"
+-tl "localhost"
+-ts "svwsdb"
+-tu "svwsuser"
+-tp "svwsuser"
+-tr "svwsroot"
+-cp "D:\git\SVWS-Server\svws-server-app"
+```
+
+Die Parameter sind in der Klasse MigrateDB.java beschrieben.
+
+
+-sp = Kennwort für die AccessDatenbanken
+
+-tu = Username für das Schema in MariaDb
+
+-tp = Kennwort für den SchemaUser
+
+-tr = Rootkennwort MariaDB
 
 # Optionale Software 
 
