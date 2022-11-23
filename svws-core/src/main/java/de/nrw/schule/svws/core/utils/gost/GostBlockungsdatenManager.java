@@ -543,6 +543,8 @@ public class GostBlockungsdatenManager {
 		// Hinzufügen des Kurses.
 		_daten.kurse.add(pKurs);
 		_mapKurse.put(pKurs.id, pKurs);
+		_kurse_sortiert_fach_kursart_kursnummer.add(pKurs);
+		_kurse_sortiert_kursart_fach_kursnummer.add(pKurs);
 	}
 	
 	// ##### GostBlockungKurs #####
