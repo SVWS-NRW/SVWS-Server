@@ -205,7 +205,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 						this.setSchuelerKurs(schuelerID.valueOf(), kursOld.id, true);
 			}
 		this.stateRegelvalidierung();
-		this._parent.updateErgebnisBewertung(this._ergebnis);
 	}
 
 	private stateRegelvalidierung() : void {
@@ -273,6 +272,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 				}
 			}
 		}
+		this._parent.updateErgebnisBewertung(this._ergebnis);
 	}
 
 	/**
