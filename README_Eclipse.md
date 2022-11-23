@@ -63,8 +63,10 @@ Dort den SVWS-Server-Ordner auswählen.
 Momentan wird im ./gradle-Verzeichnis noch eine Datei gradle.properties erwartet.
 Datei erzeugen und hier die beiden Einträge mit den eigenen GitHub-Credentials eintragen.
 
+```
 github_actor=githubusername
 github_token=ghp_43b4b5b3nm4b5nm43b5m32m6v2
+```
 
 #### SVWS Einstellungen
 
