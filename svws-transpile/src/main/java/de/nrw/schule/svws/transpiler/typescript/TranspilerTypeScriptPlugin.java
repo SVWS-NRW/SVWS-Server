@@ -137,6 +137,19 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 
 	
 	/**
+	 * Prüft, ob der übergebene Bezeichner ein Schlüsselwort in Type-Script ist,
+	 * welches nicht auch in Java ein Schlüsselwortd er Sprache ist.
+	 * 
+	 * @param bezeichner   der zu prüfende Bezeichner
+	 */
+	public void pruefeBezeichner(String bezeichner) {
+		switch (bezeichner) {
+			case "in", "of", "debugger", "export", "function", "typeOf", "var", "with" 
+				-> throw new TranspilerException("Das Typescript-Schlüsselwort " + bezeichner + " ist als Variablenname nicht zulässig");
+		}		
+	}
+	
+	/**
 	 * Transpiles the type parameter node.
 	 * 
 	 * @param node         the type parameter node to be transpiled
@@ -163,10 +176,6 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 					result += typeNode.transpile(false);				
 				}
 			}
-// TODO remove commented code below, this restriction is problematic when transpiling class objects of type String		
-//			else {
-//				result += " extends JavaObject";
-//			}
 			result += (hasNotNullAnnotation ? "" : " | null");
 		}
 		return result;
@@ -197,6 +206,8 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 	 */
 	public String convertBlockVariable(VariableTree node) {
 		// TODO ??? getNameExpression for node.getName()
+		// Prüfe Bezeichner auf Schlüsselwörter
+		pruefeBezeichner(node.getName().toString());
 		TypeNode typeNode = new TypeNode(this, node.getType(), true, transpiler.hasNotNullAnnotation(node));
 		ExpressionTree initializer = node.getInitializer();
 		if (initializer == null)
@@ -1395,6 +1406,9 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		
 		// get the accessmodifier  
 		String accessModifier = transpiler.getAccessModifier(node);
+		
+		// Prüfe ob der Bezeichner in Typescript zulässig ist
+		pruefeBezeichner(node.getName().toString());
 		
 		// convert to typescrypt code
 		TypeNode typeNode = new TypeNode(this, node.getType(), true, forceNotNull ? true : transpiler.hasNotNullAnnotation(node));
