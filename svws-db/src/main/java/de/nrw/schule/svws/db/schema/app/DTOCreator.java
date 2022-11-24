@@ -57,7 +57,7 @@ public class DTOCreator {
 			Path dir = Paths.get(packPath);
 			Files.createDirectories(dir);
 			return dir.toFile();
-		} catch (IOException e) {
+		} catch (@SuppressWarnings("unused") IOException e) {
 			return null;
 		}
 	}
@@ -104,7 +104,7 @@ public class DTOCreator {
 				String code = dto.getCode(rev);
 				try {
 					Files.writeString(file.toPath(), code, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-				} catch (IOException e) {
+				} catch (@SuppressWarnings("unused") IOException e) {
 					cmdLine.printOptionsAndExit(3, "Fehler beim Schreiben des Java-Codes in die Datei " + file.getPath());
 				}
 				// Erzeuge den Code zum Registrieren der DTO-Klasse in dem Verzeichnis der DTO-Klassen
@@ -118,12 +118,12 @@ public class DTOCreator {
 					code = dto.getCode4PrimaryKeyClass(rev);
 					try {
 						Files.writeString(file.toPath(), code, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-					} catch (IOException e) {
+					} catch (@SuppressWarnings("unused") IOException e) {
 						cmdLine.printOptionsAndExit(4, "Fehler beim Schreiben des Java-Codes in die Datei " + file.getPath());
 					}
 				}
 				logger.logLn("");
-			} catch (IOException e) {
+			} catch (@SuppressWarnings("unused") IOException e) {
 				cmdLine.printOptionsAndExit(5, "Fehler beim Erstellen des Verzeichnisses für das Package. Korrigieren Sie entweder den Ausgabe-Pfad oder die CSV-Datei.");
 				return packageDir;
 			}
@@ -150,7 +150,7 @@ public class DTOCreator {
 					String code = creator.getCode(rev);
 					try {
 						Files.writeString(file.toPath(), code, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-					} catch (IOException e) {
+					} catch (@SuppressWarnings("unused") IOException e) {
 						cmdLine.printOptionsAndExit(3, "Fehler beim Schreiben des Java-Codes in die Datei " + file.getPath());
 					}
 					// Erzeuge den Code zum Registrieren der DTO-Klasse in dem Verzeichnis der DTO-Klassen
@@ -164,12 +164,12 @@ public class DTOCreator {
 						code = creator.getCode4PrimaryKeyClass(rev);
 						try {
 							Files.writeString(file.toPath(), code, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-						} catch (IOException e) {
+						} catch (@SuppressWarnings("unused") IOException e) {
 							cmdLine.printOptionsAndExit(4, "Fehler beim Schreiben des Java-Codes in die Datei " + file.getPath());
 						}
 					}				
 					logger.logLn("");				
-				} catch (IOException e) {
+				} catch (@SuppressWarnings("unused") IOException e) {
 					cmdLine.printOptionsAndExit(5, "Fehler beim Erstellen des Verzeichnisses für das Package. Korrigieren Sie entweder den Ausgabe-Pfad oder die CSV-Datei.");
 					return packageDir;
 				}
@@ -251,7 +251,7 @@ public class DTOCreator {
 			 + "" + System.lineSeparator()
 			 + "}" + System.lineSeparator();
 			Files.writeString(dtosFile.toPath(), dtosCode, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-		} catch (IOException e) {
+		} catch (@SuppressWarnings("unused") IOException e) {
 			cmdLine.printOptionsAndExit(6, "Fehler beim Schreiben des Java-Codes in die Datei " + dtosFile.getPath());
 		}
 		
@@ -323,7 +323,7 @@ public class DTOCreator {
 			 + "" + System.lineSeparator()
 			 + "}" + System.lineSeparator();
 			Files.writeString(dtosFile.toPath(), dtosCode, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-		} catch (IOException e) {
+		} catch (@SuppressWarnings("unused") IOException e) {
 			cmdLine.printOptionsAndExit(6, "Fehler beim Schreiben des Java-Codes in die Datei " + dtosFile.getPath());
 		}
 	}
@@ -369,7 +369,7 @@ public class DTOCreator {
                """;
 		try {
 			Files.writeString(p, xml, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-		} catch (IOException e) {
+		} catch (@SuppressWarnings("unused") IOException e) {
 			cmdLine.printOptionsAndExit(6, "Fehler beim Schreiben der persistence.xml in die Datei " + pathxml);
 		}
 	}

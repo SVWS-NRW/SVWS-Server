@@ -60,8 +60,8 @@ public class ApiRequestBody {
 		
 		// Interpretiere die Parameter der Annotation
 		Map<String, ExpressionTree> args = transpiler.getArguments(annotation);
-		description = determineDescription(transpiler, args);
-		required = determineRequired(transpiler, args);
+		description = determineDescription(args);
+		required = determineRequired(args);
 		AnnotationTree annotationContent = determineContentAnnotation(transpiler, args);
 		if (annotationContent == null) {
 			String className = transpiler.getClass(method).getSimpleName().toString();
@@ -71,7 +71,7 @@ public class ApiRequestBody {
 		content = new ApiContent(transpiler, annotationContent);
 	}
 	
-	private static String determineDescription(Transpiler transpiler, Map<String, ExpressionTree> args) {
+	private static String determineDescription(Map<String, ExpressionTree> args) {
 		ExpressionTree value = args.get("description");
         if(value == null) {
             throw new TranspilerException("Transpiler Exception: Missing description value for @RequestBody annotation.");
@@ -81,7 +81,7 @@ public class ApiRequestBody {
 		throw new TranspilerException("Transpiler Exception: Unhandled description argument for ApiResponse annotation.");		
 	}
 
-	private static boolean determineRequired(Transpiler transpiler, Map<String, ExpressionTree> args) {
+	private static boolean determineRequired(Map<String, ExpressionTree> args) {
 		ExpressionTree value = args.get("required");
 		if ((value.getKind() == Kind.BOOLEAN_LITERAL) && (value instanceof LiteralTree literal) && (literal.getValue() instanceof Boolean bool))
 			return bool == null ? false : bool;

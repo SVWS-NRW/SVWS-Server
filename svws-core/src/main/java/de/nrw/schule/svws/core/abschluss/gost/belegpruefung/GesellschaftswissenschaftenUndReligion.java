@@ -191,16 +191,16 @@ public class GesellschaftswissenschaftenUndReligion extends GostBelegpruefung {
 		if ((fachbelegungen == null) || (fachbelegungen.size() == 0))
 			return;
 		// ob die Kursart "Zusatzkurs" überhaupt in einem Halbjahr gewählt wurde
-		fachbelegungen = manager.filterBelegungKursartExistiert(fachbelegungen, GostKursart.ZK);
-		if (fachbelegungen.size() == 0)
+		List<@NotNull AbiturFachbelegung> fachbelegungenZK = manager.filterBelegungKursartExistiert(fachbelegungen, GostKursart.ZK);
+		if (fachbelegungenZK.size() == 0)
 			return;
 
 		// Prüfe, ob mehr als eine Belegung des Zusatzkurses vorliegt (z.B. durch eine Zweitbelegung in einer bilingualen Variante des Faches)
-		if (fachbelegungen.size() > 1)
+		if (fachbelegungenZK.size() > 1)
 			addFehler(GostBelegungsfehler.ZK_13);
 		
 		// Prüfe die gefilterten Belegungen
-		for (AbiturFachbelegung fachbelegung : fachbelegungen) {
+		for (AbiturFachbelegung fachbelegung : fachbelegungenZK) {
 			// Prüfe, ob die Belegung für den Zusatzkurs bilingual ist
 			GostFach fach = manager.getFach(fachbelegung);
 			if ((fach == null) || (GostFachManager.istBilingual(fach)))

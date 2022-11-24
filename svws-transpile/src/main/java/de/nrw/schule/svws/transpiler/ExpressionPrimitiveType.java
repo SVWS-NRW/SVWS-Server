@@ -232,7 +232,7 @@ public class ExpressionPrimitiveType extends ExpressionType implements Primitive
 	public static ExpressionPrimitiveType get(String typeName) {
 		try {
 			return new ExpressionPrimitiveType(typeName);
-		} catch (TranspilerException te) {
+		} catch (@SuppressWarnings("unused") TranspilerException te) {
 			return null;
 		}
 	}

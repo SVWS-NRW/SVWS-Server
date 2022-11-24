@@ -237,7 +237,7 @@ public class DataSchuelerStammdaten extends DataManager<Long> {
 		    		        		jahr = Integer.parseUnsignedInt(text);
 		    		        		if ((jahr <= 1900) || (jahr > 3000))   // TODO Bestimme das aktuelle Jahr für die obere Grenze des Bereichs
 		    				    		throw OperationError.BAD_REQUEST.exception();
-		    		        	} catch (NumberFormatException e) {
+		    		        	} catch (@SuppressWarnings("unused") NumberFormatException e) {
 		    			    		throw OperationError.BAD_REQUEST.exception();
 		    		        	}    		
 		    		    	}
@@ -387,13 +387,14 @@ public class DataSchuelerStammdaten extends DataManager<Long> {
     		throw OperationError.CONFLICT.exception();
 		schueler.Ort_ID = wohnortID;
     	// Prüfe, ob die Ortsteil ID in Bezug auf die WohnortID gültig ist, wähle hierbei null-Verweise auf die K_Ort-Tabelle als überall gültig
-		if (ortsteilID != null) {
-			DTOOrtsteil ortsteil = conn.queryByKey(DTOOrtsteil.class, ortsteilID);
+		Long ortsteilIDNeu = ortsteilID;
+		if (ortsteilIDNeu != null) {
+			DTOOrtsteil ortsteil = conn.queryByKey(DTOOrtsteil.class, ortsteilIDNeu);
 	    	if ((ortsteil == null) || ((ortsteil.Ort_ID != null) && (!ortsteil.Ort_ID.equals(wohnortID)))) {
-	    		ortsteilID = null;
+	    		ortsteilIDNeu = null;
 	    	}
 		}
-		schueler.Ortsteil_ID = ortsteilID;    	
+		schueler.Ortsteil_ID = ortsteilIDNeu;    	
     }
 
 	

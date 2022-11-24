@@ -185,7 +185,7 @@ public class ApiTranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			try {
 				Files.createDirectories(path.getParent());
 				Files.writeString(path, fileImports + fileData, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
-			} catch (IOException e) {
+			} catch (@SuppressWarnings("unused") IOException e) {
 				throw new TranspilerException("Transpiler Error: Cannot write output file " + path.toString());
 			}
 		}

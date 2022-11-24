@@ -25,7 +25,7 @@ public class MigrationStringToIntegerConverter extends DBAttributeConverter<Inte
 	public Integer convertToEntityAttribute(String dbData) {
 		try {
 			return Integer.parseInt(dbData);
-		} catch(NumberFormatException e) {
+		} catch(@SuppressWarnings("unused") NumberFormatException e) {
 			return null;
 		}		
 	}

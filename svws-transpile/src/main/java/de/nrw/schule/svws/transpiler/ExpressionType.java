@@ -228,38 +228,31 @@ public abstract class ExpressionType implements Tree {
 			ExpressionType typeLeft = transpiler.getExpressionType(bt.getLeftOperand()); 
 			ExpressionType typeRight = transpiler.getExpressionType(bt.getRightOperand()); 
 			switch (bt.getKind()) {
-				case PLUS:
+				case PLUS: {
 					if (typeLeft.isString())
 						return typeLeft;
 					if (typeRight.isString())
 						return typeRight;
-				case MINUS:
-				case MULTIPLY:
-				case DIVIDE:
-				case REMAINDER: {
 					ExpressionPrimitiveType resultType = ExpressionPrimitiveType.getPromotedType(typeLeft, typeRight);
 					if (resultType == null)
 						throw new TranspilerException("Transpiler Error: Cannot determine the unboxed numeric promotion type");
 					return resultType;
 				}
-				case LEFT_SHIFT:
-				case RIGHT_SHIFT:
-				case UNSIGNED_RIGHT_SHIFT:
+				case MINUS, MULTIPLY, DIVIDE, REMAINDER: {
+					ExpressionPrimitiveType resultType = ExpressionPrimitiveType.getPromotedType(typeLeft, typeRight);
+					if (resultType == null)
+						throw new TranspilerException("Transpiler Error: Cannot determine the unboxed numeric promotion type");
+					return resultType;
+				}
+				case LEFT_SHIFT, RIGHT_SHIFT, UNSIGNED_RIGHT_SHIFT:
 					if (typeLeft instanceof ExpressionClassType ect)
 						return ExpressionPrimitiveType.getUnboxed(ect);
 					if (typeLeft instanceof ExpressionPrimitiveType ept)
 						return ept;
 					throw new TranspilerException("Transpiler Error: Unhandled type for left operand of shift operator");
-				case LESS_THAN:
-				case GREATER_THAN:
-				case LESS_THAN_EQUAL:
-				case GREATER_THAN_EQUAL:
-				case EQUAL_TO:
-				case NOT_EQUAL_TO:
+				case LESS_THAN, GREATER_THAN, LESS_THAN_EQUAL, GREATER_THAN_EQUAL, EQUAL_TO, NOT_EQUAL_TO:
 					return ExpressionPrimitiveType.get("boolean");
-				case AND:
-				case XOR:
-				case OR: {
+				case AND, XOR, OR: {
 					// check whether both operands are numeric types, then return the binary numeric promotion type 
 					if (typeLeft.isNumberType() && typeRight.isNumberType()) {
 						ExpressionPrimitiveType resultType = ExpressionPrimitiveType.getPromotedType(typeLeft, typeRight);
@@ -267,9 +260,9 @@ public abstract class ExpressionType implements Tree {
 							throw new TranspilerException("Transpiler Error: Cannot determine the unboxed numeric promotion type");
 						return resultType;
 					}
+					return ExpressionPrimitiveType.get("boolean");  
 				}
-				case CONDITIONAL_AND:
-				case CONDITIONAL_OR:
+				case CONDITIONAL_AND, CONDITIONAL_OR:
 					return ExpressionPrimitiveType.get("boolean");  
 				default:
 					throw new TranspilerException("Transpiler Error: Unexpected binary operator result type for expression type of kind " + type.getKind() + ".");

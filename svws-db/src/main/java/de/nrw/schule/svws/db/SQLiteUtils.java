@@ -21,30 +21,30 @@ public class SQLiteUtils {
 	 * @return der SQL-String mit dem ersetzten concat
 	 */
 	public static String replaceConcat(String sql) {
-		String sqlOrig = sql;
+		String tmpSql = sql;
 		while (true) {
-			Matcher matcher = patternConcat.matcher(sql);
+			Matcher matcher = patternConcat.matcher(tmpSql);
 			if (!matcher.find())
 				break;
 			StringBuilder result = new StringBuilder();
-			result.append(sql.substring(0, matcher.start()));			
+			result.append(tmpSql.substring(0, matcher.start()));			
 			int countBraces = 0;
 			int countQuotes = 0;
-			String tmp = sql.substring(matcher.end());
+			String tmp = tmpSql.substring(matcher.end());
 			// Prüfe auf beginnende Klammer
 			matcher = patternBraceCommaOrQuote.matcher(tmp);
 			if (!matcher.find())
-				throw new RuntimeException("Error: Cannot replace concat in SQL-Query: " + sqlOrig);
+				throw new RuntimeException("Error: Cannot replace concat in SQL-Query: " + sql);
 			char found = tmp.charAt(matcher.start());
 			if (found != '(')
-				throw new RuntimeException("Error: Missing ( after concat in SQL-Query: " + sqlOrig);
+				throw new RuntimeException("Error: Missing ( after concat in SQL-Query: " + sql);
 			countBraces++;
 			tmp = tmp.substring(matcher.end());
 			// Prüfe auf Anführungszeichen, Klammer oder Komma
 			while (true) {
 				matcher = patternBraceCommaOrQuote.matcher(tmp);
 				if (!matcher.find())
-					throw new RuntimeException("Error: Cannot replace concat in SQL-Query: " + sqlOrig);
+					throw new RuntimeException("Error: Cannot replace concat in SQL-Query: " + sql);
 				found = tmp.charAt(matcher.start());
 				switch (found) {
 					case '(' -> {
@@ -77,9 +77,9 @@ public class SQLiteUtils {
 					break;
 				}
 			}
-			sql = result.toString();
+			tmpSql = result.toString();
 		}
-		return sql;
+		return tmpSql;
 	}
 
 }

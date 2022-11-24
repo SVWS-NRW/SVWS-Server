@@ -39,7 +39,7 @@ public class NoteConverterFromIntegerDeserializer extends StdDeserializer<Note> 
 	public Note deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
 		try {
 			return NoteConverterFromInteger.instance.convertToEntityAttribute(p.getIntValue());
-		} catch (IOException e) {
+		} catch (@SuppressWarnings("unused") IOException e) {
 			return null;
 		}
 	}

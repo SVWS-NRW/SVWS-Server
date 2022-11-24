@@ -145,12 +145,12 @@ export class GesellschaftswissenschaftenUndReligion extends GostBelegpruefung {
 	private pruefeZusatzkurs(fachbelegungen : List<AbiturFachbelegung> | null) : void {
 		if ((fachbelegungen === null) || (fachbelegungen.size() === 0)) 
 			return;
-		fachbelegungen = this.manager.filterBelegungKursartExistiert(fachbelegungen, GostKursart.ZK);
-		if (fachbelegungen.size() === 0) 
+		let fachbelegungenZK : List<AbiturFachbelegung> | null = this.manager.filterBelegungKursartExistiert(fachbelegungen, GostKursart.ZK);
+		if (fachbelegungenZK.size() === 0) 
 			return;
-		if (fachbelegungen.size() > 1) 
+		if (fachbelegungenZK.size() > 1) 
 			this.addFehler(GostBelegungsfehler.ZK_13);
-		for (let fachbelegung of fachbelegungen) {
+		for (let fachbelegung of fachbelegungenZK) {
 			let fach : GostFach | null = this.manager.getFach(fachbelegung);
 			if ((fach === null) || (GostFachManager.istBilingual(fach))) 
 				this.addFehler(GostBelegungsfehler.ZK_13);

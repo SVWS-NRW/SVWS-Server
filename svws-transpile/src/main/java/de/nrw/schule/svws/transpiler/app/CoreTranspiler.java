@@ -58,7 +58,7 @@ public class CoreTranspiler {
 					String fileNameJavaFiles = cmdLine.getValue("jf", "");
 					String data = Files.readString(Paths.get(fileNameJavaFiles));
 					tmpJavaFiles = data.split(",");
-				} catch (IOException e) {
+				} catch (@SuppressWarnings("unused") IOException e) {
 					tmpJavaFiles = null;
 				}
 			}
@@ -67,7 +67,7 @@ public class CoreTranspiler {
 					String fileNameAPIFiles = cmdLine.getValue("af", "");
 					String data = Files.readString(Paths.get(fileNameAPIFiles));
 					tmpApiFiles = data.split(",");
-				} catch (IOException e) {
+				} catch (@SuppressWarnings("unused") IOException e) {
 					tmpApiFiles = null;
 				}
 			}
@@ -124,7 +124,7 @@ public class CoreTranspiler {
 				.collect(Collectors.joining("\n", "", "\n"));
 		try {
 			Files.writeString(Paths.get(typeScriptOutputDir + "/index.ts"), strExports, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
-		} catch (IOException e) {
+		} catch (@SuppressWarnings("unused") IOException e) {
 			throw new TranspilerException("Transpiler Error: Cannot generated index.ts file.");
 		}
 	}

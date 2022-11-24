@@ -343,7 +343,7 @@ public class DTOENMLehrerSchuelerAbschnittsdaten {
 	public Integer getAbiturFach() {
 		try {
 			return Integer.parseInt(this.AbiturFach);
-		} catch (NumberFormatException e) {
+		} catch (@SuppressWarnings("unused") NumberFormatException e) {
 			return null;
 		}
 	}

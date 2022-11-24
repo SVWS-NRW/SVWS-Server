@@ -530,7 +530,7 @@ public class KursblockungTests {
 
 	}
 
-	private void check(@NotNull GostBlockungsdatenManager kbInput, GostBlockungsergebnisManager kbOutput) {
+	private static void check(@NotNull GostBlockungsdatenManager kbInput, GostBlockungsergebnisManager kbOutput) {
 		assert kbInput != null : "kbInput == null";
 		assert kbOutput != null : "kbOutput == null";
 		assert kbOutput.getBlockungsdatenID() == kbInput.getID() : "kbOutput.getDatenID() != kbInput.getID()";
@@ -581,7 +581,7 @@ public class KursblockungTests {
 		return min;
 	}
 
-	private void regelSperreSchieneFuerKursart(@NotNull GostBlockungsdatenManager pInput, @NotNull String pKursart, int pVon, int pBis) {
+	private static void regelSperreSchieneFuerKursart(@NotNull GostBlockungsdatenManager pInput, @NotNull String pKursart, int pVon, int pBis) {
 		GostKursart gKursart = GostKursart.fromKuerzel(pKursart);
 		if (gKursart == null)
 			throw new AssertionError("GostKursart '" + pKursart + "' nicht gefunden.");
@@ -595,7 +595,7 @@ public class KursblockungTests {
 		pInput.addRegel(gRegel);
 	}
 
-	private void regelFixiereKurseInSchieneSonstNichts(@NotNull GostBlockungsdatenManager pInput, long[] pKursID,
+	private static void regelFixiereKurseInSchieneSonstNichts(@NotNull GostBlockungsdatenManager pInput, long[] pKursID,
 			int pSchiene) {
 
 		for (@NotNull GostBlockungKurs gKurs : pInput.daten().kurse) {
@@ -616,7 +616,7 @@ public class KursblockungTests {
 
 	}
 
-	private void regelVerbieteSchuelerInKurs(@NotNull GostBlockungsdatenManager pInput, long pSchuelerID,
+	private static void regelVerbieteSchuelerInKurs(@NotNull GostBlockungsdatenManager pInput, long pSchuelerID,
 			long pKursID) {
 		GostBlockungRegel gRegel = new GostBlockungRegel();
 		gRegel.id = pInput.getRegelAnzahl() + 1;
@@ -626,7 +626,7 @@ public class KursblockungTests {
 		pInput.addRegel(gRegel);
 	}
 
-	private void regelFixiereKursInSchiene(@NotNull GostBlockungsdatenManager pInput, long pKursID, int pSchiene) {
+	private static void regelFixiereKursInSchiene(@NotNull GostBlockungsdatenManager pInput, long pKursID, int pSchiene) {
 		@NotNull GostBlockungKurs kurs = pInput.getKurs(pKursID); // wirft ggf. Exception
 		GostBlockungRegel gRegel = new GostBlockungRegel();
 		gRegel.id = pInput.getRegelAnzahl() + 1;
@@ -636,7 +636,7 @@ public class KursblockungTests {
 		pInput.addRegel(gRegel);
 	}
 
-	private void regelFixiereSchuelerInKurs(@NotNull GostBlockungsdatenManager pInput, long pSchuelerID, long pKursID) {
+	private static void regelFixiereSchuelerInKurs(@NotNull GostBlockungsdatenManager pInput, long pSchuelerID, long pKursID) {
 		@NotNull GostBlockungKurs kurs = pInput.getKurs(pKursID); // wirft ggf. Exception
 		GostBlockungRegel gRegel = new GostBlockungRegel();
 		gRegel.id = pInput.getRegelAnzahl() + 1;
@@ -655,7 +655,7 @@ public class KursblockungTests {
 			testeKursblockungAlgorithmusZufaelligEinMal(i, lRandom);
 	}
 
-	private void testeKursblockungAlgorithmusZufaelligEinMal(long pID, Random pRandom) {
+	private static void testeKursblockungAlgorithmusZufaelligEinMal(long pID, Random pRandom) {
 
 		// Der Kursblockungsalgorithmus ist ein Service.
 		KursblockungAlgorithmus kbAlgorithmus = new KursblockungAlgorithmus();
@@ -687,7 +687,7 @@ public class KursblockungTests {
 			check(kbInput, kbOutput);
 	}
 
-	private GostBlockungsdatenManager erzeugeZufallsdaten(long pID, Random pRandom) {
+	private static GostBlockungsdatenManager erzeugeZufallsdaten(long pID, Random pRandom) {
 
 		int nKurse = pRandom.nextInt(100);
 		int nFaecher = 1 + (nKurse / 2);

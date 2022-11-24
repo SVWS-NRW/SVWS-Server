@@ -47,7 +47,7 @@ public class ApiContent {
 	 */
 	ApiContent(Transpiler transpiler, AnnotationTree annotation) {
 		Map<String, ExpressionTree> args = transpiler.getArguments(annotation);
-		mimetype = determineMimetype(transpiler, args);
+		mimetype = determineMimetype(args);
 		if (mimetype == ApiMimeType.MULTIPART_FORM_DATA) {
 			datatype = "FormData";
 			isArrayType = false;
@@ -59,7 +59,7 @@ public class ApiContent {
 		}
 	}
 	
-	private static ApiMimeType determineMimetype(Transpiler transpiler, Map<String, ExpressionTree> args) {
+	private static ApiMimeType determineMimetype(Map<String, ExpressionTree> args) {
 		ExpressionTree value = args.get("mediaType");
         if(value == null) {
             throw new TranspilerException("Transpiler Exception: Missing mediaType value for @Content annotation.");

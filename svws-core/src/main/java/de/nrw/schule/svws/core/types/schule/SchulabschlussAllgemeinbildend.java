@@ -201,7 +201,7 @@ public enum SchulabschlussAllgemeinbildend {
 		try {
 			SchulabschlussAllgemeinbildend other = SchulabschlussAllgemeinbildend.valueOf(str);
 			return this.equals(other);
-		} catch (IllegalArgumentException e) {
+		} catch (@SuppressWarnings("unused") IllegalArgumentException e) {
 			return false;
 		}
 	}

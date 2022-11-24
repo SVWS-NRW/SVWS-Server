@@ -266,7 +266,7 @@ public class GostSchuelerLaufbahn {
 			"LK".equals(belegungPlanungKursart) || "S".equals(belegungPlanungKursart);
 		belegung.wochenstunden =
 				"LK".equals(belegungPlanungKursart) ? 5 : wochenstunden;
-		belegung.block1gewertet = false;
+		belegung.block1gewertet = istInAbiwertung;
     }
 
 }

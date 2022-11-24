@@ -37,7 +37,7 @@ public class NoteConverterFromNotenpunkteString extends DBAttributeConverter<Not
 			return Note.KEINE;
 		try {			
 			return Note.fromNotenpunkte(Integer.parseInt(dbData));
-		} catch(NumberFormatException e) {
+		} catch(@SuppressWarnings("unused") NumberFormatException e) {
 			return Note.fromKuerzel(dbData);
 		}
 	}

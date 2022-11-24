@@ -602,7 +602,7 @@ public class SprachendatenUtils {
             default:
                 try {
                     return Integer.parseInt(ASDJahrgang);
-                } catch (NumberFormatException e) {
+                } catch (@SuppressWarnings("unused") NumberFormatException e) {
                     return 0;
                 }
         }

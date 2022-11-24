@@ -22,7 +22,7 @@ public class NoteConverterFromInteger extends DBAttributeConverter<Note, Integer
 			return null;
 		try {
 			return Integer.parseInt(note.ohneTendenz().kuerzel);
-		} catch (NumberFormatException e) {
+		} catch (@SuppressWarnings("unused") NumberFormatException e) {
 			return null;
 		}
 	}

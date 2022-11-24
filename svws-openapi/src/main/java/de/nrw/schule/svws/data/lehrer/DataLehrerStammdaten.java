@@ -204,13 +204,14 @@ public class DataLehrerStammdaten extends DataManager<Long> {
     		throw OperationError.CONFLICT.exception();
 		lehrer.Ort_ID = wohnortID;
     	// Prüfe, ob die Ortsteil ID in Bezug auf die WohnortID gültig ist, wähle hierbei null-Verweise auf die K_Ort-Tabelle als überall gültig
-		if (ortsteilID != null) {
-			DTOOrtsteil ortsteil = conn.queryByKey(DTOOrtsteil.class, ortsteilID);
+		Long ortsteilIDNeu = ortsteilID;
+		if (ortsteilIDNeu != null) {
+			DTOOrtsteil ortsteil = conn.queryByKey(DTOOrtsteil.class, ortsteilIDNeu);
 	    	if ((ortsteil == null) || ((ortsteil.Ort_ID != null) && (!ortsteil.Ort_ID.equals(wohnortID)))) {
-	    		ortsteilID = null;
+	    		ortsteilIDNeu = null;
 	    	}
 		}
-		lehrer.Ortsteil_ID = ortsteilID;    	
+		lehrer.Ortsteil_ID = ortsteilIDNeu;    	
     }
 	
 }

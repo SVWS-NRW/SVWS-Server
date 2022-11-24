@@ -214,7 +214,7 @@ public class ABPSchueler {
 				liste.add(schueler);
 			}
 			return liste;
-		} catch (IOException e) {
+		} catch (@SuppressWarnings("unused") IOException e) {
 			return Collections.emptyList();
 		}
 	}

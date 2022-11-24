@@ -44,7 +44,7 @@ public class JsonReader {
 			URI uri = URI.create(jar_path);
 			try {
 				result = FileSystems.getFileSystem(uri);
-			} catch (FileSystemNotFoundException e) {
+			} catch (@SuppressWarnings("unused") FileSystemNotFoundException e) {
 				Map<String, String> env = new HashMap<>(); 
 				env.put("create", "true");
 				try {

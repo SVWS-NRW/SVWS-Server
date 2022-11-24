@@ -34,13 +34,13 @@ public class ApiResponse {
 	 */
 	ApiResponse(Transpiler transpiler, AnnotationTree annotation) {
 		Map<String, ExpressionTree> args = transpiler.getArguments(annotation);
-		responseCode = determineResponseCode(transpiler, args);
-		description = determineDescription(transpiler, args);
+		responseCode = determineResponseCode(args);
+		description = determineDescription(args);
 		AnnotationTree annotationContent = determineContentAnnotation(transpiler, args);
 		content = annotationContent == null ? null : new ApiContent(transpiler, annotationContent);
 	}
 	
-	private static int determineResponseCode(Transpiler transpiler, Map<String, ExpressionTree> args) {
+	private static int determineResponseCode(Map<String, ExpressionTree> args) {
 		ExpressionTree value = args.get("responseCode");
         if(value == null) {
             throw new TranspilerException("Transpiler Exception: Missing responseCode value for @Response annotation.");
@@ -50,7 +50,7 @@ public class ApiResponse {
 		throw new TranspilerException("Transpiler Exception: Unhandled responseCode argument for ApiResponse annotation.");		
 	}
 
-	private static String determineDescription(Transpiler transpiler, Map<String, ExpressionTree> args) {
+	private static String determineDescription(Map<String, ExpressionTree> args) {
 		ExpressionTree value = args.get("description");
         if(value == null) {
             throw new TranspilerException("Transpiler Exception: Missing description value for @Response annotation.");

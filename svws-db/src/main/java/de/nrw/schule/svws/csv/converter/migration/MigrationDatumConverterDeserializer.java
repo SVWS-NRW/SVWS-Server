@@ -38,7 +38,7 @@ public class MigrationDatumConverterDeserializer extends StdDeserializer<String>
 	public String deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
 		try {
 			return DatumConverter.instance.convertToEntityAttribute(Timestamp.valueOf(p.getText()));
-		} catch (IllegalArgumentException e) {
+		} catch (@SuppressWarnings("unused") IllegalArgumentException e) {
 			return null;
 		}
 	}

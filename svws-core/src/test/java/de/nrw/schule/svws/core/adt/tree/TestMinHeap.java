@@ -404,7 +404,7 @@ class TestMinHeap {
 			MinHeap<Integer> h = (MinHeap<Integer>) heap.clone();
 			assertEquals(heap.size(), h.size());
 			assertEquals(heap, h);
-		} catch (CloneNotSupportedException e) {
+		} catch (@SuppressWarnings("unused") CloneNotSupportedException e) {
 			// Clone is supported...
 		}
 	}

@@ -44,7 +44,7 @@ public class ABPVersion {
 				liste.add(version);
 			}
 			return liste;
-		} catch (IOException e) {
+		} catch (@SuppressWarnings("unused") IOException e) {
 			return Collections.emptyList();
 		}
 	}

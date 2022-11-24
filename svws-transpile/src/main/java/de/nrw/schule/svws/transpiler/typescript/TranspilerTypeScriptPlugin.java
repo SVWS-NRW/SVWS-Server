@@ -2342,7 +2342,7 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 					transpileEnum(sb, classTree);
 				}
 				Files.writeString(path, sb.toString(), StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
-			} catch (IOException e) {
+			} catch (@SuppressWarnings("unused") IOException e) {
 				throw new TranspilerException("Transpiler Error: Cannot write output file " + path.toString());
 			}
 		}
@@ -2358,7 +2358,7 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			try {
 				Files.createDirectories(path.getParent());
 				Files.writeString(path, res.data, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
-			} catch (IOException e) {
+			} catch (@SuppressWarnings("unused") IOException e) {
 				throw new TranspilerException("Transpiler Error: Cannot write output file " + path.toString());
 			}
 		}

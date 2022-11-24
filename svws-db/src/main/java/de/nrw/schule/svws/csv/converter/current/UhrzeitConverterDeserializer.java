@@ -38,7 +38,7 @@ public class UhrzeitConverterDeserializer extends StdDeserializer<String> {
 	public String deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
 		try {
 			return UhrzeitConverter.instance.convertToEntityAttribute(Timestamp.valueOf(p.getText()));
-		} catch (IllegalArgumentException e) {
+		} catch (@SuppressWarnings("unused") IllegalArgumentException e) {
 			return null;
 		}
 	}

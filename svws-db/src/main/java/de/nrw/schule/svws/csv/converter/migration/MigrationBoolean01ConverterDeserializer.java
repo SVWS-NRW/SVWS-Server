@@ -37,7 +37,7 @@ public class MigrationBoolean01ConverterDeserializer extends StdDeserializer<Boo
 	public Boolean deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
 		try {
 			return Boolean01Converter.instance.convertToEntityAttribute(p.getIntValue());
-		} catch (IOException e) {
+		} catch (@SuppressWarnings("unused") IOException e) {
 			return null;
 		}
 	}

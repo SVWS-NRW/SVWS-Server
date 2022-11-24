@@ -25,7 +25,7 @@ public class StringToIntegerConverter extends DBAttributeConverter<Integer, Stri
 	public Integer convertToEntityAttribute(String dbData) {
 		try {
 			return Integer.parseInt(dbData);
-		} catch(NumberFormatException e) {
+		} catch(@SuppressWarnings("unused") NumberFormatException e) {
 			return null;
 		}		
 	}

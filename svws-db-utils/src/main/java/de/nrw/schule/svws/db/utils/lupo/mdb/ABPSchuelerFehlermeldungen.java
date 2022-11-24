@@ -63,7 +63,7 @@ public class ABPSchuelerFehlermeldungen {
 				liste.add(fehler);
 			}
 			return liste;
-		} catch (IOException e) {
+		} catch (@SuppressWarnings("unused") IOException e) {
 			return Collections.emptyList();
 		}
 	}

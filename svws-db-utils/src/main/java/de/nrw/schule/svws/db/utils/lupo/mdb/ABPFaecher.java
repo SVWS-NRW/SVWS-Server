@@ -140,12 +140,12 @@ public class ABPFaecher {
 				map.put(fach.FachKrz, fach);
 			}
 			return map;
-		} catch (IOException e) {
+		} catch (@SuppressWarnings("unused") IOException e) {
 			return Collections.emptyMap();
 		}
 	}
-	
-	
+
+
 	/**
 	 * Schreibt die angegebenen Fächer in die übergebene Datenbank
 	 * 

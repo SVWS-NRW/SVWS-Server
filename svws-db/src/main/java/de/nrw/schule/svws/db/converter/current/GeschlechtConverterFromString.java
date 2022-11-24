@@ -33,7 +33,7 @@ public class GeschlechtConverterFromString extends DBAttributeConverter<Geschlec
 			return Geschlecht.X;
 		try {
 			return Geschlecht.fromValue(Integer.parseInt(dbData));
-		} catch (NumberFormatException e) {
+		} catch (@SuppressWarnings("unused") NumberFormatException e) {
 			return Geschlecht.X;
 		}
 	}

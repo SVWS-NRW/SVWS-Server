@@ -822,7 +822,7 @@ public class LupoMDB {
 		belegung.wochenstunden = 
 				"LK".equals(belegungPlanungKursart) ? 5 : 
 				wochenstunden != null ? wochenstunden : (fachKursart == GostKursart.VTF ? 2 : 3);
-		belegung.block1gewertet = false;
+		belegung.block1gewertet = istInAbiwertung;
     }
 	
 }

@@ -251,7 +251,7 @@ public class APISchemaRoot {
     @ApiResponse(responseCode = "500", description = "Der Datenbankzugriff auf das neue Schema mit dem neuen zugehörigen Admin-Benutzer ist fehlgeschlagen oder das SVWS-Schema mit der Revision konnte nicht angelegt werden.",
 	 			 content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
     public SimpleOperationResponse createSchema(@PathParam("schema") String schemaname, 
-    						 @PathParam("revision") long revision, 
+    						 @PathParam("revision") long revision,
     						 @RequestBody(description = "Der Benutzername und das Kennwort für den administrativen Zugang zum Schema", required = true) BenutzerKennwort kennwort, 
     						 @Context HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KEINE)) {
@@ -262,9 +262,10 @@ public class APISchemaRoot {
 			// TODO move to DBSchemaManager, use DBException and extend logging...
 	
 			long max_revision = SchemaRevisionen.maxRevision.revision;
-			if (revision < 0)
-				revision = max_revision;
-			if (revision > max_revision)
+			long rev = revision;
+			if (rev < 0)
+				rev = max_revision;
+			if (rev > max_revision)
 				throw OperationError.BAD_REQUEST.exception(simpleResponse(false, log));
 			
 			DBRootManager root_manager = DBRootManager.create(conn);
@@ -298,9 +299,9 @@ public class APISchemaRoot {
 				throw OperationError.INTERNAL_SERVER_ERROR.exception(simpleResponse(false, log));
 			logger.modifyIndent(-2);
 
-			logger.logLn("Aktualisiere das Schema schrittweise auf Revision " + revision + ".");
+			logger.logLn("Aktualisiere das Schema schrittweise auf Revision " + rev + ".");
 			logger.modifyIndent(2);
-			if (!manager.updater.update(revision, false, true))
+			if (!manager.updater.update(rev, false, true))
 				throw OperationError.INTERNAL_SERVER_ERROR.exception(simpleResponse(false, log));
 			logger.modifyIndent(-2);
 			
@@ -412,7 +413,7 @@ public class APISchemaRoot {
 	    	try {
 	    		Files.createDirectories(Paths.get(mdbdirectory));
 				Files.write(Paths.get(mdbdirectory + "/" + mdbFilename), multipart.database, StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE);			
-			} catch (IOException e) {
+			} catch (@SuppressWarnings("unused") IOException e) {
 				logger.logLn(2, "Fehler beim Erstellen der temporären Access-Datenbank unter dem Namen \"" + mdbdirectory + "/" + mdbFilename + "\"");
 				throw OperationError.INTERNAL_SERVER_ERROR.exception(simpleResponse(false, log));
 			}
@@ -433,7 +434,7 @@ public class APISchemaRoot {
 			logger.logLn("Löschen der temporären Access-Datenbank unter dem Namen \"" + mdbdirectory + "/" + mdbFilename + "\".");
 			try {
 				Files.delete(Paths.get(mdbdirectory + "/" + mdbFilename));
-			} catch (IOException e) {
+			} catch (@SuppressWarnings("unused") IOException e) {
 				logger.logLn(2, "[FEHLER]");
 			}
 			
@@ -484,7 +485,7 @@ public class APISchemaRoot {
 	    	try {
 	    		Files.createDirectories(Paths.get(tmpDirectory));
 				Files.write(Paths.get(tmpDirectory + "/" + tmpFilename), multipart.database, StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE);			
-			} catch (IOException e) {
+			} catch (@SuppressWarnings("unused") IOException e) {
 				logger.logLn(2, "Fehler beim Erstellen der temporären SQLite-Datenbank unter dem Namen \"" + tmpDirectory + "/" + tmpFilename + "\"");
 				throw OperationError.INTERNAL_SERVER_ERROR.exception(simpleResponse(false, log));
 			}
@@ -511,7 +512,7 @@ public class APISchemaRoot {
 				if (!srcManager.backup.importDB(tgtConfig, conn.getUser().getPassword(), maxUpdateRevision, false, logger))
 					throw OperationError.INTERNAL_SERVER_ERROR.exception(simpleResponse(false, log));				
 				logger.modifyIndent(-2);
-			} catch(DBException e) {
+			} catch(@SuppressWarnings("unused") DBException e) {
 				throw OperationError.INTERNAL_SERVER_ERROR.exception(simpleResponse(false, log));
 			}
 			
@@ -519,7 +520,7 @@ public class APISchemaRoot {
 			logger.logLn("Löschen der temporären SQLite-Datenbank unter dem Namen \"" + tmpDirectory + "/" + tmpFilename + "\".");
 			try {
 				Files.delete(Paths.get(tmpDirectory + "/" + tmpFilename));
-			} catch (IOException e) {
+			} catch (@SuppressWarnings("unused") IOException e) {
 				logger.logLn(2, "[FEHLER]");
 			}
 			

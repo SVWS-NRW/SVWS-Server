@@ -74,7 +74,7 @@ public class ABPFachgruppen {
 				zuordnung.put(fach.Fach, fach);
 			}
 			return zuordnung;
-		} catch (IOException e) {
+		} catch (@SuppressWarnings("unused") IOException e) {
 			return Collections.emptyMap();
 		}
 	}

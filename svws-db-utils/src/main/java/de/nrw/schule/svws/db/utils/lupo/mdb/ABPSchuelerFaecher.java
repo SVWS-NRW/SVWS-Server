@@ -222,7 +222,7 @@ public class ABPSchuelerFaecher {
 				liste.add(zuordnung);
 			}
 			return liste;
-		} catch (IOException e) {
+		} catch (@SuppressWarnings("unused") IOException e) {
 			return Collections.emptyList();
 		}
 	}

@@ -220,23 +220,23 @@ public enum Note {
 	public static @NotNull Note fromKuerzel(String kuerzel) {
 		if (kuerzel == null)
 			return KEINE;
-		kuerzel = kuerzel.toUpperCase();
-		switch (kuerzel) {
+		String kuerzelUppercase = kuerzel.toUpperCase();
+		switch (kuerzelUppercase) {
 			case "6": return UNGENUEGEND;
 			case "5-": return MANGELHAFT_MINUS;
 			case "5": return MANGELHAFT;
 			case "5+": return MANGELHAFT_PLUS;
-			case "4-": return AUSREICHEND_MINUS;		
-			case "4": return AUSREICHEND;		
-			case "4+": return AUSREICHEND_PLUS;		
-			case "3-": return BEFRIEDIGEND_MINUS;		
-			case "3": return BEFRIEDIGEND;		
-			case "3+": return BEFRIEDIGEND_PLUS;		
-			case "2-": return GUT_MINUS;		
-			case "2": return GUT;		
-			case "2+": return GUT_PLUS;		
-			case "1-": return SEHR_GUT_MINUS;		
-			case "1": return SEHR_GUT;		
+			case "4-": return AUSREICHEND_MINUS;
+			case "4": return AUSREICHEND;
+			case "4+": return AUSREICHEND_PLUS;
+			case "3-": return BEFRIEDIGEND_MINUS;
+			case "3": return BEFRIEDIGEND;
+			case "3+": return BEFRIEDIGEND_PLUS;
+			case "2-": return GUT_MINUS;
+			case "2": return GUT;
+			case "2+": return GUT_PLUS;
+			case "1-": return SEHR_GUT_MINUS;
+			case "1": return SEHR_GUT;
 			case "1+": return SEHR_GUT_PLUS;
 			case "E1": return E1_MIT_BESONDEREM_ERFOLG_TEILGENOMMEN;
 			case "E2": return E2_MIT_ERFOLG_TEILGENOMMEN;
