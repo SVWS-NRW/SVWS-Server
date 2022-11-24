@@ -1,7 +1,7 @@
 <template>
-	<tr v-if="status_blockung" class="table--row table--cell-padded">
+	<tr v-if="status_blockung">
 		<template v-if="status_blockung.idle">
-			<td class="loading-disclaimer" colspan="3">
+			<td class="loading-disclaimer">
 				<div class="loading-display">
 					<span>Blockung wird berechnet...</span>
 					<span class="loading-spinner-dimensions">
@@ -15,7 +15,7 @@
 			</td>
 		</template>
 		<template v-if="status_blockung.error">
-			<td class="table--cell table--cell-padded table--border px-8" colspan="3">
+			<td>
 				<p class="api-error-text">Fehler beim Berechnen der Blockung!</p>
 			</td>
 		</template>
@@ -50,7 +50,7 @@ import {
 		--tw-bg-opacity: 1;
 		--tw-border-opacity: 1;
 		border-width: 1px;
-		padding: .25rem .75rem;
+		padding: 1rem .75rem;
 		line-height: 1.125;
 	}
 	

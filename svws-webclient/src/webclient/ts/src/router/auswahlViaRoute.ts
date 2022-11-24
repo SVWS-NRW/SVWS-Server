@@ -28,7 +28,6 @@ export function useAuswahlViaRoute<
 	const updateAuswahl = (id: string) => {
 		let item
 		for (const i of app.auswahl.liste) {
-			console.log(id, item)
 			if ((i instanceof GostJahrgang) 
 				? i.abiturjahr?.valueOf() === +id
 				: i.id === +id) {

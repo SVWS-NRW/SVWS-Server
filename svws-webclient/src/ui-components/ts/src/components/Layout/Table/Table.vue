@@ -93,20 +93,22 @@ watch(() => selection, (newVal) => tableRef.value.selectRows(newVal));
       </tr>
     </template>
     <template #body="{ rows }">
-      <VTr v-for="(row, index) in rows" :key="`row-${index}`" v-slot="{ isSelected, toggle }" :row="row" :class="{'vt-clicked': check_same(row)}" @click="emit('update:modelValue', row)">
-        <td v-if="isMultiSelect">
-          <span class="table__cell-content">
-            <Checkbox :model-value="isSelected === row" @click.stop @update:model-value="proxyUpdate(toggle)" />
-          </span>
-        </td>
-        <td v-for="(column, columnIndex) in columnsComputed" :key="`row-column-${column.key}-${columnIndex}`">
-          <slot :name="`cell-${column.key}`" :column="column" :row="row">
+      <slot name="body" :rows="rows">
+        <VTr v-for="(row, index) in rows" :key="`row-${index}`" v-slot="{ isSelected, toggle }" :row="row" :class="{'vt-clicked': check_same(row)}" @click="emit('update:modelValue', row)">
+          <td v-if="isMultiSelect">
             <span class="table__cell-content">
-              {{ row[column.key] }}
+              <Checkbox :model-value="isSelected === row" @click.stop @update:model-value="proxyUpdate(toggle)" />
             </span>
-          </slot>
-        </td>
-      </VTr>
+          </td>
+          <td v-for="(column, columnIndex) in columnsComputed" :key="`row-column-${column.key}-${columnIndex}`">
+            <slot :name="`cell-${column.key}`" :column="column" :row="row">
+              <span class="table__cell-content">
+                {{ row[column.key] }}
+              </span>
+            </slot>
+          </td>
+        </VTr>
+      </slot>
     </template>
     <template v-if="isMultiSelect || footer" #foot="{ allRowsSelected, toggleAllRows }">
       <tr>

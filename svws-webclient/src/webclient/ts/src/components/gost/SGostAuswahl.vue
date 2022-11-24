@@ -1,7 +1,7 @@
 <template>
 	<svws-ui-secondary-menu>
 		<template #headline> Abiturjahrgangsauswahl</template>
-		<template #header> </template>
+		<template #header></template>
 		<template #content>
 			<div class="container">
 				<svws-ui-table
@@ -23,125 +23,70 @@
 				</template>
 			</svws-ui-dropdown>
 			<div v-if="main.config.kursblockung_aktiv.size && abiturjahr" class="container">
-				<table class="table mt-8">
-					<thead class="table--header">
-						<tr>
-							<td class="table--cell table--cell-padded">
-								<div class="table--header-col">
-									<span class="table--header-col--text">
-										Halbjahr
-									</span>
-								</div>
-							</td>
-						</tr>
-					</thead>
-					<tbody>
-						<template v-for="hj in halbjahre" :key="hj.id">
-							<tr class="table--row">
-								<td
-									class="table--cell table--cell-padded table--border"
-									:class="{ 'table--row-selected': hj === selected_hj }"
-									@click="selected_hj = hj"
-								>
-									{{ hj.kuerzel }}
+				<svws-ui-table v-model="selected_hj" :columns="[{ key: 'kuerzel', label: 'Halbjahr' }]" :data="halbjahre">
+					<template #body="{rows}">
+						<template v-for="row in rows" :key="row.id">
+							<tr :class="{'vt-clicked': row.id === selected_hj.id}" @click="selected_hj = halbjahre.find(hj=>hj.id===row.id)!">
+								<td>
+									{{row.kuerzel}}
 									<svws-ui-button
-										v-if="hj === selected_hj"
-										size="small"
-										type="primary"
-										class="float-right cursor-pointer"
-										@click="blockung_hinzufuegen"
-									>Blockung hinzufügen</svws-ui-button>
+										v-if="row.id === selected_hj.id"
+										size="small" type="primary" class="float-right cursor-pointer" @click="blockung_hinzufuegen"
+										>Blockung hinzufügen</svws-ui-button>
 								</td>
 							</tr>
-							<template v-if="hj === selected_hj && !wait">
-								<template v-for="blockung in rows_blockungsswahl" :key="blockung.id">
-									<tr class="table--row">
-										<td
-											class="table--cell table--cell-padded table--border" 
-											:class="{ 'table--row-selected': blockung === selected_blockungauswahl }"
-											colspan="3"
-											@click="selected_blockungauswahl = blockung"
-											>
-											<template v-if=" blockung === selected_blockungauswahl ">
-												<div class="float-left flex">
-													<span v-if="!edit_blockungsname" class="px-3 underline decoration-dashed underline-offset-2 cursor-pointer" @click="edit_blockungsname = true">{{blockung.name}}--{{blockung.id}}</span>
-													<svws-ui-text-input v-else v-model="blockung.name" style="width: 10rem" headless focus @keyup.enter="edit_blockungsname=false" @input="patch_blockung(blockung)"/>
-												</div>
-												<div class="float-right flex gap-1">
-													<svws-ui-button class="cursor-pointer" size="small" @click="create_blockung" >Ergebnisse berechnen</svws-ui-button >
-													<svws-ui-button size="small" type="danger" class="cursor-pointer" @click="remove_blockung">Löschen </svws-ui-button>
-												</div>
-											</template>
-											<template v-else>
-												<span class="px-3">{{blockung.name}}</span>
-											</template>
-										</td>
-									</tr>
-									<!-- Api-Status für das Halbjahr -->
-									<auswahl-blockung-api-status :blockung="blockung"/>
-								</template>
+							<template v-if="row.id === selected_hj.id && !wait" v-for="blockung in rows_blockungsswahl" :key="blockung.id">
+								<tr :class="{'vt-clicked': blockung === selected_blockungauswahl}" @click="selected_blockungauswahl = blockung">
+									<td v-if=" blockung === selected_blockungauswahl ">
+										<div class="float-left flex">
+											<span v-if="!edit_blockungsname"
+												class="px-4 underline decoration-dashed underline-offset-2 cursor-pointer"
+												@click="edit_blockungsname = true"
+											>{{blockung.name}}--{{blockung.id}}</span>
+											<svws-ui-text-input v-else v-model="blockung.name"
+												style="width: 10rem"
+												headless focus
+												@keyup.enter="edit_blockungsname=false"
+												@input="patch_blockung(blockung)"/>
+										</div>
+										<div class="float-right flex gap-2">
+											<svws-ui-button class="cursor-pointer" size="small" @click="create_blockung">Ergebnisse berechnen</svws-ui-button >
+											<svws-ui-button size="small" type="danger" class="cursor-pointer" @click="remove_blockung">
+												<svws-ui-icon><i-ri-delete-bin-2-line/></svws-ui-icon>
+											</svws-ui-button>
+										</div>
+									</td>
+									<td v-else>
+										<span class="px-4">{{blockung.name}}</span>
+									</td>
+								</tr>
+								<auswahl-blockung-api-status :blockung="blockung"/>
 							</template>
 						</template>
-					</tbody>
-				</table>
-				<table class="table mt-8">
-					<thead class="table--header">
-						<tr>
-							<td class="table--cell table--cell-padded">
-								<div class="table--header-col">
-									<span class="table--header-col--text">
-										ID
-									</span>
-								</div>
-							</td>
-							<td class="table--cell table--cell-padded">
-								<div class="table--header-col">
-									<span class="table--header-col--text">
-										Kollisionen
-									</span>
-								</div>
-							</td>
-							<td class="table--cell table--cell-padded">
-								<div class="table--header-col">
-									<span class="table--header-col--text">
-										Bewertungen
-									</span>
-								</div>
-							</td>
-						</tr>
-					</thead>
-					<tbody>
-						<template v-for="ergebnis in rows_ergebnisse" :key="ergebnis.id">
-							<tr 
-								class="table--row"
-								:class="{ 'table--row-selected': ergebnis === selected_ergebnis }"
-								@click="selected_ergebnis = ergebnis"
-							>
-								<td class="table--cell table--cell-padded table--border" >
-									{{ ergebnis.id }}
-								</td>
-								<td class="table--cell table--cell-padded table--border" >
-									<div class="flex">
-										<span class="inline-flex font-semibold" >
-											<span :style="{'background-color': color1(ergebnis)}">{{manager?.getOfBewertung1Wert(ergebnis.id)}}</span>&nbsp
-											<span :style="{'background-color': color2(ergebnis)}">{{manager?.getOfBewertung2Wert(ergebnis.id)}}</span>&nbsp
-											<span :style="{'background-color': color3(ergebnis)}">{{manager?.getOfBewertung3Wert(ergebnis.id)}}</span>&nbsp
-											<span :style="{'background-color': color4(ergebnis)}">{{manager?.getOfBewertung4Wert(ergebnis.id)}}</span>
-										</span>
-									</div>
-								</td>
-								<td class="table--cell table--cell-padded table--border" >
-									<div v-if="ergebnis === selected_ergebnis" class="flex gap-1 float-right ">
-										<svws-ui-button size="small" type="primary" class="cursor-pointer" @click="derive_blockung"> Ableiten </svws-ui-button>
-										<svws-ui-button v-if="rows_ergebnisse.size() > 1" size="small" type="danger" class="cursor-pointer" @click="remove_ergebnis">
-											<svws-ui-icon><i-ri-delete-bin-2-line/></svws-ui-icon>
-										</svws-ui-button>
-									</div>
-								</td>
-							</tr>
-						</template>
-					</tbody>
-				</table>
+					</template>
+				</svws-ui-table>
+				<svws-ui-table
+					v-model="selected_ergebnis"
+					:columns="[{ key: 'id', label: 'ID' }, { key: 'bewertung', label: 'Bewertungen'}]"
+					:data="rows_ergebnisse.toArray()"
+				>
+					<template #cell-bewertung="{ row }">
+						<div class="flex justify-between">
+							<span class="inline-flex font-semibold" >
+								<span :style="{'background-color': color1(row)}">{{manager?.getOfBewertung1Wert(row.id)}}</span>&nbsp
+								<span :style="{'background-color': color2(row)}">{{manager?.getOfBewertung2Wert(row.id)}}</span>&nbsp
+								<span :style="{'background-color': color3(row)}">{{manager?.getOfBewertung3Wert(row.id)}}</span>&nbsp
+								<span :style="{'background-color': color4(row)}">{{manager?.getOfBewertung4Wert(row.id)}}</span>
+							</span>
+							<div v-if="row.id === selected_ergebnis?.id" class="flex gap-2">
+								<svws-ui-button size="small" type="primary" class="cursor-pointer" @click="derive_blockung"> Ableiten </svws-ui-button>
+								<svws-ui-button v-if="rows_ergebnisse.size() > 1" size="small" type="danger" class="cursor-pointer" @click="remove_ergebnis">
+									<svws-ui-icon><i-ri-delete-bin-2-line/></svws-ui-icon>
+								</svws-ui-button>
+							</div>
+						</div>
+					</template>
+				</svws-ui-table>
 			</div>
 		</template>
 	</svws-ui-secondary-menu>
@@ -254,16 +199,6 @@ const selected_ergebnis: WritableComputedRef<GostBlockungsergebnisListeneintrag 
 		}
 	}
 });
-
-// const selected: WritableComputedRef<GostJahrgang | undefined> =
-// 	computed({
-// 	get(): GostJahrgang | undefined {
-// 		return app.auswahl.ausgewaehlt;
-// 	},
-// 	set(value: GostJahrgang | undefined) {
-// 		if (app.auswahl) app.auswahl.ausgewaehlt = value
-// 	}
-// });
 
 async function abiturjahr_hinzufuegen(jahrgang: JahrgangsListeEintrag) {
 	try {
@@ -400,105 +335,4 @@ function color4(ergebnis: GostBlockungsergebnisListeneintrag): string {
 		-webkit-transform: rotate(360deg);
 	}
 }
-
-	.table--header {
-		@apply sticky top-px left-0 z-10 bg-white;
-		position: -webkit-sticky;
-	}
-
-	.table--header-col {
-		@apply inline-flex flex-row items-center;
-		@apply select-none;
-		@apply space-x-2;
-		@apply font-bold text-black;
-	}
-
-	.table--row {
-		@apply text-black;
-	}
-
-	.table--row:hover {
-		@apply cursor-pointer;
-	}
-
-	.table--row:focus {
-		@apply outline-none;
-	}
-
-	.table--row-selected {
-		@apply font-bold ;
-	}
-
-	.table--row-selected .checkbox {
-		@apply font-normal;
-	}
-
-	.table--row-selected
-		.checkbox
-		.checkbox--indicator {
-	}
-
-	.table--cell {
-		@apply bg-white;
-	}
-
-	.table--border {
-		@apply border;
-	}
-
-	.table--cell-padded {
-		@apply px-3 py-1;
-	}
-
-	.table {
-		width: calc(100% - 1px);
-	}
-
-	.table--action-button {
-		@apply h-6 w-6;
-	}
-
-	.table--action-items {
-		@apply bg-white;
-		@apply flex flex-col;
-		@apply px-2 py-1;
-		@apply ring-1;
-		@apply ring-black ring-opacity-5;
-		@apply rounded-md;
-		@apply shadow-lg;
-		@apply w-48;
-	}
-
-	.table--action-item {
-		@apply block;
-		@apply w-full;
-	}
-
-	.table--action-items:focus {
-		@apply outline-none;
-	}
-
-	.table--action-button:focus {
-		@apply outline-none ring-2 ring-inset;
-	}
-
-	.table--footer {
-		@apply flex justify-between;
-		@apply w-full;
-	}
-
-	.table--footer-wrapper {
-		@apply sticky bottom-0 left-0 z-10  bg-white;
-		position: -webkit-sticky;
-	}
-
-	.table--footer-row {
-		@apply bg-white;
-		@apply py-2 px-3;
-	}
-
-	.table--footer--actions {
-		@apply flex flex-row items-center space-x-2;
-	}
-
 </style>
