@@ -154,10 +154,10 @@ export class SatSolverWrapper extends SatSolverA {
 	/**
 	 * Forciert, dass genau {@code amount} Variablen der Variablenliste den Wert TRUE haben.
 	 * 
-	 * @param list   Die Variablenliste.
-	 * @param amount Die Anzahl an TRUEs in der Variablenliste.
+	 * @param pList   Die Variablenliste.
+	 * @param pAmount Die Anzahl an TRUEs in der Variablenliste.
 	 */
-	public c_exactly_GENERIC(list : LinkedCollection<Number>, amount : number) : void;
+	public c_exactly_GENERIC(pList : LinkedCollection<Number>, pAmount : number) : void;
 
 	/**
 	 * Implementation for method overloads of 'c_exactly_GENERIC'
@@ -168,25 +168,25 @@ export class SatSolverWrapper extends SatSolverA {
 			let amount : number = __param1 as number;
 			this.c_exactly_GENERIC(SatSolverWrapper.toList(pArray), amount);
 		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.adt.collection.LinkedCollection'))) || (__param0 === null)) && ((typeof __param1 !== "undefined") && typeof __param1 === "number")) {
-			let list : LinkedCollection<Number> = cast_de_nrw_schule_svws_core_adt_collection_LinkedCollection(__param0);
-			let amount : number = __param1 as number;
-			list = new LinkedCollection(list);
-			if (amount > list.size()) {
+			let pList : LinkedCollection<Number> = cast_de_nrw_schule_svws_core_adt_collection_LinkedCollection(__param0);
+			let pAmount : number = __param1 as number;
+			let list : LinkedCollection<Number> = new LinkedCollection(pList);
+			if (pAmount > list.size()) {
 				console.log(JSON.stringify("FEHLER: c_exactly_GENERIC --> amount > list.size()"));
 			}
-			if (amount === 0) {
+			if (pAmount === 0) {
 				for (let x of list) {
 					this.c_1(-x);
 				}
 				return;
 			}
-			if (amount === list.size()) {
+			if (pAmount === list.size()) {
 				for (let x of list) {
 					this.c_1(+x);
 				}
 				return;
 			}
-			if (amount === 1) {
+			if (pAmount === 1) {
 				if (list.size() === 1) {
 					this.c_1(list.getFirst().valueOf());
 					return;
@@ -198,32 +198,32 @@ export class SatSolverWrapper extends SatSolverA {
 				this.c_exactly_one(list);
 				return;
 			}
-			this.c_exactly_NETWORK(list, amount);
+			this.c_exactly_NETWORK(list, pAmount);
 		} else throw new Error('invalid method overload');
 	}
 
 	/**
 	 * Forciert, dass höchstens {@code maximum} Variablen der Variablenliste den Wert TRUE haben.
 	 * 
-	 * @param list    Die Variablenliste.
-	 * @param maximum Die maximale Anzahl an TRUEs in der Variablenliste.
+	 * @param pList    Die Variablenliste.
+	 * @param pMaximum Die maximale Anzahl an TRUEs in der Variablenliste.
 	 */
-	public c_at_most_GENERIC(list : LinkedCollection<Number>, maximum : number) : void {
-		list = new LinkedCollection(list);
-		if (maximum >= list.size()) {
+	public c_at_most_GENERIC(pList : LinkedCollection<Number>, pMaximum : number) : void {
+		let list : LinkedCollection<Number> = new LinkedCollection(pList);
+		if (pMaximum >= list.size()) {
 			return;
 		}
-		if (maximum === 0) {
+		if (pMaximum === 0) {
 			for (let x of list) {
 				this.c_1(-x);
 			}
 			return;
 		}
-		if (maximum === 1) {
+		if (pMaximum === 1) {
 			this.c_at_most_one_tree(list);
 			return;
 		}
-		this.c_at_most_NETWORK(list, maximum);
+		this.c_at_most_NETWORK(list, pMaximum);
 	}
 
 	/**
@@ -269,12 +269,12 @@ export class SatSolverWrapper extends SatSolverA {
 	 * Forciert, dass in der Liste maximal eine Variable TRUE ist. Die Ergebnisvariable ist eine OR-Verknüpfung aller
 	 * Variablen der Liste.
 	 * 
-	 * @param list Forciert, dass maximal eine Variable der Liste TRUE ist.
+	 * @param pList Forciert, dass maximal eine Variable der Liste TRUE ist.
 	 * 
 	 * @return Die Ergebnisvariable ist eine OR-Verknüpfung aller Variablen der Liste.
 	 */
-	private c_at_most_one_tree(list : LinkedCollection<Number>) : number {
-		list = new LinkedCollection(list);
+	private c_at_most_one_tree(pList : LinkedCollection<Number>) : number {
+		let list : LinkedCollection<Number> = new LinkedCollection(pList);
 		if (list.isEmpty()) {
 			list.add(this.varFALSE);
 		}

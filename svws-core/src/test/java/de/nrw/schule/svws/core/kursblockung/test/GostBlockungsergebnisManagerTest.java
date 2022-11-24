@@ -171,7 +171,7 @@ public class GostBlockungsergebnisManagerTest {
 				}
 			}
 
-			check_conistency(mapFaKu, mapScFaKu, mapKuSchiene, out);
+			check_conistency(mapFaKu, mapScFaKu, out);
 		}
 
 		// System.out.println(out.getOfBewertung1Wert() + "/" + out.getOfBewertung1Farbcode());
@@ -182,8 +182,7 @@ public class GostBlockungsergebnisManagerTest {
 
 	}
 
-	private static void check_conistency(HashMap<Long, HashSet<Long>> mapFaKu, HashMap<Long, HashMap<Long, Long>> mapScFaKu,
-			HashMap<Long, HashSet<Long>> mapKuSchiene, GostBlockungsergebnisManager out) {
+	private static void check_conistency(HashMap<Long, HashSet<Long>> mapFaKu, HashMap<Long, HashMap<Long, Long>> mapScFaKu, GostBlockungsergebnisManager out) {
 		// 1a) ergebnis.bewertung.anzahlKurseNichtZugeordnet;
 		int sum1a = 0;
 		for (long fachartID : mapFaKu.keySet())

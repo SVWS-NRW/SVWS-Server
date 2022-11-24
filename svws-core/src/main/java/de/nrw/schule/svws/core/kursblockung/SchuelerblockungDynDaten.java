@@ -373,8 +373,7 @@ public class SchuelerblockungDynDaten {
 			}
 	}
 
-	private SchuelerblockungInputKurs gibKleinstenKursInSchiene(
-			@NotNull Vector<@NotNull SchuelerblockungInputKurs> pKurse, int pSchiene) {
+	private static SchuelerblockungInputKurs gibKleinstenKursInSchiene(@NotNull Vector<@NotNull SchuelerblockungInputKurs> pKurse, int pSchiene) {
 		long maxSuS = Integer.MAX_VALUE;
 		SchuelerblockungInputKurs best = null;
 		for (SchuelerblockungInputKurs kurs : pKurse)

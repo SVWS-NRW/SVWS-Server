@@ -172,32 +172,32 @@ public class SatSolverWrapper extends SatSolverA {
 	/**
 	 * Forciert, dass genau {@code amount} Variablen der Variablenliste den Wert TRUE haben.
 	 * 
-	 * @param list   Die Variablenliste.
-	 * @param amount Die Anzahl an TRUEs in der Variablenliste.
+	 * @param pList   Die Variablenliste.
+	 * @param pAmount Die Anzahl an TRUEs in der Variablenliste.
 	 */
-	public void c_exactly_GENERIC(@NotNull LinkedCollection<@NotNull Integer> list, int amount) {
-		list = new LinkedCollection<>(list);
+	public void c_exactly_GENERIC(@NotNull LinkedCollection<@NotNull Integer> pList, int pAmount) {
+		@NotNull LinkedCollection<@NotNull Integer> list = new LinkedCollection<>(pList);
 		// Error?
-		if (amount > list.size()) {
+		if (pAmount > list.size()) {
 			System.out.println("FEHLER: c_exactly_GENERIC --> amount > list.size()");
 		}
 
 		// special case: 0
-		if (amount == 0) {
+		if (pAmount == 0) {
 			for (int x : list) {
 				c_1(-x);
 			}
 			return;
 		}
 		// special case: N
-		if (amount == list.size()) {
+		if (pAmount == list.size()) {
 			for (int x : list) {
 				c_1(+x);
 			}
 			return;
 		}
 		// special case: 1
-		if (amount == 1) {
+		if (pAmount == 1) {
 			if (list.size() == 1) {
 				c_1(list.getFirst());
 				return;
@@ -210,35 +210,35 @@ public class SatSolverWrapper extends SatSolverA {
 			return;
 		}
 		// else choose...
-		c_exactly_NETWORK(list, amount);
+		c_exactly_NETWORK(list, pAmount);
 	}
 
 	/**
 	 * Forciert, dass höchstens {@code maximum} Variablen der Variablenliste den Wert TRUE haben.
 	 * 
-	 * @param list    Die Variablenliste.
-	 * @param maximum Die maximale Anzahl an TRUEs in der Variablenliste.
+	 * @param pList    Die Variablenliste.
+	 * @param pMaximum Die maximale Anzahl an TRUEs in der Variablenliste.
 	 */
-	public void c_at_most_GENERIC(@NotNull LinkedCollection<@NotNull Integer> list, int maximum) {
-		list = new LinkedCollection<>(list);
+	public void c_at_most_GENERIC(@NotNull LinkedCollection<@NotNull Integer> pList, int pMaximum) {
+		@NotNull LinkedCollection<@NotNull Integer> list = new LinkedCollection<>(pList);
 		// special case: trivial
-		if (maximum >= list.size()) {
+		if (pMaximum >= list.size()) {
 			return;
 		}
 		// special case: all false
-		if (maximum == 0) {
+		if (pMaximum == 0) {
 			for (int x : list) {
 				c_1(-x);
 			}
 			return;
 		}
 		// special case: at_most_one
-		if (maximum == 1) {
+		if (pMaximum == 1) {
 			c_at_most_one_tree(list);
 			return;
 		}
 		// else choose...
-		c_at_most_NETWORK(list, maximum);
+		c_at_most_NETWORK(list, pMaximum);
 	}
 
 	// ########################################
@@ -288,13 +288,13 @@ public class SatSolverWrapper extends SatSolverA {
 	 * Forciert, dass in der Liste maximal eine Variable TRUE ist. Die Ergebnisvariable ist eine OR-Verknüpfung aller
 	 * Variablen der Liste.
 	 * 
-	 * @param list Forciert, dass maximal eine Variable der Liste TRUE ist.
+	 * @param pList Forciert, dass maximal eine Variable der Liste TRUE ist.
 	 * 
 	 * @return Die Ergebnisvariable ist eine OR-Verknüpfung aller Variablen der Liste.
 	 */
-	private int c_at_most_one_tree(@NotNull LinkedCollection<@NotNull Integer> list) {
+	private int c_at_most_one_tree(@NotNull LinkedCollection<@NotNull Integer> pList) {
 		// Liste kopieren
-		list = new LinkedCollection<>(list);
+		@NotNull LinkedCollection<@NotNull Integer> list = new LinkedCollection<>(pList);
 
 		// Sonderfall --> Erzeuge FALSE
 		if (list.isEmpty()) {

@@ -66,8 +66,7 @@ public class KursblockungAlgorithmus
 				long zeitEndeK = System.currentTimeMillis() + zeitProK;
 				do {
 					// System.out.println("Zeit " + zeitProK + " Algorithmus " + iK);
-					verwendeAlgorithmusK(algorithmenK[iK], zeitEndeK, dynDaten, algorithmenS, kursblockungOutputs, seed,
-							pInput);
+					verwendeAlgorithmusK(algorithmenK[iK], zeitEndeK, dynDaten, algorithmenS, kursblockungOutputs, pInput);
 				} while (System.currentTimeMillis() < zeitEndeK);
 
 				// Zeit abgelaufen?
@@ -88,7 +87,7 @@ public class KursblockungAlgorithmus
 
 	private static void verwendeAlgorithmusK(@NotNull KursblockungAlgorithmusK kursblockungAlgorithmusK, long zeitEndeK,
 			@NotNull KursblockungDynDaten dynDaten, @NotNull KursblockungAlgorithmusS @NotNull [] algorithmenS,
-			@NotNull Vector<@NotNull GostBlockungsergebnisManager> outputs, long inputSeed, @NotNull GostBlockungsdatenManager pInput) {
+			@NotNull Vector<@NotNull GostBlockungsergebnisManager> outputs, @NotNull GostBlockungsdatenManager pInput) {
 
 		// Verteilung der Kurse.
 		kursblockungAlgorithmusK.berechne(zeitEndeK);

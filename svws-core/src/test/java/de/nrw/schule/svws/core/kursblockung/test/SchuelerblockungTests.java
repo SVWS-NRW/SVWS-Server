@@ -39,10 +39,10 @@ public class SchuelerblockungTests {
 	void testeSchuelerblockungAlgorithmusZufaellig() {
 		Random lRandom = new Random(_SEED);
 		for (int i = 0; i < _ANZAHL_AN_ZUFALLSTESTS; i++)
-			testeSchuelerblockAlgorithmusZufaelligEinMal(i, lRandom, false);
+			testeSchuelerblockAlgorithmusZufaelligEinMal(lRandom);
 	}
 
-	private void testeSchuelerblockAlgorithmusZufaelligEinMal(int pRunde, Random pRandom, boolean pMitMultikursen) {
+	private static void testeSchuelerblockAlgorithmusZufaelligEinMal(Random pRandom) {
 
 		// Der Kursblockungsalgorithmus ist ein Service.
 		SchuelerblockungAlgorithmus alg = new SchuelerblockungAlgorithmus();

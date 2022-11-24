@@ -652,10 +652,10 @@ public class KursblockungTests {
 	void testeKursblockungAlgorithmusZufaellig() {
 		Random lRandom = new Random(1);
 		for (int i = 0; i < 10; i++)
-			testeKursblockungAlgorithmusZufaelligEinMal(i, lRandom);
+			testeKursblockungAlgorithmusZufaelligEinMal(lRandom);
 	}
 
-	private static void testeKursblockungAlgorithmusZufaelligEinMal(long pID, Random pRandom) {
+	private static void testeKursblockungAlgorithmusZufaelligEinMal(Random pRandom) {
 
 		// Der Kursblockungsalgorithmus ist ein Service.
 		KursblockungAlgorithmus kbAlgorithmus = new KursblockungAlgorithmus();
@@ -673,7 +673,7 @@ public class KursblockungTests {
 		});
 
 		// Umwandlung von 'Kurs42Daten' zu 'KursblockungInput'.
-		GostBlockungsdatenManager kbInput = erzeugeZufallsdaten(pID, pRandom);
+		GostBlockungsdatenManager kbInput = erzeugeZufallsdaten(pRandom);
 
 		// Berechnung der Blockung und Rückgabe aller Blockungsergebnisse.
 		Vector<GostBlockungsergebnisManager> kbOutputs = kbAlgorithmus.handle(kbInput);
@@ -687,7 +687,7 @@ public class KursblockungTests {
 			check(kbInput, kbOutput);
 	}
 
-	private static GostBlockungsdatenManager erzeugeZufallsdaten(long pID, Random pRandom) {
+	private static GostBlockungsdatenManager erzeugeZufallsdaten(Random pRandom) {
 
 		int nKurse = pRandom.nextInt(100);
 		int nFaecher = 1 + (nKurse / 2);

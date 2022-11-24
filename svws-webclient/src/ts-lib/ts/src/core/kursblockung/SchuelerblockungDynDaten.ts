@@ -280,7 +280,7 @@ export class SchuelerblockungDynDaten extends JavaObject {
 			if (this._fachwahlZuHatMultikurse[iFachwahl] === false) 
 				for (let schiene : number = 0; schiene < this.nSchienen; schiene++)
 					if (!this._aktuellGesperrteSchiene[schiene]) {
-						let kurs : SchuelerblockungInputKurs | null = this.gibKleinstenKursInSchiene(this._fachwahlZuKurse.get(iFachwahl), schiene);
+						let kurs : SchuelerblockungInputKurs | null = SchuelerblockungDynDaten.gibKleinstenKursInSchiene(this._fachwahlZuKurse.get(iFachwahl), schiene);
 						if (kurs !== null) 
 							data[iFachwahl][schiene] = kurs.anzahlSuS * kurs.anzahlSuS;
 					}
@@ -292,7 +292,7 @@ export class SchuelerblockungDynDaten extends JavaObject {
 					this._aktuellNichtwahlen++;
 					continue;
 				}
-				let kurs : SchuelerblockungInputKurs | null = this.gibKleinstenKursInSchiene(this._fachwahlZuKurse.get(iFachwahl), schiene);
+				let kurs : SchuelerblockungInputKurs | null = SchuelerblockungDynDaten.gibKleinstenKursInSchiene(this._fachwahlZuKurse.get(iFachwahl), schiene);
 				if (kurs === null) 
 					throw this.fehler("Der Fachart " + iFachwahl + " wurde ein NULL-Kurs zugeordnet!")
 				if (this.aktionBelegeKurs(iFachwahl, kurs) === false) 
@@ -311,7 +311,7 @@ export class SchuelerblockungDynDaten extends JavaObject {
 					this._aktuellNichtwahlen--;
 					continue;
 				}
-				let kurs : SchuelerblockungInputKurs | null = this.gibKleinstenKursInSchiene(this._fachwahlZuKurse.get(iFachwahl), schiene);
+				let kurs : SchuelerblockungInputKurs | null = SchuelerblockungDynDaten.gibKleinstenKursInSchiene(this._fachwahlZuKurse.get(iFachwahl), schiene);
 				if (kurs === null) 
 					throw this.fehler("Der Fachart " + iFachwahl + " wurde ein NULL-Kurs zugeordnet!")
 				if (this.aktionBelegeKursUndo(iFachwahl, kurs) === false) 
@@ -319,7 +319,7 @@ export class SchuelerblockungDynDaten extends JavaObject {
 			}
 	}
 
-	private gibKleinstenKursInSchiene(pKurse : Vector<SchuelerblockungInputKurs>, pSchiene : number) : SchuelerblockungInputKurs | null {
+	private static gibKleinstenKursInSchiene(pKurse : Vector<SchuelerblockungInputKurs>, pSchiene : number) : SchuelerblockungInputKurs | null {
 		let maxSuS : number = Number.MAX_VALUE;
 		let best : SchuelerblockungInputKurs | null = null;
 		for (let kurs of pKurse) 

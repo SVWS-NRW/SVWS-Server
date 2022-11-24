@@ -122,11 +122,11 @@ public class KursblockungDynDaten {
 
 		// Benötigt: kursArr
 		// Definiert: kursArrFrei
-		schritt09FehlerBeiKursFreiErstellung(pInput);
+		schritt09FehlerBeiKursFreiErstellung();
 
 		// Benötigt: kursArr
 		// Definiert: fachartArr[i].kursArr
-		schritt10FehlerBeiFachartKursArrayErstellung(pInput);
+		schritt10FehlerBeiFachartKursArrayErstellung();
 
 		schritt11FehlerBeiRegel_4_oder_5();
 
@@ -739,7 +739,7 @@ public class KursblockungDynDaten {
 
 	}
 
-	private void schritt09FehlerBeiKursFreiErstellung(@NotNull GostBlockungsdatenManager pInput) {
+	private void schritt09FehlerBeiKursFreiErstellung() {
 		// Zähle Kurse mit Freiheitsgraden.
 		int nKursFrei = 0;
 		for (KursblockungDynKurs kurs : kursArr)
@@ -755,7 +755,7 @@ public class KursblockungDynDaten {
 			}
 	}
 
-	private void schritt10FehlerBeiFachartKursArrayErstellung(@NotNull GostBlockungsdatenManager pInput) {
+	private void schritt10FehlerBeiFachartKursArrayErstellung() {
 		// Pro Fachart eine Liste zum Speichern aller zugehörigen Kurse.
 		int nFacharten = fachartArr.length;
 		@NotNull HashMap<@NotNull Integer, @NotNull LinkedCollection<@NotNull KursblockungDynKurs>> mapFachartList = new HashMap<>();

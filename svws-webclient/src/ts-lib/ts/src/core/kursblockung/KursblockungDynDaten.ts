@@ -87,8 +87,8 @@ export class KursblockungDynDaten extends JavaObject {
 		this.schritt06FehlerBeiStatistikErstellung(this.fachartArr, this.schuelerArr);
 		this.schritt07FehlerBeiSchienenErzeugung(pInput.getSchienenAnzahl());
 		this.schritt08FehlerBeiKursErstellung(pInput);
-		this.schritt09FehlerBeiKursFreiErstellung(pInput);
-		this.schritt10FehlerBeiFachartKursArrayErstellung(pInput);
+		this.schritt09FehlerBeiKursFreiErstellung();
+		this.schritt10FehlerBeiFachartKursArrayErstellung();
 		this.schritt11FehlerBeiRegel_4_oder_5();
 		this.aktionZustandSpeichernS();
 		this.aktionZustandSpeichernK();
@@ -527,7 +527,7 @@ export class KursblockungDynDaten extends JavaObject {
 		}
 	}
 
-	private schritt09FehlerBeiKursFreiErstellung(pInput : GostBlockungsdatenManager) : void {
+	private schritt09FehlerBeiKursFreiErstellung() : void {
 		let nKursFrei : number = 0;
 		for (let kurs of this.kursArr) 
 			if (kurs.gibHatFreiheitsgrade()) 
@@ -540,7 +540,7 @@ export class KursblockungDynDaten extends JavaObject {
 			}
 	}
 
-	private schritt10FehlerBeiFachartKursArrayErstellung(pInput : GostBlockungsdatenManager) : void {
+	private schritt10FehlerBeiFachartKursArrayErstellung() : void {
 		let nFacharten : number = this.fachartArr.length;
 		let mapFachartList : HashMap<Number, LinkedCollection<KursblockungDynKurs>> = new HashMap();
 		for (let i : number = 0; i < nFacharten; i++)
