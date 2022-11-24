@@ -144,37 +144,28 @@ public class SchuelerblockungDynDaten {
 		// Attribute der Fachwahlen überprüfen.
 		for (@NotNull GostFachwahl fachwahl : pInput.fachwahlen) {
 			if (fachwahl.fachID < 0)
-				throw fehler("fachwahl.fach ist zu gering! --> " + fachwahl.fachID);
+				throw fehler("fachwahl.fachID ist zu gering! --> " + fachwahl.fachID);
 			if (fachwahl.kursartID < 0)
-				throw fehler("fachwahl.kursart ist zu gering! --> " + fachwahl.kursartID);
+				throw fehler("fachwahl.kursartID ist zu gering! --> " + fachwahl.kursartID);
 		}
 
-		// Pro Fachwahl die zugehörigen Kurse überprüfen.
+		// Pro Fachwahl auf Doppelfixierungen testen.
 		for (int iFachwahl = 0; iFachwahl < nFachwahlen; iFachwahl++) {
 			@NotNull GostFachwahl fachwahl = pInput.fachwahlen.get(iFachwahl);
 			String representation = fachwahl.fachID + ";" + fachwahl.kursartID;
 
-			// Kurse dieser Fachwahl sammeln...
+			// Doppelfixierungen herausfinden.
 			boolean kursWurdeFixiert = false;
-			int kurseWaehlbar = 0;
 			for (@NotNull SchuelerblockungInputKurs kurs : pInput.kurse)
-				if ((fachwahl.fachID == kurs.fach) && (fachwahl.kursartID == kurs.kursart)) {
+				if ( (fachwahl.fachID == kurs.fach) && (fachwahl.kursartID == kurs.kursart) ) {
 					if (kurs.istGesperrt)
 						continue;
-					if (kursWurdeFixiert) {
-						if (kurs.istFixiert)
-							throw fehler("Die Fachart " + representation + " hat mehr als eine Fixierung!");
-						continue;
-					}
 					if (kurs.istFixiert) {
+						if (kursWurdeFixiert) 
+							throw fehler("Die Fachart " + representation + " hat mehr als eine Fixierung!");
 						kursWurdeFixiert = true;
-						kurseWaehlbar = 1;
-					} else {
-						kurseWaehlbar++;
 					}
 				}
-			if (kurseWaehlbar <= 0)
-				throw fehler("Die Fachart " + representation + " hat keine wählbaren Kurse!");
 		}
 
 		// Kann jeder Kurs einer Fachwahl zugeordnet werden?
@@ -209,7 +200,7 @@ public class SchuelerblockungDynDaten {
 	 * @param pInput Die Eingabedaten (Schnittstelle zur GUI).
 	 */
 	private void aktionInitialisiereDatenstrukturen(@NotNull SchuelerblockungInput pInput) {
-		// Initialisiert '_fachwahlen' und '_fachwahlZuKurse'.
+		// Initialisiert '_fachwahlZuKurse' und '_fachwahlZuFachID' und '_fachwahlZuKursartID'.
 		for (int iFachwahl = 0; iFachwahl < nFachwahlen; iFachwahl++) {
 			@NotNull GostFachwahl fachwahl = pInput.fachwahlen.get(iFachwahl);
 			_fachwahlZuFachID[iFachwahl] = fachwahl.fachID;
@@ -314,8 +305,7 @@ public class SchuelerblockungDynDaten {
 			if (_fachwahlZuHatMultikurse[iFachwahl] == false)
 				for (int schiene = 0; schiene < nSchienen; schiene++)
 					if (!_aktuellGesperrteSchiene[schiene]) {
-						SchuelerblockungInputKurs kurs = gibKleinstenKursInSchiene(_fachwahlZuKurse.get(iFachwahl),
-								schiene);
+						SchuelerblockungInputKurs kurs = gibKleinstenKursInSchiene(_fachwahlZuKurse.get(iFachwahl), schiene);
 						if (kurs != null)
 							data[iFachwahl][schiene] = kurs.anzahlSuS * kurs.anzahlSuS;
 					}
@@ -327,7 +317,7 @@ public class SchuelerblockungDynDaten {
 		for (int iFachwahl = 0; iFachwahl < nFachwahlen; iFachwahl++)
 			if (_fachwahlZuHatMultikurse[iFachwahl] == false) {
 				int schiene = r2c[iFachwahl];
-				if ((schiene < 0) || (data[iFachwahl][schiene] == UNENDLICH)) {
+				if ( (schiene < 0) || (data[iFachwahl][schiene] == UNENDLICH) ) {
 					_aktuellNichtwahlen++;
 					continue;
 				}

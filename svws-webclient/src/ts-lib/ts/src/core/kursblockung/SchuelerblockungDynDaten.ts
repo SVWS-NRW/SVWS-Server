@@ -134,33 +134,24 @@ export class SchuelerblockungDynDaten extends JavaObject {
 		}
 		for (let fachwahl of pInput.fachwahlen) {
 			if (fachwahl.fachID < 0) 
-				throw this.fehler("fachwahl.fach ist zu gering! --> " + fachwahl.fachID)
+				throw this.fehler("fachwahl.fachID ist zu gering! --> " + fachwahl.fachID)
 			if (fachwahl.kursartID < 0) 
-				throw this.fehler("fachwahl.kursart ist zu gering! --> " + fachwahl.kursartID)
+				throw this.fehler("fachwahl.kursartID ist zu gering! --> " + fachwahl.kursartID)
 		}
 		for (let iFachwahl : number = 0; iFachwahl < nFachwahlen; iFachwahl++){
 			let fachwahl : GostFachwahl = pInput.fachwahlen.get(iFachwahl);
 			let representation : String | null = fachwahl.fachID + ";" + fachwahl.kursartID;
 			let kursWurdeFixiert : boolean = false;
-			let kurseWaehlbar : number = 0;
 			for (let kurs of pInput.kurse) 
 				if ((fachwahl.fachID === kurs.fach) && (fachwahl.kursartID === kurs.kursart)) {
 					if (kurs.istGesperrt) 
 						continue;
-					if (kursWurdeFixiert) {
-						if (kurs.istFixiert) 
-							throw this.fehler("Die Fachart " + representation.valueOf() + " hat mehr als eine Fixierung!")
-						continue;
-					}
 					if (kurs.istFixiert) {
+						if (kursWurdeFixiert) 
+							throw this.fehler("Die Fachart " + representation.valueOf() + " hat mehr als eine Fixierung!")
 						kursWurdeFixiert = true;
-						kurseWaehlbar = 1;
-					} else {
-						kurseWaehlbar++;
 					}
 				}
-			if (kurseWaehlbar <= 0) 
-				throw this.fehler("Die Fachart " + representation.valueOf() + " hat keine wählbaren Kurse!")
 		}
 		for (let kurs of pInput.kurse) {
 			let gefunden : number = 0;
