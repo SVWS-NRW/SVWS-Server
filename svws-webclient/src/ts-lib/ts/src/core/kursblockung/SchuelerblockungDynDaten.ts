@@ -3,9 +3,9 @@ import { AVLSet, cast_de_nrw_schule_svws_core_adt_set_AVLSet } from '../../core/
 import { SchuelerblockungOutput, cast_de_nrw_schule_svws_core_data_kursblockung_SchuelerblockungOutput } from '../../core/data/kursblockung/SchuelerblockungOutput';
 import { SchuelerblockungInputKurs, cast_de_nrw_schule_svws_core_data_kursblockung_SchuelerblockungInputKurs } from '../../core/data/kursblockung/SchuelerblockungInputKurs';
 import { SchuelerblockungOutputFachwahlZuKurs, cast_de_nrw_schule_svws_core_data_kursblockung_SchuelerblockungOutputFachwahlZuKurs } from '../../core/data/kursblockung/SchuelerblockungOutputFachwahlZuKurs';
-import { SchuelerblockungInputFachwahl, cast_de_nrw_schule_svws_core_data_kursblockung_SchuelerblockungInputFachwahl } from '../../core/data/kursblockung/SchuelerblockungInputFachwahl';
-import { SchuelerblockungException, cast_de_nrw_schule_svws_core_kursblockung_SchuelerblockungException } from '../../core/kursblockung/SchuelerblockungException';
+import { GostFachwahl, cast_de_nrw_schule_svws_core_data_gost_GostFachwahl } from '../../core/data/gost/GostFachwahl';
 import { JavaString, cast_java_lang_String } from '../../java/lang/JavaString';
+import { SchuelerblockungException, cast_de_nrw_schule_svws_core_kursblockung_SchuelerblockungException } from '../../core/kursblockung/SchuelerblockungException';
 import { Logger, cast_de_nrw_schule_svws_core_logger_Logger } from '../../core/logger/Logger';
 import { LogLevel, cast_de_nrw_schule_svws_core_logger_LogLevel } from '../../core/logger/LogLevel';
 import { System, cast_java_lang_System } from '../../java/lang/System';
@@ -29,11 +29,13 @@ export class SchuelerblockungDynDaten extends JavaObject {
 
 	private readonly nSchienen : number;
 
-	private readonly _fachwahlen : Array<number>;
-
 	private readonly _fachwahlZuKurse : Vector<Vector<SchuelerblockungInputKurs>>;
 
 	private readonly _fachwahlZuHatMultikurse : Array<boolean>;
+
+	private readonly _fachwahlZuFachID : Array<number>;
+
+	private readonly _fachwahlZuKursartID : Array<number>;
 
 	private readonly _aktuellMatrix : KursblockungMatrix;
 
@@ -67,9 +69,10 @@ export class SchuelerblockungDynDaten extends JavaObject {
 		this.aktionPruefeEingabedaten(pInput);
 		this.nFachwahlen = pInput.fachwahlen.size();
 		this.nSchienen = pInput.schienen;
-		this._fachwahlen = Array(this.nFachwahlen).fill(0);
 		this._fachwahlZuKurse = new Vector();
 		this._fachwahlZuHatMultikurse = Array(this.nFachwahlen).fill(false);
+		this._fachwahlZuFachID = Array(this.nFachwahlen).fill(0);
+		this._fachwahlZuKursartID = Array(this.nFachwahlen).fill(0);
 		this.aktionInitialisiereDatenstrukturen(pInput);
 		this._aktuellMatrix = new KursblockungMatrix(pRandom, this.nFachwahlen, this.nSchienen);
 		this._aktuellGesperrteSchiene = Array(this.nSchienen).fill(false);
@@ -80,7 +83,7 @@ export class SchuelerblockungDynDaten extends JavaObject {
 	}
 
 	/**
-	 * Überprüft die Konstistenz und referentielle Integrität der Eingabedaten.
+	 * Überprüft die Konsistenz und referentielle Integrität der Eingabedaten.
 	 * 
 	 * @param pInput Die Eingabedaten (Schnittstelle zur GUI).
 	 */
@@ -112,10 +115,6 @@ export class SchuelerblockungDynDaten extends JavaObject {
 				throw this.fehler("kurs.kursart ist zu gering! --> " + kurs.kursart)
 			if (kurs.anzahlSuS < 0) 
 				throw this.fehler("kurs.anzahlSuS ist zu gering! --> " + kurs.anzahlSuS)
-			if (kurs.representation === null) 
-				throw this.fehler("kurs.representation ist undefiniert!")
-			if (JavaObject.equalsTranspiler(kurs.representation, (""))) 
-				throw this.fehler("kurs.representation ist leer! --> " + kurs.representation)
 			if (kurs.schienen.length < 1) 
 				throw this.fehler("kurs.schienen.length ist zu gering! --> " + kurs.schienen.length)
 			if (kurs.schienen === null) 
@@ -126,39 +125,31 @@ export class SchuelerblockungDynDaten extends JavaObject {
 				throw this.fehler("kurs.schienen.length ist zu groß! --> " + kurs.schienen.length)
 			for (let schiene1 of kurs.schienen) {
 				if (schiene1 < 1) 
-					throw this.fehler("Kurs " + kurs.representation + " ist in zu kleiner Schiene! --> " + schiene1)
+					throw this.fehler("Kurs " + kurs.id + " ist in zu kleiner Schiene! --> " + schiene1)
 				if (schiene1 > nSchienen) 
-					throw this.fehler("Kurs " + kurs.representation + " ist in zu großer Schiene! --> " + schiene1)
+					throw this.fehler("Kurs " + kurs.id + " ist in zu großer Schiene! --> " + schiene1)
 			}
 			if (kurs.istFixiert && kurs.istGesperrt) 
-				throw this.fehler("kurs.istFixiert && kurs.istGesperrt ist unmöglich! --> " + kurs.representation)
+				throw this.fehler("kurs.istFixiert && kurs.istGesperrt ist unmöglich! --> " + kurs.id)
 		}
-		let setFachwahlID : AVLSet<Number | null> | null = new AVLSet();
 		for (let fachwahl of pInput.fachwahlen) {
-			if (fachwahl.id < 0) 
-				throw this.fehler("fachwahl.id ist zu gering! --> " + fachwahl.id)
-			if (setFachwahlID.add(fachwahl.id) === false) 
-				throw this.fehler("fachwahl.id existiert doppelt! --> " + fachwahl.id)
-			if (fachwahl.fach < 0) 
-				throw this.fehler("fachwahl.fach ist zu gering! --> " + fachwahl.fach)
-			if (fachwahl.kursart < 0) 
-				throw this.fehler("fachwahl.kursart ist zu gering! --> " + fachwahl.kursart)
-			if (fachwahl.representation === null) 
-				throw this.fehler("fachwahl.representation ist undefiniert!")
-			if (JavaObject.equalsTranspiler(fachwahl.representation, (""))) 
-				throw this.fehler("fachwahl.representation ist leer! --> " + fachwahl.representation)
+			if (fachwahl.fachID < 0) 
+				throw this.fehler("fachwahl.fach ist zu gering! --> " + fachwahl.fachID)
+			if (fachwahl.kursartID < 0) 
+				throw this.fehler("fachwahl.kursart ist zu gering! --> " + fachwahl.kursartID)
 		}
 		for (let iFachwahl : number = 0; iFachwahl < nFachwahlen; iFachwahl++){
-			let fachwahl : SchuelerblockungInputFachwahl = pInput.fachwahlen.get(iFachwahl);
+			let fachwahl : GostFachwahl = pInput.fachwahlen.get(iFachwahl);
+			let representation : String | null = fachwahl.fachID + ";" + fachwahl.kursartID;
 			let kursWurdeFixiert : boolean = false;
 			let kurseWaehlbar : number = 0;
 			for (let kurs of pInput.kurse) 
-				if ((fachwahl.fach === kurs.fach) && (fachwahl.kursart === kurs.kursart)) {
+				if ((fachwahl.fachID === kurs.fach) && (fachwahl.kursartID === kurs.kursart)) {
 					if (kurs.istGesperrt) 
 						continue;
 					if (kursWurdeFixiert) {
 						if (kurs.istFixiert) 
-							throw this.fehler("Die Fachart " + fachwahl.representation + " hat mehr als eine Fixierung!")
+							throw this.fehler("Die Fachart " + representation.valueOf() + " hat mehr als eine Fixierung!")
 						continue;
 					}
 					if (kurs.istFixiert) {
@@ -169,17 +160,17 @@ export class SchuelerblockungDynDaten extends JavaObject {
 					}
 				}
 			if (kurseWaehlbar <= 0) 
-				throw this.fehler("Die Fachart " + fachwahl.representation + " hat keine wählbaren Kurse!")
+				throw this.fehler("Die Fachart " + representation.valueOf() + " hat keine wählbaren Kurse!")
 		}
 		for (let kurs of pInput.kurse) {
 			let gefunden : number = 0;
 			for (let r : number = 0; r < nFachwahlen; r++){
-				let fachwahl : SchuelerblockungInputFachwahl = pInput.fachwahlen.get(r);
-				if ((fachwahl.fach === kurs.fach) && (fachwahl.kursart === kurs.kursart)) 
+				let fachwahl : GostFachwahl = pInput.fachwahlen.get(r);
+				if ((fachwahl.fachID === kurs.fach) && (fachwahl.kursartID === kurs.kursart)) 
 					gefunden++;
 			}
 			if (gefunden === 0) 
-				throw this.fehler("Der Kurs " + kurs.representation + " konnte keiner Fachwahl zugeordnet werden!")
+				throw this.fehler("Der Kurs " + kurs.id + " konnte keiner Fachwahl zugeordnet werden!")
 		}
 	}
 
@@ -200,12 +191,13 @@ export class SchuelerblockungDynDaten extends JavaObject {
 	 */
 	private aktionInitialisiereDatenstrukturen(pInput : SchuelerblockungInput) : void {
 		for (let iFachwahl : number = 0; iFachwahl < this.nFachwahlen; iFachwahl++){
-			let fachwahl : SchuelerblockungInputFachwahl = pInput.fachwahlen.get(iFachwahl);
-			this._fachwahlen[iFachwahl] = fachwahl.id;
+			let fachwahl : GostFachwahl = pInput.fachwahlen.get(iFachwahl);
+			this._fachwahlZuFachID[iFachwahl] = fachwahl.fachID;
+			this._fachwahlZuKursartID[iFachwahl] = fachwahl.kursartID;
 			let kurse : Vector<SchuelerblockungInputKurs> | null = new Vector();
 			let hatFixiertenKurs : boolean = false;
 			for (let kurs of pInput.kurse) 
-				if ((fachwahl.fach === kurs.fach) && (fachwahl.kursart === kurs.kursart) && (!kurs.istGesperrt) && (!hatFixiertenKurs)) {
+				if ((fachwahl.fachID === kurs.fach) && (fachwahl.kursartID === kurs.kursart) && (!kurs.istGesperrt) && (!hatFixiertenKurs)) {
 					if (kurs.istFixiert) {
 						hatFixiertenKurs = true;
 						kurse.clear();
@@ -240,8 +232,9 @@ export class SchuelerblockungDynDaten extends JavaObject {
 		let out : SchuelerblockungOutput = new SchuelerblockungOutput();
 		for (let iFachwahl : number = 0; iFachwahl < this.nFachwahlen; iFachwahl++){
 			let wahl : SchuelerblockungOutputFachwahlZuKurs = new SchuelerblockungOutputFachwahlZuKurs();
-			wahl.fachwahl = this._fachwahlen[iFachwahl];
-			wahl.kurs = this._aktuellFachwahlZuKursBest[iFachwahl];
+			wahl.fachID = this._fachwahlZuFachID[iFachwahl];
+			wahl.kursartID = this._fachwahlZuKursartID[iFachwahl];
+			wahl.kursID = this._aktuellFachwahlZuKursBest[iFachwahl];
 			out.fachwahlenZuKurs.add(wahl);
 		}
 		return out;

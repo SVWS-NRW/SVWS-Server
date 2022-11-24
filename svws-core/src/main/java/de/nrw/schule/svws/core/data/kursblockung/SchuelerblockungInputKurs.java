@@ -16,13 +16,13 @@ import jakarta.validation.constraints.NotNull;
 public class SchuelerblockungInputKurs {
 
 	/** Die ID des Kurses. */
-	public long id;
+	public long id = -1;
 
 	/** Die ID des zugeordneten Faches. Beispielsweise gehört der Kurs 'D-LK1' zum Fach 'D'. */
-	public long fach;
+	public long fach = -1;
 
 	/** Die ID der zugeordneten Kursart. Beispielsweise gehört der Kurs 'D-LK1' zur Kursart 'LK'. */
-	public long kursart;
+	public int kursart = -1;
 
 	/** Falls TRUE, dann darf der Schüler diesen Kurs nicht erhalten. */
 	public boolean istGesperrt = false;
@@ -36,9 +36,5 @@ public class SchuelerblockungInputKurs {
 	/** Die Schienen, die dieser Kurs belegt. In der Regel steht im Array eine Zahl (Schiene). Die Schienen sind
 	 * 1-indiziert. */
 	public @NotNull int[] schienen = new int[0]; // Falls das Array nicht gefüllt wird, wird es als Fehler interpretiert.
-
-	/** Eine String-Darstellung des Kurses, damit bei Warnungen oder Fehlern dem Benutzer diese angezeigt werden kann,
-	 * beispielsweise 'D-GK1'. */
-	public @NotNull String representation = "";
 
 }

@@ -1,6 +1,7 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
 import { SchuelerblockungInputKurs, cast_de_nrw_schule_svws_core_data_kursblockung_SchuelerblockungInputKurs } from '../../../core/data/kursblockung/SchuelerblockungInputKurs';
 import { SchuelerblockungInputFachwahl, cast_de_nrw_schule_svws_core_data_kursblockung_SchuelerblockungInputFachwahl } from '../../../core/data/kursblockung/SchuelerblockungInputFachwahl';
+import { GostFachwahl, cast_de_nrw_schule_svws_core_data_gost_GostFachwahl } from '../../../core/data/gost/GostFachwahl';
 import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 
 export class SchuelerblockungInput extends JavaObject {
@@ -9,7 +10,7 @@ export class SchuelerblockungInput extends JavaObject {
 
 	public kurse : Vector<SchuelerblockungInputKurs> = new Vector();
 
-	public fachwahlen : Vector<SchuelerblockungInputFachwahl> = new Vector();
+	public fachwahlen : Vector<GostFachwahl> = new Vector();
 
 
 	public constructor() {
@@ -33,7 +34,7 @@ export class SchuelerblockungInput extends JavaObject {
 		}
 		if (!!obj.fachwahlen) {
 			for (let elem of obj.fachwahlen) {
-				result.fachwahlen?.add(SchuelerblockungInputFachwahl.transpilerFromJSON(JSON.stringify(elem)));
+				result.fachwahlen?.add(GostFachwahl.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		return result;
@@ -60,7 +61,7 @@ export class SchuelerblockungInput extends JavaObject {
 			result += '"fachwahlen" : [ ';
 			for (let i : number = 0; i < obj.fachwahlen.size(); i++) {
 				let elem = obj.fachwahlen.get(i);
-				result += SchuelerblockungInputFachwahl.transpilerToJSON(elem);
+				result += GostFachwahl.transpilerToJSON(elem);
 				if (i < obj.fachwahlen.size() - 1)
 					result += ',';
 			}
@@ -97,7 +98,7 @@ export class SchuelerblockungInput extends JavaObject {
 				result += '"fachwahlen" : [ ';
 				for (let i : number = 0; i < obj.fachwahlen.size(); i++) {
 					let elem = obj.fachwahlen.get(i);
-					result += SchuelerblockungInputFachwahl.transpilerToJSON(elem);
+					result += GostFachwahl.transpilerToJSON(elem);
 					if (i < obj.fachwahlen.size() - 1)
 						result += ',';
 				}

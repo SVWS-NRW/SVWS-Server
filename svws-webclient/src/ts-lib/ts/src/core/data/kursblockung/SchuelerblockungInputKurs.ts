@@ -1,13 +1,12 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 
 export class SchuelerblockungInputKurs extends JavaObject {
 
-	public id : number = 0;
+	public id : number = -1;
 
-	public fach : number = 0;
+	public fach : number = -1;
 
-	public kursart : number = 0;
+	public kursart : number = -1;
 
 	public istGesperrt : boolean = false;
 
@@ -16,8 +15,6 @@ export class SchuelerblockungInputKurs extends JavaObject {
 	public anzahlSuS : number = -1;
 
 	public schienen : Array<number> = Array(0).fill(0);
-
-	public representation : String = "";
 
 
 	public constructor() {
@@ -52,9 +49,6 @@ export class SchuelerblockungInputKurs extends JavaObject {
 		for (let i : number = 0; i < obj.schienen.length; i++) {
 			result.schienen[i] = obj.schienen[i];
 		}
-		if (typeof obj.representation === "undefined")
-			 throw new Error('invalid json format, missing attribute representation');
-		result.representation = String(obj.representation);
 		return result;
 	}
 
@@ -78,7 +72,6 @@ export class SchuelerblockungInputKurs extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		result += '"representation" : ' + '"' + obj.representation.valueOf() + '"' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -118,9 +111,6 @@ export class SchuelerblockungInputKurs extends JavaObject {
 				}
 				result += ' ]' + ',';
 			}
-		}
-		if (typeof obj.representation !== "undefined") {
-			result += '"representation" : ' + '"' + obj.representation.valueOf() + '"' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

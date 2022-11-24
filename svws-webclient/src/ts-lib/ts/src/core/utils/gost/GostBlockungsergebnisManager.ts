@@ -1,26 +1,31 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
 import { GostBlockungsergebnisSchiene, cast_de_nrw_schule_svws_core_data_gost_GostBlockungsergebnisSchiene } from '../../../core/data/gost/GostBlockungsergebnisSchiene';
 import { IllegalStateException, cast_java_lang_IllegalStateException } from '../../../java/lang/IllegalStateException';
-import { GostFach, cast_de_nrw_schule_svws_core_data_gost_GostFach } from '../../../core/data/gost/GostFach';
-import { GostBlockungsdatenManager, cast_de_nrw_schule_svws_core_utils_gost_GostBlockungsdatenManager } from '../../../core/utils/gost/GostBlockungsdatenManager';
 import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
 import { GostBlockungsergebnisKurs, cast_de_nrw_schule_svws_core_data_gost_GostBlockungsergebnisKurs } from '../../../core/data/gost/GostBlockungsergebnisKurs';
-import { GostFachwahl, cast_de_nrw_schule_svws_core_data_gost_GostFachwahl } from '../../../core/data/gost/GostFachwahl';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 import { GostBlockungRegel, cast_de_nrw_schule_svws_core_data_gost_GostBlockungRegel } from '../../../core/data/gost/GostBlockungRegel';
 import { GostKursart, cast_de_nrw_schule_svws_core_types_gost_GostKursart } from '../../../core/types/gost/GostKursart';
 import { System, cast_java_lang_System } from '../../../java/lang/System';
-import { GostBlockungsergebnis, cast_de_nrw_schule_svws_core_data_gost_GostBlockungsergebnis } from '../../../core/data/gost/GostBlockungsergebnis';
-import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
 import { GostKursblockungRegelTyp, cast_de_nrw_schule_svws_core_types_kursblockung_GostKursblockungRegelTyp } from '../../../core/types/kursblockung/GostKursblockungRegelTyp';
-import { Schueler, cast_de_nrw_schule_svws_core_data_schueler_Schueler } from '../../../core/data/schueler/Schueler';
+import { SchuelerblockungInput, cast_de_nrw_schule_svws_core_data_kursblockung_SchuelerblockungInput } from '../../../core/data/kursblockung/SchuelerblockungInput';
 import { NullPointerException, cast_java_lang_NullPointerException } from '../../../java/lang/NullPointerException';
-import { GostBlockungSchiene, cast_de_nrw_schule_svws_core_data_gost_GostBlockungSchiene } from '../../../core/data/gost/GostBlockungSchiene';
-import { JavaLong, cast_java_lang_Long } from '../../../java/lang/JavaLong';
-import { Arrays, cast_java_util_Arrays } from '../../../java/util/Arrays';
+import { List, cast_java_util_List } from '../../../java/util/List';
 import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 import { HashSet, cast_java_util_HashSet } from '../../../java/util/HashSet';
 import { GostBlockungKurs, cast_de_nrw_schule_svws_core_data_gost_GostBlockungKurs } from '../../../core/data/gost/GostBlockungKurs';
+import { GostFach, cast_de_nrw_schule_svws_core_data_gost_GostFach } from '../../../core/data/gost/GostFach';
+import { SchuelerblockungOutput, cast_de_nrw_schule_svws_core_data_kursblockung_SchuelerblockungOutput } from '../../../core/data/kursblockung/SchuelerblockungOutput';
+import { SchuelerblockungInputKurs, cast_de_nrw_schule_svws_core_data_kursblockung_SchuelerblockungInputKurs } from '../../../core/data/kursblockung/SchuelerblockungInputKurs';
+import { GostBlockungsdatenManager, cast_de_nrw_schule_svws_core_utils_gost_GostBlockungsdatenManager } from '../../../core/utils/gost/GostBlockungsdatenManager';
+import { SchuelerblockungAlgorithmus, cast_de_nrw_schule_svws_core_kursblockung_SchuelerblockungAlgorithmus } from '../../../core/kursblockung/SchuelerblockungAlgorithmus';
+import { GostFachwahl, cast_de_nrw_schule_svws_core_data_gost_GostFachwahl } from '../../../core/data/gost/GostFachwahl';
+import { GostBlockungsergebnis, cast_de_nrw_schule_svws_core_data_gost_GostBlockungsergebnis } from '../../../core/data/gost/GostBlockungsergebnis';
+import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
+import { Schueler, cast_de_nrw_schule_svws_core_data_schueler_Schueler } from '../../../core/data/schueler/Schueler';
+import { GostBlockungSchiene, cast_de_nrw_schule_svws_core_data_gost_GostBlockungSchiene } from '../../../core/data/gost/GostBlockungSchiene';
+import { JavaLong, cast_java_lang_Long } from '../../../java/lang/JavaLong';
+import { Arrays, cast_java_util_Arrays } from '../../../java/util/Arrays';
 
 export class GostBlockungsergebnisManager extends JavaObject {
 
@@ -863,14 +868,74 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert für den übergebenen Schüler einen Vorschlag für eineNeuzuordnung der Kurse.
+	 * Liefert für den übergebenen Schüler einen Vorschlag für eine Neuzuordnung der Kurse.
 	 * 
 	 * @param  pSchuelerID Die Datenbank-ID des Schülers.
 	 * 
-	 * @return             TRUE, ...noch FAKE return Wert.
+	 * @return             Die Neuzuordnung der Kurse im {@link SchuelerblockungOutput}-Objekt.
 	 */
-	public getOfSchuelerNeuzuordnung(pSchuelerID : number) : boolean {
-		throw new NullPointerException("Noch nicht implementiert")
+	public getOfSchuelerNeuzuordnung(pSchuelerID : number) : SchuelerblockungOutput {
+		let input : SchuelerblockungInput = new SchuelerblockungInput();
+		input.schienen = this.getOfSchieneAnzahl();
+		let fachwahlenDesSchuelers : List<GostFachwahl> = this._parent.getOfSchuelerFacharten(pSchuelerID);
+		input.fachwahlen.addAll(fachwahlenDesSchuelers);
+		for (let fachwahl of fachwahlenDesSchuelers) {
+			let fachartID : number = GostKursart.getFachartID(fachwahl);
+			let kurse : Vector<GostBlockungsergebnisKurs> = this.getOfFachartKursmenge(fachartID);
+			for (let kurs of kurse) {
+				let inKurs : SchuelerblockungInputKurs = new SchuelerblockungInputKurs();
+				inKurs.id = kurs.id;
+				inKurs.fach = kurs.fachID;
+				inKurs.kursart = kurs.kursart;
+				inKurs.istGesperrt = this.getOfSchuelerOfKursIstGesperrt(fachwahl.schuelerID, kurs.id);
+				inKurs.istFixiert = this.getOfSchuelerOfKursIstFixiert(fachwahl.schuelerID, kurs.id);
+				inKurs.anzahlSuS = this.getOfKursAnzahlSchueler(kurs.id);
+				inKurs.schienen = this.getOfKursSchienenNummern(pSchuelerID);
+			}
+		}
+		let algorithmus : SchuelerblockungAlgorithmus = new SchuelerblockungAlgorithmus();
+		let output : SchuelerblockungOutput = algorithmus.handle(input);
+		return output;
+	}
+
+	/**
+	 * Liefert TRUE, falls der Schüler im Kurs via Regel fixiert sein soll.
+	 * 
+	 * @param pSchuelerID  Die Datenbank-ID des Schülers.
+	 * @param pKursID      Die Datenbank-ID des Kurses.
+	 * @return             TRUE, falls der Schüler im Kurs via Regel fixiert sein soll.
+	 */
+	public getOfSchuelerOfKursIstFixiert(pSchuelerID : number, pKursID : number) : boolean {
+		for (let r of this._parent.getMengeOfRegeln()) {
+			let typ : GostKursblockungRegelTyp = GostKursblockungRegelTyp.fromTyp(r.typ);
+			if (typ as unknown === GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS as unknown) {
+				let schuelerID : number = r.parameter.get(0).valueOf();
+				let kursID : number = r.parameter.get(1).valueOf();
+				if ((schuelerID === pSchuelerID) && (kursID === pKursID)) 
+					return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Liefert TRUE, falls der Schüler im Kurs via Regel gesperrt sein soll.
+	 * 
+	 * @param pSchuelerID  Die Datenbank-ID des Schülers.
+	 * @param pKursID      Die Datenbank-ID des Kurses.
+	 * @return             TRUE, falls der Schüler im Kurs via Regel gesperrt sein soll.
+	 */
+	public getOfSchuelerOfKursIstGesperrt(pSchuelerID : number, pKursID : number) : boolean {
+		for (let r of this._parent.getMengeOfRegeln()) {
+			let typ : GostKursblockungRegelTyp = GostKursblockungRegelTyp.fromTyp(r.typ);
+			if (typ as unknown === GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS as unknown) {
+				let schuelerID : number = r.parameter.get(0).valueOf();
+				let kursID : number = r.parameter.get(1).valueOf();
+				if ((schuelerID === pSchuelerID) && (kursID === pKursID)) 
+					return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -954,6 +1019,22 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert ein Array aller Schienen-Nummern des Kurses.
+	 * 
+	 * @param pKursID  Die Datenbank-ID des Kurses.
+	 * @return         Ein Array aller Schienen-Nummern des Kurses.
+	 */
+	public getOfKursSchienenNummern(pKursID : number) : Array<number> {
+		let schienenIDs : Vector<Number> = this.getKursE(pKursID).schienen;
+		let a : Array<number> | null = Array(schienenIDs.size()).fill(0);
+		for (let i : number = 0; i < a.length; i++){
+			let schienenID : number = schienenIDs.get(i).valueOf();
+			a[i] = this._parent.getSchiene(schienenID).nummer;
+		}
+		return a;
+	}
+
+	/**
 	 * Liefert TRUE, falls der Kurs mindestens eine Kollision hat. <br>
 	 * Kollision: Der Schüler muss in einer Schiene des Kurses eine Kollision haben.
 	 * 
@@ -982,6 +1063,17 @@ export class GostBlockungsergebnisManager extends JavaObject {
 				if (this.getOfSchuelerOfSchieneKursmenge(schuelerID.valueOf(), schiene.id).size() > 1) 
 					summe++;
 		return summe;
+	}
+
+	/**
+	 * Liefert die Anzahl an Schülern die dem Kurs zugeordnet.
+	 * 
+	 * @param  pKursID  Die Datenbank-ID des Kurses.
+	 * @return          Die Anzahl an Schülern die dem Kurs zugeordnet.
+	 */
+	public getOfKursAnzahlSchueler(pKursID : number) : number {
+		let kursE : GostBlockungsergebnisKurs = this.getKursE(pKursID);
+		return kursE.schueler.size();
 	}
 
 	/**

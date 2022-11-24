@@ -13,11 +13,14 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @TranspilerDTO
 public class SchuelerblockungOutputFachwahlZuKurs {
 
-	/** Die ID der Fachwahl (des Schülers). */
-	public long fachwahl;
+	/** Die ID des Faches (des Schülers). */
+	public long fachID;
+
+	/** Die ID der Kursart (des Schülers). */
+	public int kursartID;
 
 	/** Die ID des zugeordneten Kurses zur Fachwahl (des Schülers). Ein Wert von {@code -1} bedeutet, dass das Fach
 	 * nicht zugeordnet werden konnte, was als <b>Nicht-Wahl</b> bezeichnet wird. */
-	public long kurs;
+	public long kursID;
 
 }

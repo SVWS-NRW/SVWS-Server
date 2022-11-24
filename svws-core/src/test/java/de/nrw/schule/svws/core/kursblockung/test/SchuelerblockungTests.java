@@ -12,8 +12,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
 import de.nrw.schule.svws.core.adt.set.AVLSet;
+import de.nrw.schule.svws.core.data.gost.GostFachwahl;
 import de.nrw.schule.svws.core.data.kursblockung.SchuelerblockungInput;
-import de.nrw.schule.svws.core.data.kursblockung.SchuelerblockungInputFachwahl;
 import de.nrw.schule.svws.core.data.kursblockung.SchuelerblockungInputKurs;
 import de.nrw.schule.svws.core.data.kursblockung.SchuelerblockungOutput;
 import de.nrw.schule.svws.core.data.kursblockung.SchuelerblockungOutputFachwahlZuKurs;
@@ -77,18 +77,16 @@ public class SchuelerblockungTests {
 		// Erzeuge Fachwahlen.
 		int startSchiene = 1;
 		for (int i = 0; i < nFachwahlen; i++) {
-			SchuelerblockungInputFachwahl fachwahl = new SchuelerblockungInputFachwahl();
-			fachwahl.id = i; // Die ID der Fachwahl muss pro Schüler eindeutig sein.
-			fachwahl.fach = pRandom.nextLong(30); // Es gibt ca. 30 verschiedene Fächer.
-			fachwahl.kursart = pRandom.nextLong(5); // Es gibt ca. 5 verschiedene Kursarten.
-			fachwahl.representation = "Fachwahl Nr. " + i;
+			GostFachwahl fachwahl = new GostFachwahl();
+			fachwahl.fachID = pRandom.nextLong(30); // Es gibt ca. 30 verschiedene Fächer.
+			fachwahl.kursartID = pRandom.nextInt(5); // Es gibt ca. 5 verschiedene Kursarten.
 			in.fachwahlen.add(fachwahl);
 
-			String sFachart = fachwahl.fach + ";" + fachwahl.kursart;
+			String sFachart = fachwahl.fachID + ";" + fachwahl.kursartID;
 			while (setFachart.contains(sFachart)) {
-				fachwahl.fach = pRandom.nextLong(30);
-				fachwahl.kursart = pRandom.nextLong(5);
-				sFachart = fachwahl.fach + ";" + fachwahl.kursart;
+				fachwahl.fachID = pRandom.nextLong(30);
+				fachwahl.kursartID = pRandom.nextInt(5);
+				sFachart = fachwahl.fachID + ";" + fachwahl.kursartID;
 			}
 
 			// Erzeuge die zugehörigen Kurse der Fachwahl.
@@ -97,9 +95,8 @@ public class SchuelerblockungTests {
 				SchuelerblockungInputKurs kurs = new SchuelerblockungInputKurs();
 				kurs.id = nKurse;
 				kurs.anzahlSuS = pRandom.nextInt(35); // Bis zu 34 SuS pro Kurs.
-				kurs.representation = "Kurs Nr. " + kurs.id;
-				kurs.fach = fachwahl.fach; // Fach gehört zur obigen Fachwahl.
-				kurs.kursart = fachwahl.kursart; // Kursart gehört zur obigen Fachwahl.
+				kurs.fach = fachwahl.fachID; // Fach gehört zur obigen Fachwahl.
+				kurs.kursart = fachwahl.kursartID; // Kursart gehört zur obigen Fachwahl.
 				if (j == 0) {
 					if (i < nFachwahlenDavonMulti) {
 						kurs.schienen = new int[] { startSchiene, startSchiene + 1 };
@@ -126,7 +123,7 @@ public class SchuelerblockungTests {
 
 		// ##################################################
 		// ##################################################
-		// Algorithmus bereechnet und liefert genau ein Ergebnis.
+		// Algorithmus berechnet und liefert genau ein Ergebnis.
 		SchuelerblockungOutput out = alg.handle(in);
 		// ##################################################
 		// ##################################################
@@ -162,12 +159,8 @@ public class SchuelerblockungTests {
 				fail("fachwahl == null");
 				return;
 			}
-			if (fachwahlZuKurs.kurs < 0) {
-				fail("fachwahl.kurs < 0, dabei ist eine optimale Verteilung möglich!");
-				return;
-			}
-			if (fachwahlZuKurs.fachwahl != in.fachwahlen.get(i).id) {
-				fail("Eingabe-Fachwahl-ID != Ausgabe-Fachwahl-ID");
+			if (fachwahlZuKurs.kursID < 0) {
+				fail("fachwahl.kursID < 0, dabei ist eine optimale Verteilung möglich!");
 				return;
 			}
 		}
