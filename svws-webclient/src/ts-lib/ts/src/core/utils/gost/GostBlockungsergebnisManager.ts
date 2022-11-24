@@ -182,12 +182,12 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			if (this._map_schuelerID_kollisionen.put(eSchuelerID, 0) !== null) 
 				throw new NullPointerException("Schüler ID " + eSchuelerID.valueOf() + " doppelt!")
 		}
+		for (let gSchueler of this._parent.daten().schueler) 
+			this._map_schuelerID_fachID_kurs.put(gSchueler.id, new HashMap());
 		for (let gFachwahl of this._parent.daten().fachwahlen) {
 			let mapFachKurs : HashMap<Number, GostBlockungsergebnisKurs | null> | null = this._map_schuelerID_fachID_kurs.get(gFachwahl.schuelerID);
-			if (mapFachKurs === null) {
-				mapFachKurs = new HashMap();
-				this._map_schuelerID_fachID_kurs.put(gFachwahl.schuelerID, mapFachKurs);
-			}
+			if (mapFachKurs === null) 
+				throw new NullPointerException("Schüler " + gFachwahl.schuelerID + " hat eine Fachwahl ist aber unbekannt!")
 			if (mapFachKurs.put(gFachwahl.fachID, null) !== null) 
 				throw new NullPointerException("Schüler " + gFachwahl.schuelerID + " hat Fach " + gFachwahl.fachID + " doppelt!")
 		}
@@ -635,10 +635,10 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Liefert die Menge aller Kurse mit dem angegebenen Fach. <br>
-	 * Wirft eine Exception, wenn der ID kein Fach zugeordnet ist.
+	 * Wirft eine Exception, wenn der ID kein Kurs zugeordnet ist.
 	 * 
-	 * @param pFachID Die Datenbank-ID des Faches.
-	 * @return Die Menge aller Kurse mit dem angegebenen Fach.
+	 * @param pFachID  Die Datenbank-ID des Faches.
+	 * @return         Die Menge aller Kurse mit dem angegebenen Fach.
 	 */
 	public getOfFachKursmenge(pFachID : number) : Vector<GostBlockungsergebnisKurs> {
 		let kurseOfFach : Vector<GostBlockungsergebnisKurs> | null = this._map_fachID_kurse.get(pFachID);
@@ -860,6 +860,17 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		let kurs : GostBlockungsergebnisKurs = this.getKursE(pKursID);
 		let kurseOfSchueler : HashSet<GostBlockungsergebnisKurs> = this.getOfSchuelerKursmenge(pSchuelerID);
 		return kurseOfSchueler.contains(kurs);
+	}
+
+	/**
+	 * Liefert für den übergebenen Schüler einen Vorschlag für eineNeuzuordnung der Kurse.
+	 * 
+	 * @param  pSchuelerID Die Datenbank-ID des Schülers.
+	 * 
+	 * @return             TRUE, ...noch FAKE return Wert.
+	 */
+	public getOfSchuelerNeuzuordnung(pSchuelerID : number) : boolean {
+		throw new NullPointerException("Noch nicht implementiert")
 	}
 
 	/**

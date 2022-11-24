@@ -216,16 +216,16 @@ public class GostBlockungsergebnisManager {
 		}
 
 		// Fachwahlen kopieren und hinzufügen.
+		for (@NotNull Schueler gSchueler : _parent.daten().schueler) 
+			_map_schuelerID_fachID_kurs.put(gSchueler.id, new HashMap<>());
 		for (@NotNull GostFachwahl gFachwahl : _parent.daten().fachwahlen) {
 			HashMap<@NotNull Long, GostBlockungsergebnisKurs> mapFachKurs = _map_schuelerID_fachID_kurs.get(gFachwahl.schuelerID);
-			if (mapFachKurs == null) {
-				mapFachKurs = new HashMap<>();
-				_map_schuelerID_fachID_kurs.put(gFachwahl.schuelerID, mapFachKurs);
-			}
+			if (mapFachKurs == null)
+				throw new NullPointerException("Schüler " + gFachwahl.schuelerID + " hat eine Fachwahl ist aber unbekannt!");
 			if (mapFachKurs.put(gFachwahl.fachID, null) != null)
 				throw new NullPointerException("Schüler " + gFachwahl.schuelerID + " hat Fach " + gFachwahl.fachID + " doppelt!");
 		}
-
+		
 		// _map_schuelerID_schienenID_kurse
 		for (@NotNull Schueler gSchueler : _parent.daten().schueler) {
 			_map_schuelerID_schienenID_kurse.put(gSchueler.id, new HashMap<>());
@@ -730,10 +730,10 @@ public class GostBlockungsergebnisManager {
 
 	/**
 	 * Liefert die Menge aller Kurse mit dem angegebenen Fach. <br>
-	 * Wirft eine Exception, wenn der ID kein Fach zugeordnet ist.
+	 * Wirft eine Exception, wenn der ID kein Kurs zugeordnet ist.
 	 * 
-	 * @param pFachID Die Datenbank-ID des Faches.
-	 * @return Die Menge aller Kurse mit dem angegebenen Fach.
+	 * @param pFachID  Die Datenbank-ID des Faches.
+	 * @return         Die Menge aller Kurse mit dem angegebenen Fach.
 	 */
 	public @NotNull Vector<@NotNull GostBlockungsergebnisKurs> getOfFachKursmenge(long pFachID) {
 		Vector<@NotNull GostBlockungsergebnisKurs> kurseOfFach = _map_fachID_kurse.get(pFachID);
@@ -962,6 +962,34 @@ public class GostBlockungsergebnisManager {
 		@NotNull GostBlockungsergebnisKurs kurs = getKursE(pKursID);
 		@NotNull HashSet<@NotNull GostBlockungsergebnisKurs> kurseOfSchueler = getOfSchuelerKursmenge(pSchuelerID);
 		return kurseOfSchueler.contains(kurs);
+	}
+	
+	/**
+	 * Liefert für den übergebenen Schüler einen Vorschlag für eineNeuzuordnung der Kurse.
+	 * 
+	 * @param  pSchuelerID Die Datenbank-ID des Schülers.
+	 * 
+	 * @return             TRUE, ...noch FAKE return Wert.
+	 */
+	public boolean getOfSchuelerNeuzuordnung(long pSchuelerID) {
+//		@NotNull SchuelerblockungInput in = new SchuelerblockungInput();
+//		
+//		// Schienenmenge
+//		in.schienen = this.getOfSchieneAnzahl();
+//		
+//		// Kursmenge
+//		@NotNull List<@NotNull GostFachwahl> fachwahlenDesSchuelers = _parent.getOfSchuelerFacharten(pSchuelerID);
+//		
+//		for (GostFachwahl fachwahl : fachwahlenDesSchuelers) {
+//			@NotNull Vector<@NotNull GostBlockungsergebnisKurs> kurse = getOfFachKursmenge(fachwahl.fachID);
+//			for (@NotNull GostBlockungsergebnisKurs kurs  : kurse) {
+//				@NotNull SchuelerblockungInputKurs inKurs = new SchuelerblockungInputKurs();
+//				inKurs.id = kurs.id; 
+//				in.kurse.add(inKurs);
+//			}
+//		}
+		
+		throw new NullPointerException("Noch nicht implementiert");
 	}
 
 	/**
