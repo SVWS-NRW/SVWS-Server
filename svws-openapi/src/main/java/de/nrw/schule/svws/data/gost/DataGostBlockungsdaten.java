@@ -391,23 +391,8 @@ public class DataGostBlockungsdaten extends DataManager<Long> {
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(id).build();		
 	}
 
-	/** 
-	 * Berechnet für die übergebene Blockung Zwischenergebnis, wobei der Algorithmus nur maximal eine spezifizierte
-	 * Zeit läuft.
-	 * 
-	 * @param  id     die ID der Blockung
-	 * @param  zeit   die maximale Zeit in ms
-	 * 
-	 * @return die HTTP-Response mit einer Liste von IDs der Zwischenergebnisse 
-	 */
-	public Response berechne(long id, long zeit) {
-		// Erzeuge den Input für den Kursblockungsalgorithmus
-		GostBlockungsdatenManager manager = getBlockungsdatenManagerFromDB(id);
-		manager.setMaxTimeMillis(zeit);
-		
-		KursblockungAlgorithmus algo = new KursblockungAlgorithmus();
-		Vector<GostBlockungsergebnisManager> outputs = algo.handle(manager);
-		
+	
+	private static synchronized List<Long> schreibeErgebnisse(DBEntityManager conn, long id, List<GostBlockungsergebnisManager> outputs) {
 		try {
 			Vector<Long> ergebnisse = new Vector<>();
 			conn.transactionBegin();
@@ -433,14 +418,37 @@ public class DataGostBlockungsdaten extends DataManager<Long> {
 				// Ergänze die ID bei der Liste der berechneten Ergebnisse
 				ergebnisse.add(ergebnisID);
 				ergebnisID++;
-			}
-			
+			}			
 			if (conn.transactionCommit())
-				return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(ergebnisse).build();
-			return OperationError.INTERNAL_SERVER_ERROR
-					.getResponse("\"Fehler beim Schreiben der Zwischenergebnisse für die Kursblockung.\"");
+				return ergebnisse;
+			throw OperationError.INTERNAL_SERVER_ERROR.exception("\"Fehler beim Schreiben der Zwischenergebnisse für die Kursblockung.\"");
 		} catch (Exception exception) {
 			conn.transactionRollback();
+			throw exception;
+		}
+	}
+	
+	/** 
+	 * Berechnet für die übergebene Blockung Zwischenergebnis, wobei der Algorithmus nur maximal eine spezifizierte
+	 * Zeit läuft.
+	 * 
+	 * @param  id     die ID der Blockung
+	 * @param  zeit   die maximale Zeit in ms
+	 * 
+	 * @return die HTTP-Response mit einer Liste von IDs der Zwischenergebnisse 
+	 */
+	public Response berechne(long id, long zeit) {
+		// Erzeuge den Input für den Kursblockungsalgorithmus
+		GostBlockungsdatenManager manager = getBlockungsdatenManagerFromDB(id);
+		manager.setMaxTimeMillis(zeit);
+		
+		KursblockungAlgorithmus algo = new KursblockungAlgorithmus();
+		Vector<GostBlockungsergebnisManager> outputs = algo.handle(manager);
+		
+		try {
+			List<Long> ergebnisse = schreibeErgebnisse(conn, id, outputs);
+			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(ergebnisse).build();
+		} catch (Exception exception) {
 			if (exception instanceof WebApplicationException webex)
 				return webex.getResponse();
 			return OperationError.INTERNAL_SERVER_ERROR.getResponse(exception);
