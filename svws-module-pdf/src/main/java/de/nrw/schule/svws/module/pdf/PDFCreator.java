@@ -149,19 +149,20 @@ public class PDFCreator {
 		String html = getHtml();
 		XRLog.listRegisteredLoggers().forEach(logger -> XRLog.setLevel(logger, java.util.logging.Level.WARNING));
 		Calendar now = Calendar.getInstance();
-		PDDocument doc = new PDDocument();
-		PDDocumentInformation info = doc.getDocumentInformation();
-		info.setAuthor("SVWSServer");
-		info.setCreationDate(now);
-		info.setCreator("SVWSServer");
-		info.setModificationDate(now);
-		info.setProducer("SVWSServer");
-		PdfRendererBuilder builder = new PdfRendererBuilder();
-		builder.useFastMode();
-		builder.usePDDocument(doc);
-		builder.withHtmlContent(html, null);
-		builder.toStream(os);
-		builder.run();
+		try (PDDocument doc = new PDDocument()) {
+			PDDocumentInformation info = doc.getDocumentInformation();
+			info.setAuthor("SVWSServer");
+			info.setCreationDate(now);
+			info.setCreator("SVWSServer");
+			info.setModificationDate(now);
+			info.setProducer("SVWSServer");
+			PdfRendererBuilder builder = new PdfRendererBuilder();
+			builder.useFastMode();
+			builder.usePDDocument(doc);
+			builder.withHtmlContent(html, null);
+			builder.toStream(os);
+			builder.run();
+		}
 	}
 	
 	
@@ -196,7 +197,7 @@ public class PDFCreator {
 			ByteArrayOutputStream baos = new ByteArrayOutputStream(2048);
 			runBuilder(baos);
 			return baos.toByteArray(); 
-		} catch (IOException e) {
+		} catch (@SuppressWarnings("unused") IOException e) {
 			return null;
 		}
 	}
@@ -213,8 +214,9 @@ public class PDFCreator {
 	public void save(String filename) throws IOException {
 		File file = new File(filename);
 		// TODO Create directory if it does not exist
-		FileOutputStream fos = new FileOutputStream(file);
-		runBuilder(fos);
+		try (FileOutputStream fos = new FileOutputStream(file)) {
+			runBuilder(fos);
+		}
 	}
 	
 }

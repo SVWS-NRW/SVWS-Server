@@ -161,14 +161,8 @@ public class HttpServer {
 		AbstractConnectionFactory connFactoryHTTPv1_1 = new HttpConnectionFactory(https_config);
 		AbstractConnectionFactory connFactoryHTTPv2 = new HTTP2ServerConnectionFactory(https_config);
 		ALPNServerConnectionFactory alpn = new ALPNServerConnectionFactory();
-		ServerConnector connector;
-		//if (SVWSKonfiguration.get().useHTTPDefaultv11()) {
-		//	alpn.setDefaultProtocol("http/1.1");
-		//	connector = new ServerConnector(server, sslContextFactory, alpn, connFactoryHTTPv1_1, connFactoryHTTPv2);
-		//} else {
-		//	alpn.setDefaultProtocol("h2");
-			connector = new ServerConnector(server, sslContextFactory, alpn, connFactoryHTTPv2, connFactoryHTTPv1_1);
-		//}
+		@SuppressWarnings("resource")
+		ServerConnector connector = new ServerConnector(server, sslContextFactory, alpn, connFactoryHTTPv2, connFactoryHTTPv1_1);
 		connector.setPort(SVWSKonfiguration.get().getPortHTTPS());
 		server.addConnector(connector);				
 	}

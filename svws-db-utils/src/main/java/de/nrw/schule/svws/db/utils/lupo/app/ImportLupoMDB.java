@@ -11,7 +11,6 @@ import de.nrw.schule.svws.core.logger.Logger;
 import de.nrw.schule.svws.db.Benutzer;
 import de.nrw.schule.svws.db.DBConfig;
 import de.nrw.schule.svws.db.DBDriver;
-import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.utils.lupo.mdb.LupoMDB;
 
 
@@ -103,7 +102,6 @@ public class ImportLupoMDB {
 			String tgtPwd = cmdLine.getValue("tp", "svwsadmin");
 			DBConfig tgtConfig = new DBConfig(tgtDrv, tgtLoc, tgtDB, false, tgtUser, tgtPwd, true, false);
 			Benutzer user = Benutzer.create(tgtConfig);
-			DBEntityManager conn = user.getEntityManager();
 
 		    // Lese den Namen für der LuPO-Datei ein und öffne die Datei
 			String lupofilename = cmdLine.getValue("f", "Laufbahnplanung.lup");
@@ -112,7 +110,7 @@ public class ImportLupoMDB {
 			lupoMDB.importFrom();
 			
 			// Schreibe in die LuPO-Datenbank
-			lupoMDB.setLUPOTables(conn, antwort_ja);
+			lupoMDB.setLUPOTables(user, antwort_ja);
 			
 			logger.logLn("Fertig!");
 		} catch (CommandLineException e) {

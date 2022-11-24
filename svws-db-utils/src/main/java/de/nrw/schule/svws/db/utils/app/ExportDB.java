@@ -129,7 +129,7 @@ public class ExportDB {
 				logger.logLn(0, " [OK]");
 				logger.log(LogLevel.INFO, "Datenbank-Verbindung erfolgreich aufgebaut (driver='" + srcConfig.getDBDriver() + "', schema='" + srcConfig.getDBSchema() + "', location='" + srcConfig.getDBLocation() + "', user='" + srcConfig.getUsername() + "')" + System.lineSeparator());
 		
-				DBSchemaManager srcManager = DBSchemaManager.create(srcConn, true, logger); 
+				DBSchemaManager srcManager = DBSchemaManager.create(srcUser, true, logger); 
 				
 				// Führe den Export mithilfe des Schema-Managers durch.
 				logger.modifyIndent(2);

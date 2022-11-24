@@ -5,6 +5,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.DirectoryStream;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -47,13 +48,15 @@ public class ResourceUtils {
 		if (!Files.isDirectory(fullPath))
 			return classes;
 		try {
-			Files.newDirectoryStream(fullPath).forEach(p -> {
-				if (Files.isDirectory(p)) {
-					classes.addAll(getFilesInPath(fs, path, packagePath + "/" + p.getFileName(), fileextension));
-				} else if (Files.isRegularFile(p) && p.toString().endsWith(fileextension)) {
-					classes.add(p);
-				}
-			});
+			try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(fullPath)) {
+				dirStream.forEach(p -> {
+					if (Files.isDirectory(p)) {
+						classes.addAll(getFilesInPath(fs, path, packagePath + "/" + p.getFileName(), fileextension));
+					} else if (Files.isRegularFile(p) && p.toString().endsWith(fileextension)) {
+						classes.add(p);
+					}
+				});
+			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -70,6 +73,7 @@ public class ResourceUtils {
 	 * 
 	 * @return der Pfad in das JAR-Dateisystem 
 	 */
+	@SuppressWarnings("resource")
 	private static FileSystem getJARFileSystem(URI uri) {
 		String[] array = uri.toString().split("!");
         FileSystem fs = jarFS.get(array[0]);
@@ -79,7 +83,7 @@ public class ResourceUtils {
 		    fs = FileSystems.getFileSystem(URI.create(array[0]));
 		    jarFS.put(array[0], fs);
 			return fs;
-		} catch (RuntimeException e) {
+		} catch (@SuppressWarnings("unused") RuntimeException e) {
 			// try to create a new Filesystem...
 			Map<String, String> env = new HashMap<>();
 			try {
@@ -106,7 +110,8 @@ public class ResourceUtils {
             URL url = ResourceUtils.class.getClassLoader().getResource(filename);
             URI uri = url.toURI();
             if ("jar".equals(uri.getScheme())) {
-                FileSystem fs = getJARFileSystem(uri);
+                @SuppressWarnings("resource")
+				FileSystem fs = getJARFileSystem(uri);
                 String[] array = uri.toString().split("!");
                 path = fs.getPath(array[1]);
             } else {
@@ -139,11 +144,12 @@ public class ResourceUtils {
 				URI uri;
 				try {
 					uri = res.nextElement().toURI();
-				} catch (URISyntaxException e) {
+				} catch (@SuppressWarnings("unused") URISyntaxException e) {
 					continue;
 				}
 				Path path = null;
 				if ("jar".equals(uri.getScheme())) {
+					@SuppressWarnings("resource")
 					FileSystem fs = getJARFileSystem(uri);
 					String[] array = uri.toString().split("!");
 					path = fs.getPath(array[1]);
@@ -156,7 +162,9 @@ public class ResourceUtils {
 					int j = Paths.get(packagePath).getNameCount();
 					for (int i = 0; i < j; i++)
 						path = path.getParent();
-					result.addAll(getFilesInPath(FileSystems.getDefault(), path.toString(), packagePath, fileextension));
+					@SuppressWarnings("resource")
+					FileSystem fs = FileSystems.getDefault();
+					result.addAll(getFilesInPath(fs, path.toString(), packagePath, fileextension));
 				}
 			}
 		} catch (IOException e1) {

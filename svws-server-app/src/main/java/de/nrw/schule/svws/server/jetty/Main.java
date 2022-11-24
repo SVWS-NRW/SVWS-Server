@@ -72,7 +72,7 @@ public class Main {
 						logger.logLn("Verbindung zu dem Schema "+ schema.name + " nicht möglich!");
 						continue;
 					}
-					DBSchemaManager dbManager = DBSchemaManager.create(dbConn, true, logger);
+					DBSchemaManager dbManager = DBSchemaManager.create(dbUser, true, logger);
 					if (!dbManager.updater.isUptodate(-1, false)) {
 						logger.logLn("Revision veraltet - führe Update aus...");
 						logger.modifyIndent(2);

@@ -1,6 +1,7 @@
 package de.nrw.schule.svws.api.debug;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -51,11 +52,13 @@ public class APIDebug {
 		String data = null;
     	try {
     		final String resourceName = pathSwaggerUIDist + "/" + versionSwaggerUIDist + "/" + filename;
-    		data = IOUtils.toString(ClassLoader.getSystemResourceAsStream(resourceName), StandardCharsets.UTF_8);
-    		if ("index.html".equalsIgnoreCase(filename)) {
-    			final String openapi_file = isYAML ? "openapi.yaml" : "openapi.json";
-    			final String openapi_url = StringUtils.removeEnd(request.getRequestURL().toString(), request.getRequestURI()) + "/" + openapi_file;
-    			data = data.replace("https://petstore.swagger.io/v2/swagger.json", openapi_url);
+    		try (InputStream in = ClassLoader.getSystemResourceAsStream(resourceName)) {
+	    		data = IOUtils.toString(in, StandardCharsets.UTF_8);
+	    		if ("index.html".equalsIgnoreCase(filename)) {
+	    			final String openapi_file = isYAML ? "openapi.yaml" : "openapi.json";
+	    			final String openapi_url = StringUtils.removeEnd(request.getRequestURL().toString(), request.getRequestURI()) + "/" + openapi_file;
+	    			data = data.replace("https://petstore.swagger.io/v2/swagger.json", openapi_url);
+	    		}
     		}
     	} catch(NullPointerException | IOException e) {
     		e.printStackTrace();

@@ -289,25 +289,26 @@ public class DBCoreTypeUpdater {
 	 * @param sqlInsert   der Befehl zum Einfügen der Core-type-Daten
 	 */
 	private void updateCoreTypeTabelle(String tabname, String typename, long version, String sqlInsert) {
-		DBEntityManager conn = schemaManager.getEntityManager();
-		try {
-			conn.transactionBegin();
-			// Lösche alle Daten
-			conn.transactionNativeDelete("DELETE FROM " + tabname);
-			// Füge die aktuellen Daten des Core-Types ein
-			conn.transactionNativeUpdate(sqlInsert);
-			// Aktualsiere die Core-Type-Version in der entsprechenden Tabelle
-			DTOCoreTypeVersion v = status.getCoreTypeVersion(tabname);
-			if (v == null) {
-				v = new DTOCoreTypeVersion(tabname, typename, version);
-			} else {
-				v.Version = version;
+		try (DBEntityManager conn = schemaManager.getUser().getEntityManager()) {
+			try {
+				conn.transactionBegin();
+				// Lösche alle Daten
+				conn.transactionNativeDelete("DELETE FROM " + tabname);
+				// Füge die aktuellen Daten des Core-Types ein
+				conn.transactionNativeUpdate(sqlInsert);
+				// Aktualsiere die Core-Type-Version in der entsprechenden Tabelle
+				DTOCoreTypeVersion v = status.getCoreTypeVersion(tabname);
+				if (v == null) {
+					v = new DTOCoreTypeVersion(tabname, typename, version);
+				} else {
+					v.Version = version;
+				}
+				conn.transactionPersist(v);
+				conn.transactionCommit();
+			} catch (Exception e) {
+				conn.transactionRollback();
+				throw e;
 			}
-			conn.transactionPersist(v);
-			conn.transactionCommit();
-		} catch (Exception e) {
-			conn.transactionRollback();
-			throw e;
 		}
 	}
 

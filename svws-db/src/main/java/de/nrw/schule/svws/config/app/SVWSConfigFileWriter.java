@@ -65,7 +65,7 @@ public class SVWSConfigFileWriter {
 			
 			// Schreibe die Konfiguration in die angegeben Datei
 			config.setFilename(outputFile);
-			config.write();
+			SVWSKonfiguration.write();
 		} catch (NumberFormatException | IOException e) {
 			cmdLine.printOptionsAndExit(1, e.getMessage());
 		}

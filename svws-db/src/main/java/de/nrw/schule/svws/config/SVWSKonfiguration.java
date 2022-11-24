@@ -166,7 +166,7 @@ public class SVWSKonfiguration {
 		} catch (JsonMappingException e) {
 			// TODO log error into logger
 			System.out.println("Fehler in der Konfiguration '" + filename + "': " + e);
-		} catch (IOException e) {
+		} catch (@SuppressWarnings("unused") IOException e) {
 			// TODO log error into logger
 			System.out.println("Konfiguration '" + filename + "' nicht gefunden!");
 		}
@@ -197,7 +197,7 @@ public class SVWSKonfiguration {
 		} catch (JsonMappingException e) {
 			// TODO log error into logger
 			System.out.println("Fehler in der Konfiguration '" + filename + "': " + e);
-		} catch (IOException e) {
+		} catch (@SuppressWarnings("unused") IOException e) {
 			// TODO log error into logger
 			System.out.println("Konfiguration '" + filename + "' nicht gefunden!");
 		}
@@ -214,10 +214,10 @@ public class SVWSKonfiguration {
 	 * @throws IOException   erzeugt eine IOException, wenn die Konfiguration nicht geschrieben werden kann 
 	 */
 	private static void writeJSON(Path filepath) throws IOException {
-		filepath = ((filepath == null) || ("".equals(filepath.toString()))) ? Paths.get(DEFAULT_CONFIG_FILENAME) : filepath;
+		Path path = ((filepath == null) || ("".equals(filepath.toString()))) ? Paths.get(DEFAULT_CONFIG_FILENAME) : filepath;
 		ObjectMapper mapper = new ObjectMapper();
 		String json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(instanceConfig.dto);
-		Files.writeString(filepath, json, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+		Files.writeString(path, json, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
 	}
 
 
@@ -232,10 +232,10 @@ public class SVWSKonfiguration {
 	 * @throws IOException   erzeugt eine IOException, wenn die Konfiguration nicht geschrieben werden kann 
 	 */
 	private static void writeXML(Path filepath) throws IOException {
-		filepath = ((filepath == null) || ("".equals(filepath.toString()))) ? Paths.get(DEFAULT_CONFIG_FILENAME_XML) : filepath;
+		Path path = ((filepath == null) || ("".equals(filepath.toString()))) ? Paths.get(DEFAULT_CONFIG_FILENAME_XML) : filepath;
 		XmlMapper mapper = new XmlMapper();
 		String xml = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(instanceConfig.dto);
-		Files.writeString(filepath, xml, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+		Files.writeString(path, xml, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
 	}
 
 
@@ -249,7 +249,7 @@ public class SVWSKonfiguration {
 	 * 
 	 * @return true, falls die Konfiguration erfolgreich geschrieben wurde, sonst false.
 	 */
-	public boolean write() {
+	public static boolean write() {
 		try {
 			if (instanceConfig.dto == null)
 				return false;
@@ -259,7 +259,7 @@ public class SVWSKonfiguration {
 				writeJSON(instanceConfig.dto.filepath);
 			}
 			return true;
-		} catch(IOException e) {
+		} catch(@SuppressWarnings("unused") IOException e) {
 			return false;
 		}
 	}
@@ -332,9 +332,7 @@ public class SVWSKonfiguration {
 	 * @param filename    der Dateiname
 	 */
 	public void setFilename(String filename) {
-		if ((dto == null) || ("".equals(filename)))
-			filename = null;
-		this.dto.filepath = Paths.get(filename);
+		this.dto.filepath = ((dto == null) || ("".equals(filename))) ? null : Paths.get(filename);
 	}
 
 
@@ -614,15 +612,16 @@ public class SVWSKonfiguration {
 		if ((dto == null) || (schemaName == null) || ("".equals(schemaName)) ||
 		    (userName == null) || ("".equals(userName)))
 			return false;
-		if (userPassword == null)
-			userPassword = "";
+		String password = userPassword;
+		if (password == null)
+			password = "";
 		SVWSKonfigurationSchemaDTO config = getSchemaKonfiguration(schemaName);
 		if (config == null) {
 			// Neue Config erstellen
 			config = new SVWSKonfigurationSchemaDTO();
 			config.name = schemaName;
 			config.username = userName;
-			config.password = userPassword;
+			config.password = password;
 			config.svwslogin = userSVWSLogin;
 			dto.dbKonfiguration.schemata.add(config);
 			dto.dbconfigs.put(schemaName, this.getDBConfig(dto.dbKonfiguration.schemata.size()-1));
@@ -633,7 +632,7 @@ public class SVWSKonfiguration {
 			// Vorhandene Config aktualisieren
 			config.name = schemaName;
 			config.username = userName;
-			config.password = userPassword;
+			config.password = password;
 			config.svwslogin = userSVWSLogin;
 		}
 		return write();
@@ -746,10 +745,11 @@ public class SVWSKonfiguration {
 	public static KeyStore getKeystore() throws KeyStoreException {
 		try {
 	    	SVWSKonfiguration config = SVWSKonfiguration.get();
-			FileInputStream is = new FileInputStream(config.getTLSKeystorePath() + "/keystore");
-			KeyStore keystore = KeyStore.getInstance(KeyStore.getDefaultType());
-			keystore.load(is, config.getTLSKeystorePassword().toCharArray());
-			return keystore;
+	    	try (FileInputStream is = new FileInputStream(config.getTLSKeystorePath() + "/keystore")) {
+				KeyStore keystore = KeyStore.getInstance(KeyStore.getDefaultType());
+				keystore.load(is, config.getTLSKeystorePassword().toCharArray());
+				return keystore;
+	    	}
 		} catch (KeyStoreException | IOException | NoSuchAlgorithmException | CertificateException e) {
 			throw new KeyStoreException("Zugriff azuf Keystore fehlgeschlagen.", e);
 		}

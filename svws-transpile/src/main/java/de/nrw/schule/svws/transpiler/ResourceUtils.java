@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.DirectoryStream;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -42,19 +43,21 @@ public class ResourceUtils {
 		if (!Files.isDirectory(fullPath))
 			return classes;
 		try {
-			Files.newDirectoryStream(fullPath).forEach(p -> {
-				if (Files.isDirectory(p)) {
-					classes.addAll(getFilesInPath(fs, path, "".equals(packagePath) ? p.getFileName().toString() : packagePath + "/" + p.getFileName(), fileextension));
-				} else if (Files.isRegularFile(p) && p.toString().endsWith(fileextension)) {
-					String shortFilename = p.getFileName().toString();
-					try {
-						classes.add(new TranspilerResource(packagePath.replace('/', '.'), shortFilename.substring(0, shortFilename.length() - fileextension.length()), fileextension, p));
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+			try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(fullPath)) { 
+				dirStream.forEach(p -> {
+					if (Files.isDirectory(p)) {
+						classes.addAll(getFilesInPath(fs, path, "".equals(packagePath) ? p.getFileName().toString() : packagePath + "/" + p.getFileName(), fileextension));
+					} else if (Files.isRegularFile(p) && p.toString().endsWith(fileextension)) {
+						String shortFilename = p.getFileName().toString();
+						try {
+							classes.add(new TranspilerResource(packagePath.replace('/', '.'), shortFilename.substring(0, shortFilename.length() - fileextension.length()), fileextension, p));
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					}
-				}
-			});
+				});
+			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -75,7 +78,7 @@ public class ResourceUtils {
 		String[] array = uri.toString().split("!");
 		try {
 			return FileSystems.getFileSystem(URI.create(array[0]));
-		} catch (RuntimeException e) {
+		} catch (@SuppressWarnings("unused") RuntimeException e) {
 			// try to create a new Filesystem...
 			Map<String, String> env = new HashMap<>();
 			try {
@@ -108,7 +111,7 @@ public class ResourceUtils {
 				URI uri;
 				try {
 					uri = res.nextElement().toURI();
-				} catch (URISyntaxException e) {
+				} catch (@SuppressWarnings("unused") URISyntaxException e) {
 					continue;
 				}
 				Path path = null;
@@ -126,7 +129,9 @@ public class ResourceUtils {
 					int j = "".equals(packagePath) ? 0 : Paths.get(packagePath).getNameCount();
 					for (int i = 0; i < j; i++)
 						path = path.getParent();
-					result.addAll(getFilesInPath(FileSystems.getDefault(), path.toString(), packagePath, fileextension));
+					@SuppressWarnings("resource")
+					FileSystem fs = FileSystems.getDefault();
+					result.addAll(getFilesInPath(fs, path.toString(), packagePath, fileextension));
 				}
 			}
 		} catch (IOException e1) {

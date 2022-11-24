@@ -1,5 +1,19 @@
 package de.nrw.schule.svws.api.server;
 
+import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
+
+import de.nrw.schule.svws.api.OpenAPIApplication;
+import de.nrw.schule.svws.core.data.SimpleOperationResponse;
+import de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenz;
+import de.nrw.schule.svws.data.SimpleBinaryMultipartBody;
+import de.nrw.schule.svws.data.lupo.DataLupo;
+import de.nrw.schule.svws.db.Benutzer;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
@@ -10,21 +24,6 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-
-import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
-
-import de.nrw.schule.svws.api.OpenAPIApplication;
-import de.nrw.schule.svws.core.data.SimpleOperationResponse;
-import de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenz;
-import de.nrw.schule.svws.data.SimpleBinaryMultipartBody;
-import de.nrw.schule.svws.data.lupo.DataLupo;
-import de.nrw.schule.svws.db.DBEntityManager;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.tags.Tag;
 
 
 /**
@@ -61,9 +60,8 @@ public class APILupo {
     		@RequestBody(description = "Die LuPO-Datei", required = true, content = 
 			@Content(mediaType = MediaType.MULTIPART_FORM_DATA)) @MultipartForm SimpleBinaryMultipartBody multipart,
     		@Context HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.IMPORT_EXPORT_DATEN_IMPORTIEREN)) {
-    		return DataLupo.importMDB(conn, multipart);
-    	}
+    	Benutzer user = OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.IMPORT_EXPORT_DATEN_IMPORTIEREN);
+    	return DataLupo.importMDB(user, multipart);
     }
 
     
@@ -90,9 +88,8 @@ public class APILupo {
     public Response getGostLupoExportMDBFuerJahrgang(@PathParam("schema") String schemaname,
     		@PathParam("jahrgang") String jahrgang,
     		@Context HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.IMPORT_EXPORT_SCHUELERDATEN_EXPORTIEREN)) {
-			return DataLupo.exportMDB(conn, jahrgang);
-    	}
+    	Benutzer user = OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.IMPORT_EXPORT_SCHUELERDATEN_EXPORTIEREN);
+		return DataLupo.exportMDB(user, jahrgang);
     }
     
 }

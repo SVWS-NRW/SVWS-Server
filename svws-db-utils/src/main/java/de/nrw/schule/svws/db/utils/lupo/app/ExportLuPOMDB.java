@@ -14,7 +14,6 @@ import de.nrw.schule.svws.core.logger.Logger;
 import de.nrw.schule.svws.db.Benutzer;
 import de.nrw.schule.svws.db.DBConfig;
 import de.nrw.schule.svws.db.DBDriver;
-import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.utils.lupo.mdb.LupoMDB;
 
 /**
@@ -124,14 +123,13 @@ public class ExportLuPOMDB {
 			String srcPwd = cmdLine.getValue("sp", "svwsadmin");
 			DBConfig srcConfig = new DBConfig(srcDrv, srcLoc, srcDB, false, srcUser, srcPwd, true, false);
 			Benutzer user = Benutzer.create(srcConfig);
-			DBEntityManager conn = user.getEntityManager();
 
 			String jahrgang = cmdLine.getValue("k", "Q2");
 			
 			// Schreibe die Daten für die neue LuPO-Datei
 			LupoMDB lupoMDB = new LupoMDB(lupofilename);
 			lupoMDB.logger.copyConsumer(logger);
-			lupoMDB.getFromLeistungsdaten(conn, jahrgang);
+			lupoMDB.getFromLeistungsdaten(user, jahrgang);
 			lupoMDB.exportTo();
 		} catch (CommandLineException e) {
 			cmdLine.printOptionsAndExit(1, e.getMessage());

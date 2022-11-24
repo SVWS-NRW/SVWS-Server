@@ -139,7 +139,7 @@ public class ImportDB {
 				logger.logLn(0, " [OK]");
 				logger.log(LogLevel.INFO, "Datenbank-Verbindung erfolgreich aufgebaut (driver='" + srcConfig.getDBDriver() + "', location='" + srcConfig.getDBLocation() + "', user='" + srcConfig.getUsername() + "')" + System.lineSeparator());
 				
-				DBSchemaManager srcManager = DBSchemaManager.create(srcConn, true, logger);
+				DBSchemaManager srcManager = DBSchemaManager.create(srcUser, true, logger);
 				
 				// Führe die Migration mithilfe des Schema-Managers durch.
 				logger.modifyIndent(2);

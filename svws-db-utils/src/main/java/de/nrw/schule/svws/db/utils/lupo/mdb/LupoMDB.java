@@ -30,6 +30,7 @@ import de.nrw.schule.svws.core.types.gost.GostHalbjahr;
 import de.nrw.schule.svws.core.types.gost.GostKursart;
 import de.nrw.schule.svws.core.types.gost.GostLaufbahnplanungFachkombinationTyp;
 import de.nrw.schule.svws.core.types.schule.Schulform;
+import de.nrw.schule.svws.db.Benutzer;
 import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.dto.current.gost.DTOGostJahrgangBeratungslehrer;
 import de.nrw.schule.svws.db.dto.current.gost.DTOGostJahrgangFachkombinationen;
@@ -197,62 +198,64 @@ public class LupoMDB {
 	/**
 	 * Schreibt die Daten für den übergebenen Jahrgang der Sekundarstufe II in dieses Objekt
 	 *   
-	 * @param conn       der Verbindung für den SVWS-Datenbankzugriff (siehe {@link DBEntityManager})
+	 * @param user       der Datenbank-Benutzer für den SVWS-Datenbankzugriff (siehe {@link Benutzer})
 	 * @param jahrgang   der Jahrgang, der in diese LuPO-MDB geschrieben werden soll ("EF", "Q1" oder "Q2").
 	 */
-	public void getFromLeistungsdaten(DBEntityManager conn, final String jahrgang) {
-		Schule schule = Schule.query(conn);
-		if ((jahrgang == null) || ((!"EF".equalsIgnoreCase(jahrgang)) && (!"Q1".equalsIgnoreCase(jahrgang)) && (!"Q2".equalsIgnoreCase(jahrgang)))) {
-			logger.logLn("Ungültiger Jahrgang! Erzeuge Daten für eine leere LuPO-Datei...");
+	public void getFromLeistungsdaten(Benutzer user, final String jahrgang) {
+		try (DBEntityManager conn = user.getEntityManager()) {
+			Schule schule = Schule.query(conn);
+			if ((jahrgang == null) || ((!"EF".equalsIgnoreCase(jahrgang)) && (!"Q1".equalsIgnoreCase(jahrgang)) && (!"Q2".equalsIgnoreCase(jahrgang)))) {
+				logger.logLn("Ungültiger Jahrgang! Erzeuge Daten für eine leere LuPO-Datei...");
+				logger.modifyIndent(2);
+				getEmpty();
+				logger.modifyIndent(-2);
+				return;
+			}
+			logger.logLn("Lese Daten für den Jahrgang " + jahrgang + " aus der SVWS-Datenbank...");
 			logger.modifyIndent(2);
-			getEmpty();
+			List<DTOFach> dtofaecher = conn.queryAll(DTOFach.class).stream()
+					.sorted((f1,f2) -> f1.SortierungSekII == null ? -1 : f2.SortierungSekII == null ? 1 : f2.SortierungSekII - f1.SortierungSekII).collect(Collectors.toList());
+			Map<Long, DTOFach> dtoFaecherMap = dtofaecher.stream().collect(Collectors.toMap(f -> f.ID, f -> f));
+			List<DTOFaecherNichtMoeglicheKombination> dtoFaecherNichtMoeglicheKombination = conn.queryAll(DTOFaecherNichtMoeglicheKombination.class);
+			TypedQuery<DTOSchueler> queryDtoSchueler = conn.query(
+					"SELECT s FROM DTOSchueler s JOIN DTOSchuelerLernabschnittsdaten l ON "
+					+ "s.ID IS NOT NULL AND s.ID = l.Schueler_ID AND s.Schuljahresabschnitts_ID = l.Schuljahresabschnitts_ID "
+					+ "AND (s.Geloescht = null OR s.Geloescht = false) AND s.Status = :status AND l.ASDJahrgang = :jahrgang "
+					+ "ORDER BY s.Nachname, s.Vorname", DTOSchueler.class
+			);
+			List<DTOSchueler> dtoSchueler = queryDtoSchueler
+					.setParameter("status", SchuelerStatus.AKTIV)
+					.setParameter("jahrgang", jahrgang)
+					.getResultList();
+			List<Long> schuelerIDs = dtoSchueler.stream().map(s -> s.ID).collect(Collectors.toList());
+			Map<Long, GostLeistungen> gostLeistungen = GostSchueler.getLeistungsdaten(conn, schuelerIDs);
+			Map<Long, DTOGostSchueler> dtoLupoSchueler = conn.queryAll(DTOGostSchueler.class).stream().collect(Collectors.toMap(s -> s.Schueler_ID, s -> s));
+			Map<Long, DTOLehrer> mapLehrer = conn.queryAll(DTOLehrer.class).stream().collect(Collectors.toMap(l -> l.ID, l -> l));
+			Map<Long, DTOKlassen> mapKlassen = conn.queryAll(DTOKlassen.class).stream().collect(Collectors.toMap(k -> k.ID, k -> k));
+			TypedQuery<DTOSchuelerLernabschnittsdaten> queryDtoSchuelerLernabschnitte = conn.query(
+					"SELECT l FROM DTOSchueler s JOIN DTOSchuelerLernabschnittsdaten l ON "
+					+ "s.ID IN :value AND s.ID = l.Schueler_ID AND s.Schuljahresabschnitts_ID = l.Schuljahresabschnitts_ID", DTOSchuelerLernabschnittsdaten.class
+			);
+			Map<Long, DTOSchuelerLernabschnittsdaten> mapAktAbschnitte = queryDtoSchuelerLernabschnitte
+					.setParameter("value", schuelerIDs)
+					.getResultList().stream().collect(Collectors.toMap(l -> l.Schueler_ID, l -> l));
+			versionen = ABPVersion.getDefault();
+			schuldaten = ABPSchuldaten.get(schule, jahrgang);
+			fachgruppen = ABPFachgruppen.getDefault();
+			faecher = ABPFaecher.get(fachgruppen, dtofaecher, dtoFaecherMap);
+			kursarten = ABPKursarten.getDefault();
+			lupoBenutzer = ABPLehrer.getDefault();
+			nichtMoeglicheKombinationen = ABPNichtMoeglAbiFachKombi.get(dtoFaecherNichtMoeglicheKombination, dtofaecher, dtoFaecherMap);
+			schueler = ABPSchueler.get(dtoSchueler, mapAktAbschnitte, mapKlassen, mapLehrer, dtoLupoSchueler, gostLeistungen);
+			schuelerFaecher = ABPSchuelerFaecher.get(faecher, fachgruppen, dtoSchueler, dtoLupoSchueler, gostLeistungen);
+			schuelerFaecherBasisSicherungen = ABPSchuelerFaecherBasisSicherung.getDefault();
+			schuelerFaecherSicherungen = ABPSchuelerFaecherSicherung.getDefault();
+			fehlermeldungen = ABPSchuelerFehlermeldungen.getDefault();
+			// TODO folgende Tabelle noch genutzt?
+			schuelerSprachenfolge = ABPSchuelerSprachenfolge.getDefault();
+			logger.logLn("Fertig!");
 			logger.modifyIndent(-2);
-			return;
 		}
-		logger.logLn("Lese Daten für den Jahrgang " + jahrgang + " aus der SVWS-Datenbank...");
-		logger.modifyIndent(2);
-		List<DTOFach> dtofaecher = conn.queryAll(DTOFach.class).stream()
-				.sorted((f1,f2) -> f1.SortierungSekII == null ? -1 : f2.SortierungSekII == null ? 1 : f2.SortierungSekII - f1.SortierungSekII).collect(Collectors.toList());
-		Map<Long, DTOFach> dtoFaecherMap = dtofaecher.stream().collect(Collectors.toMap(f -> f.ID, f -> f));
-		List<DTOFaecherNichtMoeglicheKombination> dtoFaecherNichtMoeglicheKombination = conn.queryAll(DTOFaecherNichtMoeglicheKombination.class);
-		TypedQuery<DTOSchueler> queryDtoSchueler = conn.query(
-				"SELECT s FROM DTOSchueler s JOIN DTOSchuelerLernabschnittsdaten l ON "
-				+ "s.ID IS NOT NULL AND s.ID = l.Schueler_ID AND s.Schuljahresabschnitts_ID = l.Schuljahresabschnitts_ID "
-				+ "AND (s.Geloescht = null OR s.Geloescht = false) AND s.Status = :status AND l.ASDJahrgang = :jahrgang "
-				+ "ORDER BY s.Nachname, s.Vorname", DTOSchueler.class
-		);
-		List<DTOSchueler> dtoSchueler = queryDtoSchueler
-				.setParameter("status", SchuelerStatus.AKTIV)
-				.setParameter("jahrgang", jahrgang)
-				.getResultList();
-		List<Long> schuelerIDs = dtoSchueler.stream().map(s -> s.ID).collect(Collectors.toList());
-		Map<Long, GostLeistungen> gostLeistungen = GostSchueler.getLeistungsdaten(conn, schuelerIDs);
-		Map<Long, DTOGostSchueler> dtoLupoSchueler = conn.queryAll(DTOGostSchueler.class).stream().collect(Collectors.toMap(s -> s.Schueler_ID, s -> s));
-		Map<Long, DTOLehrer> mapLehrer = conn.queryAll(DTOLehrer.class).stream().collect(Collectors.toMap(l -> l.ID, l -> l));
-		Map<Long, DTOKlassen> mapKlassen = conn.queryAll(DTOKlassen.class).stream().collect(Collectors.toMap(k -> k.ID, k -> k));
-		TypedQuery<DTOSchuelerLernabschnittsdaten> queryDtoSchuelerLernabschnitte = conn.query(
-				"SELECT l FROM DTOSchueler s JOIN DTOSchuelerLernabschnittsdaten l ON "
-				+ "s.ID IN :value AND s.ID = l.Schueler_ID AND s.Schuljahresabschnitts_ID = l.Schuljahresabschnitts_ID", DTOSchuelerLernabschnittsdaten.class
-		);
-		Map<Long, DTOSchuelerLernabschnittsdaten> mapAktAbschnitte = queryDtoSchuelerLernabschnitte
-				.setParameter("value", schuelerIDs)
-				.getResultList().stream().collect(Collectors.toMap(l -> l.Schueler_ID, l -> l));
-		versionen = ABPVersion.getDefault();
-		schuldaten = ABPSchuldaten.get(schule, jahrgang);
-		fachgruppen = ABPFachgruppen.getDefault();
-		faecher = ABPFaecher.get(fachgruppen, dtofaecher, dtoFaecherMap);
-		kursarten = ABPKursarten.getDefault();
-		lupoBenutzer = ABPLehrer.getDefault();
-		nichtMoeglicheKombinationen = ABPNichtMoeglAbiFachKombi.get(dtoFaecherNichtMoeglicheKombination, dtofaecher, dtoFaecherMap);
-		schueler = ABPSchueler.get(dtoSchueler, mapAktAbschnitte, mapKlassen, mapLehrer, dtoLupoSchueler, gostLeistungen);
-		schuelerFaecher = ABPSchuelerFaecher.get(faecher, fachgruppen, dtoSchueler, dtoLupoSchueler, gostLeistungen);
-		schuelerFaecherBasisSicherungen = ABPSchuelerFaecherBasisSicherung.getDefault();
-		schuelerFaecherSicherungen = ABPSchuelerFaecherSicherung.getDefault();
-		fehlermeldungen = ABPSchuelerFehlermeldungen.getDefault();
-		// TODO folgende Tabelle noch genutzt?
-		schuelerSprachenfolge = ABPSchuelerSprachenfolge.getDefault();
-		logger.logLn("Fertig!");
-		logger.modifyIndent(-2);
 	}
 	
 	
@@ -261,7 +264,7 @@ public class LupoMDB {
 	 * Schreibt die Jahrgangs-bezogenen Daten aus diesem Objekt in die zugehörigen LUPO-Tabellen 
 	 * für den angegeben Jahrgang.
 	 *   
-	 * @param conn          die Verbindung für den SVWS-Datenbankzugriff (siehe {@link DBEntityManager})
+	 * @param conn          die Datenbank-Verbindung
 	 * @param abschnitt     der aktuelle Schuljahresabschnitt
 	 * @param abiJahrgang   der Abitur-Jahrgang, für den die Informationen gesetzt werden sollen.
 	 * @param klasse        die zugehörige Klasse des Jahrgangs, aus der ggf. Informationen zu den 
@@ -387,161 +390,163 @@ public class LupoMDB {
 	/**
 	 * Schreibt die Daten aus diesem Objekt in die zugehörigen LUPO-Tabellen.
 	 *   
-	 * @param conn       die Verbindung für den SVWS-Datenbankzugriff (siehe {@link DBEntityManager})
+	 * @param user       der Datenbank-Benutzer für den SVWS-Datenbankzugriff (siehe {@link Benutzer})
 	 * @param replace    gibt an, ob alte Daten für den Jahrgang der LuPO-Datei ersetzt werden 
 	 *                   sollen, sofern sie bereits vorhanden sind.  
 	 */
-	public void setLUPOTables(DBEntityManager conn, boolean replace) {
-		Schule schule = Schule.query(conn);
-		final Map<Long, DTOSchuljahresabschnitte> schuljahresabschnitte = conn.queryAll(DTOSchuljahresabschnitte.class).stream().collect(Collectors.toMap(a -> a.ID, a -> a));
-		final Map<Long, DTOKlassen> klassen = conn.queryAll(DTOKlassen.class).stream().collect(Collectors.toMap(k -> k.ID, k -> k)); 
-		DTOSchuljahresabschnitte dtoAbschnittSchule = schuljahresabschnitte.get(schule.dto.Schuljahresabschnitts_ID);
-		
-		logger.logLn("Informationen zu der LuPO-Datei...");
-		logger.modifyIndent(2);
-		logger.logLn("- Schulhalbjahr der SVWS-DB: " + dtoAbschnittSchule.Jahr + "." + schule.getHalbjahr());
-		if (schuldaten.size() <= 0) {
-			logger.logLn("- FEHLER: Fehlender Eintrag für die aktuelle Schule in den LuPO-Daten!");
-			logger.modifyIndent(-2);
-			return;
-		}
-		ABPSchuldaten abpSchule = schuldaten.get(0);
-		logger.logLn("- Beratungshalbjahr der LuPO-Datei: " + abpSchule.Beratungshalbjahr);
-		logger.modifyIndent(-2);
-
-		logger.logLn("Vorbereitung...");
-		logger.modifyIndent(2);
-		logger.logLn("  - Erzeuge HashMap mit der Zuordnung der Fächer zum Schüler aus der LuPO-Tabelle...");
-		HashMap<Integer, Vector<ABPSchuelerFaecher>> tmpSchuelerFaecher = new HashMap<>();
-		for (ABPSchuelerFaecher abpSchuelerFaecher : schuelerFaecher) {
-			Vector<ABPSchuelerFaecher> sf = tmpSchuelerFaecher.get(abpSchuelerFaecher.Schueler_ID);
-			if (sf == null) {
-				sf = new Vector<>();
-				tmpSchuelerFaecher.put(abpSchuelerFaecher.Schueler_ID, sf);
-			}
-			sf.add(abpSchuelerFaecher);
-		}
-		logger.logLn("  - Bestimme die zu bearbeitende Schüler-Menge aus der LuPO-Datei...");
-		List<Long> schuelerIDs = schueler.stream().filter(s -> s.Schild_ID != null).map(s -> (long)s.Schild_ID).collect(Collectors.toList());
-		logger.logLn("  - Lese Schüler aus der DB ein, um diese mit den Daten der LuPO-Datei abzugleichen...");
-		Map<Long, DTOSchueler> dtoSchuelerMap = conn.queryNamed("DTOSchueler.id.multiple", schuelerIDs, DTOSchueler.class).stream().collect(Collectors.toMap(s -> s.ID, s -> s));
-		logger.logLn("  - Lese die aktuellen Lernabschnitt der Schüler aus der DB ein, um davon Daten mit den Daten aus der LuPO-Datei abzugleichen...");
-		TypedQuery<DTOSchuelerLernabschnittsdaten> queryAktuelleLernabschnitte = 
-				conn.query("SELECT l FROM DTOSchueler s JOIN DTOSchuelerLernabschnittsdaten l ON "
-						+ "l.Schueler_ID = s.ID AND l.Schuljahresabschnitts_ID = s.Schuljahresabschnitts_ID AND l.Schueler_ID IN :value", DTOSchuelerLernabschnittsdaten.class);
-		Map<Long, DTOSchuelerLernabschnittsdaten> dtoSchuelerAktAbschnittMap = queryAktuelleLernabschnitte
-				.setParameter("value", schuelerIDs)
-				.getResultList().stream().collect(Collectors.toMap(l -> l.Schueler_ID, l -> l));
-		logger.logLn("  - Lese Jahrgänge aus der DB ein, um diese beim Abgleich mit den Daten der LuPO-Datei zu verwenden...");
-		Map<Long, DTOJahrgang> dtoJahrgangMap = conn.queryAll(DTOJahrgang.class).stream().collect(Collectors.toMap(j -> j.ID, j -> j));
-		logger.logLn("  - Lese Fächer aus der DB ein, um diese beim Abgleich mit den Daten der LuPO-Datei zu verwenden...");
-		Map<String, DTOFach> dtoFaecher = conn.queryAll(DTOFach.class).stream().collect(Collectors.toMap(f -> f.Kuerzel, f -> f));
-		HashSet<Integer> hatJahrgang = new HashSet<>(); // Zum Überprüfen, ob der Abiturjahrgang bereits angelegt wurde
-		logger.modifyIndent(-2);
-
-		logger.logLn("Prüfe Schülerdaten...");
-		logger.modifyIndent(2);
-		for (ABPSchueler abpSchueler : schueler) {
-			// TODO Prüfe oder entferne evtl. vorhandene Einträge !!!
-			logger.logLn("- Lese LuPO-Schüler " + abpSchueler.ID + " mit der DB-ID " + abpSchueler.Schild_ID + " ein...");
+	public void setLUPOTables(Benutzer user, boolean replace) {
+		try (DBEntityManager conn = user.getEntityManager()) {
+			Schule schule = Schule.query(conn);
+			final Map<Long, DTOSchuljahresabschnitte> schuljahresabschnitte = conn.queryAll(DTOSchuljahresabschnitte.class).stream().collect(Collectors.toMap(a -> a.ID, a -> a));
+			final Map<Long, DTOKlassen> klassen = conn.queryAll(DTOKlassen.class).stream().collect(Collectors.toMap(k -> k.ID, k -> k)); 
+			DTOSchuljahresabschnitte dtoAbschnittSchule = schuljahresabschnitte.get(schule.dto.Schuljahresabschnitts_ID);
+			
+			logger.logLn("Informationen zu der LuPO-Datei...");
 			logger.modifyIndent(2);
-			DTOSchueler dtoSchueler = dtoSchuelerMap.get(abpSchueler.Schild_ID == null ? null : (long)abpSchueler.Schild_ID);
-			if (dtoSchueler == null) {
-				logger.logLn("- FEHLER: Der Schüler konnte nicht in der DB gefunden werden. Überspringe Schüler!");
+			logger.logLn("- Schulhalbjahr der SVWS-DB: " + dtoAbschnittSchule.Jahr + "." + schule.getHalbjahr());
+			if (schuldaten.size() <= 0) {
+				logger.logLn("- FEHLER: Fehlender Eintrag für die aktuelle Schule in den LuPO-Daten!");
 				logger.modifyIndent(-2);
-				continue;
+				return;
 			}
-			DTOSchuljahresabschnitte dtoAbschnittSchueler = schuljahresabschnitte.get(dtoSchueler.Schuljahresabschnitts_ID);
-			if (dtoAbschnittSchueler == null) {
-				logger.logLn("- FEHLER: Der Schuljahresabschnitt des Schülers konnte nicht in der DB gefunden werden. Überspringe Schüler!");
-				logger.modifyIndent(-2);
-				continue;
+			ABPSchuldaten abpSchule = schuldaten.get(0);
+			logger.logLn("- Beratungshalbjahr der LuPO-Datei: " + abpSchule.Beratungshalbjahr);
+			logger.modifyIndent(-2);
+	
+			logger.logLn("Vorbereitung...");
+			logger.modifyIndent(2);
+			logger.logLn("  - Erzeuge HashMap mit der Zuordnung der Fächer zum Schüler aus der LuPO-Tabelle...");
+			HashMap<Integer, Vector<ABPSchuelerFaecher>> tmpSchuelerFaecher = new HashMap<>();
+			for (ABPSchuelerFaecher abpSchuelerFaecher : schuelerFaecher) {
+				Vector<ABPSchuelerFaecher> sf = tmpSchuelerFaecher.get(abpSchuelerFaecher.Schueler_ID);
+				if (sf == null) {
+					sf = new Vector<>();
+					tmpSchuelerFaecher.put(abpSchuelerFaecher.Schueler_ID, sf);
+				}
+				sf.add(abpSchuelerFaecher);
 			}
-			DTOSchuelerLernabschnittsdaten dtoAktAbschnitt = dtoSchuelerAktAbschnittMap.get(dtoSchueler.ID);
-			if (dtoAktAbschnitt == null) {
-				logger.logLn("- FEHLER: Der Lernabschnitt des Schülers konnte nicht in der DB gefunden werden. Überspringe Schüler!");
-				logger.modifyIndent(-2);
-				continue;
-			}
-			
-			logger.log("- Ermittle Abiturjahrgang: ");
-			DTOJahrgang dtoJahrgang = dtoJahrgangMap.get(dtoAktAbschnitt.Jahrgang_ID);
-			if (dtoJahrgang == null) {
-				logger.logLn("FEHLER! Überspringe diesen Schüler!");
-				logger.modifyIndent(-2);
-				continue;
-			}
-			int restjahre = dtoJahrgang.AnzahlRestabschnitte / schule.dto.AnzahlAbschnitte;
-			int abiJahrgang = dtoAbschnittSchueler.Jahr + restjahre;
-			logger.logLn(0, "" + abiJahrgang);
-			logger.log("- Prüfe, ob der Abiturjahrgang bereits vorgekommen ist: ");
-			if (hatJahrgang.contains(abiJahrgang)) {
-				logger.logLn(0, "Ja");
-			} else {
-				logger.logLn(0, "Nein");
-				hatJahrgang.add(abiJahrgang);
+			logger.logLn("  - Bestimme die zu bearbeitende Schüler-Menge aus der LuPO-Datei...");
+			List<Long> schuelerIDs = schueler.stream().filter(s -> s.Schild_ID != null).map(s -> (long)s.Schild_ID).collect(Collectors.toList());
+			logger.logLn("  - Lese Schüler aus der DB ein, um diese mit den Daten der LuPO-Datei abzugleichen...");
+			Map<Long, DTOSchueler> dtoSchuelerMap = conn.queryNamed("DTOSchueler.id.multiple", schuelerIDs, DTOSchueler.class).stream().collect(Collectors.toMap(s -> s.ID, s -> s));
+			logger.logLn("  - Lese die aktuellen Lernabschnitt der Schüler aus der DB ein, um davon Daten mit den Daten aus der LuPO-Datei abzugleichen...");
+			TypedQuery<DTOSchuelerLernabschnittsdaten> queryAktuelleLernabschnitte = 
+					conn.query("SELECT l FROM DTOSchueler s JOIN DTOSchuelerLernabschnittsdaten l ON "
+							+ "l.Schueler_ID = s.ID AND l.Schuljahresabschnitts_ID = s.Schuljahresabschnitts_ID AND l.Schueler_ID IN :value", DTOSchuelerLernabschnittsdaten.class);
+			Map<Long, DTOSchuelerLernabschnittsdaten> dtoSchuelerAktAbschnittMap = queryAktuelleLernabschnitte
+					.setParameter("value", schuelerIDs)
+					.getResultList().stream().collect(Collectors.toMap(l -> l.Schueler_ID, l -> l));
+			logger.logLn("  - Lese Jahrgänge aus der DB ein, um diese beim Abgleich mit den Daten der LuPO-Datei zu verwenden...");
+			Map<Long, DTOJahrgang> dtoJahrgangMap = conn.queryAll(DTOJahrgang.class).stream().collect(Collectors.toMap(j -> j.ID, j -> j));
+			logger.logLn("  - Lese Fächer aus der DB ein, um diese beim Abgleich mit den Daten der LuPO-Datei zu verwenden...");
+			Map<String, DTOFach> dtoFaecher = conn.queryAll(DTOFach.class).stream().collect(Collectors.toMap(f -> f.Kuerzel, f -> f));
+			HashSet<Integer> hatJahrgang = new HashSet<>(); // Zum Überprüfen, ob der Abiturjahrgang bereits angelegt wurde
+			logger.modifyIndent(-2);
+	
+			logger.logLn("Prüfe Schülerdaten...");
+			logger.modifyIndent(2);
+			for (ABPSchueler abpSchueler : schueler) {
+				// TODO Prüfe oder entferne evtl. vorhandene Einträge !!!
+				logger.logLn("- Lese LuPO-Schüler " + abpSchueler.ID + " mit der DB-ID " + abpSchueler.Schild_ID + " ein...");
 				logger.modifyIndent(2);
-				DTOKlassen klasse = klassen.get(dtoAktAbschnitt.Klassen_ID);
-				setLUPOJahrgang(conn, dtoAbschnittSchule, abiJahrgang, klasse == null ? null : klasse.Klasse, dtoFaecher, replace);
-				logger.modifyIndent(-2);
-			}
-
-			logger.logLn("- Schreibe Allgemeine Schüler-Daten in die DB... ");
-			// TODO Alle Attribute prüfen, ob relevant in SVWS-DB
-			DTOGostSchueler lupoSchueler = new DTOGostSchueler(dtoSchueler.ID, abpSchueler.SPP, 
-					(abpSchueler.Sportattest != null) || ("J".equals(abpSchueler.Sportattest)), 
-					abpSchueler.FS2_SekI_manuell != null && abpSchueler.FS2_SekI_manuell);
-			lupoSchueler.DatumBeratung = abpSchueler.DatumBeratung == null ? null : abpSchueler.DatumBeratung.toLocalDate().toString();
-			lupoSchueler.DatumRuecklauf = abpSchueler.DatumRuecklauf == null ? null : abpSchueler.DatumRuecklauf.toLocalDate().toString();
-			lupoSchueler.Beratungslehrer_ID = null;  // TODO LehrerID aus abpSchueler.Beratungslehrer herausfinden?
-			lupoSchueler.Kommentar = abpSchueler.Kommentar;
-			lupoSchueler.PruefPhase = abpSchueler.PruefPhase;
-			lupoSchueler.BesondereLernleistung_Art = abpSchueler.BLL_Art;
-			lupoSchueler.BesondereLernleistung_Punkte = abpSchueler.BLL_Punkte;			
-			conn.persist(lupoSchueler);
-			
-			logger.logLn("- Schreibe Fachbezogene Schüler-Daten in die DB... ");
-			Vector<ABPSchuelerFaecher> abpSFaecher = tmpSchuelerFaecher.get(abpSchueler.ID);
-			if (abpSFaecher != null) {
-				logger.modifyIndent(2);
-				for (ABPSchuelerFaecher abpSFach : abpSFaecher) {
-					logger.log("- Fach " + abpSFach.FachKrz + ": ");
-					DTOFach dtoFach = dtoFaecher.get(abpSFach.FachKrz);
-					if (dtoFach == null) {
-						logger.logLn(0, "FEHLER! Ignoriere das Fach beim Einlesen...");
-						continue;
+				DTOSchueler dtoSchueler = dtoSchuelerMap.get(abpSchueler.Schild_ID == null ? null : (long)abpSchueler.Schild_ID);
+				if (dtoSchueler == null) {
+					logger.logLn("- FEHLER: Der Schüler konnte nicht in der DB gefunden werden. Überspringe Schüler!");
+					logger.modifyIndent(-2);
+					continue;
+				}
+				DTOSchuljahresabschnitte dtoAbschnittSchueler = schuljahresabschnitte.get(dtoSchueler.Schuljahresabschnitts_ID);
+				if (dtoAbschnittSchueler == null) {
+					logger.logLn("- FEHLER: Der Schuljahresabschnitt des Schülers konnte nicht in der DB gefunden werden. Überspringe Schüler!");
+					logger.modifyIndent(-2);
+					continue;
+				}
+				DTOSchuelerLernabschnittsdaten dtoAktAbschnitt = dtoSchuelerAktAbschnittMap.get(dtoSchueler.ID);
+				if (dtoAktAbschnitt == null) {
+					logger.logLn("- FEHLER: Der Lernabschnitt des Schülers konnte nicht in der DB gefunden werden. Überspringe Schüler!");
+					logger.modifyIndent(-2);
+					continue;
+				}
+				
+				logger.log("- Ermittle Abiturjahrgang: ");
+				DTOJahrgang dtoJahrgang = dtoJahrgangMap.get(dtoAktAbschnitt.Jahrgang_ID);
+				if (dtoJahrgang == null) {
+					logger.logLn("FEHLER! Überspringe diesen Schüler!");
+					logger.modifyIndent(-2);
+					continue;
+				}
+				int restjahre = dtoJahrgang.AnzahlRestabschnitte / schule.dto.AnzahlAbschnitte;
+				int abiJahrgang = dtoAbschnittSchueler.Jahr + restjahre;
+				logger.logLn(0, "" + abiJahrgang);
+				logger.log("- Prüfe, ob der Abiturjahrgang bereits vorgekommen ist: ");
+				if (hatJahrgang.contains(abiJahrgang)) {
+					logger.logLn(0, "Ja");
+				} else {
+					logger.logLn(0, "Nein");
+					hatJahrgang.add(abiJahrgang);
+					logger.modifyIndent(2);
+					DTOKlassen klasse = klassen.get(dtoAktAbschnitt.Klassen_ID);
+					setLUPOJahrgang(conn, dtoAbschnittSchule, abiJahrgang, klasse == null ? null : klasse.Klasse, dtoFaecher, replace);
+					logger.modifyIndent(-2);
+				}
+	
+				logger.logLn("- Schreibe Allgemeine Schüler-Daten in die DB... ");
+				// TODO Alle Attribute prüfen, ob relevant in SVWS-DB
+				DTOGostSchueler lupoSchueler = new DTOGostSchueler(dtoSchueler.ID, abpSchueler.SPP, 
+						(abpSchueler.Sportattest != null) || ("J".equals(abpSchueler.Sportattest)), 
+						abpSchueler.FS2_SekI_manuell != null && abpSchueler.FS2_SekI_manuell);
+				lupoSchueler.DatumBeratung = abpSchueler.DatumBeratung == null ? null : abpSchueler.DatumBeratung.toLocalDate().toString();
+				lupoSchueler.DatumRuecklauf = abpSchueler.DatumRuecklauf == null ? null : abpSchueler.DatumRuecklauf.toLocalDate().toString();
+				lupoSchueler.Beratungslehrer_ID = null;  // TODO LehrerID aus abpSchueler.Beratungslehrer herausfinden?
+				lupoSchueler.Kommentar = abpSchueler.Kommentar;
+				lupoSchueler.PruefPhase = abpSchueler.PruefPhase;
+				lupoSchueler.BesondereLernleistung_Art = abpSchueler.BLL_Art;
+				lupoSchueler.BesondereLernleistung_Punkte = abpSchueler.BLL_Punkte;			
+				conn.persist(lupoSchueler);
+				
+				logger.logLn("- Schreibe Fachbezogene Schüler-Daten in die DB... ");
+				Vector<ABPSchuelerFaecher> abpSFaecher = tmpSchuelerFaecher.get(abpSchueler.ID);
+				if (abpSFaecher != null) {
+					logger.modifyIndent(2);
+					for (ABPSchuelerFaecher abpSFach : abpSFaecher) {
+						logger.log("- Fach " + abpSFach.FachKrz + ": ");
+						DTOFach dtoFach = dtoFaecher.get(abpSFach.FachKrz);
+						if (dtoFach == null) {
+							logger.logLn(0, "FEHLER! Ignoriere das Fach beim Einlesen...");
+							continue;
+						}
+						DTOGostSchuelerFachbelegungen lupoSFach = new DTOGostSchuelerFachbelegungen(dtoSchueler.ID,
+								dtoFach.ID);
+						lupoSFach.EF1_Kursart = abpSFach.Kursart_E1;
+						lupoSFach.EF1_Punkte = abpSFach.Punkte_E1;
+						lupoSFach.EF2_Kursart = abpSFach.Kursart_E2;
+						lupoSFach.EF2_Punkte = abpSFach.Punkte_E2;
+						lupoSFach.Q11_Kursart = abpSFach.Kursart_Q1;
+						lupoSFach.Q11_Punkte = abpSFach.Punkte_Q1;
+						lupoSFach.Q12_Kursart = abpSFach.Kursart_Q2;
+						lupoSFach.Q12_Punkte = abpSFach.Punkte_Q2;
+						lupoSFach.Q21_Kursart = abpSFach.Kursart_Q3;
+						lupoSFach.Q21_Punkte = abpSFach.Punkte_Q3;
+						lupoSFach.Q22_Kursart = abpSFach.Kursart_Q4;
+						lupoSFach.Q22_Punkte = abpSFach.Punkte_Q4;
+						lupoSFach.AbiturFach = abpSFach.AbiturFach;
+						lupoSFach.Bemerkungen = abpSFach.Bemerkungen;
+						lupoSFach.Markiert_Q1 = abpSFach.Markiert_Q1 != null && "J".equals(abpSFach.Markiert_Q1);
+						lupoSFach.Markiert_Q2 = abpSFach.Markiert_Q2 != null && "J".equals(abpSFach.Markiert_Q2);
+						lupoSFach.Markiert_Q3 = abpSFach.Markiert_Q3 != null && "J".equals(abpSFach.Markiert_Q3);
+						lupoSFach.Markiert_Q4 = abpSFach.Markiert_Q4 != null && "J".equals(abpSFach.Markiert_Q4);
+						lupoSFach.ergebnisAbiturpruefung = abpSFach.AbiPruefErgebnis;
+						lupoSFach.hatMuendlichePflichtpruefung = abpSFach.MdlPflichtPruefung == null ? null : "J".equals(abpSFach.MdlPflichtPruefung);
+						lupoSFach.ergebnisMuendlichePruefung = abpSFach.MdlPruefErgebnis;
+						conn.persist(lupoSFach);
+						logger.logLn(0, "OK");
 					}
-					DTOGostSchuelerFachbelegungen lupoSFach = new DTOGostSchuelerFachbelegungen(dtoSchueler.ID,
-							dtoFach.ID);
-					lupoSFach.EF1_Kursart = abpSFach.Kursart_E1;
-					lupoSFach.EF1_Punkte = abpSFach.Punkte_E1;
-					lupoSFach.EF2_Kursart = abpSFach.Kursart_E2;
-					lupoSFach.EF2_Punkte = abpSFach.Punkte_E2;
-					lupoSFach.Q11_Kursart = abpSFach.Kursart_Q1;
-					lupoSFach.Q11_Punkte = abpSFach.Punkte_Q1;
-					lupoSFach.Q12_Kursart = abpSFach.Kursart_Q2;
-					lupoSFach.Q12_Punkte = abpSFach.Punkte_Q2;
-					lupoSFach.Q21_Kursart = abpSFach.Kursart_Q3;
-					lupoSFach.Q21_Punkte = abpSFach.Punkte_Q3;
-					lupoSFach.Q22_Kursart = abpSFach.Kursart_Q4;
-					lupoSFach.Q22_Punkte = abpSFach.Punkte_Q4;
-					lupoSFach.AbiturFach = abpSFach.AbiturFach;
-					lupoSFach.Bemerkungen = abpSFach.Bemerkungen;
-					lupoSFach.Markiert_Q1 = abpSFach.Markiert_Q1 != null && "J".equals(abpSFach.Markiert_Q1);
-					lupoSFach.Markiert_Q2 = abpSFach.Markiert_Q2 != null && "J".equals(abpSFach.Markiert_Q2);
-					lupoSFach.Markiert_Q3 = abpSFach.Markiert_Q3 != null && "J".equals(abpSFach.Markiert_Q3);
-					lupoSFach.Markiert_Q4 = abpSFach.Markiert_Q4 != null && "J".equals(abpSFach.Markiert_Q4);
-					lupoSFach.ergebnisAbiturpruefung = abpSFach.AbiPruefErgebnis;
-					lupoSFach.hatMuendlichePflichtpruefung = abpSFach.MdlPflichtPruefung == null ? null : "J".equals(abpSFach.MdlPflichtPruefung);
-					lupoSFach.ergebnisMuendlichePruefung = abpSFach.MdlPruefErgebnis;
-					conn.persist(lupoSFach);
-					logger.logLn(0, "OK");
+					logger.modifyIndent(-2);
 				}
 				logger.modifyIndent(-2);
 			}
 			logger.modifyIndent(-2);
 		}
-		logger.modifyIndent(-2);
 	}
 
 	

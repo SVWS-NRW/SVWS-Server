@@ -38,6 +38,7 @@ public class CsvReader {
 	 * @throws URISyntaxException   falls der Pfad der Ressource nicht in eine URI 
 	 *                              umgewandelt werden kann.  
 	 */
+	@SuppressWarnings("resource")
 	private static Path getPath(String location) throws URISyntaxException {
         ClassLoader classLoader = CsvReader.class.getClassLoader();
         var url = classLoader.getResource(location);
@@ -50,7 +51,7 @@ public class CsvReader {
 				FileSystem zipfs = null;
 				try {
 					zipfs = FileSystems.getFileSystem(URI.create(jar_path_elements[0]));
-				} catch (FileSystemNotFoundException e) {
+				} catch (@SuppressWarnings("unused") FileSystemNotFoundException e) {
 					Map<String, String> env = new HashMap<>(); 
 					env.put("create", "true");
 					zipfs = FileSystems.newFileSystem(URI.create(jar_path_elements[0]), env);

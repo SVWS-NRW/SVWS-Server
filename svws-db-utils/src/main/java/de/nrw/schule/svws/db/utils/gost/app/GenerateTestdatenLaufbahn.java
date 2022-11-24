@@ -103,68 +103,69 @@ public class GenerateTestdatenLaufbahn {
 				throw new IOException("Es wurde kein gültiges Datenbank-Schema zum Einlesen der Laufbahndaten angegeben.");
 			DBConfig dbConfig = svwsconfig.getDBConfig(dbSchema);
 			Benutzer user = Benutzer.create(dbConfig);
-			DBEntityManager conn = user.getEntityManager();
-			
-			// Lese die ID für den ersten generierten Jahrgang ein
-			int jahrgangID; 
-			try {
-				jahrgangID = Integer.parseInt(cmdLine.getValue("js", "1"));
-			} catch (@SuppressWarnings("unused") NumberFormatException e) {
-				jahrgangID = 1;
-			}
-			
-			// Prüfe die Schulform
-			Schulform schulform = Schule.queryCached(conn).getSchulform();
-	    	if ((schulform.daten == null) || (!schulform.daten.hatGymOb))
-	    		throw new RuntimeException("Datenbank-Schema enthält keine Daten für die Gymnasiale Oberstufe (Unzulässige Schulform)");
-	    	
-	    	String outPath = "../svws-core/src/test/resources/de/nrw/schule/svws/abschluesse/gost/test";
-	    	// Files.createDirectories(Paths.get(outPath));
-
-			ObjectMapper mapper = new ObjectMapper()
-					.enable(SerializationFeature.INDENT_OUTPUT);
-	    	
-			// Lese die Fächerdaten aus der Datenbank und generiere die Testdateien
-			List<DTOGostJahrgangsdaten> jahrgaenge = conn.queryAll(DTOGostJahrgangsdaten.class);
-			for (DTOGostJahrgangsdaten jahrgang : jahrgaenge) {
-				GostFaecherManager gostFaecher = FaecherGost.getFaecherListeGost(conn, jahrgang.Abi_Jahrgang);
-				if (gostFaecher.isEmpty())
-					continue; // Lasse Jahrgänge ohne Fächerdaten aus
-				String strJahrgangID = String.format("%02d", jahrgangID++);
-				mapAbiJahrgangToJahrgangID.put(jahrgang.Abi_Jahrgang, strJahrgangID);
-				mapJahrgangIDToGostFaecher.put(strJahrgangID, gostFaecher);
+			try (DBEntityManager conn = user.getEntityManager()) {
 				
-				String jsonGostFaecher = mapper.writeValueAsString(gostFaecher);
-				mapJahrgangIDToJsonGostFaecher.put(strJahrgangID, jsonGostFaecher);
-				writeTo(outPath + "/Jahrgang_" + strJahrgangID + "_GostFaecher.json", jsonGostFaecher);
-			}
-			
-			// Lese die Laufbahndaten aus der Datenbank und generiere die Testdateien für die Belegpruefung
-			List<DTOGostSchueler> schuelerListe = conn.queryAll(DTOGostSchueler.class);
-			for (DTOGostSchueler schueler : schuelerListe) {
-				String strSchuelerID = String.format("%04d", schueler.Schueler_ID);
-				Abiturdaten abiturdaten;
+				// Lese die ID für den ersten generierten Jahrgang ein
+				int jahrgangID; 
 				try {
-					abiturdaten = GostSchuelerLaufbahn.get(conn, schueler.Schueler_ID);
-				} catch (@SuppressWarnings("unused") Exception e) {
-					abiturdaten = null;
+					jahrgangID = Integer.parseInt(cmdLine.getValue("js", "1"));
+				} catch (@SuppressWarnings("unused") NumberFormatException e) {
+					jahrgangID = 1;
 				}
-				if (abiturdaten == null)
-					continue;
-				String strJahrgangID = mapAbiJahrgangToJahrgangID.get(abiturdaten.abiturjahr);
-				GostFaecherManager gostFaecher = mapJahrgangIDToGostFaecher.get(strJahrgangID);
-				System.out.println("Generiere Daten für " + strSchuelerID + " des Jahrgangs " + strJahrgangID);
 				
-				AbiturdatenManager manager = new AbiturdatenManager(abiturdaten, gostFaecher.toVector(), GostBelegpruefungsArt.EF1);
-				GostBelegpruefungErgebnis ergebnisEF1 = manager.getBelegpruefungErgebnis();
-				manager = new AbiturdatenManager(abiturdaten, gostFaecher.toVector(), GostBelegpruefungsArt.GESAMT);
-				GostBelegpruefungErgebnis ergebnisGesamt = manager.getBelegpruefungErgebnis();
+				// Prüfe die Schulform
+				Schulform schulform = Schule.queryCached(conn).getSchulform();
+		    	if ((schulform.daten == null) || (!schulform.daten.hatGymOb))
+		    		throw new RuntimeException("Datenbank-Schema enthält keine Daten für die Gymnasiale Oberstufe (Unzulässige Schulform)");
+		    	
+		    	String outPath = "../svws-core/src/test/resources/de/nrw/schule/svws/abschluesse/gost/test";
+		    	// Files.createDirectories(Paths.get(outPath));
+	
+				ObjectMapper mapper = new ObjectMapper()
+						.enable(SerializationFeature.INDENT_OUTPUT);
+		    	
+				// Lese die Fächerdaten aus der Datenbank und generiere die Testdateien
+				List<DTOGostJahrgangsdaten> jahrgaenge = conn.queryAll(DTOGostJahrgangsdaten.class);
+				for (DTOGostJahrgangsdaten jahrgang : jahrgaenge) {
+					GostFaecherManager gostFaecher = FaecherGost.getFaecherListeGost(conn, jahrgang.Abi_Jahrgang);
+					if (gostFaecher.isEmpty())
+						continue; // Lasse Jahrgänge ohne Fächerdaten aus
+					String strJahrgangID = String.format("%02d", jahrgangID++);
+					mapAbiJahrgangToJahrgangID.put(jahrgang.Abi_Jahrgang, strJahrgangID);
+					mapJahrgangIDToGostFaecher.put(strJahrgangID, gostFaecher);
+					
+					String jsonGostFaecher = mapper.writeValueAsString(gostFaecher);
+					mapJahrgangIDToJsonGostFaecher.put(strJahrgangID, jsonGostFaecher);
+					writeTo(outPath + "/Jahrgang_" + strJahrgangID + "_GostFaecher.json", jsonGostFaecher);
+				}
 				
-				writeTo(outPath + "/Jahrgang_" + strJahrgangID + "_" + strSchuelerID + "_Abiturdaten.json", mapper.writeValueAsString(abiturdaten));
-				writeTo(outPath + "/Jahrgang_" + strJahrgangID + "_" + strSchuelerID + "_Belegpruefungsergebnis_EF1.json", mapper.writeValueAsString(ergebnisEF1));
-				writeTo(outPath + "/Jahrgang_" + strJahrgangID + "_" + strSchuelerID + "_Belegpruefungsergebnis_Gesamt.json", mapper.writeValueAsString(ergebnisGesamt));
+				// Lese die Laufbahndaten aus der Datenbank und generiere die Testdateien für die Belegpruefung
+				List<DTOGostSchueler> schuelerListe = conn.queryAll(DTOGostSchueler.class);
+				for (DTOGostSchueler schueler : schuelerListe) {
+					String strSchuelerID = String.format("%04d", schueler.Schueler_ID);
+					Abiturdaten abiturdaten;
+					try {
+						abiturdaten = GostSchuelerLaufbahn.get(conn, schueler.Schueler_ID);
+					} catch (@SuppressWarnings("unused") Exception e) {
+						abiturdaten = null;
+					}
+					if (abiturdaten == null)
+						continue;
+					String strJahrgangID = mapAbiJahrgangToJahrgangID.get(abiturdaten.abiturjahr);
+					GostFaecherManager gostFaecher = mapJahrgangIDToGostFaecher.get(strJahrgangID);
+					System.out.println("Generiere Daten für " + strSchuelerID + " des Jahrgangs " + strJahrgangID);
+					
+					AbiturdatenManager manager = new AbiturdatenManager(abiturdaten, gostFaecher.toVector(), GostBelegpruefungsArt.EF1);
+					GostBelegpruefungErgebnis ergebnisEF1 = manager.getBelegpruefungErgebnis();
+					manager = new AbiturdatenManager(abiturdaten, gostFaecher.toVector(), GostBelegpruefungsArt.GESAMT);
+					GostBelegpruefungErgebnis ergebnisGesamt = manager.getBelegpruefungErgebnis();
+					
+					writeTo(outPath + "/Jahrgang_" + strJahrgangID + "_" + strSchuelerID + "_Abiturdaten.json", mapper.writeValueAsString(abiturdaten));
+					writeTo(outPath + "/Jahrgang_" + strJahrgangID + "_" + strSchuelerID + "_Belegpruefungsergebnis_EF1.json", mapper.writeValueAsString(ergebnisEF1));
+					writeTo(outPath + "/Jahrgang_" + strJahrgangID + "_" + strSchuelerID + "_Belegpruefungsergebnis_Gesamt.json", mapper.writeValueAsString(ergebnisGesamt));
+				}
+				System.out.println("Fertig!");
 			}
-			System.out.println("Fertig!");
 		} catch (CommandLineException e) {
 			cmdLine.printOptionsAndExit(1, e.getMessage());
 		} catch (IOException e) {

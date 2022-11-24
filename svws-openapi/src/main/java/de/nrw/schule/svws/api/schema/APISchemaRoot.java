@@ -97,13 +97,14 @@ public class APISchemaRoot {
 	@ApiResponse(responseCode = "403", description = "Der angegebene Benutzer besitzt nicht die Rechte, um die SVWS-Schema-Liste der Datenbank auszulesen. Hierfür werden root-Rechte benötigt")
     // TODO OpenAPI-Doc: all possible responses...
     public List<SchemaListeEintrag> getSVWSSchemaListe(@Context HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KEINE)) {
+    	Benutzer user = OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KEINE);
+    	try (DBEntityManager conn = user.getEntityManager()) {
 			// Lese zunächst alle Schemata in der DB ein. Dies können auch Schemata sein, die keine SVWS-Server-Schemata sind!
 			List<String> all = DTOInformationSchema.queryNames(conn);
 			Vector<SchemaListeEintrag> result = new Vector<>();
 			// Filtere alle Schemata heraus, die gültige SVWS-Schemata sind.
 			for (String schemaname : all) {
-				DBSchemaStatus status = DBSchemaStatus.read(conn, schemaname);
+				DBSchemaStatus status = DBSchemaStatus.read(user, schemaname);
 				DBSchemaVersion version = status.getVersion();
 				if (version == null) // Kein gültiges SVWS-Schema, prüfe das nächste Schema...
 					continue;
@@ -287,25 +288,23 @@ public class APISchemaRoot {
 	
 			DBConfig dbconfig = new DBConfig(conn.getDBDriver(), conn.getDBLocation(), schemaname, conn.useDBLogin(), kennwort.user, kennwort.password, true, true);
 			Benutzer schemaUser = Benutzer.create(dbconfig);
-			try (DBEntityManager schemaConn = schemaUser.getEntityManager()) {
-				DBSchemaManager manager = DBSchemaManager.create(schemaConn, true, logger);
-				if (manager == null)
-					throw OperationError.INTERNAL_SERVER_ERROR.exception(simpleResponse(false, log));
+			DBSchemaManager manager = DBSchemaManager.create(schemaUser, true, logger);
+			if (manager == null)
+				throw OperationError.INTERNAL_SERVER_ERROR.exception(simpleResponse(false, log));
 
-				logger.logLn("Erstelle das Schema zunächst in der Revision 0.");
-				logger.modifyIndent(2);
-				if (!manager.createSVWSSchema(0, true)) 
-					throw OperationError.INTERNAL_SERVER_ERROR.exception(simpleResponse(false, log));
-				logger.modifyIndent(-2);
+			logger.logLn("Erstelle das Schema zunächst in der Revision 0.");
+			logger.modifyIndent(2);
+			if (!manager.createSVWSSchema(0, true)) 
+				throw OperationError.INTERNAL_SERVER_ERROR.exception(simpleResponse(false, log));
+			logger.modifyIndent(-2);
 
-				logger.logLn("Aktualisiere das Schema schrittweise auf Revision " + revision + ".");
-				logger.modifyIndent(2);
-				if (!manager.updater.update(revision, false, true))
-					throw OperationError.INTERNAL_SERVER_ERROR.exception(simpleResponse(false, log));
-				logger.modifyIndent(-2);
-				
-				return simpleResponse(true, log);
-			}
+			logger.logLn("Aktualisiere das Schema schrittweise auf Revision " + revision + ".");
+			logger.modifyIndent(2);
+			if (!manager.updater.update(revision, false, true))
+				throw OperationError.INTERNAL_SERVER_ERROR.exception(simpleResponse(false, log));
+			logger.modifyIndent(-2);
+			
+			return simpleResponse(true, log);
     	}
     }
     
@@ -507,7 +506,7 @@ public class APISchemaRoot {
 				}
 				logger.logLn(0, " [OK]");
 				
-				DBSchemaManager srcManager = DBSchemaManager.create(srcConn, true, logger);
+				DBSchemaManager srcManager = DBSchemaManager.create(srcUser, true, logger);
 				logger.modifyIndent(2);
 				if (!srcManager.backup.importDB(tgtConfig, conn.getUser().getPassword(), maxUpdateRevision, false, logger))
 					throw OperationError.INTERNAL_SERVER_ERROR.exception(simpleResponse(false, log));				

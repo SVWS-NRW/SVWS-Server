@@ -140,7 +140,7 @@ public class DBUpdater {
 			logger.logLn("- Setze die DB-Revision auf " + neue_revision);
 			if (!schemaManager.setDBRevision(neue_revision))
 				throw new DBException("Fehler beim Setzen der SVWS-DB-Revision");
-		} catch (DBException e) {
+		} catch (@SuppressWarnings("unused") DBException e) {
 			success = false;
 		} finally {
 			System.gc();
@@ -183,7 +183,7 @@ public class DBUpdater {
 				return true;
 			}
 			return false;
-		} catch (Exception e) {
+		} catch (@SuppressWarnings("unused") Exception e) {
 			logger.logLn("Fehler: Aktuelle Revision des Schemas konnte nicht ermittelt werden.");
 			return false;
 		}
@@ -213,7 +213,7 @@ public class DBUpdater {
 			long revision = currentVersion.getRevision();
 			if (revision >= max_revision)
 				return false;
-		} catch (Exception e) {
+		} catch (@SuppressWarnings("unused") Exception e) {
 			// Das Schema hat keine gültige Revision und kann daher nicht aktualisiert werden - Migration nötig?
 			return false;
 		}
@@ -316,33 +316,34 @@ public class DBUpdater {
 	 *         oder keine verworfen werden müssen, sonst false
 	 */
 	private boolean dropTrigger(long veraltet) {
-		DBEntityManager conn = schemaManager.getEntityManager();
-		logger.log("- Verwerfe: ");
-		var dbms = conn.getDBDriver();
-		List<SchemaTabelleTrigger> trigger = Schema.tabellen.values().stream()
-				.flatMap(tab -> tab.trigger().stream())
-				.filter(trig -> trig.veraltet().revision == veraltet)
-				.collect(Collectors.toList());
-		if ((trigger == null) || (trigger.size() <= 0)) {
-			logger.logLn(0, "0 Trigger");
-			return true;
-		}
-		boolean result = true;
-		logger.logLn(0, trigger.size() + " Trigger...");
-		logger.modifyIndent(2);
-		for (SchemaTabelleTrigger trig : trigger) {
-			var sql = trig.getSQL(dbms, false); 
-			if ((sql == null) || ("".equals(sql)))
-				continue;
-			logger.logLn(trig.name());
-			if (conn.executeNativeUpdate(sql) == Integer.MIN_VALUE) {
-				result = false;
-				if (returnOnError)
-					break;
+		try (DBEntityManager conn = schemaManager.getUser().getEntityManager()) {
+			logger.log("- Verwerfe: ");
+			var dbms = conn.getDBDriver();
+			List<SchemaTabelleTrigger> trigger = Schema.tabellen.values().stream()
+					.flatMap(tab -> tab.trigger().stream())
+					.filter(trig -> trig.veraltet().revision == veraltet)
+					.collect(Collectors.toList());
+			if ((trigger == null) || (trigger.size() <= 0)) {
+				logger.logLn(0, "0 Trigger");
+				return true;
 			}
+			boolean result = true;
+			logger.logLn(0, trigger.size() + " Trigger...");
+			logger.modifyIndent(2);
+			for (SchemaTabelleTrigger trig : trigger) {
+				var sql = trig.getSQL(dbms, false); 
+				if ((sql == null) || ("".equals(sql)))
+					continue;
+				logger.logLn(trig.name());
+				if (conn.executeNativeUpdate(sql) == Integer.MIN_VALUE) {
+					result = false;
+					if (returnOnError)
+						break;
+				}
+			}
+			logger.modifyIndent(-2);
+			return result;
 		}
-		logger.modifyIndent(-2);
-		return result;
 	}
 	
 	
@@ -355,35 +356,36 @@ public class DBUpdater {
 	 *         oder keine verworfen werden müssen, sonst false
 	 */
 	private boolean dropIndices(long veraltet) {
-		DBEntityManager conn = schemaManager.getEntityManager();
-		logger.log("- Verwerfe: ");
-		List<SchemaTabelleIndex> indizesVeraltet = Schema.tabellen.values().stream()
-				.flatMap(tab -> tab.indizes().stream())
-				.filter(idx -> idx.veraltet().revision == veraltet)
-				.collect(Collectors.toList());
-		if ((indizesVeraltet == null) || (indizesVeraltet.size() <= 0)) {
-			logger.logLn(0, "0 Indizes");
-			return true;
-		}
-		boolean result = true;
-		logger.logLn(0, indizesVeraltet.size() + " Indizes...");
-		logger.modifyIndent(2);
-		var dbms = conn.getDBDriver();
-		for (SchemaTabelleIndex idx : indizesVeraltet) {
-			String sql = idx.getSQLDrop(dbms);
-			if ((sql == null) || ("".equals(sql))) {
-				logger.logLn("Kann " + idx.name() + "nicht entfernen!");
-				continue;
+		try (DBEntityManager conn = schemaManager.getUser().getEntityManager()) {
+			logger.log("- Verwerfe: ");
+			List<SchemaTabelleIndex> indizesVeraltet = Schema.tabellen.values().stream()
+					.flatMap(tab -> tab.indizes().stream())
+					.filter(idx -> idx.veraltet().revision == veraltet)
+					.collect(Collectors.toList());
+			if ((indizesVeraltet == null) || (indizesVeraltet.size() <= 0)) {
+				logger.logLn(0, "0 Indizes");
+				return true;
 			}
-			logger.logLn(idx.name());
-			if (conn.executeNativeUpdate(sql) == Integer.MIN_VALUE) {
-				result = false;
-				if (returnOnError)
-					break;
+			boolean result = true;
+			logger.logLn(0, indizesVeraltet.size() + " Indizes...");
+			logger.modifyIndent(2);
+			var dbms = conn.getDBDriver();
+			for (SchemaTabelleIndex idx : indizesVeraltet) {
+				String sql = idx.getSQLDrop(dbms);
+				if ((sql == null) || ("".equals(sql))) {
+					logger.logLn("Kann " + idx.name() + "nicht entfernen!");
+					continue;
+				}
+				logger.logLn(idx.name());
+				if (conn.executeNativeUpdate(sql) == Integer.MIN_VALUE) {
+					result = false;
+					if (returnOnError)
+						break;
+				}
 			}
+			logger.modifyIndent(-2);
+			return result;
 		}
-		logger.modifyIndent(-2);
-		return result;
 	}
 	
 	
@@ -396,35 +398,36 @@ public class DBUpdater {
 	 *         oder keine verworfen werden müssen, sonst false
 	 */
 	private boolean dropUniqueConstraints(long veraltet) {
-		DBEntityManager conn = schemaManager.getEntityManager();
-		logger.log("- Verwerfe: ");
-		List<SchemaTabelleUniqueIndex> ucs = Schema.tabellen.values().stream()
-				.flatMap(tab -> tab.unique().stream())
-				.filter(uc -> uc.veraltet().revision == veraltet)
-				.collect(Collectors.toList());
-		if ((ucs == null) || (ucs.size() <= 0)) {
-			logger.logLn(0, "0 Unique-Constraints");
-			return true;
-		}
-		boolean result = true;
-		logger.logLn(0, ucs.size() + " Unique-Constraints...");
-		logger.modifyIndent(2);
-		var dbms = conn.getDBDriver();
-		for (SchemaTabelleUniqueIndex uc : ucs) {
-			String sql = uc.getSQLDrop(dbms);
-			if ((sql == null) || ("".equals(sql))) {
-				logger.logLn("Kann " + uc.name() + "nicht entfernen!");
-				continue;
+		try (DBEntityManager conn = schemaManager.getUser().getEntityManager()) {
+			logger.log("- Verwerfe: ");
+			List<SchemaTabelleUniqueIndex> ucs = Schema.tabellen.values().stream()
+					.flatMap(tab -> tab.unique().stream())
+					.filter(uc -> uc.veraltet().revision == veraltet)
+					.collect(Collectors.toList());
+			if ((ucs == null) || (ucs.size() <= 0)) {
+				logger.logLn(0, "0 Unique-Constraints");
+				return true;
 			}
-			logger.logLn(uc.name());
-			if (conn.executeNativeUpdate(sql) == Integer.MIN_VALUE) {
-				result = false;
-				if (returnOnError)
-					break;
+			boolean result = true;
+			logger.logLn(0, ucs.size() + " Unique-Constraints...");
+			logger.modifyIndent(2);
+			var dbms = conn.getDBDriver();
+			for (SchemaTabelleUniqueIndex uc : ucs) {
+				String sql = uc.getSQLDrop(dbms);
+				if ((sql == null) || ("".equals(sql))) {
+					logger.logLn("Kann " + uc.name() + "nicht entfernen!");
+					continue;
+				}
+				logger.logLn(uc.name());
+				if (conn.executeNativeUpdate(sql) == Integer.MIN_VALUE) {
+					result = false;
+					if (returnOnError)
+						break;
+				}
 			}
+			logger.modifyIndent(-2);
+			return result;
 		}
-		logger.modifyIndent(-2);
-		return result;
 	}
 	
 	
@@ -437,35 +440,36 @@ public class DBUpdater {
 	 *         oder keine verworfen werden müssen, sonst false
 	 */
 	private boolean dropForeignKeys(long veraltet) {
-		DBEntityManager conn = schemaManager.getEntityManager();
-		logger.log("- Verwerfe: ");
-		List<SchemaTabelleFremdschluessel> fks = Schema.tabellen.values().stream()
-				.flatMap(tab -> tab.fremdschluessel().stream())
-				.filter(fk -> fk.veraltet().revision == veraltet)
-				.collect(Collectors.toList());
-		if ((fks == null) || (fks.size() <= 0)) {
-			logger.logLn(0, "0 Fremdschlüssel");
-			return true;
-		}
-		boolean result = true;
-		logger.logLn(0, fks.size() + " Fremdschlüssel...");
-		logger.modifyIndent(2);
-		var dbms = conn.getDBDriver();
-		for (SchemaTabelleFremdschluessel fk : fks) {
-			String sql = fk.getSQLDrop(dbms);
-			if ((sql == null) || ("".equals(sql))) {
-				logger.logLn("Kann " + fk.name() + "nicht entfernen!");
-				continue;
+		try (DBEntityManager conn = schemaManager.getUser().getEntityManager()) {
+			logger.log("- Verwerfe: ");
+			List<SchemaTabelleFremdschluessel> fks = Schema.tabellen.values().stream()
+					.flatMap(tab -> tab.fremdschluessel().stream())
+					.filter(fk -> fk.veraltet().revision == veraltet)
+					.collect(Collectors.toList());
+			if ((fks == null) || (fks.size() <= 0)) {
+				logger.logLn(0, "0 Fremdschlüssel");
+				return true;
 			}
-			logger.logLn(fk.name());
-			if (conn.executeNativeUpdate(sql) == Integer.MIN_VALUE) {
-				result = false;
-				if (returnOnError)
-					break;
+			boolean result = true;
+			logger.logLn(0, fks.size() + " Fremdschlüssel...");
+			logger.modifyIndent(2);
+			var dbms = conn.getDBDriver();
+			for (SchemaTabelleFremdschluessel fk : fks) {
+				String sql = fk.getSQLDrop(dbms);
+				if ((sql == null) || ("".equals(sql))) {
+					logger.logLn("Kann " + fk.name() + "nicht entfernen!");
+					continue;
+				}
+				logger.logLn(fk.name());
+				if (conn.executeNativeUpdate(sql) == Integer.MIN_VALUE) {
+					result = false;
+					if (returnOnError)
+						break;
+				}
 			}
+			logger.modifyIndent(-2);
+			return result;
 		}
-		logger.modifyIndent(-2);
-		return result;
 	}
 	
 	
@@ -478,38 +482,39 @@ public class DBUpdater {
 	 *         oder keine verworfen werden müssen, sonst false
 	 */
 	private boolean dropColumns(long veraltet) {
-		DBEntityManager conn = schemaManager.getEntityManager();
-		logger.log("- Verwerfe: ");
-		List<SchemaTabelle> tabs = Schema.getTabellen(veraltet-1);
-		Collections.reverse(tabs);
-		List<SchemaTabelleSpalte> cols = tabs.stream()
-				.filter(tab -> tab.veraltet().revision != veraltet)
-				.flatMap(tab -> tab.getSpalten().stream())
-				.filter(col -> col.veraltet().revision == veraltet)
-				.collect(Collectors.toList());
-		if ((cols == null) || (cols.size() <= 0)) {
-			logger.logLn(0, "0 Spalten");
-			return true;
-		}
-		boolean result = true;
-		logger.logLn(0, cols.size() + " Spalten...");
-		logger.modifyIndent(2);
-		var dbms = conn.getDBDriver();
-		for (SchemaTabelleSpalte col : cols) {
-			String sql = col.getSQLDrop(dbms);
-			if ((sql == null) || ("".equals(sql))) {
-				logger.logLn("Kann Spalte " + col.tabelle().name() + "." + col.name() + "nicht entfernen!");
-				continue;
+		try (DBEntityManager conn = schemaManager.getUser().getEntityManager()) {
+			logger.log("- Verwerfe: ");
+			List<SchemaTabelle> tabs = Schema.getTabellen(veraltet-1);
+			Collections.reverse(tabs);
+			List<SchemaTabelleSpalte> cols = tabs.stream()
+					.filter(tab -> tab.veraltet().revision != veraltet)
+					.flatMap(tab -> tab.getSpalten().stream())
+					.filter(col -> col.veraltet().revision == veraltet)
+					.collect(Collectors.toList());
+			if ((cols == null) || (cols.size() <= 0)) {
+				logger.logLn(0, "0 Spalten");
+				return true;
 			}
-			logger.logLn(col.tabelle().name() + "." + col.name());
-			if (conn.executeNativeUpdate(sql) == Integer.MIN_VALUE) {
-				result = false;
-				if (returnOnError)
-					break;
+			boolean result = true;
+			logger.logLn(0, cols.size() + " Spalten...");
+			logger.modifyIndent(2);
+			var dbms = conn.getDBDriver();
+			for (SchemaTabelleSpalte col : cols) {
+				String sql = col.getSQLDrop(dbms);
+				if ((sql == null) || ("".equals(sql))) {
+					logger.logLn("Kann Spalte " + col.tabelle().name() + "." + col.name() + "nicht entfernen!");
+					continue;
+				}
+				logger.logLn(col.tabelle().name() + "." + col.name());
+				if (conn.executeNativeUpdate(sql) == Integer.MIN_VALUE) {
+					result = false;
+					if (returnOnError)
+						break;
+				}
 			}
+			logger.modifyIndent(-2);
+			return result;
 		}
-		logger.modifyIndent(-2);
-		return result;
 	}
 	
 	
@@ -522,31 +527,32 @@ public class DBUpdater {
 	 *         oder keine verworfen werden müssen, sonst false
 	 */
 	private boolean dropTables(long veraltet) {
-		DBEntityManager conn = schemaManager.getEntityManager();
-		logger.log("- Verwerfe: ");
-		List<SchemaTabelle> tabs = Schema.getTabellen(veraltet-1).stream()
-				.filter(tab -> tab.veraltet().revision == veraltet)
-				.collect(Collectors.toList());
-		Collections.reverse(tabs);
-		if ((tabs == null) || (tabs.size() <= 0)) {
-			logger.logLn(0, "0 Tabellen");
-			return true;
+		try (DBEntityManager conn = schemaManager.getUser().getEntityManager()) {
+			logger.log("- Verwerfe: ");
+			List<SchemaTabelle> tabs = Schema.getTabellen(veraltet-1).stream()
+					.filter(tab -> tab.veraltet().revision == veraltet)
+					.collect(Collectors.toList());
+			Collections.reverse(tabs);
+			if ((tabs == null) || (tabs.size() <= 0)) {
+				logger.logLn(0, "0 Tabellen");
+				return true;
+			}
+			boolean result = true;
+			logger.logLn(0, tabs.size() + " Tabellen...");
+			logger.modifyIndent(2);
+			var dbms = conn.getDBDriver();
+			for (SchemaTabelle tab : tabs) {
+				String sql = tab.getSQLDrop(dbms);
+				logger.logLn(tab.name());
+				if (conn.executeNativeUpdate(sql) == Integer.MIN_VALUE) {
+					result = false;
+					if (returnOnError)
+						break;
+				}			
+			}
+			logger.modifyIndent(-2);
+			return result;
 		}
-		boolean result = true;
-		logger.logLn(0, tabs.size() + " Tabellen...");
-		logger.modifyIndent(2);
-		var dbms = conn.getDBDriver();
-		for (SchemaTabelle tab : tabs) {
-			String sql = tab.getSQLDrop(dbms);
-			logger.logLn(tab.name());
-			if (conn.executeNativeUpdate(sql) == Integer.MIN_VALUE) {
-				result = false;
-				if (returnOnError)
-					break;
-			}			
-		}
-		logger.modifyIndent(-2);
-		return result;
 	}
 	
 	
@@ -559,28 +565,29 @@ public class DBUpdater {
 	 *         oder keine verworfen werden müssen, sonst false
 	 */
 	private boolean dropViews(long veraltet) {
-		DBEntityManager conn = schemaManager.getEntityManager();
-		logger.log("- Verwerfe: ");
-		List<View> views = DBSchemaViews.getInstance().getViewsDeprecated(veraltet); 
-		if ((views == null) || (views.size() <= 0)) {
-			logger.logLn(0, "0 Views");
-			return true;
+		try (DBEntityManager conn = schemaManager.getUser().getEntityManager()) {
+			logger.log("- Verwerfe: ");
+			List<View> views = DBSchemaViews.getInstance().getViewsDeprecated(veraltet); 
+			if ((views == null) || (views.size() <= 0)) {
+				logger.logLn(0, "0 Views");
+				return true;
+			}
+			boolean result = true;
+			logger.logLn(0, views.size() + " Views...");
+			logger.modifyIndent(2);
+			for (int i = views.size() - 1; i >= 0; i--) {
+				View view = views.get(i);
+				String sql = view.getSQLDrop();
+				logger.logLn(view.name);
+				if (conn.executeNativeUpdate(sql) == Integer.MIN_VALUE) {
+					result = false;
+					if (returnOnError)
+						break;
+				}			
+			}
+			logger.modifyIndent(-2);
+			return result;
 		}
-		boolean result = true;
-		logger.logLn(0, views.size() + " Views...");
-		logger.modifyIndent(2);
-		for (int i = views.size() - 1; i >= 0; i--) {
-			View view = views.get(i);
-			String sql = view.getSQLDrop();
-			logger.logLn(view.name);
-			if (conn.executeNativeUpdate(sql) == Integer.MIN_VALUE) {
-				result = false;
-				if (returnOnError)
-					break;
-			}			
-		}
-		logger.modifyIndent(-2);
-		return result;
 	}
 	
 	
@@ -593,47 +600,48 @@ public class DBUpdater {
 	 *         oder keine angelegt werden müssen, sonst false
 	 */
 	private boolean createNewTables(long revision) {
-		DBEntityManager conn = schemaManager.getEntityManager();
-		logger.log("- Erstelle: ");
-		if (revision == 0) {
-			logger.logLn(0, "Fehler: Eine Aktualisierung auf Revision 0 ergibt keinen Sinn, weshalb keine Tabellen erstellt werden.");
-			return false;
-		}
-		List<SchemaTabelle> tabs = Schema.getTabellen(revision).stream().filter(tab -> tab.revision().revision == revision).collect(Collectors.toList());
-		if ((tabs == null) || (tabs.size() <= 0)) {
-			logger.logLn(0, "0 Tabellen");
-			return true;
-		}
-		boolean result = true;
-		logger.logLn(0, tabs.size() + " Tabellen...");
-		logger.modifyIndent(2);
-		
-		var dbms = conn.getDBDriver();
-		for (SchemaTabelle tab : tabs) {
-			String sql = tab.getSQL(dbms, revision);
-			if ((sql == null) || "".equals(sql))
-				continue;
-			logger.logLn(tab.name());
-			if (conn.executeNativeUpdate(sql) == Integer.MIN_VALUE) {
-				result = false;
-				if (returnOnError)
-					break;
-			} else {
-				List<String> pkTrigger = tab.getPrimaerschluesselTriggerSQLList(dbms, revision, true);
-				if (pkTrigger.size() > 0) {
-					logger.logLn("  -> Erstelle Trigger für Auto-Inkremente");
-					for (String scriptTrigger : pkTrigger) {
-						if (conn.executeNativeUpdate(scriptTrigger) == Integer.MIN_VALUE) {
-							result = false;
-							if (returnOnError)
-								break;
-						}					
+		try (DBEntityManager conn = schemaManager.getUser().getEntityManager()) {
+			logger.log("- Erstelle: ");
+			if (revision == 0) {
+				logger.logLn(0, "Fehler: Eine Aktualisierung auf Revision 0 ergibt keinen Sinn, weshalb keine Tabellen erstellt werden.");
+				return false;
+			}
+			List<SchemaTabelle> tabs = Schema.getTabellen(revision).stream().filter(tab -> tab.revision().revision == revision).collect(Collectors.toList());
+			if ((tabs == null) || (tabs.size() <= 0)) {
+				logger.logLn(0, "0 Tabellen");
+				return true;
+			}
+			boolean result = true;
+			logger.logLn(0, tabs.size() + " Tabellen...");
+			logger.modifyIndent(2);
+			
+			var dbms = conn.getDBDriver();
+			for (SchemaTabelle tab : tabs) {
+				String sql = tab.getSQL(dbms, revision);
+				if ((sql == null) || "".equals(sql))
+					continue;
+				logger.logLn(tab.name());
+				if (conn.executeNativeUpdate(sql) == Integer.MIN_VALUE) {
+					result = false;
+					if (returnOnError)
+						break;
+				} else {
+					List<String> pkTrigger = tab.getPrimaerschluesselTriggerSQLList(dbms, revision, true);
+					if (pkTrigger.size() > 0) {
+						logger.logLn("  -> Erstelle Trigger für Auto-Inkremente");
+						for (String scriptTrigger : pkTrigger) {
+							if (conn.executeNativeUpdate(scriptTrigger) == Integer.MIN_VALUE) {
+								result = false;
+								if (returnOnError)
+									break;
+							}					
+						}
 					}
 				}
 			}
+			logger.modifyIndent(-2);
+			return result;
 		}
-		logger.modifyIndent(-2);
-		return result;
 	}
 	
 	
@@ -646,33 +654,34 @@ public class DBUpdater {
 	 *         oder keine angelegt werden müssen, sonst false
 	 */
 	private boolean createNewViews(long revision) {
-		DBEntityManager conn = schemaManager.getEntityManager();
-		logger.log("- Erstelle: ");
-		if (revision == 0) {
-			logger.logLn(0, "Fehler: Eine Aktualisierung auf Revision 0 ergibt keinen Sinn, weshalb keine Views erstellt werden.");
-			return false;
-		}
-		List<View> views = DBSchemaViews.getInstance().getViewsCreated(revision);
-		if ((views == null) || (views.size() <= 0)) {
-			logger.logLn(0, "0 Tabellen");
-			return true;
-		}
-		boolean result = true;
-		logger.logLn(0, views.size() + " Tabellen...");
-		logger.modifyIndent(2);
-		for (View view : views) {
-			String sql = view.getSQLCreate(conn.getDBDriver());
-			if ((sql == null) || "".equals(sql))
-				continue;
-			logger.logLn(view.name);
-			if (conn.executeNativeUpdate(sql) == Integer.MIN_VALUE) {
-				result = false;
-				if (returnOnError)
-					break;
+		try (DBEntityManager conn = schemaManager.getUser().getEntityManager()) {
+			logger.log("- Erstelle: ");
+			if (revision == 0) {
+				logger.logLn(0, "Fehler: Eine Aktualisierung auf Revision 0 ergibt keinen Sinn, weshalb keine Views erstellt werden.");
+				return false;
 			}
+			List<View> views = DBSchemaViews.getInstance().getViewsCreated(revision);
+			if ((views == null) || (views.size() <= 0)) {
+				logger.logLn(0, "0 Tabellen");
+				return true;
+			}
+			boolean result = true;
+			logger.logLn(0, views.size() + " Tabellen...");
+			logger.modifyIndent(2);
+			for (View view : views) {
+				String sql = view.getSQLCreate(conn.getDBDriver());
+				if ((sql == null) || "".equals(sql))
+					continue;
+				logger.logLn(view.name);
+				if (conn.executeNativeUpdate(sql) == Integer.MIN_VALUE) {
+					result = false;
+					if (returnOnError)
+						break;
+				}
+			}
+			logger.modifyIndent(-2);
+			return result;
 		}
-		logger.modifyIndent(-2);
-		return result;
 	}
 	
 	
@@ -685,36 +694,37 @@ public class DBUpdater {
 	 *         oder keine angelegt werden müssen, sonst false
 	 */
 	private boolean addNewColumns(long revision) {
-		DBEntityManager conn = schemaManager.getEntityManager();
-		logger.log("- Hinzufügen: ");
-		List<SchemaTabelleSpalte> cols = Schema.getTabellen(revision).stream()
-				.filter(tab -> tab.revision().revision < revision)
-				.flatMap(tab -> tab.getSpalten().stream())
-				.filter(col -> col.revision().revision == revision)
-				.collect(Collectors.toList());
-		if ((cols == null) || (cols.size() <= 0)) {
-			logger.logLn(0, "0 Spalten");
-			return true;
-		}
-		boolean result = true;
-		logger.logLn(0, cols.size() + " Spalten...");
-		logger.modifyIndent(2);
-		var dbms = conn.getDBDriver();
-		for (SchemaTabelleSpalte col : cols) {
-			String sql = col.getSQLCreate(dbms);
-			if ((sql == null) || ("".equals(sql))) {
-				logger.logLn("Kann Spalte " + col.tabelle().name() + "." + col.name() + " nicht hinzufügen!");
-				continue;
+		try (DBEntityManager conn = schemaManager.getUser().getEntityManager()) {
+			logger.log("- Hinzufügen: ");
+			List<SchemaTabelleSpalte> cols = Schema.getTabellen(revision).stream()
+					.filter(tab -> tab.revision().revision < revision)
+					.flatMap(tab -> tab.getSpalten().stream())
+					.filter(col -> col.revision().revision == revision)
+					.collect(Collectors.toList());
+			if ((cols == null) || (cols.size() <= 0)) {
+				logger.logLn(0, "0 Spalten");
+				return true;
 			}
-			logger.logLn(col.tabelle().name() + "." + col.name());
-			if (conn.executeNativeUpdate(sql) == Integer.MIN_VALUE) {
-				result = false;
-				if (returnOnError)
-					break;
+			boolean result = true;
+			logger.logLn(0, cols.size() + " Spalten...");
+			logger.modifyIndent(2);
+			var dbms = conn.getDBDriver();
+			for (SchemaTabelleSpalte col : cols) {
+				String sql = col.getSQLCreate(dbms);
+				if ((sql == null) || ("".equals(sql))) {
+					logger.logLn("Kann Spalte " + col.tabelle().name() + "." + col.name() + " nicht hinzufügen!");
+					continue;
+				}
+				logger.logLn(col.tabelle().name() + "." + col.name());
+				if (conn.executeNativeUpdate(sql) == Integer.MIN_VALUE) {
+					result = false;
+					if (returnOnError)
+						break;
+				}
 			}
+			logger.modifyIndent(-2);
+			return result;
 		}
-		logger.modifyIndent(-2);
-		return result;
 	}
 	
 	
@@ -727,36 +737,37 @@ public class DBUpdater {
 	 *         oder keine angelegt werden müssen, sonst false
 	 */
 	private boolean addNewForeignKeys(long revision) {
-		DBEntityManager conn = schemaManager.getEntityManager();
-		logger.log("- Hinzufügen: ");
-		List<SchemaTabelleFremdschluessel> fks = Schema.getTabellen(revision).stream()
-				.filter(tab -> tab.revision().revision < revision)
-				.flatMap(tab -> tab.fremdschluessel().stream())
-				.filter(fk -> fk.revision().revision == revision)
-				.collect(Collectors.toList());
-		if ((fks == null) || (fks.size() <= 0)) {
-			logger.logLn(0, "0 Fremdschlüssel");
-			return true;
-		}
-		boolean result = true;
-		logger.logLn(0, fks.size() + " Fremdschlüssel...");
-		logger.modifyIndent(2);
-		var dbms = conn.getDBDriver();
-		for (SchemaTabelleFremdschluessel fk : fks) {
-			String sql = fk.getSQLCreate(dbms);
-			if ((sql == null) || ("".equals(sql))) {
-				logger.logLn("Kann Fremdschlüssel " + fk.name() + " nicht hinzufügen!");
-				continue;
+		try (DBEntityManager conn = schemaManager.getUser().getEntityManager()) {
+			logger.log("- Hinzufügen: ");
+			List<SchemaTabelleFremdschluessel> fks = Schema.getTabellen(revision).stream()
+					.filter(tab -> tab.revision().revision < revision)
+					.flatMap(tab -> tab.fremdschluessel().stream())
+					.filter(fk -> fk.revision().revision == revision)
+					.collect(Collectors.toList());
+			if ((fks == null) || (fks.size() <= 0)) {
+				logger.logLn(0, "0 Fremdschlüssel");
+				return true;
 			}
-			logger.logLn(fk.name());
-			if (conn.executeNativeUpdate(sql) == Integer.MIN_VALUE) {
-				result = false;
-				if (returnOnError)
-					break;
+			boolean result = true;
+			logger.logLn(0, fks.size() + " Fremdschlüssel...");
+			logger.modifyIndent(2);
+			var dbms = conn.getDBDriver();
+			for (SchemaTabelleFremdschluessel fk : fks) {
+				String sql = fk.getSQLCreate(dbms);
+				if ((sql == null) || ("".equals(sql))) {
+					logger.logLn("Kann Fremdschlüssel " + fk.name() + " nicht hinzufügen!");
+					continue;
+				}
+				logger.logLn(fk.name());
+				if (conn.executeNativeUpdate(sql) == Integer.MIN_VALUE) {
+					result = false;
+					if (returnOnError)
+						break;
+				}
 			}
+			logger.modifyIndent(-2);
+			return result;
 		}
-		logger.modifyIndent(-2);
-		return result;
 	}
 	
 	
@@ -769,36 +780,37 @@ public class DBUpdater {
 	 *         oder keine angelegt werden müssen, sonst false
 	 */
 	private boolean addNewUniqueConstraints(long revision) {
-		DBEntityManager conn = schemaManager.getEntityManager();
-		logger.log("- Hinzufügen: ");
-		List<SchemaTabelleUniqueIndex> ucs = Schema.getTabellen(revision).stream()
-				.filter(tab -> tab.revision().revision < revision)
-				.flatMap(tab -> tab.unique().stream())
-				.filter(uc -> uc.revision().revision == revision)
-				.collect(Collectors.toList());
-		if ((ucs == null) || (ucs.size() <= 0)) {
-			logger.logLn(0, "0 Unique-Constraints");
-			return true;
-		}
-		boolean result = true;
-		logger.logLn(0, ucs.size() + " Unique-Constraints...");
-		logger.modifyIndent(2);
-		var dbms = conn.getDBDriver();
-		for (SchemaTabelleUniqueIndex uc : ucs) {
-			String sql = uc.getSQLCreate(dbms);
-			if ((sql == null) || ("".equals(sql))) {
-				logger.logLn("Kann Unique-Constraint " + uc.name() + " nicht hinzufügen!");
-				continue;
+		try (DBEntityManager conn = schemaManager.getUser().getEntityManager()) {
+			logger.log("- Hinzufügen: ");
+			List<SchemaTabelleUniqueIndex> ucs = Schema.getTabellen(revision).stream()
+					.filter(tab -> tab.revision().revision < revision)
+					.flatMap(tab -> tab.unique().stream())
+					.filter(uc -> uc.revision().revision == revision)
+					.collect(Collectors.toList());
+			if ((ucs == null) || (ucs.size() <= 0)) {
+				logger.logLn(0, "0 Unique-Constraints");
+				return true;
 			}
-			logger.logLn(uc.name());
-			if (conn.executeNativeUpdate(sql) == Integer.MIN_VALUE) {
-				result = false;
-				if (returnOnError)
-					break;
+			boolean result = true;
+			logger.logLn(0, ucs.size() + " Unique-Constraints...");
+			logger.modifyIndent(2);
+			var dbms = conn.getDBDriver();
+			for (SchemaTabelleUniqueIndex uc : ucs) {
+				String sql = uc.getSQLCreate(dbms);
+				if ((sql == null) || ("".equals(sql))) {
+					logger.logLn("Kann Unique-Constraint " + uc.name() + " nicht hinzufügen!");
+					continue;
+				}
+				logger.logLn(uc.name());
+				if (conn.executeNativeUpdate(sql) == Integer.MIN_VALUE) {
+					result = false;
+					if (returnOnError)
+						break;
+				}
 			}
+			logger.modifyIndent(-2);
+			return result;
 		}
-		logger.modifyIndent(-2);
-		return result;
 	}
 	
 	
@@ -811,35 +823,36 @@ public class DBUpdater {
 	 *         oder keine angelegt werden müssen, sonst false
 	 */
 	private boolean addNewIndices(long revision) {
-		DBEntityManager conn = schemaManager.getEntityManager();
-		logger.log("- Hinzufügen: ");
-		List<SchemaTabelleIndex> indizes = Schema.getTabellen(revision).stream()
-				.filter(tab -> tab.revision().revision < revision)
-				.flatMap(tab -> tab.indizes().stream())
-				.filter(idx -> idx.revision().revision == revision)
-				.collect(Collectors.toList());
-		if ((indizes == null) || (indizes.size() <= 0)) {
-			logger.logLn(0, "0 Indizes");
-			return true;
-		}
-		boolean result = true;
-		logger.logLn(0, indizes.size() + " Indizes...");
-		logger.modifyIndent(2);
-		for (SchemaTabelleIndex idx : indizes) {
-			String sql = idx.getSQL();
-			if ((sql == null) || ("".equals(sql))) {
-				logger.logLn("Kann Index " + idx.name() + " nicht hinzufügen!");
-				continue;
+		try (DBEntityManager conn = schemaManager.getUser().getEntityManager()) {
+			logger.log("- Hinzufügen: ");
+			List<SchemaTabelleIndex> indizes = Schema.getTabellen(revision).stream()
+					.filter(tab -> tab.revision().revision < revision)
+					.flatMap(tab -> tab.indizes().stream())
+					.filter(idx -> idx.revision().revision == revision)
+					.collect(Collectors.toList());
+			if ((indizes == null) || (indizes.size() <= 0)) {
+				logger.logLn(0, "0 Indizes");
+				return true;
 			}
-			logger.logLn(idx.name());
-			if (conn.executeNativeUpdate(sql) == Integer.MIN_VALUE) {
-				result = false;
-				if (returnOnError)
-					break;
+			boolean result = true;
+			logger.logLn(0, indizes.size() + " Indizes...");
+			logger.modifyIndent(2);
+			for (SchemaTabelleIndex idx : indizes) {
+				String sql = idx.getSQL();
+				if ((sql == null) || ("".equals(sql))) {
+					logger.logLn("Kann Index " + idx.name() + " nicht hinzufügen!");
+					continue;
+				}
+				logger.logLn(idx.name());
+				if (conn.executeNativeUpdate(sql) == Integer.MIN_VALUE) {
+					result = false;
+					if (returnOnError)
+						break;
+				}
 			}
+			logger.modifyIndent(-2);
+			return result;
 		}
-		logger.modifyIndent(-2);
-		return result;
 	}
 	
 	
@@ -852,46 +865,47 @@ public class DBUpdater {
 	 *         oder keine ausgeführt werden müssen, sonst false
 	 */
 	private boolean executeManualSQLCommands(long revision) {
-		DBEntityManager conn = schemaManager.getEntityManager();
-		SchemaRevisionen rev = SchemaRevisionen.get(revision);
-		if (rev == null) {
-			logger.log("- Fehler beim Ermitteln der Schema-Revision " + revision);
-			return false;
-		}
-		var sqlBefehle = rev.getUpdater();
-		if (sqlBefehle == null) {
-			logger.log("- Fehler beim Ermitteln der SQL-Befehle für die Revision " + revision);
-			return false;
-		}
-		logger.log("- Ausführen: ");
-		if (sqlBefehle.size() == 0) {
-			logger.logLn(0, "0 Befehle");
-			return true;
-		}
-		
-		boolean result = true;
-		logger.logLn(0, sqlBefehle.size() + " Befehle...");
-		logger.modifyIndent(2);
-		for (int i = 0; i < sqlBefehle.size(); i++) {
-			String comment = sqlBefehle.getKommentar(i);
-			String sql = sqlBefehle.getSQL(conn.getDBDriver(), i); 
-			if ((comment == null) || (sql == null) || ("".equals(sql))) {
-				logger.logLn("Kann Befehl nicht ausführen!");
-				continue;
+		try (DBEntityManager conn = schemaManager.getUser().getEntityManager()) {
+			SchemaRevisionen rev = SchemaRevisionen.get(revision);
+			if (rev == null) {
+				logger.log("- Fehler beim Ermitteln der Schema-Revision " + revision);
+				return false;
 			}
-			logger.log((i+1) + " - " + comment);
-			int success = conn.executeNativeUpdate(sql);
-			if (success == Integer.MIN_VALUE) {
-				logger.logLn(0, "ERROR");
-				result = false;
-				if (returnOnError)
-					break;
-			} else {
-				logger.logLn(0, " (" + success + ")");
+			var sqlBefehle = rev.getUpdater();
+			if (sqlBefehle == null) {
+				logger.log("- Fehler beim Ermitteln der SQL-Befehle für die Revision " + revision);
+				return false;
 			}
+			logger.log("- Ausführen: ");
+			if (sqlBefehle.size() == 0) {
+				logger.logLn(0, "0 Befehle");
+				return true;
+			}
+			
+			boolean result = true;
+			logger.logLn(0, sqlBefehle.size() + " Befehle...");
+			logger.modifyIndent(2);
+			for (int i = 0; i < sqlBefehle.size(); i++) {
+				String comment = sqlBefehle.getKommentar(i);
+				String sql = sqlBefehle.getSQL(conn.getDBDriver(), i); 
+				if ((comment == null) || (sql == null) || ("".equals(sql))) {
+					logger.logLn("Kann Befehl nicht ausführen!");
+					continue;
+				}
+				logger.log((i+1) + " - " + comment);
+				int success = conn.executeNativeUpdate(sql);
+				if (success == Integer.MIN_VALUE) {
+					logger.logLn(0, "ERROR");
+					result = false;
+					if (returnOnError)
+						break;
+				} else {
+					logger.logLn(0, " (" + success + ")");
+				}
+			}
+			logger.modifyIndent(-2);
+			return result;
 		}
-		logger.modifyIndent(-2);
-		return result;
 	}
 	
 	
@@ -904,36 +918,37 @@ public class DBUpdater {
 	 *         oder keine angelegt werden müssen, sonst false
 	 */
 	private boolean createNewTrigger(long revision) {
-		DBEntityManager conn = schemaManager.getEntityManager();
-		logger.log("- Erstelle: ");
-		var dbms = conn.getDBDriver();
-		List<SchemaTabelleTrigger> trigger = Schema.tabellen.values().stream()
-				.flatMap(tab -> tab.trigger().stream())
-				.filter(trig -> trig.dbms() == dbms)
-				.filter(trig -> trig.revision().revision == revision)
-				.collect(Collectors.toList());
-		if ((trigger == null) || (trigger.size() <= 0)) {
-			logger.logLn(0, "0 Trigger");
-			return true;
-		}
-		boolean result = true;
-		logger.logLn(0, trigger.size() + " Trigger...");
-		logger.modifyIndent(2);
-		for (SchemaTabelleTrigger trig : trigger) {
-			String sql = trig.getSQL(conn.getDBDriver(), true);
-			if ((sql == null) || ("".equals(sql))) {
-				logger.logLn("Kann Trigger " + trig.name() + " nicht erstellen!");
-				continue;
+		try (DBEntityManager conn = schemaManager.getUser().getEntityManager()) {
+			logger.log("- Erstelle: ");
+			var dbms = conn.getDBDriver();
+			List<SchemaTabelleTrigger> trigger = Schema.tabellen.values().stream()
+					.flatMap(tab -> tab.trigger().stream())
+					.filter(trig -> trig.dbms() == dbms)
+					.filter(trig -> trig.revision().revision == revision)
+					.collect(Collectors.toList());
+			if ((trigger == null) || (trigger.size() <= 0)) {
+				logger.logLn(0, "0 Trigger");
+				return true;
 			}
-			logger.logLn(trig.name());
-			if (conn.executeWithJDBCConnection(sql) == Integer.MIN_VALUE) {
-				result = false;
-				if (returnOnError)
-					break;
+			boolean result = true;
+			logger.logLn(0, trigger.size() + " Trigger...");
+			logger.modifyIndent(2);
+			for (SchemaTabelleTrigger trig : trigger) {
+				String sql = trig.getSQL(conn.getDBDriver(), true);
+				if ((sql == null) || ("".equals(sql))) {
+					logger.logLn("Kann Trigger " + trig.name() + " nicht erstellen!");
+					continue;
+				}
+				logger.logLn(trig.name());
+				if (conn.executeWithJDBCConnection(sql) == Integer.MIN_VALUE) {
+					result = false;
+					if (returnOnError)
+						break;
+				}
 			}
+			logger.modifyIndent(-2);
+			return result;
 		}
-		logger.modifyIndent(-2);
-		return result;
 	}
 
 	

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import de.nrw.schule.svws.db.Benutzer;
 import de.nrw.schule.svws.db.DBDriver;
 import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.dto.current.svws.db.DTOCoreTypeVersion;
@@ -20,8 +21,8 @@ public class DBSchemaStatus {
 	/** Der Name des Schemas */
 	final String schemaName;
 
-	/** Die Datenbank-Verbindung, die für das Auslesen des Schema-Status verwendet wird. */
-	final DBEntityManager conn;
+	/** Der Datenbank-Benutzer, der für das Auslesen des Schema-Status verwendet wird. */
+	final Benutzer user;
 
 	/** Die Version des SVWS-Datenbank-Schemas */
 	DBSchemaVersion version;
@@ -34,43 +35,43 @@ public class DBSchemaStatus {
 
 
 	/**
-	 * Erzeugt ein neues Schema-Status-Objekt, indem mithilfe der übergebenen 
-	 * Verbindung z.B. das Information-Schema der Datenbank abgefragt wird.
+	 * Erzeugt ein neues Schema-Status-Objekt, indem mithilfe des übergebenen 
+	 * DB-Benutzers z.B. das Information-Schema der Datenbank abgefragt wird.
 	 * 
-	 * @param conn         die Datenbank-Verbindung für den Zugriff auf die Tabellen
+	 * @param user         der Datenbank-Benutzer für den Zugriff auf die Tabellen
 	 * @param schemaName   der Name des Schemas, dessen Status abgefragt werden soll
 	 */
-	private DBSchemaStatus(final DBEntityManager conn, final String schemaName) {
-		this.conn = conn;
+	private DBSchemaStatus(final Benutzer user, final String schemaName) {
+		this.user = user;
 		this.schemaName = schemaName;
 		update();
 	}
 
 	
 	/**
-	 * Liest den Schema-Status mithilfe der übergebenen Verbindung aus. Dabei wird das
-	 * Schema abgefragt, welches der Verbindung zugeordnet ist
+	 * Liest den Schema-Status mithilfe des übergebenen DB-Benutzers aus. Dabei wird das
+	 * Schema abgefragt, welches dem Benutzer zugeordnet ist
 	 *   
-	 * @param conn   die Datenbank-Verbindung zum Lesen der Schema-Informationen
+	 * @param user   der Datenbank-Benutzer für den Zugriff auf die Schema-Informationen
 	 * 
 	 * @return der Schema-Status
 	 */
-	public static DBSchemaStatus read(final DBEntityManager conn) {
-		return new DBSchemaStatus(conn, conn.getDBSchema());
+	public static DBSchemaStatus read(final Benutzer user) {
+		return new DBSchemaStatus(user, user.connectionManager.getConfig().getDBSchema());
 	}
 	
 	
 	/**
-	 * Liest den Schema-Status mithilfe der übergebenen Verbindung aus. Dabei wird das
+	 * Liest den Schema-Status mithilfe des übergebenen DB-Benutzers aus. Dabei wird das
 	 * Schema mit dem übergebenen Namen abgefragt.
 	 *   
-	 * @param conn         die Datenbank-Verbindung zum Lesen der Schema-Informationen
+	 * @param user         der Datenbank-Benutzer für den Zugriff auf die Schema-Informationen
 	 * @param schemaName   der Name des Schemas, dessen Status abgefragt werden soll
 	 * 
 	 * @return der Schema-Status
 	 */
-	public static DBSchemaStatus read(final DBEntityManager conn, final String schemaName) {
-		return new DBSchemaStatus(conn, schemaName);
+	public static DBSchemaStatus read(final Benutzer user, final String schemaName) {
+		return new DBSchemaStatus(user, schemaName);
 	}
 	
 	
@@ -98,10 +99,12 @@ public class DBSchemaStatus {
 	 * Aktualisiert den Schema-Status
 	 */
 	public void update() {
-		tabellen = DTOInformationSchemaTables.queryNames(conn, schemaName);
-		version = leseDBSchemaVersion();
-		coreTypeVersionen = null; // Muss neu eingelesen werden... darf aber z.B. wegen Migrationen initial eingelesen werden
-		// TODO
+		try (DBEntityManager conn = user.getEntityManager()) {
+			tabellen = DTOInformationSchemaTables.queryNames(conn, schemaName);
+			version = leseDBSchemaVersion(conn);
+			coreTypeVersionen = null; // Muss neu eingelesen werden... darf aber z.B. wegen Migrationen initial eingelesen werden
+			// TODO
+		}
 	}
 
 	
@@ -112,7 +115,7 @@ public class DBSchemaStatus {
 	 * 
 	 * @return die Datenbank-Version 
 	 */
-	private DBSchemaVersion leseDBSchemaVersion() {
+	private DBSchemaVersion leseDBSchemaVersion(DBEntityManager conn) {
 		if (tabellen.stream().filter(tabname -> "SVWS_DB_Version".equalsIgnoreCase(tabname)).findFirst().orElse(null) == null)
 			return null;
 		DTODBVersion dto;
@@ -165,8 +168,10 @@ public class DBSchemaStatus {
 	 */
 	public DTOCoreTypeVersion getCoreTypeVersion(String tabname) {
 		if (coreTypeVersionen == null) {
-			coreTypeVersionen = conn.queryAll(DTOCoreTypeVersion.class).stream()
-				.collect(Collectors.toMap(dto -> dto.NameTabelle, dto -> dto));
+			try (DBEntityManager conn = user.getEntityManager()) {
+				coreTypeVersionen = conn.queryAll(DTOCoreTypeVersion.class).stream()
+					.collect(Collectors.toMap(dto -> dto.NameTabelle, dto -> dto));
+			}
 		}
 		return coreTypeVersionen.get(tabname);
 	}
@@ -183,8 +188,10 @@ public class DBSchemaStatus {
 	public boolean hasColumn(String tabname, String colname) {
 		if (!hasTable(tabname))
 			return false;
-		Map<String, DTOInformationSchemaTableColumn> spalten = DTOInformationSchemaTableColumn.query(conn, tabname);
-		return (spalten == null) ? false : (spalten.containsKey(colname.toLowerCase())); 
+		try (DBEntityManager conn = user.getEntityManager()) {
+			Map<String, DTOInformationSchemaTableColumn> spalten = DTOInformationSchemaTableColumn.query(conn, tabname);
+			return (spalten == null) ? false : (spalten.containsKey(colname.toLowerCase()));
+		}
 	}
 	
 
@@ -200,10 +207,12 @@ public class DBSchemaStatus {
 	public List<String> filterColumns(String tabname, List<String> cols) {
 		if (!hasTable(tabname))
 			return null;
-		Map<String, DTOInformationSchemaTableColumn> spalten = DTOInformationSchemaTableColumn.query(conn, tabname);
-		if (spalten == null)
-			return null;
-		return cols.stream().filter(col -> (spalten.containsKey(col.toLowerCase()))).collect(Collectors.toList());
+		try (DBEntityManager conn = user.getEntityManager()) {
+			Map<String, DTOInformationSchemaTableColumn> spalten = DTOInformationSchemaTableColumn.query(conn, tabname);
+			if (spalten == null)
+				return null;
+			return cols.stream().filter(col -> (spalten.containsKey(col.toLowerCase()))).collect(Collectors.toList());
+		}
 	}
 	
 	

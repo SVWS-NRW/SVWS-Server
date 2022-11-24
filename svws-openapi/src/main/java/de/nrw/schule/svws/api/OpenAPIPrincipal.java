@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import de.nrw.schule.svws.config.SVWSKonfiguration;
 import de.nrw.schule.svws.db.Benutzer;
 import de.nrw.schule.svws.db.DBConfig;
+import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.utils.BenutzerUtils;
 import de.nrw.schule.svws.db.utils.OperationError;
 
@@ -136,8 +137,10 @@ public class OpenAPIPrincipal implements Principal, Serializable {
 			Benutzer benutzer = Benutzer.create(rootConfig);
 			benutzer.setUsername(username);
 			benutzer.setPassword(password);
-			if (benutzer.getEntityManager() == null)  // Prüfe, ob eine Verbindung zu DB aufgebaut werden konnte 
-				return null; // wenn nicht, dann liegt ein Verbindungs- oder Authentifizierungsfehler vor und die Authentifizierung ist fehlgeschlagen
+			try (DBEntityManager conn = benutzer.getEntityManager()) {
+				if (conn == null)  // Prüfe, ob eine Verbindung zu DB aufgebaut werden konnte 
+					return null; // wenn nicht, dann liegt ein Verbindungs- oder Authentifizierungsfehler vor und die Authentifizierung ist fehlgeschlagen
+			}
 			return new OpenAPIPrincipal(benutzer);
 		}
 

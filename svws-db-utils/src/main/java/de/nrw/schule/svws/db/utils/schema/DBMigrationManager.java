@@ -214,22 +214,24 @@ public class DBMigrationManager {
 	 * Erstellt den Schema-Manager für die angegebene Datenbank-Konfiguration und -Verbindung.
 	 * 
 	 * @param cfg     die Datenbank-Konfiguration
-	 * @param conn    die Datenbank-Verbindung
+	 * @param user    der Datenbank-Benutzer
 	 * @param isSrc   gibt für evtl. Fehlermeldungen an, ob es sich um die Verbidung zur Quell- oder Zieldatenbank handelt.
 	 * 
 	 * @return der Schema-Manager
 	 * 
 	 * @throws DBException falls ein Fehler beim Erstellen des Schema-Managers auftritt
 	 */
-	private DBSchemaManager getSchemaManager(DBConfig cfg, DBEntityManager conn, boolean isSrc) throws DBException {
-		if (conn == null) {
-			logger.logLn(0, " [Fehler]");
-			logger.log(LogLevel.ERROR, "Fehler bei der Erstellung der Datenbank-Verbindung (driver='" + cfg.getDBDriver() + "', location='" + cfg.getDBLocation() + "', user='" + cfg.getUsername() + "')" + System.lineSeparator());
-			throw new DBException("Fehler beim Verbinden zur " + (isSrc ? "Quelldatenbank" : "Zieldatenbank"));
+	private DBSchemaManager getSchemaManager(DBConfig cfg, Benutzer user, boolean isSrc) throws DBException {
+		try (DBEntityManager conn = user.getEntityManager()) {
+			if (conn == null) {
+				logger.logLn(0, " [Fehler]");
+				logger.log(LogLevel.ERROR, "Fehler bei der Erstellung der Datenbank-Verbindung (driver='" + cfg.getDBDriver() + "', location='" + cfg.getDBLocation() + "', user='" + cfg.getUsername() + "')" + System.lineSeparator());
+				throw new DBException("Fehler beim Verbinden zur " + (isSrc ? "Quelldatenbank" : "Zieldatenbank"));
+			}
+			logger.logLn(0, " [OK]");
+			logger.log(LogLevel.INFO, "Datenbank-Verbindung erfolgreich aufgebaut (driver='" + cfg.getDBDriver() + "', location='" + cfg.getDBLocation() + "', user='" + cfg.getUsername() + "')" + System.lineSeparator());
 		}
-		logger.logLn(0, " [OK]");
-		logger.log(LogLevel.INFO, "Datenbank-Verbindung erfolgreich aufgebaut (driver='" + cfg.getDBDriver() + "', location='" + cfg.getDBLocation() + "', user='" + cfg.getUsername() + "')" + System.lineSeparator());
-		return DBSchemaManager.create(conn, true, logger);		
+		return DBSchemaManager.create(user, true, logger);		
 	}
 	
 	
@@ -267,12 +269,12 @@ public class DBMigrationManager {
 			logger.log("-> Verbinde zur Quell-Datenbank... ");
 			Benutzer srcUser = Benutzer.create(srcConfig); 
 			try (DBEntityManager srcConn = srcUser.getEntityManager()) {
-				srcManager = getSchemaManager(srcConfig, srcConn, true); 
+				srcManager = getSchemaManager(srcConfig, srcUser, true); 
 
 				logger.log("-> Verbinde zum Ziel-Schema mit dem Datenbank-Test-Benutzer...");
 				Benutzer tgtUser = Benutzer.create(tgtConfig);
 				try (DBEntityManager tgtConn = tgtUser.getEntityManager()) {
-					tgtManager = getSchemaManager(tgtConfig, tgtConn, false);
+					tgtManager = getSchemaManager(tgtConfig, tgtUser, false);
 					
 					logger.logLn("-> Erstelle für die Migration in die Ziel-DB ein SVWS-Schema der Revision 0");
 					logger.modifyIndent(2);
@@ -286,7 +288,7 @@ public class DBMigrationManager {
 					
 					try {
 						tgtConn.reconnect();
-					} catch (DBConnectionException e) {
+					} catch (@SuppressWarnings("unused") DBConnectionException e) {
 						logger.logLn(" [Fehler] Erneuter Verbindungsaufbau zur Zieldatenbank fehlgeschlagen!");
 					}
 					
@@ -302,7 +304,7 @@ public class DBMigrationManager {
 					
 					try {
 						tgtConn.reconnect();
-					} catch (DBConnectionException e) {
+					} catch (@SuppressWarnings("unused") DBConnectionException e) {
 						logger.logLn(" [Fehler] Erneuter Verbindungsaufbau zur Zieldatenbank fehlgeschlagen!");
 					}
 								
@@ -361,24 +363,25 @@ public class DBMigrationManager {
 	 * @return true, falls die Schulform korrekt war oder korrigiert werden konnte, ansonsten false
 	 */
 	private boolean fixSchulform() {
-		DBEntityManager conn = tgtManager.getEntityManager();
-		Schule schule = Schule.query(conn);
-		logger.logLn("- Schulnummer: " + schule.dto.SchulNr);
-		logger.logLn("- Schulform: " + schule.getSchulform().daten.kuerzel);
-		DTOSchulverDBS dtoSchulver = conn.queryByKey(DTOSchulverDBS.class, "" + schule.dto.SchulNr);
-		if (dtoSchulver == null) {
-			logger.logLn("- Fehler: Schule konnte für die Schul-Nummer " + schule.dto.SchulNr + " nicht im Verzeichnis der Schulen gefunden werden!");
-			return false;
+		try (DBEntityManager conn = tgtManager.getUser().getEntityManager()) {
+			Schule schule = Schule.query(conn);
+			logger.logLn("- Schulnummer: " + schule.dto.SchulNr);
+			logger.logLn("- Schulform: " + schule.getSchulform().daten.kuerzel);
+			DTOSchulverDBS dtoSchulver = conn.queryByKey(DTOSchulverDBS.class, "" + schule.dto.SchulNr);
+			if (dtoSchulver == null) {
+				logger.logLn("- Fehler: Schule konnte für die Schul-Nummer " + schule.dto.SchulNr + " nicht im Verzeichnis der Schulen gefunden werden!");
+				return false;
+			}
+			
+			Schulform statSchulform = Schulform.getByNummer(dtoSchulver.SF);
+			if (statSchulform != schule.getSchulform()) {
+				logger.logLn("- Fehler: Schulform laut Schulverzeichnis: " + statSchulform.daten.kuerzel);
+				logger.logLn("- Korrigiere die Schulform in der SVWS-DB...");
+				schule.dto.Schulform = statSchulform;
+				conn.persist(schule.dto);
+			}
+			return true;
 		}
-		
-		Schulform statSchulform = Schulform.getByNummer(dtoSchulver.SF);
-		if (statSchulform != schule.getSchulform()) {
-			logger.logLn("- Fehler: Schulform laut Schulverzeichnis: " + statSchulform.daten.kuerzel);
-			logger.logLn("- Korrigiere die Schulform in der SVWS-DB...");
-			schule.dto.Schulform = statSchulform;
-			conn.persist(schule.dto);
-		}
-		return true;
 	}
 	
 	
@@ -415,8 +418,8 @@ public class DBMigrationManager {
 		// Falls ja, dann kopiere direkt, sofern keine Schulnummer angegeben ist.
 		if ((filterSchulNummer == null) && (spaltenSoll.size() == spaltenIst.size())) {
 			// Lese alle Daten aus der Tabelle
-			try {
-				List<?> entities = srcManager.getEntityManager().queryNamed("" + dtoName + ".all" + ((tab.pkSpalten().size() > 0) ? ".migration" : ""), dtoClass).getResultList();
+			try (DBEntityManager srcConn = srcManager.getUser().getEntityManager()) {
+				List<?> entities = srcConn.queryNamed("" + dtoName + ".all" + ((tab.pkSpalten().size() > 0) ? ".migration" : ""), dtoClass).getResultList();
 				return entities;
 			} catch (PersistenceException e) {
 				lastError = e.getMessage(); 
@@ -455,20 +458,22 @@ public class DBMigrationManager {
 					jpql += ")";
 				}
 			}
-			List<Object[]> entities = srcManager.getEntityManager().query(jpql, Object[].class).getResultList();
-			Constructor<?> constructor = dtoClass.getDeclaredConstructor();
-			constructor.setAccessible(true);
-			Vector<Object> list = new Vector<>();
-			for (Object[] obj : entities) {
-				Object entity = constructor.newInstance();
-				int i=0;
-				for (Field f : fields)
-					f.set(entity, obj[i++]);
-				for (Field f : missing_fields)
-					f.set(entity, tab.getSpalten(0).stream().filter(col -> col.javaAttributName().equals(f.getName())).findFirst().orElse(null).getDefaultWertConverted());
-				list.add(entity);
+			try (DBEntityManager srcConn = srcManager.getUser().getEntityManager()) {
+				List<Object[]> entities = srcConn.query(jpql, Object[].class).getResultList();
+				Constructor<?> constructor = dtoClass.getDeclaredConstructor();
+				constructor.setAccessible(true);
+				Vector<Object> list = new Vector<>();
+				for (Object[] obj : entities) {
+					Object entity = constructor.newInstance();
+					int i=0;
+					for (Field f : fields)
+						f.set(entity, obj[i++]);
+					for (Field f : missing_fields)
+						f.set(entity, tab.getSpalten(0).stream().filter(col -> col.javaAttributName().equals(f.getName())).findFirst().orElse(null).getDefaultWertConverted());
+					list.add(entity);
+				}
+				return list;
 			}
-			return list;
 		} catch (PersistenceException | NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException  e) {
 			lastError = e.getMessage();
 			return null;
@@ -485,47 +490,48 @@ public class DBMigrationManager {
 	 * @param entities   die zu schreibenden Entitäten
 	 */
 	private void write(List<?> entities) {
-		DBEntityManager tgtConn = tgtManager.getEntityManager();
-		logger.logLn("- Schreibe " + entities.size() + " Datensätze: ");
-		logger.modifyIndent(2);
-		// Versuche zunächst in Blöcken von 10000 Datensätzen zu schreiben, diese werden je nach Erfolg später noch unterteilt...
-		int write_errors = 0;
-		LinkedList<Map.Entry<Integer, Integer>> ranges = new LinkedList<>(); 
-		for (int i = 0; i <= ((entities.size() - 1) / 10000); i++) {
-			int first = i * 10000;
-			int last = (i+1)*10000 - 1;
-			if (last >= entities.size())
-				last = entities.size() - 1;
-			ranges.add(Map.entry(first, last));
-		}
-		while (!ranges.isEmpty()) {
-			Map.Entry<Integer, Integer> range = ranges.removeFirst();
-			if (tgtConn.persistRange(entities, range.getKey(), range.getValue())) {
-				if (range.getKey().equals(range.getValue())) 
-					logger.logLn("Datensatz " + range.getKey() + " erfolgreich geschrieben. (Freier Speicher: " + (Math.round(Runtime.getRuntime().freeMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().totalMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().maxMemory() / 10000000.0) / 100.0) +  "G)");						
-				else 
-					logger.logLn("Datensätze " + range.getKey() + "-" + range.getValue() + " erfolgreich geschrieben. (Freier Speicher: " + (Math.round(Runtime.getRuntime().freeMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().totalMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().maxMemory() / 10000000.0) / 100.0) +  "G)");
-			} else {
-				if (range.getKey().equals(range.getValue())) { 
-					logger.logLn(LogLevel.ERROR, "Datensatz " + range.getKey() + " konnte nicht geschrieben werden - Datensatz wird übersprungen.");
-					logger.logLn(LogLevel.ERROR, "[FEHLER] " + entities.get(range.getKey()));
-					write_errors++;
+		try (DBEntityManager tgtConn = tgtManager.getUser().getEntityManager()) {
+			logger.logLn("- Schreibe " + entities.size() + " Datensätze: ");
+			logger.modifyIndent(2);
+			// Versuche zunächst in Blöcken von 10000 Datensätzen zu schreiben, diese werden je nach Erfolg später noch unterteilt...
+			int write_errors = 0;
+			LinkedList<Map.Entry<Integer, Integer>> ranges = new LinkedList<>(); 
+			for (int i = 0; i <= ((entities.size() - 1) / 10000); i++) {
+				int first = i * 10000;
+				int last = (i+1)*10000 - 1;
+				if (last >= entities.size())
+					last = entities.size() - 1;
+				ranges.add(Map.entry(first, last));
+			}
+			while (!ranges.isEmpty()) {
+				Map.Entry<Integer, Integer> range = ranges.removeFirst();
+				if (tgtConn.persistRange(entities, range.getKey(), range.getValue())) {
+					if (range.getKey().equals(range.getValue())) 
+						logger.logLn("Datensatz " + range.getKey() + " erfolgreich geschrieben. (Freier Speicher: " + (Math.round(Runtime.getRuntime().freeMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().totalMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().maxMemory() / 10000000.0) / 100.0) +  "G)");						
+					else 
+						logger.logLn("Datensätze " + range.getKey() + "-" + range.getValue() + " erfolgreich geschrieben. (Freier Speicher: " + (Math.round(Runtime.getRuntime().freeMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().totalMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().maxMemory() / 10000000.0) / 100.0) +  "G)");
 				} else {
-					logger.logLn("Datensätze " + range.getKey() + "-" + range.getValue() + " konnten nicht geschrieben werden geschrieben - Teile den Block auf und versuche die Teilblöcke zu schreiben.");
-					// Teile den Block auf
-					int step = (range.getValue() - range.getKey() + 1) / 10;
-					if (step < 1)
-						step = 1;
-					for (int last = range.getValue(); last >= range.getKey(); last -= step) {
-						int first = last - step + 1;
-						ranges.addFirst(Map.entry(first >= range.getKey() ? first : range.getKey(), last));
+					if (range.getKey().equals(range.getValue())) { 
+						logger.logLn(LogLevel.ERROR, "Datensatz " + range.getKey() + " konnte nicht geschrieben werden - Datensatz wird übersprungen.");
+						logger.logLn(LogLevel.ERROR, "[FEHLER] " + entities.get(range.getKey()));
+						write_errors++;
+					} else {
+						logger.logLn("Datensätze " + range.getKey() + "-" + range.getValue() + " konnten nicht geschrieben werden geschrieben - Teile den Block auf und versuche die Teilblöcke zu schreiben.");
+						// Teile den Block auf
+						int step = (range.getValue() - range.getKey() + 1) / 10;
+						if (step < 1)
+							step = 1;
+						for (int last = range.getValue(); last >= range.getKey(); last -= step) {
+							int first = last - step + 1;
+							ranges.addFirst(Map.entry(first >= range.getKey() ? first : range.getKey(), last));
+						}
 					}
 				}
 			}
+			logger.modifyIndent(-2);
+			logger.logLn("" + (entities.size() - write_errors) + " Datensätze geschrieben, " + write_errors + " fehlerhafte Datensätze übersprungen.");
+			logger.modifyIndent(-2);
 		}
-		logger.modifyIndent(-2);
-		logger.logLn("" + (entities.size() - write_errors) + " Datensätze geschrieben, " + write_errors + " fehlerhafte Datensätze übersprungen.");
-		logger.modifyIndent(-2);		
 	}
 
 	
@@ -996,7 +1002,9 @@ public class DBMigrationManager {
 	 * @return die angepasste Kursart
 	 */
 	private String mapKursart(String kursart) {
-		String result =  switch (kursart) {
+		if (kursart == null)
+			return null;
+		String result = switch (kursart) {
 			case "FS" -> "DFG";
 			case "FSD" -> "FUEK";
 			case "FÜK" -> "DFG";
@@ -1009,7 +1017,7 @@ public class DBMigrationManager {
 			case "G" -> (schulform == Schulform.H) || (schulform == Schulform.R) || (schulform == Schulform.S) || (schulform == Schulform.V) ? "G_H" : "G";
 			default -> kursart;
 		};
-		if ((kursart != null) && (!kursart.equals(result))) 
+		if (!kursart.equals(result)) 
 			logger.logLn(LogLevel.ERROR, "Korrigiere Datensatz: Die Kursart " + kursart + " wurde auf " + result + " angepasst.");
 		return result;
 	}
@@ -1648,13 +1656,6 @@ public class DBMigrationManager {
 			// Schreibe die Datensätze in die Zieltabelle
 			write(entities);
 			entities = null;
-			try {
-				tgtManager.getEntityManager().reconnect();
-			} catch(DBConnectionException e) {
-				logger.logLn("[FEHLER] Die Datenverbindung konnte nicht neu aufgebaut werden.");
-				return false;
-			}
-			System.gc();
 		}
 		return true;
 	}
@@ -1664,43 +1665,43 @@ public class DBMigrationManager {
 	 * Konvertiert am Ende der Migration die Bilder in der Zieldatenbank in die Base64-Kodierung.
 	 */
 	private void convertImages() {
-		DBEntityManager conn = tgtManager.getEntityManager();
-		logger.log("* Tabelle EigeneSchule...");
-		List<MigrationDTOEigeneSchule> es_in = conn.queryAll(MigrationDTOEigeneSchule.class);
-		List<MigrationDTOEigeneSchule> es_out = es_in.stream()
-				.filter(es -> {
-					if (es.SchulLogo == null)
-						return false;
-					es.SchulLogoBase64 = Base64.getEncoder().encodeToString(es.SchulLogo);
-					return true;
-				}).collect(Collectors.toList());
-		conn.persistAll(es_out);
-		logger.logLn("" + es_out.size() + " Bilder");
-
-		logger.log("* Tabelle LehrerFoto...");
-		List<MigrationDTOLehrerFoto> lf_in = conn.queryAll(MigrationDTOLehrerFoto.class);
-		List<MigrationDTOLehrerFoto> lf_out = lf_in.stream()
-				.filter(lf -> {
-					if (lf.Foto == null)
-						return false;
-					lf.FotoBase64 = Base64.getEncoder().encodeToString(lf.Foto);
-					return true;
-				}).collect(Collectors.toList());
-		conn.persistAll(lf_out);
-		logger.logLn("" + lf_out.size() + " Bilder");
-		
-		logger.log("* Tabelle SchuelerFoto...");
-		List<MigrationDTOSchuelerFoto> sf_in = conn.queryAll(MigrationDTOSchuelerFoto.class);
-		List<MigrationDTOSchuelerFoto> sf_out = sf_in.stream()
-				.filter(sf -> {
-					if (sf.Foto == null)
-						return false;
-					sf.FotoBase64 = Base64.getEncoder().encodeToString(sf.Foto);
-					return true;
-				}).collect(Collectors.toList());
-		conn.persistAll(sf_out);
-		logger.logLn("" + sf_out.size() + " Bilder");
-	}
+		try (DBEntityManager conn = tgtManager.getUser().getEntityManager()) {
+			logger.log("* Tabelle EigeneSchule...");
+			List<MigrationDTOEigeneSchule> es_in = conn.queryAll(MigrationDTOEigeneSchule.class);
+			List<MigrationDTOEigeneSchule> es_out = es_in.stream()
+					.filter(es -> {
+						if (es.SchulLogo == null)
+							return false;
+						es.SchulLogoBase64 = Base64.getEncoder().encodeToString(es.SchulLogo);
+						return true;
+					}).collect(Collectors.toList());
+			conn.persistAll(es_out);
+			logger.logLn("" + es_out.size() + " Bilder");
 	
+			logger.log("* Tabelle LehrerFoto...");
+			List<MigrationDTOLehrerFoto> lf_in = conn.queryAll(MigrationDTOLehrerFoto.class);
+			List<MigrationDTOLehrerFoto> lf_out = lf_in.stream()
+					.filter(lf -> {
+						if (lf.Foto == null)
+							return false;
+						lf.FotoBase64 = Base64.getEncoder().encodeToString(lf.Foto);
+						return true;
+					}).collect(Collectors.toList());
+			conn.persistAll(lf_out);
+			logger.logLn("" + lf_out.size() + " Bilder");
+			
+			logger.log("* Tabelle SchuelerFoto...");
+			List<MigrationDTOSchuelerFoto> sf_in = conn.queryAll(MigrationDTOSchuelerFoto.class);
+			List<MigrationDTOSchuelerFoto> sf_out = sf_in.stream()
+					.filter(sf -> {
+						if (sf.Foto == null)
+							return false;
+						sf.FotoBase64 = Base64.getEncoder().encodeToString(sf.Foto);
+						return true;
+					}).collect(Collectors.toList());
+			conn.persistAll(sf_out);
+			logger.logLn("" + sf_out.size() + " Bilder");
+		}
+	}
 
 }

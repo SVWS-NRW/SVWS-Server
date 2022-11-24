@@ -6,11 +6,6 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.Random;
 
-import jakarta.ws.rs.WebApplicationException;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.Response.Status;
-import jakarta.ws.rs.core.StreamingOutput;
 import de.nrw.schule.svws.base.FileUtils;
 import de.nrw.schule.svws.config.SVWSKonfiguration;
 import de.nrw.schule.svws.core.data.SimpleOperationResponse;
@@ -18,8 +13,13 @@ import de.nrw.schule.svws.core.logger.LogConsumerConsole;
 import de.nrw.schule.svws.core.logger.LogConsumerVector;
 import de.nrw.schule.svws.core.logger.Logger;
 import de.nrw.schule.svws.data.SimpleBinaryMultipartBody;
-import de.nrw.schule.svws.db.DBEntityManager;
+import de.nrw.schule.svws.db.Benutzer;
 import de.nrw.schule.svws.db.utils.lupo.mdb.LupoMDB;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
+import jakarta.ws.rs.core.StreamingOutput;
 
 /**
  * Diese Klasse stellt Methoden für den Import und Export von LuPO-MDB-Datenbanken 
@@ -31,12 +31,12 @@ public class DataLupo {
     /**
      * Importiert die in dem Multipart übergebene Datei. 
      * 
-     * @param conn        die Verbindung zur Datenbank
+     * @param user        der Datenbank-Benutzer
      * @param multipart   der Multipart-Body mmit der Datei
      * 
      * @return die HTTP-Response mit dem Log
      */
-    public static Response importMDB(final DBEntityManager conn, SimpleBinaryMultipartBody multipart) {
+    public static Response importMDB(final Benutzer user, SimpleBinaryMultipartBody multipart) {
     	Logger logger = new Logger();
     	LogConsumerVector log = new LogConsumerVector();
     	logger.addConsumer(log);
@@ -45,7 +45,7 @@ public class DataLupo {
     	// Erstelle temporär eine LuPO-MDB-Datei aus dem übergebenen Byte-Array
     	Random random = new Random();
     	String tmpDirectory = SVWSKonfiguration.get().getTempPath();
-        String tmpFilename = conn.getDBSchema() +  "_" + random.ints(48, 123)  // from 0 to z
+        String tmpFilename = user.connectionManager.getConfig().getDBSchema() +  "_" + random.ints(48, 123)  // from 0 to z
           .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))  // filter some unicode characters
           .limit(40)
           .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
@@ -54,7 +54,7 @@ public class DataLupo {
     	try {
     		Files.createDirectories(Paths.get(tmpDirectory));
 			Files.write(Paths.get(tmpDirectory + "/" + tmpFilename), multipart.data, StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE);			
-		} catch (IOException e) {
+		} catch (@SuppressWarnings("unused") IOException e) {
 			logger.logLn(2, "Fehler beim Erstellen der temporären LuPO-Datenbank unter dem Namen \"" + tmpDirectory + "/" + tmpFilename + "\"");
 			SimpleOperationResponse daten = new SimpleOperationResponse();
 			daten.log = log.getStrings();
@@ -68,9 +68,9 @@ public class DataLupo {
 			lupoMDB.importFrom();
 			
 			// Schreibe in die LuPO-Datenbank
-			lupoMDB.setLUPOTables(conn, false);   // TODO konfigurierbar machen !
+			lupoMDB.setLUPOTables(user, false);   // TODO konfigurierbar machen !
 			logger.logLn("  Import beendet");
-		} catch (IOException e1) {
+		} catch (@SuppressWarnings("unused") IOException e1) {
 			logger.logLn("  [FEHLER] beim Zugriff auf die temporäre LuPO-Datenbank.");
 		} finally {
 			// Entferne die temporär angelegte Datenbank wieder...
@@ -78,7 +78,7 @@ public class DataLupo {
 			try {
 				Files.delete(Paths.get(tmpDirectory + "/" + tmpFilename));
 				logger.logLn(2, "[OK]");
-			} catch (IOException e) {
+			} catch (@SuppressWarnings("unused") IOException e) {
 				logger.logLn(2, "[FEHLER]");
 			}			
 		}
@@ -92,12 +92,12 @@ public class DataLupo {
     /**
      * Export eine LuPO-MDB für den angegebenen Jahrgang
      * 
-     * @param conn       die Verbindung für den Datenbank-Zugriff
+     * @param user       der Datenbank-Benutzer
      * @param jahrgang   der Jahrgang, für den die LuPO-Datenbank erstellt werden soll
      * 
      * @return die HTTP-Response
      */
-    public static Response exportMDB(final DBEntityManager conn, String jahrgang) {
+    public static Response exportMDB(final Benutzer user, String jahrgang) {
     	Logger logger = new Logger();
     	LogConsumerVector log = new LogConsumerVector();
     	logger.addConsumer(log);
@@ -106,7 +106,7 @@ public class DataLupo {
     	// Bestimme den Dateinamen für eine temporäre LuPO-Datei
     	Random random = new Random();
     	String tmpDirectory = SVWSKonfiguration.get().getTempPath();
-        String tmpFilename = conn.getDBSchema() +  "_" + random.ints(48, 123)  // from 0 to z
+        String tmpFilename = user.connectionManager.getConfig().getDBSchema() +  "_" + random.ints(48, 123)  // from 0 to z
           .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))  // filter some unicode characters
           .limit(40)
           .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
@@ -116,14 +116,15 @@ public class DataLupo {
         logger.logLn("Exportiere die Laufbahndaten in eine temporäre LuPO-Datenbank unter dem Namen \"" + tmpDirectory + "/" + tmpFilename + "\": ");
 		LupoMDB lupoMDB = new LupoMDB(tmpDirectory + "/" + tmpFilename);
 		lupoMDB.logger.copyConsumer(logger);
-		lupoMDB.getFromLeistungsdaten(conn, jahrgang);
+		lupoMDB.getFromLeistungsdaten(user, jahrgang);
 		try {
 			lupoMDB.exportTo();
-		} catch (IOException e1) {
+		} catch (@SuppressWarnings("unused") IOException e1) {
 			// TODO Stelle das Löschen einer ggf. schon erstellten temporären LuPO-Datei sicher
 			try {
 				Files.deleteIfExists(Paths.get(tmpDirectory + "/" + tmpFilename));
-			} catch (IOException e) {
+			} catch (@SuppressWarnings("unused") IOException e) {
+				logger.logLn("Kann die temporäre Datei nicht entfernen");
 			}
 			throw new WebApplicationException(Status.INTERNAL_SERVER_ERROR.getStatusCode());
 		}
@@ -135,7 +136,7 @@ public class DataLupo {
 				FileUtils.move(tmpDirectory + "/" + tmpFilename, output);
 				output.flush();
 			} catch (Exception e) { e.printStackTrace(); }
-        }).header("Content-Disposition", "attachment; filename=\"" + conn.getDBSchema() + jahrgang + ".lup\"").build();
+        }).header("Content-Disposition", "attachment; filename=\"" + user.connectionManager.getConfig().getDBSchema() + jahrgang + ".lup\"").build();
 		if (!response.hasEntity())
 			logger.logLn(2, "[FEHLER]");
 		logger.logLn("LuPO-Datei für die Antwort eingelesen.");

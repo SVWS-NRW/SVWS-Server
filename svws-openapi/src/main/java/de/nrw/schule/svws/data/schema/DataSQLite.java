@@ -2,17 +2,17 @@ package de.nrw.schule.svws.data.schema;
 
 import java.util.Random;
 
-import jakarta.ws.rs.WebApplicationException;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.Response.Status;
-import jakarta.ws.rs.core.StreamingOutput;
 import de.nrw.schule.svws.base.FileUtils;
 import de.nrw.schule.svws.config.SVWSKonfiguration;
 import de.nrw.schule.svws.core.logger.LogConsumerConsole;
 import de.nrw.schule.svws.core.logger.LogConsumerVector;
 import de.nrw.schule.svws.core.logger.Logger;
-import de.nrw.schule.svws.db.DBEntityManager;
+import de.nrw.schule.svws.db.Benutzer;
 import de.nrw.schule.svws.db.utils.schema.DBSchemaManager;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
+import jakarta.ws.rs.core.StreamingOutput;
 
 /**
  * Diese Klasse stellt Methoden für den Import und Export von SQLite-Datenbanken 
@@ -25,12 +25,12 @@ public class DataSQLite {
      * Exportiert eine SQLite-Datenbank aus dem aktuellen Schema. Der Aufruf erfordert
      * administrative Rechte.
      *  
-     * @param conn         die Verbindung zur Datenbank
+     * @param user         der Datenbank-Benutzer
      * @param schemaname   Name des Schemas, in das hinein migriert werden soll
      * 
      * @return Die SQLite-Datenbank
      */
-    public static Response exportSQLite(final DBEntityManager conn, String schemaname) {
+    public static Response exportSQLite(final Benutzer user, String schemaname) {
     	Logger logger = new Logger();
     	LogConsumerVector log = new LogConsumerVector();
     	logger.addConsumer(log);
@@ -47,7 +47,7 @@ public class DataSQLite {
         logger.logLn("Erstelle eine SQLite-Datenbank unter dem Namen \"" + tmpDirectory + "/" + tmpFilename + "\"");
     	
 		// Erzeuge einen Schema-Manager, der den Export des DB-Schema durchführt
-		DBSchemaManager srcManager = DBSchemaManager.create(conn, true, logger); 
+		DBSchemaManager srcManager = DBSchemaManager.create(user, true, logger); 
 		if (srcManager == null)
 			throw new WebApplicationException(Status.FORBIDDEN.getStatusCode());
 		

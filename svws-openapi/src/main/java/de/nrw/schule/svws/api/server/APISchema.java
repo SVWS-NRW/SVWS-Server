@@ -7,6 +7,7 @@ import de.nrw.schule.svws.core.logger.LogConsumerVector;
 import de.nrw.schule.svws.core.logger.Logger;
 import de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenz;
 import de.nrw.schule.svws.data.schema.DataSQLite;
+import de.nrw.schule.svws.db.Benutzer;
 import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.dto.current.svws.db.DTODBVersion;
 import de.nrw.schule.svws.db.schema.SchemaRevisionen;
@@ -62,9 +63,7 @@ public class APISchema {
     			 schema = @Schema(type = "string", format = "binary", description = "LuPO-MDB-Datei")))
     @ApiResponse(responseCode = "403", description = "Das Schema darf nicht exportiert werden.")
     public Response exportSQLite(@PathParam("schema") String schemaname, @Context HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADMIN)) {
-    		return DataSQLite.exportSQLite(conn, schemaname);
-    	}
+		return DataSQLite.exportSQLite(OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.ADMIN), schemaname);
     }
 
 
@@ -89,40 +88,40 @@ public class APISchema {
 	@ApiResponse(responseCode = "404", description = "Die Schema-Datenbank konnte nicht geladen werden. Die Server-Konfiguration ist fehlerhaft.")
     public List<String> updateSchema(@PathParam("schema") String schemaname, @PathParam("revision") long revision, @Context HttpServletRequest request) {
     	// Akzeptiere nur einen Datenbankzugriff als Administrator in Bezug auf Updates
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADMIN)) {
-			// Ermittle die Revision, auf die aktualisiert werden soll. Hier wird ggf. eine negative Revision als neueste Revision interpretiert
-			long max_revision = SchemaRevisionen.maxRevision.revision;
-			if (revision < 0)
-				revision = max_revision;
-			if (revision > max_revision)
-				throw new WebApplicationException(Status.BAD_REQUEST.getStatusCode());
-	
-			// Erzeuge einen Logger für das Update
-			Logger logger = new Logger();
-			LogConsumerVector log = new LogConsumerVector();
-			logger.addConsumer(log);
-			
-			// Erzeuge einen Schema-Manager, der die Aktualisierung des DB-Schema durchführt
-			DBSchemaManager manager = DBSchemaManager.create(conn, true, logger); 
-			if (manager == null)
-				throw new WebApplicationException(Status.FORBIDDEN.getStatusCode());
-	
-			// Prüfe, ob das Schema aktuell ist
-			if (manager.updater.isUptodate(revision, false))
-				return log.getStrings();
-			
-			// Prüfe, ob die angegebene Revision überhaupt ein Update erlaubt -> wenn nicht, dann liegt ein BAD_REQUEST (400) vor
-			if (!manager.updater.isUpdatable(revision, false))
-				throw new WebApplicationException(Status.BAD_REQUEST.getStatusCode());
-	
-			// Führe die Aktualisierung durch 
-			boolean success = manager.updater.update(revision, false, true);
-			if (!success)
-				throw new WebApplicationException(Status.INTERNAL_SERVER_ERROR.getStatusCode());
-			
-			// return log from logger
+    	Benutzer user = OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.ADMIN);
+		// Ermittle die Revision, auf die aktualisiert werden soll. Hier wird ggf. eine negative Revision als neueste Revision interpretiert
+		long max_revision = SchemaRevisionen.maxRevision.revision;
+		long rev = revision;
+		if (rev < 0)
+			rev = max_revision;
+		if (rev > max_revision)
+			throw new WebApplicationException(Status.BAD_REQUEST.getStatusCode());
+
+		// Erzeuge einen Logger für das Update
+		Logger logger = new Logger();
+		LogConsumerVector log = new LogConsumerVector();
+		logger.addConsumer(log);
+		
+		// Erzeuge einen Schema-Manager, der die Aktualisierung des DB-Schema durchführt
+		DBSchemaManager manager = DBSchemaManager.create(user, true, logger); 
+		if (manager == null)
+			throw new WebApplicationException(Status.FORBIDDEN.getStatusCode());
+
+		// Prüfe, ob das Schema aktuell ist
+		if (manager.updater.isUptodate(rev, false))
 			return log.getStrings();
-    	}
+		
+		// Prüfe, ob die angegebene Revision überhaupt ein Update erlaubt -> wenn nicht, dann liegt ein BAD_REQUEST (400) vor
+		if (!manager.updater.isUpdatable(rev, false))
+			throw new WebApplicationException(Status.BAD_REQUEST.getStatusCode());
+
+		// Führe die Aktualisierung durch 
+		boolean success = manager.updater.update(rev, false, true);
+		if (!success)
+			throw new WebApplicationException(Status.INTERNAL_SERVER_ERROR.getStatusCode());
+		
+		// return log from logger
+		return log.getStrings();
     }
 
     
