@@ -33,7 +33,7 @@ public class FileUtils {
 			}
 			istream.close();
 			return result.toString("UTF-8");
-		} catch (NullPointerException | SecurityException | IOException | IndexOutOfBoundsException e) {
+		} catch (@SuppressWarnings("unused") NullPointerException | SecurityException | IOException | IndexOutOfBoundsException e) {
 			return null;
 		}		
 	}
@@ -51,7 +51,7 @@ public class FileUtils {
 		try {
 			File file = new File(filename);
 			return file2UTF8(file);			
-		} catch (NullPointerException e) {
+		} catch (@SuppressWarnings("unused") NullPointerException e) {
 			return null;
 		}
 	}
@@ -76,7 +76,7 @@ public class FileUtils {
 			}
 			istream.close();
 			return result.toByteArray();
-		} catch (NullPointerException | SecurityException | IOException | IndexOutOfBoundsException e) {
+		} catch (@SuppressWarnings("unused") NullPointerException | SecurityException | IOException | IndexOutOfBoundsException e) {
 			return null;
 		}		
 	}
@@ -94,7 +94,7 @@ public class FileUtils {
 		try {
 			File file = new File(filename);
 			return file2ByteArray(file);			
-		} catch (NullPointerException e) {
+		} catch (@SuppressWarnings("unused") NullPointerException e) {
 			return null;
 		}
 	}
