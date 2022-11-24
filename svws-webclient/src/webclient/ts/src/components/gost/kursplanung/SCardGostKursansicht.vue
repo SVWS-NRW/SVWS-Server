@@ -87,8 +87,10 @@
 									:kurs="kurs"
 								></s-kurs-blockung>
 								<template v-if="allow_regeln">
-									<td class="border border-[#7f7f7f]/20 text-center bg-white" :colspan="schienen.size()+4">Fächer ohne Kurse</td>
-									<td class="bg-white"></td>
+									<tr>
+										<td class="border border-[#7f7f7f]/20 text-center bg-white" :colspan="schienen.size()+4">Fachwahlen ohne Kurse</td>
+										<td class="bg-white"></td>
+									</tr>
 									<s-fach-kurs
 										v-for="fach in faecher"
 										:key="fach.id"
