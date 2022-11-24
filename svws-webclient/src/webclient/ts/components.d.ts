@@ -23,6 +23,7 @@ declare module '@vue/runtime-core' {
     IRiArrowUpDownLine: typeof import('~icons/ri/arrow-up-down-line')['default']
     IRiArtboardLine: typeof import('~icons/ri/artboard-line')['default']
     IRiBookReadLine: typeof import('~icons/ri/book-read-line')['default']
+    IRiCheckboxBlankCircleFill: typeof import('~icons/ri/checkbox-blank-circle-fill')['default']
     IRiCheckLine: typeof import('~icons/ri/check-line')['default']
     IRiCloseLine: typeof import('~icons/ri/close-line')['default']
     IRiCommunityLine: typeof import('~icons/ri/community-line')['default']

@@ -1,15 +1,11 @@
 <template>
 	<template v-if="(lk_kurszahl === 0 && lk) || (gk_kurszahl === 0 && gk) || (zk_kurszahl === 0 && zk)">
-		<tr class="text-left" :style="{
-			'background-color': bgColor
-		}">
-			<td class="px-2 border-y border-[#7f7f7f]/20 border-r" :colspan="schienen.size()+4">{{ fach.bezeichnung }} </td>
+		<tr class="text-left" :style="{ 'background-color': bgColor }">
+			<td class="px-2 border-y border-[#7f7f7f]/20 border-r" :colspan="schienen+4">{{ fach.bezeichnung }} </td>
 			<td class="bg-white"></td>
 		</tr>
-		<tr v-if="lk_kurszahl === 0 && lk" class="text-left" :style="{
-			'background-color': bgColor
-		}">
-			<td class="px-4 border-y border-[#7f7f7f]/20" :colspan="schienen.size()">
+		<tr v-if="lk_kurszahl === 0 && lk" class="text-left" :style="{ 'background-color': bgColor }">
+			<td class="px-4 border-y border-[#7f7f7f]/20" :colspan="schienen">
 				{{ fach.kuerzel }}-LK: {{lk}} Kurswahlen
 			</td>
 			<td class="px-2 border-y border-[#7f7f7f]/20 border-r" colspan="4">
@@ -17,10 +13,8 @@
 			</td>
 			<td class="bg-white"></td>
 		</tr>
-		<tr v-if="gk_kurszahl === 0 && gk" class="text-left" :style="{
-			'background-color': bgColor
-		}">
-			<td class="px-4 border-y border-[#7f7f7f]/20" :colspan="schienen.size()">
+		<tr v-if="gk_kurszahl === 0 && gk" class="text-left" :style="{ 'background-color': bgColor }">
+			<td class="px-4 border-y border-[#7f7f7f]/20" :colspan="schienen">
 				{{ fach.kuerzel }}-GK: {{gk}} Kurswahlen
 			</td>
 			<td class="px-2 border-y border-[#7f7f7f]/20 border-r" colspan="4">
@@ -28,10 +22,8 @@
 			</td>
 			<td class="bg-white"></td>
 		</tr>
-		<tr v-if="zk_kurszahl === 0 && zk" class="text-left" :style="{
-			'background-color': bgColor
-		}">
-			<td class="px-4 border-y border-[#7f7f7f]/20" :colspan="schienen.size()">
+		<tr v-if="zk_kurszahl === 0 && zk" class="text-left" :style="{ 'background-color': bgColor }">
+			<td class="px-4 border-y border-[#7f7f7f]/20" :colspan="schienen">
 				{{ fach.kuerzel }}-ZK: {{zk}} Kurswahlen
 			</td>
 			<td class="px-2 border-y border-[#7f7f7f]/20 border-r" colspan="4">
@@ -45,7 +37,6 @@
 <script setup lang="ts">
 import {
 	GostBlockungKurs,
-	GostBlockungSchiene,
 	GostKursart,
 	GostStatistikFachwahl,
 	GostStatistikFachwahlHalbjahr,
@@ -82,7 +73,10 @@ const kursezaehler: ComputedRef<{ lk: number; gk: number; zk: number }> =
 					case 2:
 						zaehler.gk++;
 						break;
-					case 3:
+					case 4:
+						zaehler.zk++;
+						break;
+					case 5:
 						zaehler.zk++;
 						break;
 				}
@@ -93,8 +87,8 @@ const kursezaehler: ComputedRef<{ lk: number; gk: number; zk: number }> =
 const kurse: ComputedRef<List<GostBlockungKurs>> = computed(()=>
 	app.dataKursblockung.datenmanager?.getKursmengeSortiertNachKursartFachNummer() || new Vector<GostBlockungKurs>())
 
-const schienen: ComputedRef<List<GostBlockungSchiene>> =
-	computed(()=> app.dataKursblockung.datenmanager?.getMengeOfSchienen() || new Vector<GostBlockungSchiene>())
+const schienen: ComputedRef<number> =
+	computed(()=> app.dataKursblockung.datenmanager?.getMengeOfSchienen().size() || 0)
 
 const fach_halbjahr: ComputedRef<GostStatistikFachwahlHalbjahr> =
 	computed(() => props.fach.fachwahlen[props.halbjahr] ||	new GostStatistikFachwahlHalbjahr());

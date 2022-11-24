@@ -341,8 +341,8 @@ async function add_kurs() {
 	await app.dataKursblockung.add_blockung_kurse(props.kurs.fach_id, props.kurs.kursart)
 }
 
-function del_kurs() {
-	app.dataKursblockung.del_blockung_kurse(props.kurs.fach_id, props.kurs.kursart)
+async function del_kurs() {
+	await app.dataKursblockung.del_blockung_kurse(props.kurs.fach_id, props.kurs.kursart)
 }
 
 function toggle_active_kurs() {
