@@ -108,6 +108,7 @@ public enum OperationError {
 	 * 
 	 * @return die WebApplicationException für die Handhabung in der OpenAPI-Schnittstelle
 	 */
+	@SuppressWarnings("resource")
 	public WebApplicationException exception(final Object body) {
 		return new WebApplicationException(getResponse(body));
 	}
@@ -133,6 +134,7 @@ public enum OperationError {
 	 * 
 	 * @return die WebApplicationException für die Handhabung in der OpenAPI-Schnittstelle
 	 */
+	@SuppressWarnings("resource")
 	public WebApplicationException exception(final Throwable cause, final Object body) {
 		return new WebApplicationException(cause, getResponse(body));
 	}	
