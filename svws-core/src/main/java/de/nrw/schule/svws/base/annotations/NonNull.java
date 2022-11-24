@@ -1,0 +1,18 @@
+package de.nrw.schule.svws.base.annotations;
+
+import static java.lang.annotation.ElementType.TYPE_USE;
+import static java.lang.annotation.RetentionPolicy.CLASS;
+
+import java.lang.annotation.Documented;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
+
+/**
+ * Die Klasse wird genutzt, um Typen zu annotieren, die nicht Null sein können.
+ */
+@Documented
+@Retention(value=CLASS)
+@Target(value=TYPE_USE)
+public @interface NonNull {
+	 //
+}
