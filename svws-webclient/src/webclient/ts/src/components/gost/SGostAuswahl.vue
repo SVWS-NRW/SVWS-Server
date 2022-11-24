@@ -8,7 +8,7 @@
 					v-model="selected"
 					:columns="cols"
 					:data="rows"
-					:footer="false"
+					id="abiturjahr"
 				/>
 			</div>
 			<svws-ui-dropdown variant="secondary" class="float-right m-4">

@@ -28,13 +28,14 @@ export function useAuswahlViaRoute<
 	const updateAuswahl = (id: string) => {
 		let item
 		for (const i of app.auswahl.liste) {
-			if ((i instanceof GostJahrgang) 
-				? i.abiturjahr?.valueOf() === +id
-				: i.id === +id) {
-					item = i;
-					break
-				}
-		};
+			if (i instanceof GostJahrgang) {
+				if (i.abiturjahr?.valueOf() === +id || !i.abiturjahr && !id)
+				item = i
+			} else if (i.id === +id) {
+				item = i;
+			}
+			if (item) break
+		}
 		// console.log(`route id update for ${routeName}-${id}:`, item);
 		app.auswahl.ausgewaehlt = item;
 	};
@@ -42,7 +43,7 @@ export function useAuswahlViaRoute<
 	watch(
 		() => route.params.id,
 		id => {
-			if (route.name === routeName && id) {
+			if (route.name === routeName && (id||routeName==='gost')) {
 				updateAuswahl(id as string);
 			}
 		}
