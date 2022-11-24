@@ -13,6 +13,7 @@ export class ListKursblockungsergebnisse extends BaseList<GostBlockungsergebnisL
 	public async update_list(blockung_id: number | undefined): Promise<void> {
 		if (blockung_id === undefined) {
 			this.liste = [];
+			this.ausgewaehlt = undefined
 			return;
 		}
 		await super._update_list(() => App.apps.gost.dataKursblockung.ergebnisse());

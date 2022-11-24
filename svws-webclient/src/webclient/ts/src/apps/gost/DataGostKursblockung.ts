@@ -14,11 +14,10 @@ import {
 } from "@svws-nrw/svws-core-ts";
 import { BaseData } from "../BaseData";
 import { ListKursblockungsergebnisse } from "./ListKursblockungsergebnisse";
-import { Ref, ShallowReactive, shallowReactive, shallowRef } from "vue";
+import { ShallowReactive, shallowReactive } from "vue";
 
 interface DataGostKursblockungManagerContainer {
 	manager: {
-
 		daten: GostBlockungsdatenManager|undefined;
 		ergebnis: GostBlockungsergebnisManager|undefined;
 	}
@@ -95,6 +94,9 @@ export class DataGostKursblockung extends BaseData<
 	public async unselect(): Promise<undefined> {
 		this._daten = undefined;
 		await this.listKursblockungsergebnisse.update_list(undefined);
+		this.datenmanager = undefined;
+		this.ergebnismanager = undefined;
+		this.commit();
 		return undefined;
 	}
 	

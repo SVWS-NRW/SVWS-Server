@@ -65,6 +65,7 @@
 						</template>
 					</template>
 				</svws-ui-table>
+				<div class="py-2"></div>
 				<svws-ui-table
 					v-model="selected_ergebnis"
 					:columns="[{ key: 'id', label: 'ID' }, { key: 'bewertung', label: 'Bewertungen'}]"

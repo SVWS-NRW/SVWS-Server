@@ -26,6 +26,8 @@ export class ListKursblockungen extends BaseList<GostBlockungListeneintrag> {
 			blockung = this.liste[this.liste.length - 1];
 		else
 			blockung = this.liste.find(e => e.id === id) || this.liste[this.liste.length - 1];
-		this.ausgewaehlt = blockung
+		if (this.liste.length)
+			this.ausgewaehlt = blockung;
+		else this.ausgewaehlt = undefined;
 	}
 }
