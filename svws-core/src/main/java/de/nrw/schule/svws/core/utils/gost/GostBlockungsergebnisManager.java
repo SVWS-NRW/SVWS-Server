@@ -200,6 +200,13 @@ public class GostBlockungsergebnisManager {
 			fachartgruppe.add(eKurs);
 
 		}
+		
+		// Fachwahlen zu denen es keinen Kurs gibt der Map '_map_fachartID_kurse' hinzufügen.
+		for (@NotNull GostFachwahl gFachwahl : _parent.daten().fachwahlen) {
+			long fachartID = GostKursart.getFachartID(gFachwahl);
+			if (_map_fachartID_kurse.containsKey(fachartID) == false)
+				_map_fachartID_kurse.put(fachartID, new Vector<>());
+		}
 
 		// _map_schienenID_fachartID_kurse
 		for (@NotNull GostBlockungSchiene gSchiene : _parent.daten().schienen) {
@@ -757,8 +764,7 @@ public class GostBlockungsergebnisManager {
 	 * 
 	 * @throws NullPointerException Falls die Fachart-ID unbekannt ist.
 	 */
-	public @NotNull Vector<@NotNull GostBlockungsergebnisKurs> getOfFachartKursmenge(long pFachartID)
-			throws NullPointerException {
+	public @NotNull Vector<@NotNull GostBlockungsergebnisKurs> getOfFachartKursmenge(long pFachartID) throws NullPointerException {
 		Vector<@NotNull GostBlockungsergebnisKurs> fachartGruppe = _map_fachartID_kurse.get(pFachartID);
 		if (fachartGruppe == null)
 			throw new NullPointerException("Fachart-ID " + pFachartID + " unbekannt!");

@@ -175,6 +175,11 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			}
 			fachartgruppe.add(eKurs);
 		}
+		for (let gFachwahl of this._parent.daten().fachwahlen) {
+			let fachartID : number = GostKursart.getFachartID(gFachwahl);
+			if (this._map_fachartID_kurse.containsKey(fachartID) === false) 
+				this._map_fachartID_kurse.put(fachartID, new Vector());
+		}
 		for (let gSchiene of this._parent.daten().schienen) {
 			this._map_schienenID_fachartID_kurse.put(gSchiene.id, new HashMap());
 			for (let fachartID of this._map_fachartID_kursdifferenz.keySet()) 
