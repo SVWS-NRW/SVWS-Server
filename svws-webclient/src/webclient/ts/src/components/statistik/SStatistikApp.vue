@@ -2,7 +2,7 @@
 	<div class="flex flex-row">
 		<div class="app-wrapper">
 			<svws-ui-header><span></span></svws-ui-header>
-			<svws-ui-tab-bar v-model="app.selectedTab.value">
+			<svws-ui-tab-bar>
 				<template #tabs>
 					<svws-ui-tab-button>Daten</svws-ui-tab-button>
 				</template>
