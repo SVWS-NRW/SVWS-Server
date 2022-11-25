@@ -174,7 +174,7 @@
 		:style="{
 			'background-color': abi_gk_moeglich ? bgColor : 'gray'
 		}"
-		@click="abi_set"
+		@click="abi_gk_set"
 	>
 		{{ abi_gk_moeglich ? toggle(fach.istMoeglichAbiGK) : "" }}
 	</td>
@@ -188,7 +188,7 @@
 		:style="{
 			'background-color': abi_lk_moeglich ? bgColor : 'gray'
 		}"
-		@click="abi_set"
+		@click="abi_lk_set"
 	>
 		{{ abi_lk_moeglich ? toggle(fach.istMoeglichAbiLK) : "" }}
 	</td>
@@ -346,9 +346,14 @@
 		set({ istMoeglichQ22: !props.fach.istMoeglichQ22 });
 	}
 
-	function abi_set(): void {
-		if (!ef1_moeglich.value) return;
-		set({ istMoeglichEF1: !props.fach.istMoeglichEF1 });
+	function abi_gk_set(): void {
+		if (!abi_gk_moeglich .value) return;
+		set({ istMoeglichAbiGK: !props.fach.istMoeglichAbiGK });
+	}
+
+	function abi_lk_set(): void {
+		if (!abi_gk_moeglich .value) return;
+		set({ istMoeglichAbiLK: !props.fach.istMoeglichAbiLK });
 	}
 
 	function set_pjk_stunden(): void {
