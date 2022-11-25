@@ -11,6 +11,7 @@
 	],
 	"scripts": {
 		"dev": "vite",
+		"exposed": "vite --host",
 		"build": "vite build",
 		"serve": "vite preview",
 		"test": "vitest",
