@@ -62,7 +62,7 @@ export class ListSchueler extends BaseList<SchuelerListeEintrag, Filter> {
 		this._state.gefiltert = this.liste
 			.filter(s => !this.filter.status.length || this.filter.status.map(s => s.bezeichnung).includes(s.status))
 			.filter(s => !this.filter.jahrgang || s.jahrgang === this.filter.jahrgang.kuerzel)
-			.filter(s => !this.filter.klasse || s.jahrgang === this.filter.klasse.kuerzel)
+			.filter(s => !this.filter.klasse || s.idKlasse === this.filter.klasse.id)
 			.filter(s => !this.filter.kurs || s.kurse?.toArray(new Array<number>()).includes(this.filter.kurs.id))
 			.filter(s => !this.filter.schulgliederung || s.schulgliederung === this.filter.schulgliederung.daten.kuerzel);
 		if (this.ausgewaehlt && !this.gefiltert.includes(this.ausgewaehlt)) this.ausgewaehlt = this.gefiltert[0]
