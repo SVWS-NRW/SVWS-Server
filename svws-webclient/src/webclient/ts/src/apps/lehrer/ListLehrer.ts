@@ -13,5 +13,6 @@ export class ListLehrer extends BaseList<LehrerListeEintrag> {
 	public async update_list(): Promise<void> {
 		if (this.liste.length) return;
 		await super._update_list(() => App.api.getLehrer(App.schema));
+		if (!this.ausgewaehlt) this.ausgewaehlt = this.gefiltert[0]
 	}
 }
