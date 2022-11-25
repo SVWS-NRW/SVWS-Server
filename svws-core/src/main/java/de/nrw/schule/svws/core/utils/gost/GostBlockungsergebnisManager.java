@@ -995,10 +995,10 @@ public class GostBlockungsergebnisManager {
 				inKurs.id = kurs.id;
 				inKurs.fach = kurs.fachID;
 				inKurs.kursart = kurs.kursart;
-				inKurs.istGesperrt = getOfSchuelerOfKursIstGesperrt(fachwahl.schuelerID, kurs.id);
-				inKurs.istFixiert = getOfSchuelerOfKursIstFixiert(fachwahl.schuelerID, kurs.id);
+				inKurs.istGesperrt = getOfSchuelerOfKursIstGesperrt(pSchuelerID, kurs.id);
+				inKurs.istFixiert = getOfSchuelerOfKursIstFixiert(pSchuelerID, kurs.id);
 				inKurs.anzahlSuS = getOfKursAnzahlSchueler(kurs.id);
-				inKurs.schienen = getOfKursSchienenNummern(pSchuelerID);
+				inKurs.schienen = getOfKursSchienenNummern(kurs.id);
 			}
 		}
 		

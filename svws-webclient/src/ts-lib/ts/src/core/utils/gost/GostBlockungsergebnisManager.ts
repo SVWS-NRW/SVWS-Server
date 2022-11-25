@@ -887,10 +887,10 @@ export class GostBlockungsergebnisManager extends JavaObject {
 				inKurs.id = kurs.id;
 				inKurs.fach = kurs.fachID;
 				inKurs.kursart = kurs.kursart;
-				inKurs.istGesperrt = this.getOfSchuelerOfKursIstGesperrt(fachwahl.schuelerID, kurs.id);
-				inKurs.istFixiert = this.getOfSchuelerOfKursIstFixiert(fachwahl.schuelerID, kurs.id);
+				inKurs.istGesperrt = this.getOfSchuelerOfKursIstGesperrt(pSchuelerID, kurs.id);
+				inKurs.istFixiert = this.getOfSchuelerOfKursIstFixiert(pSchuelerID, kurs.id);
 				inKurs.anzahlSuS = this.getOfKursAnzahlSchueler(kurs.id);
-				inKurs.schienen = this.getOfKursSchienenNummern(pSchuelerID);
+				inKurs.schienen = this.getOfKursSchienenNummern(kurs.id);
 			}
 		}
 		let algorithmus : SchuelerblockungAlgorithmus = new SchuelerblockungAlgorithmus();
