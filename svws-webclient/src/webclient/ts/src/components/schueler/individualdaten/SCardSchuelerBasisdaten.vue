@@ -21,7 +21,7 @@
 				<svws-ui-text-input
 					v-model="vorname"
 					type="text"
-					placeholder="Vorname"
+					placeholder="Rufname"
 				/>
 				<svws-ui-text-input
 					v-model="alleVornamen"
