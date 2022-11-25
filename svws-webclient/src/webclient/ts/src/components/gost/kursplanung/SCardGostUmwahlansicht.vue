@@ -58,6 +58,9 @@
 					<div class="flex items-center justify-center bg-slate-100">
 						<i-ri-delete-bin-2-line class="m-2 text-4xl" :class="{ 'text-red-700': is_dragging }" />
 					</div>
+					<div class="flex items-center justify-center bg-slate-100 py-2">
+						<svws-ui-button size="small" @click="auto_verteilen">Automatisch verteilen</svws-ui-button>
+					</div>
 				</div>
 			</div>
 		</drop-data>
@@ -204,5 +207,12 @@
 		let ok = false
 		ok = await app.dataKursblockungsergebnis.removeSchuelerKurs(schuelerid, kurs.id);
 		if (ok) main.config.drag_and_drop_data = undefined;
+	}
+
+	const auto_verteilen = () => {
+		if (manager.value === undefined || selected.value === undefined)
+			return;
+		manager.value?.getOfSchuelerNeuzuordnung(selected.value.id);
+		app.dataKursblockung.commit();
 	}
 </script>
