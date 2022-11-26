@@ -64,7 +64,7 @@
 			<div class="container">
 				<svws-ui-table
 					v-model="selected"
-					:v-model:selection="selectedItems"
+					v-model:selection="selectedItems"
 					:data="rowsFiltered"
 					:columns="cols"
 					is-multi-select
@@ -89,6 +89,7 @@
 					</template> -->
 					<!-- Footer mit Button zum Hinzufügen einer Zeile -->
 					<template #footer>
+						{{selectedItems.length || 1}}/{{rowsFiltered.length}}
 						<button
 							class="flex h-10 w-10 items-center justify-center"
 							@click="addLine()"
