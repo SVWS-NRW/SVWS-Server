@@ -959,6 +959,8 @@ export class Verkehrssprache extends JavaObject {
 
 	private static readonly _sprachen : HashMap<String, Verkehrssprache> = new HashMap();
 
+	private static readonly _kuerzel2 : HashMap<String, Verkehrssprache> = new HashMap();
+
 	/**
 	 * Erzeugt eine neue Verkehrssprache in der Aufzählung.
 	 * 
@@ -975,7 +977,7 @@ export class Verkehrssprache extends JavaObject {
 	}
 
 	/**
-	 * Gibt eine Map von den Kürzels der Verkehrssprachen auf die zugehörigen Verkehrssprachen
+	 * Gibt eine Map von den Kürzeln der Verkehrssprachen auf die zugehörigen Verkehrssprachen
 	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
 	 *    
 	 * @return die Map von den Kürzeln der Verkehrssprache auf die zugehörigen Verkehrssprache
@@ -991,13 +993,57 @@ export class Verkehrssprache extends JavaObject {
 	}
 
 	/**
+	 * Gibt eine Map von den zweistelligen Kürzeln der Verkehrssprachen auf die zugehörigen Verkehrssprachen
+	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
+	 *    
+	 * @return die Map von den zweistelligen Kürzeln der Verkehrssprache auf die zugehörigen Verkehrssprache
+	 */
+	private static getMapSpracheByKuerzel2() : HashMap<String, Verkehrssprache> {
+		if (Verkehrssprache._kuerzel2.size() === 0) {
+			for (let s of Verkehrssprache.values()) {
+				if ((s.daten !== null) && (s.daten.iso2 !== null)) 
+					Verkehrssprache._kuerzel2.put(s.daten.iso2, s);
+			}
+		}
+		return Verkehrssprache._kuerzel2;
+	}
+
+	/**
 	 * Gibt die Verkehrssprache für das angegebene Kürzel zurück.
 	 * 
 	 * @param kuerzel   das Kürzel der Verkehrssprache
 	 * 
-	 * @return die Verkehrssprache oder null, falls das Kürzel ungültig ist
+	 * @return die Verkehrssprache oder null, falls das Kürzel unbekannt ist
 	 */
 	public static getByKuerzel(kuerzel : String | null) : Verkehrssprache | null {
+		return Verkehrssprache.getMapSpracheByKuerzel().get(kuerzel);
+	}
+
+	/**
+	 * Gibt die Verkehrssprache für das angegebene zweistellige ISO 639-1-Kürzel zurück.
+	 * 
+	 * @param kuerzel   das zweistellige Kürzel der Verkehrssprache
+	 * 
+	 * @return die Verkehrssprache oder null, falls das Kürzel unbekannt ist
+	 */
+	public static getByKuerzelISO2(kuerzel : String | null) : Verkehrssprache | null {
+		return Verkehrssprache.getMapSpracheByKuerzel2().get(kuerzel);
+	}
+
+	/**
+	 * Gibt die Verkehrssprache für das angegebene Kürzel zurück.
+	 * Dabei wird anhand der Länge des Kürzels automatisch geprüft, ob
+	 * eine Sprache nach ISO 639-1 bzw. ISO 639-2 angegeben wurde.
+	 * 
+	 * @param kuerzel   das Kürzel der Verkehrssprache
+	 * 
+	 * @return die Verkehrssprache oder null, falls das Kürzel unbekannt ist
+	 */
+	public static getByKuerzelAuto(kuerzel : String | null) : Verkehrssprache | null {
+		if (kuerzel === null) 
+			return null;
+		if (kuerzel.length === 2) 
+			return Verkehrssprache.getMapSpracheByKuerzel2().get(kuerzel);
 		return Verkehrssprache.getMapSpracheByKuerzel().get(kuerzel);
 	}
 

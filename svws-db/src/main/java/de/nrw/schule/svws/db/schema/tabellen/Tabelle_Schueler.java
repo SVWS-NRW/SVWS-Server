@@ -8,6 +8,7 @@ import de.nrw.schule.svws.db.converter.current.DatumConverter;
 import de.nrw.schule.svws.db.converter.current.GeschlechtConverter;
 import de.nrw.schule.svws.db.converter.current.NationalitaetenConverter;
 import de.nrw.schule.svws.db.converter.current.SchuelerStatusConverter;
+import de.nrw.schule.svws.db.converter.current.VerkehrssprachenConverter;
 import de.nrw.schule.svws.db.converter.current.statkue.SchulgliederungKuerzelConverter;
 import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
@@ -477,8 +478,10 @@ public class Tabelle_Schueler extends SchemaTabelle {
 		.setJavaComment("DEPRECATED: SchildMedia");
 
 	/** Die Definition der Tabellenspalte VerkehrsspracheFamilie */
-	public SchemaTabelleSpalte col_VerkehrsspracheFamilie = add("VerkehrsspracheFamilie", SchemaDatentypen.VARCHAR, false).setDatenlaenge(2)
-		.setDefault("de")
+	public SchemaTabelleSpalte col_VerkehrsspracheFamilie = add("VerkehrsspracheFamilie", SchemaDatentypen.VARCHAR, false).setDatenlaenge(3)
+		.setDefault("deu")
+		.setConverter(VerkehrssprachenConverter.class)
+		.setConverterRevision(SchemaRevisionen.REV_1)
 		.setJavaComment("Migrationshintergrund Verkehrssprache in der Familie");
 
 	/** Die Definition der Tabellenspalte JahrZuzug */

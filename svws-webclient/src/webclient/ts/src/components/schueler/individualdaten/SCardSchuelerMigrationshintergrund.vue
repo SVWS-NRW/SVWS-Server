@@ -14,7 +14,7 @@
 				v-model="inputGeburtsland"
 				title="Geburtsland"
 				:items="inputKatalogNationalitaeten"
-				:item-text="(i: Nationalitaeten) => i.daten.bezeichnung"
+				:item-text="(i: Nationalitaeten) => `${i.daten.bezeichnung} (${i.daten.iso3})`"
 				:item-sort="nationalitaetenKatalogEintragSort"
 				:item-filter="nationalitaetenKatalogEintragFilter"
 				:disabled="!inputHatMigrationshintergrund"
@@ -24,7 +24,7 @@
 				autocomplete
 				title="Verkehrssprache"
 				:items="inputKatalogVerkehrssprachen"
-				:item-text="(i: Verkehrssprache) => i.daten.bezeichnung"
+				:item-text="(i: Verkehrssprache) => `${i.daten.bezeichnung} (${i.daten.kuerzel})`"
 				:item-sort="verkehrsspracheKatalogEintragSort"
 				:item-filter="verkehrsspracheKatalogEintragFilter"
 				:disabled="!inputHatMigrationshintergrund"
@@ -79,8 +79,9 @@
 		Nationalitaeten.values()
 	);
 
-	const inputKatalogVerkehrssprachen: ComputedRef<Verkehrssprache[]> =
-		computed(() => Verkehrssprache.values());
+	const inputKatalogVerkehrssprachen: ComputedRef<Verkehrssprache[]> = computed(() => 
+		Verkehrssprache.values()
+	);
 
 	const inputGeburtsland: WritableComputedRef<Nationalitaeten> = computed({
 		get(): Nationalitaeten {
@@ -121,7 +122,7 @@
 	const inputVerkehrspracheFamilie: WritableComputedRef<Verkehrssprache> =
 		computed({
 			get(): Verkehrssprache {
-				return Verkehrssprache.getByKuerzel(daten.value.verkehrspracheFamilie) || Verkehrssprache.DEU
+				return Verkehrssprache.getByKuerzelAuto(daten.value.verkehrspracheFamilie) || Verkehrssprache.DEU
 			},
 			set(val: Verkehrssprache) {
 				app.stammdaten.patch({ verkehrspracheFamilie: val.daten.kuerzel });

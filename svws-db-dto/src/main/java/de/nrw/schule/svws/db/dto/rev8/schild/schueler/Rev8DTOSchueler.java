@@ -8,10 +8,12 @@ import de.nrw.schule.svws.db.converter.current.DatumConverter;
 import de.nrw.schule.svws.db.converter.current.GeschlechtConverter;
 import de.nrw.schule.svws.db.converter.current.NationalitaetenConverter;
 import de.nrw.schule.svws.db.converter.current.SchuelerStatusConverter;
+import de.nrw.schule.svws.db.converter.current.VerkehrssprachenConverter;
 
 import de.nrw.schule.svws.core.types.Geschlecht;
 import de.nrw.schule.svws.core.types.SchuelerStatus;
 import de.nrw.schule.svws.core.types.schule.Nationalitaeten;
+import de.nrw.schule.svws.core.types.schule.Verkehrssprache;
 
 
 import jakarta.persistence.Cacheable;
@@ -40,6 +42,8 @@ import de.nrw.schule.svws.csv.converter.current.NationalitaetenConverterSerializ
 import de.nrw.schule.svws.csv.converter.current.NationalitaetenConverterDeserializer;
 import de.nrw.schule.svws.csv.converter.current.SchuelerStatusConverterSerializer;
 import de.nrw.schule.svws.csv.converter.current.SchuelerStatusConverterDeserializer;
+import de.nrw.schule.svws.csv.converter.current.VerkehrssprachenConverterSerializer;
+import de.nrw.schule.svws.csv.converter.current.VerkehrssprachenConverterDeserializer;
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Schueler.
@@ -770,7 +774,10 @@ public class Rev8DTOSchueler {
 	/** Migrationshintergrund Verkehrssprache in der Familie */
 	@Column(name = "VerkehrsspracheFamilie")
 	@JsonProperty
-	public String VerkehrsspracheFamilie;
+	@Convert(converter=VerkehrssprachenConverter.class)
+	@JsonSerialize(using=VerkehrssprachenConverterSerializer.class)
+	@JsonDeserialize(using=VerkehrssprachenConverterDeserializer.class)
+	public Verkehrssprache VerkehrsspracheFamilie;
 
 	/** Migrationshintergrund Zuzugsjahr */
 	@Column(name = "JahrZuzug")

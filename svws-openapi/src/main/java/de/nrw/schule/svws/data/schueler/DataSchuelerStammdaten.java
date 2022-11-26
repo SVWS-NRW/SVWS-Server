@@ -15,6 +15,7 @@ import de.nrw.schule.svws.core.data.schueler.SchuelerStammdaten;
 import de.nrw.schule.svws.core.types.Geschlecht;
 import de.nrw.schule.svws.core.types.SchuelerStatus;
 import de.nrw.schule.svws.core.types.schule.Nationalitaeten;
+import de.nrw.schule.svws.core.types.schule.Verkehrssprache;
 import de.nrw.schule.svws.data.DataManager;
 import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.dto.current.schild.katalog.DTOFahrschuelerart;
@@ -80,7 +81,7 @@ public class DataSchuelerStammdaten extends DataManager<Long> {
 		daten.hatMigrationshintergrund = schueler.Migrationshintergrund == null ? false : schueler.Migrationshintergrund;
 		daten.zuzugsjahr = schueler.JahrZuzug == null ? null : schueler.JahrZuzug.toString();
 		daten.geburtsland = schueler.GeburtslandSchueler == null ? null : schueler.GeburtslandSchueler.daten.iso3;
-		daten.verkehrspracheFamilie = schueler.VerkehrsspracheFamilie;
+		daten.verkehrspracheFamilie = schueler.VerkehrsspracheFamilie == null ? null : schueler.VerkehrsspracheFamilie.daten.kuerzel;
 		daten.geburtslandVater = schueler.GeburtslandVater == null ? null : schueler.GeburtslandVater.daten.iso3;
 		daten.geburtslandMutter = schueler.GeburtslandMutter == null ? null : schueler.GeburtslandMutter.daten.iso3;
 		// Daten zur Sonderpädagogischen Förderung
@@ -252,7 +253,10 @@ public class DataSchuelerStammdaten extends DataManager<Long> {
 		    			}
 		    			case "verkehrspracheFamilie" -> {
 		    				String strData = JSONMapper.convertToString(value, true, true);
-		    				schueler.VerkehrsspracheFamilie = strData;  // TODO Katalog überprüfen !!!
+		    				Verkehrssprache vs = Verkehrssprache.getByKuerzelAuto(strData);
+		    				if (vs == null)
+	    			    		throw OperationError.NOT_FOUND.exception();
+		    				schueler.VerkehrsspracheFamilie = vs;
 		    			}
 		    			case "geburtslandVater" -> {
 		    				String strData = JSONMapper.convertToString(value, true, true);

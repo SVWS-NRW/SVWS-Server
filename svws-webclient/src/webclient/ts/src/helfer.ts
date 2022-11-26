@@ -97,75 +97,37 @@ export const staatsangehoerigkeitKatalogEintragSort = (
 };
 
 /** Filter für Sprachen */
-export const verkehrsspracheKatalogEintragFilter = (
-	items: Verkehrssprache[],
-	search: string
-) => {
-	if (!items.length) return [];
-	return items.filter(i => {
+export const verkehrsspracheKatalogEintragFilter = (items: Verkehrssprache[], search: string) => {
+	if (!items.length)
+		return [];
+	return items.filter((i : Verkehrssprache) => {
 		return (
-			i.daten.kuerzel
-				.toLocaleLowerCase()
-				.includes(search.toLocaleLowerCase()) ||
-			i.daten.bezeichnung
-				.toLocaleLowerCase()
-				.includes(search.toLocaleLowerCase())
+			i.daten.kuerzel.toLocaleLowerCase().includes(search.toLocaleLowerCase()) ||
+			i.daten.bezeichnung.toLocaleLowerCase().includes(search.toLocaleLowerCase())
 		);
 	});
 };
 
 /** Sortierfunktion für Sprachen */
-export const verkehrsspracheKatalogEintragSort = (
-	a: Verkehrssprache,
-	b: Verkehrssprache
-) => {
-	if (a.daten.bezeichnung && b.daten.bezeichnung) {
-		return a.daten.bezeichnung.localeCompare(
-			b.daten.bezeichnung.toString()
-		);
-	} else if (a.daten.bezeichnung && !b.daten.bezeichnung) {
-		return -1;
-	} else if (!a.daten.bezeichnung && !b.daten.bezeichnung) {
-		return 1;
-	}
-	return 0;
+export const verkehrsspracheKatalogEintragSort = (a: Verkehrssprache, b: Verkehrssprache) => { 
+	return a.daten.bezeichnung.localeCompare(b.daten.bezeichnung.toString()); 
 };
 
 /** Filter für Länder */
-export const nationalitaetenKatalogEintragFilter = (
-	items: Nationalitaeten[],
-	search: string
-) => {
-	return items.filter((i: Nationalitaeten) => {
-		if (i.daten.bezeichnung) {
-			return (
-				i.daten.bezeichnung
-					.toLocaleLowerCase()
-					.includes(search.toLocaleLowerCase()) ||
-				i.daten.iso3
-					.toLocaleLowerCase()
-					.includes(search.toLocaleLowerCase())
-			);
-		}
+export const nationalitaetenKatalogEintragFilter = (items: Nationalitaeten[], search: string) => {
+	if (!items.length)
 		return [];
+	return items.filter((i: Nationalitaeten) => {
+		return (
+			i.daten.bezeichnung.toLocaleLowerCase().includes(search.toLocaleLowerCase()) ||
+			i.daten.iso3.toLocaleLowerCase().includes(search.toLocaleLowerCase())
+		);
 	});
 };
 
 /** Sortierfunktion für Länder */
-export const nationalitaetenKatalogEintragSort = (
-	a: Nationalitaeten,
-	b: Nationalitaeten
-) => {
-	if (a.daten.bezeichnung && b.daten.bezeichnung) {
-		return a.daten.bezeichnung.localeCompare(
-			b.daten.bezeichnung.toString()
-		);
-	} else if (a.daten.bezeichnung && !b.daten.bezeichnung) {
-		return -1;
-	} else if (!a.daten.bezeichnung && !b.daten.bezeichnung) {
-		return 1;
-	}
-	return 0;
+export const nationalitaetenKatalogEintragSort = (a: Nationalitaeten, b: Nationalitaeten) => {
+	return a.daten.bezeichnung.localeCompare(b.daten.bezeichnung.toString());
 };
 
 export const katalogEintragSort = (
