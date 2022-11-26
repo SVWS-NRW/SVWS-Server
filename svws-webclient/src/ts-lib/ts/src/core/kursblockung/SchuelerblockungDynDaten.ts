@@ -1,5 +1,4 @@
 import { JavaObject, cast_java_lang_Object } from '../../java/lang/JavaObject';
-import { AVLSet, cast_de_nrw_schule_svws_core_adt_set_AVLSet } from '../../core/adt/set/AVLSet';
 import { SchuelerblockungOutput, cast_de_nrw_schule_svws_core_data_kursblockung_SchuelerblockungOutput } from '../../core/data/kursblockung/SchuelerblockungOutput';
 import { SchuelerblockungInputKurs, cast_de_nrw_schule_svws_core_data_kursblockung_SchuelerblockungInputKurs } from '../../core/data/kursblockung/SchuelerblockungInputKurs';
 import { SchuelerblockungOutputFachwahlZuKurs, cast_de_nrw_schule_svws_core_data_kursblockung_SchuelerblockungOutputFachwahlZuKurs } from '../../core/data/kursblockung/SchuelerblockungOutputFachwahlZuKurs';
@@ -16,6 +15,7 @@ import { KursblockungMatrix, cast_de_nrw_schule_svws_core_kursblockung_Kursblock
 import { JavaLong, cast_java_lang_Long } from '../../java/lang/JavaLong';
 import { Arrays, cast_java_util_Arrays } from '../../java/util/Arrays';
 import { Vector, cast_java_util_Vector } from '../../java/util/Vector';
+import { HashSet, cast_java_util_HashSet } from '../../java/util/HashSet';
 
 export class SchuelerblockungDynDaten extends JavaObject {
 
@@ -103,7 +103,7 @@ export class SchuelerblockungDynDaten extends JavaObject {
 		let nKurse : number = pInput.kurse.size();
 		if (nKurse < 1) 
 			throw this.fehler("Die Kursanzahl ist zu gering! --> " + nKurse)
-		let setKursID : AVLSet<Number | null> | null = new AVLSet();
+		let setKursID : HashSet<Number | null> | null = new HashSet();
 		for (let kurs of pInput.kurse) {
 			if (kurs.id < 0) 
 				throw this.fehler("kurs.id ist zu gering! --> " + kurs.id)

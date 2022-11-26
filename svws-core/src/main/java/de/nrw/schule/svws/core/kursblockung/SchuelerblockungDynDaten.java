@@ -1,10 +1,10 @@
 package de.nrw.schule.svws.core.kursblockung;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Random;
 import java.util.Vector;
 
-import de.nrw.schule.svws.core.adt.set.AVLSet;
 import de.nrw.schule.svws.core.data.gost.GostFachwahl;
 import de.nrw.schule.svws.core.data.kursblockung.SchuelerblockungInput;
 import de.nrw.schule.svws.core.data.kursblockung.SchuelerblockungInputKurs;
@@ -111,7 +111,7 @@ public class SchuelerblockungDynDaten {
 			throw fehler("Die Kursanzahl ist zu gering! --> " + nKurse);
 
 		// Attribute der Kurse überprüfen.
-		AVLSet<Long> setKursID = new AVLSet<>();
+		HashSet<Long> setKursID = new HashSet<>();
 		for (@NotNull SchuelerblockungInputKurs kurs : pInput.kurse) {
 			if (kurs.id < 0)
 				throw fehler("kurs.id ist zu gering! --> " + kurs.id);
