@@ -896,8 +896,11 @@ export class GostBlockungsergebnisManager extends JavaObject {
 				inKurs.istFixiert = this.getOfSchuelerOfKursIstFixiert(pSchuelerID, kurs.id);
 				inKurs.anzahlSuS = this.getOfKursAnzahlSchueler(kurs.id);
 				inKurs.schienen = this.getOfKursSchienenNummern(kurs.id);
+				input.kurse.add(inKurs);
 			}
 		}
+		if (input.kurse.isEmpty()) 
+			return new SchuelerblockungOutput();
 		let algorithmus : SchuelerblockungAlgorithmus = new SchuelerblockungAlgorithmus();
 		let output : SchuelerblockungOutput = algorithmus.handle(input);
 		return output;

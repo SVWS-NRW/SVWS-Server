@@ -1005,8 +1005,13 @@ public class GostBlockungsergebnisManager {
 				inKurs.istFixiert = getOfSchuelerOfKursIstFixiert(pSchuelerID, kurs.id);
 				inKurs.anzahlSuS = getOfKursAnzahlSchueler(kurs.id);
 				inKurs.schienen = getOfKursSchienenNummern(kurs.id);
+				input.kurse.add(inKurs);
 			}
 		}
+
+		// Sonderfall: Der Schüler hat 0 Fachwahlen oder alle Fachwahlen haben 0 Kurse.
+		if (input.kurse.isEmpty())
+			return new SchuelerblockungOutput();
 		
 		// Mit dem Algorithmus die Zuordnung berechnen.
 		@NotNull SchuelerblockungAlgorithmus algorithmus = new SchuelerblockungAlgorithmus();
