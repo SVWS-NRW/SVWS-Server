@@ -32,6 +32,10 @@ public class ENMLeistung {
 	@Schema(required = true, description = "Das Kürzel der Note, die vergeben wurde.", example="3+")
 	public String note;
 
+	/** Der Zeitstempel der letzten Änderung an der erteilten Note */
+	@Schema(required = false, description = "Der Zeitstempel der letzten Änderung an der erteilten Note.", example="2013-11-14 13:12:48.774")
+    public String tsNote;
+
 	/** Gibt bei Oberstufenkursen an, ob das Fach schriftlich belegt wurde oder nicht. */
 	@Schema(required = false, description = "Gibt bei Oberstufenkursen an, ob das Fach schriftlich belegt wurde oder nicht.", example="true")
     public Boolean istSchriftlich;
@@ -43,14 +47,26 @@ public class ENMLeistung {
     /** Gibt die Anzahl der gesamten Fehlstunden an, sofern diese fachbezogen ermittelt werden. */
 	@Schema(required = false, description = "Gibt die Anzahl der gesamten Fehlstunden an, sofern diese fachbezogen ermittel werden.", example="23")
     public Integer fehlstundenGesamt;
+	
+	/** Der Zeitstempel der letzten Änderung an Anzahl der gesamten Fehlstunden an, sofern diese fachbezogen ermittelt werden */
+	@Schema(required = false, description = "Der Zeitstempel der letzten Änderung an Anzahl der gesamten Fehlstunden an, sofern diese fachbezogen ermittelt werden.", example="2013-11-14 13:12:48.774")
+    public String tsFehlstundenGesamt;
 
     /** Gibt die Anzahl der unentschuldigten Fehlstunden an, sofern diese fachbezogen ermittelt werden. */
 	@Schema(required = false, description = "Gibt die Anzahl der unentschuldigten Fehlstunden an, sofern diese fachbezogen ermittel werden.", example="0")
     public Integer fehlstundenUnentschuldigt;
 
+	/** Der Zeitstempel der letzten Änderung an Anzahl der unentschuldigten Fehlstunden an, sofern diese fachbezogen ermittelt werden */
+	@Schema(required = false, description = "Der Zeitstempel der letzten Änderung an Anzahl der unentschuldigten Fehlstunden an, sofern diese fachbezogen ermittelt werden.", example="2013-11-14 13:12:48.774")
+    public String tsFehlstundenUnentschuldigt;
+
     /** Die fachbezogenen Bemerkungen bzw. das Thema bei Projektkursen */
 	@Schema(required = false, description = "Die fachbezogenen Bemerkungen bzw. das Thema bei Projektkursen.", example="Text zum Fach")
     public String fachbezogeneBemerkungen;
+
+	/** Der Zeitstempel der letzten Änderung an Anzahl den fachbezogenen Bemerkungen bzw. dem Thema bei Projektkursen */
+	@Schema(required = false, description = "Der Zeitstempel der letzten Änderung an Anzahl den fachbezogenen Bemerkungen bzw. dem Thema bei Projektkursen.", example="2013-11-14 13:12:48.774")
+    public String tsFachbezogeneBemerkungen;
 
     /** Die Kurszuweisung, die auf dem Zeugnis erscheinen soll für den nächsten Kursabschnitt (z.B. E oder G-Kurs, z.B. an der Gesamtschule) */
 	@Schema(required = false, description = "Die Kurszuweisung, die auf dem Zeugnis erscheinen soll für den nächsten "
@@ -61,6 +77,10 @@ public class ENMLeistung {
 	/** Gibt an, ob ein Fach gemahnt wurde oder nicht. */
 	@Schema(required = false, description = "Gibt an, ob ein Fach gemahnt wurde oder nicht.", example="true")
     public Boolean istGemahnt;
+
+	/** Der Zeitstempel, wann gesetzt wurde, ob die Leistung gemahnt wurde */
+	@Schema(required = false, description = "Der Zeitstempel, wann gesetzt wurde, ob die Leistung gemahnt wurde.", example="2013-11-14 13:12:48.774")
+    public String tsIstGemahnt;
 
 	/** Das Mahndatum bei erfolgter Mahnung. */
 	@Schema(required = true, description = "Das Mahndatum bei erfolgter Mahnung.", example="11.11.1911")

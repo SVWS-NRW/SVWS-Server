@@ -21,7 +21,23 @@ public class ENMLernabschnitt {
 	@Schema(required = true, description = "Die ID des Lernabschnittes in der SVWS-DB - kann zum Prüfen verwendet werden, ob der"
 			+ " zuvor exportierte Lernabschnitt in der DB noch gültig ist.", example="123456")
     public long id;
-    
+ 
+    /** Gibt die Anzahl der gesamten Fehlstunden an, sofern diese abschnittsbezogen ermittelt werden. */
+	@Schema(required = false, description = "Gibt die Anzahl der gesamten Fehlstunden an, sofern diese abschnittsbezogen ermittel werden.", example="23")
+    public Integer fehlstundenGesamt;
+
+    /** Gibt den Zeitstempel der letzten Änderung für die Anzahl der gesamten Fehlstunden an, sofern diese abschnittsbezogen ermittelt werden. */
+	@Schema(required = false, description = "Gibt den Zeitstempel der letzten Änderung für die Anzahl der gesamten Fehlstunden an, sofern diese abschnittsbezogen ermittelt werden.", example="2013-11-14 13:12:48.774")
+    public String tsFehlstundenGesamt;
+
+    /** Gibt die Anzahl der unentschuldigten Fehlstunden an, sofern diese abschnittsbezogen ermittelt werden. */
+	@Schema(required = false, description = "Gibt die Anzahl der unentschuldigten Fehlstunden an, sofern diese abschnittsbezogen ermittel werden.", example="0")
+    public Integer fehlstundenUnentschuldigt;
+	
+    /** Gibt den Zeitstempel der letzten Änderung für die Anzahl der unentschuldigten Fehlstunden an, sofern diese abschnittsbezogen ermittelt werden. */
+	@Schema(required = false, description = "Gibt den Zeitstempel der letzten Änderung für die Anzahl der unentschuldigten Fehlstunden an, sofern diese abschnittsbezogen ermittel werden.", example="2013-11-14 13:12:48.774")
+    public String tsFehlstundenUnentschuldigt;
+	
     /** Die Prüfungsordnung, die in dem Lernabschnitt verwendet werden muss */
     @Schema(required = true, description = "Die Prüfungsordnung, die in dem Lernabschnitt verwendet werden muss.", example="GE-APO-SI-05")
     // TODO Core Type Pruefungsordnung 

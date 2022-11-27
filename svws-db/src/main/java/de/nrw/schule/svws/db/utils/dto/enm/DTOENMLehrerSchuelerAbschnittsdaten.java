@@ -32,11 +32,14 @@ public class DTOENMLehrerSchuelerAbschnittsdaten {
 	@Id
 	public long leistungID;
 	
-	/** Das Notenkürzel der erteilten Note */
+	/** Die erteilte Note */
 	@Convert(converter=NoteConverterFromKuerzel.class)
 	@JsonSerialize(using=NoteConverterFromKuerzelSerializer.class)
 	@JsonDeserialize(using=NoteConverterFromKuerzelDeserializer.class)
 	public Note note;
+
+	/** Der Zeitstempel der letzten Änderung an der erteilten Note */
+	public String tsNote;
 	
 	/** Die allgemeine Kursart des Faches (z.B. GK, LK) */
 	public String kursart;
@@ -58,12 +61,31 @@ public class DTOENMLehrerSchuelerAbschnittsdaten {
 	
 	/** Fachbezogene Fehlstunden */
 	public Integer fehlstundenGesamt;
+	/** Der Zeitstempel der letzten Änderung an den fachbezogenen Fehlstunden */
+	public String tsFehlstundenGesamt;
 
 	/** Fachbezogene Fehlstunden, unentschuldigt */
 	public Integer fehlstundenUnentschuldigt;
+
+	/** Der Zeitstempel der letzten Änderung an den fachbezogenen Fehlstunden, unentschuldigt */
+	public String tsFehlstundenUnentschuldigt;
+	
+	/** Abschnittsbezogene Fehlstunden */
+	public Integer fehlstundenSummeGesamt;
+	
+	/** Zeitstempel: Abschnittsbezogene Fehlstunden */
+	public String tsFehlstundenSummeGesamt;
+	
+	/** Abschnittsbezogene Fehlstunden, unentschuldigt */
+	public Integer fehlstundenSummeUnentschuldigt;
+	/** Zeitstempel: Abschnittsbezogene Fehlstunden, unentschuldigt */
+	public String tsFehlstundenSummeUnentschuldigt;
 	
 	/** Text für Fachbezogene Lernentwicklung Bemerkung */
 	public String fachbezogeneBemerkungen;
+
+	/** Der Zeitstempel der letzten Änderung an den Bemerkungen zur fachbezogenen Lernentwicklung */
+	public String tsFachbezogeneBemerkungen;
 	
 	/** Die ID des Schuelers zu dem die Leistungsdaten gehören. */
 	public long schuelerID;
@@ -104,12 +126,46 @@ public class DTOENMLehrerSchuelerAbschnittsdaten {
 	/** Gibt an ob die Leistung gemahnt wurde. */
 	@Convert(converter=BooleanPlusMinusDefaultMinusConverter.class)
 	public Boolean istGemahnt;
+	/** Der Zeitstempel, wann gesetzt wurde, ob die Leistung gemahnt wurde */
+	public String tsIstGemahnt;
 	
 	/** Enthält bei erfolgter Mahnung das Mahndatum */
 	@Convert(converter=DatumConverter.class)
 	public String mahndatum;
+
+	/** Die Zeugnis-Bemerkungen */
+	public String zeugnisBemerkungen;
+
+	/** Der Zeitstempel mit den letzten Änderungen an den Zeugnis-Bemerkungen */
+	public String tsZeugnisBemerkungen;
+	/** Die Bemerkungen zum Arbeits- und Sozialverhalten */
+	public String ASV;
 	
+	/** Der Zeitstempel mit den letzten Änderungen an den Bemerkungen zum Arbeits- und Sozialverhalten */
+	public String tsASV;
+
+	/** Die LELS-Bemerkungen */
+	public String LELS;
+
+	/** Die Bemerkungen zum außerunterrichtlichen Engagement */
+	public String AUE;
+
+	/** Der Zeitstempel mit den letzten Änderungen an den Bemerkungen zum außerunterrichtlichen Engagement */
+	public String tsAUE;
 	
+	/** Die ESF-Bemerkungen */
+	public String ESF;
+	
+	/** Die Bemerkungen zu den Förderschwerpunkten */
+	public String bemerkungFSP;
+	
+	/** Die Bemerkungen zur Versetzung */
+	public String bemerkungVersetzung;
+	
+	/** Der Zeitstempel mit den letzten Änderungen an den Bemerkungen zur Versetzung */
+	public String tsBemerkungVersetzung;
+
+
 	/**
 	 * Default-Konstruktor für das Erzeugen dieser DBEntity 
 	 */
@@ -142,8 +198,24 @@ public class DTOENMLehrerSchuelerAbschnittsdaten {
 					fs1.StatistikKrz as foerderschwerpunkt1Kuerzel,
 					fs2.StatistikKrz as foerderschwerpunkt2Kuerzel,
 					la.ZieldifferentesLernen as ZieldifferentesLernen,
+					la.SumFehlStd as fehlstundenSummeGesamt,
+					enmla.tsSumFehlStd as tsFehlstundenSummeGesamt,
+					la.SumFehlStdU as fehlstundenSummeUnentschuldigt,
+					enmla.tsSumFehlStdU as tsFehlstundenSummeUnentschuldigt,
+					la.ZeugnisBem as zeugnisBemerkungen,
+					enmla.tsZeugnisBem as tsZeugnisBemerkungen,
+					bem.ASV as ASV,
+					enmla.tsASV as tsASV,
+					bem.LELS as LELS,
+					bem.AUE as AUE,
+					enmla.tsAUE as tsAUE,
+					bem.ESF as ESF,
+					bem.bemerkungFSP as bemerkungFSP,
+					bem.bemerkungVersetzung as bemerkungVersetzung,
+					enmla.tsBemerkungVersetzung as tsBemerkungVersetzung,
 					ld.ID as leistungID,
-					ld.NotenKrz as notenKrz,
+					ld.NotenKrz as note,
+					enmld.tsNotenKrz as tsNote,
 					ld.Kursart as kursart,
 					ld.Fachlehrer_ID as lehrerID,
 					ld.Kurs_ID as kursID,
@@ -151,9 +223,13 @@ public class DTOENMLehrerSchuelerAbschnittsdaten {
 					ld.Wochenstunden as wochenstunden,
 					ld.AbiFach as abiturfach,
 					ld.FehlStd as fehlstundenGesamt,
+					enmld.tsFehlStd as tsFehlstundenGesamt,
 					ld.uFehlStd as fehlstundenUnentschuldigt,
+					enmld.tsuFehlStd as tsFehlstundenUnentschuldigt,
 					ld.Lernentw as fachbezogeneBemerkungen,
+					enmld.tsLernentw as tsFachbezogeneBemerkungen,
 					ld.Warnung as istGemahnt,
+					enmld.tsWarnung as tsIstGemahnt,
 					ld.Warndatum as mahndatum
 				FROM
 					SchuelerLernabschnittsdaten la
@@ -163,6 +239,9 @@ public class DTOENMLehrerSchuelerAbschnittsdaten {
 					 	LEFT JOIN K_Foerderschwerpunkt fs1 ON la.Foerderschwerpunkt_ID = fs1.ID
 					 	LEFT JOIN K_Foerderschwerpunkt fs2 ON la.Foerderschwerpunkt2_ID = fs2.ID
 					 	LEFT JOIN Klassen k ON la.Klassen_ID = k.ID 
+					 	LEFT JOIN SchuelerLD_PSFachBem bem ON la.ID = bem.Abschnitt_ID
+					 	LEFT JOIN EnmLernabschnittsdaten enmla ON la.ID = enmla.ID
+					 	LEFT JOIN EnmLeistungsdaten enmld ON ld.ID = enmld.ID
 				ORDER BY
 					 la.Schueler_ID, la.ID, ld.ID 
 				;""".formatted(schuljahresabschnitt, lehrerKrz),
@@ -195,8 +274,24 @@ public class DTOENMLehrerSchuelerAbschnittsdaten {
 					fs1.StatistikKrz as foerderschwerpunkt1Kuerzel,
 					fs2.StatistikKrz as foerderschwerpunkt2Kuerzel,
 					la.ZieldifferentesLernen as ZieldifferentesLernen,
+					la.SumFehlStd as fehlstundenSummeGesamt,
+					enmla.tsSumFehlStd as tsFehlstundenSummeGesamt,
+					la.SumFehlStdU as fehlstundenSummeUnentschuldigt,
+					enmla.tsSumFehlStdU as tsFehlstundenSummeUnentschuldigt,
+					la.ZeugnisBem as zeugnisBemerkungen,
+					enmla.tsZeugnisBem as tsZeugnisBemerkungen,
+					bem.ASV as ASV,
+					enmla.tsASV as tsASV,
+					bem.LELS as LELS,
+					bem.AUE as AUE,
+					enmla.tsAUE as tsAUE,
+					bem.ESF as ESF,
+					bem.bemerkungFSP as bemerkungFSP,
+					bem.bemerkungVersetzung as bemerkungVersetzung,
+					enmla.tsBemerkungVersetzung as tsBemerkungVersetzung,
 					ld.ID as leistungID,
-					ld.NotenKrz as notenKrz,
+					ld.NotenKrz as note,
+					enmld.tsNotenKrz as tsNote,
 					ld.Kursart as kursart,
 					ld.Fachlehrer_ID as lehrerID,
 					ld.Kurs_ID as kursID,
@@ -204,9 +299,13 @@ public class DTOENMLehrerSchuelerAbschnittsdaten {
 					ld.Wochenstunden as wochenstunden,
 					ld.AbiFach as abiturfach,
 					ld.FehlStd as fehlstundenGesamt,
+					enmld.tsFehlStd as tsFehlstundenGesamt,
 					ld.uFehlStd as fehlstundenUnentschuldigt,
+					enmld.tsuFehlStd as tsFehlstundenUnentschuldigt,
 					ld.Lernentw as fachbezogeneBemerkungen,
+					enmld.tsLernentw as tsFachbezogeneBemerkungen,
 					ld.Warnung as istGemahnt,
+					enmld.tsWarnung as tsIstGemahnt,
 					ld.Warndatum as mahndatum
 				FROM
 					SchuelerLernabschnittsdaten la
@@ -216,6 +315,9 @@ public class DTOENMLehrerSchuelerAbschnittsdaten {
 					 	LEFT JOIN K_Foerderschwerpunkt fs1 ON la.Foerderschwerpunkt_ID = fs1.ID
 					 	LEFT JOIN K_Foerderschwerpunkt fs2 ON la.Foerderschwerpunkt2_ID = fs2.ID
 					 	LEFT JOIN Klassen k ON la.Klassen_ID = k.ID 
+					 	LEFT JOIN SchuelerLD_PSFachBem bem ON la.ID = bem.Abschnitt_ID
+					 	LEFT JOIN EnmLernabschnittsdaten enmla ON la.ID = enmla.ID
+					 	LEFT JOIN EnmLeistungsdaten enmld ON ld.ID = enmld.ID
 				ORDER BY
 					 la.Schueler_ID, la.ID, ld.ID 
 				;""".formatted(schuljahresabschnitt),

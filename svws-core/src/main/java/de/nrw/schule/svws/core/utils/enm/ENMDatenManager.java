@@ -463,30 +463,43 @@ public class ENMDatenManager {
 	 * @param lerngruppenID               die eindeutige ID der Lerngruppe, der der Schüler zugeordnet ist. 
 	 *                                    (Klasse oder Kurs wird erst in der Lerngruppe unterschieden!)
 	 * @param note                        das Kürzel der Note, die vergeben wurde
+	 * @param tsNote                      der Zeitstempe der letzten Änderung an der Note
 	 * @param istSchriftlich              gibt an, ob das Fach schriftlich belegt wurde oder nicht
 	 * @param abiturfach                  gibt an, ob es sich um ein Abitufach handelt (1,2,3 oder 4) oder nicht (null)
 	 * @param fehlstundenGesamt           gibt die Anzahl der gesamten Fehlstunden an, sofern diese fachbezogen ermittel werden
+	 * @param tsFehlstundenGesamt         der Zeitstempel der letzten Änderung an den gesamten Fehlstunden, sofern 
+	 *                                    diese fachbezogen ermittel werden
 	 * @param fehlstundenUnentschuldigt   gibt die Anzahl der unentschuldigten Fehlstunden an, sofern diese fachbezogen ermittel werden
+	 * @param tsFehlstundenUnentschuldigt der Zeitstempel der letzten Änderung an den unentschuldigten Fehlstunden, 
+	 *                                    sofern diese fachbezogen ermittel werden
 	 * @param fachbezogeneBemerkungen     die fachbezogenen Bemerkungen bzw. das Thema bei Projektkursen
+	 * @param tsFachbezogeneBemerkungen   der Zeitstempel der letzten Änderung an den fachbezogenen Bemerkungen
 	 * @param neueZuweisungKursart        die Kurszuweisung, die auf dem Zeugnis erscheinen soll für den nächsten Kursabschnitt 
 	 *                                    (z.B. E oder G-Kurs, z.B. an der Gesamtschule)
 	 * @param istGemahnt                  gibt an, ob ein Fach gemahnt wurde oder nicht
+	 * @param tsIstGemahnt                der Zeitstempel der letzten Änderung an der Angabe, ob ein Fach gemahnt wurde oder nicht 
 	 * @param mahndatum                   das Mahndatum bei erfolgter Mahnung
 	 */
 	public void addSchuelerLeistungsdaten(@NotNull ENMSchueler schueler, long leistungID, long lerngruppenID, String note, 
-				boolean istSchriftlich, Integer abiturfach, Integer fehlstundenGesamt, Integer fehlstundenUnentschuldigt, 
-				String fachbezogeneBemerkungen, String neueZuweisungKursart, boolean istGemahnt, String mahndatum) {
+				String tsNote, boolean istSchriftlich, Integer abiturfach, Integer fehlstundenGesamt, String tsFehlstundenGesamt, 
+				Integer fehlstundenUnentschuldigt, String tsFehlstundenUnentschuldigt, String fachbezogeneBemerkungen,  
+				String tsFachbezogeneBemerkungen, String neueZuweisungKursart, boolean istGemahnt, String tsIstGemahnt, String mahndatum) {
 		@NotNull ENMLeistung enmLeistung = new ENMLeistung();
 		enmLeistung.id = leistungID;
 		enmLeistung.lerngruppenID = lerngruppenID;
 		enmLeistung.note = note;
+		enmLeistung.tsNote = tsNote;
 		enmLeistung.istSchriftlich = istSchriftlich;
 		enmLeistung.abiturfach = abiturfach;
 		enmLeistung.fehlstundenGesamt = fehlstundenGesamt;
+		enmLeistung.tsFehlstundenGesamt = tsFehlstundenGesamt; 
 		enmLeistung.fehlstundenUnentschuldigt = fehlstundenUnentschuldigt;
+		enmLeistung.tsFehlstundenUnentschuldigt = tsFehlstundenUnentschuldigt; 
 		enmLeistung.fachbezogeneBemerkungen = fachbezogeneBemerkungen;
+		enmLeistung.tsFachbezogeneBemerkungen = tsFachbezogeneBemerkungen;
 		enmLeistung.neueZuweisungKursart = neueZuweisungKursart;
 		enmLeistung.istGemahnt = istGemahnt;
+		enmLeistung.tsIstGemahnt = tsIstGemahnt;
 		enmLeistung.mahndatum = mahndatum;
 		schueler.leistungsdaten.add(enmLeistung);
 	}

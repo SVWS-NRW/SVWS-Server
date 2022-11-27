@@ -160,11 +160,26 @@ public class DataENMDaten extends DataManager<Long> {
     								dtoSchueler.Lernstandsbericht);  // Deutsch als Fremdsprache liegt vor, wenn für den Schüler Lernstandsberichte geschrieben werden...
     			enmSchueler = manager.getSchueler(schuelerabschnitt.schuelerID);
     			enmSchueler.lernabschnitt.id = schuelerabschnitt.abschnittID;
+    			enmSchueler.lernabschnitt.fehlstundenGesamt = schuelerabschnitt.fehlstundenSummeGesamt;
+    			enmSchueler.lernabschnitt.tsFehlstundenGesamt = schuelerabschnitt.tsFehlstundenSummeGesamt;
+    			enmSchueler.lernabschnitt.fehlstundenUnentschuldigt = schuelerabschnitt.fehlstundenSummeUnentschuldigt;
+    			enmSchueler.lernabschnitt.tsFehlstundenUnentschuldigt = schuelerabschnitt.tsFehlstundenSummeUnentschuldigt;
     			enmSchueler.lernabschnitt.pruefungsordnung = schuelerabschnitt.pruefungsordnung;
     			enmSchueler.lernabschnitt.lernbereich1note = schuelerabschnitt.lernbereich1note == null ? null : schuelerabschnitt.lernbereich1note.kuerzel;
     			enmSchueler.lernabschnitt.lernbereich2note = schuelerabschnitt.lernbereich2note == null ? null : schuelerabschnitt.lernbereich2note.kuerzel;
     			enmSchueler.lernabschnitt.foerderschwerpunkt1 = schuelerabschnitt.foerderschwerpunkt1Kuerzel;
-    			enmSchueler.lernabschnitt.foerderschwerpunkt2 = schuelerabschnitt.foerderschwerpunkt2Kuerzel;    			
+    			enmSchueler.lernabschnitt.foerderschwerpunkt2 = schuelerabschnitt.foerderschwerpunkt2Kuerzel;
+    			enmSchueler.bemerkungen.ASV = schuelerabschnitt.ASV;
+    			enmSchueler.bemerkungen.tsASV = schuelerabschnitt.tsASV;
+    			enmSchueler.bemerkungen.AUE = schuelerabschnitt.AUE;
+    			enmSchueler.bemerkungen.tsAUE = schuelerabschnitt.tsAUE;
+    			enmSchueler.bemerkungen.ZB = schuelerabschnitt.zeugnisBemerkungen;
+    			enmSchueler.bemerkungen.tsZB = schuelerabschnitt.tsZeugnisBemerkungen;
+    			enmSchueler.bemerkungen.LELS = schuelerabschnitt.LELS;
+    			// TODO Schulform-Empfehlung enmSchueler.bemerkungen.schulformEmpf = ...
+    			enmSchueler.bemerkungen.individuelleVersetzungsbemerkungen = schuelerabschnitt.bemerkungVersetzung;
+    			enmSchueler.bemerkungen.tsIndividuelleVersetzungsbemerkungen = schuelerabschnitt.tsBemerkungVersetzung;
+    			enmSchueler.bemerkungen.foerderbemerkungen = schuelerabschnitt.bemerkungFSP;
     		}
 
     		// Hier wird die temporäre LerngruppenID erstellt, mit der in der Klasse ENMDaten gearbeitet wird. 
@@ -202,7 +217,7 @@ public class DataENMDaten extends DataManager<Long> {
     				|| (kursart == ZulaessigeKursart.GKS) || (kursart == ZulaessigeKursart.AB3) 
     				|| ((kursart == ZulaessigeKursart.AB4) && (!("Q2".equals(dtoKlasse.ASDKlasse) && (halbjahr == 2))))); 
     		
-    		String tmpAbiFach = schuelerabschnitt.AbiturFach;   // TODO check whether to remove this workaround (Eclipse-Compiler-Bug) - move into switch(schuelerabschnitt.AbiturFach)
+    		String tmpAbiFach = schuelerabschnitt.AbiturFach;
     		Integer abiFach = (tmpAbiFach == null) ? null : switch(tmpAbiFach) {
     			case "1" -> 1; 
     			case "2" -> 2; 
@@ -212,10 +227,12 @@ public class DataENMDaten extends DataManager<Long> {
     		};
     		boolean istGemahnt = (schuelerabschnitt.istGemahnt == null) ? false : schuelerabschnitt.istGemahnt;
     		String mahndatum = schuelerabschnitt.mahndatum;
-    		manager.addSchuelerLeistungsdaten(enmSchueler, schuelerabschnitt.leistungID, lerngruppe.id, schuelerabschnitt.note.kuerzel,
-    				istSchriftlich, abiFach, schuelerabschnitt.fehlstundenGesamt, 
-    				schuelerabschnitt.fehlstundenUnentschuldigt, schuelerabschnitt.fachbezogeneBemerkungen, null,
-    				istGemahnt, mahndatum);
+    		manager.addSchuelerLeistungsdaten(enmSchueler, schuelerabschnitt.leistungID, lerngruppe.id, 
+    				schuelerabschnitt.note.kuerzel, schuelerabschnitt.tsNote, istSchriftlich, abiFach, 
+    				schuelerabschnitt.fehlstundenGesamt, schuelerabschnitt.tsFehlstundenGesamt,
+    				schuelerabschnitt.fehlstundenUnentschuldigt, schuelerabschnitt.tsFehlstundenUnentschuldigt,
+    				schuelerabschnitt.fachbezogeneBemerkungen, schuelerabschnitt.tsFachbezogeneBemerkungen, null,
+    				istGemahnt, schuelerabschnitt.tsIstGemahnt, mahndatum);
     		// TODO get and add Teilleistungen
     		// TODO check and add ZP10 - Data
     		// TODO check and add BKAbschluss - Data

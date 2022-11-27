@@ -1,9 +1,18 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
+import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 
 export class ENMLernabschnitt extends JavaObject {
 
 	public id : number = 0;
+
+	public fehlstundenGesamt : Number | null = null;
+
+	public tsFehlstundenGesamt : String | null = null;
+
+	public fehlstundenUnentschuldigt : Number | null = null;
+
+	public tsFehlstundenUnentschuldigt : String | null = null;
 
 	public pruefungsordnung : String | null = null;
 
@@ -30,6 +39,10 @@ export class ENMLernabschnitt extends JavaObject {
 		if (typeof obj.id === "undefined")
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
+		result.fehlstundenGesamt = typeof obj.fehlstundenGesamt === "undefined" ? null : obj.fehlstundenGesamt === null ? null : Number(obj.fehlstundenGesamt);
+		result.tsFehlstundenGesamt = typeof obj.tsFehlstundenGesamt === "undefined" ? null : obj.tsFehlstundenGesamt === null ? null : String(obj.tsFehlstundenGesamt);
+		result.fehlstundenUnentschuldigt = typeof obj.fehlstundenUnentschuldigt === "undefined" ? null : obj.fehlstundenUnentschuldigt === null ? null : Number(obj.fehlstundenUnentschuldigt);
+		result.tsFehlstundenUnentschuldigt = typeof obj.tsFehlstundenUnentschuldigt === "undefined" ? null : obj.tsFehlstundenUnentschuldigt === null ? null : String(obj.tsFehlstundenUnentschuldigt);
 		result.pruefungsordnung = typeof obj.pruefungsordnung === "undefined" ? null : obj.pruefungsordnung === null ? null : String(obj.pruefungsordnung);
 		result.lernbereich1note = typeof obj.lernbereich1note === "undefined" ? null : obj.lernbereich1note === null ? null : String(obj.lernbereich1note);
 		result.lernbereich2note = typeof obj.lernbereich2note === "undefined" ? null : obj.lernbereich2note === null ? null : String(obj.lernbereich2note);
@@ -41,6 +54,10 @@ export class ENMLernabschnitt extends JavaObject {
 	public static transpilerToJSON(obj : ENMLernabschnitt) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
+		result += '"fehlstundenGesamt" : ' + ((!obj.fehlstundenGesamt) ? 'null' : obj.fehlstundenGesamt.valueOf()) + ',';
+		result += '"tsFehlstundenGesamt" : ' + ((!obj.tsFehlstundenGesamt) ? 'null' : '"' + obj.tsFehlstundenGesamt.valueOf() + '"') + ',';
+		result += '"fehlstundenUnentschuldigt" : ' + ((!obj.fehlstundenUnentschuldigt) ? 'null' : obj.fehlstundenUnentschuldigt.valueOf()) + ',';
+		result += '"tsFehlstundenUnentschuldigt" : ' + ((!obj.tsFehlstundenUnentschuldigt) ? 'null' : '"' + obj.tsFehlstundenUnentschuldigt.valueOf() + '"') + ',';
 		result += '"pruefungsordnung" : ' + ((!obj.pruefungsordnung) ? 'null' : '"' + obj.pruefungsordnung.valueOf() + '"') + ',';
 		result += '"lernbereich1note" : ' + ((!obj.lernbereich1note) ? 'null' : '"' + obj.lernbereich1note.valueOf() + '"') + ',';
 		result += '"lernbereich2note" : ' + ((!obj.lernbereich2note) ? 'null' : '"' + obj.lernbereich2note.valueOf() + '"') + ',';
@@ -55,6 +72,18 @@ export class ENMLernabschnitt extends JavaObject {
 		let result = '{';
 		if (typeof obj.id !== "undefined") {
 			result += '"id" : ' + obj.id + ',';
+		}
+		if (typeof obj.fehlstundenGesamt !== "undefined") {
+			result += '"fehlstundenGesamt" : ' + ((!obj.fehlstundenGesamt) ? 'null' : obj.fehlstundenGesamt.valueOf()) + ',';
+		}
+		if (typeof obj.tsFehlstundenGesamt !== "undefined") {
+			result += '"tsFehlstundenGesamt" : ' + ((!obj.tsFehlstundenGesamt) ? 'null' : '"' + obj.tsFehlstundenGesamt.valueOf() + '"') + ',';
+		}
+		if (typeof obj.fehlstundenUnentschuldigt !== "undefined") {
+			result += '"fehlstundenUnentschuldigt" : ' + ((!obj.fehlstundenUnentschuldigt) ? 'null' : obj.fehlstundenUnentschuldigt.valueOf()) + ',';
+		}
+		if (typeof obj.tsFehlstundenUnentschuldigt !== "undefined") {
+			result += '"tsFehlstundenUnentschuldigt" : ' + ((!obj.tsFehlstundenUnentschuldigt) ? 'null' : '"' + obj.tsFehlstundenUnentschuldigt.valueOf() + '"') + ',';
 		}
 		if (typeof obj.pruefungsordnung !== "undefined") {
 			result += '"pruefungsordnung" : ' + ((!obj.pruefungsordnung) ? 'null' : '"' + obj.pruefungsordnung.valueOf() + '"') + ',';

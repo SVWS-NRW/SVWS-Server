@@ -34,7 +34,7 @@ export class ENMSchueler extends JavaObject {
 
 	public readonly leistungsdaten : Vector<ENMLeistung> = new Vector();
 
-	public bemerkungen : ENMLeistungBemerkungen | null = null;
+	public bemerkungen : ENMLeistungBemerkungen | null = new ENMLeistungBemerkungen();
 
 	public zp10 : ENMZP10 | null = null;
 
