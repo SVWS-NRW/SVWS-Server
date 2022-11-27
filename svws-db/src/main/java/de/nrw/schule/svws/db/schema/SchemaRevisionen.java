@@ -9,6 +9,7 @@ import de.nrw.schule.svws.db.schema.revisionen.Revision1Updates;
 import de.nrw.schule.svws.db.schema.revisionen.Revision2Updates;
 import de.nrw.schule.svws.db.schema.revisionen.Revision3Updates;
 import de.nrw.schule.svws.db.schema.revisionen.Revision4Updates;
+import de.nrw.schule.svws.db.schema.revisionen.Revision6Updates;
 import de.nrw.schule.svws.db.schema.revisionen.RevisionNoUpdates;
 
 /**
@@ -59,7 +60,7 @@ public enum SchemaRevisionen {
 	REV_5(5, "2022-09-29"),
 	
 	/**
-	 * Erstellen von allgemein nutzbaren Views und Tabelle für das ENM
+	 * Erstellen von allgemein nutzbaren Views und Tabellen für das ENM
 	 */
 	REV_6(6, "2022-09-29"),
 	
@@ -151,6 +152,7 @@ public enum SchemaRevisionen {
                 case REV_2 -> new Revision2Updates();
                 case REV_3 -> new Revision3Updates();
                 case REV_4 -> new Revision4Updates();
+                case REV_6 -> new Revision6Updates();
                 default -> new RevisionNoUpdates(this);
 	        };
 	    }

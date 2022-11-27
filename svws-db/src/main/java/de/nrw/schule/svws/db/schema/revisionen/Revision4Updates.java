@@ -12,10 +12,10 @@ public class Revision4Updates extends SchemaRevisionUpdateSQL {
 
 	/**
 	 * Erzeugt eine Instanz für die Revisions-Updates 
-	 * für Revision 3.
+	 * für Revision 4.
 	 */
 	public Revision4Updates() {
-		super(SchemaRevisionen.REV_3);
+		super(SchemaRevisionen.REV_4);
 		updateFachkombinationen();
 	}
 

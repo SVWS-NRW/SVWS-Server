@@ -21,11 +21,35 @@ public class Tabelle_EnmLeistungsdaten extends SchemaTabelle {
 		.setNotNull()
 		.setJavaComment("ID der Leistungsdaten");
 
-	/** Die Definition der Tabellenspalte tsNote */
+	/** Die Definition der Tabellenspalte tsNotenKrz */
 	public SchemaTabelleSpalte col_tsNotenKrz = add("tsNotenKrz", SchemaDatentypen.DATETIME, false)
 	    .setDatenlaenge(3)
 		.setNotNull()
 		.setJavaComment("Der Zeitstempel der letzten Änderung an der Note.");
+
+	/** Die Definition der Tabellenspalte tsFehlStd */
+	public SchemaTabelleSpalte col_tsFehlStd = add("tsFehlStd", SchemaDatentypen.DATETIME, false)
+	    .setDatenlaenge(3)
+		.setNotNull()
+		.setJavaComment("Der Zeitstempel der letzten Änderung an den Fehlstunden.");
+
+	/** Die Definition der Tabellenspalte tsuFehlStd */
+	public SchemaTabelleSpalte col_tsuFehlStd = add("tsuFehlStd", SchemaDatentypen.DATETIME, false)
+	    .setDatenlaenge(3)
+		.setNotNull()
+		.setJavaComment("Der Zeitstempel der letzten Änderung an den unendschuldigten Fehlstunden.");
+
+	/** Die Definition der Tabellenspalte tsuFehlStd */
+	public SchemaTabelleSpalte col_tsLernentw = add("tsLernentw", SchemaDatentypen.DATETIME, false)
+	    .setDatenlaenge(3)
+		.setNotNull()
+		.setJavaComment("Der Zeitstempel der letzten Änderung an den fachbezogenen Bemerkungen.");
+
+	/** Die Definition der Tabellenspalte tsWarnung */
+	public SchemaTabelleSpalte col_tsWarnung = add("tsWarnung", SchemaDatentypen.DATETIME, false)
+	    .setDatenlaenge(3)
+		.setNotNull()
+		.setJavaComment("Der Zeitstempel der letzten Änderung, ob gemahnt wird.");
 
 
 	/** Die Definition des Fremdschlüssels EnmLeistungsdaten_FK */
@@ -36,6 +60,17 @@ public class Tabelle_EnmLeistungsdaten extends SchemaTabelle {
 			new Pair<>(col_ID, Schema.tab_SchuelerLeistungsdaten.col_ID)
 		);
 
+	
+    /** Trigger t_INSERT_EnmLeistungsdaten */
+    public SchemaTabelleTrigger trigger_MariaDB_INSERT_EnmLeistungsdaten = addTrigger(
+    		"t_INSERT_EnmLeistungsdaten",
+    		DBDriver.MARIA_DB,
+    		"""
+    		AFTER INSERT ON SchuelerLeistungsdaten FOR EACH ROW
+    		INSERT INTO EnmLeistungsdaten(ID, tsNotenKrz, tsFehlStd, tsuFehlStd, tsLernentw, tsWarnung) VALUES (NEW.ID, CURTIME(3), CURTIME(3), CURTIME(3), CURTIME(3), CURTIME(3));
+    		""", Schema.tab_SchuelerLeistungsdaten, Schema.tab_EnmLeistungsdaten);
+
+
     /** Trigger t_UPDATE_EnmLeistungsdaten */
     public SchemaTabelleTrigger trigger_MariaDB_UPDATE_EnmLeistungsdaten = addTrigger(
             "t_UPDATE_EnmLeistungsdaten",
@@ -43,14 +78,20 @@ public class Tabelle_EnmLeistungsdaten extends SchemaTabelle {
             """
             AFTER UPDATE ON SchuelerLeistungsdaten FOR EACH ROW
             BEGIN
-                DECLARE token DATETIME;
                 IF OLD.NotenKrz <> NEW.NotenKrz THEN
-                    SET token := (SELECT tsNotenKrz FROM EnmLeistungsdaten WHERE ID = NEW.ID);
-                    IF token IS NULL THEN
-                        INSERT INTO EnmLeistungsdaten(ID, tsNotenKrz) VALUES (NEW.ID, CURTIME(3));
-                    ELSE
-                        UPDATE EnmLeistungsdaten SET tsNotenKrz = CURTIME(3) WHERE ID = NEW.ID;
-                    END IF;
+                    UPDATE EnmLeistungsdaten SET tsNotenKrz = CURTIME(3) WHERE ID = NEW.ID;
+                END IF;
+                IF OLD.FehlStd <> NEW.FehlStd THEN
+                    UPDATE EnmLeistungsdaten SET tsFehlStd = CURTIME(3) WHERE ID = NEW.ID;
+                END IF;
+                IF OLD.uFehlStd <> NEW.uFehlStd THEN
+                    UPDATE EnmLeistungsdaten SET tsuFehlStd = CURTIME(3) WHERE ID = NEW.ID;
+                END IF;
+                IF OLD.Lernentw <> NEW.Lernentw THEN
+                    UPDATE EnmLeistungsdaten SET tsLernentw = CURTIME(3) WHERE ID = NEW.ID;
+                END IF;
+                IF OLD.Warnung <> NEW.Warnung THEN
+                    UPDATE EnmLeistungsdaten SET tsWarnung = CURTIME(3) WHERE ID = NEW.ID;
                 END IF;
             END
             """,

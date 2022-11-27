@@ -24,9 +24,17 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @NamedQuery(name="Rev8DTOEnmLeistungsdaten.id.multiple", query="SELECT e FROM Rev8DTOEnmLeistungsdaten e WHERE e.ID IN :value")
 @NamedQuery(name="Rev8DTOEnmLeistungsdaten.tsnotenkrz", query="SELECT e FROM Rev8DTOEnmLeistungsdaten e WHERE e.tsNotenKrz = :value")
 @NamedQuery(name="Rev8DTOEnmLeistungsdaten.tsnotenkrz.multiple", query="SELECT e FROM Rev8DTOEnmLeistungsdaten e WHERE e.tsNotenKrz IN :value")
+@NamedQuery(name="Rev8DTOEnmLeistungsdaten.tsfehlstd", query="SELECT e FROM Rev8DTOEnmLeistungsdaten e WHERE e.tsFehlStd = :value")
+@NamedQuery(name="Rev8DTOEnmLeistungsdaten.tsfehlstd.multiple", query="SELECT e FROM Rev8DTOEnmLeistungsdaten e WHERE e.tsFehlStd IN :value")
+@NamedQuery(name="Rev8DTOEnmLeistungsdaten.tsufehlstd", query="SELECT e FROM Rev8DTOEnmLeistungsdaten e WHERE e.tsuFehlStd = :value")
+@NamedQuery(name="Rev8DTOEnmLeistungsdaten.tsufehlstd.multiple", query="SELECT e FROM Rev8DTOEnmLeistungsdaten e WHERE e.tsuFehlStd IN :value")
+@NamedQuery(name="Rev8DTOEnmLeistungsdaten.tslernentw", query="SELECT e FROM Rev8DTOEnmLeistungsdaten e WHERE e.tsLernentw = :value")
+@NamedQuery(name="Rev8DTOEnmLeistungsdaten.tslernentw.multiple", query="SELECT e FROM Rev8DTOEnmLeistungsdaten e WHERE e.tsLernentw IN :value")
+@NamedQuery(name="Rev8DTOEnmLeistungsdaten.tswarnung", query="SELECT e FROM Rev8DTOEnmLeistungsdaten e WHERE e.tsWarnung = :value")
+@NamedQuery(name="Rev8DTOEnmLeistungsdaten.tswarnung.multiple", query="SELECT e FROM Rev8DTOEnmLeistungsdaten e WHERE e.tsWarnung IN :value")
 @NamedQuery(name="Rev8DTOEnmLeistungsdaten.primaryKeyQuery", query="SELECT e FROM Rev8DTOEnmLeistungsdaten e WHERE e.ID = ?1")
 @NamedQuery(name="Rev8DTOEnmLeistungsdaten.all.migration", query="SELECT e FROM Rev8DTOEnmLeistungsdaten e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","tsNotenKrz"})
+@JsonPropertyOrder({"ID","tsNotenKrz","tsFehlStd","tsuFehlStd","tsLernentw","tsWarnung"})
 public class Rev8DTOEnmLeistungsdaten {
 
 	/** ID der Leistungsdaten */
@@ -40,6 +48,26 @@ public class Rev8DTOEnmLeistungsdaten {
 	@JsonProperty
 	public String tsNotenKrz;
 
+	/** Der Zeitstempel der letzten Änderung an den Fehlstunden. */
+	@Column(name = "tsFehlStd")
+	@JsonProperty
+	public String tsFehlStd;
+
+	/** Der Zeitstempel der letzten Änderung an den unendschuldigten Fehlstunden. */
+	@Column(name = "tsuFehlStd")
+	@JsonProperty
+	public String tsuFehlStd;
+
+	/** Der Zeitstempel der letzten Änderung an den fachbezogenen Bemerkungen. */
+	@Column(name = "tsLernentw")
+	@JsonProperty
+	public String tsLernentw;
+
+	/** Der Zeitstempel der letzten Änderung, ob gemahnt wird. */
+	@Column(name = "tsWarnung")
+	@JsonProperty
+	public String tsWarnung;
+
 	/**
 	 * Erstellt ein neues Objekt der Klasse Rev8DTOEnmLeistungsdaten ohne eine Initialisierung der Attribute.
 	 */
@@ -51,8 +79,12 @@ public class Rev8DTOEnmLeistungsdaten {
 	 * Erstellt ein neues Objekt der Klasse Rev8DTOEnmLeistungsdaten ohne eine Initialisierung der Attribute.
 	 * @param ID   der Wert für das Attribut ID
 	 * @param tsNotenKrz   der Wert für das Attribut tsNotenKrz
+	 * @param tsFehlStd   der Wert für das Attribut tsFehlStd
+	 * @param tsuFehlStd   der Wert für das Attribut tsuFehlStd
+	 * @param tsLernentw   der Wert für das Attribut tsLernentw
+	 * @param tsWarnung   der Wert für das Attribut tsWarnung
 	 */
-	public Rev8DTOEnmLeistungsdaten(final Long ID, final String tsNotenKrz) {
+	public Rev8DTOEnmLeistungsdaten(final Long ID, final String tsNotenKrz, final String tsFehlStd, final String tsuFehlStd, final String tsLernentw, final String tsWarnung) {
 		if (ID == null) { 
 			throw new NullPointerException("ID must not be null");
 		}
@@ -61,6 +93,22 @@ public class Rev8DTOEnmLeistungsdaten {
 			throw new NullPointerException("tsNotenKrz must not be null");
 		}
 		this.tsNotenKrz = tsNotenKrz;
+		if (tsFehlStd == null) { 
+			throw new NullPointerException("tsFehlStd must not be null");
+		}
+		this.tsFehlStd = tsFehlStd;
+		if (tsuFehlStd == null) { 
+			throw new NullPointerException("tsuFehlStd must not be null");
+		}
+		this.tsuFehlStd = tsuFehlStd;
+		if (tsLernentw == null) { 
+			throw new NullPointerException("tsLernentw must not be null");
+		}
+		this.tsLernentw = tsLernentw;
+		if (tsWarnung == null) { 
+			throw new NullPointerException("tsWarnung must not be null");
+		}
+		this.tsWarnung = tsWarnung;
 	}
 
 
@@ -97,7 +145,7 @@ public class Rev8DTOEnmLeistungsdaten {
 	 */
 	@Override
 	public String toString() {
-		return "Rev8DTOEnmLeistungsdaten(ID=" + this.ID + ", tsNotenKrz=" + this.tsNotenKrz + ")";
+		return "Rev8DTOEnmLeistungsdaten(ID=" + this.ID + ", tsNotenKrz=" + this.tsNotenKrz + ", tsFehlStd=" + this.tsFehlStd + ", tsuFehlStd=" + this.tsuFehlStd + ", tsLernentw=" + this.tsLernentw + ", tsWarnung=" + this.tsWarnung + ")";
 	}
 
 }
