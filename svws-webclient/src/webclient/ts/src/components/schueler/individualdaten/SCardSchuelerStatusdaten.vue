@@ -95,6 +95,7 @@
 			},
 			set(val: SchuelerStatus | undefined): void {
 				app.stammdaten.patch({ status: val?.bezeichnung });
+				app.auswahl.filter = app.auswahl.filter
 			}
 		});
 	const inputFahrschuelerArtID: WritableComputedRef<

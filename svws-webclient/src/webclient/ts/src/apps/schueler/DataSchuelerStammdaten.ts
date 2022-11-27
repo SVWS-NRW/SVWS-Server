@@ -15,6 +15,7 @@ export class DataSchuelerStammdaten extends BaseData<
 		if (daten.nachname) this.selected_list_item.nachname = daten.nachname;
 		if (daten.vorname) this.selected_list_item.vorname = daten.vorname;
 		if (daten.wohnortID) this._daten.ortsteilID = -1;
+		if(daten.status) this.selected_list_item.status = daten.status;
 	}
 
 	/**

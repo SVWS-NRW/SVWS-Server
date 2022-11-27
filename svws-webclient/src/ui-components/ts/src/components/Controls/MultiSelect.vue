@@ -109,6 +109,7 @@ function selectItem(item: Item) {
 
 function removeTag(index: number) {
 	selectedItemList.value.splice(index, 1);
+	emit("update:modelValue", selectedItemList.value)
 }
 
 function onFocus(event: Event) {
