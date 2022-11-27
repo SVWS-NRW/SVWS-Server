@@ -76,7 +76,7 @@ public class APISchueler {
     @ApiResponse(responseCode = "404", description = "Keine Schüler-Einträge gefunden")
     public Response getSchuelerAktuell(@PathParam("schema") String schema, @Context HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN)) {
-    		return (new DataSchuelerliste(conn, null).getList());
+    		return (new DataSchuelerliste(conn, null).getAll());
     	}
     }
 
@@ -105,7 +105,7 @@ public class APISchueler {
     @ApiResponse(responseCode = "404", description = "Keine Schüler-Einträge gefunden")
     public Response getSchuelerFuerAbschnitt(@PathParam("schema") String schema, @PathParam("abschnitt") long abschnitt, @Context HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN)) {
-    		return (new DataSchuelerliste(conn, abschnitt).getList());
+    		return (new DataSchuelerliste(conn, abschnitt).getAll());
     	}
     }
     
