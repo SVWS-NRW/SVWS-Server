@@ -2179,6 +2179,37 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode addGostAbiturjahrgangFachkombination für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgang/{abiturjahr : \d+}/fachkombinationen/add/{typ : \d+}
+	 * 
+	 * Fügt eine Regel zu einer Fachkombination der Gymnasialen Oberstufe bei dem angegebenen Abiturjahrgang hinzu.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen einer solchen Fachkombination hat.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Die Regel zur Fachkombination bezüglich der gymnasialen Oberstufe wurde erstellt
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: GostJahrgangFachkombinationen
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um eine Regel für eine Fachkombination hinzuzufügen.
+	 *   Code 404: Abiturjahr nicht vorhanden
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
+	 * @param {number} typ - der Pfad-Parameter typ
+	 * 
+	 * @returns Die Regel zur Fachkombination bezüglich der gymnasialen Oberstufe wurde erstellt
+	 */
+	public async addGostAbiturjahrgangFachkombination(schema : string, abiturjahr : number, typ : number) : Promise<GostJahrgangFachkombinationen> {
+		let path : string = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : \d+}/fachkombinationen/add/{typ : \d+}"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema)
+				.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString())
+				.replace(/{typ\s*(:[^}]+)?}/g, typ.toString());
+		const result : string = await super.postJSON(path, null);
+		const text = result;
+		return GostJahrgangFachkombinationen.transpilerFromJSON(text);
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getGostAbiturjahrgangFachwahlstatistik für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgang/{abiturjahr : \d+}/fachwahlstatistik
 	 * 
 	 * Erstellt eine Liste aller in der Datenbank für den angebenen Abitur-Jahrgang vorhanden Fachwahlen der gymnasialen Oberstufe. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Fächerdaten besitzt.
@@ -3183,6 +3214,61 @@ export class ApiServer extends BaseApi {
 				.replace(/{id\s*(:[^}]+)?}/g, id.toString());
 		let body : string = GostJahrgangFachkombinationen.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteGostFachkombination für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/fachkombinationen/{id : \d+}
+	 * 
+	 * Entfernt eine Regel zu einer Fachkombination in der Gymnasialen Oberstufe. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Die Regel wurde wurde erfolgreich gelöscht.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: GostJahrgangFachkombinationen
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Regel zu der Fachkombination zu löschen.
+	 *   Code 404: Die Regel zu der Fachkombination wurde nicht gefunden.
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 * 
+	 * @returns Die Regel wurde wurde erfolgreich gelöscht.
+	 */
+	public async deleteGostFachkombination(schema : string, id : number) : Promise<GostJahrgangFachkombinationen> {
+		let path : string = "/db/{schema}/gost/fachkombinationen/{id : \d+}"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema)
+				.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const result : string = await super.deleteJSON(path, null);
+		const text = result;
+		return GostJahrgangFachkombinationen.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addGostFachkombination für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/fachkombinationen/add/{typ : \d+}
+	 * 
+	 * Fügt eine Regel zu einer Fachkombination der Gymnasialen Oberstufe hinzu.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen einer solchen Fachkombination hat.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Die Regel zur Fachkombination bezüglich der gymnasialen Oberstufe wurde erstellt
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: GostJahrgangFachkombinationen
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um eine Regel für eine Fachkombination hinzuzufügen.
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} typ - der Pfad-Parameter typ
+	 * 
+	 * @returns Die Regel zur Fachkombination bezüglich der gymnasialen Oberstufe wurde erstellt
+	 */
+	public async addGostFachkombination(schema : string, typ : number) : Promise<GostJahrgangFachkombinationen> {
+		let path : string = "/db/{schema}/gost/fachkombinationen/add/{typ : \d+}"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema)
+				.replace(/{typ\s*(:[^}]+)?}/g, typ.toString());
+		const result : string = await super.postJSON(path, null);
+		const text = result;
+		return GostJahrgangFachkombinationen.transpilerFromJSON(text);
 	}
 
 

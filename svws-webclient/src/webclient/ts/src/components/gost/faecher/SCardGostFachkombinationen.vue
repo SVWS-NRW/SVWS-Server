@@ -70,7 +70,7 @@
 	});
 
 	const add_kurskombi = () => {
-		//TODO app.dataFachkombinationen.add_fachkombi(props.typ)
+		app.dataFachkombinationen.add(props.typ);
 	}
 
 </script>

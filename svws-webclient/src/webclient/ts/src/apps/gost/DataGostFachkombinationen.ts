@@ -1,6 +1,6 @@
 import { App } from "../BaseApp";
 
-import { List, GostFach, ZulaessigesFach, GostJahrgang, GostJahrgangFachkombinationen } from "@svws-nrw/svws-core-ts";
+import { List, GostFach, ZulaessigesFach, GostJahrgang, GostJahrgangFachkombinationen, GostLaufbahnplanungFachkombinationTyp } from "@svws-nrw/svws-core-ts";
 import { BaseData } from "../BaseData";
 
 export class DataGostFachkombinationen extends BaseData<List<GostJahrgangFachkombinationen>, GostJahrgang, unknown> {
@@ -41,6 +41,42 @@ export class DataGostFachkombinationen extends BaseData<List<GostJahrgangFachkom
 			return false;
 		return this._patchElement(data, () => App.api.patchGostFachkombination(data, App.schema, fachkombi.id), daten.indexOf(fachkombi));
 	}
+
+
+	/**
+	 * Fügt eine neue Regel für eine Fachkombination von dem angegebenen Typ hinzu
+	 * 
+	 * @param {GostLaufbahnplanungFachkombinationTyp} typ
+	 * 
+	 * @returns {Promise<GostJahrgangFachkombinationen | undefined>} Ein Kursobjekt bei Erfolg
+	 */
+	 public async add(typ: GostLaufbahnplanungFachkombinationTyp): Promise<GostJahrgangFachkombinationen | undefined> {
+		const abijahr = App.apps.gost.auswahl.ausgewaehlt?.abiturjahr?.valueOf();
+		const result = abijahr === undefined 
+			? await App.api.addGostFachkombination(App.schema, typ.getValue())
+			: await App.api.addGostAbiturjahrgangFachkombination(App.schema, abijahr, typ.getValue());
+		if (result !== undefined)
+			this._daten?.add(result);
+		return result;
+	}
+
+
+	/**
+	 * Entfernt die Regel für eine Fachkombination mit der angegebenen ID.
+	 * 
+	 * @param {number} id
+	 * 
+	 * @returns {Promise<GostJahrgangFachkombinationen | undefined>} Ein Kursobjekt bei Erfolg
+	 */
+	 public async delete(id: number): Promise<GostJahrgangFachkombinationen | undefined> {
+		const result = await App.api.deleteGostFachkombination(App.schema, id);
+		if ((result !== undefined) && (this._daten !== undefined))
+			for (let i : number = this._daten.size() - 1; i >= 0; i--)
+				if (this._daten.get(i).id === id)
+					this._daten.remove(i);
+		return result;
+	}
+
 
 	/**
 	 * Gibt den Farbcode für das Fach zurück

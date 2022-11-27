@@ -166,7 +166,7 @@
 	});
 
 	const del_fachkombi = () => {
-		//TODO app.dataFachkombinationen.del_fachkombi(props.kombination.id)
+		app.dataFachkombinationen.delete(props.kombination.id);
 	}
 
 </script>
