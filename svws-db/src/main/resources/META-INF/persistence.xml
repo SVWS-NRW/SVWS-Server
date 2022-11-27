@@ -446,6 +446,7 @@
         <class>de.nrw.schule.svws.db.dto.current.svws.db.DTODBAutoInkremente</class>
         <class>de.nrw.schule.svws.db.dto.current.svws.db.DTODBVersion</class>
         <class>de.nrw.schule.svws.db.dto.current.svws.enm.DTOEnmLeistungsdaten</class>
+        <class>de.nrw.schule.svws.db.dto.current.svws.enm.DTOEnmLernabschnittsdaten</class>
         <class>de.nrw.schule.svws.db.dto.current.views.schildintern.DTOSchildInternNote</class>
         <class>de.nrw.schule.svws.db.dto.current.views.schulver.DTOSchulverSchulformen</class>
         <class>de.nrw.schule.svws.db.dto.current.views.statkue.DTOStatkueSchulformen</class>
@@ -686,6 +687,7 @@
         <class>de.nrw.schule.svws.db.dto.rev8.svws.db.Rev8DTODBAutoInkremente</class>
         <class>de.nrw.schule.svws.db.dto.rev8.svws.db.Rev8DTODBVersion</class>
         <class>de.nrw.schule.svws.db.dto.rev8.svws.enm.Rev8DTOEnmLeistungsdaten</class>
+        <class>de.nrw.schule.svws.db.dto.rev8.svws.enm.Rev8DTOEnmLernabschnittsdaten</class>
         <class>de.nrw.schule.svws.db.dto.rev8.views.schildintern.Rev8DTOSchildInternNote</class>
         <class>de.nrw.schule.svws.db.dto.rev8.views.schulver.Rev8DTOSchulverSchulformen</class>
         <class>de.nrw.schule.svws.db.dto.rev8.views.statkue.Rev8DTOStatkueSchulformen</class>

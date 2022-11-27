@@ -37,7 +37,7 @@ public class Tabelle_EnmLeistungsdaten extends SchemaTabelle {
 	public SchemaTabelleSpalte col_tsuFehlStd = add("tsuFehlStd", SchemaDatentypen.DATETIME, false)
 	    .setDatenlaenge(3)
 		.setNotNull()
-		.setJavaComment("Der Zeitstempel der letzten Änderung an den unendschuldigten Fehlstunden.");
+		.setJavaComment("Der Zeitstempel der letzten Änderung an den unentschuldigten Fehlstunden.");
 
 	/** Die Definition der Tabellenspalte tsuFehlStd */
 	public SchemaTabelleSpalte col_tsLernentw = add("tsLernentw", SchemaDatentypen.DATETIME, false)
@@ -78,19 +78,19 @@ public class Tabelle_EnmLeistungsdaten extends SchemaTabelle {
             """
             AFTER UPDATE ON SchuelerLeistungsdaten FOR EACH ROW
             BEGIN
-                IF OLD.NotenKrz <> NEW.NotenKrz THEN
+                IF (OLD.NotenKrz IS NULL AND NEW.NotenKrz IS NOT NULL) OR (OLD.NotenKrz <> NEW.NotenKrz) THEN
                     UPDATE EnmLeistungsdaten SET tsNotenKrz = CURTIME(3) WHERE ID = NEW.ID;
                 END IF;
-                IF OLD.FehlStd <> NEW.FehlStd THEN
+                IF (OLD.FehlStd IS NULL AND NEW.FehlStd IS NOT NULL) OR (OLD.FehlStd <> NEW.FehlStd) THEN
                     UPDATE EnmLeistungsdaten SET tsFehlStd = CURTIME(3) WHERE ID = NEW.ID;
                 END IF;
-                IF OLD.uFehlStd <> NEW.uFehlStd THEN
+                IF (OLD.uFehlStd IS NULL AND NEW.uFehlStd IS NOT NULL) OR (OLD.uFehlStd <> NEW.uFehlStd) THEN
                     UPDATE EnmLeistungsdaten SET tsuFehlStd = CURTIME(3) WHERE ID = NEW.ID;
                 END IF;
-                IF OLD.Lernentw <> NEW.Lernentw THEN
+                IF (OLD.Lernentw IS NULL AND NEW.Lernentw IS NOT NULL) OR (OLD.Lernentw <> NEW.Lernentw) THEN
                     UPDATE EnmLeistungsdaten SET tsLernentw = CURTIME(3) WHERE ID = NEW.ID;
                 END IF;
-                IF OLD.Warnung <> NEW.Warnung THEN
+                IF (OLD.Warnung IS NULL AND NEW.Warnung IS NOT NULL) OR (OLD.Warnung <> NEW.Warnung) THEN
                     UPDATE EnmLeistungsdaten SET tsWarnung = CURTIME(3) WHERE ID = NEW.ID;
                 END IF;
             END

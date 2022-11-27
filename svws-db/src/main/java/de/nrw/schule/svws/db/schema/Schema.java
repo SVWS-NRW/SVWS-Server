@@ -726,6 +726,9 @@ public class Schema {
     /** Tabelle EnmLeistungsdaten */
     public static final Tabelle_EnmLeistungsdaten tab_EnmLeistungsdaten = add(new Tabelle_EnmLeistungsdaten());
 
+    /** Tabelle EnmLernabschnittsdaten */
+    public static final Tabelle_EnmLernabschnittsdaten tab_EnmLernabschnittsdaten = add(new Tabelle_EnmLernabschnittsdaten());
+
 
 	// TODO Passe dieses Attribut an, sobald die Default-Daten nicht mehr über CSV-Dateien eingelesen werden
 	/** Die Tabellen, welche Default-Daten beinhalten und in diesem Zusammenhang aktualisiert werden sollen */

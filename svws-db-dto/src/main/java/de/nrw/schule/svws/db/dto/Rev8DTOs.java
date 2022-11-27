@@ -229,6 +229,7 @@ import de.nrw.schule.svws.db.dto.rev8.svws.db.Rev8DTOCoreTypeVersion;
 import de.nrw.schule.svws.db.dto.rev8.svws.db.Rev8DTODBAutoInkremente;
 import de.nrw.schule.svws.db.dto.rev8.svws.db.Rev8DTODBVersion;
 import de.nrw.schule.svws.db.dto.rev8.svws.enm.Rev8DTOEnmLeistungsdaten;
+import de.nrw.schule.svws.db.dto.rev8.svws.enm.Rev8DTOEnmLernabschnittsdaten;
 import de.nrw.schule.svws.db.dto.rev8.views.schildintern.Rev8DTOSchildInternNote;
 import de.nrw.schule.svws.db.dto.rev8.views.schulver.Rev8DTOSchulverSchulformen;
 import de.nrw.schule.svws.db.dto.rev8.views.statkue.Rev8DTOStatkueSchulformen;
@@ -492,6 +493,7 @@ public class Rev8DTOs {
              mapDTOName2DTOClass.put(Rev8DTODBAutoInkremente.class.getSimpleName(),Rev8DTODBAutoInkremente.class);
              mapDTOName2DTOClass.put(Rev8DTODBVersion.class.getSimpleName(),Rev8DTODBVersion.class);
              mapDTOName2DTOClass.put(Rev8DTOEnmLeistungsdaten.class.getSimpleName(),Rev8DTOEnmLeistungsdaten.class);
+             mapDTOName2DTOClass.put(Rev8DTOEnmLernabschnittsdaten.class.getSimpleName(),Rev8DTOEnmLernabschnittsdaten.class);
              mapDTOName2DTOClass.put(Rev8DTOSchildInternNote.class.getSimpleName(),Rev8DTOSchildInternNote.class);
              mapDTOName2DTOClass.put(Rev8DTOSchulverSchulformen.class.getSimpleName(),Rev8DTOSchulverSchulformen.class);
              mapDTOName2DTOClass.put(Rev8DTOStatkueSchulformen.class.getSimpleName(),Rev8DTOStatkueSchulformen.class);
@@ -758,6 +760,7 @@ public class Rev8DTOs {
              mapTablename2DTOClass.put("SVWS_DB_AutoInkremente",Rev8DTODBAutoInkremente.class);
              mapTablename2DTOClass.put("SVWS_DB_Version",Rev8DTODBVersion.class);
              mapTablename2DTOClass.put("EnmLeistungsdaten",Rev8DTOEnmLeistungsdaten.class);
+             mapTablename2DTOClass.put("EnmLernabschnittsdaten",Rev8DTOEnmLernabschnittsdaten.class);
              mapTablename2DTOClass.put("Schildintern_K_Schulnote",Rev8DTOSchildInternNote.class);
              mapTablename2DTOClass.put("Schulver_Schulformen",Rev8DTOSchulverSchulformen.class);
              mapTablename2DTOClass.put("Statkue_Schulformen",Rev8DTOStatkueSchulformen.class);

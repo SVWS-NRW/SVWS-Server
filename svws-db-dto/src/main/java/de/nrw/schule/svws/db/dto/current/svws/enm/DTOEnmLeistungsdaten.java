@@ -53,7 +53,7 @@ public class DTOEnmLeistungsdaten {
 	@JsonProperty
 	public String tsFehlStd;
 
-	/** Der Zeitstempel der letzten Änderung an den unendschuldigten Fehlstunden. */
+	/** Der Zeitstempel der letzten Änderung an den unentschuldigten Fehlstunden. */
 	@Column(name = "tsuFehlStd")
 	@JsonProperty
 	public String tsuFehlStd;
