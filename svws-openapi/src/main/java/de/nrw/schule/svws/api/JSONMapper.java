@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -269,7 +270,39 @@ public class JSONMapper {
 			throw new WebApplicationException("Ein leerer String ist hier nicht erlaubt.", Response.Status.BAD_REQUEST);
 		return (String)obj;
 	}
+
 	
+	/**
+	 * Konvertiert das übergeben Objekt in einen boolean-Array, sofern es sich um ein
+	 * boolean-Array handelt.
+	 * 
+	 * @param obj          das zu konvertierende Objekt
+	 * @param nullable     gibt an, ob Elemente auch null sein dürfen oder nicht
+	 * @param allowEmpty   gibt an, ob auch leere Arrays erlaubt sind oder nicht
+	 * @param size         die verlangte Größe des Arrays
+	 * 
+	 * @return das konvertierte boolean-Array
+	 */
+	public static Boolean[] convertToBooleanArray(Object obj, boolean nullable, boolean allowEmpty, Integer size) {
+		if (obj == null)
+			throw new WebApplicationException("Der Wert null ist nicht erlaubt.", Response.Status.BAD_REQUEST);
+		if (!(obj instanceof List))
+			throw new WebApplicationException("Es wurde ein Arrays erwartet, aber keines übergeben.", Response.Status.BAD_REQUEST);
+		@SuppressWarnings("unchecked")
+		List<? extends Boolean> params = (List<? extends Boolean>)obj;
+		if ((size != null) && (size != params.size()))
+			throw new WebApplicationException("Es wurde ein Array der Länge " + size + " erwartet, aber eines der Länge " + params.size() + " übergeben.", Response.Status.BAD_REQUEST);
+		if ((params.size() == 0) && ((size == null) || (size == 0)))
+			return new Boolean[0];
+		Boolean[] result = new Boolean[params.size()];
+		for (int i = 0; i < params.size(); i++) {
+			Boolean pvalue = params.get(i);
+			if (!nullable && (pvalue == null))
+				throw new WebApplicationException("Der Wert null ist in diesem Array nicht erlaubt.", Response.Status.BAD_REQUEST);
+			result[i] = pvalue;
+		}
+		return result;
+	}
 	
 
 	/**

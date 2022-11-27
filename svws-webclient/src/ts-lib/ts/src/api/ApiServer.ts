@@ -3161,6 +3161,32 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der PATCH-Methode patchGostFachkombination für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/fachkombinationen/{id : \d+}
+	 * 
+	 * Passt die Fachkombination mit der angegebenen ID an.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Anpassen von Fachkombinationen besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Der Patch wurde erfolgreich in die Fachkombination integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Fachkombinationen zu ändern.
+	 *   Code 404: Keine Fachkombination mit der angebenen ID gefunden oder es wurden kein gültiges Fach als ID übergeben.
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 * 
+	 * @param {Partial<GostJahrgangFachkombinationen>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async patchGostFachkombination(data : Partial<GostJahrgangFachkombinationen>, schema : string, id : number) : Promise<void> {
+		let path : string = "/db/{schema}/gost/fachkombinationen/{id : \d+}"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema)
+				.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		let body : string = GostJahrgangFachkombinationen.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getGostFaecher für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/faecher
 	 * 
 	 * Erstellt eine Liste aller in der Datenbank vorhanden Fächer der gymnasialen Oberstufe. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Fächerdaten besitzt.

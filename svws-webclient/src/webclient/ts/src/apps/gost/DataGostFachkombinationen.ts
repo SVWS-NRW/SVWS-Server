@@ -36,15 +36,10 @@ export class DataGostFachkombinationen extends BaseData<List<GostJahrgangFachkom
 	 * @returns {Promise<boolean>} True, wenn die Daten aktualisiert wurden, sonst false
 	 */
 	public async patch(data: Partial<GostJahrgangFachkombinationen>, fachkombi: GostJahrgangFachkombinationen, abiturjahr?: number): Promise<boolean> {
-		// const daten = this._daten;
-		// if (!daten) return false;
-		// return this._patchElement(data,
-		// 	abiturjahr
-		// 		? () => App.api.patchGostAbiturjahrgangFachkombinationen(data, App.schema, abiturjahr, fachkombi.id)
-		// 		: () => App.api.patchGostFachkombinationen(data, App.schema, fachkombi.id),
-		// 	daten.indexOf(fachkombi)
-		// );
-		return false; // TODO...
+		const daten = this._daten;
+		if (!daten) 
+			return false;
+		return this._patchElement(data, () => App.api.patchGostFachkombination(data, App.schema, fachkombi.id), daten.indexOf(fachkombi));
 	}
 
 	/**

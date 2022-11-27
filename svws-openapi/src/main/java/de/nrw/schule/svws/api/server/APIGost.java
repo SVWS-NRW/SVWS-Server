@@ -1717,4 +1717,38 @@ public class APIGost {
     	}
     }
 
+
+    /**
+     * Die OpenAPI-Methode für das Anpassen einer Fachkombination für Fächer der Gymnasialen Oberstufe.
+     *  
+     * @param schema     das Datenbankschema, auf welches der Patch ausgeführt werden soll
+     * @param id         die ID der Regel für die Fachkombination
+     * @param is         der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386 
+     * @param request    die Informationen zur HTTP-Anfrage
+     * 
+     * @return die HTTP-Antwort
+     */
+    @PATCH
+    @Path("/fachkombinationen/{id : \\d+}")
+    @Operation(summary = "Passt die Fachkombination mit der angegebenen ID an.",
+    description = "Passt die Fachkombination mit der angegebenen ID an."
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Anpassen von Fachkombinationen "
+    		    + "besitzt.")
+    @ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich in die Fachkombination integriert.")
+    @ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Fachkombinationen zu ändern.")
+    @ApiResponse(responseCode = "404", description = "Keine Fachkombination mit der angebenen ID gefunden oder es wurden kein gültiges Fach als ID übergeben.")
+    @ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response patchGostFachkombination(
+    		@PathParam("schema") String schema, @PathParam("id") long id,
+    		@RequestBody(description = "Der Patch für die Fachkombination", required = true, content = 
+    			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostJahrgangFachkombinationen.class))) InputStream is, 
+    		@Context HttpServletRequest request) {
+    	// TODO Anpassung der Benutzerrechte
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) { 
+    		return (new DataGostJahrgangFachkombinationen(conn, null /*nicht relevant*/)).patch(id, is);
+    	}
+    }
+
 }
