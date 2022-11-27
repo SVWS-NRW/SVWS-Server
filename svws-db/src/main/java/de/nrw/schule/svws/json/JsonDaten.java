@@ -42,7 +42,7 @@ public class JsonDaten {
 	private static final BerufskollegFachklassenKatalog getFachklassen() {
 		BerufskollegFachklassenKatalog katalog = new BerufskollegFachklassenKatalog();
 		int[] indizes = { 
-			0, 10, 20, 30, 40, 50, 55, 56, 57, 58, 
+			10, 20, 30, 40, 50, 55, 56, 57, 58, 
 			60, 61, 62, 63, 70, 80, 90, 91, 92, 93, 94,
 			100, 110, 120, 130, 140, 141, 145, 146, 
 			150, 160, 170, 180, 190,

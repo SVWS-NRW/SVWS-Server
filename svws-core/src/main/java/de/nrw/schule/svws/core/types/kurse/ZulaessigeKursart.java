@@ -883,8 +883,8 @@ public enum ZulaessigeKursart {
 	}),
 
 	/** Kursart Wahlpflichtbereich I: 2. Fremdsprache */
-	WPI_GY(new KursartKatalogEintrag[] {
-		new KursartKatalogEintrag(69000, "WPI_GY", "61", "Wahlpflichtbereich I: 2. Fremdsprache", null, null, null, false, Arrays.asList(
+	WPIGY(new KursartKatalogEintrag[] {
+		new KursartKatalogEintrag(69000, "WPIGY", "61", "Wahlpflichtbereich I: 2. Fremdsprache", null, null, null, false, Arrays.asList(
 			new Pair<>(Schulform.GY, (Schulgliederung) null)
 		), null, null)
 	}),

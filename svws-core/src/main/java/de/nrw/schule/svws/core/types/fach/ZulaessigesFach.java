@@ -67,7 +67,7 @@ public enum ZulaessigesFach {
 
 	/** Fach Arbeitslehre */
 	AL(new FachKatalogEintrag[] {
-		new FachKatalogEintrag(4000000L, "AL", "Arbeitslehre",
+		new FachKatalogEintrag(4000000L, "AL", "Arbeitslehre - Integration Hauswirtschaft, Technik, Wirtschaftslehre",
 		"AL", null, Fachgruppe.FG_AL, null,
 		false, false, false, false, false, false, true, 
 		Arrays.asList(
@@ -2581,7 +2581,7 @@ public enum ZulaessigesFach {
 
 	/** Fach Spezielle sonderpädagogische Maßnahme */
 	MX(new FachKatalogEintrag[] {
-		new FachKatalogEintrag(150000000L, "MX", "Spezielle sonderpädagogische Maßnahme",
+		new FachKatalogEintrag(150000000L, "MX", "Spezielle sonderpädagogische Maßnahmen",
 		"MX", null, null, null,
 		false, false, false, false, false, false, true, 
 		Arrays.asList(
@@ -3754,7 +3754,7 @@ public enum ZulaessigesFach {
 
 	/** Fach sonderpädag. Förderung für Schüler/-innen mit sonderpädag. Förderbedarf */
 	SG(new FachKatalogEintrag[] {
-		new FachKatalogEintrag(215000000L, "SG", "sonderpädag. Förderung für Schüler/-innen mit sonderpädag. Förderbedarf",
+		new FachKatalogEintrag(215000000L, "SG", "Sonderpädag. Förderung für Schüler/-innen mit sonderpädag. Förderbedarf",
 		"SG", null, null, null,
 		false, false, false, false, false, false, true, 
 		Arrays.asList(
@@ -3892,7 +3892,7 @@ public enum ZulaessigesFach {
 
 	/** Fach Sonstige Fremdsprachen */
 	SR(new FachKatalogEintrag[] {
-		new FachKatalogEintrag(222000000L, "SR", "Sonstige Fremdsprachen",
+		new FachKatalogEintrag(222000000L, "SR", "Sonstige Sprachen",
 		"SR", null, null, null,
 		true, false, false, false, false, false, true, 
 		Arrays.asList(
@@ -4310,7 +4310,7 @@ public enum ZulaessigesFach {
 
 	/** Fach fächerübergreifender Unterricht (Sprache/Sachunt./Mathematik/Förderunt.) */
 	UU(new FachKatalogEintrag[] {
-		new FachKatalogEintrag(245000000L, "UU", "fächerübergreifender Unterricht (Sprache/Sachunt./Mathematik/Förderunt.)",
+		new FachKatalogEintrag(245000000L, "UU", "Fächerübergreifender Unterricht (Sprache/Sachunt./Mathematik/Förderunt.)",
 		"UU", null, null, null,
 		false, false, false, false, false, false, true, 
 		Arrays.asList(
@@ -4723,7 +4723,7 @@ public enum ZulaessigesFach {
 
 	/** Fach orthodoxe Religionslehre (Syrisch) */
 	YR(new FachKatalogEintrag[] {
-		new FachKatalogEintrag(270000000L, "YR", "orthodoxe Religionslehre (Syrisch)",
+		new FachKatalogEintrag(270000000L, "YR", "Syrisch Orthodoxe Religionslehre",
 		"YR", null, Fachgruppe.FG_RE, null,
 		false, false, false, false, false, false, true, 
 		Arrays.asList(
