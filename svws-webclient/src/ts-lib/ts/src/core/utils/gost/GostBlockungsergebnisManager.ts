@@ -17,6 +17,7 @@ import { GostBlockungKurs, cast_de_nrw_schule_svws_core_data_gost_GostBlockungKu
 import { GostFach, cast_de_nrw_schule_svws_core_data_gost_GostFach } from '../../../core/data/gost/GostFach';
 import { SchuelerblockungOutput, cast_de_nrw_schule_svws_core_data_kursblockung_SchuelerblockungOutput } from '../../../core/data/kursblockung/SchuelerblockungOutput';
 import { SchuelerblockungInputKurs, cast_de_nrw_schule_svws_core_data_kursblockung_SchuelerblockungInputKurs } from '../../../core/data/kursblockung/SchuelerblockungInputKurs';
+import { SchuelerblockungOutputFachwahlZuKurs, cast_de_nrw_schule_svws_core_data_kursblockung_SchuelerblockungOutputFachwahlZuKurs } from '../../../core/data/kursblockung/SchuelerblockungOutputFachwahlZuKurs';
 import { GostBlockungsdatenManager, cast_de_nrw_schule_svws_core_utils_gost_GostBlockungsdatenManager } from '../../../core/utils/gost/GostBlockungsdatenManager';
 import { SchuelerblockungAlgorithmus, cast_de_nrw_schule_svws_core_kursblockung_SchuelerblockungAlgorithmus } from '../../../core/kursblockung/SchuelerblockungAlgorithmus';
 import { GostFachwahl, cast_de_nrw_schule_svws_core_data_gost_GostFachwahl } from '../../../core/data/gost/GostFachwahl';
@@ -876,7 +877,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * Liefert für den übergebenen Schüler einen Vorschlag für eine Neuzuordnung der Kurse.
 	 * 
 	 * @param  pSchuelerID Die Datenbank-ID des Schülers.
-	 * 
 	 * @return             Die Neuzuordnung der Kurse im {@link SchuelerblockungOutput}-Objekt.
 	 */
 	public getOfSchuelerNeuzuordnung(pSchuelerID : number) : SchuelerblockungOutput {
@@ -1415,6 +1415,26 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		if (pHinzufuegenOderEntfernen) 
 			return this.stateSchuelerKursHinzufuegen(pSchuelerID, pKursID);
 		return this.stateSchuelerKursEntfernen(pSchuelerID, pKursID);
+	}
+
+	/**
+	 * Geht die übergebenen Zuordnungen (Fach --> Kurs) durch und setzt 
+	 * bei Veränderung Kurse des übergebenen Schülers neu.   
+	 * 
+	 * @param schuelerID  Die Datenbank-ID des Schülers. 
+	 * @param pZuordnung  Die gewünschte Zuordnung.
+	 */
+	public setSchuelerNeuzuordnung(schuelerID : number, pZuordnung : SchuelerblockungOutput) : void {
+		for (let z of pZuordnung.fachwahlenZuKurs) {
+			let kursV : GostBlockungsergebnisKurs | null = this.getOfSchuelerOfFachZugeordneterKurs(schuelerID, z.fachID);
+			let kursN : GostBlockungsergebnisKurs | null = z.kursID < 0 ? null : this.getKursE(z.kursID);
+			if (kursV as unknown !== kursN as unknown) {
+				if (kursV !== null) 
+					this.setSchuelerKurs(schuelerID, kursV.id, false);
+				if (kursN !== null) 
+					this.setSchuelerKurs(schuelerID, kursN.id, true);
+			}
+		}
 	}
 
 	/**

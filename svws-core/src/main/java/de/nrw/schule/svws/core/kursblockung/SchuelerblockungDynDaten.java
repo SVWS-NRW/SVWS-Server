@@ -69,7 +69,7 @@ public class SchuelerblockungDynDaten {
 		_fachwahlZuFachID = new long[nFachwahlen];
 		_fachwahlZuKursartID = new int[nFachwahlen];
 		aktionInitialisiereDatenstrukturen(pInput);
-
+		
 		// Datenstrukturen, die pro Blockung neu initialisiert werden müssen:
 		_aktuellMatrix = new KursblockungMatrix(pRandom, nFachwahlen, nSchienen);
 		_aktuellGesperrteSchiene = new boolean[nSchienen];
@@ -143,6 +143,8 @@ public class SchuelerblockungDynDaten {
 
 		// Attribute der Fachwahlen überprüfen.
 		for (@NotNull GostFachwahl fachwahl : pInput.fachwahlen) {
+			if (fachwahl.schuelerID < 0)
+				throw fehler("fachwahl.schuelerID ist zu gering! --> " + fachwahl.schuelerID);
 			if (fachwahl.fachID < 0)
 				throw fehler("fachwahl.fachID ist zu gering! --> " + fachwahl.fachID);
 			if (fachwahl.kursartID < 0)

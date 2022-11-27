@@ -133,6 +133,8 @@ export class SchuelerblockungDynDaten extends JavaObject {
 				throw this.fehler("kurs.istFixiert && kurs.istGesperrt ist unmöglich! --> " + kurs.id)
 		}
 		for (let fachwahl of pInput.fachwahlen) {
+			if (fachwahl.schuelerID < 0) 
+				throw this.fehler("fachwahl.schuelerID ist zu gering! --> " + fachwahl.schuelerID)
 			if (fachwahl.fachID < 0) 
 				throw this.fehler("fachwahl.fachID ist zu gering! --> " + fachwahl.fachID)
 			if (fachwahl.kursartID < 0) 

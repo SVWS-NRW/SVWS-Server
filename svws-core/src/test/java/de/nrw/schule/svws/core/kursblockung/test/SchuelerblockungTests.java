@@ -78,6 +78,7 @@ public class SchuelerblockungTests {
 		int startSchiene = 1;
 		for (int i = 0; i < nFachwahlen; i++) {
 			GostFachwahl fachwahl = new GostFachwahl();
+			fachwahl.schuelerID = 1; // Fake-ID
 			fachwahl.fachID = pRandom.nextLong(30); // Es gibt ca. 30 verschiedene Fächer.
 			fachwahl.kursartID = pRandom.nextInt(5); // Es gibt ca. 5 verschiedene Kursarten.
 			in.fachwahlen.add(fachwahl);

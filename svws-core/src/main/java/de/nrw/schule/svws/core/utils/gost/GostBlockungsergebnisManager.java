@@ -17,6 +17,7 @@ import de.nrw.schule.svws.core.data.gost.GostFachwahl;
 import de.nrw.schule.svws.core.data.kursblockung.SchuelerblockungInput;
 import de.nrw.schule.svws.core.data.kursblockung.SchuelerblockungInputKurs;
 import de.nrw.schule.svws.core.data.kursblockung.SchuelerblockungOutput;
+import de.nrw.schule.svws.core.data.kursblockung.SchuelerblockungOutputFachwahlZuKurs;
 import de.nrw.schule.svws.core.data.schueler.Schueler;
 import de.nrw.schule.svws.core.kursblockung.SchuelerblockungAlgorithmus;
 import de.nrw.schule.svws.core.types.gost.GostKursart;
@@ -979,7 +980,6 @@ public class GostBlockungsergebnisManager {
 	 * Liefert für den übergebenen Schüler einen Vorschlag für eine Neuzuordnung der Kurse.
 	 * 
 	 * @param  pSchuelerID Die Datenbank-ID des Schülers.
-	 * 
 	 * @return             Die Neuzuordnung der Kurse im {@link SchuelerblockungOutput}-Objekt.
 	 */
 	public @NotNull SchuelerblockungOutput getOfSchuelerNeuzuordnung(long pSchuelerID) {
@@ -1537,6 +1537,31 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
+	 * Geht die übergebenen Zuordnungen (Fach --> Kurs) durch und setzt 
+	 * bei Veränderung Kurse des übergebenen Schülers neu.   
+     * 
+	 * @param schuelerID  Die Datenbank-ID des Schülers. 
+	 * @param pZuordnung  Die gewünschte Zuordnung.
+	 */
+	public void setSchuelerNeuzuordnung(long schuelerID, @NotNull SchuelerblockungOutput pZuordnung) {
+		
+		for (@NotNull SchuelerblockungOutputFachwahlZuKurs z : pZuordnung.fachwahlenZuKurs) {
+			// Kurs des Faches 'vorher'.
+			GostBlockungsergebnisKurs kursV = getOfSchuelerOfFachZugeordneterKurs(schuelerID, z.fachID);
+			// Kurs des Faches 'nachher'.
+			GostBlockungsergebnisKurs kursN = z.kursID < 0 ? null : getKursE(z.kursID);
+			// Bei Ungleichheit wird der Kurs gewechselt.
+			if (kursV != kursN) {
+				if (kursV != null)
+					setSchuelerKurs(schuelerID, kursV.id, false);
+				if (kursN != null)
+					setSchuelerKurs(schuelerID, kursN.id, true);
+			}
+		}
+		
+	}
+
+	/**
 	 * Fügt die übergebene Schiene hinzu.
 	 * 
 	 * @param  pSchienenID           Die Datenbank-ID der Schiene.
@@ -1638,7 +1663,7 @@ public class GostBlockungsergebnisManager {
 		
 		stateRevalidateEverything();
 	}
-
+	
 	/**
 	 * Nur für Debug-Zwecke.
 	 */
