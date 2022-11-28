@@ -48,9 +48,14 @@ import de.nrw.schule.svws.db.dto.migration.schild.kurse.MigrationDTOKurs;
 import de.nrw.schule.svws.db.dto.migration.schild.lehrer.MigrationDTOLehrer;
 import de.nrw.schule.svws.db.dto.migration.schild.lehrer.MigrationDTOLehrerAbschnittsdaten;
 import de.nrw.schule.svws.db.dto.migration.schild.lehrer.MigrationDTOLehrerAnrechnungsstunde;
+import de.nrw.schule.svws.db.dto.migration.schild.lehrer.MigrationDTOLehrerDatenschutz;
 import de.nrw.schule.svws.db.dto.migration.schild.lehrer.MigrationDTOLehrerEntlastungsstunde;
 import de.nrw.schule.svws.db.dto.migration.schild.lehrer.MigrationDTOLehrerFoto;
 import de.nrw.schule.svws.db.dto.migration.schild.lehrer.MigrationDTOLehrerFunktion;
+import de.nrw.schule.svws.db.dto.migration.schild.lehrer.MigrationDTOLehrerLehramt;
+import de.nrw.schule.svws.db.dto.migration.schild.lehrer.MigrationDTOLehrerLehramtBefaehigung;
+import de.nrw.schule.svws.db.dto.migration.schild.lehrer.MigrationDTOLehrerLehramtFachrichtung;
+import de.nrw.schule.svws.db.dto.migration.schild.lehrer.MigrationDTOLehrerLernplattform;
 import de.nrw.schule.svws.db.dto.migration.schild.lehrer.MigrationDTOLehrerMehrleistung;
 import de.nrw.schule.svws.db.dto.migration.schild.personengruppen.MigrationDTOPersonengruppen;
 import de.nrw.schule.svws.db.dto.migration.schild.personengruppen.MigrationDTOPersonengruppenPersonen;
@@ -1231,6 +1236,36 @@ public class DBMigrationManager {
 
 
 	/**
+	 * Prüft die Entitäten der Tabelle "LehrerFotos".
+	 * Hierbei wird geprüft, ob der zugeordnete Lehrer mit den angegebenen ID existiert.
+	 * 
+	 * @param entities   die Entitäten
+	 * 
+	 * @return true, falls die Daten ohne schwerwiegenden Fehler geprüft wurden
+	 */
+	private boolean checkLehrerFoto(List<MigrationDTOLehrerFoto> entities) {
+		HashMap<Long, MigrationDTOLehrerFoto> map = new HashMap<>();
+		for (int i = entities.size() - 1; i >= 0; i--) {
+			MigrationDTOLehrerFoto daten = entities.get(i);
+			if ((daten.Lehrer_ID == null) || (!lehrerIDs.contains(daten.Lehrer_ID))) {
+				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Es gibt keinen Lehrer mit der angebenen ID in der Datenbank.");
+				entities.remove(i);
+			} else {
+				// Entferne ggf. Duplikate mit gleicher ID
+				MigrationDTOLehrerFoto other = map.get(daten.Lehrer_ID);
+				if (other == null) {
+					map.put(daten.Lehrer_ID, daten);
+				} else {
+					logger.logLn(LogLevel.ERROR, "Entferne Datensatz: Es ist nur die Speicherung von einem Foto für einen Lehrer in der DB vorgesehen.");
+					entities.remove(i);
+				}
+			}
+		}
+		return true;
+	}
+	
+
+	/**
 	 * Prüft die Entitäten der Tabelle "LehrerFunktionen".
 	 * Hierbei wird eine ID als Primärschlüssel ergänzt.
 	 * 
@@ -1272,6 +1307,106 @@ public class DBMigrationManager {
 	}
 	
 
+	/**
+	 * Prüft die Entitäten der Tabelle "LehrerLehramt".
+	 * Hierbei wird geprüft, ob der zugeordnete Lehrer mit den angegebenen ID existiert.
+	 * 
+	 * @param entities   die Entitäten
+	 * 
+	 * @return true, falls die Daten ohne schwerwiegenden Fehler geprüft wurden
+	 */
+	private boolean checkLehrerLehramt(List<MigrationDTOLehrerLehramt> entities) {
+		for (int i = entities.size() - 1; i >= 0; i--) {
+			MigrationDTOLehrerLehramt daten = entities.get(i);
+			if ((daten.Lehrer_ID == null) || (!lehrerIDs.contains(daten.Lehrer_ID))) {
+				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Es gibt keinen Lehrer mit der angebenen ID in der Datenbank.");
+				entities.remove(i);
+			}
+		}
+		return true;
+	}
+	
+
+	/**
+	 * Prüft die Entitäten der Tabelle "LehrerLehramtFachr".
+	 * Hierbei wird geprüft, ob der zugeordnete Lehrer mit den angegebenen ID existiert.
+	 * 
+	 * @param entities   die Entitäten
+	 * 
+	 * @return true, falls die Daten ohne schwerwiegenden Fehler geprüft wurden
+	 */
+	private boolean checkLehrerLehramtFachrichtung(List<MigrationDTOLehrerLehramtFachrichtung> entities) {
+		for (int i = entities.size() - 1; i >= 0; i--) {
+			MigrationDTOLehrerLehramtFachrichtung daten = entities.get(i);
+			if ((daten.Lehrer_ID == null) || (!lehrerIDs.contains(daten.Lehrer_ID))) {
+				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Es gibt keinen Lehrer mit der angebenen ID in der Datenbank.");
+				entities.remove(i);
+			}
+		}
+		return true;
+	}
+	
+
+	/**
+	 * Prüft die Entitäten der Tabelle "LehrerLehramtLehrbef".
+	 * Hierbei wird geprüft, ob der zugeordnete Lehrer mit den angegebenen ID existiert.
+	 * 
+	 * @param entities   die Entitäten
+	 * 
+	 * @return true, falls die Daten ohne schwerwiegenden Fehler geprüft wurden
+	 */
+	private boolean checkLehrerLehramtBefaehigung(List<MigrationDTOLehrerLehramtBefaehigung> entities) {
+		for (int i = entities.size() - 1; i >= 0; i--) {
+			MigrationDTOLehrerLehramtBefaehigung daten = entities.get(i);
+			if ((daten.Lehrer_ID == null) || (!lehrerIDs.contains(daten.Lehrer_ID))) {
+				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Es gibt keinen Lehrer mit der angebenen ID in der Datenbank.");
+				entities.remove(i);
+			}
+		}
+		return true;
+	}
+	
+
+	/**
+	 * Prüft die Entitäten der Tabelle "LehrerDatenschutz".
+	 * Hierbei wird geprüft, ob der zugeordnete Lehrer mit den angegebenen ID existiert.
+	 * 
+	 * @param entities   die Entitäten
+	 * 
+	 * @return true, falls die Daten ohne schwerwiegenden Fehler geprüft wurden
+	 */
+	private boolean checkLehrerDatenschutz(List<MigrationDTOLehrerDatenschutz> entities) {
+		for (int i = entities.size() - 1; i >= 0; i--) {
+			MigrationDTOLehrerDatenschutz daten = entities.get(i);
+			if ((daten.LehrerID == null) || (!lehrerIDs.contains(daten.LehrerID))) {
+				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Es gibt keinen Lehrer mit der angebenen ID in der Datenbank.");
+				entities.remove(i);
+			}
+		}
+		return true;
+	}
+	
+
+	/**
+	 * Prüft die Entitäten der Tabelle "LehrerLernplattform".
+	 * Hierbei wird geprüft, ob der zugeordnete Lehrer mit den angegebenen ID existiert.
+	 * 
+	 * @param entities   die Entitäten
+	 * 
+	 * @return true, falls die Daten ohne schwerwiegenden Fehler geprüft wurden
+	 */
+	private boolean checkLehrerLernplattform(List<MigrationDTOLehrerLernplattform> entities) {
+		for (int i = entities.size() - 1; i >= 0; i--) {
+			MigrationDTOLehrerLernplattform daten = entities.get(i);
+			if ((daten.LehrerID == null) || (!lehrerIDs.contains(daten.LehrerID))) {
+				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Es gibt keinen Lehrer mit der angebenen ID in der Datenbank.");
+				entities.remove(i);
+			}
+		}
+		return true;
+	}
+	
+
 	
 	
 	/**
@@ -1304,6 +1439,9 @@ public class DBMigrationManager {
 				daten.HausNr = aufgeteilt[1];
 				daten.HausNrZusatz = aufgeteilt[2];
 			}
+			// Prüfe das Feld LSSchulform 
+			if ((daten.LSSchulform != null) && (daten.LSSchulform.length() > 2))
+				daten.LSSchulform = daten.LSSchulform.substring(0, 2);
 			schuelerIDs.add(daten.ID);
 		}
 		return true;
@@ -1581,6 +1719,18 @@ public class DBMigrationManager {
 			return checkLehrerEntlastung((List<MigrationDTOLehrerEntlastungsstunde>)entities);
 		if (firstObject instanceof MigrationDTOLehrerMehrleistung)
 			return checkLehrerMehrleistung((List<MigrationDTOLehrerMehrleistung>)entities);
+		if (firstObject instanceof MigrationDTOLehrerLehramt)
+			return checkLehrerLehramt((List<MigrationDTOLehrerLehramt>)entities);
+		if (firstObject instanceof MigrationDTOLehrerLehramtBefaehigung)
+			return checkLehrerLehramtBefaehigung((List<MigrationDTOLehrerLehramtBefaehigung>)entities);
+		if (firstObject instanceof MigrationDTOLehrerLehramtFachrichtung)
+			return checkLehrerLehramtFachrichtung((List<MigrationDTOLehrerLehramtFachrichtung>)entities);
+		if (firstObject instanceof MigrationDTOLehrerDatenschutz)
+			return checkLehrerDatenschutz((List<MigrationDTOLehrerDatenschutz>)entities);
+		if (firstObject instanceof MigrationDTOLehrerLernplattform)
+			return checkLehrerLernplattform((List<MigrationDTOLehrerLernplattform>)entities);
+		if (firstObject instanceof MigrationDTOLehrerFoto)
+			return checkLehrerFoto((List<MigrationDTOLehrerFoto>)entities);
 		if (firstObject instanceof MigrationDTOLehrerFunktion)
 			return checkLehrerFunktionen((List<MigrationDTOLehrerFunktion>)entities);
 		if (firstObject instanceof MigrationDTOSchueler)
