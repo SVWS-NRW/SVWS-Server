@@ -59,6 +59,8 @@ public class DataGostJahrgangsliste extends DataManager<Integer> {
 		if (dtos != null) {
 			dtos = dtos.stream().sorted((a,b) -> Integer.compare(a.Abi_Jahrgang, b.Abi_Jahrgang)).collect(Collectors.toList());
 			for (DTOGostJahrgangsdaten jahrgangsdaten : dtos) {
+				if (jahrgangsdaten.Abi_Jahrgang < 0)
+					continue;
 				GostJahrgang eintrag = new GostJahrgang();
 				eintrag.abiturjahr = jahrgangsdaten.Abi_Jahrgang;
 				int restjahre = jahrgangsdaten.Abi_Jahrgang - aktuellerAbschnitt.Jahr;
@@ -80,9 +82,9 @@ public class DataGostJahrgangsliste extends DataManager<Integer> {
 		
     	// Füge einen Eintrag ein, der für keinen Abiturjahrgang steht - also für allgemeine Informationen zu Abiturjahrgängen
     	GostJahrgang eintrag = new GostJahrgang();
-    	eintrag.abiturjahr = null;
+    	eintrag.abiturjahr = -1;
     	eintrag.jahrgang = null;
-    	eintrag.bezeichnung = "Allgemein";
+    	eintrag.bezeichnung = "Allgemein / Vorlage";
     	eintrag.istAbgeschlossen = false;
     	daten.add(0, eintrag);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();

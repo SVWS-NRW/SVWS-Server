@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 
 import de.nrw.schule.svws.api.JSONMapper;
 import de.nrw.schule.svws.core.data.gost.GostJahrgangsdaten;
+import de.nrw.schule.svws.core.types.gost.GostHalbjahr;
 import de.nrw.schule.svws.core.utils.jahrgang.JahrgangsUtils;
 import de.nrw.schule.svws.data.DataManager;
 import de.nrw.schule.svws.db.DBEntityManager;
@@ -62,28 +63,45 @@ public class DataGostJahrgangsdaten extends DataManager<Integer> {
     	
     	// Lese alle Abiturjahrgänge aus der Datenbank ein und ergänze diese im Vektor
 		DTOGostJahrgangsdaten jahrgangsdaten = conn.queryByKey(DTOGostJahrgangsdaten.class, abi_jahrgang);
+		if ((jahrgangsdaten == null) && (abi_jahrgang == -1)) {
+			jahrgangsdaten = new DTOGostJahrgangsdaten(-1);
+			jahrgangsdaten.TextBeratungsbogen = "";
+			jahrgangsdaten.TextMailversand = "";
+			jahrgangsdaten.ZusatzkursGEErstesHalbjahr = "Q2.1";
+			jahrgangsdaten.ZusatzkursGEVorhanden = true;
+			jahrgangsdaten.ZusatzkursSWErstesHalbjahr = "Q2.1";
+			jahrgangsdaten.ZusatzkursSWVorhanden = true;
+			conn.persist(jahrgangsdaten);
+		}
 		if (jahrgangsdaten == null)
     		return OperationError.NOT_FOUND.getResponse();
 		
 		GostJahrgangsdaten daten = new GostJahrgangsdaten();
 		daten.abiturjahr = jahrgangsdaten.Abi_Jahrgang;
-		int restjahre = jahrgangsdaten.Abi_Jahrgang - aktuellerAbschnitt.Jahr;
-		for (DTOJahrgang jahrgang : dtosJahrgaenge) {
-			Integer jahrgangRestjahre = JahrgangsUtils.getRestlicheJahre(schule.Schulform, jahrgang.Gliederung, jahrgang.ASDJahrgang);
-			if (jahrgangRestjahre != null && restjahre == jahrgangRestjahre) {
-				daten.jahrgang = jahrgang.ASDJahrgang;
-				break;
+		if (daten.abiturjahr >= 0) {
+			int restjahre = jahrgangsdaten.Abi_Jahrgang - aktuellerAbschnitt.Jahr;
+			for (DTOJahrgang jahrgang : dtosJahrgaenge) {
+				Integer jahrgangRestjahre = JahrgangsUtils.getRestlicheJahre(schule.Schulform, jahrgang.Gliederung, jahrgang.ASDJahrgang);
+				if (jahrgangRestjahre != null && restjahre == jahrgangRestjahre) {
+					daten.jahrgang = jahrgang.ASDJahrgang;
+					break;
+				}
 			}
+			daten.bezeichnung = "Abi " + daten.abiturjahr + ((daten.jahrgang == null) ? "" : " (" + daten.jahrgang + ")");
+			daten.istAbgeschlossen = (restjahre < 1);
+		} else {
+			daten.jahrgang = null;
+			daten.bezeichnung = "Allgemein / Vorlage";
+			daten.istAbgeschlossen = false;
 		}
-		daten.bezeichnung = "Abi " + daten.abiturjahr + ((daten.jahrgang == null) ? "" : " (" + daten.jahrgang + ")");
-		daten.istAbgeschlossen = (restjahre < 1);
     	daten.textBeratungsbogen = jahrgangsdaten.TextBeratungsbogen; 
     	daten.textMailversand = jahrgangsdaten.TextMailversand;
-		// TODO Verfügbarkeit von Zusatzkurse - siehe DTOGostJahrgangsdaten
+    	daten.hatZusatzkursGE = jahrgangsdaten.ZusatzkursGEVorhanden;
     	daten.beginnZusatzkursGE = jahrgangsdaten.ZusatzkursGEErstesHalbjahr;
+    	daten.hatZusatzkursSW = jahrgangsdaten.ZusatzkursSWVorhanden;
     	daten.beginnZusatzkursSW = jahrgangsdaten.ZusatzkursSWErstesHalbjahr;
     	List<DTOGostJahrgangBeratungslehrer> dtosBeratungslehrer = conn.queryNamed("DTOGostJahrgangBeratungslehrer.abi_jahrgang", daten.abiturjahr, DTOGostJahrgangBeratungslehrer.class);
-    	daten.beratungslehrer.addAll(DataGostBeratungslehrer.getBeratungslehrer(conn, dtosBeratungslehrer));		
+    	daten.beratungslehrer.addAll(DataGostBeratungslehrer.getBeratungslehrer(conn, dtosBeratungslehrer));
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
@@ -93,6 +111,7 @@ public class DataGostJahrgangsdaten extends DataManager<Integer> {
     	if (map.size() <= 0) 
 	    	return Response.status(Status.OK).build();
 		try {
+			conn.transactionBegin();
 			GostUtils.pruefeSchuleMitGOSt(conn);
 			DTOGostJahrgangsdaten jahrgangsdaten = conn.queryByKey(DTOGostJahrgangsdaten.class, abiturjahr);
 	    	if (jahrgangsdaten == null)
@@ -111,9 +130,22 @@ public class DataGostJahrgangsdaten extends DataManager<Integer> {
     				case "istAbgeschlossen" -> throw OperationError.BAD_REQUEST.exception();
     				case "textBeratungsbogen" -> jahrgangsdaten.TextBeratungsbogen = JSONMapper.convertToString(value, true, true);
     				case "textMailversand" -> jahrgangsdaten.TextMailversand = JSONMapper.convertToString(value, true, true);
-    				// TODO Verfügbarkeit von Zusatzkurse - siehe DTOGostJahrgangsdaten
-    				// TODO case "beginnZusatzkursGE" -> jahrgangsdaten.ZusatzkursGEErstesHalbjahr = JSONMapper.convertToString(value, false, false); // TODO Kürzel prüfen
-    				// TODO case "beginnZusatzkursSW" -> jahrgangsdaten.ZusatzkursSWErstesHalbjahr = JSONMapper.convertToString(value, false, false); // TODO Kürzel prüfen
+    				case "hatZusatzkursGE" -> jahrgangsdaten.ZusatzkursGEVorhanden = JSONMapper.convertToBoolean(value, false);
+    				case "beginnZusatzkursGE" -> {
+    					String tmp = JSONMapper.convertToString(value, false, false);
+    					GostHalbjahr halbjahr = GostHalbjahr.fromKuerzel(tmp);
+    					if ((halbjahr == null) || (halbjahr.istEinfuehrungsphase())) 
+    						throw OperationError.BAD_REQUEST.exception();
+    					jahrgangsdaten.ZusatzkursGEErstesHalbjahr = halbjahr.kuerzel; 
+    				}
+    				case "hatZusatzkursSW" -> jahrgangsdaten.ZusatzkursSWVorhanden = JSONMapper.convertToBoolean(value, false);
+    				case "beginnZusatzkursSW" -> {
+    					String tmp = JSONMapper.convertToString(value, false, false);
+    					GostHalbjahr halbjahr = GostHalbjahr.fromKuerzel(tmp);
+    					if ((halbjahr == null) || (halbjahr.istEinfuehrungsphase())) 
+    						throw OperationError.BAD_REQUEST.exception();
+    					jahrgangsdaten.ZusatzkursSWErstesHalbjahr = halbjahr.kuerzel;
+    				}
     				// TODO case "beratungslehrer" -> TODO set Beratungslehrer - zusätzliche API
 	    			default -> throw OperationError.BAD_REQUEST.exception();
 	    		}

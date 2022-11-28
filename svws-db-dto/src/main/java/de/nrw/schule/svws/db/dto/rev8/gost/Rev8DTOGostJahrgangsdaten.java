@@ -47,13 +47,13 @@ import de.nrw.schule.svws.csv.converter.current.Boolean01ConverterDeserializer;
 @JsonPropertyOrder({"Abi_Jahrgang","ZusatzkursGEVorhanden","ZusatzkursGEErstesHalbjahr","ZusatzkursSWVorhanden","ZusatzkursSWErstesHalbjahr","TextBeratungsbogen","TextMailversand"})
 public class Rev8DTOGostJahrgangsdaten {
 
-	/** Gymnasiale Oberstufe - Jahrgangsdaten: Schuljahr, in welchem der Jahrgang das Abitur macht */
+	/** Schuljahr, in welchem der Jahrgang das Abitur macht, oder -1 für die Vorlage für das Anlegen neuer Abiturjahrgänge. */
 	@Id
 	@Column(name = "Abi_Jahrgang")
 	@JsonProperty
 	public Integer Abi_Jahrgang;
 
-	/** Gymnasiale Oberstufe - Jahrgangsdaten: Legt fest, ob ein Zusatzkurs in Geschichte angeboten wird */
+	/** Legt fest, ob ein Zusatzkurs in Geschichte angeboten wird */
 	@Column(name = "ZusatzkursGEVorhanden")
 	@JsonProperty
 	@Convert(converter=Boolean01Converter.class)
@@ -61,12 +61,12 @@ public class Rev8DTOGostJahrgangsdaten {
 	@JsonDeserialize(using=Boolean01ConverterDeserializer.class)
 	public Boolean ZusatzkursGEVorhanden;
 
-	/** Gymnasiale Oberstufe - Jahrgangsdaten: Halbjahr, in welchem ein Zusatzkurs in Geschichte beginnt (z.B. Q2.1) */
+	/** Halbjahr, in welchem ein Zusatzkurs in Geschichte beginnt (z.B. Q2.1) */
 	@Column(name = "ZusatzkursGEErstesHalbjahr")
 	@JsonProperty
 	public String ZusatzkursGEErstesHalbjahr;
 
-	/** Gymnasiale Oberstufe - Jahrgangsdaten: Legt fest, ob ein Zusatzkurs in Sozialwissenschaften angeboten wird */
+	/** Legt fest, ob ein Zusatzkurs in Sozialwissenschaften angeboten wird */
 	@Column(name = "ZusatzkursSWVorhanden")
 	@JsonProperty
 	@Convert(converter=Boolean01Converter.class)
@@ -74,17 +74,17 @@ public class Rev8DTOGostJahrgangsdaten {
 	@JsonDeserialize(using=Boolean01ConverterDeserializer.class)
 	public Boolean ZusatzkursSWVorhanden;
 
-	/** Gymnasiale Oberstufe - Jahrgangsdaten: Halbjahr, in welchem ein Zusatzkurs in Sozialwissenschaften beginnt (z.B. Q2.1) */
+	/** Halbjahr, in welchem ein Zusatzkurs in Sozialwissenschaften beginnt (z.B. Q2.1) */
 	@Column(name = "ZusatzkursSWErstesHalbjahr")
 	@JsonProperty
 	public String ZusatzkursSWErstesHalbjahr;
 
-	/** Gymnasiale Oberstufe - Jahrgangsdaten: Text, welcher auf dem Ausdruck eines Beratungsbogens gedruckt wird */
+	/** Text, welcher auf dem Ausdruck eines Beratungsbogens gedruckt wird */
 	@Column(name = "TextBeratungsbogen")
 	@JsonProperty
 	public String TextBeratungsbogen;
 
-	/** Gymnasiale Oberstufe - Jahrgangsdaten: Text, welcher in einer Mail beim Versenden von Beratungsdateien verwendet wird */
+	/** Text, welcher in einer Mail beim Versenden von Beratungsdateien verwendet wird */
 	@Column(name = "TextMailversand")
 	@JsonProperty
 	public String TextMailversand;

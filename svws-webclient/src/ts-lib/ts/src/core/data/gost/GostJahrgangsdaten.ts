@@ -18,7 +18,11 @@ export class GostJahrgangsdaten extends JavaObject {
 
 	public textMailversand : String | null = null;
 
+	public hatZusatzkursGE : boolean = true;
+
 	public beginnZusatzkursGE : String | null = null;
+
+	public hatZusatzkursSW : boolean = true;
 
 	public beginnZusatzkursSW : String | null = null;
 
@@ -44,7 +48,13 @@ export class GostJahrgangsdaten extends JavaObject {
 		result.istAbgeschlossen = obj.istAbgeschlossen;
 		result.textBeratungsbogen = typeof obj.textBeratungsbogen === "undefined" ? null : obj.textBeratungsbogen === null ? null : String(obj.textBeratungsbogen);
 		result.textMailversand = typeof obj.textMailversand === "undefined" ? null : obj.textMailversand === null ? null : String(obj.textMailversand);
+		if (typeof obj.hatZusatzkursGE === "undefined")
+			 throw new Error('invalid json format, missing attribute hatZusatzkursGE');
+		result.hatZusatzkursGE = obj.hatZusatzkursGE;
 		result.beginnZusatzkursGE = typeof obj.beginnZusatzkursGE === "undefined" ? null : obj.beginnZusatzkursGE === null ? null : String(obj.beginnZusatzkursGE);
+		if (typeof obj.hatZusatzkursSW === "undefined")
+			 throw new Error('invalid json format, missing attribute hatZusatzkursSW');
+		result.hatZusatzkursSW = obj.hatZusatzkursSW;
 		result.beginnZusatzkursSW = typeof obj.beginnZusatzkursSW === "undefined" ? null : obj.beginnZusatzkursSW === null ? null : String(obj.beginnZusatzkursSW);
 		if (!!obj.beratungslehrer) {
 			for (let elem of obj.beratungslehrer) {
@@ -62,7 +72,9 @@ export class GostJahrgangsdaten extends JavaObject {
 		result += '"istAbgeschlossen" : ' + obj.istAbgeschlossen + ',';
 		result += '"textBeratungsbogen" : ' + ((!obj.textBeratungsbogen) ? 'null' : '"' + obj.textBeratungsbogen.valueOf() + '"') + ',';
 		result += '"textMailversand" : ' + ((!obj.textMailversand) ? 'null' : '"' + obj.textMailversand.valueOf() + '"') + ',';
+		result += '"hatZusatzkursGE" : ' + obj.hatZusatzkursGE + ',';
 		result += '"beginnZusatzkursGE" : ' + ((!obj.beginnZusatzkursGE) ? 'null' : '"' + obj.beginnZusatzkursGE.valueOf() + '"') + ',';
+		result += '"hatZusatzkursSW" : ' + obj.hatZusatzkursSW + ',';
 		result += '"beginnZusatzkursSW" : ' + ((!obj.beginnZusatzkursSW) ? 'null' : '"' + obj.beginnZusatzkursSW.valueOf() + '"') + ',';
 		if (!obj.beratungslehrer) {
 			result += '"beratungslehrer" : []';
@@ -101,8 +113,14 @@ export class GostJahrgangsdaten extends JavaObject {
 		if (typeof obj.textMailversand !== "undefined") {
 			result += '"textMailversand" : ' + ((!obj.textMailversand) ? 'null' : '"' + obj.textMailversand.valueOf() + '"') + ',';
 		}
+		if (typeof obj.hatZusatzkursGE !== "undefined") {
+			result += '"hatZusatzkursGE" : ' + obj.hatZusatzkursGE + ',';
+		}
 		if (typeof obj.beginnZusatzkursGE !== "undefined") {
 			result += '"beginnZusatzkursGE" : ' + ((!obj.beginnZusatzkursGE) ? 'null' : '"' + obj.beginnZusatzkursGE.valueOf() + '"') + ',';
+		}
+		if (typeof obj.hatZusatzkursSW !== "undefined") {
+			result += '"hatZusatzkursSW" : ' + obj.hatZusatzkursSW + ',';
 		}
 		if (typeof obj.beginnZusatzkursSW !== "undefined") {
 			result += '"beginnZusatzkursSW" : ' + ((!obj.beginnZusatzkursSW) ? 'null' : '"' + obj.beginnZusatzkursSW.valueOf() + '"') + ',';

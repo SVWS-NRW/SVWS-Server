@@ -1978,7 +1978,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getGostAbiturjahrgang für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgang/{abiturjahr : \d+}
+	 * Implementierung der GET-Methode getGostAbiturjahrgang für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\d+}
 	 * 
 	 * Liest die Grunddaten des Jahrgangs der gymnasialen Oberstufe zu dem Jahr, in welchem der Jahrgang Abitur machen wird, aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Jahrgangsinformationen besitzt.
 	 * 
@@ -1995,7 +1995,7 @@ export class ApiServer extends BaseApi {
 	 * @returns Die Grunddaten des Jahrgangs der gymnasialen Oberstufe
 	 */
 	public async getGostAbiturjahrgang(schema : string, abiturjahr : number) : Promise<GostJahrgangsdaten> {
-		let path : string = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : \d+}"
+		let path : string = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\d+}"
 				.replace(/{schema\s*(:[^}]+)?}/g, schema)
 				.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString());
 		const result : string = await super.getJSON(path);
@@ -2005,7 +2005,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der PATCH-Methode patchGostAbiturjahrgang für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgang/{abiturjahr : \d+}
+	 * Implementierung der PATCH-Methode patchGostAbiturjahrgang für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\d+}
 	 * 
 	 * Passt die Daten des Jahrganges der gymnasialen Oberstufe zu dem Jahr an, in welchem der Jahrgang Abitur machen wird. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Anpassen der Jahrgangsinformationen besitzt.
 	 * 
@@ -2022,7 +2022,7 @@ export class ApiServer extends BaseApi {
 	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
 	 */
 	public async patchGostAbiturjahrgang(data : Partial<GostJahrgangsdaten>, schema : string, abiturjahr : number) : Promise<void> {
-		let path : string = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : \d+}"
+		let path : string = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\d+}"
 				.replace(/{schema\s*(:[^}]+)?}/g, schema)
 				.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString());
 		let body : string = GostJahrgangsdaten.transpilerToJSONPatch(data);

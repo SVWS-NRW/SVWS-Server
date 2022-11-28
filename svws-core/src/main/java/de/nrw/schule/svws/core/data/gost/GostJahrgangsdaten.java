@@ -45,9 +45,17 @@ public class GostJahrgangsdaten {
 			example="Bitte Senden Sie die Beratungsdatei ausgefüllt bis spätestens 13.4.2042 zurück. MfG Euer Jahrgangsstufenteam")
 	public String textMailversand;
 	
+	/** Legt fest, ob ein Zusatzkurs in Geschichte angeboten wird. */
+	@Schema(required = true, description = "Legt fest, ob ein Zusatzkurs in Geschichte angeboten wird.", example="true")
+	public boolean hatZusatzkursGE = true;
+	
 	/** Das eindeutige Kürzel des Halbjahrs, zu dem ein Zusatzkurs in Geschichte beginnt. */
 	@Schema(required = true, description = "Das eindeutige Kürzel des Halbjahrs, zu dem ein Zusatzkurs in Geschichte beginnt.", example="Q2.1")
 	public String beginnZusatzkursGE;
+	
+	/** Legt fest, ob ein Zusatzkurs in Sozialwissenschaften angeboten wird. */
+	@Schema(required = true, description = "Legt fest, ob ein Zusatzkurs in Sozialwissenschaften angeboten wird.", example="true")
+	public boolean hatZusatzkursSW = true;
 	
 	/** Das eindeutige Kürzel des Halbjahrs, zu dem ein Zusatzkurs in Sozialwissenschaften beginnt. */
 	@Schema(required = true, description = "Das eindeutige Kürzel des Halbjahrs, zu dem ein Zusatzkurs in Sozialwissenschaften beginnt.", example="Q2.1")

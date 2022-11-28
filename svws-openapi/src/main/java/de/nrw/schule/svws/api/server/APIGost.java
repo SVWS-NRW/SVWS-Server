@@ -144,7 +144,7 @@ public class APIGost {
      * @return die Daten des Jahrganges
      */
     @GET
-    @Path("/abiturjahrgang/{abiturjahr : \\d+}")
+    @Path("/abiturjahrgang/{abiturjahr : -?\\d+}")
     @Operation(summary = "Liefert zu dem Jahr, in welchem der Jahrgang Abitur machen wird, die zugehörigen Grunddaten.",
     description = "Liest die Grunddaten des Jahrgangs der gymnasialen Oberstufe zu dem Jahr, in welchem der Jahrgang Abitur "
     		    + "machen wird, aus der Datenbank und liefert diese zurück. "
@@ -176,7 +176,7 @@ public class APIGost {
      * @return die HTTP-Antwort
      */
     @PATCH
-    @Path("/abiturjahrgang/{abiturjahr : \\d+}")
+    @Path("/abiturjahrgang/{abiturjahr : -?\\d+}")
     @Operation(summary = "Passt die Daten des Abiturjahrgangs der Gymnasialen Oberstufe an.",
     description = "Passt die Daten des Jahrganges der gymnasialen Oberstufe zu dem Jahr an, in welchem der Jahrgang Abitur "
     		    + "machen wird. "
