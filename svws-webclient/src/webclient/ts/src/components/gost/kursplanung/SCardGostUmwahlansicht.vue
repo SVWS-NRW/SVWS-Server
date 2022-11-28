@@ -7,8 +7,6 @@
 					<svws-ui-checkbox v-model="filter_kollision" class="px-4">
 						Nur Kollisionen ({{schueler_kollisionen}}/{{schueler?.length || 0}})
 					</svws-ui-checkbox>
-<!--					<svws-ui-checkbox v-model="kursfilter" class="px-4"> Kursfilter: {{aktiver_kursname}} </svws-ui-checkbox>
--->	
 					<template v-if="kursfilter">
 						<div>
 							<svws-ui-checkbox
