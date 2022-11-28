@@ -52,7 +52,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 
 	private readonly _map_schuelerID_fachwahlen : HashMap<Number, List<GostFachwahl>> = new HashMap();
 
-	private readonly _map_schulerID_fachID_kursart : HashMap<Number, HashMap<Number, GostKursart>> = new HashMap();
+	private readonly _map_schulerID_fachID_fachwahl : HashMap<Number, HashMap<Number, GostFachwahl>> = new HashMap();
 
 	private readonly _map_schulerID_facharten : HashMap<Number, List<Number>> = new HashMap();
 
@@ -988,22 +988,36 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert die zu (Schüler, Fach) die jeweilige Kursart. <br>
-	 * Liefert eine Exception, falls (Schüler, Fach) nicht existiert.
+	 * Liefert zu (Schüler, Fach) die jeweilige Kursart. <br>
+	 * Wirft eine Exception, falls der Schüler das Fach nicht gewählt hat.
 	 * 
-	 * @param pSchuelerID Die Datenbank-ID des Schülers.
-	 * @param pFachID     Die Datenbank-ID des Faches.
-	 * 
-	 * @return Die zu (Schüler, Fach) die jeweilige Kursart.
+	 * @param pSchuelerID            Die Datenbank-ID des Schülers.
+	 * @param pFachID                Die Datenbank-ID des Faches.
+	 * @return                       Die zu (Schüler, Fach) jeweilige Kursart.
+	 * @throws NullPointerException  Falls der Schüler das Fach nicht gewählt hat.
 	 */
 	public getOfSchuelerOfFachKursart(pSchuelerID : number, pFachID : number) : GostKursart {
-		let mapFachKursart : HashMap<Number, GostKursart> | null = this._map_schulerID_fachID_kursart.get(pSchuelerID);
-		if (mapFachKursart === null) 
+		let fachwahl : GostFachwahl = this.getOfSchuelerOfFachFachwahl(pSchuelerID, pFachID);
+		return GostKursart.fromID(fachwahl.kursartID);
+	}
+
+	/**
+	 * Liefert zu (Schüler, Fach) die jeweilige Fachwahl. <br>
+	 * Wirft eine Exception, falls der Schüler das Fach nicht gewählt hat.
+	 * 
+	 * @param pSchuelerID            Die Datenbank-ID des Schülers.
+	 * @param pFachID                Die Datenbank-ID des Faches.
+	 * @return                       Die zu (Schüler, Fach) jeweilige Fachwahl.
+	 * @throws NullPointerException  Falls der Schüler das Fach nicht gewählt hat.
+	 */
+	public getOfSchuelerOfFachFachwahl(pSchuelerID : number, pFachID : number) : GostFachwahl {
+		let mapFachFachwahl : HashMap<Number, GostFachwahl> | null = this._map_schulerID_fachID_fachwahl.get(pSchuelerID);
+		if (mapFachFachwahl === null) 
 			throw new NullPointerException("Schüler-ID=" + pSchuelerID + " unbekannt!")
-		let kursart : GostKursart | null = mapFachKursart.get(pFachID);
-		if (kursart === null) 
+		let fachwahl : GostFachwahl | null = mapFachFachwahl.get(pFachID);
+		if (fachwahl === null) 
 			throw new NullPointerException("Schüler-ID=" + pSchuelerID + ", Fach-ID=" + pFachID + " unbekannt!")
-		return kursart;
+		return fachwahl;
 	}
 
 	/**
@@ -1028,14 +1042,13 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws NullPointerException  Falls es eine FachwahlDopplung gibt.
 	 */
 	public addFachwahl(pFachwahl : GostFachwahl) : void {
-		let mapSFA : HashMap<Number, GostKursart> | null = this._map_schulerID_fachID_kursart.get(pFachwahl.schuelerID);
+		let mapSFA : HashMap<Number, GostFachwahl> | null = this._map_schulerID_fachID_fachwahl.get(pFachwahl.schuelerID);
 		if (mapSFA === null) {
 			mapSFA = new HashMap();
-			this._map_schulerID_fachID_kursart.put(pFachwahl.schuelerID, mapSFA);
+			this._map_schulerID_fachID_fachwahl.put(pFachwahl.schuelerID, mapSFA);
 		}
 		let fachID : number = pFachwahl.fachID;
-		let kursart : GostKursart = GostKursart.fromFachwahlOrException(pFachwahl);
-		if (mapSFA.put(fachID, kursart) !== null) 
+		if (mapSFA.put(fachID, pFachwahl) !== null) 
 			throw new NullPointerException("Schüler-ID=" + pFachwahl.schuelerID + ", Fach-ID=" + fachID + " doppelt!")
 		let fachwahlenDesSchuelers : List<GostFachwahl> | null = this._map_schuelerID_fachwahlen.get(pFachwahl.schuelerID);
 		if (fachwahlenDesSchuelers === null) {

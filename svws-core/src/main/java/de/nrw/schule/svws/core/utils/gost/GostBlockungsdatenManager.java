@@ -66,7 +66,7 @@ public class GostBlockungsdatenManager {
 	private final @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull GostFachwahl>> _map_schuelerID_fachwahlen = new HashMap<>();
 	
 	/** Schüler-ID --> Fach-ID --> Kursart = Die Fachwahl des Schülers die dem Fach die Kursart zuordnet. */
-	private final @NotNull HashMap<@NotNull Long, @NotNull HashMap<@NotNull Long, @NotNull GostKursart>> _map_schulerID_fachID_kursart = new HashMap<>();
+	private final @NotNull HashMap<@NotNull Long, @NotNull HashMap<@NotNull Long, @NotNull GostFachwahl>> _map_schulerID_fachID_fachwahl = new HashMap<>();
 
 	/** Schüler-ID --> List<Facharten> */
 	private final @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull Long>> _map_schulerID_facharten = new HashMap<>();
@@ -1028,25 +1028,38 @@ public class GostBlockungsdatenManager {
 	}
 
 	/**
-	 * Liefert die zu (Schüler, Fach) die jeweilige Kursart. <br>
-	 * Liefert eine Exception, falls (Schüler, Fach) nicht existiert.
+	 * Liefert zu (Schüler, Fach) die jeweilige Kursart. <br>
+	 * Wirft eine Exception, falls der Schüler das Fach nicht gewählt hat.
 	 * 
-	 * @param pSchuelerID Die Datenbank-ID des Schülers.
-	 * @param pFachID     Die Datenbank-ID des Faches.
-	 * 
-	 * @return Die zu (Schüler, Fach) die jeweilige Kursart.
+	 * @param pSchuelerID            Die Datenbank-ID des Schülers.
+	 * @param pFachID                Die Datenbank-ID des Faches.
+	 * @return                       Die zu (Schüler, Fach) jeweilige Kursart.
+	 * @throws NullPointerException  Falls der Schüler das Fach nicht gewählt hat.
 	 */
-	public @NotNull GostKursart getOfSchuelerOfFachKursart(long pSchuelerID, long pFachID) {
-	
-		HashMap<@NotNull Long, @NotNull GostKursart> mapFachKursart = _map_schulerID_fachID_kursart.get(pSchuelerID);
-		if (mapFachKursart == null)
+	public @NotNull GostKursart getOfSchuelerOfFachKursart(long pSchuelerID, long pFachID) throws NullPointerException {
+		@NotNull GostFachwahl fachwahl = getOfSchuelerOfFachFachwahl(pSchuelerID, pFachID);
+		return GostKursart.fromID(fachwahl.kursartID);
+	}
+
+	/**
+	 * Liefert zu (Schüler, Fach) die jeweilige Fachwahl. <br>
+	 * Wirft eine Exception, falls der Schüler das Fach nicht gewählt hat.
+	 * 
+	 * @param pSchuelerID            Die Datenbank-ID des Schülers.
+	 * @param pFachID                Die Datenbank-ID des Faches.
+	 * @return                       Die zu (Schüler, Fach) jeweilige Fachwahl.
+	 * @throws NullPointerException  Falls der Schüler das Fach nicht gewählt hat.
+	 */
+	public @NotNull GostFachwahl getOfSchuelerOfFachFachwahl(long pSchuelerID, long pFachID) throws NullPointerException {
+		HashMap<@NotNull Long, @NotNull GostFachwahl> mapFachFachwahl = _map_schulerID_fachID_fachwahl.get(pSchuelerID);
+		if (mapFachFachwahl == null)
 			throw new NullPointerException("Schüler-ID=" + pSchuelerID + " unbekannt!");
 	
-		GostKursart kursart = mapFachKursart.get(pFachID);
-		if (kursart == null)
+		GostFachwahl fachwahl = mapFachFachwahl.get(pFachID);
+		if (fachwahl == null)
 			throw new NullPointerException("Schüler-ID=" + pSchuelerID + ", Fach-ID=" + pFachID + " unbekannt!");
-	
-		return kursart;
+		
+		return fachwahl;
 	}
 
 	/**
@@ -1073,19 +1086,18 @@ public class GostBlockungsdatenManager {
 	 * @throws NullPointerException  Falls es eine FachwahlDopplung gibt.
 	 */
 	public void addFachwahl(@NotNull GostFachwahl pFachwahl) throws NullPointerException {
-		// ########## _map_schulerID_fachID_kursart ##########
+		// ########## _map_schulerID_fachID_fachwahl ##########
 		
-		// Pfad: Schüler-ID --> Fach --> Kursart 
-		HashMap<@NotNull Long, @NotNull GostKursart> mapSFA = _map_schulerID_fachID_kursart.get(pFachwahl.schuelerID);
+		// Pfad: Schüler-ID --> Fach --> GostFachwahl 
+		HashMap<@NotNull Long, @NotNull GostFachwahl> mapSFA = _map_schulerID_fachID_fachwahl.get(pFachwahl.schuelerID);
 		if (mapSFA == null) {
 			mapSFA = new HashMap<>();
-			_map_schulerID_fachID_kursart.put(pFachwahl.schuelerID, mapSFA);
+			_map_schulerID_fachID_fachwahl.put(pFachwahl.schuelerID, mapSFA);
 		}
 
-		// Hinzufügen '_map_schulerID_fachID_kursart'
+		// Hinzufügen '_map_schulerID_fachID_fachwahl'
 		long fachID = pFachwahl.fachID;
-		@NotNull GostKursart kursart = GostKursart.fromFachwahlOrException(pFachwahl);
-		if (mapSFA.put(fachID, kursart) != null) 
+		if (mapSFA.put(fachID, pFachwahl) != null) 
 			throw new NullPointerException("Schüler-ID=" + pFachwahl.schuelerID + ", Fach-ID=" + fachID + " doppelt!");
 		
 		// ########## _map_schuelerID_fachwahlen ##########

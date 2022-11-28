@@ -1085,6 +1085,24 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert die Anzahl an Schülern die dem Kurs zugeordnet sind und ihn schriftlich belegt haben.
+	 * 
+	 * @param  pKursID  Die Datenbank-ID des Kurses.
+	 * @return          Die Anzahl an Schülern die dem Kurs zugeordnet sind und ihn schriftlich belegt haben.
+	 */
+	public getOfKursAnzahlSchuelerSchriftlich(pKursID : number) : number {
+		let kursE : GostBlockungsergebnisKurs = this.getKursE(pKursID);
+		let fachID : number = kursE.fachID;
+		let summe : number = 0;
+		for (let schuelerID of kursE.schueler) {
+			let fachwahl : GostFachwahl = this._parent.getOfSchuelerOfFachFachwahl(schuelerID.valueOf(), fachID);
+			if (fachwahl.istSchriftlich) 
+				summe++;
+		}
+		return summe;
+	}
+
+	/**
 	 * Liefert die Anzahl an Schienen in denen der Kurs gerade ist.
 	 * 
 	 * @param kursID Die Datenbank-ID des Kurses.

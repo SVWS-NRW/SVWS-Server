@@ -1200,6 +1200,26 @@ public class GostBlockungsergebnisManager {
 	}
 	
 	/**
+	 * Liefert die Anzahl an Schülern die dem Kurs zugeordnet sind und ihn schriftlich belegt haben.
+	 * 
+	 * @param  pKursID  Die Datenbank-ID des Kurses.
+	 * @return          Die Anzahl an Schülern die dem Kurs zugeordnet sind und ihn schriftlich belegt haben.
+	 */
+	public int getOfKursAnzahlSchuelerSchriftlich(long pKursID) {
+		@NotNull GostBlockungsergebnisKurs kursE = getKursE(pKursID);
+		long fachID = kursE.fachID;
+		
+		int summe = 0;
+		for (@NotNull Long schuelerID : kursE.schueler) {
+			@NotNull GostFachwahl fachwahl = _parent.getOfSchuelerOfFachFachwahl(schuelerID, fachID);
+			if (fachwahl.istSchriftlich)
+				summe++;
+		}
+		
+		return summe;
+	}	
+	
+	/**
 	 * Liefert die Anzahl an Schienen in denen der Kurs gerade ist.
 	 * 
 	 * @param kursID Die Datenbank-ID des Kurses.

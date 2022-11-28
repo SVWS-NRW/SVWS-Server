@@ -275,6 +275,10 @@ export { StundenplanInputSimpleKopplung } from './core/data/stundenplanblockung/
 export { StundenplanInputSimpleKurs } from './core/data/stundenplanblockung/StundenplanInputSimpleKurs';
 export { StundenplanInputSimpleLehrkraft } from './core/data/stundenplanblockung/StundenplanInputSimpleLehrkraft';
 export { StundenplanInputSimpleRaum } from './core/data/stundenplanblockung/StundenplanInputSimpleRaum';
+export { StundenplanblockungFach } from './core/data/stundenplanblockung/StundenplanblockungFach';
+export { StundenplanblockungInput } from './core/data/stundenplanblockung/StundenplanblockungInput';
+export { StundenplanblockungKlasse } from './core/data/stundenplanblockung/StundenplanblockungKlasse';
+export { StundenplanblockungLehrkraft } from './core/data/stundenplanblockung/StundenplanblockungLehrkraft';
 export { KlausurblockungException } from './core/klausurblockung/KlausurblockungException';
 export { KlausurblockungSchienenAlgorithmus } from './core/klausurblockung/KlausurblockungSchienenAlgorithmus';
 export { KlausurblockungSchienenAlgorithmusAbstract } from './core/klausurblockung/KlausurblockungSchienenAlgorithmusAbstract';
@@ -326,6 +330,7 @@ export { LogConsumerVector } from './core/logger/LogConsumerVector';
 export { LogData } from './core/logger/LogData';
 export { LogLevel } from './core/logger/LogLevel';
 export { Logger } from './core/logger/Logger';
+export { StundenplanblockungAlgorithmus } from './core/stundenplanblockung/StundenplanblockungAlgorithmus';
 export { DQR } from './core/types/DQR';
 export { Geschlecht } from './core/types/Geschlecht';
 export { KursFortschreibungsart } from './core/types/KursFortschreibungsart';
@@ -428,6 +433,7 @@ export { BerufskollegFachklassenManager } from './core/utils/schule/Berufskolleg
 export { SchuljahresAbschnittsManager } from './core/utils/schule/SchuljahresAbschnittsManager';
 export { IntegerComparator } from './core/utils/stundenplan/IntegerComparator';
 export { SchuelerStundenplanManager } from './core/utils/stundenplan/SchuelerStundenplanManager';
+export { StundenplanblockungManager } from './core/utils/stundenplanblockung/StundenplanblockungManager';
 export { IOException } from './java/io/IOException';
 export { Serializable } from './java/io/Serializable';
 export { AbstractStringBuilder } from './java/lang/AbstractStringBuilder';
