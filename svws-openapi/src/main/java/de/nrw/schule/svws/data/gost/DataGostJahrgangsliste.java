@@ -6,6 +6,7 @@ import java.util.Vector;
 import java.util.stream.Collectors;
 
 import de.nrw.schule.svws.core.data.gost.GostJahrgang;
+import de.nrw.schule.svws.core.types.jahrgang.Jahrgaenge;
 import de.nrw.schule.svws.core.utils.gost.GostAbiturjahrUtils;
 import de.nrw.schule.svws.core.utils.jahrgang.JahrgangsUtils;
 import de.nrw.schule.svws.data.DataManager;
@@ -65,7 +66,10 @@ public class DataGostJahrgangsliste extends DataManager<Integer> {
 					Integer jahrgangRestjahre = JahrgangsUtils.getRestlicheJahre(schule.Schulform, jahrgang.Gliederung, jahrgang.ASDJahrgang);
 					if (jahrgangRestjahre != null && restjahre == jahrgangRestjahre) {
 						eintrag.jahrgang = jahrgang.ASDJahrgang;
-						break;
+						if (Jahrgaenge.JG_EF.daten.kuerzel.equals(jahrgang.ASDJahrgang) 
+								|| Jahrgaenge.JG_Q1.daten.kuerzel.equals(jahrgang.ASDJahrgang)
+								|| Jahrgaenge.JG_Q2.daten.kuerzel.equals(jahrgang.ASDJahrgang))
+							break;
 					}
 				}
 				eintrag.bezeichnung = "Abi " + eintrag.abiturjahr + ((eintrag.jahrgang == null) ? "" : " (" + eintrag.jahrgang + ")");

@@ -136,7 +136,7 @@ export class SchuelerStundenplanManager extends JavaObject {
 	 * Liefert das SchulerStundenplanUnterricht-Objekt zur übergebenen
 	 * Unterrichts-ID
 	 * 
-	 * @param idUnterricht
+	 * @param idUnterricht die ID des Unterrichts
 	 * 
 	 * @return das SchulerStundenplanUnterricht-Objekt
 	 */
