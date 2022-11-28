@@ -407,8 +407,7 @@ public class KursblockungDynDaten {
 				int von = daten[1].intValue(); // Schiene ist 1-indiziert!
 				int bis = daten[2].intValue(); // Schiene ist 1-indiziert!
 				if (!((von >= 1) && (von <= bis) && (bis <= schienenAnzahl)))
-					throw fehler("KURSART_ALLEIN_IN_SCHIENEN_VON_BIS (" + kursartID + ", " + von + ", " + bis
-							+ ") ist unlogisch!");
+					throw fehler("KURSART_ALLEIN_IN_SCHIENEN_VON_BIS (" + kursartID + ", " + von + ", " + bis + ") ist unlogisch!");
 			}
 
 		}
@@ -643,8 +642,7 @@ public class KursblockungDynDaten {
 				schieneFrei.addLast(schienenArr[perm[j]]);
 
 			// Regel 1 - Alle Kurse einer bestimmten Kursart sperren.
-			LinkedCollection<@NotNull GostBlockungRegel> regelnTyp1 = regelMap
-					.get(GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS);
+			LinkedCollection<@NotNull GostBlockungRegel> regelnTyp1 = regelMap.get(GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS);
 			if (regelnTyp1 != null)
 				for (@NotNull GostBlockungRegel regel1 : regelnTyp1)
 					if (kurs.kursart == regel1.parameter.get(0)) {
@@ -655,16 +653,17 @@ public class KursblockungDynDaten {
 					}
 
 			// Regel 6 - Alle Kurse die NICHT eine bestimmte Kursart haben in bestimmten Schienen sperren.
-			// Regel 6 ist wie Regel 1 nur statt "==" haben wir "!=".
-			LinkedCollection<@NotNull GostBlockungRegel> regelnTyp6 = regelMap
-					.get(GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS);
+			LinkedCollection<@NotNull GostBlockungRegel> regelnTyp6 = regelMap.get(GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS);
 			if (regelnTyp6 != null)
-				for (@NotNull GostBlockungRegel regel6 : regelnTyp6)
-					if (kurs.kursart != regel6.parameter.get(0)) {
+				for (@NotNull GostBlockungRegel regel6 : regelnTyp6) {
 						int von = regel6.parameter.get(1).intValue(); // DB-Schiene ist 1-indiziert!
 						int bis = regel6.parameter.get(2).intValue(); // DB-Schiene ist 1-indiziert!
-						for (int schiene = von; schiene <= bis; schiene++)
-							schieneFrei.remove(schienenArr[schiene - 1]); // Intern 0-indiziert!
+						for (int schiene = 1; schiene <= schienenArr.length; schiene++) {
+							boolean innerhalb = (von <= schiene) && (schiene <= bis);
+							boolean gleicheArt = kurs.kursart == regel6.parameter.get(0);
+							if (innerhalb != gleicheArt)
+								schieneFrei.remove(schienenArr[schiene - 1]); // Intern 0-indiziert!
+						}
 					}
 
 			// Regel 3 - Pro Kurs gesperrte Schienen entfernen.

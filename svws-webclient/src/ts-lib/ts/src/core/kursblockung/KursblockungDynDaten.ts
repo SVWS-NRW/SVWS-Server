@@ -477,13 +477,16 @@ export class KursblockungDynDaten extends JavaObject {
 					}
 			let regelnTyp6 : LinkedCollection<GostBlockungRegel> | null = this.regelMap.get(GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS);
 			if (regelnTyp6 !== null) 
-				for (let regel6 of regelnTyp6) 
-					if (kurs.kursart !== regel6.parameter.get(0)) {
-						let von : number = regel6.parameter.get(1).valueOf();
-						let bis : number = regel6.parameter.get(2).valueOf();
-						for (let schiene : number = von; schiene <= bis; schiene++)
+				for (let regel6 of regelnTyp6) {
+					let von : number = regel6.parameter.get(1).valueOf();
+					let bis : number = regel6.parameter.get(2).valueOf();
+					for (let schiene : number = 1; schiene <= this.schienenArr.length; schiene++){
+						let innerhalb : boolean = (von <= schiene) && (schiene <= bis);
+						let gleicheArt : boolean = kurs.kursart === regel6.parameter.get(0);
+						if (innerhalb !== gleicheArt) 
 							schieneFrei.remove(this.schienenArr[schiene - 1]);
 					}
+				}
 			let regelnTyp3 : LinkedCollection<GostBlockungRegel> | null = this.regelMap.get(GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE);
 			if (regelnTyp3 !== null) 
 				for (let regel3 of regelnTyp3) 
