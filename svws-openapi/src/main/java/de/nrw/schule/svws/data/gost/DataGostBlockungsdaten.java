@@ -483,8 +483,18 @@ public class DataGostBlockungsdaten extends DataManager<Long> {
 			// Bestimme die für das Vorlage-Ergebnis der duplizierten Blockung
 			DTODBAutoInkremente dbErgebnisID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Blockung_Zwischenergebnisse");
 			long idErgebnisDuplikat = dbErgebnisID == null ? 1 : dbErgebnisID.MaxID + 1;
+			// Bestimme den Namen der neuen Blockung
+			String name = blockungOriginal.Name;
+			String tmpName = name.replaceAll("\\d+$", "");
+			if (tmpName.length() != name.length()) {
+				String tmpIndex = name.substring(tmpName.length());
+				int index = Integer.parseInt(tmpIndex) + 1;
+				name = tmpName + index;
+			} else {
+				name = name + " - Kopie 1";
+			}
 			// Erstelle das Duplikat
-			DTOGostBlockung blockungDuplikat = new DTOGostBlockung(idBlockungDuplikat, blockungOriginal.Name + " (Duplikat)", blockungOriginal.Abi_Jahrgang, blockungOriginal.Halbjahr, false);
+			DTOGostBlockung blockungDuplikat = new DTOGostBlockung(idBlockungDuplikat, name, blockungOriginal.Abi_Jahrgang, blockungOriginal.Halbjahr, false);
 			conn.transactionPersist(blockungDuplikat);
 			// Dupliziere die Schienen
 			DTODBAutoInkremente dbSchienenID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Blockung_Schienen");

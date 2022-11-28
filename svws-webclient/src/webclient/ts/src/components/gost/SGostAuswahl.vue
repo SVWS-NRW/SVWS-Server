@@ -42,7 +42,7 @@
 											<span v-if="!edit_blockungsname"
 												class="px-4 underline decoration-dashed underline-offset-2 cursor-pointer"
 												@click="edit_blockungsname = true"
-											>{{blockung.name}}--{{blockung.id}}</span>
+											>{{blockung.name}}</span>
 											<svws-ui-text-input v-else v-model="blockung.name"
 												style="width: 10rem"
 												headless focus
