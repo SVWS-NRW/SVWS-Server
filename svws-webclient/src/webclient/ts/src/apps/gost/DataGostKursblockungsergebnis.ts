@@ -98,4 +98,27 @@ export class DataGostKursblockungsergebnis extends BaseData<
 		App.apps.gost.dataKursblockung.commit();
 		return true;
 	}
+
+	public async multiAssignSchuelerKurs(schuelerid: number) {
+		const ergebnismanager = App.apps.gost.dataKursblockung.ergebnismanager;
+		const ergebnisid = this._daten?.id;
+		if (ergebnismanager === undefined || schuelerid === undefined || ergebnisid === undefined)
+			return;
+		const zuordnungen = ergebnismanager.getOfSchuelerNeuzuordnung(schuelerid);
+		for (const z of zuordnungen.fachwahlenZuKurs) {
+			const kursV = ergebnismanager.getOfSchuelerOfFachZugeordneterKurs(schuelerid, z.fachID);
+			const kursN = z.kursID < 0 ? null : ergebnismanager.getKursE(z.kursID);
+			if (kursV !== kursN) {
+				if (kursV !== null) {
+					await App.api.deleteGostBlockungsergebnisKursSchuelerZuordnung(App.schema, ergebnisid, schuelerid, kursV.id);
+					ergebnismanager.setSchuelerKurs(schuelerid, kursV.id, false);
+				}
+				if (kursN !== null) {
+					await App.api.createGostBlockungsergebnisKursSchuelerZuordnung(App.schema, ergebnisid, schuelerid, kursN.id);
+					ergebnismanager.setSchuelerKurs(schuelerid, kursN.id, true);
+				}
+			}
+		}
+		App.apps.gost.dataKursblockung.commit();
+	}
 }

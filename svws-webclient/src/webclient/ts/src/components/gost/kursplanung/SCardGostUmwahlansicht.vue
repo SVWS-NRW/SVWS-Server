@@ -209,10 +209,9 @@
 		if (ok) main.config.drag_and_drop_data = undefined;
 	}
 
-	const auto_verteilen = () => {
-		if (manager.value === undefined || selected.value === undefined)
+	async function auto_verteilen() {
+		if (selected.value === undefined)
 			return;
-		manager.value?.getOfSchuelerNeuzuordnung(selected.value.id);
-		app.dataKursblockung.commit();
+		await app.dataKursblockungsergebnis.multiAssignSchuelerKurs(selected.value.id)
 	}
 </script>
