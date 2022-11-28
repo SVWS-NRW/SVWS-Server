@@ -174,6 +174,7 @@ declare module '@vue/runtime-core' {
     SSchuleDatenaustauschLaufbahnplanung: typeof import('./src/components/schule/datenaustausch/laufbahnplanung/SSchuleDatenaustauschLaufbahnplanung.vue')['default']
     SStatistikApp: typeof import('./src/components/statistik/SStatistikApp.vue')['default']
     SStatistikAuswahl: typeof import('./src/components/statistik/SStatistikAuswahl.vue')['default']
+    SUnterricht: typeof import('./src/components/schueler/stundenplan/SUnterricht.vue')['default']
     SWrapper: typeof import('./src/components/SWrapper.vue')['default']
   }
 }

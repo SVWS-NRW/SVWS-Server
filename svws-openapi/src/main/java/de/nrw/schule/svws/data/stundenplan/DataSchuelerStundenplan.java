@@ -6,10 +6,6 @@ import java.util.Map;
 import java.util.Vector;
 import java.util.stream.Collectors;
 
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.Response.Status;
-
 import de.nrw.schule.svws.core.data.stundenplan.SchuelerStundenplan;
 import de.nrw.schule.svws.core.data.stundenplan.SchuelerStundenplanUnterricht;
 import de.nrw.schule.svws.core.data.stundenplan.StundenplanZeitraster;
@@ -23,27 +19,32 @@ import de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchuelerLernabschnit
 import de.nrw.schule.svws.db.dto.current.schild.stundenplan.DTOStundenplan;
 import de.nrw.schule.svws.db.dto.current.schild.stundenplan.DTOStundenplanUnterricht;
 import de.nrw.schule.svws.db.utils.OperationError;
+import jakarta.persistence.TypedQuery;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
 /**
- * Diese Klasse erweitert den abstrakten {@link DataManager} für den
- * Core-DTO {@link StundenplanZeitraster}.
+ * Diese Klasse erweitert den abstrakten {@link DataManager} für den Core-DTO
+ * {@link StundenplanZeitraster}.
  */
 public class DataSchuelerStundenplan extends DataManager<Long> {
 
 	private final Long idStundenplan;
-	
+
 	/**
-	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link StundenplanZeitraster}.
+	 * Erstellt einen neuen {@link DataManager} für den Core-DTO
+	 * {@link StundenplanZeitraster}.
 	 * 
-	 * @param conn            die Datenbank-Verbindung für den Datenbankzugriff
-	 * @param idStundenplan   die ID des Stundenplans, dessen Zeitraster abgefragt wird
+	 * @param conn          die Datenbank-Verbindung für den Datenbankzugriff
+	 * @param idStundenplan die ID des Stundenplans, dessen Zeitraster abgefragt
+	 *                      wird
 	 */
 	public DataSchuelerStundenplan(DBEntityManager conn, Long idStundenplan) {
 		super(conn);
 		this.idStundenplan = idStundenplan;
 	}
-	
-	
+
 	@Override
 	public Response getAll() {
 		throw new UnsupportedOperationException();
@@ -58,40 +59,47 @@ public class DataSchuelerStundenplan extends DataManager<Long> {
 	public Response get(Long idSchueler) {
 		DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, idSchueler);
 		DTOStundenplan stundenplan = conn.queryByKey(DTOStundenplan.class, idStundenplan);
-		
-		List<DTOSchuelerLernabschnittsdaten> lernabschnittsdaten = conn
-			.query("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schuljahresabschnitts_ID = :sja AND e.Schueler_ID = :sid AND e.WechselNr IS NULL", DTOSchuelerLernabschnittsdaten.class)
-			.setParameter("sja", stundenplan.Schuljahresabschnitts_ID)
-			.setParameter("sid", idSchueler)
-			.getResultList();
+
+		List<DTOSchuelerLernabschnittsdaten> lernabschnittsdaten = conn.query(
+				"SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schuljahresabschnitts_ID = :sja AND e.Schueler_ID = :sid AND e.WechselNr IS NULL",
+				DTOSchuelerLernabschnittsdaten.class).setParameter("sja", stundenplan.Schuljahresabschnitts_ID)
+				.setParameter("sid", idSchueler).getResultList();
 		if ((lernabschnittsdaten == null) || (lernabschnittsdaten.size() != 1))
 			throw OperationError.NOT_FOUND.exception();
 		DTOSchuelerLernabschnittsdaten lernabschnitt = lernabschnittsdaten.get(0);
-		
+
 		Vector<StundenplanZeitraster> zeitraster = (new DataStundenplanZeitraster(conn, idStundenplan)).getZeitraster();
-		Map<Long, StundenplanZeitraster> mapZeitraster = zeitraster.stream().collect(Collectors.toMap(zr -> zr.id , zr -> zr));
 
 		Vector<SchuelerStundenplanUnterricht> spUnterricht = new Vector<>();
-		
-		List<DTOSchuelerLeistungsdaten> leistungsdaten = conn.queryNamed("DTOSchuelerLeistungsdaten.abschnitt_id", lernabschnitt.ID, DTOSchuelerLeistungsdaten.class);
+
+		List<DTOSchuelerLeistungsdaten> leistungsdaten = conn.queryNamed("DTOSchuelerLeistungsdaten.abschnitt_id",
+				lernabschnitt.ID, DTOSchuelerLeistungsdaten.class);
 		if ((leistungsdaten == null) || (leistungsdaten.isEmpty()))
-			throw OperationError.NOT_FOUND.exception();
-		
+			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(new SchuelerStundenplan()).build();
+			//throw OperationError.NOT_FOUND.exception();
+
 		List<Long> lehrer = leistungsdaten.stream().map(ld -> ld.Fachlehrer_ID).filter(l -> l != null).toList();
-		Map<Long, DTOLehrer> mapLehrer = conn.queryNamed("DTOLehrer.id.multiple", lehrer, DTOLehrer.class).stream().collect(Collectors.toMap(l -> l.ID, l -> l));
+		Map<Long, DTOLehrer> mapLehrer = conn.queryNamed("DTOLehrer.id.multiple", lehrer, DTOLehrer.class).stream()
+				.collect(Collectors.toMap(l -> l.ID, l -> l));
 
 		List<Long> faecher = leistungsdaten.stream().map(ld -> ld.Fach_ID).filter(f -> f != null).toList();
-		Map<Long, DTOFach> mapFaecher = conn.queryNamed("DTOFach.id.multiple", faecher, DTOFach.class).stream().collect(Collectors.toMap(f -> f.ID, f -> f));
+		Map<Long, DTOFach> mapFaecher = conn.queryNamed("DTOFach.id.multiple", faecher, DTOFach.class).stream()
+				.collect(Collectors.toMap(f -> f.ID, f -> f));
 
 		List<Long> kursIDs = leistungsdaten.stream().map(ld -> ld.Kurs_ID).filter(k -> k != null).toList();
-		Map<Long, List<DTOStundenplanUnterricht>> mapUnterricht = conn
-			.query("SELECT e FROM DTOStundenplanUnterricht e JOIN DTOStundenplanZeitraster z ON e.Zeitraster_ID = z.ID AND z.Stundenplan_ID = :spid AND (e.Kurs_ID IN :kids OR e.Klasse_ID = :klid)", DTOStundenplanUnterricht.class)
-			.setParameter("spid", stundenplan.ID)
-			.setParameter("kids", kursIDs)
-			.setParameter("klid", lernabschnitt.Klassen_ID)
-			.getResultList().stream()
-			.collect(Collectors.groupingBy(su -> (su.Kurs_ID != null ? su.Kurs_ID : su.Fach_ID)));
-		
+
+		String sqlKursIDs = !kursIDs.isEmpty() ? "e.Kurs_ID IN :kids OR " : "";
+
+		TypedQuery<DTOStundenplanUnterricht> tq = conn.query(
+				"SELECT e FROM DTOStundenplanUnterricht e JOIN DTOStundenplanZeitraster z ON e.Zeitraster_ID = z.ID AND z.Stundenplan_ID = :spid AND ("
+						+ sqlKursIDs + "e.Klasse_ID = :klid)",
+				DTOStundenplanUnterricht.class).setParameter("spid", stundenplan.ID)
+				.setParameter("klid", lernabschnitt.Klassen_ID);
+		if (!kursIDs.isEmpty())
+			tq.setParameter("kids", kursIDs);
+		Map<Long, List<DTOStundenplanUnterricht>> mapUnterricht = tq.getResultList().stream()
+				.collect(Collectors.groupingBy(su -> (su.Kurs_ID != null ? su.Kurs_ID : su.Fach_ID)));
+
 		leistungsdaten.stream().forEach(ld -> {
 			List<DTOStundenplanUnterricht> unterricht = mapUnterricht.get(ld.Kurs_ID != null ? ld.Kurs_ID : ld.Fach_ID);
 			if ((unterricht == null) || (leistungsdaten.isEmpty()))
@@ -109,7 +117,6 @@ public class DataSchuelerStundenplan extends DataManager<Long> {
 				ssu.idLeistungen = ld.ID;
 				ssu.idUnterricht = u.ID;
 				ssu.idZeitraster = u.Zeitraster_ID;
-				ssu.zeitraster = mapZeitraster.get(u.Zeitraster_ID);
 				ssu.kursart = ld.Kursart;
 				ssu.lehrerKuerzel = (l == null) ? "" : l.Kuerzel;
 				ssu.lehrerNachname = (l == null) ? "" : l.Nachname;
@@ -133,7 +140,7 @@ public class DataSchuelerStundenplan extends DataManager<Long> {
 		daten.vorname = schueler.Vorname;
 		daten.unterricht = spUnterricht;
 		daten.zeitraster = zeitraster;
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
@@ -141,5 +148,4 @@ public class DataSchuelerStundenplan extends DataManager<Long> {
 		throw new UnsupportedOperationException();
 	}
 
-		
 }

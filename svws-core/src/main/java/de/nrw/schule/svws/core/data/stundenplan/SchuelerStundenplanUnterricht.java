@@ -1,10 +1,9 @@
 package de.nrw.schule.svws.core.data.stundenplan;
 
-import jakarta.xml.bind.annotation.XmlRootElement;
-
 import de.nrw.schule.svws.core.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
@@ -27,10 +26,6 @@ public class SchuelerStundenplanUnterricht {
 	/** Die ID im Zeitraster des Stundenplans */
 	@Schema(required = true, description = "die ID im Zeitraster des Stundenplans", example="1")
 	public long idZeitraster = -1;
-	
-	/** Das zugehörige Zeitraster-Objekt des Stundenplans */
-	@Schema(required = true, description = "das zugehörige Zeitraster-Objekt des Stundenplans")
-	public @NotNull StundenplanZeitraster zeitraster = new StundenplanZeitraster();
 	
 	/** Die Kursart der Unterrichtseinheit. */
 	@Schema(required = false, description = "die Kursart der Unterrichtseinheit", example="GKS")

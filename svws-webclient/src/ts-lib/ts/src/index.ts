@@ -426,6 +426,7 @@ export { SprachendatenUtils } from './core/utils/schueler/SprachendatenUtils';
 export { AbgangsartenManager } from './core/utils/schule/AbgangsartenManager';
 export { BerufskollegFachklassenManager } from './core/utils/schule/BerufskollegFachklassenManager';
 export { SchuljahresAbschnittsManager } from './core/utils/schule/SchuljahresAbschnittsManager';
+export { IntegerComparator } from './core/utils/stundenplan/IntegerComparator';
 export { SchuelerStundenplanManager } from './core/utils/stundenplan/SchuelerStundenplanManager';
 export { IOException } from './java/io/IOException';
 export { Serializable } from './java/io/Serializable';
