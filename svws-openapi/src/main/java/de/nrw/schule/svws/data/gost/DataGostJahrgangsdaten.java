@@ -47,6 +47,29 @@ public class DataGostJahrgangsdaten extends DataManager<Integer> {
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * Liest die Vorlage-Daten für neue Abiturjahrgänge aus der Datenbank.
+	 * Ist keine Vorlage vorhanden, so wird ein Eintrag in der Datenbank generiert.  
+	 * 
+	 * @param conn   die zu nutzende Datenbank-Verbindung
+	 * 
+	 * @return die Vorlage-Daten
+	 */
+	public static DTOGostJahrgangsdaten getVorlage(DBEntityManager conn) {
+		DTOGostJahrgangsdaten jahrgangsdaten = conn.queryByKey(DTOGostJahrgangsdaten.class, -1);
+		if (jahrgangsdaten == null) {
+			jahrgangsdaten = new DTOGostJahrgangsdaten(-1);
+			jahrgangsdaten.TextBeratungsbogen = "";
+			jahrgangsdaten.TextMailversand = "";
+			jahrgangsdaten.ZusatzkursGEErstesHalbjahr = "Q2.1";
+			jahrgangsdaten.ZusatzkursGEVorhanden = true;
+			jahrgangsdaten.ZusatzkursSWErstesHalbjahr = "Q2.1";
+			jahrgangsdaten.ZusatzkursSWVorhanden = true;
+			conn.persist(jahrgangsdaten);
+		}
+		return jahrgangsdaten;
+	}
+	
 	@Override
 	public Response get(Integer abi_jahrgang) {
 		DTOEigeneSchule schule = GostUtils.pruefeSchuleMitGOSt(conn);
@@ -62,17 +85,9 @@ public class DataGostJahrgangsdaten extends DataManager<Integer> {
     		return OperationError.NOT_FOUND.getResponse();
     	
     	// Lese alle Abiturjahrgänge aus der Datenbank ein und ergänze diese im Vektor
-		DTOGostJahrgangsdaten jahrgangsdaten = conn.queryByKey(DTOGostJahrgangsdaten.class, abi_jahrgang);
-		if ((jahrgangsdaten == null) && (abi_jahrgang == -1)) {
-			jahrgangsdaten = new DTOGostJahrgangsdaten(-1);
-			jahrgangsdaten.TextBeratungsbogen = "";
-			jahrgangsdaten.TextMailversand = "";
-			jahrgangsdaten.ZusatzkursGEErstesHalbjahr = "Q2.1";
-			jahrgangsdaten.ZusatzkursGEVorhanden = true;
-			jahrgangsdaten.ZusatzkursSWErstesHalbjahr = "Q2.1";
-			jahrgangsdaten.ZusatzkursSWVorhanden = true;
-			conn.persist(jahrgangsdaten);
-		}
+		DTOGostJahrgangsdaten jahrgangsdaten = (abi_jahrgang == -1)
+				? getVorlage(conn)
+				: conn.queryByKey(DTOGostJahrgangsdaten.class, abi_jahrgang);
 		if (jahrgangsdaten == null)
     		return OperationError.NOT_FOUND.getResponse();
 		

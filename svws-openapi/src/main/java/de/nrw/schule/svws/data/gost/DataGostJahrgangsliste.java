@@ -134,12 +134,17 @@ public class DataGostJahrgangsliste extends DataManager<Integer> {
 		if (jahrgangsdaten != null)
 			return OperationError.CONFLICT.getResponse();
 		
+		// Lade die Vorlage für den neuen Abiturjahrgang
+		DTOGostJahrgangsdaten jahrgangsdatenVorlage = DataGostJahrgangsdaten.getVorlage(conn);
+		
 		// Erstelle die Jahrgangsdaten mit Default-Werten, Beratungslehrer sind zunächst nicht zugeordnet
 		jahrgangsdaten = new DTOGostJahrgangsdaten(abiturjahr);
-		jahrgangsdaten.ZusatzkursGEErstesHalbjahr = "Q2.1";
-		jahrgangsdaten.ZusatzkursGEVorhanden = true;
-		jahrgangsdaten.ZusatzkursSWErstesHalbjahr = "Q2.1";
-		jahrgangsdaten.ZusatzkursSWVorhanden = true;
+		jahrgangsdaten.ZusatzkursGEErstesHalbjahr = jahrgangsdatenVorlage.ZusatzkursGEErstesHalbjahr;
+		jahrgangsdaten.ZusatzkursGEVorhanden = jahrgangsdatenVorlage.ZusatzkursGEVorhanden;
+		jahrgangsdaten.ZusatzkursSWErstesHalbjahr = jahrgangsdatenVorlage.ZusatzkursSWErstesHalbjahr;
+		jahrgangsdaten.ZusatzkursSWVorhanden = jahrgangsdatenVorlage.ZusatzkursSWVorhanden;
+		jahrgangsdaten.TextBeratungsbogen = jahrgangsdatenVorlage.TextBeratungsbogen;
+		jahrgangsdaten.TextMailversand = jahrgangsdatenVorlage.TextMailversand;
 		if (!conn.persist(jahrgangsdaten))
 			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
 		// Kopiere die Fächer der Gymnasialen Oberstufe aus der allgemeinen Vorlage
