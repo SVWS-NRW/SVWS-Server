@@ -15,10 +15,8 @@
 		"serve": "vite preview",
 		"test": "vitest",
 		"test:run": "vitest run --coverage",
-		"lint:script": "eslint --ext .ts,vue --ignore-path .gitignore . --fix",
-		"format": "prettier --write .",
-		"check-licenses": "license-checker-rseidelsohn --summary --unknown --production",
-		"tsbuild": "vuedx-typecheck . && vite build"
+		"lint-tsc": "vue-tsc --noEmit",
+		"check-licenses": "license-checker-rseidelsohn --summary --unknown --production"
 	},
 	"dependencies": {
 		"@headlessui/vue": "1.6.7",

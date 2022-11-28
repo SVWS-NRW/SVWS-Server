@@ -8,7 +8,6 @@
     "format": "prettier --write ./src/main/ts ./*.config.js",
     "build": "vite build && tsc --emitDeclarationOnly",
     "dts": "vue-tsc --declaration --emitDeclarationOnly",
-    "lint:script": "eslint --ext .ts,vue --ignore-path .gitignore . --fix",
     "lint-tsc": "vue-tsc --noEmit",
     "story:dev": "histoire dev",
     "story:build": "histoire build",
