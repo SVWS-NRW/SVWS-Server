@@ -3,10 +3,8 @@ import { App } from "../BaseApp";
 import { GostJahrgang, GostJahrgangsdaten } from "@svws-nrw/svws-core-ts";
 import { BaseData } from "../BaseData";
 
-export class DataGostJahrgang extends BaseData<
-	GostJahrgangsdaten,
-	GostJahrgang
-> {
+export class DataGostJahrgang extends BaseData<GostJahrgangsdaten, GostJahrgang> {
+
 	protected on_update(daten: Partial<GostJahrgangsdaten>): void {
 		return void daten;
 	}
@@ -18,13 +16,9 @@ export class DataGostJahrgang extends BaseData<
 	 * @returns {Promise<GostJahrgangsdaten>} Die Daten als Promise
 	 */
 	public async on_select(): Promise<GostJahrgangsdaten | undefined> {
-		if (!this.selected_list_item?.abiturjahr) return super.unselect();
-		return super._select((eintrag: GostJahrgang) =>
-			App.api.getGostAbiturjahrgang(
-				App.schema,
-				eintrag.abiturjahr?.valueOf() || -1
-			)
-		);
+		if (!this.selected_list_item?.abiturjahr)
+			return super.unselect();
+		return super._select((eintrag: GostJahrgang) => App.api.getGostAbiturjahrgang(App.schema, eintrag.abiturjahr?.valueOf() || -1));
 	}
 
 	/**
@@ -38,15 +32,10 @@ export class DataGostJahrgang extends BaseData<
 	 */
 	public async patch(data: Partial<GostJahrgangsdaten>): Promise<boolean> {
 		const daten = this._daten;
-		if (!daten || daten.abiturjahr === null) return false;
+		if (!daten || daten.abiturjahr === null) 
+			return false;
 		const abijahr = daten.abiturjahr.valueOf();
-		return this._patch(data, () =>
-			App.api.patchGostAbiturjahrgang(
-				data as GostJahrgangsdaten,
-				App.schema,
-				abijahr
-			)
-		);
+		return this._patch(data, () => App.api.patchGostAbiturjahrgang(data as GostJahrgangsdaten, App.schema, abijahr));
 	}
 
 	/** Erstellt einen neuen Abiturjahrgang für die Gost mittels übergebener Jahrgang-ID
@@ -54,10 +43,8 @@ export class DataGostJahrgang extends BaseData<
 	 * @returns {Promise<number>} Gibt das Abiturjahr zurück als Promise
 	 */
 	public async post_jahrgang(id: number): Promise<number> {
-		const abiturjahr = await App.api.createGostAbiturjahrgang(
-			App.schema,
-			id
-		);
+		const abiturjahr = await App.api.createGostAbiturjahrgang(App.schema, id);
 		return abiturjahr.valueOf();
 	}
+
 }

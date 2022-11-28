@@ -13,15 +13,15 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @Schema(description="Die Informationen zu einer an der Schule unzulässigen oder erforderlichen Fachkombination. Diese kann ggf. auch Kursart-spezifisch sein.")
 @TranspilerDTO
-public class GostJahrgangFachkombinationen {
+public class GostJahrgangFachkombination {
 	
 	/** Die ID der Fachkombination */
 	@Schema(required = true, description = "die ID der Fachkombination", example="42")
 	public long id;
 
-	/** Das Jahr, in welchem der Jahrgang Abitur machen wird oder NULL, falls es sich um die Vorlage für neue Jahrgänge handelt */
-	@Schema(required = true, description = "das Jahr, in welchem der Jahrgang Abitur machen wird oder NULL, falls es sich um die Vorlage für neue Jahrgänge handelt", example="2042")
-	public Integer abiturjahr;
+	/** Das Jahr, in welchem der Jahrgang Abitur machen wird oder -1, falls es sich um die Vorlage für neue Jahrgänge handelt */
+	@Schema(required = true, description = "das Jahr, in welchem der Jahrgang Abitur machen wird oder -1, falls es sich um die Vorlage für neue Jahrgänge handelt", example="2042")
+	public int abiturjahr;
 
 	/** Die ID des Faches (Fach 1), dessen Wahl die Kombination mit einem anderen Fach verlangt oder ausschließt */
 	@Schema(required = true, description = "die ID des Faches, dessen Wahl die Kombination mit einem anderen Fach verlangt oder ausschließt", example="16")

@@ -1,12 +1,11 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
 import { GostBeratungslehrer, cast_de_nrw_schule_svws_core_data_gost_GostBeratungslehrer } from '../../../core/data/gost/GostBeratungslehrer';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 
 export class GostJahrgangsdaten extends JavaObject {
 
-	public abiturjahr : Number | null = null;
+	public abiturjahr : number = 0;
 
 	public jahrgang : String | null = null;
 
@@ -40,7 +39,9 @@ export class GostJahrgangsdaten extends JavaObject {
 	public static transpilerFromJSON(json : string): GostJahrgangsdaten {
 		const obj = JSON.parse(json);
 		const result = new GostJahrgangsdaten();
-		result.abiturjahr = typeof obj.abiturjahr === "undefined" ? null : obj.abiturjahr === null ? null : Number(obj.abiturjahr);
+		if (typeof obj.abiturjahr === "undefined")
+			 throw new Error('invalid json format, missing attribute abiturjahr');
+		result.abiturjahr = obj.abiturjahr;
 		result.jahrgang = typeof obj.jahrgang === "undefined" ? null : obj.jahrgang === null ? null : String(obj.jahrgang);
 		result.bezeichnung = typeof obj.bezeichnung === "undefined" ? null : obj.bezeichnung === null ? null : String(obj.bezeichnung);
 		if (typeof obj.istAbgeschlossen === "undefined")
@@ -66,7 +67,7 @@ export class GostJahrgangsdaten extends JavaObject {
 
 	public static transpilerToJSON(obj : GostJahrgangsdaten) : string {
 		let result = '{';
-		result += '"abiturjahr" : ' + ((!obj.abiturjahr) ? 'null' : obj.abiturjahr.valueOf()) + ',';
+		result += '"abiturjahr" : ' + obj.abiturjahr + ',';
 		result += '"jahrgang" : ' + ((!obj.jahrgang) ? 'null' : '"' + obj.jahrgang.valueOf() + '"') + ',';
 		result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : '"' + obj.bezeichnung.valueOf() + '"') + ',';
 		result += '"istAbgeschlossen" : ' + obj.istAbgeschlossen + ',';
@@ -96,7 +97,7 @@ export class GostJahrgangsdaten extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<GostJahrgangsdaten>) : string {
 		let result = '{';
 		if (typeof obj.abiturjahr !== "undefined") {
-			result += '"abiturjahr" : ' + ((!obj.abiturjahr) ? 'null' : obj.abiturjahr.valueOf()) + ',';
+			result += '"abiturjahr" : ' + obj.abiturjahr + ',';
 		}
 		if (typeof obj.jahrgang !== "undefined") {
 			result += '"jahrgang" : ' + ((!obj.jahrgang) ? 'null' : '"' + obj.jahrgang.valueOf() + '"') + ',';

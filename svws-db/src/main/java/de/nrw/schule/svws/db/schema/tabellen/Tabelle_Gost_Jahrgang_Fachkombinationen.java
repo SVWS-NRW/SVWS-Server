@@ -23,6 +23,8 @@ public class Tabelle_Gost_Jahrgang_Fachkombinationen extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte Abi_Jahrgang */
 	public SchemaTabelleSpalte col_Abi_Jahrgang = add("Abi_Jahrgang", SchemaDatentypen.INT, false)
+		.setNotNull()
+		.setDefault("-1")
 		.setJavaComment("Schuljahr, in welchem der Jahrgang das Abitur macht");
 
 	/** Die Definition der Tabellenspalte Fach1_ID */

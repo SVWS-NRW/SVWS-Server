@@ -53,7 +53,7 @@ export class ListAbiturjahrgangSchueler extends BaseList<SchuelerListeEintrag, F
 	 * @returns {Promise<void>}
 	 */
 	public async update_list(abiturjahr: number): Promise<void> {
-		if (!abiturjahr) 
+		if ((!abiturjahr) || (abiturjahr === -1))
 			return
 		await super._update_list(() => App.api.getGostAbiturjahrgangSchueler(App.schema, abiturjahr));
 	}

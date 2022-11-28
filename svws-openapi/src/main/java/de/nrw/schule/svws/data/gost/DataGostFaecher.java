@@ -29,7 +29,7 @@ import de.nrw.schule.svws.db.utils.gost.FaecherGost;
  */
 public class DataGostFaecher extends DataManager<Long> {
 
-	private Integer abijahr;
+	private int abijahr;
 	
 	/**
 	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link GostFach}.
@@ -38,7 +38,7 @@ public class DataGostFaecher extends DataManager<Long> {
 	 * @param abijahr   der Abi-Jahrgang, für welchen die Gost-Fächer verwaltet werden sollen,
 	 *                  null für die allgemeinen Jahrgangsübergreifenden Gost-Fachinformationen 
 	 */
-	public DataGostFaecher(DBEntityManager conn, Integer abijahr) {
+	public DataGostFaecher(DBEntityManager conn, int abijahr) {
 		super(conn);
 		this.abijahr = abijahr;
 	}
@@ -79,7 +79,7 @@ public class DataGostFaecher extends DataManager<Long> {
     	if (fach == null)
     		return OperationError.NOT_FOUND.getResponse();
 		GostFach daten = null;
-		if (abijahr == null) {
+		if (abijahr == -1) {
 	    	daten = FaecherGost.mapFromDTOFach(fach, faecher);
 		} else {
 	    	// TODO Prüfe, ob der Abiturjahrgang abiturjahr gültig ist oder nicht
@@ -104,7 +104,7 @@ public class DataGostFaecher extends DataManager<Long> {
     			DTOFach fach = faecher.get(id);
 		    	if (fach == null)
     	    		return OperationError.NOT_FOUND.getResponse();
-    			if (abijahr == null) {
+    			if (abijahr == -1) {
 			    	for (Entry<String, Object> entry : map.entrySet()) {
 			    		String key = entry.getKey();
 			    		Object value = entry.getValue();

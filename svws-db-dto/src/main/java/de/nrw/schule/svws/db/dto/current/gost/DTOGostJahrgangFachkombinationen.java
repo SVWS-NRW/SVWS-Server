@@ -168,6 +168,7 @@ public class DTOGostJahrgangFachkombinationen {
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOGostJahrgangFachkombinationen ohne eine Initialisierung der Attribute.
 	 * @param ID   der Wert für das Attribut ID
+	 * @param Abi_Jahrgang   der Wert für das Attribut Abi_Jahrgang
 	 * @param Fach1_ID   der Wert für das Attribut Fach1_ID
 	 * @param Fach2_ID   der Wert für das Attribut Fach2_ID
 	 * @param EF1   der Wert für das Attribut EF1
@@ -179,11 +180,15 @@ public class DTOGostJahrgangFachkombinationen {
 	 * @param Typ   der Wert für das Attribut Typ
 	 * @param Hinweistext   der Wert für das Attribut Hinweistext
 	 */
-	public DTOGostJahrgangFachkombinationen(final Long ID, final Long Fach1_ID, final Long Fach2_ID, final Boolean EF1, final Boolean EF2, final Boolean Q11, final Boolean Q12, final Boolean Q21, final Boolean Q22, final GostLaufbahnplanungFachkombinationTyp Typ, final String Hinweistext) {
+	public DTOGostJahrgangFachkombinationen(final Long ID, final Integer Abi_Jahrgang, final Long Fach1_ID, final Long Fach2_ID, final Boolean EF1, final Boolean EF2, final Boolean Q11, final Boolean Q12, final Boolean Q21, final Boolean Q22, final GostLaufbahnplanungFachkombinationTyp Typ, final String Hinweistext) {
 		if (ID == null) { 
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
+		if (Abi_Jahrgang == null) { 
+			throw new NullPointerException("Abi_Jahrgang must not be null");
+		}
+		this.Abi_Jahrgang = Abi_Jahrgang;
 		if (Fach1_ID == null) { 
 			throw new NullPointerException("Fach1_ID must not be null");
 		}

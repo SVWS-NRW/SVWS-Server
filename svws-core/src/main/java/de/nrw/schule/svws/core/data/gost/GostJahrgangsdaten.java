@@ -18,9 +18,9 @@ import jakarta.validation.constraints.NotNull;
 @TranspilerDTO
 public class GostJahrgangsdaten {
 
-	/** Das Jahr, in welchem der Jahrgang Abitur machen wird. */
-	@Schema(required = false, description = "das Jahr, in welchem der Jahrgang Abitur machen wird", example="2042")
-	public Integer abiturjahr;
+	/** Das Jahr, in welchem der Jahrgang Abitur machen wird oder -1 für die Vorlage für einen neuen Abiturjahrgang. */
+	@Schema(required = false, description = "das Jahr, in welchem der Jahrgang Abitur machen wird oder -1 für die Vorlage für einen neuen Abiturjahrgang", example="2042")
+	public int abiturjahr;
 	
 	/** Die aktuelle Jahrgangsstufe, welche dem Abiturjahrgang zugeordnet ist. */
 	@Schema(required = false, description = "die aktuelle Jahrgangstufe, welche dem Abiturjahrgang zugeordnet ist", example="Q1")

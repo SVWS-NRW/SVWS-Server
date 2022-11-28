@@ -36,7 +36,7 @@
 
 	import { computed, ComputedRef } from "vue";
 
-	import { List, Vector, GostJahrgangFachkombinationen, GostLaufbahnplanungFachkombinationTyp } from "@svws-nrw/svws-core-ts";
+	import { List, Vector, GostJahrgangFachkombination, GostLaufbahnplanungFachkombinationTyp } from "@svws-nrw/svws-core-ts";
 	import { injectMainApp, Main } from "~/apps/Main";
 
 	const props = defineProps({
@@ -60,8 +60,8 @@
 		}
 	});
 
-	const rows: ComputedRef<List<GostJahrgangFachkombinationen>> = computed(() => {
-		const result = new Vector<GostJahrgangFachkombinationen>();
+	const rows: ComputedRef<List<GostJahrgangFachkombination>> = computed(() => {
+		const result = new Vector<GostJahrgangFachkombination>();
 		if (app.dataFachkombinationen.daten)
 			for (let kombi of app.dataFachkombinationen.daten)
 				if (GostLaufbahnplanungFachkombinationTyp.fromValue(kombi.typ) === props.typ)

@@ -38,7 +38,7 @@ import { GostBlockungsergebnis, cast_de_nrw_schule_svws_core_data_gost_GostBlock
 import { GostFach, cast_de_nrw_schule_svws_core_data_gost_GostFach } from '../core/data/gost/GostFach';
 import { GostFachwahl, cast_de_nrw_schule_svws_core_data_gost_GostFachwahl } from '../core/data/gost/GostFachwahl';
 import { GostJahrgang, cast_de_nrw_schule_svws_core_data_gost_GostJahrgang } from '../core/data/gost/GostJahrgang';
-import { GostJahrgangFachkombinationen, cast_de_nrw_schule_svws_core_data_gost_GostJahrgangFachkombinationen } from '../core/data/gost/GostJahrgangFachkombinationen';
+import { GostJahrgangFachkombination, cast_de_nrw_schule_svws_core_data_gost_GostJahrgangFachkombination } from '../core/data/gost/GostJahrgangFachkombination';
 import { GostJahrgangsdaten, cast_de_nrw_schule_svws_core_data_gost_GostJahrgangsdaten } from '../core/data/gost/GostJahrgangsdaten';
 import { GostLeistungen, cast_de_nrw_schule_svws_core_data_gost_GostLeistungen } from '../core/data/gost/GostLeistungen';
 import { GostSchuelerFachwahl, cast_de_nrw_schule_svws_core_data_gost_GostSchuelerFachwahl } from '../core/data/gost/GostSchuelerFachwahl';
@@ -2031,6 +2031,241 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der GET-Methode getGostAbiturjahrgangFach für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\d+}/fach/{id : \d+}
+	 * 
+	 * Liefert die Informationen bezüglich eines Abiturjahrgangs der gymnasialen Oberstufe zu dem Fach mit der angegebenen ID. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Fachinformationen besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Die Daten des Faches bezüglich eines Abiturjahrgangs der gymnasialen Oberstufe
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: GostFach
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Fachinformationen der Gymnasialen Oberstufe anzusehen.
+	 *   Code 404: Kein Eintrag für das Fach der gymnasialen Oberstufe mit der angegebenen ID gefunden
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
+	 * @param {number} id - der Pfad-Parameter id
+	 * 
+	 * @returns Die Daten des Faches bezüglich eines Abiturjahrgangs der gymnasialen Oberstufe
+	 */
+	public async getGostAbiturjahrgangFach(schema : string, abiturjahr : number, id : number) : Promise<GostFach> {
+		let path : string = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\d+}/fach/{id : \d+}"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema)
+				.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString())
+				.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return GostFach.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchGostAbiturjahrgangFach für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\d+}/fach/{id : \d+}
+	 * 
+	 * Passt die Daten eines Faches in Bezug auf den Abiturjahrgang der Gymnasiale Oberstufe an. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Anpassen der Fachinformationen besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Der Patch wurde erfolgreich in die Fachinformationen integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Fachdaten zu ändern.
+	 *   Code 404: Kein Fach-Eintrag mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 * 
+	 * @param {Partial<GostFach>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async patchGostAbiturjahrgangFach(data : Partial<GostFach>, schema : string, abiturjahr : number, id : number) : Promise<void> {
+		let path : string = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\d+}/fach/{id : \d+}"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema)
+				.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString())
+				.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		let body : string = GostFach.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getGostAbiturjahrgangFachkombinationen für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\d+}/fachkombinationen
+	 * 
+	 * Erstellt eine Liste mit den Informationen zu den Fachkombinationen für die Laufbahnplanung des Abitur-Jahrganges der gymnasialen Oberstufe. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Fachkombinationen besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Die Liste der Fachkombinationen
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<GostJahrgangFachkombination>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Fachkombinationen anzusehen.
+	 *   Code 404: Keine Fachkombinationen gefunden oder keine gymnasiale Oberstufe bei der Schulform vorhanden
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
+	 * 
+	 * @returns Die Liste der Fachkombinationen
+	 */
+	public async getGostAbiturjahrgangFachkombinationen(schema : string, abiturjahr : number) : Promise<List<GostJahrgangFachkombination>> {
+		let path : string = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\d+}/fachkombinationen"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema)
+				.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString());
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		let ret = new Vector<GostJahrgangFachkombination>();
+		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(GostJahrgangFachkombination.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addGostAbiturjahrgangFachkombination für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\d+}/fachkombinationen/add/{typ : \d+}
+	 * 
+	 * Fügt eine Regel zu einer Fachkombination der Gymnasialen Oberstufe bei dem angegebenen Abiturjahrgang hinzu.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen einer solchen Fachkombination hat.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Die Regel zur Fachkombination bezüglich der gymnasialen Oberstufe wurde erstellt
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: GostJahrgangFachkombination
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um eine Regel für eine Fachkombination hinzuzufügen.
+	 *   Code 404: Abiturjahr nicht vorhanden
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
+	 * @param {number} typ - der Pfad-Parameter typ
+	 * 
+	 * @returns Die Regel zur Fachkombination bezüglich der gymnasialen Oberstufe wurde erstellt
+	 */
+	public async addGostAbiturjahrgangFachkombination(schema : string, abiturjahr : number, typ : number) : Promise<GostJahrgangFachkombination> {
+		let path : string = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\d+}/fachkombinationen/add/{typ : \d+}"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema)
+				.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString())
+				.replace(/{typ\s*(:[^}]+)?}/g, typ.toString());
+		const result : string = await super.postJSON(path, null);
+		const text = result;
+		return GostJahrgangFachkombination.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getGostAbiturjahrgangFachwahlstatistik für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\d+}/fachwahlstatistik
+	 * 
+	 * Erstellt eine Liste aller in der Datenbank für den angebenen Abitur-Jahrgang vorhanden Fachwahlen der gymnasialen Oberstufe. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Fächerdaten besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Eine Fachwahlstatistik
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<GostStatistikFachwahl>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Fachwahlen anzusehen.
+	 *   Code 404: Keine Fachwahlen gefunden oder keine gymnasiale Oberstufe bei der Schulform vorhanden
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
+	 * 
+	 * @returns Eine Fachwahlstatistik
+	 */
+	public async getGostAbiturjahrgangFachwahlstatistik(schema : string, abiturjahr : number) : Promise<List<GostStatistikFachwahl>> {
+		let path : string = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\d+}/fachwahlstatistik"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema)
+				.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString());
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		let ret = new Vector<GostStatistikFachwahl>();
+		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(GostStatistikFachwahl.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getGostAbiturjahrgangFaecher für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\d+}/faecher
+	 * 
+	 * Erstellt eine Liste aller in der Datenbank vorhanden Fächer der gymnasialen Oberstufe, welche für den angebenen Abitur-Jahrgang festgelegt wurden.. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Fächerdaten besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Eine Liste von Fächer-Listen-Einträgen
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<GostFach>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Fächerdaten anzusehen.
+	 *   Code 404: Keine Fächer-Einträge gefunden oder keine gymnasiale Oberstufe bei der Schulform vorhanden
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
+	 * 
+	 * @returns Eine Liste von Fächer-Listen-Einträgen
+	 */
+	public async getGostAbiturjahrgangFaecher(schema : string, abiturjahr : number) : Promise<List<GostFach>> {
+		let path : string = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\d+}/faecher"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema)
+				.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString());
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		let ret = new Vector<GostFach>();
+		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(GostFach.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getGostAbiturjahrgangFachwahlen für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\d+}/halbjahr/{halbjahr : \d+}/fachwahlen
+	 * 
+	 * Erstellt eine Liste aller in der Datenbank für den angebenen Abitur-Jahrgang vorhanden Fachwahlen der gymnasialen Oberstufe. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Fächerdaten besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Eine Liste der Fachwahlen
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<GostFachwahl>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Fachwahlen anzusehen.
+	 *   Code 404: Keine Fachwahlen gefunden oder keine gymnasiale Oberstufe bei der Schulform vorhanden
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
+	 * @param {number} halbjahr - der Pfad-Parameter halbjahr
+	 * 
+	 * @returns Eine Liste der Fachwahlen
+	 */
+	public async getGostAbiturjahrgangFachwahlen(schema : string, abiturjahr : number, halbjahr : number) : Promise<List<GostFachwahl>> {
+		let path : string = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\d+}/halbjahr/{halbjahr : \d+}/fachwahlen"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema)
+				.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString())
+				.replace(/{halbjahr\s*(:[^}]+)?}/g, halbjahr.toString());
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		let ret = new Vector<GostFachwahl>();
+		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(GostFachwahl.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getGostAbiturjahrgangSchueler für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\d+}/schueler
+	 * 
+	 * Erstellt eine Liste aller Schüler, welche zu dem angebenen Abitur-Jahrgang gehören (ohne Informationen zu Kursen). Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Schülerdaten besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Eine Liste von Schüler-Listen-Einträgen
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SchuelerListeEintrag>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Schülerdaten anzusehen.
+	 *   Code 404: Keine Schüler gefunden oder keine gymnasiale Oberstufe bei der Schulform vorhanden
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
+	 * 
+	 * @returns Eine Liste von Schüler-Listen-Einträgen
+	 */
+	public async getGostAbiturjahrgangSchueler(schema : string, abiturjahr : number) : Promise<List<SchuelerListeEintrag>> {
+		let path : string = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\d+}/schueler"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema)
+				.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString());
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		let ret = new Vector<SchuelerListeEintrag>();
+		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(SchuelerListeEintrag.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getGostAbiturjahrgangBlockungsliste für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgang/{abiturjahr : \d+}/{halbjahr : \d+}/blockungen
 	 * 
 	 * Erstellt eine Liste aller in der Datenbank vorhanden Blockungen der gymnasialen Oberstufe, welche für den angebenen Abitur-Jahrgang und das angegebene Halbjahr festgelegt wurden.. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Blockungsdaten besitzt.
@@ -2089,241 +2324,6 @@ export class ApiServer extends BaseApi {
 		const result : string = await super.postJSON(path, null);
 		const text = result;
 		return GostBlockungsdaten.transpilerFromJSON(text);
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getGostAbiturjahrgangFach für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgang/{abiturjahr : \d+}/fach/{id : \d+}
-	 * 
-	 * Liefert die Informationen bezüglich eines Abiturjahrgangs der gymnasialen Oberstufe zu dem Fach mit der angegebenen ID. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Fachinformationen besitzt.
-	 * 
-	 * Mögliche HTTP-Antworten: 
-	 *   Code 200: Die Daten des Faches bezüglich eines Abiturjahrgangs der gymnasialen Oberstufe
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: GostFach
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Fachinformationen der Gymnasialen Oberstufe anzusehen.
-	 *   Code 404: Kein Eintrag für das Fach der gymnasialen Oberstufe mit der angegebenen ID gefunden
-	 * 
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
-	 * @param {number} id - der Pfad-Parameter id
-	 * 
-	 * @returns Die Daten des Faches bezüglich eines Abiturjahrgangs der gymnasialen Oberstufe
-	 */
-	public async getGostAbiturjahrgangFach(schema : string, abiturjahr : number, id : number) : Promise<GostFach> {
-		let path : string = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : \d+}/fach/{id : \d+}"
-				.replace(/{schema\s*(:[^}]+)?}/g, schema)
-				.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString())
-				.replace(/{id\s*(:[^}]+)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
-		const text = result;
-		return GostFach.transpilerFromJSON(text);
-	}
-
-
-	/**
-	 * Implementierung der PATCH-Methode patchGostAbiturjahrgangFach für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgang/{abiturjahr : \d+}/fach/{id : \d+}
-	 * 
-	 * Passt die Daten eines Faches in Bezug auf den Abiturjahrgang der Gymnasiale Oberstufe an. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Anpassen der Fachinformationen besitzt.
-	 * 
-	 * Mögliche HTTP-Antworten: 
-	 *   Code 200: Der Patch wurde erfolgreich in die Fachinformationen integriert.
-	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Fachdaten zu ändern.
-	 *   Code 404: Kein Fach-Eintrag mit der angegebenen ID gefunden
-	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 * 
-	 * @param {Partial<GostFach>} data - der Request-Body für die HTTP-Methode
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
-	 * @param {number} id - der Pfad-Parameter id
-	 */
-	public async patchGostAbiturjahrgangFach(data : Partial<GostFach>, schema : string, abiturjahr : number, id : number) : Promise<void> {
-		let path : string = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : \d+}/fach/{id : \d+}"
-				.replace(/{schema\s*(:[^}]+)?}/g, schema)
-				.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString())
-				.replace(/{id\s*(:[^}]+)?}/g, id.toString());
-		let body : string = GostFach.transpilerToJSONPatch(data);
-		return super.patchJSON(path, body);
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getGostAbiturjahrgangFachkombinationen für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgang/{abiturjahr : \d+}/fachkombinationen
-	 * 
-	 * Erstellt eine Liste mit den Informationen zu den Fachkombinationen für die Laufbahnplanung des Abitur-Jahrganges der gymnasialen Oberstufe. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Fachkombinationen besitzt.
-	 * 
-	 * Mögliche HTTP-Antworten: 
-	 *   Code 200: Die Liste der Fachkombinationen
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<GostJahrgangFachkombinationen>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Fachkombinationen anzusehen.
-	 *   Code 404: Keine Fachkombinationen gefunden oder keine gymnasiale Oberstufe bei der Schulform vorhanden
-	 * 
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
-	 * 
-	 * @returns Die Liste der Fachkombinationen
-	 */
-	public async getGostAbiturjahrgangFachkombinationen(schema : string, abiturjahr : number) : Promise<List<GostJahrgangFachkombinationen>> {
-		let path : string = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : \d+}/fachkombinationen"
-				.replace(/{schema\s*(:[^}]+)?}/g, schema)
-				.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString());
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		let ret = new Vector<GostJahrgangFachkombinationen>();
-		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(GostJahrgangFachkombinationen.transpilerFromJSON(text)); });
-		return ret;
-	}
-
-
-	/**
-	 * Implementierung der POST-Methode addGostAbiturjahrgangFachkombination für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgang/{abiturjahr : \d+}/fachkombinationen/add/{typ : \d+}
-	 * 
-	 * Fügt eine Regel zu einer Fachkombination der Gymnasialen Oberstufe bei dem angegebenen Abiturjahrgang hinzu.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen einer solchen Fachkombination hat.
-	 * 
-	 * Mögliche HTTP-Antworten: 
-	 *   Code 200: Die Regel zur Fachkombination bezüglich der gymnasialen Oberstufe wurde erstellt
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: GostJahrgangFachkombinationen
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um eine Regel für eine Fachkombination hinzuzufügen.
-	 *   Code 404: Abiturjahr nicht vorhanden
-	 *   Code 409: Die übergebenen Daten sind fehlerhaft
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 * 
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
-	 * @param {number} typ - der Pfad-Parameter typ
-	 * 
-	 * @returns Die Regel zur Fachkombination bezüglich der gymnasialen Oberstufe wurde erstellt
-	 */
-	public async addGostAbiturjahrgangFachkombination(schema : string, abiturjahr : number, typ : number) : Promise<GostJahrgangFachkombinationen> {
-		let path : string = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : \d+}/fachkombinationen/add/{typ : \d+}"
-				.replace(/{schema\s*(:[^}]+)?}/g, schema)
-				.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString())
-				.replace(/{typ\s*(:[^}]+)?}/g, typ.toString());
-		const result : string = await super.postJSON(path, null);
-		const text = result;
-		return GostJahrgangFachkombinationen.transpilerFromJSON(text);
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getGostAbiturjahrgangFachwahlstatistik für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgang/{abiturjahr : \d+}/fachwahlstatistik
-	 * 
-	 * Erstellt eine Liste aller in der Datenbank für den angebenen Abitur-Jahrgang vorhanden Fachwahlen der gymnasialen Oberstufe. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Fächerdaten besitzt.
-	 * 
-	 * Mögliche HTTP-Antworten: 
-	 *   Code 200: Eine Fachwahlstatistik
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<GostStatistikFachwahl>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Fachwahlen anzusehen.
-	 *   Code 404: Keine Fachwahlen gefunden oder keine gymnasiale Oberstufe bei der Schulform vorhanden
-	 * 
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
-	 * 
-	 * @returns Eine Fachwahlstatistik
-	 */
-	public async getGostAbiturjahrgangFachwahlstatistik(schema : string, abiturjahr : number) : Promise<List<GostStatistikFachwahl>> {
-		let path : string = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : \d+}/fachwahlstatistik"
-				.replace(/{schema\s*(:[^}]+)?}/g, schema)
-				.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString());
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		let ret = new Vector<GostStatistikFachwahl>();
-		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(GostStatistikFachwahl.transpilerFromJSON(text)); });
-		return ret;
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getGostAbiturjahrgangFaecher für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgang/{abiturjahr : \d+}/faecher
-	 * 
-	 * Erstellt eine Liste aller in der Datenbank vorhanden Fächer der gymnasialen Oberstufe, welche für den angebenen Abitur-Jahrgang festgelegt wurden.. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Fächerdaten besitzt.
-	 * 
-	 * Mögliche HTTP-Antworten: 
-	 *   Code 200: Eine Liste von Fächer-Listen-Einträgen
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<GostFach>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Fächerdaten anzusehen.
-	 *   Code 404: Keine Fächer-Einträge gefunden oder keine gymnasiale Oberstufe bei der Schulform vorhanden
-	 * 
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
-	 * 
-	 * @returns Eine Liste von Fächer-Listen-Einträgen
-	 */
-	public async getGostAbiturjahrgangFaecher(schema : string, abiturjahr : number) : Promise<List<GostFach>> {
-		let path : string = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : \d+}/faecher"
-				.replace(/{schema\s*(:[^}]+)?}/g, schema)
-				.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString());
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		let ret = new Vector<GostFach>();
-		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(GostFach.transpilerFromJSON(text)); });
-		return ret;
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getGostAbiturjahrgangFachwahlen für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgang/{abiturjahr : \d+}/halbjahr/{halbjahr : \d+}/fachwahlen
-	 * 
-	 * Erstellt eine Liste aller in der Datenbank für den angebenen Abitur-Jahrgang vorhanden Fachwahlen der gymnasialen Oberstufe. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Fächerdaten besitzt.
-	 * 
-	 * Mögliche HTTP-Antworten: 
-	 *   Code 200: Eine Liste der Fachwahlen
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<GostFachwahl>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Fachwahlen anzusehen.
-	 *   Code 404: Keine Fachwahlen gefunden oder keine gymnasiale Oberstufe bei der Schulform vorhanden
-	 * 
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
-	 * @param {number} halbjahr - der Pfad-Parameter halbjahr
-	 * 
-	 * @returns Eine Liste der Fachwahlen
-	 */
-	public async getGostAbiturjahrgangFachwahlen(schema : string, abiturjahr : number, halbjahr : number) : Promise<List<GostFachwahl>> {
-		let path : string = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : \d+}/halbjahr/{halbjahr : \d+}/fachwahlen"
-				.replace(/{schema\s*(:[^}]+)?}/g, schema)
-				.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString())
-				.replace(/{halbjahr\s*(:[^}]+)?}/g, halbjahr.toString());
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		let ret = new Vector<GostFachwahl>();
-		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(GostFachwahl.transpilerFromJSON(text)); });
-		return ret;
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getGostAbiturjahrgangSchueler für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgang/{abiturjahr : \d+}/schueler
-	 * 
-	 * Erstellt eine Liste aller Schüler, welche zu dem angebenen Abitur-Jahrgang gehören (ohne Informationen zu Kursen). Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Schülerdaten besitzt.
-	 * 
-	 * Mögliche HTTP-Antworten: 
-	 *   Code 200: Eine Liste von Schüler-Listen-Einträgen
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<SchuelerListeEintrag>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Schülerdaten anzusehen.
-	 *   Code 404: Keine Schüler gefunden oder keine gymnasiale Oberstufe bei der Schulform vorhanden
-	 * 
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
-	 * 
-	 * @returns Eine Liste von Schüler-Listen-Einträgen
-	 */
-	public async getGostAbiturjahrgangSchueler(schema : string, abiturjahr : number) : Promise<List<SchuelerListeEintrag>> {
-		let path : string = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : \d+}/schueler"
-				.replace(/{schema\s*(:[^}]+)?}/g, schema)
-				.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString());
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		let ret = new Vector<SchuelerListeEintrag>();
-		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(SchuelerListeEintrag.transpilerFromJSON(text)); });
-		return ret;
 	}
 
 
@@ -3112,87 +3112,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getGostFach für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/fach/{id : \d+}
-	 * 
-	 * Liefert die Informationen bezüglich der gymnasialen Oberstufe zu dem Fach mit der angegebenen ID. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Fachinformationen besitzt.
-	 * 
-	 * Mögliche HTTP-Antworten: 
-	 *   Code 200: Die Daten des Faches bezüglich der gymnasialen Oberstufe
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: GostFach
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Fachiformationen der Gymnasialen Oberstufe anzusehen.
-	 *   Code 404: Kein Eintrag für das Fach der gymnasialen Oberstufe mit der angegebenen ID gefunden
-	 * 
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 * 
-	 * @returns Die Daten des Faches bezüglich der gymnasialen Oberstufe
-	 */
-	public async getGostFach(schema : string, id : number) : Promise<GostFach> {
-		let path : string = "/db/{schema}/gost/fach/{id : \d+}"
-				.replace(/{schema\s*(:[^}]+)?}/g, schema)
-				.replace(/{id\s*(:[^}]+)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
-		const text = result;
-		return GostFach.transpilerFromJSON(text);
-	}
-
-
-	/**
-	 * Implementierung der PATCH-Methode patchGostFach für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/fach/{id : \d+}
-	 * 
-	 * Passt die Daten eines Faches in Bezug auf die Gymnasiale Oberstufe an. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Anpassen der Fachinformationen besitzt.
-	 * 
-	 * Mögliche HTTP-Antworten: 
-	 *   Code 200: Der Patch wurde erfolgreich in die Fachinformationen integriert.
-	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Fachdaten zu ändern.
-	 *   Code 404: Kein Fach-Eintrag mit der angegebenen ID gefunden
-	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 * 
-	 * @param {Partial<GostFach>} data - der Request-Body für die HTTP-Methode
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 */
-	public async patchGostFach(data : Partial<GostFach>, schema : string, id : number) : Promise<void> {
-		let path : string = "/db/{schema}/gost/fach/{id : \d+}"
-				.replace(/{schema\s*(:[^}]+)?}/g, schema)
-				.replace(/{id\s*(:[^}]+)?}/g, id.toString());
-		let body : string = GostFach.transpilerToJSONPatch(data);
-		return super.patchJSON(path, body);
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getGostFachkombinationen für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/fachkombinationen
-	 * 
-	 * Erstellt eine Liste mit den Informationen zu den Fachkombinationen für die Laufbahnplanung der gymnasialen Oberstufe aus der Vorlage für neue Abiturjahrgänge. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Fachkombinationen besitzt.
-	 * 
-	 * Mögliche HTTP-Antworten: 
-	 *   Code 200: Die Liste der Fachkombinationen
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<GostJahrgangFachkombinationen>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Fachkombinationen anzusehen.
-	 *   Code 404: Keine Fachkombinationen gefunden oder keine gymnasiale Oberstufe bei der Schulform vorhanden
-	 * 
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * 
-	 * @returns Die Liste der Fachkombinationen
-	 */
-	public async getGostFachkombinationen(schema : string) : Promise<List<GostJahrgangFachkombinationen>> {
-		let path : string = "/db/{schema}/gost/fachkombinationen"
-				.replace(/{schema\s*(:[^}]+)?}/g, schema);
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		let ret = new Vector<GostJahrgangFachkombinationen>();
-		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(GostJahrgangFachkombinationen.transpilerFromJSON(text)); });
-		return ret;
-	}
-
-
-	/**
-	 * Implementierung der PATCH-Methode patchGostFachkombination für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/fachkombinationen/{id : \d+}
+	 * Implementierung der PATCH-Methode patchGostFachkombination für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/fachkombination/{id : \d+}
 	 * 
 	 * Passt die Fachkombination mit der angegebenen ID an.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Anpassen von Fachkombinationen besitzt.
 	 * 
@@ -3204,28 +3124,28 @@ export class ApiServer extends BaseApi {
 	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 * 
-	 * @param {Partial<GostJahrgangFachkombinationen>} data - der Request-Body für die HTTP-Methode
+	 * @param {Partial<GostJahrgangFachkombination>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchGostFachkombination(data : Partial<GostJahrgangFachkombinationen>, schema : string, id : number) : Promise<void> {
-		let path : string = "/db/{schema}/gost/fachkombinationen/{id : \d+}"
+	public async patchGostFachkombination(data : Partial<GostJahrgangFachkombination>, schema : string, id : number) : Promise<void> {
+		let path : string = "/db/{schema}/gost/fachkombination/{id : \d+}"
 				.replace(/{schema\s*(:[^}]+)?}/g, schema)
 				.replace(/{id\s*(:[^}]+)?}/g, id.toString());
-		let body : string = GostJahrgangFachkombinationen.transpilerToJSONPatch(data);
+		let body : string = GostJahrgangFachkombination.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
 
 	/**
-	 * Implementierung der DELETE-Methode deleteGostFachkombination für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/fachkombinationen/{id : \d+}
+	 * Implementierung der DELETE-Methode deleteGostFachkombination für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/fachkombination/{id : \d+}
 	 * 
 	 * Entfernt eine Regel zu einer Fachkombination in der Gymnasialen Oberstufe. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen besitzt.
 	 * 
 	 * Mögliche HTTP-Antworten: 
 	 *   Code 200: Die Regel wurde wurde erfolgreich gelöscht.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: GostJahrgangFachkombinationen
+	 *     - Rückgabe-Typ: GostJahrgangFachkombination
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Regel zu der Fachkombination zu löschen.
 	 *   Code 404: Die Regel zu der Fachkombination wurde nicht gefunden.
 	 * 
@@ -3234,68 +3154,13 @@ export class ApiServer extends BaseApi {
 	 * 
 	 * @returns Die Regel wurde wurde erfolgreich gelöscht.
 	 */
-	public async deleteGostFachkombination(schema : string, id : number) : Promise<GostJahrgangFachkombinationen> {
-		let path : string = "/db/{schema}/gost/fachkombinationen/{id : \d+}"
+	public async deleteGostFachkombination(schema : string, id : number) : Promise<GostJahrgangFachkombination> {
+		let path : string = "/db/{schema}/gost/fachkombination/{id : \d+}"
 				.replace(/{schema\s*(:[^}]+)?}/g, schema)
 				.replace(/{id\s*(:[^}]+)?}/g, id.toString());
 		const result : string = await super.deleteJSON(path, null);
 		const text = result;
-		return GostJahrgangFachkombinationen.transpilerFromJSON(text);
-	}
-
-
-	/**
-	 * Implementierung der POST-Methode addGostFachkombination für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/fachkombinationen/add/{typ : \d+}
-	 * 
-	 * Fügt eine Regel zu einer Fachkombination der Gymnasialen Oberstufe hinzu.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen einer solchen Fachkombination hat.
-	 * 
-	 * Mögliche HTTP-Antworten: 
-	 *   Code 200: Die Regel zur Fachkombination bezüglich der gymnasialen Oberstufe wurde erstellt
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: GostJahrgangFachkombinationen
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um eine Regel für eine Fachkombination hinzuzufügen.
-	 *   Code 409: Die übergebenen Daten sind fehlerhaft
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 * 
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} typ - der Pfad-Parameter typ
-	 * 
-	 * @returns Die Regel zur Fachkombination bezüglich der gymnasialen Oberstufe wurde erstellt
-	 */
-	public async addGostFachkombination(schema : string, typ : number) : Promise<GostJahrgangFachkombinationen> {
-		let path : string = "/db/{schema}/gost/fachkombinationen/add/{typ : \d+}"
-				.replace(/{schema\s*(:[^}]+)?}/g, schema)
-				.replace(/{typ\s*(:[^}]+)?}/g, typ.toString());
-		const result : string = await super.postJSON(path, null);
-		const text = result;
-		return GostJahrgangFachkombinationen.transpilerFromJSON(text);
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getGostFaecher für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/faecher
-	 * 
-	 * Erstellt eine Liste aller in der Datenbank vorhanden Fächer der gymnasialen Oberstufe. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Fächerdaten besitzt.
-	 * 
-	 * Mögliche HTTP-Antworten: 
-	 *   Code 200: Eine Liste von Fächer-Listen-Einträgen
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<GostFach>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Fächerdaten anzusehen.
-	 *   Code 404: Keine Fächer-Einträge gefunden oder keine gymnasiale Oberstufe bei der Schulform vorhanden
-	 * 
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * 
-	 * @returns Eine Liste von Fächer-Listen-Einträgen
-	 */
-	public async getGostFaecher(schema : string) : Promise<List<GostFach>> {
-		let path : string = "/db/{schema}/gost/faecher"
-				.replace(/{schema\s*(:[^}]+)?}/g, schema);
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		let ret = new Vector<GostFach>();
-		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(GostFach.transpilerFromJSON(text)); });
-		return ret;
+		return GostJahrgangFachkombination.transpilerFromJSON(text);
 	}
 
 

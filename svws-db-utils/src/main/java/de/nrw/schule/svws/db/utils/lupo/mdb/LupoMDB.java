@@ -364,14 +364,14 @@ public class LupoMDB {
 					? ("" + f1 + " erfordert " + f2)
 					: ("" + f1 + " erlaubt kein " + f2);
 				GostLaufbahnplanungFachkombinationTyp typ = nmk.Typ == null ? GostLaufbahnplanungFachkombinationTyp.VERBOTEN : ("+".equals(nmk.Typ) ? GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH : GostLaufbahnplanungFachkombinationTyp.VERBOTEN); 
-				DTOGostJahrgangFachkombinationen lupoNMK = new DTOGostJahrgangFachkombinationen(idNMK++, 
+				DTOGostJahrgangFachkombinationen lupoNMK = new DTOGostJahrgangFachkombinationen(idNMK++, abiJahrgang,
 						dtoFach1.ID, dtoFach2.ID, !"Q1Q4".equals(nmk.Phase), !"Q1Q4".equals(nmk.Phase), true, true, true, true,  
 						typ, hinweistext);
 				lupoNMK.Abi_Jahrgang = abiJahrgang;
 				lupoNMK.Kursart1 = nmk.Kursart1;
 				lupoNMK.Kursart2 = nmk.Kursart2;
 				conn.persist(lupoNMK);
-				DTOGostJahrgangFachkombinationen lupoNMK2 = new DTOGostJahrgangFachkombinationen(idNMK++, 
+				DTOGostJahrgangFachkombinationen lupoNMK2 = new DTOGostJahrgangFachkombinationen(idNMK++, abiJahrgang,
 						dtoFach2.ID, dtoFach1.ID, !"Q1Q4".equals(nmk.Phase), !"Q1Q4".equals(nmk.Phase), true, true, true, true,  
 						typ, hinweistext);
 				lupoNMK2.Abi_Jahrgang = abiJahrgang;

@@ -153,31 +153,23 @@ const selected_hj: WritableComputedRef<GostHalbjahr> = computed({
 		manager.value?.getHalbjahr()
 		const hj = hj_memo.value || manager.value?.getHalbjahr()
 		return hj
-			|| GostHalbjahr.getPlanungshalbjahrFromAbiturjahrSchuljahrUndHalbjahr(
-				abiturjahr.value,
-				App.akt_abschnitt.schuljahr,
-				App.akt_abschnitt.abschnitt
-			)
+			|| GostHalbjahr.getPlanungshalbjahrFromAbiturjahrSchuljahrUndHalbjahr(abiturjahr.value, App.akt_abschnitt.schuljahr, App.akt_abschnitt.abschnitt)
 			|| GostHalbjahr.EF1
 	},
 	set(hj: GostHalbjahr) {
-		if (hj === selected_hj.value || !hj) return;
+		if (hj === selected_hj.value || !hj) 
+			return;
 		hj_memo.value = hj
 		wait.value = true;
-		if (selected.value?.abiturjahr)
-			app.blockungsauswahl
-				.update_list(
-					selected.value.abiturjahr.valueOf(),
-					hj.id
-				)
-				.then(() => {
-					wait.value = false;
-				});
-		else wait.value = false;
-	}});
+		if ((selected.value?.abiturjahr) && (selected.value?.abiturjahr !== -1))
+			app.blockungsauswahl.update_list(selected.value.abiturjahr, hj.id)
+				.then(() => { wait.value = false; });
+		else 
+			wait.value = false;
+	}
+});
 
-const selected_blockungauswahl: WritableComputedRef<GostBlockungListeneintrag | undefined> =
-	computed({
+const selected_blockungauswahl: WritableComputedRef<GostBlockungListeneintrag | undefined> = computed({
 	get(): GostBlockungListeneintrag | undefined {
 		return app.blockungsauswahl.ausgewaehlt;
 	},
@@ -189,8 +181,7 @@ const selected_blockungauswahl: WritableComputedRef<GostBlockungListeneintrag | 
 	}
 });
 
-const selected_ergebnis: WritableComputedRef<GostBlockungsergebnisListeneintrag | undefined> =
-	computed({
+const selected_ergebnis: WritableComputedRef<GostBlockungsergebnisListeneintrag | undefined> = computed({
 	get(): GostBlockungsergebnisListeneintrag | undefined {
 		return app.blockungsergebnisauswahl.ausgewaehlt;
 	},
@@ -211,6 +202,7 @@ async function abiturjahr_hinzufuegen(jahrgang: JahrgangsListeEintrag) {
 		console.log("Fehler: ", e);
 	}
 }
+
 const create_blockung = () => {
 	const halbjahresHashCode: number = app.blockungsauswahl.ausgewaehlt?.hashCode() ? app.blockungsauswahl.ausgewaehlt.hashCode() : -1;
 	const id = app.blockungsauswahl.ausgewaehlt?.id;

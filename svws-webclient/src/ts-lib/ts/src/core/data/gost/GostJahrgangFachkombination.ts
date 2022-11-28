@@ -1,13 +1,12 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 import { JavaBoolean, cast_java_lang_Boolean } from '../../../java/lang/JavaBoolean';
 
-export class GostJahrgangFachkombinationen extends JavaObject {
+export class GostJahrgangFachkombination extends JavaObject {
 
 	public id : number = 0;
 
-	public abiturjahr : Number | null = null;
+	public abiturjahr : number = 0;
 
 	public fachID1 : number = 0;
 
@@ -29,16 +28,18 @@ export class GostJahrgangFachkombinationen extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.nrw.schule.svws.core.data.gost.GostJahrgangFachkombinationen'].includes(name);
+		return ['de.nrw.schule.svws.core.data.gost.GostJahrgangFachkombination'].includes(name);
 	}
 
-	public static transpilerFromJSON(json : string): GostJahrgangFachkombinationen {
+	public static transpilerFromJSON(json : string): GostJahrgangFachkombination {
 		const obj = JSON.parse(json);
-		const result = new GostJahrgangFachkombinationen();
+		const result = new GostJahrgangFachkombination();
 		if (typeof obj.id === "undefined")
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		result.abiturjahr = typeof obj.abiturjahr === "undefined" ? null : obj.abiturjahr === null ? null : Number(obj.abiturjahr);
+		if (typeof obj.abiturjahr === "undefined")
+			 throw new Error('invalid json format, missing attribute abiturjahr');
+		result.abiturjahr = obj.abiturjahr;
 		if (typeof obj.fachID1 === "undefined")
 			 throw new Error('invalid json format, missing attribute fachID1');
 		result.fachID1 = obj.fachID1;
@@ -59,10 +60,10 @@ export class GostJahrgangFachkombinationen extends JavaObject {
 		return result;
 	}
 
-	public static transpilerToJSON(obj : GostJahrgangFachkombinationen) : string {
+	public static transpilerToJSON(obj : GostJahrgangFachkombination) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"abiturjahr" : ' + ((!obj.abiturjahr) ? 'null' : obj.abiturjahr.valueOf()) + ',';
+		result += '"abiturjahr" : ' + obj.abiturjahr + ',';
 		result += '"fachID1" : ' + obj.fachID1 + ',';
 		result += '"kursart1" : ' + ((!obj.kursart1) ? 'null' : '"' + obj.kursart1.valueOf() + '"') + ',';
 		result += '"fachID2" : ' + obj.fachID2 + ',';
@@ -86,13 +87,13 @@ export class GostJahrgangFachkombinationen extends JavaObject {
 		return result;
 	}
 
-	public static transpilerToJSONPatch(obj : Partial<GostJahrgangFachkombinationen>) : string {
+	public static transpilerToJSONPatch(obj : Partial<GostJahrgangFachkombination>) : string {
 		let result = '{';
 		if (typeof obj.id !== "undefined") {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.abiturjahr !== "undefined") {
-			result += '"abiturjahr" : ' + ((!obj.abiturjahr) ? 'null' : obj.abiturjahr.valueOf()) + ',';
+			result += '"abiturjahr" : ' + obj.abiturjahr + ',';
 		}
 		if (typeof obj.fachID1 !== "undefined") {
 			result += '"fachID1" : ' + obj.fachID1 + ',';
@@ -134,6 +135,6 @@ export class GostJahrgangFachkombinationen extends JavaObject {
 
 }
 
-export function cast_de_nrw_schule_svws_core_data_gost_GostJahrgangFachkombinationen(obj : unknown) : GostJahrgangFachkombinationen {
-	return obj as GostJahrgangFachkombinationen;
+export function cast_de_nrw_schule_svws_core_data_gost_GostJahrgangFachkombination(obj : unknown) : GostJahrgangFachkombination {
+	return obj as GostJahrgangFachkombination;
 }

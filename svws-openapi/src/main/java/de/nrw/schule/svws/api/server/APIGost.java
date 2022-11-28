@@ -16,7 +16,7 @@ import de.nrw.schule.svws.core.data.gost.GostBlockungsergebnis;
 import de.nrw.schule.svws.core.data.gost.GostFach;
 import de.nrw.schule.svws.core.data.gost.GostFachwahl;
 import de.nrw.schule.svws.core.data.gost.GostJahrgang;
-import de.nrw.schule.svws.core.data.gost.GostJahrgangFachkombinationen;
+import de.nrw.schule.svws.core.data.gost.GostJahrgangFachkombination;
 import de.nrw.schule.svws.core.data.gost.GostJahrgangsdaten;
 import de.nrw.schule.svws.core.data.gost.GostLeistungen;
 import de.nrw.schule.svws.core.data.gost.GostSchuelerFachwahl;
@@ -38,6 +38,7 @@ import de.nrw.schule.svws.data.gost.DataGostJahrgangsdaten;
 import de.nrw.schule.svws.data.gost.DataGostJahrgangsliste;
 import de.nrw.schule.svws.data.gost.DataGostSchuelerLaufbahnplanung;
 import de.nrw.schule.svws.db.DBEntityManager;
+import de.nrw.schule.svws.db.utils.OperationError;
 import de.nrw.schule.svws.db.utils.data.Schule;
 import de.nrw.schule.svws.db.utils.gost.FaecherGost;
 import de.nrw.schule.svws.db.utils.gost.GostSchueler;
@@ -199,94 +200,6 @@ public class APIGost {
     	}
     }
     
-    
-    
-    /**
-     * Die OpenAPI-Methode für die Abfrage der Liste der Fächer gymnasialen Oberstufe im angegebenen Schema.
-     *  
-     * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-     * @param request       die Informationen zur HTTP-Anfrage
-     * 
-     * @return              die Liste der Fächer der gymnasialen Oberstufe mit ID des Datenbankschemas
-     */
-    @GET
-    @Path("/faecher")
-    @Operation(summary = "Gibt eine Übersicht von allen Fächern der gymnasialen Oberstufe zurück.",
-               description = "Erstellt eine Liste aller in der Datenbank vorhanden Fächer der gymnasialen Oberstufe. "
-               		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Fächerdaten "
-               		       + "besitzt.")
-    @ApiResponse(responseCode = "200", description = "Eine Liste von Fächer-Listen-Einträgen",
-                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = GostFach.class))))
-    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Fächerdaten anzusehen.")
-    @ApiResponse(responseCode = "404", description = "Keine Fächer-Einträge gefunden oder keine gymnasiale Oberstufe bei der Schulform vorhanden")
-    public Response getGostFaecher(@PathParam("schema") String schema, @Context HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
-    		return (new DataGostFaecher(conn, null)).getList();
-    	}
-    }
-    
-    
-    /**
-     * Die OpenAPI-Methode für die Abfrage der Daten eines Faches in Bezug auf die Gymnasiale Oberstufe.
-     *  
-     * @param schema      das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-     * @param id          die ID des Faches
-     * @param request     die Informationen zur HTTP-Anfrage
-     * 
-     * @return die Daten des Faches der gymnasialen Oberstufe
-     */
-    @GET
-    @Path("/fach/{id : \\d+}")
-    @Operation(summary = "Liefert die Informationen bezüglich der gymnasailen Oberstufe zu dem Fach mit der angegebenen ID.",
-    description = "Liefert die Informationen bezüglich der gymnasialen Oberstufe zu dem Fach mit der angegebenen ID. "
-    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Fachinformationen "
-    		    + "besitzt.")
-    @ApiResponse(responseCode = "200", description = "Die Daten des Faches bezüglich der gymnasialen Oberstufe",
-                 content = @Content(mediaType = "application/json",
-                 schema = @Schema(implementation = GostFach.class)))
-    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Fachiformationen der Gymnasialen Oberstufe anzusehen.")
-    @ApiResponse(responseCode = "404", description = "Kein Eintrag für das Fach der gymnasialen Oberstufe mit der angegebenen ID gefunden")
-    public Response getGostFach(@PathParam("schema") String schema, @PathParam("id") long id, @Context HttpServletRequest request) {
-    	// TODO Anpassung der Benutzerkompetenz / Einführung einer neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeinformationen
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
-    		return (new DataGostFaecher(conn, null)).get(id);
-    	}
-    }
-
-    
-    /**
-     * Die OpenAPI-Methode für das Anpassen der Daten eines Faches in Bezug auf die Gymnasiale Oberstufe.
-     *  
-     * @param schema     das Datenbankschema, auf welches der Patch ausgeführt werden soll
-     * @param id         die ID des Faches
-     * @param is         der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386 
-     * @param request    die Informationen zur HTTP-Anfrage
-     * 
-     * @return die HTTP-Antwort
-     */
-    @PATCH
-    @Path("/fach/{id : \\d+}")
-    @Operation(summary = "Passt die Daten eines Faches in Bezug auf die Gymnasiale Oberstufe an.",
-    description = "Passt die Daten eines Faches in Bezug auf die Gymnasiale Oberstufe an. "
-    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Anpassen der Fachinformationen "
-    		    + "besitzt.")
-    @ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich in die Fachinformationen integriert.")
-    @ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
-    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Fachdaten zu ändern.")
-    @ApiResponse(responseCode = "404", description = "Kein Fach-Eintrag mit der angegebenen ID gefunden")
-    @ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde")
-    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-    public Response patchGostFach(
-    		@PathParam("schema") String schema, @PathParam("id") long id,
-    		@RequestBody(description = "Der Patch für die Fachdaten", required = true, content = 
-    			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostFach.class))) InputStream is, 
-    		@Context HttpServletRequest request) 
-    {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN)) { // TODO Anpassung der Benutzerrechte
-    		return (new DataGostFaecher(conn, null)).patch(id, is);
-    	}
-    }
-    
 
     /**
      * Die OpenAPI-Methode für die Abfrage der Liste der Schüler der gymnasialen Oberstufe 
@@ -299,7 +212,7 @@ public class APIGost {
      * @return              die Liste der Schüler - allerdings ohne Informationen zu Kursen
      */
     @GET
-    @Path("/abiturjahrgang/{abiturjahr : \\d+}/schueler")
+    @Path("/abiturjahrgang/{abiturjahr : -?\\d+}/schueler")
     @Operation(summary = "Gibt eine Übersicht von allen Schülern des Abitur-Jahrganges der gymnasialen Oberstufe zurück.",
                description = "Erstellt eine Liste aller Schüler, welche zu dem angebenen Abitur-Jahrgang gehören (ohne Informationen zu Kursen). "
                		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Schülerdaten "
@@ -310,6 +223,8 @@ public class APIGost {
     @ApiResponse(responseCode = "404", description = "Keine Schüler gefunden oder keine gymnasiale Oberstufe bei der Schulform vorhanden")
     public Response getGostAbiturjahrgangSchueler(@PathParam("schema") String schema, @PathParam("abiturjahr") int abiturjahr, @Context HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN)) {
+    		if (abiturjahr < 0)
+    			return OperationError.NOT_FOUND.getResponse("Schüler können dem Vorlagen-Abiturjahrgang nicht zugewiesen sein.");
     		return (new DataGostJahrgangSchuelerliste(conn, abiturjahr)).getList();
     	}
     }
@@ -326,7 +241,7 @@ public class APIGost {
      * @return              die Liste der Fächer der gymnasialen Oberstufe mit der ID des Faches
      */
     @GET
-    @Path("/abiturjahrgang/{abiturjahr : \\d+}/faecher")
+    @Path("/abiturjahrgang/{abiturjahr : -?\\d+}/faecher")
     @Operation(summary = "Gibt eine Übersicht von allen Fächern des Abitur-Jahrganges der gymnasialen Oberstufe zurück.",
                description = "Erstellt eine Liste aller in der Datenbank vorhanden Fächer der gymnasialen Oberstufe, "
                            + "welche für den angebenen Abitur-Jahrgang festgelegt wurden.. "
@@ -355,7 +270,7 @@ public class APIGost {
      * @return die Abiturjahrgangs-spezifischen Daten des Faches der gymnasialen Oberstufe
      */
     @GET
-    @Path("/abiturjahrgang/{abiturjahr : \\d+}/fach/{id : \\d+}")
+    @Path("/abiturjahrgang/{abiturjahr : -?\\d+}/fach/{id : \\d+}")
     @Operation(summary = "Liefert die Informationen bezüglich eines Abiturjahrgangs der gymnasialen Oberstufe zu dem Fach mit der angegebenen ID.",
     description = "Liefert die Informationen bezüglich eines Abiturjahrgangs der gymnasialen Oberstufe zu dem Fach mit der angegebenen ID. "
     		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Fachinformationen "
@@ -387,7 +302,7 @@ public class APIGost {
      * @return die HTTP-Antwort
      */
     @PATCH
-    @Path("/abiturjahrgang/{abiturjahr : \\d+}/fach/{id : \\d+}")
+    @Path("/abiturjahrgang/{abiturjahr : -?\\d+}/fach/{id : \\d+}")
     @Operation(summary = "Passt die Daten eines Faches in Bezug den Abiturjahrgang der Gymnasiale Oberstufe an.",
     description = "Passt die Daten eines Faches in Bezug auf den Abiturjahrgang der Gymnasiale Oberstufe an. "
     		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Anpassen der Fachinformationen "
@@ -422,7 +337,7 @@ public class APIGost {
      * @return              die Fachwahlstatistik
      */
     @GET
-    @Path("/abiturjahrgang/{abiturjahr : \\d+}/fachwahlstatistik")
+    @Path("/abiturjahrgang/{abiturjahr : -?\\d+}/fachwahlstatistik")
     @Operation(summary = "Gibt eine Übersicht von allen Fachwahlen des Abitur-Jahrganges der gymnasialen Oberstufe zurück.",
                description = "Erstellt eine Liste aller in der Datenbank für den angebenen Abitur-Jahrgang vorhanden "
                		       + "Fachwahlen der gymnasialen Oberstufe. "
@@ -434,6 +349,8 @@ public class APIGost {
     @ApiResponse(responseCode = "404", description = "Keine Fachwahlen gefunden oder keine gymnasiale Oberstufe bei der Schulform vorhanden")
     public Response getGostAbiturjahrgangFachwahlstatistik(@PathParam("schema") String schema, @PathParam("abiturjahr") int abiturjahr, @Context HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
+    		if (abiturjahr < 0)
+    			return OperationError.NOT_FOUND.getResponse("Fachwahlen sind für den Vorlagen-Abiturjahrgang nicht verfügbar.");
     		return (new DataGostAbiturjahrgangFachwahlen(conn, abiturjahr)).getList();
     	}
     }
@@ -452,7 +369,7 @@ public class APIGost {
      * @return              die Liste der Fachwahlen der gymnasialen Oberstufe
      */
     @GET
-    @Path("/abiturjahrgang/{abiturjahr : \\d+}/halbjahr/{halbjahr : \\d+}/fachwahlen")
+    @Path("/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : \\d+}/fachwahlen")
     @Operation(summary = "Gibt eine Übersicht von allen Fachwahlen des Abitur-Jahrganges der gymnasialen Oberstufe zurück.",
                description = "Erstellt eine Liste aller in der Datenbank für den angebenen Abitur-Jahrgang vorhanden "
                            + "Fachwahlen der gymnasialen Oberstufe. "
@@ -465,6 +382,8 @@ public class APIGost {
     public Response getGostAbiturjahrgangFachwahlen(@PathParam("schema") String schema, @PathParam("abiturjahr") int abiturjahr, 
             @PathParam("halbjahr") int halbjahr, @Context HttpServletRequest request) {
         try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
+    		if (abiturjahr < 0)
+    			return OperationError.NOT_FOUND.getResponse("Fachwahlen sind für den Vorlagen-Abiturjahrgang nicht verfügbar.");
             return (new DataGostAbiturjahrgangFachwahlen(conn, abiturjahr)).getSchuelerFachwahlenResponse(halbjahr);
         }
     }
@@ -1667,32 +1586,6 @@ public class APIGost {
 
     /**
      * Die OpenAPI-Methode für die Abfrage der Liste der Fachkombinationen für die Laufbahnplanung
-     * der gymnasialen Oberstufe aus der Vorlage für neu eAbiturjahrgänge
-     *  
-     * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-     * @param request       die Informationen zur HTTP-Anfrage
-     * 
-     * @return              die Liste der Fachkombinationen
-     */
-    @GET
-    @Path("fachkombinationen")
-    @Operation(summary = "Gibt die Informationen zu den Fachkombinationen für die Laufbahnplanung der gymnasialen Oberstufe aus der Vorlage für neue Abiturjahrgänge zurück.",
-               description = "Erstellt eine Liste mit den Informationen zu den Fachkombinationen für die Laufbahnplanung der gymnasialen Oberstufe aus der Vorlage für neue Abiturjahrgänge. "
-               		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Fachkombinationen besitzt.")
-    @ApiResponse(responseCode = "200", description = "Die Liste der Fachkombinationen",
-                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = GostJahrgangFachkombinationen.class))))
-    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Fachkombinationen anzusehen.")
-    @ApiResponse(responseCode = "404", description = "Keine Fachkombinationen gefunden oder keine gymnasiale Oberstufe bei der Schulform vorhanden")
-    public Response getGostFachkombinationen(@PathParam("schema") String schema, @Context HttpServletRequest request) {
-    	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) {
-    		return (new DataGostJahrgangFachkombinationen(conn, null)).getList();
-    	}
-    }
-    
-
-    /**
-     * Die OpenAPI-Methode für die Abfrage der Liste der Fachkombinationen für die Laufbahnplanung
      * der gymnasialen Oberstufe für den angegebenen Abitur-Jahrgang.
      *  
      * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
@@ -1702,12 +1595,12 @@ public class APIGost {
      * @return              die Liste der Fachkombinationen
      */
     @GET
-    @Path("/abiturjahrgang/{abiturjahr : \\d+}/fachkombinationen")
+    @Path("/abiturjahrgang/{abiturjahr : -?\\d+}/fachkombinationen")
     @Operation(summary = "Gibt die Informationen zu den Fachkombinationen für die Laufbahnplanung des Abitur-Jahrganges der gymnasialen Oberstufe zurück.",
                description = "Erstellt eine Liste mit den Informationen zu den Fachkombinationen für die Laufbahnplanung des Abitur-Jahrganges der gymnasialen Oberstufe. "
                		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Fachkombinationen besitzt.")
     @ApiResponse(responseCode = "200", description = "Die Liste der Fachkombinationen",
-                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = GostJahrgangFachkombinationen.class))))
+                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = GostJahrgangFachkombination.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Fachkombinationen anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Fachkombinationen gefunden oder keine gymnasiale Oberstufe bei der Schulform vorhanden")
     public Response getGostAbiturjahrgangFachkombinationen(@PathParam("schema") String schema, @PathParam("abiturjahr") int abiturjahr, @Context HttpServletRequest request) {
@@ -1729,7 +1622,7 @@ public class APIGost {
      * @return die HTTP-Antwort
      */
     @PATCH
-    @Path("/fachkombinationen/{id : \\d+}")
+    @Path("/fachkombination/{id : \\d+}")
     @Operation(summary = "Passt die Fachkombination mit der angegebenen ID an.",
     description = "Passt die Fachkombination mit der angegebenen ID an."
     		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Anpassen von Fachkombinationen "
@@ -1743,11 +1636,11 @@ public class APIGost {
     public Response patchGostFachkombination(
     		@PathParam("schema") String schema, @PathParam("id") long id,
     		@RequestBody(description = "Der Patch für die Fachkombination", required = true, content = 
-    			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostJahrgangFachkombinationen.class))) InputStream is, 
+    			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostJahrgangFachkombination.class))) InputStream is, 
     		@Context HttpServletRequest request) {
     	// TODO Anpassung der Benutzerrechte
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) { 
-    		return (new DataGostJahrgangFachkombinationen(conn, null /*nicht relevant*/)).patch(id, is);
+    		return (new DataGostJahrgangFachkombinationen(conn, -1 /*nicht relevant*/)).patch(id, is);
     	}
     }
 
@@ -1763,48 +1656,22 @@ public class APIGost {
      * @return die HTTP-Antwort mit dem Status und ggf. der gelöschten Regel zur Fachkombination
      */
     @DELETE
-    @Path("/fachkombinationen/{id : \\d+}")
+    @Path("/fachkombination/{id : \\d+}")
     @Operation(summary = "Entfernt eine Regel zu einer Fachkombination in der Gymnasialen Oberstufe.",
                description = "Entfernt eine Regel zu einer Fachkombination in der Gymnasialen Oberstufe. "
     		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen besitzt.")
     @ApiResponse(responseCode = "200", description = "Die Regel wurde wurde erfolgreich gelöscht.",
-                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = GostJahrgangFachkombinationen.class)))    
+                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = GostJahrgangFachkombination.class)))    
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Regel zu der Fachkombination zu löschen.")
     @ApiResponse(responseCode = "404", description = "Die Regel zu der Fachkombination wurde nicht gefunden.")
     public Response deleteGostFachkombination(@PathParam("schema") String schema, @PathParam("id") long id, @Context HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) {
-    		return (new DataGostJahrgangFachkombinationen(conn, null /* nicht relevant */)).delete(id);
+    		return (new DataGostJahrgangFachkombinationen(conn, -1 /* nicht relevant */)).delete(id);
     	}
     }
 
 
-    /**
-     * Die OpenAPI-Methode für das Hinzufügen einer weiteren Fachkombination der Gymnasialen Oberstufe mit dem angegebenen Typ.
-     *  
-     * @param schema       das Datenbankschema, in welchem die Fachkombination erstellt wird
-     * @param typ          der Typ der Fachkombination (0: Wahl von Fach 2 ist in Kombination mit Fach 1 unzulässig, 1: Wahl von Fach 2 ist bei Wahl von Fach 1 nötig)
-     * @param request      die Informationen zur HTTP-Anfrage
-     * 
-     * @return die HTTP-Antwort mit der Schiene der Blockung der gymnasialen Oberstufe
-     */
-    @POST
-    @Path("/fachkombinationen/add/{typ : \\d+}")
-    @Operation(summary = "Fügt eine Regel zu einer Fachkombination der Gymnasialen Oberstufe hinzu.",
-               description = "Fügt eine Regel zu einer Fachkombination der Gymnasialen Oberstufe hinzu."
-    		               + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen einer solchen Fachkombination hat.")
-    @ApiResponse(responseCode = "200", description = "Die Regel zur Fachkombination bezüglich der gymnasialen Oberstufe wurde erstellt",
-                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = GostJahrgangFachkombinationen.class)))
-    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um eine Regel für eine Fachkombination hinzuzufügen.")
-    @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
-    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-    public Response addGostFachkombination(@PathParam("schema") String schema, @PathParam("typ") int typ, @Context HttpServletRequest request) {
-    	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) {
-    		return (new DataGostJahrgangFachkombinationen(conn, null)).add(typ);
-    	}
-    }
-    
     /**
      * Die OpenAPI-Methode für das Hinzufügen einer weiteren Fachkombination der Gymnasialen Oberstufe mit dem angegebenen Typ
      * bei dem angegebenen Abiturjahrgang.
@@ -1817,12 +1684,12 @@ public class APIGost {
      * @return die HTTP-Antwort mit der Schiene der Blockung der gymnasialen Oberstufe
      */
     @POST
-    @Path("/abiturjahrgang/{abiturjahr : \\d+}/fachkombinationen/add/{typ : \\d+}")
+    @Path("/abiturjahrgang/{abiturjahr : -?\\d+}/fachkombinationen/add/{typ : \\d+}")
     @Operation(summary = "Fügt eine Regel zu einer Fachkombination der Gymnasialen Oberstufe bei dem angegebenen Abiturjahrgang hinzu.",
                description = "Fügt eine Regel zu einer Fachkombination der Gymnasialen Oberstufe bei dem angegebenen Abiturjahrgang hinzu."
     		               + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen einer solchen Fachkombination hat.")
     @ApiResponse(responseCode = "200", description = "Die Regel zur Fachkombination bezüglich der gymnasialen Oberstufe wurde erstellt",
-                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = GostJahrgangFachkombinationen.class)))
+                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = GostJahrgangFachkombination.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um eine Regel für eine Fachkombination hinzuzufügen.")
     @ApiResponse(responseCode = "404", description = "Abiturjahr nicht vorhanden")
     @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")

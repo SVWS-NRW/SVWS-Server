@@ -165,7 +165,7 @@ public class DataGostJahrgangsliste extends DataManager<Integer> {
 			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
 		// Kopiere die Informationen zu nicht möglichen und geforderten Fachkombinationen aus der Vorlage
 		List<DTOGostJahrgangFachkombinationen> faecherKombis = 
-				conn.queryNamed("DTOGostJahrgangFachkombinationen.abi_jahrgang", null, DTOGostJahrgangFachkombinationen.class);
+				conn.queryNamed("DTOGostJahrgangFachkombinationen.abi_jahrgang", -1, DTOGostJahrgangFachkombinationen.class);
 		if (faecherKombis == null)
 			throw new NullPointerException();
 		if (faecherKombis.size() > 0) { 
@@ -174,7 +174,7 @@ public class DataGostJahrgangsliste extends DataManager<Integer> {
 			DTODBAutoInkremente dbNmkID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Jahrgang_Fachkombinationen");
 			long idNMK = dbNmkID == null ? 1 : dbNmkID.MaxID + 1;
 			for (DTOGostJahrgangFachkombinationen kombi : faecherKombis) {
-				DTOGostJahrgangFachkombinationen k = new DTOGostJahrgangFachkombinationen(idNMK++, 
+				DTOGostJahrgangFachkombinationen k = new DTOGostJahrgangFachkombinationen(idNMK++, abiturjahr,
 						kombi.Fach1_ID, kombi.Fach2_ID, kombi.EF1, kombi.EF2, kombi.Q11, kombi.Q12, kombi.Q21, kombi.Q22,  
 						kombi.Typ, kombi.Hinweistext);
 				k.Abi_Jahrgang = kombi.Abi_Jahrgang;

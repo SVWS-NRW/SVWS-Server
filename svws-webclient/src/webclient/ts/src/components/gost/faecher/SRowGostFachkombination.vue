@@ -15,12 +15,12 @@
 <script setup lang="ts">
 	import { computed, ComputedRef, WritableComputedRef } from "vue";
 
-	import { List, GostJahrgangFachkombinationen, GostFach, GostFaecherManager, GostKursart, GostHalbjahr } from "@svws-nrw/svws-core-ts";
+	import { List, GostJahrgangFachkombination, GostFach, GostFaecherManager, GostKursart, GostHalbjahr } from "@svws-nrw/svws-core-ts";
 	import { injectMainApp, Main } from "~/apps/Main";
 
 	const props = defineProps({
 		kombination: {
-			type: Object as () => GostJahrgangFachkombinationen,
+			type: Object as () => GostJahrgangFachkombination,
 			required: true
 		}
 	});

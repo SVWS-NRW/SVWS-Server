@@ -1,14 +1,6 @@
 import { App } from "../BaseApp";
 
-import {
-	GostFach,
-	Fachgruppe,
-	ZulaessigesFach,
-	GostJahrgang,
-	GostFaecherManager,
-	List,
-	Jahrgaenge
-} from "@svws-nrw/svws-core-ts";
+import { List, GostFach, Fachgruppe, ZulaessigesFach, GostJahrgang, GostFaecherManager, Jahrgaenge } from "@svws-nrw/svws-core-ts";
 import { BaseData } from "../BaseData";
 import { reactive } from "vue";
 
@@ -20,11 +12,8 @@ class DataGostFaecherReactiveState {
 	public faecherOhnePJKundVTF: Array<GostFach> = [];
 }
 
-export class DataGostFaecher extends BaseData<
-	List<GostFach>,
-	GostJahrgang,
-	GostFaecherManager
-> {
+export class DataGostFaecher extends BaseData<List<GostFach>, GostJahrgang, GostFaecherManager> {
+
 	protected _data = reactive(new DataGostFaecherReactiveState());
 
 	get faecherOhnePJKundVTF(): Array<GostFach> {
@@ -32,24 +21,26 @@ export class DataGostFaecher extends BaseData<
 	}
 
 	protected on_update(daten: Partial<GostFach>, id?: number): void {
-		if (!this._daten) return;
-		if (!this.selected_list_item || !id) return;
+		if (!this._daten) 
+			return;
+		if (!this.selected_list_item || !id)
+			return;
 		let fach: GostFach | undefined = undefined;
 		for (const f of this._daten) {
 			if (!this.istVertiefungsOderProjektkursfach(f))
 				this._data.faecherOhnePJKundVTF.push(f);
-			if (f.id === id) fach = f;
+			if (f.id === id) 
+				fach = f;
 		}
 		// const fach = this._daten.find(f => f.id === id);
-		if (!fach) return;
+		if (!fach)
+			return;
 		if (daten.projektKursLeitfach1ID) {
 			// Aktualisiere bei den Projektkursen auch das Kürzel für die Ansicht!
 			if (!daten.projektKursLeitfach1ID) {
 				fach["projektKursLeitfach1Kuerzel"] = "";
 			} else {
-				const leitfach = this._data.faecherOhnePJKundVTF.find(
-					f => daten.id == f.id
-				);
+				const leitfach = this._data.faecherOhnePJKundVTF.find(f => daten.id == f.id);
 				if (!leitfach) {
 					// TODO error
 				} else {
@@ -62,9 +53,7 @@ export class DataGostFaecher extends BaseData<
 			if (!daten.projektKursLeitfach2ID) {
 				fach["projektKursLeitfach2Kuerzel"] = "";
 			} else {
-				const leitfach = this._data.faecherOhnePJKundVTF.find(
-					f => daten.id == f.id
-				);
+				const leitfach = this._data.faecherOhnePJKundVTF.find(f => daten.id == f.id);
 				if (!leitfach) {
 					// TODO error
 				} else {
@@ -83,10 +72,9 @@ export class DataGostFaecher extends BaseData<
 	 *   Projektkursfach handelt, ansonsten false //--helfer TODO
 	 */
 	public istVertiefungsOderProjektkursfach(fach: GostFach): boolean {
-		if (!fach.kuerzel) return false;
-		const fg = ZulaessigesFach.getByKuerzelASD(
-			fach.kuerzel
-		).getFachgruppe();
+		if (!fach.kuerzel) 
+			return false;
+		const fg = ZulaessigesFach.getByKuerzelASD(fach.kuerzel).getFachgruppe();
 		return fg == Fachgruppe.FG_VX || fg == Fachgruppe.FG_PX;
 	}
 
@@ -98,13 +86,8 @@ export class DataGostFaecher extends BaseData<
 	 */
 	public async on_select(): Promise<List<GostFach> | undefined> {
 		const getter = (eintrag: GostJahrgang | undefined) => {
-			const abiturjahr = eintrag?.abiturjahr;
-			return abiturjahr
-				? App.api.getGostAbiturjahrgangFaecher(
-						App.schema,
-						abiturjahr.valueOf()
-				  )
-				: App.api.getGostFaecher(App.schema);
+			const abiturjahr = eintrag?.abiturjahr || -1;
+			return App.api.getGostAbiturjahrgangFaecher(App.schema, abiturjahr.valueOf());
 		};
 		const res = await super._select(getter);
 		const daten = this._daten;
@@ -130,26 +113,11 @@ export class DataGostFaecher extends BaseData<
 	 * @param {Partial<GostFach>} data Die Daten, die aktualisiert werden sollen
 	 * @returns {Promise<boolean>} True, wenn die Daten aktualisiert wurden, sonst false
 	 */
-	public async patch(
-		data: Partial<GostFach>,
-		fach: GostFach,
-		abiturjahr?: number
-	): Promise<boolean> {
+	public async patch(data: Partial<GostFach>, fach: GostFach, abiturjahr?: number): Promise<boolean> {
 		const daten = this._daten;
-		if (!daten) return false;
-		return this._patchElement(
-			data,
-			abiturjahr
-				? () =>
-						App.api.patchGostAbiturjahrgangFach(
-							data,
-							App.schema,
-							abiturjahr,
-							fach.id
-						)
-				: () => App.api.patchGostFach(data, App.schema, fach.id),
-			daten.indexOf(fach)
-		);
+		if ((!daten) || (abiturjahr === undefined))
+			return false;
+		return this._patchElement(data, () => App.api.patchGostAbiturjahrgangFach(data, App.schema, abiturjahr, fach.id), daten.indexOf(fach));
 	}
 
 	/**
@@ -164,9 +132,7 @@ export class DataGostFaecher extends BaseData<
 
 	public ist_PJK(fach: GostFach): boolean {
 		if (!fach.kuerzel) return false;
-		const fg = ZulaessigesFach.getByKuerzelASD(
-			fach.kuerzel
-		).getFachgruppe();
+		const fg = ZulaessigesFach.getByKuerzelASD(fach.kuerzel).getFachgruppe();
 		return fg === Fachgruppe.FG_PX;
 	}
 

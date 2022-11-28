@@ -1,17 +1,10 @@
 import { App } from "../BaseApp";
 
-import {
-	GostJahrgang,
-	GostStatistikFachwahl,
-	List,
-	ZulaessigesFach
-} from "@svws-nrw/svws-core-ts";
+import { List, GostJahrgang, GostStatistikFachwahl, ZulaessigesFach } from "@svws-nrw/svws-core-ts";
 import { BaseData } from "../BaseData";
 
-export class DataGostSchuelerFachwahlen extends BaseData<
-	List<GostStatistikFachwahl>,
-	GostJahrgang
-> {
+export class DataGostSchuelerFachwahlen extends BaseData<List<GostStatistikFachwahl>, GostJahrgang> {
+
 	protected on_update(daten: Partial<GostStatistikFachwahl>): void {
 		return void daten;
 	}
@@ -33,12 +26,10 @@ export class DataGostSchuelerFachwahlen extends BaseData<
 	 * @returns {Promise<List<GostStatistikFachwahl>>} Die Daten als Promise
 	 */
 	public async on_select(): Promise<List<GostStatistikFachwahl> | undefined> {
-		if (!this.selected_list_item?.abiturjahr) return super.unselect();
+		if ((!this.selected_list_item?.abiturjahr) || (this.selected_list_item?.abiturjahr == -1))
+			return super.unselect();
 		return super._select((eintrag: GostJahrgang) =>
-			App.api.getGostAbiturjahrgangFachwahlstatistik(
-				App.schema,
-				eintrag.abiturjahr?.valueOf() || -1
-			)
+			App.api.getGostAbiturjahrgangFachwahlstatistik(App.schema, eintrag.abiturjahr?.valueOf() || -1)
 		);
 	}
 
@@ -55,4 +46,5 @@ export class DataGostSchuelerFachwahlen extends BaseData<
 	public async patch(data: Partial<GostStatistikFachwahl>): Promise<boolean> {
 		return !!data;
 	}
+
 }

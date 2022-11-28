@@ -20,11 +20,20 @@ public class Revision4Updates extends SchemaRevisionUpdateSQL {
 	}
 
 	private void updateFachkombinationen() {
+		// Erzeuge einen Default-Eintrag für die Vorlage von Abiturjahrgängen
+		add("Erzeuge einen Default-Eintrag für die Vorlage von Abiturjahrgängen",
+				"""
+				INSERT INTO Gost_Jahrgangsdaten(Abi_Jahrgang,ZusatzkursGEVorhanden,ZusatzkursGEErstesHalbjahr,ZusatzkursSWVorhanden,ZusatzkursSWErstesHalbjahr,TextBeratungsbogen,TextMailversand)
+				VALUES (-1,true,'Q2.1',true,'Q2.1','','')
+				""", Schema.tab_Gost_Jahrgangsdaten
+		);
+		
 		// Übertrage die Daten aus der Tabelle NichtMoeglAbiFachKombi in die Tabelle Gost_Jahrgang_Fachkombinationen (zuerst eine Richtung der Regel)
 		add("Übertrage Regeln aus NichtMoeglAbiFachKombi nach Gost_Jahrgang_Fachkombinationen (Richtung 1)", 
 			"""
-			INSERT INTO Gost_Jahrgang_Fachkombinationen(Fach1_ID,Fach2_ID,Kursart1,Kursart2,EF1,EF2,Q11,Q12,Q21,Q22,Typ,Hinweistext)
+			INSERT INTO Gost_Jahrgang_Fachkombinationen(Abi_Jahrgang,Fach1_ID,Fach2_ID,Kursart1,Kursart2,EF1,EF2,Q11,Q12,Q21,Q22,Typ,Hinweistext)
 			SELECT 
+			  -1,
 			  nmk.Fach1_ID, 
 			  nmk.Fach2_ID, 
 			  nmk.Kursart1, 
@@ -52,8 +61,9 @@ public class Revision4Updates extends SchemaRevisionUpdateSQL {
 		// Übertrage die Daten aus der Tabelle NichtMoeglAbiFachKombi in die Tabelle Gost_Jahrgang_Fachkombinationen (dann die andere Richtung der Regel)
 		add("Übertrage Regeln aus NichtMoeglAbiFachKombi nach Gost_Jahrgang_Fachkombinationen (Richtung 2)",
 				"""
-				INSERT INTO Gost_Jahrgang_Fachkombinationen(Fach1_ID,Fach2_ID,Kursart1,Kursart2,EF1,EF2,Q11,Q12,Q21,Q22,Typ,Hinweistext)
+				INSERT INTO Gost_Jahrgang_Fachkombinationen(Abi_Jahrgang,Fach1_ID,Fach2_ID,Kursart1,Kursart2,EF1,EF2,Q11,Q12,Q21,Q22,Typ,Hinweistext)
 				SELECT 
+				  -1,
 				  nmk.Fach2_ID, 
 				  nmk.Fach1_ID, 
 				  nmk.Kursart2, 
