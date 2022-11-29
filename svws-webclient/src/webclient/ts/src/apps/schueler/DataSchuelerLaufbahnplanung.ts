@@ -9,6 +9,7 @@ import { List, Vector, GostHalbjahr, GostKursart, Jahrgaenge, Fachgruppe, Schulg
 import { BaseData } from "../BaseData";
 import { reactive } from "vue";
 import { mainApp } from "../Main";
+import { Gost } from "../gost/Gost";
 
 
 /** Signatur für die Sprachbelegungen */
@@ -691,6 +692,20 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 					wahl.Q21 = null;
 					wahl.Q22 = null;
 				}
+				if (GostFachbereich.SOZIALWISSENSCHAFTEN.hat(row) && (App.apps.gost.dataJahrgang.daten?.hatZusatzkursSW)) {
+					const beginn : GostHalbjahr | null = GostHalbjahr.fromKuerzel(App.apps.gost.dataJahrgang.daten.beginnZusatzkursSW);
+					if ((beginn !== null) && (beginn === GostHalbjahr.Q11) && (wahl.EF2 === null)) {
+						wahl.Q11 = "ZK";
+						wahl.Q12 = "ZK";
+					}
+				}
+				if (GostFachbereich.GESCHICHTE.hat(row) && App.apps.gost.dataJahrgang.daten?.hatZusatzkursGE) {
+					const beginn : GostHalbjahr | null = GostHalbjahr.fromKuerzel(App.apps.gost.dataJahrgang.daten.beginnZusatzkursGE);
+					if ((beginn !== null) && (beginn === GostHalbjahr.Q11) && (wahl.EF2 === null)) {
+						wahl.Q11 = "ZK";
+						wahl.Q12 = "ZK";
+					}
+				}
 				break;
 			case "M":
 				if (row.istMoeglichQ12 && !this.ist_VTF(row))
@@ -709,6 +724,13 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 					if (row.istMoeglichQ22) 
 						wahl.Q22 = "M";
 				}
+				break;
+			case "ZK":
+				const beginn : GostHalbjahr | null = (GostFachbereich.SOZIALWISSENSCHAFTEN.hat(row))
+					? GostHalbjahr.fromKuerzel(App.apps.gost.dataJahrgang.daten?.beginnZusatzkursSW || "")
+					: GostHalbjahr.fromKuerzel(App.apps.gost.dataJahrgang.daten?.beginnZusatzkursGE || "");
+				wahl.Q11 = null;
+				wahl.Q12 = null;
 				break;
 			case "LK":
 				wahl.Q12 = row.istMoeglichQ12 ? wahl.Q11 : null;
@@ -750,12 +772,42 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 					wahl.Q21 = "M";
 					wahl.Q22 = null;
 				}
+				if (GostFachbereich.SOZIALWISSENSCHAFTEN.hat(row) && (App.apps.gost.dataJahrgang.daten?.hatZusatzkursSW)) {
+					const beginn : GostHalbjahr | null = GostHalbjahr.fromKuerzel(App.apps.gost.dataJahrgang.daten.beginnZusatzkursSW);
+					if ((beginn !== null) && (((beginn === GostHalbjahr.Q11) && (wahl.EF2 === null)) || ((beginn === GostHalbjahr.Q12) && (wahl.Q11 === null)))) {
+						if (beginn === GostHalbjahr.Q11)
+							wahl.Q11 = "ZK";
+						wahl.Q12 = "ZK";
+						if (beginn === GostHalbjahr.Q12)
+							wahl.Q21 = "ZK";
+					}
+				}
+				if (GostFachbereich.GESCHICHTE.hat(row) && App.apps.gost.dataJahrgang.daten?.hatZusatzkursGE) {
+					const beginn : GostHalbjahr | null = GostHalbjahr.fromKuerzel(App.apps.gost.dataJahrgang.daten.beginnZusatzkursGE);
+					if ((beginn !== null) && (((beginn === GostHalbjahr.Q11) && (wahl.EF2 === null)) || ((beginn === GostHalbjahr.Q12) && (wahl.Q11 === null)))) {
+						if (beginn === GostHalbjahr.Q11)
+							wahl.Q11 = "ZK";
+						wahl.Q12 = "ZK";
+						if (beginn === GostHalbjahr.Q12)
+							wahl.Q21 = "ZK";
+					}
+				}
 				break;
 			case "M":
 				wahl.Q12 = ist_PJK_VTF ? null : "S";
 				break;
 			case "S":
 				wahl.Q12 = wahl.Q11 === "LK" ? "LK" : null;
+				break;
+			case "ZK":
+				const beginn : GostHalbjahr | null = (GostFachbereich.SOZIALWISSENSCHAFTEN.hat(row))
+					? GostHalbjahr.fromKuerzel(App.apps.gost.dataJahrgang.daten?.beginnZusatzkursSW || "")
+					: GostHalbjahr.fromKuerzel(App.apps.gost.dataJahrgang.daten?.beginnZusatzkursGE || "");
+				if ((beginn !== null) && (beginn === GostHalbjahr.Q11))
+					wahl.Q11 = null;
+				wahl.Q12 = null;
+				if ((beginn !== null) && (beginn === GostHalbjahr.Q12))
+					wahl.Q21 = null;
 				break;
 			// TODO: Warum ist das so? Bis Q22. Was ist erlaubt: M, S, null?
 			case "LK":
@@ -798,9 +850,25 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 				if (this.ist_PJK(row) && wahl.Q12 === null && row.istMoeglichQ22) {
 					wahl.Q22 = "M";
 				}
-				if ((GostFachbereich.SOZIALWISSENSCHAFTEN.hat(row) || GostFachbereich.GESCHICHTE.hat(row)) && (wahl.Q12 === null)) {
-					wahl.Q21 = "ZK";
-					wahl.Q22 = row.istMoeglichQ22 ? "ZK" : null;
+				if (GostFachbereich.SOZIALWISSENSCHAFTEN.hat(row) && (App.apps.gost.dataJahrgang.daten?.hatZusatzkursSW)) {
+					const beginn : GostHalbjahr | null = GostHalbjahr.fromKuerzel(App.apps.gost.dataJahrgang.daten.beginnZusatzkursSW);
+					if ((beginn !== null) && (((beginn === GostHalbjahr.Q12) && (wahl.Q11 === null)) || ((beginn === GostHalbjahr.Q21) && (wahl.Q12 === null)))) {
+						if (beginn === GostHalbjahr.Q12)
+							wahl.Q12 = "ZK";
+						wahl.Q21 = "ZK";
+						if (beginn === GostHalbjahr.Q21)
+							wahl.Q22 = "ZK";
+					}
+				}
+				if (GostFachbereich.GESCHICHTE.hat(row) && App.apps.gost.dataJahrgang.daten?.hatZusatzkursGE) {
+					const beginn : GostHalbjahr | null = GostHalbjahr.fromKuerzel(App.apps.gost.dataJahrgang.daten.beginnZusatzkursGE);
+					if ((beginn !== null) && (((beginn === GostHalbjahr.Q12) && (wahl.Q11 === null)) || ((beginn === GostHalbjahr.Q21) && (wahl.Q12 === null)))) {
+						if (beginn === GostHalbjahr.Q12)
+							wahl.Q12 = "ZK";
+						wahl.Q21 = "ZK";
+						if (beginn === GostHalbjahr.Q21)
+							wahl.Q22 = "ZK";
+					}
 				}
 				break;
 			case "M":
@@ -810,8 +878,14 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 				wahl.Q21 = wahl.Q12 === "LK" ? "LK" : null;
 				break;
 			case "ZK":
+				const beginn : GostHalbjahr | null = (GostFachbereich.SOZIALWISSENSCHAFTEN.hat(row))
+					? GostHalbjahr.fromKuerzel(App.apps.gost.dataJahrgang.daten?.beginnZusatzkursSW || "")
+					: GostHalbjahr.fromKuerzel(App.apps.gost.dataJahrgang.daten?.beginnZusatzkursGE || "");
+				if ((beginn !== null) && (beginn === GostHalbjahr.Q12))
+					wahl.Q12 = null;
 				wahl.Q21 = null;
-				wahl.Q22 = null;
+				if ((beginn !== null) && (beginn === GostHalbjahr.Q21))
+					wahl.Q22 = null;
 				break;
 			case "LK":
 				wahl.Q21 = null;
@@ -849,10 +923,19 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 		switch (wahl.Q22) {
 			case null:
 				wahl.Q22 = "M";
-				if ((GostFachbereich.SOZIALWISSENSCHAFTEN.hat(row) || GostFachbereich.GESCHICHTE.hat(row)) && (wahl.Q12 === null)) {
-					if (wahl.Q21 === null) 
+				if (GostFachbereich.SOZIALWISSENSCHAFTEN.hat(row) && (App.apps.gost.dataJahrgang.daten?.hatZusatzkursSW)) {
+					const beginn : GostHalbjahr | null = GostHalbjahr.fromKuerzel(App.apps.gost.dataJahrgang.daten.beginnZusatzkursSW);
+					if ((beginn !== null) && (beginn === GostHalbjahr.Q21) && (wahl.Q12 === null)) {
 						wahl.Q21 = "ZK";
-					wahl.Q22 = "ZK";
+						wahl.Q22 = "ZK";
+					}
+				}
+				if (GostFachbereich.GESCHICHTE.hat(row) && App.apps.gost.dataJahrgang.daten?.hatZusatzkursGE) {
+					const beginn : GostHalbjahr | null = GostHalbjahr.fromKuerzel(App.apps.gost.dataJahrgang.daten.beginnZusatzkursGE);
+					if ((beginn !== null) && (beginn === GostHalbjahr.Q21) && (wahl.Q12 === null)) {
+						wahl.Q21 = "ZK";
+						wahl.Q22 = "ZK";
+					}
 				}
 				break;
 			case "M":
@@ -862,7 +945,13 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 				wahl.Q22 = wahl.Q21 === "LK" ? "LK" : null;
 				break;
 			case "ZK":
-				wahl.Q22 = null;
+					const beginn : GostHalbjahr | null = (GostFachbereich.SOZIALWISSENSCHAFTEN.hat(row))
+						? GostHalbjahr.fromKuerzel(App.apps.gost.dataJahrgang.daten?.beginnZusatzkursSW || "")
+						: GostHalbjahr.fromKuerzel(App.apps.gost.dataJahrgang.daten?.beginnZusatzkursGE || "");
+					if ((beginn !== null) && (beginn === GostHalbjahr.Q21)) {
+						wahl.Q21 = null;
+					}
+					wahl.Q22 = null;
 				break;
 			case "LK":
 				wahl.Q22 = null;
