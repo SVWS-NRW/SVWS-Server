@@ -1,41 +1,26 @@
 <template>
-	<tr
-		class="px-2 text-left"
-		:style="{ 'background-color': bgColor }"
-		>
+	<tr class="px-2 text-left" :style="{ 'background-color': bgColor }" >
 		<td class="border border-[#7f7f7f]/20 px-2 whitespace-nowrap" :class="{'border-t-2': kursdifferenz}">
 			<div class="flex gap-1">
 				<template v-if=" kurs === edit_name ">
 					{{ fachKuerzel }}-{{ art.kuerzel }}{{ kurs.nummer }}-
-					<svws-ui-text-input
-						v-model="suffix"
-						focus headless
-						style="width: 2rem"
-						@blur="edit_name=undefined"
-						@keyup.enter="edit_name=undefined"
-					/>
+					<svws-ui-text-input v-model="suffix" focus headless style="width: 2rem" @blur="edit_name=undefined" @keyup.enter="edit_name=undefined" />
 				</template>
 				<template v-else>
 					<span class="underline decoration-dashed underline-offset-2 cursor-text" @click="edit_name = kurs">
-						{{ fachKuerzel }}-{{ art.kuerzel }}{{ kurs.nummer }}{{ kurs.suffix ? "-"+kurs.suffix : "" }}
-					</span>
+						{{ fachKuerzel }}-{{ art.kuerzel }}{{ kurs.nummer }}{{ kurs.suffix ? "-"+kurs.suffix : "" }} </span>
 				</template>
 			</div>
 		</td>
 		<td class="border border-[#7f7f7f]/20 text-center" :class="{'border-t-2': kursdifferenz}">
-			<svws-ui-checkbox v-model="koop"></svws-ui-checkbox>
-		</td>
+			<svws-ui-checkbox v-model="koop"></svws-ui-checkbox> </td>
 		<template v-if="setze_kursdifferenz && kurs_blockungsergebnis">
-			<td 
-			  class="border border-[#7f7f7f]/20 text-center border-t-2"
-				:rowspan="kursdifferenz[0]"
-			>{{kursdifferenz[1]}}</td>
+			<td class="border border-[#7f7f7f]/20 text-center border-t-2" :rowspan="kursdifferenz[0]" >
+				{{kursdifferenz[1]}}</td>
 		</template>
 		<template v-if="!kurs_blockungsergebnis">
-			<td></td>
-		</template>
-		<drop-data
-			v-if="allow_regeln"
+			<td></td> </template>
+		<drop-data v-if="allow_regeln"
 			v-for="(schiene) in schienen"
 			:key="schiene.id"
 			class="border border-[#7f7f7f]/20 text-center"
@@ -43,8 +28,7 @@
 			tag="td"
 			@drop="drop_aendere_kursschiene($event, schiene.id)"
 			>
-			<drag-data
-				v-if="kurs_schiene_zugeordnet(schiene)"
+			<drag-data v-if="kurs_schiene_zugeordnet(schiene)"
 				:key="kurs.id"
 				tag="div"
 				:data="{kurs, schiene}"
@@ -59,8 +43,7 @@
 					{{ kurs_blockungsergebnis?.schueler.size() }}
 					<svws-ui-icon class="cursor-pointer" @click="fixieren_regel_toggle" >
 						<i-ri-pushpin-fill v-if="fixier_regeln.length" class="inline-block"/>
-						<i-ri-pushpin-line v-else class="inline-block"/>
-					</svws-ui-icon>
+						<i-ri-pushpin-line v-else class="inline-block"/> </svws-ui-icon>
 				</svws-ui-badge>
 			</drag-data>
 			<template v-else>
@@ -72,25 +55,18 @@
 		</drop-data>
 		<!-- Es dürfen keine Regeln erstellt werden -->
 		<template v-else v-for="schiene in schienen" :key="schiene.nummer">
-			<td 
-				class="border border-[#7f7f7f]/20 text-center"
-				:class="{ 'border-t-2': kursdifferenz }"
-			>
+			<td class="border border-[#7f7f7f]/20 text-center" :class="{ 'border-t-2': kursdifferenz }" >
 				<svws-ui-badge
 					v-if="kurs_schiene_zugeordnet(schiene)"
 					size="tiny" :variant="selected_kurs?'primary':'highlight'" class="cursor-pointer"
 					@click="toggle_active_kurs">
-					{{ kurs_blockungsergebnis?.schueler.size() }}
-				</svws-ui-badge>
+					{{ kurs_blockungsergebnis?.schueler.size() }} </svws-ui-badge>
 			</td>
 		</template>
 		<template v-if="setze_kursdifferenz && kurs_blockungsergebnis && allow_regeln">
-			<td
-				class="border border-[#7f7f7f]/20 text-center border-t-2 whitespace-nowrap w-2"
-				:rowspan="kursdifferenz[0]" :colspan="kurszahl_anzeige?2:1"
-				@click="toggle_kurszahl_anzeige">
-				<div
-					v-if="kurszahl_anzeige"
+			<td class="border border-[#7f7f7f]/20 text-center border-t-2 whitespace-nowrap w-2"
+				:rowspan="kursdifferenz[0]" :colspan="kurszahl_anzeige?2:1" @click="toggle_kurszahl_anzeige">
+				<div v-if="kurszahl_anzeige"
 					class="cursor-pointer rounded-lg bg-slate-100 px-2">
 					<span @click="del_kurs">-</span>
 					<span class="px-2">{{kursdifferenz[2]}}</span>
@@ -125,12 +101,7 @@ import { computed, ComputedRef, Ref, ref, WritableComputedRef } from "vue";
 
 import { injectMainApp, Main } from "~/apps/Main";
 
-const props = defineProps({
-	kurs: {
-		type: Object as () => GostBlockungKurs,
-		required: true
-	}
-});
+const props = defineProps({ kurs: { type: Object as () => GostBlockungKurs, required: true } });
 
 const art = GostKursart.fromID(props.kurs.kursart)
 
@@ -174,6 +145,7 @@ const koop: WritableComputedRef<boolean> =
 		kurs.istKoopKurs = Boolean(value);
 		app.dataKursblockung.patch_kurs(kurs);
 	}});
+
 const suffix: WritableComputedRef<string> =
 	computed({
 	get(): string {
@@ -185,6 +157,7 @@ const suffix: WritableComputedRef<string> =
 		kurs.suffix = String(value);
 		app.dataKursblockung.patch_kurs(kurs);
 	}});
+
 const manager: ComputedRef<GostBlockungsergebnisManager | undefined> =
 	computed(()=> app.dataKursblockung.manager_container.manager ? app.dataKursblockung.ergebnismanager : undefined);
 
@@ -255,6 +228,7 @@ function drag_started(e: DragEvent) {
 	drag_data.value.kurs = data.kurs;
 	drag_data.value.schiene = data.schiene;
 }
+
 function drag_ended() {
 	drag_data.value.kurs = undefined;
 	drag_data.value.schiene = undefined;

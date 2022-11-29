@@ -2,27 +2,15 @@
 	<drag-data
 		:key="kurs.id"
 		tag="td"
-		:data="{
-			id: kurs.id,
-			fachID: kurs.fachID,
-			kursart: kurs.kursart?.valueOf()
-		}"
+		:data="{ id: kurs.id, fachID: kurs.fachID, kursart: kurs.kursart?.valueOf() }"
 		class="select-none"
-		:class="{
-			'cursor-move border-2 border-green-700': is_draggable,
-			'bg-yellow-200': is_drop_zone
-		}"
+		:class="{ 'cursor-move border-2 border-green-700': is_draggable, 'bg-yellow-200': is_drop_zone }"
 		:draggable="is_draggable"
-		:style="{
-			'background-color': bgColor
-		}"
+		:style="{ 'background-color': bgColor }"
 		@drag-start="drag_started"
 		@drag-end="drag_ended"
 	>
-		<drop-data
-			@drop="drop_aendere_kurszuordnung($event, kurs.id)"
-			v-slot="{active}"
-		>
+		<drop-data @drop="drop_aendere_kurszuordnung($event, kurs.id)" v-slot="{active}" >
 			<span :class="{'bg-red-400': active && is_drop_zone}">{{ kurs_name }}</span>
 			<span v-if="is_draggable && allow_regeln">
 					<svws-ui-icon class="cursor-pointer" @click="verbieten_regel_toggle" >
@@ -34,8 +22,7 @@
 						<i-ri-pushpin-line  v-if="!verbieten_regel && !fixier_regel" class="inline-block"/>
 					</svws-ui-icon>
 			</span>
-			<br />{{ kurs.schueler.size() }} -
-			{{ kurs_original?.id }}/{{ kurs.id }}
+			<br />{{ kurs.schueler.size() }}
 		</drop-data>
 	</drag-data>
 </template>
@@ -52,7 +39,7 @@
 		Vector,
 		ZulaessigesFach
 	} from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, WritableComputedRef, ref } from "vue";
+	import { computed, ComputedRef, WritableComputedRef } from "vue";
 
 	import { injectMainApp, Main } from "~/apps/Main";
 

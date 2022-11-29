@@ -1,290 +1,237 @@
 <template>
-	<td
-		class="border border-[#7f7f7f]/20 px-2 text-left"
-		:style="{
-			'background-color': bgColor
-		}"
-	>
-		{{ fach.kuerzelAnzeige }}
-	</td>
-	<td
-		class="border border-[#7f7f7f]/20 text-left"
-		:style="{
-			'background-color': bgColor
-		}"
-	>
-		{{ fach.bezeichnung }}
-	</td>
-	<td
-		class="border border-[#7f7f7f]/20 text-center"
-		:style="{
-			'background-color': bgColor
-		}"
-	>
-		{{ fach.wochenstundenQualifikationsphase }}
-	</td>
-	<td
-		:class="[
-			'text-center',
-			{ 'border border-[#7f7f7f]/20': bgColorIfLanguage !== '#7f7f7f' }
-		]"
-		:style="{
-			'background-color': bgColorIfLanguage
-		}"
-	>
-		{{ bgColorIfLanguage === "gray" ? "" : sprachenfolgeNr || "" }}
-	</td>
-	<td
-		:class="[
-			'text-center',
-			{ 'border border-[#7f7f7f]/20': bgColorIfLanguage !== '#7f7f7f' }
-		]"
-		:style="{
-			'background-color': bgColorIfLanguage
-		}"
-	>
-		{{ sprachenfolgeJahrgang }}
-	</td>
-	<td
-		:class="[
-			'w-12 text-center',
-			{
+	<td class="border border-[#7f7f7f]/20 px-2 text-left" :style="{ 'background-color': bgColor }" >
+		{{ fach.kuerzelAnzeige }}</td>
+	<td class="border border-[#7f7f7f]/20 text-left" :style="{ 'background-color': bgColor }" >
+		{{ fach.bezeichnung }} </td>
+	<td class="border border-[#7f7f7f]/20 text-center" :style="{ 'background-color': bgColor }" >
+		{{ fach.wochenstundenQualifikationsphase }} </td>
+	<td :class="[ 'text-center', { 'border border-[#7f7f7f]/20': bgColorIfLanguage !== '#7f7f7f' } ]" :style="{ 'background-color': bgColorIfLanguage }" >
+		{{ bgColorIfLanguage === "gray" ? "" : sprachenfolgeNr || "" }} </td>
+	<td :class="[ 'text-center', { 'border border-[#7f7f7f]/20': bgColorIfLanguage !== '#7f7f7f' } ]" :style="{ 'background-color': bgColorIfLanguage }" >
+		{{ sprachenfolgeJahrgang }} </td>
+	<td :class="[ 'w-12 text-center', {
 				'cursor-pointer border': ef1_moeglich && !bewertet[0],
 				'border-[#7f7f7f]/20': ef1_moeglich,
-				'cursor-not-allowed': !ef1_moeglich || bewertet[0]
-			}
-		]"
-		:style="{
-			'background-color': ef1_moeglich
-				? bgColor + (bewertet[0] ? '80' : '')
-				: 'gray'
-		}"
-		@click="() => ef1_set()"
-	>
-		{{ wahlen[0] }}
-	</td>
-	<td
-		:class="[
-			'w-12 text-center',
-			{
+				'cursor-not-allowed': !ef1_moeglich || bewertet[0] } ]"
+			:style="{ 'background-color': ef1_moeglich ? bgColor + (bewertet[0] ? '80' : '') : 'gray' }" @click="() => ef1_set()" >
+		{{ wahlen[0] }} </td>
+	<td :class="[ 'w-12 text-center', {
 				'cursor-pointer border': ef2_moeglich && !bewertet[1],
 				'border-[#7f7f7f]/20': ef2_moeglich,
-				'cursor-not-allowed': !ef2_moeglich || bewertet[1]
-			}
-		]"
-		:style="{
-			'background-color': ef2_moeglich
-				? bgColor + (bewertet[1] ? '80' : '')
-				: 'gray'
-		}"
-		@click="() => ef2_set()"
-	>
-		{{ wahlen[1] }}
-	</td>
-	<td
-		:class="[
-			'w-12 text-center',
-			{
+				'cursor-not-allowed': !ef2_moeglich || bewertet[1] } ]"
+			:style="{ 'background-color': ef2_moeglich ? bgColor + (bewertet[1] ? '80' : '') : 'gray' }" @click="() => ef2_set()" >
+		{{ wahlen[1] }} </td>
+	<td :class="[ 'w-12 text-center', {
 				'cursor-pointer border': q11_moeglich && !bewertet[2],
 				'border-[#7f7f7f]/20': q11_moeglich,
-				'cursor-not-allowed': !q11_moeglich || bewertet[2]
-			}
-		]"
-		:style="{
-			'background-color': q11_moeglich
-				? bgColor + (bewertet[2] ? '80' : '')
-				: 'gray'
-		}"
-		@click="() => q11_set()"
-	>
-		{{ wahlen[2] }}
-	</td>
-	<td
-		:class="[
-			'w-12 text-center',
-			{
+				'cursor-not-allowed': !q11_moeglich || bewertet[2] } ]"
+			:style="{ 'background-color': q11_moeglich ? bgColor + (bewertet[2] ? '80' : '') : 'gray' }" @click="() => q11_set()" >
+		{{ wahlen[2] }} </td>
+	<td :class="[ 'w-12 text-center', {
 				'cursor-pointer border': q12_moeglich && !bewertet[3],
 				'border-[#7f7f7f]/20': q12_moeglich,
-				'cursor-not-allowed': !q12_moeglich || bewertet[3]
-			}
-		]"
-		:style="{
-			'background-color': q12_moeglich
-				? bgColor + (bewertet[3] ? '80' : '')
-				: 'gray'
-		}"
-		@click="() => q12_set()"
-	>
-		{{ wahlen[3] }}
-	</td>
-	<td
-		:class="[
-			'w-12 text-center',
-			{
+				'cursor-not-allowed': !q12_moeglich || bewertet[3] } ]"
+			:style="{ 'background-color': q12_moeglich ? bgColor + (bewertet[3] ? '80' : '') : 'gray' }" @click="() => q12_set()" >
+		{{ wahlen[3] }} </td>
+	<td :class="[ 'w-12 text-center', {
 				'cursor-pointer border': q21_moeglich && !bewertet[4],
 				'border-[#7f7f7f]/20': q21_moeglich,
-				'cursor-not-allowed': !q21_moeglich || bewertet[4]
-			}
-		]"
-		:style="{
-			'background-color': q21_moeglich
-				? bgColor + (bewertet[4] ? '80' : '')
-				: 'gray'
-		}"
-		@click="() => q21_set()"
-	>
-		{{ wahlen[4] }}
-	</td>
-	<td
-		:class="[
-			'w-12 text-center',
-			{
+				'cursor-not-allowed': !q21_moeglich || bewertet[4] } ]"
+			:style="{ 'background-color': q21_moeglich ? bgColor + (bewertet[4] ? '80' : '') : 'gray' }" @click="() => q21_set()" >
+		{{ wahlen[4] }} </td>
+	<td :class="[ 'w-12 text-center', {
 				'cursor-pointer border': q22_moeglich && !bewertet[5],
 				'border-[#7f7f7f]/20': q22_moeglich,
-				'cursor-not-allowed': !q22_moeglich || bewertet[5]
-			}
-		]"
-		:style="{
-			'background-color': q22_moeglich
-				? bgColor + (bewertet[5] ? '80' : '')
-				: 'gray'
-		}"
-		@click="() => q22_set()"
-	>
-		{{ wahlen[5] }}
-	</td>
-	<td
-		:class="[
-			'w-12 text-center',
-			{
+				'cursor-not-allowed': !q22_moeglich || bewertet[5] } ]"
+			:style="{ 'background-color': q22_moeglich ? bgColor + (bewertet[5] ? '80' : '') : 'gray' }" @click="() => q22_set()" >
+		{{ wahlen[5] }} </td>
+	<td :class="[ 'w-12 text-center', {
 				'cursor-pointer border': abi_moeglich && !bewertet[5],
 				'border-[#7f7f7f]/20': abi_moeglich,
-				'cursor-not-allowed': !abi_moeglich
-			}
-		]"
-		:style="{
-			'background-color': abi_moeglich
-				? bgColor + (bewertet[5] ? '80' : '')
-				: 'gray'
-		}"
-		@click="() => abi_set()"
-	>
-		{{ abi_wahl || "" }}
-	</td>
+				'cursor-not-allowed': !abi_moeglich } ]"
+			:style="{ 'background-color': abi_moeglich ? bgColor + (bewertet[5] ? '80' : '') : 'gray' }" @click="() => abi_set()" >
+		{{ abi_wahl }} </td>
 </template>
 
 <script setup lang="ts">
-	import { computed, ComputedRef, Ref, ref } from "vue";
+	import { computed, ComputedRef } from "vue";
 
-	import { GostFach } from "@svws-nrw/svws-core-ts";
+	import { GostFach, GostJahrgangFachkombination, GostLaufbahnplanungFachkombinationTyp, List, Vector } from "@svws-nrw/svws-core-ts";
 	import { injectMainApp, Main } from "~/apps/Main";
 	import { DataSchuelerLaufbahnplanung } from "~/apps/schueler/DataSchuelerLaufbahnplanung";
+	import { App } from "~/apps/BaseApp";
 
-	const props = defineProps({
-		fach: {
-			type: Object as () => GostFach,
-			required: true
-		}
-	});
+	const { fach } = defineProps({ fach: { type: Object as () => GostFach, required: true } });
 
 	const main: Main = injectMainApp();
 	const app = main.apps.schueler;
 
-	const daten: ComputedRef<DataSchuelerLaufbahnplanung> = computed(() => {
-		return app.dataGostLaufbahndaten || new DataSchuelerLaufbahnplanung();
-	});
+	const daten: ComputedRef<DataSchuelerLaufbahnplanung> =
+		computed(() => app.dataGostLaufbahndaten || new DataSchuelerLaufbahnplanung());
 
-	const id: Ref<number> = ref(props.fach.id);
+	const bewertet: ComputedRef<Array<boolean>> =
+		computed(() => daten.value.daten?.bewertetesHalbjahr || []);
 
-	const bewertet: ComputedRef<Array<boolean>> = computed(() => {
-		return daten.value.daten?.bewertetesHalbjahr || [];
-	});
+	const unbelegbarSprache: ComputedRef<boolean> =
+		computed(() => daten.value.getFallsSpracheMoeglich(fach));
 
-	const unbelegbarSprache: ComputedRef<boolean> = computed(() => {
-		return daten.value.getFallsSpracheMoeglich(props.fach);
-	});
+	const bgColor: ComputedRef<string> =
+		computed(() => daten.value.getBgColor(fach));
 
-	const bgColor: ComputedRef<string> = computed<string>(() => {
-		return daten.value.getBgColor(props.fach);
-	});
+	const bgColorIfLanguage: ComputedRef<string> =
+		computed(() => daten.value.getBgColorIfLanguage(fach));
 
-	const bgColorIfLanguage: ComputedRef<string> = computed<string>(() => {
-		return daten.value.getBgColorIfLanguage(props.fach);
-	});
+	const sprachenfolgeNr: ComputedRef<number> =
+		computed(() => daten.value.sprachenfolgeNr(fach));
 
-	const sprachenfolgeNr: ComputedRef<number> = computed<number>(() => {
-		return daten.value.sprachenfolgeNr(props.fach);
-	});
+	const sprachenfolgeJahrgang: ComputedRef<string> =
+		computed(() => daten.value.sprachenfolgeJahrgang(fach));
 
-	const sprachenfolgeJahrgang: ComputedRef<string> = computed<string>(() => {
-		return daten.value.sprachenfolgeJahrgang(props.fach);
-	});
+	const ef1_moeglich: ComputedRef<boolean> =
+		computed(() => daten.value.getEF1Moeglich(fach));
 
-	const ef1_moeglich: ComputedRef<boolean> = computed<boolean>(() => {
-		return daten.value.getEF1Moeglich(props.fach);
-	});
+	const ef2_moeglich: ComputedRef<boolean> =
+		computed(() => daten.value.getEF2Moeglich(fach));
 
-	const ef2_moeglich: ComputedRef<boolean> = computed<boolean>(() => {
-		return daten.value.getEF2Moeglich(props.fach);
-	});
+	const q11_moeglich: ComputedRef<boolean> =
+		computed(() => daten.value.getQ11Moeglich(fach));
 
-	const q11_moeglich: ComputedRef<boolean> = computed<boolean>(() => {
-		return daten.value.getQ11Moeglich(props.fach);
-	});
+	const q12_moeglich: ComputedRef<boolean> =
+		computed(() => daten.value.getQ12Moeglich(fach));
 
-	const q12_moeglich: ComputedRef<boolean> = computed<boolean>(() => {
-		return daten.value.getQ12Moeglich(props.fach);
-	});
+	const q21_moeglich: ComputedRef<boolean> =
+		computed(() => daten.value.getQ21Moeglich(fach));
 
-	const q21_moeglich: ComputedRef<boolean> = computed<boolean>(() => {
-		return daten.value.getQ21Moeglich(props.fach);
-	});
+	const q22_moeglich: ComputedRef<boolean> =
+		computed(() => daten.value.getQ22Moeglich(fach));
 
-	const q22_moeglich: ComputedRef<boolean> = computed<boolean>(() => {
-		return daten.value.getQ22Moeglich(props.fach);
-	});
+	const abi_moeglich: ComputedRef<boolean> =
+		computed(() => daten.value.getAbiMoeglich(fach));
+	
+	const wahlen: ComputedRef<string[]> =
+		computed(() => daten.value.getWahlen(fach));
 
-	const abi_moeglich: ComputedRef<boolean> = computed<boolean>(() => {
-		return daten.value.getAbiMoeglich(props.fach);
-	});
+	const abi_wahl: ComputedRef<string> =
+		computed(() => ( daten.value.gostFachbelegungen[ fach.id ]?.abiturFach?.toString() || ""));
 
-	const wahlen: ComputedRef<string[]> = computed<string[]>(() => {
-		return daten.value.getWahlen(props.fach);
-	});
+	const fachkombis: ComputedRef<List<GostJahrgangFachkombination>> =
+		computed(() => {
+			const result = new Vector<GostJahrgangFachkombination>();
+			if (App.apps.gost.dataFachkombinationen.daten)
+				for (let kombi of App.apps.gost.dataFachkombinationen.daten)
+					if (kombi.fachID2 === fach.id)
+						result.add(kombi)
+			return result;
+		});
 
-	const abi_wahl: ComputedRef<string | null> = computed<string | null>(() => {
-		return (
-			daten.value.gostFachbelegungen[
-				props.fach.id
-			]?.abiturFach?.toString() || ""
-		);
-	});
+	const fachkombi_erforderlich: ComputedRef<List<GostJahrgangFachkombination>> =
+		computed(()=> {
+			let result = new Vector<GostJahrgangFachkombination>()
+			for (const kombi of fachkombis.value)
+				if (GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH.getValue() === kombi.typ)
+					result.add(kombi);
+			return result;
+		})
 
-	function ef1_set(): void {
-		daten.value.setEF1Wahl(props.fach);
-	}
+	const fachkombi_verboten: ComputedRef<List<GostJahrgangFachkombination>> =
+		computed(()=> {
+			let result = new Vector<GostJahrgangFachkombination>()
+			for (const kombi of fachkombis.value)
+				if (GostLaufbahnplanungFachkombinationTyp.VERBOTEN.getValue() === kombi.typ)
+					result.add(kombi);
+			return result;
+		})
 
-	function ef2_set(): void {
-		daten.value.setEF2Wahl(props.fach);
-	}
+	const fachkombi_erforderlich_ef1: ComputedRef<boolean> =
+		computed(()=> {
+			if (fachkombi_erforderlich.value.size() > 0)
+				for (const kombi of fachkombi_erforderlich.value)
+					if (kombi.gueltigInHalbjahr[1]) return true;
+			return false;
+		})
+	const fachkombi_erforderlich_ef2: ComputedRef<boolean> =
+		computed(()=> {
+			if (fachkombi_erforderlich.value.size() > 0)
+				for (const kombi of fachkombi_erforderlich.value)
+					if (kombi.gueltigInHalbjahr[2]) return true;
+			return false;
+		})
+	const fachkombi_erforderlich_q11: ComputedRef<boolean> =
+		computed(()=> {
+			if (fachkombi_erforderlich.value.size() > 0)
+				for (const kombi of fachkombi_erforderlich.value)
+					if (kombi.gueltigInHalbjahr[3]) return true;
+			return false;
+		})
+	const fachkombi_erforderlich_q12: ComputedRef<boolean> =
+		computed(()=> {
+			if (fachkombi_erforderlich.value.size() > 0)
+				for (const kombi of fachkombi_erforderlich.value)
+					if (kombi.gueltigInHalbjahr[4]) return true;
+			return false;
+		})
+	const fachkombi_erforderlich_q21: ComputedRef<boolean> =
+		computed(()=> {
+			if (fachkombi_erforderlich.value.size() > 0)
+				for (const kombi of fachkombi_erforderlich.value)
+					if (kombi.gueltigInHalbjahr[5]) return true;
+			return false;
+		})
+	const fachkombi_erforderlich_q22: ComputedRef<boolean> =
+		computed(()=> {
+			if (fachkombi_erforderlich.value.size() > 0)
+				for (const kombi of fachkombi_erforderlich.value)
+					if (kombi.gueltigInHalbjahr[6]) return true;
+			return false;
+		})
+	const fachkombi_verboten_ef1: ComputedRef<boolean> =
+		computed(()=> {
+			if (fachkombi_verboten.value.size() > 0)
+				for (const kombi of fachkombi_verboten.value)
+					if (kombi.gueltigInHalbjahr[1]) return true;
+			return false;
+		})
+	const fachkombi_verboten_ef2: ComputedRef<boolean> =
+		computed(()=> {
+			if (fachkombi_verboten.value.size() > 0)
+				for (const kombi of fachkombi_verboten.value)
+					if (kombi.gueltigInHalbjahr[2]) return true;
+			return false;
+		})
+	const fachkombi_verboten_q11: ComputedRef<boolean> =
+		computed(()=> {
+			if (fachkombi_verboten.value.size() > 0)
+				for (const kombi of fachkombi_verboten.value)
+					if (kombi.gueltigInHalbjahr[3]) return true;
+			return false;
+		})
+	const fachkombi_verboten_q12: ComputedRef<boolean> =
+		computed(()=> {
+			if (fachkombi_verboten.value.size() > 0)
+				for (const kombi of fachkombi_verboten.value)
+					if (kombi.gueltigInHalbjahr[4]) return true;
+			return false;
+		})
+	const fachkombi_verboten_q21: ComputedRef<boolean> =
+		computed(()=> {
+			if (fachkombi_verboten.value.size() > 0)
+				for (const kombi of fachkombi_verboten.value)
+					if (kombi.gueltigInHalbjahr[5]) return true;
+			return false;
+		})
+	const fachkombi_verboten_q22: ComputedRef<boolean> =
+		computed(()=> {
+			if (fachkombi_verboten.value.size() > 0)
+				for (const kombi of fachkombi_verboten.value)
+					if (kombi.gueltigInHalbjahr[6]) return true;
+			return false;
+		})
 
-	function q11_set(): void {
-		daten.value.setQ11Wahl(props.fach);
-	}
-
-	function q12_set(): void {
-		daten.value.setQ12Wahl(props.fach);
-	}
-
-	function q21_set(): void {
-		daten.value.setQ21Wahl(props.fach);
-	}
-
-	function q22_set(): void {
-		daten.value.setQ22Wahl(props.fach);
-	}
-
-	function abi_set(): void {
-		daten.value.setAbiturWahl(props.fach);
-	}
+	function ef1_set(): void { daten.value.setEF1Wahl(fach); }
+	function ef2_set(): void { daten.value.setEF2Wahl(fach); }
+	function q11_set(): void { daten.value.setQ11Wahl(fach); }
+	function q12_set(): void { daten.value.setQ12Wahl(fach); }
+	function q21_set(): void { daten.value.setQ21Wahl(fach); }
+	function q22_set(): void { daten.value.setQ22Wahl(fach); }
+	function abi_set(): void { daten.value.setAbiturWahl(fach); }
 </script>

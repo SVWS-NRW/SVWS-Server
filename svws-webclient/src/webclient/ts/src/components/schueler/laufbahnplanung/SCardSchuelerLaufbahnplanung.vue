@@ -7,32 +7,15 @@
 						<table class="border-collapse text-sm">
 							<thead :class="{'bg-slate-100': !manuell, 'bg-red-400': manuell}">
 								<tr>
-									<td class="border border-[#7f7f7f]/20 text-center" colspan="3">
-										Fach
-									</td>
-									<td class="border border-[#7f7f7f]/20 text-center" colspan="2">
-										Sprachen
-									</td>
-									<td class="border border-[#7f7f7f]/20 text-center" colspan="2">
-										EF
-									</td>
-									<td class="border border-[#7f7f7f]/20 text-center" colspan="4">
-										Qualifikationsphase
-									</td>
-									<td
-										class="border border-[#7f7f7f]/20 px-2 text-center"
-										rowspan="2"
-									>
-										Abitur<br />-fach
-									</td>
+									<td class="border border-[#7f7f7f]/20 text-center" colspan="3"> Fach </td>
+									<td class="border border-[#7f7f7f]/20 text-center" colspan="2"> Sprachen </td>
+									<td class="border border-[#7f7f7f]/20 text-center" colspan="2"> EF </td>
+									<td class="border border-[#7f7f7f]/20 text-center" colspan="4"> Qualifikationsphase </td>
+									<td class="border border-[#7f7f7f]/20 px-2 text-center" rowspan="2" > Abitur<br />-fach </td>
 								</tr>
 								<tr>
-									<td class="border border-[#7f7f7f]/20 px-2 text-center">
-										Kürzel
-									</td>
-									<td class="border border-[#7f7f7f]/20 text-center">
-										Bezeichnung
-									</td>
+									<td class="border border-[#7f7f7f]/20 px-2 text-center"> Kürzel </td>
+									<td class="border border-[#7f7f7f]/20 text-center"> Bezeichnung </td>
 									<td class="border border-[#7f7f7f]/20 text-center">WStd.</td>
 									<td class="border border-[#7f7f7f]/20 text-center">Folge</td>
 									<td class="border border-[#7f7f7f]/20 text-center">ab Jg</td>
@@ -49,10 +32,7 @@
 							</tr>
 							<thead class="bg-slate-100">
 								<tr>
-									<td
-										class="border border-[#7f7f7f]/20 text-center"
-										colspan="5"
-									></td>
+									<td class="border border-[#7f7f7f]/20 text-center" colspan="5" ></td>
 									<td class="border border-[#7f7f7f]/20 text-center">EF.1</td>
 									<td class="border border-[#7f7f7f]/20 text-center">EF.2</td>
 									<td class="border border-[#7f7f7f]/20 text-center">Q1.1</td>
@@ -63,24 +43,15 @@
 								</tr>
 							</thead>
 							<tr>
-								<td
-									class="border border-[#7f7f7f]/20 bg-slate-100 text-center"
-									colspan="5"
-								>
-									Anzahl Kurse
-								</td>
-								<td
-									v-for="(jahrgang, i) in kurszahlen"
-									:key="i"
+								<td class="border border-[#7f7f7f]/20 bg-slate-100 text-center" colspan="5" > Anzahl Kurse </td>
+								<td v-for="(jahrgang, i) in kurszahlen" :key="i"
 									class="border border-[#7f7f7f]/20 text-center"
 									:class="{
 										'bg-yellow-400': jahrgang < 10,
 										'bg-green-300': jahrgang > 9,
 										'bg-green-700': jahrgang > 11
 									}"
-								>
-									{{ jahrgang }}
-								</td>
+								> {{ jahrgang }} </td>
 								<td
 									class="border border-[#7f7f7f]/20 bg-slate-100 text-center"
 									:class="{
@@ -93,20 +64,11 @@
 											kurse_summe < 37,
 										'bg-green-700': kurse_summe > 36
 									}"
-								>
-									{{ kurse_summe }}
-								</td>
+								> {{ kurse_summe }} </td>
 							</tr>
 							<tr>
-								<td
-									class="border border-[#7f7f7f]/20 bg-slate-100 text-center"
-									colspan="5"
-								>
-									Wochenstunden
-								</td>
-								<td
-									v-for="(jahrgang, i) in wochenstunden"
-									:key="i"
+								<td class="border border-[#7f7f7f]/20 bg-slate-100 text-center" colspan="5" > Wochenstunden </td>
+								<td v-for="(jahrgang, i) in wochenstunden" :key="i"
 									class="border border-[#7f7f7f]/20 text-center"
 									:class="{
 										'bg-red-400': jahrgang < 30,
@@ -116,11 +78,8 @@
 											jahrgang > 32 && jahrgang < 37,
 										'bg-green-700': jahrgang > 36
 									}"
-								>
-									{{ jahrgang }}
-								</td>
-								<td
-									class="border border-[#7f7f7f]/20 bg-slate-100 text-center"
+								> {{ jahrgang }} </td>
+								<td class="border border-[#7f7f7f]/20 bg-slate-100 text-center"
 									:class="{
 										'bg-red-400': wst_summe < 100,
 										'bg-yellow-400':
@@ -128,19 +87,11 @@
 										'bg-green-300': wst_summe >= 102 && wst_summe <= 108,
 										'bg-green-700': wst_summe > 108
 									}"
-								>
-									{{ wst_summe }}
-								</td>
+								> {{ wst_summe }} </td>
 							</tr>
 							<tr>
-								<td
-									class="border border-[#7f7f7f]/20 bg-slate-100 text-center"
-									colspan="5"
-								>
-									Durchschnitt
-								</td>
-								<td
-									colspan="2"
+								<td class="border border-[#7f7f7f]/20 bg-slate-100 text-center" colspan="5" > Durchschnitt </td>
+								<td colspan="2"
 									class="border border-[#7f7f7f]/20 text-center"
 									:class="{
 										'bg-red-400': wst_d_ef < 34,
@@ -148,11 +99,8 @@
 											wst_d_ef >= 34 && wst_d_ef < 37,
 										'bg-green-700': wst_d_ef >= 37
 									}"
-								>
-									{{ wst_d_ef }}
-								</td>
-								<td
-									colspan="4"
+								> {{ wst_d_ef }} </td>
+								<td colspan="4"
 									class="border border-[#7f7f7f]/20 bg-slate-100 text-center"
 									:class="{
 										'bg-red-400': wst_d_q < 34,
@@ -160,19 +108,14 @@
 											wst_d_q >= 34 && wst_d_q < 37,
 										'bg-green-700': wst_d_q >= 37
 									}"
-								>
-									{{ wst_d_q }}
-								</td>
+								> {{ wst_d_q }} </td>
 								<td class="border border-[#7f7f7f]/20 bg-slate-100"></td>
 							</tr>
 						</table>
 					</div>
 					<div class="flex justify-between">
-
-						<svws-ui-button class="my-4" @click.prevent="download_file"
-						>Wahlbogen herunterladen</svws-ui-button
-					>
-					<span><svws-ui-button :type="manuell ? 'danger':'primary'" class="my-4" @click="manu">Manuellen Modus {{manuell?"de":""}}aktivieren</svws-ui-button></span>
+						<svws-ui-button class="my-4" @click.prevent="download_file" >Wahlbogen herunterladen</svws-ui-button >
+						<svws-ui-button :type="manuell ? 'danger':'primary'" class="my-4" @click="manu">Manuellen Modus {{manuell?"de":""}}aktivieren</svws-ui-button>
 					</div>
 				</div>
 			</div>
@@ -181,19 +124,13 @@
 					<div class="overflow-hidden rounded-lg shadow">
 						<table class="border-collapse text-sm">
 							<thead class="bg-slate-100">
-								<tr>
-									<td class="px-2">Belegprüfung</td>
-								</tr>
+								<tr> <td class="px-2">Belegprüfung</td> </tr>
 							</thead>
 							<tbody>
-								<tr
-									class="border border-[#7f7f7f]/20 text-left"
-								>
+								<tr class="border border-[#7f7f7f]/20 text-left" >
 									<td class="px-2">
 										<div class="flex gap-4">
-											<div
-												class="form-check form-check-inline cursor-pointer"
-											>
+											<div class="form-check form-check-inline cursor-pointer" >
 												<input
 													id="ef"
 													v-model="belegpruefungsart"
@@ -202,15 +139,9 @@
 													name="inlineRadioOptions"
 													:value="ef1"
 												/>
-												<label
-													class="form-check-label inline-block cursor-pointer"
-													for="ef"
-													>EF 1</label
-												>
+												<label class="form-check-label inline-block cursor-pointer" for="ef" >EF 1</label >
 											</div>
-											<div
-												class="form-check form-check-inline cursor-pointer"
-											>
+											<div class="form-check form-check-inline cursor-pointer" >
 												<input
 													id="gesamt"
 													v-model="belegpruefungsart"
@@ -219,11 +150,7 @@
 													name="inlineRadioOptions"
 													:value="gesamt"
 												/>
-												<label
-													class="form-check-label inline-block cursor-pointer"
-													for="gesamt"
-													>Gesamt</label
-												>
+												<label class="form-check-label inline-block cursor-pointer" for="gesamt" >Gesamt</label >
 											</div>
 										</div>
 									</td>
@@ -231,53 +158,30 @@
 							</tbody>
 							<thead class="bg-slate-100">
 								<tr>
-									<td class="px-2">
-										Laufbahnfehler
-										<svws-ui-badge
-											v-if="belegungsfehler.length"
-											variant="error"
-											size="tiny"
-										>
-											{{ belegungsfehler.length }}
+									<td class="px-2"> Laufbahnfehler
+										<svws-ui-badge v-if="belegungsfehler.size()" variant="error" size="tiny" >
+											{{ belegungsfehler.size() }}
 										</svws-ui-badge>
 									</td>
 								</tr>
 							</thead>
 							<tbody>
-								<tr
-									v-for="fehler in belegungsfehler"
-									:key="fehler.code.toString()"
-									class="border border-[#7f7f7f]/20 text-left"
-								>
-									<td
-										v-if="belegungsfehler.length"
-										class="px-2"
-									>
-										{{ fehler.beschreibung }}
-									</td>
+								<tr v-for="fehler in belegungsfehler" :key="fehler.code.toString()" class="border border-[#7f7f7f]/20 text-left" >
+									<td v-if="belegungsfehler.size()" class="px-2" > {{ fehler.beschreibung }} </td>
 								</tr>
-								<tr v-if="!belegungsfehler.length">
-									<td class="px-2">Keine</td>
-								</tr>
+								<tr v-if="!belegungsfehler.size()">
+									<td class="px-2">Keine</td> </tr>
 							</tbody>
 							<thead class="bg-slate-100">
 								<tr>
-									<td class="px-2">
-										Informationen zur Laufbahn
-									</td>
+									<td class="px-2"> Informationen zur Laufbahn </td>
 								</tr>
 							</thead>
 							<tbody>
-								<tr
-									v-for="fehler in belegungsHinweise"
-									:key="fehler.code.toString()"
-									class="border border-[#7f7f7f]/20 text-left"
-								>
-									<td class="px-2">
-										{{ fehler.beschreibung }}
-									</td>
+								<tr v-for="fehler in belegungsHinweise" :key="fehler.code.toString()" class="border border-[#7f7f7f]/20 text-left" >
+									<td class="px-2"> {{ fehler.beschreibung }} </td>
 								</tr>
-								<tr v-if="!belegungsHinweise.length">
+								<tr v-if="!belegungsHinweise.size()">
 									<td class="px-2">Keine</td>
 								</tr>
 							</tbody>
@@ -285,11 +189,7 @@
 					</div>
 				</div>
 				<div class="am:px-6 py-2 lg:px-8">
-					<svws-ui-text-input
-						v-model="inputBeratungsdatum"
-						type="date"
-						placeholder="Beratungsdatum"
-					/>
+					<svws-ui-text-input v-model="inputBeratungsdatum" type="date" placeholder="Beratungsdatum" />
 				</div>
 				<div class="am:px-6 py-2 lg:px-8">
 					<svws-ui-textarea-input placeholder="Kommentar" resizeable="vertical"></svws-ui-textarea-input>
@@ -298,7 +198,9 @@
 					<div class="overflow-hidden rounded-lg shadow">
 						<table class="border-collapse text-sm w-full">
 							<thead class="bg-slate-100">
-								<tr><td colspan="5" class="px-2">Sprachprüfungen</td></tr>
+								<tr>
+									<td colspan="5" class="px-2">Sprachprüfungen</td>
+								</tr>
 								<tr>
 									<td class="px-2">Sprache</td>
 									<td class="px-2">Typ</td>
@@ -308,15 +210,15 @@
 								</tr>
 							</thead>
 							<tbody>
-						<tr v-for="pruefung in app.dataGostLaufbahndaten?.daten?.sprachendaten.pruefungen" :key="pruefung.sprache?.valueOf()" class="border bottom-1  border-[#7f7f7f]/20">
-							<td class="px-2">{{pruefung.sprache}}</td>
-							<td class="px-2">{{pruefung.istHSUPruefung ? "HSU":''}}{{pruefung.istFeststellungspruefung ? 'SFP':''}}</td>
-							<td class="px-2">{{Sprachpruefungniveau.getByID(pruefung.anspruchsniveauId || null)?.daten.beschreibung}}</td>
-							<td class="px-2">{{pruefung.istHSUPruefung?'–':''}}{{pruefung.kannErstePflichtfremdspracheErsetzen ? 'Erste Fremdsprache':''}}{{pruefung.kannZweitePflichtfremdspracheErsetzen ? 'Zweite Fremdsprache':''}}{{pruefung.kannWahlpflichtfremdspracheErsetzen ? 'Wahlpflichtfremdsprache':''}}</td>
-							<td class="text-center">{{pruefung.note}}</td>
-						</tr>
+								<tr v-for="pruefung in app.dataGostLaufbahndaten?.daten?.sprachendaten.pruefungen" :key="pruefung.sprache?.valueOf()" class="border bottom-1  border-[#7f7f7f]/20">
+									<td class="px-2">{{pruefung.sprache}}</td>
+									<td class="px-2">{{pruefung.istHSUPruefung ? "HSU":''}}{{pruefung.istFeststellungspruefung ? 'SFP':''}}</td>
+									<td class="px-2">{{Sprachpruefungniveau.getByID(pruefung.anspruchsniveauId || null)?.daten.beschreibung}}</td>
+									<td class="px-2">{{pruefung.istHSUPruefung?'–':''}}{{pruefung.kannErstePflichtfremdspracheErsetzen ? 'Erste Fremdsprache':''}}{{pruefung.kannZweitePflichtfremdspracheErsetzen ? 'Zweite Fremdsprache':''}}{{pruefung.kannWahlpflichtfremdspracheErsetzen ? 'Wahlpflichtfremdsprache':''}}</td>
+									<td class="text-center">{{pruefung.note}}</td>
+								</tr>
 							</tbody>
-					</table>
+						</table>
 					</div>
 				</div>
 			</div>
@@ -325,15 +227,20 @@
 </template>
 
 <script setup lang="ts">
-	import { computed, ComputedRef, ref } from "vue";
+	import { computed, ComputedRef, ref, WritableComputedRef } from "vue";
 
 	import {
 		GostBelegpruefungErgebnisFehler,
 		GostBelegpruefungsArt,
 		GostBelegungsfehlerArt,
 		GostFach,
-		Sprachpruefungniveau
-	} from "@svws-nrw/svws-core-ts";
+		Sprachpruefungniveau,
+		GostLaufbahnplanungFachkombinationTyp,
+		GostFaecherManager,
+		List,
+		Vector,
+		GostJahrgangFachkombination
+		} from "@svws-nrw/svws-core-ts";
 	import { App } from "~/apps/BaseApp";
 	import { injectMainApp, Main } from "~/apps/Main";
 	import { DataSchuelerLaufbahnplanung } from "~/apps/schueler/DataSchuelerLaufbahnplanung";
@@ -345,109 +252,84 @@
 
 	const manuell = ref(false)
 
-	function manu() {manuell.value = manuell.value ? false:true; data.value.manuelle_eingabe = manuell.value}
+	const data: ComputedRef<DataSchuelerLaufbahnplanung> =
+		computed(() => app.dataGostLaufbahndaten || new DataSchuelerLaufbahnplanung());
 
-	const data: ComputedRef<DataSchuelerLaufbahnplanung> = computed(() => {
-		return app.dataGostLaufbahndaten || new DataSchuelerLaufbahnplanung();
-	});
+	const rows: ComputedRef<GostFach[]> =
+		computed(() => data.value.gostFaecher);
 
-	const id = computed<number | undefined>(() => {
-		return app.auswahl.ausgewaehlt?.id;
-	});
+	const kurszahlen: ComputedRef<number[]> =
+		computed(() => data.value.anrechenbare_kurszahlen);
 
-	const rows = computed<GostFach[]>(() => {
-		return data.value.gostFaecher;
-	});
-
-	const kurszahlen = computed<number[]>(() => {
-		return data.value.anrechenbare_kurszahlen;
-	});
-
-	const kurse_summe = computed<number>(() => {
+	const kurse_summe: ComputedRef<number> =
+		computed(() => data.value.anrechenbare_kurszahlen.reduce((p, c) => p + c, 0));
 		//TODO korrigieren
-		return data.value.anrechenbare_kurszahlen.reduce((p, c) => p + c, 0);
-	});
 
-	const wochenstunden = computed<number[]>(() => {
-		return data.value.wochenstunden;
-	});
+	const wochenstunden: ComputedRef<number[]> =
+		computed(() => data.value.wochenstunden);
 
-	const wst_summe = computed<number>(() => {
-		return wochenstunden.value.reduce((p, c) => p + c, 0) / 2;
-	});
+	const wst_summe: ComputedRef<number> =
+		computed(() => wochenstunden.value.reduce((p, c) => p + c, 0) / 2);
 
-	const wst_d_ef = computed<number>(() => {
-		return (wochenstunden.value[0] + wochenstunden.value[1]) / 2;
-	});
+	const wst_d_ef: ComputedRef<number> =
+		computed(() => (wochenstunden.value[0] + wochenstunden.value[1]) / 2);
 
-	const wst_d_q = computed<number>(() => {
-		const [e, f, ...q] = wochenstunden.value;
-		void e, f;
-		return q.reduce((p, c) => p + c, 0) / 4;
-	});
+	const wst_d_q: ComputedRef<number> =
+		computed(() => {
+			const [e, f, ...q] = wochenstunden.value;
+			void e, f;
+			return q.reduce((p, c) => p + c, 0) / 4;
+		});
 
-	const isNurEF1Selected = computed<boolean>(() => {
-		return (
-			data.value.gostAktuelleBelegpruefungsart ===
-			GostBelegpruefungsArt.EF1
-		);
-	});
+	const belegungsfehlerAlle: ComputedRef<List<GostBelegpruefungErgebnisFehler>>=
+		computed(() => data.value.gostBelegpruefungsErgebnis.fehlercodes);
 
-	const isGesamtSelected = computed<boolean>(() => {
-		return (
-			data.value.gostAktuelleBelegpruefungsart ===
-			GostBelegpruefungsArt.GESAMT
-		);
-	});
-
-	const belegungsfehlerAlle = computed<GostBelegpruefungErgebnisFehler[]>(
-		() => {
-			return data.value.gostBelegpruefungsErgebnis.fehlercodes.toArray(
-				new Array<GostBelegpruefungErgebnisFehler>()
-			);
-		}
-	);
-
-	const belegungsfehler = computed<GostBelegpruefungErgebnisFehler[]>(() => {
-		return belegungsfehlerAlle.value.filter(
-			fehler =>
-				!!fehler &&
-				(GostBelegungsfehlerArt.fromKuerzel(fehler.art) ===
+	const belegungsfehler: ComputedRef<List<GostBelegpruefungErgebnisFehler>> =
+		computed(() => {
+			let res = new Vector<GostBelegpruefungErgebnisFehler>();
+			for (const fehler of belegungsfehlerAlle.value)
+				if (!!fehler &&
+					(GostBelegungsfehlerArt.fromKuerzel(fehler.art) ===
 					GostBelegungsfehlerArt.BELEGUNG ||
 					GostBelegungsfehlerArt.fromKuerzel(fehler.art) ===
-						GostBelegungsfehlerArt.SCHRIFTLICHKEIT)
-		);
-	});
+					GostBelegungsfehlerArt.SCHRIFTLICHKEIT))
+						res.add(fehler);
+			return res;
+		});
 
-	const belegungsHinweise = computed<GostBelegpruefungErgebnisFehler[]>(
-		() => {
-			return belegungsfehlerAlle.value.filter(
-				fehler =>
-					!!fehler &&
-					GostBelegungsfehlerArt.fromKuerzel(fehler.art) ===
-						GostBelegungsfehlerArt.HINWEIS
-			);
-		}
-	);
+	const belegungsHinweise: ComputedRef<List<GostBelegpruefungErgebnisFehler>> =
+		computed(() => {
+			let res = new Vector<GostBelegpruefungErgebnisFehler>();
+			for (const fehler of belegungsfehlerAlle.value)
+				if (!!fehler && GostBelegungsfehlerArt.fromKuerzel(fehler.art) === GostBelegungsfehlerArt.HINWEIS)
+					res.add(fehler);
+			return res;
+		});
 
-	const belegpruefungsart = computed<GostBelegpruefungsArt>({
-		get(): GostBelegpruefungsArt {
-			return data.value.gostAktuelleBelegpruefungsart;
-		},
-		set(value: GostBelegpruefungsArt) {
-			data.value.gostAktuelleBelegpruefungsart = value;
-		}
-	});
+	const belegpruefungsart: WritableComputedRef<GostBelegpruefungsArt> =
+		computed({
+			get(): GostBelegpruefungsArt {
+				return data.value.gostAktuelleBelegpruefungsart;
+			},
+			set(value: GostBelegpruefungsArt) {
+				data.value.gostAktuelleBelegpruefungsart = value;
+			}
+		});
 
-	const inputBeratungsdatum = computed<string>({
-		get(): string {
-			return ""; //this.app.stammdaten.daten.geburtsdatum;
-		},
-		set(val: string) {
-			void val;
-			//this.app.stammdaten.patch({ geburtsdatum: val });
-		}
-	});
+	const inputBeratungsdatum: WritableComputedRef<string> =
+		computed({
+			get(): string {
+				return ""; //this.app.stammdaten.daten.geburtsdatum;
+			},
+			set(val: string) {
+				void val;
+				//this.app.stammdaten.patch({ geburtsdatum: val });
+			}
+		});
+
+	function manu() {
+		manuell.value = manuell.value ? false:true; data.value.manuelle_eingabe = manuell.value
+	}
 
 	function download_file() {
 		const id = app.stammdaten.daten?.id;

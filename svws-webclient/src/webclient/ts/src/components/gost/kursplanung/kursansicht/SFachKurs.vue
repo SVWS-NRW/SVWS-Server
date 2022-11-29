@@ -3,14 +3,11 @@
 		<tr v-for="kursart in GostKursart.values()" class="text-left" :style="{ 'background-color': bgColor }">
 			<template v-if="kurszahlen.get(kursart.id) === 0 && wahlen.get(kursart.id)" class="text-left" :style="{ 'background-color': bgColor }">
 				<td class="px-4 border-y border-[#7f7f7f]/20" colspan="3">
-					{{ fach.kuerzel }}-{{ kursart.kuerzel }}
-				</td>
+					{{ fach.kuerzel }}-{{ kursart.kuerzel }} </td>
 				<td class="px-2 border-y border-[#7f7f7f]/20" colspan="3">
-					<svws-ui-button class="" size="small" @click="add_kurs(kursart)">Kurs hinzufügen</svws-ui-button>
-				</td>
+					<svws-ui-button class="" size="small" @click="add_kurs(kursart)">Kurs hinzufügen</svws-ui-button> </td>
 				<td class="px-4 border-y border-[#7f7f7f]/20 border-r" :colspan="schienen.size()-2">
-					{{ wahlen.get(kursart.id) }} Kurswahlen
-				</td>
+					{{ wahlen.get(kursart.id) }} Kurswahlen </td>
 				<td class="bg-white"></td>
 			</template>
 		</tr>
@@ -46,8 +43,9 @@
 			return kurszahlen;
 		});
 
-	const kurse: ComputedRef<List<GostBlockungKurs>> = computed(()=>
-		app.dataKursblockung.datenmanager?.getKursmengeSortiertNachKursartFachNummer() || new Vector<GostBlockungKurs>())
+	const kurse: ComputedRef<List<GostBlockungKurs>> =
+		computed(()=>
+			app.dataKursblockung.datenmanager?.getKursmengeSortiertNachKursartFachNummer() || new Vector<GostBlockungKurs>())
 
 	const schienen: ComputedRef<List<GostBlockungSchiene>> =
 		computed(()=> app.dataKursblockung.datenmanager?.getMengeOfSchienen() || new Vector<GostBlockungSchiene>())
