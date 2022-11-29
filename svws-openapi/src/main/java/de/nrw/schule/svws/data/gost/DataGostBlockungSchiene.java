@@ -173,6 +173,7 @@ public class DataGostBlockungSchiene extends DataManager<Long> {
 		// Passe alle Regeln einem Parametern Schienenanzahl an.
 		// Bestimme alle Regeln der Blockung
 		List<DTOGostBlockungRegel> dtoRegeln = conn.queryNamed("DTOGostBlockungRegel.blockung_id", schiene.Blockung_ID, DTOGostBlockungRegel.class);
+		Map<Long, DTOGostBlockungRegel> mapDTORegeln = dtoRegeln.stream().collect(Collectors.toMap(r -> r.ID, r -> r));
 		if (dtoRegeln.size() > 0) {
 			List<Long> regelIDs = dtoRegeln.stream().map(r -> r.ID).toList();
 			// Bestimme die RegelParameter dieser Regeln
@@ -191,7 +192,7 @@ public class DataGostBlockungSchiene extends DataManager<Long> {
 				Map<Integer, DTOGostBlockungRegelParameter> mapParam = dtoParams.stream().collect(Collectors.toMap(p -> p.Nummer, p -> p));
 				long[] newParams = GostKursblockungRegelTyp.getNeueParameterBeiSchienenLoeschung(regel, daten.nummer);
 				if (newParams == null) { // Lösche die Regel in der DB und gehe zur nächsten über
-					conn.transactionRemove(regel);
+					conn.transactionRemove(mapDTORegeln.get(regel.id));
 					continue;
 				}
 				// Prüfe, ob die Parameter der Regel verändert wurden und aktualisiere diese ggf. in der DB 
