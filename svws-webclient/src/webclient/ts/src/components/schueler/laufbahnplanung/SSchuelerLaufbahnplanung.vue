@@ -17,17 +17,27 @@
 </template>
 
 <script setup lang="ts">
-	import { computed, ComputedRef, defineAsyncComponent, ref } from "vue";
+	import { computed, ComputedRef, ref } from "vue";
+	import { App } from "~/apps/BaseApp";
 	import { injectMainApp, Main } from "~/apps/Main";
-
-	const HilfeLaufbahnplanung = defineAsyncComponent(() => import( "~/components/schueler/laufbahnplanung/HilfeLaufbahnplanung.md" ));
 
 	const main: Main = injectMainApp();
 	const app = main.apps.schueler;
-	const visible: ComputedRef<boolean> = computed<boolean>(() =>
-		//return this.$app.gostLaufbahn.visible; //TODO: richtige Bedingung einpflegen
-		!!app.dataGostLaufbahndaten?.abiturjahr && !!app.dataGostLaufbahndaten?.daten && main.config.hasGost
-	);
+
+	const current_abiturjahr = App.apps.gost.auswahl.ausgewaehlt;
+	const schueler_abiturjahr = app.dataGostLaufbahndaten?.abiturjahr;
+	if (current_abiturjahr !== undefined
+		&& schueler_abiturjahr !== undefined
+		&& current_abiturjahr.abiturjahr !== schueler_abiturjahr)
+			App.apps.gost.auswahl.ausgewaehlt = App.apps.gost.auswahl.liste.find(jahr => jahr.abiturjahr === schueler_abiturjahr);
+
+	const visible: ComputedRef<boolean> =
+		computed<boolean>(() =>
+			//return this.$app.gostLaufbahn.visible; //TODO: richtige Bedingung einpflegen
+			!!schueler_abiturjahr
+			&& !!app.dataGostLaufbahndaten?.daten
+			&& main.config.hasGost
+		);
 
 	const modal = ref();
 </script>

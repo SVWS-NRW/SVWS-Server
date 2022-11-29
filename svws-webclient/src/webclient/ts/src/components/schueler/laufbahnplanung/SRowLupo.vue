@@ -12,39 +12,45 @@
 	<td :class="[ 'w-12 text-center', {
 				'cursor-pointer border': ef1_moeglich && !bewertet[0],
 				'border-[#7f7f7f]/20': ef1_moeglich,
-				'cursor-not-allowed': !ef1_moeglich || bewertet[0] } ]"
-			:style="{ 'background-color': ef1_moeglich ? bgColor + (bewertet[0] ? '80' : '') : 'gray' }" @click="() => ef1_set()" >
-		{{ wahlen[0] }} </td>
+				'cursor-not-allowed': !ef1_moeglich || bewertet[0] || fachkombi_verboten_ef1 } ]"
+			:style="{ 'background-color': ef1_moeglich && !fachkombi_verboten_ef1 ? bgColor + (bewertet[0] ? '80' : '') : 'gray' }" @click="() => ef1_set()" >
+		<span :class="{'rounded-full px-2 bg-red-400': fachkombi_erforderlich_ef1, 'rounded-full px-2 bg-green-400': fachkombi_erforderlich_ef1}">
+			{{ wahlen[0] }}</span> </td>
 	<td :class="[ 'w-12 text-center', {
 				'cursor-pointer border': ef2_moeglich && !bewertet[1],
 				'border-[#7f7f7f]/20': ef2_moeglich,
-				'cursor-not-allowed': !ef2_moeglich || bewertet[1] } ]"
-			:style="{ 'background-color': ef2_moeglich ? bgColor + (bewertet[1] ? '80' : '') : 'gray' }" @click="() => ef2_set()" >
-		{{ wahlen[1] }} </td>
+				'cursor-not-allowed': !ef2_moeglich || bewertet[1] || fachkombi_verboten_ef2 } ]"
+			:style="{ 'background-color': ef2_moeglich && !fachkombi_verboten_ef2 ? bgColor + (bewertet[1] ? '80' : '') : 'gray' }" @click="() => ef2_set()" >
+		<span :class="{'rounded-full px-2 bg-red-400': fachkombi_erforderlich_ef2, 'rounded-full px-2 bg-green-400': fachkombi_erforderlich_ef2}">
+			{{ wahlen[1] }}</span> </td>
 	<td :class="[ 'w-12 text-center', {
 				'cursor-pointer border': q11_moeglich && !bewertet[2],
 				'border-[#7f7f7f]/20': q11_moeglich,
-				'cursor-not-allowed': !q11_moeglich || bewertet[2] } ]"
-			:style="{ 'background-color': q11_moeglich ? bgColor + (bewertet[2] ? '80' : '') : 'gray' }" @click="() => q11_set()" >
-		{{ wahlen[2] }} </td>
+				'cursor-not-allowed': !q11_moeglich || bewertet[2] || fachkombi_verboten_q11 } ]"
+			:style="{ 'background-color': q11_moeglich && !fachkombi_verboten_q11 ? bgColor + (bewertet[2] ? '80' : '') : 'gray' }" @click="() => q11_set()" >
+		<span :class="{'rounded-full px-2 bg-red-400': fachkombi_erforderlich_q11, 'rounded-full px-2 bg-green-400': fachkombi_erforderlich_q11}">
+			{{ wahlen[2] }}</span> </td>
 	<td :class="[ 'w-12 text-center', {
 				'cursor-pointer border': q12_moeglich && !bewertet[3],
 				'border-[#7f7f7f]/20': q12_moeglich,
-				'cursor-not-allowed': !q12_moeglich || bewertet[3] } ]"
-			:style="{ 'background-color': q12_moeglich ? bgColor + (bewertet[3] ? '80' : '') : 'gray' }" @click="() => q12_set()" >
-		{{ wahlen[3] }} </td>
+				'cursor-not-allowed': !q12_moeglich || bewertet[3] || fachkombi_verboten_q12 } ]"
+			:style="{ 'background-color': q12_moeglich && !fachkombi_verboten_q12 ? bgColor + (bewertet[3] ? '80' : '') : 'gray' }" @click="() => q12_set()" >
+		<span :class="{'rounded-full px-2 bg-red-400': fachkombi_erforderlich_q12, 'rounded-full px-2 bg-green-400': fachkombi_erforderlich_q12}">
+			{{ wahlen[3] }} </span> </td>
 	<td :class="[ 'w-12 text-center', {
 				'cursor-pointer border': q21_moeglich && !bewertet[4],
 				'border-[#7f7f7f]/20': q21_moeglich,
-				'cursor-not-allowed': !q21_moeglich || bewertet[4] } ]"
-			:style="{ 'background-color': q21_moeglich ? bgColor + (bewertet[4] ? '80' : '') : 'gray' }" @click="() => q21_set()" >
-		{{ wahlen[4] }} </td>
+				'cursor-not-allowed': !q21_moeglich || bewertet[4] || fachkombi_verboten_q21 } ]"
+			:style="{ 'background-color': q21_moeglich && !fachkombi_verboten_q21 ? bgColor + (bewertet[4] ? '80' : '') : 'gray' }" @click="() => q21_set()" >
+		<span :class="{'rounded-full px-2 bg-red-400': fachkombi_erforderlich_q21, 'rounded-full px-2 bg-green-400': fachkombi_erforderlich_q21}">
+			{{ wahlen[4] }}</span> </td>
 	<td :class="[ 'w-12 text-center', {
 				'cursor-pointer border': q22_moeglich && !bewertet[5],
 				'border-[#7f7f7f]/20': q22_moeglich,
-				'cursor-not-allowed': !q22_moeglich || bewertet[5] } ]"
-			:style="{ 'background-color': q22_moeglich ? bgColor + (bewertet[5] ? '80' : '') : 'gray' }" @click="() => q22_set()" >
-		{{ wahlen[5] }} </td>
+				'cursor-not-allowed': !q22_moeglich || bewertet[5] || fachkombi_verboten_q22 } ]"
+			:style="{ 'background-color': q22_moeglich && !fachkombi_verboten_q22 ? bgColor + (bewertet[5] ? '80' : '') : 'gray' }" @click="() => q22_set()" >
+		<span :class="{'rounded-full px-2 bg-red-400': fachkombi_erforderlich_q22, 'rounded-full px-2 bg-green-400': fachkombi_erforderlich_q22}">
+			{{ wahlen[5] }}</span> </td>
 	<td :class="[ 'w-12 text-center', {
 				'cursor-pointer border': abi_moeglich && !bewertet[5],
 				'border-[#7f7f7f]/20': abi_moeglich,
@@ -65,6 +71,7 @@
 
 	const main: Main = injectMainApp();
 	const app = main.apps.schueler;
+	const faechermanager = App.apps.gost.dataFaecher.manager;
 
 	const daten: ComputedRef<DataSchuelerLaufbahnplanung> =
 		computed(() => app.dataGostLaufbahndaten || new DataSchuelerLaufbahnplanung());
@@ -144,86 +151,152 @@
 
 	const fachkombi_erforderlich_ef1: ComputedRef<boolean> =
 		computed(()=> {
-			if (fachkombi_erforderlich.value.size() > 0)
+			if (fachkombi_erforderlich.value.size() > 0 && !bewertet.value[0])
 				for (const kombi of fachkombi_erforderlich.value)
-					if (kombi.gueltigInHalbjahr[1]) return true;
+					if (kombi.gueltigInHalbjahr[1]) {
+						const fach = faechermanager?.get(kombi.fachID1 || 0)
+						if (!fach) return false;
+						const belegung_1 = daten.value.getWahlen(fach)[0]
+						const belegung_2 = wahlen.value[0]
+						return belegung_1 !== belegung_2 ? true : false;
+					};
 			return false;
 		})
 	const fachkombi_erforderlich_ef2: ComputedRef<boolean> =
 		computed(()=> {
-			if (fachkombi_erforderlich.value.size() > 0)
+			if (fachkombi_erforderlich.value.size() > 0 && !bewertet.value[1])
 				for (const kombi of fachkombi_erforderlich.value)
-					if (kombi.gueltigInHalbjahr[2]) return true;
+					if (kombi.gueltigInHalbjahr[2]) {
+						const fach = faechermanager?.get(kombi.fachID1 || 0)
+						if (!fach) return false;
+						const belegung_1 = daten.value.getWahlen(fach)[1]
+						const belegung_2 = wahlen.value[1]
+						return belegung_1 !== belegung_2 ? true : false;
+					};
 			return false;
 		})
 	const fachkombi_erforderlich_q11: ComputedRef<boolean> =
 		computed(()=> {
-			if (fachkombi_erforderlich.value.size() > 0)
+			if (fachkombi_erforderlich.value.size() > 0 && !bewertet.value[2])
 				for (const kombi of fachkombi_erforderlich.value)
-					if (kombi.gueltigInHalbjahr[3]) return true;
+					if (kombi.gueltigInHalbjahr[3]) {
+						const fach = faechermanager?.get(kombi.fachID1 || 0)
+						if (!fach) return false;
+						const belegung_1 = daten.value.getWahlen(fach)[2]
+						const belegung_2 = wahlen.value[2]
+						return belegung_1 !== belegung_2 ? true : false;
+					};
 			return false;
 		})
 	const fachkombi_erforderlich_q12: ComputedRef<boolean> =
 		computed(()=> {
-			if (fachkombi_erforderlich.value.size() > 0)
+			if (fachkombi_erforderlich.value.size() > 0 && !bewertet.value[3])
 				for (const kombi of fachkombi_erforderlich.value)
-					if (kombi.gueltigInHalbjahr[4]) return true;
+					if (kombi.gueltigInHalbjahr[4]) {
+						const fach = faechermanager?.get(kombi.fachID1 || 0)
+						if (!fach) return false;
+						const belegung_1 = daten.value.getWahlen(fach)[3]
+						const belegung_2 = wahlen.value[3]
+						return belegung_1 !== belegung_2 ? true : false;
+					};
 			return false;
 		})
 	const fachkombi_erforderlich_q21: ComputedRef<boolean> =
 		computed(()=> {
-			if (fachkombi_erforderlich.value.size() > 0)
+			if (fachkombi_erforderlich.value.size() > 0 && !bewertet.value[4])
 				for (const kombi of fachkombi_erforderlich.value)
-					if (kombi.gueltigInHalbjahr[5]) return true;
+					if (kombi.gueltigInHalbjahr[5]) {
+						const fach = faechermanager?.get(kombi.fachID1 || 0)
+						if (!fach) return false;
+						const belegung_1 = daten.value.getWahlen(fach)[4]
+						const belegung_2 = wahlen.value[4]
+						return belegung_1 !== belegung_2 ? true : false;
+					};
 			return false;
 		})
 	const fachkombi_erforderlich_q22: ComputedRef<boolean> =
 		computed(()=> {
-			if (fachkombi_erforderlich.value.size() > 0)
+			if (fachkombi_erforderlich.value.size() > 0 && !bewertet.value[5])
 				for (const kombi of fachkombi_erforderlich.value)
-					if (kombi.gueltigInHalbjahr[6]) return true;
+					if (kombi.gueltigInHalbjahr[6]) {
+						const fach = faechermanager?.get(kombi.fachID1 || 0)
+						if (!fach) return false;
+						const belegung_1 = daten.value.getWahlen(fach)[5]
+						const belegung_2 = wahlen.value[5]
+						return belegung_1 !== belegung_2 ? true : false;
+					};
 			return false;
 		})
 	const fachkombi_verboten_ef1: ComputedRef<boolean> =
 		computed(()=> {
-			if (fachkombi_verboten.value.size() > 0)
+			if (fachkombi_verboten.value.size() > 0 && !bewertet.value[0])
 				for (const kombi of fachkombi_verboten.value)
-					if (kombi.gueltigInHalbjahr[1]) return true;
+					if (kombi.gueltigInHalbjahr[1]) {
+						const fach = faechermanager?.get(kombi.fachID1)
+						if (!fach) return false;
+						const belegung = daten.value.getWahlen(fach)[0]
+						return belegung ? true : false;
+					};
 			return false;
 		})
 	const fachkombi_verboten_ef2: ComputedRef<boolean> =
 		computed(()=> {
-			if (fachkombi_verboten.value.size() > 0)
+			if (fachkombi_verboten.value.size() > 0 && !bewertet.value[1])
 				for (const kombi of fachkombi_verboten.value)
-					if (kombi.gueltigInHalbjahr[2]) return true;
+					if (kombi.gueltigInHalbjahr[2]) {
+						const fach = faechermanager?.get(kombi.fachID1 || 0)
+						if (!fach) return false;
+						const belegung = daten.value.getWahlen(fach)[1]
+						return belegung ? true : false;
+					};
 			return false;
 		})
 	const fachkombi_verboten_q11: ComputedRef<boolean> =
 		computed(()=> {
-			if (fachkombi_verboten.value.size() > 0)
+			if (fachkombi_verboten.value.size() > 0 && !bewertet.value[2])
 				for (const kombi of fachkombi_verboten.value)
-					if (kombi.gueltigInHalbjahr[3]) return true;
+					if (kombi.gueltigInHalbjahr[3]) {
+						const fach = faechermanager?.get(kombi.fachID1 || 0)
+						if (!fach) return false;
+						const belegung = daten.value.getWahlen(fach)[2]
+						return belegung ? true : false;
+					};
 			return false;
 		})
 	const fachkombi_verboten_q12: ComputedRef<boolean> =
 		computed(()=> {
-			if (fachkombi_verboten.value.size() > 0)
+			if (fachkombi_verboten.value.size() > 0 && !bewertet.value[3])
 				for (const kombi of fachkombi_verboten.value)
-					if (kombi.gueltigInHalbjahr[4]) return true;
+					if (kombi.gueltigInHalbjahr[4]) {
+						const fach = faechermanager?.get(kombi.fachID1 || 0)
+						if (!fach) return false;
+						const belegung = daten.value.getWahlen(fach)[3]
+						return belegung ? true : false;
+					};
 			return false;
 		})
 	const fachkombi_verboten_q21: ComputedRef<boolean> =
 		computed(()=> {
-			if (fachkombi_verboten.value.size() > 0)
+			if (fachkombi_verboten.value.size() > 0 && !bewertet.value[4])
 				for (const kombi of fachkombi_verboten.value)
-					if (kombi.gueltigInHalbjahr[5]) return true;
+					if (kombi.gueltigInHalbjahr[5]) {
+						const fach = faechermanager?.get(kombi.fachID1 || 0)
+						if (!fach) return false;
+						const belegung = daten.value.getWahlen(fach)[4]
+						return belegung ? true : false;
+					};
 			return false;
 		})
 	const fachkombi_verboten_q22: ComputedRef<boolean> =
 		computed(()=> {
-			if (fachkombi_verboten.value.size() > 0)
+			if (fachkombi_verboten.value.size() > 0 && !bewertet.value[5])
 				for (const kombi of fachkombi_verboten.value)
-					if (kombi.gueltigInHalbjahr[6]) return true;
+					if (kombi.gueltigInHalbjahr[6]) {
+						const fach = faechermanager?.get(kombi.fachID1 || 0)
+						if (!fach) return false;
+						const belegung = daten.value.getWahlen(fach)[5]
+						return belegung ? true : false;
+					};
 			return false;
 		})
 

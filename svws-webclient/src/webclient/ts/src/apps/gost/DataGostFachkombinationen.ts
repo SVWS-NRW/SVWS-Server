@@ -3,7 +3,7 @@ import { App } from "../BaseApp";
 import { List, GostFach, ZulaessigesFach, GostJahrgang, GostJahrgangFachkombination, GostLaufbahnplanungFachkombinationTyp } from "@svws-nrw/svws-core-ts";
 import { BaseData } from "../BaseData";
 
-export class DataGostFachkombinationen extends BaseData<List<GostJahrgangFachkombination> | undefined, GostJahrgang | undefined, unknown> {
+export class DataGostFachkombinationen extends BaseData<List<GostJahrgangFachkombination>, GostJahrgang, unknown> {
 
 	protected on_update(daten: Partial<GostJahrgangFachkombination>, id?: number): void {
 	}
