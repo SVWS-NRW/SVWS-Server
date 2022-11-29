@@ -55,7 +55,7 @@ class DataSchuelerLaufbahnplanungReactiveState {
 }
 
 
-export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerListeEintrag> {
+export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerListeEintrag, AbiturdatenManager> {
 
 	protected _data = reactive(new DataSchuelerLaufbahnplanungReactiveState());
 
@@ -131,6 +131,7 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 	 */
 	set gostAktuelleBelegpruefungsart(value: GostBelegpruefungsArt) {
 		this._data.gostBelegpruefungsart = value;
+		this.set_manager();
 		this.gostBelegpruefung();
 	}
 
@@ -145,14 +146,19 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 	 * @returns {void}
 	 */
 	private gostBelegpruefung(): void {
-		if (!this._daten) return;
+		if (this._daten === undefined || this.manager === undefined) return;
+		this._data.gostBelegpruefungsErgebnis = this.manager.getBelegpruefungErgebnis();
+		this._data._wochenstunden = this.manager.getWochenstunden() || [];
+		this._data._anrechenbare_kurse = this.manager.getAnrechenbareKurse() || [];
+	}
+	
+	private set_manager() {
+		if (this._daten === undefined)
+			return;
 		const art = (this._data.gostBelegpruefungsart.kuerzel === GostBelegpruefungsArt.GESAMT.kuerzel)
 			? GostBelegpruefungsArt.GESAMT
 			: GostBelegpruefungsArt.EF1;
-		const abiManager: AbiturdatenManager = new AbiturdatenManager(this._daten, this.gostFaecherList, art);
-		this._data.gostBelegpruefungsErgebnis = abiManager.getBelegpruefungErgebnis();
-		this._data._wochenstunden = abiManager.getWochenstunden() || [];
-		this._data._anrechenbare_kurse = abiManager.getAnrechenbareKurse() || [];
+		this.manager = new AbiturdatenManager(this._daten, this.gostFaecherList, art);
 	}
 
 	/**
@@ -194,6 +200,7 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 				if (belegung.sprache)
 					this._data.gostSprachbelegungen[belegung.sprache.valueOf()] = belegung;
 			}
+			this.set_manager();
 			// Führe die Laufbahnprüfung durch
 			this.gostBelegpruefung();
 		} else {
@@ -348,6 +355,19 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 		return ((ist_fortfuehrbar && !row.istFremdSpracheNeuEinsetzend) || (!ist_fortfuehrbar && row.istFremdSpracheNeuEinsetzend));
 	}
 
+	private checkDoppelbelegung(row: GostFach, hj: GostHalbjahr): boolean {
+		const fachbelegungen = this.manager?.getFachbelegungByFachkuerzel(row.kuerzel);
+		if (fachbelegungen !== undefined) {
+			for (const fachbelegung of fachbelegungen) {
+				if (this.manager?.pruefeBelegung(fachbelegung, hj)) {
+					if (fachbelegung.fachID !== row.id)
+						return true;
+				}
+			}
+		}
+		return false;
+	}
+
 	/**
 	 * Gibt an, ob die Fachwahl in der EF1 möglich ist
 	 *
@@ -359,7 +379,9 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 		if (fach.getFachgruppe() === Fachgruppe.FG_ME || fach.getFachgruppe() === Fachgruppe.FG_PX 
 				|| (row.istFremdsprache && !this.getFallsSpracheMoeglich(row)))
 			return false;
-		return row.istMoeglichEF1;
+		return this.checkDoppelbelegung(row, GostHalbjahr.EF1)
+			? false
+			: row.istMoeglichEF1;
 	}
 
 	/**
@@ -373,7 +395,9 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 		if (fach.getFachgruppe() === Fachgruppe.FG_ME || fach.getFachgruppe() === Fachgruppe.FG_PX 
 				|| (row.istFremdsprache && !this.getFallsSpracheMoeglich(row)))
 			return false;
-		return row.istMoeglichEF2;
+		return this.checkDoppelbelegung(row, GostHalbjahr.EF2)
+			? false
+			: row.istMoeglichEF2;
 	}
 
 	/**
@@ -383,10 +407,12 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 	 * @returns {boolean}
 	 */
 	public getQ11Moeglich(row: GostFach): boolean {
+		if (this.checkDoppelbelegung(row, GostHalbjahr.Q11))
+			return false;
 		if (row.istMoeglichQ11) {
 			return row.istFremdsprache ? this.getFallsSpracheMoeglich(row) : true;
 		} else 
-			return false;
+			return row.istMoeglichQ11;
 	}
 
 	/**
@@ -396,10 +422,12 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 	 * @returns {boolean}
 	 */
 	public getQ12Moeglich(row: GostFach): boolean {
+		if (this.checkDoppelbelegung(row, GostHalbjahr.Q12))
+			return false;
 		if (row.istMoeglichQ12) {
 			return row.istFremdsprache ? this.getFallsSpracheMoeglich(row) : true;
 		} else 
-			return false;
+			return row.istMoeglichQ12;
 	}
 
 	/**
@@ -411,6 +439,8 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 	public getQ21Moeglich(row: GostFach): boolean {
 		const fach = ZulaessigesFach.getByKuerzelASD(row.kuerzel);
 		if (fach.getFachgruppe() === Fachgruppe.FG_ME) 
+			return false;
+		if (this.checkDoppelbelegung(row, GostHalbjahr.Q21)) 
 			return false;
 		if (row.istMoeglichQ21) {
 			return row.istFremdsprache ? this.getFallsSpracheMoeglich(row) : true;
@@ -427,6 +457,8 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 	public getQ22Moeglich(row: GostFach): boolean {
 		const fach = ZulaessigesFach.getByKuerzelASD(row.kuerzel);
 		if (fach.getFachgruppe() === Fachgruppe.FG_ME)
+			return false;
+		if (this.checkDoppelbelegung(row, GostHalbjahr.Q22)) 
 			return false;
 		if (row.istMoeglichQ22) {
 			return row.istFremdsprache ? this.getFallsSpracheMoeglich(row) : true;
