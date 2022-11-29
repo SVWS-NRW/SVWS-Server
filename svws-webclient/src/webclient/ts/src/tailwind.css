@@ -16,6 +16,11 @@
 .content-wrapper {
 	@apply flex flex-row items-start space-x-4;
 }
+
+.input-wrapper-1-col {
+	@apply grid flex-grow grid-cols-1 gap-4;
+}
+
 .input-wrapper {
 	@apply grid flex-grow grid-cols-1 gap-4 xl:grid-cols-2;
 }

@@ -19,8 +19,8 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="border border-[#7f7f7f]/20 px-2 text-center">Kürzel</td>
-							<td class="border border-[#7f7f7f]/20 text-center">Fach</td>
+							<td class="w-20 border border-[#7f7f7f]/20 px-2 text-center">Kürzel</td>
+							<td class="w-60 border border-[#7f7f7f]/20 text-center">Fach</td>
 							<td class="border border-[#7f7f7f]/20 text-center">Neu</td>
 							<td class="border border-[#7f7f7f]/20 text-center">WStd.</td>
 							<td class="border border-[#7f7f7f]/20 text-center">1.</td>

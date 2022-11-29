@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-content-card title="Text für Mailversand">
+	<svws-ui-content-card title="Laufbahnplanung: Text für Mailversand">
 		<div class="input-wrapper">
 			<div class="col-span-2">
 				<svws-ui-textarea-input

@@ -5,7 +5,7 @@
 			</svws-ui-header>
 			<svws-ui-tab-bar v-model="app.selectedTab.value">
 				<template #tabs>
-					<svws-ui-tab-button>Stammdaten</svws-ui-tab-button>
+					<svws-ui-tab-button>Allgemein</svws-ui-tab-button>
 					<svws-ui-tab-button>Fächer</svws-ui-tab-button>
 					<svws-ui-tab-button :hidden="!jahrgang">Fachwahlen</svws-ui-tab-button>
 					<svws-ui-tab-button :hidden="!abiturjahr">Kursplanung</svws-ui-tab-button>
