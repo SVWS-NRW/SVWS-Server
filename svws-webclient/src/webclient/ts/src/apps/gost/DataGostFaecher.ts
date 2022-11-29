@@ -143,6 +143,7 @@ export class DataGostFaecher extends BaseData<List<GostFach>, GostJahrgang, Gost
 			f.getFachgruppe() == Fachgruppe.FG_PX
 		);
 	}
+
 	/**
 	 * Gibt an, ob die Fachwahl in der EF1 möglich ist
 	 *
@@ -156,6 +157,7 @@ export class DataGostFaecher extends BaseData<List<GostFach>, GostJahrgang, Gost
 			fach.getFachgruppe() == Fachgruppe.FG_PX
 		);
 	}
+
 	/**
 	 * Gibt an, ob die Fachwahl in der EF2 möglich ist
 	 *
@@ -169,6 +171,7 @@ export class DataGostFaecher extends BaseData<List<GostFach>, GostJahrgang, Gost
 			fach.getFachgruppe() == Fachgruppe.FG_PX
 		);
 	}
+
 	/**
 	 * Gibt an, ob die Fachwahl in der Q11 möglich ist
 	 *
@@ -177,9 +180,9 @@ export class DataGostFaecher extends BaseData<List<GostFach>, GostJahrgang, Gost
 	 */
 	public getQ11Moeglich(row: GostFach): boolean {
 		void row;
-		// var fach = ZulaessigesFach.getByKuerzelASD(row.kuerzel);
 		return true;
 	}
+
 	/**
 	 * Gibt an, ob die Fachwahl in der Q12 möglich ist
 	 *
@@ -188,9 +191,9 @@ export class DataGostFaecher extends BaseData<List<GostFach>, GostJahrgang, Gost
 	 */
 	public getQ12Moeglich(row: GostFach): boolean {
 		void row;
-		// var fach = ZulaessigesFach.getByKuerzelASD(row.kuerzel);
 		return true;
 	}
+
 	/**
 	 * Gibt an, ob die Fachwahl in der Q12 möglich ist
 	 *
@@ -198,9 +201,10 @@ export class DataGostFaecher extends BaseData<List<GostFach>, GostJahrgang, Gost
 	 * @returns {boolean}
 	 */
 	public getQ21Moeglich(row: GostFach): boolean {
-		const fach = ZulaessigesFach.getByKuerzelASD(row.kuerzel);
-		return !(fach.getFachgruppe() == Fachgruppe.FG_ME);
+		void row;
+		return true;
 	}
+
 	/**
 	 * Gibt an, ob die Fachwahl in der Q22 möglich ist
 	 *
@@ -208,9 +212,10 @@ export class DataGostFaecher extends BaseData<List<GostFach>, GostJahrgang, Gost
 	 * @returns {boolean}
 	 */
 	public getQ22Moeglich(row: GostFach): boolean {
-		const fach = ZulaessigesFach.getByKuerzelASD(row.kuerzel);
-		return !(fach.getFachgruppe() == Fachgruppe.FG_ME);
+		void row;
+		return true;
 	}
+
 	/**
 	 * Gibt an, ob die Fachwahl als Grundkurs möglich ist
 	 *
@@ -225,6 +230,7 @@ export class DataGostFaecher extends BaseData<List<GostFach>, GostJahrgang, Gost
 			fach.getFachgruppe() == Fachgruppe.FG_PX
 		);
 	}
+
 	/**
 	 * Gibt an, ob die Fachwahl als LK möglich ist
 	 *
@@ -241,4 +247,5 @@ export class DataGostFaecher extends BaseData<List<GostFach>, GostJahrgang, Gost
 			(row.biliSprache != null && row.biliSprache != "D")
 		);
 	}
+
 }
