@@ -17,21 +17,17 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ComputedRef, defineAsyncComponent, ref } from "vue";
-import { injectMainApp, Main } from "~/apps/Main";
-const HilfeLaufbahnplanung = defineAsyncComponent(
-	() =>
-		import(
-			"~/components/schueler/laufbahnplanung/HilfeLaufbahnplanung.md"
-		)
-);
+	import { computed, ComputedRef, defineAsyncComponent, ref } from "vue";
+	import { injectMainApp, Main } from "~/apps/Main";
 
-const main: Main = injectMainApp();
-const app = main.apps.schueler;
-const visible: ComputedRef<boolean> = computed<boolean>(() =>
-	//return this.$app.gostLaufbahn.visible; //TODO: richtige Bedingung einpflegen
-	!!app.dataGostLaufbahndaten?.abiturjahr && !!app.dataGostLaufbahndaten?.daten && main.config.hasGost
-);
+	const HilfeLaufbahnplanung = defineAsyncComponent(() => import( "~/components/schueler/laufbahnplanung/HilfeLaufbahnplanung.md" ));
 
-const modal = ref();
+	const main: Main = injectMainApp();
+	const app = main.apps.schueler;
+	const visible: ComputedRef<boolean> = computed<boolean>(() =>
+		//return this.$app.gostLaufbahn.visible; //TODO: richtige Bedingung einpflegen
+		!!app.dataGostLaufbahndaten?.abiturjahr && !!app.dataGostLaufbahndaten?.daten && main.config.hasGost
+	);
+
+	const modal = ref();
 </script>
