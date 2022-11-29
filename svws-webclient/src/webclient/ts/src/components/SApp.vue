@@ -36,7 +36,7 @@
 								<i-ri-team-line
 									v-if="menuItem.icon === 'team'"
 								/>
-								<i-ri-user--2-line
+								<i-ri-user-2-line
 									v-else-if="menuItem.icon === 'user-2'"
 								/>
 								<i-ri-artboard-line

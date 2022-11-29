@@ -17,6 +17,8 @@ export default defineConfig({
 		Components({
 			resolvers: [IconsResolver()],
 			dirs: ['src/components'],
+			extensions: ['vue', 'md'],
+			include: [/\.vue$/, /\.vue\?vue/, /\.md$/],
 		}),
 		Icons()
 	],
