@@ -9,14 +9,11 @@ import { List, Vector, GostHalbjahr, GostKursart, Jahrgaenge, Fachgruppe, Schulg
 import { BaseData } from "../BaseData";
 import { reactive } from "vue";
 import { mainApp } from "../Main";
-import { Gost } from "../gost/Gost";
-
 
 /** Signatur für die Sprachbelegungen */
 interface GostSprachbelegungen {
 	[fachID: string]: Sprachbelegung;
 }
-
 
 class DataSchuelerLaufbahnplanungReactiveState {
 	/**
@@ -55,7 +52,6 @@ class DataSchuelerLaufbahnplanungReactiveState {
 	_anrechenbare_kurse = [0, 0, 0, 0, 0, 0];
 }
 
-
 export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerListeEintrag, AbiturdatenManager> {
 
 	protected _data = reactive(new DataSchuelerLaufbahnplanungReactiveState());
@@ -68,7 +64,6 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 	 * SVWS-Server ausgelesen werden.
 	 */
 	protected gostFaecherList: List<GostFach> = new Vector<GostFach>();
-
 
 	protected on_update(daten: Partial<GostSchuelerFachwahl>): void {
 		// TODO
@@ -128,7 +123,6 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 	 * Setter für die Belegprüfungsart.
 	 *
 	 * @param {GostBelegpruefungsArt} value Die neue aktuelle Belegprüfungsart
-	 * @returns {void}
 	 */
 	set gostAktuelleBelegpruefungsart(value: GostBelegpruefungsArt) {
 		this._data.gostBelegpruefungsart = value;
@@ -136,6 +130,9 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 		this.gostBelegpruefung();
 	}
 
+	/**
+	 * Getter für das Belegprüfungsergebnis
+	 */
 	get gostBelegpruefungsErgebnis() {
 		return this._data.gostBelegpruefungsErgebnis;
 	}
@@ -153,6 +150,7 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 		this._data._anrechenbare_kurse = this.manager.getAnrechenbareKurse() || [];
 	}
 	
+	/** aktualisiert den Abiturdatenmanager, z.B. wenn sich die Belegprüfungsart ändert */
 	private set_manager() {
 		if (this._daten === undefined)
 			return;
@@ -356,6 +354,12 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 		return ((ist_fortfuehrbar && !row.istFremdSpracheNeuEinsetzend) || (!ist_fortfuehrbar && row.istFremdSpracheNeuEinsetzend));
 	}
 
+	/**
+	 * Prüft, ob ein Fach bereits belegt ist durch ein gleichnamiges Fach, z.B. bei Bili-Fächern
+	 * @param {GostFach} row Das GostFach
+	 * @param {GostHalbjahr} hj Das GostHalbjahr
+	 * @returns {boolean} ob doppel belegt wurde, z.B. bei Bili-Fächern
+	 */
 	private checkDoppelbelegung(row: GostFach, hj: GostHalbjahr): boolean {
 		const fachbelegungen = this.manager?.getFachbelegungByFachkuerzel(row.kuerzel);
 		if (fachbelegungen !== undefined) {
