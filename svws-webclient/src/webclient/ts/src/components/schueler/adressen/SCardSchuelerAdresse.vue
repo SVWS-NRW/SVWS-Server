@@ -2,7 +2,7 @@
     <svws-ui-content-card>
 		<template #actions>
 			<svws-ui-button type="danger">
-				<svws-ui-icon><i-ri-delete-bin--2-line /></svws-ui-icon>
+				<svws-ui-icon><i-ri-delete-bin-2-line /></svws-ui-icon>
 				<span class="ml-2">Löschen</span></svws-ui-button
 			>
 		</template>
@@ -565,8 +565,10 @@ import { App } from "~/apps/BaseApp";
 	const ap_neu : BetriebAnsprechpartner = reactive(new BetriebAnsprechpartner())
 
 	async function saveEntries(){
+		const id = app.betriebsStammdaten.daten?.id?.valueOf();
+		if (id === undefined) return;
 		ap_neu.betrieb_id = app.betriebsStammdaten.daten?.id || null;
-        await App.api.createBetriebansprechpartner(ap_neu,App.schema,app.betriebsStammdaten.daten?.id);
+        await App.api.createBetriebansprechpartner(ap_neu,App.schema, id);
 		app.listSchuelerbetriebe?.betriebansprechpartner.update_list();
 		modalAdd.value.closeModal();
 	}

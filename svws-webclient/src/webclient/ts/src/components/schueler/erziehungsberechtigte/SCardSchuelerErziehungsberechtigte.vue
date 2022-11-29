@@ -2,7 +2,7 @@
 	<svws-ui-content-card>
 		<template #actions>
 			<svws-ui-button type="danger">
-				<svws-ui-icon><i-ri-delete-bin--2-line /></svws-ui-icon>
+				<svws-ui-icon><i-ri-delete-bin-2-line /></svws-ui-icon>
 				<span class="ml-2">Löschen</span></svws-ui-button
 			>
 			<svws-ui-button type="secondary">
