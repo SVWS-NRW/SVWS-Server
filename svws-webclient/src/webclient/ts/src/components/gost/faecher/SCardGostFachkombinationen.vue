@@ -19,7 +19,7 @@
 							<td class="border border-[#7f7f7f]/20 text-center">Q1.1</td>
 							<td class="border border-[#7f7f7f]/20 text-center">Q1.2</td>
 							<td class="border border-[#7f7f7f]/20 text-center">Q2.1</td>
-							<td class="border border-[#7f7f7f]/20 text-center">Q2.1</td>
+							<td class="border border-[#7f7f7f]/20 text-center">Q2.2</td>
 						</tr>
 					</thead>
 					<tr v-for="row in rows" :key="row.id">

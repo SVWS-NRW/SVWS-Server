@@ -62,7 +62,7 @@
 <script setup lang="ts">
 	import { computed, ComputedRef } from "vue";
 
-	import { GostFach, GostJahrgangFachkombination, GostLaufbahnplanungFachkombinationTyp, List, Vector } from "@svws-nrw/svws-core-ts";
+	import { GostFach, GostHalbjahr, GostJahrgangFachkombination, GostLaufbahnplanungFachkombinationTyp, List, Vector } from "@svws-nrw/svws-core-ts";
 	import { injectMainApp, Main } from "~/apps/Main";
 	import { DataSchuelerLaufbahnplanung } from "~/apps/schueler/DataSchuelerLaufbahnplanung";
 	import { App } from "~/apps/BaseApp";
@@ -73,53 +73,28 @@
 	const app = main.apps.schueler;
 	const faechermanager = App.apps.gost.dataFaecher.manager;
 
-	const daten: ComputedRef<DataSchuelerLaufbahnplanung> =
-		computed(() => app.dataGostLaufbahndaten || new DataSchuelerLaufbahnplanung());
+	const daten: ComputedRef<DataSchuelerLaufbahnplanung> = computed(() => app.dataGostLaufbahndaten || new DataSchuelerLaufbahnplanung());
+	const bewertet: ComputedRef<Array<boolean>> = computed(() => daten.value.daten?.bewertetesHalbjahr || []);
 
-	const bewertet: ComputedRef<Array<boolean>> =
-		computed(() => daten.value.daten?.bewertetesHalbjahr || []);
+	const unbelegbarSprache: ComputedRef<boolean> = computed(() => daten.value.getFallsSpracheMoeglich(fach));
 
-	const unbelegbarSprache: ComputedRef<boolean> =
-		computed(() => daten.value.getFallsSpracheMoeglich(fach));
+	const bgColor: ComputedRef<string> = computed(() => daten.value.getBgColor(fach));
+	const bgColorIfLanguage: ComputedRef<string> = computed(() => daten.value.getBgColorIfLanguage(fach));
 
-	const bgColor: ComputedRef<string> =
-		computed(() => daten.value.getBgColor(fach));
+	const sprachenfolgeNr: ComputedRef<number> = computed(() => daten.value.sprachenfolgeNr(fach));
+	const sprachenfolgeJahrgang: ComputedRef<string> = computed(() => daten.value.sprachenfolgeJahrgang(fach));
 
-	const bgColorIfLanguage: ComputedRef<string> =
-		computed(() => daten.value.getBgColorIfLanguage(fach));
-
-	const sprachenfolgeNr: ComputedRef<number> =
-		computed(() => daten.value.sprachenfolgeNr(fach));
-
-	const sprachenfolgeJahrgang: ComputedRef<string> =
-		computed(() => daten.value.sprachenfolgeJahrgang(fach));
-
-	const ef1_moeglich: ComputedRef<boolean> =
-		computed(() => daten.value.getEF1Moeglich(fach));
-
-	const ef2_moeglich: ComputedRef<boolean> =
-		computed(() => daten.value.getEF2Moeglich(fach));
-
-	const q11_moeglich: ComputedRef<boolean> =
-		computed(() => daten.value.getQ11Moeglich(fach));
-
-	const q12_moeglich: ComputedRef<boolean> =
-		computed(() => daten.value.getQ12Moeglich(fach));
-
-	const q21_moeglich: ComputedRef<boolean> =
-		computed(() => daten.value.getQ21Moeglich(fach));
-
-	const q22_moeglich: ComputedRef<boolean> =
-		computed(() => daten.value.getQ22Moeglich(fach));
-
-	const abi_moeglich: ComputedRef<boolean> =
-		computed(() => daten.value.getAbiMoeglich(fach));
+	const ef1_moeglich: ComputedRef<boolean> = computed(() => daten.value.getEF1Moeglich(fach));
+	const ef2_moeglich: ComputedRef<boolean> = computed(() => daten.value.getEF2Moeglich(fach));
+	const q11_moeglich: ComputedRef<boolean> = computed(() => daten.value.getQ11Moeglich(fach));
+	const q12_moeglich: ComputedRef<boolean> = computed(() => daten.value.getQ12Moeglich(fach));
+	const q21_moeglich: ComputedRef<boolean> = computed(() => daten.value.getQ21Moeglich(fach));
+	const q22_moeglich: ComputedRef<boolean> = computed(() => daten.value.getQ22Moeglich(fach));
+	const abi_moeglich: ComputedRef<boolean> = computed(() => daten.value.getAbiMoeglich(fach));
 	
-	const wahlen: ComputedRef<string[]> =
-		computed(() => daten.value.getWahlen(fach));
+	const wahlen: ComputedRef<string[]> = computed(() => daten.value.getWahlen(fach));
 
-	const abi_wahl: ComputedRef<string> =
-		computed(() => ( daten.value.gostFachbelegungen[ fach.id ]?.abiturFach?.toString() || ""));
+	const abi_wahl: ComputedRef<string> = computed(() => ( daten.value.gostFachbelegungen[ fach.id ]?.abiturFach?.toString() || ""));
 
 	const fachkombis: ComputedRef<List<GostJahrgangFachkombination>> =
 		computed(() => {
@@ -149,156 +124,50 @@
 			return result;
 		})
 
-	const fachkombi_erforderlich_ef1: ComputedRef<boolean> =
-		computed(()=> {
-			if (fachkombi_erforderlich.value.size() > 0 && !bewertet.value[0])
-				for (const kombi of fachkombi_erforderlich.value)
-					if (kombi.gueltigInHalbjahr[1]) {
-						const fach = faechermanager?.get(kombi.fachID1 || 0)
-						if (!fach) return false;
-						const belegung_1 = daten.value.getWahlen(fach)[0]
-						const belegung_2 = wahlen.value[0]
-						return belegung_1 !== belegung_2 ? true : false;
-					};
-			return false;
-		})
-	const fachkombi_erforderlich_ef2: ComputedRef<boolean> =
-		computed(()=> {
-			if (fachkombi_erforderlich.value.size() > 0 && !bewertet.value[1])
-				for (const kombi of fachkombi_erforderlich.value)
-					if (kombi.gueltigInHalbjahr[2]) {
-						const fach = faechermanager?.get(kombi.fachID1 || 0)
-						if (!fach) return false;
-						const belegung_1 = daten.value.getWahlen(fach)[1]
-						const belegung_2 = wahlen.value[1]
-						return belegung_1 !== belegung_2 ? true : false;
-					};
-			return false;
-		})
-	const fachkombi_erforderlich_q11: ComputedRef<boolean> =
-		computed(()=> {
-			if (fachkombi_erforderlich.value.size() > 0 && !bewertet.value[2])
-				for (const kombi of fachkombi_erforderlich.value)
-					if (kombi.gueltigInHalbjahr[3]) {
-						const fach = faechermanager?.get(kombi.fachID1 || 0)
-						if (!fach) return false;
-						const belegung_1 = daten.value.getWahlen(fach)[2]
-						const belegung_2 = wahlen.value[2]
-						return belegung_1 !== belegung_2 ? true : false;
-					};
-			return false;
-		})
-	const fachkombi_erforderlich_q12: ComputedRef<boolean> =
-		computed(()=> {
-			if (fachkombi_erforderlich.value.size() > 0 && !bewertet.value[3])
-				for (const kombi of fachkombi_erforderlich.value)
-					if (kombi.gueltigInHalbjahr[4]) {
-						const fach = faechermanager?.get(kombi.fachID1 || 0)
-						if (!fach) return false;
-						const belegung_1 = daten.value.getWahlen(fach)[3]
-						const belegung_2 = wahlen.value[3]
-						return belegung_1 !== belegung_2 ? true : false;
-					};
-			return false;
-		})
-	const fachkombi_erforderlich_q21: ComputedRef<boolean> =
-		computed(()=> {
-			if (fachkombi_erforderlich.value.size() > 0 && !bewertet.value[4])
-				for (const kombi of fachkombi_erforderlich.value)
-					if (kombi.gueltigInHalbjahr[5]) {
-						const fach = faechermanager?.get(kombi.fachID1 || 0)
-						if (!fach) return false;
-						const belegung_1 = daten.value.getWahlen(fach)[4]
-						const belegung_2 = wahlen.value[4]
-						return belegung_1 !== belegung_2 ? true : false;
-					};
-			return false;
-		})
-	const fachkombi_erforderlich_q22: ComputedRef<boolean> =
-		computed(()=> {
-			if (fachkombi_erforderlich.value.size() > 0 && !bewertet.value[5])
-				for (const kombi of fachkombi_erforderlich.value)
-					if (kombi.gueltigInHalbjahr[6]) {
-						const fach = faechermanager?.get(kombi.fachID1 || 0)
-						if (!fach) return false;
-						const belegung_1 = daten.value.getWahlen(fach)[5]
-						const belegung_2 = wahlen.value[5]
-						return belegung_1 !== belegung_2 ? true : false;
-					};
-			return false;
-		})
-	const fachkombi_verboten_ef1: ComputedRef<boolean> =
-		computed(()=> {
-			if (fachkombi_verboten.value.size() > 0 && !bewertet.value[0])
-				for (const kombi of fachkombi_verboten.value)
-					if (kombi.gueltigInHalbjahr[1]) {
-						const fach = faechermanager?.get(kombi.fachID1)
-						if (!fach) return false;
-						const belegung = daten.value.getWahlen(fach)[0]
-						return belegung ? true : false;
-					};
-			return false;
-		})
-	const fachkombi_verboten_ef2: ComputedRef<boolean> =
-		computed(()=> {
-			if (fachkombi_verboten.value.size() > 0 && !bewertet.value[1])
-				for (const kombi of fachkombi_verboten.value)
-					if (kombi.gueltigInHalbjahr[2]) {
-						const fach = faechermanager?.get(kombi.fachID1 || 0)
-						if (!fach) return false;
-						const belegung = daten.value.getWahlen(fach)[1]
-						return belegung ? true : false;
-					};
-			return false;
-		})
-	const fachkombi_verboten_q11: ComputedRef<boolean> =
-		computed(()=> {
-			if (fachkombi_verboten.value.size() > 0 && !bewertet.value[2])
-				for (const kombi of fachkombi_verboten.value)
-					if (kombi.gueltigInHalbjahr[3]) {
-						const fach = faechermanager?.get(kombi.fachID1 || 0)
-						if (!fach) return false;
-						const belegung = daten.value.getWahlen(fach)[2]
-						return belegung ? true : false;
-					};
-			return false;
-		})
-	const fachkombi_verboten_q12: ComputedRef<boolean> =
-		computed(()=> {
-			if (fachkombi_verboten.value.size() > 0 && !bewertet.value[3])
-				for (const kombi of fachkombi_verboten.value)
-					if (kombi.gueltigInHalbjahr[4]) {
-						const fach = faechermanager?.get(kombi.fachID1 || 0)
-						if (!fach) return false;
-						const belegung = daten.value.getWahlen(fach)[3]
-						return belegung ? true : false;
-					};
-			return false;
-		})
-	const fachkombi_verboten_q21: ComputedRef<boolean> =
-		computed(()=> {
-			if (fachkombi_verboten.value.size() > 0 && !bewertet.value[4])
-				for (const kombi of fachkombi_verboten.value)
-					if (kombi.gueltigInHalbjahr[5]) {
-						const fach = faechermanager?.get(kombi.fachID1 || 0)
-						if (!fach) return false;
-						const belegung = daten.value.getWahlen(fach)[4]
-						return belegung ? true : false;
-					};
-			return false;
-		})
-	const fachkombi_verboten_q22: ComputedRef<boolean> =
-		computed(()=> {
-			if (fachkombi_verboten.value.size() > 0 && !bewertet.value[5])
-				for (const kombi of fachkombi_verboten.value)
-					if (kombi.gueltigInHalbjahr[6]) {
-						const fach = faechermanager?.get(kombi.fachID1 || 0)
-						if (!fach) return false;
-						const belegung = daten.value.getWahlen(fach)[5]
-						return belegung ? true : false;
-					};
-			return false;
-		})
+	function pruefeFachkombiErforderlich(halbjahr: GostHalbjahr) : boolean {
+		if (fachkombi_erforderlich.value.size() > 0 && !bewertet.value[halbjahr.id]) {
+			for (const kombi of fachkombi_erforderlich.value) {
+				if (kombi.gueltigInHalbjahr[halbjahr.id]) {
+					const fach = faechermanager?.get(kombi.fachID1);
+					if (!fach) 
+						return false;
+					const belegung_1 = daten.value.getWahlen(fach)[halbjahr.id];
+					const belegung_2 = wahlen.value[halbjahr.id];
+					return belegung_1 !== belegung_2;
+				}
+			}
+		}
+		return false;
+	}
+
+	const fachkombi_erforderlich_ef1: ComputedRef<boolean> = computed(() => pruefeFachkombiErforderlich(GostHalbjahr.EF1));
+	const fachkombi_erforderlich_ef2: ComputedRef<boolean> = computed(() => pruefeFachkombiErforderlich(GostHalbjahr.EF2));
+	const fachkombi_erforderlich_q11: ComputedRef<boolean> = computed(() => pruefeFachkombiErforderlich(GostHalbjahr.Q11));
+	const fachkombi_erforderlich_q12: ComputedRef<boolean> = computed(() => pruefeFachkombiErforderlich(GostHalbjahr.Q12));
+	const fachkombi_erforderlich_q21: ComputedRef<boolean> = computed(() => pruefeFachkombiErforderlich(GostHalbjahr.Q21));
+	const fachkombi_erforderlich_q22: ComputedRef<boolean> = computed(() => pruefeFachkombiErforderlich(GostHalbjahr.Q22));
+
+	function pruefeFachkombiVerboten(halbjahr: GostHalbjahr) : boolean {
+		if ((fachkombi_verboten.value.size() > 0) && (!bewertet.value[halbjahr.id])) {
+			for (const kombi of fachkombi_verboten.value) {
+				if (kombi.gueltigInHalbjahr[halbjahr.id]) {
+					const fach = faechermanager?.get(kombi.fachID1)
+					if (!fach) 
+						return false;
+					const belegung = daten.value.getWahlen(fach)[halbjahr.id]
+					return belegung ? true : false;
+				};
+			}
+		}
+		return false;
+	}
+
+	const fachkombi_verboten_ef1: ComputedRef<boolean> = computed(() => pruefeFachkombiVerboten(GostHalbjahr.EF1));
+	const fachkombi_verboten_ef2: ComputedRef<boolean> = computed(() => pruefeFachkombiVerboten(GostHalbjahr.EF2));
+	const fachkombi_verboten_q11: ComputedRef<boolean> = computed(() => pruefeFachkombiVerboten(GostHalbjahr.Q11));
+	const fachkombi_verboten_q12: ComputedRef<boolean> = computed(() => pruefeFachkombiVerboten(GostHalbjahr.Q12));
+	const fachkombi_verboten_q21: ComputedRef<boolean> = computed(() => pruefeFachkombiVerboten(GostHalbjahr.Q21));
+	const fachkombi_verboten_q22: ComputedRef<boolean> = computed(() => pruefeFachkombiVerboten(GostHalbjahr.Q22));
 
 	function ef1_set(): void { daten.value.setEF1Wahl(fach); }
 	function ef2_set(): void { daten.value.setEF2Wahl(fach); }
@@ -307,4 +176,5 @@
 	function q21_set(): void { daten.value.setQ21Wahl(fach); }
 	function q22_set(): void { daten.value.setQ22Wahl(fach); }
 	function abi_set(): void { daten.value.setAbiturWahl(fach); }
+
 </script>
