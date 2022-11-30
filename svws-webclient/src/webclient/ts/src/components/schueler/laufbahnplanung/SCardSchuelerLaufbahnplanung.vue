@@ -176,10 +176,10 @@
 								</thead>
 								<tbody>
 									<tr v-for="regel in fachkombi_erforderlich()" :key="regel.id" class="border border-[#7f7f7f]/20 text-left" >
-										<td class="px-2"> {{ regel.hinweistext }} </td>
+										<td class="px-2">{{regel_umgesetzt(regel)}} {{ regel.hinweistext }} </td>
 									</tr>
 									<tr v-for="regel in fachkombi_verboten()" :key="regel.id" class="border border-[#7f7f7f]/20 text-left" >
-										<td class="px-2"> {{ regel.hinweistext }} </td>
+										<td class="px-2">{{regel_umgesetzt(regel)}} {{ regel.hinweistext }} </td>
 									</tr>
 								</tbody>
 							</template>
@@ -237,6 +237,7 @@
 		Vector,
 		GostJahrgangFachkombination,
 		GostLaufbahnplanungFachkombinationTyp,
+		GostHalbjahr,
 		} from "@svws-nrw/svws-core-ts";
 	import { App } from "~/apps/BaseApp";
 	import { injectMainApp, Main } from "~/apps/Main";
@@ -318,32 +319,32 @@
 		App.apps.gost.dataFachkombinationen.daten || new Vector();
 
 	const fachkombi_erforderlich = (): List<GostJahrgangFachkombination> => {
-			let result = new Vector<GostJahrgangFachkombination>()
-			for (const kombi of fachkombis)
-				if (GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH.getValue() === kombi.typ) {
-					if (kombi.hinweistext === "") {
-						const fach1 = faechermanager?.get(kombi.fachID1);
-						const fach2 = faechermanager?.get(kombi.fachID2);
-						kombi.hinweistext = `${fach1?.kuerzel} als ${kombi.kursart1} erlaubt kein ${fach2} als ${kombi.kursart2}`;
-					}
-					result.add(kombi);
+		let result = new Vector<GostJahrgangFachkombination>()
+		for (const kombi of fachkombis)
+			if (GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH.getValue() === kombi.typ) {
+				if (kombi.hinweistext === "") {
+					const fach1 = faechermanager?.get(kombi.fachID1);
+					const fach2 = faechermanager?.get(kombi.fachID2);
+					kombi.hinweistext = `${fach1?.kuerzel} als ${kombi.kursart1} erlaubt kein ${fach2} als ${kombi.kursart2}`;
 				}
-			return result;
-		}
+				result.add(kombi);
+			}
+		return result;
+	}
 
 	const fachkombi_verboten = (): List<GostJahrgangFachkombination> => {
-			let result = new Vector<GostJahrgangFachkombination>()
-			for (const kombi of fachkombis)
-				if (GostLaufbahnplanungFachkombinationTyp.VERBOTEN.getValue() === kombi.typ) {
-					if (kombi.hinweistext === "") {
-						const fach1 = faechermanager?.get(kombi.fachID1);
-						const fach2 = faechermanager?.get(kombi.fachID2);
-						kombi.hinweistext = `${fach1?.kuerzel} als ${kombi.kursart1} erfordert ${fach2} als ${kombi.kursart2}`;
-					}
-					result.add(kombi);
+		let result = new Vector<GostJahrgangFachkombination>()
+		for (const kombi of fachkombis)
+			if (GostLaufbahnplanungFachkombinationTyp.VERBOTEN.getValue() === kombi.typ) {
+				if (kombi.hinweistext === "") {
+					const fach1 = faechermanager?.get(kombi.fachID1);
+					const fach2 = faechermanager?.get(kombi.fachID2);
+					kombi.hinweistext = `${fach1?.kuerzel} als ${kombi.kursart1} erfordert ${fach2} als ${kombi.kursart2}`;
 				}
-			return result;
-		}
+				result.add(kombi);
+			}
+		return result;
+	}
 
 	const inputBeratungsdatum: WritableComputedRef<string> =
 		computed({
@@ -374,5 +375,23 @@
 				URL.revokeObjectURL(link.href);
 			})
 			.catch(console.error);
+	}
+
+	function regel_umgesetzt(kombi: GostJahrgangFachkombination): boolean {
+		const fach1 = faechermanager?.get(kombi.fachID1);
+		const fach2 = faechermanager?.get(kombi.fachID2);
+		if (!fach1 || !fach2)
+			return true;
+		for (const hj of GostHalbjahr.values()) {
+			if (kombi.gueltigInHalbjahr[hj.id]) {
+				const belegung_1 = data.value.getWahlen(fach1)[hj.id];
+				const belegung_2 = data.value.getWahlen(fach2)[hj.id];
+				if (kombi.typ === GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH.getValue())
+					return belegung_1 === belegung_2
+				if (kombi.typ === GostLaufbahnplanungFachkombinationTyp.VERBOTEN.getValue())
+					return belegung_1 !== belegung_2
+			}
+		}
+		return true;
 	}
 </script>
