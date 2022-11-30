@@ -134,13 +134,18 @@ public class DateTimeUtil {
 	 * sich, wenn es mindestens einen Zeitpunkt gibt, welcher in beiden Zeiträumen
 	 * enthalten ist.
 	 *
-	 * @param rangeStart1 Startzeit des ersten Zeitraums
-	 * @param rangeEnd1   Endzeit des ersten Zeitraums
-	 * @param rangeStart2 Startzeit des zweiten Zeitraums
-	 * @param rangeEnd2   Endzeit des zweiten Zeitraums
+	 * @param pRangeStart1 Startzeit des ersten Zeitraums
+	 * @param pRangeEnd1   Endzeit des ersten Zeitraums
+	 * @param pRangeStart2 Startzeit des zweiten Zeitraums
+	 * @param pRangeEnd2   Endzeit des zweiten Zeitraums
 	 * @return true, wenn die Zeiträume überlappen
 	 */
-	public static boolean intersect(Instant rangeStart1, Instant rangeEnd1, Instant rangeStart2, Instant rangeEnd2) {
+	public static boolean intersect(Instant pRangeStart1, Instant pRangeEnd1, Instant pRangeStart2,
+			Instant pRangeEnd2) {
+		Instant rangeStart1 = pRangeStart1;
+		Instant rangeStart2 = pRangeStart2;
+		Instant rangeEnd1 = pRangeEnd1;
+		Instant rangeEnd2 = pRangeEnd2;
 		if (rangeStart1.compareTo(rangeEnd1) > 0) {
 			Instant buf = rangeStart1;
 			rangeStart1 = rangeEnd1;
@@ -160,21 +165,23 @@ public class DateTimeUtil {
 	 * Gibt wieder, ob sich ein Zeitpunkt innerhalb eines Zeitraums befindet,
 	 * inklusive Start und Endzeitpunkt
 	 *
-	 * @param rangeStart der Startzeitpunkt der Range
-	 * @param rangeEnd   der Endzeitpunkt der Range
-	 * @param instant    der Zeitpunkt, der gegen den Zeitraum verglichen werden
-	 *                   soll
+	 * @param pRangeStart der Startzeitpunkt der Range
+	 * @param pRangeEnd   der Endzeitpunkt der Range
+	 * @param instant     der Zeitpunkt, der gegen den Zeitraum verglichen werden
+	 *                    soll
 	 * @return true, wenn instant gleich oder größer als der Start und gleich oder
 	 *         kleiner als das Ende ist
 	 */
-	public static boolean between(Instant rangeStart, Instant rangeEnd, Instant instant) {
+	public static boolean between(Instant pRangeStart, Instant pRangeEnd, Instant instant) {
+		Instant rangeStart = pRangeStart;
+		Instant rangeEnd = pRangeEnd;
 		if (rangeStart.compareTo(rangeEnd) >= 0) {
 			// Start und Endzeitpunkt vertauschen
 			Instant buf = rangeStart;
 			rangeStart = rangeEnd;
 			rangeEnd = buf;
 		}
-		return instant.compareTo(rangeStart) >= 0 && instant.compareTo(rangeEnd) <= 0;
+		return instant.compareTo(pRangeStart) >= 0 && instant.compareTo(pRangeEnd) <= 0;
 	}
 
 	/**

@@ -35,7 +35,7 @@ public class KalenderEintrag {
 
 	/** das serialisierte .ics dieses Kalendereintrags */
 	@Schema(required = true, description = "das serialisierte .ics dieses Kalendereintrags", example = "...")
-	public @NotNull String data;
+	public @NotNull String data = "";
 
 	/** der Startzeitpunkt dieses Kalendereintrags als SQL-Timestamp */
 	@Schema(required = false, description = "der Startzeitpunkt dieses Kalendereintrags ", example = "2022-10-13 14:00:00.000")
@@ -59,5 +59,5 @@ public class KalenderEintrag {
 
 	/** der Typ des Kalendereintrags */
 	@Schema(required = true, description = "der Typ des Kalendereintrags ", example = "VEVENT")
-	public @NotNull String kalenderTyp;
+	public @NotNull String kalenderTyp = "VEVENT";
 }

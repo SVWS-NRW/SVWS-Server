@@ -11,7 +11,7 @@ export class KalenderEintrag extends JavaObject {
 
 	public version : String = "";
 
-	public data : String;
+	public data : String = "";
 
 	public kalenderStart : String | null = null;
 
@@ -23,7 +23,7 @@ export class KalenderEintrag extends JavaObject {
 
 	public istBesitzer : boolean = false;
 
-	public kalenderTyp : String;
+	public kalenderTyp : String = "VEVENT";
 
 
 	public constructor() {
