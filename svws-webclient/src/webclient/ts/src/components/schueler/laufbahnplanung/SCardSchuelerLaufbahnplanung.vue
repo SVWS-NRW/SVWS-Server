@@ -176,10 +176,12 @@
 								</thead>
 								<tbody>
 									<tr v-for="regel in fachkombi_erforderlich()" :key="regel.id" class="border border-[#7f7f7f]/20 text-left" >
-										<td class="px-2">{{regel_umgesetzt(regel)}} {{ regel.hinweistext }} </td>
+										<td class="px-2">
+											<span v-if="regel_umgesetzt(regel)" class="px-2 rounded-full bg-green-400 mr-1"></span> {{ regel.hinweistext }} </td>
 									</tr>
 									<tr v-for="regel in fachkombi_verboten()" :key="regel.id" class="border border-[#7f7f7f]/20 text-left" >
-										<td class="px-2">{{regel_umgesetzt(regel)}} {{ regel.hinweistext }} </td>
+										<td class="px-2">
+											<span v-if="regel_umgesetzt(regel)" class="px-2 rounded-full bg-green-400 mr-1"></span> {{ regel.hinweistext }} </td>
 									</tr>
 								</tbody>
 							</template>
