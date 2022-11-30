@@ -28,7 +28,7 @@
 								</tr>
 							</thead>
 							<tr v-for="row in rows" :key="row.id">
-								<s-row-lupo :fach="row"></s-row-lupo>
+								<s-row-lupo :fach="row" />
 							</tr>
 							<thead class="bg-slate-100">
 								<tr>
@@ -52,16 +52,11 @@
 										'bg-green-700': jahrgang > 11
 									}"
 								> {{ jahrgang }} </td>
-								<td
-									class="border border-[#7f7f7f]/20 bg-slate-100 text-center"
+								<td class="border border-[#7f7f7f]/20 bg-slate-100 text-center"
 									:class="{
 										'bg-red-400': kurse_summe < 30,
-										'bg-yellow-400':
-											kurse_summe >= 31 &&
-											kurse_summe <= 32,
-										'bg-green-300':
-											kurse_summe > 32 &&
-											kurse_summe < 37,
+										'bg-yellow-400': kurse_summe >= 31 && kurse_summe <= 32,
+										'bg-green-300': kurse_summe > 32 && kurse_summe < 37,
 										'bg-green-700': kurse_summe > 36
 									}"
 								> {{ kurse_summe }} </td>
@@ -72,18 +67,15 @@
 									class="border border-[#7f7f7f]/20 text-center"
 									:class="{
 										'bg-red-400': jahrgang < 30,
-										'bg-yellow-400':
-											jahrgang >= 31 && jahrgang <= 32,
-										'bg-green-300':
-											jahrgang > 32 && jahrgang < 37,
+										'bg-yellow-400': jahrgang >= 31 && jahrgang <= 32,
+										'bg-green-300': jahrgang > 32 && jahrgang < 37,
 										'bg-green-700': jahrgang > 36
 									}"
 								> {{ jahrgang }} </td>
 								<td class="border border-[#7f7f7f]/20 bg-slate-100 text-center"
 									:class="{
 										'bg-red-400': wst_summe < 100,
-										'bg-yellow-400':
-											wst_summe >= 100 && wst_summe < 102,
+										'bg-yellow-400': wst_summe >= 100 && wst_summe < 102,
 										'bg-green-300': wst_summe >= 102 && wst_summe <= 108,
 										'bg-green-700': wst_summe > 108
 									}"
@@ -95,8 +87,7 @@
 									class="border border-[#7f7f7f]/20 text-center"
 									:class="{
 										'bg-red-400': wst_d_ef < 34,
-										'bg-green-300':
-											wst_d_ef >= 34 && wst_d_ef < 37,
+										'bg-green-300': wst_d_ef >= 34 && wst_d_ef < 37,
 										'bg-green-700': wst_d_ef >= 37
 									}"
 								> {{ wst_d_ef }} </td>
@@ -104,8 +95,7 @@
 									class="border border-[#7f7f7f]/20 bg-slate-100 text-center"
 									:class="{
 										'bg-red-400': wst_d_q < 34,
-										'bg-green-300':
-											wst_d_q >= 34 && wst_d_q < 37,
+										'bg-green-300': wst_d_q >= 34 && wst_d_q < 37,
 										'bg-green-700': wst_d_q >= 37
 									}"
 								> {{ wst_d_q }} </td>
@@ -131,24 +121,18 @@
 									<td class="px-2">
 										<div class="flex gap-4">
 											<div class="form-check form-check-inline cursor-pointer" >
-												<input
-													id="ef"
+												<input type="radio" name="inlineRadioOptions" id="ef"
 													v-model="belegpruefungsart"
-													class="bg-text-center float-left mt-[0.15rem] mr-2 h-4 w-4 cursor-pointer rounded-full border border-gray-300 bg-white bg-contain checked:border-slate-100 checked:bg-slate-100 focus:outline-none"
-													type="radio"
-													name="inlineRadioOptions"
 													:value="ef1"
+													class="bg-text-center float-left mt-[0.15rem] mr-2 h-4 w-4 cursor-pointer rounded-full border border-gray-300 bg-white bg-contain checked:border-slate-100 checked:bg-slate-100 focus:outline-none"
 												/>
 												<label class="form-check-label inline-block cursor-pointer" for="ef" >EF 1</label >
 											</div>
 											<div class="form-check form-check-inline cursor-pointer" >
-												<input
-													id="gesamt"
+												<input id="gesamt" type="radio" name="inlineRadioOptions"
 													v-model="belegpruefungsart"
-													class="bg-text-center float-left mt-[0.15rem] mr-2 h-4 w-4 cursor-pointer rounded-full border border-gray-300 bg-white bg-contain checked:border-slate-100 checked:bg-slate-100 focus:outline-none"
-													type="radio"
-													name="inlineRadioOptions"
 													:value="gesamt"
+													class="bg-text-center float-left mt-[0.15rem] mr-2 h-4 w-4 cursor-pointer rounded-full border border-gray-300 bg-white bg-contain checked:border-slate-100 checked:bg-slate-100 focus:outline-none"
 												/>
 												<label class="form-check-label inline-block cursor-pointer" for="gesamt" >Gesamt</label >
 											</div>
@@ -160,8 +144,7 @@
 								<tr>
 									<td class="px-2"> Laufbahnfehler
 										<svws-ui-badge v-if="belegungsfehler.size()" variant="error" size="tiny" >
-											{{ belegungsfehler.size() }}
-										</svws-ui-badge>
+											{{ belegungsfehler.size() }} </svws-ui-badge>
 									</td>
 								</tr>
 							</thead>
@@ -185,6 +168,21 @@
 									<td class="px-2">Keine</td>
 								</tr>
 							</tbody>
+							<template v-if="(fachkombis.size())">
+								<thead class="bg-slate-100">
+									<tr>
+										<td class="px-2"> Informationen zu Fachkombinationsregeln </td>
+									</tr>
+								</thead>
+								<tbody>
+									<tr v-for="regel in fachkombi_erforderlich()" :key="regel.id" class="border border-[#7f7f7f]/20 text-left" >
+										<td class="px-2"> {{ regel.hinweistext }} </td>
+									</tr>
+									<tr v-for="regel in fachkombi_verboten()" :key="regel.id" class="border border-[#7f7f7f]/20 text-left" >
+										<td class="px-2"> {{ regel.hinweistext }} </td>
+									</tr>
+								</tbody>
+							</template>
 						</table>
 					</div>
 				</div>
@@ -237,6 +235,8 @@
 		Sprachpruefungniveau,
 		List,
 		Vector,
+		GostJahrgangFachkombination,
+		GostLaufbahnplanungFachkombinationTyp,
 		} from "@svws-nrw/svws-core-ts";
 	import { App } from "~/apps/BaseApp";
 	import { injectMainApp, Main } from "~/apps/Main";
@@ -246,6 +246,7 @@
 	const app = main.apps.schueler;
 	const ef1: GostBelegpruefungsArt = GostBelegpruefungsArt.EF1;
 	const gesamt: GostBelegpruefungsArt = GostBelegpruefungsArt.GESAMT;
+	const faechermanager = App.apps.gost.dataFaecher.manager;
 
 	const manuell = ref(false)
 
@@ -312,6 +313,37 @@
 				data.value.gostAktuelleBelegpruefungsart = value;
 			}
 		});
+	
+	const fachkombis: List<GostJahrgangFachkombination> =
+		App.apps.gost.dataFachkombinationen.daten || new Vector();
+
+	const fachkombi_erforderlich = (): List<GostJahrgangFachkombination> => {
+			let result = new Vector<GostJahrgangFachkombination>()
+			for (const kombi of fachkombis)
+				if (GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH.getValue() === kombi.typ) {
+					if (kombi.hinweistext === "") {
+						const fach1 = faechermanager?.get(kombi.fachID1);
+						const fach2 = faechermanager?.get(kombi.fachID2);
+						kombi.hinweistext = `${fach1?.kuerzel} als ${kombi.kursart1} erlaubt kein ${fach2} als ${kombi.kursart2}`;
+					}
+					result.add(kombi);
+				}
+			return result;
+		}
+
+	const fachkombi_verboten = (): List<GostJahrgangFachkombination> => {
+			let result = new Vector<GostJahrgangFachkombination>()
+			for (const kombi of fachkombis)
+				if (GostLaufbahnplanungFachkombinationTyp.VERBOTEN.getValue() === kombi.typ) {
+					if (kombi.hinweistext === "") {
+						const fach1 = faechermanager?.get(kombi.fachID1);
+						const fach2 = faechermanager?.get(kombi.fachID2);
+						kombi.hinweistext = `${fach1?.kuerzel} als ${kombi.kursart1} erfordert ${fach2} als ${kombi.kursart2}`;
+					}
+					result.add(kombi);
+				}
+			return result;
+		}
 
 	const inputBeratungsdatum: WritableComputedRef<string> =
 		computed({
