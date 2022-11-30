@@ -3,7 +3,7 @@
 	"description": "SVWS-Server-Projekt: Webclient",
 	"author": "MSB NRW",
 	"license": "BSD-3-Clause",
-	"version": "0.4.0",
+	"version": "0.4.1-SNAPSHOT",
 	"main": "./dist/index.js",
 	"types": "./dist/index.d.ts",
 	"files": [
@@ -22,7 +22,7 @@
 		"@headlessui/vue": "1.6.7",
 		"vue": "^3.2",
 		"vue-router": "^4.1.5",
-		"@svws-nrw/svws-core-ts": "^0.4.0",
-		"@svws-nrw/svws-ui": "^0.4.0"
+		"@svws-nrw/svws-core-ts": "^0.4.1-SNAPSHOT",
+		"@svws-nrw/svws-ui": "^0.4.1-SNAPSHOT"
 	}
 }
