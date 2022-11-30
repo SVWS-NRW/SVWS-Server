@@ -86,12 +86,17 @@ class="sidebar--menu" :class="{
 }
 
 .sidebar--menu--body {
-	@apply flex flex-1 flex-col;
-	@apply py-4;
+	@apply flex-1;
 }
 
+.sidebar--menu--body,
 .sidebar--menu--footer {
 	@apply flex flex-col;
-	@apply py-4;
+	@apply py-2 px-2;
+}
+
+.sidebar--menu--collapsed .sidebar--menu--body,
+.sidebar--menu--collapsed .sidebar--menu--footer {
+	@apply px-1;
 }
 </style>

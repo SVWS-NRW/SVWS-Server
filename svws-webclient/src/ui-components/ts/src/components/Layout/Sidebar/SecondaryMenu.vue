@@ -27,10 +27,11 @@
 	@apply flex flex-shrink-0 flex-col;
 	@apply h-screen w-1/4;
 	@apply overflow-y-auto;
-	@apply shadow;
+	@apply shadow-dark-20 shadow-lg z-10;
+	@apply rounded-tr-2xl rounded-br-2xl;
 	-webkit-overflow-scrolling: touch;
 	min-width: 22rem;
-	max-width: 32rem;
+	max-width: 30rem;
 }
 
 .secondary-menu .v-table {
@@ -52,5 +53,13 @@
 	@apply overflow-y-auto;
 	@apply relative z-0;
 	-webkit-overflow-scrolling: touch;
+}
+
+.secondary-menu--content .secondary-menu--navigation {
+	@apply px-3;
+}
+
+.secondary-menu--content .secondary-menu--navigation {
+	@apply flex flex-col items-start
 }
 </style>

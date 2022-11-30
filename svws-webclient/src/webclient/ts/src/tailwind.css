@@ -7,6 +7,7 @@
 	@apply h-screen;
 	@apply overflow-hidden;
 	@apply relative;
+	@apply bg-white pl-3;
 }
 
 .app-wrapper {

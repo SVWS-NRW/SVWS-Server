@@ -1,9 +1,9 @@
 <template>
 	<svws-ui-secondary-menu>
-		<template #headline> Statistik </template>
+		<template #headline>Statistik</template>
 		<template #header> </template>
 		<template #content>
-			<div class="container">
+			<div class="secondary-menu--navigation container">
 				<svws-ui-sidebar-menu-item
 					><template #label><span></span></template
 				></svws-ui-sidebar-menu-item>

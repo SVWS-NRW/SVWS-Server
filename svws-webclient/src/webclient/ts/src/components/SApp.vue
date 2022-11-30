@@ -23,7 +23,7 @@
 					<div v-else />
 				</template>
 				<template #default>
-					<div class="mt-6 mb-8">
+					<div class="mt-4 mb-12">
 						<svws-ui-sidebar-menu-item
 							v-for="menuItem in menuItems"
 							:key="menuItem.caption"
@@ -81,7 +81,7 @@
 		</template>
 		<template #main>
 			<svws-ui-overlay v-if="showOverlay || initializing" />
-			<div class="page-wrapper svws-ui-bg-white">
+			<div class="page-wrapper">
 				<svws-ui-overlay v-if="showOverlay || initializing" />
 				<main class="relative h-screen">
 					<router-view />
@@ -150,7 +150,7 @@
 	});
 
 	const selectedItems = ref([]);
-	const isCollapsed = ref(false);
+	const isCollapsed = ref(true);
 
 	const schulname: ComputedRef<string> = computed(() => {
 		const name = appSchule.value.schuleStammdaten.daten?.bezeichnung1;
@@ -295,20 +295,6 @@
 </script>
 
 <style>
-	.svws-app {
-		display: flex;
-		position: relative;
-		flex: 1 1 auto;
-		flex-direction: column;
-		height: 100%;
-		width: 100%;
-		-ms-user-select: None;
-		-moz-user-select: None;
-		-webkit-user-select: None;
-		user-select: None;
-		color: var(--font-color);
-	}
-
 	html {
 		font-size: 12px;
 	}
