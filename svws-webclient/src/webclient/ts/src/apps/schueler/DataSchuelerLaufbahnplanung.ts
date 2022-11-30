@@ -17,12 +17,6 @@ interface GostSprachbelegungen {
 
 class DataSchuelerLaufbahnplanungReactiveState {
 	/**
-	 * Die derzeitigen Fächer der gymnasialen Oberstufe, welche aus dem
-	 * SVWS-Server ausgelesen werden.
-	 */
-	gostFaecher: Array<GostFach> = [];
-
-	/**
 	 * Eine Liste der Fächer der gymnasialen Oberstufe, welche aus dem SVWS-Server
 	 * ausgelesen wurden, aber ohne Vertiefungs- und Projektkursfächer
 	 */
@@ -59,19 +53,13 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 	/** Legt fest, ob die Eingabe frei gewählt werden darf oder Einschränkungen eingestellt sind */
 	public manuelle_eingabe = false;
 
-	/**
-	 * Die derzeitigen Fächer der gymnasialen Oberstufe, welche aus dem
-	 * SVWS-Server ausgelesen werden.
-	 */
-	protected gostFaecherList: List<GostFach> = new Vector<GostFach>();
-
 	protected on_update(daten: Partial<GostSchuelerFachwahl>): void {
 		// TODO
 		return void daten;
 	}
 
-	get gostFaecher(): Array<GostFach> {
-		return this._data.gostFaecher;
+	get gostFaecher(): List<GostFach> {
+		return App.apps.gost.dataFaecher.daten || new Vector()
 	}
 
 	get gostFachbelegungen(): Array<AbiturFachbelegung> {
@@ -157,7 +145,7 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 		const art = (this._data.gostBelegpruefungsart.kuerzel === GostBelegpruefungsArt.GESAMT.kuerzel)
 			? GostBelegpruefungsArt.GESAMT
 			: GostBelegpruefungsArt.EF1;
-		this.manager = new AbiturdatenManager(this._daten, this.gostFaecherList, art);
+		this.manager = new AbiturdatenManager(this._daten, this.gostFaecher, art);
 	}
 
 	/**
@@ -170,22 +158,11 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 		await super._select((eintrag: SchuelerListeEintrag) => App.api.getGostSchuelerLaufbahnplanung(App.schema, eintrag.id));
 		if (!this._daten) 
 			return undefined;
-		if (!this._data.gostFaecher.length && this.hasGostlaufbahn() && this.abiturjahr !== undefined && this.abiturjahr !== -1) {
-			// Lese die Fächerinformationen für die gymnasiale Oberstufe für den speziellen Abiturjahrgang
-			try {
-				// TODO Diese Anfrage sollte über die App stattfinden
-				const result = await App.api.getGostAbiturjahrgangFaecher(App.schema, this.abiturjahr);
-				this.gostFaecherList = result;
-				this._data.gostFaecher = result.toArray(new Array<GostFach>());
-				this._data.gostFaecherOhnePJKundVTF = this.gostFaecher.filter(
-					fach => !this.istVertiefungsOderProjektkursfach(fach)
-				);
-			} catch (error) {
-				this.gostFaecherList.clear();
-				this._data.gostFaecher = [];
-				this._data.gostFaecherOhnePJKundVTF = [];
-				console.error(error);
-			}
+		if (!this.gostFaecher.size() && this.hasGostlaufbahn() && this.abiturjahr !== undefined && this.abiturjahr !== -1) {
+			this._data.gostFaecherOhnePJKundVTF = []
+			for (const fach of this.gostFaecher)
+				if (!this.istVertiefungsOderProjektkursfach(fach))
+					this._data.gostFaecherOhnePJKundVTF.push(fach)
 		}
 		this._data._kurszahlen = [0, 0, 0, 0, 0, 0];
 		this._data._wochenstunden = [0, 0, 0, 0, 0, 0];
@@ -200,7 +177,6 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 					this._data.gostSprachbelegungen[belegung.sprache.valueOf()] = belegung;
 			}
 			this.set_manager();
-			// Führe die Laufbahnprüfung durch
 			this.gostBelegpruefung();
 		} else {
 			this._data.gostFachbelegungen = [];

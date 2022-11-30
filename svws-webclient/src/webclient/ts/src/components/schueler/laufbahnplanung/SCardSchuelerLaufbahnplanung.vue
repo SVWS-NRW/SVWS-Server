@@ -235,11 +235,8 @@
 		GostBelegungsfehlerArt,
 		GostFach,
 		Sprachpruefungniveau,
-		GostLaufbahnplanungFachkombinationTyp,
-		GostFaecherManager,
 		List,
 		Vector,
-		GostJahrgangFachkombination
 		} from "@svws-nrw/svws-core-ts";
 	import { App } from "~/apps/BaseApp";
 	import { injectMainApp, Main } from "~/apps/Main";
@@ -255,8 +252,8 @@
 	const data: ComputedRef<DataSchuelerLaufbahnplanung> =
 		computed(() => app.dataGostLaufbahndaten || new DataSchuelerLaufbahnplanung());
 
-	const rows: ComputedRef<GostFach[]> =
-		computed(() => data.value.gostFaecher);
+	const rows: ComputedRef<List<GostFach>> =
+		computed(() => App.apps.gost.dataFaecher.daten || new Vector());
 
 	const kurszahlen: ComputedRef<number[]> =
 		computed(() => data.value.anrechenbare_kurszahlen);
