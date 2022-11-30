@@ -29,7 +29,7 @@ export class AdressbuchKontakt extends AdressbuchEintrag {
 
 	public webAdresse : String | null = "";
 
-	public kategorien : List<String | null> | null = new Vector<String | null>();
+	public kategorien : List<String | null> | null = new Vector();
 
 	public organisation : String | null = null;
 

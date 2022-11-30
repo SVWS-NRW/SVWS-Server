@@ -15,4 +15,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @HttpMethod("PROPFIND")
 public @interface PROPFIND {
+	// kein code nötig
 }

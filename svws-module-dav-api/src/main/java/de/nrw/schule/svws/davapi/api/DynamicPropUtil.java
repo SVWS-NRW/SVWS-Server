@@ -55,6 +55,7 @@ class DynamicPropUtil {
 	 * @param propRequested Prop-Objekt aus dem Request.
 	 * @return Liste der angefragten Properties als Field-Objekte (Relection)
 	 */
+	@SuppressWarnings("static-method")
 	private List<Field> getPropsFieldsNotNull(@NotNull Prop propRequested) {
 		Field[] fields = propRequested.getClass().getDeclaredFields();
 		List<Field> requestedFields = new ArrayList<>();
@@ -91,13 +92,8 @@ class DynamicPropUtil {
 					Object instance = field.getType().getDeclaredConstructor().newInstance();
 					field.set(prop404, instance);
 
-				} catch (InstantiationException e) {
-					e.printStackTrace();
-				} catch (IllegalAccessException e) {
-					e.printStackTrace();
-				} catch (InvocationTargetException e) {
-					e.printStackTrace();
-				} catch (NoSuchMethodException e) {
+				} catch (InstantiationException | IllegalAccessException | InvocationTargetException
+						| NoSuchMethodException e) {
 					e.printStackTrace();
 				}
 			}

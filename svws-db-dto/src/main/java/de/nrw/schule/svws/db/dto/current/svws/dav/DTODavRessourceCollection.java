@@ -45,9 +45,11 @@ import de.nrw.schule.svws.csv.converter.current.DavRessourceCollectionTypConvert
 @NamedQuery(name="DTODavRessourceCollection.beschreibung.multiple", query="SELECT e FROM DTODavRessourceCollection e WHERE e.Beschreibung IN :value")
 @NamedQuery(name="DTODavRessourceCollection.synctoken", query="SELECT e FROM DTODavRessourceCollection e WHERE e.SyncToken = :value")
 @NamedQuery(name="DTODavRessourceCollection.synctoken.multiple", query="SELECT e FROM DTODavRessourceCollection e WHERE e.SyncToken IN :value")
+@NamedQuery(name="DTODavRessourceCollection.geloeschtam", query="SELECT e FROM DTODavRessourceCollection e WHERE e.geloeschtam = :value")
+@NamedQuery(name="DTODavRessourceCollection.geloeschtam.multiple", query="SELECT e FROM DTODavRessourceCollection e WHERE e.geloeschtam IN :value")
 @NamedQuery(name="DTODavRessourceCollection.primaryKeyQuery", query="SELECT e FROM DTODavRessourceCollection e WHERE e.ID = ?1")
 @NamedQuery(name="DTODavRessourceCollection.all.migration", query="SELECT e FROM DTODavRessourceCollection e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"Benutzer_ID","ID","Typ","Anzeigename","Beschreibung","SyncToken"})
+@JsonPropertyOrder({"Benutzer_ID","ID","Typ","Anzeigename","Beschreibung","SyncToken","geloeschtam"})
 public class DTODavRessourceCollection {
 
 	/** Die ID des Benutzers, zu dem der Datensatz gehört */
@@ -86,6 +88,14 @@ public class DTODavRessourceCollection {
 	@JsonSerialize(using=DatumUhrzeitConverterSerializer.class)
 	@JsonDeserialize(using=DatumUhrzeitConverterDeserializer.class)
 	public String SyncToken;
+
+	/** Der Zeitpunkt, an dem diese ggf. Ressource gelöscht wurde. */
+	@Column(name = "geloeschtam")
+	@JsonProperty
+	@Convert(converter=DatumUhrzeitConverter.class)
+	@JsonSerialize(using=DatumUhrzeitConverterSerializer.class)
+	@JsonDeserialize(using=DatumUhrzeitConverterDeserializer.class)
+	public String geloeschtam;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTODavRessourceCollection ohne eine Initialisierung der Attribute.
@@ -159,7 +169,7 @@ public class DTODavRessourceCollection {
 	 */
 	@Override
 	public String toString() {
-		return "DTODavRessourceCollection(Benutzer_ID=" + this.Benutzer_ID + ", ID=" + this.ID + ", Typ=" + this.Typ + ", Anzeigename=" + this.Anzeigename + ", Beschreibung=" + this.Beschreibung + ", SyncToken=" + this.SyncToken + ")";
+		return "DTODavRessourceCollection(Benutzer_ID=" + this.Benutzer_ID + ", ID=" + this.ID + ", Typ=" + this.Typ + ", Anzeigename=" + this.Anzeigename + ", Beschreibung=" + this.Beschreibung + ", SyncToken=" + this.SyncToken + ", geloeschtam=" + this.geloeschtam + ")";
 	}
 
 }

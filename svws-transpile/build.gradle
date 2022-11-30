@@ -11,17 +11,15 @@ dependencies {
 
     implementation 'org.codehaus.plexus:plexus-utils:3.4.1'
     
-    javacore fileTree(dir: "$rootDir/svws-core/src/main/java", includes: ['**/svws/core/**/*.java'], excludes: ['**/svws/core/transpiler/TranspilerDTO.java', 
-    //TODO remove exclude once carddav/caldav submodule is created
-    '**/svws/core/data/adressbuch/FakedataFactory.java'])
+    javacore fileTree(dir: "$rootDir/svws-core/src/main/java", includes: ['**/svws/core/**/*.java'], excludes: ['**/svws/core/transpiler/TranspilerDTO.java'])
     
     javaapi fileTree(dir: "$rootDir/svws-openapi/src/main/java", includes: ['**/svws/api/*/*.java'], 
                      excludes: [ '**/svws/api/schema/**/*.java',
                                  '**/svws/api/client/**/*.java', 
                                  '**/svws/api/debug/**/*.java',
-                                 //TODO remove excludes once carddav/caldav submodule is created
                                  '**/svws/api/webdav/**/*.java',
-                                 '**/svws/api/server/APIAdressbuch.java']) 
+                                 '**/svws/api/server/APIAdressbuch.java',
+                                 '**/svws/api/server/APIKalender.java']) 
 }
 
 task removeTranspiledCode(type: Delete) {

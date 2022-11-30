@@ -65,7 +65,7 @@ public class Getcontentlanguage {
      */
     public List<String> getContent() {
         if (content == null) {
-            content = new ArrayList<String>();
+            content = new ArrayList<>();
         }
         return this.content;
     }

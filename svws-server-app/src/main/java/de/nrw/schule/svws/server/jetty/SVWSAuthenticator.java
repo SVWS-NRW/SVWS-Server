@@ -60,9 +60,9 @@ public class SVWSAuthenticator extends LoginAuthenticator {
         Options-Requests und Header werde hier in dieser Klasse gesetzt. In Hinblick auf eine lose Kopplung ist die folgende Implementierung
         keine gute Lösung. Eine Alternativlösung muss diskutiert werden.
         */
-        if("OPTIONS".equals(request.getMethod()) && request.getRequestURI().contains("/carddav")){
+        if("OPTIONS".equals(request.getMethod()) && request.getRequestURI().contains("/dav")){
             response.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, PUT, DELETE, OPTIONS, HEAD, PROPFIND, REPORT");
-            response.setHeader("DAV", "addressbook");
+            response.setHeader("DAV", "addressbook, calendar-access");
         }
         //Workaround Ende
 

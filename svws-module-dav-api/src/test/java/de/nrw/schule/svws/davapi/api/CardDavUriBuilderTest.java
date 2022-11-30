@@ -14,7 +14,7 @@ class CardDavUriBuilderTest {
 	 * Erstellt eine Instanz des {@link CardDavUriParameter}
 	 * @return
 	 */
-	private CardDavUriParameter createParameter() {
+	private static CardDavUriParameter createParameter() {
 		CardDavUriParameter parameter = new CardDavUriParameter();
 		parameter.setAdressbuchId("AAA");
 		parameter.setBenutzerId("BBB");
@@ -28,7 +28,7 @@ class CardDavUriBuilderTest {
 	 */
 	@Test
 	void getAddressbookUri_returnsExpectedUri() {
-		String result = CardDavUriBuilder.getAddressbookUri(this.createParameter());
+		String result = CardDavUriBuilder.getAddressbookUri(createParameter());
 		assertEquals("/db/SSS/carddav/adressbuecher/AAA", result);
 	}
 
@@ -37,7 +37,7 @@ class CardDavUriBuilderTest {
 	 */
 	@Test
 	void getAddressbookCollectionUri_returnsExpectedUri() {
-		String result = CardDavUriBuilder.getAddressbookCollectionUri(this.createParameter());
+		String result = CardDavUriBuilder.getAddressbookCollectionUri(createParameter());
 		assertEquals("/db/SSS/carddav/adressbuecher", result);
 	}
 
@@ -46,7 +46,7 @@ class CardDavUriBuilderTest {
 	 */
 	@Test
 	void getAdressEntryUri_returnsExpectedUri() {
-		String result = CardDavUriBuilder.getAdressEntryUri(this.createParameter());
+		String result = CardDavUriBuilder.getAdressEntryUri(createParameter());
 		assertEquals("/db/SSS/carddav/adressbuecher/AAA/KKK.vcf", result);
 	}
 
@@ -55,7 +55,7 @@ class CardDavUriBuilderTest {
 	 */
 	@Test
 	void getPrincipalUri_returnsExpectedUri() {
-		String result = CardDavUriBuilder.getPrincipalUri(this.createParameter());
+		String result = CardDavUriBuilder.getPrincipalUri(createParameter());
 		assertEquals("/db/SSS/carddav/benutzer/BBB", result);
 	}
 

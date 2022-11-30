@@ -27,7 +27,7 @@ public class Tabelle_DavRessourceCollections extends SchemaTabelle {
 		.setJavaComment("ID der WebDav-Ressourcensammlung");
 
 	/** Die Definition der Tabellenspalte Typ */
-	public SchemaTabelleSpalte col_Typ = add("Typ", SchemaDatentypen.VARCHAR, false).setDatenlaenge(80)
+	public SchemaTabelleSpalte col_Typ = add("Typ", SchemaDatentypen.INT, false)
 		.setNotNull()
 		.setConverter(DavRessourceCollectionTypConverter.class)
 		.setJavaComment("Gibt den Typ dieser Sammlung an, bspw Adressbuch oder Kalender");
@@ -44,9 +44,17 @@ public class Tabelle_DavRessourceCollections extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte SyncToken */
 	public SchemaTabelleSpalte col_SyncToken = add("SyncToken", SchemaDatentypen.DATETIME, false)
 		.setNotNull()
+		.setDatenlaenge(3)
 		.setConverter(DatumUhrzeitConverter.class)
 		.setJavaComment("Das SyncToken der Ressourcensammlung");
 
+	/** Die Definition der Tabellenspalte geloeschtam */
+	public SchemaTabelleSpalte col_geloeschtam = add("geloeschtam", SchemaDatentypen.DATETIME, false)
+			.setDatenlaenge(3)
+			.setConverter(DatumUhrzeitConverter.class)
+			.setJavaComment("Der Zeitpunkt, an dem diese ggf. Ressource gelöscht wurde.");
+
+	
 
 	/** Die Definition des Fremdschlüssels DavRessourceCollection_Benutzer_FK */
 	public SchemaTabelleFremdschluessel fk_DavRessourceCollection_Benutzer_FK = addForeignKey(

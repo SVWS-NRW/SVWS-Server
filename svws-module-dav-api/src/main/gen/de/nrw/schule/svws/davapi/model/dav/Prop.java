@@ -8,10 +8,17 @@
 
 package de.nrw.schule.svws.davapi.model.dav;
 
+import de.nrw.schule.svws.davapi.model.dav.cal.CalendarData;
+import de.nrw.schule.svws.davapi.model.dav.cal.CalendarHomeSet;
+import de.nrw.schule.svws.davapi.model.dav.cal.CalendarUserAddressSet;
+import de.nrw.schule.svws.davapi.model.dav.cal.ScheduleInboxUrl;
+import de.nrw.schule.svws.davapi.model.dav.cal.SupportedCalendarComponentSet;
 import de.nrw.schule.svws.davapi.model.dav.card.AddressbookHomeSet;
 import de.nrw.schule.svws.davapi.model.dav.card.CardAddressData;
 import de.nrw.schule.svws.davapi.model.dav.card.SupportedAddressData;
 import de.nrw.schule.svws.davapi.model.dav.cs.Getctag;
+import de.nrw.schule.svws.davapi.model.dav.cs.Organizer;
+import de.nrw.schule.svws.davapi.model.dav.ical.CalendarColor;
 
 import jakarta.xml.bind.annotation.*;
 
@@ -503,5 +510,94 @@ public class Prop {
     public void setSupportedAddressData(SupportedAddressData supportedAddressData) {
         this.supportedAddressData = supportedAddressData;
     }
+
+	// CalDAV-Elements
+	@XmlElement(name="calendar-home-set", namespace = "urn:ietf:params:xml:ns:caldav")
+	protected CalendarHomeSet calendarHomeSet;
+
+	public CalendarHomeSet getCalendarHomeSet() {
+		return calendarHomeSet;
+	}
+
+	public void setCalendarHomeSet(CalendarHomeSet calendarHomeSet) {
+		this.calendarHomeSet = calendarHomeSet;
+	}
+
+	@XmlElement(name = "supported-calendar-component-set", namespace = "urn:ietf:params:xml:ns:caldav")
+	protected SupportedCalendarComponentSet supportedCalendarComponentSet;
+
+	public SupportedCalendarComponentSet getSupportedCalendarComponentSet() {
+		return supportedCalendarComponentSet;
+	}
+
+	public void setSupportedCalendarComponentSet(SupportedCalendarComponentSet supportedCalendarComponentSet) {
+		this.supportedCalendarComponentSet = supportedCalendarComponentSet;
+	}
+
+	@XmlElement(name="calendar-color", namespace = "http://apple.com/ns/ical")
+	protected CalendarColor calendarColor;
+
+	public CalendarColor getCalendarColor() {
+		return calendarColor;
+	}
+
+	public void setCalendarColor(CalendarColor calendarColor) {
+		this.calendarColor = calendarColor;
+	}
+
+	@XmlElement(name = "calendar-user-address-set", namespace = "urn:ietf:params:xml:ns:caldav")
+	protected CalendarUserAddressSet calendarUserAddressSet;
+
+	public CalendarUserAddressSet getCalendarUserAddressSet() {
+		return calendarUserAddressSet;
+	}
+
+	public void setCalendarUserAddressSet(CalendarUserAddressSet calendarUserAddressSet) {
+		this.calendarUserAddressSet = calendarUserAddressSet;
+	}
+
+	@XmlElement(name = "schedule-inbox-URL", namespace = "urn:ietf:params:xml:ns:caldav")
+	protected ScheduleInboxUrl scheduleInboxUrl;
+
+	public ScheduleInboxUrl getScheduleInboxUrl() {
+		return scheduleInboxUrl;
+	}
+
+	public void setScheduleInboxUrl(ScheduleInboxUrl scheduleInboxUrl) {
+		this.scheduleInboxUrl = scheduleInboxUrl;
+	}
+
+	@XmlElement(name = "schedule-outbox-URL", namespace = "urn:ietf:params:xml:ns:caldav")
+	protected ScheduleInboxUrl scheduleoutboxUrl;
+
+	public ScheduleInboxUrl getScheduleoutboxUrl() {
+		return scheduleoutboxUrl;
+	}
+
+	public void setScheduleoutboxUrl(ScheduleInboxUrl scheduleoutboxUrl) {
+		this.scheduleoutboxUrl = scheduleoutboxUrl;
+	}
+
+	@XmlElement(name = "calendar-data", namespace = "urn:ietf:params:xml:ns:caldav")
+	protected CalendarData calendarData;
+
+	public CalendarData getCalendarData() {
+		return calendarData;
+	}
+
+	public void setCalendarData(CalendarData calendarData) {
+		this.calendarData = calendarData;
+	}
+
+	@XmlElement(name = "organizer", namespace = "http://calendarserver.org/ns/")
+	protected Organizer organizer;
+
+	public Organizer getOrganizer() {
+		return organizer;
+	}
+
+	public void setOrganizer(Organizer organizer) {
+		this.organizer = organizer;
+	}
 
 }

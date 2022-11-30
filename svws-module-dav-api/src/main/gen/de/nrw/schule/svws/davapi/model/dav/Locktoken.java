@@ -66,7 +66,7 @@ public class Locktoken {
      */
     public List<String> getHref() {
         if (href == null) {
-            href = new ArrayList<String>();
+            href = new ArrayList<>();
         }
         return this.href;
     }

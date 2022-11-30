@@ -1,16 +1,17 @@
 package de.nrw.schule.svws.davapi.data.repos.bycategory;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.Vector;
+
 import de.nrw.schule.svws.core.data.adressbuch.Adressbuch;
 import de.nrw.schule.svws.core.data.adressbuch.AdressbuchEintrag;
-import de.nrw.schule.svws.davapi.data.AdressbuchQueryParameters;
+import de.nrw.schule.svws.core.data.adressbuch.AdressbuchKontakt;
+import de.nrw.schule.svws.davapi.data.CollectionRessourceQueryParameters;
 import de.nrw.schule.svws.davapi.data.IAdressbuchKontaktRepository;
 import de.nrw.schule.svws.davapi.data.IAdressbuchRepository;
 import de.nrw.schule.svws.davapi.util.AdressbuchTyp;
 import de.nrw.schule.svws.db.DBEntityManager;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.Vector;
 
 /**
  * Eine Implementierung des Adressbuchrepositories für Datenbankzugriffe. Bei
@@ -26,7 +27,7 @@ public class AdressbuchWithCategoriesRepository implements IAdressbuchRepository
 	 * {@link AdressbuchKontakt}e
 	 */
 	private IAdressbuchKontaktRepository adressbuchKontaktRepository;
-
+	
 	/**
 	 * Erstellt ein neues Repository mit der angegebenen Verbindung
 	 *
@@ -38,13 +39,13 @@ public class AdressbuchWithCategoriesRepository implements IAdressbuchRepository
 	}
 
 	@Override
-	public Optional<Adressbuch> getAdressbuchById(String adressbuchId, AdressbuchQueryParameters params) {
+	public Optional<Adressbuch> getAdressbuchById(String adressbuchId, CollectionRessourceQueryParameters params) {
 		Optional<Adressbuch> adressbuchOpt = this.getAvailableAdressbuecher(params).stream()
 				.filter(a -> a.id.equals(adressbuchId)).findFirst();
 		if (adressbuchOpt.isEmpty()) {
 			return adressbuchOpt;
 		}
-		if (params.includeAdressbuchEintraege) {
+		if (params.includeRessources) {
 			List<AdressbuchEintrag> kontakteByAdressbuch = adressbuchKontaktRepository
 					.getKontakteByAdressbuch(adressbuchId, params);
 			adressbuchOpt.get().adressbuchEintraege.addAll(kontakteByAdressbuch);
@@ -53,7 +54,7 @@ public class AdressbuchWithCategoriesRepository implements IAdressbuchRepository
 	}
 
 	@Override
-	public List<Adressbuch> getAvailableAdressbuecher(AdressbuchQueryParameters params) {
+	public List<Adressbuch> getAvailableAdressbuecher(CollectionRessourceQueryParameters params) {
 		List<Adressbuch> result = new Vector<>();
 		result.add(createAdressbuch(AdressbuchContactTypes.SCHUELER));
 		result.add(createAdressbuch(AdressbuchContactTypes.LEHRER));
@@ -66,7 +67,7 @@ public class AdressbuchWithCategoriesRepository implements IAdressbuchRepository
 	/**
 	 * Erstellt ein Adressbuch mit gegebener Adressbuch Kontakt Art und gegebenem
 	 * AdressbuchTyp
-	 * 
+	 *
 	 * @param adressbuchContactTypes die Art des Adressbuchs nach Kontakten, gibt
 	 *                               die ID und Beschreibung des Adressbuchs
 	 * @param typ                    der AdressbuchTyp unterscheidet, ob ein
@@ -74,30 +75,30 @@ public class AdressbuchWithCategoriesRepository implements IAdressbuchRepository
 	 *                               öffentlich ist
 	 * @return das erzeugte Adressbuch
 	 */
-	private Adressbuch createAdressbuch(AdressbuchContactTypes adressbuchContactTypes, AdressbuchTyp typ) {
+	private static Adressbuch createAdressbuch(AdressbuchContactTypes adressbuchContactTypes, AdressbuchTyp typ) {
 		return createAdressbuch(adressbuchContactTypes.toString().toLowerCase(), adressbuchContactTypes.anzeigeName,
 				adressbuchContactTypes.beschreibung);
 	}
 
 	/**
 	 * Erstellt ein neues Adressbuch anhand eines {@link AdressbuchContactTypes}
-	 * 
+	 *
 	 * @param adressbuchType die Art des Adressbuchs
 	 * @return das erstellte Adressbuch
 	 */
-	private Adressbuch createAdressbuch(AdressbuchContactTypes adressbuchType) {
+	private static Adressbuch createAdressbuch(AdressbuchContactTypes adressbuchType) {
 		return createAdressbuch(adressbuchType, AdressbuchTyp.GENERIERT);
 	}
 
 	/**
 	 * Erstellt ein neues Adressbuch mit Id, anzeigename und Beschreibung
-	 * 
+	 *
 	 * @param id           die ID des Adressbuchs
 	 * @param displayName  der Anzeigename des Adressbuchs
 	 * @param beschreibung die Beschreibung des Adressbuchs
 	 * @return das erstellte Adressbuch
 	 */
-	private Adressbuch createAdressbuch(String id, String displayName, String beschreibung) {
+	private static Adressbuch createAdressbuch(String id, String displayName, String beschreibung) {
 		Adressbuch a = new Adressbuch();
 		a.adressbuchTyp = AdressbuchTyp.GENERIERT.bezeichnung;
 		a.beschreibung = beschreibung;
@@ -131,7 +132,7 @@ public class AdressbuchWithCategoriesRepository implements IAdressbuchRepository
 
 		/**
 		 * erstellt eine neue Adressbuchkonstakte mit Anzeigename und Beschreibung
-		 * 
+		 *
 		 * @param anzeigeName  der Anzeigename
 		 * @param beschreibung die Beschreibung
 		 */

@@ -66,7 +66,7 @@ public class AdressbuchKontakt extends AdressbuchEintrag {
 
 	/** Die Kategorien dieses Kontakts */
 	@ArraySchema(schema = @Schema(required = true, description = "Die Kategorien dieses Kontakts", example = "..."))
-	public List<String> kategorien = new Vector<String>();
+	public List<String> kategorien = new Vector<>();
 
 	/**
 	 * Die Organisation dieses Kontakts 

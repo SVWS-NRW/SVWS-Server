@@ -14,21 +14,21 @@ public interface IAdressbuchRepository {
 
 	/**
 	 * Ermittelt ein Adressbuch über eine Adressbuch-Id.
-	 * 
+	 *
 	 * @param adressbuchId Id des Adressbuchs
 	 * @param params       QueryParameter zum Filtern des Inhalts des Adressbuch
 	 * @return Optional eines Adressbuchs oder Optional.empty(), falls kein
 	 *         Adressbuch mit der angegebenen Id gefunden werden konnte.
 	 */
-	public Optional<Adressbuch> getAdressbuchById(String adressbuchId, AdressbuchQueryParameters params);
+	public Optional<Adressbuch> getAdressbuchById(String adressbuchId, CollectionRessourceQueryParameters params);
 
 	/**
 	 * Ermittelt eine Liste aller für den angemeldeten Benutzer verfügbaren
 	 * Adressbücher.
-	 * 
+	 *
 	 * @param params QueryParameter zum Filtern des Inhalts der Adressbuecher
 	 * @return Liste verfügbarer Adressbücher.
 	 */
-	public List<Adressbuch> getAvailableAdressbuecher(AdressbuchQueryParameters params);
+	public List<Adressbuch> getAvailableAdressbuecher(CollectionRessourceQueryParameters params);
 
 }

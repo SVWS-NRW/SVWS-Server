@@ -85,7 +85,7 @@ public class Response {
      */
     public List<String> getHref() {
         if (href == null) {
-            href = new ArrayList<String>();
+            href = new ArrayList<>();
         }
         return this.href;
     }
@@ -138,7 +138,7 @@ public class Response {
      */
     public List<Propstat> getPropstat() {
         if (propstat == null) {
-            propstat = new ArrayList<Propstat>();
+            propstat = new ArrayList<>();
         }
         return this.propstat;
     }

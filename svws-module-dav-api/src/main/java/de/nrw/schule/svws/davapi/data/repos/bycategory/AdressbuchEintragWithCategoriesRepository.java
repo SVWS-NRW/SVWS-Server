@@ -3,9 +3,10 @@ package de.nrw.schule.svws.davapi.data.repos.bycategory;
 import de.nrw.schule.svws.core.data.adressbuch.AdressbuchEintrag;
 import de.nrw.schule.svws.core.data.schule.Schuljahresabschnitt;
 import de.nrw.schule.svws.core.utils.schule.SchuljahresAbschnittsManager;
-import de.nrw.schule.svws.davapi.data.AdressbuchQueryParameters;
+import de.nrw.schule.svws.davapi.data.CollectionRessourceQueryParameters;
 import de.nrw.schule.svws.davapi.data.IAdressbuchKontaktRepository;
 import de.nrw.schule.svws.davapi.data.repos.bycategory.AdressbuchWithCategoriesRepository.AdressbuchContactTypes;
+import de.nrw.schule.svws.db.Benutzer;
 import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.nrw.schule.svws.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
@@ -53,13 +54,17 @@ class AdressbuchEintragWithCategoriesRepository implements IAdressbuchKontaktRep
 	 */
 	private DBEntityManager conn;
 
+	/** der Benutzer, dessen Adressbuecher gesucht werden */
+	private Benutzer user;
+
 	/**
 	 * Konstruktor zum Erstellen des Repositories mit einer Datenbankverbindung
-	 * 
+	 *
 	 * @param conn die Datenbankverbindung
 	 */
 	public AdressbuchEintragWithCategoriesRepository(DBEntityManager conn) {
 		this.conn = conn;
+		this.user = conn.getUser();
 		querySchuljahresabschnitt(conn);
 	}
 
@@ -68,7 +73,7 @@ class AdressbuchEintragWithCategoriesRepository implements IAdressbuchKontaktRep
 	 */
 	private void instantiateSchuelerRepository() {
 		if (this.schuelerRepository == null) {
-			this.schuelerRepository = new SchuelerWithCategoriesRepository(conn, aktuellerSchuljahresabschnitt,
+			this.schuelerRepository = new SchuelerWithCategoriesRepository(conn, user, aktuellerSchuljahresabschnitt,
 					kategorienUtil);
 		}
 	}
@@ -79,7 +84,7 @@ class AdressbuchEintragWithCategoriesRepository implements IAdressbuchKontaktRep
 
 	private void instantiateLehrerRepository() {
 		if (this.lehrerRepository == null) {
-			this.lehrerRepository = new LehrerWithCategoriesRepository(conn, aktuellerSchuljahresabschnitt,
+			this.lehrerRepository = new LehrerWithCategoriesRepository(conn, user, aktuellerSchuljahresabschnitt,
 					kategorienUtil);
 		}
 	}
@@ -98,7 +103,7 @@ class AdressbuchEintragWithCategoriesRepository implements IAdressbuchKontaktRep
 	/**
 	 * Sucht den aktuellen Schuljahresabschnitt und erstellt das
 	 * {@link AdressbuchKategorienUtil} für die repositories
-	 * 
+	 *
 	 * @param conn die Datenbankverbindung
 	 */
 	private void querySchuljahresabschnitt(DBEntityManager conn) {
@@ -118,25 +123,25 @@ class AdressbuchEintragWithCategoriesRepository implements IAdressbuchKontaktRep
 
 	@Override
 	public List<AdressbuchEintrag> getKontakteByAdressbuch(@NotNull String adressbuchId,
-			AdressbuchQueryParameters params) {
+			CollectionRessourceQueryParameters params) {
 		AdressbuchContactTypes adressbuchEnum = AdressbuchContactTypes.valueOf(adressbuchId.toUpperCase());
 
 		List<AdressbuchEintrag> result = switch (adressbuchEnum) {
-			case SCHUELER: {
-				instantiateSchuelerRepository();
-				yield schuelerRepository.getKontakteByAdressbuch(adressbuchId, params);
-			}
-			case ERZIEHER: {
-				instantiateErzieherRepository();
-				yield erzieherRepository.getKontakteByAdressbuch(adressbuchId, params);
-			}
-			case LEHRER: {
-				instantiateLehrerRepository();
-				yield lehrerRepository.getKontakteByAdressbuch(adressbuchId, params);
-			}
-			default: {
-				throw new IllegalArgumentException("Unexpected value: " + adressbuchId);
-			}
+		case SCHUELER: {
+			instantiateSchuelerRepository();
+			yield schuelerRepository.getKontakteByAdressbuch(adressbuchId, params);
+		}
+		case ERZIEHER: {
+			instantiateErzieherRepository();
+			yield erzieherRepository.getKontakteByAdressbuch(adressbuchId, params);
+		}
+		case LEHRER: {
+			instantiateLehrerRepository();
+			yield lehrerRepository.getKontakteByAdressbuch(adressbuchId, params);
+		}
+		default: {
+			throw new IllegalArgumentException("Unexpected value: " + adressbuchId);
+		}
 		};
 		result.forEach(k -> k.adressbuchId = adressbuchId);
 		return result;

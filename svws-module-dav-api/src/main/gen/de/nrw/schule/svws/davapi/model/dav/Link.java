@@ -70,7 +70,7 @@ public class Link {
      */
     public List<String> getSrc() {
         if (src == null) {
-            src = new ArrayList<String>();
+            src = new ArrayList<>();
         }
         return this.src;
     }
@@ -99,7 +99,7 @@ public class Link {
      */
     public List<String> getDst() {
         if (dst == null) {
-            dst = new ArrayList<String>();
+            dst = new ArrayList<>();
         }
         return this.dst;
     }

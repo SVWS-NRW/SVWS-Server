@@ -8,6 +8,8 @@
 
 package de.nrw.schule.svws.davapi.model.dav;
 
+import de.nrw.schule.svws.davapi.model.dav.cal.CalendarMultiget;
+import de.nrw.schule.svws.davapi.model.dav.cal.CalendarQuery;
 import org.w3c.dom.Element;
 
 import jakarta.xml.bind.annotation.*;
@@ -33,9 +35,7 @@ import jakarta.xml.bind.annotation.*;
  *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "any"
-})
+@XmlType(name = "")
 @XmlRootElement(name = "report")
 public class Report {
 
@@ -65,5 +65,38 @@ public class Report {
     public void setAny(Element value) {
         this.any = value;
     }
+
+	@XmlElement(name = "sync-collection")
+	protected SyncCollection syncCollection;
+
+	public SyncCollection getSyncCollection() {
+		return syncCollection;
+	}
+
+	public void setSyncCollection(SyncCollection syncCollection) {
+		this.syncCollection = syncCollection;
+	}
+
+	@XmlElement(name = "calendar-multiget", namespace = "urn:ietf:params:xml:ns:caldav")
+	protected CalendarMultiget calendarMultiget;
+
+	public CalendarMultiget getCalendarMultiget() {
+		return calendarMultiget;
+	}
+
+	public void setCalendarMultiget(CalendarMultiget calendarMultiget) {
+		this.calendarMultiget = calendarMultiget;
+	}
+
+	@XmlElement(name = "calendar-query", namespace = "urn:ietf:params:xml:ns:caldav")
+	protected CalendarQuery calendarQuery;
+
+	public CalendarQuery getCalendarQuery() {
+		return calendarQuery;
+	}
+
+	public void setCalendarQuery(CalendarQuery calendarQuery) {
+		this.calendarQuery = calendarQuery;
+	}
 
 }

@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Testklasse für die Namensgebung von Kategorien
  */
-class AdressbuchKategorienUtilTest {
+public class AdressbuchKategorienUtilTest {
 
 	private static final String JAHRGANG = "09";
 	private static final String KLASSE = "9c";

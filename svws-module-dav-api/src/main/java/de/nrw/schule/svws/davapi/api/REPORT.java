@@ -15,4 +15,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @HttpMethod("REPORT")
 public @interface REPORT {
+	// kein code nötig
 }

@@ -1,11 +1,23 @@
 package de.nrw.schule.svws.davapi.data.repos.bycategory;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.Vector;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 import de.nrw.schule.svws.core.data.adressbuch.AdressbuchEintrag;
 import de.nrw.schule.svws.core.data.adressbuch.Telefonnummer;
 import de.nrw.schule.svws.core.types.SchuelerStatus;
 import de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenz;
-import de.nrw.schule.svws.davapi.data.AdressbuchQueryParameters;
+import de.nrw.schule.svws.davapi.data.CollectionRessourceQueryParameters;
 import de.nrw.schule.svws.davapi.data.IAdressbuchKontaktRepository;
+import de.nrw.schule.svws.db.Benutzer;
 import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.dto.current.schild.erzieher.DTOSchuelerTelefon;
 import de.nrw.schule.svws.db.dto.current.schild.erzieher.DTOTelefonArt;
@@ -17,17 +29,6 @@ import de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchueler;
 import de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
 import de.nrw.schule.svws.db.dto.current.schild.schule.DTOJahrgang;
 import de.nrw.schule.svws.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
-
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.Vector;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * Diese Implementierung des {@link IAdressbuchKontaktRepository} dient der
@@ -53,34 +54,39 @@ public class SchuelerWithCategoriesRepository implements IAdressbuchKontaktRepos
 	 * Name der eigenen Schule
 	 */
 	private String schulName;
+	/** der Benutzer, dessen Adressbuecher gesucht werden */
+	private Benutzer user;
 
 	/**
 	 * Konstruktor zum Erstellen des Repositories mit einer Datenbankverbindung
-	 * 
+	 *
 	 * @param conn                          die Datenbankverbindung
+	 * @param user                          der Benutzer, dessen Adressbuecher
+	 *                                      gesucht werden
 	 * @param kategorienUtil                Instanz der Utility zum Erzeugen von
 	 *                                      Adressbuchkategorien
 	 * @param aktuellerSchuljahresabschnitt der aktuelle Schuljahresabschnitt für
 	 *                                      weitere Queries
 	 */
-	public SchuelerWithCategoriesRepository(DBEntityManager conn,
+	public SchuelerWithCategoriesRepository(DBEntityManager conn, Benutzer user,
 			DTOSchuljahresabschnitte aktuellerSchuljahresabschnitt, AdressbuchKategorienUtil kategorienUtil) {
 		this.conn = conn;
+		this.user = user;
 		this.aktuellerSchuljahresabschnitt = aktuellerSchuljahresabschnitt;
 		this.kategorienUtil = kategorienUtil;
 		this.schulName = IAdressbuchKontaktRepository.getSchulname(conn);
 	}
 
 	@Override
-	public List<AdressbuchEintrag> getKontakteByAdressbuch(String adressbuchId, AdressbuchQueryParameters params) {
-		if (!params.includeAdressbuchEintraege
-				|| !conn.getUser().pruefeKompetenz(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN)) {
+	public List<AdressbuchEintrag> getKontakteByAdressbuch(String adressbuchId,
+			CollectionRessourceQueryParameters params) {
+		if (!params.includeRessources || !user.pruefeKompetenz(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN)) {
 			return new Vector<>();
 		}
 		List<DTOSchueler> filteredDtoSchuelers = conn.queryNamed("DTOSchueler.all", DTOSchueler.class).getResultStream()
 				.filter(SCHUELER_FILTER).toList();
 
-		if (params.includeAdressbuchEintragIDsOnly) {
+		if (params.includeEintragIDs && !params.includeEintragPayload) {
 			return filteredDtoSchuelers.stream().map(s -> {
 				AdressbuchEintrag a = new AdressbuchEintrag();
 				a.id = IAdressbuchKontaktRepository.createSchuelerId(s.ID);
@@ -107,7 +113,7 @@ public class SchuelerWithCategoriesRepository implements IAdressbuchKontaktRepos
 	 * über {@link DTOSchuelerTelefon} eine Liste von Telefonnummern zugeordnet ist.
 	 * Schueler, denen über {@link DTOSchuelerTelefon} keine Telefonnummern
 	 * zugeordnet sind, tauchen in der Map nicht auf.
-	 * 
+	 *
 	 * @param schuelerIds ids der Schueler, für die nach Telefonnummern gesucht
 	 *                    werden soll
 	 * @param conn        die Datenbankverbindung
@@ -126,7 +132,7 @@ public class SchuelerWithCategoriesRepository implements IAdressbuchKontaktRepos
 
 		for (DTOSchuelerTelefon dto : dtoSchuelerTelefonQueryResult) {
 			DTOTelefonArt dtoTelefonArt = telefonArtById.get(dto.TelefonArt_ID);
-			if (dto.Gesperrt || dto.Telefonnummer == null || !dtoTelefonArt.Sichtbar) {
+			if (dto.Gesperrt.booleanValue() || dto.Telefonnummer == null || !dtoTelefonArt.Sichtbar.booleanValue()) {
 				continue;
 			}
 			List<Telefonnummer> telefonnummern = telefonnummerBySchuelerId.get(dto.Schueler_ID);
@@ -145,10 +151,10 @@ public class SchuelerWithCategoriesRepository implements IAdressbuchKontaktRepos
 
 	/**
 	 * Hilfsmethode für die Suche aller Kategorien einer SchülerId
-	 * 
+	 *
 	 * @param collect
 	 * @param filteredDtoSchuelers
-	 * 
+	 *
 	 * @return eine Map ,in der jeder SchülerId die entsprechenden Kategorien
 	 *         zugeordnet sind
 	 */

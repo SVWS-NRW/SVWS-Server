@@ -68,6 +68,6 @@ public class SearchRequest
 	@XmlAnyElement
 	public JAXBElement<String> getElement()
 	{
-		return new JAXBElement<String>(new QName("DAV:", language), String.class, query);
+		return new JAXBElement<>(new QName("DAV:", language), String.class, query);
 	}
 }

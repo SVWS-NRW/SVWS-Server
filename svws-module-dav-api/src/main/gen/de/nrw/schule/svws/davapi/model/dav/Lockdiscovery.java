@@ -68,7 +68,7 @@ public class Lockdiscovery {
      */
     public List<Activelock> getActivelock() {
         if (activelock == null) {
-            activelock = new ArrayList<Activelock>();
+            activelock = new ArrayList<>();
         }
         return this.activelock;
     }

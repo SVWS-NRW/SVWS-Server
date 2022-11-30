@@ -33,6 +33,7 @@ public class Tabelle_DavRessources extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte lastModified */
 	public SchemaTabelleSpalte col_lastModified = add("lastModified", SchemaDatentypen.DATETIME, false)
 		.setNotNull()
+		.setDatenlaenge(3)
 		.setConverter(DatumUhrzeitConverter.class)
 		.setJavaComment("Das Datum an dem die Ressource zuletzt geändert wurde, als Synctoken einsetzbar");
 
@@ -44,12 +45,14 @@ public class Tabelle_DavRessources extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte KalenderStart */
 	public SchemaTabelleSpalte col_KalenderStart = add("KalenderStart", SchemaDatentypen.DATETIME, false)
 		.setNotNull()
+		.setDatenlaenge(3)
 		.setConverter(DatumUhrzeitConverter.class)
 		.setJavaComment("Der Start der Kalenderressource, wenn es eine Kalenderressource ist");
 
 	/** Die Definition der Tabellenspalte KalenderEnde */
 	public SchemaTabelleSpalte col_KalenderEnde = add("KalenderEnde", SchemaDatentypen.DATETIME, false)
 		.setNotNull()
+		.setDatenlaenge(3)
 		.setConverter(DatumUhrzeitConverter.class)
 		.setJavaComment("Das Ende der Kalenderressource, wenn es eines Kalenderressource ist");
 
@@ -58,6 +61,11 @@ public class Tabelle_DavRessources extends SchemaTabelle {
 		.setNotNull()
 		.setJavaComment("Die Daten der Ressource");
 
+	/** Die Definition der Tabellenspalte geloeschtam */
+	public SchemaTabelleSpalte col_geloeschtam = add("geloeschtam", SchemaDatentypen.DATETIME, false)
+			.setDatenlaenge(3)
+			.setConverter(DatumUhrzeitConverter.class)
+			.setJavaComment("Der Zeitpunkt, an dem diese ggf. Ressource gelöscht wurde.");
 
 	/** Die Definition des Fremdschlüssels DavRessources_Collection_FK */
 	public SchemaTabelleFremdschluessel fk_DavRessources_Collection_FK = addForeignKey(

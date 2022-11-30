@@ -38,7 +38,9 @@ import java.util.List;
 @XmlRootElement(name = "getetag")
 public class Getetag {
 
-    public Getetag(){}
+    public Getetag(){
+    	//empty default constructor
+    }
 
     @XmlMixed
     private List<String> content;
@@ -67,7 +69,7 @@ public class Getetag {
      */
     public List<String> getContent() {
         if (content == null) {
-            content = new ArrayList<String>();
+            content = new ArrayList<>();
         }
         return this.content;
     }

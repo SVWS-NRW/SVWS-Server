@@ -1,8 +1,19 @@
 package de.nrw.schule.svws.davapi.api;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Optional;
+
+import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -12,15 +23,12 @@ import com.fasterxml.jackson.module.jakarta.xmlbind.JakartaXmlBindAnnotationModu
 
 import de.nrw.schule.svws.davapi.model.dav.Getetag;
 import de.nrw.schule.svws.davapi.model.dav.Prop;
+import de.nrw.schule.svws.davapi.model.dav.SyncCollection;
+import de.nrw.schule.svws.davapi.model.dav.cal.CalendarMultiget;
+import de.nrw.schule.svws.davapi.model.dav.cal.CalendarQuery;
 import de.nrw.schule.svws.davapi.model.dav.card.AddressbookMultiget;
 import de.nrw.schule.svws.davapi.model.dav.card.CardAddressData;
 import de.nrw.schule.svws.davapi.util.XmlUnmarshallingUtil;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Optional;
-
-import org.junit.jupiter.api.Test;
 
 /**
  * Testklasse für die {@link XmlUnmarshallingUtil}
@@ -81,7 +89,9 @@ public class XmlUnmarshallingTest {
 
 	/**
 	 * testet das Unmarshalling eines Multiget-Requests
-	 * @throws JsonProcessingException beim Lesen und Schreiben von Werten über den {@link ObjectMapper}
+	 * 
+	 * @throws JsonProcessingException beim Lesen und Schreiben von Werten über den
+	 *                                 {@link ObjectMapper}
 	 */
 	@Test
 	void testMarshallingUnmarshallingAddressbookMultiget() throws JsonProcessingException {
@@ -108,7 +118,7 @@ public class XmlUnmarshallingTest {
 
 	}
 
-	private ObjectMapper getCustomMapper() {
+	private static ObjectMapper getCustomMapper() {
 		JacksonXmlModule module = new JacksonXmlModule();
 		module.setDefaultUseWrapper(false);
 		ObjectMapper mapper = new XmlMapper(module);
@@ -116,7 +126,7 @@ public class XmlUnmarshallingTest {
 		return mapper;
 	}
 
-	private AddressbookMultiget prepareCustomMultiget() {
+	private static AddressbookMultiget prepareCustomMultiget() {
 		AddressbookMultiget mg = new AddressbookMultiget();
 		Prop prop = new Prop();
 		prop.setGetetag(new Getetag());
@@ -124,5 +134,80 @@ public class XmlUnmarshallingTest {
 		mg.setProp(prop);
 		mg.getHref().addAll(HREF_VALUES);
 		return mg;
+	}
+
+	/**
+	 * Test a bug: XmlUnmarshaller instantiiert Klassen, die nicht zum xml passen
+	 * 
+	 * @throws IOException beim Einlesen des InputStreams
+	 */
+	@Test
+	void testUnmarshallingIntoObjects() throws IOException {
+		// mit sync-collection
+		String inputString = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+				+ "<sync-collection xmlns=\"DAV:\"><sync-token/><sync-level>1</sync-level><prop><getcontenttype/><getetag/></prop></sync-collection>";
+		Optional<CalendarMultiget> multiget;
+		Optional<CalendarQuery> calendarQuery;
+		Optional<SyncCollection> syncCollection;
+		try (InputStream inputStream = stringToInputStream(inputString)) {
+			multiget = XmlUnmarshallingUtil.tryUnmarshal(inputStream, CalendarMultiget.class);
+			assertFalse(multiget.isPresent());
+		}
+		try (InputStream inputStream = stringToInputStream(inputString)) {
+			calendarQuery = XmlUnmarshallingUtil.tryUnmarshal(inputStream, CalendarQuery.class);
+			assertFalse(calendarQuery.isPresent());
+
+		}
+		try (InputStream inputStream = stringToInputStream(inputString)) {
+			syncCollection = XmlUnmarshallingUtil.tryUnmarshal(inputStream, SyncCollection.class);
+			assertTrue(syncCollection.isPresent());
+
+			// mit calendar-multiget
+			inputString = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+					+ "<C:calendar-multiget xmlns:D=\"DAV:\" xmlns:C=\"urn:ietf:params:xml:ns:caldav\"><D:prop><D:getetag/><C:calendar-data/></D:prop><D:href>/db/gymabi/dav/kalender/5/6.ics</D:href><D:href>/db/gymabi/dav/kalender/5/5.ics</D:href><D:href>/db/gymabi/dav/kalender/5/4.ics</D:href><D:href>/db/gymabi/dav/kalender/5/3.ics</D:href><D:href>/db/gymabi/dav/kalender/5/2.ics</D:href><D:href>/db/gymabi/dav/kalender/5/1.ics</D:href></C:calendar-multiget>";
+		}
+		try (InputStream inputStream = stringToInputStream(inputString)) {
+			multiget = XmlUnmarshallingUtil.tryUnmarshal(inputStream, CalendarMultiget.class);
+			assertTrue(multiget.isPresent());
+
+		}
+		try (InputStream inputStream = stringToInputStream(inputString)) {
+			calendarQuery = XmlUnmarshallingUtil.tryUnmarshal(inputStream, CalendarQuery.class);
+			assertFalse(calendarQuery.isPresent());
+
+		}
+		try (InputStream inputStream = stringToInputStream(inputString)) {
+			syncCollection = XmlUnmarshallingUtil.tryUnmarshal(inputStream, SyncCollection.class);
+			assertFalse(syncCollection.isPresent());
+			inputStream.close();
+		}
+		// gleiche tests mit inputString anstelle von Stream
+		// mit sync-collection
+		inputString = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+				+ "<sync-collection xmlns=\"DAV:\"><sync-token/><sync-level>1</sync-level><prop><getcontenttype/><getetag/></prop></sync-collection>";
+		multiget = XmlUnmarshallingUtil.tryUnmarshal(inputString, CalendarMultiget.class);
+		assertFalse(multiget.isPresent());
+
+		calendarQuery = XmlUnmarshallingUtil.tryUnmarshal(inputString, CalendarQuery.class);
+		assertFalse(calendarQuery.isPresent());
+
+		syncCollection = XmlUnmarshallingUtil.tryUnmarshal(inputString, SyncCollection.class);
+		assertTrue(syncCollection.isPresent());
+
+		// mit calendar-multiget
+		inputString = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+				+ "<C:calendar-multiget xmlns:D=\"DAV:\" xmlns:C=\"urn:ietf:params:xml:ns:caldav\"><D:prop><D:getetag/><C:calendar-data/></D:prop><D:href>/db/gymabi/dav/kalender/5/6.ics</D:href><D:href>/db/gymabi/dav/kalender/5/5.ics</D:href><D:href>/db/gymabi/dav/kalender/5/4.ics</D:href><D:href>/db/gymabi/dav/kalender/5/3.ics</D:href><D:href>/db/gymabi/dav/kalender/5/2.ics</D:href><D:href>/db/gymabi/dav/kalender/5/1.ics</D:href></C:calendar-multiget>";
+		multiget = XmlUnmarshallingUtil.tryUnmarshal(inputString, CalendarMultiget.class);
+		assertTrue(multiget.isPresent());
+
+		calendarQuery = XmlUnmarshallingUtil.tryUnmarshal(inputString, CalendarQuery.class);
+		assertFalse(calendarQuery.isPresent());
+
+		syncCollection = XmlUnmarshallingUtil.tryUnmarshal(inputString, SyncCollection.class);
+		assertFalse(syncCollection.isPresent());
+	}
+
+	private static InputStream stringToInputStream(String input) {
+		return new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8));
 	}
 }

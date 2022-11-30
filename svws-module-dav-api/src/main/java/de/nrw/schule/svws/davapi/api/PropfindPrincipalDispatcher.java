@@ -4,6 +4,7 @@ import de.nrw.schule.svws.davapi.model.dav.Multistatus;
 import de.nrw.schule.svws.davapi.model.dav.Prop;
 import de.nrw.schule.svws.davapi.model.dav.Propfind;
 import de.nrw.schule.svws.davapi.model.dav.Response;
+import de.nrw.schule.svws.davapi.model.dav.cal.CalendarHomeSet;
 import de.nrw.schule.svws.davapi.model.dav.card.AddressbookHomeSet;
 import de.nrw.schule.svws.davapi.util.XmlUnmarshallingUtil;
 
@@ -20,14 +21,14 @@ public class PropfindPrincipalDispatcher extends DavDispatcher {
 	/**
 	 * Die URI-Parameter zum Erzeugen von im Responseobjekt enthaltenen URIs
 	 */
-	private CardDavUriParameter uriParameter;
+	private DavUriParameter uriParameter;
 
 	/**
 	 * Erstellt einen Dispatcher mit den gegebenen URI-Parametern
-	 * 
+	 *
 	 * @param uriParameter die URI-Parameter für diesen Dispatcher
 	 */
-	public PropfindPrincipalDispatcher(CardDavUriParameter uriParameter) {
+	public PropfindPrincipalDispatcher(DavUriParameter uriParameter) {
 		this.uriParameter = uriParameter;
 	}
 
@@ -44,10 +45,6 @@ public class PropfindPrincipalDispatcher extends DavDispatcher {
 	public Object dispatch(ServletInputStream inputStream, String ressourceId) throws IOException {
 		Propfind propfind = XmlUnmarshallingUtil.unmarshal(inputStream, Propfind.class);
 		// TODO: Ergänzen einer Prüfung, ob Schema und Benutzer gefunden werden
-		/*
-		 * if(...){ return new Error(); }
-		 */
-
 		Multistatus ms = new Multistatus();
 		ms.getResponse().add(this.generateResponsePrincipalLevel(ressourceId, propfind.getProp()));
 		return ms;
@@ -55,7 +52,7 @@ public class PropfindPrincipalDispatcher extends DavDispatcher {
 
 	/**
 	 * Generiert ein Response-Objekt für einen angegebenen Benutzer (Principal).
-	 * 
+	 *
 	 * @param benutzerId    Id des Benutzers (Principals), zu dem Informationen
 	 *                      zurückgeliefert werden sollen
 	 * @param propRequested Prop aus dem Request. Definiert, welche Informationen
@@ -74,12 +71,18 @@ public class PropfindPrincipalDispatcher extends DavDispatcher {
 		Prop prop200 = new Prop();
 		if (dynamicPropUtil.getIsFieldRequested(AddressbookHomeSet.class)) {
 			AddressbookHomeSet addressbookHomeSet = new AddressbookHomeSet();
-			addressbookHomeSet.getHref().add(CardDavUriBuilder.getAddressbookCollectionUri(uriParameter));
+			addressbookHomeSet.getHref().add(DavUriBuilder.getAddressbookCollectionUri(uriParameter));
 			prop200.setAddressbookHomeSet(addressbookHomeSet);
 		}
 
+		if (dynamicPropUtil.getIsFieldRequested(CalendarHomeSet.class)) {
+			CalendarHomeSet calendarHomeSet = new CalendarHomeSet();
+			calendarHomeSet.getHref().add(DavUriBuilder.getCalendarCollectionUri(uriParameter));
+			prop200.setCalendarHomeSet(calendarHomeSet);
+		}
+
 		Response response = createResponse(propRequested, prop200);
-		response.getHref().add(CardDavUriBuilder.getPrincipalUri(uriParameter));
+		response.getHref().add(DavUriBuilder.getPrincipalUri(uriParameter));
 		return response;
 	}
 

@@ -44,9 +44,11 @@ import de.nrw.schule.svws.csv.converter.current.DatumUhrzeitConverterDeserialize
 @NamedQuery(name="Rev8DTODavRessource.kalenderende.multiple", query="SELECT e FROM Rev8DTODavRessource e WHERE e.KalenderEnde IN :value")
 @NamedQuery(name="Rev8DTODavRessource.ressource", query="SELECT e FROM Rev8DTODavRessource e WHERE e.ressource = :value")
 @NamedQuery(name="Rev8DTODavRessource.ressource.multiple", query="SELECT e FROM Rev8DTODavRessource e WHERE e.ressource IN :value")
+@NamedQuery(name="Rev8DTODavRessource.geloeschtam", query="SELECT e FROM Rev8DTODavRessource e WHERE e.geloeschtam = :value")
+@NamedQuery(name="Rev8DTODavRessource.geloeschtam.multiple", query="SELECT e FROM Rev8DTODavRessource e WHERE e.geloeschtam IN :value")
 @NamedQuery(name="Rev8DTODavRessource.primaryKeyQuery", query="SELECT e FROM Rev8DTODavRessource e WHERE e.ID = ?1")
 @NamedQuery(name="Rev8DTODavRessource.all.migration", query="SELECT e FROM Rev8DTODavRessource e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","DavRessourceCollection_ID","UID","lastModified","KalenderTyp","KalenderStart","KalenderEnde","ressource"})
+@JsonPropertyOrder({"ID","DavRessourceCollection_ID","UID","lastModified","KalenderTyp","KalenderStart","KalenderEnde","ressource","geloeschtam"})
 public class Rev8DTODavRessource {
 
 	/** ID der Dav Ressource */
@@ -98,6 +100,14 @@ public class Rev8DTODavRessource {
 	@Column(name = "ressource")
 	@JsonProperty
 	public byte[] ressource;
+
+	/** Der Zeitpunkt, an dem diese ggf. Ressource gelöscht wurde. */
+	@Column(name = "geloeschtam")
+	@JsonProperty
+	@Convert(converter=DatumUhrzeitConverter.class)
+	@JsonSerialize(using=DatumUhrzeitConverterSerializer.class)
+	@JsonDeserialize(using=DatumUhrzeitConverterDeserializer.class)
+	public String geloeschtam;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse Rev8DTODavRessource ohne eine Initialisierung der Attribute.
@@ -186,7 +196,7 @@ public class Rev8DTODavRessource {
 	 */
 	@Override
 	public String toString() {
-		return "Rev8DTODavRessource(ID=" + this.ID + ", DavRessourceCollection_ID=" + this.DavRessourceCollection_ID + ", UID=" + this.UID + ", lastModified=" + this.lastModified + ", KalenderTyp=" + this.KalenderTyp + ", KalenderStart=" + this.KalenderStart + ", KalenderEnde=" + this.KalenderEnde + ", ressource=" + this.ressource + ")";
+		return "Rev8DTODavRessource(ID=" + this.ID + ", DavRessourceCollection_ID=" + this.DavRessourceCollection_ID + ", UID=" + this.UID + ", lastModified=" + this.lastModified + ", KalenderTyp=" + this.KalenderTyp + ", KalenderStart=" + this.KalenderStart + ", KalenderEnde=" + this.KalenderEnde + ", ressource=" + this.ressource + ", geloeschtam=" + this.geloeschtam + ")";
 	}
 
 }

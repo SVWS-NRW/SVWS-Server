@@ -81,8 +81,7 @@ public class AddressProperty implements VCardProperty {
 	public String getType() {
 		if (this.addressType == null)
 			return TYPE;
-		else
-			return TYPE + ";TYPE=" + addressType;
+		return TYPE + ";TYPE=" + addressType;
 	}
 
 	@Override
@@ -103,15 +102,14 @@ public class AddressProperty implements VCardProperty {
 
 	/**
 	 * Hilfsmethode zum Serialisieren des Straßenelements einer Adresse an einem
-	 * gegebenen StringBuilder //TODO Möglichkeit für amerikanische Schreibweise
-	 * einer Straße (123 Example Street) fehlt.
+	 * gegebenen StringBuilder 
 	 * 
 	 * @param street
 	 * @param houseNumber
 	 * @param houseNumberAddition
 	 * @param sb
 	 */
-	private void addStreetPropertyPart(String street, String houseNumber, String houseNumberAddition,
+	private static void addStreetPropertyPart(String street, String houseNumber, String houseNumberAddition,
 			StringBuilder sb) {
 		if (street != null) {
 			sb.append(street);
@@ -135,7 +133,7 @@ public class AddressProperty implements VCardProperty {
 	 * @param propertySequenceElement
 	 * @param sb
 	 */
-	private void addPropertySequenceElement(String propertySequenceElement, StringBuilder sb) {
+	private static void addPropertySequenceElement(String propertySequenceElement, StringBuilder sb) {
 		addPropertySequenceElement(propertySequenceElement, sb, false);
 	}
 
@@ -150,7 +148,7 @@ public class AddressProperty implements VCardProperty {
 	 *                                {@link CardProperty#SEQUENCE_ELEMENT_SEPARATOR}
 	 *                                gesetzt wird
 	 */
-	private void addPropertySequenceElement(String propertySequenceElement, StringBuilder sb, boolean isLast) {
+	private static void addPropertySequenceElement(String propertySequenceElement, StringBuilder sb, boolean isLast) {
 		if (propertySequenceElement != null) {
 			sb.append(propertySequenceElement);
 		}

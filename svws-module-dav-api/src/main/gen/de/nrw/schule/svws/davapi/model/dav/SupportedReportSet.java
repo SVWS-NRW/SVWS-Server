@@ -66,7 +66,7 @@ public class SupportedReportSet {
      */
     public List<SupportedReport> getSupportedReport() {
         if (supportedReport == null) {
-            supportedReport = new ArrayList<SupportedReport>();
+            supportedReport = new ArrayList<>();
         }
         return this.supportedReport;
     }

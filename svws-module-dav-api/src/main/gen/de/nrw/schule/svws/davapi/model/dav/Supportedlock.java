@@ -68,7 +68,7 @@ public class Supportedlock {
      */
     public List<Lockentry> getLockentry() {
         if (lockentry == null) {
-            lockentry = new ArrayList<Lockentry>();
+            lockentry = new ArrayList<>();
         }
         return this.lockentry;
     }

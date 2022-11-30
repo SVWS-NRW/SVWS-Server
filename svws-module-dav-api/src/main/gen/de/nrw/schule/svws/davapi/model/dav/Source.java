@@ -68,7 +68,7 @@ public class Source {
      */
     public List<Link> getLink() {
         if (link == null) {
-            link = new ArrayList<Link>();
+            link = new ArrayList<>();
         }
         return this.link;
     }

@@ -9,6 +9,9 @@ import de.nrw.schule.svws.db.schema.SchemaTabelle;
 import de.nrw.schule.svws.db.schema.SchemaTabelleFremdschluessel;
 import de.nrw.schule.svws.db.schema.SchemaTabelleSpalte;
 
+/**
+ * Definition der Tabelle für DavRessourceCollectionACL
+ */
 public class Tabelle_DavRessourceCollectionsACL extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte ID */
 	public SchemaTabelleSpalte col_ID = add("ID", SchemaDatentypen.BIGINT, true)
@@ -20,6 +23,7 @@ public class Tabelle_DavRessourceCollectionsACL extends SchemaTabelle {
 		.setNotNull()
 		.setJavaComment("Die ID des Benutzers dieses ACL-Eintrags");
 
+	/** Definition der Tabellenspalte RessourceCollection_ID */
 	public SchemaTabelleSpalte col_RessourceCollection_ID = add("RessourceCollection_ID", SchemaDatentypen.BIGINT, false)
 			.setNotNull()
 			.setJavaComment("Die ID der RessourceCollection dieses ACL-Eintrags");

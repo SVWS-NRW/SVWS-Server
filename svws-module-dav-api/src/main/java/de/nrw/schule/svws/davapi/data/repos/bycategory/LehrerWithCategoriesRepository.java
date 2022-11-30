@@ -1,11 +1,20 @@
 package de.nrw.schule.svws.davapi.data.repos.bycategory;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import de.nrw.schule.svws.core.data.adressbuch.AdressbuchEintrag;
 import de.nrw.schule.svws.core.data.adressbuch.AdressbuchKontakt;
 import de.nrw.schule.svws.core.data.adressbuch.Telefonnummer;
 import de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenz;
-import de.nrw.schule.svws.davapi.data.AdressbuchQueryParameters;
+import de.nrw.schule.svws.davapi.data.CollectionRessourceQueryParameters;
 import de.nrw.schule.svws.davapi.data.IAdressbuchKontaktRepository;
+import de.nrw.schule.svws.db.Benutzer;
 import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.dto.current.schild.katalog.DTOOrt;
 import de.nrw.schule.svws.db.dto.current.schild.klassen.DTOKlassen;
@@ -15,14 +24,6 @@ import de.nrw.schule.svws.db.dto.current.schild.lehrer.DTOLehrer;
 import de.nrw.schule.svws.db.dto.current.schild.lehrer.DTOLehrerLehramtBefaehigung;
 import de.nrw.schule.svws.db.dto.current.schild.schule.DTOJahrgang;
 import de.nrw.schule.svws.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Diese Implementierung des {@link IAdressbuchKontaktRepository} dient der
@@ -48,18 +49,23 @@ public class LehrerWithCategoriesRepository implements IAdressbuchKontaktReposit
 	 * Name der eigenen Schule
 	 */
 	private String schulName;
+	/** der Benutzer, dessen Adressbuecher gesucht werden */
+	private Benutzer user;
 
 	/**
 	 * Konstruktor zum Erstellen des Repositories mit einer Datenbankverbindung
-	 * 
+	 *
 	 * @param conn                          die Datenbankverbindung
+	 * @param user                          der Benutzer, dessen Adressbuecher
+	 *                                      gesucht werden
 	 * @param kategorienUtil                Instanz der Utility zum Erzeugen von
 	 *                                      Adressbuchkategorien
 	 * @param aktuellerSchuljahresabschnitt der aktuelle Schuljahresabschnitt für
 	 *                                      weitere Queries
 	 */
-	public LehrerWithCategoriesRepository(DBEntityManager conn, DTOSchuljahresabschnitte aktuellerSchuljahresabschnitt,
-			AdressbuchKategorienUtil kategorienUtil) {
+	public LehrerWithCategoriesRepository(DBEntityManager conn, Benutzer user,
+			DTOSchuljahresabschnitte aktuellerSchuljahresabschnitt, AdressbuchKategorienUtil kategorienUtil) {
+		this.user = user;
 		this.conn = conn;
 		this.aktuellerSchuljahresabschnitt = aktuellerSchuljahresabschnitt;
 		this.kategorienUtil = kategorienUtil;
@@ -67,13 +73,13 @@ public class LehrerWithCategoriesRepository implements IAdressbuchKontaktReposit
 	}
 
 	@Override
-	public List<AdressbuchEintrag> getKontakteByAdressbuch(String adressbuchId, AdressbuchQueryParameters params) {
-		if (!params.includeAdressbuchEintraege
-				|| !conn.getUser().pruefeKompetenz(BenutzerKompetenz.LEHRERDATEN_ANSEHEN)) {
+	public List<AdressbuchEintrag> getKontakteByAdressbuch(String adressbuchId,
+			CollectionRessourceQueryParameters params) {
+		if (!params.includeRessources || !user.pruefeKompetenz(BenutzerKompetenz.LEHRERDATEN_ANSEHEN)) {
 			return new ArrayList<>();
 		}
 		List<DTOLehrer> dtoLehrerResult = conn.queryNamed("DTOLehrer.sichtbar", true, DTOLehrer.class);
-		if (params.includeAdressbuchEintragIDsOnly) {
+		if (params.includeEintragIDs && !params.includeEintragPayload) {
 			return dtoLehrerResult.stream().map(e -> {
 				AdressbuchEintrag a = new AdressbuchEintrag();
 				a.id = IAdressbuchKontaktRepository.createLehrerId(e.ID);
@@ -91,7 +97,7 @@ public class LehrerWithCategoriesRepository implements IAdressbuchKontaktReposit
 
 	/**
 	 * Erstellt aus einem {@link DTOLehrer} einen {@link AdressbuchEintrag}
-	 * 
+	 *
 	 * @param l          der Lehrer
 	 * @param ort        der Wohnort des Lehrers
 	 * @param categories die Kategorien, die diesem Lehrer zugeordnet sind
@@ -132,7 +138,7 @@ public class LehrerWithCategoriesRepository implements IAdressbuchKontaktReposit
 
 	/**
 	 * Erstellt eine Map der Kategorien nach LehrerId
-	 * 
+	 *
 	 * @return eine Map, in der alle Kategorien eines Lehrers der Lehrer ID
 	 *         zugeordnet sind
 	 */
@@ -171,7 +177,7 @@ public class LehrerWithCategoriesRepository implements IAdressbuchKontaktReposit
 		List<DTOLehrerLehramtBefaehigung> dtoLehrerLehramtBefaehigungQueryResult = conn
 				.queryNamed("DTOLehrerLehramtBefaehigung.all", DTOLehrerLehramtBefaehigung.class).getResultList();
 		for (DTOLehrerLehramtBefaehigung k : dtoLehrerLehramtBefaehigungQueryResult) {
-			Set<String> categories = result.computeIfAbsent(k.Lehrer_ID, s -> new HashSet<String>());
+			Set<String> categories = result.computeIfAbsent(k.Lehrer_ID, s -> new HashSet<>());
 			categories.add(kategorienUtil.formatLehrerFachschaft(k.LehrbefKrz));
 		}
 		return result;

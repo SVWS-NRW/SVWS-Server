@@ -33,18 +33,18 @@ public interface IAdressbuchKontaktRepository {
 	/**
 	 * Ermittelt eine Liste aller Kontakte aus einem Adressbuch mir der angegebenen
 	 * Id.
-	 * 
+	 *
 	 * @param adressbuchId Id des Adressbuchs, dessen Kontakte ermittelt werden
 	 *                     sollen.
 	 * @param params       QueryParameter zum filtern der Adressbucheinträge auf
 	 *                     notwendigt Informationen
 	 * @return Liste mit Kontakten des angegebenen Adressbuchs.
 	 */
-	List<AdressbuchEintrag> getKontakteByAdressbuch(String adressbuchId, AdressbuchQueryParameters params);
+	List<AdressbuchEintrag> getKontakteByAdressbuch(String adressbuchId, CollectionRessourceQueryParameters params);
 
 	/**
 	 * statische Methode zum mappen von SchuelerDTOs zu Kontakten
-	 * 
+	 *
 	 * @param dtoSchueler    das zu mappende DTO
 	 * @param telefonnummern die Liste der Telefonnummern zu dem Schueler
 	 * @param ort            das Datenbankobjekt für den Wohnort des Schuelers
@@ -82,7 +82,7 @@ public interface IAdressbuchKontaktRepository {
 	/**
 	 * Prüft, ob eine Liste mit Telefonnummern eine gegebene Nummer bereits enthält.
 	 * Falls nicht, wird diese gegebene Nummer der Liste hinzugefügt
-	 * 
+	 *
 	 * @param standardTelefonnummer die gegebene Telefonnummer
 	 * @param telefonnummern        eine vorhandene Liste mit Telefonnummern
 	 * @param type                  der Typ der hinzuzufügenden Telefonnummer
@@ -105,7 +105,7 @@ public interface IAdressbuchKontaktRepository {
 	/**
 	 * Sucht anhand einer gegebenen Liste von {@link DTOOrt#ID} die {@link DTOOrt}
 	 * und gibt eine Map auf die jeweilige ID wieder
-	 * 
+	 *
 	 * @param ortIds Ids der Orte
 	 * @param conn   die Datenbankverbindung
 	 * @return die gesuchten Orte gemappt auf ihre ID
@@ -117,12 +117,11 @@ public interface IAdressbuchKontaktRepository {
 
 	/**
 	 * Fügt einem Kontakt die Ortsdaten hinzu
-	 * 
+	 *
 	 * @param k   der Kontakt
 	 * @param ort der zuzufügende Ort
 	 */
 	static void applyOrtToKontakt(AdressbuchKontakt k, DTOOrt ort) {
-		// TODO gegebenfalls um Ortsteildaten ergänzen?
 		if (ort != null) {
 			k.ort = ort.Bezeichnung;
 			k.plz = ort.PLZ;
@@ -131,7 +130,7 @@ public interface IAdressbuchKontaktRepository {
 
 	/**
 	 * Erstellt eine SchuelerID für den Adressbuchkontakt
-	 * 
+	 *
 	 * @param schuelerID die ID des Schuelers
 	 * @return eine Stringrepräsentation der SchuelerID
 	 */
@@ -141,7 +140,7 @@ public interface IAdressbuchKontaktRepository {
 
 	/**
 	 * Erstellt eine ErzieherID für den Adressbuchkontakt
-	 * 
+	 *
 	 * @param erzieherID die ID des Erziehers
 	 * @return eine Stringrepräsentation der ErzieherID
 	 */
@@ -151,7 +150,7 @@ public interface IAdressbuchKontaktRepository {
 
 	/**
 	 * Erstellt eine LehrerID für den Adressbuchkontakt
-	 * 
+	 *
 	 * @param lehrerID die ID des Lehrer
 	 * @return eine Stringrepräsentation der LehrerID
 	 */
@@ -161,7 +160,7 @@ public interface IAdressbuchKontaktRepository {
 
 	/**
 	 * Sucht den Namen der eigenen Schule mit gegebener Datenbankverbindung
-	 * 
+	 *
 	 * @param conn die Datenbankverbindung
 	 * @return der Name der eigenen Schule
 	 */

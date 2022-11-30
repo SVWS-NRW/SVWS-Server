@@ -74,7 +74,7 @@ public class Multistatus {
      */
     public List<Response> getResponse() {
         if (response == null) {
-            response = new ArrayList<Response>();
+            response = new ArrayList<>();
         }
         return this.response;
     }

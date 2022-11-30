@@ -45,9 +45,11 @@ import de.nrw.schule.svws.csv.converter.current.DavRessourceCollectionTypConvert
 @NamedQuery(name="Rev8DTODavRessourceCollection.beschreibung.multiple", query="SELECT e FROM Rev8DTODavRessourceCollection e WHERE e.Beschreibung IN :value")
 @NamedQuery(name="Rev8DTODavRessourceCollection.synctoken", query="SELECT e FROM Rev8DTODavRessourceCollection e WHERE e.SyncToken = :value")
 @NamedQuery(name="Rev8DTODavRessourceCollection.synctoken.multiple", query="SELECT e FROM Rev8DTODavRessourceCollection e WHERE e.SyncToken IN :value")
+@NamedQuery(name="Rev8DTODavRessourceCollection.geloeschtam", query="SELECT e FROM Rev8DTODavRessourceCollection e WHERE e.geloeschtam = :value")
+@NamedQuery(name="Rev8DTODavRessourceCollection.geloeschtam.multiple", query="SELECT e FROM Rev8DTODavRessourceCollection e WHERE e.geloeschtam IN :value")
 @NamedQuery(name="Rev8DTODavRessourceCollection.primaryKeyQuery", query="SELECT e FROM Rev8DTODavRessourceCollection e WHERE e.ID = ?1")
 @NamedQuery(name="Rev8DTODavRessourceCollection.all.migration", query="SELECT e FROM Rev8DTODavRessourceCollection e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"Benutzer_ID","ID","Typ","Anzeigename","Beschreibung","SyncToken"})
+@JsonPropertyOrder({"Benutzer_ID","ID","Typ","Anzeigename","Beschreibung","SyncToken","geloeschtam"})
 public class Rev8DTODavRessourceCollection {
 
 	/** Die ID des Benutzers, zu dem der Datensatz gehört */
@@ -86,6 +88,14 @@ public class Rev8DTODavRessourceCollection {
 	@JsonSerialize(using=DatumUhrzeitConverterSerializer.class)
 	@JsonDeserialize(using=DatumUhrzeitConverterDeserializer.class)
 	public String SyncToken;
+
+	/** Der Zeitpunkt, an dem diese ggf. Ressource gelöscht wurde. */
+	@Column(name = "geloeschtam")
+	@JsonProperty
+	@Convert(converter=DatumUhrzeitConverter.class)
+	@JsonSerialize(using=DatumUhrzeitConverterSerializer.class)
+	@JsonDeserialize(using=DatumUhrzeitConverterDeserializer.class)
+	public String geloeschtam;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse Rev8DTODavRessourceCollection ohne eine Initialisierung der Attribute.
@@ -159,7 +169,7 @@ public class Rev8DTODavRessourceCollection {
 	 */
 	@Override
 	public String toString() {
-		return "Rev8DTODavRessourceCollection(Benutzer_ID=" + this.Benutzer_ID + ", ID=" + this.ID + ", Typ=" + this.Typ + ", Anzeigename=" + this.Anzeigename + ", Beschreibung=" + this.Beschreibung + ", SyncToken=" + this.SyncToken + ")";
+		return "Rev8DTODavRessourceCollection(Benutzer_ID=" + this.Benutzer_ID + ", ID=" + this.ID + ", Typ=" + this.Typ + ", Anzeigename=" + this.Anzeigename + ", Beschreibung=" + this.Beschreibung + ", SyncToken=" + this.SyncToken + ", geloeschtam=" + this.geloeschtam + ")";
 	}
 
 }

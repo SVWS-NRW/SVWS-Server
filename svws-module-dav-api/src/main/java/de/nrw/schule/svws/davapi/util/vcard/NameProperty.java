@@ -147,7 +147,7 @@ public class NameProperty implements VCardProperty {
 	/**
 	 * Hilfsmethode zum zufügen von Listen
 	 */
-	private void appendMultiple(List<String> names, StringBuilder sb) {
+	private static void appendMultiple(List<String> names, StringBuilder sb) {
 		Iterator<String> iter = names.iterator();
 		while (iter.hasNext()) {
 			sb.append(iter.next());

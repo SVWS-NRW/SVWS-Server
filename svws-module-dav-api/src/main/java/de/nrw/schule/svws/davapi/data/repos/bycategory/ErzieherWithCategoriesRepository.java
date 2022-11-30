@@ -1,11 +1,21 @@
 package de.nrw.schule.svws.davapi.data.repos.bycategory;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 import de.nrw.schule.svws.core.data.adressbuch.AdressbuchEintrag;
 import de.nrw.schule.svws.core.data.adressbuch.AdressbuchKontakt;
 import de.nrw.schule.svws.core.data.adressbuch.Telefonnummer;
 import de.nrw.schule.svws.core.types.SchuelerStatus;
 import de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenz;
-import de.nrw.schule.svws.davapi.data.AdressbuchQueryParameters;
+import de.nrw.schule.svws.davapi.data.CollectionRessourceQueryParameters;
 import de.nrw.schule.svws.davapi.data.IAdressbuchKontaktRepository;
 import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.dto.current.schild.erzieher.DTOSchuelerErzieherAdresse;
@@ -17,16 +27,6 @@ import de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchueler;
 import de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
 import de.nrw.schule.svws.db.dto.current.schild.schule.DTOJahrgang;
 import de.nrw.schule.svws.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * Diese Implementierung des {@link IAdressbuchKontaktRepository} dient der
@@ -47,17 +47,17 @@ public class ErzieherWithCategoriesRepository implements IAdressbuchKontaktRepos
 	 * Utility zum Erzeugen von Adressbuchkategorien
 	 */
 	private AdressbuchKategorienUtil kategorienUtil;
-
+	
 	/**
 	 * Konstruktor zum Erstellen des Repositories mit einer Datenbankverbindung
-	 * 
+	 *
 	 * @param conn                          die Datenbankverbindung
 	 * @param kategorienUtil                Instanz der Utility zum Erzeugen von
 	 *                                      Adressbuchkategorien
 	 * @param aktuellerSchuljahresabschnitt der aktuelle Schuljahresabschnitt für
 	 *                                      weitere Queries
 	 */
-	public ErzieherWithCategoriesRepository(DBEntityManager conn,
+	public ErzieherWithCategoriesRepository(DBEntityManager conn, 
 			DTOSchuljahresabschnitte aktuellerSchuljahresabschnitt, AdressbuchKategorienUtil kategorienUtil) {
 		this.conn = conn;
 		this.aktuellerSchuljahresabschnitt = aktuellerSchuljahresabschnitt;
@@ -65,8 +65,8 @@ public class ErzieherWithCategoriesRepository implements IAdressbuchKontaktRepos
 	}
 
 	@Override
-	public List<AdressbuchEintrag> getKontakteByAdressbuch(String adressbuchId, AdressbuchQueryParameters params) {
-		if (!params.includeAdressbuchEintraege
+	public List<AdressbuchEintrag> getKontakteByAdressbuch(String adressbuchId, CollectionRessourceQueryParameters params) {
+		if (!params.includeRessources
 				|| !conn.getUser().pruefeKompetenz(BenutzerKompetenz.ADRESSDATEN_ERZIEHER_ANSEHEN)) {
 			return new ArrayList<>();
 		}
@@ -91,7 +91,7 @@ public class ErzieherWithCategoriesRepository implements IAdressbuchKontaktRepos
 			}
 			erzieherBySchuelerID.put(schuelerErzAdresse.Schueler_ID, schuelerErzAdresse);
 		}
-		if (params.includeAdressbuchEintragIDsOnly) {
+		if (params.includeEintragIDs && !params.includeEintragPayload) {
 			return erzieherBySchuelerID.values().stream().map(e -> {
 				AdressbuchEintrag a = new AdressbuchEintrag();
 				a.id = IAdressbuchKontaktRepository.createErzieherId(e.ID);
@@ -99,7 +99,7 @@ public class ErzieherWithCategoriesRepository implements IAdressbuchKontaktRepos
 			}).toList();
 		}
 
-		
+
 		Set<Long> ortIds = filteredDtoSchuelers.stream().map(s -> s.Ort_ID).collect(Collectors.toSet());
 		ortIds.addAll(erzieherBySchuelerID.values().stream().map(e -> e.ErzOrt_ID).collect(Collectors.toSet()));
 
@@ -121,10 +121,10 @@ public class ErzieherWithCategoriesRepository implements IAdressbuchKontaktRepos
 
 	/**
 	 * Hilfsmethode für die Suche aller Kategorien der Erzieher
-	 * 
+	 *
 	 * @param schuelerStatusByID der Status der Schueler gemappt auf ihre Schueler
 	 *                           ID
-	 * 
+	 *
 	 * @return eine Map ,in der jeder Erzieher-Id die entsprechenden Kategorien
 	 *         zugeordnet sind
 	 */
@@ -168,7 +168,7 @@ public class ErzieherWithCategoriesRepository implements IAdressbuchKontaktRepos
 				kursNameById.keySet(), DTOKursSchueler.class);
 		for (DTOKursSchueler dtoKursSchueler : dtoKursSchuelerQueryResult) {
 			Set<String> listForSchuelerId = result.computeIfAbsent(dtoKursSchueler.Schueler_ID,
-					s -> new HashSet<String>());
+					s -> new HashSet<>());
 			if (kursNameById.containsKey(dtoKursSchueler.Kurs_ID)) {
 				DTOKurs dtoKurs = kursNameById.get(dtoKursSchueler.Kurs_ID);
 				listForSchuelerId.add(kategorienUtil.formatErzieherKurs(dtoKurs.KurzBez,
@@ -182,7 +182,7 @@ public class ErzieherWithCategoriesRepository implements IAdressbuchKontaktRepos
 	/**
 	 * Hilfsmethode zum Erstellen eines Adressbucheintrags aus einem
 	 * {@link DTOSchuelerErzieherAdresse}
-	 * 
+	 *
 	 * @param dtoSchuelerErzieherAdresse das {@link DTOSchuelerErzieherAdresse} aus
 	 *                                   dem der Kontakt erstellt wird
 	 * @param ort                        der Ort des Erziehers
@@ -194,7 +194,7 @@ public class ErzieherWithCategoriesRepository implements IAdressbuchKontaktRepos
 	 * @return ein AdressbuchEintrag der diesen Erziehungsberechtigten
 	 *         repräsentierts
 	 */
-	private AdressbuchEintrag mapDTOErzieherAdrToAdressbuchEintrag(
+	private static AdressbuchEintrag mapDTOErzieherAdrToAdressbuchEintrag(
 			DTOSchuelerErzieherAdresse dtoSchuelerErzieherAdresse, DTOOrt ort, Set<String> categories,
 			DTOSchueler dtoSchueler, List<Telefonnummer> telefonnummern) {
 		AdressbuchKontakt k = new AdressbuchKontakt();
