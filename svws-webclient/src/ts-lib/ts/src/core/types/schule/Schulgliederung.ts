@@ -199,25 +199,7 @@ export class Schulgliederung extends JavaObject {
 
 	public static readonly SSI : Schulgliederung = new Schulgliederung("SSI", 86, [new SchulgliederungKatalogEintrag(10007000, "SSI", false, Arrays.asList(Schulform.GE), true, false, "Sekundarschule, integrierte Form (auslaufend)", null, null, null, false, null, null, null, null)]);
 
-	public static readonly X01 : Schulgliederung = new Schulgliederung("X01", 87, [new SchulgliederungKatalogEintrag(6001000, "X01", true, Arrays.asList(Schulform.BK, Schulform.SB), true, true, "Allgemeine Hochschulreife (ausgelaufen) (AHR 3j; VZ)", BerufskollegAnlage.X, "01", 280, true, Arrays.asList(SchulabschlussBerufsbildend.OA, SchulabschlussBerufsbildend.WECHSEL), Arrays.asList(SchulabschlussAllgemeinbildend.OA, SchulabschlussAllgemeinbildend.FHR, SchulabschlussAllgemeinbildend.ABITUR), null, null)]);
-
-	public static readonly X02 : Schulgliederung = new Schulgliederung("X02", 88, [new SchulgliederungKatalogEintrag(6002000, "X02", true, Arrays.asList(Schulform.BK, Schulform.SB), true, true, "Fachhochschulreife (ausgelaufen) (FHR 2j; VZ)", BerufskollegAnlage.X, "02", 290, true, Arrays.asList(SchulabschlussBerufsbildend.OA, SchulabschlussBerufsbildend.WECHSEL), Arrays.asList(SchulabschlussAllgemeinbildend.OA, SchulabschlussAllgemeinbildend.FHR), null, null)]);
-
-	public static readonly X03 : Schulgliederung = new Schulgliederung("X03", 89, [new SchulgliederungKatalogEintrag(6003000, "X03", true, Arrays.asList(Schulform.BK, Schulform.SB), true, true, "Fachhochschulreife (ausgelaufen) (FHR 3j; TZ)", BerufskollegAnlage.X, "03", 300, false, Arrays.asList(SchulabschlussBerufsbildend.OA, SchulabschlussBerufsbildend.WECHSEL), Arrays.asList(SchulabschlussAllgemeinbildend.OA, SchulabschlussAllgemeinbildend.FHR), null, null)]);
-
-	public static readonly X04 : Schulgliederung = new Schulgliederung("X04", 90, [new SchulgliederungKatalogEintrag(6004000, "X04", true, Arrays.asList(Schulform.BK, Schulform.SB), true, true, "Berufspraktikum Fremdsprachenassistent (ausgelaufen) (BP/FAss 1j; TZ)", BerufskollegAnlage.X, "04", 310, false, Arrays.asList(SchulabschlussBerufsbildend.OA, SchulabschlussBerufsbildend.WECHSEL, SchulabschlussBerufsbildend.BP), Arrays.asList(SchulabschlussAllgemeinbildend.OA), null, null)]);
-
-	public static readonly X05 : Schulgliederung = new Schulgliederung("X05", 91, [new SchulgliederungKatalogEintrag(6005000, "X05", true, Arrays.asList(Schulform.BK, Schulform.SB), true, true, "Berufsabschluss/Assistent (ausgelaufen) (BAB/Ass 3j; TZ)", BerufskollegAnlage.X, "05", 320, false, Arrays.asList(SchulabschlussBerufsbildend.OA, SchulabschlussBerufsbildend.WECHSEL, SchulabschlussBerufsbildend.BAB), Arrays.asList(SchulabschlussAllgemeinbildend.OA), null, null)]);
-
-	public static readonly X06 : Schulgliederung = new Schulgliederung("X06", 92, [new SchulgliederungKatalogEintrag(6006000, "X06", true, Arrays.asList(Schulform.BK, Schulform.SB), true, true, "Berufsabschluss und Allgemeine Hochschulreife (ausgelaufen) (BAB/AHR 3j; VZ)", BerufskollegAnlage.X, "06", 330, true, Arrays.asList(SchulabschlussBerufsbildend.OA, SchulabschlussBerufsbildend.WECHSEL, SchulabschlussBerufsbildend.BAB), Arrays.asList(SchulabschlussAllgemeinbildend.OA, SchulabschlussAllgemeinbildend.FHR, SchulabschlussAllgemeinbildend.ABITUR), null, null)]);
-
-	public static readonly X07 : Schulgliederung = new Schulgliederung("X07", 93, [new SchulgliederungKatalogEintrag(6007000, "X07", true, Arrays.asList(Schulform.BK, Schulform.SB), true, true, "Berufsabschluss und Fachoberschulreife (ausgelaufen) (BAB/FOR 3j; VZ)", BerufskollegAnlage.X, "07", 340, true, Arrays.asList(SchulabschlussBerufsbildend.OA, SchulabschlussBerufsbildend.WECHSEL, SchulabschlussBerufsbildend.BAB), Arrays.asList(SchulabschlussAllgemeinbildend.OA, SchulabschlussAllgemeinbildend.MSA, SchulabschlussAllgemeinbildend.MSA_Q), null, null)]);
-
-	public static readonly X08 : Schulgliederung = new Schulgliederung("X08", 94, [new SchulgliederungKatalogEintrag(6008000, "X08", true, Arrays.asList(Schulform.BK, Schulform.SB), true, true, "Berufsabschluss mit Zusatzqualifikation (ausgelaufen) (BAB/ZQ 3j; VZ)", BerufskollegAnlage.X, "08", 350, true, Arrays.asList(SchulabschlussBerufsbildend.OA, SchulabschlussBerufsbildend.WECHSEL, SchulabschlussBerufsbildend.BAB), Arrays.asList(SchulabschlussAllgemeinbildend.OA), null, null)]);
-
-	public static readonly Y8 : Schulgliederung = new Schulgliederung("Y8", 95, [new SchulgliederungKatalogEintrag(10008000, "Y8", false, Arrays.asList(Schulform.GE), false, false, "Lehrplan G8", null, null, null, false, null, null, null, null)]);
-
-	public static readonly Z01 : Schulgliederung = new Schulgliederung("Z01", 96, [new SchulgliederungKatalogEintrag(7001000, "Z01", true, Arrays.asList(Schulform.BK, Schulform.SB), false, false, "Kooperationsklasse Hauptschule (HS 2j; VZ)", BerufskollegAnlage.Z, "01", 370, true, Arrays.asList(SchulabschlussBerufsbildend.OA, SchulabschlussBerufsbildend.WECHSEL), Arrays.asList(SchulabschlussAllgemeinbildend.OA), null, null)]);
+	public static readonly Y8 : Schulgliederung = new Schulgliederung("Y8", 87, [new SchulgliederungKatalogEintrag(10008000, "Y8", false, Arrays.asList(Schulform.GE), false, false, "Lehrplan G8", null, null, null, false, null, null, null, null)]);
 
 	public static VERSION : number = 1;
 
