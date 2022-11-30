@@ -1,15 +1,20 @@
 package de.nrw.schule.svws.data.gost;
 
 import java.io.InputStream;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import de.nrw.schule.svws.api.JSONMapper;
 import de.nrw.schule.svws.core.data.gost.Abiturdaten;
 import de.nrw.schule.svws.core.data.gost.GostSchuelerFachwahl;
+import de.nrw.schule.svws.core.types.Note;
 import de.nrw.schule.svws.core.types.gost.GostHalbjahr;
+import de.nrw.schule.svws.core.types.gost.GostKursart;
+import de.nrw.schule.svws.core.types.kurse.ZulaessigeKursart;
 import de.nrw.schule.svws.core.utils.gost.GostFaecherManager;
 import de.nrw.schule.svws.data.DataManager;
+import de.nrw.schule.svws.data.schule.DataSchuleStammdaten;
 import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.dto.current.gost.DTOGostJahrgangsdaten;
 import de.nrw.schule.svws.db.dto.current.gost.DTOGostSchueler;
@@ -17,6 +22,7 @@ import de.nrw.schule.svws.db.dto.current.gost.DTOGostSchuelerFachbelegungen;
 import de.nrw.schule.svws.db.dto.current.schild.faecher.DTOFach;
 import de.nrw.schule.svws.db.dto.current.schild.klassen.DTOKlassen;
 import de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchueler;
+import de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
 import de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
 import de.nrw.schule.svws.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.nrw.schule.svws.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
@@ -107,6 +113,7 @@ public class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 	 * Halbjahr oder ein Halbjahr davor fällt, da hier bereits eine Kursblockung stattgefunden hat
 	 * und Anpassungen über die Kurswahlen bzw. die Leistungsdaten erfolgen sollten.
 	 *  
+	 * @param schueler      der Schüler, für welchen die Fachwahl angepasst wird
 	 * @param fwDB          der Wert für die Fachwahl aus der DB
 	 * @param halbjahr      das Halbjahr, auf welches sich der Patch bezieht
 	 * @param aktHalbjahr   das Halbjahr, in welchem sich der Schüler befindet
@@ -117,13 +124,66 @@ public class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 	 * 
 	 * @throws WebApplicationException (CONFLICT) falls die Fachwahl ungültig ist
 	 */
-	private static String patchFachwahlHalbjahr(String fwDB, GostHalbjahr halbjahr, GostHalbjahr aktHalbjahr, DTOFach fach, Object value) throws WebApplicationException {
+	private String patchFachwahlHalbjahr(DTOSchueler schueler, String fwDB, GostHalbjahr halbjahr, GostHalbjahr aktHalbjahr, DTOFach fach, Object value) throws WebApplicationException {
 		String fw = JSONMapper.convertToString(value, true, false);
 		if (((fw == null) && (fwDB == null)) || ((fw != null) && (fw.equals(fwDB))))
 			return fwDB;
 		// prüfe, ob eine Änderung bei diesem Schüler überhaupt erlaubt ist oder in das aktuelle Halbjahr des Schülers oder früher fällt...
-		if ((aktHalbjahr != null) && (aktHalbjahr.compareTo(halbjahr) >= 0))
+		if ((aktHalbjahr != null) && (aktHalbjahr.compareTo(halbjahr) >= 0)) {
+			// Prüfe, ob die eingebene Fachwahl den Leistungsdaten entspricht
+			int anzahlAbschnitte = DataSchuleStammdaten.getAnzahlAbschnitte(conn);
+			List<DTOSchuelerLernabschnittsdaten> lernabschnitte = conn.queryList(
+					"SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = ?1 AND e.ASDJahrgang = ?2", 
+					DTOSchuelerLernabschnittsdaten.class,
+					schueler.ID, halbjahr.jahrgang);
+			for (DTOSchuelerLernabschnittsdaten lernabschnitt : lernabschnitte) {
+				DTOSchuljahresabschnitte abschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, lernabschnitt.Schuljahresabschnitts_ID);
+				if (halbjahr.halbjahr * ((anzahlAbschnitte == 4) ? 2 : 1) == abschnitt.Abschnitt) {
+					List<DTOSchuelerLeistungsdaten> leistungen =  conn.queryList(
+							"SELECT e FROM DTOSchuelerLeistungsdaten e WHERE e.Abschnitt_ID = ?1 AND e.Fach_ID = ?2", 
+							DTOSchuelerLeistungsdaten.class,
+							lernabschnitt.ID, fach.ID);
+					for (DTOSchuelerLeistungsdaten leistung : leistungen) {
+						ZulaessigeKursart zulkursart = ZulaessigeKursart.getByASDKursart(leistung.Kursart);
+						GostKursart kursart = GostKursart.fromKursart(zulkursart);
+						if (kursart == null)
+							continue;
+						if (fw == null)
+							throw OperationError.CONFLICT.exception();
+						switch (fw) {
+							case "M" -> {
+								if ((kursart == GostKursart.PJK) || (kursart == GostKursart.VTF) ||
+									(kursart == GostKursart.GK) && ((zulkursart == ZulaessigeKursart.GKM) || ((zulkursart == ZulaessigeKursart.AB4) && (halbjahr == GostHalbjahr.Q22))))
+									return fw;
+							}
+							case "S" -> {
+								if ((kursart == GostKursart.GK) && (
+										(zulkursart == ZulaessigeKursart.GKS) || 
+										(zulkursart == ZulaessigeKursart.AB3) || 
+										((zulkursart == ZulaessigeKursart.AB4) && (halbjahr != GostHalbjahr.Q22))))
+									return fw;
+							}
+							case "LK" -> {
+								if ((kursart == GostKursart.LK))
+									return fw;
+							}
+							case "ZK" -> {
+								if ((kursart == GostKursart.ZK))
+									return fw;
+							}
+							case "AT" -> {
+								if ("SP".equals(fach.StatistikFach.daten.kuerzelASD) && (leistung.NotenKrz == Note.ATTEST))
+									return fw;
+							}
+						}
+						throw OperationError.CONFLICT.exception();
+					}
+				}
+			}
+			if (fw == null)
+				return fw;
 			throw OperationError.CONFLICT.exception();
+		}
 		boolean valid = (fw == null)
 				|| (fw.equals("M")) || (fw.equals("S")) 
 				|| (((fw.equals("LK")) || (fw.equals("ZK"))) && (!halbjahr.istEinfuehrungsphase()))
@@ -177,12 +237,12 @@ public class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 		    		String key = entry.getKey();
 		    		Object value = entry.getValue();
 		    		switch (key) {
-		    			case "EF1" -> fachbelegung.EF1_Kursart = patchFachwahlHalbjahr(fachbelegung.EF1_Kursart, GostHalbjahr.EF1, aktHalbjahr, fach, value);
-		    			case "EF2" -> fachbelegung.EF2_Kursart = patchFachwahlHalbjahr(fachbelegung.EF2_Kursart, GostHalbjahr.EF2, aktHalbjahr, fach, value);
-		    			case "Q11" -> fachbelegung.Q11_Kursart = patchFachwahlHalbjahr(fachbelegung.Q11_Kursart, GostHalbjahr.Q11, aktHalbjahr, fach, value);
-		    			case "Q12" -> fachbelegung.Q12_Kursart = patchFachwahlHalbjahr(fachbelegung.Q12_Kursart, GostHalbjahr.Q12, aktHalbjahr, fach, value);
-		    			case "Q21" -> fachbelegung.Q21_Kursart = patchFachwahlHalbjahr(fachbelegung.Q21_Kursart, GostHalbjahr.Q21, aktHalbjahr, fach, value);
-		    			case "Q22" -> fachbelegung.Q22_Kursart = patchFachwahlHalbjahr(fachbelegung.Q22_Kursart, GostHalbjahr.Q22, aktHalbjahr, fach, value);
+		    			case "EF1" -> fachbelegung.EF1_Kursart = patchFachwahlHalbjahr(schueler,fachbelegung.EF1_Kursart, GostHalbjahr.EF1, aktHalbjahr, fach, value);
+		    			case "EF2" -> fachbelegung.EF2_Kursart = patchFachwahlHalbjahr(schueler,fachbelegung.EF2_Kursart, GostHalbjahr.EF2, aktHalbjahr, fach, value);
+		    			case "Q11" -> fachbelegung.Q11_Kursart = patchFachwahlHalbjahr(schueler,fachbelegung.Q11_Kursart, GostHalbjahr.Q11, aktHalbjahr, fach, value);
+		    			case "Q12" -> fachbelegung.Q12_Kursart = patchFachwahlHalbjahr(schueler,fachbelegung.Q12_Kursart, GostHalbjahr.Q12, aktHalbjahr, fach, value);
+		    			case "Q21" -> fachbelegung.Q21_Kursart = patchFachwahlHalbjahr(schueler,fachbelegung.Q21_Kursart, GostHalbjahr.Q21, aktHalbjahr, fach, value);
+		    			case "Q22" -> fachbelegung.Q22_Kursart = patchFachwahlHalbjahr(schueler,fachbelegung.Q22_Kursart, GostHalbjahr.Q22, aktHalbjahr, fach, value);
 		    			case "abiturFach" -> {
 		    				Integer af = JSONMapper.convertToInteger(value, true);
 		    		    	if ((af != null) && ((af < 1) || (af > 4)))

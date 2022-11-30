@@ -116,6 +116,21 @@ public class DataSchuleStammdaten extends DataManager<Long> {
 	}
 	
 
+	/**
+	 * Gibt die Anzahl der Abschnitte pro Schuljahr
+	 * 
+	 * @param conn   die Datenbankverbindung, welche bei der Abfrage genutzt wird 
+	 * 
+	 * @return die Anzahl der Abschnitte pro Schuljahr
+	 */
+	public static int getAnzahlAbschnitte(DBEntityManager conn) {
+    	DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
+    	if ((schule == null) || (schule.AnzahlAbschnitte == null))
+    		return 2;   // Default-Wert
+    	return schule.AnzahlAbschnitte;
+	}
+	
+
 	@Override
 	public Response patch(Long id, InputStream is) {
     	Map<String, Object> map = JSONMapper.toMap(is);
