@@ -21,36 +21,79 @@ module.exports = {
 		},
 		fontFamily: {
 			sans: [
+				"ui-sans-serif",
+				"system-ui",
 				"-apple-system",
 				"BlinkMacSystemFont",
-				'"Segoe UI"',
+				"Segoe UI",
 				"Roboto",
-				"Helvetica",
+				"Helvetica Neue",
 				"Arial",
-				"sans-serif"
+				"Noto Sans",
+				"sans-serif",
+				"Apple Color Emoji",
+				"Segoe UI Emoji",
+				"Segoe UI Symbol",
+				"Noto Color Emoji"
 			],
 			mono: [
+				"ui-monospace",
 				"SFMono-Regular",
-				"Consolas",
-				'"Liberation Mono"',
 				"Menlo",
+				"Monaco",
+				"Consolas",
+				"Liberation Mono",
+				"Courier New",
 				"monospace"
 			]
 		},
 		fontSize: {
-			caption: ["0.625rem", { lineHeight: "1.5" }],
-			button: ["0.8125rem", { lineHeight: "1.125" }],
-			body: ["0.875rem", { lineHeight: "1.5" }],
-			input: ["1rem", { lineHeight: "1.25" }],
-			"headline-5": ["1rem", { lineHeight: "1.25" }],
-			"headline-4": ["1.25rem", { lineHeight: "1.25" }],
-			"headline-3": ["1.5rem", { lineHeight: "1.25" }],
-			"headline-2": ["2.125rem", { lineHeight: "1.2" }],
-			"headline-1": ["3rem", { lineHeight: "1.125" }]
+			'base': ['1rem', {
+				lineHeight: '1.33',
+				fontWeight: '500',
+			}],
+			'headline-sm': ['1rem', {
+				lineHeight: '1.33',
+				fontWeight: '700',
+			}],
+			'headline': ['1.618rem', {
+				lineHeight: '1.1',
+				fontWeight: '700',
+			}],
+			'headline-xl': ['2.618rem', {
+				lineHeight: '1.1',
+				fontWeight: '700',
+			}],
+			'sm': ['0.833rem', {
+				lineHeight: '1.1',
+				fontWeight: '400',
+			}],
+			'sm-bold': ['0.833rem', {
+				lineHeight: '1',
+				fontWeight: '700',
+			}],
+			button: ['0.916rem', {
+				lineHeight: '1',
+				fontWeight: '700',
+			}],
+			caption: ["0.625rem", { lineHeight: "1.5" }], // Deprecated
+			body: ["0.875rem", { lineHeight: "1.5" }], // Deprecated
+			input: ["1rem", { lineHeight: "1.25" }], // Deprecated
+			"headline-5": ["1rem", { lineHeight: "1.25" }], // Deprecated
+			"headline-4": ["1.25rem", { lineHeight: "1.25" }], // Deprecated
+			"headline-3": ["1.5rem", { lineHeight: "1.25" }], // Deprecated
+			"headline-2": ["2.125rem", { lineHeight: "1.2" }], // Deprecated
+			"headline-1": ["3rem", { lineHeight: "1.125" }] // Deprecated
 		},
 		fontWeight: {
 			normal: "400",
+			medium: "500",
 			bold: "700"
+		},
+		borderWidth: {
+			0: '0px',
+			DEFAULT: 'thin',
+			2: '2px',
 		},
 		extend: {
 			screens: {
@@ -109,7 +152,7 @@ module.exports = {
 			boxShadow: {
 				"border-t": "0 -2px 0 0 rgba(0, 0, 0, 1)",
 				"border-b": "0 2px 0 0 rgba(0, 0, 0, 1)"
-			}
+			},
 		}
 	},
 	variants: {

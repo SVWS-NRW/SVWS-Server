@@ -23,11 +23,6 @@
 </template>
 
 <style>
-	.content-card--wrapper {
-		/* @apply border-b-2 border-dark-20; */
-		@apply pt-4 pb-8;
-	}
-
 	.content-card--headline {
 		@apply text-black;
 		@apply flex-shrink-0;

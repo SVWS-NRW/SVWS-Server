@@ -50,9 +50,14 @@ class="sidebar--menu" :class="{
 
 .sidebar--menu--header {
 	@apply relative;
-	@apply flex flex-shrink-0 flex-col;
+	@apply flex flex-shrink-0 flex-col justify-center;
 	@apply px-4 py-4;
 	@apply bg-white;
+	min-height: 6.5rem;
+}
+
+.sidebar--menu--header input {
+	@apply border-0 cursor-pointer p-0 h-auto;
 }
 
 .sidebar--menu--collapse {
@@ -65,8 +70,14 @@ class="sidebar--menu" :class="{
 	@apply bg-white;
 	@apply text-headline-4 text-black;
 	@apply translate-y-1/2 transform;
-
+	@apply border-0;
+	padding: 0.9rem;
 	right: theme("spacing.2");
+}
+
+.sidebar--menu--collapsed .sidebar--menu--collapse {
+	right: 50%;
+	margin-right: -0.875rem;
 }
 
 .sidebar--menu--collapse:focus {

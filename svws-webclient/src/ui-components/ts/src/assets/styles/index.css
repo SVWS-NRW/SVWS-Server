@@ -5,7 +5,7 @@
 @layer base {
 	:root {
 		--color-white: 255, 255, 255; /* #ffffff */
-		--color-black: 36, 36, 36; /* #242424 */
+		--color-black: 44, 44, 44; /* #2C2C2C */
 		--color-gray: 102, 102, 102; /* #666666 */
 		--color-primary: 50, 156, 213; /* #329cd5 */
 		--color-light: 240, 244, 247; /* #f0f4f7 */
@@ -33,7 +33,7 @@
 		--color-green-dark: 15, 93, 66; /* #0f5d42 */
 	}
 	.theme-dark {
-		--color-white: 36, 36, 36; /* #242424 */
+		--color-white: 44, 44, 44; /* #2C2C2C */
 		--color-black: 255, 255, 255; /* #ffffff */
 		--color-gray: 102, 102, 102; /* #666666 */
 		--color-primary: 107, 203, 255; /* #6bcbff */
@@ -64,27 +64,34 @@
 }
 
 html {
-	font-size: 13px;
+	@apply antialiased text-black;
 }
 
-.headline-1 {
-	@apply text-headline-1 font-bold;
+.text-sm-bold {
+	@apply uppercase;
 }
 
-.headline-2 {
-	@apply text-headline-2 font-bold;
+.headline-1, .text-headline-1 {
+	@apply text-headline-xl;
 }
 
-.headline-3 {
-	@apply text-headline-3 font-bold;
+.headline-2, .text-headline-2,
+.headline-3, .text-headline-3 {
+	@apply text-headline;
 }
 
-.headline-4 {
-	@apply text-headline-4 font-bold;
+.headline-4, .text-headline-4,
+.headline-5, .text-headline-5 {
+	@apply text-headline-sm;
 }
 
-.headline-5 {
-	@apply text-headline-5 font-bold;
+.text-caption {
+	@apply text-sm;
+}
+
+.text-body,
+.text-input {
+	@apply text-base;
 }
 
 .popper {

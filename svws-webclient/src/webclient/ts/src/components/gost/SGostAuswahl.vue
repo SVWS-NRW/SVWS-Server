@@ -1,6 +1,6 @@
 <template>
 	<svws-ui-secondary-menu>
-		<template #headline> Abiturjahrgangsauswahl</template>
+		<template #headline>Abiturjahrgänge</template>
 		<template #header></template>
 		<template #content>
 			<div class="container">
@@ -9,38 +9,41 @@
 					:columns="cols"
 					:data="rows"
 					id="abiturjahr"
-				/>
+					:footer="true"
+				>
+					<template #footer>
+						<svws-ui-dropdown variant="icon" class="">
+							<template #dropdownButton>Abiturjahr hinzufügen</template>
+							<template #dropdownItems>
+								<svws-ui-dropdown-item
+									v-for="jahrgang in jahrgaenge"
+									:key="jahrgang.id"
+									class="px-2"
+									@click="abiturjahr_hinzufuegen(jahrgang)"
+								>{{ jahrgang.kuerzel }}
+								</svws-ui-dropdown-item>
+							</template>
+						</svws-ui-dropdown>
+					</template>
+				</svws-ui-table>
 			</div>
-			<svws-ui-dropdown variant="secondary" class="float-right m-4">
-				<template #dropdownButton>Abiturjahr hinzufügen</template>
-				<template #dropdownItems>
-					<svws-ui-dropdown-item
-						v-for="jahrgang in jahrgaenge"
-						:key="jahrgang.id"
-						class="px-2"
-						@click="abiturjahr_hinzufuegen(jahrgang)"
-					>{{ jahrgang.kuerzel }}</svws-ui-dropdown-item>
-				</template>
-			</svws-ui-dropdown>
-			<div v-if="main.config.kursblockung_aktiv.size && abiturjahr" class="container">
-				<svws-ui-table v-model="selected_hj" :columns="[{ key: 'kuerzel', label: 'Halbjahr' }]" :data="halbjahre">
+			<div v-if="main.config.kursblockung_aktiv.size && abiturjahr" class="mt-20">
+				<h3 class="text-headline px-6 mb-3">Blockungen</h3>
+				<svws-ui-table v-model="selected_hj" :columns="[{ key: 'kuerzel', label: 'Halbjahr' }]" :data="halbjahre" class="mb-10">
 					<template #body="{rows}">
 						<template v-for="row in rows" :key="row.id">
 							<tr :class="{'vt-clicked': row.id === selected_hj.id}" @click="selected_hj = halbjahre.find(hj=>hj.id===row.id)!">
 								<td>
 									{{row.kuerzel}}
-									<svws-ui-button
-										v-if="row.id === selected_hj.id"
-										size="small" type="primary" class="float-right cursor-pointer" @click="blockung_hinzufuegen"
-										>Blockung hinzufügen</svws-ui-button>
+									<svws-ui-button type="transparent" v-if="row.id === selected_hj.id" @click="blockung_hinzufuegen">Blockung hinzufügen</svws-ui-button>
 								</td>
 							</tr>
 							<template v-if="row.id === selected_hj.id && !wait" v-for="blockung in rows_blockungsswahl" :key="blockung.id">
-								<tr :class="{'vt-clicked': blockung === selected_blockungauswahl}" @click="selected_blockungauswahl = blockung">
+								<tr :class="{'vt-clicked': blockung === selected_blockungauswahl}" class="table--row-indent" @click="selected_blockungauswahl = blockung">
 									<td v-if=" blockung === selected_blockungauswahl ">
-										<div class="float-left flex">
+										<div class="flex">
 											<span v-if="!edit_blockungsname"
-												class="px-4 underline decoration-dashed underline-offset-2 cursor-pointer"
+												class="text-input--inline"
 												@click="edit_blockungsname = true"
 											>{{blockung.name}}</span>
 											<svws-ui-text-input v-else v-model="blockung.name"
@@ -49,15 +52,15 @@
 												@keyup.enter="edit_blockungsname=false"
 												@input="patch_blockung(blockung)"/>
 										</div>
-										<div class="float-right flex gap-2">
-											<svws-ui-button class="cursor-pointer" size="small" @click="create_blockung">Ergebnisse berechnen</svws-ui-button >
-											<svws-ui-button size="small" type="danger" class="cursor-pointer" @click="remove_blockung">
+										<div class="flex items-center gap-1">
+											<svws-ui-button size="small" type="danger" @click="remove_blockung" title="Blockung löschen">
 												<svws-ui-icon><i-ri-delete-bin-2-line/></svws-ui-icon>
 											</svws-ui-button>
+											<svws-ui-button size="small" type="secondary" @click="create_blockung" title="Ergebnisse berechnen">Berechnen</svws-ui-button >
 										</div>
 									</td>
 									<td v-else>
-										<span class="px-4">{{blockung.name}}</span>
+										<span>{{blockung.name}}</span>
 									</td>
 								</tr>
 								<auswahl-blockung-api-status :blockung="blockung"/>
@@ -65,7 +68,6 @@
 						</template>
 					</template>
 				</svws-ui-table>
-				<div class="py-2"></div>
 				<svws-ui-table
 					v-model="selected_ergebnis"
 					:columns="[{ key: 'id', label: 'ID' }, { key: 'bewertung', label: 'Bewertungen'}]"
@@ -121,7 +123,7 @@ const main: Main = injectMainApp();
 const app = main.apps.gost;
 const appJahrgaenge = main.apps.jahrgaenge;
 const cols = ref([
-	{ key: "bezeichnung", label: "Bezeichnung", sortable: true },
+	{ key: "bezeichnung", label: "Bezeichnung", sortable: true, span: 2 },
 	{ key: "abiturjahr", label: "Abiturjahr", sortable: true },
 	{ key: "jahrgang", label: "Stufe", sortable: true }]);
 
@@ -130,7 +132,7 @@ const halbjahre = GostHalbjahr.values();
 const hj_memo: Ref<GostHalbjahr | undefined> = ref(undefined)
 const edit_blockungsname: Ref<boolean> = ref(false)
 
-const rows: ComputedRef<GostJahrgang[]> = 
+const rows: ComputedRef<GostJahrgang[]> =
 	computed(() => {
 	const list = [...app.auswahl.liste];
 	return list.sort((a, b) =>

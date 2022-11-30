@@ -63,7 +63,6 @@
 
 <style>
 	footer.status {
-		@apply border-t-2;
 		@apply px-4 py-1;
 		@apply flex flex-col;
 		@apply 2xl:flex-row 2xl:items-center;

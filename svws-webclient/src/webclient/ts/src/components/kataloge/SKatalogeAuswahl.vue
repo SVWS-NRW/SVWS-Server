@@ -3,7 +3,7 @@
 		<template #headline> Kataloge </template>
 		<template #header> </template>
 		<template #content>
-			<div class="container mt-2">
+			<div class="container">
 				<svws-ui-sidebar-menu-item
 					v-for="item in menu_items"
 					:key="item.value"

@@ -11,7 +11,7 @@
 						SVWS-NRW
 					</svws-ui-sidebar-menu-header>
 					<div v-if="!isCollapsed">
-						<div v-if="schule_abschnitte" class="mt-4 px-4">
+						<div v-if="schule_abschnitte" class="mt-2">
 							<svws-ui-multi-select
 								v-model="akt_abschnitt"
 								:items="schule_abschnitte"
@@ -20,7 +20,7 @@
 							></svws-ui-multi-select>
 						</div>
 					</div>
-					<div v-else class="mt-9" />
+					<div v-else />
 				</template>
 				<template #default>
 					<div class="mt-6 mb-8">
@@ -307,6 +307,10 @@
 		-webkit-user-select: None;
 		user-select: None;
 		color: var(--font-color);
+	}
+
+	html {
+		font-size: 12px;
 	}
 
 	@page {

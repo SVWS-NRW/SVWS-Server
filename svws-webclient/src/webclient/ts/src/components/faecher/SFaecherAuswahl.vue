@@ -29,7 +29,7 @@
 	import { injectMainApp, Main } from "~/apps/Main";
 	import { useAuswahlViaRoute } from '~/router/auswahlViaRoute';
 	import { router } from "~/router"
-	
+
 	const selected = useAuswahlViaRoute('faecher')
 	const main: Main = injectMainApp();
 	const app = main.apps.faecher;
@@ -44,7 +44,8 @@
 		{
 			key: "bezeichnung",
 			label: "Bezeichnung",
-			sortable: true
+			sortable: true,
+			span: 3
 		}
 	]);
 

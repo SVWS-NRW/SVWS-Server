@@ -1,6 +1,7 @@
 <script setup lang='ts'>
 import useColumns from './features/use-columns';
 import type { DataTableItem, DataTableColumn } from './types';
+import DropdownWithAction from "~/components/Controls/DropdownWithAction.vue";
 
 const {
   data = [],
@@ -53,15 +54,15 @@ onMounted(() => tableRef.value.selectRows(selection));
 watch(() => selection, (newVal) => tableRef.value.selectRows(newVal));
 // watch(() => modelValue, (newVal) => clickedRow.value = newVal);
 </script>
-  
+
 <template>
   <VTable
     ref="tableRef" :data="data" :selection-mode="isMultiSelect ? 'multiple' : null" :select-on-click="false"
     hide-sort-icons>
     <template #head="{ allRowsSelected, toggleAllRows }">
       <tr>
-        <th v-if="isMultiSelect" class="w-1">
-          <span class="table__head-content">
+        <th v-if="isMultiSelect" class="column--checkbox">
+          <span class="table--head-content">
             <Checkbox
               v-if="isMultiSelect" :model-value="allRowsSelected"
               @update:model-value="proxyUpdate(toggleAllRows)" />
@@ -71,9 +72,10 @@ watch(() => selection, (newVal) => tableRef.value.selectRows(newVal));
           <slot :name="`head-${column.key}`" :column="column">
             <VTh
               v-if="column.sortable" v-slot="{ sortOrder }" :sort-key="column.key"
+			  :style="`flex-grow: ${column.span};`"
               :default-sort="column.defaultSort">
-              <div>
-                <span>{{ column.label }}</span>
+              <div class="w-full">
+                <span class="column--title" :title="column.label">{{ column.label }}</span>
                 <span>
                   <Icon v-show="sortOrder === 0">
                     <i-ri-arrow-up-down-line />
@@ -87,7 +89,7 @@ watch(() => selection, (newVal) => tableRef.value.selectRows(newVal));
                 </span>
               </div>
             </VTh>
-            <th v-else><span>{{ column.label }}</span></th>
+            <th v-else><span class="column--title" :title="column.label">{{ column.label }}</span></th>
           </slot>
         </template>
       </tr>
@@ -95,14 +97,14 @@ watch(() => selection, (newVal) => tableRef.value.selectRows(newVal));
     <template #body="{ rows }">
       <slot name="body" :rows="rows">
         <VTr v-for="(row, index) in rows" :key="`row-${index}`" v-slot="{ isSelected, toggle }" :row="row" :class="{'vt-clicked': check_same(row)}" @click="emit('update:modelValue', row)">
-          <td v-if="isMultiSelect">
-            <span class="table__cell-content">
+          <td v-if="isMultiSelect" class="column--checkbox">
+            <span class="table--cell-content">
               <Checkbox :model-value="isSelected === row" @click.stop @update:model-value="proxyUpdate(toggle)" />
             </span>
           </td>
-          <td v-for="(column, columnIndex) in columnsComputed" :key="`row-column-${column.key}-${columnIndex}`">
+          <td v-for="(column, columnIndex) in columnsComputed" :key="`row-column-${column.key}-${columnIndex}`" :style="`flex-grow: ${column.span};`">
             <slot :name="`cell-${column.key}`" :column="column" :row="row">
-              <span class="table__cell-content">
+              <span class="table--cell-content" :title="row[column.key]">
                 {{ row[column.key] }}
               </span>
             </slot>
@@ -111,100 +113,174 @@ watch(() => selection, (newVal) => tableRef.value.selectRows(newVal));
       </slot>
     </template>
     <template v-if="isMultiSelect || footer" #foot="{ allRowsSelected, toggleAllRows }">
-      <tr>
-        <td colspan="1000">
-          <div class="v-table__footer">
-            <Checkbox v-if="isMultiSelect" :model-value="allRowsSelected" @change="toggleAllRows" />
-            <div class="v-table__footer--actions">
-              <slot v-if="footer" name="footer" />
-            </div>
-          </div>
+      <tr class="table--footer">
+        <td class="table--footer-checkbox">
+			<Checkbox v-if="isMultiSelect" :model-value="allRowsSelected" @change="toggleAllRows" />
         </td>
+		  <td class="table--footer--actions" :class="{ 'table--footer--has-actions': footer}">
+			  <slot v-if="footer" name="footer" />
+		  </td>
       </tr>
     </template>
   </VTable>
 </template>
-  
+
 <style>
 .v-table {
-  width: calc(100% - 1px);
+	@apply w-full border-l border-dark-20 bg-white flex flex-col;
 
-  thead {
-    @apply sticky top-px left-0 z-10 bg-white;
-    @apply shadow-border-b shadow-dark-20;
-    position: -webkit-sticky;
+	tr {
+		@apply flex items-center w-full border-b border-dark-20 relative overflow-hidden;
+	}
 
-    th {
-      @apply bg-white;
-      @apply border-dark-20;
+	th, td {
+		@apply flex items-center grow w-0 border-r border-dark-20 leading-none h-full overflow-hidden;
+		padding: 0.3rem 0.5rem 0.25rem;
+		line-height: 1.25;
+	}
 
-      &.v-th {
-        div {
-          @apply inline-flex flex-row items-center;
-          @apply select-none;
-          @apply space-x-2;
-          @apply text-button font-bold text-black;
-        }
-      }
-    }
-  }
+	td:not(.column--checkbox):hover {
+		@apply overflow-visible;
 
-  tbody {
-    tr {
-      @apply text-button text-black;
+		.table--cell-content {
+			@apply overflow-hidden;
+			display: -webkit-box;
+			-webkit-box-orient: vertical;
+			-webkit-line-clamp: 1;
+			word-break: break-all;
 
-      &:hover {
-        @apply cursor-pointer;
-      }
+		&:hover {
+			 @apply block overflow-visible whitespace-nowrap bg-white z-10 relative;
+		 }
+		}
+	}
 
-      &:focus {
-        @apply outline-none;
-      }
+	thead {
+		@apply sticky top-0 left-0 z-10 bg-white flex w-full;
+		@apply border-dark-20 border-t shadow shadow-dark-20 text-sm-bold uppercase;
+		position: -webkit-sticky;
 
-      &.vt-clicked {
-        @apply font-bold text-primary;
-      }
+		tr {
+			@apply border-b-0;
+		}
 
-      &.vt-selected {
-        .checkbox {
-          .checkbox--indicator {
-            @apply border-primary;
-          }
-        }
-      }
+		th {
+			@apply text-left;
+			padding: 0.8rem 0.5rem;
 
-      td {
-        @apply bg-white;
-        @apply border-dark-20;
-        @apply border;
-      }
-    }
-  }
+			> div, > div > span {
+				@apply w-full;
+			}
 
-  tfoot {
-    tr {
-      @apply sticky bottom-0 left-0 z-10 bg-white;
-      @apply shadow-border-t shadow-dark-20;
-      position: -webkit-sticky;
+			&.v-th {
+				div {
+					@apply inline-flex flex-row items-center;
+					@apply select-none cursor-pointer;
+					@apply space-x-1;
+					@apply text-sm-bold;
+				}
+			}
+		}
+	}
 
-      td {
-        @apply bg-white;
-        @apply py-2 px-3;
-      }
-    }
-  }
+	tbody {
+		tr {
+			@apply bg-white;
+			height: 1.72rem;
+
+			&:hover {
+				@apply cursor-pointer;
+			}
+
+			&:focus {
+				@apply outline-none;
+			}
+
+			&.vt-clicked {
+				@apply font-bold text-primary bg-primary bg-opacity-5;;
+			}
+
+			 &:last-child {
+				@apply border-b-0;
+			  }
+		}
+
+		td {
+			@apply justify-between;
+
+			.button {
+				@apply border;
+				font-size: 0.833rem;
+				padding: 0.1em 0.7em;
+			}
+		}
+
+		.text-input-component input {
+			@apply border-0 p-0 h-auto w-full;
+		}
+	}
+
+	tfoot {
+		@apply sticky bottom-0 left-0 z-20 bg-white flex w-full;
+		@apply border-t border-dark-20;
+		position: -webkit-sticky;
+		box-shadow: 0 -6px 12px -12px rgba(var(--color-dark-20),0.5);
+	}
+
+	.column--checkbox,
+	.table--footer-checkbox {
+		@apply p-0 flex justify-center items-center;
+		flex-grow: 0.25;
+		min-width: 2rem;
+		max-width: 2rem;
+	}
+
+	.table--footer-checkbox {
+		@apply border-r-0;
+	}
+
+	tr.table--footer {
+		@apply flex justify-between;
+		@apply w-full;
+		min-height: 2rem;
+
+		@apply overflow-visible;
+	}
+
+	.table--footer--actions {
+		@apply flex flex-row items-center justify-end space-x-1 overflow-visible;
+
+		.button--icon {
+			@apply p-2 w-8 h-8;
+		}
+
+		.dropdown--button {
+			@apply border-0;
+		}
+	}
+
+	.table--footer--has-actions {
+		min-height: 2.7rem;
+	}
+
 }
 
-.v-table__footer {
-  @apply flex justify-between;
-  @apply w-full;
-
-  &--actions {
-    @apply flex flex-row items-center space-x-2;
-  }
+.column--title {
+	@apply text-ellipsis overflow-hidden;
+	max-width: calc(100% - 1.25rem);
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 1;
+	word-break: break-all;
 }
 
-.table__cell-content {
-  @apply px-3 py-1;
+.table--row-indent {
+	@apply pl-2;
+
+	&:before {
+		@apply block bg-dark-20 w-4;
+		content: '';
+		height: 1px;
+	 }
 }
 </style>

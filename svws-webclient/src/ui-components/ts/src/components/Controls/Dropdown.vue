@@ -5,7 +5,7 @@ const {
 	variant = "primary",
 	disabled = false,
 } = defineProps<{
-	variant?: "primary" | "secondary" | "danger";
+	variant?: "primary" | "secondary" | "danger" | "icon";
 	disabled?: boolean;
 }>();
 </script>
@@ -16,7 +16,8 @@ const {
 v-slot="{ open }" class="dropdown--button" :class="{
 			'dropdown--button--primary': variant === 'primary',
 			'dropdown--button--secondary': variant === 'secondary',
-			'dropdown--button--danger': variant === 'danger'
+			'dropdown--button--danger': variant === 'danger',
+			'dropdown--button--icon': variant === 'icon'
 		}" :disabled="disabled">
 			<slot name="dropdownButton" />
 			<Icon class="dropdown--icon">
@@ -28,7 +29,8 @@ v-slot="{ open }" class="dropdown--button" :class="{
 as="div" class="dropdown--items" :class="{
 			'dropdown--items--primary': variant === 'primary',
 			'dropdown--items--secondary': variant === 'secondary',
-			'dropdown--items--danger': variant === 'danger'
+			'dropdown--items--danger': variant === 'danger',
+			'dropdown--items--icon': variant === 'icon'
 		}">
 			<slot name="dropdownItems" />
 		</MenuItems>
@@ -122,5 +124,30 @@ as="div" class="dropdown--items" :class="{
 
 .dropdown--items--danger {
 	@apply border-error;
+}
+
+.dropdown--button--icon {
+	@apply rounded border-0 justify-center items-center bg-transparent;
+
+	.table--footer & {
+		@apply px-2 py-1;
+	}
+
+	&:hover {
+		@apply bg-dark-20 bg-opacity-50 rounded;
+	}
+
+	&:focus, &[aria-expanded="true"] {
+		@apply bg-transparent;
+  	}
+
+	&:focus {
+		 @apply ring-dark ring-opacity-50;
+	}
+
+	svg {
+		width: 1.2rem;
+		height: 1.2rem;
+	}
 }
 </style>

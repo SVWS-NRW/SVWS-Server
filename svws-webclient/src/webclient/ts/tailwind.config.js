@@ -11,5 +11,7 @@ module.exports = {
 	variants: {
 		extend: {}
 	},
-	plugins: []
+	plugins: [{
+		tailwindcss: {config: '../../webclient/tailwind.config-base.js'},
+	}]
 };

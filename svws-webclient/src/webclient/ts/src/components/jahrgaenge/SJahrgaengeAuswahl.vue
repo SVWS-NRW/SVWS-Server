@@ -40,7 +40,8 @@
 		{
 			key: "bezeichnung",
 			label: "Bezeichnung",
-			sortable: true
+			sortable: true,
+			span: 3
 		}
 	];
 	const main: Main = injectMainApp();

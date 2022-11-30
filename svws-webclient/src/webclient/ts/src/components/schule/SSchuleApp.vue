@@ -1,6 +1,6 @@
 <template>
 	<div class="flex h-full flex-row">
-		<div class="flex w-full flex-col px-4">
+		<div class="flex w-full flex-col">
 			<svws-ui-header
 				><span>{{
 					app.schuleStammdaten.daten?.bezeichnung1

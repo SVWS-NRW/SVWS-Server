@@ -3,7 +3,7 @@
 		<template #headline> Statistik </template>
 		<template #header> </template>
 		<template #content>
-			<div class="container mt-2">
+			<div class="container">
 				<svws-ui-sidebar-menu-item
 					><template #label><span></span></template
 				></svws-ui-sidebar-menu-item>

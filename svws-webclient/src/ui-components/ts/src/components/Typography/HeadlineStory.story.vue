@@ -3,15 +3,17 @@
 </script>
 
 <template>
-  <Story title="SVWS UI/Typography/Headline">
-    <h1 class="headline-1">Headline 1</h1>
+  <Story title="SVWS UI/Typography/Text">
+    <h1 class="text-headline-xl mb-6">Extra Large Headline</h1>
 
-    <h2 class="headline-2">Headline 2</h2>
+    <h2 class="text-headline mb-6">Default Headline</h2>
 
-    <h3 class="headline-3">Headline 3</h3>
+    <h3 class="text-headline-sm mb-3">Small Headline</h3>
 
-    <h4 class="headline-4">Headline 4</h4>
+    <p class="text-base mb-3">Default Text</p>
 
-    <h5 class="headline-5">Headline 5</h5>
+    <p class="text-sm mb-2">Small Text</p>
+
+    <p class="text-sm-bold">Table Header, Labels</p>
   </Story>
 </template>

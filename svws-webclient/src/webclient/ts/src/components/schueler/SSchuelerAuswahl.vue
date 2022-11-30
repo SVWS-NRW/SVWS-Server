@@ -2,7 +2,7 @@
 	<svws-ui-secondary-menu>
 		<template #headline> Schülerauswahl</template>
 		<template #header>
-			<div class="px-6 pt-3">
+			<div class="px-6">
 				<svws-ui-multi-select
 					v-model="filterStatus"
 					:items="inputKatalogSchuelerStatus"
@@ -10,7 +10,7 @@
 					tags
 					title="Status"
 				/>
-				<div class="mt-4 grid grid-cols-2 gap-4">
+				<div class="input-wrapper mt-3">
 					<svws-ui-multi-select
 						v-model="filterKlassen"
 						title="Klasse"
@@ -91,15 +91,15 @@
 					<template #footer>
 						{{selectedItems.length || 1}}/{{rowsFiltered.length}}
 						<button
-							class="flex h-10 w-10 items-center justify-center"
+							class="button button--icon"
 							@click="addLine()"
 						>
 							<svws-ui-icon><i-ri-add-line /></svws-ui-icon>
 						</button>
-						<button class="flex h-10 w-10 items-center justify-center">
+						<button class="button button--icon">
 							<svws-ui-icon><i-ri-file-copy-line /></svws-ui-icon>
 						</button>
-						<button class="flex h-10 w-10 items-center justify-center">
+						<button class="button button--icon">
 							<svws-ui-icon><i-ri-more-2-line /></svws-ui-icon>
 						</button>
 					</template>
@@ -134,10 +134,9 @@
 	const filtered: Ref<boolean> = ref(false);
 	const search: Ref<string> = ref("");
 	const cols = [
-		{ key: "klasse", label: "Klasse", sortable: true },
-		{ key: "nachname", label: "Nachname", sortable: true },
-		{ key: "vorname", label: "Vorname", sortable: true },
-		{ key: "actions", label: '' }
+		{ key: "klasse", label: "Klasse", sortable: true, span: '1' },
+		{ key: "nachname", label: "Nachname", sortable: true, span: '2' },
+		{ key: "vorname", label: "Vorname", sortable: true, span: '2' },
 	]
 	const actions = [
 		{ label: "Löschen", action: "delete" },

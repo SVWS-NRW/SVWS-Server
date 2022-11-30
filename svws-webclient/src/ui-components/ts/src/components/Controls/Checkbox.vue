@@ -6,12 +6,14 @@ const {
 	value = '',
 	statistics = false,
 	disabled = false,
+	circle = false,
 	modelValue
 } = defineProps<{
 	value?: CheckboxValue;
 	modelValue: ModelValue;
 	statistics?: boolean;
 	disabled?: boolean;
+	circle?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -30,20 +32,26 @@ const model = computed({
 
 <template>
 	<label
-		class="checkbox" 
+		class="checkbox"
 		:class="{
 			'checkbox--disabled': disabled,
-			'checkbox--statistics': statistics
+			'checkbox--statistics': statistics,
+			'checkbox--checked': modelValue,
+			'checkbox--circle': circle,
 		}">
-		<input v-model="model" class="checkbox--control" type="checkbox" :value="value" :disabled="disabled" />
-		<span class="checkbox--indicator">
-			<Icon>
-				<i-ri-check-line />
-			</Icon>
-		</span>
-		<span class="checkbox--label">
+		<input v-model="model" class="checkbox--control" type="checkbox" :value="value" :disabled="disabled" :title="disabled ? 'Deaktiviert' : ''" />
+		<Icon v-if="modelValue">
+			<i-ri-checkbox-line v-if="!circle" />
+			<i-ri-checkbox-circle-fill v-if="circle" />
+		</Icon>
+		<Icon v-if="!modelValue">
+			<i-ri-checkbox-blank-line v-if="!circle" />
+		</Icon>
+		<span class="checkbox--label" v-if="$slots.default || statistics">
 			<slot />
-			<i-ri-bar-chart-fill v-if="statistics" class="ml-2" />
+			<Icon v-if="statistics" class="ml-1">
+				<i-ri-bar-chart-fill  />
+			</Icon>
 		</span>
 	</label>
 </template>
@@ -52,73 +60,55 @@ const model = computed({
 .checkbox {
 	@apply cursor-pointer;
 	@apply inline-flex;
-	@apply items-center justify-start;
+	@apply items-start justify-start;
 	@apply select-none;
-	@apply text-input;
+	@apply text-base font-normal leading-none;
+	@apply my-1;
+}
+
+.checkbox:not(.checkbox--checked) .icon {
+	@apply opacity-50;
 }
 
 .checkbox--control {
 	@apply hidden;
 }
 
-.checkbox--diabled {
-	@apply border-gray;
-	@apply text-gray;
+.checkbox--disabled {
+	@apply opacity-50;
+	@apply cursor-not-allowed;
 }
 
-.checkbox--indicator {
-	@apply bg-white;
-	@apply border-2 border-black;
-	@apply inline-flex items-center justify-center;
-	@apply h-5 w-5;
-}
-
-.checkbox--disabled .checkbox--indicator {
-	@apply border-gray;
-}
-.checkbox--statistics .checkbox--indicator {
-	@apply border-purple;
-}
-
-.checkbox--indicator .icon {
-	@apply opacity-0;
-
-	font-size: 1rem;
-}
-
-.checkbox:focus .checkbox--indicator,
-.checkbox input:focus+.checkbox--indicator {
-	@apply border-primary;
-}
-
-.checkbox input:checked+.checkbox--indicator .icon {
-	@apply opacity-100;
-	@apply text-black;
-}
-
-.checkbox--disabled input:checked+.checkbox--indicator .icon {
-	@apply opacity-100;
-	@apply text-gray;
-	@apply bg-gray;
-	@apply bg-opacity-5;
-}
-.checkbox--statistics input:checked+.checkbox--indicator .icon {
-	@apply opacity-100;
-	@apply text-purple;
-	@apply bg-purple;
-	@apply bg-opacity-5;
+.checkbox--checked {
+	@apply font-medium;
 }
 
 .checkbox--label {
-	@apply ml-2;
-	@apply text-black;
-	@apply flex items-center;
+	margin: 0.1rem 0 0 0.2rem;
 }
 
 .checkbox--disabled .checkbox--label {
 	@apply text-gray;
 }
-.checkbox--statistics .checkbox--label {
+.checkbox--statistics {
 	@apply text-purple;
+}
+
+.checkbox--statistics .checkbox--label .icon {
+	@apply opacity-100 inline-block;
+	width: 0.8em;
+	height: 0.8em;
+
+	svg {
+		@apply w-full h-full;
+	}
+}
+
+.checkbox--wrapper {
+	margin-left: -1rem;
+}
+
+.checkbox--wrapper .checkbox {
+	margin-left: 1rem;
 }
 </style>

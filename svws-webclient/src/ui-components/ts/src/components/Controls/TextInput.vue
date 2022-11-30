@@ -91,7 +91,7 @@ defineExpose({
 });
 
 </script>
-	
+
 <template>
 	<label class="text-input-component" :class="{
 		'text-input-focus': focused,
@@ -159,9 +159,9 @@ defineExpose({
 	@apply bg-white;
 	@apply rounded border border-black border-opacity-20;
 	@apply h-9 w-full;
-	@apply px-4 py-2;
-	@apply text-input text-black;
+	@apply text-base;
 	@apply whitespace-nowrap;
+	padding: 0.5em 0.7em;
 }
 
 .text-input-focus .text-input--control,
@@ -199,7 +199,7 @@ defineExpose({
 }
 
 .text-input-readonly .text-input--control {
-	@apply cursor-default;
+	@apply cursor-default pointer-events-none;
 }
 
 .text-input-invalid .text-input--control {
@@ -209,24 +209,32 @@ defineExpose({
 .text-input--placeholder {
 	@apply absolute;
 	@apply pointer-events-none;
-	@apply text-input text-gray;
+	@apply opacity-50;
 	@apply transform;
 	@apply flex items-center;
 
-	top: theme("spacing.2");
-	left: theme("spacing.4");
+	top: 0.5em;
+	left: 0.7em;
+
+	&:after {
+		content: '…'
+	}
 }
 
 .text-input-focus .text-input--placeholder,
 .text-input-filled .text-input--placeholder {
 	@apply -translate-y-1/2;
-	@apply bg-white;
+	@apply bg-white opacity-100;
 	@apply rounded;
 	@apply px-1;
-	@apply text-button;
 
 	top: 0;
-	left: theme("spacing.1");
+	left: 0.7em;
+	font-size: 0.78rem;
+
+	&:after {
+	 content: ''
+ 	}
 }
 
 .text-input-invalid .text-input--placeholder {
@@ -265,6 +273,10 @@ defineExpose({
 }
 
 .text-input--headless {
-	@apply bg-white w-full text-black whitespace-nowrap outline-none border-0 px-3;
+	@apply bg-white w-full text-black font-medium whitespace-nowrap outline-none border-0 px-3;
+}
+
+.text-input--inline {
+	@apply underline decoration-dashed underline-offset-2 cursor-text decoration-black;
 }
 </style>

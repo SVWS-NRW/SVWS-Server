@@ -38,6 +38,7 @@ class="button" :class="{
 		'button--secondary': type === 'secondary',
 		'button--danger': type === 'danger',
 		'button--transparent': type === 'transparent',
+		'button--icon': type === 'icon',
 		'button--dropdown-action': dropdownAction === true,
 		'button--normal': size === 'normal',
 		'button--small': size === 'small',
@@ -74,6 +75,10 @@ class="button" :class="{
 	@apply text-black;
 }
 
+.button--secondary:hover {
+	@apply bg-black text-white;
+}
+
 .button--secondary:focus {
 	@apply ring-primary ring-opacity-50;
 }
@@ -82,6 +87,10 @@ class="button" :class="{
 	@apply bg-transparent;
 	@apply border-error;
 	@apply text-error;
+}
+
+.button--danger:hover {
+	@apply bg-error text-white;
 }
 
 .button--danger:focus {
@@ -93,7 +102,7 @@ class="button" :class="{
 .button--transparent {
 	@apply bg-transparent;
 	@apply border-transparent;
-	@apply text-primary;
+	@apply rounded;
 }
 
 .button--transparent:hover {
@@ -122,5 +131,23 @@ class="button" :class="{
 	@apply pr-3;
 	@apply relative z-20;
 	@apply rounded-r-none;
+}
+
+.button--icon {
+	@apply rounded border-0 justify-center items-center;
+	@apply p-2 w-8 h-8;
+
+	&:hover, &:focus {
+		 @apply bg-dark-20 bg-opacity-50 rounded;
+	 }
+
+   &:focus {
+		@apply ring-dark ring-opacity-50;
+	}
+
+	svg {
+		width: 1.2rem;
+		height: 1.2rem;
+	}
 }
 </style>

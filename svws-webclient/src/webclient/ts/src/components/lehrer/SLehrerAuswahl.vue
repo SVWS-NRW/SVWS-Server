@@ -2,8 +2,8 @@
 	<svws-ui-secondary-menu>
 		<template #headline> Lehrerauswahl </template>
 		<template #header>
-			<div class="px-6 pt-3">
-				<div class="mt-4">
+			<div class="px-6">
+				<div>
 					<svws-ui-text-input
 						v-model="search"
 						type="search"
@@ -65,18 +65,16 @@
 			key: "nachname",
 			label: "Nachname",
 			width: "45%",
-			sortable: true
+			sortable: true,
+			span: 2
 		},
 		{
 			key: "vorname",
 			label: "Vorname",
 			width: "45%",
-			sortable: true
-		},
-  		{
-    		key: 'actions',
-    		label: ''
-  		}
+			sortable: true,
+			span: 2
+		}
 	];
 
 	const actions = [

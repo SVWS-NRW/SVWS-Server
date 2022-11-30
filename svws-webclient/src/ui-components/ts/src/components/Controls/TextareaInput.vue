@@ -61,7 +61,7 @@ function onKeyDown(event: KeyboardEvent) {
 }
 
 </script>
-	
+
 <template>
 	<label
 		class="textarea-input" :class="{
@@ -113,8 +113,8 @@ function onKeyDown(event: KeyboardEvent) {
 	@apply bg-white;
 	@apply rounded border border-black border-opacity-20;
 	@apply w-full;
-	@apply px-4 py-2;
-	@apply text-input text-black;
+	@apply text-base;
+	padding: 0.5em 0.7em;
 }
 
 .textarea-input-focus .textarea-input--control,
@@ -150,12 +150,16 @@ function onKeyDown(event: KeyboardEvent) {
 .textarea-input--placeholder {
 	@apply absolute;
 	@apply pointer-events-none;
-	@apply text-input text-gray;
+	@apply opacity-50;
 	@apply transform;
 	@apply flex items-center;
 
-	top: theme("spacing.2");
-	left: theme("spacing.4");
+	top: 0.5em;
+	left: 0.7em;
+
+	&:after {
+		content: '…'
+	}
 }
 
 .textarea-input--statistics .textarea-input--control {
@@ -178,12 +182,17 @@ function onKeyDown(event: KeyboardEvent) {
 .textarea-input-focus .textarea-input--placeholder,
 .textarea-input-filled .textarea-input--placeholder {
 	@apply -translate-y-1/2;
-	@apply bg-white;
+	@apply bg-white opacity-100;
+	@apply rounded;
 	@apply px-1;
-	@apply text-caption;
 
 	top: 0;
-	left: theme("spacing.1");
+	left: 0.7em;
+	font-size: 0.78rem;
+
+	&:after {
+		content: ''
+	}
 }
 
 .textarea-input-invalid .textarea-input--placeholder {

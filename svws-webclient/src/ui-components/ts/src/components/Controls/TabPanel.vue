@@ -10,6 +10,6 @@ import { TabPanel } from '@headlessui/vue'
 
 <style>
 .tab-container {
-  @apply mt-0 mb-8 flex-grow overflow-y-auto px-4;
+  @apply mt-0 mb-8 flex-grow overflow-y-auto px-6;
 }
 </style>

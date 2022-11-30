@@ -12,7 +12,7 @@ const {
 
 <template>
 	<div class="header--wrapper">
-		<h5 class="headline-2 flex items-center space-x-2 text-black">
+		<h5 class="text-headline flex items-center space-x-2">
 			<slot />
 		</h5>
 		<Badge v-if="badge" :variant="badgeVariant" :size="badgeSize">{{
@@ -24,8 +24,13 @@ const {
 <style>
 .header--wrapper {
 	@apply flex flex-row items-center;
-	@apply py-6 px-4;
+	@apply py-2 px-6;
 	@apply space-x-2;
 	@apply flex-shrink-0;
+	min-height: 6.5rem;
+}
+
+.tab-container .header--wrapper {
+	@apply px-0;
 }
 </style>

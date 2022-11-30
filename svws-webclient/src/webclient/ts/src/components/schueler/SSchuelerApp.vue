@@ -1,6 +1,6 @@
 <template>
 	<div class="flex h-full flex-row">
-		<div v-if="app?.stammdaten.daten" class="flex w-full flex-col px-4">
+		<div v-if="app?.stammdaten.daten" class="flex w-full flex-col">
 			<svws-ui-header :badge="inputId" badge-variant="light" badge-size="normal"><span>{{ inputVorname }} {{
 					inputNachname
 			}}</span>

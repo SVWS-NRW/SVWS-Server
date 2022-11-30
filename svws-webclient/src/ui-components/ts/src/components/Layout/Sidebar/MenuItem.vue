@@ -24,7 +24,7 @@ class="sidebar--menu-item" :class="{
 		'sidebar--menu-item--active': active,
 		'sidebar--menu-item--collapsed': collapsed
 	}" href="#" @click.prevent="onClick">
-		<span class="sidebar--menu-item--icon">
+		<span v-if="$slots.icon" class="sidebar--menu-item--icon">
 			<Icon>
 				<slot name="icon" />
 			</Icon>
@@ -43,7 +43,7 @@ class="sidebar--menu-item" :class="{
 	@apply flex items-center;
 	@apply py-1;
 	@apply my-1;
-	@apply border-l-2 border-transparent;
+	@apply border-l-2 border-r-2 border-transparent;
 	@apply cursor-pointer;
 }
 
@@ -54,12 +54,12 @@ class="sidebar--menu-item" :class="{
 
 .sidebar--menu--body .sidebar--menu-item--active,
 .sidebar--menu--footer .sidebar--menu-item--active {
-	@apply border-white;
+	@apply border-l-white;
 	@apply font-bold;
 }
 
 .secondary-menu--content .sidebar--menu-item {
-	@apply text-dark;
+	@apply text-dark px-6;
 }
 
 .secondary-menu--content .sidebar--menu-item--active {
@@ -69,16 +69,23 @@ class="sidebar--menu-item" :class="{
 
 .sidebar--menu-item--icon {
 	@apply flex;
-	@apply mr-4 ml-3;
-	@apply text-headline-2;
+	@apply mx-2;
+	font-size: 2rem;
 }
 
 .sidebar--menu-item--label {
 	@apply flex flex-col;
-	@apply text-body;
-
-	line-height: 1.25;
+	@apply text-base;
 }
+
+/*@supports (-webkit-line-clamp: 1) {
+	.sidebar--menu-item--label {
+		overflow: hidden;
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 1;
+	}
+}*/
 
 .sidebar--menu-item--collapsed .sidebar--menu-item--label {
 	@apply hidden;

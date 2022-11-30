@@ -116,7 +116,7 @@ v-if="!state.scrolledMax"
     @apply rounded-full;
     @apply w-full;
     @apply flex-shrink-0;
-    @apply px-4 pb-4;
+    @apply px-4 mb-6;
 }
 
 .tab-bar {

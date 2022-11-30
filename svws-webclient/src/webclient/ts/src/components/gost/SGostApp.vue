@@ -1,6 +1,6 @@
 <template>
 	<div class="flex h-full flex-row">
-		<div class="flex w-full flex-col px-4">
+		<div class="flex w-full flex-col">
 			<svws-ui-header :badge="jahrgang">{{ bezeichnung_abiturjahr }}
 			</svws-ui-header>
 			<svws-ui-tab-bar v-model="app.selectedTab.value">

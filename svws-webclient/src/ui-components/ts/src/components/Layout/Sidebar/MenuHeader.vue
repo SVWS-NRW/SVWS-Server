@@ -56,8 +56,9 @@ fill="#020202"
 }
 
 .sidebar--menu-header--label {
-	@apply ml-4;
-	@apply text-headline-3 font-bold text-dark;
+	@apply ml-2;
+	@apply font-bold;
+	font-size: 1.4rem;
 }
 
 .sidebar--menu-header--collapsed .sidebar--menu-header--label {

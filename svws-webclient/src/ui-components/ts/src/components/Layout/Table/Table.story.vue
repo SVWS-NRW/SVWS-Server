@@ -59,10 +59,6 @@ const columns2 = ref([
   {
     key: 'isActive',
     label: 'Is active?',
-  },
-  {
-    key: 'actions',
-    label: ''
   }
 ]);
 const actions = [
@@ -112,6 +108,30 @@ function execute(action: string, row: DataTableItem) {
       <div v-if="Object.keys(clickedRow).length === 0">No row clicked</div>
       <span v-else>{{ clickedRow }}</span>
     </Variant>
+    <Variant title="Selection Multi + Footer Action">
+		<Table v-model:selection="selectedRows2" v-model="clickedRow" :data="data" is-multi-select :footer="true">
+			<template #footer>
+				<button
+					class="button button--icon"
+				>
+					<svws-ui-icon><i-ri-add-line /></svws-ui-icon>
+				</button>
+				<button class="button button--icon">
+					<svws-ui-icon><i-ri-file-copy-line /></svws-ui-icon>
+				</button>
+				<button class="button button--icon">
+					<svws-ui-icon><i-ri-more-2-line /></svws-ui-icon>
+				</button>
+			</template>
+		</Table>
+      <br />
+      <strong>Selected:</strong>
+      <div v-if="selectedRows2.length === 0">No rows selected</div>
+      <span v-else>{{ selectedRows2 }}</span>
+      <div><strong>Clicked:</strong></div>
+      <div v-if="Object.keys(clickedRow).length === 0">No row clicked</div>
+      <span v-else>{{ clickedRow }}</span>
+    </Variant>
     <Variant title="Sorting + Selection + Header Labels">
       <Table v-model:selection="selectedRows3" :data="data" :columns="columns" is-multi-select />
       <br />
@@ -122,12 +142,12 @@ function execute(action: string, row: DataTableItem) {
     <Variant title="Basic + Custom Head Cell">
       <Table :data="data">
         <template #head-age="{ column }">
-          <div class="flex">
+          <th>
             <Icon>
               <i-ri-alarm-line />
             </Icon>
             {{ column.label }} 🥳
-          </div>
+          </th>
         </template>
       </Table>
     </Variant>
@@ -184,19 +204,19 @@ function execute(action: string, row: DataTableItem) {
     <Variant title="Headless Inputs">
       <Table :data="data" :columns="columns2">
         <template #cell-name="{ row }">
-          <span v-if="!row.isEditing" class="table__cell-content">{{ row.name }}</span>
+          <span v-if="!row.isEditing" class="table--cell-content">{{ row.name }}</span>
           <TextInput v-else v-model="row.name" headless />
         </template>
         <template #cell-email="{ row }">
-          <span v-if="!row.isEditing" class="table__cell-content">{{ row.email }}</span>
+          <span v-if="!row.isEditing" class="table--cell-content">{{ row.email }}</span>
           <TextInput v-else v-model="row.email" headless />
         </template>
         <template #cell-age="{ row }">
-          <span v-if="!row.isEditing" class="table__cell-content">{{ row.age }}</span>
+          <span v-if="!row.isEditing" class="table--cell-content">{{ row.age }}</span>
           <MultiSelect v-else v-model="row.age" :items="[{id: 1, text: '< 10',}, {id: 2, text: '11-20'}, {id: 3, text: '> 20'} ]" headless />
         </template>
         <template #cell-isActive="{ row }">
-          <span v-if="!row.isEditing" class="table__cell-content">{{ row.isActive }}</span>
+          <span v-if="!row.isEditing" class="table--cell-content">{{ row.isActive }}</span>
           <Toggle v-else v-model="row.isActive" headless />
         </template>
         <template #cell-actions="{ row }">
