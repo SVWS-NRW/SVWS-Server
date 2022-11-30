@@ -195,4 +195,14 @@ public class DateTimeUtil {
 	public static long getTimeInMillis(String time) {
 		return DatumUhrzeitConverter.instance.convertToDatabaseColumn(time).getTime();
 	}
+
+	/**
+	 * Gibt einen CalDav String in Zulu-Timezone für den gegebenen Zeitpunkt wieder.
+	 * 
+	 * @param t der gegebene Zeitpunkt
+	 * @return der CalDav String
+	 */
+	public static String toCalDavString(Instant t) {
+		return DAV_ISO_FORMATTER_WITHZONE.format(t.atZone(ZoneId.of("Z")));
+	}
 }

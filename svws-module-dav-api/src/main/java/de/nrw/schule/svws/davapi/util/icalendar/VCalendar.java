@@ -28,7 +28,7 @@ public class VCalendar {
 	 */
 	static final String END_PROPERTY_KEY = "END";
 	/** Konstante für Zeilenumbrüche */
-	static final String LINEBREAK = "\r\n";
+	public static final String LINEBREAK = "\r\n";
 	/**
 	 * konstante für Zeilenumbrüche innerhalb eines Properties mit führendem
 	 * Leerzeichen
