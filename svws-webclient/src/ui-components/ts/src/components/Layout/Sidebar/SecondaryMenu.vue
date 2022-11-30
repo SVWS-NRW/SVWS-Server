@@ -25,10 +25,12 @@
 	@apply bg-light;
 	@apply border-x border-dark-20;
 	@apply flex flex-shrink-0 flex-col;
-	@apply h-screen w-1/4 min-w-84 max-w-116;
+	@apply h-screen w-1/4;
 	@apply overflow-y-auto;
 	@apply shadow;
 	-webkit-overflow-scrolling: touch;
+	min-width: 22rem;
+	max-width: 32rem;
 }
 
 .secondary-menu .v-table {
