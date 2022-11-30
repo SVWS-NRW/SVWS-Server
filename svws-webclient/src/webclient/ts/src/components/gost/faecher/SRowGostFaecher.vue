@@ -59,6 +59,7 @@
 	>
 		<svws-ui-multi-select
 			v-if="istJahrgangAllgemein && hatLeitfach1"
+			headless
 			:items="katalogLeitfaecher"
 			:item-text="(i: GostFach) => i?.kuerzelAnzeige"
 			v-model="leitfach1"
@@ -73,6 +74,7 @@
 	>
 		<svws-ui-multi-select
 			v-if="istJahrgangAllgemein && istProjektkurs"
+			headless
 			:items="katalogLeitfaecher"
 			:item-text="(i: GostFach) => i?.kuerzelAnzeige"
 			v-model="leitfach2"
