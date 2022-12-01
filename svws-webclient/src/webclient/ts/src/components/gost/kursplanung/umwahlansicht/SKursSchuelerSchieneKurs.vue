@@ -12,7 +12,7 @@
 	>
 		<drop-data @drop="drop_aendere_kurszuordnung($event, kurs.id)" v-slot="{active}" >
 			<span :class="{'bg-red-400': active && is_drop_zone}">{{ kurs_name }}</span>
-			<span v-if="is_draggable && allow_regeln">
+			<span v-if="allow_regeln">
 					<svws-ui-icon class="cursor-pointer" @click="verbieten_regel_toggle" >
 						<i-ri-forbid-fill v-if="verbieten_regel" class="inline-block"/>
 						<i-ri-forbid-line v-if="!verbieten_regel && !fixier_regel" class="inline-block"/>
