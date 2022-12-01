@@ -32,4 +32,12 @@ public class StundenplanblockungInput {
 	@ArraySchema(schema = @Schema(implementation = StundenplanblockungFach.class))
 	public @NotNull Vector<@NotNull StundenplanblockungFach> faecher = new Vector<>();
 	
+	/** Alle Räume. Der Manager sortiert diese Liste stets nach dem Kürzel des Raumes. */
+	@ArraySchema(schema = @Schema(implementation = StundenplanblockungRaum.class))
+	public @NotNull Vector<@NotNull StundenplanblockungRaum> raeume = new Vector<>();
+	
+	/** Alle Kopplungen. Der Manager sortiert diese Liste stets nach dem Kürzel der Kopplung. */
+	@ArraySchema(schema = @Schema(implementation = StundenplanblockungKopplung.class))
+	public @NotNull Vector<@NotNull StundenplanblockungKopplung> kopplungen = new Vector<>();
+	
 }

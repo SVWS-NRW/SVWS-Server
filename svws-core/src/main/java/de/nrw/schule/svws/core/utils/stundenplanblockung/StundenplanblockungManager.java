@@ -2,12 +2,15 @@ package de.nrw.schule.svws.core.utils.stundenplanblockung;
 
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Vector;
 
 import de.nrw.schule.svws.core.data.stundenplanblockung.StundenplanblockungFach;
 import de.nrw.schule.svws.core.data.stundenplanblockung.StundenplanblockungInput;
 import de.nrw.schule.svws.core.data.stundenplanblockung.StundenplanblockungKlasse;
+import de.nrw.schule.svws.core.data.stundenplanblockung.StundenplanblockungKopplung;
 import de.nrw.schule.svws.core.data.stundenplanblockung.StundenplanblockungLehrkraft;
+import de.nrw.schule.svws.core.data.stundenplanblockung.StundenplanblockungRaum;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -79,6 +82,35 @@ public class StundenplanblockungManager {
 		return Long.compare(a.id, b.id);
 	};
 
+	/** Fach-ID --> Raum-Objekt. */
+	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanblockungRaum> _map_id_raum = new HashMap<>();
+
+	/** Ein Comparator zum Sortieren der Räume nach dem Kürzel. */
+	private static final @NotNull Comparator<@NotNull StundenplanblockungRaum> _comp_raum_kuerzel = (
+			@NotNull StundenplanblockungRaum a, @NotNull StundenplanblockungRaum b) -> {
+		// Sortierung nach dem Kürzel.
+		int cmpKuerzel = a.kuerzel.compareTo(b.kuerzel);
+		if (cmpKuerzel != 0)
+			return cmpKuerzel;
+
+		// Sortierung nach der ID.
+		return Long.compare(a.id, b.id);
+	};
+
+	/** Fach-ID --> Kopplung-Objekt. */
+	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanblockungKopplung> _map_id_kopplung = new HashMap<>();
+
+	/** Ein Comparator zum Sortieren der Kopplungen nach dem Kürzel. */
+	private static final @NotNull Comparator<@NotNull StundenplanblockungKopplung> _comp_kopplung_kuerzel = (
+			@NotNull StundenplanblockungKopplung a, @NotNull StundenplanblockungKopplung b) -> {
+		// Sortierung nach dem Kürzel.
+		int cmpKuerzel = a.kuerzel.compareTo(b.kuerzel);
+		if (cmpKuerzel != 0)
+			return cmpKuerzel;
+
+		// Sortierung nach der ID.
+		return Long.compare(a.id, b.id);
+	};
 	/**
 	 * Erzeugt einen neuen Manager mit einem leeren {@link StundenplanblockungInput}-Objekt.
 	 */
@@ -89,31 +121,41 @@ public class StundenplanblockungManager {
 	// ############################################################
 	// ######################## Lehrkräfte ########################
 	// ############################################################
+	
+	private void lehrkraftAddOhneSortierung(@NotNull StundenplanblockungLehrkraft pLehrkraft) throws NullPointerException {
+		// Existiert die Lehrkraft bereits?
+		if (_map_id_lehrkraft.containsKey(pLehrkraft.id))
+			throw new NullPointerException("Lehrkraft-ID " + pLehrkraft.id + " existiert bereits!");
+		// Lehrkraft hinzufügen.
+		_map_id_lehrkraft.put(pLehrkraft.id, pLehrkraft);
+		_daten.lehrkraefte.add(pLehrkraft);
+	}
 
 	/**
-	 * Erzeugt eine Lehrkraft anhand der übergebenen Daten. <br>
+	 * Fügt die Lehrkraft hinzu. <br>
 	 * Wirft eine NullPointerException, falls die Lehrkraft-ID bereits existiert.
 	 * 
-	 * @param pLehrkraftID           Die Datenbank-ID der Lehrkraft.
-	 * @param pKuerzel               Das Kürzel der Lehrkraft.
+	 * @param pLehrkraft             Das Lehrkraft-Objekt.
 	 * @throws NullPointerException  Falls die Lehrkraft-ID bereits existiert.
 	 */
-	public void lehrkraftCreate(long pLehrkraftID, @NotNull String pKuerzel) throws NullPointerException {
-		// Existiert die Lehrkraft bereits?
-		if (_map_id_lehrkraft.containsKey(pLehrkraftID))
-			throw new NullPointerException("Lehrkraft-ID " + pLehrkraftID + " existiert bereits!");
-
-		// Lehrkraft erzeugen.
-		StundenplanblockungLehrkraft le = new StundenplanblockungLehrkraft();
-		le.id = pLehrkraftID;
-		le.kuerzel = pKuerzel;
-
-		// Lehrkraft hinzufügen.
-		_map_id_lehrkraft.put(pLehrkraftID, le);
-		_daten.lehrkraefte.add(le);
+	public void lehrkraftAdd(@NotNull StundenplanblockungLehrkraft pLehrkraft) throws NullPointerException {
+		lehrkraftAddOhneSortierung(pLehrkraft);
 		_daten.lehrkraefte.sort(_comp_lehrkraft_kuerzel);
 	}
 
+	/**
+	 * Fügt alle Lehrkräfte hinzu. <br>
+	 * Wirft eine NullPointerException, falls eine der Lehrkräfte bereits existiert. 
+	 * 
+	 * @param pLehrkraefte           Die Menge der Lehrkräfte, die hinzugefügt werden soll.
+	 * @throws NullPointerException  Falls eine der Lehrkräfte bereits existiert.
+	 */
+	public void lehrkraftAddAll(@NotNull List<@NotNull StundenplanblockungLehrkraft> pLehrkraefte) throws NullPointerException {
+		for (@NotNull StundenplanblockungLehrkraft lehrkraft : pLehrkraefte)
+			lehrkraftAddOhneSortierung(lehrkraft);
+		_daten.lehrkraefte.sort(_comp_lehrkraft_kuerzel);
+	}
+	
 	/**
 	 * Liefert TRUE, falls die Lehrkraft-ID existiert. 
 	 * 
@@ -158,7 +200,6 @@ public class StundenplanblockungManager {
 	public void lehrkraftRemove(long pLehrkraftID) throws NullPointerException {
 		// Lehrkraft holen.
 		@NotNull StundenplanblockungLehrkraft lehrkraft = lehrkraftGet(pLehrkraftID);
-
 		// Lehrkraft löschen.
 		_map_id_lehrkraft.remove(pLehrkraftID);
 		_daten.lehrkraefte.remove(lehrkraft);
@@ -195,27 +236,38 @@ public class StundenplanblockungManager {
 	// ###################### Klassen/Stufen ######################
 	// ############################################################
 
+	
+	private void klasseAddOhneSortierung(@NotNull StundenplanblockungKlasse pKlasse) throws NullPointerException {
+		// Existiert die Klasse bereits?
+		if (_map_id_klasse.containsKey(pKlasse.id))
+			throw new NullPointerException("Klasse-ID " + pKlasse.id + " existiert bereits!");
+		// Klasse hinzufügen.
+		_map_id_klasse.put(pKlasse.id, pKlasse);
+		_daten.klassen.add(pKlasse);
+	}
+	
 	/**
-	 * Erzeugt eine Klasse anhand der übergebenen Daten. <br>
+	 * Fügt die Klasse hinzu. <br>
 	 * Wirft eine NullPointerException, falls die Klasse-ID bereits existiert.
 	 * 
-	 * @param pKlasseID              Die Datenbank-ID der Klasse.
-	 * @param pKuerzel               Das Kürzel der Klasse.
+	 * @param pKlasse                Das Klassen-Objekt.
 	 * @throws NullPointerException  Falls die Klasse-ID bereits existiert.
 	 */
-	public void klasseCreate(long pKlasseID, @NotNull String pKuerzel) throws NullPointerException {
-		// Existiert die Klasse bereits?
-		if (_map_id_klasse.containsKey(pKlasseID))
-			throw new NullPointerException("Klasse-ID " + pKlasseID + " existiert bereits!");
-
-		// Klasse erzeugen.
-		StundenplanblockungKlasse kl = new StundenplanblockungKlasse();
-		kl.id = pKlasseID;
-		kl.kuerzel = pKuerzel;
-
-		// Klasse hinzufügen.
-		_map_id_klasse.put(pKlasseID, kl);
-		_daten.klassen.add(kl);
+	public void klasseAdd(@NotNull StundenplanblockungKlasse pKlasse) throws NullPointerException {
+		klasseAddOhneSortierung(pKlasse);
+		_daten.klassen.sort(_comp_klasse_kuerzel);
+	}
+	
+	/**
+	 * Fügt alle Klassen hinzu. <br>
+	 * Wirft eine NullPointerException, falls eine der Klassen bereits existiert. 
+	 * 
+	 * @param pKlassen               Die Menge der Klassen, die hinzugefügt werden soll.
+	 * @throws NullPointerException  Falls eine der Klassen bereits existiert.
+	 */
+	public void klasseAddAll(@NotNull List<@NotNull StundenplanblockungKlasse> pKlassen) throws NullPointerException {
+		for (@NotNull StundenplanblockungKlasse klasse : pKlassen)
+			klasseAddOhneSortierung(klasse);
 		_daten.klassen.sort(_comp_klasse_kuerzel);
 	}
 
@@ -263,7 +315,6 @@ public class StundenplanblockungManager {
 	public void klasseRemove(long pKlasseID) throws NullPointerException {
 		// Klasse holen.
 		@NotNull StundenplanblockungKlasse klasse = klasseGet(pKlasseID);
-
 		// Klasse löschen.
 		_map_id_klasse.remove(pKlasseID);
 		_daten.klassen.remove(klasse);
@@ -287,32 +338,41 @@ public class StundenplanblockungManager {
 	// ########################## Fächer ##########################
 	// ############################################################
 
+	
+	private void fachAddOhneSortierung(@NotNull StundenplanblockungFach pFach) throws NullPointerException {
+		// Existiert das Fach bereits?
+		if (_map_id_fach.containsKey(pFach.id))
+			throw new NullPointerException("Fach-ID " + pFach.id + " existiert bereits!");
+		// Fach hinzufügen.
+		_map_id_fach.put(pFach.id, pFach);
+		_daten.faecher.add(pFach);
+	}
+	
 	/**
-	 * Erzeugt ein Fach anhand der übergebenen Daten. <br>
+	 * Fügt das Fach hinzu. <br>
 	 * Wirft eine NullPointerException, falls die Fach-ID bereits existiert.
 	 * 
-	 * @param pFachID                Die Datenbank-ID des Faches.
-	 * @param pKuerzel               Das Kürzel des Faches.
-	 * @param pSortierung            Eine Zahlenwert Als Grundlage zur Sortierung der Fächer. 
+	 * @param pFach                  Das Fach-Objekt.
 	 * @throws NullPointerException  Falls die Fach-ID bereits existiert.
 	 */
-	public void fachCreate(long pFachID, @NotNull String pKuerzel, int pSortierung) throws NullPointerException {
-		// Existiert das Fach bereits?
-		if (_map_id_fach.containsKey(pFachID))
-			throw new NullPointerException("Fach-ID " + pFachID + " existiert bereits!");
-
-		// Fach erzeugen.
-		StundenplanblockungFach fa = new StundenplanblockungFach();
-		fa.id = pFachID;
-		fa.kuerzel = pKuerzel;
-		fa.sortierung = pSortierung;
-
-		// Fach hinzufügen.
-		_map_id_fach.put(pFachID, fa);
-		_daten.faecher.add(fa);
+	public void fachAdd(@NotNull StundenplanblockungFach pFach) throws NullPointerException {
+		fachAddOhneSortierung(pFach);
 		_daten.faecher.sort(_comp_fach_sortiernummer);
 	}
-
+	
+	/**
+	 * Fügt alle Fächer hinzu. <br>
+	 * Wirft eine NullPointerException, falls eines der Fächer bereits existiert. 
+	 * 
+	 * @param pFaecher               Die Menge der Fächer, die hinzugefügt werden soll.
+	 * @throws NullPointerException  Falls eines der Fächer bereits existiert.
+	 */
+	public void fachAddAll(@NotNull List<@NotNull StundenplanblockungFach> pFaecher) throws NullPointerException {
+		for (@NotNull StundenplanblockungFach fach : pFaecher)
+			fachAddOhneSortierung(fach);
+		_daten.faecher.sort(_comp_fach_sortiernummer);
+	}
+	
 	/**
 	 * Liefert TRUE, falls die Fach-ID existiert. 
 	 * 
@@ -357,7 +417,6 @@ public class StundenplanblockungManager {
 	public void fachRemove(long pFachID) throws NullPointerException {
 		// Fach holen.
 		@NotNull StundenplanblockungFach fach = fachGet(pFachID);
-
 		// Fach löschen.
 		_map_id_fach.remove(pFachID);
 		_daten.faecher.remove(fach);
@@ -389,6 +448,274 @@ public class StundenplanblockungManager {
 		@NotNull StundenplanblockungFach fach = fachGet(pFachID);
 		fach.sortierung = pSortiernummer;
 		_daten.faecher.sort(_comp_fach_sortiernummer);
+	}
+
+	// ############################################################
+	// ########################## Räume ###########################
+	// ############################################################
+
+	private void raumAddOhneSortierung(@NotNull StundenplanblockungRaum pRaum) throws NullPointerException {
+		// Existiert der Raum bereits?
+		if (_map_id_raum.containsKey(pRaum.id))
+			throw new NullPointerException("Raum-ID " + pRaum.id + " existiert bereits!");
+		// Raum hinzufügen.
+		_map_id_raum.put(pRaum.id, pRaum);
+		_daten.raeume.add(pRaum);
+	}
+
+	/**
+	 * Fügt den Raum hinzu. <br>
+	 * Wirft eine NullPointerException, falls die Raum-ID bereits existiert.
+	 * 
+	 * @param pRaum                  Das Raum-Objekt.
+	 * @throws NullPointerException  Falls die Raum-ID bereits existiert.
+	 */
+	public void raumAdd(@NotNull StundenplanblockungRaum pRaum) throws NullPointerException {
+		raumAddOhneSortierung(pRaum);
+		_daten.raeume.sort(_comp_raum_kuerzel);
+	}
+
+	/**
+	 * Fügt alle Räume hinzu. <br>
+	 * Wirft eine NullPointerException, falls einer der Räume bereits existiert. 
+	 * 
+	 * @param pRaeume                Die Menge der Räume, die hinzugefügt werden soll.
+	 * @throws NullPointerException  Falls einer der Räume bereits existiert.
+	 */
+	public void raumAddAll(@NotNull List<@NotNull StundenplanblockungRaum> pRaeume) throws NullPointerException {
+		for (@NotNull StundenplanblockungRaum raum : pRaeume)
+			raumAddOhneSortierung(raum);
+		_daten.raeume.sort(_comp_raum_kuerzel);
+	}
+	
+	/**
+	 * Liefert TRUE, falls die Raum-ID existiert. 
+	 * 
+	 * @param pRaumID  Die Datenbank-ID des Raumes.
+	 * @return         TRUE, falls die Raum-ID existiert.
+	 */
+	public boolean raumExists(long pRaumID) {
+		return _map_id_raum.containsKey(pRaumID);
+	}
+
+	/**
+	 * Liefert das {@link StundenplanblockungRaum}-Objekt zur übergebenen ID. <br>
+	 * Wirft eine NullPointerException, falls die Raum-ID unbekannt ist.
+	 * 
+	 * @param pRaumID                Die Datenbank-ID des Raumes.
+	 * @return                       Das {@link StundenplanblockungRaum}-Objekt zur übergebenen ID.
+	 * @throws NullPointerException  Falls die Raum-ID unbekannt ist.
+	 */
+	public @NotNull StundenplanblockungRaum raumGet(long pRaumID) throws NullPointerException {
+		StundenplanblockungRaum raum = _map_id_raum.get(pRaumID);
+		if (raum == null)
+			throw new NullPointerException("Raum-ID " + pRaumID + " unbekannt!");
+		return raum;
+	}
+
+	/**
+	 * Liefert die Menge aller Räume sortiert nach dem Kürzel.
+	 * 
+	 * @return Die Menge aller Räume sortiert nach dem Kürzel.
+	 */
+	public Vector<StundenplanblockungRaum> raumGetMengeSortiertNachKuerzel() {
+		return _daten.raeume;
+	}
+
+	/**
+	 * Löscht den übergebenen Raum. <br>
+	 * Wirft eine NullPointerException, falls die Raum-ID unbekannt ist.
+	 * 
+	 * @param pRaumID                Die Datenbank-ID des Raumes.
+	 * @throws NullPointerException  Falls die Raum-ID unbekannt ist.
+	 */
+	public void raumRemove(long pRaumID) throws NullPointerException {
+		// Raum holen.
+		@NotNull StundenplanblockungRaum raum = raumGet(pRaumID);
+		// Raum löschen.
+		_map_id_raum.remove(pRaumID);
+		_daten.raeume.remove(raum);
+	}
+
+	/**
+	 * Ändert das Kürzel des Raumes. <br>
+	 * Wirft eine NullPointerException, falls die Raum-ID unbekannt ist.
+	 * 
+	 * @param pRaumID                Die Datenbank-ID des Raumes.
+	 * @param pKuerzel               Das neue Kürzel des Raumes.
+	 * @throws NullPointerException  Falls die Raum-ID unbekannt ist.
+	 */
+	public void raumSetKuerzel(long pRaumID, @NotNull String pKuerzel) throws NullPointerException {
+		@NotNull StundenplanblockungRaum raum = raumGet(pRaumID);
+		raum.kuerzel = pKuerzel;
+		_daten.raeume.sort(_comp_raum_kuerzel);
+	}
+	
+	// ############################################################
+	// ####################### Kopplungen #########################
+	// ############################################################
+
+	private void kopplungAddOhneSortierung(@NotNull StundenplanblockungKopplung pKopplung) throws NullPointerException {
+		// Existiert die Kopplung bereits?
+		if (_map_id_kopplung.containsKey(pKopplung.id))
+			throw new NullPointerException("Kopplung-ID " + pKopplung.id + " existiert bereits!");
+		// Kopplung hinzufügen.
+		_map_id_kopplung.put(pKopplung.id, pKopplung);
+		_daten.kopplungen.add(pKopplung);
+	}
+
+	/**
+	 * Fügt die Kopplung hinzu. <br>
+	 * Wirft eine NullPointerException, falls die Kopplung-ID bereits existiert.
+	 * 
+	 * @param pKopplung              Das Kopplung-Objekt.
+	 * @throws NullPointerException  Falls die Kopplung-ID bereits existiert.
+	 */
+	public void kopplungAdd(@NotNull StundenplanblockungKopplung pKopplung) throws NullPointerException {
+		kopplungAddOhneSortierung(pKopplung);
+		_daten.kopplungen.sort(_comp_kopplung_kuerzel);
+	}
+
+	/**
+	 * Fügt alle Kopplungen hinzu. <br>
+	 * Wirft eine NullPointerException, falls eine der Kopplungen bereits existiert. 
+	 * 
+	 * @param pKopplungen            Die Menge der Kopplungen, die hinzugefügt werden soll.
+	 * @throws NullPointerException  Falls eine der Kopplungen bereits existiert.
+	 */
+	public void kopplungAddAll(@NotNull List<@NotNull StundenplanblockungKopplung> pKopplungen) throws NullPointerException {
+		for (@NotNull StundenplanblockungKopplung kopplung : pKopplungen)
+			kopplungAddOhneSortierung(kopplung);
+		_daten.kopplungen.sort(_comp_kopplung_kuerzel);
+	}
+
+	/**
+	 * Liefert TRUE, falls die Kopplung-ID existiert. 
+	 * 
+	 * @param pKopplungID  Die Datenbank-ID der Kopplung.
+	 * @return             TRUE, falls die Kopplung-ID existiert.
+	 */
+	public boolean kopplungExists(long pKopplungID) {
+		return _map_id_kopplung.containsKey(pKopplungID);
+	}
+
+	/**
+	 * Liefert das {@link StundenplanblockungKopplung}-Objekt zur übergebenen ID. <br>
+	 * Wirft eine NullPointerException, falls die Kopplung-ID unbekannt ist.
+	 * 
+	 * @param pKopplungID            Die Datenbank-ID der Kopplung.
+	 * @return                       Das {@link StundenplanblockungKopplung}-Objekt zur übergebenen ID.
+	 * @throws NullPointerException  Falls die Kopplung-ID unbekannt ist.
+	 */
+	public @NotNull StundenplanblockungKopplung kopplungGet(long pKopplungID) throws NullPointerException {
+		StundenplanblockungKopplung kopplung = _map_id_kopplung.get(pKopplungID);
+		if (kopplung == null)
+			throw new NullPointerException("Kopplung-ID " + pKopplungID + " unbekannt!");
+		return kopplung;
+	}
+
+	/**
+	 * Liefert die Menge aller Kopplungen sortiert nach dem Kürzel.
+	 * 
+	 * @return Die Menge aller Kopplungen sortiert nach dem Kürzel.
+	 */
+	public Vector<StundenplanblockungKopplung> kopplungGetMengeSortiertNachKuerzel() {
+		return _daten.kopplungen;
+	}
+
+	/**
+	 * Löscht die übergebenen Kopplung. <br>
+	 * Wirft eine NullPointerException, falls die Kopplung-ID unbekannt ist.
+	 * 
+	 * @param pKopplungID            Die Datenbank-ID der Kopplung.
+	 * @throws NullPointerException  Falls die Kopplung-ID unbekannt ist.
+	 */
+	public void kopplungRemove(long pKopplungID) throws NullPointerException {
+		// Kopplung holen.
+		@NotNull StundenplanblockungKopplung kopplung = kopplungGet(pKopplungID);
+		// Kopplung löschen.
+		_map_id_kopplung.remove(pKopplungID);
+		_daten.kopplungen.remove(kopplung);
+	}
+
+	/**
+	 * Ändert das Kürzel der Kopplung. <br>
+	 * Wirft eine NullPointerException, falls die Kopplung-ID unbekannt ist.
+	 * 
+	 * @param pKopplungID            Die Datenbank-ID der Kopplung.
+	 * @param pKuerzel               Das neue Kürzel der Kopplung.
+	 * @throws NullPointerException  Falls die Kopplung-ID unbekannt ist.
+	 */
+	public void kopplungSetKuerzel(long pKopplungID, @NotNull String pKuerzel) throws NullPointerException {
+		@NotNull StundenplanblockungKopplung kopplung = kopplungGet(pKopplungID);
+		kopplung.kuerzel = pKuerzel;
+		_daten.kopplungen.sort(_comp_kopplung_kuerzel);
+	}
+
+	// ############################################################
+	// ######################## Sonstiges #########################
+	// ############################################################
+	
+	/**
+	 * Diese Methode überprüft alle Datenstrukturen auf ihre Konsistenz.
+	 * Liefert TRUE, falls die Daten in Ordnung (konsistent) sind.
+	 * 
+	 * @return TRUE, falls die Daten in Ordnung (konsistent) sind.
+	 */
+	public boolean miscCheckConsistency() {
+		
+		// Lehrkräfte
+		if (_daten.lehrkraefte.size() != _map_id_lehrkraft.size())
+			return false;
+		for (@NotNull StundenplanblockungLehrkraft lehrkraft : _daten.lehrkraefte)
+			if (_map_id_lehrkraft.get(lehrkraft.id) != lehrkraft)
+				return false;
+		for (int i = 1 ; i < _daten.lehrkraefte.size() ; i++)
+			if (_comp_lehrkraft_kuerzel.compare(_daten.lehrkraefte.get(i-1), _daten.lehrkraefte.get(i)) > 0)
+				return false;
+				
+		// Klassen
+		if (_daten.klassen.size() != _map_id_klasse.size())
+			return false;
+		for (@NotNull StundenplanblockungKlasse klasse : _daten.klassen)
+			if (_map_id_klasse.get(klasse.id) != klasse)
+				return false;
+		for (int i = 1 ; i < _daten.klassen.size() ; i++)
+			if (_comp_klasse_kuerzel.compare(_daten.klassen.get(i-1), _daten.klassen.get(i)) > 0)
+				return false;
+				
+		// Fächer
+		if (_daten.faecher.size() != _map_id_fach.size())
+			return false;
+		for (@NotNull StundenplanblockungFach fach : _daten.faecher)
+			if (_map_id_fach.get(fach.id) != fach)
+				return false;
+		for (int i = 1 ; i < _daten.faecher.size() ; i++)
+			if (_comp_fach_sortiernummer.compare(_daten.faecher.get(i-1), _daten.faecher.get(i)) > 0)
+				return false;
+				
+		// Räume
+		if (_daten.raeume.size() != _map_id_raum.size())
+			return false;
+		for (@NotNull StundenplanblockungRaum raum : _daten.raeume)
+			if (_map_id_raum.get(raum.id) != raum)
+				return false;
+		for (int i = 1 ; i < _daten.raeume.size() ; i++)
+			if (_comp_raum_kuerzel.compare(_daten.raeume.get(i-1), _daten.raeume.get(i)) > 0)
+				return false;
+		
+		// Kopplungen
+		if (_daten.kopplungen.size() != _map_id_kopplung.size())
+			return false;
+		for (@NotNull StundenplanblockungKopplung kopplung : _daten.kopplungen)
+			if (_map_id_kopplung.get(kopplung.id) != kopplung)
+				return false;
+		for (int i = 1 ; i < _daten.kopplungen.size() ; i++)
+			if (_comp_kopplung_kuerzel.compare(_daten.kopplungen.get(i-1), _daten.kopplungen.get(i)) > 0)
+				return false;
+		
+		
+		return true;
 	}
 	
 }
