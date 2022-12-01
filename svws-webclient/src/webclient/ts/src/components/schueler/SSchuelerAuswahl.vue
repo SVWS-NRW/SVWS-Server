@@ -70,23 +70,6 @@
 					is-multi-select
 					:footer="true"
 					>
-					<!-- Kontextmenü der Zeile für die Spalte Actions -->
-					<!-- <template #cell-actions="{ row }">
-						<svws-ui-popover :hover="false" placement="left-end" :disable-click-away="false">
-							<template #trigger>
-								<button class="action-button">
-									<svws-ui-icon> <i-ri-more-2-fill /> </svws-ui-icon>
-								</button>
-							</template>
-							<template #content>
-								<div class="action-items">
-									<div v-for="action in actions" :key="action.action">
-										<button class="action-item" @click="onAction(action.action, row)">{{ action.label }}</button>
-									</div>
-								</div>
-							</template>
-						</svws-ui-popover>
-					</template> -->
 					<!-- Footer mit Button zum Hinzufügen einer Zeile -->
 					<template #footer>
 						{{selectedItems.length || 1}}/{{rowsFiltered.length}}
@@ -138,10 +121,6 @@
 		{ key: "nachname", label: "Nachname", sortable: true, span: '2' },
 		{ key: "vorname", label: "Vorname", sortable: true, span: '2' },
 	]
-	const actions = [
-		{ label: "Löschen", action: "delete" },
-		{ label: "Kopieren", action: "copy" }
-	];
 	const main: Main = injectMainApp();
 	const app = main.apps.schueler;
 	const appKlassen = main.apps.klassen;
