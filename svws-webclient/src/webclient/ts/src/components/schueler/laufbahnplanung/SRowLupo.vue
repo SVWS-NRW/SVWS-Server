@@ -109,7 +109,7 @@
 			const result = new Vector<GostJahrgangFachkombination>();
 			if (App.apps.gost.dataFachkombinationen.daten)
 				for (let kombi of App.apps.gost.dataFachkombinationen.daten)
-					if (kombi.fachID2 === fach.id)
+					if (kombi.fachID2 === fach.id && kombi.abiturjahr === app.dataGostLaufbahndaten?.abiturjahr)
 						result.add(kombi)
 			return result;
 		});

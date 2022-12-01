@@ -319,12 +319,20 @@
 			}
 		});
 	
-	const fachkombis: List<GostJahrgangFachkombination> =
-		App.apps.gost.dataFachkombinationen.daten || new Vector();
+	const fachkombis: ComputedRef<List<GostJahrgangFachkombination>> =
+		computed(()=>{
+			let list = new Vector<GostJahrgangFachkombination>();
+			if (App.apps.gost.dataFachkombinationen.daten === undefined)
+				return list;
+			for (const regel of	App.apps.gost.dataFachkombinationen.daten)
+				if (regel.abiturjahr === app.dataGostLaufbahndaten?.abiturjahr)
+					list.add(regel)
+			return list;
+		})
 
 	const fachkombi_erforderlich = (): List<GostJahrgangFachkombination> => {
 		let result = new Vector<GostJahrgangFachkombination>()
-		for (const kombi of fachkombis)
+		for (const kombi of fachkombis.value)
 			if (GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH.getValue() === kombi.typ) {
 				if (kombi.hinweistext === "") {
 					const fach1 = faechermanager.value?.get(kombi.fachID1);
@@ -338,7 +346,7 @@
 
 	const fachkombi_verboten = (): List<GostJahrgangFachkombination> => {
 		let result = new Vector<GostJahrgangFachkombination>()
-		for (const kombi of fachkombis)
+		for (const kombi of fachkombis.value)
 			if (GostLaufbahnplanungFachkombinationTyp.VERBOTEN.getValue() === kombi.typ) {
 				if (kombi.hinweistext === "") {
 					const fach1 = faechermanager.value?.get(kombi.fachID1);
