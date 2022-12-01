@@ -56,14 +56,17 @@
 		:style="{
 			'background-color': bgColor
 		}"
-	>
-		<svws-ui-multi-select
-			v-if="istJahrgangAllgemein && hatLeitfach1"
-			headless
-			:items="katalogLeitfaecher"
-			:item-text="(i: GostFach) => i?.kuerzelAnzeige"
-			v-model="leitfach1"
-		/>
+		>
+			<div class="flex gap-1 p-0" v-if="istJahrgangAllgemein && hatLeitfach1">
+				<svws-ui-multi-select
+				headless
+				:disabled="!leitfach1"
+				:items="katalogLeitfaecher"
+				:item-text="(i: GostFach) => i?.kuerzelAnzeige"
+				v-model="leitfach1"
+				/>
+				<svws-ui-icon class="text-red-400 cursor-pointer" @click="leitfach1=undefined"><i-ri-delete-bin-2-line/></svws-ui-icon>
+			</div>
 		<span v-else>{{ fach.projektKursLeitfach1Kuerzel }}</span>
 	</td>
 	<td
@@ -72,13 +75,16 @@
 			'background-color': bgColor
 		}"
 	>
-		<svws-ui-multi-select
-			v-if="istJahrgangAllgemein && istProjektkurs"
-			headless
-			:items="katalogLeitfaecher"
-			:item-text="(i: GostFach) => i?.kuerzelAnzeige"
-			v-model="leitfach2"
-		/>
+		<div class="flex gap-1 p-0" v-if="istJahrgangAllgemein && istProjektkurs">
+			<svws-ui-multi-select
+				headless
+				:disabled="!leitfach1"
+				:items="katalogLeitfaecher"
+				:item-text="(i: GostFach) => i?.kuerzelAnzeige"
+				v-model="leitfach2"
+			/>
+			<svws-ui-icon class="text-red-400 cursor-pointer" @click="leitfach2=undefined"><i-ri-delete-bin-2-line/></svws-ui-icon>
+		</div>	
 		<span v-else>{{ fach.projektKursLeitfach2Kuerzel }}</span>
 	</td>
 
@@ -213,11 +219,9 @@
 	const main: Main = injectMainApp();
 	const app = main.apps.gost;
 
-	const katalogLeitfaecher: ComputedRef<GostFach[] | undefined> = computed(
-		() => {
-			return app.dataFaecher.faecherOhnePJKundVTF;
-		}
-	);
+	const katalogLeitfaecher: ComputedRef<(GostFach)[]> =
+		computed(() => app.dataFaecher.faecherOhnePJKundVTF);
+	
 	const leitfach1: WritableComputedRef<GostFach | undefined> = computed({
 		get(): GostFach | undefined {
 			return app.dataFaecher.faecherOhnePJKundVTF.find(
@@ -227,7 +231,7 @@
 		set(leitfachNeu: GostFach | undefined) {
 			if (!app.auswahl.ausgewaehlt?.abiturjahr) return;
 			app.dataFaecher.patch(
-				{ projektKursLeitfach1ID: leitfachNeu?.id },
+				{ projektKursLeitfach1ID: leitfachNeu?.id || null },
 				props.fach,
 				app.auswahl.ausgewaehlt.abiturjahr.valueOf()
 			);
@@ -241,9 +245,11 @@
 			);
 		},
 		set(leitfachNeu: GostFach | undefined) {
-			if (!app.auswahl.ausgewaehlt?.abiturjahr) return;
+			if (!app.auswahl.ausgewaehlt?.abiturjahr
+					|| leitfachNeu === leitfach1.value)
+				return;
 			app.dataFaecher.patch(
-				{ projektKursLeitfach2ID: leitfachNeu?.id },
+				{ projektKursLeitfach2ID: leitfachNeu?.id || null },
 				props.fach,
 				app.auswahl.ausgewaehlt.abiturjahr.valueOf()
 			);
