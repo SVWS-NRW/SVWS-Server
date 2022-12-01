@@ -240,6 +240,7 @@
 		GostJahrgangFachkombination,
 		GostLaufbahnplanungFachkombinationTyp,
 		GostHalbjahr,
+		GostKursart,
 		} from "@svws-nrw/svws-core-ts";
 	import { App } from "~/apps/BaseApp";
 	import { injectMainApp, Main } from "~/apps/Main";
@@ -249,9 +250,10 @@
 	const app = main.apps.schueler;
 	const ef1: GostBelegpruefungsArt = GostBelegpruefungsArt.EF1;
 	const gesamt: GostBelegpruefungsArt = GostBelegpruefungsArt.GESAMT;
-	const faechermanager = App.apps.gost.dataFaecher.manager;
-
 	const manuell = ref(false)
+	
+	const abiturmanager = computed(()=> app.dataGostLaufbahndaten?.manager);
+	const faechermanager = computed(()=>App.apps.gost.dataFaecher.manager);
 
 	const data: ComputedRef<DataSchuelerLaufbahnplanung> =
 		computed(() => app.dataGostLaufbahndaten || new DataSchuelerLaufbahnplanung());
@@ -325,8 +327,8 @@
 		for (const kombi of fachkombis)
 			if (GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH.getValue() === kombi.typ) {
 				if (kombi.hinweistext === "") {
-					const fach1 = faechermanager?.get(kombi.fachID1);
-					const fach2 = faechermanager?.get(kombi.fachID2);
+					const fach1 = faechermanager.value?.get(kombi.fachID1);
+					const fach2 = faechermanager.value?.get(kombi.fachID2);
 					kombi.hinweistext = `${fach1?.kuerzel} als ${kombi.kursart1} erlaubt kein ${fach2} als ${kombi.kursart2}`;
 				}
 				result.add(kombi);
@@ -339,8 +341,8 @@
 		for (const kombi of fachkombis)
 			if (GostLaufbahnplanungFachkombinationTyp.VERBOTEN.getValue() === kombi.typ) {
 				if (kombi.hinweistext === "") {
-					const fach1 = faechermanager?.get(kombi.fachID1);
-					const fach2 = faechermanager?.get(kombi.fachID2);
+					const fach1 = faechermanager.value?.get(kombi.fachID1);
+					const fach2 = faechermanager.value?.get(kombi.fachID2);
 					kombi.hinweistext = `${fach1?.kuerzel} als ${kombi.kursart1} erfordert ${fach2} als ${kombi.kursart2}`;
 				}
 				result.add(kombi);
@@ -380,18 +382,19 @@
 	}
 
 	function regel_umgesetzt(kombi: GostJahrgangFachkombination): boolean {
-		const fach1 = faechermanager?.get(kombi.fachID1);
-		const fach2 = faechermanager?.get(kombi.fachID2);
-		if (!fach1 || !fach2)
-			return true;
+		if (!abiturmanager.value || !faechermanager.value) return true;
+		const fach1 = faechermanager.value.get(kombi.fachID1);
+		const f1 = abiturmanager.value.getFachbelegungByKuerzel(fach1?.kuerzel || null)
+		const fach2 = faechermanager.value.get(kombi.fachID2);
+		const f2 = abiturmanager.value.getFachbelegungByKuerzel(fach2?.kuerzel || null)
 		for (const hj of GostHalbjahr.values()) {
 			if (kombi.gueltigInHalbjahr[hj.id]) {
-				const belegung_1 = data.value.getWahlen(fach1)[hj.id];
-				const belegung_2 = data.value.getWahlen(fach2)[hj.id];
-				if (kombi.typ === GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH.getValue())
-					return belegung_1 === belegung_2
-				if (kombi.typ === GostLaufbahnplanungFachkombinationTyp.VERBOTEN.getValue())
-					return belegung_1 !== belegung_2
+				const belegung_1 = abiturmanager.value.pruefeBelegungMitKursart(f1, GostKursart.fromKuerzel(kombi.kursart1)!, hj)
+				const belegung_2 = abiturmanager.value.pruefeBelegungMitKursart(f2, GostKursart.fromKuerzel(kombi.kursart1)!, hj);
+				if (belegung_1 && belegung_2 && kombi.typ === GostLaufbahnplanungFachkombinationTyp.VERBOTEN.getValue()) 
+					return false;
+				if (kombi.typ === GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH.getValue() && belegung_1 != belegung_2)
+					return false;
 			}
 		}
 		return true;
