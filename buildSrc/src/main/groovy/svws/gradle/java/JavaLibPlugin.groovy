@@ -26,15 +26,15 @@ class JavaLibPlugin implements Plugin<Project> {
 
 
 	void addDatabase() {
-		def versionPersistenceAPI = '3.0.0';
+		def versionPersistenceAPI = '3.1.0';
 		def versionEclipsePersistence = '2.2.3';
-		def versionEclipselink = '3.1.0-M1';
-		def versionMariaDB = '2.7.4';
-		def versionSQLite = '3.36.0.3';
+		def versionEclipselink = '4.0.0';
+		def versionMariaDB = '3.1.0';
+		def versionSQLite = '3.40.0.0';
 		def versionUCanAccess = '5.0.1';
-		def versionJackcess = '4.0.1';
-		def versionMySQL = '8.0.29';
-		def versionMSSQL = '9.4.1.jre16';
+		def versionJackcess = '4.0.4';
+		def versionMySQL = '8.0.31';
+		def versionMSSQL = '11.2.1.jre17';
 		project.configurations.create('database');
 		project.dependencies.add('database', 'jakarta.persistence:jakarta.persistence-api:' + versionPersistenceAPI);
 	    project.dependencies.add('database', 'org.eclipse.persistence:jakarta.persistence:' + versionEclipsePersistence);

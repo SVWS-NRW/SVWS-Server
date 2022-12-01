@@ -2922,9 +2922,7 @@ export class ApiServer extends BaseApi {
 	 * Aktiviert bzw. persistiert das Blockungsergebnis. Dies ist nur erlaubt, wenn keine aktivierte Blockung in der DB vorliegt. Beim Aktivieren wird die Kursliste und die Leistungsdaten der Schüler entsprechend befüllt.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Aktivieren eines Blockungsergebnisses besitzt.
 	 * 
 	 * Mögliche HTTP-Antworten: 
-	 *   Code 200: Das Blockungsergebnis wurde erfolgreich aktiviert.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: Integer
+	 *   Code 204: Die Zuordnung wurde erfolgreich gelöscht.
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um ein Blockungsergebnis zu aktivieren.
 	 *   Code 404: Keine oder nicht alle Daten zu dem Ergebnis gefunden, um dieses zu aktiveren
 	 *   Code 409: Es wurde bereits eine Blockung aktiviert
@@ -2932,16 +2930,13 @@ export class ApiServer extends BaseApi {
 	 * 
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} ergebnisid - der Pfad-Parameter ergebnisid
-	 * 
-	 * @returns Das Blockungsergebnis wurde erfolgreich aktiviert.
 	 */
-	public async activateGostBlockungsergebnis(schema : string, ergebnisid : number) : Promise<Number> {
+	public async activateGostBlockungsergebnis(schema : string, ergebnisid : number) : Promise<void> {
 		let path : string = "/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \d+}/activate"
 				.replace(/{schema\s*(:[^}]+)?}/g, schema)
 				.replace(/{ergebnisid\s*(:[^}]+)?}/g, ergebnisid.toString());
-		const result : string = await super.postJSON(path, null);
-		const text = result;
-		return parseInt(JSON.parse(text));
+		await super.postJSON(path, null);
+		return;
 	}
 
 

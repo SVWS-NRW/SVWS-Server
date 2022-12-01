@@ -1347,9 +1347,7 @@ public class APIGost {
     		    + "Schüler entsprechend befüllt."
     		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Aktivieren eines "
     		    + "Blockungsergebnisses besitzt.")
-    @ApiResponse(responseCode = "200", description = "Das Blockungsergebnis wurde erfolgreich aktiviert.",
-            content = @Content(mediaType = MediaType.APPLICATION_JSON,
-            schema = @Schema(implementation = Integer.class)))
+    @ApiResponse(responseCode = "204", description = "Die Zuordnung wurde erfolgreich gelöscht.")
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um ein Blockungsergebnis zu aktivieren.")
     @ApiResponse(responseCode = "404", description = "Keine oder nicht alle Daten zu dem Ergebnis gefunden, um dieses zu aktiveren")
     @ApiResponse(responseCode = "409", description = "Es wurde bereits eine Blockung aktiviert")

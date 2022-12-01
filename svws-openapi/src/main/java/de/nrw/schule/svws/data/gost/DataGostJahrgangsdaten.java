@@ -9,14 +9,12 @@ import java.util.Map.Entry;
 import de.nrw.schule.svws.api.JSONMapper;
 import de.nrw.schule.svws.core.data.gost.GostJahrgangsdaten;
 import de.nrw.schule.svws.core.types.gost.GostHalbjahr;
-import de.nrw.schule.svws.core.types.gost.GostKursart;
 import de.nrw.schule.svws.core.utils.jahrgang.JahrgangsUtils;
 import de.nrw.schule.svws.data.DataManager;
 import de.nrw.schule.svws.data.schule.DataSchuleStammdaten;
 import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.dto.current.gost.DTOGostJahrgangBeratungslehrer;
 import de.nrw.schule.svws.db.dto.current.gost.DTOGostJahrgangsdaten;
-import de.nrw.schule.svws.db.dto.current.schild.kurse.DTOKurs;
 import de.nrw.schule.svws.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.nrw.schule.svws.db.dto.current.schild.schule.DTOJahrgang;
 import de.nrw.schule.svws.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
@@ -127,15 +125,7 @@ public class DataGostJahrgangsdaten extends DataManager<Integer> {
 	    	for (DTOSchuljahresabschnitte abschnitt : alleAbschnitte) {
 	    		GostHalbjahr halbjahr = GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(abi_jahrgang, abschnitt.Jahr, 
 	    				(anzahlAbschnitte == 4) ? (abschnitt.Abschnitt + 1) / 2 : abschnitt.Abschnitt);
-	    		List<DTOKurs> kurse = conn.queryList("SELECT e FROM DTOKurs e WHERE e.ASDJahrgang = ?1 AND e.Schuljahresabschnitts_ID = ?2", 
-	    				DTOKurs.class, halbjahr.jahrgang, abschnitt.ID);
-	    		for (DTOKurs kurs : kurse) {
-	    			GostKursart kursart = GostKursart.fromKuerzel(kurs.KursartAllg);
-	    			if (kursart != null) {
-	    				daten.istBlockungFestgelegt[halbjahr.id] = true;
-	    				break;
-	    			}
-	    		}
+	    		daten.istBlockungFestgelegt[halbjahr.id] = GostUtils.pruefeHatOberstufenKurseInAbschnitt(conn, halbjahr, abschnitt);
 	    	}
     	}
     	// Ergänze die Beratungslehrer
