@@ -69,7 +69,7 @@
 <script setup lang="ts">
 	import { computed, ComputedRef } from "vue";
 
-	import { GostFach, GostHalbjahr, GostJahrgangFachkombination, GostLaufbahnplanungFachkombinationTyp, List, Vector } from "@svws-nrw/svws-core-ts";
+	import { GostFach, GostHalbjahr, GostJahrgangFachkombination, GostKursart, GostLaufbahnplanungFachkombinationTyp, List, Vector } from "@svws-nrw/svws-core-ts";
 	import { injectMainApp, Main } from "~/apps/Main";
 	import { DataSchuelerLaufbahnplanung } from "~/apps/schueler/DataSchuelerLaufbahnplanung";
 	import { App } from "~/apps/BaseApp";
@@ -132,15 +132,21 @@
 			return result;
 		})
 
+	const abiturmanager = computed(()=> app.dataGostLaufbahndaten?.manager);
+
 	function pruefeFachkombiErforderlich(halbjahr: GostHalbjahr) : boolean {
-		if (fachkombi_erforderlich.value.size() > 0 && !bewertet.value[halbjahr.id]) {
+		if (fachkombi_erforderlich.value.size() > 0) {
 			for (const kombi of fachkombi_erforderlich.value) {
 				if (kombi.gueltigInHalbjahr[halbjahr.id]) {
-					const fach = faechermanager?.get(kombi.fachID1);
-					if (!fach) 
+					const fach1 = faechermanager?.get(kombi.fachID1);
+					if (!fach1 || !abiturmanager.value) 
 						return false;
-					const belegung_1 = daten.value.getWahlen(fach)[halbjahr.id];
-					const belegung_2 = wahlen.value[halbjahr.id];
+					const f1 = abiturmanager.value.getFachbelegungByKuerzel(fach1?.kuerzel || null)
+					const f2 = abiturmanager.value.getFachbelegungByKuerzel(fach.kuerzel)
+					const belegung_1 = abiturmanager.value.pruefeBelegungMitKursart(f1, GostKursart.fromKuerzel(kombi.kursart1)!, halbjahr)
+					const belegung_2 = abiturmanager.value.pruefeBelegungMitKursart(f2, GostKursart.fromKuerzel(kombi.kursart1)!, halbjahr);
+					if (belegung_2)
+						return false;
 					return belegung_1 !== belegung_2;
 				}
 			}
