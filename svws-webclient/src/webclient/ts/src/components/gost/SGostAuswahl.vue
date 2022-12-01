@@ -53,10 +53,10 @@
 												@input="patch_blockung(blockung)"/>
 										</div>
 										<div class="flex items-center gap-1">
+											<svws-ui-button size="small" type="secondary" @click="create_blockung" title="Ergebnisse berechnen">Berechnen</svws-ui-button >
 											<svws-ui-button size="small" type="danger" @click="remove_blockung" title="Blockung löschen">
 												<svws-ui-icon><i-ri-delete-bin-2-line/></svws-ui-icon>
 											</svws-ui-button>
-											<svws-ui-button size="small" type="secondary" @click="create_blockung" title="Ergebnisse berechnen">Berechnen</svws-ui-button >
 										</div>
 									</td>
 									<td v-else>
@@ -70,29 +70,40 @@
 				</svws-ui-table>
 				<svws-ui-table
 					v-model="selected_ergebnis"
-					:columns="[{ key: 'id', label: 'ID' }, { key: 'bewertung', label: 'Bewertungen'}]"
+					:columns="[{ key: 'id', label: 'ID', span: '1' }, { key: 'bewertung', label: 'Bewertungen', span: '4'}]"
 					:data="rows_ergebnisse.toArray()"
 				>
 					<template #cell-bewertung="{ row }">
-						<div class="flex justify-between">
-							<span class="inline-flex font-semibold" >
-								<span :style="{'background-color': color1(row)}">{{manager?.getOfBewertung1Wert(row.id)}}</span>&nbsp
-								<span :style="{'background-color': color2(row)}">{{manager?.getOfBewertung2Wert(row.id)}}</span>&nbsp
-								<span :style="{'background-color': color3(row)}">{{manager?.getOfBewertung3Wert(row.id)}}</span>&nbsp
-								<span :style="{'background-color': color4(row)}">{{manager?.getOfBewertung4Wert(row.id)}}</span>
-							</span>
-							<div v-if="row.id === selected_ergebnis?.id" class="flex gap-2">
-								<svws-ui-button size="small" type="primary" class="cursor-pointer" @click="derive_blockung"> Ableiten </svws-ui-button>
-								<svws-ui-button v-if="rows_ergebnisse.size() > 1" size="small" type="danger" class="cursor-pointer" @click="remove_ergebnis">
-									<svws-ui-icon><i-ri-delete-bin-2-line/></svws-ui-icon>
-								</svws-ui-button>
-							</div>
+						<span class="flex gap-1 font-semibold" >
+							<span :style="{'background-color': color1(row)}">{{manager?.getOfBewertung1Wert(row.id)}}</span>
+							<span :style="{'background-color': color2(row)}">{{manager?.getOfBewertung2Wert(row.id)}}</span>
+							<span :style="{'background-color': color3(row)}">{{manager?.getOfBewertung3Wert(row.id)}}</span>
+							<span :style="{'background-color': color4(row)}">{{manager?.getOfBewertung4Wert(row.id)}}</span>
+						</span>
+						<div v-if="row.id === selected_ergebnis?.id" class="flex gap-2">
+							<svws-ui-button size="small" type="secondary" class="cursor-pointer" @click="toggle_modal"> Aktivieren </svws-ui-button>
+							<svws-ui-button size="small" type="secondary" class="cursor-pointer" @click="derive_blockung"> Ableiten </svws-ui-button>
+							<svws-ui-button v-if="rows_ergebnisse.size() > 1" size="small" type="danger" class="cursor-pointer" @click="remove_ergebnis">
+								<svws-ui-icon><i-ri-delete-bin-2-line/></svws-ui-icon>
+							</svws-ui-button>
 						</div>
 					</template>
 				</svws-ui-table>
 			</div>
 		</template>
 	</svws-ui-secondary-menu>
+	<svws-ui-modal ref="modal" size="small">
+		<template #modalTitle>Blockungsergebnis aktivieren</template>
+		<template #modalDescription>
+			<div class="flex gap-1 mb-2">
+				Soll das Blockungsergebnis aktiviert werden?
+			</div>
+			<div class="flex gap-1">
+				<svws-ui-button @click="toggle_modal()">Abbrechen</svws-ui-button>
+				<svws-ui-button @click="activate_ergebnis">Ja</svws-ui-button>
+			</div>
+		</template>
+	</svws-ui-modal>
 </template>
 
 <script setup lang="ts">
@@ -131,6 +142,7 @@ const wait: Ref<boolean> = ref(false);
 const halbjahre = GostHalbjahr.values();
 const hj_memo: Ref<GostHalbjahr | undefined> = ref(undefined)
 const edit_blockungsname: Ref<boolean> = ref(false)
+const modal: Ref<any> = ref(null);
 
 const rows: ComputedRef<GostJahrgang[]> =
 	computed(() => {
@@ -242,6 +254,12 @@ async function remove_ergebnis() {
 	await app.blockungsauswahl.update_list(abiturjahr, selected_hj.value.id)
 }
 
+async function activate_ergebnis() {
+	if (!selected_ergebnis.value)
+		return;
+	await App.api.activateGostBlockungsergebnis(App.schema, selected_ergebnis.value.id);
+}
+
 async function derive_blockung() {
 	if (!selected_ergebnis.value)
 		return;
@@ -265,6 +283,9 @@ function color3(ergebnis: GostBlockungsergebnisListeneintrag): string {
 function color4(ergebnis: GostBlockungsergebnisListeneintrag): string {
 	return `hsl(${Math.round((1 - (manager.value?.getOfBewertung4Intervall(ergebnis.id)||0)) * 120)},100%,80%)`
 }
+function toggle_modal() {
+	modal.value.isOpen ? modal.value.closeModal() : modal.value.openModal();
+};
 </script>
 
 <style>
