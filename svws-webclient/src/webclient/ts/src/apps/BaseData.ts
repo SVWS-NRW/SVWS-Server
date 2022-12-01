@@ -6,6 +6,7 @@ type ListElement<T> = T extends List<(infer ElementType)> ? ElementType : T;
 export interface BaseDataState<T, U=undefined> {
 	data: T | undefined;
 	manager: U | undefined;
+	pending: boolean;
 }
 
 /**
@@ -30,8 +31,8 @@ export abstract class BaseData<T, ListItem, U = unknown> {
 	 */
 	public constructor(isReactive: boolean = true) {
 		this._state = isReactive
-			? reactive({ data: undefined, manager: undefined })
-			: { data: undefined, manager: undefined };
+			? reactive({ data: undefined, manager: undefined, pending: false })
+			: { data: undefined, manager: undefined, pending: false };
 	}
 
 	/** Getter für den Manager
@@ -62,6 +63,20 @@ export abstract class BaseData<T, ListItem, U = unknown> {
 	 */
 	protected set _daten(data: T | undefined) {
 		this._state.data = data;
+	}
+
+	/** Getter für den Ladestatus
+	 * @returns {boolean} Der Status
+	 */
+	public get pending(): boolean {
+		return this._state.pending;
+	}
+
+	/** Setter für den Ladestatus
+	 * @param {boolean} state Der Status
+	 */
+	public set pending(state: boolean) {
+		this._state.pending = state;
 	}
 
 	//** Ein Callback für Updates an den Daten */

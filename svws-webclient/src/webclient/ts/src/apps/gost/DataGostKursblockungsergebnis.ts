@@ -105,6 +105,7 @@ export class DataGostKursblockungsergebnis extends BaseData<
 		if (ergebnismanager === undefined || schuelerid === undefined || ergebnisid === undefined)
 			return;
 		const zuordnungen = ergebnismanager.getOfSchuelerNeuzuordnung(schuelerid);
+		this.pending = true;
 		for (const z of zuordnungen.fachwahlenZuKurs) {
 			const kursV = ergebnismanager.getOfSchuelerOfFachZugeordneterKurs(schuelerid, z.fachID);
 			const kursN = z.kursID < 0 ? null : ergebnismanager.getKursE(z.kursID);
@@ -120,5 +121,6 @@ export class DataGostKursblockungsergebnis extends BaseData<
 			}
 		}
 		App.apps.gost.dataKursblockung.commit();
+		this.pending = false;
 	}
 }
