@@ -61,6 +61,10 @@ public class GostJahrgangsdaten {
 	@Schema(required = true, description = "Das eindeutige Kürzel des Halbjahrs, zu dem ein Zusatzkurs in Sozialwissenschaften beginnt.", example="Q2.1")
 	public String beginnZusatzkursSW;
 
+	/** Gibt an, ob für die jeweilige Halbjahre der Oberstufe bereits eine Blockung in den Leistungsdaten persistiert wurde (0 = EF.1, 1=EF.2, ...) */
+	@ArraySchema(schema = @Schema(required = true, implementation = Boolean.class, description = "gibt an, ob für die jeweilige Halbjahre der Oberstufe bereits eine Blockung in den Leistungsdaten persistiert wurde (0 = EF.1, 1=EF.2, ...)"))
+	public @NotNull boolean[] istBlockungFestgelegt = new boolean[6];
+	
 	/** Die Liste der Beratungslehrer für diesen Jahrgang der gymnasialen Oberstufe */
 	@ArraySchema(schema = @Schema(implementation = GostBeratungslehrer.class))
 	public final @NotNull Vector<@NotNull GostBeratungslehrer> beratungslehrer = new Vector<>();

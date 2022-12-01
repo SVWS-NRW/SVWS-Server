@@ -1,6 +1,7 @@
 package de.nrw.schule.svws.data.gost;
 
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -8,11 +9,14 @@ import java.util.Map.Entry;
 import de.nrw.schule.svws.api.JSONMapper;
 import de.nrw.schule.svws.core.data.gost.GostJahrgangsdaten;
 import de.nrw.schule.svws.core.types.gost.GostHalbjahr;
+import de.nrw.schule.svws.core.types.gost.GostKursart;
 import de.nrw.schule.svws.core.utils.jahrgang.JahrgangsUtils;
 import de.nrw.schule.svws.data.DataManager;
+import de.nrw.schule.svws.data.schule.DataSchuleStammdaten;
 import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.dto.current.gost.DTOGostJahrgangBeratungslehrer;
 import de.nrw.schule.svws.db.dto.current.gost.DTOGostJahrgangsdaten;
+import de.nrw.schule.svws.db.dto.current.schild.kurse.DTOKurs;
 import de.nrw.schule.svws.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.nrw.schule.svws.db.dto.current.schild.schule.DTOJahrgang;
 import de.nrw.schule.svws.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
@@ -115,6 +119,26 @@ public class DataGostJahrgangsdaten extends DataManager<Integer> {
     	daten.beginnZusatzkursGE = jahrgangsdaten.ZusatzkursGEErstesHalbjahr;
     	daten.hatZusatzkursSW = jahrgangsdaten.ZusatzkursSWVorhanden;
     	daten.beginnZusatzkursSW = jahrgangsdaten.ZusatzkursSWErstesHalbjahr;
+    	// Ergänze die Information, ob bereits eine Blockung persistiert wurde anhand der angelegten Kurse in den entsprechenden Lernabschnitten
+    	if (abi_jahrgang >= 0) {
+    		int anzahlAbschnitte = DataSchuleStammdaten.getAnzahlAbschnitte(conn);
+	    	List<Integer> jahre = Arrays.asList(abi_jahrgang - 1, abi_jahrgang - 2, abi_jahrgang - 3);
+	    	List<DTOSchuljahresabschnitte> alleAbschnitte = conn.queryNamed("DTOSchuljahresabschnitte.jahr.multiple", jahre, DTOSchuljahresabschnitte.class);
+	    	for (DTOSchuljahresabschnitte abschnitt : alleAbschnitte) {
+	    		GostHalbjahr halbjahr = GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(abi_jahrgang, abschnitt.Jahr, 
+	    				(anzahlAbschnitte == 4) ? (abschnitt.Abschnitt + 1) / 2 : abschnitt.Abschnitt);
+	    		List<DTOKurs> kurse = conn.queryList("SELECT e FROM DTOKurs e WHERE e.ASDJahrgang = ?1 AND e.Schuljahresabschnitts_ID = ?2", 
+	    				DTOKurs.class, halbjahr.jahrgang, abschnitt.ID);
+	    		for (DTOKurs kurs : kurse) {
+	    			GostKursart kursart = GostKursart.fromKuerzel(kurs.KursartAllg);
+	    			if (kursart != null) {
+	    				daten.istBlockungFestgelegt[halbjahr.id] = true;
+	    				break;
+	    			}
+	    		}
+	    	}
+    	}
+    	// Ergänze die Beratungslehrer
     	List<DTOGostJahrgangBeratungslehrer> dtosBeratungslehrer = conn.queryNamed("DTOGostJahrgangBeratungslehrer.abi_jahrgang", daten.abiturjahr, DTOGostJahrgangBeratungslehrer.class);
     	daten.beratungslehrer.addAll(DataGostBeratungslehrer.getBeratungslehrer(conn, dtosBeratungslehrer));
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
