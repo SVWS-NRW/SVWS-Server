@@ -5,7 +5,7 @@
 		:data="{ id: kurs.id, fachID: kurs.fachID, kursart: kurs.kursart?.valueOf() }"
 		class="select-none"
 		:class="{ 'cursor-move border-2 border-green-700': is_draggable, 'bg-yellow-200': is_drop_zone }"
-		:draggable="is_draggable"
+		:draggable="is_draggable && !pending"
 		:style="{ 'background-color': bgColor }"
 		@drag-start="drag_started"
 		@drag-end="drag_ended"
@@ -22,7 +22,7 @@
 						<i-ri-pushpin-line  v-if="!verbieten_regel && !fixier_regel" class="inline-block"/>
 					</svws-ui-icon>
 			</span>
-			<br />{{ kurs.schueler.size() }}
+			<br />{{schueler_schriftlich}}/{{ kurs.schueler.size() }}
 		</drop-data>
 	</drag-data>
 </template>
@@ -77,7 +77,11 @@
 			for (const s of props.kurs.schueler)
 				if (s === props.schueler.id)
 					return true;
-			return false; });
+			return false;
+		});
+
+	const pending: ComputedRef<boolean> =
+		computed(()=> app.dataKursblockungsergebnis.pending);
 
 	const is_drop_zone: ComputedRef<boolean> =
 		computed(() => {
@@ -94,6 +98,9 @@
 
 	const kurs_name: ComputedRef<String> =
 		computed(()=> manager.value?.getOfKursName(props.kurs.id) || "")
+
+	const schueler_schriftlich: ComputedRef<number> =
+		computed(()=> manager.value?.getOfKursAnzahlSchuelerSchriftlich(props.kurs.id) || 0);
 
 	const gostfach: ComputedRef<ZulaessigesFach | undefined> =
 		computed(() => {

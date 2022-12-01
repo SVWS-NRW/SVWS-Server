@@ -67,7 +67,9 @@ export class DataGostKursblockung extends BaseData<
 	 * @returns {Promise<GostBlockungsdaten>} Die Daten als Promise
 	 */
 	public async on_select(): Promise<GostBlockungsdaten | undefined> {
-		if (!this.selected_list_item) return super.unselect();
+		if (!this.selected_list_item)
+			return super.unselect();
+		this.pending = true;
 		const blockungsdaten = await super._select((eintrag: GostBlockungListeneintrag) =>
 			App.api.getGostBlockung(App.schema, eintrag.id));
 		if (blockungsdaten && App.apps.gost.dataFaecher.manager){
@@ -79,6 +81,7 @@ export class DataGostKursblockung extends BaseData<
 			if (this.listKursblockungsergebnisse.liste.length)
 				this.listKursblockungsergebnisse.ausgewaehlt = this.listKursblockungsergebnisse.liste[0];
 		}
+		this.pending = false;
 		return blockungsdaten;
 	}
 
@@ -124,12 +127,18 @@ export class DataGostKursblockung extends BaseData<
 	 * @returns {Promise<GostBlockungKurs|undefined>} Ein Kursobjekt bei Erfolg
 	 */
 	public async add_blockung_kurse(fach_id: number, kursart_id: number): Promise<GostBlockungKurs | undefined> {
-		if (!this.daten?.id) return;
+		if (!this.daten?.id)
+			return;
+		this.pending = true;
 		const kurs = await App.api.addGostBlockungKurs(App.schema, this.daten.id, fach_id, kursart_id);
-		if (!kurs) return
+		if (!kurs) {
+			this.pending = false;
+			return
+		}
 		this.datenmanager?.addKurs(kurs)
 		this.ergebnismanager?.setAddKursByID(kurs.id)
 		this.commit()
+		this.pending = false;
 		return kurs
 	}
 	
@@ -139,12 +148,18 @@ export class DataGostKursblockung extends BaseData<
 	 * @returns {Promise<GostBlockungKurs|undefined>} Ein Kursobjekt bei Erfolg
 	 */
 	public async del_blockung_kurse(fach_id: number, kursart_id: number): Promise<GostBlockungKurs | undefined> {
-		if (!this.daten?.id) return;
+		if (!this.daten?.id)
+			return;
+		this.pending = true;
 		const kurs = await App.api.deleteGostBlockungKurs(App.schema, this.daten.id, fach_id, kursart_id);
-		if (!kurs) return
+		if (!kurs) {
+			this.pending = false;
+			return
+		}
 		this.datenmanager?.removeKurs(kurs)
 		this.ergebnismanager?.setRemoveKursByID(kurs.id)
 		this.commit()
+		this.pending = false;
 		return kurs
 	}
 
@@ -158,12 +173,18 @@ export class DataGostKursblockung extends BaseData<
 	 * @returns {Promise<GostBlockungRegel|undefined>} Ein Kursobjekt bei Erfolg
 	 */
 	public async add_blockung_regel(regel_typ: number): Promise<GostBlockungRegel | undefined> {
-		if (!this.daten?.id) return;
+		if (!this.daten?.id)
+			return;
+		this.pending = true;
 		const regel = await App.api.addGostBlockungRegel(App.schema, this.daten.id, regel_typ);
-		if (!regel) return
+		if (!regel) {
+			this.pending = false;
+			return
+		}
 		this.datenmanager?.addRegel(regel)
 		this.ergebnismanager?.setAddRegelByID(regel.id)
 		this.commit()
+		this.pending = false;
 		return regel
 	}
 
@@ -172,12 +193,18 @@ export class DataGostKursblockung extends BaseData<
 	 * @returns {Promise<GostBlockungRegel|undefined>} Ein Kursobjekt bei Erfolg
 	 */
 	public async del_blockung_regel(regel_id: number): Promise<GostBlockungRegel | undefined> {
-		if (!this.daten?.id) return;
+		if (!this.daten?.id)
+			return;
+		this.pending = true;
 		const regel = await App.api.deleteGostBlockungRegelByID(App.schema, regel_id);
-		if (!regel) return
+		if (!regel) {
+			this.pending = false;
+			return
+		}
 		this.datenmanager?.removeRegel(regel);
 		this.ergebnismanager?.setRemoveRegelByID(regel.id);
 		this.commit();
+			this.pending = false;
 		return regel
 	}
 
@@ -185,7 +212,8 @@ export class DataGostKursblockung extends BaseData<
 	public async patch_blockung_regel(data: GostBlockungRegel): Promise<GostBlockungRegel | undefined> {
 		await App.api.patchGostBlockungRegel(data, App.schema, data.id);
 		const regel = this.datenmanager?.getRegel(data.id)
-		if (!regel) return
+		if (!regel)
+			return
 		this.datenmanager?.removeRegel(regel);
 		this.ergebnismanager?.setRemoveRegelByID(regel.id);
 		this.datenmanager?.addRegel(data);
@@ -198,23 +226,35 @@ export class DataGostKursblockung extends BaseData<
 	 * @returns {Promise<GostBlockungSchiene|undefined>} Ein Schienenobjekt bei Erfolg
 	 */	
 	public async add_blockung_schiene(): Promise<GostBlockungSchiene | undefined> {
-		if (!this.daten?.id) return;
+		if (!this.daten?.id)
+			return;
+		this.pending = true;
 		const schiene = await App.api.addGostBlockungSchiene(App.schema, this.daten.id);
-		if (!schiene) return
+		if (!schiene) {
+			this.pending = false;
+			return
+		}
 		this.datenmanager?.addSchiene(schiene);
 		this.ergebnismanager?.setAddSchieneByID(schiene.id)
 		this.commit();
+		this.pending = false;
 		return schiene
 	}
 
 	/** Entfernt eine Schiene aus der Blockung */
 	public async del_blockung_schiene(schiene: GostBlockungSchiene): Promise<GostBlockungSchiene|undefined> {
-		if (!this.daten?.id) return;
+		if (!this.daten?.id)
+			return;
+		this.pending = true;
 		const s = await App.api.deleteGostBlockungSchieneByID(App.schema, schiene.id);
-		if (!s) return
+		if (!s) {
+			this.pending = false;
+			return
+		}
 		this.datenmanager?.removeSchieneByID(s.id);
 		this.ergebnismanager?.setRemoveSchieneByID(s.id)
 		this.commit();
+		this.pending = false;
 		return s;
 	}
 
