@@ -1327,7 +1327,40 @@ public class APIGost {
     		return (new DataGostBlockungsergebnisse(conn)).get(id);
     	}
     }
-    
+
+
+    /**
+     * Die OpenAPI-Methode für das Aktivieren bzw. Persistieren eines Blockungsergebnisses
+     * der Gymnasialen Oberstufe in der Kursliste und den Leistungsdaten von Schülern.
+     *  
+     * @param schema       das Datenbankschema
+     * @param id           die ID des zu aktivierenden Blockungsergebnisses 
+     * @param request      die Informationen zur HTTP-Anfrage
+     * 
+     * @return die HTTP-Antwort
+     */
+    @POST
+    @Path("/blockungen/zwischenergebnisse/{ergebnisid : \\d+}/activate")
+    @Operation(summary = "Aktiviert bzw. persistiert das Blockungsergebnis.",
+    description = "Aktiviert bzw. persistiert das Blockungsergebnis. Dies ist nur erlaubt, wenn keine aktivierte "
+    		    + "Blockung in der DB vorliegt. Beim Aktivieren wird die Kursliste und die Leistungsdaten der "
+    		    + "Schüler entsprechend befüllt."
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Aktivieren eines "
+    		    + "Blockungsergebnisses besitzt.")
+    @ApiResponse(responseCode = "200", description = "Das Blockungsergebnis wurde erfolgreich aktiviert.",
+            content = @Content(mediaType = MediaType.APPLICATION_JSON,
+            schema = @Schema(implementation = Integer.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um ein Blockungsergebnis zu aktivieren.")
+    @ApiResponse(responseCode = "404", description = "Keine oder nicht alle Daten zu dem Ergebnis gefunden, um dieses zu aktiveren")
+    @ApiResponse(responseCode = "409", description = "Es wurde bereits eine Blockung aktiviert")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response activateGostBlockungsergebnis(@PathParam("schema") String schema, @PathParam("ergebnisid") long id, @Context HttpServletRequest request) {
+    	// TODO Anpassung der Benutzerrechte
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) {
+    		return (new DataGostBlockungsergebnisse(conn)).aktiviere(id);
+    	}
+    }
+
 
     /**
      * Die OpenAPI-Methode für das Löschen von Blockungsergebnissen einer Blockung der Gymnasialen Oberstufe.

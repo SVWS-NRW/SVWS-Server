@@ -2917,6 +2917,35 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode activateGostBlockungsergebnis für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \d+}/activate
+	 * 
+	 * Aktiviert bzw. persistiert das Blockungsergebnis. Dies ist nur erlaubt, wenn keine aktivierte Blockung in der DB vorliegt. Beim Aktivieren wird die Kursliste und die Leistungsdaten der Schüler entsprechend befüllt.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Aktivieren eines Blockungsergebnisses besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Das Blockungsergebnis wurde erfolgreich aktiviert.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Integer
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um ein Blockungsergebnis zu aktivieren.
+	 *   Code 404: Keine oder nicht alle Daten zu dem Ergebnis gefunden, um dieses zu aktiveren
+	 *   Code 409: Es wurde bereits eine Blockung aktiviert
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} ergebnisid - der Pfad-Parameter ergebnisid
+	 * 
+	 * @returns Das Blockungsergebnis wurde erfolgreich aktiviert.
+	 */
+	public async activateGostBlockungsergebnis(schema : string, ergebnisid : number) : Promise<Number> {
+		let path : string = "/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \d+}/activate"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema)
+				.replace(/{ergebnisid\s*(:[^}]+)?}/g, ergebnisid.toString());
+		const result : string = await super.postJSON(path, null);
+		const text = result;
+		return parseInt(JSON.parse(text));
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode dupliziereGostBlockungMitErgebnis für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \d+}/dupliziere
 	 * 
 	 * Dupliziert zu dem angegebenen Zwischenergebnis gehörende Blockung der gymnasialen Oberstufe. Das Zwischenergebnis wird als einziges mit dupliziert und dient bei dem Blockungsduplikat. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Duplizieren einer Blockung besitzt.

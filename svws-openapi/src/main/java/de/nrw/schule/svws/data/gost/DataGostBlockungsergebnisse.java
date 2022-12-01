@@ -426,5 +426,18 @@ public class DataGostBlockungsergebnisse extends DataManager<Long> {
             throw exception;
         }
     }
-	
+
+
+    /**
+     * Aktiviert bzw. persistiert das Blockungsergebnis in der Kursliste und in den Leistungsdaten der
+     * Schüler des Abiturjahrgangs
+     * 
+     * @param idErgebnis   das zu persistierende Blockungsergebnis
+     * 
+     * @return die HTTP-Response, welchen den Erfolg der Operation angibt
+     */
+    public Response aktiviere(Long idErgebnis) {
+		throw new UnsupportedOperationException();
+    }
+
 }
