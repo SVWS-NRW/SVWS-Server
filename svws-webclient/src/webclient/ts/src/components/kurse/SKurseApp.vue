@@ -16,6 +16,7 @@
 				</template>
 				<template #panels>
 					<svws-ui-tab-panel>
+						<s-kurs-daten/>
 					</svws-ui-tab-panel>
 				</template>
 			</svws-ui-tab-bar>
@@ -24,11 +25,11 @@
 </template>
 
 <script setup lang="ts">
-	import { computed, ComputedRef } from "vue";
+	import { computed, ComputedRef, defineAsyncComponent } from "vue";
 	import { injectMainApp, Main } from "~/apps/Main";
 
 	// TODO Implementierung Kursdaten beim Server benötigt
-	// const SKursDaten = defineAsyncComponent(() => import("~/components/kurse/daten/SKursDaten.vue"));
+	const SKursDaten = defineAsyncComponent(() => import("~/components/kurse/daten/SKursDaten.vue"));
 
 	// TODO Implementierung Kursdaten beim Server benötigt
 	// @Options({ name: 's-kurs-app', components: { SKursDaten } })
