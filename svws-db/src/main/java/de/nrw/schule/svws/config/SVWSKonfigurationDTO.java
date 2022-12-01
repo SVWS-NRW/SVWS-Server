@@ -38,6 +38,14 @@ class SVWSKonfigurationDTO {
 	@JsonProperty("DisableAutoUpdates")
 	Boolean disableAutoUpdates;
 
+	/** Gibt an, ob beim Server TLS deaktiviert werden soll und HTTP statt HTTPS verwendet werden soll. */
+	@JsonProperty("DisableTLS")
+	Boolean disableTLS;
+	
+	/** Gibt den HTTP-Port des Servers an, sofern TLS dekativiert wurde */
+	@JsonProperty("PortHTTP")
+	Integer portHTTP;
+	
 	/** Gibt an, dass die HTTP-Version 1.1 statt 2 als Default genutzt wird */
 	@JsonProperty("UseHTTPDefaultv11")
 	Boolean useHTTPDefaultv11;

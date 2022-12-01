@@ -128,10 +128,14 @@ public class HttpServer {
 	 * und fügt diese zum Jetty-Server hinzu.
 	 */
 	private static void addHTTPConfiguration() {
+		boolean disableTLS = SVWSKonfiguration.get().isTLSDisabled();
+		
 		// HTTP Configuration
 		HttpConfiguration http_config = new HttpConfiguration();
-		http_config.setSecureScheme("https");
-		http_config.setSecurePort(SVWSKonfiguration.get().getPortHTTPS());
+		if (!disableTLS) {
+			http_config.setSecureScheme("https");
+			http_config.setSecurePort(SVWSKonfiguration.get().getPortHTTPS());
+		}
 		http_config.setOutputBufferSize(32768);
 		http_config.setRequestHeaderSize(8192);
 		http_config.setResponseHeaderSize(8192);
@@ -154,17 +158,30 @@ public class HttpServer {
 		// SSL HTTP Configuration
 		HttpConfiguration https_config = new HttpConfiguration(http_config);
 		SecureRequestCustomizer secureRequestCustomizer = new SecureRequestCustomizer();
-		secureRequestCustomizer.setSniHostCheck(false);
+		if (!disableTLS) {
+			secureRequestCustomizer.setSniHostCheck(false);
+		}
 		https_config.addCustomizer(secureRequestCustomizer);
 
-		// HTTP Connection Factory (v1.1 oder v2)		
+		// HTTP Connection Factory (v1.1 oder v2)
 		AbstractConnectionFactory connFactoryHTTPv1_1 = new HttpConnectionFactory(https_config);
 		AbstractConnectionFactory connFactoryHTTPv2 = new HTTP2ServerConnectionFactory(https_config);
 		ALPNServerConnectionFactory alpn = new ALPNServerConnectionFactory();
-		@SuppressWarnings("resource")
-		ServerConnector connector = new ServerConnector(server, sslContextFactory, alpn, connFactoryHTTPv2, connFactoryHTTPv1_1);
-		connector.setPort(SVWSKonfiguration.get().getPortHTTPS());
-		server.addConnector(connector);				
+		if (disableTLS) {
+			@SuppressWarnings("resource")
+			ServerConnector connector = SVWSKonfiguration.get().useHTTPDefaultv11() 
+				? new ServerConnector(server, connFactoryHTTPv1_1, connFactoryHTTPv2)
+				: new ServerConnector(server, connFactoryHTTPv2, connFactoryHTTPv1_1);
+			connector.setPort(SVWSKonfiguration.get().getPortHTTP());
+			server.addConnector(connector);
+		} else {
+			@SuppressWarnings("resource")
+			ServerConnector connector = SVWSKonfiguration.get().useHTTPDefaultv11()
+				? new ServerConnector(server, sslContextFactory, alpn, connFactoryHTTPv1_1, connFactoryHTTPv2)
+				: new ServerConnector(server, sslContextFactory, alpn, connFactoryHTTPv2, connFactoryHTTPv1_1);
+			connector.setPort(SVWSKonfiguration.get().getPortHTTPS());
+			server.addConnector(connector);
+		}
 	}
 	
 	

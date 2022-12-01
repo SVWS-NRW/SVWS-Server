@@ -1,6 +1,8 @@
 {
     "DisableDBRootAccess": false,
     "DisableAutoUpdates" : false,
+    "DisableTLS" : false,
+    "PortHTTP" : 80,
 	"UseHTTPDefaultv11": false,
 	"PortHTTPS": 443,
 	"UseCORSHeader": true,

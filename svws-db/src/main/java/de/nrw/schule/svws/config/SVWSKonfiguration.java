@@ -390,6 +390,33 @@ public class SVWSKonfiguration {
 	
 	
 	
+	private static boolean default_disableTLS = false;
+	
+	/** 
+	 * Gibt an, ob beim Server TLS deaktiviert werden soll und HTTP statt HTTPS verwendet 
+	 * werden soll.
+	 * 
+	 * @return true, falls TLS deaktiviert wurde, sonst false (default) 
+	 */
+	public boolean isTLSDisabled() {
+		return (dto == null) || (this.dto.disableTLS == null) ? default_disableTLS : this.dto.disableTLS;		
+	}
+	
+	
+	
+	/** Gibt den Default HTTP-Port des Servers an, sofern TLS deaktiviert wurde */
+	public static int default_PortHTTP = 8080;
+	
+	/**
+	 * Gibt den HTTP-Port des Servers zurück, sofern TLS deaktiviert wurde
+	 * 
+	 * @return der HTTP-Port des Servers, sofern TLS deaktiviert wurde
+	 */
+	public int getPortHTTP() {
+		return (dto == null) || (this.dto.portHTTP == null) ? default_PortHTTP : this.dto.portHTTP;		
+	}
+	
+	
 	/** Gibt an, dass die HTTP-Version 1.1 statt 2 als Default genutzt wird */
 	public static boolean default_useHTTPDefaultv11 = false;
 	
