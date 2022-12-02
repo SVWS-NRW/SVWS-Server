@@ -28,6 +28,8 @@ export class JahrgangsUtils extends JavaObject {
 			return null;
 		if ((schulform as unknown === Schulform.FW as unknown) || (schulform as unknown === Schulform.WB as unknown) || (schulform as unknown === Schulform.BK as unknown) || (schulform as unknown === Schulform.SB as unknown)) 
 			return null;
+		if (jahrgang === null) 
+			return null;
 		if (schulform as unknown === Schulform.GY as unknown) {
 			switch (jahrgang) {
 				case "05": 

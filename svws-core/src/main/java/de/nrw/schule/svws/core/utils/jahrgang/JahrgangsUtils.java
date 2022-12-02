@@ -27,6 +27,8 @@ public class JahrgangsUtils {
 			return null;
 		if ((schulform == Schulform.FW) || (schulform == Schulform.WB) || (schulform == Schulform.BK) || (schulform == Schulform.SB))
 			return null;
+		if (jahrgang == null)
+			return null;
 		if (schulform == Schulform.GY){
 			// Gymnasium zählt Restjahre immer bis zum Abitur
 			switch (jahrgang) {
@@ -46,8 +48,7 @@ public class JahrgangsUtils {
 				case "12": return 2;
 				case "13": return 1;
 			}
-		}
-		else{
+		} else {
 			// Angaben für die allgemein bildenden Schulen ohne Gymnasium
 			// TODO nicht darunter fallende Schulformen vorher verarbeiten
 			switch (jahrgang) {

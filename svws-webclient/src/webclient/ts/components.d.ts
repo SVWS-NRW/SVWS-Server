@@ -79,7 +79,6 @@ declare module '@vue/runtime-core' {
     SCardGostZusatzkurse: typeof import('./src/components/gost/faecher/SCardGostZusatzkurse.vue')['default']
     SCardKlasseBasisdaten: typeof import('./src/components/klassen/daten/SCardKlasseBasisdaten.vue')['default']
     SCardKursBasisdaten: typeof import('./src/components/kurse/daten/SCardKursBasisdaten.vue')['default']
-    SCardKurseBasisdaten: typeof import('./src/components/kurse/daten/SCardKurseBasisdaten.vue')['default']
     SCardLehrerBasisdaten: typeof import('./src/components/lehrer/individualdaten/SCardLehrerBasisdaten.vue')['default']
     SCardLehrerKontaktdaten: typeof import('./src/components/lehrer/individualdaten/SCardLehrerKontaktdaten.vue')['default']
     SCardLehrerPersonaldatenAllgemein: typeof import('./src/components/lehrer/personaldaten/SCardLehrerPersonaldatenAllgemein.vue')['default']
