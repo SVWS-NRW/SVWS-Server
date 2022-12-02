@@ -14,13 +14,17 @@
 			<span :class="{'bg-red-400': active && is_drop_zone}">{{ kurs_name }}</span>
 			<span v-if="allow_regeln">
 					<svws-ui-icon class="cursor-pointer" @click="verbieten_regel_toggle" >
-						<i-ri-forbid-fill v-if="verbieten_regel" class="inline-block"/>
-						<i-ri-forbid-line v-if="!verbieten_regel && !fixier_regel" class="inline-block"/>
+						<i-ri-forbid-fill v-if="verbieten_regel" class="inline-block text-red-400"/>
+						<i-ri-forbid-line v-if="!verbieten_regel && !fixier_regel" class="inline-block text-red-400"/>
 					</svws-ui-icon>
 					<svws-ui-icon class="cursor-pointer" @click="fixieren_regel_toggle" >
 						<i-ri-pushpin-fill v-if="fixier_regel" class="inline-block"/>
-						<i-ri-pushpin-line  v-if="!verbieten_regel && !fixier_regel" class="inline-block"/>
+						<i-ri-pushpin-line v-if="!verbieten_regel && !fixier_regel" class="inline-block"/>
 					</svws-ui-icon>
+			</span>
+			<span v-else>
+					<svws-ui-icon> <i-ri-forbid-fill v-if="verbieten_regel" class="inline-block text-red-400"/> </svws-ui-icon>
+					<svws-ui-icon> <i-ri-pushpin-fill v-if="fixier_regel" class="inline-block text-red-400"/> </svws-ui-icon>
 			</span>
 			<br />{{schueler_schriftlich}}/{{ kurs.schueler.size() }}
 		</drop-data>
@@ -91,7 +95,8 @@
 				return false;
 			if (fachID !== props.kurs.fachID || kursart !== props.kurs.kursart)
 				return false;
-			return true; });
+			return true;
+		});
 
 	const kurs_original: ComputedRef<GostBlockungKurs | undefined> =
 		computed( () => manager.value?.getKursG(props.kurs.id));
@@ -110,13 +115,15 @@
 				if (f.id === kurs_original.value?.fach_id) {
 					fach = f; break
 				}
-			return ZulaessigesFach.getByKuerzelASD(fach?.kuerzel || null); });
+			return ZulaessigesFach.getByKuerzelASD(fach?.kuerzel || null);
+		});
 
 	const bgColor: ComputedRef<string> =
 		computed(() => {
 			if ((!is_draggable.value) || (!gostfach.value))
 				return "";
-			return gostfach.value.getHMTLFarbeRGB().valueOf(); });
+			return gostfach.value.getHMTLFarbeRGB().valueOf();
+		});
 	
 	const regeln: ComputedRef<List<GostBlockungRegel>> =
 		computed(()=> app.dataKursblockung.datenmanager?.getMengeOfRegeln() || new Vector<GostBlockungRegel>())
@@ -127,7 +134,8 @@
 				if (regel.typ === GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ
 						&& regel.parameter.get(0) === props.schueler.id
 						&& regel.parameter.get(1) === props.kurs.id)
-					return regel})
+					return regel;
+		})
 	
 	const fixier_regel: ComputedRef<GostBlockungRegel | undefined> =
 		computed(() => {
@@ -135,7 +143,8 @@
 				if (regel.typ === GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ
 						&& regel.parameter.get(0) === props.schueler.id
 						&& regel.parameter.get(1) === props.kurs.id)
-					return regel})
+					return regel
+		})
 
 	const fixieren_regel_toggle = () => fixier_regel.value ? fixieren_regel_entfernen() : fixieren_regel_hinzufuegen()
 	const verbieten_regel_toggle = () => verbieten_regel.value ? verbieten_regel_entfernen() : verbieten_regel_hinzufuegen()
