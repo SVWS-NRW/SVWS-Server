@@ -11,6 +11,9 @@
 					id="abiturjahr"
 					:footer="true"
 				>
+					<template #cell-abiturjahr="{ row }">
+						{{row.abiturjahr === -1 ? '':row.abiturjahr}}
+					</template>
 					<template #footer>
 						<svws-ui-dropdown variant="icon" class="">
 							<template #dropdownButton>Abiturjahr hinzufügen</template>
