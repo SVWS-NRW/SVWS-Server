@@ -246,6 +246,7 @@ public class DataGostBlockungKurs extends DataManager<Long> {
 	 */
 	public Response deleteKurs(long idBlockung, long idFach, int idKursart) {
 		try {
+			conn.transactionBegin();
 			GostUtils.pruefeSchuleMitGOSt(conn);
 	        // Prüfe, ob die Blockung nur das Vorlage-Ergebnis hat
 	        DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, idBlockung);
@@ -273,6 +274,7 @@ public class DataGostBlockungKurs extends DataManager<Long> {
 			GostBlockungKurs daten = dtoMapper.apply(kurs);
 			if (!conn.transactionRemove(kurs))
 				throw OperationError.INTERNAL_SERVER_ERROR.exception();
+			conn.transactionCommit();
 			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 		} catch (Exception exception) {
 			conn.transactionRollback();
@@ -307,7 +309,7 @@ public class DataGostBlockungKurs extends DataManager<Long> {
 	        	throw OperationError.BAD_REQUEST.exception("Der Kurs kann nicht entfernt werden, da bei der Blockungsdefinition schon berechnete Ergebnisse existieren.");
 			// Entferne den Kurs
 			GostBlockungKurs daten = dtoMapper.apply(kurs);
-			conn.transactionRemove(kurs);
+			conn.transactionRemove(kurs); // TODO BACHRAN muss hier nicht bei false eine Exception geworfen werden? 
 			conn.transactionCommit();
 			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 		} catch (Exception exception) {
