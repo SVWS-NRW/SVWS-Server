@@ -13,7 +13,9 @@
 			</div>
 		</td>
 		<td class="border border-[#7f7f7f]/20 text-center" :class="{'border-t-2': kursdifferenz}">
-			<svws-ui-checkbox v-model="koop"></svws-ui-checkbox> </td>
+			<svws-ui-checkbox v-if="allow_regeln" v-model="koop"></svws-ui-checkbox>
+			<template v-else>{{koop ? "&#x2713;" : "&#x2717;"}}</template>
+		</td>
 		<template v-if="setze_kursdifferenz && kurs_blockungsergebnis">
 			<td class="border border-[#7f7f7f]/20 text-center border-t-2" :rowspan="kursdifferenz[0]" >
 				{{kursdifferenz[1]}}</td>
