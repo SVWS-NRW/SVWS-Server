@@ -692,6 +692,15 @@ public class Revision1Updates extends SchemaRevisionUpdateSQL {
 			""",
 			Schema.tab_SchuelerLeistungsdaten, Schema.tab_Kurse
 		);
+		add("Setzen des ASDJahrgang, falls diese NULL ist auf den Eintrag des Jahrgangs bei Jahrgang_ID in der Tabelle Lernabschnittsdaten",
+			"""
+			UPDATE SchuelerLernabschnittsdaten JOIN EigeneSchule_Jahrgaenge 
+				ON SchuelerLernabschnittsdaten.Jahrgang_ID = EigeneSchule_Jahrgaenge.ID 
+			SET SchuelerLernabschnittsdaten.ASDJahrgang = EigeneSchule_Jahrgaenge.ASDJahrgang 
+			WHERE SchuelerLernabschnittsdaten.ASDJahrgang IS NULL AND SchuelerLernabschnittsdaten.Jahrgang_ID IS NOT NULL;
+			""",
+			Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_EigeneSchule_Jahrgaenge
+		);
 		add("Korrektur für den Fremdschluessel auf die Spalte NPV_Fach_ID der Tabelle Lernabschnittsdaten",
 			"""
 			UPDATE SchuelerLernabschnittsdaten 
