@@ -146,10 +146,10 @@ const modal: Ref<any> = ref(null);
 
 const rows: ComputedRef<GostJahrgang[]> =
 	computed(() => {
-	const list = [...app.auswahl.liste];
-	return list.sort((a, b) =>
-		(a?.bezeichnung || "") < (b?.bezeichnung || "") ? 1 : -1
-	)});
+		const list = [...app.auswahl.liste];
+		return list.sort((a, b) =>
+			(a?.bezeichnung || "") < (b?.bezeichnung || "") ? 1 : -1)
+	});
 
 const manager: ComputedRef<GostBlockungsdatenManager | undefined> =
 	computed(()=> app.dataKursblockung.manager_container ? app.dataKursblockung.datenmanager : undefined);
