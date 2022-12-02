@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 import org.junit.jupiter.api.Test;
@@ -97,8 +98,8 @@ public class VCalendarSerialisationTest {
 		// das Event erhält die eigentlichen Daten für das Ereignis
 		// startzeit als Instant - hier in UTC
 		Instant start = Instant.parse("2022-08-29T06:00:00.000Z");
-		// startzeit als Instant - hier in GMT über unsere Hilfsmethoden
-		Instant end = DateTimeUtil.fromSqlTimeStamp("2022-08-29T08:45:00.000");
+		// startzeit als Instant - hier in GMT
+		Instant end = LocalDateTime.of(2022, 8, 29, 8, 45, 0).atZone(ZoneId.of(DateTimeUtil.TIMEZONE_DEFAULT)).toInstant();
 		VEvent event = VEvent.createSimpleEvent(start, end, "Erste Unterrichtsstunde", "Die Beschreibung des Events");
 		// Regel für wöchentliche Wiederholungen
 		RRule r = new RRule(Frequency.WEEKLY);
@@ -120,8 +121,8 @@ public class VCalendarSerialisationTest {
 		// das Event erhält die eigentlichen Daten für das Ereignis
 		// startzeit als Instant - hier in UTC
 		Instant start = Instant.parse("2022-08-29T06:00:00.000Z");
-		// startzeit als Instant - hier in GMT über unsere Hilfsmethoden
-		Instant end = DateTimeUtil.fromSqlTimeStamp("2022-08-29T08:45:00.000");
+		// startzeit als Instant - hier in GMT
+				Instant end = LocalDateTime.of(2022, 8, 29, 8, 45, 0).atZone(ZoneId.of(DateTimeUtil.TIMEZONE_DEFAULT)).toInstant();
 		VEvent event = VEvent.createSimpleEvent(start, end, "Erste Unterrichtsstunde", "Die Beschreibung des Events");
 		// Regel für 2wöchentliche Wiederholungen an Montagen und Freitagen
 		RRule r = new RRule(Frequency.WEEKLY);

@@ -126,7 +126,8 @@ public class DateTimeUtil {
 
 	/**
 	 * Konvertiert ein SQL-Timestamp String wie er an
-	 * {@link DTODavRessource#KalenderStart} verwendet wird in ein {@link Instant}
+	 * {@link DTODavRessource#KalenderStart} verwendet wird in ein {@link Instant}<br>
+	 * <strong>Diese Methode nutzt die Systemzeitzone zum Parsen!</strong>
 	 * 
 	 * @param sql der String für den SQL-Timestamp
 	 * @return den Zeitpunkt aus dem SQLTimestamp
