@@ -94,9 +94,9 @@ public class DataSchuelerliste extends DataManager<Long> {
 		eintrag.id = schueler.ID;
 		eintrag.nachname = schueler.Nachname;
 		eintrag.vorname = schueler.Vorname;
-		eintrag.idKlasse = aktAbschnitt.Klassen_ID;
-		eintrag.jahrgang = aktAbschnitt.ASDJahrgang;
-		eintrag.schulgliederung = aktAbschnitt.Schulgliederung.daten.kuerzel;
+		eintrag.idKlasse = (aktAbschnitt == null) ? null : aktAbschnitt.Klassen_ID;
+		eintrag.jahrgang = (aktAbschnitt == null) ? null : aktAbschnitt.ASDJahrgang;
+		eintrag.schulgliederung = (aktAbschnitt == null) ? null : aktAbschnitt.Schulgliederung.daten.kuerzel;
 		eintrag.status = schueler.Status.bezeichnung;
 		eintrag.idSchuljahresabschnitt = schueler.Schuljahresabschnitts_ID;
 		return eintrag;		
