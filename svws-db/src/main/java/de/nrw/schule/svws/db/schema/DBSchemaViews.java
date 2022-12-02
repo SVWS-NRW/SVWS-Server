@@ -36,8 +36,6 @@ public class DBSchemaViews {
 	private DBSchemaViews() {
 		// Revision 0
 		add_Schildintern_K_Schulnote();
-		add_Schulver_Schulformen();
-		add_Statkue_Schulformen();
 		add_Statkue_Herkunftsschulform();
 		add_Statkue_Herkunftsart();
 		add_Statkue_ZulJahrgaenge();
@@ -166,44 +164,6 @@ public class DBSchemaViews {
 		addView(view);
 	}
 
-
-	private void add_Schulver_Schulformen() {
-		View view = new View(
-				"Schulver_Schulformen", "views.schulver", "DTOSchulverSchulformen", 
-				"View zur Simulation einer Schulver-Tabelle: Schulformen",
-				0, null,
-                """
-                Schulformen WHERE Nummer IS NOT NULL
-                """
-		).add("Schulform", "Eindeutige Nummer der Schulform", "String", "Nummer", null, true)
-		 .add("SF", "Das Kürzel der Schulform", "String", "Kuerzel", null, false)
-		 .add("Bezeichnung", "Die Bezeichnung der Schulform", "String", "Bezeichnung", null, false)
-		 .add("Flag", "Flag zur Kompatibilität zur Schulver", "String", "'1'", null, false)
-		 .add("geaendert", "Das Datum der letzten Änderung", "String", "null", null, false)
-		 .add("gueltigVon", "Gibt das Schuljahr an, ab dem die Schulform verwendet werden kann oder null, falls es keine Einschränkung gibt", "Integer", "gueltigVon", null, false)
-		 .add("gueltigBis", "Gibt das Schuljahr an, bis zu welchem die Schulform verwendet werden kann oder null, falls es keine Einschränkung gibt", "Integer", "gueltigBis", null, false);
-		addView(view);
-	}
-
-
-	private void add_Statkue_Schulformen() {
-		View view = new View(
-				"Statkue_Schulformen", "views.statkue", "DTOStatkueSchulformen", 
-				"View zur Simulation einer Statkue-Tabelle: Schulformen",
-				0, null,
-                """
-                Schulformen
-                """
-		).add("Schulform", "Eindeutige Nummer der Schulform", "String", "Nummer", null, false)
-		 .add("SF", "Das Kürzel der Schulform", "String", "Kuerzel", null, true)
-		 .add("Bezeichnung", "Die Bezeichnung der Schulform", "String", "Bezeichnung", null, true)
-		 .add("Flag", "Flag zur Kompatibilität zur Schulver", "String", "'1'", null, false)
-		 .add("geaendert", "Das Datumd er letzten Änderung", "String", "null", null, false)
-		 .add("Sortierung", "Gibt die Sortierreihenfolge an", "Integer", "0", null, false)
-		 .add("gueltigVon", "Gibt das Schuljahr an, ab dem die Schulform verwendet werden kann oder null, falls es keine Einschränkung gibt", "Integer", "gueltigVon", null, false)
-		 .add("gueltigBis", "Gibt das Schuljahr an, bis zu welchem die Schulform verwendet werden kann oder null, falls es keine Einschränkung gibt", "Integer", "gueltigBis", null, false);
-		addView(view);
-	}
 
 	private void add_Statkue_Herkunftsschulform() {
 		View view = new View(

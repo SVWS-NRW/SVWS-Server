@@ -188,28 +188,8 @@
         <class>de.nrw.schule.svws.db.dto.migration.schule.MigrationDTOKAoAZusatzmerkmalKeys</class>
         <class>de.nrw.schule.svws.db.dto.migration.schule.MigrationDTONationalitaetenKeys</class>
         <class>de.nrw.schule.svws.db.dto.migration.schule.MigrationDTOReligionKeys</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schulver.MigrationDTOSchulverDBS</class>
-        <class>de.nrw.schule.svws.db.dto.migration.schulver.MigrationDTOSchulverSchultraeger</class>
-        <class>de.nrw.schule.svws.db.dto.migration.statkue.MigrationDTOSVWSSprachpruefungNiveaus</class>
         <class>de.nrw.schule.svws.db.dto.migration.statkue.MigrationDTOStatkueAbgangsart</class>
-        <class>de.nrw.schule.svws.db.dto.migration.statkue.MigrationDTOStatkueAndereGrundschulen</class>
-        <class>de.nrw.schule.svws.db.dto.migration.statkue.MigrationDTOStatkueBilingual</class>
-        <class>de.nrw.schule.svws.db.dto.migration.statkue.MigrationDTOStatkueLehrerAbgang</class>
-        <class>de.nrw.schule.svws.db.dto.migration.statkue.MigrationDTOStatkueLehrerAnrechnung</class>
-        <class>de.nrw.schule.svws.db.dto.migration.statkue.MigrationDTOStatkueLehrerBeschaeftigungsart</class>
-        <class>de.nrw.schule.svws.db.dto.migration.statkue.MigrationDTOStatkueLehrerEinsatzstatus</class>
-        <class>de.nrw.schule.svws.db.dto.migration.statkue.MigrationDTOStatkueLehrerFachrichtung</class>
-        <class>de.nrw.schule.svws.db.dto.migration.statkue.MigrationDTOStatkueLehrerFachrichtungAnerkennung</class>
-        <class>de.nrw.schule.svws.db.dto.migration.statkue.MigrationDTOStatkueLehrerLehramt</class>
-        <class>de.nrw.schule.svws.db.dto.migration.statkue.MigrationDTOStatkueLehrerLehramtAnerkennung</class>
-        <class>de.nrw.schule.svws.db.dto.migration.statkue.MigrationDTOStatkueLehrerLehrbefaehigung</class>
-        <class>de.nrw.schule.svws.db.dto.migration.statkue.MigrationDTOStatkueLehrerLehrbefaehigungAnerkennung</class>
-        <class>de.nrw.schule.svws.db.dto.migration.statkue.MigrationDTOStatkueLehrerMehrleistung</class>
-        <class>de.nrw.schule.svws.db.dto.migration.statkue.MigrationDTOStatkueLehrerMinderleistung</class>
-        <class>de.nrw.schule.svws.db.dto.migration.statkue.MigrationDTOStatkueLehrerRechtsverhaeltnis</class>
-        <class>de.nrw.schule.svws.db.dto.migration.statkue.MigrationDTOStatkueLehrerZugang</class>
         <class>de.nrw.schule.svws.db.dto.migration.statkue.MigrationDTOStatkueSchuelerErsteSchulformSekI</class>
-        <class>de.nrw.schule.svws.db.dto.migration.statkue.MigrationDTOStatkueSchuelerKindergartenbesuch</class>
         <class>de.nrw.schule.svws.db.dto.migration.svws.auth.MigrationDTOCredentials</class>
         <class>de.nrw.schule.svws.db.dto.migration.svws.auth.MigrationDTOCredentialsLernplattformen</class>
         <class>de.nrw.schule.svws.db.dto.migration.svws.auth.MigrationDTOLernplattformen</class>
@@ -409,28 +389,8 @@
         <class>de.nrw.schule.svws.db.dto.current.schule.DTOKAoAZusatzmerkmalKeys</class>
         <class>de.nrw.schule.svws.db.dto.current.schule.DTONationalitaetenKeys</class>
         <class>de.nrw.schule.svws.db.dto.current.schule.DTOReligionKeys</class>
-        <class>de.nrw.schule.svws.db.dto.current.schulver.DTOSchulverDBS</class>
-        <class>de.nrw.schule.svws.db.dto.current.schulver.DTOSchulverSchultraeger</class>
-        <class>de.nrw.schule.svws.db.dto.current.statkue.DTOSVWSSprachpruefungNiveaus</class>
         <class>de.nrw.schule.svws.db.dto.current.statkue.DTOStatkueAbgangsart</class>
-        <class>de.nrw.schule.svws.db.dto.current.statkue.DTOStatkueAndereGrundschulen</class>
-        <class>de.nrw.schule.svws.db.dto.current.statkue.DTOStatkueBilingual</class>
-        <class>de.nrw.schule.svws.db.dto.current.statkue.DTOStatkueLehrerAbgang</class>
-        <class>de.nrw.schule.svws.db.dto.current.statkue.DTOStatkueLehrerAnrechnung</class>
-        <class>de.nrw.schule.svws.db.dto.current.statkue.DTOStatkueLehrerBeschaeftigungsart</class>
-        <class>de.nrw.schule.svws.db.dto.current.statkue.DTOStatkueLehrerEinsatzstatus</class>
-        <class>de.nrw.schule.svws.db.dto.current.statkue.DTOStatkueLehrerFachrichtung</class>
-        <class>de.nrw.schule.svws.db.dto.current.statkue.DTOStatkueLehrerFachrichtungAnerkennung</class>
-        <class>de.nrw.schule.svws.db.dto.current.statkue.DTOStatkueLehrerLehramt</class>
-        <class>de.nrw.schule.svws.db.dto.current.statkue.DTOStatkueLehrerLehramtAnerkennung</class>
-        <class>de.nrw.schule.svws.db.dto.current.statkue.DTOStatkueLehrerLehrbefaehigung</class>
-        <class>de.nrw.schule.svws.db.dto.current.statkue.DTOStatkueLehrerLehrbefaehigungAnerkennung</class>
-        <class>de.nrw.schule.svws.db.dto.current.statkue.DTOStatkueLehrerMehrleistung</class>
-        <class>de.nrw.schule.svws.db.dto.current.statkue.DTOStatkueLehrerMinderleistung</class>
-        <class>de.nrw.schule.svws.db.dto.current.statkue.DTOStatkueLehrerRechtsverhaeltnis</class>
-        <class>de.nrw.schule.svws.db.dto.current.statkue.DTOStatkueLehrerZugang</class>
         <class>de.nrw.schule.svws.db.dto.current.statkue.DTOStatkueSchuelerErsteSchulformSekI</class>
-        <class>de.nrw.schule.svws.db.dto.current.statkue.DTOStatkueSchuelerKindergartenbesuch</class>
         <class>de.nrw.schule.svws.db.dto.current.svws.auth.DTOCredentials</class>
         <class>de.nrw.schule.svws.db.dto.current.svws.auth.DTOCredentialsLernplattformen</class>
         <class>de.nrw.schule.svws.db.dto.current.svws.auth.DTOLernplattformen</class>
@@ -448,8 +408,6 @@
         <class>de.nrw.schule.svws.db.dto.current.svws.enm.DTOEnmLeistungsdaten</class>
         <class>de.nrw.schule.svws.db.dto.current.svws.enm.DTOEnmLernabschnittsdaten</class>
         <class>de.nrw.schule.svws.db.dto.current.views.schildintern.DTOSchildInternNote</class>
-        <class>de.nrw.schule.svws.db.dto.current.views.schulver.DTOSchulverSchulformen</class>
-        <class>de.nrw.schule.svws.db.dto.current.views.statkue.DTOStatkueSchulformen</class>
         <class>de.nrw.schule.svws.db.dto.current.views.statkue.DTOStatkueHerkunftsschulform</class>
         <class>de.nrw.schule.svws.db.dto.current.views.statkue.DTOStatkueHerkunftsart</class>
         <class>de.nrw.schule.svws.db.dto.current.views.statkue.DTOStatkueZulaessigerJahrgang</class>
@@ -650,28 +608,8 @@
         <class>de.nrw.schule.svws.db.dto.rev8.schule.Rev8DTOKAoAZusatzmerkmalKeys</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schule.Rev8DTONationalitaetenKeys</class>
         <class>de.nrw.schule.svws.db.dto.rev8.schule.Rev8DTOReligionKeys</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schulver.Rev8DTOSchulverDBS</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.schulver.Rev8DTOSchulverSchultraeger</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.statkue.Rev8DTOSVWSSprachpruefungNiveaus</class>
         <class>de.nrw.schule.svws.db.dto.rev8.statkue.Rev8DTOStatkueAbgangsart</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.statkue.Rev8DTOStatkueAndereGrundschulen</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.statkue.Rev8DTOStatkueBilingual</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.statkue.Rev8DTOStatkueLehrerAbgang</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.statkue.Rev8DTOStatkueLehrerAnrechnung</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.statkue.Rev8DTOStatkueLehrerBeschaeftigungsart</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.statkue.Rev8DTOStatkueLehrerEinsatzstatus</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.statkue.Rev8DTOStatkueLehrerFachrichtung</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.statkue.Rev8DTOStatkueLehrerFachrichtungAnerkennung</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.statkue.Rev8DTOStatkueLehrerLehramt</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.statkue.Rev8DTOStatkueLehrerLehramtAnerkennung</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.statkue.Rev8DTOStatkueLehrerLehrbefaehigung</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.statkue.Rev8DTOStatkueLehrerLehrbefaehigungAnerkennung</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.statkue.Rev8DTOStatkueLehrerMehrleistung</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.statkue.Rev8DTOStatkueLehrerMinderleistung</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.statkue.Rev8DTOStatkueLehrerRechtsverhaeltnis</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.statkue.Rev8DTOStatkueLehrerZugang</class>
         <class>de.nrw.schule.svws.db.dto.rev8.statkue.Rev8DTOStatkueSchuelerErsteSchulformSekI</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.statkue.Rev8DTOStatkueSchuelerKindergartenbesuch</class>
         <class>de.nrw.schule.svws.db.dto.rev8.svws.auth.Rev8DTOCredentials</class>
         <class>de.nrw.schule.svws.db.dto.rev8.svws.auth.Rev8DTOCredentialsLernplattformen</class>
         <class>de.nrw.schule.svws.db.dto.rev8.svws.auth.Rev8DTOLernplattformen</class>
@@ -689,8 +627,6 @@
         <class>de.nrw.schule.svws.db.dto.rev8.svws.enm.Rev8DTOEnmLeistungsdaten</class>
         <class>de.nrw.schule.svws.db.dto.rev8.svws.enm.Rev8DTOEnmLernabschnittsdaten</class>
         <class>de.nrw.schule.svws.db.dto.rev8.views.schildintern.Rev8DTOSchildInternNote</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.views.schulver.Rev8DTOSchulverSchulformen</class>
-        <class>de.nrw.schule.svws.db.dto.rev8.views.statkue.Rev8DTOStatkueSchulformen</class>
         <class>de.nrw.schule.svws.db.dto.rev8.views.statkue.Rev8DTOStatkueHerkunftsschulform</class>
         <class>de.nrw.schule.svws.db.dto.rev8.views.statkue.Rev8DTOStatkueHerkunftsart</class>
         <class>de.nrw.schule.svws.db.dto.rev8.views.statkue.Rev8DTOStatkueZulaessigerJahrgang</class>

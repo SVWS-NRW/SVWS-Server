@@ -14,7 +14,9 @@ import java.util.UUID;
 import java.util.Vector;
 import java.util.stream.Collectors;
 
+import de.nrw.schule.svws.base.CsvReader;
 import de.nrw.schule.svws.config.SVWSKonfiguration;
+import de.nrw.schule.svws.core.data.schule.SchulenKatalogEintrag;
 import de.nrw.schule.svws.core.logger.LogLevel;
 import de.nrw.schule.svws.core.logger.Logger;
 import de.nrw.schule.svws.core.types.KursFortschreibungsart;
@@ -29,7 +31,6 @@ import de.nrw.schule.svws.db.DBDriver;
 import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.DBException;
 import de.nrw.schule.svws.db.dto.MigrationDTOs;
-import de.nrw.schule.svws.db.dto.current.schulver.DTOSchulverDBS;
 import de.nrw.schule.svws.db.dto.migration.schild.MigrationDTOSchuelerIndividuelleGruppe;
 import de.nrw.schule.svws.db.dto.migration.schild.MigrationDTOSchuelerIndividuelleGruppeSchueler;
 import de.nrw.schule.svws.db.dto.migration.schild.benutzer.MigrationDTOProtokollLogin;
@@ -372,12 +373,13 @@ public class DBMigrationManager {
 			Schule schule = Schule.query(conn);
 			logger.logLn("- Schulnummer: " + schule.dto.SchulNr);
 			logger.logLn("- Schulform: " + schule.getSchulform().daten.kuerzel);
-			DTOSchulverDBS dtoSchulver = conn.queryByKey(DTOSchulverDBS.class, "" + schule.dto.SchulNr);
+			List<SchulenKatalogEintrag> katalogSchulen = CsvReader.fromResource("daten/csv/schulver/Schulen.csv", SchulenKatalogEintrag.class);
+			SchulenKatalogEintrag dtoSchulver = katalogSchulen.stream().filter(s -> s.SchulNr.equals("" + schule.dto.SchulNr)).findFirst().orElse(null);
 			if (dtoSchulver == null) {
 				logger.logLn("- Fehler: Schule konnte für die Schul-Nummer " + schule.dto.SchulNr + " nicht im Verzeichnis der Schulen gefunden werden!");
 				return false;
 			}
-			
+
 			Schulform statSchulform = Schulform.getByNummer(dtoSchulver.SF);
 			if (statSchulform != schule.getSchulform()) {
 				logger.logLn("- Fehler: Schulform laut Schulverzeichnis: " + statSchulform.daten.kuerzel);

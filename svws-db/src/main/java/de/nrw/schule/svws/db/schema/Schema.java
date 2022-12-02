@@ -591,71 +591,11 @@ public class Schema {
 	/** Tabelle Schulleitung */
 	public static final Tabelle_Schulleitung tab_Schulleitung = add(new Tabelle_Schulleitung());
 
-	/** Tabelle Schulver_DBS */
-	public static final Tabelle_Schulver_DBS tab_Schulver_DBS = add(new Tabelle_Schulver_DBS());
-
-	/** Tabelle Schulver_Schultraeger */
-	public static final Tabelle_Schulver_Schultraeger tab_Schulver_Schultraeger = add(new Tabelle_Schulver_Schultraeger());
-
 	/** Tabelle Statkue_Abgangsart */
 	public static final Tabelle_Statkue_Abgangsart tab_Statkue_Abgangsart = add(new Tabelle_Statkue_Abgangsart());
 
-	/** Tabelle Statkue_AndereGrundschulen */
-	public static final Tabelle_Statkue_AndereGrundschulen tab_Statkue_AndereGrundschulen = add(new Tabelle_Statkue_AndereGrundschulen());
-
-	/** Tabelle Statkue_Bilingual */
-	public static final Tabelle_Statkue_Bilingual tab_Statkue_Bilingual = add(new Tabelle_Statkue_Bilingual());
-
-	/** Tabelle Statkue_LehrerAbgang */
-	public static final Tabelle_Statkue_LehrerAbgang tab_Statkue_LehrerAbgang = add(new Tabelle_Statkue_LehrerAbgang());
-
-	/** Tabelle Statkue_LehrerAnrechnung */
-	public static final Tabelle_Statkue_LehrerAnrechnung tab_Statkue_LehrerAnrechnung = add(new Tabelle_Statkue_LehrerAnrechnung());
-
-	/** Tabelle Statkue_LehrerBeschaeftigungsart */
-	public static final Tabelle_Statkue_LehrerBeschaeftigungsart tab_Statkue_LehrerBeschaeftigungsart = add(new Tabelle_Statkue_LehrerBeschaeftigungsart());
-
-	/** Tabelle Statkue_LehrerEinsatzstatus */
-	public static final Tabelle_Statkue_LehrerEinsatzstatus tab_Statkue_LehrerEinsatzstatus = add(new Tabelle_Statkue_LehrerEinsatzstatus());
-
-	/** Tabelle Statkue_LehrerFachrAnerkennung */
-	public static final Tabelle_Statkue_LehrerFachrAnerkennung tab_Statkue_LehrerFachrAnerkennung = add(new Tabelle_Statkue_LehrerFachrAnerkennung());
-
-	/** Tabelle Statkue_LehrerFachrichtung */
-	public static final Tabelle_Statkue_LehrerFachrichtung tab_Statkue_LehrerFachrichtung = add(new Tabelle_Statkue_LehrerFachrichtung());
-
-	/** Tabelle Statkue_LehrerLehramt */
-	public static final Tabelle_Statkue_LehrerLehramt tab_Statkue_LehrerLehramt = add(new Tabelle_Statkue_LehrerLehramt());
-
-	/** Tabelle Statkue_LehrerLehramtAnerkennung */
-	public static final Tabelle_Statkue_LehrerLehramtAnerkennung tab_Statkue_LehrerLehramtAnerkennung = add(new Tabelle_Statkue_LehrerLehramtAnerkennung());
-
-	/** Tabelle Statkue_LehrerLehrbefAnerkennung */
-	public static final Tabelle_Statkue_LehrerLehrbefAnerkennung tab_Statkue_LehrerLehrbefAnerkennung = add(new Tabelle_Statkue_LehrerLehrbefAnerkennung());
-
-	/** Tabelle Statkue_LehrerLehrbefaehigung */
-	public static final Tabelle_Statkue_LehrerLehrbefaehigung tab_Statkue_LehrerLehrbefaehigung = add(new Tabelle_Statkue_LehrerLehrbefaehigung());
-
-	/** Tabelle Statkue_LehrerMehrleistung */
-	public static final Tabelle_Statkue_LehrerMehrleistung tab_Statkue_LehrerMehrleistung = add(new Tabelle_Statkue_LehrerMehrleistung());
-
-	/** Tabelle Statkue_LehrerMinderleistung */
-	public static final Tabelle_Statkue_LehrerMinderleistung tab_Statkue_LehrerMinderleistung = add(new Tabelle_Statkue_LehrerMinderleistung());
-
-	/** Tabelle Statkue_LehrerRechtsverhaeltnis */
-	public static final Tabelle_Statkue_LehrerRechtsverhaeltnis tab_Statkue_LehrerRechtsverhaeltnis = add(new Tabelle_Statkue_LehrerRechtsverhaeltnis());
-
-	/** Tabelle Statkue_LehrerZugang */
-	public static final Tabelle_Statkue_LehrerZugang tab_Statkue_LehrerZugang = add(new Tabelle_Statkue_LehrerZugang());
-
-	/** Tabelle Statkue_SVWS_SprachpruefungNiveaus */
-	public static final Tabelle_Statkue_SVWS_SprachpruefungNiveaus tab_Statkue_SVWS_SprachpruefungNiveaus = add(new Tabelle_Statkue_SVWS_SprachpruefungNiveaus());
-
 	/** Tabelle Statkue_SchuelerErsteSchulformSekI */
 	public static final Tabelle_Statkue_SchuelerErsteSchulformSekI tab_Statkue_SchuelerErsteSchulformSekI = add(new Tabelle_Statkue_SchuelerErsteSchulformSekI());
-
-	/** Tabelle Statkue_SchuelerKindergartenbesuch */
-	public static final Tabelle_Statkue_SchuelerKindergartenbesuch tab_Statkue_SchuelerKindergartenbesuch = add(new Tabelle_Statkue_SchuelerKindergartenbesuch());
 
 	/** Tabelle Stundenplan */
 	public static final Tabelle_Stundenplan tab_Stundenplan = add(new Tabelle_Stundenplan());
@@ -733,14 +673,8 @@ public class Schema {
 	// TODO Passe dieses Attribut an, sobald die Default-Daten nicht mehr über CSV-Dateien eingelesen werden
 	/** Die Tabellen, welche Default-Daten beinhalten und in diesem Zusammenhang aktualisiert werden sollen */
 	public static final SchemaTabelle[] tabellenDefaultDaten = new SchemaTabelle[] {
-		Schema.tab_Schulver_DBS,
-		Schema.tab_Schulver_Schultraeger,
 		Schema.tab_Statkue_Abgangsart,
-		Schema.tab_Statkue_AndereGrundschulen,
-		Schema.tab_Statkue_Bilingual,
-		Schema.tab_Statkue_SchuelerErsteSchulformSekI,
-		Schema.tab_Statkue_SchuelerKindergartenbesuch,
-		Schema.tab_Statkue_SVWS_SprachpruefungNiveaus
+		Schema.tab_Statkue_SchuelerErsteSchulformSekI
 	};
 
 

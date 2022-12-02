@@ -36,17 +36,6 @@ public class DBDefaultData {
 	 */
 	public static String getFileName(SchemaTabelle tab) {
 	    return switch (tab.name()) {
-            case "Schildintern_AbiturInfos" -> "daten/csv/schild3/AbiturInfos.csv";
-            case "Schildintern_Datenart" -> "daten/csv/schild3/Datenart.csv";
-            case "Schildintern_DQR_Niveaus" -> "daten/csv/schild3/DQRNiveaus.csv";
-            case "Schildintern_FilterFehlendeEintraegeSchild3" -> "daten/csv/schild3/FilterFehlendeEintraege.csv";
-            case "Schildintern_HSchStatus" -> "daten/csv/schild3/HSchStatus.csv";
-            case "Schildintern_Laender" -> "daten/csv/schild3/Laender.csv";
-            case "Schildintern_PrfSemAbschl" -> "daten/csv/schild3/PrfSemAbschl.csv";
-            case "Schildintern_TextExport" -> "daten/csv/schild3/TextExport.csv";
-            case "Schildintern_UnicodeUmwandlung" -> "daten/csv/schild3/UnicodeUmwandlung.csv";
-            case "Schulver_DBS" -> "daten/csv/schulver/Schulen.csv";
-            case "Schulver_Schultraeger" -> "daten/csv/schulver/Schultraeger.csv";
             default -> "daten/csv/" + tab.javaSubPackage().replace(".", "/") + "/" + tab.name() + ".csv";
         };
     }
