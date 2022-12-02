@@ -16,9 +16,9 @@ public class VEvent {
 	/** Value des Begin- oder End-Properties, bspw <code>BEGIN:VEVENT</code> */
 	public static final String VEVENT_VALUE = "VEVENT";
 	/** der Startzeitpunkt des Events */
-	private Instant dtStartProperty;
+	private Instant dtStart;
 	/** der Endzeitpunkt des Events */
-	private Instant dtEndProperty;
+	private Instant dtEnd;
 	/** die Properties dieses Events */
 	private List<IProperty> properties = new Vector<>();
 
@@ -35,7 +35,7 @@ public class VEvent {
 	 * @return den Startzeitpunkt des Events
 	 */
 	public Instant getDTStart() {
-		return this.dtStartProperty;
+		return this.dtStart;
 	}
 
 	/**
@@ -44,7 +44,7 @@ public class VEvent {
 	 * @return den Endzeitpunkt
 	 */
 	public Instant getDTEnd() {
-		return this.dtEndProperty;
+		return this.dtEnd;
 	}
 
 	/**
@@ -55,12 +55,11 @@ public class VEvent {
 	 */
 	public void addProperty(IProperty property) {
 		if (property.getKey().startsWith(DTSTART_KEY)) {
-			this.dtStartProperty = DateTimeUtil.parseCalDav(property);
+			this.dtStart = DateTimeUtil.parseCalDav(property);
 		} else if (property.getKey().startsWith(DTEND_KEY)) {
-			this.dtEndProperty = DateTimeUtil.parseCalDav(property);
-		} else {
-			this.properties.add(property);
-		}
+			this.dtEnd = DateTimeUtil.parseCalDav(property);
+		} 
+		this.properties.add(property);
 	}
 
 	/**
@@ -91,8 +90,46 @@ public class VEvent {
 		for (IProperty p : properties) {
 			p.serialize(sb);
 		}
-		// TODO serialisieren von DTStart und DTEnd fehlt
 		new Property(VCalendar.END_PROPERTY_KEY, VEVENT_VALUE).serialize(sb);
 	}
 
+	/**
+	 * Erzeugt ein VEVENT mit gegebenem Start- und Endzeitpunkt, sowie Titel und
+	 * Beschreibung. Greift auf
+	 * {@link #createSimpleEvent(Instant, Instant, String, String)} zurück und setzt
+	 * als TimeZone die {@link DateTimeUtil#TIMEZONE_DEFAULT}
+	 * 
+	 * @param start       startzeitpunkt
+	 * @param end         endzeitpunkt
+	 * @param title       Titel des Ereignis
+	 * @param description Beschreibung des Ereignis
+	 * @return VEvent mit gegebenen Parametern
+	 */
+	public static VEvent createSimpleEvent(Instant start, Instant end, String title, String description) {
+		return createSimpleEvent(start, end, title, description, DateTimeUtil.TIMEZONE_DEFAULT);
+	}
+
+	/**
+	 * Erzeugt ein VEVENT mit gegebenem Start- und Endzeitpunkt, sowie Titel und
+	 * Beschreibung. Greift auf
+	 * {@link #createSimpleEvent(Instant, Instant, String, String)} zurück und setzt
+	 * als TimeZone die {@link DateTimeUtil#TIMEZONE_DEFAULT}
+	 * 
+	 * @param start       startzeitpunkt
+	 * @param end         endzeitpunkt
+	 * @param title       Titel des Ereignis
+	 * @param description Beschreibung des Ereignis
+	 * @param tzid        die Zeitzone für den Start- und Endzeitpunk
+	 * @return VEvent mit gegebenen Parametern
+	 */
+	public static VEvent createSimpleEvent(Instant start, Instant end, String title, String description, String tzid) {
+		VEvent e = new VEvent();
+		e.addProperty(new Property(PropertyKeys.DTSTART.toStringWithArguments("TZID=" + tzid),
+				DateTimeUtil.toCalDavString(start, tzid)));
+		e.addProperty(new Property(PropertyKeys.DTEND.toStringWithArguments("TZID=" + tzid),
+				DateTimeUtil.toCalDavString(end, tzid)));
+		e.addProperty(new Property(PropertyKeys.DESC, description));
+		e.addProperty(new Property(PropertyKeys.SUMMARY, title));
+		return e;
+	}
 }

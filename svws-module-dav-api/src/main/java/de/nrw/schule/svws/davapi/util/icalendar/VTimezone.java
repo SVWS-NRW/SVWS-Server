@@ -23,6 +23,8 @@ public class VTimezone {
 			"END:STANDARD", "END:VTIMEZONE");
 	/** VTimezone für EUROPE/BERLIN */
 	public static final VTimezone DEFAULT_TZ_BERLIN_EUROPE = getBerlinEuropeTimezone();
+	/** TZID für EUROPE/BERLIN */
+	public static final String DEFAULT_TZ_BERLIN_EUROPE_STR = "Europe/Berlin";
 	/** Liste der Properties dieses VTIMEZONE-Eintrags */
 	private List<IProperty> properties = new Vector<>();
 

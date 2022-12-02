@@ -21,6 +21,16 @@ public class Property implements IProperty {
 		this.key = propertyKey;
 		this.value = propertyValue;
 	}
+	
+	/**
+	 * Konstruktor für Property aus Schlüssel und Wert
+	 * @param key der Key
+	 * @param propertyValue der Wert
+	 */
+	public Property(PropertyKeys key, String propertyValue) {
+		this.key = key.name();
+		this.value = propertyValue;
+	}
 
 	@Override
 	public String getKey() {

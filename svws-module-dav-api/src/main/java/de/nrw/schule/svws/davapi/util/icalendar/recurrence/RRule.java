@@ -1,20 +1,17 @@
 package de.nrw.schule.svws.davapi.util.icalendar.recurrence;
 
 import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import de.nrw.schule.svws.davapi.util.icalendar.DateTimeUtil;
 import de.nrw.schule.svws.davapi.util.icalendar.IProperty;
+import de.nrw.schule.svws.davapi.util.icalendar.PropertyKeys;
 import de.nrw.schule.svws.davapi.util.icalendar.VCalendar;
 
 /**
@@ -218,7 +215,9 @@ significant when a WEEKLY "RRULE" has an interval greater than 1,<br>
  */
 public class RRule implements IProperty {
 
+	/** Property Keyword für BYDAY */
 	private static final String BYDAY_KEY = "BYDAY";
+	/** Property KEyword für INTERVAL */
 	private static final String INTERVAL_KEY = "INTERVAL";
 	/** Die Frequenz, mit der das wiederkehrende Ereignis auftritt */
 	private Frequency freq;
@@ -455,7 +454,7 @@ public class RRule implements IProperty {
 
 	@Override
 	public String getKey() {
-		return "RRULE";
+		return PropertyKeys.RRULE.name();
 	}
 
 	@Override
@@ -621,185 +620,9 @@ public class RRule implements IProperty {
 	 * @return das maximale Datum entsprechend der hier definierten Regeln.
 	 */
 	public Instant getMaxInstant(Instant dtStart) {
-//		if (this.limit == null) {
-		return Instant.MAX;// cutoff, Recurrence Rules auswerten nicht funktional.
-//		}
-//		Instant result = dtStart;
-//		int count = this.limit.getCount();
-//		while ((this.limit.getCount() != 0 && count > 0)
-//				|| (this.limit.getUntil() != null && result.compareTo(this.limit.getUntil()) < 0)) {
-//			result = getNextInstant(result);
-//			count--;
-//		}
-//		return result;
-	}
-
-	/**
-	 * Berechnet den nächsten Termin anhand des startdatums und der gegebenen Regeln
-	 * 
-	 * @param start der Startzeitpunkt
-	 * @return den auf den Startzeitpunkt folgenden Zeitpunkt
-	 */
-	private Instant getNextInstant(Instant pStart) {
-		ZonedDateTime start = pStart.atZone(ZoneId.of(DateTimeUtil.TIMEZONE_DEFAULT));
-		switch (this.freq) {
-		case DAILY:
-			return getNextInstantWithDailyFrequence(start);
-		case HOURLY:
-			return getNextInstantWithHourlyFrequence(start);
-		case MINUTELY:
-			return getNextInstantWithMinutelyFrequence(start);
-		case MONTHLY:
-			return getNextInstantWithMonthlyFrequence(start);
-		case SECONDLY:
-			return getNextInstantWithSecondlyFrequence(start);
-		case WEEKLY:
-			return getNextInstantWithWeeklyFrequence(start);
-		case YEARLY:
-		default:
-			return getNextInstantWithYearlyFrequence(start);
+		if (this.limit == null || this.limit.getUntil() != null) {
+			return Instant.MAX;// cutoff, Recurrence Rules auswerten nicht funktional.
 		}
+		return this.limit.getUntil();
 	}
-
-	/**
-	 * Diese Methode berechnet den nächsten auftretenden Wert entsprechend der
-	 * Regeln für jährliche Frequenz
-	 * 
-	 * @param start der Startzeitpunkt
-	 * @return das nächste Ereignis entsprechend der Regeln.
-	 */
-	private Instant getNextInstantWithYearlyFrequence(final ZonedDateTime pStart) {
-		ZonedDateTime start = pStart;
-		// ermitteln, ob nach Sekundenregeln ein höherer Wert als der aktuelle ermittelt
-		// werden kann
-		int nextValueFromSet = getNextValueFromSet(start.getSecond(), this.bySeconds, 0, 59);
-		if (nextValueFromSet > start.getSecond()) {
-			return start.withSecond(nextValueFromSet).toInstant();
-		}
-		start = start.withSecond(nextValueFromSet);
-		// ermitteln, ob nach Minutenregeln ein höherer Wert als der aktuelle ermittelt
-		// werden kann
-		nextValueFromSet = getNextValueFromSet(start.getMinute(), this.byMinutes, 0, 59);
-		if (nextValueFromSet > start.getMinute()) {
-			return start.withMinute(nextValueFromSet).toInstant();
-		}
-		start = start.withMinute(nextValueFromSet);
-		// ermitteln, ob nach Stundenregeln ein höherer Wert als der aktuelle ermittelt
-		// werden kann
-		nextValueFromSet = getNextValueFromSet(start.getHour(), this.byHours, 0, 23);
-		if (nextValueFromSet > start.getHour()) {
-			return start.withHour(nextValueFromSet).toInstant();
-		}
-		start = start.withHour(nextValueFromSet);
-		// ermitteln, ob nach Wochentagsregeln ein höherer Wert als der aktuelle
-		// ermittelt werden kann
-
-		// ermitteln, ob nach Monatstagregeln ein höherer Wert als der aktuelle
-		// ermittelt
-		// werden kann
-		nextValueFromSet = getNextValueFromSet(start.getHour(), this.byHours, 0, 23);
-		if (nextValueFromSet > start.getHour()) {
-			return start.withHour(nextValueFromSet).toInstant();
-		}
-		start = start.withHour(nextValueFromSet);
-		// ermitteln, ob nach Wochentagsregeln ein höherer Wert als der aktuelle
-		// ermittelt werden kann
-
-		return null;
-	}
-
-	/**
-	 * Diese Methode berechnet den nächsten auftretenden Wert entsprechend der
-	 * Regeln für Wöchentliche Frequenz
-	 * 
-	 * @param start der Startzeitpunkt
-	 * @return das nächste Ereignis entsprechend der Regeln.
-	 */
-	private Instant getNextInstantWithWeeklyFrequence(ZonedDateTime start) {
-		return null;
-	}
-
-	/**
-	 * Diese Methode berechnet den nächsten auftretenden Wert entsprechend der
-	 * Regeln für monatliche Frequenz
-	 * 
-	 * @param start der Startzeitpunkt
-	 * @return das nächste Ereignis entsprechend der Regeln.
-	 */
-	private Instant getNextInstantWithMonthlyFrequence(ZonedDateTime start) {
-		return null;
-	}
-
-	/**
-	 * Diese Methode berechnet den nächsten auftretenden Wert entsprechend der
-	 * Regeln für minütliche Frequenz
-	 * 
-	 * @param start der Startzeitpunkt
-	 * @return das nächste Ereignis entsprechend der Regeln.
-	 */
-	private Instant getNextInstantWithMinutelyFrequence(ZonedDateTime start) {
-		return null;
-	}
-
-	/**
-	 * Diese Methode berechnet den nächsten auftretenden Wert entsprechend der
-	 * Regeln für stündliche Frequenz
-	 * 
-	 * @param start der Startzeitpunkt
-	 * @return das nächste Ereignis entsprechend der Regeln.
-	 */
-	private Instant getNextInstantWithHourlyFrequence(ZonedDateTime start) {
-		return null;
-	}
-
-	/**
-	 * Diese Methode berechnet den nächsten auftretenden Wert entsprechend der
-	 * Regeln für tägliche Frequenz
-	 * 
-	 * @param start der Startzeitpunkt
-	 * @return das nächste Ereignis entsprechend der Regeln.
-	 */
-	private Instant getNextInstantWithDailyFrequence(ZonedDateTime start) {
-		return null;
-	}
-
-	/**
-	 * Diese Methode berechnet den nächsten auftretenden Wert entsprechend der
-	 * Regeln für sekündliche Frequenz
-	 * 
-	 * @param start der Startzeitpunkt
-	 * @return das nächste Ereignis entsprechend der Regeln.
-	 */
-	private Instant getNextInstantWithSecondlyFrequence(ZonedDateTime start) {
-		return null;
-	}
-
-	/**
-	 * Hilfsmethode, die den nächsten Wert aus einer Folge von Werten wiedergibt.
-	 * Ist kein Wert im Set der nächstgrößere im Vergleich zum gegebenen Wert, wird
-	 * der kleinste Wert des Sets wiedergegeben. Ist das Set leer wird der initiale
-	 * Wert wiedergegeben.
-	 * 
-	 * @param initialValue der intitiale Wert, von dem aus der nächstgrößere im Set
-	 *                     gesucht wird
-	 * @param pValueSet    das Set, aus dem der nächstgrößere Wert gesucht werden
-	 *                     soll.
-	 */
-	private static int getNextValueFromSet(int initialValue, Set<Integer> pValueSet, int minValue, int maxValue) {
-		if (pValueSet.isEmpty()) {
-			return initialValue;
-		}
-		Set<Integer> values;
-		if (Collections.min(pValueSet) < 0) {
-			values = pValueSet.stream().map(i -> i < 0 ? maxValue + i : i).collect(Collectors.toSet());
-		} else {
-			values = new HashSet<>(pValueSet);
-		}
-		Optional<Integer> findFirst = values.stream().filter(i -> i > initialValue).sorted().findFirst();
-		if (findFirst.isEmpty()) {
-			return Collections.min(values);
-		}
-		return findFirst.get();
-	}
-
 }

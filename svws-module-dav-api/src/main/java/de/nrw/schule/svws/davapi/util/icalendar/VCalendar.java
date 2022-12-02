@@ -110,6 +110,15 @@ public class VCalendar {
 	}
 
 	/**
+	 * setter für den VTIMEZONE-Eintrag in diesem VCalendar
+	 * 
+	 * @param tz die Zeitzonendefinition
+	 */
+	public void setTimezoneDefinition(VTimezone tz) {
+		this.timezone = tz;
+	}
+
+	/**
 	 * getter für den Typ der Einträge dieses VCalendars
 	 * 
 	 * @return den Typ der Einträge dieses VCalendars

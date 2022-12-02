@@ -2,6 +2,7 @@ package de.nrw.schule.svws.davapi.util.icalendar;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -27,6 +28,11 @@ public class DateTimeUtil {
 	 */
 	private static final DateTimeFormatter DAV_ISO_FORMATTER_WITHZONE = DateTimeFormatter
 			.ofPattern("yyyyMMdd'T'HHmmssX");
+	/**
+	 * formatter für Dates nach RFC5545 Spezifikation wie es in .ics-Dateien
+	 * verwendet wird
+	 */
+	private static final DateTimeFormatter DAV_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyMMdd");
 	/**
 	 * Die Standardzeitzone
 	 */
@@ -204,5 +210,27 @@ public class DateTimeUtil {
 	 */
 	public static String toCalDavString(Instant t) {
 		return DAV_ISO_FORMATTER_WITHZONE.format(t.atZone(ZoneId.of("Z")));
+	}
+
+	/**
+	 * Erzeugt einen CalDav String ohne Zeitzonenangabe, Zeit wird in die gegebene
+	 * Zeitzone gerechnet
+	 * 
+	 * @param t    der gegebene Zeitpunkt
+	 * @param tzid die Zeitzone, in die umgerechnet werden soll
+	 * @return das Datum als Zeichenkette für die Verwendung in CalDav
+	 */
+	public static String toCalDavString(Instant t, String tzid) {
+		return DAV_ISO_FORMATTER.format(t.atZone(ZoneId.of(tzid)));
+	}
+
+	/**
+	 * Erzeugt aus einem Localdate ein .ics DateString im Format YYYYMMDD
+	 * 
+	 * @param d das Datum, welches umgewandelt werden soll
+	 * @return den DateString zur Verwendung in .ics Daten
+	 */
+	public static String toCalDavDateString(LocalDate d) {
+		return DAV_DATE_FORMATTER.format(d);
 	}
 }
