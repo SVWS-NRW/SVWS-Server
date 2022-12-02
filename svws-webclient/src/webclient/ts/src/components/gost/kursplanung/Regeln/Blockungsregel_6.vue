@@ -1,7 +1,7 @@
 <script setup lang="ts">
 	import { injectMainApp, Main } from "~/apps/Main";
-	import { GostBlockungRegel, GostBlockungSchiene, GostKursart, GostKursblockungRegelTyp, Vector } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, Ref, ref, shallowRef } from "vue";
+	import { GostBlockungRegel, GostBlockungSchiene, GostKursart, GostKursblockungRegelTyp, List, Vector } from "@svws-nrw/svws-core-ts";
+	import { computed, ComputedRef, Ref, ref, WritableComputedRef } from "vue";
 	
 	const main: Main = injectMainApp();
 	const app = main.apps.gost;
@@ -10,10 +10,51 @@
 	// public static readonly KURSART_ALLEIN_IN_SCHIENEN_VON_BIS : GostKursblockungRegelTyp =
 	//new GostKursblockungRegelTyp("KURSART_ALLEIN_IN_SCHIENEN_VON_BIS", 2, 6, "Kursart: Allein in Schienen (von/bis)",
 	//Arrays.asList(GostKursblockungRegelParameterTyp.KURSART, GostKursblockungRegelParameterTyp.SCHIENEN_NR, GostKursblockungRegelParameterTyp.SCHIENEN_NR));
-	const schienen = app.dataKursblockung.datenmanager?.getMengeOfSchienen()
-	const kursart: Ref<GostKursart> = shallowRef(GostKursart.GK)
-	const start: Ref<GostBlockungSchiene> = ref(schienen?.get(0) || new GostBlockungSchiene())
-	const ende: Ref<GostBlockungSchiene> = ref(schienen?.get(0) || new GostBlockungSchiene())
+	const schienen: ComputedRef<List<GostBlockungSchiene>> =
+	computed(()=> app.dataKursblockung.datenmanager?.getMengeOfSchienen() || new Vector())
+
+const kursart: WritableComputedRef<GostKursart> =
+	computed({
+		get(): GostKursart {
+			const id = regel.value?.parameter.get(0)
+			if (id)
+				return GostKursart.fromID(id.valueOf())
+			return GostKursart.LK
+		},
+		set(val: GostKursart) {
+			console.log(regel.value?.parameter.get(0))
+			if (regel.value)
+				regel.value.parameter.set(0, val.id)	
+		}
+	})
+
+const start: WritableComputedRef<GostBlockungSchiene> =
+	computed({
+		get(): GostBlockungSchiene {
+			for (const schiene of schienen.value)
+				if (schiene.nummer === regel.value?.parameter.get(1))
+					return schiene;
+			return new GostBlockungSchiene()
+		},
+		set(val: GostBlockungSchiene) {
+			if (regel.value)
+				regel.value.parameter.set(1, val.nummer)	
+		}
+	})
+
+const ende: WritableComputedRef<GostBlockungSchiene> =
+	computed({
+		get(): GostBlockungSchiene {
+			for (const schiene of schienen.value)
+				if (schiene.nummer === regel.value?.parameter.get(2))
+					return schiene;
+			return new GostBlockungSchiene()
+		},
+		set(val: GostBlockungSchiene) {
+			if (regel.value)
+				regel.value.parameter.set(2, val.nummer)	
+		}
+	})
 	const regel: Ref<GostBlockungRegel | undefined> = ref(undefined)
 
 	const regeln: ComputedRef<GostBlockungRegel[]> =
@@ -39,13 +80,15 @@
 	}
 	
 	const regel_hinzufuegen = async () => {
-		await app.dataKursblockung.add_blockung_regel(regel_typ.typ)
-	}
-	
-	const regel_entfernen = async (r: GostBlockungRegel) => {
-		await app.dataKursblockung.del_blockung_regel(r.id)
-		if (r === regel.value) regel.value = undefined
-	}
+	regel.value = await app.dataKursblockung.add_blockung_regel(regel_typ.typ)
+}
+
+	const regel_entfernen = async (r: GostBlockungRegel|undefined) => {
+	if (r === undefined)
+		return;
+	await app.dataKursblockung.del_blockung_regel(r.id)
+	if (r === regel.value) regel.value = undefined
+}
 	</script>
 	
 	<template>
@@ -69,11 +112,10 @@
 					von
 					<parameter-schiene v-model="start" class="mx-1" />bis
 					<parameter-schiene v-model="ende" class="mx-1" />
-					<svws-ui-button type="primary" @click="speichern">
-						<svws-ui-icon>
-							<i-ri-check-line />
-						</svws-ui-icon>
-					</svws-ui-button>
+					<svws-ui-button type="danger" @click="regel_entfernen(regel)" class="mr-2">
+						<svws-ui-icon> <i-ri-delete-bin-2-line /> </svws-ui-icon> </svws-ui-button>
+					<svws-ui-button type="secondary" @click="speichern">
+						<svws-ui-icon> <i-ri-check-line /> </svws-ui-icon> </svws-ui-button>
 				</div>
 			</div>
 		</div>
