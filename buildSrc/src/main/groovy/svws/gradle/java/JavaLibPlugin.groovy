@@ -34,7 +34,7 @@ class JavaLibPlugin implements Plugin<Project> {
 		def versionUCanAccess = '5.0.1';
 		def versionJackcess = '4.0.4';
 		def versionMySQL = '8.0.31';
-		def versionMSSQL = '11.2.1.jre17';
+		def versionMSSQL = '9.4.1.jre16';
 		project.configurations.create('database');
 		project.dependencies.add('database', 'jakarta.persistence:jakarta.persistence-api:' + versionPersistenceAPI);
 	    project.dependencies.add('database', 'org.eclipse.persistence:jakarta.persistence:' + versionEclipsePersistence);
