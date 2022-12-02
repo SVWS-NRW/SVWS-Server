@@ -31,11 +31,11 @@
 				<h3 class="text-headline px-6 mb-3">Blockungen</h3>
 				<svws-ui-table v-model="selected_hj" :columns="[{ key: 'kuerzel', label: 'Halbjahr' }]" :data="halbjahre" class="mb-10">
 					<template #body="{rows}">
-						<template v-for="row in rows" :key="row.id">
+						<template v-for="row in <GostHalbjahr[]>rows" :key="row.id">
 							<tr :class="{'vt-clicked': row.id === selected_hj.id}" @click="selected_hj = halbjahre.find(hj=>hj.id===row.id)!">
 								<td>
 									{{row.kuerzel}}
-									<svws-ui-button type="transparent" v-if="row.id === selected_hj.id" @click="blockung_hinzufuegen">Blockung hinzufügen</svws-ui-button>
+									<svws-ui-button type="transparent" v-if="allow_add_blockung(row)" @click="blockung_hinzufuegen">Blockung hinzufügen</svws-ui-button>
 								</td>
 							</tr>
 							<template v-if="row.id === selected_hj.id && !wait" v-for="blockung in rows_blockungsswahl" :key="blockung.id">
@@ -162,49 +162,56 @@ const abiturjahr: ComputedRef<number> =
 const jahrgaenge: ComputedRef<JahrgangsListeEintrag[]> =
 	computed( () => appJahrgaenge.auswahl.liste);
 
-const selected_hj: WritableComputedRef<GostHalbjahr> = computed({
-	get(): GostHalbjahr {
-		manager.value?.getHalbjahr()
-		const hj = hj_memo.value || manager.value?.getHalbjahr()
-		return hj
-			|| GostHalbjahr.getPlanungshalbjahrFromAbiturjahrSchuljahrUndHalbjahr(abiturjahr.value, App.akt_abschnitt.schuljahr, App.akt_abschnitt.abschnitt)
-			|| GostHalbjahr.EF1
-	},
-	set(hj: GostHalbjahr) {
-		if (hj === selected_hj.value || !hj) 
-			return;
-		hj_memo.value = hj
-		wait.value = true;
-		if ((selected.value?.abiturjahr) && (selected.value?.abiturjahr !== -1))
-			app.blockungsauswahl.update_list(selected.value.abiturjahr, hj.id)
-				.then(() => { wait.value = false; });
-		else 
-			wait.value = false;
-	}
-});
+const selected_hj: WritableComputedRef<GostHalbjahr> =
+	computed({
+		get(): GostHalbjahr {
+			manager.value?.getHalbjahr()
+			const hj = hj_memo.value || manager.value?.getHalbjahr()
+			return hj
+				|| GostHalbjahr.getPlanungshalbjahrFromAbiturjahrSchuljahrUndHalbjahr(abiturjahr.value, App.akt_abschnitt.schuljahr, App.akt_abschnitt.abschnitt)
+				|| GostHalbjahr.EF1
+		},
+		set(hj: GostHalbjahr) {
+			if (hj === selected_hj.value || !hj) 
+				return;
+			hj_memo.value = hj
+			wait.value = true;
+			if ((selected.value?.abiturjahr) && (selected.value?.abiturjahr !== -1))
+				app.blockungsauswahl.update_list(selected.value.abiturjahr, hj.id)
+					.then(() => { wait.value = false; });
+			else 
+				wait.value = false;
+		}});
 
-const selected_blockungauswahl: WritableComputedRef<GostBlockungListeneintrag | undefined> = computed({
-	get(): GostBlockungListeneintrag | undefined {
-		return app.blockungsauswahl.ausgewaehlt;
-	},
-	set: (value: GostBlockungListeneintrag | undefined) => {
-		if (value !== app.blockungsauswahl.ausgewaehlt) {
-			app.blockungsauswahl.ausgewaehlt = value;
-			edit_blockungsname.value = false
-		}
-	}
-});
+const selected_blockungauswahl: WritableComputedRef<GostBlockungListeneintrag | undefined> =
+	computed({
+		get(): GostBlockungListeneintrag | undefined {
+			return app.blockungsauswahl.ausgewaehlt;
+		},
+		set: (value: GostBlockungListeneintrag | undefined) => {
+			if (value !== app.blockungsauswahl.ausgewaehlt) {
+				app.blockungsauswahl.ausgewaehlt = value;
+				edit_blockungsname.value = false
+			}
+		}});
 
-const selected_ergebnis: WritableComputedRef<GostBlockungsergebnisListeneintrag | undefined> = computed({
-	get(): GostBlockungsergebnisListeneintrag | undefined {
-		return app.blockungsergebnisauswahl.ausgewaehlt;
-	},
-	set(value: GostBlockungsergebnisListeneintrag | undefined) {
-		if (app.blockungsergebnisauswahl) {
-			app.blockungsergebnisauswahl.ausgewaehlt = value;
-		}
-	}
-});
+const selected_ergebnis: WritableComputedRef<GostBlockungsergebnisListeneintrag | undefined> =
+	computed({
+		get(): GostBlockungsergebnisListeneintrag | undefined {
+			return app.blockungsergebnisauswahl.ausgewaehlt;
+		},
+		set(value: GostBlockungsergebnisListeneintrag | undefined) {
+			if (app.blockungsergebnisauswahl) {
+				app.blockungsergebnisauswahl.ausgewaehlt = value;
+			}
+		}});
+
+const allow_add_blockung = (row: GostHalbjahr): boolean => {
+	const curr_hj = row.id === selected_hj.value.id;
+	if (!curr_hj || app.dataJahrgang.daten === undefined)
+		return false;
+	return app.dataJahrgang.daten.istBlockungFestgelegt[row.id] ? false : true
+}
 
 async function abiturjahr_hinzufuegen(jahrgang: JahrgangsListeEintrag) {
 	try {
@@ -255,9 +262,11 @@ async function remove_ergebnis() {
 }
 
 async function activate_ergebnis() {
-	if (!selected_ergebnis.value)
+	toggle_modal();
+	if (!selected_ergebnis.value || !app.dataJahrgang.daten)
 		return;
 	await App.api.activateGostBlockungsergebnis(App.schema, selected_ergebnis.value.id);
+	app.dataJahrgang.daten.istBlockungFestgelegt[selected_hj.value.id] = true;
 }
 
 async function derive_blockung() {
