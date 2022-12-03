@@ -274,7 +274,8 @@ public class DataGostBlockungKurs extends DataManager<Long> {
 			GostBlockungKurs daten = dtoMapper.apply(kurs);
 			if (!conn.transactionRemove(kurs))
 				throw OperationError.INTERNAL_SERVER_ERROR.exception();
-			conn.transactionCommit();
+			if (!conn.transactionCommit())
+				throw OperationError.INTERNAL_SERVER_ERROR.exception();
 			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 		} catch (Exception exception) {
 			conn.transactionRollback();
@@ -309,8 +310,10 @@ public class DataGostBlockungKurs extends DataManager<Long> {
 	        	throw OperationError.BAD_REQUEST.exception("Der Kurs kann nicht entfernt werden, da bei der Blockungsdefinition schon berechnete Ergebnisse existieren.");
 			// Entferne den Kurs
 			GostBlockungKurs daten = dtoMapper.apply(kurs);
-			conn.transactionRemove(kurs); // TODO BACHRAN muss hier nicht bei false eine Exception geworfen werden? 
-			conn.transactionCommit();
+			if (!conn.transactionRemove(kurs)) 
+				throw OperationError.INTERNAL_SERVER_ERROR.exception();
+			if (!conn.transactionCommit())
+				throw OperationError.INTERNAL_SERVER_ERROR.exception();
 			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 		} catch (Exception exception) {
 			conn.transactionRollback();
