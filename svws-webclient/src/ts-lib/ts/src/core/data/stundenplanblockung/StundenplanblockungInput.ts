@@ -3,6 +3,7 @@ import { StundenplanblockungLehrkraft, cast_de_nrw_schule_svws_core_data_stunden
 import { StundenplanblockungKopplung, cast_de_nrw_schule_svws_core_data_stundenplanblockung_StundenplanblockungKopplung } from '../../../core/data/stundenplanblockung/StundenplanblockungKopplung';
 import { StundenplanblockungKlasse, cast_de_nrw_schule_svws_core_data_stundenplanblockung_StundenplanblockungKlasse } from '../../../core/data/stundenplanblockung/StundenplanblockungKlasse';
 import { StundenplanblockungFach, cast_de_nrw_schule_svws_core_data_stundenplanblockung_StundenplanblockungFach } from '../../../core/data/stundenplanblockung/StundenplanblockungFach';
+import { StundenplanblockungLerngruppe, cast_de_nrw_schule_svws_core_data_stundenplanblockung_StundenplanblockungLerngruppe } from '../../../core/data/stundenplanblockung/StundenplanblockungLerngruppe';
 import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 import { StundenplanblockungRaum, cast_de_nrw_schule_svws_core_data_stundenplanblockung_StundenplanblockungRaum } from '../../../core/data/stundenplanblockung/StundenplanblockungRaum';
 
@@ -17,6 +18,8 @@ export class StundenplanblockungInput extends JavaObject {
 	public raeume : Vector<StundenplanblockungRaum> = new Vector();
 
 	public kopplungen : Vector<StundenplanblockungKopplung> = new Vector();
+
+	public lerngruppen : Vector<StundenplanblockungLerngruppe> = new Vector();
 
 
 	public constructor() {
@@ -53,6 +56,11 @@ export class StundenplanblockungInput extends JavaObject {
 		if (!!obj.kopplungen) {
 			for (let elem of obj.kopplungen) {
 				result.kopplungen?.add(StundenplanblockungKopplung.transpilerFromJSON(JSON.stringify(elem)));
+			}
+		}
+		if (!!obj.lerngruppen) {
+			for (let elem of obj.lerngruppen) {
+				result.lerngruppen?.add(StundenplanblockungLerngruppe.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		return result;
@@ -116,6 +124,18 @@ export class StundenplanblockungInput extends JavaObject {
 				let elem = obj.kopplungen.get(i);
 				result += StundenplanblockungKopplung.transpilerToJSON(elem);
 				if (i < obj.kopplungen.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
+		}
+		if (!obj.lerngruppen) {
+			result += '"lerngruppen" : []';
+		} else {
+			result += '"lerngruppen" : [ ';
+			for (let i : number = 0; i < obj.lerngruppen.size(); i++) {
+				let elem = obj.lerngruppen.get(i);
+				result += StundenplanblockungLerngruppe.transpilerToJSON(elem);
+				if (i < obj.lerngruppen.size() - 1)
 					result += ',';
 			}
 			result += ' ]' + ',';
@@ -192,6 +212,20 @@ export class StundenplanblockungInput extends JavaObject {
 					let elem = obj.kopplungen.get(i);
 					result += StundenplanblockungKopplung.transpilerToJSON(elem);
 					if (i < obj.kopplungen.size() - 1)
+						result += ',';
+				}
+				result += ' ]' + ',';
+			}
+		}
+		if (typeof obj.lerngruppen !== "undefined") {
+			if (!obj.lerngruppen) {
+				result += '"lerngruppen" : []';
+			} else {
+				result += '"lerngruppen" : [ ';
+				for (let i : number = 0; i < obj.lerngruppen.size(); i++) {
+					let elem = obj.lerngruppen.get(i);
+					result += StundenplanblockungLerngruppe.transpilerToJSON(elem);
+					if (i < obj.lerngruppen.size() - 1)
 						result += ',';
 				}
 				result += ' ]' + ',';

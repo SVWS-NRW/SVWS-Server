@@ -54,8 +54,6 @@ export class GostBlockungsdatenManager extends JavaObject {
 
 	private readonly _map_schulerID_fachID_fachwahl : HashMap<Number, HashMap<Number, GostFachwahl>> = new HashMap();
 
-	private readonly _map_schulerID_facharten : HashMap<Number, List<Number>> = new HashMap();
-
 	private readonly _mapErgebnis : HashMap<Number, GostBlockungsergebnisListeneintrag> = new HashMap();
 
 	private readonly _compKurs_fach_kursart_kursnummer : Comparator<GostBlockungKurs>;
@@ -939,6 +937,10 @@ export class GostBlockungsdatenManager extends JavaObject {
 			throw new NullPointerException("Schüler.id =  " + pSchueler.id + " --> doppelt!")
 		this._daten.schueler.add(pSchueler);
 		this._map_id_schueler.put(pSchueler.id, pSchueler);
+		if (this._map_schuelerID_fachwahlen.containsKey(pSchueler.id) === false) 
+			this._map_schuelerID_fachwahlen.put(pSchueler.id, new Vector());
+		if (this._map_schulerID_fachID_fachwahl.containsKey(pSchueler.id) === false) 
+			this._map_schulerID_fachID_fachwahl.put(pSchueler.id, new HashMap());
 	}
 
 	/**

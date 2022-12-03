@@ -68,8 +68,8 @@ public class GostBlockungsdatenManager {
 	/** Schüler-ID --> Fach-ID --> Kursart = Die Fachwahl des Schülers die dem Fach die Kursart zuordnet. */
 	private final @NotNull HashMap<@NotNull Long, @NotNull HashMap<@NotNull Long, @NotNull GostFachwahl>> _map_schulerID_fachID_fachwahl = new HashMap<>();
 
-	/** Schüler-ID --> List<Facharten> */
-	private final @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull Long>> _map_schulerID_facharten = new HashMap<>();
+//	/** Schüler-ID --> List<Facharten> */
+//	private final @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull Long>> _map_schulerID_facharten = new HashMap<>();
 
 	/** Ergebnis-ID --> {@link GostBlockungsergebnisListeneintrag} */
 	private final @NotNull HashMap<@NotNull Long, @NotNull GostBlockungsergebnisListeneintrag> _mapErgebnis = new HashMap<>();
@@ -88,9 +88,6 @@ public class GostBlockungsdatenManager {
 
 	/** Ein Comparator für die Fachwahlen (SCHÜLERID, FACH, KURSART) */
 	private final @NotNull Comparator<@NotNull GostFachwahl> _compFachwahlen;
-
-//	/** Eine sortierte, gecachte Menge der {@link GostBlockungsergebnisListeneintrag} nach ihrer Bewertung. */
-//	private List<@NotNull GostBlockungsergebnisListeneintrag> _ergebnisse_sortiert_nach_bewertung = null;
 
 	/** Ein Comparator für die {@link GostBlockungsergebnisListeneintrag} nach ihrer Bewertung. */
 	private final @NotNull Comparator<@NotNull GostBlockungsergebnisListeneintrag> _compErgebnisse = new GostBlockungsergebnisComparator();
@@ -980,6 +977,10 @@ public class GostBlockungsdatenManager {
 		// Schüler hinzufügen
 		_daten.schueler.add(pSchueler);
 		_map_id_schueler.put(pSchueler.id, pSchueler);
+		if (_map_schuelerID_fachwahlen.containsKey(pSchueler.id) == false)
+			_map_schuelerID_fachwahlen.put(pSchueler.id, new Vector<>());
+		if (_map_schulerID_fachID_fachwahl.containsKey(pSchueler.id) == false)
+			_map_schulerID_fachID_fachwahl.put(pSchueler.id, new HashMap<>());
 	}
 	
 	/**

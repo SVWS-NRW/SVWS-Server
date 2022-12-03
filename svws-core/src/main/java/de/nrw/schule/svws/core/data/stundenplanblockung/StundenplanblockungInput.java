@@ -40,4 +40,8 @@ public class StundenplanblockungInput {
 	@ArraySchema(schema = @Schema(implementation = StundenplanblockungKopplung.class))
 	public @NotNull Vector<@NotNull StundenplanblockungKopplung> kopplungen = new Vector<>();
 	
+	/** Alle Lerngruppen. Der Manager sortiert die Lerngruppen, je nach Bedarf.*/
+	@ArraySchema(schema = @Schema(implementation = StundenplanblockungLerngruppe.class))
+	public @NotNull Vector<@NotNull StundenplanblockungLerngruppe> lerngruppen = new Vector<>();
+	
 }

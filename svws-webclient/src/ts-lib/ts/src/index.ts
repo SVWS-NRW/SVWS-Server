@@ -282,7 +282,9 @@ export { StundenplanblockungInput } from './core/data/stundenplanblockung/Stunde
 export { StundenplanblockungKlasse } from './core/data/stundenplanblockung/StundenplanblockungKlasse';
 export { StundenplanblockungKopplung } from './core/data/stundenplanblockung/StundenplanblockungKopplung';
 export { StundenplanblockungLehrkraft } from './core/data/stundenplanblockung/StundenplanblockungLehrkraft';
+export { StundenplanblockungLerngruppe } from './core/data/stundenplanblockung/StundenplanblockungLerngruppe';
 export { StundenplanblockungRaum } from './core/data/stundenplanblockung/StundenplanblockungRaum';
+export { StundenplanblockungStundenelement } from './core/data/stundenplanblockung/StundenplanblockungStundenelement';
 export { KlausurblockungException } from './core/klausurblockung/KlausurblockungException';
 export { KlausurblockungSchienenAlgorithmus } from './core/klausurblockung/KlausurblockungSchienenAlgorithmus';
 export { KlausurblockungSchienenAlgorithmusAbstract } from './core/klausurblockung/KlausurblockungSchienenAlgorithmusAbstract';
