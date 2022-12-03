@@ -65,7 +65,7 @@ public class DataBenutzerliste extends DataManager<Long> {
 		List<Long> benutzerIDs = conn
 				.queryNamed("DTOBenutzergruppenMitglied.gruppe_id", benutzergruppe.ID, DTOBenutzergruppenMitglied.class)
 				.stream().map(g -> g.Benutzer_ID).sorted().toList();
-		List<DTOViewBenutzerdetails> benutzer = benutzerIDs.size() == 0 
+		List<DTOViewBenutzerdetails> benutzer = (benutzerIDs.size() == 0) 
 		        ? Collections.emptyList()
 		        : conn.queryNamed("DTOViewBenutzerdetails.id.multiple", benutzerIDs, DTOViewBenutzerdetails.class);
 		if (benutzer == null)

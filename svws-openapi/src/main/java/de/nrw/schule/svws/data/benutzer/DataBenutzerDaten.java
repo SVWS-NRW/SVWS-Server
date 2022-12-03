@@ -3,6 +3,7 @@ package de.nrw.schule.svws.data.benutzer;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -103,13 +104,15 @@ public class DataBenutzerDaten extends DataManager<Long> {
         List<Long> gruppenIDs = conn
                 .queryNamed("DTOBenutzergruppenMitglied.benutzer_id", id, DTOBenutzergruppenMitglied.class).stream()
                 .map(g -> g.Gruppe_ID).toList();
-        List<DTOBenutzergruppe> gruppen = conn.queryNamed("DTOBenutzergruppe.id.multiple", gruppenIDs,
-                DTOBenutzergruppe.class);
+        List<DTOBenutzergruppe> gruppen = (gruppenIDs.size() == 0)
+        		? new Vector<>()
+        		: conn.queryNamed("DTOBenutzergruppe.id.multiple", gruppenIDs, DTOBenutzergruppe.class);
         // Lese die Informationen zu den Kompetenzen ein
         List<Long> kompetenzIDs = conn.queryNamed("DTOBenutzerKompetenz.benutzer_id", id, DTOBenutzerKompetenz.class)
                 .stream().map(b -> b.Kompetenz_ID).sorted().toList();
-        List<DTOBenutzergruppenKompetenz> gruppenKompetenzen = conn.queryNamed(
-                "DTOBenutzergruppenKompetenz.gruppe_id.multiple", gruppenIDs, DTOBenutzergruppenKompetenz.class);
+        List<DTOBenutzergruppenKompetenz> gruppenKompetenzen = (gruppenIDs.size() == 0)
+        		? new Vector<>()
+        		: conn.queryNamed("DTOBenutzergruppenKompetenz.gruppe_id.multiple", gruppenIDs, DTOBenutzergruppenKompetenz.class);
         Map<Long, List<DTOBenutzergruppenKompetenz>> mapGruppenKompetenzen = gruppenKompetenzen.stream()
                 .collect(Collectors.groupingBy(k -> k.Gruppe_ID));
         // Erstelle den Core-DTO für die API und gebe diesen zurück
