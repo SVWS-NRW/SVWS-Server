@@ -906,6 +906,15 @@ public class KursblockungDynDaten {
 			for (KursblockungDynKurs kurs : dynSchueler.gibKurswahlen())
 				if (kurs != null)
 					out.setSchuelerKurs(dynSchueler.gibDatenbankID(), kurs.gibDatenbankID(), true);
+		
+		// Erzeuge durch Regeln forcierte Schüler-Kurs-Zuordnungen.
+		for (@NotNull GostBlockungRegel gRegel : gDataManager.getMengeOfRegeln()) 
+			if (gRegel.typ == GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ) {
+				long schuelerID = gRegel.parameter.get(0);
+				long kursID = gRegel.parameter.get(1);
+				if (out.getOfSchuelerOfKursIstZugeordnet(schuelerID, kursID) == false) 
+					out.setSchuelerKurs(schuelerID, kursID, true); // Kann zu Kollisionen führen!
+			}
 
 		// Debug Zwecke
 		/*

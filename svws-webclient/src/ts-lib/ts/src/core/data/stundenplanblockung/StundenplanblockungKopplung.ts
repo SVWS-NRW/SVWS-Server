@@ -1,11 +1,15 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
+import { StundenplanblockungStundenelement, cast_de_nrw_schule_svws_core_data_stundenplanblockung_StundenplanblockungStundenelement } from '../../../core/data/stundenplanblockung/StundenplanblockungStundenelement';
+import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 
 export class StundenplanblockungKopplung extends JavaObject {
 
 	public id : number = 0;
 
 	public kuerzel : String = "";
+
+	public stundenelemente : Vector<StundenplanblockungStundenelement> = new Vector();
 
 
 	public constructor() {
@@ -25,6 +29,11 @@ export class StundenplanblockungKopplung extends JavaObject {
 		if (typeof obj.kuerzel === "undefined")
 			 throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = String(obj.kuerzel);
+		if (!!obj.stundenelemente) {
+			for (let elem of obj.stundenelemente) {
+				result.stundenelemente?.add(StundenplanblockungStundenelement.transpilerFromJSON(JSON.stringify(elem)));
+			}
+		}
 		return result;
 	}
 
@@ -32,6 +41,18 @@ export class StundenplanblockungKopplung extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
 		result += '"kuerzel" : ' + '"' + obj.kuerzel.valueOf() + '"' + ',';
+		if (!obj.stundenelemente) {
+			result += '"stundenelemente" : []';
+		} else {
+			result += '"stundenelemente" : [ ';
+			for (let i : number = 0; i < obj.stundenelemente.size(); i++) {
+				let elem = obj.stundenelemente.get(i);
+				result += StundenplanblockungStundenelement.transpilerToJSON(elem);
+				if (i < obj.stundenelemente.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
+		}
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -44,6 +65,20 @@ export class StundenplanblockungKopplung extends JavaObject {
 		}
 		if (typeof obj.kuerzel !== "undefined") {
 			result += '"kuerzel" : ' + '"' + obj.kuerzel.valueOf() + '"' + ',';
+		}
+		if (typeof obj.stundenelemente !== "undefined") {
+			if (!obj.stundenelemente) {
+				result += '"stundenelemente" : []';
+			} else {
+				result += '"stundenelemente" : [ ';
+				for (let i : number = 0; i < obj.stundenelemente.size(); i++) {
+					let elem = obj.stundenelemente.get(i);
+					result += StundenplanblockungStundenelement.transpilerToJSON(elem);
+					if (i < obj.stundenelemente.size() - 1)
+						result += ',';
+				}
+				result += ' ]' + ',';
+			}
 		}
 		result = result.slice(0, -1);
 		result += '}';

@@ -163,8 +163,7 @@ public class KursblockungTests {
 			fail("Blockung001 hat nicht 14 Schienen, sondern " + manager.getSchienenAnzahl() + ".");
 
 		if (manager.getSchuelerAnzahlMitFachwahlen() != 137)
-			fail("Blockung001 hat nicht 137 SuS mit Fachwahlen, sondern " + manager.getSchuelerAnzahlMitFachwahlen()
-					+ ".");
+			fail("Blockung001 hat nicht 137 SuS mit Fachwahlen, sondern " + manager.getSchuelerAnzahlMitFachwahlen() + ".");
 
 		if (manager.getFaecherAnzahl() != 33)
 			fail("Blockung001 hat nicht 33 Fächer, sondern " + manager.getFaecherAnzahl() + ".");
@@ -366,8 +365,7 @@ public class KursblockungTests {
 			fail("Blockung002 hat nicht 12 Schienen, sondern " + manager.getSchienenAnzahl() + ".");
 
 		if (manager.getSchuelerAnzahlMitFachwahlen() != 150)
-			fail("Blockung002 hat nicht 150 SuS mit Fachwahlen, sondern " + manager.getSchuelerAnzahlMitFachwahlen()
-					+ ".");
+			fail("Blockung002 hat nicht 150 SuS mit Fachwahlen, sondern " + manager.getSchuelerAnzahlMitFachwahlen() + ".");
 
 		if (manager.getFaecherAnzahl() != 23)
 			fail("Blockung002 hat nicht 23 Fächer, sondern " + manager.getFaecherAnzahl() + ".");
@@ -513,8 +511,7 @@ public class KursblockungTests {
 		regelFixiereKursInSchiene(kbInput, 44, 1);
 		regelFixiereKursInSchiene(kbInput, 17, 1);
 
-		long[] schuelerFixierungen = new long[] { 4, 10, 18, 21, 22, 27, 31, 55, 56, 58, 59, 61, 66, 78, 101, 118, 122,
-				125, 128 };
+		long[] schuelerFixierungen = new long[] { 4, 10, 18, 21, 22, 27, 31, 55, 56, 58, 59, 61, 66, 78, 101, 118, 122, 125, 128 };
 		for (long schuelerID : schuelerFixierungen)
 			regelFixiereSchuelerInKurs(kbInput, schuelerID, 0);
 
@@ -535,16 +532,8 @@ public class KursblockungTests {
 		assert kbOutput != null : "kbOutput == null";
 		assert kbOutput.getBlockungsdatenID() == kbInput.getID() : "kbOutput.getDatenID() != kbInput.getID()";
 		assert kbOutput.getOfBewertungAnzahlNichtZugeordneterKurse() <= 0 : "kbOutput.getAnzahlNichtZugeordneterKurse() > 0";
-
-		int kollisionen = kbOutput.getOfBewertungAnzahlKollisionen();
-		assert kollisionen == 0 : "kbOutput.getAnzahlKollisionen() != 0 --> " + kollisionen;
-		
 		int nichtwahlen = kbOutput.getOfBewertungAnzahlNichtzugeordneterFachwahlen();
 		assert nichtwahlen >= 0 : "kbOutput.getAnzahlNichtzugeordneterFachwahlen() < 0 --> " + nichtwahlen;
-		
-//		int regelverletzungen = kbOutput.getErgebnis().bewertung.regelVerletzungen.size();
-//		if (regelverletzungen > 0)
-//			System.out.println("Regelverletzungen = " + regelverletzungen);
 	}
 
 	private long recursive_min_sum_r(long[][] matrix, int r, boolean[] usedC) {
@@ -697,11 +686,11 @@ public class KursblockungTests {
 
 		// Erzeuge alle Schienen.
 		HashMap<Long, GostBlockungSchiene> mapSchienen = new HashMap<>();
-		for (int i = 1; i <= nSchienen; i++) {
+		for (int schienenNr = 1; schienenNr <= nSchienen; schienenNr++) {
 			GostBlockungSchiene gSchiene = new GostBlockungSchiene();
-			gSchiene.id = i; // Pseudo-ID
-			gSchiene.nummer = i;
-			gSchiene.bezeichnung = "Schiene " + i;
+			gSchiene.id = schienenNr; // Pseudo-ID
+			gSchiene.nummer = schienenNr;
+			gSchiene.bezeichnung = "Schiene " + schienenNr;
 			mapSchienen.put(gSchiene.id, gSchiene);
 		}
 
@@ -745,7 +734,7 @@ public class KursblockungTests {
 			gSchueler.id = schuelerID;
 			gSchueler.nachname = "Nachname" + schuelerID;
 			gSchueler.vorname = "Vorname" + schuelerID;
-			gSchueler.geschlecht = 3;
+			gSchueler.geschlecht = pRandom.nextBoolean() ?  3 : 4;
 			mapSchueler.put(gSchueler.id, gSchueler);
 
 			HashSet<Long> setUsedSchiene = new HashSet<>();

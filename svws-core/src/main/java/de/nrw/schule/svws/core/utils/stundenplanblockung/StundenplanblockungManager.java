@@ -10,6 +10,7 @@ import de.nrw.schule.svws.core.data.stundenplanblockung.StundenplanblockungInput
 import de.nrw.schule.svws.core.data.stundenplanblockung.StundenplanblockungKlasse;
 import de.nrw.schule.svws.core.data.stundenplanblockung.StundenplanblockungKopplung;
 import de.nrw.schule.svws.core.data.stundenplanblockung.StundenplanblockungLehrkraft;
+import de.nrw.schule.svws.core.data.stundenplanblockung.StundenplanblockungLerngruppe;
 import de.nrw.schule.svws.core.data.stundenplanblockung.StundenplanblockungRaum;
 import jakarta.validation.constraints.NotNull;
 
@@ -23,9 +24,16 @@ public class StundenplanblockungManager {
 
 	/** Die Eingabedaten die dieser Manager manipuliert. */
 	private final @NotNull StundenplanblockungInput _daten;
+	
+	// ############################################################
+	// ################## Attribute: Lehrkräfte ###################
+	// ############################################################
 
 	/** Lehrkraft-ID --> Lehrkraft-Objekt. */
-	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanblockungLehrkraft> _map_id_lehrkraft = new HashMap<>();
+	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanblockungLehrkraft> _map_lehrkraftID_lehrkraft = new HashMap<>();
+
+	/** Lehrkraft-ID --> Lerngruppe-ID --> Lerngruppe. */
+	private final @NotNull HashMap<@NotNull Long, @NotNull HashMap<@NotNull Long, @NotNull StundenplanblockungLerngruppe>> _map_lehrkraftID_lerngruppeID_lerngruppe = new HashMap<>();
 
 	/** Ein Comparator zum Sortieren der Lehrkräfte nach dem Kürzel. */
 	private static final @NotNull Comparator<@NotNull StundenplanblockungLehrkraft> _comp_lehrkraft_kuerzel = (
@@ -39,8 +47,12 @@ public class StundenplanblockungManager {
 		return Long.compare(a.id, b.id);
 	};
 
+	// ############################################################
+	// ################### Attribute: Klassen #####################
+	// ############################################################
+
 	/** Klasse-ID --> Klasse-Objekt. */
-	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanblockungKlasse> _map_id_klasse = new HashMap<>();
+	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanblockungKlasse> _map_klasseID_klasse = new HashMap<>();
 
 	/** Ein Comparator zum Sortieren der Klassen nach dem Kürzel. */
 	private static final @NotNull Comparator<@NotNull StundenplanblockungKlasse> _comp_klasse_kuerzel = (
@@ -62,6 +74,10 @@ public class StundenplanblockungManager {
 		return Long.compare(a.id, b.id);
 	};
 
+	// ############################################################
+	// ################### Attribute: Fächer ######################
+	// ############################################################
+
 	/** Fach-ID --> Fach-Objekt. */
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanblockungFach> _map_id_fach = new HashMap<>();
 
@@ -81,8 +97,12 @@ public class StundenplanblockungManager {
 		// Sortierung nach der ID.
 		return Long.compare(a.id, b.id);
 	};
+	
+	// ############################################################
+	// #################### Attribute: Räume ######################
+	// ############################################################
 
-	/** Fach-ID --> Raum-Objekt. */
+	/** Raum-ID --> Raum-Objekt. */
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanblockungRaum> _map_id_raum = new HashMap<>();
 
 	/** Ein Comparator zum Sortieren der Räume nach dem Kürzel. */
@@ -97,7 +117,11 @@ public class StundenplanblockungManager {
 		return Long.compare(a.id, b.id);
 	};
 
-	/** Fach-ID --> Kopplung-Objekt. */
+	// ############################################################
+	// ################# Attribute: Kopplungen ####################
+	// ############################################################
+	
+	/** Kopplung-ID --> Kopplung-Objekt. */
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanblockungKopplung> _map_id_kopplung = new HashMap<>();
 
 	/** Ein Comparator zum Sortieren der Kopplungen nach dem Kürzel. */
@@ -111,23 +135,39 @@ public class StundenplanblockungManager {
 		// Sortierung nach der ID.
 		return Long.compare(a.id, b.id);
 	};
+	
+	// ############################################################
+	// ################ Attribute: Lerngruppen ####################
+	// ############################################################
+	
+	/** Lerngruppe-ID --> Kopplung-Objekt. */
+	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanblockungLerngruppe> _map_id_lerngruppe = new HashMap<>();
+
+	/** Ein Comparator zum Sortieren der Lerngruppen nach ihrer ID. */
+	private static final @NotNull Comparator<@NotNull StundenplanblockungLerngruppe> _comp_lerngruppe_id = (
+			@NotNull StundenplanblockungLerngruppe a, @NotNull StundenplanblockungLerngruppe b) -> {
+		// Sortierung nach der ID.
+		return Long.compare(a.id, b.id);
+	};
+	
 	/**
 	 * Erzeugt einen neuen Manager mit einem leeren {@link StundenplanblockungInput}-Objekt.
 	 */
 	public StundenplanblockungManager() {
 		_daten = new StundenplanblockungInput();
 	}
-
+	
 	// ############################################################
 	// ######################## Lehrkräfte ########################
 	// ############################################################
 	
 	private void lehrkraftAddOhneSortierung(@NotNull StundenplanblockungLehrkraft pLehrkraft) throws NullPointerException {
 		// Existiert die Lehrkraft bereits?
-		if (_map_id_lehrkraft.containsKey(pLehrkraft.id))
+		if (_map_lehrkraftID_lehrkraft.containsKey(pLehrkraft.id))
 			throw new NullPointerException("Lehrkraft-ID " + pLehrkraft.id + " existiert bereits!");
 		// Lehrkraft hinzufügen.
-		_map_id_lehrkraft.put(pLehrkraft.id, pLehrkraft);
+		_map_lehrkraftID_lehrkraft.put(pLehrkraft.id, pLehrkraft);
+		_map_lehrkraftID_lerngruppeID_lerngruppe.put(pLehrkraft.id, new HashMap<>());
 		_daten.lehrkraefte.add(pLehrkraft);
 	}
 
@@ -163,7 +203,7 @@ public class StundenplanblockungManager {
 	 * @return              TRUE, falls die Lehrkraft-ID existiert.
 	 */
 	public boolean lehrkraftExists(long pLehrkraftID) {
-		return _map_id_lehrkraft.containsKey(pLehrkraftID);
+		return _map_lehrkraftID_lehrkraft.containsKey(pLehrkraftID);
 	}
 
 	/**
@@ -175,10 +215,30 @@ public class StundenplanblockungManager {
 	 * @throws NullPointerException  Falls die Lehrkraft-ID unbekannt ist.
 	 */
 	public @NotNull StundenplanblockungLehrkraft lehrkraftGet(long pLehrkraftID) throws NullPointerException {
-		StundenplanblockungLehrkraft lehrkraft = _map_id_lehrkraft.get(pLehrkraftID);
+		StundenplanblockungLehrkraft lehrkraft = _map_lehrkraftID_lehrkraft.get(pLehrkraftID);
 		if (lehrkraft == null)
 			throw new NullPointerException("Lehrkraft-ID " + pLehrkraftID + " unbekannt!");
 		return lehrkraft;
+	}
+
+	// ############################################################
+	// ###################### Klassen/Stufen ######################
+	// ############################################################
+	
+
+	/**
+	 * Liefert eine Map der Lerngruppen der Lehrkraft. <br>
+	 * Wirft eine NullPointerException, falls die Lehrkraft-ID unbekannt ist.
+	 * 
+	 * @param pLehrkraft             Das {@link StundenplanblockungLehrkraft}-Objekt.
+	 * @return                       Eine Map der Lerngruppen der Lehrkraft.
+	 * @throws NullPointerException  Falls die Lehrkraft-ID unbekannt ist.
+	 */
+	public @NotNull HashMap<@NotNull Long, @NotNull StundenplanblockungLerngruppe> lehrkraftGetMapLerngruppen(@NotNull StundenplanblockungLehrkraft pLehrkraft) throws NullPointerException {
+		HashMap<@NotNull Long, @NotNull StundenplanblockungLerngruppe> map = _map_lehrkraftID_lerngruppeID_lerngruppe.get(pLehrkraft.id);
+		if (map == null)
+			throw new NullPointerException("Lehrkraft-ID " + pLehrkraft.id + " unbekannt!");
+		return map;
 	}
 
 	/**
@@ -190,6 +250,11 @@ public class StundenplanblockungManager {
 		return _daten.lehrkraefte;
 	}
 
+	// ############################################################
+	// ###################### Klassen/Stufen ######################
+	// ############################################################
+	
+	
 	/**
 	 * Löscht die übergebene Lehrkraft. <br>
 	 * Wirft eine NullPointerException, falls die Lehrkraft-ID unbekannt ist.
@@ -201,7 +266,7 @@ public class StundenplanblockungManager {
 		// Lehrkraft holen.
 		@NotNull StundenplanblockungLehrkraft lehrkraft = lehrkraftGet(pLehrkraftID);
 		// Lehrkraft löschen.
-		_map_id_lehrkraft.remove(pLehrkraftID);
+		_map_lehrkraftID_lehrkraft.remove(pLehrkraftID);
 		_daten.lehrkraefte.remove(lehrkraft);
 	}
 
@@ -239,10 +304,10 @@ public class StundenplanblockungManager {
 	
 	private void klasseAddOhneSortierung(@NotNull StundenplanblockungKlasse pKlasse) throws NullPointerException {
 		// Existiert die Klasse bereits?
-		if (_map_id_klasse.containsKey(pKlasse.id))
+		if (_map_klasseID_klasse.containsKey(pKlasse.id))
 			throw new NullPointerException("Klasse-ID " + pKlasse.id + " existiert bereits!");
 		// Klasse hinzufügen.
-		_map_id_klasse.put(pKlasse.id, pKlasse);
+		_map_klasseID_klasse.put(pKlasse.id, pKlasse);
 		_daten.klassen.add(pKlasse);
 	}
 	
@@ -278,7 +343,7 @@ public class StundenplanblockungManager {
 	 * @return           TRUE, falls die Klasse-ID existiert.
 	 */
 	public boolean klasseExists(long pKlasseID) {
-		return _map_id_klasse.containsKey(pKlasseID);
+		return _map_klasseID_klasse.containsKey(pKlasseID);
 	}
 
 	/**
@@ -290,7 +355,7 @@ public class StundenplanblockungManager {
 	 * @throws NullPointerException  Falls die Klasse-ID unbekannt ist.
 	 */
 	public @NotNull StundenplanblockungKlasse klasseGet(long pKlasseID) throws NullPointerException {
-		StundenplanblockungKlasse klasse = _map_id_klasse.get(pKlasseID);
+		StundenplanblockungKlasse klasse = _map_klasseID_klasse.get(pKlasseID);
 		if (klasse == null)
 			throw new NullPointerException("Klasse-ID " + pKlasseID + " unbekannt!");
 		return klasse;
@@ -316,7 +381,7 @@ public class StundenplanblockungManager {
 		// Klasse holen.
 		@NotNull StundenplanblockungKlasse klasse = klasseGet(pKlasseID);
 		// Klasse löschen.
-		_map_id_klasse.remove(pKlasseID);
+		_map_klasseID_klasse.remove(pKlasseID);
 		_daten.klassen.remove(klasse);
 	}
 
@@ -651,6 +716,116 @@ public class StundenplanblockungManager {
 		kopplung.kuerzel = pKuerzel;
 		_daten.kopplungen.sort(_comp_kopplung_kuerzel);
 	}
+	// ############################################################
+	// ###################### Lerngruppen #########################
+	// ############################################################
+
+	private void lerngruppeAddOhneSortierung(@NotNull StundenplanblockungLerngruppe pLerngruppe) throws NullPointerException {
+		// Existiert die Lerngruppe bereits?
+		if (_map_id_lerngruppe.containsKey(pLerngruppe.id))
+			throw new NullPointerException("Lerngruppe-ID " + pLerngruppe.id + " existiert bereits!");
+		// Lerngruppe hinzufügen.
+		_map_id_lerngruppe.put(pLerngruppe.id, pLerngruppe);
+		_daten.lerngruppen.add(pLerngruppe);
+	}
+
+	/**
+	 * Fügt die Lerngruppe hinzu. <br>
+	 * Wirft eine NullPointerException, falls die Lerngruppe-ID bereits existiert.
+	 * 
+	 * @param pLerngruppe            Das Lerngruppe-Objekt.
+	 * @throws NullPointerException  Falls die Lerngruppe-ID bereits existiert.
+	 */
+	public void lerngruppeAdd(@NotNull StundenplanblockungLerngruppe pLerngruppe) throws NullPointerException {
+		lerngruppeAddOhneSortierung(pLerngruppe);
+		_daten.lerngruppen.sort(_comp_lerngruppe_id);
+	}
+
+	/**
+	 * Fügt alle Lerngruppen hinzu. <br>
+	 * Wirft eine NullPointerException, falls eine der Lerngruppen bereits existiert. 
+	 * 
+	 * @param pLerngruppen           Die Menge der Lerngruppen, die hinzugefügt werden soll.
+	 * @throws NullPointerException  Falls eine der Lerngruppen bereits existiert.
+	 */
+	public void lerngruppeAddAll(@NotNull List<@NotNull StundenplanblockungLerngruppe> pLerngruppen) throws NullPointerException {
+		for (@NotNull StundenplanblockungLerngruppe lerngruppe : pLerngruppen)
+			lerngruppeAddOhneSortierung(lerngruppe);
+		_daten.lerngruppen.sort(_comp_lerngruppe_id);
+	}
+
+	/**
+	 * Liefert TRUE, falls die Lerngruppe-ID existiert. 
+	 * 
+	 * @param pLerngruppeID  Die Lerngruppe-ID der Kopplung.
+	 * @return               TRUE, falls die Lerngruppe-ID existiert.
+	 */
+	public boolean lerngruppeExists(long pLerngruppeID) {
+		return _map_id_lerngruppe.containsKey(pLerngruppeID);
+	}
+
+	/**
+	 * Liefert das {@link StundenplanblockungLerngruppe}-Objekt zur übergebenen ID. <br>
+	 * Wirft eine NullPointerException, falls die Lerngruppe-ID unbekannt ist.
+	 * 
+	 * @param pLerngruppeID          Die Lerngruppe-ID der Kopplung.
+	 * @return                       Das {@link StundenplanblockungLerngruppe}-Objekt zur übergebenen ID.
+	 * @throws NullPointerException  Falls die Lerngruppe-ID unbekannt ist.
+	 */
+	public @NotNull StundenplanblockungLerngruppe lerngruppeGet(long pLerngruppeID) throws NullPointerException {
+		StundenplanblockungLerngruppe lerngruppe = _map_id_lerngruppe.get(pLerngruppeID);
+		if (lerngruppe == null)
+			throw new NullPointerException("Lerngruppe-ID " + pLerngruppeID + " unbekannt!");
+		return lerngruppe;
+	}
+
+	/**
+	 * Liefert die Menge aller Lerngruppen sortiert nach ihrer ID.
+	 * 
+	 * @return Die Menge aller Lerngruppen sortiert nach ihrer ID.
+	 */
+	public Vector<StundenplanblockungLerngruppe> lerngruppeGetMengeSortiertNachID() {
+		return _daten.lerngruppen;
+	}
+
+	/**
+	 * Löscht die übergebenen Lerngruppe. <br>
+	 * Wirft eine NullPointerException, falls die Lerngruppe-ID unbekannt ist.
+	 * 
+	 * @param pLerngruppeID          Die Datenbank-ID der Lerngruppe.
+	 * @throws NullPointerException  Falls die Lerngruppe-ID unbekannt ist.
+	 */
+	public void lerngruppeRemove(long pLerngruppeID) throws NullPointerException {
+		// Lerngruppe holen.
+		@NotNull StundenplanblockungLerngruppe lerngruppe = lerngruppeGet(pLerngruppeID);
+		// Lerngruppe löschen.
+		_map_id_lerngruppe.remove(pLerngruppeID);
+		_daten.lerngruppen.remove(lerngruppe);
+	}
+
+	private void lerngruppeAddLehrkraftOhneSortierung(@NotNull StundenplanblockungLerngruppe pLerngruppe, @NotNull StundenplanblockungLehrkraft pLehrkraft) {
+		// Fehler?
+		@NotNull HashMap<@NotNull Long, @NotNull StundenplanblockungLerngruppe> mapLerngruppe = lehrkraftGetMapLerngruppen(pLehrkraft);
+		if (mapLerngruppe.containsKey(pLerngruppe.id) == true)
+			throw new NullPointerException("(Lerngruppe="+pLerngruppe.id+", Lehrkraft="+pLehrkraft.id+") ist doppelt!");
+		// Hinzufügen
+		mapLerngruppe.put(pLerngruppe.id, pLerngruppe);
+	}
+
+	/**
+	 * Ordnet einer Lerngruppe eine Lehrkraft zu. <br>
+	 * Wirft eine NullPointerException, falls eine ID nicht existiert, oder die Zuordnung bereits existiert. 
+	 * 
+	 * @param pLerngruppeID          Die Datenbank-ID der Kopplung.
+	 * @param pLehrkraftID           Die Datenbank-ID der Lehrkraft.
+	 * @throws NullPointerException  Falls eine ID nicht existiert, oder die Zuordnung bereits existiert.
+	 */
+	public void lerngruppeAddLehrkraft(long pLerngruppeID, long pLehrkraftID) throws NullPointerException {
+		@NotNull StundenplanblockungLerngruppe lerngruppe = lerngruppeGet(pLerngruppeID);
+		@NotNull StundenplanblockungLehrkraft lehrkraft = lehrkraftGet(pLehrkraftID);
+		lerngruppeAddLehrkraftOhneSortierung(lerngruppe, lehrkraft);
+		// TODO Lerngruppe-Lehrkraft sortieren?
+	}
 
 	// ############################################################
 	// ######################## Sonstiges #########################
@@ -665,20 +840,20 @@ public class StundenplanblockungManager {
 	public boolean miscCheckConsistency() {
 		
 		// Lehrkräfte
-		if (_daten.lehrkraefte.size() != _map_id_lehrkraft.size())
+		if (_daten.lehrkraefte.size() != _map_lehrkraftID_lehrkraft.size())
 			return false;
 		for (@NotNull StundenplanblockungLehrkraft lehrkraft : _daten.lehrkraefte)
-			if (_map_id_lehrkraft.get(lehrkraft.id) != lehrkraft)
+			if (_map_lehrkraftID_lehrkraft.get(lehrkraft.id) != lehrkraft)
 				return false;
 		for (int i = 1 ; i < _daten.lehrkraefte.size() ; i++)
 			if (_comp_lehrkraft_kuerzel.compare(_daten.lehrkraefte.get(i-1), _daten.lehrkraefte.get(i)) > 0)
 				return false;
 				
 		// Klassen
-		if (_daten.klassen.size() != _map_id_klasse.size())
+		if (_daten.klassen.size() != _map_klasseID_klasse.size())
 			return false;
 		for (@NotNull StundenplanblockungKlasse klasse : _daten.klassen)
-			if (_map_id_klasse.get(klasse.id) != klasse)
+			if (_map_klasseID_klasse.get(klasse.id) != klasse)
 				return false;
 		for (int i = 1 ; i < _daten.klassen.size() ; i++)
 			if (_comp_klasse_kuerzel.compare(_daten.klassen.get(i-1), _daten.klassen.get(i)) > 0)

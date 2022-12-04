@@ -667,6 +667,13 @@ export class KursblockungDynDaten extends JavaObject {
 			for (let kurs of dynSchueler.gibKurswahlen()) 
 				if (kurs !== null) 
 					out.setSchuelerKurs(dynSchueler.gibDatenbankID(), kurs.gibDatenbankID(), true);
+		for (let gRegel of gDataManager.getMengeOfRegeln()) 
+			if (gRegel.typ === GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ) {
+				let schuelerID : number = gRegel.parameter.get(0).valueOf();
+				let kursID : number = gRegel.parameter.get(1).valueOf();
+				if (out.getOfSchuelerOfKursIstZugeordnet(schuelerID, kursID) === false) 
+					out.setSchuelerKurs(schuelerID, kursID, true);
+			}
 		return out;
 	}
 

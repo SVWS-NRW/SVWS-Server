@@ -14,6 +14,7 @@ import de.nrw.schule.svws.core.data.stundenplanblockung.StundenplanblockungFach;
 import de.nrw.schule.svws.core.data.stundenplanblockung.StundenplanblockungKlasse;
 import de.nrw.schule.svws.core.data.stundenplanblockung.StundenplanblockungKopplung;
 import de.nrw.schule.svws.core.data.stundenplanblockung.StundenplanblockungLehrkraft;
+import de.nrw.schule.svws.core.data.stundenplanblockung.StundenplanblockungLerngruppe;
 import de.nrw.schule.svws.core.data.stundenplanblockung.StundenplanblockungRaum;
 import de.nrw.schule.svws.core.utils.stundenplanblockung.StundenplanblockungManager;
 import jakarta.validation.constraints.NotNull;
@@ -26,13 +27,14 @@ import jakarta.validation.constraints.NotNull;
 public class StundenplanblockungTests {
 
 	private static final long _SEED = 1L;
-	private static final int _ANZAHL_MANAGER_TESTS = 10;
-	private static final int _ANZAHL_MANAGER_SUB_TESTS = 100000;
+	private static final int _ANZAHL_MANAGER_TESTS = 2;
+	private static final int _ANZAHL_MANAGER_SUB_TESTS = 1000000;
 	private static final int _MAX_LEHRKRAEFTE = 50;
 	private static final int _MAX_KLASSEN = 50;
 	private static final int _MAX_FAECHER = 20;
 	private static final int _MAX_RAEUME = 90;
 	private static final int _MAX_KOPPLUNGEN = 40;
+	private static final int _MAX_LERNGRUPPEN = 800;
 
 	/** 
 	 * Diese Klasse testet den {@link StundenplanblockungManager} mit randomisierten Daten.
@@ -169,6 +171,29 @@ public class StundenplanblockungTests {
 				}
 			}
 
+			
+			// Lerngruppen testen
+			case 50 -> {
+				long lerngruppeID = pRandom.nextLong(_MAX_LERNGRUPPEN);
+				if (pMan.lerngruppeExists(lerngruppeID)) {
+					pMan.lerngruppeRemove(lerngruppeID);
+					if (pMan.lerngruppeExists(lerngruppeID))
+						fail("Kopplung sollte nicht mehr existieren!");
+				} else {
+					pMan.lerngruppeAdd(lerngruppeCreate(lerngruppeID, pMan, pRandom));
+					if (!pMan.lerngruppeExists(lerngruppeID))
+						fail("Kopplung sollte nun existieren!");
+				}
+			}
+			case 51 -> {
+				Vector<StundenplanblockungLerngruppe> lerngruppen = pMan.lerngruppeGetMengeSortiertNachID();
+				if (lerngruppen.isEmpty() == false) {
+					// StundenplanblockungLerngruppe lerngruppe = lerngruppen.get(pRandom.nextInt(lerngruppen.size()));
+					// pMan.lerngruppeSetKuerzel(lerngruppe.id, "Lerngruppe" + pRandom.nextInt(_MAX_LERNGRUPPEN));
+					// TODO BAR
+				}
+			}
+
 		}
 
 	}
@@ -209,4 +234,22 @@ public class StundenplanblockungTests {
 		kopplung.kuerzel = "Kopplung" + pKopplungID;
 		return kopplung;
 	}
+	
+
+	private static @NotNull StundenplanblockungLerngruppe lerngruppeCreate(long lerngruppeID, StundenplanblockungManager pMan, Random pRandom) {
+		StundenplanblockungLerngruppe lerngruppe = new StundenplanblockungLerngruppe();
+		lerngruppe.id = lerngruppeID;
+		
+		Vector<StundenplanblockungLehrkraft> lehrkraefte = pMan.lehrkraftGetMengeSortiertNachKuerzel();
+		if (lehrkraefte.isEmpty() == false) {
+			StundenplanblockungLehrkraft lehrkraft1 = lehrkraefte.get(pRandom.nextInt(lehrkraefte.size()));
+			lerngruppe.lehrkraefte1.add(lehrkraft1);
+			
+			StundenplanblockungLehrkraft lehrkraft2 = lehrkraefte.get(pRandom.nextInt(lehrkraefte.size()));
+			lerngruppe.lehrkraefte1.add(lehrkraft2);
+		}
+		
+		return lerngruppe;
+	}
+	
 }
