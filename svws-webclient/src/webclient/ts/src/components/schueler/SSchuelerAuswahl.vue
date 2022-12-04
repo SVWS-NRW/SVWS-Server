@@ -72,7 +72,10 @@
 					>
 					<!-- Footer mit Button zum Hinzufügen einer Zeile -->
 					<template #footer>
-						{{selectedItems.length || 1}}/{{rowsFiltered.length}}
+						<div class="text-sm-bold normal-case mr-auto">
+							<span v-if="selectedItems.length">{{selectedItems.length}}/{{rowsFiltered.length}} ausgewählt</span>
+							<span v-else>{{rowsFiltered.length}} Einträge</span>
+						</div>
 						<button
 							class="button button--icon"
 							@click="addLine()"

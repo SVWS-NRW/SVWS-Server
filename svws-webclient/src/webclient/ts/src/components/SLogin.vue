@@ -158,7 +158,7 @@ async function login() {
 }
 
 .login-footer {
-	@apply pt-8 flex flex-wrap lg:flex-nowrap;
+	@apply pt-8 flex flex-wrap lg:flex-nowrap justify-between;
 }
 
 .login-footer-logo {

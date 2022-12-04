@@ -216,8 +216,9 @@
 		@apply transform;
 		@apply flex items-center;
 
-		top: 0.5em;
-		left: 0.7em;
+	top: 0.5em;
+	left: 0.7em;
+	line-height: 1.33;
 
 		&:after {
 			content: '…'
@@ -278,7 +279,7 @@
 	.text-input--headless {
 		@apply bg-white w-full text-black font-medium whitespace-nowrap outline-none border-0 px-3;
 	}
-	
+
 </style>
 <style lang="postcss">
 .text-input--inline {

@@ -28,7 +28,6 @@
 	@apply h-screen w-1/4;
 	@apply overflow-y-auto;
 	@apply shadow-dark-20 shadow-lg z-10;
-	@apply rounded-tr-2xl rounded-br-2xl;
 	-webkit-overflow-scrolling: touch;
 	min-width: 22rem;
 	max-width: 30rem;

@@ -156,6 +156,7 @@ function onKeyDown(event: KeyboardEvent) {
 
 	top: 0.5em;
 	left: 0.7em;
+	line-height: 1.33;
 
 	&:after {
 		content: '…'
