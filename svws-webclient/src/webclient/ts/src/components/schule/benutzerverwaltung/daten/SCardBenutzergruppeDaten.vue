@@ -23,9 +23,11 @@
 </template>
 
 <script setup lang="ts">
-	import { BenutzergruppenManager, BenutzerKompetenz, BenutzerKompetenzKatalogEintrag, BenutzerListeEintrag } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, Ref, ref, watch, WritableComputedRef } from "vue";
+	import { BenutzergruppeListeEintrag, BenutzergruppenManager, BenutzerKompetenz, BenutzerKompetenzKatalogEintrag, BenutzerListeEintrag } from "@svws-nrw/svws-core-ts";
+	import { computed, ComputedRef, Ref, ref, WritableComputedRef } from "vue";
 	import { injectMainApp, Main } from "~/apps/Main";
+	import { router } from "~/router";
+	
 
 	const main: Main = injectMainApp();
 	const app = main.apps.benutzergruppe;
@@ -38,7 +40,7 @@
 		get(): string | undefined {
 			return manager.value?.getBezeichnung().valueOf();
 		},
-		set(val: string | undefined) {
+		async set(val: string | undefined) {
 			console.log(val);
 			if ((val === undefined) || (val === "") || (val === manager.value?.getBezeichnung().valueOf()))
 				return;

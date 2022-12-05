@@ -1,6 +1,5 @@
 package de.nrw.schule.svws.core.data.benutzer;
 
-import java.util.List;
 import java.util.Vector;
 
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -32,6 +31,6 @@ public class BenutzergruppeDaten {
 
 	/** Die IDs der Kompetenzen, die speziell dieser Benutzergruppe zugeordnet sind. */
 	@Schema(required = true, description = "die IDs der Kompetenzen, die speziell diesem Benutzer zugeordnet sind")
-	public @NotNull List<@NotNull Long> kompetenzen = new Vector<>();
+	public @NotNull Vector<@NotNull Long> kompetenzen = new Vector<>();
 
 }

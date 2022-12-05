@@ -53,5 +53,6 @@ public class BenutzerDaten {
 	/** Die Kompetenzen, die speziell diesem Benutzer zugeordnet sind. */
 	@Schema(required = true, description = "die Kompetenzen, die speziell diesem Benutzer zugeordnet sind")
 	public @NotNull List<@NotNull Long> kompetenzen = new Vector<>();
-
+	
+	
 }

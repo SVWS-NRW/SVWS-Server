@@ -193,6 +193,9 @@ public class DataBenutzerDaten extends DataManager<Long> {
             conn.transactionBegin();
             if ((name == null) || "".equals(name))
                 return OperationError.CONFLICT.getResponse("Der Anmeldename muss gültig sein und darf nicht null oder leer sein");
+            // TODO  Ist es richtig?
+            if(conn.getUser().getId() == id)
+                return OperationError.CONFLICT.getResponse("Der aktuelle User kann seinen Benutzernamen nicht ändern.");
             DTOViewBenutzerdetails benutzer = getDTO(id);
             // Der alte Anmeldename wurde übergeben.
             if (name.equals(benutzer.Benutzername))

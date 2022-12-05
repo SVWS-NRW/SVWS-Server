@@ -5,7 +5,7 @@
 				<div class="inline-block py-2 align-middle sm:px-6 lg:px-8">
 					<div class="overflow-hidden rounded-lg shadow">
 						<table class="border-collapse text-sm">
-                            <s-kompetenzgruppe v-for="kompetenzgruppe in BenutzerKompetenzGruppe.values()" :key="kompetenzgruppe.daten.id" :kompetenzgruppe="kompetenzgruppe">
+                            <s-kompetenzgruppe v-for="kompetenzgruppe in BenutzerKompetenzGruppe.values()" :key="kompetenzgruppe.daten.id" :kompetenzgruppe="kompetenzgruppe" :istAdmin="istAdmin" :benutzertyp=1>
                             </s-kompetenzgruppe>
                         </table>
                     </div>
@@ -28,4 +28,10 @@
 		return app.dataBenutzergruppe.manager;
 	});
 
+	const istAdmin: ComputedRef<Boolean | undefined> = computed(() => {
+		if(app.dataBenutzergruppe.manager?.istAdmin())
+			return true;
+		else 
+			return false;
+	});
 </script>

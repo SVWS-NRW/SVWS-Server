@@ -499,8 +499,7 @@ public class APIBenutzer {
     @Operation(summary = "Entfernt die Admin-Berechtigung er Benutzergruppe mit der id",
     description = "Entfernt die Admin-Berechtigung er Benutzergruppe mit der id"
                 + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen  der Admin-Berechtigung hat.")
-    @ApiResponse(responseCode = "200", description = "Die Admin-Berechtigung wurde erfolgreich entfernt.",
-                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = GostBlockungSchiene.class)))    
+    @ApiResponse(responseCode = "204", description = "Die Information wurde erfolgreich gesetzt.")
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Admin-Berechtigung zu entfernen.")
     @ApiResponse(responseCode = "404", description = "Die Benutzergruppe ist nicht vorhanden.")
     @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")

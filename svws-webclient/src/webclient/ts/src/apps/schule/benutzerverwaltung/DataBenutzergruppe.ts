@@ -3,7 +3,7 @@ import { BaseData } from "~/apps/BaseData";
 
 import { ListBenutzergruppenBenutzer } from "./ListBenutzergruppenBenutzer";
 
-import { BenutzergruppeDaten, BenutzergruppeListeEintrag, BenutzergruppenManager, BenutzerKompetenz } from "@svws-nrw/svws-core-ts";
+import { BenutzergruppeDaten, BenutzergruppeListeEintrag, BenutzergruppenManager, BenutzerKompetenz, BenutzerKompetenzGruppe, List, Vector } from "@svws-nrw/svws-core-ts";
 
 
 export class DataBenutzergruppe extends BaseData<BenutzergruppeDaten, BenutzergruppeListeEintrag, BenutzergruppenManager> {
@@ -65,8 +65,11 @@ export class DataBenutzergruppe extends BaseData<BenutzergruppeDaten, Benutzergr
 			return;
 		await App.api.setBenutzergruppeBezeichnung(bezeichnung, App.schema, this.manager.getID());
 		this.manager.setBezeichnung(bezeichnung);
+		for(var index in App.apps.benutzergruppe.auswahl.liste){
+			if(App.apps.benutzergruppe.auswahl.liste[index].id === App.apps.benutzergruppe.dataBenutzergruppe.daten?.id)
+			App.apps.benutzergruppe.auswahl.liste[index].bezeichnung=bezeichnung;
+		}
 	}
-
 
 	/**
 	 * Setzt, ob die Benutzergruppe eine administrative Gruppe ist oder nicht
@@ -78,7 +81,10 @@ export class DataBenutzergruppe extends BaseData<BenutzergruppeDaten, Benutzergr
 	 public async setIstAdmin(istAdmin: boolean): Promise<void> {
 		if (!this.manager) 
 			return;
-		await App.api.setBenutzergruppeAdmin(istAdmin, App.schema, this.manager.getID());
+		if(istAdmin)
+			await App.api.addBenutzergruppeAdmin(App.schema, this.manager.getID());
+		else
+			await App.api.removeBenutzergruppeAdmin(App.schema, this.manager.getID());
 		this.manager.setAdmin(istAdmin);
 	}
 
@@ -89,14 +95,16 @@ export class DataBenutzergruppe extends BaseData<BenutzergruppeDaten, Benutzergr
 	 * @param kompetenz   die hinzuzufügende Kompetenz
 	 */
 	public async addKompetenz(kompetenz : BenutzerKompetenz) : Promise<boolean> {
+		const kid:Vector<Number> = new Vector<Number>();
+		kid.add(Number(kompetenz.daten.id));
 		if (!this.manager)
 			return false;
 		if (this.manager.hatKompetenz(kompetenz))
 			return false;
-		await App.api.setBenutzergruppeKompetenz(true, App.schema, this.manager.getID(), kompetenz.daten.id);
+		await App.api.addBenutzergruppeKompetenzen(kid, App.schema, this.manager.getID());
+		this.manager.addKompetenz(kompetenz);
 		return true;
 	}
-
 
 	/**
 	 * Entfernt die übergebene Kompetenz aus dieser Benutzergruppe
@@ -104,11 +112,57 @@ export class DataBenutzergruppe extends BaseData<BenutzergruppeDaten, Benutzergr
 	 * @param kompetenz   die zu entfernende Kompetenz
 	 */
 	 public async removeKompetenz(kompetenz : BenutzerKompetenz) : Promise<boolean> {
+		const kid:Vector<Number> = new Vector<Number>();
+		kid.add(Number(kompetenz.daten.id));
 		if (!this.manager)
 			return false;
 		if (!this.manager.hatKompetenz(kompetenz))
 			return false;
-		await App.api.setBenutzergruppeKompetenz(false, App.schema, this.manager.getID(), kompetenz.daten.id);
+		await App.api.removeBenutzergruppeKompetenzen(kid, App.schema, this.manager.getID());
+		this.manager.removeKompetenz(kompetenz);
+		return true;
+	}
+
+	/**
+	 * Fügt die übergebene Kompetenzen einer Benutzerkompetenzgruppe zu dieser Benutzergruppe hinzu
+	 * 
+	 * @param kompetenzgruppe   die Kompetenzgruppe, deren Kompetenzen hinzugefügt werden.
+	 */
+	 public async addBenutzerKompetenzGruppe(kompetenzgruppe : BenutzerKompetenzGruppe) : Promise<boolean> {
+		const kids : Vector<Number> = new Vector<Number>();
+		if (!this.manager)
+			return false;
+		if (!this.manager.istAdmin()) {
+			for (let komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe)) {
+				kids.add(Number(komp.daten.id));
+			}
+			await App.api.addBenutzergruppeKompetenzen(kids,App.schema,this.manager.getID());
+			for (let komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe)) {
+				if (!this.manager?.hatKompetenz(komp))
+					this.manager?.addKompetenz(komp);
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * Entfernt die übergebene Kompetenzen einer Benutzerkompetenzgruppe von dieser Benutzergruppe 
+	 * 
+	 * @param kompetenzgruppe   die Kompetenzgruppe, deren Kompetenzen entfernt werden.
+	 */
+	 public async removeBenutzerKompetenzGruppe(kompetenzgruppe : BenutzerKompetenzGruppe) : Promise<boolean> {
+		const kids : Vector<Number> = new Vector<Number>();
+		if (!this.manager)
+			return false;
+		if (!this.manager.istAdmin()) {
+			for (let komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe))
+				kids.add(Number(komp.daten.id));
+			await App.api.removeBenutzergruppeKompetenzen(kids,App.schema,this.manager.getID());
+			for (let komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe)) {
+				if (this.manager?.hatKompetenz(komp))
+					this.manager?.removeKompetenz(komp);
+			}
+		}
 		return true;
 	}
 

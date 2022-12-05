@@ -1,8 +1,8 @@
 <template>
-	<div v-if="visibleBenutzer" class="app-container">
+	<div v-show="visibleBenutzer" class="app-container">
 		<s-card-benutzer-daten />
 	</div>
-	<div v-if="visibleBenutzergruppe" class="app-container">
+	<div v-show="visibleBenutzergruppe" class="app-container">
 		<s-card-benutzergruppe-daten />
 		<s-card-benutzergruppe-kompetenzen />
 	</div>
@@ -13,11 +13,11 @@
 	import { App } from "~/apps/BaseApp";
 
 	const visibleBenutzer: ComputedRef<boolean> = computed(() => {
-		return App.apps.benutzer.auswahl.ausgewaehlt !== undefined;
+		return (App.apps.benutzer.auswahl.ausgewaehlt !== undefined);
 	});
 
 	const visibleBenutzergruppe: ComputedRef<boolean> = computed(() => {
-		return App.apps.benutzergruppe.auswahl.ausgewaehlt !== undefined;
+		return (App.apps.benutzergruppe.auswahl.ausgewaehlt !== undefined);
 	});
 
 </script>

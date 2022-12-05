@@ -1,7 +1,7 @@
 <template>
     <tr>
         <td>
-			<svws-ui-checkbox v-model="selected"> {{ kompetenz.daten.bezeichnung }} </svws-ui-checkbox>
+			<svws-ui-checkbox v-model="selected" :disabled="istAdmin"> {{ kompetenz.daten.id}}-{{ kompetenz.daten.bezeichnung }} </svws-ui-checkbox>
         </td>
     </tr>
 </template>
@@ -12,7 +12,8 @@
 	import { injectMainApp, Main } from "~/apps/Main";
 
     const props = defineProps({
-        kompetenz: { type: Object as () => BenutzerKompetenz, required: true }
+        kompetenz: { type: Object as () => BenutzerKompetenz, required: true },
+        istAdmin:{type:Boolean, required: true}
     });
 
 	const main: Main = injectMainApp();
