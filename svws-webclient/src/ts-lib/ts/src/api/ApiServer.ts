@@ -2950,7 +2950,7 @@ export class ApiServer extends BaseApi {
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: GostBlockungsdaten
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Blockungsdaten der Gymnasialen Oberstufe zu duplizieren.
-	 *   Code 404: Keine Blockung mit der angebenen ID gefunden.
+	 *   Code 404: Kein Blockungsergebnis mit der angebenen ID gefunden.
 	 * 
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} ergebnisid - der Pfad-Parameter ergebnisid
@@ -2959,6 +2959,33 @@ export class ApiServer extends BaseApi {
 	 */
 	public async dupliziereGostBlockungMitErgebnis(schema : string, ergebnisid : number) : Promise<GostBlockungsdaten> {
 		let path : string = "/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \d+}/dupliziere"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema)
+				.replace(/{ergebnisid\s*(:[^}]+)?}/g, ergebnisid.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return GostBlockungsdaten.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode schreibeGostBlockungsErgebnisHoch für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \d+}/hochschreiben
+	 * 
+	 * Schreibt die zum Ergebnis gehörende Blockung mit dem Ergebnis in das nächste Halbjahr hoch. Nicht mehr vorhandene Fachwahlen werden ggf. automatisch entfernt. Es werden aber keine neuen Kurse oder Zuordnung neu generiert. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Hochschreiben einer Blockung besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Die Blockung und das Ergebnis wurde erfolgreich hochgeschrieben. 
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: GostBlockungsdaten
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Blockung der Gymnasialen Oberstufe hochzuschreiben.
+	 *   Code 404: Kein Blockungsergebnis mit der angebenen ID gefunden.
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} ergebnisid - der Pfad-Parameter ergebnisid
+	 * 
+	 * @returns Die Blockung und das Ergebnis wurde erfolgreich hochgeschrieben. 
+	 */
+	public async schreibeGostBlockungsErgebnisHoch(schema : string, ergebnisid : number) : Promise<GostBlockungsdaten> {
+		let path : string = "/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \d+}/hochschreiben"
 				.replace(/{schema\s*(:[^}]+)?}/g, schema)
 				.replace(/{ergebnisid\s*(:[^}]+)?}/g, ergebnisid.toString());
 		const result : string = await super.getJSON(path);

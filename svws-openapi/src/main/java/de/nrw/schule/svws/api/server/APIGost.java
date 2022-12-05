@@ -1410,11 +1410,45 @@ public class APIGost {
     	content = @Content(mediaType = "application/json",
     	schema = @Schema(implementation = GostBlockungsdaten.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Blockungsdaten der Gymnasialen Oberstufe zu duplizieren.")
-    @ApiResponse(responseCode = "404", description = "Keine Blockung mit der angebenen ID gefunden.")
+    @ApiResponse(responseCode = "404", description = "Kein Blockungsergebnis mit der angebenen ID gefunden.")
     public Response dupliziereGostBlockungMitErgebnis(@PathParam("schema") String schema, @PathParam("ergebnisid") long id, @Context HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeinformationen
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) {
     		return (new DataGostBlockungsdaten(conn)).dupliziere(id);
+    	}
+    }
+    
+    
+    /**
+     * Die OpenAPI-Methode für das Hochschreiben der Definition einer Blockung mit den in der DB 
+     * gespeicherten Blockungsdaten ausgehend von dem angegebenen Zwischenergebnis in das nächste Halbjahr. 
+     * Dieses Zwischenergebnis wird mit hochgeschrieben und dient bei der hochgeschriebenen Blockung 
+     * auch als Vorlage für die Definition von Regeln. Nicht mehr vorhandene Fachwahlen werden
+     * ggf. automatisch entfernt. Es werden aber keine neuen Kurse oder Zuordnung neu generiert.
+     *
+     * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param id         die ID des Zwischenergebnisses
+     * @param request    die Informationen zur HTTP-Anfrage
+     * 
+     * @return die HTTP-Antwort mit der hochgeschriebenen Blockung 
+     */
+    @GET
+    @Path("/blockungen/zwischenergebnisse/{ergebnisid : \\d+}/hochschreiben")
+    @Operation(summary = "Schreibt die zum Ergebnis gehörende Blockung mit dem Ergebnis in das nächste Halbjahr hoch.",
+               description = "Schreibt die zum Ergebnis gehörende Blockung mit dem Ergebnis in das nächste Halbjahr hoch. "
+               	+ "Nicht mehr vorhandene Fachwahlen werden ggf. automatisch entfernt. Es werden aber keine neuen Kurse "
+               	+ "oder Zuordnung neu generiert. "
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Hochschreiben einer Blockung "
+    		    + "besitzt.")
+    @ApiResponse(responseCode = "200", description = "Die Blockung und das Ergebnis wurde erfolgreich hochgeschrieben. ",
+    	content = @Content(mediaType = "application/json",
+    	schema = @Schema(implementation = GostBlockungsdaten.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Blockung der Gymnasialen Oberstufe hochzuschreiben.")
+    @ApiResponse(responseCode = "404", description = "Kein Blockungsergebnis mit der angebenen ID gefunden.")
+    public Response schreibeGostBlockungsErgebnisHoch(@PathParam("schema") String schema, @PathParam("ergebnisid") long id, @Context HttpServletRequest request) {
+    	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeinformationen
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) {
+    		return (new DataGostBlockungsdaten(conn)).hochschreiben(id);
     	}
     }
     

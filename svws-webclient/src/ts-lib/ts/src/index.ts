@@ -430,6 +430,7 @@ export { GostAbiturjahrUtils } from './core/utils/gost/GostAbiturjahrUtils';
 export { GostBlockungsdatenManager } from './core/utils/gost/GostBlockungsdatenManager';
 export { GostBlockungsergebnisComparator } from './core/utils/gost/GostBlockungsergebnisComparator';
 export { GostBlockungsergebnisManager } from './core/utils/gost/GostBlockungsergebnisManager';
+export { GostFachwahlManager } from './core/utils/gost/GostFachwahlManager';
 export { GostFaecherManager } from './core/utils/gost/GostFaecherManager';
 export { GostStatistikFachwahlManager } from './core/utils/gost/GostStatistikFachwahlManager';
 export { JahrgangsUtils } from './core/utils/jahrgang/JahrgangsUtils';

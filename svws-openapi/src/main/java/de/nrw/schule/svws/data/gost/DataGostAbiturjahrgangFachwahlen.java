@@ -12,6 +12,7 @@ import de.nrw.schule.svws.core.data.gost.GostFachwahl;
 import de.nrw.schule.svws.core.data.gost.GostStatistikFachwahl;
 import de.nrw.schule.svws.core.types.gost.GostHalbjahr;
 import de.nrw.schule.svws.core.types.gost.GostKursart;
+import de.nrw.schule.svws.core.utils.gost.GostFachwahlManager;
 import de.nrw.schule.svws.core.utils.gost.GostStatistikFachwahlManager;
 import de.nrw.schule.svws.data.DataManager;
 import de.nrw.schule.svws.db.DBEntityManager;
@@ -142,7 +143,21 @@ public class DataGostAbiturjahrgangFachwahlen extends DataManager<Long> {
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
-	
+
+	/**
+	 * Ermittelt die Fachwahlen zu dem Abiturjahrgang dieses Objektes und gibt einen
+	 * Fachwahl-Manager dafür zurück
+	 * 
+	 * @param halbjahr   das Halbjahr der gymnasialen Oberstufe, für welches die
+	 *                   Fachwahlen bestimmt werden sollen 
+	 * 
+	 * @return der Fachwahl-Manager für die Fachwahlen dieses Abiturjahrgangs 
+	 */
+	public GostFachwahlManager getFachwahlManager(GostHalbjahr halbjahr) {
+		return new GostFachwahlManager(this.getSchuelerFachwahlen(halbjahr));
+	}
+
+
 	/**
 	 * Ermittelt die Fachwahlen zu dem Abiturjahrgang dieses Objektes.
 	 * 

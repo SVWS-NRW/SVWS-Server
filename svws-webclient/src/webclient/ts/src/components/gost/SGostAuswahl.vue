@@ -84,7 +84,8 @@
 							<span :style="{'background-color': color4(row)}">{{manager?.getOfBewertung4Wert(row.id)}}</span>
 						</span>
 						<div v-if="row.id === selected_ergebnis?.id" class="flex gap-2">
-							<svws-ui-button size="small" type="secondary" class="cursor-pointer" @click="toggle_modal"> Aktivieren </svws-ui-button>
+							<svws-ui-button v-if="selected_hj !== GostHalbjahr.Q22" size="small" type="secondary" class="cursor-pointer" @click="toggle_modal_hochschreiben"> Hochschreiben </svws-ui-button>
+							<svws-ui-button size="small" type="secondary" class="cursor-pointer" @click="toggle_modal_aktivieren"> Aktivieren </svws-ui-button>
 							<svws-ui-button size="small" type="secondary" class="cursor-pointer" @click="derive_blockung"> Ableiten </svws-ui-button>
 							<svws-ui-button v-if="rows_ergebnisse.size() > 1" size="small" type="danger" class="cursor-pointer" @click="remove_ergebnis">
 								<svws-ui-icon><i-ri-delete-bin-2-line/></svws-ui-icon>
@@ -95,15 +96,27 @@
 			</div>
 		</template>
 	</svws-ui-secondary-menu>
-	<svws-ui-modal ref="modal" size="small">
+	<svws-ui-modal ref="modal_aktivieren" size="small">
 		<template #modalTitle>Blockungsergebnis aktivieren</template>
 		<template #modalDescription>
 			<div class="flex gap-1 mb-2">
 				Soll das Blockungsergebnis aktiviert werden?
 			</div>
 			<div class="flex gap-1">
-				<svws-ui-button @click="toggle_modal()">Abbrechen</svws-ui-button>
+				<svws-ui-button @click="toggle_modal_aktivieren()">Abbrechen</svws-ui-button>
 				<svws-ui-button @click="activate_ergebnis">Ja</svws-ui-button>
+			</div>
+		</template>
+	</svws-ui-modal>
+	<svws-ui-modal ref="modal_hochschreiben" size="small">
+		<template #modalTitle>Blockungsergebnis hochschreiben</template>
+		<template #modalDescription>
+			<div class="flex gap-1 mb-2">
+				Soll das Blockungsergebnis in das nächste Halbjahr ({{selected_hj.next()?.kuerzel}}) hochgeschrieben werden?
+			</div>
+			<div class="flex gap-1">
+				<svws-ui-button @click="toggle_modal_hochschreiben()">Abbrechen</svws-ui-button>
+				<svws-ui-button @click="hochschreiben_ergebnis">Ja</svws-ui-button>
 			</div>
 		</template>
 	</svws-ui-modal>
@@ -122,23 +135,9 @@
 </template>
 
 <script setup lang="ts">
-import {
-	GostBlockungListeneintrag,
-	GostBlockungsdatenManager,
-	GostBlockungsergebnisListeneintrag,
-	GostHalbjahr,
-	GostJahrgang,
-	JahrgangsListeEintrag,
-	List,
-	Vector
-} from "@svws-nrw/svws-core-ts";
-import {
-	computed,
-	ComputedRef,
-	ref,
-	Ref,
-	WritableComputedRef
-} from "vue";
+import { List, Vector, GostBlockungListeneintrag, GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag,
+	GostHalbjahr, GostJahrgang, JahrgangsListeEintrag } from "@svws-nrw/svws-core-ts";
+import { computed, ComputedRef, ref, Ref, WritableComputedRef } from "vue";
 import { App } from "~/apps/BaseApp";
 import { useAuswahlViaRoute } from '~/router/auswahlViaRoute';
 import { GOST_CREATE_BLOCKUNG_SYMBOL } from "~/apps/core/LoadingSymbols";
@@ -277,7 +276,7 @@ async function remove_ergebnis() {
 }
 
 async function activate_ergebnis() {
-	modal.value.closeModal();
+	modal_aktivieren.value.closeModal();
 	if (!selected_ergebnis.value || !app.dataJahrgang.daten)
 		return;
 	await App.api.activateGostBlockungsergebnis(App.schema, selected_ergebnis.value.id);
@@ -291,6 +290,16 @@ async function derive_blockung() {
 	const abiturjahr = selected.value?.abiturjahr?.valueOf() || -1;
 	await app.blockungsauswahl.update_list(abiturjahr, selected_hj.value.id, true);
 }
+
+async function hochschreiben_ergebnis() {
+	modal_hochschreiben.value.closeModal();
+	if (!selected_ergebnis.value || !app.dataJahrgang.daten)
+		return;
+	await App.api.schreibeGostBlockungsErgebnisHoch(App.schema, selected_ergebnis.value.id);
+	const abiturjahr = selected.value?.abiturjahr?.valueOf() || -1;
+	await app.blockungsauswahl.update_list(abiturjahr, selected_hj.value.next()?.id || selected_hj.value.id, true);
+}
+
 async function patch_blockung(blockung: GostBlockungListeneintrag) {
 	await app.dataKursblockung.patch({name: blockung.name});
 }
@@ -308,15 +317,21 @@ function color4(ergebnis: GostBlockungsergebnisListeneintrag): string {
 	return `hsl(${Math.round((1 - (manager.value?.getOfBewertung4Intervall(ergebnis.id)||0)) * 120)},100%,80%)`
 }
 
-const modal: Ref<any> = ref(null);
-function toggle_modal() {
-	modal.value.isOpen ? modal.value.closeModal() : modal.value.openModal();
+const modal_aktivieren: Ref<any> = ref(null);
+function toggle_modal_aktivieren() {
+	modal_aktivieren.value.isOpen ? modal_aktivieren.value.closeModal() : modal_aktivieren.value.openModal();
+};
+
+const modal_hochschreiben: Ref<any> = ref(null);
+function toggle_modal_hochschreiben() {
+	modal_hochschreiben.value.isOpen ? modal_hochschreiben.value.closeModal() : modal_hochschreiben.value.openModal();
 };
 
 const modal_remove_blockung: Ref<any> = ref(null);
 function toggle_remove_blockung_modal() {
 	modal_remove_blockung.value.isOpen ? modal_remove_blockung.value.closeModal() : modal_remove_blockung.value.openModal();
 };
+
 </script>
 
 <style>
