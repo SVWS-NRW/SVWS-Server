@@ -57,7 +57,7 @@
 		</drop-data>
 		<!-- Es dürfen keine Regeln erstellt werden -->
 		<template v-else v-for="schiene in schienen" :key="schiene.nummer">
-			<td class="border border-[#7f7f7f]/20 text-center" :class="{ 'border-t-2': kursdifferenz }" >
+			<td class="border border-[#7f7f7f]/20 text-center py-1" :class="{ 'border-t-2': kursdifferenz }" >
 				<svws-ui-badge
 					v-if="kurs_schiene_zugeordnet(schiene)"
 					size="tiny" :variant="selected_kurs?'primary':'highlight'" class="cursor-pointer"
