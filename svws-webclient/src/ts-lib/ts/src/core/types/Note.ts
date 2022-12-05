@@ -1,5 +1,6 @@
 import { JavaObject, cast_java_lang_Object } from '../../java/lang/JavaObject';
 import { JavaInteger, cast_java_lang_Integer } from '../../java/lang/JavaInteger';
+import { NotenKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_NotenKatalogEintrag } from '../../core/data/schule/NotenKatalogEintrag';
 import { JavaString, cast_java_lang_String } from '../../java/lang/JavaString';
 
 export class Note extends JavaObject {
@@ -85,6 +86,8 @@ export class Note extends JavaObject {
 	public readonly gueltigVon : Number | null;
 
 	public readonly gueltigBis : Number | null;
+
+	private katalogEintrag : NotenKatalogEintrag | null = null;
 
 	/**
 	 * Erzeugt ein neues Element der Aufzählung
@@ -404,6 +407,17 @@ export class Note extends JavaObject {
 			default: 
 				return null;
 		}
+	}
+
+	/**
+	 * Gibt den Noten-Katalog-Eintrag zu dieser Note zurück.
+	 *  
+	 * @return der Noten-Katalog-Eintrag
+	 */
+	public getKatalogEintrag() : NotenKatalogEintrag {
+		if (this.katalogEintrag === null) 
+			this.katalogEintrag = new NotenKatalogEintrag(this.id, this.sortierung, this.notenpunkte, this.kuerzel, this.text, this.textZeugnis, this.gueltigVon, this.gueltigBis);
+		return this.katalogEintrag;
 	}
 
 	/**

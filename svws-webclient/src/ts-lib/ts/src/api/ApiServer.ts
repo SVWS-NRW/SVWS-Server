@@ -86,6 +86,7 @@ import { LehrerStammdaten, cast_de_nrw_schule_svws_core_data_lehrer_LehrerStammd
 import { List, cast_java_util_List } from '../java/util/List';
 import { JavaLong, cast_java_lang_Long } from '../java/lang/JavaLong';
 import { NationalitaetenKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_NationalitaetenKatalogEintrag } from '../core/data/schule/NationalitaetenKatalogEintrag';
+import { NotenKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_NotenKatalogEintrag } from '../core/data/schule/NotenKatalogEintrag';
 import { JavaObject, cast_java_lang_Object } from '../java/lang/JavaObject';
 import { OrganisationsformKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_OrganisationsformKatalogEintrag } from '../core/data/schule/OrganisationsformKatalogEintrag';
 import { OrtKatalogEintrag, cast_de_nrw_schule_svws_core_data_kataloge_OrtKatalogEintrag } from '../core/data/kataloge/OrtKatalogEintrag';
@@ -5463,6 +5464,33 @@ export class ApiServer extends BaseApi {
 		const obj = JSON.parse(result);
 		let ret = new Vector<NationalitaetenKatalogEintrag>();
 		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(NationalitaetenKatalogEintrag.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getKatalogNoten für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/allgemein/noten
+	 * 
+	 * Gibt den Noten-Katalog zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Der Noten-Katalog.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<NotenKatalogEintrag>
+	 *   Code 403: Der SVWS-Benutzer hat keine gültige Anmeldung.
+	 *   Code 404: Keine Noten-Einträge gefunden.
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * 
+	 * @returns Der Noten-Katalog.
+	 */
+	public async getKatalogNoten(schema : string) : Promise<List<NotenKatalogEintrag>> {
+		let path : string = "/db/{schema}/schule/allgemein/noten"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		let ret = new Vector<NotenKatalogEintrag>();
+		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(NotenKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 

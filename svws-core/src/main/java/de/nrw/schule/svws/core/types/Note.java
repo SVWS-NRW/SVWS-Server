@@ -2,6 +2,7 @@ package de.nrw.schule.svws.core.types;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import de.nrw.schule.svws.core.data.schule.NotenKatalogEintrag;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -117,6 +118,8 @@ public enum Note {
 	/** Gibt an, bis zu welchem Schuljahr die Note gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. */
 	public final Integer gueltigBis;
 
+	/** Der Noten-Katalog-Eintrag */
+	private NotenKatalogEintrag katalogEintrag = null;
 
 
 	/**
@@ -383,6 +386,18 @@ public enum Note {
 			default:
 				return null;
 		}
+	}
+
+
+	/**
+	 * Gibt den Noten-Katalog-Eintrag zu dieser Note zurück.
+	 *  
+	 * @return der Noten-Katalog-Eintrag
+	 */
+	public @NotNull NotenKatalogEintrag getKatalogEintrag() {
+		if (katalogEintrag == null)
+			katalogEintrag = new NotenKatalogEintrag(id, sortierung, notenpunkte, kuerzel, text, textZeugnis, gueltigVon, gueltigBis);
+		return katalogEintrag;
 	}
 
 }

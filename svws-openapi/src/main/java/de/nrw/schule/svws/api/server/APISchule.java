@@ -14,6 +14,7 @@ import de.nrw.schule.svws.core.data.schule.FoerderschwerpunktKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.HerkunftsschulnummerKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.KindergartenbesuchKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.NationalitaetenKatalogEintrag;
+import de.nrw.schule.svws.core.data.schule.NotenKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.OrganisationsformKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.PruefungsordnungKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.ReformpaedagogikKatalogEintrag;
@@ -43,6 +44,7 @@ import de.nrw.schule.svws.data.schule.DataKatalogFoerderschwerpunkte;
 import de.nrw.schule.svws.data.schule.DataKatalogHerkunftsschulnummern;
 import de.nrw.schule.svws.data.schule.DataKatalogKindergartenbesuch;
 import de.nrw.schule.svws.data.schule.DataKatalogNationalitaeten;
+import de.nrw.schule.svws.data.schule.DataKatalogNoten;
 import de.nrw.schule.svws.data.schule.DataKatalogOrganisationsformen;
 import de.nrw.schule.svws.data.schule.DataKatalogPruefungsordnungen;
 import de.nrw.schule.svws.data.schule.DataKatalogReformpaedagogik;
@@ -1032,4 +1034,27 @@ public class APISchule {
         }
     }
     
+    /**
+     * Die OpenAPI-Methode für die Abfrage der Kataloges der Noten.
+     *  
+     * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param request       die Informationen zur HTTP-Anfrage
+     * 
+     * @return die Liste mit den Einträgen des Noten-Kataloges
+     */
+    @GET
+    @Path("/allgemein/noten")
+    @Operation(summary = "Gibt den Noten-Katalog zurück.",
+               description = "Gibt den Noten-Katalog zurück. "
+                       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
+    @ApiResponse(responseCode = "200", description = "Der Noten-Katalog.",
+                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = NotenKatalogEintrag.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine gültige Anmeldung.")
+    @ApiResponse(responseCode = "404", description = "Keine Noten-Einträge gefunden.")
+    public Response getKatalogNoten(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
+            return (new DataKatalogNoten()).getList();
+        }
+    }
+
 }

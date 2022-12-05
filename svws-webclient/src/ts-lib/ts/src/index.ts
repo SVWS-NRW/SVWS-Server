@@ -247,6 +247,7 @@ export { HerkunftsartKatalogEintragBezeichnung } from './core/data/schule/Herkun
 export { HerkunftsschulnummerKatalogEintrag } from './core/data/schule/HerkunftsschulnummerKatalogEintrag';
 export { KindergartenbesuchKatalogEintrag } from './core/data/schule/KindergartenbesuchKatalogEintrag';
 export { NationalitaetenKatalogEintrag } from './core/data/schule/NationalitaetenKatalogEintrag';
+export { NotenKatalogEintrag } from './core/data/schule/NotenKatalogEintrag';
 export { OrganisationsformKatalogEintrag } from './core/data/schule/OrganisationsformKatalogEintrag';
 export { PruefungsordnungKatalogEintrag } from './core/data/schule/PruefungsordnungKatalogEintrag';
 export { ReformpaedagogikKatalogEintrag } from './core/data/schule/ReformpaedagogikKatalogEintrag';
