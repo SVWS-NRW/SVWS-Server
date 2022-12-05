@@ -1,16 +1,12 @@
 <script setup lang='ts'>
 	import { MenuItem as MenuItemHeadless } from "@headlessui/vue";
 
-	const {
-		disabled = false,
-	} = defineProps<{
-		disabled?: boolean;
-	}>();
+	const { disabled = false } = defineProps<{ disabled?: boolean; }>();
 </script>
 	
 <template>
 	<menu-item-headless v-slot="{ active }" :disabled="disabled">
-		<Button
+		<button
 			class="dropdown--item"
 			:class="{
 				'dropdown--item--active': active === true
@@ -20,7 +16,7 @@
 				><slot name="icon"></slot
 			></svws-ui-icon>
 			<slot />
-		</Button>
+		</button>
 	</menu-item-headless>
 </template>
 

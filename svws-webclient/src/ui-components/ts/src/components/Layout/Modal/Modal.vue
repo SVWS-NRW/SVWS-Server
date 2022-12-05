@@ -4,11 +4,7 @@ import { Dialog, DialogTitle, DialogDescription } from "@headlessui/vue";
 
 type Size = "small" | "medium" | "large";
 
-const {
-	size = 'small'
-} = defineProps<{
-	size: Size;
-}>();
+const { size = 'small' } = defineProps<{ size: Size; }>();
 
 const isOpen = ref(false);
 
@@ -41,11 +37,11 @@ class="modal" :class="{
 					<DialogTitle class="modal--title">
 						<slot name="modalTitle" />
 					</DialogTitle>
-					<Button class="modal--closeButton" @click="closeModal">
+					<button class="modal--closeButton" @click="closeModal">
 						<Icon class="modal--closeIcon">
 							<i-ri-close-line />
 						</Icon>
-					</Button>
+					</button>
 				</div>
 				<DialogDescription class="modal--description">
 					<slot name="modalDescription" />

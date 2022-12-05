@@ -21,12 +21,12 @@ class="sidebar--menu" :class="{
 	}">
 		<div class="sidebar--menu--header">
 			<slot name="header" />
-			<Button class="sidebar--menu--collapse" @click.prevent="onCollapse">
+			<button class="sidebar--menu--collapse" @click.prevent="onCollapse">
 				<Icon>
 					<i-ri-arrow-right-s-line v-if="collapsed" />
 					<i-ri-arrow-left-s-line v-else />
 				</Icon>
-			</Button>
+			</button>
 		</div>
 		<div class="sidebar--menu--body">
 			<slot />
