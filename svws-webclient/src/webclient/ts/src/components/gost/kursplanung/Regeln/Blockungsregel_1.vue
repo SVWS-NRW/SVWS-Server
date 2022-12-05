@@ -81,7 +81,7 @@ const speichern = async () => {
 }
 
 const regel_hinzufuegen = async () => {
-	await app.dataKursblockung.add_blockung_regel(regel_typ.typ)
+	regel.value = await app.dataKursblockung.add_blockung_regel(regel_typ.typ)
 }
 
 const regel_entfernen = async (r: GostBlockungRegel|undefined) => {
