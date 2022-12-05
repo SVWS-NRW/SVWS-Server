@@ -100,7 +100,7 @@ const kursbezeichnung = (regel: GostBlockungRegel): string => {
 		<div v-for="r in regeln" :key="r.id" class="flex justify-between">
 			<div class="cursor-pointer" @click="regel = (regel !== r) ? r:undefined" :class="{'bg-slate-200':r===regel}">
 				{{name(r.parameter.get(0).valueOf())}} in
-				{{kursbezeichnung(r)}} gesperrt
+				{{kursbezeichnung(r)}} fixiert
 			</div>
 			<svws-ui-icon v-if="allow_regeln" type="danger" class="cursor-pointer" @click="regel_entfernen(r)">
 				<i-ri-delete-bin-2-line />

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { injectMainApp, Main } from "~/apps/Main";
 import { GostBlockungRegel, GostBlockungSchiene, GostKursart, GostKursblockungRegelTyp, List, Vector } from "@svws-nrw/svws-core-ts";
-import { computed, ComputedRef, Ref, ref, shallowRef, ShallowRef, WritableComputedRef } from "vue";
+import { computed, ComputedRef, ShallowRef, WritableComputedRef } from "vue";
 
 const main: Main = injectMainApp();
 const app = main.apps.gost;
