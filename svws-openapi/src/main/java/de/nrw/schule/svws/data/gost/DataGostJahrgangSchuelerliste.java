@@ -3,6 +3,7 @@ package de.nrw.schule.svws.data.gost;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 import java.util.stream.Collectors;
 
 import de.nrw.schule.svws.core.data.schueler.SchuelerListeEintrag;
@@ -53,8 +54,10 @@ public class DataGostJahrgangSchuelerliste extends DataManager<Integer> {
 			throw OperationError.NOT_FOUND.exception();
 		List<DTOViewGostSchuelerAbiturjahrgang> schuelerAbijahrgang = conn.queryNamed(
 			"DTOViewGostSchuelerAbiturjahrgang.abiturjahr", abijahrgang, DTOViewGostSchuelerAbiturjahrgang.class);
-		if ((schuelerAbijahrgang == null) || (schuelerAbijahrgang.size() == 0))
+		if (schuelerAbijahrgang == null)
 			throw OperationError.NOT_FOUND.exception();
+		if (schuelerAbijahrgang.size() == 0)
+			return new Vector<>();
 		List<Long> schuelerIDs = schuelerAbijahrgang.stream().map(s -> s.ID).collect(Collectors.toList());
 		List<DTOSchueler> schuelerListe = conn.queryNamed("DTOSchueler.id.multiple", schuelerIDs, DTOSchueler.class);
 		if ((schuelerListe == null) || (schuelerListe.size() == 0))
@@ -69,6 +72,10 @@ public class DataGostJahrgangSchuelerliste extends DataManager<Integer> {
 
     	// Bestimme alle Schüler-IDs für den Abiturjahrgang der Blockung
 		List<DTOSchueler> schuelerListe = getSchuelerDTOs();
+		if (schuelerListe.size() == 0) {
+			List<SchuelerListeEintrag> daten = new Vector<>();
+			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		}
 		List<Long> schuelerIDs = schuelerListe.stream().map(s -> s.ID).toList();
 
     	// Bestimme die aktuellen Lernabschnitte für die Schüler

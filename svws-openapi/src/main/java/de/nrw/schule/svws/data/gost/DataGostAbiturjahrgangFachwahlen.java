@@ -88,8 +88,10 @@ public class DataGostAbiturjahrgangFachwahlen extends DataManager<Long> {
 		GostUtils.pruefeSchuleMitGOSt(conn);
     	// Bestimme alle Schüler-IDs des angegebenen Abiturjahrgangs
 		List<DTOViewGostSchuelerAbiturjahrgang> schueler = conn.queryNamed("DTOViewGostSchuelerAbiturjahrgang.abiturjahr", abijahr, DTOViewGostSchuelerAbiturjahrgang.class);
-		if ((schueler == null) || (schueler.size() == 0))
+		if (schueler == null)
 			return null;
+		if (schueler.size() == 0)
+			return new Vector<>();
 		List<Long> schuelerIDs = schueler.stream().map(s -> s.ID).collect(Collectors.toList());
     	List<DTOGostSchuelerFachbelegungen> fachbelegungen = conn.queryNamed("DTOGostSchuelerFachbelegungen.schueler_id.multiple", schuelerIDs, DTOGostSchuelerFachbelegungen.class);
 		if ((fachbelegungen == null) || (fachbelegungen.size() == 0))
