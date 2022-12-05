@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { injectMainApp, Main } from "~/apps/Main";
 import { GostBlockungRegel, GostBlockungSchiene, GostKursart, GostKursblockungRegelTyp, List, Vector } from "@svws-nrw/svws-core-ts";
-import { computed, ComputedRef, Ref, ref, WritableComputedRef } from "vue";
+import { computed, ComputedRef, Ref, ref, shallowRef, ShallowRef, WritableComputedRef } from "vue";
 
 const main: Main = injectMainApp();
 const app = main.apps.gost;
@@ -55,7 +55,8 @@ const ende: WritableComputedRef<GostBlockungSchiene> =
 				regel.value.parameter.set(2, val.nummer)	
 		}
 	})
-const regel: Ref<GostBlockungRegel | undefined> = ref(undefined)
+
+const regel: ShallowRef<GostBlockungRegel | undefined> = shallowRef(undefined)
 
 const regeln: ComputedRef<GostBlockungRegel[]> =
 	computed(()=> {
