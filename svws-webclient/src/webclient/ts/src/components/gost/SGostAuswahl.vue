@@ -165,7 +165,7 @@ const rows: ComputedRef<GostJahrgang[]> =
 	});
 
 const manager: ComputedRef<GostBlockungsdatenManager | undefined> =
-	computed(()=> app.dataKursblockung.manager_container ? app.dataKursblockung.datenmanager : undefined);
+	computed(()=> app.dataKursblockung.datenmanager);
 const rows_blockungsswahl: ComputedRef<GostBlockungListeneintrag[]> =
 	computed(() => app.blockungsauswahl.liste);
 const rows_ergebnisse: ComputedRef<List<GostBlockungsergebnisListeneintrag>> =

@@ -162,7 +162,7 @@ const suffix: WritableComputedRef<string> =
 	}});
 
 const manager: ComputedRef<GostBlockungsergebnisManager | undefined> =
-	computed(()=> app.dataKursblockung.manager_container.manager ? app.dataKursblockung.ergebnismanager : undefined);
+	computed(()=> app.dataKursblockung.ergebnismanager);
 
 const schienen: ComputedRef<List<GostBlockungsergebnisSchiene>> =
 	computed(()=> manager.value?.getMengeAllerSchienen() || new Vector<GostBlockungsergebnisSchiene>())

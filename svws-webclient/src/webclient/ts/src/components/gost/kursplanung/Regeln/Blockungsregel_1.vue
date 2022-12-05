@@ -81,7 +81,7 @@ const speichern = async () => {
 }
 
 const regel_hinzufuegen = async () => {
-	regel.value = await app.dataKursblockung.add_blockung_regel(regel_typ.typ)
+	await app.dataKursblockung.add_blockung_regel(regel_typ.typ)
 }
 
 const regel_entfernen = async (r: GostBlockungRegel|undefined) => {
@@ -111,13 +111,14 @@ function select_regel(r: GostBlockungRegel) {
 					<i-ri-delete-bin-2-line /></svws-ui-icon>
 		</div>
 		<div v-if="regel && allow_regeln">
-			<div class="inline-flex items-baseline">
+			<div class="inline-flex items-baseline gap-1">
 				Sperre
-				<parameter-kursart v-model="kursart" class="mx-1" />
+				<parameter-kursart v-model="kursart" />
 				von
-				<parameter-schiene v-model="start" class="mx-1" />bis
-				<parameter-schiene v-model="ende" class="mx-1" />
-				<svws-ui-button type="danger" @click="regel_entfernen(regel)" class="mr-2">
+				<parameter-schiene v-model="start" />
+				bis
+				<parameter-schiene v-model="ende" />
+				<svws-ui-button type="danger" @click="regel_entfernen(regel)">
 					<svws-ui-icon> <i-ri-delete-bin-2-line /> </svws-ui-icon> </svws-ui-button>
 				<svws-ui-button type="secondary" @click="speichern">
 					<svws-ui-icon> <i-ri-check-line /> </svws-ui-icon> </svws-ui-button>

@@ -1,17 +1,18 @@
 <script setup lang="ts">
 import { injectMainApp, Main } from "~/apps/Main";
-import { GostBlockungKurs, GostBlockungRegel, GostKursart, GostKursblockungRegelTyp, List, SchuelerListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
-import { computed, ComputedRef, Ref, ref, ShallowRef, shallowRef, WritableComputedRef } from "vue";
+import { GostBlockungKurs, GostBlockungRegel, GostBlockungsdatenManager, GostKursblockungRegelTyp, List, SchuelerListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
+import { computed, ComputedRef, ShallowRef, shallowRef, WritableComputedRef } from "vue";
 
 const main: Main = injectMainApp();
 const app = main.apps.gost;
-const manager = app.dataKursblockung.datenmanager
-const faechermanager = app.dataFaecher.manager
 
 const regel_typ = GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS
 // public static readonly SCHUELER_FIXIEREN_IN_KURS : GostKursblockungRegelTyp =
 // new GostKursblockungRegelTyp("SCHUELER_FIXIEREN_IN_KURS", 4, 4, "Schüler: Fixiere in Kurs",
 // Arrays.asList(GostKursblockungRegelParameterTyp.SCHUELER_ID, GostKursblockungRegelParameterTyp.KURS_ID));
+const manager: ComputedRef<GostBlockungsdatenManager | undefined> =
+	computed(()=> app.dataKursblockung.datenmanager)
+
 const schuelerliste = app.listAbiturjahrgangSchueler.liste || []
 const kurse: ComputedRef<List<GostBlockungKurs>> =
 	computed(()=> app.dataKursblockung.datenmanager?.getKursmengeSortiertNachKursartFachNummer() || new Vector())
@@ -48,44 +49,47 @@ const regel: ShallowRef<GostBlockungRegel | undefined> = shallowRef(undefined)
 
 const regeln: ComputedRef<GostBlockungRegel[]> =
 	computed(()=> {
-	const arr = []
-	const regeln = app.dataKursblockung.datenmanager?.getMengeOfRegeln()
-	if (!regeln) return []
-	for (const r of regeln)
-		if (r.typ === regel_typ.typ)
-			arr.push(r)
-	return arr })
+		const arr = [];
+		const regeln = app.dataKursblockung.datenmanager?.getMengeOfRegeln();
+		if (!regeln)
+			return [];
+		for (const r of regeln)
+			if (r.typ === regel_typ.typ)
+				arr.push(r);
+		return arr;
+	})
 
 const allow_regeln: ComputedRef<boolean> =
-	computed(()=> app.blockungsergebnisauswahl.liste.length === 1)
+	computed(()=> app.blockungsergebnisauswahl.liste.length === 1);
 
 const speichern = async () => {
-	if (!regel.value) return
-	await app.dataKursblockung.patch_blockung_regel(regel.value)
-	regel.value = undefined
+	if (!regel.value)
+		return;
+	await app.dataKursblockung.patch_blockung_regel(regel.value);
+	regel.value = undefined;
 }
 
 const regel_hinzufuegen = async () => {
-	regel.value = await app.dataKursblockung.add_blockung_regel(regel_typ.typ)
+	regel.value = await app.dataKursblockung.add_blockung_regel(regel_typ.typ);
 }
 
 const regel_entfernen = async (r: GostBlockungRegel|undefined) => {
 	if (r === undefined)
 		return;
-	await app.dataKursblockung.del_blockung_regel(r.id)
-	if (r === regel.value) regel.value = undefined
+	await app.dataKursblockung.del_blockung_regel(r.id);
+	if (r === regel.value) regel.value = undefined;
 }
 
 const name = (id: number) => {
-	const schueler = schuelerliste.find(s => s.id === id)
-	return schueler ? `${schueler.nachname}, ${schueler.vorname}` : ""
+	const schueler = schuelerliste.find(s => s.id === id);
+	return schueler ? `${schueler.nachname}, ${schueler.vorname}` : "";
 }
 
 const kursbezeichnung = (regel: GostBlockungRegel): String => {
-	if (manager === undefined)
-		throw new Error("Der Kursblockungsmanager ist nicht verfügbar")
-	const kurs = manager.getKurs(regel.parameter.get(1).valueOf())
-	return manager.getNameOfKurs(kurs.id)
+	if (manager.value === undefined)
+		throw new Error("Der Kursblockungsmanager ist nicht verfügbar");
+	const kurs = manager.value.getKurs(regel.parameter.get(1).valueOf());
+	return manager.value.getNameOfKurs(kurs.id);
 }
 </script>
 	
@@ -111,7 +115,7 @@ const kursbezeichnung = (regel: GostBlockungRegel): String => {
 				<parameter-schueler v-model="schueler" />
 				in
 				<parameter-kurs v-model="kurs" />
-				<svws-ui-button type="danger" @click="regel_entfernen(regel)" class="mr-2">
+				<svws-ui-button type="danger" @click="regel_entfernen(regel)">
 					<svws-ui-icon> <i-ri-delete-bin-2-line /> </svws-ui-icon> </svws-ui-button>
 				<svws-ui-button type="secondary" @click="speichern">
 					<svws-ui-icon> <i-ri-check-line /> </svws-ui-icon> </svws-ui-button>
