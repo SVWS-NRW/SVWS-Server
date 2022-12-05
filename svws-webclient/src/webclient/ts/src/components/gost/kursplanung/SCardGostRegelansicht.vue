@@ -5,7 +5,7 @@
 			<div class="w-full flex-none">
 				<div class="py-2 align-middle sm:px-6 lg:px-8">
 					<div class="overflow-hidden rounded-lg shadow">
-								<span>Regeln zur Blockung</span>
+								<span class="font-bold ">Regeln zur Blockung</span>
 								<div class="py-1 px-8 bg-slate-100 shadow-lg rounded-lg mb-1">
 									<Blockungsregel_1 />
 								</div>

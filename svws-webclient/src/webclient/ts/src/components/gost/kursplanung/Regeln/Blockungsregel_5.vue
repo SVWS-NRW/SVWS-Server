@@ -81,12 +81,11 @@ const name = (id: number) => {
 	return schueler ? `${schueler.nachname}, ${schueler.vorname}` : ""
 }
 
-const kursbezeichnung = (regel: GostBlockungRegel): string => {
-	const kurs = manager?.getKurs(regel.parameter.get(1).valueOf())
-	if (!kurs) return ""
-	const fach = faechermanager?.get(kurs.fach_id)
-	if (!fach) return ""
-	return `${fach.kuerzel}-${GostKursart.fromID(kurs.kursart).kuerzel}${kurs.nummer}${kurs.suffix ? '-'+kurs.suffix : ''}`
+const kursbezeichnung = (regel: GostBlockungRegel): String => {
+	if (manager === undefined)
+		throw new Error("Der Kursblockungsmanager ist nicht verfügbar")
+	const kurs = manager.getKurs(regel.parameter.get(1).valueOf())
+	return manager.getNameOfKurs(kurs.id)
 }
 </script>
 <template>
@@ -106,7 +105,7 @@ const kursbezeichnung = (regel: GostBlockungRegel): string => {
 			</svws-ui-icon>
 		</div>
 		<div v-if="regel && allow_regeln">
-			<div class="inline-flex items-baseline">
+			<div class="inline-flex items-baseline gap-1">
 				Verbiete
 				<parameter-schueler v-model="schueler" />
 				in
