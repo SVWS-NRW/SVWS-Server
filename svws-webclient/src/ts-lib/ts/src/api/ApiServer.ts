@@ -844,9 +844,7 @@ export class ApiServer extends BaseApi {
 	 * Entfernt die Admin-Berechtigung er Benutzergruppe mit der idDabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen  der Admin-Berechtigung hat.
 	 * 
 	 * Mögliche HTTP-Antworten: 
-	 *   Code 200: Die Admin-Berechtigung wurde erfolgreich entfernt.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: GostBlockungSchiene
+	 *   Code 204: Die Information wurde erfolgreich gesetzt.
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Admin-Berechtigung zu entfernen.
 	 *   Code 404: Die Benutzergruppe ist nicht vorhanden.
 	 *   Code 409: Die übergebenen Daten sind fehlerhaft
@@ -854,16 +852,13 @@ export class ApiServer extends BaseApi {
 	 * 
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
-	 * 
-	 * @returns Die Admin-Berechtigung wurde erfolgreich entfernt.
 	 */
-	public async removeBenutzergruppeAdmin(schema : string, id : number) : Promise<GostBlockungSchiene> {
+	public async removeBenutzergruppeAdmin(schema : string, id : number) : Promise<void> {
 		let path : string = "/db/{schema}/benutzer/gruppe/{id : \d+}/removeAdmin"
 				.replace(/{schema\s*(:[^}]+)?}/g, schema)
 				.replace(/{id\s*(:[^}]+)?}/g, id.toString());
-		const result : string = await super.deleteJSON(path, null);
-		const text = result;
-		return GostBlockungSchiene.transpilerFromJSON(text);
+		await super.deleteJSON(path, null);
+		return;
 	}
 
 

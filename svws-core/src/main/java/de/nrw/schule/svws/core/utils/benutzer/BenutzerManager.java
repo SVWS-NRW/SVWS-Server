@@ -4,11 +4,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Vector;
-import java.util.stream.Collectors;
 
 import de.nrw.schule.svws.core.data.benutzer.BenutzerDaten;
 import de.nrw.schule.svws.core.data.benutzer.BenutzergruppeDaten;
-import de.nrw.schule.svws.core.data.benutzer.BenutzergruppeListeEintrag;
 import de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenz;
 import jakarta.validation.constraints.NotNull;
 
