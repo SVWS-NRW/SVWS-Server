@@ -14,7 +14,6 @@ export class ListBenutzer extends BaseList<BenutzerListeEintrag, undefined> {
 	 * @param eintrag   die neue Auswahl
 	 */
 	 public async before_select(eintrag: BenutzerListeEintrag | undefined): Promise<void> {
-console.log('Selection - Benutzer: ' + eintrag + ' , gruppe? ' + App.apps.benutzergruppe.auswahl.ausgewaehlt);
 		if ((eintrag !== undefined) && (App.apps.benutzergruppe.auswahl.ausgewaehlt !== undefined))
 			App.apps.benutzergruppe.auswahl.ausgewaehlt = undefined;
 	}
