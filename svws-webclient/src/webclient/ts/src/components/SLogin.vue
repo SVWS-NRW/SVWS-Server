@@ -23,22 +23,22 @@
 						</svws-ui-button>
 					</div>
 					<Transition>
-					<div v-if="inputDBSchema" class="login-input-group">
-						<svws-ui-multi-select v-model="inputDBSchema" title="DB-Schema" :items="inputDBSchemata" :item-text="get_name" />
-						<svws-ui-text-input v-model="username" type="text" placeholder="Benutzername" />
-						<svws-ui-text-input
-							v-model="password"
-							type="password"
-							placeholder="Passwort"
-							@keyup.enter="login"
-						/>
-						<svws-ui-button @click="login">Anmelden</svws-ui-button>
-						<div v-if="main.config.isAuthenticated === false" class="text-red-500">Fehler bei der Anmeldung. Passwort oder Benutzername falsch.</div>
-					</div>
-					<div v-else class="login-input-group">
-						<div v-if="!connection_ok" class="text-red-500">Fehler beim Verbinden zum Server</div>
-					</div>
-				</Transition>
+						<div v-if="inputDBSchema" class="login-input-group">
+							<svws-ui-multi-select v-model="inputDBSchema" title="DB-Schema" :items="inputDBSchemata" :item-text="get_name" />
+							<svws-ui-text-input v-model="username" type="text" placeholder="Benutzername" />
+							<svws-ui-text-input
+								v-model="password"
+								type="password"
+								placeholder="Passwort"
+								@keyup.enter="login"
+							/>
+							<svws-ui-button @click="login">Anmelden</svws-ui-button>
+							<div v-if="main.config.isAuthenticated === false" class="text-red-500">Fehler bei der Anmeldung. Passwort oder Benutzername falsch.</div>
+						</div>
+						<div v-else class="login-input-group">
+							<div v-if="!connection_ok" class="text-red-500">Fehler beim Verbinden zum Server</div>
+						</div>
+					</Transition>
 				</div>
 				<div class="login-footer">
 					<img class="login-footer-logo" src="/images/MSB_NRW_Logo.svg" />
@@ -78,7 +78,7 @@ const serverAddress = ref("localhost");
 const username = ref("Admin");
 const password = ref("");
 
-const connection_ok: Ref<boolean> = ref(false)
+const connection_ok: Ref<boolean> = ref(true)
 
 const main: Main = injectMainApp();
 const inputDBSchemata: ComputedRef<DBSchemaListeEintrag[] | undefined> = computed(() => {
