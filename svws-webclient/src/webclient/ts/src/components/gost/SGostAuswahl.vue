@@ -57,7 +57,7 @@
 										</div>
 										<div class="flex items-center gap-1">
 											<svws-ui-button size="small" type="secondary" @click="create_blockung" title="Ergebnisse berechnen">Berechnen</svws-ui-button >
-											<svws-ui-button size="small" type="danger" @click="remove_blockung" title="Blockung löschen">
+											<svws-ui-button size="small" type="danger" @click="toggle_remove_blockung_modal" title="Blockung löschen">
 												<svws-ui-icon><i-ri-delete-bin-2-line/></svws-ui-icon>
 											</svws-ui-button>
 										</div>
@@ -107,6 +107,18 @@
 			</div>
 		</template>
 	</svws-ui-modal>
+	<svws-ui-modal ref="modal_remove_blockung" size="small">
+		<template #modalTitle>Blockung löschen</template>
+		<template #modalDescription>
+			<div class="flex gap-1 mb-2">
+				Soll die Blockung mit allen Ergebnissen gelöscht werden?
+			</div>
+			<div class="flex gap-1">
+				<svws-ui-button @click="toggle_remove_blockung_modal()">Abbrechen</svws-ui-button>
+				<svws-ui-button @click="remove_blockung">Ja</svws-ui-button>
+			</div>
+		</template>
+	</svws-ui-modal>
 </template>
 
 <script setup lang="ts">
@@ -145,7 +157,6 @@ const wait: Ref<boolean> = ref(false);
 const halbjahre = GostHalbjahr.values();
 const hj_memo: Ref<GostHalbjahr | undefined> = ref(undefined)
 const edit_blockungsname: Ref<boolean> = ref(false)
-const modal: Ref<any> = ref(null);
 
 const rows: ComputedRef<GostJahrgang[]> =
 	computed(() => {
@@ -295,8 +306,15 @@ function color3(ergebnis: GostBlockungsergebnisListeneintrag): string {
 function color4(ergebnis: GostBlockungsergebnisListeneintrag): string {
 	return `hsl(${Math.round((1 - (manager.value?.getOfBewertung4Intervall(ergebnis.id)||0)) * 120)},100%,80%)`
 }
+
+const modal: Ref<any> = ref(null);
 function toggle_modal() {
 	modal.value.isOpen ? modal.value.closeModal() : modal.value.openModal();
+};
+
+const modal_remove_blockung: Ref<any> = ref(null);
+function toggle_remove_blockung_modal() {
+	modal_remove_blockung.value.isOpen ? modal_remove_blockung.value.closeModal() : modal_remove_blockung.value.openModal();
 };
 </script>
 
