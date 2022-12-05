@@ -1351,6 +1351,15 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert die Anzahl aller Schüler-IDs mit mindestens einer Kollision oder Nichtwahl.
+	 * 
+	 * @return Die Anzahl aller Schüler-IDs mit mindestens einer Kollision oder Nichtwahl.
+	 */
+	public getAnzahlDerSchuelerMitKollisionenOderNichtwahlen() : number {
+		return this.getMengeDerSchuelerMitKollisionenOderNichtwahlen().size();
+	}
+
+	/**
 	 * Liefert eine Menge aller Kurse mit mindestens einer Kollision.
 	 * 
 	 * @return Eine Menge aller Kurse mit mindestens einer Kollision.

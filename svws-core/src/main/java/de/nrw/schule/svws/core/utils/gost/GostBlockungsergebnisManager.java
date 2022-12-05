@@ -1470,6 +1470,15 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
+	 * Liefert die Anzahl aller Schüler-IDs mit mindestens einer Kollision oder Nichtwahl.
+	 * 
+	 * @return Die Anzahl aller Schüler-IDs mit mindestens einer Kollision oder Nichtwahl.
+	 */
+	public int getAnzahlDerSchuelerMitKollisionenOderNichtwahlen() {
+		return getMengeDerSchuelerMitKollisionenOderNichtwahlen().size();
+	}
+
+	/**
 	 * Liefert eine Menge aller Kurse mit mindestens einer Kollision.
 	 * 
 	 * @return Eine Menge aller Kurse mit mindestens einer Kollision.
