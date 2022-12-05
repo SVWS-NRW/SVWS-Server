@@ -45,6 +45,18 @@ export abstract class BaseList<ListenEintragTyp, ListenFilterTyp = undefined> {
 	}
 
 	/**
+	 * Diese Methode wird vor der Auswahl eines Listeneintrags aufgerufen.
+	 * Als default liefert die Klasse BaseList ein Promise
+	 * zurück. Für ein anderes Verhalten sollte diese Methode überschrieben
+	 * werden.
+	 *
+	 * @returns {Promise<void>} ein Promise
+	 */
+	public async before_select(eintrag: ListenEintragTyp | undefined): Promise<void> {
+		return
+	}
+
+	/**
 	 * Diese Methode wird bei der Auswahl eines Listeneintrags aufgerufen.
 	 * Als default liefert die Klasse BaseList ein Promise
 	 * zurück. Für ein anderes Verhalten sollte diese Methode überschrieben
@@ -151,15 +163,13 @@ export abstract class BaseList<ListenEintragTyp, ListenFilterTyp = undefined> {
 	set ausgewaehlt(eintrag: ListenEintragTyp | undefined) {
 		this._state.pending = true;
 		this._state.ausgewaehlt = eintrag;
+		this._pending = [ this.before_select(eintrag) ];
 		if (eintrag)
-			this._pending = this.daten.map(d => {
-				return d.select(eintrag);
-			});
-		else this._pending = this.daten.map(d => d.unselect());
+			this._pending.concat(this.daten.map(d => { return d.select(eintrag); }));
+		else 
+			this._pending.concat(this.daten.map(d => d.unselect()));
 		this._pending.push(this.on_select());
-		Promise.allSettled(this._pending).then(
-			() => { this._state.pending = false}
-		);
+		Promise.allSettled(this._pending).then( () => { this._state.pending = false} );
 	}
 
 	/** Getter für den Schnellfilter */

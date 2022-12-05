@@ -8,12 +8,15 @@ export class ListBenutzergruppe extends BaseList<BenutzergruppeListeEintrag, und
 
 	protected _filter = undefined;
 
-	public async on_select(): Promise<void> {
-		if (this.ausgewaehlt !== undefined)
-			return;
-		if (App.apps.benutzer.auswahl.ausgewaehlt !== undefined)
+	/**
+	 * Prüfe vor der Auswahl der Benutzergruppe, ob bereits zuvor ein Benutzer ausgewählt wurde.
+	 * Ist dies der Fall, so entferne die Auswahl des Benutzers.
+	 * 
+	 * @param eintrag   die neue Auswahl
+	 */
+	public async before_select(eintrag: BenutzergruppeListeEintrag | undefined): Promise<void> {
+		if ((eintrag !== undefined) && (App.apps.benutzer.auswahl.ausgewaehlt !== undefined))
 			App.apps.benutzer.auswahl.ausgewaehlt = undefined;
-		return;
 	}
 
 	/**
