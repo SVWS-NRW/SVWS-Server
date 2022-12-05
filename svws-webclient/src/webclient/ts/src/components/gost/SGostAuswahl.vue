@@ -258,6 +258,7 @@ async function blockung_hinzufuegen() {
 }
 
 async function remove_blockung() {
+	modal_remove_blockung.value.closeModal()
 	if (!selected_blockungauswahl.value)
 		return;
 	await App.api.deleteGostBlockung(App.schema, selected_blockungauswahl.value?.id);
@@ -276,7 +277,7 @@ async function remove_ergebnis() {
 }
 
 async function activate_ergebnis() {
-	toggle_modal();
+	modal.value.closeModal();
 	if (!selected_ergebnis.value || !app.dataJahrgang.daten)
 		return;
 	await App.api.activateGostBlockungsergebnis(App.schema, selected_ergebnis.value.id);
