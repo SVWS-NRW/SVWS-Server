@@ -2,6 +2,9 @@ package de.nrw.schule.svws.core.data.gost;
 
 import jakarta.xml.bind.annotation.XmlRootElement;
 
+import java.util.List;
+import java.util.Vector;
+
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import de.nrw.schule.svws.core.transpiler.TranspilerDTO;
@@ -41,5 +44,8 @@ public class GostBlockungKurs {
 
 	/** Die Anzahl an Schienen, die der Kurs belegt, meistens =1. Falls > 1 ist es ein 'Multikurs'.*/
 	public int anzahlSchienen = 1;
-	
+
+	/** Die Lehrer, die diesem Kurs bereits fest zugeordnet sind. */
+	public @NotNull List<@NotNull GostBlockungKursLehrer> lehrer = new Vector<>();
+
 }

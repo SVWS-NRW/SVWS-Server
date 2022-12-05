@@ -17,6 +17,7 @@ import { GostBlockungKurs, cast_de_nrw_schule_svws_core_data_gost_GostBlockungKu
 import { HashSet, cast_java_util_HashSet } from '../../../java/util/HashSet';
 import { GostFach, cast_de_nrw_schule_svws_core_data_gost_GostFach } from '../../../core/data/gost/GostFach';
 import { GostFachwahl, cast_de_nrw_schule_svws_core_data_gost_GostFachwahl } from '../../../core/data/gost/GostFachwahl';
+import { GostBlockungKursLehrer, cast_de_nrw_schule_svws_core_data_gost_GostBlockungKursLehrer } from '../../../core/data/gost/GostBlockungKursLehrer';
 import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
 import { GostBlockungsergebnis, cast_de_nrw_schule_svws_core_data_gost_GostBlockungsergebnis } from '../../../core/data/gost/GostBlockungsergebnis';
 import { GostBlockungsdaten, cast_de_nrw_schule_svws_core_data_gost_GostBlockungsdaten } from '../../../core/data/gost/GostBlockungsdaten';
@@ -654,6 +655,14 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public removeKurs(pKurs : GostBlockungKurs) : void {
 		this.removeKursByID(pKurs.id);
+	}
+
+	/**
+	 * Fügt den übergebenen Kurslehrer zu den Blockungs-Daten hinzu
+	 *  
+	 * @param pKursLehrer   der Kurslehrer
+	 */
+	public addKursLehrer(pKursLehrer : GostBlockungKursLehrer) : void {
 	}
 
 	private addSchieneOhneSortierung(pSchiene : GostBlockungSchiene) : void {

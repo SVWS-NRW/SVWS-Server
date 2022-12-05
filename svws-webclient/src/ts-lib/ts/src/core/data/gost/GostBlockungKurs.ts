@@ -1,5 +1,8 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
+import { GostBlockungKursLehrer, cast_de_nrw_schule_svws_core_data_gost_GostBlockungKursLehrer } from '../../../core/data/gost/GostBlockungKursLehrer';
+import { List, cast_java_util_List } from '../../../java/util/List';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
+import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 
 export class GostBlockungKurs extends JavaObject {
 
@@ -18,6 +21,8 @@ export class GostBlockungKurs extends JavaObject {
 	public wochenstunden : number = 3;
 
 	public anzahlSchienen : number = 1;
+
+	public lehrer : List<GostBlockungKursLehrer> = new Vector();
 
 
 	public constructor() {
@@ -55,6 +60,11 @@ export class GostBlockungKurs extends JavaObject {
 		if (typeof obj.anzahlSchienen === "undefined")
 			 throw new Error('invalid json format, missing attribute anzahlSchienen');
 		result.anzahlSchienen = obj.anzahlSchienen;
+		if (!!obj.lehrer) {
+			for (let elem of obj.lehrer) {
+				result.lehrer?.add(GostBlockungKursLehrer.transpilerFromJSON(JSON.stringify(elem)));
+			}
+		}
 		return result;
 	}
 
@@ -68,6 +78,18 @@ export class GostBlockungKurs extends JavaObject {
 		result += '"suffix" : ' + '"' + obj.suffix.valueOf() + '"' + ',';
 		result += '"wochenstunden" : ' + obj.wochenstunden + ',';
 		result += '"anzahlSchienen" : ' + obj.anzahlSchienen + ',';
+		if (!obj.lehrer) {
+			result += '"lehrer" : []';
+		} else {
+			result += '"lehrer" : [ ';
+			for (let i : number = 0; i < obj.lehrer.size(); i++) {
+				let elem = obj.lehrer.get(i);
+				result += GostBlockungKursLehrer.transpilerToJSON(elem);
+				if (i < obj.lehrer.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
+		}
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -98,6 +120,20 @@ export class GostBlockungKurs extends JavaObject {
 		}
 		if (typeof obj.anzahlSchienen !== "undefined") {
 			result += '"anzahlSchienen" : ' + obj.anzahlSchienen + ',';
+		}
+		if (typeof obj.lehrer !== "undefined") {
+			if (!obj.lehrer) {
+				result += '"lehrer" : []';
+			} else {
+				result += '"lehrer" : [ ';
+				for (let i : number = 0; i < obj.lehrer.size(); i++) {
+					let elem = obj.lehrer.get(i);
+					result += GostBlockungKursLehrer.transpilerToJSON(elem);
+					if (i < obj.lehrer.size() - 1)
+						result += ',';
+				}
+				result += ' ]' + ',';
+			}
 		}
 		result = result.slice(0, -1);
 		result += '}';

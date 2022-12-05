@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 
 import de.nrw.schule.svws.api.JSONMapper;
 import de.nrw.schule.svws.core.data.gost.GostBlockungKurs;
+import de.nrw.schule.svws.core.data.gost.GostBlockungKursLehrer;
 import de.nrw.schule.svws.core.data.gost.GostBlockungRegel;
 import de.nrw.schule.svws.core.data.gost.GostBlockungsdaten;
 import de.nrw.schule.svws.core.data.gost.GostBlockungsergebnisSchiene;
@@ -43,6 +44,7 @@ import de.nrw.schule.svws.db.dto.current.gost.kursblockung.DTOGostBlockungSchien
 import de.nrw.schule.svws.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergebnis;
 import de.nrw.schule.svws.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergebnisKursSchiene;
 import de.nrw.schule.svws.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergebnisKursSchueler;
+import de.nrw.schule.svws.db.dto.current.schild.lehrer.DTOLehrer;
 import de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchueler;
 import de.nrw.schule.svws.db.dto.current.svws.db.DTODBAutoInkremente;
 import de.nrw.schule.svws.db.utils.OperationError;
@@ -143,7 +145,32 @@ public class DataGostBlockungsdaten extends DataManager<Long> {
 		List<DTOGostBlockungKurs> kurse = conn.queryNamed("DTOGostBlockungKurs.blockung_id", blockung.ID, DTOGostBlockungKurs.class);
 		for (DTOGostBlockungKurs kurs : kurse)
 			manager.addKurs(DataGostBlockungKurs.dtoMapper.apply(kurs));
-		
+
+		// Kurs-Lehrer hinzufügen
+		List<Long> kursIDs = kurse.stream().map(k -> k.ID).toList();
+		if (kursIDs.size() > 0) {
+			List<DTOGostBlockungKurslehrer> kurslehrerListe = conn.queryNamed("DTOGostBlockungKurslehrer.blockung_kurs_id.multiple", kursIDs, DTOGostBlockungKurslehrer.class);
+			List<Long> kurslehrerIDs = kurslehrerListe.stream().map(kl -> kl.Lehrer_ID).distinct().toList();
+			if (kurslehrerIDs.size() > 0) {
+				Map<Long, DTOLehrer> mapLehrer = conn.queryNamed("DTOLehrer.id.multiple", kurslehrerIDs, DTOLehrer.class)
+						.stream().collect(Collectors.toMap(l -> l.ID, l -> l));
+				for (DTOGostBlockungKurslehrer kurslehrer : kurslehrerListe) {
+					DTOLehrer lehrer = mapLehrer.get(kurslehrer.Lehrer_ID);
+					if (lehrer == null)
+						throw OperationError.NOT_FOUND.exception();
+					GostBlockungKursLehrer kl = new GostBlockungKursLehrer();
+					kl.id = lehrer.ID;
+					kl.kuerzel = lehrer.Kuerzel;
+					kl.vorname = lehrer.Vorname;
+					kl.nachname = lehrer.Nachname;
+					kl.istExtern = (lehrer.StammschulNr != null);
+					kl.reihenfolge = kurslehrer.Reihenfolge;
+					kl.wochenstunden = kurslehrer.Wochenstunden;
+					manager.addKursLehrer(kl);
+				}
+			}
+		}
+
 		// Regeln hinzufügen.
 		List<DTOGostBlockungRegel> regeln = conn.queryNamed("DTOGostBlockungRegel.blockung_id", blockung.ID, DTOGostBlockungRegel.class);
 		if (regeln.size() > 0) {

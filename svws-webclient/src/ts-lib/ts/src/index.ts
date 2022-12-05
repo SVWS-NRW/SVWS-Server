@@ -118,6 +118,7 @@ export { Abiturdaten } from './core/data/gost/Abiturdaten';
 export { GostBelegpruefungsdaten } from './core/data/gost/GostBelegpruefungsdaten';
 export { GostBeratungslehrer } from './core/data/gost/GostBeratungslehrer';
 export { GostBlockungKurs } from './core/data/gost/GostBlockungKurs';
+export { GostBlockungKursLehrer } from './core/data/gost/GostBlockungKursLehrer';
 export { GostBlockungListeneintrag } from './core/data/gost/GostBlockungListeneintrag';
 export { GostBlockungRegel } from './core/data/gost/GostBlockungRegel';
 export { GostBlockungSchiene } from './core/data/gost/GostBlockungSchiene';

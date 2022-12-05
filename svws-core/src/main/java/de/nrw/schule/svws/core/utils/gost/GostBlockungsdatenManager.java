@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Vector;
 
 import de.nrw.schule.svws.core.data.gost.GostBlockungKurs;
+import de.nrw.schule.svws.core.data.gost.GostBlockungKursLehrer;
 import de.nrw.schule.svws.core.data.gost.GostBlockungRegel;
 import de.nrw.schule.svws.core.data.gost.GostBlockungSchiene;
 import de.nrw.schule.svws.core.data.gost.GostBlockungsdaten;
@@ -674,6 +675,19 @@ public class GostBlockungsdatenManager {
 		removeKursByID(pKurs.id);
 	}
 
+	// ##### GostBlockungKursLehrer #####
+	
+	/**
+	 * Fügt den übergebenen Kurslehrer zu den Blockungs-Daten hinzu
+	 *  
+	 * @param pKursLehrer   der Kurslehrer
+	 */
+	public void addKursLehrer(@NotNull GostBlockungKursLehrer pKursLehrer) {
+		// TODO Implementierung
+	}
+
+	// TODO Getter, HashMaps, Remove, ...
+	
 	// ##### GostBlockungSchiene #####
 
 	private void addSchieneOhneSortierung(@NotNull GostBlockungSchiene pSchiene) throws NullPointerException {
