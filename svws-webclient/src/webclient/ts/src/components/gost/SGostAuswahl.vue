@@ -73,7 +73,7 @@
 				</svws-ui-table>
 				<svws-ui-table
 					v-model="selected_ergebnis"
-					:columns="[{ key: 'id', label: 'ID', span: '1' }, { key: 'bewertung', label: 'Bewertungen', span: '4'}]"
+					:columns="[{ key: 'id', label: 'ID'}, { key: 'bewertung', label: 'Bewertungen', span: '7'}]"
 					:data="rows_ergebnisse.toArray()"
 				>
 					<template #cell-bewertung="{ row }">
@@ -173,7 +173,10 @@ const rows_ergebnisse: ComputedRef<List<GostBlockungsergebnisListeneintrag>> =
 const abiturjahr: ComputedRef<number> =
 	computed(() => Number(app.dataJahrgang.daten?.abiturjahr));
 const jahrgaenge: ComputedRef<JahrgangsListeEintrag[]> =
-	computed( () => appJahrgaenge.auswahl.liste);
+	computed( () => {
+		const set = new Set(app.auswahl.liste.map(r=>r.jahrgang))
+		return appJahrgaenge.auswahl.liste.filter(j=>!set.has(j.kuerzel))
+	});
 
 const selected_hj: WritableComputedRef<GostHalbjahr> =
 	computed({
