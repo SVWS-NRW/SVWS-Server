@@ -65,7 +65,7 @@ export class KursblockungAlgorithmus extends Service<GostBlockungsdatenManager, 
 		if (dynDaten.gibCompareZustandG_NW_KD_FW() > 0) {
 			dynDaten.aktionZustandSpeichernG();
 		}
-		let out : GostBlockungsergebnisManager = dynDaten.gibErzeugtesKursblockungOutput(pInput);
+		let out : GostBlockungsergebnisManager = dynDaten.gibErzeugtesKursblockungOutput(pInput, outputs.size() + 1);
 		outputs.add(out);
 	}
 

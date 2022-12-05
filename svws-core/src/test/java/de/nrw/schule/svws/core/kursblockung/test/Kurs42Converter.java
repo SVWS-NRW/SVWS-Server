@@ -188,6 +188,7 @@ public class Kurs42Converter {
 
 		this._manager = new GostBlockungsdatenManager(gDaten, fManager);
 		this._manager.setMaxTimeMillis(pMaxTimeMillis);
+		this._manager.setID(1);
 
 		this._logger.modifyIndent(-4);
 	}

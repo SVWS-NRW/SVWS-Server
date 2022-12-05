@@ -654,12 +654,11 @@ export class KursblockungDynDaten extends JavaObject {
 	 * Erzeugt ein Objekt {@link GostBlockungsergebnisManager}. Dieses Objekt beinhaltet alle Informationen aus denen
 	 * die GUI die Kurs-Zu-Schiene und die SuS-Zu-Kurs-Zuordnungen rekonstruieren kann.
 	 * 
-	 * @param  gDataManager Das Eingabe-Objekt (der Daten-Manager).
-	 * 
-	 * @return              Das Blockungsergebnis für die GUI.
+	 * @param  gDataManager  Das Eingabe-Objekt (der Daten-Manager).
+	 * @return               Das Blockungsergebnis für die GUI.
 	 */
-	gibErzeugtesKursblockungOutput(gDataManager : GostBlockungsdatenManager) : GostBlockungsergebnisManager {
-		let out : GostBlockungsergebnisManager = new GostBlockungsergebnisManager(gDataManager, -1);
+	gibErzeugtesKursblockungOutput(gDataManager : GostBlockungsdatenManager, pErgebnisID : number) : GostBlockungsergebnisManager {
+		let out : GostBlockungsergebnisManager = new GostBlockungsergebnisManager(gDataManager, pErgebnisID);
 		for (let dynKurs of this.kursArr) 
 			for (let schienenNr of dynKurs.gibSchienenLage()) 
 				out.setKursSchienenNr(dynKurs.gibDatenbankID(), schienenNr + 1);

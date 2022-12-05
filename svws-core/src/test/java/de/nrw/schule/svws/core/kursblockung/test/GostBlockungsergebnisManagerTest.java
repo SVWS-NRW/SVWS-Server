@@ -62,7 +62,7 @@ public class GostBlockungsergebnisManagerTest {
 		long maxTimeMillis = 999;
 		Kurs42Converter k42Converter = new Kurs42Converter(log, PFAD_DATEN_001, maxTimeMillis, false);
 		GostBlockungsdatenManager input = k42Converter.gibKursblockungInput();
-		GostBlockungsergebnisManager out = new GostBlockungsergebnisManager(input, -1L);
+		GostBlockungsergebnisManager out = new GostBlockungsergebnisManager(input, 1L);
 
 		/// GostBlockungsergebnisManager dynamisch testen. 
 		teste_in_out(input, out);
@@ -89,7 +89,7 @@ public class GostBlockungsergebnisManagerTest {
 		long maxTimeMillis = 1000 * 1;
 		Kurs42Converter k42Converter = new Kurs42Converter(log, PFAD_DATEN_002, maxTimeMillis, false);
 		GostBlockungsdatenManager input = k42Converter.gibKursblockungInput();
-		GostBlockungsergebnisManager out = new GostBlockungsergebnisManager(input, -1L);
+		GostBlockungsergebnisManager out = new GostBlockungsergebnisManager(input, 1L);
 
 		/// GostBlockungsergebnisManager dynamisch testen. 
 		teste_in_out(input, out);

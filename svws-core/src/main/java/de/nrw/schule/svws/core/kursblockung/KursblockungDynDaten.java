@@ -888,13 +888,12 @@ public class KursblockungDynDaten {
 	 * Erzeugt ein Objekt {@link GostBlockungsergebnisManager}. Dieses Objekt beinhaltet alle Informationen aus denen
 	 * die GUI die Kurs-Zu-Schiene und die SuS-Zu-Kurs-Zuordnungen rekonstruieren kann.
 	 * 
-	 * @param  gDataManager Das Eingabe-Objekt (der Daten-Manager).
-	 * 
-	 * @return              Das Blockungsergebnis für die GUI.
+	 * @param  gDataManager  Das Eingabe-Objekt (der Daten-Manager).
+	 * @return               Das Blockungsergebnis für die GUI.
 	 */
 	@NotNull
-	GostBlockungsergebnisManager gibErzeugtesKursblockungOutput(@NotNull GostBlockungsdatenManager gDataManager) {
-		@NotNull GostBlockungsergebnisManager out = new GostBlockungsergebnisManager(gDataManager, -1);
+	GostBlockungsergebnisManager gibErzeugtesKursblockungOutput(@NotNull GostBlockungsdatenManager gDataManager, long pErgebnisID) {
+		@NotNull GostBlockungsergebnisManager out = new GostBlockungsergebnisManager(gDataManager, pErgebnisID);
 
 		// Erzeuge die Kurs-Schienen-Zuordnungen (Manager hat eine 1-Indizierung der Schiene!)
 		for (@NotNull KursblockungDynKurs dynKurs : kursArr)
