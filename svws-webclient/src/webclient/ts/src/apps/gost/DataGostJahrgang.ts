@@ -18,7 +18,10 @@ export class DataGostJahrgang extends BaseData<GostJahrgangsdaten, GostJahrgang>
 	public async on_select(): Promise<GostJahrgangsdaten | undefined> {
 		if (!this.selected_list_item?.abiturjahr)
 			return super.unselect();
-		return super._select((eintrag: GostJahrgang) => App.api.getGostAbiturjahrgang(App.schema, eintrag.abiturjahr?.valueOf() || -1));
+		this.pending = true;
+		const res = super._select((eintrag: GostJahrgang) => App.api.getGostAbiturjahrgang(App.schema, eintrag.abiturjahr?.valueOf() || -1));
+		this.pending = false;
+		return res;
 	}
 
 	/**

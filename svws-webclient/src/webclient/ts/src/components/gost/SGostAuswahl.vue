@@ -13,6 +13,8 @@
 				>
 					<template #cell-abiturjahr="{ row }">
 						{{row.abiturjahr === -1 ? '':row.abiturjahr}}
+						<span v-if="(pending && row.abiturjahr === selected?.abiturjahr)" class="loading-spinner-dimensions">
+							<img src="/loading_spinner.svg" alt="Ladeanzeige" class="loading-spinner-dimensions loading-rotation" ></span>
 					</template>
 					<template #footer>
 						<svws-ui-dropdown variant="icon" class="">
@@ -35,14 +37,16 @@
 				<svws-ui-table v-model="selected_hj" :columns="[{ key: 'kuerzel', label: 'Halbjahr' }]" :data="halbjahre" class="mb-10">
 					<template #body="{rows}">
 						<template v-for="row in <GostHalbjahr[]>rows" :key="row.id">
-							<tr :class="{'vt-clicked': row.id === selected_hj.id}" @click="selected_hj = halbjahre.find(hj=>hj.id===row.id)!">
+							<tr :class="{'vt-clicked': row.id === selected_hj.id}" @click="select_hj(row)">
 								<td>
 									{{row.kuerzel}}
-									<svws-ui-button type="transparent" v-if="allow_add_blockung(row)" @click="blockung_hinzufuegen">Blockung hinzufügen</svws-ui-button>
+									<span v-if="(pending && row.id === selected_hj.id)" class="loading-spinner-dimensions">
+										<img src="/loading_spinner.svg" alt="Ladeanzeige" class="loading-spinner-dimensions loading-rotation" ></span>
+									<svws-ui-button type="transparent" v-if="allow_add_blockung(row)" @click="blockung_hinzufuegen" :disabled="pending">Blockung hinzufügen</svws-ui-button>
 								</td>
 							</tr>
 							<template v-if="row.id === selected_hj.id && !wait" v-for="blockung in rows_blockungsswahl" :key="blockung.id">
-								<tr :class="{'vt-clicked': blockung === selected_blockungauswahl}" class="table--row-indent" @click="selected_blockungauswahl = blockung">
+								<tr :class="{'vt-clicked': blockung === selected_blockungauswahl}" class="table--row-indent" @click="select_blockungauswahl(blockung)">
 									<td v-if=" blockung === selected_blockungauswahl ">
 										<div class="flex">
 											<span v-if="!edit_blockungsname"
@@ -56,8 +60,8 @@
 												@input="patch_blockung(blockung)"/>
 										</div>
 										<div class="flex items-center gap-1">
-											<svws-ui-button size="small" type="secondary" @click="create_blockung" title="Ergebnisse berechnen">Berechnen</svws-ui-button >
-											<svws-ui-button size="small" type="danger" @click="toggle_remove_blockung_modal" title="Blockung löschen">
+											<svws-ui-button size="small" type="secondary" @click="create_blockung" title="Ergebnisse berechnen" :disabled="pending">Berechnen</svws-ui-button >
+											<svws-ui-button size="small" type="danger" @click="toggle_remove_blockung_modal" title="Blockung löschen" :disabled="pending">
 												<svws-ui-icon><i-ri-delete-bin-2-line/></svws-ui-icon>
 											</svws-ui-button>
 										</div>
@@ -84,10 +88,10 @@
 							<span :style="{'background-color': color4(row)}">{{manager?.getOfBewertung4Wert(row.id)}}</span>
 						</span>
 						<div v-if="row.id === selected_ergebnis?.id" class="flex gap-2">
-							<svws-ui-button v-if="selected_hj !== GostHalbjahr.Q22" size="small" type="secondary" class="cursor-pointer" @click="toggle_modal_hochschreiben"> Hochschreiben </svws-ui-button>
-							<svws-ui-button size="small" type="secondary" class="cursor-pointer" @click="toggle_modal_aktivieren"> Aktivieren </svws-ui-button>
-							<svws-ui-button size="small" type="secondary" class="cursor-pointer" @click="derive_blockung"> Ableiten </svws-ui-button>
-							<svws-ui-button v-if="rows_ergebnisse.size() > 1" size="small" type="danger" class="cursor-pointer" @click="remove_ergebnis">
+							<svws-ui-button v-if="selected_hj !== GostHalbjahr.Q22" size="small" type="secondary" class="cursor-pointer" @click="toggle_modal_hochschreiben" :disabled="pending"> Hochschreiben </svws-ui-button>
+							<svws-ui-button size="small" type="secondary" class="cursor-pointer" @click="toggle_modal_aktivieren" :disabled="pending"> Aktivieren </svws-ui-button>
+							<svws-ui-button size="small" type="secondary" class="cursor-pointer" @click="derive_blockung" :disabled="pending"> Ableiten </svws-ui-button>
+							<svws-ui-button v-if="rows_ergebnisse.size() > 1" size="small" type="danger" class="cursor-pointer" @click="remove_ergebnis" :disabled="pending">
 								<svws-ui-icon><i-ri-delete-bin-2-line/></svws-ui-icon>
 							</svws-ui-button>
 						</div>
@@ -222,11 +226,30 @@ const selected_ergebnis: WritableComputedRef<GostBlockungsergebnisListeneintrag 
 			}
 		}});
 
+const pending_jahrgang: ComputedRef<boolean> =
+	computed(()=> app.dataJahrgang.pending);
+
+const pending: ComputedRef<boolean> =
+	computed(()=> app.dataKursblockung.pending);
+
 const allow_add_blockung = (row: GostHalbjahr): boolean => {
 	const curr_hj = row.id === selected_hj.value.id;
 	if (!curr_hj || app.dataJahrgang.daten === undefined)
 		return false;
 	return app.dataJahrgang.daten.istBlockungFestgelegt[row.id] ? false : true
+}
+
+function select_hj(halbjahr: GostHalbjahr) {
+	if (pending.value)
+		return;
+	const selection = halbjahre.find(hj=>hj.id===halbjahr.id);
+	if (selection)
+		selected_hj.value = selection;
+}
+
+function select_blockungauswahl(blockung: GostBlockungListeneintrag) {
+	if (!pending.value)
+		selected_blockungauswahl.value = blockung;
 }
 
 async function abiturjahr_hinzufuegen(jahrgang: JahrgangsListeEintrag) {
