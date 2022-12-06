@@ -5,7 +5,7 @@ import { List, Vector, GostHalbjahr, GostKursart, Jahrgaenge, Fachgruppe, Schulg
 		GostSchuelerFachwahl, GostAbiturjahrUtils, GostBelegpruefungErgebnis, GostBelegpruefungsArt,
 		ZulaessigesFach, GostFach, GostFachbereich, 
 		SchuelerListeEintrag,
-		Sprachbelegung, SprachendatenUtils } from "@svws-nrw/svws-core-ts";
+		Sprachbelegung, SprachendatenUtils, GostFaecherManager } from "@svws-nrw/svws-core-ts";
 import { BaseData } from "../BaseData";
 import { reactive } from "vue";
 import { mainApp } from "../Main";
@@ -1012,4 +1012,26 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 		this.setWahl(row, wahl);
 	}
 
+	public reset_fachwahlen() {
+		if (!this._daten || !this.manager)
+			return;
+		for (const fachbelegung of this._daten.fachbelegungen) {
+			const fach = this.manager.getFach(fachbelegung);
+			if (fach) {
+				const fachwahl = this.extract_fachwahl(fach);
+				let index = 0;
+				for (const hj of this._daten.bewertetesHalbjahr) {
+					if (!hj) {
+						const gost_hj = GostHalbjahr.fromID(index)
+						const name = gost_hj?.toString() as 'EF1'|'EF2'|'Q11'|'Q12'|'Q21'|'Q22'|undefined
+						if (name)
+							fachwahl[name] = null;
+						}
+						++index;
+					}
+				fachwahl.abiturFach = null;
+				this.setWahl(fach, fachwahl);
+			}
+		}
+	}
 }

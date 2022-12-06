@@ -103,9 +103,10 @@
 							</tr>
 						</table>
 					</div>
-					<div class="flex justify-between">
-						<svws-ui-button class="my-4" @click.prevent="download_file" >Wahlbogen herunterladen</svws-ui-button >
-						<svws-ui-button :type="manuell ? 'danger':'primary'" class="my-4" @click="manu">Manuellen Modus {{manuell?"de":""}}aktivieren</svws-ui-button>
+					<div class="flex justify-between gap-1">
+						<svws-ui-button @click.prevent="download_file" >Wahlbogen herunterladen</svws-ui-button >
+						<svws-ui-button @click="app.dataGostLaufbahndaten?.reset_fachwahlen()">Reset</svws-ui-button>
+						<svws-ui-button :type="manuell ? 'danger':'primary'" @click="manu">Manuellen Modus {{manuell?"de":""}}aktivieren</svws-ui-button>
 					</div>
 				</div>
 			</div>
