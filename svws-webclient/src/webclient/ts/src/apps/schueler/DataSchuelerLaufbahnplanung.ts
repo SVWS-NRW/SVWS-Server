@@ -337,7 +337,8 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 	 * @returns {boolean} ob doppel belegt wurde, z.B. bei Bili-Fächern
 	 */
 	private checkDoppelbelegung(row: GostFach, hj: GostHalbjahr): boolean {
-		if (row.kuerzel === "VX")
+		const fach = ZulaessigesFach.getByKuerzelASD(row.kuerzel);
+		if (fach.getFachgruppe() === Fachgruppe.FG_VX)
 			return false;
 		const fachbelegungen = this.manager?.getFachbelegungByFachkuerzel(row.kuerzel);
 		if (fachbelegungen !== undefined) {
