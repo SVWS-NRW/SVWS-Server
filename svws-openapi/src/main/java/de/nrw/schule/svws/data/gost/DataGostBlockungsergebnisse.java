@@ -765,6 +765,25 @@ public class DataGostBlockungsergebnisse extends DataManager<Long> {
 	        		return OperationError.CONFLICT.getResponse();
 	        	aktiviere(ergebnisManager, abschnitt, halbjahr);
 	        }
+	        // Markiere die Blockung und das Ergebnis als aktiviert
+	        try {
+	            conn.transactionBegin();
+	        	DTOGostBlockung bl = conn.queryByKey(DTOGostBlockung.class, dtoErgebnis.Blockung_ID);
+	        	bl.IstAktiv = true;
+	        	if (!conn.transactionPersist(bl))
+		        	throw OperationError.INTERNAL_SERVER_ERROR.exception();
+				DTOGostBlockungZwischenergebnis erg = conn.queryByKey(DTOGostBlockungZwischenergebnis.class, dtoErgebnis.ID);
+	        	erg.IstVorlage = true;
+	        	if (!conn.transactionPersist(erg))
+		        	throw OperationError.INTERNAL_SERVER_ERROR.exception();
+		        if (!conn.transactionCommit())
+		        	throw OperationError.INTERNAL_SERVER_ERROR.exception();
+		    } catch (Exception exception) {
+		        conn.transactionRollback();
+		        if (exception instanceof WebApplicationException webex)
+		            throw webex;
+		        throw exception;
+		    }
 	        return Response.status(Status.NO_CONTENT).build();
 	    } catch (Exception exception) {
 	        if (exception instanceof WebApplicationException webex)

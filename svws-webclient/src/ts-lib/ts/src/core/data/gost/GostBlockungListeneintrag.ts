@@ -9,6 +9,8 @@ export class GostBlockungListeneintrag extends JavaObject {
 
 	public gostHalbjahr : number = 0;
 
+	public istAktiv : boolean = false;
+
 
 	public constructor() {
 		super();
@@ -30,6 +32,9 @@ export class GostBlockungListeneintrag extends JavaObject {
 		if (typeof obj.gostHalbjahr === "undefined")
 			 throw new Error('invalid json format, missing attribute gostHalbjahr');
 		result.gostHalbjahr = obj.gostHalbjahr;
+		if (typeof obj.istAktiv === "undefined")
+			 throw new Error('invalid json format, missing attribute istAktiv');
+		result.istAktiv = obj.istAktiv;
 		return result;
 	}
 
@@ -38,6 +43,7 @@ export class GostBlockungListeneintrag extends JavaObject {
 		result += '"id" : ' + obj.id + ',';
 		result += '"name" : ' + '"' + obj.name.valueOf() + '"' + ',';
 		result += '"gostHalbjahr" : ' + obj.gostHalbjahr + ',';
+		result += '"istAktiv" : ' + obj.istAktiv + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -53,6 +59,9 @@ export class GostBlockungListeneintrag extends JavaObject {
 		}
 		if (typeof obj.gostHalbjahr !== "undefined") {
 			result += '"gostHalbjahr" : ' + obj.gostHalbjahr + ',';
+		}
+		if (typeof obj.istAktiv !== "undefined") {
+			result += '"istAktiv" : ' + obj.istAktiv + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

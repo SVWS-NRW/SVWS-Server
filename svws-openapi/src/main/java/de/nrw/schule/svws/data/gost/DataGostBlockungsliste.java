@@ -44,7 +44,8 @@ public class DataGostBlockungsliste extends DataManager<Integer> {
 		GostBlockungListeneintrag daten = new GostBlockungListeneintrag();
 		daten.id = blockung.ID;
 		daten.name = blockung.Name;
-		daten.gostHalbjahr = blockung.Halbjahr.id;		
+		daten.gostHalbjahr = blockung.Halbjahr.id;
+		daten.istAktiv = blockung.IstAktiv;
 		return daten;
 	};
 	
