@@ -11,6 +11,7 @@ import { BaseList } from "../BaseList";
 import { ListAbschnitte } from "./ListAbschnitte";
 import { ListStundenplaene } from "./ListStundenplaene";
 import { reactive } from "vue";
+import { ListGost } from "../gost/ListGost";
 
 /**
  * Das Interface für die Schülerfilterfunktion. Alle hier gesetzten Werte
@@ -77,6 +78,14 @@ export class ListSchueler extends BaseList<SchuelerListeEintrag, Filter> {
 		if (!this._state.ausgewaehlt?.id) return;
 		await this.listAbschnitte.update_list(this._state.ausgewaehlt.id);
 		await this.listStundenplaene.update_list();
+		// hole und aktualisiere die GostJahrgänge, um in der Laufbahnplanung die
+		// jeweiligen GostFächer etc. des Jahrgangs zu bekommen
+		const listGost = BaseList.all.find(list => list instanceof ListGost) as ListGost | undefined;
+		if (listGost) {
+			const jahrgang = listGost.liste.find(jahrgang => jahrgang.jahrgang === this._state.ausgewaehlt?.jahrgang);
+			if (jahrgang && listGost.ausgewaehlt !== jahrgang)
+				listGost.ausgewaehlt = jahrgang;
+		}
 		if (this.listStundenplaene.liste) this.listStundenplaene.ausgewaehlt = this.listStundenplaene.liste[0];
 	}
 }
