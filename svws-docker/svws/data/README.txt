@@ -1,0 +1,1 @@
+Access-Datenbank mit Daten für den initialen Import in dieses Verzeichnis legen (z.B. GymAbi.mdb)

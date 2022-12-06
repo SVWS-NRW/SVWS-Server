@@ -1,0 +1,113 @@
+//TODO: Übergeordnete build.gradle darf nicht alle Plugins auf dieses Modul anwenden (z.B. kein JavaLibPlugin)
+repositories {
+	maven {
+		name = "GitHubPackagesServer"
+		url = "https://maven.pkg.github.com/SVWS-NRW/SVWS-Packages"
+		credentials {
+			username = getGithubActor()
+			password = getGithubToken()
+		}
+	}
+	mavenCentral()
+}
+
+project.ext.svwsArtifactVersion = "0.4.1"
+
+dependencies {
+	implementation "de.nrw.schule.svws:svws-server-app:${svwsArtifactVersion}"
+	implementation "de.nrw.schule.svws:svws-client:${svwsArtifactVersion}"
+}
+
+/*
+ Task lädt die SVWS-Artefakte einer angegebenen Version
+ aus dem Package-Repository von GitHub und speichert diese
+ für die Integration in das Docker-Image des SVWSs.
+ */
+task downloadPublishedArtifacts(type: Copy) {
+	delete "$projectDir/svws/app"
+	copy {
+		from configurations.runtimeClasspath
+		into "$projectDir/svws/tmp"
+	}
+	copy {
+		from ("$projectDir/svws/tmp") {
+			exclude "svws-*.jar"
+			exclude "svws-*.zip"
+		}
+		into "$projectDir/svws/app/lib"
+	}
+	copy {
+		from ("$projectDir/svws/tmp") {
+			include "svws-*.jar"
+			include "svws-*.zip"
+		}
+		into "$projectDir/svws/app"
+	}
+	delete "$projectDir/svws/tmp"
+}
+
+/*
+ Task führt ein Docker-Build per docker compose durch.
+ */
+task dockerComposeBuild(type: Exec) {
+	dependsOn downloadPublishedArtifacts
+	workingDir "$projectDir"
+	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
+		commandLine 'cmd', '/c', 'docker compose build'
+	} else {
+		commandLine 'sh', '-c', 'docker compose build'
+	}
+}
+
+/*
+ Task startet eine lokale SVWS-Umgebung per docker compose.
+ */
+task dockerComposeUp(type: Exec) {
+	workingDir "$projectDir"
+	def cmd = 'docker compose up'
+	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
+		commandLine 'cmd', '/c', cmd
+	} else {
+		commandLine 'sh', '-c', 'docker compose up'
+	}
+}
+
+/*
+ Task führt einen Image-Build des SVWS durch.
+ */
+task dockerBuildSvws(type: Exec) {
+	dependsOn downloadPublishedArtifacts
+	workingDir "$projectDir"
+	def cmd = "docker build svws/. -t svws:${svwsArtifactVersion}";
+	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
+		commandLine 'cmd', '/c', cmd
+	} else {
+		commandLine 'sh', '-c', cmd
+	}
+}
+
+/*
+ Task führt einen Image-Build des SVWS durch, setzt ein Tag
+ und veröffentlicht das Image im Image-Repository (Nexus)
+ */
+task dockerBuildTagAndPublish(type: Exec) {
+	dependsOn dockerBuildSvws
+	workingDir "$projectDir"
+	def dockerRegistryUsername = getNexusActor()
+	def dockerRegistryToken = getNexusToken()
+	//TODO: Korrekte URL zur Image-Registry setzen, wenn Einrichtung im Nexus/Rev-Proxy abgeschlossen ist
+	def dockerRegistry = 'artifactory.svws-nrw.de/repository/svws-docker'
+	def tagNamePub = "${dockerRegistry}/svws:${svwsArtifactVersion}"
+
+	def cmd = """
+		echo ${dockerRegistryToken} | docker login --username ${dockerRegistryUsername} --password-stdin ${dockerRegistry}
+		docker tag svws:${project.version} ${tagNamePub}
+		docker push ${tagNamePub}
+	"""
+
+	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
+		commandLine 'cmd', '/c', cmd
+	} else {
+		commandLine 'sh', '-c', cmd
+	}
+}
