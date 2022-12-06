@@ -1,5 +1,41 @@
 // Vitest Snapshot v1
 
+exports[`java.util.Vector, getestet mit 'LehrerListeEintrag' > toArray: returns given array with elements 1`] = `
+[
+  LehrerListeEintrag {
+    "id": 0,
+    "istAenderbar": false,
+    "istRelevantFuerStatistik": false,
+    "istSichtbar": false,
+    "kuerzel": "",
+    "nachname": "",
+    "personTyp": "",
+    "sortierung": 0,
+    "vorname": "",
+  },
+  2,
+  3,
+]
+`;
+
+exports[`java.util.Vector, getestet mit 'Number' > toArray: returns given array with elements 1`] = `
+[
+  Number {},
+  2,
+  3,
+]
+`;
+
+exports[`java.util.Vector, getestet mit 'String' > toArray: returns given array with elements 1`] = `
+[
+  String {
+    "0": "a",
+  },
+  2,
+  3,
+]
+`;
+
 exports[`java.util.Vector, getestet mit LehrerListeEintrag > toArray: returns given array with elements 1`] = `
 [
   LehrerListeEintrag {
