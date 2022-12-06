@@ -50,6 +50,7 @@ export class MainConfig {
 	kursblockung_aktiv = new Set();
 	blockung_aktiv = false;
 	hasGost = false;
+	user_config: Map<keyof UserConfigKeys, UserConfigKeys[keyof UserConfigKeys]> = new Map();
 
 	/** Das aktuelle Drag & Drop - Objekt */
 	drag_and_drop_data: any;

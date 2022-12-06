@@ -15,6 +15,7 @@ import { DataSchuelerLaufbahndaten } from "./DataSchuelerLaufbahnplanung";
 import { FeedbackValues, ApiStatus } from "./userfeedback";
 import { reactive } from "vue";
 import { DataGostFachkombinationen } from "./DataGostFachkombinationen";
+import { mainApp } from "../Main";
 
 /**
  * Diese Klasse enthält den Abiturjahrgangsspezifischen Teil der gymnasialen
@@ -120,6 +121,10 @@ export class Gost extends App {
 			this.dataFachkombinationen,
 			this.dataFachwahlen
 		]);
+		try {
+			const sortierung = await App.api.getClientConfigUserKey(App.schema, 'SVWS-Client', 'gost.kursansicht.sortierung');
+			mainApp.config.user_config.set('gost.kursansicht.sortierung', sortierung);
+		} catch (e) {}
 	}
 
 	public getBgColor(row: GostStatistikFachwahl): string {

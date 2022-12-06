@@ -73,7 +73,7 @@
 				</svws-ui-table>
 				<svws-ui-table
 					v-model="selected_ergebnis"
-					:columns="[{ key: 'id', label: 'ID'}, { key: 'bewertung', label: 'Bewertungen', span: '7'}]"
+					:columns="[{ key: 'id', label: 'ID'}, { key: 'bewertung', label: 'Bewertungen', span: '15'}]"
 					:data="rows_ergebnisse.toArray()"
 				>
 					<template #cell-bewertung="{ row }">

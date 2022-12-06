@@ -116,16 +116,30 @@
 		List,
 		Vector
 	} from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, Ref, ref } from "vue";
+	import { App } from "~/apps/BaseApp";
+	import { computed, ComputedRef, ref, Ref, WritableComputedRef } from "vue";
 
-	import { injectMainApp, Main } from "~/apps/Main";
+	import { injectMainApp, Main, mainApp } from "~/apps/Main";
 
 	const main: Main = injectMainApp();
 	const app = main.apps.gost
-
-	const sort_by: Ref<'kursart'|'fach_id'> = ref('fach_id')
+	
 	const edit_schienenname: Ref<GostBlockungSchiene|undefined> = ref()
 
+	const sort_by: WritableComputedRef<UserConfigKeys['gost.kursansicht.sortierung']> =
+		computed({
+			get(): UserConfigKeys['gost.kursansicht.sortierung'] {
+				return main.config.user_config.get('gost.kursansicht.sortierung')
+					|| 'kursart'
+			},
+			set(value: UserConfigKeys['gost.kursansicht.sortierung']) {
+				if (value === undefined)
+					value = 'kursart'
+				App.api.setClientConfigUserKey(value, App.schema, 'SVWS-Client', 'gost.kursansicht.sortierung')
+				mainApp.config.user_config.set('gost.kursansicht.sortierung', value)
+			}
+		});
+	
 	const faecher: ComputedRef<List<GostStatistikFachwahl>> =
 		computed(() => app.dataFachwahlen.daten || new Vector<GostStatistikFachwahl>());
 
