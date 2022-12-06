@@ -78,8 +78,16 @@ export class DataGostKursblockung extends BaseData<
 			this.datenmanager = new GostBlockungsdatenManager(blockungsdaten, App.apps.gost.dataFaecher.manager);
 			this.commit();
 			await this.listKursblockungsergebnisse.update_list(blockungsdaten.id);
-			if (this.listKursblockungsergebnisse.liste.length)
-				this.listKursblockungsergebnisse.ausgewaehlt = this.listKursblockungsergebnisse.liste[0];
+			if (this.listKursblockungsergebnisse.liste.length) {
+				let ergebnis = this.listKursblockungsergebnisse.liste[0];
+				if (blockungsdaten.istAktiv)
+					for (const e of this.listKursblockungsergebnisse.liste)
+						if (e.istVorlage) {
+							ergebnis = e;
+							break;
+						}
+				this.listKursblockungsergebnisse.ausgewaehlt = ergebnis;
+			}
 		}
 		this.pending = false;
 		return blockungsdaten;

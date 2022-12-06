@@ -45,7 +45,7 @@
 									<svws-ui-button type="transparent" v-if="allow_add_blockung(row)" @click="blockung_hinzufuegen" :disabled="pending">Blockung hinzufügen</svws-ui-button>
 								</td>
 							</tr>
-							<template v-if="row.id === selected_hj.id && !wait" v-for="blockung in rows_blockungsswahl" :key="blockung.id">
+							<template v-if="row.id === selected_hj.id && !wait" v-for="blockung in rows_blockungsswahl" :key="blockung.hashCode">
 								<tr :class="{'vt-clicked': blockung === selected_blockungauswahl}" class="table--row-indent" @click="select_blockungauswahl(blockung)">
 									<td v-if=" blockung === selected_blockungauswahl ">
 										<div class="flex">
@@ -59,7 +59,8 @@
 												@keyup.enter="edit_blockungsname=false"
 												@input="patch_blockung(blockung)"/>
 										</div>
-										<div class="flex items-center gap-1">
+										<svws-ui-icon v-if="blockung.istAktiv" > <i-ri-pushpin-fill /> </svws-ui-icon>
+										<div v-if="allow_add_blockung(row)" class="flex items-center gap-1">
 											<svws-ui-button size="small" type="secondary" @click="create_blockung" title="Ergebnisse berechnen" :disabled="pending">Berechnen</svws-ui-button >
 											<svws-ui-button size="small" type="danger" @click="toggle_remove_blockung_modal" title="Blockung löschen" :disabled="pending">
 												<svws-ui-icon><i-ri-delete-bin-2-line/></svws-ui-icon>
@@ -80,14 +81,15 @@
 					:columns="[{ key: 'id', label: 'ID'}, { key: 'bewertung', label: 'Bewertungen', span: '15'}]"
 					:data="rows_ergebnisse.toArray()"
 				>
-					<template #cell-bewertung="{ row }">
+					<template #cell-bewertung="{ row }: {row: GostBlockungsergebnisListeneintrag}">
 						<span class="flex gap-1 font-semibold" >
 							<span :style="{'background-color': color1(row)}">{{manager?.getOfBewertung1Wert(row.id)}}</span>
 							<span :style="{'background-color': color2(row)}">{{manager?.getOfBewertung2Wert(row.id)}}</span>
 							<span :style="{'background-color': color3(row)}">{{manager?.getOfBewertung3Wert(row.id)}}</span>
 							<span :style="{'background-color': color4(row)}">{{manager?.getOfBewertung4Wert(row.id)}}</span>
 						</span>
-						<div v-if="row.id === selected_ergebnis?.id" class="flex gap-2">
+						<svws-ui-icon v-if="row.istVorlage" > <i-ri-pushpin-fill /></svws-ui-icon>
+						<div v-if="(row.id === selected_ergebnis?.id && !selected_blockungauswahl?.istAktiv)" class="flex gap-2">
 							<svws-ui-button v-if="selected_hj !== GostHalbjahr.Q22" size="small" type="secondary" class="cursor-pointer" @click="toggle_modal_hochschreiben" :disabled="pending"> Hochschreiben </svws-ui-button>
 							<svws-ui-button size="small" type="secondary" class="cursor-pointer" @click="toggle_modal_aktivieren" :disabled="pending"> Aktivieren </svws-ui-button>
 							<svws-ui-button size="small" type="secondary" class="cursor-pointer" @click="derive_blockung" :disabled="pending"> Ableiten </svws-ui-button>
