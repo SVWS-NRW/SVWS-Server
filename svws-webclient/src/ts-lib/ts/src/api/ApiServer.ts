@@ -2446,18 +2446,20 @@ export class ApiServer extends BaseApi {
 	 *   Code 409: Die übergebenen Daten sind fehlerhaft
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 * 
+	 * @param {List<Number>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} blockungsid - der Pfad-Parameter blockungsid
 	 * @param {number} regeltyp - der Pfad-Parameter regeltyp
 	 * 
 	 * @returns Die Regel der Blockung der gymnasialen Oberstufe
 	 */
-	public async addGostBlockungRegel(schema : string, blockungsid : number, regeltyp : number) : Promise<GostBlockungRegel> {
+	public async addGostBlockungRegel(data : List<Number>, schema : string, blockungsid : number, regeltyp : number) : Promise<GostBlockungRegel> {
 		let path : string = "/db/{schema}/gost/blockungen/{blockungsid : \d+}/addregel/{regeltyp : \d+}"
 				.replace(/{schema\s*(:[^}]+)?}/g, schema)
 				.replace(/{blockungsid\s*(:[^}]+)?}/g, blockungsid.toString())
 				.replace(/{regeltyp\s*(:[^}]+)?}/g, regeltyp.toString());
-		const result : string = await super.postJSON(path, null);
+		let body : string = "[" + data.toArray().map(d => JSON.stringify(d)).join() + "]";
+		const result : string = await super.postJSON(path, body);
 		const text = result;
 		return GostBlockungRegel.transpilerFromJSON(text);
 	}

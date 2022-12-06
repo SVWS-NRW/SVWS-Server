@@ -182,12 +182,13 @@ public class DataGostBlockungRegel extends DataManager<Long> {
 	/** 
      * Fügt eine Regel mit Default-Werten zu einer Blockung der Gymnasialen Oberstufe hinzu.
 	 * 
-     * @param idBlockung   die ID der Blockung
-	 * @param idRegelTyp   die ID des Typs der Blockungsregel (siehe {@link GostKursblockungRegelTyp})
+     * @param idBlockung       die ID der Blockung
+	 * @param idRegelTyp       die ID des Typs der Blockungsregel (siehe {@link GostKursblockungRegelTyp})
+	 * @param regelParameter   die Parameter der Regel oder null, falls Default-Paramater verwendet werden sollen
 	 * 
 	 * @return Eine Response mit der neuen Regel 
 	 */
-	public Response addRegel(long idBlockung, int idRegelTyp) {
+	public Response addRegel(long idBlockung, int idRegelTyp, List<Long> regelParameter) {
 		try {
 			conn.transactionBegin();
 			// Prüfe, ob die Schule eine gymnasiale Oberstufe hat
@@ -210,30 +211,61 @@ public class DataGostBlockungRegel extends DataManager<Long> {
 	    	GostBlockungRegel daten = new GostBlockungRegel();
 	    	daten.id = idRegel;
 	    	daten.typ = regelTyp.typ;
+	    	if ((regelParameter != null) && (regelTyp.getParamCount() != regelParameter.size()))
+				throw OperationError.CONFLICT.exception();
 	    	// Füge Default-Parameter zu der Regel hinzu.
 	    	for (int i = 0; i < regelTyp.getParamCount(); i++) {
 	    		GostKursblockungRegelParameterTyp paramType = regelTyp.getParamType(i);
-	    		long paramValue = switch (paramType) {
-					case KURSART -> GostKursart.LK.id;
-					case KURS_ID -> {
-				    	List<DTOGostBlockungKurs> kurse = conn.queryNamed("DTOGostBlockungKurs.blockung_id", idBlockung, DTOGostBlockungKurs.class);
-						if ((kurse == null) || (kurse.size() == 0))
-							throw OperationError.NOT_FOUND.exception();
-						yield kurse.get(0).ID;
-					}
-					case SCHIENEN_NR -> {
-						Optional<Integer> minSchiene = conn.queryNamed("DTOGostBlockungSchiene.blockung_id", idBlockung, DTOGostBlockungSchiene.class).stream().map(s -> s.Nummer).min((a,b) -> Integer.compare(a, b));
-						if (minSchiene.isEmpty())
-							throw OperationError.NOT_FOUND.exception();
-						yield minSchiene.get();
-					}
-					case SCHUELER_ID -> {
-						List<DTOViewGostSchuelerAbiturjahrgang> schueler = conn.queryNamed("DTOViewGostSchuelerAbiturjahrgang.abiturjahr", blockung.Abi_Jahrgang, DTOViewGostSchuelerAbiturjahrgang.class);
-						if ((schueler == null) || (schueler.size() == 0))
-							throw OperationError.NOT_FOUND.exception();
-						yield schueler.get(0).ID;
-					}
-	    		};
+	    		long paramValue;
+	    		if (regelParameter == null) {
+		    		paramValue = switch (paramType) {
+						case KURSART -> GostKursart.LK.id;
+						case KURS_ID -> {
+					    	List<DTOGostBlockungKurs> kurse = conn.queryNamed("DTOGostBlockungKurs.blockung_id", idBlockung, DTOGostBlockungKurs.class);
+							if ((kurse == null) || (kurse.size() == 0))
+								throw OperationError.NOT_FOUND.exception();
+							yield kurse.get(0).ID;
+						}
+						case SCHIENEN_NR -> {
+							Optional<Integer> minSchiene = conn.queryNamed("DTOGostBlockungSchiene.blockung_id", idBlockung, DTOGostBlockungSchiene.class).stream().map(s -> s.Nummer).min((a,b) -> Integer.compare(a, b));
+							if (minSchiene.isEmpty())
+								throw OperationError.NOT_FOUND.exception();
+							yield minSchiene.get();
+						}
+						case SCHUELER_ID -> {
+							List<DTOViewGostSchuelerAbiturjahrgang> schueler = conn.queryNamed("DTOViewGostSchuelerAbiturjahrgang.abiturjahr", blockung.Abi_Jahrgang, DTOViewGostSchuelerAbiturjahrgang.class);
+							if ((schueler == null) || (schueler.size() == 0))
+								throw OperationError.NOT_FOUND.exception();
+							yield schueler.get(0).ID;
+						}
+		    		};
+	    		} else {
+					Long tmp = regelParameter.get(i);
+					paramValue = tmp;
+		    		switch (paramType) {
+						case KURSART -> {
+							if (GostKursart.fromIDorNull(tmp.intValue()) == null)
+								throw OperationError.NOT_FOUND.exception();
+						}
+						case KURS_ID -> {
+							DTOGostBlockungKurs kurs = conn.queryByKey(DTOGostBlockungKurs.class, tmp);
+							if (kurs == null)
+								throw OperationError.NOT_FOUND.exception();
+						}
+						case SCHIENEN_NR -> {
+							List<DTOGostBlockungSchiene> schienen = conn.queryList("SELECT e FROM DTOGostBlockungSchiene e WHERE e.Blockung_ID = ?1 AND e.Nummer = ?2", 
+									DTOGostBlockungSchiene.class, idBlockung, tmp);
+							if (schienen.isEmpty())
+								throw OperationError.NOT_FOUND.exception();
+						}
+						case SCHUELER_ID -> {
+							List<DTOViewGostSchuelerAbiturjahrgang> schueler = conn.queryList("SELECT e FROM DTOViewGostSchuelerAbiturjahrgang e WHERE e.Abiturjahr = ?1 AND e.ID = ?2", 
+									DTOViewGostSchuelerAbiturjahrgang.class, blockung.Abi_Jahrgang, tmp);
+							if ((schueler == null) || (schueler.size() == 0))
+								throw OperationError.NOT_FOUND.exception();
+						}
+		    		}
+	    		}
 	    		DTOGostBlockungRegelParameter param = new DTOGostBlockungRegelParameter(idRegel, i, paramValue);
 	    		conn.transactionPersist(param);
 	    		daten.parameter.add(paramValue);

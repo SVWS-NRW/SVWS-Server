@@ -1,6 +1,7 @@
 package de.nrw.schule.svws.api.server;
 
 import java.io.InputStream;
+import java.util.List;
 
 import de.nrw.schule.svws.api.OpenAPIApplication;
 import de.nrw.schule.svws.core.abschluss.gost.AbiturdatenManager;
@@ -1186,6 +1187,7 @@ public class APIGost {
      * @param schema       das Datenbankschema, in welchem die Regel der Blockung erstellt wird
      * @param idBlockung   die ID der Blockung
      * @param typRegel     der Regel-Typ
+     * @param regelParameter  die Parameter der Regel oder null, falls Default-Parameter verwendet werden sollen
      * @param request      die Informationen zur HTTP-Anfrage
      * 
      * @return die HTTP-Antwort mit der Regel der Blockung der gymnasialen Oberstufe
@@ -1203,10 +1205,13 @@ public class APIGost {
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
     public Response addGostBlockungRegel(
     		@PathParam("schema") String schema, @PathParam("blockungsid") long idBlockung, 
-    		@PathParam("regeltyp") int typRegel, @Context HttpServletRequest request) {
+    		@PathParam("regeltyp") int typRegel, 
+            @RequestBody(description = "Die Regel-Parameter", required = false, content = @Content(mediaType = MediaType.APPLICATION_JSON, 
+            array = @ArraySchema(schema = @Schema(implementation = Long.class)))) List<Long> regelParameter,
+    		@Context HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) {
-    		return (new DataGostBlockungRegel(conn)).addRegel(idBlockung, typRegel);
+    		return (new DataGostBlockungRegel(conn)).addRegel(idBlockung, typRegel, regelParameter);
     	}
     }
 
