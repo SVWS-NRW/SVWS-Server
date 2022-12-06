@@ -122,7 +122,7 @@ export class Gost extends App {
 			this.dataFachwahlen
 		]);
 		try {
-			const sortierung = await App.api.getClientConfigUserKey(App.schema, 'SVWS-Client', 'gost.kursansicht.sortierung');
+			const sortierung = await App.api.getClientConfigUserKey(App.schema, 'SVWS-Client', 'gost.kursansicht.sortierung')	as UserConfigKeys['gost.kursansicht.sortierung'];
 			mainApp.config.user_config.set('gost.kursansicht.sortierung', sortierung);
 		} catch (e) {}
 	}
