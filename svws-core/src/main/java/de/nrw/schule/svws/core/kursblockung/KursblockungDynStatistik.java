@@ -21,10 +21,7 @@ public class KursblockungDynStatistik {
 	private @NotNull int @NotNull [][] matrixFachartPaar = new int[0][0];
 
 	/** Regel: Kurs verbiete mit Kurs. */
-	private @NotNull boolean @NotNull [][] kursVerbieteMitKurs = new boolean[0][0];
-	
-	/** Regel: Kurs zusammen mit Kurs. */
-	private @NotNull boolean @NotNull [][] kursZusammenMitKurs = new boolean[0][0];
+	private @NotNull int @NotNull [][] regelVerletzungKursMitKurs = new int[0][0];
 	
 	/** Die aktuelle Bewertung aller Regelverletzungen. */
 	private int bewertungRegelverletzungen;
@@ -92,8 +89,7 @@ public class KursblockungDynStatistik {
 	 */
 	void clear() {
 		matrixFachartPaar = new int[0][0];
-		kursVerbieteMitKurs = new boolean[0][0];
-		kursZusammenMitKurs = new boolean[0][0];
+		regelVerletzungKursMitKurs = new int[0][0];
 
 		bewertungRegelverletzungen = 0;
 		bewertungRegelverletzungenSaveS = 0;
@@ -123,11 +119,11 @@ public class KursblockungDynStatistik {
 	 * @param pMatrixFachartPaar Das 2D-Array beinhaltet pro Fachart-Paar eine Bewertung.
 	 * @param pMaxSchueler       Die maximale Anzahl an Schülern.
 	 * @param pMaxFacharten      Die maximale Anzahl an Facharten. 
+	 * @param pMaxKurse          Die maximale Anzahl an Kursen. 
 	 */
 	void aktionInitialisiere(@NotNull int @NotNull [][] pMatrixFachartPaar, int pMaxSchueler, int pMaxFacharten, int pMaxKurse) {
 		matrixFachartPaar = pMatrixFachartPaar;
-		kursVerbieteMitKurs = new boolean[pMaxKurse][pMaxKurse];
-		kursZusammenMitKurs = new boolean[pMaxKurse][pMaxKurse];
+		regelVerletzungKursMitKurs = new int[pMaxKurse][pMaxKurse];
 		
 		bewertungRegelverletzungen = 0;
 		bewertungRegelverletzungenSaveS = 0;
@@ -199,23 +195,18 @@ public class KursblockungDynStatistik {
 	 *         verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist. 
 	 */
 	int gibBewertungZustandS_NW_KD() {
-		// Nichtwahlen schlechter?
-		if (bewertungNichtwahlen > bewertungNichtwahlenSaveS) 
-			return -1;
-		// Nichtwahlen besser?
-		if (bewertungNichtwahlen < bewertungNichtwahlenSaveS) 
-			return +1;
+		// Regelverletzungen
+		if (bewertungRegelverletzungen > bewertungRegelverletzungenSaveS) return -1;
+		if (bewertungRegelverletzungen < bewertungRegelverletzungenSaveS) return +1;
+		
+		// Nichtwahlen
+		if (bewertungNichtwahlen > bewertungNichtwahlenSaveS) return -1;
+		if (bewertungNichtwahlen < bewertungNichtwahlenSaveS) return +1;
 
+		// Kursdifferenzen
 		for (int i = bewertungKursdifferenzen.length - 1; i >= 0; i--) {
-			// Kursdifferenz gleich?
-			if (bewertungKursdifferenzen[i] == bewertungKursdifferenzenSaveS[i]) 
-				continue;
-			// Kursdifferenz schlechter?
-			if (bewertungKursdifferenzen[i] > bewertungKursdifferenzenSaveS[i]) 
-				return -1;
-			// Kursdifferenz besser?
-			if (bewertungKursdifferenzen[i] < bewertungKursdifferenzenSaveS[i]) 
-				return +1;
+			if (bewertungKursdifferenzen[i] > bewertungKursdifferenzenSaveS[i]) return -1;
+			if (bewertungKursdifferenzen[i] < bewertungKursdifferenzenSaveS[i]) return +1;
 		}
 
 		// Bewertungen identisch
@@ -230,72 +221,23 @@ public class KursblockungDynStatistik {
 	 *         verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist. 
 	 */
 	int gibCompareZustandK_NW_KD_FW() {
-		// Nichtwahlen schlechter?
-		if (bewertungNichtwahlen > bewertungNichtwahlenSaveK) 
-			return -1;
-		// Nichtwahlen besser?
-		if (bewertungNichtwahlen < bewertungNichtwahlenSaveK) 
-			return +1;
-
-		// Kursdifferenzen vergleichen.
-		for (int i = bewertungKursdifferenzen.length - 1; i >= 0; i--) {
-			// Kursdifferenz gleich?
-			if (bewertungKursdifferenzen[i] == bewertungKursdifferenzenSaveK[i]) 
-				continue;
-			// Kursdifferenz schlechter?
-			if (bewertungKursdifferenzen[i] > bewertungKursdifferenzenSaveK[i]) 
-				return -1;
-			// Kursdifferenz besser?
-			if (bewertungKursdifferenzen[i] < bewertungKursdifferenzenSaveK[i]) 
-				return +1;
-		}
-
-		// FachartPaar schlechter?
-		if (bewertungFachartPaar > bewertungFachartPaarSaveK) 
-			return -1;
-		// FachartPaar besser?
-		if (bewertungFachartPaar < bewertungFachartPaarSaveK) 
-			return +1;
-
-		// Bewertungen identisch
-		return 0;
-	}
-
-	/** 
-	 * Liefert den Wert {@code -1, 0 oder +1}, falls die Bewertung (Nichtwahlen, Kursdiffenzen, FachartPaar) des
-	 * Zustandes-G sich verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
-	 * 
-	 * @return {@code -1, 0 oder +1}, falls die Bewertung (Nichtwahlen, Kursdiffenzen, FachartPaar) des Zustandes-G sich
-	 *         verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist. 
-	 */
-	int gibCompareZustandG_NW_KD_FW() {
-		// Nichtwahlen schlechter?
-		if (bewertungNichtwahlen > bewertungNichtwahlenSaveG) 
-			return -1;
-		// Nichtwahlen besser?
-		if (bewertungNichtwahlen < bewertungNichtwahlenSaveG) 
-			return +1;
-
-		// Kursdifferenzen vergleichen.
-		for (int i = bewertungKursdifferenzen.length - 1; i >= 0; i--) {
-			// Kursdifferenz gleich?
-			if (bewertungKursdifferenzen[i] == bewertungKursdifferenzenSaveG[i]) 
-				continue;
-			// Kursdifferenz schlechter?
-			if (bewertungKursdifferenzen[i] > bewertungKursdifferenzenSaveG[i]) 
-				return -1;
-			// Kursdifferenz besser?
-			if (bewertungKursdifferenzen[i] < bewertungKursdifferenzenSaveG[i]) 
-				return +1;
-		}
-
-		// FachartPaar schlechter?
-		if (bewertungFachartPaar > bewertungFachartPaarSaveG) 
-			return -1;
+		// Regelverletzungen
+		if (bewertungRegelverletzungen > bewertungRegelverletzungenSaveK) return -1;
+		if (bewertungRegelverletzungen < bewertungRegelverletzungenSaveK) return +1;
 		
-		// FachartPaar besser?
-		if (bewertungFachartPaar < bewertungFachartPaarSaveG) 
-			return +1;
+		// Nichtwahlen
+		if (bewertungNichtwahlen > bewertungNichtwahlenSaveK) return -1;
+		if (bewertungNichtwahlen < bewertungNichtwahlenSaveK) return +1;
+
+		// Kursdifferenzen
+		for (int i = bewertungKursdifferenzen.length - 1; i >= 0; i--) {
+			if (bewertungKursdifferenzen[i] > bewertungKursdifferenzenSaveK[i]) return -1;
+			if (bewertungKursdifferenzen[i] < bewertungKursdifferenzenSaveK[i]) return +1;
+		}
+
+		// FachartPaar
+		if (bewertungFachartPaar > bewertungFachartPaarSaveK) return -1;
+		if (bewertungFachartPaar < bewertungFachartPaarSaveK) return +1;
 
 		// Bewertungen identisch
 		return 0;
@@ -309,33 +251,53 @@ public class KursblockungDynStatistik {
 	 *         Zustandes K sich verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist. 
 	 */
 	int gibCompareZustandK_FW_NW_KD() {
+		// Regelverletzungen
+		if (bewertungRegelverletzungen > bewertungRegelverletzungenSaveK) return -1;
+		if (bewertungRegelverletzungen < bewertungRegelverletzungenSaveK) return +1;
 
-		// FachartPaar schlechter?
-		if (bewertungFachartPaar > bewertungFachartPaarSaveK) 
-			return -1;
-		// FachartPaar besser?
-		if (bewertungFachartPaar < bewertungFachartPaarSaveK) 
-			return +1;
-
-		// Nichtwahlen schlechter?
-		if (bewertungNichtwahlen > bewertungNichtwahlenSaveK) 
-			return -1;
-		// Nichtwahlen besser?
-		if (bewertungNichtwahlen < bewertungNichtwahlenSaveK) 
-			return +1;
-
-		// Kursdifferenzen vergleichen.
+		// FachartPaar
+		if (bewertungFachartPaar > bewertungFachartPaarSaveK) return -1;
+		if (bewertungFachartPaar < bewertungFachartPaarSaveK) return +1;
+	
+		// Nichtwahlen
+		if (bewertungNichtwahlen > bewertungNichtwahlenSaveK) return -1;
+		if (bewertungNichtwahlen < bewertungNichtwahlenSaveK) return +1;
+	
+		// Kursdifferenzen
 		for (int i = bewertungKursdifferenzen.length - 1; i >= 0; i--) {
-			// Kursdifferenz gleich?
-			if (bewertungKursdifferenzen[i] == bewertungKursdifferenzenSaveK[i]) 
-				continue;
-			// Kursdifferenz schlechter?
-			if (bewertungKursdifferenzen[i] > bewertungKursdifferenzenSaveK[i]) 
-				return -1;
-			// Kursdifferenz besser?
-			if (bewertungKursdifferenzen[i] < bewertungKursdifferenzenSaveK[i]) 
-				return +1;
+			if (bewertungKursdifferenzen[i] > bewertungKursdifferenzenSaveK[i]) return -1;
+			if (bewertungKursdifferenzen[i] < bewertungKursdifferenzenSaveK[i]) return +1;
 		}
+	
+		// Bewertungen identisch
+		return 0;
+	}
+
+	/** 
+	 * Liefert den Wert {@code -1, 0 oder +1}, falls die Bewertung (Nichtwahlen, Kursdiffenzen, FachartPaar) des
+	 * Zustandes-G sich verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
+	 * 
+	 * @return {@code -1, 0 oder +1}, falls die Bewertung (Nichtwahlen, Kursdiffenzen, FachartPaar) des Zustandes-G sich
+	 *         verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist. 
+	 */
+	int gibCompareZustandG_NW_KD_FW() {
+		// Regelverletzungen
+		if (bewertungRegelverletzungen > bewertungRegelverletzungenSaveG) return -1;
+		if (bewertungRegelverletzungen < bewertungRegelverletzungenSaveG) return +1;
+		
+		// Nichtwahlen
+		if (bewertungNichtwahlen > bewertungNichtwahlenSaveG) return -1;
+		if (bewertungNichtwahlen < bewertungNichtwahlenSaveG) return +1;
+
+		// Kursdifferenzen
+		for (int i = bewertungKursdifferenzen.length - 1; i >= 0; i--) {
+			if (bewertungKursdifferenzen[i] > bewertungKursdifferenzenSaveG[i]) return -1;
+			if (bewertungKursdifferenzen[i] < bewertungKursdifferenzenSaveG[i]) return +1;
+		}
+
+		// FachartPaar
+		if (bewertungFachartPaar > bewertungFachartPaarSaveG) return -1;
+		if (bewertungFachartPaar < bewertungFachartPaarSaveG) return +1;
 
 		// Bewertungen identisch
 		return 0;
@@ -392,11 +354,7 @@ public class KursblockungDynStatistik {
 		int nr1 = pKurs1.gibFachart().gibNr();
 		int nr2 = pKurs2.gibFachart().gibNr();
 		bewertungFachartPaar += matrixFachartPaar[nr1][nr2];
-		
-		if (kursVerbieteMitKurs[nr1][nr2])
-			bewertungRegelverletzungen++;
-		if (kursZusammenMitKurs[nr1][nr2])
-			bewertungRegelverletzungen--;
+		bewertungRegelverletzungen += regelVerletzungKursMitKurs[nr1][nr2];
 	}
 
 	/** 
@@ -409,11 +367,7 @@ public class KursblockungDynStatistik {
 		int nr1 = pKurs1.gibFachart().gibNr();
 		int nr2 = pKurs2.gibFachart().gibNr();
 		bewertungFachartPaar -= matrixFachartPaar[nr1][nr2];
-
-		if (kursVerbieteMitKurs[nr1][nr2])
-			bewertungRegelverletzungen--;
-		if (kursZusammenMitKurs[nr1][nr2])
-			bewertungRegelverletzungen++;
+		bewertungRegelverletzungen -= regelVerletzungKursMitKurs[nr1][nr2];
 	}
 
 	/** 
@@ -505,11 +459,16 @@ public class KursblockungDynStatistik {
 	void regelHinzufuegenKursVerbieteMitKurs(@NotNull KursblockungDynKurs kurs1, @NotNull KursblockungDynKurs kurs2) {
 		int nr1 = kurs1.gibInternalID();
 		int nr2 = kurs2.gibInternalID();
-		kursVerbieteMitKurs[nr1][nr2] = true;
+		regelVerletzungKursMitKurs[nr1][nr2] += 1;
+		regelVerletzungKursMitKurs[nr2][nr1] += 1;
+		System.out.println("DEBUG: VERBIETE " + kurs1.toString()+" mit " + kurs2.toString());
 	}
 
 	/**
 	 * Fügt die Regel {@link GostKursblockungRegelTyp#KURS_ZUSAMMEN_MIT_KURS} zur Bewertung hinzu.
+	 * 
+	 * Erhöht direkt den Malus 'bewertungRegelverletzungen', da die Kurse anfangs noch nicht zusammen sind.
+	 * Geht ein Kurs über 2 Schienen, der andere über 3, dann können diese maximal 2 Mal zusammen sein.   
 	 * 
 	 * @param kurs1  Der 1. Kurs der Regel.
 	 * @param kurs2  Der 2. Kurs der Regel.
@@ -517,7 +476,10 @@ public class KursblockungDynStatistik {
 	void regelHinzufuegenKursZusammenMitKurs(@NotNull KursblockungDynKurs kurs1, @NotNull KursblockungDynKurs kurs2) {
 		int nr1 = kurs1.gibInternalID();
 		int nr2 = kurs2.gibInternalID();
-		kursZusammenMitKurs[nr1][nr2] = true;
+		regelVerletzungKursMitKurs[nr1][nr2] -= 1;
+		regelVerletzungKursMitKurs[nr2][nr1] -= 1;
+		bewertungRegelverletzungen += Math.max(kurs1.gibSchienenAnzahl(), kurs2.gibSchienenAnzahl());
+		System.out.println("DEBUG: ZUSAMMEN " + kurs1.toString()+" mit " + kurs2.toString());
 	}
 
 }

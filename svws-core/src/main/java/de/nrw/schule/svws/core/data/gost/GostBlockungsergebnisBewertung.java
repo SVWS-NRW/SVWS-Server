@@ -19,7 +19,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @TranspilerDTO
 public class GostBlockungsergebnisBewertung {
 
-	/** Bewertungskriterium 1a: Array mit den Regel-IDs der Regeln, die nicht erfüllt werden konnten. */
+	/** Bewertungskriterium 1a: Array mit den Regel-IDs der {@link GostBlockungRegel} die nicht erfüllt werden konnten. */
 	public @NotNull Vector<@NotNull Long> regelVerletzungen = new Vector<>();
 
 	/** Bewertungskriterium 1b: Anzahl aller Kurse, die nicht auf Schienen verteilt wurden. */

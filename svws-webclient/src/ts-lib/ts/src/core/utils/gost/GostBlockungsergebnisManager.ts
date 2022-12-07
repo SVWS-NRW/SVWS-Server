@@ -278,6 +278,33 @@ export class GostBlockungsergebnisManager extends JavaObject {
 						}
 					break;
 				}
+				case GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS: {
+					let kursID1 : number = r.parameter.get(0).valueOf();
+					let kursID2 : number = r.parameter.get(1).valueOf();
+					let set1 : HashSet<GostBlockungsergebnisSchiene> = this.getOfKursSchienenmenge(kursID1);
+					let set2 : HashSet<GostBlockungsergebnisSchiene> = this.getOfKursSchienenmenge(kursID2);
+					for (let schiene1 of set1) 
+						for (let schiene2 of set2) 
+							if (schiene1 as unknown === schiene2 as unknown) 
+								regelVerletzungen.add(r.id);
+					break;
+				}
+				case GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS: {
+					let kursID1 : number = r.parameter.get(0).valueOf();
+					let kursID2 : number = r.parameter.get(1).valueOf();
+					let set1 : HashSet<GostBlockungsergebnisSchiene> = this.getOfKursSchienenmenge(kursID1);
+					let set2 : HashSet<GostBlockungsergebnisSchiene> = this.getOfKursSchienenmenge(kursID2);
+					if (set1.size() < set2.size()) {
+						for (let schiene1 of set1) 
+							if (set2.contains(schiene1) === false) 
+								regelVerletzungen.add(r.id);
+					} else {
+						for (let schiene2 of set2) 
+							if (set1.contains(schiene2) === false) 
+								regelVerletzungen.add(r.id);
+					}
+					break;
+				}
 				default: {
 					throw new IllegalStateException("Der Regel-Typ ist unbekannt: " + typ)
 				}

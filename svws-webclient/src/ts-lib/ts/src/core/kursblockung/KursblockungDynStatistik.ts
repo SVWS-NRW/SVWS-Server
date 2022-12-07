@@ -8,9 +8,7 @@ export class KursblockungDynStatistik extends JavaObject {
 
 	private matrixFachartPaar : Array<Array<number>> = [...Array(0)].map(e => Array(0).fill(0));
 
-	private kursVerbieteMitKurs : Array<Array<boolean>> = [...Array(0)].map(e => Array(0).fill(false));
-
-	private kursZusammenMitKurs : Array<Array<boolean>> = [...Array(0)].map(e => Array(0).fill(false));
+	private regelVerletzungKursMitKurs : Array<Array<number>> = [...Array(0)].map(e => Array(0).fill(0));
 
 	private bewertungRegelverletzungen : number = 0;
 
@@ -63,8 +61,7 @@ export class KursblockungDynStatistik extends JavaObject {
 	 */
 	clear() : void {
 		this.matrixFachartPaar = [...Array(0)].map(e => Array(0).fill(0));
-		this.kursVerbieteMitKurs = [...Array(0)].map(e => Array(0).fill(false));
-		this.kursZusammenMitKurs = [...Array(0)].map(e => Array(0).fill(false));
+		this.regelVerletzungKursMitKurs = [...Array(0)].map(e => Array(0).fill(0));
 		this.bewertungRegelverletzungen = 0;
 		this.bewertungRegelverletzungenSaveS = 0;
 		this.bewertungRegelverletzungenSaveK = 0;
@@ -91,11 +88,11 @@ export class KursblockungDynStatistik extends JavaObject {
 	 * @param pMatrixFachartPaar Das 2D-Array beinhaltet pro Fachart-Paar eine Bewertung.
 	 * @param pMaxSchueler       Die maximale Anzahl an Schülern.
 	 * @param pMaxFacharten      Die maximale Anzahl an Facharten. 
+	 * @param pMaxKurse          Die maximale Anzahl an Kursen. 
 	 */
 	aktionInitialisiere(pMatrixFachartPaar : Array<Array<number>>, pMaxSchueler : number, pMaxFacharten : number, pMaxKurse : number) : void {
 		this.matrixFachartPaar = pMatrixFachartPaar;
-		this.kursVerbieteMitKurs = [...Array(pMaxKurse)].map(e => Array(pMaxKurse).fill(false));
-		this.kursZusammenMitKurs = [...Array(pMaxKurse)].map(e => Array(pMaxKurse).fill(false));
+		this.regelVerletzungKursMitKurs = [...Array(pMaxKurse)].map(e => Array(pMaxKurse).fill(0));
 		this.bewertungRegelverletzungen = 0;
 		this.bewertungRegelverletzungenSaveS = 0;
 		this.bewertungRegelverletzungenSaveK = 0;
@@ -164,13 +161,15 @@ export class KursblockungDynStatistik extends JavaObject {
 	 *         verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist. 
 	 */
 	gibBewertungZustandS_NW_KD() : number {
+		if (this.bewertungRegelverletzungen > this.bewertungRegelverletzungenSaveS) 
+			return -1;
+		if (this.bewertungRegelverletzungen < this.bewertungRegelverletzungenSaveS) 
+			return +1;
 		if (this.bewertungNichtwahlen > this.bewertungNichtwahlenSaveS) 
 			return -1;
 		if (this.bewertungNichtwahlen < this.bewertungNichtwahlenSaveS) 
 			return +1;
 		for (let i : number = this.bewertungKursdifferenzen.length - 1; i >= 0; i--){
-			if (this.bewertungKursdifferenzen[i] === this.bewertungKursdifferenzenSaveS[i]) 
-				continue;
 			if (this.bewertungKursdifferenzen[i] > this.bewertungKursdifferenzenSaveS[i]) 
 				return -1;
 			if (this.bewertungKursdifferenzen[i] < this.bewertungKursdifferenzenSaveS[i]) 
@@ -188,13 +187,15 @@ export class KursblockungDynStatistik extends JavaObject {
 	 *         verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist. 
 	 */
 	gibCompareZustandK_NW_KD_FW() : number {
+		if (this.bewertungRegelverletzungen > this.bewertungRegelverletzungenSaveK) 
+			return -1;
+		if (this.bewertungRegelverletzungen < this.bewertungRegelverletzungenSaveK) 
+			return +1;
 		if (this.bewertungNichtwahlen > this.bewertungNichtwahlenSaveK) 
 			return -1;
 		if (this.bewertungNichtwahlen < this.bewertungNichtwahlenSaveK) 
 			return +1;
 		for (let i : number = this.bewertungKursdifferenzen.length - 1; i >= 0; i--){
-			if (this.bewertungKursdifferenzen[i] === this.bewertungKursdifferenzenSaveK[i]) 
-				continue;
 			if (this.bewertungKursdifferenzen[i] > this.bewertungKursdifferenzenSaveK[i]) 
 				return -1;
 			if (this.bewertungKursdifferenzen[i] < this.bewertungKursdifferenzenSaveK[i]) 
@@ -203,34 +204,6 @@ export class KursblockungDynStatistik extends JavaObject {
 		if (this.bewertungFachartPaar > this.bewertungFachartPaarSaveK) 
 			return -1;
 		if (this.bewertungFachartPaar < this.bewertungFachartPaarSaveK) 
-			return +1;
-		return 0;
-	}
-
-	/**
-	 *
-	 * Liefert den Wert {@code -1, 0 oder +1}, falls die Bewertung (Nichtwahlen, Kursdiffenzen, FachartPaar) des
-	 * Zustandes-G sich verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
-	 * 
-	 * @return {@code -1, 0 oder +1}, falls die Bewertung (Nichtwahlen, Kursdiffenzen, FachartPaar) des Zustandes-G sich
-	 *         verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist. 
-	 */
-	gibCompareZustandG_NW_KD_FW() : number {
-		if (this.bewertungNichtwahlen > this.bewertungNichtwahlenSaveG) 
-			return -1;
-		if (this.bewertungNichtwahlen < this.bewertungNichtwahlenSaveG) 
-			return +1;
-		for (let i : number = this.bewertungKursdifferenzen.length - 1; i >= 0; i--){
-			if (this.bewertungKursdifferenzen[i] === this.bewertungKursdifferenzenSaveG[i]) 
-				continue;
-			if (this.bewertungKursdifferenzen[i] > this.bewertungKursdifferenzenSaveG[i]) 
-				return -1;
-			if (this.bewertungKursdifferenzen[i] < this.bewertungKursdifferenzenSaveG[i]) 
-				return +1;
-		}
-		if (this.bewertungFachartPaar > this.bewertungFachartPaarSaveG) 
-			return -1;
-		if (this.bewertungFachartPaar < this.bewertungFachartPaarSaveG) 
 			return +1;
 		return 0;
 	}
@@ -244,6 +217,10 @@ export class KursblockungDynStatistik extends JavaObject {
 	 *         Zustandes K sich verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist. 
 	 */
 	gibCompareZustandK_FW_NW_KD() : number {
+		if (this.bewertungRegelverletzungen > this.bewertungRegelverletzungenSaveK) 
+			return -1;
+		if (this.bewertungRegelverletzungen < this.bewertungRegelverletzungenSaveK) 
+			return +1;
 		if (this.bewertungFachartPaar > this.bewertungFachartPaarSaveK) 
 			return -1;
 		if (this.bewertungFachartPaar < this.bewertungFachartPaarSaveK) 
@@ -253,13 +230,41 @@ export class KursblockungDynStatistik extends JavaObject {
 		if (this.bewertungNichtwahlen < this.bewertungNichtwahlenSaveK) 
 			return +1;
 		for (let i : number = this.bewertungKursdifferenzen.length - 1; i >= 0; i--){
-			if (this.bewertungKursdifferenzen[i] === this.bewertungKursdifferenzenSaveK[i]) 
-				continue;
 			if (this.bewertungKursdifferenzen[i] > this.bewertungKursdifferenzenSaveK[i]) 
 				return -1;
 			if (this.bewertungKursdifferenzen[i] < this.bewertungKursdifferenzenSaveK[i]) 
 				return +1;
 		}
+		return 0;
+	}
+
+	/**
+	 *
+	 * Liefert den Wert {@code -1, 0 oder +1}, falls die Bewertung (Nichtwahlen, Kursdiffenzen, FachartPaar) des
+	 * Zustandes-G sich verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist.
+	 * 
+	 * @return {@code -1, 0 oder +1}, falls die Bewertung (Nichtwahlen, Kursdiffenzen, FachartPaar) des Zustandes-G sich
+	 *         verschlechtert (-1), sich verbessert (+1) hat oder gleichgeblieben (0) ist. 
+	 */
+	gibCompareZustandG_NW_KD_FW() : number {
+		if (this.bewertungRegelverletzungen > this.bewertungRegelverletzungenSaveG) 
+			return -1;
+		if (this.bewertungRegelverletzungen < this.bewertungRegelverletzungenSaveG) 
+			return +1;
+		if (this.bewertungNichtwahlen > this.bewertungNichtwahlenSaveG) 
+			return -1;
+		if (this.bewertungNichtwahlen < this.bewertungNichtwahlenSaveG) 
+			return +1;
+		for (let i : number = this.bewertungKursdifferenzen.length - 1; i >= 0; i--){
+			if (this.bewertungKursdifferenzen[i] > this.bewertungKursdifferenzenSaveG[i]) 
+				return -1;
+			if (this.bewertungKursdifferenzen[i] < this.bewertungKursdifferenzenSaveG[i]) 
+				return +1;
+		}
+		if (this.bewertungFachartPaar > this.bewertungFachartPaarSaveG) 
+			return -1;
+		if (this.bewertungFachartPaar < this.bewertungFachartPaarSaveG) 
+			return +1;
 		return 0;
 	}
 
@@ -312,10 +317,7 @@ export class KursblockungDynStatistik extends JavaObject {
 		let nr1 : number = pKurs1.gibFachart().gibNr();
 		let nr2 : number = pKurs2.gibFachart().gibNr();
 		this.bewertungFachartPaar += this.matrixFachartPaar[nr1][nr2];
-		if (this.kursVerbieteMitKurs[nr1][nr2]) 
-			this.bewertungRegelverletzungen++;
-		if (this.kursZusammenMitKurs[nr1][nr2]) 
-			this.bewertungRegelverletzungen--;
+		this.bewertungRegelverletzungen += this.regelVerletzungKursMitKurs[nr1][nr2];
 	}
 
 	/**
@@ -329,10 +331,7 @@ export class KursblockungDynStatistik extends JavaObject {
 		let nr1 : number = pKurs1.gibFachart().gibNr();
 		let nr2 : number = pKurs2.gibFachart().gibNr();
 		this.bewertungFachartPaar -= this.matrixFachartPaar[nr1][nr2];
-		if (this.kursVerbieteMitKurs[nr1][nr2]) 
-			this.bewertungRegelverletzungen--;
-		if (this.kursZusammenMitKurs[nr1][nr2]) 
-			this.bewertungRegelverletzungen++;
+		this.bewertungRegelverletzungen -= this.regelVerletzungKursMitKurs[nr1][nr2];
 	}
 
 	/**
@@ -427,11 +426,16 @@ export class KursblockungDynStatistik extends JavaObject {
 	regelHinzufuegenKursVerbieteMitKurs(kurs1 : KursblockungDynKurs, kurs2 : KursblockungDynKurs) : void {
 		let nr1 : number = kurs1.gibInternalID();
 		let nr2 : number = kurs2.gibInternalID();
-		this.kursVerbieteMitKurs[nr1][nr2] = true;
+		this.regelVerletzungKursMitKurs[nr1][nr2] += 1;
+		this.regelVerletzungKursMitKurs[nr2][nr1] += 1;
+		console.log(JSON.stringify("DEBUG: VERBIETE " + kurs1.toString().valueOf() + " mit " + kurs2.toString().valueOf()));
 	}
 
 	/**
 	 * Fügt die Regel {@link GostKursblockungRegelTyp#KURS_ZUSAMMEN_MIT_KURS} zur Bewertung hinzu.
+	 * 
+	 * Erhöht direkt den Malus 'bewertungRegelverletzungen', da die Kurse anfangs noch nicht zusammen sind.
+	 * Geht ein Kurs über 2 Schienen, der andere über 3, dann können diese maximal 2 Mal zusammen sein.   
 	 * 
 	 * @param kurs1  Der 1. Kurs der Regel.
 	 * @param kurs2  Der 2. Kurs der Regel.
@@ -439,7 +443,10 @@ export class KursblockungDynStatistik extends JavaObject {
 	regelHinzufuegenKursZusammenMitKurs(kurs1 : KursblockungDynKurs, kurs2 : KursblockungDynKurs) : void {
 		let nr1 : number = kurs1.gibInternalID();
 		let nr2 : number = kurs2.gibInternalID();
-		this.kursZusammenMitKurs[nr1][nr2] = true;
+		this.regelVerletzungKursMitKurs[nr1][nr2] -= 1;
+		this.regelVerletzungKursMitKurs[nr2][nr1] -= 1;
+		this.bewertungRegelverletzungen += Math.max(kurs1.gibSchienenAnzahl(), kurs2.gibSchienenAnzahl());
+		console.log(JSON.stringify("DEBUG: ZUSAMMEN " + kurs1.toString().valueOf() + " mit " + kurs2.toString().valueOf()));
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

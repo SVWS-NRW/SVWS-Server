@@ -323,6 +323,33 @@ public class GostBlockungsergebnisManager {
 	            		}
 	            	break;
 	            }
+	            case KURS_VERBIETEN_MIT_KURS: { // 7
+	            	long kursID1 = r.parameter.get(0);
+	            	long kursID2 = r.parameter.get(1);
+	            	@NotNull HashSet<@NotNull GostBlockungsergebnisSchiene> set1 = getOfKursSchienenmenge(kursID1);
+	            	@NotNull HashSet<@NotNull GostBlockungsergebnisSchiene> set2 = getOfKursSchienenmenge(kursID2);
+	            	for (@NotNull GostBlockungsergebnisSchiene schiene1 : set1) 
+		            	for (@NotNull GostBlockungsergebnisSchiene schiene2 : set2) 
+							if (schiene1 == schiene2)
+			            		regelVerletzungen.add(r.id);
+	            	break;
+	            }
+	            case KURS_ZUSAMMEN_MIT_KURS: { // 8
+	            	long kursID1 = r.parameter.get(0);
+	            	long kursID2 = r.parameter.get(1);
+	            	@NotNull HashSet<@NotNull GostBlockungsergebnisSchiene> set1 = getOfKursSchienenmenge(kursID1);
+	            	@NotNull HashSet<@NotNull GostBlockungsergebnisSchiene> set2 = getOfKursSchienenmenge(kursID2);
+	            	if (set1.size() < set2.size()) {
+	            		for (@NotNull GostBlockungsergebnisSchiene schiene1 : set1) 
+            				if (set2.contains(schiene1) == false)
+            					regelVerletzungen.add(r.id);
+	            	} else {
+	            		for (@NotNull GostBlockungsergebnisSchiene schiene2 : set2) 
+            				if (set1.contains(schiene2) == false)
+            					regelVerletzungen.add(r.id);
+	            	}
+	            	break;
+	            }
 	            default: {
 	            	throw new IllegalStateException("Der Regel-Typ ist unbekannt: " + typ);
 	            }
