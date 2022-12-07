@@ -976,8 +976,6 @@
     } ]
   } ],
   "bilingualeSprache" : null,
-  "sek1Fremdsprache2ManuellGeprueft" : false,
-  "muttersprachenpruefungEndeEF" : true,
   "latinum" : false,
   "kleinesLatinum" : false,
   "graecum" : false,
@@ -1011,6 +1009,32 @@
   "sprachendaten" : {
     "schuelerID" : 1042,
     "belegungen" : [ ],
-    "pruefungen" : [ ]
+    "pruefungen" : [ {
+      "sprache" : "N",
+      "jahrgang" : "09",
+      "anspruchsniveauId" : 3,
+      "ersetzteSprache" : "F",
+      "istHSUPruefung" : false,
+      "istFeststellungspruefung" : true,
+      "kannErstePflichtfremdspracheErsetzen" : false,
+      "kannZweitePflichtfremdspracheErsetzen" : true,
+      "kannWahlpflichtfremdspracheErsetzen" : false,
+      "kannBelegungAlsFortgefuehrteSpracheErlauben" : false,
+      "referenzniveau" : null,
+      "note" : 2
+    }, {
+      "sprache" : "N",
+      "jahrgang" : "EF",
+      "anspruchsniveauId" : 4,
+      "ersetzteSprache" : "F",
+      "istHSUPruefung" : false,
+      "istFeststellungspruefung" : true,
+      "kannErstePflichtfremdspracheErsetzen" : false,
+      "kannZweitePflichtfremdspracheErsetzen" : true,
+      "kannWahlpflichtfremdspracheErsetzen" : false,
+      "kannBelegungAlsFortgefuehrteSpracheErlauben" : false,
+      "referenzniveau" : null,
+      "note" : 3
+    } ]
   }
 }

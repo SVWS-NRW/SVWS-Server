@@ -248,18 +248,14 @@ public class Fremdsprachen extends GostBelegpruefung {
                 addFehler(GostBelegungsfehler.FS_18);
             }
             // Da an dieser Stelle keine fortführbaren Sprachen vorhanden sind, dann muss eine Sprachprüfung Ende EF stattfinden, darauf muss hingewiesen werden.
-            // TODO: hatMuttersprachenPruefungEndeEF entfernen und ersetzen durch: if (SprachendatenManager.hatSprachfeststellungspruefungAufEFNiveau(manager.getSprachendaten())) {
-            if (manager.hatMuttersprachenPruefungEndeEF()) {
+            if (SprachendatenUtils.hatSprachfeststellungspruefungAufEFNiveau(manager.getSprachendaten())) {
                 addFehler(GostBelegungsfehler.FS_19_INFO);
-            }
-            else {
+            } else {
                 // Ein Schüler ohne Sprachprüfung und fortführbare Sprachen sollte keine Berechtigung für die Oberstufe erhalten haben.
                 // Gebe daher Fehlermeldung zu einer evtl. fehlerhaften Sprachenfolge aus.
                 if (anzahlFortfuehrbareFremdsprachen == 0) {
                     addFehler(GostBelegungsfehler.FS_25);
-                }
-                // Andernfalls gib eine Fehlermeldung aus, dass eine vorhandene Sprache belegt werden muss
-                else {
+                } else { // Andernfalls gib eine Fehlermeldung aus, dass eine vorhandene Sprache belegt werden muss
                     addFehler(GostBelegungsfehler.FS_18);
                     if (!SprachendatenUtils.hatZweiSprachenMitMin4JahrenDauerEndeSekI(manager.getSprachendaten()))
                         addFehler(GostBelegungsfehler.FS_24);
@@ -561,37 +557,31 @@ public class Fremdsprachen extends GostBelegpruefung {
 		// Für die folgenden Fälle gilt weiterhin: Es liegt KEINE durchgehend belegte fortgeführte Fremdsprache vor.
 		if (anzahlNeueinsetzendeFremdsprachenDurchgehendBelegt > 0) {
 			// Für eine gültige Laufbahn muss entweder eine Sprachprüfung Ende EF stattgefunden haben ...
-			// TODO: hatMuttersprachenPruefungEndeEF entfernen und ersetzen durch: if (SprachendatenManager.hatSprachfeststellungspruefungAufEFNiveau(manager.getSprachendaten())) {
-			if (manager.hatMuttersprachenPruefungEndeEF()) {
+			if (SprachendatenUtils.hatSprachfeststellungspruefungAufEFNiveau(manager.getSprachendaten())) {
 				addFehler(GostBelegungsfehler.FS_19_INFO);
 				return;
 			}
 			// ... oder eine fortgeführte Fremdsprache bis Ende EF belegt worden sein.
 			// Fehlt diese, gib einen Fehler aus und prüfe auf weitere Fehler.
-			if(anzahlFortgefuehrteFremdsprachenEFBelegt == 0){
+			if (anzahlFortgefuehrteFremdsprachenEFBelegt == 0){
 				addFehler(GostBelegungsfehler.FS_10);
 
 				// Ein Schüler ohne Sprachprüfung und fortführbare Sprachen sollte keine Berechtigung für die Oberstufe erhalten haben.
 				// Gebe daher Fehlermeldung zu einer evtl. fehlerhaften Sprachenfolge aus.
 				if (anzahlFortfuehrbareFremdsprachen == 0) {
 					addFehler(GostBelegungsfehler.FS_25);
-				}
-				// Andernfalls gib eine Fehlermeldung aus, dass eine vorhandene Sprache belegt werden muss
-				else {
+				} else { // Andernfalls gib eine Fehlermeldung aus, dass eine vorhandene Sprache belegt werden muss
 					if (!SprachendatenUtils.hatZweiSprachenMitMin4JahrenDauerEndeSekI(manager.getSprachendaten()))
 						addFehler(GostBelegungsfehler.FS_24);
 				}
 			}
-		}
-		else {
+		} else {
 			// Hier liegt WEDER eine durchgängig belegte fortgeführte NOCH eine durchgängig belegte neu einsetzende Fremdsprache vor.
 			// Gebe eine entsprechende Fehlermeldung aus. Da FS_10 einen Hinweis auf eine weitere fortgeführte Fremdsprache in der EF enthält,
 			// gebe bei einer Sprachprüfung am EF den Fehler FS_18 aus (ohne den zusätzlichen Hinweis in FS_10).
-			// TODO: hatMuttersprachenPruefungEndeEF entfernen und ersetzen durch: if (SprachendatenManager.hatSprachfeststellungspruefungAufEFNiveau(manager.getSprachendaten())) {
-			if (manager.hatMuttersprachenPruefungEndeEF()) {
+			if (SprachendatenUtils.hatSprachfeststellungspruefungAufEFNiveau(manager.getSprachendaten())) {
 				addFehler(GostBelegungsfehler.FS_18);
-			}
-			else {
+			} else {
 				addFehler(GostBelegungsfehler.FS_10);
 			}
 		}
@@ -666,13 +656,13 @@ public class Fremdsprachen extends GostBelegpruefung {
 		}
 
 		// Prüfe, ob eine Muttersprachenprüfung stattgefunden hat und eine fortgeführte Fremdsprache in der EF schriftlich belegt wurde
-		if (manager.hatMuttersprachenPruefungEndeEF() &&
+		if (SprachendatenUtils.hatSprachfeststellungspruefungAufEFNiveau(manager.getSprachendaten()) &&
 				manager.pruefeBelegungExistiertMitSchriftlichkeit(fremdsprachen_fortgefuehrt, GostSchriftlichkeit.SCHRIFTLICH,
 				GostHalbjahr.EF1, GostHalbjahr.EF2))
 			return;
 
 		// Prüfe, ob eine Muttersprachenprüfung stattgefunden hat und eine neu einsetzende Fremdsprache durchgängig belegt wurde
-		if (manager.hatMuttersprachenPruefungEndeEF() &&
+		if (SprachendatenUtils.hatSprachfeststellungspruefungAufEFNiveau(manager.getSprachendaten()) &&
 				manager.pruefeBelegungDurchgehendBelegtExistiert(fremdsprachen_neu, GostSchriftlichkeit.SCHRIFTLICH,
 				GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21))
 			return;

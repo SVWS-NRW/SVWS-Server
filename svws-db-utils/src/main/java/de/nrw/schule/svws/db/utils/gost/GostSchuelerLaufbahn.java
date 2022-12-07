@@ -64,7 +64,7 @@ public class GostSchuelerLaufbahn {
     	GostFaecherManager gostFaecher = FaecherGost.getFaecherListeGost(conn, abiturjahr);
     	DTOGostSchueler dtoGostSchueler = conn.queryByKey(DTOGostSchueler.class, id);
     	if (dtoGostSchueler == null) {
-    		dtoGostSchueler = new DTOGostSchueler(id, false, false, false);
+    		dtoGostSchueler = new DTOGostSchueler(id, false);
     		if (!conn.persist(dtoGostSchueler))
     			throw new WebApplicationException(Status.INTERNAL_SERVER_ERROR.getStatusCode());
     	}
@@ -86,9 +86,6 @@ public class GostSchuelerLaufbahn {
 		abidaten.projektKursThema = leistungen.projektkursThema;
 		abidaten.projektkursLeitfach1Kuerzel = leistungen.projektkursLeitfach1Kuerzel;
 		abidaten.projektkursLeitfach2Kuerzel = leistungen.projektkursLeitfach2Kuerzel;
-
-		abidaten.sek1Fremdsprache2ManuellGeprueft = dtoGostSchueler.ZweiteFremdpracheInSekIVorhanden;
-		abidaten.muttersprachenpruefungEndeEF = dtoGostSchueler.HatSprachPraktischePruefung;
 
 		for (GostHalbjahr hj : GostHalbjahr.values())
 			abidaten.bewertetesHalbjahr[hj.id] = leistungen.bewertetesHalbjahr[hj.id];

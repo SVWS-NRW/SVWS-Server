@@ -163,7 +163,7 @@ export class Fremdsprachen extends GostBelegpruefung {
 			if (anzahlNeueinsetzendeFremdsprachenDurchgehendBelegbarFehlerMuendlich > 0) {
 				this.addFehler(GostBelegungsfehler.FS_18);
 			}
-			if (this.manager.hatMuttersprachenPruefungEndeEF()) {
+			if (SprachendatenUtils.hatSprachfeststellungspruefungAufEFNiveau(this.manager.getSprachendaten())) {
 				this.addFehler(GostBelegungsfehler.FS_19_INFO);
 			} else {
 				if (anzahlFortfuehrbareFremdsprachen === 0) {
@@ -364,7 +364,7 @@ export class Fremdsprachen extends GostBelegpruefung {
 			this.addFehler(GostBelegungsfehler.FS_12);
 		}
 		if (anzahlNeueinsetzendeFremdsprachenDurchgehendBelegt > 0) {
-			if (this.manager.hatMuttersprachenPruefungEndeEF()) {
+			if (SprachendatenUtils.hatSprachfeststellungspruefungAufEFNiveau(this.manager.getSprachendaten())) {
 				this.addFehler(GostBelegungsfehler.FS_19_INFO);
 				return;
 			}
@@ -378,7 +378,7 @@ export class Fremdsprachen extends GostBelegpruefung {
 				}
 			}
 		} else {
-			if (this.manager.hatMuttersprachenPruefungEndeEF()) {
+			if (SprachendatenUtils.hatSprachfeststellungspruefungAufEFNiveau(this.manager.getSprachendaten())) {
 				this.addFehler(GostBelegungsfehler.FS_18);
 			} else {
 				this.addFehler(GostBelegungsfehler.FS_10);
@@ -424,9 +424,9 @@ export class Fremdsprachen extends GostBelegpruefung {
 			this.addFehler(GostBelegungsfehler.FS_11);
 			return;
 		}
-		if (this.manager.hatMuttersprachenPruefungEndeEF() && this.manager.pruefeBelegungExistiertMitSchriftlichkeit(this.fremdsprachen_fortgefuehrt, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1, GostHalbjahr.EF2)) 
+		if (SprachendatenUtils.hatSprachfeststellungspruefungAufEFNiveau(this.manager.getSprachendaten()) && this.manager.pruefeBelegungExistiertMitSchriftlichkeit(this.fremdsprachen_fortgefuehrt, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1, GostHalbjahr.EF2)) 
 			return;
-		if (this.manager.hatMuttersprachenPruefungEndeEF() && this.manager.pruefeBelegungDurchgehendBelegtExistiert(this.fremdsprachen_neu, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21)) 
+		if (SprachendatenUtils.hatSprachfeststellungspruefungAufEFNiveau(this.manager.getSprachendaten()) && this.manager.pruefeBelegungDurchgehendBelegtExistiert(this.fremdsprachen_neu, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21)) 
 			return;
 		if (!this.manager.pruefeBelegungExistiertMitSchriftlichkeit(this.fremdsprachen_fortgefuehrt, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1, GostHalbjahr.EF2)) 
 			this.addFehler(GostBelegungsfehler.FS_16);

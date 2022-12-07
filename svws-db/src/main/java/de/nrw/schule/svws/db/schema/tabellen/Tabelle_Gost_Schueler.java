@@ -31,13 +31,6 @@ public class Tabelle_Gost_Schueler extends SchemaTabelle {
 		.setConverter(DatumConverter.class)
 		.setJavaComment("Gymnasiale Oberstufe - Schülerdaten: Das Datum an dem der letzte Beratungsbogen des Schülersmit seiner Fächerwahl in der Schule eingereicht wurde");
 
-	/** Die Definition der Tabellenspalte HatSprachPraktischePruefung */
-	public SchemaTabelleSpalte col_HatSprachPraktischePruefung = add("HatSprachPraktischePruefung", SchemaDatentypen.INT, false)
-		.setDefault("0")
-		.setNotNull()
-		.setConverter(Boolean01Converter.class)
-		.setJavaComment("Gymnasiale Oberstufe - Schülerdaten: Gibt an, ob eine Teilnahme an einer sprachpraktischen Prüfung erfolgt ist: 1 - true, 0 - false");
-
 	/** Die Definition der Tabellenspalte HatSportattest */
 	public SchemaTabelleSpalte col_HatSportattest = add("HatSportattest", SchemaDatentypen.INT, false)
 		.setDefault("0")
@@ -64,13 +57,6 @@ public class Tabelle_Gost_Schueler extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte BesondereLernleistung_Punkte */
 	public SchemaTabelleSpalte col_BesondereLernleistung_Punkte = add("BesondereLernleistung_Punkte", SchemaDatentypen.INT, false)
 		.setJavaComment("Gymnasiale Oberstufe - Schülerdaten: Die Notenpunkte der besonderen Lernleistung ");
-
-	/** Die Definition der Tabellenspalte ZweiteFremdpracheInSekIVorhanden */
-	public SchemaTabelleSpalte col_ZweiteFremdpracheInSekIVorhanden = add("ZweiteFremdpracheInSekIVorhanden", SchemaDatentypen.INT, false)
-		.setDefault("0")
-		.setNotNull()
-		.setConverter(Boolean01Converter.class)
-		.setJavaComment("Gymnasiale Oberstufe - Schülerdaten: Gibt an, ob die Belegung der zweiten Fremdsprache in der Sek I manuell geprüft wurde und eine Prüfung bei der Laufbahnplanung entfallen kann: 1 - true, 0 - false");
 
 
 	/** Die Definition des Fremdschlüssels Gost_Schueler_Schueler_ID_FK */

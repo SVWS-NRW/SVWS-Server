@@ -372,7 +372,7 @@ public class ABPSchueler {
 			if (lupoSchueler != null) {
 				eintrag.DatumBeratung = (lupoSchueler.DatumBeratung == null) ? null : LocalDateTime.parse(lupoSchueler.DatumBeratung);
 				eintrag.DatumRuecklauf = (lupoSchueler.DatumRuecklauf == null) ? null : LocalDateTime.parse(lupoSchueler.DatumRuecklauf);
-				eintrag.SPP = lupoSchueler.HatSprachPraktischePruefung;
+				eintrag.SPP = false; // TODO Bestimme über: SprachendatenUtils.hatSprachfeststellungspruefungAufEFNiveau(manager.getSprachendaten()), Problem SprachDatenManager nuss zuvor geladen werden...
 				eintrag.Sportattest = lupoSchueler.HatSportattest == null ? null : lupoSchueler.HatSportattest ? "J" : "N";
 				eintrag.Kommentar = lupoSchueler.Kommentar;
 				DTOLehrer beratungslehrer = mapLehrer.get(lupoSchueler.Beratungslehrer_ID);
@@ -380,7 +380,7 @@ public class ABPSchueler {
 				eintrag.PruefPhase = lupoSchueler.PruefPhase;
 				eintrag.BLL_Art = lupoSchueler.BesondereLernleistung_Art;
 				eintrag.BLL_Punkte = lupoSchueler.BesondereLernleistung_Punkte;
-				eintrag.FS2_SekI_manuell = lupoSchueler.ZweiteFremdpracheInSekIVorhanden;
+				eintrag.FS2_SekI_manuell = false;
 				eintrag.Gliederung = "***";   // TODO from SchülerAbschnittsdaten
 			}
 			eintrag.Konfession = null; // TODO from schueler.Religion_ID;

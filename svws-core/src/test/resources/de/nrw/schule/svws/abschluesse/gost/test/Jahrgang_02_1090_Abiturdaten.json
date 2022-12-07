@@ -1034,8 +1034,6 @@
     } ]
   } ],
   "bilingualeSprache" : "E",
-  "sek1Fremdsprache2ManuellGeprueft" : false,
-  "muttersprachenpruefungEndeEF" : false,
   "latinum" : false,
   "kleinesLatinum" : false,
   "graecum" : false,

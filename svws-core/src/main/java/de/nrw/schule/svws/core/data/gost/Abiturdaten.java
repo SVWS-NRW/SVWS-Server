@@ -2,8 +2,6 @@ package de.nrw.schule.svws.core.data.gost;
 
 import java.util.Vector;
 
-import jakarta.xml.bind.annotation.XmlRootElement;
-
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import de.nrw.schule.svws.core.data.schueler.Sprachendaten;
@@ -13,6 +11,7 @@ import de.nrw.schule.svws.core.types.gost.GostHalbjahr;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 
 /**
@@ -21,7 +20,7 @@ import jakarta.validation.constraints.NotNull;
 @XmlRootElement
 @Schema(description="enthält die Informationen der gymnasialen Oberstufe eines Schülers in Bezug auf das Abitur.")
 @JsonPropertyOrder({ "schuelerID", "abiturjahr", "schuljahrAbitur", "fachbelegungen", "sprachenfolge", "sprachpruefungen", "bilingualeSprache",
-    "sek1Fremdsprache2ManuellGeprueft", "muttersprachenpruefungEndeEF", "latinum", "kleinesLatinum", "graecum", "hebraicum",
+    "latinum", "kleinesLatinum", "graecum", "hebraicum",
     "block1FehlstundenGesamt", "block1FehlstundenUnentschuldigt", "projektKursThema", "projektkursLeitfach1Kuerzel", 
     "projektkursLeitfach2Kuerzel", "besondereLernleistung", "besondereLernleistungNotenKuerzel", "besondereLernleistungThema",
     "block1AnzahlKurse", "block1DefiziteGesamt", "block1DefiziteLK", "block1PunktSummeGK", "block1PunktSummeLK", "block1PunktSummeNormiert",
@@ -58,18 +57,6 @@ public class Abiturdaten {
     /** Das einstellige Kürzel der Sprache des bilingualen Bildungsganges, falls der Schüler an einem solchen teilnimmt. */
 	@Schema(required = false, description = "Das einstellige Kürzel der Sprache des bilingualen Bildungsganges, falls der Schüler an einem solchen teilnimmt, ansonsten null.", example="E")
 	public String bilingualeSprache = null;
-	
-	
-	// TODO IMPLEMENTATION SPRACHPRÜFUNGEN: Alte LuPO Einträge zur manuellen Prüfung von Fremdsprachen können entfernt werden.
-	/** Gibt an, ob die zweite Fremdsprache in der Sekundarstufe I manuell geprüft wurde und vorhanden ist. Bei einer Belegprüfung muss diese dann nicht anhand der Sprachenfolge geprüft werden. */
-	@Schema(required = false, defaultValue ="false", description = "Gibt an, ob die zweite Fremdsprache in der Sekundarstufe I manuell geprüft wurde und vorhanden ist. Bei einer Belegprüfung muss diese dann nicht anhand der Sprachenfolge geprüft werden.", example="true")
-	public boolean sek1Fremdsprache2ManuellGeprueft = false;
-
-    // TODO IMPLEMENTATION SPRACHPRÜFUNGEN: Alte LuPO Einträge zur manuellen Prüfung von Fremdsprachen können entfernt werden.
-	/** Gibt an, ob am Ende der EF eine Muttersprachliche Prüfung erfolgen wird bzw. erfolgt ist. */
-	@Schema(required = false, defaultValue ="false", description = "Gibt an, ob am Ende der EF eine Muttersprachliche Prüfung erfolgen wird bzw. erfolgt ist.", example="true")
-	public boolean muttersprachenpruefungEndeEF = false;
-    
 
 	/** Gibt an, ob das große Latinum erworben wurde. */
 	@Schema(required = false, defaultValue ="false", description = "Gibt an, ob das große Latinum erworben wurde.", example="true")

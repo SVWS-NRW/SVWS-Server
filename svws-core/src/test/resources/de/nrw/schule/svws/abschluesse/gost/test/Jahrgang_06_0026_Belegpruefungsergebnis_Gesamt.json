@@ -17,6 +17,10 @@
 	  "art" : "BELEGUNG",
 	  "beschreibung" : "Bei fehlender 2. Fremdsprache muss eine neu einsetzende Fremdsprache durchgehend schriftlich belegt werden."
   }, {
+    "code" : "FS_22_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "Englisch wurde nicht in der Sprachenfolge eingetragen. Bitte Prüfen Sie die Sprachenfolge auf Korrektheit."
+  }, {
     "code" : "FS_11",
     "art" : "SCHRIFTLICHKEIT",
     "beschreibung" : "Mindestens eine durchgehend belegte Fremdsprache muss von EF.1 bis Q2.1 schriftlich belegt sein."

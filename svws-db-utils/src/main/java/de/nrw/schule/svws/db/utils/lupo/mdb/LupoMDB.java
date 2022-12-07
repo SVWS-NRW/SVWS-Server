@@ -492,9 +492,8 @@ public class LupoMDB {
 	
 				logger.logLn("- Schreibe Allgemeine Schüler-Daten in die DB... ");
 				// TODO Alle Attribute prüfen, ob relevant in SVWS-DB
-				DTOGostSchueler lupoSchueler = new DTOGostSchueler(dtoSchueler.ID, abpSchueler.SPP, 
-						(abpSchueler.Sportattest != null) || ("J".equals(abpSchueler.Sportattest)), 
-						abpSchueler.FS2_SekI_manuell != null && abpSchueler.FS2_SekI_manuell);
+				DTOGostSchueler lupoSchueler = new DTOGostSchueler(dtoSchueler.ID, 
+						(abpSchueler.Sportattest != null) || ("J".equals(abpSchueler.Sportattest)));
 				lupoSchueler.DatumBeratung = abpSchueler.DatumBeratung == null ? null : abpSchueler.DatumBeratung.toLocalDate().toString();
 				lupoSchueler.DatumRuecklauf = abpSchueler.DatumRuecklauf == null ? null : abpSchueler.DatumRuecklauf.toLocalDate().toString();
 				lupoSchueler.Beratungslehrer_ID = null;  // TODO LehrerID aus abpSchueler.Beratungslehrer herausfinden?
@@ -632,8 +631,6 @@ public class LupoMDB {
 			abidaten.schuljahrAbitur = 2021; // s.o.
 			
 			abidaten.bilingualeSprache = lupoSchueler.Bilingual;
-			abidaten.sek1Fremdsprache2ManuellGeprueft = (lupoSchueler.FS2_SekI_manuell != null) && lupoSchueler.FS2_SekI_manuell;
-			abidaten.muttersprachenpruefungEndeEF = lupoSchueler.SPP;
 			
 			abidaten.besondereLernleistung = GostBesondereLernleistung.fromKuerzel(lupoSchueler.BLL_Art).kuerzel;
 			abidaten.besondereLernleistungNotenKuerzel = Note.fromNotenpunkte(lupoSchueler.BLL_Punkte).kuerzel;

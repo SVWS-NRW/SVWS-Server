@@ -1405,25 +1405,6 @@ export class AbiturdatenManager extends JavaObject {
 	}
 
 	/**
-	 * Gibt an, ob am Ende der EF eine Muttersprachenprüfung geplant bzw. erfolgt ist.
-	 * 
-	 * @return true, falls eine Muttersprachenprüfung am Ende der EF vorliegt, sonst false
-	 */
-	public hatMuttersprachenPruefungEndeEF() : boolean {
-		return this.abidaten.muttersprachenpruefungEndeEF;
-	}
-
-	/**
-	 * Gibt an, ob die zweite Fremdsprache in der Sekundarstufe manuell erfolgreich 
-	 * geprüft wurde und dort eine entsprechende Belegung existiert.
-	 * 
-	 * @return true, falls in der Sek I eine zweite Fremdsprache belegt wurde
-	 */
-	public istSekIZweiteFremdspracheManuellGeprueft() : boolean {
-		return this.abidaten.sek1Fremdsprache2ManuellGeprueft;
-	}
-
-	/**
 	 * Prüft, ob die Belegung seit der EF1 vorhanden ist. Hierbei werden
 	 * Zusatz-, Vertiefungs- und Projektkurse auch als später einsetzend akzeptiert.
 	 * Dies gilt auch für Literatur, instrumental- und vokalpraktische Kurse sowie 

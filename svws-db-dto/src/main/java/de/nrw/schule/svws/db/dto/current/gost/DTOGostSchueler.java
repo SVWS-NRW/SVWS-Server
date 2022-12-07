@@ -37,8 +37,6 @@ import de.nrw.schule.svws.csv.converter.current.DatumConverterDeserializer;
 @NamedQuery(name="DTOGostSchueler.datumberatung.multiple", query="SELECT e FROM DTOGostSchueler e WHERE e.DatumBeratung IN :value")
 @NamedQuery(name="DTOGostSchueler.datumruecklauf", query="SELECT e FROM DTOGostSchueler e WHERE e.DatumRuecklauf = :value")
 @NamedQuery(name="DTOGostSchueler.datumruecklauf.multiple", query="SELECT e FROM DTOGostSchueler e WHERE e.DatumRuecklauf IN :value")
-@NamedQuery(name="DTOGostSchueler.hatsprachpraktischepruefung", query="SELECT e FROM DTOGostSchueler e WHERE e.HatSprachPraktischePruefung = :value")
-@NamedQuery(name="DTOGostSchueler.hatsprachpraktischepruefung.multiple", query="SELECT e FROM DTOGostSchueler e WHERE e.HatSprachPraktischePruefung IN :value")
 @NamedQuery(name="DTOGostSchueler.hatsportattest", query="SELECT e FROM DTOGostSchueler e WHERE e.HatSportattest = :value")
 @NamedQuery(name="DTOGostSchueler.hatsportattest.multiple", query="SELECT e FROM DTOGostSchueler e WHERE e.HatSportattest IN :value")
 @NamedQuery(name="DTOGostSchueler.kommentar", query="SELECT e FROM DTOGostSchueler e WHERE e.Kommentar = :value")
@@ -51,11 +49,9 @@ import de.nrw.schule.svws.csv.converter.current.DatumConverterDeserializer;
 @NamedQuery(name="DTOGostSchueler.besonderelernleistung_art.multiple", query="SELECT e FROM DTOGostSchueler e WHERE e.BesondereLernleistung_Art IN :value")
 @NamedQuery(name="DTOGostSchueler.besonderelernleistung_punkte", query="SELECT e FROM DTOGostSchueler e WHERE e.BesondereLernleistung_Punkte = :value")
 @NamedQuery(name="DTOGostSchueler.besonderelernleistung_punkte.multiple", query="SELECT e FROM DTOGostSchueler e WHERE e.BesondereLernleistung_Punkte IN :value")
-@NamedQuery(name="DTOGostSchueler.zweitefremdpracheinsekivorhanden", query="SELECT e FROM DTOGostSchueler e WHERE e.ZweiteFremdpracheInSekIVorhanden = :value")
-@NamedQuery(name="DTOGostSchueler.zweitefremdpracheinsekivorhanden.multiple", query="SELECT e FROM DTOGostSchueler e WHERE e.ZweiteFremdpracheInSekIVorhanden IN :value")
 @NamedQuery(name="DTOGostSchueler.primaryKeyQuery", query="SELECT e FROM DTOGostSchueler e WHERE e.Schueler_ID = ?1")
 @NamedQuery(name="DTOGostSchueler.all.migration", query="SELECT e FROM DTOGostSchueler e WHERE e.Schueler_ID IS NOT NULL")
-@JsonPropertyOrder({"Schueler_ID","DatumBeratung","DatumRuecklauf","HatSprachPraktischePruefung","HatSportattest","Kommentar","Beratungslehrer_ID","PruefPhase","BesondereLernleistung_Art","BesondereLernleistung_Punkte","ZweiteFremdpracheInSekIVorhanden"})
+@JsonPropertyOrder({"Schueler_ID","DatumBeratung","DatumRuecklauf","HatSportattest","Kommentar","Beratungslehrer_ID","PruefPhase","BesondereLernleistung_Art","BesondereLernleistung_Punkte"})
 public class DTOGostSchueler {
 
 	/** Gymnasiale Oberstufe - Schülerdaten: Die ID des Schülers in der Schülertabelle */
@@ -79,14 +75,6 @@ public class DTOGostSchueler {
 	@JsonSerialize(using=DatumConverterSerializer.class)
 	@JsonDeserialize(using=DatumConverterDeserializer.class)
 	public String DatumRuecklauf;
-
-	/** Gymnasiale Oberstufe - Schülerdaten: Gibt an, ob eine Teilnahme an einer sprachpraktischen Prüfung erfolgt ist: 1 - true, 0 - false */
-	@Column(name = "HatSprachPraktischePruefung")
-	@JsonProperty
-	@Convert(converter=Boolean01Converter.class)
-	@JsonSerialize(using=Boolean01ConverterSerializer.class)
-	@JsonDeserialize(using=Boolean01ConverterDeserializer.class)
-	public Boolean HatSprachPraktischePruefung;
 
 	/** Gymnasiale Oberstufe - Schülerdaten: Gibt an, ob ein Sportattest bei dem Schüler vorliegt oder nicht und die Wahl eines Ersatzfaches zulässig ist: 1 - true, 0 - false */
 	@Column(name = "HatSportattest")
@@ -121,14 +109,6 @@ public class DTOGostSchueler {
 	@JsonProperty
 	public Integer BesondereLernleistung_Punkte;
 
-	/** Gymnasiale Oberstufe - Schülerdaten: Gibt an, ob die Belegung der zweiten Fremdsprache in der Sek I manuell geprüft wurde und eine Prüfung bei der Laufbahnplanung entfallen kann: 1 - true, 0 - false */
-	@Column(name = "ZweiteFremdpracheInSekIVorhanden")
-	@JsonProperty
-	@Convert(converter=Boolean01Converter.class)
-	@JsonSerialize(using=Boolean01ConverterSerializer.class)
-	@JsonDeserialize(using=Boolean01ConverterDeserializer.class)
-	public Boolean ZweiteFremdpracheInSekIVorhanden;
-
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOGostSchueler ohne eine Initialisierung der Attribute.
 	 */
@@ -139,27 +119,17 @@ public class DTOGostSchueler {
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOGostSchueler ohne eine Initialisierung der Attribute.
 	 * @param Schueler_ID   der Wert für das Attribut Schueler_ID
-	 * @param HatSprachPraktischePruefung   der Wert für das Attribut HatSprachPraktischePruefung
 	 * @param HatSportattest   der Wert für das Attribut HatSportattest
-	 * @param ZweiteFremdpracheInSekIVorhanden   der Wert für das Attribut ZweiteFremdpracheInSekIVorhanden
 	 */
-	public DTOGostSchueler(final Long Schueler_ID, final Boolean HatSprachPraktischePruefung, final Boolean HatSportattest, final Boolean ZweiteFremdpracheInSekIVorhanden) {
+	public DTOGostSchueler(final Long Schueler_ID, final Boolean HatSportattest) {
 		if (Schueler_ID == null) { 
 			throw new NullPointerException("Schueler_ID must not be null");
 		}
 		this.Schueler_ID = Schueler_ID;
-		if (HatSprachPraktischePruefung == null) { 
-			throw new NullPointerException("HatSprachPraktischePruefung must not be null");
-		}
-		this.HatSprachPraktischePruefung = HatSprachPraktischePruefung;
 		if (HatSportattest == null) { 
 			throw new NullPointerException("HatSportattest must not be null");
 		}
 		this.HatSportattest = HatSportattest;
-		if (ZweiteFremdpracheInSekIVorhanden == null) { 
-			throw new NullPointerException("ZweiteFremdpracheInSekIVorhanden must not be null");
-		}
-		this.ZweiteFremdpracheInSekIVorhanden = ZweiteFremdpracheInSekIVorhanden;
 	}
 
 
@@ -196,7 +166,7 @@ public class DTOGostSchueler {
 	 */
 	@Override
 	public String toString() {
-		return "DTOGostSchueler(Schueler_ID=" + this.Schueler_ID + ", DatumBeratung=" + this.DatumBeratung + ", DatumRuecklauf=" + this.DatumRuecklauf + ", HatSprachPraktischePruefung=" + this.HatSprachPraktischePruefung + ", HatSportattest=" + this.HatSportattest + ", Kommentar=" + this.Kommentar + ", Beratungslehrer_ID=" + this.Beratungslehrer_ID + ", PruefPhase=" + this.PruefPhase + ", BesondereLernleistung_Art=" + this.BesondereLernleistung_Art + ", BesondereLernleistung_Punkte=" + this.BesondereLernleistung_Punkte + ", ZweiteFremdpracheInSekIVorhanden=" + this.ZweiteFremdpracheInSekIVorhanden + ")";
+		return "DTOGostSchueler(Schueler_ID=" + this.Schueler_ID + ", DatumBeratung=" + this.DatumBeratung + ", DatumRuecklauf=" + this.DatumRuecklauf + ", HatSportattest=" + this.HatSportattest + ", Kommentar=" + this.Kommentar + ", Beratungslehrer_ID=" + this.Beratungslehrer_ID + ", PruefPhase=" + this.PruefPhase + ", BesondereLernleistung_Art=" + this.BesondereLernleistung_Art + ", BesondereLernleistung_Punkte=" + this.BesondereLernleistung_Punkte + ")";
 	}
 
 }

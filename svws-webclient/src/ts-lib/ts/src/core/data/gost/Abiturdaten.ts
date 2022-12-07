@@ -24,10 +24,6 @@ export class Abiturdaten extends JavaObject {
 
 	public bilingualeSprache : String | null = null;
 
-	public sek1Fremdsprache2ManuellGeprueft : boolean = false;
-
-	public muttersprachenpruefungEndeEF : boolean = false;
-
 	public latinum : boolean = false;
 
 	public kleinesLatinum : boolean = false;
@@ -119,12 +115,6 @@ export class Abiturdaten extends JavaObject {
 			 throw new Error('invalid json format, missing attribute sprachendaten');
 		result.sprachendaten = Sprachendaten.transpilerFromJSON(JSON.stringify(obj.sprachendaten));
 		result.bilingualeSprache = typeof obj.bilingualeSprache === "undefined" ? null : obj.bilingualeSprache === null ? null : String(obj.bilingualeSprache);
-		if (typeof obj.sek1Fremdsprache2ManuellGeprueft === "undefined")
-			 throw new Error('invalid json format, missing attribute sek1Fremdsprache2ManuellGeprueft');
-		result.sek1Fremdsprache2ManuellGeprueft = obj.sek1Fremdsprache2ManuellGeprueft;
-		if (typeof obj.muttersprachenpruefungEndeEF === "undefined")
-			 throw new Error('invalid json format, missing attribute muttersprachenpruefungEndeEF');
-		result.muttersprachenpruefungEndeEF = obj.muttersprachenpruefungEndeEF;
 		if (typeof obj.latinum === "undefined")
 			 throw new Error('invalid json format, missing attribute latinum');
 		result.latinum = obj.latinum;
@@ -202,8 +192,6 @@ export class Abiturdaten extends JavaObject {
 		}
 		result += '"sprachendaten" : ' + Sprachendaten.transpilerToJSON(obj.sprachendaten) + ',';
 		result += '"bilingualeSprache" : ' + ((!obj.bilingualeSprache) ? 'null' : '"' + obj.bilingualeSprache.valueOf() + '"') + ',';
-		result += '"sek1Fremdsprache2ManuellGeprueft" : ' + obj.sek1Fremdsprache2ManuellGeprueft + ',';
-		result += '"muttersprachenpruefungEndeEF" : ' + obj.muttersprachenpruefungEndeEF + ',';
 		result += '"latinum" : ' + obj.latinum + ',';
 		result += '"kleinesLatinum" : ' + obj.kleinesLatinum + ',';
 		result += '"graecum" : ' + obj.graecum + ',';
@@ -283,12 +271,6 @@ export class Abiturdaten extends JavaObject {
 		}
 		if (typeof obj.bilingualeSprache !== "undefined") {
 			result += '"bilingualeSprache" : ' + ((!obj.bilingualeSprache) ? 'null' : '"' + obj.bilingualeSprache.valueOf() + '"') + ',';
-		}
-		if (typeof obj.sek1Fremdsprache2ManuellGeprueft !== "undefined") {
-			result += '"sek1Fremdsprache2ManuellGeprueft" : ' + obj.sek1Fremdsprache2ManuellGeprueft + ',';
-		}
-		if (typeof obj.muttersprachenpruefungEndeEF !== "undefined") {
-			result += '"muttersprachenpruefungEndeEF" : ' + obj.muttersprachenpruefungEndeEF + ',';
 		}
 		if (typeof obj.latinum !== "undefined") {
 			result += '"latinum" : ' + obj.latinum + ',';

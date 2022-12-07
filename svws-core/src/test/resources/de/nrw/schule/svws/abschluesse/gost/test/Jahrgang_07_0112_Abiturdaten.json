@@ -964,8 +964,6 @@
     }, null, null, null, null, null ]
   } ],
   "bilingualeSprache" : null,
-  "sek1Fremdsprache2ManuellGeprueft" : false,
-  "muttersprachenpruefungEndeEF" : true,
   "latinum" : false,
   "kleinesLatinum" : false,
   "graecum" : false,
@@ -1006,15 +1004,33 @@
       "belegungBisJahrgang" : null,
       "belegungBisAbschnitt" : null,
       "referenzniveau" : null
+    } ],
+    "pruefungen" : [ {
+      "sprache" : "E",
+      "jahrgang" : "09",
+      "anspruchsniveauId" : 3,
+      "ersetzteSprache" : "E",
+      "istHSUPruefung" : false,
+      "istFeststellungspruefung" : true,
+      "kannErstePflichtfremdspracheErsetzen" : false,
+      "kannZweitePflichtfremdspracheErsetzen" : true,
+      "kannWahlpflichtfremdspracheErsetzen" : false,
+      "kannBelegungAlsFortgefuehrteSpracheErlauben" : false,
+      "referenzniveau" : null,
+      "note" : 2
     }, {
       "sprache" : "E",
-      "reihenfolge" : -1,
-      "belegungVonJahrgang" : "05",
-      "belegungVonAbschnitt" : 1,
-      "belegungBisJahrgang" : null,
-      "belegungBisAbschnitt" : null,
-      "referenzniveau" : null
-    } ],
-    "pruefungen" : [ ]
+      "jahrgang" : "EF",
+      "anspruchsniveauId" : 4,
+      "ersetzteSprache" : "E",
+      "istHSUPruefung" : false,
+      "istFeststellungspruefung" : true,
+      "kannErstePflichtfremdspracheErsetzen" : false,
+      "kannZweitePflichtfremdspracheErsetzen" : true,
+      "kannWahlpflichtfremdspracheErsetzen" : false,
+      "kannBelegungAlsFortgefuehrteSpracheErlauben" : false,
+      "referenzniveau" : null,
+      "note" : 3
+    } ]
   }
 }

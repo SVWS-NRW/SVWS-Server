@@ -175,8 +175,6 @@ public class GostSchuelerAbitur {
 		abidaten.schuelerID = dtoSchuelerAbitur.Schueler_ID;
 		abidaten.schuljahrAbitur = dtoAbschnittPruefung == null ? null : dtoAbschnittPruefung.Jahr;
 		abidaten.abiturjahr = abiturjahr;
-        // TODO IMPLEMENTATION SPRACHPRÜFUNGEN: Alte LuPO Einträge zur manuellen Prüfung von Fremdsprachen können entfernt werden.
-		abidaten.sek1Fremdsprache2ManuellGeprueft = dtoSchuelerAbitur.FremdspracheSekIManuellGeprueft;
 		abidaten.projektKursThema = dtoSchuelerAbitur.ProjektkursThema;
 		abidaten.block1FehlstundenGesamt = dtoSchuelerAbitur.FehlstundenSumme == null ? -1 : dtoSchuelerAbitur.FehlstundenSumme;
 		abidaten.block1FehlstundenUnentschuldigt = dtoSchuelerAbitur.FehlstundenSummeUnentschuldigt == null ? -1 : dtoSchuelerAbitur.FehlstundenSummeUnentschuldigt;
