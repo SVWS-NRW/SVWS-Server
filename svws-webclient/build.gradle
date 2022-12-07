@@ -50,8 +50,6 @@ dependencies {
     )
 }
 
-def gitCommitHash = 'git rev-parse --verify --short HEAD'.execute().text.trim()
-
 project.ext.npm_properties = [
 	npm_organization: "svws-nrw",
 	npm_packagename_ts_lib: "svws-core-ts",
@@ -64,8 +62,7 @@ project.ext.npm_properties = [
 	npm_license: "BSD-3-Clause",
 	ts_out: ".",
 	coverage_out: "../../../build/coverage/",
-	version: "$project.version",
-	hash: "$gitCommitHash"
+	version: "$project.version"
 ]
 
 task copyConfigTsLib(type: Copy) {
@@ -141,8 +138,7 @@ task copyConfigWebclient(type: Copy) {
 		npm_author: project.ext.npm_properties.npm_author.toString(),
 		npm_license: project.ext.npm_properties.npm_license.toString(),
 		ts_out: project.ext.npm_properties.ts_out.toString(),
-		version: project.ext.npm_properties.version.toString(),
-		hash: project.ext.npm_properties.hash.toString()
+		version: project.ext.npm_properties.version.toString()
 	])
 }
 
