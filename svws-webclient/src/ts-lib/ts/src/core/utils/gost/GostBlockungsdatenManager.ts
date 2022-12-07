@@ -5,6 +5,7 @@ import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 import { GostBlockungRegel, cast_de_nrw_schule_svws_core_data_gost_GostBlockungRegel } from '../../../core/data/gost/GostBlockungRegel';
 import { GostKursart, cast_de_nrw_schule_svws_core_types_gost_GostKursart } from '../../../core/types/gost/GostKursart';
+import { System, cast_java_lang_System } from '../../../java/lang/System';
 import { Comparator, cast_java_util_Comparator } from '../../../java/util/Comparator';
 import { GostKursblockungRegelTyp, cast_de_nrw_schule_svws_core_types_kursblockung_GostKursblockungRegelTyp } from '../../../core/types/kursblockung/GostKursblockungRegelTyp';
 import { NullPointerException, cast_java_lang_NullPointerException } from '../../../java/lang/NullPointerException';
@@ -92,12 +93,14 @@ export class GostBlockungsdatenManager extends JavaObject {
 	public constructor(__param0? : GostBlockungsdaten, __param1? : GostFaecherManager) {
 		super();
 		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined")) {
+			console.log(JSON.stringify("DEBUG: GostBlockungsdatenManager - Konstrukor - START"));
 			this._faecherManager = new GostFaecherManager();
 			this._daten = new GostBlockungsdaten();
 			this._daten.gostHalbjahr = GostHalbjahr.EF1.id;
 			this._compKurs_fach_kursart_kursnummer = this.createComparatorKursFachKursartNummer();
 			this._compKurs_kursart_fach_kursnummer = this.createComparatorKursKursartFachNummer();
 			this._compFachwahlen = this.createComparatorFachwahlen();
+			console.log(JSON.stringify("DEBUG: GostBlockungsdatenManager - Konstrukor - ENDE"));
 		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.data.gost.GostBlockungsdaten')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('de.nrw.schule.svws.core.utils.gost.GostFaecherManager'))))) {
 			let pDaten : GostBlockungsdaten = cast_de_nrw_schule_svws_core_data_gost_GostBlockungsdaten(__param0);
 			let pFaecherManager : GostFaecherManager = cast_de_nrw_schule_svws_core_utils_gost_GostFaecherManager(__param1);
@@ -1049,6 +1052,24 @@ export class GostBlockungsdatenManager extends JavaObject {
 		if (fachwahlenDesSchuelers === null) 
 			throw new NullPointerException("Schüler-ID=" + pSchuelerID + " unbekannt!")
 		return fachwahlenDesSchuelers;
+	}
+
+	/**
+	 * Liefert TRUE, falls der übergebene Schüler die entsprechende Fachwahl=Fach+Kursart hat.
+	 *  
+	 * @param pSchuelerID   Die Datenbank.ID des Schülers.
+	 * @param pFach         Die Datenbank-ID des Faches der Fachwahl des Schülers.
+	 * @param pKursart      Die Datenbank-ID der Kursart der Fachwahl des Schülers.
+	 * @return              TRUE, falls der übergebene Schüler die entsprechende Fachwahl=Fach+Kursart hat.
+	 */
+	public getOfSchuelerHatFachart(pSchuelerID : number, pFach : number, pKursart : number) : boolean {
+		let map : HashMap<Number, GostFachwahl> | null = this._map_schulerID_fachID_fachwahl.get(pSchuelerID);
+		if (map === null) 
+			throw new NullPointerException("Schüler-ID " + pSchuelerID + " unbekannt!")
+		let wahl : GostFachwahl | null = map.get(pFach);
+		if (wahl === null) 
+			return false;
+		return wahl.kursartID === pKursart;
 	}
 
 	/**

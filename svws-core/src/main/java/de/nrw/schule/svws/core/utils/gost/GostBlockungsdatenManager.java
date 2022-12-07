@@ -100,12 +100,14 @@ public class GostBlockungsdatenManager {
 	 * Erstellt einen neuen Manager mit leeren Blockungsdaten und einem leeren Fächer-Manager.
 	 */
 	public GostBlockungsdatenManager() {
+		System.out.println("DEBUG: GostBlockungsdatenManager - Konstrukor - START");
 		_faecherManager = new GostFaecherManager();
 		_daten = new GostBlockungsdaten();
 		_daten.gostHalbjahr = GostHalbjahr.EF1.id;
 		_compKurs_fach_kursart_kursnummer = createComparatorKursFachKursartNummer();
 		_compKurs_kursart_fach_kursnummer = createComparatorKursKursartFachNummer();
 		_compFachwahlen = createComparatorFachwahlen();
+		System.out.println("DEBUG: GostBlockungsdatenManager - Konstrukor - ENDE");
 	}
 
 	/** Erstellt einen neuen Manager mit den angegebenen Blockungsdaten und dem Fächer-Manager.
@@ -1103,6 +1105,24 @@ public class GostBlockungsdatenManager {
 	}
 
 	// ##### GostFachwahl #####
+
+	/**
+	 * Liefert TRUE, falls der übergebene Schüler die entsprechende Fachwahl=Fach+Kursart hat.
+	 *  
+	 * @param pSchuelerID   Die Datenbank.ID des Schülers.
+	 * @param pFach         Die Datenbank-ID des Faches der Fachwahl des Schülers.
+	 * @param pKursart      Die Datenbank-ID der Kursart der Fachwahl des Schülers.
+	 * @return              TRUE, falls der übergebene Schüler die entsprechende Fachwahl=Fach+Kursart hat.
+	 */	
+	public boolean getOfSchuelerHatFachart(long pSchuelerID, long pFach, long pKursart) {
+		HashMap<@NotNull Long, @NotNull GostFachwahl> map = _map_schulerID_fachID_fachwahl.get(pSchuelerID);
+		if (map == null)
+			throw new NullPointerException("Schüler-ID " + pSchuelerID + " unbekannt!");
+		GostFachwahl wahl = map.get(pFach);
+		if (wahl == null)
+			return false;
+		return wahl.kursartID == pKursart;
+	}
 
 	/**
 	 * Fügt eine Fachwahl hinzu.

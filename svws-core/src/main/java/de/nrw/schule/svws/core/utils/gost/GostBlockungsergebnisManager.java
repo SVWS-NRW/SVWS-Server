@@ -873,6 +873,18 @@ public class GostBlockungsergebnisManager {
 	}
 	
 	/**
+	 * Liefert TRUE, falls der übergebene Schüler die entsprechende Fachwahl=Fach+Kursart hat.
+	 *  
+	 * @param pSchuelerID   Die Datenbank.ID des Schülers.
+	 * @param pFach         Die Datenbank-ID des Faches der Fachwahl des Schülers.
+	 * @param pKursart      Die Datenbank-ID der Kursart der Fachwahl des Schülers.
+	 * @return              TRUE, falls der übergebene Schüler die entsprechende Fachwahl=Fach+Kursart hat.
+	 */
+	public boolean getOfSchuelerHatFachwahl(long pSchuelerID, long pFach, long pKursart) {
+		return _parent.getOfSchuelerHatFachart(pSchuelerID, pFach, pKursart);
+	}
+	
+	/**
 	 * Liefert die Anzahl an Kollisionen des Schülers. <br>
 	 * Ein Schüler, der N>1 Mal in einer Schiene ist, erzeugt N-1 Kollisionen.
 	 * 
