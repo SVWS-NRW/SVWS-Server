@@ -12,6 +12,7 @@ declare module '@vue/runtime-core' {
     Badge: typeof import('./src/components/Typography/Badge.vue')['default']
     Button: typeof import('./src/components/Controls/Button.vue')['default']
     Checkbox: typeof import('./src/components/Controls/Checkbox.vue')['default']
+    ComboBox: typeof import('./src/components/Controls/ComboBox/ComboBox.vue')['default']
     ContentCard: typeof import('./src/components/Layout/ContentCard.vue')['default']
     Dropdown: typeof import('./src/components/Controls/Dropdown.vue')['default']
     DropdownItem: typeof import('./src/components/Controls/DropdownItem.vue')['default']
