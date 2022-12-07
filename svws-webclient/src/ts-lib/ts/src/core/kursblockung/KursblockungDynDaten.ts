@@ -291,6 +291,28 @@ export class KursblockungDynDaten extends JavaObject {
 				if (!((von >= 1) && (von <= bis) && (bis <= schienenAnzahl))) 
 					throw this.fehler("KURSART_ALLEIN_IN_SCHIENEN_VON_BIS (" + kursartID + ", " + von + ", " + bis + ") ist unlogisch!")
 			}
+			if (gostRegel as unknown === GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS as unknown) {
+				let length : number = daten.length;
+				if (length !== 2) 
+					throw this.fehler("KURS_VERBIETEN_MIT_KURS daten.length=" + length + ", statt 2!")
+				let kursID1 : number = daten[0].valueOf();
+				if (!setKurse.contains(kursID1)) 
+					throw this.fehler("KURS_VERBIETEN_MIT_KURS hat unbekannte 1. Kurs-ID (" + kursID1 + ").")
+				let kursID2 : number = daten[1].valueOf();
+				if (!setKurse.contains(kursID2)) 
+					throw this.fehler("KURS_VERBIETEN_MIT_KURS hat unbekannte 2. Kurs-ID (" + kursID2 + ").")
+			}
+			if (gostRegel as unknown === GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS as unknown) {
+				let length : number = daten.length;
+				if (length !== 2) 
+					throw this.fehler("KURS_ZUSAMMEN_MIT_KURS daten.length=" + length + ", statt 2!")
+				let kursID1 : number = daten[0].valueOf();
+				if (!setKurse.contains(kursID1)) 
+					throw this.fehler("KURS_ZUSAMMEN_MIT_KURS hat unbekannte 1. Kurs-ID (" + kursID1 + ").")
+				let kursID2 : number = daten[1].valueOf();
+				if (!setKurse.contains(kursID2)) 
+					throw this.fehler("KURS_ZUSAMMEN_MIT_KURS hat unbekannte 2. Kurs-ID (" + kursID2 + ").")
+			}
 		}
 	}
 

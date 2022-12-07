@@ -74,8 +74,7 @@ public class KursblockungDynDaten {
 	 * @param pLogger Logger für Benutzerhinweise, Warnungen und Fehler.
 	 * @param pInput  Die Eingabedaten (Schnittstelle zur GUI).
 	 */
-	public KursblockungDynDaten(@NotNull Random pRandom, @NotNull Logger pLogger,
-			@NotNull GostBlockungsdatenManager pInput) {
+	public KursblockungDynDaten(@NotNull Random pRandom, @NotNull Logger pLogger, @NotNull GostBlockungsdatenManager pInput) {
 		_random = pRandom;
 		logger = pLogger;
 		regelMap = new HashMap<>();
@@ -408,6 +407,36 @@ public class KursblockungDynDaten {
 				int bis = daten[2].intValue(); // Schiene ist 1-indiziert!
 				if (!((von >= 1) && (von <= bis) && (bis <= schienenAnzahl)))
 					throw fehler("KURSART_ALLEIN_IN_SCHIENEN_VON_BIS (" + kursartID + ", " + von + ", " + bis + ") ist unlogisch!");
+			}
+			
+			// Regeltyp = 7
+			if (gostRegel == GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS) {
+				int length = daten.length;
+				if (length != 2)
+					throw fehler("KURS_VERBIETEN_MIT_KURS daten.length=" + length + ", statt 2!");
+				
+				long kursID1 = daten[0];
+				if (!setKurse.contains(kursID1))
+					throw fehler("KURS_VERBIETEN_MIT_KURS hat unbekannte 1. Kurs-ID (" + kursID1 + ").");
+				
+				long kursID2 = daten[1];
+				if (!setKurse.contains(kursID2))
+					throw fehler("KURS_VERBIETEN_MIT_KURS hat unbekannte 2. Kurs-ID (" + kursID2 + ").");
+			}
+
+			// Regeltyp = 8
+			if (gostRegel == GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS) {
+				int length = daten.length;
+				if (length != 2)
+					throw fehler("KURS_ZUSAMMEN_MIT_KURS daten.length=" + length + ", statt 2!");
+				
+				long kursID1 = daten[0];
+				if (!setKurse.contains(kursID1))
+					throw fehler("KURS_ZUSAMMEN_MIT_KURS hat unbekannte 1. Kurs-ID (" + kursID1 + ").");
+				
+				long kursID2 = daten[1];
+				if (!setKurse.contains(kursID2))
+					throw fehler("KURS_ZUSAMMEN_MIT_KURS hat unbekannte 2. Kurs-ID (" + kursID2 + ").");
 			}
 
 		}
