@@ -177,23 +177,23 @@ export class DataGostKursblockung extends BaseData<
 	}
 
 	/**Ergänzt eine Regel in der Blockung
-	 * @param {number} regel_typ
+	 * @param {GostBlockungRegel} regel die neue Regel
 	 * @returns {Promise<GostBlockungRegel|undefined>} Ein Kursobjekt bei Erfolg
 	 */
-	public async add_blockung_regel(regel_typ: number): Promise<GostBlockungRegel | undefined> {
+	public async add_blockung_regel(regel: GostBlockungRegel): Promise<GostBlockungRegel | undefined> {
 		if (!this.daten?.id)
 			return;
 		this.pending = true;
-		const regel = await App.api.addGostBlockungRegel(App.schema, this.daten.id, regel_typ);
-		if (!regel) {
+		const r = await App.api.addGostBlockungRegel(regel.parameter, App.schema, this.daten.id, regel.typ);
+		if (!r) {
 			this.pending = false;
-			return
+			return;
 		}
-		this.datenmanager?.addRegel(regel)
-		this.ergebnismanager?.setAddRegelByID(regel.id)
-		this.commit()
+		this.datenmanager?.addRegel(r);
+		this.ergebnismanager?.setAddRegelByID(r.id);
+		this.commit();
 		this.pending = false;
-		return regel
+		return r;
 	}
 
 	/**Löscht eine Regel in der Blockung mit der jeweiligen id

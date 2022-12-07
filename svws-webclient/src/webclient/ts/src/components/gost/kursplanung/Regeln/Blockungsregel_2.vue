@@ -65,12 +65,16 @@ const regeln: ComputedRef<GostBlockungRegel[]> =
 const speichern = async () => {
 	if (!regel.value)
 		return
-	await app.dataKursblockung.patch_blockung_regel(regel.value)
+	await app.dataKursblockung.add_blockung_regel(regel.value)
 	regel.value = undefined
 }
 
-const regel_hinzufuegen = async () => {
-	regel.value = await app.dataKursblockung.add_blockung_regel(regel_typ.typ)
+const regel_hinzufuegen = () => {
+	const r = new GostBlockungRegel();
+	r.typ = regel_typ.typ;
+	r.parameter.add(kurse.value.get(0).id)
+	r.parameter.add(1);
+	regel.value = r;
 }
 
 const regel_entfernen = async (r: GostBlockungRegel|undefined) => {
@@ -109,7 +113,7 @@ const kursbezeichnung = (regel: GostBlockungRegel): String => {
 				<parameter-kurs v-model="kurs" />
 				in
 				<parameter-schiene v-model="schiene" />
-				<svws-ui-button type="danger" @click="regel_entfernen(regel)">
+				<svws-ui-button type="danger" @click="regel=undefined">
 					<svws-ui-icon> <i-ri-delete-bin-2-line /> </svws-ui-icon> </svws-ui-button>
 				<svws-ui-button type="secondary" @click="speichern">
 					<svws-ui-icon> <i-ri-check-line /> </svws-ui-icon> </svws-ui-button>
