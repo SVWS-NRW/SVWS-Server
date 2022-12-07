@@ -3,10 +3,6 @@ configurations {
 } 
 
 dependencies {
-	implementation(configurations.jackson)
-	implementation(configurations.resteasy)
-	implementation(configurations.validation)
-	implementation(configurations.swagger)
 }
 
 publishing {

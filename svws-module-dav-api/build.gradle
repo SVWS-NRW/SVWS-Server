@@ -1,5 +1,5 @@
 configurations {
-    implementation.extendsFrom(crypto, database, validation, jetty, resteasy)
+    implementation.extendsFrom(crypto, database, jackson, validation, jetty, resteasy)
 }
 
 // add generated java files to sourceSets
@@ -36,12 +36,6 @@ dependencies {
     implementation project(':svws-db')
     implementation project(':svws-db-dto')
     implementation project(':svws-db-utils')
-
-    implementation(configurations.crypto)
-    implementation(configurations.database)
-    implementation(configurations.jackson)
-    implementation(configurations.jetty)
-    implementation(configurations.resteasy)
 }
 
 publishing {

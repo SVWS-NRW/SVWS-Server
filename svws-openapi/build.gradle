@@ -1,5 +1,5 @@
 configurations {
-	implementation.extendsFrom(crypto, database, jetty, resteasy, swagger, pdf)
+	implementation.extendsFrom(crypto, database, jackson, jetty, resteasy, swagger, pdf)
 }
 
 compileJava.dependsOn(":svws-db:assemble")
@@ -42,13 +42,6 @@ dependencies {
 	implementation project(':svws-db-utils')
 	implementation project(':svws-module-pdf')
     implementation project(':svws-module-dav-api')
-
-	implementation(configurations.crypto)
-	implementation(configurations.database)
-	implementation(configurations.jackson)
-	implementation(configurations.jetty)
-	implementation(configurations.resteasy)
-	implementation(configurations.swagger)
 }
 // TODO xml-apis belegt namespaces org.w3c.dom und javax.xml.namespace
 // dies führt zu eclipse problemen (package accesible from more than one module),
