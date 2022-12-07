@@ -12,7 +12,7 @@
 	>
 		<drop-data @drop="drop_aendere_kurszuordnung($event, kurs.id)" v-slot="{active}" >
 			<span :class="{'bg-red-400': active && is_drop_zone}">{{ kurs_name }}</span>
-			<span v-if="allow_regeln">
+			<span v-if="(allow_regeln && fach_gewaehlt)">
 					<svws-ui-icon class="cursor-pointer" @click.stop="verbieten_regel_toggle" >
 						<i-ri-forbid-fill v-if="verbieten_regel" class="inline-block text-red-400"/>
 						<i-ri-forbid-line v-if="!verbieten_regel && !fixier_regel" class="inline-block"/>
@@ -74,7 +74,18 @@
 		computed(() => app.dataKursblockung.ergebnismanager);
 
 	const allow_regeln: ComputedRef<boolean> =
-		computed(()=> app.blockungsergebnisauswahl.liste.length === 1)
+		computed(()=> app.blockungsergebnisauswahl.liste.length === 1);
+
+	const fach_gewaehlt: ComputedRef<boolean> =
+		computed(()=> {
+			if (!app.dataKursblockung.datenmanager)
+				return false;
+			const fachwahl = app.dataKursblockung.datenmanager.getOfSchuelerFacharten(props.schueler.id)
+			for (const wahl of fachwahl)
+				if (wahl.fachID === props.kurs.fachID && wahl.kursartID === props.kurs.kursart)
+					return true;
+			return false;
+		})
 
 	const is_draggable: ComputedRef<boolean> =
 		computed(() => {
@@ -128,8 +139,11 @@
 	const regeln: ComputedRef<List<GostBlockungRegel>> =
 		computed(()=> app.dataKursblockung.datenmanager?.getMengeOfRegeln() || new Vector<GostBlockungRegel>())
 
-	const verbieten_regel: ComputedRef<GostBlockungRegel | undefined> =
+
+	const fixier_regel: ComputedRef<GostBlockungRegel | undefined> =
 		computed(() => {
+	// const verbieten_regel: ComputedRef<boolean> =
+		// computed(() => manager.value?.getOfSchuelerOfKursIstGesperrt(props.schueler.id, props.kurs.id) || false)
 			for (const regel of regeln.value)
 				if (regel.typ === GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ
 						&& regel.parameter.get(0) === props.schueler.id
@@ -137,8 +151,10 @@
 					return regel;
 		})
 	
-	const fixier_regel: ComputedRef<GostBlockungRegel | undefined> =
+	const verbieten_regel: ComputedRef<GostBlockungRegel | undefined> =
 		computed(() => {
+	// const fixier_regel: ComputedRef<boolean> =
+		// computed(() => manager.value?.getOfSchuelerOfKursIstFixiert(props.schueler.id, props.kurs.id) || false)
 			for (const regel of regeln.value)
 				if (regel.typ === GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ
 						&& regel.parameter.get(0) === props.schueler.id
