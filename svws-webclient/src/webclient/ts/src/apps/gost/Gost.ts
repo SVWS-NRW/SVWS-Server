@@ -131,7 +131,7 @@ export class Gost extends App {
 		return ZulaessigesFach.getByKuerzelASD(row.kuerzelStatistik).getHMTLFarbeRGBA(1.0).valueOf();
 	}
 
-	async create_blockung(id: number, hjId: number): Promise<List<Number>|void> {
+	async create_blockungsergebnisse(id: number, hjId: number): Promise<List<Number>|void> {
 		this.addIdToApiStatus(hjId);
 		this.setApiStatusIdle(hjId);
 		try {

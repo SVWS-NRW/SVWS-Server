@@ -42,7 +42,7 @@
 									{{row.kuerzel}}
 									<span v-if="(pending && row.id === selected_hj.id)" class="loading-spinner-dimensions">
 										<img src="/loading_spinner.svg" alt="Ladeanzeige" class="loading-spinner-dimensions loading-rotation" ></span>
-									<svws-ui-button type="transparent" v-if="allow_add_blockung(row)" @click="blockung_hinzufuegen" :disabled="pending">Blockung hinzufügen</svws-ui-button>
+									<svws-ui-button type="transparent" v-if="allow_add_blockung(row)" @click.stop="blockung_hinzufuegen" :disabled="pending">Blockung hinzufügen</svws-ui-button>
 								</td>
 							</tr>
 							<template v-if="row.id === selected_hj.id && !wait" v-for="blockung in rows_blockungsswahl" :key="blockung.hashCode">
@@ -51,7 +51,7 @@
 										<div class="flex">
 											<span v-if="!edit_blockungsname"
 												class="text-input--inline"
-												@click="edit_blockungsname = true"
+												@click.stop="edit_blockungsname = true"
 											>{{blockung.name}}</span>
 											<svws-ui-text-input v-else v-model="blockung.name"
 												style="width: 10rem"
@@ -61,8 +61,8 @@
 										</div>
 										<svws-ui-icon v-if="blockung.istAktiv" > <i-ri-pushpin-fill /> </svws-ui-icon>
 										<div v-if="allow_add_blockung(row)" class="flex items-center gap-1">
-											<svws-ui-button size="small" type="secondary" @click="create_blockung" title="Ergebnisse berechnen" :disabled="pending">Berechnen</svws-ui-button >
-											<svws-ui-button size="small" type="danger" @click="toggle_remove_blockung_modal" title="Blockung löschen" :disabled="pending">
+											<svws-ui-button size="small" type="secondary" @click.stop="create_blockungsergebnisse" title="Ergebnisse berechnen" :disabled="pending">Berechnen</svws-ui-button >
+											<svws-ui-button size="small" type="danger" @click.stop="toggle_remove_blockung_modal" title="Blockung löschen" :disabled="pending">
 												<svws-ui-icon><i-ri-delete-bin-2-line/></svws-ui-icon>
 											</svws-ui-button>
 										</div>
@@ -90,10 +90,10 @@
 						</span>
 						<svws-ui-icon v-if="row.istVorlage" > <i-ri-pushpin-fill /></svws-ui-icon>
 						<div v-if="(row.id === selected_ergebnis?.id && !selected_blockungauswahl?.istAktiv)" class="flex gap-2">
-							<svws-ui-button v-if="selected_hj !== GostHalbjahr.Q22" size="small" type="secondary" class="cursor-pointer" @click="toggle_modal_hochschreiben" :disabled="pending"> Hochschreiben </svws-ui-button>
-							<svws-ui-button size="small" type="secondary" class="cursor-pointer" @click="toggle_modal_aktivieren" :disabled="pending"> Aktivieren </svws-ui-button>
-							<svws-ui-button size="small" type="secondary" class="cursor-pointer" @click="derive_blockung" :disabled="pending"> Ableiten </svws-ui-button>
-							<svws-ui-button v-if="rows_ergebnisse.size() > 1" size="small" type="danger" class="cursor-pointer" @click="remove_ergebnis" :disabled="pending">
+							<svws-ui-button v-if="selected_hj !== GostHalbjahr.Q22" size="small" type="secondary" class="cursor-pointer" @click.stop="toggle_modal_hochschreiben" :disabled="pending"> Hochschreiben </svws-ui-button>
+							<svws-ui-button size="small" type="secondary" class="cursor-pointer" @click.stop="toggle_modal_aktivieren" :disabled="pending"> Aktivieren </svws-ui-button>
+							<svws-ui-button size="small" type="secondary" class="cursor-pointer" @click.stop="derive_blockung" :disabled="pending"> Ableiten </svws-ui-button>
+							<svws-ui-button v-if="rows_ergebnisse.size() > 1" size="small" type="danger" class="cursor-pointer" @click.stop="remove_ergebnis" :disabled="pending">
 								<svws-ui-icon><i-ri-delete-bin-2-line/></svws-ui-icon>
 							</svws-ui-button>
 						</div>
@@ -265,12 +265,12 @@ async function abiturjahr_hinzufuegen(jahrgang: JahrgangsListeEintrag) {
 	}
 }
 
-const create_blockung = () => {
+const create_blockungsergebnisse = () => {
 	const halbjahresHashCode: number = app.blockungsauswahl.ausgewaehlt?.hashCode() ? app.blockungsauswahl.ausgewaehlt.hashCode() : -1;
 	const id = app.blockungsauswahl.ausgewaehlt?.id;
 	if (!id)
 		return;
-	const apiCall = app.create_blockung(id, halbjahresHashCode);
+	const apiCall = app.create_blockungsergebnisse(id, halbjahresHashCode);
 	main.config.apiLoadingStatus.addStatusByPromise(apiCall, {message: 'Blockung wird berechnet...', caller: 'Kursplanung (Gost)', categories: [GOST_CREATE_BLOCKUNG_SYMBOL]});
 };
 
@@ -279,8 +279,6 @@ async function blockung_hinzufuegen() {
 		return;
 	await App.api.createGostAbiturjahrgangBlockung(App.schema, selected.value.abiturjahr.valueOf(), selected_hj.value.id);
 	const abiturjahr = selected.value.abiturjahr.valueOf();
-	if (!abiturjahr)
-		return;
 	await app.blockungsauswahl.update_list(abiturjahr, selected_hj.value.id, true);
 }
 

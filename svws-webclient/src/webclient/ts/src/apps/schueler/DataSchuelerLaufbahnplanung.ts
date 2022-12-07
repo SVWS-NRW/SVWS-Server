@@ -5,7 +5,7 @@ import { List, Vector, GostHalbjahr, GostKursart, Jahrgaenge, Fachgruppe, Schulg
 		GostSchuelerFachwahl, GostAbiturjahrUtils, GostBelegpruefungErgebnis, GostBelegpruefungsArt,
 		ZulaessigesFach, GostFach, GostFachbereich, 
 		SchuelerListeEintrag,
-		Sprachbelegung, SprachendatenUtils, GostFaecherManager } from "@svws-nrw/svws-core-ts";
+		Sprachbelegung, SprachendatenUtils } from "@svws-nrw/svws-core-ts";
 import { BaseData } from "../BaseData";
 import { reactive } from "vue";
 import { mainApp } from "../Main";

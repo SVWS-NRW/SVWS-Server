@@ -18,8 +18,4 @@ export class ListKursblockungsergebnisse extends BaseList<GostBlockungsergebnisL
 		}
 		await super._update_list(() => App.apps.gost.dataKursblockung.ergebnisse());
 	}
-
-	public select_by_index(index: number): void {
-		this.ausgewaehlt = this.liste[index+1];
-	}
 }
