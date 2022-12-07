@@ -173,11 +173,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	private getIstBlockungsVorlage() : boolean {
-		if (this._daten.ergebnisse.size() !== 1) 
-			return false;
-		if (this._daten.ergebnisse.get(0).istVorlage === false) 
-			return false;
-		return true;
+		return this._daten.ergebnisse.size() === 1;
 	}
 
 	/**

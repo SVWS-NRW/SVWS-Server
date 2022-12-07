@@ -42,7 +42,8 @@ export class KursblockungDynSchiene extends JavaObject {
 	}
 
 	/**
-	 *Fügt der Schiene einen Kurs hinzu. Das Statistik-Objekt wird über neue Kurs-Paarungen informiert.
+	 *
+	 * Fügt der Schiene einen Kurs hinzu. Das Statistik-Objekt wird über neue Kurs-Paarungen informiert.
 	 * 
 	 * @param kurs1 Der Kurs, welcher der Schiene hinzugefügt werden soll. 
 	 */
@@ -53,9 +54,8 @@ export class KursblockungDynSchiene extends JavaObject {
 			this.logger.logLn(LogLevel.ERROR, fehler);
 			throw new KursblockungException(fehler)
 		}
-		for (let kurs2 of this.kursMap.values()) {
+		for (let kurs2 of this.kursMap.values()) 
 			this.statistik.aktionKurspaarInSchieneHinzufuegen(kurs1, kurs2);
-		}
 		this.kursMap.put(kursID, kurs1);
 	}
 
@@ -72,9 +72,8 @@ export class KursblockungDynSchiene extends JavaObject {
 			throw new KursblockungException(fehler)
 		}
 		this.kursMap.remove(kursID);
-		for (let kurs2 of this.kursMap.values()) {
+		for (let kurs2 of this.kursMap.values()) 
 			this.statistik.aktionKurspaarInSchieneEntfernen(kurs1, kurs2);
-		}
 	}
 
 	/**

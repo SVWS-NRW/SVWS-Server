@@ -190,11 +190,7 @@ public class GostBlockungsdatenManager {
 	}
 	
 	private boolean getIstBlockungsVorlage() {
-		if (_daten.ergebnisse.size() != 1)
-			return false;
-		if (_daten.ergebnisse.get(0).istVorlage == false)
-			return false;
-		return true;
+		return _daten.ergebnisse.size() == 1; 
 	}
 
 	/**

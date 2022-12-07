@@ -12,8 +12,7 @@ import jakarta.validation.constraints.NotNull;
  * @author Benjamin A. Bartsch */
 public class KursblockungDynSchiene {
 
-	/** Die Nummer der Schiene. Wenn es 14 Schienen gibt, dann gibt es 14 Objekte dieser Klasse mit den Nummern 0 bis
-	 * 13. */
+	/** Die Nummer der Schiene. Wenn es 14 Schienen gibt, dann gibt es 14 Objekte dieser Klasse mit den Nummern 0 bis 13. */
 	private final int nr;
 
 	/** Logger für Benutzerhinweise, Warnungen und Fehler. */
@@ -42,10 +41,13 @@ public class KursblockungDynSchiene {
 		return "" + nr;
 	}
 
-	/** Fügt der Schiene einen Kurs hinzu. Das Statistik-Objekt wird über neue Kurs-Paarungen informiert.
+	/** 
+	 * Fügt der Schiene einen Kurs hinzu. Das Statistik-Objekt wird über neue Kurs-Paarungen informiert.
 	 * 
-	 * @param kurs1 Der Kurs, welcher der Schiene hinzugefügt werden soll. */
+	 * @param kurs1 Der Kurs, welcher der Schiene hinzugefügt werden soll. 
+	 */
 	public void aktionKursHinzufuegen(@NotNull KursblockungDynKurs kurs1) {
+		// Fehler?
 		long kursID = kurs1.gibDatenbankID();
 		if (kursMap.containsKey(kursID)) {
 			String fehler = "Kurs '" + kurs1.toString() + "' soll in Schiene " + nr + ", ist aber bereits drin.";
@@ -53,9 +55,8 @@ public class KursblockungDynSchiene {
 			throw new KursblockungException(fehler);
 		}
 		// Zuerst Kurs-Paarungen hinzufügen.
-		for (@NotNull KursblockungDynKurs kurs2 : kursMap.values()) {
+		for (@NotNull KursblockungDynKurs kurs2 : kursMap.values()) 
 			statistik.aktionKurspaarInSchieneHinzufuegen(kurs1, kurs2);
-		}
 		// Dann der Datenstruktur hinzufügen.
 		kursMap.put(kursID, kurs1);
 	}
@@ -64,6 +65,7 @@ public class KursblockungDynSchiene {
 	 * 
 	 * @param kurs1 Der Kurs, welcher aus der Schiene entfernt werden soll. */
 	public void aktionKursEntfernen(@NotNull KursblockungDynKurs kurs1) {
+		// Fehler?
 		long kursID = kurs1.gibDatenbankID();
 		if (!kursMap.containsKey(kursID)) {
 			String fehler = "Kurs '" + kurs1.toString() + "' soll aus Schiene " + nr
@@ -74,9 +76,8 @@ public class KursblockungDynSchiene {
 		// Zuerst aus der Datenstruktur entfernen.
 		kursMap.remove(kursID);
 		// Dann Kurs-Paarungen entfernen.
-		for (@NotNull KursblockungDynKurs kurs2 : kursMap.values()) {
+		for (@NotNull KursblockungDynKurs kurs2 : kursMap.values()) 
 			statistik.aktionKurspaarInSchieneEntfernen(kurs1, kurs2);
-		}
 	}
 
 	/** Liefert die aktuelle Nummer der Schiene (0-indiziert).

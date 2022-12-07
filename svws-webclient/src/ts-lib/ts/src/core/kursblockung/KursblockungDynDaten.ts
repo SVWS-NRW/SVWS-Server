@@ -84,12 +84,13 @@ export class KursblockungDynDaten extends JavaObject {
 		this.schritt03FehlerBeiFachartenErstellung(pInput);
 		this.schritt04FehlerBeiSchuelerErstellung(pInput);
 		this.schritt05FehlerBeiSchuelerFachwahlenErstellung(pInput, this.schuelerArr);
-		this.schritt06FehlerBeiStatistikErstellung(this.fachartArr, this.schuelerArr);
+		this.schritt06FehlerBeiStatistikErstellung(this.fachartArr, this.schuelerArr, pInput);
 		this.schritt07FehlerBeiSchienenErzeugung(pInput.getSchienenAnzahl());
 		this.schritt08FehlerBeiKursErstellung(pInput);
 		this.schritt09FehlerBeiKursFreiErstellung();
 		this.schritt10FehlerBeiFachartKursArrayErstellung();
 		this.schritt11FehlerBeiRegel_4_oder_5();
+		this.schritt12FehlerBeiRegel_7_oder_8();
 		this.aktionZustandSpeichernS();
 		this.aktionZustandSpeichernK();
 		this.aktionZustandSpeichernG();
@@ -301,6 +302,8 @@ export class KursblockungDynDaten extends JavaObject {
 				let kursID2 : number = daten[1].valueOf();
 				if (!setKurse.contains(kursID2)) 
 					throw this.fehler("KURS_VERBIETEN_MIT_KURS hat unbekannte 2. Kurs-ID (" + kursID2 + ").")
+				if (kursID1 === kursID2) 
+					throw this.fehler("KURS_VERBIETEN_MIT_KURS 1. Kurs == 2. Kurs = " + kursID1 + ".")
 			}
 			if (gostRegel as unknown === GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS as unknown) {
 				let length : number = daten.length;
@@ -312,6 +315,8 @@ export class KursblockungDynDaten extends JavaObject {
 				let kursID2 : number = daten[1].valueOf();
 				if (!setKurse.contains(kursID2)) 
 					throw this.fehler("KURS_ZUSAMMEN_MIT_KURS hat unbekannte 2. Kurs-ID (" + kursID2 + ").")
+				if (kursID1 === kursID2) 
+					throw this.fehler("KURS_VERBIETEN_MIT_KURS 1. Kurs == 2. Kurs = " + kursID1 + ".")
 			}
 		}
 	}
@@ -434,7 +439,7 @@ export class KursblockungDynDaten extends JavaObject {
 		}
 	}
 
-	private schritt06FehlerBeiStatistikErstellung(fachartArr : Array<KursblockungDynFachart>, susArr : Array<KursblockungDynSchueler>) : void {
+	private schritt06FehlerBeiStatistikErstellung(fachartArr : Array<KursblockungDynFachart>, susArr : Array<KursblockungDynSchueler>, pInput : GostBlockungsdatenManager) : void {
 		let nFacharten : number = fachartArr.length;
 		let bewertungMatrixFachart : Array<Array<number>> = [...Array(nFacharten)].map(e => Array(nFacharten).fill(0));
 		for (let i : number = 0; i < susArr.length; i++){
@@ -464,7 +469,7 @@ export class KursblockungDynDaten extends JavaObject {
 			}
 			bewertungMatrixFachart[nr1][nr1] += 10000000;
 		}
-		this.statistik.aktionInitialisiere(bewertungMatrixFachart, susArr.length, fachartArr.length);
+		this.statistik.aktionInitialisiere(bewertungMatrixFachart, susArr.length, fachartArr.length, pInput.getKursAnzahl());
 	}
 
 	private schritt07FehlerBeiSchienenErzeugung(pSchienen : number) : void {
@@ -599,7 +604,7 @@ export class KursblockungDynDaten extends JavaObject {
 						schueler.aktionSetzeKursSperrung(kurs.gibInternalID());
 			}
 		let regelnTyp5 : LinkedCollection<GostBlockungRegel> | null = this.regelMap.get(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS);
-		if (regelnTyp5 !== null) {
+		if (regelnTyp5 !== null) 
 			for (let regel5 of regelnTyp5) {
 				let schuelerID : number = regel5.parameter.get(0).valueOf();
 				let kursID : number = regel5.parameter.get(1).valueOf();
@@ -607,7 +612,27 @@ export class KursblockungDynDaten extends JavaObject {
 				let verbotenerKurs : KursblockungDynKurs = this.gibKurs(kursID);
 				schueler.aktionSetzeKursSperrung(verbotenerKurs.gibInternalID());
 			}
-		}
+	}
+
+	private schritt12FehlerBeiRegel_7_oder_8() : void {
+		let regelnTyp7 : LinkedCollection<GostBlockungRegel> | null = this.regelMap.get(GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS);
+		if (regelnTyp7 !== null) 
+			for (let regel7 of regelnTyp7) {
+				let kursID1 : number = regel7.parameter.get(0).valueOf();
+				let kursID2 : number = regel7.parameter.get(1).valueOf();
+				let kurs1 : KursblockungDynKurs = this.gibKurs(kursID1);
+				let kurs2 : KursblockungDynKurs = this.gibKurs(kursID2);
+				this.statistik.regelHinzufuegenKursVerbieteMitKurs(kurs1, kurs2);
+			}
+		let regelnTyp8 : LinkedCollection<GostBlockungRegel> | null = this.regelMap.get(GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS);
+		if (regelnTyp8 !== null) 
+			for (let regel8 of regelnTyp8) {
+				let kursID1 : number = regel8.parameter.get(0).valueOf();
+				let kursID2 : number = regel8.parameter.get(1).valueOf();
+				let kurs1 : KursblockungDynKurs = this.gibKurs(kursID1);
+				let kurs2 : KursblockungDynKurs = this.gibKurs(kursID2);
+				this.statistik.regelHinzufuegenKursZusammenMitKurs(kurs1, kurs2);
+			}
 	}
 
 	private gibFachart(pFachID : number, pKursart : number) : KursblockungDynFachart {

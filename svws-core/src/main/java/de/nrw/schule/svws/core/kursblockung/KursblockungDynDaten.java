@@ -110,7 +110,7 @@ public class KursblockungDynDaten {
 		schritt05FehlerBeiSchuelerFachwahlenErstellung(pInput, schuelerArr);
 
 		// Definiert: statistik
-		schritt06FehlerBeiStatistikErstellung(fachartArr, schuelerArr);
+		schritt06FehlerBeiStatistikErstellung(fachartArr, schuelerArr, pInput);
 
 		// Definiert: schienenArr
 		schritt07FehlerBeiSchienenErzeugung(pInput.getSchienenAnzahl());
@@ -128,6 +128,8 @@ public class KursblockungDynDaten {
 		schritt10FehlerBeiFachartKursArrayErstellung();
 
 		schritt11FehlerBeiRegel_4_oder_5();
+		
+		schritt12FehlerBeiRegel_7_oder_8();
 
 		// Zustände Speichern
 		aktionZustandSpeichernS();
@@ -422,6 +424,9 @@ public class KursblockungDynDaten {
 				long kursID2 = daten[1];
 				if (!setKurse.contains(kursID2))
 					throw fehler("KURS_VERBIETEN_MIT_KURS hat unbekannte 2. Kurs-ID (" + kursID2 + ").");
+
+				if (kursID1 == kursID2)
+					throw fehler("KURS_VERBIETEN_MIT_KURS 1. Kurs == 2. Kurs = " + kursID1 + ".");
 			}
 
 			// Regeltyp = 8
@@ -437,6 +442,9 @@ public class KursblockungDynDaten {
 				long kursID2 = daten[1];
 				if (!setKurse.contains(kursID2))
 					throw fehler("KURS_ZUSAMMEN_MIT_KURS hat unbekannte 2. Kurs-ID (" + kursID2 + ").");
+
+				if (kursID1 == kursID2)
+					throw fehler("KURS_VERBIETEN_MIT_KURS 1. Kurs == 2. Kurs = " + kursID1 + ".");
 			}
 
 		}
@@ -601,8 +609,7 @@ public class KursblockungDynDaten {
 		}
 	}
 
-	private void schritt06FehlerBeiStatistikErstellung(@NotNull KursblockungDynFachart @NotNull [] fachartArr,
-			@NotNull KursblockungDynSchueler @NotNull [] susArr) {
+	private void schritt06FehlerBeiStatistikErstellung(@NotNull KursblockungDynFachart @NotNull [] fachartArr, @NotNull KursblockungDynSchueler @NotNull [] susArr, @NotNull GostBlockungsdatenManager pInput) {
 		int nFacharten = fachartArr.length;
 		@NotNull int @NotNull [][] bewertungMatrixFachart = new int[nFacharten][nFacharten];
 
@@ -640,7 +647,7 @@ public class KursblockungDynDaten {
 			bewertungMatrixFachart[nr1][nr1] += 10000000;
 		}
 
-		statistik.aktionInitialisiere(bewertungMatrixFachart, susArr.length, fachartArr.length);
+		statistik.aktionInitialisiere(bewertungMatrixFachart, susArr.length, fachartArr.length, pInput.getKursAnzahl());
 	}
 
 	private void schritt07FehlerBeiSchienenErzeugung(int pSchienen) {
@@ -747,13 +754,10 @@ public class KursblockungDynDaten {
 			}
 
 			// List --> Array
-			@NotNull KursblockungDynSchiene @NotNull [] pSchienenLage = schieneLage
-					.toArray(new KursblockungDynSchiene[0]);
-			@NotNull KursblockungDynSchiene @NotNull [] pSchienenFrei = schieneFrei
-					.toArray(new KursblockungDynSchiene[0]);
+			@NotNull KursblockungDynSchiene @NotNull [] pSchienenLage = schieneLage.toArray(new KursblockungDynSchiene[0]);
+			@NotNull KursblockungDynSchiene @NotNull [] pSchienenFrei = schieneFrei.toArray(new KursblockungDynSchiene[0]);
 			@NotNull KursblockungDynFachart dynFachart = gibFachart(kurs.fach_id, kurs.kursart);
-			@NotNull KursblockungDynKurs dynKurs = new KursblockungDynKurs(_random, pSchienenLage, pSchienenLageFixiert,
-					pSchienenFrei, kurs.id, dynFachart, logger, i);
+			@NotNull KursblockungDynKurs dynKurs = new KursblockungDynKurs(_random, pSchienenLage, pSchienenLageFixiert, pSchienenFrei, kurs.id, dynFachart, logger, i);
 
 			// Kurs --> Array
 			kursArr[i] = dynKurs;
@@ -811,10 +815,8 @@ public class KursblockungDynDaten {
 	}
 
 	private void schritt11FehlerBeiRegel_4_oder_5() {
-
 		// Regel 4 - SCHUELER_FIXIEREN_IN_KURS
-		LinkedCollection<@NotNull GostBlockungRegel> regelnTyp4 = regelMap
-				.get(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS);
+		LinkedCollection<@NotNull GostBlockungRegel> regelnTyp4 = regelMap.get(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS);
 		if (regelnTyp4 != null)
 			for (@NotNull GostBlockungRegel regel4 : regelnTyp4) {
 				long schuelerID = regel4.parameter.get(0);
@@ -828,9 +830,8 @@ public class KursblockungDynDaten {
 			}
 
 		// Regel 5 - SCHUELER_VERBIETEN_IN_KURS
-		LinkedCollection<@NotNull GostBlockungRegel> regelnTyp5 = regelMap
-				.get(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS);
-		if (regelnTyp5 != null) {
+		LinkedCollection<@NotNull GostBlockungRegel> regelnTyp5 = regelMap.get(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS);
+		if (regelnTyp5 != null) 
 			for (@NotNull GostBlockungRegel regel5 : regelnTyp5) {
 				long schuelerID = regel5.parameter.get(0);
 				long kursID = regel5.parameter.get(1);
@@ -839,8 +840,30 @@ public class KursblockungDynDaten {
 				// Kurs verbieten
 				schueler.aktionSetzeKursSperrung(verbotenerKurs.gibInternalID());
 			}
-		}
+	}
 
+	private void schritt12FehlerBeiRegel_7_oder_8() {
+		// Regel 7 - KURS_VERBIETEN_MIT_KURS
+		LinkedCollection<@NotNull GostBlockungRegel> regelnTyp7 = regelMap.get(GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS);
+		if (regelnTyp7 != null)
+			for (@NotNull GostBlockungRegel regel7 : regelnTyp7) {
+				long kursID1 = regel7.parameter.get(0);
+				long kursID2 = regel7.parameter.get(1);
+				@NotNull KursblockungDynKurs kurs1 = gibKurs(kursID1);
+				@NotNull KursblockungDynKurs kurs2 = gibKurs(kursID2);
+				statistik.regelHinzufuegenKursVerbieteMitKurs(kurs1, kurs2);
+			}
+
+		// Regel 7 - KURS_ZUSAMMEN_MIT_KURS
+		LinkedCollection<@NotNull GostBlockungRegel> regelnTyp8 = regelMap.get(GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS);
+		if (regelnTyp8 != null)
+			for (@NotNull GostBlockungRegel regel8 : regelnTyp8) {
+				long kursID1 = regel8.parameter.get(0);
+				long kursID2 = regel8.parameter.get(1);
+				@NotNull KursblockungDynKurs kurs1 = gibKurs(kursID1);
+				@NotNull KursblockungDynKurs kurs2 = gibKurs(kursID2);
+				statistik.regelHinzufuegenKursZusammenMitKurs(kurs1, kurs2);
+			}
 	}
 
 	private @NotNull KursblockungDynFachart gibFachart(long pFachID, int pKursart) {
