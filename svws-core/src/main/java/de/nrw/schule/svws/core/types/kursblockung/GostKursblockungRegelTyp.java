@@ -93,6 +93,17 @@ public enum GostKursblockungRegelTyp {
 	SCHUELER_VERBIETEN_IN_KURS(5, "Schüler: Verbiete in Kurs", Arrays.asList(
 		GostKursblockungRegelParameterTyp.SCHUELER_ID, 
 		GostKursblockungRegelParameterTyp.KURS_ID
+	)),
+
+	/** 
+	 * Der Regel-Typ zum Verbieten eines Kurses (A) mit einem Kurs (B) in der selben Schiene. <br>
+	 * 
+	 * - Parameter A: Datenbank-ID des 1. Kurses (long) <br>
+	 * - Parameter B: Datenbank-ID des 2. Kurses (long) 
+	 */
+	KURS_VERBIETEN_MIT_KURS(6, "Kurs verbiete mit Kurs", Arrays.asList(
+		GostKursblockungRegelParameterTyp.KURS_ID, 
+		GostKursblockungRegelParameterTyp.KURS_ID
 	));
 
 	/** Die ID des Regel-Typs */
@@ -206,7 +217,8 @@ public enum GostKursblockungRegelTyp {
 		@NotNull GostKursblockungRegelTyp typ = fromTyp(pRegel.typ);
 		@NotNull Vector<@NotNull Long> param = pRegel.parameter;
 		switch (typ) {
-            case SCHUELER_FIXIEREN_IN_KURS, SCHUELER_VERBIETEN_IN_KURS: { // 4, 5
+			// Keine Veränderung bei (2 Parameter) 
+            case SCHUELER_FIXIEREN_IN_KURS, SCHUELER_VERBIETEN_IN_KURS, KURS_VERBIETEN_MIT_KURS: { // 4, 5
             	long p0 = param.get(0);
             	long p1 = param.get(1);
             	return new long[] {p0, p1};
