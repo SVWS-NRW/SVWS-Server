@@ -49,15 +49,17 @@
 								<tr :class="{'vt-clicked': blockung === selected_blockungauswahl}" class="table--row-indent" @click="select_blockungauswahl(blockung)">
 									<td v-if=" blockung === selected_blockungauswahl ">
 										<div class="flex">
-											<span v-if="!edit_blockungsname"
+											<span v-if="(!edit_blockungsname && blockung === selected_blockungauswahl)"
 												class="text-input--inline"
 												@click.stop="edit_blockungsname = true"
 											>{{blockung.name}}</span>
-											<svws-ui-text-input v-else v-model="blockung.name"
+											<svws-ui-text-input v-else
+												:modelValue="blockung.name"
 												style="width: 10rem"
 												headless focus
 												@keyup.enter="edit_blockungsname=false"
-												@input="patch_blockung(blockung)"/>
+												@keyup.escape="edit_blockungsname=false"
+												@update:modelValue="patch_blockung"/>
 										</div>
 										<svws-ui-icon v-if="blockung.istAktiv" > <i-ri-pushpin-fill /> </svws-ui-icon>
 										<div v-if="allow_add_blockung(row)" class="flex items-center gap-1">
@@ -326,8 +328,8 @@ async function hochschreiben_ergebnis() {
 	await app.blockungsauswahl.update_list(abiturjahr, selected_hj.value.next()?.id || selected_hj.value.id, true);
 }
 
-async function patch_blockung(blockung: GostBlockungListeneintrag) {
-	await app.dataKursblockung.patch({name: blockung.name});
+function patch_blockung(name: string) {
+	app.dataKursblockung.patch({name});
 }
 
 function color1(ergebnis: GostBlockungsergebnisListeneintrag): string {
