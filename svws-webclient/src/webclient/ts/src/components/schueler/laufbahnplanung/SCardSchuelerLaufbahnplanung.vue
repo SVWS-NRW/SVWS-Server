@@ -27,7 +27,7 @@
 									<td class="border border-[#7f7f7f]/20 text-center">Q2.2</td>
 								</tr>
 							</thead>
-							<tr v-for="row in rows" :key="row.id">
+							<tr v-for="row in rows" :key="row.id" class="select-none">
 								<s-row-lupo :fach="row" />
 							</tr>
 							<thead class="bg-slate-100">

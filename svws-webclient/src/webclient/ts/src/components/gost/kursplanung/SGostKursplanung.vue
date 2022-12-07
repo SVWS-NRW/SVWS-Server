@@ -9,7 +9,7 @@
 		</div>
 		<div class="flex min-h-full flex-col ml-auto bg-slate-200 rounded-l-lg" :class="{ 'w-16': collapsed }">
 			<div class="relative pl-2 ">
-				<svws-ui-button class="flex justify-center w-7 h-7 rounded-full text-headline-4 text-black translate-y-1/2 transform" @click.prevent="onToggle">
+				<svws-ui-button class="flex justify-center w-7 h-7 rounded-full text-headline-4 text-black translate-y-1/2 transform" @click="onToggle">
 					<svws-ui-icon> <i-ri-arrow-left-s-line v-if="collapsed" /> <i-ri-arrow-right-s-line v-else /> </svws-ui-icon>
 				</svws-ui-button>
 			</div>

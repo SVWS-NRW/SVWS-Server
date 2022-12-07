@@ -1,7 +1,7 @@
 <template>
-	<td class="border border-[#7f7f7f]/20 px-2 text-left" :style="{ 'background-color': bgColor }" >
+	<td class="border border-[#7f7f7f]/20 px-2 text-left select-text" :style="{ 'background-color': bgColor }" >
 		{{ fach.kuerzelAnzeige }}</td>
-	<td class="border border-[#7f7f7f]/20 text-left" :style="{ 'background-color': bgColor }" >
+	<td class="border border-[#7f7f7f]/20 text-left select-text" :style="{ 'background-color': bgColor }" >
 		{{ fach.bezeichnung }} </td>
 	<td class="border border-[#7f7f7f]/20 text-center" :style="{ 'background-color': bgColor }" >
 		{{ fach.wochenstundenQualifikationsphase }} </td>
@@ -14,7 +14,7 @@
 				'border-[#7f7f7f]/20': ef1_moeglich,
 				'opacity-80': bewertet[0],
 				'cursor-not-allowed': !ef1_moeglich || bewertet[0] || fachkombi_verboten_ef1 } ]"
-			:style="{ 'background-color': (ef1_moeglich && !fachkombi_verboten_ef1) ? bgColor : 'gray' }" @click="() => ef1_set()" >
+			:style="{ 'background-color': (ef1_moeglich && !fachkombi_verboten_ef1) ? bgColor : 'gray' }" @click.stop="() => ef1_set()" >
 		<span :class="{'rounded-full px-2 bg-red-400': fachkombi_erforderlich_ef1}">
 			{{ wahlen[0] }}</span> </td>
 	<td :class="[ 'w-12 text-center', {
@@ -22,7 +22,7 @@
 				'border-[#7f7f7f]/20': ef2_moeglich,
 				'opacity-80': bewertet[1],
 				'cursor-not-allowed': !ef2_moeglich || bewertet[1] || fachkombi_verboten_ef2 } ]"
-			:style="{ 'background-color': (ef2_moeglich && !fachkombi_verboten_ef2) ? bgColor: 'gray' }" @click="() => ef2_set()" >
+			:style="{ 'background-color': (ef2_moeglich && !fachkombi_verboten_ef2) ? bgColor: 'gray' }" @click.stop="() => ef2_set()" >
 		<span :class="{'rounded-full px-2 bg-red-400': fachkombi_erforderlich_ef2}">
 			{{ wahlen[1] }}</span> </td>
 	<td :class="[ 'w-12 text-center', {
@@ -30,7 +30,7 @@
 				'border-[#7f7f7f]/20': q11_moeglich,
 				'opacity-80': bewertet[2],
 				'cursor-not-allowed': !q11_moeglich || bewertet[2] || fachkombi_verboten_q11 } ]"
-			:style="{ 'background-color': (q11_moeglich && !fachkombi_verboten_q11) ? bgColor: 'gray' }" @click="() => q11_set()" >
+			:style="{ 'background-color': (q11_moeglich && !fachkombi_verboten_q11) ? bgColor: 'gray' }" @click.stop="() => q11_set()" >
 		<span :class="{'rounded-full px-2 bg-red-400': fachkombi_erforderlich_q11}">
 			{{ wahlen[2] }}</span> </td>
 	<td :class="[ 'w-12 text-center', {
@@ -38,7 +38,7 @@
 				'border-[#7f7f7f]/20': q12_moeglich,
 				'opacity-80': bewertet[3],
 				'cursor-not-allowed': !q12_moeglich || bewertet[3] || fachkombi_verboten_q12 } ]"
-			:style="{ 'background-color': (q12_moeglich && !fachkombi_verboten_q12) ? bgColor: 'gray' }" @click="() => q12_set()" >
+			:style="{ 'background-color': (q12_moeglich && !fachkombi_verboten_q12) ? bgColor: 'gray' }" @click.stop="() => q12_set()" >
 		<span :class="{'rounded-full px-2 bg-red-400': fachkombi_erforderlich_q12}">
 			{{ wahlen[3] }} </span> </td>
 	<td :class="[ 'w-12 text-center', {
@@ -46,7 +46,7 @@
 				'border-[#7f7f7f]/20': q21_moeglich,
 				'opacity-80': bewertet[4],
 				'cursor-not-allowed': !q21_moeglich || bewertet[4] || fachkombi_verboten_q21 } ]"
-			:style="{ 'background-color': (q21_moeglich && !fachkombi_verboten_q21) ? bgColor: 'gray' }" @click="() => q21_set()" >
+			:style="{ 'background-color': (q21_moeglich && !fachkombi_verboten_q21) ? bgColor: 'gray' }" @click.stop="() => q21_set()" >
 		<span :class="{'rounded-full px-2 bg-red-400': fachkombi_erforderlich_q21}">
 			{{ wahlen[4] }}</span> </td>
 	<td :class="[ 'w-12 text-center', {
@@ -54,7 +54,7 @@
 				'border-[#7f7f7f]/20': q22_moeglich,
 				'opacity-80': bewertet[5],
 				'cursor-not-allowed': !q22_moeglich || bewertet[5] || fachkombi_verboten_q22 } ]"
-			:style="{ 'background-color': (q22_moeglich && !fachkombi_verboten_q22) ? bgColor: 'gray' }" @click="() => q22_set()" >
+			:style="{ 'background-color': (q22_moeglich && !fachkombi_verboten_q22) ? bgColor: 'gray' }" @click.stop="() => q22_set()" >
 		<span :class="{'rounded-full px-2 bg-red-400': fachkombi_erforderlich_q22}">
 			{{ wahlen[5] }}</span> </td>
 	<td :class="[ 'w-12 text-center', {
@@ -62,7 +62,7 @@
 				'border-[#7f7f7f]/20': abi_moeglich,
 				'opacity-80': bewertet[5],
 				'cursor-not-allowed': !abi_moeglich } ]"
-			:style="{ 'background-color': abi_moeglich ? bgColor : 'gray' }" @click="() => abi_set()" >
+			:style="{ 'background-color': abi_moeglich ? bgColor : 'gray' }" @click.stop="() => abi_set()" >
 		{{ abi_wahl }} </td>
 </template>
 

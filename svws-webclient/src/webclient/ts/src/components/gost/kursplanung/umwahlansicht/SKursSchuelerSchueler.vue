@@ -7,11 +7,11 @@
 			<div class="flex justify-between">
 				<span>{{ `${schueler.nachname}, ${schueler.vorname}`}} <svws-ui-badge v-if="schueler.status !== 'Aktiv'" size="tiny" variant="highlight">{{schueler.status}}</svws-ui-badge></span>
 				<div v-if="selected_kurs && (selected || verbieten_regel || fixier_regel)">
-					<svws-ui-icon class="cursor-pointer" @click="verbieten_regel_toggle" >
+					<svws-ui-icon class="cursor-pointer" @click.stop="verbieten_regel_toggle" >
 						<i-ri-forbid-fill v-if="verbieten_regel" class="inline-block"/>
 						<i-ri-forbid-line v-if="!verbieten_regel && !fixier_regel" class="inline-block"/>
 					</svws-ui-icon>
-					<svws-ui-icon class="cursor-pointer" @click="fixieren_regel_toggle" >
+					<svws-ui-icon class="cursor-pointer" @click.stop="fixieren_regel_toggle" >
 						<i-ri-pushpin-fill v-if="fixier_regel" class="inline-block"/>
 						<i-ri-pushpin-line  v-if="!verbieten_regel && !fixier_regel" class="inline-block"/>
 					</svws-ui-icon>
