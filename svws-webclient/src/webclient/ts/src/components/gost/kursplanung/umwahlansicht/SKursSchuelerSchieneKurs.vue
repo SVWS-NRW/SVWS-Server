@@ -77,15 +77,7 @@
 		computed(()=> app.blockungsergebnisauswahl.liste.length === 1);
 
 	const fach_gewaehlt: ComputedRef<boolean> =
-		computed(()=> {
-			if (!app.dataKursblockung.datenmanager)
-				return false;
-			const fachwahl = app.dataKursblockung.datenmanager.getOfSchuelerFacharten(props.schueler.id)
-			for (const wahl of fachwahl)
-				if (wahl.fachID === props.kurs.fachID && wahl.kursartID === props.kurs.kursart)
-					return true;
-			return false;
-		})
+		computed(()=> manager.value?.getOfSchuelerHatFachwahl(props.schueler.id, props.kurs.fachID, props.kurs.kursart) || false)
 
 	const is_draggable: ComputedRef<boolean> =
 		computed(() => {
