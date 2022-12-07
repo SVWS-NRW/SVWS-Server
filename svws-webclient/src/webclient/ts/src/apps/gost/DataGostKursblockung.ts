@@ -180,20 +180,20 @@ export class DataGostKursblockung extends BaseData<
 	 * @param {GostBlockungRegel} regel die neue Regel
 	 * @returns {Promise<GostBlockungRegel|undefined>} Ein Kursobjekt bei Erfolg
 	 */
-	public async add_blockung_regel(regel: GostBlockungRegel): Promise<GostBlockungRegel | undefined> {
+	public async add_blockung_regel(r: GostBlockungRegel): Promise<GostBlockungRegel | undefined> {
 		if (!this.daten?.id)
 			return;
 		this.pending = true;
-		const r = await App.api.addGostBlockungRegel(regel.parameter, App.schema, this.daten.id, regel.typ);
-		if (!r) {
+		const regel = await App.api.addGostBlockungRegel(r.parameter, App.schema, this.daten.id, r.typ);
+		if (!regel) {
 			this.pending = false;
 			return;
 		}
-		this.datenmanager?.addRegel(r);
-		this.ergebnismanager?.setAddRegelByID(r.id);
+		this.datenmanager?.addRegel(regel);
+		this.ergebnismanager?.setAddRegelByID(regel.id);
 		this.commit();
 		this.pending = false;
-		return r;
+		return regel;
 	}
 
 	/**Löscht eine Regel in der Blockung mit der jeweiligen id
@@ -214,20 +214,6 @@ export class DataGostKursblockung extends BaseData<
 		this.commit();
 			this.pending = false;
 		return regel
-	}
-
-	/**passt die Regel einer Blockung an */
-	public async patch_blockung_regel(data: GostBlockungRegel): Promise<GostBlockungRegel | undefined> {
-		await App.api.patchGostBlockungRegel(data, App.schema, data.id);
-		const regel = this.datenmanager?.getRegel(data.id)
-		if (!regel)
-			return
-		this.datenmanager?.removeRegel(regel);
-		this.ergebnismanager?.setRemoveRegelByID(regel.id);
-		this.datenmanager?.addRegel(data);
-		this.ergebnismanager?.setAddRegelByID(data.id)
-		this.commit();
-		return regel;
 	}
 
 	/**Ergänzt eine Schiene in der Blockung für das angegebene

@@ -36,6 +36,7 @@
 
 <script setup lang="ts">
 import {
+GostBlockungRegel,
 	GostBlockungSchiene,
 	GostKursart,
 	GostKursblockungRegelTyp,
@@ -70,12 +71,12 @@ const drag_data = computed({
 
 const regel_hinzufuegen = async (regeltyp: GostKursblockungRegelTyp) => {
 	toggle_modal()
-	const regel = await app.dataKursblockung.add_blockung_regel(regeltyp.typ)
-	if (!regel) return
-	regel.parameter.set(0, kursart.value.id)
-	regel.parameter.set(1, von.value.nummer)
-	regel.parameter.set(2, bis.value.nummer)
-	await app.dataKursblockung.patch_blockung_regel(regel)
+	const regel = new GostBlockungRegel();
+	regel.typ = regeltyp.typ;
+	regel.parameter.add(kursart.value.id)
+	regel.parameter.add(von.value.nummer)
+	regel.parameter.add(bis.value.nummer)
+	await app.dataKursblockung.add_blockung_regel(regel)
 }
 
 function regel_schiene() {

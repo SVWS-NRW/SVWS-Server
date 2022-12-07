@@ -260,11 +260,6 @@ const ermittel_parent_schiene = (ergebnis_schiene: GostBlockungsergebnisSchiene)
 	return schiene
 }
 
-const regel_speichern = async (regel: GostBlockungRegel) => {
-	regel.parameter.set(0, props.kurs.id)
-	await app.dataKursblockung.patch_blockung_regel(regel)
-}
-
 const fixieren_regel_toggle = () => {
 	if (app.dataKursblockung.pending)
 		return;
@@ -273,9 +268,10 @@ const fixieren_regel_toggle = () => {
 const fixieren_regel_hinzufuegen = async () => {
 	if (app.dataKursblockung.pending || !manager.value)
 		return;
-	const regel = await app.dataKursblockung.add_blockung_regel(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ)
+	const regel = new GostBlockungRegel();
+	regel.typ = GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ;
 	const kurs = kurs_blockungsergebnis.value
-	if (!regel || !kurs)
+	if (!kurs)
 		return;
 	const schienen = manager.value.getOfKursSchienenmenge(kurs.id)
 	if (!schienen)
@@ -283,8 +279,9 @@ const fixieren_regel_hinzufuegen = async () => {
 	const schiene = manager.value.getSchieneG([...schienen][0].id)
 	if (!schiene)
 		return;
-	regel.parameter.set(1, schiene.nummer)
-	await regel_speichern(regel)
+	regel.parameter.add(props.kurs.id);
+	regel.parameter.add(schiene.nummer);
+	await app.dataKursblockung.add_blockung_regel(regel)
 }
 
 const fixieren_regel_entfernen = async () => {
@@ -304,11 +301,10 @@ const sperren_regel_toggle = (schiene: GostBlockungsergebnisSchiene) => {
 }
 
 const sperren_regel_hinzufuegen = async (nummer: number) => {
-	const regel = await app.dataKursblockung.add_blockung_regel(GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ);
-	if (!regel)
-		return;
-	regel.parameter.set(1, nummer);
-	await regel_speichern(regel);
+	const regel = new GostBlockungRegel();
+	regel.parameter.add(props.kurs.id);
+	regel.parameter.add(nummer);
+	await app.dataKursblockung.add_blockung_regel(regel);
 }
 
 const sperren_regel_entfernen = async (nummer: number) => {

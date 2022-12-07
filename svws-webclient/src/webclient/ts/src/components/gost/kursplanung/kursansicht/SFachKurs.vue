@@ -15,7 +15,7 @@
 </template>
 
 <script setup lang="ts">
-	import { List, Vector, GostBlockungKurs, GostBlockungSchiene, GostKursart, GostStatistikFachwahl, GostStatistikFachwahlHalbjahr, HashMap, ZulaessigesFach, GostFach, KurszahlenUndWochenstunden } from "@svws-nrw/svws-core-ts";
+	import { List, Vector, GostBlockungKurs, GostBlockungSchiene, GostKursart, GostStatistikFachwahl, GostStatistikFachwahlHalbjahr, HashMap, ZulaessigesFach, GostFach } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef } from "vue";
 
 	import { injectMainApp, Main } from "~/apps/Main";
