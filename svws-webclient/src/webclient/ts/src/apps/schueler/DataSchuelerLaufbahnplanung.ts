@@ -421,9 +421,6 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 	 * @returns {boolean}
 	 */
 	public getQ21Moeglich(row: GostFach): boolean {
-		const fach = ZulaessigesFach.getByKuerzelASD(row.kuerzel);
-		if (fach.getFachgruppe() === Fachgruppe.FG_ME) 
-			return false;
 		if (this.checkDoppelbelegung(row, GostHalbjahr.Q21)) 
 			return false;
 		if (row.istMoeglichQ21) {
@@ -439,9 +436,6 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 	 * @returns {boolean}
 	 */
 	public getQ22Moeglich(row: GostFach): boolean {
-		const fach = ZulaessigesFach.getByKuerzelASD(row.kuerzel);
-		if (fach.getFachgruppe() === Fachgruppe.FG_ME)
-			return false;
 		if (this.checkDoppelbelegung(row, GostHalbjahr.Q22)) 
 			return false;
 		if (row.istMoeglichQ22) {
@@ -458,7 +452,8 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 	 */
 	public getAbiGKMoeglich(row: GostFach): boolean {
 		const fach = ZulaessigesFach.getByKuerzelASD(row.kuerzel);
-		if (fach.getFachgruppe() === Fachgruppe.FG_ME || fach.getFachgruppe() === Fachgruppe.FG_VX 
+		if (fach.getFachgruppe() === Fachgruppe.FG_ME
+				|| fach.getFachgruppe() === Fachgruppe.FG_VX 
 				|| fach.getFachgruppe() === Fachgruppe.FG_PX)
 			return false;
 		return row.istMoeglichAbiGK;
@@ -473,7 +468,8 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 	 */
 	public getAbiLKMoeglich(row: GostFach): boolean {
 		const fach = ZulaessigesFach.getByKuerzelASD(row.kuerzel);
-		if (fach.getFachgruppe() === Fachgruppe.FG_ME || fach.getFachgruppe() === Fachgruppe.FG_VX 
+		if (fach.getFachgruppe() === Fachgruppe.FG_ME
+				|| fach.getFachgruppe() === Fachgruppe.FG_VX 
 				|| fach.getFachgruppe() === Fachgruppe.FG_PX || fach.getJahrgangAb() === Jahrgaenge.JG_EF 
 				|| (row.biliSprache === null && row.biliSprache === "D"))
 			return false;
@@ -501,13 +497,15 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 				const hjQ12 = fachbelegung.belegungen?.[GostHalbjahr.Q12.id];
 				const hjQ21 = fachbelegung.belegungen?.[GostHalbjahr.Q21.id];
 				const hjQ22 = fachbelegung.belegungen?.[GostHalbjahr.Q22.id];
-				if (!hjQ11?.kursartKuerzel || !hjQ12?.kursartKuerzel ||
-					!hjQ21?.kursartKuerzel || !hjQ22?.kursartKuerzel)
+				if (!hjQ11?.kursartKuerzel
+						|| !hjQ12?.kursartKuerzel
+						|| !hjQ21?.kursartKuerzel
+						|| !hjQ22?.kursartKuerzel)
 					return false;
 				if (GostKursart.fromKuerzel(hjQ11.kursartKuerzel) !== GostKursart.GK 
-					|| GostKursart.fromKuerzel(hjQ12.kursartKuerzel) !== GostKursart.GK 
-					|| GostKursart.fromKuerzel(hjQ21.kursartKuerzel) !== GostKursart.GK 
-					|| GostKursart.fromKuerzel(hjQ22.kursartKuerzel) !== GostKursart.GK)
+						|| GostKursart.fromKuerzel(hjQ12.kursartKuerzel) !== GostKursart.GK 
+						|| GostKursart.fromKuerzel(hjQ21.kursartKuerzel) !== GostKursart.GK 
+						|| GostKursart.fromKuerzel(hjQ22.kursartKuerzel) !== GostKursart.GK)
 					return false;
 				if (!hjQ11.schriftlich || !hjQ12.schriftlich || !hjQ21.schriftlich)
 					return false;
