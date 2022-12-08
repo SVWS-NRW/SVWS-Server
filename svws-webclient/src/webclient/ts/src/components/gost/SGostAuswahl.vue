@@ -40,7 +40,7 @@
 							<tr :class="{'vt-clicked': row.id === selected_hj.id}" @click="select_hj(row)">
 								<td>
 									{{row.kuerzel}}
-									<span v-if="(pending && row.id === selected_hj.id)" class="loading-spinner-dimensions">
+									<span v-if="((pending || app.blockungsauswahl.pending) && row.id === selected_hj.id)" class="loading-spinner-dimensions">
 										<img src="/loading_spinner.svg" alt="Ladeanzeige" class="loading-spinner-dimensions loading-rotation" ></span>
 									<svws-ui-button type="transparent" v-if="allow_add_blockung(row)" @click.stop="blockung_hinzufuegen" :disabled="pending">Blockung hinzufügen</svws-ui-button>
 								</td>
@@ -200,9 +200,6 @@ const selected_hj: WritableComputedRef<GostHalbjahr> =
 			hj_memo.value = hj
 			if ((selected.value?.abiturjahr) && (selected.value?.abiturjahr !== -1)) {
 				app.blockungsauswahl.ausgewaehlt = undefined;
-				// app.dataKursblockung.datenmanager = undefined;
-				// app.dataKursblockung.ergebnismanager = undefined;
-				// app.dataKursblockung.commit();
 				app.blockungsauswahl.update_list(selected.value.abiturjahr, hj.id)
 			}
 		}});
@@ -244,7 +241,7 @@ const allow_add_blockung = (row: GostHalbjahr): boolean => {
 }
 
 function select_hj(halbjahr: GostHalbjahr) {
-	if (pending.value)
+	if (pending.value || app.blockungsauswahl.pending)
 		return;
 	const selection = halbjahre.find(hj=>hj.id===halbjahr.id);
 	if (selection)

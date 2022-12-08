@@ -172,7 +172,7 @@ export abstract class BaseList<ListenEintragTyp, ListenFilterTyp = undefined> {
 			this._pending.concat(this.daten.map(d => { return d.select(eintrag); }));
 		else 
 			this._pending.concat(this.daten.map(d => d.unselect()));
-		Promise.allSettled(this._pending).then(()=> this.on_select()).then( () => { this._state.pending = false} );
+		Promise.allSettled(this._pending).then(()=> this.on_select()).then(() => this._state.pending = false);
 	}
 
 	/** Getter für den Schnellfilter */
@@ -186,8 +186,7 @@ export abstract class BaseList<ListenEintragTyp, ListenFilterTyp = undefined> {
 		this.filter_liste();
 	}
 
-	public async pending(): Promise<void> {
-		// console.log(this._pending)
-		await Promise.allSettled(this._pending)
+	public get pending(): boolean {
+		return this._state.pending;
 	}
 }
