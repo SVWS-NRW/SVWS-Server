@@ -4,21 +4,12 @@
 envsubst < /etc/app/svws/conf/svwsconfig-template.json > /opt/app/svws/svwsconfig.json
 
 # Testdatenbank importieren
-if [ "$INIT_TESTDB_ON_STARTUP" = "true" ]; then
-  echo "Testdaten-Import: AKTIVERT"
-  MDBFILE=$(ls /opt/app/svws/data/*.mdb| head -1)
-  
-  echo "Starte Testdaten-Import ..."
-  java -cp "svws-server-app-*.jar:./*:./lib/*" de.nrw.schule.svws.db.utils.app.MigrateDB -j -d -r -1 -sd "MDB" \
-       -sl "${MDBFILE}" -sp "${TESTDB_PASSWORD}" \
-       -td "MARIA_DB" \
-       -tl ${MYSQL_HOST} \
-       -ts ${MYSQL_DATABASE} \
-       -tu ${MYSQL_USER} \
-       -tp ${MYSQL_PASSWORD} \
-       -tr ${MYSQL_ROOT_PASSWORD}
-else
-  echo "Testdaten-Import: DEAKTIVERT"
+if [[ -d $INIT_SCRIPTS_DIR ]]; then
+    echo "INIT_SCRIPTS_DIR: $INIT_SCRIPTS_DIR"
+	for f in "$INIT_SCRIPTS_DIR"/*.sh; do
+	  echo "Starte Shell script: $f"
+	  /bin/bash "$f"
+	done
 fi
 
 # SVWS-Server starten

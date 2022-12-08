@@ -1,4 +1,11 @@
 //TODO: Übergeordnete build.gradle darf nicht alle Plugins auf dieses Modul anwenden (z.B. kein JavaLibPlugin)
+project.ext.svwsArtifactVersion = "0.4.1"
+
+dependencies {
+	implementation "de.nrw.schule.svws:svws-server-app:${svwsArtifactVersion}"
+	implementation "de.nrw.schule.svws:svws-client:${svwsArtifactVersion}"
+}
+
 repositories {
 	maven {
 		name = "GitHubPackagesServer"
@@ -9,13 +16,6 @@ repositories {
 		}
 	}
 	mavenCentral()
-}
-
-project.ext.svwsArtifactVersion = "0.4.1"
-
-dependencies {
-	implementation "de.nrw.schule.svws:svws-server-app:${svwsArtifactVersion}"
-	implementation "de.nrw.schule.svws:svws-client:${svwsArtifactVersion}"
 }
 
 /*
@@ -78,7 +78,7 @@ task dockerComposeUp(type: Exec) {
 task dockerBuildSvws(type: Exec) {
 	dependsOn downloadPublishedArtifacts
 	workingDir "$projectDir"
-	def cmd = "docker build svws/. -t svws:${svwsArtifactVersion}";
+	def cmd = "docker build svws/. -t svws:${svwsArtifactVersion}"
 	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
 		commandLine 'cmd', '/c', cmd
 	} else {
