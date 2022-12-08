@@ -302,6 +302,7 @@ const sperren_regel_toggle = (schiene: GostBlockungsergebnisSchiene) => {
 
 const sperren_regel_hinzufuegen = async (nummer: number) => {
 	const regel = new GostBlockungRegel();
+	regel.typ = GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ;
 	regel.parameter.add(props.kurs.id);
 	regel.parameter.add(nummer);
 	await app.dataKursblockung.add_blockung_regel(regel);
