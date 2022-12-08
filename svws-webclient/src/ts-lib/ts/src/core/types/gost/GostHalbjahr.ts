@@ -302,6 +302,18 @@ export class GostHalbjahr extends JavaObject {
 	}
 
 	/**
+	 * Bestimmt das Abitujahr für dieses Halbjahr der Gymnasialen Oberstufe anhand des 
+	 * übergebenen Schuljahres.
+	 * 
+	 * @param schuljahr   das Schuljahr
+	 * 
+	 * @return das Abiturjahr
+	 */
+	public getAbiturjahrFromSchuljahr(schuljahr : number) : number {
+		return schuljahr + 3 - (Math.trunc(this.id / 2));
+	}
+
+	/**
 	 * Bestimmt das Schuljahr für dieses Halbjahr der Gymnasialen Oberstufe anhand des 
 	 * übergebenen Abiturjahres.
 	 * 

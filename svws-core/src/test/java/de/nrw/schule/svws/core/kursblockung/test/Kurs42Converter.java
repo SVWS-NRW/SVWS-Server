@@ -3,6 +3,10 @@ package de.nrw.schule.svws.core.kursblockung.test;
 import java.util.HashMap;
 
 import de.nrw.schule.svws.base.CsvReader;
+import de.nrw.schule.svws.base.kurs42.Kurs42DataBlockplan;
+import de.nrw.schule.svws.base.kurs42.Kurs42DataFachwahlen;
+import de.nrw.schule.svws.base.kurs42.Kurs42DataKurse;
+import de.nrw.schule.svws.base.kurs42.Kurs42DataSchueler;
 import de.nrw.schule.svws.core.data.gost.GostBlockungKurs;
 import de.nrw.schule.svws.core.data.gost.GostBlockungRegel;
 import de.nrw.schule.svws.core.data.gost.GostBlockungSchiene;
@@ -67,7 +71,7 @@ public class Kurs42Converter {
 		}
 
 		// Einlesen der Kurs-Objekte & Fächer & Kursarten
-		for (Kurs42DataKurs k42kurs : CsvReader.fromResource(pPfad + "Kurse.txt", Kurs42DataKurs.class)) {
+		for (Kurs42DataKurse k42kurs : CsvReader.fromResource(pPfad + "Kurse.txt", Kurs42DataKurse.class)) {
 
 			// Doppelter Kursname?
 			String sKursname = k42kurs.Name;
@@ -104,8 +108,8 @@ public class Kurs42Converter {
 		}
 
 		// Einlesen der Fachwahl-Objekte
-		for (Kurs42DataFachwahl k42fachwahl : CsvReader.fromResource(pPfad + "Fachwahlen.txt",
-				Kurs42DataFachwahl.class)) {
+		for (Kurs42DataFachwahlen k42fachwahl : CsvReader.fromResource(pPfad + "Fachwahlen.txt",
+				Kurs42DataFachwahlen.class)) {
 			// Schüler unbekannt?
 			String sSchueler = getKeySchueler(k42fachwahl);
 			if (!mapSchueler.containsKey(sSchueler))
@@ -209,11 +213,11 @@ public class Kurs42Converter {
 		return s.Name + ";" + s.Vorname + ";" + s.GebDat + ";" + s.Geschlecht;
 	}
 
-	/** Erzeugt aus den vier Attributen (Name, Vorname, GebDat und Geschlecht) des Objektes {@link Kurs42DataFachwahl}
+	/** Erzeugt aus den vier Attributen (Name, Vorname, GebDat und Geschlecht) des Objektes {@link Kurs42DataFachwahlen}
 	 * einen eindeutigen Schlüssel.
 	 * 
 	 * @return Ein eindeutiger Schlüssel um einen Schüler zu identifizieren. */
-	private static String getKeySchueler(Kurs42DataFachwahl f) {
+	private static String getKeySchueler(Kurs42DataFachwahlen f) {
 		return f.Name + ";" + f.Vorname + ";" + f.GebDat + ";" + f.Geschlecht;
 	}
 

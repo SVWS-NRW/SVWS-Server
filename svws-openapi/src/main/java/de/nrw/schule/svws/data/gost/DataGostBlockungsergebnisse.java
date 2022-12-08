@@ -536,7 +536,7 @@ public class DataGostBlockungsergebnisse extends DataManager<Long> {
 	    			lernabschnitt.Schulbesuchsjahre = null; // TODO Berechnen aus altem Lernabschnitt
 	    			lernabschnitt.Hochrechnung = null;
 	    			lernabschnitt.SemesterWertung = true;
-	    			lernabschnitt.PruefOrdnung = Pruefungsordnung.APO_GOST.daten.kuerzelSchild;
+	    			lernabschnitt.PruefOrdnung = Pruefungsordnung.APO_GOST.daten.kuerzelSchild;  // TODO Schulgliederung.DEFAULT, Schulgliederung.GY8 -> /G8 oder Schulgliederung.GY9 -> /G9
 	    			lernabschnitt.Klassen_ID = null;  // TODO aus altem Lernabschnitt ermitteln
 	    			lernabschnitt.Verspaetet = null;
 	    			lernabschnitt.NPV_Fach_ID = null;

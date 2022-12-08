@@ -67,19 +67,18 @@ public class CsvReader {
 	
 	
 	/**
-	 * Erzeugt eine Liste von Objekten vom Typ T, indem die CSV-Datei an der Stelle
-	 * location eingelesen wird und die einzelnen Einträge in Objekt vom Typ T
+	 * Erzeugt eine Liste von Objekten vom Typ T, indem die CSV-Datei von dem Pfad
+	 * path eingelesen wird und die einzelnen Einträge in Objekt vom Typ T
 	 * konvertiert werden. 
 	 *  
-	 * @param <T>        der generische Parameter für die Klasse T, von welcher die Objekt-Instanzen erzeugt werden
-	 * @param location   der Ort, an dem sich die CSV-Resource befindet
-	 * @param clazz      das Klassenobjekt zur generischen Klasse T
+	 * @param <T>     der generische Parameter für die Klasse T, von welcher die Objekt-Instanzen erzeugt werden
+	 * @param path    der Pfad, unter dem sich die CSV-Resource befindet
+	 * @param clazz   das Klassenobjekt zur generischen Klasse T
 	 * 
-	 * @return die Liste der Objekt vom Typ T
+	 * @return die Liste der Objekte vom Typ T
 	 */
-	public static <T> List<T> fromResource(String location, Class<T> clazz) {
+	public static <T> List<T> from(Path path, Class<T> clazz) {
         try {
-			Path path = getPath(location);
 			InputStream inputStream = Files.newInputStream(path);
 	        CsvMapper mapper = new CsvMapper()
 	        		.enable(CsvParser.Feature.WRAP_AS_ARRAY);
@@ -95,13 +94,32 @@ public class CsvReader {
 			        .readValues(inputStream)) {
 	        	return it.readAll();
         	}
+		} catch (IOException e) {
+			System.err.println("ERROR: Cannot access csv resource file '" + path.toString() + "'" + e);
+			e.printStackTrace();
+			return null;			
+		}
+	}
+
+
+	/**
+	 * Erzeugt eine Liste von Objekten vom Typ T, indem die CSV-Datei an der Stelle
+	 * location eingelesen wird und die einzelnen Einträge in Objekt vom Typ T
+	 * konvertiert werden. 
+	 *  
+	 * @param <T>        der generische Parameter für die Klasse T, von welcher die Objekt-Instanzen erzeugt werden
+	 * @param location   der Ort, an dem sich die CSV-Resource befindet
+	 * @param clazz      das Klassenobjekt zur generischen Klasse T
+	 * 
+	 * @return die Liste der Objekte vom Typ T
+	 */
+	public static <T> List<T> fromResource(String location, Class<T> clazz) {
+        try {
+			Path path = getPath(location);
+			return from(path, clazz);
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
 			return null;
-		} catch (IOException e) {
-			System.err.println("ERROR: Cannot access csv resource file '" + location + "'" + e);
-			e.printStackTrace();
-			return null;			
 		}
 	}
 

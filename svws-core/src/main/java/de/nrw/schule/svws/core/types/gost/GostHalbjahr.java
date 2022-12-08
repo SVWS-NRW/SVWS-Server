@@ -322,6 +322,19 @@ public enum GostHalbjahr implements Comparable<GostHalbjahr> {
 
 
 	/**
+	 * Bestimmt das Abitujahr für dieses Halbjahr der Gymnasialen Oberstufe anhand des 
+	 * übergebenen Schuljahres.
+	 * 
+	 * @param schuljahr   das Schuljahr
+	 * 
+	 * @return das Abiturjahr
+	 */
+	public int getAbiturjahrFromSchuljahr(int schuljahr) {
+		return schuljahr + 3 - (id / 2);
+	}
+
+
+	/**
 	 * Bestimmt das Schuljahr für dieses Halbjahr der Gymnasialen Oberstufe anhand des 
 	 * übergebenen Abiturjahres.
 	 * 
