@@ -105,7 +105,7 @@
 					</div>
 					<div class="flex justify-between gap-1">
 						<svws-ui-button @click.prevent="download_file" >Wahlbogen herunterladen</svws-ui-button >
-						<svws-ui-button @click="app.dataGostLaufbahndaten?.reset_fachwahlen()">Reset</svws-ui-button>
+						<svws-ui-button @click="toggle_modal">Reset</svws-ui-button>
 						<svws-ui-button :type="manuell ? 'danger':'primary'" @click="manu">Manuellen Modus {{manuell?"de":""}}aktivieren</svws-ui-button>
 					</div>
 				</div>
@@ -225,10 +225,23 @@
 			</div>
 		</div>
 	</svws-ui-content-card>
+
+	<svws-ui-modal ref="modal" size="small">
+		<template #modalTitle>Alle Kurswahlen löschen</template>
+		<template #modalDescription>
+			<div class="flex gap-1 mb-2">
+				Sollen alle Kurswahlen, die bisher noch nicht bewertet wurden, gelöscht werden?
+			</div>
+			<div class="flex gap-1">
+				<svws-ui-button @click="toggle_modal">Abbrechen</svws-ui-button>
+				<svws-ui-button @click="reset_fachwahlen">Ja</svws-ui-button>
+			</div>
+		</template>
+	</svws-ui-modal>
 </template>
 
 <script setup lang="ts">
-	import { computed, ComputedRef, ref, WritableComputedRef } from "vue";
+	import { computed, ComputedRef, Ref, ref, WritableComputedRef } from "vue";
 
 	import {
 		GostBelegpruefungErgebnisFehler,
@@ -252,7 +265,17 @@
 	const ef1: GostBelegpruefungsArt = GostBelegpruefungsArt.EF1;
 	const gesamt: GostBelegpruefungsArt = GostBelegpruefungsArt.GESAMT;
 	const manuell = ref(false)
-	
+
+	const modal: Ref<any> = ref(null);
+
+	function toggle_modal() {
+		modal.value.isOpen ? modal.value.closeModal() : modal.value.openModal();
+	};
+	function reset_fachwahlen() {
+		modal.value.closeModal();
+		app.dataGostLaufbahndaten?.reset_fachwahlen();
+	}
+
 	const abiturmanager = computed(()=> app.dataGostLaufbahndaten?.manager);
 	const faechermanager = computed(()=>App.apps.gost.dataFaecher.manager);
 
