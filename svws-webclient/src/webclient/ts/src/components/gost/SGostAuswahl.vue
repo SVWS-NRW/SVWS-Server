@@ -45,7 +45,7 @@
 									<svws-ui-button type="transparent" v-if="allow_add_blockung(row)" @click.stop="blockung_hinzufuegen" :disabled="pending">Blockung hinzufügen</svws-ui-button>
 								</td>
 							</tr>
-							<template v-if="row.id === selected_hj.id && !wait" v-for="blockung in rows_blockungsswahl" :key="blockung.hashCode">
+							<template v-if="row.id === selected_hj.id" v-for="blockung in rows_blockungswahl" :key="blockung.hashCode">
 								<tr :class="{'vt-clicked': blockung === selected_blockungauswahl}" class="table--row-indent" @click="select_blockungauswahl(blockung)">
 									<td v-if=" blockung === selected_blockungauswahl ">
 										<div class="flex">
@@ -160,7 +160,6 @@ const cols = ref([
 	{ key: "abiturjahr", label: "Abiturjahr", sortable: true },
 	{ key: "jahrgang", label: "Stufe", sortable: true }]);
 
-const wait: Ref<boolean> = ref(false);
 const halbjahre = GostHalbjahr.values();
 const hj_memo: Ref<GostHalbjahr | undefined> = ref(undefined)
 const edit_blockungsname: Ref<boolean> = ref(false)
@@ -174,7 +173,7 @@ const rows: ComputedRef<GostJahrgang[]> =
 
 const manager: ComputedRef<GostBlockungsdatenManager | undefined> =
 	computed(()=> app.dataKursblockung.datenmanager);
-const rows_blockungsswahl: ComputedRef<GostBlockungListeneintrag[]> =
+const rows_blockungswahl: ComputedRef<GostBlockungListeneintrag[]> =
 	computed(() => app.blockungsauswahl.liste);
 const rows_ergebnisse: ComputedRef<List<GostBlockungsergebnisListeneintrag>> =
 	computed(() => manager.value?.getErgebnisseSortiertNachBewertung() || new Vector<GostBlockungsergebnisListeneintrag>());
@@ -199,12 +198,13 @@ const selected_hj: WritableComputedRef<GostHalbjahr> =
 			if (hj === selected_hj.value || !hj) 
 				return;
 			hj_memo.value = hj
-			wait.value = true;
-			if ((selected.value?.abiturjahr) && (selected.value?.abiturjahr !== -1))
+			if ((selected.value?.abiturjahr) && (selected.value?.abiturjahr !== -1)) {
+				app.blockungsauswahl.ausgewaehlt = undefined;
+				// app.dataKursblockung.datenmanager = undefined;
+				// app.dataKursblockung.ergebnismanager = undefined;
+				// app.dataKursblockung.commit();
 				app.blockungsauswahl.update_list(selected.value.abiturjahr, hj.id)
-					.then(() => { wait.value = false; });
-			else 
-				wait.value = false;
+			}
 		}});
 
 const selected_blockungauswahl: WritableComputedRef<GostBlockungListeneintrag | undefined> =
@@ -328,8 +328,10 @@ async function hochschreiben_ergebnis() {
 	await app.blockungsauswahl.update_list(abiturjahr, selected_hj.value.next()?.id || selected_hj.value.id, true);
 }
 
-function patch_blockung(name: string) {
-	app.dataKursblockung.patch({name});
+async function patch_blockung(name: string) {
+	const res = await app.dataKursblockung.patch({name});
+	if (res && selected_blockungauswahl.value)
+		selected_blockungauswahl.value.name = name;
 }
 
 function color1(ergebnis: GostBlockungsergebnisListeneintrag): string {

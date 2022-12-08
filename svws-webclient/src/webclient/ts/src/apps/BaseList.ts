@@ -98,6 +98,8 @@ export abstract class BaseList<ListenEintragTyp, ListenFilterTyp = undefined> {
 		this._state.pending = true;
 		try {
 			const result = await getter();
+			if (result.size() === 0)
+				this.ausgewaehlt = undefined;
 			this.liste = result.toArray(new Array<ListenEintragTyp>());
 		} catch (error) {
 			console.log( "Fehler, die Auswahlliste konnte nicht geladen werden: ", error);

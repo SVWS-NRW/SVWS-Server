@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-content-card title="Schüler und Kurszuordnungen" v-if="visible">
+	<svws-ui-content-card title="Schüler und Kurszuordnungen">
 	<div class="flex flex-row gap-4">
 		<div class="flex-none">
 			<div class="sticky">
@@ -100,9 +100,6 @@
 	const schueler_filter = app.listAbiturjahrgangSchueler.filter;
 
 	const is_dragging: Ref<boolean> = ref(false)
-
-	const visible: ComputedRef<boolean> =
-		computed(()=> !!manager.value && !manager.value.getOfSchuelerAlleFachwahlenNichtZugeordnet())
 
 	const manager: ComputedRef<GostBlockungsergebnisManager | undefined> =
 		computed(() => app.dataKursblockung.ergebnismanager);

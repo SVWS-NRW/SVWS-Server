@@ -1,6 +1,6 @@
 <template>
 	<div
-		v-if="visible && app.blockungsauswahl.ausgewaehlt"
+		v-if="visible"
 		class="flex"
 	>
 		<div class="flex flex-row flex-wrap gap-4">
@@ -33,10 +33,10 @@
 	
 	const collapsed: Ref<boolean> = ref(true);
 
-	const visible: ComputedRef<boolean> = computed(() => {
+	const visible: ComputedRef<boolean> =
+		computed(() =>
 		//return this.$app.gostKursplanung.visible; //TODO: richtige Bedingung einpflegen
-		return true;
-	});
+		app.blockungsauswahl.liste.length > 0 && !!app.blockungsauswahl.ausgewaehlt);
 
 	const self = Symbol("kursplanung");
 
