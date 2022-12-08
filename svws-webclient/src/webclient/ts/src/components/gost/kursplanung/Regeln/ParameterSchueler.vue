@@ -6,11 +6,11 @@ import { computed } from "vue";
 const main: Main = injectMainApp();
 const app = main.apps.gost;
 
-const { modelValue } = defineProps<{ modelValue: SchuelerListeEintrag; }>();
+const props = defineProps<{ modelValue: SchuelerListeEintrag; }>();
 const emit = defineEmits(['update:modelValue'])
 const selected = computed({
 	get(): SchuelerListeEintrag {
-		return modelValue;
+		return props.modelValue;
 	},
 	set(val: SchuelerListeEintrag) {
 		emit('update:modelValue', val);

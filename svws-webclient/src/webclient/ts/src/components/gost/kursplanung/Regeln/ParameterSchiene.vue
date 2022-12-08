@@ -6,12 +6,12 @@ import { computed } from "vue";
 const main: Main = injectMainApp();
 const app = main.apps.gost;
 
-const { modelValue } = defineProps<{ modelValue: GostBlockungSchiene; }>();
+const props = defineProps<{ modelValue: GostBlockungSchiene; }>();
 const emit = defineEmits(['update:modelValue'])
 
 const selected = computed({
 	get(): GostBlockungSchiene {
-		return modelValue;
+		return props.modelValue;
 	},
 	set(val: GostBlockungSchiene) {
 		emit('update:modelValue', val);

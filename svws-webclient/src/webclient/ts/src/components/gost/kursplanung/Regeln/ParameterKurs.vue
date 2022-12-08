@@ -7,11 +7,11 @@ const main: Main = injectMainApp();
 const app = main.apps.gost;
 const faechermanager = app.dataFaecher.manager
 
-const { modelValue } = defineProps<{ modelValue: GostBlockungKurs; }>();
+const props = defineProps<{ modelValue: GostBlockungKurs; }>();
 const emit = defineEmits(['update:modelValue'])
 const selected = computed({
 	get(): GostBlockungKurs {
-		return modelValue;
+		return props.modelValue;
 	},
 	set(val: GostBlockungKurs) {
 		emit('update:modelValue', val);

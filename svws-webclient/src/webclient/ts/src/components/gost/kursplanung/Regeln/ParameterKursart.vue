@@ -2,13 +2,13 @@
 import { GostKursart } from "@svws-nrw/svws-core-ts";
 import { computed } from "vue";
 
-const { modelValue } = defineProps<{ modelValue: GostKursart; }>();
+const props = defineProps<{ modelValue: GostKursart; }>();
 const kursarten = GostKursart.values()
 	
 const emit = defineEmits(['update:modelValue'])
 const selected = computed({
 	get(): GostKursart {
-		return modelValue;
+		return props.modelValue;
 	},
 	set(val: GostKursart) {
 		emit('update:modelValue', val);
