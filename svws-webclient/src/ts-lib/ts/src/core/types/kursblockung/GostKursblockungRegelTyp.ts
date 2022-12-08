@@ -45,6 +45,8 @@ export class GostKursblockungRegelTyp extends JavaObject {
 
 	public static readonly KURS_ZUSAMMEN_MIT_KURS : GostKursblockungRegelTyp = new GostKursblockungRegelTyp("KURS_ZUSAMMEN_MIT_KURS", 8, 8, "Kurs zusammen mit Kurs", Arrays.asList(GostKursblockungRegelParameterTyp.KURS_ID, GostKursblockungRegelParameterTyp.KURS_ID));
 
+	public static readonly LEHRKRAFT_BEACHTEN : GostKursblockungRegelTyp = new GostKursblockungRegelTyp("LEHRKRAFT_BEACHTEN", 9, 9, "Lehrkräfte beachten (auch Externe?)", Arrays.asList(GostKursblockungRegelParameterTyp.BOOLEAN));
+
 	public readonly typ : number;
 
 	public readonly bezeichnung : String | null;
@@ -165,6 +167,10 @@ export class GostKursblockungRegelTyp extends JavaObject {
 				let p0 : number = param.get(0).valueOf();
 				let p1 : number = param.get(1).valueOf();
 				return [p0, p1];
+			}
+			case GostKursblockungRegelTyp.LEHRKRAFT_BEACHTEN: {
+				let p0 : number = param.get(0).valueOf();
+				return [p0];
 			}
 			case GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE:
 			case GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE: {

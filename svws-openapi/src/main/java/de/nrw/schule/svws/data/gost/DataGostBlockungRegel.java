@@ -153,6 +153,10 @@ public class DataGostBlockungRegel extends DataManager<Long> {
 									if (schueler == null)
 										throw OperationError.BAD_REQUEST.exception();
 								}
+								case BOOLEAN -> {
+									if ((pvalue < 0) || (pvalue > 1))
+										throw OperationError.BAD_REQUEST.exception();
+								}
 								default -> throw OperationError.BAD_REQUEST.exception();
 	    					}
 	    					// Aktualisiere den Parameter-Wert in der Datenbank, sofern er sich geändert hat
@@ -238,6 +242,9 @@ public class DataGostBlockungRegel extends DataManager<Long> {
 								throw OperationError.NOT_FOUND.exception();
 							yield schueler.get(0).ID;
 						}
+						case BOOLEAN -> {
+							yield 0L;
+						}
 		    		};
 	    		} else {
 					Long tmp = regelParameter.get(i);
@@ -262,6 +269,10 @@ public class DataGostBlockungRegel extends DataManager<Long> {
 							List<DTOViewGostSchuelerAbiturjahrgang> schueler = conn.queryList("SELECT e FROM DTOViewGostSchuelerAbiturjahrgang e WHERE e.Abiturjahr = ?1 AND e.ID = ?2", 
 									DTOViewGostSchuelerAbiturjahrgang.class, blockung.Abi_Jahrgang, tmp);
 							if ((schueler == null) || (schueler.size() == 0))
+								throw OperationError.NOT_FOUND.exception();
+						}
+						case BOOLEAN -> {
+							if ((paramValue < 0) || (paramValue > 1))
 								throw OperationError.NOT_FOUND.exception();
 						}
 		    		}

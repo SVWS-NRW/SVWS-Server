@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Vector;
 
 import de.nrw.schule.svws.core.data.gost.GostBlockungKurs;
+import de.nrw.schule.svws.core.data.gost.GostBlockungKursLehrer;
 import de.nrw.schule.svws.core.data.gost.GostBlockungRegel;
 import de.nrw.schule.svws.core.data.gost.GostBlockungSchiene;
 import de.nrw.schule.svws.core.data.gost.GostBlockungsergebnis;
@@ -339,15 +340,28 @@ public class GostBlockungsergebnisManager {
 	            	long kursID2 = r.parameter.get(1);
 	            	@NotNull HashSet<@NotNull GostBlockungsergebnisSchiene> set1 = getOfKursSchienenmenge(kursID1);
 	            	@NotNull HashSet<@NotNull GostBlockungsergebnisSchiene> set2 = getOfKursSchienenmenge(kursID2);
-	            	if (set1.size() < set2.size()) {
+	            	if (set1.size() < set2.size()) { // "set1" muss in "set2" enthalten sein.
 	            		for (@NotNull GostBlockungsergebnisSchiene schiene1 : set1) 
             				if (set2.contains(schiene1) == false)
             					regelVerletzungen.add(r.id);
-	            	} else {
+	            	} else { // "set2" muss in "set1" enthalten sein.
 	            		for (@NotNull GostBlockungsergebnisSchiene schiene2 : set2) 
             				if (set1.contains(schiene2) == false)
             					regelVerletzungen.add(r.id);
 	            	}
+	            	break;
+	            }
+	            case LEHRKRAFT_BEACHTEN: { // 9
+					boolean externBeachten = r.parameter.get(0) == 1L;
+					for (@NotNull GostBlockungsergebnisSchiene eSchiene : _map_schienenID_schiene.values())
+						for (@NotNull GostBlockungsergebnisKurs eKurs1 : eSchiene.kurse) 
+							for (@NotNull GostBlockungsergebnisKurs eKurs2 : eSchiene.kurse)
+								if (eKurs1.id < eKurs2.id) 
+									for (@NotNull GostBlockungKursLehrer gLehr1 : getKursG(eKurs1.id).lehrer)
+										for (@NotNull GostBlockungKursLehrer gLehr2 : getKursG(eKurs2.id).lehrer) 
+											if (gLehr1 == gLehr2)
+												if ( (externBeachten) || (!gLehr1.istExtern) ) 
+													regelVerletzungen.add(r.id);
 	            	break;
 	            }
 	            default: {

@@ -7,6 +7,7 @@ import java.util.Random;
 
 import de.nrw.schule.svws.core.adt.collection.LinkedCollection;
 import de.nrw.schule.svws.core.data.gost.GostBlockungKurs;
+import de.nrw.schule.svws.core.data.gost.GostBlockungKursLehrer;
 import de.nrw.schule.svws.core.data.gost.GostBlockungRegel;
 import de.nrw.schule.svws.core.data.gost.GostBlockungSchiene;
 import de.nrw.schule.svws.core.data.gost.GostFach;
@@ -130,6 +131,8 @@ public class KursblockungDynDaten {
 		schritt11FehlerBeiRegel_4_oder_5();
 		
 		schritt12FehlerBeiRegel_7_oder_8();
+		
+		schritt13FehlerBeiRegel_9(pInput);
 
 		// Zustände Speichern
 		aktionZustandSpeichernS();
@@ -419,14 +422,14 @@ public class KursblockungDynDaten {
 				
 				long kursID1 = daten[0];
 				if (!setKurse.contains(kursID1))
-					throw fehler("KURS_VERBIETEN_MIT_KURS hat unbekannte 1. Kurs-ID (" + kursID1 + ").");
+					throw fehler("KURS_VERBIETEN_MIT_KURS hat unbekannte 1. Kurs-ID (" + kursID1 + ")!");
 				
 				long kursID2 = daten[1];
 				if (!setKurse.contains(kursID2))
-					throw fehler("KURS_VERBIETEN_MIT_KURS hat unbekannte 2. Kurs-ID (" + kursID2 + ").");
+					throw fehler("KURS_VERBIETEN_MIT_KURS hat unbekannte 2. Kurs-ID (" + kursID2 + ")!");
 
 				if (kursID1 == kursID2)
-					throw fehler("KURS_VERBIETEN_MIT_KURS 1. Kurs == 2. Kurs = " + kursID1 + ".");
+					throw fehler("KURS_VERBIETEN_MIT_KURS 1. Kurs == 2. Kurs = " + kursID1 + "!");
 			}
 
 			// Regeltyp = 8
@@ -437,14 +440,25 @@ public class KursblockungDynDaten {
 				
 				long kursID1 = daten[0];
 				if (!setKurse.contains(kursID1))
-					throw fehler("KURS_ZUSAMMEN_MIT_KURS hat unbekannte 1. Kurs-ID (" + kursID1 + ").");
+					throw fehler("KURS_ZUSAMMEN_MIT_KURS hat unbekannte 1. Kurs-ID (" + kursID1 + ")!");
 				
 				long kursID2 = daten[1];
 				if (!setKurse.contains(kursID2))
-					throw fehler("KURS_ZUSAMMEN_MIT_KURS hat unbekannte 2. Kurs-ID (" + kursID2 + ").");
+					throw fehler("KURS_ZUSAMMEN_MIT_KURS hat unbekannte 2. Kurs-ID (" + kursID2 + ")!");
 
 				if (kursID1 == kursID2)
-					throw fehler("KURS_VERBIETEN_MIT_KURS 1. Kurs == 2. Kurs = " + kursID1 + ".");
+					throw fehler("KURS_VERBIETEN_MIT_KURS 1. Kurs == 2. Kurs = " + kursID1 + "!");
+			}
+
+			// Regeltyp = 9
+			if (gostRegel == GostKursblockungRegelTyp.LEHRKRAFT_BEACHTEN) {
+				int length = daten.length;
+				if (length != 1)
+					throw fehler("LEHRKRAFT_BEACHTEN daten.length=" + length + ", statt 1!");
+				
+				long auchExtern = daten[0];
+				if ((auchExtern < 0) || (auchExtern > 1))
+					throw fehler("LEHRKRAFT_BEACHTEN AuchExterne-Wert ist nicht 0/1, sondern (" + auchExtern + ")!");
 			}
 
 		}
@@ -854,7 +868,7 @@ public class KursblockungDynDaten {
 				statistik.regelHinzufuegenKursVerbieteMitKurs(kurs1, kurs2);
 			}
 
-		// Regel 7 - KURS_ZUSAMMEN_MIT_KURS
+		// Regel 8 - KURS_ZUSAMMEN_MIT_KURS
 		LinkedCollection<@NotNull GostBlockungRegel> regelnTyp8 = regelMap.get(GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS);
 		if (regelnTyp8 != null)
 			for (@NotNull GostBlockungRegel regel8 : regelnTyp8) {
@@ -863,6 +877,26 @@ public class KursblockungDynDaten {
 				@NotNull KursblockungDynKurs kurs1 = gibKurs(kursID1);
 				@NotNull KursblockungDynKurs kurs2 = gibKurs(kursID2);
 				statistik.regelHinzufuegenKursZusammenMitKurs(kurs1, kurs2);
+			}
+	}
+	
+	private void schritt13FehlerBeiRegel_9(@NotNull GostBlockungsdatenManager pInput) {
+		// Regel 9 - LEHRKRAFT_BEACHTEN
+		LinkedCollection<@NotNull GostBlockungRegel> regelnTyp9 = regelMap.get(GostKursblockungRegelTyp.LEHRKRAFT_BEACHTEN);
+		if (regelnTyp9 != null)
+			for (@NotNull GostBlockungRegel regel9 : regelnTyp9) {
+				boolean externBeachten = regel9.parameter.get(0) == 1L;
+				for (@NotNull GostBlockungKurs gKurs1 : pInput.daten().kurse) 
+					for (@NotNull GostBlockungKurs gKurs2 : pInput.daten().kurse)
+						if (gKurs1.id < gKurs2.id) 
+							for (@NotNull GostBlockungKursLehrer gLehr1 : gKurs1.lehrer)
+								for (@NotNull GostBlockungKursLehrer gLehr2 : gKurs2.lehrer) 
+									if (gLehr1 == gLehr2)
+										if ( (externBeachten) || (!gLehr1.istExtern) ) {
+											@NotNull KursblockungDynKurs kurs1 = gibKurs(gKurs1.id);
+											@NotNull KursblockungDynKurs kurs2 = gibKurs(gKurs2.id);
+											statistik.regelHinzufuegenKursVerbieteMitKurs(kurs1, kurs2);
+										}
 			}
 	}
 

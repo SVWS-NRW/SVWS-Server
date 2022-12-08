@@ -16,6 +16,9 @@ public enum GostKursblockungRegelParameterTyp {
 	KURS_ID,
 	
 	/** Der Parameter Typ Schüler-ID */
-	SCHUELER_ID;
+	SCHUELER_ID,
+
+	/** Der Parameter Typ für eine Ja=1/Nein=0 Entscheidung. */
+	BOOLEAN;
 	
 }

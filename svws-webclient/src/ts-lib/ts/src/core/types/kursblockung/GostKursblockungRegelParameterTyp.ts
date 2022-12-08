@@ -22,6 +22,8 @@ export class GostKursblockungRegelParameterTyp extends JavaObject {
 
 	public static readonly SCHUELER_ID : GostKursblockungRegelParameterTyp = new GostKursblockungRegelParameterTyp("SCHUELER_ID", 3, );
 
+	public static readonly BOOLEAN : GostKursblockungRegelParameterTyp = new GostKursblockungRegelParameterTyp("BOOLEAN", 4, );
+
 	private constructor(name : string, ordinal : number) {
 		super();
 		this.__name = name;

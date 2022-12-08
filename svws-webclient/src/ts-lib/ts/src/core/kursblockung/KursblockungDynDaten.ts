@@ -22,6 +22,7 @@ import { KursblockungDynStatistik, cast_de_nrw_schule_svws_core_kursblockung_Kur
 import { GostBlockungsdatenManager, cast_de_nrw_schule_svws_core_utils_gost_GostBlockungsdatenManager } from '../../core/utils/gost/GostBlockungsdatenManager';
 import { LinkedCollection, cast_de_nrw_schule_svws_core_adt_collection_LinkedCollection } from '../../core/adt/collection/LinkedCollection';
 import { GostFachwahl, cast_de_nrw_schule_svws_core_data_gost_GostFachwahl } from '../../core/data/gost/GostFachwahl';
+import { GostBlockungKursLehrer, cast_de_nrw_schule_svws_core_data_gost_GostBlockungKursLehrer } from '../../core/data/gost/GostBlockungKursLehrer';
 import { JavaInteger, cast_java_lang_Integer } from '../../java/lang/JavaInteger';
 import { GostBlockungSchiene, cast_de_nrw_schule_svws_core_data_gost_GostBlockungSchiene } from '../../core/data/gost/GostBlockungSchiene';
 import { JavaLong, cast_java_lang_Long } from '../../java/lang/JavaLong';
@@ -91,6 +92,7 @@ export class KursblockungDynDaten extends JavaObject {
 		this.schritt10FehlerBeiFachartKursArrayErstellung();
 		this.schritt11FehlerBeiRegel_4_oder_5();
 		this.schritt12FehlerBeiRegel_7_oder_8();
+		this.schritt13FehlerBeiRegel_9(pInput);
 		this.aktionZustandSpeichernS();
 		this.aktionZustandSpeichernK();
 		this.aktionZustandSpeichernG();
@@ -298,12 +300,12 @@ export class KursblockungDynDaten extends JavaObject {
 					throw this.fehler("KURS_VERBIETEN_MIT_KURS daten.length=" + length + ", statt 2!")
 				let kursID1 : number = daten[0].valueOf();
 				if (!setKurse.contains(kursID1)) 
-					throw this.fehler("KURS_VERBIETEN_MIT_KURS hat unbekannte 1. Kurs-ID (" + kursID1 + ").")
+					throw this.fehler("KURS_VERBIETEN_MIT_KURS hat unbekannte 1. Kurs-ID (" + kursID1 + ")!")
 				let kursID2 : number = daten[1].valueOf();
 				if (!setKurse.contains(kursID2)) 
-					throw this.fehler("KURS_VERBIETEN_MIT_KURS hat unbekannte 2. Kurs-ID (" + kursID2 + ").")
+					throw this.fehler("KURS_VERBIETEN_MIT_KURS hat unbekannte 2. Kurs-ID (" + kursID2 + ")!")
 				if (kursID1 === kursID2) 
-					throw this.fehler("KURS_VERBIETEN_MIT_KURS 1. Kurs == 2. Kurs = " + kursID1 + ".")
+					throw this.fehler("KURS_VERBIETEN_MIT_KURS 1. Kurs == 2. Kurs = " + kursID1 + "!")
 			}
 			if (gostRegel as unknown === GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS as unknown) {
 				let length : number = daten.length;
@@ -311,12 +313,20 @@ export class KursblockungDynDaten extends JavaObject {
 					throw this.fehler("KURS_ZUSAMMEN_MIT_KURS daten.length=" + length + ", statt 2!")
 				let kursID1 : number = daten[0].valueOf();
 				if (!setKurse.contains(kursID1)) 
-					throw this.fehler("KURS_ZUSAMMEN_MIT_KURS hat unbekannte 1. Kurs-ID (" + kursID1 + ").")
+					throw this.fehler("KURS_ZUSAMMEN_MIT_KURS hat unbekannte 1. Kurs-ID (" + kursID1 + ")!")
 				let kursID2 : number = daten[1].valueOf();
 				if (!setKurse.contains(kursID2)) 
-					throw this.fehler("KURS_ZUSAMMEN_MIT_KURS hat unbekannte 2. Kurs-ID (" + kursID2 + ").")
+					throw this.fehler("KURS_ZUSAMMEN_MIT_KURS hat unbekannte 2. Kurs-ID (" + kursID2 + ")!")
 				if (kursID1 === kursID2) 
-					throw this.fehler("KURS_VERBIETEN_MIT_KURS 1. Kurs == 2. Kurs = " + kursID1 + ".")
+					throw this.fehler("KURS_VERBIETEN_MIT_KURS 1. Kurs == 2. Kurs = " + kursID1 + "!")
+			}
+			if (gostRegel as unknown === GostKursblockungRegelTyp.LEHRKRAFT_BEACHTEN as unknown) {
+				let length : number = daten.length;
+				if (length !== 1) 
+					throw this.fehler("LEHRKRAFT_BEACHTEN daten.length=" + length + ", statt 1!")
+				let auchExtern : number = daten[0].valueOf();
+				if ((auchExtern < 0) || (auchExtern > 1)) 
+					throw this.fehler("LEHRKRAFT_BEACHTEN AuchExterne-Wert ist nicht 0/1, sondern (" + auchExtern + ")!")
 			}
 		}
 	}
@@ -632,6 +642,25 @@ export class KursblockungDynDaten extends JavaObject {
 				let kurs1 : KursblockungDynKurs = this.gibKurs(kursID1);
 				let kurs2 : KursblockungDynKurs = this.gibKurs(kursID2);
 				this.statistik.regelHinzufuegenKursZusammenMitKurs(kurs1, kurs2);
+			}
+	}
+
+	private schritt13FehlerBeiRegel_9(pInput : GostBlockungsdatenManager) : void {
+		let regelnTyp9 : LinkedCollection<GostBlockungRegel> | null = this.regelMap.get(GostKursblockungRegelTyp.LEHRKRAFT_BEACHTEN);
+		if (regelnTyp9 !== null) 
+			for (let regel9 of regelnTyp9) {
+				let externBeachten : boolean = regel9.parameter.get(0) === 1;
+				for (let gKurs1 of pInput.daten().kurse) 
+					for (let gKurs2 of pInput.daten().kurse) 
+						if (gKurs1.id < gKurs2.id) 
+							for (let gLehr1 of gKurs1.lehrer) 
+								for (let gLehr2 of gKurs2.lehrer) 
+									if (gLehr1 as unknown === gLehr2 as unknown) 
+										if ((externBeachten) || (!gLehr1.istExtern)) {
+											let kurs1 : KursblockungDynKurs = this.gibKurs(gKurs1.id);
+											let kurs2 : KursblockungDynKurs = this.gibKurs(gKurs2.id);
+											this.statistik.regelHinzufuegenKursVerbieteMitKurs(kurs1, kurs2);
+										}
 			}
 	}
 

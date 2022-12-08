@@ -21,6 +21,7 @@ import { SchuelerblockungOutputFachwahlZuKurs, cast_de_nrw_schule_svws_core_data
 import { GostBlockungsdatenManager, cast_de_nrw_schule_svws_core_utils_gost_GostBlockungsdatenManager } from '../../../core/utils/gost/GostBlockungsdatenManager';
 import { SchuelerblockungAlgorithmus, cast_de_nrw_schule_svws_core_kursblockung_SchuelerblockungAlgorithmus } from '../../../core/kursblockung/SchuelerblockungAlgorithmus';
 import { GostFachwahl, cast_de_nrw_schule_svws_core_data_gost_GostFachwahl } from '../../../core/data/gost/GostFachwahl';
+import { GostBlockungKursLehrer, cast_de_nrw_schule_svws_core_data_gost_GostBlockungKursLehrer } from '../../../core/data/gost/GostBlockungKursLehrer';
 import { GostBlockungsergebnis, cast_de_nrw_schule_svws_core_data_gost_GostBlockungsergebnis } from '../../../core/data/gost/GostBlockungsergebnis';
 import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
 import { Schueler, cast_de_nrw_schule_svws_core_data_schueler_Schueler } from '../../../core/data/schueler/Schueler';
@@ -303,6 +304,19 @@ export class GostBlockungsergebnisManager extends JavaObject {
 							if (set1.contains(schiene2) === false) 
 								regelVerletzungen.add(r.id);
 					}
+					break;
+				}
+				case GostKursblockungRegelTyp.LEHRKRAFT_BEACHTEN: {
+					let externBeachten : boolean = r.parameter.get(0) === 1;
+					for (let eSchiene of this._map_schienenID_schiene.values()) 
+						for (let eKurs1 of eSchiene.kurse) 
+							for (let eKurs2 of eSchiene.kurse) 
+								if (eKurs1.id < eKurs2.id) 
+									for (let gLehr1 of this.getKursG(eKurs1.id).lehrer) 
+										for (let gLehr2 of this.getKursG(eKurs2.id).lehrer) 
+											if (gLehr1 as unknown === gLehr2 as unknown) 
+												if ((externBeachten) || (!gLehr1.istExtern)) 
+													regelVerletzungen.add(r.id);
 					break;
 				}
 				default: {
