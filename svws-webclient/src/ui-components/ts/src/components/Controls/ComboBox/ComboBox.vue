@@ -221,7 +221,7 @@
 	<div class="wrapper" :class="{ 'z-50': showList }">
 		<div
 			class="multiselect-input-component"
-			:class="{ 'with-open-list': showList, 'multiselect-input-component--statistics': statistics }"
+			:class="{ 'with-open-list': showList, 'multiselect-input-component--statistics': statistics, 'with-value': !!selectedItem }"
 		>
 			<div :class="['input', !showInput ? 'sr-only' : '']">
 				<text-input
@@ -334,6 +334,7 @@
 	}
 
 	.multiselect-input-component.with-open-list,
+	.multiselect-input-component.with-value,
 	.multiselect-input-component:focus-within {
 		@apply border-opacity-100;
 	}
