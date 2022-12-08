@@ -137,7 +137,7 @@
 	// const verbieten_regel: ComputedRef<boolean> =
 		// computed(() => manager.value?.getOfSchuelerOfKursIstGesperrt(props.schueler.id, props.kurs.id) || false)
 			for (const regel of regeln.value)
-				if (regel.typ === GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ
+				if (regel.typ === GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ
 						&& regel.parameter.get(0) === props.schueler.id
 						&& regel.parameter.get(1) === props.kurs.id)
 					return regel;
@@ -148,7 +148,7 @@
 	// const fixier_regel: ComputedRef<boolean> =
 		// computed(() => manager.value?.getOfSchuelerOfKursIstFixiert(props.schueler.id, props.kurs.id) || false)
 			for (const regel of regeln.value)
-				if (regel.typ === GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ
+				if (regel.typ === GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ
 						&& regel.parameter.get(0) === props.schueler.id
 						&& regel.parameter.get(1) === props.kurs.id)
 					return regel
