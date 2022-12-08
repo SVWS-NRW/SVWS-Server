@@ -19,12 +19,13 @@
 										<div class="flex gap-1">
 											<template v-if="s === edit_schienenname">
 												<svws-ui-text-input
-													v-model="s.bezeichnung"
+													:modelValue="s.bezeichnung"
 													focus headless
 													style="width: 6rem"
 													@blur="edit_schienenname=undefined"
 													@keyup.enter="edit_schienenname=undefined"
-													@input="patch_schiene(s)"
+													@keyup.escape="edit_schienenname=undefined"
+													@update:modelValue="patch_schiene(s, $event)"
 												/>
 											</template>
 											<template v-else>
@@ -176,7 +177,8 @@
 		return manager.value?.getOfSchieneAnzahlSchuelerMitKollisionen(idSchiene) || 0;
 	};
 
-	async function patch_schiene(schiene: GostBlockungSchiene) {
+	async function patch_schiene(schiene: GostBlockungSchiene, bezeichnung: String) {
+		schiene.bezeichnung = bezeichnung;
 		await app.dataKursblockung.patch_schiene(schiene);
 	}
 
