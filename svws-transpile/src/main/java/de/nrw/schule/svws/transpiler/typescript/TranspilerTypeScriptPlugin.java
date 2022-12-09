@@ -1288,6 +1288,8 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			// TODO replace String methods...
 			if (type.isString()) {
 				String expression = convertExpression(ms.getExpression());
+				if ("contains".equals(ms.getIdentifier().toString()))
+					return "JavaString.contains(" + expression + ", " + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
 				if ("indexOf".equals(ms.getIdentifier().toString()))
 					return "JavaString.indexOf(" + expression + ", " + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
 				if ("compareTo".equals(ms.getIdentifier().toString()))

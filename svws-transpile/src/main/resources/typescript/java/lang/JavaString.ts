@@ -2,7 +2,15 @@ import { NullPointerException } from "./NullPointerException";
 
 export abstract class JavaString {
 
-    public static indexOf(s: String, str: String, fromIndex?: number): number {
+    public static contains(str: String, s: String) : boolean {
+        if (str === null)
+            throw new NullPointerException();
+        if (s === null)
+            return false;
+        return str.includes(s.valueOf());
+    }
+
+    public static indexOf(s : String, str : String, fromIndex? : number) : number {
         if (s === null)
             throw new NullPointerException();
         if (str === null)
