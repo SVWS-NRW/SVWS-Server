@@ -1438,30 +1438,21 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		return menge;
 	}
 
-	private getOfSchuelerHatImNamenSubstring(pSchuelerID : number, pSubString : String) : boolean {
+	/**
+	 * Liefert TRUE, falls der Sub-String im Nachnamen oder im Vornamen des Schülers vorkommt.
+	 * Groß- und Kleinschreibung wird dabei ignoriert.
+	 * 
+	 * @param pSchuelerID  Die Datenbank-ID des Schülers.
+	 * @param pSubString   Der zu suchende Sub-String.
+	 * @return             TRUE, falls der Sub-String im Nachnamen oder im Vornamen des Schülers vorkommt.
+	 */
+	public getOfSchuelerHatImNamenSubstring(pSchuelerID : number, pSubString : String) : boolean {
 		let schueler : Schueler = this.getSchuelerG(pSchuelerID);
 		let text : String = pSubString.toLowerCase();
-		let nachname : String = schueler.nachname.toLowerCase();
-		let vorname : String = schueler.vorname.toLowerCase();
-		if (GostBlockungsergebnisManager.contains(nachname, text)) 
+		if (JavaString.contains(schueler.nachname.toLowerCase(), text)) 
 			return true;
-		if (GostBlockungsergebnisManager.contains(vorname, text)) 
+		if (JavaString.contains(schueler.vorname.toLowerCase(), text)) 
 			return true;
-		return false;
-	}
-
-	private static contains(pBig : String, pSmall : String) : boolean {
-		for (let i : number = 0; i < pBig.length; i++){
-			if (i + pSmall.length >= pBig.length) 
-				return false;
-			let matches : number = 0;
-			for (let j : number = 0; j < pSmall.length; j++)
-				if (pBig.charAt(i + j) === pSmall.charAt(j)) 
-					matches++; else 
-					break;
-			if (matches === pSmall.length) 
-				return true;
-		}
 		return false;
 	}
 

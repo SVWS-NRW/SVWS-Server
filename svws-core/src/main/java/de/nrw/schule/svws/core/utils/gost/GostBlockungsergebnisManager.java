@@ -1561,35 +1561,21 @@ public class GostBlockungsergebnisManager {
 	}	
 
 
-	private boolean getOfSchuelerHatImNamenSubstring(long pSchuelerID, @NotNull String pSubString) {
+	/**
+	 * Liefert TRUE, falls der Sub-String im Nachnamen oder im Vornamen des Schülers vorkommt.
+	 * Groß- und Kleinschreibung wird dabei ignoriert.
+	 * 
+	 * @param pSchuelerID  Die Datenbank-ID des Schülers.
+	 * @param pSubString   Der zu suchende Sub-String.
+	 * @return             TRUE, falls der Sub-String im Nachnamen oder im Vornamen des Schülers vorkommt.
+	 */
+	public boolean getOfSchuelerHatImNamenSubstring(long pSchuelerID, @NotNull String pSubString) {
 		@NotNull Schueler schueler = getSchuelerG(pSchuelerID);
 		@NotNull String text = pSubString.toLowerCase();
-		@NotNull String nachname = schueler.nachname.toLowerCase();
-		@NotNull String vorname = schueler.vorname.toLowerCase();
-		if (contains(nachname, text))
+		if (schueler.nachname.toLowerCase().contains(text))
 			return true;
-		if (contains(vorname, text))
+		if (schueler.vorname.toLowerCase().contains(text))
 			return true;
-		return false;
-	}
-
-	private static boolean contains(@NotNull String pBig, @NotNull String pSmall) {
-		
-		for (int i = 0; i < pBig.length(); i++) {
-			if (i + pSmall.length() >= pBig.length())
-				return false;
-			
-			int matches = 0;
-			for (int j = 0; j < pSmall.length(); j++) 
-				if (pBig.charAt(i + j) == pSmall.charAt(j) ) 
-					matches++;
-				 else 
-					break;
-			
-			if (matches == pSmall.length())
-				return true;
-		}
-		
 		return false;
 	}
 
