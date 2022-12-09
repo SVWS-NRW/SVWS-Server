@@ -3,6 +3,10 @@
 		<div class="flex flex-row">
 			<div class="w-full flex-none sm:-mx-6 lg:-mx-8">
 				<div class="py-2 align-middle sm:px-6 lg:px-8">
+					<div class="flex gap-2 mb-2">
+						<svws-ui-button  type="secondary" class="cursor-pointer" @click="toggle_modal_hochschreiben"> Hochschreiben </svws-ui-button>
+						<svws-ui-button type="secondary" class="cursor-pointer" @click="toggle_modal_aktivieren"> Aktivieren </svws-ui-button>
+					</div>
 					<div class="rounded-lg shadow">
 						<table class="w-full  border-collapse text-sm table-auto">
 							<!-- Wenn sticky angewendet wird, verschwinden die  border border-[#7f7f7f]/20 s...  -->
@@ -106,6 +110,30 @@
 			</div>
 		</div>
 	</svws-ui-content-card>
+	<svws-ui-modal ref="modal_aktivieren" size="small">
+		<template #modalTitle>Blockungsergebnis aktivieren</template>
+		<template #modalDescription>
+			<div class="flex gap-1 mb-2">
+				Soll das Blockungsergebnis aktiviert werden?
+			</div>
+			<div class="flex gap-1">
+				<svws-ui-button @click="toggle_modal_aktivieren">Abbrechen</svws-ui-button>
+				<svws-ui-button @click="activate_ergebnis">Ja</svws-ui-button>
+			</div>
+		</template>
+	</svws-ui-modal>
+	<svws-ui-modal ref="modal_hochschreiben" size="small">
+		<template #modalTitle>Blockungsergebnis hochschreiben</template>
+		<template #modalDescription>
+			<div class="flex gap-1 mb-2">
+				Soll das Blockungsergebnis in das nächste Halbjahr ({{app.dataKursblockung.datenmanager?.getHalbjahr().next()?.kuerzel}}) hochgeschrieben werden?
+			</div>
+			<div class="flex gap-1">
+				<svws-ui-button @click="toggle_modal_hochschreiben">Abbrechen</svws-ui-button>
+				<svws-ui-button @click="hochschreiben_ergebnis">Ja</svws-ui-button>
+			</div>
+		</template>
+	</svws-ui-modal>
 </template>
 
 <script setup lang="ts">
@@ -189,4 +217,34 @@
 	async function del_schiene(s: GostBlockungSchiene) {
 		await app.dataKursblockung.del_blockung_schiene(s)
 	}
+
+	const modal_aktivieren: Ref<any> = ref(null);
+	function toggle_modal_aktivieren() {
+		modal_aktivieren.value.isOpen ? modal_aktivieren.value.closeModal() : modal_aktivieren.value.openModal();
+	};
+
+	const modal_hochschreiben: Ref<any> = ref(null);
+	function toggle_modal_hochschreiben() {
+		modal_hochschreiben.value.isOpen ? modal_hochschreiben.value.closeModal() : modal_hochschreiben.value.openModal();
+	};
+
+	async function activate_ergebnis() {
+		modal_aktivieren.value.closeModal();
+		const selected_hj = app.dataKursblockung.datenmanager?.getHalbjahr();
+		if (!app.blockungsergebnisauswahl.ausgewaehlt || !app.dataJahrgang.daten || !selected_hj)
+			return;
+		await App.api.activateGostBlockungsergebnis(App.schema, app.blockungsergebnisauswahl.ausgewaehlt.id);
+		app.dataJahrgang.daten.istBlockungFestgelegt[selected_hj.id] = true;
+	}
+
+	async function hochschreiben_ergebnis() {
+		modal_hochschreiben.value.closeModal();
+		const selected_hj = app.dataKursblockung.datenmanager?.getHalbjahr();
+		if (!app.blockungsergebnisauswahl.ausgewaehlt || !app.dataJahrgang.daten || !selected_hj)
+		return;
+		const abiturjahr = app.auswahl.ausgewaehlt?.abiturjahr || -1
+		await App.api.schreibeGostBlockungsErgebnisHoch(App.schema, app.blockungsergebnisauswahl.ausgewaehlt.id);
+		await app.blockungsauswahl.update_list(abiturjahr, selected_hj.next()?.id || selected_hj.id, true);
+	}
+
 </script>

@@ -92,8 +92,6 @@
 						</span>
 						<svws-ui-icon v-if="row.istVorlage" > <i-ri-pushpin-fill /></svws-ui-icon>
 						<div v-if="(row.id === selected_ergebnis?.id && !selected_blockungauswahl?.istAktiv)" class="flex gap-2">
-							<svws-ui-button v-if="selected_hj !== GostHalbjahr.Q22" size="small" type="secondary" class="cursor-pointer" @click.stop="toggle_modal_hochschreiben" :disabled="pending"> Hochschreiben </svws-ui-button>
-							<svws-ui-button size="small" type="secondary" class="cursor-pointer" @click.stop="toggle_modal_aktivieren" :disabled="pending"> Aktivieren </svws-ui-button>
 							<svws-ui-button size="small" type="secondary" class="cursor-pointer" @click.stop="derive_blockung" :disabled="pending"> Ableiten </svws-ui-button>
 							<svws-ui-button v-if="rows_ergebnisse.size() > 1" size="small" type="danger" class="cursor-pointer" @click.stop="remove_ergebnis" :disabled="pending">
 								<svws-ui-icon><i-ri-delete-bin-2-line/></svws-ui-icon>
@@ -104,30 +102,6 @@
 			</div>
 		</template>
 	</svws-ui-secondary-menu>
-	<svws-ui-modal ref="modal_aktivieren" size="small">
-		<template #modalTitle>Blockungsergebnis aktivieren</template>
-		<template #modalDescription>
-			<div class="flex gap-1 mb-2">
-				Soll das Blockungsergebnis aktiviert werden?
-			</div>
-			<div class="flex gap-1">
-				<svws-ui-button @click="toggle_modal_aktivieren()">Abbrechen</svws-ui-button>
-				<svws-ui-button @click="activate_ergebnis">Ja</svws-ui-button>
-			</div>
-		</template>
-	</svws-ui-modal>
-	<svws-ui-modal ref="modal_hochschreiben" size="small">
-		<template #modalTitle>Blockungsergebnis hochschreiben</template>
-		<template #modalDescription>
-			<div class="flex gap-1 mb-2">
-				Soll das Blockungsergebnis in das nächste Halbjahr ({{selected_hj.next()?.kuerzel}}) hochgeschrieben werden?
-			</div>
-			<div class="flex gap-1">
-				<svws-ui-button @click="toggle_modal_hochschreiben()">Abbrechen</svws-ui-button>
-				<svws-ui-button @click="hochschreiben_ergebnis">Ja</svws-ui-button>
-			</div>
-		</template>
-	</svws-ui-modal>
 	<svws-ui-modal ref="modal_remove_blockung" size="small">
 		<template #modalTitle>Blockung löschen</template>
 		<template #modalDescription>
@@ -300,29 +274,12 @@ async function remove_ergebnis() {
 	await app.blockungsauswahl.update_list(abiturjahr, selected_hj.value.id)
 }
 
-async function activate_ergebnis() {
-	modal_aktivieren.value.closeModal();
-	if (!selected_ergebnis.value || !app.dataJahrgang.daten)
-		return;
-	await App.api.activateGostBlockungsergebnis(App.schema, selected_ergebnis.value.id);
-	app.dataJahrgang.daten.istBlockungFestgelegt[selected_hj.value.id] = true;
-}
-
 async function derive_blockung() {
 	if (!selected_ergebnis.value)
 		return;
 	await App.api.dupliziereGostBlockungMitErgebnis(App.schema, selected_ergebnis.value.id);
 	const abiturjahr = selected.value?.abiturjahr?.valueOf() || -1;
 	await app.blockungsauswahl.update_list(abiturjahr, selected_hj.value.id, true);
-}
-
-async function hochschreiben_ergebnis() {
-	modal_hochschreiben.value.closeModal();
-	if (!selected_ergebnis.value || !app.dataJahrgang.daten)
-		return;
-	await App.api.schreibeGostBlockungsErgebnisHoch(App.schema, selected_ergebnis.value.id);
-	const abiturjahr = selected.value?.abiturjahr?.valueOf() || -1;
-	await app.blockungsauswahl.update_list(abiturjahr, selected_hj.value.next()?.id || selected_hj.value.id, true);
 }
 
 async function patch_blockung(name: string) {
@@ -343,16 +300,6 @@ function color3(ergebnis: GostBlockungsergebnisListeneintrag): string {
 function color4(ergebnis: GostBlockungsergebnisListeneintrag): string {
 	return `hsl(${Math.round((1 - (manager.value?.getOfBewertung4Intervall(ergebnis.id)||0)) * 120)},100%,80%)`
 }
-
-const modal_aktivieren: Ref<any> = ref(null);
-function toggle_modal_aktivieren() {
-	modal_aktivieren.value.isOpen ? modal_aktivieren.value.closeModal() : modal_aktivieren.value.openModal();
-};
-
-const modal_hochschreiben: Ref<any> = ref(null);
-function toggle_modal_hochschreiben() {
-	modal_hochschreiben.value.isOpen ? modal_hochschreiben.value.closeModal() : modal_hochschreiben.value.openModal();
-};
 
 const modal_remove_blockung: Ref<any> = ref(null);
 function toggle_remove_blockung_modal() {
