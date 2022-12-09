@@ -1030,6 +1030,17 @@ public class GostBlockungsdatenManager {
 		return schueler;
 	}
 
+	
+	/**
+	 * Liefert die aktuelle Menge aller Schüler. 
+	 * Das ist die interne Referenz zur Liste der Schüler im {@link GostBlockungsdaten}-Objekt. 
+	 * 
+	 * @return Die aktuelle Menge aller Schüler.
+	 */
+	public @NotNull List<@NotNull Schueler> getMengeOfSchueler() {
+		return _daten.schueler;
+	}
+	
 	/**
 	 * Liefert nur die Anzahl an Schülern, die mindestens eine Fachwahl haben.
 	 * 

@@ -1404,6 +1404,68 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert eine gefilterte Menge aller Schüler.
+	 * 
+	 * @param  pKursID      Falls > 0, werden Schüler des Kurses herausgefiltert.
+	 * @param  pFachID      Falls > 0 und 
+	 * @param  pKursartID   falls > 0, werden Schüler mit dieser Fachwahl herausgefiltert.
+	 * @param  pKonfliktTyp Falls 1 = mit Kollisionen, 2 = mit Nichtwahlen, 3 = mit Kollisionen und Nichtwahlen, sonst alle Schüler.
+	 * @param  pSubString   Falls |pSubString| > 0 werden Schüler deren Vor- oder Nachname diesen String enthält herausgefiltert.
+	 * 
+	 * @return eine gefilterte Menge aller Schüler.
+	 */
+	public getMengeDerSchuelerGefiltert(pKursID : number, pFachID : number, pKursartID : number, pKonfliktTyp : number, pSubString : String) : Vector<Schueler> {
+		let menge : Vector<Schueler> = new Vector();
+		for (let schueler of this._parent.getMengeOfSchueler()) {
+			let pSchuelerID : number = schueler.id;
+			if ((pKonfliktTyp === 1) || (pKonfliktTyp === 3)) 
+				if (this.getOfSchuelerHatKollision(pSchuelerID) === false) 
+					continue;
+			if ((pKonfliktTyp === 2) || (pKonfliktTyp === 3)) 
+				if (this.getOfSchuelerHatNichtwahl(pSchuelerID) === false) 
+					continue;
+			if (pSubString.length > 0) 
+				if (this.getOfSchuelerHatImNamenSubstring(pSchuelerID, pSubString) === false) 
+					continue;
+			if (pKursID > 0) 
+				if (this.getOfSchuelerOfKursIstZugeordnet(pSchuelerID, pKursID) === false) 
+					continue;
+			if ((pFachID > 0) && (pKursartID > 0)) 
+				if (this.getOfSchuelerHatFachwahl(pSchuelerID, pFachID, pKursartID) === false) 
+					continue;
+			menge.add(schueler);
+		}
+		return menge;
+	}
+
+	private getOfSchuelerHatImNamenSubstring(pSchuelerID : number, pSubString : String) : boolean {
+		let schueler : Schueler = this.getSchuelerG(pSchuelerID);
+		let text : String = pSubString.toLowerCase();
+		let nachname : String = schueler.nachname.toLowerCase();
+		let vorname : String = schueler.vorname.toLowerCase();
+		if (GostBlockungsergebnisManager.contains(nachname, text)) 
+			return true;
+		if (GostBlockungsergebnisManager.contains(vorname, text)) 
+			return true;
+		return false;
+	}
+
+	private static contains(pBig : String, pSmall : String) : boolean {
+		for (let i : number = 0; i < pBig.length; i++){
+			if (i + pSmall.length >= pBig.length) 
+				return false;
+			let matches : number = 0;
+			for (let j : number = 0; j < pSmall.length; j++)
+				if (pBig.charAt(i + j) === pSmall.charAt(j)) 
+					matches++; else 
+					break;
+			if (matches === pSmall.length) 
+				return true;
+		}
+		return false;
+	}
+
+	/**
 	 * Liefert die Anzahl aller Schüler-IDs mit mindestens einer Kollision oder Nichtwahl.
 	 * 
 	 * @return Die Anzahl aller Schüler-IDs mit mindestens einer Kollision oder Nichtwahl.

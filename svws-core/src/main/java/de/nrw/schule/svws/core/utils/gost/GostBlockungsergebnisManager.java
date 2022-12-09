@@ -1521,6 +1521,77 @@ public class GostBlockungsergebnisManager {
 		
 		return set;
 	}
+	
+	/**
+	 * Liefert eine gefilterte Menge aller Schüler.
+	 * 
+	 * @param  pKursID      Falls > 0, werden Schüler des Kurses herausgefiltert.
+	 * @param  pFachID      Falls > 0 und 
+	 * @param  pKursartID   falls > 0, werden Schüler mit dieser Fachwahl herausgefiltert.
+	 * @param  pKonfliktTyp Falls 1 = mit Kollisionen, 2 = mit Nichtwahlen, 3 = mit Kollisionen und Nichtwahlen, sonst alle Schüler.
+	 * @param  pSubString   Falls |pSubString| > 0 werden Schüler deren Vor- oder Nachname diesen String enthält herausgefiltert.
+	 * 
+	 * @return eine gefilterte Menge aller Schüler.
+	 */
+	public @NotNull Vector<@NotNull Schueler> getMengeDerSchuelerGefiltert(int pKursID, int pFachID, int pKursartID, int pKonfliktTyp, @NotNull String pSubString) {
+		@NotNull Vector<@NotNull Schueler> menge = new Vector<>();
+		
+		for (@NotNull Schueler schueler : _parent.getMengeOfSchueler()) {
+			long pSchuelerID = schueler.id;
+			if ((pKonfliktTyp == 1) || (pKonfliktTyp == 3))
+				if (getOfSchuelerHatKollision(pSchuelerID) == false)
+					continue;
+			if ((pKonfliktTyp == 2) || (pKonfliktTyp == 3))
+				if (getOfSchuelerHatNichtwahl(pSchuelerID) == false)
+					continue;
+			if (pSubString.length() > 0)
+				if (getOfSchuelerHatImNamenSubstring(pSchuelerID, pSubString) == false)
+					continue;
+			if (pKursID > 0)
+				if (getOfSchuelerOfKursIstZugeordnet(pSchuelerID, pKursID) == false)
+					continue;
+			if ((pFachID > 0) && (pKursartID > 0))
+				if (getOfSchuelerHatFachwahl(pSchuelerID, pFachID, pKursartID) == false)
+					continue;
+			// Der Schüler entspricht allen Filterkriterien.
+			menge.add(schueler);
+		}
+		
+		return menge;
+	}	
+
+
+	private boolean getOfSchuelerHatImNamenSubstring(long pSchuelerID, @NotNull String pSubString) {
+		@NotNull Schueler schueler = getSchuelerG(pSchuelerID);
+		@NotNull String text = pSubString.toLowerCase();
+		@NotNull String nachname = schueler.nachname.toLowerCase();
+		@NotNull String vorname = schueler.vorname.toLowerCase();
+		if (contains(nachname, text))
+			return true;
+		if (contains(vorname, text))
+			return true;
+		return false;
+	}
+
+	private static boolean contains(@NotNull String pBig, @NotNull String pSmall) {
+		
+		for (int i = 0; i < pBig.length(); i++) {
+			if (i + pSmall.length() >= pBig.length())
+				return false;
+			
+			int matches = 0;
+			for (int j = 0; j < pSmall.length(); j++) 
+				if (pBig.charAt(i + j) == pSmall.charAt(j) ) 
+					matches++;
+				 else 
+					break;
+			
+			if (matches == pSmall.length())
+				return true;
+		}
+		
+		return false;
+	}
 
 	/**
 	 * Liefert die Anzahl aller Schüler-IDs mit mindestens einer Kollision oder Nichtwahl.

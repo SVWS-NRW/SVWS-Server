@@ -983,6 +983,16 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert die aktuelle Menge aller Schüler. 
+	 * Das ist die interne Referenz zur Liste der Schüler im {@link GostBlockungsdaten}-Objekt. 
+	 * 
+	 * @return Die aktuelle Menge aller Schüler.
+	 */
+	public getMengeOfSchueler() : List<Schueler> {
+		return this._daten.schueler;
+	}
+
+	/**
 	 * Liefert nur die Anzahl an Schülern, die mindestens eine Fachwahl haben.
 	 * 
 	 * @return die Anzahl an Schülern, die mindestens eine Fachwahl haben.
