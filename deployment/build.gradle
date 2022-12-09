@@ -1,0 +1,42 @@
+//TODO: Übergeordnete build.gradle darf nicht alle Plugins auf dieses Modul anwenden (z.B. kein JavaLibPlugin)
+def svwsArtifactVersion = "0.4.1"
+def appArtifactsDir ="$projectDir/../download/svws"
+
+subprojects {
+	project.ext.appArtifactsDir = appArtifactsDir
+	project.ext.svwsArtifactVersion = svwsArtifactVersion
+
+	dependencies {
+		implementation "de.nrw.schule.svws:svws-server-app:${svwsArtifactVersion}"
+		implementation "de.nrw.schule.svws:svws-client:${svwsArtifactVersion}"
+	}
+
+	repositories {
+		maven {
+			name = "GitHubPackagesServer"
+			url = "https://maven.pkg.github.com/SVWS-NRW/SVWS-Packages"
+			credentials {
+				username = getGithubActor()
+				password = getGithubToken()
+			}
+		}
+		mavenCentral()
+	}
+
+	/*
+	 Task lädt die SVWS-Artefakte einer angegebenen Version
+	 aus dem Package-Repository von GitHub und speichert diese
+	 für die Integration in das Docker-Image des SVWSs.
+	 */
+	task downloadPublishedArtifacts(type: Copy) {
+		copy {
+			from configurations.runtimeClasspath
+			into "${project.ext.appArtifactsDir}"
+		}
+	}
+
+}
+
+clean.doLast {
+	file("${appArtifactsDir}").deleteDir()
+}

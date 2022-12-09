@@ -2,6 +2,8 @@ rootProject.name = 'svws-server'
 
 include "buildSrc"
 rootProject.children.find{ it.name == "buildSrc" }.name = "gradle-build-src"
+include 'deployment'
+include 'deployment:docker'
 
 include 'svws-core'
 include 'svws-db'
@@ -13,4 +15,3 @@ include 'svws-server-app'
 include 'svws-transpile'
 include 'svws-webclient'
 include 'svws-module-dav-api'
-include 'svws-docker'

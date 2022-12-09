@@ -434,3 +434,4 @@ import_mdb.cmd
 /download/
 svwsconfig.json
 /Notizen
+/deployment/docker/svws/app/
