@@ -1,4 +1,14 @@
+import { NullPointerException } from "./NullPointerException";
+
 export abstract class JavaString {
+
+    public static indexOf(s: String, str: String, fromIndex?: number): number {
+        if (s === null)
+            throw new NullPointerException();
+        if (str === null)
+            return -1;
+        return s.indexOf(str.valueOf(), fromIndex);
+    }
 
     public static replaceFirst(s : String, regex : String, replacement : String) {
         return s.replace(new RegExp(regex.valueOf()), replacement.valueOf());
