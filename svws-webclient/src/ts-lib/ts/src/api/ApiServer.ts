@@ -30,6 +30,7 @@ import { FoerderschwerpunktKatalogEintrag, cast_de_nrw_schule_svws_core_data_sch
 import { GEAbschlussFaecher, cast_de_nrw_schule_svws_core_data_abschluss_GEAbschlussFaecher } from '../core/data/abschluss/GEAbschlussFaecher';
 import { GostBelegpruefungErgebnis, cast_de_nrw_schule_svws_core_abschluss_gost_GostBelegpruefungErgebnis } from '../core/abschluss/gost/GostBelegpruefungErgebnis';
 import { GostBlockungKurs, cast_de_nrw_schule_svws_core_data_gost_GostBlockungKurs } from '../core/data/gost/GostBlockungKurs';
+import { GostBlockungKursLehrer, cast_de_nrw_schule_svws_core_data_gost_GostBlockungKursLehrer } from '../core/data/gost/GostBlockungKursLehrer';
 import { GostBlockungListeneintrag, cast_de_nrw_schule_svws_core_data_gost_GostBlockungListeneintrag } from '../core/data/gost/GostBlockungListeneintrag';
 import { GostBlockungRegel, cast_de_nrw_schule_svws_core_data_gost_GostBlockungRegel } from '../core/data/gost/GostBlockungRegel';
 import { GostBlockungSchiene, cast_de_nrw_schule_svws_core_data_gost_GostBlockungSchiene } from '../core/data/gost/GostBlockungSchiene';
@@ -2697,6 +2698,113 @@ export class ApiServer extends BaseApi {
 		const result : string = await super.deleteJSON(path, null);
 		const text = result;
 		return GostBlockungKurs.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getGostBlockungKurslehrer für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/kurse/{kursid : \d+}/lehrer/{lehrerid : \d+}
+	 * 
+	 * Liest einen Kurs-Lehrer eines Kurses einer Blockung der Gymnasialen Oberstufe aus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Die Daten zu dem Kurs-Lehrer.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: GostBlockungKursLehrer
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Kurslehrer auszulesen.
+	 *   Code 404: Der Kurs wurde nicht bei einer Blockung gefunden oder der Lehrer mit der ID existiert nicht.
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} kursid - der Pfad-Parameter kursid
+	 * @param {number} lehrerid - der Pfad-Parameter lehrerid
+	 * 
+	 * @returns Die Daten zu dem Kurs-Lehrer.
+	 */
+	public async getGostBlockungKurslehrer(schema : string, kursid : number, lehrerid : number) : Promise<GostBlockungKursLehrer> {
+		let path : string = "/db/{schema}/gost/blockungen/kurse/{kursid : \d+}/lehrer/{lehrerid : \d+}"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema)
+				.replace(/{kursid\s*(:[^}]+)?}/g, kursid.toString())
+				.replace(/{lehrerid\s*(:[^}]+)?}/g, lehrerid.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return GostBlockungKursLehrer.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchGostBlockungKurslehrer für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/kurse/{kursid : \d+}/lehrer/{lehrerid : \d+}
+	 * 
+	 * Passt einen Kurs-Lehrer eines Kurses einer Blockung der Gymnasialen Oberstufe an. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Anpassen besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 204: Die Daten wurden erfolgreich angepasst.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zum Kurslehrer anzupassen.
+	 *   Code 404: Der Kurs wurde nicht bei einer Blockung gefunden oder der Lehrer mit der ID existiert nicht.
+	 * 
+	 * @param {Partial<GostBlockungKursLehrer>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} kursid - der Pfad-Parameter kursid
+	 * @param {number} lehrerid - der Pfad-Parameter lehrerid
+	 */
+	public async patchGostBlockungKurslehrer(data : Partial<GostBlockungKursLehrer>, schema : string, kursid : number, lehrerid : number) : Promise<void> {
+		let path : string = "/db/{schema}/gost/blockungen/kurse/{kursid : \d+}/lehrer/{lehrerid : \d+}"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema)
+				.replace(/{kursid\s*(:[^}]+)?}/g, kursid.toString())
+				.replace(/{lehrerid\s*(:[^}]+)?}/g, lehrerid.toString());
+		let body : string = GostBlockungKursLehrer.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteGostBlockungKurslehrer für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/kurse/{kursid : \d+}/lehrer/{lehrerid : \d+}
+	 * 
+	 * Entfernt einen Kurs-Lehrer eines Kurses einer Blockung der Gymnasialen Oberstufe. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Hinzufügen besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 204: Die Daten wurden erfolgreich entfernt.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Kurslehrer zu entfernen.
+	 *   Code 404: Der Kurs wurde nicht bei einer Blockung gefunden oder der Lehrer mit der ID existiert nicht bei dem Kurs.
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} kursid - der Pfad-Parameter kursid
+	 * @param {number} lehrerid - der Pfad-Parameter lehrerid
+	 */
+	public async deleteGostBlockungKurslehrer(schema : string, kursid : number, lehrerid : number) : Promise<void> {
+		let path : string = "/db/{schema}/gost/blockungen/kurse/{kursid : \d+}/lehrer/{lehrerid : \d+}"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema)
+				.replace(/{kursid\s*(:[^}]+)?}/g, kursid.toString())
+				.replace(/{lehrerid\s*(:[^}]+)?}/g, lehrerid.toString());
+		await super.deleteJSON(path, null);
+		return;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addGostBlockungKurslehrer für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/kurse/{kursid : \d+}/lehrer/{lehrerid : \d+}/add
+	 * 
+	 * Fügt einen Kurs-Lehrer zu einem Kurs einer Blockung der Gymnasialen Oberstufe hinzu. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Hinzufügen besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Die Daten zu dem hinzugefügten Kurs-Lehrer.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: GostBlockungKursLehrer
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Kurslehrer hinzuzufügen.
+	 *   Code 404: Der Kurs wurde nicht bei einer Blockung gefunden oder der Lehrer mit der ID existiert nicht.
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} kursid - der Pfad-Parameter kursid
+	 * @param {number} lehrerid - der Pfad-Parameter lehrerid
+	 * 
+	 * @returns Die Daten zu dem hinzugefügten Kurs-Lehrer.
+	 */
+	public async addGostBlockungKurslehrer(schema : string, kursid : number, lehrerid : number) : Promise<GostBlockungKursLehrer> {
+		let path : string = "/db/{schema}/gost/blockungen/kurse/{kursid : \d+}/lehrer/{lehrerid : \d+}/add"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema)
+				.replace(/{kursid\s*(:[^}]+)?}/g, kursid.toString())
+				.replace(/{lehrerid\s*(:[^}]+)?}/g, lehrerid.toString());
+		const result : string = await super.postJSON(path, null);
+		const text = result;
+		return GostBlockungKursLehrer.transpilerFromJSON(text);
 	}
 
 

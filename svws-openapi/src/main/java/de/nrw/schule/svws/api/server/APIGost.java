@@ -9,6 +9,7 @@ import de.nrw.schule.svws.core.abschluss.gost.GostBelegpruefungErgebnis;
 import de.nrw.schule.svws.core.abschluss.gost.GostBelegpruefungsArt;
 import de.nrw.schule.svws.core.data.gost.Abiturdaten;
 import de.nrw.schule.svws.core.data.gost.GostBlockungKurs;
+import de.nrw.schule.svws.core.data.gost.GostBlockungKursLehrer;
 import de.nrw.schule.svws.core.data.gost.GostBlockungListeneintrag;
 import de.nrw.schule.svws.core.data.gost.GostBlockungRegel;
 import de.nrw.schule.svws.core.data.gost.GostBlockungSchiene;
@@ -27,6 +28,7 @@ import de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenz;
 import de.nrw.schule.svws.core.utils.gost.GostFaecherManager;
 import de.nrw.schule.svws.data.gost.DataGostAbiturjahrgangFachwahlen;
 import de.nrw.schule.svws.data.gost.DataGostBlockungKurs;
+import de.nrw.schule.svws.data.gost.DataGostBlockungKursLehrer;
 import de.nrw.schule.svws.data.gost.DataGostBlockungRegel;
 import de.nrw.schule.svws.data.gost.DataGostBlockungSchiene;
 import de.nrw.schule.svws.data.gost.DataGostBlockungsdaten;
@@ -1028,6 +1030,124 @@ public class APIGost {
     }
     
     
+    /**
+     * Die OpenAPI-Methode für die Abfrage der Daten eines Kurs-Lehrers eines Kurses einer Blockung 
+     * der Gymnasialen Oberstufe.
+     *  
+     * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param idKurs     die ID des Kurses der Blockung
+     * @param idLehrer   die ID des Lehrers
+     * @param request    die Informationen zur HTTP-Anfrage
+     * 
+     * @return die Informationen zum Kurs-Lehrer des Kurses der Blockung 
+     */
+    @GET
+    @Path("/blockungen/kurse/{kursid : \\d+}/lehrer/{lehrerid : \\d+}")
+    @Operation(summary = "Liest einen Kurs-Lehrer eines Kurses einer Blockung der Gymnasialen Oberstufe aus.",
+               description = "Liest einen Kurs-Lehrer eines Kurses einer Blockung der Gymnasialen Oberstufe aus. "
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.")
+    @ApiResponse(responseCode = "200", description = "Die Daten zu dem Kurs-Lehrer.",
+                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = GostBlockungKursLehrer.class)))    
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Kurslehrer auszulesen.")
+    @ApiResponse(responseCode = "404", description = "Der Kurs wurde nicht bei einer Blockung gefunden oder der Lehrer mit der ID existiert nicht.")
+    public Response getGostBlockungKurslehrer(@PathParam("schema") String schema, @PathParam("kursid") long idKurs,
+    		@PathParam("lehrerid") long idLehrer, @Context HttpServletRequest request) {
+    	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) {
+    		return (new DataGostBlockungKursLehrer(conn, idKurs)).get(idLehrer);
+    	}
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für das Anpassen der Daten eines Kurs-Lehrers eines Kurses einer Blockung 
+     * der Gymnasialen Oberstufe.
+     *  
+     * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param idKurs     die ID des Kurses der Blockung
+     * @param idLehrer   die ID des Lehrers
+     * @param is         der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386 
+     * @param request    die Informationen zur HTTP-Anfrage
+     * 
+     * @return die Informationen zum Kurs-Lehrer des Kurses der Blockung 
+     */
+    @PATCH
+    @Path("/blockungen/kurse/{kursid : \\d+}/lehrer/{lehrerid : \\d+}")
+    @Operation(summary = "Passt einen Kurs-Lehrer eines Kurses einer Blockung der Gymnasialen Oberstufe an.",
+               description = "Passt einen Kurs-Lehrer eines Kurses einer Blockung der Gymnasialen Oberstufe an. "
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Anpassen besitzt.")
+    @ApiResponse(responseCode = "204", description = "Die Daten wurden erfolgreich angepasst.")
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten zum Kurslehrer anzupassen.")
+    @ApiResponse(responseCode = "404", description = "Der Kurs wurde nicht bei einer Blockung gefunden oder der Lehrer mit der ID existiert nicht.")
+    public Response patchGostBlockungKurslehrer(@PathParam("schema") String schema, @PathParam("kursid") long idKurs,
+    		@PathParam("lehrerid") long idLehrer, 
+    		@RequestBody(description = "Der Patch für der Kurs der Blockung", required = true, content = 
+				@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostBlockungKursLehrer.class))) InputStream is, 
+    		@Context HttpServletRequest request) {
+    	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) {
+    		return (new DataGostBlockungKursLehrer(conn, idKurs)).patch(idLehrer, is);
+    	}
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für das Hinzufügen eines Kurs-Lehrers zu einem Kurs einer Blockung 
+     * der Gymnasialen Oberstufe.
+     *  
+     * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param idKurs     die ID des Kurses der Blockung
+     * @param idLehrer   die ID des Lehrers
+     * @param request    die Informationen zur HTTP-Anfrage
+     * 
+     * @return die Informationen zum Kurs-Lehrer des Kurses der Blockung 
+     */
+    @POST
+    @Path("/blockungen/kurse/{kursid : \\d+}/lehrer/{lehrerid : \\d+}/add")
+    @Operation(summary = "Fügt einen Kurs-Lehrer zu einem Kurs einer Blockung der Gymnasialen Oberstufe hinzu.",
+               description = "Fügt einen Kurs-Lehrer zu einem Kurs einer Blockung der Gymnasialen Oberstufe hinzu. "
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Hinzufügen besitzt.")
+    @ApiResponse(responseCode = "200", description = "Die Daten zu dem hinzugefügten Kurs-Lehrer.",
+                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = GostBlockungKursLehrer.class)))    
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Kurslehrer hinzuzufügen.")
+    @ApiResponse(responseCode = "404", description = "Der Kurs wurde nicht bei einer Blockung gefunden oder der Lehrer mit der ID existiert nicht.")
+    public Response addGostBlockungKurslehrer(@PathParam("schema") String schema, @PathParam("kursid") long idKurs,
+    		@PathParam("lehrerid") long idLehrer, @Context HttpServletRequest request) {
+    	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) {
+    		return (new DataGostBlockungKursLehrer(conn, idKurs)).addKurslehrer(idLehrer);
+    	}
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für das Entfernen eines Kurs-Lehrers eines Kurs einer Blockung 
+     * der Gymnasialen Oberstufe.
+     *  
+     * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param idKurs     die ID des Kurses der Blockung
+     * @param idLehrer   die ID des Lehrers
+     * @param request    die Informationen zur HTTP-Anfrage
+     * 
+     * @return die HTTP-Response 
+     */
+    @DELETE
+    @Path("/blockungen/kurse/{kursid : \\d+}/lehrer/{lehrerid : \\d+}")
+    @Operation(summary = "Entfernt einen Kurs-Lehrer eines Kurses einer Blockung der Gymnasialen Oberstufe.",
+               description = "Entfernt einen Kurs-Lehrer eines Kurses einer Blockung der Gymnasialen Oberstufe. "
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Hinzufügen besitzt.")
+    @ApiResponse(responseCode = "204", description = "Die Daten wurden erfolgreich entfernt.")
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Kurslehrer zu entfernen.")
+    @ApiResponse(responseCode = "404", description = "Der Kurs wurde nicht bei einer Blockung gefunden oder der Lehrer mit der ID existiert nicht bei dem Kurs.")
+    public Response deleteGostBlockungKurslehrer(@PathParam("schema") String schema, @PathParam("kursid") long idKurs,
+    		@PathParam("lehrerid") long idLehrer, @Context HttpServletRequest request) {
+    	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) {
+    		return (new DataGostBlockungKursLehrer(conn, idKurs)).deleteKurslehrer(idLehrer);
+    	}
+    }
+
+
     /**
      * Die OpenAPI-Methode für das Hinzufügen einer weiteren Schiene zu einer
      * Blockung der Gymnasialen Oberstufe.
