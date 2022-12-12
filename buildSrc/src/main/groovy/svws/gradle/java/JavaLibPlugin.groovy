@@ -60,23 +60,7 @@ class JavaLibPlugin implements Plugin<Project> {
 	}
 
 
-	void addJetty10Configuration() {
-		// TODO replace with addJetty11Configuration as soon as all dependency conflicts with the jakarta name space are solved
-		def version = "10.0.9";
-		def versionServletApi = "4.0.6";
-		project.configurations.create('jetty');
-	    project.dependencies.add('jetty', 'org.eclipse.jetty.toolchain:jetty-servlet-api:' + versionServletApi);
-	    project.dependencies.add('jetty', 'org.eclipse.jetty.http2:http2-server:' + version);
-	    project.dependencies.add('jetty', 'org.eclipse.jetty:jetty-servlet:' + version);
-	    project.dependencies.add('jetty', 'org.eclipse.jetty:jetty-servlets:' + version);
-	    project.dependencies.add('jetty', 'org.eclipse.jetty:jetty-jaas:' + version);
-	    project.dependencies.add('jetty', 'org.eclipse.jetty:jetty-alpn-server:' + version);
-	    project.dependencies.add('jetty', 'org.eclipse.jetty:jetty-alpn-java-server:' + version);
-	}
-
-
 	void addJettyConfiguration() {
-		// TODO for future use - see above
 		def version = "11.0.12";
 		def versionServletApi = "5.0.2";
 		project.configurations.create('jetty');
