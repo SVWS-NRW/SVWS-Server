@@ -83,8 +83,11 @@
 				</svws-ui-table>
 				<svws-ui-table
 					v-model="selected_ergebnis"
+					v-model:selection="selected_ergebnisse"
+					is-multi-select
 					:columns="[{ key: 'id', label: 'ID'}, { key: 'bewertung', label: 'Bewertungen', span: '15'}]"
 					:data="rows_ergebnisse.toArray()"
+					:footer="selected_ergebnisse.length > 0"
 				>
 					<template #cell-bewertung="{ row }: {row: GostBlockungsergebnisListeneintrag}">
 						<span class="flex gap-1 font-semibold" >
@@ -100,6 +103,11 @@
 								<svws-ui-icon><i-ri-delete-bin-2-line/></svws-ui-icon>
 							</svws-ui-button>
 						</div>
+					</template>
+					<template #footer>
+						<svws-ui-button @click="remove_ergebnisse" type="danger" size="small">
+							Auswahl löschen
+						</svws-ui-button>
 					</template>
 				</svws-ui-table>
 			</div>
@@ -138,8 +146,9 @@ const cols = ref([
 	{ key: "jahrgang", label: "Stufe", sortable: true }]);
 
 const halbjahre = GostHalbjahr.values();
-const hj_memo: Ref<GostHalbjahr | undefined> = ref(undefined)
-const edit_blockungsname: Ref<boolean> = ref(false)
+const hj_memo: Ref<GostHalbjahr | undefined> = ref(undefined);
+const edit_blockungsname: Ref<boolean> = ref(false);
+const selected_ergebnisse: Ref<GostBlockungsergebnisListeneintrag[]> = ref([]);
 
 const rows: ComputedRef<GostJahrgang[]> =
 	computed(() => {
@@ -215,6 +224,17 @@ const allow_add_blockung = (row: GostHalbjahr): boolean => {
 	if (!curr_hj || app.dataJahrgang.daten === undefined)
 		return false;
 	return app.dataJahrgang.daten.istBlockungFestgelegt[row.id] ? false : true
+}
+
+async function remove_ergebnisse() {
+	const abiturjahr = selected.value?.abiturjahr?.valueOf() || -1;
+	if (selected_ergebnisse.value.length > 0 && abiturjahr) {
+		for (const ergebnis of selected_ergebnisse.value) {
+			await App.api.deleteGostBlockungsergebnis(App.schema, ergebnis.id);
+		}
+		selected_ergebnisse.value = [];
+		await app.blockungsauswahl.update_list(abiturjahr, selected_hj.value.id);
+	}
 }
 
 function select_hj(halbjahr: GostHalbjahr) {
