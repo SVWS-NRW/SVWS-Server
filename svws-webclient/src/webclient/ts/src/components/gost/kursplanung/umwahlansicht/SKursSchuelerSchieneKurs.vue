@@ -5,14 +5,14 @@
 		:data="{ id: kurs.id, fachID: kurs.fachID, kursart: kurs.kursart?.valueOf() }"
 		class="select-none"
 		:class="{ 'cursor-move border-2 border-green-700': is_draggable, 'bg-yellow-200': is_drop_zone }"
-		:draggable="is_draggable && !pending"
+		:draggable="is_draggable"
 		:style="{ 'background-color': bgColor }"
 		@drag-start="drag_started"
 		@drag-end="drag_ended"
 	>
 		<drop-data @drop="drop_aendere_kurszuordnung($event, kurs.id)" v-slot="{active}" >
 			<span :class="{'bg-red-400': active && is_drop_zone}">{{ kurs_name }}</span>
-			<span v-if="(allow_regeln && fach_gewaehlt)">
+			<span v-if="(allow_regeln && fach_gewaehlt && !blockung_aktiv)">
 					<svws-ui-icon class="cursor-pointer" @click.stop="verbieten_regel_toggle" >
 						<i-ri-forbid-fill v-if="verbieten_regel" class="inline-block text-red-400"/>
 						<i-ri-forbid-line v-if="!verbieten_regel && !fixier_regel" class="inline-block"/>
@@ -81,6 +81,8 @@
 
 	const is_draggable: ComputedRef<boolean> =
 		computed(() => {
+			if (pending.value || blockung_aktiv.value)
+				return false;
 			for (const s of props.kurs.schueler)
 				if (s === props.schueler.id)
 					return true;
@@ -123,14 +125,21 @@
 
 	const bgColor: ComputedRef<string> =
 		computed(() => {
-			if ((!is_draggable.value) || (!gostfach.value))
+			if (!gostfach.value)
 				return "";
-			return gostfach.value.getHMTLFarbeRGB().valueOf();
+			if (manager.value?.getOfSchuelerOfKursIstZugeordnet(props.schueler.id, props.kurs.id))
+				return gostfach.value.getHMTLFarbeRGB().valueOf();
+			else return "";
 		});
+
+	const blockung_aktiv: ComputedRef<boolean> =
+		computed(()=> app.blockungsauswahl.ausgewaehlt?.istAktiv || false)
+
+	const blockungsergebnis_aktiv: ComputedRef<boolean> =
+		computed(()=> app.blockungsergebnisauswahl.ausgewaehlt?.istVorlage || false)
 	
 	const regeln: ComputedRef<List<GostBlockungRegel>> =
 		computed(()=> app.dataKursblockung.datenmanager?.getMengeOfRegeln() || new Vector<GostBlockungRegel>())
-
 
 	const fixier_regel: ComputedRef<GostBlockungRegel | undefined> =
 		computed(() => {

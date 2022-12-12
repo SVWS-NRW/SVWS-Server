@@ -1,6 +1,6 @@
 <template>
 	<tr
-		class="cursor-pointer border border-[#7f7f7f]/20 px-2 text-left"
+		class="border border-[#7f7f7f]/20 px-2 text-left"
 		:class="{
 			'bg-red-400': schiene_hat_kollisionen
 		}"

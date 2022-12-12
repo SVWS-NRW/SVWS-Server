@@ -133,4 +133,11 @@ export class DataGostKursblockungsergebnis extends BaseData<
 		App.apps.gost.dataKursblockung.commit();
 		this.pending = false;
 	}
+
+	public async activate_blockungsergebnis(): Promise<boolean> {
+		if (!this.selected_list_item)
+			return false;
+		await App.api.activateGostBlockungsergebnis(App.schema, this.selected_list_item.id);
+		return true;
+	}
 }

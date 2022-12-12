@@ -3,10 +3,12 @@
 		<div class="flex flex-row">
 			<div class="w-full flex-none sm:-mx-6 lg:-mx-8">
 				<div class="py-2 align-middle sm:px-6 lg:px-8">
-					<div class="flex gap-2 mb-2">
+					<div v-if="!blockung_aktiv" class="flex gap-2 mb-2">
 						<svws-ui-button  type="secondary" class="cursor-pointer" @click="toggle_modal_hochschreiben"> Hochschreiben </svws-ui-button>
 						<svws-ui-button type="secondary" class="cursor-pointer" @click="toggle_modal_aktivieren"> Aktivieren </svws-ui-button>
 					</div>
+					<div v-if="blockungsergebnis_aktiv" class="text-lg font-bold">Dieses Blockungsergebnis ist aktiv.</div>
+					<div v-else="blockungsergebnis_aktiv" class="text-lg font-bold">Ein anderes Ergebnis dieser Blockung ist bereits aktiv.</div>
 					<div class="rounded-lg shadow">
 						<table class="w-full  border-collapse text-sm table-auto">
 							<!-- Wenn sticky angewendet wird, verschwinden die  border border-[#7f7f7f]/20 s...  -->
@@ -188,7 +190,13 @@
 		computed(() => app.dataKursblockung.ergebnismanager);
 
 	const allow_regeln: ComputedRef<boolean> =
-		computed(()=> app.blockungsergebnisauswahl.liste.length === 1)
+		computed(()=> app.blockungsergebnisauswahl.liste.length === 1);
+
+	const blockung_aktiv: ComputedRef<boolean> =
+		computed(()=> app.blockungsauswahl.ausgewaehlt?.istAktiv || false)
+
+	const blockungsergebnis_aktiv: ComputedRef<boolean> =
+		computed(()=> app.blockungsergebnisauswahl.ausgewaehlt?.istVorlage || false)
 
 	function getAnzahlSchuelerSchiene(idSchiene: number): number {
 		return manager.value?.getOfSchieneAnzahlSchueler(idSchiene) || 0;
@@ -231,10 +239,14 @@
 	async function activate_ergebnis() {
 		modal_aktivieren.value.closeModal();
 		const selected_hj = app.dataKursblockung.datenmanager?.getHalbjahr();
-		if (!app.blockungsergebnisauswahl.ausgewaehlt || !app.dataJahrgang.daten || !selected_hj)
+		if (!app.blockungsauswahl.ausgewaehlt || !app.blockungsergebnisauswahl.ausgewaehlt || !app.dataJahrgang.daten || !selected_hj)
 			return;
-		await App.api.activateGostBlockungsergebnis(App.schema, app.blockungsergebnisauswahl.ausgewaehlt.id);
+		const res = await app.dataKursblockungsergebnis.activate_blockungsergebnis();
+		if (!res)
+			return;
 		app.dataJahrgang.daten.istBlockungFestgelegt[selected_hj.id] = true;
+		app.blockungsauswahl.ausgewaehlt.istAktiv = true;
+		app.blockungsergebnisauswahl.ausgewaehlt.istVorlage = true;
 	}
 
 	async function hochschreiben_ergebnis() {

@@ -53,12 +53,14 @@
 							:schueler-id="selected.id"
 							/>
 					</table>
-					<div class="flex items-center justify-center bg-slate-100">
-						<i-ri-delete-bin-2-line class="m-2 text-4xl" :class="{ 'text-red-700': is_dragging }" />
-					</div>
-					<div class="flex items-center justify-center bg-slate-100 py-2">
-						<svws-ui-button size="small m-2" @click="auto_verteilen" :disabled="pending">Automatisch verteilen</svws-ui-button>
-					</div>
+					<template v-if="!blockung_aktiv">
+						<div class="flex items-center justify-center bg-slate-100">
+							<i-ri-delete-bin-2-line class="m-2 text-4xl" :class="{ 'text-red-700': is_dragging }" />
+						</div>
+						<div class="flex items-center justify-center bg-slate-100 py-2">
+							<svws-ui-button size="small m-2" @click="auto_verteilen" :disabled="pending">Automatisch verteilen</svws-ui-button>
+						</div>
+					</template>
 				</div>
 			</div>
 		</drop-data>
@@ -126,7 +128,11 @@
 			}
 		});
 
-	const kursfilter: ComputedRef<boolean> = computed(() => schueler_filter.kursid !== undefined)
+	const kursfilter: ComputedRef<boolean> =
+		computed(() => schueler_filter.kursid !== undefined);
+
+	const blockung_aktiv: ComputedRef<boolean> =
+		computed(()=> app.blockungsauswahl.ausgewaehlt?.istAktiv || false);
 
 	const aktiver_kursname: ComputedRef<String | undefined> =
 		computed(() => schueler_filter.kursid === undefined ? undefined : manager.value?.getOfKursName(schueler_filter.kursid));

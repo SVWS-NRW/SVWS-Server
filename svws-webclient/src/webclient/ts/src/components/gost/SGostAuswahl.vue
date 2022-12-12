@@ -70,7 +70,10 @@
 										</div>
 									</td>
 									<td v-else>
-										<span>{{blockung.name}}</span>
+										<div class="flex justify-between w-full">
+											<span>{{blockung.name}}</span>
+											<svws-ui-icon v-if="blockung.istAktiv" > <i-ri-pushpin-fill /> </svws-ui-icon>
+										</div>
 									</td>
 								</tr>
 								<auswahl-blockung-api-status :blockung="blockung"/>

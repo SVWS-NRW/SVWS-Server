@@ -10,7 +10,7 @@
 			:data="{ id: kursid, fachID: fach.fachID, kursart: kursartid }"
 			class="select-none px-2"
 			:class="{ 'bg-slate-100' : (belegung !== undefined), 'cursor-move' : (belegung === undefined) }"
-			:draggable="belegung === undefined"
+			:draggable="belegung === undefined && !blockung_aktiv"
 			:style="{
 				'background-color': belegung === undefined ? bgColor : false
 			}"
@@ -95,6 +95,12 @@
 				main.config.drag_and_drop_data = value
 			}
 		});
+
+	const blockung_aktiv: ComputedRef<boolean> =
+		computed(()=> app.blockungsauswahl.ausgewaehlt?.istAktiv || false)
+
+	const blockungsergebnis_aktiv: ComputedRef<boolean> =
+		computed(()=> app.blockungsergebnisauswahl.ausgewaehlt?.istVorlage || false)
 
 	function get_kurs_name(): String {
 		if (kursid.value === undefined) 

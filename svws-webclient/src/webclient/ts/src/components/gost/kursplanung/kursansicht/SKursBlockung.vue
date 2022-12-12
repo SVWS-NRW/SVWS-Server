@@ -22,7 +22,7 @@
 		</template>
 		<template v-if="!kurs_blockungsergebnis">
 			<td></td> </template>
-		<drop-data v-if="allow_regeln"
+		<drop-data v-if="!blockung_aktiv"
 			v-for="(schiene) in schienen"
 			:key="schiene.id"
 			class="border border-[#7f7f7f]/20 text-center"
@@ -45,13 +45,13 @@
 					{{ kurs_blockungsergebnis?.schueler.size() }}
 					<svws-ui-icon class="cursor-pointer" @click="fixieren_regel_toggle" >
 						<i-ri-pushpin-fill v-if="fixier_regeln.length" class="inline-block"/>
-						<i-ri-pushpin-line v-else class="inline-block"/> </svws-ui-icon>
+						<i-ri-pushpin-line v-if="!fixier_regeln.length && allow_regeln" class="inline-block"/> </svws-ui-icon>
 				</svws-ui-badge>
 			</drag-data>
 			<template v-else>
 				<svws-ui-icon class="cursor-pointer px-4 py-2" @click="sperren_regel_toggle(schiene)">
 					<i-ri-forbid-fill v-if="sperr_regeln.find(r=>r.parameter.get(1) === ermittel_parent_schiene(schiene).nummer)" class="inline-block text-red-500" />
-					<i-ri-forbid-line v-else class="inline-block opacity-0 hover:opacity-25" />
+					<i-ri-forbid-line v-if="allow_regeln && !sperr_regeln.find(r=>r.parameter.get(1) === ermittel_parent_schiene(schiene).nummer)" class="inline-block opacity-0 hover:opacity-25" />
 				</svws-ui-icon>
 			</template>
 		</drop-data>
@@ -62,7 +62,12 @@
 					v-if="kurs_schiene_zugeordnet(schiene)"
 					size="tiny" :variant="selected_kurs?'primary':'highlight'" class="cursor-pointer"
 					@click="toggle_active_kurs">
-					{{ kurs_blockungsergebnis?.schueler.size() }} </svws-ui-badge>
+					{{ kurs_blockungsergebnis?.schueler.size() }}
+					<svws-ui-icon v-if="fixier_regeln.length">
+						<i-ri-pushpin-fill class="inline-block"/></svws-ui-icon>
+					<svws-ui-icon class="px-4 py-2" v-if="sperr_regeln.find(r=>r.parameter.get(1) === ermittel_parent_schiene(schiene).nummer)">
+					<i-ri-forbid-fill class="inline-block text-red-500" /> </svws-ui-icon>
+				</svws-ui-badge>
 			</td>
 		</template>
 		<template v-if="setze_kursdifferenz && kurs_blockungsergebnis && allow_regeln">
@@ -224,6 +229,9 @@ const fixier_regeln: ComputedRef<GostBlockungRegel[]> =
 const allow_regeln: ComputedRef<boolean> =
 	computed(()=> app.blockungsergebnisauswahl.liste.length === 1)
 
+const blockung_aktiv: ComputedRef<boolean> =
+	computed(()=> app.blockungsauswahl.ausgewaehlt?.istAktiv || false);
+
 const toggle_kurszahl_anzeige = () => kurszahl_anzeige.value = !kurszahl_anzeige.value
 
 function drag_started(e: DragEvent) {
@@ -261,7 +269,7 @@ const ermittel_parent_schiene = (ergebnis_schiene: GostBlockungsergebnisSchiene)
 }
 
 const fixieren_regel_toggle = () => {
-	if (app.dataKursblockung.pending)
+	if (app.dataKursblockung.pending || !allow_regeln.value)
 		return;
 	fixier_regeln.value.length ? fixieren_regel_entfernen() : fixieren_regel_hinzufuegen()
 }
@@ -292,7 +300,7 @@ const fixieren_regel_entfernen = async () => {
 }
 
 const sperren_regel_toggle = (schiene: GostBlockungsergebnisSchiene) => {
-	if (app.dataKursblockung.pending)
+	if (app.dataKursblockung.pending || !allow_regeln.value)
 		return;
 	const { nummer } = ermittel_parent_schiene(schiene);
 	return sperr_regeln.value.find(r=>r.parameter.get(1) === nummer)
