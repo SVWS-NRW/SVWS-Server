@@ -85,7 +85,6 @@ task dockerBuildTagAndPublish(type: Exec) {
 	def dockerPushCmd = "docker push ${tagNamePub}"
 
 	def cmd = "${dockerLoginCmd} && ${dockerTagCmd} && ${dockerPushCmd}"
-	project.logger.lifecycle(cmd)
 	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
 		commandLine 'cmd', '/c', cmd
 	} else {
