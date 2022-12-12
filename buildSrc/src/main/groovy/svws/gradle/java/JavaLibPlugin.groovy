@@ -49,7 +49,7 @@ class JavaLibPlugin implements Plugin<Project> {
 
 
 	void addJacksonConfiguration() {
-		def version = "2.13.4";
+		def version = "2.14.1";
 		project.configurations.create('jackson');
 		project.dependencies.add('jackson', 'com.fasterxml.jackson.core:jackson-annotations:' + version);
 		project.dependencies.add('jackson', 'com.fasterxml.jackson.core:jackson-core:' + version);
@@ -61,7 +61,7 @@ class JavaLibPlugin implements Plugin<Project> {
 
 
 	void addJettyConfiguration() {
-		def version = "11.0.12";
+		def version = "11.0.13";
 		def versionServletApi = "5.0.2";
 		project.configurations.create('jetty');
 	    project.dependencies.add('jetty', 'org.eclipse.jetty.toolchain:jetty-jakarta-servlet-api:' + versionServletApi);
@@ -75,7 +75,7 @@ class JavaLibPlugin implements Plugin<Project> {
 
 
 	void addPdfConfiguration() {
-		def version = "2.0.26";
+		def version = "2.0.27";
 		def openHtmlToPdfVersion = "1.0.10";
 		project.configurations.create('pdf');
 		project.dependencies.add('pdf', 'org.apache.pdfbox:pdfbox:' + version);
@@ -87,7 +87,7 @@ class JavaLibPlugin implements Plugin<Project> {
 
 
 	void addRestEasyConfiguration() {
-		def version = "6.2.0.Final";
+		def version = "6.2.1.Final";
 		project.configurations.create('resteasy');
 		project.dependencies.add('resteasy', 'org.jboss.resteasy:resteasy-core:' + version);
 		project.dependencies.add('resteasy', 'org.jboss.resteasy:resteasy-jackson2-provider:' + version);
@@ -97,8 +97,8 @@ class JavaLibPlugin implements Plugin<Project> {
 
 
 	void addSwagger() {
-	    def version = "2.2.2";
-	    def versionUI = "4.1.3";
+	    def version = "2.2.7";
+	    def versionUI = "4.15.5";
 		project.configurations.create('swagger');
 	    project.dependencies.add('swagger', 'io.swagger.core.v3:swagger-jaxrs2-jakarta:' + version);
 		project.dependencies.add('swagger', 'io.swagger.core.v3:swagger-annotations-jakarta:' + version);
@@ -107,7 +107,7 @@ class JavaLibPlugin implements Plugin<Project> {
 
 
 	void addValidation() {
-		def version = "3.0.1";
+		def version = "3.0.2";
 		project.configurations.create('validation');
 		project.dependencies.add('validation', 'jakarta.validation:jakarta.validation-api:' + version);
     }

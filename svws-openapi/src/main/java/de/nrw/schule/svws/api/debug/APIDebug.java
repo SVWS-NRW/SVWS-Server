@@ -34,7 +34,7 @@ public class APIDebug {
 	private static final String pathSwaggerUIDist = "META-INF/resources/webjars/swagger-ui-dist";
 	
 	/** Die Version der Swagger-UI. Diese wird hier benötigt, da die Ressourcen in einem entsprechenden Unterverzeichnis liegen. */
-	private static final String versionSwaggerUIDist = "4.1.3"; 
+	private static final String versionSwaggerUIDist = "4.15.5"; 
 	// TODO determine Swagger UI Dist Version automatically...
 
 
@@ -54,7 +54,7 @@ public class APIDebug {
     		final String resourceName = pathSwaggerUIDist + "/" + versionSwaggerUIDist + "/" + filename;
     		try (InputStream in = ClassLoader.getSystemResourceAsStream(resourceName)) {
 	    		data = IOUtils.toString(in, StandardCharsets.UTF_8);
-	    		if ("index.html".equalsIgnoreCase(filename)) {
+	    		if ("swagger-initializer.js".equalsIgnoreCase(filename)) {
 	    			final String openapi_file = isYAML ? "openapi.yaml" : "openapi.json";
 	    			final String openapi_url = StringUtils.removeEnd(request.getRequestURL().toString(), request.getRequestURI()) + "/" + openapi_file;
 	    			data = data.replace("https://petstore.swagger.io/v2/swagger.json", openapi_url);
@@ -105,6 +105,22 @@ public class APIDebug {
     
 
 	/**
+	 * Diese Methode gibt die "swagger-initializer.js"-Datei der Swagger-UI zurück.
+	 * 
+	 * @param yaml      ist auf "/yaml" gesetzt, wenn auf die Debug-API mithilfe der yaml-OpenAPI-Datei zugegriffen wird.
+	 * @param request   der HTTP-Request
+	 * 
+	 * @return die HTTP-Response
+	 */
+    @GET
+    @Produces("text/javascript")
+    @Path("/debug{yaml : (/yaml)?}/swagger-initializer.js")
+    public Response debugFileSwaggerInitializerJS(@PathParam("yaml") String yaml, @Context final HttpServletRequest request) {
+        return getResource("swagger-initializer.js", request, "/yaml".equals(yaml));
+    }
+
+
+	/**
 	 * Diese Methode gibt die "swagger-ui.js"-Datei der Swagger-UI zurück.
 	 * 
 	 * @param yaml      ist auf "/yaml" gesetzt, wenn auf die Debug-API mithilfe der yaml-OpenAPI-Datei zugegriffen wird.
@@ -148,6 +164,21 @@ public class APIDebug {
         return getResource("swagger-ui-standalone-preset.js", null, "/yaml".equals(yaml));
     }
 
+
+	/**
+	 * Diese Methode gibt die "index.css"-Datei der Swagger-UI zurück.
+	 * 
+	 * @param yaml      ist auf "/yaml" gesetzt, wenn auf die Debug-API mithilfe der yaml-OpenAPI-Datei zugegriffen wird.
+	 * 
+	 * @return die HTTP-Response
+	 */
+    @GET
+    @Produces("text/css")
+    @Path("/debug{yaml : (/yaml)?}/index.css")
+    public Response debugFileIndexCSS(@PathParam("yaml") String yaml) {
+        return getResource("index.css", null, "/yaml".equals(yaml));
+    }
+    
 
 	/**
 	 * Diese Methode gibt die "swagger-ui.css"-Datei der Swagger-UI zurück.
