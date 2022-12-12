@@ -188,9 +188,9 @@ public class PDFGostWahlbogen extends PDFCreator {
 		this.manager = new AbiturdatenManager(this.abidaten, this.gostFaecher.toVector(), GostBelegpruefungsArt.GESAMT);		
 		// Ersetze die Felder des Templates mit den Daten
 		bodyData.put("PRUEFUNGSORDNUNG", "APO-GOSt");
-		bodyData.put("SCHULBEZEICHNUNG_1", schulbezeichnung[0]);
-		bodyData.put("SCHULBEZEICHNUNG_2", schulbezeichnung[1]);
-		bodyData.put("SCHULBEZEICHNUNG_3", schulbezeichnung[2]);
+		bodyData.put("SCHULBEZEICHNUNG_1", schulbezeichnung[0] == null ? "" : schulbezeichnung[0]);
+		bodyData.put("SCHULBEZEICHNUNG_2", schulbezeichnung[1] == null ? "" : schulbezeichnung[1]);
+		bodyData.put("SCHULBEZEICHNUNG_3", schulbezeichnung[2] == null ? "" : schulbezeichnung[2]);
 		bodyData.put("SCHUELER_NAME", schuelerName);
 		bodyData.put("KLASSE", klasse);
 		bodyData.put("ABITURJAHR", "" + abidaten.abiturjahr);
