@@ -3,7 +3,7 @@
 		<td class="border border-[#7f7f7f]/20 px-2 whitespace-nowrap" :class="{'border-t-2': kursdifferenz}">
 			<div class="flex gap-1">
 				<template v-if=" kurs === edit_name ">
-					{{ fachKuerzel }}-{{ art.kuerzel }}{{ kurs.nummer }}-
+					{{ kursbezeichnung }}-
 					<svws-ui-text-input v-model="suffix" focus headless style="width: 2rem" @blur="edit_name=undefined" @keyup.enter="edit_name=undefined" />
 				</template>
 				<template v-else>
@@ -28,7 +28,7 @@
 			class="border border-[#7f7f7f]/20 text-center"
 			:class="{'border-t-2': kursdifferenz, 'bg-yellow-200': drag_data.kurs?.id === kurs.id && drag_data.schiene?.id !== schiene.id, 'bg-slate-500': schiene_gesperrt(schiene)}"
 			tag="td"
-			@drop="drop_aendere_kursschiene($event, schiene.id)"
+			@drop="drop_aendere_kursschiene($event, schiene)"
 			>
 			<drag-data v-if="kurs_schiene_zugeordnet(schiene)"
 				:key="kurs.id"
@@ -87,6 +87,19 @@
 		</template>
 		<!-- <td class="border-none bg-white"></td> -->
 	</tr>
+	<svws-ui-modal ref="kurs_und_kurs_modal" size="small">
+		<template #modalTitle>Regel erstellen für Kurse</template>
+		<template #modalDescription>
+			<div class="">
+				Sollen die Kurse {{get_kursbezeichnung(kurs1?.id)}} und {{get_kursbezeichnung(kurs.id)}} immer oder nie zusammen auf einer Schiene liegen?
+			</div>
+			<div class="flex gap-1">
+				<svws-ui-button @click="toggle_kurs_und_kurs_modal">Abbrechen</svws-ui-button>
+				<svws-ui-button @click="create_regel_immer">Immer</svws-ui-button>
+				<svws-ui-button @click="create_regel_nie">Nie</svws-ui-button>
+			</div>
+		</template>
+	</svws-ui-modal>
 </template>
 
 <script setup lang="ts">
@@ -141,7 +154,6 @@ const fach: ComputedRef<ZulaessigesFach> =
 const bgColor: ComputedRef<string> =
 	computed(() => fach.value ? fach.value.getHMTLFarbeRGB().valueOf() : "#ffffff");
 
-
 const koop: WritableComputedRef<boolean> =
 	computed({
 	get(): boolean {
@@ -168,6 +180,15 @@ const suffix: WritableComputedRef<string> =
 
 const manager: ComputedRef<GostBlockungsergebnisManager | undefined> =
 	computed(()=> app.dataKursblockung.ergebnismanager);
+
+const kursbezeichnung: ComputedRef<String> =
+	computed(()=> get_kursbezeichnung(props.kurs.id));
+
+function get_kursbezeichnung(kurs_id: number | undefined) {
+	if (!kurs_id || !manager.value)
+		return String();
+	return manager.value.getOfKursName(kurs_id);
+}
 
 const schienen: ComputedRef<List<GostBlockungsergebnisSchiene>> =
 	computed(()=> manager.value?.getMengeAllerSchienen() || new Vector<GostBlockungsergebnisSchiene>())
@@ -324,13 +345,18 @@ const sperren_regel_entfernen = async (nummer: number) => {
 	await app.dataKursblockung.del_blockung_regel(regel.id)
 }
 
-function drop_aendere_kursschiene(drag_data: {kurs: GostBlockungsergebnisKurs; schiene: GostBlockungSchiene}, schiene_id: number) {
-	if (!drag_data.kurs || !drag_data.schiene || app.dataKursblockungsergebnis.pending)
+let kurs1: GostBlockungsergebnisKurs | undefined = undefined;
+function drop_aendere_kursschiene(drag_data: {kurs: GostBlockungsergebnisKurs; schiene: GostBlockungSchiene}, schiene: GostBlockungsergebnisSchiene) {
+	if (!drag_data.kurs || !drag_data.schiene || app.dataKursblockungsergebnis.pending || kurs_blockungsergebnis.value === undefined)
 		return
-	if (drag_data.kurs.id === kurs_blockungsergebnis.value?.id && schiene_id !== drag_data.schiene.id) {
+	if (drag_data.kurs.id !== kurs_blockungsergebnis.value.id && kurs_schiene_zugeordnet(schiene)) {
+		kurs1 = drag_data.kurs;
+		toggle_kurs_und_kurs_modal();
+		return;
+	}
+	if (drag_data.kurs.id === kurs_blockungsergebnis.value.id && schiene.id !== drag_data.schiene.id) {
 		if (fixier_regeln.value) fixieren_regel_entfernen()
-		app.dataKursblockungsergebnis.assignKursSchiene(drag_data.kurs.id, drag_data.schiene.id, schiene_id)
-		drag_ended()
+		app.dataKursblockungsergebnis.assignKursSchiene(drag_data.kurs.id, drag_data.schiene.id, schiene.id)
 	}
 }
 
@@ -355,4 +381,31 @@ function toggle_active_kurs() {
 function kurs_schiene_zugeordnet(schiene: GostBlockungsergebnisSchiene): boolean {
 	return manager.value?.getOfKursOfSchieneIstZugeordnet(props.kurs.id, schiene.id) || false
 }
+
+const kurs_und_kurs_modal: Ref<any> = ref(null);
+function toggle_kurs_und_kurs_modal() {
+	kurs_und_kurs_modal.value.isOpen ? kurs_und_kurs_modal.value.closeModal() : kurs_und_kurs_modal.value.openModal();
+};
+
+async function create_regel_immer() {
+	kurs_und_kurs_modal.value.closeModal();
+	if (!kurs1)
+		return;
+	const regel = new GostBlockungRegel();
+	regel.typ = GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS.typ;
+	regel.parameter.add(kurs1.id)
+	regel.parameter.add(props.kurs.id);
+	await app.dataKursblockung.add_blockung_regel(regel)
+}
+async function create_regel_nie() {
+	kurs_und_kurs_modal.value.closeModal();
+	if (!kurs1)
+		return;
+	const regel = new GostBlockungRegel();
+	regel.typ = GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS.typ;
+	regel.parameter.add(kurs1.id)
+	regel.parameter.add(props.kurs.id);
+	await app.dataKursblockung.add_blockung_regel(regel)
+}
+
 </script>

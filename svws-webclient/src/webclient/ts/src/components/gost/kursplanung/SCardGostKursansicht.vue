@@ -8,7 +8,7 @@
 						<svws-ui-button type="secondary" class="cursor-pointer" @click="toggle_modal_aktivieren"> Aktivieren </svws-ui-button>
 					</div>
 					<div v-if="blockungsergebnis_aktiv" class="text-lg font-bold">Dieses Blockungsergebnis ist aktiv.</div>
-					<div v-else="blockungsergebnis_aktiv" class="text-lg font-bold">Ein anderes Ergebnis dieser Blockung ist bereits aktiv.</div>
+					<div v-if="blockung_aktiv && !blockungsergebnis_aktiv" class="text-lg font-bold">Ein anderes Ergebnis dieser Blockung ist bereits aktiv.</div>
 					<div class="rounded-lg shadow">
 						<table class="w-full  border-collapse text-sm table-auto">
 							<!-- Wenn sticky angewendet wird, verschwinden die  border border-[#7f7f7f]/20 s...  -->

@@ -14,6 +14,8 @@ declare module '@vue/runtime-core' {
     Blockungsregel_4: typeof import('./src/components/gost/kursplanung/Regeln/Blockungsregel_4.vue')['default']
     Blockungsregel_5: typeof import('./src/components/gost/kursplanung/Regeln/Blockungsregel_5.vue')['default']
     Blockungsregel_6: typeof import('./src/components/gost/kursplanung/Regeln/Blockungsregel_6.vue')['default']
+    Blockungsregel_7: typeof import('./src/components/gost/kursplanung/Regeln/Blockungsregel_7.vue')['default']
+    Blockungsregel_8: typeof import('./src/components/gost/kursplanung/Regeln/Blockungsregel_8.vue')['default']
     DragData: typeof import('./src/components/DragData.vue')['default']
     DropData: typeof import('./src/components/DropData.vue')['default']
     HilfeLaufbahnplanung: typeof import('./src/components/schueler/laufbahnplanung/HilfeLaufbahnplanung.md')['default']

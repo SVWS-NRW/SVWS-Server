@@ -19,6 +19,12 @@
 									<Blockungsregel_3 />
 								</div>
 								<div class="py-1 px-8 bg-slate-100 shadow-lg rounded-lg my-1">
+									<Blockungsregel_7 />
+								</div>
+								<div class="py-1 px-8 bg-slate-100 shadow-lg rounded-lg my-1">
+									<Blockungsregel_8 />
+								</div>
+								<div class="py-1 px-8 bg-slate-100 shadow-lg rounded-lg my-1">
 									<Blockungsregel_4 />
 								</div>
 								<div class="py-1 px-8 bg-slate-100 shadow-lg rounded-lg my-1">
