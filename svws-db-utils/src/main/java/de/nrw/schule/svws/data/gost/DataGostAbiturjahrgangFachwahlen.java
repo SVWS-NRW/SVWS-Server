@@ -94,7 +94,7 @@ public class DataGostAbiturjahrgangFachwahlen extends DataManager<Long> {
 			return new Vector<>();
 		List<Long> schuelerIDs = schueler.stream().map(s -> s.ID).collect(Collectors.toList());
     	List<DTOGostSchuelerFachbelegungen> fachbelegungen = conn.queryNamed("DTOGostSchuelerFachbelegungen.schueler_id.multiple", schuelerIDs, DTOGostSchuelerFachbelegungen.class);
-		if ((fachbelegungen == null) || (fachbelegungen.size() == 0))
+		if (fachbelegungen == null)
 			return null;
 		// Lese die Fachliste aus der DB
 		Map<Long, DTOFach> faecher = conn.queryAll(DTOFach.class).stream().collect(Collectors.toMap(f -> f.ID, f -> f));
@@ -128,8 +128,8 @@ public class DataGostAbiturjahrgangFachwahlen extends DataManager<Long> {
     		return Integer.compare(faecher.get(a.id).SortierungSekII, faecher.get(b.id).SortierungSekII); 
     	}).collect(Collectors.toList());
 	}
-	
-	
+
+
     /**
      * Ermittelt die Fachwahlen zu dem Abiturjahrgang dieses Objektes.
      * 
