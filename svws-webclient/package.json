@@ -65,6 +65,7 @@
 	},
 	"overrides": {
 		"@yankeeinlondon/happy-wrapper": "2.8.0",
-		"native-dash": "1.23.2"
+		"native-dash": "1.23.2",
+		"brilliant-errors": "0.6.0"
 	}
 }
