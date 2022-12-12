@@ -22,7 +22,23 @@ import de.nrw.schule.svws.core.types.fach.ZulaessigesFach;
 import de.nrw.schule.svws.core.types.gost.GostHalbjahr;
 import de.nrw.schule.svws.core.types.gost.GostKursart;
 import de.nrw.schule.svws.core.utils.gost.GostFaecherManager;
+import de.nrw.schule.svws.data.gost.GostUtils;
+import de.nrw.schule.svws.db.DBEntityManager;
+import de.nrw.schule.svws.db.dto.current.gost.DTOGostJahrgangsdaten;
+import de.nrw.schule.svws.db.dto.current.gost.DTOGostSchueler;
+import de.nrw.schule.svws.db.dto.current.schild.klassen.DTOKlassen;
+import de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchueler;
+import de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
+import de.nrw.schule.svws.db.dto.current.schild.schule.DTOEigeneSchule;
+import de.nrw.schule.svws.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
+import de.nrw.schule.svws.db.utils.OperationError;
+import de.nrw.schule.svws.db.utils.gost.FaecherGost;
+import de.nrw.schule.svws.db.utils.gost.GostSchuelerLaufbahn;
 import de.nrw.schule.svws.module.pdf.PDFCreator;
+import jakarta.persistence.TypedQuery;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Diese Klasse beinhaltet den Code zur Erstellung eines Wahlbogens
@@ -178,9 +194,9 @@ public class PDFGostWahlbogen extends PDFCreator {
 	 * @param bemerkungJahrgang   der Text, der bei diesem Schüler oben auf dem Beratungsbogen erscheinen soll.
 	 * @param datumBeratung       das Datum der letzten Beratung des Schülers
 	 */
-	public PDFGostWahlbogen(String schuelerName, Geschlecht geschlecht, String klasse, String[] schulbezeichnung, Abiturdaten abidaten, 
-			                GostFaecherManager gostFaecher, GostHalbjahr planungsHalbjahr, String bemerkungJahrgang,
-			                String datumBeratung) {
+	private PDFGostWahlbogen(String schuelerName, Geschlecht geschlecht, String klasse, String[] schulbezeichnung, Abiturdaten abidaten, 
+			                 GostFaecherManager gostFaecher, GostHalbjahr planungsHalbjahr, String bemerkungJahrgang,
+			                 String datumBeratung) {
 		// Setze den Titel des Dokuments, das HTML-Template und die speziellen CSS-Definitionen für dieses Dokument 
 		super("Wahlbogen für das Halbjahr " + planungsHalbjahr.kuerzel + " von " + schuelerName, html, css);
 		this.abidaten = abidaten;
@@ -369,4 +385,71 @@ public class PDFGostWahlbogen extends PDFCreator {
 		return;
 	}
 
+	
+	/**
+	 * Erstellt das PDF-Dokument für den Wahlbogen zu der Laufbahn 
+	 * eines Schülers der gymnasialen Oberstufe.
+	 * 
+	 * @param conn          die Datenbank-Verbindung 
+	 * @param schueler_id   die ID des Schülers 
+	 * 
+	 * @return die HTTP-Response mit dem PDF-Dokument
+	 */
+	public static Response query(DBEntityManager conn, Long schueler_id) {
+		// Lese die Laufbahndaten aus der DB
+		if (schueler_id == null)
+	    	return OperationError.NOT_FOUND.getResponse();
+		DTOEigeneSchule schule = GostUtils.pruefeSchuleMitGOSt(conn);
+    	DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, schueler_id);
+		if (schueler == null)
+    		return OperationError.NOT_FOUND.getResponse();
+		DTOGostSchueler gostSchueler = conn.queryByKey(DTOGostSchueler.class, schueler_id);
+		if (gostSchueler == null)
+    		return OperationError.NOT_FOUND.getResponse();
+		DTOSchuljahresabschnitte abschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schueler.Schuljahresabschnitts_ID);
+		if (abschnitt == null)
+    		return OperationError.NOT_FOUND.getResponse();
+    	TypedQuery<DTOSchuelerLernabschnittsdaten> queryAktAbschnitt = conn.query("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = :schueler_id AND e.Schuljahresabschnitts_ID = :abschnitt_id", DTOSchuelerLernabschnittsdaten.class);
+    	DTOSchuelerLernabschnittsdaten aktAbschnitt = queryAktAbschnitt
+    			.setParameter("schueler_id", schueler_id)
+    			.setParameter("abschnitt_id", abschnitt.ID)
+    			.getResultList().stream().findFirst().orElse(null);
+    	if (aktAbschnitt == null)
+    		throw new WebApplicationException(Status.NOT_FOUND.getStatusCode());
+    	DTOKlassen klasse = conn.queryByKey(DTOKlassen.class, aktAbschnitt.Klassen_ID);
+		if (klasse == null)
+    		return OperationError.NOT_FOUND.getResponse();
+    	Abiturdaten daten = GostSchuelerLaufbahn.get(conn, schueler_id);
+		if (daten == null)
+    		return OperationError.NOT_FOUND.getResponse();
+    	DTOGostJahrgangsdaten jahrgangsDaten = conn.queryByKey(DTOGostJahrgangsdaten.class, daten.abiturjahr);
+		if (jahrgangsDaten == null)
+    		return OperationError.NOT_FOUND.getResponse();
+    	// TODO Bei Schulen mit Quartalen fehlt die Bestimmung des Halbjahres anstatt abschnitt.Abschnitt...
+    	GostHalbjahr halbjahr = GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(daten.abiturjahr, abschnitt.Jahr, abschnitt.Abschnitt);
+    	GostHalbjahr planungsHalbjahr = GostHalbjahr.getPlanungshalbjahrFromAbiturjahrSchuljahrUndHalbjahr(daten.abiturjahr, abschnitt.Jahr, abschnitt.Abschnitt);
+    	if (planungsHalbjahr == null)
+    		planungsHalbjahr = (halbjahr == null) ? GostHalbjahr.EF1 : GostHalbjahr.Q22;
+    	GostFaecherManager gostFaecher = FaecherGost.getFaecherListeGost(conn, daten.abiturjahr);
+    	if (gostFaecher.isEmpty())
+    		return OperationError.NOT_FOUND.getResponse();
+    	PDFGostWahlbogen wahlbogen = new PDFGostWahlbogen(
+    		schueler.Vorname + " " + schueler.Nachname,
+    		schueler.Geschlecht,
+    		klasse.Klasse,
+    		new String[] { schule.Bezeichnung1, schule.Bezeichnung2, schule.Bezeichnung3 }, 
+    		daten,
+    		gostFaecher,
+    		planungsHalbjahr,
+    		jahrgangsDaten.TextBeratungsbogen,
+    		gostSchueler.DatumBeratung
+    	);
+		byte[] data = wahlbogen.toByteArray();
+		if (data == null)
+			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
+		return Response.status(Status.OK).type("application/pdf")
+			.header("Content-Disposition", "attachment; filename=Laufbahnplanung_" + schueler.Nachname.replace(' ', '_') + "_" + schueler.Vorname.replace(' ', '_') + ".pdf")  // TODO ergänze Informationen zum Dateinamen, z.B. Schülername oder ID
+			.entity(data).build();
+	}
+	
 }

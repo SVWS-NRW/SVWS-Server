@@ -46,6 +46,7 @@ import de.nrw.schule.svws.db.utils.data.Schule;
 import de.nrw.schule.svws.db.utils.gost.FaecherGost;
 import de.nrw.schule.svws.db.utils.gost.GostSchueler;
 import de.nrw.schule.svws.db.utils.gost.GostSchuelerAbitur;
+import de.nrw.schule.svws.module.pdf.gost.PDFGostWahlbogen;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -447,7 +448,7 @@ public class APIGost {
     public Response getGostSchuelerPDFWahlbogen(@PathParam("schema") String schema, @PathParam("id") long id, @Context HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeinformationen
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN)) {
-    		return DataGostSchuelerLaufbahnplanung.getPDFWahlbogen(conn, id);
+    		return PDFGostWahlbogen.query(conn, id);
     	}
     }
 

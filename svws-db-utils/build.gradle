@@ -1,5 +1,5 @@
 configurations {
-	implementation.extendsFrom(crypto, database, jackson, resteasy)
+	implementation.extendsFrom(crypto, database, jackson, resteasy, swagger)
 }
 
 dependencies {

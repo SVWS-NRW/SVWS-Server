@@ -1,11 +1,15 @@
 configurations {
-	implementation.extendsFrom(pdf)
+	implementation.extendsFrom(database, resteasy, pdf)
 }
 
 compileJava.dependsOn(":svws-core:assemble")
+compileJava.dependsOn(":svws-db-utils:assemble")
 
 dependencies {
 	implementation project(':svws-core')
+    implementation project(':svws-db')
+    implementation project(':svws-db-dto')
+    implementation project(':svws-db-utils')
 }
 
 publishing {
