@@ -1,12 +1,21 @@
 package de.nrw.schule.svws.data.gost;
 
 import java.io.InputStream;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import de.nrw.schule.svws.core.data.gost.GostJahrgang;
+import de.nrw.schule.svws.core.types.Note;
+import de.nrw.schule.svws.core.types.gost.GostHalbjahr;
+import de.nrw.schule.svws.core.types.gost.GostKursart;
 import de.nrw.schule.svws.core.types.jahrgang.Jahrgaenge;
+import de.nrw.schule.svws.core.types.kurse.ZulaessigeKursart;
 import de.nrw.schule.svws.core.utils.gost.GostAbiturjahrUtils;
 import de.nrw.schule.svws.core.utils.jahrgang.JahrgangsUtils;
 import de.nrw.schule.svws.data.DataManager;
@@ -14,11 +23,16 @@ import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.dto.current.gost.DTOGostJahrgangFachkombinationen;
 import de.nrw.schule.svws.db.dto.current.gost.DTOGostJahrgangFaecher;
 import de.nrw.schule.svws.db.dto.current.gost.DTOGostJahrgangsdaten;
+import de.nrw.schule.svws.db.dto.current.gost.DTOGostSchueler;
+import de.nrw.schule.svws.db.dto.current.gost.DTOGostSchuelerFachbelegungen;
 import de.nrw.schule.svws.db.dto.current.schild.faecher.DTOFach;
+import de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
+import de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
 import de.nrw.schule.svws.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.nrw.schule.svws.db.dto.current.schild.schule.DTOJahrgang;
 import de.nrw.schule.svws.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.nrw.schule.svws.db.dto.current.svws.db.DTODBAutoInkremente;
+import de.nrw.schule.svws.db.dto.current.views.gost.DTOViewGostSchuelerAbiturjahrgang;
 import de.nrw.schule.svws.db.utils.OperationError;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -185,7 +199,121 @@ public class DataGostJahrgangsliste extends DataManager<Integer> {
 			if (!conn.persistAll(gostFaecherKombis))
 				return OperationError.INTERNAL_SERVER_ERROR.getResponse();
 		}
+		// Bestimme die Fachwahlen aus ggf. schon bestehenden Lernabschnitten
+		Jahrgaenge jg = Jahrgaenge.getByKuerzel(jahrgang.ASDJahrgang);
+		if ((jg == Jahrgaenge.JG_EF) || (jg == Jahrgaenge.JG_Q1) || (jg == Jahrgaenge.JG_Q2)) {
+	    	// Bestimme alle Schüler-IDs des angegebenen Abiturjahrgangs
+			Map<Long, DTOFach> mapFaecher = faecher.stream().collect(Collectors.toMap(f -> f.ID, f -> f));
+			List<DTOViewGostSchuelerAbiturjahrgang> schueler = conn.queryNamed("DTOViewGostSchuelerAbiturjahrgang.abiturjahr", abiturjahr, DTOViewGostSchuelerAbiturjahrgang.class);
+			if ((schueler != null) && (schueler.size() > 0)) {
+				List<Long> schuelerIDs = schueler.stream().map(s -> s.ID).toList();
+				List<Integer> abschnitte = schule.AnzahlAbschnitte == 4 ? Arrays.asList(2, 4) : Arrays.asList(1, 2); 
+				List<DTOSchuljahresabschnitte> schuljahresabschnitte = conn.queryNamed("DTOSchuljahresabschnitte.abschnitt.multiple", abschnitte, DTOSchuljahresabschnitte.class);
+				List<Long> schuljahresabschnittIDs = schuljahresabschnitte.stream().map(a -> a.ID).toList();
+				Map<Long, DTOSchuljahresabschnitte> mapSchuljahresabschnitte = schuljahresabschnitte.stream().collect(Collectors.toMap(s -> s.ID, s -> s));
+				List<DTOSchuelerLernabschnittsdaten> lernabschnitte = conn.queryList("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID IN ?1 AND e.WechselNr IS NULL AND e.ASDJahrgang IN ('EF', 'Q1', 'Q2') AND e.Schuljahresabschnitts_ID IN ?2 AND e.SemesterWertung = true", DTOSchuelerLernabschnittsdaten.class, schuelerIDs, schuljahresabschnittIDs);
+				List<Long> lernabschnittIDs = lernabschnitte.stream().map(l -> l.ID).toList();
+				Map<Long, List<DTOSchuelerLernabschnittsdaten>> mapLernabschnitte = lernabschnitte.stream().collect(Collectors.groupingBy(l -> l.Schueler_ID));
+				List<DTOSchuelerLeistungsdaten> leistungsdaten = conn.queryNamed("DTOSchuelerLeistungsdaten.abschnitt_id.multiple", lernabschnittIDs, DTOSchuelerLeistungsdaten.class);
+				Map<Long, List<DTOSchuelerLeistungsdaten>> mapLeistungsdaten = leistungsdaten.stream().collect(Collectors.groupingBy(l -> l.Abschnitt_ID));
+
+				HashMap<Long, HashMap<Long, DTOGostSchuelerFachbelegungen>> schuelerfachbelegungen = new HashMap<>();
+				for (long schueler_id : schuelerIDs) {
+					List<DTOSchuelerLernabschnittsdaten> slas = mapLernabschnitte.get(schueler_id);
+					if ((slas == null) || (slas.size() == 0))
+						continue;
+					HashMap<Long, DTOGostSchuelerFachbelegungen> fachbelegungen = new HashMap<>();
+					schuelerfachbelegungen.put(schueler_id, fachbelegungen);
+					for (DTOSchuelerLernabschnittsdaten sla : slas) {
+						List<DTOSchuelerLeistungsdaten> slds = mapLeistungsdaten.get(sla.ID);
+						if ((slds == null) || (slds.size() == 0))
+							continue;
+						DTOSchuljahresabschnitte schuljahresabschnitt = mapSchuljahresabschnitte.get(sla.Schuljahresabschnitts_ID);
+						if (schuljahresabschnitt == null)
+							continue;
+						GostHalbjahr halbjahr = GostHalbjahr.fromJahrgangUndHalbjahr(sla.ASDJahrgang, schule.AnzahlAbschnitte == 4 ? schuljahresabschnitt.Abschnitt / 2 : schuljahresabschnitt.Abschnitt);
+						if (halbjahr == null)
+							continue;
+						for (DTOSchuelerLeistungsdaten sld : slds) {
+							DTOFach fach = mapFaecher.get(sld.Fach_ID);
+							if ((fach == null) || (!fach.IstOberstufenFach))
+								continue;
+							DTOGostSchuelerFachbelegungen fachbelegung = fachbelegungen.get(fach.ID);
+							if (fachbelegung == null) {
+								fachbelegung = new DTOGostSchuelerFachbelegungen(schueler_id, fach.ID);
+								fachbelegungen.put(fach.ID, fachbelegung);
+							}
+							switch (halbjahr) {
+								case EF1 -> {
+									fachbelegung.EF1_Kursart = funcGetKursart.apply(sld, halbjahr);
+									fachbelegung.EF1_Punkte = funcGetNotenpunkte.apply(sld.NotenKrz);
+								}
+								case EF2 -> {
+									fachbelegung.EF2_Kursart = funcGetKursart.apply(sld, halbjahr);
+									fachbelegung.EF2_Punkte = funcGetNotenpunkte.apply(sld.NotenKrz);
+								}
+								case Q11 -> {
+									fachbelegung.Q11_Kursart = funcGetKursart.apply(sld, halbjahr);
+									fachbelegung.Q11_Punkte = funcGetNotenpunkte.apply(sld.NotenKrz);
+								}
+								case Q12 -> {
+									fachbelegung.Q12_Kursart = funcGetKursart.apply(sld, halbjahr);
+									fachbelegung.Q12_Punkte = funcGetNotenpunkte.apply(sld.NotenKrz);
+								}
+								case Q21 -> {
+									fachbelegung.Q21_Kursart = funcGetKursart.apply(sld, halbjahr);
+									fachbelegung.Q21_Punkte = funcGetNotenpunkte.apply(sld.NotenKrz);
+								}
+								case Q22 -> {
+									fachbelegung.Q22_Kursart = funcGetKursart.apply(sld, halbjahr);
+									fachbelegung.Q22_Punkte = funcGetNotenpunkte.apply(sld.NotenKrz);
+								}
+							}
+						}
+					}
+				}
+				conn.transactionBegin();
+				for (long schueler_id : schuelerfachbelegungen.keySet()) {
+					HashMap<Long, DTOGostSchuelerFachbelegungen> fachbelegungen = schuelerfachbelegungen.get(schueler_id);
+					if (!conn.transactionPersist(new DTOGostSchueler(schueler_id, false)))
+						return OperationError.INTERNAL_SERVER_ERROR.getResponse();
+					for (long fach_id : fachbelegungen.keySet()) {
+						if (!conn.transactionPersist(fachbelegungen.get(fach_id)))
+							return OperationError.INTERNAL_SERVER_ERROR.getResponse();
+					}
+				}
+				if (!conn.transactionCommit())
+					return OperationError.INTERNAL_SERVER_ERROR.getResponse();
+			}
+		}
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(abiturjahr).build();
 	}
+
+	private Function<Note, String> funcGetNotenpunkte = (Note note) -> {
+		if (note == null)
+			return null;
+		if (note.istNote())
+			return "" + note.notenpunkte;
+		return switch (note) {
+			case ATTEST, E1_MIT_BESONDEREM_ERFOLG_TEILGENOMMEN, E2_MIT_ERFOLG_TEILGENOMMEN, E3_TEILGENOMMEN -> note.kuerzel;
+			default -> null;
+		};
+	};
+	
+	private BiFunction<DTOSchuelerLeistungsdaten, GostHalbjahr, String> funcGetKursart = (DTOSchuelerLeistungsdaten sld, GostHalbjahr halbjahr) -> {
+		GostKursart kursart = GostKursart.fromKuerzel(sld.KursartAllg);
+		ZulaessigeKursart zulkursart = ZulaessigeKursart.getByASDKursart(sld.Kursart);
+		if ((kursart == null) || (zulkursart == null))
+			return null;
+		if (((kursart == GostKursart.LK) || kursart == GostKursart.GK) && (sld.NotenKrz == Note.ATTEST))
+			return "AT";
+		return switch (kursart) {
+			case LK -> "LK";
+			case GK -> ((zulkursart == ZulaessigeKursart.GKS) || ((zulkursart == ZulaessigeKursart.AB3) || ((zulkursart == ZulaessigeKursart.AB3) && (halbjahr != GostHalbjahr.Q22)))) ? "S" : "M";
+			case ZK -> "ZK";
+			case PJK -> "M";
+			case VTF -> "M";
+		};		
+	};
 	
 }
