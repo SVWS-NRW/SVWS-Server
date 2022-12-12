@@ -230,7 +230,7 @@
 		<template #modalTitle>Alle Kurswahlen löschen</template>
 		<template #modalDescription>
 			<div class="flex gap-1 mb-2">
-				Sollen alle Kurswahlen, die bisher noch nicht bewertet wurden, gelöscht werden?
+				Sollen die Fachwahlen der noch in Planung befindlichen Halbjahre gelöscht werden?
 			</div>
 			<div class="flex gap-1">
 				<svws-ui-button @click="toggle_modal">Abbrechen</svws-ui-button>
