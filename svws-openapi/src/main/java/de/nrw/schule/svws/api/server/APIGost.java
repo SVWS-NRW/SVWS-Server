@@ -447,12 +447,11 @@ public class APIGost {
     public Response getGostSchuelerPDFWahlbogen(@PathParam("schema") String schema, @PathParam("id") long id, @Context HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeinformationen
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN)) {
-    		return (new DataGostSchuelerLaufbahnplanung(conn)).getPDFWahlbogen(id);
+    		return DataGostSchuelerLaufbahnplanung.getPDFWahlbogen(conn, id);
     	}
     }
 
 
-    
     /**
      * Die OpenAPI-Methode für die Abfrage einer Fachwahl der Gymnasialen Oberstufe eines Schülers.
      *  

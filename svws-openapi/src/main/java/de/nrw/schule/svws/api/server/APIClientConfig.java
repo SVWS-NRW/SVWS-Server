@@ -14,10 +14,9 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
-
-import de.nrw.schule.svws.api.JSONMapper;
 import de.nrw.schule.svws.api.OpenAPIApplication;
 import de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenz;
+import de.nrw.schule.svws.data.JSONMapper;
 import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.dto.current.svws.client.DTOClientKonfigurationBenutzer;
 import de.nrw.schule.svws.db.dto.current.svws.client.DTOClientKonfigurationGlobal;

@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import de.nrw.schule.svws.api.JSONMapper;
 import de.nrw.schule.svws.core.data.gost.Abiturdaten;
 import de.nrw.schule.svws.core.data.gost.GostSchuelerFachwahl;
 import de.nrw.schule.svws.core.types.Note;
@@ -14,6 +13,7 @@ import de.nrw.schule.svws.core.types.gost.GostKursart;
 import de.nrw.schule.svws.core.types.kurse.ZulaessigeKursart;
 import de.nrw.schule.svws.core.utils.gost.GostFaecherManager;
 import de.nrw.schule.svws.data.DataManager;
+import de.nrw.schule.svws.data.JSONMapper;
 import de.nrw.schule.svws.data.schule.DataSchuleStammdaten;
 import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.dto.current.gost.DTOGostJahrgangsdaten;
@@ -271,11 +271,12 @@ public class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 	 * Erstellt das PDF-Dokument für den Wahlbogen zu der Laufbahn 
 	 * eines Schülers der gymnasialen Oberstufe.
 	 * 
+	 * @param conn          die Datenbank-Verbindung 
 	 * @param schueler_id   die ID des Schülers 
 	 * 
 	 * @return die HTTP-Response mit dem PDF-Dokument
 	 */
-	public Response getPDFWahlbogen(Long schueler_id) {
+	public static Response getPDFWahlbogen(DBEntityManager conn, Long schueler_id) {
 		// Lese die Laufbahndaten aus der DB
 		if (schueler_id == null)
 	    	return OperationError.NOT_FOUND.getResponse();

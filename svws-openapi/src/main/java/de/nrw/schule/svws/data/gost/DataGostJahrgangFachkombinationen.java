@@ -7,13 +7,13 @@ import java.util.Map.Entry;
 import java.util.Vector;
 import java.util.function.Function;
 
-import de.nrw.schule.svws.api.JSONMapper;
 import de.nrw.schule.svws.core.data.gost.GostFach;
 import de.nrw.schule.svws.core.data.gost.GostJahrgangFachkombination;
 import de.nrw.schule.svws.core.types.gost.GostKursart;
 import de.nrw.schule.svws.core.types.gost.GostLaufbahnplanungFachkombinationTyp;
 import de.nrw.schule.svws.core.utils.gost.GostFaecherManager;
 import de.nrw.schule.svws.data.DataManager;
+import de.nrw.schule.svws.data.JSONMapper;
 import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.dto.current.gost.DTOGostJahrgangFachkombinationen;
 import de.nrw.schule.svws.db.dto.current.schild.faecher.DTOFach;

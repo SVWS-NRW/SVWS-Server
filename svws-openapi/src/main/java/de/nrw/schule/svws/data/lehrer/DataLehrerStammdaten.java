@@ -9,13 +9,12 @@ import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
-
-import de.nrw.schule.svws.api.JSONMapper;
 import de.nrw.schule.svws.core.data.lehrer.LehrerStammdaten;
 import de.nrw.schule.svws.core.types.Geschlecht;
 import de.nrw.schule.svws.core.types.PersonalTyp;
 import de.nrw.schule.svws.core.types.schule.Nationalitaeten;
 import de.nrw.schule.svws.data.DataManager;
+import de.nrw.schule.svws.data.JSONMapper;
 import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.dto.current.schild.katalog.DTOOrtsteil;
 import de.nrw.schule.svws.db.dto.current.schild.lehrer.DTOLehrer;

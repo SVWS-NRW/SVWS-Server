@@ -3,7 +3,6 @@ package de.nrw.schule.svws.api.server;
 import java.io.InputStream;
 import java.util.List;
 
-import de.nrw.schule.svws.api.JSONMapper;
 import de.nrw.schule.svws.api.OpenAPIApplication;
 import de.nrw.schule.svws.core.data.benutzer.BenutzerDaten;
 import de.nrw.schule.svws.core.data.benutzer.BenutzerKompetenzGruppenKatalogEintrag;
@@ -13,6 +12,7 @@ import de.nrw.schule.svws.core.data.benutzer.BenutzergruppeDaten;
 import de.nrw.schule.svws.core.data.benutzer.BenutzergruppeListeEintrag;
 import de.nrw.schule.svws.core.data.gost.GostBlockungSchiene;
 import de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenz;
+import de.nrw.schule.svws.data.JSONMapper;
 import de.nrw.schule.svws.data.benutzer.DataBenutzerDaten;
 import de.nrw.schule.svws.data.benutzer.DataBenutzergruppeDaten;
 import de.nrw.schule.svws.data.benutzer.DataBenutzergruppeliste;

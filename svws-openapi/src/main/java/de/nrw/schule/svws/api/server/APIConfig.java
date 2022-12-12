@@ -4,10 +4,10 @@ import java.security.KeyStoreException;
 import java.security.cert.Certificate;
 import java.util.List;
 
-import de.nrw.schule.svws.api.JSONMapper;
 import de.nrw.schule.svws.api.SVWSVersion;
 import de.nrw.schule.svws.config.SVWSKonfiguration;
 import de.nrw.schule.svws.core.data.db.DBSchemaListeEintrag;
+import de.nrw.schule.svws.data.JSONMapper;
 import de.nrw.schule.svws.db.utils.OperationError;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
