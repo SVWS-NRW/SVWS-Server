@@ -82,6 +82,7 @@
 					</template>
 				</svws-ui-table>
 				<svws-ui-table
+					v-if="rows_ergebnisse.size()>0"
 					v-model="selected_ergebnis"
 					v-model:selection="selected_ergebnisse"
 					is-multi-select
@@ -105,7 +106,8 @@
 						</div>
 					</template>
 					<template #footer>
-						<svws-ui-button @click="remove_ergebnisse" type="danger" size="small">
+						<span v-if="selected_ergebnisse.length === rows_ergebnisse.size()">Mindestens ein Ergebnis behalten!</span>
+						<svws-ui-button @click="remove_ergebnisse" type="danger" size="small" :disabled="selected_ergebnisse.length > 0 && selected_ergebnisse.length < rows_ergebnisse.size() - 1">
 							Auswahl löschen
 						</svws-ui-button>
 					</template>
