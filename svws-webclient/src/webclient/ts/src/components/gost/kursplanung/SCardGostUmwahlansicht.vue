@@ -54,7 +54,7 @@
 							/>
 					</table>
 					<template v-if="!blockung_aktiv">
-						<div class="flex items-center justify-center bg-slate-100">
+						<div class="flex items-center justify-center bg-slate-100" :class="{'bg-red-400 text-white': active}">
 							<i-ri-delete-bin-2-line class="m-2 text-4xl" :class="{ 'text-red-700': is_dragging }" />
 						</div>
 						<div class="flex items-center justify-center bg-slate-100 py-2">

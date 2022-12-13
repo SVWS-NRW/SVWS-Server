@@ -24,6 +24,7 @@
 			<td></td> </template>
 		<drop-data v-if="!blockung_aktiv"
 			v-for="(schiene) in schienen"
+			v-slot="{ active }"
 			:key="schiene.id"
 			class="border border-[#7f7f7f]/20 text-center"
 			:class="{'border-t-2': setze_kursdifferenz, 'bg-yellow-200': drag_data.kurs?.id === kurs.id && drag_data.schiene?.id !== schiene.id, 'bg-slate-500': schiene_gesperrt(schiene)}"
@@ -36,12 +37,12 @@
 				:data="{kurs, schiene}"
 				class="select-none whitespace-nowrap"
 				:draggable="true"
-				:class="{'bg-slate-500': schiene_gesperrt(schiene) }"
+				:class="{'bg-slate-500': schiene_gesperrt(schiene)}"
 				:style="{ 'background-color': schiene_gesperrt(schiene)? '':bgColor}"
 				@drag-start="drag_started"
 				@dragEnd="drag_ended"
 			>
-				<svws-ui-badge size="tiny" class="cursor-grab" :variant="selected_kurs ? 'primary' : fixier_regeln.length ? 'error' : 'highlight'" @click="toggle_active_kurs">
+				<svws-ui-badge size="tiny" class="cursor-grab" :variant="selected_kurs ? 'primary' : fixier_regeln.length ? 'error' : active && drag_data?.kurs?.id !== kurs.id ? 'success' : 'highlight'" @click="toggle_active_kurs">
 					{{ kurs_blockungsergebnis?.schueler.size() }}
 					<svws-ui-icon class="cursor-pointer" @click="fixieren_regel_toggle" >
 						<i-ri-pushpin-fill v-if="fixier_regeln.length" class="inline-block"/>
@@ -49,10 +50,12 @@
 				</svws-ui-badge>
 			</drag-data>
 			<template v-else>
-				<svws-ui-icon class="cursor-pointer px-4 py-2" @click="sperren_regel_toggle(schiene)">
-					<i-ri-forbid-fill v-if="sperr_regeln.find(r=>r.parameter.get(1) === ermittel_parent_schiene(schiene).nummer)" class="inline-block text-red-500" />
-					<i-ri-forbid-line v-if="allow_regeln && !sperr_regeln.find(r=>r.parameter.get(1) === ermittel_parent_schiene(schiene).nummer)" class="inline-block opacity-0 hover:opacity-25" />
-				</svws-ui-icon>
+				<div :class="{'bg-green-400': active && drag_data?.schiene?.id !== schiene.id && drag_data.kurs?.id === kurs.id && drag_data.schiene?.id !== schiene.id}">
+					<svws-ui-icon class="cursor-pointer px-4 py-2" @click="sperren_regel_toggle(schiene)">
+						<i-ri-forbid-fill v-if="sperr_regeln.find(r=>r.parameter.get(1) === ermittel_parent_schiene(schiene).nummer)" class="inline-block text-red-500" />
+						<i-ri-forbid-line v-if="allow_regeln && !sperr_regeln.find(r=>r.parameter.get(1) === ermittel_parent_schiene(schiene).nummer)" class="inline-block opacity-0 hover:opacity-25" />
+					</svws-ui-icon>
+				</div>
 			</template>
 		</drop-data>
 		<!-- Es dürfen keine Regeln erstellt werden -->
