@@ -60,7 +60,7 @@
 		</drop-data>
 		<!-- Es dürfen keine Regeln erstellt werden -->
 		<template v-else v-for="schiene in schienen" :key="schiene.nummer">
-			<td class="border border-[#7f7f7f]/20 text-center py-1" :class="{ 'border-t-2': setze_kursdifferenz }" >
+			<td class="border border-[#7f7f7f]/20 text-center py-1 select-none whitespace-nowrap" :class="{ 'border-t-2': setze_kursdifferenz }" >
 				<svws-ui-badge
 					v-if="kurs_schiene_zugeordnet(schiene)"
 					size="tiny" :variant="selected_kurs?'primary':'highlight'" class="cursor-pointer"
@@ -76,8 +76,7 @@
 		<template v-if="setze_kursdifferenz && kurs_blockungsergebnis && allow_regeln">
 			<td class="border border-[#7f7f7f]/20 text-center border-t-2 whitespace-nowrap w-2"
 				:rowspan="kursdifferenz[0]" :colspan="kurszahl_anzeige?2:1" @click="toggle_kurszahl_anzeige">
-				<div v-if="kurszahl_anzeige"
-					class="cursor-pointer rounded-lg bg-slate-100 px-2">
+				<div v-if="kurszahl_anzeige" class="cursor-pointer rounded-lg bg-slate-100 px-2">
 					<span @click="del_kurs">-</span>
 					<span class="px-2">{{kursdifferenz[2]}}</span>
 					<span @click="add_kurs">+</span>
