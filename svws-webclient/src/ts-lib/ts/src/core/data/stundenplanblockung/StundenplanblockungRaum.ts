@@ -7,8 +7,6 @@ export class StundenplanblockungRaum extends JavaObject {
 
 	public kuerzel : String = "";
 
-	public maxSuS : number = -1;
-
 
 	public constructor() {
 		super();
@@ -27,9 +25,6 @@ export class StundenplanblockungRaum extends JavaObject {
 		if (typeof obj.kuerzel === "undefined")
 			 throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = String(obj.kuerzel);
-		if (typeof obj.maxSuS === "undefined")
-			 throw new Error('invalid json format, missing attribute maxSuS');
-		result.maxSuS = obj.maxSuS;
 		return result;
 	}
 
@@ -37,7 +32,6 @@ export class StundenplanblockungRaum extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
 		result += '"kuerzel" : ' + '"' + obj.kuerzel.valueOf() + '"' + ',';
-		result += '"maxSuS" : ' + obj.maxSuS + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -50,9 +44,6 @@ export class StundenplanblockungRaum extends JavaObject {
 		}
 		if (typeof obj.kuerzel !== "undefined") {
 			result += '"kuerzel" : ' + '"' + obj.kuerzel.valueOf() + '"' + ',';
-		}
-		if (typeof obj.maxSuS !== "undefined") {
-			result += '"maxSuS" : ' + obj.maxSuS + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

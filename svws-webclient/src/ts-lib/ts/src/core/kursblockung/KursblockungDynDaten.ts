@@ -993,18 +993,16 @@ export class KursblockungDynDaten extends JavaObject {
 	 *Verteilt alle Kurse auf ihre Schienen zufällig. Kurse die keinen Freiheitsgrad haben, werden dabei ignoriert. 
 	 */
 	aktionKurseFreieZufaelligVerteilen() : void {
-		for (let kurs of this.kursArrFrei) {
+		for (let kurs of this.kursArrFrei) 
 			kurs.aktionZufaelligVerteilen();
-		}
 	}
 
 	/**
 	 *Verteilt einen Kurs zufällig. Kurse die keinen Freiheitsgrad haben, werden dabei ignoriert. 
 	 */
 	aktionKursVerteilenEinenZufaelligenFreien() : void {
-		if (this.kursArrFrei.length === 0) {
+		if (this.kursArrFrei.length === 0) 
 			return;
-		}
 		let index : number = this._random.nextInt(this.kursArrFrei.length);
 		let kurs : KursblockungDynKurs = this.kursArrFrei[index];
 		kurs.aktionZufaelligVerteilen();

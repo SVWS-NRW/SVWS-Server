@@ -23,7 +23,4 @@ public class StundenplanblockungLehrkraft {
 	/** Das Kürzel der Lehrkraft. Beispielsweise 'BAR'. */
 	public @NotNull String kuerzel = "";
 
-	/** TRUE, falls die Lehrkraft prinzipiell vertreten dürfte. */
-	public boolean darfVertreten = false;
-
 }

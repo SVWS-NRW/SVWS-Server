@@ -23,7 +23,4 @@ public class StundenplanblockungRaum {
 	/** Das Kürzel des Raumes. Beispielsweise 'E21'. */
 	public @NotNull String kuerzel = "";
 
-	/** Die maximale Anzahl an SuS, die im Raum Platz haben. */
-	public int maxSuS = -1;
-
 }

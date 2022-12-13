@@ -75,7 +75,7 @@ public class KursblockungAlgorithmus
 
 			}
 			// Nächster Durchgang hat mehr Zeit.
-			zeitProK += 100;
+			zeitProK *= 2;
 		} while (System.currentTimeMillis() < zeitEndeGesamt);
 
 		// Logger-Einrückung (relativ -4)
@@ -91,6 +91,7 @@ public class KursblockungAlgorithmus
 
 		// Verteilung der Kurse.
 		kursblockungAlgorithmusK.berechne(zeitEndeK);
+		// dynDaten.gibStatistik().debug("berechne:" );
 
 		// Verteilung der SuS (nur die beste Verteilung bleibt im Zustand K).
 		dynDaten.aktionZustandSpeichernK();

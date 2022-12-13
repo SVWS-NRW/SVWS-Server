@@ -1,6 +1,7 @@
 package de.nrw.schule.svws.core.kursblockung.test;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 
 import de.nrw.schule.svws.base.CsvReader;
 import de.nrw.schule.svws.base.kurs42.Kurs42DataBlockplan;
@@ -51,6 +52,7 @@ public class Kurs42Converter {
 		HashMap<String, GostBlockungKurs> mapKurse = new HashMap<>();
 		HashMap<String, Schueler> mapSchueler = new HashMap<>();
 		HashMap<String, GostFachwahl> mapFachwahlen = new HashMap<>();
+		HashMap<String, LinkedList<GostBlockungKurs>> mapFachart = new HashMap<>();
 		HashMap<Long, GostBlockungRegel> mapRegeln = new HashMap<>();
 
 		// Einlesen der Schüler-Objekte
@@ -96,10 +98,16 @@ public class Kurs42Converter {
 				mapKursarten.put(sKursartKuerzel, gKursart);
 			}
 
+			// Neue Fachart? --> Map
+			String sFachart = sFachKuerzel + ";"+sKursartKuerzel;
+			if (mapFachart.containsKey(sFachart) == false)
+				mapFachart.put(sFachart, new LinkedList<>());
+			
 			// Neuen Kurs erzeugen. Dem Map und Vector hinzufügen.
 			GostBlockungKurs gKurs = new GostBlockungKurs();
+			mapFachart.get(sFachart).addLast(gKurs);
 			gKurs.id = mapKurse.size();
-			gKurs.nummer = 1; // TODO BAR sinnvolle nr?
+			gKurs.nummer = mapFachart.get(sFachart).size();
 			// System.out.println("Kursname "+sKursname+" --> "+gKurs.id);
 			gKurs.fach_id = mapFaecher.get(sFachKuerzel).id;
 			gKurs.kursart = mapKursarten.get(sKursartKuerzel).id;

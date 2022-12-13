@@ -1,10 +1,13 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
 import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
 import { StundenplanblockungFach, cast_de_nrw_schule_svws_core_data_stundenplanblockung_StundenplanblockungFach } from '../../../core/data/stundenplanblockung/StundenplanblockungFach';
+import { StundenplanblockungRegelTyp, cast_de_nrw_schule_svws_core_data_stundenplanblockung_StundenplanblockungRegelTyp } from '../../../core/data/stundenplanblockung/StundenplanblockungRegelTyp';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
+import { StundenplanblockungStundenelement, cast_de_nrw_schule_svws_core_data_stundenplanblockung_StundenplanblockungStundenelement } from '../../../core/data/stundenplanblockung/StundenplanblockungStundenelement';
 import { Comparator, cast_java_util_Comparator } from '../../../java/util/Comparator';
 import { StundenplanblockungLehrkraft, cast_de_nrw_schule_svws_core_data_stundenplanblockung_StundenplanblockungLehrkraft } from '../../../core/data/stundenplanblockung/StundenplanblockungLehrkraft';
 import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
+import { StundenplanblockungRegel, cast_de_nrw_schule_svws_core_data_stundenplanblockung_StundenplanblockungRegel } from '../../../core/data/stundenplanblockung/StundenplanblockungRegel';
 import { StundenplanblockungKopplung, cast_de_nrw_schule_svws_core_data_stundenplanblockung_StundenplanblockungKopplung } from '../../../core/data/stundenplanblockung/StundenplanblockungKopplung';
 import { StundenplanblockungKlasse, cast_de_nrw_schule_svws_core_data_stundenplanblockung_StundenplanblockungKlasse } from '../../../core/data/stundenplanblockung/StundenplanblockungKlasse';
 import { NullPointerException, cast_java_lang_NullPointerException } from '../../../java/lang/NullPointerException';
@@ -13,6 +16,7 @@ import { StundenplanblockungInput, cast_de_nrw_schule_svws_core_data_stundenplan
 import { StundenplanblockungLerngruppe, cast_de_nrw_schule_svws_core_data_stundenplanblockung_StundenplanblockungLerngruppe } from '../../../core/data/stundenplanblockung/StundenplanblockungLerngruppe';
 import { List, cast_java_util_List } from '../../../java/util/List';
 import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
+import { IllegalArgumentException, cast_java_lang_IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
 import { StundenplanblockungRaum, cast_de_nrw_schule_svws_core_data_stundenplanblockung_StundenplanblockungRaum } from '../../../core/data/stundenplanblockung/StundenplanblockungRaum';
 
 export class StundenplanblockungManager extends JavaObject {
@@ -105,22 +109,30 @@ export class StundenplanblockungManager extends JavaObject {
 	 * @param pLehrkraft             Das Lehrkraft-Objekt.
 	 * @throws NullPointerException  Falls die Lehrkraft-ID bereits existiert.
 	 */
-	public lehrkraftAdd(pLehrkraft : StundenplanblockungLehrkraft) : void {
-		this.lehrkraftAddOhneSortierung(pLehrkraft);
-		this._daten.lehrkraefte.sort(StundenplanblockungManager._comp_lehrkraft_kuerzel);
-	}
+	public lehrkraftAdd(pLehrkraft : StundenplanblockungLehrkraft) : void;
 
 	/**
-	 * Fügt alle Lehrkräfte hinzu. <br>
+	 * Fügt alle Lehrkräfte hinzu ohne diese zu sortieren. <br>
 	 * Wirft eine NullPointerException, falls eine der Lehrkräfte bereits existiert. 
 	 * 
 	 * @param pLehrkraefte           Die Menge der Lehrkräfte, die hinzugefügt werden soll.
 	 * @throws NullPointerException  Falls eine der Lehrkräfte bereits existiert.
 	 */
-	public lehrkraftAddAll(pLehrkraefte : List<StundenplanblockungLehrkraft>) : void {
-		for (let lehrkraft of pLehrkraefte) 
-			this.lehrkraftAddOhneSortierung(lehrkraft);
-		this._daten.lehrkraefte.sort(StundenplanblockungManager._comp_lehrkraft_kuerzel);
+	public lehrkraftAdd(pLehrkraefte : List<StundenplanblockungLehrkraft>) : void;
+
+	/**
+	 * Implementation for method overloads of 'lehrkraftAdd'
+	 */
+	public lehrkraftAdd(__param0 : List<StundenplanblockungLehrkraft> | StundenplanblockungLehrkraft) : void {
+		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.data.stundenplanblockung.StundenplanblockungLehrkraft'))))) {
+			let pLehrkraft : StundenplanblockungLehrkraft = cast_de_nrw_schule_svws_core_data_stundenplanblockung_StundenplanblockungLehrkraft(__param0);
+			this.lehrkraftAddOhneSortierung(pLehrkraft);
+			this._daten.lehrkraefte.sort(StundenplanblockungManager._comp_lehrkraft_kuerzel);
+		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('java.util.List'))) || (__param0 === null))) {
+			let pLehrkraefte : List<StundenplanblockungLehrkraft> = cast_java_util_List(__param0);
+			for (let lehrkraft of pLehrkraefte) 
+				this.lehrkraftAddOhneSortierung(lehrkraft);
+		} else throw new Error('invalid method overload');
 	}
 
 	/**
@@ -164,6 +176,18 @@ export class StundenplanblockungManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert die Anzahl an Wochenstunden der Lehrkraft. 
+	 * Wirft eine NullPointerException, falls die Lehrkraft-ID unbekannt ist.
+	 * 
+	 * @param pLehrkraft             Das {@link StundenplanblockungLehrkraft}-Objekt.
+	 * @return                       Eine Map der Lerngruppen der Lehrkraft.
+	 * @throws NullPointerException  Falls die Lehrkraft-ID unbekannt ist.
+	 */
+	public lehrkraftGetWochenstunden(pLehrkraft : StundenplanblockungLehrkraft) : number {
+		return 0;
+	}
+
+	/**
 	 * Liefert die Menge aller Lehrkräfte sortiert nach dem Kürzel.
 	 * 
 	 * @return Die Menge aller Lehrkräfte sortiert nach dem Kürzel.
@@ -197,19 +221,6 @@ export class StundenplanblockungManager extends JavaObject {
 		let lehrkraft : StundenplanblockungLehrkraft = this.lehrkraftGet(pLehrkraftID);
 		lehrkraft.kuerzel = pKuerzel;
 		this._daten.lehrkraefte.sort(StundenplanblockungManager._comp_lehrkraft_kuerzel);
-	}
-
-	/**
-	 * Ändert, ob die Lehrkraft prinzipiell vertreten dürfte. <br>
-	 * Wirft eine NullPointerException, falls die Lehrkraft-ID unbekannt ist.
-	 * 
-	 * @param pLehrkraftID           Die Datenbank-ID der Lehrkraft.
-	 * @param pDarfVertreten         TRUE, falls die Lehrkraft prinzipiell vertreten dürfte.
-	 * @throws NullPointerException  Falls die Lehrkraft-ID unbekannt ist.
-	 */
-	public lehrkraftSetDarfVertreten(pLehrkraftID : number, pDarfVertreten : boolean) : void {
-		let lehrkraft : StundenplanblockungLehrkraft = this.lehrkraftGet(pLehrkraftID);
-		lehrkraft.darfVertreten = pDarfVertreten;
 	}
 
 	private klasseAddOhneSortierung(pKlasse : StundenplanblockungKlasse) : void {
@@ -601,8 +612,36 @@ export class StundenplanblockungManager extends JavaObject {
 	private lerngruppeAddOhneSortierung(pLerngruppe : StundenplanblockungLerngruppe) : void {
 		if (this._map_id_lerngruppe.containsKey(pLerngruppe.id)) 
 			throw new NullPointerException("Lerngruppe-ID " + pLerngruppe.id + " existiert bereits!")
+		for (let lehrkraft1 of pLerngruppe.lehrkraefte1) 
+			if (this.lehrkraftExists(lehrkraft1.id) === false) 
+				throw new NullPointerException("Lehrkraft-ID " + lehrkraft1.id + " existiert nicht!")
+		for (let lehrkraft2 of pLerngruppe.lehrkraefte2) 
+			if (this.lehrkraftExists(lehrkraft2.id) === false) 
+				throw new NullPointerException("Lehrkraft-ID " + lehrkraft2.id + " existiert nicht!")
+		for (let klasse of pLerngruppe.klassen) 
+			if (this.klasseExists(klasse.id) === false) 
+				throw new NullPointerException("Klasse-ID " + klasse.id + " existiert nicht!")
+		for (let fach of pLerngruppe.faecher) 
+			if (this.fachExists(fach.id) === false) 
+				throw new NullPointerException("Fach-ID " + fach.id + " existiert nicht!")
+		for (let raum1 of pLerngruppe.raeume1) 
+			if (this.raumExists(raum1.id) === false) 
+				throw new NullPointerException("Raum-ID " + raum1.id + " existiert nicht!")
+		for (let raum2 of pLerngruppe.raeume2) 
+			if (this.raumExists(raum2.id) === false) 
+				throw new NullPointerException("Raum-ID " + raum2.id + " existiert nicht!")
+		for (let kopplung of pLerngruppe.kopplungen) 
+			if (this.kopplungExists(kopplung.id) === false) 
+				throw new NullPointerException("Kopplung-ID " + kopplung.id + " existiert nicht!")
+		for (let stundenelement of pLerngruppe.stundenelemente) 
+			if (this.stundenelementExists(stundenelement.id) === false) 
+				throw new NullPointerException("Stundenelement-ID " + stundenelement.id + " existiert nicht!")
 		this._map_id_lerngruppe.put(pLerngruppe.id, pLerngruppe);
 		this._daten.lerngruppen.add(pLerngruppe);
+	}
+
+	private stundenelementExists(pStundenelementID : number) : boolean {
+		return true;
 	}
 
 	/**
@@ -699,53 +738,67 @@ export class StundenplanblockungManager extends JavaObject {
 	}
 
 	/**
-	 * Diese Methode überprüft alle Datenstrukturen auf ihre Konsistenz.
-	 * Liefert TRUE, falls die Daten in Ordnung (konsistent) sind.
+	 * Fügt die Regel hinzu.
 	 * 
-	 * @return TRUE, falls die Daten in Ordnung (konsistent) sind.
+	 * @param pRegel Das Regel-Objekt.
 	 */
-	public miscCheckConsistency() : boolean {
+	public regelAdd(pRegel : StundenplanblockungRegel) : void {
+		let typ : StundenplanblockungRegelTyp | null = StundenplanblockungRegelTyp.fromRegel(pRegel);
+		switch (typ) {
+			case StundenplanblockungRegelTyp.SCHULE_TAGE_PRO_WOCHE: {
+				break;
+			}
+			default: 
+				throw new IllegalArgumentException("Unexpected value: " + typ)
+		}
+	}
+
+	/**
+	 * Diese Methode überprüft alle Datenstrukturen auf ihre Konsistenz.
+	 * 
+	 * @throws NullPointerException  Falls eine Inkonsistenz in den Daten gefunden wurde. 
+	 */
+	public miscCheckConsistencyOrException() : void {
 		if (this._daten.lehrkraefte.size() !== this._map_lehrkraftID_lehrkraft.size()) 
-			return false;
+			throw new NullPointerException()
 		for (let lehrkraft of this._daten.lehrkraefte) 
 			if (this._map_lehrkraftID_lehrkraft.get(lehrkraft.id) as unknown !== lehrkraft as unknown) 
-				return false;
+				throw new NullPointerException()
 		for (let i : number = 1; i < this._daten.lehrkraefte.size(); i++)
 			if (StundenplanblockungManager._comp_lehrkraft_kuerzel.compare(this._daten.lehrkraefte.get(i - 1), this._daten.lehrkraefte.get(i)) > 0) 
-				return false;
+				throw new NullPointerException()
 		if (this._daten.klassen.size() !== this._map_klasseID_klasse.size()) 
-			return false;
+			throw new NullPointerException()
 		for (let klasse of this._daten.klassen) 
 			if (this._map_klasseID_klasse.get(klasse.id) as unknown !== klasse as unknown) 
-				return false;
+				throw new NullPointerException()
 		for (let i : number = 1; i < this._daten.klassen.size(); i++)
 			if (StundenplanblockungManager._comp_klasse_kuerzel.compare(this._daten.klassen.get(i - 1), this._daten.klassen.get(i)) > 0) 
-				return false;
+				throw new NullPointerException()
 		if (this._daten.faecher.size() !== this._map_id_fach.size()) 
-			return false;
+			throw new NullPointerException()
 		for (let fach of this._daten.faecher) 
 			if (this._map_id_fach.get(fach.id) as unknown !== fach as unknown) 
-				return false;
+				throw new NullPointerException()
 		for (let i : number = 1; i < this._daten.faecher.size(); i++)
 			if (StundenplanblockungManager._comp_fach_sortiernummer.compare(this._daten.faecher.get(i - 1), this._daten.faecher.get(i)) > 0) 
-				return false;
+				throw new NullPointerException()
 		if (this._daten.raeume.size() !== this._map_id_raum.size()) 
-			return false;
+			throw new NullPointerException()
 		for (let raum of this._daten.raeume) 
 			if (this._map_id_raum.get(raum.id) as unknown !== raum as unknown) 
-				return false;
+				throw new NullPointerException()
 		for (let i : number = 1; i < this._daten.raeume.size(); i++)
 			if (StundenplanblockungManager._comp_raum_kuerzel.compare(this._daten.raeume.get(i - 1), this._daten.raeume.get(i)) > 0) 
-				return false;
+				throw new NullPointerException()
 		if (this._daten.kopplungen.size() !== this._map_id_kopplung.size()) 
-			return false;
+			throw new NullPointerException()
 		for (let kopplung of this._daten.kopplungen) 
 			if (this._map_id_kopplung.get(kopplung.id) as unknown !== kopplung as unknown) 
-				return false;
+				throw new NullPointerException()
 		for (let i : number = 1; i < this._daten.kopplungen.size(); i++)
 			if (StundenplanblockungManager._comp_kopplung_kuerzel.compare(this._daten.kopplungen.get(i - 1), this._daten.kopplungen.get(i)) > 0) 
-				return false;
-		return true;
+				throw new NullPointerException()
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

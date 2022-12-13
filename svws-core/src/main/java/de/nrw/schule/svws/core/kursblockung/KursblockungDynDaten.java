@@ -1280,16 +1280,14 @@ public class KursblockungDynDaten {
 
 	/** Verteilt alle Kurse auf ihre Schienen zufällig. Kurse die keinen Freiheitsgrad haben, werden dabei ignoriert. */
 	void aktionKurseFreieZufaelligVerteilen() {
-		for (@NotNull KursblockungDynKurs kurs : kursArrFrei) {
+		for (@NotNull KursblockungDynKurs kurs : kursArrFrei) 
 			kurs.aktionZufaelligVerteilen();
-		}
 	}
 
 	/** Verteilt einen Kurs zufällig. Kurse die keinen Freiheitsgrad haben, werden dabei ignoriert. */
 	void aktionKursVerteilenEinenZufaelligenFreien() {
-		if (kursArrFrei.length == 0) {
+		if (kursArrFrei.length == 0) 
 			return;
-		}
 		int index = _random.nextInt(kursArrFrei.length);
 		@NotNull KursblockungDynKurs kurs = kursArrFrei[index];
 		kurs.aktionZufaelligVerteilen();

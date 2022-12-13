@@ -526,6 +526,59 @@ public class KursblockungTests {
 			check(kbInput, kbOutput);
 
 	}
+	
+	/**
+	 * Liest diese {@link #PFAD_DATEN_002} Daten ein. Definiert einige Regeln und explizit Regel 4, die 19 SuS in Kurs 0
+	 * fixiert. Lässt dann den Kursblockungsalgorithmus Kurse und SuS verteilen.
+	 */
+	@Test
+	@DisplayName("test003_regel_Kurs_mit_Kurs")
+	void test003_regel_Kurs_mit_Kurs() {
+
+		// Der Kursblockungsalgorithmus ist ein Service.
+		KursblockungAlgorithmus kbAlgorithmus = new KursblockungAlgorithmus();
+
+		// Logger vom Service übernehmen
+		Logger log = kbAlgorithmus.getLogger();
+
+		// Consumer triggert 'fail', wenn etwas kritisches geloggt wurde.
+		log.addConsumer(new Consumer<LogData>() {
+			@Override
+			public void accept(LogData t) {
+				if (t.getLevel().compareTo(LogLevel.APP) != 0)
+					fail(t.getText());
+			}
+		});
+
+		// Einlesen der Kurs42-Daten aus den Textdateien.
+		long maxTimeMillis = 1000 * 1;
+		boolean kurseFixieren = false;
+		
+		// Umwandlung von 'Kurs42Daten' zu 'KursblockungInput'.
+		Kurs42Converter k42Converter = new Kurs42Converter(log, PFAD_DATEN_002, maxTimeMillis, kurseFixieren);
+		@NotNull GostBlockungsdatenManager man = k42Converter.gibKursblockungInput();
+
+		// Weitere Regeln manuell hinzufügen.
+		// System.out.println(man.getNameOfKurs(1)+", "+man.getKurs(1).id);
+		// System.out.println(man.getNameOfKurs(2)+", "+man.getKurs(2).id);
+		
+		GostBlockungRegel regel = new GostBlockungRegel();
+		regel.id = 1;
+		regel.typ = GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS.typ;
+		regel.parameter.add(1L);
+		regel.parameter.add(2L);
+		man.addRegel(regel);
+
+		// Berechnung der Blockung und Rückgabe aller Blockungsergebnisse.
+		Vector<@NotNull GostBlockungsergebnisManager> kbOutputs = kbAlgorithmus.handle(man);
+
+		// Blockungsergebnisse vorhanden?
+		assert kbOutputs != null : "kbOutputs == null";
+
+		// Jedes einzelne Blockungsergebnis prüfen.
+		for (GostBlockungsergebnisManager kbOutput : kbOutputs)
+			check(man, kbOutput);
+	}
 
 	private static void check(@NotNull GostBlockungsdatenManager kbInput, GostBlockungsergebnisManager kbOutput) {
 		assert kbInput != null : "kbInput == null";

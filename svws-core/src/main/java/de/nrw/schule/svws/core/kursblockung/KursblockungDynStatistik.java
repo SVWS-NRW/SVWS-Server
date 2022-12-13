@@ -38,8 +38,8 @@ public class KursblockungDynStatistik {
 	/** Die aktuelle Bewertung der Fachart-Paare aller Schienen. */
 	private long bewertungFachartPaar;
 
-	/** Zum Speichern des Wertes von {@link KursblockungDynStatistik#bewertungFachartPaar} auf Schüler-Ebene. */
-	private long bewertungFachartPaarSaveS;
+//	/** Zum Speichern des Wertes von {@link KursblockungDynStatistik#bewertungFachartPaar} auf Schüler-Ebene. */
+//	private long bewertungFachartPaarSaveS;
 
 	/** Zum Speichern des Wertes von {@link KursblockungDynStatistik#bewertungFachartPaar} auf Kurs-Ebene. */
 	private long bewertungFachartPaarSaveK;
@@ -97,7 +97,7 @@ public class KursblockungDynStatistik {
 		bewertungRegelverletzungenSaveG = 0;
 		
 		bewertungFachartPaar = 0;
-		bewertungFachartPaarSaveS = 0;
+		// bewertungFachartPaarSaveS = 0;
 		bewertungFachartPaarSaveK = 0;
 		bewertungFachartPaarSaveG = 0;
 		
@@ -153,7 +153,7 @@ public class KursblockungDynStatistik {
 	 * @param pPrefix Ein String-Prefix vor der Ausgabe. 
 	 */
 	void debug(@NotNull String pPrefix) {
-		System.out.println(pPrefix + ", NW = " + bewertungRegelverletzungen 
+		System.out.println(pPrefix + ", RV = " + bewertungRegelverletzungen 
 				                   + ", NW = " + bewertungNichtwahlen 
 				                   + ", FW = " + bewertungFachartPaar 
 				                   + ", KDs = "+ bewertungKursdifferenzenMaxIndex + " = " + Arrays.toString(bewertungKursdifferenzen));
@@ -303,37 +303,37 @@ public class KursblockungDynStatistik {
 		return 0;
 	}
 
-	/** 
-	 * Liefert den Wert {@code true}, falls die Bewertung (bewertungFachartPaar) des Zustandes S sich verschlechtert hat.
-	 * 
-	 * @return {@code true}, falls die Bewertung (bewertungFachartPaar) des Zustandes S sich verschlechtert hat. 
-	 */
-	boolean gibBewertungFachartPaarSchlechter() {
-		// FachartPaar schlechter?
-		if (bewertungFachartPaar > bewertungFachartPaarSaveS) 
-			return true;
-		// FachartPaar besser?
-		if (bewertungFachartPaar < bewertungFachartPaarSaveS) 
-			return false;
-		// Bewertungen identisch --> nicht schlechter
-		return false;
-	}
-
-	/** 
-	 * Liefert den Wert {@code true}, falls die Bewertung (bewertungFachartPaar) des Zustandes K sich verschlechtert hat.
-	 * 
-	 * @return {@code true}, falls die Bewertung (bewertungFachartPaar) des Zustandes K sich verschlechtert hat. 
-	 */
-	boolean gibBewertungFachartPaarSchlechterK() {
-		// FachartPaar schlechter?
-		if (bewertungFachartPaar > bewertungFachartPaarSaveK) 
-			return true;
-		// FachartPaar besser?
-		if (bewertungFachartPaar < bewertungFachartPaarSaveK) 
-			return false;
-		// Bewertungen identisch --> nicht schlechter
-		return false;
-	}
+//	/** 
+//	 * Liefert den Wert {@code true}, falls die Bewertung (bewertungFachartPaar) des Zustandes S sich verschlechtert hat.
+//	 * 
+//	 * @return {@code true}, falls die Bewertung (bewertungFachartPaar) des Zustandes S sich verschlechtert hat. 
+//	 */
+//	boolean gibBewertungFachartPaarSchlechter2() {
+//		// FachartPaar schlechter?
+//		if (bewertungFachartPaar > bewertungFachartPaarSaveS) 
+//			return true;
+//		// FachartPaar besser?
+//		if (bewertungFachartPaar < bewertungFachartPaarSaveS) 
+//			return false;
+//		// Bewertungen identisch --> nicht schlechter
+//		return false;
+//	}
+//
+//	/** 
+//	 * Liefert den Wert {@code true}, falls die Bewertung (bewertungFachartPaar) des Zustandes K sich verschlechtert hat.
+//	 * 
+//	 * @return {@code true}, falls die Bewertung (bewertungFachartPaar) des Zustandes K sich verschlechtert hat. 
+//	 */
+//	boolean gibBewertungFachartPaarSchlechterK2() {
+//		// FachartPaar schlechter?
+//		if (bewertungFachartPaar > bewertungFachartPaarSaveK) 
+//			return true;
+//		// FachartPaar besser?
+//		if (bewertungFachartPaar < bewertungFachartPaarSaveK) 
+//			return false;
+//		// Bewertungen identisch --> nicht schlechter
+//		return false;
+//	}
 
 	/** 
 	 * Liefert das Array bzw. das Histogramm der Kursdifferenzen.
@@ -351,10 +351,12 @@ public class KursblockungDynStatistik {
 	 * @param pKurs2 Der 2. Kurs des Kurs-Paares.
 	 */
 	void aktionKurspaarInSchieneHinzufuegen(@NotNull KursblockungDynKurs pKurs1, @NotNull KursblockungDynKurs pKurs2) {
-		int nr1 = pKurs1.gibFachart().gibNr();
-		int nr2 = pKurs2.gibFachart().gibNr();
-		bewertungFachartPaar += matrixFachartPaar[nr1][nr2];
-		bewertungRegelverletzungen += regelVerletzungKursMitKurs[nr1][nr2];
+		int faNr1 = pKurs1.gibFachart().gibNr();
+		int faNr2 = pKurs2.gibFachart().gibNr();
+		int kuNr1 = pKurs1.gibInternalID();
+		int kuNr2 = pKurs2.gibInternalID();
+		bewertungFachartPaar += matrixFachartPaar[faNr1][faNr2];
+		bewertungRegelverletzungen += regelVerletzungKursMitKurs[kuNr1][kuNr2];
 	}
 
 	/** 
@@ -364,10 +366,12 @@ public class KursblockungDynStatistik {
 	 * @param pKurs2 Der 2. Kurs des Kurs-Paares. 
 	 */
 	void aktionKurspaarInSchieneEntfernen(@NotNull KursblockungDynKurs pKurs1, @NotNull KursblockungDynKurs pKurs2) {
-		int nr1 = pKurs1.gibFachart().gibNr();
-		int nr2 = pKurs2.gibFachart().gibNr();
-		bewertungFachartPaar -= matrixFachartPaar[nr1][nr2];
-		bewertungRegelverletzungen -= regelVerletzungKursMitKurs[nr1][nr2];
+		int faNr1 = pKurs1.gibFachart().gibNr();
+		int faNr2 = pKurs2.gibFachart().gibNr();
+		int kuNr1 = pKurs1.gibInternalID();
+		int kuNr2 = pKurs2.gibInternalID();
+		bewertungFachartPaar -= matrixFachartPaar[faNr1][faNr2];
+		bewertungRegelverletzungen -= regelVerletzungKursMitKurs[kuNr1][kuNr2];
 	}
 
 	/** 
@@ -415,23 +419,17 @@ public class KursblockungDynStatistik {
 	}
 
 	/** 
-	 * Speichert die aktuellen Werte (im Zustand S). <br>
-	 * Die Methoden {@link KursblockungDynStatistik#gibBewertungZustandS_NW_KD()} und
-	 * {@link KursblockungDynStatistik#gibBewertungFachartPaarSchlechter} bedienen sich dann der ehemaligen Werte um
-	 * festzustellen, ob es eine Verschlechterung gab. 
+	 * Speichert die aktuellen Werte (im Zustand S).
 	 */
 	void aktionBewertungSpeichernS() {
 		bewertungRegelverletzungenSaveS = bewertungRegelverletzungen;
 		bewertungNichtwahlenSaveS = bewertungNichtwahlen;
-		bewertungFachartPaarSaveS = bewertungFachartPaar;
+//		bewertungFachartPaarSaveS = bewertungFachartPaar;
 		System.arraycopy(bewertungKursdifferenzen, 0, bewertungKursdifferenzenSaveS, 0, bewertungKursdifferenzen.length);
 	}
 
 	/** 
-	 * Speichert die aktuellen Werte (im Zustand K). <br>
-	 * Die Methoden {@link KursblockungDynStatistik#gibCompareZustandK_NW_KD_FW()} und
-	 * {@link KursblockungDynStatistik#gibBewertungFachartPaarSchlechter} bedienen sich dann der ehemaligen Werte um
-	 * festzustellen, ob es eine Verschlechterung gab. 
+	 * Speichert die aktuellen Werte (im Zustand K).
 	 */
 	void aktionBewertungSpeichernK() {
 		bewertungRegelverletzungenSaveK = bewertungRegelverletzungen;
@@ -461,6 +459,7 @@ public class KursblockungDynStatistik {
 		int nr2 = kurs2.gibInternalID();
 		regelVerletzungKursMitKurs[nr1][nr2] += 1;
 		regelVerletzungKursMitKurs[nr2][nr1] += 1;
+		System.out.println("DEBUG: regelHinzufuegenKursVerbieteMitKurs ["+nr1+"/"+kurs1.gibDatenbankID()+"]["+nr2+"/"+kurs2.gibDatenbankID()+"]");
 	}
 
 	/**
@@ -478,6 +477,7 @@ public class KursblockungDynStatistik {
 		regelVerletzungKursMitKurs[nr1][nr2] -= 1;
 		regelVerletzungKursMitKurs[nr2][nr1] -= 1;
 		bewertungRegelverletzungen += Math.max(kurs1.gibSchienenAnzahl(), kurs2.gibSchienenAnzahl());
+		System.out.println("DEBUG: regelHinzufuegenKursZusammenMitKurs ["+nr1+"/"+kurs1.gibDatenbankID()+"]["+nr2+"/"+kurs2.gibDatenbankID()+"]");
 	}
 
 }

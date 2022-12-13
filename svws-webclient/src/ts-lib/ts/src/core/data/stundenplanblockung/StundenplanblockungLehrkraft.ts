@@ -7,8 +7,6 @@ export class StundenplanblockungLehrkraft extends JavaObject {
 
 	public kuerzel : String = "";
 
-	public darfVertreten : boolean = false;
-
 
 	public constructor() {
 		super();
@@ -27,9 +25,6 @@ export class StundenplanblockungLehrkraft extends JavaObject {
 		if (typeof obj.kuerzel === "undefined")
 			 throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = String(obj.kuerzel);
-		if (typeof obj.darfVertreten === "undefined")
-			 throw new Error('invalid json format, missing attribute darfVertreten');
-		result.darfVertreten = obj.darfVertreten;
 		return result;
 	}
 
@@ -37,7 +32,6 @@ export class StundenplanblockungLehrkraft extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
 		result += '"kuerzel" : ' + '"' + obj.kuerzel.valueOf() + '"' + ',';
-		result += '"darfVertreten" : ' + obj.darfVertreten + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -50,9 +44,6 @@ export class StundenplanblockungLehrkraft extends JavaObject {
 		}
 		if (typeof obj.kuerzel !== "undefined") {
 			result += '"kuerzel" : ' + '"' + obj.kuerzel.valueOf() + '"' + ',';
-		}
-		if (typeof obj.darfVertreten !== "undefined") {
-			result += '"darfVertreten" : ' + obj.darfVertreten + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

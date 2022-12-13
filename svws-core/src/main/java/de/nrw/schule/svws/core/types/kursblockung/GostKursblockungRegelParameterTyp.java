@@ -1,8 +1,10 @@
 package de.nrw.schule.svws.core.types.kursblockung;
 
+import de.nrw.schule.svws.core.data.gost.GostBlockungRegel;
+
 /** 
  * Diese Klasse definiert die unterschiedlichen Typen von Regel-Parametern, 
- * die im Rahmen der Kursblockung eingesetzt werden. 
+ * die im Rahmen der Kursblockung eingesetzt werden bei {@link GostBlockungRegel}. 
  */
 public enum GostKursblockungRegelParameterTyp {
 

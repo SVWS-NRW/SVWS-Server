@@ -20,8 +20,6 @@ export class KursblockungDynStatistik extends JavaObject {
 
 	private bewertungFachartPaar : number = 0;
 
-	private bewertungFachartPaarSaveS : number = 0;
-
 	private bewertungFachartPaarSaveK : number = 0;
 
 	private bewertungFachartPaarSaveG : number = 0;
@@ -67,7 +65,6 @@ export class KursblockungDynStatistik extends JavaObject {
 		this.bewertungRegelverletzungenSaveK = 0;
 		this.bewertungRegelverletzungenSaveG = 0;
 		this.bewertungFachartPaar = 0;
-		this.bewertungFachartPaarSaveS = 0;
 		this.bewertungFachartPaarSaveK = 0;
 		this.bewertungFachartPaarSaveG = 0;
 		this.bewertungNichtwahlen = 0;
@@ -118,7 +115,7 @@ export class KursblockungDynStatistik extends JavaObject {
 	 * @param pPrefix Ein String-Prefix vor der Ausgabe. 
 	 */
 	debug(pPrefix : String) : void {
-		console.log(JSON.stringify(pPrefix.valueOf() + ", NW = " + this.bewertungRegelverletzungen + ", NW = " + this.bewertungNichtwahlen + ", FW = " + this.bewertungFachartPaar + ", KDs = " + this.bewertungKursdifferenzenMaxIndex + " = " + Arrays.toString(this.bewertungKursdifferenzen).valueOf()));
+		console.log(JSON.stringify(pPrefix.valueOf() + ", RV = " + this.bewertungRegelverletzungen + ", NW = " + this.bewertungNichtwahlen + ", FW = " + this.bewertungFachartPaar + ", KDs = " + this.bewertungKursdifferenzenMaxIndex + " = " + Arrays.toString(this.bewertungKursdifferenzen).valueOf()));
 	}
 
 	/**
@@ -270,34 +267,6 @@ export class KursblockungDynStatistik extends JavaObject {
 
 	/**
 	 *
-	 * Liefert den Wert {@code true}, falls die Bewertung (bewertungFachartPaar) des Zustandes S sich verschlechtert hat.
-	 * 
-	 * @return {@code true}, falls die Bewertung (bewertungFachartPaar) des Zustandes S sich verschlechtert hat. 
-	 */
-	gibBewertungFachartPaarSchlechter() : boolean {
-		if (this.bewertungFachartPaar > this.bewertungFachartPaarSaveS) 
-			return true;
-		if (this.bewertungFachartPaar < this.bewertungFachartPaarSaveS) 
-			return false;
-		return false;
-	}
-
-	/**
-	 *
-	 * Liefert den Wert {@code true}, falls die Bewertung (bewertungFachartPaar) des Zustandes K sich verschlechtert hat.
-	 * 
-	 * @return {@code true}, falls die Bewertung (bewertungFachartPaar) des Zustandes K sich verschlechtert hat. 
-	 */
-	gibBewertungFachartPaarSchlechterK() : boolean {
-		if (this.bewertungFachartPaar > this.bewertungFachartPaarSaveK) 
-			return true;
-		if (this.bewertungFachartPaar < this.bewertungFachartPaarSaveK) 
-			return false;
-		return false;
-	}
-
-	/**
-	 *
 	 * Liefert das Array bzw. das Histogramm der Kursdifferenzen.
 	 * 
 	 * @return das Array bzw. das Histogramm der Kursdifferenzen. 
@@ -314,10 +283,12 @@ export class KursblockungDynStatistik extends JavaObject {
 	 * @param pKurs2 Der 2. Kurs des Kurs-Paares.
 	 */
 	aktionKurspaarInSchieneHinzufuegen(pKurs1 : KursblockungDynKurs, pKurs2 : KursblockungDynKurs) : void {
-		let nr1 : number = pKurs1.gibFachart().gibNr();
-		let nr2 : number = pKurs2.gibFachart().gibNr();
-		this.bewertungFachartPaar += this.matrixFachartPaar[nr1][nr2];
-		this.bewertungRegelverletzungen += this.regelVerletzungKursMitKurs[nr1][nr2];
+		let faNr1 : number = pKurs1.gibFachart().gibNr();
+		let faNr2 : number = pKurs2.gibFachart().gibNr();
+		let kuNr1 : number = pKurs1.gibInternalID();
+		let kuNr2 : number = pKurs2.gibInternalID();
+		this.bewertungFachartPaar += this.matrixFachartPaar[faNr1][faNr2];
+		this.bewertungRegelverletzungen += this.regelVerletzungKursMitKurs[kuNr1][kuNr2];
 	}
 
 	/**
@@ -328,10 +299,12 @@ export class KursblockungDynStatistik extends JavaObject {
 	 * @param pKurs2 Der 2. Kurs des Kurs-Paares. 
 	 */
 	aktionKurspaarInSchieneEntfernen(pKurs1 : KursblockungDynKurs, pKurs2 : KursblockungDynKurs) : void {
-		let nr1 : number = pKurs1.gibFachart().gibNr();
-		let nr2 : number = pKurs2.gibFachart().gibNr();
-		this.bewertungFachartPaar -= this.matrixFachartPaar[nr1][nr2];
-		this.bewertungRegelverletzungen -= this.regelVerletzungKursMitKurs[nr1][nr2];
+		let faNr1 : number = pKurs1.gibFachart().gibNr();
+		let faNr2 : number = pKurs2.gibFachart().gibNr();
+		let kuNr1 : number = pKurs1.gibInternalID();
+		let kuNr2 : number = pKurs2.gibInternalID();
+		this.bewertungFachartPaar -= this.matrixFachartPaar[faNr1][faNr2];
+		this.bewertungRegelverletzungen -= this.regelVerletzungKursMitKurs[kuNr1][kuNr2];
 	}
 
 	/**
@@ -380,24 +353,17 @@ export class KursblockungDynStatistik extends JavaObject {
 
 	/**
 	 *
-	 * Speichert die aktuellen Werte (im Zustand S). <br>
-	 * Die Methoden {@link KursblockungDynStatistik#gibBewertungZustandS_NW_KD()} und
-	 * {@link KursblockungDynStatistik#gibBewertungFachartPaarSchlechter} bedienen sich dann der ehemaligen Werte um
-	 * festzustellen, ob es eine Verschlechterung gab. 
+	 * Speichert die aktuellen Werte (im Zustand S).
 	 */
 	aktionBewertungSpeichernS() : void {
 		this.bewertungRegelverletzungenSaveS = this.bewertungRegelverletzungen;
 		this.bewertungNichtwahlenSaveS = this.bewertungNichtwahlen;
-		this.bewertungFachartPaarSaveS = this.bewertungFachartPaar;
 		System.arraycopy(this.bewertungKursdifferenzen, 0, this.bewertungKursdifferenzenSaveS, 0, this.bewertungKursdifferenzen.length);
 	}
 
 	/**
 	 *
-	 * Speichert die aktuellen Werte (im Zustand K). <br>
-	 * Die Methoden {@link KursblockungDynStatistik#gibCompareZustandK_NW_KD_FW()} und
-	 * {@link KursblockungDynStatistik#gibBewertungFachartPaarSchlechter} bedienen sich dann der ehemaligen Werte um
-	 * festzustellen, ob es eine Verschlechterung gab. 
+	 * Speichert die aktuellen Werte (im Zustand K).
 	 */
 	aktionBewertungSpeichernK() : void {
 		this.bewertungRegelverletzungenSaveK = this.bewertungRegelverletzungen;
@@ -428,6 +394,7 @@ export class KursblockungDynStatistik extends JavaObject {
 		let nr2 : number = kurs2.gibInternalID();
 		this.regelVerletzungKursMitKurs[nr1][nr2] += 1;
 		this.regelVerletzungKursMitKurs[nr2][nr1] += 1;
+		console.log(JSON.stringify("DEBUG: regelHinzufuegenKursVerbieteMitKurs [" + nr1 + "/" + kurs1.gibDatenbankID() + "][" + nr2 + "/" + kurs2.gibDatenbankID() + "]"));
 	}
 
 	/**
@@ -445,6 +412,7 @@ export class KursblockungDynStatistik extends JavaObject {
 		this.regelVerletzungKursMitKurs[nr1][nr2] -= 1;
 		this.regelVerletzungKursMitKurs[nr2][nr1] -= 1;
 		this.bewertungRegelverletzungen += Math.max(kurs1.gibSchienenAnzahl(), kurs2.gibSchienenAnzahl());
+		console.log(JSON.stringify("DEBUG: regelHinzufuegenKursZusammenMitKurs [" + nr1 + "/" + kurs1.gibDatenbankID() + "][" + nr2 + "/" + kurs2.gibDatenbankID() + "]"));
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

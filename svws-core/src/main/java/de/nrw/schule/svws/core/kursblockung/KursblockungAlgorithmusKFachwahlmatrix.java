@@ -27,8 +27,7 @@ public class KursblockungAlgorithmusKFachwahlmatrix extends KursblockungAlgorith
 	 * @param pLogger Logger für Benutzerhinweise, Warnungen und Fehler.
 	 * @param pDynDat Die dynamischen Blockungsdaten.
 	 */
-	public KursblockungAlgorithmusKFachwahlmatrix(@NotNull Random pRandom, @NotNull Logger pLogger,
-			@NotNull KursblockungDynDaten pDynDat) {
+	public KursblockungAlgorithmusKFachwahlmatrix(@NotNull Random pRandom, @NotNull Logger pLogger, @NotNull KursblockungDynDaten pDynDat) {
 		super(pRandom, pLogger, pDynDat);
 	}
 	
@@ -43,9 +42,8 @@ public class KursblockungAlgorithmusKFachwahlmatrix extends KursblockungAlgorith
 	@Override
 	public void berechne(long pEndzeit) {
 		// Keine Kursverteilung, wenn es keine freien Kurse gibt.
-		if (dynDaten.gibKurseDieFreiSindAnzahl() == 0) {
+		if (dynDaten.gibKurseDieFreiSindAnzahl() == 0) 
 			return;
-		}
 
 		// Entferne SuS aus den Kursen (vorsichtshalber wegen alter Berechnungen).
 		dynDaten.aktionSchuelerAusAllenKursenEntfernen();
@@ -60,13 +58,12 @@ public class KursblockungAlgorithmusKFachwahlmatrix extends KursblockungAlgorith
 		int countKeineVerbesserung = 0;
 		do {
 			countKeineVerbesserung = verteileKurse() ? 0 : countKeineVerbesserung + 1;
-		} while ((countKeineVerbesserung < MAX_RUNDEN_IN_FOLGE_OHNE_VERBESSERUNG)
-				&& (System.currentTimeMillis() < pEndzeit));
+		} while ( (countKeineVerbesserung < MAX_RUNDEN_IN_FOLGE_OHNE_VERBESSERUNG) && (System.currentTimeMillis() < pEndzeit) );
 	}
 
 	/**
-	 * Die Lage einiger Kurse wird verändert. Falls sich die Bewertung verschlechter, wird die Veränderung rückgängig
-	 * gemacht.
+	 * Die Lage einiger Kurse wird verändert. Falls sich die Bewertung verschlechter, 
+	 * wird die Veränderung rückgängig gemacht.
 	 * 
 	 * @return TRUE, falls sich die Bewertung verbessert hat.
 	 */

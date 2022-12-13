@@ -286,6 +286,9 @@ export { StundenplanblockungKopplung } from './core/data/stundenplanblockung/Stu
 export { StundenplanblockungLehrkraft } from './core/data/stundenplanblockung/StundenplanblockungLehrkraft';
 export { StundenplanblockungLerngruppe } from './core/data/stundenplanblockung/StundenplanblockungLerngruppe';
 export { StundenplanblockungRaum } from './core/data/stundenplanblockung/StundenplanblockungRaum';
+export { StundenplanblockungRegel } from './core/data/stundenplanblockung/StundenplanblockungRegel';
+export { StundenplanblockungRegelParameterTyp } from './core/data/stundenplanblockung/StundenplanblockungRegelParameterTyp';
+export { StundenplanblockungRegelTyp } from './core/data/stundenplanblockung/StundenplanblockungRegelTyp';
 export { StundenplanblockungStundenelement } from './core/data/stundenplanblockung/StundenplanblockungStundenelement';
 export { KlausurblockungException } from './core/klausurblockung/KlausurblockungException';
 export { KlausurblockungSchienenAlgorithmus } from './core/klausurblockung/KlausurblockungSchienenAlgorithmus';
