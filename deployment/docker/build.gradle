@@ -55,7 +55,7 @@ task dockerComposeUp(type: Exec) {
  */
 task dockerBuildSvws(type: Exec) {
 	dependsOn downloadPublishedArtifacts
-	workingDir "$projectDir/docker"
+	workingDir "$projectDir"
 	def cmd = "docker build svws/. -t svws:${svwsArtifactVersion}"
 	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
 		commandLine 'cmd', '/c', cmd
@@ -69,26 +69,23 @@ task dockerBuildSvws(type: Exec) {
  und veröffentlicht das Image im Image-Repository (Nexus)
  */
 task dockerBuildTagAndPublish(type: Exec) {
-	//dependsOn dockerBuildSvws
-	workingDir "$projectDir/docker"
+	dependsOn dockerBuildSvws
+	workingDir "$projectDir"
 	def dockerRegistryUsername = getNexusActor()
 	def dockerRegistryToken = getNexusToken()
 
 	def dockerRegistryHost = 'artifactory.svws-nrw.de'
 	def dockerRegistry = "${dockerRegistryHost}/repository/svws-docker"
 	def tagNamePub = "${dockerRegistry}/svws:${svwsArtifactVersion}"
-
-	//TODO: STDIN für Password nutzen
-	//echo ${dockerRegistryToken} | docker login --username ${dockerRegistryUsername} --password-stdin ${dockerRegistryHost}
-	def dockerLoginCmd = "docker login --username ${dockerRegistryUsername} --password ${dockerRegistryToken} ${dockerRegistryHost}"
 	def dockerTagCmd = "docker tag svws:${svwsArtifactVersion} ${tagNamePub}"
 	def dockerPushCmd = "docker push ${tagNamePub}"
 
-	def cmd = "${dockerLoginCmd} && ${dockerTagCmd} && ${dockerPushCmd}"
 	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
-		commandLine 'cmd', '/c', cmd
+		def dockerLoginCmdWin = "docker login --username ${dockerRegistryUsername} --password-stdin ${dockerRegistryHost}<pw.txt"
+		commandLine 'cmd', '/c', "@echo ${dockerRegistryToken}>pw.txt&&${dockerLoginCmdWin} && ${dockerTagCmd} && ${dockerPushCmd} && del pw.txt"
 	} else {
-		commandLine 'sh', '-c', cmd
+		def dockerLoginCmdLin = "set -x; echo \"${dockerRegistryToken}\" | docker login --username ${dockerRegistryUsername} --password-stdin ${dockerRegistryHost}"
+		commandLine 'sh', '-c', "${dockerLoginCmdLin} && ${dockerTagCmd} && ${dockerPushCmd}"
 	}
 }
 
