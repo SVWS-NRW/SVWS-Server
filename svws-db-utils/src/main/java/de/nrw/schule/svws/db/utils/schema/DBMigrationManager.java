@@ -265,13 +265,13 @@ public class DBMigrationManager {
 			return false;
 		}
 		
-		success = createTargetSchema();
-		if (!success) {
-			logger.modifyIndent(-2);
-			return false;
-		}
-		
 		try {
+			success = createTargetSchema();
+			if (!success) {
+				logger.modifyIndent(-2);
+				return false;
+			}
+			
 			logger.log("-> Verbinde zur Quell-Datenbank... ");
 			Benutzer srcUser = Benutzer.create(srcConfig); 
 			try (DBEntityManager srcConn = srcUser.getEntityManager()) {
@@ -351,13 +351,12 @@ public class DBMigrationManager {
 			success = false;
 		} finally {
 			System.gc();
+			
+			if (!SVWSKonfiguration.get().unlockSchema(tgtSchema)) {
+				logger.logLn("-> Migration evtl. fehlgeschlagen! (Fehler beim Freigeben des Datenbank-Schemas. Schema ist nicht gesperrt - dies wird an dieser Stelle nicht erwartet!)");
+				success = false;
+			}		
 		}
-		
-		if (!SVWSKonfiguration.get().unlockSchema(tgtSchema)) {
-			logger.logLn("-> Migration evtl. fehlgeschlagen! (Fehler beim Freigeben des Datenbank-Schemas. Schema ist nicht gesperrt - dies wird an dieser Stelle nicht erwartet!)");
-			success = false;
-		}		
-				
 		logger.modifyIndent(-2);
 		return success;
 	}
