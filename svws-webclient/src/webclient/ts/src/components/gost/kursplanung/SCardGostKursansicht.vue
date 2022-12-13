@@ -4,8 +4,8 @@
 			<div class="w-full flex-none sm:-mx-6 lg:-mx-8">
 				<div class="py-2 align-middle sm:px-6 lg:px-8">
 					<div v-if="!blockung_aktiv" class="flex gap-2 mb-2">
-						<svws-ui-button  type="secondary" class="cursor-pointer" @click="toggle_modal_hochschreiben"> Hochschreiben </svws-ui-button>
-						<svws-ui-button type="secondary" class="cursor-pointer" @click="toggle_modal_aktivieren"> Aktivieren </svws-ui-button>
+						<svws-ui-button  type="primary" @click="toggle_modal_hochschreiben">Hochschreiben</svws-ui-button>
+						<svws-ui-button type="secondary" @click="toggle_modal_aktivieren">Aktivieren</svws-ui-button>
 					</div>
 					<div v-if="blockungsergebnis_aktiv" class="text-lg font-bold">Dieses Blockungsergebnis ist aktiv.</div>
 					<div v-if="blockung_aktiv && !blockungsergebnis_aktiv" class="text-lg font-bold">Ein anderes Ergebnis dieser Blockung ist bereits aktiv.</div>
@@ -126,14 +126,12 @@
 	</svws-ui-modal>
 	<svws-ui-modal ref="modal_hochschreiben" size="small">
 		<template #modalTitle>Blockungsergebnis hochschreiben</template>
-		<template #modalDescription>
-			<div class="flex gap-1 mb-2">
-				Soll das Blockungsergebnis in das nächste Halbjahr ({{app.dataKursblockung.datenmanager?.getHalbjahr().next()?.kuerzel}}) hochgeschrieben werden?
-			</div>
-			<div class="flex gap-1">
-				<svws-ui-button @click="toggle_modal_hochschreiben">Abbrechen</svws-ui-button>
-				<svws-ui-button @click="hochschreiben_ergebnis">Ja</svws-ui-button>
-			</div>
+		<template #modalContent>
+			<p>Soll das Blockungsergebnis in das nächste Halbjahr ({{app.dataKursblockung.datenmanager?.getHalbjahr().next()?.kuerzel}}) hochgeschrieben werden?</p>
+		</template>
+		<template #modalActions>
+			<svws-ui-button type="secondary" @click="toggle_modal_hochschreiben">Abbrechen</svws-ui-button>
+			<svws-ui-button @click="hochschreiben_ergebnis">Ja</svws-ui-button>
 		</template>
 	</svws-ui-modal>
 </template>
@@ -154,7 +152,7 @@
 
 	const main: Main = injectMainApp();
 	const app = main.apps.gost
-	
+
 	const edit_schienenname: Ref<GostBlockungSchiene|undefined> = ref()
 
 	const sort_by: WritableComputedRef<UserConfigKeys['gost.kursansicht.sortierung']> =
@@ -170,7 +168,7 @@
 				mainApp.config.user_config.set('gost.kursansicht.sortierung', value)
 			}
 		});
-	
+
 	const faecher: ComputedRef<List<GostStatistikFachwahl>> =
 		computed(() => app.dataFachwahlen.daten || new Vector<GostStatistikFachwahl>());
 

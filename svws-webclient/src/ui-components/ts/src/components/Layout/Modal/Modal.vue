@@ -37,17 +37,17 @@ class="modal" :class="{
 					<DialogTitle class="modal--title">
 						<slot name="modalTitle" />
 					</DialogTitle>
-					<button class="modal--closeButton" @click="closeModal">
+					<Button type="icon" @click="closeModal">
 						<Icon class="modal--closeIcon">
 							<i-ri-close-line />
 						</Icon>
-					</button>
+					</Button>
 				</div>
-				<DialogDescription class="modal--description">
+				<DialogDescription v-if="$slots.modalDescription" class="modal--description">
 					<slot name="modalDescription" />
 				</DialogDescription>
 
-				<div class="modal-content">
+				<div v-if="$slots.modalContent" class="modal--content">
 					<slot name="modalContent" />
 				</div>
 
@@ -60,28 +60,6 @@ class="modal" :class="{
 </template>
 
 <style>
-.modal--closeButton {
-	@apply text-dark;
-	@apply mr-3;
-	@apply flex items-center justify-center;
-	@apply rounded-full;
-	@apply h-8 w-8;
-}
-
-.modal--closeButton:hover {
-	@apply bg-light;
-}
-
-.modal--closeButton:focus {
-	@apply bg-light;
-	@apply outline-none ring ring-primary ring-opacity-50;
-}
-
-.modal--closeIcon {
-	@apply inline-block;
-	@apply ml-0;
-}
-
 .modal--pageWrapper {
 	@apply flex items-center justify-center;
 	@apply min-h-screen;
@@ -97,11 +75,9 @@ class="modal" :class="{
 	@apply bg-white;
 	@apply flex flex-col items-center;
 	@apply mx-auto;
-	@apply px-6 py-4;
 	@apply relative z-50;
-	@apply rounded-md;
-	@apply shadow-lg;
-	@apply space-y-8;
+	@apply rounded-lg;
+	@apply shadow-xl shadow-dark-20;
 }
 
 .modal--sm {
@@ -116,13 +92,17 @@ class="modal" :class="{
 	@apply w-full max-w-modal-lg;
 }
 
+.modal--titlebar {
+	@apply p-2;
+}
+
 .modal--title {
-	@apply flex-grow;
-	@apply text-caption uppercase text-black;
+	@apply flex-grow px-2;
+	@apply text-sm-bold uppercase;
 }
 
 .modal--description {
-	@apply text-center font-bold text-black;
+	@apply p-4 text-base;
 }
 
 .modal--wrapper {
@@ -130,12 +110,21 @@ class="modal" :class="{
 	@apply overflow-y-auto;
 }
 
-.modal--actions {
-	@apply flex items-center justify-center;
-	@apply space-x-4;
+.modal--content {
+	@apply w-full text-base p-4 text-center;
 }
 
-.modal-content {
-	@apply w-full;
+.modal--actions {
+	@apply flex items-center justify-center p-4;
+	@apply space-x-2;
+}
+
+.modal--description + .modal--content {
+	@apply pt-0;
+}
+
+.modal--description + .modal--actions,
+.modal--content + .modal--actions {
+	@apply pt-2;
 }
 </style>

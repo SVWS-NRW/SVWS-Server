@@ -304,6 +304,6 @@
 </style>
 <style lang="postcss">
 .text-input--inline {
-	@apply underline decoration-dashed underline-offset-2 cursor-text decoration-black;
+	@apply underline decoration-dashed underline-offset-2 cursor-text;
 }
 </style>

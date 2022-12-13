@@ -62,7 +62,7 @@
 												@update:modelValue="patch_blockung"/>
 										</div>
 										<svws-ui-icon v-if="blockung.istAktiv" > <i-ri-pushpin-fill /> </svws-ui-icon>
-										<div v-if="allow_add_blockung(row)" class="flex items-center gap-1">
+										<div v-if="allow_add_blockung(row)" class="flex gap-1">
 											<svws-ui-button size="small" type="secondary" @click.stop="create_blockungsergebnisse" title="Ergebnisse berechnen" :disabled="pending">Berechnen</svws-ui-button >
 											<svws-ui-button size="small" type="danger" @click.stop="toggle_remove_blockung_modal" title="Blockung löschen" :disabled="pending">
 												<svws-ui-icon><i-ri-delete-bin-2-line/></svws-ui-icon>
@@ -86,19 +86,19 @@
 					v-model="selected_ergebnis"
 					v-model:selection="selected_ergebnisse"
 					is-multi-select
-					:columns="[{ key: 'id', label: 'ID'}, { key: 'bewertung', label: 'Bewertungen', span: '15'}]"
+					:columns="[{ key: 'id', label: 'ID'}, { key: 'bewertung', label: 'Bewertungen', span: 15 }]"
 					:data="rows_ergebnisse.toArray()"
 					:footer="selected_ergebnisse.length > 0"
 				>
 					<template #cell-bewertung="{ row }: {row: GostBlockungsergebnisListeneintrag}">
-						<span class="flex gap-1 font-semibold" >
+						<span class="flex gap-1 cell--bewertung" >
 							<span :style="{'background-color': color1(row)}">{{manager?.getOfBewertung1Wert(row.id)}}</span>
 							<span :style="{'background-color': color2(row)}">{{manager?.getOfBewertung2Wert(row.id)}}</span>
 							<span :style="{'background-color': color3(row)}">{{manager?.getOfBewertung3Wert(row.id)}}</span>
 							<span :style="{'background-color': color4(row)}">{{manager?.getOfBewertung4Wert(row.id)}}</span>
 						</span>
 						<svws-ui-icon v-if="row.istVorlage" > <i-ri-pushpin-fill /></svws-ui-icon>
-						<div v-if="(row.id === selected_ergebnis?.id && !selected_blockungauswahl?.istAktiv)" class="flex gap-2">
+						<div v-if="(row.id === selected_ergebnis?.id && !selected_blockungauswahl?.istAktiv)" class="flex gap-1">
 							<svws-ui-button size="small" type="secondary" class="cursor-pointer" @click.stop="derive_blockung" :disabled="pending"> Ableiten </svws-ui-button>
 							<svws-ui-button v-if="rows_ergebnisse.size() > 1" size="small" type="danger" class="cursor-pointer" @click.stop="remove_ergebnis" :disabled="pending">
 								<svws-ui-icon><i-ri-delete-bin-2-line/></svws-ui-icon>
@@ -183,7 +183,7 @@ const selected_hj: WritableComputedRef<GostHalbjahr> =
 				|| GostHalbjahr.EF1
 		},
 		set(hj: GostHalbjahr) {
-			if (hj === selected_hj.value || !hj) 
+			if (hj === selected_hj.value || !hj)
 				return;
 			hj_memo.value = hj
 			if ((selected.value?.abiturjahr) && (selected.value?.abiturjahr !== -1)) {
@@ -395,5 +395,16 @@ function toggle_remove_blockung_modal() {
 	100% {
 		-webkit-transform: rotate(360deg);
 	}
+}
+</style>
+<style lang="postcss" scoped>
+.cell--bewertung span {
+	@apply inline-block text-center text-black rounded font-normal;
+	min-width: 5ex;
+	padding: 0.05em 0.2em;
+}
+
+.vt-clicked .cell--bewertung span {
+	filter: brightness(0.8) saturate(200%);
 }
 </style>

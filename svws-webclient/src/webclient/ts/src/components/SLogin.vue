@@ -18,14 +18,14 @@
 								</svg></span>
 							<span class="flex flex-col">SVWS-NRW <span class="text-sm">Version {{version}}</span></span>
 						</h1>
-						<div class="login-input-group">
+						<div class="login-input-group mt-8">
 							<svws-ui-text-input v-model="serverAddress" type="text" placeholder="Server Addresse" />
 							<svws-ui-button type="secondary" @click="connectClicked">
 								Verbinden
 							</svws-ui-button>
 						</div>
 						<Transition>
-							<div v-if="inputDBSchema" class="login-input-group">
+							<div v-if="inputDBSchema" class="login-input-group mt-16">
 								<svws-ui-multi-select v-model="inputDBSchema" title="DB-Schema" :items="inputDBSchemata" :item-text="get_name" />
 								<svws-ui-text-input v-model="username" type="text" placeholder="Benutzername" />
 								<svws-ui-text-input
@@ -137,7 +137,7 @@ async function login() {
 }
 
 .login-form {
-	@apply w-full space-y-8 p-4 lg:p-8 bg-white rounded-xl flex flex-col items-center;
+	@apply w-full p-4 lg:p-8 bg-white rounded-xl flex flex-col items-center;
 	max-width: 40rem;
 }
 

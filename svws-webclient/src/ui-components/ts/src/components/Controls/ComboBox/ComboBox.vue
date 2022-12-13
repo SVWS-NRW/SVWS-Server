@@ -467,7 +467,7 @@ function scrollToActiveItem() {
 	@apply whitespace-nowrap;
 	@apply h-full;
 	@apply cursor-pointer;
-	padding: 0.5em 0.7em 0.5em 0.4em;
+	padding: 0.5em 0.7em;
 	min-height: 3rem;
 	border-radius: 1.4em;
 }

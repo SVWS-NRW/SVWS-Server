@@ -4,8 +4,8 @@
 
 <style>
 	.overlay {
-		@apply backdrop-blur-sm backdrop-filter;
-		@apply bg-white bg-opacity-50;
+		@apply backdrop-blur-[2px] backdrop-filter;
+		@apply bg-dark-20 bg-opacity-80;
 		@apply absolute top-0 left-0;
 		@apply h-full w-full;
 		@apply z-50;

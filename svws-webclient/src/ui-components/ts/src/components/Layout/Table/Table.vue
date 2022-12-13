@@ -89,7 +89,7 @@ watch(() => selection, (newVal) => tableRef.value.selectRows(newVal));
                 </span>
               </div>
             </VTh>
-            <th v-else><span class="column--title" :title="column.label">{{ column.label }}</span></th>
+            <th v-else :style="`flex-grow: ${column.span};`"><span class="column--title" :title="column.label">{{ column.label }}</span></th>
           </slot>
         </template>
       </tr>
@@ -272,6 +272,7 @@ watch(() => selection, (newVal) => tableRef.value.selectRows(newVal));
 	-webkit-box-orient: vertical;
 	-webkit-line-clamp: 1;
 	word-break: break-all;
+	min-width: 1.6rem;
 }
 
 .table--row-indent {
