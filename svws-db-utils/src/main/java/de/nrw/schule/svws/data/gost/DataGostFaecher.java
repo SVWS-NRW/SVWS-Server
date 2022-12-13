@@ -136,17 +136,17 @@ public class DataGostFaecher extends DataManager<Long> {
 			    				fach.WochenstundenQualifikationsphase = JSONMapper.convertToInteger(value, false);
 			    			}
 			    			case "projektKursLeitfach1ID" -> {
-			    				fach.ProjektKursLeitfach1_ID = JSONMapper.convertToLong(value, false);
+			    				fach.ProjektKursLeitfach1_ID = JSONMapper.convertToLong(value, true);
 			    		    	if ((fach.ProjektKursLeitfach1_ID != null) && (fach.ProjektKursLeitfach1_ID < 0))
-			    		    		throw OperationError.CONFLICT.exception();    	
-		    			    	if (faecher.get(fach.ProjektKursLeitfach1_ID) == null)
+			    		    		throw OperationError.CONFLICT.exception();   
+		    			    	if ((fach.ProjektKursLeitfach1_ID != null) && (faecher.get(fach.ProjektKursLeitfach1_ID) == null))
 		    			    		throw OperationError.NOT_FOUND.exception();
 			    			}
 			    			case "projektKursLeitfach2ID" -> {
-			    				fach.ProjektKursLeitfach2_ID = JSONMapper.convertToLong(value, false);
+			    				fach.ProjektKursLeitfach2_ID = JSONMapper.convertToLong(value, true);
 			    		    	if ((fach.ProjektKursLeitfach2_ID != null) && (fach.ProjektKursLeitfach2_ID < 0))
 			    		    		throw OperationError.CONFLICT.exception();    	
-		    			    	if (faecher.get(fach.ProjektKursLeitfach2_ID) == null)
+		    			    	if ((fach.ProjektKursLeitfach2_ID != null) && (faecher.get(fach.ProjektKursLeitfach2_ID) == null))
 		    			    		throw OperationError.NOT_FOUND.exception();
 			    			}
 			    			case "projektKursLeitfach1Kuerzel" -> throw OperationError.BAD_REQUEST.exception();  
