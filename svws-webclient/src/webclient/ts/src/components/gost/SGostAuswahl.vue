@@ -107,7 +107,7 @@
 					</template>
 					<template #footer>
 						<span v-if="selected_ergebnisse.length === rows_ergebnisse.size()">Mindestens ein Ergebnis behalten!</span>
-						<svws-ui-button @click="remove_ergebnisse" type="danger" size="small" :disabled="selected_ergebnisse.length > 0 && selected_ergebnisse.length < rows_ergebnisse.size() - 1">
+						<svws-ui-button @click="remove_ergebnisse" type="danger" size="small" :disabled="selected_ergebnisse.length > rows_ergebnisse.size() - 1">
 							Auswahl löschen
 						</svws-ui-button>
 					</template>
