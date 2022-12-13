@@ -191,7 +191,7 @@ public class DataGostJahrgangsliste extends DataManager<Integer> {
 				DTOGostJahrgangFachkombinationen k = new DTOGostJahrgangFachkombinationen(idNMK++, abiturjahr,
 						kombi.Fach1_ID, kombi.Fach2_ID, kombi.EF1, kombi.EF2, kombi.Q11, kombi.Q12, kombi.Q21, kombi.Q22,  
 						kombi.Typ, kombi.Hinweistext);
-				k.Abi_Jahrgang = kombi.Abi_Jahrgang;
+				k.Abi_Jahrgang = abiturjahr;
 				k.Kursart1 = kombi.Kursart1;
 				k.Kursart2 = kombi.Kursart2;
 				gostFaecherKombis.add(k);
@@ -217,13 +217,13 @@ public class DataGostJahrgangsliste extends DataManager<Integer> {
 				List<DTOSchuelerLeistungsdaten> leistungsdaten = conn.queryNamed("DTOSchuelerLeistungsdaten.abschnitt_id.multiple", lernabschnittIDs, DTOSchuelerLeistungsdaten.class);
 				Map<Long, List<DTOSchuelerLeistungsdaten>> mapLeistungsdaten = leistungsdaten.stream().collect(Collectors.groupingBy(l -> l.Abschnitt_ID));
 
-				HashMap<Long, HashMap<Long, DTOGostSchuelerFachbelegungen>> schuelerfachbelegungen = new HashMap<>();
 				for (long schueler_id : schuelerIDs) {
 					List<DTOSchuelerLernabschnittsdaten> slas = mapLernabschnitte.get(schueler_id);
 					if ((slas == null) || (slas.size() == 0))
 						continue;
 					HashMap<Long, DTOGostSchuelerFachbelegungen> fachbelegungen = new HashMap<>();
-					schuelerfachbelegungen.put(schueler_id, fachbelegungen);
+					DTOGostSchuelerFachbelegungen[] abifach = new DTOGostSchuelerFachbelegungen[4];
+					GostHalbjahr[] abifachHalbjahr = new GostHalbjahr[4];
 					for (DTOSchuelerLernabschnittsdaten sla : slas) {
 						List<DTOSchuelerLeistungsdaten> slds = mapLeistungsdaten.get(sla.ID);
 						if ((slds == null) || (slds.size() == 0))
@@ -243,6 +243,19 @@ public class DataGostJahrgangsliste extends DataManager<Integer> {
 								fachbelegung = new DTOGostSchuelerFachbelegungen(schueler_id, fach.ID);
 								fachbelegungen.put(fach.ID, fachbelegung);
 							}
+							// Prüfe, ob das Abiturfach in dem Halbjahr gesetzt wurde. Nehme den jeweils letzten Eintrag in den Halbjahren
+							try {
+								int abifachNr = Integer.parseInt(sld.AbiFach);
+								if ((abifachNr > 0) && (abifachNr < 5)) {
+									if ((abifachHalbjahr[abifachNr-1] == null) || (abifachHalbjahr[abifachNr-1].id < halbjahr.id)) {
+										abifach[abifachNr-1] = fachbelegung;
+										abifachHalbjahr[abifachNr-1] = halbjahr;
+									}
+								}
+							} catch (NumberFormatException nfe) {
+								// kein gültiges Abbiturfach bei dem Lernabschnitt angegeben 
+							}
+							// Setze Fachwahl für das Halbjahr
 							switch (halbjahr) {
 								case EF1 -> {
 									fachbelegung.EF1_Kursart = funcGetKursart.apply(sld, halbjahr);
@@ -271,19 +284,19 @@ public class DataGostJahrgangsliste extends DataManager<Integer> {
 							}
 						}
 					}
-				}
-				conn.transactionBegin();
-				for (long schueler_id : schuelerfachbelegungen.keySet()) {
-					HashMap<Long, DTOGostSchuelerFachbelegungen> fachbelegungen = schuelerfachbelegungen.get(schueler_id);
+					for (int i = 1; i <= 4; i++)
+						if (abifach[i-1] != null)
+							abifach[i-1].AbiturFach = i;
+					conn.transactionBegin();
 					if (!conn.transactionPersist(new DTOGostSchueler(schueler_id, false)))
 						return OperationError.INTERNAL_SERVER_ERROR.getResponse();
 					for (long fach_id : fachbelegungen.keySet()) {
 						if (!conn.transactionPersist(fachbelegungen.get(fach_id)))
 							return OperationError.INTERNAL_SERVER_ERROR.getResponse();
 					}
+					if (!conn.transactionCommit())
+						return OperationError.INTERNAL_SERVER_ERROR.getResponse();
 				}
-				if (!conn.transactionCommit())
-					return OperationError.INTERNAL_SERVER_ERROR.getResponse();
 			}
 		}
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(abiturjahr).build();
