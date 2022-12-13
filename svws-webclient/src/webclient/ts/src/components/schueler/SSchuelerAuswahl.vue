@@ -2,7 +2,7 @@
 	<svws-ui-secondary-menu>
 		<template #headline> Schülerauswahl</template>
 		<template #header>
-			<div class="px-6">
+			<div class="px-5">
 				<svws-ui-multi-select
 					v-model="filterStatus"
 					:items="inputKatalogSchuelerStatus"
@@ -10,7 +10,7 @@
 					tags
 					title="Status"
 				/>
-				<div class="input-wrapper mt-3">
+				<div class="input-wrapper mt-6">
 					<svws-ui-multi-select
 						v-model="filterKlassen"
 						title="Klasse"
@@ -36,8 +36,10 @@
 						:item-text="text_schulgliederung"
 					/>
 				</div>
-				<div class="mt-4 flex flex-row items-center justify-between">
-					<svws-ui-button type="secondary">
+			</div>
+			<div class="px-5">
+				<div class="mt-2 flex flex-row items-center justify-between">
+					<svws-ui-button type="transparent">
 						<svws-ui-icon><i-ri-filter-3-line /></svws-ui-icon>
 						<span class="ml-2">Erweiterte Filter</span>
 					</svws-ui-button>
@@ -50,7 +52,9 @@
 						<span class="ml-2">Filter zurücksetzen</span>
 					</svws-ui-button>
 				</div>
-				<div class="mt-4">
+				</div>
+			<div class="px-5">
+				<div class="mt-6 mb-2">
 					<svws-ui-text-input
 						v-model="search"
 						type="search"
@@ -357,19 +361,3 @@
 		}
 	}
 </script>
-<style>
-.action-button {
-  @apply h-6 w-6;
-}
-
-.action-items {
-  @apply bg-white;
-  @apply flex flex-col;
-  @apply px-2 py-1;
-  @apply ring-1;
-  @apply ring-black ring-opacity-5;
-  @apply rounded-md;
-  @apply shadow-lg;
-  @apply w-48;
-}
-</style>

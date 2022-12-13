@@ -31,9 +31,7 @@
 }
 
 .app-container {
-	@apply grid gap-x-16 gap-y-20;
-	--auto-grid-min-size: 32rem;
-	grid-template-columns: repeat(auto-fit, minmax(max(var(--auto-grid-min-size), 30%), 1fr));
+	@apply grid grid-cols-1 gap-x-[3vw] gap-y-[6vh] 2xl:grid-cols-2 4xl:grid-cols-3;
 }
 
 /* Defaults zu den Schriften */

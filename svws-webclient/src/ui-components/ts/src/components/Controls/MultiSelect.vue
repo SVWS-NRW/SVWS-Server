@@ -276,15 +276,6 @@ v-for="(item, index) in filteredList" :key="index" ref="itemRefs" class="multise
 	@apply relative z-30;
 }
 
-.multiselect--items-wrapper {
-	@apply absolute z-20 max-h-64 w-full;
-	@apply divide-y divide-light;
-	@apply rounded border border-t-0 border-gray;
-	@apply -mt-2 pt-2;
-	@apply overflow-y-auto overflow-x-hidden;
-	@apply shadow;
-}
-
 .multiselect--item {
 	@apply bg-white text-dark;
 	@apply text-body;

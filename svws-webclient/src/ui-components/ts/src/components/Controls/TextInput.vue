@@ -6,7 +6,7 @@
 <script setup lang="ts">
 	import { genId } from "../../utils";
 
-	type InputType = "text" | "number" | "date" | "email";
+	type InputType = "text" | "number" | "date" | "email" | "search";
 
 	const {
 		type = "text",
@@ -88,7 +88,8 @@
 			'text-input-disabled': disabled,
 			'text-input-readonly': readonly,
 			'text-input--icon': hasIcon,
-			'text-input--statistics': statistics
+			'text-input--statistics': statistics,
+			'text-input--search': type === 'search'
 		}"
 	>
 		<input
@@ -161,7 +162,7 @@
 
 	.text-input--control {
 		@apply bg-white;
-		@apply rounded border border-black border-opacity-20;
+		@apply rounded-md border border-black border-opacity-20;
 		@apply h-9 w-full;
 		@apply text-base;
 		@apply whitespace-nowrap;
@@ -173,6 +174,23 @@
 		@apply border-gray border-opacity-100;
 		@apply outline-none;
 	}
+
+	/*.text-input--search:not(.text-input-filled) .text-input--placeholder {
+		@apply sr-only;
+	}
+
+	.text-input--search:not(.text-input-filled) .text-input--control {
+		@apply border-transparent bg-transparent text-transparent;
+		margin-bottom: -2em;
+	}
+
+	.text-input-component.text-input--search:focus-within .text-input--control {
+		@apply mb-0;
+	}
+
+	.text-input--search:not(.text-input-filled) .icon {
+		@apply bg-primary;
+	}*/
 
 	.text-input--control[type="date"]::-webkit-inner-spin-button,
 	.text-input--control[type="date"]::-webkit-calendar-picker-indicator {
@@ -197,10 +215,6 @@
 		}
 	}
 
-	.text-input-disabled .text-input--control {
-		@apply cursor-not-allowed;
-	}
-
 	.text-input-readonly .text-input--control {
 		@apply cursor-default pointer-events-none;
 	}
@@ -216,9 +230,9 @@
 		@apply transform;
 		@apply flex items-center;
 
-	top: 0.5em;
-	left: 0.7em;
-	line-height: 1.33;
+		top: 0.5em;
+		left: 0.7em;
+		line-height: 1.33;
 
 		&:after {
 			content: '…'
@@ -241,6 +255,12 @@
 		}
 	}
 
+	.secondary-menu .text-input--control,
+	.secondary-menu .text-input-component:focus-within .text-input--placeholder,
+	.secondary-menu .text-input-filled .text-input--placeholder {
+		@apply bg-light;
+	}
+
 	.text-input-invalid .text-input--placeholder {
 		@apply text-error;
 	}
@@ -259,6 +279,7 @@
 	}
 
 	.text-input-disabled {
+		@apply cursor-not-allowed;
 		@apply opacity-50;
 	}
 

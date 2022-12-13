@@ -133,17 +133,22 @@ class="button" :class="{
 	@apply rounded-r-none;
 }
 
+.button--transparent,
 .button--icon {
 	@apply rounded border-0 justify-center items-center;
-	@apply p-2 w-8 h-8;
+	@apply p-2;
 
 	&:hover, &:focus {
-		 @apply bg-dark-20 bg-opacity-50 rounded;
-	 }
+		@apply bg-dark-20 bg-opacity-50 rounded;
+	}
 
-   &:focus {
+	&:focus {
 		@apply ring-dark ring-opacity-50;
 	}
+}
+
+.button--icon {
+	@apply w-8 h-8;
 
 	svg {
 		width: 1.2rem;

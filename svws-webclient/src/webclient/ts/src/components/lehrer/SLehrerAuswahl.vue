@@ -2,7 +2,7 @@
 	<svws-ui-secondary-menu>
 		<template #headline> Lehrerauswahl </template>
 		<template #header>
-			<div class="px-6">
+			<div class="px-5">
 				<div>
 					<svws-ui-text-input
 						v-model="search"
