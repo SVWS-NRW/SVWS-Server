@@ -42,6 +42,10 @@ const modelValue4 = ref([]);
 		<SvwsUiCheckbox v-model="modelValue3" disabled :value="false">Checkbox</SvwsUiCheckbox>
     </Variant>
 
+    <Variant title="Headless">
+		<SvwsUiCheckbox v-model="modelValue3" headless :value="false">Checkbox</SvwsUiCheckbox>
+    </Variant>
+
     <Variant title="Multi selection">
 		<div class="checkbox--wrapper">
 		  <SvwsUiCheckbox v-model="modelValue4" value="1">

@@ -7,13 +7,15 @@ const {
 	statistics = false,
 	disabled = false,
 	circle = false,
-	modelValue
+	modelValue,
+	headless = false
 } = defineProps<{
 	value?: CheckboxValue;
 	modelValue: ModelValue;
 	statistics?: boolean;
 	disabled?: boolean;
 	circle?: boolean;
+	headless?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -38,6 +40,7 @@ const model = computed({
 			'checkbox--statistics': statistics,
 			'checkbox--checked': modelValue,
 			'checkbox--circle': circle,
+			'checkbox--headless': headless
 		}">
 		<input v-model="model" class="checkbox--control" type="checkbox" :value="value" :disabled="disabled" :title="disabled ? 'Deaktiviert' : ''" />
 		<Icon v-if="modelValue">
@@ -110,5 +113,9 @@ const model = computed({
 
 .checkbox--wrapper .checkbox {
 	margin-left: 1rem;
+}
+
+.checkbox--headless {
+	margin: 0;
 }
 </style>
