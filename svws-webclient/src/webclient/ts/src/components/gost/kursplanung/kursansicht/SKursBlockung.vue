@@ -1,6 +1,6 @@
 <template>
 	<tr class="px-2 text-left" :style="{ 'background-color': bgColor }" >
-		<td class="border border-[#7f7f7f]/20 px-2 whitespace-nowrap" :class="{'border-t-2': kursdifferenz}">
+		<td class="border border-[#7f7f7f]/20 px-2 whitespace-nowrap" :class="{'border-t-2': setze_kursdifferenz}">
 			<div class="flex gap-1">
 				<template v-if=" kurs === edit_name ">
 					{{ kursbezeichnung }}-
@@ -12,8 +12,8 @@
 				</template>
 			</div>
 		</td>
-		<td class="border border-[#7f7f7f]/20 text-center" :class="{'border-t-2': kursdifferenz}">
-			<svws-ui-checkbox v-if="allow_regeln" v-model="koop"></svws-ui-checkbox>
+		<td class="border border-[#7f7f7f]/20 text-center" :class="{'border-t-2': setze_kursdifferenz}">
+			<svws-ui-checkbox headless v-if="allow_regeln" v-model="koop"></svws-ui-checkbox>
 			<template v-else>{{koop ? "&#x2713;" : "&#x2717;"}}</template>
 		</td>
 		<template v-if="setze_kursdifferenz && kurs_blockungsergebnis">
@@ -26,7 +26,7 @@
 			v-for="(schiene) in schienen"
 			:key="schiene.id"
 			class="border border-[#7f7f7f]/20 text-center"
-			:class="{'border-t-2': kursdifferenz, 'bg-yellow-200': drag_data.kurs?.id === kurs.id && drag_data.schiene?.id !== schiene.id, 'bg-slate-500': schiene_gesperrt(schiene)}"
+			:class="{'border-t-2': setze_kursdifferenz, 'bg-yellow-200': drag_data.kurs?.id === kurs.id && drag_data.schiene?.id !== schiene.id, 'bg-slate-500': schiene_gesperrt(schiene)}"
 			tag="td"
 			@drop="drop_aendere_kursschiene($event, schiene)"
 			>
@@ -57,7 +57,7 @@
 		</drop-data>
 		<!-- Es dürfen keine Regeln erstellt werden -->
 		<template v-else v-for="schiene in schienen" :key="schiene.nummer">
-			<td class="border border-[#7f7f7f]/20 text-center py-1" :class="{ 'border-t-2': kursdifferenz }" >
+			<td class="border border-[#7f7f7f]/20 text-center py-1" :class="{ 'border-t-2': setze_kursdifferenz }" >
 				<svws-ui-badge
 					v-if="kurs_schiene_zugeordnet(schiene)"
 					size="tiny" :variant="selected_kurs?'primary':'highlight'" class="cursor-pointer"
