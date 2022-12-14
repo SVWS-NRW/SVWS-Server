@@ -1,6 +1,6 @@
 In dieser Datei befindet sich eine Übersicht der Anlagen am Berufskolleg.
 Eine Beschreibung der in den einzelnen Anlagen zu vergebenden Abschlüss.
-Außerdem ein erste Beschreibung der Vorgehensweise.
+Außerdem eine erste Beschreibung der Vorgehensweise.
 Die einzelnen Beschreibungen befinden sich dann in den Anlege Packages.
 
 
