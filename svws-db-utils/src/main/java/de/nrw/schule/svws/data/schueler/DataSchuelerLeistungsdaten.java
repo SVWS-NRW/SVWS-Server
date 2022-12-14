@@ -65,7 +65,7 @@ public class DataSchuelerLeistungsdaten extends DataManager<Long> {
 		daten.Mahndatum = dto.Warndatum;
 		daten.istEpochal = dto.VorherAbgeschl == null ? false : dto.VorherAbgeschl; 
 		daten.geholtJahrgangAbgeschlossen = dto.AbschlussJahrgang;
-		daten.gewichtungAllgemeinbildend = dto.Gewichtung;
+		daten.gewichtungAllgemeinbildend = dto.Gewichtung == null ? 1 : dto.Gewichtung;
 		daten.noteBerufsabschluss = dto.NoteAbschlussBA; 
 		daten.textFachbezogeneLernentwicklung = dto.Lernentw;
 		daten.umfangLernstandsbericht = dto.Umfang;

@@ -21,12 +21,10 @@ import de.nrw.schule.svws.core.types.KursFortschreibungsart;
 import de.nrw.schule.svws.core.types.Note;
 import de.nrw.schule.svws.core.types.gost.GostHalbjahr;
 import de.nrw.schule.svws.core.types.gost.GostKursart;
-import de.nrw.schule.svws.core.types.klassen.Klassenart;
-import de.nrw.schule.svws.core.types.schule.AllgemeinbildendOrganisationsformen;
-import de.nrw.schule.svws.core.types.schule.Pruefungsordnung;
 import de.nrw.schule.svws.core.utils.gost.GostBlockungsdatenManager;
 import de.nrw.schule.svws.core.utils.gost.GostBlockungsergebnisManager;
 import de.nrw.schule.svws.data.DataManager;
+import de.nrw.schule.svws.data.schueler.DBUtilsSchuelerLernabschnittsdaten;
 import de.nrw.schule.svws.data.schule.SchulUtils;
 import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.dto.current.gost.DTOGostSchuelerFachbelegungen;
@@ -517,89 +515,13 @@ public class DataGostBlockungsergebnisse extends DataManager<Long> {
 	    	}
 	        if (!conn.transactionCommit())
 	        	throw OperationError.INTERNAL_SERVER_ERROR.exception();
-            conn.transactionBegin();
-			// Bestimme die ID, mit welche der nächste Schülerlernabschnitt eingefügt wird
-			DTODBAutoInkremente dbLernabschnitteID = conn.queryByKey(DTODBAutoInkremente.class, Schema.tab_SchuelerLernabschnittsdaten.name());
-			long idLernabschnitt = dbLernabschnitteID == null ? 1 : dbLernabschnitteID.MaxID + 1;
 	    	// Durchwandere alle Schüler des Abitur-Jahrgangs und lege ggf. fehlende Lernabschnitte an
 			HashMap<Long, Long> mapLernabschnitte = new HashMap<>();
 	    	for (Schueler schueler : datenManager.daten().schueler) {
-	    		// Prüfe, ob bereits ein Lernabschnitt vorhanden ist
-	    		List<DTOSchuelerLernabschnittsdaten> lernabschnitte = conn.queryList("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = ?1 AND e.Schuljahresabschnitts_ID = ?2 AND e.WechselNr IS NULL",
-	    				DTOSchuelerLernabschnittsdaten.class, schueler.id, abschnitt.ID);
-	    		DTOSchuelerLernabschnittsdaten lernabschnitt = null;
-	    		if (lernabschnitte.size() > 0) {
-	    			lernabschnitt = lernabschnitte.get(0);
-	    		} else {
-	    			lernabschnitt = new DTOSchuelerLernabschnittsdaten(idLernabschnitt++, schueler.id, abschnitt.ID, false);
-	    			lernabschnitt.WechselNr = null;
-	    			lernabschnitt.Schulbesuchsjahre = null; // TODO Berechnen aus altem Lernabschnitt
-	    			lernabschnitt.Hochrechnung = null;
-	    			lernabschnitt.SemesterWertung = true;
-	    			lernabschnitt.PruefOrdnung = Pruefungsordnung.APO_GOST.daten.kuerzelSchild;  // TODO Schulgliederung.DEFAULT, Schulgliederung.GY8 -> /G8 oder Schulgliederung.GY9 -> /G9
-	    			lernabschnitt.Klassen_ID = null;  // TODO aus altem Lernabschnitt ermitteln
-	    			lernabschnitt.Verspaetet = null;
-	    			lernabschnitt.NPV_Fach_ID = null;
-	    			lernabschnitt.NPV_NoteKrz = null;
-	    			lernabschnitt.NPV_Datum = null;
-	    			lernabschnitt.NPAA_Fach_ID = null;
-	    			lernabschnitt.NPAA_NoteKrz = null;
-	    			lernabschnitt.NPAA_Datum = null;
-	    			lernabschnitt.NPBQ_Fach_ID = null;
-	    			lernabschnitt.NPBQ_NoteKrz = null;
-	    			lernabschnitt.NPBQ_Datum = null;
-	    			lernabschnitt.VersetzungKrz = null;
-	    			lernabschnitt.AbschlussArt = null;
-	    			lernabschnitt.AbschlIstPrognose = null;
-	    			lernabschnitt.Konferenzdatum = null;
-	    			lernabschnitt.ZeugnisDatum = null;
-	    			lernabschnitt.Schulgliederung = null; // TODO aus der Klassentabelle oder der Jahrgangstabelle
-	    			lernabschnitt.ASDJahrgang = halbjahr.jahrgang;
-	    			lernabschnitt.Jahrgang_ID = jahrgang.ID;
-	    			lernabschnitt.Fachklasse_ID = null;
-	    			lernabschnitt.Schwerpunkt_ID = null;
-	    			lernabschnitt.ZeugnisBem = null;
-	    			lernabschnitt.Schwerbehinderung = null; // TODO aus altem Lernabschnitt
-	    			lernabschnitt.Foerderschwerpunkt_ID = null; // TODO aus altem Lernabschnitt
-	    			lernabschnitt.OrgFormKrz = AllgemeinbildendOrganisationsformen.HALBTAG.daten.kuerzel;
-	    			lernabschnitt.RefPaed = null;
-	    			lernabschnitt.Klassenart = Klassenart.RK.daten.kuerzel; // TODO aus altem Lernabschnitt übernehmen
-	    			lernabschnitt.SumFehlStd = 0;
-	    			lernabschnitt.SumFehlStdU = 0;
-	    			lernabschnitt.Wiederholung = false;   // TODO prüfe, ob ein alter Lernabschnitt mit dem Gost-Halbjahr existiert
-	    			lernabschnitt.Gesamtnote_GS = null;
-	    			lernabschnitt.Gesamtnote_NW = null;
-	    			lernabschnitt.Folgeklasse_ID = null;  // TODO aus Klassentabelle
-	    			lernabschnitt.Foerderschwerpunkt2_ID = null; // TODO aus altem Lernabschnitt
-	    			lernabschnitt.Abschluss = null;
-	    			lernabschnitt.Abschluss_B = null;
-	    			lernabschnitt.DSNote = null;
-	    			lernabschnitt.AV_Leist = null;
-	    			lernabschnitt.AV_Zuv = null;
-	    			lernabschnitt.AV_Selbst = null;
-	    			lernabschnitt.SV_Verant = null;
-	    			lernabschnitt.SV_Konfl = null;
-	    			lernabschnitt.SV_Koop = null;
-	    			lernabschnitt.MoeglNPFaecher = null;
-	    			lernabschnitt.Zertifikate = null;
-	    			lernabschnitt.DatumFHR = null;
-	    			lernabschnitt.PruefAlgoErgebnis = null;
-	    			lernabschnitt.Zeugnisart = null;
-	    			lernabschnitt.DatumVon = null;  // TODO
-	    			lernabschnitt.DatumBis = null;  // TODO
-	    			lernabschnitt.FehlstundenGrenzwert = null;
-	    			lernabschnitt.Sonderpaedagoge_ID = null;
-	    			lernabschnitt.FachPraktAnteilAusr = null;
-	    			lernabschnitt.BilingualerZweig = null;   // TODO aus alten Lernabschnitt übernehmen
-	    			lernabschnitt.AOSF = null;   // TODO aus alten Lernabschnitt übernehmen
-	    			lernabschnitt.Autist = null;   // TODO aus alten Lernabschnitt übernehmen
-	    			lernabschnitt.ZieldifferentesLernen = null;
-	    			conn.transactionPersist(lernabschnitt);
-	    		}
+	    		DTOSchuelerLernabschnittsdaten lernabschnitt = DBUtilsSchuelerLernabschnittsdaten
+	    				.transactionGetOrCreateByPrevious(conn, schueler.id, abschnitt);
 	    		mapLernabschnitte.put(schueler.id, lernabschnitt.ID);
 	    	}
-	        if (!conn.transactionCommit())
-	        	throw OperationError.INTERNAL_SERVER_ERROR.exception();
             conn.transactionBegin();
 			// Bestimme die ID, mit welcher die nächsten Schülerleistungsdaten eingefügt werden
 			DTODBAutoInkremente dbLeistungenID = conn.queryByKey(DTODBAutoInkremente.class, Schema.tab_SchuelerLeistungsdaten.name());
@@ -709,7 +631,7 @@ public class DataGostBlockungsergebnisse extends DataManager<Long> {
 	    			leistung.WochenstdZusatzkraft = null;  // TODO
 	    			leistung.Prf10Fach = null;
 	    			leistung.AufZeugnis = true;
-	    			leistung.Gewichtung = null;
+	    			leistung.Gewichtung = 1;
 	    			leistung.NoteAbschlussBA = null;
 	    			leistung.Umfang = null;
 	    			conn.transactionPersist(leistung);

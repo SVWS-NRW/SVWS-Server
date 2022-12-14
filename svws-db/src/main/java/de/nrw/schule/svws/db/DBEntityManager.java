@@ -206,8 +206,10 @@ public class DBEntityManager implements AutoCloseable {
 	 */
 	public boolean transactionCommit() {
 		try {
-			if (em.getTransaction().isActive())
+			if (em.getTransaction().isActive()) {
 				em.getTransaction().commit();
+				em.clear();
+			}
 			return true;
 		} catch (@SuppressWarnings("unused") RollbackException | IllegalStateException e) {
 			return false;
