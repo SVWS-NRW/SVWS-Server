@@ -4,21 +4,23 @@
 		<div class="flex-none">
 			<div class="sticky">
 				<div class="rounded-lg shadow">
-					<svws-ui-checkbox v-model="filter_kollision" class="px-4">
-						Nur Kollisionen ({{schueler_kollisionen}}/{{schueler?.length || 0}})
-					</svws-ui-checkbox>
-					<template v-if="kursfilter">
-						<div>
-							<svws-ui-checkbox
-								v-if="kursfilter"
-								v-model="filter_negiert" class="px-4"
-							>
-								Nicht in diesem Kurs
-							</svws-ui-checkbox>
-						</div>
-						<div class="px-4 font-bold"> Kursansicht {{aktiver_kursname}} 
-						</div>
-					</template>
+					<div class="flex justify-between">
+						<svws-ui-checkbox v-model="kurs_filter_toggle" class="" > Kursfilter </svws-ui-checkbox>
+						<svws-ui-multi-select v-if="kurs_filter_toggle" v-model="kurs_filter" :items="kurse" headless :item-text="(kurs: GostBlockungKurs) => manager?.getOfKursName(kurs.id)" class="w-52"/>
+					</div>
+					<div class="flex justify-between">
+						<svws-ui-checkbox v-model="fach_filter_toggle" class="" > Fachfilter </svws-ui-checkbox>
+						<svws-ui-multi-select v-if="fach_filter_toggle" v-model="fach_filter" :items="app.dataFaecher.daten" headless :item-text="(fach: GostFach) => fach.bezeichnung" class="w-36"/>
+						<svws-ui-multi-select v-if="fach_filter_toggle" v-model="kursart_filter" :items="GostKursart.values()" headless :item-text="(kursart: GostKursart) => kursart.kuerzel" class="w-16"/>
+					</div>
+					<div class="pl-4">
+						<svws-ui-radio-group>
+							<svws-ui-radio-option v-model="radio_filter" value="alle" name="Alle" label="Alle" />
+							<svws-ui-radio-option v-model="radio_filter" value="kollisionen" name="Kollisionen" label="Kollisionen" />
+							<svws-ui-radio-option v-model="radio_filter" value="nichtwahlen" name="Nichtwahlen" label="Nichtwahlen" />
+							<svws-ui-radio-option v-model="radio_filter" value="kollisionen_nichtwahlen" name="Kollisionen_Nichtwahlen" label="Kollisionen und Nichtwahlen" />
+						</svws-ui-radio-group>
+					</div>
 					<svws-ui-text-input v-model="filter_name" type="search" placeholder="Suche nach Namen">
 						<i-ri-search-line />
 					</svws-ui-text-input>
@@ -88,7 +90,9 @@
 		GostBlockungsergebnisKurs,
 		GostBlockungsergebnisManager,
 		GostBlockungsergebnisSchiene,
+		GostFach,
 		GostFachwahl,
+		GostKursart,
 		List,
 		SchuelerListeEintrag,
 		Vector
@@ -128,21 +132,18 @@
 			}
 		});
 
-	const kursfilter: ComputedRef<boolean> =
-		computed(() => schueler_filter.kursid !== undefined);
-
 	const blockung_aktiv: ComputedRef<boolean> =
 		computed(()=> app.blockungsauswahl.ausgewaehlt?.istAktiv || false);
 
 	const aktiver_kursname: ComputedRef<String | undefined> =
-		computed(() => schueler_filter.kursid === undefined ? undefined : manager.value?.getOfKursName(schueler_filter.kursid));
+		computed(() => schueler_filter.kurs === undefined ? undefined : manager.value?.getOfKursName(schueler_filter.kurs.id));
 
 	const schueler_kollisionen: ComputedRef<number> =
 		computed(() => {
 			if (manager.value === undefined)
 				return 0;
-			if (schueler_filter.kursid !== undefined)
-				return manager.value.getOfKursAnzahlKollisionen(schueler_filter.kursid);
+			if (schueler_filter.kurs?.id !== undefined)
+				return manager.value.getOfKursAnzahlKollisionen(schueler_filter.kurs.id);
 			return manager.value.getMengeDerSchuelerMitKollisionen().size();
 		});
 
@@ -166,24 +167,100 @@
 		return app.dataKursblockung.datenmanager.getOfSchuelerFacharten(selected.value.id)
 	});
 
-	const filter_kollision: WritableComputedRef<boolean> =
+	const fach_filter_toggle: WritableComputedRef<boolean> =
 		computed({
-		get(): boolean {
-			return schueler_filter.kollisionsfilter;
-		},
-		set(value: boolean) {
-			schueler_filter.kollisionsfilter = value;
-			app.listAbiturjahrgangSchueler.filter = schueler_filter;
-		}
-	});
+			get(): boolean {
+				if (fach_filter.value) return true;
+				return false;
+			},
+			set(value: boolean) {
+				if (value && app.dataFaecher.daten)
+					fach_filter.value = app.dataFaecher.daten.get(0);
+				else
+					fach_filter.value = undefined;
+			}
+		})
+	const fach_filter: WritableComputedRef<GostFach | undefined> =
+		computed({
+			get(): GostFach | undefined {
+				return schueler_filter.fach;
+			},
+			set(value: GostFach | undefined) {
+				schueler_filter.fach = value;
+				app.listAbiturjahrgangSchueler.filter = schueler_filter;
+			}
+		})
 
-	const filter_negiert: WritableComputedRef<boolean> =
+	const kurs_filter_toggle: WritableComputedRef<boolean> =
 		computed({
-		get(): boolean {
-			return schueler_filter.kursfilter_negiert;
+			get(): boolean {
+				if (kurs_filter.value) return true;
+				return false;
+			},
+			set(value: boolean) {
+				if (value && app.dataFaecher.daten) {
+					kurs_filter.value = kurse.value.get(0);
+					kursart_filter.value = GostKursart.GK;
+				}
+				else {
+					kurs_filter.value = undefined;
+					kursart_filter.value = undefined;
+				}
+
+			}
+		})
+	const kurs_filter: WritableComputedRef<GostBlockungKurs | undefined> =
+		computed({
+			get(): GostBlockungKurs | undefined {
+				return schueler_filter.kurs;
+			},
+			set(value: GostBlockungKurs | undefined) {
+				schueler_filter.kurs = value;
+				app.listAbiturjahrgangSchueler.filter = schueler_filter;
+			}
+		})
+
+	const kursart_filter: WritableComputedRef<GostKursart | undefined> =
+		computed({
+			get(): GostKursart | undefined {
+				return schueler_filter.kursart;
+			},
+			set(value: GostKursart | undefined) {
+				schueler_filter.kursart = value;
+				app.listAbiturjahrgangSchueler.filter = schueler_filter;
+			}
+		})
+
+	const radio_filter: WritableComputedRef<string> =
+		computed({
+		get(): string {
+			if (schueler_filter.kollisionen && schueler_filter.nichtwahlen)
+				return 'kollisionen_nichtwahlen';
+			if (schueler_filter.kollisionen)
+				return 'kollisionen';
+			if (schueler_filter.nichtwahlen)
+				return 'nichtwahlen';
+			else return 'alle';
 		},
-		set(value: boolean) {
-			schueler_filter.kursfilter_negiert = value;
+		set(value: string) {
+			switch (value) {
+				case 'alle':
+					schueler_filter.kollisionen = false;
+					schueler_filter.nichtwahlen = false;
+					break;
+				case 'kollisionen':
+					schueler_filter.kollisionen = true;
+					schueler_filter.nichtwahlen = false;
+					break;
+				case 'nichtwahlen':
+					schueler_filter.kollisionen = false;
+					schueler_filter.nichtwahlen = true;
+					break;
+				case 'kollisionen_nichtwahlen':
+					schueler_filter.kollisionen = true;
+					schueler_filter.nichtwahlen = true;
+					break;
+			}
 			app.listAbiturjahrgangSchueler.filter = schueler_filter;
 		}
 	});
