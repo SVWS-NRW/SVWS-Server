@@ -44,6 +44,8 @@ import { GostJahrgangsdaten, cast_de_nrw_schule_svws_core_data_gost_GostJahrgang
 import { GostLeistungen, cast_de_nrw_schule_svws_core_data_gost_GostLeistungen } from '../core/data/gost/GostLeistungen';
 import { GostSchuelerFachwahl, cast_de_nrw_schule_svws_core_data_gost_GostSchuelerFachwahl } from '../core/data/gost/GostSchuelerFachwahl';
 import { GostStatistikFachwahl, cast_de_nrw_schule_svws_core_data_gost_GostStatistikFachwahl } from '../core/data/gost/GostStatistikFachwahl';
+import { HerkunftKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_HerkunftKatalogEintrag } from '../core/data/schule/HerkunftKatalogEintrag';
+import { HerkunftsartKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_HerkunftsartKatalogEintrag } from '../core/data/schule/HerkunftsartKatalogEintrag';
 import { HerkunftsschulnummerKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_HerkunftsschulnummerKatalogEintrag } from '../core/data/schule/HerkunftsschulnummerKatalogEintrag';
 import { JavaInteger, cast_java_lang_Integer } from '../java/lang/JavaInteger';
 import { JahrgangsDaten, cast_de_nrw_schule_svws_core_data_jahrgang_JahrgangsDaten } from '../core/data/jahrgang/JahrgangsDaten';
@@ -5224,6 +5226,60 @@ export class ApiServer extends BaseApi {
 		const obj = JSON.parse(result);
 		let ret = new Vector<SchuelerListeEintrag>();
 		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(SchuelerListeEintrag.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getKatalogHerkuenfte für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/allgemein/herkuenfte
+	 * 
+	 * Erstellt eine Liste aller in dem Katalog vorhandenen Herkünfte von Schülern. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Eine Liste von Katalog-Einträgen
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<HerkunftKatalogEintrag>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
+	 *   Code 404: Keine Katalog-Einträge gefunden
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * 
+	 * @returns Eine Liste von Katalog-Einträgen
+	 */
+	public async getKatalogHerkuenfte(schema : string) : Promise<List<HerkunftKatalogEintrag>> {
+		let path : string = "/db/{schema}/schueler/allgemein/herkuenfte"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		let ret = new Vector<HerkunftKatalogEintrag>();
+		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(HerkunftKatalogEintrag.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getKatalogHerkunftsarten für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/allgemein/herkunftsarten
+	 * 
+	 * Erstellt eine Liste aller in dem Katalog vorhandenen Herkunftsarten bei Schülern. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Eine Liste von Katalog-Einträgen
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<HerkunftsartKatalogEintrag>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
+	 *   Code 404: Keine Katalog-Einträge gefunden
+	 * 
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * 
+	 * @returns Eine Liste von Katalog-Einträgen
+	 */
+	public async getKatalogHerkunftsarten(schema : string) : Promise<List<HerkunftsartKatalogEintrag>> {
+		let path : string = "/db/{schema}/schueler/allgemein/herkunftsarten"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		let ret = new Vector<HerkunftsartKatalogEintrag>();
+		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(HerkunftsartKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 

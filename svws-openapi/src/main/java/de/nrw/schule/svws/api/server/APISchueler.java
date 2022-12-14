@@ -13,9 +13,13 @@ import de.nrw.schule.svws.core.data.schueler.SchuelerListeEintrag;
 import de.nrw.schule.svws.core.data.schueler.SchuelerSchulbesuchsdaten;
 import de.nrw.schule.svws.core.data.schueler.SchuelerStammdaten;
 import de.nrw.schule.svws.core.data.schueler.UebergangsempfehlungKatalogEintrag;
+import de.nrw.schule.svws.core.data.schule.HerkunftKatalogEintrag;
+import de.nrw.schule.svws.core.data.schule.HerkunftsartKatalogEintrag;
 import de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenz;
 import de.nrw.schule.svws.data.betriebe.DataBetriebsStammdaten;
 import de.nrw.schule.svws.data.erzieher.DataErzieherStammdaten;
+import de.nrw.schule.svws.data.schueler.DataKatalogHerkuenfte;
+import de.nrw.schule.svws.data.schueler.DataKatalogHerkunftsarten;
 import de.nrw.schule.svws.data.schueler.DataKatalogSchuelerFahrschuelerarten;
 import de.nrw.schule.svws.data.schueler.DataKatalogUebergangsempfehlung;
 import de.nrw.schule.svws.data.schueler.DataSchuelerBetriebsdaten;
@@ -431,6 +435,52 @@ public class APISchueler {
     public Response getKatalogUebergangsempfehlung(@PathParam("schema") String schema, @Context HttpServletRequest request) {
         try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
             return (new DataKatalogUebergangsempfehlung()).getList();
+        }
+    }
+
+    /**
+     * Die OpenAPI-Methode für die Abfrage des Katalogs der Herkünfte von Schülern.
+     *  
+     * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param request   die Informationen zur HTTP-Anfrage
+     * 
+     * @return die Liste mit dem Katalog der Herkünfte von Schülern.
+     */
+    @GET
+    @Path("/allgemein/herkuenfte")
+    @Operation(summary = "Gibt den Katalog der Herkünfte von Schülern zurück.",
+               description = "Erstellt eine Liste aller in dem Katalog vorhandenen Herkünfte von Schülern. "
+                           + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
+    @ApiResponse(responseCode = "200", description = "Eine Liste von Katalog-Einträgen",
+                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = HerkunftKatalogEintrag.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
+    @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
+    public Response getKatalogHerkuenfte(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
+            return (new DataKatalogHerkuenfte()).getList();
+        }
+    }
+
+    /**
+     * Die OpenAPI-Methode für die Abfrage des Katalogs der Herkunftsarten bei Schülern.
+     *  
+     * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param request   die Informationen zur HTTP-Anfrage
+     * 
+     * @return die Liste mit dem Katalog der Herkunftsarten bei Schülern.
+     */
+    @GET
+    @Path("/allgemein/herkunftsarten")
+    @Operation(summary = "Gibt den Katalog der Herkunftsarten bei Schülern zurück.",
+               description = "Erstellt eine Liste aller in dem Katalog vorhandenen Herkunftsarten bei Schülern. "
+                           + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
+    @ApiResponse(responseCode = "200", description = "Eine Liste von Katalog-Einträgen",
+                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = HerkunftsartKatalogEintrag.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
+    @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
+    public Response getKatalogHerkunftsarten(@PathParam("schema") String schema, @Context HttpServletRequest request) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
+            return (new DataKatalogHerkunftsarten()).getList();
         }
     }
     
