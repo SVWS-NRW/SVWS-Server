@@ -42,18 +42,18 @@ import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Diese Klasse beinhaltet den Code zur Erstellung eines Wahlbogens
- * für die Laufbahnplanung der gymnasialen Oberstufe. 
+ * für die Laufbahnplanung der gymnasialen Oberstufe.
  */
 public class PDFGostWahlbogen extends PDFCreator {
-	
-	private final static String html = 
+
+	private final static String html =
 		"""
 		<table width="100%" border="0" cellspacing="0" cellpadding="0">
 			<tr>
 				<td style="width: 15%; text-align: left; vertical-align: top;">
-					<p>@@PRUEFUNGSORDNUNG@@</p> 
+					<p>@@PRUEFUNGSORDNUNG@@</p>
 				</td>
-				<td style="width: 70%; text-align: center;"> 
+				<td style="width: 70%; text-align: center;">
 					<h2>@@SCHULBEZEICHNUNG_1@@<br/>@@SCHULBEZEICHNUNG_2@@<br/>@@SCHULBEZEICHNUNG_3@@</h2>
 				</td>
 				<td style="width: 15%; text-align: right; vertical-align: top;">
@@ -107,7 +107,7 @@ public class PDFGostWahlbogen extends PDFCreator {
 			</tfoot>
 		</table>
 		<p>Schulorganisatorische Gründe können zu einer Änderung der Fachwahl und der Laufbahn führen. Korrekturwünsche können
-		vor jedem Halbjahreswechsel nach Rücksprache mit den Beratungslehrern durchgeführt werden.</p>		
+		vor jedem Halbjahreswechsel nach Rücksprache mit den Beratungslehrern durchgeführt werden.</p>
 		@@BELEGUNGSFEHLER@@
 		@@BELEGUNGSHINWEISE@@
 		<table width="100%" border="0" cellspacing="0" cellpadding="0" style="page-break-inside: avoid;">
@@ -144,8 +144,8 @@ public class PDFGostWahlbogen extends PDFCreator {
 		<span class="tinyfont" style="margin-right: 2em">2) Summe der durchschnittlichen Jahresstunden</span></p>
 		</div>
 		""";
-	
-	private final static String css = 
+
+	private final static String css =
 		"""
 		table.faecher thead {
 			background-color: #E0E0E0;
@@ -172,36 +172,36 @@ public class PDFGostWahlbogen extends PDFCreator {
 
 
 	/** Die Laufbahndaten des Schülers */
-	private Abiturdaten abidaten; 
-	
+	private Abiturdaten abidaten;
+
 	/** Die Fächer der gymnasialen Oberstufe für den Abiturjahrgang des Schülers */
 	private GostFaecherManager gostFaecher;
-	
+
 	/** Der Abiturdaten-Manager */
 	private AbiturdatenManager manager;
 
 
 	/**
-	 * Erstellt einen neuen PDF-Wahlbogen mit den übergebenen Daten. 
-	 * 
+	 * Erstellt einen neuen PDF-Wahlbogen mit den übergebenen Daten.
+	 *
 	 * @param schuelerName        der Name des Schülers bestehend aus Vorname und Nachname getrennt durch ein Leerzeichen
 	 * @param geschlecht          das Geschlecht des Schülers
 	 * @param klasse              die Klasse des Schülers
 	 * @param schulbezeichnung    die Bezeichnung der Schule bestehend aus drei Teilen
-	 * @param abidaten            die Laufbahndaten des Schülers 
+	 * @param abidaten            die Laufbahndaten des Schülers
 	 * @param gostFaecher         die Fächer der gymnasialen Oberstufe für den Abiturjahrgang des Schülers
 	 * @param planungsHalbjahr    das Halbjahr der gymnasialen Oberstufe, auf welches sich die Planung bezieht
 	 * @param bemerkungJahrgang   der Text, der bei diesem Schüler oben auf dem Beratungsbogen erscheinen soll.
 	 * @param datumBeratung       das Datum der letzten Beratung des Schülers
 	 */
-	private PDFGostWahlbogen(String schuelerName, Geschlecht geschlecht, String klasse, String[] schulbezeichnung, Abiturdaten abidaten, 
+	private PDFGostWahlbogen(String schuelerName, Geschlecht geschlecht, String klasse, String[] schulbezeichnung, Abiturdaten abidaten,
 			                 GostFaecherManager gostFaecher, GostHalbjahr planungsHalbjahr, String bemerkungJahrgang,
 			                 String datumBeratung) {
-		// Setze den Titel des Dokuments, das HTML-Template und die speziellen CSS-Definitionen für dieses Dokument 
+		// Setze den Titel des Dokuments, das HTML-Template und die speziellen CSS-Definitionen für dieses Dokument
 		super("Wahlbogen für das Halbjahr " + planungsHalbjahr.kuerzel + " von " + schuelerName, html, css);
 		this.abidaten = abidaten;
 		this.gostFaecher = gostFaecher;
-		this.manager = new AbiturdatenManager(this.abidaten, this.gostFaecher.toVector(), GostBelegpruefungsArt.GESAMT);		
+		this.manager = new AbiturdatenManager(this.abidaten, this.gostFaecher.toVector(), GostBelegpruefungsArt.GESAMT);
 		// Ersetze die Felder des Templates mit den Daten
 		bodyData.put("PRUEFUNGSORDNUNG", "APO-GOSt");
 		bodyData.put("SCHULBEZEICHNUNG_1", schulbezeichnung[0] == null ? "" : schulbezeichnung[0]);
@@ -225,8 +225,8 @@ public class PDFGostWahlbogen extends PDFCreator {
 		getErgebnisse();
 		bodyData.put("ZEIT", LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss")));
 	}
-	
-	
+
+
 	/**
 	 * Bestimmt die Anzahl der belegten Kurse bzw. die Anzahl der Anrechenbaren Kurse aus der Qualifikationsphase und zusätzlich
 	 * die Wochenstunden und die durchschnittlichen Jahresstunden.
@@ -249,7 +249,7 @@ public class PDFGostWahlbogen extends PDFCreator {
 		bodyData.put("WSTD_Q22", "" + wstd[5]);
 		bodyData.put("JSTD", "" + ((wstd[0] + wstd[1] + wstd[2] + wstd[3] + wstd[4] + wstd[5]) / 2.0));
 	}
-	
+
 	/**
 	 * Führt eine Laufbahnprüfung durch und gibt die Fehler- und die
 	 * Informationen zur Laufbahn aus.
@@ -288,8 +288,8 @@ public class PDFGostWahlbogen extends PDFCreator {
 		}
 		bodyData.put("BELEGUNGSHINWEISE", sb.toString());
 	}
-	
-	
+
+
 	private String getRows() {
 		// Erzeuge eine Map Fach-ID -> AbiturFachbelegung aus den AbiturDaten
 		Map<Long, AbiturFachbelegung> belegungen = abidaten.fachbelegungen.stream().collect(Collectors.toMap(b -> b.fachID, b -> b));
@@ -308,7 +308,11 @@ public class PDFGostWahlbogen extends PDFCreator {
 				Sprachbelegung sprachbelegung = sprachbelegungen.get(zfach.daten.kuerzel);
 				Sprachpruefung sprachpruefung = sprachpruefungen.get(zfach.daten.kuerzel);
 				if (sprachbelegung != null) {
-					rows.append("<td>").append(sprachbelegung.reihenfolge).append(" (ab Jg. ").append(sprachbelegung.belegungVonJahrgang).append(")").append("</td>");
+					if((sprachbelegung.belegungVonJahrgang != null) && !sprachbelegung.belegungVonJahrgang.isEmpty()) {
+						// Nur Sprachen heranziehen, die auch vor oder mit der eigenen Belegung hätten starten können. So wird bspw. die neue Fremdsprache ab EF nicht durch die Belegung der gleichen Sprache in der Sek-I als belegt markiert.
+						if ((zfach.daten.abJahrgang == null) || zfach.daten.abJahrgang.isEmpty() || (zfach.daten.abJahrgang.compareToIgnoreCase(sprachbelegung.belegungVonJahrgang) <= 0))
+							rows.append("<td>").append(sprachbelegung.reihenfolge).append(" (ab Jg. ").append(sprachbelegung.belegungVonJahrgang).append(")").append("</td>");
+					}
 				} else if ((sprachpruefung != null) && (sprachpruefung.kannBelegungAlsFortgefuehrteSpracheErlauben)) {
 					rows.append("<td>");
 					if (sprachpruefung.kannErstePflichtfremdspracheErsetzen)
@@ -351,11 +355,11 @@ public class PDFGostWahlbogen extends PDFCreator {
 		}
 		return rows.toString();
 	}
-	
-	
+
+
 	/**
 	 * Gibt die Tabellenzelle für die Halbjahres-Belegung zurück.
-	 *  
+	 *
 	 * @param sb           der {@link StringBuilder}, in welchen die Tabellenzelle geschrieben wird.
 	 * @param belegungHj   die Halbjahresbelegung
 	 */
@@ -385,14 +389,14 @@ public class PDFGostWahlbogen extends PDFCreator {
 		return;
 	}
 
-	
+
 	/**
-	 * Erstellt das PDF-Dokument für den Wahlbogen zu der Laufbahn 
+	 * Erstellt das PDF-Dokument für den Wahlbogen zu der Laufbahn
 	 * eines Schülers der gymnasialen Oberstufe.
-	 * 
-	 * @param conn          die Datenbank-Verbindung 
-	 * @param schueler_id   die ID des Schülers 
-	 * 
+	 *
+	 * @param conn          die Datenbank-Verbindung
+	 * @param schueler_id   die ID des Schülers
+	 *
 	 * @return die HTTP-Response mit dem PDF-Dokument
 	 */
 	public static Response query(DBEntityManager conn, Long schueler_id) {
@@ -437,7 +441,7 @@ public class PDFGostWahlbogen extends PDFCreator {
     		schueler.Vorname + " " + schueler.Nachname,
     		schueler.Geschlecht,
     		klasse.Klasse,
-    		new String[] { schule.Bezeichnung1, schule.Bezeichnung2, schule.Bezeichnung3 }, 
+    		new String[] { schule.Bezeichnung1, schule.Bezeichnung2, schule.Bezeichnung3 },
     		daten,
     		gostFaecher,
     		planungsHalbjahr,
@@ -451,5 +455,5 @@ public class PDFGostWahlbogen extends PDFCreator {
 			.header("Content-Disposition", "attachment; filename=Laufbahnplanung_" + schueler.Nachname.replace(' ', '_') + "_" + schueler.Vorname.replace(' ', '_') + ".pdf")  // TODO ergänze Informationen zum Dateinamen, z.B. Schülername oder ID
 			.entity(data).build();
 	}
-	
+
 }
