@@ -1418,11 +1418,14 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		let menge : Vector<Schueler> = new Vector();
 		for (let schueler of this._parent.getMengeOfSchueler()) {
 			let pSchuelerID : number = schueler.id;
-			if ((pKonfliktTyp === 1) || (pKonfliktTyp === 3)) 
+			if (pKonfliktTyp === 1) 
 				if (this.getOfSchuelerHatKollision(pSchuelerID) === false) 
 					continue;
-			if ((pKonfliktTyp === 2) || (pKonfliktTyp === 3)) 
+			if (pKonfliktTyp === 2) 
 				if (this.getOfSchuelerHatNichtwahl(pSchuelerID) === false) 
+					continue;
+			if (pKonfliktTyp === 3) 
+				if ((this.getOfSchuelerHatKollision(pSchuelerID) === false) && (this.getOfSchuelerHatNichtwahl(pSchuelerID) === false)) 
 					continue;
 			if (pSubString.length > 0) 
 				if (this.getOfSchuelerHatImNamenSubstring(pSchuelerID, pSubString) === false) 

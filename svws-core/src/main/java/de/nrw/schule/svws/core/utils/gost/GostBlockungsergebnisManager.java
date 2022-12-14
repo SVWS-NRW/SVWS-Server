@@ -1538,11 +1538,14 @@ public class GostBlockungsergebnisManager {
 		
 		for (@NotNull Schueler schueler : _parent.getMengeOfSchueler()) {
 			long pSchuelerID = schueler.id;
-			if ((pKonfliktTyp == 1) || (pKonfliktTyp == 3))
+			if (pKonfliktTyp == 1)
 				if (getOfSchuelerHatKollision(pSchuelerID) == false)
 					continue;
-			if ((pKonfliktTyp == 2) || (pKonfliktTyp == 3))
+			if (pKonfliktTyp == 2)
 				if (getOfSchuelerHatNichtwahl(pSchuelerID) == false)
+					continue;
+			if (pKonfliktTyp == 3)
+				if ((getOfSchuelerHatKollision(pSchuelerID) == false) && (getOfSchuelerHatNichtwahl(pSchuelerID) == false))
 					continue;
 			if (pSubString.length() > 0)
 				if (getOfSchuelerHatImNamenSubstring(pSchuelerID, pSubString) == false)
