@@ -207,15 +207,26 @@
 
 	const add_lehrer_regel = computed({
 		get(): LehrerListeEintrag | undefined {
-			return undefined;
-			// return app.dataKursblockung. (kurs);
+			if (!app.listAbiturjahrgangSchueler.filter.kurs?.lehrer.size())
+				return undefined;
+			const lehrer = app.listAbiturjahrgangSchueler.filter.kurs.lehrer.get(0);
+			return main.apps.lehrer.auswahl.liste.find(l => lehrer.id === l.id);
 		},
 		set(value: LehrerListeEintrag | undefined) {
 			if (!app.listAbiturjahrgangSchueler.filter.kurs)
 				return;
-			value
-				? app.dataKursblockungsergebnis.add_blockung_lehrer(app.listAbiturjahrgangSchueler.filter.kurs.id, value.id)
-				: app.dataKursblockungsergebnis.del_blockung_lehrer(app.listAbiturjahrgangSchueler.filter.kurs.id, 0)
+			if (value) {
+				app.dataKursblockung.add_blockung_lehrer(app.listAbiturjahrgangSchueler.filter.kurs.id, value.id)
+					.then(lehrer => {
+						if (lehrer && app.listAbiturjahrgangSchueler.filter.kurs)
+						app.listAbiturjahrgangSchueler.filter.kurs.lehrer.add(lehrer)
+					})
+			}
+			else {
+				const lehrer = app.listAbiturjahrgangSchueler.filter.kurs.lehrer.get(0);
+				app.dataKursblockung.del_blockung_lehrer(app.listAbiturjahrgangSchueler.filter.kurs.id, lehrer.id)
+					.then(()=> app.listAbiturjahrgangSchueler.filter.kurs?.lehrer.remove(lehrer))
+			}
 		}
 	});
 	function getAnzahlSchuelerSchiene(idSchiene: number): number {

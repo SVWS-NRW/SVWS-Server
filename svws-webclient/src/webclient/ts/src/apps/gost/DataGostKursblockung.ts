@@ -258,4 +258,36 @@ export class DataGostKursblockung extends BaseData<
 		await App.api.patchGostBlockungSchiene(data, App.schema, data.id);
 		//TODO, der Manager sollte was tun..
 	}
+	
+	/**Ergänzt einen Lehrer in der Blockung zum angegebenen Kurs
+	 * @returns {Promise<GostBlockungKursLehrer|undefined>} Ein Schienenobjekt bei Erfolg
+	 */	
+	public async add_blockung_lehrer(kursid: number, lehrerid: number): Promise<GostBlockungKursLehrer | undefined> {
+		if (!this.daten?.id)
+			return;
+		this.pending = true;
+		const lehrer = await App.api.addGostBlockungKurslehrer(App.schema, kursid, lehrerid);
+		if (!lehrer) {
+			this.pending = false;
+			return
+		}
+		// this.ergebnismanager?.  addSchiene(schiene);
+		// this.ergebnismanager?.setAddSchieneByID(schiene.id)
+		// this.commit();
+		this.pending = false;
+		return lehrer;
+	}
+
+	/** Entfernt eine Lehrerin aus der Kurszuordnung */
+	public async del_blockung_lehrer(kursid: number, lehrerid: number): Promise<void> {
+		if (!this.daten?.id)
+			return;
+		this.pending = true;
+		await App.api.deleteGostBlockungKurslehrer(App.schema, kursid, lehrerid)
+		const ergebnismanager = App.apps.gost.dataKursblockung.ergebnismanager;
+		// this.ergebnismanager?.setRemoveSchieneByID(s.id)
+		// this.commit();
+		this.pending = false;
+	}
+
 }
