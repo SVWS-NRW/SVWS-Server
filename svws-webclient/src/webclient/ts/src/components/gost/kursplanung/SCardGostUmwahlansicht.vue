@@ -108,7 +108,11 @@
 	const is_dragging: Ref<boolean> = ref(false)
 
 	const manager: ComputedRef<GostBlockungsergebnisManager | undefined> =
-		computed(() => app.dataKursblockung.ergebnismanager);
+		computed(() => {
+			// löse ein erneutes Filtern aus, wenn der Manager sich ändert (z.B. bei Blockungs- oder -Ergebniswechsel)
+			app.listAbiturjahrgangSchueler.filter = app.listAbiturjahrgangSchueler.filter;
+			return app.dataKursblockung.ergebnismanager
+		});
 
 	const kurse: ComputedRef<List<GostBlockungKurs>> =
 		computed(() => app.dataKursblockung.datenmanager?.getKursmengeSortiertNachKursartFachNummer()
