@@ -6,7 +6,6 @@ import java.util.Vector;
 
 import de.nrw.schule.svws.db.converter.current.BenutzerTypConverter;
 import de.nrw.schule.svws.db.converter.current.Boolean01Converter;
-import de.nrw.schule.svws.db.converter.current.BooleanPlusMinusDefaultPlusConverter;
 import de.nrw.schule.svws.db.converter.current.SchuelerStatusConverter;
 import de.nrw.schule.svws.db.converter.current.statkue.SchulformKuerzelConverter;
 import de.nrw.schule.svws.db.converter.current.statkue.SchulgliederungKuerzelConverter;
@@ -35,13 +34,8 @@ public class DBSchemaViews {
 	 */
 	private DBSchemaViews() {
 		// Revision 0
-		add_Schildintern_K_Schulnote();
 		add_Statkue_Herkunftsschulform();
 		add_Statkue_Herkunftsart();
-		add_Statkue_ZulJahrgaenge();
-		add_Statkue_ZulKuArt();
-		add_Statkue_ZulFaecher();
-		add_Statkue_SVWS_ZulaessigeFaecher();
 		// Revision 6
 		add_V_Benutzer();
 		add_V_Benutzerkompetenzen();
@@ -132,39 +126,6 @@ public class DBSchemaViews {
 	}
 
 
-	private void add_Schildintern_K_Schulnote() {
-		View view = new View(
-				"Schildintern_K_Schulnote", "views.schildintern", "DTOSchildInternNote", 
-				"View zur Simulation einer Schildintern-Tabelle: Liste der möglichen Noteneinträge in den Leistungsdaten",
-				0, null,
-                """
-                Noten
-                """
-		).add("ID", "Die ID der Schulnote", "Long", "ID", null, true)
-		 .add("Krz", "Das Notenkürzel (z.B. 5+)", "String", "Kuerzel", null, false)
-		 .add("Art", "Die Art der Note (N - allgemeine Note, Z - mit Tendenz)", "String", "CASE WHEN IstTendenznote > 0 THEN 'Z' ELSE 'N' END", null, false)
-		 .add("Bezeichnung", "Die ausführliche Noten-Bezeichnung (z.B. ausreichend (plus))", "String", "Text", null, false)
-		 .add("Zeugnisnotenbez", "Die Bezeichnung auf einem Zeugnis ohne Tendenzen (z.B. ausreichend)", "String", """
-                                           CASE
-                                             WHEN Kuerzel = '5-' OR Kuerzel = '5+' THEN 'mangelhaft'
-                                             WHEN Kuerzel = '4-' OR Kuerzel = '4+' THEN 'ausreichend'
-                                             WHEN Kuerzel = '3-' OR Kuerzel = '3+' THEN 'befriedigend'
-                                             WHEN Kuerzel = '2-' OR Kuerzel = '2+' THEN 'gut'
-                                             WHEN Kuerzel = '1-' OR Kuerzel = '1+' THEN 'sehr gut'
-                                             WHEN Kuerzel IN ('AM', 'AT', 'NT', 'NB', 'NE', 'LM') THEN '--------------------'
-                                             ELSE Text
-                                           END								 		
-                                           """, null, false)
-		 .add("Punkte", "Die Bezeichnung der Note in einer Laufbahn der Sekundarstufe II", "String", "CASE WHEN TextLaufbahnSII IS NULL THEN '--' ELSE TextLaufbahnSII END", null, false)
-		 .add("Sortierung", "Ein Zahlwert, welcher die Sortierreihenfolge der einzelnen Noten spezifiziert", "Integer", "Sortierung", null, false)
-		 .add("Sichtbar", "Gibt an, ob der Noteneintrag sichtbar ist", "Boolean", "'+'", BooleanPlusMinusDefaultPlusConverter.class, false)
-		 .add("Aenderbar", "Gibt an, ob der Noteneintrag änderbar ist", "Boolean", "'+'", BooleanPlusMinusDefaultPlusConverter.class, false)
-		 .add("gueltigVon", "Gibt das Schuljahr an, ab dem die Note verwendet werden kann oder null, falls es keine Einschränkung gibt", "Integer", "gueltigVon", null, false)
-		 .add("gueltigBis", "Gibt das Schuljahr an, bis zu welchem die Note verwendet werden kann oder null, falls es keine Einschränkung gibt", "Integer", "gueltigBis", null, false);
-		addView(view);
-	}
-
-
 	private void add_Statkue_Herkunftsschulform() {
 		View view = new View(
 				"Statkue_Herkunftsschulform", "views.statkue", "DTOStatkueHerkunftsschulform", 
@@ -203,109 +164,6 @@ public class DBSchemaViews {
 		 .add("gueltigBis", "Gibt die Gültigkeit bis zu welchem Schuljahr an", "String", "h.gueltigBis", null, false);
 		addView(view);
 	}
-
-	private void add_Statkue_ZulJahrgaenge() {
-		View view = new View(
-				"Statkue_ZulJahrgaenge", "views.statkue", "DTOStatkueZulaessigerJahrgang", 
-				"View zur Simulation einer Statkue-Tabelle: Zulässige Jahrgänge",
-				0, null,
-                """
-                Jahrgaenge jg JOIN Jahrgaenge_Bezeichnungen jgb ON jg.ID = Jahrgang_ID WHERE jg.gueltigBis IS NULL
-                """
-		).add("ID", "Eine eindeutige ID des Jahrgangs", "Long", "jg.ID", null, true)
-		 .add("Schulform", "Die Schulform, für welche der Jahrgang definiert ist", "String", "jgb.Schulform_Kuerzel", null, false)
-		 .add("SNR", "Die Schulnummer, für welche der Jahrgang definiert wurde, falls die Definition auf eine schule eingeschränkt ist.", "String", "CASE WHEN jgb.Schulform_Kuerzel = 'HI' THEN 164264 ELSE NULL END", null, false)
-		 .add("FSP", "Der Förderschwerpunkt, fallse die Jahrgangsdefintion nur auf einen FSP eingeschränkt ist", "String", "NULL", null, false)
-		 .add("Jahrgang", "Das zweistellige Kürzel des Jahrgangs", "String", "jg.Kuerzel", null, false)
-		 .add("KZ_Bereich", "Statkue - Feld KZ_Bereich", "Integer", "0", null, false)
-		 .add("Beschreibung", "die textuelle Beschreibung des Jahrgangs", "String", "jgb.Bezeichnung", null, false)
-		 .add("geaendert", "Datum der letzten Änderung (hier zur Kompatibilität vorhanden)", "String", "NULL", null, false)
-		 .add("gueltigVon", "Gibt die Gültigkeit ab welchem Schuljahr an", "String", "jg.gueltigVon", null, false)
-		 .add("gueltigBis", "Gibt die Gültigkeit bis zu welchem Schuljahr an", "String", "jg.gueltigBis", null, false);
-		addView(view);		
-	}
-
-
-	private void add_Statkue_ZulKuArt() {
-		View view = new View(
-				"Statkue_ZulKuArt", "views.statkue", "DTOStatkueZulaessigeKursart", 
-				"View zur Simulation einer Statkue-Tabelle: Zulässige Kursarten",
-				0, null,
-                """
-                KursartenKatalog k JOIN KursartenKatalog_Schulformen ks ON k.ID = ks.Kursart_ID AND k.gueltigBis IS NULL
-                """
-		).add("SF", "Die Schulform bei der die Kursart zulässig ist.", "String", "ks.Schulform_Kuerzel", null, true)
-		 .add("FSP", "Eine Einschränkung der Zulässigkeit der Kusart auf einen Förderschwerpunkt (hier nur Kompatibilität angegeben)", "String", "'**'", null, true)
-		 .add("BG", "Eine Einschränkung der Zulässigkeit der Kursart auf einen Bildungsgang", "String", "CASE WHEN ks.Schulgliederung_Kuerzel = '' THEN '**' ELSE ks.Schulgliederung_Kuerzel END", null, true)
-		 .add("Kursart", "Der numerische Schlüssel für die amtliche Schulstatistik", "String", "k.Nummer", null, true)
-		 .add("Kursart2", "Das Kürzel der Kursart", "String", "k.Kuerzel", null, true)
-		 .add("Bezeichnung", "Die Bezeichnung der Kursart", "String", "k.Bezeichnung", null, true)		 
-		 .add("SGLBereich", "Zur Kompatibilität vorhanden", "Integer", "0", null, true)
-		 .add("Flag", "Flag - zur Kompatibilität (hier 1)", "String", "'1'", null, true)
-		 .add("geaendert", "Datum der letzten Änderung (hier zur Kompatibilität vorhanden)", "String", "NULL", null, false)
-		 .add("gueltigVon", "Gibt die Gültigkeit ab welchem Schuljahr an", "String", "k.gueltigVon", null, false)
-		 .add("gueltigBis", "Gibt die Gültigkeit bis zu welchem Schuljahr an", "String", "k.gueltigBis", null, false);
-		addView(view);
-	}
-
-
-	private void add_Statkue_ZulFaecher() {
-		View view = new View(
-				"Statkue_ZulFaecher", "views.statkue", "DTOStatkueZulaessigesFach", 
-				"View zur Simulation einer Statkue-Tabelle: Zulässige Fächer",
-				0, null,
-                """
-                FachKatalog f JOIN FachKatalog_Schulformen fs ON f.ID = fs.Fach_ID AND f.gueltigBis IS NULL
-                """
-		).add("Schulform", "Die Schulform bei der das Fach zulässig ist.", "String", "fs.Schulform_Kuerzel", null, true)
-		 .add("FSP", "Eine Einschränkung der Zulässigkeit des Faches auf einen Förderschwerpunkt (hier nur Kompatibilität angegeben)", "String", "NULL", null, false)
-		 .add("BG", "Eine Einschränkung der Zulässigkeit des Faches auf einen Bildungsgang", "String", "CASE WHEN fs.Schulgliederung_Kuerzel = '' THEN '***' ELSE fs.Schulgliederung_Kuerzel END", null, true)
-		 .add("Fach", "Das Kürzel für die amtliche Schulstatistik", "String", "f.KuerzelASD", null, true)
-		 .add("Bezeichnung", "Die Bezeichnung des Faches", "String", "f.Bezeichnung", null, true)		 
-		 .add("KZ_Bereich", "Zur Kompatibilität vorhanden", "Integer", "0", null, false)
-		 .add("Flag", "Flag - zur Kompatibilität (hier 1)", "String", "'1'", null, true)
-		 .add("Sortierung", "Zur Kompatibilität vorhanden", "Integer", "1", null, false)
-		 .add("Sortierung2", "Zur Kompatibilität vorhanden", "Integer", "1", null, false)
-		 .add("geaendert", "Datum der letzten Änderung (hier zur Kompatibilität vorhanden)", "String", "NULL", null, false)
-		 .add("gueltigVon", "Gibt die Gültigkeit ab welchem Schuljahr an", "String", "f.gueltigVon", null, false)
-		 .add("gueltigBis", "Gibt die Gültigkeit bis zu welchem Schuljahr an", "String", "f.gueltigBis", null, false);
-		addView(view);
-	}
-
-
-	private void add_Statkue_SVWS_ZulaessigeFaecher() {
-		View view = new View(
-				"Statkue_SVWS_ZulaessigeFaecher", "views.statkue", "DTOSVWSZulaessigeFaecherMapping", 
-				"View zur Simulation einer Statkue-Tabelle: SVWS Zulässige Fächer",
-				0, null,
-                """
-                FachKatalog f 
-                JOIN FachKatalog_Schulformen fs ON f.ID = fs.Fach_ID AND f.gueltigBis IS NULL
-                LEFT JOIN Fachgruppen fg ON f.Fachgruppe = fg.FG_Kuerzel
-                GROUP BY f.id
-                """
-		).add("Fach", "Fachkürzel aus der Tabelle StatkueZulaessigeFaecher von ITNRW.", "String", "f.KuerzelASD", null, true)
-		 .add("Bezeichnung", "Die Bezeichnung des Faches", "String", "f.Bezeichnung", null, false)		 
-		 .add("FachkuerzelAtomar", "atomarisiertes Fachkürzel", "String", "f.Kuerzel", null, false)
-		 .add("Kurzbezeichnung", "kürzere Bezeichnung falls gewünscht", "String", "f.Bezeichnung", null, false)		 
-		 .add("Aufgabenfeld", "das Aufgabenfeld, welchem das Fach zugeordnet ist (1, 2 oder 3)", "Integer", "f.Aufgabenfeld", null, false)
-		 .add("Fachgruppe_ID", "Die ID der zugeordneten Fachgruppe", "Integer", "fg.ID", null, false)
-		 .add("SchulformenUndGliederungen", "Gibt die Schulformen an in denen das Fach erlaubt ist (R,H,2020) gibt an dass ein Fach an R nur in H ab 2020 erlaubt ist", "String", "group_concat(fs.Schulform_Kuerzel)", null, false)		 
-		 .add("SchulformenAusgelaufen", "zur Kompatibilität", "String", "NULL", null, false)
-		 .add("AusgelaufenInSchuljahr", "zur Kompatibilität", "String", "NULL", null, false)
-		 .add("AbJahrgang", "Jahrgang ab dem das Fach unterrichtet werden darf", "String", "f.JahrgangAb", null, false)		
-		 .add("IstFremdsprache", "Boolscher Wert ob es eine Fremdsprache ist", "Boolean", "f.IstFremdsprache", Boolean01Converter.class, false)
-		 .add("IstHKFS", "Boolscher Wert ob es eine HerkunftsFremdsprache ist", "Boolean", "f.IstHKFS", Boolean01Converter.class, false)
-		 .add("IstAusRegUFach", "Boolscher Wert ob es eine reguläres Unterrichtsfach ist", "Boolean", "f.IstAusRegUFach", Boolean01Converter.class, false)
-		 .add("IstErsatzPflichtFS", "Boolscher Wert ob es eine Ersatzpflichfremdsprache ist", "Boolean", "f.IstErsatzPflichtFS", Boolean01Converter.class, false)
-		 .add("IstKonfKoop", "Boolscher Wert ob es eine eine Religionslehre im KOOP ist", "Boolean", "f.IstKonfKoop", Boolean01Converter.class, false)
-		 .add("NurSII", "Boolscher Wert ob das Fach nur in der SII unterrichtet werden darf", "Boolean", "f.NurSII", Boolean01Converter.class, false)
-		 .add("ExportASD", "Boolscher Wert ob das Fach für den ASDExport vorgesehen ist", "Boolean", "f.ExportASD", Boolean01Converter.class, false)
-		 .add("gueltigVon", "Gibt die Gültigkeit ab welchem Schuljahr an", "String", "f.gueltigVon", null, false)
-		 .add("gueltigBis", "Gibt die Gültigkeit bis zu welchem Schuljahr an", "String", "f.gueltigBis", null, false);
-		addView(view);
-	}
-
 
 	private void add_V_Benutzer() {
 		View view = new View(

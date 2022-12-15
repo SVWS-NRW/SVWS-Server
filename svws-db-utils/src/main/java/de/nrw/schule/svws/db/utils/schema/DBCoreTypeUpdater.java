@@ -9,14 +9,9 @@ import java.util.stream.Stream;
 
 import de.nrw.schule.svws.config.SVWSKonfiguration;
 import de.nrw.schule.svws.core.data.fach.FachKatalogEintrag;
-import de.nrw.schule.svws.core.data.jahrgang.JahrgangsKatalogEintrag;
-import de.nrw.schule.svws.core.data.jahrgang.JahrgangsKatalogEintragBezeichnung;
-import de.nrw.schule.svws.core.data.kurse.KursartKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.HerkunftKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.HerkunftsartKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.HerkunftsartKatalogEintragBezeichnung;
-import de.nrw.schule.svws.core.data.schule.SchulabschlussAllgemeinbildendKatalogEintrag;
-import de.nrw.schule.svws.core.data.schule.SchulabschlussBerufsbildendKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.SchulformKatalogEintrag;
 import de.nrw.schule.svws.core.data.schule.SchulformSchulgliederung;
 import de.nrw.schule.svws.core.logger.Logger;
@@ -37,8 +32,6 @@ import de.nrw.schule.svws.core.types.schule.AllgemeineMerkmale;
 import de.nrw.schule.svws.core.types.schule.BerufskollegOrganisationsformen;
 import de.nrw.schule.svws.core.types.schule.Nationalitaeten;
 import de.nrw.schule.svws.core.types.schule.Religion;
-import de.nrw.schule.svws.core.types.schule.SchulabschlussAllgemeinbildend;
-import de.nrw.schule.svws.core.types.schule.SchulabschlussBerufsbildend;
 import de.nrw.schule.svws.core.types.schule.Schulform;
 import de.nrw.schule.svws.core.types.schule.Schulgliederung;
 import de.nrw.schule.svws.core.types.schule.WeiterbildungskollegOrganisationsformen;
@@ -87,13 +80,9 @@ public class DBCoreTypeUpdater {
 		this.status = schemaManager.getSchemaStatus();
 		tables.add(new CoreTypeTable("Fachgruppen", Fachgruppe.VERSION, updateFachgruppen));
 		tables.add(new CoreTypeTable("KursFortschreibungsarten", KursFortschreibungsart.VERSION, updateKursFortschreibungsarten));
-		tables.add(new CoreTypeTable("Schulabschluesse_Allgemeinbildend", SchulabschlussAllgemeinbildend.VERSION, updateSchulabschluesseAllgemeinbildend));
-		tables.add(new CoreTypeTable("Schulabschluesse_Berufsbildend", SchulabschlussBerufsbildend.VERSION, updateSchulabschluesseBerufsbildend));
 		tables.add(new CoreTypeTable("Schulformen", Schulform.VERSION, updateSchulformen));
 		tables.add(new CoreTypeTable("PersonalTypen", PersonalTyp.VERSION, updatePersonalTypen));
 		tables.add(new CoreTypeTable("Nationalitaeten_Keys", Nationalitaeten.VERSION, updateNationalitaeten_Keys));
-		tables.add(new CoreTypeTable("Jahrgaenge", Jahrgaenge.VERSION, updateJahrgaenge));
-		tables.add(new CoreTypeTable("Jahrgaenge_Bezeichnungen", Jahrgaenge.VERSION, updateJahrgaengeBezeichnungen));
 		tables.add(new CoreTypeTable("Jahrgaenge_Keys", Jahrgaenge.VERSION, updateJahrgaengeKeys));
 		tables.add(new CoreTypeTable("Noten", Note.VERSION, updateNoten));
 		tables.add(new CoreTypeTable("Herkunft", Herkunft.VERSION, updateHerkuenfte));
@@ -103,9 +92,7 @@ public class DBCoreTypeUpdater {
 		tables.add(new CoreTypeTable("Herkunftsart_Keys", Herkunftsarten.VERSION, updateHerkunftsartenKeys));
 		tables.add(new CoreTypeTable("Herkunftsart_Schulformen", Herkunftsarten.VERSION, updateHerkunftsartenSchulformen));
 		tables.add(new CoreTypeTable("KlassenartenKatalog_Keys", Klassenart.VERSION, updateKlassenartenKeys));
-		tables.add(new CoreTypeTable("KursartenKatalog", ZulaessigeKursart.VERSION, updateKursarten));
 		tables.add(new CoreTypeTable("KursartenKatalog_Keys", ZulaessigeKursart.VERSION, updateKursartenKeys));
-		tables.add(new CoreTypeTable("KursartenKatalog_Schulformen", ZulaessigeKursart.VERSION, updateKursartenSchulformen));
 		tables.add(new CoreTypeTable("FachKatalog", ZulaessigesFach.VERSION, updateZulaessigeFaecher));
 		tables.add(new CoreTypeTable("FachKatalog_Keys", ZulaessigesFach.VERSION, updateZulaessigeFaecherKeys));
 		tables.add(new CoreTypeTable("FachKatalog_Schulformen", ZulaessigesFach.VERSION, updateZulaessigeFaecherSchulformen));
@@ -306,61 +293,6 @@ public class DBCoreTypeUpdater {
 	/**
 	 * Aktualisiert die Tabelle für den Core-Type Jahrgaenge 
 	 */
-	private Consumer<Logger> updateJahrgaenge = (Logger logger) -> {
-		String tabname = "Jahrgaenge";
-		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
-		StringBuilder sql = new StringBuilder();
-		sql.append("INSERT INTO ");
-		sql.append(tabname); 
-		sql.append("(ID, Kuerzel, gueltigVon, gueltigBis) ");
-		Jahrgaenge[] values = Jahrgaenge.values();
-		boolean isFirst = true;
-		for (int i = 0; i < values.length; i++) {
-			Jahrgaenge jahrgaenge = values[i];
-			for (JahrgangsKatalogEintrag jg : jahrgaenge.historie) {
-				sql.append(isFirst ? "VALUES (" : ", (");
-				isFirst = false;
-				sql.append(jg.id).append(",");
-				sql.append("'").append(jg.kuerzel).append("'").append(",");
-				sql.append(jg.gueltigVon).append(",");
-				sql.append(jg.gueltigBis).append(")");
-			}
-		}
-		updateCoreTypeTabelle(tabname, Jahrgaenge.class.getCanonicalName(), Jahrgaenge.VERSION, sql.toString());
-	};
-
-
-	/**
-	 * Aktualisiert die Tabelle für den Core-Type Jahrgaenge 
-	 */
-	private Consumer<Logger> updateJahrgaengeBezeichnungen = (Logger logger) -> {
-		String tabname = "Jahrgaenge_Bezeichnungen";
-		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
-		StringBuilder sql = new StringBuilder();
-		sql.append("INSERT INTO ");
-		sql.append(tabname); 
-		sql.append("(Jahrgang_ID, Schulform_Kuerzel, Bezeichnung) ");
-		Jahrgaenge[] values = Jahrgaenge.values();
-		boolean isFirst = true;
-		for (int i = 0; i < values.length; i++) {
-			Jahrgaenge jahrgaenge = values[i];
-			for (JahrgangsKatalogEintrag jg : jahrgaenge.historie) {
-				for (JahrgangsKatalogEintragBezeichnung jgb : jg.bezeichnungen) {
-					sql.append(isFirst ? "VALUES (" : ", (");
-					isFirst = false;
-					sql.append(jg.id).append(",");
-					sql.append("'").append(jgb.schulform).append("'").append(",");
-					sql.append("'").append(jgb.bezeichnung).append("'").append(")");
-				}
-			}
-		}
-		updateCoreTypeTabelle(tabname, Jahrgaenge.class.getCanonicalName(), Jahrgaenge.VERSION, sql.toString());
-	};
-
-
-	/**
-	 * Aktualisiert die Tabelle für den Core-Type Jahrgaenge 
-	 */
 	private Consumer<Logger> updateJahrgaengeKeys = (Logger logger) -> {
 		String tabname = "Jahrgaenge_Keys";
 		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
@@ -490,64 +422,6 @@ public class DBCoreTypeUpdater {
 			sql.append(p.gueltigBis).append(")");
 		}
 		updateCoreTypeTabelle(tabname, PersonalTyp.class.getCanonicalName(), PersonalTyp.VERSION, sql.toString());
-	};
-
-
-	/**
-	 * Aktualisiert die Tabelle für den Core-Type SchulabschlussAllgemeinbildend 
-	 */
-	private Consumer<Logger> updateSchulabschluesseAllgemeinbildend = (Logger logger) -> {
-		String tabname = "Schulabschluesse_Allgemeinbildend";
-		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
-		StringBuilder sql = new StringBuilder();
-		sql.append("INSERT INTO ");
-		sql.append(tabname); 
-		sql.append("(ID, Kuerzel, Bezeichnung, Kuerzel_Statistik, gueltigVon, gueltigBis) ");
-		SchulabschlussAllgemeinbildend[] values = SchulabschlussAllgemeinbildend.values();
-		boolean isFirst = true;
-		for (int i = 0; i < values.length; i++) {
-			SchulabschlussAllgemeinbildend abschlussart = values[i];
-			for (SchulabschlussAllgemeinbildendKatalogEintrag sf : abschlussart.historie) {
-				sql.append(isFirst ? "VALUES (" : ", (");
-				isFirst = false;
-				sql.append(sf.id).append(",");
-				sql.append("'").append(sf.kuerzel).append("'").append(",");
-				sql.append("'").append(sf.bezeichnung).append("'").append(",");
-				sql.append("'").append(sf.kuerzelStatistik).append("'").append(",");
-				sql.append(sf.gueltigVon).append(",");
-				sql.append(sf.gueltigBis).append(")");
-			}
-		}
-		updateCoreTypeTabelle(tabname, SchulabschlussAllgemeinbildend.class.getCanonicalName(), SchulabschlussAllgemeinbildend.VERSION, sql.toString());
-	};
-
-
-	/**
-	 * Aktualisiert die Tabelle für den Core-Type SchulabschlussBerufsbildend 
-	 */
-	private Consumer<Logger> updateSchulabschluesseBerufsbildend = (Logger logger) -> {
-		String tabname = "Schulabschluesse_Berufsbildend";
-		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
-		StringBuilder sql = new StringBuilder();
-		sql.append("INSERT INTO ");
-		sql.append(tabname); 
-		sql.append("(ID, Kuerzel, Bezeichnung, Kuerzel_Statistik, gueltigVon, gueltigBis) ");
-		SchulabschlussBerufsbildend[] values = SchulabschlussBerufsbildend.values();
-		boolean isFirst = true;
-		for (int i = 0; i < values.length; i++) {
-			SchulabschlussBerufsbildend abschlussart = values[i];
-			for (SchulabschlussBerufsbildendKatalogEintrag sf : abschlussart.historie) {
-				sql.append(isFirst ? "VALUES (" : ", (");
-				isFirst = false;
-				sql.append(sf.id).append(",");
-				sql.append("'").append(sf.kuerzel).append("'").append(",");
-				sql.append("'").append(sf.bezeichnung).append("'").append(",");
-				sql.append("'").append(sf.kuerzelStatistik).append("'").append(",");
-				sql.append(sf.gueltigVon).append(",");
-				sql.append(sf.gueltigBis).append(")");
-			}
-		}
-		updateCoreTypeTabelle(tabname, SchulabschlussBerufsbildend.class.getCanonicalName(), SchulabschlussBerufsbildend.VERSION, sql.toString());
 	};
 
 
@@ -763,48 +637,6 @@ public class DBCoreTypeUpdater {
 	
 	
 	/**
-	 * Aktualisiert die Tabelle für den Core-Type ZulaessigeKursart
-	 */
-	private Consumer<Logger> updateKursarten = (Logger logger) -> {
-		String tabname = "KursartenKatalog";
-		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
-		StringBuilder sql = new StringBuilder();
-		sql.append("INSERT INTO ");
-		sql.append(tabname); 
-		sql.append("(ID, Kuerzel, Nummer, Bezeichnung, Bemerkungen, KuerzelAllg, BezeichnungAllg, ErlaubtGOSt, gueltigVon, gueltigBis) ");
-		ZulaessigeKursart[] values = ZulaessigeKursart.values();
-		boolean isFirst = true;
-		for (int i = 0; i < values.length; i++) {
-			ZulaessigeKursart kursart = values[i];
-			for (KursartKatalogEintrag k : kursart.historie) {
-				sql.append(isFirst ? "VALUES (" : ", (");
-				isFirst = false;
-				sql.append(k.id).append(",");
-				sql.append("'").append(k.kuerzel).append("'").append(",");
-				sql.append("'").append(k.nummer).append("'").append(",");
-				sql.append("'").append(k.bezeichnung).append("'").append(",");
-				if (k.bemerkungen == null)
-					sql.append("null,");
-				else
-					sql.append("'").append(k.bemerkungen).append("'").append(",");
-				if (k.kuerzelAllg == null)
-					sql.append("null,");
-				else
-					sql.append("'").append(k.kuerzelAllg).append("'").append(",");
-				if (k.bezeichnungAllg == null)
-					sql.append("null,");
-				else
-					sql.append("'").append(k.bezeichnungAllg).append("'").append(",");
-				sql.append(k.erlaubtGOSt ? 1 : 0).append(",");
-				sql.append(k.gueltigVon).append(",");
-				sql.append(k.gueltigBis).append(")");
-			}
-		}
-		updateCoreTypeTabelle(tabname, ZulaessigeKursart.class.getCanonicalName(), ZulaessigeKursart.VERSION, sql.toString());
-	};
-
-	
-	/**
 	 * Aktualisiert die Tabelle für den Core-Type ZulaessigeKursart 
 	 */
 	private Consumer<Logger> updateKursartenKeys = (Logger logger) -> {
@@ -826,40 +658,6 @@ public class DBCoreTypeUpdater {
 	};
 	
 	
-	/**
-	 * Aktualisiert die Tabelle für den Core-Type ZulaessigeKursart
-	 */
-	private Consumer<Logger> updateKursartenSchulformen = (Logger logger) -> {
-		String tabname = "KursartenKatalog_Schulformen";
-		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
-		StringBuilder sql = new StringBuilder();
-		sql.append("INSERT INTO ");
-		sql.append(tabname); 
-		sql.append("(Kursart_ID, Schulform_Kuerzel, Schulgliederung_Kuerzel) ");
-		ZulaessigeKursart[] values = ZulaessigeKursart.values();
-		boolean isFirst = true;
-		for (int i = 0; i < values.length; i++) {
-			ZulaessigeKursart kursart = values[i];
-			for (KursartKatalogEintrag k : kursart.historie) {
-				for (SchulformSchulgliederung sfsg : k.zulaessig) {
-					sql.append(isFirst ? "VALUES (" : ", (");
-					isFirst = false;
-					sql.append(k.id).append(",");
-					if (sfsg.schulform == null)
-						sql.append("null,");
-					else
-						sql.append("'").append(Schulform.getByKuerzel(sfsg.schulform).daten.kuerzel).append("'").append(",");
-					if (sfsg.gliederung == null)
-						sql.append("'')");
-					else
-						sql.append("'").append(Schulgliederung.getByKuerzel(sfsg.gliederung)).append("'").append(")");
-				}
-			}
-		}
-		updateCoreTypeTabelle(tabname, ZulaessigeKursart.class.getCanonicalName(), ZulaessigeKursart.VERSION, sql.toString());
-	};
-
-
 	/**
 	 * Aktualisiert die Tabelle für den Core-Type ZulaessigesFach
 	 */

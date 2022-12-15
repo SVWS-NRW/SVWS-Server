@@ -77,9 +77,7 @@ import de.nrw.schule.svws.db.dto.migration.schild.klassen.MigrationDTOKlassenart
 import de.nrw.schule.svws.db.dto.migration.schild.klassen.MigrationDTOVersetzung;
 import de.nrw.schule.svws.db.dto.migration.schild.kurse.MigrationDTOKurs;
 import de.nrw.schule.svws.db.dto.migration.schild.kurse.MigrationDTOKursLehrer;
-import de.nrw.schule.svws.db.dto.migration.schild.kurse.MigrationDTOKursartenKatalog;
 import de.nrw.schule.svws.db.dto.migration.schild.kurse.MigrationDTOKursartenKatalogKeys;
-import de.nrw.schule.svws.db.dto.migration.schild.kurse.MigrationDTOKursartenKatalogSchulformen;
 import de.nrw.schule.svws.db.dto.migration.schild.lehrer.MigrationDTOLehrer;
 import de.nrw.schule.svws.db.dto.migration.schild.lehrer.MigrationDTOLehrerAbschnittsdaten;
 import de.nrw.schule.svws.db.dto.migration.schild.lehrer.MigrationDTOLehrerAnrechnungsstunde;
@@ -126,8 +124,6 @@ import de.nrw.schule.svws.db.dto.migration.schild.schueler.fhr.MigrationDTOSchue
 import de.nrw.schule.svws.db.dto.migration.schild.schueler.fhr.MigrationDTOSchuelerFHRFach;
 import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAbteilungen;
 import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAbteilungsKlassen;
-import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAlleJahrgaenge;
-import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAlleJahrgaengeBezeichnungen;
 import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAlleJahrgaengeKeys;
 import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAlleSchulformen;
 import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOAllgemeineMerkmaleKatalogKeys;
@@ -146,8 +142,6 @@ import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOHerkunftsar
 import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOJahrgang;
 import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOMerkmale;
 import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOOrganisationsformenKatalogKeys;
-import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOSchulabschluesse_Allgemeinbildend;
-import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOSchulabschluesse_Berufsbildend;
 import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOSchulformen;
 import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOSchuljahresabschnitte;
 import de.nrw.schule.svws.db.dto.migration.schild.schule.MigrationDTOSchultexte;
@@ -274,9 +268,7 @@ public class MigrationDTOs {
              mapDTOName2DTOClass.put(MigrationDTOVersetzung.class.getSimpleName(),MigrationDTOVersetzung.class);
              mapDTOName2DTOClass.put(MigrationDTOKurs.class.getSimpleName(),MigrationDTOKurs.class);
              mapDTOName2DTOClass.put(MigrationDTOKursLehrer.class.getSimpleName(),MigrationDTOKursLehrer.class);
-             mapDTOName2DTOClass.put(MigrationDTOKursartenKatalog.class.getSimpleName(),MigrationDTOKursartenKatalog.class);
              mapDTOName2DTOClass.put(MigrationDTOKursartenKatalogKeys.class.getSimpleName(),MigrationDTOKursartenKatalogKeys.class);
-             mapDTOName2DTOClass.put(MigrationDTOKursartenKatalogSchulformen.class.getSimpleName(),MigrationDTOKursartenKatalogSchulformen.class);
              mapDTOName2DTOClass.put(MigrationDTOLehrer.class.getSimpleName(),MigrationDTOLehrer.class);
              mapDTOName2DTOClass.put(MigrationDTOLehrerAbschnittsdaten.class.getSimpleName(),MigrationDTOLehrerAbschnittsdaten.class);
              mapDTOName2DTOClass.put(MigrationDTOLehrerAnrechnungsstunde.class.getSimpleName(),MigrationDTOLehrerAnrechnungsstunde.class);
@@ -323,8 +315,6 @@ public class MigrationDTOs {
              mapDTOName2DTOClass.put(MigrationDTOSchuelerFHRFach.class.getSimpleName(),MigrationDTOSchuelerFHRFach.class);
              mapDTOName2DTOClass.put(MigrationDTOAbteilungen.class.getSimpleName(),MigrationDTOAbteilungen.class);
              mapDTOName2DTOClass.put(MigrationDTOAbteilungsKlassen.class.getSimpleName(),MigrationDTOAbteilungsKlassen.class);
-             mapDTOName2DTOClass.put(MigrationDTOAlleJahrgaenge.class.getSimpleName(),MigrationDTOAlleJahrgaenge.class);
-             mapDTOName2DTOClass.put(MigrationDTOAlleJahrgaengeBezeichnungen.class.getSimpleName(),MigrationDTOAlleJahrgaengeBezeichnungen.class);
              mapDTOName2DTOClass.put(MigrationDTOAlleJahrgaengeKeys.class.getSimpleName(),MigrationDTOAlleJahrgaengeKeys.class);
              mapDTOName2DTOClass.put(MigrationDTOAlleSchulformen.class.getSimpleName(),MigrationDTOAlleSchulformen.class);
              mapDTOName2DTOClass.put(MigrationDTOAllgemeineMerkmaleKatalogKeys.class.getSimpleName(),MigrationDTOAllgemeineMerkmaleKatalogKeys.class);
@@ -343,8 +333,6 @@ public class MigrationDTOs {
              mapDTOName2DTOClass.put(MigrationDTOJahrgang.class.getSimpleName(),MigrationDTOJahrgang.class);
              mapDTOName2DTOClass.put(MigrationDTOMerkmale.class.getSimpleName(),MigrationDTOMerkmale.class);
              mapDTOName2DTOClass.put(MigrationDTOOrganisationsformenKatalogKeys.class.getSimpleName(),MigrationDTOOrganisationsformenKatalogKeys.class);
-             mapDTOName2DTOClass.put(MigrationDTOSchulabschluesse_Allgemeinbildend.class.getSimpleName(),MigrationDTOSchulabschluesse_Allgemeinbildend.class);
-             mapDTOName2DTOClass.put(MigrationDTOSchulabschluesse_Berufsbildend.class.getSimpleName(),MigrationDTOSchulabschluesse_Berufsbildend.class);
              mapDTOName2DTOClass.put(MigrationDTOSchulformen.class.getSimpleName(),MigrationDTOSchulformen.class);
              mapDTOName2DTOClass.put(MigrationDTOSchuljahresabschnitte.class.getSimpleName(),MigrationDTOSchuljahresabschnitte.class);
              mapDTOName2DTOClass.put(MigrationDTOSchultexte.class.getSimpleName(),MigrationDTOSchultexte.class);
@@ -474,9 +462,7 @@ public class MigrationDTOs {
              mapTablename2DTOClass.put("Versetzung",MigrationDTOVersetzung.class);
              mapTablename2DTOClass.put("Kurse",MigrationDTOKurs.class);
              mapTablename2DTOClass.put("KursLehrer",MigrationDTOKursLehrer.class);
-             mapTablename2DTOClass.put("KursartenKatalog",MigrationDTOKursartenKatalog.class);
              mapTablename2DTOClass.put("KursartenKatalog_Keys",MigrationDTOKursartenKatalogKeys.class);
-             mapTablename2DTOClass.put("KursartenKatalog_Schulformen",MigrationDTOKursartenKatalogSchulformen.class);
              mapTablename2DTOClass.put("K_Lehrer",MigrationDTOLehrer.class);
              mapTablename2DTOClass.put("LehrerAbschnittsdaten",MigrationDTOLehrerAbschnittsdaten.class);
              mapTablename2DTOClass.put("LehrerAnrechnung",MigrationDTOLehrerAnrechnungsstunde.class);
@@ -523,8 +509,6 @@ public class MigrationDTOs {
              mapTablename2DTOClass.put("SchuelerFHRFaecher",MigrationDTOSchuelerFHRFach.class);
              mapTablename2DTOClass.put("EigeneSchule_Abteilungen",MigrationDTOAbteilungen.class);
              mapTablename2DTOClass.put("EigeneSchule_Abt_Kl",MigrationDTOAbteilungsKlassen.class);
-             mapTablename2DTOClass.put("Jahrgaenge",MigrationDTOAlleJahrgaenge.class);
-             mapTablename2DTOClass.put("Jahrgaenge_Bezeichnungen",MigrationDTOAlleJahrgaengeBezeichnungen.class);
              mapTablename2DTOClass.put("Jahrgaenge_Keys",MigrationDTOAlleJahrgaengeKeys.class);
              mapTablename2DTOClass.put("Schulformen",MigrationDTOAlleSchulformen.class);
              mapTablename2DTOClass.put("AllgemeineMerkmaleKatalog_Keys",MigrationDTOAllgemeineMerkmaleKatalogKeys.class);
@@ -543,8 +527,6 @@ public class MigrationDTOs {
              mapTablename2DTOClass.put("EigeneSchule_Jahrgaenge",MigrationDTOJahrgang.class);
              mapTablename2DTOClass.put("EigeneSchule_Merkmale",MigrationDTOMerkmale.class);
              mapTablename2DTOClass.put("OrganisationsformenKatalog_Keys",MigrationDTOOrganisationsformenKatalogKeys.class);
-             mapTablename2DTOClass.put("Schulabschluesse_Allgemeinbildend",MigrationDTOSchulabschluesse_Allgemeinbildend.class);
-             mapTablename2DTOClass.put("Schulabschluesse_Berufsbildend",MigrationDTOSchulabschluesse_Berufsbildend.class);
              mapTablename2DTOClass.put("EigeneSchule_Schulformen",MigrationDTOSchulformen.class);
              mapTablename2DTOClass.put("Schuljahresabschnitte",MigrationDTOSchuljahresabschnitte.class);
              mapTablename2DTOClass.put("EigeneSchule_Texte",MigrationDTOSchultexte.class);

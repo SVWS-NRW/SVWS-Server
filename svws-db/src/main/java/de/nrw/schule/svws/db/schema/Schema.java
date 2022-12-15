@@ -168,12 +168,6 @@ public class Schema {
 	/** Tabelle ImpExp_EigeneImporte_Tabellen */
 	public static final Tabelle_ImpExp_EigeneImporte_Tabellen tab_ImpExp_EigeneImporte_Tabellen = add(new Tabelle_ImpExp_EigeneImporte_Tabellen());
 
-	/** Tabelle Jahrgaenge */
-	public static final Tabelle_Jahrgaenge tab_Jahrgaenge = add(new Tabelle_Jahrgaenge());
-
-	/** Tabelle Jahrgaenge_Bezeichnungen */
-	public static final Tabelle_Jahrgaenge_Bezeichnungen tab_Jahrgaenge_Bezeichnungen = add(new Tabelle_Jahrgaenge_Bezeichnungen());
-
 	/** Tabelle Jahrgaenge_Keys */
 	public static final Tabelle_Jahrgaenge_Keys tab_Jahrgaenge_Keys = add(new Tabelle_Jahrgaenge_Keys());
 
@@ -285,14 +279,8 @@ public class Schema {
 	/** Tabelle KursFortschreibungsarten */
 	public static final Tabelle_KursFortschreibungsarten tab_KursFortschreibungsarten = add(new Tabelle_KursFortschreibungsarten());
 
-	/** Tabelle KursartenKatalog */
-	public static final Tabelle_KursartenKatalog tab_KursartenKatalog = add(new Tabelle_KursartenKatalog());
-
 	/** Tabelle KursartenKatalog_Keys */
 	public static final Tabelle_KursartenKatalog_Keys tab_KursartenKatalog_Keys = add(new Tabelle_KursartenKatalog_Keys());
-
-	/** Tabelle KursartenKatalog_Schulformen */
-	public static final Tabelle_KursartenKatalog_Schulformen tab_KursartenKatalog_Schulformen = add(new Tabelle_KursartenKatalog_Schulformen());
 
 	/** Tabelle Lernplattformen */
 	public static final Tabelle_Lernplattformen tab_Lernplattformen = add(new Tabelle_Lernplattformen());
@@ -389,12 +377,6 @@ public class Schema {
 
 	/** Tabelle SchuelerStatus */
 	public static final Tabelle_SchuelerStatus_Keys tab_SchuelerStatus = add(new Tabelle_SchuelerStatus_Keys());
-
-	/** Tabelle Schulabschluesse_Allgemeinbildend */
-	public static final Tabelle_Schulabschluesse_Allgemeinbildend tab_Schulabschluesse_Allgemeinbildend = add(new Tabelle_Schulabschluesse_Allgemeinbildend());
-
-	/** Tabelle Schulabschluesse_Berufsbildend */
-	public static final Tabelle_Schulabschluesse_Berufsbildend tab_Schulabschluesse_Berufsbildend = add(new Tabelle_Schulabschluesse_Berufsbildend());
 
 	/** Tabelle SchuleCredentials */
 	public static final Tabelle_SchuleCredentials tab_SchuleCredentials = add(new Tabelle_SchuleCredentials());
