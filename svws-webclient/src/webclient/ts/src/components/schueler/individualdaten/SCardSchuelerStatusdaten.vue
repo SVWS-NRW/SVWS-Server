@@ -18,84 +18,55 @@
 </template>
 
 <script setup lang="ts">
-
-	import { computed, ComputedRef, WritableComputedRef } from "vue";
-	import { KatalogEintrag, List, SchuelerStammdaten, SchuelerStatus } from "@svws-nrw/svws-core-ts";
+	import { computed, ComputedRef, watch, WritableComputedRef } from "vue";
+	import { KatalogEintrag, List, SchuelerStatus } from "@svws-nrw/svws-core-ts";
 	import { injectMainApp, Main } from "~/apps/Main";
 	import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
 	import { DataKatalogFahrschuelerarten } from "~/apps/schueler/DataKatalogFahrschuelerarten";
+	import { useInputWithBaseData } from '../../../utils/composables/inputs';
 
+	
 	const props = defineProps<{ stammdaten: DataSchuelerStammdaten, fachschuelerarten: DataKatalogFahrschuelerarten }>();
-
-	const daten: ComputedRef<SchuelerStammdaten> = computed(() => props.stammdaten.daten || new SchuelerStammdaten());
 
 
 	const main: Main = injectMainApp();
 	const app = main.apps.schueler;
 
-	const inputStatus: WritableComputedRef<SchuelerStatus | undefined> = computed({
-		get: () => (SchuelerStatus.fromBezeichnung(daten.value.status) || undefined),
-		set: (value) => {
-			props.stammdaten.patch({ status: value?.bezeichnung });
-			app.auswahl.filter = app.auswahl.filter
-		}
-	});
+	const inputBinding = useInputWithBaseData(props.stammdaten)
+	
+	const inputStatus: WritableComputedRef<SchuelerStatus | undefined> = inputBinding('status', {
+		get: (v: string): SchuelerStatus | undefined => v ? SchuelerStatus.fromBezeichnung(v) ?? undefined : undefined,
+		set: (v: SchuelerStatus | undefined): string | undefined => v?.bezeichnung as string | undefined
+	})
+	watch(inputStatus, () => { app.auswahl.filter = app.auswahl.filter})
+	
+	const inputKatalogFahrschuelerarten: ComputedRef<KatalogEintrag[]> = computed(() =>  props.fachschuelerarten.daten?.toArray() as KatalogEintrag[] || [] as KatalogEintrag[]);
+	const inputFahrschuelerArtID: WritableComputedRef<KatalogEintrag | undefined> = inputBinding('fahrschuelerArtID', {
+		get: (v: number): KatalogEintrag | undefined => {
+			for (const art of inputKatalogFahrschuelerarten.value)
+			if (art.id === v)
+			return art
+		},
+		set: (v: KatalogEintrag | undefined): number | undefined => v?.id
+	})
 
-	const inputKatalogFahrschuelerarten: ComputedRef<KatalogEintrag[]> = computed(() => props.fachschuelerarten.daten?.toArray() as KatalogEintrag[] || []);
-	const inputFahrschuelerArtID: WritableComputedRef<KatalogEintrag | undefined> = computed({
-		get: () => inputKatalogFahrschuelerarten.value.find(n => n.id === daten.value.fahrschuelerArtID),
-		set: (value) => props.stammdaten.patch({ fahrschuelerArtID: value?.id })
-	});
+	const inputKatalogHaltestellen: ComputedRef<List<KatalogEintrag>> = computed(() => main.kataloge.haltestellen);
+	const inputHaltestelleID: WritableComputedRef<KatalogEintrag | undefined> = inputBinding('haltestelleID', {
+		get: (v: number | undefined) => {
+			for (const r of inputKatalogHaltestellen.value) 
+				if (r.id === v)
+					return r;
+		},
+		set: (v: KatalogEintrag | undefined) => v?.id
+	})
 
-	const inputKatalogHaltestellen: ComputedRef<KatalogEintrag[]> = computed(() => main.kataloge.haltestellen.toArray() as KatalogEintrag[]);
-	const inputHaltestelleID: WritableComputedRef<KatalogEintrag | undefined> = computed({
-		get: () => inputKatalogHaltestellen.value.find(n => n.id === daten.value.haltestelleID),
-		set: (value) => props.stammdaten.patch({ haltestelleID: value?.id })
-	});
-
-	const inputAnmeldedatum: WritableComputedRef<string | undefined> = computed({
-		get: () => daten.value.anmeldedatum?.toString(),
-		set: (value) => props.stammdaten.patch({ anmeldedatum: value })
-	});
-
-	const inputAufnahmedatum: WritableComputedRef<string | undefined> = computed({
-		get: () => daten.value.aufnahmedatum?.toString(),
-		set: (value) => props.stammdaten.patch({ aufnahmedatum: value })
-	});
-
-	const inputIstDuplikat: WritableComputedRef<boolean> = computed({
-		get: () => daten.value.istDuplikat,
-		set: (value) => props.stammdaten.patch({ istDuplikat: value })
-	});
-
-	const inputIstSchulpflichtErfuellt: WritableComputedRef<boolean | undefined> = computed({
-		get: () => daten.value.istSchulpflichtErfuellt?.valueOf(),
-		set: (value) => props.stammdaten.patch({ istSchulpflichtErfuellt: value })
-	});
-
-	const inputHatMasernimpfnachweis: WritableComputedRef<boolean> = computed({
-		get: () => daten.value.hatMasernimpfnachweis,
-		set: (value) => props.stammdaten.patch({ hatMasernimpfnachweis: value })
-	});
-
-	const inputKeineAuskunftAnDritte: WritableComputedRef<boolean> = computed({
-		get: () => daten.value.keineAuskunftAnDritte,
-		set: (value) => props.stammdaten.patch({ keineAuskunftAnDritte: value })
-	});
-
-	const inputErhaeltSchuelerBAFOEG: WritableComputedRef<boolean> = computed({
-		get: () => daten.value.erhaeltSchuelerBAFOEG,
-		set: (value) => props.stammdaten.patch({ erhaeltSchuelerBAFOEG: value })
-	});
-
-	const inputIstBerufsschulpflichtErfuellt: WritableComputedRef<boolean | undefined> = computed({
-		get: () => daten.value.istBerufsschulpflichtErfuellt?.valueOf(),
-		set: (value) => props.stammdaten.patch({ istBerufsschulpflichtErfuellt: value })
-	});
-
-	const inputIstVolljaehrig: WritableComputedRef<boolean | undefined> = computed({
-		get: () => daten.value.istVolljaehrig?.valueOf(),
-		set: (value) => props.stammdaten.patch({ istVolljaehrig: value })
-	});
-
+	const inputAnmeldedatum: WritableComputedRef<string | undefined> = inputBinding('anmeldedatum')
+	const inputAufnahmedatum: WritableComputedRef<string | undefined> = inputBinding('anmeldedatum')
+	const inputIstDuplikat: WritableComputedRef<boolean | undefined> = inputBinding('istDuplikat')
+	const inputIstSchulpflichtErfuellt: WritableComputedRef<boolean | undefined> = inputBinding('istSchulpflichtErfuellt')
+	const inputHatMasernimpfnachweis: WritableComputedRef<boolean | undefined> = inputBinding('hatMasernimpfnachweis')
+	const inputKeineAuskunftAnDritte: WritableComputedRef<boolean | undefined> = inputBinding('keineAuskunftAnDritte')
+	const inputErhaeltSchuelerBAFOEG: WritableComputedRef<boolean | undefined> = inputBinding('erhaeltSchuelerBAFOEG')
+	const inputIstBerufsschulpflichtErfuellt: WritableComputedRef<boolean | undefined> = inputBinding('istBerufsschulpflichtErfuellt')
+	const inputIstVolljaehrig: WritableComputedRef<boolean | undefined> = inputBinding('istVolljaehrig')
 </script>

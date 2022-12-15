@@ -20,8 +20,8 @@
 	import { computed, ComputedRef, WritableComputedRef } from "vue";
 
 	import { Geschlecht, SchuelerStammdaten } from "@svws-nrw/svws-core-ts";
-	import { UseSchuelerStammdaten } from "~/utils/composables/stammdaten"
 	import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
+	import { UseSchuelerStammdaten } from "../composables"
 
 	const props = defineProps<{ stammdaten: DataSchuelerStammdaten }>();
 

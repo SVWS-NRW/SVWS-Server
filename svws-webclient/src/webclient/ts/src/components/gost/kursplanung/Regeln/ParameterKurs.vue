@@ -19,7 +19,7 @@ const selected = computed({
 });
 
 function text(i: GostBlockungKurs) {
-	return `${faechermanager?.get(i.fach_id)?.kuerzel}-${GostKursart.fromID(i.kursart)}${i.nummer}${i.suffix ? "-"+i.suffix:""}`
+	return `${faechermanager?.get(i.fach_id)?.kuerzel}-${i.kursart > 0 ? GostKursart.fromID(i.kursart) : 'kursart-fehlt' }${i.nummer}${i.suffix ? "-"+i.suffix:""}`
 }
 </script>
 
