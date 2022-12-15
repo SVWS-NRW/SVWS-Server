@@ -4,11 +4,11 @@
 		<div class="flex-none">
 			<div class="sticky">
 				<div class="rounded-lg shadow">
-					<div class="flex justify-between">
+					<div class="flex justify-between w-72">
 						<svws-ui-checkbox v-model="kurs_filter_toggle" class="" > Kursfilter </svws-ui-checkbox>
 						<svws-ui-multi-select v-if="kurs_filter_toggle" v-model="kurs_filter" :items="kurse" headless :item-text="(kurs: GostBlockungKurs) => manager?.getOfKursName(kurs.id)" class="w-52"/>
 					</div>
-					<div class="flex justify-between">
+					<div class="flex justify-between w-72">
 						<svws-ui-checkbox v-model="fach_filter_toggle" class="" > Fachfilter </svws-ui-checkbox>
 						<svws-ui-multi-select v-if="fach_filter_toggle" v-model="fach_filter" :items="app.dataFaecher.daten" headless :item-text="(fach: GostFach) => fach.bezeichnung" class="w-36"/>
 						<svws-ui-multi-select v-if="fach_filter_toggle" v-model="kursart_filter" :items="GostKursart.values()" headless :item-text="(kursart: GostKursart) => kursart.kuerzel" class="w-16"/>
@@ -174,10 +174,14 @@
 				return false;
 			},
 			set(value: boolean) {
-				if (value && app.dataFaecher.daten)
+				if (value && app.dataFaecher.daten) {
+					kurs_filter_toggle.value = false;
 					fach_filter.value = app.dataFaecher.daten.get(0);
-				else
+					kursart_filter.value = GostKursart.GK;
+				} else {
 					fach_filter.value = undefined;
+					kursart_filter.value = undefined;
+				}
 			}
 		})
 	const fach_filter: WritableComputedRef<GostFach | undefined> =
@@ -200,13 +204,10 @@
 			set(value: boolean) {
 				if (value && app.dataFaecher.daten) {
 					kurs_filter.value = kurse.value.get(0);
-					kursart_filter.value = GostKursart.GK;
+					fach_filter_toggle.value = false;
 				}
-				else {
+				else
 					kurs_filter.value = undefined;
-					kursart_filter.value = undefined;
-				}
-
 			}
 		})
 	const kurs_filter: WritableComputedRef<GostBlockungKurs | undefined> =
