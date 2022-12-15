@@ -2,6 +2,7 @@ import { App } from "../BaseApp";
 
 import {
 	GostBlockungKurs,
+	GostBlockungKursLehrer,
 	GostBlockungListeneintrag,
 	GostBlockungRegel,
 	GostBlockungSchiene,

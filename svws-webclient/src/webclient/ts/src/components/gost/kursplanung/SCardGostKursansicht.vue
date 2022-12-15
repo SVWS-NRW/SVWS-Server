@@ -1,11 +1,17 @@
 <template>
 	<svws-ui-content-card :title="`Übersicht über die Blockung ${allow_regeln ? '/ Festlegung von Regeln':''}`">
 		<div class="flex flex-row">
-			<div class="w-full flex-none sm:-mx-6 lg:-mx-8">
+			<div class="flex-none sm:-mx-6 lg:-mx-8">
 				<div class="py-2 align-middle sm:px-6 lg:px-8">
-					<div v-if="!blockung_aktiv" class="flex gap-2 mb-2">
-						<svws-ui-button  type="primary" @click="toggle_modal_hochschreiben">Hochschreiben</svws-ui-button>
-						<svws-ui-button type="secondary" @click="toggle_modal_aktivieren">Aktivieren</svws-ui-button>
+					<div class="w-full flex gap-2 justify-between mb-2">
+						<div class="flex gap-2">
+							<svws-ui-button size="small" type="primary" @click="toggle_modal_hochschreiben">Hochschreiben</svws-ui-button>
+							<svws-ui-button  v-if="!blockung_aktiv" type="secondary" @click="toggle_modal_aktivieren">Aktivieren</svws-ui-button>
+						</div>
+						<div v-if="app.listAbiturjahrgangSchueler.filter.kurs" class="flex gap-2 text-lg">
+							Lehrkraft:
+							<svws-ui-multi-select v-model="add_lehrer_regel" class="w-52" autocomplete :item-filter="lehrer_filter" :items="main.apps.lehrer.auswahl.liste" :item-text="(l: LehrerListeEintrag)=> `${l.nachname}, ${l.vorname} (${l.kuerzel})`"/>
+						</div>
 					</div>
 					<div v-if="blockungsergebnis_aktiv" class="text-lg font-bold">Dieses Blockungsergebnis ist aktiv.</div>
 					<div v-if="blockung_aktiv && !blockungsergebnis_aktiv" class="text-lg font-bold">Ein anderes Ergebnis dieser Blockung ist bereits aktiv.</div>
@@ -139,9 +145,11 @@
 <script setup lang="ts">
 	import {
 		GostBlockungKurs,
+		GostBlockungKursLehrer,
 		GostBlockungSchiene,
 		GostBlockungsergebnisManager,
 		GostStatistikFachwahl,
+		LehrerListeEintrag,
 		List,
 		Vector
 	} from "@svws-nrw/svws-core-ts";
@@ -149,6 +157,7 @@
 	import { computed, ComputedRef, ref, Ref, WritableComputedRef } from "vue";
 
 	import { injectMainApp, Main, mainApp } from "~/apps/Main";
+	import { lehrer_filter } from "~/helfer"
 
 	const main: Main = injectMainApp();
 	const app = main.apps.gost
@@ -196,6 +205,19 @@
 	const blockungsergebnis_aktiv: ComputedRef<boolean> =
 		computed(()=> app.blockungsergebnisauswahl.ausgewaehlt?.istVorlage || false)
 
+	const add_lehrer_regel = computed({
+		get(): LehrerListeEintrag | undefined {
+			return undefined;
+			// return app.dataKursblockung. (kurs);
+		},
+		set(value: LehrerListeEintrag | undefined) {
+			if (!app.listAbiturjahrgangSchueler.filter.kurs)
+				return;
+			value
+				? app.dataKursblockungsergebnis.add_blockung_lehrer(app.listAbiturjahrgangSchueler.filter.kurs.id, value.id)
+				: app.dataKursblockungsergebnis.del_blockung_lehrer(app.listAbiturjahrgangSchueler.filter.kurs.id, 0)
+		}
+	});
 	function getAnzahlSchuelerSchiene(idSchiene: number): number {
 		return manager.value?.getOfSchieneAnzahlSchueler(idSchiene) || 0;
 	};

@@ -200,7 +200,7 @@ const kurs_blockungsergebnis: ComputedRef<GostBlockungsergebnisKurs|undefined> =
 
 const selected_kurs: ComputedRef<boolean> =
 	computed(() => (kurs_blockungsergebnis.value !== undefined)
-		&& (kurs_blockungsergebnis.value?.id === app.listAbiturjahrgangSchueler.filter.kursid))
+		&& (kurs_blockungsergebnis.value?.id === app.listAbiturjahrgangSchueler.filter.kurs?.id))
 
 const filtered_by_kursart: ComputedRef<GostBlockungsergebnisKurs[]> =
 	computed(()=>{
@@ -376,7 +376,11 @@ async function del_kurs() {
 
 function toggle_active_kurs() {
 	const filterValue = app.listAbiturjahrgangSchueler.filter;
-	filterValue.kursid = (filterValue.kursid === kurs_blockungsergebnis.value?.id) ? undefined :  kurs_blockungsergebnis.value?.id;
+	if (filterValue.kurs !== props.kurs) {
+		app.listAbiturjahrgangSchueler.reset_filter();
+		filterValue.kurs = props.kurs;
+	}
+	else app.listAbiturjahrgangSchueler.reset_filter();
 	app.listAbiturjahrgangSchueler.filter = filterValue;
 }
 

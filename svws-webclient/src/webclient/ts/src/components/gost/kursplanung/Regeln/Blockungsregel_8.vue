@@ -105,7 +105,7 @@ const kursbezeichnung2 = (regel: GostBlockungRegel): String => {
 		</div>
 		<div v-for="r in regeln" :key="r.id" class="flex justify-between">
 			<div class="cursor-pointer" @click="regel = (regel !== r) ? r:undefined" :class="{'bg-slate-200':r===regel}">
-				{{kursbezeichnung1(r)}} nur zusammen mit {{kursbezeichnung2(r)}}
+				{{kursbezeichnung1(r)}} immer zusammen mit {{kursbezeichnung2(r)}}
 			</div>
 			<svws-ui-icon v-if="allow_regeln" type="danger" class="cursor-pointer" @click="regel_entfernen(r)">
 				<i-ri-delete-bin-2-line />
@@ -114,7 +114,7 @@ const kursbezeichnung2 = (regel: GostBlockungRegel): String => {
 		<div v-if="regel && allow_regeln">
 			<div class="inline-flex items-baseline gap-1">
 				<parameter-kurs v-model="kurs1" />
-				nur zusammen mit
+				immer zusammen mit
 				<parameter-kurs v-model="kurs2" />
 				<svws-ui-button type="danger" @click="regel=undefined">
 					<svws-ui-icon> <i-ri-delete-bin-2-line /> </svws-ui-icon> </svws-ui-button>

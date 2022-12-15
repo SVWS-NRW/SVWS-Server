@@ -1,6 +1,7 @@
 import {
 	Erzieherart,
 	KatalogEintrag,
+	LehrerListeEintrag,
 	List,
 	Nationalitaeten,
 	OrtKatalogEintrag,
@@ -190,4 +191,21 @@ export const erzieherArtSort = (a: Erzieherart, b: Erzieherart) => {
 		return 1;
 	}
 	return 0;
+};
+
+/** Der Filter für Lehrer mit Kürzelsuche */
+export const lehrer_filter = (items: LehrerListeEintrag[], search: string): LehrerListeEintrag[] => {
+	const name = search.replace(/\d+\s*/, "").trim();
+	if (!name)
+		return items;
+	return items.filter((item: LehrerListeEintrag) =>
+		item.kuerzel
+			.toLocaleLowerCase("de-DE")
+			.startsWith(name.toLocaleLowerCase("de-DE"))
+		|| item.nachname
+			.toLocaleLowerCase("de-DE")
+			.startsWith(name.toLocaleLowerCase("de-DE"))
+		|| item.vorname
+			.toLocaleLowerCase("de-DE")
+			.startsWith(name.toLocaleLowerCase("de-DE")))
 };
