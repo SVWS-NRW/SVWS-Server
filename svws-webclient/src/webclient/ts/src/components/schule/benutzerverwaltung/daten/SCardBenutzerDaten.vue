@@ -8,6 +8,7 @@
 		</div>
 	</svws-ui-content-card>
 	<s-card-benutzer-gruppen-liste > </s-card-benutzer-gruppen-liste>
+	
 </template>
 
 <script setup lang="ts">

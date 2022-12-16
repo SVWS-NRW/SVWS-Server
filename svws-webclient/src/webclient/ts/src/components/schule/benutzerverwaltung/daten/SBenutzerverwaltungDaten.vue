@@ -1,6 +1,7 @@
 <template>
 	<div v-show="visibleBenutzer" class="app-container">
 		<s-card-benutzer-daten />
+		<s-card-benutzer-kompetenzen />
 	</div>
 	<div v-show="visibleBenutzergruppe" class="app-container">
 		<s-card-benutzergruppe-daten />

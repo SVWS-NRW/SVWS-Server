@@ -1,7 +1,7 @@
 import { App } from "~/apps/BaseApp";
 import { BaseData } from "~/apps/BaseData";
 
-import {BenutzerDaten, BenutzergruppeListeEintrag, BenutzerListeEintrag, BenutzerManager, Vector} from "@svws-nrw/svws-core-ts";
+import {BenutzerDaten, BenutzergruppeDaten, BenutzergruppeListeEintrag, BenutzerKompetenz, BenutzerKompetenzGruppe, BenutzerListeEintrag, BenutzerManager, Vector} from "@svws-nrw/svws-core-ts";
 
 export class DataBenutzer extends BaseData<BenutzerDaten, BenutzerListeEintrag, BenutzerManager> {
  
@@ -91,8 +91,10 @@ export class DataBenutzer extends BaseData<BenutzerDaten, BenutzerListeEintrag, 
 			return;
 		const bg_ids:Vector<Number> = new Vector<Number>();
 		bg_ids.add(Number(this.manager.getID()));	
-		await App.api.addBenutzergruppeBenutzer(bg_ids, App.schema,bg_id);
-		this.manager.addToGruppe(bg_id);
+		const result = await App.api.addBenutzergruppeBenutzer(bg_ids, App.schema,bg_id) as BenutzergruppeDaten;
+		console.log(result);
+		this.manager.addToGruppe(result);
+		
 		
 	}
 
@@ -106,10 +108,10 @@ export class DataBenutzer extends BaseData<BenutzerDaten, BenutzerListeEintrag, 
 	 public async addBenutzergruppenBenutzer(bgle: BenutzergruppeListeEintrag[] | undefined): Promise<void> {
 		const benutzer_id:Vector<Number> = new Vector<Number>();
 		benutzer_id.add(Number(this.manager?.getID()));
-		bgle?.forEach((eintrag) =>  {
+		bgle?.forEach(async (eintrag) =>  {
 			if (!this.manager?.IstInGruppe(eintrag.id)) {
-				App.api.addBenutzergruppeBenutzer(benutzer_id, App.schema,eintrag.id);
-				this.manager?.addToGruppe(eintrag.id);
+				const result = await App.api.addBenutzergruppeBenutzer(benutzer_id, App.schema,eintrag.id) as BenutzergruppeDaten;
+				this.manager?.addToGruppe(result);
 			}
 		});
 	}
@@ -126,8 +128,8 @@ export class DataBenutzer extends BaseData<BenutzerDaten, BenutzerListeEintrag, 
 			return;
 		const bg_ids:Vector<Number> = new Vector<Number>();
 		bg_ids.add(this.manager.getID());	
-		await App.api.removeBenutzergruppeBenutzer(bg_ids, App.schema,bg_id);
-		this.manager.removeFromGruppe(bg_id);
+		const result = await App.api.removeBenutzergruppeBenutzer(bg_ids, App.schema,bg_id) as BenutzergruppeDaten;
+		this.manager.removeFromGruppe(result);
 	}
 
 	/**
@@ -140,12 +142,96 @@ export class DataBenutzer extends BaseData<BenutzerDaten, BenutzerListeEintrag, 
 	 public async removeBenutzergruppenBenutzer(bgle: BenutzergruppeListeEintrag[] | undefined): Promise<void> {
 		const benutzer_id:Vector<Number> = new Vector<Number>();
 		benutzer_id.add(Number(this.manager?.getID()));	
-		bgle?.forEach((eintrag) =>  {
+		bgle?.forEach(async (eintrag) =>  {
 			if (this.manager?.IstInGruppe(eintrag.id)) {
-				App.api.removeBenutzergruppeBenutzer(benutzer_id, App.schema, eintrag.id);
-				this.manager?.removeFromGruppe(eintrag.id);
+				const result = await App.api.removeBenutzergruppeBenutzer(benutzer_id, App.schema, eintrag.id) as BenutzergruppeDaten;
+				this.manager?.removeFromGruppe(result);
 			}
 		});
 	}
 
+	/**
+	 * Fügt die übergebene Kompetenz zu dem Benutzer hinzu
+	 * 
+	 * @param kompetenz   die hinzuzufügende Kompetenz
+	 */
+	 public async addKompetenz(kompetenz : BenutzerKompetenz) : Promise<boolean> {
+		const kid:Vector<Number> = new Vector<Number>();
+		kid.add(Number(kompetenz.daten.id));
+		if (!this.manager)
+			return false;
+		if (this.manager.hatKompetenz(kompetenz))
+			return false;
+		await App.api.addBenutzerKompetenzen(kid, App.schema, this.manager.getID());
+		this.manager.addKompetenz(kompetenz);
+		return true;
+	}
+
+	/**
+	 * Entfernt die übergebene Kompetenz von diesem Benutzer
+	 * 
+	 * @param kompetenz   die zu entfernende Kompetenz
+	 */
+	 public async removeKompetenz(kompetenz : BenutzerKompetenz) : Promise<boolean> {
+		const kid:Vector<Number> = new Vector<Number>();
+		kid.add(Number(kompetenz.daten.id));
+		if (!this.manager)
+			return false;
+		if (!this.manager.hatKompetenz(kompetenz))
+			return false;
+		await App.api.removeBenutzerKompetenzen(kid, App.schema, this.manager.getID());
+		this.manager.removeKompetenz(kompetenz);
+		return true;
+	}
+
+
+
+	/**
+	 * Fügt die übergebene Kompetenzen einer Benutzerkompetenzgruppe zu diesem Benutzer hinzu
+	 * 
+	 * @param kompetenzgruppe   die Kompetenzgruppe, deren Kompetenzen hinzugefügt werden.
+	 */
+	 public async addBenutzerKompetenzGruppe(kompetenzgruppe : BenutzerKompetenzGruppe) : Promise<boolean> {
+		const kids : Vector<Number> = new Vector<Number>();
+		if (!this.manager)
+			return false;
+		if (!this.manager.istAdmin()) {
+			for (let komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe)) {
+				if(this.manager.getGruppen(komp).size() === 0)
+					kids.add(Number(komp.daten.id));
+			}
+			await App.api.addBenutzerKompetenzen(kids,App.schema,this.manager.getID());
+			for (let komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe)) {
+				if(this.manager.getGruppen(komp).size() === 0){
+					if (!this.manager?.hatKompetenz(komp))
+						this.manager?.addKompetenz(komp);
+				}
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * Entfernt die übergebene Kompetenzen einer Benutzerkompetenzgruppe von diesem Benutzer
+	 * 
+	 * @param kompetenzgruppe   die Kompetenzgruppe, deren Kompetenzen entfernt werden.
+	 */
+	 public async removeBenutzerKompetenzGruppe(kompetenzgruppe : BenutzerKompetenzGruppe) : Promise<boolean> {
+		const kids : Vector<Number> = new Vector<Number>();
+		if (!this.manager)
+			return false;
+		if (!this.manager.istAdmin()) {
+			for (let komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe))
+				if(this.manager.getGruppen(komp).size() === 0)
+					kids.add(Number(komp.daten.id));
+			await App.api.removeBenutzerKompetenzen(kids,App.schema,this.manager.getID());
+			for (let komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe)) {
+				if(this.manager.getGruppen(komp).size() === 0){
+					if (this.manager?.hatKompetenz(komp))
+						this.manager?.removeKompetenz(komp);
+				}		
+			}
+		}
+		return true;
+	}
 }

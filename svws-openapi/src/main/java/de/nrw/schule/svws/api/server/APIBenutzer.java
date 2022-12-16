@@ -11,6 +11,7 @@ import de.nrw.schule.svws.core.data.benutzer.BenutzerListeEintrag;
 import de.nrw.schule.svws.core.data.benutzer.BenutzergruppeDaten;
 import de.nrw.schule.svws.core.data.benutzer.BenutzergruppeListeEintrag;
 import de.nrw.schule.svws.core.data.gost.GostBlockungSchiene;
+import de.nrw.schule.svws.core.data.kataloge.KatalogEintrag;
 import de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenz;
 import de.nrw.schule.svws.data.JSONMapper;
 import de.nrw.schule.svws.data.benutzer.DataBenutzerDaten;
@@ -331,8 +332,7 @@ public class APIBenutzer {
     @Operation(summary = "Entfernt Kompetenzen bei einem Benutzer.", description = "Entfernt Kompetenzen bei einem Benutzer."
             + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen der Kompetenzen besitzt.")
     
-    @ApiResponse(responseCode = "200", description = "Die Kompetenzen wurden erfolgreich entfernt.",
-    			 content = @Content(mediaType = "application/json", schema = @Schema(implementation = Long.class)))  
+    @ApiResponse(responseCode = "204", description = "Die Kompetenzen wurden erfolgreich entfernt.")  
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Kompetenzen zu entfernen.")
     @ApiResponse(responseCode = "404", description = "Benötigte Information zum Benutzer wurden nicht in der DB gefunden.")
     @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
@@ -582,7 +582,8 @@ public class APIBenutzer {
     @Path("/gruppe/{id : \\d+}/benutzer/add")
     @Operation(summary = "Fügt Benutzer bei einer Benutzergruppe hinzu.", description = "Fügt Benutzer bei einer Benutzergruppe hinzu."
             + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Hinzufügen der Benutzer besitzt.")
-    @ApiResponse(responseCode = "204", description = "Die Benutzer wurden erfolgreich hinzugefügt.")
+    @ApiResponse(responseCode = "200", description = "Die Benutzer wurden erfolgreich hinzugefügt.",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = BenutzergruppeDaten.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um neue Benutzer hinzuzufügen.")
     @ApiResponse(responseCode = "404", description = "Benötigte Information zum Benutzer wurden nicht in der DB gefunden.")
     @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
@@ -610,7 +611,8 @@ public class APIBenutzer {
     @Path("/gruppe/{id : \\d+}/benutzer/remove")
     @Operation(summary = "Entfernt Benutzer bei einer Benutzergruppe hinzu.", description = "Entfernt Benutzer bei einer Benutzergruppe hinzu."
             + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen der Benutzer besitzt.")
-    @ApiResponse(responseCode = "204", description = "Die Benutzer wurden erfolgreich hinzugefügt.")
+    @ApiResponse(responseCode = "200", description = "Die Benutzer wurden erfolgreich hinzugefügt.",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = BenutzergruppeDaten.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um neue Benutzer zu entfernen.")
     @ApiResponse(responseCode = "404", description = "Benötigte Information zum Benutzer wurden nicht in der DB gefunden.")
     @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")

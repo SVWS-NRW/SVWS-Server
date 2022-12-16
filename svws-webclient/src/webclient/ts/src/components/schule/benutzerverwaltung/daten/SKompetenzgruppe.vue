@@ -8,7 +8,8 @@
             </tr>
         </thead>
         <tbody>
-            <s-kompetenz v-for="kompetenz in BenutzerKompetenz.getKompetenzen(kompetenzgruppe)" :key="kompetenz.daten.id" :kompetenz="kompetenz" :istAdmin="istAdmin">
+            <s-kompetenz v-for="kompetenz in BenutzerKompetenz.getKompetenzen(kompetenzgruppe)" 
+            :key="kompetenz.daten.id" :kompetenz="kompetenz" :istAdmin="istAdmin" :benutzertyp="benutzertyp">
             </s-kompetenz>
         </tbody>
     </div>
@@ -38,13 +39,12 @@
             return manager.value?.hatKompetenzen(BenutzerKompetenz.getKompetenzen(props.kompetenzgruppe)) || false;
         },
         set(value: boolean) {
-            console.log(props.benutzertyp);
-            console.log(manager.value);
-            // TODO
             if (value)
-                 props.benutzertyp === 0 ? console.log("TO DO") : app_bg.dataBenutzergruppe.addBenutzerKompetenzGruppe(props.kompetenzgruppe) 
+                 props.benutzertyp === 0 ? app_b.dataBenutzer.addBenutzerKompetenzGruppe(props.kompetenzgruppe) 
+                                         : app_bg.dataBenutzergruppe.addBenutzerKompetenzGruppe(props.kompetenzgruppe) 
             else
-                 props.benutzertyp === 0 ? console.log("TO OD") : app_bg.dataBenutzergruppe.removeBenutzerKompetenzGruppe(props.kompetenzgruppe)
+                 props.benutzertyp === 0 ? app_b.dataBenutzer.removeBenutzerKompetenzGruppe(props.kompetenzgruppe)  
+                                         : app_bg.dataBenutzergruppe.removeBenutzerKompetenzGruppe(props.kompetenzgruppe)
         }
     });
 

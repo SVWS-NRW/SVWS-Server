@@ -53,7 +53,6 @@ public class BenutzerManager {
         _daten = new BenutzerDaten();
         _daten.id = id;
         _daten.istAdmin = false;
-
     }
 
     /**
@@ -68,45 +67,73 @@ public class BenutzerManager {
         for (@NotNull
         Long kID : pDaten.kompetenzen) {
             if (kID == null)
-                throw new NullPointerException(
-                        "Fehlerhafte Daten: Die Liste der Kompetenzen darf keine Null-Werte enthalten.");
+                throw new NullPointerException("Fehlerhafte Daten: Die Liste der Kompetenzen darf keine Null-Werte enthalten.");
             BenutzerKompetenz komp = BenutzerKompetenz.getByID(kID);
             if (komp == null)
-                throw new NullPointerException(
-                        "Fehlerhafte Daten: Die Kompetenz mit der ID " + kID + " existiert nicht.");
+                throw new NullPointerException("Fehlerhafte Daten: Die Kompetenz mit der ID " + kID + " existiert nicht.");
             if (_setKompetenzen.contains(komp))
-                throw new IllegalArgumentException(
-                        "Die Kompetenz mit der ID " + kID + " wurde mehrfach bei der Gruppe eingetragen.");
+                throw new IllegalArgumentException("Die Kompetenz mit der ID " + kID + " wurde mehrfach bei der Gruppe eingetragen.");
             _setKompetenzen.add(komp);
             _setKompetenzenAlle.add(komp);
         }
         // Aktualisiere die lokalen Datenstrukturen - die über Gruppen zugeordneten
         // Kompetenzen
-        for (@NotNull
-        BenutzergruppeDaten bgd : _daten.gruppen) {
-            _mapGruppen.put(bgd.id, bgd);
-            _setGruppenIDs.add(bgd.id);
-            for (@NotNull
-            Long kid : bgd.kompetenzen) {
-                BenutzerKompetenz komp = BenutzerKompetenz.getByID(kid);
-                if (komp == null)
-                    throw new NullPointerException(
-                            "Fehlerhafte Daten: Die Kompetenz mit der ID " + kid + " existiert nicht.");
-                // Aktualisiere die Menge der zugeordneten Kompetenzen
-                _setKompetenzenAlle.add(komp);
-                // Speichere über welche Gruppe die Kompetenz zugeordnet wurde.
-                getGruppen(komp).add(bgd);
-            }
-        }
+        for (@NotNull BenutzergruppeDaten bgd : _daten.gruppen)
+            addGruppe(bgd);
     }
 
+    /**
+     * Aktualisiere die lokalen Datenstrukturen - die über Gruppen zugeordneten  Kompetenzen
+     * 
+     * @param bgd die Benutzergruppendaten
+     */
+    private void addGruppe(BenutzergruppeDaten bgd) {
+        if (bgd == null)
+            return;
+        _mapGruppen.put(bgd.id, bgd);
+        _setGruppenIDs.add(bgd.id);
+        for (@NotNull Long kid : bgd.kompetenzen) {
+            BenutzerKompetenz komp = BenutzerKompetenz.getByID(kid);
+            if (komp == null)
+                throw new NullPointerException("Fehlerhafte Daten: Die Kompetenz mit der ID " + kid + " existiert nicht.");
+            // Aktualisiere die Menge der zugeordneten Kompetenzen
+            _setKompetenzenAlle.add(komp);
+            // Speichere über welche Gruppe die Kompetenz zugeordnet wurde.
+            getGruppen(komp).add(bgd);
+        }        
+    }
+    
+    
+    /**
+     * Aktualisiere die lokalen Datenstrukturen - die über Gruppen zugeordneten  Kompetenzen
+     * 
+     * @param bgd die Benutzergruppendaten
+     */
+    private void removeGruppe(BenutzergruppeDaten bgd) {
+        if (bgd == null)
+            return;
+        _mapGruppen.remove(bgd.id);
+        _setGruppenIDs.remove(bgd.id);
+        for (@NotNull BenutzerKompetenz p : BenutzerKompetenz.values()) {
+           Vector< @NotNull BenutzergruppeDaten> vbgd = _mapKompetenzenVonGruppe.get(p);
+            if(vbgd == null ) 
+                throw new NullPointerException("Fehler");
+           if(vbgd.contains(bgd)) {
+                    vbgd.remove(bgd);
+                    if(vbgd.size() == 0)
+                        _setKompetenzenAlle.remove(p);
+           }         
+           _mapKompetenzenVonGruppe.remove(p);
+           _mapKompetenzenVonGruppe.put(p, vbgd);
+        }
+    }
+    
     /**
      * Initialisiert die lokalen Datenstrukturen.
      */
     private void init() {
         // Erzeuge leere Vektoren für einzelnen Komptenzen
-        for (@NotNull
-        BenutzerKompetenz p : BenutzerKompetenz.values())
+        for (@NotNull BenutzerKompetenz p : BenutzerKompetenz.values())
             _mapKompetenzenVonGruppe.put(p, new Vector<>());
     }
 
@@ -300,7 +327,7 @@ public class BenutzerManager {
         if (!_setKompetenzen.contains(kompetenz))
             throw new IllegalArgumentException(
                     "Die Kompetenz mit der ID " + kompetenz.daten.id + " ist nicht direkt beim Benutzer vorhanden.");
-        this._daten.kompetenzen.remove(kompetenz.daten.id);
+        this._daten.kompetenzen.removeElement(kompetenz.daten.id);
         _setKompetenzen.remove(kompetenz);
         @NotNull
         List<@NotNull BenutzergruppeDaten> gruppen = getGruppen(kompetenz);
@@ -335,33 +362,28 @@ public class BenutzerManager {
     /**
      * Fügt den Benutzer in eine Gruppe ein
      * 
-     * @param id ID der Gruppe
+     * @param bgd die Benutzergruppe
      * 
      * @throws IllegalArgumentException wenn der Benutzer die Kompetenz bereits hat
      */
 
-    public void addToGruppe(@NotNull long id) {
-        if (!this.IstInGruppe(id))
-            this._setGruppenIDs.add(id);
-        else
+    public void addToGruppe(@NotNull BenutzergruppeDaten bgd) {
+        if (bgd != null) {
+            this.addGruppe(bgd);
+        }
+             else
             throw new IllegalArgumentException("Der Benutzer ist bereits in der Gruppe ");
     }
 
     /**
      * Entfernt den Benutzer aus der Gruppe
      * 
-     * @param id  ID der Gruppe
+     * @param bgd  dei Benutzergruppe
      * 
      * @throws IllegalArgumentException wenn der Benutzer die Kompetenz bereits hat
      */
 
-    public void removeFromGruppe(@NotNull long id) {
-        if (this.IstInGruppe(id))
-            this._setGruppenIDs.remove(id);
-        else
-            throw new IllegalArgumentException("Der Benutzer ist nicht in der Gruppe ");
-    }
-    
-    
-
+    public void removeFromGruppe(@NotNull BenutzergruppeDaten bgd) {
+         this.removeGruppe(bgd);
+    }   
 }

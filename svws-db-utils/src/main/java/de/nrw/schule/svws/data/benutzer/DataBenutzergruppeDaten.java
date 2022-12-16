@@ -2,8 +2,10 @@ package de.nrw.schule.svws.data.benutzer;
 
 import java.io.InputStream;
 import java.util.List;
+import java.util.function.Function;
 
 import de.nrw.schule.svws.core.data.benutzer.BenutzergruppeDaten;
+import de.nrw.schule.svws.core.data.betrieb.BetriebAnsprechpartner;
 import de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenz;
 import de.nrw.schule.svws.core.utils.benutzer.BenutzergruppenManager;
 import de.nrw.schule.svws.data.DataManager;
@@ -12,6 +14,7 @@ import de.nrw.schule.svws.db.dto.current.schild.benutzer.DTOBenutzer;
 import de.nrw.schule.svws.db.dto.current.schild.benutzer.DTOBenutzergruppe;
 import de.nrw.schule.svws.db.dto.current.schild.benutzer.DTOBenutzergruppenKompetenz;
 import de.nrw.schule.svws.db.dto.current.schild.benutzer.DTOBenutzergruppenMitglied;
+import de.nrw.schule.svws.db.dto.current.schild.katalog.DTOAnsprechpartnerAllgemeineAdresse;
 import de.nrw.schule.svws.db.utils.OperationError;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
@@ -34,6 +37,25 @@ public class DataBenutzergruppeDaten extends DataManager<Long> {
         super(conn);
     }
 
+    /**
+     * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOBenutzergruppe}
+     */
+    
+    private Function<DTOBenutzergruppe,BenutzergruppeDaten> dtoMapper = (DTOBenutzergruppe k) -> {
+        BenutzergruppeDaten daten = new BenutzergruppeDaten();
+        daten.id = k.ID;
+        daten.bezeichnung = k.Bezeichnung;
+        daten.istAdmin = k.IstAdmin;
+     // Lese die Kompetenzen der Gruppe ein
+        List<Long> kompetenzIDs = conn
+                .queryNamed("DTOBenutzergruppenKompetenz.gruppe_id", k.ID,
+                        DTOBenutzergruppenKompetenz.class)
+                .stream().map(g -> g.Kompetenz_ID).sorted().toList();
+        for (Long kompetenzID : kompetenzIDs)
+            daten.kompetenzen.add(kompetenzID);
+        return daten;
+    };
+    
     @Override
     public Response getAll() {
         return this.getList();
@@ -43,7 +65,7 @@ public class DataBenutzergruppeDaten extends DataManager<Long> {
     public Response getList() {
         throw new UnsupportedOperationException();
     }
-
+    
     /**
      * Bestimmt das DTO für die Benutzergruppe aus der Datenbank.
      * 
@@ -116,7 +138,7 @@ public class DataBenutzergruppeDaten extends DataManager<Long> {
         } finally {
             conn.transactionRollback();
         }
-        return Response.status(Status.OK).build();
+        return Response.status(Status.NO_CONTENT).build();
     }
 
     /**
@@ -266,7 +288,7 @@ public class DataBenutzergruppeDaten extends DataManager<Long> {
      * @param id   die ID der Benutzergruppe
      * @param bids die ID der Benutzer
      * 
-     * @return die Response 204 bei Erfolg.
+     * @return die Response 200 bei Erfolg.
      */
     public Response addBenutzer(Long id, List<Long> bids) {
         if ((id == null) || (bids == null))
@@ -300,7 +322,8 @@ public class DataBenutzergruppeDaten extends DataManager<Long> {
                 conn.transactionRollback();
             }
         }
-        return Response.status(Status.OK).build();
+        BenutzergruppeDaten daten = dtoMapper.apply(getDTO(id));
+        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
     }
 
     /**
@@ -309,7 +332,7 @@ public class DataBenutzergruppeDaten extends DataManager<Long> {
      * @param id    die ID der Benutzergruppe
      * @param bids  die ID der Benutzer
      * 
-     * @return die Response 204 bei Erfolg.
+     * @return die Response 200 bei Erfolg.
      */
     public Response removeBenutzer(Long id, List<Long> bids) {
         if (id == null || bids == null)
@@ -346,7 +369,8 @@ public class DataBenutzergruppeDaten extends DataManager<Long> {
                conn.transactionRollback();
            }
         } 
-        return Response.status(Status.OK).build();
+        BenutzergruppeDaten daten = dtoMapper.apply(getDTO(id));
+        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
     }
 
 

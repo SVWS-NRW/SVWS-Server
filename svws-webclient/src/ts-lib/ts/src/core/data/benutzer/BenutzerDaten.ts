@@ -23,7 +23,7 @@ export class BenutzerDaten extends JavaObject {
 
 	public gruppen : List<BenutzergruppeDaten> = new Vector();
 
-	public kompetenzen : List<Number> = new Vector();
+	public kompetenzen : Vector<Number> = new Vector();
 
 
 	public constructor() {

@@ -67,18 +67,52 @@ export class BenutzerManager extends JavaObject {
 				this._setKompetenzen.add(komp);
 				this._setKompetenzenAlle.add(komp);
 			}
-			for (let bgd of this._daten.gruppen) {
-				this._mapGruppen.put(bgd.id, bgd);
-				this._setGruppenIDs.add(bgd.id);
-				for (let kid of bgd.kompetenzen) {
-					let komp : BenutzerKompetenz | null = BenutzerKompetenz.getByID(kid.valueOf());
-					if (komp === null) 
-						throw new NullPointerException("Fehlerhafte Daten: Die Kompetenz mit der ID " + kid.valueOf() + " existiert nicht.")
-					this._setKompetenzenAlle.add(komp);
-					this.getGruppen(komp).add(bgd);
-				}
-			}
+			for (let bgd of this._daten.gruppen) 
+				this.addGruppe(bgd);
 		} else throw new Error('invalid method overload');
+	}
+
+	/**
+	 * Aktualisiere die lokalen Datenstrukturen - die über Gruppen zugeordneten  Kompetenzen
+	 * 
+	 * @param bgd die Benutzergruppendaten
+	 */
+	private addGruppe(bgd : BenutzergruppeDaten | null) : void {
+		if (bgd === null) 
+			return;
+		this._mapGruppen.put(bgd.id, bgd);
+		this._setGruppenIDs.add(bgd.id);
+		for (let kid of bgd.kompetenzen) {
+			let komp : BenutzerKompetenz | null = BenutzerKompetenz.getByID(kid.valueOf());
+			if (komp === null) 
+				throw new NullPointerException("Fehlerhafte Daten: Die Kompetenz mit der ID " + kid.valueOf() + " existiert nicht.")
+			this._setKompetenzenAlle.add(komp);
+			this.getGruppen(komp).add(bgd);
+		}
+	}
+
+	/**
+	 * Aktualisiere die lokalen Datenstrukturen - die über Gruppen zugeordneten  Kompetenzen
+	 * 
+	 * @param bgd die Benutzergruppendaten
+	 */
+	private removeGruppe(bgd : BenutzergruppeDaten | null) : void {
+		if (bgd === null) 
+			return;
+		this._mapGruppen.remove(bgd.id);
+		this._setGruppenIDs.remove(bgd.id);
+		for (let p of BenutzerKompetenz.values()) {
+			let vbgd : Vector<BenutzergruppeDaten> | null = this._mapKompetenzenVonGruppe.get(p);
+			if (vbgd === null) 
+				throw new NullPointerException("Fehler")
+			if (vbgd.contains(bgd)) {
+				vbgd.remove(bgd);
+				if (vbgd.size() === 0) 
+					this._setKompetenzenAlle.remove(p);
+			}
+			this._mapKompetenzenVonGruppe.remove(p);
+			this._mapKompetenzenVonGruppe.put(p, vbgd);
+		}
 	}
 
 	/**
@@ -274,7 +308,7 @@ export class BenutzerManager extends JavaObject {
 	public removeKompetenz(kompetenz : BenutzerKompetenz) : void {
 		if (!this._setKompetenzen.contains(kompetenz)) 
 			throw new IllegalArgumentException("Die Kompetenz mit der ID " + kompetenz.daten.id + " ist nicht direkt beim Benutzer vorhanden.")
-		this._daten.kompetenzen.remove(kompetenz.daten.id);
+		this._daten.kompetenzen.removeElement(kompetenz.daten.id);
 		this._setKompetenzen.remove(kompetenz);
 		let gruppen : List<BenutzergruppeDaten> = this.getGruppen(kompetenz);
 		if (gruppen.size() === 0) 
@@ -305,27 +339,26 @@ export class BenutzerManager extends JavaObject {
 	/**
 	 * Fügt den Benutzer in eine Gruppe ein
 	 * 
-	 * @param id ID der Gruppe
+	 * @param bgd die Benutzergruppe
 	 * 
 	 * @throws IllegalArgumentException wenn der Benutzer die Kompetenz bereits hat
 	 */
-	public addToGruppe(id : number) : void {
-		if (!this.IstInGruppe(id)) 
-			this._setGruppenIDs.add(id); else 
+	public addToGruppe(bgd : BenutzergruppeDaten) : void {
+		if (bgd !== null) {
+			this.addGruppe(bgd);
+		} else 
 			throw new IllegalArgumentException("Der Benutzer ist bereits in der Gruppe ")
 	}
 
 	/**
 	 * Entfernt den Benutzer aus der Gruppe
 	 * 
-	 * @param id  ID der Gruppe
+	 * @param bgd  dei Benutzergruppe
 	 * 
 	 * @throws IllegalArgumentException wenn der Benutzer die Kompetenz bereits hat
 	 */
-	public removeFromGruppe(id : number) : void {
-		if (this.IstInGruppe(id)) 
-			this._setGruppenIDs.remove(id); else 
-			throw new IllegalArgumentException("Der Benutzer ist nicht in der Gruppe ")
+	public removeFromGruppe(bgd : BenutzergruppeDaten) : void {
+		this.removeGruppe(bgd);
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
