@@ -19,6 +19,7 @@ import SApp from "~/components/SApp.vue";
 export const RouteApp : RouteRecordRaw = {
     path: "/",
     component: SApp,
+    name: "app",
     children: [
         RouteSchule,
         RouteSchuleBenutzerverwaltung,

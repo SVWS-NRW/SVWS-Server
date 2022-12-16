@@ -3,38 +3,12 @@
 		<template #headline> Schülerauswahl</template>
 		<template #header>
 			<div class="px-5">
-				<svws-ui-multi-select
-					v-model="filterStatus"
-					:items="inputKatalogSchuelerStatus"
-					:item-text="text_status"
-					tags
-					title="Status"
-				/>
+				<svws-ui-multi-select v-model="filterStatus" :items="inputKatalogSchuelerStatus" :item-text="text_status" tags title="Status" />
 				<div class="input-wrapper mt-6">
-					<svws-ui-multi-select
-						v-model="filterKlassen"
-						title="Klasse"
-						:items="inputKlassen"
-						:item-text="text_klasse"
-					/>
-					<svws-ui-multi-select
-						v-model="filterJahrgaenge"
-						title="Jahrgang"
-						:items="inputJahrgaenge"
-						:item-text="text_jahrgang"
-					/>
-					<svws-ui-multi-select
-						v-model="filterKurse"
-						title="Kurs"
-						:items="inputKurse"
-						:item-text="text_kurs"
-					/>
-					<svws-ui-multi-select
-						v-model="filterSchulgliederung"
-						title="Schulgliederung"
-						:items="inputSchulgliederungen"
-						:item-text="text_schulgliederung"
-					/>
+					<svws-ui-multi-select v-model="filterKlassen" title="Klasse" :items="inputKlassen" :item-text="text_klasse" />
+					<svws-ui-multi-select v-model="filterJahrgaenge" title="Jahrgang" :items="inputJahrgaenge" :item-text="text_jahrgang" />
+					<svws-ui-multi-select v-model="filterKurse" title="Kurs" :items="inputKurse" :item-text="text_kurs" />
+					<svws-ui-multi-select v-model="filterSchulgliederung" title="Schulgliederung" :items="inputSchulgliederungen" :item-text="text_schulgliederung" />
 				</div>
 			</div>
 			<div class="px-5">
@@ -43,47 +17,28 @@
 						<svws-ui-icon><i-ri-filter-3-line /></svws-ui-icon>
 						<span class="ml-2">Erweiterte Filter</span>
 					</svws-ui-button>
-					<svws-ui-button
-						v-show="filtered"
-						type="transparent"
-						@click="filterReset"
-					>
+					<svws-ui-button v-show="filtered" type="transparent" @click="filterReset">
 						<svws-ui-icon><i-ri-close-line /></svws-ui-icon>
 						<span class="ml-2">Filter zurücksetzen</span>
 					</svws-ui-button>
 				</div>
-				</div>
+			</div>
 			<div class="px-5">
 				<div class="mt-6 mb-2">
-					<svws-ui-text-input
-						v-model="search"
-						type="search"
-						placeholder="Suche nach Namen oder Klasse"
-						><i-ri-search-line
-					/></svws-ui-text-input>
+					<svws-ui-text-input v-model="search" type="search" placeholder="Suche nach Namen oder Klasse"><i-ri-search-line/></svws-ui-text-input>
 				</div>
 			</div>
 		</template>
 		<template #content>
 			<div class="container">
-				<svws-ui-table
-					v-model="selected"
-					v-model:selection="selectedItems"
-					:data="rowsFiltered"
-					:columns="cols"
-					is-multi-select
-					:footer="true"
-					>
+				<svws-ui-table v-model="selected" v-model:selection="selectedItems" :data="rowsFiltered" :columns="cols" is-multi-select :footer="true">
 					<!-- Footer mit Button zum Hinzufügen einer Zeile -->
 					<template #footer>
 						<div class="text-sm-bold normal-case mr-auto">
 							<span v-if="selectedItems.length">{{selectedItems.length}}/{{rowsFiltered.length}} ausgewählt</span>
 							<span v-else>{{rowsFiltered.length}} Einträge</span>
 						</div>
-						<button
-							class="button button--icon"
-							@click="addLine()"
-						>
+						<button class="button button--icon" @click="addLine()">
 							<svws-ui-icon><i-ri-add-line /></svws-ui-icon>
 						</button>
 						<button class="button button--icon">
@@ -102,16 +57,11 @@
 <script setup lang="ts">
 	import { computed, ComputedRef, Ref, ref, WritableComputedRef } from "vue";
 
-	import {
-		JahrgangsListeEintrag,
-		KlassenListeEintrag,
-		KursListeEintrag,
-		SchuelerListeEintrag,
-		SchuelerStatus,
-		Schulgliederung
-	} from "@svws-nrw/svws-core-ts";
+	import { SchuelerListeEintrag, SchuelerStatus, JahrgangsListeEintrag, 
+		KlassenListeEintrag, KursListeEintrag, Schulgliederung } from "@svws-nrw/svws-core-ts";
+
 	import { injectMainApp, Main } from "~/apps/Main";
-	import { useAuswahlViaRoute } from '~/router/auswahlViaRoute';
+	import { routeSchuelerAuswahl } from "~/router/apps/RouteSchueler";
 
 	export interface SchuelerProps {
 		selectedItems: Array<SchuelerListeEintrag>;
@@ -119,6 +69,8 @@
 		filtered: boolean;
 		search: string;
 	}
+
+	const props = defineProps<{ id: Number | undefined; }>();
 
 	// TODO Speichere in einem speziellen Filter-Objekt
 	const filtered: Ref<boolean> = ref(false);
@@ -139,10 +91,7 @@
 	const rows: ComputedRef<Array<any>> = computed(() => {
 		const array = app.auswahl.gefiltert.map(e => ({
 			...e,
-			klasse:
-				appKlassen.auswahl.liste
-					.find(k => k.id === e.idKlasse)
-					?.kuerzel?.toString() || ""
+			klasse: appKlassen.auswahl.liste.find(k => k.id === e.idKlasse)?.kuerzel?.toString() || ""
 		}));
 		return array;
 	});
@@ -152,18 +101,14 @@
 		if (search.value && rowsConst) {
 			return rowsConst.filter(
 				(e: any) =>
-					e.nachname
-						.toLocaleLowerCase()
-						.includes(search.value.toLocaleLowerCase()) ||
-					e.vorname
-						.toLocaleLowerCase()
-						.includes(search.value.toLocaleLowerCase())
+					e.nachname.toLocaleLowerCase().includes(search.value.toLocaleLowerCase()) ||
+					e.vorname.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())
 			);
 		}
 		return rowsConst;
 	});
 
-	const selected = useAuswahlViaRoute('schueler')
+	const selected = routeSchuelerAuswahl();
 
 	const inputKatalogSchuelerStatus: ComputedRef<Array<SchuelerStatus>> =
 		computed(() => {
@@ -185,15 +130,11 @@
 			}
 		});
 
-	const inputSchulgliederungen: ComputedRef<
-		Array<Schulgliederung> | undefined
-	> = computed(() => {
+	const inputSchulgliederungen: ComputedRef<Array<Schulgliederung> | undefined> = computed(() => {
 		return appSchule.schulgliederungen;
 	});
 
-	const filterSchulgliederung: WritableComputedRef<
-		Schulgliederung | undefined
-	> = computed({
+	const filterSchulgliederung: WritableComputedRef<Schulgliederung | undefined> = computed({
 		get(): Schulgliederung | undefined {
 			return app.auswahl.filter.schulgliederung;
 		},
@@ -207,15 +148,11 @@
 		}
 	});
 
-	const inputJahrgaenge: ComputedRef<
-		Array<JahrgangsListeEintrag> | undefined
-	> = computed(() => {
+	const inputJahrgaenge: ComputedRef<Array<JahrgangsListeEintrag> | undefined> = computed(() => {
 		return appJahrgaenge.auswahl.liste;
 	});
 
-	const filterJahrgaenge: WritableComputedRef<
-		JahrgangsListeEintrag | undefined
-	> = computed({
+	const filterJahrgaenge: WritableComputedRef<JahrgangsListeEintrag | undefined> = computed({
 		get(): JahrgangsListeEintrag | undefined {
 			return app.auswahl.filter.jahrgang;
 		},
@@ -233,14 +170,13 @@
 
 	const inputKlassen: ComputedRef<Array<KlassenListeEintrag> | undefined> =
 		computed(() => {
-			if (appKlassen) {
-				const liste = [...appKlassen.auswahl.liste];
-				const jahrgang = app.auswahl.filter.jahrgang;
-				if (jahrgang) {
-					return liste.filter(k => k.idJahrgang === jahrgang.id);
-				} else return liste;
-			}
-			return undefined;
+			if (appKlassen === undefined)
+				return undefined;
+			const liste = [...appKlassen.auswahl.liste];
+			const jahrgang = app.auswahl.filter.jahrgang;
+			return (jahrgang === undefined)
+				? liste
+				: liste.filter(k => k.idJahrgang === jahrgang.id);
 		});
 
 	const filterKlassen: WritableComputedRef<KlassenListeEintrag | undefined> =
@@ -260,15 +196,13 @@
 
 	const inputKurse: ComputedRef<Array<KursListeEintrag> | undefined> =
 		computed(() => {
-			if (appKurse) {
-				const liste = [...appKurse.auswahl.liste];
-				const jahrgang = app.auswahl.filter.jahrgang;
-				if (jahrgang) {
-					return liste.filter(k =>
-						k.idJahrgaenge.contains(jahrgang.id)
-					);
-				} else return liste;
-			} else return undefined;
+			if (appKurse === undefined)
+				return undefined;
+			const liste = [...appKurse.auswahl.liste];
+			const jahrgang = app.auswahl.filter.jahrgang;
+			return (jahrgang === undefined)
+				? liste
+				: liste.filter(k => k.idJahrgaenge.contains(jahrgang.id));
 		});
 
 	const filterKurse: WritableComputedRef<KursListeEintrag | undefined> =
@@ -360,4 +294,5 @@
 			filtered.value = false;
 		}
 	}
+
 </script>
