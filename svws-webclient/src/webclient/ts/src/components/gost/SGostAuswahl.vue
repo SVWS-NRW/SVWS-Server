@@ -32,20 +32,20 @@
 					</template>
 				</svws-ui-table>
 			</div>
-			<div v-if="main.config.kursblockung_aktiv.size && abiturjahr" class="mt-20">
+			<div v-if="main.config.kursblockung_aktiv.size && abiturjahr > 0" class="mt-20">
 				<h3 class="text-headline px-6 mb-3">Blockungen</h3>
 				<svws-ui-table v-model="selected_hj" :columns="[{ key: 'kuerzel', label: 'Halbjahr' }]" :data="halbjahre" class="mb-10">
 					<template #body="{rows}">
 						<template v-for="row in <GostHalbjahr[]>rows" :key="row.id">
-							<tr :class="{'vt-clicked': row.id === selected_hj.id}" @click="select_hj(row)">
+							<tr :class="{'vt-clicked': row.id === selected_hj?.id}" @click="select_hj(row)">
 								<td>
 									{{row.kuerzel}}
-									<span v-if="((pending || app.blockungsauswahl.pending) && row.id === selected_hj.id)" class="loading-spinner-dimensions">
+									<span v-if="((pending || app.blockungsauswahl.pending) && row.id === selected_hj?.id)" class="loading-spinner-dimensions">
 										<img src="/loading_spinner.svg" alt="Ladeanzeige" class="loading-spinner-dimensions loading-rotation" ></span>
 									<svws-ui-button type="transparent" v-if="allow_add_blockung(row)" @click.stop="blockung_hinzufuegen" :disabled="pending">Blockung hinzufügen</svws-ui-button>
 								</td>
 							</tr>
-							<template v-if="row.id === selected_hj.id" v-for="blockung in rows_blockungswahl" :key="blockung.hashCode">
+							<template v-if="row.id === selected_hj?.id" v-for="blockung in rows_blockungswahl" :key="blockung.hashCode">
 								<tr :class="{'vt-clicked': blockung === selected_blockungauswahl}" class="table--row-indent" @click="select_blockungauswahl(blockung)">
 									<td v-if=" blockung === selected_blockungauswahl ">
 										<div class="flex">
@@ -132,7 +132,7 @@
 <script setup lang="ts">
 import { List, Vector, GostBlockungListeneintrag, GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag,
 	GostHalbjahr, GostJahrgang, JahrgangsListeEintrag } from "@svws-nrw/svws-core-ts";
-import { computed, ComputedRef, ref, Ref, WritableComputedRef } from "vue";
+import { computed, ComputedRef, ref, Ref, watch, WritableComputedRef } from "vue";
 import { App } from "~/apps/BaseApp";
 import { useAuswahlViaRoute } from '~/router/auswahlViaRoute';
 import { GOST_CREATE_BLOCKUNG_SYMBOL } from "~/apps/core/LoadingSymbols";
@@ -173,20 +173,34 @@ const jahrgaenge: ComputedRef<JahrgangsListeEintrag[]> =
 		return appJahrgaenge.auswahl.liste.filter(j=>!set.has(j.kuerzel))
 	});
 
-const selected_hj: WritableComputedRef<GostHalbjahr> =
+watch(()=>selected.value, (new_jahrgang)=> {
+	if (new_jahrgang?.abiturjahr && new_jahrgang.abiturjahr !== -1) {
+		let hj = GostHalbjahr.getPlanungshalbjahrFromAbiturjahrSchuljahrUndHalbjahr( new_jahrgang.abiturjahr, App.akt_abschnitt.schuljahr, App.akt_abschnitt.abschnitt);
+		// manchmal gibt es kein Planungshalbjahr, z.B. weil die Q2 fast durch ist oder der Abiturjahrgang noch in der Sek1 ist.
+		if (!hj)
+			if (new_jahrgang.abiturjahr < App.akt_abschnitt.schuljahr + App.akt_abschnitt.abschnitt)
+				hj = GostHalbjahr.Q22;
+			else
+				hj = GostHalbjahr.EF1;
+		selected_hj.value = hj;
+	} else
+		selected_hj.value = undefined;
+})
+
+const selected_hj: WritableComputedRef<GostHalbjahr | undefined > =
 	computed({
-		get(): GostHalbjahr {
-			manager.value?.getHalbjahr()
-			const hj = hj_memo.value || manager.value?.getHalbjahr()
-			return hj
-				|| GostHalbjahr.getPlanungshalbjahrFromAbiturjahrSchuljahrUndHalbjahr(abiturjahr.value, App.akt_abschnitt.schuljahr, App.akt_abschnitt.abschnitt)
-				|| GostHalbjahr.EF1
+		get(): GostHalbjahr | undefined {
+			return hj_memo.value;
 		},
-		set(hj: GostHalbjahr) {
-			if (hj === selected_hj.value || !hj)
+		set(hj: GostHalbjahr | undefined) {
+			if (hj === selected_hj.value)
 				return;
 			hj_memo.value = hj
-			if ((selected.value?.abiturjahr) && (selected.value?.abiturjahr !== -1)) {
+			if (hj === undefined) {
+				app.blockungsauswahl.ausgewaehlt = undefined;
+				app.blockungsauswahl.liste = [];
+			}
+			else if ((selected.value?.abiturjahr) && (selected.value?.abiturjahr !== -1)) {
 				app.blockungsauswahl.ausgewaehlt = undefined;
 				app.blockungsauswahl.update_list(selected.value.abiturjahr, hj.id)
 			}
@@ -222,20 +236,22 @@ const pending: ComputedRef<boolean> =
 	computed(()=> app.dataKursblockung.pending);
 
 const allow_add_blockung = (row: GostHalbjahr): boolean => {
-	const curr_hj = row.id === selected_hj.value.id;
+	const curr_hj = row.id === selected_hj.value?.id;
 	if (!curr_hj || app.dataJahrgang.daten === undefined)
 		return false;
 	return app.dataJahrgang.daten.istBlockungFestgelegt[row.id] ? false : true
 }
 
 async function remove_ergebnisse() {
+	if (!selected_hj.value)
+		return;
 	const abiturjahr = selected.value?.abiturjahr?.valueOf() || -1;
 	if (selected_ergebnisse.value.length > 0 && abiturjahr) {
 		for (const ergebnis of selected_ergebnisse.value) {
 			await App.api.deleteGostBlockungsergebnis(App.schema, ergebnis.id);
 		}
 		selected_ergebnisse.value = [];
-		await app.blockungsauswahl.update_list(abiturjahr, selected_hj.value.id);
+		await app.blockungsauswahl.update_list(abiturjahr, selected_hj.value?.id);
 	}
 }
 
@@ -273,7 +289,7 @@ const create_blockungsergebnisse = () => {
 };
 
 async function blockung_hinzufuegen() {
-	if (!selected.value?.abiturjahr)
+	if (!selected.value?.abiturjahr || !selected_hj.value)
 		return;
 	await App.api.createGostAbiturjahrgangBlockung(App.schema, selected.value.abiturjahr.valueOf(), selected_hj.value.id);
 	const abiturjahr = selected.value.abiturjahr.valueOf();
@@ -282,7 +298,7 @@ async function blockung_hinzufuegen() {
 
 async function remove_blockung() {
 	modal_remove_blockung.value.closeModal()
-	if (!selected_blockungauswahl.value)
+	if (!selected_blockungauswahl.value || !selected_hj.value)
 		return;
 	await App.api.deleteGostBlockung(App.schema, selected_blockungauswahl.value?.id);
 	const abiturjahr = selected.value?.abiturjahr?.valueOf();
@@ -292,7 +308,7 @@ async function remove_blockung() {
 }
 
 async function remove_ergebnis() {
-	if (!selected_ergebnis.value)
+	if (!selected_ergebnis.value || !selected_hj.value)
 		return;
 	await App.api.deleteGostBlockungsergebnis(App.schema, selected_ergebnis.value.id);
 	const abiturjahr = selected.value?.abiturjahr?.valueOf() || -1;
@@ -300,7 +316,7 @@ async function remove_ergebnis() {
 }
 
 async function derive_blockung() {
-	if (!selected_ergebnis.value)
+	if (!selected_ergebnis.value || !selected_hj.value)
 		return;
 	await App.api.dupliziereGostBlockungMitErgebnis(App.schema, selected_ergebnis.value.id);
 	const abiturjahr = selected.value?.abiturjahr?.valueOf() || -1;

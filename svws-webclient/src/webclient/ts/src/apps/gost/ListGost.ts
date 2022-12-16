@@ -30,17 +30,9 @@ export class ListGost extends BaseList<GostJahrgang> {
 	 */
 	public async on_select(): Promise<void> {
 		const abijahr = this._state.ausgewaehlt?.abiturjahr?.valueOf();
-		if (!abijahr) return;
+		if (abijahr === undefined || abijahr < 1) return;
 		this.listKursblockungen.ausgewaehlt = undefined;
-		await this.listAbiturjahrgangSchueler.update_list(abijahr);
 		this.listAbiturjahrgangSchueler.reset_filter();
-		const hj = abijahr 
-			? GostHalbjahr.getPlanungshalbjahrFromAbiturjahrSchuljahrUndHalbjahr(
-					abijahr,
-					App.akt_abschnitt.schuljahr,
-					App.akt_abschnitt.abschnitt
-				)
-			: undefined
-		if (hj) await this.listKursblockungen.update_list(abijahr, hj.id);
+		await this.listAbiturjahrgangSchueler.update_list(abijahr);
 	}
 }
