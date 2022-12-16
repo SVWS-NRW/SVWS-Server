@@ -92,8 +92,8 @@ public class DataSchuelerliste extends DataManager<Long> {
 	public static SchuelerListeEintrag erstelleSchuelerlistenEintrag(DTOSchueler schueler, DTOSchuelerLernabschnittsdaten aktAbschnitt) {
 		SchuelerListeEintrag eintrag = new SchuelerListeEintrag();
 		eintrag.id = schueler.ID;
-		eintrag.nachname = schueler.Nachname;
-		eintrag.vorname = schueler.Vorname;
+		eintrag.nachname = schueler.Nachname == null ? "" : schueler.Nachname;
+		eintrag.vorname = schueler.Vorname == null ? "" : schueler.Vorname;
 		eintrag.idKlasse = (aktAbschnitt == null) ? null : aktAbschnitt.Klassen_ID;
 		eintrag.jahrgang = (aktAbschnitt == null) ? null : aktAbschnitt.ASDJahrgang;
 		eintrag.schulgliederung = (aktAbschnitt == null) ? null : aktAbschnitt.Schulgliederung.daten.kuerzel;

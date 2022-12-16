@@ -50,10 +50,10 @@ public class DataSchuelerStammdaten extends DataManager<Long> {
     	// Basisdaten
 		daten.id = schueler.ID;
 		daten.foto = "";
-		daten.nachname = schueler.Nachname;
-		daten.zusatzNachname = schueler.ZusatzNachname;
-		daten.vorname = schueler.Vorname;
-		daten.alleVornamen = schueler.AlleVornamen;
+		daten.nachname = schueler.Nachname == null ? "" : schueler.Nachname;
+		daten.zusatzNachname = schueler.ZusatzNachname == null ? "" : schueler.ZusatzNachname;
+		daten.vorname = schueler.Vorname == null ? "" : schueler.Vorname;
+		daten.alleVornamen = schueler.AlleVornamen == null ? "" : schueler.AlleVornamen;
 		daten.geschlecht = schueler.Geschlecht.id;
 		daten.geburtsdatum = schueler.Geburtsdatum;
 		daten.geburtsort = schueler.Geburtsort;
