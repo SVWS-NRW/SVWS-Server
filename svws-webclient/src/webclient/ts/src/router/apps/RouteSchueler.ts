@@ -5,7 +5,7 @@ import { injectMainApp } from "~/apps/Main";
 
 
 function getRouteSchuelerProps(route: RouteLocationNormalized) {
-	if (route.params.id === undefined)
+	if ((route.name !== "schueler") || (route.params.id === undefined))
 		return { id: undefined, item: undefined };
 	const id = parseInt(route.params.id as string);
 	const app = injectMainApp().apps.schueler;
@@ -30,6 +30,7 @@ export function routeSchuelerAuswahl(): WritableComputedRef<SchuelerListeEintrag
 	const router = useRouter();
 	const route = useRoute();
 	const app = injectMainApp().apps.schueler;
+
 	const selected = computed({
 		get(): SchuelerListeEintrag | undefined {
 			if (route.params.id === undefined)
