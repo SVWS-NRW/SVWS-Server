@@ -394,7 +394,6 @@ export class KursblockungDynStatistik extends JavaObject {
 		let nr2 : number = kurs2.gibInternalID();
 		this.regelVerletzungKursMitKurs[nr1][nr2] += 1;
 		this.regelVerletzungKursMitKurs[nr2][nr1] += 1;
-		console.log(JSON.stringify("DEBUG: regelHinzufuegenKursVerbieteMitKurs [" + nr1 + "/" + kurs1.gibDatenbankID() + "][" + nr2 + "/" + kurs2.gibDatenbankID() + "]"));
 	}
 
 	/**
@@ -412,7 +411,6 @@ export class KursblockungDynStatistik extends JavaObject {
 		this.regelVerletzungKursMitKurs[nr1][nr2] -= 1;
 		this.regelVerletzungKursMitKurs[nr2][nr1] -= 1;
 		this.bewertungRegelverletzungen += Math.max(kurs1.gibSchienenAnzahl(), kurs2.gibSchienenAnzahl());
-		console.log(JSON.stringify("DEBUG: regelHinzufuegenKursZusammenMitKurs [" + nr1 + "/" + kurs1.gibDatenbankID() + "][" + nr2 + "/" + kurs2.gibDatenbankID() + "]"));
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

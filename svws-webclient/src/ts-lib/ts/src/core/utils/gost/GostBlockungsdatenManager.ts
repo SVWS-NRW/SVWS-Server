@@ -5,7 +5,6 @@ import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 import { GostBlockungRegel, cast_de_nrw_schule_svws_core_data_gost_GostBlockungRegel } from '../../../core/data/gost/GostBlockungRegel';
 import { GostKursart, cast_de_nrw_schule_svws_core_types_gost_GostKursart } from '../../../core/types/gost/GostKursart';
-import { System, cast_java_lang_System } from '../../../java/lang/System';
 import { Comparator, cast_java_util_Comparator } from '../../../java/util/Comparator';
 import { GostKursblockungRegelTyp, cast_de_nrw_schule_svws_core_types_kursblockung_GostKursblockungRegelTyp } from '../../../core/types/kursblockung/GostKursblockungRegelTyp';
 import { NullPointerException, cast_java_lang_NullPointerException } from '../../../java/lang/NullPointerException';
@@ -17,8 +16,8 @@ import { IllegalArgumentException, cast_java_lang_IllegalArgumentException } fro
 import { GostBlockungKurs, cast_de_nrw_schule_svws_core_data_gost_GostBlockungKurs } from '../../../core/data/gost/GostBlockungKurs';
 import { HashSet, cast_java_util_HashSet } from '../../../java/util/HashSet';
 import { GostFach, cast_de_nrw_schule_svws_core_data_gost_GostFach } from '../../../core/data/gost/GostFach';
-import { GostFachwahl, cast_de_nrw_schule_svws_core_data_gost_GostFachwahl } from '../../../core/data/gost/GostFachwahl';
 import { GostBlockungKursLehrer, cast_de_nrw_schule_svws_core_data_gost_GostBlockungKursLehrer } from '../../../core/data/gost/GostBlockungKursLehrer';
+import { GostFachwahl, cast_de_nrw_schule_svws_core_data_gost_GostFachwahl } from '../../../core/data/gost/GostFachwahl';
 import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
 import { GostBlockungsergebnis, cast_de_nrw_schule_svws_core_data_gost_GostBlockungsergebnis } from '../../../core/data/gost/GostBlockungsergebnis';
 import { GostBlockungsdaten, cast_de_nrw_schule_svws_core_data_gost_GostBlockungsdaten } from '../../../core/data/gost/GostBlockungsdaten';
@@ -35,6 +34,13 @@ export class GostBlockungsdatenManager extends JavaObject {
 
 	private static readonly compRegel : Comparator<GostBlockungRegel> = { compare : (a: GostBlockungRegel, b: GostBlockungRegel) => {
 		let result : number = JavaInteger.compare(a.typ, b.typ);
+		if (result !== 0) 
+			return result;
+		return JavaLong.compare(a.id, b.id);
+	} };
+
+	private static readonly compLehrkraefte : Comparator<GostBlockungKursLehrer> = { compare : (a: GostBlockungKursLehrer, b: GostBlockungKursLehrer) => {
+		let result : number = JavaInteger.compare(a.reihenfolge, b.reihenfolge);
 		if (result !== 0) 
 			return result;
 		return JavaLong.compare(a.id, b.id);
@@ -93,14 +99,12 @@ export class GostBlockungsdatenManager extends JavaObject {
 	public constructor(__param0? : GostBlockungsdaten, __param1? : GostFaecherManager) {
 		super();
 		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined")) {
-			console.log(JSON.stringify("DEBUG: GostBlockungsdatenManager - Konstrukor - START"));
 			this._faecherManager = new GostFaecherManager();
 			this._daten = new GostBlockungsdaten();
 			this._daten.gostHalbjahr = GostHalbjahr.EF1.id;
 			this._compKurs_fach_kursart_kursnummer = this.createComparatorKursFachKursartNummer();
 			this._compKurs_kursart_fach_kursnummer = this.createComparatorKursKursartFachNummer();
 			this._compFachwahlen = this.createComparatorFachwahlen();
-			console.log(JSON.stringify("DEBUG: GostBlockungsdatenManager - Konstrukor - ENDE"));
 		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.data.gost.GostBlockungsdaten')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('de.nrw.schule.svws.core.utils.gost.GostFaecherManager'))))) {
 			let pDaten : GostBlockungsdaten = cast_de_nrw_schule_svws_core_data_gost_GostBlockungsdaten(__param0);
 			let pFaecherManager : GostFaecherManager = cast_de_nrw_schule_svws_core_utils_gost_GostFaecherManager(__param1);
@@ -657,11 +661,116 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
-	 * Fügt den übergebenen Kurslehrer zu den Blockungs-Daten hinzu
-	 *  
-	 * @param pKursLehrer   der Kurslehrer
+	 * Liefert alle Lehrkräfte eines Kurses sortiert nach {@link GostBlockungKursLehrer#reihenfolge}.
+	 * 
+	 * @param pKursID  Die Datenbank-ID des Kurses.
+	 * @return         Alle Lehrkräfte eines Kurses sortiert nach {@link GostBlockungKursLehrer#reihenfolge}.
 	 */
-	public addKursLehrer(pKursLehrer : GostBlockungKursLehrer) : void {
+	public getOfKursLehrkaefteSortiert(pKursID : number) : List<GostBlockungKursLehrer> {
+		let kurs : GostBlockungKurs = this.getKurs(pKursID);
+		return kurs.lehrer;
+	}
+
+	/**
+	 * Liefert die Lehrkraft des Kurses, welche die angegebene Nummer hat. <br>
+	 * Wirft eine Exceptions, falls es eine solche Lehrkraft nicht gibt.
+	 *    
+	 * @param pKursID                Die Datenbank-ID des Kurses.
+	 * @param pReihenfolgeNr         Die Lehrkraft mit der Nummer, die gesucht wird. 
+	 * @return                       Die Lehrkraft des Kurses, welche die angegebene Nummer hat.
+	 * @throws NullPointerException  Falls es eine solche Lehrkraft nicht gibt.
+	 */
+	public getOfKursLehrkaftMitNummer(pKursID : number, pReihenfolgeNr : number) : GostBlockungKursLehrer | null {
+		for (let lehrkraft of this.getOfKursLehrkaefteSortiert(pKursID)) 
+			if (lehrkraft.reihenfolge === pReihenfolgeNr) 
+				return lehrkraft;
+		throw new NullPointerException("Es gibt im Kurs " + pKursID + " keine Lehrkraft mit ReihenfolgeNr " + pReihenfolgeNr)
+	}
+
+	/**
+	 * Liefert TRUE, falls im Kurs die Lehrkraft mit der Nummer existiert.
+	 *    
+	 * @param pKursID                Die Datenbank-ID des Kurses.
+	 * @param pReihenfolgeNr         Die Lehrkraft mit der Nummer, die gesucht wird. 
+	 * @return                       TRUE, falls im Kurs die Lehrkraft mit der Nummer existiert.
+	 * @throws NullPointerException  Falls es eine solche Lehrkraft nicht gibt.
+	 */
+	public getOfKursLehrkaftMitNummerExists(pKursID : number, pReihenfolgeNr : number) : boolean {
+		for (let lehrkraft of this.getOfKursLehrkaefteSortiert(pKursID)) 
+			if (lehrkraft.reihenfolge === pReihenfolgeNr) 
+				return true;
+		return false;
+	}
+
+	/**
+	 * Liefert die Lehrkraft des Kurses, welche die angegebene ID hat. <br>
+	 * Wirft eine Exceptions, falls es eine solche Lehrkraft nicht gibt.
+	 *    
+	 * @param pKursID                Die Datenbank-ID des Kurses.
+	 * @param pLehrkraftID           Die Datenbank-ID der gesuchten Lehrkraft. 
+	 * @return                       Die Lehrkraft des Kurses, welche die angegebene ID hat.
+	 * @throws NullPointerException  Falls es eine solche Lehrkraft nicht gibt.
+	 */
+	public getOfKursLehrkaftMitID(pKursID : number, pLehrkraftID : number) : GostBlockungKursLehrer | null {
+		for (let lehrkraft of this.getOfKursLehrkaefteSortiert(pKursID)) 
+			if (lehrkraft.id === pLehrkraftID) 
+				return lehrkraft;
+		throw new NullPointerException("Es gibt im Kurs " + pKursID + " keine Lehrkraft mit ID " + pLehrkraftID)
+	}
+
+	/**
+	 * Liefert TRUE, falls im Kurs die Lehrkraft mit der ID existiert.
+	 *    
+	 * @param pKursID                Die Datenbank-ID des Kurses.
+	 * @param pLehrkraftID           Die Datenbank-ID der gesuchten Lehrkraft. 
+	 * @return                       TRUE, falls im Kurs die Lehrkraft mit der ID existiert.
+	 * @throws NullPointerException  Falls es eine solche Lehrkraft nicht gibt.
+	 */
+	public getOfKursLehrkaftMitIDExists(pKursID : number, pLehrkraftID : number) : boolean {
+		for (let lehrkraft of this.getOfKursLehrkaefteSortiert(pKursID)) 
+			if (lehrkraft.id === pLehrkraftID) 
+				return true;
+		return false;
+	}
+
+	/**
+	 * Fügt die übergebene Lehrkraft zum Kurs hinzu. <br>
+	 * Wirft eine NullPointerException, falls es die Lehrkraft oder die ReihenfolgeNr bereits im Kurs gibt.
+	 * 
+	 * @param pKursID                Die Datenbank-ID des Kurses.
+	 * @param pKursLehrer            Das {@link GostBlockungKursLehrer}-Objekt.
+	 * @throws NullPointerException  Falls es die Lehrkraft oder die ReihenfolgeNr im Kurs bereits gibt.
+	 */
+	public patchOfKursAddLehrkraft(pKursID : number, pKursLehrer : GostBlockungKursLehrer) : void {
+		let kurs : GostBlockungKurs = this.getKurs(pKursID);
+		let lehrer : List<GostBlockungKursLehrer> = kurs.lehrer;
+		for (let lehrkraft of lehrer) {
+			if (lehrkraft.id === pKursLehrer.id) 
+				throw new NullPointerException("Kurs " + pKursID + " hat bereits eine Lehrkraft mit ID " + pKursLehrer.id)
+			if (lehrkraft.reihenfolge === pKursLehrer.reihenfolge) 
+				throw new NullPointerException("Kurs " + pKursID + " hat bereits eine Lehrkraft mit ReihenfolgeNr " + pKursLehrer.reihenfolge)
+		}
+		lehrer.add(pKursLehrer);
+		lehrer.sort(GostBlockungsdatenManager.compLehrkraefte);
+	}
+
+	/**
+	 * Löscht aus dem übergebenen Kurs die angegebene Lehrkraft. <br>
+	 * Wirft eine NullPointerException, falls es eine solche Lehrkraft im Kurs nicht gibt.
+	 * 
+	 * @param pKursID                Die Datenbank-ID des Kurses.
+	 * @param pLehrkraftID           Die Datenbank-ID des {@link GostBlockungKursLehrer}-Objekt.
+	 * @throws NullPointerException  Falls es eine solche Lehrkraft im Kurs nicht gibt.
+	 */
+	public patchOfKursRemoveLehrkraft(pKursID : number, pLehrkraftID : number) : void {
+		let kurs : GostBlockungKurs = this.getKurs(pKursID);
+		let lehrer : List<GostBlockungKursLehrer> = kurs.lehrer;
+		for (let i : number = 0; i < lehrer.size(); i++)
+			if (lehrer.get(i).id === pLehrkraftID) {
+				lehrer.remove(i);
+				return;
+			}
+		throw new NullPointerException("Kurs " + pKursID + " hat keine Lehrkraft mit ID " + pLehrkraftID)
 	}
 
 	private addSchieneOhneSortierung(pSchiene : GostBlockungSchiene) : void {
