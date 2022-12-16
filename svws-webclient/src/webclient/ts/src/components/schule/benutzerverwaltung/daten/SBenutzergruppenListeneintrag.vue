@@ -10,7 +10,7 @@
 	import { BenutzergruppeListeEintrag, BenutzerManager } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, WritableComputedRef } from "vue";
 	import { injectMainApp, Main } from "~/apps/Main";
-import { Benutzergruppe } from "~/apps/schule/benutzerverwaltung/Benutzergruppe";
+    import { Benutzergruppe } from "~/apps/schule/benutzerverwaltung/Benutzergruppe";
 
     const props = defineProps({
         bgle: { type: Object as () => BenutzergruppeListeEintrag, required: true },

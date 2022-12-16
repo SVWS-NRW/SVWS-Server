@@ -9,11 +9,12 @@
         </thead>
         <tbody>
             <s-kompetenz v-for="kompetenz in BenutzerKompetenz.getKompetenzen(kompetenzgruppe)" 
-            :key="kompetenz.daten.id" :kompetenz="kompetenz" :istAdmin="istAdmin" :benutzertyp="benutzertyp">
+                :key="kompetenz.daten.id" :kompetenz="kompetenz" :istAdmin="istAdmin" :benutzertyp="benutzertyp">
             </s-kompetenz>
         </tbody>
     </div>
 </template>
+
 <script setup lang="ts">
 	import { BenutzergruppenManager, BenutzerKompetenz, BenutzerKompetenzGruppe, BenutzerManager } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, WritableComputedRef } from "vue";
@@ -22,29 +23,36 @@
     
     const props = defineProps({
         kompetenzgruppe: { type: Object as () => BenutzerKompetenzGruppe, required: true },
-        istAdmin:{type:Boolean, required: true},
-        benutzertyp : {type : Number, default:0}
+        istAdmin: { type: Boolean, required: true },
+        benutzertyp : {type : Number, default:0 }
     });
 
 	const main: Main = injectMainApp();
-	const app_b =  main.apps.benutzer;
+	const app_b = main.apps.benutzer;
     const app_bg =  main.apps.benutzergruppe;
 
     const manager: ComputedRef<BenutzergruppenManager | BenutzerManager| undefined> = computed(() => {
-		return props.benutzertyp === 0 ? app_b.dataBenutzer.manager : app_bg.dataBenutzergruppe.manager;
+		return (props.benutzertyp === 0) ? app_b.dataBenutzer.manager : app_bg.dataBenutzergruppe.manager;
 	});
 
     const selected: WritableComputedRef<boolean> = computed({
         get(): boolean {
-            return manager.value?.hatKompetenzen(BenutzerKompetenz.getKompetenzen(props.kompetenzgruppe)) || false;
+            if (manager.value === undefined)
+                return false;
+            return manager.value.hatKompetenzen(BenutzerKompetenz.getKompetenzen(props.kompetenzgruppe));
         },
         set(value: boolean) {
-            if (value)
-                 props.benutzertyp === 0 ? app_b.dataBenutzer.addBenutzerKompetenzGruppe(props.kompetenzgruppe) 
-                                         : app_bg.dataBenutzergruppe.addBenutzerKompetenzGruppe(props.kompetenzgruppe) 
-            else
-                 props.benutzertyp === 0 ? app_b.dataBenutzer.removeBenutzerKompetenzGruppe(props.kompetenzgruppe)  
-                                         : app_bg.dataBenutzergruppe.removeBenutzerKompetenzGruppe(props.kompetenzgruppe)
+            if (value) {
+                if (props.benutzertyp === 0) 
+                    app_b.dataBenutzer.addBenutzerKompetenzGruppe(props.kompetenzgruppe);
+                else
+                    app_bg.dataBenutzergruppe.addBenutzerKompetenzGruppe(props.kompetenzgruppe);
+            } else {
+                if (props.benutzertyp === 0)
+                    app_b.dataBenutzer.removeBenutzerKompetenzGruppe(props.kompetenzgruppe);
+                else
+                    app_bg.dataBenutzergruppe.removeBenutzerKompetenzGruppe(props.kompetenzgruppe);
+            }
         }
     });
 

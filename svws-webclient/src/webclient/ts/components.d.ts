@@ -69,6 +69,7 @@ declare module '@vue/runtime-core' {
     SCardBenutzergruppeDaten: typeof import('./src/components/schule/benutzerverwaltung/daten/SCardBenutzergruppeDaten.vue')['default']
     SCardBenutzergruppeKompetenzen: typeof import('./src/components/schule/benutzerverwaltung/daten/SCardBenutzergruppeKompetenzen.vue')['default']
     SCardBenutzerGruppenListe: typeof import('./src/components/schule/benutzerverwaltung/daten/SCardBenutzerGruppenListe.vue')['default']
+    SCardBenutzerKompetenzen: typeof import('./src/components/schule/benutzerverwaltung/daten/SCardBenutzerKompetenzen.vue')['default']
     SCardFachBasisdaten: typeof import('./src/components/faecher/daten/SCardFachBasisdaten.vue')['default']
     SCardFoerderschwerpunktDaten: typeof import('./src/components/kataloge/foerderschwerpunkte/daten/SCardFoerderschwerpunktDaten.vue')['default']
     SCardGostBeratungslehrer: typeof import('./src/components/gost/stammdaten/SCardGostBeratungslehrer.vue')['default']

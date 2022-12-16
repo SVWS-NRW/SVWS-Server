@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-	import { computed, ComputedRef, defineAsyncComponent } from "vue";
+	import { computed, ComputedRef } from "vue";
 	import { App } from "~/apps/BaseApp";
 
 	const visibleBenutzer: ComputedRef<boolean> = computed(() => {

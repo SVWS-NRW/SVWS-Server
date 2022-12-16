@@ -13,8 +13,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <s-benutzergruppen-listeneintrag v-for="bgle in benutzergruppen" :key="bgle.id" :bgle="bgle" >
-                            </s-benutzergruppen-listeneintrag>
+                            <s-benutzergruppen-listeneintrag v-for="bgle in benutzergruppen" :key="bgle.id" :bgle="bgle" > </s-benutzergruppen-listeneintrag>
                         </tbody>
                         </table>
                     </div>
@@ -26,7 +25,7 @@
 
 <script setup lang="ts">
 
-	import { BenutzerDaten, BenutzergruppeListeEintrag, BenutzergruppenManager, BenutzerKompetenzGruppe, BenutzerManager } from "@svws-nrw/svws-core-ts";
+	import { BenutzergruppeListeEintrag, BenutzerManager } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, WritableComputedRef } from "vue";
 	import { injectMainApp, Main } from "~/apps/Main";
 
@@ -47,10 +46,11 @@
             return benutzergruppen.value?.length === manager.value?.anzahlGruppen() ?  true : false;
         },
         set(value: boolean) {
-            if(value)
+            if (value)
                 app.dataBenutzer.addBenutzergruppenBenutzer(benutzergruppen.value);
             else
                 app.dataBenutzer.removeBenutzergruppenBenutzer(benutzergruppen.value);
         }
     });
+
 </script>

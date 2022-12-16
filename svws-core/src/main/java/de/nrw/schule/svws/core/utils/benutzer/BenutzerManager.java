@@ -110,31 +110,31 @@ public class BenutzerManager {
      * @param bgd die Benutzergruppendaten
      */
     private void removeGruppe(BenutzergruppeDaten bgd) {
-        if (bgd == null)
-            return;
-        _mapGruppen.remove(bgd.id);
-        _setGruppenIDs.remove(bgd.id);
-        for (@NotNull BenutzerKompetenz p : BenutzerKompetenz.values()) {
-           Vector< @NotNull BenutzergruppeDaten> vbgd = _mapKompetenzenVonGruppe.get(p);
-            if(vbgd == null ) 
-                throw new NullPointerException("Fehler");
-           if(vbgd.contains(bgd)) {
-                    vbgd.remove(bgd);
-                    if(vbgd.size() == 0)
-                        _setKompetenzenAlle.remove(p);
-           }         
-           _mapKompetenzenVonGruppe.remove(p);
-           _mapKompetenzenVonGruppe.put(p, vbgd);
-        }
-    }
+    	if (bgd == null)
+    		return;
+    	_mapGruppen.remove(bgd.id);
+    	_setGruppenIDs.remove(bgd.id);
+    	for (@NotNull BenutzerKompetenz p : BenutzerKompetenz.values()) {
+    		Vector< @NotNull BenutzergruppeDaten> vbgd = _mapKompetenzenVonGruppe.get(p);
+    		if (vbgd == null ) 
+    			throw new NullPointerException("Fehler");
+			if (vbgd.contains(bgd)) {
+				vbgd.remove(bgd);
+				if(vbgd.size() == 0)
+					_setKompetenzenAlle.remove(p);
+			}         
+			_mapKompetenzenVonGruppe.remove(p);
+			_mapKompetenzenVonGruppe.put(p, vbgd);
+    	}
+	}
     
     /**
      * Initialisiert die lokalen Datenstrukturen.
      */
     private void init() {
-        // Erzeuge leere Vektoren für einzelnen Komptenzen
-        for (@NotNull BenutzerKompetenz p : BenutzerKompetenz.values())
-            _mapKompetenzenVonGruppe.put(p, new Vector<>());
+    	// Erzeuge leere Vektoren für einzelnen Komptenzen
+    	for (@NotNull BenutzerKompetenz p : BenutzerKompetenz.values())
+    		_mapKompetenzenVonGruppe.put(p, new Vector<>());
     }
 
     /**
@@ -149,8 +149,7 @@ public class BenutzerManager {
     public @NotNull List<@NotNull BenutzergruppeDaten> getGruppen(@NotNull BenutzerKompetenz kompetenz) {
         Vector<@NotNull BenutzergruppeDaten> gruppen = _mapKompetenzenVonGruppe.get(kompetenz);
         if (gruppen == null)
-            throw new NullPointerException(
-                    "Die interne Datenstruktur _mapKompetenzenVonGruppe wurde nich korrekt initialisiert.");
+            throw new NullPointerException("Die interne Datenstruktur _mapKompetenzenVonGruppe wurde nich korrekt initialisiert.");
         return gruppen;
     }
 
@@ -267,8 +266,7 @@ public class BenutzerManager {
     public boolean hatKompetenzen(@NotNull List<@NotNull BenutzerKompetenz> kompetenzen) {
         if (this._daten.istAdmin)
             return true;
-        for (@NotNull
-        BenutzerKompetenz kompetenz : kompetenzen)
+        for (@NotNull BenutzerKompetenz kompetenz : kompetenzen)
             if (!_setKompetenzenAlle.contains(kompetenz))
                 return false;
         return true;
@@ -286,8 +284,7 @@ public class BenutzerManager {
     public boolean hatKompetenzenMindestensEine(@NotNull List<@NotNull BenutzerKompetenz> kompetenzen) {
         if (this._daten.istAdmin)
             return true;
-        for (@NotNull
-        BenutzerKompetenz kompetenz : kompetenzen)
+        for (@NotNull BenutzerKompetenz kompetenz : kompetenzen)
             if (_setKompetenzenAlle.contains(kompetenz))
                 return true;
         return false;
@@ -325,8 +322,7 @@ public class BenutzerManager {
      */
     public void removeKompetenz(@NotNull BenutzerKompetenz kompetenz) throws IllegalArgumentException {
         if (!_setKompetenzen.contains(kompetenz))
-            throw new IllegalArgumentException(
-                    "Die Kompetenz mit der ID " + kompetenz.daten.id + " ist nicht direkt beim Benutzer vorhanden.");
+            throw new IllegalArgumentException("Die Kompetenz mit der ID " + kompetenz.daten.id + " ist nicht direkt beim Benutzer vorhanden.");
         this._daten.kompetenzen.removeElement(kompetenz.daten.id);
         _setKompetenzen.remove(kompetenz);
         @NotNull
@@ -368,11 +364,10 @@ public class BenutzerManager {
      */
 
     public void addToGruppe(@NotNull BenutzergruppeDaten bgd) {
-        if (bgd != null) {
-            this.addGruppe(bgd);
-        }
-             else
-            throw new IllegalArgumentException("Der Benutzer ist bereits in der Gruppe ");
+    	if (bgd != null) {
+    		this.addGruppe(bgd);
+        } else
+        	throw new IllegalArgumentException("Der Benutzer ist bereits in der Gruppe ");
     }
 
     /**
@@ -384,6 +379,7 @@ public class BenutzerManager {
      */
 
     public void removeFromGruppe(@NotNull BenutzergruppeDaten bgd) {
-         this.removeGruppe(bgd);
-    }   
+    	this.removeGruppe(bgd);
+    }
+
 }

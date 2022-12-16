@@ -2,19 +2,15 @@
 	<div class="flex h-full flex-row">
 		<div class="flex w-full flex-col">
 			<svws-ui-header :badge="inputId" badge-variant="light" badge-size="normal">
-				<span>{{ inputBezeichnung }}</span>
-				<svws-ui-badge variant="highlight" size="normal">
-					{{ anzeigename }}
-				</svws-ui-badge>
+				<span> {{ inputBezeichnung }} </span>
+				<svws-ui-badge variant="highlight" size="normal"> {{ anzeigename }} </svws-ui-badge>
 			</svws-ui-header>
 			<svws-ui-tab-bar>
 				<template #tabs>
-					<svws-ui-tab-button>Daten</svws-ui-tab-button>
+					<svws-ui-tab-button> Daten </svws-ui-tab-button>
 				</template>
 				<template #panels>
-					<svws-ui-tab-panel>
-						<s-benutzerverwaltung-daten />
-					</svws-ui-tab-panel>
+					<svws-ui-tab-panel> <s-benutzerverwaltung-daten /> </svws-ui-tab-panel>
 				</template>
 			</svws-ui-tab-bar>
 		</div>

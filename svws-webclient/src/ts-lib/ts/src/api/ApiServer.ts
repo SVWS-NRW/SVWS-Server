@@ -472,9 +472,7 @@ export class ApiServer extends BaseApi {
 	 * Entfernt Kompetenzen bei einem Benutzer.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen der Kompetenzen besitzt.
 	 * 
 	 * Mögliche HTTP-Antworten: 
-	 *   Code 200: Die Kompetenzen wurden erfolgreich entfernt.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: Long
+	 *   Code 204: Die Kompetenzen wurden erfolgreich entfernt.
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Kompetenzen zu entfernen.
 	 *   Code 404: Benötigte Information zum Benutzer wurden nicht in der DB gefunden.
 	 *   Code 409: Die übergebenen Daten sind fehlerhaft
@@ -483,17 +481,14 @@ export class ApiServer extends BaseApi {
 	 * @param {List<Number>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
-	 * 
-	 * @returns Die Kompetenzen wurden erfolgreich entfernt.
 	 */
-	public async removeBenutzerKompetenzen(data : List<Number>, schema : string, id : number) : Promise<Number> {
+	public async removeBenutzerKompetenzen(data : List<Number>, schema : string, id : number) : Promise<void> {
 		let path : string = "/db/{schema}/benutzer/{id : \d+}/kompetenz/remove"
 				.replace(/{schema\s*(:[^}]+)?}/g, schema)
 				.replace(/{id\s*(:[^}]+)?}/g, id.toString());
 		let body : string = "[" + data.toArray().map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
-		const text = result;
-		return parseFloat(JSON.parse(text));
+		await super.deleteJSON(path, body);
+		return;
 	}
 
 
@@ -717,7 +712,9 @@ export class ApiServer extends BaseApi {
 	 * Fügt Benutzer bei einer Benutzergruppe hinzu.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Hinzufügen der Benutzer besitzt.
 	 * 
 	 * Mögliche HTTP-Antworten: 
-	 *   Code 204: Die Benutzer wurden erfolgreich hinzugefügt.
+	 *   Code 200: Die Benutzer wurden erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: BenutzergruppeDaten
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um neue Benutzer hinzuzufügen.
 	 *   Code 404: Benötigte Information zum Benutzer wurden nicht in der DB gefunden.
 	 *   Code 409: Die übergebenen Daten sind fehlerhaft
@@ -726,14 +723,17 @@ export class ApiServer extends BaseApi {
 	 * @param {List<Number>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
+	 * 
+	 * @returns Die Benutzer wurden erfolgreich hinzugefügt.
 	 */
-	public async addBenutzergruppeBenutzer(data : List<Number>, schema : string, id : number) : Promise<void> {
+	public async addBenutzergruppeBenutzer(data : List<Number>, schema : string, id : number) : Promise<BenutzergruppeDaten> {
 		let path : string = "/db/{schema}/benutzer/gruppe/{id : \d+}/benutzer/add"
 				.replace(/{schema\s*(:[^}]+)?}/g, schema)
 				.replace(/{id\s*(:[^}]+)?}/g, id.toString());
 		let body : string = "[" + data.toArray().map(d => JSON.stringify(d)).join() + "]";
-		await super.postJSON(path, body);
-		return;
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return BenutzergruppeDaten.transpilerFromJSON(text);
 	}
 
 
@@ -743,7 +743,9 @@ export class ApiServer extends BaseApi {
 	 * Entfernt Benutzer bei einer Benutzergruppe hinzu.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen der Benutzer besitzt.
 	 * 
 	 * Mögliche HTTP-Antworten: 
-	 *   Code 204: Die Benutzer wurden erfolgreich hinzugefügt.
+	 *   Code 200: Die Benutzer wurden erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: BenutzergruppeDaten
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um neue Benutzer zu entfernen.
 	 *   Code 404: Benötigte Information zum Benutzer wurden nicht in der DB gefunden.
 	 *   Code 409: Die übergebenen Daten sind fehlerhaft
@@ -752,14 +754,17 @@ export class ApiServer extends BaseApi {
 	 * @param {List<Number>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
+	 * 
+	 * @returns Die Benutzer wurden erfolgreich hinzugefügt.
 	 */
-	public async removeBenutzergruppeBenutzer(data : List<Number>, schema : string, id : number) : Promise<void> {
+	public async removeBenutzergruppeBenutzer(data : List<Number>, schema : string, id : number) : Promise<BenutzergruppeDaten> {
 		let path : string = "/db/{schema}/benutzer/gruppe/{id : \d+}/benutzer/remove"
 				.replace(/{schema\s*(:[^}]+)?}/g, schema)
 				.replace(/{id\s*(:[^}]+)?}/g, id.toString());
 		let body : string = "[" + data.toArray().map(d => JSON.stringify(d)).join() + "]";
-		await super.deleteJSON(path, body);
-		return;
+		const result : string = await super.deleteJSON(path, body);
+		const text = result;
+		return BenutzergruppeDaten.transpilerFromJSON(text);
 	}
 
 

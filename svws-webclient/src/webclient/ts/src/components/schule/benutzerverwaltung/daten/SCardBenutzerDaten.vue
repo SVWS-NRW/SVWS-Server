@@ -8,7 +8,6 @@
 		</div>
 	</svws-ui-content-card>
 	<s-card-benutzer-gruppen-liste > </s-card-benutzer-gruppen-liste>
-	
 </template>
 
 <script setup lang="ts">
@@ -20,6 +19,7 @@
 
 	const main: Main = injectMainApp();
 	const app = main.apps.benutzer;
+
 	const manager: ComputedRef<BenutzerManager | undefined> = computed(() => {
 		return app.dataBenutzer.manager;
 	})

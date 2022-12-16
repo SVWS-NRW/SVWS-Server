@@ -28,10 +28,10 @@
 		return app.dataBenutzer.manager;
 	});
 
-	const istAdmin: ComputedRef<Boolean | undefined> = computed(() => {
-		if(app.dataBenutzer.manager?.istAdmin())
-			return true;
-		else 
+	const istAdmin: ComputedRef<boolean> = computed(() => {
+		if (app.dataBenutzer.manager === undefined)
 			return false;
+		return app.dataBenutzer.manager.istAdmin();
 	});
+
 </script>
