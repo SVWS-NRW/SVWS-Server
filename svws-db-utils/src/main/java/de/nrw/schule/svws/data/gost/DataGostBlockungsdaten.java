@@ -167,6 +167,7 @@ public class DataGostBlockungsdaten extends DataManager<Long> {
 					kl.reihenfolge = kurslehrer.Reihenfolge;
 					kl.wochenstunden = kurslehrer.Wochenstunden;
 					// manager.patchOfKursAddLehrkraft(????, kl);
+					
 					// TODO BACHRAN Wie soll ich hier die Kurs-ID herausbekommen? KursIDs eine eine Menge... 
 				}
 			}
