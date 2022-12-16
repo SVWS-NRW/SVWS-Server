@@ -1,11 +1,11 @@
 import { RouteRecordRaw } from "vue-router";
 
-export default <RouteRecordRaw>{
+export const RouteSchuleBenutzerverwaltung : RouteRecordRaw = {
 	name: "benutzerverwaltung",
 	path: "/schule/benutzerverwaltung",
 	components: {
-		default: () => import("./SBenutzerverwaltungApp.vue"),
-		liste: () => import("./SBenutzerverwaltungAuswahl.vue")
+		default: () => import("~/components/schule/benutzerverwaltung/SBenutzerverwaltungApp.vue"),
+		liste: () => import("~/components/schule/benutzerverwaltung/SBenutzerverwaltungAuswahl.vue")
 	},
 	children: [ 
 		{
