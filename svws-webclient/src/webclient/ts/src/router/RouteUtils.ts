@@ -52,7 +52,7 @@ export function routeAppAuswahl<T extends RouteRecordRaw, Item>(route : T) : Wri
  * @returns das Objekt mit den Werten für die Properties
  */
 export function routePropsAuswahlID<TAuswahl extends BaseList<{ id: number }, unknown>>(route: RouteLocationNormalized, name: string, auswahl: TAuswahl) {
-	if ((route.name !== name) || (route.params.id === undefined))
+	if ((auswahl === undefined) || (route.name !== name) || (route.params.id === undefined))
 		return { id: undefined, item: undefined };
 	const id = parseInt(route.params.id as string);
 	const item = auswahl.liste.find(s => s.id === id);
@@ -79,7 +79,9 @@ export function routeAuswahlID<TItem extends { id: number }, TAuswahl extends Ba
 		get(): TItem | undefined {
 			if (route.params.id === undefined)
 				return undefined;
-			return auswahl.liste.find(s => s.id.toString() === route.params.id);
+			if ((auswahl.ausgewaehlt === undefined) || (auswahl.ausgewaehlt.id.toString() !== route.params.id))
+				auswahl.ausgewaehlt = auswahl.liste.find(s => s.id.toString() === route.params.id);
+			return auswahl.ausgewaehlt;
 		},
 		set(value: TItem | undefined) {
 			auswahl.ausgewaehlt = value;

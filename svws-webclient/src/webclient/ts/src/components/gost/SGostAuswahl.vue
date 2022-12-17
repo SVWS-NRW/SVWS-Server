@@ -4,13 +4,7 @@
 		<template #header></template>
 		<template #content>
 			<div class="container">
-				<svws-ui-table
-					v-model="selected"
-					:columns="cols"
-					:data="rows"
-					id="abiturjahr"
-					:footer="true"
-				>
+				<svws-ui-table v-model="selected" :columns="cols" :data="rows" id="abiturjahr" :footer="true">
 					<template #cell-abiturjahr="{ row }">
 						{{row.abiturjahr === -1 ? '':row.abiturjahr}}
 						<span v-if="(pending && row.abiturjahr === selected?.abiturjahr)" class="loading-spinner-dimensions">

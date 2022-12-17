@@ -36,7 +36,7 @@ export const RouteGost : RouteRecordRaw = {
  * @returns das Objekt mit den Werten für die Properties
  */
 function routePropsGostAuswahl<TAuswahl extends BaseList<{ abiturjahr: number }, unknown>>(route: RouteLocationNormalized, name: string, auswahl: TAuswahl) {
-	if ((route.name !== name) || (route.params.abiturjahr === undefined))
+	if ((auswahl === undefined) || (route.name !== name) || (route.params.abiturjahr === undefined))
 		return { id: undefined, item: undefined };
 	const abiturjahr = parseInt(route.params.abiturjahr as string);
 	const item = auswahl.liste.find(s => s.abiturjahr === abiturjahr);
