@@ -18,7 +18,8 @@
     "dist"
   ],
   "main": "./dist/svws-ui.umd.js",
-  "module": "./dist/svws-ui.mjs",
+  "module": "./dist/svws-ui.js",
+  "type": "module",
   "types": "./dist/index.d.ts",
   "dependencies": {
 		"@headlessui/vue": "1.6.7",

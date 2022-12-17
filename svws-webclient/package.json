@@ -36,7 +36,7 @@
 		"unplugin-icons": "^0.14.1",
 		"unplugin-vue-components": "^0.22.4",
 		"vite": "^3.0.9",
-		"vite-plugin-md": "^0.20.2",
+		"vite-plugin-md": "^0.22.5",
 		"vitest": "^0.25.1",
 		"vue-tsc": "^1.0.3",
 		"vue3-popper": "^1.4.1"
@@ -63,9 +63,5 @@
 	"dependencies": {
 		"@headlessui/vue": "1.6.7"
 	},
-	"overrides": {
-		"@yankeeinlondon/happy-wrapper": "2.8.0",
-		"native-dash": "1.23.2",
-		"brilliant-errors": "0.6.0"
-	}
+	"type": "module"
 }

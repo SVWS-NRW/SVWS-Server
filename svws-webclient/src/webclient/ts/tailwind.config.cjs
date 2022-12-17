@@ -12,6 +12,6 @@ module.exports = {
 		extend: {}
 	},
 	plugins: [{
-		tailwindcss: {config: '../../webclient/tailwind.config-base.js'},
+		tailwindcss: {config: '../../webclient/tailwind.config-base.cjs'},
 	}]
 };

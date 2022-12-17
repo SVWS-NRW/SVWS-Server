@@ -1,4 +1,4 @@
-const config = require("../../../tailwind.config-base");
+const config = require("../../../tailwind.config-base.cjs");
 
 // config.content.push("../../ui-components/ts/src/components/**/*.{vue,js,ts,jsx,tsx}")
 config.content = [
