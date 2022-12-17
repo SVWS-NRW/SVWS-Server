@@ -4,13 +4,28 @@
 			<div class="flex-none sm:-mx-6 lg:-mx-8">
 				<div class="py-2 align-middle sm:px-6 lg:px-8">
 					<div class="w-full flex gap-2 justify-between mb-2">
-						<div class="flex gap-2">
+						<div class="flex gap-2 content-start">
 							<svws-ui-button size="small" type="primary" @click="toggle_modal_hochschreiben">Hochschreiben</svws-ui-button>
 							<svws-ui-button  v-if="!blockung_aktiv" type="secondary" @click="toggle_modal_aktivieren">Aktivieren</svws-ui-button>
 						</div>
-						<div v-if="app.listAbiturjahrgangSchueler.filter.kurs" class="flex gap-2 text-lg">
-							Lehrkraft:
-							<svws-ui-multi-select v-model="add_lehrer_regel" class="w-52" autocomplete :item-filter="lehrer_filter" :items="main.apps.lehrer.auswahl.liste" :item-text="(l: LehrerListeEintrag)=> `${l.nachname}, ${l.vorname} (${l.kuerzel})`"/>
+						<div v-if="app.listAbiturjahrgangSchueler.filter.kurs && allow_regeln" class="flex gap-2 text-lg">
+							<div class="flex flex-col justify-end">
+								<div class="flex flex-row content-start gap-2">
+									Lehrkraft:
+
+									<div class="flex flex-col gap-2">
+										<div class="flex flex-row gap-1" v-for="lehrer, i of kurslehrer" :key="lehrer.id">
+											<svws-ui-multi-select :modelValue="lehrer" @update:modelValue="update_kurslehrer" class="w-52" autocomplete :item-filter="lehrer_filter" :items="main.apps.lehrer.auswahl.liste" :item-text="(l: LehrerListeEintrag)=> `${l.nachname}, ${l.vorname} (${l.kuerzel})`"/>
+											<svws-ui-icon class="cursor-pointer text-red-400" @click="remove_kurslehrer(lehrer)"><i-ri-delete-bin-2-line /></svws-ui-icon>
+											<svws-ui-icon v-if="!new_kurs_lehrer && i === kurslehrer.length-1" class="cursor-pointer text-black" @click="new_kurs_lehrer=true"><i-ri-user-add-line /></svws-ui-icon>
+										</div>
+									</div>
+								</div>
+								<div v-if="!kurslehrer.length || new_kurs_lehrer">
+									<svws-ui-multi-select 
+									:modelValue="undefined" @update:modelValue="update_kurslehrer" class="w-52" autocomplete :item-filter="lehrer_filter" :items="main.apps.lehrer.auswahl.liste" :item-text="(l: LehrerListeEintrag)=> `${l.nachname}, ${l.vorname} (${l.kuerzel})`"/>
+								</div>
+							</div>
 						</div>
 					</div>
 					<div v-if="blockungsergebnis_aktiv" class="text-lg font-bold">Dieses Blockungsergebnis ist aktiv.</div>
@@ -163,6 +178,7 @@
 	const app = main.apps.gost
 
 	const edit_schienenname: Ref<GostBlockungSchiene|undefined> = ref()
+	const new_kurs_lehrer: Ref<boolean> = ref(false);
 
 	const sort_by: WritableComputedRef<UserConfigKeys['gost.kursansicht.sortierung']> =
 		computed({
@@ -205,30 +221,34 @@
 	const blockungsergebnis_aktiv: ComputedRef<boolean> =
 		computed(()=> app.blockungsergebnisauswahl.ausgewaehlt?.istVorlage || false)
 
-	const add_lehrer_regel = computed({
-		get(): LehrerListeEintrag | undefined {
-			if (!app.listAbiturjahrgangSchueler.filter.kurs?.lehrer.size())
-				return undefined;
-			const lehrer = app.listAbiturjahrgangSchueler.filter.kurs.lehrer.get(0);
-			return main.apps.lehrer.auswahl.liste.find(l => lehrer.id === l.id);
-		},
-		set(value: LehrerListeEintrag | undefined) {
-			if (!app.listAbiturjahrgangSchueler.filter.kurs)
-				return;
-			if (value) {
-				app.dataKursblockung.add_blockung_lehrer(app.listAbiturjahrgangSchueler.filter.kurs.id, value.id)
-					.then(lehrer => {
-						if (lehrer && app.listAbiturjahrgangSchueler.filter.kurs)
-						app.listAbiturjahrgangSchueler.filter.kurs.lehrer.add(lehrer)
-					})
-			}
-			else {
-				const lehrer = app.listAbiturjahrgangSchueler.filter.kurs.lehrer.get(0);
-				app.dataKursblockung.del_blockung_lehrer(app.listAbiturjahrgangSchueler.filter.kurs.id, lehrer.id)
-					.then(()=> app.listAbiturjahrgangSchueler.filter.kurs?.lehrer.remove(lehrer))
-			}
-		}
-	});
+	const kurslehrer: ComputedRef<Array<LehrerListeEintrag>> =
+		computed(()=> {
+			if (!app.dataKursblockung.datenmanager || !app.listAbiturjahrgangSchueler.filter.kurs)
+				return [];
+			const liste = app.dataKursblockung.datenmanager.getOfKursLehrkraefteSortiert(app.listAbiturjahrgangSchueler.filter.kurs.id);
+			const set = new Set();
+			for (const l of liste)
+				set.add(l.id);
+			return main.apps.lehrer.auswahl.liste.filter(l=>set.has(l.id))
+		})
+	
+	async function update_kurslehrer(e: LehrerListeEintrag) {
+		if (!app.dataKursblockung.datenmanager || !app.listAbiturjahrgangSchueler.filter.kurs)
+			return;
+		const kurslehrer = await app.dataKursblockung.add_blockung_lehrer(app.listAbiturjahrgangSchueler.filter.kurs.id, e.id);
+		if (!kurslehrer)
+			throw new Error("Fehler beim Anlegen des Kurslehrers");
+		app.dataKursblockung.datenmanager.patchOfKursAddLehrkraft(app.listAbiturjahrgangSchueler.filter.kurs.id, kurslehrer);
+		new_kurs_lehrer.value = false;
+	}
+
+	function remove_kurslehrer(lehrer: LehrerListeEintrag) {
+		if (!app.dataKursblockung.datenmanager || !app.listAbiturjahrgangSchueler.filter.kurs)
+			return;
+		app.dataKursblockung.del_blockung_lehrer(app.listAbiturjahrgangSchueler.filter.kurs.id, lehrer.id);
+		app.dataKursblockung.datenmanager.patchOfKursRemoveLehrkraft(app.listAbiturjahrgangSchueler.filter.kurs.id, lehrer.id);
+	}
+	
 	function getAnzahlSchuelerSchiene(idSchiene: number): number {
 		return manager.value?.getOfSchieneAnzahlSchueler(idSchiene) || 0;
 	};

@@ -8,7 +8,7 @@
 				</template>
 				<template v-else>
 					<span class="underline decoration-dashed underline-offset-2 cursor-text" @click="edit_name = kurs">
-						{{ fachKuerzel }}-{{ art.kuerzel }}{{ kurs.nummer }}{{ kurs.suffix ? "-"+kurs.suffix : "" }} </span>
+						{{ kursbezeichnung }}</span> {{kurslehrer}} 
 				</template>
 			</div>
 		</td>
@@ -107,6 +107,7 @@
 <script setup lang="ts">
 import {
 	GostBlockungKurs,
+	GostBlockungKursLehrer,
 	GostBlockungRegel,
 	GostBlockungSchiene,
 	GostBlockungsergebnisKurs,
@@ -290,6 +291,14 @@ const ermittel_parent_schiene = (ergebnis_schiene: GostBlockungsergebnisSchiene)
 	if (!schiene) throw new Error("Schiene fehlt in der Definition")
 	return schiene
 }
+
+const kurslehrer: ComputedRef<String> =
+	computed(()=> {
+		if (props.kurs.lehrer.size() === 0)
+			return "";
+		const kuerzel = props.kurs.lehrer.get(0).kuerzel;
+		return props.kurs.lehrer.size() > 1 ? kuerzel + "+":kuerzel;
+	})
 
 const fixieren_regel_toggle = () => {
 	if (app.dataKursblockung.pending || !allow_regeln.value)
