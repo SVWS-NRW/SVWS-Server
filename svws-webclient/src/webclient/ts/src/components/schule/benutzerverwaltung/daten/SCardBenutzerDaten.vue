@@ -15,7 +15,8 @@
 	import { computed, ComputedRef, Ref, ref, WritableComputedRef } from "vue";
 
 	import { injectMainApp, Main } from "~/apps/Main";
-	import { useAuswahlViaRoute } from "~/router/auswahlViaRoute";
+	import { routeAppAuswahl } from "~/router/RouteUtils";
+	import { RouteSchuleBenutzerverwaltungBenutzergruppe } from "~/router/apps/benutzerverwaltung/RouteSchuleBenutzerverwaltungBenutzergruppe";
 
 	const main: Main = injectMainApp();
 	const app = main.apps.benutzer;
@@ -69,7 +70,7 @@
 			: rowsValue;
 	});
 
-	const benutzergruppen_ausgewaehlt = useAuswahlViaRoute('benutzergruppe');
+	const benutzergruppen_ausgewaehlt = routeAppAuswahl(RouteSchuleBenutzerverwaltungBenutzergruppe);
 	const benutzergruppen_selection = ref([]);
 
 </script>
