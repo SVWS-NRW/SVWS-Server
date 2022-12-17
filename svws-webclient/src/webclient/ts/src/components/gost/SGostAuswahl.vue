@@ -134,11 +134,12 @@ import { List, Vector, GostBlockungListeneintrag, GostBlockungsdatenManager, Gos
 	GostHalbjahr, GostJahrgang, JahrgangsListeEintrag } from "@svws-nrw/svws-core-ts";
 import { computed, ComputedRef, ref, Ref, watch, WritableComputedRef } from "vue";
 import { App } from "~/apps/BaseApp";
-import { useAuswahlViaRoute } from '~/router/auswahlViaRoute';
 import { GOST_CREATE_BLOCKUNG_SYMBOL } from "~/apps/core/LoadingSymbols";
 import { injectMainApp, Main } from "~/apps/Main";
+import { RouteGost } from "~/router/apps/RouteGost";
+import { routeAppAuswahl } from "~/router/RouteUtils";
 
-const selected = useAuswahlViaRoute('gost')
+const selected: WritableComputedRef<GostJahrgang | undefined> = routeAppAuswahl(RouteGost);
 const main: Main = injectMainApp();
 const app = main.apps.gost;
 const appJahrgaenge = main.apps.jahrgaenge;
