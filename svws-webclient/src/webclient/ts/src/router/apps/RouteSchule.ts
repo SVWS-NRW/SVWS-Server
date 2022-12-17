@@ -1,8 +1,10 @@
 import { RouteRecordRaw } from "vue-router";
 import { RouteAppMeta } from "~/router/RouteUtils";
 
+const ROUTE_NAME: string = "schule";
+
 export const RouteSchule : RouteRecordRaw = {
-	name: "schule",
+	name: ROUTE_NAME,
 	path: "/schule",
 	components: {
 		default: () => import("~/components/schule/SSchuleApp.vue"),

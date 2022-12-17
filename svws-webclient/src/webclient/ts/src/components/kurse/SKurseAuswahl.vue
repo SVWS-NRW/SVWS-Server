@@ -4,41 +4,24 @@
 		<template #header> </template>
 		<template #content>
 			<div class="container">
-				<svws-ui-table
-					v-model="selected"
-					:columns="cols"
-					:data="rows"
-					:footer="false"
-				/>
+				<svws-ui-table v-model="selected" :columns="cols" :data="rows" :footer="false" />
 			</div>
 		</template>
 	</svws-ui-secondary-menu>
 </template>
 
 <script setup lang="ts">
+
 	import { computed } from "vue";
 	import { injectMainApp, Main } from "~/apps/Main";
 	import { KursListeEintrag } from "@svws-nrw/svws-core-ts";
-	import { useAuswahlViaRoute } from '~/router/auswahlViaRoute';
+	import { RouteKurse } from "~/router/apps/RouteKurse";
+	import { routeAppAuswahl } from "~/router/RouteUtils";
 
 	const cols = [
-	{
-			key: "kuerzel",
-			label: "Kuerzel",
-			width: "6em",
-			sortable: true,
-			defaultSort: "asc"
-		},
-		{
-			key: "lehrer_name",
-			label: "Fachlehrer",
-			sortable: true
-		},
-		{
-			key: "jahrgang",
-			label: "Jahrgang",
-			sortable: true
-		}
+		{ key: "kuerzel", label: "Kuerzel", width: "6em", sortable: true, defaultSort: "asc" },
+		{ key: "lehrer_name", label: "Fachlehrer", sortable: true },
+		{ key: "jahrgang", label: "Jahrgang", sortable: true }
 	];
 	const main: Main = injectMainApp();
 	const app = main.apps.kurse;
@@ -49,19 +32,11 @@
 	const rows = computed(() => {
 		return app.auswahl.liste.map((e: KursListeEintrag) => ({
 			...e,
-			lehrer_name:
-				appLehrer.auswahl.liste.find(l => l.id === e.lehrer)?.kuerzel ||
-				"",
-			jahrgang:
-				appJahrgaenge.auswahl.liste
-					.find(j =>
-						e.idJahrgaenge
-							.toArray(new Array<number>())
-							.includes(j.id)
-					)
-					?.kuerzel?.toString() || ""
+			lehrer_name: appLehrer.auswahl.liste.find(l => l.id === e.lehrer)?.kuerzel || "",
+			jahrgang: appJahrgaenge.auswahl.liste.find(j => e.idJahrgaenge.toArray(new Array<number>()).includes(j.id))?.kuerzel?.toString() || ""
 		}));
 	});
 
-	const selected = useAuswahlViaRoute('kurse')
+	const selected = routeAppAuswahl(RouteKurse);
+
 </script>

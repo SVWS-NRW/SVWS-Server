@@ -2,7 +2,7 @@
 	<svws-ui-secondary-menu>
 		<template #headline>
 			<div>
-				<i-ri-arrow-left-line class="inline-block cursor-pointer" @click="router.push({ name: menu_previous })" />
+				<i-ri-arrow-left-line class="inline-block cursor-pointer" @click="router.push({ name: RouteSchule.name })" />
 				Benutzerverwaltung
 			</div>
 		</template>
@@ -39,12 +39,13 @@
 	import { injectMainApp, Main } from "~/apps/Main";
 	import { router } from "~/router";
 	import { routeAppAuswahl } from "~/router/RouteUtils";
-	import { RouteSchuleBenutzerverwaltungBenutzer, RouteSchuleBenutzerverwaltungBenutzergruppe } from "~/router/apps/RouteSchuleBenutzerverwaltung";
+	import { RouteSchule } from "~/router/apps/RouteSchule";
+	import { RouteSchuleBenutzerverwaltungBenutzer } from "~/router/apps/benutzerverwaltung/RouteSchuleBenutzerverwaltungBenutzer";
+	import { RouteSchuleBenutzerverwaltungBenutzergruppe } from "~/router/apps/benutzerverwaltung/RouteSchuleBenutzerverwaltungBenutzergruppe";
 
 	// Allgemeines
 
 	const main: Main = injectMainApp();
-	const menu_previous = ref("schule");
 
 	// Auswahlliste der Benutzer
 
