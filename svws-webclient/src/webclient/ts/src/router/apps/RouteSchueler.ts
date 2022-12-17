@@ -1,8 +1,7 @@
 import { SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
-import { computed, WritableComputedRef } from "vue";
-import { RouteLocationNormalized, RouteMeta, RouteRecordRaw, useRoute, useRouter } from "vue-router";
+import { RouteRecordRaw } from "vue-router";
 import { injectMainApp } from "~/apps/Main";
-import { RouteAppMeta } from "~/router/RouteAppMeta";
+import { RouteAppMeta, routeAuswahlID, routePropsAuswahlID } from "~/router/RouteUtils";
 
 
 export const RouteSchueler : RouteRecordRaw = {
@@ -13,38 +12,11 @@ export const RouteSchueler : RouteRecordRaw = {
 		liste: () => import("~/components/schueler/SSchuelerAuswahl.vue")
 	},
 	props: {
-		default: getRouteSchuelerProps,
-		liste: getRouteSchuelerProps
+		default: (route) => routePropsAuswahlID(route, "schueler", injectMainApp().apps.schueler.auswahl),
+		liste: (route) => routePropsAuswahlID(route, "schueler", injectMainApp().apps.schueler.auswahl)
 	},
 	meta: <RouteAppMeta<SchuelerListeEintrag | undefined>> {
-		auswahl: routeSchuelerAuswahl
+		auswahl: () => routeAuswahlID("schueler", injectMainApp().apps.schueler.auswahl)
 	}
 }
 
-function getRouteSchuelerProps(route: RouteLocationNormalized) {
-	if ((route.name !== "schueler") || (route.params.id === undefined))
-		return { id: undefined, item: undefined };
-	const id = parseInt(route.params.id as string);
-	const app = injectMainApp().apps.schueler;
-	const item = app.auswahl.liste.find(s => s.id === id);
-	return { id: id, item: item };
-}
-
-function routeSchuelerAuswahl(): WritableComputedRef<SchuelerListeEintrag | undefined> {
-	const router = useRouter();
-	const route = useRoute();
-	const app = injectMainApp().apps.schueler;
-
-	const selected = computed({
-		get(): SchuelerListeEintrag | undefined {
-			if (route.params.id === undefined)
-				return undefined;
-			return app.auswahl.liste.find(s => s.id.toString() === route.params.id);
-		},
-		set(value: SchuelerListeEintrag | undefined) {
-			app.auswahl.ausgewaehlt = value;
-			router.push({ name: "schueler", params: { id: value?.id } });
-		}
-	});
-	return selected;
-}

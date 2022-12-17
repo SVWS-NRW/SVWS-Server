@@ -39,7 +39,7 @@
 	import { computed, ComputedRef, Ref, ref } from "vue";
 	import { injectMainApp, Main } from "~/apps/Main";
 	import { RouteLehrer } from "~/router/apps/RouteLehrer";
-	import { routeAppAuswahl } from "~/router/RouteAppMeta";
+	import { routeAppAuswahl } from "~/router/RouteUtils";
 
 	const cols = [
 		{ key: "kuerzel", label: "Kuerzel", width: "10%", sortable: true, defaultSort: "asc" },

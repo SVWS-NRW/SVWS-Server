@@ -1,5 +1,5 @@
 import { RouteRecordRaw } from "vue-router";
-import { RouteAppMeta } from "../RouteAppMeta";
+import { RouteAppMeta } from "~/router/RouteUtils";
 
 export const RouteSchule : RouteRecordRaw = {
 	name: "schule",

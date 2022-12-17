@@ -1,8 +1,8 @@
 import { BenutzergruppeListeEintrag, BenutzerListeEintrag } from "@svws-nrw/svws-core-ts";
-import { computed, WritableComputedRef } from "vue";
-import { RouteLocationNormalized, RouteRecordRaw, useRoute, useRouter } from "vue-router";
+import { RouteRecordRaw } from "vue-router";
 import { injectMainApp } from "~/apps/Main";
-import { RouteAppMeta } from "../RouteAppMeta";
+import { RouteAppMeta, routeAuswahlID, routePropsAuswahlID } from "~/router/RouteUtils";
+
 
 export const RouteSchuleBenutzerverwaltungBenutzer : RouteRecordRaw = {
 	name: "benutzer",
@@ -10,44 +10,13 @@ export const RouteSchuleBenutzerverwaltungBenutzer : RouteRecordRaw = {
 	components: {
 	},
 	props: {
-		default: getRouteSchuleBenutzerverwaltungBenutzerProps,
-		liste: getRouteSchuleBenutzerverwaltungBenutzerProps
+		default: (route) => routePropsAuswahlID(route, "benutzer", injectMainApp().apps.benutzer.auswahl),
+		liste: (route) => routePropsAuswahlID(route, "benutzer", injectMainApp().apps.benutzer.auswahl)
 	},
 	meta: <RouteAppMeta<BenutzerListeEintrag  | undefined>> {
-		auswahl: routeBenutzerverwaltungBenutzerAuswahl
+		auswahl: () => routeAuswahlID("benutzer", injectMainApp().apps.benutzer.auswahl)
 	}
 }
-
-
-function getRouteSchuleBenutzerverwaltungBenutzerProps(route: RouteLocationNormalized) {
-	if ((route.name !== "benutzer") || (route.params.id === undefined))
-		return { id: undefined, item: undefined };
-	const id = parseInt(route.params.id as string);
-	const app = injectMainApp().apps.benutzer;
-	const item = app.auswahl.liste.find(s => s.id === id);
-	return { id: id, item: item };
-}
-
-
-function routeBenutzerverwaltungBenutzerAuswahl(): WritableComputedRef<BenutzerListeEintrag | undefined> {
-	const router = useRouter();
-	const route = useRoute();
-	const app = injectMainApp().apps.benutzer;
-
-	const selected = computed({
-		get(): BenutzerListeEintrag | undefined {
-			if (route.params.id === undefined)
-				return undefined;
-			return app.auswahl.liste.find(s => s.id.toString() === route.params.id);
-		},
-		set(value: BenutzerListeEintrag | undefined) {
-			app.auswahl.ausgewaehlt = value;
-			router.push({ name: "benutzer", params: { id: value?.id } });
-		}
-	});
-	return selected;
-}
-
 
 export const RouteSchuleBenutzerverwaltungBenutzergruppe : RouteRecordRaw = {
 	name: "benutzergruppe",
@@ -55,46 +24,13 @@ export const RouteSchuleBenutzerverwaltungBenutzergruppe : RouteRecordRaw = {
 	components: {
 	},
 	props: {
-		default: getRouteSchuleBenutzerverwaltungBenutzergruppeProps,
-		liste: getRouteSchuleBenutzerverwaltungBenutzergruppeProps
+		default: (route) => routePropsAuswahlID(route, "benutzergruppe", injectMainApp().apps.benutzergruppe.auswahl),
+		liste: (route) => routePropsAuswahlID(route, "benutzergruppe", injectMainApp().apps.benutzergruppe.auswahl)
 	},
 	meta: <RouteAppMeta<BenutzergruppeListeEintrag  | undefined>> {
-		auswahl: routeBenutzerverwaltungBenutzergruppenAuswahl
+		auswahl: () => routeAuswahlID("benutzergruppe", injectMainApp().apps.benutzergruppe.auswahl)
 	}
 }
-
-
-function getRouteSchuleBenutzerverwaltungBenutzergruppeProps(route: RouteLocationNormalized) {
-	if ((route.name !== "benutzergruppe") || (route.params.id === undefined))
-		return { id: undefined, item: undefined };
-	const id = parseInt(route.params.id as string);
-	const app = injectMainApp().apps.benutzergruppe;
-	const item = app.auswahl.liste.find(s => s.id === id);
-	return { id: id, item: item };
-}
-
-
-
-
-function routeBenutzerverwaltungBenutzergruppenAuswahl(): WritableComputedRef<BenutzergruppeListeEintrag | undefined> {
-	const router = useRouter();
-	const route = useRoute();
-	const app = injectMainApp().apps.benutzergruppe;
-
-	const selected = computed({
-		get(): BenutzergruppeListeEintrag | undefined {
-			if (route.params.id === undefined)
-				return undefined;
-			return app.auswahl.liste.find(s => s.id.toString() === route.params.id);
-		},
-		set(value: BenutzergruppeListeEintrag | undefined) {
-			app.auswahl.ausgewaehlt = value;
-			router.push({ name: "benutzergruppe", params: { id: value?.id } });
-		}
-	});
-	return selected;
-}
-
 
 export const RouteSchuleBenutzerverwaltung : RouteRecordRaw = {
 	name: "benutzerverwaltung",

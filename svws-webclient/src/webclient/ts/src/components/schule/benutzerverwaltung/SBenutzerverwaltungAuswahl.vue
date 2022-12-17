@@ -38,7 +38,7 @@
 	import { computed, ComputedRef, Ref, ref } from "vue";
 	import { injectMainApp, Main } from "~/apps/Main";
 	import { router } from "~/router";
-	import { routeAppAuswahl } from "~/router/RouteAppMeta";
+	import { routeAppAuswahl } from "~/router/RouteUtils";
 	import { RouteSchuleBenutzerverwaltungBenutzer, RouteSchuleBenutzerverwaltungBenutzergruppe } from "~/router/apps/RouteSchuleBenutzerverwaltung";
 
 	// Allgemeines

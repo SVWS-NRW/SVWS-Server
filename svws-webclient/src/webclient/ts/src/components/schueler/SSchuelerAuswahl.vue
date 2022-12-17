@@ -62,7 +62,7 @@
 
 	import { injectMainApp, Main } from "~/apps/Main";
 	import { RouteSchueler } from "~/router/apps/RouteSchueler";
-	import { routeAppAuswahl } from "~/router/RouteAppMeta";
+	import { routeAppAuswahl } from "~/router/RouteUtils";
 
 	export interface SchuelerProps {
 		selectedItems: Array<SchuelerListeEintrag>;
