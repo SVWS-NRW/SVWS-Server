@@ -23,24 +23,27 @@
 
 <script setup lang="ts">
 
+	import { GostJahrgang } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef } from "vue";
 
 	import { injectMainApp } from "~/apps/Main";
 
 	const app = injectMainApp().apps.gost;
 
+	const props = defineProps<{ id: number | undefined; item: GostJahrgang | undefined }>();
+
 	const jahrgang: ComputedRef<string | undefined> = computed(() => {
-		return app.auswahl.ausgewaehlt?.jahrgang?.toString();
+		return props.item?.jahrgang?.toString();
 	});
 
 	const abiturjahr: ComputedRef<number | undefined> = computed(() => {
-		if ((app.dataJahrgang.daten?.abiturjahr === undefined) || (app.dataJahrgang.daten?.abiturjahr?.valueOf() === -1))
+		if ((app.dataJahrgang.daten?.abiturjahr === undefined) || (app.dataJahrgang.daten?.abiturjahr === -1))
 			return undefined;
-		return app.dataJahrgang.daten?.abiturjahr?.valueOf();
+		return app.dataJahrgang.daten?.abiturjahr;
 	});
 
-	const bezeichnung_abiturjahr: ComputedRef<string | undefined> = computed(
-		() => { return app.auswahl.ausgewaehlt?.bezeichnung?.toString(); }
-	);
+	const bezeichnung_abiturjahr: ComputedRef<string | undefined> = computed(() => { 
+		return props.item?.bezeichnung?.toString(); 
+	});
 
 </script>

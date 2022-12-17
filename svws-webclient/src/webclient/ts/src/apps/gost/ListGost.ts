@@ -30,7 +30,8 @@ export class ListGost extends BaseList<GostJahrgang> {
 	 */
 	public async on_select(): Promise<void> {
 		const abijahr = this._state.ausgewaehlt?.abiturjahr?.valueOf();
-		if (abijahr === undefined || abijahr < 1) return;
+		if (abijahr === undefined || abijahr < 1) 
+			return;
 		this.listKursblockungen.ausgewaehlt = undefined;
 		this.listAbiturjahrgangSchueler.reset_filter();
 		await this.listAbiturjahrgangSchueler.update_list(abijahr);
