@@ -1,4 +1,6 @@
 import { GostHalbjahr, GostJahrgang } from "@svws-nrw/svws-core-ts";
+import { useRoute } from "vue-router";
+import { RouteGost } from "~/router/apps/RouteGost";
 import { App } from "../BaseApp";
 import { BaseList } from "../BaseList";
 import { ListAbiturjahrgangSchueler } from "./ListAbiturjahrgangSchueler";
@@ -14,6 +16,7 @@ export class ListGost extends BaseList<GostJahrgang> {
 		this.listAbiturjahrgangSchueler = listAbiturjahrgangSchueler;
 		this.listKursblockungen = listKursblockungen;
 	}
+
 	/**
 	 * Aktualisiert die Liste für die Schülerauswahl
 	 *
@@ -21,8 +24,10 @@ export class ListGost extends BaseList<GostJahrgang> {
 	 */
 	public async update_list(): Promise<void> {
 		await super._update_list(() => App.api.getGostAbiturjahrgaenge(App.schema));
-		if (this.ausgewaehlt === undefined) this.ausgewaehlt = this.liste[0];
+		if (this.ausgewaehlt === undefined) 
+		 	this.ausgewaehlt = this.liste[0];
 	}
+
 	/**
 	 * Aktualisiert die Liste der AbiSchüler
 	 *

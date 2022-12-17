@@ -150,7 +150,6 @@ export abstract class BaseList<ListenEintragTyp, ListenFilterTyp = undefined> {
 	 * @returns {ListenEintragTyp | undefined}
 	 */
 	get ausgewaehlt(): ListenEintragTyp | undefined {
-		if (!this._state.ausgewaehlt) return undefined;
 		return this._state.ausgewaehlt;
 	}
 

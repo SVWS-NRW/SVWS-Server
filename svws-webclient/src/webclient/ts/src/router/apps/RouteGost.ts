@@ -61,7 +61,9 @@ function routeGostAuswahl<TItem extends { abiturjahr: number }, TAuswahl extends
 		get(): TItem | undefined {
 			if (route.params.abiturjahr === undefined)
 				return undefined;
-			return auswahl.liste.find(s => s.abiturjahr.toString() === route.params.abiturjahr);
+			if ((auswahl.ausgewaehlt === undefined) || (auswahl.ausgewaehlt.abiturjahr.toString() !== route.params.abiturjahr))
+				auswahl.ausgewaehlt = auswahl.liste.find(s => s.abiturjahr.toString() === route.params.abiturjahr);
+			return auswahl.ausgewaehlt;
 		},
 		set(value: TItem | undefined) {
 			auswahl.ausgewaehlt = value;
