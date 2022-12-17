@@ -130,223 +130,225 @@
 </template>
 
 <script setup lang="ts">
-import { List, Vector, GostBlockungListeneintrag, GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag,
-	GostHalbjahr, GostJahrgang, JahrgangsListeEintrag } from "@svws-nrw/svws-core-ts";
-import { computed, ComputedRef, ref, Ref, watch, WritableComputedRef } from "vue";
-import { App } from "~/apps/BaseApp";
-import { GOST_CREATE_BLOCKUNG_SYMBOL } from "~/apps/core/LoadingSymbols";
-import { injectMainApp, Main } from "~/apps/Main";
-import { RouteGost } from "~/router/apps/RouteGost";
-import { routeAppAuswahl } from "~/router/RouteUtils";
+	import { List, Vector, GostBlockungListeneintrag, GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag,
+		GostHalbjahr, GostJahrgang, JahrgangsListeEintrag } from "@svws-nrw/svws-core-ts";
+	import { computed, ComputedRef, ref, Ref, watch, WritableComputedRef } from "vue";
+	import { App } from "~/apps/BaseApp";
+	import { GOST_CREATE_BLOCKUNG_SYMBOL } from "~/apps/core/LoadingSymbols";
+	import { injectMainApp, Main } from "~/apps/Main";
+	import { RouteGost } from "~/router/apps/RouteGost";
+	import { routeAppAuswahl } from "~/router/RouteUtils";
 
-const selected: WritableComputedRef<GostJahrgang | undefined> = routeAppAuswahl(RouteGost);
-const main: Main = injectMainApp();
-const app = main.apps.gost;
-const appJahrgaenge = main.apps.jahrgaenge;
-const cols = ref([
-	{ key: "bezeichnung", label: "Bezeichnung", sortable: true, span: 2 },
-	{ key: "abiturjahr", label: "Abiturjahr", sortable: true },
-	{ key: "jahrgang", label: "Stufe", sortable: true }]);
+	const props = defineProps<{ id: number | undefined; item: GostJahrgang | undefined }>();
 
-const halbjahre = GostHalbjahr.values();
-const hj_memo: Ref<GostHalbjahr | undefined> = ref(undefined);
-const edit_blockungsname: Ref<boolean> = ref(false);
-const selected_ergebnisse: Ref<GostBlockungsergebnisListeneintrag[]> = ref([]);
+	const selected: WritableComputedRef<GostJahrgang | undefined> = routeAppAuswahl(RouteGost);
+	const main: Main = injectMainApp();
+	const app = main.apps.gost;
+	const appJahrgaenge = main.apps.jahrgaenge;
+	const cols = ref([
+		{ key: "bezeichnung", label: "Bezeichnung", sortable: true, span: 2 },
+		{ key: "abiturjahr", label: "Abiturjahr", sortable: true },
+		{ key: "jahrgang", label: "Stufe", sortable: true }]);
 
-const rows: ComputedRef<GostJahrgang[]> =
-	computed(() => {
-		const list = [...app.auswahl.liste];
-		return list.sort((a, b) =>
-			(a?.bezeichnung || "") < (b?.bezeichnung || "") ? 1 : -1)
-	});
+	const halbjahre = GostHalbjahr.values();
+	const hj_memo: Ref<GostHalbjahr | undefined> = ref(undefined);
+	const edit_blockungsname: Ref<boolean> = ref(false);
+	const selected_ergebnisse: Ref<GostBlockungsergebnisListeneintrag[]> = ref([]);
 
-const manager: ComputedRef<GostBlockungsdatenManager | undefined> =
-	computed(()=> app.dataKursblockung.datenmanager);
-const rows_blockungswahl: ComputedRef<GostBlockungListeneintrag[]> =
-	computed(() => app.blockungsauswahl.liste);
-const rows_ergebnisse: ComputedRef<List<GostBlockungsergebnisListeneintrag>> =
-	computed(() => manager.value?.getErgebnisseSortiertNachBewertung() || new Vector<GostBlockungsergebnisListeneintrag>());
-const abiturjahr: ComputedRef<number> =
-	computed(() => Number(app.dataJahrgang.daten?.abiturjahr));
-const jahrgaenge: ComputedRef<JahrgangsListeEintrag[]> =
-	computed( () => {
-		const set = new Set(app.auswahl.liste.map(r=>r.jahrgang))
-		return appJahrgaenge.auswahl.liste.filter(j=>!set.has(j.kuerzel))
-	});
+	const rows: ComputedRef<GostJahrgang[]> =
+		computed(() => {
+			const list = [...app.auswahl.liste];
+			return list.sort((a, b) =>
+				(a?.bezeichnung || "") < (b?.bezeichnung || "") ? 1 : -1)
+		});
 
-watch(()=>selected.value, (new_jahrgang)=> {
-	if (new_jahrgang?.abiturjahr && new_jahrgang.abiturjahr !== -1) {
-		let hj = GostHalbjahr.getPlanungshalbjahrFromAbiturjahrSchuljahrUndHalbjahr( new_jahrgang.abiturjahr, App.akt_abschnitt.schuljahr, App.akt_abschnitt.abschnitt);
-		// manchmal gibt es kein Planungshalbjahr, z.B. weil die Q2 fast durch ist oder der Abiturjahrgang noch in der Sek1 ist.
-		if (!hj)
-			if (new_jahrgang.abiturjahr < App.akt_abschnitt.schuljahr + App.akt_abschnitt.abschnitt)
-				hj = GostHalbjahr.Q22;
-			else
-				hj = GostHalbjahr.EF1;
-		selected_hj.value = hj;
-	} else
-		selected_hj.value = undefined;
-})
+	const manager: ComputedRef<GostBlockungsdatenManager | undefined> =
+		computed(()=> app.dataKursblockung.datenmanager);
+	const rows_blockungswahl: ComputedRef<GostBlockungListeneintrag[]> =
+		computed(() => app.blockungsauswahl.liste);
+	const rows_ergebnisse: ComputedRef<List<GostBlockungsergebnisListeneintrag>> =
+		computed(() => manager.value?.getErgebnisseSortiertNachBewertung() || new Vector<GostBlockungsergebnisListeneintrag>());
+	const abiturjahr: ComputedRef<number> =
+		computed(() => Number(app.dataJahrgang.daten?.abiturjahr));
+	const jahrgaenge: ComputedRef<JahrgangsListeEintrag[]> =
+		computed( () => {
+			const set = new Set(app.auswahl.liste.map(r=>r.jahrgang))
+			return appJahrgaenge.auswahl.liste.filter(j=>!set.has(j.kuerzel))
+		});
 
-const selected_hj: WritableComputedRef<GostHalbjahr | undefined > =
-	computed({
-		get(): GostHalbjahr | undefined {
-			return hj_memo.value;
-		},
-		set(hj: GostHalbjahr | undefined) {
-			if (hj === selected_hj.value)
-				return;
-			hj_memo.value = hj
-			if (hj === undefined) {
-				app.blockungsauswahl.ausgewaehlt = undefined;
-				app.blockungsauswahl.liste = [];
+	watch(()=>selected.value, (new_jahrgang)=> {
+		if (new_jahrgang?.abiturjahr && new_jahrgang.abiturjahr !== -1) {
+			let hj = GostHalbjahr.getPlanungshalbjahrFromAbiturjahrSchuljahrUndHalbjahr( new_jahrgang.abiturjahr, App.akt_abschnitt.schuljahr, App.akt_abschnitt.abschnitt);
+			// manchmal gibt es kein Planungshalbjahr, z.B. weil die Q2 fast durch ist oder der Abiturjahrgang noch in der Sek1 ist.
+			if (!hj)
+				if (new_jahrgang.abiturjahr < App.akt_abschnitt.schuljahr + App.akt_abschnitt.abschnitt)
+					hj = GostHalbjahr.Q22;
+				else
+					hj = GostHalbjahr.EF1;
+			selected_hj.value = hj;
+		} else
+			selected_hj.value = undefined;
+	})
+
+	const selected_hj: WritableComputedRef<GostHalbjahr | undefined > =
+		computed({
+			get(): GostHalbjahr | undefined {
+				return hj_memo.value;
+			},
+			set(hj: GostHalbjahr | undefined) {
+				if (hj === selected_hj.value)
+					return;
+				hj_memo.value = hj
+				if (hj === undefined) {
+					app.blockungsauswahl.ausgewaehlt = undefined;
+					app.blockungsauswahl.liste = [];
+				}
+				else if ((selected.value?.abiturjahr) && (selected.value?.abiturjahr !== -1)) {
+					app.blockungsauswahl.ausgewaehlt = undefined;
+					app.blockungsauswahl.update_list(selected.value.abiturjahr, hj.id)
+				}
+			}});
+
+	const selected_blockungauswahl: WritableComputedRef<GostBlockungListeneintrag | undefined> =
+		computed({
+			get(): GostBlockungListeneintrag | undefined {
+				return app.blockungsauswahl.ausgewaehlt;
+			},
+			set: (value: GostBlockungListeneintrag | undefined) => {
+				if (value !== app.blockungsauswahl.ausgewaehlt) {
+					app.blockungsauswahl.ausgewaehlt = value;
+					edit_blockungsname.value = false
+				}
+			}});
+
+	const selected_ergebnis: WritableComputedRef<GostBlockungsergebnisListeneintrag | undefined> =
+		computed({
+			get(): GostBlockungsergebnisListeneintrag | undefined {
+				return app.blockungsergebnisauswahl.ausgewaehlt;
+			},
+			set(value: GostBlockungsergebnisListeneintrag | undefined) {
+				if (app.blockungsergebnisauswahl) {
+					app.blockungsergebnisauswahl.ausgewaehlt = value;
+				}
+			}});
+
+	const pending_jahrgang: ComputedRef<boolean> =
+		computed(()=> app.dataJahrgang.pending);
+
+	const pending: ComputedRef<boolean> =
+		computed(()=> app.dataKursblockung.pending);
+
+	const allow_add_blockung = (row: GostHalbjahr): boolean => {
+		const curr_hj = row.id === selected_hj.value?.id;
+		if (!curr_hj || app.dataJahrgang.daten === undefined)
+			return false;
+		return app.dataJahrgang.daten.istBlockungFestgelegt[row.id] ? false : true
+	}
+
+	async function remove_ergebnisse() {
+		if (!selected_hj.value)
+			return;
+		const abiturjahr = selected.value?.abiturjahr?.valueOf() || -1;
+		if (selected_ergebnisse.value.length > 0 && abiturjahr) {
+			for (const ergebnis of selected_ergebnisse.value) {
+				await App.api.deleteGostBlockungsergebnis(App.schema, ergebnis.id);
 			}
-			else if ((selected.value?.abiturjahr) && (selected.value?.abiturjahr !== -1)) {
-				app.blockungsauswahl.ausgewaehlt = undefined;
-				app.blockungsauswahl.update_list(selected.value.abiturjahr, hj.id)
-			}
-		}});
-
-const selected_blockungauswahl: WritableComputedRef<GostBlockungListeneintrag | undefined> =
-	computed({
-		get(): GostBlockungListeneintrag | undefined {
-			return app.blockungsauswahl.ausgewaehlt;
-		},
-		set: (value: GostBlockungListeneintrag | undefined) => {
-			if (value !== app.blockungsauswahl.ausgewaehlt) {
-				app.blockungsauswahl.ausgewaehlt = value;
-				edit_blockungsname.value = false
-			}
-		}});
-
-const selected_ergebnis: WritableComputedRef<GostBlockungsergebnisListeneintrag | undefined> =
-	computed({
-		get(): GostBlockungsergebnisListeneintrag | undefined {
-			return app.blockungsergebnisauswahl.ausgewaehlt;
-		},
-		set(value: GostBlockungsergebnisListeneintrag | undefined) {
-			if (app.blockungsergebnisauswahl) {
-				app.blockungsergebnisauswahl.ausgewaehlt = value;
-			}
-		}});
-
-const pending_jahrgang: ComputedRef<boolean> =
-	computed(()=> app.dataJahrgang.pending);
-
-const pending: ComputedRef<boolean> =
-	computed(()=> app.dataKursblockung.pending);
-
-const allow_add_blockung = (row: GostHalbjahr): boolean => {
-	const curr_hj = row.id === selected_hj.value?.id;
-	if (!curr_hj || app.dataJahrgang.daten === undefined)
-		return false;
-	return app.dataJahrgang.daten.istBlockungFestgelegt[row.id] ? false : true
-}
-
-async function remove_ergebnisse() {
-	if (!selected_hj.value)
-		return;
-	const abiturjahr = selected.value?.abiturjahr?.valueOf() || -1;
-	if (selected_ergebnisse.value.length > 0 && abiturjahr) {
-		for (const ergebnis of selected_ergebnisse.value) {
-			await App.api.deleteGostBlockungsergebnis(App.schema, ergebnis.id);
+			selected_ergebnisse.value = [];
+			await app.blockungsauswahl.update_list(abiturjahr, selected_hj.value?.id);
 		}
-		selected_ergebnisse.value = [];
-		await app.blockungsauswahl.update_list(abiturjahr, selected_hj.value?.id);
 	}
-}
 
-function select_hj(halbjahr: GostHalbjahr) {
-	if (pending.value || app.blockungsauswahl.pending)
-		return;
-	const selection = halbjahre.find(hj=>hj.id===halbjahr.id);
-	if (selection)
-		selected_hj.value = selection;
-}
-
-function select_blockungauswahl(blockung: GostBlockungListeneintrag) {
-	if (!pending.value)
-		selected_blockungauswahl.value = blockung;
-}
-
-async function abiturjahr_hinzufuegen(jahrgang: JahrgangsListeEintrag) {
-	try {
-		const abiturjahr = await app.dataJahrgang.post_jahrgang(jahrgang.id);
-		await app.auswahl.update_list();
-		const jahr = app.auswahl.liste?.find(j => j.abiturjahr === abiturjahr);
-		selected.value = jahr;
-	} catch (e) {
-		console.log("Fehler: ", e);
+	function select_hj(halbjahr: GostHalbjahr) {
+		if (pending.value || app.blockungsauswahl.pending)
+			return;
+		const selection = halbjahre.find(hj=>hj.id===halbjahr.id);
+		if (selection)
+			selected_hj.value = selection;
 	}
-}
 
-const create_blockungsergebnisse = () => {
-	const halbjahresHashCode: number = app.blockungsauswahl.ausgewaehlt?.hashCode() ? app.blockungsauswahl.ausgewaehlt.hashCode() : -1;
-	const id = app.blockungsauswahl.ausgewaehlt?.id;
-	if (!id)
-		return;
-	const apiCall = app.create_blockungsergebnisse(id, halbjahresHashCode);
-	main.config.apiLoadingStatus.addStatusByPromise(apiCall, {message: 'Blockung wird berechnet...', caller: 'Kursplanung (Gost)', categories: [GOST_CREATE_BLOCKUNG_SYMBOL]});
-};
+	function select_blockungauswahl(blockung: GostBlockungListeneintrag) {
+		if (!pending.value)
+			selected_blockungauswahl.value = blockung;
+	}
 
-async function blockung_hinzufuegen() {
-	if (!selected.value?.abiturjahr || !selected_hj.value)
-		return;
-	await App.api.createGostAbiturjahrgangBlockung(App.schema, selected.value.abiturjahr.valueOf(), selected_hj.value.id);
-	const abiturjahr = selected.value.abiturjahr.valueOf();
-	await app.blockungsauswahl.update_list(abiturjahr, selected_hj.value.id, true);
-}
+	async function abiturjahr_hinzufuegen(jahrgang: JahrgangsListeEintrag) {
+		try {
+			const abiturjahr = await app.dataJahrgang.post_jahrgang(jahrgang.id);
+			await app.auswahl.update_list();
+			const jahr = app.auswahl.liste?.find(j => j.abiturjahr === abiturjahr);
+			selected.value = jahr;
+		} catch (e) {
+			console.log("Fehler: ", e);
+		}
+	}
 
-async function remove_blockung() {
-	modal_remove_blockung.value.closeModal()
-	if (!selected_blockungauswahl.value || !selected_hj.value)
-		return;
-	await App.api.deleteGostBlockung(App.schema, selected_blockungauswahl.value?.id);
-	const abiturjahr = selected.value?.abiturjahr?.valueOf();
-	if (!abiturjahr)
-		return;
-	await app.blockungsauswahl.update_list(abiturjahr, selected_hj.value.id);
-}
+	const create_blockungsergebnisse = () => {
+		const halbjahresHashCode: number = app.blockungsauswahl.ausgewaehlt?.hashCode() ? app.blockungsauswahl.ausgewaehlt.hashCode() : -1;
+		const id = app.blockungsauswahl.ausgewaehlt?.id;
+		if (!id)
+			return;
+		const apiCall = app.create_blockungsergebnisse(id, halbjahresHashCode);
+		main.config.apiLoadingStatus.addStatusByPromise(apiCall, {message: 'Blockung wird berechnet...', caller: 'Kursplanung (Gost)', categories: [GOST_CREATE_BLOCKUNG_SYMBOL]});
+	};
 
-async function remove_ergebnis() {
-	if (!selected_ergebnis.value || !selected_hj.value)
-		return;
-	await App.api.deleteGostBlockungsergebnis(App.schema, selected_ergebnis.value.id);
-	const abiturjahr = selected.value?.abiturjahr?.valueOf() || -1;
-	await app.blockungsauswahl.update_list(abiturjahr, selected_hj.value.id)
-}
+	async function blockung_hinzufuegen() {
+		if (!selected.value?.abiturjahr || !selected_hj.value)
+			return;
+		await App.api.createGostAbiturjahrgangBlockung(App.schema, selected.value.abiturjahr.valueOf(), selected_hj.value.id);
+		const abiturjahr = selected.value.abiturjahr.valueOf();
+		await app.blockungsauswahl.update_list(abiturjahr, selected_hj.value.id, true);
+	}
 
-async function derive_blockung() {
-	if (!selected_ergebnis.value || !selected_hj.value)
-		return;
-	await App.api.dupliziereGostBlockungMitErgebnis(App.schema, selected_ergebnis.value.id);
-	const abiturjahr = selected.value?.abiturjahr?.valueOf() || -1;
-	await app.blockungsauswahl.update_list(abiturjahr, selected_hj.value.id, true);
-}
+	async function remove_blockung() {
+		modal_remove_blockung.value.closeModal()
+		if (!selected_blockungauswahl.value || !selected_hj.value)
+			return;
+		await App.api.deleteGostBlockung(App.schema, selected_blockungauswahl.value?.id);
+		const abiturjahr = selected.value?.abiturjahr?.valueOf();
+		if (!abiturjahr)
+			return;
+		await app.blockungsauswahl.update_list(abiturjahr, selected_hj.value.id);
+	}
 
-async function patch_blockung(name: string) {
-	const res = await app.dataKursblockung.patch({name});
-	if (res && selected_blockungauswahl.value)
-		selected_blockungauswahl.value.name = name;
-}
+	async function remove_ergebnis() {
+		if (!selected_ergebnis.value || !selected_hj.value)
+			return;
+		await App.api.deleteGostBlockungsergebnis(App.schema, selected_ergebnis.value.id);
+		const abiturjahr = selected.value?.abiturjahr?.valueOf() || -1;
+		await app.blockungsauswahl.update_list(abiturjahr, selected_hj.value.id)
+	}
 
-function color1(ergebnis: GostBlockungsergebnisListeneintrag): string {
-	return `hsl(${Math.round((1 - (manager.value?.getOfBewertung1Intervall(ergebnis.id)||0)) * 120)},100%,80%)`
-}
-function color2(ergebnis: GostBlockungsergebnisListeneintrag): string {
-	return `hsl(${Math.round((1 - (manager.value?.getOfBewertung2Intervall(ergebnis.id)||0)) * 120)},100%,80%)`
-}
-function color3(ergebnis: GostBlockungsergebnisListeneintrag): string {
-	return `hsl(${Math.round((1 - (manager.value?.getOfBewertung3Intervall(ergebnis.id)||0)) * 120)},100%,80%)`
-}
-function color4(ergebnis: GostBlockungsergebnisListeneintrag): string {
-	return `hsl(${Math.round((1 - (manager.value?.getOfBewertung4Intervall(ergebnis.id)||0)) * 120)},100%,80%)`
-}
+	async function derive_blockung() {
+		if (!selected_ergebnis.value || !selected_hj.value)
+			return;
+		await App.api.dupliziereGostBlockungMitErgebnis(App.schema, selected_ergebnis.value.id);
+		const abiturjahr = selected.value?.abiturjahr?.valueOf() || -1;
+		await app.blockungsauswahl.update_list(abiturjahr, selected_hj.value.id, true);
+	}
 
-const modal_remove_blockung: Ref<any> = ref(null);
-function toggle_remove_blockung_modal() {
-	modal_remove_blockung.value.isOpen ? modal_remove_blockung.value.closeModal() : modal_remove_blockung.value.openModal();
-};
+	async function patch_blockung(name: string) {
+		const res = await app.dataKursblockung.patch({name});
+		if (res && selected_blockungauswahl.value)
+			selected_blockungauswahl.value.name = name;
+	}
+
+	function color1(ergebnis: GostBlockungsergebnisListeneintrag): string {
+		return `hsl(${Math.round((1 - (manager.value?.getOfBewertung1Intervall(ergebnis.id)||0)) * 120)},100%,80%)`
+	}
+	function color2(ergebnis: GostBlockungsergebnisListeneintrag): string {
+		return `hsl(${Math.round((1 - (manager.value?.getOfBewertung2Intervall(ergebnis.id)||0)) * 120)},100%,80%)`
+	}
+	function color3(ergebnis: GostBlockungsergebnisListeneintrag): string {
+		return `hsl(${Math.round((1 - (manager.value?.getOfBewertung3Intervall(ergebnis.id)||0)) * 120)},100%,80%)`
+	}
+	function color4(ergebnis: GostBlockungsergebnisListeneintrag): string {
+		return `hsl(${Math.round((1 - (manager.value?.getOfBewertung4Intervall(ergebnis.id)||0)) * 120)},100%,80%)`
+	}
+
+	const modal_remove_blockung: Ref<any> = ref(null);
+	function toggle_remove_blockung_modal() {
+		modal_remove_blockung.value.isOpen ? modal_remove_blockung.value.closeModal() : modal_remove_blockung.value.openModal();
+	};
 
 </script>
 
@@ -414,6 +416,7 @@ function toggle_remove_blockung_modal() {
 	}
 }
 </style>
+
 <style lang="postcss" scoped>
 .cell--bewertung span {
 	@apply inline-block text-center text-black rounded font-normal;

@@ -25,10 +25,9 @@
 
 	import { computed, ComputedRef } from "vue";
 
-	import { injectMainApp, Main } from "~/apps/Main";
+	import { injectMainApp } from "~/apps/Main";
 
-	const main: Main = injectMainApp();
-	const app = main.apps.gost;
+	const app = injectMainApp().apps.gost;
 
 	const jahrgang: ComputedRef<string | undefined> = computed(() => {
 		return app.auswahl.ausgewaehlt?.jahrgang?.toString();
