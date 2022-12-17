@@ -37,8 +37,9 @@
 	import type { BenutzerListeEintrag, BenutzergruppeListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, Ref, ref } from "vue";
 	import { injectMainApp, Main } from "~/apps/Main";
-	import { useAuswahlViaRoute } from "~/router/auswahlViaRoute";
 	import { router } from "~/router";
+	import { routeAppAuswahl } from "~/router/RouteAppMeta";
+	import { RouteSchuleBenutzerverwaltungBenutzer, RouteSchuleBenutzerverwaltungBenutzergruppe } from "~/router/apps/RouteSchuleBenutzerverwaltung";
 
 	// Allgemeines
 
@@ -68,8 +69,7 @@
 			: rowsValue;
 	});
 
-	const benutzer_ausgewaehlt = useAuswahlViaRoute('benutzer');
-
+	const benutzer_ausgewaehlt = routeAppAuswahl(RouteSchuleBenutzerverwaltungBenutzer);
 
 	// Auswahlliste der Benutzergruppen
 
@@ -93,7 +93,7 @@
 			: rowsValue;
 	});
 
-	const benutzergruppen_ausgewaehlt = useAuswahlViaRoute('benutzergruppe');
+	const benutzergruppen_ausgewaehlt = routeAppAuswahl(RouteSchuleBenutzerverwaltungBenutzergruppe);
 	const benutzergruppen_selection = ref([]);
 
 </script>

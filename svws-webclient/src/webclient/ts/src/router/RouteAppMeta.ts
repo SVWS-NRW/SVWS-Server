@@ -1,8 +1,8 @@
 import { WritableComputedRef } from "vue";
 import { RouteMeta, RouteRecordRaw } from "vue-router";
 
-export interface RouteAppMeta<T> extends RouteMeta {
-	auswahl: () => WritableComputedRef<T>
+export interface RouteAppMeta<Item> extends RouteMeta {
+	auswahl: () => WritableComputedRef<Item>
 }
 
 function routeAppMeta<T extends RouteRecordRaw, Item>(route : T) : RouteAppMeta<Item> {
