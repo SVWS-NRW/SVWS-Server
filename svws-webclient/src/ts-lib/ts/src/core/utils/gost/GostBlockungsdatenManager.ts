@@ -666,7 +666,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @param pKursID  Die Datenbank-ID des Kurses.
 	 * @return         Alle Lehrkräfte eines Kurses sortiert nach {@link GostBlockungKursLehrer#reihenfolge}.
 	 */
-	public getOfKursLehrkaefteSortiert(pKursID : number) : List<GostBlockungKursLehrer> {
+	public getOfKursLehrkraefteSortiert(pKursID : number) : List<GostBlockungKursLehrer> {
 		let kurs : GostBlockungKurs = this.getKurs(pKursID);
 		return kurs.lehrer;
 	}
@@ -680,8 +680,8 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @return                       Die Lehrkraft des Kurses, welche die angegebene Nummer hat.
 	 * @throws NullPointerException  Falls es eine solche Lehrkraft nicht gibt.
 	 */
-	public getOfKursLehrkaftMitNummer(pKursID : number, pReihenfolgeNr : number) : GostBlockungKursLehrer | null {
-		for (let lehrkraft of this.getOfKursLehrkaefteSortiert(pKursID)) 
+	public getOfKursLehrkraftMitNummer(pKursID : number, pReihenfolgeNr : number) : GostBlockungKursLehrer | null {
+		for (let lehrkraft of this.getOfKursLehrkraefteSortiert(pKursID)) 
 			if (lehrkraft.reihenfolge === pReihenfolgeNr) 
 				return lehrkraft;
 		throw new NullPointerException("Es gibt im Kurs " + pKursID + " keine Lehrkraft mit ReihenfolgeNr " + pReihenfolgeNr)
@@ -695,8 +695,8 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @return                       TRUE, falls im Kurs die Lehrkraft mit der Nummer existiert.
 	 * @throws NullPointerException  Falls es eine solche Lehrkraft nicht gibt.
 	 */
-	public getOfKursLehrkaftMitNummerExists(pKursID : number, pReihenfolgeNr : number) : boolean {
-		for (let lehrkraft of this.getOfKursLehrkaefteSortiert(pKursID)) 
+	public getOfKursLehrkraftMitNummerExists(pKursID : number, pReihenfolgeNr : number) : boolean {
+		for (let lehrkraft of this.getOfKursLehrkraefteSortiert(pKursID)) 
 			if (lehrkraft.reihenfolge === pReihenfolgeNr) 
 				return true;
 		return false;
@@ -711,8 +711,8 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @return                       Die Lehrkraft des Kurses, welche die angegebene ID hat.
 	 * @throws NullPointerException  Falls es eine solche Lehrkraft nicht gibt.
 	 */
-	public getOfKursLehrkaftMitID(pKursID : number, pLehrkraftID : number) : GostBlockungKursLehrer | null {
-		for (let lehrkraft of this.getOfKursLehrkaefteSortiert(pKursID)) 
+	public getOfKursLehrkraftMitID(pKursID : number, pLehrkraftID : number) : GostBlockungKursLehrer | null {
+		for (let lehrkraft of this.getOfKursLehrkraefteSortiert(pKursID)) 
 			if (lehrkraft.id === pLehrkraftID) 
 				return lehrkraft;
 		throw new NullPointerException("Es gibt im Kurs " + pKursID + " keine Lehrkraft mit ID " + pLehrkraftID)
@@ -726,8 +726,8 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @return                       TRUE, falls im Kurs die Lehrkraft mit der ID existiert.
 	 * @throws NullPointerException  Falls es eine solche Lehrkraft nicht gibt.
 	 */
-	public getOfKursLehrkaftMitIDExists(pKursID : number, pLehrkraftID : number) : boolean {
-		for (let lehrkraft of this.getOfKursLehrkaefteSortiert(pKursID)) 
+	public getOfKursLehrkraftMitIDExists(pKursID : number, pLehrkraftID : number) : boolean {
+		for (let lehrkraft of this.getOfKursLehrkraefteSortiert(pKursID)) 
 			if (lehrkraft.id === pLehrkraftID) 
 				return true;
 		return false;

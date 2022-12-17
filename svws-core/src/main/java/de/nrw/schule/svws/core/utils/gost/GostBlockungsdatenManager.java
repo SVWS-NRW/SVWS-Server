@@ -694,7 +694,7 @@ public class GostBlockungsdatenManager {
 	 * @param pKursID  Die Datenbank-ID des Kurses.
 	 * @return         Alle Lehrkräfte eines Kurses sortiert nach {@link GostBlockungKursLehrer#reihenfolge}.
 	 */
-	public @NotNull List<@NotNull GostBlockungKursLehrer> getOfKursLehrkaefteSortiert(long pKursID) {
+	public @NotNull List<@NotNull GostBlockungKursLehrer> getOfKursLehrkraefteSortiert(long pKursID) {
 		@NotNull GostBlockungKurs kurs = getKurs(pKursID);
 		return kurs.lehrer;
 	}
@@ -708,8 +708,8 @@ public class GostBlockungsdatenManager {
 	 * @return                       Die Lehrkraft des Kurses, welche die angegebene Nummer hat.
 	 * @throws NullPointerException  Falls es eine solche Lehrkraft nicht gibt.
 	 */
-	public GostBlockungKursLehrer getOfKursLehrkaftMitNummer(long pKursID, int pReihenfolgeNr) throws NullPointerException {
-		for (@NotNull GostBlockungKursLehrer lehrkraft : getOfKursLehrkaefteSortiert(pKursID))
+	public GostBlockungKursLehrer getOfKursLehrkraftMitNummer(long pKursID, int pReihenfolgeNr) throws NullPointerException {
+		for (@NotNull GostBlockungKursLehrer lehrkraft : getOfKursLehrkraefteSortiert(pKursID))
 			if (lehrkraft.reihenfolge == pReihenfolgeNr)
 				return lehrkraft;
 		throw new NullPointerException("Es gibt im Kurs " + pKursID + " keine Lehrkraft mit ReihenfolgeNr " + pReihenfolgeNr);
@@ -723,8 +723,8 @@ public class GostBlockungsdatenManager {
 	 * @return                       TRUE, falls im Kurs die Lehrkraft mit der Nummer existiert.
 	 * @throws NullPointerException  Falls es eine solche Lehrkraft nicht gibt.
 	 */
-	public boolean getOfKursLehrkaftMitNummerExists(long pKursID, int pReihenfolgeNr) {
-		for (@NotNull GostBlockungKursLehrer lehrkraft : getOfKursLehrkaefteSortiert(pKursID))
+	public boolean getOfKursLehrkraftMitNummerExists(long pKursID, int pReihenfolgeNr) {
+		for (@NotNull GostBlockungKursLehrer lehrkraft : getOfKursLehrkraefteSortiert(pKursID))
 			if (lehrkraft.reihenfolge == pReihenfolgeNr)
 				return true;
 		return false;
@@ -739,8 +739,8 @@ public class GostBlockungsdatenManager {
 	 * @return                       Die Lehrkraft des Kurses, welche die angegebene ID hat.
 	 * @throws NullPointerException  Falls es eine solche Lehrkraft nicht gibt.
 	 */
-	public GostBlockungKursLehrer getOfKursLehrkaftMitID(long pKursID, int pLehrkraftID) throws NullPointerException {
-		for (@NotNull GostBlockungKursLehrer lehrkraft : getOfKursLehrkaefteSortiert(pKursID))
+	public GostBlockungKursLehrer getOfKursLehrkraftMitID(long pKursID, int pLehrkraftID) throws NullPointerException {
+		for (@NotNull GostBlockungKursLehrer lehrkraft : getOfKursLehrkraefteSortiert(pKursID))
 			if (lehrkraft.id == pLehrkraftID)
 				return lehrkraft;
 		throw new NullPointerException("Es gibt im Kurs " + pKursID + " keine Lehrkraft mit ID " + pLehrkraftID);
@@ -754,8 +754,8 @@ public class GostBlockungsdatenManager {
 	 * @return                       TRUE, falls im Kurs die Lehrkraft mit der ID existiert.
 	 * @throws NullPointerException  Falls es eine solche Lehrkraft nicht gibt.
 	 */
-	public boolean getOfKursLehrkaftMitIDExists(long pKursID, int pLehrkraftID) throws NullPointerException {
-		for (@NotNull GostBlockungKursLehrer lehrkraft : getOfKursLehrkaefteSortiert(pKursID))
+	public boolean getOfKursLehrkraftMitIDExists(long pKursID, int pLehrkraftID) throws NullPointerException {
+		for (@NotNull GostBlockungKursLehrer lehrkraft : getOfKursLehrkraefteSortiert(pKursID))
 			if (lehrkraft.id == pLehrkraftID)
 				return true;
 		return false;
