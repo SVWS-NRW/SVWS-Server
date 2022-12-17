@@ -37,9 +37,7 @@
 	});
 
 	const abiturjahr: ComputedRef<number | undefined> = computed(() => {
-		if ((app.dataJahrgang.daten?.abiturjahr === undefined) || (app.dataJahrgang.daten?.abiturjahr === -1))
-			return undefined;
-		return app.dataJahrgang.daten?.abiturjahr;
+		return props.id;
 	});
 
 	const bezeichnung_abiturjahr: ComputedRef<string | undefined> = computed(() => { 
