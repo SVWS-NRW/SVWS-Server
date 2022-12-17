@@ -1,17 +1,9 @@
 import { SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
 import { computed, WritableComputedRef } from "vue";
-import { RouteLocationNormalized, RouteRecordRaw, useRoute, useRouter } from "vue-router";
+import { RouteLocationNormalized, RouteMeta, RouteRecordRaw, useRoute, useRouter } from "vue-router";
 import { injectMainApp } from "~/apps/Main";
+import { RouteAppMeta } from "~/router/RouteAppMeta";
 
-
-function getRouteSchuelerProps(route: RouteLocationNormalized) {
-	if ((route.name !== "schueler") || (route.params.id === undefined))
-		return { id: undefined, item: undefined };
-	const id = parseInt(route.params.id as string);
-	const app = injectMainApp().apps.schueler;
-	const item = app.auswahl.liste.find(s => s.id === id);
-	return { id: id, item: item };
-}
 
 export const RouteSchueler : RouteRecordRaw = {
 	name: "schueler",
@@ -23,10 +15,22 @@ export const RouteSchueler : RouteRecordRaw = {
 	props: {
 		default: getRouteSchuelerProps,
 		liste: getRouteSchuelerProps
+	},
+	meta: <RouteAppMeta<SchuelerListeEintrag | undefined>> {
+		auswahl: routeSchuelerAuswahl
 	}
 }
 
-export function routeSchuelerAuswahl(): WritableComputedRef<SchuelerListeEintrag | undefined> {
+function getRouteSchuelerProps(route: RouteLocationNormalized) {
+	if ((route.name !== "schueler") || (route.params.id === undefined))
+		return { id: undefined, item: undefined };
+	const id = parseInt(route.params.id as string);
+	const app = injectMainApp().apps.schueler;
+	const item = app.auswahl.liste.find(s => s.id === id);
+	return { id: id, item: item };
+}
+
+function routeSchuelerAuswahl(): WritableComputedRef<SchuelerListeEintrag | undefined> {
 	const router = useRouter();
 	const route = useRoute();
 	const app = injectMainApp().apps.schueler;

@@ -38,7 +38,8 @@
 	import type { LehrerListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, Ref, ref } from "vue";
 	import { injectMainApp, Main } from "~/apps/Main";
-	import { routeLehrerAuswahl } from "~/router/apps/RouteLehrer";
+	import { RouteLehrer } from "~/router/apps/RouteLehrer";
+	import { routeAppAuswahl } from "~/router/RouteAppMeta";
 
 	const cols = [
 		{ key: "kuerzel", label: "Kuerzel", width: "10%", sortable: true, defaultSort: "asc" },
@@ -73,7 +74,7 @@
 		return rows.value;
 	});
 
-	const selected = routeLehrerAuswahl();
+	const selected = routeAppAuswahl(RouteLehrer);
 
 	function onAction(action: string, item: LehrerListeEintrag) {
 		console.log(action, item);
