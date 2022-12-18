@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Vector;
 
 import de.nrw.schule.svws.core.adt.collection.LinkedCollection;
 import de.nrw.schule.svws.core.data.gost.GostBlockungKurs;
@@ -883,21 +884,29 @@ public class KursblockungDynDaten {
 	private void schritt13FehlerBeiRegel_9(@NotNull GostBlockungsdatenManager pInput) {
 		// Regel 9 - LEHRKRAFT_BEACHTEN
 		LinkedCollection<@NotNull GostBlockungRegel> regelnTyp9 = regelMap.get(GostKursblockungRegelTyp.LEHRKRAFT_BEACHTEN);
-		if (regelnTyp9 != null)
+		if (regelnTyp9 != null) {
+			// Sammle zunächst alle potentiellen Kurse
+			@NotNull Vector<@NotNull GostBlockungKurs> vKurseMitLehrkraft = new Vector<>();
+			for (@NotNull GostBlockungKurs gKurs : pInput.daten().kurse)
+				if (gKurs.lehrer.isEmpty() == false) 
+					vKurseMitLehrkraft.add(gKurs);
+			
+			// Finde Kurse mit der selben Lehrkraft
 			for (@NotNull GostBlockungRegel regel9 : regelnTyp9) {
 				boolean externBeachten = regel9.parameter.get(0) == 1L;
-				for (@NotNull GostBlockungKurs gKurs1 : pInput.daten().kurse) 
-					for (@NotNull GostBlockungKurs gKurs2 : pInput.daten().kurse)
-						if (gKurs1.id < gKurs2.id) 
+				for (@NotNull GostBlockungKurs gKurs1 : vKurseMitLehrkraft) 
+					for (@NotNull GostBlockungKurs gKurs2 : vKurseMitLehrkraft)
+						if (gKurs1.id < gKurs2.id)
 							for (@NotNull GostBlockungKursLehrer gLehr1 : gKurs1.lehrer)
 								for (@NotNull GostBlockungKursLehrer gLehr2 : gKurs2.lehrer) 
-									if (gLehr1 == gLehr2)
+									if (gLehr1.id == gLehr2.id) 
 										if ( (externBeachten) || (!gLehr1.istExtern) ) {
 											@NotNull KursblockungDynKurs kurs1 = gibKurs(gKurs1.id);
 											@NotNull KursblockungDynKurs kurs2 = gibKurs(gKurs2.id);
 											statistik.regelHinzufuegenKursVerbieteMitKurs(kurs1, kurs2);
 										}
 			}
+		}
 	}
 
 	private @NotNull KursblockungDynFachart gibFachart(long pFachID, int pKursart) {

@@ -15,6 +15,7 @@ import { System, cast_java_lang_System } from '../../java/lang/System';
 import { GostKursblockungRegelTyp, cast_de_nrw_schule_svws_core_types_kursblockung_GostKursblockungRegelTyp } from '../../core/types/kursblockung/GostKursblockungRegelTyp';
 import { Random, cast_java_util_Random } from '../../java/util/Random';
 import { List, cast_java_util_List } from '../../java/util/List';
+import { Vector, cast_java_util_Vector } from '../../java/util/Vector';
 import { HashSet, cast_java_util_HashSet } from '../../java/util/HashSet';
 import { GostBlockungKurs, cast_de_nrw_schule_svws_core_data_gost_GostBlockungKurs } from '../../core/data/gost/GostBlockungKurs';
 import { GostFach, cast_de_nrw_schule_svws_core_data_gost_GostFach } from '../../core/data/gost/GostFach';
@@ -647,21 +648,26 @@ export class KursblockungDynDaten extends JavaObject {
 
 	private schritt13FehlerBeiRegel_9(pInput : GostBlockungsdatenManager) : void {
 		let regelnTyp9 : LinkedCollection<GostBlockungRegel> | null = this.regelMap.get(GostKursblockungRegelTyp.LEHRKRAFT_BEACHTEN);
-		if (regelnTyp9 !== null) 
+		if (regelnTyp9 !== null) {
+			let vKurseMitLehrkraft : Vector<GostBlockungKurs> = new Vector();
+			for (let gKurs of pInput.daten().kurse) 
+				if (gKurs.lehrer.isEmpty() === false) 
+					vKurseMitLehrkraft.add(gKurs);
 			for (let regel9 of regelnTyp9) {
 				let externBeachten : boolean = regel9.parameter.get(0) === 1;
-				for (let gKurs1 of pInput.daten().kurse) 
-					for (let gKurs2 of pInput.daten().kurse) 
+				for (let gKurs1 of vKurseMitLehrkraft) 
+					for (let gKurs2 of vKurseMitLehrkraft) 
 						if (gKurs1.id < gKurs2.id) 
 							for (let gLehr1 of gKurs1.lehrer) 
 								for (let gLehr2 of gKurs2.lehrer) 
-									if (gLehr1 as unknown === gLehr2 as unknown) 
+									if (gLehr1.id === gLehr2.id) 
 										if ((externBeachten) || (!gLehr1.istExtern)) {
 											let kurs1 : KursblockungDynKurs = this.gibKurs(gKurs1.id);
 											let kurs2 : KursblockungDynKurs = this.gibKurs(gKurs2.id);
 											this.statistik.regelHinzufuegenKursVerbieteMitKurs(kurs1, kurs2);
 										}
 			}
+		}
 	}
 
 	private gibFachart(pFachID : number, pKursart : number) : KursblockungDynFachart {
