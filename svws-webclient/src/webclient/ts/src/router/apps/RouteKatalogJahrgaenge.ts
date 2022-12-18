@@ -13,8 +13,8 @@ export const RouteKatalogJahrgaenge : RouteRecordRaw = {
 		liste: () => import("~/components/jahrgaenge/SJahrgaengeAuswahl.vue")
 	},
 	props: {
-		default: (route) => routePropsAuswahlID(route, ROUTE_NAME, injectMainApp().apps.jahrgaenge.auswahl),
-		liste: (route) => routePropsAuswahlID(route, ROUTE_NAME, injectMainApp().apps.jahrgaenge.auswahl)
+		default: (route) => routePropsAuswahlID(route, injectMainApp().apps.jahrgaenge.auswahl),
+		liste: (route) => routePropsAuswahlID(route, injectMainApp().apps.jahrgaenge.auswahl)
 	},
 	meta: <RouteAppMeta<JahrgangsListeEintrag | undefined>> {
 		auswahl: () => routeAuswahlID(ROUTE_NAME, injectMainApp().apps.jahrgaenge.auswahl)

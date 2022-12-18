@@ -8,14 +8,19 @@
 </template>
 
 <script setup lang="ts">
+
+	import { LehrerListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef } from "vue";
 	import { injectMainApp, Main } from "~/apps/Main";
 
 	const main: Main = injectMainApp();
 	const app = main.apps.lehrer;
 
+	const props = defineProps<{ id?: number; item?: LehrerListeEintrag }>();
+
 	const visible: ComputedRef<boolean> = computed(() => {
 		//return this.$app.lehrerPersonaldaten.visible; //TODO: richtige Bedingung einpflegen
 		return true;
 	});
+
 </script>

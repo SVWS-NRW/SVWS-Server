@@ -23,6 +23,10 @@ public class LehrerListeEintrag {
 	@Schema(required = true, description = "das Kürzel des Lehrers", example="MUS")
 	public @NotNull String kuerzel = "";
 	
+	/** Ggf. ein akademischer Grad des Lehrers. */
+	@Schema(required = false, description = "Ggf. ein akademischer Grad des Lehrers.", example="Dr.")
+	public String titel;
+
 	/** Der Nachname des Lehrers. */
 	@Schema(required = true, description = "der Nachname des Lehrers", example="Mustermann")
 	public @NotNull String nachname = "";

@@ -52,6 +52,7 @@ declare module '@vue/runtime-core' {
     RadioGroup: typeof import('./src/components/Controls/RadioGroup.vue')['default']
     RadioOption: typeof import('./src/components/Controls/RadioOption.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
+    RouterTabBar: typeof import('./src/components/Controls/RouterTabBar.vue')['default']
     RouterView: typeof import('vue-router')['RouterView']
     SecondaryMenu: typeof import('./src/components/Layout/Sidebar/SecondaryMenu.vue')['default']
     SelectInput: typeof import('./src/components/Controls/SelectInput.vue')['default']

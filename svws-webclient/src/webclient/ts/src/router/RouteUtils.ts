@@ -11,6 +11,11 @@ export interface RouteAppMeta<Item> extends RouteMeta {
 	/** Eine Funktion, welche eine Computed-Property zurückliefert, die für die Auswahl eines Elements aus einer Liste von Elementen verantwirtlich ist. */
 	auswahl: () => WritableComputedRef<Item>
 
+	/** Eine 0-indizierte ID zur Angabe der Reihenfolge der Routen-Elemente bei der Darstellung in der UI */
+	reihenfolge: number
+
+	/** Ein Text, welcher zur Darstellung in der GUI genutzt wird (z.B. der Text auf Tabs) */
+	text: string
 }
 
 
@@ -51,8 +56,8 @@ export function routeAppAuswahl<T extends RouteRecordRaw, Item>(route : T) : Wri
  * 
  * @returns das Objekt mit den Werten für die Properties
  */
-export function routePropsAuswahlID<TAuswahl extends BaseList<{ id: number }, unknown>>(route: RouteLocationNormalized, name: string, auswahl: TAuswahl) {
-	if ((auswahl === undefined) || (route.name !== name) || (route.params.id === undefined))
+export function routePropsAuswahlID<TAuswahl extends BaseList<{ id: number }, unknown>>(route: RouteLocationNormalized, auswahl: TAuswahl) {
+	if ((auswahl === undefined) || (route.params.id === undefined))
 		return { id: undefined, item: undefined };
 	const id = parseInt(route.params.id as string);
 	const item = auswahl.liste.find(s => s.id === id);

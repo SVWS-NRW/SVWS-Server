@@ -7,6 +7,8 @@ export class LehrerListeEintrag extends JavaObject {
 
 	public kuerzel : String = "";
 
+	public titel : String | null = null;
+
 	public nachname : String = "";
 
 	public vorname : String = "";
@@ -39,6 +41,7 @@ export class LehrerListeEintrag extends JavaObject {
 		if (typeof obj.kuerzel === "undefined")
 			 throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = String(obj.kuerzel);
+		result.titel = typeof obj.titel === "undefined" ? null : obj.titel === null ? null : String(obj.titel);
 		if (typeof obj.nachname === "undefined")
 			 throw new Error('invalid json format, missing attribute nachname');
 		result.nachname = String(obj.nachname);
@@ -67,6 +70,7 @@ export class LehrerListeEintrag extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
 		result += '"kuerzel" : ' + '"' + obj.kuerzel.valueOf() + '"' + ',';
+		result += '"titel" : ' + ((!obj.titel) ? 'null' : '"' + obj.titel.valueOf() + '"') + ',';
 		result += '"nachname" : ' + '"' + obj.nachname.valueOf() + '"' + ',';
 		result += '"vorname" : ' + '"' + obj.vorname.valueOf() + '"' + ',';
 		result += '"personTyp" : ' + '"' + obj.personTyp.valueOf() + '"' + ',';
@@ -86,6 +90,9 @@ export class LehrerListeEintrag extends JavaObject {
 		}
 		if (typeof obj.kuerzel !== "undefined") {
 			result += '"kuerzel" : ' + '"' + obj.kuerzel.valueOf() + '"' + ',';
+		}
+		if (typeof obj.titel !== "undefined") {
+			result += '"titel" : ' + ((!obj.titel) ? 'null' : '"' + obj.titel.valueOf() + '"') + ',';
 		}
 		if (typeof obj.nachname !== "undefined") {
 			result += '"nachname" : ' + '"' + obj.nachname.valueOf() + '"' + ',';

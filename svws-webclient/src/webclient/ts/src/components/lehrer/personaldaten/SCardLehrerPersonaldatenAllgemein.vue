@@ -69,7 +69,6 @@
 
 	const main: Main = injectMainApp();
 	const app = main.apps.lehrer;
-	console.log(app.personaldaten);
 
 	const zugaenge_liste: ComputedRef<LehrerZugangsgrund[]> = computed(() =>
 		LehrerZugangsgrund.values()

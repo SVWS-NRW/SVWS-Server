@@ -15,8 +15,8 @@ export const RouteGost : RouteRecordRaw = {
 		liste: () => import("~/components/gost/SGostAuswahl.vue")
 	},
 	props: {
-		default: (route) => routePropsGostAuswahl(route, ROUTE_NAME, injectMainApp().apps.gost.auswahl),
-		liste: (route) => routePropsGostAuswahl(route, ROUTE_NAME, injectMainApp().apps.gost.auswahl)
+		default: (route) => routePropsGostAuswahl(route, injectMainApp().apps.gost.auswahl),
+		liste: (route) => routePropsGostAuswahl(route, injectMainApp().apps.gost.auswahl)
 	},
 	meta: <RouteAppMeta<GostJahrgang | undefined>> {
 		auswahl: () => routeGostAuswahl(ROUTE_NAME, injectMainApp().apps.gost.auswahl)
@@ -29,14 +29,12 @@ export const RouteGost : RouteRecordRaw = {
  * der Gost-Auswahl-Liste, welche ein numerisches abiturjahr-Attribut hat.
  * 
  * @param route     die aktuelle Route, für die die Properties erzeugt werden sollen
- * @param name      der Name des Routen-Eintrages, für welche die Properties erzeugt werden sollen.
- *                  Dieser wird genutzt, um zu prüfen, ob die übergebene Route zu dem Routen-Eintrag passt
  * @param auswahl   die Liste der Auswahl (siehe auch BaseList)
  * 
  * @returns das Objekt mit den Werten für die Properties
  */
-function routePropsGostAuswahl<TAuswahl extends BaseList<{ abiturjahr: number }, unknown>>(route: RouteLocationNormalized, name: string, auswahl: TAuswahl) {
-	if ((auswahl === undefined) || (route.name !== name) || (route.params.abiturjahr === undefined))
+function routePropsGostAuswahl<TAuswahl extends BaseList<{ abiturjahr: number }, unknown>>(route: RouteLocationNormalized, auswahl: TAuswahl) {
+	if ((auswahl === undefined) || (route.params.abiturjahr === undefined))
 		return { id: undefined, item: undefined };
 	const abiturjahr = parseInt(route.params.abiturjahr as string);
 	const item = auswahl.liste.find(s => s.abiturjahr === abiturjahr);

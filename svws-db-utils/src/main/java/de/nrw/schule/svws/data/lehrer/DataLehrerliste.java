@@ -40,6 +40,7 @@ public class DataLehrerliste extends DataManager<Long> {
 		LehrerListeEintrag eintrag = new LehrerListeEintrag();
 		eintrag.id = l.ID;
 		eintrag.kuerzel = l.Kuerzel;
+		eintrag.titel = l.Titel == null ? "" : l.Titel;
 		eintrag.nachname = l.Nachname;
 		eintrag.vorname = l.Vorname;
 		eintrag.personTyp = l.PersonTyp.kuerzel;

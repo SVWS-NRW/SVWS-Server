@@ -133,7 +133,7 @@
 	import { RouteGost } from "~/router/apps/RouteGost";
 	import { routeAppAuswahl } from "~/router/RouteUtils";
 
-	const props = defineProps<{ id: number | undefined; item: GostJahrgang | undefined }>();
+	const props = defineProps<{ id?: number; item?: GostJahrgang }>();
 
 	const selected: WritableComputedRef<GostJahrgang | undefined> = routeAppAuswahl(RouteGost);
 	const main: Main = injectMainApp();

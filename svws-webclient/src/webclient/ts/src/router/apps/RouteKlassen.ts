@@ -13,8 +13,8 @@ export const RouteKlassen : RouteRecordRaw = {
 		liste: () => import("~/components/klassen/SKlassenAuswahl.vue")
 	},
 	props: {
-		default: (route) => routePropsAuswahlID(route, ROUTE_NAME, injectMainApp().apps.klassen.auswahl),
-		liste: (route) => routePropsAuswahlID(route, ROUTE_NAME, injectMainApp().apps.klassen.auswahl)
+		default: (route) => routePropsAuswahlID(route, injectMainApp().apps.klassen.auswahl),
+		liste: (route) => routePropsAuswahlID(route, injectMainApp().apps.klassen.auswahl)
 	},
 	meta: <RouteAppMeta<KlassenListeEintrag | undefined>> {
 		auswahl: () => routeAuswahlID(ROUTE_NAME, injectMainApp().apps.klassen.auswahl)

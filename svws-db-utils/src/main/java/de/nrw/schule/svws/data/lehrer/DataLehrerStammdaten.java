@@ -46,11 +46,11 @@ public class DataLehrerStammdaten extends DataManager<Long> {
 		daten.id = lehrer.ID;
 		daten.kuerzel = lehrer.Kuerzel;
 		daten.personalTyp = lehrer.PersonTyp.kuerzel;
-		daten.anrede = lehrer.Anrede;
-		daten.titel = lehrer.Titel;
-		daten.amtsbezeichnung = lehrer.Amtsbezeichnung;
-		daten.nachname = lehrer.Nachname;
-		daten.vorname = lehrer.Vorname;
+		daten.anrede = lehrer.Anrede == null ? "" : lehrer.Anrede;
+		daten.titel = lehrer.Titel == null ? "" : lehrer.Titel;
+		daten.amtsbezeichnung = lehrer.Amtsbezeichnung == null ? "" : lehrer.Amtsbezeichnung;
+		daten.nachname = lehrer.Nachname == null ? "" : lehrer.Nachname;
+		daten.vorname = lehrer.Vorname == null ? "" : lehrer.Vorname;
 		daten.geschlecht = lehrer.Geschlecht.id;
 		daten.geburtsdatum = lehrer.Geburtsdatum;
 		daten.staatsangehoerigkeitID = lehrer.staatsangehoerigkeit == null ? null : lehrer.staatsangehoerigkeit.daten.iso3;

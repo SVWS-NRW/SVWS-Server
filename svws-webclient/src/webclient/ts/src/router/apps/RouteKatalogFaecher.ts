@@ -13,8 +13,8 @@ export const RouteKatalogFaecher : RouteRecordRaw = {
 		liste: () => import("~/components/faecher/SFaecherAuswahl.vue")
 	},
 	props: {
-		default: (route) => routePropsAuswahlID(route, ROUTE_NAME, injectMainApp().apps.faecher.auswahl),
-		liste: (route) => routePropsAuswahlID(route, ROUTE_NAME, injectMainApp().apps.faecher.auswahl)
+		default: (route) => routePropsAuswahlID(route, injectMainApp().apps.faecher.auswahl),
+		liste: (route) => routePropsAuswahlID(route, injectMainApp().apps.faecher.auswahl)
 	},
 	meta: <RouteAppMeta<FaecherListeEintrag | undefined>> {
 		auswahl: () => routeAuswahlID(ROUTE_NAME, injectMainApp().apps.faecher.auswahl)

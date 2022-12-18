@@ -13,8 +13,8 @@ export const RouteSchueler : RouteRecordRaw = {
 		liste: () => import("~/components/schueler/SSchuelerAuswahl.vue")
 	},
 	props: {
-		default: (route) => routePropsAuswahlID(route, ROUTE_NAME, injectMainApp().apps.schueler.auswahl),
-		liste: (route) => routePropsAuswahlID(route, ROUTE_NAME, injectMainApp().apps.schueler.auswahl)
+		default: (route) => routePropsAuswahlID(route, injectMainApp().apps.schueler.auswahl),
+		liste: (route) => routePropsAuswahlID(route, injectMainApp().apps.schueler.auswahl)
 	},
 	meta: <RouteAppMeta<SchuelerListeEintrag | undefined>> {
 		auswahl: () => routeAuswahlID(ROUTE_NAME, injectMainApp().apps.schueler.auswahl)

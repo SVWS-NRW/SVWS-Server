@@ -32,3 +32,4 @@ export { default as SvwsUiBadge } from "~/Typography/Badge.vue";
 export { default as SvwsUiTooltip } from "~/Tooltip.vue";
 export { default as SvwsUiPopover } from "~/Popover.vue";
 export { default as SvwsUiTable } from "~/Layout/Table/Table.vue";
+export { default as SvwsUiRouterTabBar } from "~/Controls/RouterTabBar.vue";

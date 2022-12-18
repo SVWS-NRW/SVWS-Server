@@ -13,8 +13,8 @@ export const RouteKatalogReligion : RouteRecordRaw = {
 		liste: () => import("~/components/kataloge/religionen/SReligionenAuswahl.vue")
 	},
 	props: {
-		default: (route) => routePropsAuswahlID(route, ROUTE_NAME, injectMainApp().apps.religionen.auswahl),
-		liste: (route) => routePropsAuswahlID(route, ROUTE_NAME, injectMainApp().apps.religionen.auswahl)
+		default: (route) => routePropsAuswahlID(route, injectMainApp().apps.religionen.auswahl),
+		liste: (route) => routePropsAuswahlID(route, injectMainApp().apps.religionen.auswahl)
 	},
 	meta: <RouteAppMeta<ReligionEintrag | undefined>> {
 		auswahl: () => routeAuswahlID(ROUTE_NAME, injectMainApp().apps.religionen.auswahl)

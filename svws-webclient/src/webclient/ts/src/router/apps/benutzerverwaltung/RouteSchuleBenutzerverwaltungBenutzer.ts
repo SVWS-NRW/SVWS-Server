@@ -11,8 +11,8 @@ export const RouteSchuleBenutzerverwaltungBenutzer : RouteRecordRaw = {
 	components: {
 	},
 	props: {
-		default: (route) => routePropsAuswahlID(route, ROUTE_NAME, injectMainApp().apps.benutzer.auswahl),
-		liste: (route) => routePropsAuswahlID(route, ROUTE_NAME, injectMainApp().apps.benutzer.auswahl)
+		default: (route) => routePropsAuswahlID(route, injectMainApp().apps.benutzer.auswahl),
+		liste: (route) => routePropsAuswahlID(route, injectMainApp().apps.benutzer.auswahl)
 	},
 	meta: <RouteAppMeta<BenutzerListeEintrag  | undefined>> {
 		auswahl: () => routeAuswahlID(ROUTE_NAME, injectMainApp().apps.benutzer.auswahl)
