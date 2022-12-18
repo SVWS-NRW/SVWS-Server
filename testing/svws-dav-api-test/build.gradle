@@ -1,0 +1,26 @@
+dependencies {
+	testImplementation 'io.rest-assured:rest-assured:5.3.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.7.1'
+}
+//exclude javadoc for generated model without comments
+testJavadoc {
+    exclude 'de/nrw/schule/svws/api/**'
+}
+
+
+test {
+	onlyIf { 
+		System.properties.containsKey('svws.testing.api.schema')
+		&& System.properties.containsKey('svws.testing.api.port')
+		&& System.properties.containsKey('svws.testing.api.host')
+	}
+	println 'Running DAV-API-Tests with Properties:'
+
+	println 'Host:' + System.getProperty('svws.testing.api.host')
+	println 'Port:' +  System.getProperty('svws.testing.api.port')
+	println 'Schema:' +  System.getProperty('svws.testing.api.schema')	
+	systemProperty 'svws.testing.api.host', System.getProperty('svws.testing.api.host')
+	systemProperty 'svws.testing.api.port', System.getProperty('svws.testing.api.port')
+	systemProperty 'svws.testing.api.schema', System.getProperty('svws.testing.api.schema')
+}
+

@@ -1,0 +1,8 @@
+<propfind xmlns="DAV:"
+          xmlns:card="urn:ietf:params:xml:ns:carddav">
+<prop>
+<resourcetype/>
+<displayname/>
+<card:supported-address-data/>
+</prop>
+</propfind>
