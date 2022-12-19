@@ -286,7 +286,7 @@ public class Tabelle_Schueler extends SchemaTabelle {
 		.setJavaComment("letzte Schule Entlassdatum");
 
 	/** Die Definition der Tabellenspalte LSVersetzung */
-	public SchemaTabelleSpalte col_LSVersetzung = add("LSVersetzung", SchemaDatentypen.VARCHAR, false).setDatenlaenge(2)
+	public SchemaTabelleSpalte col_LSVersetzung = add("LSVersetzung", SchemaDatentypen.VARCHAR, false).setDatenlaenge(10)
 		.setJavaComment("letzte Schule Versetzungsvermerk");
 
 	/** Die Definition der Tabellenspalte LSFachklKennung */

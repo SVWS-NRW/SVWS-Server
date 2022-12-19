@@ -22,6 +22,7 @@ import de.nrw.schule.svws.core.logger.Logger;
 import de.nrw.schule.svws.core.types.KursFortschreibungsart;
 import de.nrw.schule.svws.core.types.PersonalTyp;
 import de.nrw.schule.svws.core.types.SchuelerStatus;
+import de.nrw.schule.svws.core.types.schueler.Herkunftsarten;
 import de.nrw.schule.svws.core.types.schule.Schulform;
 import de.nrw.schule.svws.core.utils.AdressenUtils;
 import de.nrw.schule.svws.db.Benutzer;
@@ -1443,6 +1444,14 @@ public class DBMigrationManager {
 			// Prüfe das Feld LSSchulform 
 			if ((daten.LSSchulform != null) && (daten.LSSchulform.length() > 2))
 				daten.LSSchulform = daten.LSSchulform.substring(0, 2);
+			// Passe das Feld LSVersetzung an und verwende die ID statt des Statistik-Kürzels in der DB
+			if ((daten.LSVersetzung != null)) {
+				Herkunftsarten art = switch (daten.LSVersetzung) {
+					case "0", "3", "4" -> Herkunftsarten.getByKuerzel("0" + daten.LSVersetzung);
+					default -> Herkunftsarten.getByKuerzel(daten.LSVersetzung); 
+				};
+				daten.LSVersetzung = (art == null) ? null : "" + art.daten.id;
+			}
 			schuelerIDs.add(daten.ID);
 		}
 		return true;

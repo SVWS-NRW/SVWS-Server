@@ -23,7 +23,7 @@ public enum Herkunftsarten {
 	 * Gleiche oder niedrigere Jahrgangsstufe gegenüber dem Vorjahr wegen Nichtversetzung (§ 50 Abs. 5 SchulG) 
 	 */
 	NICHTVERSETZUNG(new HerkunftsartKatalogEintrag[] {
-		new HerkunftsartKatalogEintrag(0L, "0", Arrays.asList(
+		new HerkunftsartKatalogEintrag(0L, "00", Arrays.asList(
 			new HerkunftsartKatalogEintragBezeichnung(Schulform.FW, "Nichtversetzung", "Gleiche oder niedrigere Jahrgangsstufe gegenüber dem Vorjahr wegen Nichtversetzung (§ 50 Abs. 5 SchulG)"),
 			new HerkunftsartKatalogEintragBezeichnung(Schulform.HI, "Nichtversetzung", "Gleiche oder niedrigere Jahrgangsstufe gegenüber dem Vorjahr wegen Nichtversetzung (§ 50 Abs. 5 SchulG)"),
 			new HerkunftsartKatalogEintragBezeichnung(Schulform.WF, "Nichtversetzung", "Gleiche oder niedrigere Jahrgangsstufe gegenüber dem Vorjahr wegen Nichtversetzung (§ 50 Abs. 5 SchulG)"),
@@ -48,7 +48,7 @@ public enum Herkunftsarten {
 	 * Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen freiwilliger Wiederholung 
 	 */
 	FREIWILLIGE_WIEDERHOLUNG(new HerkunftsartKatalogEintrag[] {
-		new HerkunftsartKatalogEintrag(3000L, "3", Arrays.asList(
+		new HerkunftsartKatalogEintrag(3000L, "03", Arrays.asList(
 			new HerkunftsartKatalogEintragBezeichnung(Schulform.FW, "Freiwillige Wiederholung", "Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen freiwilliger Wiederholung"),
 			new HerkunftsartKatalogEintragBezeichnung(Schulform.HI, "Freiwillige Wiederholung", "Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen freiwilliger Wiederholung"),
 			new HerkunftsartKatalogEintragBezeichnung(Schulform.WF, "Freiwillige Wiederholung", "Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen freiwilliger Wiederholung"),
@@ -73,7 +73,7 @@ public enum Herkunftsarten {
 	 * Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen Rücktritt 
 	 */
 	RUECKTRITT(new HerkunftsartKatalogEintrag[] {
-		new HerkunftsartKatalogEintrag(3100L, "3", Arrays.asList(
+		new HerkunftsartKatalogEintrag(3100L, "03", Arrays.asList(
 			new HerkunftsartKatalogEintragBezeichnung(Schulform.FW, "Rücktritt", "Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen Rücktritt"),
 			new HerkunftsartKatalogEintragBezeichnung(Schulform.HI, "Rücktritt", "Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen Rücktritt"),
 			new HerkunftsartKatalogEintragBezeichnung(Schulform.WF, "Rücktritt", "Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen Rücktritt"),
@@ -98,7 +98,7 @@ public enum Herkunftsarten {
 	 * Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen Verbleib in der Schulstufe (Förderschwerpunkt geistige Entwicklung) 
 	 */
 	VERBLEIB_IN_SCHULSTUFE(new HerkunftsartKatalogEintrag[] {
-		new HerkunftsartKatalogEintrag(3200L, "3", Arrays.asList(
+		new HerkunftsartKatalogEintrag(3200L, "03", Arrays.asList(
 			new HerkunftsartKatalogEintragBezeichnung(Schulform.FW, "Verbleib in der Schulstufe", "Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen Verbleib in der Schulstufe (Förderschwerpunkt geistige Entwicklung)"),
 			new HerkunftsartKatalogEintragBezeichnung(Schulform.HI, "Verbleib in der Schulstufe", "Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen Verbleib in der Schulstufe (Förderschwerpunkt geistige Entwicklung)"),
 			new HerkunftsartKatalogEintragBezeichnung(Schulform.WF, "Verbleib in der Schulstufe", "Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen Verbleib in der Schulstufe (Förderschwerpunkt geistige Entwicklung)"),
@@ -123,7 +123,7 @@ public enum Herkunftsarten {
 	 * Verbleib in der Schuleingangsphase 
 	 */
 	VERBLEIB_IN_SCHULEINGANGSPHASE(new HerkunftsartKatalogEintrag[] {
-		new HerkunftsartKatalogEintrag(4000L, "4", Arrays.asList(
+		new HerkunftsartKatalogEintrag(4000L, "04", Arrays.asList(
 			new HerkunftsartKatalogEintragBezeichnung(Schulform.FW, "Verbleib in der Schuleingangsphase", "Verbleib in der Schuleingangsphase"),
 			new HerkunftsartKatalogEintragBezeichnung(Schulform.HI, "Verbleib in der Schuleingangsphase", "Verbleib in der Schuleingangsphase"),
 			new HerkunftsartKatalogEintragBezeichnung(Schulform.WF, "Verbleib in der Schuleingangsphase", "Verbleib in der Schuleingangsphase"),
@@ -629,7 +629,8 @@ public enum Herkunftsarten {
 	private static @NotNull HashMap<@NotNull String, Herkunftsarten> getMapHerkunftsartByKuerzel() {
 		if (_mapKuerzel.size() == 0)
 			for (Herkunftsarten j : Herkunftsarten.values())
-				_mapKuerzel.put(j.daten.kuerzel, j);				
+				if (!_mapKuerzel.containsKey(j.daten.kuerzel))
+					_mapKuerzel.put(j.daten.kuerzel, j);
 		return _mapKuerzel;
 	}
 	
