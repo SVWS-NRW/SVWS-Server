@@ -16,7 +16,7 @@
 
 	import { BenutzergruppeListeEintrag, BenutzerListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, ref, Ref, WritableComputedRef } from "vue";
-	import { RouteRecordRaw, useRouter } from "vue-router";
+	import { RouteRecordRaw, useRoute, useRouter } from "vue-router";
 
 	import { injectMainApp, Main } from "~/apps/Main";
 	import { RoutesBenutzerverwaltungChildren } from "~/router/apps/RouteSchuleBenutzerverwaltung"
@@ -25,19 +25,16 @@
 
 	const main: Main = injectMainApp();
 
+	const route = useRoute();
 	const router = useRouter();
 
 	const props = defineProps<{ id?: number; item?: BenutzerListeEintrag | BenutzergruppeListeEintrag }>();
 
-	const currentRoute: Ref<RouteRecordRaw> = ref(RouteSchuleBenutzerverwaltungBenutzer);
-
 	const selectedRoute: WritableComputedRef<RouteRecordRaw> = computed({
 		get(): RouteRecordRaw {
-			return props.item instanceof BenutzerListeEintrag ? RouteSchuleBenutzerverwaltungBenutzer : RouteSchuleBenutzerverwaltungBenutzergruppe;
-			// return currentRoute.value;
+			return route.name === "benutzer" ? RouteSchuleBenutzerverwaltungBenutzer : RouteSchuleBenutzerverwaltungBenutzergruppe;
 		},
 		set(value: RouteRecordRaw) {
-			currentRoute.value = value;
 			router.push({ name: value.name, params: { id: props.id } });
 		}
 	});
