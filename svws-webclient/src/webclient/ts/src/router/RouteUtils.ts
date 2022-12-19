@@ -84,9 +84,10 @@ export function routeAuswahlID<TItem extends { id: number }, TAuswahl extends Ba
 		get(): TItem | undefined {
 			if (route.params.id === undefined)
 				return undefined;
-			if ((auswahl.ausgewaehlt === undefined) || (auswahl.ausgewaehlt.id.toString() !== route.params.id))
-				auswahl.ausgewaehlt = auswahl.liste.find(s => s.id.toString() === route.params.id);
-			return auswahl.ausgewaehlt;
+			let tmp = auswahl.ausgewaehlt;
+			if ((tmp === undefined) || (tmp.id.toString() !== route.params.id))
+				tmp = auswahl.liste.find(s => s.id.toString() === route.params.id);
+			return tmp;
 		},
 		set(value: TItem | undefined) {
 			auswahl.ausgewaehlt = value;

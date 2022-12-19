@@ -1,8 +1,9 @@
-import { RouteRecordRaw } from "vue-router";
+import { RouteLocationNormalized, RouteRecordRaw } from "vue-router";
 import { injectMainApp } from "~/apps/Main";
-import { RouteAppMeta, routePropsAuswahlID } from "~/router/RouteUtils";
+import { RouteAppMeta } from "~/router/RouteUtils";
 import { RouteSchuleBenutzerverwaltungBenutzer } from "~/router/apps/benutzerverwaltung/RouteSchuleBenutzerverwaltungBenutzer";
 import { RouteSchuleBenutzerverwaltungBenutzergruppe } from "~/router/apps/benutzerverwaltung/RouteSchuleBenutzerverwaltungBenutzergruppe";
+import { BaseList } from "~/apps/BaseList";
 
 const ROUTE_NAME: string = "benutzerverwaltung";
 
@@ -20,12 +21,34 @@ export const RouteSchuleBenutzerverwaltung : RouteRecordRaw = {
 		liste: () => import("~/components/schule/benutzerverwaltung/SBenutzerverwaltungAuswahl.vue")
 	},
 	props: {
-		default: (route) => routePropsAuswahlID(route, injectMainApp().apps.benutzer.auswahl),
-		liste: (route) => routePropsAuswahlID(route, injectMainApp().apps.benutzer.auswahl)
+		default: (route) => routeSchuleBenutzerverwaltungPropsAuswahlID(route),
+		liste: (route) => routeSchuleBenutzerverwaltungPropsAuswahlID(route)
 	},
 	meta: <RouteAppMeta<undefined>> {
 		auswahl: () => {}
 	},
 	redirect: to => to.path + "/benutzer",
 	children: RoutesBenutzerverwaltungChildren
+}
+
+
+
+/**
+ * EineMethode zum Erzeugen der Properties Route in der Benutzerverwaltung
+ * 
+ * @param route     die aktuelle Route, für die die Properties erzeugt werden sollen
+ * 
+ * @returns das Objekt mit den Werten für die Properties
+ */
+export function routeSchuleBenutzerverwaltungPropsAuswahlID(route: RouteLocationNormalized) {
+	const routename = route.name?.toString();
+	if ((routename === undefined) || (route.params.id === undefined))
+		return { id: undefined, item: undefined, routename: routename };
+	const id = parseInt(route.params.id as string);
+	const item = (routename === "benutzer")
+		? injectMainApp().apps.benutzer.auswahl.liste.find(s => s.id === id)
+		: injectMainApp().apps.benutzergruppe.auswahl.liste.find(s => s.id === id);
+	if (item === undefined)
+		return { id: undefined, item: undefined, routename: routename };
+	return { id: id, item: item, routename: routename };
 }

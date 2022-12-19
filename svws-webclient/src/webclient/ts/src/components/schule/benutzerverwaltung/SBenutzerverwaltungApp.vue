@@ -2,8 +2,7 @@
 	<div class="flex h-full flex-row">
 		<div class="flex w-full flex-col">
 			<svws-ui-header :badge="inputId" badge-variant="light" badge-size="normal">
-				<span> {{ inputBezeichnung }} </span>
-				<svws-ui-badge variant="highlight" size="normal"> {{ anzeigename }} </svws-ui-badge>
+				<span> {{ anzeigename }} </span>
 			</svws-ui-header>
 			<svws-ui-router-tab-bar :routes="RoutesBenutzerverwaltungChildren" v-model="selectedRoute">
 				<router-view />
@@ -30,37 +29,29 @@
 
 	const props = defineProps<{ id?: number; item?: BenutzerListeEintrag | BenutzergruppeListeEintrag }>();
 
+	const isRouteBenutzer: ComputedRef<boolean> = computed(() => {
+ 		return route.name?.toString() === "benutzer";
+	});
+
 	const selectedRoute: WritableComputedRef<RouteRecordRaw> = computed({
 		get(): RouteRecordRaw {
-			return route.name === "benutzer" ? RouteSchuleBenutzerverwaltungBenutzer : RouteSchuleBenutzerverwaltungBenutzergruppe;
+			return isRouteBenutzer.value ? RouteSchuleBenutzerverwaltungBenutzer : RouteSchuleBenutzerverwaltungBenutzergruppe;
 		},
 		set(value: RouteRecordRaw) {
 			router.push({ name: value.name, params: { id: props.id } });
 		}
 	});
 
-	const anzeigename: ComputedRef<string | false> = computed(() => {
-		if (main.apps.benutzer.auswahl.ausgewaehlt)
-			return main.apps.benutzer.auswahl.ausgewaehlt?.anzeigename.toString();
-		if (main.apps.benutzergruppe.auswahl.ausgewaehlt)
-			return main.apps.benutzergruppe.auswahl.ausgewaehlt.bezeichnung.toString();
-		return false;
+	const anzeigename: ComputedRef<string> = computed(() => {
+		if (props.item === undefined)
+			return "";
+		return isRouteBenutzer.value
+			? ((props.item as BenutzerListeEintrag).anzeigename.toString() || "")
+			: ((props.item as BenutzergruppeListeEintrag).bezeichnung.toString() || "");
 	});
 
-	const inputId: ComputedRef<string | false> = computed(() => {
-		if (main.apps.benutzer.auswahl.ausgewaehlt)
-			return "ID: " + main.apps.benutzer.auswahl.ausgewaehlt.id;
-		if (main.apps.benutzergruppe.auswahl.ausgewaehlt)
-			return "ID: " + main.apps.benutzergruppe.auswahl.ausgewaehlt.id;
-		return false;
-	});
-
-	const inputBezeichnung: ComputedRef<string | undefined> = computed(() => {
-		if (main.apps.benutzer.auswahl.ausgewaehlt)
-			return main.apps.benutzer.dataBenutzer.daten?.anzeigename?.toString();
-		if (main.apps.benutzergruppe.auswahl.ausgewaehlt)
-			return main.apps.benutzergruppe.dataBenutzergruppe.manager?.getBezeichnung().valueOf();
-		return "";
+	const inputId: ComputedRef<string> = computed(() => {
+		return "ID: " + props.id;
 	});
 
 </script>

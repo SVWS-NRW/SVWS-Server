@@ -11,12 +11,10 @@
 </template>
 
 <script setup lang="ts">
-	import { BenutzergruppeListeEintrag, BenutzerManager } from "@svws-nrw/svws-core-ts";
+	import { BenutzerManager } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, Ref, ref, WritableComputedRef } from "vue";
 
 	import { injectMainApp, Main } from "~/apps/Main";
-	import { routeAppAuswahl } from "~/router/RouteUtils";
-	import { RouteSchuleBenutzerverwaltungBenutzergruppe } from "~/router/apps/benutzerverwaltung/RouteSchuleBenutzerverwaltungBenutzergruppe";
 
 	const main: Main = injectMainApp();
 	const app = main.apps.benutzer;
@@ -46,31 +44,5 @@
 			app.dataBenutzer.setAnmeldename(val);
 		}
 	});
-
-
-	// Auswahlliste der Benutzergruppen
-
-	const benutzergruppen_cols = [
-		{ key: "id", label: "ID", sortable: true },
-		{ key: "bezeichnung", label: "Bezeichnung", sortable: true }
-	];
-
-	const benutzergruppen_suche: Ref<string> = ref("");
-
-	const benutzergruppen_rows: ComputedRef<BenutzergruppeListeEintrag[] | undefined> = computed(() => {
-		return main.apps.benutzergruppe.auswahl.liste;
-	});
-
-	const benutzergruppen_rows_gefiltert: ComputedRef<BenutzergruppeListeEintrag[] | undefined> = computed(() => {
-		if (benutzergruppen_rows.value === undefined) 
-			return undefined;
-		const rowsValue: BenutzergruppeListeEintrag[] = benutzergruppen_rows.value;
-		return (benutzergruppen_suche.value) 
-			? rowsValue.filter((e: BenutzergruppeListeEintrag) => e.bezeichnung.toLocaleLowerCase().includes(benutzergruppen_suche.value.toLocaleLowerCase()))
-			: rowsValue;
-	});
-
-	const benutzergruppen_ausgewaehlt = routeAppAuswahl(RouteSchuleBenutzerverwaltungBenutzergruppe);
-	const benutzergruppen_selection = ref([]);
 
 </script>

@@ -17,9 +17,10 @@ export class DataBenutzergruppe extends BaseData<BenutzergruppeDaten, Benutzergr
 	 * @returns {Promise<BenutzergruppeDaten>} Die Daten als Promise
 	 */
 	public async on_select(): Promise<BenutzergruppeDaten | undefined> {
-		this.manager = undefined;
-		if (!this.selected_list_item) 
+		if (!this.selected_list_item) {
+			this.manager = undefined;
 			return super.unselect();
+		}
 		const gruppendaten = await super._select((eintrag: BenutzergruppeListeEintrag) =>
 			App.api.getBenutzergruppeDaten(App.schema, eintrag.id)
 		);

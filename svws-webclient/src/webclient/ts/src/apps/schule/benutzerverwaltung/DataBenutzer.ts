@@ -16,9 +16,10 @@ export class DataBenutzer extends BaseData<BenutzerDaten, BenutzerListeEintrag, 
 	 * @returns {Promise<BenutzerDaten>} Die Daten als Promise
 	 */
 	public async on_select(): Promise<BenutzerDaten | undefined> {
-		this.manager = undefined;
-		if (!this.selected_list_item) 
+		if (!this.selected_list_item)  {
+			this.manager = undefined;
 			return super.unselect();
+		}
 		const benutzerdaten = await super._select((eintrag: BenutzerListeEintrag) =>
 			App.api.getBenutzerDaten(App.schema, eintrag.id)
 		);
@@ -51,7 +52,6 @@ export class DataBenutzer extends BaseData<BenutzerDaten, BenutzerListeEintrag, 
 	 public async setAnzeigename(anzeigename: string): Promise<void> {
 		if (!this.manager) 
 			return;
-		console.log(anzeigename);
 		await App.api.setAnzeigename(anzeigename,App.schema,this.manager.getID());
 		for (var index in App.apps.benutzer.auswahl.liste) {
 			if (App.apps.benutzer.auswahl.liste[index].id === App.apps.benutzer.dataBenutzer.daten?.id)
@@ -70,7 +70,6 @@ export class DataBenutzer extends BaseData<BenutzerDaten, BenutzerListeEintrag, 
 	 public async setAnmeldename(anmeldename: string): Promise<void> {
 		if (!this.manager) 
 			return;
-		console.log(anmeldename);
 		await App.api.setAnmeldename(anmeldename, App.schema, this.manager.getID());
 		for (var index in App.apps.benutzer.auswahl.liste){
 			if (App.apps.benutzer.auswahl.liste[index].id === App.apps.benutzer.dataBenutzer.daten?.id)
@@ -92,7 +91,6 @@ export class DataBenutzer extends BaseData<BenutzerDaten, BenutzerListeEintrag, 
 		const bg_ids:Vector<Number> = new Vector<Number>();
 		bg_ids.add(Number(this.manager.getID()));	
 		const result = await App.api.addBenutzergruppeBenutzer(bg_ids, App.schema,bg_id) as BenutzergruppeDaten;
-		console.log(result);
 		this.manager.addToGruppe(result);
 		
 		

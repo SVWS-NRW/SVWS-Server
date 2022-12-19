@@ -3,7 +3,8 @@ import { computed, WritableComputedRef } from "vue";
 import { RouteRecordRaw, useRoute, useRouter } from "vue-router";
 import { BaseList } from "~/apps/BaseList";
 import { injectMainApp } from "~/apps/Main";
-import { RouteAppMeta, routePropsAuswahlID } from "~/router/RouteUtils";
+import { RouteAppMeta } from "~/router/RouteUtils";
+import { routeSchuleBenutzerverwaltungPropsAuswahlID } from "~/router/apps/RouteSchuleBenutzerverwaltung";
 
 const ROUTE_NAME: string = "benutzer";
 
@@ -11,7 +12,7 @@ export const RouteSchuleBenutzerverwaltungBenutzer : RouteRecordRaw = {
 	name: ROUTE_NAME,
 	path: "/schule/benutzerverwaltung/:id(\\d+)?/benutzer",
 	component: () => import("~/components/schule/benutzerverwaltung/daten/SBenutzer.vue"),
-	props: (route) => routePropsAuswahlID(route, injectMainApp().apps.benutzer.auswahl),
+	props: (route) => routeSchuleBenutzerverwaltungPropsAuswahlID(route),
 	meta: <RouteAppMeta<BenutzerListeEintrag  | undefined>> {
 		auswahl: () => routeBenutzerverwaltungBenutzerAuswahlID(ROUTE_NAME, injectMainApp().apps.benutzer.auswahl),
 		text: "Benutzer"
@@ -40,9 +41,10 @@ export function routeBenutzerverwaltungBenutzerAuswahlID<TItem extends { id: num
 				return undefined;
 			if (route.name?.toString() !== name)
 				return undefined;
-			if ((auswahl.ausgewaehlt === undefined) || (auswahl.ausgewaehlt.id.toString() !== route.params.id))
-				auswahl.ausgewaehlt = auswahl.liste.find(s => s.id.toString() === route.params.id);
-			return auswahl.ausgewaehlt;
+			let tmp = auswahl.ausgewaehlt;
+			if ((tmp === undefined) || (tmp.id.toString() !== route.params.id))
+				tmp = auswahl.liste.find(s => s.id.toString() === route.params.id);
+			return tmp;
 		},
 		set(value: TItem | undefined) {
 			auswahl.ausgewaehlt = value;
