@@ -173,8 +173,8 @@ export class DataGostKursblockung extends BaseData<
 	}
 
 	/** passt einen Kurs an */
-	public async patch_kurs(data: GostBlockungKurs): Promise<void> {
-		await App.api.patchGostBlockungKurs(data, App.schema, data.id);
+	public async patch_kurs(kurs_id: number, data: Partial<GostBlockungKurs>): Promise<void> {
+		await App.api.patchGostBlockungKurs(data, App.schema, kurs_id);
 	}
 
 	/**Ergänzt eine Regel in der Blockung

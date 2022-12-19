@@ -164,9 +164,9 @@ const koop: WritableComputedRef<boolean> =
 	},
 	set(value: boolean) {
 		const kurs = app.dataKursblockung.datenmanager?.getKurs(props.kurs.id)
-		if (!kurs) return
-		kurs.istKoopKurs = Boolean(value);
-		app.dataKursblockung.patch_kurs(kurs);
+		if (!kurs) 
+			return;
+		app.dataKursblockung.patch_kurs(kurs.id, { istKoopKurs: Boolean(value) });
 	}});
 
 const suffix: WritableComputedRef<string> =
@@ -176,9 +176,9 @@ const suffix: WritableComputedRef<string> =
 	},
 	set(value: string) {
 		const kurs = app.dataKursblockung.datenmanager?.getKurs(props.kurs.id)
-		if (!kurs) return
-		kurs.suffix = String(value);
-		app.dataKursblockung.patch_kurs(kurs);
+		if (!kurs) 
+			return;
+		app.dataKursblockung.patch_kurs(kurs.id, { suffix: String(value) });
 	}});
 
 const manager: ComputedRef<GostBlockungsergebnisManager | undefined> =
