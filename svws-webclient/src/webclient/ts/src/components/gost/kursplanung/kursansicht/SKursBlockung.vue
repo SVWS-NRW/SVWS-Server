@@ -297,7 +297,8 @@ const kurslehrer: ComputedRef<String> =
 		if (props.kurs.lehrer.size() === 0)
 			return "";
 		const kuerzel = props.kurs.lehrer.get(0).kuerzel;
-		return props.kurs.lehrer.size() > 1 ? kuerzel + "+":kuerzel;
+		const str = props.kurs.lehrer.size() > 1 ? kuerzel + "+":kuerzel;
+		return `(${str})`
 	})
 
 const fixieren_regel_toggle = () => {

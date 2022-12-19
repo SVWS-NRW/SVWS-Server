@@ -217,6 +217,15 @@ export class DataGostKursblockung extends BaseData<
 		return regel
 	}
 
+	/**Patcht eine Regel in der Blockung mit der jeweiligen id
+	 * @param {number} regel_id
+	 */
+	public async patch_blockung_regel(data: GostBlockungRegel) {
+		this.pending = true;
+		await App.api.patchGostBlockungRegel(data, App.schema, data.id);
+		this.pending = false;
+	}
+
 	/**Ergänzt eine Schiene in der Blockung für das angegebene
 	 * @returns {Promise<GostBlockungSchiene|undefined>} Ein Schienenobjekt bei Erfolg
 	 */	
