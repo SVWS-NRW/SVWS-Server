@@ -353,7 +353,7 @@ OP_Schulformen;OP_POKrz;OP_Krz;OP_Abgangsart_B;OP_Abgangsart_NB;OP_Art;OP_Typ;OP
 -R-SR-GE-;R/APO-SI05/5-10;R/APO-SI05/AGZ_OHSA10;C;;A;;A;Abgangszeugnis ohne Gleichstellung zum Hauptschulabschluss nach Kl. 10;;-10-;;;2;;
 -R-SR-GE-;R/APO-SI05/5-10;R/APO-SI05/AGZ_MHSA10;D;;A;;A;Abgangszeugnis mit Gleichstellung zum Hauptschulabschluss nach Kl. 10;;-10-;;;4;;
 -GE-;GE/APO-SI05/5-10;GE/APO-SI05/AGZ;A;;A;;A;Abgangszeugnis nach frühestens 10 Schulbesuchsjahren;;-05-06-07-08-09-;;;0;;
--GE-;GE/APO-SI05/5-10;GE/APO-SI05/OA;C;;A;;A;Ohne Abschluss;;-10-;;;0;;
+-GE-;GE/APO-SI05/5-10;GE/APO-SI05/OA;C;;A;;A;Ohne Abschluss;;-09-10-;;;0;;
 -GY-SG-;GY/APO-SI05/5-10;GY/APO-SI05/HA_OV;B;;A;;A;HA: Abgangszeugnis mit Gleichstellung zum Hauptschulabschluss (ohne Versetzungsvermerk);§38(3);-09-;;;0;;
 -GY-SG-;GY/APO-SI05/5-10;GY/APO-SI05/AGZ;A;;A;;A;Abgangszeugnis nach frühestens 10 Schulbesuchsjahren;;-06-07-08-;;;0;;
 -GY-SG-;GY/APO-SI05/5-10;GY/APO-SI05/AGZ_OHSA;A;;A;;A;Abgangszeugnis ohne Gleichstellung zum Hauptschulabschluss;;-10-;;;0;;
