@@ -7,14 +7,11 @@ const ROUTE_NAME: string = "benutzer";
 
 export const RouteSchuleBenutzerverwaltungBenutzer : RouteRecordRaw = {
 	name: ROUTE_NAME,
-	path: "/schule/benutzerverwaltung/benutzer/:id(\\d+)?",
-	components: {
-	},
-	props: {
-		default: (route) => routePropsAuswahlID(route, injectMainApp().apps.benutzer.auswahl),
-		liste: (route) => routePropsAuswahlID(route, injectMainApp().apps.benutzer.auswahl)
-	},
+	path: "/schule/benutzerverwaltung/:id(\\d+)?/benutzer",
+	component: () => import("~/components/schule/benutzerverwaltung/daten/SBenutzer.vue"),
+	props: (route) => routePropsAuswahlID(route, injectMainApp().apps.benutzer.auswahl),
 	meta: <RouteAppMeta<BenutzerListeEintrag  | undefined>> {
-		auswahl: () => routeAuswahlID(ROUTE_NAME, injectMainApp().apps.benutzer.auswahl)
+		auswahl: () => routeAuswahlID(ROUTE_NAME, injectMainApp().apps.benutzer.auswahl),
+		text: "Benutzer"
 	}
 }

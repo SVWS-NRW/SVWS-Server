@@ -5,24 +5,42 @@
 				<span> {{ inputBezeichnung }} </span>
 				<svws-ui-badge variant="highlight" size="normal"> {{ anzeigename }} </svws-ui-badge>
 			</svws-ui-header>
-			<svws-ui-tab-bar>
-				<template #tabs>
-					<svws-ui-tab-button> Daten </svws-ui-tab-button>
-				</template>
-				<template #panels>
-					<svws-ui-tab-panel> <s-benutzerverwaltung-daten /> </svws-ui-tab-panel>
-				</template>
-			</svws-ui-tab-bar>
+			<svws-ui-router-tab-bar :routes="RoutesBenutzerverwaltungChildren" v-model="selectedRoute">
+				<router-view />
+			</svws-ui-router-tab-bar>
 		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
-	import { computed, ComputedRef } from "vue";
+
+	import { BenutzergruppeListeEintrag, BenutzerListeEintrag } from "@svws-nrw/svws-core-ts";
+	import { computed, ComputedRef, ref, Ref, WritableComputedRef } from "vue";
+	import { RouteRecordRaw, useRouter } from "vue-router";
 
 	import { injectMainApp, Main } from "~/apps/Main";
+	import { RoutesBenutzerverwaltungChildren } from "~/router/apps/RouteSchuleBenutzerverwaltung"
+	import { RouteSchuleBenutzerverwaltungBenutzer } from "~/router/apps/benutzerverwaltung/RouteSchuleBenutzerverwaltungBenutzer";
+	import { RouteSchuleBenutzerverwaltungBenutzergruppe } from "~/router/apps/benutzerverwaltung/RouteSchuleBenutzerverwaltungBenutzergruppe";
 
 	const main: Main = injectMainApp();
+
+	const router = useRouter();
+
+	const props = defineProps<{ id?: number; item?: BenutzerListeEintrag | BenutzergruppeListeEintrag }>();
+
+	const currentRoute: Ref<RouteRecordRaw> = ref(RouteSchuleBenutzerverwaltungBenutzer);
+
+	const selectedRoute: WritableComputedRef<RouteRecordRaw> = computed({
+		get(): RouteRecordRaw {
+			return props.item instanceof BenutzerListeEintrag ? RouteSchuleBenutzerverwaltungBenutzer : RouteSchuleBenutzerverwaltungBenutzergruppe;
+			// return currentRoute.value;
+		},
+		set(value: RouteRecordRaw) {
+			currentRoute.value = value;
+			router.push({ name: value.name, params: { id: props.id } });
+		}
+	});
 
 	const anzeigename: ComputedRef<string | false> = computed(() => {
 		if (main.apps.benutzer.auswahl.ausgewaehlt)
