@@ -107,7 +107,6 @@
 <script setup lang="ts">
 import {
 	GostBlockungKurs,
-	GostBlockungKursLehrer,
 	GostBlockungRegel,
 	GostBlockungSchiene,
 	GostBlockungsergebnisKurs,

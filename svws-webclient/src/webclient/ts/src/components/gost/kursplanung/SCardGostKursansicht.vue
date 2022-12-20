@@ -12,8 +12,8 @@
 							<div class="flex flex-col justify-end">
 								<div class="flex flex-row gap-2">
 									Lehrkraft:
-											<svws-ui-multi-select v-model="kurslehrer" class="w-52" autocomplete :item-filter="lehrer_filter" :items="main.apps.lehrer.auswahl.liste" :item-text="(l: LehrerListeEintrag)=> `${l.nachname}, ${l.vorname} (${l.kuerzel})`"/>
-											<svws-ui-icon class="cursor-pointer text-red-400" @click="remove_kurslehrer"><i-ri-delete-bin-2-line /></svws-ui-icon>
+											<svws-ui-multi-select v-model="kurslehrer" class="w-52" autocomplete :item-filter="lehrer_filter" removable
+												:items="main.apps.lehrer.auswahl.liste" :item-text="(l: LehrerListeEintrag)=> `${l.nachname}, ${l.vorname} (${l.kuerzel})`"/>
 								</div>
 							</div>
 						</div>
@@ -150,9 +150,10 @@
 <script setup lang="ts">
 	import {
 		GostBlockungKurs,
-		GostBlockungKursLehrer,
+		GostBlockungRegel,
 		GostBlockungSchiene,
 		GostBlockungsergebnisManager,
+		GostKursblockungRegelTyp,
 		GostStatistikFachwahl,
 		LehrerListeEintrag,
 		List,
@@ -163,13 +164,11 @@
 
 	import { injectMainApp, Main, mainApp } from "~/apps/Main";
 	import { lehrer_filter } from "~/helfer"
-import { Lehrer } from "~/apps/lehrer/Lehrer";
 
 	const main: Main = injectMainApp();
 	const app = main.apps.gost
 
 	const edit_schienenname: Ref<GostBlockungSchiene|undefined> = ref()
-	const new_kurs_lehrer: Ref<boolean> = ref(false);
 
 	const sort_by: WritableComputedRef<UserConfigKeys['gost.kursansicht.sortierung']> =
 		computed({
@@ -235,12 +234,12 @@ import { Lehrer } from "~/apps/lehrer/Lehrer";
 							if (!lehrer || !app.dataKursblockung.datenmanager || !app.listAbiturjahrgangSchueler.filter.kurs)
 								throw new Error("Fehler beim Anlegen des Kurslehrers");
 							app.dataKursblockung.datenmanager.patchOfKursAddLehrkraft(app.listAbiturjahrgangSchueler.filter.kurs.id, lehrer);
+							add_lehrer_regel();
 						})
-
-				}
+					}
+				else remove_kurslehrer()
 			}
 		})
-	
 
 	function remove_kurslehrer() {
 		if (!app.dataKursblockung.datenmanager || !app.listAbiturjahrgangSchueler.filter.kurs || !kurslehrer.value)
@@ -249,6 +248,27 @@ import { Lehrer } from "~/apps/lehrer/Lehrer";
 		app.dataKursblockung.datenmanager.patchOfKursRemoveLehrkraft(app.listAbiturjahrgangSchueler.filter.kurs.id, kurslehrer.value.id);
 	}
 	
+	const lehrer_regel: ComputedRef<GostBlockungRegel | undefined> =
+		computed(()=> {
+			const regel_typ = GostKursblockungRegelTyp.LEHRKRAFT_BEACHTEN
+			const regeln = app.dataKursblockung.datenmanager?.getMengeOfRegeln()
+			if (!regeln)
+				return undefined;
+			for (const r of regeln)
+				if (r.typ === regel_typ.typ)
+					return r;
+		})
+
+	function add_lehrer_regel() {
+		if (lehrer_regel !== undefined)
+			return;
+		const r = new GostBlockungRegel();
+		const regel_typ = GostKursblockungRegelTyp.LEHRKRAFT_BEACHTEN
+		r.typ = regel_typ.typ;
+		r.parameter.add(1);
+		app.dataKursblockung.add_blockung_regel(r);
+	}
+
 	function getAnzahlSchuelerSchiene(idSchiene: number): number {
 		return manager.value?.getOfSchieneAnzahlSchueler(idSchiene) || 0;
 	};
