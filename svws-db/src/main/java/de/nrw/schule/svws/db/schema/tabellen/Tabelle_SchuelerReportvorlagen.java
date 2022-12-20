@@ -48,7 +48,7 @@ public class Tabelle_SchuelerReportvorlagen extends SchemaTabelle {
 	 */
 	public Tabelle_SchuelerReportvorlagen() {
 		super("SchuelerReportvorlagen", SchemaRevisionen.REV_0);
-		setMigrate(true);
+		setMigrate(false);
 		setImportExport(true);
 		setJavaSubPackage("schild");
 		setJavaClassName("DTOSchuelerReportvorlagen");
