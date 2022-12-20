@@ -13,7 +13,7 @@
 				<template #panels>
 					<svws-ui-tab-panel>
 						<!-- TODO Implementierung Jahrgangsdaten beim Server benötigt -->
-						<!-- <s-jahrgangsdaten-daten /> -->
+						<s-jahrgang-daten />
 					</svws-ui-tab-panel>
 				</template>
 			</svws-ui-tab-bar>

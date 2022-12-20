@@ -33,7 +33,7 @@
 		string | null
 	>({
 		get(): string | null {
-			if (app && app.schulbesuchsdaten.daten?.entlassungDatum) {
+			if (app && app.schulbesuchsdaten.daten?.entlassungDatum && app.schulbesuchsdaten.daten?.entlassungDatum !== null) {
 				return String(app.schulbesuchsdaten.daten.entlassungDatum);
 			}
 			return null;

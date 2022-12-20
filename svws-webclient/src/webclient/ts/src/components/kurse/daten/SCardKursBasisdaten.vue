@@ -14,10 +14,10 @@
 				/>
 				<svws-ui-multi-select
 					v-model="inputIdJahrgaenge"
+					tags
+					title="Jahrgaenge"
 					:items="listJahrgaenge"
 					:item-text="(item: Jahrgaenge) => item?.daten.kuerzel || ''"
-					tags
-					title="Jahrgänge"
 				/>
 				<svws-ui-text-input
 					v-model="inputIdFach"
@@ -48,7 +48,6 @@
 
 	import { Jahrgaenge, JahrgangsListeEintrag, LehrerListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
 	import { injectMainApp, Main } from "~/apps/Main";
-	import { Lehrer } from "~/apps/lehrer/Lehrer";
 
 	const main: Main = injectMainApp();
 	const app = main.apps.kurse;

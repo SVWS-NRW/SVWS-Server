@@ -52,7 +52,11 @@
 	});
 	const inputAufnehmdendBestaetigt = computed<boolean | null>({
 		get(): boolean | null {
-			if (app && app.schulbesuchsdaten?.daten?.aufnehmdendBestaetigt) {
+			if (
+				app &&
+				app.schulbesuchsdaten?.daten?.aufnehmdendBestaetigt &&
+				app.schulbesuchsdaten?.daten?.aufnehmdendBestaetigt !== null
+			) {
 				return app.schulbesuchsdaten.daten.aufnehmdendBestaetigt.valueOf();
 			}
 			return null;

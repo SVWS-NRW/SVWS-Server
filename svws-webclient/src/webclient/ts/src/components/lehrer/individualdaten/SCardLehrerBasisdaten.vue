@@ -87,7 +87,7 @@
 	const main: Main = injectMainApp();
 	const app = main.apps.lehrer;
 
-	const inputKatalogStaatsangehoerigkeit: ComputedRef<Nationalitaeten[]> = computed(() => 
+	const inputKatalogStaatsangehoerigkeit: ComputedRef<Nationalitaeten[]> = computed(() =>
 		Nationalitaeten.values()
 	);
 	const inputKatalogGeschlecht: ComputedRef<Geschlecht[]> = computed(() =>
@@ -151,7 +151,7 @@
 
 	const inputGeburtsdatum: WritableComputedRef<string> = computed({
 		get(): string {
-			return String(daten.value.geburtsdatum);
+			return daten.value?.geburtsdatum ? String(daten.value.geburtsdatum) : '';
 		},
 		set(val) {
 			app.stammdaten.patch({ geburtsdatum: val });
@@ -182,7 +182,7 @@
 
 	const inputTitel: WritableComputedRef<string | undefined> = computed({
 		get(): string | undefined {
-			return String(daten.value.titel);
+			return daten.value?.titel !== null ? String(daten.value.titel) : '';
 		},
 		set(val) {
 			app.stammdaten.patch({ titel: val });
@@ -192,7 +192,7 @@
 	const inputAmtsbezeichnung: WritableComputedRef<string | undefined> =
 		computed({
 			get(): string | undefined {
-				return String(daten.value.amtsbezeichnung);
+				return daten.value?.amtsbezeichnung ? String(daten.value.amtsbezeichnung) : '';
 			},
 			set(val) {
 				app.stammdaten.patch({ amtsbezeichnung: val });

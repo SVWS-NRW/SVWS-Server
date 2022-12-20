@@ -5,8 +5,7 @@
 </template>
 
 <script setup lang="ts">
-	import { BenutzergruppenManager, BenutzerKompetenz, SchuelerStundenplanUnterricht } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, WritableComputedRef } from "vue";
+	import { SchuelerStundenplanUnterricht } from "@svws-nrw/svws-core-ts";
 	import { injectMainApp, Main } from "~/apps/Main";
 
     const props = defineProps({

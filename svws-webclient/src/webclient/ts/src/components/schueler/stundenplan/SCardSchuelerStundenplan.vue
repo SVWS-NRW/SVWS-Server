@@ -38,12 +38,12 @@
 <script setup lang="ts">
 	import { computed, ComputedRef, Ref, ref, watch, WritableComputedRef } from "vue";
 
-	import { SchuelerStundenplan, SchuelerStundenplanManager, SchuelerStundenplanUnterricht, StundenplanListeEintrag, ZulaessigesFach } from "@svws-nrw/svws-core-ts";
+	import { SchuelerStundenplanManager, StundenplanListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { injectMainApp, Main } from "~/apps/Main";
 
 	const main: Main = injectMainApp();
 	const app = main.apps.schueler;
-	
+
 	const liste: WritableComputedRef<StundenplanListeEintrag[]> = computed(() => {
 			return app.listStundenplaene.liste
 	});

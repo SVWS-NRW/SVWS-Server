@@ -70,66 +70,87 @@
 		}
 	});
 	const inputVorigeAllgHerkunft = computed({
-		get(): string {
+		get(): string | null {
+			if(app.schulbesuchsdaten.daten?.vorigeAllgHerkunft !== null) {
 			return String(app.schulbesuchsdaten.daten?.vorigeAllgHerkunft);
+			}
+			return null
 		},
-		set(val: string) {
+		set(val: string | null) {
 			val;
 			// TODO Server-Implementierung: this.app.schulbesuchsdaten.patch({ vorigeAllgHerkunft:  val });
 		}
 	});
 	const inputVorigeEntlassDatum = computed({
-		get(): string {
-			return String(app.schulbesuchsdaten.daten?.vorigeEntlassdatum);
+		get(): string | null {
+			if(app.schulbesuchsdaten.daten?.vorigeEntlassdatum !== null) {
+				return String(app.schulbesuchsdaten.daten?.vorigeEntlassdatum);
+			}
+			return null;
 		},
-		set(val: string) {
+		set(val: string | null) {
 			val;
 			// TODO Server-Implementierung: this.app.schulbesuchsdaten.patch({ vorigeEntlassdatum:  val });
 		}
 	});
 	const inputVorigeEntlassjahrgang = computed({
-		get(): string {
-			return String(app.schulbesuchsdaten.daten?.vorigeEntlassjahrgang);
+		get(): string | null {
+			if(app.schulbesuchsdaten.daten?.vorigeEntlassjahrgang !== null) {
+				return String(app.schulbesuchsdaten.daten?.vorigeEntlassjahrgang);
+			}
+			return null;
 		},
-		set(val: string) {
+		set(val: string | null) {
 			val;
 			// TODO Server-Implementierung: this.app.schulbesuchsdaten.patch({ vorigeEntlassjahrgang:  val });
 		}
 	});
 	const inputVorigeArtLetzteVersetzung = computed({
-		get(): string {
+		get(): string | null {
+			if(app.schulbesuchsdaten.daten?.vorigeArtLetzteVersetzung !== null) {
 			return String(
 				app.schulbesuchsdaten.daten?.vorigeArtLetzteVersetzung
 			);
+			}
+			return null;
 		},
-		set(val: string) {
+		set(val: string | null) {
 			val;
 			// TODO Server-Implementierung: this.app.schulbesuchsdaten.patch({ vorigeArtLetzteVersetzung:  val });
 		}
 	});
 	const inputVorigeBemerkung = computed({
-		get(): string {
+		get(): string | null {
+			if(app.schulbesuchsdaten.daten?.vorigeBemerkung !== null) {
 			return String(app.schulbesuchsdaten.daten?.vorigeBemerkung);
+			}
+			return null;
 		},
-		set(val: string) {
+		set(val: string | null) {
 			val;
 			// TODO Server-Implementierung: this.app.schulbesuchsdaten.patch({ vorigeBemerkung:  val });
 		}
 	});
 	const inputVorigeEntlassgrundID = computed({
-		get(): string {
+		get(): string | null {
+			if(app.schulbesuchsdaten.daten?.vorigeEntlassgrundID !== null) {
 			return String(app.schulbesuchsdaten.daten?.vorigeEntlassgrundID);
+			}
+			return null;
 		},
-		set(val: string) {
+		set(val: string | null) {
 			val;
 			// TODO Server-Implementierung: this.app.schulbesuchsdaten.patch({ vorigeEntlassgrundID:  val });
 		}
 	});
 	const inputVorigeAbschlussartID = computed({
-		get(): string {
-			return String(app.schulbesuchsdaten.daten?.vorigeAbschlussartID);
+		get(): string | null {
+			if(app.schulbesuchsdaten.daten?.vorigeAbschlussartID !== null) {
+				return String(app.schulbesuchsdaten.daten?.vorigeAbschlussartID);
+			}
+			return null;
 		},
-		set(val: string) {
+		set(val: string | null) {
 			val;
 			// TODO Server-Implementierung: this.app.schulbesuchsdaten.patch({ vorigeAbschlussartID:  val });
 		}

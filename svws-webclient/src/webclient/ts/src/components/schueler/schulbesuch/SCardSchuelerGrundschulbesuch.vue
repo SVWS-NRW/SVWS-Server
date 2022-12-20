@@ -35,7 +35,7 @@
 			get(): number | null {
 				if (
 					app &&
-					app.schulbesuchsdaten.daten?.grundschuleEinschulungsjahr
+					app.schulbesuchsdaten.daten?.grundschuleEinschulungsjahr !== null
 				) {
 					return Number(
 						app.schulbesuchsdaten.daten?.grundschuleEinschulungsjahr
@@ -55,7 +55,7 @@
 		get(): number | null {
 			if (
 				app &&
-				app.schulbesuchsdaten.daten?.grundschuleEinschulungsartID
+				app.schulbesuchsdaten.daten?.grundschuleEinschulungsartID !== null
 			) {
 				return Number(
 					app.schulbesuchsdaten.daten?.grundschuleEinschulungsartID
@@ -75,7 +75,8 @@
 		get(): number | null {
 			if (
 				app &&
-				app.schulbesuchsdaten.daten?.grundschuleJahreEingangsphase
+				app.schulbesuchsdaten.daten?.grundschuleJahreEingangsphase &&
+				app.schulbesuchsdaten.daten?.grundschuleJahreEingangsphase !== null
 			) {
 				return Number(
 					app.schulbesuchsdaten.daten.grundschuleJahreEingangsphase
@@ -95,7 +96,8 @@
 		get(): number | null {
 			if (
 				app &&
-				app.schulbesuchsdaten.daten?.grundschuleUebergangsempfehlungID
+				app.schulbesuchsdaten.daten?.grundschuleUebergangsempfehlungID &&
+				app.schulbesuchsdaten.daten?.grundschuleUebergangsempfehlungID !== null
 			) {
 				return Number(
 					app.schulbesuchsdaten.daten

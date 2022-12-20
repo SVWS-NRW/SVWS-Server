@@ -51,7 +51,7 @@
 		{ key: "name", label: "Name", sortable: true },
 		{ key: "istAdmin", label: "IstAdmin", sortable: false }
 	];
-	
+
 	const rows: ComputedRef<BenutzerListeEintrag[] | undefined> = computed(() => {
 		return app.dataBenutzergruppe.listBenutzergruppenBenutzer.liste;
 	});
@@ -80,7 +80,7 @@
 			return app.dataBenutzergruppe.listBenutzergruppenBenutzer.liste[0] ;
 		},
 		set(val:BenutzerListeEintrag | undefined) {
-			// TODO	
+			// TODO
 		}
 	});
 

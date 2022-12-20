@@ -79,8 +79,8 @@
 		return app.stammdaten.daten || new SchuelerStammdaten();
 	});
 
-	const inputKatalogOrte: ComputedRef<List<OrtKatalogEintrag>> = computed(() => {
-		return main.kataloge.orte;
+	const inputKatalogOrte: ComputedRef<Array<OrtKatalogEintrag>> = computed(() => {
+		return main.kataloge.orte.toArray() as Array<OrtKatalogEintrag>;
 	});
 
 	const inputKatalogOrtsteil: ComputedRef<List<OrtsteilKatalogEintrag>> =
@@ -115,10 +115,10 @@
 		computed({
 			get(): OrtKatalogEintrag | undefined {
 				// FIXME: Suche implementieren sobald Funktionalität in List umgesetzt wurde
-				// return inputKatalogOrte.value.find(
-				// 	o => o.id === daten.value.wohnortID
-				// );
-				return undefined;
+				return (inputKatalogOrte.value as OrtKatalogEintrag[]).find(
+					(o: OrtKatalogEintrag | undefined) => {return o?.id == daten.value.wohnortID}
+				);
+				// return undefined;
 			},
 			set(val: OrtKatalogEintrag | undefined) {
 				app.stammdaten.patch({ wohnortID: val?.id });

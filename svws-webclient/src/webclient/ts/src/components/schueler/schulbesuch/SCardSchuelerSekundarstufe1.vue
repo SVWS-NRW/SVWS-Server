@@ -27,29 +27,38 @@
 	const main: Main = injectMainApp();
 	const app = main.apps.schueler;
 
-	const inputSekIWechsel = computed<string>({
-		get(): string {
-			return String(app.schulbesuchsdaten?.daten?.sekIWechsel);
+	const inputSekIWechsel = computed<string | null>({
+		get(): string | null {
+			if(app.schulbesuchsdaten?.daten?.sekIWechsel !== null) {
+				return String(app.schulbesuchsdaten?.daten?.sekIWechsel);
+			}
+			return null;
 		},
-		set(val: string) {
+		set(val: string | null) {
 			val;
 			// TODO Server-Implementierung: this.app.schulbesuchsdaten.patch({ sekIWechsel:  val });
 		}
 	});
-	const inputSekIErsteSchulform = computed<string>({
-		get(): string {
+	const inputSekIErsteSchulform = computed<string | null>({
+		get(): string | null {
+			if(app.schulbesuchsdaten?.daten?.sekIErsteSchulform !== null) {
 			return String(app.schulbesuchsdaten?.daten?.sekIErsteSchulform);
+			}
+			return null;
 		},
-		set(val: string) {
+		set(val: string | null) {
 			val;
 			// TODO Server-Implementierung: this.app.schulbesuchsdaten.patch({ sekIErsteSchulform:  val });
 		}
 	});
-	const inputSekIIWechsel = computed<string>({
-		get(): string {
+	const inputSekIIWechsel = computed<string | null>({
+		get(): string | null {
+			if (app.schulbesuchsdaten?.daten?.sekIIWechsel !== null) {
 			return String(app.schulbesuchsdaten?.daten?.sekIIWechsel);
+			}
+			return null;
 		},
-		set(val: string) {
+		set(val: string | null) {
 			val;
 			// TODO Server-Implementierung: this.app.schulbesuchsdaten.patch({ sekIIWechsel:  val });
 		}

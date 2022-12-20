@@ -140,7 +140,7 @@
 
 	const nachname: WritableComputedRef<string | undefined> = computed({
 		get(): string | undefined {
-			return String(props.erzieher?.nachname);
+			return props.erzieher?.nachname !== null ? String(props.erzieher?.nachname) : '';
 		},
 		set(val: string | undefined) {
 			app.erzieher?.patch({ nachname: val }, props.erzieher);
@@ -150,7 +150,7 @@
 	const zusatzNachname: WritableComputedRef<string | null> = computed({
 		get(): string | null {
 			if (props.erzieher?.zusatzNachname !== null) {
-				return String(props.erzieher?.zusatzNachname);
+				return props.erzieher?.zusatzNachname !== null ? String(props.erzieher?.zusatzNachname) : '';
 			}
 			return null;
 		},

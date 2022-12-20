@@ -69,7 +69,8 @@
 
 	const use = new UseSchuelerStammdaten(app.stammdaten)
 
-	const {vorname, alleVornamen, nachname, zusatzNachname, geschlecht} = use
+	const {vorname, alleVornamen, nachname, zusatzNachname, geschlecht} = use;
+
 	const daten: ComputedRef<SchuelerStammdaten> = computed(() => {
 		return app.stammdaten.daten || new SchuelerStammdaten();
 	});
