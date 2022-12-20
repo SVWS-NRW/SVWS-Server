@@ -31,6 +31,7 @@ declare module '@vue/runtime-core' {
     IRiCheckboxBlankLine: typeof import('~icons/ri/checkbox-blank-line')['default']
     IRiCheckboxCircleFill: typeof import('~icons/ri/checkbox-circle-fill')['default']
     IRiCheckboxLine: typeof import('~icons/ri/checkbox-line')['default']
+    IRiCloseCircleLine: typeof import('~icons/ri/close-circle-line')['default']
     IRiCloseLine: typeof import('~icons/ri/close-line')['default']
     IRiSortAsc: typeof import('~icons/ri/sort-asc')['default']
     IRiSortDesc: typeof import('~icons/ri/sort-desc')['default']

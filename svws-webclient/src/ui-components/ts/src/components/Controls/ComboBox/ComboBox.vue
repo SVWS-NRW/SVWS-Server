@@ -16,7 +16,8 @@ const {
 	itemSort,
 	itemFilter,
 	modelValue,
-	headless
+	headless,
+	removable
 } = defineProps({
 	placeholder: {type: String, default: ""},
 	title: {type: String, default: ""},
@@ -42,11 +43,12 @@ const {
 	modelValue: {
 		type: [Object, Array] as PropType<Item | Item[]>
 	},
-	headless: {type: Boolean, default: false}
+	headless: {type: Boolean, default: false},
+	removable: {type: Boolean, default: false}
 });
 
 const emit = defineEmits<{
-	(e: "update:modelValue", items: Array<Item | null> | Item | null): void;
+	(e: "update:modelValue", items: Array<Item | null> | Item | null | undefined): void;
 	(e: "focus", event: Event): void;
 	(e: "blur", event: Event): void;
 }>();
@@ -166,15 +168,17 @@ function selectCurrentActiveItem() {
 	if (!tags) closeListbox();
 }
 
-function selectItem(item: Item) {
+function selectItem(item: Item | undefined) {
 	selectedItem.value = item;
-	if (tags) {
-		if (selectedItemList.has(item)) {
-			selectedItemList.delete(item);
-		} else selectedItemList.add(item);
-	} else {
-		selectedItemList.clear();
-		selectedItemList.add(item);
+	if (item) {
+		if (tags) {
+			if (selectedItemList.has(item)) {
+				selectedItemList.delete(item);
+			} else selectedItemList.add(item);
+		} else {
+			selectedItemList.clear();
+			selectedItemList.add(item);
+		}
 	}
 	emit("update:modelValue", tags ? [...selectedItemList] : selectedItem.value);
 }
@@ -221,6 +225,10 @@ function scrollToActiveItem() {
 		inline: "nearest"
 	});
 }
+
+function removeItem() {
+	selectItem(undefined);
+}
 </script>
 
 <template>
@@ -238,6 +246,7 @@ function scrollToActiveItem() {
 					:statistics="statistics"
 					:headless="headless"
 					:disabled="disabled"
+					:removable="removable"
 					role="combobox"
 					:aria-label="placeholder"
 					:aria-expanded="showList"
@@ -280,6 +289,9 @@ function scrollToActiveItem() {
 					<i-ri-bar-chart-fill v-if="statistics" class="ml-2"/>
 				</span>
 			</div>
+			<Icon v-if="removable && modelValue" @click="removeItem" class="remove-icon">
+				<i-ri-close-circle-line/>
+			</Icon>
 			<Icon class="dropdown-icon" @click="showList ? closeListbox() : openListbox()">
 				<i-ri-arrow-up-s-line v-if="showList"/>
 				<i-ri-arrow-down-s-line v-else/>
@@ -382,6 +394,14 @@ function scrollToActiveItem() {
 	@apply absolute py-1 px-2;
 	@apply flex;
 	@apply inset-y-0 right-0;
+	@apply items-center justify-center;
+}
+
+.remove-icon {
+	@apply absolute py-1 px-2;
+	@apply cursor-pointer;
+	@apply flex;
+	@apply inset-y-0 right-5;
 	@apply items-center justify-center;
 }
 

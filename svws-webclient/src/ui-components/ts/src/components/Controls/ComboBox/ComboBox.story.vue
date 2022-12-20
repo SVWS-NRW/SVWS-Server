@@ -38,6 +38,7 @@
 					:item-text="item => item?.text || ''"
 					:items="items"
 					@input="onInput"
+					:removable="true"
 				/>
 			</div>
 		</Variant>
