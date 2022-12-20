@@ -8,9 +8,18 @@
 				</template>
 				<template v-else>
 					<span class="underline decoration-dashed underline-offset-2 cursor-text" @click="edit_name = kurs">
-						{{ kursbezeichnung }}</span> {{kurslehrer}} 
+						{{ kursbezeichnung }}</span>
 				</template>
 			</div>
+		</td>
+		<td>
+			<template v-if="allow_regeln">
+				<svws-ui-multi-select v-model="kurslehrer" class="w-12" autocomplete :item-filter="lehrer_filter" removable headless
+					:items="main.apps.lehrer.auswahl.liste" :item-text="(l: LehrerListeEintrag)=> `${l.kuerzel}`"/>
+			</template>
+			<template v-else>
+				{{ kurslehrer?.kuerzel }}
+			</template>
 		</td>
 		<td class="border border-[#7f7f7f]/20 text-center" :class="{'border-t-2': setze_kursdifferenz}">
 			<svws-ui-checkbox headless v-if="allow_regeln" v-model="koop"></svws-ui-checkbox>
@@ -115,13 +124,16 @@ import {
 	GostFach,
 	GostKursart,
 	GostKursblockungRegelTyp,
+	LehrerListeEintrag,
 	List,
 	Vector,
 	ZulaessigesFach
 } from "@svws-nrw/svws-core-ts";
 import { computed, ComputedRef, Ref, ref, WritableComputedRef } from "vue";
+import { App } from "~/apps/BaseApp";
 
 import { injectMainApp, Main } from "~/apps/Main";
+import { lehrer_filter } from "~/helfer";
 
 const props = defineProps({ kurs: { type: Object as () => GostBlockungKurs, required: true } });
 
@@ -186,6 +198,63 @@ const manager: ComputedRef<GostBlockungsergebnisManager | undefined> =
 const kursbezeichnung: ComputedRef<String> =
 	computed(()=> get_kursbezeichnung(props.kurs.id));
 
+const kurslehrer: WritableComputedRef<LehrerListeEintrag|undefined> =
+	computed({
+		get(): LehrerListeEintrag | undefined {
+			if (!app.dataKursblockung.datenmanager || !props.kurs)
+				return;
+			const liste = app.dataKursblockung.datenmanager.getOfKursLehrkraefteSortiert(props.kurs.id);
+			if (liste.size()) {
+				const lehrer = liste.get(0);
+				return App.apps.lehrer.auswahl.liste.find(l=>l.id === lehrer.id);
+			}
+			else
+				return;
+		},
+		set(value: LehrerListeEintrag | undefined) {
+			if (!props.kurs)
+				return;
+			if (value !== undefined) {
+				app.dataKursblockung.add_blockung_lehrer(props.kurs.id, value.id)
+					.then(lehrer => {
+						if (!lehrer || !app.dataKursblockung.datenmanager || !props.kurs)
+							throw new Error("Fehler beim Anlegen des Kurslehrers");
+						app.dataKursblockung.datenmanager.patchOfKursAddLehrkraft(props.kurs.id, lehrer);
+						add_lehrer_regel();
+					})
+				}
+			else remove_kurslehrer()
+		}
+	})
+
+function remove_kurslehrer() {
+	if (!app.dataKursblockung.datenmanager || !props.kurs || !kurslehrer.value)
+		return;
+	app.dataKursblockung.del_blockung_lehrer(props.kurs.id, kurslehrer.value.id);
+	app.dataKursblockung.datenmanager.patchOfKursRemoveLehrkraft(props.kurs.id, kurslehrer.value.id);
+}
+
+const lehrer_regel: ComputedRef<GostBlockungRegel | undefined> =
+	computed(()=> {
+		const regel_typ = GostKursblockungRegelTyp.LEHRKRAFT_BEACHTEN
+		const regeln = app.dataKursblockung.datenmanager?.getMengeOfRegeln()
+		if (!regeln)
+			return undefined;
+		for (const r of regeln)
+			if (r.typ === regel_typ.typ)
+				return r;
+	})
+
+function add_lehrer_regel() {
+	if (lehrer_regel !== undefined)
+		return;
+	const r = new GostBlockungRegel();
+	const regel_typ = GostKursblockungRegelTyp.LEHRKRAFT_BEACHTEN
+	r.typ = regel_typ.typ;
+	r.parameter.add(1);
+	app.dataKursblockung.add_blockung_regel(r);
+}
+
 function get_kursbezeichnung(kurs_id: number | undefined) {
 	if (!kurs_id || !manager.value)
 		return String();
@@ -200,7 +269,7 @@ const kurs_blockungsergebnis: ComputedRef<GostBlockungsergebnisKurs|undefined> =
 
 const selected_kurs: ComputedRef<boolean> =
 	computed(() => (kurs_blockungsergebnis.value !== undefined)
-		&& (kurs_blockungsergebnis.value?.id === app.listAbiturjahrgangSchueler.filter.kurs?.id))
+		&& (kurs_blockungsergebnis.value?.id === props.kurs?.id))
 
 const filtered_by_kursart: ComputedRef<GostBlockungsergebnisKurs[]> =
 	computed(()=>{
@@ -290,15 +359,6 @@ const ermittel_parent_schiene = (ergebnis_schiene: GostBlockungsergebnisSchiene)
 	if (!schiene) throw new Error("Schiene fehlt in der Definition")
 	return schiene
 }
-
-const kurslehrer: ComputedRef<String> =
-	computed(()=> {
-		if (props.kurs.lehrer.size() === 0)
-			return "";
-		const kuerzel = props.kurs.lehrer.get(0).kuerzel;
-		const str = props.kurs.lehrer.size() > 1 ? kuerzel + "+":kuerzel;
-		return `(${str})`
-	})
 
 const fixieren_regel_toggle = () => {
 	if (app.dataKursblockung.pending || !allow_regeln.value)

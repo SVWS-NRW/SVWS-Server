@@ -8,15 +8,6 @@
 							<svws-ui-button size="small" type="primary" @click="toggle_modal_hochschreiben">Hochschreiben</svws-ui-button>
 							<svws-ui-button  v-if="!blockung_aktiv" type="secondary" @click="toggle_modal_aktivieren">Aktivieren</svws-ui-button>
 						</div>
-						<div v-if="app.listAbiturjahrgangSchueler.filter.kurs && allow_regeln" class="flex gap-2 text-lg">
-							<div class="flex flex-col justify-end">
-								<div class="flex flex-row gap-2">
-									Lehrkraft:
-											<svws-ui-multi-select v-model="kurslehrer" class="w-52" autocomplete :item-filter="lehrer_filter" removable
-												:items="main.apps.lehrer.auswahl.liste" :item-text="(l: LehrerListeEintrag)=> `${l.nachname}, ${l.vorname} (${l.kuerzel})`"/>
-								</div>
-							</div>
-						</div>
 					</div>
 					<div v-if="blockungsergebnis_aktiv" class="text-lg font-bold">Dieses Blockungsergebnis ist aktiv.</div>
 					<div v-if="blockung_aktiv && !blockungsergebnis_aktiv" class="text-lg font-bold">Ein anderes Ergebnis dieser Blockung ist bereits aktiv.</div>
@@ -25,7 +16,7 @@
 							<!-- Wenn sticky angewendet wird, verschwinden die  border border-[#7f7f7f]/20 s...  -->
 							<thead class="sticky top-0 bg-slate-100">
 								<tr>
-									<td colspan="3">
+									<td colspan="4">
 										Schiene
 									</td>
 									<td
@@ -33,7 +24,7 @@
 										:key="s.id"
 										class="border border-[#7f7f7f]/20 text-center"
 									>
-										<div class="flex gap-1">
+										<div class="flex justify-center" v-if="allow_regeln">
 											<template v-if="s === edit_schienenname">
 												<svws-ui-text-input
 													:modelValue="s.bezeichnung"
@@ -50,6 +41,7 @@
 											</template>
 											<svws-ui-icon v-if="allow_del_schiene(s)" class="text-red-500 cursor-pointer" @click="del_schiene(s)"><i-ri-delete-bin-2-line/></svws-ui-icon>
 										</div>
+										<template v-else>{{s.nummer}}</template>
 									</td>
 									<template v-if="allow_regeln">
 										<td class="bg-[#329cd5] rounded-l-none rounded-lg border-none cursor-pointer" rowspan="4" @click="add_schiene">
@@ -58,7 +50,7 @@
 									</template>
 								</tr>
 								<tr>
-									<td class="border border-[#7f7f7f]/20" colspan="3">
+									<td class="border border-[#7f7f7f]/20" colspan="4">
 										Schülerzahl
 									</td>
 									<!-- Schülerzahlen -->
@@ -71,7 +63,7 @@
 									</td>
 								</tr>
 								<tr>
-									<td class="border border-[#7f7f7f]/20" colspan="3">
+									<td class="border border-[#7f7f7f]/20" colspan="4">
 										Kollisionen
 									</td>
 									<!-- Kollisionen -->
@@ -85,7 +77,8 @@
 								</tr>
 								<tr>
 									<td class="border border-[#7f7f7f]/20 text-center cursor-pointer" @click="sort_by = sort_by === 'kursart'? 'fach_id':'kursart'">
-										<div class="flex gap-1">Kurs (Lehrer)<svws-ui-icon><i-ri-arrow-up-down-line /></svws-ui-icon></div></td>
+										<div class="flex gap-1">Kurs<svws-ui-icon><i-ri-arrow-up-down-line /></svws-ui-icon></div></td>
+									<td>Lehrer</td>
 									<td class="border border-[#7f7f7f]/20 text-center">Koop</td>
 									<td class="border border-[#7f7f7f]/20 text-center">Diff</td>
 									<!--Schienen-->
@@ -210,64 +203,6 @@
 
 	const blockungsergebnis_aktiv: ComputedRef<boolean> =
 		computed(()=> app.blockungsergebnisauswahl.ausgewaehlt?.istVorlage || false)
-
-	const kurslehrer: WritableComputedRef<LehrerListeEintrag|undefined> =
-		computed({
-			get(): LehrerListeEintrag | undefined {
-				if (!app.dataKursblockung.datenmanager || !app.listAbiturjahrgangSchueler.filter.kurs)
-					return;
-				const liste = app.dataKursblockung.datenmanager.getOfKursLehrkraefteSortiert(app.listAbiturjahrgangSchueler.filter.kurs.id);
-				if (liste.size()) {
-					const lehrer = liste.get(0);
-					return App.apps.lehrer.auswahl.liste.find(l=>l.id === lehrer.id);
-				}
-				else
-					return;
-
-			},
-			set(value: LehrerListeEintrag | undefined) {
-				if (!app.listAbiturjahrgangSchueler.filter.kurs)
-					return;
-				if (value !== undefined) {
-					app.dataKursblockung.add_blockung_lehrer(app.listAbiturjahrgangSchueler.filter.kurs.id, value.id)
-						.then(lehrer => {
-							if (!lehrer || !app.dataKursblockung.datenmanager || !app.listAbiturjahrgangSchueler.filter.kurs)
-								throw new Error("Fehler beim Anlegen des Kurslehrers");
-							app.dataKursblockung.datenmanager.patchOfKursAddLehrkraft(app.listAbiturjahrgangSchueler.filter.kurs.id, lehrer);
-							add_lehrer_regel();
-						})
-					}
-				else remove_kurslehrer()
-			}
-		})
-
-	function remove_kurslehrer() {
-		if (!app.dataKursblockung.datenmanager || !app.listAbiturjahrgangSchueler.filter.kurs || !kurslehrer.value)
-			return;
-		app.dataKursblockung.del_blockung_lehrer(app.listAbiturjahrgangSchueler.filter.kurs.id, kurslehrer.value.id);
-		app.dataKursblockung.datenmanager.patchOfKursRemoveLehrkraft(app.listAbiturjahrgangSchueler.filter.kurs.id, kurslehrer.value.id);
-	}
-	
-	const lehrer_regel: ComputedRef<GostBlockungRegel | undefined> =
-		computed(()=> {
-			const regel_typ = GostKursblockungRegelTyp.LEHRKRAFT_BEACHTEN
-			const regeln = app.dataKursblockung.datenmanager?.getMengeOfRegeln()
-			if (!regeln)
-				return undefined;
-			for (const r of regeln)
-				if (r.typ === regel_typ.typ)
-					return r;
-		})
-
-	function add_lehrer_regel() {
-		if (lehrer_regel !== undefined)
-			return;
-		const r = new GostBlockungRegel();
-		const regel_typ = GostKursblockungRegelTyp.LEHRKRAFT_BEACHTEN
-		r.typ = regel_typ.typ;
-		r.parameter.add(1);
-		app.dataKursblockung.add_blockung_regel(r);
-	}
 
 	function getAnzahlSchuelerSchiene(idSchiene: number): number {
 		return manager.value?.getOfSchieneAnzahlSchueler(idSchiene) || 0;
