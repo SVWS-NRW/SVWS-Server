@@ -17,54 +17,54 @@ import de.nrw.schule.svws.core.types.gost.GostKursart;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Diese Klasse gruppiert alle Belegprüfungen für einen Schüler für die Prüfung der EF1 bzw. 
+ * Diese Klasse gruppiert alle Belegprüfungen für einen Schüler für die Prüfung der EF1 bzw.
  * für die Gesamtprüfungen, welche sich auf Kurszahlen und Wochenstunden beziehen.
  */
 public class KurszahlenUndWochenstunden extends GostBelegpruefung {
 
 	/// Die Kurszahlen der einzelnen Halbjahre
 	private HashMap<@NotNull GostHalbjahr, @NotNull HashMap<@NotNull GostKursart, @NotNull Integer>> kurszahlen;
-	
+
 	/// Die Kurszahlen der einzelnen Halbjahre
 	private HashMap<@NotNull GostHalbjahr, @NotNull Integer> kurszahlenGrundkurse;
 
 	/// Die Kurszahlen der einzelnen Halbjahre
 	private HashMap<@NotNull GostHalbjahr, @NotNull Integer> kurszahlenLeistungskurse;
-	
+
 	/// Die Kurszahlen der anrechenbaren Kurse für die einzelnen Halbjahre
 	private HashMap<@NotNull GostHalbjahr, @NotNull Integer> kurszahlenAnrechenbar;
 
 	/// Die Kurszahlen der Einführungsphase
 	private HashMap<@NotNull GostKursart, @NotNull Integer> kurszahlenEinfuehrungsphase;
-	
+
 	/// Die Kurszahlen der Qualifikationsphase
 	private HashMap<@NotNull GostKursart, @NotNull Integer> kurszahlenQualifikationsphase;
-	
-	/// Die Gesamtzahl der Grundkurse der Qualifikationsphase (auch Zusatzkurse und ggf. Projektkurse, die zu keiner besonderen Lernleistung zählen)  
+
+	/// Die Gesamtzahl der Grundkurse der Qualifikationsphase (auch Zusatzkurse und ggf. Projektkurse, die zu keiner besonderen Lernleistung zählen)
 	private int blockIAnzahlGrundkurse;
 
 	/// Die Anzahl der belegten LK-Fächer (sollten 2 sein)
 	private int anzahlLKFaecher;
-	
-	/// Die Gesamtzahl der Leistungskurse der Qualifikationsphase (sollten 8 sein) 
+
+	/// Die Gesamtzahl der Leistungskurse der Qualifikationsphase (sollten 8 sein)
 	private int blockIAnzahlLeistungskurse;
-	
-	/// Die Gesamtzahl der anrechenbaren Kurse der Qualifikationsphase 
+
+	/// Die Gesamtzahl der anrechenbaren Kurse der Qualifikationsphase
 	private int blockIAnzahlAnrechenbar;
-	
+
 	/// Die Anzahl der Wochenstunden in dem entsprechenden Halbjahr
 	private HashMap<@NotNull GostHalbjahr, @NotNull Integer> wochenstunden;
-	
+
 	/// Die Anzahl der WochenStunden in der Einführungsphase
 	private int wochenstundenEinfuehrungsphase;
 
 	/// Die Anzahl der WochenStunden in der Qualifikationsphase
 	private int wochenstundenQualifikationsphase;
-	
-	
+
+
 	/**
 	 * Erstellt eine neue Belegprüfung für die Kurszahlen.
-	 * 
+	 *
 	 * @param manager                 der Daten-Manager für die Abiturdaten
 	 * @param pruefungs_art           die Art der durchzuführenden Prüfung (z.B. EF.1 oder GESAMT)
 	 * @param pruefungProjektkurse    das Ergebnis für die Belegprüfung der Projektkurse
@@ -73,7 +73,7 @@ public class KurszahlenUndWochenstunden extends GostBelegpruefung {
 		super(manager, pruefungs_art, pruefungProjektkurse);
 	}
 
-	
+
 	@Override
 	protected void init() {
 		kurszahlen = new HashMap<>();
@@ -90,7 +90,7 @@ public class KurszahlenUndWochenstunden extends GostBelegpruefung {
 		wochenstundenEinfuehrungsphase = 0;
 		wochenstundenQualifikationsphase = 0;
 		@NotNull Projektkurse projektkurse = ((@NotNull Projektkurse)pruefungen_vorher[0]);
-		
+
 		// Erzeuge zunächst Einträge mit 0 für die Kurszahlen und Wochenstunden in allen HashMaps
 		@NotNull GostKursart@NotNull[] kursarten = GostKursart.values();
 		for (GostHalbjahr halbjahr : GostHalbjahr.values()) {
@@ -107,8 +107,8 @@ public class KurszahlenUndWochenstunden extends GostBelegpruefung {
 			kurszahlenEinfuehrungsphase.put(kursart, 0);
 			kurszahlenQualifikationsphase.put(kursart, 0);
 		}
-		
-		// Zähle nun die einzelnen Kurse und die Wochenstunden... 
+
+		// Zähle nun die einzelnen Kurse und die Wochenstunden...
 		@NotNull List<@NotNull AbiturFachbelegung> alleFachbelegungen = manager.getFachbelegungen();
 		for (int i = 0; i < alleFachbelegungen.size(); i++) {
 			AbiturFachbelegung fachbelegung = alleFachbelegungen.get(i);
@@ -117,12 +117,12 @@ public class KurszahlenUndWochenstunden extends GostBelegpruefung {
 			for (AbiturFachbelegungHalbjahr fachbelegungHalbjahr : fachbelegung.belegungen) {
 				if (fachbelegungHalbjahr == null)
 					continue;
-				
-				// Überspringe Sport-Kurse, die in diesem Halbjahr die Note "AT" beinhalten, bei der Zählung der Kursstunden 
+
+				// Überspringe Sport-Kurse, die in diesem Halbjahr die Note "AT" beinhalten, bei der Zählung der Kursstunden
 				// und der Wochenstunden. Der Schüler ist in diesem Halbjahr aufgrund eines Attestes von Sport befreit.
 				if (GostFachbereich.SPORT.hat(fach) && Note.ATTEST.equals(Note.fromKuerzel(fachbelegungHalbjahr.notenkuerzel)))
 					continue;
-				
+
 				// Bestimme Halbjahr und Kursart
 				GostHalbjahr halbjahr = GostHalbjahr.fromKuerzel(fachbelegungHalbjahr.halbjahrKuerzel);
 				if (halbjahr == null)
@@ -130,17 +130,17 @@ public class KurszahlenUndWochenstunden extends GostBelegpruefung {
 				GostKursart kursart = GostKursart.fromKuerzel(fachbelegungHalbjahr.kursartKuerzel);
 				if (kursart == null)  // Dies kann z.B. bei einem Sportattest ("AT") der Fall sein.
 					continue;
-				
+
 				// Für das Halbjahr
 				HashMap<@NotNull GostKursart, @NotNull Integer> kurszahlenHalbjahr = kurszahlen.get(halbjahr);
 				if (kurszahlenHalbjahr == null)
 					kurszahlenHalbjahr = new HashMap<>();
 				Integer kurszahlAlt = kurszahlenHalbjahr.get(kursart);
 				kurszahlenHalbjahr.put(kursart, kurszahlAlt == null ? 1 : kurszahlAlt + 1);
-				
+
 				// Für die Grundkurse
-				if ((kursart == GostKursart.GK) || 
-					(halbjahr.istQualifikationsphase() && ((kursart == GostKursart.ZK) 
+				if ((kursart == GostKursart.GK) ||
+					(halbjahr.istQualifikationsphase() && ((kursart == GostKursart.ZK)
 													   || ((kursart == GostKursart.PJK) && (projektkurse.istAnrechenbar(fachbelegungHalbjahr)))))) {
 					Integer kurszahlGK = kurszahlenGrundkurse.get(halbjahr);
 					kurszahlenGrundkurse.put(halbjahr, kurszahlGK == null ? 1 : kurszahlGK + 1);
@@ -151,7 +151,7 @@ public class KurszahlenUndWochenstunden extends GostBelegpruefung {
 						blockIAnzahlAnrechenbar++;
 					}
 				}
-				
+
 				// Für die Leistungskurse
 				if (halbjahr.istQualifikationsphase() && (kursart == GostKursart.LK)) {
 					istLKFach = true;
@@ -174,7 +174,7 @@ public class KurszahlenUndWochenstunden extends GostBelegpruefung {
 				}
 				Integer wochenstundenAlt = wochenstunden.get(halbjahr);
 				wochenstunden.put(halbjahr, wochenstundenAlt == null ? stunden : wochenstundenAlt + stunden);
-				
+
 				// Kurszahlen und Wochenstunden für die Einführungsphase und die Qualifikationsphase - hier werden ggf. auch unzulässige Belegungen gezählt
 				if (halbjahr.istEinfuehrungsphase()) {
 					Integer kurszahlEF = kurszahlenEinfuehrungsphase.get(kursart);
@@ -201,7 +201,7 @@ public class KurszahlenUndWochenstunden extends GostBelegpruefung {
 
 
 	/**
-	 * EF1-Prüfung Punkt 21: 
+	 * EF1-Prüfung Punkt 21:
 	 * Prüfe, ob zu wenige Grundkurse (ohne Vertiefungskurse) in der EF belegt wurden,
 	 * dh. weniger als 10 Kurse
 	 */
@@ -212,7 +212,7 @@ public class KurszahlenUndWochenstunden extends GostBelegpruefung {
 		if ((kurszahlGK == null) || (kurszahlGK < 10))
 			addFehler(GostBelegungsfehler.ANZ_10);
 	}
-	
+
 	/**
 	 * EF1-Prüfung Punkt 22:
 	 * Prüfe, ob die Summe der Kursstunden in der EF.1 größer oder gleich 32 und kleiner oder gleich 36 ist.
@@ -224,11 +224,11 @@ public class KurszahlenUndWochenstunden extends GostBelegpruefung {
 		if ((stunden == null) || (stunden < 32) || (stunden > 36))
 			addFehler(GostBelegungsfehler.ANZ_11_INFO);
 	}
-	
 
-	
-	
-	
+
+
+
+
 	@Override
 	protected void pruefeGesamt() {
 		// Führe die Belegprüfung für die gesamte Oberstufe durch
@@ -244,7 +244,7 @@ public class KurszahlenUndWochenstunden extends GostBelegpruefung {
 
 
 	/**
-	 * Gesamtprüfung Punkt 58: 
+	 * Gesamtprüfung Punkt 58:
 	 * Prüfe, ob zu wenige Grundkurse (ohne Vertiefungskurse) in der EF belegt wurden,
 	 * dh. weniger als 10 Kurse
 	 */
@@ -276,7 +276,7 @@ public class KurszahlenUndWochenstunden extends GostBelegpruefung {
 	/**
 	 * Gesamtprüfung Punkt 61:
 	 * Prüfe, ob in den Halbjahren der Qualifikationsphase mindestens 7 Grundkurse belegt wurden.
-	 * Dazu zählen auch Zusatzkurse sowie solche Projektkurse, die 2 Halbjahre belegt wurden 
+	 * Dazu zählen auch Zusatzkurse sowie solche Projektkurse, die 2 Halbjahre belegt wurden
 	 * und zu keiner besonderen Lernleistung zählen.
 	 */
 	private void pruefeGrundkurseQ() {
@@ -288,7 +288,7 @@ public class KurszahlenUndWochenstunden extends GostBelegpruefung {
 				addFehler(GostBelegungsfehler.GKS_10);
 		}
 	}
-	
+
 
 	/**
 	 * Gesamtprüfung Punkt 60 und 75:
@@ -298,16 +298,20 @@ public class KurszahlenUndWochenstunden extends GostBelegpruefung {
 		if (anzahlLKFaecher != 2)
 			addFehler(GostBelegungsfehler.LK_10);
 		if (kurszahlenLeistungskurse == null)
-			throw new NullPointerException();		
+			throw new NullPointerException();
 		for (GostHalbjahr halbjahr : GostHalbjahr.getQualifikationsphase()) {
 			Integer kurszahlLK = kurszahlenLeistungskurse.get(halbjahr);
-			if ((kurszahlLK != null) && (kurszahlLK > 2))
-				addFehler(GostBelegungsfehler.LK_11);
+			if (kurszahlLK != null) {
+				if (kurszahlLK < 2)
+					addFehler(GostBelegungsfehler.LK_10);
+				else if (kurszahlLK > 2)
+					addFehler(GostBelegungsfehler.LK_11);
+			}
 		}
 	}
 
-	
-	
+
+
 	/**
 	 * Gesamtprüfung Punkt 62:
 	 * Ist die Summe aller belegten Vertiefungskurse in der EF kleiner gleich 4?
@@ -320,7 +324,7 @@ public class KurszahlenUndWochenstunden extends GostBelegpruefung {
 			addFehler(GostBelegungsfehler.VF_10);
 	}
 
-	
+
 	/**
 	 * Gesamtprüfung Punkt 63:
 	 * Ist die Summe aller belegten Vertiefungskurse in der Qualifikationsphase kleiner gleich 2?
@@ -333,22 +337,22 @@ public class KurszahlenUndWochenstunden extends GostBelegpruefung {
 			addFehler(GostBelegungsfehler.VF_11);
 	}
 
-	
+
 	/**
 	 * Gesamtprüfung Punkt 69:
-	 * Ist die Anzahl anrechenbarer Kurse für Block I des Abiturs (Qualifikationsphase) größer gleich 38? 
+	 * Ist die Anzahl anrechenbarer Kurse für Block I des Abiturs (Qualifikationsphase) größer gleich 38?
 	 */
 	private void pruefeAnrechenbareKurse() {
 		if (blockIAnzahlAnrechenbar < 38)
 			addFehler(GostBelegungsfehler.ANZ_12);
 	}
-	
-	
+
+
 	/**
 	 * Gesamtprüfung Punkte 80-82:
 	 * Prüfe, ob die Summe der durschnittlichen Kursstunden der 3 Jahre größer oder gleich 100 bzw. 102 ist
-	 * und ob die durchschnittliche Summe der Kursstunden in der Einführungsphase under Qualifikationsphase 
-	 * größer oder gleich 34 ist. 
+	 * und ob die durchschnittliche Summe der Kursstunden in der Einführungsphase under Qualifikationsphase
+	 * größer oder gleich 34 ist.
 	 */
 	private void pruefeKursstundenSummen() {
 		if (wochenstundenEinfuehrungsphase / 2.0 < 34.0)
@@ -364,16 +368,16 @@ public class KurszahlenUndWochenstunden extends GostBelegpruefung {
 			}
 		}
 	}
-	
-	
-	
-	
+
+
+
+
 	/**
 	 * Gibt die Kurszahlen für das Halbjahr und die Kursart zurück.
-	 * 
+	 *
 	 * @param halbjahr   das Halbjahr
 	 * @param kursart    die Kursart
-	 * 
+	 *
 	 * @return die Kurszahlen
 	 */
 	public final int getKurszahlen(@NotNull GostHalbjahr halbjahr, @NotNull GostKursart kursart) {
@@ -391,9 +395,9 @@ public class KurszahlenUndWochenstunden extends GostBelegpruefung {
 
 	/**
 	 * Gibt die Kurszahlen für die Grundkurse für das angegebene Halbjahr zurück.
-	 * 
+	 *
 	 * @param halbjahr   das Halbjahr
-	 * 
+	 *
 	 * @return die Kurszahlen
 	 */
 	public final int getKurszahlenGrundkurse(@NotNull GostHalbjahr halbjahr) {
@@ -408,9 +412,9 @@ public class KurszahlenUndWochenstunden extends GostBelegpruefung {
 
 	/**
 	 * Gibt die Kurszahlen für die Leistungskurse für das angegebene Halbjahr zurück.
-	 * 
+	 *
 	 * @param halbjahr   das Halbjahr
-	 * 
+	 *
 	 * @return die Kurszahlen
 	 */
 	public final int getKurszahlenLeistungskurse(@NotNull GostHalbjahr halbjahr) {
@@ -425,9 +429,9 @@ public class KurszahlenUndWochenstunden extends GostBelegpruefung {
 
 	/**
 	 * Gibt die Zahl der anrechenbaren Kurse für das angegebene Halbjahr zurück.
-	 * 
+	 *
 	 * @param halbjahr   das Halbjahr
-	 * 
+	 *
 	 * @return die Kurszahlen
 	 */
 	public final int getKurszahlenAnrechenbar(@NotNull GostHalbjahr halbjahr) {
@@ -442,9 +446,9 @@ public class KurszahlenUndWochenstunden extends GostBelegpruefung {
 
 	/**
 	 * Gibt die Zahl der Kurse mit der angegebenen Kursart in der Einführungsphase zurück.
-	 * 
+	 *
 	 * @param kursart   die Kursart
-	 * 
+	 *
 	 * @return die Kurszahlen
 	 */
 	public final int getKurszahlenEinfuehrungsphase(@NotNull GostKursart kursart) {
@@ -459,9 +463,9 @@ public class KurszahlenUndWochenstunden extends GostBelegpruefung {
 
 	/**
 	 * Gibt die Zahl der Kurse mit der angegebenen Kursart in der Qualifikationsphase zurück.
-	 * 
+	 *
 	 * @param kursart   die Kursart
-	 * 
+	 *
 	 * @return die Kurszahlen
 	 */
 	public final int getKurszahlenQualifikationsphase(@NotNull GostKursart kursart) {
@@ -476,7 +480,7 @@ public class KurszahlenUndWochenstunden extends GostBelegpruefung {
 
 	/**
 	 * Gibt die Anzahl der Grundkurse für Block I zurück.
-	 * 
+	 *
 	 * @return die Anzahl der Grundkurse
 	 */
 	public final int getBlockIAnzahlGrundkurse() {
@@ -486,7 +490,7 @@ public class KurszahlenUndWochenstunden extends GostBelegpruefung {
 
 	/**
 	 * Gibt die Anzahl der Leistungskurse für Block I zurück.
-	 * 
+	 *
 	 * @return die Anzahl der Leistungskurse
 	 */
 	public final int getBlockIAnzahlLeistungskurse() {
@@ -496,7 +500,7 @@ public class KurszahlenUndWochenstunden extends GostBelegpruefung {
 
 	/**
 	 * Gibt die Anzahl der anrechenbaren Kurse für Block I zurück.
-	 * 
+	 *
 	 * @return die Anzahl der anrechenbaren Kurse
 	 */
 	public final int getBlockIAnzahlAnrechenbar() {
@@ -506,9 +510,9 @@ public class KurszahlenUndWochenstunden extends GostBelegpruefung {
 
 	/**
 	 * Gibt die Anzahl der Wochenstunden für das angegebene Halbjahr zurück.
-	 *  
+	 *
 	 * @param halbjahr  das Halbjahr
-	 * 
+	 *
 	 * @return die Anzahl der Wochenstunden
 	 */
 	public final int getWochenstunden(@NotNull GostHalbjahr halbjahr) {
@@ -523,7 +527,7 @@ public class KurszahlenUndWochenstunden extends GostBelegpruefung {
 
 	/**
 	 * Gibt die Anzahl der Wochenstunden für die Einführungsphase zurück.
-	 *  
+	 *
 	 * @return die Anzahl der Wochenstunden
 	 */
 	public final int getWochenstundenEinfuehrungsphase() {
@@ -533,7 +537,7 @@ public class KurszahlenUndWochenstunden extends GostBelegpruefung {
 
 	/**
 	 * Gibt die Anzahl der Wochenstunden für die Qualifikationsphase zurück.
-	 *  
+	 *
 	 * @return die Anzahl der Wochenstunden
 	 */
 	public final int getWochenstundenQualifikationsphase() {

@@ -47,7 +47,7 @@ export class KurszahlenUndWochenstunden extends GostBelegpruefung {
 
 	/**
 	 * Erstellt eine neue Belegprüfung für die Kurszahlen.
-	 * 
+	 *
 	 * @param manager                 der Daten-Manager für die Abiturdaten
 	 * @param pruefungs_art           die Art der durchzuführenden Prüfung (z.B. EF.1 oder GESAMT)
 	 * @param pruefungProjektkurse    das Ergebnis für die Belegprüfung der Projektkurse
@@ -167,7 +167,7 @@ export class KurszahlenUndWochenstunden extends GostBelegpruefung {
 	}
 
 	/**
-	 * EF1-Prüfung Punkt 21: 
+	 * EF1-Prüfung Punkt 21:
 	 * Prüfe, ob zu wenige Grundkurse (ohne Vertiefungskurse) in der EF belegt wurden,
 	 * dh. weniger als 10 Kurse
 	 */
@@ -203,7 +203,7 @@ export class KurszahlenUndWochenstunden extends GostBelegpruefung {
 	}
 
 	/**
-	 * Gesamtprüfung Punkt 58: 
+	 * Gesamtprüfung Punkt 58:
 	 * Prüfe, ob zu wenige Grundkurse (ohne Vertiefungskurse) in der EF belegt wurden,
 	 * dh. weniger als 10 Kurse
 	 */
@@ -233,7 +233,7 @@ export class KurszahlenUndWochenstunden extends GostBelegpruefung {
 	/**
 	 * Gesamtprüfung Punkt 61:
 	 * Prüfe, ob in den Halbjahren der Qualifikationsphase mindestens 7 Grundkurse belegt wurden.
-	 * Dazu zählen auch Zusatzkurse sowie solche Projektkurse, die 2 Halbjahre belegt wurden 
+	 * Dazu zählen auch Zusatzkurse sowie solche Projektkurse, die 2 Halbjahre belegt wurden
 	 * und zu keiner besonderen Lernleistung zählen.
 	 */
 	private pruefeGrundkurseQ() : void {
@@ -257,8 +257,12 @@ export class KurszahlenUndWochenstunden extends GostBelegpruefung {
 			throw new NullPointerException()
 		for (let halbjahr of GostHalbjahr.getQualifikationsphase()) {
 			let kurszahlLK : Number | null = this.kurszahlenLeistungskurse.get(halbjahr);
-			if ((kurszahlLK !== null) && (kurszahlLK > 2)) 
-				this.addFehler(GostBelegungsfehler.LK_11);
+			if (kurszahlLK !== null) {
+				if (kurszahlLK < 2) 
+					this.addFehler(GostBelegungsfehler.LK_10); else 
+					if (kurszahlLK > 2) 
+						this.addFehler(GostBelegungsfehler.LK_11);
+			}
 		}
 	}
 
@@ -288,7 +292,7 @@ export class KurszahlenUndWochenstunden extends GostBelegpruefung {
 
 	/**
 	 * Gesamtprüfung Punkt 69:
-	 * Ist die Anzahl anrechenbarer Kurse für Block I des Abiturs (Qualifikationsphase) größer gleich 38? 
+	 * Ist die Anzahl anrechenbarer Kurse für Block I des Abiturs (Qualifikationsphase) größer gleich 38?
 	 */
 	private pruefeAnrechenbareKurse() : void {
 		if (this.blockIAnzahlAnrechenbar < 38) 
@@ -298,8 +302,8 @@ export class KurszahlenUndWochenstunden extends GostBelegpruefung {
 	/**
 	 * Gesamtprüfung Punkte 80-82:
 	 * Prüfe, ob die Summe der durschnittlichen Kursstunden der 3 Jahre größer oder gleich 100 bzw. 102 ist
-	 * und ob die durchschnittliche Summe der Kursstunden in der Einführungsphase under Qualifikationsphase 
-	 * größer oder gleich 34 ist. 
+	 * und ob die durchschnittliche Summe der Kursstunden in der Einführungsphase under Qualifikationsphase
+	 * größer oder gleich 34 ist.
 	 */
 	private pruefeKursstundenSummen() : void {
 		if (this.wochenstundenEinfuehrungsphase / 2.0 < 34.0) 
@@ -318,10 +322,10 @@ export class KurszahlenUndWochenstunden extends GostBelegpruefung {
 
 	/**
 	 * Gibt die Kurszahlen für das Halbjahr und die Kursart zurück.
-	 * 
+	 *
 	 * @param halbjahr   das Halbjahr
 	 * @param kursart    die Kursart
-	 * 
+	 *
 	 * @return die Kurszahlen
 	 */
 	public getKurszahlen(halbjahr : GostHalbjahr, kursart : GostKursart) : number {
@@ -338,9 +342,9 @@ export class KurszahlenUndWochenstunden extends GostBelegpruefung {
 
 	/**
 	 * Gibt die Kurszahlen für die Grundkurse für das angegebene Halbjahr zurück.
-	 * 
+	 *
 	 * @param halbjahr   das Halbjahr
-	 * 
+	 *
 	 * @return die Kurszahlen
 	 */
 	public getKurszahlenGrundkurse(halbjahr : GostHalbjahr) : number {
@@ -354,9 +358,9 @@ export class KurszahlenUndWochenstunden extends GostBelegpruefung {
 
 	/**
 	 * Gibt die Kurszahlen für die Leistungskurse für das angegebene Halbjahr zurück.
-	 * 
+	 *
 	 * @param halbjahr   das Halbjahr
-	 * 
+	 *
 	 * @return die Kurszahlen
 	 */
 	public getKurszahlenLeistungskurse(halbjahr : GostHalbjahr) : number {
@@ -370,9 +374,9 @@ export class KurszahlenUndWochenstunden extends GostBelegpruefung {
 
 	/**
 	 * Gibt die Zahl der anrechenbaren Kurse für das angegebene Halbjahr zurück.
-	 * 
+	 *
 	 * @param halbjahr   das Halbjahr
-	 * 
+	 *
 	 * @return die Kurszahlen
 	 */
 	public getKurszahlenAnrechenbar(halbjahr : GostHalbjahr) : number {
@@ -386,9 +390,9 @@ export class KurszahlenUndWochenstunden extends GostBelegpruefung {
 
 	/**
 	 * Gibt die Zahl der Kurse mit der angegebenen Kursart in der Einführungsphase zurück.
-	 * 
+	 *
 	 * @param kursart   die Kursart
-	 * 
+	 *
 	 * @return die Kurszahlen
 	 */
 	public getKurszahlenEinfuehrungsphase(kursart : GostKursart) : number {
@@ -402,9 +406,9 @@ export class KurszahlenUndWochenstunden extends GostBelegpruefung {
 
 	/**
 	 * Gibt die Zahl der Kurse mit der angegebenen Kursart in der Qualifikationsphase zurück.
-	 * 
+	 *
 	 * @param kursart   die Kursart
-	 * 
+	 *
 	 * @return die Kurszahlen
 	 */
 	public getKurszahlenQualifikationsphase(kursart : GostKursart) : number {
@@ -418,7 +422,7 @@ export class KurszahlenUndWochenstunden extends GostBelegpruefung {
 
 	/**
 	 * Gibt die Anzahl der Grundkurse für Block I zurück.
-	 * 
+	 *
 	 * @return die Anzahl der Grundkurse
 	 */
 	public getBlockIAnzahlGrundkurse() : number {
@@ -427,7 +431,7 @@ export class KurszahlenUndWochenstunden extends GostBelegpruefung {
 
 	/**
 	 * Gibt die Anzahl der Leistungskurse für Block I zurück.
-	 * 
+	 *
 	 * @return die Anzahl der Leistungskurse
 	 */
 	public getBlockIAnzahlLeistungskurse() : number {
@@ -436,7 +440,7 @@ export class KurszahlenUndWochenstunden extends GostBelegpruefung {
 
 	/**
 	 * Gibt die Anzahl der anrechenbaren Kurse für Block I zurück.
-	 * 
+	 *
 	 * @return die Anzahl der anrechenbaren Kurse
 	 */
 	public getBlockIAnzahlAnrechenbar() : number {
@@ -445,9 +449,9 @@ export class KurszahlenUndWochenstunden extends GostBelegpruefung {
 
 	/**
 	 * Gibt die Anzahl der Wochenstunden für das angegebene Halbjahr zurück.
-	 *  
+	 *
 	 * @param halbjahr  das Halbjahr
-	 * 
+	 *
 	 * @return die Anzahl der Wochenstunden
 	 */
 	public getWochenstunden(halbjahr : GostHalbjahr) : number {
@@ -461,7 +465,7 @@ export class KurszahlenUndWochenstunden extends GostBelegpruefung {
 
 	/**
 	 * Gibt die Anzahl der Wochenstunden für die Einführungsphase zurück.
-	 *  
+	 *
 	 * @return die Anzahl der Wochenstunden
 	 */
 	public getWochenstundenEinfuehrungsphase() : number {
@@ -470,7 +474,7 @@ export class KurszahlenUndWochenstunden extends GostBelegpruefung {
 
 	/**
 	 * Gibt die Anzahl der Wochenstunden für die Qualifikationsphase zurück.
-	 *  
+	 *
 	 * @return die Anzahl der Wochenstunden
 	 */
 	public getWochenstundenQualifikationsphase() : number {
