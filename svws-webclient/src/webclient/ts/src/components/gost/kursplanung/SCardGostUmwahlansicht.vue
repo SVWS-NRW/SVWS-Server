@@ -284,7 +284,8 @@
 
 	const pending = computed(()=>app.dataKursblockungsergebnis.pending);
 
-	watch(()=>schueler.value, (new_val)=> selected.value = new_val ? new_val[0] : undefined)
+	// Macht Probleme beim Neuverteilen der Kurse. Schüler spring tzurück auf 1
+	//watch(()=>schueler.value, (new_val)=> selected.value = new_val ? new_val[0] : undefined)
 
 	async function drop_entferne_kurszuordnung(kurs: any) {
 		const schuelerid = selected.value?.id;
