@@ -3,9 +3,6 @@ export { default as SvwsUiCheckbox } from "~/Controls/Checkbox.vue";
 export { default as SvwsUiDropdown } from "~/Controls/Dropdown.vue";
 export { default as SvwsUiDropdownItem } from "~/Controls/DropdownItem.vue";
 export { default as SvwsUiDropdownWithAction } from "~/Controls/DropdownWithAction.vue";
-// TODO: Diese Komponente wird abgelöst und ist deprecated.
-// Sie kann entfernt werden, wenn wir mit der ComboBox, die sie ablöst (s. nächste Zeile), zufrieden sind
-// export { default as SvwsUiMultiSelect } from "~/Controls/MultiSelect.vue";
 export { default as SvwsUiMultiSelect } from "~/Controls/ComboBox/ComboBox.vue";
 export { default as SvwsUiProgressBar } from "~/Controls/ProgressBar.vue";
 export { default as SvwsUiRadioGroup } from "~/Controls/RadioGroup.vue";
