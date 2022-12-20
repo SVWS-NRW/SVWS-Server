@@ -1,21 +1,15 @@
 
 <template>
 	<svws-ui-content-card v-if="app.dataKursblockung.daten" class="">
-		<div class="flex flex-row">
-			<div class="w-full flex-none">
-				<div class="py-2 align-middle sm:px-6 lg:px-8">
-					<div class="overflow-hidden rounded-lg shadow">
-						<div class="py-1 px-8 bg-slate-100 shadow-lg rounded-lg my-1">
-							<Blockungsregel_9 />
-						</div>
-						<span class="font-bold">Kurslehrerzuordnung</span>
-						<div v-for="kurs in kurse" :key="kurs.hashCode()" class="py-1 px-8 bg-slate-100 shadow-lg rounded-lg mb-1">
-							<s-kurslehrer-select :kurs="kurs"/>
-						</div>
-					</div>
+				<div class="w-96 py-2 align-middle sm:px-6 lg:px-8">
+						<svws-ui-table :data="kurse.toArray()" :columns="[{label: 'Kurs'}, {label: 'Kurslehrer'}, {label: 'Aktionen'}]">
+							<template #body="{rows}">
+								<template v-for="kurs in <GostBlockungKurs[]>rows" :key="kurs.id">
+									<s-kurslehrer-select :kurs="kurs"/>
+								</template>
+							</template>
+						</svws-ui-table>
 				</div>
-			</div>
-		</div>
 	</svws-ui-content-card>
 </template>
 

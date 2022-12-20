@@ -12,7 +12,7 @@
 				<svws-ui-button class="flex justify-center w-20 h-7 rounded-full text-headline-4 text-black translate-y-1/2 transform" @click="onToggleRegeln">
 					Regeln <svws-ui-icon> <i-ri-arrow-left-s-line v-if="collapsed" /> <i-ri-arrow-right-s-line v-else /> </svws-ui-icon> </svws-ui-button>
 				<svws-ui-button class="flex justify-center w-20 h-7 rounded-full text-headline-4 text-black translate-y-1/2 transform" @click="onToggleLehrer">
-					Lehrer <svws-ui-icon> <i-ri-arrow-left-s-line v-if="collapsed" /> <i-ri-arrow-right-s-line v-else /> </svws-ui-icon> </svws-ui-button>
+					Kurse <svws-ui-icon> <i-ri-arrow-left-s-line v-if="collapsed" /> <i-ri-arrow-right-s-line v-else /> </svws-ui-icon> </svws-ui-button>
 			</div>
 			<div class="flex flex-col py-4">
 				<s-card-gost-regelansicht v-if="!collapsed && active_panel==='regeln'"/>

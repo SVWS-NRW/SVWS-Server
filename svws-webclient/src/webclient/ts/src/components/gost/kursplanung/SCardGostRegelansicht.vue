@@ -30,6 +30,9 @@
 								<div class="py-1 px-8 bg-slate-100 shadow-lg rounded-lg my-1">
 									<Blockungsregel_5 />
 								</div>
+								<div class="py-1 px-8 bg-slate-100 shadow-lg rounded-lg my-1">
+									<Blockungsregel_9 />
+								</div>
 					</div>
 				</div>
 			</div>

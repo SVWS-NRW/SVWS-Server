@@ -1,23 +1,26 @@
 <template>
-	<div class="flex gap-2">
-		<span class="w-20">{{kursbezeichnung}}</span>
-		<div class="flex flex-col gap-2">
-			<div class="flex flex-row gap-1" v-for="lehrer, i of kurslehrer" :key="lehrer.id">
-				<svws-ui-multi-select :modelValue="lehrer" @update:modelValue="(val: LehrerListeEintrag|undefined) => update_kurslehrer(val, lehrer)" class="w-52"
-					autocomplete :item-filter="lehrer_filter" :items="lehrer_liste" removable
-					:item-text="(l: LehrerListeEintrag)=> `${l.nachname}, ${l.vorname} (${l.kuerzel})`"/>
-				<svws-ui-icon v-if="!new_kurs_lehrer && i === kurslehrer.length-1" class="cursor-pointer text-black" @click="new_kurs_lehrer=true"><i-ri-user-add-line /></svws-ui-icon>
-			</div>
-			<div v-if="!kurslehrer.length || new_kurs_lehrer">
-				<svws-ui-multi-select
-				:modelValue="undefined" @update:modelValue="update_kurslehrer" class="w-52" autocomplete :item-filter="lehrer_filter" :items="lehrer_liste" :item-text="(l: LehrerListeEintrag)=> `${l.nachname}, ${l.vorname} (${l.kuerzel})`"/>
-			</div>
-		</div>
-	</div>
+	<tr :style="{'background-color': bgColor}">
+			<td><span class="w-20">{{kursbezeichnung}}</span></td>
+			<td>
+				<div class="flex flex-col gap-2">
+					<div class="flex flex-row gap-1" v-for="lehrer, i of kurslehrer" :key="lehrer.id">
+						<svws-ui-multi-select :modelValue="lehrer" @update:modelValue="(val: LehrerListeEintrag|undefined) => update_kurslehrer(val, lehrer)" class="w-52"
+							autocomplete :item-filter="lehrer_filter" :items="lehrer_liste" removable
+							:item-text="(l: LehrerListeEintrag)=> `${l.nachname}, ${l.vorname} (${l.kuerzel})`"/>
+						<svws-ui-icon v-if="!new_kurs_lehrer && i === kurslehrer.length-1" class="cursor-pointer text-black" @click="new_kurs_lehrer=true"><i-ri-user-add-line /></svws-ui-icon>
+					</div>
+					<div v-if="!kurslehrer.length || new_kurs_lehrer">
+						<svws-ui-multi-select
+						:modelValue="undefined" @update:modelValue="update_kurslehrer" class="w-52" autocomplete :item-filter="lehrer_filter" :items="lehrer_liste" :item-text="(l: LehrerListeEintrag)=> `${l.nachname}, ${l.vorname} (${l.kuerzel})`"/>
+					</div>
+				</div>
+			</td>
+			<td>tu was</td>
+	</tr>
 </template>
 
 <script setup lang="ts">
-	import { GostBlockungKurs, GostBlockungRegel, GostBlockungsergebnisManager, GostKursblockungRegelTyp, LehrerListeEintrag } from '@svws-nrw/svws-core-ts';
+	import { GostBlockungKurs, GostBlockungRegel, GostBlockungsergebnisManager, GostFach, GostKursblockungRegelTyp, LehrerListeEintrag, ZulaessigesFach } from '@svws-nrw/svws-core-ts';
 	import { ComputedRef, computed, Ref, ref } from 'vue';
 	import { App } from '~/apps/BaseApp';
 	import { injectMainApp, Main } from '~/apps/Main';
@@ -31,6 +34,24 @@
 
 	const manager: ComputedRef<GostBlockungsergebnisManager | undefined> =
 		computed(()=> app.dataKursblockung.ergebnismanager);
+
+const gostFach: ComputedRef<GostFach | null> =
+	computed(() => {
+		let fach: GostFach | null = null
+		if (!app.dataFaecher.manager) return null
+		for (const f of app.dataFaecher.manager.values())
+			if (f.id === props.kurs.fach_id) {
+				fach = f
+				break
+			}
+		return fach;
+	});
+
+const fach: ComputedRef<ZulaessigesFach> =
+	computed(() => ZulaessigesFach.getByKuerzelASD(gostFach.value?.kuerzel || null));
+
+const bgColor: ComputedRef<string> =
+	computed(() => fach.value ? fach.value.getHMTLFarbeRGB().valueOf() : "#ffffff");
 
 	const kursbezeichnung: ComputedRef<String> =
 		computed(()=> manager.value?.getOfKursName(props.kurs.id)||"")

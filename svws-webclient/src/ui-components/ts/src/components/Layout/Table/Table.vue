@@ -1,7 +1,6 @@
 <script setup lang='ts'>
 import useColumns from './features/use-columns';
 import type { DataTableItem, DataTableColumn } from './types';
-import DropdownWithAction from "~/components/Controls/DropdownWithAction.vue";
 
 const {
   data = [],
