@@ -2,7 +2,7 @@
 	<tr class="px-2 text-left" :style="{ 'background-color': bgColor }" >
 		<td class="border border-[#7f7f7f]/20 px-2 whitespace-nowrap" :class="{'border-t-2': setze_kursdifferenz}">
 			<div class="flex gap-1">
-				<template v-if=" kurs === edit_name ">
+				<template v-if=" kurs === edit_name">
 					{{ kursbezeichnung }}-
 					<svws-ui-text-input v-model="suffix" focus headless style="width: 2rem" @blur="edit_name=undefined" @keyup.enter="edit_name=undefined" />
 				</template>
@@ -12,9 +12,9 @@
 				</template>
 			</div>
 		</td>
-		<td>
+		<td class="border border-[#7f7f7f]/20 text-center" :class="{'border-t-2': setze_kursdifferenz}">
 			<template v-if="allow_regeln">
-				<svws-ui-multi-select v-model="kurslehrer" class="w-12" autocomplete :item-filter="lehrer_filter" removable headless
+				<svws-ui-multi-select v-model="kurslehrer" class="w-20" autocomplete :item-filter="lehrer_filter" removable headless
 					:items="main.apps.lehrer.auswahl.liste" :item-text="(l: LehrerListeEintrag)=> `${l.kuerzel}`"/>
 			</template>
 			<template v-else>
@@ -26,8 +26,9 @@
 			<template v-else>{{koop ? "&#x2713;" : "&#x2717;"}}</template>
 		</td>
 		<template v-if="setze_kursdifferenz && kurs_blockungsergebnis">
-			<td class="border border-[#7f7f7f]/20 text-center border-t-2" :rowspan="kursdifferenz[0]" >
-				{{kursdifferenz[1]}}</td>
+			<td class="border border-[#7f7f7f]/20 text-center border-t-2" :rowspan="kursdifferenz[0] + (kursdetail_anzeige ? 1:0)" >
+				{{kursdifferenz[2]}}</td>
+			<td class="border border-[#7f7f7f]/20 text-center border-t-2" :rowspan="kursdifferenz[0] + (kursdetail_anzeige ? 1:0)">{{kursdifferenz[1]}}</td> 
 		</template>
 		<template v-if="!kurs_blockungsergebnis">
 			<td></td> </template>
@@ -67,7 +68,6 @@
 				</div>
 			</template>
 		</drop-data>
-		<!-- Es dürfen keine Regeln erstellt werden -->
 		<template v-else v-for="schiene in schienen" :key="schiene.nummer">
 			<td class="border border-[#7f7f7f]/20 text-center leading-5 select-none whitespace-nowrap" :class="{ 'border-t-2': setze_kursdifferenz }" >
 				<svws-ui-badge
@@ -82,22 +82,42 @@
 				</svws-ui-badge>
 			</td>
 		</template>
-		<template v-if="setze_kursdifferenz && kurs_blockungsergebnis && allow_regeln">
-			<td class="border border-[#7f7f7f]/20 text-center leading-5  whitespace-nowrap w-2"
-				:rowspan="kursdifferenz[0]" :colspan="kurszahl_anzeige?2:1" @click="toggle_kurszahl_anzeige">
-				<div v-if="kurszahl_anzeige" class="cursor-pointer rounded-lg bg-slate-100 px-2">
-					<span @click="del_kurs">-</span>
-					<span class="px-2">{{kursdifferenz[2]}}</span>
-					<span @click="add_kurs">+</span>
-				</div>
-				<div v-else class="cursor-pointer underline decoration-dashed underline-offset-2">{{kursdifferenz[2]}}</div>
+		<template v-if="allow_regeln">
+			<td class="border border-[#7f7f7f]/20 text-center leading-5  whitespace-nowrap w-2" :class="{'border-t-2': setze_kursdifferenz}" @click="toggle_kursdetail_anzeige">
+				<div v-if="kursdetail_anzeige" class="cursor-pointer">V</div>
+				<div v-else class="cursor-pointer">A</div>
 			</td>
 		</template>
-		<template v-if="!kurs_blockungsergebnis && allow_regeln">
-			<td class="bg-white"></td>
-		</template>
+		<!-- <template v-else>
+			<td class="bg-white" :class="{'border-t-2': setze_kursdifferenz}"></td>
+		</template> -->
 		<!-- <td class="border-none bg-white"></td> -->
 	</tr>
+	<!--Wenn Kursdtails angewählt sind, erscheint die zusätzliche Zeile-->
+	<tr v-if="kursdetail_anzeige">
+		<td colspan="3">
+			<svws-ui-button class="h-6" size="small" type="secondary" @click="toggle_zusatzkraefte_modal">Zusatzkräfte anlegen</svws-ui-button>
+		</td>
+		<td :colspan="1+schienen.size()">
+			<div class="flex gap-1 p-2">
+					Schienen
+					<svws-ui-button class="h-6" size="small" type="secondary" @click="">+</svws-ui-button>
+					{{ kurs.anzahlSchienen }}
+					<svws-ui-button class="h-6" size="small" type="secondary" @click="">-</svws-ui-button>
+					<span class="px-4">Kurse</span>
+					<svws-ui-button class="h-6" size="small" type="secondary" @click="add_kurs">+</svws-ui-button>
+					<svws-ui-button class="h-6" size="small" type="secondary" @click="del_kurs">-</svws-ui-button>
+					<svws-ui-button class="h-6" type="secondary">Aufteilen …</svws-ui-button>
+					<svws-ui-dropdown class="h-6" variant="icon" v-if="filtered_by_kursart.length>1">
+						<template #dropdownButton>Zusammenlegen</template>
+						<template #dropdownItems>
+							<svws-ui-dropdown-item v-for="k in filtered_by_kursart.filter(k=>k.id!==kurs.id)" :key="k.id" class="px-2" @click=""> {{ get_kursbezeichnung(k.id) }} </svws-ui-dropdown-item>
+						</template>
+					</svws-ui-dropdown>
+			</div>
+		</td>
+	</tr>
+	<!--Modal-->
 	<svws-ui-modal ref="kurs_und_kurs_modal" size="small">
 		<template #modalTitle>Regel erstellen für Kurse</template>
 		<template #modalDescription>
@@ -108,6 +128,17 @@
 				<svws-ui-button @click="toggle_kurs_und_kurs_modal">Abbrechen</svws-ui-button>
 				<svws-ui-button @click="create_regel_immer">Immer</svws-ui-button>
 				<svws-ui-button @click="create_regel_nie">Nie</svws-ui-button>
+			</div>
+		</template>
+	</svws-ui-modal>
+	<svws-ui-modal ref="zusatzkraefte_modal" size="small">
+		<template #modalTitle>Zusatzkräfte für Kurse</template>
+		<template #modalDescription>
+			<div class="">
+				<s-kurslehrer-select :kurs="kurs"/>
+			</div>
+			<div class="flex gap-1">
+				<svws-ui-button @click="toggle_zusatzkraefte_modal">Beende</svws-ui-button>
 			</div>
 		</template>
 	</svws-ui-modal>
@@ -143,7 +174,7 @@ const main: Main = injectMainApp();
 const app = main.apps.gost;
 
 const edit_name: Ref<GostBlockungKurs | undefined> = ref(undefined)
-const kurszahl_anzeige: Ref<boolean> = ref(false)
+const kursdetail_anzeige: Ref<boolean> = ref(false)
 
 const drag_data: Ref<{kurs: GostBlockungKurs|undefined; schiene: GostBlockungSchiene|undefined}> = ref({schiene: undefined, kurs: undefined})
 
@@ -158,9 +189,6 @@ const gostFach: ComputedRef<GostFach | null> =
 			}
 		return fach;
 	});
-
-const fachKuerzel: ComputedRef<string> =
-	computed(() => gostFach.value?.kuerzelAnzeige?.toString() || "?");
 
 const fach: ComputedRef<ZulaessigesFach> =
 	computed(() => ZulaessigesFach.getByKuerzelASD(gostFach.value?.kuerzel || null));
@@ -269,7 +297,7 @@ const kurs_blockungsergebnis: ComputedRef<GostBlockungsergebnisKurs|undefined> =
 
 const selected_kurs: ComputedRef<boolean> =
 	computed(() => (kurs_blockungsergebnis.value !== undefined)
-		&& (kurs_blockungsergebnis.value?.id === props.kurs?.id))
+		&& (kurs_blockungsergebnis.value?.id === app.listAbiturjahrgangSchueler.filter.kurs?.id))
 
 const filtered_by_kursart: ComputedRef<GostBlockungsergebnisKurs[]> =
 	computed(()=>{
@@ -323,8 +351,6 @@ const allow_regeln: ComputedRef<boolean> =
 
 const blockung_aktiv: ComputedRef<boolean> =
 	computed(()=> app.blockungsauswahl.ausgewaehlt?.istAktiv || false);
-
-const toggle_kurszahl_anzeige = () => kurszahl_anzeige.value = !kurszahl_anzeige.value
 
 function drag_started(e: DragEvent) {
 	const transfer = e.dataTransfer;
@@ -457,6 +483,13 @@ function kurs_schiene_zugeordnet(schiene: GostBlockungsergebnisSchiene): boolean
 	return manager.value?.getOfKursOfSchieneIstZugeordnet(props.kurs.id, schiene.id) || false
 }
 
+const toggle_kursdetail_anzeige = () => kursdetail_anzeige.value = !kursdetail_anzeige.value
+
+const zusatzkraefte_modal: Ref<any> = ref(null);
+function toggle_zusatzkraefte_modal() {
+	zusatzkraefte_modal.value.isOpen ? zusatzkraefte_modal.value.closeModal() : zusatzkraefte_modal.value.openModal();
+};
+
 const kurs_und_kurs_modal: Ref<any> = ref(null);
 function toggle_kurs_und_kurs_modal() {
 	kurs_und_kurs_modal.value.isOpen ? kurs_und_kurs_modal.value.closeModal() : kurs_und_kurs_modal.value.openModal();
@@ -482,5 +515,4 @@ async function create_regel_nie() {
 	regel.parameter.add(props.kurs.id);
 	await app.dataKursblockung.add_blockung_regel(regel)
 }
-
 </script>

@@ -1,22 +1,16 @@
 <template>
-	<tr :style="{'background-color': bgColor}">
-			<td><span class="w-20">{{kursbezeichnung}}</span></td>
-			<td>
-				<div class="flex flex-col gap-2">
-					<div class="flex flex-row gap-1" v-for="lehrer, i of kurslehrer" :key="lehrer.id">
-						<svws-ui-multi-select :modelValue="lehrer" @update:modelValue="(val: LehrerListeEintrag|undefined) => update_kurslehrer(val, lehrer)" class="w-52"
-							autocomplete :item-filter="lehrer_filter" :items="lehrer_liste" removable
-							:item-text="(l: LehrerListeEintrag)=> `${l.nachname}, ${l.vorname} (${l.kuerzel})`"/>
-						<svws-ui-icon v-if="!new_kurs_lehrer && i === kurslehrer.length-1" class="cursor-pointer text-black" @click="new_kurs_lehrer=true"><i-ri-user-add-line /></svws-ui-icon>
-					</div>
-					<div v-if="!kurslehrer.length || new_kurs_lehrer">
-						<svws-ui-multi-select
-						:modelValue="undefined" @update:modelValue="update_kurslehrer" class="w-52" autocomplete :item-filter="lehrer_filter" :items="lehrer_liste" :item-text="(l: LehrerListeEintrag)=> `${l.nachname}, ${l.vorname} (${l.kuerzel})`"/>
-					</div>
-				</div>
-			</td>
-			<td>tu was</td>
-	</tr>
+	<div class="flex flex-col gap-2">
+		<div class="flex flex-row gap-1" v-for="lehrer, i of kurslehrer" :key="lehrer.id">
+			<svws-ui-multi-select :modelValue="lehrer" @update:modelValue="(val: LehrerListeEintrag|undefined) => update_kurslehrer(val, lehrer)" class="w-52"
+				autocomplete :item-filter="lehrer_filter" :items="lehrer_liste" removable
+				:item-text="(l: LehrerListeEintrag)=> `${l.nachname}, ${l.vorname} (${l.kuerzel})`"/>
+			<svws-ui-icon v-if="!new_kurs_lehrer && i === kurslehrer.length-1" class="cursor-pointer text-black" @click="new_kurs_lehrer=true"><i-ri-user-add-line /></svws-ui-icon>
+		</div>
+		<div v-if="!kurslehrer.length || new_kurs_lehrer">
+			<svws-ui-multi-select
+			:modelValue="undefined" @update:modelValue="update_kurslehrer" class="w-52" autocomplete :item-filter="lehrer_filter" :items="lehrer_liste" :item-text="(l: LehrerListeEintrag)=> `${l.nachname}, ${l.vorname} (${l.kuerzel})`"/>
+		</div>
+	</div>
 </template>
 
 <script setup lang="ts">

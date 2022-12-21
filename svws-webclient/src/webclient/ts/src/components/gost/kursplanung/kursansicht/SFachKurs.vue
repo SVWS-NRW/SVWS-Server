@@ -1,21 +1,23 @@
 <template>
-	<template v-if="isVisible">
-		<tr v-for="kursart in GostKursart.values()" class="text-left" :style="{ 'background-color': bgColor }">
-			<template v-if="kurszahlen.get(kursart.id) === 0 && wahlen.get(kursart.id)" class="text-left" :style="{ 'background-color': bgColor }">
-				<td class="px-4 border-y border-[#7f7f7f]/20" colspan="3">
+	<template v-for="kursart in GostKursart.values()" >
+		<template v-if="kurszahlen.get(kursart.id) === 0 && wahlen.get(kursart.id) && allow_regeln">
+			<tr class="text-left" :style="{ 'background-color': bgColor }">
+				<td class="border border-[#7f7f7f]/20 px-2 whitespace-nowrap border-t-2" colspan="3">
 					{{ fach.kuerzel }}-{{ kursart.kuerzel }} </td>
-				<td class="px-2 border-y border-[#7f7f7f]/20" colspan="3">
-					<svws-ui-button class="" size="small" @click="add_kurs(kursart)">Kurs hinzufügen</svws-ui-button> </td>
-				<td class="px-4 border-y border-[#7f7f7f]/20 border-r" :colspan="schienen.size()-2">
-					{{ wahlen.get(kursart.id) }} Kurswahlen </td>
-				<td class="bg-white"></td>
-			</template>
-		</tr>
+				<td class="px-2 border-y border-[#7f7f7f]/20 border-t-2" colspan="1">
+					{{ wahlen.get(kursart.id) }} </td>
+				<td class="border border-[#7f7f7f]/20 px-2 border-t-2" :colspan="schienen.size()+2">
+					<svws-ui-button class="px-12" size="small" @click="add_kurs(kursart)">Kurs hinzufügen</svws-ui-button> </td>
+			</tr>
+		</template>
+		<template v-else>
+			<s-kurs-blockung v-for="kurs in vorhandene_kurse(kursart)" :key="kurs.id" :kurs="kurs"/>
+		</template>
 	</template>
 </template>
 
 <script setup lang="ts">
-	import { List, Vector, GostBlockungKurs, GostBlockungSchiene, GostKursart, GostStatistikFachwahl, GostStatistikFachwahlHalbjahr, HashMap, ZulaessigesFach, GostFach } from "@svws-nrw/svws-core-ts";
+	import { List, Vector, GostBlockungKurs, GostBlockungSchiene, GostKursart, GostStatistikFachwahl, GostStatistikFachwahlHalbjahr, ZulaessigesFach, GostFach } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef } from "vue";
 
 	import { injectMainApp, Main } from "~/apps/Main";
@@ -28,12 +30,15 @@
 	const main: Main = injectMainApp();
 	const app = main.apps.gost;
 
+	const allow_regeln: ComputedRef<boolean> =
+		computed(()=> app.blockungsergebnisauswahl.liste.length === 1)
+
 	const kurszahlen: ComputedRef<Map<number, number>> =
 		computed(() => {
 			const kurszahlen : Map<number, number> = new Map();
 			for (const kursart of GostKursart.values())
 				kurszahlen.set(kursart.id, 0);
-			for (const k of kurse.value) {
+			for (const k of sorted_kurse.value) {
 				if (k.fach_id !== props.fach.id)
 					continue;
 				let anzahl = kurszahlen.get(k.kursart);
@@ -43,9 +48,24 @@
 			return kurszahlen;
 		});
 
-	const kurse: ComputedRef<List<GostBlockungKurs>> =
-		computed(()=>
-			app.dataKursblockung.datenmanager?.getKursmengeSortiertNachKursartFachNummer() || new Vector<GostBlockungKurs>())
+	function vorhandene_kurse(kursart: GostKursart): GostBlockungKurs[] {
+		let liste = [];
+		for (const kurs of sorted_kurse.value)
+			if (kurs.fach_id === props.fach.id && kurs.kursart === kursart.id)
+				liste.push(kurs);
+		return liste;
+	}
+	const sort_by: ComputedRef<UserConfigKeys['gost.kursansicht.sortierung']> =
+		computed(() => main.config.user_config.get('gost.kursansicht.sortierung') || 'kursart');
+
+	const sorted_kurse: ComputedRef<List<GostBlockungKurs>> =
+		computed(() => {
+			if (app.dataKursblockung.datenmanager === undefined)
+				return new Vector<GostBlockungKurs>();
+			if (sort_by.value === 'kursart')
+				return app.dataKursblockung.datenmanager.getKursmengeSortiertNachKursartFachNummer()
+			else return app.dataKursblockung.datenmanager.getKursmengeSortiertNachFachKursartNummer()
+		})
 
 	const schienen: ComputedRef<List<GostBlockungSchiene>> =
 		computed(()=> app.dataKursblockung.datenmanager?.getMengeOfSchienen() || new Vector<GostBlockungSchiene>())
@@ -68,23 +88,10 @@
 			return wahlen;
 		});
 
-	const isVisible : ComputedRef<boolean> = computed(() => {
-		for (const kursart of GostKursart.values()) {
-			const k = kurszahlen.value.get(kursart.id);
-			const w = wahlen.value.get(kursart.id);
-			if ((k === undefined) || w === undefined)
-				return false;
-			if ((k === 0) && (w > 0))
-				return true;
-		}
-		return false;
-	});
-
 	const bgColor: ComputedRef<string | undefined> =
 		computed(() => app.dataFachwahlen.getBgColor(props.fach));
 
 	function add_kurs(art: GostKursart) {
 		app.dataKursblockung.add_blockung_kurse(props.fach.id, art.id)
 	}
-
 </script>

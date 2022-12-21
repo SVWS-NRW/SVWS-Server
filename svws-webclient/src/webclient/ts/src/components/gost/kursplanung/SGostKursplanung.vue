@@ -11,12 +11,9 @@
 			<div class="relative pl-2 flex flex-col gap-2">
 				<svws-ui-button class="flex justify-center w-20 h-7 rounded-full text-headline-4 text-black translate-y-1/2 transform" @click="onToggleRegeln">
 					Regeln <svws-ui-icon> <i-ri-arrow-left-s-line v-if="collapsed" /> <i-ri-arrow-right-s-line v-else /> </svws-ui-icon> </svws-ui-button>
-				<svws-ui-button class="flex justify-center w-20 h-7 rounded-full text-headline-4 text-black translate-y-1/2 transform" @click="onToggleLehrer">
-					Kurse <svws-ui-icon> <i-ri-arrow-left-s-line v-if="collapsed" /> <i-ri-arrow-right-s-line v-else /> </svws-ui-icon> </svws-ui-button>
 			</div>
 			<div class="flex flex-col py-4">
 				<s-card-gost-regelansicht v-if="!collapsed && active_panel==='regeln'"/>
-				<s-card-gost-kurslehrerpanel v-if="!collapsed && active_panel==='lehrer'"/>
 			</div>
 		</div>
 	</div>
@@ -34,7 +31,7 @@
 	const app = main.apps.gost;
 	
 	const collapsed: Ref<boolean> = ref(true);
-	const active_panel: Ref<'lehrer'|'regeln'> = ref('regeln')
+	const active_panel: Ref<'regeln'> = ref('regeln')
 
 	const visible: ComputedRef<boolean> =
 		computed(() =>
@@ -51,13 +48,6 @@
 	}
 
 	function onToggleRegeln() {
-		if (active_panel.value === 'regeln')
-			onToggle();
-		active_panel.value = 'regeln';
-	}
-	function onToggleLehrer() {
-		if (active_panel.value === 'lehrer')
-			onToggle();
-		active_panel.value = 'lehrer';
+		onToggle();
 	}
 </script>

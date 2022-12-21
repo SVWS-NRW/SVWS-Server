@@ -16,26 +16,16 @@
 							<!-- Wenn sticky angewendet wird, verschwinden die  border border-[#7f7f7f]/20 s...  -->
 							<thead class="sticky top-0 bg-slate-100">
 								<tr>
-									<td colspan="4">
-										Schiene
-									</td>
-									<td
-										v-for="s in schienen"
-										:key="s.id"
-										class="border border-[#7f7f7f]/20 text-center"
-									>
-										<div class="flex justify-center" v-if="allow_regeln">
+									<td colspan="5">
+										Schiene </td>
+									<td v-for="s in schienen" :key="s.id" class="border border-[#7f7f7f]/20 text-center" >
+										<div v-if="allow_regeln" class="flex justify-center">
 											<template v-if="s === edit_schienenname">
-												<svws-ui-text-input
-													:modelValue="s.bezeichnung"
-													focus headless
-													style="width: 6rem"
+												<svws-ui-text-input :modelValue="s.bezeichnung" focus headless style="width: 6rem"
 													@blur="edit_schienenname=undefined"
 													@keyup.enter="edit_schienenname=undefined"
 													@keyup.escape="edit_schienenname=undefined"
-													@update:modelValue="patch_schiene(s, $event)"
-												/>
-											</template>
+													@update:modelValue="patch_schiene(s, $event)" /> </template>
 											<template v-else>
 												<span class="px-3 underline decoration-dashed underline-offset-2 cursor-text" @click="edit_schienenname = s">{{s.nummer}}</span>
 											</template>
@@ -45,70 +35,38 @@
 									</td>
 									<template v-if="allow_regeln">
 										<td class="bg-[#329cd5] rounded-l-none rounded-lg border-none cursor-pointer" rowspan="4" @click="add_schiene">
-											<div class="px-2" >+</div></td><td rowspan="4" class="bg-white">
-										</td>
+											<div class="px-2" >+</div></td>
+										<td rowspan="4" class="bg-white"> </td>
 									</template>
 								</tr>
 								<tr>
-									<td class="border border-[#7f7f7f]/20" colspan="4">
-										Schülerzahl
-									</td>
+									<td class="border border-[#7f7f7f]/20" colspan="5">
+										Schülerzahl </td>
 									<!-- Schülerzahlen -->
-									<td
-										v-for="s in schienen"
-										:key="s.id"
-										class="border border-[#7f7f7f]/20 text-center"
-									>
-										{{ getAnzahlSchuelerSchiene(s.id) }}
-									</td>
+									<td v-for="s in schienen" :key="s.id" class="border border-[#7f7f7f]/20 text-center" >
+										{{ getAnzahlSchuelerSchiene(s.id) }} </td>
 								</tr>
 								<tr>
-									<td class="border border-[#7f7f7f]/20" colspan="4">
-										Kollisionen
-									</td>
+									<td class="border border-[#7f7f7f]/20" colspan="5">
+										Kollisionen </td>
 									<!-- Kollisionen -->
-									<td
-										v-for="s in schienen"
-										:key="s.id"
-										class="border border-[#7f7f7f]/20 text-center"
-									>
-										{{ getAnzahlKollisionenSchiene(s.id) }}
-									</td>
+									<td v-for="s in schienen" :key="s.id" class="border border-[#7f7f7f]/20 text-center" >
+										{{ getAnzahlKollisionenSchiene(s.id) }} </td>
 								</tr>
 								<tr>
 									<td class="border border-[#7f7f7f]/20 text-center cursor-pointer" @click="sort_by = sort_by === 'kursart'? 'fach_id':'kursart'">
 										<div class="flex gap-1">Kurs<svws-ui-icon><i-ri-arrow-up-down-line /></svws-ui-icon></div></td>
 									<td>Lehrer</td>
 									<td class="border border-[#7f7f7f]/20 text-center">Koop</td>
+									<td class="border border-[#7f7f7f]/20 text-center">FW</td>
 									<td class="border border-[#7f7f7f]/20 text-center">Diff</td>
 									<!--Schienen-->
-									<s-drag-schiene
-										v-if="allow_regeln"
-										v-for="s in schienen"
-										:key="s.id"
-										:schiene="s"
-									/>
+									<s-drag-schiene v-if="allow_regeln" v-for="s in schienen" :key="s.id" :schiene="s" />
 									<td v-else :colspan="schienen.size()" class="text-center">Regeln können nicht in Ergebnissen erstellt werden</td>
 								</tr>
 							</thead>
 							<tbody>
-								<s-kurs-blockung
-									v-for="kurs in sorted_kurse"
-									:key="kurs.id"
-									:kurs="kurs"
-								></s-kurs-blockung>
-								<template v-if="allow_regeln">
-									<tr>
-										<td class="border border-[#7f7f7f]/20 text-center bg-white" :colspan="schienen.size()+4">Fachwahlen ohne Kurse</td>
-										<td class="bg-white"></td>
-									</tr>
-									<s-fach-kurs
-										v-for="fach in faecher"
-										:key="fach.id"
-										:fach="fach"
-										:halbjahr="app.blockungsauswahl.ausgewaehlt?.gostHalbjahr || 0"
-									/>
-								</template>
+								<s-fach-kurs v-for="fach in faecher" :key="fach.id" :fach="fach" :halbjahr="app.blockungsauswahl.ausgewaehlt?.gostHalbjahr || 0"/>
 							</tbody>
 						</table>
 					</div>
@@ -120,12 +78,10 @@
 		<template #modalTitle>Blockungsergebnis aktivieren</template>
 		<template #modalDescription>
 			<div class="flex gap-1 mb-2">
-				Soll das Blockungsergebnis aktiviert werden?
-			</div>
+				Soll das Blockungsergebnis aktiviert werden? </div>
 			<div class="flex gap-1">
 				<svws-ui-button @click="toggle_modal_aktivieren">Abbrechen</svws-ui-button>
-				<svws-ui-button @click="activate_ergebnis">Ja</svws-ui-button>
-			</div>
+				<svws-ui-button @click="activate_ergebnis">Ja</svws-ui-button> </div>
 		</template>
 	</svws-ui-modal>
 	<svws-ui-modal ref="modal_hochschreiben" size="small">
@@ -142,13 +98,9 @@
 
 <script setup lang="ts">
 	import {
-		GostBlockungKurs,
-		GostBlockungRegel,
 		GostBlockungSchiene,
 		GostBlockungsergebnisManager,
-		GostKursblockungRegelTyp,
 		GostStatistikFachwahl,
-		LehrerListeEintrag,
 		List,
 		Vector
 	} from "@svws-nrw/svws-core-ts";
@@ -156,7 +108,6 @@
 	import { computed, ComputedRef, ref, Ref, WritableComputedRef } from "vue";
 
 	import { injectMainApp, Main, mainApp } from "~/apps/Main";
-	import { lehrer_filter } from "~/helfer"
 
 	const main: Main = injectMainApp();
 	const app = main.apps.gost
@@ -179,15 +130,6 @@
 
 	const faecher: ComputedRef<List<GostStatistikFachwahl>> =
 		computed(() => app.dataFachwahlen.daten || new Vector<GostStatistikFachwahl>());
-
-	const sorted_kurse: ComputedRef<List<GostBlockungKurs>> =
-		computed(() => {
-			if (app.dataKursblockung.datenmanager === undefined)
-				return new Vector<GostBlockungKurs>();
-			if (sort_by.value === 'kursart')
-				return app.dataKursblockung.datenmanager.getKursmengeSortiertNachKursartFachNummer()
-			else return app.dataKursblockung.datenmanager.getKursmengeSortiertNachFachKursartNummer()
-		})
 
 	const schienen: ComputedRef<List<GostBlockungSchiene>> =
 		computed(() => app.dataKursblockung.datenmanager?.getMengeOfSchienen() || new Vector<GostBlockungSchiene>());
@@ -264,5 +206,4 @@
 		await App.api.schreibeGostBlockungsErgebnisHoch(App.schema, app.blockungsergebnisauswahl.ausgewaehlt.id);
 		await app.blockungsauswahl.update_list(abiturjahr, selected_hj.next()?.id || selected_hj.id, true);
 	}
-
 </script>
