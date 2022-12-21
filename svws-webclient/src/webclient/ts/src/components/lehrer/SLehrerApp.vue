@@ -3,10 +3,12 @@
 		<svws-ui-header>
 			<div class="flex items-center">
 				<div class="w-16 mr-4 -ml-2">
+<!--
 					<svws-ui-avatar
 						:src="'data:image/png;base64, ' + foto"
-						:alt="foto ? 'Foto ' + vorname + ' ' + nachname : ''"
+						:alt="foto ? 'Foto ' + inputVorname + ' ' + inputNachname : ''"
 					/>
+-->					
 				</div>
 				<div>
 					<span class="inline-block mr-3">{{ inputTitel }} {{ inputVorname }} {{ inputNachname }}</span>
@@ -27,29 +29,36 @@
 
 <script setup lang="ts">
 
-	import { LehrerListeEintrag } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, Ref, ref, WritableComputedRef } from "vue";
-	import { RouteRecordRaw, useRouter } from "vue-router";
+	import { LehrerListeEintrag, LogConsumerConsole } from "@svws-nrw/svws-core-ts";
+	import { computed, ComputedRef, onMounted, WritableComputedRef } from "vue";
+	import { onBeforeRouteUpdate, RouteRecordRaw, useRoute, useRouter } from "vue-router";
 
 	import { injectMainApp, Main } from "~/apps/Main";
-	import { RouteLehrerIndividualdaten } from "~/router/apps/lehrer/RouteLehrerIndividualdaten";
-	import { RouteLehrerChildren } from "~/router/apps/RouteLehrer";
+	import { RouteLehrer, RouteLehrerChildren, routeLehrerSetRedirect } from "~/router/apps/RouteLehrer";
+	import { routeAppMeta } from "~/router/RouteUtils";
 
 	const main: Main = injectMainApp();
 	const app = main.apps.lehrer;
 
-	const router = useRouter();
-
 	const props = defineProps<{ id?: number; item?: LehrerListeEintrag }>();
 
-	const currentRoute: Ref<RouteRecordRaw> = ref(RouteLehrerIndividualdaten);
+	// Initialisiere die Sub-Routen
+	const router = useRouter();
+	const route = useRoute();
+	const routeLehrerMeta = routeAppMeta(RouteLehrer);
+	routeLehrerSetRedirect(route);
+	
+	onMounted(() => {
+		if (((route.params.id === undefined) || (route.params.id === "")) && (app.auswahl.liste.length > 0))
+			router.push({ name: routeLehrerMeta.redirect.name?.toString(), params: { id: app.auswahl.liste[0].id } });
+	});
 
 	const selectedRoute: WritableComputedRef<RouteRecordRaw> = computed({
 		get(): RouteRecordRaw {
-			return currentRoute.value;
+			return routeLehrerMeta.redirect;
 		},
 		set(value: RouteRecordRaw) {
-			currentRoute.value = value;
+			routeLehrerMeta.redirect = value;
 			router.push({ name: value.name, params: { id: props.id } });
 		}
 	});

@@ -59,6 +59,8 @@
 	const main: Main = injectMainApp();
 	const app = main.apps.lehrer;
 
+	const props = defineProps<{ id?: number; item?: LehrerListeEintrag, routename: string }>();
+
 	const rows: ComputedRef<LehrerListeEintrag[] | undefined> = computed(() => {
 		return app.auswahl.liste;
 	});

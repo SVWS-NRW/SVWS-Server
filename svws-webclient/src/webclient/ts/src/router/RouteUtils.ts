@@ -9,13 +9,16 @@ import { BaseList } from "~/apps/BaseList";
 export interface RouteAppMeta<Item> extends RouteMeta {
 
 	/** Eine Funktion, welche eine Computed-Property zurückliefert, die für die Auswahl eines Elements aus einer Liste von Elementen verantwirtlich ist. */
-	auswahl: () => WritableComputedRef<Item>
+	auswahl: (routename? : string) => WritableComputedRef<Item>;
+
+	/** Ein Pfad, welcher als Suffix der Route angehangen wird, falls ein automatischer redirect erfolgt (z.B. bei Tabs nach einer Auswahl) */
+	redirect: RouteRecordRaw;
 
 	/** Eine 0-indizierte ID zur Angabe der Reihenfolge der Routen-Elemente bei der Darstellung in der UI */
-	reihenfolge: number
+	reihenfolge: number;
 
 	/** Ein Text, welcher zur Darstellung in der GUI genutzt wird (z.B. der Text auf Tabs) */
-	text: string
+	text: string;
 }
 
 
@@ -26,7 +29,7 @@ export interface RouteAppMeta<Item> extends RouteMeta {
  * 
  * @returns Die Meta-Information des Routen-Eintrags
  */
-function routeAppMeta<T extends RouteRecordRaw, Item>(route : T) : RouteAppMeta<Item> {
+export function routeAppMeta<T extends RouteRecordRaw, Item>(route : T) : RouteAppMeta<Item> {
 	if (route.meta === undefined)
 		throw new Error("Meta-Informationen für die Route '" + route.name?.toString() + "' nicht definiert.");
 	return route.meta as RouteAppMeta<Item>;
@@ -35,12 +38,13 @@ function routeAppMeta<T extends RouteRecordRaw, Item>(route : T) : RouteAppMeta<
 /**
  * Methode zum Erzeugen der Computed-Property für die Auswahl eines Routen-Eintrags.
  * 
- * @param route    der Routen-Eintrag, für den die Computed-Property erzeugt werden soll
+ * @param route       der Routen-Eintrag, für den die Computed-Property erzeugt werden soll
+ * @param routename   der Name der Route, die zuvor aktiviert war
  * 
  * @returns die Computed-Property
  */
-export function routeAppAuswahl<T extends RouteRecordRaw, Item>(route : T) : WritableComputedRef<Item> {
-	return routeAppMeta<T, Item>(route).auswahl();
+export function routeAppAuswahl<T extends RouteRecordRaw, Item>(route : T, routename? : string) : WritableComputedRef<Item> {
+	return routeAppMeta<T, Item>(route).auswahl(routename);
 }
 
 /**
@@ -58,10 +62,10 @@ export function routeAppAuswahl<T extends RouteRecordRaw, Item>(route : T) : Wri
  */
 export function routePropsAuswahlID<TAuswahl extends BaseList<{ id: number }, unknown>>(route: RouteLocationNormalized, auswahl: TAuswahl) {
 	if ((auswahl === undefined) || (route.params.id === undefined))
-		return { id: undefined, item: undefined };
+		return { id: undefined, item: undefined, routename: route.name?.toString() };
 	const id = parseInt(route.params.id as string);
 	const item = auswahl.liste.find(s => s.id === id);
-	return { id: id, item: item };
+	return { id: id, item: item, routename: route.name?.toString() };
 }
 
 
