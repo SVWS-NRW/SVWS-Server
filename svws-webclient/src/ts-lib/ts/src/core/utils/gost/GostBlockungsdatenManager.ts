@@ -592,7 +592,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert den Namen des Kurses der Form [Fach]+[Kursart][Kursnummer], beispielsweise D-GK1.
+	 * Liefert den Namen des Kurses der Form [Fach]+[Kursart][Kursnummer]+[Suffix], beispielsweise D-GK1.
 	 * 
 	 * @param  pKursID  Die Datenbank-ID des Kurses.
 	 * @return          Den Namen des Kurses der Form [Fach]+[Kursart][Kursnummer], beispielsweise D-GK1.
@@ -600,7 +600,19 @@ export class GostBlockungsdatenManager extends JavaObject {
 	public getNameOfKurs(pKursID : number) : String {
 		let kurs : GostBlockungKurs = this.getKurs(pKursID);
 		let gFach : GostFach = this._faecherManager.getOrException(kurs.fach_id);
-		return gFach.kuerzel + "-" + GostKursart.fromID(kurs.kursart).kuerzel + kurs.nummer;
+		let sAppend : String = JavaObject.equalsTranspiler(kurs.suffix, ("")) ? "" : ("-" + kurs.suffix);
+		return gFach.kuerzel + "-" + GostKursart.fromID(kurs.kursart).kuerzel + kurs.nummer + sAppend.valueOf();
+	}
+
+	/**
+	 * Setzt den Suffix des Kurses.
+	 * 
+	 * @param  pKursID  Die Datenbank-ID des Kurses.
+	 * @param  pSuffix  Der neue Suffix des Kurses.
+	 */
+	public setSuffixOfKurs(pKursID : number, pSuffix : String) : void {
+		let kurs : GostBlockungKurs = this.getKurs(pKursID);
+		kurs.suffix = pSuffix;
 	}
 
 	/**

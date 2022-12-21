@@ -619,7 +619,7 @@ public class GostBlockungsdatenManager {
 	}
 
 	/**
-	 * Liefert den Namen des Kurses der Form [Fach]+[Kursart][Kursnummer], beispielsweise D-GK1.
+	 * Liefert den Namen des Kurses der Form [Fach]+[Kursart][Kursnummer]+[Suffix], beispielsweise D-GK1.
 	 * 
 	 * @param  pKursID  Die Datenbank-ID des Kurses.
 	 * @return          Den Namen des Kurses der Form [Fach]+[Kursart][Kursnummer], beispielsweise D-GK1.
@@ -627,7 +627,19 @@ public class GostBlockungsdatenManager {
 	public @NotNull String getNameOfKurs(long pKursID) {
 		@NotNull GostBlockungKurs kurs = getKurs(pKursID);
 		@NotNull GostFach gFach = _faecherManager.getOrException(kurs.fach_id);
-		return gFach.kuerzel + "-" + GostKursart.fromID(kurs.kursart).kuerzel + kurs.nummer;
+		@NotNull String sAppend = kurs.suffix.equals("") ? "" : ("-" + kurs.suffix);
+		return gFach.kuerzel + "-" + GostKursart.fromID(kurs.kursart).kuerzel + kurs.nummer + sAppend;
+	}
+
+	/**
+	 * Setzt den Suffix des Kurses.
+	 * 
+	 * @param  pKursID  Die Datenbank-ID des Kurses.
+	 * @param  pSuffix  Der neue Suffix des Kurses.
+	 */
+	public void setSuffixOfKurs(long pKursID, @NotNull String pSuffix) {
+		@NotNull GostBlockungKurs kurs = getKurs(pKursID);
+		kurs.suffix = pSuffix;
 	}
 
 	/**
