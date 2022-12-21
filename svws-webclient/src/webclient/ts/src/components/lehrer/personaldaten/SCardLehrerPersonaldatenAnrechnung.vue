@@ -1,136 +1,77 @@
 <template>
 	<svws-ui-content-card title="Mehr- / Minderleistung /Anrechnungsstunden">
 		<div class="input-wrapper">
-			<svws-ui-multi-select
-				v-model="mehrleistungsgrund"
-				title="Mehrleistung"
-				:items="mehrleistungsgruende_liste"
-				:item-text="(i: LehrerMehrleistungArt) =>i.daten.text"
-			/>
-			<svws-ui-multi-select
-				v-model="minderleistungsgrund"
-				title="Minderleistung"
-				:items="minderleistungsgruende_liste"
-				:item-text="(i: LehrerMinderleistungArt) =>i.daten.text"
-			/>
-			<svws-ui-text-input
-				v-model="pflichtstundensoll"
-				type="text"
-				placeholder="Stundensumme"
-			/>
-			<svws-ui-multi-select
-				v-model="anrechnungsgrund"
-				title="Nicht unterichtliche Tätigkeiten"
-				:items="anrechnungsgruende_liste"
-				:item-text="(i: LehrerAnrechnungsgrund) =>i.daten.text"
-			/>
-			<svws-ui-text-input
-				v-model="stammschulnummer"
-				type="text"
-				placeholder="Stammschulnummer"
-			/>
+			<svws-ui-multi-select title="Mehrleistung" v-model="mehrleistungsgrund" :items="LehrerMehrleistungArt.values()" 
+				:item-text="(i: LehrerMehrleistungArt) =>i.daten.text" />
+			<svws-ui-multi-select title="Minderleistung" v-model="minderleistungsgrund" :items="LehrerMinderleistungArt.values()"
+				:item-text="(i: LehrerMinderleistungArt) =>i.daten.text" />
+			<svws-ui-text-input placeholder="Stundensumme" v-model="pflichtstundensoll" type="text" />
+			<svws-ui-multi-select title="Nicht unterichtliche Tätigkeiten" v-model="anrechnungsgrund" :items="LehrerAnrechnungsgrund.values()"
+				:item-text="(i: LehrerAnrechnungsgrund) =>i.daten.text" />
+			<svws-ui-text-input placeholder="Stammschulnummer" v-model="stammschulnummer" type="text" />
 		</div>
 	</svws-ui-content-card>
 </template>
 
 <script setup lang="ts">
+
 	import { computed, ComputedRef, WritableComputedRef } from "vue";
+	import { LehrerAnrechnungsgrund, LehrerMehrleistungArt, LehrerMinderleistungArt, LehrerPersonaldaten } from "@svws-nrw/svws-core-ts";
+	import { DataLehrerPersonaldaten } from "~/apps/lehrer/DataLehrerPersonaldaten";
 
-	import {
-		LehrerAnrechnungsgrund,
-		LehrerMehrleistungArt,
-		LehrerMinderleistungArt
-	} from "@svws-nrw/svws-core-ts";
-	import { injectMainApp, Main } from "~/apps/Main";
+	const props = defineProps<{ personaldaten: DataLehrerPersonaldaten }>();
 
-	const main: Main = injectMainApp();
-	const app = main.apps.lehrer;
+	const daten: ComputedRef<LehrerPersonaldaten> = computed(() => props.personaldaten.daten || new LehrerPersonaldaten());
 
-	const mehrleistungsgruende_liste: ComputedRef<LehrerMehrleistungArt[]> =
-		computed(() => {
-			return LehrerMehrleistungArt.values();
-		});
-
-	const minderleistungsgruende_liste: ComputedRef<LehrerMinderleistungArt[]> =
-		computed(() => {
-			return LehrerMinderleistungArt.values();
-		});
-
-	const anrechnungsgruende_liste: ComputedRef<LehrerAnrechnungsgrund[]> =
-		computed(() => {
-			return LehrerAnrechnungsgrund.values();
-		});
-
-	const mehrleistungsgrund: WritableComputedRef<
-		LehrerMehrleistungArt | undefined
-	> = computed({
+	const mehrleistungsgrund: WritableComputedRef<LehrerMehrleistungArt | undefined> = computed({
 		get(): LehrerMehrleistungArt | undefined {
 			// TODO aus Personaldaten bestimmten
 			const kuerzel = undefined;
-			return mehrleistungsgruende_liste.value.find(
-				(e: LehrerMehrleistungArt) => e.daten.kuerzel === kuerzel
-			);
+			return LehrerMehrleistungArt.values().find(e => e.daten.kuerzel === kuerzel);
 		},
 		set(val: LehrerMehrleistungArt | undefined) {
-			// TODO
-			// this.app.personaldaten.patch({
-			//	mehrleistungsgrund: val?.kuerzel
-			// });
+			// TODO props.personaldaten.patch({ mehrleistungsgrund: val?.kuerzel });
 		}
 	});
 
-	const minderleistungsgrund: WritableComputedRef<
-		LehrerMinderleistungArt | undefined
-	> = computed({
+	const minderleistungsgrund: WritableComputedRef<LehrerMinderleistungArt | undefined> = computed({
 		get(): LehrerMinderleistungArt | undefined {
 			// TODO aus Personaldaten bestimmten
 			const kuerzel = undefined;
-			return minderleistungsgruende_liste.value.find(
-				(e: LehrerMinderleistungArt) => e.daten.kuerzel === kuerzel
-			);
+			return LehrerMinderleistungArt.values().find(e => e.daten.kuerzel === kuerzel);
 		},
 		set(val: LehrerMinderleistungArt | undefined) {
-			// TODO
-			// this.app.personaldaten.patch({
-			//	minderleistungsgrund: val?.kuerzel
-			// });
+			// TODO props.personaldaten.patch({ minderleistungsgrund: val?.kuerzel });
 		}
 	});
 
-	const anrechnungsgrund: WritableComputedRef<
-		LehrerAnrechnungsgrund | undefined
-	> = computed({
+	const anrechnungsgrund: WritableComputedRef<LehrerAnrechnungsgrund | undefined> = computed({
 		get(): LehrerAnrechnungsgrund | undefined {
 			// TODO aus Personaldaten bestimmten
 			const kuerzel = undefined;
-			return anrechnungsgruende_liste.value.find(
-				e => e.daten.kuerzel === kuerzel
-			);
+			return LehrerAnrechnungsgrund.values().find(e => e.daten.kuerzel === kuerzel);
 		},
 		set(val: LehrerAnrechnungsgrund | undefined) {
-			// TODO
-			// this.app.personaldaten.patch({
-			//	anrechnungsgrund: val?.kuerzel
-			// });
+			// TODO props.personaldaten.patch({ anrechnungsgrund: val?.kuerzel });
 		}
 	});
 
-	const pflichtstundensoll: WritableComputedRef<number | undefined> =
-		computed({
-			get(): number | undefined {
-				return app.personaldaten?.daten?.pflichtstundensoll?.valueOf();
-			},
-			set(val: number | undefined) {
-				app.personaldaten.patch({ pflichtstundensoll: val });
-			}
-		});
+	const pflichtstundensoll: WritableComputedRef<number | undefined> = computed({
+		get(): number | undefined {
+			return daten.value.pflichtstundensoll?.valueOf();
+		},
+		set(val: number | undefined) {
+			props.personaldaten.patch({ pflichtstundensoll: val });
+		}
+	});
 
 	const stammschulnummer: WritableComputedRef<string | undefined> = computed({
 		get(): string | undefined {
-			return app.personaldaten?.daten?.stammschulnummer?.toString();
+			return daten.value.stammschulnummer?.toString();
 		},
 		set(val: string | undefined) {
-			app.personaldaten.patch({ stammschulnummer: val });
+			props.personaldaten.patch({ stammschulnummer: val });
 		}
 	});
+
 </script>

@@ -1,5 +1,5 @@
 <template>
-	<div v-if="app.stammdaten.daten && props?.id">
+	<div v-if="data.stammdaten.daten && props?.id">
 		<svws-ui-header>
 			<div class="flex items-center">
 				<div class="w-16 mr-4 -ml-2">
@@ -32,19 +32,19 @@
 	import { RouteRecordRaw, useRoute, useRouter } from "vue-router";
 
 	import { injectMainApp, Main } from "~/apps/Main";
-	import { RouteLehrer, RouteLehrerChildren, RouteLehrerData, routeLehrerSetRedirect } from "~/router/apps/RouteLehrer";
+	import { RouteLehrer, RouteLehrerChildren, RouteDataLehrer, routeLehrerSetRedirect } from "~/router/apps/RouteLehrer";
 	import { routeAppData, routeAppMeta } from "~/router/RouteUtils";
 
 	const main: Main = injectMainApp();
 	const app = main.apps.lehrer;
 
-	const props = defineProps<{ id?: number; item?: LehrerListeEintrag }>();
+	const props = defineProps<{ id?: number; item?: LehrerListeEintrag, routename: string }>();
 
 	// Initialisiere die Sub-Routen
 	const router = useRouter();
 	const route = useRoute();
 	const redirect = routeAppMeta(RouteLehrer).redirect;
-	const data: RouteLehrerData = routeAppData(RouteLehrer);
+	const data: RouteDataLehrer = routeAppData(RouteLehrer);
 	routeLehrerSetRedirect(route);
 	
 	onMounted(() => {

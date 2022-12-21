@@ -1,9 +1,9 @@
 <template>
-	<div v-if="app.personaldaten.daten && visible" class="app-container">
-		<s-card-lehrer-personaldaten-allgemein />
-		<s-card-lehrer-personaldaten-lehraemter />
-		<s-card-lehrer-personaldaten-beschaeftigung />
-		<s-card-lehrer-personaldaten-anrechnung />
+	<div v-if="visible" class="app-container">
+		<s-card-lehrer-personaldaten-allgemein :personaldaten="personaldaten" />
+		<s-card-lehrer-personaldaten-lehraemter :personaldaten="personaldaten" />
+		<s-card-lehrer-personaldaten-beschaeftigung :personaldaten="personaldaten" />
+		<s-card-lehrer-personaldaten-anrechnung :personaldaten="personaldaten" />
 	</div>
 </template>
 
@@ -11,15 +11,22 @@
 
 	import { LehrerListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef } from "vue";
-	import { injectMainApp, Main } from "~/apps/Main";
+	import { DataLehrerPersonaldaten } from "~/apps/lehrer/DataLehrerPersonaldaten";
+	import { RouteDataLehrerPersonaldaten, RouteLehrerPersonaldaten } from "~/router/apps/lehrer/RouteLehrerPersonaldaten";
+	import { routeAppData } from "~/router/RouteUtils";
 
-	const main: Main = injectMainApp();
-	const app = main.apps.lehrer;
+	const props = defineProps<{ id?: number; item?: LehrerListeEintrag, routename: string }>();
 
-	const props = defineProps<{ id?: number; item?: LehrerListeEintrag }>();
+	const data: RouteDataLehrerPersonaldaten = routeAppData(RouteLehrerPersonaldaten);
+
+	const personaldaten: ComputedRef<DataLehrerPersonaldaten> = computed(() => {
+		return data.personaldaten;
+	});
 
 	const visible: ComputedRef<boolean> = computed(() => {
-		//return this.$app.lehrerPersonaldaten.visible; //TODO: richtige Bedingung einpflegen
+		if (personaldaten.value.daten === undefined)
+			return false;
+		//TODO: richtige Bedingung einpflegen
 		return true;
 	});
 

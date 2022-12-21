@@ -2,114 +2,40 @@
 	<svws-ui-content-card title="Basisdaten">
 		<div class="content-wrapper">
 			<div class="input-wrapper">
-				<svws-ui-text-input
-					v-model="inputKuerzel"
-					type="text"
-					placeholder="Kürzel"
-					required
-				/>
-				<svws-ui-multi-select
-					v-model="inputPersonalTyp"
-					:items="inputPersonalTypen"
-					:item-text="(i: PersonalTyp) => i.bezeichnung"
-					title="Personal-Typ"
-					required
-				/>
-				<svws-ui-text-input
-					v-model="inputNachname"
-					type="text"
-					placeholder="Nachname"
-					required
-				/>
-				<svws-ui-text-input
-					v-model="inputVorname"
-					type="text"
-					placeholder="Vorname"
-					required
-				/>
-				<svws-ui-multi-select
-					v-model="inputGeschlecht"
-					title="Geschlecht"
-					:items="inputKatalogGeschlecht"
-					required
-				/>
-				<svws-ui-text-input
-					v-model="inputGeburtsdatum"
-					type="date"
-					placeholder="Geburtsdatum"
-					required
-				/>
-				<svws-ui-multi-select
-					v-model="inputStaatsangehoerigkeit"
-					title="Staatsangehörigkeit"
-					:items="inputKatalogStaatsangehoerigkeit"
-					:item-text="(i: Nationalitaeten) => i.daten.staatsangehoerigkeit"
-					:item-sort="staatsangehoerigkeitKatalogEintragSort"
-					:item-filter="staatsangehoerigkeitKatalogEintragFilter"
-					required
-				/>
-				<svws-ui-text-input
-					v-model="inputTitel"
-					type="text"
-					placeholder="Akad.Grad"
-				/>
-				<svws-ui-text-input
-					v-model="inputAmtsbezeichnung"
-					type="text"
-					placeholder="Amtsbezeichnung"
-				/>
+				<svws-ui-text-input placeholder="Kürzel" v-model="inputKuerzel" type="text" required />
+				<svws-ui-multi-select title="Personal-Typ" v-model="inputPersonalTyp" :items="PersonalTyp.values()" :item-text="(i: PersonalTyp) => i.bezeichnung" required />
+				<svws-ui-text-input placeholder="Nachname" v-model="inputNachname" type="text" required />
+				<svws-ui-text-input placeholder="Vorname" v-model="inputVorname" type="text" required />
+				<svws-ui-multi-select title="Geschlecht" v-model="inputGeschlecht" :items="Geschlecht.values()" required />
+				<svws-ui-text-input placeholder="Geburtsdatum" v-model="inputGeburtsdatum" type="date" required />
+				<svws-ui-multi-select title="Staatsangehörigkeit" v-model="inputStaatsangehoerigkeit" :items="Nationalitaeten.values()"
+					:item-text="(i: Nationalitaeten) => i.daten.staatsangehoerigkeit" :item-sort="staatsangehoerigkeitKatalogEintragSort"
+					:item-filter="staatsangehoerigkeitKatalogEintragFilter" required />
+				<svws-ui-text-input placeholder="Akad.Grad" v-model="inputTitel" type="text" />
+				<svws-ui-text-input placeholder="Amtsbezeichnung" v-model="inputAmtsbezeichnung" type="text" />
 			</div>
 		</div>
 	</svws-ui-content-card>
 </template>
 
 <script setup lang="ts">
+
 	import { computed, ComputedRef, WritableComputedRef } from "vue";
 
-	import {
-		Geschlecht,
-		LehrerStammdaten,
-		Nationalitaeten,
-		PersonalTyp
-	} from "@svws-nrw/svws-core-ts";
-	import { injectMainApp, Main } from "~/apps/Main";
-	import {
-		staatsangehoerigkeitKatalogEintragFilter,
-		staatsangehoerigkeitKatalogEintragSort
-	} from "~/helfer";
+	import { Geschlecht, LehrerStammdaten, Nationalitaeten, PersonalTyp } from "@svws-nrw/svws-core-ts";
+	import { staatsangehoerigkeitKatalogEintragFilter, staatsangehoerigkeitKatalogEintragSort } from "~/helfer";
+	import { DataLehrerStammdaten } from "~/apps/lehrer/DataLehrerStammdaten";
 
-	const main: Main = injectMainApp();
-	const app = main.apps.lehrer;
+	const props = defineProps<{ stammdaten: DataLehrerStammdaten }>();
 
-	const inputKatalogStaatsangehoerigkeit: ComputedRef<Nationalitaeten[]> = computed(() =>
-		Nationalitaeten.values()
-	);
-	const inputKatalogGeschlecht: ComputedRef<Geschlecht[]> = computed(() =>
-		Geschlecht.values()
-	);
-	const inputPersonalTypen: ComputedRef<PersonalTyp[]> = computed(() =>
-		PersonalTyp.values()
-	);
+	const daten: ComputedRef<LehrerStammdaten> = computed(() => props.stammdaten.daten || new LehrerStammdaten());
 
-	const daten: ComputedRef<LehrerStammdaten> = computed(
-		() => app.stammdaten.daten || new LehrerStammdaten()
-	);
-	const id: ComputedRef<number | undefined> = computed(() => {
-		return daten.value.id;
-	});
-
-	const foto: ComputedRef<string | undefined> = computed(() => {
-		return String(daten.value.foto);
-	});
-
-	const inputKuerzel: WritableComputedRef<string> = computed({
+	const inputKuerzel: WritableComputedRef<string> = computed({ 
 		get(): string {
 			return daten.value.kuerzel.toString();
 		},
 		set(val) {
-			if (app.stammdaten) {
-				app.stammdaten.patch({ kuerzel: val });
-			}
+			props.stammdaten.patch({ kuerzel: val });
 		}
 	});
 
@@ -118,7 +44,7 @@
 			return daten.value.nachname.toString();
 		},
 		set(val: string) {
-			app.stammdaten.patch({ nachname: val });
+			props.stammdaten.patch({ nachname: val });
 		}
 	});
 
@@ -127,19 +53,16 @@
 			return daten.value.vorname.toString();
 		},
 		set(val) {
-			app.stammdaten.patch({ vorname: val });
+			props.stammdaten.patch({ vorname: val });
 		}
 	});
 
 	const inputGeschlecht: WritableComputedRef<Geschlecht> = computed({
 		get(): Geschlecht {
-			return (
-				Geschlecht.fromValue(Number(daten.value.geschlecht)) ||
-				Geschlecht.X
-			);
+			return Geschlecht.fromValue(Number(daten.value.geschlecht)) || Geschlecht.X;
 		},
 		set(val: Geschlecht) {
-			app.stammdaten.patch({ geschlecht: val.id });
+			props.stammdaten.patch({ geschlecht: val.id });
 		}
 	});
 
@@ -148,20 +71,16 @@
 			return daten.value?.geburtsdatum ? String(daten.value.geburtsdatum) : '';
 		},
 		set(val) {
-			app.stammdaten.patch({ geburtsdatum: val });
+			props.stammdaten.patch({ geburtsdatum: val });
 		}
 	});
 
 	const inputPersonalTyp: WritableComputedRef<PersonalTyp> = computed({
 		get(): PersonalTyp {
-			const kuerzel = daten.value.personalTyp;
-			return (
-				inputPersonalTypen.value.find(i => i.kuerzel === kuerzel) ||
-				PersonalTyp.SONSTIGE
-			);
+			return PersonalTyp.values().find(i => i.kuerzel === daten.value.personalTyp) || PersonalTyp.SONSTIGE;
 		},
 		set(val: PersonalTyp) {
-			app.stammdaten.patch({ personalTyp: val.kuerzel.toString() });
+			props.stammdaten.patch({ personalTyp: val.kuerzel.toString() });
 		}
 	});
 
@@ -170,26 +89,26 @@
 			return Nationalitaeten.getByISO3(daten.value.staatsangehoerigkeitID) || Nationalitaeten.DEU;
 		},
 		set(val: Nationalitaeten) {
-			app.stammdaten.patch({ staatsangehoerigkeitID: val.daten.iso3 });
+			props.stammdaten.patch({ staatsangehoerigkeitID: val.daten.iso3 });
 		}
 	});
 
 	const inputTitel: WritableComputedRef<string | undefined> = computed({
 		get(): string | undefined {
-			return daten.value?.titel !== null ? String(daten.value.titel) : '';
+			return (daten.value.titel) === null ? "" : String(daten.value.titel);
 		},
 		set(val) {
-			app.stammdaten.patch({ titel: val });
+			props.stammdaten.patch({ titel: val });
 		}
 	});
 
-	const inputAmtsbezeichnung: WritableComputedRef<string | undefined> =
-		computed({
-			get(): string | undefined {
-				return daten.value?.amtsbezeichnung ? String(daten.value.amtsbezeichnung) : '';
-			},
-			set(val) {
-				app.stammdaten.patch({ amtsbezeichnung: val });
-			}
-		});
+	const inputAmtsbezeichnung: WritableComputedRef<string | undefined> = computed({
+		get(): string | undefined {
+			return (daten.value.amtsbezeichnung === null) ? "" : String(daten.value.amtsbezeichnung);
+		},
+		set(val) {
+			props.stammdaten.patch({ amtsbezeichnung: val });
+		}
+	});
+
 </script>
