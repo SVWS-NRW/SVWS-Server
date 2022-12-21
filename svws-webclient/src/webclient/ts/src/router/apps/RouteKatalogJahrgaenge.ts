@@ -16,7 +16,7 @@ export const RouteKatalogJahrgaenge : RouteRecordRaw = {
 		default: (route) => routePropsAuswahlID(route, injectMainApp().apps.jahrgaenge.auswahl),
 		liste: (route) => routePropsAuswahlID(route, injectMainApp().apps.jahrgaenge.auswahl)
 	},
-	meta: <RouteAppMeta<JahrgangsListeEintrag | undefined>> {
+	meta: <RouteAppMeta<JahrgangsListeEintrag | undefined, unknown>> {
 		auswahl: () => routeAuswahlID(ROUTE_NAME, injectMainApp().apps.jahrgaenge.auswahl)
 	}
 }

@@ -13,7 +13,7 @@ export const RouteSchuleBenutzerverwaltungBenutzergruppe : RouteRecordRaw = {
 	path: "/schule/benutzerverwaltung/:id(\\d+)?/benutzergruppe",
 	component: () => import("~/components/schule/benutzerverwaltung/daten/SBenutzergruppe.vue"),
 	props: (route) => routeSchuleBenutzerverwaltungPropsAuswahlID(route),
-	meta: <RouteAppMeta<BenutzergruppeListeEintrag  | undefined>> {
+	meta: <RouteAppMeta<BenutzergruppeListeEintrag  | undefined, unknown>> {
 		auswahl: () => routeBenutzerverwaltungBenutzergruppeAuswahlID(ROUTE_NAME, injectMainApp().apps.benutzergruppe.auswahl),
 		text: "Benutzergruppe"
 	}

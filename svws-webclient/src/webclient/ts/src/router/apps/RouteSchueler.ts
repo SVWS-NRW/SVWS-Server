@@ -16,7 +16,7 @@ export const RouteSchueler : RouteRecordRaw = {
 		default: (route) => routePropsAuswahlID(route, injectMainApp().apps.schueler.auswahl),
 		liste: (route) => routePropsAuswahlID(route, injectMainApp().apps.schueler.auswahl)
 	},
-	meta: <RouteAppMeta<SchuelerListeEintrag | undefined>> {
+	meta: <RouteAppMeta<SchuelerListeEintrag | undefined, unknown>> {
 		auswahl: () => routeAuswahlID(ROUTE_NAME, injectMainApp().apps.schueler.auswahl)
 	}
 }

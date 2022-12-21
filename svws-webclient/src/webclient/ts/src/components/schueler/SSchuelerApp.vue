@@ -9,7 +9,7 @@
 						/>
 					</div>
 					<div>
-						<span class="inline-block mr-3">{{ inputVorname }} {{ inputNachname }}</span>
+						<span class="inline-block mr-3">{{ vorname }} {{ nachname }}</span>
 						<svws-ui-badge variant="light">{{ inputId }}</svws-ui-badge>
 						<br/>
 						<span class="opacity-50">{{ inputKlasse }}</span>
@@ -82,11 +82,15 @@
 		return !!App.apps.schule.schulform?.daten.hatGymOb;
 	});
 
-	const inputNachname: ComputedRef<string | false> = computed(() => {
+	const foto: ComputedRef<String | undefined> = computed(() => {
+		return app.stammdaten.daten?.foto || undefined;
+	});
+
+	const nachname: ComputedRef<string | false> = computed(() => {
 		return (app.auswahl.ausgewaehlt === undefined) ? false : app.auswahl.ausgewaehlt.nachname.toString();
 	});
 
-	const inputVorname: ComputedRef<string | false> = computed(() => {
+	const vorname: ComputedRef<string | false> = computed(() => {
 		return (app.auswahl.ausgewaehlt === undefined) ? false : app.auswahl.ausgewaehlt.vorname.toString();
 	});
 

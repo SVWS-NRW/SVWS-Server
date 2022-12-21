@@ -24,7 +24,7 @@ export const RouteSchuleBenutzerverwaltung : RouteRecordRaw = {
 		default: (route) => routeSchuleBenutzerverwaltungPropsAuswahlID(route),
 		liste: (route) => routeSchuleBenutzerverwaltungPropsAuswahlID(route)
 	},
-	meta: <RouteAppMeta<undefined>> {
+	meta: <RouteAppMeta<unknown, unknown>> {
 		auswahl: () => {}
 	},
 	redirect: to => to.path + "/benutzer",

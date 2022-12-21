@@ -16,7 +16,7 @@ export const RouteKatalogFaecher : RouteRecordRaw = {
 		default: (route) => routePropsAuswahlID(route, injectMainApp().apps.faecher.auswahl),
 		liste: (route) => routePropsAuswahlID(route, injectMainApp().apps.faecher.auswahl)
 	},
-	meta: <RouteAppMeta<FaecherListeEintrag | undefined>> {
+	meta: <RouteAppMeta<FaecherListeEintrag | undefined, unknown>> {
 		auswahl: () => routeAuswahlID(ROUTE_NAME, injectMainApp().apps.faecher.auswahl)
 	}
 }

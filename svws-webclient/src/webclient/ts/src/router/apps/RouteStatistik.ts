@@ -10,7 +10,7 @@ export const RouteStatistik : RouteRecordRaw = {
 		default: () => import("~/components/statistik/SStatistikApp.vue"),
 		liste: () => import("~/components/statistik/SStatistikAuswahl.vue")
 	},
-	meta: <RouteAppMeta<undefined>> {
+	meta: <RouteAppMeta<unknown, unknown>> {
 		auswahl: () => {}
 	}
 }

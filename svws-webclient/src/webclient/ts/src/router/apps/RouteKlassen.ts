@@ -16,7 +16,7 @@ export const RouteKlassen : RouteRecordRaw = {
 		default: (route) => routePropsAuswahlID(route, injectMainApp().apps.klassen.auswahl),
 		liste: (route) => routePropsAuswahlID(route, injectMainApp().apps.klassen.auswahl)
 	},
-	meta: <RouteAppMeta<KlassenListeEintrag | undefined>> {
+	meta: <RouteAppMeta<KlassenListeEintrag | undefined, unknown>> {
 		auswahl: () => routeAuswahlID(ROUTE_NAME, injectMainApp().apps.klassen.auswahl)
 	}
 }

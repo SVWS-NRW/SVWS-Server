@@ -16,7 +16,7 @@ export const RouteKatalogReligion : RouteRecordRaw = {
 		default: (route) => routePropsAuswahlID(route, injectMainApp().apps.religionen.auswahl),
 		liste: (route) => routePropsAuswahlID(route, injectMainApp().apps.religionen.auswahl)
 	},
-	meta: <RouteAppMeta<ReligionEintrag | undefined>> {
+	meta: <RouteAppMeta<ReligionEintrag | undefined, unknown>> {
 		auswahl: () => routeAuswahlID(ROUTE_NAME, injectMainApp().apps.religionen.auswahl)
 	}
 }

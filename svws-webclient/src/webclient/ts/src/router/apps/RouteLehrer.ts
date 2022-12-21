@@ -6,6 +6,7 @@ import { RouteLehrerIndividualdaten } from "~/router/apps/lehrer/RouteLehrerIndi
 import { RouteLehrerPersonaldaten } from "~/router/apps/lehrer/RouteLehrerPersonaldaten";
 import { RouteLehrerUnterrichtsdaten } from "~/router/apps/lehrer/RouteLehrerUnterrichtsdaten";
 import { ref } from "vue";
+import { DataLehrerStammdaten } from "~/apps/lehrer/DataLehrerStammdaten";
 
 const ROUTE_NAME: string = "lehrer";
 
@@ -14,6 +15,11 @@ export const RouteLehrerChildren: RouteRecordRaw[] = [
 	RouteLehrerPersonaldaten,
 	RouteLehrerUnterrichtsdaten
 ];
+
+
+export interface RouteLehrerData {
+	stammdaten: DataLehrerStammdaten;
+}
 
 export const RouteLehrer : RouteRecordRaw = {
 	name: ROUTE_NAME,
@@ -26,9 +32,12 @@ export const RouteLehrer : RouteRecordRaw = {
 		default: (route) => routePropsAuswahlID(route, injectMainApp().apps.lehrer.auswahl),
 		liste: (route) => routePropsAuswahlID(route, injectMainApp().apps.lehrer.auswahl)
 	},
-	meta: <RouteAppMeta<LehrerListeEintrag | undefined>> {
+	meta: <RouteAppMeta<LehrerListeEintrag | undefined, RouteLehrerData>> {
 		auswahl: () => routeAuswahlID(ROUTE_NAME, injectMainApp().apps.lehrer.auswahl),
-		redirect: ref(RouteLehrerIndividualdaten)
+		redirect: ref(RouteLehrerIndividualdaten),
+		data: <RouteLehrerData>{
+			stammdaten: new DataLehrerStammdaten()
+		}
 	},
 	redirect: to => {
 		return to.path + "/" + routeAppMeta(RouteLehrer)?.redirect.value.path;
@@ -38,7 +47,7 @@ export const RouteLehrer : RouteRecordRaw = {
 
 
 export function routeLehrerSetRedirect(route : RouteLocationNormalizedLoaded) {
-	const meta = RouteLehrer.meta as RouteAppMeta<LehrerListeEintrag | undefined>;
+	const meta = RouteLehrer.meta as RouteAppMeta<LehrerListeEintrag | undefined, RouteLehrerData>;
 	if (meta === undefined)
 		return;
 	if (route.name === RouteLehrerPersonaldaten.name) {

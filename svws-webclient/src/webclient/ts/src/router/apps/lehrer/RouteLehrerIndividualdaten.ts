@@ -9,7 +9,7 @@ export const RouteLehrerIndividualdaten : RouteRecordRaw = {
 	path: "daten",
 	component: () => import("~/components/lehrer/individualdaten/SLehrerIndividualdaten.vue"),
 	props: (route) => routePropsAuswahlID(route, injectMainApp().apps.lehrer.auswahl),
-	meta: <RouteAppMeta<undefined>> {
+	meta: <RouteAppMeta<unknown, unknown>> {
 		auswahl: () => {},
 		text: "Daten"
 	}

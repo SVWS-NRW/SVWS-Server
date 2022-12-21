@@ -18,7 +18,7 @@ export const RouteGost : RouteRecordRaw = {
 		default: (route) => routePropsGostAuswahl(route, injectMainApp().apps.gost.auswahl),
 		liste: (route) => routePropsGostAuswahl(route, injectMainApp().apps.gost.auswahl)
 	},
-	meta: <RouteAppMeta<GostJahrgang | undefined>> {
+	meta: <RouteAppMeta<GostJahrgang | undefined, unknown>> {
 		auswahl: () => routeGostAuswahl(ROUTE_NAME, injectMainApp().apps.gost.auswahl)
 	}
 }

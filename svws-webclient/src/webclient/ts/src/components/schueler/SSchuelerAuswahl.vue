@@ -87,7 +87,7 @@
 		search: string;
 	}
 
-	const props = defineProps<{ id: Number | undefined; item: SchuelerListeEintrag | undefined }>();
+	const props = defineProps<{ id: Number | undefined; item: SchuelerListeEintrag | undefined; routename: string }>();
 
 	// TODO Speichere in einem speziellen Filter-Objekt
 	const filtered: Ref<boolean> = ref(false);

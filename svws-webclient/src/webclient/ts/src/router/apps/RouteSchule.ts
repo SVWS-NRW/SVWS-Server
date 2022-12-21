@@ -10,7 +10,7 @@ export const RouteSchule : RouteRecordRaw = {
 		default: () => import("~/components/schule/SSchuleApp.vue"),
 		liste: () => import("~/components/schule/SSchuleAuswahl.vue")
 	},
-	meta: <RouteAppMeta<undefined>> {
+	meta: <RouteAppMeta<unknown, unknown>> {
 		auswahl: () => {}
 	}
 }

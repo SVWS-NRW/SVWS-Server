@@ -6,10 +6,13 @@ import { BaseList } from "~/apps/BaseList";
  * Dieses Interface gibt an, welche Informationen bei Routen-Einträgen
  * im SVWS-Client als Meta-Informationen abgelegt werden.
  */
-export interface RouteAppMeta<Item> extends RouteMeta {
+export interface RouteAppMeta<ItemAuswahl, RouteData> extends RouteMeta {
 
 	/** Eine Funktion, welche eine Computed-Property zurückliefert, die für die Auswahl eines Elements aus einer Liste von Elementen verantwirtlich ist. */
-	auswahl: (routename? : string) => WritableComputedRef<Item>;
+	auswahl: (routename? : string) => WritableComputedRef<ItemAuswahl>;
+
+	/** Die Daten, die einer Route zugeordnet sind */
+	data: RouteData;
 
 	/** Ein Pfad, welcher als Suffix der Route angehangen wird, falls ein automatischer redirect erfolgt (z.B. bei Tabs nach einer Auswahl) */
 	redirect: Ref<RouteRecordRaw>;
@@ -29,10 +32,10 @@ export interface RouteAppMeta<Item> extends RouteMeta {
  * 
  * @returns Die Meta-Information des Routen-Eintrags
  */
-export function routeAppMeta<T extends RouteRecordRaw, Item>(route : T) : RouteAppMeta<Item> {
+export function routeAppMeta<T extends RouteRecordRaw, ItemAuswahl, RouteData>(route : T) : RouteAppMeta<ItemAuswahl, RouteData> {
 	if (route.meta === undefined)
 		throw new Error("Meta-Informationen für die Route '" + route.name?.toString() + "' nicht definiert.");
-	return route.meta as RouteAppMeta<Item>;
+	return route.meta as RouteAppMeta<ItemAuswahl, RouteData>;
 }
 
 /**
@@ -43,8 +46,21 @@ export function routeAppMeta<T extends RouteRecordRaw, Item>(route : T) : RouteA
  * 
  * @returns die Computed-Property
  */
-export function routeAppAuswahl<T extends RouteRecordRaw, Item>(route : T, routename? : string) : WritableComputedRef<Item> {
-	return routeAppMeta<T, Item>(route).auswahl(routename);
+export function routeAppAuswahl<T extends RouteRecordRaw, ItemAuswahl, RouteData>(route : T, routename? : string) : WritableComputedRef<ItemAuswahl> {
+	return routeAppMeta<T, ItemAuswahl, RouteData>(route).auswahl(routename);
+}
+
+/**
+ * Eine interne Hilfsmethode, um Typ-sicher auf die Daten von Routen-Einträgen zuzugreifen.
+ * 
+ * @param route   der Routen-Eintrag, bei der auf die Meta-Informationen zugegriffen werden soll
+ * 
+ * @returns Die Daten des Routen-Eintrags
+ */
+export function routeAppData<T extends RouteRecordRaw, ItemAuswahl, RouteData>(route : T) : RouteData {
+	if (route.meta === undefined)
+		throw new Error("Meta-Informationen für die Route '" + route.name?.toString() + "' nicht definiert.");
+	return route.meta.data as RouteData;
 }
 
 /**

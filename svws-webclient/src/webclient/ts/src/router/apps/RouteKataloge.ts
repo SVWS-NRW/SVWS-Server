@@ -10,7 +10,7 @@ export const RouteKataloge : RouteRecordRaw = {
 		default: () => import("~/components/kataloge/SKatalogeApp.vue"),
 		liste: () => import("~/components/kataloge/SKatalogeAuswahl.vue")
 	},
-	meta: <RouteAppMeta<undefined>> {
+	meta: <RouteAppMeta<unknown, unknown>> {
 		auswahl: () => {}
 	}
 }

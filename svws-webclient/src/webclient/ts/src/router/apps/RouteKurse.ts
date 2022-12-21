@@ -16,7 +16,7 @@ export const RouteKurse : RouteRecordRaw = {
 		default: (route) => routePropsAuswahlID(route, injectMainApp().apps.kurse.auswahl),
 		liste: (route) => routePropsAuswahlID(route, injectMainApp().apps.kurse.auswahl)
 	},
-	meta: <RouteAppMeta<KursListeEintrag | undefined>> {
+	meta: <RouteAppMeta<KursListeEintrag | undefined, unknown>> {
 		auswahl: () => routeAuswahlID(ROUTE_NAME, injectMainApp().apps.kurse.auswahl)
 	}
 }
