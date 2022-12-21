@@ -1,4 +1,4 @@
-import { computed, WritableComputedRef } from "vue";
+import { computed, Ref, WritableComputedRef } from "vue";
 import { RouteLocationNormalized, RouteMeta, RouteRecordRaw, useRoute, useRouter } from "vue-router";
 import { BaseList } from "~/apps/BaseList";
 
@@ -12,7 +12,7 @@ export interface RouteAppMeta<Item> extends RouteMeta {
 	auswahl: (routename? : string) => WritableComputedRef<Item>;
 
 	/** Ein Pfad, welcher als Suffix der Route angehangen wird, falls ein automatischer redirect erfolgt (z.B. bei Tabs nach einer Auswahl) */
-	redirect: RouteRecordRaw;
+	redirect: Ref<RouteRecordRaw>;
 
 	/** Eine 0-indizierte ID zur Angabe der Reihenfolge der Routen-Elemente bei der Darstellung in der UI */
 	reihenfolge: number;

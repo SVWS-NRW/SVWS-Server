@@ -29,9 +29,9 @@
 
 <script setup lang="ts">
 
-	import { LehrerListeEintrag, LogConsumerConsole } from "@svws-nrw/svws-core-ts";
+	import { LehrerListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, onMounted, WritableComputedRef } from "vue";
-	import { onBeforeRouteUpdate, RouteRecordRaw, useRoute, useRouter } from "vue-router";
+	import { RouteRecordRaw, useRoute, useRouter } from "vue-router";
 
 	import { injectMainApp, Main } from "~/apps/Main";
 	import { RouteLehrer, RouteLehrerChildren, routeLehrerSetRedirect } from "~/router/apps/RouteLehrer";
@@ -50,15 +50,15 @@
 	
 	onMounted(() => {
 		if (((route.params.id === undefined) || (route.params.id === "")) && (app.auswahl.liste.length > 0))
-			router.push({ name: routeLehrerMeta.redirect.name?.toString(), params: { id: app.auswahl.liste[0].id } });
+			router.push({ name: routeLehrerMeta.redirect.value.name?.toString(), params: { id: app.auswahl.liste[0].id } });
 	});
 
 	const selectedRoute: WritableComputedRef<RouteRecordRaw> = computed({
 		get(): RouteRecordRaw {
-			return routeLehrerMeta.redirect;
+			return routeLehrerMeta.redirect.value;
 		},
 		set(value: RouteRecordRaw) {
-			routeLehrerMeta.redirect = value;
+			routeLehrerMeta.redirect.value = value;
 			router.push({ name: value.name, params: { id: props.id } });
 		}
 	});

@@ -7,9 +7,7 @@
                 </button>
             </div>
             <div ref="contentEl" class="tab-bar">
-                <button v-for="route in props.routes" @click="select(route)" :class="[isSelected(route) ? 'router-tab-bar--button-active' : '', false ? 'hidden' : 'router-tab-bar--button']">
-                    {{ route.meta?.text }}
-                </button>
+                <router-tab-bar-button v-for="route in props.routes" :route="route" :selected="selected" @select="select(route)" />
             </div>
             <div v-if="!state.scrolledMax"
                 class="router-tab-bar--scroll-button-background router-tab-bar--scroll-button-background-right">
@@ -98,10 +96,6 @@
         selected.value = route;
     }
 
-    function isSelected(route: RouteRecordRaw) : boolean {
-        return (route.name === selected.value.name)
-    }
-
 </script>
 
 
@@ -173,4 +167,5 @@
     .router-tab-bar--scroll-button:focus {
 		@apply outline-none ring ring-inset ring-primary ring-opacity-75;
     }
+
 </style>
