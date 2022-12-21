@@ -421,6 +421,7 @@ gradle-app.setting
 
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,intellij+all,eclipse,java,gradle,node,macos,windows,linux
 
+components.d.ts
 
 openapitools.json
 start_server.sh
