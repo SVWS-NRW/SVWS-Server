@@ -2,6 +2,7 @@
 import SvwsUiContentCard from "./ContentCard.vue";
 import SvwsUiTextInput from "../Controls/TextInput.vue";
 import SvwsUiButton from "../Controls/Button.vue";
+import SvwsUiAvatar from "./Avatar.vue";
 </script>
 
 <template>
@@ -12,8 +13,8 @@ import SvwsUiButton from "../Controls/Button.vue";
             <svws-ui-button>Test</svws-ui-button>
         </template>
         <div class="flex flex-row items-start space-x-4">
-          <div class="flex-shrink-0">
-            <img src="https://via.placeholder.com/256" class="w-32 h-32 rounded-full md:h-20 md:w-20 lg:h-24 lg:w-24">
+          <div class="w-24">
+		  <svws-ui-avatar/>
           </div>
           <div class="flex-grow grid gap-4 grid-cols-1 md:grid-cols-2">
             <svws-ui-text-input type="text" placeholder="Vorname" />

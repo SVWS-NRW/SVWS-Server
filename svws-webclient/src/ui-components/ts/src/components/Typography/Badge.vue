@@ -31,34 +31,10 @@ class="badge" :class="{
 
 <style>
 .badge {
-	@apply border;
-	@apply font-bold;
-	@apply rounded;
-}
-
-.badge--normal {
-	@apply px-2 py-1;
-	@apply text-body;
-}
-
-.badge--tiny {
-	@apply px-1 py-0;
-	@apply text-button;
-}
-
-.badge--small {
-	@apply px-2 py-1;
-	@apply text-button;
-}
-
-.badge--medium {
-	@apply px-2.5 py-1.5;
-	@apply text-headline-4;
-}
-
-.badge--big {
-	@apply px-3 py-2;
-	@apply text-headline-3;
+	@apply font-bold leading-none;
+	@apply rounded inline-block align-top;
+	font-size: 0.65em;
+	padding: 0.35em 0.5em;
 }
 
 .badge--error {

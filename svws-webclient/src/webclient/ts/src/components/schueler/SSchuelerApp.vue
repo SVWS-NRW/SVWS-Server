@@ -1,9 +1,20 @@
 <template>
-	<div class="flex h-full flex-row">
-		<div v-if="app?.stammdaten.daten" class="flex w-full flex-col">
-			<svws-ui-header :badge="inputId" badge-variant="light" badge-size="normal">
-				<span> {{ inputVorname }} {{ inputNachname }} </span>
-				<svws-ui-badge variant="highlight" size="normal"> {{ inputKlasse }} </svws-ui-badge>
+		<div v-if="app?.stammdaten.daten" class="flex w-full flex-col h-full">
+			<svws-ui-header>
+				<div class="flex items-center">
+					<div class="w-16 mr-4 -ml-2">
+						<svws-ui-avatar
+							:src="'data:image/png;base64, ' + foto"
+							:alt="foto ? 'Foto ' + vorname + ' ' + nachname : ''"
+						/>
+					</div>
+					<div>
+						<span class="inline-block mr-3">{{ inputVorname }} {{ inputNachname }}</span>
+						<svws-ui-badge variant="light">{{ inputId }}</svws-ui-badge>
+						<br/>
+						<span class="opacity-50">{{ inputKlasse }}</span>
+					</div>
+				</div>
 			</svws-ui-header>
 			<svws-ui-tab-bar v-model="app.selectedTab.value">
 				<template #tabs>
@@ -44,7 +55,6 @@
 				</template>
 			</svws-ui-tab-bar>
 		</div>
-	</div>
 </template>
 
 <script setup lang="ts">

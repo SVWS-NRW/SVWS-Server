@@ -3,62 +3,15 @@
 		class="status svws-ui-bg-white svws-ui-text-black svws-ui-border-dark-20"
 	>
 		<s-loading-status v-if="loading"></s-loading-status>
-		<div class="status-content">
-			<p>Powered by SVWS-NRW v{{version}}</p>
-			<nav class="status-nav">
-				<a href="https://www.svws.nrw.de/faq/impressum">Impressum</a>
-				<a href="#">Datenschutz</a>
-				<a href="#">Hilfe</a>
-			</nav>
-			<button
-				type="button"
-				class="toggle-theme-button"
-				@click="toggleDarkTheme"
-			>
-				<template v-if="isDarkTheme">
-					<svws-ui-icon><i-ri-sun-line /></svws-ui-icon>
-					<span class="hidden 2xl:inline-block">Light Theme</span>
-				</template>
-				<template v-if="!isDarkTheme">
-					<svws-ui-icon><i-ri-moon-line /></svws-ui-icon>
-					<span class="hidden 2xl:inline-block">Dark Theme</span>
-				</template>
-			</button>
-		</div>
 	</footer>
 </template>
 
 <script setup lang="ts">
-	import { computed, ComputedRef, onMounted, ref } from "vue";
+	import { computed, ComputedRef } from "vue";
 	import { injectMainApp } from "~/apps/Main";
-	import { version } from '../../version';
 
 	const app = injectMainApp();
 	const loading: ComputedRef<boolean> = computed(() => app.config.pending);
-
-    const isDarkTheme = ref(false);
-
-    onMounted(() => {
-		if (
-			localStorage.getItem("darkmode") === "true" &&
-			isDarkTheme.value === false
-		) {
-			toggleDarkTheme();
-		}
-	});
-
-    function toggleDarkTheme() {
-		isDarkTheme.value = !isDarkTheme.value;
-		window.localStorage.setItem(
-			"darkmode",
-			String(isDarkTheme.value)
-		);
-		if (isDarkTheme.value) {
-			document.body.classList.add("theme-dark");
-		} else {
-			document.body.classList.remove("theme-dark");
-		}
-	};
 </script>
 
 <style>

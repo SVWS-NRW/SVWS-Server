@@ -113,7 +113,7 @@ watch(() => selection, (newVal) => tableRef.value.selectRows(newVal));
     </template>
     <template v-if="isMultiSelect || footer" #foot="{ allRowsSelected, toggleAllRows }">
       <tr class="table--footer">
-        <td class="table--footer-checkbox">
+        <td class="table--footer-checkbox column--checkbox">
 			<Checkbox v-if="isMultiSelect" :model-value="allRowsSelected" @change="toggleAllRows" />
         </td>
 		  <td class="table--footer--actions" :class="{ 'table--footer--has-actions': footer}">
@@ -124,7 +124,7 @@ watch(() => selection, (newVal) => tableRef.value.selectRows(newVal));
   </VTable>
 </template>
 
-<style>
+<style lang="postcss">
 .v-table {
 	@apply w-full border-l border-dark-20 bg-white flex flex-col;
 
@@ -272,6 +272,11 @@ watch(() => selection, (newVal) => tableRef.value.selectRows(newVal));
 	-webkit-line-clamp: 1;
 	word-break: break-all;
 	min-width: 1.6rem;
+	line-height: 1.25;
+}
+
+.secondary-menu--content .v-table {
+	@apply border-l-0;
 }
 
 .table--row-indent {

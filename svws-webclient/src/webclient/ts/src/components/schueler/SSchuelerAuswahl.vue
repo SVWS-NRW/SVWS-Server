@@ -1,8 +1,24 @@
 <template>
 	<svws-ui-secondary-menu>
-		<template #headline> Schülerauswahl</template>
+		<template #headline>
+			<span>Schüler</span>
+		</template>
+		<template #abschnitt>
+			<!--TODO: Abschnitt Auswahl
+			<template #abschnitt>
+					<div v-if="schule_abschnitte" class="mt-2">
+						<svws-ui-multi-select
+							v-model="akt_abschnitt"
+							:items="schule_abschnitte"
+							:item-sort="item_sort"
+							:item-text="item_text"
+						></svws-ui-multi-select>
+					</div>
+				</template>
+			-->
+		</template>
 		<template #header>
-			<div class="px-5">
+			<div>
 				<svws-ui-multi-select v-model="filterStatus" :items="inputKatalogSchuelerStatus" :item-text="text_status" tags title="Status" />
 				<div class="input-wrapper mt-6">
 					<svws-ui-multi-select v-model="filterKlassen" title="Klasse" :items="inputKlassen" :item-text="text_klasse" />
@@ -11,7 +27,7 @@
 					<svws-ui-multi-select v-model="filterSchulgliederung" title="Schulgliederung" :items="inputSchulgliederungen" :item-text="text_schulgliederung" />
 				</div>
 			</div>
-			<div class="px-5">
+			<div>
 				<div class="mt-2 flex flex-row items-center justify-between">
 					<svws-ui-button type="transparent">
 						<svws-ui-icon><i-ri-filter-3-line /></svws-ui-icon>
@@ -23,7 +39,7 @@
 					</svws-ui-button>
 				</div>
 			</div>
-			<div class="px-5">
+			<div>
 				<div class="mt-6 mb-2">
 					<svws-ui-text-input v-model="search" type="search" placeholder="Suche nach Namen oder Klasse"><i-ri-search-line/></svws-ui-text-input>
 				</div>
@@ -57,7 +73,7 @@
 <script setup lang="ts">
 	import { computed, ComputedRef, Ref, ref, WritableComputedRef } from "vue";
 
-	import { SchuelerListeEintrag, SchuelerStatus, JahrgangsListeEintrag, 
+	import { SchuelerListeEintrag, SchuelerStatus, JahrgangsListeEintrag,
 		KlassenListeEintrag, KursListeEintrag, Schulgliederung } from "@svws-nrw/svws-core-ts";
 
 	import { injectMainApp, Main } from "~/apps/Main";

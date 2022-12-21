@@ -31,6 +31,14 @@
 		--color-green: 137, 237, 202; /* #89edca */
 		--color-green-light: 190, 232, 218; /* #bee8da */
 		--color-green-dark: 15, 93, 66; /* #0f5d42 */
+
+		--popper-theme-background-color: rgb(var(--color-primary));
+		--popper-theme-background-color-hover: rgb(var(--color-primary));
+		--popper-theme-padding: 0.4em 0.75em 0.45em;
+		--popper-theme-text-color: rgb(var(--color-white));
+		--popper-theme-border-radius: 0.25rem;
+		--popper-theme-border-style: none;
+		--popper-theme-box-shadow: 0 1px 3px 0 rgb(0 0 0 / .1), 0 1px 2px -1px rgb(0 0 0 / .1);
 	}
 	.theme-dark {
 		--color-white: 44, 44, 44; /* #2C2C2C */

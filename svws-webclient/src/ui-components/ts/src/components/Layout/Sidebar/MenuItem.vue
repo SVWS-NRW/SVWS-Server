@@ -39,54 +39,65 @@ class="sidebar--menu-item" :class="{
 	</a>
 </template>
 
-<style>
+<style lang="postcss">
 .sidebar--menu-item {
-	@apply flex items-center;
+	@apply flex items-center flex-col;
 	@apply p-2 rounded my-1;
 	@apply cursor-pointer;
-}
-
-.sidebar--menu-item:hover,
-.sidebar--menu-item:focus {
-	@apply bg-dark-20 bg-opacity-20;
-}
-
-.sidebar--menu-item--collapsed {
-	@apply flex-col;
 	padding: 0.25rem 0.1rem;
 }
 
+.sidebar--menu-item:last-child {
+	@apply mb-0;
+}
+
+.sidebar--menu--body .sidebar--menu-item--active,
+.sidebar--menu--footer .sidebar--menu-item--active {
+	@apply bg-dark-20;
+}
+
+.sidebar--menu-item:hover,
+.sidebar--menu-item:focus,
+.sidebar--menu--body .sidebar--menu-item:hover,
+.sidebar--menu--body .sidebar--menu-item:focus,
+.sidebar--menu--footer .sidebar--menu-item:hover,
+.sidebar--menu--footer .sidebar--menu-item:focus {
+	@apply text-primary bg-primary bg-opacity-10;
+}
+
 .sidebar--menu-item--label {
-	@apply text-ellipsis overflow-hidden text-base;
+	@apply text-ellipsis overflow-hidden;
 	max-width: 100%;
 	display: -webkit-box;
 	-webkit-box-orient: vertical;
 	-webkit-line-clamp: 1;
 	word-break: break-all;
-}
-
-.sidebar--menu-item--collapsed .sidebar--menu-item--label {
 	font-size: 0.78rem;
 }
 
-.sidebar--menu--body .sidebar--menu-item,
-.sidebar--menu--footer .sidebar--menu-item {
-	@apply text-white;
+@media (min-width: 1280px) {
+	.sidebar--menu .sidebar--menu-item--label {
+		font-size: 0.9rem;
+	}
 }
 
-.sidebar--menu--body .sidebar--menu-item--active,
-.sidebar--menu--footer .sidebar--menu-item--active {
-	@apply bg-light bg-opacity-100 text-dark;
+@media (min-width: 2000px) {
+	.sidebar--menu .sidebar--menu-item--label {
+		font-size: 1rem;
+	}
 }
 
 .secondary-menu--content .sidebar--menu-item {
-	@apply text-dark px-3 inline-block;
-	margin: 0.1rem 0;
+	@apply text-dark px-3 inline-block my-1;
+}
+
+.secondary-menu--content .sidebar--menu-item--label {
+	@apply text-base;
 }
 
 .secondary-menu--content .sidebar--menu-item:hover,
 .secondary-menu--content .sidebar--menu-item:focus {
-	@apply bg-dark-20 bg-opacity-50;
+	@apply text-primary bg-primary bg-opacity-10;
 }
 
 .secondary-menu--content .sidebar--menu-item--active {
@@ -95,12 +106,21 @@ class="sidebar--menu-item" :class="{
 }
 
 .sidebar--menu-item--icon {
-	@apply mr-2;
-	font-size: 1.618rem;
+	@apply mr-0 mt-1;
+	font-size: 1.2rem;
 }
 
-.sidebar--menu-item--collapsed .sidebar--menu-item--icon {
-	@apply mr-0 mt-1;
+@media (min-width: 1280px) {
+	.sidebar--menu-item--icon {
+		font-size: 1.4rem;
+	}
+}
+
+@media (min-width: 2000px) {
+	.sidebar--menu-item--icon {
+		@apply mb-1;
+		font-size: 1.5rem;
+	}
 }
 
 .sidebar--menu-item--subline {

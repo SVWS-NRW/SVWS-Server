@@ -1,10 +1,10 @@
 <template>
 	<svws-ui-secondary-menu>
 		<template #headline>
-			<div>
-				<i-ri-arrow-left-line class="inline-block cursor-pointer" @click="router.push({ name: RouteKataloge.name })" />
-				Jahrgangsauswahl
-			</div>
+			<nav class="secondary-menu--breadcrumbs">
+				<a @click="router.push({name: 'kataloge' })">Kataloge</a>
+				<span>Jahrgänge</span>
+			</nav>
 		</template>
 		<template #header> </template>
 		<template #content>
@@ -26,7 +26,7 @@
 	import { routeAppAuswahl } from "~/router/RouteUtils";
 
 	const cols = [
-		{ key: "kuerzel", label: "Kuerzel", width: "6em", sortable: true, defaultSort: "asc" },
+		{ key: "kuerzel", label: "Kürzel", width: "6em", sortable: true, defaultSort: "asc" },
 		{ key: "bezeichnung", label: "Bezeichnung", sortable: true, span: 3 }
 	];
 	const main: Main = injectMainApp();

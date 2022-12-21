@@ -1,12 +1,27 @@
 <template>
-	<div v-if="app.stammdaten.daten">
-		<svws-ui-header :badge="props.id" badge-variant="light" badge-size="normal">
-			<span> {{ inputTitel }} {{ inputVorname }} {{ inputNachname }} </span>
-			<svws-ui-badge variant="highlight" size="normal"> {{ inputKuerzel }} </svws-ui-badge>
+	<div v-if="app.stammdaten.daten && props?.id">
+		<svws-ui-header>
+			<div class="flex items-center">
+				<div class="w-16 mr-4 -ml-2">
+					<svws-ui-avatar
+						:src="'data:image/png;base64, ' + foto"
+						:alt="foto ? 'Foto ' + vorname + ' ' + nachname : ''"
+					/>
+				</div>
+				<div>
+					<span class="inline-block mr-3">{{ inputTitel }} {{ inputVorname }} {{ inputNachname }}</span>
+					<svws-ui-badge variant="light">ID: {{ props.id }}</svws-ui-badge>
+					<br/>
+					<span class="opacity-50">{{ inputKuerzel }}</span>
+				</div>
+			</div>
 		</svws-ui-header>
 		<svws-ui-router-tab-bar :routes="RouteLehrerChildren" v-model="selectedRoute">
 			<router-view />
 		</svws-ui-router-tab-bar>
+	</div>
+	<div v-else class="app-layout--main--placeholder">
+		<i-ri-briefcase-line/>
 	</div>
 </template>
 

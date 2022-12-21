@@ -27,7 +27,7 @@
 				</svws-ui-table>
 			</div>
 			<div v-if="main.config.kursblockung_aktiv.size && abiturjahr > 0" class="mt-20">
-				<h3 class="text-headline px-6 mb-3">Blockungen</h3>
+				<h3 class="text-headline px-6 4xl:px-8 mb-3">Blockungen</h3>
 				<svws-ui-table v-model="selected_hj" :columns="[{ key: 'kuerzel', label: 'Halbjahr' }]" :data="halbjahre" class="mb-10">
 					<template #body="{rows}">
 						<template v-for="row in <GostHalbjahr[]>rows" :key="row.id">

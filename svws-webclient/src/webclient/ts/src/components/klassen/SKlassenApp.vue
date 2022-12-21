@@ -1,20 +1,20 @@
 <template>
-	<div class="flex h-full flex-row">
+	<div v-if="app.auswahl.ausgewaehlt && app.auswahl.ausgewaehlt !== null" class="flex h-full flex-row">
 		<div class="flex w-full flex-col">
-			<svws-ui-header
-				:badge="inputId"
-				badge-variant="light"
-				badge-size="normal"
-				><span>{{ inputKuerzel }}</span
-				><svws-ui-badge
-					v-for="(l, i) in inputKlassenlehrer"
-					:key="i"
-					variant="highlight"
-					size="normal"
-					span
-				>
-					{{ l.kuerzel }}
-				</svws-ui-badge></svws-ui-header
+			<svws-ui-header>
+				<span class="inline-block mr-3">{{ inputKuerzel }}</span>
+				<svws-ui-badge variant="light">{{ inputId }}</svws-ui-badge>
+				<br/>
+				<div class="separate-items--custom">
+					<span
+						v-for="(l, i) in inputKlassenlehrer"
+						:key="i"
+						class="opacity-50"
+					>
+						{{ l.kuerzel }}
+					</span>
+				</div>
+			</svws-ui-header
 			>
 			<svws-ui-tab-bar v-model="app.selectedTab.value">
 				<template #tabs>
@@ -27,6 +27,9 @@
 				</template>
 			</svws-ui-tab-bar>
 		</div>
+	</div>
+	<div v-else class="app-layout--main--placeholder">
+		<i-ri-group-line/>
 	</div>
 </template>
 

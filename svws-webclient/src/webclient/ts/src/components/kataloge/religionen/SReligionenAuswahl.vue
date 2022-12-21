@@ -1,10 +1,10 @@
 <template>
 	<svws-ui-secondary-menu>
 		<template #headline>
-			<div>
-				<i-ri-arrow-left-line class="inline-block cursor-pointer" @click="router.push({ name: RouteKataloge.name })" />
-				Religionenauswahl
-			</div>
+			<nav class="secondary-menu--breadcrumbs">
+				<a @click="router.push({name: 'kataloge' })">Kataloge</a>
+				<span>Religionen</span>
+			</nav>
 		</template>
 		<template #header> </template>
 		<template #content>
@@ -23,7 +23,7 @@
 		<template #modalTitle>Religion Hinzufügen</template>
 		<template #modalContent>
 			<div class="input-wrapper">
-				<svws-ui-multi-select v-model="reli_neu.kuerzel" title="Statistikkürzel" :items="inputKatalogReligionenStatistik" 
+				<svws-ui-multi-select v-model="reli_neu.kuerzel" title="Statistikkürzel" :items="inputKatalogReligionenStatistik"
 					:item-text="(i: Religion) => i.daten.kuerzel" required />
 				<svws-ui-text-input v-model="reli_neu.kuerzel" type="text" placeholder="Kürzel" />
 				<svws-ui-text-input v-model="reli_neu.text" type="text" placeholder="Bezeichnung" />
@@ -59,8 +59,8 @@
 	} as unknown as ReligionEintrag);
 
 	const cols = ref([
-		{ key: "kuerzel", label: "Kuerzel", sortable: true, defaultSort: "asc" },
-		{ key: "text", label: "Bezeichnung", sortable: true }
+		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: "asc" },
+		{ key: "text", label: "Bezeichnung", sortable: true, span: 2 }
 	]);
 
 	const main: Main = injectMainApp();
@@ -73,7 +73,7 @@
 
 	const selected: WritableComputedRef<ReligionEintrag | undefined> = computed({
 		get(): ReligionEintrag {
-			if (!app.auswahl.ausgewaehlt) 
+			if (!app.auswahl.ausgewaehlt)
 				return none_selected.value;
 			return app.auswahl.ausgewaehlt;
 		},

@@ -108,7 +108,7 @@ v-if="!state.scrolledMax"
     </TabGroup>
 </template>
 
-<style>
+<style lang="postcss">
 .tab-bar--wrapper {
     @apply flex items-center;
     @apply overflow-hidden;
@@ -120,12 +120,12 @@ v-if="!state.scrolledMax"
 }
 
 .tab-bar {
-    @apply bg-light;
+	@apply bg-light;
     @apply flex flex-row items-center;
     @apply overflow-x-scroll;
     @apply relative;
     @apply rounded-full;
-    @apply space-x-2;
+    @apply space-x-2 p-1;
     @apply w-full;
 
     -ms-overflow-style: none;
@@ -149,15 +149,15 @@ v-if="!state.scrolledMax"
 .tab-bar--scroll-button-background-right {
     @apply bg-gradient-to-r;
     @apply pl-8;
-    @apply right-0;
     @apply rounded-r-full;
+	right: 0.875rem;
 }
 
 .tab-bar--scroll-button-background-left {
     @apply bg-gradient-to-l;
-    @apply left-0;
     @apply pr-8;
     @apply rounded-l-full;
+	left: 0.875rem;
 }
 
 .tab-bar--scroll-button {

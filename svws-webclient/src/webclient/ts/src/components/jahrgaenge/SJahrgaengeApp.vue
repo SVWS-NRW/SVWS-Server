@@ -1,10 +1,11 @@
 <template>
-	<div class="flex h-full flex-row">
+	<div v-if="app.auswahl.ausgewaehlt && app.auswahl.ausgewaehlt !== null" class="flex h-full flex-row">
 		<div class="flex w-full flex-col">
-			<svws-ui-header :badge="inputId" badge-variant="light" badge-size="normal"><span>{{ inputBezeichnung }}</span>
-				<svws-ui-badge variant="highlight" size="normal">{{
-						inputKuerzel
-				}}</svws-ui-badge>
+			<svws-ui-header>
+				<span class="inline-block mr-3">{{ inputBezeichnung }}</span>
+				<svws-ui-badge variant="light">{{ inputId }}</svws-ui-badge>
+				<br/>
+				<span class="opacity-50">{{ inputKuerzel }}</span>
 			</svws-ui-header>
 			<svws-ui-tab-bar v-model="app.selectedTab.value">
 				<template #tabs>
@@ -18,6 +19,9 @@
 				</template>
 			</svws-ui-tab-bar>
 		</div>
+	</div>
+	<div v-else class="app-layout--main--placeholder">
+		<i-ri-archive-line/>
 	</div>
 </template>
 

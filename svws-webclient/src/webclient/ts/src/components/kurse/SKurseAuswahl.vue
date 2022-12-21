@@ -1,6 +1,6 @@
 <template>
 	<svws-ui-secondary-menu>
-		<template #headline> Kursauswahl </template>
+		<template #headline>Kurse</template>
 		<template #header> </template>
 		<template #content>
 			<div class="container">
@@ -19,7 +19,7 @@
 	import { routeAppAuswahl } from "~/router/RouteUtils";
 
 	const cols = [
-		{ key: "kuerzel", label: "Kuerzel", width: "6em", sortable: true, defaultSort: "asc" },
+		{ key: "kuerzel", label: "Kürzel", width: "6em", sortable: true, defaultSort: "asc" },
 		{ key: "lehrer_name", label: "Fachlehrer", sortable: true },
 		{ key: "jahrgang", label: "Jahrgang", sortable: true }
 	];

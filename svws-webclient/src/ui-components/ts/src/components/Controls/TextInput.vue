@@ -169,6 +169,11 @@
 		padding: 0.5em 0.7em;
 	}
 
+	.multiselect-input-component .text-input--control {
+		@apply text-ellipsis overflow-hidden;
+		padding-right: 3.5em;
+	}
+
 	.text-input-component:focus-within .text-input--control,
 	.text-input-filled .text-input--control {
 		@apply border-gray border-opacity-100;
@@ -233,10 +238,10 @@
 		top: 0.5em;
 		left: 0.7em;
 		line-height: 1.33;
+	}
 
-		&:after {
-			content: '…'
-		}
+	.multiselect-input-component .text-input--placeholder {
+		top: 0.6em;
 	}
 
 	.text-input-component:focus-within .text-input--placeholder,
@@ -255,27 +260,28 @@
 		}
 	}
 
-	.secondary-menu .text-input--control,
-	.secondary-menu .text-input-component:focus-within .text-input--placeholder,
-	.secondary-menu .text-input-filled .text-input--placeholder {
+	.app-layout--secondary.text-input--control,
+	.app-layout--secondary.text-input-component:focus-within .text-input--placeholder,
+	.app-layout--secondary.text-input-filled .text-input--placeholder {
 		@apply bg-light;
-	}
-
-	.text-input-invalid .text-input--placeholder {
-		@apply text-error;
 	}
 
 	.text-input--statistics .text-input--control {
 		@apply border-purple;
-		@apply bg-purple bg-opacity-5;
+		@apply bg-purple bg-opacity-[0.02];
 	}
 
-	.text-input--statistics.text-input-invalid .text-input--control {
+	.text-input-invalid .text-input--control {
 		@apply border-error;
 	}
 
 	.text-input--statistics .text-input--placeholder {
 		@apply text-purple;
+	}
+
+	.text-input-invalid .text-input--placeholder,
+	.text-input-invalid .text-input--control {
+		@apply text-error;
 	}
 
 	.text-input-disabled {

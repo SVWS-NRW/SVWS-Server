@@ -1,14 +1,11 @@
 <template>
-	<div class="flex h-full flex-row">
+	<div v-if="appKurse.auswahl.ausgewaehlt" class="flex h-full flex-row">
 		<div class="flex w-full flex-col">
-			<svws-ui-header
-				:badge="inputId"
-				badge-variant="light"
-				badge-size="normal"
-				><span>{{ inputKuerzel }}</span
-				><svws-ui-badge variant="highlight" size="normal">{{
-					inputFachlehrer
-				}}</svws-ui-badge></svws-ui-header
+			<svws-ui-header>
+				<span class="inline-block mr-3">{{ inputKuerzel }}</span>
+				<svws-ui-badge variant="light">{{ inputId }}</svws-ui-badge>
+				<span v-if="inputFachlehrer" class="opacity-50"><br/>{{ inputFachlehrer }}</span>
+			</svws-ui-header
 			>
 			<svws-ui-tab-bar v-model="appKurse.selectedTab.value">
 				<template #tabs>
@@ -21,6 +18,9 @@
 				</template>
 			</svws-ui-tab-bar>
 		</div>
+	</div>
+	<div v-else class="app-layout--main--placeholder">
+		<i-ri-slideshow-line/>
 	</div>
 </template>
 

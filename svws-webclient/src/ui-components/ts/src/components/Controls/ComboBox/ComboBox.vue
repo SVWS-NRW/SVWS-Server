@@ -289,13 +289,17 @@ function removeItem() {
 					<i-ri-bar-chart-fill v-if="statistics" class="ml-2"/>
 				</span>
 			</div>
-			<Icon v-if="removable && modelValue" @click="removeItem" class="remove-icon">
-				<i-ri-close-circle-line/>
-			</Icon>
-			<Icon class="dropdown-icon" @click="showList ? closeListbox() : openListbox()">
-				<i-ri-arrow-up-s-line v-if="showList"/>
-				<i-ri-arrow-down-s-line v-else/>
-			</Icon>
+			<div v-if="removable && modelValue" @click="removeItem" class="remove-icon">
+				<Icon>
+					<i-ri-close-line/>
+				</Icon>
+			</div>
+			<div class="dropdown-icon" @click="showList ? closeListbox() : openListbox()">
+				<Icon>
+					<i-ri-arrow-up-s-line v-if="showList" class="pb-0.5"/>
+					<i-ri-arrow-down-s-line v-else class="pt-0.5"/>
+				</Icon>
+			</div>
 		</div>
 		<ul
 			v-show="showList"
@@ -340,7 +344,7 @@ function removeItem() {
 
 .multiselect-input-component--statistics {
 	@apply border-purple;
-	@apply bg-purple bg-opacity-5;
+	@apply bg-purple bg-opacity-[0.02];
 }
 
 .multiselect-input-component.with-open-list,
@@ -368,10 +372,6 @@ function removeItem() {
 	top: 0.9em;
 	left: 0.7em;
 	line-height: 1.33;
-
-	&:after {
-		content: '…'
-	}
 }
 
 .multiselect-input-component:focus-within .multiselect-tags--placeholder,
@@ -391,18 +391,19 @@ function removeItem() {
 }
 
 .dropdown-icon {
-	@apply absolute py-1 px-2;
+	@apply absolute p-1;
 	@apply flex;
 	@apply inset-y-0 right-0;
-	@apply items-center justify-center;
-}
+	@apply items-center justify-center cursor-pointer text-base;
 
-.remove-icon {
-	@apply absolute py-1 px-2;
-	@apply cursor-pointer;
-	@apply flex;
-	@apply inset-y-0 right-5;
-	@apply items-center justify-center;
+	.icon {
+		@apply py-0.5;
+		font-size: 1.2em;
+	}
+
+	&:hover .icon {
+		@apply bg-black text-white rounded;
+	}
 }
 
 .tag-list {
@@ -471,12 +472,27 @@ function removeItem() {
 	@apply bg-transparent pointer-events-none;
 }
 
-.tag-remove .icon {
-	@apply inline-block mt-0;
+.tag-remove .icon,
+.remove-icon .icon {
+	@apply inline-block mt-0 cursor-pointer;
 }
 
-.tag-remove .icon:hover {
-	@apply bg-white text-error rounded-full;
+.tag-remove .icon:hover,
+.remove-icon:hover .icon {
+	@apply bg-error text-white rounded-full;
+}
+
+.remove-icon {
+	@apply absolute p-1 inset-y-0;
+	@apply cursor-pointer;
+	@apply flex items-center justify-center;
+	right: 1.65rem;
+	font-size: 0.8rem;
+
+	.icon {
+		@apply rounded-full;
+		padding: 1px;
+	}
 }
 
 .tag-list-wrapper {
@@ -501,10 +517,5 @@ function removeItem() {
 .with-value .tag-list-wrapper {
 	@apply border-gray border-opacity-100;
 	@apply outline-none;
-}
-
-.secondary-menu .tag-list-wrapper,
-.secondary-menu .tag-list-wrapper .multiselect-tags--placeholder {
-	@apply bg-light;
 }
 </style>

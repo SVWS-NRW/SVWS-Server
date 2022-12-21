@@ -1,10 +1,10 @@
 <template>
 	<svws-ui-secondary-menu>
 		<template #headline>
-			<div>
-				<i-ri-arrow-left-line class="inline-block cursor-pointer" @click="router.push({name: RouteKataloge.name })" />
-				Fächerauswahl
-			</div>
+			<nav class="secondary-menu--breadcrumbs">
+				<a @click="router.push({name: 'kataloge' })">Kataloge</a>
+				<span>Fächer</span>
+			</nav>
 		</template>
 		<template #header> </template>
 		<template #content>
@@ -30,7 +30,7 @@
 	const app = main.apps.faecher;
 
 	const cols = ref([
-		{ key: "kuerzel", label: "Kuerzel", sortable: true, defaultSort: 'asc' },
+		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: 'asc' },
 		{ key: "bezeichnung", label: "Bezeichnung", sortable: true, span: 3 }
 	]);
 

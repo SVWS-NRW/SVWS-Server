@@ -111,7 +111,7 @@ function onKeyDown(event: KeyboardEvent) {
 
 .textarea-input--control {
 	@apply bg-white;
-	@apply rounded border border-black border-opacity-20;
+	@apply rounded-md border border-black border-opacity-20;
 	@apply w-full;
 	@apply text-base;
 	padding: 0.5em 0.7em;
@@ -157,15 +157,11 @@ function onKeyDown(event: KeyboardEvent) {
 	top: 0.5em;
 	left: 0.7em;
 	line-height: 1.33;
-
-	&:after {
-		content: '…'
-	}
 }
 
 .textarea-input--statistics .textarea-input--control {
 	@apply border-purple;
-	@apply bg-purple bg-opacity-5;
+	@apply bg-purple bg-opacity-[0.02];
 }
 
 .textarea-input--statistics.textarea-input-invalid .textarea-input--control {

@@ -31,21 +31,9 @@ const {
 	</Popper>
 </template>
 
-<style scoped>
-:deep(div[data-v-2e7b3708]) {
-	@apply block;
-}
-
-:deep(.popper #arrow) {
-	@apply -z-20;
-}
-
-:deep(.popper #arrow::before) {
-	@apply bg-primary;
-}
-
-:deep(.popper:hover),
-:deep(.popper:hover > #arrow::before) {
-	@apply bg-primary;
-}
+<style lang="postcss">
+	.popper {
+		@apply w-max z-50 leading-tight;
+		max-width: 16rem;
+	}
 </style>

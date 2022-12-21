@@ -1,6 +1,6 @@
 <template>
 	<svws-ui-secondary-menu>
-		<template #headline> Kataloge </template>
+		<template #headline>Kataloge</template>
 		<template #header> </template>
 		<template #content>
 			<div class="secondary-menu--navigation container">

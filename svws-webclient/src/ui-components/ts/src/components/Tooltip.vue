@@ -4,12 +4,14 @@
 	</div>
 </template>
 
-<style>
+<style lang="postcss">
 .tooltip {
-	@apply block;
+	@apply text-body;
+}
+
+.popper #arrow::before,
+.popper:hover,
+.popper:hover > #arrow::before{
 	@apply bg-primary;
-	@apply text-body text-white;
-	@apply rounded;
-	@apply px-4 py-2;
 }
 </style>

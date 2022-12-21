@@ -1,12 +1,6 @@
 <template>
 	<svws-ui-content-card title="Basisdaten">
 		<div class="content-wrapper">
-			<div class="flex-shrink-0">
-				<svws-ui-avatar
-					:src="'data:image/png;base64, ' + foto"
-					:alt="'Foto ' + vorname + ' ' + nachname"
-				/>
-			</div>
 			<div class="input-wrapper">
 				<svws-ui-text-input
 					v-model="nachname"

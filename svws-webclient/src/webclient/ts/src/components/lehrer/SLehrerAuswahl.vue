@@ -1,9 +1,11 @@
 <template>
 	<svws-ui-secondary-menu>
-		<template #headline> Lehrerauswahl </template>
+		<template #headline>
+			<span>Lehrkräfte</span>
+		</template>
 		<template #header>
-			<div class="px-5">
-				<div>
+			<div>
+				<div class="mb-2">
 					<svws-ui-text-input v-model="search" type="search" placeholder="Suche nach Namen oder Kürzel"><i-ri-search-line /></svws-ui-text-input>
 				</div>
 			</div>
@@ -42,7 +44,7 @@
 	import { routeAppAuswahl } from "~/router/RouteUtils";
 
 	const cols = [
-		{ key: "kuerzel", label: "Kuerzel", width: "10%", sortable: true, defaultSort: "asc" },
+		{ key: "kuerzel", label: "Kürzel", width: "10%", sortable: true, defaultSort: "asc" },
 		{ key: "nachname", label: "Nachname", width: "45%", sortable: true, span: 2 },
 		{ key: "vorname", label: "Vorname", width: "45%", sortable: true, span: 2 }
 	];
@@ -66,7 +68,7 @@
 			return undefined;
 		if (search.value) {
 			return rows.value.filter(
-				(e: LehrerListeEintrag) => 
+				(e: LehrerListeEintrag) =>
 					e.nachname.toLocaleLowerCase().includes(search.value.toLocaleLowerCase()) ||
 					e.vorname.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())
 			);

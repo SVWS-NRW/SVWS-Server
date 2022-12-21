@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-content-card title="Bemerkungen">
+	<svws-ui-content-card class="lg:col-span-2 4xl:col-span-3 mt-auto pt-8">
 		<div class="input-wrapper">
 			<div class="col-span-2">
 				<svws-ui-textarea-input

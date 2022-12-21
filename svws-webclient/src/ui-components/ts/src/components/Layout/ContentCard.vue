@@ -8,11 +8,13 @@
 
 <template>
 	<div class="content-card--wrapper">
-		<div class="content-card--header">
-			<h5 class="headline-5 content-card--headline">
+		<div v-if="title || $slots.actions" class="content-card--header" :class="{
+			'content-card--header--has-actions': $slots.actions
+		}">
+			<h3 v-if="title" class="headline-5 content-card--headline">
 				{{ title }}
-			</h5>
-			<div class="content-card--actions">
+			</h3>
+			<div v-if="$slots.actions" class="content-card--actions">
 				<slot name="actions" />
 			</div>
 		</div>
@@ -22,14 +24,22 @@
 	</div>
 </template>
 
-<style>
+<style lang="postcss">
+	.content-card--wrapper {
+		@apply h-fit;
+	}
+
 	.content-card--headline {
 		@apply text-black;
 		@apply flex-shrink-0;
 	}
 
 	.content-card--header {
-		@apply flex items-center justify-between;
+		@apply inline-flex items-center justify-between px-3 py-1 rounded bg-light mt-6 mb-2 w-auto -mx-1;
+	}
+
+	.content-card--header--has-actions {
+		@apply flex w-full;
 	}
 
 	.content-card--actions {

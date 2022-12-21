@@ -1,6 +1,6 @@
 <template>
 	<svws-ui-secondary-menu>
-		<template #headline> Klassenauswahl </template>
+		<template #headline>Klassen</template>
 		<template #header> </template>
 		<template #content>
 			<div class="container">
@@ -19,7 +19,7 @@
 	import { routeAppAuswahl } from "~/router/RouteUtils";
 
 	const cols = ref([
-		{ key: "kuerzel", label: "Kuerzel", width: "6em", sortable: true, defaultSort: "asc" },
+		{ key: "kuerzel", label: "Kürzel", width: "6em", sortable: true, defaultSort: "asc" },
 		{ key: "bezeichnung", label: "Bezeichnung", sortable: true, span: 2 }
 	]);
 	const main: Main = injectMainApp();

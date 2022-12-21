@@ -1,44 +1,26 @@
 <template>
-	<div class="secondary-menu">
-		<h3 class="secondary-menu--headline">
-			<slot name="headline" />
-		</h3>
-		<div class="secondary-menu--header">
-			<slot name="header" />
+	<h1 class="secondary-menu--headline">
+		<slot name="headline" />
+		<div v-if="$slots.abschnitt" class="input--schule-abschnitte">
+			<slot name="abschnitt" />
 		</div>
-		<div class="secondary-menu--content">
-			<slot name="content" />
-		</div>
+	</h1>
+	<div class="secondary-menu--header">
+		<slot name="header" />
+	</div>
+	<div class="secondary-menu--content">
+		<slot name="content" />
 	</div>
 </template>
 
 <style>
 .secondary-menu--headline {
-	@apply py-2 px-6 text-headline;
+	@apply py-2 text-headline;
 	@apply relative z-20;
-	@apply flex items-center;
-	min-height: 6.5rem;
 }
 
-.secondary-menu {
-	@apply relative;
-	@apply bg-light;
-	@apply border-x border-dark-20;
-	@apply flex flex-shrink-0 flex-col;
-	@apply h-screen w-1/4;
-	@apply overflow-y-auto;
-	@apply shadow-dark-20 shadow-lg z-10;
-	-webkit-overflow-scrolling: touch;
-	min-width: 22rem;
-	max-width: 30rem;
-}
-
-.secondary-menu .v-table {
-	@apply border-l-0;
-}
-
-.secondary-menu .v-table th:last-child,
-.secondary-menu .v-table td:last-child {
+.app-layout--secondary-container .v-table th:last-child,
+.app-layout--secondary-container .v-table td:last-child {
 	@apply border-r-0;
 }
 
@@ -52,13 +34,31 @@
 	@apply overflow-y-auto;
 	@apply relative z-0;
 	-webkit-overflow-scrolling: touch;
-}
-
-.secondary-menu--content .secondary-menu--navigation {
-	@apply px-3;
+	margin-bottom: -1px;
 }
 
 .secondary-menu--content .secondary-menu--navigation {
 	@apply flex flex-col items-start
+}
+
+.secondary-menu--breadcrumbs {
+	@apply flex flex-wrap;
+
+	> *:not(:last-child) {
+		@apply opacity-25 cursor-pointer;
+
+		&:hover {
+			@apply opacity-100 text-primary;
+
+			&:after {
+				@apply opacity-25;
+			}
+		}
+
+		&:after {
+			@apply inline-block mx-1 text-black;
+			content: '/';
+		}
+	}
 }
 </style>
