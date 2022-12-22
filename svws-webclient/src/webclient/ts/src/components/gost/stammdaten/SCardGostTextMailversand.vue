@@ -2,35 +2,29 @@
 	<svws-ui-content-card title="Laufbahnplanung: Text für Mailversand">
 		<div class="input-wrapper">
 			<div class="col-span-2">
-				<svws-ui-textarea-input
-					v-model="inputTextMailversand"
-					placeholder="Text für Mailversand"
-					resizeable="vertical"
-				/>
+				<svws-ui-textarea-input placeholder="Text für Mailversand" v-model="inputTextMailversand" resizeable="vertical" />
 			</div>
 		</div>
 	</svws-ui-content-card>
 </template>
 
 <script setup lang="ts">
+
 	import { computed, ComputedRef, WritableComputedRef } from "vue";
+	import { GostJahrgangsdaten } from '@svws-nrw/svws-core-ts';
+	import { DataGostJahrgang } from '~/apps/gost/DataGostJahrgang';
 
-	import { injectMainApp, Main } from "~/apps/Main";
+	const props = defineProps<{ jahrgangsdaten: DataGostJahrgang }>();
 
-	const main: Main = injectMainApp();
-	const app = main.apps.gost;
+	const daten: ComputedRef<GostJahrgangsdaten> = computed(() => props.jahrgangsdaten.daten || new GostJahrgangsdaten());
 
-	const autosize: ComputedRef<boolean> = computed(() => {
-		return true;
+	const inputTextMailversand: WritableComputedRef<string | undefined> = computed({
+		get(): string | undefined {
+			return daten.value.textMailversand?.toString();
+		},
+		set(val) {
+			props.jahrgangsdaten.patch({ textMailversand: val });
+		}
 	});
 
-	const inputTextMailversand: WritableComputedRef<string | undefined> =
-		computed({
-			get(): string | undefined {
-				return app.dataJahrgang.daten?.textMailversand?.toString();
-			},
-			set(val) {
-				app.dataJahrgang.patch({ textMailversand: val });
-			}
-		});
 </script>

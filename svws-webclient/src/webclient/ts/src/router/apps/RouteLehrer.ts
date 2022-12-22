@@ -64,13 +64,14 @@ export const RouteLehrer : RouteRecordRaw = {
 
 export function routeLehrerSetRedirect(route : RouteLocationNormalizedLoaded) {
 	const meta = RouteLehrer.meta as RouteAppMeta<LehrerListeEintrag | undefined, RouteDataLehrer>;
-	if (meta === undefined)
+	if ((RouteLehrer.children === undefined) || (meta === undefined))
 		return;
-	if (route.name === RouteLehrerPersonaldaten.name) {
-		meta.redirect.value = RouteLehrerPersonaldaten;
-	} else if (route.name === RouteLehrerUnterrichtsdaten.name) {
-		meta.redirect.value = RouteLehrerUnterrichtsdaten;
-	} else {
-		meta.redirect.value = RouteLehrerIndividualdaten;
+	for (var child of RouteLehrer.children) {
+		if (route.name === child.name) {
+			meta.redirect.value = child;
+			return;
+		}
 	}
+	meta.redirect.value = RouteLehrerIndividualdaten;
 }
+

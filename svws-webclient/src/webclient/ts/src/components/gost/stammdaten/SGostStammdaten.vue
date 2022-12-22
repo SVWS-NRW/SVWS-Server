@@ -1,32 +1,30 @@
 <template>
-	<div v-if="app.dataJahrgang.daten && visible" class="app-container">
-		<s-card-gost-beratungslehrer v-if="enabled" />
+	<div v-if="props.item !== undefined" class="app-container">
+		<s-card-gost-beratungslehrer v-if="istAbiturjahrgang" :jahrgangsdaten="jahrgangsdaten" />
 		<div>
-			<s-card-gost-text-beratungsbogen />
-			<s-card-gost-text-mailversand />
+			<s-card-gost-text-beratungsbogen :jahrgangsdaten="jahrgangsdaten" />
+			<s-card-gost-text-mailversand :jahrgangsdaten="jahrgangsdaten" />
 		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
 
+	import { GostJahrgang } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef } from "vue";
+	import { DataGostJahrgang } from "~/apps/gost/DataGostJahrgang";
 
-	import { injectMainApp, Main } from "~/apps/Main";
+	import { RouteDataGost, RouteGost } from "~/router/apps/RouteGost";
+	import { routeAppData } from "~/router/RouteUtils";
 
-	const main: Main = injectMainApp();
-	const app = main.apps.gost;
+	const props = defineProps<{ id?: number; item?: GostJahrgang, routename: string }>();
 
-	const enabled: ComputedRef<boolean> = computed(() => {
-		return (
-			!!app.dataJahrgang.daten?.abiturjahr &&
-			app.dataJahrgang.daten?.abiturjahr > 0
-		);
+	const data: RouteDataGost = routeAppData(RouteGost);
+
+	const jahrgangsdaten: ComputedRef<DataGostJahrgang> = computed(() => {
+		return data.jahrgangsdaten;
 	});
 
-	const visible: ComputedRef<boolean> = computed(() => {
-		//return this.$app.gostStammdaten.visible; //TODO: richtige Bedingung einpflegen
-		return true;
-	});
+	const istAbiturjahrgang: ComputedRef<boolean> = computed(() => (props.id !== undefined) && (props.id > 0));
 
 </script>

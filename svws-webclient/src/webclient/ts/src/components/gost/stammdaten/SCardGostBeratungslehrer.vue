@@ -7,8 +7,13 @@
 </template>
 
 <script setup lang="ts">
-	import { injectMainApp, Main } from "~/apps/Main";
 
-	const main: Main = injectMainApp();
-	const app = main.apps.gost;
+	import { GostJahrgangsdaten } from '@svws-nrw/svws-core-ts';
+	import { computed, ComputedRef } from 'vue';
+	import { DataGostJahrgang } from '~/apps/gost/DataGostJahrgang';
+
+	const props = defineProps<{ jahrgangsdaten: DataGostJahrgang }>();
+
+	const daten: ComputedRef<GostJahrgangsdaten> = computed(() => props.jahrgangsdaten.daten || new GostJahrgangsdaten());
+
 </script>
