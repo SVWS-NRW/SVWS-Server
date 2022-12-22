@@ -196,7 +196,7 @@
 			icon: "team"
 		},
 		{
-			caption: "Lehrer",
+			caption: "Lehrkräfte",
 			value: "lehrer",
 			active: ["lehrer"],
 			icon: "briefcase"

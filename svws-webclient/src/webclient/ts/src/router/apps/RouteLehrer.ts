@@ -24,7 +24,7 @@ export interface RouteDataLehrer {
 
 export const RouteLehrer : RouteRecordRaw = {
 	name: ROUTE_NAME,
-	path: "/lehrer/:id(\\d+)?",
+	path: "/lehrkraefte/:id(\\d+)?",
 	components: {
 		default: () => import("~/components/lehrer/SLehrerApp.vue"),
 		liste: () => import("~/components/lehrer/SLehrerAuswahl.vue")
