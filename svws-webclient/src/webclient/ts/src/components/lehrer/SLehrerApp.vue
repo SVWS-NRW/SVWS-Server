@@ -3,10 +3,7 @@
 		<svws-ui-header>
 			<div class="flex items-center">
 				<div class="w-16 mr-4 -ml-2">
-					<svws-ui-avatar
-						:src="'data:image/png;base64, ' + foto"
-						:alt="foto ? 'Foto ' + inputVorname + ' ' + inputNachname : ''"
-					/>
+					<svws-ui-avatar :src="'data:image/png;base64, ' + foto" :alt="foto ? 'Foto ' + inputVorname + ' ' + inputNachname : ''" />
 				</div>
 				<div>
 					<span class="inline-block mr-3">{{ inputTitel }} {{ inputVorname }} {{ inputNachname }}</span>
@@ -16,7 +13,7 @@
 				</div>
 			</div>
 		</svws-ui-header>
-		<svws-ui-router-tab-bar :routes="RouteLehrerChildren" v-model="selectedRoute">
+		<svws-ui-router-tab-bar :routes="RouteLehrerChildren" :hidden="routeAppAreHidden(RouteLehrerChildren)" v-model="selectedRoute">
 			<router-view />
 		</svws-ui-router-tab-bar>
 	</div>
@@ -33,7 +30,7 @@
 
 	import { injectMainApp, Main } from "~/apps/Main";
 	import { RouteLehrer, RouteLehrerChildren, RouteDataLehrer, routeLehrerSetRedirect } from "~/router/apps/RouteLehrer";
-	import { routeAppData, routeAppMeta } from "~/router/RouteUtils";
+	import { routeAppData, routeAppMeta, routeAppAreHidden } from "~/router/RouteUtils";
 
 	const main: Main = injectMainApp();
 	const app = main.apps.lehrer;

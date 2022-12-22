@@ -52,6 +52,9 @@
 			</template>
 		</svws-ui-tab-bar>
 	</div>
+	<div v-else class="app-layout--main--placeholder">
+		<i-ri-briefcase-line/>
+	</div>
 </template>
 
 <script setup lang="ts">

@@ -48,6 +48,7 @@ export const RouteLehrer : RouteRecordRaw = {
 	},
 	meta: <RouteAppMeta<LehrerListeEintrag | undefined, RouteDataLehrer>> {
 		auswahl: () => routeAuswahlID(ROUTE_NAME, injectMainApp().apps.lehrer.auswahl),
+		hidden: () => false,
 		redirect: ref(RouteLehrerIndividualdaten),
 		data: <RouteDataLehrer>{
 			item: undefined,

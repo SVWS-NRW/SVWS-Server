@@ -11,6 +11,7 @@ export const RouteLehrerIndividualdaten : RouteRecordRaw = {
 	props: (route) => routePropsAuswahlID(route, injectMainApp().apps.lehrer.auswahl),
 	meta: <RouteAppMeta<unknown, unknown>> {
 		auswahl: () => {},
+		hidden: () => false,
 		text: "Daten"
 	}
 };

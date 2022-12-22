@@ -7,7 +7,8 @@
                 </button>
             </div>
             <div ref="contentEl" class="tab-bar">
-                <router-tab-bar-button v-for="route in props.routes" :route="route" :selected="selected" @select="select(route)" />
+                <router-tab-bar-button v-for="(route, index) in props.routes" :route="route" :selected="selected" 
+                    :hidden="isHidden(index)" @select="select(route)" />
             </div>
             <div v-if="!state.scrolledMax"
                 class="router-tab-bar--scroll-button-background router-tab-bar--scroll-button-background-right">
@@ -28,6 +29,7 @@
 
     const props = defineProps<{
         routes: RouteRecordRaw[]
+        hidden: boolean[] | undefined
         modelValue: RouteRecordRaw
     }>();
 
@@ -49,6 +51,12 @@
             emit('update:modelValue', value);
         }
     });
+
+    function isHidden(index: number) {
+        if ((props.hidden === undefined) || props.hidden[index] === undefined)
+            return false;
+        return props.hidden[index];
+    }
 
     const state = ref<ComponentData>({
         scrolled: false,

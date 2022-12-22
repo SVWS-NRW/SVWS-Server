@@ -1,4 +1,4 @@
-import { computed, Ref, WritableComputedRef } from "vue";
+import { computed, ComputedRef, Ref, WritableComputedRef } from "vue";
 import { RouteLocationNormalized, RouteMeta, RouteRecordRaw, useRoute, useRouter } from "vue-router";
 import { BaseList } from "~/apps/BaseList";
 
@@ -11,14 +11,14 @@ export interface RouteAppMeta<ItemAuswahl, RouteData> extends RouteMeta {
 	/** Eine Funktion, welche eine Computed-Property zurückliefert, die für die Auswahl eines Elements aus einer Liste von Elementen verantwirtlich ist. */
 	auswahl: (routename? : string) => WritableComputedRef<ItemAuswahl>;
 
+	/** Eine Funktion, welche die Sichtbarkeit der Route für die Anwendung prüft */
+	hidden: () => boolean;
+
 	/** Die Daten, die einer Route zugeordnet sind */
 	data: RouteData;
 
 	/** Ein Pfad, welcher als Suffix der Route angehangen wird, falls ein automatischer redirect erfolgt (z.B. bei Tabs nach einer Auswahl) */
 	redirect: Ref<RouteRecordRaw>;
-
-	/** Eine 0-indizierte ID zur Angabe der Reihenfolge der Routen-Elemente bei der Darstellung in der UI */
-	reihenfolge: number;
 
 	/** Ein Text, welcher zur Darstellung in der GUI genutzt wird (z.B. der Text auf Tabs) */
 	text: string;
@@ -62,6 +62,41 @@ export function routeAppData<T extends RouteRecordRaw, ItemAuswahl, RouteData>(r
 		throw new Error("Meta-Informationen für die Route '" + route.name?.toString() + "' nicht definiert.");
 	return route.meta.data as RouteData;
 }
+
+
+/**
+ * Prüft für die übergeben Route, ob sie versteckt oder sichtbar ist.
+ * Dafür wird die hidden-Methode bei den Meta-Informationen der Router aufgerufen,
+ * falls sie definiert ist. Ist keine Methode definiert, so ist die Router sichtbar.
+ * 
+ * @param route   die Route
+ * 
+ * @returns true, falls die Route versteckt sein soll
+ */
+export function routeAppIsHidden(route : RouteRecordRaw): boolean {
+	if (route.meta === undefined)
+		return false;
+	if ((route.meta.hidden === undefined) || (typeof route.meta.hidden !== "function"))
+		return false;
+	return route.meta.hidden();
+}
+
+
+/**
+ * Prüft für das übergebene Array von Routen, ob sie versteckt oder sichtbar sind.
+ * Dafür wird jeweils die hidden-Methode bei den Meta-Informationen der Router
+ * aufgerufen, falls sie definiert ist. Ist diese nicht definiert, so ist
+ * die jeweilige Route sichtbar.
+ * 
+ * @param route   die Route
+ * 
+ * @returns ein Array mit der Länge der Eingabe und jeweils true, falls die entspechende
+ *          Route des übergebenen Arrays versteckt sein soll
+ */
+export function routeAppAreHidden(routes : RouteRecordRaw[]): boolean[] {
+	return routes.map(r => routeAppIsHidden(r));
+}
+
 
 /**
  * Eine Default-Methode zum Erzeugen der Properties "id" und "item" zu einer Route bei 

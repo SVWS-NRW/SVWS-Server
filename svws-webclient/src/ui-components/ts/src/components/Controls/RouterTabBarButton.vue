@@ -1,5 +1,5 @@
 <template>
-    <button @click="select()" :class="[isSelected ? 'router-tab-bar-button--active' : '', false ? 'hidden' : 'router-tab-bar-button']">
+    <button @click="select()" :class="[isSelected ? 'router-tab-bar-button--active' : '', props.hidden ? 'hidden' : 'router-tab-bar-button']">
         {{ route.meta?.text }}
     </button>
 </template>
@@ -14,6 +14,7 @@
 
     const props = defineProps<{
         route: RouteRecordRaw
+        hidden: boolean
         selected: RouteRecordRaw
     }>();
 

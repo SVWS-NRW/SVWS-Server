@@ -31,6 +31,7 @@ export const RouteLehrerPersonaldaten : RouteRecordRaw = {
 	},
 	meta: <RouteAppMeta<unknown, RouteDataLehrerPersonaldaten>> {
 		auswahl: () => {},
+		hidden: () => false,
 		text: "Personaldaten",
 		data: <RouteDataLehrerPersonaldaten>{
 			item: undefined,
