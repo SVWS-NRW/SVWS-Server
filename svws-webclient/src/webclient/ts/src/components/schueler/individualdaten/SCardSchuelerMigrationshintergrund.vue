@@ -22,23 +22,21 @@
 
 	import { Nationalitaeten, Verkehrssprache, SchuelerStammdaten } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, WritableComputedRef } from "vue";
-	import { injectMainApp, Main } from "~/apps/Main";
+	import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
 
 	import { verkehrsspracheKatalogEintragFilter, verkehrsspracheKatalogEintragSort, nationalitaetenKatalogEintragFilter, nationalitaetenKatalogEintragSort } from "~/helfer";
 
-	const main: Main = injectMainApp();
-	const app = main.apps.schueler;
+	const props = defineProps<{ stammdaten: DataSchuelerStammdaten }>();
 
-	const daten: ComputedRef<SchuelerStammdaten> = computed(() => {
-		return app.stammdaten.daten || new SchuelerStammdaten();
-	});
+	const daten: ComputedRef<SchuelerStammdaten> = computed(() => props.stammdaten.daten || new SchuelerStammdaten());
+
 
 	const inputGeburtsland: WritableComputedRef<Nationalitaeten> = computed({
 		get(): Nationalitaeten {
 			return Nationalitaeten.getByISO3(daten.value.geburtsland) || Nationalitaeten.DEU;
 		},
 		set(val: Nationalitaeten) {
-			app.stammdaten.patch({ geburtsland: val.daten.iso3 });
+			props.stammdaten.patch({ geburtsland: val.daten.iso3 });
 		}
 	});
 
@@ -47,7 +45,7 @@
 			return daten.value.zuzugsjahr?.toString();
 		},
 		set(val: string | undefined) {
-			app.stammdaten.patch({ zuzugsjahr: val });
+			props.stammdaten.patch({ zuzugsjahr: val });
 		}
 	});
 
@@ -56,7 +54,7 @@
 			return Nationalitaeten.getByISO3(daten.value.geburtslandMutter) || Nationalitaeten.DEU;
 		},
 		set(val: Nationalitaeten) {
-			app.stammdaten.patch({ geburtslandMutter: val.daten.iso3 });
+			props.stammdaten.patch({ geburtslandMutter: val.daten.iso3 });
 		}
 	});
 
@@ -65,7 +63,7 @@
 			return Nationalitaeten.getByISO3(daten.value.geburtslandVater) || Nationalitaeten.DEU;
 		},
 		set(val: Nationalitaeten) {
-			app.stammdaten.patch({ geburtslandVater: val.daten.iso3 });
+			props.stammdaten.patch({ geburtslandVater: val.daten.iso3 });
 		}
 	});
 
@@ -74,7 +72,7 @@
 			return Verkehrssprache.getByKuerzelAuto(daten.value.verkehrspracheFamilie) || Verkehrssprache.DEU
 		},
 		set(val: Verkehrssprache) {
-			app.stammdaten.patch({ verkehrspracheFamilie: val.daten.kuerzel });
+			props.stammdaten.patch({ verkehrspracheFamilie: val.daten.kuerzel });
 		}
 	});
 
@@ -84,7 +82,7 @@
 			return daten.value.hatMigrationshintergrund;
 		},
 		set(val: boolean | undefined) {
-			app.stammdaten.patch({ hatMigrationshintergrund: val });
+			props.stammdaten.patch({ hatMigrationshintergrund: val });
 		}
 	});
 

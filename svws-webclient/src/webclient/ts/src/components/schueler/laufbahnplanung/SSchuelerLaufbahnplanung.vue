@@ -16,6 +16,7 @@
 
 <script setup lang="ts">
 
+	import { SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, ref } from "vue";
 	import { App } from "~/apps/BaseApp";
 	import { injectMainApp, Main } from "~/apps/Main";
@@ -23,11 +24,13 @@
 	const main: Main = injectMainApp();
 	const app = main.apps.schueler;
 
+	const props = defineProps<{ id?: number; item?: SchuelerListeEintrag, routename: string }>();
+
 	const current_abiturjahr = App.apps.gost.auswahl.ausgewaehlt;
 	const schueler_abiturjahr = app.dataGostLaufbahndaten?.abiturjahr;
 
 	if (current_abiturjahr !== undefined && schueler_abiturjahr !== undefined && current_abiturjahr.abiturjahr !== schueler_abiturjahr)
-			App.apps.gost.auswahl.ausgewaehlt = App.apps.gost.auswahl.liste.find(jahr => jahr.abiturjahr === schueler_abiturjahr);
+		App.apps.gost.auswahl.ausgewaehlt = App.apps.gost.auswahl.liste.find(jahr => jahr.abiturjahr === schueler_abiturjahr);
 
 	const visible: ComputedRef<boolean> = computed<boolean>(() =>
 		//return this.$app.gostLaufbahn.visible; //TODO: richtige Bedingung einpflegen

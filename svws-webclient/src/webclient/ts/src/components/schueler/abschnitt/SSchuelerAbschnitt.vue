@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="ts">
-	import { computed, ComputedRef, defineAsyncComponent } from "vue";
+	import { computed, ComputedRef } from "vue";
 	import { injectMainApp, Main } from "~/apps/Main";
 
 	const main: Main = injectMainApp();

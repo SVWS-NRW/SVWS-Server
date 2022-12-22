@@ -6,7 +6,7 @@
 				<svws-ui-text-input placeholder="Zusatz" v-model="zusatzNachname" type="text" />
 				<svws-ui-text-input placeholder="Rufname" v-model="vorname" type="text" />
 				<svws-ui-text-input placeholder="Alle Vornamen" v-model="alleVornamen" type="text" />
-				<svws-ui-multi-select title="Geschlecht" v-model="geschlecht" :items="inputKatalogGeschlecht" statistics />
+				<svws-ui-multi-select title="Geschlecht" v-model="geschlecht" :items="Geschlecht.values()" statistics />
 				<svws-ui-text-input placeholder="Geburtsdatum" v-model="inputGeburtsdatum" type="date" required statistics />
 				<svws-ui-text-input placeholder="Geburtsort" v-model="inputGeburtsort" type="text" statistics />
 				<svws-ui-text-input placeholder="Geburtsname" v-model="inputGeburtsname" type="text" />
@@ -22,39 +22,34 @@
 	import { Geschlecht, SchuelerStammdaten } from "@svws-nrw/svws-core-ts";
 	import { injectMainApp, Main } from "~/apps/Main";
 	import { UseSchuelerStammdaten } from "~/utils/composables/stammdaten"
+	import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
+
+	const props = defineProps<{ stammdaten: DataSchuelerStammdaten }>();
+
+	const daten: ComputedRef<SchuelerStammdaten> = computed(() => props.stammdaten.daten || new SchuelerStammdaten());
 
 	const main: Main = injectMainApp();
 	const app = main.apps.schueler;
 
-	const use = new UseSchuelerStammdaten(app.stammdaten)
+	const use = new UseSchuelerStammdaten(props.stammdaten)
 
 	const { vorname, alleVornamen, nachname, zusatzNachname, geschlecht } = use;
 
-	const daten: ComputedRef<SchuelerStammdaten> = computed(() => {
-		return app.stammdaten.daten || new SchuelerStammdaten();
-	});
-
-	const inputKatalogGeschlecht: ComputedRef<Geschlecht[]> = computed(() => {
-		return Geschlecht.values();
-	});
-
-	const inputGeburtsdatum: WritableComputedRef<string | undefined> = computed(
-		{
-			get(): string | undefined {
-				return daten.value.geburtsdatum?.toString();
-			},
-			set(val: string | undefined) {
-				app.stammdaten.patch({ geburtsdatum: val });
-			}
+	const inputGeburtsdatum: WritableComputedRef<string | undefined> = computed({
+		get(): string | undefined {
+			return daten.value.geburtsdatum?.toString();
+		},
+		set(val: string | undefined) {
+			props.stammdaten.patch({ geburtsdatum: val });
 		}
-	);
+	});
 
 	const inputGeburtsort: WritableComputedRef<string | undefined> = computed({
 		get(): string | undefined {
 			return daten.value.geburtsort?.toString();
 		},
 		set(val: string | undefined) {
-			app.stammdaten.patch({ geburtsort: val });
+			props.stammdaten.patch({ geburtsort: val });
 		}
 	});
 
@@ -63,7 +58,7 @@
 			return daten.value.geburtsname?.toString();
 		},
 		set(val: string | undefined) {
-			app.stammdaten.patch({ geburtsname: val });
+			props.stammdaten.patch({ geburtsname: val });
 		}
 	});
 

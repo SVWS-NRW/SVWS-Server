@@ -10,18 +10,20 @@
 
 <script setup lang="ts">
 
-	import { computed, WritableComputedRef } from "vue";
-	import { injectMainApp, Main } from "~/apps/Main";
+	import { SchuelerStammdaten } from "@svws-nrw/svws-core-ts";
+	import { computed, ComputedRef, WritableComputedRef } from "vue";
+	import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
 
-	const main: Main = injectMainApp();
-	const app = main.apps.schueler;
+	const props = defineProps<{ stammdaten: DataSchuelerStammdaten }>();
+
+	const daten: ComputedRef<SchuelerStammdaten> = computed(() => props.stammdaten.daten || new SchuelerStammdaten());
 
 	const inputBemerkungen: WritableComputedRef<string | undefined> = computed({
 		get(): string | undefined {
-			return app.stammdaten.daten?.bemerkungen?.toString() || undefined;
+			return daten.value.bemerkungen?.toString() || undefined;
 		},
 		set(val) {
-			app.stammdaten.patch({ bemerkungen: val });
+			props.stammdaten.patch({ bemerkungen: val });
 		}
 	});
 

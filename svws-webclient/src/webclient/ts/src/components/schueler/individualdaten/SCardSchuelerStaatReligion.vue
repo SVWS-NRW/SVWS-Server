@@ -23,13 +23,14 @@
 	import { List, Nationalitaeten, ReligionEintrag, SchuelerStammdaten } from "@svws-nrw/svws-core-ts";
 	import { injectMainApp, Main } from "~/apps/Main";
 	import { staatsangehoerigkeitKatalogEintragFilter, staatsangehoerigkeitKatalogEintragSort } from "../../../helfer";
+	import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
+
+	const props = defineProps<{ stammdaten: DataSchuelerStammdaten }>();
+
+	const daten: ComputedRef<SchuelerStammdaten> = computed(() => props.stammdaten.daten || new SchuelerStammdaten());
+
 
 	const main: Main = injectMainApp();
-	const app = main.apps.schueler;
-
-	const daten: ComputedRef<SchuelerStammdaten> = computed(() => {
-		return app.stammdaten.daten || new SchuelerStammdaten();
-	});
 
 	const inputKatalogReligionen: ComputedRef<List<ReligionEintrag>> = computed(() => {
 		return main.kataloge.religionen;
@@ -40,7 +41,7 @@
 			return Nationalitaeten.getByISO3(daten.value.staatsangehoerigkeitID) || Nationalitaeten.DEU;
 		},
 		set(val: Nationalitaeten) {
-			app.stammdaten.patch({ staatsangehoerigkeitID: val.daten.iso3 });
+			props.stammdaten.patch({ staatsangehoerigkeitID: val.daten.iso3 });
 		}
 	});
 
@@ -49,7 +50,7 @@
 			return Nationalitaeten.getByISO3(daten.value.staatsangehoerigkeit2ID) || Nationalitaeten.DEU;
 		},
 		set(val: Nationalitaeten) {
-			app.stammdaten.patch({ staatsangehoerigkeit2ID: val.daten.iso3 });
+			props.stammdaten.patch({ staatsangehoerigkeit2ID: val.daten.iso3 });
 		}
 	});
 
@@ -66,7 +67,7 @@
 			return o;
 		},
 		set(val) {
-			app.stammdaten.patch({ religionID: val?.id });
+			props.stammdaten.patch({ religionID: val?.id });
 		}
 	});
 
@@ -75,7 +76,7 @@
 			return daten.value.religionabmeldung?.toString();
 		},
 		set(val) {
-			app.stammdaten.patch({ religionabmeldung: val });
+			props.stammdaten.patch({ religionabmeldung: val });
 		}
 	});
 
@@ -84,7 +85,7 @@
 			return daten.value.religionanmeldung?.toString();
 		},
 		set(val) {
-			app.stammdaten.patch({ religionanmeldung: val });
+			props.stammdaten.patch({ religionanmeldung: val });
 		}
 	});
 
@@ -93,9 +94,7 @@
 			return daten.value.druckeKonfessionAufZeugnisse;
 		},
 		set(val) {
-			app.stammdaten.patch({
-				druckeKonfessionAufZeugnisse: val
-			});
+			props.stammdaten.patch({ druckeKonfessionAufZeugnisse: val });
 		}
 	});
 

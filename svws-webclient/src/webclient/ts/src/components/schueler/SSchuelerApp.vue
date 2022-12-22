@@ -7,50 +7,15 @@
 				</div>
 				<div>
 					<span class="inline-block mr-3"> {{ vorname }} {{ nachname }} </span>
-					<svws-ui-badge variant="light"> {{ inputId }} </svws-ui-badge>
+					<svws-ui-badge variant="light"> {{ props.id }} </svws-ui-badge>
 					<br/>
 					<span class="opacity-50"> {{ inputKlasse }} </span>
 				</div>
 			</div>
 		</svws-ui-header>
-		<svws-ui-tab-bar v-model="app.selectedTab.value">
-			<template #tabs>
-				<svws-ui-tab-button> Individualdaten </svws-ui-tab-button>
-				<svws-ui-tab-button> Erziehungsberechtigte </svws-ui-tab-button>
-				<svws-ui-tab-button> Adressen / Betriebe </svws-ui-tab-button>
-				<svws-ui-tab-button> Schulbesuch </svws-ui-tab-button>
-				<svws-ui-tab-button> Aktuelles Halbjahr </svws-ui-tab-button>
-				<svws-ui-tab-button> Leistungsdaten </svws-ui-tab-button>
-				<svws-ui-tab-button :hidden="!hatAbiturjahrgang"> Laufbahnplanung </svws-ui-tab-button>
-				<svws-ui-tab-button> Stundenplan </svws-ui-tab-button>
-			</template>
-			<template #panels>
-				<svws-ui-tab-panel>
-					<s-schueler-individualdaten />
-				</svws-ui-tab-panel>
-				<svws-ui-tab-panel>
-					<s-schueler-erziehungsberechtigte />
-				</svws-ui-tab-panel>
-				<svws-ui-tab-panel>
-					<s-schueler-adressen />
-				</svws-ui-tab-panel>
-				<svws-ui-tab-panel>
-					<s-schueler-schulbesuch />
-				</svws-ui-tab-panel>
-				<svws-ui-tab-panel>
-					<s-schueler-halbjahr />
-				</svws-ui-tab-panel>
-				<svws-ui-tab-panel>
-					<s-schueler-leistungsdaten />
-				</svws-ui-tab-panel>
-				<svws-ui-tab-panel :hidden="!hatAbiturjahrgang">
-					<s-schueler-laufbahnplanung />
-				</svws-ui-tab-panel>
-				<svws-ui-tab-panel>
-					<s-schueler-stundenplan />
-				</svws-ui-tab-panel>
-			</template>
-		</svws-ui-tab-bar>
+		<svws-ui-router-tab-bar :routes="RouteSchuelerChildren" :hidden="routeAppAreHidden(RouteSchuelerChildren)" v-model="selectedRoute">
+			<router-view />
+		</svws-ui-router-tab-bar>
 	</div>
 	<div v-else class="app-layout--main--placeholder">
 		<i-ri-briefcase-line/>
@@ -59,50 +24,59 @@
 
 <script setup lang="ts">
 
-	import { computed, ComputedRef } from "vue";
-	import { App } from "~/apps/BaseApp";
-	import { Klassen } from "~/apps/klassen/Klassen";
-	import { Schueler } from "~/apps/schueler/Schueler";
-	import SSchuelerStundenplan from "./stundenplan/SSchuelerStundenplan.vue";
+	import { computed, ComputedRef, onMounted, WritableComputedRef } from "vue";
+	import { RouteRecordRaw, useRoute, useRouter } from "vue-router";
 
 	import { injectMainApp, Main } from "~/apps/Main";
+	import { RouteSchueler, RouteSchuelerChildren, RouteDataSchueler, routeSchuelerSetRedirect } from "~/router/apps/RouteSchueler";
+	import { routeAppData, routeAppMeta, routeAppAreHidden } from "~/router/RouteUtils";
+	import { SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
 
 	const main: Main = injectMainApp();
-	const app: Schueler = main.apps.schueler;
+	const app = main.apps.schueler;
 
-	const appKlassen: Klassen = main.apps.klassen;
+	const props = defineProps<{ id?: number; item?: SchuelerListeEintrag, routename: string }>();
 
-	const hatAbiturjahrgang: ComputedRef<boolean> = computed(()=> {
-		const abiturjahr = main.apps.schueler.dataGostLaufbahndaten?.daten?.abiturjahr;
-		const jahrgang = App.apps.gost.auswahl.liste.find(j => (j.abiturjahr === abiturjahr));
-		return jahrgang ? true : false;
-	})
-
-	const gost: ComputedRef<boolean> = computed(() => {
-		return !!App.apps.schule.schulform?.daten.hatGymOb;
+	// Initialisiere die Sub-Routen
+	const router = useRouter();
+	const route = useRoute();
+	const redirect = routeAppMeta(RouteSchueler).redirect;
+	const data: RouteDataSchueler = routeAppData(RouteSchueler);
+	routeSchuelerSetRedirect(route);
+	
+	onMounted(() => {
+		if (((route.params.id === undefined) || (route.params.id === "")) && (app.auswahl.liste.length > 0))
+			router.push({ name: redirect.value.name?.toString(), params: { id: app.auswahl.liste[0].id } });
 	});
+
+	const selectedRoute: WritableComputedRef<RouteRecordRaw> = computed({
+		get(): RouteRecordRaw {
+			return redirect.value;
+		},
+		set(value: RouteRecordRaw) {
+			redirect.value = value;
+			router.push({ name: value.name, params: { id: props.id } });
+		}
+	});
+
 
 	const foto: ComputedRef<String | undefined> = computed(() => {
-		return app.stammdaten.daten?.foto || undefined;
+		return data.stammdaten.daten?.foto || undefined;
 	});
 
-	const nachname: ComputedRef<string | false> = computed(() => {
-		return (app.auswahl.ausgewaehlt === undefined) ? false : app.auswahl.ausgewaehlt.nachname.toString();
+	const nachname: ComputedRef<string | undefined> = computed(() => {
+		return props.item?.nachname.toString();
 	});
 
-	const vorname: ComputedRef<string | false> = computed(() => {
-		return (app.auswahl.ausgewaehlt === undefined) ? false : app.auswahl.ausgewaehlt.vorname.toString();
-	});
-
-	const inputId: ComputedRef<string> = computed(() => {
-		return (app.auswahl.ausgewaehlt === undefined) ? "" : "ID: " + app.auswahl.ausgewaehlt.id;
+	const vorname: ComputedRef<string | undefined> = computed(() => {
+		return props.item?.vorname.toString();
 	});
 
 	const inputKlasse: ComputedRef<string | false> = computed(() => {
-		if (app.auswahl.ausgewaehlt === undefined)
+		if (props.item === undefined)
 			return false;
-		const id = app.auswahl.ausgewaehlt.idKlasse;
-		const klasse = appKlassen.auswahl.liste.find(k => k.id === id);
+		const id = props.item.idKlasse;
+		const klasse = main.apps.klassen.auswahl.liste.find(k => k.id === id);
 		return klasse?.kuerzel?.toString() || false;
 	});
 

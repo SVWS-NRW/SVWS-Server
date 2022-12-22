@@ -23,15 +23,15 @@
 
 	import { AdressenUtils, List, OrtKatalogEintrag, OrtsteilKatalogEintrag, SchuelerStammdaten } from "@svws-nrw/svws-core-ts";
 	import { injectMainApp, Main } from "~/apps/Main";
+	import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
+
+	const props = defineProps<{ stammdaten: DataSchuelerStammdaten }>();
+
+	const daten: ComputedRef<SchuelerStammdaten> = computed(() => props.stammdaten.daten || new SchuelerStammdaten());
+
 
 	const main: Main = injectMainApp();
-	const app = main.apps.schueler;
 
-	const eingabeStrasseOk = ref(true);
-
-	const daten: ComputedRef<SchuelerStammdaten> = computed(() => {
-		return app.stammdaten.daten || new SchuelerStammdaten();
-	});
 
 	const inputKatalogOrte: ComputedRef<Array<OrtKatalogEintrag>> = computed(() => {
 		return main.kataloge.orte.toArray() as Array<OrtKatalogEintrag>;
@@ -41,16 +41,17 @@
 		return main.kataloge.ortsteile;
 	});
 
+	const eingabeStrasseOk = ref(true);
+
 	const inputStrasse: WritableComputedRef<string | undefined> = computed({
 		get(): string | undefined {
-			const d = app.stammdaten.daten;
-			const ret = AdressenUtils.combineStrasse(d?.strassenname || "", d?.hausnummer || "", d?.hausnummerZusatz || "");
+			const ret = AdressenUtils.combineStrasse(daten.value.strassenname || "", daten.value.hausnummer || "", daten.value.hausnummerZusatz || "");
 			return ret ? ret.toString() : undefined;
 		},
 		set(val: string | undefined) {
 			if (val) {
 				const vals = AdressenUtils.splitStrasse(val);
-				app.stammdaten.patch({ strassenname: vals?.[0] || val, hausnummer: vals?.[1] || "", hausnummerZusatz: vals?.[2] || "" });
+				props.stammdaten.patch({ strassenname: vals?.[0] || val, hausnummer: vals?.[1] || "", hausnummerZusatz: vals?.[2] || "" });
 				eingabeStrasseOk.value = !!vals;
 			}
 		}
@@ -59,13 +60,10 @@
 	const inputWohnortID: WritableComputedRef<OrtKatalogEintrag | undefined> = computed({
 		get(): OrtKatalogEintrag | undefined {
 			// FIXME: Suche implementieren sobald Funktionalität in List umgesetzt wurde
-			return (inputKatalogOrte.value as OrtKatalogEintrag[]).find(
-				(o: OrtKatalogEintrag | undefined) => o?.id == daten.value.wohnortID
-			);
-			// return undefined;
+			return (inputKatalogOrte.value as OrtKatalogEintrag[]).find(o => o?.id == daten.value.wohnortID);
 		},
 		set(val: OrtKatalogEintrag | undefined) {
-			app.stammdaten.patch({ wohnortID: val?.id });
+			props.stammdaten.patch({ wohnortID: val?.id });
 		}
 	});
 
@@ -82,7 +80,7 @@
 			return o;
 		},
 		set(val: OrtsteilKatalogEintrag | undefined) {
-			app.stammdaten.patch({ ortsteilID: val?.id });
+			props.stammdaten.patch({ ortsteilID: val?.id });
 		}
 	});
 
@@ -91,7 +89,7 @@
 			return daten.value.telefon?.toString();
 		},
 		set(val) {
-			app.stammdaten.patch({ telefon: val });
+			props.stammdaten.patch({ telefon: val });
 		}
 	});
 
@@ -100,7 +98,7 @@
 			return daten.value.telefonMobil?.toString();
 		},
 		set(val) {
-			app.stammdaten.patch({ telefonMobil: val });
+			props.stammdaten.patch({ telefonMobil: val });
 		}
 	});
 
@@ -109,7 +107,7 @@
 			return daten.value.emailPrivat?.toString();
 		},
 		set(val) {
-			app.stammdaten.patch({ emailPrivat: val });
+			props.stammdaten.patch({ emailPrivat: val });
 		}
 	});
 
@@ -118,7 +116,7 @@
 			return daten.value.emailSchule?.toString();
 		},
 		set(val) {
-			app.stammdaten.patch({ emailSchule: val });
+			props.stammdaten.patch({ emailSchule: val });
 		}
 	});
 

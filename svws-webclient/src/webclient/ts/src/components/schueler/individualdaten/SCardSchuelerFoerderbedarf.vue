@@ -13,12 +13,17 @@
 
 	import { computed, ComputedRef, WritableComputedRef } from "vue";
 	import { FoerderschwerpunktEintrag, List, SchuelerStammdaten } from "@svws-nrw/svws-core-ts";
-	import { injectMainApp, Main } from "~/apps/Main";
+	import { injectMainApp } from "~/apps/Main";
+	import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
 
-	const main: Main = injectMainApp();
-	const app = main.apps.schueler;
-	const daten: ComputedRef<SchuelerStammdaten> = computed(() => app.stammdaten.daten || new SchuelerStammdaten());
+	const props = defineProps<{ stammdaten: DataSchuelerStammdaten }>();
 
+	const daten: ComputedRef<SchuelerStammdaten> = computed(() => props.stammdaten.daten || new SchuelerStammdaten());
+
+
+	const app = injectMainApp().apps.schueler;
+
+	
 	const inputKatalogFoerderschwerpunkte: ComputedRef<List<FoerderschwerpunktEintrag>> = computed(() => app.katalogFoerderschwerpunkte);
 
 	const inputFoerderschwerpunktID: WritableComputedRef<FoerderschwerpunktEintrag | undefined> = computed({
@@ -29,7 +34,7 @@
 					return schwerpunkt
 		},
 		set(val: FoerderschwerpunktEintrag | undefined) {
-			app.stammdaten.patch({ foerderschwerpunktID: val?.id });
+			props.stammdaten.patch({ foerderschwerpunktID: val?.id });
 		}
 	});
 
@@ -41,7 +46,7 @@
 					return schwerpunkt
 		},
 		set(val: FoerderschwerpunktEintrag | undefined) {
-			app.stammdaten.patch({ foerderschwerpunkt2ID: val?.id });
+			props.stammdaten.patch({ foerderschwerpunkt2ID: val?.id });
 		}
 	});
 
@@ -50,7 +55,7 @@
 			return !!daten.value.istAOSF; 
 		},
 		set(val) { 
-			app.stammdaten.patch({ istAOSF: val });
+			props.stammdaten.patch({ istAOSF: val });
 		}
 	});
 
@@ -59,7 +64,7 @@
 			return !!daten.value.istLernenZieldifferent; 
 		},
 		set(val) { 
-			app.stammdaten.patch({ istLernenZieldifferent: val }); 
+			props.stammdaten.patch({ istLernenZieldifferent: val }); 
 		}
 	});
 

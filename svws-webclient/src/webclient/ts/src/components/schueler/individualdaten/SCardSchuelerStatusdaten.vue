@@ -22,28 +22,30 @@
 	import { computed, ComputedRef, WritableComputedRef } from "vue";
 	import { KatalogEintrag, List, SchuelerStammdaten, SchuelerStatus } from "@svws-nrw/svws-core-ts";
 	import { injectMainApp, Main } from "~/apps/Main";
+	import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
+
+	const props = defineProps<{ stammdaten: DataSchuelerStammdaten }>();
+
+	const daten: ComputedRef<SchuelerStammdaten> = computed(() => props.stammdaten.daten || new SchuelerStammdaten());
+
 
 	const main: Main = injectMainApp();
 	const app = main.apps.schueler;
-
-	const daten: ComputedRef<SchuelerStammdaten> = computed(() => {
-		return app.stammdaten.daten || new SchuelerStammdaten();
-	});
 
 	const inputKatalogFahrschuelerarten: ComputedRef<List<KatalogEintrag>> = computed(() =>  app.katalogFahrschuelerarten);
 
 	const inputKatalogHaltestellen: ComputedRef<List<KatalogEintrag>> = computed(() => main.kataloge.haltestellen);
 
 	const inputStatus: WritableComputedRef<SchuelerStatus | undefined> = computed({
-			//TODO id verwenden
-			get(): SchuelerStatus | undefined {
-				return (SchuelerStatus.fromBezeichnung(daten.value.status) || undefined);
-			},
-			set(val: SchuelerStatus | undefined): void {
-				app.stammdaten.patch({ status: val?.bezeichnung });
-				app.auswahl.filter = app.auswahl.filter
-			}
-		});
+		//TODO id verwenden
+		get(): SchuelerStatus | undefined {
+			return (SchuelerStatus.fromBezeichnung(daten.value.status) || undefined);
+		},
+		set(val: SchuelerStatus | undefined): void {
+			props.stammdaten.patch({ status: val?.bezeichnung });
+			app.auswahl.filter = app.auswahl.filter
+		}
+	});
 
 	const inputFahrschuelerArtID: WritableComputedRef<KatalogEintrag | undefined> = computed({
 		get(): KatalogEintrag | undefined {
@@ -53,7 +55,7 @@
 					return art
 		},
 		set(val) {
-			app.stammdaten.patch({ fahrschuelerArtID: val?.id });
+			props.stammdaten.patch({ fahrschuelerArtID: val?.id });
 		}
 	});
 
@@ -65,7 +67,7 @@
 					return r;
 		},
 		set(val) {
-			app.stammdaten.patch({ haltestelleID: val?.id });
+			props.stammdaten.patch({ haltestelleID: val?.id });
 		}
 	});
 
@@ -74,7 +76,7 @@
 			return daten.value.anmeldedatum?.toString();
 		},
 		set(val) {
-			app.stammdaten.patch({ anmeldedatum: val });
+			props.stammdaten.patch({ anmeldedatum: val });
 		}
 	});
 
@@ -83,7 +85,7 @@
 			return daten.value.aufnahmedatum?.toString();
 		},
 		set(val) {
-			app.stammdaten.patch({ aufnahmedatum: val });
+			props.stammdaten.patch({ aufnahmedatum: val });
 		}
 	});
 
@@ -92,7 +94,7 @@
 			return daten.value.istDuplikat;
 		},
 		set(val) {
-			app.stammdaten.patch({ istDuplikat: val });
+			props.stammdaten.patch({ istDuplikat: val });
 		}
 	});
 
@@ -101,7 +103,7 @@
 			return daten.value.istSchulpflichtErfuellt?.valueOf();
 		},
 		set(val: boolean | undefined) {
-			app.stammdaten.patch({ istSchulpflichtErfuellt: val });
+			props.stammdaten.patch({ istSchulpflichtErfuellt: val });
 		}
 	});
 
@@ -110,7 +112,7 @@
 			return daten.value.hatMasernimpfnachweis;
 		},
 		set(val) {
-			app.stammdaten.patch({ hatMasernimpfnachweis: val });
+			props.stammdaten.patch({ hatMasernimpfnachweis: val });
 		}
 	});
 
@@ -119,7 +121,7 @@
 			return daten.value.keineAuskunftAnDritte;
 		},
 		set(val) {
-			app.stammdaten.patch({ keineAuskunftAnDritte: val });
+			props.stammdaten.patch({ keineAuskunftAnDritte: val });
 		}
 	});
 
@@ -128,7 +130,7 @@
 			return daten.value.erhaeltSchuelerBAFOEG;
 		},
 		set(val) {
-			app.stammdaten.patch({ erhaeltSchuelerBAFOEG: val });
+			props.stammdaten.patch({ erhaeltSchuelerBAFOEG: val });
 		}
 	});
 
@@ -137,7 +139,7 @@
 			return daten.value.istBerufsschulpflichtErfuellt?.valueOf();
 		},
 		set(val) {
-			app.stammdaten.patch({ istBerufsschulpflichtErfuellt: val });
+			props.stammdaten.patch({ istBerufsschulpflichtErfuellt: val });
 		}
 	});
 
@@ -146,7 +148,7 @@
 			return daten.value.istVolljaehrig?.valueOf();
 		},
 		set(val) {
-			app.stammdaten.patch({ istVolljaehrig: val });
+			props.stammdaten.patch({ istVolljaehrig: val });
 		}
 	});
 
