@@ -3,6 +3,7 @@
 </template>
 
 <script setup lang="ts">
+
 	import { computed, ComputedRef } from "vue";
 	import { injectMainApp, Main } from "~/apps/Main";
 
@@ -12,4 +13,5 @@
 	const id: ComputedRef<number | undefined> = computed(() => {
 		return app.stammdaten.daten?.id;
 	});
+
 </script>
