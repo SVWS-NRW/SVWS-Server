@@ -657,8 +657,12 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 		switch (wahl.Q11) {
 			case null: wahl.Q11 = (GostFachbereich.DEUTSCH.hat(row) || GostFachbereich.MATHEMATIK.hat(row)) ? "S" : "M"; break;
 			case "M":  wahl.Q11 = ist_PJK_VTF ? null : "S"; break;
+			//TODO S->S ist bestimmt falsch
 			case "S":  wahl.Q11 = (row.istMoeglichAbiLK) ? "LK" : (GostFachbereich.DEUTSCH.hat(row) || GostFachbereich.MATHEMATIK.hat(row)) ? "S" : null; break;
-			case "LK": wahl.Q11 = (GostFachbereich.DEUTSCH.hat(row) || GostFachbereich.MATHEMATIK.hat(row)) ? "S" : null; break;
+			case "LK": 
+				wahl.Q11 = (GostFachbereich.DEUTSCH.hat(row) || GostFachbereich.MATHEMATIK.hat(row)) ? "S" : null;
+				wahl.abiturFach = null;
+				break;
 		}
 		// Sonderfall Sport - darf AT haben
 		if (!wahl.Q11 && GostFachbereich.SPORT.hat(row)) 
