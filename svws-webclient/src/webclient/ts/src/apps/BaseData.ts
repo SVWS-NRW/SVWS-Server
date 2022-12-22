@@ -127,6 +127,8 @@ export abstract class BaseData<T, ListItem, U = unknown> {
 	 */
 	public async unselect(): Promise<undefined> {
 		this._daten = undefined;
+		this.manager = undefined;
+		this.pending = false;
 		return undefined;
 	}
 
