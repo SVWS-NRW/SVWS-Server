@@ -1,29 +1,18 @@
 <template>
-	<tr
-		:style="{
-			'background-color': bgColor
-		}"
-	>
+	<tr :style="{ 'background-color': bgColor }">
 		<td>{{ fach_bezeichnung }}</td>
 		<td>{{ lehrer_kuerzel }}</td>
 		<td>
-			<svws-ui-multi-select
-				v-model="inputNote"
-				title="Note"
-				:items="inputKatalogNoten"
-				:item-text="(item: Note) => item.kuerzel"
-			/>
+			<svws-ui-multi-select title="Note" v-model="inputNote" :items="Note.values()" :item-text="(item: Note) => item.kuerzel" />
 		</td>
-		<td></td>
+		<td>
+		</td>
 	</tr>
 </template>
 
 <script setup lang="ts">
-	import {
-		Note,
-		SchuelerLeistungsdaten,
-		ZulaessigesFach
-	} from "@svws-nrw/svws-core-ts";
+
+	import { Note, SchuelerLeistungsdaten, ZulaessigesFach } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef } from "vue";
 	import { injectMainApp, Main } from "~/apps/Main";
 
@@ -35,30 +24,21 @@
 	const app = main.apps.schueler;
 	const appLehrer = main.apps.lehrer;
 	const appFaecher = main.apps.faecher;
+
 	const lehrer_kuerzel: ComputedRef<string> = computed<string>(() => {
 		let result = "";
-		if (appLehrer) {
-			result =
-				appLehrer.auswahl.liste
-					.find(l => props.fach.lehrerID === l.id)
-					?.kuerzel.toString() || "";
-		}
+		if (appLehrer)
+			result = appLehrer.auswahl.liste.find(l => props.fach.lehrerID === l.id)?.kuerzel.toString() || "";
 		return result;
 	});
-	const fach_bezeichnung: ComputedRef<string | undefined> = computed<
-		string | undefined
-	>(() => {
+
+	const fach_bezeichnung: ComputedRef<string | undefined> = computed<string | undefined>(() => {
 		let bezeichnung: string | undefined = "";
-		if (appFaecher) {
-			bezeichnung = appFaecher.auswahl.liste
-				.find(f => f.id === props.fach.fachID)
-				?.bezeichnung?.toString();
-		}
+		if (appFaecher)
+			bezeichnung = appFaecher.auswahl.liste.find(f => f.id === props.fach.fachID)?.bezeichnung?.toString();
 		return bezeichnung;
 	});
-	const inputKatalogNoten: ComputedRef<Note[]> = computed<Note[]>(() => {
-		return Note.values();
-	});
+
 	const inputNote = computed({
 		get(): Note | undefined {
 			const id = props.fach.note;
@@ -74,8 +54,7 @@
 	const zul_fach: ComputedRef<ZulaessigesFach | null> = computed(() => {
 		if (appFaecher) {
 			return ZulaessigesFach.getByKuerzelASD(
-				appFaecher.auswahl.liste.find(f => f.id === props.fach.fachID)
-					?.kuerzel || null
+				appFaecher.auswahl.liste.find(f => f.id === props.fach.fachID)?.kuerzel || null
 			);
 		}
 		return null;
@@ -91,4 +70,5 @@
 		//return $app.leistungsdaten.visible; //TODO: richtige Bedingung einpflegen
 		return true;
 	});
+
 </script>

@@ -12,16 +12,4 @@
 </template>
 
 <script setup lang="ts">
-	import {defineAsyncComponent } from "vue";
-
-	const SSchuelerApp = defineAsyncComponent(
-		() => import("~/components/schueler/SSchuelerApp.vue")
-	);
-	const SSchuelerAuswahl = defineAsyncComponent(
-		() => import("~/components/schueler/SSchuelerAuswahl.vue")
-	);
-	const SSchuelerGruppenaktionen = defineAsyncComponent(
-		() =>
-			import("~/components/schueler/SSchuelerGruppenaktionen.vue")
-	);
 </script>

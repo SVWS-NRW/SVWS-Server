@@ -1,16 +1,13 @@
 <template>
 	<svws-ui-content-card title="Alle bisher besuchten Schulen">
 		<div>
-			<svws-ui-textarea-input
-				v-model="inputAlleSchulen"
-				placeholder="Schulen"
-				resizeable="vertical"
-			/>
+			<svws-ui-textarea-input placeholder="Schulen" v-model="inputAlleSchulen" resizeable="vertical" />
 		</div>
 	</svws-ui-content-card>
 </template>
 
 <script setup lang="ts">
+
 	import { computed } from "vue";
 
 	const inputAlleSchulen = computed({
@@ -23,4 +20,5 @@
 			// TODO es wird eine aufwendigere Komponente benötigt...
 		}
 	});
+
 </script>

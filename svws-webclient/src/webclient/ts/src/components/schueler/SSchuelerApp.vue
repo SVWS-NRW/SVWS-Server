@@ -1,60 +1,57 @@
 <template>
-		<div v-if="app?.stammdaten.daten" class="flex w-full flex-col h-full">
-			<svws-ui-header>
-				<div class="flex items-center">
-					<div class="w-16 mr-4 -ml-2">
-						<svws-ui-avatar
-							:src="'data:image/png;base64, ' + foto"
-							:alt="foto ? 'Foto ' + vorname + ' ' + nachname : ''"
-						/>
-					</div>
-					<div>
-						<span class="inline-block mr-3">{{ vorname }} {{ nachname }}</span>
-						<svws-ui-badge variant="light">{{ inputId }}</svws-ui-badge>
-						<br/>
-						<span class="opacity-50">{{ inputKlasse }}</span>
-					</div>
+	<div v-if="app?.stammdaten.daten" class="flex w-full flex-col h-full">
+		<svws-ui-header>
+			<div class="flex items-center">
+				<div class="w-16 mr-4 -ml-2">
+					<svws-ui-avatar :src="'data:image/png;base64, ' + foto" :alt="foto ? 'Foto ' + vorname + ' ' + nachname : ''" />
 				</div>
-			</svws-ui-header>
-			<svws-ui-tab-bar v-model="app.selectedTab.value">
-				<template #tabs>
-					<svws-ui-tab-button>Individualdaten</svws-ui-tab-button>
-					<svws-ui-tab-button>Erziehungsberechtigte</svws-ui-tab-button>
-					<svws-ui-tab-button>Adressen / Betriebe</svws-ui-tab-button>
-					<svws-ui-tab-button>Schulbesuch</svws-ui-tab-button>
-					<svws-ui-tab-button>Aktuelles Halbjahr</svws-ui-tab-button>
-					<svws-ui-tab-button>Leistungsdaten</svws-ui-tab-button>
-					<svws-ui-tab-button :hidden="!hatAbiturjahrgang">Laufbahnplanung</svws-ui-tab-button>
-					<svws-ui-tab-button>Stundenplan</svws-ui-tab-button>
-				</template>
-				<template #panels>
-					<svws-ui-tab-panel>
-						<s-schueler-individualdaten />
-					</svws-ui-tab-panel>
-					<svws-ui-tab-panel>
-						<s-schueler-erziehungsberechtigte />
-					</svws-ui-tab-panel>
-					<svws-ui-tab-panel>
-						<s-schueler-adressen />
-					</svws-ui-tab-panel>
-					<svws-ui-tab-panel>
-						<s-schueler-schulbesuch />
-					</svws-ui-tab-panel>
-					<svws-ui-tab-panel>
-						<s-schueler-halbjahr />
-					</svws-ui-tab-panel>
-					<svws-ui-tab-panel>
-						<s-schueler-leistungsdaten />
-					</svws-ui-tab-panel>
-					<svws-ui-tab-panel :hidden="!hatAbiturjahrgang">
-						<s-schueler-laufbahnplanung />
-					</svws-ui-tab-panel>
-					<svws-ui-tab-panel>
-						<s-schueler-stundenplan />
-					</svws-ui-tab-panel>
-				</template>
-			</svws-ui-tab-bar>
-		</div>
+				<div>
+					<span class="inline-block mr-3"> {{ vorname }} {{ nachname }} </span>
+					<svws-ui-badge variant="light"> {{ inputId }} </svws-ui-badge>
+					<br/>
+					<span class="opacity-50"> {{ inputKlasse }} </span>
+				</div>
+			</div>
+		</svws-ui-header>
+		<svws-ui-tab-bar v-model="app.selectedTab.value">
+			<template #tabs>
+				<svws-ui-tab-button> Individualdaten </svws-ui-tab-button>
+				<svws-ui-tab-button> Erziehungsberechtigte </svws-ui-tab-button>
+				<svws-ui-tab-button> Adressen / Betriebe </svws-ui-tab-button>
+				<svws-ui-tab-button> Schulbesuch </svws-ui-tab-button>
+				<svws-ui-tab-button> Aktuelles Halbjahr </svws-ui-tab-button>
+				<svws-ui-tab-button> Leistungsdaten </svws-ui-tab-button>
+				<svws-ui-tab-button :hidden="!hatAbiturjahrgang"> Laufbahnplanung </svws-ui-tab-button>
+				<svws-ui-tab-button> Stundenplan </svws-ui-tab-button>
+			</template>
+			<template #panels>
+				<svws-ui-tab-panel>
+					<s-schueler-individualdaten />
+				</svws-ui-tab-panel>
+				<svws-ui-tab-panel>
+					<s-schueler-erziehungsberechtigte />
+				</svws-ui-tab-panel>
+				<svws-ui-tab-panel>
+					<s-schueler-adressen />
+				</svws-ui-tab-panel>
+				<svws-ui-tab-panel>
+					<s-schueler-schulbesuch />
+				</svws-ui-tab-panel>
+				<svws-ui-tab-panel>
+					<s-schueler-halbjahr />
+				</svws-ui-tab-panel>
+				<svws-ui-tab-panel>
+					<s-schueler-leistungsdaten />
+				</svws-ui-tab-panel>
+				<svws-ui-tab-panel :hidden="!hatAbiturjahrgang">
+					<s-schueler-laufbahnplanung />
+				</svws-ui-tab-panel>
+				<svws-ui-tab-panel>
+					<s-schueler-stundenplan />
+				</svws-ui-tab-panel>
+			</template>
+		</svws-ui-tab-bar>
+	</div>
 </template>
 
 <script setup lang="ts">

@@ -1,16 +1,13 @@
 <template>
 	<svws-ui-content-card title="Besondere Merkmale für die Statistik">
 		<div>
-			<svws-ui-textarea-input
-				v-model="inputMerkmale"
-				placeholder="Merkmale"
-				resizeable="vertical"
-			/>
+			<svws-ui-textarea-input placeholder="Merkmale" v-model="inputMerkmale" resizeable="vertical" />
 		</div>
 	</svws-ui-content-card>
 </template>
 
 <script setup lang="ts">
+
 	import { computed } from "vue";
 
 	const inputMerkmale = computed({
@@ -23,4 +20,5 @@
 			// TODO es wird eine aufwendigere Komponente benötigt...
 		}
 	});
+
 </script>

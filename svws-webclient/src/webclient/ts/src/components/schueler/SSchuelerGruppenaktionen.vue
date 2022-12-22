@@ -3,9 +3,7 @@
 		<div class="flex w-full flex-col">
 			<svws-ui-header>
 				<span>Gruppenaktionen für Schüler</span>
-				<svws-ui-badge variant="highlight"
-					>{{ items.length }} Einträge</svws-ui-badge
-				>
+				<svws-ui-badge variant="highlight"> {{ items.length }} Einträge </svws-ui-badge>
 			</svws-ui-header>
 			<svws-ui-button type="danger" @click="modal.openModal()">
 				Alle {{ items.length }} Schüler löschen
@@ -15,7 +13,6 @@
 				<template #modalDescription>
 					Sollen diese {{ items.length }} Schüler gelöscht werden?
 				</template>
-
 				<template #modalActions>
 					<svws-ui-button type="secondary" @click="modal.closeModal">
 						Abbrechen
@@ -34,28 +31,16 @@
 	// import { SvwsUiModal } from "@svws-nrw/svws-ui";
 
 	const props = defineProps({
-		items: {
-			type: Array,
-			default() {
-				return [];
-			}
-		}
+		items: { type: Array, default() { return []; } }
 	});
 
-	const emits = defineEmits([
-		"update:hidden",
-		"update:selected",
-		"update:items"
-	]);
+	const emits = defineEmits([ "update:hidden", "update:selected", "update:items" ]);
 
 	// FIXME: const modal: Ref<SvwsUiModal> = ref(null);
 	const modal: Ref<any> = ref(null);
 	function deleteEntries() {
-		console.log({
-			message: "delete entries",
-			items: props.items,
-			count: props.items.length
-		});
+		console.log({ message: "delete entries", items: props.items, count: props.items.length });
 		modal.value.closeModal();
 	}
+
 </script>

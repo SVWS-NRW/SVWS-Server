@@ -11,6 +11,7 @@
 </template>
 
 <script setup lang="ts">
+
 	import { computed, ComputedRef } from "vue";
 	import { injectMainApp, Main } from "~/apps/Main";
 
@@ -21,4 +22,5 @@
 		//return this.$app.stammdaten.visible; //TODO: richtige Bedingung einpflegen
 		return true;
 	});
+
 </script>

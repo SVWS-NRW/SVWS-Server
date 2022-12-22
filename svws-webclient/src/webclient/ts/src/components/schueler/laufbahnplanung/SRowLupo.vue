@@ -67,6 +67,7 @@
 </template>
 
 <script setup lang="ts">
+
 	import { computed, ComputedRef } from "vue";
 
 	import { GostFach, GostHalbjahr, GostJahrgangFachkombination, GostKursart, GostLaufbahnplanungFachkombinationTyp, List, Vector } from "@svws-nrw/svws-core-ts";

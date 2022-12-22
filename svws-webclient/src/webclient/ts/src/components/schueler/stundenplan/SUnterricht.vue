@@ -1,7 +1,5 @@
 <template>
-    <td class="text-center">
-        {{unterricht.fachKuerzel}}
-    </td>
+    <td class="text-center"> {{unterricht.fachKuerzel}} </td>
 </template>
 
 <script setup lang="ts">
@@ -14,6 +12,5 @@
 
 	const main: Main = injectMainApp();
 	const app = main.apps.schueler;
-
 
 </script>

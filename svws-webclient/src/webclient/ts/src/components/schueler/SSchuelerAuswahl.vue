@@ -5,16 +5,9 @@
 		</template>
 		<template #abschnitt>
 			<!--TODO: Abschnitt Auswahl
-			<template #abschnitt>
-					<div v-if="schule_abschnitte" class="mt-2">
-						<svws-ui-multi-select
-							v-model="akt_abschnitt"
-							:items="schule_abschnitte"
-							:item-sort="item_sort"
-							:item-text="item_text"
-						></svws-ui-multi-select>
-					</div>
-				</template>
+			<div v-if="schule_abschnitte" class="mt-2">
+				<svws-ui-multi-select v-model="akt_abschnitt" :items="schule_abschnitte" :item-sort="item_sort" :item-text="item_text"></svws-ui-multi-select>
+			</div>
 			-->
 		</template>
 		<template #header>
@@ -185,57 +178,53 @@
 		}
 	});
 
-	const inputKlassen: ComputedRef<Array<KlassenListeEintrag> | undefined> =
-		computed(() => {
-			if (appKlassen === undefined)
-				return undefined;
-			const liste = [...appKlassen.auswahl.liste];
-			const jahrgang = app.auswahl.filter.jahrgang;
-			return (jahrgang === undefined)
-				? liste
-				: liste.filter(k => k.idJahrgang === jahrgang.id);
-		});
+	const inputKlassen: ComputedRef<Array<KlassenListeEintrag> | undefined> = computed(() => {
+		if (appKlassen === undefined)
+			return undefined;
+		const liste = [...appKlassen.auswahl.liste];
+		const jahrgang = app.auswahl.filter.jahrgang;
+		return (jahrgang === undefined)
+			? liste
+			: liste.filter(k => k.idJahrgang === jahrgang.id);
+	});
 
-	const filterKlassen: WritableComputedRef<KlassenListeEintrag | undefined> =
-		computed({
-			get(): KlassenListeEintrag | undefined {
-				return app.auswahl.filter.klasse;
-			},
-			set(value: KlassenListeEintrag | undefined) {
-				if (app) {
-					const filter = app.auswahl.filter;
-					filter.klasse = value;
-					app.auswahl.filter = filter;
-					filtered.value = true;
-				}
+	const filterKlassen: WritableComputedRef<KlassenListeEintrag | undefined> = computed({
+		get(): KlassenListeEintrag | undefined {
+			return app.auswahl.filter.klasse;
+		},
+		set(value: KlassenListeEintrag | undefined) {
+			if (app) {
+				const filter = app.auswahl.filter;
+				filter.klasse = value;
+				app.auswahl.filter = filter;
+				filtered.value = true;
 			}
-		});
+		}
+	});
 
-	const inputKurse: ComputedRef<Array<KursListeEintrag> | undefined> =
-		computed(() => {
-			if (appKurse === undefined)
-				return undefined;
-			const liste = [...appKurse.auswahl.liste];
-			const jahrgang = app.auswahl.filter.jahrgang;
-			return (jahrgang === undefined)
-				? liste
-				: liste.filter(k => k.idJahrgaenge.contains(jahrgang.id));
-		});
+	const inputKurse: ComputedRef<Array<KursListeEintrag> | undefined> = computed(() => {
+		if (appKurse === undefined)
+			return undefined;
+		const liste = [...appKurse.auswahl.liste];
+		const jahrgang = app.auswahl.filter.jahrgang;
+		return (jahrgang === undefined)
+			? liste
+			: liste.filter(k => k.idJahrgaenge.contains(jahrgang.id));
+	});
 
-	const filterKurse: WritableComputedRef<KursListeEintrag | undefined> =
-		computed({
-			get(): KursListeEintrag | undefined {
-				return app.auswahl.filter.kurs;
-			},
-			set(value: KursListeEintrag | undefined) {
-				if (app) {
-					const filter = app.auswahl.filter;
-					filter.kurs = value;
-					app.auswahl.filter = filter;
-					filtered.value = true;
-				}
+	const filterKurse: WritableComputedRef<KursListeEintrag | undefined> = computed({
+		get(): KursListeEintrag | undefined {
+			return app.auswahl.filter.kurs;
+		},
+		set(value: KursListeEintrag | undefined) {
+			if (app) {
+				const filter = app.auswahl.filter;
+				filter.kurs = value;
+				app.auswahl.filter = filter;
+				filtered.value = true;
 			}
-		});
+		}
+	});
 
 	function text_status(status: SchuelerStatus): string {
 		if (status instanceof Array) return "";
@@ -258,13 +247,6 @@
 		return schulgliederung.daten.kuerzel.toString();
 	}
 
-	// function updateSelectedItems(selectedItems: SchuelerListeEintrag[]) {
-	// 	if (app) {
-	// 		app.auswahl.ausgewaehlt_gruppe = selectedItems;
-	// 	}
-	// }
-
-	// Ersatz für updateSelectedItems für neue Tabelle.
 	const selectedItems: WritableComputedRef<SchuelerListeEintrag[]> = computed({
 		get: () => app.auswahl.ausgewaehlt_gruppe,
 		set: (items: SchuelerListeEintrag[]) => {

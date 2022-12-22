@@ -2,56 +2,21 @@
 	<svws-ui-content-card title="Basisdaten">
 		<div class="content-wrapper">
 			<div class="input-wrapper">
-				<svws-ui-text-input
-					v-model="nachname"
-					type="text"
-					placeholder="Nachname"
-				/>
-				<svws-ui-text-input
-					v-model="zusatzNachname"
-					type="text"
-					placeholder="Zusatz"
-				/>
-				<svws-ui-text-input
-					v-model="vorname"
-					type="text"
-					placeholder="Rufname"
-				/>
-				<svws-ui-text-input
-					v-model="alleVornamen"
-					type="text"
-					placeholder="Alle Vornamen"
-				/>
-				<svws-ui-multi-select
-					v-model="geschlecht"
-					title="Geschlecht"
-					:items="inputKatalogGeschlecht"
-					statistics
-				/>
-				<svws-ui-text-input
-					v-model="inputGeburtsdatum"
-					type="date"
-					placeholder="Geburtsdatum"
-					required
-					statistics
-				/>
-				<svws-ui-text-input
-					v-model="inputGeburtsort"
-					type="text"
-					placeholder="Geburtsort"
-					statistics
-				/>
-				<svws-ui-text-input
-					v-model="inputGeburtsname"
-					type="text"
-					placeholder="Geburtsname"
-				/>
+				<svws-ui-text-input placeholder="Nachname" v-model="nachname" type="text" />
+				<svws-ui-text-input placeholder="Zusatz" v-model="zusatzNachname" type="text" />
+				<svws-ui-text-input placeholder="Rufname" v-model="vorname" type="text" />
+				<svws-ui-text-input placeholder="Alle Vornamen" v-model="alleVornamen" type="text" />
+				<svws-ui-multi-select title="Geschlecht" v-model="geschlecht" :items="inputKatalogGeschlecht" statistics />
+				<svws-ui-text-input placeholder="Geburtsdatum" v-model="inputGeburtsdatum" type="date" required statistics />
+				<svws-ui-text-input placeholder="Geburtsort" v-model="inputGeburtsort" type="text" statistics />
+				<svws-ui-text-input placeholder="Geburtsname" v-model="inputGeburtsname" type="text" />
 			</div>
 		</div>
 	</svws-ui-content-card>
 </template>
 
 <script setup lang="ts">
+
 	import { computed, ComputedRef, WritableComputedRef } from "vue";
 
 	import { Geschlecht, SchuelerStammdaten } from "@svws-nrw/svws-core-ts";
@@ -63,7 +28,7 @@
 
 	const use = new UseSchuelerStammdaten(app.stammdaten)
 
-	const {vorname, alleVornamen, nachname, zusatzNachname, geschlecht} = use;
+	const { vorname, alleVornamen, nachname, zusatzNachname, geschlecht } = use;
 
 	const daten: ComputedRef<SchuelerStammdaten> = computed(() => {
 		return app.stammdaten.daten || new SchuelerStammdaten();
@@ -72,16 +37,6 @@
 	const inputKatalogGeschlecht: ComputedRef<Geschlecht[]> = computed(() => {
 		return Geschlecht.values();
 	});
-
-	const id: ComputedRef<number | undefined> = computed(() => {
-		return daten.value.id.valueOf();
-	});
-
-	const foto: ComputedRef<string | undefined> = computed(() => {
-		return daten.value.foto?.toString();
-	});
-
-
 
 	const inputGeburtsdatum: WritableComputedRef<string | undefined> = computed(
 		{
@@ -111,4 +66,5 @@
 			app.stammdaten.patch({ geburtsname: val });
 		}
 	});
+
 </script>

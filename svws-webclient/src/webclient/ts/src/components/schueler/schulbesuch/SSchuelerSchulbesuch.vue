@@ -18,7 +18,8 @@
 	const app = main.apps.schueler;
 
 	const visible: ComputedRef<boolean> = computed<boolean>(() => {
-		//return $app.schulbesuch.visible; //TODO: richtige Bedingung einpflegen
+		//TODO: richtige Bedingung einpflegen
 		return true;
 	});
+
 </script>

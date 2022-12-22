@@ -241,21 +241,11 @@
 </template>
 
 <script setup lang="ts">
+
 	import { computed, ComputedRef, Ref, ref, WritableComputedRef } from "vue";
 
-	import {
-		GostBelegpruefungErgebnisFehler,
-		GostBelegpruefungsArt,
-		GostBelegungsfehlerArt,
-		GostFach,
-		Sprachpruefungniveau,
-		List,
-		Vector,
-		GostJahrgangFachkombination,
-		GostLaufbahnplanungFachkombinationTyp,
-		GostHalbjahr,
-		GostKursart,
-		} from "@svws-nrw/svws-core-ts";
+	import { GostBelegpruefungErgebnisFehler, GostBelegpruefungsArt, GostBelegungsfehlerArt, GostFach, Sprachpruefungniveau,
+		List, Vector, GostJahrgangFachkombination, GostLaufbahnplanungFachkombinationTyp, GostHalbjahr, GostKursart } from "@svws-nrw/svws-core-ts";
 	import { App } from "~/apps/BaseApp";
 	import { injectMainApp, Main } from "~/apps/Main";
 	import { DataSchuelerLaufbahnplanung } from "~/apps/schueler/DataSchuelerLaufbahnplanung";
@@ -271,88 +261,76 @@
 	function toggle_modal() {
 		modal.value.isOpen ? modal.value.closeModal() : modal.value.openModal();
 	};
+
 	function reset_fachwahlen() {
 		modal.value.closeModal();
 		app.dataGostLaufbahndaten?.reset_fachwahlen();
 	}
 
 	const abiturmanager = computed(()=> app.dataGostLaufbahndaten?.manager);
-	const faechermanager = computed(()=>App.apps.gost.dataFaecher.manager);
+	const faechermanager = computed(()=> App.apps.gost.dataFaecher.manager);
 
-	const data: ComputedRef<DataSchuelerLaufbahnplanung> =
-		computed(() => app.dataGostLaufbahndaten || new DataSchuelerLaufbahnplanung());
+	const data: ComputedRef<DataSchuelerLaufbahnplanung> = computed(() => app.dataGostLaufbahndaten || new DataSchuelerLaufbahnplanung());
 
-	const rows: ComputedRef<List<GostFach>> =
-		computed(() => App.apps.gost.dataFaecher.daten || new Vector());
+	const rows: ComputedRef<List<GostFach>> = computed(() => App.apps.gost.dataFaecher.daten || new Vector());
 
-	const kurszahlen: ComputedRef<number[]> =
-		computed(() => data.value.anrechenbare_kurszahlen);
+	const kurszahlen: ComputedRef<number[]> = computed(() => data.value.anrechenbare_kurszahlen);
 
-	const kurse_summe: ComputedRef<number> =
-		computed(() => data.value.anrechenbare_kurszahlen.reduce((p, c) => p + c, 0));
+	const kurse_summe: ComputedRef<number> = computed(() => data.value.anrechenbare_kurszahlen.reduce((p, c) => p + c, 0));
 		//TODO korrigieren
 
-	const wochenstunden: ComputedRef<number[]> =
-		computed(() => data.value.wochenstunden);
+	const wochenstunden: ComputedRef<number[]> = computed(() => data.value.wochenstunden);
 
-	const wst_summe: ComputedRef<number> =
-		computed(() => wochenstunden.value.reduce((p, c) => p + c, 0) / 2);
+	const wst_summe: ComputedRef<number> = computed(() => wochenstunden.value.reduce((p, c) => p + c, 0) / 2);
 
-	const wst_d_ef: ComputedRef<number> =
-		computed(() => (wochenstunden.value[0] + wochenstunden.value[1]) / 2);
+	const wst_d_ef: ComputedRef<number> = computed(() => (wochenstunden.value[0] + wochenstunden.value[1]) / 2);
 
-	const wst_d_q: ComputedRef<number> =
-		computed(() => {
-			const [e, f, ...q] = wochenstunden.value;
-			void e, f;
-			return q.reduce((p, c) => p + c, 0) / 4;
-		});
+	const wst_d_q: ComputedRef<number> = computed(() => {
+		const [e, f, ...q] = wochenstunden.value;
+		void e, f;
+		return q.reduce((p, c) => p + c, 0) / 4;
+	});
 
-	const belegungsfehlerAlle: ComputedRef<List<GostBelegpruefungErgebnisFehler>>=
-		computed(() => data.value.gostBelegpruefungsErgebnis.fehlercodes);
+	const belegungsfehlerAlle: ComputedRef<List<GostBelegpruefungErgebnisFehler>> = computed(() => data.value.gostBelegpruefungsErgebnis.fehlercodes);
 
-	const belegungsfehler: ComputedRef<List<GostBelegpruefungErgebnisFehler>> =
-		computed(() => {
-			let res = new Vector<GostBelegpruefungErgebnisFehler>();
-			for (const fehler of belegungsfehlerAlle.value)
-				if (!!fehler &&
-					(GostBelegungsfehlerArt.fromKuerzel(fehler.art) ===
-					GostBelegungsfehlerArt.BELEGUNG ||
-					GostBelegungsfehlerArt.fromKuerzel(fehler.art) ===
-					GostBelegungsfehlerArt.SCHRIFTLICHKEIT))
-						res.add(fehler);
-			return res;
-		});
-
-	const belegungsHinweise: ComputedRef<List<GostBelegpruefungErgebnisFehler>> =
-		computed(() => {
-			let res = new Vector<GostBelegpruefungErgebnisFehler>();
-			for (const fehler of belegungsfehlerAlle.value)
-				if (!!fehler && GostBelegungsfehlerArt.fromKuerzel(fehler.art) === GostBelegungsfehlerArt.HINWEIS)
+	const belegungsfehler: ComputedRef<List<GostBelegpruefungErgebnisFehler>> = computed(() => {
+		let res = new Vector<GostBelegpruefungErgebnisFehler>();
+		for (const fehler of belegungsfehlerAlle.value)
+			if (!!fehler &&
+				(GostBelegungsfehlerArt.fromKuerzel(fehler.art) ===
+				GostBelegungsfehlerArt.BELEGUNG ||
+				GostBelegungsfehlerArt.fromKuerzel(fehler.art) ===
+				GostBelegungsfehlerArt.SCHRIFTLICHKEIT))
 					res.add(fehler);
-			return res;
-		});
+		return res;
+	});
 
-	const belegpruefungsart: WritableComputedRef<GostBelegpruefungsArt> =
-		computed({
-			get(): GostBelegpruefungsArt {
-				return data.value.gostAktuelleBelegpruefungsart;
-			},
-			set(value: GostBelegpruefungsArt) {
-				data.value.gostAktuelleBelegpruefungsart = value;
-			}
-		});
+	const belegungsHinweise: ComputedRef<List<GostBelegpruefungErgebnisFehler>> = computed(() => {
+		let res = new Vector<GostBelegpruefungErgebnisFehler>();
+		for (const fehler of belegungsfehlerAlle.value)
+			if (!!fehler && GostBelegungsfehlerArt.fromKuerzel(fehler.art) === GostBelegungsfehlerArt.HINWEIS)
+				res.add(fehler);
+		return res;
+	});
+
+	const belegpruefungsart: WritableComputedRef<GostBelegpruefungsArt> = computed({
+		get(): GostBelegpruefungsArt {
+			return data.value.gostAktuelleBelegpruefungsart;
+		},
+		set(value: GostBelegpruefungsArt) {
+			data.value.gostAktuelleBelegpruefungsart = value;
+		}
+	});
 	
-	const fachkombis: ComputedRef<List<GostJahrgangFachkombination>> =
-		computed(()=>{
-			let list = new Vector<GostJahrgangFachkombination>();
-			if (App.apps.gost.dataFachkombinationen.daten === undefined)
-				return list;
-			for (const regel of	App.apps.gost.dataFachkombinationen.daten)
-				if (regel.abiturjahr === app.dataGostLaufbahndaten?.abiturjahr)
-					list.add(regel)
+	const fachkombis: ComputedRef<List<GostJahrgangFachkombination>> = computed(()=>{
+		let list = new Vector<GostJahrgangFachkombination>();
+		if (App.apps.gost.dataFachkombinationen.daten === undefined)
 			return list;
-		})
+		for (const regel of	App.apps.gost.dataFachkombinationen.daten)
+			if (regel.abiturjahr === app.dataGostLaufbahndaten?.abiturjahr)
+				list.add(regel)
+		return list;
+	})
 
 	const fachkombi_erforderlich = (): List<GostJahrgangFachkombination> => {
 		let result = new Vector<GostJahrgangFachkombination>()
@@ -382,16 +360,15 @@
 		return result;
 	}
 
-	const inputBeratungsdatum: WritableComputedRef<string> =
-		computed({
-			get(): string {
-				return ""; //this.app.stammdaten.daten.geburtsdatum;
-			},
-			set(val: string) {
-				void val;
-				//this.app.stammdaten.patch({ geburtsdatum: val });
-			}
-		});
+	const inputBeratungsdatum: WritableComputedRef<string> = computed({
+		get(): string {
+			return ""; //this.app.stammdaten.daten.geburtsdatum;
+		},
+		set(val: string) {
+			void val;
+			//this.app.stammdaten.patch({ geburtsdatum: val });
+		}
+	});
 
 	function manu() {
 		manuell.value = manuell.value ? false:true; data.value.manuelle_eingabe = manuell.value
@@ -431,4 +408,5 @@
 		}
 		return true;
 	}
+
 </script>
