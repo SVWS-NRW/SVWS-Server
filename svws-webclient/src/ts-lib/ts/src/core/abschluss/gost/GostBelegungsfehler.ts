@@ -208,8 +208,8 @@ export class GostBelegungsfehler extends JavaObject {
 
 	/**
 	 * Erstellt einen neuen Belegungsfehler für die Aufzählung (s.o.). Dabei wird ein
-	 * Text für die Gesamtprüfung und die EF.1-Prüfung angegeben.    
-	 * 
+	 * Text für die Gesamtprüfung und die EF.1-Prüfung angegeben.
+	 *
 	 * @param code         der eindeutige Code des Belegungsfehlers
 	 * @param art          die Fehlerart (Belegungsfehler, Schriftlichkeit oder Information)
 	 * @param textGESAMT   der zugeordnete Text für die Gesamtbelegprüfung oder null
@@ -226,7 +226,7 @@ export class GostBelegungsfehler extends JavaObject {
 	/**
 	 * Gibt zurück, ob es sich bei dem Belegungsfehler nur um eine Information
 	 * und nicht um einen "echten" Fehler handelt.
-	 *   
+	 *
 	 * @return true, falls es sich nur um eine Information handelt, sonst false
 	 */
 	public istInfo() : boolean {
@@ -236,7 +236,7 @@ export class GostBelegungsfehler extends JavaObject {
 	/**
 	 * Gibt zurück, ob es sich bei dem Belegungsfehler um einen "echten" Fehler handelt
 	 * und nicht nur um eine Information.
-	 * 
+	 *
 	 * @return true, falls es sich um einen "echten" Fehler handelt, sonst false
 	 */
 	public istFehler() : boolean {
@@ -245,7 +245,7 @@ export class GostBelegungsfehler extends JavaObject {
 
 	/**
 	 * Gibt die Art des Belegungsfehlers zurück.
-	 * 
+	 *
 	 * @return die Art des Belegungsfehlers
 	 */
 	public getArt() : GostBelegungsfehlerArt {
@@ -253,11 +253,11 @@ export class GostBelegungsfehler extends JavaObject {
 	}
 
 	/**
-	 * Gibt je nach angegebenener Belegprüfungsart den zugehörigen Text für den Belegungsfehler 
+	 * Gibt je nach angegebenener Belegprüfungsart den zugehörigen Text für den Belegungsfehler
 	 * zurück.
-	 * 
+	 *
 	 * @param pruef_art   die Belegprüfungsart
-	 * 
+	 *
 	 * @return der zugehörige Text des Belegungsfehlers
 	 */
 	public getText(pruef_art : GostBelegpruefungsArt) : String {

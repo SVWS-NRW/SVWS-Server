@@ -175,7 +175,7 @@ export class DataGostKursblockung extends BaseData<
 	/** passt einen Kurs an */
 	public async patch_kurs(kurs_id: number, data: Partial<GostBlockungKurs>): Promise<void> {
 		await App.api.patchGostBlockungKurs(data, App.schema, kurs_id);
-		if (data.suffix)
+		if (data.suffix !== undefined)
 			this.datenmanager?.setSuffixOfKurs(kurs_id, data.suffix);
 	}
 
