@@ -31,3 +31,4 @@ export { default as SvwsUiPopover } from "~/Popover.vue";
 export { default as SvwsUiTable } from "~/Layout/Table/Table.vue";
 export { default as SvwsUiRouterTabBar } from "~/Controls/RouterTabBar.vue";
 export { default as SvwsUiRouterTabBarButton } from "~/Controls/RouterTabBarButton.vue";
+export { default as SvwsUiRouterVerticalTabBar } from "~/Controls/RouterVerticalTabBar.vue";

@@ -1,23 +1,23 @@
 <template>
-    <div class="router-tab-bar--area">
-        <div class="router-tab-bar--wrapper print:hidden">
-            <div v-if="state.scrolled" class="router-tab-bar--scroll-button-background router-tab-bar--scroll-button-background-left">
-                <button class="router-tab-bar--scroll-button" @click="scroll('left')">
-                   <Icon> <i-ri-arrow-left-line /> </Icon>
+    <div class="router-vertical-tab-bar--area">
+        <div class="router-vertical-tab-bar--wrapper print:hidden">
+            <div v-if="state.scrolled" class="router-vertical-tab-bar--scroll-button-background router-vertical-tab-bar--scroll-button-background-up">
+                <button class="router-vertical-tab-bar--scroll-button" @click="scroll('up')">
+                   <Icon> <i-ri-arrow-up-line /> </Icon>
                 </button>
             </div>
-            <div ref="contentEl" class="router-tab-bar--content">
+            <div ref="contentEl" class="router-vertical-tab-bar--content">
                 <router-tab-bar-button v-for="(route, index) in props.routes" :route="route" :selected="selected" 
                     :hidden="isHidden(index)" @select="select(route)" />
             </div>
             <div v-if="!state.scrolledMax"
-                class="router-tab-bar--scroll-button-background router-tab-bar--scroll-button-background-right">
-                <button class="router-tab-bar--scroll-button" @click="scroll('right')">
-                    <Icon> <i-ri-arrow-right-line /> </Icon>
+                class="router-vertical-tab-bar--scroll-button-background router-vertical-tab-bar--scroll-button-background-down">
+                <button class="router-vertical-tab-bar--scroll-button" @click="scroll('down')">
+                    <Icon> <i-ri-arrow-down-line /> </Icon>
                 </button>
             </div>
         </div>
-        <div class="router-tab-bar--panel">
+        <div class="router-vertical-tab-bar--panel">
             <slot />
         </div>
     </div>
@@ -39,7 +39,7 @@
         scrolled: boolean;
         scrolledMax: boolean;
         scrollFactor: number;
-        maxScrollLeft: number;
+        maxScrollTop: number;
     }
 
     const contentEl = ref();
@@ -62,12 +62,12 @@
         scrolled: false,
         scrolledMax: false,
         scrollFactor: 4,
-        maxScrollLeft: 0,
+        maxScrollTop: 0,
     });
 
     onMounted(() => {
-        state.value.maxScrollLeft = (contentEl.value?.scrollWidth ?? 0) - (contentEl.value?.clientWidth ?? 0);
-        state.value.scrolledMax = (contentEl.value?.scrollLeft ?? 0) >= state.value.maxScrollLeft;
+        state.value.maxScrollTop = (contentEl.value?.scrollHeight ?? 0) - (contentEl.value?.clientHeight ?? 0);
+        state.value.scrolledMax = (contentEl.value?.scrollTop ?? 0) >= state.value.maxScrollTop;
         contentEl.value?.addEventListener("scroll", handleScroll);
         window.addEventListener("resize", handleScroll);
     })
@@ -85,17 +85,17 @@
 
 
     function handleScroll() {
-        state.value.scrolled = (contentEl.value?.scrollLeft ?? 0) > 0;
-        state.value.maxScrollLeft =
-            (contentEl.value?.scrollWidth ?? 0) - (contentEl.value?.clientWidth ?? 0);
-        state.value.scrolledMax = (contentEl.value?.scrollLeft ?? 0) >= state.value.maxScrollLeft;
+        state.value.scrolled = (contentEl.value?.scrollTop ?? 0) > 0;
+        state.value.maxScrollTop =
+            (contentEl.value?.scrollHEight ?? 0) - (contentEl.value?.clientHeight ?? 0);
+        state.value.scrolledMax = (contentEl.value?.scrollTop ?? 0) >= state.value.maxScrollTop;
     }
 
-    function scroll(direction: 'left' | 'right') {
-        const dir = direction == "left" ? -1 : 1;
+    function scroll(direction: 'up' | 'down') {
+        const dir = direction == "up" ? -1 : 1;
         contentEl.value?.scrollBy({
-            top: 0,
-            left: (dir * contentEl.value.scrollWidth) / state.value.scrollFactor,
+            left: 0,
+            top: (dir * contentEl.value.scrollHeight) / state.value.scrollFactor,
             behavior: "smooth"
         });
     }
@@ -109,31 +109,29 @@
 
 <style lang="postcss">
     .router-vertical-tab-bar--area {
-        @apply flex items-start
+        @apply flex flex-row flex-grow items-start;
+		@apply w-full;
     }
 
-    .router-tab-bar--panel {
-        @apply mt-0 mb-8 flex-grow overflow-y-auto px-6;
+    .router-vertical-tab-bar--panel {
+        @apply flex-grow overflow-y-auto;
     }
 
-    .router-tab-bar--wrapper {
-		@apply flex items-center;
+    .router-vertical-tab-bar--wrapper {
+		@apply flex flex-col flex-shrink items-start;
 		@apply overflow-hidden;
 		@apply relative;
-		@apply rounded-full;
-		@apply w-full;
-		@apply flex-shrink-0;
-		@apply px-4 mb-6;
+		@apply rounded-md;
+		@apply mr-4;
     }
 
-    .router-tab-bar--content {
+    .router-vertical-tab-bar--content {
 		@apply bg-light;
-		@apply flex flex-row items-center;
-		@apply overflow-x-scroll;
+		@apply flex flex-col items-center;
+		@apply overflow-y-scroll;
 		@apply relative;
-		@apply rounded-full;
-		@apply space-x-2 p-1;
-		@apply w-full;
+		@apply rounded-md;
+		@apply space-y-2 p-1;
 
 		-ms-overflow-style: none;
 		/* Remove Scrollbar in IE and Edge */
@@ -141,42 +139,42 @@
 		/* Remove Scrollbar in Firefox */
     }
 
-    .router-tab-bar--content::-webkit-scrollbar {
+    .router-vertical-tab-bar--content::-webkit-scrollbar {
         display: none;
         /* Remove Scrollbar in Chromium basesd Browsers */
     }
 
-    .router-tab-bar--scroll-button-background {
+    .router-vertical-tab-bar--scroll-button-background {
 		@apply absolute z-20;
-		@apply h-full;
+		@apply w-full;
 		@apply pointer-events-none;
 		@apply from-transparent via-light to-light;
     }
 
-    .router-tab-bar--scroll-button-background-right {
-		@apply bg-gradient-to-r;
-		@apply pl-8;
-		@apply rounded-r-full;
-		right: 0.875rem;
+    .router-vertical-tab-bar--scroll-button-background-down {
+		@apply bg-gradient-to-b;
+		@apply pt-8;
+		@apply rounded-b-full;
+		bottom: 0.875rem;
     }
 
-    .router-tab-bar--scroll-button-background-left {
-		@apply bg-gradient-to-l;
-		@apply pr-8;
-		@apply rounded-l-full;
-		left: 0.875rem;
+    .router-vertical-tab-bar--scroll-button-background-up {
+		@apply bg-gradient-to-t;
+		@apply pb-8;
+		@apply rounded-t-full;
+		top: 0.875rem;
     }
 
-    .router-tab-bar--scroll-button {
-		@apply h-full;
+    .router-vertical-tab-bar--scroll-button {
+		@apply w-full;
 		@apply inline-flex items-center justify-center;
 		@apply pointer-events-auto;
-		@apply px-3.5;
+		@apply py-3.5;
 		@apply rounded-full;
 		@apply text-black;
     }
 
-    .router-tab-bar--scroll-button:focus {
+    .router-vertical-tab-bar--scroll-button:focus {
 		@apply outline-none ring ring-inset ring-primary ring-opacity-75;
     }
 
