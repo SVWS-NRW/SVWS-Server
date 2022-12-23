@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-app-layout fullwidthContent="true">
+	<svws-ui-app-layout :fullwidthContent="true">
 		<template #main>
 			<div class="login-wrapper">
 				<div class="login-container">

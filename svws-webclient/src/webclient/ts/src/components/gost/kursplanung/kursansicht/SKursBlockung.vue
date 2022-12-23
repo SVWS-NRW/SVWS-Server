@@ -206,6 +206,7 @@ const koop: WritableComputedRef<boolean> =
 		if (!kurs) 
 			return;
 		app.dataKursblockung.patch_kurs(kurs.id, { istKoopKurs: Boolean(value) });
+		kurs.istKoopKurs = value;
 	}});
 
 const suffix: WritableComputedRef<string> =
