@@ -4,11 +4,9 @@
 			<span>Schüler</span>
 		</template>
 		<template #abschnitt>
-			<!--TODO: Abschnitt Auswahl
 			<div v-if="schule_abschnitte" class="mt-2">
 				<svws-ui-multi-select v-model="akt_abschnitt" :items="schule_abschnitte" :item-sort="item_sort" :item-text="item_text"></svws-ui-multi-select>
 			</div>
-			-->
 		</template>
 		<template #header>
 			<div>
@@ -67,11 +65,12 @@
 	import { computed, ComputedRef, Ref, ref, WritableComputedRef } from "vue";
 
 	import { SchuelerListeEintrag, SchuelerStatus, JahrgangsListeEintrag,
-		KlassenListeEintrag, KursListeEintrag, Schulgliederung } from "@svws-nrw/svws-core-ts";
+		KlassenListeEintrag, KursListeEintrag, Schulgliederung, Schuljahresabschnitt } from "@svws-nrw/svws-core-ts";
 
 	import { injectMainApp, Main } from "~/apps/Main";
 	import { RouteSchueler } from "~/router/apps/RouteSchueler";
 	import { routeAppAuswahl } from "~/router/RouteUtils";
+import { Schule } from "~/apps/schule/Schule";
 
 	export interface SchuelerProps {
 		selectedItems: Array<SchuelerListeEintrag>;
@@ -93,7 +92,6 @@
 	const main: Main = injectMainApp();
 	const app = main.apps.schueler;
 	const appKlassen = main.apps.klassen;
-	const appSchule = main.apps.schule;
 	const appJahrgaenge = main.apps.jahrgaenge;
 	const appKurse = main.apps.kurse;
 
@@ -141,7 +139,7 @@
 		});
 
 	const inputSchulgliederungen: ComputedRef<Array<Schulgliederung> | undefined> = computed(() => {
-		return appSchule.schulgliederungen;
+		return appSchule.value.schulgliederungen;
 	});
 
 	const filterSchulgliederung: WritableComputedRef<Schulgliederung | undefined> = computed({
@@ -292,6 +290,36 @@
 			app.auswahl.filter = filter;
 			filtered.value = false;
 		}
+	}
+	const schule_abschnitte: ComputedRef<
+		Array<Schuljahresabschnitt> | undefined
+	> = computed(() => {
+		const liste = appSchule.value.schuleStammdaten.daten?.abschnitte;
+		return liste?.toArray(new Array<Schuljahresabschnitt>()) || [];
+	});
+
+	const akt_abschnitt: WritableComputedRef<Schuljahresabschnitt> = computed({
+		get(): Schuljahresabschnitt {
+			return main.config.akt_abschnitt;
+		},
+		set(abschnitt: Schuljahresabschnitt) {
+			main.config.akt_abschnitt = abschnitt;
+		}
+	});
+
+	const appSchule: ComputedRef<Schule> = computed(() => {
+		return main.apps.schule;
+	});
+	function item_sort(a: Schuljahresabschnitt, b: Schuljahresabschnitt) {
+		return (
+			b.schuljahr + b.abschnitt * 0.1 - (a.schuljahr + a.abschnitt * 0.1)
+		);
+	}
+
+	function item_text(item: Schuljahresabschnitt) {
+		return item.schuljahr
+			? `${item.schuljahr}, ${item.abschnitt}. HJ`
+			: "Abschnitt";
 	}
 
 </script>

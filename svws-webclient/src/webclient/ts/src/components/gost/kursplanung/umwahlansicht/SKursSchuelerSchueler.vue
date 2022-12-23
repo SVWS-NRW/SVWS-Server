@@ -19,10 +19,7 @@
 	import { injectMainApp, Main } from "~/apps/Main";
 
 	const {schueler} = defineProps({
-		schueler: {
-			type: SchuelerListeEintrag,
-			required: true
-		},
+		schueler: { type: SchuelerListeEintrag, required: true },
 		selected: { type: Boolean, required: true }
 	});
 
@@ -36,7 +33,7 @@
 		computed(()=> {
 			if (manager.value === undefined)
 				return false;
-			const kursid = app.listAbiturjahrgangSchueler.filter.kursid;
+			const kursid = app.listAbiturjahrgangSchueler.filter.kurs?.id;
 			if (kursid === undefined)
 				return manager.value.getOfSchuelerHatKollision(schueler.id);
 			return manager.value.getOfKursSchuelermengeMitKollisionen(kursid).contains(schueler.id);
