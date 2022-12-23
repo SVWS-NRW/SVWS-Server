@@ -462,6 +462,12 @@ public class KursblockungDynDaten {
 					throw fehler("LEHRKRAFT_BEACHTEN AuchExterne-Wert ist nicht 0/1, sondern (" + auchExtern + ")!");
 			}
 
+			// Regeltyp = 10
+			if (gostRegel == GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN) {
+				int length = daten.length;
+				if (length != 0)
+					throw fehler("LEHRKRAEFTE_BEACHTEN daten.length=" + length + ", statt 0!");
+			}
 		}
 
 	}
@@ -906,6 +912,28 @@ public class KursblockungDynDaten {
 											statistik.regelHinzufuegenKursVerbieteMitKurs(kurs1, kurs2);
 										}
 			}
+		}
+
+		// Regel 10 - LEHRKRAEFTE_BEACHTEN
+		LinkedCollection<@NotNull GostBlockungRegel> regelnTyp10 = regelMap.get(GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN);
+		if (regelnTyp10 != null) {
+			// Sammle zunächst alle potentiellen Kurse
+			@NotNull Vector<@NotNull GostBlockungKurs> vKurseMitLehrkraft = new Vector<>();
+			for (@NotNull GostBlockungKurs gKurs : pInput.daten().kurse)
+				if (gKurs.lehrer.isEmpty() == false) 
+					vKurseMitLehrkraft.add(gKurs);
+			// Finde Kurse mit der selben Lehrkraft
+			for (@SuppressWarnings("unused") @NotNull GostBlockungRegel regel10 : regelnTyp10) 
+				for (@NotNull GostBlockungKurs gKurs1 : vKurseMitLehrkraft) 
+					for (@NotNull GostBlockungKurs gKurs2 : vKurseMitLehrkraft)
+						if (gKurs1.id < gKurs2.id)
+							for (@NotNull GostBlockungKursLehrer gLehr1 : gKurs1.lehrer)
+								for (@NotNull GostBlockungKursLehrer gLehr2 : gKurs2.lehrer) 
+									if (gLehr1.id == gLehr2.id) {
+										@NotNull KursblockungDynKurs kurs1 = gibKurs(gKurs1.id);
+										@NotNull KursblockungDynKurs kurs2 = gibKurs(gKurs2.id);
+										statistik.regelHinzufuegenKursVerbieteMitKurs(kurs1, kurs2);
+									}
 		}
 	}
 

@@ -314,9 +314,20 @@ export class GostBlockungsergebnisManager extends JavaObject {
 								if (eKurs1.id < eKurs2.id) 
 									for (let gLehr1 of this.getKursG(eKurs1.id).lehrer) 
 										for (let gLehr2 of this.getKursG(eKurs2.id).lehrer) 
-											if (gLehr1 as unknown === gLehr2 as unknown) 
+											if (gLehr1.id === gLehr2.id) 
 												if ((externBeachten) || (!gLehr1.istExtern)) 
 													regelVerletzungen.add(r.id);
+					break;
+				}
+				case GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN: {
+					for (let eSchiene of this._map_schienenID_schiene.values()) 
+						for (let eKurs1 of eSchiene.kurse) 
+							for (let eKurs2 of eSchiene.kurse) 
+								if (eKurs1.id < eKurs2.id) 
+									for (let gLehr1 of this.getKursG(eKurs1.id).lehrer) 
+										for (let gLehr2 of this.getKursG(eKurs2.id).lehrer) 
+											if (gLehr1.id === gLehr2.id) 
+												regelVerletzungen.add(r.id);
 					break;
 				}
 				default: {

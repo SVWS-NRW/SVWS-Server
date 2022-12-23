@@ -359,9 +359,20 @@ public class GostBlockungsergebnisManager {
 								if (eKurs1.id < eKurs2.id) 
 									for (@NotNull GostBlockungKursLehrer gLehr1 : getKursG(eKurs1.id).lehrer)
 										for (@NotNull GostBlockungKursLehrer gLehr2 : getKursG(eKurs2.id).lehrer) 
-											if (gLehr1 == gLehr2)
+											if (gLehr1.id == gLehr2.id)
 												if ( (externBeachten) || (!gLehr1.istExtern) ) 
 													regelVerletzungen.add(r.id);
+	            	break;
+	            }
+	            case LEHRKRAEFTE_BEACHTEN: { // 10
+					for (@NotNull GostBlockungsergebnisSchiene eSchiene : _map_schienenID_schiene.values())
+						for (@NotNull GostBlockungsergebnisKurs eKurs1 : eSchiene.kurse) 
+							for (@NotNull GostBlockungsergebnisKurs eKurs2 : eSchiene.kurse)
+								if (eKurs1.id < eKurs2.id) 
+									for (@NotNull GostBlockungKursLehrer gLehr1 : getKursG(eKurs1.id).lehrer)
+										for (@NotNull GostBlockungKursLehrer gLehr2 : getKursG(eKurs2.id).lehrer) 
+											if (gLehr1.id == gLehr2.id)
+												regelVerletzungen.add(r.id);
 	            	break;
 	            }
 	            default: {

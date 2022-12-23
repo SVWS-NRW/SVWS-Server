@@ -123,7 +123,15 @@ public enum GostKursblockungRegelTyp {
 	 */
 	LEHRKRAFT_BEACHTEN(9, "Lehrkräfte beachten (auch Externe?)", Arrays.asList(
 			GostKursblockungRegelParameterTyp.BOOLEAN
-	));
+	)),
+
+	/** 
+	 * Der Regel-Typ zum forcieren, dass gleiche Lehrkräfte nicht in der selben Schiene landen.
+	 */
+	LEHRKRAEFTE_BEACHTEN(10, "Lehrkräfte beachten", Arrays.asList(
+	)),
+	
+	; // Ende der Regeln
 
 	/** Die ID des Regel-Typs */
 	public final int typ;
@@ -236,17 +244,21 @@ public enum GostKursblockungRegelTyp {
 		@NotNull GostKursblockungRegelTyp typ = fromTyp(pRegel.typ);
 		@NotNull Vector<@NotNull Long> param = pRegel.parameter;
 		switch (typ) {
-			// Keine Veränderung bei (2 Parameter) 
+			// Keine Veränderung bei 0 Parametern. 
+			case LEHRKRAEFTE_BEACHTEN: { // 10
+				return new long[] {};
+			}
+			// Keine Veränderung bei 1 Parameter. 
+			case LEHRKRAFT_BEACHTEN: { // 9
+				long p0 = param.get(0);
+				return new long[] {p0};
+			}
+			// Keine Veränderung bei 2 Parametern. 
             case SCHUELER_FIXIEREN_IN_KURS, SCHUELER_VERBIETEN_IN_KURS, 
                  KURS_VERBIETEN_MIT_KURS, KURS_ZUSAMMEN_MIT_KURS : { // 4, 5, 7, 8
             	long p0 = param.get(0);
             	long p1 = param.get(1);
             	return new long[] {p0, p1};
-            }
-			// Keine Veränderung bei (1 Parameter) 
-            case LEHRKRAFT_BEACHTEN: { // 9
-            	long p0 = param.get(0);
-            	return new long[] {p0};
             }
             case KURS_FIXIERE_IN_SCHIENE, KURS_SPERRE_IN_SCHIENE: { // 2, 3
             	long p0 = param.get(0);

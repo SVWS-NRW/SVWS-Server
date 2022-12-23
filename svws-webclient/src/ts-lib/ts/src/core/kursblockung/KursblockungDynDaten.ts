@@ -329,6 +329,11 @@ export class KursblockungDynDaten extends JavaObject {
 				if ((auchExtern < 0) || (auchExtern > 1)) 
 					throw this.fehler("LEHRKRAFT_BEACHTEN AuchExterne-Wert ist nicht 0/1, sondern (" + auchExtern + ")!")
 			}
+			if (gostRegel as unknown === GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN as unknown) {
+				let length : number = daten.length;
+				if (length !== 0) 
+					throw this.fehler("LEHRKRAEFTE_BEACHTEN daten.length=" + length + ", statt 0!")
+			}
 		}
 	}
 
@@ -667,6 +672,24 @@ export class KursblockungDynDaten extends JavaObject {
 											this.statistik.regelHinzufuegenKursVerbieteMitKurs(kurs1, kurs2);
 										}
 			}
+		}
+		let regelnTyp10 : LinkedCollection<GostBlockungRegel> | null = this.regelMap.get(GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN);
+		if (regelnTyp10 !== null) {
+			let vKurseMitLehrkraft : Vector<GostBlockungKurs> = new Vector();
+			for (let gKurs of pInput.daten().kurse) 
+				if (gKurs.lehrer.isEmpty() === false) 
+					vKurseMitLehrkraft.add(gKurs);
+			for (let regel10 of regelnTyp10) 
+				for (let gKurs1 of vKurseMitLehrkraft) 
+					for (let gKurs2 of vKurseMitLehrkraft) 
+						if (gKurs1.id < gKurs2.id) 
+							for (let gLehr1 of gKurs1.lehrer) 
+								for (let gLehr2 of gKurs2.lehrer) 
+									if (gLehr1.id === gLehr2.id) {
+										let kurs1 : KursblockungDynKurs = this.gibKurs(gKurs1.id);
+										let kurs2 : KursblockungDynKurs = this.gibKurs(gKurs2.id);
+										this.statistik.regelHinzufuegenKursVerbieteMitKurs(kurs1, kurs2);
+									}
 		}
 	}
 
