@@ -41,11 +41,13 @@
 <script setup lang="ts">
 
 	import { Religion, ReligionEintrag } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, reactive, ref } from "vue";
+	import { computed, ComputedRef, reactive, ref, WritableComputedRef } from "vue";
 	import { App } from "~/apps/BaseApp";
 	import { router } from "~/router";
 	import { injectMainApp, Main } from "~/apps/Main";
 	import { routeKatalogReligion } from "~/router/apps/RouteKatalogReligion";
+	import {Schuljahresabschnitt} from "@svws-nrw/svws-core-ts";
+	import {Schule} from "~/apps/schule/Schule";
 
 	const props = defineProps<{ id?: number; item?: ReligionEintrag, routename: string }>();
 	const selected = routeKatalogReligion.auswahl;
@@ -78,8 +80,7 @@
 		if (reli_neu.kuerzel) {
 			await App.api.createReligion(
 				reli_neu,
-				App.schema,
-				reli_neu.kuerzel?.valueOf()
+				App.schema
 			);
 			modalAdd.value.closeModal();
 			app.auswahl.update_list();
@@ -93,6 +94,37 @@
 		reli_neu.kuerzel = null;
 		reli_neu.text = null;
 		reli_neu.textZeugnis = null;
+	}
+
+	const schule_abschnitte: ComputedRef<
+		Array<Schuljahresabschnitt> | undefined
+	> = computed(() => {
+		const liste = appSchule.value.schuleStammdaten.daten?.abschnitte;
+		return liste?.toArray(new Array<Schuljahresabschnitt>()) || [];
+	});
+
+	const akt_abschnitt: WritableComputedRef<Schuljahresabschnitt> = computed({
+		get(): Schuljahresabschnitt {
+			return main.config.akt_abschnitt;
+		},
+		set(abschnitt: Schuljahresabschnitt) {
+			main.config.akt_abschnitt = abschnitt;
+		}
+	});
+
+	const appSchule: ComputedRef<Schule> = computed(() => {
+		return main.apps.schule;
+	});
+	function item_sort(a: Schuljahresabschnitt, b: Schuljahresabschnitt) {
+		return (
+			b.schuljahr + b.abschnitt * 0.1 - (a.schuljahr + a.abschnitt * 0.1)
+		);
+	}
+
+	function item_text(item: Schuljahresabschnitt) {
+		return item.schuljahr
+			? `${item.schuljahr}, ${item.abschnitt}. HJ`
+			: "Abschnitt";
 	}
 
 </script>

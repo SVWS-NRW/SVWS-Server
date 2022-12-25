@@ -4,12 +4,10 @@
 			<span>Schüler</span>
 		</template>
 		<template #abschnitt>
-			<div v-if="schule_abschnitte" class="mt-2">
-				<svws-ui-multi-select v-model="akt_abschnitt" :items="schule_abschnitte" :item-sort="item_sort" :item-text="item_text"></svws-ui-multi-select>
-			</div>
+			<svws-ui-multi-select v-if="schule_abschnitte" v-model="akt_abschnitt" :items="schule_abschnitte" :item-sort="item_sort" :item-text="item_text"></svws-ui-multi-select>
 		</template>
 		<template #header>
-			<div>
+			<div class="mt-1">
 				<svws-ui-multi-select v-model="filterStatus" :items="inputKatalogSchuelerStatus" :item-text="text_status" tags title="Status" />
 				<div class="input-wrapper mt-6">
 					<svws-ui-multi-select v-model="filterKlassen" title="Klasse" :items="inputKlassen" :item-text="text_klasse" />

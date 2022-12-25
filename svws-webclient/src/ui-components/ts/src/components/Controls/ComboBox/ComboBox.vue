@@ -463,7 +463,7 @@ function removeItem() {
 }
 
 .tag-badge {
-	@apply rounded-full bg-primary cursor-pointer text-white relative z-10;
+	@apply rounded-full bg-dark cursor-pointer text-white relative z-10;
 	@apply flex items-center leading-none;
 	padding: 0.2em 0.4em 0.2em 0.7em;
 }

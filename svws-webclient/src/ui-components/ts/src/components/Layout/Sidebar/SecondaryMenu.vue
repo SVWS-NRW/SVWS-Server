@@ -13,7 +13,7 @@
 	</div>
 </template>
 
-<style>
+<style lang="postcss">
 .secondary-menu--headline {
 	@apply py-2 text-headline;
 	@apply relative z-20;
@@ -39,6 +39,41 @@
 
 .secondary-menu--content .secondary-menu--navigation {
 	@apply flex flex-col items-start
+}
+
+.input--schule-abschnitte {
+	@apply -mt-1;
+}
+
+.input--schule-abschnitte .dropdown-icon:hover span.icon,
+.input--schule-abschnitte .dropdown-icon:focus span.icon {
+	@apply bg-transparent text-black;
+}
+
+.input--schule-abschnitte input.text-input--control {
+	@apply border-0 p-0 h-auto;
+	@apply font-bold;
+	width: 7.8em;
+	padding-right: 1.4rem !important;
+}
+
+.input--schule-abschnitte input.text-input--control,
+.input--schule-abschnitte .text-input-readonly input.text-input--control {
+	@apply cursor-pointer;
+}
+
+.input--schule-abschnitte {
+	@apply cursor-pointer opacity-25;
+}
+
+.input--schule-abschnitte:hover,
+.input--schule-abschnitte:focus-within {
+	@apply opacity-100;
+}
+
+.input--schule-abschnitte .multiselect--items-wrapper {
+	@apply mt-2;
+	min-width: 12em;
 }
 
 .secondary-menu--breadcrumbs {

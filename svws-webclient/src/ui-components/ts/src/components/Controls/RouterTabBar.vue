@@ -7,7 +7,7 @@
                 </button>
             </div>
             <div ref="contentEl" class="router-tab-bar--content">
-                <router-tab-bar-button v-for="(route, index) in props.routes" :route="route" :selected="selected" 
+                <router-tab-bar-button v-for="(route, index) in props.routes" :route="route" :selected="selected"
                     :hidden="isHidden(index)" @select="select(route)" />
             </div>
             <div v-if="!state.scrolledMax"
@@ -116,6 +116,11 @@
         @apply mt-0 mb-8 flex-grow overflow-y-auto px-6;
     }
 
+	.router-tab-bar--area {
+		@apply h-full overflow-y-auto;
+		-webkit-overflow-scrolling: touch;
+	}
+
     .router-tab-bar--wrapper {
 		@apply flex items-center;
 		@apply overflow-hidden;
@@ -124,6 +129,8 @@
 		@apply w-full;
 		@apply flex-shrink-0;
 		@apply px-4 mb-6;
+		@apply sticky top-0 left-0 z-10 bg-white;
+		box-shadow: 0 0 1.5rem 1rem theme("colors.white");
     }
 
     .router-tab-bar--content {

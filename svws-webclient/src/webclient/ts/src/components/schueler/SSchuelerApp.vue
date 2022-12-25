@@ -9,7 +9,7 @@
 					<span class="inline-block mr-3"> {{ vorname }} {{ nachname }} </span>
 					<svws-ui-badge variant="light"> {{ props.id }} </svws-ui-badge>
 					<br/>
-					<span class="opacity-50"> {{ inputKlasse }} </span>
+					<span class="opacity-50"> {{ inputKlasse ? inputKlasse : '–' }} </span>
 				</div>
 			</div>
 		</svws-ui-header>

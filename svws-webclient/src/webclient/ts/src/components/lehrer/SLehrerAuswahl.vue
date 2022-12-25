@@ -3,6 +3,9 @@
 		<template #headline>
 			<span>Lehrkräfte</span>
 		</template>
+		<template #abschnitt>
+			<svws-ui-multi-select v-if="schule_abschnitte" v-model="akt_abschnitt" :items="schule_abschnitte" :item-sort="item_sort" :item-text="item_text"></svws-ui-multi-select>
+		</template>
 		<template #header>
 			<div>
 				<div class="mb-2">
@@ -38,9 +41,11 @@
 <script setup lang="ts">
 
 	import type { LehrerListeEintrag } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, Ref, ref } from "vue";
+	import {computed, ComputedRef, Ref, ref, WritableComputedRef} from "vue";
 	import { injectMainApp, Main } from "~/apps/Main";
 	import { routeLehrer } from "~/router/apps/RouteLehrer";
+	import {Schuljahresabschnitt} from "@svws-nrw/svws-core-ts";
+	import {Schule} from "~/apps/schule/Schule";
 
 	const cols = [
 		{ key: "kuerzel", label: "Kürzel", width: "10%", sortable: true, defaultSort: "asc" },
@@ -83,6 +88,37 @@
 		console.log(action, item);
 	}
 
+	const schule_abschnitte: ComputedRef<
+		Array<Schuljahresabschnitt> | undefined
+	> = computed(() => {
+		const liste = appSchule.value.schuleStammdaten.daten?.abschnitte;
+		return liste?.toArray(new Array<Schuljahresabschnitt>()) || [];
+	});
+
+	const akt_abschnitt: WritableComputedRef<Schuljahresabschnitt> = computed({
+		get(): Schuljahresabschnitt {
+			return main.config.akt_abschnitt;
+		},
+		set(abschnitt: Schuljahresabschnitt) {
+			main.config.akt_abschnitt = abschnitt;
+		}
+	});
+
+	const appSchule: ComputedRef<Schule> = computed(() => {
+		return main.apps.schule;
+	});
+
+	function item_sort(a: Schuljahresabschnitt, b: Schuljahresabschnitt) {
+		return (
+			b.schuljahr + b.abschnitt * 0.1 - (a.schuljahr + a.abschnitt * 0.1)
+		);
+	}
+
+	function item_text(item: Schuljahresabschnitt) {
+		return item.schuljahr
+			? `${item.schuljahr}, ${item.abschnitt}. HJ`
+			: "Abschnitt";
+	}
 </script>
 
 

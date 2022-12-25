@@ -9,7 +9,7 @@
 					<svws-ui-sidebar-menu-item
 						v-for="menuItem in menuItems"
 						:key="menuItem.caption"
-						:active="menuItem.active.includes(route.name as string)"
+						:active="menuItem.active.includes(route.name.split('_')[0] as string)"
 						@click="router.push({ name: menuItem.value })"
 					>
 						<template #label>{{ menuItem.caption }}</template>
@@ -109,9 +109,9 @@
 	const fullMenuItems: MenuItem[] = [
 		{ caption: schulname.value, value: "schule", active: ["schule"], icon: "community" },
 		{ caption: "Kataloge", value: "kataloge", active: [ "kataloge", "faecher", "jahrgaenge", "foerderschwerpunkte", "religionen" ], icon: "archive" },
-		{ caption: "Schüler", value: "schueler", active: ["schueler"], icon: "team" },
+		{ caption: "Schüler", value: "schueler", active: ["schueler"], icon: "group" },
 		{ caption: "Lehrkräfte", value: "lehrer", active: ["lehrer"], icon: "briefcase" },
-		{ caption: "Klassen", value: "klassen", active: ["klassen"], icon: "group" },
+		{ caption: "Klassen", value: "klassen", active: ["klassen"], icon: "team" },
 		{ caption: "Kurse", value: "kurse", active: ["kurse"], icon: "slideshow" },
 		{ caption: "Oberstufe", value: "gost", active: ["gost"], icon: "graduation-cap" },
 		{ caption: "Statistik", value: "statistik", active: ["statistik"], icon: "line-chart" }
@@ -162,9 +162,5 @@
 			padding: 10mm 25mm 10mm 25mm !important;
 			/* overflow: hidden; */
 		}
-	}
-
-	.input--schule-abschnitte input.text-input--control {
-		@apply border-0 p-0 h-auto;
 	}
 </style>

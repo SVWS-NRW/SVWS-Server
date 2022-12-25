@@ -224,10 +224,6 @@
 		@apply cursor-default pointer-events-none;
 	}
 
-	.text-input-readonly .text-input--control {
-		@apply cursor-default pointer-events-none;
-	}
-
 	.text-input--placeholder {
 		@apply absolute;
 		@apply pointer-events-none;
@@ -241,7 +237,7 @@
 	}
 
 	.multiselect-input-component .text-input--placeholder {
-		top: 0.6em;
+		top: 0.5em;
 	}
 
 	.text-input-component:focus-within .text-input--placeholder,
