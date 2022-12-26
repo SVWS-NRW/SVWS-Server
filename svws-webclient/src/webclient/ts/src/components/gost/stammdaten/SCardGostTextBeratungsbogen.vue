@@ -1,8 +1,8 @@
 <template>
-	<svws-ui-content-card title="Laufbahnplanung: Text für Beratungsbögen">
+	<svws-ui-content-card title="Texte für die Laufbahnplanung">
 		<div class="input-wrapper">
 			<div class="col-span-2">
-				<svws-ui-textarea-input placeholder="Text für Beratungsbögen" v-model="inputTextBeratungsbogen" resizeable="vertical" />
+				<svws-ui-textarea-input placeholder="Beratungsbögen" v-model="inputTextBeratungsbogen" resizeable="vertical" />
 			</div>
 		</div>
 	</svws-ui-content-card>

@@ -3,11 +3,13 @@
 		<template v-if="kurszahlen.get(kursart.id) === 0 && wahlen.get(kursart.id) && allow_regeln">
 			<tr class="text-left" :style="{ 'background-color': bgColor }">
 				<td colspan="3">
-					{{ fach.kuerzel }}-{{ kursart.kuerzel }} </td>
+					{{ fach.kuerzel }}-{{ kursart.kuerzel }}
+				</td>
 				<td class="text-center" colspan="1">
 					{{ wahlen.get(kursart.id) }} </td>
 				<td :colspan="schienen.size()+2">
-					<svws-ui-button class="px-12" size="small" @click="add_kurs(kursart)">Kurs hinzufügen</svws-ui-button> </td>
+					<svws-ui-button class="" type="secondary" size="small" @click="add_kurs(kursart)" title="Kurs hinzufügen">Kurs hinzufügen</svws-ui-button>
+				</td>
 			</tr>
 		</template>
 		<template v-else>

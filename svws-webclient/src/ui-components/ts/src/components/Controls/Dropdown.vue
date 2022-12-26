@@ -44,7 +44,7 @@ as="div" class="dropdown--items" :class="{
 }
 
 .dropdown--button {
-	@apply border-2;
+	@apply border;
 	@apply flex items-center;
 	@apply px-5 py-2;
 	@apply relative z-10;

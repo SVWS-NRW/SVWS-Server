@@ -21,6 +21,9 @@
 						</svws-ui-icon>
 						<span>Regeln zur Blockung</span>
 					</div>
+					<div class="app-layout--main-sidebar--trigger-count" v-if="collapsed">
+						{{ app.dataKursblockung.daten?.regeln?.size() ?? '' }} <!--TODO: Update der Zahl, wenn sich die Regeln ändern.-->
+					</div>
 				</div>
 				<div class="app-layout--main-sidebar--content">
 					<s-card-gost-regelansicht v-if="!collapsed && active_panel==='regeln'"/>
@@ -64,6 +67,4 @@
 
 	const allow_regeln: ComputedRef<boolean> =
 		computed(()=> app.blockungsergebnisauswahl.liste.length === 1);
-
-	console.log(allow_regeln)
 </script>

@@ -68,7 +68,7 @@ function toggleFullscreen() {
 	.app-layout--secondary {
 		@apply w-1/5 flex-shrink-0;
 		min-width: 22rem;
-		max-width: 36rem;
+		max-width: 32rem;
 	}
 
 	.app-layout--main {
@@ -170,7 +170,7 @@ function toggleFullscreen() {
 
 	.app-layout--main-sidebar--container {
 		@apply rounded-xl h-full overflow-hidden flex flex-col;
-		@apply shadow-dark-20 shadow-xl bg-white;
+		@apply shadow-lg bg-white;
 		@apply border border-dark-20 border-opacity-60;
 	}
 
@@ -182,13 +182,13 @@ function toggleFullscreen() {
 
 	.app-layout--main-sidebar--trigger {
 		@apply pointer-events-auto;
-		@apply w-full cursor-pointer;
+		@apply w-full cursor-pointer relative;
 		@apply p-6 pl-3;
 		@apply text-headline;
 	}
 
 	.sidebar-trigger--text {
-		@apply flex items-center;
+		@apply flex items-center opacity-50;
 
 		.button--icon {
 			@apply p-1;
@@ -211,15 +211,34 @@ function toggleFullscreen() {
 		}
 
 		.app-layout--main-sidebar--trigger {
-			@apply px-6 py-3 rounded-full bg-primary text-white text-base font-bold cursor-pointer;
+			@apply px-6 py-2 rounded-full bg-primary text-white text-base font-bold cursor-pointer border-2;
+
+			&:hover,
+			&:focus {
+				@apply bg-light text-primary;
+			}
+
+			&:focus {
+				@apply outline-none ring ring-primary ring-opacity-50;
+			}
 		}
 
 		.sidebar-trigger--text {
-			@apply whitespace-nowrap;
+			@apply whitespace-nowrap opacity-100;
 		}
 
 		.app-layout--main-sidebar--content {
 			@apply hidden;
 		}
+	}
+
+	.app-layout--main-sidebar--trigger-count {
+		@apply text-white font-bold rounded-full text-sm text-center w-auto;
+		@apply absolute;
+		background-color: #f00;
+		padding: 0.1em 0.4em;
+		top: -0.5em;
+		right: -0.5em;
+		min-width: 1.6em;
 	}
 </style>

@@ -45,7 +45,7 @@
 								</div>
 								<div class="w-full flex justify-end items-start">
 									<div v-if="main.config.isAuthenticated === false" class="text-left mr-4 leading-tight text-red-500 font-bold">Fehler bei der Anmeldung. Passwort oder Benutzername falsch.</div>
-									<div v-else class="text-left mr-4 leading-tight w-full my-auto">Verbunden mit {{ serverAddress }}</div>
+									<div v-else class="text-left mr-4 leading-tight w-full my-auto opacity-50">Verbunden mit {{ serverAddress }}</div>
 									<svws-ui-button @click="login">Anmelden</svws-ui-button>
 								</div>
 							</div>

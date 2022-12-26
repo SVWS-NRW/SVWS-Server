@@ -13,7 +13,7 @@
 				</template>
 			</div>
 		</td>
-		<td class="text-center" :class="{'cell--kursdifferenz': setze_kursdifferenz}">
+		<td class="text-center cell--has-multiselect" :class="{'cell--kursdifferenz': setze_kursdifferenz}">
 			<template v-if="allow_regeln">
 				<svws-ui-multi-select v-model="kurslehrer" class="w-20" autocomplete :item-filter="lehrer_filter" removable headless
 					:items="main.apps.lehrer.auswahl.liste" :item-text="(l: LehrerListeEintrag)=> `${l.kuerzel}`"/>
@@ -27,7 +27,7 @@
 			<template v-else>{{koop ? "&#x2713;" : "&#x2717;"}}</template>
 		</td>
 		<template v-if="setze_kursdifferenz && kurs_blockungsergebnis">
-			<td class="text-center blockung--kursdifferenz" :rowspan="kursdifferenz[0] + (kursdetail_anzeige ? 1:0)" >
+			<td class="text-center blockung--kursdifferenz" :rowspan="kursdifferenz[0] + (kursdetail_anzeige ? 1:0)">
 				{{kursdifferenz[2]}}</td>
 			<td class="text-center blockung--kursdifferenz" :rowspan="kursdifferenz[0] + (kursdetail_anzeige ? 1:0)">{{kursdifferenz[1]}}</td>
 		</template>
@@ -61,8 +61,8 @@
 				</svws-ui-badge>
 			</drag-data>
 			<template v-else>
-				<div :class="{'bg-green-400': active && drag_data?.schiene?.id !== schiene.id && drag_data.kurs?.id === kurs.id && drag_data.schiene?.id !== schiene.id}">
-					<svws-ui-icon class="cursor-pointer px-4 py-2" @click="sperren_regel_toggle(schiene)">
+				<div class="cursor-pointer" @click="sperren_regel_toggle(schiene)" :class="{'bg-green-400': active && drag_data?.schiene?.id !== schiene.id && drag_data.kurs?.id === kurs.id && drag_data.schiene?.id !== schiene.id}">
+					<svws-ui-icon>
 						<i-ri-forbid-fill v-if="sperr_regeln.find(r=>r.parameter.get(1) === ermittel_parent_schiene(schiene).nummer)" class="inline-block text-red-500" />
 						<i-ri-forbid-line v-if="allow_regeln && !sperr_regeln.find(r=>r.parameter.get(1) === ermittel_parent_schiene(schiene).nummer)" class="inline-block opacity-0 hover:opacity-25" />
 					</svws-ui-icon>
@@ -84,9 +84,11 @@
 			</td>
 		</template>
 		<template v-if="allow_regeln">
-			<td class="text-center leading-5 w-2" :class="{'cell--kursdifferenz': setze_kursdifferenz}" @click="toggle_kursdetail_anzeige">
-				<div v-if="kursdetail_anzeige" class="cursor-pointer">V</div>
-				<div v-else class="cursor-pointer">A</div>
+			<td class="cursor-pointer text-center hover:opacity-100" :class="{'cell--kursdifferenz': setze_kursdifferenz, 'opacity-100' : kursdetail_anzeige, 'opacity-25' : !kursdetail_anzeige}" @click="toggle_kursdetail_anzeige" title="Kursdetails anzeigen">
+				<div class="inline-block">
+					<i-ri-arrow-up-s-line v-if="kursdetail_anzeige" class="relative top-0.5"/>
+					<i-ri-arrow-down-s-line v-else class="relative top-0.5"/>
+				</div>
 			</td>
 		</template>
 		<!-- <template v-else>
@@ -95,26 +97,45 @@
 		<!-- <td class="border-none bg-white"></td> -->
 	</tr>
 	<!--Wenn Kursdtails angewählt sind, erscheint die zusätzliche Zeile-->
-	<tr v-if="kursdetail_anzeige">
-		<td colspan="3">
-			<svws-ui-button class="h-6" size="small" type="secondary" @click="toggle_zusatzkraefte_modal">Zusatzkräfte anlegen</svws-ui-button>
-		</td>
-		<td :colspan="1+schienen.size()">
-			<div class="flex gap-1 p-2">
-					Schienen
-					<svws-ui-button class="h-6" size="small" type="secondary" @click="">+</svws-ui-button>
-					{{ kurs.anzahlSchienen }}
-					<svws-ui-button class="h-6" size="small" type="secondary" @click="">-</svws-ui-button>
-					<span class="px-4">Kurse</span>
-					<svws-ui-button class="h-6" size="small" type="secondary" @click="add_kurs">+</svws-ui-button>
-					<svws-ui-button class="h-6" size="small" type="secondary" @click="del_kurs">-</svws-ui-button>
-					<svws-ui-button class="h-6" type="secondary">Aufteilen …</svws-ui-button>
-					<svws-ui-dropdown class="h-6" variant="icon" v-if="filtered_by_kursart.length>1">
+	<tr v-if="kursdetail_anzeige" :style="{ 'background-color': bgColor }" class="table--row-kursdetail relative z-10">
+		<td :colspan="6+schienen.size()" style="padding-top: 0.75rem; padding-bottom: 0.75rem;">
+			<div class="flex justify-between items-center gap-2">
+				<div class="flex items-center gap-12">
+					<svws-ui-button size="small" type="secondary" @click="toggle_zusatzkraefte_modal">Zusatzkräfte anlegen<i-ri-briefcase-line class="ml-1 my-0.5"/></svws-ui-button>
+					<div class="flex items-center text-base">
+						<div class="mr-2">Schienen</div>
+						<button @click="" class="group">
+							<i-ri-indeterminate-circle-line class="w-5 h-5 group-hover:hidden"/>
+							<i-ri-indeterminate-circle-fill class="w-5 h-5 hidden group-hover:inline-block"/>
+						</button>
+						<span class="mx-1">{{ kurs.anzahlSchienen }}</span>
+						<button @click="" class="group">
+							<i-ri-add-circle-line class="w-5 h-5 group-hover:hidden"/>
+							<i-ri-add-circle-fill class="w-5 h-5 hidden group-hover:inline-block"/>
+						</button>
+					</div>
+					<div class="flex items-center text-sm font-bold">
+						<div class="mr-2 text-base">Kurse</div>
+						<button @click="del_kurs" class="group">
+							<i-ri-indeterminate-circle-line class="w-5 h-5 group-hover:hidden"/>
+							<i-ri-indeterminate-circle-fill class="w-5 h-5 hidden group-hover:inline-block"/>
+						</button>
+						<span class="mx-0.5"></span>
+						<button @click="add_kurs" class="group">
+							<i-ri-add-circle-line class="w-5 h-5 group-hover:hidden"/>
+							<i-ri-add-circle-fill class="w-5 h-5 hidden group-hover:inline-block"/>
+						</button>
+					</div>
+				</div>
+				<div class="flex items-center gap-2">
+					<svws-ui-dropdown variant="icon" v-if="filtered_by_kursart.length>1">
 						<template #dropdownButton>Zusammenlegen</template>
 						<template #dropdownItems>
 							<svws-ui-dropdown-item v-for="k in filtered_by_kursart.filter(k=>k.id!==kurs.id)" :key="k.id" class="px-2" @click=""> {{ get_kursbezeichnung(k.id) }} </svws-ui-dropdown-item>
 						</template>
 					</svws-ui-dropdown>
+					<svws-ui-button size="small" type="secondary">Aufteilen…</svws-ui-button>
+				</div>
 			</div>
 		</td>
 	</tr>
@@ -133,14 +154,12 @@
 		</template>
 	</svws-ui-modal>
 	<svws-ui-modal ref="zusatzkraefte_modal" size="small">
-		<template #modalTitle>Zusatzkräfte für Kurse</template>
-		<template #modalDescription>
-			<div class="">
-				<s-kurslehrer-select :kurs="kurs"/>
-			</div>
-			<div class="flex gap-1">
-				<svws-ui-button @click="toggle_zusatzkraefte_modal">Beende</svws-ui-button>
-			</div>
+		<template #modalTitle>Zusatzkräfte für Kurs {{ kursbezeichnung }}</template>
+		<template #modalContent>
+			<s-kurslehrer-select :kurs="kurs"/>
+		</template>
+		<template #modalActions>
+			<svws-ui-button @click="toggle_zusatzkraefte_modal">Fertig</svws-ui-button>
 		</template>
 	</svws-ui-modal>
 </template>

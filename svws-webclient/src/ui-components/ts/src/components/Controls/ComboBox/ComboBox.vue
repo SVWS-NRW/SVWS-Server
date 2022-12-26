@@ -415,7 +415,7 @@ function removeItem() {
 	@apply border-black rounded-md border bg-white;
 	@apply mt-1 px-1;
 	@apply overflow-y-auto overflow-x-hidden;
-	@apply shadow-lg shadow-dark-20;
+	@apply shadow-lg;
 	@apply cursor-pointer;
 	-webkit-overflow-scrolling: touch;
 	max-height: 36.3ex;

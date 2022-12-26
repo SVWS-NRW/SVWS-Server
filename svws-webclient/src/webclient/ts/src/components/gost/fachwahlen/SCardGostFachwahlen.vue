@@ -1,7 +1,5 @@
 <template>
-	<svws-ui-content-card
-		:title="'Fächer der Oberstufe für den Jahrgang: ' + bezeichnung"
-	>
+	<svws-ui-content-card>
 		<div class="content-wrapper">
 			<div class="input-wrapper">
 				<div class="table-container">

@@ -1,6 +1,9 @@
 <template>
 	<svws-ui-secondary-menu>
 		<template #headline>Abiturjahrgänge</template>
+		<template #abschnitt>
+			<svws-ui-multi-select v-if="schule_abschnitte" v-model="akt_abschnitt" :items="schule_abschnitte" :item-sort="item_sort" :item-text="item_text"></svws-ui-multi-select>
+		</template>
 		<template #header></template>
 		<template #content>
 			<div class="container">
@@ -27,7 +30,7 @@
 				</svws-ui-table>
 			</div>
 			<div v-if="main.config.kursblockung_aktiv.size && abiturjahr > 0" class="mt-20">
-				<h3 class="text-headline px-6 4xl:px-8 mb-3">Blockungen</h3>
+				<h3 class="text-headline px-6 4xl:px-8 mb-3 opacity-50">Blockungen</h3>
 				<svws-ui-table v-model="selected_hj" :columns="[{ key: 'kuerzel', label: 'Halbjahr' }]" :data="halbjahre" class="mb-10">
 					<template #body="{rows}">
 						<template v-for="row in <GostHalbjahr[]>rows" :key="row.id">
@@ -131,6 +134,8 @@
 	import { GOST_CREATE_BLOCKUNG_SYMBOL } from "~/apps/core/LoadingSymbols";
 	import { injectMainApp, Main } from "~/apps/Main";
 	import { routeGost } from "~/router/apps/RouteGost";
+	import {Schuljahresabschnitt} from "@svws-nrw/svws-core-ts";
+	import {Schule} from "~/apps/schule/Schule";
 
 	const props = defineProps<{ id?: number; item?: GostJahrgang, routename: string }>();
 
@@ -342,6 +347,37 @@
 	function toggle_remove_blockung_modal() {
 		modal_remove_blockung.value.isOpen ? modal_remove_blockung.value.closeModal() : modal_remove_blockung.value.openModal();
 	};
+
+	const schule_abschnitte: ComputedRef<
+		Array<Schuljahresabschnitt> | undefined
+	> = computed(() => {
+		const liste = appSchule.value.schuleStammdaten.daten?.abschnitte;
+		return liste?.toArray(new Array<Schuljahresabschnitt>()) || [];
+	});
+
+	const akt_abschnitt: WritableComputedRef<Schuljahresabschnitt> = computed({
+		get(): Schuljahresabschnitt {
+			return main.config.akt_abschnitt;
+		},
+		set(abschnitt: Schuljahresabschnitt) {
+			main.config.akt_abschnitt = abschnitt;
+		}
+	});
+
+	const appSchule: ComputedRef<Schule> = computed(() => {
+		return main.apps.schule;
+	});
+	function item_sort(a: Schuljahresabschnitt, b: Schuljahresabschnitt) {
+		return (
+			b.schuljahr + b.abschnitt * 0.1 - (a.schuljahr + a.abschnitt * 0.1)
+		);
+	}
+
+	function item_text(item: Schuljahresabschnitt) {
+		return item.schuljahr
+			? `${item.schuljahr}, ${item.abschnitt}. HJ`
+			: "Abschnitt";
+	}
 
 </script>
 

@@ -1,8 +1,8 @@
 <template>
-	<svws-ui-content-card title="Laufbahnplanung: Text für Mailversand">
+	<svws-ui-content-card>
 		<div class="input-wrapper">
 			<div class="col-span-2">
-				<svws-ui-textarea-input placeholder="Text für Mailversand" v-model="inputTextMailversand" resizeable="vertical" />
+				<svws-ui-textarea-input placeholder="Mailversand" v-model="inputTextMailversand" resizeable="vertical" />
 			</div>
 		</div>
 	</svws-ui-content-card>

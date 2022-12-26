@@ -1,14 +1,16 @@
 <template>
-	<div class="flex flex-col gap-2">
-		<div class="flex flex-row gap-1" v-for="lehrer, i of kurslehrer" :key="lehrer.id">
-			<svws-ui-multi-select :modelValue="lehrer" @update:modelValue="(val: LehrerListeEintrag|undefined) => update_kurslehrer(val, lehrer)" class="w-52"
+	<div class="flex flex-col gap-2 text-left">
+		<div class="flex w-full items-center" v-for="lehrer, i of kurslehrer" :key="lehrer.id">
+			<svws-ui-multi-select :modelValue="lehrer" @update:modelValue="(val: LehrerListeEintrag|undefined) => update_kurslehrer(val, lehrer)" class="flex-1"
 				autocomplete :item-filter="lehrer_filter" :items="lehrer_liste" removable
 				:item-text="(l: LehrerListeEintrag)=> `${l.nachname}, ${l.vorname} (${l.kuerzel})`"/>
-			<svws-ui-icon v-if="!new_kurs_lehrer && i === kurslehrer.length-1" class="cursor-pointer text-black" @click="new_kurs_lehrer=true"><i-ri-user-add-line /></svws-ui-icon>
+			<svws-ui-icon v-if="!new_kurs_lehrer && i === kurslehrer.length-1" class="ml-3 cursor-pointer text-black hover:text-primary" @click="new_kurs_lehrer=true">
+				<i-ri-user-add-line />
+			</svws-ui-icon>
 		</div>
 		<div v-if="!kurslehrer.length || new_kurs_lehrer">
 			<svws-ui-multi-select
-			:modelValue="undefined" @update:modelValue="update_kurslehrer" class="w-52" autocomplete :item-filter="lehrer_filter" :items="lehrer_liste" :item-text="(l: LehrerListeEintrag)=> `${l.nachname}, ${l.vorname} (${l.kuerzel})`"/>
+			:modelValue="undefined" @update:modelValue="update_kurslehrer" class="flex-1" autocomplete :item-filter="lehrer_filter" :items="lehrer_liste" :item-text="(l: LehrerListeEintrag)=> `${l.nachname}, ${l.vorname} (${l.kuerzel})`"/>
 		</div>
 	</div>
 </template>
@@ -90,7 +92,7 @@ const bgColor: ComputedRef<string> =
 		app.dataKursblockung.datenmanager.patchOfKursAddLehrkraft(props.kurs.id, kurslehrer);
 		new_kurs_lehrer.value = false;
 	}
-	
+
 	const lehrer_regel: ComputedRef<GostBlockungRegel | undefined> =
 		computed(()=> {
 			const regel_typ = GostKursblockungRegelTyp.LEHRKRAFT_BEACHTEN

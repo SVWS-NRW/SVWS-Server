@@ -1,9 +1,12 @@
 <template>
-	<svws-ui-content-card :title="`Blockungsübersicht`">
-		<template #actions>
-			<svws-ui-button v-if="!blockung_aktiv" type="secondary" @click="toggle_modal_aktivieren">Aktivieren</svws-ui-button>
-			<svws-ui-button type="primary" @click="toggle_modal_hochschreiben">Hochschreiben</svws-ui-button>
-		</template>
+	<svws-ui-content-card>
+		<div class="flex flex-wrap justify-between">
+			<h3 class="text-headline opacity-50">Übersicht {{app?.dataKursblockung?.daten?.name ? app?.dataKursblockung?.daten?.name : 'Blockungsübersicht'}}</h3>
+			<div class="flex items-center gap-2">
+				<svws-ui-button v-if="!blockung_aktiv" type="secondary" @click="toggle_modal_aktivieren">Aktivieren</svws-ui-button>
+				<svws-ui-button type="primary" @click="toggle_modal_hochschreiben">Hochschreiben</svws-ui-button>
+			</div>
+		</div>
 		<div class="flex flex-row">
 			<div class="flex-none">
 				<div>
@@ -27,7 +30,7 @@
 												@keyup.escape="edit_schienenname=undefined"
 												@update:modelValue="patch_schiene(s, $event)" /> </template>
 										<template v-else>
-											<span class="px-3 underline decoration-dashed underline-offset-2 cursor-text" @click="edit_schienenname = s">{{s.nummer}}</span>
+											<span class="px-3 underline decoration-dotted underline-offset-2 cursor-text" title="Namen bearbeiten" @click="edit_schienenname = s">{{s.nummer}}</span>
 										</template>
 										<svws-ui-icon v-if="allow_del_schiene(s)" class="text-red-500 cursor-pointer" @click="del_schiene(s)"><i-ri-delete-bin-2-line/></svws-ui-icon>
 									</div>
@@ -96,13 +99,13 @@
 </template>
 
 <script setup lang="ts">
-	import {
-		GostBlockungSchiene,
-		GostBlockungsergebnisManager,
-		GostStatistikFachwahl,
-		List,
-		Vector
-	} from "@svws-nrw/svws-core-ts";
+import {
+	GostBlockungSchiene, GostBlockungsdatenManager,
+	GostBlockungsergebnisManager,
+	GostStatistikFachwahl,
+	List,
+	Vector
+} from "@svws-nrw/svws-core-ts";
 	import { App } from "~/apps/BaseApp";
 	import { computed, ComputedRef, ref, Ref, WritableComputedRef } from "vue";
 

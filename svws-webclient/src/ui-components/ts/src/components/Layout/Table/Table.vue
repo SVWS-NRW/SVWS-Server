@@ -315,8 +315,11 @@ watch(() => selection, (newVal) => tableRef.value.selectRows(newVal));
 		}
 
 		th {
-			@apply text-left;
 			padding: 0.15rem 0.5rem 0.1rem;
+		}
+
+		th:not(.text-center) {
+			@apply text-left;
 		}
 	}
 
@@ -344,7 +347,47 @@ watch(() => selection, (newVal) => tableRef.value.selectRows(newVal));
 		.text-input-component input {
 			@apply border-0 p-0 h-auto w-full;
 		}
+
+		input.text-input--headless {
+			@apply bg-transparent;
+		}
+
+		.cell--has-multiselect {
+			@apply p-0;
+
+			.multiselect-input-component {
+				@apply pl-2;
+			}
+		}
+
+		.multiselect-input-component .dropdown-icon {
+			@apply p-0;
+
+			.icon {
+				font-size: 1em;
+				padding-top: 0.2rem;
+				padding-bottom: 0.2rem;
+			}
+		}
+
+		.checkbox--headless {
+			@apply relative;
+			top: 0.1rem;
+		}
+
+		.multiselect--items-wrapper {
+			@apply text-left mt-2 ml-2;
+			min-width: 8rem;
+		}
+
+		.multiselect-input-component .dropdown-icon:hover span.icon {
+			@apply rounded-none;
+		}
 	}
+}
+
+.table--row-kursdetail {
+	box-shadow: inset 0 -2px 4px 0 rgba(0,0,0,0.1), inset 0 1px 4px 0 rgba(0,0,0,0.1);
 }
 
 /*.table--highlight-rows tr:hover,
