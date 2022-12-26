@@ -1,6 +1,6 @@
 <template>
-		<drop-data 
-			class="border border-[#7f7f7f]/20 text-center"
+		<drop-data
+			class="text-center"
 			:class="{'bg-yellow-200': drag_data.schiene && drag_data.schiene?.id !== schiene.id }"
 			tag="td"
 			@drop="regel_schiene"
@@ -10,7 +10,7 @@
 				tag="div"
 				:data="{schiene}"
 				class="select-none cursor-grab"
-				:draggable="true" 
+				:draggable="true"
 				@drag-start="drag_started"
 				@drag-end="drag_data.schiene=undefined"
 			>

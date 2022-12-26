@@ -39,7 +39,7 @@
 	}
 
 	.content-card--header--has-actions {
-		@apply flex w-full;
+		@apply flex w-full pr-1;
 	}
 
 	.content-card--actions {

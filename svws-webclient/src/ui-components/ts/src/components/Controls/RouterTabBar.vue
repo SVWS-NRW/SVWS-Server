@@ -129,7 +129,7 @@
 		@apply w-full;
 		@apply flex-shrink-0;
 		@apply px-4 mb-6;
-		@apply sticky top-0 left-0 z-10 bg-white;
+		@apply sticky top-0 left-0 z-20 bg-white;
 		box-shadow: 0 0 1.5rem 1rem theme("colors.white");
     }
 

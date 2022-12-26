@@ -138,7 +138,7 @@ watch(() => selection, (newVal) => tableRef.value.selectRows(newVal));
 		line-height: 1.25;
 	}
 
-	td:not(.column--checkbox):hover {
+	td:not(.column--checkbox) {
 		@apply overflow-visible;
 
 		.table--cell-content {
@@ -288,4 +288,71 @@ watch(() => selection, (newVal) => tableRef.value.selectRows(newVal));
 		height: 1px;
 	 }
 }
+
+.v-table--complex {
+	@apply w-full border;
+	--table-border-color: rgba(0,0,0,0.25);
+	border-color: var(--table-border-color);
+
+	tr {
+		@apply border;
+		border-color: var(--table-border-color);
+	}
+
+	th, td {
+		@apply h-full whitespace-nowrap border px-2;
+		line-height: 1.25;
+		border-color: var(--table-border-color);
+	}
+
+	thead {
+		@apply sticky top-0 left-0 z-10;
+		@apply shadow shadow-dark-20 text-sm-bold uppercase;
+		position: -webkit-sticky;
+
+		tr {
+			height: 1.72rem;
+		}
+
+		th {
+			@apply text-left;
+			padding: 0.15rem 0.5rem 0.1rem;
+		}
+	}
+
+	tbody {
+		tr {
+			@apply w-full;
+			height: 1.72rem;
+
+			&.row--kursdifferenz {
+				@apply hidden;
+			}
+
+			&:focus {
+				@apply outline-none;
+			}
+		}
+
+		td {
+			.button {
+				font-size: 0.833rem;
+				padding: 0.1em 0.7em;
+			}
+		}
+
+		.text-input-component input {
+			@apply border-0 p-0 h-auto w-full;
+		}
+	}
+}
+
+/*.table--highlight-rows tr:hover,
+.table--highlight-rows tr:hover ~ tr:not(.blockung--kursdifferenz) {
+	filter: brightness(0.8) saturate(200%);
+}
+
+.table--highlight-rows tr:hover ~ tr.blockung--kursdifferenz ~ tr {
+	filter: none;
+}*/
 </style>

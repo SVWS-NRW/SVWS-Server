@@ -1,75 +1,74 @@
 <template>
-	<svws-ui-content-card :title="`Übersicht über die Blockung ${allow_regeln ? '/ Festlegung von Regeln':''}`">
+	<svws-ui-content-card :title="`Blockungsübersicht`">
+		<template #actions>
+			<svws-ui-button v-if="!blockung_aktiv" type="secondary" @click="toggle_modal_aktivieren">Aktivieren</svws-ui-button>
+			<svws-ui-button type="primary" @click="toggle_modal_hochschreiben">Hochschreiben</svws-ui-button>
+		</template>
 		<div class="flex flex-row">
-			<div class="flex-none sm:-mx-6 lg:-mx-8">
-				<div class="py-2 align-middle sm:px-6 lg:px-8">
+			<div class="flex-none">
+				<div>
 					<div class="w-full flex gap-2 justify-between mb-2">
 						<div class="flex gap-2 content-start">
-							<svws-ui-button size="small" type="primary" @click="toggle_modal_hochschreiben">Hochschreiben</svws-ui-button>
-							<svws-ui-button  v-if="!blockung_aktiv" type="secondary" @click="toggle_modal_aktivieren">Aktivieren</svws-ui-button>
 						</div>
 					</div>
 					<div v-if="blockungsergebnis_aktiv" class="text-lg font-bold">Dieses Blockungsergebnis ist aktiv.</div>
 					<div v-if="blockung_aktiv && !blockungsergebnis_aktiv" class="text-lg font-bold">Ein anderes Ergebnis dieser Blockung ist bereits aktiv.</div>
-					<div class="rounded-lg shadow">
-						<table class="w-full  border-collapse text-sm table-auto">
-							<!-- Wenn sticky angewendet wird, verschwinden die  border border-[#7f7f7f]/20 s...  -->
-							<thead class="sticky top-0 bg-slate-100">
-								<tr>
-									<td colspan="5">
-										Schiene </td>
-									<td v-for="s in schienen" :key="s.id" class="border border-[#7f7f7f]/20 text-center" >
-										<div v-if="allow_regeln" class="flex justify-center">
-											<template v-if="s === edit_schienenname">
-												<svws-ui-text-input :modelValue="s.bezeichnung" focus headless style="width: 6rem"
-													@blur="edit_schienenname=undefined"
-													@keyup.enter="edit_schienenname=undefined"
-													@keyup.escape="edit_schienenname=undefined"
-													@update:modelValue="patch_schiene(s, $event)" /> </template>
-											<template v-else>
-												<span class="px-3 underline decoration-dashed underline-offset-2 cursor-text" @click="edit_schienenname = s">{{s.nummer}}</span>
-											</template>
-											<svws-ui-icon v-if="allow_del_schiene(s)" class="text-red-500 cursor-pointer" @click="del_schiene(s)"><i-ri-delete-bin-2-line/></svws-ui-icon>
-										</div>
-										<template v-else>{{s.nummer}}</template>
-									</td>
-									<template v-if="allow_regeln">
-										<td class="bg-[#329cd5] rounded-l-none rounded-lg border-none cursor-pointer" rowspan="4" @click="add_schiene">
-											<div class="px-2" >+</div></td>
-										<td rowspan="4" class="bg-white"> </td>
-									</template>
-								</tr>
-								<tr>
-									<td class="border border-[#7f7f7f]/20" colspan="5">
-										Schülerzahl </td>
-									<!-- Schülerzahlen -->
-									<td v-for="s in schienen" :key="s.id" class="border border-[#7f7f7f]/20 text-center" >
-										{{ getAnzahlSchuelerSchiene(s.id) }} </td>
-								</tr>
-								<tr>
-									<td class="border border-[#7f7f7f]/20" colspan="5">
-										Kollisionen </td>
-									<!-- Kollisionen -->
-									<td v-for="s in schienen" :key="s.id" class="border border-[#7f7f7f]/20 text-center" >
-										{{ getAnzahlKollisionenSchiene(s.id) }} </td>
-								</tr>
-								<tr>
-									<td class="border border-[#7f7f7f]/20 text-center cursor-pointer" @click="sort_by = sort_by === 'kursart'? 'fach_id':'kursart'">
-										<div class="flex gap-1">Kurs<svws-ui-icon><i-ri-arrow-up-down-line /></svws-ui-icon></div></td>
-									<td>Lehrer</td>
-									<td class="border border-[#7f7f7f]/20 text-center">Koop</td>
-									<td class="border border-[#7f7f7f]/20 text-center">FW</td>
-									<td class="border border-[#7f7f7f]/20 text-center">Diff</td>
-									<!--Schienen-->
-									<s-drag-schiene v-if="allow_regeln" v-for="s in schienen" :key="s.id" :schiene="s" />
-									<td v-else :colspan="schienen.size()" class="text-center">Regeln können nicht in Ergebnissen erstellt werden</td>
-								</tr>
-							</thead>
-							<tbody>
-								<s-fach-kurs v-for="fach in faecher" :key="fach.id" :fach="fach" :halbjahr="app.blockungsauswahl.ausgewaehlt?.gostHalbjahr || 0"/>
-							</tbody>
-						</table>
-					</div>
+					<table class="v-table--complex table--highlight-rows table-auto w-full border-collapse">
+						<thead class="sticky top-0">
+							<tr>
+								<th colspan="5">
+									Schiene </th>
+								<th v-for="s in schienen" :key="s.id" class="text-center" >
+									<div v-if="allow_regeln" class="flex justify-center">
+										<template v-if="s === edit_schienenname">
+											<svws-ui-text-input :modelValue="s.bezeichnung" focus headless style="width: 6rem"
+												@blur="edit_schienenname=undefined"
+												@keyup.enter="edit_schienenname=undefined"
+												@keyup.escape="edit_schienenname=undefined"
+												@update:modelValue="patch_schiene(s, $event)" /> </template>
+										<template v-else>
+											<span class="px-3 underline decoration-dashed underline-offset-2 cursor-text" @click="edit_schienenname = s">{{s.nummer}}</span>
+										</template>
+										<svws-ui-icon v-if="allow_del_schiene(s)" class="text-red-500 cursor-pointer" @click="del_schiene(s)"><i-ri-delete-bin-2-line/></svws-ui-icon>
+									</div>
+									<template v-else>{{s.nummer}}</template>
+								</th>
+								<template v-if="allow_regeln">
+									<th rowspan="4" @click="add_schiene" title="Schiene hinzufügen" class="p-2">
+										<div class="p-2 cursor-pointer rounded bg-primary text-white">+</div></th>
+									<th rowspan="4" class="hidden"/>
+								</template>
+							</tr>
+							<tr>
+								<th colspan="5">
+									Schülerzahl </th>
+								<!-- Schülerzahlen -->
+								<th v-for="s in schienen" :key="s.id" class="text-center" >
+									{{ getAnzahlSchuelerSchiene(s.id) }} </th>
+							</tr>
+							<tr>
+								<th colspan="5">
+									Kollisionen </th>
+								<!-- Kollisionen -->
+								<th v-for="s in schienen" :key="s.id" class="text-center" >
+									{{ getAnzahlKollisionenSchiene(s.id) }} </th>
+							</tr>
+							<tr>
+								<th class="text-center cursor-pointer" @click="sort_by = sort_by === 'kursart'? 'fach_id':'kursart'">
+									<div class="flex gap-1">Kurs<svws-ui-icon><i-ri-arrow-up-down-line /></svws-ui-icon></div></th>
+								<th>Lehrer</th>
+								<th class="text-center">Koop</th>
+								<th class="text-center">FW</th>
+								<th class="text-center">Diff</th>
+								<!--Schienen-->
+								<s-drag-schiene v-if="allow_regeln" v-for="s in schienen" :key="s.id" :schiene="s" />
+								<th v-else :colspan="schienen.size()" class="text-center">Regeln können nicht in Ergebnissen erstellt werden</th>
+							</tr>
+						</thead>
+						<tbody>
+							<s-fach-kurs v-for="fach in faecher" :key="fach.id" :fach="fach" :halbjahr="app.blockungsauswahl.ausgewaehlt?.gostHalbjahr || 0"/>
+						</tbody>
+					</table>
 				</div>
 			</div>
 		</div>

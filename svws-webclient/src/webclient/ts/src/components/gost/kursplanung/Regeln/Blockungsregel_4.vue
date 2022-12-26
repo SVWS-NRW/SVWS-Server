@@ -27,11 +27,11 @@ const schueler: WritableComputedRef<SchuelerListeEintrag> =
 		},
 		set(val: SchuelerListeEintrag) {
 			if (regel.value)
-				regel.value.parameter.set(0, val.id)	
+				regel.value.parameter.set(0, val.id)
 		}
 	})
 
-const kurs: WritableComputedRef<GostBlockungKurs> = 
+const kurs: WritableComputedRef<GostBlockungKurs> =
 	computed({
 		get(): GostBlockungKurs {
 			for (const k of kurse.value)
@@ -41,10 +41,10 @@ const kurs: WritableComputedRef<GostBlockungKurs> =
 		},
 		set(val: GostBlockungKurs) {
 			if (regel.value)
-				regel.value.parameter.set(1, val.id)	
+				regel.value.parameter.set(1, val.id)
 		}
 	})
-	
+
 const regel: ShallowRef<GostBlockungRegel | undefined> = shallowRef(undefined)
 
 const regeln: ComputedRef<GostBlockungRegel[]> =
@@ -96,16 +96,15 @@ const kursbezeichnung = (regel: GostBlockungRegel): String => {
 	return manager.value.getNameOfKurs(kurs.id);
 }
 </script>
-	
+
 <template>
 	<div>
-		<div class="flex justify-between my-4">
-			<h5 class="headline-5">{{ regel_typ.bezeichnung }}</h5>
-			<svws-ui-badge v-if="!regel && allow_regeln" size="tiny" variant="primary" @click="regel_hinzufuegen" class="cursor-pointer">Regel
-				hinzufügen</svws-ui-badge>
+		<div class="flex justify-between items-center" :class="{'mb-2' : regeln.length}">
+			<h5 class="text-sm font-bold leading-loose pr-4 py-1">{{ regel_typ.bezeichnung }}</h5>
+			<svws-ui-button v-if="!regel && allow_regeln" size="small" type="primary" @click="regel_hinzufuegen">Regel hinzufügen</svws-ui-button>
 		</div>
 		<div v-for="r in regeln" :key="r.id" class="flex justify-between">
-			<div class="cursor-pointer" @click="regel = (regel !== r) ? r:undefined" :class="{'bg-slate-200':r===regel}">
+			<div class="cursor-pointer" @click="regel = (regel !== r) ? r:undefined" :class="{'bg-dark-20 font-bold px-1 rounded -ml-1':r===regel}">
 				{{name(r.parameter.get(0).valueOf())}} in
 				{{kursbezeichnung(r)}} fixiert
 			</div>
@@ -113,15 +112,15 @@ const kursbezeichnung = (regel: GostBlockungRegel): String => {
 				<i-ri-delete-bin-2-line />
 			</svws-ui-icon>
 		</div>
-		<div v-if="regel && allow_regeln">
-			<div class="inline-flex items-baseline gap-1">
+		<div v-if="regel && allow_regeln" class="mt-3">
+			<div class="inline-flex items-center gap-2 w-full">
 				Fixiere
 				<parameter-schueler v-model="schueler" />
 				in
 				<parameter-kurs v-model="kurs" />
-				<svws-ui-button type="danger" @click="regel=undefined">
+				<svws-ui-button type="icon" class="hover--danger ml-auto" @click="regel=undefined">
 					<svws-ui-icon> <i-ri-delete-bin-2-line /> </svws-ui-icon> </svws-ui-button>
-				<svws-ui-button type="secondary" @click="speichern">
+				<svws-ui-button type="primary" @click="speichern">
 					<svws-ui-icon> <i-ri-check-line /> </svws-ui-icon> </svws-ui-button>
 			</div>
 		</div>

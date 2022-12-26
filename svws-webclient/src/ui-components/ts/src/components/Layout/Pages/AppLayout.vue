@@ -1,26 +1,42 @@
 <script setup lang='ts'>
+import {ref} from "vue";
+
 const {
 	fullwidthContent = false,
 } = defineProps<{
 	fullwidthContent?: boolean;
 }>();
+
+const contentIsFullscreen = ref(false);
+
+function toggleFullscreen() {
+	contentIsFullscreen.value = !contentIsFullscreen.value;
+	window.localStorage.setItem(
+		"fullscreen",
+		String(contentIsFullscreen.value)
+	);
+};
 </script>
 <template>
 	<div class="app-layout--wrapper">
-		<div v-if="$slots.sidebar" class="app-layout--sidebar-wrapper">
+		<div v-if="$slots.sidebar && !contentIsFullscreen" class="app-layout--sidebar-wrapper">
 			<slot name="sidebar" />
 		</div>
-		<div v-if="$slots.secondaryMenu" class="app-layout--secondary">
+		<div v-if="$slots.secondaryMenu && !contentIsFullscreen" class="app-layout--secondary">
 			<div class="app-layout--secondary-container">
 				<slot name="secondaryMenu" />
 			</div>
 		</div>
 		<main class="app-layout--main">
-			<div class="app-layout--main-container" :class="{'fullwidth-content' : fullwidthContent}">
+			<div class="app-layout--main-container relative" :class="{'fullwidth-content' : fullwidthContent}">
 				<slot name="main" />
+				<!-- Experiment: Fullscreen Button, der den Content-Bereich auf die gesamte Breite des Browsers ausdehnt
+				<svws-ui-button type="transparent" @click="toggleFullscreen" class="cursor-pointer absolute top-4 right-10 text-sm">
+					<svws-ui-icon v-if="!contentIsFullscreen"><i-ri-fullscreen-line/></svws-ui-icon>
+					<svws-ui-icon class="flex" v-if="contentIsFullscreen">Fullscreen deaktivieren  <i-ri-fullscreen-exit-line/></svws-ui-icon>
+				</svws-ui-button>-->
 			</div>
 		</main>
-		<slot name="contentSidebar" />
 	</div>
 </template>
 
@@ -144,6 +160,66 @@ const {
 		svg {
 			@apply w-full h-1/5 text-dark-20;
 			max-width: 20vw;
+		}
+	}
+
+	.app-layout--main-sidebar {
+		@apply fixed top-0 right-0 bottom-0 z-30 p-6 h-full flex flex-col;
+		max-width: 32vw;
+	}
+
+	.app-layout--main-sidebar--container {
+		@apply rounded-xl h-full overflow-hidden flex flex-col;
+		@apply shadow-dark-20 shadow-xl bg-white;
+		@apply border border-dark-20 border-opacity-60;
+	}
+
+	.app-layout--main-sidebar--content {
+		@apply bg-light h-full p-3;
+		@apply overflow-y-auto;
+		-webkit-overflow-scrolling: touch;
+	}
+
+	.app-layout--main-sidebar--trigger {
+		@apply pointer-events-auto;
+		@apply w-full cursor-pointer;
+		@apply p-6 pl-3;
+		@apply text-headline;
+	}
+
+	.sidebar-trigger--text {
+		@apply flex items-center;
+
+		.button--icon {
+			@apply p-1;
+			width: 2.5rem;
+			height: 2.5rem;
+
+			svg {
+				width: 2rem;
+				height: 2rem;
+			}
+		}
+	}
+
+	.app-layout--main-sidebar--collapsed {
+		@apply pointer-events-none;
+		@apply py-4 pr-4 rounded-none;
+
+		.app-layout--main-sidebar--container {
+			@apply shadow-transparent border-none bg-transparent pr-8 pt-8;
+		}
+
+		.app-layout--main-sidebar--trigger {
+			@apply px-6 py-3 rounded-full bg-primary text-white text-base font-bold cursor-pointer;
+		}
+
+		.sidebar-trigger--text {
+			@apply whitespace-nowrap;
+		}
+
+		.app-layout--main-sidebar--content {
+			@apply hidden;
 		}
 	}
 </style>

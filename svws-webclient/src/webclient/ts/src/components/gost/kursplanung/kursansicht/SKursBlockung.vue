@@ -1,6 +1,7 @@
 <template>
-	<tr class="px-2 text-left" :style="{ 'background-color': bgColor }" >
-		<td class="border border-[#7f7f7f]/20 px-2 whitespace-nowrap" :class="{'border-t-2': setze_kursdifferenz}">
+	<tr v-if="setze_kursdifferenz" class="row--kursdifferenz"/>
+	<tr :style="{ 'background-color': bgColor }">
+		<td :class="{'cell--kursdifferenz': setze_kursdifferenz}">
 			<div class="flex gap-1">
 				<template v-if=" kurs === edit_name">
 					{{ kursbezeichnung }}-
@@ -12,7 +13,7 @@
 				</template>
 			</div>
 		</td>
-		<td class="border border-[#7f7f7f]/20 text-center" :class="{'border-t-2': setze_kursdifferenz}">
+		<td class="text-center" :class="{'cell--kursdifferenz': setze_kursdifferenz}">
 			<template v-if="allow_regeln">
 				<svws-ui-multi-select v-model="kurslehrer" class="w-20" autocomplete :item-filter="lehrer_filter" removable headless
 					:items="main.apps.lehrer.auswahl.liste" :item-text="(l: LehrerListeEintrag)=> `${l.kuerzel}`"/>
@@ -21,14 +22,14 @@
 				{{ kurslehrer?.kuerzel }}
 			</template>
 		</td>
-		<td class="border border-[#7f7f7f]/20 text-center" :class="{'border-t-2': setze_kursdifferenz}">
+		<td class="text-center" :class="{'cell--kursdifferenz': setze_kursdifferenz}">
 			<svws-ui-checkbox headless v-if="allow_regeln" v-model="koop"></svws-ui-checkbox>
 			<template v-else>{{koop ? "&#x2713;" : "&#x2717;"}}</template>
 		</td>
 		<template v-if="setze_kursdifferenz && kurs_blockungsergebnis">
-			<td class="border border-[#7f7f7f]/20 text-center border-t-2" :rowspan="kursdifferenz[0] + (kursdetail_anzeige ? 1:0)" >
+			<td class="text-center blockung--kursdifferenz" :rowspan="kursdifferenz[0] + (kursdetail_anzeige ? 1:0)" >
 				{{kursdifferenz[2]}}</td>
-			<td class="border border-[#7f7f7f]/20 text-center border-t-2" :rowspan="kursdifferenz[0] + (kursdetail_anzeige ? 1:0)">{{kursdifferenz[1]}}</td> 
+			<td class="text-center blockung--kursdifferenz" :rowspan="kursdifferenz[0] + (kursdetail_anzeige ? 1:0)">{{kursdifferenz[1]}}</td>
 		</template>
 		<template v-if="!kurs_blockungsergebnis">
 			<td></td> </template>
@@ -36,8 +37,8 @@
 			v-for="(schiene) in schienen"
 			v-slot="{ active }"
 			:key="schiene.id"
-			class="border border-[#7f7f7f]/20 text-center"
-			:class="{'border-t-2': setze_kursdifferenz, 'bg-yellow-200': drag_data.kurs?.id === kurs.id && drag_data.schiene?.id !== schiene.id, 'bg-slate-500': schiene_gesperrt(schiene)}"
+			class="text-center"
+			:class="{'cell--kursdifferenz': setze_kursdifferenz, 'bg-yellow-200': drag_data.kurs?.id === kurs.id && drag_data.schiene?.id !== schiene.id, 'bg-slate-500': schiene_gesperrt(schiene)}"
 			tag="td"
 			@drop="drop_aendere_kursschiene($event, schiene)"
 			>
@@ -45,7 +46,7 @@
 				:key="kurs.id"
 				tag="div"
 				:data="{kurs, schiene}"
-				class="select-none whitespace-nowrap leading-5"
+				class="select-none leading-5"
 				:draggable="true"
 				:class="{'bg-slate-500': schiene_gesperrt(schiene)}"
 				:style="{ 'background-color': schiene_gesperrt(schiene)? '':bgColor}"
@@ -69,7 +70,7 @@
 			</template>
 		</drop-data>
 		<template v-else v-for="schiene in schienen" :key="schiene.nummer">
-			<td class="border border-[#7f7f7f]/20 text-center leading-5 select-none whitespace-nowrap" :class="{ 'border-t-2': setze_kursdifferenz }" >
+			<td class="text-center leading-5 select-none" :class="{ 'cell--kursdifferenz': setze_kursdifferenz }" >
 				<svws-ui-badge
 					v-if="kurs_schiene_zugeordnet(schiene)"
 					size="tiny" :variant="selected_kurs?'primary':'highlight'" class="cursor-pointer"
@@ -83,13 +84,13 @@
 			</td>
 		</template>
 		<template v-if="allow_regeln">
-			<td class="border border-[#7f7f7f]/20 text-center leading-5  whitespace-nowrap w-2" :class="{'border-t-2': setze_kursdifferenz}" @click="toggle_kursdetail_anzeige">
+			<td class="text-center leading-5 w-2" :class="{'cell--kursdifferenz': setze_kursdifferenz}" @click="toggle_kursdetail_anzeige">
 				<div v-if="kursdetail_anzeige" class="cursor-pointer">V</div>
 				<div v-else class="cursor-pointer">A</div>
 			</td>
 		</template>
 		<!-- <template v-else>
-			<td class="bg-white" :class="{'border-t-2': setze_kursdifferenz}"></td>
+			<td class="bg-white" :class="{'cell--kursdifferenz': setze_kursdifferenz}"></td>
 		</template> -->
 		<!-- <td class="border-none bg-white"></td> -->
 	</tr>
@@ -203,7 +204,7 @@ const koop: WritableComputedRef<boolean> =
 	},
 	set(value: boolean) {
 		const kurs = app.dataKursblockung.datenmanager?.getKurs(props.kurs.id)
-		if (!kurs) 
+		if (!kurs)
 			return;
 		app.dataKursblockung.patch_kurs(kurs.id, { istKoopKurs: Boolean(value) });
 		kurs.istKoopKurs = value;
@@ -216,7 +217,7 @@ const suffix: WritableComputedRef<string> =
 	},
 	set(value: string) {
 		const kurs = app.dataKursblockung.datenmanager?.getKurs(props.kurs.id)
-		if (!kurs) 
+		if (!kurs)
 			return;
 		app.dataKursblockung.patch_kurs(kurs.id, { suffix: String(value) });
 	}});
@@ -370,7 +371,7 @@ const schiene_gesperrt = (schiene: GostBlockungsergebnisSchiene): boolean => {
 	for (const regel of regeln.value) {
 		const { nummer } = ermittel_parent_schiene(schiene)
 		if (regel.typ === GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS.typ
-			&& regel.parameter.get(0) !== props.kurs.kursart 
+			&& regel.parameter.get(0) !== props.kurs.kursart
 			&& (nummer >= regel.parameter.get(1) && nummer <= regel.parameter.get(2)))
 				return true;
 		else if (regel.typ === GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS.typ

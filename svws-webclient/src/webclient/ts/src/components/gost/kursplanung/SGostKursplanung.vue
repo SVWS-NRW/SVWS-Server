@@ -3,17 +3,28 @@
 		v-if="visible"
 		class="flex"
 	>
-		<div class="flex flex-row flex-wrap gap-4">
+		<div class="flex flex-row gap-4">
 			<s-card-gost-kursansicht />
 			<s-card-gost-umwahlansicht class="grow"/>
 		</div>
-		<div class="flex min-h-full flex-col ml-auto bg-slate-200 rounded-l-lg" :class="{ 'w-24': collapsed }">
-			<div class="relative pl-2 flex flex-col gap-2">
-				<svws-ui-button class="flex justify-center w-20 h-7 rounded-full text-headline-4 text-black translate-y-1/2 transform" @click="onToggleRegeln">
-					Regeln <svws-ui-icon> <i-ri-arrow-left-s-line v-if="collapsed" /> <i-ri-arrow-right-s-line v-else /> </svws-ui-icon> </svws-ui-button>
-			</div>
-			<div class="flex flex-col py-4">
-				<s-card-gost-regelansicht v-if="!collapsed && active_panel==='regeln'"/>
+		<div v-if="allow_regeln" class="app-layout--main-sidebar" :class="{ 'app-layout--main-sidebar--collapsed': collapsed }">
+			<div class="app-layout--main-sidebar--container">
+				<div class="app-layout--main-sidebar--trigger" @click="onToggle">
+					<div class="sidebar-trigger--text">
+						<svws-ui-button type="icon" class="mr-1 p-[0.1em]" v-if="!collapsed">
+							<svws-ui-icon>
+								<i-ri-close-line/>
+							</svws-ui-icon>
+						</svws-ui-button>
+						<svws-ui-icon v-if="collapsed" class="mr-2">
+							<i-ri-equalizer-line/>
+						</svws-ui-icon>
+						<span>Regeln zur Blockung</span>
+					</div>
+				</div>
+				<div class="app-layout--main-sidebar--content">
+					<s-card-gost-regelansicht v-if="!collapsed && active_panel==='regeln'"/>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -29,7 +40,7 @@
 
 	const main: Main = injectMainApp();
 	const app = main.apps.gost;
-	
+
 	const collapsed: Ref<boolean> = ref(true);
 	const active_panel: Ref<'regeln'> = ref('regeln')
 
@@ -50,4 +61,9 @@
 	function onToggleRegeln() {
 		onToggle();
 	}
+
+	const allow_regeln: ComputedRef<boolean> =
+		computed(()=> app.blockungsergebnisauswahl.liste.length === 1);
+
+	console.log(allow_regeln)
 </script>

@@ -54,8 +54,8 @@ const lehrer_regel: ComputedRef<GostBlockungRegel | undefined> =
 
 <template>
 	<div>
-		<div class="flex justify-between my-4">
-			<h5 class="headline-5">{{ regel_typ.bezeichnung }}</h5>
+		<div class="flex justify-between items-center" :class="{'mb-2' : lehrer_regel}">
+			<h5 class="text-sm font-bold leading-loose pr-4 py-1">{{ regel_typ.bezeichnung }}</h5>
 			<svws-ui-checkbox v-model="regel" :disabled="!allow_regeln"/>
 		</div>
 		<div v-if="lehrer_regel">

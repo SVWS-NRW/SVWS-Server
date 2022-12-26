@@ -3,6 +3,7 @@ type ButtonType =
 	"primary" |
 	"secondary" |
 	"danger" |
+	"icon" |
 	"transparent";
 type ButtonSize =
 	'small' |
@@ -65,6 +66,10 @@ class="button" :class="{
 	@apply text-white;
 }
 
+.button--primary:hover {
+	@apply bg-light text-primary;
+}
+
 .button--primary:focus {
 	@apply ring-primary ring-opacity-50;
 }
@@ -116,9 +121,6 @@ class="button" :class="{
 .button--normal {
 	@apply px-5 py-2;
 }
-.button--small {
-	@apply px-1 py-0;
-}
 
 .button:disabled {
 	@apply bg-disabled;
@@ -154,5 +156,15 @@ class="button" :class="{
 		width: 1.2rem;
 		height: 1.2rem;
 	}
+}
+
+.hover--danger:hover {
+	@apply text-error;
+}
+
+.button--small {
+	border-width: thin;
+	font-size: .833rem;
+	padding: .1em .5em .15em;
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
 	<tr
 		v-if="visible"
-		class="cursor-pointer border border-[#7f7f7f]/20 px-2 text-left"
+		class="cursor-pointer px-2 text-left"
 		:class="{ 'bg-red-400': (belegung === undefined) }"
 	>
 		<drag-data
@@ -78,7 +78,7 @@
 
 	const bgColor: ComputedRef<string> =
 		computed(() => {
-			if (belegung.value) 
+			if (belegung.value)
 				return "gray"
 			const zulfach = ZulaessigesFach.getByKuerzelASD(gostfach.value?.kuerzel || null);
 			if (!zulfach)
@@ -103,7 +103,7 @@
 		computed(()=> app.blockungsergebnisauswahl.ausgewaehlt?.istVorlage || false)
 
 	function get_kurs_name(): String {
-		if (kursid.value === undefined) 
+		if (kursid.value === undefined)
 			return manager.value?.getFach(props.fach.fachID).kuerzelAnzeige + "-" + kursart.value || "?";
 		return manager.value?.getOfKursName(kursid.value) || "";
 	}
@@ -111,7 +111,7 @@
 	function drag_started(e: DragEvent) {
 		const transfer = e.dataTransfer;
 		const data = JSON.parse(transfer?.getData('text/plain') || "") as { id: number, fachID: number, kursart: number } | undefined;
-		if (data === undefined) 
+		if (data === undefined)
 			return;
 		drag_data.value = data
 	}

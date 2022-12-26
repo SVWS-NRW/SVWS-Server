@@ -1,6 +1,6 @@
 <template>
 	<tr
-		class="cursor-pointer border border-[#7f7f7f]/20 px-2 text-left"
+		class="cursor-pointer px-2 text-left"
 		:class="{ 'bg-red-400': kollision && !nichtwahl, 'bg-orange-400': nichtwahl && !kollision, 'bg-gradient-to-r':nichtwahl && kollision,'from-red-400': nichtwahl && kollision, 'to-orange-400': nichtwahl && kollision}"
 	>
 		<td class="px-2">
@@ -25,7 +25,7 @@
 
 	const main: Main = injectMainApp();
 	const app = main.apps.gost;
-	
+
 	const manager: ComputedRef<GostBlockungsergebnisManager | undefined> =
 		computed(() => app.dataKursblockung.ergebnismanager);
 
@@ -39,7 +39,7 @@
 			return manager.value.getOfKursSchuelermengeMitKollisionen(kursid).contains(schueler.id);
 		});
 
-	const nichtwahl: ComputedRef<boolean> = 
+	const nichtwahl: ComputedRef<boolean> =
 		computed(() => {
 			if (manager.value === undefined)
 				return false;

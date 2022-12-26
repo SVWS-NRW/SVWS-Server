@@ -2,11 +2,11 @@
 	<template v-for="kursart in GostKursart.values()" >
 		<template v-if="kurszahlen.get(kursart.id) === 0 && wahlen.get(kursart.id) && allow_regeln">
 			<tr class="text-left" :style="{ 'background-color': bgColor }">
-				<td class="border border-[#7f7f7f]/20 px-2 whitespace-nowrap border-t-2" colspan="3">
+				<td colspan="3">
 					{{ fach.kuerzel }}-{{ kursart.kuerzel }} </td>
-				<td class="px-2 border-y border-[#7f7f7f]/20 border-t-2" colspan="1">
+				<td class="text-center" colspan="1">
 					{{ wahlen.get(kursart.id) }} </td>
-				<td class="border border-[#7f7f7f]/20 px-2 border-t-2" :colspan="schienen.size()+2">
+				<td :colspan="schienen.size()+2">
 					<svws-ui-button class="px-12" size="small" @click="add_kurs(kursart)">Kurs hinzufügen</svws-ui-button> </td>
 			</tr>
 		</template>
