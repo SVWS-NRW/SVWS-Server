@@ -1,57 +1,58 @@
-import { RouteLocationNormalizedLoaded, RouteRecordRaw, useRoute } from "vue-router";
-import { injectMainApp } from "~/apps/Main";
-import { routeAppMeta, RouteAppMeta } from "~/router/RouteUtils";
-import { routePropsGostAuswahl } from "~/router/apps/RouteGost";
-import { RouteGostKlausurplanungKlausurdaten } from "./klausurplanung/RouteGostKlausurplanungKlausurdaten";
-import { RouteGostKlausurplanungSchienen } from "./klausurplanung/RouteGostKlausurplanungSchienen";
-import { RouteGostKlausurplanungKalender } from "./klausurplanung/RouteGostKlausurplanungKalender";
-import { RouteGostKlausurplanungPlanung } from "./klausurplanung/RouteGostKlausurplanungPlanung";
-import { RouteGostKlausurplanungKonflikte } from "./klausurplanung/RouteGostKlausurplanungKonflikte";
-import { ref } from "vue";
-
-const ROUTE_NAME: string = "gost_klausurplanung";
-
-export const RouteGostKlausurplanungChildren: RouteRecordRaw[] = [
-	RouteGostKlausurplanungKlausurdaten,
-	RouteGostKlausurplanungSchienen,
-	RouteGostKlausurplanungKalender,
-	RouteGostKlausurplanungPlanung,
-	RouteGostKlausurplanungKonflikte
-];
+import { RouteRecordRaw, useRouter } from "vue-router";
+import { mainApp } from "~/apps/Main";
+import { RouteNode } from "~/router/RouteNode";
+import { routeGost, RouteGost } from "~/router/apps/RouteGost";
+import { routeGostKlausurplanungKlausurdaten } from "./klausurplanung/RouteGostKlausurplanungKlausurdaten";
+import { routeGostKlausurplanungSchienen } from "./klausurplanung/RouteGostKlausurplanungSchienen";
+import { routeGostKlausurplanungKalender } from "./klausurplanung/RouteGostKlausurplanungKalender";
+import { routeGostKlausurplanungPlanung } from "./klausurplanung/RouteGostKlausurplanungPlanung";
+import { routeGostKlausurplanungKonflikte } from "./klausurplanung/RouteGostKlausurplanungKonflikte";
+import { computed, WritableComputedRef } from "vue";
 
 
-export const RouteGostKlausurplanung : RouteRecordRaw = {
-	name: ROUTE_NAME,
-	path: "klausurplanung",
-	component: () => import("~/components/gost/klausurplanung/SGostKlausurplanung.vue"),
-	props: (route) => routePropsGostAuswahl(route, injectMainApp().apps.gost.auswahl),
-	meta: <RouteAppMeta<unknown, unknown>> {
-		auswahl: () => {},
-		hidden: () => {
-			const route = useRoute();
-			return route.params.abiturjahr === "-1";
-		},
-		redirect: ref(RouteGostKlausurplanungKlausurdaten),
-		text: "Klausurplanung"
-	},
-	redirect: to => {
-		return to.path + "/" + routeAppMeta(RouteGostKlausurplanung)?.redirect.value.path;
-	},
-	children: RouteGostKlausurplanungChildren
-};
+const SGostKlausurplanung = () => import("~/components/gost/klausurplanung/SGostKlausurplanung.vue");
 
+export class RouteGostKlausurplanung extends RouteNode<unknown> {
 
-export function routeGostKlausurplanungSetRedirect(route : RouteLocationNormalizedLoaded) {
-	const meta = RouteGostKlausurplanung.meta as RouteAppMeta<unknown, unknown>;
-	if ((RouteGostKlausurplanung.children === undefined) || (meta === undefined))
-		return;
-	for (var child of RouteGostKlausurplanung.children) {
-		if (route.name === child.name) {
-			meta.redirect.value = child;
-			return;
+	protected defaultChildNode = routeGostKlausurplanungKlausurdaten;
+
+	public constructor() {
+		super("gost_klausurplanung", "klausurplanung", SGostKlausurplanung);
+		super.propHandler = (route) => RouteGost.getPropsByAuswahlAbiturjahr(route, mainApp.apps.gost.auswahl);
+		super.text = "Klausurplanung";
+		this.isHidden = () => {
+			return (routeGost.data.item === undefined) || (routeGost.data.item.abiturjahr === -1);
 		}
+		super.children = [
+			routeGostKlausurplanungKlausurdaten,
+			routeGostKlausurplanungSchienen,
+			routeGostKlausurplanungKalender,
+			routeGostKlausurplanungPlanung,
+			routeGostKlausurplanungKonflikte
+		];
 	}
-	meta.redirect.value = RouteGostKlausurplanungKlausurdaten;
+
+    /**
+     * TODO
+     * 
+     * @returns 
+     */
+    public getChildRouteSelector() {
+        const router = useRouter();
+		const self = this;
+        const selectedRoute: WritableComputedRef<RouteRecordRaw> = computed({
+            get(): RouteRecordRaw {
+                return self.selectedChildRecord || self.defaultChildNode.record;
+            },
+            set(value: RouteRecordRaw) {
+                self.selectedChildRecord = value;
+				const abiturjahr = (routeGost.data.item === undefined) ? undefined : "" + routeGost.data.item.abiturjahr;
+                router.push({ name: value.name, params: { abiturjahr: abiturjahr } });
+            }
+        });
+        return selectedRoute;
+    }
+
 }
 
-
+export const routeGostKlausurplanung = new RouteGostKlausurplanung();

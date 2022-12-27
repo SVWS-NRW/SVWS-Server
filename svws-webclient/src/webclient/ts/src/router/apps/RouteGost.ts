@@ -1,130 +1,156 @@
 import { GostJahrgang } from "@svws-nrw/svws-core-ts";
-import { computed, ref, WritableComputedRef } from "vue";
-import { RouteLocationNormalized, RouteLocationNormalizedLoaded, RouteRecordRaw, useRoute, useRouter } from "vue-router";
-import { BaseList } from "~/apps/BaseList";
+import { computed, WritableComputedRef } from "vue";
+import { RouteLocationNormalized, RouteRecordRaw, useRoute, useRouter } from "vue-router";
 import { DataGostJahrgang } from "~/apps/gost/DataGostJahrgang";
-import { injectMainApp } from "~/apps/Main";
-import { routeAppData, routeAppMeta, RouteAppMeta } from "~/router/RouteUtils";
-import { RouteGostFachwahlen } from "./gost/RouteGostFachwahlen";
-import { RouteGostFaecher } from "./gost/RouteGostFaecher";
-import { RouteGostJahrgangsdaten } from "./gost/RouteGostJahrgangsdaten";
-import { RouteGostKlausurplanung } from "./gost/RouteGostKlausurplanung";
-import { RouteGostKursplanung } from "./gost/RouteGostKursplanung";
+import { ListGost } from "~/apps/gost/ListGost";
+import { mainApp } from "~/apps/Main";
+import { RouteNodeListView } from "../RouteNodeListView";
+import { routeGostFachwahlen } from "./gost/RouteGostFachwahlen";
+import { routeGostFaecher } from "./gost/RouteGostFaecher";
+import { routeGostJahrgangsdaten } from "./gost/RouteGostJahrgangsdaten";
+import { routeGostKlausurplanung } from "./gost/RouteGostKlausurplanung";
+import { routeGostKursplanung } from "./gost/RouteGostKursplanung";
 
-const ROUTE_NAME: string = "gost";
-
-export const RouteGostChildren: RouteRecordRaw[] = [
-	RouteGostJahrgangsdaten,
-	RouteGostFaecher,
-	RouteGostFachwahlen,
-	RouteGostKursplanung,
-	RouteGostKlausurplanung
-];
-
-
-export interface RouteDataGost {
-	item: GostJahrgang | undefined;
-	jahrgangsdaten: DataGostJahrgang;
+export class RouteDataGost {
+	item: GostJahrgang | undefined = undefined;
+	jahrgangsdaten: DataGostJahrgang = new DataGostJahrgang();
 }
 
-export const RouteGost : RouteRecordRaw = {
-	name: "gost",
-	path: "/gost/:abiturjahr(-?\\d+)?",
-	components: {
-		default: () => import("~/components/gost/SGostApp.vue"),
-		liste: () => import("~/components/gost/SGostAuswahl.vue")
-	},
-	props: {
-		default: (route) => {
-			const prop = routePropsGostAuswahl(route, injectMainApp().apps.gost.auswahl);
-			const data: RouteDataGost = routeAppData(RouteGost);
-			if (prop.item !== data.item) {
-				if (prop.item === undefined) {
-					data.item = undefined;
-					data.jahrgangsdaten.unselect();
-				} else {
-					data.item = prop.item as GostJahrgang;
-					data.jahrgangsdaten.select(data.item);
-				}
-			}
-			return prop;
-		},
-		liste: (route) => routePropsGostAuswahl(route, injectMainApp().apps.gost.auswahl)
-	},
-	meta: <RouteAppMeta<GostJahrgang | undefined, unknown>> {
-		auswahl: () => routeGostAuswahl(ROUTE_NAME, injectMainApp().apps.gost.auswahl),
-		hidden: () => false,
-		redirect: ref(RouteGostJahrgangsdaten),
-		data: <RouteDataGost>{
-			item: undefined,
-			jahrgangsdaten: new DataGostJahrgang()
+const SGostAuswahl = () => import("~/components/gost/SGostAuswahl.vue")
+const SGostApp = () => import("~/components/gost/SGostApp.vue")
+
+
+export class RouteGost extends RouteNodeListView<GostJahrgang, RouteDataGost> {
+
+	protected defaultChildNode = routeGostJahrgangsdaten;
+
+	public constructor() {
+		super("gost", "/gost/:abiturjahr(-?\\d+)?", SGostAuswahl, SGostApp, new RouteDataGost());
+		super.propHandler = (route) => this.getProps(route);
+		super.text = "Oberstufe";
+        super.setView("liste", SGostAuswahl, (route) => RouteGost.getPropsByAuswahlAbiturjahr(route, mainApp.apps.gost.auswahl));
+		super.children = [
+			routeGostJahrgangsdaten,
+			routeGostFaecher,
+			routeGostFachwahlen,
+			routeGostKursplanung,
+			routeGostKlausurplanung
+		];
+	}
+
+    /**
+     * TODO see RouterManager - global hook
+     * 
+     * @param to    die Ziel-Route
+     * @param from   die Quell-Route
+     */
+    public beforeEach(to: RouteLocationNormalized, from: RouteLocationNormalized): any {
+		if ((to.name?.toString() === this.name) && (to.params.abiturjahr === undefined)) {
+			const redirect_name: string = (this.selectedChild === undefined) ? this.defaultChildNode.name : this.selectedChild.name;
+			return { name: redirect_name, params: { abiturjahr: mainApp.apps.gost.auswahl.liste.at(0)?.abiturjahr }};
 		}
-	},
-	redirect: to => {
-		return to.path + "/" + routeAppMeta(RouteGost)?.redirect.value.path;
-	},
-	children: RouteGostChildren
-}
+        return true;
+    }
 
-
-export function routeGostSetRedirect(route : RouteLocationNormalizedLoaded) {
-	const meta = RouteGost.meta as RouteAppMeta<GostJahrgang | undefined, RouteDataGost>;
-	if ((RouteGost.children === undefined) || (meta === undefined))
-		return;
-	for (var child of RouteGost.children) {
-		if (route.name === child.name) {
-			meta.redirect.value = child;
+	protected onSelect(item?: GostJahrgang) {
+		if (item === this.data.item)
 			return;
+		if (item === undefined) {
+			this.data.item = undefined;
+			this.data.jahrgangsdaten.unselect();
+		} else {
+			this.data.item = item;
+			this.data.jahrgangsdaten.select(this.data.item);
 		}
 	}
-	meta.redirect.value = RouteGostJahrgangsdaten;
+
+    protected getAuswahlComputedProperty(): WritableComputedRef<GostJahrgang | undefined> {
+		return this.getSelectorByAbiturjahr(mainApp.apps.gost.auswahl);
+	}
+
+    /**
+     * Eine Hilfs-Methode zum Erzeugen der Properties "id" und "item" zu einer Route bei
+     * der Auswahl-Liste des Abiturjahrgangs.
+     * 
+     * @param route     die aktuelle Route, für die die Properties erzeugt werden sollen
+     * @param auswahl   die Liste der Auswahl
+     * 
+     * @returns das Objekt mit den Werten für die Properties
+     */
+    public static getPropsByAuswahlAbiturjahr(route: RouteLocationNormalized, auswahl: ListGost) {
+        if ((auswahl === undefined) || (route.params.abiturjahr === undefined))
+            return { id: undefined, item: undefined, routename: route.name?.toString() };
+        const abiturjahr = parseInt(route.params.abiturjahr as string);
+        const item = auswahl.liste.find(s => s.abiturjahr === abiturjahr);
+        return { id: abiturjahr, item: item, routename: route.name?.toString() };
+    }
+
+	public getProps(to: RouteLocationNormalized): Record<string, any> {
+		const prop = RouteGost.getPropsByAuswahlAbiturjahr(to, mainApp.apps.gost.auswahl);
+		this.onSelect(prop.item as GostJahrgang | undefined);
+		return prop;
+	}
+
+	
+    /**
+     * TODO
+     * 
+     * @returns 
+     */
+    public getChildRouteSelector() {
+        const router = useRouter();
+        const self = this;
+        const selectedRoute: WritableComputedRef<RouteRecordRaw> = computed({
+            get(): RouteRecordRaw {
+                return self.selectedChildRecord || self.defaultChildNode.record;
+            },
+            set(value: RouteRecordRaw) {
+                self.selectedChildRecord = value;
+				const abiturjahr = (self.data.item === undefined) ? undefined : "" + self.data.item.abiturjahr;
+                router.push({ name: value.name, params: { abiturjahr: abiturjahr } });
+            }
+        });
+        return selectedRoute;
+    }
+
+    /**
+     * Eine Hilfs-Methode zum Erzeugen der beschreibaren Computed-Property für die Auswahl einer 
+     * Route eines Routen-Eintrags in der zugehörigen vue-Komponente.
+     * 
+     * @param auswahl   die Liste der Auswahl
+     * 
+     * @returns die Computed-Property
+     */
+    public getSelectorByAbiturjahr(auswahl: ListGost) : WritableComputedRef<GostJahrgang | undefined> {
+        const router = useRouter();
+        const route = useRoute();
+        const name: string = this.name;
+        const redirect_name: string = (this.selectedChild === undefined) ? name : this.selectedChild.name;
+
+        const selected = computed({
+            get(): GostJahrgang | undefined {
+                if (route.params.abiturjahr === undefined)
+                    return undefined;
+                let tmp = auswahl.ausgewaehlt;
+                if ((tmp === undefined) || (tmp.abiturjahr.toString() !== route.params.abiturjahr))
+                    tmp = auswahl.liste.find(s => s.abiturjahr.toString() === route.params.abiturjahr);
+                return tmp;
+            },
+            set(value: GostJahrgang | undefined) {
+                auswahl.ausgewaehlt = value;
+                const from_name = route.name?.toString() || "";
+                if ((from_name !== name) && from_name?.startsWith(name)) {  // TODO Ergänze Methode bei RouteNode isNested und nutze diese 
+                    const params = {...route.params};
+                    params.abiturjahr = "" + value?.abiturjahr;
+                    router.push({ name: from_name, params: params });
+                } else {
+                    router.push({ name: redirect_name, params: { abiturjahr: value?.abiturjahr } });
+                }
+            }
+        });
+        return selected;
+    }
+
 }
 
-
-/**
- * Eine Methode zum Erzeugen der Properties "abiturjahr" und "item" zu einer Route bei 
- * der Gost-Auswahl-Liste, welche ein numerisches abiturjahr-Attribut hat.
- * 
- * @param route     die aktuelle Route, für die die Properties erzeugt werden sollen
- * @param auswahl   die Liste der Auswahl (siehe auch BaseList)
- * 
- * @returns das Objekt mit den Werten für die Properties
- */
-export function routePropsGostAuswahl<TAuswahl extends BaseList<{ abiturjahr: number }, unknown>>(route: RouteLocationNormalized, auswahl: TAuswahl) {
-	if ((auswahl === undefined) || (route.params.abiturjahr === undefined))
-		return { id: undefined, item: undefined, routename: route.name?.toString() };
-	const abiturjahr = parseInt(route.params.abiturjahr as string);
-	const item = auswahl.liste.find(s => s.abiturjahr === abiturjahr);
-	return { id: abiturjahr, item: item, routename: route.name?.toString() };
-}
-
-
-/**
- * Eine Methode für Routen-Einträge zum Erzeugen der Computed-Property bei der
- * Gost-Auswahl einer Route eines Routen-Eintrags.
- * 
- * @param name      der Name des Routen-Eintrags, so dass dieser beim Setzen einer Route aktualisiert werden kann
- * @param auswahl   die Liste der Auswahl (siehe auch BaseList)
- * 
- * @returns die Computed-Property
- */
-function routeGostAuswahl<TItem extends { abiturjahr: number }, TAuswahl extends BaseList<TItem, unknown>>(name: string, auswahl: TAuswahl) : WritableComputedRef<TItem | undefined> {
-	const router = useRouter();
-	const route = useRoute();
-
-	const selected = computed({
-		get(): TItem | undefined {
-			if (route.params.abiturjahr === undefined)
-				return undefined;
-			let tmp = auswahl.ausgewaehlt;
-			if ((tmp === undefined) || (tmp.abiturjahr.toString() !== route.params.abiturjahr))
-				tmp = auswahl.liste.find(s => s.abiturjahr.toString() === route.params.abiturjahr);
-			return tmp;
-		},
-		set(value: TItem | undefined) {
-			auswahl.ausgewaehlt = value;
-			router.push({ name: name, params: { abiturjahr: value?.abiturjahr } });
-		}
-	});
-	return selected;
-}
+export const routeGost = new RouteGost();

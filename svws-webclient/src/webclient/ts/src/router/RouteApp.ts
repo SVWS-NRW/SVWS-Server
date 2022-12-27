@@ -10,7 +10,7 @@ import { routeSchueler } from "~/router/apps/RouteSchueler";
 import { routeLehrer } from "~/router/apps/RouteLehrer";
 import { RouteKlassen } from "~/router/apps/RouteKlassen";
 import { RouteKurse } from "~/router/apps/RouteKurse";
-import { RouteGost } from "~/router/apps/RouteGost";
+import { routeGost } from "~/router/apps/RouteGost";
 import { RouteStatistik } from "~/router/apps/RouteStatistik";
 
 import SApp from "~/components/SApp.vue";
@@ -31,7 +31,7 @@ export const RouteApp : RouteRecordRaw = {
         routeLehrer.record,
         RouteKlassen,
         RouteKurse,
-        RouteGost,
+        routeGost.record,
         RouteStatistik
     ],
     meta: {

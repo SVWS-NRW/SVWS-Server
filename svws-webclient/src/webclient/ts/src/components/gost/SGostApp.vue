@@ -6,7 +6,7 @@
 				<br/>
 				<span class="opacity-50">{{ jahrgang }}</span>
 			</svws-ui-header>
-			<svws-ui-router-tab-bar :routes="RouteGostChildren" :hidden="routeAppAreHidden(RouteGostChildren)" v-model="selectedRoute">
+			<svws-ui-router-tab-bar :routes="routeGost.children_records" :hidden="routeGost.children_hidden" v-model="selectedRoute">
 				<router-view />
 			</svws-ui-router-tab-bar>
 		</div>
@@ -27,37 +27,13 @@
 <script setup lang="ts">
 
 	import { GostJahrgang } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, onMounted, WritableComputedRef } from "vue";
-	import { RouteRecordRaw, useRoute, useRouter } from "vue-router";
+	import { computed, ComputedRef } from "vue";
 
-	import { injectMainApp } from "~/apps/Main";
-	import { RouteGost, RouteGostChildren, routeGostSetRedirect } from "~/router/apps/RouteGost";
-	import { routeAppMeta, routeAppAreHidden } from "~/router/RouteUtils";
-
-	const app = injectMainApp().apps.gost;
+	import { routeGost } from "~/router/apps/RouteGost";
 
 	const props = defineProps<{ id?: number; item?: GostJahrgang, routename: string }>();
 
-	// Initialisiere die Sub-Routen
-	const router = useRouter();
-	const route = useRoute();
-	const redirect = routeAppMeta(RouteGost).redirect;
-	routeGostSetRedirect(route);
-	
-	onMounted(() => {
-		if (((route.params.id === undefined) || (route.params.id === "")) && (app.auswahl.liste.length > 0))
-			router.push({ name: redirect.value.name?.toString(), params: { abiturjahr: app.auswahl.liste[0].abiturjahr } });
-	});
-
-	const selectedRoute: WritableComputedRef<RouteRecordRaw> = computed({
-		get(): RouteRecordRaw {
-			return redirect.value;
-		},
-		set(value: RouteRecordRaw) {
-			redirect.value = value;
-			router.push({ name: value.name, params: { abiturjahr: props.id } });
-		}
-	});
+	const selectedRoute = routeGost.getChildRouteSelector();
 
 
 	const jahrgang: ComputedRef<string | undefined> = computed(() => {

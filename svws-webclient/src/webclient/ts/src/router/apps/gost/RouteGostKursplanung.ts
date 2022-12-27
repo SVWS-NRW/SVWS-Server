@@ -1,21 +1,20 @@
-import { RouteRecordRaw, useRoute } from "vue-router";
-import { injectMainApp } from "~/apps/Main";
-import { RouteAppMeta } from "~/router/RouteUtils";
-import { routePropsGostAuswahl } from "~/router/apps/RouteGost";
+import { mainApp } from "~/apps/Main";
+import { RouteNode } from "~/router/RouteNode";
+import { routeGost, RouteGost } from "~/router/apps/RouteGost";
 
-const ROUTE_NAME: string = "gost_kursplanung";
+const SGostKursplanung = () => import("~/components/gost/kursplanung/SGostKursplanung.vue");
 
-export const RouteGostKursplanung : RouteRecordRaw = {
-	name: ROUTE_NAME,
-	path: "kursplanung",
-	component: () => import("~/components/gost/kursplanung/SGostKursplanung.vue"),
-	props: (route) => routePropsGostAuswahl(route, injectMainApp().apps.gost.auswahl),
-	meta: <RouteAppMeta<unknown, unknown>> {
-		auswahl: () => {},
-		hidden: () => {
-			const route = useRoute();
-			return route.params.abiturjahr === "-1";
-		},
-		text: "Kursplanung"
+export class RouteGostKursplanung extends RouteNode<unknown> {
+
+	public constructor() {
+		super("gost_kursplanung", "kursplanung", SGostKursplanung);
+		super.propHandler = (route) => RouteGost.getPropsByAuswahlAbiturjahr(route, mainApp.apps.gost.auswahl);
+		super.text = "Kursplanung";
+		this.isHidden = () => {
+			return (routeGost.data.item === undefined) || (routeGost.data.item.abiturjahr === -1);
+		}
 	}
-};
+
+}
+
+export const routeGostKursplanung = new RouteGostKursplanung();

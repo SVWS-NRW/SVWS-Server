@@ -130,12 +130,11 @@
 	import { App } from "~/apps/BaseApp";
 	import { GOST_CREATE_BLOCKUNG_SYMBOL } from "~/apps/core/LoadingSymbols";
 	import { injectMainApp, Main } from "~/apps/Main";
-	import { RouteGost } from "~/router/apps/RouteGost";
-	import { routeAppAuswahl } from "~/router/RouteUtils";
+	import { routeGost } from "~/router/apps/RouteGost";
 
 	const props = defineProps<{ id?: number; item?: GostJahrgang, routename: string }>();
 
-	const selected: WritableComputedRef<GostJahrgang | undefined> = routeAppAuswahl(RouteGost);
+	const selected: WritableComputedRef<GostJahrgang | undefined> = routeGost.auswahl;
 	const main: Main = injectMainApp();
 	const app = main.apps.gost;
 	const appJahrgaenge = main.apps.jahrgaenge;

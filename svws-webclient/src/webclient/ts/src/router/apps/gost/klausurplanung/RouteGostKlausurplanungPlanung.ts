@@ -1,18 +1,18 @@
-import { RouteRecordRaw, useRoute } from "vue-router";
-import { injectMainApp } from "~/apps/Main";
-import { RouteAppMeta } from "~/router/RouteUtils";
-import { routePropsGostAuswahl } from "~/router/apps/RouteGost";
+import { mainApp } from "~/apps/Main";
+import { RouteNode } from "~/router/RouteNode";
+import { RouteGost } from "~/router/apps/RouteGost";
 
-const ROUTE_NAME: string = "gost_klausurplanung_planung";
+const SGostKlausurplanungPlanung = () => import("~/components/gost/klausurplanung/SGostKlausurplanungPlanung.vue");
 
-export const RouteGostKlausurplanungPlanung : RouteRecordRaw = {
-	name: ROUTE_NAME,
-	path: "planung",
-	component: () => import("~/components/gost/klausurplanung/SGostKlausurplanungPlanung.vue"),
-	props: (route) => routePropsGostAuswahl(route, injectMainApp().apps.gost.auswahl),
-	meta: <RouteAppMeta<unknown, unknown>> {
-		auswahl: () => {},
-		hidden: () => false,
-		text: "Detailplanung"
+export class RouteGostKlausurplanungPlanung extends RouteNode<unknown> {
+
+	public constructor() {
+		super("gost_klausurplanung_planung", "planung", SGostKlausurplanungPlanung);
+		super.propHandler = (route) => RouteGost.getPropsByAuswahlAbiturjahr(route, mainApp.apps.gost.auswahl);
+		super.text = "Detailplanung";
 	}
-};
+
+}
+
+export const routeGostKlausurplanungPlanung = new RouteGostKlausurplanungPlanung();
+
