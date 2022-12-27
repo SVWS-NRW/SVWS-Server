@@ -25,39 +25,14 @@
 <script setup lang="ts">
 
 	import { LehrerListeEintrag } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, onMounted, WritableComputedRef } from "vue";
-	import { RouteRecordRaw, useRoute, useRouter } from "vue-router";
+	import { computed, ComputedRef } from "vue";
 
-	import { injectMainApp, Main } from "~/apps/Main";
-	import { routeLehrerIndividualdaten } from "~/router/apps/lehrer/RouteLehrerIndividualdaten";
 	import { routeLehrer, RouteDataLehrer } from "~/router/apps/RouteLehrer";
-
-	const main: Main = injectMainApp();
-	const app = main.apps.lehrer;
 
 	const props = defineProps<{ id?: number; item?: LehrerListeEintrag, routename: string }>();
 
-	// Initialisiere die Sub-Routen
-	const router = useRouter();
-	const route = useRoute();
-//	const redirect = routeAppMeta(RouteLehrer).redirect;
 	const data: RouteDataLehrer = routeLehrer.data;
-/*	routeLehrerSetRedirect(route);
-	
-	onMounted(() => {
-		if (((route.params.id === undefined) || (route.params.id === "")) && (app.auswahl.liste.length > 0))
-			router.push({ name: redirect.value.name?.toString(), params: { id: app.auswahl.liste[0].id } });
-	});
-*/
-	const selectedRoute: WritableComputedRef<RouteRecordRaw> = computed({
-		get(): RouteRecordRaw {
-			return routeLehrer.selectedChildRecord || routeLehrerIndividualdaten.record;
-		},
-		set(value: RouteRecordRaw) {
-			routeLehrer.selectedChildRecord = value;
-			router.push({ name: value.name, params: { id: props.id } });
-		}
-	});
+	const selectedRoute = routeLehrer.getChildRouteSelector();
 
 	const foto: ComputedRef<String | undefined> = computed(() => {
 		return data.stammdaten.daten?.foto || undefined;

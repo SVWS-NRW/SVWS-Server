@@ -11,10 +11,7 @@ import { RouteNode } from "~/router/RouteNode";
  * einer Auswahlliste und die "default"-Router-View dient der Darstellung
  * von Detail-Informationen zu dem ausgewählten Listen-Eintrag.
  */
-export abstract class RouteNodeListView<TAuswahl, TItemAuswahl, TRouteData> extends RouteNode<TRouteData> {
-
-    /** Gibt an, ob die Auswahlliste zu Beginn automatisch mit dem ersten Eintrag initialisiert werden soll */
-    protected _autoInit: boolean = false;
+export abstract class RouteNodeListView<TItemAuswahl, TRouteData> extends RouteNode<TRouteData> {
 
     /**
      * Erstellt einen Knoten für das Routing mithilfe einer Auswahl-Liste.
@@ -35,20 +32,6 @@ export abstract class RouteNodeListView<TAuswahl, TItemAuswahl, TRouteData> exte
      */
     public get auswahl() : WritableComputedRef<TItemAuswahl | undefined> {
         return this.getAuswahlComputedProperty();
-    }
-
-    /**
-     * Getter für die Information, ob die Auswahlliste automatisch mit dem ersten Eintrag initialisiert werden soll.
-     */
-    public get autoInit() : boolean {
-        return this._autoInit;
-    }
-
-    /**
-     * Setter für die Information, ob die Auswahlliste automatisch mit dem ersten Eintrag initialisiert werden soll.
-     */
-    public set autoInit(value : boolean) {
-        this._autoInit = value;
     }
 
     /**
@@ -73,7 +56,6 @@ export abstract class RouteNodeListView<TAuswahl, TItemAuswahl, TRouteData> exte
         const route = useRoute();
         const name: string = this.name;
         const redirect_name: string = (this.selectedChild === undefined) ? name : this.selectedChild.name;
-        const autoInit = this.autoInit;
 
         const selected = computed({
             get(): TItem | undefined {

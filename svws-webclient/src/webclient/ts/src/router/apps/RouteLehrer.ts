@@ -1,5 +1,5 @@
 import { LehrerListeEintrag } from "@svws-nrw/svws-core-ts";
-import { RouteLocationNormalized } from "vue-router";
+import { RouteLocationNormalized, RouteRecordRaw, useRouter } from "vue-router";
 import { injectMainApp } from "~/apps/Main";
 import { routeLehrerIndividualdaten } from "~/router/apps/lehrer/RouteLehrerIndividualdaten";
 import { routeLehrerPersonaldaten } from "~/router/apps/lehrer/RouteLehrerPersonaldaten";
@@ -7,7 +7,7 @@ import { routeLehrerUnterrichtsdaten } from "~/router/apps/lehrer/RouteLehrerUnt
 import { DataLehrerStammdaten } from "~/apps/lehrer/DataLehrerStammdaten";
 import { RouteNodeListView } from "../RouteNodeListView";
 import { ListLehrer } from "~/apps/lehrer/ListLehrer";
-import { WritableComputedRef } from "vue";
+import { computed, WritableComputedRef } from "vue";
 import { mainApp } from "~/apps/Main"
 
 
@@ -21,7 +21,9 @@ const SLehrerAuswahl = () => import("~/components/lehrer/SLehrerAuswahl.vue")
 const SLehrerApp = () => import("~/components/lehrer/SLehrerApp.vue")
 
 
-export class RouteLehrer extends RouteNodeListView<ListLehrer, LehrerListeEintrag, RouteDataLehrer> {
+export class RouteLehrer extends RouteNodeListView<LehrerListeEintrag, RouteDataLehrer> {
+
+	protected defaultChildNode = routeLehrerIndividualdaten;
 
 	public constructor() {
 		super("lehrer", "/lehrkraefte/:id(\\d+)?", SLehrerAuswahl, SLehrerApp, new RouteDataLehrer());
@@ -33,7 +35,6 @@ export class RouteLehrer extends RouteNodeListView<ListLehrer, LehrerListeEintra
 			routeLehrerPersonaldaten,
 			routeLehrerUnterrichtsdaten
 		];
-		this.autoInit = true;
 	}
 
     /**
@@ -45,7 +46,7 @@ export class RouteLehrer extends RouteNodeListView<ListLehrer, LehrerListeEintra
     public beforeEach(to: RouteLocationNormalized, from: RouteLocationNormalized): any {
 		if ((to.name?.toString() === this.name) && (to.params.id === undefined)) {
 			const redirect_name: string = (this.selectedChild === undefined) ? routeLehrerIndividualdaten.name : this.selectedChild.name;
-			return { name: redirect_name, params: mainApp.apps.lehrer.auswahl.liste.at(0) };
+			return { name: redirect_name, params: { id: mainApp.apps.lehrer.auswahl.liste.at(0)?.id }};
 		}
         return true;
     }
@@ -72,32 +73,27 @@ export class RouteLehrer extends RouteNodeListView<ListLehrer, LehrerListeEintra
 		return prop;
 	}
 
+    /**
+     * TODO
+     * 
+     * @returns 
+     */
+    public getChildRouteSelector() {
+        const router = useRouter();
+        const self = this;
+        const selectedRoute: WritableComputedRef<RouteRecordRaw> = computed({
+            get(): RouteRecordRaw {
+                return self.selectedChildRecord || self.defaultChildNode.record;
+            },
+            set(value: RouteRecordRaw) {
+                self.selectedChildRecord = value;
+				const id = (self.data.item === undefined) ? undefined : "" + self.data.item.id;
+                router.push({ name: value.name, params: { id: id } });
+            }
+        });
+        return selectedRoute;
+    }
+
 }
 
 export const routeLehrer = new RouteLehrer();
-
-/*
-export const RouteLehrer : RouteRecordRaw = {
-	meta: <RouteAppMeta<LehrerListeEintrag | undefined, RouteDataLehrer>> {
-		redirect: ref(routeLehrerIndividualdaten.record),
-	},
-	redirect: to => {
-		return to.path + "/" + routeAppMeta(RouteLehrer)?.redirect.value.path;
-	},
-	children: RouteLehrerChildren
-};
-
-
-export function routeLehrerSetRedirect(route : RouteLocationNormalizedLoaded) {
-	const meta = RouteLehrer.meta as RouteAppMeta<LehrerListeEintrag | undefined, RouteDataLehrer>;
-	if ((RouteLehrer.children === undefined) || (meta === undefined))
-		return;
-	for (var child of RouteLehrer.children) {
-		if (route.name === child.name) {
-			meta.redirect.value = child;
-			return;
-		}
-	}
-	meta.redirect.value = routeLehrerIndividualdaten.record;
-}
-*/
