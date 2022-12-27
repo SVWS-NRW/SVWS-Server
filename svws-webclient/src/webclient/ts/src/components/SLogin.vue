@@ -90,7 +90,7 @@ import { version } from '../../version';
 
 const route = useRoute();
 
-const serverAddress = ref("svws-nrw.de");
+const serverAddress = ref("localhost");
 const username = ref("Admin");
 const password = ref("");
 
