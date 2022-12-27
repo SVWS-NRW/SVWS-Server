@@ -41,22 +41,14 @@
 <script setup lang="ts">
 
 	import { Religion, ReligionEintrag } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, reactive, ref, Ref, WritableComputedRef } from "vue";
+	import { computed, ComputedRef, reactive, ref } from "vue";
 	import { App } from "~/apps/BaseApp";
 	import { router } from "~/router";
 	import { injectMainApp, Main } from "~/apps/Main";
-	import { RouteKataloge } from "~/router/apps/RouteKataloge";
-	import { RouteKatalogReligion } from "~/router/apps/RouteKatalogReligion";
-	import { routeAppAuswahl } from "~/router/RouteUtils";
+	import { routeKatalogReligion } from "~/router/apps/RouteKatalogReligion";
 
-	const none_selected: Ref<ReligionEintrag> = ref({
-		id: -1,
-		text: "",
-		textZeugnis: "",
-		kuerzel: "",
-		istSichtbar: false,
-		istAenderbar: false
-	} as unknown as ReligionEintrag);
+	const props = defineProps<{ id?: number; item?: ReligionEintrag, routename: string }>();
+	const selected = routeKatalogReligion.auswahl;
 
 	const cols = ref([
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: "asc" },
@@ -71,21 +63,8 @@
 		return app.auswahl.liste;
 	});
 
-	const selected: WritableComputedRef<ReligionEintrag | undefined> = computed({
-		get(): ReligionEintrag {
-			if (!app.auswahl.ausgewaehlt)
-				return none_selected.value;
-			return app.auswahl.ausgewaehlt;
-		},
-		set(value: ReligionEintrag) {
-			if (app) {
-				app.auswahl.ausgewaehlt = value;
-			}
-		}
-	});
-
 	/**
-	 * Modalfenster-Neu-Anpsrechpartner
+	 * Modalfenster: Neue Religion
 	 */
 	const reli_neu: ReligionEintrag = reactive(new ReligionEintrag());
 

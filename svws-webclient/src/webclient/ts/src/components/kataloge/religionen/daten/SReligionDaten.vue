@@ -6,11 +6,10 @@
 
 <script setup lang="ts">
 
-	import { computed, ComputedRef, defineAsyncComponent } from "vue";
+	import { ReligionEintrag } from "@svws-nrw/svws-core-ts";
+	import { computed, ComputedRef } from "vue";
 
-	const SCardReligionDaten = defineAsyncComponent(
-		() => import("~/components/kataloge/religionen/daten/SCardReligionDaten.vue")
-	);
+	const props = defineProps<{ id?: number; item?: ReligionEintrag, routename: string }>();
 
 	const visible: ComputedRef<boolean> = computed(() => {
 		// TODO: richtige Bedingung einpflegen

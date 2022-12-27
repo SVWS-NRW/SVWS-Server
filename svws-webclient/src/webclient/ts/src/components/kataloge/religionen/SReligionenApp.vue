@@ -1,23 +1,16 @@
 <template>
-	<div v-if="app.dataReligion.daten" class="flex h-full flex-row">
-		<div class="flex w-full flex-col">
-			<svws-ui-header>
-				<span class="inline-block mr-3 capitalize">{{ inputBezeichnung }}</span>
-				<svws-ui-badge variant="light">{{ inputId }}</svws-ui-badge>
+	<div v-if="props.id !== undefined">
+		<svws-ui-header>
+			<div class="flex items-center">
+				<span class="inline-block mr-3 capitalize">{{ props.item?.text }}</span>
+				<svws-ui-badge variant="light">{{ "ID: " + props.id }}</svws-ui-badge>
 				<br/>
-				<span class="opacity-50">{{ inputKuerzel }}</span>
-			</svws-ui-header>
-			<svws-ui-tab-bar>
-				<template #tabs>
-					<svws-ui-tab-button>Daten</svws-ui-tab-button>
-				</template>
-				<template #panels>
-					<svws-ui-tab-panel>
-						<s-religion-daten />
-					</svws-ui-tab-panel>
-				</template>
-			</svws-ui-tab-bar>
-		</div>
+				<span class="opacity-50">{{ props.item?.kuerzel }}</span>
+			</div>
+		</svws-ui-header>
+		<svws-ui-router-tab-bar :routes="routeKatalogReligion.children_records" :hidden="routeKatalogReligion.children_hidden" v-model="selectedRoute">
+			<router-view />
+		</svws-ui-router-tab-bar>
 	</div>
 	<div v-else class="app-layout--main--placeholder">
 		<i-ri-archive-line/>
@@ -25,35 +18,13 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ComputedRef, defineAsyncComponent } from "vue";
 
-import { injectMainApp, Main } from "~/apps/Main";
+	import { ReligionEintrag } from "@svws-nrw/svws-core-ts";
+	import { RouteDataKatalogReligion, routeKatalogReligion } from "~/router/apps/RouteKatalogReligion";
 
-const SReligionDaten = defineAsyncComponent(
-	() => import("~/components/kataloge/religionen/daten/SReligionDaten.vue")
-);
-const main: Main = injectMainApp();
+	const props = defineProps<{ id?: number; item?: ReligionEintrag, routename: string }>();
 
-const app = main.apps.religionen;
+	const data: RouteDataKatalogReligion = routeKatalogReligion.data;
+	const selectedRoute = routeKatalogReligion.getChildRouteSelector();
 
-const inputKuerzel: ComputedRef<string | false> = computed(() => {
-	if (app.auswahl.ausgewaehlt?.kuerzel) {
-		return app.auswahl.ausgewaehlt.kuerzel.toString();
-	}
-	return false;
-});
-
-const inputId: ComputedRef<string | false> = computed(() => {
-	if (app.auswahl.ausgewaehlt) {
-		return "ID: " + app.auswahl.ausgewaehlt.id;
-	}
-	return false;
-});
-
-const inputBezeichnung: ComputedRef<string | undefined> = computed(() => {
-	if (app.auswahl.ausgewaehlt) {
-		return app.dataReligion.daten?.text?.toString();
-	}
-	return "";
-});
 </script>
