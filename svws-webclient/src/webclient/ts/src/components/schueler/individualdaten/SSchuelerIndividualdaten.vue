@@ -15,12 +15,11 @@
 	import { SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef } from "vue";
 	import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
-	import { RouteSchueler, RouteDataSchueler } from "~/router/apps/RouteSchueler";
-	import { routeAppData } from "~/router/RouteUtils";
+	import { routeSchueler, RouteDataSchueler } from "~/router/apps/RouteSchueler";
 
 	const props = defineProps<{ id?: number; item?: SchuelerListeEintrag, routename: string }>();
 
-	const data: RouteDataSchueler = routeAppData(RouteSchueler);
+	const data: RouteDataSchueler = routeSchueler.data;
 
 	const stammdaten: ComputedRef<DataSchuelerStammdaten> = computed(() => {
 		return data.stammdaten;

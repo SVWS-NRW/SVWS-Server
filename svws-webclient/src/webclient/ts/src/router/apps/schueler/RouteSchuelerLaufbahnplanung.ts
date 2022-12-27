@@ -1,22 +1,24 @@
-import { RouteRecordRaw } from "vue-router";
 import { App } from "~/apps/BaseApp";
-import { injectMainApp } from "~/apps/Main";
-import { RouteAppMeta, routePropsAuswahlID } from "~/router/RouteUtils";
+import { mainApp } from "~/apps/Main";
+import { RouteNode } from "~/router/RouteNode";
+import { RouteNodeListView } from "~/router/RouteNodeListView";
 
-const ROUTE_NAME: string = "schueler_laufbahnplanung";
+const SSchuelerLaufbahnplanung = () => import("~/components/schueler/laufbahnplanung/SSchuelerLaufbahnplanung.vue");
 
-export const RouteSchuelerLaufbahnplanung : RouteRecordRaw = {
-	name: ROUTE_NAME,
-	path: "laufbahnplanung",
-	component: () => import("~/components/schueler/laufbahnplanung/SSchuelerLaufbahnplanung.vue"),
-	props: (route) => routePropsAuswahlID(route, injectMainApp().apps.schueler.auswahl),
-	meta: <RouteAppMeta<unknown, unknown>> {
-		auswahl: () => {},
-		hidden: () => {
-			const abiturjahr = injectMainApp().apps.schueler.dataGostLaufbahndaten?.daten?.abiturjahr; // TODO Bestimme Abiturjahr über Daten aus RouteSchueler
-			const jahrgang = App.apps.gost.auswahl.liste.find(j => (j.abiturjahr === abiturjahr));     // TODO Bestimme Jahrgang aus der Liste der Abiturjahgänge in RouteSchueler
+export class RouteSchuelerLaufbahnplanung extends RouteNode<unknown> {
+
+	public constructor() {
+		super("schueler_laufbahnplanung", "laufbahnplanung", SSchuelerLaufbahnplanung);
+		super.propHandler = (route) => RouteNodeListView.getPropsByAuswahlID(route, mainApp.apps.schueler.auswahl);
+		super.text = "Laufbahnplanung";
+		super.isHidden = () => {
+			const abiturjahr = mainApp.apps.schueler.dataGostLaufbahndaten?.daten?.abiturjahr;   // TODO Bestimme Abiturjahr über Daten aus RouteSchueler
+			const jahrgang = App.apps.gost.auswahl.liste.find(j => (j.abiturjahr === abiturjahr));   // TODO Bestimme Jahrgang aus der Liste der Abiturjahgänge in RouteSchueler
 			return (jahrgang === undefined);
-		},
-		text: "Laufbahnplanung"
+		}
 	}
-};
+
+}
+
+export const routeSchuelerLaufbahnplanung = new RouteSchuelerLaufbahnplanung();
+

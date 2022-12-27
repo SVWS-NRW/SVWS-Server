@@ -13,7 +13,7 @@
 				</div>
 			</div>
 		</svws-ui-header>
-		<svws-ui-router-tab-bar :routes="RouteSchuelerChildren" :hidden="routeAppAreHidden(RouteSchuelerChildren)" v-model="selectedRoute">
+		<svws-ui-router-tab-bar :routes="routeSchueler.children_records" :hidden="routeSchueler.children_hidden" v-model="selectedRoute">
 			<router-view />
 		</svws-ui-router-tab-bar>
 	</div>
@@ -24,12 +24,10 @@
 
 <script setup lang="ts">
 
-	import { computed, ComputedRef, onMounted, WritableComputedRef } from "vue";
-	import { RouteRecordRaw, useRoute, useRouter } from "vue-router";
+	import { computed, ComputedRef } from "vue";
 
 	import { injectMainApp, Main } from "~/apps/Main";
-	import { RouteSchueler, RouteSchuelerChildren, RouteDataSchueler, routeSchuelerSetRedirect } from "~/router/apps/RouteSchueler";
-	import { routeAppData, routeAppMeta, routeAppAreHidden } from "~/router/RouteUtils";
+	import { routeSchueler, RouteDataSchueler } from "~/router/apps/RouteSchueler";
 	import { SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
 
 	const main: Main = injectMainApp();
@@ -37,27 +35,8 @@
 
 	const props = defineProps<{ id?: number; item?: SchuelerListeEintrag, routename: string }>();
 
-	// Initialisiere die Sub-Routen
-	const router = useRouter();
-	const route = useRoute();
-	const redirect = routeAppMeta(RouteSchueler).redirect;
-	const data: RouteDataSchueler = routeAppData(RouteSchueler);
-	routeSchuelerSetRedirect(route);
-	
-	onMounted(() => {
-		if (((route.params.id === undefined) || (route.params.id === "")) && (app.auswahl.liste.length > 0))
-			router.push({ name: redirect.value.name?.toString(), params: { id: app.auswahl.liste[0].id } });
-	});
-
-	const selectedRoute: WritableComputedRef<RouteRecordRaw> = computed({
-		get(): RouteRecordRaw {
-			return redirect.value;
-		},
-		set(value: RouteRecordRaw) {
-			redirect.value = value;
-			router.push({ name: value.name, params: { id: props.id } });
-		}
-	});
+	const data: RouteDataSchueler = routeSchueler.data;
+	const selectedRoute = routeSchueler.getChildRouteSelector();
 
 
 	const foto: ComputedRef<String | undefined> = computed(() => {

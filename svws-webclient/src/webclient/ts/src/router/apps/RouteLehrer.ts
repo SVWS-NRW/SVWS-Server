@@ -1,6 +1,5 @@
 import { LehrerListeEintrag } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized, RouteRecordRaw, useRouter } from "vue-router";
-import { injectMainApp } from "~/apps/Main";
 import { routeLehrerIndividualdaten } from "~/router/apps/lehrer/RouteLehrerIndividualdaten";
 import { routeLehrerPersonaldaten } from "~/router/apps/lehrer/RouteLehrerPersonaldaten";
 import { routeLehrerUnterrichtsdaten } from "~/router/apps/lehrer/RouteLehrerUnterrichtsdaten";
@@ -28,7 +27,7 @@ export class RouteLehrer extends RouteNodeListView<LehrerListeEintrag, RouteData
 	public constructor() {
 		super("lehrer", "/lehrkraefte/:id(\\d+)?", SLehrerAuswahl, SLehrerApp, new RouteDataLehrer());
 		super.propHandler = (route) => this.getProps(route);
-		super.text = "Personaldaten";
+		super.text = "Lehrkräfte";
         super.setView("liste", SLehrerAuswahl, (route) => RouteNodeListView.getPropsByAuswahlID(route, mainApp.apps.lehrer.auswahl));
 		super.children = [
 			routeLehrerIndividualdaten,
@@ -45,7 +44,7 @@ export class RouteLehrer extends RouteNodeListView<LehrerListeEintrag, RouteData
      */
     public beforeEach(to: RouteLocationNormalized, from: RouteLocationNormalized): any {
 		if ((to.name?.toString() === this.name) && (to.params.id === undefined)) {
-			const redirect_name: string = (this.selectedChild === undefined) ? routeLehrerIndividualdaten.name : this.selectedChild.name;
+			const redirect_name: string = (this.selectedChild === undefined) ? this.defaultChildNode.name : this.selectedChild.name;
 			return { name: redirect_name, params: { id: mainApp.apps.lehrer.auswahl.liste.at(0)?.id }};
 		}
         return true;
@@ -64,11 +63,11 @@ export class RouteLehrer extends RouteNodeListView<LehrerListeEintrag, RouteData
 	}
 
     protected getAuswahlComputedProperty(): WritableComputedRef<LehrerListeEintrag | undefined> {
-		return this.getSelectorByID<LehrerListeEintrag, ListLehrer>(injectMainApp().apps.lehrer.auswahl);
+		return this.getSelectorByID<LehrerListeEintrag, ListLehrer>(mainApp.apps.lehrer.auswahl);
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
-		const prop = RouteNodeListView.getPropsByAuswahlID(to, injectMainApp().apps.lehrer.auswahl);
+		const prop = RouteNodeListView.getPropsByAuswahlID(to, mainApp.apps.lehrer.auswahl);
 		this.onSelect(prop.item as LehrerListeEintrag | undefined);
 		return prop;
 	}

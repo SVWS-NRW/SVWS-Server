@@ -1,17 +1,19 @@
-import { RouteRecordRaw } from "vue-router";
-import { injectMainApp } from "~/apps/Main";
-import { RouteAppMeta, routePropsAuswahlID } from "~/router/RouteUtils";
+import { mainApp } from "~/apps/Main";
+import { RouteNode } from "~/router/RouteNode";
+import { RouteNodeListView } from "~/router/RouteNodeListView";
 
-const ROUTE_NAME: string = "schueler_abschnitt";
 
-export const RouteSchuelerAbschnitt : RouteRecordRaw = {
-	name: ROUTE_NAME,
-	path: "abschnitt",
-	component: () => import("~/components/schueler/abschnitt/SSchuelerAbschnitt.vue"),
-	props: (route) => routePropsAuswahlID(route, injectMainApp().apps.schueler.auswahl),
-	meta: <RouteAppMeta<unknown, unknown>> {
-		auswahl: () => {},
-		hidden: () => false,
-		text: "Aktueller Abschnitt"   // TODO Quartal, etc. aus den Daten der eigenen Schule
+const SSchuelerAbschnitt = () => import("~/components/schueler/abschnitt/SSchuelerAbschnitt.vue");
+
+export class RouteSchuelerAbschnitt extends RouteNode<unknown> {
+
+	public constructor() {
+		super("schueler_abschnitt", "abschnitt", SSchuelerAbschnitt);
+		super.propHandler = (route) => RouteNodeListView.getPropsByAuswahlID(route, mainApp.apps.schueler.auswahl);
+		super.text = "Aktueller Abschnitt";
 	}
-};
+
+}
+
+export const routeSchuelerAbschnitt = new RouteSchuelerAbschnitt();
+

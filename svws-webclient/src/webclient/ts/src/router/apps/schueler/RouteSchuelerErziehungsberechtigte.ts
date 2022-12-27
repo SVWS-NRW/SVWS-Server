@@ -1,17 +1,18 @@
-import { RouteRecordRaw } from "vue-router";
-import { injectMainApp } from "~/apps/Main";
-import { RouteAppMeta, routePropsAuswahlID } from "~/router/RouteUtils";
+import { mainApp } from "~/apps/Main";
+import { RouteNode } from "~/router/RouteNode";
+import { RouteNodeListView } from "~/router/RouteNodeListView";
 
-const ROUTE_NAME: string = "schueler_erziehungsberechtigte";
+const SSchuelerErziehungsberechtigte = () => import("~/components/schueler/erziehungsberechtigte/SSchuelerErziehungsberechtigte.vue");
 
-export const RouteSchuelerErziehungsberechtigte : RouteRecordRaw = {
-	name: ROUTE_NAME,
-	path: "erziehungsberechtigte",
-	component: () => import("~/components/schueler/erziehungsberechtigte/SSchuelerErziehungsberechtigte.vue"),
-	props: (route) => routePropsAuswahlID(route, injectMainApp().apps.schueler.auswahl),
-	meta: <RouteAppMeta<unknown, unknown>> {
-		auswahl: () => {},
-		hidden: () => false,
-		text: "Erziehungsberechtigte"
+export class RouteSchuelerErziehungsberechtigte extends RouteNode<unknown> {
+
+	public constructor() {
+		super("schueler_erziehungsberechtigte", "erziehungsberechtigte", SSchuelerErziehungsberechtigte);
+		super.propHandler = (route) => RouteNodeListView.getPropsByAuswahlID(route, mainApp.apps.schueler.auswahl);
+		super.text = "Erziehungsberechtigte";
 	}
-};
+
+}
+
+export const routeSchuelerErziehungsberechtigte = new RouteSchuelerErziehungsberechtigte();
+

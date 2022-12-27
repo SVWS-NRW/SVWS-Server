@@ -1,8 +1,7 @@
 import { LehrerListeEintrag } from "@svws-nrw/svws-core-ts";
-import { defineAsyncComponent } from "vue";
 import { RouteLocationNormalized } from "vue-router";
 import { DataLehrerPersonaldaten } from "~/apps/lehrer/DataLehrerPersonaldaten";
-import { injectMainApp } from "~/apps/Main";
+import { mainApp } from "~/apps/Main";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteNodeListView } from "~/router/RouteNodeListView";
 
@@ -36,7 +35,7 @@ export class RouteLehrerPersonaldaten extends RouteNode<RouteDataLehrerPersonald
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
-		const prop = RouteNodeListView.getPropsByAuswahlID(to, injectMainApp().apps.lehrer.auswahl);
+		const prop = RouteNodeListView.getPropsByAuswahlID(to, mainApp.apps.lehrer.auswahl);
 		this.onSelect(prop.item as LehrerListeEintrag | undefined);
 		return prop;
 	}

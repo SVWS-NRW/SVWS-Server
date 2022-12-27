@@ -28,8 +28,9 @@ export class RouteManager {
         const node : RouteNode<unknown> | undefined = RouteNode.getNodeByName(to.name?.toString());
         if (node === undefined)
             return true; // TODO später sollte dies false sein, wenn alle Routen vollständig auf den RouteManager umgestellt wurden
-        // TODO Prüfe, ob die Route sichtbar ist (hidden-Methode)
-
+        // Prüfe mithilfe der hidden-Methode, ob die Route sichtbar ist
+        if (node.hidden())
+            return false;
         // Rufe die beforeEach-Methode bei der Ziel-Route auf...
         return node.beforeEach(to, from);
     }

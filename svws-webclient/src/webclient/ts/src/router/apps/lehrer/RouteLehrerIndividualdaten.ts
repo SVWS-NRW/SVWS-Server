@@ -1,5 +1,4 @@
-import { defineAsyncComponent } from "vue";
-import { injectMainApp } from "~/apps/Main";
+import { mainApp } from "~/apps/Main";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteNodeListView } from "~/router/RouteNodeListView";
 
@@ -9,7 +8,7 @@ export class RouteLehrerIndividualdaten extends RouteNode<unknown> {
 
 	public constructor() {
 		super("lehrer_daten", "daten", SLehrerIndividualdaten);
-		super.propHandler = (route) => RouteNodeListView.getPropsByAuswahlID(route, injectMainApp().apps.lehrer.auswahl);
+		super.propHandler = (route) => RouteNodeListView.getPropsByAuswahlID(route, mainApp.apps.lehrer.auswahl);
 		super.text = "Daten";
 	}
 

@@ -68,9 +68,8 @@
 		KlassenListeEintrag, KursListeEintrag, Schulgliederung, Schuljahresabschnitt } from "@svws-nrw/svws-core-ts";
 
 	import { injectMainApp, Main } from "~/apps/Main";
-	import { RouteSchueler } from "~/router/apps/RouteSchueler";
-	import { routeAppAuswahl } from "~/router/RouteUtils";
-import { Schule } from "~/apps/schule/Schule";
+	import { routeSchueler } from "~/router/apps/RouteSchueler";
+	import { Schule } from "~/apps/schule/Schule";
 
 	export interface SchuelerProps {
 		selectedItems: Array<SchuelerListeEintrag>;
@@ -116,7 +115,7 @@ import { Schule } from "~/apps/schule/Schule";
 		return rowsConst;
 	});
 
-	const selected = routeAppAuswahl(RouteSchueler);
+	const selected = routeSchueler.auswahl;
 
 	const inputKatalogSchuelerStatus: ComputedRef<Array<SchuelerStatus>> =
 		computed(() => {

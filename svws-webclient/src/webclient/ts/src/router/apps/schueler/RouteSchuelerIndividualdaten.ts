@@ -1,17 +1,18 @@
-import { RouteRecordRaw } from "vue-router";
-import { injectMainApp } from "~/apps/Main";
-import { RouteAppMeta, routePropsAuswahlID } from "~/router/RouteUtils";
+import { mainApp } from "~/apps/Main";
+import { RouteNode } from "~/router/RouteNode";
+import { RouteNodeListView } from "~/router/RouteNodeListView";
 
-const ROUTE_NAME: string = "schueler_daten";
+const SSchuelerIndividualdaten = () => import("~/components/schueler/individualdaten/SSchuelerIndividualdaten.vue");
 
-export const RouteSchuelerIndividualdaten : RouteRecordRaw = {
-	name: ROUTE_NAME,
-	path: "daten",
-	component: () => import("~/components/schueler/individualdaten/SSchuelerIndividualdaten.vue"),
-	props: (route) => routePropsAuswahlID(route, injectMainApp().apps.schueler.auswahl),
-	meta: <RouteAppMeta<unknown, unknown>> {
-		auswahl: () => {},
-		hidden: () => false,
-		text: "Individualdaten"
+export class RouteSchuelerIndividualdaten extends RouteNode<unknown> {
+
+	public constructor() {
+		super("schueler_daten", "daten", SSchuelerIndividualdaten);
+		super.propHandler = (route) => RouteNodeListView.getPropsByAuswahlID(route, mainApp.apps.schueler.auswahl);
+		super.text = "Individualdaten";
 	}
-};
+
+}
+
+export const routeSchuelerIndividualdaten = new RouteSchuelerIndividualdaten();
+

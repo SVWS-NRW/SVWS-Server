@@ -6,7 +6,7 @@ import { RouteKataloge } from "~/router/apps/RouteKataloge";
 import { RouteKatalogFaecher } from "~/router/apps/RouteKatalogFaecher";
 import { RouteKatalogReligion } from "~/router/apps/RouteKatalogReligion";
 import { RouteKatalogJahrgaenge } from "~/router/apps/RouteKatalogJahrgaenge";
-import { RouteSchueler } from "~/router/apps/RouteSchueler";
+import { routeSchueler } from "~/router/apps/RouteSchueler";
 import { routeLehrer } from "~/router/apps/RouteLehrer";
 import { RouteKlassen } from "~/router/apps/RouteKlassen";
 import { RouteKurse } from "~/router/apps/RouteKurse";
@@ -27,7 +27,7 @@ export const RouteApp : RouteRecordRaw = {
         RouteKatalogFaecher,
         RouteKatalogReligion,
         RouteKatalogJahrgaenge,
-        RouteSchueler,
+        routeSchueler.record,
         routeLehrer.record,
         RouteKlassen,
         RouteKurse,

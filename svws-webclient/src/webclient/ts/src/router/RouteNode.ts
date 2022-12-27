@@ -14,6 +14,9 @@ export abstract class RouteNode<TRouteData> {
     /** Das vue-Router-Objekt (siehe RouteRecordRaw) */
     protected _record: RouteRecordRaw;
 
+    // Eine Funktion zum Prüfen, ob der Knoten, d.h. die Route, versteckt sein soll oder nicht
+    protected isHidden: (() => boolean) | undefined = undefined;
+
     /** Die Kind-Knoten zu dieser Route */
     protected _children: RouteNode<unknown>[];
 
@@ -176,9 +179,8 @@ export abstract class RouteNode<TRouteData> {
      */
 	public hidden(): boolean {
         // TODO prüfen, ob die Komponente dargestellt werden darf oder nicht
-        return false;
+        return (this.isHidden === undefined) ? false : this.isHidden();
     }
-
 
 
     /**

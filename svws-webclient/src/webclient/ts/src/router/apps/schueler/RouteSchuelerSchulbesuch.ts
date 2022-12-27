@@ -1,17 +1,18 @@
-import { RouteRecordRaw } from "vue-router";
-import { injectMainApp } from "~/apps/Main";
-import { RouteAppMeta, routePropsAuswahlID } from "~/router/RouteUtils";
+import { mainApp } from "~/apps/Main";
+import { RouteNode } from "~/router/RouteNode";
+import { RouteNodeListView } from "~/router/RouteNodeListView";
 
-const ROUTE_NAME: string = "schueler_schulbesuch";
+const SSchuelerSchulbesuch = () => import("~/components/schueler/schulbesuch/SSchuelerSchulbesuch.vue");
 
-export const RouteSchuelerSchulbesuch : RouteRecordRaw = {
-	name: ROUTE_NAME,
-	path: "schulbesuch",
-	component: () => import("~/components/schueler/schulbesuch/SSchuelerSchulbesuch.vue"),
-	props: (route) => routePropsAuswahlID(route, injectMainApp().apps.schueler.auswahl),
-	meta: <RouteAppMeta<unknown, unknown>> {
-		auswahl: () => {},
-		hidden: () => false,
-		text: "Schulbesuch"
+export class RouteSchuelerSchulbesuch extends RouteNode<unknown> {
+
+	public constructor() {
+		super("schueler_schulbesuch", "schulbesuch", SSchuelerSchulbesuch);
+		super.propHandler = (route) => RouteNodeListView.getPropsByAuswahlID(route, mainApp.apps.schueler.auswahl);
+		super.text = "Schulbesuch";
 	}
-};
+
+}
+
+export const routeSchuelerSchulbesuch = new RouteSchuelerSchulbesuch();
+
