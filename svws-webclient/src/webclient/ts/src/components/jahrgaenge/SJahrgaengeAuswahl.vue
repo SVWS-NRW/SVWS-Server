@@ -21,21 +21,22 @@
 	import { computed, ComputedRef } from "vue";
 	import { injectMainApp, Main } from "~/apps/Main";
 	import { router } from "~/router"
-	import { RouteKataloge } from "~/router/apps/RouteKataloge";
-	import { RouteKatalogJahrgaenge } from "~/router/apps/RouteKatalogJahrgaenge";
-	import { routeAppAuswahl } from "~/router/RouteUtils";
+	import { routeKatalogJahrgaenge } from "~/router/apps/RouteKatalogJahrgaenge";
+
+	const props = defineProps<{ id?: number; item?: JahrgangsListeEintrag, routename: string }>();
+
+	const selected = routeKatalogJahrgaenge.auswahl;
 
 	const cols = [
 		{ key: "kuerzel", label: "Kürzel", width: "6em", sortable: true, defaultSort: "asc" },
 		{ key: "bezeichnung", label: "Bezeichnung", sortable: true, span: 3 }
 	];
+
 	const main: Main = injectMainApp();
 	const app = main.apps.jahrgaenge;
 
-	const rows: ComputedRef<JahrgangsListeEintrag[] | undefined> = computed(
-		() => { return app.auswahl.liste; }
-	);
-
-	const selected = routeAppAuswahl(RouteKatalogJahrgaenge);
+	const rows: ComputedRef<JahrgangsListeEintrag[] | undefined> = computed(() => { 
+		return app.auswahl.liste; 
+	});
 
 </script>
