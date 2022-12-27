@@ -1,23 +1,15 @@
 <template>
-	<div v-if="appKurse.auswahl.ausgewaehlt" class="flex h-full flex-row">
-		<div class="flex w-full flex-col">
-			<svws-ui-header>
-				<span class="inline-block mr-3">{{ inputKuerzel }}</span>
-				<svws-ui-badge variant="light">{{ inputId }}</svws-ui-badge>
+	<div v-if="appKurse.auswahl.ausgewaehlt">
+		<svws-ui-header>
+			<div class="flex items-center">
+				<span class="inline-block mr-3">{{ kuerzel }}</span>
+				<svws-ui-badge variant="light">{{ "ID: " + props.id }}</svws-ui-badge>
 				<span v-if="inputFachlehrer" class="opacity-50"><br/>{{ inputFachlehrer }}</span>
-			</svws-ui-header
-			>
-			<svws-ui-tab-bar v-model="appKurse.selectedTab.value">
-				<template #tabs>
-					<svws-ui-tab-button>Daten</svws-ui-tab-button>
-				</template>
-				<template #panels>
-					<svws-ui-tab-panel>
-						<s-kurs-daten/>
-					</svws-ui-tab-panel>
-				</template>
-			</svws-ui-tab-bar>
-		</div>
+			</div>
+		</svws-ui-header>
+		<svws-ui-router-tab-bar :routes="routeKurse.children_records" :hidden="routeKurse.children_hidden" v-model="selectedRoute">
+			<router-view />
+		</svws-ui-router-tab-bar>
 	</div>
 	<div v-else class="app-layout--main--placeholder">
 		<i-ri-slideshow-line/>
@@ -25,38 +17,31 @@
 </template>
 
 <script setup lang="ts">
-	import { computed, ComputedRef, defineAsyncComponent } from "vue";
+
+	import { KursListeEintrag } from "@svws-nrw/svws-core-ts";
+	import { computed, ComputedRef } from "vue";
 	import { injectMainApp, Main } from "~/apps/Main";
+	import { RouteDataKurse, routeKurse } from "~/router/apps/RouteKurse";
 
-	// TODO Implementierung Kursdaten beim Server benötigt
-	const SKursDaten = defineAsyncComponent(() => import("~/components/kurse/daten/SKursDaten.vue"));
+	const props = defineProps<{ id?: number; item?: KursListeEintrag, routename: string }>();
 
-	// TODO Implementierung Kursdaten beim Server benötigt
-	// @Options({ name: 's-kurs-app', components: { SKursDaten } })
+	const data: RouteDataKurse = routeKurse.data;
+	const selectedRoute = routeKurse.getChildRouteSelector();
+
 	const main: Main = injectMainApp();
 
 	const appKurse = main.apps.kurse;
 	const appLehrer = main.apps.lehrer;
 
-	const inputKuerzel: ComputedRef<string> = computed(() => {
-		if (appKurse.auswahl.ausgewaehlt) {
-			return appKurse.auswahl.ausgewaehlt.kuerzel.toString();
-		}
-		return "";
-	});
-
-	const inputId: ComputedRef<string> = computed(() => {
-		if (appKurse.auswahl.ausgewaehlt) {
-			return "ID: " + appKurse.auswahl.ausgewaehlt.id;
-		}
-		return "";
-	});
+	const kuerzel: ComputedRef<string> = computed(() => props.item?.kuerzel.toString() || "");
 
 	const inputFachlehrer: ComputedRef<string> = computed(() => {
 		const id = appKurse.auswahl.ausgewaehlt?.lehrer;
 		const leer = "kein Lehrer festgelegt";
-		if (!id) return leer;
+		if (!id) 
+			return leer;
 		const lehrer = appLehrer.auswahl.liste.find(l => l.id === id);
 		return lehrer?.kuerzel.toString() || leer;
 	});
+
 </script>

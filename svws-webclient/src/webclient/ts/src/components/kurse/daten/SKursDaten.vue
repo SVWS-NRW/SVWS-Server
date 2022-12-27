@@ -5,14 +5,15 @@
 </template>
 
 <script setup lang="ts">
-	import { computed, ComputedRef, defineAsyncComponent } from "vue";
 
-	const SCardKursBasisdaten = defineAsyncComponent(
-		() => import("~/components/kurse/daten/SCardKursBasisdaten.vue")
-	);
+	import { KursListeEintrag } from "@svws-nrw/svws-core-ts";
+	import { computed, ComputedRef } from "vue";
+
+	const props = defineProps<{ id?: number; item?: KursListeEintrag, routename: string }>();
 
 	const visible: ComputedRef<boolean> = computed(() => {
 		//return this.$app.afaecher.visible; //TODO: richtige Bedingung einpflegen
 		return true;
 	});
+
 </script>

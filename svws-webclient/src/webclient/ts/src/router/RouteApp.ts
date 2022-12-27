@@ -1,17 +1,17 @@
 import { RouteRecordRaw } from "vue-router";
 
-import { RouteSchule } from "~/router/apps/RouteSchule";
+import { routeSchule } from "~/router/apps/RouteSchule";
 import { RouteSchuleBenutzerverwaltung } from "~/router/apps/RouteSchuleBenutzerverwaltung";
-import { RouteKataloge } from "~/router/apps/RouteKataloge";
+import { routeKataloge } from "~/router/apps/RouteKataloge";
 import { RouteKatalogFaecher } from "~/router/apps/RouteKatalogFaecher";
 import { RouteKatalogReligion } from "~/router/apps/RouteKatalogReligion";
 import { RouteKatalogJahrgaenge } from "~/router/apps/RouteKatalogJahrgaenge";
 import { routeSchueler } from "~/router/apps/RouteSchueler";
 import { routeLehrer } from "~/router/apps/RouteLehrer";
 import { RouteKlassen } from "~/router/apps/RouteKlassen";
-import { RouteKurse } from "~/router/apps/RouteKurse";
+import { routeKurse } from "~/router/apps/RouteKurse";
 import { routeGost } from "~/router/apps/RouteGost";
-import { RouteStatistik } from "~/router/apps/RouteStatistik";
+import { routeStatistik } from "~/router/apps/RouteStatistik";
 
 import SApp from "~/components/SApp.vue";
 
@@ -21,18 +21,18 @@ export const RouteApp : RouteRecordRaw = {
     component: SApp,
     name: "app",
     children: [
-        RouteSchule,
+        routeSchule.record,
         RouteSchuleBenutzerverwaltung,
-        RouteKataloge,
+        routeKataloge.record,
         RouteKatalogFaecher,
         RouteKatalogReligion,
         RouteKatalogJahrgaenge,
         routeSchueler.record,
         routeLehrer.record,
         RouteKlassen,
-        RouteKurse,
+        routeKurse.record,
         routeGost.record,
-        RouteStatistik
+        routeStatistik.record
     ],
     meta: {
         auth_required: false,   // gibt an, ob eine Authentifizierung für diese Seite benötigt wird

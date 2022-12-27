@@ -1,16 +1,33 @@
-import { RouteRecordRaw } from "vue-router";
-import { RouteAppMeta } from "~/router/RouteUtils";
+import { computed, WritableComputedRef } from "vue";
+import { RouteLocationNormalized } from "vue-router";
+import { RouteNodeListView } from "../RouteNodeListView";
 
-const ROUTE_NAME: string = "schule";
+const SSchuleAuswahl = () => import("~/components/schule/SSchuleAuswahl.vue")
+const SSchuleApp = () => import("~/components/schule/SSchuleApp.vue")
 
-export const RouteSchule : RouteRecordRaw = {
-	name: ROUTE_NAME,
-	path: "/schule",
-	components: {
-		default: () => import("~/components/schule/SSchuleApp.vue"),
-		liste: () => import("~/components/schule/SSchuleAuswahl.vue")
-	},
-	meta: <RouteAppMeta<unknown, unknown>> {
-		auswahl: () => {}
+export class RouteSchule extends RouteNodeListView<unknown, unknown> {
+
+	protected defaultChildNode = undefined;
+
+	public constructor() {
+		super("schule", "/schule", SSchuleAuswahl, SSchuleApp);
+		super.propHandler = (route) => this.getProps(route);
+		super.text = "Schule";
+		super.setView("liste", SSchuleAuswahl, (route) => this.getNoProps(route));
+		super.children = [
+		];
 	}
+
+    protected getAuswahlComputedProperty(): WritableComputedRef<undefined> {
+		// TODO
+		return computed({ get(): undefined { return undefined; }, set(value: undefined) { }});
+	}
+
+	public getProps(to: RouteLocationNormalized): Record<string, any> {
+		// TODO
+		return { };
+	}
+
 }
+
+export const routeSchule = new RouteSchule();

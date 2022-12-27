@@ -15,8 +15,9 @@
 	import { computed } from "vue";
 	import { injectMainApp, Main } from "~/apps/Main";
 	import { KursListeEintrag } from "@svws-nrw/svws-core-ts";
-	import { RouteKurse } from "~/router/apps/RouteKurse";
-	import { routeAppAuswahl } from "~/router/RouteUtils";
+	import { routeKurse } from "~/router/apps/RouteKurse";
+
+	const props = defineProps<{ id?: number; item?: KursListeEintrag, routename: string }>();
 
 	const cols = [
 		{ key: "kuerzel", label: "Kürzel", width: "6em", sortable: true, defaultSort: "asc" },
@@ -37,6 +38,6 @@
 		}));
 	});
 
-	const selected = routeAppAuswahl(RouteKurse);
+	const selected = routeKurse.auswahl;
 
 </script>

@@ -1,16 +1,33 @@
-import { RouteRecordRaw } from "vue-router";
-import { RouteAppMeta } from "~/router/RouteUtils";
+import { computed, WritableComputedRef } from "vue";
+import { RouteLocationNormalized } from "vue-router";
+import { RouteNodeListView } from "../RouteNodeListView";
 
-const ROUTE_NAME: string = "kataloge";
+const SKatalogeAuswahl = () => import("~/components/kataloge/SKatalogeAuswahl.vue")
+const SKatalogeApp = () => import("~/components/kataloge/SKatalogeApp.vue")
 
-export const RouteKataloge : RouteRecordRaw = {
-	name: ROUTE_NAME,
-	path: "/kataloge",
-	components: {
-		default: () => import("~/components/kataloge/SKatalogeApp.vue"),
-		liste: () => import("~/components/kataloge/SKatalogeAuswahl.vue")
-	},
-	meta: <RouteAppMeta<unknown, unknown>> {
-		auswahl: () => {}
+export class RouteKataloge extends RouteNodeListView<unknown, unknown> {
+
+	protected defaultChildNode = undefined;
+
+	public constructor() {
+		super("kataloge", "/kataloge", SKatalogeAuswahl, SKatalogeApp);
+		super.propHandler = (route) => this.getProps(route);
+		super.text = "Kataloge";
+		super.setView("liste", SKatalogeAuswahl, (route) => this.getNoProps(route));
+		super.children = [
+		];
 	}
+
+    protected getAuswahlComputedProperty(): WritableComputedRef<undefined> {
+		// TODO
+		return computed({ get(): undefined { return undefined; }, set(value: undefined) { }});
+	}
+
+	public getProps(to: RouteLocationNormalized): Record<string, any> {
+		// TODO
+		return { };
+	}
+
 }
+
+export const routeKataloge = new RouteKataloge();

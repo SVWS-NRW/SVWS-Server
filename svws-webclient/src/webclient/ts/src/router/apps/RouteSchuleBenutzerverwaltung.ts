@@ -3,7 +3,6 @@ import { injectMainApp } from "~/apps/Main";
 import { RouteAppMeta } from "~/router/RouteUtils";
 import { RouteSchuleBenutzerverwaltungBenutzer } from "~/router/apps/benutzerverwaltung/RouteSchuleBenutzerverwaltungBenutzer";
 import { RouteSchuleBenutzerverwaltungBenutzergruppe } from "~/router/apps/benutzerverwaltung/RouteSchuleBenutzerverwaltungBenutzergruppe";
-import { BaseList } from "~/apps/BaseList";
 
 const ROUTE_NAME: string = "benutzerverwaltung";
 
