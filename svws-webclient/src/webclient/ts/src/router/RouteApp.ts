@@ -3,7 +3,7 @@ import { RouteRecordRaw } from "vue-router";
 import { routeSchule } from "~/router/apps/RouteSchule";
 import { RouteSchuleBenutzerverwaltung } from "~/router/apps/RouteSchuleBenutzerverwaltung";
 import { routeKataloge } from "~/router/apps/RouteKataloge";
-import { RouteKatalogFaecher } from "~/router/apps/RouteKatalogFaecher";
+import { routeKatalogFaecher } from "~/router/apps/RouteKatalogFaecher";
 import { RouteKatalogReligion } from "~/router/apps/RouteKatalogReligion";
 import { RouteKatalogJahrgaenge } from "~/router/apps/RouteKatalogJahrgaenge";
 import { routeSchueler } from "~/router/apps/RouteSchueler";
@@ -24,7 +24,7 @@ export const RouteApp : RouteRecordRaw = {
         routeSchule.record,
         RouteSchuleBenutzerverwaltung,
         routeKataloge.record,
-        RouteKatalogFaecher,
+        routeKatalogFaecher.record,
         RouteKatalogReligion,
         RouteKatalogJahrgaenge,
         routeSchueler.record,

@@ -17,15 +17,16 @@
 
 <script setup lang="ts">
 
-	import type { FaecherListeEintrag } from "@svws-nrw/svws-core-ts";
+	import { FaecherListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, ref } from "vue";
 	import { injectMainApp, Main } from "~/apps/Main";
 	import { router } from "~/router"
-	import { RouteKataloge } from "~/router/apps/RouteKataloge";
-	import { routeAppAuswahl } from "~/router/RouteUtils";
-	import { RouteKatalogFaecher } from "~/router/apps/RouteKatalogFaecher";
+	import { routeKatalogFaecher } from "~/router/apps/RouteKatalogFaecher";
 
-	const selected = routeAppAuswahl(RouteKatalogFaecher);
+	const props = defineProps<{ id?: number; item?: FaecherListeEintrag, routename: string }>();
+	
+	const selected = routeKatalogFaecher.auswahl;
+
 	const main: Main = injectMainApp();
 	const app = main.apps.faecher;
 

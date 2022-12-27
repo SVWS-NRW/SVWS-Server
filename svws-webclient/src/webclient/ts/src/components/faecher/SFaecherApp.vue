@@ -1,23 +1,16 @@
 <template>
-	<div v-if="app.dataFach.daten" class="flex h-full flex-row">
-		<div class="flex w-full flex-col">
-			<svws-ui-header>
-				<span class="inline-block mr-3">{{ inputBezeichnung }}</span>
-				<svws-ui-badge variant="light">{{ inputId }}</svws-ui-badge>
+	<div v-if="props.id !== undefined">
+		<svws-ui-header>
+			<div class="flex items-center">
+				<span class="inline-block mr-3">{{ props.item?.bezeichnung }}</span>
+				<svws-ui-badge variant="light">{{ "ID: " + props.id }}</svws-ui-badge>
 				<br/>
-				<span class="opacity-50">{{ inputKuerzel }}</span>
-			</svws-ui-header>
-			<svws-ui-tab-bar v-model="app.selectedTab.value">
-				<template #tabs>
-					<svws-ui-tab-button>Daten</svws-ui-tab-button>
-				</template>
-				<template #panels>
-					<svws-ui-tab-panel>
-						<s-fach-daten />
-					</svws-ui-tab-panel>
-				</template>
-			</svws-ui-tab-bar>
-		</div>
+				<span class="opacity-50">{{ props.item?.kuerzel }}</span>
+			</div>
+		</svws-ui-header>
+		<svws-ui-router-tab-bar :routes="routeKatalogFaecher.children_records" :hidden="routeKatalogFaecher.children_hidden" v-model="selectedRoute">
+			<router-view />
+		</svws-ui-router-tab-bar>
 	</div>
 	<div v-else class="app-layout--main--placeholder">
 		<i-ri-archive-line/>
@@ -25,35 +18,13 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ComputedRef, defineAsyncComponent } from "vue";
 
-import { injectMainApp, Main } from "~/apps/Main";
+	import { FaecherListeEintrag } from "@svws-nrw/svws-core-ts";
+	import { RouteDataKatalogFaecher, routeKatalogFaecher } from "~/router/apps/RouteKatalogFaecher";
 
-const SFachDaten = defineAsyncComponent(
-	() => import("~/components/faecher/daten/SFachDaten.vue")
-);
-const main: Main = injectMainApp();
+	const props = defineProps<{ id?: number; item?: FaecherListeEintrag, routename: string }>();
 
-const app = main.apps.faecher;
+	const data: RouteDataKatalogFaecher = routeKatalogFaecher.data;
+	const selectedRoute = routeKatalogFaecher.getChildRouteSelector();
 
-const inputKuerzel: ComputedRef<string | false> = computed(() => {
-	if (app.auswahl.ausgewaehlt?.kuerzel) {
-		return app.auswahl.ausgewaehlt.kuerzel.toString();
-	}
-	return false;
-});
-
-const inputId: ComputedRef<string | false> = computed(() => {
-	if (app.auswahl.ausgewaehlt) {
-		return "ID: " + app.auswahl.ausgewaehlt.id;
-	}
-	return false;
-});
-
-const inputBezeichnung: ComputedRef<string | undefined> = computed(() => {
-	if (app.auswahl.ausgewaehlt) {
-		return app.dataFach.daten?.bezeichnung?.toString();
-	}
-	return "";
-});
 </script>
