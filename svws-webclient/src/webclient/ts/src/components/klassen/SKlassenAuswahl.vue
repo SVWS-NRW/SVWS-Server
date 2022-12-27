@@ -15,8 +15,10 @@
 	import type { KlassenListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, ref } from "vue";
 	import { injectMainApp, Main } from "~/apps/Main";
-	import { RouteKlassen } from "~/router/apps/RouteKlassen";
-	import { routeAppAuswahl } from "~/router/RouteUtils";
+	import { routeKlassen } from "~/router/apps/RouteKlassen";
+
+	const props = defineProps<{ id?: number; item?: KlassenListeEintrag, routename: string }>();
+	const selected = routeKlassen.auswahl;
 
 	const cols = ref([
 		{ key: "kuerzel", label: "Kürzel", width: "6em", sortable: true, defaultSort: "asc" },
@@ -26,7 +28,5 @@
 	const app = main.apps.klassen;
 
 	const rows: ComputedRef<KlassenListeEintrag[] | undefined> = computed(() => { return app.auswahl.liste; });
-
-	const selected = routeAppAuswahl(RouteKlassen);
 
 </script>

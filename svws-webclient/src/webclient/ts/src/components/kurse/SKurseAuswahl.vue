@@ -18,6 +18,7 @@
 	import { routeKurse } from "~/router/apps/RouteKurse";
 
 	const props = defineProps<{ id?: number; item?: KursListeEintrag, routename: string }>();
+	const selected = routeKurse.auswahl;
 
 	const cols = [
 		{ key: "kuerzel", label: "Kürzel", width: "6em", sortable: true, defaultSort: "asc" },
@@ -37,7 +38,5 @@
 			jahrgang: appJahrgaenge.auswahl.liste.find(j => e.idJahrgaenge.toArray(new Array<number>()).includes(j.id))?.kuerzel?.toString() || ""
 		}));
 	});
-
-	const selected = routeKurse.auswahl;
 
 </script>

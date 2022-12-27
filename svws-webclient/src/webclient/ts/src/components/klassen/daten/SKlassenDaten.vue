@@ -5,14 +5,15 @@
 </template>
 
 <script setup lang="ts">
-	import { computed, ComputedRef, defineAsyncComponent } from "vue";
 
-	const SCardKlasseBasisdaten = defineAsyncComponent(
-		() => import("~/components/klassen/daten/SCardKlasseBasisdaten.vue")
-	);
+	import { KlassenListeEintrag } from "@svws-nrw/svws-core-ts";
+	import { computed, ComputedRef } from "vue";
+
+	const props = defineProps<{ id?: number; item?: KlassenListeEintrag, routename: string }>();
 
 	const visible: ComputedRef<boolean> = computed(() => {
 		//return this.$app.afaecher.visible; //TODO: richtige Bedingung einpflegen
 		return true;
 	});
+
 </script>

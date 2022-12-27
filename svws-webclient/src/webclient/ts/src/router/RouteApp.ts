@@ -8,7 +8,7 @@ import { RouteKatalogReligion } from "~/router/apps/RouteKatalogReligion";
 import { RouteKatalogJahrgaenge } from "~/router/apps/RouteKatalogJahrgaenge";
 import { routeSchueler } from "~/router/apps/RouteSchueler";
 import { routeLehrer } from "~/router/apps/RouteLehrer";
-import { RouteKlassen } from "~/router/apps/RouteKlassen";
+import { routeKlassen } from "~/router/apps/RouteKlassen";
 import { routeKurse } from "~/router/apps/RouteKurse";
 import { routeGost } from "~/router/apps/RouteGost";
 import { routeStatistik } from "~/router/apps/RouteStatistik";
@@ -29,7 +29,7 @@ export const RouteApp : RouteRecordRaw = {
         RouteKatalogJahrgaenge,
         routeSchueler.record,
         routeLehrer.record,
-        RouteKlassen,
+        routeKlassen.record,
         routeKurse.record,
         routeGost.record,
         routeStatistik.record
