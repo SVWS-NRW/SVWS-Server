@@ -3,7 +3,7 @@ import { computed, WritableComputedRef } from "vue";
 import { RouteLocationNormalized, RouteRecordRaw, useRouter } from "vue-router";
 import { mainApp } from "~/apps/Main";
 import { RouteNodeListView } from "~/router/RouteNodeListView";
-import { routeKatalogReligionDaten } from "~/router/apps/religion/routeKatalogReligionDaten";
+import { routeKatalogReligionDaten } from "~/router/apps/religion/RouteKatalogReligionDaten";
 import { ListReligionen } from "~/apps/kataloge/religionen/ListReligionen";
 
 
