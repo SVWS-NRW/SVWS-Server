@@ -1,0 +1,38 @@
+import { RouteLocationNormalized, Router } from "vue-router";
+
+import { RouteNode } from "~/router/RouteNode";
+import { RouteApp } from "~/router/RouteApp";
+import { RouteLogin } from "~/router/RouteLogin";
+
+import { mainApp } from "~/apps/Main";
+
+
+export class RouteManager {
+
+    protected router: Router;
+
+    public constructor (router: Router) {
+        this.router = router;
+        this.router.beforeEach(this.beforeEach);
+        // Füge die Haupt-Routen hinzu
+        this.router.addRoute(RouteLogin);
+        this.router.addRoute(RouteApp);
+    }
+
+
+    protected beforeEach(to: RouteLocationNormalized, from: RouteLocationNormalized) {
+        // Ist der Benutzer nicht authentifiziert, so wird er zur Login-Seite weitergeleitet
+        if (!mainApp.authenticated && to.name !== "login")
+            return { name: "login", query: { redirect: to.fullPath } }; // TODO 
+        // Bestimme den Knoten, für das Ziel der Route
+        const node : RouteNode<unknown> | undefined = RouteNode.getNodeByName(to.name?.toString());
+        if (node === undefined)
+            return true; // TODO später sollte dies false sein, wenn alle Routen vollständig auf den RouteManager umgestellt wurden
+        // TODO Prüfe, ob die Route sichtbar ist (hidden-Methode)
+
+        // Rufe die beforeEach-Methode bei der Ziel-Route auf...
+        return node.beforeEach(to, from);
+    }
+
+
+}

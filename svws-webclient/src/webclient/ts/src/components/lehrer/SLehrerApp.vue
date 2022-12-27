@@ -13,7 +13,7 @@
 				</div>
 			</div>
 		</svws-ui-header>
-		<svws-ui-router-tab-bar :routes="RouteLehrerChildren" :hidden="routeAppAreHidden(RouteLehrerChildren)" v-model="selectedRoute">
+		<svws-ui-router-tab-bar :routes="routeLehrer.children_records" :hidden="routeLehrer.children_hidden" v-model="selectedRoute">
 			<router-view />
 		</svws-ui-router-tab-bar>
 	</div>
@@ -29,8 +29,8 @@
 	import { RouteRecordRaw, useRoute, useRouter } from "vue-router";
 
 	import { injectMainApp, Main } from "~/apps/Main";
-	import { RouteLehrer, RouteLehrerChildren, RouteDataLehrer, routeLehrerSetRedirect } from "~/router/apps/RouteLehrer";
-	import { routeAppData, routeAppMeta, routeAppAreHidden } from "~/router/RouteUtils";
+	import { routeLehrerIndividualdaten } from "~/router/apps/lehrer/RouteLehrerIndividualdaten";
+	import { routeLehrer, RouteDataLehrer } from "~/router/apps/RouteLehrer";
 
 	const main: Main = injectMainApp();
 	const app = main.apps.lehrer;
@@ -40,21 +40,21 @@
 	// Initialisiere die Sub-Routen
 	const router = useRouter();
 	const route = useRoute();
-	const redirect = routeAppMeta(RouteLehrer).redirect;
-	const data: RouteDataLehrer = routeAppData(RouteLehrer);
-	routeLehrerSetRedirect(route);
+//	const redirect = routeAppMeta(RouteLehrer).redirect;
+	const data: RouteDataLehrer = routeLehrer.data;
+/*	routeLehrerSetRedirect(route);
 	
 	onMounted(() => {
 		if (((route.params.id === undefined) || (route.params.id === "")) && (app.auswahl.liste.length > 0))
 			router.push({ name: redirect.value.name?.toString(), params: { id: app.auswahl.liste[0].id } });
 	});
-
+*/
 	const selectedRoute: WritableComputedRef<RouteRecordRaw> = computed({
 		get(): RouteRecordRaw {
-			return redirect.value;
+			return routeLehrer.selectedChildRecord || routeLehrerIndividualdaten.record;
 		},
 		set(value: RouteRecordRaw) {
-			redirect.value = value;
+			routeLehrer.selectedChildRecord = value;
 			router.push({ name: value.name, params: { id: props.id } });
 		}
 	});

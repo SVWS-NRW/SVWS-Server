@@ -49,14 +49,15 @@
 			</svws-ui-sidebar-menu>
 		</template>
 		<template #secondaryMenu>
-			<router-view name="liste"/>
+			<router-view :key="$route.hash" name="liste"/>
 		</template>
 		<template #main>
 			<svws-ui-overlay v-if="showOverlay || initializing" />
 			<div class="page-wrapper">
 				<svws-ui-overlay v-if="showOverlay || initializing" />
 				<main class="relative h-full">
-					<router-view /> </main>
+					<router-view :key="$route.hash" />
+				</main>
 				<s-app-status />
 			</div>
 		</template>

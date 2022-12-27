@@ -1,41 +1,46 @@
 import { LehrerListeEintrag } from "@svws-nrw/svws-core-ts";
-import { RouteRecordRaw } from "vue-router";
+import { defineAsyncComponent } from "vue";
+import { RouteLocationNormalized } from "vue-router";
 import { DataLehrerPersonaldaten } from "~/apps/lehrer/DataLehrerPersonaldaten";
 import { injectMainApp } from "~/apps/Main";
-import { routeAppData, RouteAppMeta, routePropsAuswahlID } from "~/router/RouteUtils";
+import { RouteNode } from "~/router/RouteNode";
+import { RouteNodeListView } from "~/router/RouteNodeListView";
 
-const ROUTE_NAME: string = "lehrer_personaldaten";
 
-export interface RouteDataLehrerPersonaldaten {
-	item: LehrerListeEintrag | undefined;
-	personaldaten: DataLehrerPersonaldaten;
+
+export class RouteDataLehrerPersonaldaten {
+	item: LehrerListeEintrag | undefined = undefined;
+	personaldaten: DataLehrerPersonaldaten = new DataLehrerPersonaldaten();
 }
 
-export const RouteLehrerPersonaldaten : RouteRecordRaw = {
-	name: ROUTE_NAME,
-	path: "personaldaten",
-	component: () => import("~/components/lehrer/personaldaten/SLehrerPersonaldaten.vue"),
-	props: (route) => {
-		const prop = routePropsAuswahlID(route, injectMainApp().apps.lehrer.auswahl);
-		const data: RouteDataLehrerPersonaldaten = routeAppData(RouteLehrerPersonaldaten);
-		if (prop.item !== data.item) {
-			if (prop.item === undefined) {
-				data.item = undefined;
-				data.personaldaten.unselect();
-			} else {
-				data.item = prop.item as LehrerListeEintrag;
-				data.personaldaten.select(data.item);
-			}
-		}
-		return prop;
-	},
-	meta: <RouteAppMeta<unknown, RouteDataLehrerPersonaldaten>> {
-		auswahl: () => {},
-		hidden: () => false,
-		text: "Personaldaten",
-		data: <RouteDataLehrerPersonaldaten>{
-			item: undefined,
-			personaldaten: new DataLehrerPersonaldaten()
+const SLehrerPersonaldaten = () => import("~/components/lehrer/personaldaten/SLehrerPersonaldaten.vue");
+
+export class RouteLehrerPersonaldaten extends RouteNode<RouteDataLehrerPersonaldaten> {
+
+	public constructor() {
+		super("lehrer_personaldaten", "personaldaten", SLehrerPersonaldaten, new RouteDataLehrerPersonaldaten());
+		super.propHandler = (route) => this.getProps(route);
+		super.text = "Personaldaten";
+	}
+
+	protected onSelect(item?: LehrerListeEintrag) {
+		if (item === this.data.item)
+			return;
+		if (item === undefined) {
+			this.data.item = undefined;
+			this.data.personaldaten.unselect();
+		} else {
+			this.data.item = item;
+			this.data.personaldaten.select(this.data.item);
 		}
 	}
-};
+
+	public getProps(to: RouteLocationNormalized): Record<string, any> {
+		const prop = RouteNodeListView.getPropsByAuswahlID(to, injectMainApp().apps.lehrer.auswahl);
+		this.onSelect(prop.item as LehrerListeEintrag | undefined);
+		return prop;
+	}
+
+}
+
+export const routeLehrerPersonaldaten = new RouteLehrerPersonaldaten();

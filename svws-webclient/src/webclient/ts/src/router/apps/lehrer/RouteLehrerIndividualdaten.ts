@@ -1,17 +1,19 @@
-import { RouteRecordRaw } from "vue-router";
+import { defineAsyncComponent } from "vue";
 import { injectMainApp } from "~/apps/Main";
-import { RouteAppMeta, routePropsAuswahlID } from "~/router/RouteUtils";
+import { RouteNode } from "~/router/RouteNode";
+import { RouteNodeListView } from "~/router/RouteNodeListView";
 
-const ROUTE_NAME: string = "lehrer_daten";
+const SLehrerIndividualdaten = () => import("~/components/lehrer/individualdaten/SLehrerIndividualdaten.vue");
 
-export const RouteLehrerIndividualdaten : RouteRecordRaw = {
-	name: ROUTE_NAME,
-	path: "daten",
-	component: () => import("~/components/lehrer/individualdaten/SLehrerIndividualdaten.vue"),
-	props: (route) => routePropsAuswahlID(route, injectMainApp().apps.lehrer.auswahl),
-	meta: <RouteAppMeta<unknown, unknown>> {
-		auswahl: () => {},
-		hidden: () => false,
-		text: "Daten"
+export class RouteLehrerIndividualdaten extends RouteNode<unknown> {
+
+	public constructor() {
+		super("lehrer_daten", "daten", SLehrerIndividualdaten);
+		super.propHandler = (route) => RouteNodeListView.getPropsByAuswahlID(route, injectMainApp().apps.lehrer.auswahl);
+		super.text = "Daten";
 	}
-};
+
+}
+
+export const routeLehrerIndividualdaten = new RouteLehrerIndividualdaten();
+

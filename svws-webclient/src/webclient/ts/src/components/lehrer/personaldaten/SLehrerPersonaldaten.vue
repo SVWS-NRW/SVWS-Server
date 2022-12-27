@@ -12,15 +12,12 @@
 	import { LehrerListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef } from "vue";
 	import { DataLehrerPersonaldaten } from "~/apps/lehrer/DataLehrerPersonaldaten";
-	import { RouteDataLehrerPersonaldaten, RouteLehrerPersonaldaten } from "~/router/apps/lehrer/RouteLehrerPersonaldaten";
-	import { routeAppData } from "~/router/RouteUtils";
+	import { routeLehrerPersonaldaten } from "~/router/apps/lehrer/RouteLehrerPersonaldaten";
 
 	const props = defineProps<{ id?: number; item?: LehrerListeEintrag, routename: string }>();
 
-	const data: RouteDataLehrerPersonaldaten = routeAppData(RouteLehrerPersonaldaten);
-
 	const personaldaten: ComputedRef<DataLehrerPersonaldaten> = computed(() => {
-		return data.personaldaten;
+		return routeLehrerPersonaldaten.data.personaldaten;
 	});
 
 	const visible: ComputedRef<boolean> = computed(() => {
