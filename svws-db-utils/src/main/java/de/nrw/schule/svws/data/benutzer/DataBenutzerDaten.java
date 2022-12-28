@@ -3,6 +3,7 @@ package de.nrw.schule.svws.data.benutzer;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Vector;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -12,6 +13,7 @@ import de.nrw.schule.svws.core.data.benutzer.BenutzergruppeDaten;
 import de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenz;
 import de.nrw.schule.svws.core.types.benutzer.BenutzerTyp;
 import de.nrw.schule.svws.data.DataManager;
+import de.nrw.schule.svws.data.JSONMapper;
 import de.nrw.schule.svws.db.Benutzer;
 import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.dto.current.schild.benutzer.DTOBenutzer;
@@ -21,6 +23,7 @@ import de.nrw.schule.svws.db.dto.current.schild.benutzer.DTOBenutzergruppe;
 import de.nrw.schule.svws.db.dto.current.schild.benutzer.DTOBenutzergruppenKompetenz;
 import de.nrw.schule.svws.db.dto.current.schild.benutzer.DTOBenutzergruppenMitglied;
 import de.nrw.schule.svws.db.dto.current.svws.auth.DTOCredentials;
+import de.nrw.schule.svws.db.dto.current.svws.db.DTODBAutoInkremente;
 import de.nrw.schule.svws.db.dto.current.views.benutzer.DTOViewBenutzerdetails;
 import de.nrw.schule.svws.db.utils.OperationError;
 import jakarta.ws.rs.WebApplicationException;
@@ -411,6 +414,82 @@ public class DataBenutzerDaten extends DataManager<Long> {
         		+ "ON bgm.Gruppe_ID = bg.ID and bgm.Benutzer_ID= ?1 and bg.IstAdmin= ?2 ", DTOBenutzergruppe.class, 
         		conn.getUser().getId(), true);
         return bgs.size();
+    }
+
+       /** 
+     * Erstellt einen neuen Benutzer  * 
+     * @param is                        Das JSON-Objekt mit den Daten
+     * @param passwort           Das Passwort des neuen Benutzers
+     * 
+     * @return Eine Response mit dem neuen Benutzer 
+     */
+    public Response create(InputStream is, String passwort) {
+        DTOBenutzerAllgemein benutzer_allg = null;
+        DTOBenutzer benutzer = null;
+        DTOCredentials credential=null;
+        Long ba_ID = (long) 0;
+        Map<String, Object> map = JSONMapper.toMap(is);
+            if(map.size() > 0) {
+                try {
+                    conn.transactionBegin();
+                    
+                    // Bestimme die ID des neuen Benutzers
+                    DTODBAutoInkremente ba_lastID = conn.queryByKey(DTODBAutoInkremente.class, "BenutzerAllgemein");
+                    ba_ID = ba_lastID == null ? 1 : ba_lastID.MaxID + 1;
+                    
+                    //Bestimme die ID des neuen Credentials
+                    DTODBAutoInkremente c_lastID = conn.queryByKey(DTODBAutoInkremente.class, "Credentials");
+                    Long c_ID = c_lastID == null ? 1 : c_lastID.MaxID + 1;
+                    
+                    //Bestimme die ID des neuen Credentials
+                    DTODBAutoInkremente b_lastID = conn.queryByKey(DTODBAutoInkremente.class, "Benutzer");
+                    Long b_ID = b_lastID == null ? 1 : b_lastID.MaxID + 1;
+                    
+                    //Lege die Objekte an
+                    benutzer_allg = new DTOBenutzerAllgemein(ba_ID);
+                    //TODO Benutzertyp default-Wert?
+                    benutzer = new DTOBenutzer(b_ID,BenutzerTyp.ALLGEMEIN,false);
+                    //TODO Benutzername? + Password?
+                    credential = new DTOCredentials(c_ID,"test");
+                    credential.PasswordHash="passwort".hashCode()+"";
+                    for(Entry<String, Object> entry : map.entrySet()) {
+                        String key = entry.getKey();
+                        Object value = entry.getValue();
+                        switch(key) {
+                            case "id" -> {
+                                Long create_id = JSONMapper.convertToLong(value, true);
+                                if ( create_id != null )
+                                    throw OperationError.BAD_REQUEST.exception("ID muss leer sein.");
+                            }
+                            case "typ" -> {
+                                                        int typ_id = JSONMapper.convertToInteger(value, true);
+                                                        benutzer.Typ = BenutzerTyp.getByID(typ_id);
+                                                    }
+                            case "typID" -> System.out.println("//TODO");
+                            case "anzeigename" -> benutzer_allg.AnzeigeName = JSONMapper.convertToString(value, true, true);
+                            case "name" -> credential.Benutzername = JSONMapper.convertToString(value, true, true);
+                            case "istAdmin" -> benutzer.IstAdmin = JSONMapper.convertToBoolean(value, true);
+                            default -> throw OperationError.BAD_REQUEST.exception();
+                        }
+                    }
+                    //Objekten miteinander verbinden
+                    benutzer.Allgemein_ID=benutzer_allg.ID;
+                    benutzer_allg.CredentialID = credential.ID;
+                    conn.transactionPersist(benutzer);
+                    conn.transactionPersist(benutzer_allg);
+                    conn.transactionPersist(credential);
+                    if( !conn.transactionCommit())
+                        return OperationError.CONFLICT.getResponse("Datenbankfehler beim Persistieren des Betriebansprechpartners");
+                }catch (Exception e) {
+                    if(e instanceof WebApplicationException webApplicationException)
+                        return webApplicationException.getResponse();
+                    return OperationError.INTERNAL_SERVER_ERROR.getResponse();
+                }finally {
+                    conn.transactionRollback();
+                }
+            }
+            return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(getDTO(ba_ID)).build();
+            
     }
 
 }

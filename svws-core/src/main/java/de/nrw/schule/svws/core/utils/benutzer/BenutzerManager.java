@@ -3,6 +3,7 @@ package de.nrw.schule.svws.core.utils.benutzer;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 import de.nrw.schule.svws.core.data.benutzer.BenutzerDaten;
@@ -64,8 +65,7 @@ public class BenutzerManager {
         init();
         this._daten = pDaten;
         // Aktualisiere die lokalen Datenstrukturen - die direkt zugeordnete Kompetenzen
-        for (@NotNull
-        Long kID : pDaten.kompetenzen) {
+        for (@NotNull Long kID : pDaten.kompetenzen) {
             if (kID == null)
                 throw new NullPointerException("Fehlerhafte Daten: Die Liste der Kompetenzen darf keine Null-Werte enthalten.");
             BenutzerKompetenz komp = BenutzerKompetenz.getByID(kID);
@@ -99,8 +99,11 @@ public class BenutzerManager {
             // Aktualisiere die Menge der zugeordneten Kompetenzen
             _setKompetenzenAlle.add(komp);
             // Speichere über welche Gruppe die Kompetenz zugeordnet wurde.
-            getGruppen(komp).add(bgd);
-        }        
+            Vector<@NotNull BenutzergruppeDaten> gruppen = _mapKompetenzenVonGruppe.get(komp) ;
+            if (gruppen == null)
+                throw new NullPointerException("Vector existiert nicht, müsste aber zuvor initialisiert worden sein.");
+            gruppen.add(bgd);
+         }        
     }
     
     
@@ -114,19 +117,34 @@ public class BenutzerManager {
     		return;
     	_mapGruppen.remove(bgd.id);
     	_setGruppenIDs.remove(bgd.id);
-    	for (@NotNull BenutzerKompetenz p : BenutzerKompetenz.values()) {
-    		Vector< @NotNull BenutzergruppeDaten> vbgd = _mapKompetenzenVonGruppe.get(p);
-    		if (vbgd == null ) 
-    			throw new NullPointerException("Fehler");
-			if (vbgd.contains(bgd)) {
-				vbgd.remove(bgd);
-				if(vbgd.size() == 0)
-					_setKompetenzenAlle.remove(p);
-			}         
-			_mapKompetenzenVonGruppe.remove(p);
-			_mapKompetenzenVonGruppe.put(p, vbgd);
-    	}
+    	 for (@NotNull Long kid : bgd.kompetenzen) {
+            BenutzerKompetenz komp = BenutzerKompetenz.getByID(kid);
+    		if (komp != null){
+    		    Vector< @NotNull BenutzergruppeDaten> gruppen = _mapKompetenzenVonGruppe.get(komp);
+    		    if (gruppen == null)
+                    throw new NullPointerException("Vector existiert nicht, müsste aber zuvor initialisiert worden sein.");
+		        for (int i = gruppen.size() - 1; i >= 0; i--)
+		            if (gruppen.elementAt(i).id == bgd.id)
+		                gruppen.removeElementAt(i);
+		        if (gruppen.isEmpty() && !this._setKompetenzen.contains(komp))
+		            this._setKompetenzenAlle.remove(komp);
+    		}
+    	 }	
 	}
+    
+    /**
+     * Liefert true, wenn der Benutzer in einer adminstrativen Gruppe ist, sonst false.
+     * 
+     * @return true, wenn der Benutzer in einer administrativen Gruppe ist.
+     */
+
+    public boolean  istInAdminGruppe() {
+       for(BenutzergruppeDaten bg : _mapGruppen.values()) {
+           if(bg.istAdmin)
+               return true;
+       }
+       return false;
+    }
     
     /**
      * Initialisiert die lokalen Datenstrukturen.
@@ -237,7 +255,7 @@ public class BenutzerManager {
      *         ansonsten false
      */
     public boolean istAdmin() {
-        return this._daten.istAdmin;
+        return this._daten.istAdmin || this.istInAdminGruppe();
     }
 
     /**
@@ -249,7 +267,7 @@ public class BenutzerManager {
      * @return true, falls der Benutzer die Kompetenz besitzt.
      */
     public boolean hatKompetenz(@NotNull BenutzerKompetenz kompetenz) {
-        if (this._daten.istAdmin)
+        if (this._daten.istAdmin || istInAdminGruppe())
             return true;
         return _setKompetenzenAlle.contains(kompetenz);
     }
@@ -381,5 +399,7 @@ public class BenutzerManager {
     public void removeFromGruppe(@NotNull BenutzergruppeDaten bgd) {
     	this.removeGruppe(bgd);
     }
+    
+    
 
 }

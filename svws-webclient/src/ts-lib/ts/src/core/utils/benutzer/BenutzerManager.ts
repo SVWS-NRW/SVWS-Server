@@ -87,7 +87,10 @@ export class BenutzerManager extends JavaObject {
 			if (komp === null) 
 				throw new NullPointerException("Fehlerhafte Daten: Die Kompetenz mit der ID " + kid.valueOf() + " existiert nicht.")
 			this._setKompetenzenAlle.add(komp);
-			this.getGruppen(komp).add(bgd);
+			let gruppen : Vector<BenutzergruppeDaten> | null = this._mapKompetenzenVonGruppe.get(komp);
+			if (gruppen === null) 
+				throw new NullPointerException("Vector existiert nicht, müsste aber zuvor initialisiert worden sein.")
+			gruppen.add(bgd);
 		}
 	}
 
@@ -101,18 +104,32 @@ export class BenutzerManager extends JavaObject {
 			return;
 		this._mapGruppen.remove(bgd.id);
 		this._setGruppenIDs.remove(bgd.id);
-		for (let p of BenutzerKompetenz.values()) {
-			let vbgd : Vector<BenutzergruppeDaten> | null = this._mapKompetenzenVonGruppe.get(p);
-			if (vbgd === null) 
-				throw new NullPointerException("Fehler")
-			if (vbgd.contains(bgd)) {
-				vbgd.remove(bgd);
-				if (vbgd.size() === 0) 
-					this._setKompetenzenAlle.remove(p);
+		for (let kid of bgd.kompetenzen) {
+			let komp : BenutzerKompetenz | null = BenutzerKompetenz.getByID(kid.valueOf());
+			if (komp !== null) {
+				let gruppen : Vector<BenutzergruppeDaten> | null = this._mapKompetenzenVonGruppe.get(komp);
+				if (gruppen === null) 
+					throw new NullPointerException("Vector existiert nicht, müsste aber zuvor initialisiert worden sein.")
+				for (let i : number = gruppen.size() - 1; i >= 0; i--)
+					if (gruppen.elementAt(i).id === bgd.id) 
+						gruppen.removeElementAt(i);
+				if (gruppen.isEmpty() && !this._setKompetenzen.contains(komp)) 
+					this._setKompetenzenAlle.remove(komp);
 			}
-			this._mapKompetenzenVonGruppe.remove(p);
-			this._mapKompetenzenVonGruppe.put(p, vbgd);
 		}
+	}
+
+	/**
+	 * Liefert true, wenn der Benutzer in einer adminstrativen Gruppe ist, sonst false.
+	 * 
+	 * @return true, wenn der Benutzer in einer administrativen Gruppe ist.
+	 */
+	public istInAdminGruppe() : boolean {
+		for (let bg of this._mapGruppen.values()) {
+			if (bg.istAdmin) 
+				return true;
+		}
+		return false;
 	}
 
 	/**
@@ -223,7 +240,7 @@ export class BenutzerManager extends JavaObject {
 	 *         ansonsten false
 	 */
 	public istAdmin() : boolean {
-		return this._daten.istAdmin;
+		return this._daten.istAdmin || this.istInAdminGruppe();
 	}
 
 	/**
@@ -235,7 +252,7 @@ export class BenutzerManager extends JavaObject {
 	 * @return true, falls der Benutzer die Kompetenz besitzt.
 	 */
 	public hatKompetenz(kompetenz : BenutzerKompetenz) : boolean {
-		if (this._daten.istAdmin) 
+		if (this._daten.istAdmin || this.istInAdminGruppe()) 
 			return true;
 		return this._setKompetenzenAlle.contains(kompetenz);
 	}

@@ -12,6 +12,7 @@ import de.nrw.schule.svws.core.data.benutzer.BenutzergruppeDaten;
 import de.nrw.schule.svws.core.data.benutzer.BenutzergruppeListeEintrag;
 import de.nrw.schule.svws.core.data.gost.GostBlockungSchiene;
 import de.nrw.schule.svws.core.data.kataloge.KatalogEintrag;
+import de.nrw.schule.svws.core.data.schueler.SchuelerBetriebsdaten;
 import de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenz;
 import de.nrw.schule.svws.data.JSONMapper;
 import de.nrw.schule.svws.data.benutzer.DataBenutzerDaten;
@@ -20,7 +21,9 @@ import de.nrw.schule.svws.data.benutzer.DataBenutzergruppeliste;
 import de.nrw.schule.svws.data.benutzer.DataBenutzerkompetenzGruppenliste;
 import de.nrw.schule.svws.data.benutzer.DataBenutzerkompetenzliste;
 import de.nrw.schule.svws.data.benutzer.DataBenutzerliste;
+import de.nrw.schule.svws.data.schueler.DataSchuelerBetriebsdaten;
 import de.nrw.schule.svws.db.DBEntityManager;
+import de.nrw.schule.svws.db.dto.current.schild.benutzer.DTOBenutzerAllgemein;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -274,8 +277,7 @@ public class APIBenutzer {
     @Operation(summary = "Entfernt die Admin-Berechtigung des Benutzers mit der id",
     description = "Entfernt die Admin-Berechtigung des Benutzers mit der id."
     		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen  der Admin-Berechtigung hat.")
-    @ApiResponse(responseCode = "200", description = "Die Admin-Berechtigung wurde erfolgreich entfernt.",
-                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = GostBlockungSchiene.class)))    
+    @ApiResponse(responseCode = "204", description = "Die Admin-Berechtigung wurde erfolgreich entfernt.")
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Admin-Berechtigung zu entfernen.")
     @ApiResponse(responseCode = "404", description = "Der Benutzer ist nicht vorhanden.")
     @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
@@ -627,5 +629,42 @@ public class APIBenutzer {
     }
 
     // TODO Methode setBenutzergruppeKompetenz aufteilen (siehe bei Benutzer) in zwei API-Methoden: addBenutzergruppeKompetenz (POST) und removeBenutzergruppeKompetenz (DELETE)
+    
+ 
+    /**
+     * Die OpenAPI-Methode für das Erstellen eines neuen Benutzers.
+     *  
+     * @param schema                das Datenbankschema, in welchem der Benutzer erstellt wird
+     * @param request                die Informationen zur HTTP-Anfrage
+     * @param is                          JSON-Objekt mit den Daten
+     * @param passwort              das Passwort des neuen Benutzers
+     * @return die HTTP-Antwort mit der neuen Blockung
+     */
+    @POST
+    @Path("/new")
+    @Operation(summary = "Erstellt einen neuen Benutzer und gibt ihn zurück.",
+    description = "Erstellt einen neuen Benutzer und gibt ihn zurück."
+                + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Benutzers "
+                + "besitzt.")
+    @ApiResponse(responseCode = "200", description = "Benutzer wurde erfolgreich angelegt.",
+            content = @Content(mediaType = MediaType.APPLICATION_JSON,
+            schema = @Schema(implementation = BenutzerDaten.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Benutzer anzulegen.")
+    @ApiResponse(responseCode = "409", description = "Fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response createBenutzer(
+            @PathParam("schema") String schema,
+            @PathParam("passwort") String passwort,
+            @RequestBody(description = "Der Post für die Benutzer-Daten", required = true, content = 
+            @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = BenutzerDaten.class))) InputStream is, 
+            @Context HttpServletRequest request) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADMIN)) { // TODO Anpassung der Benutzerrechte
+            //TODO  Parameter passwort erhält keinen Wert von der Abfrage
+            System.out.println(passwort);
+            return (new DataBenutzerDaten(conn)).create(is, passwort);
+           
+        }
+    }
+    
 
 }

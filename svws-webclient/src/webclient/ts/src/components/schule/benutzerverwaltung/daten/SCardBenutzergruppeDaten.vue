@@ -4,7 +4,25 @@
 			<div class="input-wrapper">
 				<svws-ui-text-input v-model="bezeichnung" type="text" placeholder="Bezeichnung" />
 				<svws-ui-checkbox v-model="inputIstAdmin"> Admin ? </svws-ui-checkbox>
-				<svws-ui-table v-model="selected" v-model:selection="selection" :columns="cols" :data="rowsFiltered" is-multi-select />
+				<svws-ui-table v-model="selected" v-model:selection="selection" :columns="cols" :data="rowsFiltered" :footer="true" is-multi-select >
+					<!-- Footer mit Button zum Hinzufügen einer Zeile -->
+					<template #footer>
+						<!-- <div class="text-sm-bold normal-case mr-auto">
+							<span v-if="selectedItems.length">{{selectedItems.length}}/{{rowsFiltered.length}} ausgewählt</span>
+							<span v-else>{{rowsFiltered.length}} Einträge</span>
+						</div> -->
+						<button class="button button--icon" @click="createUser()">
+							<svws-ui-icon><i-ri-add-line /></svws-ui-icon>
+						</button>
+						<button class="button button--icon">
+							<svws-ui-icon><i-ri-file-copy-line /></svws-ui-icon>
+						</button>
+						<button class="button button--icon">
+							<svws-ui-icon><i-ri-more-2-line /></svws-ui-icon>
+						</button>
+					</template>
+				</svws-ui-table>	
+
 			</div>
 		</div>
 	</svws-ui-content-card>
@@ -44,6 +62,13 @@
 		}
 	});
 
+	function auswahl(test: BenutzerListeEintrag[]){
+		console.log(test);
+	}
+
+	function ausgewaehlt(test: BenutzerListeEintrag){
+		console.log(test);
+	} 
 	// Die Spalte für die Tabelle der Gruppenbenutzer
 	const cols = [
 		{ key: "id", label: "ID", sortable: true },
@@ -83,5 +108,9 @@
 			// TODO
 		}
 	});
+
+	function createUser(){
+		console.log("Halloe")
+	}
 
 </script>

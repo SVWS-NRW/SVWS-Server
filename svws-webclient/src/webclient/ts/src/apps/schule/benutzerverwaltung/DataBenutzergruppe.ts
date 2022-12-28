@@ -103,7 +103,9 @@ export class DataBenutzergruppe extends BaseData<BenutzergruppeDaten, Benutzergr
 		if (this.manager.hatKompetenz(kompetenz))
 			return false;
 		await App.api.addBenutzergruppeKompetenzen(kid, App.schema, this.manager.getID());
-		this.manager.addKompetenz(kompetenz);
+		const benutzergruppendaten = await App.api.getBenutzergruppeDaten(App.schema, this.manager.getID())
+		this.manager = new BenutzergruppenManager(benutzergruppendaten);
+		// this.manager.addKompetenz(kompetenz);
 		return true;
 	}
 
@@ -120,7 +122,9 @@ export class DataBenutzergruppe extends BaseData<BenutzergruppeDaten, Benutzergr
 		if (!this.manager.hatKompetenz(kompetenz))
 			return false;
 		await App.api.removeBenutzergruppeKompetenzen(kid, App.schema, this.manager.getID());
-		this.manager.removeKompetenz(kompetenz);
+		const benutzergruppendaten = await App.api.getBenutzergruppeDaten(App.schema, this.manager.getID())
+		this.manager = new BenutzergruppenManager(benutzergruppendaten);
+		//this.manager.removeKompetenz(kompetenz);
 		return true;
 	}
 
@@ -138,10 +142,12 @@ export class DataBenutzergruppe extends BaseData<BenutzergruppeDaten, Benutzergr
 				kids.add(Number(komp.daten.id));
 			}
 			await App.api.addBenutzergruppeKompetenzen(kids,App.schema,this.manager.getID());
-			for (let komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe)) {
-				if (!this.manager?.hatKompetenz(komp))
-					this.manager?.addKompetenz(komp);
-			}
+			const benutzergruppendaten = await App.api.getBenutzergruppeDaten(App.schema, this.manager.getID())
+			this.manager = new BenutzergruppenManager(benutzergruppendaten);
+			// for (let komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe)) {
+			// 	if (!this.manager?.hatKompetenz(komp))
+			// 		this.manager?.addKompetenz(komp);
+			// }
 		}
 		return true;
 	}
@@ -159,10 +165,12 @@ export class DataBenutzergruppe extends BaseData<BenutzergruppeDaten, Benutzergr
 			for (let komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe))
 				kids.add(Number(komp.daten.id));
 			await App.api.removeBenutzergruppeKompetenzen(kids,App.schema,this.manager.getID());
-			for (let komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe)) {
-				if (this.manager?.hatKompetenz(komp))
-					this.manager?.removeKompetenz(komp);
-			}
+			const benutzergruppendaten = await App.api.getBenutzergruppeDaten(App.schema, this.manager.getID())
+			this.manager = new BenutzergruppenManager(benutzergruppendaten);
+			// for (let komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe)) {
+			// 	if (this.manager?.hatKompetenz(komp))
+			// 		this.manager?.removeKompetenz(komp);
+			// }
 		}
 		return true;
 	}

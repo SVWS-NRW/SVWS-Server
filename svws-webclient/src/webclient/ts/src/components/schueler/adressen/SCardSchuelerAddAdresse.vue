@@ -107,7 +107,7 @@
 		} else {
 			await App.api.createSchuelerbetrieb(s_betrieb,App.schema,s_betrieb.schueler_id.valueOf(),s_betrieb.betrieb_id.valueOf());
 			// TODO Zeitverzögerung muss her, weil das Laden der Daten schneller geht, als sie in die Datenbank geschrieben werden.
-			app.listSchuelerbetriebe?.update_list(app.auswahl.ausgewaehlt?.id);
+			await app.listSchuelerbetriebe?.update_list(app.auswahl.ausgewaehlt?.id);
 			modalAddBetrieb.value.closeModal();
 		}
 		// TODO Nach der Erstellung eines neuen Schülerbetriebs wird die Schülerbetriebliste nicht aktualisiert.

@@ -4,6 +4,7 @@
 			<div class="input-wrapper">
 				<svws-ui-text-input v-model="anzeigename" type="text" placeholder="Login-Name" />
 				<svws-ui-text-input v-model="name" type="text" placeholder="Name" />
+				<svws-ui-checkbox v-model="inputIstAdmin" :disabled="manager?.istInAdminGruppe()"> Admin ? </svws-ui-checkbox>
 			</div>
 		</div>
 	</svws-ui-content-card>
@@ -42,6 +43,16 @@
 			if ((val === undefined) || (val === "") || (val === manager.value?.getAnmeldename().valueOf()))
 				return;
 			app.dataBenutzer.setAnmeldename(val);
+		}
+	});
+	const inputIstAdmin: WritableComputedRef<boolean | undefined> = computed({
+		get(): boolean | undefined {
+			return manager.value?.istAdmin();
+		},
+		set(val) {
+			if ((val === undefined) || (val === manager.value?.istAdmin()))
+				return;
+			app.dataBenutzer.setIstAdmin(val);
 		}
 	});
 

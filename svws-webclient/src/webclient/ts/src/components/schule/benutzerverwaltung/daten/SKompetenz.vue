@@ -28,6 +28,7 @@
 
     const aktiviert : ComputedRef<Boolean | undefined> = computed(() => {
         if (props.benutzertyp === 0){
+            //True wenn Benutzer Admin ist oder die Kompetenz von einer Gruppe geerbt wird.
             return manager.value?.istAdmin() || app_b.dataBenutzer.manager?.getGruppen(props.kompetenz).size() !== 0;
         } else{
             return props.istAdmin;
