@@ -76,6 +76,7 @@ export { BenutzerKompetenzKatalogEintrag } from './core/data/benutzer/BenutzerKo
 export { BenutzerListeEintrag } from './core/data/benutzer/BenutzerListeEintrag';
 export { BenutzergruppeDaten } from './core/data/benutzer/BenutzergruppeDaten';
 export { BenutzergruppeListeEintrag } from './core/data/benutzer/BenutzergruppeListeEintrag';
+export { Credentials } from './core/data/benutzer/Credentials';
 export { BetriebAnsprechpartner } from './core/data/betrieb/BetriebAnsprechpartner';
 export { BetriebListeEintrag } from './core/data/betrieb/BetriebListeEintrag';
 export { BetriebStammdaten } from './core/data/betrieb/BetriebStammdaten';

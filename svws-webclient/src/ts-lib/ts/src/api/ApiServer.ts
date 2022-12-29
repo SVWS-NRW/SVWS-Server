@@ -15,6 +15,7 @@ import { BetriebAnsprechpartner, cast_de_nrw_schule_svws_core_data_betrieb_Betri
 import { BetriebListeEintrag, cast_de_nrw_schule_svws_core_data_betrieb_BetriebListeEintrag } from '../core/data/betrieb/BetriebListeEintrag';
 import { BetriebStammdaten, cast_de_nrw_schule_svws_core_data_betrieb_BetriebStammdaten } from '../core/data/betrieb/BetriebStammdaten';
 import { BilingualeSpracheKatalogEintrag, cast_de_nrw_schule_svws_core_data_fach_BilingualeSpracheKatalogEintrag } from '../core/data/fach/BilingualeSpracheKatalogEintrag';
+import { Credentials, cast_de_nrw_schule_svws_core_data_benutzer_Credentials } from '../core/data/benutzer/Credentials';
 import { DBSchemaListeEintrag, cast_de_nrw_schule_svws_core_data_db_DBSchemaListeEintrag } from '../core/data/db/DBSchemaListeEintrag';
 import { EinschulungsartKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_EinschulungsartKatalogEintrag } from '../core/data/schule/EinschulungsartKatalogEintrag';
 import { ENMDaten, cast_de_nrw_schule_svws_core_data_enm_ENMDaten } from '../core/data/enm/ENMDaten';
@@ -391,7 +392,7 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der POST-Methode setAnmeldename für den Zugriff auf die URL https://{hostname}/db/{schema}/benutzer/{id : \d+}/anmeldename
 	 * 
-	 * Setzt den Anmeldenamen eines Benutzers.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Setzen des Kennwortes besitzt.
+	 * Setzt den Anmeldenamen eines Benutzers.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Setzen des Anmeldenamenss besitzt.
 	 * 
 	 * Mögliche HTTP-Antworten: 
 	 *   Code 204: Der Anmeldename wurde erfolgreich gesetzt.
@@ -493,6 +494,32 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode setPassword für den Zugriff auf die URL https://{hostname}/db/{schema}/benutzer/{id : \d+}/password
+	 * 
+	 * Setzt das neue Passwort eines Benutzers.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Setzen des Kennwortes besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 204: Das Passwort wurde erfolgreich gesetzt.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um das Kennwort zu setzen.
+	 *   Code 404: Das Passwort zu dem Benutzer sind nicht vorhanden.
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 * 
+	 * @param {String} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async setPassword(data : String, schema : string, id : number) : Promise<void> {
+		let path : string = "/db/{schema}/benutzer/{id : \d+}/password"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema)
+				.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		let body : string = JSON.stringify(data);
+		await super.postJSON(path, body);
+		return;
+	}
+
+
+	/**
 	 * Implementierung der POST-Methode setBenutzerPasswort für den Zugriff auf die URL https://{hostname}/db/{schema}/benutzer/{id : \d+}/password
 	 * 
 	 * Setzt das Kennwort eines Benutzers.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Setzen des Kennwortes besitzt.
@@ -524,9 +551,7 @@ export class ApiServer extends BaseApi {
 	 * Entfernt die Admin-Berechtigung des Benutzers mit der id.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen  der Admin-Berechtigung hat.
 	 * 
 	 * Mögliche HTTP-Antworten: 
-	 *   Code 200: Die Admin-Berechtigung wurde erfolgreich entfernt.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: GostBlockungSchiene
+	 *   Code 204: Die Admin-Berechtigung wurde erfolgreich entfernt.
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Admin-Berechtigung zu entfernen.
 	 *   Code 404: Der Benutzer ist nicht vorhanden.
 	 *   Code 409: Die übergebenen Daten sind fehlerhaft
@@ -534,16 +559,13 @@ export class ApiServer extends BaseApi {
 	 * 
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
-	 * 
-	 * @returns Die Admin-Berechtigung wurde erfolgreich entfernt.
 	 */
-	public async removeBenutzerAdmin(schema : string, id : number) : Promise<GostBlockungSchiene> {
+	public async removeBenutzerAdmin(schema : string, id : number) : Promise<void> {
 		let path : string = "/db/{schema}/benutzer/{id : \d+}/removeAdmin"
 				.replace(/{schema\s*(:[^}]+)?}/g, schema)
 				.replace(/{id\s*(:[^}]+)?}/g, id.toString());
-		const result : string = await super.deleteJSON(path, null);
-		const text = result;
-		return GostBlockungSchiene.transpilerFromJSON(text);
+		await super.deleteJSON(path, null);
+		return;
 	}
 
 
@@ -596,6 +618,34 @@ export class ApiServer extends BaseApi {
 		let ret = new Vector<BenutzerKompetenzGruppenKatalogEintrag>();
 		obj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(BenutzerKompetenzGruppenKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode createBenutzergruppe für den Zugriff auf die URL https://{hostname}/db/{schema}/benutzer/benutzergruppe/new
+	 * 
+	 * Erstellt eine neue Benutzergruppe und gibt sie zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen einer Benutzergruppe besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Benutzergruppe wurde erfolgreich angelegt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: BenutzergruppeDaten
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Benutzer anzulegen.
+	 *   Code 409: Fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 * 
+	 * @param {BenutzergruppeDaten} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * 
+	 * @returns Benutzergruppe wurde erfolgreich angelegt.
+	 */
+	public async createBenutzergruppe(data : BenutzergruppeDaten, schema : string) : Promise<BenutzergruppeDaten> {
+		let path : string = "/db/{schema}/benutzer/benutzergruppe/new"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		let body : string = BenutzergruppeDaten.transpilerToJSON(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return BenutzergruppeDaten.transpilerFromJSON(text);
 	}
 
 
@@ -867,6 +917,36 @@ export class ApiServer extends BaseApi {
 				.replace(/{id\s*(:[^}]+)?}/g, id.toString());
 		await super.deleteJSON(path, null);
 		return;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode createBenutzerAllgemein für den Zugriff auf die URL https://{hostname}/db/{schema}/benutzer/new/{anzeigename}
+	 * 
+	 * Erstellt einen neuen Benutzer und gibt ihn zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Benutzers besitzt.
+	 * 
+	 * Mögliche HTTP-Antworten: 
+	 *   Code 200: Benutzer wurde erfolgreich angelegt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: BenutzerDaten
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Benutzer anzulegen.
+	 *   Code 409: Fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 * 
+	 * @param {Credentials} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {string} anzeigename - der Pfad-Parameter anzeigename
+	 * 
+	 * @returns Benutzer wurde erfolgreich angelegt.
+	 */
+	public async createBenutzerAllgemein(data : Credentials, schema : string, anzeigename : string) : Promise<BenutzerDaten> {
+		let path : string = "/db/{schema}/benutzer/new/{anzeigename}"
+				.replace(/{schema\s*(:[^}]+)?}/g, schema)
+				.replace(/{anzeigename\s*(:[^}]+)?}/g, anzeigename);
+		let body : string = Credentials.transpilerToJSON(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return BenutzerDaten.transpilerFromJSON(text);
 	}
 
 
