@@ -88,9 +88,7 @@
 		console.log(action, item);
 	}
 
-	const schule_abschnitte: ComputedRef<
-		Array<Schuljahresabschnitt> | undefined
-	> = computed(() => {
+	const schule_abschnitte: ComputedRef<Array<Schuljahresabschnitt> | undefined> = computed(() => {
 		const liste = appSchule.value.schuleStammdaten.daten?.abschnitte;
 		return liste?.toArray(new Array<Schuljahresabschnitt>()) || [];
 	});
@@ -119,6 +117,7 @@
 			? `${item.schuljahr}, ${item.abschnitt}. HJ`
 			: "Abschnitt";
 	}
+
 </script>
 
 

@@ -1,7 +1,8 @@
 import { RouteRecordRaw } from "vue-router";
 
 import { routeSchule } from "~/router/apps/RouteSchule";
-import { RouteSchuleBenutzerverwaltung } from "~/router/apps/RouteSchuleBenutzerverwaltung";
+import { routeSchuleBenutzer } from "~/router/apps/RouteSchuleBenutzer";
+import { routeSchuleBenutzergruppe } from "~/router/apps/RouteSchuleBenutzergruppe";
 import { routeKataloge } from "~/router/apps/RouteKataloge";
 import { routeKatalogFaecher } from "~/router/apps/RouteKatalogFaecher";
 import { routeKatalogReligion } from "~/router/apps/RouteKatalogReligion";
@@ -22,7 +23,8 @@ export const RouteApp : RouteRecordRaw = {
     name: "app",
     children: [
         routeSchule.record,
-        RouteSchuleBenutzerverwaltung,
+        routeSchuleBenutzer.record,
+        routeSchuleBenutzergruppe.record,
         routeKataloge.record,
         routeKatalogFaecher.record,
         routeKatalogReligion.record,

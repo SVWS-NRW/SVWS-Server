@@ -1,8 +1,10 @@
 import { App } from "~/apps/BaseApp";
 import { BaseData } from "~/apps/BaseData";
 
-import {BenutzerDaten, BenutzergruppeDaten, BenutzergruppeListeEintrag, BenutzerKompetenz, BenutzerKompetenzGruppe, BenutzerListeEintrag, BenutzerManager, Credentials, Vector} from "@svws-nrw/svws-core-ts";
+import { BenutzerDaten, BenutzergruppeDaten, BenutzergruppeListeEintrag, BenutzerKompetenz, BenutzerKompetenzGruppe, 
+	BenutzerListeEintrag, BenutzerManager, Credentials, Vector } from "@svws-nrw/svws-core-ts";
 import { router } from "~/router";
+import { routeSchuleBenutzer } from "~/router/apps/RouteSchuleBenutzer";
 
 export class DataBenutzer extends BaseData<BenutzerDaten, BenutzerListeEintrag, BenutzerManager> {
  
@@ -271,6 +273,6 @@ export class DataBenutzer extends BaseData<BenutzerDaten, BenutzerListeEintrag, 
 		ble.idCredentials = result.idCredentials;
 		App.apps.benutzer.auswahl.liste.push(ble);
 		App.apps.benutzer.auswahl.ausgewaehlt = result;
-		router.push("/schule/benutzerverwaltung/"+ble.id+"/benutzer");
+		router.push({ name: routeSchuleBenutzer.name, params: { id : ble.id } });
 	}
 }

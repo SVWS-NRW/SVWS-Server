@@ -1,5 +1,4 @@
-<template>
-        
+<template>        
     <svws-ui-modal  ref="modalNeueBenutzergruppe"  size="small" >
         <template #modalTitle>
             Benutzergruppe hinzufügen
@@ -15,15 +14,8 @@
         </template>
         
         <template #modalActions>
-            <Button
-            type="secondary"
-            @click="modalNeueBenutzergruppe.closeModal()"
-            >
-            Abbrechen
-            </Button>
-            <Button @click="createBenutzergruppe">
-            Weiter
-            </Button>
+            <svws-ui-button type="secondary" @click="modalNeueBenutzergruppe.closeModal()"> Abbrechen </svws-ui-button>
+            <svws-ui-button @click="createBenutzergruppe"> Weiter </svws-ui-button>
         </template>
     </svws-ui-modal>
     

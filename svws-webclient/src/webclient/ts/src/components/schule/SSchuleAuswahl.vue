@@ -1,14 +1,10 @@
 <template>
 	<svws-ui-secondary-menu>
-		<template #headline>Schulverwaltung</template>
+		<template #headline> Schulverwaltung </template>
 		<template #header> </template>
 		<template #content>
 			<div class="secondary-menu--navigation container">
-				<svws-ui-sidebar-menu-item
-					v-for="item in menu_items"
-					:key="item.value"
-					@click="router.push({ name: item.value })"
-				>
+				<svws-ui-sidebar-menu-item v-for="item in menu_items" :key="item.value" @click="router.push({ name: item.value })">
 					<template #label>
 						<span>{{ item.title }}</span>
 					</template>
@@ -19,6 +15,7 @@
 </template>
 
 <script setup lang="ts">
+
 	import { router } from "~/router";
 
 	const menu_items = [
@@ -29,7 +26,9 @@
 		{ title: "Schuljahreswechsel", value: "schuljahreswechsel" },
 		{ title: "Statistik IT.NRW", value: "statistikitnrw" },
 		{ title: "Werkzeuge", value: "werkzeuge" },
-		{ title: "Benutzerverwaltung", value: "benutzerverwaltung" },
+		{ title: "Benutzer", value: "benutzer" },
+		{ title: "Benutzergruppen", value: "benutzergruppen" },
 		{ title: "Hilfe", value: "hilfe" }
 	];
+
 </script>

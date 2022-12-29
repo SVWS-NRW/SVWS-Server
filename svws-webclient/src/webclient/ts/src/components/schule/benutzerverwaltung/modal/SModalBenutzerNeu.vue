@@ -1,9 +1,7 @@
 <template>
-    <!-- MODAL FENSTER-->
     <svws-ui-modal  ref="modalNeuerBenutzer"  size="small" >
-        
         <template #modalTitle>
-		    Schüler hinzufügen
+		    Benutzer hinzufügen
 		</template>
 		
         <template #modalContent>
@@ -13,18 +11,13 @@
 					<svws-ui-text-input v-model="name" type="text" placeholder="Login-Name" />
 					<svws-ui-text-input v-model="passwort1" type="password" placeholder="Passwort"/>
                     <svws-ui-text-input v-model="passwort2" type="password" placeholder="Passwort"/>
-                    
 				</div>
 			</div>	
 		</template>						
 		
         <template #modalActions>
-			<Button	type="secondary" @click="modalNeuerBenutzer.closeModal()" >
-				Abbrechen
-			</Button>
-			<Button  @click="createBenutzerAllgemein">
-				Weiter
-			</Button>
+			<svws-ui-button type="secondary" @click="modalNeuerBenutzer.closeModal()"> Abbrechen </svws-ui-button>
+			<svws-ui-button @click="createBenutzerAllgemein"> Weiter </svws-ui-button>
 		</template>
 	</svws-ui-modal>								
 	
