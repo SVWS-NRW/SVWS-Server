@@ -1,7 +1,8 @@
 import { App } from "~/apps/BaseApp";
 import { BaseData } from "~/apps/BaseData";
 
-import {BenutzerDaten, BenutzergruppeDaten, BenutzergruppeListeEintrag, BenutzerKompetenz, BenutzerKompetenzGruppe, BenutzerListeEintrag, BenutzerManager, Vector} from "@svws-nrw/svws-core-ts";
+import {BenutzerDaten, BenutzergruppeDaten, BenutzergruppeListeEintrag, BenutzerKompetenz, BenutzerKompetenzGruppe, BenutzerListeEintrag, BenutzerManager, Credentials, Vector} from "@svws-nrw/svws-core-ts";
+import { router } from "~/router";
 
 export class DataBenutzer extends BaseData<BenutzerDaten, BenutzerListeEintrag, BenutzerManager> {
  
@@ -92,7 +93,7 @@ export class DataBenutzer extends BaseData<BenutzerDaten, BenutzerListeEintrag, 
 			await App.api.addBenutzerAdmin(App.schema, this.manager.getID());
 		else
 			await App.api.removeBenutzerAdmin(App.schema, this.manager.getID());
-		this.aktualisierBenutzerManager();
+		this.manager.setAdmin(istAdmin);
 	}
 
 	/**
@@ -252,15 +253,24 @@ export class DataBenutzer extends BaseData<BenutzerDaten, BenutzerListeEintrag, 
 		}
 		return true;
 	}
-
 	/**
-	 * Initialisiert den BenutzerManager mit dem beim Server abgefragten Benutzer erneut
-	 * 
+	 * Erstellt eine neue Benutzergruppe
+	 * @param bezeichnung die Bezichnung der neuen Benutzergruppe
+	 * @param istAdmin    True, wenn die neue Benutzrgruppe administrativ ist.
 	 */
-	public async aktualisierBenutzerManager(){
-		if(this.manager === undefined)
-			return;
-		const benutzerdaten = await App.api.getBenutzerDaten(App.schema, this.manager.getID())
-		this.manager = new BenutzerManager(benutzerdaten);
+	public async createBenutzerAllgemein( anmeldename : string, benutzername : string, passwort : string){
+		const credential : Credentials = new Credentials();
+		credential.benutzername = benutzername;
+		credential.password = passwort;
+		const result = await App.api.createBenutzerAllgemein(credential,App.schema,anmeldename);
+		const ble: BenutzerListeEintrag = new BenutzerListeEintrag();
+		ble.id = result.id;
+		ble.anzeigename = result.anzeigename;
+		ble.name = result.name;
+		ble.istAdmin= result.istAdmin;
+		ble.idCredentials = result.idCredentials;
+		App.apps.benutzer.auswahl.liste.push(ble);
+		App.apps.benutzer.auswahl.ausgewaehlt = result;
+		router.push("/schule/benutzerverwaltung/"+ble.id+"/benutzer");
 	}
 }

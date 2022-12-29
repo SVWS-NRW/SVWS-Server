@@ -4,6 +4,7 @@ import { BaseData } from "~/apps/BaseData";
 import { ListBenutzergruppenBenutzer } from "./ListBenutzergruppenBenutzer";
 
 import { BenutzergruppeDaten, BenutzergruppeListeEintrag, BenutzergruppenManager, BenutzerKompetenz, BenutzerKompetenzGruppe, List, Vector } from "@svws-nrw/svws-core-ts";
+import { router } from "~/router";
 
 
 export class DataBenutzergruppe extends BaseData<BenutzergruppeDaten, BenutzergruppeListeEintrag, BenutzergruppenManager> {
@@ -103,9 +104,7 @@ export class DataBenutzergruppe extends BaseData<BenutzergruppeDaten, Benutzergr
 		if (this.manager.hatKompetenz(kompetenz))
 			return false;
 		await App.api.addBenutzergruppeKompetenzen(kid, App.schema, this.manager.getID());
-		const benutzergruppendaten = await App.api.getBenutzergruppeDaten(App.schema, this.manager.getID())
-		this.manager = new BenutzergruppenManager(benutzergruppendaten);
-		// this.manager.addKompetenz(kompetenz);
+		this.manager.addKompetenz(kompetenz);
 		return true;
 	}
 
@@ -122,9 +121,7 @@ export class DataBenutzergruppe extends BaseData<BenutzergruppeDaten, Benutzergr
 		if (!this.manager.hatKompetenz(kompetenz))
 			return false;
 		await App.api.removeBenutzergruppeKompetenzen(kid, App.schema, this.manager.getID());
-		const benutzergruppendaten = await App.api.getBenutzergruppeDaten(App.schema, this.manager.getID())
-		this.manager = new BenutzergruppenManager(benutzergruppendaten);
-		//this.manager.removeKompetenz(kompetenz);
+		this.manager.removeKompetenz(kompetenz);
 		return true;
 	}
 
@@ -143,11 +140,10 @@ export class DataBenutzergruppe extends BaseData<BenutzergruppeDaten, Benutzergr
 			}
 			await App.api.addBenutzergruppeKompetenzen(kids,App.schema,this.manager.getID());
 			const benutzergruppendaten = await App.api.getBenutzergruppeDaten(App.schema, this.manager.getID())
-			this.manager = new BenutzergruppenManager(benutzergruppendaten);
-			// for (let komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe)) {
-			// 	if (!this.manager?.hatKompetenz(komp))
-			// 		this.manager?.addKompetenz(komp);
-			// }
+			for (let komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe)) {
+				if (!this.manager?.hatKompetenz(komp))
+					this.manager?.addKompetenz(komp);
+			}
 		}
 		return true;
 	}
@@ -165,14 +161,32 @@ export class DataBenutzergruppe extends BaseData<BenutzergruppeDaten, Benutzergr
 			for (let komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe))
 				kids.add(Number(komp.daten.id));
 			await App.api.removeBenutzergruppeKompetenzen(kids,App.schema,this.manager.getID());
-			const benutzergruppendaten = await App.api.getBenutzergruppeDaten(App.schema, this.manager.getID())
-			this.manager = new BenutzergruppenManager(benutzergruppendaten);
-			// for (let komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe)) {
-			// 	if (this.manager?.hatKompetenz(komp))
-			// 		this.manager?.removeKompetenz(komp);
-			// }
+			for (let komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe)) {
+				if (this.manager?.hatKompetenz(komp))
+					this.manager?.removeKompetenz(komp);
+			}
 		}
 		return true;
+	}
+
+	/**
+	 * Erstellt eine neue Benutzergruppe
+	 * @param bezeichnung die Bezichnung der neuen Benutzergruppe
+	 * @param istAdmin    True, wenn die neue Benutzrgruppe administrativ ist.
+	 */
+	public async create( bezeichnung : string, istAdmin : boolean){
+		const bg : BenutzergruppeDaten = new BenutzergruppeDaten();
+		bg.bezeichnung = bezeichnung;
+		bg.istAdmin = istAdmin;
+		const result = await App.api.createBenutzergruppe(bg,App.schema);
+		const bgle: BenutzergruppeListeEintrag = new BenutzergruppeListeEintrag();
+		console.log(bgle);
+		bgle.id = result.id;
+		bgle.bezeichnung = result.bezeichnung;
+		bgle.istAdmin = result.istAdmin;
+		App.apps.benutzergruppe.auswahl.liste.push(bgle);
+		App.apps.benutzergruppe.auswahl.ausgewaehlt = result;
+		router.push("/schule/benutzerverwaltung/"+bgle.id+"/benutzergruppe");
 	}
 
 }

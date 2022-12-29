@@ -10,6 +10,7 @@ import de.nrw.schule.svws.core.data.benutzer.BenutzerKompetenzKatalogEintrag;
 import de.nrw.schule.svws.core.data.benutzer.BenutzerListeEintrag;
 import de.nrw.schule.svws.core.data.benutzer.BenutzergruppeDaten;
 import de.nrw.schule.svws.core.data.benutzer.BenutzergruppeListeEintrag;
+import de.nrw.schule.svws.core.data.benutzer.Credentials;
 import de.nrw.schule.svws.core.data.gost.GostBlockungSchiene;
 import de.nrw.schule.svws.core.data.kataloge.KatalogEintrag;
 import de.nrw.schule.svws.core.data.schueler.SchuelerBetriebsdaten;
@@ -220,7 +221,7 @@ public class APIBenutzer {
     @POST
     @Path("/{id : \\d+}/anmeldename")
     @Operation(summary = "Setzt den Anmeldenamen eines Benutzers.", description = "Setzt den Anmeldenamen eines Benutzers."
-            + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Setzen des Kennwortes besitzt.")
+            + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Setzen des Anmeldenamenss besitzt.")
     @ApiResponse(responseCode = "204", description = "Der Anmeldename wurde erfolgreich gesetzt.")
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um das Kennwort zu setzen.")
     @ApiResponse(responseCode = "404", description = "Der Anmeldename zu dem Benutzer sind nicht vorhanden.")
@@ -232,6 +233,34 @@ public class APIBenutzer {
             @Context HttpServletRequest request) {
         try (DBEntityManager conn = OpenAPIApplication.getDBConnectionAllowSelf(request, BenutzerKompetenz.ADMIN, id)) {
             return (new DataBenutzerDaten(conn)).setAnmeldename(id, JSONMapper.toString(is));
+        }
+    }
+    
+    /**
+     * Die OpenAPI-Methode für Setzen eines neuen Passworts.
+     * 
+     * @param schema  das Datenbankschema, in welchem der Benutzer ist.
+     * @param id      die ID des Benutzers
+     * @param is      der Input-Stream mit dem neuen Passwort
+     * @param request die Informationen zur HTTP-Anfrage
+     * 
+     * @return die HTTP-Antwort
+     */
+    @POST
+    @Path("/{id : \\d+}/password")
+    @Operation(summary = "Setzt das neue Passwort eines Benutzers.", description = "Setzt das neue Passwort eines Benutzers."
+            + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Setzen des Kennwortes besitzt.")
+    @ApiResponse(responseCode = "204", description = "Das Passwort wurde erfolgreich gesetzt.")
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um das Kennwort zu setzen.")
+    @ApiResponse(responseCode = "404", description = "Das Passwort zu dem Benutzer sind nicht vorhanden.")
+    @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response setPassword(
+            @PathParam("schema") String schema, @PathParam("id") long id,
+            @RequestBody(description = "Der Anmeldename", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = String.class))) InputStream is,
+            @Context HttpServletRequest request) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnectionAllowSelf(request, BenutzerKompetenz.ADMIN, id)) {
+            return (new DataBenutzerDaten(conn)).setPassword(id, JSONMapper.toString(is));
         }
     }
     
@@ -276,18 +305,18 @@ public class APIBenutzer {
     @Path("/{id : \\d+}/removeAdmin")
     @Operation(summary = "Entfernt die Admin-Berechtigung des Benutzers mit der id",
     description = "Entfernt die Admin-Berechtigung des Benutzers mit der id."
-    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen  der Admin-Berechtigung hat.")
+                + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen  der Admin-Berechtigung hat.")
     @ApiResponse(responseCode = "204", description = "Die Admin-Berechtigung wurde erfolgreich entfernt.")
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Admin-Berechtigung zu entfernen.")
     @ApiResponse(responseCode = "404", description = "Der Benutzer ist nicht vorhanden.")
     @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
     public Response removeBenutzerAdmin(
-    		@PathParam("schema") String schema, @PathParam("id") long id, 
-    		@Context HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADMIN)) {
-    		return (new DataBenutzerDaten(conn)).removeAdmin(id);
-    	}
+            @PathParam("schema") String schema, @PathParam("id") long id, 
+            @Context HttpServletRequest request) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADMIN)) {
+            return (new DataBenutzerDaten(conn)).removeAdmin(id);
+        }
     }
 
     /**
@@ -637,11 +666,11 @@ public class APIBenutzer {
      * @param schema                das Datenbankschema, in welchem der Benutzer erstellt wird
      * @param request                die Informationen zur HTTP-Anfrage
      * @param is                          JSON-Objekt mit den Daten
-     * @param passwort              das Passwort des neuen Benutzers
-     * @return die HTTP-Antwort mit der neuen Blockung
+     * @param anzeigename      Azeigename des neuen Benutzers
+     * @return die HTTP-Antwort mit dem neuen Benutzer
      */
     @POST
-    @Path("/new")
+    @Path("/new/{anzeigename}")
     @Operation(summary = "Erstellt einen neuen Benutzer und gibt ihn zurück.",
     description = "Erstellt einen neuen Benutzer und gibt ihn zurück."
                 + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Benutzers "
@@ -652,19 +681,45 @@ public class APIBenutzer {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Benutzer anzulegen.")
     @ApiResponse(responseCode = "409", description = "Fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-    public Response createBenutzer(
+    public Response createBenutzerAllgemein(
             @PathParam("schema") String schema,
-            @PathParam("passwort") String passwort,
+            @PathParam("anzeigename") String anzeigename,
             @RequestBody(description = "Der Post für die Benutzer-Daten", required = true, content = 
-            @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = BenutzerDaten.class))) InputStream is, 
+            @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Credentials.class))) InputStream is, 
             @Context HttpServletRequest request) {
         try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADMIN)) { // TODO Anpassung der Benutzerrechte
-            //TODO  Parameter passwort erhält keinen Wert von der Abfrage
-            System.out.println(passwort);
-            return (new DataBenutzerDaten(conn)).create(is, passwort);
-           
+            return (new DataBenutzerDaten(conn)).createBenutzerAllgemein(is, anzeigename);
         }
     }
     
+    /**
+     * Die OpenAPI-Methode für das Erstellen eines neuen Benutzers.
+     *  
+     * @param schema                das Datenbankschema, in welchem der Benutzer erstellt wird
+     * @param request                die Informationen zur HTTP-Anfrage
+     * @param is                          JSON-Objekt mit den Daten
+     * @return die HTTP-Antwort mit der neuen Blockung
+     */
+    @POST
+    @Path("/benutzergruppe/new")
+    @Operation(summary = "Erstellt eine neue Benutzergruppe und gibt sie zurück.",
+    description = "Erstellt eine neue Benutzergruppe und gibt sie zurück."
+                + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen einer Benutzergruppe "
+                + "besitzt.")
+    @ApiResponse(responseCode = "200", description = "Benutzergruppe wurde erfolgreich angelegt.",
+            content = @Content(mediaType = MediaType.APPLICATION_JSON,
+            schema = @Schema(implementation = BenutzergruppeDaten.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Benutzer anzulegen.")
+    @ApiResponse(responseCode = "409", description = "Fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response createBenutzergruppe(
+            @PathParam("schema") String schema,
+            @RequestBody(description = "Der Post für die Benutzergruppe-Daten", required = true, content = 
+            @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = BenutzergruppeDaten.class))) InputStream is, 
+            @Context HttpServletRequest request) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADMIN)) { // TODO Anpassung der Benutzerrechte
+             return (new DataBenutzergruppeDaten(conn)).create(is);
+        }
+    }
 
 }

@@ -74,17 +74,7 @@ public class DataBenutzerDaten extends DataManager<Long> {
         daten.istAdmin = b.IstAdmin == null ? false : b.IstAdmin;
         return daten;
     };
-
-    @Override
-    public Response getAll() {
-        return this.getList();
-    }
-
-    @Override
-    public Response getList() {
-        throw new UnsupportedOperationException();
-    }
-
+    
     /**
      * Bestimmt das DTO für den Benutzer aus der Datenbank.
      * 
@@ -100,6 +90,234 @@ public class DataBenutzerDaten extends DataManager<Long> {
             throw OperationError.NOT_FOUND.exception("Der Benutzer mit der ID existiert nicht.");
         return benutzer;
     }
+    
+    /**
+     * Bestimmt die Anzahl der administrativen Gruppen, welche dem aktuellen
+     * Benutzer administrative Rechte verleihen.
+     *
+     * @return die Anzahl der Gruppen über die der Benutzer administrative
+     *         Berechtigungen hat
+     */
+    private int getAnzahlAdminGruppen() {
+        // Ermittle die administrativen Gruppen des aktuellen Benutzers
+        List<DTOBenutzergruppe> bgs = conn.queryList(
+                "SELECT bg FROM DTOBenutzergruppenMitglied bgm JOIN DTOBenutzergruppe bg "
+                        + "ON bgm.Gruppe_ID = bg.ID and bgm.Benutzer_ID= ?1 and bg.IstAdmin= ?2 ",
+                DTOBenutzergruppe.class,
+                conn.getUser().getId(), true);
+        return bgs.size();
+    }
+    
+    /**
+     * Setzt für die angegebene Benutzer-ID den Benutzer administrativ.
+     * 
+     * @param id die ID des Benutzers
+     * 
+     * @return bei Erfolg eine HTTP-Response 200
+     */
+    public Response addAdmin(Long id) {
+        try {
+            conn.transactionBegin();
+            if (id == null)
+                throw OperationError.NOT_FOUND.exception("Die ID der zu änderden Benutzer darf nicht null sein.");
+            DTOBenutzer benutzer = conn.queryByKey(DTOBenutzer.class, id);
+            if (benutzer == null)
+                throw OperationError.NOT_FOUND.exception("Der Benutzer mit der ID existiert nicht.");
+            if (benutzer.IstAdmin)
+                throw OperationError.BAD_REQUEST.exception("Der Benutzer hat bereits administrative Rechte.");
+            benutzer.IstAdmin = true;
+            conn.transactionPersist(benutzer);
+            conn.transactionCommit();
+        } catch (Exception e) {
+            if (e instanceof WebApplicationException webApplicationException)
+                return webApplicationException.getResponse();
+            return OperationError.INTERNAL_SERVER_ERROR.getResponse();
+        } finally {
+            conn.transactionRollback();
+        }
+        return Response.status(Status.OK).build();
+    }
+    
+    /**
+     * Setzt für die angegebene Benutzer-ID die Benutzerkompetenzen.
+     * 
+     * @param id   die ID des Benutzers
+     * @param kids die IDs der Kompetenzen
+     * 
+     * @return bei Erfolg eine HTTP-Response 200
+     * 
+     * @throws WebApplicationException eine Exception mit dem entsprechenden
+     *                                 HTTP-Fehlercode im Fehlerfall
+     */
+    public Response addKompetenzen(Long id, List<Long> kids) throws WebApplicationException {
+        if ((id == null) || (kids == null))
+            return OperationError.NOT_FOUND.getResponse(
+                    "Die ID der zu änderden Benutzer bzw IDs der Kompetenzen darf bzw. dürfen nicht null sein.");
+        // Prüfe, ob der Benutzer mit der ID existiert.
+        getDTO(id);
+        // Prüfe, ob die Benutzerkompetenzen mit den Ids existieren.
+        for (Long kid : kids) {
+            if (BenutzerKompetenz.getByID(kid) == null)
+                throw OperationError.NOT_FOUND
+                        .exception("Die Benutzerkompetenz mit der ID " + kid + " existiert nicht!!");
+        }
+        // Füge die Kompetenzen hinzu
+        try {
+            conn.transactionBegin();
+            for (Long kid : kids) {
+                DTOBenutzerKompetenz bk = conn.queryByKey(DTOBenutzerKompetenz.class, id, kid);
+                if (bk == null) {
+                    bk = new DTOBenutzerKompetenz(id, kid);
+                    conn.transactionPersist(bk);
+                }
+            }
+            conn.transactionCommit();
+        } catch (Exception e) {
+            if (e instanceof WebApplicationException webApplicationException)
+                return webApplicationException.getResponse();
+            return OperationError.INTERNAL_SERVER_ERROR.getResponse();
+        } finally {
+            conn.transactionRollback();
+        }
+        return Response.status(Status.OK).build();
+    }
+
+    /**
+     * Erstellt einen neuen Benutzer *
+     * 
+     * @param is       Das JSON-Objekt mit den Daten
+     * @param anzeigename Anzeigename des neuen Benutzers
+     * 
+     * @return Eine Response mit dem neuen Benutzer
+     */
+    public Response createBenutzerAllgemein(InputStream is, String anzeigename) {
+        DTOBenutzerAllgemein benutzer_allg = null;
+        DTOBenutzer benutzer = null;
+        DTOCredentials credential = null;
+        Long c_ID = (long) 0;
+
+        Map<String, Object> map = JSONMapper.toMap(is);
+        if (map.size() > 0) {
+            try {
+                conn.transactionBegin();
+
+                // Bestimme die ID des Benutzers / Credentials / BenutzerAllgemeins 
+                DTODBAutoInkremente ba_lastID = conn.queryByKey(DTODBAutoInkremente.class, "BenutzerAllgemein");
+                Long ba_ID = ba_lastID == null ? 1 : ba_lastID.MaxID + 1;
+                DTODBAutoInkremente c_lastID = conn.queryByKey(DTODBAutoInkremente.class, "Credentials");
+                c_ID = c_lastID == null ? 1 : c_lastID.MaxID + 1;
+                DTODBAutoInkremente b_lastID = conn.queryByKey(DTODBAutoInkremente.class, "Benutzer");
+                Long b_ID = b_lastID == null ? 1 : b_lastID.MaxID + 1;
+
+                // Lege die Objekte an
+                benutzer_allg = new DTOBenutzerAllgemein(ba_ID);
+                benutzer_allg.AnzeigeName = anzeigename;
+               
+                benutzer = new DTOBenutzer(b_ID, BenutzerTyp.ALLGEMEIN, false);
+                credential = new DTOCredentials(c_ID, "test");
+                
+                for (Entry<String, Object> entry : map.entrySet()) {
+                    String key = entry.getKey();
+                    Object value = entry.getValue();
+                    switch (key) {
+                        case "id" -> {
+                            Long create_id = JSONMapper.convertToLong(value, true);
+                            if (create_id != null && create_id != -1)
+                                throw OperationError.BAD_REQUEST.exception("ID muss leer sein.");
+                        }
+                        case "benutzername" -> credential.Benutzername =  JSONMapper.convertToString(value, true, true);
+                        case "password" -> credential.PasswordHash = Benutzer.erstellePasswortHash(JSONMapper.convertToString(value, true, true));
+                        default -> throw OperationError.BAD_REQUEST.exception();
+                    }
+                }
+                // Objekten miteinander verbinden
+                benutzer.Allgemein_ID = benutzer_allg.ID;
+                benutzer_allg.CredentialID = credential.ID;
+                 
+                //Credential-Objekt persistieren
+                conn.transactionPersist(credential);
+                if (!conn.transactionCommit())
+                    return OperationError.CONFLICT
+                            .getResponse("Datenbankfehler beim Persistieren des Betriebansprechpartners");
+            } catch (Exception e) {
+                if (e instanceof WebApplicationException webApplicationException)
+                    return webApplicationException.getResponse();
+                return OperationError.INTERNAL_SERVER_ERROR.getResponse();
+            } finally {
+                conn.transactionRollback();
+            }
+        }
+        
+        // BenutzerAllg.-Objekt persistieren
+        try {
+            conn.transactionBegin();
+            conn.transactionPersist(benutzer_allg);
+            if (!conn.transactionCommit())
+                return OperationError.CONFLICT
+                        .getResponse("Datenbankfehler beim Persistieren des Betriebansprechpartners");
+       }catch(Exception e) {
+           if (e instanceof WebApplicationException webApplicationException)
+               return webApplicationException.getResponse();
+           return OperationError.INTERNAL_SERVER_ERROR.getResponse();
+        }finally {
+            conn.transactionRollback();
+        }
+        
+     // Benutzer-Objekt persistieren
+        try {
+            conn.transactionBegin();
+            conn.transactionPersist(benutzer);
+            if (!conn.transactionCommit())
+                return OperationError.CONFLICT.getResponse("Datenbankfehler beim Persistieren des Betriebansprechpartners");
+       }catch(Exception e) {
+           if (e instanceof WebApplicationException webApplicationException)
+               return webApplicationException.getResponse();
+           return OperationError.INTERNAL_SERVER_ERROR.getResponse();
+        }finally {
+            conn.transactionRollback();
+        }
+        BenutzerDaten daten = dtoMapper.apply(getDTO(c_ID));
+        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+    }
+
+    /**
+     * Erstellt einen neuen Benutzer mit dem Benutzertyp Erzieher
+     * 
+     * @return Eine Response mit dem neuen Benutzer
+     */
+    public Response createBenutzerErzieher() {
+        throw new UnsupportedOperationException();
+    }
+    
+    /**
+     * Erstellt einen neuen Benutzer mit dem Benutzertyp Lehrer
+     * 
+     * @return Eine Response mit dem neuen Benutzer
+     */
+    public Response createBenutzerLehrer() {
+        throw new UnsupportedOperationException();
+    }
+    
+    /**
+     * Erstellt einen neuen Benutzer mit dem Benutzertyp Lehrer
+     * 
+     * @return Eine Response mit dem neuen Benutzer
+     */
+    public Response createBenutzerSchueler() {
+        throw new UnsupportedOperationException();
+    }
+    
+    @Override
+    public Response getAll() {
+        return this.getList();
+    }
+
+    @Override
+    public Response getList() {
+        throw new UnsupportedOperationException();
+    }
+
+    
 
     @Override
     public Response get(Long id) {
@@ -108,14 +326,15 @@ public class DataBenutzerDaten extends DataManager<Long> {
                 .queryNamed("DTOBenutzergruppenMitglied.benutzer_id", id, DTOBenutzergruppenMitglied.class).stream()
                 .map(g -> g.Gruppe_ID).toList();
         List<DTOBenutzergruppe> gruppen = (gruppenIDs.size() == 0)
-        		? new Vector<>()
-        		: conn.queryNamed("DTOBenutzergruppe.id.multiple", gruppenIDs, DTOBenutzergruppe.class);
+                ? new Vector<>()
+                : conn.queryNamed("DTOBenutzergruppe.id.multiple", gruppenIDs, DTOBenutzergruppe.class);
         // Lese die Informationen zu den Kompetenzen ein
         List<Long> kompetenzIDs = conn.queryNamed("DTOBenutzerKompetenz.benutzer_id", id, DTOBenutzerKompetenz.class)
                 .stream().map(b -> b.Kompetenz_ID).sorted().toList();
         List<DTOBenutzergruppenKompetenz> gruppenKompetenzen = (gruppenIDs.size() == 0)
-        		? new Vector<>()
-        		: conn.queryNamed("DTOBenutzergruppenKompetenz.gruppe_id.multiple", gruppenIDs, DTOBenutzergruppenKompetenz.class);
+                ? new Vector<>()
+                : conn.queryNamed("DTOBenutzergruppenKompetenz.gruppe_id.multiple", gruppenIDs,
+                        DTOBenutzergruppenKompetenz.class);
         Map<Long, List<DTOBenutzergruppenKompetenz>> mapGruppenKompetenzen = gruppenKompetenzen.stream()
                 .collect(Collectors.groupingBy(k -> k.Gruppe_ID));
         // Erstelle den Core-DTO für die API und gebe diesen zurück
@@ -135,13 +354,87 @@ public class DataBenutzerDaten extends DataManager<Long> {
         }
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
     }
-
+    
+    /**
+     * Entfernt die Admin-Berechtigung des Benutzers.
+     * 
+     * @param id die ID des Benutzers
+     * 
+     * @return bei Erfolg eine HTTP-Response 200
+     */
+    public Response removeAdmin(Long id) {
+        try {
+            conn.transactionBegin();
+            if (id == null)
+                throw OperationError.NOT_FOUND.exception("Die ID der zu änderden Benutzer darf nicht null sein.");
+            DTOBenutzer benutzer = conn.queryByKey(DTOBenutzer.class, id);
+            if (benutzer == null)
+                throw OperationError.NOT_FOUND.exception("Der Benutzer mit der ID existiert nicht.");
+            if (!benutzer.IstAdmin)
+                throw OperationError.BAD_REQUEST.exception("Der Benutzer mit der ID " + id
+                        + " besitzt selbst direkt keine administrative Berechtigung, die entfernt werden könnte.");
+            if ((id == conn.getUser().getId()) && (getAnzahlAdminGruppen() == 0))
+                throw OperationError.BAD_REQUEST.exception(
+                        "Der aktuelle Benutzer darf seine Admin-Berechtigung nicht entfernen, wenn er diese nicht zusätzlich über administrative Gruppen besitzt.");
+            benutzer.IstAdmin = false;
+            conn.transactionPersist(benutzer);
+            conn.transactionCommit();
+        } catch (Exception e) {
+            if (e instanceof WebApplicationException webApplicationException)
+                return webApplicationException.getResponse();
+            return OperationError.INTERNAL_SERVER_ERROR.getResponse();
+        } finally {
+            conn.transactionRollback();
+        }
+        return Response.status(Status.OK).build();
+    }
+    /**
+     * Entfernt für die angegebene Benutzer-ID die Benutzerkompetenzen.
+     * 
+     * @param id   die ID des Benutzers
+     * @param kids die IDs der Kompetenzen
+     * 
+     * @return bei Erfolg eine HTTP-Response 204
+     */
+    public Response removeKompetenzen(Long id, List<Long> kids) {
+        if (id == null || kids == null)
+            return OperationError.NOT_FOUND.getResponse(
+                    "Die ID der zu änderden Benutzer bzw IDs der Kompetenzen darf bzw. dürfen nicht null sein.");
+        // Prüfe, ob der Benutzer mit der ID existiert.
+        getDTO(id);
+        // Prüfe, ob die Benutzerkompetenzen mit den Ids existieren.
+        for (Long kid : kids) {
+            if (BenutzerKompetenz.getByID(kid) == null)
+                return OperationError.NOT_FOUND
+                        .getResponse("Die Benutzerkompetenz mit der ID " + kid + " existiert nicht!!");
+        }
+        try {
+            conn.transactionBegin();
+            for (Long kid : kids) {
+                // Bestimme den Datensatz aus DTOBenutzerKompetenz
+                DTOBenutzerKompetenz bk = conn.queryByKey(DTOBenutzerKompetenz.class, id, kid);
+                if (bk == null)
+                    throw OperationError.NOT_FOUND
+                            .exception("Der zu löschende Datensatz in DTOBenutzerkompetenz mit Benutzer_ID" + id
+                                    + "und Kompetenz_ID" + kid + " existiert nicht");
+                // Entferne die Kompetenz
+                conn.transactionRemove(bk);
+            }
+            conn.transactionCommit();
+        } catch (Exception e) {
+            if (e instanceof WebApplicationException webApplicationException)
+                return webApplicationException.getResponse();
+            return OperationError.INTERNAL_SERVER_ERROR.getResponse();
+        } finally {
+            conn.transactionRollback();
+        }
+        return Response.status(Status.OK).build();
+    }
 
     @Override
     public Response patch(Long id, InputStream is) {
         throw new UnsupportedOperationException();
     }
-
 
     /**
      * Setzt für die angegebene Benutzer-ID den Anzeigenamen.
@@ -155,16 +448,19 @@ public class DataBenutzerDaten extends DataManager<Long> {
         try {
             conn.transactionBegin();
             if ((name == null) || "".equals(name))
-                return OperationError.CONFLICT.getResponse("Der Anzeigename muss gültig sein und darf nicht null oder leer sein");
+                return OperationError.CONFLICT
+                        .getResponse("Der Anzeigename muss gültig sein und darf nicht null oder leer sein");
             if (id == null)
                 throw OperationError.NOT_FOUND.exception("Die ID der zu änderden Benutzer darf nicht null sein.");
             DTOBenutzerAllgemein benutzerallgemein = conn.queryByKey(DTOBenutzerAllgemein.class, id);
             if (benutzerallgemein == null)
                 throw OperationError.NOT_FOUND.exception("Der Benutzer mit der ID existiert nicht.");
-            // Der Anzeigename wird nur bei den Benutzern mit dem Benutzertyp Allgemein geändert.
+            // Der Anzeigename wird nur bei den Benutzern mit dem Benutzertyp Allgemein
+            // geändert.
             DTOViewBenutzerdetails benutzerdetails = getDTO(id);
             if (benutzerdetails.Typ != BenutzerTyp.ALLGEMEIN)
-                return OperationError.BAD_REQUEST.getResponse("Der Anzeigename kann bei dem Benutzer mit der ID" + id + "aufgrund des Benutzertyps nicht geändert werden");
+                return OperationError.BAD_REQUEST.getResponse("Der Anzeigename kann bei dem Benutzer mit der ID" + id
+                        + "aufgrund des Benutzertyps nicht geändert werden");
             // Der alte Anzeigename wurde übergeben.
             if (name.equals(benutzerallgemein.AnzeigeName))
                 return Response.status(Status.OK).build();
@@ -181,7 +477,10 @@ public class DataBenutzerDaten extends DataManager<Long> {
         }
         return Response.status(Status.OK).build();
     }
-
+    
+    
+    
+    
 
     /**
      * Setzt für die angegebene Benutzer-ID den Anmeldenamen des Benutzers.
@@ -195,9 +494,10 @@ public class DataBenutzerDaten extends DataManager<Long> {
         try {
             conn.transactionBegin();
             if ((name == null) || "".equals(name))
-                return OperationError.CONFLICT.getResponse("Der Anmeldename muss gültig sein und darf nicht null oder leer sein");
-            // TODO  Ist es richtig?
-            if(conn.getUser().getId() == id)
+                return OperationError.CONFLICT
+                        .getResponse("Der Anmeldename muss gültig sein und darf nicht null oder leer sein");
+            // TODO Ist es richtig?
+            if (conn.getUser().getId() == id)
                 return OperationError.CONFLICT.getResponse("Der aktuelle User kann seinen Benutzernamen nicht ändern.");
             DTOViewBenutzerdetails benutzer = getDTO(id);
             // Der alte Anmeldename wurde übergeben.
@@ -205,7 +505,8 @@ public class DataBenutzerDaten extends DataManager<Long> {
                 return Response.status(Status.OK).build();
             DTOCredentials cred = conn.queryByKey(DTOCredentials.class, benutzer.credentialID);
             if (cred == null)
-                return OperationError.INTERNAL_SERVER_ERROR.getResponse("Dem Benutzer sind keine gültigen Credentials zugeordnet.");
+                return OperationError.INTERNAL_SERVER_ERROR
+                        .getResponse("Dem Benutzer sind keine gültigen Credentials zugeordnet.");
             // Prüfe vorher, ob der Name nicht bereits verwendet wird -> Conflict
             List<DTOCredentials> creds = conn.queryAll(DTOCredentials.class);
             for (DTOCredentials data : creds) {
@@ -225,159 +526,13 @@ public class DataBenutzerDaten extends DataManager<Long> {
         return Response.status(Status.OK).build();
     }
 
-
-    /**
-     * Setzt für die angegebene Benutzer-ID die Benutzerkompetenzen.
-     * 
-     * @param id   die ID des Benutzers
-     * @param kids die IDs der Kompetenzen
-     * 
-     * @return bei Erfolg eine HTTP-Response 200
-     * 
-     * @throws WebApplicationException eine Exception mit dem entsprechenden HTTP-Fehlercode im Fehlerfall 
-     */
-    public Response addKompetenzen(Long id, List<Long> kids) throws WebApplicationException {
-        if ((id == null) || (kids == null))
-            return OperationError.NOT_FOUND.getResponse("Die ID der zu änderden Benutzer bzw IDs der Kompetenzen darf bzw. dürfen nicht null sein.");
-        // Prüfe, ob der Benutzer mit der ID existiert.
-        getDTO(id); 
-        // Prüfe, ob die Benutzerkompetenzen mit den Ids existieren.
-        for (Long kid : kids) {
-            if (BenutzerKompetenz.getByID(kid) == null)
-                throw OperationError.NOT_FOUND
-                        .exception("Die Benutzerkompetenz mit der ID " + kid + " existiert nicht!!");
-        }
-        // Füge die Kompetenzen hinzu
-        try {
-            conn.transactionBegin();
-            for (Long kid : kids) {
-               DTOBenutzerKompetenz bk = conn.queryByKey(DTOBenutzerKompetenz.class, id, kid);
-                if (bk == null) {
-                    bk = new DTOBenutzerKompetenz(id, kid);
-                    conn.transactionPersist(bk);
-                }
-            }
-            conn.transactionCommit();
-        } catch (Exception e) {
-            if (e instanceof WebApplicationException webApplicationException)
-                return webApplicationException.getResponse();
-            return OperationError.INTERNAL_SERVER_ERROR.getResponse();
-        } finally {
-            conn.transactionRollback();
-        }
-        return Response.status(Status.OK).build();
-    }
-
-
-    /**
-     * Entfernt für die angegebene Benutzer-ID die Benutzerkompetenzen.
-     * 
-     * @param id     die ID des Benutzers
-     * @param kids   die IDs der Kompetenzen
-     * 
-     * @return bei Erfolg eine HTTP-Response 204
-     */
-    public Response removeKompetenzen(Long id, List<Long> kids) {
-    	if (id == null || kids == null)
-            return OperationError.NOT_FOUND.getResponse("Die ID der zu änderden Benutzer bzw IDs der Kompetenzen darf bzw. dürfen nicht null sein.");
-    	// Prüfe, ob der Benutzer mit der ID existiert.
-    	getDTO(id);
-        // Prüfe, ob die Benutzerkompetenzen mit den Ids existieren.
-        for (Long kid : kids) {
-            if (BenutzerKompetenz.getByID(kid) == null)
-                return OperationError.NOT_FOUND.getResponse("Die Benutzerkompetenz mit der ID " + kid + " existiert nicht!!");
-        }
-        try {
-            conn.transactionBegin();
-            for (Long kid : kids) {
-            	// Bestimme den Datensatz aus DTOBenutzerKompetenz
-                DTOBenutzerKompetenz bk = conn.queryByKey(DTOBenutzerKompetenz.class, id, kid);
-                if (bk == null) 
-                	throw OperationError.NOT_FOUND.exception("Der zu löschende Datensatz in DTOBenutzerkompetenz mit Benutzer_ID"+id+"und Kompetenz_ID"+kid+" existiert nicht");
-                // Entferne die Kompetenz
-                conn.transactionRemove(bk);
-            }
-            conn.transactionCommit();
-        } catch (Exception e) {
-            if (e instanceof WebApplicationException webApplicationException)
-                return webApplicationException.getResponse();
-            return OperationError.INTERNAL_SERVER_ERROR.getResponse();
-        } finally {
-            conn.transactionRollback();
-        }
-        return Response.status(Status.OK).build();
-    }
     
-
-    /**
-     * Setzt für die angegebene Benutzer-ID den Benutzer administrativ.
-     * 
-     * @param id      die ID des Benutzers
-     * 
-     * @return bei Erfolg eine HTTP-Response 200
-     */
-    public Response addAdmin(Long id) {
-        try {
-            conn.transactionBegin();
-            if (id == null)
-                throw OperationError.NOT_FOUND.exception("Die ID der zu änderden Benutzer darf nicht null sein.");
-            DTOBenutzer benutzer = conn.queryByKey(DTOBenutzer.class, id);
-            if (benutzer == null)
-                throw OperationError.NOT_FOUND.exception("Der Benutzer mit der ID existiert nicht.");
-            if (benutzer.IstAdmin)
-            	throw OperationError.BAD_REQUEST.exception("Der Benutzer hat bereits administrative Rechte.");
-        	benutzer.IstAdmin = true;
-        	conn.transactionPersist(benutzer);
-            conn.transactionCommit();
-        } catch (Exception e) {
-            if (e instanceof WebApplicationException webApplicationException)
-                return webApplicationException.getResponse();
-            return OperationError.INTERNAL_SERVER_ERROR.getResponse();
-        } finally {
-            conn.transactionRollback();
-        }
-        return Response.status(Status.OK).build();
-    }
-    
-    /**
-     * Entfernt die Admin-Berechtigung des Benutzers.
-     * 
-     * @param id      die ID des Benutzers
-     * 
-     * @return bei Erfolg eine HTTP-Response 200
-     */
-    public Response removeAdmin(Long id) {
-        try {
-            conn.transactionBegin();
-            if (id == null)
-                throw OperationError.NOT_FOUND.exception("Die ID der zu änderden Benutzer darf nicht null sein.");
-            DTOBenutzer benutzer = conn.queryByKey(DTOBenutzer.class, id);
-            if (benutzer == null)
-                throw OperationError.NOT_FOUND.exception("Der Benutzer mit der ID existiert nicht.");
-            if (!benutzer.IstAdmin)
-            	throw OperationError.BAD_REQUEST.exception("Der Benutzer mit der ID " + id + " besitzt selbst direkt keine administrative Berechtigung, die entfernt werden könnte.");
-            if ((id == conn.getUser().getId()) && (getAnzahlAdminGruppen() == 0))
-            	throw OperationError.BAD_REQUEST.exception("Der aktuelle Benutzer darf seine Admin-Berechtigung nicht entfernen, wenn er diese nicht zusätzlich über administrative Gruppen besitzt.");
-        	benutzer.IstAdmin = false;
-        	conn.transactionPersist(benutzer);
-            conn.transactionCommit();
-        } catch (Exception e) {
-            if (e instanceof WebApplicationException webApplicationException)
-                return webApplicationException.getResponse();
-            return OperationError.INTERNAL_SERVER_ERROR.getResponse();
-        } finally {
-            conn.transactionRollback();
-        }
-        return Response.status(Status.OK).build();
-    }
-
-
     /**
      * Erstellt für den Benutzer mit der übergebenen ID einen neuen Kennwort-Hash
      * basierend auf dem übergebenen Kennwort
      * 
-     * @param id         die ID des Benutzers, dessen Kennwort neu gesetzt werden soll
-     * @param password   das Kennwort
+     * @param id       die ID des Benutzers, dessen Kennwort neu gesetzt werden soll
+     * @param password das Kennwort
      * 
      * @return bei Erfolg eine HTTP-Response 204
      */
@@ -403,93 +558,7 @@ public class DataBenutzerDaten extends DataManager<Long> {
     }
 
     
-    /**
-     * Bestimmt die Anzahl der administrativen Gruppen, welche dem aktuellen Benutzer administrative Rechte verleihen.
-     *
-     * @return die Anzahl der Gruppen über die der Benutzer administrative Berechtigungen hat
-     */
-    private int getAnzahlAdminGruppen() {
-        // Ermittle die administrativen Gruppen des aktuellen Benutzers
-        List<DTOBenutzergruppe> bgs = conn.queryList("SELECT bg FROM DTOBenutzergruppenMitglied bgm JOIN DTOBenutzergruppe bg "
-        		+ "ON bgm.Gruppe_ID = bg.ID and bgm.Benutzer_ID= ?1 and bg.IstAdmin= ?2 ", DTOBenutzergruppe.class, 
-        		conn.getUser().getId(), true);
-        return bgs.size();
-    }
 
-       /** 
-     * Erstellt einen neuen Benutzer  * 
-     * @param is                        Das JSON-Objekt mit den Daten
-     * @param passwort           Das Passwort des neuen Benutzers
-     * 
-     * @return Eine Response mit dem neuen Benutzer 
-     */
-    public Response create(InputStream is, String passwort) {
-        DTOBenutzerAllgemein benutzer_allg = null;
-        DTOBenutzer benutzer = null;
-        DTOCredentials credential=null;
-        Long ba_ID = (long) 0;
-        Map<String, Object> map = JSONMapper.toMap(is);
-            if(map.size() > 0) {
-                try {
-                    conn.transactionBegin();
-                    
-                    // Bestimme die ID des neuen Benutzers
-                    DTODBAutoInkremente ba_lastID = conn.queryByKey(DTODBAutoInkremente.class, "BenutzerAllgemein");
-                    ba_ID = ba_lastID == null ? 1 : ba_lastID.MaxID + 1;
-                    
-                    //Bestimme die ID des neuen Credentials
-                    DTODBAutoInkremente c_lastID = conn.queryByKey(DTODBAutoInkremente.class, "Credentials");
-                    Long c_ID = c_lastID == null ? 1 : c_lastID.MaxID + 1;
-                    
-                    //Bestimme die ID des neuen Credentials
-                    DTODBAutoInkremente b_lastID = conn.queryByKey(DTODBAutoInkremente.class, "Benutzer");
-                    Long b_ID = b_lastID == null ? 1 : b_lastID.MaxID + 1;
-                    
-                    //Lege die Objekte an
-                    benutzer_allg = new DTOBenutzerAllgemein(ba_ID);
-                    //TODO Benutzertyp default-Wert?
-                    benutzer = new DTOBenutzer(b_ID,BenutzerTyp.ALLGEMEIN,false);
-                    //TODO Benutzername? + Password?
-                    credential = new DTOCredentials(c_ID,"test");
-                    credential.PasswordHash="passwort".hashCode()+"";
-                    for(Entry<String, Object> entry : map.entrySet()) {
-                        String key = entry.getKey();
-                        Object value = entry.getValue();
-                        switch(key) {
-                            case "id" -> {
-                                Long create_id = JSONMapper.convertToLong(value, true);
-                                if ( create_id != null )
-                                    throw OperationError.BAD_REQUEST.exception("ID muss leer sein.");
-                            }
-                            case "typ" -> {
-                                                        int typ_id = JSONMapper.convertToInteger(value, true);
-                                                        benutzer.Typ = BenutzerTyp.getByID(typ_id);
-                                                    }
-                            case "typID" -> System.out.println("//TODO");
-                            case "anzeigename" -> benutzer_allg.AnzeigeName = JSONMapper.convertToString(value, true, true);
-                            case "name" -> credential.Benutzername = JSONMapper.convertToString(value, true, true);
-                            case "istAdmin" -> benutzer.IstAdmin = JSONMapper.convertToBoolean(value, true);
-                            default -> throw OperationError.BAD_REQUEST.exception();
-                        }
-                    }
-                    //Objekten miteinander verbinden
-                    benutzer.Allgemein_ID=benutzer_allg.ID;
-                    benutzer_allg.CredentialID = credential.ID;
-                    conn.transactionPersist(benutzer);
-                    conn.transactionPersist(benutzer_allg);
-                    conn.transactionPersist(credential);
-                    if( !conn.transactionCommit())
-                        return OperationError.CONFLICT.getResponse("Datenbankfehler beim Persistieren des Betriebansprechpartners");
-                }catch (Exception e) {
-                    if(e instanceof WebApplicationException webApplicationException)
-                        return webApplicationException.getResponse();
-                    return OperationError.INTERNAL_SERVER_ERROR.getResponse();
-                }finally {
-                    conn.transactionRollback();
-                }
-            }
-            return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(getDTO(ba_ID)).build();
-            
-    }
+    
 
 }

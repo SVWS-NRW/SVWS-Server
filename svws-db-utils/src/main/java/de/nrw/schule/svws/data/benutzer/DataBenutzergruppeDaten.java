@@ -2,19 +2,20 @@ package de.nrw.schule.svws.data.benutzer;
 
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.function.Function;
-
 import de.nrw.schule.svws.core.data.benutzer.BenutzergruppeDaten;
-import de.nrw.schule.svws.core.data.betrieb.BetriebAnsprechpartner;
 import de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenz;
 import de.nrw.schule.svws.core.utils.benutzer.BenutzergruppenManager;
 import de.nrw.schule.svws.data.DataManager;
+import de.nrw.schule.svws.data.JSONMapper;
 import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.dto.current.schild.benutzer.DTOBenutzer;
 import de.nrw.schule.svws.db.dto.current.schild.benutzer.DTOBenutzergruppe;
 import de.nrw.schule.svws.db.dto.current.schild.benutzer.DTOBenutzergruppenKompetenz;
 import de.nrw.schule.svws.db.dto.current.schild.benutzer.DTOBenutzergruppenMitglied;
-import de.nrw.schule.svws.db.dto.current.schild.katalog.DTOAnsprechpartnerAllgemeineAdresse;
+import de.nrw.schule.svws.db.dto.current.svws.db.DTODBAutoInkremente;
 import de.nrw.schule.svws.db.utils.OperationError;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
@@ -179,9 +180,9 @@ public class DataBenutzergruppeDaten extends DataManager<Long> {
             conn.transactionBegin();
             DTOBenutzergruppe bg = getDTO(id);
             if (!bg.IstAdmin)
-            	throw OperationError.BAD_REQUEST.exception("Die Gruppe mit der ID " + id + " ist nicht administrativ, "
-            			+ "weshalb keine Admin-Berechtigung entfernt werden kann."); 
-        	pruefeAdminUeberGruppe(id);
+                throw OperationError.BAD_REQUEST.exception("Die Gruppe mit der ID " + id + " ist nicht administrativ, "
+                        + "weshalb keine Admin-Berechtigung entfernt werden kann."); 
+            pruefeAdminUeberGruppe(id);
             bg.IstAdmin = false;
             conn.transactionPersist(bg);
             conn.transactionCommit();
@@ -293,7 +294,7 @@ public class DataBenutzergruppeDaten extends DataManager<Long> {
     public Response addBenutzer(Long id, List<Long> bids) {
         if ((id == null) || (bids == null))
             return OperationError.NOT_FOUND.getResponse("Die ID der zu ändernden Benutzergruppe bzw IDs der Benutzer darf "
-            		+ "bzw. dürfen nicht null sein.");
+                    + "bzw. dürfen nicht null sein.");
         getDTO(id); // Prüfe, ob die Gruppe überhaupt in der DB definiert ist
         if (bids.size() > 0) {
             // Prüfe, ob die Benutzer mit den Ids existieren.
@@ -337,7 +338,7 @@ public class DataBenutzergruppeDaten extends DataManager<Long> {
     public Response removeBenutzer(Long id, List<Long> bids) {
         if (id == null || bids == null)
             return OperationError.NOT_FOUND.getResponse("Die ID der zu ändernden Benutzergruppe bzw IDs der Benutzer darf "
-            		+ "bzw. dürfen nicht null sein.");
+                    + "bzw. dürfen nicht null sein.");
         getDTO(id); // Prüfe, ob die Gruppe überhaupt in der DB definiert ist
         if (bids.size() > 0) {
             // Prüfe, ob die Benutzer mit den Ids existieren.
@@ -349,15 +350,15 @@ public class DataBenutzergruppeDaten extends DataManager<Long> {
             try {
                 conn.transactionBegin();
                 for (Long bid : bids) {
-                	// Prüfe zunächst, ob der Benutzer überhaupt Mitglied der Gruppe ist...
+                    // Prüfe zunächst, ob der Benutzer überhaupt Mitglied der Gruppe ist...
                     DTOBenutzergruppenMitglied bgm = conn.queryByKey(DTOBenutzergruppenMitglied.class, id, bid);
                     if (bgm == null)
-                    	throw OperationError.NOT_FOUND.exception("Der Benutzer mit der ID " + bid + " kann nicht aus der Gruppe "
-                    			+ "mit der ID " + id + " entfernt werden, da dieser nicht Mitglied in der Gruppe ist.");
-                	// Prüfe, ob der zu entfernende Benutzer der aktuelle Benutzer und die betroffene Gruppe administrativ ist...
+                        throw OperationError.NOT_FOUND.exception("Der Benutzer mit der ID " + bid + " kann nicht aus der Gruppe "
+                                + "mit der ID " + id + " entfernt werden, da dieser nicht Mitglied in der Gruppe ist.");
+                    // Prüfe, ob der zu entfernende Benutzer der aktuelle Benutzer und die betroffene Gruppe administrativ ist...
                     if ((conn.getUser().getId() == bid) && (getDTO(id).IstAdmin))
-                    	pruefeAdminUeberGruppe(id);
-                	conn.transactionRemove(bgm);
+                        pruefeAdminUeberGruppe(id);
+                    conn.transactionRemove(bgm);
                 }
                 conn.transactionCommit();
             }   
@@ -385,30 +386,85 @@ public class DataBenutzergruppeDaten extends DataManager<Long> {
      *                                   von der Admin-Berechtigung der angegebenen Gruppe abhängt.  
      */
     private void pruefeAdminUeberGruppe(long idGruppe) throws WebApplicationException {
-    	// Ermittle den aktuellen Benutzer und prüfe, ob dieser direkt als Benutzer Admin-Rechte besitzt.
+        // Ermittle den aktuellen Benutzer und prüfe, ob dieser direkt als Benutzer Admin-Rechte besitzt.
         DTOBenutzer benutzer = conn.queryByKey(DTOBenutzer.class, conn.getUser().getId());
         if (benutzer.IstAdmin)
-        	return;
+            return;
 
         // Ermittle die administrativen Gruppen des aktuellen Benutzers
         List<DTOBenutzergruppe> bgs = conn.queryList("SELECT bg FROM DTOBenutzergruppenMitglied bgm JOIN DTOBenutzergruppe bg "
-        		+ "ON bgm.Gruppe_ID = bg.ID and bgm.Benutzer_ID= ?1 and bg.IstAdmin= ?2 ", DTOBenutzergruppe.class, 
-        		conn.getUser().getId(), true);
+                + "ON bgm.Gruppe_ID = bg.ID and bgm.Benutzer_ID= ?1 and bg.IstAdmin= ?2 ", DTOBenutzergruppe.class, 
+                conn.getUser().getId(), true);
         
-    	// Prüfe, ob der aktuelle Benutzer überhaupt eine Admin-Berechtigung über eine administrative Gruppe hat
+        // Prüfe, ob der aktuelle Benutzer überhaupt eine Admin-Berechtigung über eine administrative Gruppe hat
         if (bgs.size() == 0) {
-        	// Dieser Fall sollte nicht auftreten, da der aktuelle Benutzer dann weder als Benutzer 
-        	// noch über eine Gruppe administrative Berechtigungen erhalte hätte und diese Operation
-        	// unzulässig wäre...
+            // Dieser Fall sollte nicht auftreten, da der aktuelle Benutzer dann weder als Benutzer 
+            // noch über eine Gruppe administrative Berechtigungen erhalte hätte und diese Operation
+            // unzulässig wäre...
             throw OperationError.INTERNAL_SERVER_ERROR.exception("Der aktuelle Benutzer verfügt über keine "
-            		+ "administrative Berechtigung und darf daher diese API-Methode nicht aufrufen.");
+                    + "administrative Berechtigung und darf daher diese API-Methode nicht aufrufen.");
         } 
         if ((bgs.size() == 1) && (bgs.get(0).ID.longValue() == idGruppe)) {
-        	// Der aktuelle Benutzer ist nur in genau der administrativen Gruppe,
-        	// aus der er entfernt werden soll. Dies ist nicht zulässig.
+            // Der aktuelle Benutzer ist nur in genau der administrativen Gruppe,
+            // aus der er entfernt werden soll. Dies ist nicht zulässig.
             throw OperationError.FORBIDDEN.exception("Der aktuelle Benutzer bezieht seine administrative Berechtigung über "
-            		+ "die Benutzergruppe und würde die administrative Berechtigung durch diese Operation verlieren.");
+                    + "die Benutzergruppe und würde die administrative Berechtigung durch diese Operation verlieren.");
         }
+    }
+    
+    /**
+     * Erstellt eine neue Benutzergruppe
+     * 
+     * @param is       Das JSON-Objekt mit den Daten
+     * 
+     * @return Eine Response mit dem neuen Benutzer
+     */
+    public Response create(InputStream is) {
+        DTOBenutzergruppe bg = null;
+      
+
+        Map<String, Object> map = JSONMapper.toMap(is);
+        if (map.size() > 0) {
+            try {
+                conn.transactionBegin();
+
+                // Bestimme die ID der neuen Benutzergruppe
+                DTODBAutoInkremente lastID = conn.queryByKey(DTODBAutoInkremente.class, "Benutzergruppen");
+                Long ID = lastID == null ? 1 : lastID.MaxID + 1;
+
+                // TODO Konstruktor-Parameter überprüfen
+                bg = new DTOBenutzergruppe(ID,"temp",false);
+              
+                for (Entry<String, Object> entry : map.entrySet()) {
+                    String key = entry.getKey();
+                    Object value = entry.getValue();
+                    switch (key) {
+                        case "id" -> {
+                            Long create_id = JSONMapper.convertToLong(value, true);
+                            if (create_id != null && create_id!=-1)
+                                throw OperationError.BAD_REQUEST.exception("ID muss leer sein.");
+                        }
+                        case "bezeichnung" -> bg.Bezeichnung = JSONMapper.convertToString(value, true, true);
+                        case "istAdmin" -> bg.IstAdmin = JSONMapper.convertToBoolean(value, true);
+                        case "kompetenzen" -> System.out.println("//TODO Kompetenzen bei Benutzergruppe-Inputstream Create");
+                        default -> throw OperationError.BAD_REQUEST.exception();
+                    }
+                }
+                conn.transactionPersist(bg);
+                if (!conn.transactionCommit())
+                    return OperationError.CONFLICT
+                            .getResponse("Datenbankfehler beim Persistieren des Betriebansprechpartners");
+            } catch (Exception e) {
+                if (e instanceof WebApplicationException webApplicationException)
+                    return webApplicationException.getResponse();
+                return OperationError.INTERNAL_SERVER_ERROR.getResponse();
+            } finally {
+                conn.transactionRollback();
+            }
+        }
+        BenutzergruppeDaten daten = dtoMapper.apply(getDTO(bg.ID));
+        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+
     }
 
 }
