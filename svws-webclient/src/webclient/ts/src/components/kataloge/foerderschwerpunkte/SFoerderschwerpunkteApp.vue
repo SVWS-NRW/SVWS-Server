@@ -1,55 +1,26 @@
 <template>
 	<div class="flex h-full flex-row">
 		<div v-if="app.dataFoerderschwerpunkt.daten" class="flex w-full flex-col">
-			<svws-ui-header :badge="inputId" badge-variant="light" badge-size="normal"><span>{{ inputBezeichnung }}</span>
-				<svws-ui-badge variant="highlight" size="normal">{{
-						inputKuerzel
-				}}</svws-ui-badge>
+			<svws-ui-header :badge="props.id" badge-variant="light" badge-size="normal"><span>{{ props.item?.text }}</span>
+				<svws-ui-badge variant="highlight" size="normal"> {{ props.item?.kuerzel }} </svws-ui-badge>
 			</svws-ui-header>
-			<svws-ui-tab-bar v-model="app.selectedTab.value">
-				<template #tabs>
-					<svws-ui-tab-button>Daten</svws-ui-tab-button>
-				</template>
-				<template #panels>
-					<svws-ui-tab-panel>
-						<s-foerderschwerpunkt-daten />
-					</svws-ui-tab-panel>
-				</template>
-			</svws-ui-tab-bar>
+			<svws-ui-router-tab-bar :routes="routeKatalogFoerderschwerpunkte.children_records" :hidden="routeKatalogFoerderschwerpunkte.children_hidden" v-model="selectedRoute">
+				<router-view />
+			</svws-ui-router-tab-bar>
 		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
-import { computed, ComputedRef, defineAsyncComponent } from "vue";
 
-import { injectMainApp, Main } from "~/apps/Main";
+	import { FoerderschwerpunktEintrag } from "@svws-nrw/svws-core-ts";
+	import { injectMainApp, Main } from "~/apps/Main";
+	import { routeKatalogFoerderschwerpunkte } from "~/router/apps/RouteKatalogFoerderschwerpunkte";
 
-const SFoerderschwerpunktDaten = defineAsyncComponent(
-	() => import("~/components/kataloge/foerderschwerpunkte/daten/SFoerderschwerpunktDaten.vue")
-);
-const main: Main = injectMainApp();
+	const props = defineProps<{ id?: number; item?: FoerderschwerpunktEintrag, routename: string }>();
 
-const app = main.apps.foerderschwerpunkte;
+	const main: Main = injectMainApp();
 
-const inputKuerzel: ComputedRef<string | false> = computed(() => {
-	if (app.auswahl.ausgewaehlt?.kuerzel) {
-		return app.auswahl.ausgewaehlt.kuerzel.toString();
-	}
-	return false;
-});
+	const app = main.apps.foerderschwerpunkte;
 
-const inputId: ComputedRef<string | false> = computed(() => {
-	if (app.auswahl.ausgewaehlt) {
-		return "ID: " + app.auswahl.ausgewaehlt.id;
-	}
-	return false;
-});
-
-const inputBezeichnung: ComputedRef<string | undefined> = computed(() => {
-	if (app.auswahl.ausgewaehlt) {
-		return app.dataFoerderschwerpunkt.daten?.text?.toString();
-	}
-	return "";
-});
 </script>

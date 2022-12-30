@@ -2,6 +2,7 @@ import { computed, WritableComputedRef } from "vue";
 import { RouteLocationNormalized } from "vue-router";
 import { RouteNodeListView } from "../RouteNodeListView";
 import { routeKatalogFaecher } from "./RouteKatalogFaecher";
+import { routeKatalogFoerderschwerpunkte } from "./RouteKatalogFoerderschwerpunkte";
 import { routeKatalogJahrgaenge } from "./RouteKatalogJahrgaenge";
 import { routeKatalogReligion } from "./RouteKatalogReligion";
 
@@ -22,8 +23,8 @@ export class RouteKataloge extends RouteNodeListView<unknown, unknown> {
 		super.menu = [
 			routeKatalogFaecher,
 			routeKatalogReligion,
-			routeKatalogJahrgaenge
-			// TODO { title: "Förderschwerpunkte", value: "foerderschwerpunkte" },
+			routeKatalogJahrgaenge,
+			routeKatalogFoerderschwerpunkte
 			// TODO { title: "Haltestellen", value: "haltestellen" },
 			// TODO { title: "Betriebe", value: "betriebe" }
 		];

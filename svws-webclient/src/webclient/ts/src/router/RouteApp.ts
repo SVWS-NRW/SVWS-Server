@@ -5,6 +5,7 @@ import { routeKataloge } from "~/router/apps/RouteKataloge";
 import { routeKatalogFaecher } from "~/router/apps/RouteKatalogFaecher";
 import { routeKatalogReligion } from "~/router/apps/RouteKatalogReligion";
 import { routeKatalogJahrgaenge } from "~/router/apps/RouteKatalogJahrgaenge";
+import { routeKatalogFoerderschwerpunkte } from "./apps/RouteKatalogFoerderschwerpunkte";
 import { routeSchueler } from "~/router/apps/RouteSchueler";
 import { routeLehrer } from "~/router/apps/RouteLehrer";
 import { routeKlassen } from "~/router/apps/RouteKlassen";
@@ -31,6 +32,7 @@ export class RouteApp extends RouteNode<unknown> {
                   routeKatalogFaecher,
                   routeKatalogReligion,
                   routeKatalogJahrgaenge,
+                  routeKatalogFoerderschwerpunkte,
                   routeSchueler,
                   routeLehrer,
                   routeKlassen,

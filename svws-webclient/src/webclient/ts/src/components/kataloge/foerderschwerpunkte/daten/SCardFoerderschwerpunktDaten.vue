@@ -2,34 +2,18 @@
 	<svws-ui-content-card title="Daten">
 		<div class="content-wrapper">
 			<div class="input-wrapper">
-				<svws-ui-text-input
-					v-model="id"
-					type="text"
-					placeholder="ID"
-				/>
-				<svws-ui-text-input
-					v-model="inputKuerzel"
-					type="text"
-					placeholder="Kürzel"
-				/>
-				<svws-ui-text-input
-					v-model="inputBezeichnung"
-					type="text"
-					placeholder="Bezeichnung"
-				/>
-				<svws-ui-multi-select
-					v-model="inputStatistikKuerzel"
-					title="Statistikkürzel"
-					:items="inputKatalogFoerderschwerpunkteStatistik"
-					:item-text="(i: Foerderschwerpunkt) => i.daten.kuerzel"
-					required
-				/>
+				<svws-ui-text-input placeholder="ID" v-model="id" type="text" />
+				<svws-ui-text-input placeholder="Kürzel" v-model="inputKuerzel" type="text" />
+				<svws-ui-text-input placeholder="Bezeichnung" v-model="inputBezeichnung" type="text" />
+				<svws-ui-multi-select title="Statistikkürzel" v-model="inputStatistikKuerzel" :items="inputKatalogFoerderschwerpunkteStatistik"
+					:item-text="(i: Foerderschwerpunkt) => i.daten.kuerzel" required />
 			</div>
 		</div>
 	</svws-ui-content-card>
 </template>
 
 <script setup lang="ts">
+
 	import { computed, ComputedRef, WritableComputedRef } from "vue";
 
 	import { Foerderschwerpunkt } from "@svws-nrw/svws-core-ts";
@@ -37,9 +21,8 @@
 
 	const main: Main = injectMainApp();
 	const app = main.apps.foerderschwerpunkte;
-	const inputKatalogFoerderschwerpunkteStatistik: ComputedRef<
-		Foerderschwerpunkt[] | undefined
-	> = computed(() => {
+
+	const inputKatalogFoerderschwerpunkteStatistik: ComputedRef< Foerderschwerpunkt[] | undefined> = computed(() => {
 		return Foerderschwerpunkt.values();
 	});
 
