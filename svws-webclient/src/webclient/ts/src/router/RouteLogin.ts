@@ -1,14 +1,16 @@
-import { RouteRecordRaw } from "vue-router";
+import SLogin from "~/components/SLogin.vue";
+import { RouteNode } from "~/router/RouteNode";
 
-import Login from "~/components/SLogin.vue";
 
+export class RouteLogin extends RouteNode<unknown> {
 
-export const RouteLogin : RouteRecordRaw = {
-    path: "/login",
-    name: "login",
-    component: Login,
-    meta: {
-        auth_required: false,   // gibt an, ob eine Authentifizierung für diese Seite benötigt wird
-        schulformen: undefined  // undefined bedeutet, dass diese Seite bei allen Schulformen angezeigt wird
-    }
+	protected defaultChildNode = undefined;
+
+	public constructor() {
+		super("login", "/login", SLogin);
+		super.text = "Login";
+	}
+
 }
+
+export const routeLogin = new RouteLogin();

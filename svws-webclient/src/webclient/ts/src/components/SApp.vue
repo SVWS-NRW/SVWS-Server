@@ -6,7 +6,7 @@
 					<svws-ui-sidebar-menu-header> Admin </svws-ui-sidebar-menu-header>
 				</template>
 				<template #default>
-					<svws-ui-sidebar-menu-item v-for="item in routeApp.menu" :active="is_active(item)" @click="router.push({ name: item.name })">
+					<svws-ui-sidebar-menu-item v-for="item in routeApp.menu" :active="is_active(item)" @click="select(item)">
 						<template #label> {{ getText(item) }} </template>
 						<template #icon> <s-app-icon :routename="item.name" /> </template>
 					</svws-ui-sidebar-menu-item>
@@ -74,6 +74,11 @@
 	watch(minDelayReached, () => { showOverlay.value = true; });
 	watch(minDurationReached, () => { showOverlay.value = false; });
 
+	function select(current : RouteNode<unknown>) : void {
+		router.push({ name: current.name });
+		document.title = schulname.value + " - " + current.text;
+	}
+
 	function is_active(current : RouteNode<unknown>): boolean {
 		const routename = route.name?.toString().split('_')[0];
 		if (routename === undefined)
@@ -84,13 +89,12 @@
 	}
 
 	function getText(item: RouteNode<unknown>): string {
-		if ("Schule" === item.text)
-			return schulname.value;
 		return item.text;
 	}
 
 	function logout() {
 		main.logout();
+		document.title = "SVWS-Client";
 		router.push("/login");
 	}
 

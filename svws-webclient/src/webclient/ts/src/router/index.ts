@@ -1,7 +1,5 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 
-import { RouteLogin } from "~/router/RouteLogin";
-import { RouteApp } from "~/router/RouteApp";
 import { RouteManager } from "~/router/RouteManager";
 
 

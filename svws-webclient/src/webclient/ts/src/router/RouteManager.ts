@@ -2,7 +2,7 @@ import { RouteLocationNormalized, Router } from "vue-router";
 
 import { RouteNode } from "~/router/RouteNode";
 import { routeApp } from "~/router/RouteApp";
-import { RouteLogin } from "~/router/RouteLogin";
+import { routeLogin } from "~/router/RouteLogin";
 
 import { mainApp } from "~/apps/Main";
 
@@ -15,7 +15,7 @@ export class RouteManager {
         this.router = router;
         this.router.beforeEach(this.beforeEach);
         // Füge die Haupt-Routen hinzu
-        this.router.addRoute(RouteLogin);
+        this.router.addRoute(routeLogin.record);
         this.router.addRoute(routeApp.record);
     }
 
@@ -34,6 +34,5 @@ export class RouteManager {
         // Rufe die beforeEach-Methode bei der Ziel-Route auf...
         return node.beforeEach(to, from);
     }
-
 
 }
