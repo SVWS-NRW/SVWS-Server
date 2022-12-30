@@ -81,62 +81,66 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ComputedRef, Ref, ref, watch, WritableComputedRef } from "vue";
-import { DBSchemaListeEintrag } from "@svws-nrw/svws-core-ts";
-import { injectMainApp, Main } from "~/apps/Main";
-import { router } from "~/router";
-import { useRoute } from "vue-router";
-import { version } from '../../version';
 
-const route = useRoute();
+	import { computed, ComputedRef, Ref, ref, watch, WritableComputedRef } from "vue";
+	import { DBSchemaListeEintrag } from "@svws-nrw/svws-core-ts";
+	import { injectMainApp, Main } from "~/apps/Main";
+	import { router } from "~/router";
+	import { useRoute } from "vue-router";
+	import { version } from '../../version';
+	import { routeSchueler } from "~/router/apps/RouteSchueler";
 
-const serverAddress = ref("localhost");
-const username = ref("Admin");
-const password = ref("");
+	const route = useRoute();
 
-const connection_ok: Ref<boolean> = ref(true)
+	const serverAddress = ref("localhost");
+	const username = ref("Admin");
+	const password = ref("");
+	const defaultRoute = routeSchueler;
 
-const main: Main = injectMainApp();
-const inputDBSchemata: ComputedRef<DBSchemaListeEintrag[] | undefined> = computed(() => {
-	return main.config.dbSchemata;
-});
+	const connection_ok: Ref<boolean> = ref(true)
 
-watch(() => main.config.pending, (pending: boolean) => {
-				const guards = ['/', '/login']
-				const redirect = route.query.redirect as string | undefined
-				if (!pending) {
-					const path: string = redirect && !guards.includes(redirect)
-						? redirect
-						: '/schueler'
-					router.push(path)
-				}
+	const main: Main = injectMainApp();
+
+	const inputDBSchemata: ComputedRef<DBSchemaListeEintrag[] | undefined> = computed(() => {
+		return main.config.dbSchemata;
+	});
+
+	watch(() => main.config.pending, (pending: boolean) => {
+		const guards = ['/', '/login']
+		const redirect = route.query.redirect as string | undefined
+		if (!pending) {
+			if (redirect && !guards.includes(redirect))
+				router.push(redirect);
+			else
+				router.push({ name: defaultRoute.name });
+		}
 	})
 
-main.connectTo(window.location.hostname + ":" + window.location.port)
+	main.connectTo(window.location.hostname + ":" + window.location.port)
 
-const inputDBSchema: WritableComputedRef<DBSchemaListeEintrag | undefined> = computed({
-	set(val: DBSchemaListeEintrag | undefined) {
-		if (main.config) {
-			main.config.dbSchema = val;
+	const inputDBSchema: WritableComputedRef<DBSchemaListeEintrag | undefined> = computed({
+		set(val: DBSchemaListeEintrag | undefined) {
+			if (main.config) {
+				main.config.dbSchema = val;
+			}
+		},
+		get(): DBSchemaListeEintrag | undefined {
+			return main.config.dbSchema;
 		}
-	},
-	get(): DBSchemaListeEintrag | undefined {
-		return main.config.dbSchema;
+	});
+
+	function get_name(i: DBSchemaListeEintrag): string | undefined {
+		return i?.name?.toString();
+	};
+
+	async function connectClicked() {
+		connection_ok.value = true;
+		connection_ok.value = await main.connectTo(serverAddress.value);
+	};
+
+	async function login() {
+		await main.authenticate(username.value, password.value);
 	}
-});
-
-function get_name(i: DBSchemaListeEintrag): string | undefined {
-	return i?.name?.toString();
-};
-
-async function connectClicked() {
-	connection_ok.value = true;
-	connection_ok.value = await main.connectTo(serverAddress.value);
-};
-
-async function login() {
-	await main.authenticate(username.value, password.value);
-}
 
 </script>
 
