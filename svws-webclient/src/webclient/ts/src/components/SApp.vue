@@ -6,11 +6,9 @@
 					<svws-ui-sidebar-menu-header> Admin </svws-ui-sidebar-menu-header>
 				</template>
 				<template #default>
-					<svws-ui-sidebar-menu-item v-for="menuItem in menuItems" :key="menuItem.caption"
-						:active="menuItem.active.includes(route.name?.toString().split('_')[0] as string)"
-						@click="router.push({ name: menuItem.value })">
-						<template #label> {{ menuItem.caption }} </template>
-						<template #icon> <s-app-icon :routename="menuItem.value" /> </template>
+					<svws-ui-sidebar-menu-item v-for="item in routeApp.menu" :active="is_active(item)" @click="router.push({ name: item.name })">
+						<template #label> {{ getText(item) }} </template>
+						<template #icon> <s-app-icon :routename="item.name" /> </template>
 					</svws-ui-sidebar-menu-item>
 				</template>
 				<template #footer>
@@ -47,61 +45,27 @@
 	import type { Schule } from "~/apps/schule/Schule";
 	import { version } from '../../version';
 
-	import { computed, ComputedRef, ref, watch, WritableComputedRef } from "vue";
+	import { computed, ComputedRef, ref, watch } from "vue";
 	import { useRoute } from "vue-router";
 	import { injectMainApp } from "~/apps/Main";
 	import { router } from "~/router";
+	import { routeApp } from "~/router/RouteApp";
+	import { RouteNode } from "~/router/RouteNode";
 
 	const route = useRoute();
 
-	interface MenuItem { caption: string; value: string; icon: string; active: string[]; }
-
 	const main = injectMainApp();
+
 	const appSchule: ComputedRef<Schule> = computed(() => main.apps.schule);
-
-	const menubar_selected: WritableComputedRef<string> = computed({
-		get(): string {
-			return main.config.selected_app;
-		},
-		set(val: string) {
-			if (val === "abmelden") {
-				main.logout();
-			} else {
-				if (val && val !== menubar_selected.value) {
-					main.config.selected_app = val;
-					selectedItems.value = [];
-				}
-			}
-		}
-	});
-
-	const selectedItems = ref([]);
 
 	const schulname: ComputedRef<string> = computed(() => {
 		const name = appSchule.value.schuleStammdaten.daten?.bezeichnung1;
 		return name ? name.toString() : "fehlende Bezeichnung";
 	});
 
-	const fullMenuItems: MenuItem[] = [
-		{ caption: schulname.value, value: "schule", active: ["schule"], icon: "community" },
-		{ caption: "Kataloge", value: "kataloge", active: [ "kataloge", "faecher", "jahrgaenge", "foerderschwerpunkte", "religionen" ], icon: "archive" },
-		{ caption: "Schüler", value: "schueler", active: ["schueler"], icon: "group" },
-		{ caption: "Lehrkräfte", value: "lehrer", active: ["lehrer"], icon: "briefcase" },
-		{ caption: "Klassen", value: "klassen", active: ["klassen"], icon: "team" },
-		{ caption: "Kurse", value: "kurse", active: ["kurse"], icon: "slideshow" },
-		{ caption: "Oberstufe", value: "gost", active: ["gost"], icon: "graduation-cap" },
-		{ caption: "Statistik", value: "statistik", active: ["statistik"], icon: "line-chart" }
-	];
 	const minDelayReached = ref(false);
 	const minDurationReached = ref(false);
 	const showOverlay = ref(false);
-
-	const menuItems: ComputedRef<MenuItem[]> = computed(() => {
-		if (!main.config.hasGost) {
-			return fullMenuItems.filter(item => item.value !== "gost");
-		}
-		return fullMenuItems; 
-	});
 
 	const initializing: ComputedRef<boolean> = computed( () => main.config.apiLoadingStatus.initializing);
 
@@ -109,6 +73,21 @@
 	setTimeout(() => (minDurationReached.value = true), 400); // Minimum Dauer bevor das Overlay ausgeblendet wird. Soll flackern des Bildschirms vermeiden.
 	watch(minDelayReached, () => { showOverlay.value = true; });
 	watch(minDurationReached, () => { showOverlay.value = false; });
+
+	function is_active(current : RouteNode<unknown>): boolean {
+		const routename = route.name?.toString().split('_')[0];
+		if (routename === undefined)
+			return false;
+		if (routename === current.name)
+			return true;
+		return current.menu.map(r => r.name).includes(routename);
+	}
+
+	function getText(item: RouteNode<unknown>): string {
+		if ("Schule" === item.text)
+			return schulname.value;
+		return item.text;
+	}
 
 	function logout() {
 		main.logout();
