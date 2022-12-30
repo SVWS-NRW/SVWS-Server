@@ -7,14 +7,8 @@
 		<template #header> </template>
 		<template #content>
 			<div class="secondary-menu--navigation container">
-				<svws-ui-sidebar-menu-item
-					v-for="item in menu_items"
-					:key="item.value"
-					@click="router.push({ name: item.value })"
-				>
-					<template #label>
-						<span>{{ item.title }}</span>
-					</template>
+				<svws-ui-sidebar-menu-item v-for="item in routeKataloge.menu" :key="item.name" @click="router.push({ name: item.name })">
+					<template #label> <span>{{ item.text }}</span> </template>
 				</svws-ui-sidebar-menu-item>
 			</div>
 		</template>
@@ -22,11 +16,13 @@
 </template>
 
 <script setup lang="ts">
+
 	import { computed, WritableComputedRef, ComputedRef } from "vue";
 	import { injectMainApp, Main } from "~/apps/Main";
 	import { router } from "~/router";
-	import {Schuljahresabschnitt} from "@svws-nrw/svws-core-ts";
-	import {Schule} from "~/apps/schule/Schule";
+	import { Schuljahresabschnitt } from "@svws-nrw/svws-core-ts";
+	import { Schule } from "~/apps/schule/Schule";
+	import { routeKataloge } from "~/router/apps/RouteKataloge";
 
 	const menu_items = [
 		{ title: "Fächer", value: "faecher" },
@@ -38,24 +34,7 @@
 	];
 	const main: Main = injectMainApp();
 
-	// const menubar_selected: WritableComputedRef<string | undefined> = computed({
-	// 	get(): string | undefined {
-	// 		return main.config.selected_app;
-	// 	},
-	// 	set(val: string | undefined) {
-	// 		if (
-	// 			val &&
-	// 			val !== menubar_selected.value &&
-	// 			main.config.selected_app
-	// 		) {
-	// 			main.config.selected_app = val;
-	// 		}
-	// 	}
-	// });
-
-	const schule_abschnitte: ComputedRef<
-		Array<Schuljahresabschnitt> | undefined
-	> = computed(() => {
+	const schule_abschnitte: ComputedRef<Array<Schuljahresabschnitt> | undefined> = computed(() => {
 		const liste = appSchule.value.schuleStammdaten.daten?.abschnitte;
 		return liste?.toArray(new Array<Schuljahresabschnitt>()) || [];
 	});
@@ -72,6 +51,7 @@
 	const appSchule: ComputedRef<Schule> = computed(() => {
 		return main.apps.schule;
 	});
+
 	function item_sort(a: Schuljahresabschnitt, b: Schuljahresabschnitt) {
 		return (
 			b.schuljahr + b.abschnitt * 0.1 - (a.schuljahr + a.abschnitt * 0.1)
@@ -79,8 +59,7 @@
 	}
 
 	function item_text(item: Schuljahresabschnitt) {
-		return item.schuljahr
-			? `${item.schuljahr}, ${item.abschnitt}. HJ`
-			: "Abschnitt";
+		return item.schuljahr ? `${item.schuljahr}, ${item.abschnitt}. HJ` : "Abschnitt";
 	}
+
 </script>

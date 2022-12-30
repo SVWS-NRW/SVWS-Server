@@ -4,10 +4,8 @@
 		<template #header> </template>
 		<template #content>
 			<div class="secondary-menu--navigation container">
-				<svws-ui-sidebar-menu-item v-for="item in menu_items" :key="item.value" @click="router.push({ name: item.value })">
-					<template #label>
-						<span>{{ item.title }}</span>
-					</template>
+				<svws-ui-sidebar-menu-item v-for="item in routeSchule.menu" :key="item.name" @click="router.push({ name: item.name })">
+					<template #label> <span>{{ item.text }}</span> </template>
 				</svws-ui-sidebar-menu-item>
 			</div>
 		</template>
@@ -16,19 +14,7 @@
 
 <script setup lang="ts">
 
+	import { routeSchule } from "~/router/apps/RouteSchule";
 	import { router } from "~/router";
-
-	const menu_items = [
-		{ title: "Schule bearbeiten", value: "schule_bearbeiten" },
-		{ title: "Einstellungen", value: "einstellungen" },
-		{ title: "Datenaustausch", value: "datenaustausch" },
-		{ title: "Datensicherung", value: "datensicherung" },
-		{ title: "Schuljahreswechsel", value: "schuljahreswechsel" },
-		{ title: "Statistik IT.NRW", value: "statistikitnrw" },
-		{ title: "Werkzeuge", value: "werkzeuge" },
-		{ title: "Benutzer", value: "benutzer" },
-		{ title: "Benutzergruppen", value: "benutzergruppen" },
-		{ title: "Hilfe", value: "hilfe" }
-	];
 
 </script>

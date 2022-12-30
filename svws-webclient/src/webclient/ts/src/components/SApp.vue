@@ -43,6 +43,7 @@
 </template>
 
 <script setup lang="ts">
+
 	import type { Schule } from "~/apps/schule/Schule";
 	import { version } from '../../version';
 
@@ -50,7 +51,6 @@
 	import { useRoute } from "vue-router";
 	import { injectMainApp } from "~/apps/Main";
 	import { router } from "~/router";
-	import { App } from "~/apps/BaseApp";
 
 	const route = useRoute();
 

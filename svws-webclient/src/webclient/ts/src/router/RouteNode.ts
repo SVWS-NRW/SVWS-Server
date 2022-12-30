@@ -20,6 +20,9 @@ export abstract class RouteNode<TRouteData> {
     /** Die Kind-Knoten zu dieser Route */
     protected _children: RouteNode<unknown>[];
 
+    /** Die Knoten, welche in einem Menu zu dieser Komponente zur Verfügung gestellt werden */
+    protected _menu: RouteNode<unknown>[];
+
 	/** Die Daten, die dem Knoten zugeordnet sind */
 	protected _data: TRouteData;          
 
@@ -51,6 +54,7 @@ export abstract class RouteNode<TRouteData> {
             }
         };
         this._children = [];
+        this._menu = [];
         this._data = (data !== undefined) ? data : {} as TRouteData;
     }
 
@@ -121,6 +125,26 @@ export abstract class RouteNode<TRouteData> {
      */
     public get children() : RouteNode<unknown>[] {
         return this._children;
+    }
+
+    /**
+     * Setzt die Knoten, welche bei der Auswahl dieser Route für ein 
+     * Menu zur Verfügung stehen.
+     * 
+     * @param nodes   Ein Array mit den Knoten
+     */
+    public set menu(nodes: RouteNode<unknown>[]) {
+        this._menu = nodes;
+    }
+
+    /**
+     * Gibt die Knoten zurück, welche bei der Auswahl dieser Route für ein 
+     * Menu zur Verfügung stehen.
+     * 
+     * @returns ein Array mit den Knoten
+     */
+    public get menu() : RouteNode<unknown>[] {
+        return this._menu;
     }
 
     /**
