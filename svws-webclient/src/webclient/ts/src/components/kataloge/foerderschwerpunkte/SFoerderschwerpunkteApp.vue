@@ -22,5 +22,6 @@
 	const main: Main = injectMainApp();
 
 	const app = main.apps.foerderschwerpunkte;
+	const selectedRoute = routeKatalogFoerderschwerpunkte.getChildRouteSelector();
 
 </script>
