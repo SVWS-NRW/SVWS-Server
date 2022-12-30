@@ -6,33 +6,11 @@
 					<svws-ui-sidebar-menu-header> Admin </svws-ui-sidebar-menu-header>
 				</template>
 				<template #default>
-					<svws-ui-sidebar-menu-item
-						v-for="menuItem in menuItems"
-						:key="menuItem.caption"
-						:active="menuItem.active.includes(route.name.split('_')[0] as string)"
-						@click="router.push({ name: menuItem.value })"
-					>
-						<template #label>{{ menuItem.caption }}</template>
-						<template #icon>
-							<i-ri-team-line v-if="menuItem.icon === 'team'" />
-							<i-ri-user-2-line v-else-if="menuItem.icon === 'user-2'" />
-							<i-ri-artboard-line v-else-if="menuItem.icon === 'artboard'" />
-							<i-ri-numbers-line v-else-if="menuItem.icon === 'numbers'" />
-							<i-ri-group-line v-else-if="menuItem.icon === 'group'" />
-							<i-ri-bar-chart-2-line v-else-if="menuItem.icon === 'line-chart'" />
-							<i-ri-book-read-line v-else-if="menuItem.icon === 'book-read'" />
-							<i-ri-parent-line v-else-if="menuItem.icon === 'parent'" />
-							<i-ri-community-line v-else-if="menuItem.icon === 'community'" />
-							<i-ri-archive-line v-else-if="menuItem.icon === 'archive'" />
-							<i-ri-briefcase-line v-else-if="menuItem.icon === 'briefcase'" />
-							<i-ri-slideshow-line v-else-if="menuItem.icon === 'slideshow'" />
-							<svg v-else-if="menuItem.icon === 'graduation-cap'" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1.2em" height="1.2em">
-								<g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-									<path d="m2.573 8.463l8.659-4.329a.6.6 0 0 1 .536 0l8.659 4.33a.6.6 0 0 1 0 1.073l-8.659 4.329a.6.6 0 0 1-.536 0l-8.659-4.33a.6.6 0 0 1 0-1.073Z"/>
-									<path d="M22.5 13V9.5l-2-1m-16 2v5.412a2 2 0 0 0 1.142 1.807l5 2.374a2 2 0 0 0 1.716 0l5-2.374a2 2 0 0 0 1.142-1.807V10.5"/>
-								</g>
-							</svg>
-						</template>
+					<svws-ui-sidebar-menu-item v-for="menuItem in menuItems" :key="menuItem.caption"
+						:active="menuItem.active.includes(route.name?.toString().split('_')[0] as string)"
+						@click="router.push({ name: menuItem.value })">
+						<template #label> {{ menuItem.caption }} </template>
+						<template #icon> <s-app-icon :routename="menuItem.value" /> </template>
 					</svws-ui-sidebar-menu-item>
 				</template>
 				<template #footer>
@@ -79,32 +57,30 @@
 	interface MenuItem { caption: string; value: string; icon: string; active: string[]; }
 
 	const main = injectMainApp();
-	const appSchule: ComputedRef<Schule> =
-		computed(() => main.apps.schule);
+	const appSchule: ComputedRef<Schule> = computed(() => main.apps.schule);
 
-	const menubar_selected: WritableComputedRef<string> =
-		computed({
-			get(): string {
-				return main.config.selected_app;
-			},
-			set(val: string) {
-				if (val === "abmelden") {
-					main.logout();
-				} else {
-					if (val && val !== menubar_selected.value) {
-						main.config.selected_app = val;
-						selectedItems.value = [];
-					}
+	const menubar_selected: WritableComputedRef<string> = computed({
+		get(): string {
+			return main.config.selected_app;
+		},
+		set(val: string) {
+			if (val === "abmelden") {
+				main.logout();
+			} else {
+				if (val && val !== menubar_selected.value) {
+					main.config.selected_app = val;
+					selectedItems.value = [];
 				}
 			}
-		});
+		}
+	});
 
 	const selectedItems = ref([]);
 
-	const schulname: ComputedRef<string> =
-		computed(() => {
-			const name = appSchule.value.schuleStammdaten.daten?.bezeichnung1;
-			return name ? name.toString() : "fehlende Bezeichnung"; });
+	const schulname: ComputedRef<string> = computed(() => {
+		const name = appSchule.value.schuleStammdaten.daten?.bezeichnung1;
+		return name ? name.toString() : "fehlende Bezeichnung";
+	});
 
 	const fullMenuItems: MenuItem[] = [
 		{ caption: schulname.value, value: "schule", active: ["schule"], icon: "community" },
@@ -120,33 +96,25 @@
 	const minDurationReached = ref(false);
 	const showOverlay = ref(false);
 
-	const menuItems: ComputedRef<MenuItem[]> =
-		computed(() => {
-			if (!main.config.hasGost) {
-				return fullMenuItems.filter(item => item.value !== "gost");
-			}
-			return fullMenuItems; });
+	const menuItems: ComputedRef<MenuItem[]> = computed(() => {
+		if (!main.config.hasGost) {
+			return fullMenuItems.filter(item => item.value !== "gost");
+		}
+		return fullMenuItems; 
+	});
 
-	const initializing: ComputedRef<boolean> =
-		computed( () => main.config.apiLoadingStatus.initializing);
+	const initializing: ComputedRef<boolean> = computed( () => main.config.apiLoadingStatus.initializing);
 
 	setTimeout(() => (minDelayReached.value = true), 100); // Minimum Delay bevor das Overlay eingeblendet wird. Soll flackern des Bildschirms vermeiden.
 	setTimeout(() => (minDurationReached.value = true), 400); // Minimum Dauer bevor das Overlay ausgeblendet wird. Soll flackern des Bildschirms vermeiden.
 	watch(minDelayReached, () => { showOverlay.value = true; });
 	watch(minDurationReached, () => { showOverlay.value = false; });
-	watch( () => route.name, () => {
-		//Die Liste werden biem Navigieren aktualisiert.
-		if (route.name?.toString() === "benutzer")
-			App.apps.benutzer.auswahl.update_list();
-		if (route.name?.toString() === "benutzergruppe")
-			App.apps.benutzergruppe.auswahl.update_list();
-		selectedItems.value = [];
-	});
 
 	function logout() {
 		main.logout();
 		router.push("/login");
 	}
+
 </script>
 
 <style lang="postcss">
