@@ -1,4 +1,4 @@
-import { Erzieherart, List, SchuelerListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
+import { SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized } from "vue-router";
 import { mainApp } from "~/apps/Main";
 import { DataKatalogErzieherarten } from "~/apps/schueler/DataKatalogErzieherarten";

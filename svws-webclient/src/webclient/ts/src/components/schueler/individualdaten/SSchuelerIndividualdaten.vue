@@ -4,8 +4,8 @@
 		<s-card-schueler-kontaktdaten :stammdaten="props.stammdaten" />
 		<s-card-schueler-staat-religion :stammdaten="props.stammdaten" />
 		<s-card-schueler-migrationshintergrund :stammdaten="props.stammdaten" />
-		<s-card-schueler-foerderbedarf :stammdaten="props.stammdaten" />
-		<s-card-schueler-statusdaten :stammdaten="props.stammdaten" />
+		<s-card-schueler-foerderbedarf :stammdaten="props.stammdaten" :foerderschwerpunkte="props.foerderschwerpunkte"/>
+		<s-card-schueler-statusdaten :stammdaten="props.stammdaten" :fachschuelerarten="props.fachschuelerarten" />
 		<s-card-schueler-bemerkungen :stammdaten="props.stammdaten" />
 	</div>
 </template>
@@ -14,10 +14,13 @@
 
 	import { SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef } from "vue";
+	import { DataKatalogFahrschuelerarten } from "~/apps/schueler/DataKatalogFahrschuelerarten";
+	import { DataKatalogFoerderschwerpunkte } from "~/apps/schueler/DataKatalogFoerderschwerpunkte";
 	import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
 	import { routeSchuelerIndividualdaten } from "~/router/apps/schueler/RouteSchuelerIndividualdaten";
 
-	const props = defineProps<{ id?: number, item?: SchuelerListeEintrag, stammdaten: DataSchuelerStammdaten, routename: string }>();
+	const props = defineProps<{ id?: number, item?: SchuelerListeEintrag, stammdaten: DataSchuelerStammdaten, 
+		fachschuelerarten: DataKatalogFahrschuelerarten, foerderschwerpunkte: DataKatalogFoerderschwerpunkte, routename: string }>();
 
 	const visible: ComputedRef<boolean> = computed(() => {
 		return !(routeSchuelerIndividualdaten.hidden) && (props.id !== undefined);

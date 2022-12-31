@@ -23,18 +23,15 @@
 	import { KatalogEintrag, List, SchuelerStammdaten, SchuelerStatus } from "@svws-nrw/svws-core-ts";
 	import { injectMainApp, Main } from "~/apps/Main";
 	import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
+	import { DataKatalogFahrschuelerarten } from "~/apps/schueler/DataKatalogFahrschuelerarten";
 
-	const props = defineProps<{ stammdaten: DataSchuelerStammdaten }>();
+	const props = defineProps<{ stammdaten: DataSchuelerStammdaten, fachschuelerarten: DataKatalogFahrschuelerarten }>();
 
 	const daten: ComputedRef<SchuelerStammdaten> = computed(() => props.stammdaten.daten || new SchuelerStammdaten());
 
 
 	const main: Main = injectMainApp();
 	const app = main.apps.schueler;
-
-	const inputKatalogFahrschuelerarten: ComputedRef<List<KatalogEintrag>> = computed(() =>  app.katalogFahrschuelerarten);
-
-	const inputKatalogHaltestellen: ComputedRef<List<KatalogEintrag>> = computed(() => main.kataloge.haltestellen);
 
 	const inputStatus: WritableComputedRef<SchuelerStatus | undefined> = computed({
 		//TODO id verwenden
@@ -47,6 +44,7 @@
 		}
 	});
 
+	const inputKatalogFahrschuelerarten: ComputedRef<KatalogEintrag[]> = computed(() => props.fachschuelerarten.daten?.toArray() as KatalogEintrag[] || []);
 	const inputFahrschuelerArtID: WritableComputedRef<KatalogEintrag | undefined> = computed({
 		get(): KatalogEintrag | undefined {
 			const id = daten.value.fahrschuelerArtID;
@@ -59,6 +57,8 @@
 		}
 	});
 
+	// TODO Lese Katalog in der Route aus und nutze keinen globalen Katalog
+	const inputKatalogHaltestellen: ComputedRef<List<KatalogEintrag>> = computed(() => main.kataloge.haltestellen);
 	const inputHaltestelleID: WritableComputedRef<KatalogEintrag | undefined> = computed({
 		get(): KatalogEintrag | undefined {
 			const id = daten.value.haltestelleID;

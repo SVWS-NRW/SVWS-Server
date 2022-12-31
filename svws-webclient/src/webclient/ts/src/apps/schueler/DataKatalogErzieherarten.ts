@@ -11,7 +11,13 @@ export class DataKatalogErzieherarten extends BaseData<List<Erzieherart>, unknow
 	 * @returns {Promise<List<Erzieherart>} Die Katalog.Daten als Promise
 	 */
 	public async on_select(): Promise<List<Erzieherart> | undefined> {
-		return super._select(() => App.api.getErzieherArten(App.schema));
+		try {
+			this._daten = await App.api.getErzieherArten(App.schema);
+			return this._daten;
+		} catch (error) {
+			console.log(`Fehler: ${error}`);
+			return this.unselect();
+		}
 	}
 
 	protected on_update(daten: Partial<List<Erzieherart>>): void {

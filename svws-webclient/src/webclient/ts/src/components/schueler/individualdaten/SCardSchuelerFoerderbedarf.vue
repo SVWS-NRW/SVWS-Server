@@ -13,18 +13,14 @@
 
 	import { computed, ComputedRef, WritableComputedRef } from "vue";
 	import { FoerderschwerpunktEintrag, List, SchuelerStammdaten } from "@svws-nrw/svws-core-ts";
-	import { injectMainApp } from "~/apps/Main";
 	import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
+	import { DataKatalogFoerderschwerpunkte } from "~/apps/schueler/DataKatalogFoerderschwerpunkte";
 
-	const props = defineProps<{ stammdaten: DataSchuelerStammdaten }>();
+	const props = defineProps<{ stammdaten: DataSchuelerStammdaten, foerderschwerpunkte: DataKatalogFoerderschwerpunkte }>();
 
 	const daten: ComputedRef<SchuelerStammdaten> = computed(() => props.stammdaten.daten || new SchuelerStammdaten());
-
-
-	const app = injectMainApp().apps.schueler;
-
 	
-	const inputKatalogFoerderschwerpunkte: ComputedRef<List<FoerderschwerpunktEintrag>> = computed(() => app.katalogFoerderschwerpunkte);
+	const inputKatalogFoerderschwerpunkte: ComputedRef<FoerderschwerpunktEintrag[]> = computed(() => props.foerderschwerpunkte.daten?.toArray() as FoerderschwerpunktEintrag[] || []);
 
 	const inputFoerderschwerpunktID: WritableComputedRef<FoerderschwerpunktEintrag | undefined> = computed({
 		get(): FoerderschwerpunktEintrag | undefined {

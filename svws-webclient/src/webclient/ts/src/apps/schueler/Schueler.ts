@@ -33,11 +33,6 @@ export class Schueler extends App {
 	public listAbschnitte!: ListAbschnitte;
 	public dataSchuelerAbschnittsdaten!: DataSchuelerAbschnittsdaten;
 
-	/** Der Katalog der Fahrschülerarten */
-	public katalogFahrschuelerarten: List<KatalogEintrag> = new Vector<KatalogEintrag>();
-	/** Der Katalog der Förderschwerpunkte */
-	public katalogFoerderschwerpunkte: List<FoerderschwerpunktEintrag> = new Vector<FoerderschwerpunktEintrag>();
-
 	/** Liste der Schülerbetriebe */
 	public listSchuelerbetriebe : ListSchuelerBetriebsdaten | undefined = undefined;
 	/** Objekt für Betriebsstammdaten */
@@ -70,8 +65,5 @@ export class Schueler extends App {
 		this.listSchuelerbetriebe  = new ListSchuelerBetriebsdaten();
 		this.betriebsStammdaten = new DataBetriebsstammdaten();
 		this.listSchuelerbetriebe.add_data(this.betriebsStammdaten);
-
-		this.katalogFahrschuelerarten = await App.api.getSchuelerFahrschuelerarten(App.schema);
-		this.katalogFoerderschwerpunkte = await App.api.getSchuelerFoerderschwerpunkte(App.schema);
 	}
 }
