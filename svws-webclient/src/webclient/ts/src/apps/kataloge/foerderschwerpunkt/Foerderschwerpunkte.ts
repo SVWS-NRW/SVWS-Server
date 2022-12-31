@@ -1,6 +1,5 @@
 import { App } from "../../BaseApp";
 
-import { DataFoerderschwerpunkt } from "./DataFoerderschwerpunkt";
 import { ListFoerderschwerpunkte } from "./ListFoerderschwerpunkte";
 
 /**
@@ -16,20 +15,12 @@ export class Foerderschwerpunkte extends App {
 	public auswahl!: ListFoerderschwerpunkte;
 
 	/**
-	 * Das Objekt zur Verwaltung der Kommunikation bezüglich der Förderschwerpunktdaten mit dem
-	 * SVWS-Server
-	 */
-	public dataFoerderschwerpunkt!: DataFoerderschwerpunkt;
-
-	/**
 	 * Initialisiert die Klasse und holt die relevanten Daten vom Server
 	 *
 	 * @returns {Promise<void>}
 	 */
 	public async init(): Promise<void> {
 		this.auswahl = new ListFoerderschwerpunkte();
-		this.dataFoerderschwerpunkt = new DataFoerderschwerpunkt();
-		this.auswahl.add_data([this.dataFoerderschwerpunkt]);
 	}
 
 }

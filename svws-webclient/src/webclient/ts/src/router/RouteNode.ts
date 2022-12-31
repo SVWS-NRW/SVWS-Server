@@ -165,7 +165,7 @@ export abstract class RouteNode<TRouteData> {
      * @returns ein Array mit der 
      */
     public get children_hidden() : boolean[] {
-        return this._children.map(c => c.hidden());
+        return this._children.map(c => c.hidden);
     }
 
     /**
@@ -201,7 +201,7 @@ export abstract class RouteNode<TRouteData> {
      * 
      * @returns true, falls der Knoten versteckt werden soll und für das Routing nicht zur Verfügung steht.
      */
-	public hidden(): boolean {
+	public get hidden(): boolean {
         // TODO prüfen, ob die Komponente dargestellt werden darf oder nicht
         return (this.isHidden === undefined) ? false : this.isHidden();
     }
