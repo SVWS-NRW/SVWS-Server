@@ -1,6 +1,5 @@
-import { mainApp } from "~/apps/Main";
 import { RouteNode } from "~/router/RouteNode";
-import { RouteNodeListView } from "~/router/RouteNodeListView";
+import { routeSchueler } from "~/router/apps/RouteSchueler";
 
 const SSchuelerIndividualdaten = () => import("~/components/schueler/individualdaten/SSchuelerIndividualdaten.vue");
 
@@ -8,7 +7,7 @@ export class RouteSchuelerIndividualdaten extends RouteNode<unknown> {
 
 	public constructor() {
 		super("schueler_daten", "daten", SSchuelerIndividualdaten);
-		super.propHandler = (route) => RouteNodeListView.getPropsByAuswahlID(route, mainApp.apps.schueler.auswahl);
+		super.propHandler = (route) => routeSchueler.getProps(route);
 		super.text = "Individualdaten";
 	}
 

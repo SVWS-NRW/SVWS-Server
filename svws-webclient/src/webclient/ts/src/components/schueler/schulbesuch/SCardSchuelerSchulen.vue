@@ -1,24 +1,19 @@
 <template>
 	<svws-ui-content-card title="Alle bisher besuchten Schulen">
 		<div>
-			<svws-ui-textarea-input placeholder="Schulen" v-model="inputAlleSchulen" resizeable="vertical" />
+			Hier wird demnächst die Übersicht über die besuchten Schulen implementiert
+			<div v-for="schule in props.data.daten?.alleSchulen">
+				<!-- TODO <svws-zu-table> für die besuchten Schulen -->
+				<p> {{ schule.schulnummer + " ... (" + schule.datumVon + "-" + schule.datumBis + ")" }} </p>
+			</div>
 		</div>
 	</svws-ui-content-card>
 </template>
 
 <script setup lang="ts">
 
-	import { computed } from "vue";
+	import { DataSchuelerSchulbesuchsdaten } from "~/apps/schueler/DataSchuelerSchulbesuchsdaten";
 
-	const inputAlleSchulen = computed({
-		get() {
-			return "Hier werden später alle bisher besuchten Schulen aufgelistet und sind veränderbar...";
-			// return this.app.schulbesuchsdaten.daten.alleSchulen;
-		},
-		set(val) {
-			val;
-			// TODO es wird eine aufwendigere Komponente benötigt...
-		}
-	});
-
+	const props = defineProps<{ data: DataSchuelerSchulbesuchsdaten }>();
+	
 </script>

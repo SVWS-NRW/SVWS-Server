@@ -7,15 +7,12 @@
 </template>
 
 <script setup lang="ts">
-	import { computed, ComputedRef } from "vue";
-	import { injectMainApp, Main } from "~/apps/Main";
 
-	const main: Main = injectMainApp();
-	const app = main.apps.schueler;
+	import { computed, ComputedRef } from "vue";
+	import { routeSchuelerAbschnitt } from "~/router/apps/schueler/RouteSchuelerAbschnitt";
 
 	const visible: ComputedRef<boolean> = computed(() => {
-		//return this.$app.halbjahr.visible; //TODO: richtige Bedingung einpflegen
-		return true;
+		return !(routeSchuelerAbschnitt.hidden);
 	});
 
 </script>

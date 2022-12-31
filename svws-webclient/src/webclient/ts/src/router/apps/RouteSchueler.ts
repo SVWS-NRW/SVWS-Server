@@ -74,8 +74,9 @@ export class RouteSchueler extends RouteNodeListView<SchuelerListeEintrag, Route
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
-		const prop = RouteNodeListView.getPropsByAuswahlID(to, mainApp.apps.schueler.auswahl);
+		const prop: Record<string, any> = RouteNodeListView.getPropsByAuswahlID(to, mainApp.apps.schueler.auswahl);
 		this.onSelect(prop.item as SchuelerListeEintrag | undefined);
+		prop.stammdaten = this.data.stammdaten;
 		return prop;
 	}
 

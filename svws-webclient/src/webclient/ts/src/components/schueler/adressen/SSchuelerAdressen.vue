@@ -19,6 +19,7 @@
 
 	import { computed, ComputedRef } from "vue";
 	import { injectMainApp, Main } from "~/apps/Main";
+	import { routeSchuelerAdressen } from "~/router/apps/schueler/RouteSchuelerAdressen";
 
 	const main: Main = injectMainApp();
 	const app = main.apps.schueler;
@@ -30,8 +31,7 @@
 	});
 
 	const visible: ComputedRef<boolean> = computed(() => {
-		//return this.$app.adressen.visible; //TODO: richtige Bedingung einpflegen
-		return true;
+		return !routeSchuelerAdressen.hidden;
 	});
 
 </script>

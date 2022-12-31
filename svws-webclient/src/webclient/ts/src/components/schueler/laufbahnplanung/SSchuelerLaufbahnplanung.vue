@@ -20,6 +20,7 @@
 	import { computed, ComputedRef, ref } from "vue";
 	import { App } from "~/apps/BaseApp";
 	import { injectMainApp, Main } from "~/apps/Main";
+	import { routeSchuelerLaufbahnplanung } from "~/router/apps/schueler/RouteSchuelerLaufbahnplanung";
 
 	const main: Main = injectMainApp();
 	const app = main.apps.schueler;
@@ -32,13 +33,10 @@
 	if (current_abiturjahr !== undefined && schueler_abiturjahr !== undefined && current_abiturjahr.abiturjahr !== schueler_abiturjahr)
 		App.apps.gost.auswahl.ausgewaehlt = App.apps.gost.auswahl.liste.find(jahr => jahr.abiturjahr === schueler_abiturjahr);
 
-	const visible: ComputedRef<boolean> = computed<boolean>(() =>
-		//return this.$app.gostLaufbahn.visible; //TODO: richtige Bedingung einpflegen
-		!!schueler_abiturjahr
-		&& !!app.dataGostLaufbahndaten?.daten
-		&& main.config.hasGost
-	);
-
 	const modal = ref();
+
+	const visible: ComputedRef<boolean> = computed(() => {
+		return !(routeSchuelerLaufbahnplanung.hidden) && (props.id !== undefined);
+	});
 
 </script>

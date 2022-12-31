@@ -33,12 +33,11 @@ export class RouteKatalogFoerderschwerpunkteDaten extends RouteNode<RouteDataKat
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
-		let prop: any = RouteNodeListView.getPropsByAuswahlID(to, routeKatalogFoerderschwerpunkte.data.auswahl);
+		let prop: Record<string, any> = RouteNodeListView.getPropsByAuswahlID(to, routeKatalogFoerderschwerpunkte.data.auswahl);
 		this.onSelect(prop.item as FoerderschwerpunktEintrag | undefined);
 		prop.data = this.data.daten;
 		return prop;
 	}
-
 
 }
 

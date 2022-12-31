@@ -1,5 +1,5 @@
 <template>
-	<div v-if="app.listAbschnitte.liste && visible" class="app-container">
+	<div v-if="visible" class="app-container">
 		<s-card-abschnitte />
 		<s-card-leistungsdaten />
 	</div>
@@ -7,15 +7,11 @@
 
 <script setup lang="ts">
 
-	import { computed } from "vue";
-	import { injectMainApp, Main } from "~/apps/Main";
-
-	const main: Main = injectMainApp();
-	const app = main.apps.schueler;
+	import { computed, ComputedRef } from "vue";
+	import { routeSchuelerLeistungsdaten } from "~/router/apps/schueler/RouteSchuelerLeistungsdaten";
 	
-	const visible = computed(() => {
-		//return this.$app.stammdaten.visible; //TODO: richtige Bedingung einpflegen
-		return true;
+	const visible: ComputedRef<boolean> = computed(() => {
+		return !(routeSchuelerLeistungsdaten.hidden);
 	});
 
 </script>
