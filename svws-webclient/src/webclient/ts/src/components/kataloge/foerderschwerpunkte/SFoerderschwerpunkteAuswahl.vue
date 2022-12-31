@@ -19,7 +19,6 @@
 
 	import { FoerderschwerpunktEintrag } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, ref } from "vue";
-	import { injectMainApp, Main } from "~/apps/Main";
 	import { router } from "~/router";
 	import { routeKatalogFoerderschwerpunkte } from "~/router/apps/RouteKatalogFoerderschwerpunkte";
 
@@ -31,11 +30,8 @@
 		{ key: "text", label: "Bezeichnung", sortable: true }
 	]);
 
-	const main: Main = injectMainApp();
-	const app = main.apps.foerderschwerpunkte;
-
 	const rows: ComputedRef<FoerderschwerpunktEintrag[] | undefined> = computed(() => {
-		return app.auswahl.liste;
+		return routeKatalogFoerderschwerpunkte.data.auswahl.liste;
 	});
 
 </script>

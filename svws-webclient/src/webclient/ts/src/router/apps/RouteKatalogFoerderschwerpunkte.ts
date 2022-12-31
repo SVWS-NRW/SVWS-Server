@@ -1,7 +1,6 @@
 import { FoerderschwerpunktEintrag } from "@svws-nrw/svws-core-ts";
 import { computed, WritableComputedRef } from "vue";
 import { RouteLocationNormalized, RouteRecordRaw, useRouter } from "vue-router";
-import { mainApp } from "~/apps/Main";
 import { RouteNodeListView } from "~/router/RouteNodeListView";
 import { routeKatalogFoerderschwerpunkteDaten } from "~/router/apps/foerderschwerpunkte/RouteKatalogFoerderschwerpunkteDaten";
 import { ListFoerderschwerpunkte } from "~/apps/kataloge/foerderschwerpunkt/ListFoerderschwerpunkte";
@@ -9,6 +8,7 @@ import { ListFoerderschwerpunkte } from "~/apps/kataloge/foerderschwerpunkt/List
 
 export class RouteDataKatalogFoerderschwerpunkte {
 	item: FoerderschwerpunktEintrag | undefined = undefined;
+	auswahl: ListFoerderschwerpunkte = new ListFoerderschwerpunkte();
 }
 
 const SFoerderschwerpunkteAuswahl = () => import("~/components/kataloge/foerderschwerpunkte/SFoerderschwerpunkteAuswahl.vue")
@@ -22,7 +22,7 @@ export class RouteKatalogFoerderschwerpunkte extends RouteNodeListView<Foerdersc
 		super("foerderschwerpunkte", "/kataloge/foerderschwerpunkte/:id(\\d+)?", SFoerderschwerpunkteAuswahl, SFoerderschwerpunkteApp, new RouteDataKatalogFoerderschwerpunkte());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Förderschwerpunkte";
-        super.setView("liste", SFoerderschwerpunkteAuswahl, (route) => RouteNodeListView.getPropsByAuswahlID(route, mainApp.apps.foerderschwerpunkte.auswahl));
+        super.setView("liste", SFoerderschwerpunkteAuswahl, (route) => RouteNodeListView.getPropsByAuswahlID(route, this.data.auswahl));
 		super.children = [
 			routeKatalogFoerderschwerpunkteDaten
 		];
@@ -34,10 +34,11 @@ export class RouteKatalogFoerderschwerpunkte extends RouteNodeListView<Foerdersc
      * @param to    die Ziel-Route
      * @param from   die Quell-Route
      */
-    public beforeEach(to: RouteLocationNormalized, from: RouteLocationNormalized): any {
+    public async beforeEach(to: RouteLocationNormalized, from: RouteLocationNormalized): Promise<any> {
+		await this.data.auswahl.update_list();
 		if ((to.name?.toString() === this.name) && (to.params.id === undefined)) {
 			const redirect_name: string = (this.selectedChild === undefined) ? this.defaultChildNode.name : this.selectedChild.name;
-			return { name: redirect_name, params: { id: mainApp.apps.foerderschwerpunkte.auswahl.liste.at(0)?.id }};
+			return { name: redirect_name, params: { id: this.data.auswahl.liste.at(0)?.id }};
 		}
         return true;
     }
@@ -53,11 +54,11 @@ export class RouteKatalogFoerderschwerpunkte extends RouteNodeListView<Foerdersc
 	}
 
     protected getAuswahlComputedProperty(): WritableComputedRef<FoerderschwerpunktEintrag | undefined> {
-		return this.getSelectorByID<FoerderschwerpunktEintrag, ListFoerderschwerpunkte>(mainApp.apps.foerderschwerpunkte.auswahl);
+		return this.getSelectorByID<FoerderschwerpunktEintrag, ListFoerderschwerpunkte>(this.data.auswahl);
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
-		const prop = RouteNodeListView.getPropsByAuswahlID(to, mainApp.apps.foerderschwerpunkte.auswahl);
+		const prop = RouteNodeListView.getPropsByAuswahlID(to, this.data.auswahl);
 		this.onSelect(prop.item as FoerderschwerpunktEintrag | undefined);
 		return prop;
 	}

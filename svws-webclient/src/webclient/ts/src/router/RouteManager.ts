@@ -20,7 +20,7 @@ export class RouteManager {
     }
 
 
-    protected beforeEach(to: RouteLocationNormalized, from: RouteLocationNormalized) {
+    protected async beforeEach(to: RouteLocationNormalized, from: RouteLocationNormalized) {
         // Ist der Benutzer nicht authentifiziert, so wird er zur Login-Seite weitergeleitet
         if (!mainApp.authenticated && to.name !== "login")
             return { name: "login", query: { redirect: to.fullPath } }; // TODO 
@@ -32,7 +32,7 @@ export class RouteManager {
         if (node.hidden)
             return false;
         // Rufe die beforeEach-Methode bei der Ziel-Route auf...
-        return node.beforeEach(to, from);
+        return await node.beforeEach(to, from);
     }
 
 }

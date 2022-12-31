@@ -1,9 +1,9 @@
 import { FoerderschwerpunktEintrag } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized } from "vue-router";
 import { DataFoerderschwerpunkt } from "~/apps/kataloge/foerderschwerpunkt/DataFoerderschwerpunkt";
-import { mainApp } from "~/apps/Main";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteNodeListView } from "~/router/RouteNodeListView";
+import { routeKatalogFoerderschwerpunkte } from "../RouteKatalogFoerderschwerpunkte";
 
 const SFoerderschwerpunktDaten = () => import("~/components/kataloge/foerderschwerpunkte/daten/SFoerderschwerpunktDaten.vue");
 
@@ -33,7 +33,7 @@ export class RouteKatalogFoerderschwerpunkteDaten extends RouteNode<RouteDataKat
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
-		let prop: any = RouteNodeListView.getPropsByAuswahlID(to, mainApp.apps.foerderschwerpunkte.auswahl);
+		let prop: any = RouteNodeListView.getPropsByAuswahlID(to, routeKatalogFoerderschwerpunkte.data.auswahl);
 		this.onSelect(prop.item as FoerderschwerpunktEintrag | undefined);
 		prop.data = this.data.daten;
 		return prop;

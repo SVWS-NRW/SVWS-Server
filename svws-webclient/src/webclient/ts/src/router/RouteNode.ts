@@ -242,7 +242,7 @@ export abstract class RouteNode<TRouteData> {
      * @param to    die Ziel-Route
      * @param from   die Quell-Route
      */
-    public beforeEach(to: RouteLocationNormalized, from: RouteLocationNormalized) {
+    public async beforeEach(to: RouteLocationNormalized, from: RouteLocationNormalized) {
         return true;
     }
 

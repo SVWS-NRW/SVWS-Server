@@ -24,7 +24,6 @@ import { Klassen } from "./klassen/Klassen";
 import { Kurse } from "./kurse/Kurse";
 import { Lehrer } from "./lehrer/Lehrer";
 import { BaseList } from "./BaseList";
-import { Foerderschwerpunkte } from "./kataloge/foerderschwerpunkt/Foerderschwerpunkte";
 import { Religionen } from "./kataloge/religionen/Religionen";
 import { ApiLoadingStatus } from "./core/ApiLoadingStatus.class";
 import { MAIN_LOADING_SYMBOL } from "./core/LoadingSymbols";
@@ -230,7 +229,6 @@ export class Main {
 			lehrer: new Lehrer(),
 			faecher: new Faecher(),
 			gost: new Gost(),
-			foerderschwerpunkte: new Foerderschwerpunkte(),
 			religionen : new Religionen()
 		};
 		await App.apps.schule.init();
