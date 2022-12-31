@@ -27,28 +27,11 @@ export class Schueler extends App {
 	public auswahl!: ListSchueler;
 
 	/**
-	 * Das Objekt zur Verwaltung der Kommunikation bezüglich der Stammdaten des
-	 * Schülers mit dem SVWS-Server
-	 */
-	public stammdaten!: DataSchuelerStammdaten;
-	/**
-	 * Das Objekt zur Verwaltung der Kommunikation bezüglich der Schulbesuchsdaten
-	 * des Schülers mit dem SVWS-Server
-	 */
-	public schulbesuchsdaten!: DataSchuelerSchulbesuchsdaten;
-
-	/**
 	 * Das Objekt zur Verwaltung der Kommunikation bezüglich der
 	 * Schülerlaufbahndaren des Schülers der gymnasialen Oberstufe mit dem SVWS-Server
 	 */
 	public dataGostLaufbahndaten: DataSchuelerLaufbahnplanung | undefined =
 		undefined;
-
-	/**
-	 * Das Objekt zur Verwaltung der Kommunikation bezüglich der
-	 * Erzieher des Schülers
-	 */
-	public erzieher: DataSchuelerErzieherStammdaten | undefined = undefined;
 
 	public listAbschnitte!: ListAbschnitte;
 	public dataSchuelerAbschnittsdaten!: DataSchuelerAbschnittsdaten;
@@ -86,14 +69,6 @@ export class Schueler extends App {
 		this.listStundenplaene.add_data([this.dataStundenplan])
 
 		this.auswahl = new ListSchueler(this.listAbschnitte, this.listStundenplaene);
-		this.stammdaten = new DataSchuelerStammdaten();
-		this.schulbesuchsdaten = new DataSchuelerSchulbesuchsdaten();
-		this.erzieher = new DataSchuelerErzieherStammdaten();
-		this.auswahl.add_data([
-			this.stammdaten,
-			this.schulbesuchsdaten,
-			this.erzieher
-		]);
 		if (mainApp.config.hasGost) {
 			this.dataGostLaufbahndaten = new DataSchuelerLaufbahnplanung();
 			this.auswahl.add_data(this.dataGostLaufbahndaten);

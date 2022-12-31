@@ -1,5 +1,5 @@
 <template>
-	<div v-if="app?.stammdaten.daten" class="flex w-full flex-col h-full">
+	<div v-if="visible" class="flex w-full flex-col h-full">
 		<svws-ui-header>
 			<div class="flex items-center">
 				<div class="w-16 mr-4 -ml-2">
@@ -57,6 +57,10 @@
 		const id = props.item.idKlasse;
 		const klasse = main.apps.klassen.auswahl.liste.find(k => k.id === id);
 		return klasse?.kuerzel?.toString() || false;
+	});
+
+	const visible: ComputedRef<boolean> = computed(() => {
+		return !(routeSchueler.hidden) && (props.id !== undefined);
 	});
 
 </script>
