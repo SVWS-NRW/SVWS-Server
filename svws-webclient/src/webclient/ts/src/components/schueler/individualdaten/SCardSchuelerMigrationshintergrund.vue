@@ -32,58 +32,33 @@
 
 
 	const inputGeburtsland: WritableComputedRef<Nationalitaeten> = computed({
-		get(): Nationalitaeten {
-			return Nationalitaeten.getByISO3(daten.value.geburtsland) || Nationalitaeten.DEU;
-		},
-		set(val: Nationalitaeten) {
-			props.stammdaten.patch({ geburtsland: val.daten.iso3 });
-		}
+		get: () => Nationalitaeten.getByISO3(daten.value.geburtsland) || Nationalitaeten.DEU,
+		set: (value) => props.stammdaten.patch({ geburtsland: value.daten.iso3 })
 	});
 
 	const inputZuzugsjahr: WritableComputedRef<string | undefined> = computed({
-		get(): string | undefined {
-			return daten.value.zuzugsjahr?.toString();
-		},
-		set(val: string | undefined) {
-			props.stammdaten.patch({ zuzugsjahr: val });
-		}
+		get: () => daten.value.zuzugsjahr?.toString(),
+		set: (value) => props.stammdaten.patch({ zuzugsjahr: value })
 	});
 
 	const inputGeburtslandMutter: WritableComputedRef<Nationalitaeten> = computed({
-		get(): Nationalitaeten {
-			return Nationalitaeten.getByISO3(daten.value.geburtslandMutter) || Nationalitaeten.DEU;
-		},
-		set(val: Nationalitaeten) {
-			props.stammdaten.patch({ geburtslandMutter: val.daten.iso3 });
-		}
+		get: () => Nationalitaeten.getByISO3(daten.value.geburtslandMutter) || Nationalitaeten.DEU,
+		set: (value) => props.stammdaten.patch({ geburtslandMutter: value.daten.iso3 })
 	});
 
 	const inputGeburtslandVater: WritableComputedRef<Nationalitaeten> = computed({
-		get(): Nationalitaeten {
-			return Nationalitaeten.getByISO3(daten.value.geburtslandVater) || Nationalitaeten.DEU;
-		},
-		set(val: Nationalitaeten) {
-			props.stammdaten.patch({ geburtslandVater: val.daten.iso3 });
-		}
+		get: () => Nationalitaeten.getByISO3(daten.value.geburtslandVater) || Nationalitaeten.DEU,
+		set: (value) => props.stammdaten.patch({ geburtslandVater: value.daten.iso3 })
 	});
 
 	const inputVerkehrspracheFamilie: WritableComputedRef<Verkehrssprache> = computed({
-		get(): Verkehrssprache {
-			return Verkehrssprache.getByKuerzelAuto(daten.value.verkehrspracheFamilie) || Verkehrssprache.DEU
-		},
-		set(val: Verkehrssprache) {
-			props.stammdaten.patch({ verkehrspracheFamilie: val.daten.kuerzel });
-		}
+		get: () => Verkehrssprache.getByKuerzelAuto(daten.value.verkehrspracheFamilie) || Verkehrssprache.DEU,
+		set: (value) => props.stammdaten.patch({ verkehrspracheFamilie: value.daten.kuerzel })
 	});
 
 	const inputHatMigrationshintergrund: WritableComputedRef<boolean | undefined> = computed({
-		// TODO Reset Sprachen Familie bzw. Abhängigkeiten
-		get(): boolean | undefined {
-			return daten.value.hatMigrationshintergrund;
-		},
-		set(val: boolean | undefined) {
-			props.stammdaten.patch({ hatMigrationshintergrund: val });
-		}
+		get: () => daten.value.hatMigrationshintergrund,
+		set: (value) => props.stammdaten.patch({ hatMigrationshintergrund: value })
 	});
 
 </script>

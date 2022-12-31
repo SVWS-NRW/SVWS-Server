@@ -20,7 +20,6 @@
 	import { computed, ComputedRef, WritableComputedRef } from "vue";
 
 	import { Geschlecht, SchuelerStammdaten } from "@svws-nrw/svws-core-ts";
-	import { injectMainApp, Main } from "~/apps/Main";
 	import { UseSchuelerStammdaten } from "~/utils/composables/stammdaten"
 	import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
 
@@ -28,38 +27,23 @@
 
 	const daten: ComputedRef<SchuelerStammdaten> = computed(() => props.stammdaten.daten || new SchuelerStammdaten());
 
-	const main: Main = injectMainApp();
-	const app = main.apps.schueler;
-
 	const use = new UseSchuelerStammdaten(props.stammdaten)
 
 	const { vorname, alleVornamen, nachname, zusatzNachname, geschlecht } = use;
 
 	const inputGeburtsdatum: WritableComputedRef<string | undefined> = computed({
-		get(): string | undefined {
-			return daten.value.geburtsdatum?.toString();
-		},
-		set(val: string | undefined) {
-			props.stammdaten.patch({ geburtsdatum: val });
-		}
+		get: () => daten.value.geburtsdatum?.toString(),
+		set: (value) => props.stammdaten.patch({ geburtsdatum: value })
 	});
 
 	const inputGeburtsort: WritableComputedRef<string | undefined> = computed({
-		get(): string | undefined {
-			return daten.value.geburtsort?.toString();
-		},
-		set(val: string | undefined) {
-			props.stammdaten.patch({ geburtsort: val });
-		}
+		get: () => daten.value.geburtsort?.toString(),
+		set: (value) => props.stammdaten.patch({ geburtsort: value })
 	});
 
 	const inputGeburtsname: WritableComputedRef<string | undefined> = computed({
-		get(): string | undefined {
-			return daten.value.geburtsname?.toString();
-		},
-		set(val: string | undefined) {
-			props.stammdaten.patch({ geburtsname: val });
-		}
+		get: () => daten.value.geburtsname?.toString(),
+		set: (value) => props.stammdaten.patch({ geburtsname: value })
 	});
 
 </script>

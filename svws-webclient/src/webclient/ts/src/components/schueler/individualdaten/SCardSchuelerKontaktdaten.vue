@@ -21,7 +21,7 @@
 	import { computed, ComputedRef, ref, WritableComputedRef } from "vue";
 	import { orte_filter, orte_sort, ortsteilFilter, ortsteilSort } from "~/helfer";
 
-	import { AdressenUtils, List, OrtKatalogEintrag, OrtsteilKatalogEintrag, SchuelerStammdaten } from "@svws-nrw/svws-core-ts";
+	import { AdressenUtils, OrtKatalogEintrag, OrtsteilKatalogEintrag, SchuelerStammdaten } from "@svws-nrw/svws-core-ts";
 	import { injectMainApp, Main } from "~/apps/Main";
 	import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
 
@@ -29,95 +29,54 @@
 
 	const daten: ComputedRef<SchuelerStammdaten> = computed(() => props.stammdaten.daten || new SchuelerStammdaten());
 
-
 	const main: Main = injectMainApp();
-
-
-	const inputKatalogOrte: ComputedRef<Array<OrtKatalogEintrag>> = computed(() => {
-		return main.kataloge.orte.toArray() as Array<OrtKatalogEintrag>;
-	});
-
-	const inputKatalogOrtsteil: ComputedRef<List<OrtsteilKatalogEintrag>> = computed(() => {
-		return main.kataloge.ortsteile;
-	});
 
 	const eingabeStrasseOk = ref(true);
 
 	const inputStrasse: WritableComputedRef<string | undefined> = computed({
-		get(): string | undefined {
+		get: () => {
 			const ret = AdressenUtils.combineStrasse(daten.value.strassenname || "", daten.value.hausnummer || "", daten.value.hausnummerZusatz || "");
 			return ret ? ret.toString() : undefined;
 		},
-		set(val: string | undefined) {
-			if (val) {
-				const vals = AdressenUtils.splitStrasse(val);
-				props.stammdaten.patch({ strassenname: vals?.[0] || val, hausnummer: vals?.[1] || "", hausnummerZusatz: vals?.[2] || "" });
+		set(value: string | undefined) {
+			if (value) {
+				const vals = AdressenUtils.splitStrasse(value);
+				props.stammdaten.patch({ strassenname: vals?.[0] || value, hausnummer: vals?.[1] || "", hausnummerZusatz: vals?.[2] || "" });
 				eingabeStrasseOk.value = !!vals;
 			}
 		}
 	});
 
+	const inputKatalogOrte: ComputedRef<OrtKatalogEintrag[]> = computed(() => main.kataloge.orte.toArray() as OrtKatalogEintrag[]);
 	const inputWohnortID: WritableComputedRef<OrtKatalogEintrag | undefined> = computed({
-		get(): OrtKatalogEintrag | undefined {
-			// FIXME: Suche implementieren sobald Funktionalität in List umgesetzt wurde
-			return (inputKatalogOrte.value as OrtKatalogEintrag[]).find(o => o?.id == daten.value.wohnortID);
-		},
-		set(val: OrtKatalogEintrag | undefined) {
-			props.stammdaten.patch({ wohnortID: val?.id });
-		}
+		get: () => inputKatalogOrte.value.find(ort => ort.id == daten.value.wohnortID),
+		set: (value) => props.stammdaten.patch({ wohnortID: value?.id })
 	});
 
+	const inputKatalogOrtsteil: ComputedRef<OrtsteilKatalogEintrag[]> = computed(() => main.kataloge.ortsteile.toArray() as OrtsteilKatalogEintrag[]);
 	const inputOrtsteilID: WritableComputedRef<OrtsteilKatalogEintrag | undefined> = computed({
-		get(): OrtsteilKatalogEintrag | undefined {
-			const id = daten.value.ortsteilID;
-			let o;
-			for (const r of inputKatalogOrtsteil.value) { 
-				if (r.id === id) { 
-					o = r;
-					break;
-				}
-			}
-			return o;
-		},
-		set(val: OrtsteilKatalogEintrag | undefined) {
-			props.stammdaten.patch({ ortsteilID: val?.id });
-		}
+		get: () => inputKatalogOrtsteil.value.find(ortsteil => ortsteil.id == daten.value.ortsteilID),
+		set: (value) => props.stammdaten.patch({ ortsteilID: value?.id })
 	});
 
 	const inputTelefon: WritableComputedRef<string | undefined> = computed({
-		get(): string | undefined {
-			return daten.value.telefon?.toString();
-		},
-		set(val) {
-			props.stammdaten.patch({ telefon: val });
-		}
+		get: () => daten.value.telefon?.toString(),
+		set: (value) => props.stammdaten.patch({ telefon: value })
 	});
 
 	const inputTelefonMobil: WritableComputedRef<string | undefined> = computed({
-		get(): string | undefined {
-			return daten.value.telefonMobil?.toString();
-		},
-		set(val) {
-			props.stammdaten.patch({ telefonMobil: val });
-		}
+		get: () => daten.value.telefonMobil?.toString(),
+		set: (value) => props.stammdaten.patch({ telefonMobil: value })
 	});
 
 	const inputEmailPrivat: WritableComputedRef<string | undefined> = computed({
-		get(): string | undefined {
-			return daten.value.emailPrivat?.toString();
-		},
-		set(val) {
-			props.stammdaten.patch({ emailPrivat: val });
-		}
+		get: () => daten.value.emailPrivat?.toString(),
+		set: (value) => props.stammdaten.patch({ emailPrivat: value })
 	});
 
 	const inputEmailSchule: WritableComputedRef<string | undefined> = computed({
-		get(): string | undefined {
-			return daten.value.emailSchule?.toString();
-		},
-		set(val) {
-			props.stammdaten.patch({ emailSchule: val });
-		}
+		get: () => daten.value.emailSchule?.toString(),
+		set: (value) => props.stammdaten.patch({ emailSchule: value })
 	});
 
 </script>

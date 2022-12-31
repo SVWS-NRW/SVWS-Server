@@ -19,12 +19,8 @@
 	const daten: ComputedRef<SchuelerStammdaten> = computed(() => props.stammdaten.daten || new SchuelerStammdaten());
 
 	const inputBemerkungen: WritableComputedRef<string | undefined> = computed({
-		get(): string | undefined {
-			return daten.value.bemerkungen?.toString() || undefined;
-		},
-		set(val) {
-			props.stammdaten.patch({ bemerkungen: val });
-		}
+		get: () => daten.value.bemerkungen?.toString() || undefined,
+		set: (value) => props.stammdaten.patch({ bemerkungen: value })
 	});
 
 </script>

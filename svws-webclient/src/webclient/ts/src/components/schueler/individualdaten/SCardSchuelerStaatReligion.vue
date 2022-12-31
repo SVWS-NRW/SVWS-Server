@@ -18,9 +18,10 @@
 </template>
 
 <script setup lang="ts">
+
 	import { computed, ComputedRef, WritableComputedRef } from "vue";
 
-	import { List, Nationalitaeten, ReligionEintrag, SchuelerStammdaten } from "@svws-nrw/svws-core-ts";
+	import { Nationalitaeten, ReligionEintrag, SchuelerStammdaten } from "@svws-nrw/svws-core-ts";
 	import { injectMainApp, Main } from "~/apps/Main";
 	import { staatsangehoerigkeitKatalogEintragFilter, staatsangehoerigkeitKatalogEintragSort } from "../../../helfer";
 	import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
@@ -32,70 +33,35 @@
 
 	const main: Main = injectMainApp();
 
-	const inputKatalogReligionen: ComputedRef<List<ReligionEintrag>> = computed(() => {
-		return main.kataloge.religionen;
-	});
-
 	const inputStaatsangehoerigkeit: WritableComputedRef<Nationalitaeten> = computed({
-		get(): Nationalitaeten {
-			return Nationalitaeten.getByISO3(daten.value.staatsangehoerigkeitID) || Nationalitaeten.DEU;
-		},
-		set(val: Nationalitaeten) {
-			props.stammdaten.patch({ staatsangehoerigkeitID: val.daten.iso3 });
-		}
+		get: () => Nationalitaeten.getByISO3(daten.value.staatsangehoerigkeitID) || Nationalitaeten.DEU,
+		set: (value) => props.stammdaten.patch({ staatsangehoerigkeitID: value.daten.iso3 })
 	});
 
 	const inputStaatsangehoerigkeit2: WritableComputedRef<Nationalitaeten> = computed({
-		get(): Nationalitaeten {
-			return Nationalitaeten.getByISO3(daten.value.staatsangehoerigkeit2ID) || Nationalitaeten.DEU;
-		},
-		set(val: Nationalitaeten) {
-			props.stammdaten.patch({ staatsangehoerigkeit2ID: val.daten.iso3 });
-		}
+		get: () => Nationalitaeten.getByISO3(daten.value.staatsangehoerigkeit2ID) || Nationalitaeten.DEU,
+		set: (value) => props.stammdaten.patch({ staatsangehoerigkeit2ID: value.daten.iso3 })
 	});
 
+	const inputKatalogReligionen: ComputedRef<ReligionEintrag[]> = computed(() => main.kataloge.religionen.toArray() as ReligionEintrag[]);
 	const inputReligionID: WritableComputedRef<ReligionEintrag | undefined> = computed({
-		get(): ReligionEintrag | undefined {
-			const id = daten.value.religionID;
-			let o;
-			for (const r of inputKatalogReligionen.value) { 
-				if (r.id === id) { 
-					o = r;
-					break;
-				}
-			}
-			return o;
-		},
-		set(val) {
-			props.stammdaten.patch({ religionID: val?.id });
-		}
+		get: () => inputKatalogReligionen.value.find(n => n.id === daten.value.religionID),
+		set: (value) => props.stammdaten.patch({ religionID: value?.id })
 	});
 
 	const inputReligionabmeldung: WritableComputedRef<string | undefined> = computed({
-		get(): string | undefined {
-			return daten.value.religionabmeldung?.toString();
-		},
-		set(val) {
-			props.stammdaten.patch({ religionabmeldung: val });
-		}
+		get: () => daten.value.religionabmeldung?.toString(),
+		set: (value) => props.stammdaten.patch({ religionabmeldung: value })
 	});
 
 	const inputReligionanmeldung: WritableComputedRef<string | undefined> = computed({
-		get(): string | undefined {
-			return daten.value.religionanmeldung?.toString();
-		},
-		set(val) {
-			props.stammdaten.patch({ religionanmeldung: val });
-		}
+		get: () => daten.value.religionanmeldung?.toString(),
+		set: (value) => props.stammdaten.patch({ religionanmeldung: value })
 	});
 
 	const inputDruckeKonfessionAufZeugnisse: WritableComputedRef<boolean> = computed({
-		get(): boolean {
-			return daten.value.druckeKonfessionAufZeugnisse;
-		},
-		set(val) {
-			props.stammdaten.patch({ druckeKonfessionAufZeugnisse: val });
-		}
+		get: () => daten.value.druckeKonfessionAufZeugnisse,
+		set: (value) => props.stammdaten.patch({ druckeKonfessionAufZeugnisse: value })
 	});
 
 </script>

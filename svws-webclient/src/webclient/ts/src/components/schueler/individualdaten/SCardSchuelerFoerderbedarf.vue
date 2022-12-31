@@ -12,7 +12,7 @@
 <script setup lang="ts">
 
 	import { computed, ComputedRef, WritableComputedRef } from "vue";
-	import { FoerderschwerpunktEintrag, List, SchuelerStammdaten } from "@svws-nrw/svws-core-ts";
+	import { FoerderschwerpunktEintrag, SchuelerStammdaten } from "@svws-nrw/svws-core-ts";
 	import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
 	import { DataKatalogFoerderschwerpunkte } from "~/apps/schueler/DataKatalogFoerderschwerpunkte";
 
@@ -23,45 +23,23 @@
 	const inputKatalogFoerderschwerpunkte: ComputedRef<FoerderschwerpunktEintrag[]> = computed(() => props.foerderschwerpunkte.daten?.toArray() as FoerderschwerpunktEintrag[] || []);
 
 	const inputFoerderschwerpunktID: WritableComputedRef<FoerderschwerpunktEintrag | undefined> = computed({
-		get(): FoerderschwerpunktEintrag | undefined {
-			const id = daten.value.foerderschwerpunktID;
-			for (const schwerpunkt of inputKatalogFoerderschwerpunkte.value)
-				if (schwerpunkt.id === id)
-					return schwerpunkt
-		},
-		set(val: FoerderschwerpunktEintrag | undefined) {
-			props.stammdaten.patch({ foerderschwerpunktID: val?.id });
-		}
+		get: () => inputKatalogFoerderschwerpunkte.value.find(n => n.id === props.stammdaten.daten?.foerderschwerpunktID),
+		set: (value) => props.stammdaten.patch({ foerderschwerpunktID: value?.id })
 	});
 
 	const inputFoerderschwerpunkt2ID: WritableComputedRef<FoerderschwerpunktEintrag | undefined> = computed({
-		get(): FoerderschwerpunktEintrag | undefined {
-			const id = daten.value.foerderschwerpunkt2ID;
-			for (const schwerpunkt of inputKatalogFoerderschwerpunkte.value)
-				if (schwerpunkt.id === id)
-					return schwerpunkt
-		},
-		set(val: FoerderschwerpunktEintrag | undefined) {
-			props.stammdaten.patch({ foerderschwerpunkt2ID: val?.id });
-		}
+		get: () => inputKatalogFoerderschwerpunkte.value.find(n => n.id === props.stammdaten.daten?.foerderschwerpunkt2ID),
+		set: (value) => props.stammdaten.patch({ foerderschwerpunkt2ID: value?.id })
 	});
 
 	const inputIstAOSF: WritableComputedRef<boolean | undefined> = computed({
-		get(): boolean { 
-			return !!daten.value.istAOSF; 
-		},
-		set(val) { 
-			props.stammdaten.patch({ istAOSF: val });
-		}
+		get: () => !!daten.value.istAOSF,
+		set: (value) => props.stammdaten.patch({ istAOSF: value })
 	});
 
 	const inputIstLernenZieldifferent: WritableComputedRef<boolean | undefined> = computed({
-		get(): boolean { 
-			return !!daten.value.istLernenZieldifferent; 
-		},
-		set(val) { 
-			props.stammdaten.patch({ istLernenZieldifferent: val }); 
-		}
+		get: () => !!daten.value.istLernenZieldifferent,
+		set: (value) => props.stammdaten.patch({ istLernenZieldifferent: value })
 	});
 
 </script>
