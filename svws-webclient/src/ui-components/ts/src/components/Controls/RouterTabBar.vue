@@ -108,11 +108,12 @@
 
 
 <style lang="postcss">
-    .router-vertical-tab-bar--area {
-        @apply flex items-start
+    .router-tab-bar--area {
+        @apply flex flex-col items-start
     }
 
     .router-tab-bar--panel {
+        @apply h-full;
         @apply mt-0 mb-8 flex-grow overflow-y-auto px-6;
     }
 
