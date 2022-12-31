@@ -651,7 +651,25 @@ public class Schema {
     /** Tabelle EnmLernabschnittsdaten */
     public static final Tabelle_EnmLernabschnittsdaten tab_EnmLernabschnittsdaten = add(new Tabelle_EnmLernabschnittsdaten());
 
+    /** Tabelle Gost_Klausuren_Vorgaben */
+    public static final Tabelle_Gost_Klausuren_Vorgaben tab_Gost_Klausuren_Vorgaben = add(new Tabelle_Gost_Klausuren_Vorgaben());
+    
+    /** Tabelle Gost_Klausuren_Klausuren */
+    public static final Tabelle_Gost_Klausuren_Termine tab_Gost_Klausuren_Termine = add(new Tabelle_Gost_Klausuren_Termine());
 
+    /** Tabelle Gost_Klausuren_Raeume */
+    public static final Tabelle_Gost_Klausuren_Raeume tab_Gost_Klausuren_Raeume = add(new Tabelle_Gost_Klausuren_Raeume());
+
+    /** Tabelle Gost_Klausuren_Klausuren */
+    public static final Tabelle_Gost_Klausuren_Klausuren tab_Gost_Klausuren_Klausuren = add(new Tabelle_Gost_Klausuren_Klausuren());
+
+    /** Tabelle Gost_Klausuren_Aufsichten */
+    public static final Tabelle_Gost_Klausuren_Aufsichten tab_Gost_Klausuren_Aufsichten = add(new Tabelle_Gost_Klausuren_Aufsichten());
+
+    /** Tabelle Gost_Klausuren_Entfall */
+    public static final Tabelle_Gost_Klausuren_Entfall tab_Gost_Klausuren_Entfall = add(new Tabelle_Gost_Klausuren_Entfall());
+
+    
 	// TODO Passe dieses Attribut an, sobald die Default-Daten nicht mehr über CSV-Dateien eingelesen werden
 	/** Die Tabellen, welche Default-Daten beinhalten und in diesem Zusammenhang aktualisiert werden sollen */
 	public static final SchemaTabelle[] tabellenDefaultDaten = new SchemaTabelle[] {

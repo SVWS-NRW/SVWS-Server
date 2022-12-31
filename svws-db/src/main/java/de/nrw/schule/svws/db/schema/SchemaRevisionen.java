@@ -72,7 +72,12 @@ public enum SchemaRevisionen {
 	/**
 	 * Tabellen für DavRessourcen und Sammlungen
 	 */
-	REV_8(8, "2022-09-29");
+	REV_8(8, "2022-09-29"),
+	
+	/**
+	 * Tabellen für Klausurplanung
+	 */
+	REV_9(9, "2022-12-30");
 
 
 	/** 
@@ -80,14 +85,14 @@ public enum SchemaRevisionen {
 	 * bis zu welcher alle Schema-Revision als stabil gelten und ab Version 1.0 des SVWS-Servers 
 	 * nicht mehr verändert werden. 
 	 */
-	public static final SchemaRevisionen maxRevision = REV_8;
+	public static final SchemaRevisionen maxRevision = REV_9;
 	
 	/**
 	 * Gibt die größte Revisions-Nummer an, welche in diese Enumeration definiert wurde.
 	 * Dies dient dazu Revisionen als Entwickler-Revisionen zu kennzeichnen, die noch nicht
 	 * stabil sind. Dieser Wert ist also größer oder gleich {@link SchemaRevisionen#maxRevision}.
 	 */
-	public static final SchemaRevisionen maxDeveloperRevision = REV_8;
+	public static final SchemaRevisionen maxDeveloperRevision = REV_9;
 
 	/** Eine Map, welche von der Revisionsnummer auf das Objekt der Aufzählung abbildet. */
 	private static Map<Long, SchemaRevisionen> _mapByNumber = null; 
