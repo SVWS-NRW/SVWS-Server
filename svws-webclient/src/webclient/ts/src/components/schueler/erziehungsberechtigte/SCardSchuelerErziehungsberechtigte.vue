@@ -11,14 +11,14 @@
 			<div class="entry-wrapper">
 				<h2 class="svws-ui-text-black col-span-2">Basisdaten</h2>
 				<div class="entry-content">
-					<svws-ui-multi-select title="Erzieherart" v-model="idErzieherArt" :items="inputKatalogErzieherarten"
+					<svws-ui-multi-select title="Erzieherart" v-model="idErzieherArt" :items="katalogErzieherarten"
 						:item-sort="erzieherArtSort" :item-text="(i: Erzieherart) => i.bezeichnung" />
 					<svws-ui-checkbox v-model="erhaeltAnschreiben"> erhält Anschreiben </svws-ui-checkbox>
 					<svws-ui-text-input placeholder="Name" v-model="nachname" type="text" />
 					<svws-ui-text-input placeholder="Zusatz zum Nachnamen" v-model="zusatzNachname" type="text" />
 					<svws-ui-text-input placeholder="Vorname" v-model="vorname" type="text" />
 					<svws-ui-text-input placeholder="E-Mail Adresse" v-model="email" type="email" verify-email />
-					<svws-ui-multi-select title="1. Staatsangehörigkeit" v-model="staatsangehoerigkeit" :items="inputKatalogStaatsangehoerigkeit"
+					<svws-ui-multi-select title="1. Staatsangehörigkeit" v-model="staatsangehoerigkeit" :items="Nationalitaeten.values()"
 						:item-text="(i: Nationalitaeten) => i.daten.staatsangehoerigkeit" :item-sort="staatsangehoerigkeitKatalogEintragSort"
 						:item-filter="staatsangehoerigkeitKatalogEintragFilter" />
 				</div>
@@ -52,184 +52,81 @@
 
 <script setup lang="ts">
 
-	import { Erzieherart, ErzieherStammdaten, List, Nationalitaeten, OrtKatalogEintrag, OrtsteilKatalogEintrag } from "@svws-nrw/svws-core-ts";
+	import { Erzieherart, ErzieherStammdaten, Nationalitaeten, OrtKatalogEintrag, OrtsteilKatalogEintrag } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, ref, Ref, WritableComputedRef } from "vue";
 	import { injectMainApp, Main } from "~/apps/Main";
-	import { erzieherArtSort, staatsangehoerigkeitKatalogEintragFilter, staatsangehoerigkeitKatalogEintragSort, orte_filter, orte_sort,
-		ortsteilFilter, ortsteilSort } from "~/helfer";
+	import { DataKatalogErzieherarten } from "~/apps/schueler/DataKatalogErzieherarten";
+	import { DataSchuelerErzieherStammdaten } from "~/apps/schueler/DataSchuelerErzieherStammdaten";
+	import { erzieherArtSort, staatsangehoerigkeitKatalogEintragFilter, staatsangehoerigkeitKatalogEintragSort, 
+		orte_filter, orte_sort, ortsteilFilter, ortsteilSort } from "~/helfer";
 
-	const props = defineProps({
-		erzieher: {
-			type: Object as () => ErzieherStammdaten,
-			default: () => new ErzieherStammdaten()
-		}
-	});
+	const props = defineProps<{ data: DataSchuelerErzieherStammdaten, erzieher: ErzieherStammdaten, erzieherarten: DataKatalogErzieherarten }>();
 
 	const main: Main = injectMainApp();
-	const app = main.apps.schueler;
 
-	const nachname: WritableComputedRef<string | undefined> = computed({
-		get(): string | undefined {
-			return props.erzieher?.nachname !== null ? String(props.erzieher?.nachname) : "";
-		},
-		set(val: string | undefined) {
-			app.erzieher?.patch({ nachname: val }, props.erzieher);
-		}
+	const nachname: WritableComputedRef<string> = computed({
+		get: () => props.erzieher.nachname?.toString() || "",
+		set: (value) => props.data.patch({ nachname: value }, props.erzieher)
 	});
 
-	const zusatzNachname: WritableComputedRef<string | null> = computed({
-		get(): string | null {
-			if (props.erzieher?.zusatzNachname !== null) {
-				return props.erzieher?.zusatzNachname !== null ? String(props.erzieher?.zusatzNachname) : "";
-			}
-			return null;
-		},
-		set(val: string | null) {
-			app.erzieher?.patch({ zusatzNachname: val }, props.erzieher);
-		}
+	const zusatzNachname: WritableComputedRef<string> = computed({
+		get: () => props.erzieher.zusatzNachname?.toString() || "",
+		set: (value) => props.data.patch({ zusatzNachname: value }, props.erzieher)
 	});
 
-	const vorname: WritableComputedRef<string | null> = computed({
-		get(): string | null {
-			if (props.erzieher?.vorname !== null) {
-				return String(props.erzieher?.vorname);
-			}
-			return null;
-		},
-		set(val: string | null) {
-			app.erzieher?.patch({ vorname: val }, props.erzieher);
-		}
+	const vorname: WritableComputedRef<string> = computed({
+		get: () => props.erzieher.vorname?.toString() || "",
+		set: (value) => props.data.patch({ vorname: value }, props.erzieher)
 	});
 
-	const email: WritableComputedRef<string | null> = computed({
-		get(): string | null {
-			if (props.erzieher?.eMail !== null) {
-				return String(props.erzieher?.eMail);
-			}
-			return null;
-		},
-		set(val: string | null) {
-			app.erzieher?.patch({ eMail: val }, props.erzieher);
-		}
+	const email: WritableComputedRef<string> = computed({
+		get: () => props.erzieher.eMail?.toString() || "",
+		set: (value) => props.data.patch({ eMail: value }, props.erzieher)
 	});
 
-	const erhaeltAnschreiben: WritableComputedRef<boolean | null> = computed({
-		get(): boolean | null {
-			if (props.erzieher?.erhaeltAnschreiben !== undefined) {
-				return Boolean(props.erzieher?.erhaeltAnschreiben);
-			}
-			return null;
-		},
-		set(val: boolean | null) {
-			app.erzieher?.patch({ erhaeltAnschreiben: val }, props.erzieher);
-		}
+	const erhaeltAnschreiben: WritableComputedRef<boolean> = computed({
+		get: () => (props.erzieher.erhaeltAnschreiben === null) ? true : props.erzieher.erhaeltAnschreiben?.valueOf(),
+		set: (value) => props.data.patch({ erhaeltAnschreiben: value }, props.erzieher)
 	});
 
-	const inputKatalogStaatsangehoerigkeit: ComputedRef<Nationalitaeten[]> = computed(() =>
-		Nationalitaeten.values()
-	);
-
-	const inputKatalogErzieherarten: Ref<Erzieherart[]> = ref(
-		//TODO fix erzieherarten
-		[]
-		//main.kataloge.erzieherarten || []
-	);
-
-	const inputKatalogOrte: Ref<List<OrtKatalogEintrag>> = ref(main.kataloge.orte);
-
-	const inputKatalogOrtsteil: Ref<List<OrtsteilKatalogEintrag>> = ref(
-		main.kataloge.ortsteile
-	);
-
+	// TODO Lese Katalog in der Route aus und nutze keinen globalen Katalog
+	const inputKatalogOrte: Ref<OrtKatalogEintrag[]> = ref(main.kataloge.orte.toArray() as OrtKatalogEintrag[]);
 	const inputWohnortID: WritableComputedRef<OrtKatalogEintrag | undefined> = computed({
-		get(): OrtKatalogEintrag | undefined {
-			// TODO:TEST testen
-			const id = props.erzieher.wohnortID;
-			let o;
-			for (const r of inputKatalogOrte.value) { 
-				if (r.id === id) { 
-					o = r; 
-					break;
-				}
-			}
-			return o;
-		},
-		set(val: OrtKatalogEintrag | undefined) {
-			app.erzieher?.patch({ wohnortID: val?.id }, props.erzieher);
-		}
+		get: () => inputKatalogOrte.value.find(ort => ort.id == props.erzieher.wohnortID),
+		set: (value) => props.data.patch({ wohnortID: value?.id }, props.erzieher)
 	});
 
+	// TODO Lese Katalog in der Route aus und nutze keinen globalen Katalog
+	const inputKatalogOrtsteil: Ref<OrtsteilKatalogEintrag[]> = ref(main.kataloge.ortsteile.toArray() as OrtsteilKatalogEintrag[]);
 	const inputOrtsteilID: WritableComputedRef<OrtsteilKatalogEintrag | undefined> = computed({
-		get(): OrtsteilKatalogEintrag | undefined {
-			// TODO:TEST testen
-			const id = props.erzieher.ortsteilID;
-			let o;
-			for (const r of inputKatalogOrtsteil.value) { 
-				if (r.id === id) {
-					o = r;
-					break;
-				}
-			}
-			return o;
-		},
-		set(val: OrtsteilKatalogEintrag | undefined) {
-			app.erzieher?.patch({ ortsteilID: val?.id }, props.erzieher);
-		}
+		get: () => inputKatalogOrtsteil.value.find(ortsteil => ortsteil.id == props.erzieher.ortsteilID),
+		set: (value) => props.data.patch({ ortsteilID: value?.id }, props.erzieher)
 	});
 
 	const staatsangehoerigkeit: WritableComputedRef<Nationalitaeten> = computed({
-		get(): Nationalitaeten {
-			return Nationalitaeten.getByISO3(props.erzieher.staatsangehoerigkeitID) || Nationalitaeten.DEU;
-		},
-		set(val: Nationalitaeten) {
-			app.stammdaten.patch({ staatsangehoerigkeitID: val.daten.iso3 });
-		}
+		get: () => Nationalitaeten.getByISO3(props.erzieher.staatsangehoerigkeitID) || Nationalitaeten.DEU,
+		set: (value) => props.data.patch({ staatsangehoerigkeitID: value.daten.iso3 }, props.erzieher)
 	});
 
+	const katalogErzieherarten: ComputedRef<Erzieherart[]> = computed(() => props.erzieherarten.daten?.toArray() as Erzieherart[] || []);
 	const idErzieherArt: WritableComputedRef<Erzieherart | undefined> = computed({
-		get(): Erzieherart | undefined {
-			const id = props.erzieher.idErzieherArt;
-			return inputKatalogErzieherarten.value.find(n => n.id === id);
-		},
-		set(val: Erzieherart | undefined) {
-			app.erzieher?.patch({ idErzieherArt: val?.id }, props.erzieher);
-		}
+		get: () => katalogErzieherarten.value.find(n => n.id === props.erzieher.idErzieherArt),
+		set: (value) => props.data.patch({ idErzieherArt: value?.id }, props.erzieher)
 	});
 
-	const strassenname: WritableComputedRef<string | null> = computed({
-		get(): string | null {
-			if (props.erzieher?.strassenname !== null) {
-				return String(props.erzieher?.strassenname);
-			}
-			return null;
-		},
-		set(val: string | null) {
-			app.erzieher?.patch({ strassenname: val }, props.erzieher);
-		}
+	const strassenname: WritableComputedRef<string> = computed({
+		get: () => props.erzieher.strassenname?.toString() || "",
+		set: (value) => props.data.patch({ strassenname: value }, props.erzieher)
 	});
 
-	const hausnummerZusatz: WritableComputedRef<string | null> = computed({
-		get(): string | null {
-			if (props.erzieher?.hausnummerZusatz !== null) {
-				return String(props.erzieher?.hausnummerZusatz);
-			}
-			return null;
-		},
-		set(val: string | null) {
-			app.erzieher?.patch({ hausnummerZusatz: val }, props.erzieher);
-		}
+	const hausnummerZusatz: WritableComputedRef<string> = computed({
+		get: () => props.erzieher.hausnummerZusatz?.toString() || "",
+		set: (value) => props.data.patch({ hausnummerZusatz: value }, props.erzieher)
 	});
 
-	const bemerkungen: WritableComputedRef<string | null> = computed({
-		get(): string | null {
-			if (props.erzieher?.bemerkungen !== null) {
-				return String(props.erzieher?.bemerkungen);
-			}
-			return null;
-		},
-		set(val: string | null) {
-			app.erzieher?.patch({ bemerkungen: val }, props.erzieher);
-		}
+	const bemerkungen: WritableComputedRef<string> = computed({
+		get: () => props.erzieher.bemerkungen?.toString() || "",
+		set: (value) => props.data.patch({ bemerkungen: value }, props.erzieher)
 	});
 
 </script>

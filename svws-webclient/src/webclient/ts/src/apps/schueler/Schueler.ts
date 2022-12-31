@@ -1,10 +1,7 @@
-import { Erzieherart, FoerderschwerpunktEintrag, KatalogEintrag, List, Vector } from "@svws-nrw/svws-core-ts";
+import { FoerderschwerpunktEintrag, KatalogEintrag, List, Vector } from "@svws-nrw/svws-core-ts";
 import { App } from "../BaseApp";
 import { ListSchueler } from "./ListSchueler";
-import { DataSchuelerStammdaten } from "./DataSchuelerStammdaten";
-import { DataSchuelerSchulbesuchsdaten } from "./DataSchuelerSchulbesuchsdaten";
 import { DataSchuelerLaufbahnplanung } from "./DataSchuelerLaufbahnplanung";
-import { DataSchuelerErzieherStammdaten } from "./DataSchuelerErzieherStammdaten";
 import { ListAbschnitte } from "./ListAbschnitte";
 import { DataSchuelerAbschnittsdaten } from "./DataSchuelerAbschnittsdaten";
 import { mainApp } from "../Main";
@@ -41,9 +38,6 @@ export class Schueler extends App {
 	/** Der Katalog der Förderschwerpunkte */
 	public katalogFoerderschwerpunkte: List<FoerderschwerpunktEintrag> = new Vector<FoerderschwerpunktEintrag>();
 
-	/** Der Katalog für Erzieherarten eines Erziehers*/
-	public katalogErzieherarten: List<Erzieherart> = new Vector<Erzieherart>();
-
 	/** Liste der Schülerbetriebe */
 	public listSchuelerbetriebe : ListSchuelerBetriebsdaten | undefined = undefined;
 	/** Objekt für Betriebsstammdaten */
@@ -79,6 +73,5 @@ export class Schueler extends App {
 
 		this.katalogFahrschuelerarten = await App.api.getSchuelerFahrschuelerarten(App.schema);
 		this.katalogFoerderschwerpunkte = await App.api.getSchuelerFoerderschwerpunkte(App.schema);
-		this.katalogErzieherarten = await App.api.getErzieherArten(App.schema);
 	}
 }

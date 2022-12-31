@@ -4,7 +4,7 @@
 			<svws-ui-button>Erziehungsberechtigten hinzufügen</svws-ui-button>
 		</div>
 		<div v-for="(e, i) in erzieher" :key="i" class="col-span-3">
-			<s-card-schueler-erziehungsberechtigte :erzieher="e" />
+			<s-card-schueler-erziehungsberechtigte :data="props.data" :erzieher="e" :erzieherarten="props.erzieherarten" />
 		</div>
 	</div>
 </template>
@@ -13,10 +13,11 @@
 
 	import { ErzieherStammdaten, List, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef } from "vue";
+	import { DataKatalogErzieherarten } from "~/apps/schueler/DataKatalogErzieherarten";
 	import { DataSchuelerErzieherStammdaten } from "~/apps/schueler/DataSchuelerErzieherStammdaten";
 	import { routeSchuelerErziehungsberechtigte } from "~/router/apps/schueler/RouteSchuelerErziehungsberechtigte";
 
-	const props = defineProps<{ id?: number, item?: SchuelerListeEintrag, data: DataSchuelerErzieherStammdaten, routename: string }>();
+	const props = defineProps<{ id?: number, item?: SchuelerListeEintrag, data: DataSchuelerErzieherStammdaten, erzieherarten: DataKatalogErzieherarten, routename: string }>();
 
 	const erzieher: ComputedRef<List<ErzieherStammdaten> | undefined> = computed(() => props.data.daten);
 
