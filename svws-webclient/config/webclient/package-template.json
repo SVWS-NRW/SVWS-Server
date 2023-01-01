@@ -20,7 +20,7 @@
 		"check-licenses": "license-checker-rseidelsohn --summary --unknown --production"
 	},
 	"dependencies": {
-		"@headlessui/vue": "1.6.7",
+		"@headlessui/vue": "^1.7.7",
 		"vue": "^3.2",
 		"vue-router": "^4.1.5",
 		"@@npm_organization@/svws-core-ts": "^@version@",
