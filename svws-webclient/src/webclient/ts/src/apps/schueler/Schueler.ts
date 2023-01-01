@@ -7,8 +7,6 @@ import { DataSchuelerAbschnittsdaten } from "./DataSchuelerAbschnittsdaten";
 import { mainApp } from "../Main";
 import { ListSchuelerBetriebsdaten } from "./ListSchuelerBetriebsdaten";
 import { DataBetriebsstammdaten } from "./DataBetriebsstammdaten";
-import { ListStundenplaene } from "./ListStundenplaene";
-import { DataStundenplan } from "./DataStundenplan";
 
 /**
  * Diese Klasse enthält den Schülerspezifischen Teil des
@@ -37,10 +35,6 @@ export class Schueler extends App {
 	public listSchuelerbetriebe : ListSchuelerBetriebsdaten | undefined = undefined;
 	/** Objekt für Betriebsstammdaten */
 	public betriebsStammdaten!: DataBetriebsstammdaten;
-	/** Die Liste der Stundenpläne für den aktuellen Abschnitt */
-	public listStundenplaene!: ListStundenplaene;
-	/** Objekt für Stundenplan */
-	public dataStundenplan!: DataStundenplan;
 
 	/**
 	 * Initialisiert die OpenAPI mit der aktuellen Konfiguration
@@ -52,12 +46,7 @@ export class Schueler extends App {
 		this.dataSchuelerAbschnittsdaten = new DataSchuelerAbschnittsdaten();
 		this.listAbschnitte.add_data(this.dataSchuelerAbschnittsdaten);
 
-
-		this.dataStundenplan = new DataStundenplan();
-		this.listStundenplaene = new ListStundenplaene();
-		this.listStundenplaene.add_data([this.dataStundenplan])
-
-		this.auswahl = new ListSchueler(this.listAbschnitte, this.listStundenplaene);
+		this.auswahl = new ListSchueler(this.listAbschnitte);
 		if (mainApp.config.hasGost) {
 			this.dataGostLaufbahndaten = new DataSchuelerLaufbahnplanung();
 			this.auswahl.add_data(this.dataGostLaufbahndaten);

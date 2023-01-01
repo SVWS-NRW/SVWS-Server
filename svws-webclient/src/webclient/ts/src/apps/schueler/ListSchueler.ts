@@ -34,12 +34,10 @@ export class ListSchueler extends BaseList<SchuelerListeEintrag, Filter> {
 	}) as Filter;
 
 	protected listAbschnitte: ListAbschnitte;
-	protected listStundenplaene: ListStundenplaene;
 
-	public constructor(listAbschnitte: ListAbschnitte, listStundenplaene: ListStundenplaene) {
+	public constructor(listAbschnitte: ListAbschnitte) {
 		super();
 		this.listAbschnitte = listAbschnitte;
-		this.listStundenplaene = listStundenplaene;
 	}
 	/**
 	 * Aktualisiert die Liste für die Schülerauswahl
@@ -77,7 +75,6 @@ export class ListSchueler extends BaseList<SchuelerListeEintrag, Filter> {
 	public async on_select(): Promise<void> {
 		if (!this._state.ausgewaehlt?.id) return;
 		await this.listAbschnitte.update_list(this._state.ausgewaehlt.id);
-		await this.listStundenplaene.update_list();
 		// hole und aktualisiere die GostJahrgänge, um in der Laufbahnplanung die
 		// jeweiligen GostFächer etc. des Jahrgangs zu bekommen
 		const listGost = BaseList.all.find(list => list instanceof ListGost) as ListGost | undefined;
@@ -86,6 +83,5 @@ export class ListSchueler extends BaseList<SchuelerListeEintrag, Filter> {
 			if (jahrgang && listGost.ausgewaehlt !== jahrgang)
 				listGost.ausgewaehlt = jahrgang;
 		}
-		if (this.listStundenplaene.liste) this.listStundenplaene.ausgewaehlt = this.listStundenplaene.liste[0];
 	}
 }

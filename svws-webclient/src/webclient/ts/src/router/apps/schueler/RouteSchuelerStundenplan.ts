@@ -1,6 +1,7 @@
-import { mainApp } from "~/apps/Main";
 import { RouteNode } from "~/router/RouteNode";
-import { RouteNodeListView } from "~/router/RouteNodeListView";
+import { routeSchueler } from "~/router/apps/RouteSchueler";
+import { routeSchuelerStundenplanDaten } from "~/router/apps/schueler/stundenplan/RouteSchuelerStundenplanDaten";
+import { RouteLocationNormalized } from "vue-router";
 
 const SSchuelerStundenplan = () => import("~/components/schueler/stundenplan/SSchuelerStundenplan.vue");
 
@@ -8,9 +9,16 @@ export class RouteSchuelerStundenplan extends RouteNode<unknown> {
 
 	public constructor() {
 		super("schueler_stundenplan", "stundenplan", SSchuelerStundenplan);
-		super.propHandler = (route) => RouteNodeListView.getPropsByAuswahlID(route, mainApp.apps.schueler.auswahl);
+		super.propHandler = (route) => routeSchueler.getProps(route);
 		super.text = "Stundenplan";
+		super.children = [
+			routeSchuelerStundenplanDaten
+		];
 	}
+
+    public async beforeEach(to: RouteLocationNormalized, from: RouteLocationNormalized): Promise<any> {
+		return { name: routeSchuelerStundenplanDaten.name, params: to.params };
+    }
 
 }
 
