@@ -24,7 +24,7 @@ public class DTOHelper {
         } else if ((rev < 0) || (rev <= SchemaRevisionen.maxRevision.revision)) {
             return DTOs.getFromDTOName(name);
         } else if (rev <= SchemaRevisionen.maxDeveloperRevision.revision) {
-            return Rev8DTOs.getFromDTOName(name);
+            return Rev9DTOs.getFromDTOName(name);
         } else {
             return null;
         }
@@ -45,7 +45,7 @@ public class DTOHelper {
         } else if ((rev < 0) || (rev <= SchemaRevisionen.maxRevision.revision)) {
             return DTOs.getFromTableName(name);
         } else if (rev <= SchemaRevisionen.maxDeveloperRevision.revision) {
-            return Rev8DTOs.getFromTableName(name);
+            return Rev9DTOs.getFromTableName(name);
         } else {
             return null;
         }
