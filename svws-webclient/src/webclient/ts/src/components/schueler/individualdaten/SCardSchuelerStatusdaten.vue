@@ -28,35 +28,26 @@
 	
 	const props = defineProps<{ stammdaten: DataSchuelerStammdaten, fachschuelerarten: DataKatalogFahrschuelerarten }>();
 
-
 	const main: Main = injectMainApp();
 	const app = main.apps.schueler;
 
 	const inputBinding = useInputWithBaseData(props.stammdaten)
 	
 	const inputStatus: WritableComputedRef<SchuelerStatus | undefined> = inputBinding('status', {
-		get: (v: string): SchuelerStatus | undefined => v ? SchuelerStatus.fromBezeichnung(v) ?? undefined : undefined,
-		set: (v: SchuelerStatus | undefined): string | undefined => v?.bezeichnung as string | undefined
+		get: (v: string) => v ? SchuelerStatus.fromBezeichnung(v) ?? undefined : undefined,
+		set: (v: SchuelerStatus | undefined) => v?.bezeichnung as string | undefined
 	})
 	watch(inputStatus, () => { app.auswahl.filter = app.auswahl.filter})
 	
 	const inputKatalogFahrschuelerarten: ComputedRef<KatalogEintrag[]> = computed(() =>  props.fachschuelerarten.daten?.toArray() as KatalogEintrag[] || [] as KatalogEintrag[]);
 	const inputFahrschuelerArtID: WritableComputedRef<KatalogEintrag | undefined> = inputBinding('fahrschuelerArtID', {
-		get: (v: number): KatalogEintrag | undefined => {
-			for (const art of inputKatalogFahrschuelerarten.value)
-			if (art.id === v)
-			return art
-		},
+		get: (v: number): KatalogEintrag | undefined => inputKatalogFahrschuelerarten.value.find(art => art.id === v),
 		set: (v: KatalogEintrag | undefined): number | undefined => v?.id
 	})
 
-	const inputKatalogHaltestellen: ComputedRef<List<KatalogEintrag>> = computed(() => main.kataloge.haltestellen);
+	const inputKatalogHaltestellen: ComputedRef<KatalogEintrag[]> = computed(() => main.kataloge.haltestellen.toArray() as KatalogEintrag[]);
 	const inputHaltestelleID: WritableComputedRef<KatalogEintrag | undefined> = inputBinding('haltestelleID', {
-		get: (v: number | undefined) => {
-			for (const r of inputKatalogHaltestellen.value) 
-				if (r.id === v)
-					return r;
-		},
+		get: (v: number | undefined) => inputKatalogHaltestellen.value.find(r => r.id === v),
 		set: (v: KatalogEintrag | undefined) => v?.id
 	})
 
