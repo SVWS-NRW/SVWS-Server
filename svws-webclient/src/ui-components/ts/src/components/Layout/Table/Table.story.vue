@@ -132,6 +132,17 @@ function execute(action: string, row: DataTableItem) {
       <div v-if="Object.keys(clickedRow).length === 0">No row clicked</div>
       <span v-else>{{ clickedRow }}</span>
     </Variant>
+    <Variant title="Custom everything">
+      <Table :data="data">
+        <template #head>
+          <tr><th>Fruit</th><th>More Fruit</th></tr>
+          <tr><th>Banana</th><th>Apple</th></tr>
+        </template>
+        <template #body="{rows}">
+          <tr v-for="row in rows"><td>{{ row.name }}</td><td>{{ row.email }}</td></tr>
+        </template>
+      </Table>
+    </Variant>
     <Variant title="Sorting + Selection + Header Labels">
       <Table v-model:selection="selectedRows3" :data="data" :columns="columns" is-multi-select />
       <br />

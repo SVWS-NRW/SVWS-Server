@@ -59,39 +59,41 @@ watch(() => selection, (newVal) => tableRef.value.selectRows(newVal));
     ref="tableRef" :data="data" :selection-mode="isMultiSelect ? 'multiple' : null" :select-on-click="false"
     hide-sort-icons>
     <template #head="{ allRowsSelected, toggleAllRows }">
-      <tr>
-        <th v-if="isMultiSelect" class="column--checkbox">
-          <span class="table--head-content">
-            <Checkbox
-              v-if="isMultiSelect" :model-value="allRowsSelected"
-              @update:model-value="proxyUpdate(toggleAllRows)" />
-          </span>
-        </th>
-        <template v-for="(column, index) in columnsComputed" :key="`head-${index}`">
-          <slot :name="`head-${column.key}`" :column="column">
-            <VTh
-              v-if="column.sortable" v-slot="{ sortOrder }" :sort-key="column.key"
-			  :style="`flex-grow: ${column.span};`"
-              :default-sort="column.defaultSort">
-              <div class="w-full">
-                <span class="column--title" :title="column.label">{{ column.label }}</span>
-                <span>
-                  <Icon v-show="sortOrder === 0">
-                    <i-ri-arrow-up-down-line />
-                  </Icon>
-                  <Icon v-show=" sortOrder === 1 ">
-                    <i-ri-sort-asc />
-                  </Icon>
-                  <Icon v-show=" sortOrder === -1 ">
-                    <i-ri-sort-desc />
-                  </Icon>
-                </span>
-              </div>
-            </VTh>
-            <th v-else :style="`flex-grow: ${column.span};`"><span class="column--title" :title="column.label">{{ column.label }}</span></th>
-          </slot>
-        </template>
-      </tr>
+      <slot name="head" :allRowsSelected="allRowsSelected" :toggleAllRows="toggleAllRows">
+				<tr>
+					<th v-if="isMultiSelect" class="column--checkbox">
+						<span class="table--head-content">
+							<Checkbox
+								v-if="isMultiSelect" :model-value="allRowsSelected"
+								@update:model-value="proxyUpdate(toggleAllRows)" />
+						</span>
+					</th>
+					<template v-for="(column, index) in columnsComputed" :key="`head-${index}`">
+						<slot :name="`head-${column.key}`" :column="column">
+							<VTh
+								v-if="column.sortable" v-slot="{ sortOrder }" :sort-key="column.key"
+								:style="`flex-grow: ${column.span};`"
+								:default-sort="column.defaultSort">
+								<div class="w-full">
+									<span class="column--title" :title="column.label">{{ column.label }}</span>
+									<span>
+										<Icon v-show="sortOrder === 0">
+											<i-ri-arrow-up-down-line />
+										</Icon>
+										<Icon v-show=" sortOrder === 1 ">
+											<i-ri-sort-asc />
+										</Icon>
+										<Icon v-show=" sortOrder === -1 ">
+											<i-ri-sort-desc />
+										</Icon>
+									</span>
+								</div>
+							</VTh>
+							<th v-else :style="`flex-grow: ${column.span};`"><span class="column--title" :title="column.label">{{ column.label }}</span></th>
+						</slot>
+					</template>
+				</tr>
+			</slot>
     </template>
     <template #body="{ rows }">
       <slot name="body" :rows="rows">
@@ -155,7 +157,7 @@ watch(() => selection, (newVal) => tableRef.value.selectRows(newVal));
 	}
 
 	thead {
-		@apply sticky top-0 left-0 z-10 bg-white flex w-full;
+		@apply sticky top-0 left-0 z-10 bg-white w-full;
 		@apply border-dark-20 border-t shadow shadow-dark-20 text-sm-bold uppercase;
 		position: -webkit-sticky;
 
