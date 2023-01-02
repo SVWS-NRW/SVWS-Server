@@ -1,4 +1,4 @@
-import { SchuelerLernabschnittListeEintrag } from "@svws-nrw/svws-core-ts";
+import { FaecherListeEintrag, LehrerListeEintrag, SchuelerLernabschnittListeEintrag } from "@svws-nrw/svws-core-ts";
 import { WritableComputedRef } from "@vue/reactivity";
 import { RouteLocationNormalized, useRoute, useRouter } from "vue-router";
 import { RouteNodeListView } from "~/router/RouteNodeListView";
@@ -6,11 +6,17 @@ import { routeSchueler } from "~/router/apps/RouteSchueler";
 import { computed } from "vue";
 import { DataSchuelerAbschnittsdaten } from "~/apps/schueler/DataSchuelerAbschnittsdaten";
 import { ListAbschnitte } from "~/apps/schueler/ListAbschnitte";
+import { ListFaecher } from "~/apps/faecher/ListFaecher";
+import { ListLehrer } from "~/apps/lehrer/ListLehrer";
 
 export class RouteDataSchuelerLeistungenDaten {
 	auswahl: ListAbschnitte = new ListAbschnitte();
 	item: SchuelerLernabschnittListeEintrag | undefined = undefined;
 	daten: DataSchuelerAbschnittsdaten = new DataSchuelerAbschnittsdaten();
+	listFaecher: ListFaecher = new ListFaecher();
+	mapFaecher: Map<number, FaecherListeEintrag> = new Map();
+	listLehrer: ListLehrer = new ListLehrer();
+	mapLehrer: Map<number, LehrerListeEintrag> = new Map();
 }
 
 const SSchuelerLeistungenDaten = () => import("~/components/schueler/leistungsdaten/SSchuelerLeistungenDaten.vue");
@@ -37,8 +43,19 @@ export class RouteSchuelerLeistungenDaten extends RouteNodeListView<SchuelerLern
 		if (to.params.id === undefined)
 			return false;
 		const id = parseInt(to.params.id as string);
-		await this.data.auswahl.update_list(id);
-		if ((to.name?.toString() === this.name) && (to.params.idLernabschnitt === undefined))
+		const to_name = to.name?.toString();
+		const from_name = from.name?.toString();
+		if (to_name !== from_name) {
+			await this.data.listFaecher.update_list();
+			this.data.mapFaecher.clear();
+			this.data.listFaecher.liste.forEach(f => this.data.mapFaecher.set(f.id, f));
+			await this.data.listLehrer.update_list();
+			this.data.mapLehrer.clear();
+			this.data.listLehrer.liste.forEach(l => this.data.mapLehrer.set(l.id, l));
+		}
+		if ((to_name !== from_name) || (from.params.id === undefined) || (parseInt(from.params.id as string) != id))
+			await this.data.auswahl.update_list(id);
+		if ((to_name === this.name) && (to.params.idLernabschnitt === undefined))
 			return { name: this.name, params: { id: to.params.id, idLernabschnitt: this.data.auswahl.liste.at(0)?.id }};
         return true;
     }
@@ -96,6 +113,8 @@ export class RouteSchuelerLeistungenDaten extends RouteNodeListView<SchuelerLern
 			this.onSelect(itemLernabschnitt);
 		prop.lernabschnitt = this.data.item;
 		prop.data = this.data.daten;
+		prop.mapFaecher = this.data.mapFaecher;
+		prop.mapLehrer = this.data.mapLehrer;
 		return prop;
 	}
 

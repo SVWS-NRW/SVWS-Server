@@ -10,13 +10,22 @@
 
 <script setup lang="ts">
 
-	import { SchuelerLernabschnittListeEintrag, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
+	import { FaecherListeEintrag, LehrerListeEintrag, SchuelerLernabschnittListeEintrag, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, ref, WritableComputedRef } from "vue";
 	import { DataSchuelerAbschnittsdaten } from "~/apps/schueler/DataSchuelerAbschnittsdaten";
 	import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
 	import { routeSchuelerLeistungenDaten } from "~/router/apps/schueler/leistungsdaten/RouteSchuelerLeistungenDaten";
 
-	const props = defineProps<{ id?: number; item?: SchuelerListeEintrag, stammdaten: DataSchuelerStammdaten, lernabschnitt?: SchuelerLernabschnittListeEintrag, data: DataSchuelerAbschnittsdaten, routename: string }>();
+	const props = defineProps<{ 
+		id?: number; 
+		item?: SchuelerListeEintrag, 
+		stammdaten: DataSchuelerStammdaten, 
+		lernabschnitt?: SchuelerLernabschnittListeEintrag, 
+		data: DataSchuelerAbschnittsdaten, 
+		mapFaecher: Map<number, FaecherListeEintrag>,
+		mapLehrer: Map<number, LehrerListeEintrag>,
+		routename: string
+	}>();
 	
 	const liste: ComputedRef<SchuelerLernabschnittListeEintrag[]> = computed(() => routeSchuelerLeistungenDaten.data.auswahl.liste);
 

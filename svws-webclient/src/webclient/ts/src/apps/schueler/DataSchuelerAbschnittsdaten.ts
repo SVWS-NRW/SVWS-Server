@@ -1,6 +1,7 @@
 import { App } from "../BaseApp";
 
 import {
+	SchuelerLeistungsdaten,
 	SchuelerLernabschnittListeEintrag,
 	SchuelerLernabschnittsdaten
 } from "@svws-nrw/svws-core-ts";
@@ -41,18 +42,23 @@ export class DataSchuelerAbschnittsdaten extends BaseData<
 	 *   aktualisiert werden sollen
 	 * @returns {Promise<boolean>} True, wenn die Daten aktualisiert wurden, sonst false
 	 */
-	public async patch(
-		data: Partial<SchuelerLernabschnittsdaten>
-	): Promise<boolean> {
+	public async patch(data: Partial<SchuelerLernabschnittsdaten>): Promise<boolean> {
 		const daten = this._daten;
-		if (!daten) return false;
-		// richtige Patch-Methode suchen
-		return this._patch(data, () =>
-			App.api.patchSchuelerSchulbesuch(
-				data as SchuelerLernabschnittsdaten,
-				App.schema,
-				daten.id
-			)
-		);
+		if (!daten) 
+			return false;
+		// TODO richtige Patch-Methode suchen
+		// return this._patch(data, () => App.api.patchSchuelerLernabschnittsdaten(data as SchuelerLernabschnittsdaten, App.schema, daten.id));
+		return true;
 	}
+
+
+	public async patchLeistung(data: Partial<SchuelerLeistungsdaten>, idLeistung: number): Promise<boolean> {
+		const daten = this._daten;
+		if (!daten) 
+			return false;
+		// TODO Patch-Methode aufrufen: await App.api.patchSchuelerLeistungsdaten(data, App.schema, idLeistung)
+		// TODO Daten anpassen
+		return true;
+	}
+
 }
