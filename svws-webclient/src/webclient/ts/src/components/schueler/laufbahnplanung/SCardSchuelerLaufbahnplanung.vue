@@ -375,8 +375,8 @@
 	}
 
 	function download_file() {
-		const id = app.stammdaten.daten?.id;
-		if (!id) return;
+		const id = app.auswahl.ausgewaehlt?.id;
+		if (id === undefined) return;
 		App.api
 			.getGostSchuelerPDFWahlbogen(App.schema, id)
 			.then(blob => {
