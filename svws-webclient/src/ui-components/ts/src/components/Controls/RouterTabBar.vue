@@ -114,7 +114,7 @@
 
     .router-tab-bar--panel {
         @apply h-full;
-        @apply mt-0 mb-8 flex-grow overflow-y-auto px-6;
+        @apply mt-0 mb-8 flex-grow overflow-y-auto px-6 flex-auto w-full;
     }
 
 	.router-tab-bar--area {

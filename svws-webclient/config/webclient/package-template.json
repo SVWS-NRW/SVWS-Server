@@ -25,5 +25,8 @@
 		"vue-router": "^4.1.5",
 		"@@npm_organization@/svws-core-ts": "^@version@",
 		"@@npm_organization@/svws-ui": "^@version@"
+	},
+	"devDependencies": {
+		"@vueuse/core": "^9.9.0"
 	}
 }
