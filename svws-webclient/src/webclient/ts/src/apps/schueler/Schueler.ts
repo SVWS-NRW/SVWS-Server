@@ -1,9 +1,6 @@
-import { FoerderschwerpunktEintrag, KatalogEintrag, List, Vector } from "@svws-nrw/svws-core-ts";
 import { App } from "../BaseApp";
 import { ListSchueler } from "./ListSchueler";
 import { DataSchuelerLaufbahnplanung } from "./DataSchuelerLaufbahnplanung";
-import { ListAbschnitte } from "./ListAbschnitte";
-import { DataSchuelerAbschnittsdaten } from "./DataSchuelerAbschnittsdaten";
 import { mainApp } from "../Main";
 import { ListSchuelerBetriebsdaten } from "./ListSchuelerBetriebsdaten";
 import { DataBetriebsstammdaten } from "./DataBetriebsstammdaten";

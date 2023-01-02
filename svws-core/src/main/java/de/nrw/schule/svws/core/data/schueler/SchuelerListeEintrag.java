@@ -38,6 +38,10 @@ public class SchuelerListeEintrag {
 	@Schema(required = true, description = "der aktuelle Jahrgang des Schülers", example="09")
 	public @NotNull String jahrgang = "";
 	
+	/** Der Abiturjahrgang, falls es sich um eine Schule mit Gymnasialer Oberstufe handelt. */
+	@Schema(required = true, description = "der Abiturjahrgang, falls es sich um eine Schule mit Gymnasialer Oberstufe handelt", example="2030")
+	public Integer abiturjahrgang = null;
+	
 	/** Das Kürzel der aktuellen Schulgliederung des Schülers */
 	@Schema(required = true, description = "das Kürzel der aktuellen Schulgliederung des Schülers", example="GY9")
 	public @NotNull String schulgliederung = "";

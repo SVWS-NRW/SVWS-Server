@@ -1,4 +1,5 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
+import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
 import { JavaLong, cast_java_lang_Long } from '../../../java/lang/JavaLong';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
@@ -14,6 +15,8 @@ export class SchuelerListeEintrag extends JavaObject {
 	public idKlasse : Number = -1;
 
 	public jahrgang : String = "";
+
+	public abiturjahrgang : Number | null = null;
 
 	public schulgliederung : String = "";
 
@@ -50,6 +53,7 @@ export class SchuelerListeEintrag extends JavaObject {
 		if (typeof obj.jahrgang === "undefined")
 			 throw new Error('invalid json format, missing attribute jahrgang');
 		result.jahrgang = String(obj.jahrgang);
+		result.abiturjahrgang = typeof obj.abiturjahrgang === "undefined" ? null : obj.abiturjahrgang === null ? null : Number(obj.abiturjahrgang);
 		if (typeof obj.schulgliederung === "undefined")
 			 throw new Error('invalid json format, missing attribute schulgliederung');
 		result.schulgliederung = String(obj.schulgliederung);
@@ -74,6 +78,7 @@ export class SchuelerListeEintrag extends JavaObject {
 		result += '"vorname" : ' + '"' + obj.vorname.valueOf() + '"' + ',';
 		result += '"idKlasse" : ' + obj.idKlasse.valueOf() + ',';
 		result += '"jahrgang" : ' + '"' + obj.jahrgang.valueOf() + '"' + ',';
+		result += '"abiturjahrgang" : ' + ((!obj.abiturjahrgang) ? 'null' : obj.abiturjahrgang.valueOf()) + ',';
 		result += '"schulgliederung" : ' + '"' + obj.schulgliederung.valueOf() + '"' + ',';
 		result += '"status" : ' + '"' + obj.status.valueOf() + '"' + ',';
 		result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt.valueOf() + ',';
@@ -110,6 +115,9 @@ export class SchuelerListeEintrag extends JavaObject {
 		}
 		if (typeof obj.jahrgang !== "undefined") {
 			result += '"jahrgang" : ' + '"' + obj.jahrgang.valueOf() + '"' + ',';
+		}
+		if (typeof obj.abiturjahrgang !== "undefined") {
+			result += '"abiturjahrgang" : ' + ((!obj.abiturjahrgang) ? 'null' : obj.abiturjahrgang.valueOf()) + ',';
 		}
 		if (typeof obj.schulgliederung !== "undefined") {
 			result += '"schulgliederung" : ' + '"' + obj.schulgliederung.valueOf() + '"' + ',';

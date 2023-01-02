@@ -14,12 +14,14 @@ import jakarta.ws.rs.core.Response.Status;
 
 import de.nrw.schule.svws.core.data.schueler.SchuelerListeEintrag;
 import de.nrw.schule.svws.core.types.SchuelerStatus;
+import de.nrw.schule.svws.core.utils.gost.GostAbiturjahrUtils;
 import de.nrw.schule.svws.data.DataManager;
 import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.dto.current.schild.kurse.DTOKursSchueler;
 import de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchueler;
 import de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
 import de.nrw.schule.svws.db.dto.current.schild.schule.DTOEigeneSchule;
+import de.nrw.schule.svws.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.nrw.schule.svws.db.utils.OperationError;
 import jakarta.persistence.TypedQuery;
 
@@ -203,9 +205,12 @@ public class DataSchuelerliste extends DataManager<Long> {
 				"SELECT l FROM DTOSchueler s JOIN DTOSchuelerLernabschnittsdaten l ON "
 				+ "s.ID IN :value AND s.ID = l.Schueler_ID AND s.Schuljahresabschnitts_ID = l.Schuljahresabschnitts_ID AND l.WechselNr IS NULL", DTOSchuelerLernabschnittsdaten.class
 		);
-		Map<Long, DTOSchuelerLernabschnittsdaten> mapAktAbschnitte = queryDtoSchuelerLernabschnitte
-				.setParameter("value", schuelerIDs)
-				.getResultList().stream().collect(Collectors.toMap(l -> l.Schueler_ID, l -> l));
+		List<DTOSchuelerLernabschnittsdaten> listAktAbschnitte = queryDtoSchuelerLernabschnitte
+				.setParameter("value", schuelerIDs).getResultList();
+		Map<Long, DTOSchuelerLernabschnittsdaten> mapAktAbschnitte = listAktAbschnitte.stream().collect(Collectors.toMap(l -> l.Schueler_ID, l -> l));
+		List<Long> listSchuljahresabschnitteIDs = listAktAbschnitte.stream().map(a -> a.Schuljahresabschnitts_ID).distinct().toList();
+		List<DTOSchuljahresabschnitte> listSchuljahresabschnitte = conn.queryNamed("DTOSchuljahresabschnitte.id.multiple", listSchuljahresabschnitteIDs, DTOSchuljahresabschnitte.class);
+		Map<Long, DTOSchuljahresabschnitte> mapSchuljahresabschnitte = listSchuljahresabschnitte.stream().collect(Collectors.toMap(a -> a.ID, a -> a));
     	// Erstelle die Schüler-Liste und sortiere sie
     	List<SchuelerListeEintrag> schuelerListe = schueler.stream()
     		.map(s -> erstelleSchuelerlistenEintrag(s, mapAktAbschnitte.get(s.ID)))
@@ -213,6 +218,15 @@ public class DataSchuelerliste extends DataManager<Long> {
 	    	.collect(Collectors.toList());
     	// Ermittle die Kurse, welche von den Schülern belegt wurden.
     	getSchuelerKurse(schuelerListe, abschnitt);
+    	// Bestimme das Abiturjahr, sofern es sich um eine Schule mit gymnasialer Oberstufe handelt.
+    	DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
+    	if (schule.Schulform.daten.hatGymOb) {
+    		for (SchuelerListeEintrag s : schuelerListe) {
+    			DTOSchuelerLernabschnittsdaten lernabschnitt = mapAktAbschnitte.get(s.id);
+    			DTOSchuljahresabschnitte schuljahresabschnitt = mapSchuljahresabschnitte.get(lernabschnitt.Schuljahresabschnitts_ID);
+    			s.abiturjahrgang = GostAbiturjahrUtils.getGostAbiturjahr(schule.Schulform, lernabschnitt.Schulgliederung, schuljahresabschnitt.Jahr, lernabschnitt.ASDJahrgang);
+    		}
+    	}
     	// Und gib die Schülerliste mit den belegten Kursen zurück...
     	return schuelerListe;		
 	}
