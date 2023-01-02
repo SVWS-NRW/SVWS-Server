@@ -28,7 +28,7 @@ export class ListSchueler extends BaseList<SchuelerListeEintrag, Filter> {
 		kurs: undefined,
 		klasse: undefined,
 		schulgliederung: undefined,
-		status: [SchuelerStatus.AKTIV]
+		status: [ SchuelerStatus.AKTIV, SchuelerStatus.EXTERN ]
 	}) as Filter;
 
 	public constructor() {
@@ -68,14 +68,7 @@ export class ListSchueler extends BaseList<SchuelerListeEintrag, Filter> {
 	 * @returns {Promise<void>}
 	 */
 	public async on_select(): Promise<void> {
-		if (!this._state.ausgewaehlt?.id) return;
-		// hole und aktualisiere die GostJahrgänge, um in der Laufbahnplanung die
-		// jeweiligen GostFächer etc. des Jahrgangs zu bekommen
-		const listGost = BaseList.all.find(list => list instanceof ListGost) as ListGost | undefined;
-		if (listGost) {
-			const jahrgang = listGost.liste.find(jahrgang => jahrgang.jahrgang === this._state.ausgewaehlt?.jahrgang);
-			if (jahrgang && listGost.ausgewaehlt !== jahrgang)
-				listGost.ausgewaehlt = jahrgang;
-		}
+		if (!this._state.ausgewaehlt?.id) 
+			return;
 	}
 }

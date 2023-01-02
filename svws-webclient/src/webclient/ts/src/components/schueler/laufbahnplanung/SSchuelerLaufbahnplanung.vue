@@ -11,32 +11,33 @@
 			</svws-ui-button>
 		</template>
 	</svws-ui-modal>
-	<s-card-schueler-laufbahnplanung v-if="visible" />
+	<s-card-schueler-laufbahnplanung v-if="visible" :item="item" :stammdaten="stammdaten" :dataLaufbahn="dataLaufbahn" :dataFaecher="dataFaecher" :dataFachkombinationen="dataFachkombinationen" />
 </template>
 
 <script setup lang="ts">
 
 	import { SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, ref } from "vue";
-	import { App } from "~/apps/BaseApp";
-	import { injectMainApp, Main } from "~/apps/Main";
+	import { DataGostFachkombinationen } from "~/apps/gost/DataGostFachkombinationen";
+	import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
+	import { DataSchuelerLaufbahnplanung } from "~/apps/schueler/DataSchuelerLaufbahnplanung";
+	import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
 	import { routeSchuelerLaufbahnplanung } from "~/router/apps/schueler/RouteSchuelerLaufbahnplanung";
 
-	const main: Main = injectMainApp();
-	const app = main.apps.schueler;
-
-	const props = defineProps<{ id?: number; item?: SchuelerListeEintrag, routename: string }>();
-
-	const current_abiturjahr = App.apps.gost.auswahl.ausgewaehlt;
-	const schueler_abiturjahr = app.dataGostLaufbahndaten?.abiturjahr;
-
-	if (current_abiturjahr !== undefined && schueler_abiturjahr !== undefined && current_abiturjahr.abiturjahr !== schueler_abiturjahr)
-		App.apps.gost.auswahl.ausgewaehlt = App.apps.gost.auswahl.liste.find(jahr => jahr.abiturjahr === schueler_abiturjahr);
+	const { id, item, stammdaten, dataLaufbahn, dataFaecher, dataFachkombinationen } = defineProps<{ 
+		id?: number; 
+		item?: SchuelerListeEintrag, 
+		stammdaten: DataSchuelerStammdaten, 
+		dataLaufbahn: DataSchuelerLaufbahnplanung, 
+		dataFaecher: DataGostFaecher, 
+		dataFachkombinationen: DataGostFachkombinationen,
+		routename: string 
+	}>();
 
 	const modal = ref();
 
 	const visible: ComputedRef<boolean> = computed(() => {
-		return !(routeSchuelerLaufbahnplanung.hidden) && (props.id !== undefined);
+		return !(routeSchuelerLaufbahnplanung.hidden) && (id !== undefined) && (item?.abiturjahrgang !== undefined);
 	});
 
 </script>

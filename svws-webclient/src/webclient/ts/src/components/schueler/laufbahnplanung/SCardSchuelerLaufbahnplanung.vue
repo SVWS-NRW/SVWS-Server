@@ -28,7 +28,7 @@
 								</tr>
 							</thead>
 							<tr v-for="row in rows" :key="row.id" class="select-none">
-								<s-row-lupo :fach="row" />
+								<s-row-lupo :fach="row" :dataLaufbahn="dataLaufbahn" :dataFaecher="dataFaecher" :dataFachkombinationen="dataFachkombinationen" />
 							</tr>
 							<thead class="bg-slate-100">
 								<tr>
@@ -195,7 +195,7 @@
 				<div class="am:px-6 py-2 lg:px-8">
 					<svws-ui-textarea-input placeholder="Kommentar" resizeable="vertical"></svws-ui-textarea-input>
 				</div>
-				<div v-if="app.dataGostLaufbahndaten?.daten?.sprachendaten.pruefungen.size()" class="inline-block py-2 align-middle sm:px-6 lg:px-8 w-full">
+				<div v-if="dataLaufbahn.daten?.sprachendaten.pruefungen.size()" class="inline-block py-2 align-middle sm:px-6 lg:px-8 w-full">
 					<div class="overflow-hidden rounded-lg shadow">
 						<table class="border-collapse text-sm w-full">
 							<thead class="bg-slate-100">
@@ -211,7 +211,7 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr v-for="pruefung in app.dataGostLaufbahndaten?.daten?.sprachendaten.pruefungen" :key="pruefung.sprache?.valueOf()" class="border bottom-1  border-[#7f7f7f]/20">
+								<tr v-for="pruefung in dataLaufbahn.daten?.sprachendaten.pruefungen" :key="pruefung.sprache?.valueOf()" class="border bottom-1  border-[#7f7f7f]/20">
 									<td class="px-2">{{pruefung.sprache}}</td>
 									<td class="px-2">{{pruefung.istHSUPruefung ? "HSU":''}}{{pruefung.istFeststellungspruefung ? 'SFP':''}}</td>
 									<td class="px-2">{{Sprachpruefungniveau.getByID(pruefung.anspruchsniveauId || null)?.daten.beschreibung}}</td>
@@ -245,13 +245,21 @@
 	import { computed, ComputedRef, Ref, ref, WritableComputedRef } from "vue";
 
 	import { GostBelegpruefungErgebnisFehler, GostBelegpruefungsArt, GostBelegungsfehlerArt, GostFach, Sprachpruefungniveau,
-		List, Vector, GostJahrgangFachkombination, GostLaufbahnplanungFachkombinationTyp, GostHalbjahr, GostKursart } from "@svws-nrw/svws-core-ts";
+		List, Vector, GostJahrgangFachkombination, GostLaufbahnplanungFachkombinationTyp, GostHalbjahr, GostKursart, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { App } from "~/apps/BaseApp";
-	import { injectMainApp, Main } from "~/apps/Main";
 	import { DataSchuelerLaufbahnplanung } from "~/apps/schueler/DataSchuelerLaufbahnplanung";
+	import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
+	import { DataGostFachkombinationen } from "~/apps/gost/DataGostFachkombinationen";
+	import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
 
-	const main: Main = injectMainApp();
-	const app = main.apps.schueler;
+	const { item, stammdaten, dataLaufbahn, dataFaecher, dataFachkombinationen } = defineProps<{ 
+		item?: SchuelerListeEintrag, 
+		stammdaten: DataSchuelerStammdaten, 
+		dataLaufbahn: DataSchuelerLaufbahnplanung,
+		dataFaecher: DataGostFaecher, 
+		dataFachkombinationen: DataGostFachkombinationen
+	}>();
+
 	const ef1: GostBelegpruefungsArt = GostBelegpruefungsArt.EF1;
 	const gesamt: GostBelegpruefungsArt = GostBelegpruefungsArt.GESAMT;
 	const manuell = ref(false)
@@ -264,22 +272,20 @@
 
 	function reset_fachwahlen() {
 		modal.value.closeModal();
-		app.dataGostLaufbahndaten?.reset_fachwahlen();
+		dataLaufbahn.reset_fachwahlen();
 	}
 
-	const abiturmanager = computed(()=> app.dataGostLaufbahndaten?.manager);
-	const faechermanager = computed(()=> App.apps.gost.dataFaecher.manager);
+	const abiturmanager = computed(()=> dataLaufbahn.manager);
+	const faechermanager = computed(()=> dataFaecher.manager);
 
-	const data: ComputedRef<DataSchuelerLaufbahnplanung> = computed(() => app.dataGostLaufbahndaten || new DataSchuelerLaufbahnplanung());
+	const rows: ComputedRef<List<GostFach>> = computed(() => dataFaecher.daten || new Vector());
 
-	const rows: ComputedRef<List<GostFach>> = computed(() => App.apps.gost.dataFaecher.daten || new Vector());
+	const kurszahlen: ComputedRef<number[]> = computed(() => dataLaufbahn.anrechenbare_kurszahlen);
 
-	const kurszahlen: ComputedRef<number[]> = computed(() => data.value.anrechenbare_kurszahlen);
-
-	const kurse_summe: ComputedRef<number> = computed(() => data.value.anrechenbare_kurszahlen.reduce((p, c) => p + c, 0));
+	const kurse_summe: ComputedRef<number> = computed(() => dataLaufbahn.anrechenbare_kurszahlen.reduce((p, c) => p + c, 0));
 		//TODO korrigieren
 
-	const wochenstunden: ComputedRef<number[]> = computed(() => data.value.wochenstunden);
+	const wochenstunden: ComputedRef<number[]> = computed(() => dataLaufbahn.wochenstunden);
 
 	const wst_summe: ComputedRef<number> = computed(() => wochenstunden.value.reduce((p, c) => p + c, 0) / 2);
 
@@ -291,7 +297,7 @@
 		return q.reduce((p, c) => p + c, 0) / 4;
 	});
 
-	const belegungsfehlerAlle: ComputedRef<List<GostBelegpruefungErgebnisFehler>> = computed(() => data.value.gostBelegpruefungsErgebnis.fehlercodes);
+	const belegungsfehlerAlle: ComputedRef<List<GostBelegpruefungErgebnisFehler>> = computed(() => dataLaufbahn.gostBelegpruefungsErgebnis.fehlercodes);
 
 	const belegungsfehler: ComputedRef<List<GostBelegpruefungErgebnisFehler>> = computed(() => {
 		let res = new Vector<GostBelegpruefungErgebnisFehler>();
@@ -315,19 +321,19 @@
 
 	const belegpruefungsart: WritableComputedRef<GostBelegpruefungsArt> = computed({
 		get(): GostBelegpruefungsArt {
-			return data.value.gostAktuelleBelegpruefungsart;
+			return dataLaufbahn.gostAktuelleBelegpruefungsart;
 		},
 		set(value: GostBelegpruefungsArt) {
-			data.value.gostAktuelleBelegpruefungsart = value;
+			dataLaufbahn.gostAktuelleBelegpruefungsart = value;
 		}
 	});
 	
 	const fachkombis: ComputedRef<List<GostJahrgangFachkombination>> = computed(()=>{
 		let list = new Vector<GostJahrgangFachkombination>();
-		if (App.apps.gost.dataFachkombinationen.daten === undefined)
+		if (dataFachkombinationen.daten === undefined)
 			return list;
-		for (const regel of	App.apps.gost.dataFachkombinationen.daten)
-			if (regel.abiturjahr === app.dataGostLaufbahndaten?.abiturjahr)
+		for (const regel of	dataFachkombinationen.daten)
+			if (regel.abiturjahr === item?.abiturjahrgang)
 				list.add(regel)
 		return list;
 	})
@@ -362,36 +368,35 @@
 
 	const inputBeratungsdatum: WritableComputedRef<string> = computed({
 		get(): string {
-			return ""; //this.app.stammdaten.daten.geburtsdatum;
+			return ""; // props.stammdaten.daten.geburtsdatum;
 		},
 		set(val: string) {
 			void val;
-			//this.app.stammdaten.patch({ geburtsdatum: val });
+			// props.stammdaten.patch({ geburtsdatum: val });
 		}
 	});
 
 	function manu() {
-		manuell.value = manuell.value ? false:true; data.value.manuelle_eingabe = manuell.value
+		manuell.value = manuell.value ? false:true; dataLaufbahn.manuelle_eingabe = manuell.value
 	}
 
 	function download_file() {
-		const id = app.auswahl.ausgewaehlt?.id;
-		if (id === undefined) return;
-		App.api
-			.getGostSchuelerPDFWahlbogen(App.schema, id)
-			.then(blob => {
-				const link = document.createElement("a");
-				link.href = URL.createObjectURL(blob);
-				link.download = "Wahlbogen.pdf";
-				link.target = "_blank";
-				link.click();
-				URL.revokeObjectURL(link.href);
-			})
-			.catch(console.error);
+		const id = stammdaten.daten?.id;
+		if (!id) 
+			return;
+		App.api.getGostSchuelerPDFWahlbogen(App.schema, id).then(blob => {
+			const link = document.createElement("a");
+			link.href = URL.createObjectURL(blob);
+			link.download = "Wahlbogen.pdf";
+			link.target = "_blank";
+			link.click();
+			URL.revokeObjectURL(link.href);
+		}).catch(console.error);
 	}
 
 	function regel_umgesetzt(kombi: GostJahrgangFachkombination): boolean {
-		if (!abiturmanager.value || !faechermanager.value) return true;
+		if (!abiturmanager.value || !faechermanager.value)
+			return true;
 		const fach1 = faechermanager.value.get(kombi.fachID1);
 		const f1 = abiturmanager.value.getFachbelegungByKuerzel(fach1?.kuerzel || null)
 		const fach2 = faechermanager.value.get(kombi.fachID2);

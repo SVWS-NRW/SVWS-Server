@@ -18,13 +18,6 @@ export class Schueler extends App {
 	/** Informationen zum allgemeinen Status dieser Teilapplikation */
 	public auswahl!: ListSchueler;
 
-	/**
-	 * Das Objekt zur Verwaltung der Kommunikation bezüglich der
-	 * Schülerlaufbahndaren des Schülers der gymnasialen Oberstufe mit dem SVWS-Server
-	 */
-	public dataGostLaufbahndaten: DataSchuelerLaufbahnplanung | undefined =
-		undefined;
-
 	/** Liste der Schülerbetriebe */
 	public listSchuelerbetriebe : ListSchuelerBetriebsdaten | undefined = undefined;
 	/** Objekt für Betriebsstammdaten */
@@ -37,10 +30,6 @@ export class Schueler extends App {
 	 */
 	public async init(): Promise<void> {
 		this.auswahl = new ListSchueler();
-		if (mainApp.config.hasGost) {
-			this.dataGostLaufbahndaten = new DataSchuelerLaufbahnplanung();
-			this.auswahl.add_data(this.dataGostLaufbahndaten);
-		}
 		this.listSchuelerbetriebe  = new ListSchuelerBetriebsdaten();
 		this.betriebsStammdaten = new DataBetriebsstammdaten();
 		this.listSchuelerbetriebe.add_data(this.betriebsStammdaten);
