@@ -66,9 +66,4 @@
 		return zul_fach.value.getHMTLFarbeRGB().valueOf();
 	});
 
-	const visible: ComputedRef<boolean> = computed<boolean>(() => {
-		//return $app.leistungsdaten.visible; //TODO: richtige Bedingung einpflegen
-		return true;
-	});
-
 </script>

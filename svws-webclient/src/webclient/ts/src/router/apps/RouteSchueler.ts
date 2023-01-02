@@ -9,7 +9,7 @@ import { routeSchuelerAdressen } from "~/router/apps/schueler/RouteSchuelerAdres
 import { routeSchuelerErziehungsberechtigte } from "~/router/apps/schueler/RouteSchuelerErziehungsberechtigte";
 import { routeSchuelerIndividualdaten } from "~/router/apps/schueler/RouteSchuelerIndividualdaten";
 import { routeSchuelerLaufbahnplanung } from "~/router/apps/schueler/RouteSchuelerLaufbahnplanung";
-import { routeSchuelerLeistungsdaten } from "~/router/apps/schueler/RouteSchuelerLeistungsdaten";
+import { routeSchuelerLeistungen } from "~/router/apps/schueler/RouteSchuelerLeistungen";
 import { routeSchuelerSchulbesuch } from "~/router/apps/schueler/RouteSchuelerSchulbesuch";
 import { routeSchuelerStundenplan } from "~/router/apps/schueler/RouteSchuelerStundenplan";
 import { ListSchueler } from "~/apps/schueler/ListSchueler";
@@ -37,7 +37,7 @@ export class RouteSchueler extends RouteNodeListView<SchuelerListeEintrag, Route
 			routeSchuelerAdressen,
 			routeSchuelerSchulbesuch,
 			routeSchuelerAbschnitt,
-			routeSchuelerLeistungsdaten,
+			routeSchuelerLeistungen,
 			routeSchuelerLaufbahnplanung,
 			routeSchuelerStundenplan
 		];

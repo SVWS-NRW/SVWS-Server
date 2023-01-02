@@ -17,7 +17,6 @@ public class SchuelerLernabschnittListeEintrag {
 	/** Die ID des Lernabschnitts in der Datenbank. */
 	@Schema(required = true, description = "die ID des Lernabschnitts in der Datenbank", example="126784")
 	public long id;
-	
 	/** Die ID des Schülers, zu dem diese Lernabschnittdaten gehören. */
 	@Schema(required = true, description = "die ID des Schülers, zu dem diese Lernabschnittdaten gehören", example="4785")
 	public long schuelerID;
@@ -25,6 +24,14 @@ public class SchuelerLernabschnittListeEintrag {
 	/** Die ID des Schuljahresabschnitts, zu welchem diese Lernabschnittdaten gehören. */
 	@Schema(required = true, description = "die ID des Schuljahresabschnitts, zu welchem diese Lernabschnittdaten gehören", example="42")
 	public long schuljahresabschnitt;
+	
+	/** Das Schuljahr, in welchem der Schuljahresabschnitt liegt */
+	@Schema(required = true, description = "Das Schuljahr, in welchem der Abschnitt liegt", example="2024")
+	public int schuljahr;
+
+	/** Die Nummer des Abschnitts im Schuljahr */
+	@Schema(required = true, description = "Die Nummer des Abschnitts im Schuljahr", example="2")
+	public int abschnitt;
 	
 	/** Eine Nr, zur Unterscheidung von Lernabschnittsdaten, wenn beim Schüler mehrere Lernabschnitt in einem Schuljahresabschnitt vorliegen (z.B. Wechsel einer Klasse, NULL=aktueller Abschnitt, 1=vor dem ersten Wechsel, 2=vor dem zweiten Wechsel, usw.). */
 	@Schema(required = false, description = "eine Nr, zur Unterscheidung von Lernabschnissdaten, wenn beim Schüler mehrere Lernabschnitt in einem Schuljahresabschnitt vorliegen (z.B. Wechsel einer Klasse, NULL=aktueller Abschnitt, 1=vor dem ersten Wechsel, 2=vor dem zweiten Wechsel, usw.)", example="NULL")	

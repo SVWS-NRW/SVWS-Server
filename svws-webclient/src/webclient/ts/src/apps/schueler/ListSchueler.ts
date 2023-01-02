@@ -8,8 +8,6 @@ import {
 } from "@svws-nrw/svws-core-ts";
 import { App } from "../BaseApp";
 import { BaseList } from "../BaseList";
-import { ListAbschnitte } from "./ListAbschnitte";
-import { ListStundenplaene } from "./ListStundenplaene";
 import { reactive } from "vue";
 import { ListGost } from "../gost/ListGost";
 
@@ -33,11 +31,8 @@ export class ListSchueler extends BaseList<SchuelerListeEintrag, Filter> {
 		status: [SchuelerStatus.AKTIV]
 	}) as Filter;
 
-	protected listAbschnitte: ListAbschnitte;
-
-	public constructor(listAbschnitte: ListAbschnitte) {
+	public constructor() {
 		super();
-		this.listAbschnitte = listAbschnitte;
 	}
 	/**
 	 * Aktualisiert die Liste für die Schülerauswahl
@@ -74,7 +69,6 @@ export class ListSchueler extends BaseList<SchuelerListeEintrag, Filter> {
 	 */
 	public async on_select(): Promise<void> {
 		if (!this._state.ausgewaehlt?.id) return;
-		await this.listAbschnitte.update_list(this._state.ausgewaehlt.id);
 		// hole und aktualisiere die GostJahrgänge, um in der Laufbahnplanung die
 		// jeweiligen GostFächer etc. des Jahrgangs zu bekommen
 		const listGost = BaseList.all.find(list => list instanceof ListGost) as ListGost | undefined;

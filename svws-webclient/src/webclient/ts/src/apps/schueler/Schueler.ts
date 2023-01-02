@@ -28,9 +28,6 @@ export class Schueler extends App {
 	public dataGostLaufbahndaten: DataSchuelerLaufbahnplanung | undefined =
 		undefined;
 
-	public listAbschnitte!: ListAbschnitte;
-	public dataSchuelerAbschnittsdaten!: DataSchuelerAbschnittsdaten;
-
 	/** Liste der Schülerbetriebe */
 	public listSchuelerbetriebe : ListSchuelerBetriebsdaten | undefined = undefined;
 	/** Objekt für Betriebsstammdaten */
@@ -42,11 +39,7 @@ export class Schueler extends App {
 	 * @returns {Promise<void>}
 	 */
 	public async init(): Promise<void> {
-		this.listAbschnitte = new ListAbschnitte();
-		this.dataSchuelerAbschnittsdaten = new DataSchuelerAbschnittsdaten();
-		this.listAbschnitte.add_data(this.dataSchuelerAbschnittsdaten);
-
-		this.auswahl = new ListSchueler(this.listAbschnitte);
+		this.auswahl = new ListSchueler();
 		if (mainApp.config.hasGost) {
 			this.dataGostLaufbahndaten = new DataSchuelerLaufbahnplanung();
 			this.auswahl.add_data(this.dataGostLaufbahndaten);

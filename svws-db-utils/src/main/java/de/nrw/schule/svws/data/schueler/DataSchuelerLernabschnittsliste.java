@@ -17,6 +17,7 @@ import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.dto.current.schild.klassen.DTOKlassen;
 import de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchueler;
 import de.nrw.schule.svws.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
+import de.nrw.schule.svws.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.nrw.schule.svws.db.utils.OperationError;
 
 
@@ -81,7 +82,11 @@ public class DataSchuelerLernabschnittsliste extends DataManager<Long> {
     	List<Long> klassenIDs = abschnitte.stream().map(a -> a.Klassen_ID).collect(Collectors.toList());
     	List<DTOKlassen> klassen = conn.queryNamed("DTOKlassen.id.multiple", klassenIDs, DTOKlassen.class);
     	Map<Long, DTOKlassen> mapKlassen = klassen.stream().collect(Collectors.toMap(k -> k.ID, k -> k));
-    	// Konvertiere die Lenabschnitte, ergänze sie um die Klasseninformationen und füge sie zur Liste hinzu
+    	// Bestimme die Schuljahres-Abschnitte
+    	List<Long> schuljahresabschnittIDs = abschnitte.stream().map(a -> a.Schuljahresabschnitts_ID).collect(Collectors.toList());
+    	List<DTOSchuljahresabschnitte> schuljahresabschnitte = conn.queryNamed("DTOSchuljahresabschnitte.id.multiple", schuljahresabschnittIDs, DTOSchuljahresabschnitte.class);
+    	Map<Long, DTOSchuljahresabschnitte> mapSchuljahresabschnitte = schuljahresabschnitte.stream().collect(Collectors.toMap(a -> a.ID, a -> a));
+    	// Konvertiere die Lenabschnitte, ergänze sie um die Klassen- und Schuljahresabschnittsinformationen und füge sie zur Liste hinzu
     	Vector<SchuelerLernabschnittListeEintrag> daten = new Vector<>();
     	for (DTOSchuelerLernabschnittsdaten l : abschnitte) {
     		SchuelerLernabschnittListeEintrag e = dtoMapper.apply(l);
@@ -90,8 +95,26 @@ public class DataSchuelerLernabschnittsliste extends DataManager<Long> {
     			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
     		e.klasse = klasse.Klasse;
     		e.klasseStatistik = klasse.ASDKlasse;
+    		DTOSchuljahresabschnitte schuljahresabschnitt = mapSchuljahresabschnitte.get(e.schuljahresabschnitt);
+    		if (schuljahresabschnitt == null)
+    			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
+    		e.schuljahr = schuljahresabschnitt.Jahr;
+    		e.abschnitt = schuljahresabschnitt.Abschnitt;
     		daten.add(e);
     	}
+    	daten.sort((SchuelerLernabschnittListeEintrag a, SchuelerLernabschnittListeEintrag b) -> {
+    		int tmp = Integer.compare(a.schuljahr, b.schuljahr);
+    		if (tmp != 0)
+    			return tmp;
+    		tmp = Integer.compare(a.abschnitt, b.abschnitt);
+    		if (tmp != 0)
+    			return tmp;
+    		if (a.wechselNr == null)
+    			return 1;
+    		if (b.wechselNr == null)
+    			return -1;
+    		return Integer.compare(a.wechselNr, b.wechselNr);
+    	});
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

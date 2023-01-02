@@ -10,6 +10,10 @@ export class SchuelerLernabschnittListeEintrag extends JavaObject {
 
 	public schuljahresabschnitt : number = 0;
 
+	public schuljahr : number = 0;
+
+	public abschnitt : number = 0;
+
 	public wechselNr : Number | null = null;
 
 	public istGewertet : boolean = true;
@@ -49,6 +53,12 @@ export class SchuelerLernabschnittListeEintrag extends JavaObject {
 		if (typeof obj.schuljahresabschnitt === "undefined")
 			 throw new Error('invalid json format, missing attribute schuljahresabschnitt');
 		result.schuljahresabschnitt = obj.schuljahresabschnitt;
+		if (typeof obj.schuljahr === "undefined")
+			 throw new Error('invalid json format, missing attribute schuljahr');
+		result.schuljahr = obj.schuljahr;
+		if (typeof obj.abschnitt === "undefined")
+			 throw new Error('invalid json format, missing attribute abschnitt');
+		result.abschnitt = obj.abschnitt;
 		result.wechselNr = typeof obj.wechselNr === "undefined" ? null : obj.wechselNr === null ? null : Number(obj.wechselNr);
 		if (typeof obj.istGewertet === "undefined")
 			 throw new Error('invalid json format, missing attribute istGewertet');
@@ -82,6 +92,8 @@ export class SchuelerLernabschnittListeEintrag extends JavaObject {
 		result += '"id" : ' + obj.id + ',';
 		result += '"schuelerID" : ' + obj.schuelerID + ',';
 		result += '"schuljahresabschnitt" : ' + obj.schuljahresabschnitt + ',';
+		result += '"schuljahr" : ' + obj.schuljahr + ',';
+		result += '"abschnitt" : ' + obj.abschnitt + ',';
 		result += '"wechselNr" : ' + ((!obj.wechselNr) ? 'null' : obj.wechselNr.valueOf()) + ',';
 		result += '"istGewertet" : ' + obj.istGewertet + ',';
 		result += '"istWiederholung" : ' + obj.istWiederholung + ',';
@@ -106,6 +118,12 @@ export class SchuelerLernabschnittListeEintrag extends JavaObject {
 		}
 		if (typeof obj.schuljahresabschnitt !== "undefined") {
 			result += '"schuljahresabschnitt" : ' + obj.schuljahresabschnitt + ',';
+		}
+		if (typeof obj.schuljahr !== "undefined") {
+			result += '"schuljahr" : ' + obj.schuljahr + ',';
+		}
+		if (typeof obj.abschnitt !== "undefined") {
+			result += '"abschnitt" : ' + obj.abschnitt + ',';
 		}
 		if (typeof obj.wechselNr !== "undefined") {
 			result += '"wechselNr" : ' + ((!obj.wechselNr) ? 'null' : obj.wechselNr.valueOf()) + ',';

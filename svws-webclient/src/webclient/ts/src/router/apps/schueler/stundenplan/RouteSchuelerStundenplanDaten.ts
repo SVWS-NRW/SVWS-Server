@@ -62,7 +62,7 @@ export class RouteSchuelerStundenplanDaten extends RouteNodeListView<Stundenplan
 					params.idStundenplan = "" + value?.id;
 					router.push({ name: from_name, params: params });
 				} else {
-					router.push({ name: self.name, params: { idStundenplan: value?.id } });
+					router.push({ name: self.name, params: { id: route.params.id, idStundenplan: value?.id } });
 				}
 			}
 		});

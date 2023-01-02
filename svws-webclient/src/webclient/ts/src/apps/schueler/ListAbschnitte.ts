@@ -11,7 +11,8 @@ export class ListAbschnitte extends BaseList<SchuelerLernabschnittListeEintrag> 
 	 * @returns {Promise<void>}
 	 */
 	public async update_list(id: number): Promise<void> {
-		if (!id) return;
+		if (!id) 
+			return;
 		await super._update_list(() =>
 			App.api.getSchuelerLernabschnittsliste(App.schema, id)
 		);
