@@ -223,7 +223,11 @@ public class DataSchuelerliste extends DataManager<Long> {
     	if (schule.Schulform.daten.hatGymOb) {
     		for (SchuelerListeEintrag s : schuelerListe) {
     			DTOSchuelerLernabschnittsdaten lernabschnitt = mapAktAbschnitte.get(s.id);
+    			if (lernabschnitt == null)
+    				continue;
     			DTOSchuljahresabschnitte schuljahresabschnitt = mapSchuljahresabschnitte.get(lernabschnitt.Schuljahresabschnitts_ID);
+    			if (schuljahresabschnitt == null)
+    				continue;
     			s.abiturjahrgang = GostAbiturjahrUtils.getGostAbiturjahr(schule.Schulform, lernabschnitt.Schulgliederung, schuljahresabschnitt.Jahr, lernabschnitt.ASDJahrgang);
     		}
     	}
