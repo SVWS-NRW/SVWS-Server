@@ -471,7 +471,14 @@ public class DataGostBlockungsdaten extends DataManager<Long> {
 		manager.setMaxTimeMillis(zeit);
 		
 		KursblockungAlgorithmus algo = new KursblockungAlgorithmus();
-		Vector<GostBlockungsergebnisManager> outputs = algo.handle(manager);
+		
+		Vector<GostBlockungsergebnisManager> outputs;
+		
+		try {
+			outputs = algo.handle(manager);
+		} catch (Exception exception) {
+			return OperationError.INTERNAL_SERVER_ERROR.getResponse(exception);
+		}
 		
 		try {
 			List<Long> ergebnisse = schreibeErgebnisse(conn, id, outputs);
