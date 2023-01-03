@@ -15,6 +15,12 @@
 	import { DataKlasse } from "~/apps/klassen/DataKlasse";
 	import { ListLehrer } from "~/apps/lehrer/ListLehrer";
 
+	const { data, mapLehrer } = defineProps<{ 
+		data: DataKlasse,
+		listLehrer: ListLehrer,
+		mapLehrer: Map<Number, LehrerListeEintrag>
+	}>();
+
 	type Lehrer = {
 		kuerzel?: string;
 		nachname?: string;
@@ -22,26 +28,21 @@
 		typ?: string;
 	}
 
-	const { data, mapLehrer } = defineProps<{ 
-		data: DataKlasse,
-		listLehrer: ListLehrer,
-		mapLehrer: Map<Number, LehrerListeEintrag>
-	}>();
-
-	const liste: ComputedRef<Lehrer[]> =
-		computed(() => {
-			if (!data.daten?.klassenLeitungen) return [];
-			let res: Lehrer[] = [];
-			for (const l of data.daten.klassenLeitungen)
-				if (l)
-					res.push({
-						kuerzel: kuerzel(l),
-						nachname: nachname(l),
-						vorname: vorname(l),
-						typ: personTyp(l)
-					})
-			return res;
+	const liste: ComputedRef<Lehrer[]> = computed(() => {
+		if (data.daten?.klassenLeitungen === undefined) 
+			return [];
+		return (data.daten.klassenLeitungen?.toArray() as Number[]).map((id : Number) => {
+			const lehrer = mapLehrer.get(id);
+			if (lehrer === undefined)
+				return {};
+			return { 
+				kuerzel: lehrer.kuerzel.toString(), 
+				nachname: lehrer.nachname.toString(), 
+				vorname: lehrer.vorname.toString(), 
+				typ: PersonalTyp.fromBezeichnung(lehrer.personTyp)?.bezeichnung.toString() || undefined 
+			};
 		});
+	});
 
 	const cols = ref([
 		{ key: "kuerzel", label: "Kürzel", span: "1", sortable: false },
@@ -49,13 +50,5 @@
 		{ key: "vorname", label: "Vorname", span: "1", sortable: false },
 		{ key: "personTyp", label: "Typ", span: "1", sortable: false },
 	]);
-
-	const kuerzel = (id: Number): string | undefined  => mapLehrer.get(id)?.kuerzel.toString();
-	const nachname = (id: Number): string | undefined  => mapLehrer.get(id)?.nachname.toString();
-	const vorname = (id: Number): string | undefined  => mapLehrer.get(id)?.vorname.toString();
-	const personTyp = (id: Number): string | undefined  => {
-		const personTyp = mapLehrer.get(id)?.personTyp;
-		return personTyp === undefined ? undefined : PersonalTyp.fromBezeichnung(personTyp)?.bezeichnung.toString();
-	}
 
 </script>
