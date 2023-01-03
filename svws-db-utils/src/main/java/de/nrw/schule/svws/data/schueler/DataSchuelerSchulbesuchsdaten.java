@@ -61,7 +61,7 @@ public class DataSchuelerSchulbesuchsdaten extends DataManager<Long> {
 		daten.id = schueler.ID;
 		// Informationen zu der Schule, die vor der Aufnahme besucht wurde
 		daten.vorigeSchulnummer = schueler.LSSchulNr;
-		// TODO daten.vorigeAllgHerkunft = schueler.;
+		daten.vorigeAllgHerkunft = schueler.LSSchulform;
 		daten.vorigeEntlassdatum = schueler.LSSchulEntlassDatum;
 		daten.vorigeEntlassjahrgang = schueler.LSJahrgang;
 		daten.vorigeArtLetzteVersetzung = schueler.LSVersetzung;
