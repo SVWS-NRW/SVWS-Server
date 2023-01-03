@@ -26,9 +26,11 @@
 	import { computed, ComputedRef, ref } from "vue";
 	import { LehrerListeEintrag, PersonalTyp } from "@svws-nrw/svws-core-ts";
 	import { DataKlasse } from "~/apps/klassen/DataKlasse";
+	import { ListLehrer } from "~/apps/lehrer/ListLehrer";
 
 	const { data, mapLehrer } = defineProps<{ 
 		data: DataKlasse,
+		listLehrer: ListLehrer,
 		mapLehrer: Map<Number, LehrerListeEintrag>
 	}>();
 
