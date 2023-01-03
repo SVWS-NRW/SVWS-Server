@@ -601,7 +601,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 		let kurs : GostBlockungKurs = this.getKurs(pKursID);
 		let gFach : GostFach = this._faecherManager.getOrException(kurs.fach_id);
 		let sAppend : String = JavaObject.equalsTranspiler(kurs.suffix, ("")) ? "" : ("-" + kurs.suffix);
-		return gFach.kuerzel + "-" + GostKursart.fromID(kurs.kursart).kuerzel + kurs.nummer + sAppend.valueOf();
+		return gFach.kuerzelAnzeige + "-" + GostKursart.fromID(kurs.kursart).kuerzel + kurs.nummer + sAppend.valueOf();
 	}
 
 	/**

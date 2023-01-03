@@ -628,7 +628,7 @@ public class GostBlockungsdatenManager {
 		@NotNull GostBlockungKurs kurs = getKurs(pKursID);
 		@NotNull GostFach gFach = _faecherManager.getOrException(kurs.fach_id);
 		@NotNull String sAppend = kurs.suffix.equals("") ? "" : ("-" + kurs.suffix);
-		return gFach.kuerzel + "-" + GostKursart.fromID(kurs.kursart).kuerzel + kurs.nummer + sAppend;
+		return gFach.kuerzelAnzeige + "-" + GostKursart.fromID(kurs.kursart).kuerzel + kurs.nummer + sAppend;
 	}
 
 	/**
