@@ -1,804 +1,115 @@
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
-import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
-import { StundenplanblockungFach, cast_de_nrw_schule_svws_core_data_stundenplanblockung_StundenplanblockungFach } from '../../../core/data/stundenplanblockung/StundenplanblockungFach';
-import { StundenplanblockungRegelTyp, cast_de_nrw_schule_svws_core_data_stundenplanblockung_StundenplanblockungRegelTyp } from '../../../core/data/stundenplanblockung/StundenplanblockungRegelTyp';
-import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
-import { StundenplanblockungStundenelement, cast_de_nrw_schule_svws_core_data_stundenplanblockung_StundenplanblockungStundenelement } from '../../../core/data/stundenplanblockung/StundenplanblockungStundenelement';
-import { Comparator, cast_java_util_Comparator } from '../../../java/util/Comparator';
-import { StundenplanblockungLehrkraft, cast_de_nrw_schule_svws_core_data_stundenplanblockung_StundenplanblockungLehrkraft } from '../../../core/data/stundenplanblockung/StundenplanblockungLehrkraft';
-import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
-import { StundenplanblockungRegel, cast_de_nrw_schule_svws_core_data_stundenplanblockung_StundenplanblockungRegel } from '../../../core/data/stundenplanblockung/StundenplanblockungRegel';
-import { StundenplanblockungKopplung, cast_de_nrw_schule_svws_core_data_stundenplanblockung_StundenplanblockungKopplung } from '../../../core/data/stundenplanblockung/StundenplanblockungKopplung';
-import { StundenplanblockungKlasse, cast_de_nrw_schule_svws_core_data_stundenplanblockung_StundenplanblockungKlasse } from '../../../core/data/stundenplanblockung/StundenplanblockungKlasse';
-import { NullPointerException, cast_java_lang_NullPointerException } from '../../../java/lang/NullPointerException';
-import { JavaLong, cast_java_lang_Long } from '../../../java/lang/JavaLong';
-import { StundenplanblockungInput, cast_de_nrw_schule_svws_core_data_stundenplanblockung_StundenplanblockungInput } from '../../../core/data/stundenplanblockung/StundenplanblockungInput';
-import { StundenplanblockungLerngruppe, cast_de_nrw_schule_svws_core_data_stundenplanblockung_StundenplanblockungLerngruppe } from '../../../core/data/stundenplanblockung/StundenplanblockungLerngruppe';
-import { List, cast_java_util_List } from '../../../java/util/List';
-import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
-import { IllegalArgumentException, cast_java_lang_IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
-import { StundenplanblockungRaum, cast_de_nrw_schule_svws_core_data_stundenplanblockung_StundenplanblockungRaum } from '../../../core/data/stundenplanblockung/StundenplanblockungRaum';
+import { StundenplanblockungManagerFachMenge, cast_de_nrw_schule_svws_core_utils_stundenplanblockung_StundenplanblockungManagerFachMenge } from '../../../core/utils/stundenplanblockung/StundenplanblockungManagerFachMenge';
+import { StundenplanblockungManagerLehrkraftMenge, cast_de_nrw_schule_svws_core_utils_stundenplanblockung_StundenplanblockungManagerLehrkraftMenge } from '../../../core/utils/stundenplanblockung/StundenplanblockungManagerLehrkraftMenge';
+import { StundenplanblockungManagerLerngruppeMenge, cast_de_nrw_schule_svws_core_utils_stundenplanblockung_StundenplanblockungManagerLerngruppeMenge } from '../../../core/utils/stundenplanblockung/StundenplanblockungManagerLerngruppeMenge';
+import { StundenplanblockungManagerRaumMenge, cast_de_nrw_schule_svws_core_utils_stundenplanblockung_StundenplanblockungManagerRaumMenge } from '../../../core/utils/stundenplanblockung/StundenplanblockungManagerRaumMenge';
+import { StundenplanblockungManagerKopplungMenge, cast_de_nrw_schule_svws_core_utils_stundenplanblockung_StundenplanblockungManagerKopplungMenge } from '../../../core/utils/stundenplanblockung/StundenplanblockungManagerKopplungMenge';
+import { StundenplanblockungManagerSchule, cast_de_nrw_schule_svws_core_utils_stundenplanblockung_StundenplanblockungManagerSchule } from '../../../core/utils/stundenplanblockung/StundenplanblockungManagerSchule';
+import { StundenplanblockungManagerStatistik, cast_de_nrw_schule_svws_core_utils_stundenplanblockung_StundenplanblockungManagerStatistik } from '../../../core/utils/stundenplanblockung/StundenplanblockungManagerStatistik';
+import { StundenplanblockungManagerKlasseMenge, cast_de_nrw_schule_svws_core_utils_stundenplanblockung_StundenplanblockungManagerKlasseMenge } from '../../../core/utils/stundenplanblockung/StundenplanblockungManagerKlasseMenge';
 
 export class StundenplanblockungManager extends JavaObject {
 
-	private readonly _daten : StundenplanblockungInput;
+	private readonly _manager_sc : StundenplanblockungManagerSchule;
 
-	private readonly _map_lehrkraftID_lehrkraft : HashMap<Number, StundenplanblockungLehrkraft> = new HashMap();
+	private readonly _manager_fa : StundenplanblockungManagerFachMenge;
 
-	private readonly _map_lehrkraftID_lerngruppeID_lerngruppe : HashMap<Number, HashMap<Number, StundenplanblockungLerngruppe>> = new HashMap();
+	private readonly _manager_kl : StundenplanblockungManagerKlasseMenge;
 
-	private static readonly _comp_lehrkraft_kuerzel : Comparator<StundenplanblockungLehrkraft> = { compare : (a: StundenplanblockungLehrkraft, b: StundenplanblockungLehrkraft) => {
-		let cmpKuerzel : number = JavaString.compareTo(a.kuerzel, b.kuerzel);
-		if (cmpKuerzel !== 0) 
-			return cmpKuerzel;
-		return JavaLong.compare(a.id, b.id);
-	} };
+	private readonly _manager_ko : StundenplanblockungManagerKopplungMenge;
 
-	private readonly _map_klasseID_klasse : HashMap<Number, StundenplanblockungKlasse> = new HashMap();
+	private readonly _manager_le : StundenplanblockungManagerLehrkraftMenge;
 
-	private static readonly _comp_klasse_kuerzel : Comparator<StundenplanblockungKlasse> = { compare : (a: StundenplanblockungKlasse, b: StundenplanblockungKlasse) => {
-		let kuerzelA : String | null = a.kuerzel.trim();
-		let kuerzelB : String | null = b.kuerzel.trim();
-		while (kuerzelA.startsWith("0")) 
-			kuerzelA = kuerzelA.substring(1);
-		while (kuerzelB.startsWith("0")) 
-			kuerzelB = kuerzelB.substring(1);
-		let cmpKuerzel : number = JavaString.compareTo(kuerzelA, kuerzelB);
-		if (cmpKuerzel !== 0) 
-			return cmpKuerzel;
-		return JavaLong.compare(a.id, b.id);
-	} };
+	private readonly _manager_gr : StundenplanblockungManagerLerngruppeMenge;
 
-	private readonly _map_id_fach : HashMap<Number, StundenplanblockungFach> = new HashMap();
+	private readonly _manager_ra : StundenplanblockungManagerRaumMenge;
 
-	private static readonly _comp_fach_sortiernummer : Comparator<StundenplanblockungFach> = { compare : (a: StundenplanblockungFach, b: StundenplanblockungFach) => {
-		let cmpSortiernummer : number = JavaInteger.compare(a.sortierung, b.sortierung);
-		if (cmpSortiernummer !== 0) 
-			return cmpSortiernummer;
-		let cmpKuerzel : number = JavaString.compareTo(a.kuerzel, b.kuerzel);
-		if (cmpKuerzel !== 0) 
-			return cmpKuerzel;
-		return JavaLong.compare(a.id, b.id);
-	} };
-
-	private readonly _map_id_raum : HashMap<Number, StundenplanblockungRaum> = new HashMap();
-
-	private static readonly _comp_raum_kuerzel : Comparator<StundenplanblockungRaum> = { compare : (a: StundenplanblockungRaum, b: StundenplanblockungRaum) => {
-		let cmpKuerzel : number = JavaString.compareTo(a.kuerzel, b.kuerzel);
-		if (cmpKuerzel !== 0) 
-			return cmpKuerzel;
-		return JavaLong.compare(a.id, b.id);
-	} };
-
-	private readonly _map_id_kopplung : HashMap<Number, StundenplanblockungKopplung> = new HashMap();
-
-	private static readonly _comp_kopplung_kuerzel : Comparator<StundenplanblockungKopplung> = { compare : (a: StundenplanblockungKopplung, b: StundenplanblockungKopplung) => {
-		let cmpKuerzel : number = JavaString.compareTo(a.kuerzel, b.kuerzel);
-		if (cmpKuerzel !== 0) 
-			return cmpKuerzel;
-		return JavaLong.compare(a.id, b.id);
-	} };
-
-	private readonly _map_id_lerngruppe : HashMap<Number, StundenplanblockungLerngruppe> = new HashMap();
-
-	private static readonly _comp_lerngruppe_id : Comparator<StundenplanblockungLerngruppe> = { compare : (a: StundenplanblockungLerngruppe, b: StundenplanblockungLerngruppe) => {
-		return JavaLong.compare(a.id, b.id);
-	} };
+	private readonly _manager_st : StundenplanblockungManagerStatistik;
 
 
 	/**
-	 * Erzeugt einen neuen Manager mit einem leeren {@link StundenplanblockungInput}-Objekt.
+	 * Erzeugt einen neuen, leeren Manager.
 	 */
 	public constructor() {
 		super();
-		this._daten = new StundenplanblockungInput();
-	}
-
-	private lehrkraftAddOhneSortierung(pLehrkraft : StundenplanblockungLehrkraft) : void {
-		if (this._map_lehrkraftID_lehrkraft.containsKey(pLehrkraft.id)) 
-			throw new NullPointerException("Lehrkraft-ID " + pLehrkraft.id + " existiert bereits!")
-		this._map_lehrkraftID_lehrkraft.put(pLehrkraft.id, pLehrkraft);
-		this._map_lehrkraftID_lerngruppeID_lerngruppe.put(pLehrkraft.id, new HashMap());
-		this._daten.lehrkraefte.add(pLehrkraft);
+		this._manager_sc = new StundenplanblockungManagerSchule();
+		this._manager_fa = new StundenplanblockungManagerFachMenge();
+		this._manager_kl = new StundenplanblockungManagerKlasseMenge();
+		this._manager_ko = new StundenplanblockungManagerKopplungMenge();
+		this._manager_le = new StundenplanblockungManagerLehrkraftMenge();
+		this._manager_gr = new StundenplanblockungManagerLerngruppeMenge();
+		this._manager_ra = new StundenplanblockungManagerRaumMenge();
+		this._manager_st = new StundenplanblockungManagerStatistik();
 	}
 
 	/**
-	 * Fügt die Lehrkraft hinzu. <br>
-	 * Wirft eine NullPointerException, falls die Lehrkraft-ID bereits existiert.
+	 * Liefert den Manager zur Verwaltung der globalen Schulkonfiguration.
 	 * 
-	 * @param pLehrkraft             Das Lehrkraft-Objekt.
-	 * @throws NullPointerException  Falls die Lehrkraft-ID bereits existiert.
+	 * @return Den Manager zur Verwaltung der globalen Schulkonfiguration.
 	 */
-	public lehrkraftAdd(pLehrkraft : StundenplanblockungLehrkraft) : void;
+	public getSchule() : StundenplanblockungManagerSchule {
+		return this._manager_sc;
+	}
 
 	/**
-	 * Fügt alle Lehrkräfte hinzu ohne diese zu sortieren. <br>
-	 * Wirft eine NullPointerException, falls eine der Lehrkräfte bereits existiert. 
+	 * Liefert den Manager zur Verwaltung der Lehrkräfte.
 	 * 
-	 * @param pLehrkraefte           Die Menge der Lehrkräfte, die hinzugefügt werden soll.
-	 * @throws NullPointerException  Falls eine der Lehrkräfte bereits existiert.
+	 * @return Den Manager zur Verwaltung der Lehrkräfte.
 	 */
-	public lehrkraftAdd(pLehrkraefte : List<StundenplanblockungLehrkraft>) : void;
-
-	/**
-	 * Implementation for method overloads of 'lehrkraftAdd'
-	 */
-	public lehrkraftAdd(__param0 : List<StundenplanblockungLehrkraft> | StundenplanblockungLehrkraft) : void {
-		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.data.stundenplanblockung.StundenplanblockungLehrkraft'))))) {
-			let pLehrkraft : StundenplanblockungLehrkraft = cast_de_nrw_schule_svws_core_data_stundenplanblockung_StundenplanblockungLehrkraft(__param0);
-			this.lehrkraftAddOhneSortierung(pLehrkraft);
-			this._daten.lehrkraefte.sort(StundenplanblockungManager._comp_lehrkraft_kuerzel);
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('java.util.List'))) || (__param0 === null))) {
-			let pLehrkraefte : List<StundenplanblockungLehrkraft> = cast_java_util_List(__param0);
-			for (let lehrkraft of pLehrkraefte) 
-				this.lehrkraftAddOhneSortierung(lehrkraft);
-		} else throw new Error('invalid method overload');
+	public getLehrkraefte() : StundenplanblockungManagerLehrkraftMenge {
+		return this._manager_le;
 	}
 
 	/**
-	 * Liefert TRUE, falls die Lehrkraft-ID existiert. 
+	 * Liefert den Manager zur Verwaltung der Lerngruppen.
 	 * 
-	 * @param pLehrkraftID  Die Datenbank-ID der Lehrkraft.
-	 * @return              TRUE, falls die Lehrkraft-ID existiert.
+	 * @return Den Manager zur Verwaltung der Lerngruppen.
 	 */
-	public lehrkraftExists(pLehrkraftID : number) : boolean {
-		return this._map_lehrkraftID_lehrkraft.containsKey(pLehrkraftID);
+	public getLerngruppen() : StundenplanblockungManagerLerngruppeMenge {
+		return this._manager_gr;
 	}
 
 	/**
-	 * Liefert das {@link StundenplanblockungLehrkraft}-Objekt zur übergebenen ID. <br>
-	 * Wirft eine NullPointerException, falls die Lehrkraft-ID unbekannt ist.
+	 * Liefert den Manager zur Verwaltung der Klassen.
 	 * 
-	 * @param pLehrkraftID           Die Datenbank-ID der Lehrkraft.
-	 * @return                       Das {@link StundenplanblockungLehrkraft}-Objekt zur übergebenen ID.
-	 * @throws NullPointerException  Falls die Lehrkraft-ID unbekannt ist.
+	 * @return Den Manager zur Verwaltung der Klassen.
 	 */
-	public lehrkraftGet(pLehrkraftID : number) : StundenplanblockungLehrkraft {
-		let lehrkraft : StundenplanblockungLehrkraft | null = this._map_lehrkraftID_lehrkraft.get(pLehrkraftID);
-		if (lehrkraft === null) 
-			throw new NullPointerException("Lehrkraft-ID " + pLehrkraftID + " unbekannt!")
-		return lehrkraft;
+	public getKlassen() : StundenplanblockungManagerKlasseMenge {
+		return this._manager_kl;
 	}
 
 	/**
-	 * Liefert eine Map der Lerngruppen der Lehrkraft. <br>
-	 * Wirft eine NullPointerException, falls die Lehrkraft-ID unbekannt ist.
+	 * Liefert den Manager zur Verwaltung der Fächer.
 	 * 
-	 * @param pLehrkraft             Das {@link StundenplanblockungLehrkraft}-Objekt.
-	 * @return                       Eine Map der Lerngruppen der Lehrkraft.
-	 * @throws NullPointerException  Falls die Lehrkraft-ID unbekannt ist.
+	 * @return Den Manager zur Verwaltung der Fächer.
 	 */
-	public lehrkraftGetMapLerngruppen(pLehrkraft : StundenplanblockungLehrkraft) : HashMap<Number, StundenplanblockungLerngruppe> {
-		let map : HashMap<Number, StundenplanblockungLerngruppe> | null = this._map_lehrkraftID_lerngruppeID_lerngruppe.get(pLehrkraft.id);
-		if (map === null) 
-			throw new NullPointerException("Lehrkraft-ID " + pLehrkraft.id + " unbekannt!")
-		return map;
+	public getFaecher() : StundenplanblockungManagerFachMenge {
+		return this._manager_fa;
 	}
 
 	/**
-	 * Liefert die Anzahl an Wochenstunden der Lehrkraft. 
-	 * Wirft eine NullPointerException, falls die Lehrkraft-ID unbekannt ist.
+	 * Liefert den Manager zur Verwaltung der Räume.
 	 * 
-	 * @param pLehrkraft             Das {@link StundenplanblockungLehrkraft}-Objekt.
-	 * @return                       Eine Map der Lerngruppen der Lehrkraft.
-	 * @throws NullPointerException  Falls die Lehrkraft-ID unbekannt ist.
+	 * @return Den Manager zur Verwaltung der Räume.
 	 */
-	public lehrkraftGetWochenstunden(pLehrkraft : StundenplanblockungLehrkraft) : number {
-		return 0;
+	public getRaeume() : StundenplanblockungManagerRaumMenge {
+		return this._manager_ra;
 	}
 
 	/**
-	 * Liefert die Menge aller Lehrkräfte sortiert nach dem Kürzel.
+	 * Liefert den Manager zur Verwaltung der Kopplungen.
 	 * 
-	 * @return Die Menge aller Lehrkräfte sortiert nach dem Kürzel.
+	 * @return Den Manager zur Verwaltung der Kopplungen.
 	 */
-	public lehrkraftGetMengeSortiertNachKuerzel() : Vector<StundenplanblockungLehrkraft | null> | null {
-		return this._daten.lehrkraefte;
+	public getKopplungen() : StundenplanblockungManagerKopplungMenge {
+		return this._manager_ko;
 	}
 
 	/**
-	 * Löscht die übergebene Lehrkraft. <br>
-	 * Wirft eine NullPointerException, falls die Lehrkraft-ID unbekannt ist.
-	 * 
-	 * @param pLehrkraftID           Die Datenbank-ID der Lehrkraft.
-	 * @throws NullPointerException  Falls die Lehrkraft-ID unbekannt ist.
-	 */
-	public lehrkraftRemove(pLehrkraftID : number) : void {
-		let lehrkraft : StundenplanblockungLehrkraft = this.lehrkraftGet(pLehrkraftID);
-		this._map_lehrkraftID_lehrkraft.remove(pLehrkraftID);
-		this._daten.lehrkraefte.remove(lehrkraft);
-	}
-
-	/**
-	 * Ändert das Kürzel der Lehrkraft. <br>
-	 * Wirft eine NullPointerException, falls die Lehrkraft-ID unbekannt ist.
-	 * 
-	 * @param pLehrkraftID           Die Datenbank-ID der Lehrkraft.
-	 * @param pKuerzel               Das neue Kürzel der Lehrkraft.
-	 * @throws NullPointerException  Falls die Lehrkraft-ID unbekannt ist.
-	 */
-	public lehrkraftSetKuerzel(pLehrkraftID : number, pKuerzel : String) : void {
-		let lehrkraft : StundenplanblockungLehrkraft = this.lehrkraftGet(pLehrkraftID);
-		lehrkraft.kuerzel = pKuerzel;
-		this._daten.lehrkraefte.sort(StundenplanblockungManager._comp_lehrkraft_kuerzel);
-	}
-
-	private klasseAddOhneSortierung(pKlasse : StundenplanblockungKlasse) : void {
-		if (this._map_klasseID_klasse.containsKey(pKlasse.id)) 
-			throw new NullPointerException("Klasse-ID " + pKlasse.id + " existiert bereits!")
-		this._map_klasseID_klasse.put(pKlasse.id, pKlasse);
-		this._daten.klassen.add(pKlasse);
-	}
-
-	/**
-	 * Fügt die Klasse hinzu. <br>
-	 * Wirft eine NullPointerException, falls die Klasse-ID bereits existiert.
-	 * 
-	 * @param pKlasse                Das Klassen-Objekt.
-	 * @throws NullPointerException  Falls die Klasse-ID bereits existiert.
-	 */
-	public klasseAdd(pKlasse : StundenplanblockungKlasse) : void {
-		this.klasseAddOhneSortierung(pKlasse);
-		this._daten.klassen.sort(StundenplanblockungManager._comp_klasse_kuerzel);
-	}
-
-	/**
-	 * Fügt alle Klassen hinzu. <br>
-	 * Wirft eine NullPointerException, falls eine der Klassen bereits existiert. 
-	 * 
-	 * @param pKlassen               Die Menge der Klassen, die hinzugefügt werden soll.
-	 * @throws NullPointerException  Falls eine der Klassen bereits existiert.
-	 */
-	public klasseAddAll(pKlassen : List<StundenplanblockungKlasse>) : void {
-		for (let klasse of pKlassen) 
-			this.klasseAddOhneSortierung(klasse);
-		this._daten.klassen.sort(StundenplanblockungManager._comp_klasse_kuerzel);
-	}
-
-	/**
-	 * Liefert TRUE, falls die Klasse-ID existiert. 
-	 * 
-	 * @param pKlasseID  Die Datenbank-ID der Klasse.
-	 * @return           TRUE, falls die Klasse-ID existiert.
-	 */
-	public klasseExists(pKlasseID : number) : boolean {
-		return this._map_klasseID_klasse.containsKey(pKlasseID);
-	}
-
-	/**
-	 * Liefert das {@link StundenplanblockungKlasse}-Objekt zur übergebenen ID. <br>
-	 * Wirft eine NullPointerException, falls die Klasse-ID unbekannt ist.
-	 * 
-	 * @param pKlasseID              Die Datenbank-ID der Klasse.
-	 * @return                       Das {@link StundenplanblockungKlasse}-Objekt zur übergebenen ID.
-	 * @throws NullPointerException  Falls die Klasse-ID unbekannt ist.
-	 */
-	public klasseGet(pKlasseID : number) : StundenplanblockungKlasse {
-		let klasse : StundenplanblockungKlasse | null = this._map_klasseID_klasse.get(pKlasseID);
-		if (klasse === null) 
-			throw new NullPointerException("Klasse-ID " + pKlasseID + " unbekannt!")
-		return klasse;
-	}
-
-	/**
-	 * Liefert die Menge aller Klassen sortiert nach dem Kürzel.
-	 * 
-	 * @return Die Menge aller Klassen sortiert nach dem Kürzel.
-	 */
-	public klasseGetMengeSortiertNachKuerzel() : Vector<StundenplanblockungKlasse | null> | null {
-		return this._daten.klassen;
-	}
-
-	/**
-	 * Löscht die übergebene Klasse. <br>
-	 * Wirft eine NullPointerException, falls die Klasse-ID unbekannt ist.
-	 * 
-	 * @param pKlasseID              Die Datenbank-ID der Klasse.
-	 * @throws NullPointerException  Falls die Klasse-ID unbekannt ist.
-	 */
-	public klasseRemove(pKlasseID : number) : void {
-		let klasse : StundenplanblockungKlasse = this.klasseGet(pKlasseID);
-		this._map_klasseID_klasse.remove(pKlasseID);
-		this._daten.klassen.remove(klasse);
-	}
-
-	/**
-	 * Ändert das Kürzel der Klasse. <br>
-	 * Wirft eine NullPointerException, falls die Klasse-ID unbekannt ist.
-	 * 
-	 * @param pKlasseID              Die Datenbank-ID der Klasse.
-	 * @param pKuerzel               Das neue Kürzel der Klasse.
-	 * @throws NullPointerException  Falls die Klasse-ID unbekannt ist.
-	 */
-	public klasseSetKuerzel(pKlasseID : number, pKuerzel : String) : void {
-		let klasse : StundenplanblockungKlasse = this.klasseGet(pKlasseID);
-		klasse.kuerzel = pKuerzel;
-		this._daten.klassen.sort(StundenplanblockungManager._comp_klasse_kuerzel);
-	}
-
-	private fachAddOhneSortierung(pFach : StundenplanblockungFach) : void {
-		if (this._map_id_fach.containsKey(pFach.id)) 
-			throw new NullPointerException("Fach-ID " + pFach.id + " existiert bereits!")
-		this._map_id_fach.put(pFach.id, pFach);
-		this._daten.faecher.add(pFach);
-	}
-
-	/**
-	 * Fügt das Fach hinzu. <br>
-	 * Wirft eine NullPointerException, falls die Fach-ID bereits existiert.
-	 * 
-	 * @param pFach                  Das Fach-Objekt.
-	 * @throws NullPointerException  Falls die Fach-ID bereits existiert.
-	 */
-	public fachAdd(pFach : StundenplanblockungFach) : void {
-		this.fachAddOhneSortierung(pFach);
-		this._daten.faecher.sort(StundenplanblockungManager._comp_fach_sortiernummer);
-	}
-
-	/**
-	 * Fügt alle Fächer hinzu. <br>
-	 * Wirft eine NullPointerException, falls eines der Fächer bereits existiert. 
-	 * 
-	 * @param pFaecher               Die Menge der Fächer, die hinzugefügt werden soll.
-	 * @throws NullPointerException  Falls eines der Fächer bereits existiert.
-	 */
-	public fachAddAll(pFaecher : List<StundenplanblockungFach>) : void {
-		for (let fach of pFaecher) 
-			this.fachAddOhneSortierung(fach);
-		this._daten.faecher.sort(StundenplanblockungManager._comp_fach_sortiernummer);
-	}
-
-	/**
-	 * Liefert TRUE, falls die Fach-ID existiert. 
-	 * 
-	 * @param pFachID  Die Datenbank-ID des Faches.
-	 * @return         TRUE, falls die Fach-ID existiert.
-	 */
-	public fachExists(pFachID : number) : boolean {
-		return this._map_id_fach.containsKey(pFachID);
-	}
-
-	/**
-	 * Liefert das {@link StundenplanblockungFach}-Objekt zur übergebenen ID. <br>
-	 * Wirft eine NullPointerException, falls die Fach-ID unbekannt ist.
-	 * 
-	 * @param pFachID                Die Datenbank-ID des Faches.
-	 * @return                       Das {@link StundenplanblockungFach}-Objekt zur übergebenen ID.
-	 * @throws NullPointerException  Falls die Fach-ID unbekannt ist.
-	 */
-	public fachGet(pFachID : number) : StundenplanblockungFach {
-		let fach : StundenplanblockungFach | null = this._map_id_fach.get(pFachID);
-		if (fach === null) 
-			throw new NullPointerException("Fach-ID " + pFachID + " unbekannt!")
-		return fach;
-	}
-
-	/**
-	 * Liefert die Menge aller Fächer sortiert nach der Sortiernummer.
-	 * 
-	 * @return Die Menge aller Fächer sortiert nach der Sortiernummer.
-	 */
-	public fachGetMengeSortiertNachSortiernummer() : Vector<StundenplanblockungFach | null> | null {
-		return this._daten.faecher;
-	}
-
-	/**
-	 * Löscht das übergebene Fach. <br>
-	 * Wirft eine NullPointerException, falls die Fach-ID unbekannt ist.
-	 * 
-	 * @param pFachID                Die Datenbank-ID des Faches.
-	 * @throws NullPointerException  Falls die Fach-ID unbekannt ist.
-	 */
-	public fachRemove(pFachID : number) : void {
-		let fach : StundenplanblockungFach = this.fachGet(pFachID);
-		this._map_id_fach.remove(pFachID);
-		this._daten.faecher.remove(fach);
-	}
-
-	/**
-	 * Ändert das Kürzel des Faches. <br>
-	 * Wirft eine NullPointerException, falls die Fach-ID unbekannt ist.
-	 * 
-	 * @param pFachID                Die Datenbank-ID des Faches.
-	 * @param pKuerzel               Das neue Kürzel des Faches.
-	 * @throws NullPointerException  Falls die Fach-ID unbekannt ist.
-	 */
-	public fachSetKuerzel(pFachID : number, pKuerzel : String) : void {
-		let fach : StundenplanblockungFach = this.fachGet(pFachID);
-		fach.kuerzel = pKuerzel;
-		this._daten.faecher.sort(StundenplanblockungManager._comp_fach_sortiernummer);
-	}
-
-	/**
-	 * Ändert die Sortiernummer des Faches. <br>
-	 * Wirft eine NullPointerException, falls die Fach-ID unbekannt ist.
-	 * 
-	 * @param pFachID                Die Datenbank-ID des Faches.
-	 * @param pSortiernummer         Die neue Sortiernummer des Faches.
-	 * @throws NullPointerException  Falls die Fach-ID unbekannt ist.
-	 */
-	public fachSetSortiernummer(pFachID : number, pSortiernummer : number) : void {
-		let fach : StundenplanblockungFach = this.fachGet(pFachID);
-		fach.sortierung = pSortiernummer;
-		this._daten.faecher.sort(StundenplanblockungManager._comp_fach_sortiernummer);
-	}
-
-	private raumAddOhneSortierung(pRaum : StundenplanblockungRaum) : void {
-		if (this._map_id_raum.containsKey(pRaum.id)) 
-			throw new NullPointerException("Raum-ID " + pRaum.id + " existiert bereits!")
-		this._map_id_raum.put(pRaum.id, pRaum);
-		this._daten.raeume.add(pRaum);
-	}
-
-	/**
-	 * Fügt den Raum hinzu. <br>
-	 * Wirft eine NullPointerException, falls die Raum-ID bereits existiert.
-	 * 
-	 * @param pRaum                  Das Raum-Objekt.
-	 * @throws NullPointerException  Falls die Raum-ID bereits existiert.
-	 */
-	public raumAdd(pRaum : StundenplanblockungRaum) : void {
-		this.raumAddOhneSortierung(pRaum);
-		this._daten.raeume.sort(StundenplanblockungManager._comp_raum_kuerzel);
-	}
-
-	/**
-	 * Fügt alle Räume hinzu. <br>
-	 * Wirft eine NullPointerException, falls einer der Räume bereits existiert. 
-	 * 
-	 * @param pRaeume                Die Menge der Räume, die hinzugefügt werden soll.
-	 * @throws NullPointerException  Falls einer der Räume bereits existiert.
-	 */
-	public raumAddAll(pRaeume : List<StundenplanblockungRaum>) : void {
-		for (let raum of pRaeume) 
-			this.raumAddOhneSortierung(raum);
-		this._daten.raeume.sort(StundenplanblockungManager._comp_raum_kuerzel);
-	}
-
-	/**
-	 * Liefert TRUE, falls die Raum-ID existiert. 
-	 * 
-	 * @param pRaumID  Die Datenbank-ID des Raumes.
-	 * @return         TRUE, falls die Raum-ID existiert.
-	 */
-	public raumExists(pRaumID : number) : boolean {
-		return this._map_id_raum.containsKey(pRaumID);
-	}
-
-	/**
-	 * Liefert das {@link StundenplanblockungRaum}-Objekt zur übergebenen ID. <br>
-	 * Wirft eine NullPointerException, falls die Raum-ID unbekannt ist.
-	 * 
-	 * @param pRaumID                Die Datenbank-ID des Raumes.
-	 * @return                       Das {@link StundenplanblockungRaum}-Objekt zur übergebenen ID.
-	 * @throws NullPointerException  Falls die Raum-ID unbekannt ist.
-	 */
-	public raumGet(pRaumID : number) : StundenplanblockungRaum {
-		let raum : StundenplanblockungRaum | null = this._map_id_raum.get(pRaumID);
-		if (raum === null) 
-			throw new NullPointerException("Raum-ID " + pRaumID + " unbekannt!")
-		return raum;
-	}
-
-	/**
-	 * Liefert die Menge aller Räume sortiert nach dem Kürzel.
-	 * 
-	 * @return Die Menge aller Räume sortiert nach dem Kürzel.
-	 */
-	public raumGetMengeSortiertNachKuerzel() : Vector<StundenplanblockungRaum | null> | null {
-		return this._daten.raeume;
-	}
-
-	/**
-	 * Löscht den übergebenen Raum. <br>
-	 * Wirft eine NullPointerException, falls die Raum-ID unbekannt ist.
-	 * 
-	 * @param pRaumID                Die Datenbank-ID des Raumes.
-	 * @throws NullPointerException  Falls die Raum-ID unbekannt ist.
-	 */
-	public raumRemove(pRaumID : number) : void {
-		let raum : StundenplanblockungRaum = this.raumGet(pRaumID);
-		this._map_id_raum.remove(pRaumID);
-		this._daten.raeume.remove(raum);
-	}
-
-	/**
-	 * Ändert das Kürzel des Raumes. <br>
-	 * Wirft eine NullPointerException, falls die Raum-ID unbekannt ist.
-	 * 
-	 * @param pRaumID                Die Datenbank-ID des Raumes.
-	 * @param pKuerzel               Das neue Kürzel des Raumes.
-	 * @throws NullPointerException  Falls die Raum-ID unbekannt ist.
-	 */
-	public raumSetKuerzel(pRaumID : number, pKuerzel : String) : void {
-		let raum : StundenplanblockungRaum = this.raumGet(pRaumID);
-		raum.kuerzel = pKuerzel;
-		this._daten.raeume.sort(StundenplanblockungManager._comp_raum_kuerzel);
-	}
-
-	private kopplungAddOhneSortierung(pKopplung : StundenplanblockungKopplung) : void {
-		if (this._map_id_kopplung.containsKey(pKopplung.id)) 
-			throw new NullPointerException("Kopplung-ID " + pKopplung.id + " existiert bereits!")
-		this._map_id_kopplung.put(pKopplung.id, pKopplung);
-		this._daten.kopplungen.add(pKopplung);
-	}
-
-	/**
-	 * Fügt die Kopplung hinzu. <br>
-	 * Wirft eine NullPointerException, falls die Kopplung-ID bereits existiert.
-	 * 
-	 * @param pKopplung              Das Kopplung-Objekt.
-	 * @throws NullPointerException  Falls die Kopplung-ID bereits existiert.
-	 */
-	public kopplungAdd(pKopplung : StundenplanblockungKopplung) : void {
-		this.kopplungAddOhneSortierung(pKopplung);
-		this._daten.kopplungen.sort(StundenplanblockungManager._comp_kopplung_kuerzel);
-	}
-
-	/**
-	 * Fügt alle Kopplungen hinzu. <br>
-	 * Wirft eine NullPointerException, falls eine der Kopplungen bereits existiert. 
-	 * 
-	 * @param pKopplungen            Die Menge der Kopplungen, die hinzugefügt werden soll.
-	 * @throws NullPointerException  Falls eine der Kopplungen bereits existiert.
-	 */
-	public kopplungAddAll(pKopplungen : List<StundenplanblockungKopplung>) : void {
-		for (let kopplung of pKopplungen) 
-			this.kopplungAddOhneSortierung(kopplung);
-		this._daten.kopplungen.sort(StundenplanblockungManager._comp_kopplung_kuerzel);
-	}
-
-	/**
-	 * Liefert TRUE, falls die Kopplung-ID existiert. 
-	 * 
-	 * @param pKopplungID  Die Datenbank-ID der Kopplung.
-	 * @return             TRUE, falls die Kopplung-ID existiert.
-	 */
-	public kopplungExists(pKopplungID : number) : boolean {
-		return this._map_id_kopplung.containsKey(pKopplungID);
-	}
-
-	/**
-	 * Liefert das {@link StundenplanblockungKopplung}-Objekt zur übergebenen ID. <br>
-	 * Wirft eine NullPointerException, falls die Kopplung-ID unbekannt ist.
-	 * 
-	 * @param pKopplungID            Die Datenbank-ID der Kopplung.
-	 * @return                       Das {@link StundenplanblockungKopplung}-Objekt zur übergebenen ID.
-	 * @throws NullPointerException  Falls die Kopplung-ID unbekannt ist.
-	 */
-	public kopplungGet(pKopplungID : number) : StundenplanblockungKopplung {
-		let kopplung : StundenplanblockungKopplung | null = this._map_id_kopplung.get(pKopplungID);
-		if (kopplung === null) 
-			throw new NullPointerException("Kopplung-ID " + pKopplungID + " unbekannt!")
-		return kopplung;
-	}
-
-	/**
-	 * Liefert die Menge aller Kopplungen sortiert nach dem Kürzel.
-	 * 
-	 * @return Die Menge aller Kopplungen sortiert nach dem Kürzel.
-	 */
-	public kopplungGetMengeSortiertNachKuerzel() : Vector<StundenplanblockungKopplung | null> | null {
-		return this._daten.kopplungen;
-	}
-
-	/**
-	 * Löscht die übergebenen Kopplung. <br>
-	 * Wirft eine NullPointerException, falls die Kopplung-ID unbekannt ist.
-	 * 
-	 * @param pKopplungID            Die Datenbank-ID der Kopplung.
-	 * @throws NullPointerException  Falls die Kopplung-ID unbekannt ist.
-	 */
-	public kopplungRemove(pKopplungID : number) : void {
-		let kopplung : StundenplanblockungKopplung = this.kopplungGet(pKopplungID);
-		this._map_id_kopplung.remove(pKopplungID);
-		this._daten.kopplungen.remove(kopplung);
-	}
-
-	/**
-	 * Ändert das Kürzel der Kopplung. <br>
-	 * Wirft eine NullPointerException, falls die Kopplung-ID unbekannt ist.
-	 * 
-	 * @param pKopplungID            Die Datenbank-ID der Kopplung.
-	 * @param pKuerzel               Das neue Kürzel der Kopplung.
-	 * @throws NullPointerException  Falls die Kopplung-ID unbekannt ist.
-	 */
-	public kopplungSetKuerzel(pKopplungID : number, pKuerzel : String) : void {
-		let kopplung : StundenplanblockungKopplung = this.kopplungGet(pKopplungID);
-		kopplung.kuerzel = pKuerzel;
-		this._daten.kopplungen.sort(StundenplanblockungManager._comp_kopplung_kuerzel);
-	}
-
-	private lerngruppeAddOhneSortierung(pLerngruppe : StundenplanblockungLerngruppe) : void {
-		if (this._map_id_lerngruppe.containsKey(pLerngruppe.id)) 
-			throw new NullPointerException("Lerngruppe-ID " + pLerngruppe.id + " existiert bereits!")
-		for (let lehrkraft1 of pLerngruppe.lehrkraefte1) 
-			if (this.lehrkraftExists(lehrkraft1.id) === false) 
-				throw new NullPointerException("Lehrkraft-ID " + lehrkraft1.id + " existiert nicht!")
-		for (let lehrkraft2 of pLerngruppe.lehrkraefte2) 
-			if (this.lehrkraftExists(lehrkraft2.id) === false) 
-				throw new NullPointerException("Lehrkraft-ID " + lehrkraft2.id + " existiert nicht!")
-		for (let klasse of pLerngruppe.klassen) 
-			if (this.klasseExists(klasse.id) === false) 
-				throw new NullPointerException("Klasse-ID " + klasse.id + " existiert nicht!")
-		for (let fach of pLerngruppe.faecher) 
-			if (this.fachExists(fach.id) === false) 
-				throw new NullPointerException("Fach-ID " + fach.id + " existiert nicht!")
-		for (let raum1 of pLerngruppe.raeume1) 
-			if (this.raumExists(raum1.id) === false) 
-				throw new NullPointerException("Raum-ID " + raum1.id + " existiert nicht!")
-		for (let raum2 of pLerngruppe.raeume2) 
-			if (this.raumExists(raum2.id) === false) 
-				throw new NullPointerException("Raum-ID " + raum2.id + " existiert nicht!")
-		for (let kopplung of pLerngruppe.kopplungen) 
-			if (this.kopplungExists(kopplung.id) === false) 
-				throw new NullPointerException("Kopplung-ID " + kopplung.id + " existiert nicht!")
-		for (let stundenelement of pLerngruppe.stundenelemente) 
-			if (this.stundenelementExists(stundenelement.id) === false) 
-				throw new NullPointerException("Stundenelement-ID " + stundenelement.id + " existiert nicht!")
-		this._map_id_lerngruppe.put(pLerngruppe.id, pLerngruppe);
-		this._daten.lerngruppen.add(pLerngruppe);
-	}
-
-	private stundenelementExists(pStundenelementID : number) : boolean {
-		return true;
-	}
-
-	/**
-	 * Fügt die Lerngruppe hinzu. <br>
-	 * Wirft eine NullPointerException, falls die Lerngruppe-ID bereits existiert.
-	 * 
-	 * @param pLerngruppe            Das Lerngruppe-Objekt.
-	 * @throws NullPointerException  Falls die Lerngruppe-ID bereits existiert.
-	 */
-	public lerngruppeAdd(pLerngruppe : StundenplanblockungLerngruppe) : void {
-		this.lerngruppeAddOhneSortierung(pLerngruppe);
-		this._daten.lerngruppen.sort(StundenplanblockungManager._comp_lerngruppe_id);
-	}
-
-	/**
-	 * Fügt alle Lerngruppen hinzu. <br>
-	 * Wirft eine NullPointerException, falls eine der Lerngruppen bereits existiert. 
-	 * 
-	 * @param pLerngruppen           Die Menge der Lerngruppen, die hinzugefügt werden soll.
-	 * @throws NullPointerException  Falls eine der Lerngruppen bereits existiert.
-	 */
-	public lerngruppeAddAll(pLerngruppen : List<StundenplanblockungLerngruppe>) : void {
-		for (let lerngruppe of pLerngruppen) 
-			this.lerngruppeAddOhneSortierung(lerngruppe);
-		this._daten.lerngruppen.sort(StundenplanblockungManager._comp_lerngruppe_id);
-	}
-
-	/**
-	 * Liefert TRUE, falls die Lerngruppe-ID existiert. 
-	 * 
-	 * @param pLerngruppeID  Die Lerngruppe-ID der Kopplung.
-	 * @return               TRUE, falls die Lerngruppe-ID existiert.
-	 */
-	public lerngruppeExists(pLerngruppeID : number) : boolean {
-		return this._map_id_lerngruppe.containsKey(pLerngruppeID);
-	}
-
-	/**
-	 * Liefert das {@link StundenplanblockungLerngruppe}-Objekt zur übergebenen ID. <br>
-	 * Wirft eine NullPointerException, falls die Lerngruppe-ID unbekannt ist.
-	 * 
-	 * @param pLerngruppeID          Die Lerngruppe-ID der Kopplung.
-	 * @return                       Das {@link StundenplanblockungLerngruppe}-Objekt zur übergebenen ID.
-	 * @throws NullPointerException  Falls die Lerngruppe-ID unbekannt ist.
-	 */
-	public lerngruppeGet(pLerngruppeID : number) : StundenplanblockungLerngruppe {
-		let lerngruppe : StundenplanblockungLerngruppe | null = this._map_id_lerngruppe.get(pLerngruppeID);
-		if (lerngruppe === null) 
-			throw new NullPointerException("Lerngruppe-ID " + pLerngruppeID + " unbekannt!")
-		return lerngruppe;
-	}
-
-	/**
-	 * Liefert die Menge aller Lerngruppen sortiert nach ihrer ID.
-	 * 
-	 * @return Die Menge aller Lerngruppen sortiert nach ihrer ID.
-	 */
-	public lerngruppeGetMengeSortiertNachID() : Vector<StundenplanblockungLerngruppe | null> | null {
-		return this._daten.lerngruppen;
-	}
-
-	/**
-	 * Löscht die übergebenen Lerngruppe. <br>
-	 * Wirft eine NullPointerException, falls die Lerngruppe-ID unbekannt ist.
-	 * 
-	 * @param pLerngruppeID          Die Datenbank-ID der Lerngruppe.
-	 * @throws NullPointerException  Falls die Lerngruppe-ID unbekannt ist.
-	 */
-	public lerngruppeRemove(pLerngruppeID : number) : void {
-		let lerngruppe : StundenplanblockungLerngruppe = this.lerngruppeGet(pLerngruppeID);
-		this._map_id_lerngruppe.remove(pLerngruppeID);
-		this._daten.lerngruppen.remove(lerngruppe);
-	}
-
-	private lerngruppeAddLehrkraftOhneSortierung(pLerngruppe : StundenplanblockungLerngruppe, pLehrkraft : StundenplanblockungLehrkraft) : void {
-		let mapLerngruppe : HashMap<Number, StundenplanblockungLerngruppe> = this.lehrkraftGetMapLerngruppen(pLehrkraft);
-		if (mapLerngruppe.containsKey(pLerngruppe.id) === true) 
-			throw new NullPointerException("(Lerngruppe=" + pLerngruppe.id + ", Lehrkraft=" + pLehrkraft.id + ") ist doppelt!")
-		mapLerngruppe.put(pLerngruppe.id, pLerngruppe);
-	}
-
-	/**
-	 * Ordnet einer Lerngruppe eine Lehrkraft zu. <br>
-	 * Wirft eine NullPointerException, falls eine ID nicht existiert, oder die Zuordnung bereits existiert. 
-	 * 
-	 * @param pLerngruppeID          Die Datenbank-ID der Kopplung.
-	 * @param pLehrkraftID           Die Datenbank-ID der Lehrkraft.
-	 * @throws NullPointerException  Falls eine ID nicht existiert, oder die Zuordnung bereits existiert.
-	 */
-	public lerngruppeAddLehrkraft(pLerngruppeID : number, pLehrkraftID : number) : void {
-		let lerngruppe : StundenplanblockungLerngruppe = this.lerngruppeGet(pLerngruppeID);
-		let lehrkraft : StundenplanblockungLehrkraft = this.lehrkraftGet(pLehrkraftID);
-		this.lerngruppeAddLehrkraftOhneSortierung(lerngruppe, lehrkraft);
-	}
-
-	/**
-	 * Fügt die Regel hinzu.
-	 * 
-	 * @param pRegel Das Regel-Objekt.
-	 */
-	public regelAdd(pRegel : StundenplanblockungRegel) : void {
-		let typ : StundenplanblockungRegelTyp | null = StundenplanblockungRegelTyp.fromRegel(pRegel);
-		switch (typ) {
-			case StundenplanblockungRegelTyp.SCHULE_TAGE_PRO_WOCHE: {
-				break;
-			}
-			default: 
-				throw new IllegalArgumentException("Unexpected value: " + typ)
-		}
-	}
-
-	/**
-	 * Diese Methode überprüft alle Datenstrukturen auf ihre Konsistenz.
-	 * 
-	 * @throws NullPointerException  Falls eine Inkonsistenz in den Daten gefunden wurde. 
+	 * Überprüft alle Daten auf ihre Konsistenz. <br>
+	 * Wirft eine Exception, falls die Daten nicht konsistent sind.  
 	 */
 	public miscCheckConsistencyOrException() : void {
-		if (this._daten.lehrkraefte.size() !== this._map_lehrkraftID_lehrkraft.size()) 
-			throw new NullPointerException()
-		for (let lehrkraft of this._daten.lehrkraefte) 
-			if (this._map_lehrkraftID_lehrkraft.get(lehrkraft.id) as unknown !== lehrkraft as unknown) 
-				throw new NullPointerException()
-		for (let i : number = 1; i < this._daten.lehrkraefte.size(); i++)
-			if (StundenplanblockungManager._comp_lehrkraft_kuerzel.compare(this._daten.lehrkraefte.get(i - 1), this._daten.lehrkraefte.get(i)) > 0) 
-				throw new NullPointerException()
-		if (this._daten.klassen.size() !== this._map_klasseID_klasse.size()) 
-			throw new NullPointerException()
-		for (let klasse of this._daten.klassen) 
-			if (this._map_klasseID_klasse.get(klasse.id) as unknown !== klasse as unknown) 
-				throw new NullPointerException()
-		for (let i : number = 1; i < this._daten.klassen.size(); i++)
-			if (StundenplanblockungManager._comp_klasse_kuerzel.compare(this._daten.klassen.get(i - 1), this._daten.klassen.get(i)) > 0) 
-				throw new NullPointerException()
-		if (this._daten.faecher.size() !== this._map_id_fach.size()) 
-			throw new NullPointerException()
-		for (let fach of this._daten.faecher) 
-			if (this._map_id_fach.get(fach.id) as unknown !== fach as unknown) 
-				throw new NullPointerException()
-		for (let i : number = 1; i < this._daten.faecher.size(); i++)
-			if (StundenplanblockungManager._comp_fach_sortiernummer.compare(this._daten.faecher.get(i - 1), this._daten.faecher.get(i)) > 0) 
-				throw new NullPointerException()
-		if (this._daten.raeume.size() !== this._map_id_raum.size()) 
-			throw new NullPointerException()
-		for (let raum of this._daten.raeume) 
-			if (this._map_id_raum.get(raum.id) as unknown !== raum as unknown) 
-				throw new NullPointerException()
-		for (let i : number = 1; i < this._daten.raeume.size(); i++)
-			if (StundenplanblockungManager._comp_raum_kuerzel.compare(this._daten.raeume.get(i - 1), this._daten.raeume.get(i)) > 0) 
-				throw new NullPointerException()
-		if (this._daten.kopplungen.size() !== this._map_id_kopplung.size()) 
-			throw new NullPointerException()
-		for (let kopplung of this._daten.kopplungen) 
-			if (this._map_id_kopplung.get(kopplung.id) as unknown !== kopplung as unknown) 
-				throw new NullPointerException()
-		for (let i : number = 1; i < this._daten.kopplungen.size(); i++)
-			if (StundenplanblockungManager._comp_kopplung_kuerzel.compare(this._daten.kopplungen.get(i - 1), this._daten.kopplungen.get(i)) > 0) 
-				throw new NullPointerException()
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
