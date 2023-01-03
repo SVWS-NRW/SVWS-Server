@@ -1,6 +1,5 @@
 import { App } from "../BaseApp";
 
-import { DataKlasse } from "./DataKlasse";
 import { ListKlassen } from "./ListKlassen";
 
 /**
@@ -12,14 +11,9 @@ import { ListKlassen } from "./ListKlassen";
  * Komponenten hinweg aktualisiert werden müssen.
  */
 export class Klassen extends App {
+
 	/** Informationen zum allgemeinen Status dieser Teilapplikation */
 	public auswahl!: ListKlassen;
-
-	/**
-	 * Das Objekt zur Verwaltung der Kommunikation bezüglich der Klassendaten mit
-	 * dem SVWS-Server
-	 */
-	public klassendaten!: DataKlasse;
 
 	/**
 	 * Initialisiert die Klasse und holt die relevanten Daten vom Server
@@ -28,7 +22,6 @@ export class Klassen extends App {
 	 */
 	public async init(): Promise<void> {
 		this.auswahl = new ListKlassen();
-		this.klassendaten = new DataKlasse();
-		this.auswahl.add_data([this.klassendaten]);
 	}
+
 }

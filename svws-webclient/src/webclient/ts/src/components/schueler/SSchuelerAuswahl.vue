@@ -63,11 +63,12 @@
 	import { computed, ComputedRef, Ref, ref, WritableComputedRef } from "vue";
 
 	import { SchuelerListeEintrag, SchuelerStatus, JahrgangsListeEintrag,
-		KlassenListeEintrag, KursListeEintrag, Schulgliederung, Schuljahresabschnitt } from "@svws-nrw/svws-core-ts";
+		KlassenListeEintrag, KursListeEintrag, Schulgliederung, Schuljahresabschnitt, Schueler } from "@svws-nrw/svws-core-ts";
 
 	import { injectMainApp, Main } from "~/apps/Main";
 	import { routeSchueler } from "~/router/apps/RouteSchueler";
 	import { Schule } from "~/apps/schule/Schule";
+	import { ListSchueler } from "~/apps/schueler/ListSchueler";
 
 	export interface SchuelerProps {
 		selectedItems: Array<SchuelerListeEintrag>;
@@ -77,6 +78,8 @@
 	}
 
 	const props = defineProps<{ id: Number | undefined; item: SchuelerListeEintrag | undefined; routename: string }>();
+
+	const selected = routeSchueler.auswahl;
 
 	// TODO Speichere in einem speziellen Filter-Objekt
 	const filtered: Ref<boolean> = ref(false);
@@ -91,10 +94,13 @@
 	const appKlassen = main.apps.klassen;
 	const appJahrgaenge = main.apps.jahrgaenge;
 	const appKurse = main.apps.kurse;
+	const appSchule: ComputedRef<Schule> = computed(() => main.apps.schule);
+
+	const listSchueler: ComputedRef<ListSchueler> = computed(() => app.auswahl);
 
 	// rows(): Array<SchuelerListeEintrag & {klasse: string}> {
 	const rows: ComputedRef<Array<any>> = computed(() => {
-		const array = app.auswahl.gefiltert.map(e => ({
+		const array = listSchueler.value.gefiltert.map(e => ({
 			...e,
 			klasse: appKlassen.auswahl.liste.find(k => k.id === e.idKlasse)?.kuerzel?.toString() || ""
 		}));
@@ -113,8 +119,6 @@
 		return rowsConst;
 	});
 
-	const selected = routeSchueler.auswahl;
-
 	const inputKatalogSchuelerStatus: ComputedRef<Array<SchuelerStatus>> =
 		computed(() => {
 			return SchuelerStatus.values();
@@ -123,13 +127,13 @@
 	const filterStatus: WritableComputedRef<Array<SchuelerStatus> | undefined> =
 		computed({
 			get(): Array<SchuelerStatus> | undefined {
-				return app.auswahl.filter.status;
+				return listSchueler.value.filter.status;
 			},
 			set(value: Array<SchuelerStatus> | undefined) {
-				const filter = app.auswahl.filter;
+				const filter = listSchueler.value.filter;
 				if (filter) {
 					filter.status = value || [];
-					app.auswahl.filter = filter;
+					listSchueler.value.filter = filter;
 					filtered.value = true;
 				}
 			}
@@ -141,13 +145,13 @@
 
 	const filterSchulgliederung: WritableComputedRef<Schulgliederung | undefined> = computed({
 		get(): Schulgliederung | undefined {
-			return app.auswahl.filter.schulgliederung;
+			return listSchueler.value.filter.schulgliederung;
 		},
 		set(value: Schulgliederung | undefined) {
-			const filter = app.auswahl.filter;
+			const filter = listSchueler.value.filter;
 			if (filter) {
 				filter.schulgliederung = value;
-				app.auswahl.filter = filter;
+				listSchueler.value.filter = filter;
 				filtered.value = true;
 			}
 		}
@@ -159,15 +163,15 @@
 
 	const filterJahrgaenge: WritableComputedRef<JahrgangsListeEintrag | undefined> = computed({
 		get(): JahrgangsListeEintrag | undefined {
-			return app.auswahl.filter.jahrgang;
+			return listSchueler.value.filter.jahrgang;
 		},
 		set(value: JahrgangsListeEintrag | undefined) {
-			const filter = app.auswahl.filter;
-			if (filter && app) {
+			const filter = listSchueler.value.filter;
+			if (filter && listSchueler.value) {
 				filter.jahrgang = value;
 				filter.klasse = undefined;
 				filter.kurs = undefined;
-				app.auswahl.filter = filter;
+				listSchueler.value.filter = filter;
 				filtered.value = true;
 			}
 		}
@@ -177,7 +181,7 @@
 		if (appKlassen === undefined)
 			return undefined;
 		const liste = [...appKlassen.auswahl.liste];
-		const jahrgang = app.auswahl.filter.jahrgang;
+		const jahrgang = listSchueler.value.filter.jahrgang;
 		return (jahrgang === undefined)
 			? liste
 			: liste.filter(k => k.idJahrgang === jahrgang.id);
@@ -185,13 +189,13 @@
 
 	const filterKlassen: WritableComputedRef<KlassenListeEintrag | undefined> = computed({
 		get(): KlassenListeEintrag | undefined {
-			return app.auswahl.filter.klasse;
+			return listSchueler.value.filter.klasse;
 		},
 		set(value: KlassenListeEintrag | undefined) {
-			if (app) {
-				const filter = app.auswahl.filter;
+			if (listSchueler.value) {
+				const filter = listSchueler.value.filter;
 				filter.klasse = value;
-				app.auswahl.filter = filter;
+				listSchueler.value.filter = filter;
 				filtered.value = true;
 			}
 		}
@@ -201,7 +205,7 @@
 		if (appKurse === undefined)
 			return undefined;
 		const liste = [...appKurse.auswahl.liste];
-		const jahrgang = app.auswahl.filter.jahrgang;
+		const jahrgang = listSchueler.value.filter.jahrgang;
 		return (jahrgang === undefined)
 			? liste
 			: liste.filter(k => k.idJahrgaenge.contains(jahrgang.id));
@@ -209,13 +213,13 @@
 
 	const filterKurse: WritableComputedRef<KursListeEintrag | undefined> = computed({
 		get(): KursListeEintrag | undefined {
-			return app.auswahl.filter.kurs;
+			return listSchueler.value.filter.kurs;
 		},
 		set(value: KursListeEintrag | undefined) {
-			if (app) {
-				const filter = app.auswahl.filter;
+			if (listSchueler.value) {
+				const filter = listSchueler.value.filter;
 				filter.kurs = value;
-				app.auswahl.filter = filter;
+				listSchueler.value.filter = filter;
 				filtered.value = true;
 			}
 		}
@@ -243,9 +247,9 @@
 	}
 
 	const selectedItems: WritableComputedRef<SchuelerListeEintrag[]> = computed({
-		get: () => app.auswahl.ausgewaehlt_gruppe,
+		get: () => listSchueler.value.ausgewaehlt_gruppe,
 		set: (items: SchuelerListeEintrag[]) => {
-			app.auswahl.ausgewaehlt_gruppe = items;
+			listSchueler.value.ausgewaehlt_gruppe = items;
 		}
 	});
 
@@ -276,21 +280,19 @@
 	}
 
 	function filterReset() {
-		if (app) {
+		if (listSchueler.value) {
 			search.value = "";
-			const filter = app.auswahl.filter;
+			const filter = listSchueler.value.filter;
 			filter.jahrgang = undefined;
 			filter.klasse = undefined;
 			filter.kurs = undefined;
 			filter.schulgliederung = undefined;
-			filter.status = [SchuelerStatus.AKTIV];
-			app.auswahl.filter = filter;
+			filter.status = [ SchuelerStatus.AKTIV, SchuelerStatus.EXTERN ];
+			listSchueler.value.filter = filter;
 			filtered.value = false;
 		}
 	}
-	const schule_abschnitte: ComputedRef<
-		Array<Schuljahresabschnitt> | undefined
-	> = computed(() => {
+	const schule_abschnitte: ComputedRef<Array<Schuljahresabschnitt> | undefined> = computed(() => {
 		const liste = appSchule.value.schuleStammdaten.daten?.abschnitte;
 		return liste?.toArray(new Array<Schuljahresabschnitt>()) || [];
 	});
@@ -304,9 +306,6 @@
 		}
 	});
 
-	const appSchule: ComputedRef<Schule> = computed(() => {
-		return main.apps.schule;
-	});
 	function item_sort(a: Schuljahresabschnitt, b: Schuljahresabschnitt) {
 		return (
 			b.schuljahr + b.abschnitt * 0.1 - (a.schuljahr + a.abschnitt * 0.1)

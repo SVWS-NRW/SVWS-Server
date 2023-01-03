@@ -17,7 +17,7 @@ export class KlassenDaten extends JavaObject {
 
 	public istSichtbar : boolean = false;
 
-	public klassenLeitungen : Vector<Number | null> | null = new Vector();
+	public klassenLeitungen : Vector<Number> | null = new Vector();
 
 
 	public constructor() {
@@ -45,7 +45,7 @@ export class KlassenDaten extends JavaObject {
 		result.istSichtbar = obj.istSichtbar;
 		if (!!obj.klassenLeitungen) {
 			for (let elem of obj.klassenLeitungen) {
-				result.klassenLeitungen?.add(elem === null ? null : Number(elem));
+				result.klassenLeitungen?.add(Number(elem));
 			}
 		}
 		return result;
@@ -65,7 +65,7 @@ export class KlassenDaten extends JavaObject {
 			result += '"klassenLeitungen" : [ ';
 			for (let i : number = 0; i < obj.klassenLeitungen.size(); i++) {
 				let elem = obj.klassenLeitungen.get(i);
-				result += (elem == null) ? null : elem;
+				result += elem;
 				if (i < obj.klassenLeitungen.size() - 1)
 					result += ',';
 			}
@@ -103,7 +103,7 @@ export class KlassenDaten extends JavaObject {
 				result += '"klassenLeitungen" : [ ';
 				for (let i : number = 0; i < obj.klassenLeitungen.size(); i++) {
 					let elem = obj.klassenLeitungen.get(i);
-					result += (elem == null) ? null : elem;
+					result += elem;
 					if (i < obj.klassenLeitungen.size() - 1)
 						result += ',';
 				}

@@ -2,6 +2,7 @@ package de.nrw.schule.svws.core.data.klassen;
 
 import java.util.Vector;
 
+import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 import de.nrw.schule.svws.core.transpiler.TranspilerDTO;
@@ -43,7 +44,7 @@ public class KlassenDaten {
 
 	/** Die Liste der IDs der Klassenleitungen der Klasse. */
 	@ArraySchema(schema = @Schema(implementation = Long.class))
-	public Vector<Long> klassenLeitungen = new Vector<>();
+	public Vector<@NotNull Long> klassenLeitungen = new Vector<>();
 	
 	// TODO Weitere Daten	
 }
