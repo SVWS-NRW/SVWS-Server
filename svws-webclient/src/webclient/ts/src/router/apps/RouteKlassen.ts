@@ -1,13 +1,16 @@
-import { KlassenListeEintrag } from "@svws-nrw/svws-core-ts";
+import { KlassenListeEintrag, LehrerListeEintrag } from "@svws-nrw/svws-core-ts";
 import { computed, WritableComputedRef } from "vue";
 import { RouteLocationNormalized, RouteRecordRaw, useRouter } from "vue-router";
-import { mainApp } from "~/apps/Main";
 import { RouteNodeListView } from "~/router/RouteNodeListView";
 import { routeKlassenDaten } from "~/router/apps/klassen/RouteKlassenDaten";
 import { ListKlassen } from "~/apps/klassen/ListKlassen";
+import { ListLehrer } from "~/apps/lehrer/ListLehrer";
 
 export class RouteDataKlassen {
 	item: KlassenListeEintrag | undefined = undefined;
+	auswahl: ListKlassen = new ListKlassen();
+	listLehrer: ListLehrer = new ListLehrer();
+	mapLehrer: Map<Number, LehrerListeEintrag> = new Map();
 }
 
 const SKlassenAuswahl = () => import("~/components/klassen/SKlassenAuswahl.vue")
@@ -21,7 +24,7 @@ export class RouteKlassen extends RouteNodeListView<KlassenListeEintrag, RouteDa
 		super("klassen", "/klassen/:id(\\d+)?", SKlassenAuswahl, SKlassenApp, new RouteDataKlassen());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Klassen";
-        super.setView("liste", SKlassenAuswahl, (route) => RouteNodeListView.getPropsByAuswahlID(route, mainApp.apps.klassen.auswahl));
+        super.setView("liste", SKlassenAuswahl, (route) => RouteNodeListView.getPropsByAuswahlID(route, this.data.auswahl));
 		super.children = [
 			routeKlassenDaten
 		];
@@ -33,10 +36,17 @@ export class RouteKlassen extends RouteNodeListView<KlassenListeEintrag, RouteDa
      * @param to    die Ziel-Route
      * @param from   die Quell-Route
      */
-    public beforeEach(to: RouteLocationNormalized, from: RouteLocationNormalized): any {
+    public async beforeEach(to: RouteLocationNormalized, from: RouteLocationNormalized): Promise<any> {
+console.log("beforeEach: " + this.name + "!==" + from.name?.toString());
+		if (this.name !== from.name?.toString()) {
+			await this.data.auswahl.update_list();
+			await this.data.listLehrer.update_list();
+			this.data.mapLehrer.clear();
+			this.data.listLehrer.liste.forEach(l => this.data.mapLehrer.set(l.id, l));
+		}
 		if ((to.name?.toString() === this.name) && (to.params.id === undefined)) {
 			const redirect_name: string = (this.selectedChild === undefined) ? this.defaultChildNode.name : this.selectedChild.name;
-			return { name: redirect_name, params: { id: mainApp.apps.klassen.auswahl.liste.at(0)?.id }};
+			return { name: redirect_name, params: { id: this.data.auswahl.liste.at(0)?.id }};
 		}
         return true;
     }
@@ -52,12 +62,14 @@ export class RouteKlassen extends RouteNodeListView<KlassenListeEintrag, RouteDa
 	}
 
     protected getAuswahlComputedProperty(): WritableComputedRef<KlassenListeEintrag | undefined> {
-		return this.getSelectorByID<KlassenListeEintrag, ListKlassen>(mainApp.apps.klassen.auswahl);
+		return this.getSelectorByID<KlassenListeEintrag, ListKlassen>(this.data.auswahl);
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
-		const prop = RouteNodeListView.getPropsByAuswahlID(to, mainApp.apps.klassen.auswahl);
+		const prop: Record<string, any> = RouteNodeListView.getPropsByAuswahlID(to, this.data.auswahl);
 		this.onSelect(prop.item as KlassenListeEintrag | undefined);
+		prop.listLehrer = this.data.listLehrer;
+		prop.mapLehrer = this.data.mapLehrer;
 		return prop;
 	}
 

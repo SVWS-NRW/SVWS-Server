@@ -17,7 +17,7 @@ export class KlassenListeEintrag extends JavaObject {
 
 	public istSichtbar : boolean = false;
 
-	public klassenLehrer : Vector<Number | null> | null = new Vector();
+	public klassenLehrer : Vector<Number> | null = new Vector();
 
 
 	public constructor() {
@@ -45,7 +45,7 @@ export class KlassenListeEintrag extends JavaObject {
 		result.istSichtbar = obj.istSichtbar;
 		if (!!obj.klassenLehrer) {
 			for (let elem of obj.klassenLehrer) {
-				result.klassenLehrer?.add(elem === null ? null : Number(elem));
+				result.klassenLehrer?.add(Number(elem));
 			}
 		}
 		return result;
@@ -65,7 +65,7 @@ export class KlassenListeEintrag extends JavaObject {
 			result += '"klassenLehrer" : [ ';
 			for (let i : number = 0; i < obj.klassenLehrer.size(); i++) {
 				let elem = obj.klassenLehrer.get(i);
-				result += (elem == null) ? null : elem;
+				result += elem;
 				if (i < obj.klassenLehrer.size() - 1)
 					result += ',';
 			}
@@ -103,7 +103,7 @@ export class KlassenListeEintrag extends JavaObject {
 				result += '"klassenLehrer" : [ ';
 				for (let i : number = 0; i < obj.klassenLehrer.size(); i++) {
 					let elem = obj.klassenLehrer.get(i);
-					result += (elem == null) ? null : elem;
+					result += elem;
 					if (i < obj.klassenLehrer.size() - 1)
 						result += ',';
 				}

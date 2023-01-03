@@ -16,7 +16,7 @@
 <script setup lang="ts">
 
 	import { computed, WritableComputedRef } from "vue";
-	import { Jahrgaenge, JahrgangsListeEintrag } from "@svws-nrw/svws-core-ts";
+	import { JahrgangsListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { DataKlasse } from "~/apps/klassen/DataKlasse";
 	import { ListJahrgaenge } from "~/apps/jahrgaenge/ListJahrgaenge";
 

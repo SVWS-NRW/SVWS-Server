@@ -1,9 +1,9 @@
 <template>
-	<div v-if="app.auswahl.ausgewaehlt && app.auswahl.ausgewaehlt !== null">
+	<div v-if="visible">
 		<svws-ui-header>
 			<div class="flex items-center">
-				<span class="inline-block mr-3">{{ inputKuerzel }}</span>
-				<svws-ui-badge variant="light">{{ "ID: " + props.id }}</svws-ui-badge>
+				<span class="inline-block mr-3">{{ item?.kuerzel?.toString() }}</span>
+				<svws-ui-badge variant="light">{{ "ID: " + id }}</svws-ui-badge>
 				<br/>
 				<div class="separate-items--custom">
 					<span v-for="(l, i) in inputKlassenlehrer" :key="i" class="opacity-50"> {{ l.kuerzel }} </span>
@@ -23,36 +23,25 @@
 
 	import { KlassenListeEintrag, LehrerListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef } from "vue";
-	import { injectMainApp, Main } from "~/apps/Main";
-	import { RouteDataKlassen, routeKlassen } from "~/router/apps/RouteKlassen";
+	import { ListLehrer } from "~/apps/lehrer/ListLehrer";
+	import { routeKlassen } from "~/router/apps/RouteKlassen";
 
-	const props = defineProps<{ id?: number; item?: KlassenListeEintrag, routename: string }>();
+	const { id, item, listLehrer, mapLehrer, routename } = defineProps<{ 
+		id?: number; 
+		item?: KlassenListeEintrag, 
+		listLehrer: ListLehrer,
+		mapLehrer: Map<Number, LehrerListeEintrag>,
+		routename: string 
+	}>();
 
-	const data: RouteDataKlassen = routeKlassen.data;
 	const selectedRoute = routeKlassen.getChildRouteSelector();
 
-	const main: Main = injectMainApp();
-	const app = main.apps.klassen;
-	const appLehrer = main.apps.lehrer;
+	const inputKlassenlehrer: ComputedRef<LehrerListeEintrag[]> = computed(() =>
+		(item?.klassenLehrer?.toArray() as Number[] || []).map(id => mapLehrer.get(id) || undefined).filter(l => l !== undefined) as LehrerListeEintrag[]
+	);
 
-	const inputKuerzel: ComputedRef<string | null> = computed(() => {
-		if (app.auswahl.ausgewaehlt && app.auswahl.ausgewaehlt !== null) {
-			return String(app.auswahl.ausgewaehlt.kuerzel);
-		} else if (app.auswahl.ausgewaehlt && app.auswahl.ausgewaehlt === null) {
-			return null;
-		}
-		return "";
-	});
-
-	const inputKlassenlehrer: ComputedRef<Array<LehrerListeEintrag>> = computed(() => {
-		const liste: Array<LehrerListeEintrag> = [];
-		const ids = app.auswahl.ausgewaehlt?.klassenLehrer || [];
-		for (const id of ids) {
-			const lehrer = appLehrer.auswahl.liste.find(l => l.id === id);
-			if (lehrer) 
-				liste.push(lehrer);
-		}
-		return liste;
+	const visible: ComputedRef<boolean> = computed(() => {
+		return !(routeKlassen.hidden) && (id !== undefined);
 	});
 
 </script>

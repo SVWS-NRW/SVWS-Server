@@ -35,7 +35,8 @@ export class RouteKatalogFoerderschwerpunkte extends RouteNodeListView<Foerdersc
      * @param from   die Quell-Route
      */
     public async beforeEach(to: RouteLocationNormalized, from: RouteLocationNormalized): Promise<any> {
-		await this.data.auswahl.update_list();
+		if (this.name !== from.name?.toString())
+			await this.data.auswahl.update_list();
 		if ((to.name?.toString() === this.name) && (to.params.id === undefined)) {
 			const redirect_name: string = (this.selectedChild === undefined) ? this.defaultChildNode.name : this.selectedChild.name;
 			return { name: redirect_name, params: { id: this.data.auswahl.liste.at(0)?.id }};
