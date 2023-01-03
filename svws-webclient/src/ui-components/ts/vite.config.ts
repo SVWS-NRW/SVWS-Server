@@ -28,6 +28,9 @@ export default defineConfig({
 			],
 			imports: [
 				"vue"
+			],
+			dirs: [
+				'./src/composables'
 			]
 		})
 	],

@@ -3,7 +3,6 @@ export type Variant = "primary" | "success" | "error" | "highlight" | "light";
 export type Size = "big" | "medium" | "normal" | "small" | "tiny";
 </script>
 <script setup lang='ts'>
-
 const {
 	variant = 'light',
 	size = 'normal',

@@ -17,8 +17,8 @@ const {
 			<slot />
 		</h2>
 		<Badge v-if="badge" :variant="badgeVariant" :size="badgeSize">{{
-				badge
-		}}</Badge>
+		badge
+			}}</Badge>
 	</div>
 </template>
 
