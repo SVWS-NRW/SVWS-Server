@@ -17,6 +17,9 @@ export abstract class RouteNode<TRouteData> {
     // Eine Funktion zum Prüfen, ob der Knoten, d.h. die Route, versteckt sein soll oder nicht
     protected isHidden: (() => boolean) | undefined = undefined;
 
+    /** Der Elter-Knoten, sofern es sich um einen Kind-Knoten handelt. */
+    protected _parent?: RouteNode<unknown>;
+
     /** Die Kind-Knoten zu dieser Route */
     protected _children: RouteNode<unknown>[];
 
@@ -113,7 +116,11 @@ export abstract class RouteNode<TRouteData> {
      * @param nodes   Ein Array mit den Kindern für das Routing
      */
     public set children(nodes: RouteNode<unknown>[]) {
+        if (this._children !== undefined)
+            this._children.forEach(c => c.parent = undefined);
         this._children = nodes;
+        if (this._children !== undefined)
+            this._children.forEach(c => c.parent = this);
         this._record.children = nodes.length === 0 ? undefined : nodes.map(n => n.record);
     }
 
@@ -145,6 +152,24 @@ export abstract class RouteNode<TRouteData> {
      */
     public get menu() : RouteNode<unknown>[] {
         return this._menu;
+    }
+
+    /**
+     * Gibt den Elter-Knoten zurück, sofern einer gesetzt wurde
+     * 
+     * @return der Elter-Knoten oder undefined
+     */
+    public get parent(): RouteNode<unknown> | undefined {
+        return this._parent;
+    }
+
+    /**
+     * Setzt oder entfernt den Elter-Knoten
+     * 
+     * @param value der Elter-Knoten oder undefined
+     */
+    protected set parent(value: RouteNode<unknown> | undefined) {
+        this._parent = value;
     }
 
     /**

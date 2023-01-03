@@ -37,7 +37,6 @@ export class RouteKlassen extends RouteNodeListView<KlassenListeEintrag, RouteDa
      * @param from   die Quell-Route
      */
     public async beforeEach(to: RouteLocationNormalized, from: RouteLocationNormalized): Promise<any> {
-console.log("beforeEach: " + this.name + "!==" + from.name?.toString());
 		if (this.name !== from.name?.toString()) {
 			await this.data.auswahl.update_list();
 			await this.data.listLehrer.update_list();

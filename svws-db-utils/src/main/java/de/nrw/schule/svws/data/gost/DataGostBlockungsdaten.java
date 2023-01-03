@@ -511,28 +511,14 @@ public class DataGostBlockungsdaten extends DataManager<Long> {
 			// Bestimme die ID für das Vorlage-Ergebnis der duplizierten Blockung
 			DTODBAutoInkremente dbErgebnisID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Blockung_Zwischenergebnisse");
 			long idErgebnisDuplikat = dbErgebnisID == null ? 1 : dbErgebnisID.MaxID + 1;
-			
-			// Bestimme den Namen der neuen Blockung (OLD)
-//			String name = blockungOriginal.Name;
-//			String tmpName = name.replaceAll("\\d+$", "");
-//			if (tmpName.length() != name.length()) {
-//				String tmpIndex = name.substring(tmpName.length());
-//				int index = Integer.parseInt(tmpIndex) + 1;
-//				name = tmpName + index;
-//			} else {
-//				name = name + " - Kopie 1";
-//			}
-			
-			// Bestimme den Namen der neuen Blockung (NEW)
+			// Bestimme den Namen der neuen Blockung
 			List<DTOGostBlockung> blockungen = conn.queryList("SELECT e FROM DTOGostBlockung e WHERE e.Abi_Jahrgang = ?1 and e.Halbjahr = ?2", DTOGostBlockung.class, blockungOriginal.Abi_Jahrgang, blockungOriginal.Halbjahr);
 			Set<String> namen = blockungen.stream().map(b -> b.Name).collect(Collectors.toUnmodifiableSet());
-
 			String trimmedName = blockungOriginal.Name.replaceAll("\\d+$", "").stripTrailing();
 			int nameIndex = 1;
 			while (namen.contains(trimmedName + " " + nameIndex))
 				nameIndex++;
 			String name = trimmedName + " " + nameIndex;
-			
 			// Erstelle das Duplikat
 			DTOGostBlockung blockungDuplikat = new DTOGostBlockung(idBlockungDuplikat, name, blockungOriginal.Abi_Jahrgang, blockungOriginal.Halbjahr, false);
 			conn.transactionPersist(blockungDuplikat);
