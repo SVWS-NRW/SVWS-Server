@@ -2,20 +2,7 @@
 	<svws-ui-content-card title="Klassenleitungen">
 		<div class="content-wrapper">
 			<div class="input-wrapper">
-				<svws-ui-table :columns="cols" :data="liste" :footer="false">
-					<template #cell-kuerzel="{row}">
-						{{ kuerzel(row) }}
-					</template>
-					<template #cell-nachname="{row}">
-						{{ nachname(row) }}
-					</template>
-					<template #cell-vorname="{row}">
-						{{ vorname(row) }}
-					</template>
-					<template #cell-personTyp="{row}">
-						{{ personTyp(row) }}
-					</template>
-				</svws-ui-table>
+				<svws-ui-table :columns="cols" :data="liste" :footer="false"/>
 			</div>
 		</div>
 	</svws-ui-content-card>
@@ -28,13 +15,33 @@
 	import { DataKlasse } from "~/apps/klassen/DataKlasse";
 	import { ListLehrer } from "~/apps/lehrer/ListLehrer";
 
+	type Lehrer = {
+		kuerzel?: string;
+		nachname?: string;
+		vorname?: string;
+		typ?: string;
+	}
+
 	const { data, mapLehrer } = defineProps<{ 
 		data: DataKlasse,
 		listLehrer: ListLehrer,
 		mapLehrer: Map<Number, LehrerListeEintrag>
 	}>();
 
-	const liste: ComputedRef<Number[]> = computed(() => data.daten?.klassenLeitungen?.toArray() as Number[] || []);
+	const liste: ComputedRef<Lehrer[]> =
+		computed(() => {
+			if (!data.daten?.klassenLeitungen) return [];
+			let res: Lehrer[] = [];
+			for (const l of data.daten.klassenLeitungen)
+				if (l)
+					res.push({
+						kuerzel: kuerzel(l),
+						nachname: nachname(l),
+						vorname: vorname(l),
+						typ: personTyp(l)
+					})
+			return res;
+		});
 
 	const cols = ref([
 		{ key: "kuerzel", label: "Kürzel", span: "1", sortable: false },
