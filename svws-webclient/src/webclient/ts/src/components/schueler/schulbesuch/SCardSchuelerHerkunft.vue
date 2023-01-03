@@ -6,7 +6,7 @@
 			<div class="input-wrapper-3-cols">
 				<svws-ui-text-input placeholder="Entlassen am" v-model="vorigeEntlassDatum" type="date" />
 				<svws-ui-text-input placeholder="Entlassjahrgang" v-model="vorigeEntlassjahrgang" type="year" />
-				<svws-ui-multi-select title="Versetzung" v-model="vorigeArtLetzteVersetzung" :items="herkunftsarten" :item-text="(h: Herkunftsarten) => getBezeichnung(h) + ' (' + h.daten.kuerzel + ')'" statistics />
+				<svws-ui-multi-select title="Versetzung" v-model="vorigeArtLetzteVersetzung" :items="herkunftsarten" :item-text="(h: Herkunftsarten) => getBezeichnung(h) + ' (' + h.daten.kuerzel + ')'" :statistics="showstatistic" />
 			</div>
 			<div class="input-wrapper-3-cols">
 				<svws-ui-text-input placeholder="Bemerkung" v-model="vorigeBemerkung" type="text" />
@@ -86,5 +86,7 @@
 		get: () => props.data.daten?.vorigeAbschlussartID?.toString(),
 		set: (value) => props.data.patch({ vorigeAbschlussartID:  value })
 	});
+
+	const showstatistic: ComputedRef<boolean> = computed(() => true);
 
 </script>
