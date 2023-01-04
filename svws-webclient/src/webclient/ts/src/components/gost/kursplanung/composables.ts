@@ -33,7 +33,7 @@ export function createKursbezeichnungsGetter(parameter: number = 0) {
 		const manager = gost.dataKursblockung.datenmanager
 		if (manager === undefined)
 			throw new Error("Der Kursblockungsmanager ist nicht verfügbar")
-		const kurs = manager.getKurs(regel.parameter.get(0).valueOf())
+		const kurs = manager.getKurs(regel.parameter.get(parameter).valueOf())
 		return manager.getNameOfKurs(kurs.id)
 	}
 }

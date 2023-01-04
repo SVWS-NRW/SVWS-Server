@@ -28,7 +28,7 @@ const name = (id: number) => {
 	return schueler ? `${schueler.nachname}, ${schueler.vorname}` : "";
 }
 
-const getKursbezeichnung = createKursbezeichnungsGetter()
+const getKursbezeichnung = createKursbezeichnungsGetter(1)
 </script>
 
 <template>
