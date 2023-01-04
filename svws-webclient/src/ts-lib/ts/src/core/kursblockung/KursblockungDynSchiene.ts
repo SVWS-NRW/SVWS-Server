@@ -7,8 +7,8 @@ import { JavaLong, cast_java_lang_Long } from '../../java/lang/JavaLong';
 import { KursblockungDynKurs, cast_de_nrw_schule_svws_core_kursblockung_KursblockungDynKurs } from '../../core/kursblockung/KursblockungDynKurs';
 import { JavaString, cast_java_lang_String } from '../../java/lang/JavaString';
 import { Logger, cast_de_nrw_schule_svws_core_logger_Logger } from '../../core/logger/Logger';
-import { KursblockungException, cast_de_nrw_schule_svws_core_kursblockung_KursblockungException } from '../../core/kursblockung/KursblockungException';
 import { LogLevel, cast_de_nrw_schule_svws_core_logger_LogLevel } from '../../core/logger/LogLevel';
+import { UserNotificationException, cast_de_nrw_schule_svws_core_UserNotificationException } from '../../core/UserNotificationException';
 import { System, cast_java_lang_System } from '../../java/lang/System';
 
 export class KursblockungDynSchiene extends JavaObject {
@@ -52,7 +52,7 @@ export class KursblockungDynSchiene extends JavaObject {
 		if (this.kursMap.containsKey(kursID)) {
 			let fehler : String | null = "Kurs \'" + kurs1.toString().valueOf() + "\' soll in Schiene " + this.nr + ", ist aber bereits drin.";
 			this.logger.logLn(LogLevel.ERROR, fehler);
-			throw new KursblockungException(fehler)
+			throw new UserNotificationException(fehler)
 		}
 		for (let kurs2 of this.kursMap.values()) 
 			this.statistik.aktionKurspaarInSchieneHinzufuegen(kurs1, kurs2);
@@ -69,7 +69,7 @@ export class KursblockungDynSchiene extends JavaObject {
 		if (!this.kursMap.containsKey(kursID)) {
 			let fehler : String | null = "Kurs \'" + kurs1.toString().valueOf() + "\' soll aus Schiene " + this.nr + " entfernt werden, ist aber nicht drin.";
 			this.logger.logLn(LogLevel.ERROR, fehler);
-			throw new KursblockungException(fehler)
+			throw new UserNotificationException(fehler)
 		}
 		this.kursMap.remove(kursID);
 		for (let kurs2 of this.kursMap.values()) 

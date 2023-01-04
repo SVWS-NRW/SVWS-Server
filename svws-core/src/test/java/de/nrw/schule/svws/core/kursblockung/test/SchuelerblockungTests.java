@@ -84,6 +84,7 @@ public class SchuelerblockungTests {
 			in.fachwahlen.add(fachwahl);
 
 			String sFachart = fachwahl.fachID + ";" + fachwahl.kursartID;
+			in.fachwahlenText.add(sFachart);
 			while (setFachart.contains(sFachart)) {
 				fachwahl.fachID = pRandom.nextLong(30);
 				fachwahl.kursartID = pRandom.nextInt(5);

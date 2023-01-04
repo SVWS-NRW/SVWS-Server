@@ -605,6 +605,18 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert den Namen (Fach-Kursart) der Fachwahl.
+	 * 
+	 * @param pFachwahl Das Fachwahl-Objekt.
+	 * @return Den Namen (Fach-Kursart) der Fachwahl.
+	 */
+	public getNameOfFachwahl(pFachwahl : GostFachwahl) : String {
+		let gFach : GostFach = this._faecherManager.getOrException(pFachwahl.fachID);
+		let gKursart : GostKursart = GostKursart.fromID(pFachwahl.kursartID);
+		return gFach.kuerzelAnzeige + "-" + gKursart.kuerzel;
+	}
+
+	/**
 	 * Setzt den Suffix des Kurses.
 	 * 
 	 * @param  pKursID  Die Datenbank-ID des Kurses.

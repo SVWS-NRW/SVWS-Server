@@ -17,8 +17,9 @@ export class SchuelerblockungAlgorithmus extends Service<SchuelerblockungInput, 
 		this.logger.modifyIndent(+4);
 		let seed : number = new Random().nextLong();
 		let random : Random = new Random(seed);
-		this.logger.log(LogLevel.APP, "Seed verwendet --> " + seed);
-		let dynDaten : SchuelerblockungDynDaten = new SchuelerblockungDynDaten(random, this.logger, pInput);
+		this.logger.log(LogLevel.APP, "SchuelerblockungAlgorithmus.handle(): Seed (" + seed + ") verwendet.");
+		let dynDaten : SchuelerblockungDynDaten = new SchuelerblockungDynDaten(random, pInput);
+		this.logger.modifyIndent(-4);
 		return dynDaten.gibBestesMatching();
 	}
 

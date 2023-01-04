@@ -5,13 +5,13 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Vector;
 
+import de.nrw.schule.svws.core.DeveloperNotificationException;
+import de.nrw.schule.svws.core.UserNotificationException;
 import de.nrw.schule.svws.core.data.gost.GostFachwahl;
 import de.nrw.schule.svws.core.data.kursblockung.SchuelerblockungInput;
 import de.nrw.schule.svws.core.data.kursblockung.SchuelerblockungInputKurs;
 import de.nrw.schule.svws.core.data.kursblockung.SchuelerblockungOutput;
 import de.nrw.schule.svws.core.data.kursblockung.SchuelerblockungOutputFachwahlZuKurs;
-import de.nrw.schule.svws.core.logger.LogLevel;
-import de.nrw.schule.svws.core.logger.Logger;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -26,9 +26,6 @@ public class SchuelerblockungDynDaten {
 
 	/** Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed. */
 	private final @NotNull Random _random;
-
-	/** Logger für Benutzerhinweise, Warnungen und Fehler. */
-	private final @NotNull Logger _logger;
 
 	// Diese Attribute werden einmalig pro Blockung initialisiert.
 	private final int nFachwahlen;
@@ -53,11 +50,9 @@ public class SchuelerblockungDynDaten {
 	 * Datenstrukturen auf.
 	 * 
 	 * @param pRandom Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
-	 * @param pLogger Logger für Benutzerhinweise, Warnungen und Fehler.
 	 * @param pInput  Die Eingabedaten (Schnittstelle zur GUI).
 	 */
-	public SchuelerblockungDynDaten(@NotNull Random pRandom, @NotNull Logger pLogger, @NotNull SchuelerblockungInput pInput) {
-		_logger = pLogger;
+	public SchuelerblockungDynDaten(@NotNull Random pRandom, @NotNull SchuelerblockungInput pInput) {
 		_random = pRandom;
 		aktionPruefeEingabedaten(pInput);
 
@@ -88,73 +83,73 @@ public class SchuelerblockungDynDaten {
 		// NULL-Referenzen überprüfen.
 
 		if (pInput == null)
-			throw fehler("pInput == NULL");
+			throw new DeveloperNotificationException("pInput == NULL"); 
 
 		if (pInput.fachwahlen == null)
-			throw fehler("pInput.fachwahlen == NULL");
+			throw new DeveloperNotificationException("pInput.fachwahlen == NULL");
 
 		if (pInput.kurse == null)
-			throw fehler("pInput.kurse == NULL");
+			throw new DeveloperNotificationException("pInput.kurse == NULL");
 
 		// Anzahl an Elementen überprüfen.
 
 		int nFachwahlen = pInput.fachwahlen.size();
 		if (nFachwahlen < 1)
-			throw fehler("Der Schüler hat zu wenig Fachwahlen! --> " + nFachwahlen);
+			throw new DeveloperNotificationException("Der Schüler hat zu wenig Fachwahlen ("+nFachwahlen+"), ein Blocken sollte gar nicht angeboten werden!");
 
 		int nSchienen = pInput.schienen;
 		if (nSchienen < 1)
-			throw fehler("Die Schienenanzahl ist zu gering! --> " + nSchienen);
+			throw new DeveloperNotificationException("Die Schienenanzahl ("+nSchienen+") ist zu gering!");
 
 		int nKurse = pInput.kurse.size();
 		if (nKurse < 1)
-			throw fehler("Die Kursanzahl ist zu gering! --> " + nKurse);
+			throw new DeveloperNotificationException("Die Kursanzahl ("+nKurse+") ist zu gering!");
 
 		// Attribute der Kurse überprüfen.
 		HashSet<Long> setKursID = new HashSet<>();
 		for (@NotNull SchuelerblockungInputKurs kurs : pInput.kurse) {
 			if (kurs.id < 0)
-				throw fehler("kurs.id ist zu gering! --> " + kurs.id);
+				throw new DeveloperNotificationException("kurs.id ("+kurs.id+") ist zu gering!");
 			if (setKursID.add(kurs.id) == false)
-				throw fehler("kurs.id existiert doppelt! --> " + kurs.id);
+				throw new DeveloperNotificationException("kurs.id ("+kurs.id+") existiert doppelt!");
 			if (kurs.fach < 0)
-				throw fehler("kurs.fach ist zu gering! --> " + kurs.fach);
+				throw new DeveloperNotificationException("kurs.fach ("+kurs.fach+") ist zu gering!");
 			if (kurs.kursart < 0)
-				throw fehler("kurs.kursart ist zu gering! --> " + kurs.kursart);
+				throw new DeveloperNotificationException("kurs.kursart ("+kurs.kursart+") ist zu gering!");
 			if (kurs.anzahlSuS < 0)
-				throw fehler("kurs.anzahlSuS ist zu gering! --> " + kurs.anzahlSuS);
-			if (kurs.schienen.length < 1)
-				throw fehler("kurs.schienen.length ist zu gering! --> " + kurs.schienen.length);
+				throw new DeveloperNotificationException("kurs.anzahlSuS ("+kurs.anzahlSuS+") ist zu gering!");
 			if (kurs.schienen == null)
-				throw fehler("kurs.schienen ist undefiniert! --> " + kurs.schienen);
+				throw new DeveloperNotificationException("kurs.schienen == ("+kurs.schienen+") ist nicht definiert!");
 			if (kurs.schienen.length <= 0)
-				throw fehler("kurs.schienen.length ist zu klein! --> " + kurs.schienen.length);
+				throw new DeveloperNotificationException("kurs.schienen.length ("+kurs.schienen.length+") ist zu gering!");
 			if (kurs.schienen.length > nSchienen)
-				throw fehler("kurs.schienen.length ist zu groß! --> " + kurs.schienen.length);
+				throw new DeveloperNotificationException("kurs.schienen.length ("+kurs.schienen.length+") ist zu groß!");
 			for (int schiene1 : kurs.schienen) {
 				if (schiene1 < 1)
-					throw fehler("Kurs " + kurs.id + " ist in zu kleiner Schiene! --> " + schiene1);
+					throw new DeveloperNotificationException("Kurs " + kurs.id + " ist in zu kleiner Schiene ("+schiene1+")!");
 				if (schiene1 > nSchienen)
-					throw fehler("Kurs " + kurs.id + " ist in zu großer Schiene! --> " + schiene1);
+					throw new DeveloperNotificationException("Kurs " + kurs.id + " ist in zu großer Schiene ("+schiene1+")!");
 			}
 			if (kurs.istFixiert && kurs.istGesperrt)
-				throw fehler("kurs.istFixiert && kurs.istGesperrt ist unmöglich! --> " + kurs.id);
+				throw new DeveloperNotificationException("Kurs " + kurs.id + " ist fixiert und gesperrt, das sollte nicht möglich sein!");
 		}
 
 		// Attribute der Fachwahlen überprüfen.
 		for (@NotNull GostFachwahl fachwahl : pInput.fachwahlen) {
 			if (fachwahl.schuelerID < 0)
-				throw fehler("fachwahl.schuelerID ist zu gering! --> " + fachwahl.schuelerID);
+				throw new DeveloperNotificationException("fachwahl.schuelerID ("+fachwahl.schuelerID+") ist zu gering!");
 			if (fachwahl.fachID < 0)
-				throw fehler("fachwahl.fachID ist zu gering! --> " + fachwahl.fachID);
+				throw new DeveloperNotificationException("fachwahl.fachID ("+fachwahl.fachID+") ist zu gering!");
 			if (fachwahl.kursartID < 0)
-				throw fehler("fachwahl.kursartID ist zu gering! --> " + fachwahl.kursartID);
+				throw new DeveloperNotificationException("fachwahl.kursartID ("+fachwahl.kursartID+") ist zu gering!");
 		}
 
 		// Pro Fachwahl auf Doppelfixierungen testen.
 		for (int iFachwahl = 0; iFachwahl < nFachwahlen; iFachwahl++) {
 			@NotNull GostFachwahl fachwahl = pInput.fachwahlen.get(iFachwahl);
-			String representation = fachwahl.fachID + ";" + fachwahl.kursartID;
+			if (iFachwahl >= pInput.fachwahlenText.size())
+				throw new DeveloperNotificationException("pInput.fachwahlenText: Es fehlt der Text zur Fachwahl ("+iFachwahl+")!");
+			String representation = pInput.fachwahlenText.get(iFachwahl); 
 
 			// Doppelfixierungen herausfinden.
 			boolean kursWurdeFixiert = false;
@@ -164,7 +159,7 @@ public class SchuelerblockungDynDaten {
 						continue;
 					if (kurs.istFixiert) {
 						if (kursWurdeFixiert) 
-							throw fehler("Die Fachart " + representation + " hat mehr als eine Fixierung!");
+							throw new UserNotificationException("Die Fachart/Fachwahl (" + representation + ") hat mehr als eine Fixierung!");
 						kursWurdeFixiert = true;
 					}
 				}
@@ -181,19 +176,9 @@ public class SchuelerblockungDynDaten {
 			}
 
 			if (gefunden == 0)
-				throw fehler("Der Kurs " + kurs.id + " konnte keiner Fachwahl zugeordnet werden!");
+				throw new DeveloperNotificationException("Der Kurs (" + kurs.id + ") konnte keiner Fachart/Fachwahl zugeordnet werden!");
 		}
 
-	}
-
-	/**
-	 * Erzeugt einen Fehler und teilt dem Logger einen Fehler mit.
-	 * 
-	 * @param fehlermeldung Die Fehlermeldung.
-	 */
-	private SchuelerblockungException fehler(@NotNull String fehlermeldung) {
-		_logger.logLn(LogLevel.ERROR, fehlermeldung);
-		return new SchuelerblockungException(fehlermeldung);
 	}
 
 	/**
@@ -283,7 +268,9 @@ public class SchuelerblockungDynDaten {
 			if (aktionBelegeKurs(iFachwahl, kurs) == true) {
 				aktionVerteileMultikurseRekursiv(iFachwahl + 1);
 				if (aktionBelegeKursUndo(iFachwahl, kurs) == false)
-					throw fehler("Der Kurs " + kurs.id + " konnte nicht entfernt werden!");
+					throw new DeveloperNotificationException("In der Methode 'SchuelerblockungDynDaten.aktionVerteileMultikurseRekursiv' ist ein unerwarteter Fehler passiert: "
+							+ "Der Kurs (" + kurs.id + ") konnte vom Algorithmus nicht entfernt werden! "
+    						+ "Diesen Fehler kann nur das Programmier-Team beheben.");
 			}
 		}
 
@@ -325,9 +312,13 @@ public class SchuelerblockungDynDaten {
 				}
 				SchuelerblockungInputKurs kurs = gibKleinstenKursInSchiene(_fachwahlZuKurse.get(iFachwahl), schiene);
 				if (kurs == null)
-					throw fehler("Der Fachart " + iFachwahl + " wurde ein NULL-Kurs zugeordnet!");
+					throw new DeveloperNotificationException("In der Methode 'SchuelerblockungDynDaten.aktionVerteileMitMatching' ist ein unerwarteter Fehler passiert: "
+							+ "Der Fachart (" + iFachwahl + ") wurde ein NULL-Kurs zugeordnet! "
+    						+ "Diesen Fehler kann nur das Programmier-Team beheben.");
 				if (aktionBelegeKurs(iFachwahl, kurs) == false)
-					throw fehler("Der Kurs " + kurs.id + " konnte nicht belegt werden!");
+					throw new DeveloperNotificationException("In der Methode 'SchuelerblockungDynDaten.aktionVerteileMitMatching' ist ein unerwarteter Fehler passiert: "
+							+ "Der Kurs (" + kurs.id + ") konnte nicht belegt werden! "
+    						+ "Diesen Fehler kann nur das Programmier-Team beheben.");
 			}
 
 		// Besseren Zustand speichern?
@@ -349,9 +340,13 @@ public class SchuelerblockungDynDaten {
 				}
 				SchuelerblockungInputKurs kurs = gibKleinstenKursInSchiene(_fachwahlZuKurse.get(iFachwahl), schiene);
 				if (kurs == null)
-					throw fehler("Der Fachart " + iFachwahl + " wurde ein NULL-Kurs zugeordnet!");
+					throw new DeveloperNotificationException("In der Methode 'SchuelerblockungDynDaten.aktionVerteileMitMatching' ist ein unerwarteter Fehler passiert: "
+							+ "Der Fachart (" + iFachwahl + ") wurde ein NULL-Kurs zugeordnet! "
+    						+ "Diesen Fehler kann nur das Programmier-Team beheben.");
 				if (aktionBelegeKursUndo(iFachwahl, kurs) == false)
-					throw fehler("Der Kurs " + kurs.id + " konnte nicht entfernt werden!");
+					throw new DeveloperNotificationException("In der Methode 'SchuelerblockungDynDaten.aktionVerteileMitMatching' ist ein unerwarteter Fehler passiert: "
+							+ "Der Kurs (" + kurs.id + ") konnte nicht entfernt werden! "
+    						+ "Diesen Fehler kann nur das Programmier-Team beheben.");
 			}
 	}
 

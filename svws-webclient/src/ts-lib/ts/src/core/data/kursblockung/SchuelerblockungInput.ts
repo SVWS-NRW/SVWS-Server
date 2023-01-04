@@ -2,6 +2,7 @@ import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject
 import { SchuelerblockungInputKurs, cast_de_nrw_schule_svws_core_data_kursblockung_SchuelerblockungInputKurs } from '../../../core/data/kursblockung/SchuelerblockungInputKurs';
 import { SchuelerblockungInputFachwahl, cast_de_nrw_schule_svws_core_data_kursblockung_SchuelerblockungInputFachwahl } from '../../../core/data/kursblockung/SchuelerblockungInputFachwahl';
 import { GostFachwahl, cast_de_nrw_schule_svws_core_data_gost_GostFachwahl } from '../../../core/data/gost/GostFachwahl';
+import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
 import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 
 export class SchuelerblockungInput extends JavaObject {
@@ -11,6 +12,8 @@ export class SchuelerblockungInput extends JavaObject {
 	public kurse : Vector<SchuelerblockungInputKurs> = new Vector();
 
 	public fachwahlen : Vector<GostFachwahl> = new Vector();
+
+	public fachwahlenText : Vector<String> = new Vector();
 
 
 	public constructor() {
@@ -35,6 +38,11 @@ export class SchuelerblockungInput extends JavaObject {
 		if (!!obj.fachwahlen) {
 			for (let elem of obj.fachwahlen) {
 				result.fachwahlen?.add(GostFachwahl.transpilerFromJSON(JSON.stringify(elem)));
+			}
+		}
+		if (!!obj.fachwahlenText) {
+			for (let elem of obj.fachwahlenText) {
+				result.fachwahlenText?.add(String(elem));
 			}
 		}
 		return result;
@@ -63,6 +71,18 @@ export class SchuelerblockungInput extends JavaObject {
 				let elem = obj.fachwahlen.get(i);
 				result += GostFachwahl.transpilerToJSON(elem);
 				if (i < obj.fachwahlen.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
+		}
+		if (!obj.fachwahlenText) {
+			result += '"fachwahlenText" : []';
+		} else {
+			result += '"fachwahlenText" : [ ';
+			for (let i : number = 0; i < obj.fachwahlenText.size(); i++) {
+				let elem = obj.fachwahlenText.get(i);
+				result += '"' + elem + '"';
+				if (i < obj.fachwahlenText.size() - 1)
 					result += ',';
 			}
 			result += ' ]' + ',';
@@ -100,6 +120,20 @@ export class SchuelerblockungInput extends JavaObject {
 					let elem = obj.fachwahlen.get(i);
 					result += GostFachwahl.transpilerToJSON(elem);
 					if (i < obj.fachwahlen.size() - 1)
+						result += ',';
+				}
+				result += ' ]' + ',';
+			}
+		}
+		if (typeof obj.fachwahlenText !== "undefined") {
+			if (!obj.fachwahlenText) {
+				result += '"fachwahlenText" : []';
+			} else {
+				result += '"fachwahlenText" : [ ';
+				for (let i : number = 0; i < obj.fachwahlenText.size(); i++) {
+					let elem = obj.fachwahlenText.get(i);
+					result += '"' + elem + '"';
+					if (i < obj.fachwahlenText.size() - 1)
 						result += ',';
 				}
 				result += ' ]' + ',';

@@ -27,4 +27,8 @@ public class SchuelerblockungInput {
 	@ArraySchema(schema = @Schema(implementation = SchuelerblockungInputFachwahl.class)) 
 	public @NotNull Vector<@NotNull GostFachwahl> fachwahlen = new Vector<>();
 
+	/** Zu jeder Fachwahl eine textuelle Darstellung. */
+	@ArraySchema(schema = @Schema(implementation = String.class)) 
+	public @NotNull Vector<@NotNull String> fachwahlenText = new Vector<>();
+
 }

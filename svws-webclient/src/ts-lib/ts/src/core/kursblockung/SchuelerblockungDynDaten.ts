@@ -3,10 +3,8 @@ import { SchuelerblockungOutput, cast_de_nrw_schule_svws_core_data_kursblockung_
 import { SchuelerblockungInputKurs, cast_de_nrw_schule_svws_core_data_kursblockung_SchuelerblockungInputKurs } from '../../core/data/kursblockung/SchuelerblockungInputKurs';
 import { SchuelerblockungOutputFachwahlZuKurs, cast_de_nrw_schule_svws_core_data_kursblockung_SchuelerblockungOutputFachwahlZuKurs } from '../../core/data/kursblockung/SchuelerblockungOutputFachwahlZuKurs';
 import { GostFachwahl, cast_de_nrw_schule_svws_core_data_gost_GostFachwahl } from '../../core/data/gost/GostFachwahl';
+import { DeveloperNotificationException, cast_de_nrw_schule_svws_core_DeveloperNotificationException } from '../../core/DeveloperNotificationException';
 import { JavaString, cast_java_lang_String } from '../../java/lang/JavaString';
-import { SchuelerblockungException, cast_de_nrw_schule_svws_core_kursblockung_SchuelerblockungException } from '../../core/kursblockung/SchuelerblockungException';
-import { Logger, cast_de_nrw_schule_svws_core_logger_Logger } from '../../core/logger/Logger';
-import { LogLevel, cast_de_nrw_schule_svws_core_logger_LogLevel } from '../../core/logger/LogLevel';
 import { System, cast_java_lang_System } from '../../java/lang/System';
 import { JavaInteger, cast_java_lang_Integer } from '../../java/lang/JavaInteger';
 import { SchuelerblockungInput, cast_de_nrw_schule_svws_core_data_kursblockung_SchuelerblockungInput } from '../../core/data/kursblockung/SchuelerblockungInput';
@@ -15,6 +13,7 @@ import { KursblockungMatrix, cast_de_nrw_schule_svws_core_kursblockung_Kursblock
 import { JavaLong, cast_java_lang_Long } from '../../java/lang/JavaLong';
 import { Arrays, cast_java_util_Arrays } from '../../java/util/Arrays';
 import { Vector, cast_java_util_Vector } from '../../java/util/Vector';
+import { UserNotificationException, cast_de_nrw_schule_svws_core_UserNotificationException } from '../../core/UserNotificationException';
 import { HashSet, cast_java_util_HashSet } from '../../java/util/HashSet';
 
 export class SchuelerblockungDynDaten extends JavaObject {
@@ -22,8 +21,6 @@ export class SchuelerblockungDynDaten extends JavaObject {
 	private static readonly UNENDLICH : number = 1000000;
 
 	private readonly _random : Random;
-
-	private readonly _logger : Logger;
 
 	private readonly nFachwahlen : number;
 
@@ -59,12 +56,10 @@ export class SchuelerblockungDynDaten extends JavaObject {
 	 * Datenstrukturen auf.
 	 * 
 	 * @param pRandom Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
-	 * @param pLogger Logger für Benutzerhinweise, Warnungen und Fehler.
 	 * @param pInput  Die Eingabedaten (Schnittstelle zur GUI).
 	 */
-	public constructor(pRandom : Random, pLogger : Logger, pInput : SchuelerblockungInput) {
+	public constructor(pRandom : Random, pInput : SchuelerblockungInput) {
 		super();
-		this._logger = pLogger;
 		this._random = pRandom;
 		this.aktionPruefeEingabedaten(pInput);
 		this.nFachwahlen = pInput.fachwahlen.size();
@@ -89,60 +84,60 @@ export class SchuelerblockungDynDaten extends JavaObject {
 	 */
 	aktionPruefeEingabedaten(pInput : SchuelerblockungInput) : void {
 		if (pInput === null) 
-			throw this.fehler("pInput == NULL")
+			throw new DeveloperNotificationException("pInput == NULL")
 		if (pInput.fachwahlen === null) 
-			throw this.fehler("pInput.fachwahlen == NULL")
+			throw new DeveloperNotificationException("pInput.fachwahlen == NULL")
 		if (pInput.kurse === null) 
-			throw this.fehler("pInput.kurse == NULL")
+			throw new DeveloperNotificationException("pInput.kurse == NULL")
 		let nFachwahlen : number = pInput.fachwahlen.size();
 		if (nFachwahlen < 1) 
-			throw this.fehler("Der Schüler hat zu wenig Fachwahlen! --> " + nFachwahlen)
+			throw new DeveloperNotificationException("Der Schüler hat zu wenig Fachwahlen (" + nFachwahlen + "), ein Blocken sollte gar nicht angeboten werden!")
 		let nSchienen : number = pInput.schienen;
 		if (nSchienen < 1) 
-			throw this.fehler("Die Schienenanzahl ist zu gering! --> " + nSchienen)
+			throw new DeveloperNotificationException("Die Schienenanzahl (" + nSchienen + ") ist zu gering!")
 		let nKurse : number = pInput.kurse.size();
 		if (nKurse < 1) 
-			throw this.fehler("Die Kursanzahl ist zu gering! --> " + nKurse)
+			throw new DeveloperNotificationException("Die Kursanzahl (" + nKurse + ") ist zu gering!")
 		let setKursID : HashSet<Number | null> | null = new HashSet();
 		for (let kurs of pInput.kurse) {
 			if (kurs.id < 0) 
-				throw this.fehler("kurs.id ist zu gering! --> " + kurs.id)
+				throw new DeveloperNotificationException("kurs.id (" + kurs.id + ") ist zu gering!")
 			if (setKursID.add(kurs.id) === false) 
-				throw this.fehler("kurs.id existiert doppelt! --> " + kurs.id)
+				throw new DeveloperNotificationException("kurs.id (" + kurs.id + ") existiert doppelt!")
 			if (kurs.fach < 0) 
-				throw this.fehler("kurs.fach ist zu gering! --> " + kurs.fach)
+				throw new DeveloperNotificationException("kurs.fach (" + kurs.fach + ") ist zu gering!")
 			if (kurs.kursart < 0) 
-				throw this.fehler("kurs.kursart ist zu gering! --> " + kurs.kursart)
+				throw new DeveloperNotificationException("kurs.kursart (" + kurs.kursart + ") ist zu gering!")
 			if (kurs.anzahlSuS < 0) 
-				throw this.fehler("kurs.anzahlSuS ist zu gering! --> " + kurs.anzahlSuS)
-			if (kurs.schienen.length < 1) 
-				throw this.fehler("kurs.schienen.length ist zu gering! --> " + kurs.schienen.length)
+				throw new DeveloperNotificationException("kurs.anzahlSuS (" + kurs.anzahlSuS + ") ist zu gering!")
 			if (kurs.schienen === null) 
-				throw this.fehler("kurs.schienen ist undefiniert! --> " + kurs.schienen)
+				throw new DeveloperNotificationException("kurs.schienen == (" + kurs.schienen + ") ist nicht definiert!")
 			if (kurs.schienen.length <= 0) 
-				throw this.fehler("kurs.schienen.length ist zu klein! --> " + kurs.schienen.length)
+				throw new DeveloperNotificationException("kurs.schienen.length (" + kurs.schienen.length + ") ist zu gering!")
 			if (kurs.schienen.length > nSchienen) 
-				throw this.fehler("kurs.schienen.length ist zu groß! --> " + kurs.schienen.length)
+				throw new DeveloperNotificationException("kurs.schienen.length (" + kurs.schienen.length + ") ist zu groß!")
 			for (let schiene1 of kurs.schienen) {
 				if (schiene1 < 1) 
-					throw this.fehler("Kurs " + kurs.id + " ist in zu kleiner Schiene! --> " + schiene1)
+					throw new DeveloperNotificationException("Kurs " + kurs.id + " ist in zu kleiner Schiene (" + schiene1 + ")!")
 				if (schiene1 > nSchienen) 
-					throw this.fehler("Kurs " + kurs.id + " ist in zu großer Schiene! --> " + schiene1)
+					throw new DeveloperNotificationException("Kurs " + kurs.id + " ist in zu großer Schiene (" + schiene1 + ")!")
 			}
 			if (kurs.istFixiert && kurs.istGesperrt) 
-				throw this.fehler("kurs.istFixiert && kurs.istGesperrt ist unmöglich! --> " + kurs.id)
+				throw new DeveloperNotificationException("Kurs " + kurs.id + " ist fixiert und gesperrt, das sollte nicht möglich sein!")
 		}
 		for (let fachwahl of pInput.fachwahlen) {
 			if (fachwahl.schuelerID < 0) 
-				throw this.fehler("fachwahl.schuelerID ist zu gering! --> " + fachwahl.schuelerID)
+				throw new DeveloperNotificationException("fachwahl.schuelerID (" + fachwahl.schuelerID + ") ist zu gering!")
 			if (fachwahl.fachID < 0) 
-				throw this.fehler("fachwahl.fachID ist zu gering! --> " + fachwahl.fachID)
+				throw new DeveloperNotificationException("fachwahl.fachID (" + fachwahl.fachID + ") ist zu gering!")
 			if (fachwahl.kursartID < 0) 
-				throw this.fehler("fachwahl.kursartID ist zu gering! --> " + fachwahl.kursartID)
+				throw new DeveloperNotificationException("fachwahl.kursartID (" + fachwahl.kursartID + ") ist zu gering!")
 		}
 		for (let iFachwahl : number = 0; iFachwahl < nFachwahlen; iFachwahl++){
 			let fachwahl : GostFachwahl = pInput.fachwahlen.get(iFachwahl);
-			let representation : String | null = fachwahl.fachID + ";" + fachwahl.kursartID;
+			if (iFachwahl >= pInput.fachwahlenText.size()) 
+				throw new DeveloperNotificationException("pInput.fachwahlenText: Es fehlt der Text zur Fachwahl (" + iFachwahl + ")!")
+			let representation : String | null = pInput.fachwahlenText.get(iFachwahl);
 			let kursWurdeFixiert : boolean = false;
 			for (let kurs of pInput.kurse) 
 				if ((fachwahl.fachID === kurs.fach) && (fachwahl.kursartID === kurs.kursart)) {
@@ -150,7 +145,7 @@ export class SchuelerblockungDynDaten extends JavaObject {
 						continue;
 					if (kurs.istFixiert) {
 						if (kursWurdeFixiert) 
-							throw this.fehler("Die Fachart " + representation.valueOf() + " hat mehr als eine Fixierung!")
+							throw new UserNotificationException("Die Fachart/Fachwahl (" + representation.valueOf() + ") hat mehr als eine Fixierung!")
 						kursWurdeFixiert = true;
 					}
 				}
@@ -163,18 +158,8 @@ export class SchuelerblockungDynDaten extends JavaObject {
 					gefunden++;
 			}
 			if (gefunden === 0) 
-				throw this.fehler("Der Kurs " + kurs.id + " konnte keiner Fachwahl zugeordnet werden!")
+				throw new DeveloperNotificationException("Der Kurs (" + kurs.id + ") konnte keiner Fachart/Fachwahl zugeordnet werden!")
 		}
-	}
-
-	/**
-	 * Erzeugt einen Fehler und teilt dem Logger einen Fehler mit.
-	 * 
-	 * @param fehlermeldung Die Fehlermeldung.
-	 */
-	private fehler(fehlermeldung : String) : SchuelerblockungException | null {
-		this._logger.logLn(LogLevel.ERROR, fehlermeldung);
-		return new SchuelerblockungException(fehlermeldung);
 	}
 
 	/**
@@ -248,7 +233,7 @@ export class SchuelerblockungDynDaten extends JavaObject {
 			if (this.aktionBelegeKurs(iFachwahl, kurs) === true) {
 				this.aktionVerteileMultikurseRekursiv(iFachwahl + 1);
 				if (this.aktionBelegeKursUndo(iFachwahl, kurs) === false) 
-					throw this.fehler("Der Kurs " + kurs.id + " konnte nicht entfernt werden!")
+					throw new DeveloperNotificationException("In der Methode \'SchuelerblockungDynDaten.aktionVerteileMultikurseRekursiv\' ist ein unerwarteter Fehler passiert: Der Kurs (" + kurs.id + ") konnte vom Algorithmus nicht entfernt werden! Diesen Fehler kann nur das Programmier-Team beheben.")
 			}
 		}
 		this._aktuellNichtwahlen += schienenAnzahl;
@@ -280,9 +265,9 @@ export class SchuelerblockungDynDaten extends JavaObject {
 				}
 				let kurs : SchuelerblockungInputKurs | null = SchuelerblockungDynDaten.gibKleinstenKursInSchiene(this._fachwahlZuKurse.get(iFachwahl), schiene);
 				if (kurs === null) 
-					throw this.fehler("Der Fachart " + iFachwahl + " wurde ein NULL-Kurs zugeordnet!")
+					throw new DeveloperNotificationException("In der Methode \'SchuelerblockungDynDaten.aktionVerteileMitMatching\' ist ein unerwarteter Fehler passiert: Der Fachart (" + iFachwahl + ") wurde ein NULL-Kurs zugeordnet! Diesen Fehler kann nur das Programmier-Team beheben.")
 				if (this.aktionBelegeKurs(iFachwahl, kurs) === false) 
-					throw this.fehler("Der Kurs " + kurs.id + " konnte nicht belegt werden!")
+					throw new DeveloperNotificationException("In der Methode \'SchuelerblockungDynDaten.aktionVerteileMitMatching\' ist ein unerwarteter Fehler passiert: Der Kurs (" + kurs.id + ") konnte nicht belegt werden! Diesen Fehler kann nur das Programmier-Team beheben.")
 			}
 		if ((this._aktuellNichtwahlen < this._aktuellNichtwahlenBest) || ((this._aktuellNichtwahlen === this._aktuellNichtwahlenBest) && (this._aktuellBewertung < this._aktuellBewertungBest))) {
 			this._aktuellNichtwahlenBest = this._aktuellNichtwahlen;
@@ -299,9 +284,9 @@ export class SchuelerblockungDynDaten extends JavaObject {
 				}
 				let kurs : SchuelerblockungInputKurs | null = SchuelerblockungDynDaten.gibKleinstenKursInSchiene(this._fachwahlZuKurse.get(iFachwahl), schiene);
 				if (kurs === null) 
-					throw this.fehler("Der Fachart " + iFachwahl + " wurde ein NULL-Kurs zugeordnet!")
+					throw new DeveloperNotificationException("In der Methode \'SchuelerblockungDynDaten.aktionVerteileMitMatching\' ist ein unerwarteter Fehler passiert: Der Fachart (" + iFachwahl + ") wurde ein NULL-Kurs zugeordnet! Diesen Fehler kann nur das Programmier-Team beheben.")
 				if (this.aktionBelegeKursUndo(iFachwahl, kurs) === false) 
-					throw this.fehler("Der Kurs " + kurs.id + " konnte nicht entfernt werden!")
+					throw new DeveloperNotificationException("In der Methode \'SchuelerblockungDynDaten.aktionVerteileMitMatching\' ist ein unerwarteter Fehler passiert: Der Kurs (" + kurs.id + ") konnte nicht entfernt werden! Diesen Fehler kann nur das Programmier-Team beheben.")
 			}
 	}
 

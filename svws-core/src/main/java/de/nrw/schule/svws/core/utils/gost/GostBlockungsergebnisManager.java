@@ -1055,6 +1055,11 @@ public class GostBlockungsergebnisManager {
 		// Fachwahlen des Schülers.
 		@NotNull List<@NotNull GostFachwahl> fachwahlenDesSchuelers = _parent.getOfSchuelerFacharten(pSchuelerID);
 		input.fachwahlen.addAll(fachwahlenDesSchuelers);
+		
+		for (@NotNull GostFachwahl fachwahl : fachwahlenDesSchuelers) {
+			@NotNull String representation = _parent.getNameOfFachwahl(fachwahl);
+			input.fachwahlenText.add(representation);
+		}
 
 		// Alle für den Schüler wählbaren Kurse.
 		for (GostFachwahl fachwahl : fachwahlenDesSchuelers) {

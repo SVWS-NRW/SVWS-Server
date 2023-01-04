@@ -2,6 +2,7 @@ package de.nrw.schule.svws.core.kursblockung;
 
 import java.util.HashMap;
 
+import de.nrw.schule.svws.core.UserNotificationException;
 import de.nrw.schule.svws.core.adt.set.AVLSet;
 import de.nrw.schule.svws.core.logger.LogLevel;
 import de.nrw.schule.svws.core.logger.Logger;
@@ -52,7 +53,7 @@ public class KursblockungDynSchiene {
 		if (kursMap.containsKey(kursID)) {
 			String fehler = "Kurs '" + kurs1.toString() + "' soll in Schiene " + nr + ", ist aber bereits drin.";
 			logger.logLn(LogLevel.ERROR, fehler);
-			throw new KursblockungException(fehler);
+			throw new UserNotificationException(fehler);
 		}
 		// Zuerst Kurs-Paarungen hinzufügen.
 		for (@NotNull KursblockungDynKurs kurs2 : kursMap.values()) 
@@ -71,7 +72,7 @@ public class KursblockungDynSchiene {
 			String fehler = "Kurs '" + kurs1.toString() + "' soll aus Schiene " + nr
 					+ " entfernt werden, ist aber nicht drin.";
 			logger.logLn(LogLevel.ERROR, fehler);
-			throw new KursblockungException(fehler);
+			throw new UserNotificationException(fehler);
 		}
 		// Zuerst aus der Datenstruktur entfernen.
 		kursMap.remove(kursID);

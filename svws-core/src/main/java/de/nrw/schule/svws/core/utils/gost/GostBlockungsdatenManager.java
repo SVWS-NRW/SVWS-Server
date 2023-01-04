@@ -630,6 +630,18 @@ public class GostBlockungsdatenManager {
 		@NotNull String sAppend = kurs.suffix.equals("") ? "" : ("-" + kurs.suffix);
 		return gFach.kuerzelAnzeige + "-" + GostKursart.fromID(kurs.kursart).kuerzel + kurs.nummer + sAppend;
 	}
+	
+	/**
+	 * Liefert den Namen (Fach-Kursart) der Fachwahl.
+	 * 
+	 * @param pFachwahl Das Fachwahl-Objekt.
+	 * @return Den Namen (Fach-Kursart) der Fachwahl.
+	 */
+	public @NotNull String getNameOfFachwahl(@NotNull GostFachwahl pFachwahl) {
+		@NotNull GostFach gFach = _faecherManager.getOrException(pFachwahl.fachID);
+		@NotNull GostKursart gKursart = GostKursart.fromID(pFachwahl.kursartID);
+		return gFach.kuerzelAnzeige + "-" + gKursart.kuerzel;
+	}	
 
 	/**
 	 * Setzt den Suffix des Kurses.

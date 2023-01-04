@@ -8,6 +8,7 @@ import de.nrw.schule.svws.base.kurs42.Kurs42DataBlockplan;
 import de.nrw.schule.svws.base.kurs42.Kurs42DataFachwahlen;
 import de.nrw.schule.svws.base.kurs42.Kurs42DataKurse;
 import de.nrw.schule.svws.base.kurs42.Kurs42DataSchueler;
+import de.nrw.schule.svws.core.DeveloperNotificationException;
 import de.nrw.schule.svws.core.data.gost.GostBlockungKurs;
 import de.nrw.schule.svws.core.data.gost.GostBlockungRegel;
 import de.nrw.schule.svws.core.data.gost.GostBlockungSchiene;
@@ -15,14 +16,11 @@ import de.nrw.schule.svws.core.data.gost.GostBlockungsdaten;
 import de.nrw.schule.svws.core.data.gost.GostFach;
 import de.nrw.schule.svws.core.data.gost.GostFachwahl;
 import de.nrw.schule.svws.core.data.schueler.Schueler;
-import de.nrw.schule.svws.core.kursblockung.KursblockungException;
-import de.nrw.schule.svws.core.logger.LogLevel;
 import de.nrw.schule.svws.core.logger.Logger;
 import de.nrw.schule.svws.core.types.gost.GostKursart;
 import de.nrw.schule.svws.core.types.kursblockung.GostKursblockungRegelTyp;
 import de.nrw.schule.svws.core.utils.gost.GostBlockungsdatenManager;
 import de.nrw.schule.svws.core.utils.gost.GostFaecherManager;
-import jakarta.validation.constraints.NotNull;
 
 /** Eine Klasse zum Einlesen von exportierten Kurs42-Textdateien mit direkter Umwandlung in das Eingabeobjekt
  * {@linkplain GostBlockungsdatenManager} für die Kursblockung.
@@ -56,13 +54,12 @@ public class Kurs42Converter {
 		HashMap<Long, GostBlockungRegel> mapRegeln = new HashMap<>();
 
 		// Einlesen der Schüler-Objekte
-		for (Kurs42DataSchueler k42schueler : CsvReader.fromResource(pPfad + "Schueler.txt",
-				Kurs42DataSchueler.class)) {
+		for (Kurs42DataSchueler k42schueler : CsvReader.fromResource(pPfad + "Schueler.txt", Kurs42DataSchueler.class)) {
 
 			// Doppelter Schülername?
 			String sKey = getKeySchueler(k42schueler);
 			if (mapSchueler.containsKey(sKey))
-				throw fehler("Kurs42-Schueler-Inkonsistenz: Schüler '" + sKey + "' existiert doppelt.");
+				throw new DeveloperNotificationException("Kurs42-Schueler-Inkonsistenz: Schüler (" + sKey + ") existiert doppelt.");
 
 			Schueler gSchueler = new Schueler();
 			gSchueler.id = mapSchueler.size() + 1;
@@ -78,7 +75,7 @@ public class Kurs42Converter {
 			// Doppelter Kursname?
 			String sKursname = k42kurs.Name;
 			if (mapKurse.containsKey(sKursname))
-				throw fehler("Kurs42-Kurse-Inkonsistenz: Kurs '" + sKursname + "' existiert doppelt.");
+				throw new DeveloperNotificationException("Kurs42-Kurse-Inkonsistenz: Kurs '" + sKursname + "' existiert doppelt.");
 
 			// Neues Fach? --> Map
 			String sFachKuerzel = k42kurs.Fach;
@@ -94,7 +91,7 @@ public class Kurs42Converter {
 			if (!mapKursarten.containsKey(sKursartKuerzel)) {
 				GostKursart gKursart = GostKursart.fromKuerzel(sKursartKuerzel);
 				if (gKursart == null)
-					throw new NullPointerException("GostKursart.fromKuerzel(" + sKursartKuerzel + ") == null");
+					throw new DeveloperNotificationException("GostKursart.fromKuerzel(" + sKursartKuerzel + ") == null");
 				mapKursarten.put(sKursartKuerzel, gKursart);
 			}
 
@@ -116,12 +113,11 @@ public class Kurs42Converter {
 		}
 
 		// Einlesen der Fachwahl-Objekte
-		for (Kurs42DataFachwahlen k42fachwahl : CsvReader.fromResource(pPfad + "Fachwahlen.txt",
-				Kurs42DataFachwahlen.class)) {
+		for (Kurs42DataFachwahlen k42fachwahl : CsvReader.fromResource(pPfad + "Fachwahlen.txt", Kurs42DataFachwahlen.class)) {
 			// Schüler unbekannt?
 			String sSchueler = getKeySchueler(k42fachwahl);
 			if (!mapSchueler.containsKey(sSchueler))
-				throw fehler("Kurs42-Fachwahlen-Inkonsistenz: Schüler '" + sSchueler + "' unbekannt!");
+				throw new DeveloperNotificationException("Kurs42-Fachwahlen-Inkonsistenz: Schüler (" + sSchueler + ") unbekannt!");
 
 			// Neues Fach? --> Map
 			String sFachKuerzel = k42fachwahl.Fachkrz;
@@ -144,8 +140,7 @@ public class Kurs42Converter {
 			// Schüler hat doppelte Fachwahl?
 			String sFachwahl = sSchueler + ";" + sFachKuerzel + ";" + sKursartKuerzel;
 			if (mapFachwahlen.containsKey(sFachwahl))
-				throw fehler("Kurs42-Fachwahlen: Schüler '" + sSchueler + "' hat die Fachwahl '" + sFachKuerzel + ";"
-						+ sKursartKuerzel + "' doppelt!");
+				throw new DeveloperNotificationException("Kurs42-Fachwahlen: Schüler (" + sSchueler + ") hat die Fachwahl (" + sFachKuerzel + ";"+ sKursartKuerzel + ") doppelt!");
 
 			// Fachwahl erzeugen
 			GostFachwahl gFachwahl = new GostFachwahl();
@@ -157,13 +152,12 @@ public class Kurs42Converter {
 
 		// Einlesen der Lage der Kurse. Bestimmung der Schienenanzahl
 		int schienenAnzahl = 1;
-		for (Kurs42DataBlockplan k42blockplan : CsvReader.fromResource(pPfad + "Blockplan.txt",
-				Kurs42DataBlockplan.class)) {
+		for (Kurs42DataBlockplan k42blockplan : CsvReader.fromResource(pPfad + "Blockplan.txt", Kurs42DataBlockplan.class)) {
 
 			// Kurs unbekannt?
 			String sKursname = k42blockplan.Kursbezeichnung;
 			if (!mapKurse.containsKey(sKursname))
-				throw fehler("Kurs42-Blockplan-Inkonsistenz: Kurs '" + sKursname + "' existiert nicht in 'Kurse.txt'.");
+				throw new DeveloperNotificationException("Kurs42-Blockplan-Inkonsistenz: Kurs (" + sKursname + ") existiert nicht in 'Kurse.txt'.");
 
 			// Schienenanzahl erhöhen?
 			int gSchiene = k42blockplan.Schiene + 1;
@@ -255,14 +249,6 @@ public class Kurs42Converter {
 			return "GK";
 		}
 		return kursart;
-	}
-
-	/** Erzeugt einen Fehler via Exception und Logger.
-	 * 
-	 * @param fehlermeldung Die Fehlermeldung. */
-	private KursblockungException fehler(@NotNull String fehlermeldung) {
-		_logger.logLn(LogLevel.ERROR, fehlermeldung);
-		return new KursblockungException(fehlermeldung);
 	}
 
 }

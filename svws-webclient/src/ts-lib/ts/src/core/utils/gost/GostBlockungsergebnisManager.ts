@@ -949,6 +949,10 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		let fachwahlenDesSchuelers : List<GostFachwahl> = this._parent.getOfSchuelerFacharten(pSchuelerID);
 		input.fachwahlen.addAll(fachwahlenDesSchuelers);
 		for (let fachwahl of fachwahlenDesSchuelers) {
+			let representation : String = this._parent.getNameOfFachwahl(fachwahl);
+			input.fachwahlenText.add(representation);
+		}
+		for (let fachwahl of fachwahlenDesSchuelers) {
 			let fachartID : number = GostKursart.getFachartID(fachwahl);
 			let kurse : Vector<GostBlockungsergebnisKurs> = this.getOfFachartKursmenge(fachartID);
 			for (let kurs of kurse) {
