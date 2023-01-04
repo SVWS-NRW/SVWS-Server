@@ -3,9 +3,7 @@ export { ApiServer } from './api/ApiServer';
 export { ApiServerAlgorithmen } from './api/ApiServerAlgorithmen';
 export { BaseApi } from './api/BaseApi';
 export { OpenApiError } from './api/OpenApiError';
-export { DeveloperNotificationException } from './core/DeveloperNotificationException';
 export { Service } from './core/Service';
-export { UserNotificationException } from './core/UserNotificationException';
 export { AbschlussManager } from './core/abschluss/AbschlussManager';
 export { AbschlussManagerBerufsbildend } from './core/abschluss/AbschlussManagerBerufsbildend';
 export { BKAnlageA01Abschluss } from './core/abschluss/bk/a/BKAnlageA01Abschluss';
@@ -293,6 +291,8 @@ export { StundenplanblockungRegel } from './core/data/stundenplanblockung/Stunde
 export { StundenplanblockungRegelParameterTyp } from './core/data/stundenplanblockung/StundenplanblockungRegelParameterTyp';
 export { StundenplanblockungRegelTyp } from './core/data/stundenplanblockung/StundenplanblockungRegelTyp';
 export { StundenplanblockungStundenelement } from './core/data/stundenplanblockung/StundenplanblockungStundenelement';
+export { DeveloperNotificationException } from './core/exceptions/DeveloperNotificationException';
+export { UserNotificationException } from './core/exceptions/UserNotificationException';
 export { KlausurblockungException } from './core/klausurblockung/KlausurblockungException';
 export { KlausurblockungSchienenAlgorithmus } from './core/klausurblockung/KlausurblockungSchienenAlgorithmus';
 export { KlausurblockungSchienenAlgorithmusAbstract } from './core/klausurblockung/KlausurblockungSchienenAlgorithmusAbstract';

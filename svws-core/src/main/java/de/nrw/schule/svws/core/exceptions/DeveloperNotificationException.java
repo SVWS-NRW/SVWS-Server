@@ -1,4 +1,4 @@
-package de.nrw.schule.svws.core;
+package de.nrw.schule.svws.core.exceptions;
 
 import jakarta.validation.constraints.NotNull;
 

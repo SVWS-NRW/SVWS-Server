@@ -2,8 +2,8 @@ package de.nrw.schule.svws.core.kursblockung;
 
 import java.util.HashMap;
 
-import de.nrw.schule.svws.core.UserNotificationException;
 import de.nrw.schule.svws.core.adt.set.AVLSet;
+import de.nrw.schule.svws.core.exceptions.UserNotificationException;
 import de.nrw.schule.svws.core.logger.LogLevel;
 import de.nrw.schule.svws.core.logger.Logger;
 import jakarta.validation.constraints.NotNull;

@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.Vector;
 
-import de.nrw.schule.svws.core.DeveloperNotificationException;
-import de.nrw.schule.svws.core.UserNotificationException;
 import de.nrw.schule.svws.core.adt.collection.LinkedCollection;
 import de.nrw.schule.svws.core.data.gost.GostBlockungKurs;
 import de.nrw.schule.svws.core.data.gost.GostBlockungKursLehrer;
@@ -15,6 +13,8 @@ import de.nrw.schule.svws.core.data.gost.GostBlockungRegel;
 import de.nrw.schule.svws.core.data.gost.GostBlockungSchiene;
 import de.nrw.schule.svws.core.data.gost.GostFach;
 import de.nrw.schule.svws.core.data.gost.GostFachwahl;
+import de.nrw.schule.svws.core.exceptions.DeveloperNotificationException;
+import de.nrw.schule.svws.core.exceptions.UserNotificationException;
 import de.nrw.schule.svws.core.logger.Logger;
 import de.nrw.schule.svws.core.types.gost.GostKursart;
 import de.nrw.schule.svws.core.types.kursblockung.GostKursblockungRegelTyp;

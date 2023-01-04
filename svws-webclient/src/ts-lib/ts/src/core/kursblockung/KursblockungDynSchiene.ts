@@ -8,7 +8,7 @@ import { KursblockungDynKurs, cast_de_nrw_schule_svws_core_kursblockung_Kursbloc
 import { JavaString, cast_java_lang_String } from '../../java/lang/JavaString';
 import { Logger, cast_de_nrw_schule_svws_core_logger_Logger } from '../../core/logger/Logger';
 import { LogLevel, cast_de_nrw_schule_svws_core_logger_LogLevel } from '../../core/logger/LogLevel';
-import { UserNotificationException, cast_de_nrw_schule_svws_core_UserNotificationException } from '../../core/UserNotificationException';
+import { UserNotificationException, cast_de_nrw_schule_svws_core_exceptions_UserNotificationException } from '../../core/exceptions/UserNotificationException';
 import { System, cast_java_lang_System } from '../../java/lang/System';
 
 export class KursblockungDynSchiene extends JavaObject {

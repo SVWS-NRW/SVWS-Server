@@ -5,7 +5,7 @@ import { KursblockungStatic, cast_de_nrw_schule_svws_core_kursblockung_Kursblock
 import { HashMap, cast_java_util_HashMap } from '../../java/util/HashMap';
 import { KursblockungDynSchiene, cast_de_nrw_schule_svws_core_kursblockung_KursblockungDynSchiene } from '../../core/kursblockung/KursblockungDynSchiene';
 import { KursblockungDynKurs, cast_de_nrw_schule_svws_core_kursblockung_KursblockungDynKurs } from '../../core/kursblockung/KursblockungDynKurs';
-import { DeveloperNotificationException, cast_de_nrw_schule_svws_core_DeveloperNotificationException } from '../../core/DeveloperNotificationException';
+import { DeveloperNotificationException, cast_de_nrw_schule_svws_core_exceptions_DeveloperNotificationException } from '../../core/exceptions/DeveloperNotificationException';
 import { Logger, cast_de_nrw_schule_svws_core_logger_Logger } from '../../core/logger/Logger';
 import { GostBlockungRegel, cast_de_nrw_schule_svws_core_data_gost_GostBlockungRegel } from '../../core/data/gost/GostBlockungRegel';
 import { GostKursart, cast_de_nrw_schule_svws_core_types_gost_GostKursart } from '../../core/types/gost/GostKursart';
@@ -26,7 +26,7 @@ import { JavaInteger, cast_java_lang_Integer } from '../../java/lang/JavaInteger
 import { GostBlockungSchiene, cast_de_nrw_schule_svws_core_data_gost_GostBlockungSchiene } from '../../core/data/gost/GostBlockungSchiene';
 import { JavaLong, cast_java_lang_Long } from '../../java/lang/JavaLong';
 import { KursblockungDynSchueler, cast_de_nrw_schule_svws_core_kursblockung_KursblockungDynSchueler } from '../../core/kursblockung/KursblockungDynSchueler';
-import { UserNotificationException, cast_de_nrw_schule_svws_core_UserNotificationException } from '../../core/UserNotificationException';
+import { UserNotificationException, cast_de_nrw_schule_svws_core_exceptions_UserNotificationException } from '../../core/exceptions/UserNotificationException';
 
 export class KursblockungDynDaten extends JavaObject {
 

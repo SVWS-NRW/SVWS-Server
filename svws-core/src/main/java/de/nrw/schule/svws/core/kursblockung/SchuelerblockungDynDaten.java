@@ -5,13 +5,13 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Vector;
 
-import de.nrw.schule.svws.core.DeveloperNotificationException;
-import de.nrw.schule.svws.core.UserNotificationException;
 import de.nrw.schule.svws.core.data.gost.GostFachwahl;
 import de.nrw.schule.svws.core.data.kursblockung.SchuelerblockungInput;
 import de.nrw.schule.svws.core.data.kursblockung.SchuelerblockungInputKurs;
 import de.nrw.schule.svws.core.data.kursblockung.SchuelerblockungOutput;
 import de.nrw.schule.svws.core.data.kursblockung.SchuelerblockungOutputFachwahlZuKurs;
+import de.nrw.schule.svws.core.exceptions.DeveloperNotificationException;
+import de.nrw.schule.svws.core.exceptions.UserNotificationException;
 import jakarta.validation.constraints.NotNull;
 
 /**
