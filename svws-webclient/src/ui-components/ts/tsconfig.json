@@ -10,9 +10,6 @@
 		"types": [
 			"vite/client"
 		],
-		"vueCompilerOptions": {
-
-		}
 	},
 	"include": [
 		"env.d.ts",
