@@ -35,7 +35,8 @@
 		const transfer = e.dataTransfer;
 		if (!transfer) return;
 		transfer.dropEffect = "move";
-		dragging.value = true
+		dragging.value = true;
+		transfer.clearData();
 		transfer.setData('text/plain', JSON.stringify(props.data));
 		emits("dragStart", e);
 	}

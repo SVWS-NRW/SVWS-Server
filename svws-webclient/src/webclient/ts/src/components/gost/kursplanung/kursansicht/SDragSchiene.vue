@@ -1,11 +1,11 @@
 <template>
-		<drop-data
+		<svws-ui-drop-data
 			class="text-center"
 			:class="{'bg-yellow-200': drag_data.schiene && drag_data.schiene?.id !== schiene.id }"
 			tag="td"
 			@drop="regel_schiene"
 			>
-			<drag-data
+			<svws-ui-drag-data
 				:key="schiene.id"
 				tag="div"
 				:data="{schiene}"
@@ -17,8 +17,8 @@
 					<svws-ui-icon >
 						<i-ri-lock-unlock-line class="inline-block"/>
 					</svws-ui-icon>
-			</drag-data>
-	</drop-data>
+			</svws-ui-drag-data>
+	</svws-ui-drop-data>
 
 	<svws-ui-modal ref="modal" size="small">
 		<template #modalTitle>Regel erstellen</template>

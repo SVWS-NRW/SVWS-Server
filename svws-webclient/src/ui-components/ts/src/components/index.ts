@@ -32,3 +32,5 @@ export { default as SvwsUiTable } from "./Layout/Table/Table.vue";
 export { default as SvwsUiRouterTabBar } from "./Controls/RouterTabBar.vue";
 export { default as SvwsUiRouterTabBarButton } from "./Controls/RouterTabBarButton.vue";
 export { default as SvwsUiRouterVerticalTabBar } from "./Controls/RouterVerticalTabBar.vue";
+export { default as SvwsUiDragData } from "./DragData.vue";
+export { default as SvwsUiDropData } from "./DropData.vue";

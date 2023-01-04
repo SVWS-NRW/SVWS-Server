@@ -1,5 +1,5 @@
 <template>
-	<drag-data
+	<svws-ui-drag-data
 		:key="kurs.id"
 		tag="td"
 		:data="{ id: kurs.id, fachID: kurs.fachID, kursart: kurs.kursart?.valueOf() }"
@@ -10,7 +10,7 @@
 		@drag-start="drag_started"
 		@drag-end="drag_ended"
 	>
-		<drop-data @drop="drop_aendere_kurszuordnung($event, kurs.id)" v-slot="{active}" >
+		<svws-ui-drop-data @drop="drop_aendere_kurszuordnung($event, kurs.id)" v-slot="{active}" >
 			<div :class="{'bg-green-400': active && is_drop_zone}">
 				<span>{{ kurs_name }}</span>
 				<br />{{schueler_schriftlich}}/{{ kurs.schueler.size() }}
@@ -29,8 +29,8 @@
 						<svws-ui-icon> <i-ri-pushpin-fill v-if="fixier_regel" class="inline-block text-red-400"/> </svws-ui-icon>
 				</span>
 			</div>
-		</drop-data>
-	</drag-data>
+		</svws-ui-drop-data>
+	</svws-ui-drag-data>
 </template>
 
 <script setup lang="ts">

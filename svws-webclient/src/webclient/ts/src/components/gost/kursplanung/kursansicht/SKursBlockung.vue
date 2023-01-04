@@ -33,7 +33,7 @@
 		</template>
 		<template v-if="!kurs_blockungsergebnis">
 			<td></td> </template>
-		<drop-data v-if="!blockung_aktiv"
+		<svws-ui-drop-data v-if="!blockung_aktiv"
 			v-for="(schiene) in schienen"
 			v-slot="{ active }"
 			:key="schiene.id"
@@ -42,7 +42,7 @@
 			tag="td"
 			@drop="drop_aendere_kursschiene($event, schiene)"
 			>
-			<drag-data v-if="kurs_schiene_zugeordnet(schiene)"
+			<svws-ui-drag-data v-if="kurs_schiene_zugeordnet(schiene)"
 				:key="kurs.id"
 				tag="div"
 				:data="{kurs, schiene}"
@@ -59,7 +59,7 @@
 						<i-ri-pushpin-fill v-if="fixier_regeln.length" class="inline-block"/>
 						<i-ri-pushpin-line v-if="!fixier_regeln.length && allow_regeln" class="inline-block"/> </svws-ui-icon>
 				</svws-ui-badge>
-			</drag-data>
+			</svws-ui-drag-data>
 			<template v-else>
 				<div class="cursor-pointer" @click="sperren_regel_toggle(schiene)" :class="{'bg-green-400': active && drag_data?.schiene?.id !== schiene.id && drag_data.kurs?.id === kurs.id && drag_data.schiene?.id !== schiene.id}">
 					<svws-ui-icon>
@@ -68,7 +68,7 @@
 					</svws-ui-icon>
 				</div>
 			</template>
-		</drop-data>
+		</svws-ui-drop-data>
 		<template v-else v-for="schiene in schienen" :key="schiene.nummer">
 			<td class="text-center leading-5 select-none" :class="{ 'cell--kursdifferenz': setze_kursdifferenz }" >
 				<svws-ui-badge

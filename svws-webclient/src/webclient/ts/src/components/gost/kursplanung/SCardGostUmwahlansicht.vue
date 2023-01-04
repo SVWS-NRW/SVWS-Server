@@ -38,7 +38,7 @@
 				</div>
 			</div>
 		</div>
-		<drop-data
+		<svws-ui-drop-data
 			v-if="selected"
 			v-slot="{ active }"
 			class="w-40 flex-none"
@@ -65,7 +65,7 @@
 					</template>
 				</div>
 			</div>
-		</drop-data>
+		</svws-ui-drop-data>
 		<div v-if="selected" class="flex-none">
 			<div class="">
 				<div class="overflow-hidden rounded-lg shadow">

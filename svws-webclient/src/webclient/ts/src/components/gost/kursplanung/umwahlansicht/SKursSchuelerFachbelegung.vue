@@ -4,7 +4,7 @@
 		class="cursor-pointer px-2 text-left"
 		:class="{ 'bg-red-400': (belegung === undefined) }"
 	>
-		<drag-data
+		<svws-ui-drag-data
 			:key="kursid"
 			tag="td"
 			:data="{ id: kursid, fachID: fach.fachID, kursart: kursartid }"
@@ -18,7 +18,7 @@
 			@drag-end="drag_ended"
 		>
 			{{ get_kurs_name() }}
-		</drag-data>
+		</svws-ui-drag-data>
 	</tr>
 </template>
 

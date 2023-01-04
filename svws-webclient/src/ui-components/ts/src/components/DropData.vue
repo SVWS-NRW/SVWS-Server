@@ -2,7 +2,7 @@
 	<component
 		:is="tag"
 		@dragover.prevent="over"
-		@dragenter="active = true"
+		@dragenter.prevent="active = true"
 		@dragleave.prevent="active = false"
 		@drop.prevent="drop"
 	>
@@ -35,6 +35,5 @@
 		active.value = false;
 		const data = JSON.parse(transfer.getData('text/plain'));
 		emits("drop", data);
-		// TODO transfer.clearData(); required? Would throw a DOMException...
 	}
 </script>
