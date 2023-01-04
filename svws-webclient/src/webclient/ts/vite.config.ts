@@ -7,8 +7,6 @@ import Markdown from "vite-plugin-md";
 import { resolve } from "path";
 import { ComponentResolver } from 'unplugin-vue-components/types';
 
-
-
 export default defineConfig({
 	test: {},
 	server: { port: 3000 },
