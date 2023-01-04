@@ -53,7 +53,7 @@
 				@drag-start="drag_started"
 				@dragEnd="drag_ended"
 			>
-				<svws-ui-badge size="tiny" class="cursor-grab" :variant="selected_kurs ? 'primary' : fixier_regeln.length ? 'error' : active && drag_data?.kurs?.id !== kurs.id ? 'success' : 'highlight'" @click="toggle_active_kurs">
+				<svws-ui-badge size="tiny" class="cursor-grab" :type="selected_kurs ? 'primary' : fixier_regeln.length ? 'error' : active && drag_data?.kurs?.id !== kurs.id ? 'success' : 'highlight'" @click="toggle_active_kurs">
 					{{ kurs_blockungsergebnis?.schueler.size() }}
 					<svws-ui-icon class="cursor-pointer" @click="fixieren_regel_toggle" >
 						<i-ri-pushpin-fill v-if="fixier_regeln.length" class="inline-block"/>
@@ -73,7 +73,7 @@
 			<td class="text-center leading-5 select-none" :class="{ 'cell--kursdifferenz': setze_kursdifferenz }" >
 				<svws-ui-badge
 					v-if="kurs_schiene_zugeordnet(schiene)"
-					size="tiny" :variant="selected_kurs?'primary':'highlight'" class="cursor-pointer"
+					size="tiny" :type="selected_kurs?'primary':'highlight'" class="cursor-pointer"
 					@click="toggle_active_kurs">
 					{{ kurs_blockungsergebnis?.schueler.size() }}
 					<svws-ui-icon v-if="fixier_regeln.length">
@@ -128,7 +128,7 @@
 					</div>
 				</div>
 				<div class="flex items-center gap-2">
-					<svws-ui-dropdown variant="icon" v-if="filtered_by_kursart.length>1">
+					<svws-ui-dropdown type="icon" v-if="filtered_by_kursart.length>1">
 						<template #dropdownButton>Zusammenlegen</template>
 						<template #dropdownItems>
 							<svws-ui-dropdown-item v-for="k in filtered_by_kursart.filter(k=>k.id!==kurs.id)" :key="k.id" class="px-2" @click=""> {{ get_kursbezeichnung(k.id) }} </svws-ui-dropdown-item>

@@ -12,7 +12,7 @@ function onClick(event: Event) {
 <template>
   <Story title="SVWS UI/Controls/Dropdown">
     <Variant title="Primary">
-      <svws-ui-dropdown variant="primary" @click="onClick">
+      <svws-ui-dropdown type="primary" @click="onClick">
         <template #dropdownButton>More options</template>
         <template #dropdownItems>
           <svws-ui-dropdown-item icon="home" @click="onClick">Option 1</svws-ui-dropdown-item>
@@ -24,7 +24,7 @@ function onClick(event: Event) {
     </Variant>
 
     <Variant title="Secondary">
-      <svws-ui-dropdown variant="secondary" @click="onClick">
+      <svws-ui-dropdown type="secondary" @click="onClick">
         <template #dropdownButton>More options</template>
         <template #dropdownItems>
           <svws-ui-dropdown-item icon="home" @click="onClick">Option 1</svws-ui-dropdown-item>
@@ -35,8 +35,8 @@ function onClick(event: Event) {
       </svws-ui-dropdown>
     </Variant>
 
-    <Variant title="Danger">
-      <svws-ui-dropdown variant="danger" @click="onClick">
+    <Variant title="Error">
+      <svws-ui-dropdown type="error" @click="onClick">
         <template #dropdownButton>More options</template>
         <template #dropdownItems>
           <svws-ui-dropdown-item icon="home" @click="onClick">Option 1</svws-ui-dropdown-item>
@@ -48,7 +48,7 @@ function onClick(event: Event) {
     </Variant>
 
     <Variant title="Disabled">
-      <svws-ui-dropdown variant="primary" disabled @click="onClick">
+      <svws-ui-dropdown type="primary" disabled @click="onClick">
         <template #dropdownButton>More options</template>
         <template #dropdownItems>
           <svws-ui-dropdown-item icon="home" @click="onClick">Option 1</svws-ui-dropdown-item>
@@ -60,7 +60,7 @@ function onClick(event: Event) {
     </Variant>
 
     <Variant title="Text/Icon only">
-      <svws-ui-dropdown variant="icon" @click="onClick">
+      <svws-ui-dropdown type="icon" @click="onClick">
         <template #dropdownButton>More options</template>
         <template #dropdownItems>
           <svws-ui-dropdown-item icon="home" @click="onClick">Option 1</svws-ui-dropdown-item>

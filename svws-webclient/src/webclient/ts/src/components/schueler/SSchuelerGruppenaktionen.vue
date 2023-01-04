@@ -3,9 +3,9 @@
 		<div class="flex w-full flex-col">
 			<svws-ui-header>
 				<span>Gruppenaktionen für Schüler</span>
-				<svws-ui-badge variant="highlight"> {{ items.length }} Einträge </svws-ui-badge>
+				<svws-ui-badge type="highlight"> {{ items.length }} Einträge </svws-ui-badge>
 			</svws-ui-header>
-			<svws-ui-button type="danger" @click="modal.openModal()">
+			<svws-ui-button type="error" @click="modal.openModal()">
 				Alle {{ items.length }} Schüler löschen
 			</svws-ui-button>
 			<svws-ui-modal ref="modal">
@@ -17,7 +17,7 @@
 					<svws-ui-button type="secondary" @click="modal.closeModal">
 						Abbrechen
 					</svws-ui-button>
-					<svws-ui-button type="danger" @click="deleteEntries()">
+					<svws-ui-button type="error" @click="deleteEntries()">
 						Löschen
 					</svws-ui-button>
 				</template>

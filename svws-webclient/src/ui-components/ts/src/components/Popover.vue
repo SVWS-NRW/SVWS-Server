@@ -1,7 +1,7 @@
 <script setup lang='ts'>
 import Popper from "vue3-popper";
+import { Placement } from "../types";
 
-type PLACEMENT = "auto" | "auto-start" | "auto-end" | "top" | "top-start" | "top-end" | "bottom" | "bottom-start" | "bottom-end" | "right" | "right-start" | "right-end" | "left" | "left-start" | "left-end";
 
 const {
 	placement = "auto",
@@ -11,7 +11,7 @@ const {
 	openDelay = 0,
 	hover = true,
 } = defineProps<{
-	placement?: PLACEMENT;
+	placement?: Placement;
 	disableClickAway?: boolean;
 	offsetX?: string;
 	offsetY?: string;

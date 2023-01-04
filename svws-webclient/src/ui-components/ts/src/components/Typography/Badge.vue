@@ -1,13 +1,11 @@
-<script lang='ts'>
-export type Variant = "primary" | "success" | "error" | "highlight" | "light";
-export type Size = "big" | "medium" | "normal" | "small" | "tiny";
-</script>
 <script setup lang='ts'>
+import { Size, Type } from '~/types';
+
 const {
-	variant = 'light',
+	type = 'light',
 	size = 'normal',
 } = defineProps<{
-	variant?: Variant;
+	type?: Type;
 	size?: Size;
 }>();
 </script>
@@ -15,11 +13,11 @@ const {
 <template>
 	<span
 class="badge" :class="{
-		'badge--primary': variant === 'primary',
-		'badge--success': variant === 'success',
-		'badge--error': variant === 'error',
-		'badge--highlight': variant === 'highlight',
-		'badge--light': variant === 'light',
+		'badge--primary': type === 'primary',
+		'badge--success': type === 'success',
+		'badge--error': type === 'error',
+		'badge--highlight': type === 'highlight',
+		'badge--light': type === 'light',
 		'badge--big': size === 'big',
 		'badge--medium': size === 'medium',
 		'badge--normal': size === 'normal',

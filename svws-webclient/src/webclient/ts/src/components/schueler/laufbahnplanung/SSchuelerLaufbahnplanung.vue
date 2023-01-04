@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-badge class="cursor-pointer print:hidden" size="tiny" variant="primary" @click="modal.openModal()"> Hilfe </svws-ui-badge>
+	<svws-ui-badge class="cursor-pointer print:hidden" size="tiny" type="primary" @click="modal.openModal()"> Hilfe </svws-ui-badge>
 	<svws-ui-modal ref="modal">
 		<template #modalTitle>Hilfe</template>
 		<template #modalDescription>

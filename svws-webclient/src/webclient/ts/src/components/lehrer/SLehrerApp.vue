@@ -7,7 +7,7 @@
 				</div>
 				<div>
 					<span class="inline-block mr-3">{{ inputTitel }} {{ inputVorname }} {{ inputNachname }}</span>
-					<svws-ui-badge variant="light">ID: {{ props.id }}</svws-ui-badge>
+					<svws-ui-badge type="light">ID: {{ props.id }}</svws-ui-badge>
 					<br/>
 					<span class="opacity-50">{{ inputKuerzel }}</span>
 				</div>

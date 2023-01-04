@@ -3,7 +3,7 @@
 		<svws-ui-header>
 			<div class="flex items-center">
 				<span class="inline-block mr-3">{{ item?.kuerzel?.toString() }}</span>
-				<svws-ui-badge variant="light">{{ "ID: " + id }}</svws-ui-badge>
+				<svws-ui-badge type="light">{{ "ID: " + id }}</svws-ui-badge>
 				<br/>
 				<div class="separate-items--custom">
 					<span v-for="(l, i) in inputKlassenlehrer" :key="i" class="opacity-50"> {{ l.kuerzel }} </span>

@@ -5,7 +5,7 @@
 	>
 		<td class="px-2">
 			<div class="flex justify-between">
-				<span>{{ `${schueler.nachname}, ${schueler.vorname}`}} <svws-ui-badge v-if="schueler.status !== 'Aktiv'" size="tiny" variant="highlight">{{schueler.status}}</svws-ui-badge></span>
+				<span>{{ `${schueler.nachname}, ${schueler.vorname}`}} <svws-ui-badge v-if="schueler.status !== 'Aktiv'" size="tiny" type="highlight">{{schueler.status}}</svws-ui-badge></span>
 				<svws-ui-icon v-if="selected"><i-ri-checkbox-blank-circle-fill class="text-blue-400"/></svws-ui-icon>
 			</div>
 		</td>

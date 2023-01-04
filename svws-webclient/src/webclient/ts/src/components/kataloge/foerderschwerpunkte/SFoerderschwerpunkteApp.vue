@@ -1,8 +1,8 @@
 <template>
 	<div class="flex h-full flex-row">
 		<div v-if="props.id !== undefined" class="flex w-full flex-col">
-			<svws-ui-header :badge="props.id" badge-variant="light" badge-size="normal"><span>{{ props.item?.text }}</span>
-				<svws-ui-badge variant="highlight" size="normal"> {{ props.item?.kuerzel }} </svws-ui-badge>
+			<svws-ui-header :badge="props.id" badge-type="light" badge-size="normal"><span>{{ props.item?.text }}</span>
+				<svws-ui-badge type="highlight" size="normal"> {{ props.item?.kuerzel }} </svws-ui-badge>
 			</svws-ui-header>
 			<svws-ui-router-tab-bar :routes="routeKatalogFoerderschwerpunkte.children_records" :hidden="routeKatalogFoerderschwerpunkte.children_hidden" v-model="selectedRoute">
 				<router-view />

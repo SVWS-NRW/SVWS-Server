@@ -3,7 +3,7 @@
 		<svws-ui-header>
 			<div class="flex items-center">
 				<span class="inline-block mr-3">{{ kuerzel }}</span>
-				<svws-ui-badge variant="light">{{ "ID: " + props.id }}</svws-ui-badge>
+				<svws-ui-badge type="light">{{ "ID: " + props.id }}</svws-ui-badge>
 				<span v-if="inputFachlehrer" class="opacity-50"><br/>{{ inputFachlehrer }}</span>
 			</div>
 		</svws-ui-header>

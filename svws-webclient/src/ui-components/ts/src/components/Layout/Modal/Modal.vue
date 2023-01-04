@@ -1,10 +1,9 @@
 <script setup lang='ts'>
 //TODO: props weiterleiten über :open. Das mit den refs ist Blödsinn
 import { Dialog, DialogTitle, DialogDescription } from "@headlessui/vue";
+import { Size } from "~/types";
 
-type Size = "small" | "medium" | "large";
-
-const { size = 'small' } = defineProps<{ size?: Size; }>();
+const { size = 'small' } = defineProps<{ size: Extract<Size, 'small' | 'medium' | 'big'>; }>();
 
 const isOpen = ref(false);
 
@@ -31,7 +30,7 @@ defineExpose({
 class="modal" :class="{
 				'modal--sm': size === 'small',
 				'modal--md': size === 'medium',
-				'modal--lg': size === 'large'
+				'modal--lg': size === 'big'
 			}">
 				<div class="modal--titlebar">
 					<DialogTitle class="modal--title">

@@ -53,7 +53,7 @@
 		@apply border-black;
 	}
 
-	.dropdown--items--danger .dropdown--item:focus {
+	.dropdown--items--error .dropdown--item:focus {
 		@apply ring-error ring-opacity-50;
 		@apply border-error;
 	}

@@ -1,11 +1,11 @@
 <script setup lang='ts'>
-type Size = 'default' | 'small';
+import { Size } from '~/types';
 
 const {
-	size = 'default',
+	size = 'normal',
 	progress = 0,
 } = defineProps<{
-	size?: Size;
+	size?: Extract<Size, 'normal' | 'small'>;
 	progress?: number;
 }>();
 </script>
@@ -13,7 +13,7 @@ const {
 <template>
 	<div
 class="progress-bar" :class="{
-		'progress-bar--default': size === 'default',
+		'progress-bar--normal': size === 'normal',
 		'progress-bar--small': size === 'small'
 	}">
 		<div class="progress-bar--label">
@@ -33,7 +33,7 @@ class="progress-bar" :class="{
 	@apply flex flex-wrap justify-between;
 }
 
-.progress-bar--default {
+.progress-bar--normal {
 	@apply text-input;
 }
 
@@ -48,7 +48,7 @@ class="progress-bar" :class="{
 	@apply w-full;
 }
 
-.progress-bar--default .progress-bar--bar {
+.progress-bar--normal .progress-bar--bar {
 	@apply h-3;
 	@apply mt-3;
 }
@@ -63,7 +63,7 @@ class="progress-bar" :class="{
 	@apply transition-all;
 }
 
-.progress-bar--default .progress-bar--completed {
+.progress-bar--normal .progress-bar--completed {
 	@apply h-3;
 }
 

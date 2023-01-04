@@ -6,8 +6,8 @@ import SvwsUiProgressBar from "./ProgressBar.vue";
 
 <template>
   <Story title="SVWS UI/Controls/Progress Bar">
-    <Variant title="Default">
-      <svws-ui-progress-bar :progress="82" size="default">Progress Bar</svws-ui-progress-bar>
+    <Variant title="Normal">
+      <svws-ui-progress-bar :progress="82" size="normal">Progress Bar</svws-ui-progress-bar>
     </Variant>
 
     <Variant title="Small">

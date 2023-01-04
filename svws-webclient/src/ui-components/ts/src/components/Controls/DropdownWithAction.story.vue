@@ -13,7 +13,7 @@ function onClick(event: Event) {
 <template>
   <Story title="SVWS UI/Controls/Dropdown with action">
     <Variant title="Primary">
-      <svws-ui-dropdown-with-action variant="primary">
+      <svws-ui-dropdown-with-action type="primary">
         <template #actionButton>
           <svws-ui-button dropdown-action @click="onClick">Button und Dropdown</svws-ui-button>
         </template>
@@ -27,7 +27,7 @@ function onClick(event: Event) {
     </Variant>
 
     <Variant title="Secondary">
-      <svws-ui-dropdown-with-action variant="secondary">
+      <svws-ui-dropdown-with-action type="secondary">
         <template #actionButton>
           <svws-ui-button dropdown-action @click="onClick">Button und Dropdown</svws-ui-button>
         </template>
@@ -40,8 +40,8 @@ function onClick(event: Event) {
       </svws-ui-dropdown-with-action>
     </Variant>
 
-    <Variant title="Danger">
-      <svws-ui-dropdown-with-action variant="danger">
+    <Variant title="Error">
+      <svws-ui-dropdown-with-action type="error">
         <template #actionButton>
           <svws-ui-button dropdown-action @click="onClick">Button und Dropdown</svws-ui-button>
         </template>
@@ -55,7 +55,7 @@ function onClick(event: Event) {
     </Variant>
 
     <Variant title="Disabled">
-      <svws-ui-dropdown-with-action variant="primary" disabled dropdown-disabled>
+      <svws-ui-dropdown-with-action type="primary" disabled dropdown-disabled>
         <template #actionButton>
           <svws-ui-button dropdown-action @click="onClick">Button und Dropdown</svws-ui-button>
         </template>

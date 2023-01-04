@@ -1,7 +1,7 @@
 <template>
 	<div class="flex h-full flex-row">
 		<div class="flex w-full flex-col">
-			<svws-ui-header :badge="id" badge-variant="light" badge-size="normal">
+			<svws-ui-header :badge="id" badge-type="light" badge-size="normal">
 				<span> {{ anzeigename }} </span>
 			</svws-ui-header>
 			<svws-ui-router-tab-bar :routes="routeSchuleBenutzer.children_records" :hidden="routeSchuleBenutzer.children_hidden" v-model="selectedRoute">

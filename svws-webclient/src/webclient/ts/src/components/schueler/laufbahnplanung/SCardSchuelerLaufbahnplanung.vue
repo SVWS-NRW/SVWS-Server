@@ -106,7 +106,7 @@
 					<div class="flex justify-between gap-1">
 						<svws-ui-button @click.prevent="download_file" >Wahlbogen herunterladen</svws-ui-button >
 						<svws-ui-button @click="toggle_modal">Reset</svws-ui-button>
-						<svws-ui-button :type="manuell ? 'danger':'primary'" @click="manu">Manuellen Modus {{manuell?"de":""}}aktivieren</svws-ui-button>
+						<svws-ui-button :type="manuell ? 'error':'primary'" @click="manu">Manuellen Modus {{manuell?"de":""}}aktivieren</svws-ui-button>
 					</div>
 				</div>
 			</div>
@@ -144,7 +144,7 @@
 							<thead class="bg-slate-100">
 								<tr>
 									<td class="px-2"> Laufbahnfehler
-										<svws-ui-badge v-if="belegungsfehler.size()" variant="error" size="tiny" >
+										<svws-ui-badge v-if="belegungsfehler.size()" type="error" size="tiny" >
 											{{ belegungsfehler.size() }} </svws-ui-badge>
 									</td>
 								</tr>

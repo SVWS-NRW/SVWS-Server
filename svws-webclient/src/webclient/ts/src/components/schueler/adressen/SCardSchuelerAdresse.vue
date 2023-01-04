@@ -1,7 +1,7 @@
 <template>
     <svws-ui-content-card>
 		<template #actions>
-			<svws-ui-button type="danger">
+			<svws-ui-button type="error">
 				<svws-ui-icon> <i-ri-delete-bin-2-line /> </svws-ui-icon>
 				<span class="ml-2">Löschen</span>
 			</svws-ui-button>

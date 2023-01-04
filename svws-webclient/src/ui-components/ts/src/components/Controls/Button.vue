@@ -1,13 +1,5 @@
 <script lang="ts" setup>
-type ButtonType =
-	"primary" |
-	"secondary" |
-	"danger" |
-	"icon" |
-	"transparent";
-type ButtonSize =
-	'small' |
-	'normal';
+import { Size, ButtonType } from '../../types';
 
 const {
 	type = 'primary',
@@ -18,7 +10,7 @@ const {
 	type?: ButtonType;
 	disabled?: boolean;
 	dropdownAction?: boolean;
-	size?: ButtonSize;
+	size?: Extract<Size, 'small' | 'normal'>;
 }>();
 
 const emit = defineEmits<{
@@ -37,7 +29,7 @@ function onClick(event: MouseEvent) {
 class="button" :class="{
 		'button--primary': type === 'primary',
 		'button--secondary': type === 'secondary',
-		'button--danger': type === 'danger',
+		'button--error': type === 'error',
 		'button--transparent': type === 'transparent',
 		'button--icon': type === 'icon',
 		'button--dropdown-action': dropdownAction === true,
@@ -88,17 +80,17 @@ class="button" :class="{
 	@apply ring-primary ring-opacity-50;
 }
 
-.button--danger {
+.button--error {
 	@apply bg-transparent;
 	@apply border-error;
 	@apply text-error;
 }
 
-.button--danger:hover {
+.button--error:hover {
 	@apply bg-error text-white;
 }
 
-.button--danger:focus {
+.button--error:focus {
 	@apply bg-error;
 	@apply ring-error ring-opacity-50;
 	@apply text-white;
@@ -158,7 +150,7 @@ class="button" :class="{
 	}
 }
 
-.hover--danger:hover {
+.hover--error:hover {
 	@apply text-error;
 }
 

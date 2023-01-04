@@ -6,7 +6,7 @@ import SvwsUiButton from "./Button.vue";
 const propsVariants = {
   Primary: { type: "primary" },
   Secondary: { type: "secondary" },
-  Danger: { type: "danger" },
+  Error: { type: "error" },
   Transparent: { type: "transparent" },
   'Dropdown Action': { type: "primary", dropdownAction: true },
   Disabled: { type: "primary", disabled: true },

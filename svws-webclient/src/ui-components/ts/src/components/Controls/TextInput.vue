@@ -4,9 +4,8 @@
 	};
 </script>
 <script setup lang="ts">
+	import { InputType } from "../../types";
 	import { genId } from "../../utils";
-
-	type InputType = "text" | "number" | "date" | "email" | "search" | "password" | "tel" | "year";
 
 	const {
 		type = "text",
@@ -170,7 +169,7 @@
 	}
 
 	.multiselect-input-component .text-input--control {
-		@apply text-ellipsis overflow-hidden;
+		@apply overflow-hidden text-ellipsis;
 		padding-right: 3.5em;
 	}
 
@@ -221,7 +220,7 @@
 	}
 
 	.text-input-readonly .text-input--control {
-		@apply cursor-default pointer-events-none;
+		@apply pointer-events-none cursor-default;
 	}
 
 	.text-input--placeholder {
@@ -252,7 +251,7 @@
 		font-size: 0.78rem;
 
 		&:after {
-			content: '';
+			content: "";
 		}
 	}
 
@@ -300,12 +299,11 @@
 	}
 
 	.text-input--headless {
-		@apply bg-white w-full text-black font-medium whitespace-nowrap outline-none border-0 px-3;
+		@apply w-full whitespace-nowrap border-0 bg-white px-3 font-medium text-black outline-none;
 	}
-
 </style>
 <style lang="postcss">
-.text-input--inline {
-	@apply underline decoration-dashed underline-offset-2 cursor-text;
-}
+	.text-input--inline {
+		@apply cursor-text underline decoration-dashed underline-offset-2;
+	}
 </style>

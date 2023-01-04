@@ -1,13 +1,12 @@
 <script setup lang='ts'>
 import { Menu as MenuHeadless, MenuButton, MenuItems } from "@headlessui/vue";
-
-type Variant = 'primary' | 'secondary' | 'danger';
+import { DropdownType } from "../../types";
 
 const {
-	variant = 'primary',
+	type = 'primary',
 	dropdownDisabled = false,
 } = defineProps<{
-	variant?: Variant;
+	type?: DropdownType;
 	dropdownDisabled?: boolean;
 }>();
 </script>
@@ -18,11 +17,11 @@ const {
 		<menu-button
 v-slot="{ open }" class="dropdown-with-action--button" :class="{
 			'dropdown-with-action--button--primary':
-				variant === 'primary',
+				type === 'primary',
 			'dropdown-with-action--button--secondary':
-				variant === 'secondary',
-			'dropdown-with-action--button--danger':
-				variant === 'danger'
+				type === 'secondary',
+			'dropdown-with-action--button--error':
+				type === 'error'
 		}" :disabled="dropdownDisabled">
 			<Icon class="dropdown-with-action--icon">
 				<i-ri-arrow-up-s-line v-if="open" />
@@ -31,9 +30,9 @@ v-slot="{ open }" class="dropdown-with-action--button" :class="{
 		</menu-button>
 		<menu-items
 as="div" class="dropdown--items" :class="{
-			'dropdown--items--primary': variant === 'primary',
-			'dropdown--items--secondary': variant === 'secondary',
-			'dropdown--items--danger': variant === 'danger'
+			'dropdown--items--primary': type === 'primary',
+			'dropdown--items--secondary': type === 'secondary',
+			'dropdown--items--error': type === 'error'
 		}">
 			<slot name="dropdownItems" />
 		</menu-items>
@@ -80,13 +79,13 @@ as="div" class="dropdown--items" :class="{
 	@apply ring-primary ring-opacity-50;
 }
 
-.dropdown-with-action--button--danger {
+.dropdown-with-action--button--error {
 	@apply bg-transparent;
 	@apply border-error;
 	@apply text-error;
 }
 
-.dropdown-with-action--button--danger:focus {
+.dropdown-with-action--button--error:focus {
 	@apply bg-error;
 	@apply ring-error ring-opacity-50;
 	@apply text-white;
@@ -126,7 +125,7 @@ as="div" class="dropdown--items" :class="{
 	@apply border-black;
 }
 
-.dropdown--items--danger {
+.dropdown--items--error {
 	@apply border-error;
 }
 </style>

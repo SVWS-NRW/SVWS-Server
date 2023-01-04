@@ -91,7 +91,7 @@ const regel_entfernen = async (r: GostBlockungRegel|undefined) => {
 			</div>
 			<svws-ui-icon
 				v-if="allow_regeln"
-				type="danger"
+				type="error"
 				class="cursor-pointer"
 				@click="regel_entfernen(r)"
 			>
@@ -103,7 +103,7 @@ const regel_entfernen = async (r: GostBlockungRegel|undefined) => {
 				<slot />
 				<svws-ui-button
 					type="icon"
-					class="hover--danger m1-auto"
+					class="hover--error m1-auto"
 					@click="regel=undefined"
 				>
 					<svws-ui-icon> <i-ri-delete-bin-2-line /> </svws-ui-icon>
