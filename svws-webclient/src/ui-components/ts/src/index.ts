@@ -47,4 +47,6 @@ export {
 	SvwsUiRouterTabBar,
 	SvwsUiRouterTabBarButton,
 	SvwsUiRouterVerticalTabBar,
+	SvwsUiDragData,
+	SvwsUiDropData
 } from './components'

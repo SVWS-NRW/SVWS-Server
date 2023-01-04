@@ -105,6 +105,8 @@ function SVWSComponentNames() {
 		"SvwsUiTable",
 		"SvwsUiRouterTabBar",
 		"SvwsUiRouterTabBarButton",
-		"SvwsUiRouterVerticalTabBar"
+		"SvwsUiRouterVerticalTabBar",
+		"SvwsUiDragData",
+		"SvwsUiDropData"
 	]
 }
