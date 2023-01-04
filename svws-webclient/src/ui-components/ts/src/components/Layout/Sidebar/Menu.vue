@@ -17,10 +17,10 @@
 					@click="toggleDarkTheme"
 				>
 					<template v-if="isDarkTheme">
-						<svws-ui-icon><i-ri-sun-line /></svws-ui-icon>
+						<Icon><i-ri-sun-line /></Icon>
 					</template>
 					<template v-if="!isDarkTheme">
-						<svws-ui-icon><i-ri-moon-line /></svws-ui-icon>
+						<Icon><i-ri-moon-line /></Icon>
 					</template>
 				</button>
 			</div>

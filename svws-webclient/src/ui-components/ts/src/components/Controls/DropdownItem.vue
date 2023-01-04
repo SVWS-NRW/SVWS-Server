@@ -12,9 +12,9 @@
 				'dropdown--item--active': active === true
 			}"
 		>
-			<svws-ui-icon class="dropdown--item--icon"
+			<Icon class="dropdown--item--icon"
 				><slot name="icon"></slot
-			></svws-ui-icon>
+			></Icon>
 			<slot />
 		</button>
 	</menu-item-headless>

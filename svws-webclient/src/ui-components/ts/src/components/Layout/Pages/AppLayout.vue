@@ -32,8 +32,8 @@ function toggleFullscreen() {
 				<slot name="main" />
 				<!-- Experiment: Fullscreen Button, der den Content-Bereich auf die gesamte Breite des Browsers ausdehnt
 				<svws-ui-button type="transparent" @click="toggleFullscreen" class="cursor-pointer absolute top-4 right-10 text-sm">
-					<svws-ui-icon v-if="!contentIsFullscreen"><i-ri-fullscreen-line/></svws-ui-icon>
-					<svws-ui-icon class="flex" v-if="contentIsFullscreen">Fullscreen deaktivieren  <i-ri-fullscreen-exit-line/></svws-ui-icon>
+					<Icon v-if="!contentIsFullscreen"><i-ri-fullscreen-line/></Icon>
+					<Icon class="flex" v-if="contentIsFullscreen">Fullscreen deaktivieren  <i-ri-fullscreen-exit-line/></Icon>
 				</svws-ui-button>-->
 			</div>
 		</main>
