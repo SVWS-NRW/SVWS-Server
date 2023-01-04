@@ -52,7 +52,7 @@ export class RouteSchueler extends RouteNodeListView<SchuelerListeEintrag, Route
     public beforeEach(to: RouteLocationNormalized, from: RouteLocationNormalized): any {
 		if ((to.name?.toString() === this.name) && (to.params.id === undefined)) {
 			const redirect_name: string = (this.selectedChild === undefined) ? this.defaultChildNode.name : this.selectedChild.name;
-			return { name: redirect_name, params: { id: mainApp.apps.schueler.auswahl.liste.at(0)?.id }};
+			return { name: redirect_name, params: { id: mainApp.apps.schueler.auswahl.gefiltert.at(0)?.id }};
 		}
         return true;
     }
