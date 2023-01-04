@@ -60,7 +60,7 @@
 							<i-ri-delete-bin-2-line class="m-2 text-4xl" :class="{ 'text-red-700': is_dragging }" />
 						</div>
 						<div class="flex items-center justify-center bg-slate-100 py-2">
-							<svws-ui-button size="small m-2" @click="auto_verteilen" :disabled="pending">Automatisch verteilen</svws-ui-button>
+							<svws-ui-button size="small" class="m-2" @click="auto_verteilen" :disabled="pending">Automatisch verteilen</svws-ui-button>
 						</div>
 					</template>
 				</div>
@@ -97,13 +97,18 @@
 		SchuelerListeEintrag,
 		Vector
 	} from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, Ref, ref, watch, WritableComputedRef } from "vue";
+	import { computed, ComputedRef, onErrorCaptured, Ref, ref, WritableComputedRef } from "vue";
 
 	import { injectMainApp, Main } from "~/apps/Main";
 
 	const main: Main = injectMainApp();
 	const app = main.apps.gost;
 	const schueler_filter = app.listAbiturjahrgangSchueler.filter;
+
+	onErrorCaptured((e)=>{
+		alert("Es ist ein Fehler aufgetreten: " + e.message);
+		return false;
+	})
 
 	const is_dragging: Ref<boolean> = ref(false)
 
