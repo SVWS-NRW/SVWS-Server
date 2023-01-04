@@ -82,6 +82,10 @@ function execute(action: string, row: DataTableItem) {
     row.isEditing = !row.isEditing;
   }
 }
+
+function manipulateData() {
+  data.value.splice(0,1);
+}
 </script>
 
 <template>
