@@ -1,6 +1,8 @@
+<script lang='ts'>
+export type Variant = "primary" | "success" | "error" | "highlight" | "light";
+export type Size = "big" | "medium" | "normal" | "small" | "tiny";
+</script>
 <script setup lang='ts'>
-type Variant = "primary" | "success" | "error" | "highlight" | "light";
-type Size = "big" | "medium" | "normal" | "small" | "tiny";
 
 const {
 	variant = 'light',
@@ -29,7 +31,7 @@ class="badge" :class="{
 	</span>
 </template>
 
-<style>
+<style lang="postcss">
 .badge {
 	@apply font-bold leading-none;
 	@apply rounded inline-block align-top;

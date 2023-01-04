@@ -1,4 +1,4 @@
-export type DataTableItem = Record<string, unknown>;
+export type DataTableItem = Record<string, any>;
 
 export type DataTableColumn = {
 	key: string;

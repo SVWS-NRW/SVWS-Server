@@ -6,12 +6,18 @@
 		"baseUrl": ".",
 		"paths": {
 			"~/*": ["src/*"]
+		},
+		"types": [
+			"vite/client"
+		],
+		"vueCompilerOptions": {
+
 		}
 	},
 	"include": [
 		"src/**/*",
+		"src/**/*.vue",
 		"components.d.ts",
 		"auto-imports.d.ts"
-	],
-	"exclude": ["**/*.story.vue"]
+	]
 }

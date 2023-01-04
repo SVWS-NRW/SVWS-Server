@@ -6,7 +6,7 @@
 <script setup lang="ts">
 	import { genId } from "../../utils";
 
-	type InputType = "text" | "number" | "date" | "email" | "search";
+	type InputType = "text" | "number" | "date" | "email" | "search" | "password" | "tel" | "year";
 
 	const {
 		type = "text",
@@ -21,7 +21,7 @@
 		focus = false
 	} = defineProps<{
 		type?: InputType;
-		modelValue: string | number;
+		modelValue?: string | number;
 		placeholder?: string;
 		statistics?: boolean;
 		valid?: boolean;

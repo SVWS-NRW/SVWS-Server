@@ -1,12 +1,13 @@
 <script setup lang='ts'>
+import type { Variant, Size } from '../Typography/Badge.vue';
 const {
 	badge = '',
 	badgeVariant = '',
 	badgeSize = '',
 } = defineProps<{
 	badge?: string;
-	badgeVariant?: string;
-	badgeSize?: string;
+	badgeVariant?: Variant;
+	badgeSize?: Size;
 }>();
 </script>
 
@@ -21,7 +22,7 @@ const {
 	</div>
 </template>
 
-<style>
+<style lang="postcss">
 .header--wrapper {
 	@apply flex flex-row items-center justify-start;
 	@apply py-2 px-6;

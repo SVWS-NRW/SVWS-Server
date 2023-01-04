@@ -48,7 +48,7 @@ function onClick(event: Event) {
     </Variant>
 
     <Variant title="Disabled">
-      <svws-ui-dropdown variant="Primary" disabled @click="onClick">
+      <svws-ui-dropdown variant="primary" disabled @click="onClick">
         <template #dropdownButton>More options</template>
         <template #dropdownItems>
           <svws-ui-dropdown-item icon="home" @click="onClick">Option 1</svws-ui-dropdown-item>

@@ -28,7 +28,7 @@ import SvwsUiTabPanel from "../../Controls/TabPanel.vue";
 						</svws-ui-sidebar-menu-header>
 					</template>
 					<template #default>
-						<svws-ui-sidebar-menu-item active="true">
+						<svws-ui-sidebar-menu-item active>
 							<template #label>Menu Item Label</template>
 							<template #icon>
 								<i-ri-team-line/>
@@ -107,7 +107,7 @@ import SvwsUiTabPanel from "../../Controls/TabPanel.vue";
 						<svws-ui-tab-button>Schulbesuch</svws-ui-tab-button>
 						<svws-ui-tab-button>Aktuelles Halbjahr</svws-ui-tab-button>
 						<svws-ui-tab-button>Leistungsdaten</svws-ui-tab-button>
-						<svws-ui-tab-button :hidden="!hatAbiturjahrgang">Laufbahnplanung</svws-ui-tab-button>
+						<svws-ui-tab-button hidden>Laufbahnplanung</svws-ui-tab-button>
 						<svws-ui-tab-button>Stundenplan</svws-ui-tab-button>
 					</template>
 					<template #panels>
@@ -129,7 +129,7 @@ import SvwsUiTabPanel from "../../Controls/TabPanel.vue";
 						<svws-ui-tab-panel>
 							<s-schueler-leistungsdaten />
 						</svws-ui-tab-panel>
-						<svws-ui-tab-panel :hidden="!hatAbiturjahrgang">
+						<svws-ui-tab-panel hidden>
 							<s-schueler-laufbahnplanung />
 						</svws-ui-tab-panel>
 						<svws-ui-tab-panel>

@@ -6,8 +6,9 @@
 	"version": "0.5.1-SNAPSHOT",
   "scripts": {
     "format": "prettier --write ./src/main/ts ./*.config.js",
-    "build": "vite build && tsc --emitDeclarationOnly",
-    "dts": "vue-tsc --declaration --emitDeclarationOnly",
+    "build": "npm run build-lib && npm build-dts",
+    "build-lib": "vite build", 
+    "build-dts": "vue-tsc --declaration --emitDeclarationOnly -p tsconfig.build.json",
     "lint-tsc": "vue-tsc --noEmit",
     "story:dev": "histoire dev",
     "story:build": "histoire build",

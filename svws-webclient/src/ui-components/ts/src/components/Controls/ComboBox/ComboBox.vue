@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import {type PropType, type ComputedRef} from "vue";
-import {genId} from "../../../utils";
+import { type PropType, type ComputedRef } from "vue";
+import { genId } from "../../../utils";
 import TextInput from "../TextInput.vue";
 
-type Item = { id: number; text: string };
+type Item = Record<string, any>;
 
 const {
 	placeholder,
@@ -32,13 +32,13 @@ const {
 		}
 	},
 	itemText: {
-		type: Function as PropType<(item: Item) => string>,
+		type: Function as PropType<(item: any) => string>,
 		default(item: Item) {
 			return item.text || "";
 		}
 	},
-	itemSort: {type: Function as PropType<(a: Item, b: Item) => number>, default: null},
-	itemFilter: {type: Function as PropType<(items: Item[], searchText: string) => Item[]>, default: null},
+	itemSort: {type: Function as PropType<(a: any, b: any) => number>, default: null},
+	itemFilter: {type: Function as PropType<(items: any[], searchText: string) => any[]>, default: null},
 	// eslint-disable-next-line vue/require-default-prop
 	modelValue: {
 		type: [Object, Array] as PropType<Item | Item[]>
@@ -86,7 +86,7 @@ function onBlur() {
 const dynModelValue = computed<string>(() => {
 	switch (true) {
 		default:
-			return generateInputText();
+			return generateInputText() ?? '';
 		case showList.value && autocomplete:
 			return searchText.value;
 	}
@@ -219,6 +219,18 @@ function onEscape() {
 	}
 }
 
+function onSpace (e: InputEvent) {
+	console.log('space')
+	if (!autocomplete)	{
+		e.preventDefault();
+		if (!showList.value) {
+			openListbox();
+		} else {
+			selectCurrentActiveItem();
+		}
+	}
+}
+
 function scrollToActiveItem() {
 	(itemRefs.value as HTMLElement[])[activeItemIndex.value]?.scrollIntoView({
 		block: "nearest",
@@ -266,7 +278,7 @@ function removeItem() {
 					@keydown.left.prevent="onArrowUp"
 					@keydown.enter.prevent="selectCurrentActiveItem"
 					@keydown.esc.prevent="onEscape"
-					@keydown.space="!autocomplete && (showList ? selectCurrentActiveItem() : openListbox())"
+					@keydown.space="onSpace"
 				/>
 			</div>
 			<div v-if="tags" class="tag-list-wrapper" @click.self="toggleListbox">

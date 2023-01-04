@@ -38,7 +38,7 @@ const columns = ref([
     label: 'Wie alt?',
     sortable: true,
     defaultSort: 'desc'
-  }
+  } as const
 ]);
 const columns2 = ref([
   {
@@ -55,7 +55,7 @@ const columns2 = ref([
     label: 'Wie alt?',
     sortable: true,
     defaultSort: 'desc'
-  },
+  } as const,
   {
     key: 'isActive',
     label: 'Is active?',

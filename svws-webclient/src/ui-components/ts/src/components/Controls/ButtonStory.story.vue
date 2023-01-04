@@ -12,7 +12,7 @@ const propsVariants = {
   Disabled: { type: "primary", disabled: true },
   Normal: { type: "primary", size: 'normal' },
   Small: { type: "primary", size: 'small' },
-};
+} as const;
 
 function onClick(event: Event) {
   hstEvent('Click', event);

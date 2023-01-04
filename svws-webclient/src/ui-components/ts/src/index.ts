@@ -1,15 +1,50 @@
 import "./assets/styles/index.css";
 import { App, Plugin } from "vue";
-import * as components from "./components";
 import SmartTable from "vuejs-smart-table";
 
-const install: Exclude<Plugin["install"], undefined> = function install(
+export const SvwsUiPlugin: Exclude<Plugin["install"], undefined> = function install(
 	app: App
 ) {
+	// TODO: statt dem plugin sollten wir auch hier die Komponenten einzeln exportieren.
+	// Dazu müssen wir in der smartTable Bib aber noch eine kleine Anpassung vornehmen.
+	// https://github.com/antony-k1208/vuejs-smart-table/pull/1
 	app.use(SmartTable);
-	Object.entries(components).forEach(([componentName, component]) => {
-		app.component(componentName, component);
-	});
 };
 
-export default install;
+// Components
+export {
+	SvwsUiButton,
+	SvwsUiCheckbox,
+	SvwsUiDropdown,
+	SvwsUiDropdownItem,
+	SvwsUiDropdownWithAction,
+	SvwsUiMultiSelect,
+	SvwsUiProgressBar,
+	SvwsUiRadioGroup,
+	SvwsUiRadioOption,
+	SvwsUiSelectInput,
+	SvwsUiTabBar,
+	SvwsUiTabButton,
+	SvwsUiTabPanel,
+	SvwsUiTextareaInput,
+	SvwsUiTextInput,
+	SvwsUiToggle,
+	SvwsUiAvatar,
+	SvwsUiContentCard,
+	SvwsUiHeader,
+	SvwsUiIcon,
+	SvwsUiModal,
+	SvwsUiOverlay,
+	SvwsUiAppLayout,
+	SvwsUiSidebarMenu,
+	SvwsUiSidebarMenuHeader,
+	SvwsUiSidebarMenuItem,
+	SvwsUiSecondaryMenu,
+	SvwsUiBadge,
+	SvwsUiTooltip,
+	SvwsUiPopover,
+	SvwsUiTable,
+	SvwsUiRouterTabBar,
+	SvwsUiRouterTabBarButton,
+	SvwsUiRouterVerticalTabBar,
+} from './components'

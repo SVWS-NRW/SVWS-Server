@@ -20,11 +20,12 @@ function onClick(event: MouseEvent) {
 
 <template>
 	<a
-class="sidebar--menu-item" :class="{
-		'sidebar--menu-item--active': active,
-		'sidebar--menu-item--collapsed': collapsed
-	}" href="#" @click.prevent="onClick"
-	:title="$slots.label()[0].children">
+		class="sidebar--menu-item" :class="{
+			'sidebar--menu-item--active': active,
+			'sidebar--menu-item--collapsed': collapsed
+		}" href="#" @click.prevent="onClick"
+		:title="($slots.label?.()[0].children as unknown as string)"
+	>
 		<span v-if="$slots.icon" class="sidebar--menu-item--icon">
 			<Icon>
 				<slot name="icon" />

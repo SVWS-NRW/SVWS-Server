@@ -12,15 +12,15 @@ const {
 	cols = 80,
 	rows = 6
 } = defineProps<{
-	modelValue: string;
+	modelValue?: string;
 	placeholder?: string;
 	valid?: boolean;
 	statistics?: boolean;
 	required?: boolean;
 	disabled?: boolean;
 	resizeable?: ResizableOption;
-	cols: number;
-	rows: number;
+	cols?: number;
+	rows?: number;
 }>();
 
 const emit = defineEmits<{

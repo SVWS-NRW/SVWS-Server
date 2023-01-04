@@ -7,7 +7,7 @@ import SvwsUiRadioGroup from "../../Controls/RadioGroup.vue";
 import SvwsUiRadioOption from "../../Controls/RadioOption.vue";
 import SvwsUiButton from "../../Controls/Button.vue";
 
-const modal = ref(null);
+const modal = ref<any>(null);
 
 function onClick(event: Event) {
   hstEvent('click', event);
@@ -33,7 +33,7 @@ value="option3" name="radioInputExample" label="Vergangenes Schuljahr 2019/2020"
       </template>
 
       <template #modalActions>
-        <svws-ui-button type="secondary" @click="modal.closeModal()">Abbrechen</svws-ui-button>
+        <svws-ui-button type="secondary" @click="modal?.closeModal()">Abbrechen</svws-ui-button>
         <svws-ui-button @click="onClick">Weiter</svws-ui-button>
       </template>
     </svws-ui-modal>
