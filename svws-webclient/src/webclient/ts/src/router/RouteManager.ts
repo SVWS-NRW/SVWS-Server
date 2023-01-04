@@ -27,7 +27,7 @@ export class RouteManager {
         // Bestimme den Knoten, für das Ziel der Route
         const node : RouteNode<unknown> | undefined = RouteNode.getNodeByName(to.name?.toString());
         if (node === undefined)
-            return true; // TODO später sollte dies false sein, wenn alle Routen vollständig auf den RouteManager umgestellt wurden
+            return false;
         // Prüfe mithilfe der hidden-Methode, ob die Route sichtbar ist
         if (node.hidden)
             return false;
