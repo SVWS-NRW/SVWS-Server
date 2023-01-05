@@ -3,6 +3,7 @@ import { GostBlockungsergebnisListeneintrag, cast_de_nrw_schule_svws_core_data_g
 import { GostFaecherManager, cast_de_nrw_schule_svws_core_utils_gost_GostFaecherManager } from '../../../core/utils/gost/GostFaecherManager';
 import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
+import { DeveloperNotificationException, cast_de_nrw_schule_svws_core_exceptions_DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { GostBlockungRegel, cast_de_nrw_schule_svws_core_data_gost_GostBlockungRegel } from '../../../core/data/gost/GostBlockungRegel';
 import { GostKursart, cast_de_nrw_schule_svws_core_types_gost_GostKursart } from '../../../core/types/gost/GostKursart';
 import { Comparator, cast_java_util_Comparator } from '../../../java/util/Comparator';
@@ -59,6 +60,8 @@ export class GostBlockungsdatenManager extends JavaObject {
 	private readonly _map_id_schueler : HashMap<Number, Schueler> = new HashMap();
 
 	private readonly _map_schuelerID_fachwahlen : HashMap<Number, List<GostFachwahl>> = new HashMap();
+
+	private readonly _map_fachartID_fachwahlen : HashMap<Number, List<GostFachwahl>> = new HashMap();
 
 	private readonly _map_schulerID_fachID_fachwahl : HashMap<Number, HashMap<Number, GostFachwahl>> = new HashMap();
 
@@ -1234,6 +1237,13 @@ export class GostBlockungsdatenManager extends JavaObject {
 		}
 		fachwahlenDesSchuelers.add(pFachwahl);
 		fachwahlenDesSchuelers.sort(this._compFachwahlen);
+		let fachartID : number = GostKursart.getFachartID(pFachwahl);
+		let fachwahlenDerFachart : List<GostFachwahl> | null = this._map_fachartID_fachwahlen.get(fachartID);
+		if (fachwahlenDerFachart === null) {
+			fachwahlenDerFachart = new Vector();
+			this._map_schuelerID_fachwahlen.put(fachartID, fachwahlenDerFachart);
+		}
+		fachwahlenDerFachart.add(pFachwahl);
 		this._daten.fachwahlen.add(pFachwahl);
 	}
 
@@ -1254,6 +1264,22 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public getFachwahlAnzahl() : number {
 		return this._daten.fachwahlen.size();
+	}
+
+	/**
+	 * Liefert die Menge aller {@link GostFachwahl} einer bestimmten Fachart-ID. <br> 
+	 * Die Fachart-ID lässt sich mit {@link GostKursart#getFachartID} berechnen. <br>
+	 * Wirft eine DeveloperNotificationException, falls es diese Fachart-ID nicht gibt.
+	 * 
+	 * @param pFachartID Die Fachart-ID berechnet aus Fach-ID und Kursart-ID.
+	 * @return Die Menge aller {@link GostFachwahl} einer bestimmten Fachart-ID.
+	 * @throws DeveloperNotificationException  Falls es diese Fachart-ID nicht gibt.
+	 */
+	public getOfFachartMengeFachwahlen(pFachartID : number) : List<GostFachwahl> {
+		let fachwahlenDerFachart : List<GostFachwahl> | null = this._map_fachartID_fachwahlen.get(pFachartID);
+		if (fachwahlenDerFachart === null) 
+			throw new DeveloperNotificationException("Fachart-ID=" + pFachartID + " unbekannt!")
+		return fachwahlenDerFachart;
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

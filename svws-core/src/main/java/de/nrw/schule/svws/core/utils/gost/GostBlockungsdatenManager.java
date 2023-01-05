@@ -17,6 +17,7 @@ import de.nrw.schule.svws.core.data.gost.GostBlockungsergebnisListeneintrag;
 import de.nrw.schule.svws.core.data.gost.GostFach;
 import de.nrw.schule.svws.core.data.gost.GostFachwahl;
 import de.nrw.schule.svws.core.data.schueler.Schueler;
+import de.nrw.schule.svws.core.exceptions.DeveloperNotificationException;
 import de.nrw.schule.svws.core.types.gost.GostHalbjahr;
 import de.nrw.schule.svws.core.types.gost.GostKursart;
 import de.nrw.schule.svws.core.types.kursblockung.GostKursblockungRegelTyp;
@@ -72,6 +73,9 @@ public class GostBlockungsdatenManager {
 
 	/** Schüler-ID --> List<Fachwahl> = Die Fachwahlen des Schülers der jeweiligen Fachart. */
 	private final @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull GostFachwahl>> _map_schuelerID_fachwahlen = new HashMap<>();
+
+	/** Fachart-ID --> List<Fachwahl> = Die Fachwahlen einer Fachart. */
+	private final @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull GostFachwahl>> _map_fachartID_fachwahlen = new HashMap<>();
 
 	/** Schüler-ID --> Fach-ID --> Kursart = Die Fachwahl des Schülers die dem Fach die Kursart zuordnet. */
 	private final @NotNull HashMap<@NotNull Long, @NotNull HashMap<@NotNull Long, @NotNull GostFachwahl>> _map_schulerID_fachID_fachwahl = new HashMap<>();
@@ -1304,6 +1308,17 @@ public class GostBlockungsdatenManager {
 		fachwahlenDesSchuelers.add(pFachwahl);
 		fachwahlenDesSchuelers.sort(_compFachwahlen);
 
+		// ########## _map_fachartID_fachwahlen ##########
+
+		// Pfad: Fachart-ID --> Vector<GostFachwahl>
+		long fachartID = GostKursart.getFachartID(pFachwahl);
+		List<@NotNull GostFachwahl> fachwahlenDerFachart = _map_fachartID_fachwahlen.get(fachartID);
+		if (fachwahlenDerFachart == null) {
+			fachwahlenDerFachart = new Vector<>();
+			_map_schuelerID_fachwahlen.put(fachartID, fachwahlenDerFachart);
+		}
+		fachwahlenDerFachart.add(pFachwahl);
+
 		// ########## _daten.fachwahlen ##########
 		_daten.fachwahlen.add(pFachwahl);
 	}
@@ -1326,4 +1341,20 @@ public class GostBlockungsdatenManager {
 		return _daten.fachwahlen.size();
 	}
 
+	/**
+	 * Liefert die Menge aller {@link GostFachwahl} einer bestimmten Fachart-ID. <br> 
+	 * Die Fachart-ID lässt sich mit {@link GostKursart#getFachartID} berechnen. <br>
+	 * Wirft eine DeveloperNotificationException, falls es diese Fachart-ID nicht gibt.
+	 * 
+	 * @param pFachartID Die Fachart-ID berechnet aus Fach-ID und Kursart-ID.
+	 * @return Die Menge aller {@link GostFachwahl} einer bestimmten Fachart-ID.
+	 * @throws DeveloperNotificationException  Falls es diese Fachart-ID nicht gibt.
+	 */
+	public @NotNull List<@NotNull GostFachwahl> getOfFachartMengeFachwahlen(long pFachartID) throws DeveloperNotificationException{
+		List<@NotNull GostFachwahl> fachwahlenDerFachart = _map_fachartID_fachwahlen.get(pFachartID);
+		if (fachwahlenDerFachart == null)
+			throw new DeveloperNotificationException("Fachart-ID=" + pFachartID + " unbekannt!");
+		return fachwahlenDerFachart;
+	}
+	
 }
