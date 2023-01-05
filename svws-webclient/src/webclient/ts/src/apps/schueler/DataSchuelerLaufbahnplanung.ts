@@ -78,7 +78,7 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 		const gliederung: Schulgliederung | null = Schulgliederung.getByKuerzel(
 			this.selected_list_item.schulgliederung
 		);
-		const schulform = App.apps.schule.schulform;
+		const schulform = App.apps.schule.schuleStammdaten.schulform.value || null;
 		if (gliederung === null || schulform === null)
 			return undefined;
 		const schuljahr = App.akt_abschnitt;
@@ -95,7 +95,8 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 	 * @returns {boolean} True, falls gymnasiale Laufbahndaten zur Verfügung stehen.
 	 */
 	private hasGostlaufbahn(): boolean {
-		return (!!App.apps.schule.schulform && !!App.apps.schule.schulform && mainApp.config.hasGost && this.abiturjahr !== undefined && this.abiturjahr !== -1);
+		const schulform = App.apps.schule.schuleStammdaten.schulform.value || null;
+		return (!!schulform && mainApp.config.hasGost && this.abiturjahr !== undefined && this.abiturjahr !== -1);
 	}
 
 	/**

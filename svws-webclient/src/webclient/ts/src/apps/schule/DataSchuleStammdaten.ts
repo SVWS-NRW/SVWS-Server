@@ -1,12 +1,28 @@
 import { App } from "../BaseApp";
 
-import { SchuleStammdaten } from "@svws-nrw/svws-core-ts";
+import { SchuleStammdaten, Schulform, Schulgliederung, UnsupportedOperationException } from "@svws-nrw/svws-core-ts";
 import { BaseData } from "../BaseData";
+import { computed, WritableComputedRef } from "vue";
 
 export class DataSchuleStammdaten extends BaseData<SchuleStammdaten, unknown> {
+
+	public schulform: WritableComputedRef<Schulform | undefined> = computed({
+		get: () => this.daten === undefined ? undefined : (Schulform.getByKuerzel(this.daten.schulform) || undefined),
+		set: (value) => { throw new UnsupportedOperationException("TODO implement DataSchuleStammdaten: set schulform"); }
+	});
+
+	public schulgliederungen: WritableComputedRef<Schulgliederung[] | undefined> = computed({
+		get: () => {
+			const sf = this.schulform.value;
+			return sf === undefined ? [] : Schulgliederung.get(sf).toArray() as Schulgliederung[] || [];
+		},
+		set: (value) => {}
+	});
+
 	protected on_update(daten: Partial<SchuleStammdaten>): void {
 		return void daten;
 	}
+
 	/**
 	 * Wird bei einer Änderung des ausgewählten Listeneintrags aufgerufen und holt
 	 * die Daten vom SVWS-Server.

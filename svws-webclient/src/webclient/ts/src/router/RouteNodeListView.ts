@@ -62,7 +62,7 @@ export abstract class RouteNodeListView<TItemAuswahl, TRouteData> extends RouteN
                 if (route.params.id === undefined)
                     return undefined;
                 let tmp = auswahl.ausgewaehlt;
-                if ((tmp === undefined) || (tmp.id.toString() !== route.params.id))
+                if ((tmp === undefined) || (tmp.id === undefined) || (tmp.id.toString() !== route.params.id))
                     tmp = auswahl.liste.find(s => s.id.toString() === route.params.id);
                 return tmp;
             },

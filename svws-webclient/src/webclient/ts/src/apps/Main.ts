@@ -232,7 +232,7 @@ export class Main {
 			religionen : new Religionen()
 		};
 		await App.apps.schule.init();
-		this.config.hasGost = !!App.apps.schule.schulform?.daten.hatGymOb;
+		this.config.hasGost = !!App.apps.schule.schuleStammdaten.schulform.value?.daten.hatGymOb;
 		for (const a of Object.values(App.apps)) {
 			const schule = a instanceof Schule
 			const gost = a instanceof Gost

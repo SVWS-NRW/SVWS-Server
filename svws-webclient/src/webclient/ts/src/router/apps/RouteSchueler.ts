@@ -1,4 +1,4 @@
-import { SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
+import { JahrgangsListeEintrag, KlassenListeEintrag, KursListeEintrag, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
 import { computed, WritableComputedRef } from "vue";
 import { RouteLocationNormalized, RouteParams, RouteRecordRaw, useRouter } from "vue-router";
 import { mainApp } from "~/apps/Main";
@@ -14,10 +14,21 @@ import { routeSchuelerSchulbesuch } from "~/router/apps/schueler/RouteSchuelerSc
 import { routeSchuelerStundenplan } from "~/router/apps/schueler/RouteSchuelerStundenplan";
 import { ListSchueler } from "~/apps/schueler/ListSchueler";
 import { RouteNode } from "~/router/RouteNode";
+import { ListKlassen } from "~/apps/klassen/ListKlassen";
+import { ListJahrgaenge } from "~/apps/jahrgaenge/ListJahrgaenge";
+import { ListKurse } from "~/apps/kurse/ListKurse";
+import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 
 export class RouteDataSchueler {
 	item: SchuelerListeEintrag | undefined = undefined;
 	stammdaten: DataSchuelerStammdaten = new DataSchuelerStammdaten();
+	schule: DataSchuleStammdaten = new DataSchuleStammdaten();
+	listKlassen: ListKlassen = new ListKlassen();
+	mapKlassen: Map<Number, KlassenListeEintrag> = new Map();
+	listJahrgaenge: ListJahrgaenge = new ListJahrgaenge();
+	mapJahrgaenge: Map<Number, JahrgangsListeEintrag> = new Map();
+	listKurse: ListKurse = new ListKurse();
+	mapKurs: Map<Number, KursListeEintrag> = new Map();
 }
 
 const SSchuelerAuswahl = () => import("~/components/schueler/SSchuelerAuswahl.vue")
@@ -31,7 +42,7 @@ export class RouteSchueler extends RouteNodeListView<SchuelerListeEintrag, Route
 		super("schueler", "/schueler/:id(\\d+)?", SSchuelerAuswahl, SSchuelerApp, new RouteDataSchueler());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Schüler";
-        super.setView("liste", SSchuelerAuswahl, (route) => RouteNodeListView.getPropsByAuswahlID(route, mainApp.apps.schueler.auswahl));
+        super.setView("liste", SSchuelerAuswahl, (route) => this.getProps(route));
 		super.children = [
 			routeSchuelerIndividualdaten,
 			routeSchuelerErziehungsberechtigte,
@@ -44,12 +55,6 @@ export class RouteSchueler extends RouteNodeListView<SchuelerListeEintrag, Route
 		];
 	}
 
-    /**
-     * TODO see RouterManager - global hook
-     * 
-     * @param to    die Ziel-Route
-     * @param from   die Quell-Route
-     */
     public async beforeEach(to: RouteNode<unknown>, to_params: RouteParams, from: RouteNode<unknown> | undefined, from_params: RouteParams): Promise<any> {
 		if ((to.name === this.name) && (to_params.id === undefined)) {
 			const redirect_name: string = (this.selectedChild === undefined) ? this.defaultChildNode.name : this.selectedChild.name;
@@ -57,6 +62,19 @@ export class RouteSchueler extends RouteNodeListView<SchuelerListeEintrag, Route
 		}
         return true;
     }
+
+    public async enter(to: RouteNode<unknown>, to_params: RouteParams) {
+		await this.data.schule.select(true);  // undefined würde das laden verhindern, daher true
+		await this.data.listKlassen.update_list();
+		this.data.mapKlassen.clear();
+		this.data.listKlassen.liste.forEach(k => this.data.mapKlassen.set(k.id, k));
+		await this.data.listJahrgaenge.update_list();
+		this.data.mapJahrgaenge.clear();
+		this.data.listJahrgaenge.liste.forEach(j => this.data.mapJahrgaenge.set(j.id, j));
+		await this.data.listKurse.update_list();
+		this.data.mapKurs.clear();
+		this.data.listKurse.liste.forEach(k => this.data.mapKurs.set(k.id, k));
+	}
 
 	protected onSelect(item?: SchuelerListeEintrag) {
 		if (item === this.data.item)
@@ -78,6 +96,13 @@ export class RouteSchueler extends RouteNodeListView<SchuelerListeEintrag, Route
 		const prop: Record<string, any> = RouteNodeListView.getPropsByAuswahlID(to, mainApp.apps.schueler.auswahl);
 		this.onSelect(prop.item as SchuelerListeEintrag | undefined);
 		prop.stammdaten = this.data.stammdaten;
+		prop.schule = this.data.schule;
+		prop.listKlassen = this.data.listKlassen;
+		prop.mapKlassen = this.data.mapKlassen;
+		prop.listJahrgaenge = this.data.listJahrgaenge;
+		prop.mapJahrgaenge = this.data.mapJahrgaenge;
+		prop.listKurse = this.data.listKurse;
+		prop.mapKurs = this.data.mapKurs;
 		return prop;
 	}
 

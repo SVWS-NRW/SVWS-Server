@@ -7,7 +7,7 @@
 				</div>
 				<div>
 					<span class="inline-block mr-3"> {{ vorname }} {{ nachname }} </span>
-					<svws-ui-badge type="light"> {{ props.id }} </svws-ui-badge>
+					<svws-ui-badge type="light"> {{ item?.id }} </svws-ui-badge>
 					<br/>
 					<span class="opacity-50"> {{ inputKlasse ? inputKlasse : '–' }} </span>
 				</div>
@@ -26,14 +26,27 @@
 
 	import { computed, ComputedRef } from "vue";
 
-	import { injectMainApp, Main } from "~/apps/Main";
 	import { routeSchueler, RouteDataSchueler } from "~/router/apps/RouteSchueler";
-	import { SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
+	import { JahrgangsListeEintrag, KlassenListeEintrag, KursListeEintrag, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
+	import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
+	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
+	import { ListKurse } from "~/apps/kurse/ListKurse";
+	import { ListJahrgaenge } from "~/apps/jahrgaenge/ListJahrgaenge";
+	import { ListKlassen } from "~/apps/klassen/ListKlassen";
 
-	const main: Main = injectMainApp();
-	const app = main.apps.schueler;
-
-	const props = defineProps<{ id?: number; item?: SchuelerListeEintrag, routename: string }>();
+	const { item, mapKlassen } = defineProps<{ 
+		id?: number; 
+		item?: SchuelerListeEintrag, 
+		stammdaten: DataSchuelerStammdaten;
+		schule: DataSchuleStammdaten;
+		listKlassen: ListKlassen;
+		mapKlassen: Map<Number, KlassenListeEintrag>;
+		listJahrgaenge: ListJahrgaenge;
+		mapJahrgaenge: Map<Number, JahrgangsListeEintrag>;
+		listKurse: ListKurse;
+		mapKurs: Map<Number, KursListeEintrag>;
+		routename: string
+	}>();
 
 	const data: RouteDataSchueler = routeSchueler.data;
 	const selectedRoute = routeSchueler.getChildRouteSelector();
@@ -44,23 +57,21 @@
 	});
 
 	const nachname: ComputedRef<string | undefined> = computed(() => {
-		return props.item?.nachname.toString();
+		return item?.nachname.toString();
 	});
 
 	const vorname: ComputedRef<string | undefined> = computed(() => {
-		return props.item?.vorname.toString();
+		return item?.vorname.toString();
 	});
 
 	const inputKlasse: ComputedRef<string | false> = computed(() => {
-		if (props.item === undefined)
+		if (item === undefined)
 			return false;
-		const id = props.item.idKlasse;
-		const klasse = main.apps.klassen.auswahl.liste.find(k => k.id === id);
-		return klasse?.kuerzel?.toString() || false;
+		return mapKlassen.get(item.idKlasse)?.kuerzel?.toString() || false;
 	});
 
 	const visible: ComputedRef<boolean> = computed(() => {
-		return !(routeSchueler.hidden) && (props.id !== undefined);
+		return !(routeSchueler.hidden) && (item !== undefined);
 	});
 
 </script>

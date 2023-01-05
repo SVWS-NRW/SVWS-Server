@@ -63,12 +63,16 @@
 	import { computed, ComputedRef, Ref, ref, WritableComputedRef } from "vue";
 
 	import { SchuelerListeEintrag, SchuelerStatus, JahrgangsListeEintrag,
-		KlassenListeEintrag, KursListeEintrag, Schulgliederung, Schuljahresabschnitt, Schueler } from "@svws-nrw/svws-core-ts";
+		KlassenListeEintrag, KursListeEintrag, Schulgliederung, Schuljahresabschnitt } from "@svws-nrw/svws-core-ts";
 
 	import { injectMainApp, Main } from "~/apps/Main";
 	import { routeSchueler } from "~/router/apps/RouteSchueler";
-	import { Schule } from "~/apps/schule/Schule";
 	import { ListSchueler } from "~/apps/schueler/ListSchueler";
+	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
+	import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
+	import { ListKlassen } from "~/apps/klassen/ListKlassen";
+	import { ListJahrgaenge } from "~/apps/jahrgaenge/ListJahrgaenge";
+	import { ListKurse } from "~/apps/kurse/ListKurse";
 
 	export interface SchuelerProps {
 		selectedItems: Array<SchuelerListeEintrag>;
@@ -77,7 +81,19 @@
 		search: string;
 	}
 
-	const props = defineProps<{ id: Number | undefined; item: SchuelerListeEintrag | undefined; routename: string }>();
+	const { schule, listKlassen, mapKlassen, listJahrgaenge, listKurse } = defineProps<{ 
+		id?: Number;
+		item?: SchuelerListeEintrag;
+		stammdaten: DataSchuelerStammdaten;
+		schule: DataSchuleStammdaten;
+		listKlassen: ListKlassen;
+		mapKlassen: Map<Number, KlassenListeEintrag>;
+		listJahrgaenge: ListJahrgaenge;
+		mapJahrgaenge: Map<Number, JahrgangsListeEintrag>;
+		listKurse: ListKurse;
+		mapKurs: Map<Number, KursListeEintrag>;
+		routename: string ;
+	}>();
 
 	const selected = routeSchueler.auswahl;
 
@@ -91,10 +107,6 @@
 	]
 	const main: Main = injectMainApp();
 	const app = main.apps.schueler;
-	const appKlassen = main.apps.klassen;
-	const appJahrgaenge = main.apps.jahrgaenge;
-	const appKurse = main.apps.kurse;
-	const appSchule: ComputedRef<Schule> = computed(() => main.apps.schule);
 
 	const listSchueler: ComputedRef<ListSchueler> = computed(() => app.auswahl);
 
@@ -102,7 +114,7 @@
 	const rows: ComputedRef<Array<any>> = computed(() => {
 		const array = listSchueler.value.gefiltert.map(e => ({
 			...e,
-			klasse: appKlassen.auswahl.liste.find(k => k.id === e.idKlasse)?.kuerzel?.toString() || ""
+			klasse: mapKlassen.get(e.idKlasse)?.kuerzel?.toString() || ""
 		}));
 		return array;
 	});
@@ -139,9 +151,7 @@
 			}
 		});
 
-	const inputSchulgliederungen: ComputedRef<Array<Schulgliederung> | undefined> = computed(() => {
-		return appSchule.value.schulgliederungen;
-	});
+	const inputSchulgliederungen = schule.schulgliederungen;
 
 	const filterSchulgliederung: WritableComputedRef<Schulgliederung | undefined> = computed({
 		get(): Schulgliederung | undefined {
@@ -158,7 +168,7 @@
 	});
 
 	const inputJahrgaenge: ComputedRef<Array<JahrgangsListeEintrag> | undefined> = computed(() => {
-		return appJahrgaenge.auswahl.liste;
+		return listJahrgaenge.liste;
 	});
 
 	const filterJahrgaenge: WritableComputedRef<JahrgangsListeEintrag | undefined> = computed({
@@ -178,13 +188,9 @@
 	});
 
 	const inputKlassen: ComputedRef<Array<KlassenListeEintrag> | undefined> = computed(() => {
-		if (appKlassen === undefined)
-			return undefined;
-		const liste = [...appKlassen.auswahl.liste];
+		const liste = [...listKlassen.liste];
 		const jahrgang = listSchueler.value.filter.jahrgang;
-		return (jahrgang === undefined)
-			? liste
-			: liste.filter(k => k.idJahrgang === jahrgang.id);
+		return (jahrgang === undefined) ? liste : liste.filter(k => k.idJahrgang === jahrgang.id);
 	});
 
 	const filterKlassen: WritableComputedRef<KlassenListeEintrag | undefined> = computed({
@@ -202,9 +208,7 @@
 	});
 
 	const inputKurse: ComputedRef<Array<KursListeEintrag> | undefined> = computed(() => {
-		if (appKurse === undefined)
-			return undefined;
-		const liste = [...appKurse.auswahl.liste];
+		const liste = [...listKurse.liste];
 		const jahrgang = listSchueler.value.filter.jahrgang;
 		return (jahrgang === undefined)
 			? liste
@@ -293,8 +297,7 @@
 		}
 	}
 	const schule_abschnitte: ComputedRef<Array<Schuljahresabschnitt> | undefined> = computed(() => {
-		const liste = appSchule.value.schuleStammdaten.daten?.abschnitte;
-		return liste?.toArray(new Array<Schuljahresabschnitt>()) || [];
+		return schule.daten?.abschnitte?.toArray(new Array<Schuljahresabschnitt>()) || [];
 	});
 
 	const akt_abschnitt: WritableComputedRef<Schuljahresabschnitt> = computed({
@@ -307,9 +310,7 @@
 	});
 
 	function item_sort(a: Schuljahresabschnitt, b: Schuljahresabschnitt) {
-		return (
-			b.schuljahr + b.abschnitt * 0.1 - (a.schuljahr + a.abschnitt * 0.1)
-		);
+		return b.schuljahr + b.abschnitt * 0.1 - (a.schuljahr + a.abschnitt * 0.1);
 	}
 
 	function item_text(item: Schuljahresabschnitt) {

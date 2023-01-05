@@ -1,8 +1,4 @@
-import {
-	Schulform,
-	Schulgliederung,
-	Schuljahresabschnitt,
-} from "@svws-nrw/svws-core-ts";
+import { Schuljahresabschnitt } from "@svws-nrw/svws-core-ts";
 import { App } from "../BaseApp";
 
 import { DataSchuleStammdaten } from "./DataSchuleStammdaten";
@@ -14,10 +10,6 @@ export class Schule extends App {
 	public auswahl!: ListSchule;
 	/** Die Stammdaten der Schule */
 	public schuleStammdaten!: DataSchuleStammdaten;
-	/** Die ermittelte Schulform */
-	public schulform!: Schulform | null;
-	/** Die an der Schule verfügbaren Schulgliederungen */
-	public schulgliederungen: Array<Schulgliederung> = [];
 
 	/**
 	 * Initialisiert die OpenAPI mit der aktuellen Konfiguration
@@ -30,14 +22,6 @@ export class Schule extends App {
 		//select(true) wird übergeben, weil es keine Liste gibt, aus der etwas ausgewählt werden kann...
 		await this.schuleStammdaten.select(true);
 		if (!this.schuleStammdaten.daten) return;
-		this.schulform = !this.schuleStammdaten.daten.schulform
-			? null
-			: Schulform.getByKuerzel(this.schuleStammdaten.daten.schulform);
-		this.schulgliederungen = !this.schulform
-			? []
-			: Schulgliederung.get(this.schulform).toArray(
-					Array<Schulgliederung>()
-			  );
 		const id = this.schuleStammdaten.daten.idSchuljahresabschnitt;
 		const a = this.schuleStammdaten.daten.abschnitte
 			.toArray(new Array<Schuljahresabschnitt>())

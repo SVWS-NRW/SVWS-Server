@@ -26,7 +26,7 @@
 	import { ListLehrer } from "~/apps/lehrer/ListLehrer";
 	import { routeKlassen } from "~/router/apps/RouteKlassen";
 
-	const { id, item, listLehrer, mapLehrer, routename } = defineProps<{ 
+	const { id, item, mapLehrer } = defineProps<{ 
 		id?: number; 
 		item?: KlassenListeEintrag, 
 		listLehrer: ListLehrer,
