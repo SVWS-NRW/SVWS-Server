@@ -1,9 +1,10 @@
 import { FoerderschwerpunktEintrag } from "@svws-nrw/svws-core-ts";
 import { computed, WritableComputedRef } from "vue";
-import { RouteLocationNormalized, RouteRecordRaw, useRouter } from "vue-router";
+import { RouteLocationNormalized, RouteParams, RouteRecordRaw, useRouter } from "vue-router";
 import { RouteNodeListView } from "~/router/RouteNodeListView";
 import { routeKatalogFoerderschwerpunkteDaten } from "~/router/apps/foerderschwerpunkte/RouteKatalogFoerderschwerpunkteDaten";
 import { ListFoerderschwerpunkte } from "~/apps/kataloge/foerderschwerpunkt/ListFoerderschwerpunkte";
+import { RouteNode } from "~/router/RouteNode";
 
 
 export class RouteDataKatalogFoerderschwerpunkte {
@@ -28,16 +29,10 @@ export class RouteKatalogFoerderschwerpunkte extends RouteNodeListView<Foerdersc
 		];
 	}
 
-    /**
-     * TODO see RouterManager - global hook
-     * 
-     * @param to    die Ziel-Route
-     * @param from   die Quell-Route
-     */
-    public async beforeEach(to: RouteLocationNormalized, from: RouteLocationNormalized): Promise<any> {
-		if (this.name !== from.name?.toString())
+    public async beforeEach(to: RouteNode<unknown>, to_params: RouteParams, from: RouteNode<unknown> | undefined, from_params: RouteParams): Promise<any> {
+		if (this.name !== from?.name)
 			await this.data.auswahl.update_list();
-		if ((to.name?.toString() === this.name) && (to.params.id === undefined)) {
+		if ((to.name === this.name) && (to_params.id === undefined)) {
 			const redirect_name: string = (this.selectedChild === undefined) ? this.defaultChildNode.name : this.selectedChild.name;
 			return { name: redirect_name, params: { id: this.data.auswahl.liste.at(0)?.id }};
 		}

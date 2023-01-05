@@ -1,11 +1,12 @@
 import { StundenplanListeEintrag } from "@svws-nrw/svws-core-ts";
 import { WritableComputedRef } from "@vue/reactivity";
-import { RouteLocationNormalized, useRoute, useRouter } from "vue-router";
+import { RouteLocationNormalized, RouteParams, useRoute, useRouter } from "vue-router";
 import { DataStundenplan } from "~/apps/schueler/DataStundenplan";
 import { ListStundenplaene } from "~/apps/schueler/ListStundenplaene";
 import { RouteNodeListView } from "~/router/RouteNodeListView";
 import { routeSchueler } from "~/router/apps/RouteSchueler";
 import { computed } from "vue";
+import { RouteNode } from "~/router/RouteNode";
 
 export class RouteDataSchuelerStundenplan {
 	auswahl: ListStundenplaene = new ListStundenplaene();
@@ -27,16 +28,10 @@ export class RouteSchuelerStundenplanDaten extends RouteNodeListView<Stundenplan
 		];
 	}
 
-    /**
-     * TODO see RouterManager - global hook
-     * 
-     * @param to    die Ziel-Route
-     * @param from   die Quell-Route
-     */
-    public async beforeEach(to: RouteLocationNormalized, from: RouteLocationNormalized): Promise<any> {
+    public async beforeEach(to: RouteNode<unknown>, to_params: RouteParams, from: RouteNode<unknown> | undefined, from_params: RouteParams): Promise<any> {
 		await this.data.auswahl.update_list();
-		if ((to.name?.toString() === this.name) && (to.params.idStundenplan === undefined))
-			return { name: this.name, params: { id: to.params.id, idStundenplan: this.data.auswahl.liste.at(0)?.id }};
+		if ((to.name === this.name) && (to_params.idStundenplan === undefined))
+			return { name: this.name, params: { id: to_params.id, idStundenplan: this.data.auswahl.liste.at(0)?.id }};
         return true;
     }
 

@@ -1,10 +1,11 @@
 import { FaecherListeEintrag } from "@svws-nrw/svws-core-ts";
 import { computed, WritableComputedRef } from "vue";
-import { RouteLocationNormalized, RouteRecordRaw, useRouter } from "vue-router";
+import { RouteLocationNormalized, RouteParams, RouteRecordRaw, useRouter } from "vue-router";
 import { ListFaecher } from "~/apps/faecher/ListFaecher";
 import { mainApp } from "~/apps/Main";
 import { RouteNodeListView } from "~/router/RouteNodeListView";
 import { routeFaecherDaten } from "~/router/apps/faecher/RouteFaecherDaten";
+import { RouteNode } from "~/router/RouteNode";
 
 const ROUTE_NAME: string = "faecher";
 
@@ -29,14 +30,8 @@ export class RouteKatalogFaecher extends RouteNodeListView<FaecherListeEintrag, 
 		];
 	}
 
-    /**
-     * TODO see RouterManager - global hook
-     * 
-     * @param to    die Ziel-Route
-     * @param from   die Quell-Route
-     */
-    public beforeEach(to: RouteLocationNormalized, from: RouteLocationNormalized): any {
-		if ((to.name?.toString() === this.name) && (to.params.id === undefined)) {
+    public async beforeEach(to: RouteNode<unknown>, to_params: RouteParams, from: RouteNode<unknown> | undefined, from_params: RouteParams): Promise<any> {
+		if ((to.name === this.name) && (to_params.id === undefined)) {
 			const redirect_name: string = (this.selectedChild === undefined) ? this.defaultChildNode.name : this.selectedChild.name;
 			return { name: redirect_name, params: { id: mainApp.apps.faecher.auswahl.liste.at(0)?.id }};
 		}

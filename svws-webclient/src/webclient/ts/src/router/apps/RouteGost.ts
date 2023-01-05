@@ -1,9 +1,10 @@
 import { GostJahrgang } from "@svws-nrw/svws-core-ts";
 import { computed, WritableComputedRef } from "vue";
-import { RouteLocationNormalized, RouteRecordRaw, useRoute, useRouter } from "vue-router";
+import { RouteLocationNormalized, RouteParams, RouteRecordRaw, useRoute, useRouter } from "vue-router";
 import { DataGostJahrgang } from "~/apps/gost/DataGostJahrgang";
 import { ListGost } from "~/apps/gost/ListGost";
 import { mainApp } from "~/apps/Main";
+import { RouteNode } from "../RouteNode";
 import { RouteNodeListView } from "../RouteNodeListView";
 import { routeGostFachwahlen } from "./gost/RouteGostFachwahlen";
 import { routeGostFaecher } from "./gost/RouteGostFaecher";
@@ -38,14 +39,8 @@ export class RouteGost extends RouteNodeListView<GostJahrgang, RouteDataGost> {
 		];
 	}
 
-    /**
-     * TODO see RouterManager - global hook
-     * 
-     * @param to    die Ziel-Route
-     * @param from   die Quell-Route
-     */
-    public beforeEach(to: RouteLocationNormalized, from: RouteLocationNormalized): any {
-		if ((to.name?.toString() === this.name) && (to.params.abiturjahr === undefined)) {
+    public async beforeEach(to: RouteNode<unknown>, to_params: RouteParams, from: RouteNode<unknown> | undefined, from_params: RouteParams): Promise<any> {
+		if ((to.name === this.name) && (to_params.abiturjahr === undefined)) {
 			const redirect_name: string = (this.selectedChild === undefined) ? this.defaultChildNode.name : this.selectedChild.name;
 			return { name: redirect_name, params: { abiturjahr: mainApp.apps.gost.auswahl.liste.at(0)?.abiturjahr }};
 		}

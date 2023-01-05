@@ -1,10 +1,11 @@
 import { KursListeEintrag } from "@svws-nrw/svws-core-ts";
 import { computed, WritableComputedRef } from "vue";
-import { RouteLocationNormalized, RouteRecordRaw, useRouter } from "vue-router";
+import { RouteLocationNormalized, RouteParams, RouteRecordRaw, useRouter } from "vue-router";
 import { ListKurse } from "~/apps/kurse/ListKurse";
 import { mainApp } from "~/apps/Main";
 import { RouteNodeListView } from "~/router/RouteNodeListView";
 import { routeKurseDaten } from "~/router/apps/kurse/RouteKurseDaten";
+import { RouteNode } from "~/router/RouteNode";
 
 export class RouteDataKurse {
 	item: KursListeEintrag | undefined = undefined;
@@ -27,14 +28,8 @@ export class RouteKurse extends RouteNodeListView<KursListeEintrag, RouteDataKur
 		];
 	}
 
-    /**
-     * TODO see RouterManager - global hook
-     * 
-     * @param to    die Ziel-Route
-     * @param from   die Quell-Route
-     */
-    public beforeEach(to: RouteLocationNormalized, from: RouteLocationNormalized): any {
-		if ((to.name?.toString() === this.name) && (to.params.id === undefined)) {
+    public async beforeEach(to: RouteNode<unknown>, to_params: RouteParams, from: RouteNode<unknown> | undefined, from_params: RouteParams): Promise<any> {
+		if ((to.name === this.name) && (to_params.id === undefined)) {
 			const redirect_name: string = (this.selectedChild === undefined) ? this.defaultChildNode.name : this.selectedChild.name;
 			return { name: redirect_name, params: { id: mainApp.apps.kurse.auswahl.liste.at(0)?.id }};
 		}

@@ -1,10 +1,11 @@
 import { BenutzergruppeListeEintrag } from "@svws-nrw/svws-core-ts";
-import { RouteLocationNormalized, RouteRecordRaw, useRouter } from "vue-router";
+import { RouteLocationNormalized, RouteParams, RouteRecordRaw, useRouter } from "vue-router";
 import { routeSchuleBenutzergruppeDaten } from "~/router/apps/benutzergruppe/RouteSchuleBenutzergruppeDaten";
 import { RouteNodeListView } from "~/router/RouteNodeListView";
 import { ListBenutzergruppe } from "~/apps/schule/benutzerverwaltung/ListBenutzergruppe";
 import { computed, WritableComputedRef } from "vue";
 import { mainApp } from "~/apps/Main"
+import { RouteNode } from "~/router/RouteNode";
 
 
 export class RouteDataSchuleBenutzergruppe {
@@ -30,14 +31,8 @@ export class RouteSchuleBenutzergruppe extends RouteNodeListView<BenutzergruppeL
 		];
 	}
 
-    /**
-     * TODO see RouterManager - global hook
-     * 
-     * @param to    die Ziel-Route
-     * @param from   die Quell-Route
-     */
-    public beforeEach(to: RouteLocationNormalized, from: RouteLocationNormalized): any {
-		if ((to.name?.toString() === this.name) && (to.params.id === undefined)) {
+    public async beforeEach(to: RouteNode<unknown>, to_params: RouteParams, from: RouteNode<unknown> | undefined, from_params: RouteParams): Promise<any> {
+		if ((to.name === this.name) && (to_params.id === undefined)) {
 			const redirect_name: string = (this.selectedChild === undefined) ? this.defaultChildNode.name : this.selectedChild.name;
 			return { name: redirect_name, params: { id: mainApp.apps.benutzergruppe.auswahl.liste.at(0)?.id }};
 		}

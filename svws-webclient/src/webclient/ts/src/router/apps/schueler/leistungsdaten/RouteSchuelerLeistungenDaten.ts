@@ -1,6 +1,6 @@
 import { FaecherListeEintrag, LehrerListeEintrag, SchuelerLernabschnittListeEintrag } from "@svws-nrw/svws-core-ts";
 import { WritableComputedRef } from "@vue/reactivity";
-import { RouteLocationNormalized, useRoute, useRouter } from "vue-router";
+import { RouteLocationNormalized, RouteParams, useRoute, useRouter } from "vue-router";
 import { RouteNodeListView } from "~/router/RouteNodeListView";
 import { routeSchueler } from "~/router/apps/RouteSchueler";
 import { computed } from "vue";
@@ -8,6 +8,7 @@ import { DataSchuelerAbschnittsdaten } from "~/apps/schueler/DataSchuelerAbschni
 import { ListAbschnitte } from "~/apps/schueler/ListAbschnitte";
 import { ListFaecher } from "~/apps/faecher/ListFaecher";
 import { ListLehrer } from "~/apps/lehrer/ListLehrer";
+import { RouteNode } from "~/router/RouteNode";
 
 export class RouteDataSchuelerLeistungenDaten {
 	auswahl: ListAbschnitte = new ListAbschnitte();
@@ -33,19 +34,11 @@ export class RouteSchuelerLeistungenDaten extends RouteNodeListView<SchuelerLern
 		];
 	}
 
-    /**
-     * TODO see RouterManager - global hook
-     * 
-     * @param to    die Ziel-Route
-     * @param from   die Quell-Route
-     */
-    public async beforeEach(to: RouteLocationNormalized, from: RouteLocationNormalized): Promise<any> {
-		if (to.params.id === undefined)
+    public async beforeEach(to: RouteNode<unknown>, to_params: RouteParams, from: RouteNode<unknown> | undefined, from_params: RouteParams): Promise<any> {
+		if (to_params.id === undefined)
 			return false;
-		const id = parseInt(to.params.id as string);
-		const to_name = to.name?.toString();
-		const from_name = from.name?.toString();
-		if (to_name !== from_name) {
+		const id = parseInt(to_params.id as string);
+		if (to.name !== from?.name) {
 			await this.data.listFaecher.update_list();
 			this.data.mapFaecher.clear();
 			this.data.listFaecher.liste.forEach(f => this.data.mapFaecher.set(f.id, f));
@@ -53,10 +46,10 @@ export class RouteSchuelerLeistungenDaten extends RouteNodeListView<SchuelerLern
 			this.data.mapLehrer.clear();
 			this.data.listLehrer.liste.forEach(l => this.data.mapLehrer.set(l.id, l));
 		}
-		if ((to_name !== from_name) || (from.params.id === undefined) || (parseInt(from.params.id as string) != id))
+		if ((to.name !== from?.name) || (from_params.id === undefined) || (parseInt(from_params.id as string) != id))
 			await this.data.auswahl.update_list(id);
-		if ((to_name === this.name) && (to.params.idLernabschnitt === undefined))
-			return { name: this.name, params: { id: to.params.id, idLernabschnitt: this.data.auswahl.liste.at(0)?.id }};
+		if ((to.name === this.name) && (to_params.idLernabschnitt === undefined))
+			return { name: this.name, params: { id: to_params.id, idLernabschnitt: this.data.auswahl.liste.at(0)?.id }};
         return true;
     }
 

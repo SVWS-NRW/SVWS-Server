@@ -1,5 +1,5 @@
 import { LehrerListeEintrag } from "@svws-nrw/svws-core-ts";
-import { RouteLocationNormalized, RouteRecordRaw, useRouter } from "vue-router";
+import { RouteLocationNormalized, RouteParams, RouteRecordRaw, useRouter } from "vue-router";
 import { routeLehrerIndividualdaten } from "~/router/apps/lehrer/RouteLehrerIndividualdaten";
 import { routeLehrerPersonaldaten } from "~/router/apps/lehrer/RouteLehrerPersonaldaten";
 import { routeLehrerUnterrichtsdaten } from "~/router/apps/lehrer/RouteLehrerUnterrichtsdaten";
@@ -8,6 +8,7 @@ import { RouteNodeListView } from "../RouteNodeListView";
 import { ListLehrer } from "~/apps/lehrer/ListLehrer";
 import { computed, WritableComputedRef } from "vue";
 import { mainApp } from "~/apps/Main"
+import { RouteNode } from "~/router/RouteNode";
 
 
 export class RouteDataLehrer {
@@ -36,14 +37,8 @@ export class RouteLehrer extends RouteNodeListView<LehrerListeEintrag, RouteData
 		];
 	}
 
-    /**
-     * TODO see RouterManager - global hook
-     * 
-     * @param to    die Ziel-Route
-     * @param from   die Quell-Route
-     */
-    public beforeEach(to: RouteLocationNormalized, from: RouteLocationNormalized): any {
-		if ((to.name?.toString() === this.name) && (to.params.id === undefined)) {
+    public async beforeEach(to: RouteNode<unknown>, to_params: RouteParams, from: RouteNode<unknown> | undefined, from_params: RouteParams): Promise<any> {
+		if ((to.name === this.name) && (to_params.id === undefined)) {
 			const redirect_name: string = (this.selectedChild === undefined) ? this.defaultChildNode.name : this.selectedChild.name;
 			return { name: redirect_name, params: { id: mainApp.apps.lehrer.auswahl.liste.at(0)?.id }};
 		}

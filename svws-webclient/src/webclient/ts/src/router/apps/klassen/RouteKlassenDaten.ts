@@ -1,5 +1,5 @@
 import { JahrgangsListeEintrag, KlassenListeEintrag } from "@svws-nrw/svws-core-ts";
-import { RouteLocationNormalized } from "vue-router";
+import { RouteLocationNormalized, RouteParams } from "vue-router";
 import { ListJahrgaenge } from "~/apps/jahrgaenge/ListJahrgaenge";
 import { DataKlasse } from "~/apps/klassen/DataKlasse";
 import { RouteNode } from "~/router/RouteNode";
@@ -22,8 +22,8 @@ export class RouteKlassenDaten extends RouteNode<RouteDataKlassenDaten> {
 		super.text = "Daten";
 	}
 
-    public async beforeEach(to: RouteLocationNormalized, from: RouteLocationNormalized): Promise<any> {
-		if (from.name?.toString() !== this.name) {
+    public async beforeEach(to: RouteNode<unknown>, to_params: RouteParams, from: RouteNode<unknown> | undefined, from_params: RouteParams): Promise<any> {
+		if (from?.name !== this.name) {
 			await this.data.listJahrgaenge.update_list();
 			this.data.mapJahrgaenge.clear();
 			this.data.listJahrgaenge.liste.forEach(j => this.data.mapJahrgaenge.set(j.id, j));

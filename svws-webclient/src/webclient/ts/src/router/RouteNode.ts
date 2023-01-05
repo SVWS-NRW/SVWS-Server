@@ -1,5 +1,5 @@
 import { ref, Ref } from "vue";
-import { RouteComponent, RouteLocationNormalized, RouteRecordRaw } from "vue-router";
+import { RouteComponent, RouteLocationNormalized, RouteParams, RouteRecordRaw } from "vue-router";
 
 /**
  * Diese abstrakte Klasse ist die Basisklasse aller Knoten für
@@ -265,12 +265,91 @@ export abstract class RouteNode<TRouteData> {
      * TODO see RouterManager - global hook
      * 
      * @param to    die Ziel-Route
+     * @param to_params die Parameter der Ziel-Route
      * @param from   die Quell-Route
+     * @param from_params die Parameter der Quell-Route
      */
-    public async beforeEach(to: RouteLocationNormalized, from: RouteLocationNormalized) {
+    public async beforeEach(to: RouteNode<unknown>, to_params: RouteParams, from: RouteNode<unknown> | undefined, from_params: RouteParams) {
         return true;
     }
 
+    /**
+     * Prüft, ob dieser Knoten ein Nachfolger-Knoten des Kontens mit dem angegebenen 
+     * Knoten ist.
+     * 
+     * @param other   der andere Knoten (bzw. der Name), der evtl. ein Vorgänger dieses Knotens ist
+     * 
+     * @returns die Folge der Knoten von dem anderen Knoten bis zu diesem Knoten (einschließlich), 
+     *   falls dieser Knoten ein Nachfolger-Knoten ist und ansonsten false
+     */
+    public checkSuccessorOf(other: string | RouteNode<unknown>): RouteNode<unknown>[] | false {
+        const other_node = typeof other === "string" ? RouteNode.getNodeByName(other) : other;
+        if ((other_node === undefined) || (this.parent === undefined))
+            return false;
+        const result: RouteNode<unknown>[] = [ this ];
+        let current: RouteNode<unknown> | undefined = this.parent;
+        do {
+            result.push(current);
+            if (current.name === other_node.name)
+                return result.reverse();
+            current = current.parent;
+        } while (current !== undefined);
+        return false;
+    }
+
+    /**
+     * Prüft, ob dieser Knoten ein Vorgänger-Knoten des Kontens mit dem angegebenen 
+     * Knoten ist.
+     * 
+     * @param other   der andere Knoten (bzw. der Name), der evtl. ein Nachfolger dieses Knotens ist
+     * 
+     * @returns die Folge der Knoten von diesem Knoten bis zu dem anderen Knoten (einschließlich), 
+     *   falls dieser Knoten ein Vorgänger-Knoten ist und ansonsten false
+     */
+    public checkPredecessorOf(other: string | RouteNode<unknown>): RouteNode<unknown>[] | false {
+        const other_node = typeof other === "string" ? RouteNode.getNodeByName(other) : other;
+        if ((other_node === undefined) || (other_node.parent === undefined))
+            return false;
+        const result: RouteNode<unknown>[] = [ this ];
+        let current: RouteNode<unknown> | undefined = other_node.parent;
+        do {
+            result.push(current);
+            if (current.name === this.name)
+                return result.reverse();
+            current = current.parent;
+        } while (current !== undefined);
+        return false;
+    }
+
+    /**
+     * Bestimmt die Vorgänger dieses Knotens und gibt diese als Array 
+     * zurück. Dabei ist das Array so sortiert, dass das letzte Element im 
+     * Array der direkte Vorgänger dieses Knotens ist. Existiert
+     * kein Vorgänger, so ist das Array leer.
+     * 
+     * @returns die Vorgänger dieses Knotens als Array
+     */
+    public getPredecessors(): RouteNode<unknown>[] {
+        const result: RouteNode<unknown>[] = [ ];
+        let current: RouteNode<unknown> | undefined = this.parent;
+        while (current !== undefined) {
+            result.push(current);
+            current = current.parent;
+        }
+        return result.reverse();
+    }
+
+    public async enter() {
+//        console.log("Enter " + this.name);
+    }
+
+    public async update() {
+//        console.log("Update " + this.name);
+    }
+
+    public async leave() {
+//        console.log("Leave " + this.name);
+    }
 
     /**
      * Gibt den Knoten für den übergebenen Namen zurück.
