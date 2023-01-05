@@ -1,9 +1,8 @@
 import { LehrerListeEintrag } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized } from "vue-router";
 import { DataLehrerPersonaldaten } from "~/apps/lehrer/DataLehrerPersonaldaten";
-import { mainApp } from "~/apps/Main";
 import { RouteNode } from "~/router/RouteNode";
-import { RouteNodeListView } from "~/router/RouteNodeListView";
+import { routeLehrer } from "../RouteLehrer";
 
 
 
@@ -35,7 +34,7 @@ export class RouteLehrerPersonaldaten extends RouteNode<RouteDataLehrerPersonald
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
-		const prop = RouteNodeListView.getPropsByAuswahlID(to, mainApp.apps.lehrer.auswahl);
+		const prop = routeLehrer.getProps(to);
 		this.onSelect(prop.item as LehrerListeEintrag | undefined);
 		return prop;
 	}

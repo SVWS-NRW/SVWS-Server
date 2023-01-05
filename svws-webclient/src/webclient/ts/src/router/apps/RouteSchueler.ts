@@ -115,14 +115,11 @@ export class RouteSchueler extends RouteNodeListView<SchuelerListeEintrag, Route
      */
     public getChildRouteSelector() {
         const router = useRouter();
-        const self = this;
         const selectedRoute: WritableComputedRef<RouteRecordRaw> = computed({
-            get(): RouteRecordRaw {
-                return self.selectedChildRecord || self.defaultChildNode.record;
-            },
-            set(value: RouteRecordRaw) {
-                self.selectedChildRecord = value;
-				const id = (self.data.item === undefined) ? undefined : "" + self.data.item.id;
+            get: () => this.selectedChildRecord || this.defaultChildNode.record,
+            set: (value) => {
+				this.selectedChildRecord = value;
+				const id = (this.data.item === undefined) ? undefined : "" + this.data.item.id;
                 router.push({ name: value.name, params: { id: id } });
             }
         });

@@ -19,9 +19,6 @@ import { Benutzergruppe } from "./schule/benutzerverwaltung/Benutzergruppe";
 import { Faecher } from "./faecher/Faecher";
 import { Gost } from "./gost/Gost";
 import { Jahrgaenge } from "./jahrgaenge/Jahrgaenge";
-import { Klassen } from "./klassen/Klassen";
-import { Kurse } from "./kurse/Kurse";
-import { Lehrer } from "./lehrer/Lehrer";
 import { BaseList } from "./BaseList";
 import { Religionen } from "./kataloge/religionen/Religionen";
 import { ApiLoadingStatus } from "./core/ApiLoadingStatus.class";
@@ -221,10 +218,7 @@ export class Main {
 			schule: new Schule(),
 			benutzer: new Benutzer(),
 			benutzergruppe : new Benutzergruppe(),
-			kurse: new Kurse(),
-			klassen: new Klassen(),
 			jahrgaenge: new Jahrgaenge(),
-			lehrer: new Lehrer(),
 			faecher: new Faecher(),
 			gost: new Gost(),
 			religionen : new Religionen()

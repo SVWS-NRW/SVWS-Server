@@ -6,7 +6,6 @@ import type { Jahrgaenge } from "./jahrgaenge/Jahrgaenge";
 import { Religionen } from "./kataloge/religionen/Religionen";
 import type { Klassen } from "./klassen/Klassen";
 import type { Kurse } from "./kurse/Kurse";
-import type { Lehrer } from "./lehrer/Lehrer";
 import { Benutzer } from "./schule/benutzerverwaltung/Benutzer";
 import { Benutzergruppe } from "./schule/benutzerverwaltung/Benutzergruppe";
 import type { Schule } from "./schule/Schule";
@@ -18,10 +17,7 @@ export type Apps = {
 	benutzergruppe: Benutzergruppe;
 	gost: Gost;
 	jahrgaenge: Jahrgaenge;
-	klassen: Klassen;
-	kurse: Kurse;
 	faecher: Faecher;
-	lehrer: Lehrer;
 	religionen : Religionen;
 };
 

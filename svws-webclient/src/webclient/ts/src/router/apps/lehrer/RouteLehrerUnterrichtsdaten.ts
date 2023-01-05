@@ -1,6 +1,5 @@
-import { mainApp } from "~/apps/Main";
 import { RouteNode } from "~/router/RouteNode";
-import { RouteNodeListView } from "~/router/RouteNodeListView";
+import { routeLehrer } from "../RouteLehrer";
 
 const SLehrerUnterrichtsdaten = () => import("~/components/lehrer/unterrichtsdaten/SLehrerUnterrichtsdaten.vue");
 
@@ -8,7 +7,7 @@ const SLehrerUnterrichtsdaten = () => import("~/components/lehrer/unterrichtsdat
 
 	public constructor() {
 		super("lehrer_unterrichtsdaten", "unterrichtsdaten", SLehrerUnterrichtsdaten);
-		super.propHandler = (route) => RouteNodeListView.getPropsByAuswahlID(route, mainApp.apps.lehrer.auswahl);
+		super.propHandler = (route) => routeLehrer.getProps(route);
 		super.text = "Unterrichtsdaten";
 	}
 

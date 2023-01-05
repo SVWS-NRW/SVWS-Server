@@ -6,10 +6,12 @@ import { routeKlassenDaten } from "~/router/apps/klassen/RouteKlassenDaten";
 import { ListKlassen } from "~/apps/klassen/ListKlassen";
 import { ListLehrer } from "~/apps/lehrer/ListLehrer";
 import { RouteNode } from "~/router/RouteNode";
+import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 
 export class RouteDataKlassen {
 	item: KlassenListeEintrag | undefined = undefined;
 	auswahl: ListKlassen = new ListKlassen();
+	schule: DataSchuleStammdaten = new DataSchuleStammdaten();
 	listLehrer: ListLehrer = new ListLehrer();
 	mapLehrer: Map<Number, LehrerListeEintrag> = new Map();
 }
@@ -25,7 +27,7 @@ export class RouteKlassen extends RouteNodeListView<KlassenListeEintrag, RouteDa
 		super("klassen", "/klassen/:id(\\d+)?", SKlassenAuswahl, SKlassenApp, new RouteDataKlassen());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Klassen";
-        super.setView("liste", SKlassenAuswahl, (route) => RouteNodeListView.getPropsByAuswahlID(route, this.data.auswahl));
+        super.setView("liste", SKlassenAuswahl, (route) => this.getProps(route));
 		super.children = [
 			routeKlassenDaten
 		];
@@ -40,6 +42,7 @@ export class RouteKlassen extends RouteNodeListView<KlassenListeEintrag, RouteDa
     }
 
     public async enter(to: RouteNode<unknown>, to_params: RouteParams) {
+		await this.data.schule.select(true);  // undefined würde das laden verhindern, daher true
 		await this.data.listLehrer.update_list();
 		this.data.mapLehrer.clear();
 		this.data.listLehrer.liste.forEach(l => this.data.mapLehrer.set(l.id, l));
@@ -66,6 +69,7 @@ export class RouteKlassen extends RouteNodeListView<KlassenListeEintrag, RouteDa
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		const prop: Record<string, any> = RouteNodeListView.getPropsByAuswahlID(to, this.data.auswahl);
 		this.onSelect(prop.item as KlassenListeEintrag | undefined);
+		prop.schule = this.data.schule;
 		prop.listLehrer = this.data.listLehrer;
 		prop.mapLehrer = this.data.mapLehrer;
 		return prop;

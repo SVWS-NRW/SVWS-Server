@@ -16,27 +16,35 @@
 
 <script setup lang="ts">
 
-	import { Schuljahresabschnitt, KlassenListeEintrag } from "@svws-nrw/svws-core-ts";
+	import { Schuljahresabschnitt, KlassenListeEintrag, LehrerListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, ref, WritableComputedRef } from "vue";
 	import { injectMainApp, Main } from "~/apps/Main";
 	import { routeKlassen } from "~/router/apps/RouteKlassen";
-	import { Schule } from "~/apps/schule/Schule";
+	import { ListLehrer } from "~/apps/lehrer/ListLehrer";
+	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
+	import { DataTableColumn } from "@svws-nrw/svws-ui/dist/components/Layout/Table/types";
 
-	const props = defineProps<{ id?: number; item?: KlassenListeEintrag, routename: string }>();
+	const { schule } = defineProps<{ 
+		id?: number; 
+		item?: KlassenListeEintrag;
+		schule: DataSchuleStammdaten;
+		listLehrer: ListLehrer;
+		mapLehrer: Map<Number, LehrerListeEintrag>;
+		routename: string;
+	}>();
 	const selected = routeKlassen.auswahl;
 
 	const main: Main = injectMainApp();
-	const appSchule: ComputedRef<Schule> = computed(() => main.apps.schule);
 
-	const cols = ref([
-		{ key: "kuerzel", label: "Kürzel", width: "6em", sortable: true, defaultSort: "asc" },
+	const cols = <DataTableColumn[]>[
+		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: "asc" },
 		{ key: "bezeichnung", label: "Bezeichnung", sortable: true, span: 2 }
-	]);
+	];
 
-	const rows: ComputedRef<KlassenListeEintrag[] | undefined> = computed(() => { return routeKlassen.data.auswahl.liste; });
+	const rows: ComputedRef<KlassenListeEintrag[]> = computed(() => routeKlassen.data.auswahl.liste);
 
 	const schule_abschnitte: ComputedRef<Schuljahresabschnitt[] | undefined> = computed(() => 
-		appSchule.value.schuleStammdaten.daten?.abschnitte?.toArray() as Schuljahresabschnitt[] || []
+		schule.daten?.abschnitte?.toArray() as Schuljahresabschnitt[] || []
 	);
 
 	const akt_abschnitt: WritableComputedRef<Schuljahresabschnitt> = computed({

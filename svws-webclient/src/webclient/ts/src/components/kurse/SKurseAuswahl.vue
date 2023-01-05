@@ -17,62 +17,59 @@
 
 	import { computed, ComputedRef, WritableComputedRef } from "vue";
 	import { injectMainApp, Main } from "~/apps/Main";
-	import { KursListeEintrag } from "@svws-nrw/svws-core-ts";
+	import { JahrgangsListeEintrag, KursListeEintrag, LehrerListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { routeKurse } from "~/router/apps/RouteKurse";
-	import {Schuljahresabschnitt} from "@svws-nrw/svws-core-ts";
-	import {Schule} from "~/apps/schule/Schule";
+	import { Schuljahresabschnitt } from "@svws-nrw/svws-core-ts";
+	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
+	import { ListJahrgaenge } from "~/apps/jahrgaenge/ListJahrgaenge";
+	import { ListLehrer } from "~/apps/lehrer/ListLehrer";
+	import { DataTableColumn } from "@svws-nrw/svws-ui/dist/components/Layout/Table/types";
 
-	const props = defineProps<{ id?: number; item?: KursListeEintrag, routename: string }>();
+	const { schule, listJahrgaenge, listLehrer } = defineProps<{ 
+		id?: number;
+		item?: KursListeEintrag;
+		schule: DataSchuleStammdaten;
+		listJahrgaenge: ListJahrgaenge;
+		mapJahrgaenge: Map<Number, JahrgangsListeEintrag>;
+		listLehrer: ListLehrer;
+		mapLehrer: Map<Number, LehrerListeEintrag>;
+		routename: string;
+	}>();
+
 	const selected = routeKurse.auswahl;
 
-	const cols = [
-		{ key: "kuerzel", label: "Kürzel", width: "6em", sortable: true, defaultSort: "asc" },
+	const cols = <DataTableColumn[]>[
+		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: "asc" },
 		{ key: "lehrer_name", label: "Fachlehrer", sortable: true },
 		{ key: "jahrgang", label: "Jahrgang", sortable: true }
 	];
 	const main: Main = injectMainApp();
-	const app = main.apps.kurse;
-	const appLehrer = main.apps.lehrer;
-	const appJahrgaenge = main.apps.jahrgaenge;
 
 	// FIXME: Typing: const rows: ComputedRef<KursEintrag[] | undefined> = computed(() => {
 	const rows = computed(() => {
-		return app.auswahl.liste.map((e: KursListeEintrag) => ({
+		return routeKurse.data.auswahl.liste.map((e: KursListeEintrag) => ({
 			...e,
-			lehrer_name: appLehrer.auswahl.liste.find(l => l.id === e.lehrer)?.kuerzel || "",
-			jahrgang: appJahrgaenge.auswahl.liste.find(j => e.idJahrgaenge.toArray(new Array<number>()).includes(j.id))?.kuerzel?.toString() || ""
+			lehrer_name: listLehrer.liste.find(l => l.id === e.lehrer)?.kuerzel || "",
+			jahrgang: listJahrgaenge.liste.find(j => e.idJahrgaenge.toArray(new Array<number>()).includes(j.id))?.kuerzel?.toString() || ""
 		}));
 	});
 
-
-	const schule_abschnitte: ComputedRef<
-		Array<Schuljahresabschnitt> | undefined
-	> = computed(() => {
-		const liste = appSchule.value.schuleStammdaten.daten?.abschnitte;
+	const schule_abschnitte: ComputedRef<Array<Schuljahresabschnitt> | undefined> = computed(() => {
+		const liste = schule.daten?.abschnitte;
 		return liste?.toArray(new Array<Schuljahresabschnitt>()) || [];
 	});
 
 	const akt_abschnitt: WritableComputedRef<Schuljahresabschnitt> = computed({
-		get(): Schuljahresabschnitt {
-			return main.config.akt_abschnitt;
-		},
-		set(abschnitt: Schuljahresabschnitt) {
-			main.config.akt_abschnitt = abschnitt;
-		}
+		get: () => main.config.akt_abschnitt,
+		set: (abschnitt) => main.config.akt_abschnitt = abschnitt
 	});
 
-	const appSchule: ComputedRef<Schule> = computed(() => {
-		return main.apps.schule;
-	});
 	function item_sort(a: Schuljahresabschnitt, b: Schuljahresabschnitt) {
-		return (
-			b.schuljahr + b.abschnitt * 0.1 - (a.schuljahr + a.abschnitt * 0.1)
-		);
+		return b.schuljahr + b.abschnitt * 0.1 - (a.schuljahr + a.abschnitt * 0.1);
 	}
 
 	function item_text(item: Schuljahresabschnitt) {
-		return item.schuljahr
-			? `${item.schuljahr}, ${item.abschnitt}. HJ`
-			: "Abschnitt";
+		return item.schuljahr ? `${item.schuljahr}, ${item.abschnitt}. HJ` : "Abschnitt";
 	}
+
 </script>

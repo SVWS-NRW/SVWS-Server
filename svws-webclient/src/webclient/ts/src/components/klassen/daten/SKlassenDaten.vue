@@ -12,11 +12,14 @@
 	import { DataKlasse } from "~/apps/klassen/DataKlasse";
 	import { ListLehrer } from "~/apps/lehrer/ListLehrer";
 	import { ListJahrgaenge } from "~/apps/jahrgaenge/ListJahrgaenge";
+	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
+	import { routeKlassenDaten } from "~/router/apps/klassen/RouteKlassenDaten";
 
-	const { id, item, data, listLehrer, mapLehrer, listJahrgaenge, mapJahrgaenge, routename } = defineProps<{ 
+	const { item, data, listLehrer, mapLehrer, listJahrgaenge, mapJahrgaenge } = defineProps<{ 
 		id?: number; 
 		item?: KlassenListeEintrag, 
 		data: DataKlasse, 
+		schule: DataSchuleStammdaten;
 		listLehrer: ListLehrer,
 		mapLehrer: Map<Number, LehrerListeEintrag>,
 		listJahrgaenge: ListJahrgaenge,
@@ -25,8 +28,7 @@
 	}>();
 
 	const visible: ComputedRef<boolean> = computed(() => {
-		//return this.$app.afaecher.visible; //TODO: richtige Bedingung einpflegen
-		return true;
+		return (!routeKlassenDaten.hidden) && (item !== undefined);
 	});
 
 </script>

@@ -2,163 +2,73 @@
 	<svws-ui-content-card title="Basisdaten">
 		<div class="content-wrapper">
 			<div class="input-wrapper">
-				<svws-ui-text-input
-					v-model="inputKuerzel"
-					type="text"
-					placeholder="Kürzel"
-				/>
-				<svws-ui-text-input
-					v-model="inputIdSchuljahresabschnitt"
-					type="text"
-					placeholder="Schuljahresabschnitt"
-				/>
-				<svws-ui-multi-select
-					v-model="inputIdJahrgaenge"
-					tags
-					title="Jahrgaenge"
-					:items="listJahrgaenge"
-					:item-text="(item: Jahrgaenge) => item?.daten.kuerzel || ''"
-				/>
-				<svws-ui-text-input
-					v-model="inputIdFach"
-					type="number"
-					placeholder="Id Fach"
-				/>
-				<svws-ui-multi-select
-					v-model="inputLehrer"
-					:items="listLehrer"
-					:item-text="(item:LehrerListeEintrag) => item.kuerzel"
-					title="Lehrer"
-				/>
-				<svws-ui-text-input
-					v-model="inputSortierung"
-					type="number"
-					placeholder="Sortierung"
-				/>
-				<svws-ui-checkbox v-model="inputIstSichtbar"
-					>Ist sichtbar</svws-ui-checkbox
-				>
+				<svws-ui-text-input placeholder="Kürzel" v-model="kuerzel" type="text" />
+				<svws-ui-text-input placeholder="Schuljahresabschnitt" v-model="schuljahresabschnitt" type="text" />
+				<svws-ui-multi-select title="Jahrgaenge" v-model="jahrgaenge" tags :items="listJahrgaenge.liste"
+					:item-text="(item: JahrgangsListeEintrag) => item?.kuerzel?.toString() || ''" />
+				<svws-ui-text-input placeholder="Fach-ID" v-model="fach" type="number" />
+				<svws-ui-multi-select title="Lehrer" v-model="lehrer" :items="listLehrer.liste" :item-text="(item:LehrerListeEintrag) => item.kuerzel.toString()" />
+				<svws-ui-text-input placeholder="Sortierung" v-model="sortierung" type="number" />
+				<svws-ui-checkbox v-model="istSichtbar"> Ist sichtbar </svws-ui-checkbox>
 			</div>
 		</div>
 	</svws-ui-content-card>
 </template>
 
 <script setup lang="ts">
-	import { computed, ComputedRef, WritableComputedRef } from "vue";
+	import { computed, WritableComputedRef } from "vue";
 
-	import { Jahrgaenge, JahrgangsListeEintrag, LehrerListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
-	import { injectMainApp, Main } from "~/apps/Main";
+	import { JahrgangsListeEintrag, KursListeEintrag, LehrerListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
+	import { ListLehrer } from "~/apps/lehrer/ListLehrer";
+	import { DataKurs } from "~/apps/kurse/DataKurs";
+	import { ListJahrgaenge } from "~/apps/jahrgaenge/ListJahrgaenge";
 
-	const main: Main = injectMainApp();
-	const app = main.apps.kurse;
-	const appLehrer = main.apps.lehrer;
-	const schuljahresabschnitte = main.apps.jahrgaenge.auswahl.liste;
+	const { item, data, listLehrer, mapLehrer, listJahrgaenge, mapJahrgaenge } = defineProps<{ 
+		item?: KursListeEintrag;
+		data: DataKurs;
+		listJahrgaenge: ListJahrgaenge;
+		mapJahrgaenge: Map<Number, JahrgangsListeEintrag>;
+		listLehrer: ListLehrer;
+		mapLehrer: Map<Number, LehrerListeEintrag>;
+	}>();
 
-	const listJahrgaenge: ComputedRef<Jahrgaenge[]> = computed(() => Jahrgaenge.values());
-
-	const id: ComputedRef<number | undefined> = computed(() => {
-		return app.auswahl.ausgewaehlt?.id.valueOf();
+	const schuljahresabschnitt: WritableComputedRef<number | undefined> = computed({
+		get: () => data.daten?.idSchuljahresabschnitt,
+		set: (value) => data.patch({idSchuljahresabschnitt: value})
 	});
 
-	const inputIdSchuljahresabschnitt: WritableComputedRef<number | undefined> = computed({
-		get(): number | undefined {
-			const schuljahrAbschnitt = schuljahresabschnitte.find((sa: JahrgangsListeEintrag) => {
-				return sa.id === app.auswahl.ausgewaehlt?.idSchuljahresabschnitt;
-			});
-			return app.auswahl.ausgewaehlt?.idSchuljahresabschnitt;
-		},
-		set(val: number | undefined) {
-			app.kursdaten.patch({idSchuljahresabschnitt: val});
+	const kuerzel: WritableComputedRef<string | undefined> = computed({
+		get: () => data.daten?.kuerzel.toString(),
+		set: (value) => data.patch({ kuerzel: value })
+	});
+
+	const jahrgaenge: WritableComputedRef<JahrgangsListeEintrag[]> = computed({
+		get: () => data.daten === undefined ? [] : (data.daten.idJahrgaenge.toArray() as Number[]).map(id => mapJahrgaenge.get(id)).filter(j => j !== undefined) as JahrgangsListeEintrag[],
+		set: (value) => { 
+			const result: Vector<Number> = new Vector();
+			value.forEach(j => result.add(Number(j.id)));
+			data.patch({ idJahrgaenge: result });
 		}
 	});
 
-	const inputKuerzel: WritableComputedRef<string | undefined> = computed({
-		get(): string | undefined {
-			return app.auswahl.ausgewaehlt?.kuerzel?.toString();
-		},
-		set(val: string | undefined) {
-			app.kursdaten.patch({ kuerzel: val });
-		}
+	const fach: WritableComputedRef<number | undefined> = computed({
+		get: () => data.daten?.idFach,
+		set: (value) => data.patch({idFach: value})
 	});
 
-const inputIdJahrgaenge: WritableComputedRef<Jahrgaenge[] | undefined> =
-	computed({
-		get(): Jahrgaenge[] | undefined {
-			const selection: Jahrgaenge[] = [];
-			app.auswahl.ausgewaehlt?.idJahrgaenge.toArray().forEach((id: unknown) => {
-					const jahrgang = listJahrgaenge.value.find((j: Jahrgaenge) => {
-						return Number(id) === j.daten.id;
-					});
-					if(jahrgang) selection.push(jahrgang);
-			});
-			return selection;
-		},
-		set(val: Jahrgaenge[] | undefined) {
-			const ids: Vector<Number> = new Vector();
-			// val?.forEach((jahrgang: Jahrgaenge) => {
-			// 	ids.add(jahrgang.daten.id);
-			// });
-			app.kursdaten.patch({idJahrgaenge: new Vector(ids)});
-		}
+	const lehrer: WritableComputedRef<LehrerListeEintrag | undefined> = computed({
+		get: () => ((data.daten === undefined) || (data.daten.lehrer === null)) ? undefined : mapLehrer.get(data.daten.lehrer),
+		set: (value) => data.patch({lehrer: value === undefined ? null : value.id })
 	});
 
-	// const inputJahrgaenge: WritableComputedRef<Jahrgaenge[] | undefined> =
-	// 	computed({
-	// 		get(): Jahrgaeng[] | undefined {
-	// 			const jahrgaenge: Jahrgaenge[] = [];
-	// 			app.auswahl.ausgewaehlt?.idJahrgaenge.forEach((i: Number) => {
-	// 			jahrgaenge.push(jahrgaengeList.value.find((e: Jahrgaenge) => {
-	// 				return e.daten.id === i;
-	// 			}))
-	// 		})
-	// 		},
-	// 		set(val: Jahrgaenge[] | undefined) {
-	// 			app.klassendaten.patch({idJahrgaenge: val?.daten.id});
-	// 		}
-	// 	});
-
-const inputIdFach: WritableComputedRef<number | undefined> =
-	computed({
-		get(): number | undefined {
-			return app.auswahl.ausgewaehlt?.idFach;
-		},
-		set(val: number | undefined) {
-			app.kursdaten.patch({idFach: val});
-		}
+	const istSichtbar: WritableComputedRef<boolean> = computed({
+		get: () => item === undefined ? false : item.istSichtbar,
+		set: (value) => data.patch({ istSichtbar: value })
 	});
 
-const inputLehrer: WritableComputedRef<LehrerListeEintrag | undefined> =
-	computed({
-		get(): LehrerListeEintrag | undefined {
-			const lehrer = appLehrer.auswahl.liste.find((l: LehrerListeEintrag) => {
-				return l.id === app.auswahl.ausgewaehlt?.lehrer;
-			})
-			return lehrer;
-		},
-		set(val: LehrerListeEintrag | undefined) {
-			app.kursdaten.patch({lehrer: val?.id});
-		}
+	const sortierung: WritableComputedRef<number> = computed({
+		get: () => item?.sortierung || 32000,
+		set: (value) => data.patch({ sortierung: value })
 	});
 
-	const inputIstSichtbar: WritableComputedRef<boolean | undefined> = computed({
-		get(): boolean | undefined {
-			return app.auswahl.ausgewaehlt?.istSichtbar;
-		},
-		set(val: boolean | undefined) {
-			app.kursdaten.patch({istSichtbar: val});
-		}
-	});
-
-	const inputSortierung: WritableComputedRef<number | undefined> = computed({
-		get(): number | undefined {
-			return app.auswahl.ausgewaehlt?.sortierung;
-		},
-		set(val: number | undefined) {
-			app.kursdaten.patch({sortierung: val});
-		}
-	});
-
-	const listLehrer: ComputedRef<LehrerListeEintrag[]> = computed(() => {
-		return appLehrer.auswahl.liste;
-	});
 </script>

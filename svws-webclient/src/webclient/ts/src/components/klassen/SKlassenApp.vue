@@ -3,7 +3,7 @@
 		<svws-ui-header>
 			<div class="flex items-center">
 				<span class="inline-block mr-3">{{ item?.kuerzel?.toString() }}</span>
-				<svws-ui-badge type="light">{{ "ID: " + id }}</svws-ui-badge>
+				<svws-ui-badge type="light">{{ "ID: " + item?.id }}</svws-ui-badge>
 				<br/>
 				<div class="separate-items--custom">
 					<span v-for="(l, i) in inputKlassenlehrer" :key="i" class="opacity-50"> {{ l.kuerzel }} </span>
@@ -24,11 +24,13 @@
 	import { KlassenListeEintrag, LehrerListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef } from "vue";
 	import { ListLehrer } from "~/apps/lehrer/ListLehrer";
+	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 	import { routeKlassen } from "~/router/apps/RouteKlassen";
 
-	const { id, item, mapLehrer } = defineProps<{ 
+	const { item, mapLehrer } = defineProps<{ 
 		id?: number; 
 		item?: KlassenListeEintrag, 
+		schule: DataSchuleStammdaten;
 		listLehrer: ListLehrer,
 		mapLehrer: Map<Number, LehrerListeEintrag>,
 		routename: string 
@@ -41,7 +43,7 @@
 	);
 
 	const visible: ComputedRef<boolean> = computed(() => {
-		return !(routeKlassen.hidden) && (id !== undefined);
+		return (!routeKlassen.hidden) && (item !== undefined);
 	});
 
 </script>
