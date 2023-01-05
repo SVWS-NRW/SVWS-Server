@@ -1,8 +1,7 @@
 <template>
-	<footer
-		class="status svws-ui-bg-white svws-ui-text-black svws-ui-border-dark-20"
-	>
+	<footer class="status svws-ui-bg-white svws-ui-text-black svws-ui-border-dark-20">
 		<s-loading-status v-if="loading"></s-loading-status>
+		<span v-if="error" class="text-red-400 font-bold">{{ error }}</span>
 	</footer>
 </template>
 
@@ -12,6 +11,9 @@
 
 	const app = injectMainApp();
 	const loading: ComputedRef<boolean> = computed(() => app.config.pending);
+	defineProps({
+		error	: { type: String }
+	});
 </script>
 
 <style>

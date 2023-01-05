@@ -34,7 +34,7 @@
 				<main class="relative h-full">
 					<router-view :key="$route.hash" />
 				</main>
-				<s-app-status />
+				<s-app-status :error="error_message"/>
 			</div>
 		</template>
 	</svws-ui-app-layout>
@@ -45,12 +45,23 @@
 	import type { Schule } from "~/apps/schule/Schule";
 	import { version } from '../../version';
 
-	import { computed, ComputedRef, ref, watch } from "vue";
+	import { computed, ComputedRef, onErrorCaptured, ref, Ref, watch } from "vue";
 	import { useRoute } from "vue-router";
 	import { injectMainApp } from "~/apps/Main";
 	import { router } from "~/router";
 	import { routeApp } from "~/router/RouteApp";
 	import { RouteNode } from "~/router/RouteNode";
+
+	onErrorCaptured((e)=>{
+		error_message.value = e.message.toString();
+	});
+
+	const error_message: Ref<undefined|string> = ref(undefined);
+	watch(error_message, (new_val)=> {
+		setTimeout(()=> {
+			if (new_val !== undefined) error_message.value = undefined;
+		}, 10_000);
+	})
 
 	const route = useRoute();
 
@@ -97,21 +108,4 @@
 		document.title = "SVWS-Client";
 		router.push("/login");
 	}
-
 </script>
-
-<style lang="postcss">
-	@page {
-		size: A4 portrait;
-		margin: 0mm;
-	}
-
-	@media print {
-		body {
-			width: 210mm;
-			height: 296.8mm;
-			padding: 10mm 25mm 10mm 25mm !important;
-			/* overflow: hidden; */
-		}
-	}
-</style>

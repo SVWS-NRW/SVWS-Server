@@ -107,7 +107,7 @@
 
 	onErrorCaptured((e)=>{
 		alert("Es ist ein Fehler aufgetreten: " + e.message);
-		return false;
+		// return false;
 	})
 
 	const is_dragging: Ref<boolean> = ref(false)
