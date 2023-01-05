@@ -1,11 +1,11 @@
 <template>
 	<div v-if="visible" class="app-container relative">
 		<div class="svws-ui-bg-white sticky top-0 z-50 col-span-3 flex justify-end py-4">
-			<s-card-schueler-add-adresse />
+			<s-card-schueler-add-adresse :item="item" :list-schuelerbetriebe="listSchuelerbetriebe" />
 		</div>
 		<div v-if="sb_vorhanden" class="col-span-3">
-			<s-card-schueler-beschaeftigung />
-			<s-card-schueler-adresse />
+			<s-card-schueler-beschaeftigung :list-schuelerbetriebe="listSchuelerbetriebe" />
+			<s-card-schueler-adresse :list-schuelerbetriebe="listSchuelerbetriebe" :betriebs-stammdaten="betriebsStammdaten" />
 		</div>
 		<div v-else>
 			<h1>
@@ -17,17 +17,22 @@
 
 <script setup lang="ts">
 
+	import { SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef } from "vue";
-	import { injectMainApp, Main } from "~/apps/Main";
+	import { DataBetriebsstammdaten } from "~/apps/schueler/DataBetriebsstammdaten";
+	import { ListSchuelerBetriebsdaten } from "~/apps/schueler/ListSchuelerBetriebsdaten";
 	import { routeSchuelerAdressen } from "~/router/apps/schueler/RouteSchuelerAdressen";
 
-	const main: Main = injectMainApp();
-	const app = main.apps.schueler;
+	const { listSchuelerbetriebe, betriebsStammdaten } = defineProps<{ 
+		id?: number;
+		item?: SchuelerListeEintrag;
+		listSchuelerbetriebe : ListSchuelerBetriebsdaten;
+		betriebsStammdaten: DataBetriebsstammdaten;
+		routename: string;
+	}>();
 
 	const sb_vorhanden : ComputedRef<boolean> = computed(() => { 
-		if (app.listSchuelerbetriebe)
-			return app.listSchuelerbetriebe?.liste.length > 0 ? true : false ;
-		return false;
+		return listSchuelerbetriebe?.liste.length > 0 ? true : false;
 	});
 
 	const visible: ComputedRef<boolean> = computed(() => {

@@ -17,7 +17,7 @@
 
 								<tbody>
 									<tr v-for="(ds, id) in betriebe" :key="id" @click="select(ds)" class="border-b bg-white transition duration-300 ease-in-out hover:bg-gray-400">
-										<s-card-schueler-beschaeftigungs-tabelle :betrieb="ds"/>
+										<s-card-schueler-beschaeftigungs-tabelle :betrieb="ds" :list-schuelerbetriebe="listSchuelerbetriebe" />
 									</tr>	
 								</tbody>
 							</table>
@@ -32,23 +32,23 @@
 <script setup lang="ts">
 
 	import { computed, ComputedRef } from "vue";
-	import { injectMainApp, Main } from "~/apps/Main";
 	import { SchuelerBetriebsdaten } from "@svws-nrw/svws-core-ts";
+	import { ListSchuelerBetriebsdaten } from "~/apps/schueler/ListSchuelerBetriebsdaten";
 
-	const main: Main = injectMainApp();
-	const app = main.apps.schueler;
+	const { listSchuelerbetriebe } = defineProps<{ 
+		listSchuelerbetriebe : ListSchuelerBetriebsdaten;
+	}>();
 
 	const headerTags : ComputedRef<Array<string>> = computed(() => {
 		return [ "Betrieb", "Ausbilder","Beschäftigungsart", "Beginn", "Ende", "Praktikum"];
 	});
 	
 	const betriebe : ComputedRef<SchuelerBetriebsdaten[] | undefined> = computed(() => {
-		return app.listSchuelerbetriebe?.liste;
+		return listSchuelerbetriebe.liste;
 	});
 
 	function select(ds : SchuelerBetriebsdaten){
-        if (app.listSchuelerbetriebe)
-            app.listSchuelerbetriebe.ausgewaehlt = ds;
+		listSchuelerbetriebe.ausgewaehlt = ds;
 	}
 
 </script>

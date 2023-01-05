@@ -18,11 +18,6 @@ export class Schueler extends App {
 	/** Informationen zum allgemeinen Status dieser Teilapplikation */
 	public auswahl!: ListSchueler;
 
-	/** Liste der Schülerbetriebe */
-	public listSchuelerbetriebe : ListSchuelerBetriebsdaten | undefined = undefined;
-	/** Objekt für Betriebsstammdaten */
-	public betriebsStammdaten!: DataBetriebsstammdaten;
-
 	/**
 	 * Initialisiert die OpenAPI mit der aktuellen Konfiguration
 	 *
@@ -30,8 +25,5 @@ export class Schueler extends App {
 	 */
 	public async init(): Promise<void> {
 		this.auswahl = new ListSchueler();
-		this.listSchuelerbetriebe  = new ListSchuelerBetriebsdaten();
-		this.betriebsStammdaten = new DataBetriebsstammdaten();
-		this.listSchuelerbetriebe.add_data(this.betriebsStammdaten);
 	}
 }

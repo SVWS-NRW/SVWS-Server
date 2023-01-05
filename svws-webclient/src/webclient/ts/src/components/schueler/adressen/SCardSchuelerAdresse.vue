@@ -20,7 +20,7 @@
 					<div class="flex w-full flex-row items-center space-x-4">
 						<div class="flex-grow">
 							<svws-ui-multi-select v-if="inputBetriebAnsprechpartner.length > 0" title="Ansprechpartner" v-model="ansprechpartner"
-								:items="inputBetriebAnsprechpartner" :item-text="(i: BetriebAnsprechpartner) => i.name" />
+								:items="inputBetriebAnsprechpartner" :item-text="(i: BetriebAnsprechpartner) => i.name?.toString() || ''" />
 							<p v-else>Kein Ansprechpartner</p>
 						</div>
 						<div class="flex flex-row space-x-4">
@@ -32,7 +32,7 @@
 							</svws-ui-button>
 						</div>
 					</div>
-					<svws-ui-multi-select title="betreuende Lehrkraft" v-model="inputBetreuungslehrer" :items="inputLehrerListe" :item-text="(i:LehrerListeEintrag) => i.nachname" />
+					<svws-ui-multi-select title="betreuende Lehrkraft" v-model="inputBetreuungslehrer" :items="inputLehrerListe" :item-text="(i:LehrerListeEintrag) => i.nachname.toString()" />
 				</div>
 			</div>
 			<div class="entry-wrapper">
@@ -111,19 +111,25 @@
 	import { BetriebAnsprechpartner, LehrerListeEintrag, List, OrtKatalogEintrag, SchuelerBetriebsdaten } from "@svws-nrw/svws-core-ts";
 	import { orte_filter, orte_sort, } from "~/helfer";
 	import { App } from "~/apps/BaseApp";
+	import { DataBetriebsstammdaten } from "~/apps/schueler/DataBetriebsstammdaten";
+	import { ListSchuelerBetriebsdaten } from "~/apps/schueler/ListSchuelerBetriebsdaten";
+
+	const { listSchuelerbetriebe, betriebsStammdaten } = defineProps<{ 
+		listSchuelerbetriebe : ListSchuelerBetriebsdaten;
+		betriebsStammdaten: DataBetriebsstammdaten;
+	}>();
 
 	const main: Main = injectMainApp();
-	const app = main.apps.schueler;
 	const modalEdit = ref();
 	const modalAdd = ref();
 
 	/** Kataloge */
 
 	const inputBetriebAnsprechpartner: ComputedRef<BetriebAnsprechpartner[]> = computed(() => {
-		if ((app.listSchuelerbetriebe === undefined) || (app.listSchuelerbetriebe.ausgewaehlt === undefined))
+		if (listSchuelerbetriebe.ausgewaehlt === undefined)
 			return []
-		const id = app.listSchuelerbetriebe.ausgewaehlt.betrieb_id;
-		return app.listSchuelerbetriebe.betriebansprechpartner.liste.filter(l => l.betrieb_id === id);
+		const id = listSchuelerbetriebe.ausgewaehlt.betrieb_id;
+		return listSchuelerbetriebe.betriebansprechpartner.liste.filter(l => l.betrieb_id === id);
 	})
 
 	const inputKatalogOrte: ComputedRef<List<OrtKatalogEintrag>> = computed(() => {
@@ -131,109 +137,70 @@
 	});
 
 	const inputLehrerListe: ComputedRef<LehrerListeEintrag[]> = computed(() => {
-		return app.listSchuelerbetriebe?.lehrer.liste || [];
+		return listSchuelerbetriebe.lehrer.liste;
 	});
 
 
 	/** Basisdaten */
 
 	const name : WritableComputedRef<string | undefined> = computed({
-		get(): string | undefined {
-			return app.betriebsStammdaten.daten?.name1?.valueOf();
-		},
-		set(val: string | undefined){
-			app.betriebsStammdaten.patch({ name1 : val });
-		}
+		get: () => betriebsStammdaten.daten?.name1?.valueOf(),
+		set: (value) => betriebsStammdaten.patch({ name1 : value })
 	})
 
 	const namezusatz : WritableComputedRef<string | undefined> = computed({
-		get(): string | undefined {
-			return app.betriebsStammdaten.daten?.name2?.valueOf();
-		},
-		set(val: string | undefined){
-			app.betriebsStammdaten.patch({ name2 : val });
-		}
+		get: () => betriebsStammdaten.daten?.name2?.valueOf(),
+		set: (value) => betriebsStammdaten.patch({ name2 : value })
 	})
 
 	const telefon1 : WritableComputedRef<string | undefined> = computed({
-		get(): string | undefined {
-			return app.betriebsStammdaten.daten?.telefon1?.valueOf();
-		},
-		set(val: string | undefined){
-			app.betriebsStammdaten.patch({ telefon1 : val });
-		}
+		get: () => betriebsStammdaten.daten?.telefon1?.valueOf(),
+		set: (value) => betriebsStammdaten.patch({ telefon1 : value })
 	})
 
 	const telefon2 : WritableComputedRef<string | undefined> = computed({
-		get(): string | undefined {
-			return app.betriebsStammdaten.daten?.telefon2?.valueOf();
-		},
-		set(val: string | undefined){
-			app.betriebsStammdaten.patch({ telefon2 : val });
-		}
+		get: () => betriebsStammdaten.daten?.telefon2?.valueOf(),
+		set: (value) => betriebsStammdaten.patch({ telefon2 : value })
 	})
 
 	const fax : WritableComputedRef<string | undefined> = computed({
-		get(): string | undefined {
-			return app.betriebsStammdaten.daten?.fax?.valueOf();
-		},
-		set(val: string | undefined){
-			app.betriebsStammdaten.patch({ fax : val });
-		}
+		get: () => betriebsStammdaten.daten?.fax?.valueOf(),
+		set: (value) => betriebsStammdaten.patch({ fax : value })
 	})
 
 	const email : WritableComputedRef<string | undefined> = computed({
-		get(): string | undefined {
-			return app.betriebsStammdaten.daten?.email?.valueOf();
-		},
-		set(val: string | undefined){
-			app.betriebsStammdaten.patch({ email : val });
-		}
+		get: () => betriebsStammdaten.daten?.email?.valueOf(),
+		set: (value) => betriebsStammdaten.patch({ email : value })
 	})
 
 	const branche : WritableComputedRef<string | undefined> = computed({
-		get(): string | undefined {
-			return app.betriebsStammdaten.daten?.branche?.valueOf();
-		},
-		set(val: string | undefined){
-			app.betriebsStammdaten.patch({ branche : val });
-		}
+		get: () => betriebsStammdaten.daten?.branche?.valueOf(),
+		set: (value) => betriebsStammdaten.patch({ branche : value })
 	})
 
 	const ansprechpartner: WritableComputedRef<BetriebAnsprechpartner | undefined> = computed({
-		get(): BetriebAnsprechpartner | undefined {
-			if (app.listSchuelerbetriebe?.ausgewaehlt) {
-				return inputBetriebAnsprechpartner.value.find(l => l.id === app.listSchuelerbetriebe?.ausgewaehlt?.ansprechpartner_id);
-			}
-			return undefined;
-		},
-		set(val: BetriebAnsprechpartner | undefined) {
-			if (app.listSchuelerbetriebe?.ausgewaehlt) {
-				const data = app.listSchuelerbetriebe?.ausgewaehlt as SchuelerBetriebsdaten;
-				data.ansprechpartner_id = Number(val?.id);
-				if ((!data) || (!data.id))
-					return;
-				App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id.valueOf());
-			}
-			return;
+		get: () => listSchuelerbetriebe.ausgewaehlt === undefined ? undefined 
+			: inputBetriebAnsprechpartner.value.find(l => l.id === listSchuelerbetriebe.ausgewaehlt?.ansprechpartner_id),
+		set: (value) => {
+			if (listSchuelerbetriebe.ausgewaehlt === undefined)
+				return;
+			const data = listSchuelerbetriebe.ausgewaehlt as SchuelerBetriebsdaten;
+			data.ansprechpartner_id = Number(value?.id);
+			if (data.id === null)
+				return;
+			App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id.valueOf());
 		}
 	});
 
 	const inputBetreuungslehrer: WritableComputedRef<LehrerListeEintrag | undefined> = computed({
-		get(): LehrerListeEintrag | undefined {
-			if(app.listSchuelerbetriebe?.ausgewaehlt){
-				if (!inputLehrerListe.value)
-					return undefined;
-				return inputLehrerListe.value.find(l => l.id === app.listSchuelerbetriebe?.ausgewaehlt?.betreuungslehrer_id);
-			}
-			return undefined;
-		},
-		set(val: LehrerListeEintrag | undefined) {
-			const data: SchuelerBetriebsdaten | undefined = app.listSchuelerbetriebe?.ausgewaehlt;
-			if ((!data) || (!data.id) || (!val))
+		get: () => listSchuelerbetriebe.ausgewaehlt === undefined ? undefined
+				: inputLehrerListe.value.find(l => l.id === listSchuelerbetriebe.ausgewaehlt?.betreuungslehrer_id),
+		set: (value) => {
+			const data: SchuelerBetriebsdaten | undefined = listSchuelerbetriebe.ausgewaehlt;
+			if ((!data) || (!data.id) || (!value))
 				return;
-			data.betreuungslehrer_id = val?.id;
-			App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id.valueOf()).then();
+			data.betreuungslehrer_id = Number(value?.id);
+			App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id.valueOf());
 		}
 	});
 
@@ -241,57 +208,47 @@
 	/** Adresse */
 
 	const strassenname : WritableComputedRef<string | undefined> = computed({
-		get(): string | undefined {
-			return app.betriebsStammdaten.daten?.strassenname?.valueOf();
-		},
-		set(val: string | undefined){
-			app.betriebsStammdaten.patch({ strassenname : val });
-		}
+		get: () => betriebsStammdaten.daten?.strassenname?.valueOf(),
+		set: (value) => betriebsStammdaten.patch({ strassenname : value })
 	})
 
 	const hausnummerzusatz : WritableComputedRef<string | undefined> = computed({
-		get(): string | undefined {
-			return app.betriebsStammdaten.daten?.hausnrzusatz?.valueOf();
-		},
-		set(val: string | undefined){
-			app.betriebsStammdaten.patch({ hausnrzusatz : val });
-		}
+		get: () => betriebsStammdaten.daten?.hausnrzusatz?.valueOf(),
+		set: (value) => betriebsStammdaten.patch({ hausnrzusatz : value })
 	})
 
-	const inputWohnortID: WritableComputedRef<OrtKatalogEintrag | undefined> =computed({
-			get(): OrtKatalogEintrag | undefined {
-				// TODO Die UI-Komponente zeigt nach Auswahl eines neuen Eintrags den Eintrag doppelt. Erst nach 10 Sekunden ist es wieder normal.
-				if (app.betriebsStammdaten.daten?.ort_id) {
-					const id = app.betriebsStammdaten.daten?.ort_id;
-					let o;
-					for (const r of inputKatalogOrte.value) { 
-						if (r.id === id) { 
-							o = r; 
-							break;
-						} 
-					}
-					return o;
+	const inputWohnortID: WritableComputedRef<OrtKatalogEintrag | undefined> = computed({
+		get: () => {
+			// TODO Die UI-Komponente zeigt nach Auswahl eines neuen Eintrags den Eintrag doppelt. Erst nach 10 Sekunden ist es wieder normal.
+			if (betriebsStammdaten.daten?.ort_id) {
+				const id = betriebsStammdaten.daten?.ort_id;
+				let o;
+				for (const r of inputKatalogOrte.value) { 
+					if (r.id === id) { 
+						o = r; 
+						break;
+					} 
 				}
-				return undefined;
-			},
-			set(val: OrtKatalogEintrag | undefined) {
-				app.betriebsStammdaten.patch({ ort_id: val?.id });
+				return o;
 			}
-		});
+			return undefined;
+		},
+		set: (value) => betriebsStammdaten.patch({ ort_id: value?.id })
+	});
 
 
 	const anschreiben: WritableComputedRef<boolean | undefined> = computed({
-		get(): boolean | undefined {
-			if (app.listSchuelerbetriebe?.ausgewaehlt) {
-				const data = app.listSchuelerbetriebe?.ausgewaehlt as SchuelerBetriebsdaten;
+		get: () => {
+			if (listSchuelerbetriebe?.ausgewaehlt) {
+				const data = listSchuelerbetriebe.ausgewaehlt as SchuelerBetriebsdaten;
 				return data.allgadranschreiben?.valueOf();
 			}
 			return undefined;
 		},
-		set(val: boolean | undefined) {
-			if (app.listSchuelerbetriebe?.ausgewaehlt) {
-				const data = app.listSchuelerbetriebe?.ausgewaehlt as SchuelerBetriebsdaten;
-				data.allgadranschreiben = Boolean(val);
+		set: (value) => {
+			if (listSchuelerbetriebe?.ausgewaehlt) {
+				const data = listSchuelerbetriebe.ausgewaehlt as SchuelerBetriebsdaten;
+				data.allgadranschreiben = Boolean(value);
 				if ((!data) || (!data.id))
 					return;
 				App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id.valueOf());
@@ -301,13 +258,8 @@
 	});
 
 	const bemerkungen : WritableComputedRef<string | undefined> = computed({
-		get(): string | undefined {
-			// TODO Der Wert wird von API richtig geliefert, jedoch wird er von UI-Komponente nicht dargestellt.
-			return app.betriebsStammdaten.daten?.bemerkungen?.valueOf();
-		},
-		set(val: string | undefined){
-			app.betriebsStammdaten.patch({ bemerkungen : val });
-		}
+		get: () => betriebsStammdaten.daten?.bemerkungen?.valueOf() || undefined,
+		set: (value) => betriebsStammdaten.patch({ bemerkungen : value })
 	})
 
 	/**
@@ -315,92 +267,79 @@
 	 */
 
 	const ap_name : WritableComputedRef<string | undefined> = computed({
-		get(): string | undefined {
-			return ansprechpartner.value?.name?.valueOf();
-		},
-		set(val: string | undefined){
+		get: () => ansprechpartner.value?.name?.valueOf() || undefined,
+		set: (value) => {
 			const data = ansprechpartner.value as BetriebAnsprechpartner;
-			data.name = String(val);
+			data.name = String(value);
 			if ((!data) || (!data.id))
 				return;
-			App.api.patchBetriebanpsrechpartnerdaten(data, App.schema,data.id.valueOf());
+			App.api.patchBetriebanpsrechpartnerdaten(data, App.schema, data.id.valueOf());
 		}
 	})
+
 	const ap_vorname : WritableComputedRef<string | undefined> = computed({
-		get(): string | undefined {
-			return ansprechpartner.value?.vorname?.valueOf();
-		},
-		set(val: string | undefined){
+		get: () => ansprechpartner.value?.vorname?.valueOf(),
+		set: (value) => {
 			const data = ansprechpartner.value as BetriebAnsprechpartner;
-			data.vorname = String(val);
+			data.vorname = String(value);
 			if ((!data) || (!data.id))
 				return;
-			App.api.patchBetriebanpsrechpartnerdaten(data, App.schema,data.id.valueOf());
+			App.api.patchBetriebanpsrechpartnerdaten(data, App.schema, data.id.valueOf());
 		}
 	})
 
 	const ap_anrede : WritableComputedRef<string | undefined> = computed({
-		get(): string | undefined {
-			return ansprechpartner.value?.anrede?.valueOf();
-		},
-		set(val: string | undefined){
+		get: () => ansprechpartner.value?.anrede?.valueOf(),
+		set: (value) => {
 			const data = ansprechpartner.value as BetriebAnsprechpartner;
-			data.anrede = String(val);
+			data.anrede = String(value);
 			if ((!data) || (!data.id))
 				return;
-			App.api.patchBetriebanpsrechpartnerdaten(data, App.schema,data.id.valueOf());
+			App.api.patchBetriebanpsrechpartnerdaten(data, App.schema, data.id.valueOf());
 		}
 	})
 
 	const ap_telefonnr : WritableComputedRef<string | undefined> = computed({
-		get(): string | undefined {
-			return ansprechpartner.value?.telefon?.valueOf();
-		},
-		set(val: string | undefined){
+		get: () => ansprechpartner.value?.telefon?.valueOf(),
+		set: (value) => {
 			const data = ansprechpartner.value as BetriebAnsprechpartner;
-			data.telefon = String(val);
+			data.telefon = String(value);
 			if ((!data) || (!data.id))
 				return;
-			App.api.patchBetriebanpsrechpartnerdaten(data, App.schema,data.id.valueOf());
+			App.api.patchBetriebanpsrechpartnerdaten(data, App.schema, data.id.valueOf());
 		}
 	})
 
 	const ap_email : WritableComputedRef<string | undefined> = computed({
-		get(): string | undefined {
-			return ansprechpartner.value?.email?.valueOf();
-		},
-		set(val: string | undefined){
+		get: () => ansprechpartner.value?.email?.valueOf(),
+		set: (value) => {
 			const data = ansprechpartner.value as BetriebAnsprechpartner;
-			data.email = String(val);
+			data.email = String(value);
 			if ((!data) || (!data.id))
 				return;
-			App.api.patchBetriebanpsrechpartnerdaten(data, App.schema,data.id.valueOf());
+			App.api.patchBetriebanpsrechpartnerdaten(data, App.schema, data.id.valueOf());
 		}
 	})
 
 	const ap_abteilung : WritableComputedRef<string | undefined> = computed({
-		get(): string | undefined {
-			return ansprechpartner.value?.abteilung?.valueOf();
-		},
-		set(val: string | undefined){
+		get: () => ansprechpartner.value?.abteilung?.valueOf(),
+		set: (value) => {
 			const data = ansprechpartner.value as BetriebAnsprechpartner;
-			data.abteilung = String(val);
+			data.abteilung = String(value);
 			if ((!data) || (!data.id))
 				return;
-			App.api.patchBetriebanpsrechpartnerdaten(data, App.schema,data.id.valueOf());
+			App.api.patchBetriebanpsrechpartnerdaten(data, App.schema, data.id.valueOf());
 		}
 	})
 
 	const ap_titel : WritableComputedRef<string | undefined> = computed({
-		get(): string | undefined {
-			return ansprechpartner.value?.titel?.valueOf();
-		},
-		set(val: string | undefined){
+		get: () => ansprechpartner.value?.titel?.valueOf(),
+		set: (value) => {
 			const data = ansprechpartner.value as BetriebAnsprechpartner;
-			data.titel = String(val);
+			data.titel = String(value);
 			if ((!data) || (!data.id))
 				return;
-			App.api.patchBetriebanpsrechpartnerdaten(data, App.schema,data.id.valueOf());
+			App.api.patchBetriebanpsrechpartnerdaten(data, App.schema, data.id.valueOf());
 		}
 	})
 
@@ -410,12 +349,12 @@
 	const ap_neu : BetriebAnsprechpartner = reactive(new BetriebAnsprechpartner())
 
 	async function saveEntries(){
-		const id = app.betriebsStammdaten.daten?.id?.valueOf();
+		const id = betriebsStammdaten.daten?.id?.valueOf();
 		if (id === undefined) 
 			return;
-		ap_neu.betrieb_id = app.betriebsStammdaten.daten?.id || null;
-        await App.api.createBetriebansprechpartner(ap_neu,App.schema, id);
-		app.listSchuelerbetriebe?.betriebansprechpartner.update_list();
+		ap_neu.betrieb_id = betriebsStammdaten.daten?.id || null;
+        await App.api.createBetriebansprechpartner(ap_neu, App.schema, id);
+		listSchuelerbetriebe.betriebansprechpartner.update_list();
 		modalAdd.value.closeModal();
 	}
 

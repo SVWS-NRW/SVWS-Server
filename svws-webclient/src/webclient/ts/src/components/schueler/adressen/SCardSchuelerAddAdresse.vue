@@ -27,30 +27,32 @@
 
 <script setup lang="ts">
 
-	import { BetriebAnsprechpartner, BetriebListeEintrag, KatalogEintrag, LehrerListeEintrag, List, SchuelerBetriebsdaten } from "@svws-nrw/svws-core-ts";
+	import { BetriebAnsprechpartner, BetriebListeEintrag, KatalogEintrag, LehrerListeEintrag, List, SchuelerBetriebsdaten, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, reactive, ref, WritableComputedRef } from "vue";
-	import { injectMainApp, Main } from "~/apps/Main";
 	import { App } from "~/apps/BaseApp";
+	import { ListSchuelerBetriebsdaten } from "~/apps/schueler/ListSchuelerBetriebsdaten";
 
-	const main: Main = injectMainApp();
-	const app = main.apps.schueler;
+	const { item, listSchuelerbetriebe } = defineProps<{ 
+		item?: SchuelerListeEintrag;
+		listSchuelerbetriebe : ListSchuelerBetriebsdaten;
+	}>();
 
 	const modalAddBetrieb = ref();
 	const s_betrieb : SchuelerBetriebsdaten = reactive(new SchuelerBetriebsdaten());
 	const inputBeschaeftigungsarten: ComputedRef<List<KatalogEintrag>> = computed(() => main.kataloge.beschaeftigungsarten);
 
 	const inputLehrerListe: ComputedRef<LehrerListeEintrag[]> = computed(() => {
-		return app.listSchuelerbetriebe?.lehrer.liste || [];
+		return listSchuelerbetriebe.lehrer.liste || [];
 	});
 
 	const inputBetriebListe: ComputedRef<BetriebListeEintrag[]> = computed(() => {
-		return app.listSchuelerbetriebe?.betriebe.liste || [];
+		return listSchuelerbetriebe.betriebe.liste || [];
 	})
 
 	const inputBetriebAnsprechpartner: ComputedRef<BetriebAnsprechpartner[]> = computed(() => {
-		if ((s_betrieb.betrieb_id === null) || (app.listSchuelerbetriebe === undefined))
+		if (s_betrieb.betrieb_id === null)
 			return [];
-		return app.listSchuelerbetriebe.betriebansprechpartner.liste.filter(l => l.betrieb_id === s_betrieb.betrieb_id);
+		return listSchuelerbetriebe.betriebansprechpartner.liste.filter(l => l.betrieb_id === s_betrieb.betrieb_id);
 	})
 
 	const betrieb: WritableComputedRef<BetriebListeEintrag | undefined> = computed({
@@ -101,17 +103,18 @@
 	});
 
 	async function save(){
-		s_betrieb.schueler_id = Number(app.auswahl.ausgewaehlt?.id);
+		s_betrieb.schueler_id = item === undefined ? null : Number(item?.id);
 		if (!s_betrieb.betrieb_id || !s_betrieb.schueler_id){
 			alert("Betrieb-ID bzw. Schuler_ID darf nicht null sein.");
 		} else {
 			await App.api.createSchuelerbetrieb(s_betrieb,App.schema,s_betrieb.schueler_id.valueOf(),s_betrieb.betrieb_id.valueOf());
 			// TODO Zeitverzögerung muss her, weil das Laden der Daten schneller geht, als sie in die Datenbank geschrieben werden.
-			await app.listSchuelerbetriebe?.update_list(app.auswahl.ausgewaehlt?.id);
+			if (item !== undefined)
+				await listSchuelerbetriebe.update_list(item.id);
 			modalAddBetrieb.value.closeModal();
 		}
 		// TODO Nach der Erstellung eines neuen Schülerbetriebs wird die Schülerbetriebliste nicht aktualisiert.
-		//app.listSchuelerbetriebe?.update_list(app.auswahl.ausgewaehlt.id.valueOf());
+		//app.listSchuelerbetriebe?.update_list(item.id.valueOf());
 		loeschen();
 	}
 
