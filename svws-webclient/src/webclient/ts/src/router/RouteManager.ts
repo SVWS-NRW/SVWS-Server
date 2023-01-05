@@ -40,16 +40,15 @@ export class RouteManager {
         // Ereignisbehandlung: Sende die entsprechenden Nachrichten enter, update, leave zur Aktualisierung an die Knoten
         if (from.fullPath === "/") {
             // Die Analyse der Quell-Route ist nicht erheblich - die Ereignisse für die Ziel-Route sind aber wichtig
-//            console.log("initial");
             const to_predecessors: RouteNode<unknown>[] = to_node.getPredecessors();
             to_predecessors.forEach(
-                async node => await node.enter()
+                async node => await node.enter(to_node, to.params)
             );
-            await to_node.enter();
+            await to_node.enter(to_node, to.params);
             to_predecessors.forEach(
-                async node => await node.update()
+                async node => await node.update(to_node, to.params)
             );
-            await to_node.update();
+            await to_node.update(to_node, to.params);
         } else {
             // Bestimme den Knoten, der Route, die zuvor ausgewählt war - diese muss ja auch gültig sein...
             if (from_node === undefined)
@@ -58,25 +57,21 @@ export class RouteManager {
             const equals = (to_node.name === from_node.name);
             const to_is_successor = to_node.checkSuccessorOf(from_node);
             const from_is_successor = from_node.checkSuccessorOf(to_node);
-//            console.log(from_node.name + " --> " + to_node.name);
             if (to_is_successor) {
                 console.log("to_is_successor");
                 for (let node of to_is_successor)
                     if (node.name !== from_node.name)
-                        await node.enter();
+                        await node.enter(to_node, to.params);
                 for (let node of to_is_successor)
-                    await node.update();
+                    await node.update(to_node, to.params);
             } else if (from_is_successor) {
-//                console.log("from_is_successor");
                 from_is_successor.slice(1).reverse().forEach(
-                    async node => await node.leave()
+                    async node => await node.leave(from_node, from.params)
                 );
-                await to_node.update();
+                await to_node.update(to_node, to.params);
             } else if (equals) {
-//                console.log("equals");
-                await to_node.update();
+                await to_node.update(to_node, to.params);
             } else {
-//                console.log("not equal");
                 let from_predecessors: RouteNode<unknown>[] = from_node.getPredecessors();
                 let to_predecessors: RouteNode<unknown>[] = to_node.getPredecessors();
                 // Entferne gemeinsame Teilroute am Anfang der beiden Routen - diese Routen-Teile bleiben erhalten
@@ -84,18 +79,18 @@ export class RouteManager {
                     from_predecessors = from_predecessors.slice(1);
                     to_predecessors = to_predecessors.slice(1);
                 }
-                await from_node.leave();
+                await from_node.leave(from_node, from.params);
                 [...from_predecessors].reverse().forEach(
-                    async node => await node.leave()
+                    async node => await node.leave(from_node, from.params)
                 );
                 to_predecessors.forEach(
-                    async node => await node.enter()
+                    async node => await node.enter(to_node, to.params)
                 );
-                await to_node.enter();
+                await to_node.enter(to_node, to.params);
                 to_predecessors.forEach(
-                    async node => await node.update()
+                    async node => await node.update(to_node, to.params)
                 );
-                await to_node.update();
+                await to_node.update(to_node, to.params);
             }
         }
         // Akzeptiere die Route...

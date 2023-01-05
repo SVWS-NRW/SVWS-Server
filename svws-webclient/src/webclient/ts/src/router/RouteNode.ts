@@ -339,16 +339,36 @@ export abstract class RouteNode<TRouteData> {
         return result.reverse();
     }
 
-    public async enter() {
-//        console.log("Enter " + this.name);
+    /**
+     * Ein Ereignis, welches im globalen beforeEach-Guard aufgerufen wird,
+     * bevor eine Route neu betreten wird.
+     * 
+     * @param to   die neue Route
+     * @param to_params   die Routen-Parameter
+     */
+    public async enter(to: RouteNode<unknown>, to_params: RouteParams) {
     }
 
-    public async update() {
-//        console.log("Update " + this.name);
+    /**
+     * Ein Ereignis, welches im globalen beforeEach-Guard aufgerufen wird,
+     * wenn die Informationen einer Route aktualisiert werden sollen.
+     * Dieses Ereignis wird unabhängig davon aufgerufen, ob die Route das erste 
+     * mal betreten wird oder einfach nur angepasst wird
+     * 
+     * @param to   die neue Route
+     * @param to_params   die Routen-Parameter
+     */
+    public async update(to: RouteNode<unknown>, to_params: RouteParams) {
     }
 
-    public async leave() {
-//        console.log("Leave " + this.name);
+    /**
+     * Ein Ereignis, welches im globalen beforeEach-Guard aufgerufen wird,
+     * bevor eine Route verlassen wird.
+     * 
+     * @param from   die Route, die verlassen wird
+     * @param from_params   die Routen-Parameter
+     */
+    public async leave(from: RouteNode<unknown>, from_params: RouteParams) {
     }
 
     /**

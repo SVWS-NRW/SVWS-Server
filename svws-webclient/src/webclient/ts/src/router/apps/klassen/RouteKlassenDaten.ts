@@ -22,14 +22,14 @@ export class RouteKlassenDaten extends RouteNode<RouteDataKlassenDaten> {
 		super.text = "Daten";
 	}
 
-    public async beforeEach(to: RouteNode<unknown>, to_params: RouteParams, from: RouteNode<unknown> | undefined, from_params: RouteParams): Promise<any> {
-		if (from?.name !== this.name) {
-			await this.data.listJahrgaenge.update_list();
-			this.data.mapJahrgaenge.clear();
-			this.data.listJahrgaenge.liste.forEach(j => this.data.mapJahrgaenge.set(j.id, j));
-		}
-        return true;
-    }
+    public async enter(to: RouteNode<unknown>, to_params: RouteParams) {
+		await this.data.listJahrgaenge.update_list();
+		this.data.mapJahrgaenge.clear();
+		this.data.listJahrgaenge.liste.forEach(j => this.data.mapJahrgaenge.set(j.id, j));
+	}
+
+    public async update(to: RouteNode<unknown>, to_params: RouteParams) {
+	}
 
 	protected onSelect(item?: KlassenListeEintrag) {
 		if (item === this.data.item)

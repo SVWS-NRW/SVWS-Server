@@ -30,14 +30,16 @@ export class RouteKatalogFoerderschwerpunkte extends RouteNodeListView<Foerdersc
 	}
 
     public async beforeEach(to: RouteNode<unknown>, to_params: RouteParams, from: RouteNode<unknown> | undefined, from_params: RouteParams): Promise<any> {
-		if (this.name !== from?.name)
-			await this.data.auswahl.update_list();
 		if ((to.name === this.name) && (to_params.id === undefined)) {
 			const redirect_name: string = (this.selectedChild === undefined) ? this.defaultChildNode.name : this.selectedChild.name;
 			return { name: redirect_name, params: { id: this.data.auswahl.liste.at(0)?.id }};
 		}
         return true;
     }
+
+    public async enter(to: RouteNode<unknown>, to_params: RouteParams) {
+		await this.data.auswahl.update_list();
+	}
 
 	protected onSelect(item?: FoerderschwerpunktEintrag) {
 		if (item === this.data.item)
