@@ -51,17 +51,22 @@
 
 	function checkSelection(selection: Array<DataTableItem>) {
 		const filteredArray = data.filter(value => selection.includes(value));
-		tableRef.value.deselectAll();
-		tableRef.value.selectRows(filteredArray);
+		if (isMultiSelect && filteredArray.length !== selection.length) {
+			tableRef.value.deselectAll();
+			tableRef.value.selectRows(filteredArray);
+			emit("update:selection", filteredArray ?? []);
+		}
 
 		return filteredArray;
 	}
 
 	function checkSingleSelection() {
-		const isAvailable = data.some((value) => check_same(value))
-		
-		if (!isAvailable) {
-			emit('update:modelValue', {});
+		if (Object.keys(modelValue).length > 0) {
+			const isAvailable = data.some(value => check_same(value));
+
+			if (!isAvailable) {
+				emit("update:modelValue", {});
+			}
 		}
 	}
 
@@ -69,7 +74,8 @@
 	watch(
 		() => selection,
 		newVal => {
-			checkSelection(newVal);
+			tableRef.value.deselectAll();
+			tableRef.value.selectRows(newVal);
 		}
 	);
 
@@ -77,10 +83,10 @@
 		() => data,
 		() => {
 			checkSingleSelection();
-			const filteredSelection = checkSelection(selection);
-			emit("update:selection", filteredSelection ?? []);
-		}, {
-			deep: true,
+			checkSelection(selection);
+		},
+		{
+			deep: true
 		}
 	);
 	// watch(() => modelValue, (newVal) => clickedRow.value = newVal);

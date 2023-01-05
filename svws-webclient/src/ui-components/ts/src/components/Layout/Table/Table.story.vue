@@ -105,6 +105,8 @@ function manipulateData() {
     <Variant title="Selection Multi">
       <Table v-model:selection="selectedRows2" v-model="clickedRow" :data="data" is-multi-select />
       <br />
+      <Button @click="manipulateData">Manipulate data prop</Button>
+      <br />
       <strong>Selected:</strong>
       <div v-if="selectedRows2.length === 0">No rows selected</div>
       <span v-else>{{ selectedRows2 }}</span>
