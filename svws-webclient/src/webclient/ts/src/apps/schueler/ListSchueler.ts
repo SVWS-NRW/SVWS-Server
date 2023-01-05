@@ -9,7 +9,6 @@ import {
 import { App } from "../BaseApp";
 import { BaseList } from "../BaseList";
 import { reactive } from "vue";
-import { ListGost } from "../gost/ListGost";
 
 /**
  * Das Interface für die Schülerfilterfunktion. Alle hier gesetzten Werte

@@ -1,10 +1,8 @@
 import { App } from "../BaseApp";
 
-import {
-	StundenplanListeEintrag,
-	SchuelerStundenplan
-} from "@svws-nrw/svws-core-ts";
+import { StundenplanListeEintrag, SchuelerStundenplan } from "@svws-nrw/svws-core-ts";
 import { BaseData } from "../BaseData";
+import { routeSchueler } from "~/router/apps/RouteSchueler";
 
 export class DataStundenplan extends BaseData<
 	SchuelerStundenplan,
@@ -21,11 +19,10 @@ export class DataStundenplan extends BaseData<
 	 * @returns {Promise<StundenplanZeitraster>} Die Daten als Promise
 	 */
 	public async on_select(): Promise<SchuelerStundenplan | undefined> {
-		const schueler = App.apps.schueler.auswahl.ausgewaehlt;
-		if (!schueler) return;
-		return super._select((eintrag: StundenplanListeEintrag) =>
-			App.api.getSchuelerStundenplan(App.schema, eintrag.id, schueler.id)
-		);
+		const schueler = routeSchueler.data.auswahl.ausgewaehlt;
+		if (!schueler) 
+			return;
+		return super._select((eintrag: StundenplanListeEintrag) => App.api.getSchuelerStundenplan(App.schema, eintrag.id, schueler.id));
 	}
 
 	/**

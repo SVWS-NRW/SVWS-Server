@@ -1,7 +1,7 @@
 <template>
 	<svws-ui-content-card title="Statusdaten">
 		<div class="input-wrapper">
-			<svws-ui-multi-select title="Status" v-model="inputStatus" :items="SchuelerStatus.values()" :item-text="(i: SchuelerStatus) => i.bezeichnung" />
+			<svws-ui-multi-select title="Status" v-model="inputStatus" :items="SchuelerStatus.values()" :item-text="(i: SchuelerStatus) => i.bezeichnung.toString()" />
 			<svws-ui-checkbox v-model="inputIstDuplikat">Ist Duplikat</svws-ui-checkbox>
 			<svws-ui-multi-select title="Fahrschüler" v-model="inputFahrschuelerArtID" :items="inputKatalogFahrschuelerarten" />
 			<svws-ui-multi-select title="Haltestelle" v-model="inputHaltestelleID" :items="inputKatalogHaltestellen" />
@@ -20,25 +20,23 @@
 <script setup lang="ts">
 
 	import { computed, ComputedRef, WritableComputedRef } from "vue";
-	import { KatalogEintrag, List, SchuelerStammdaten, SchuelerStatus } from "@svws-nrw/svws-core-ts";
-	import { injectMainApp, Main } from "~/apps/Main";
+	import { KatalogEintrag, SchuelerStammdaten, SchuelerStatus } from "@svws-nrw/svws-core-ts";
 	import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
 	import { DataKatalogFahrschuelerarten } from "~/apps/schueler/DataKatalogFahrschuelerarten";
+	import { injectMainApp, Main } from "~/apps/Main";
 
-	const props = defineProps<{ stammdaten: DataSchuelerStammdaten, fachschuelerarten: DataKatalogFahrschuelerarten }>();
+	const props = defineProps<{ 
+		stammdaten: DataSchuelerStammdaten, 
+		fachschuelerarten: DataKatalogFahrschuelerarten 
+	}>();
+
+	const main: Main = injectMainApp();
 
 	const daten: ComputedRef<SchuelerStammdaten> = computed(() => props.stammdaten.daten || new SchuelerStammdaten());
 
-
-	const main: Main = injectMainApp();
-	const app = main.apps.schueler;
-
 	const inputStatus: WritableComputedRef<SchuelerStatus | undefined> = computed({
 		get: () => (SchuelerStatus.fromBezeichnung(daten.value.status) || undefined),
-		set: (value) => {
-			props.stammdaten.patch({ status: value?.bezeichnung });
-			app.auswahl.filter = app.auswahl.filter
-		}
+		set: (value) => props.stammdaten.patch({ status: value?.bezeichnung })
 	});
 
 	const inputKatalogFahrschuelerarten: ComputedRef<KatalogEintrag[]> = computed(() => props.fachschuelerarten.daten?.toArray() as KatalogEintrag[] || []);
@@ -68,8 +66,8 @@
 		set: (value) => props.stammdaten.patch({ istDuplikat: value })
 	});
 
-	const inputIstSchulpflichtErfuellt: WritableComputedRef<boolean | undefined> = computed({
-		get: () => daten.value.istSchulpflichtErfuellt?.valueOf(),
+	const inputIstSchulpflichtErfuellt: WritableComputedRef<boolean> = computed({
+		get: () => daten.value.istSchulpflichtErfuellt === null ? false : daten.value.istSchulpflichtErfuellt.valueOf(),
 		set: (value) => props.stammdaten.patch({ istSchulpflichtErfuellt: value })
 	});
 
@@ -88,13 +86,13 @@
 		set: (value) => props.stammdaten.patch({ erhaeltSchuelerBAFOEG: value })
 	});
 
-	const inputIstBerufsschulpflichtErfuellt: WritableComputedRef<boolean | undefined> = computed({
-		get: () => daten.value.istBerufsschulpflichtErfuellt?.valueOf(),
+	const inputIstBerufsschulpflichtErfuellt: WritableComputedRef<boolean> = computed({
+		get: () => daten.value.istBerufsschulpflichtErfuellt === null ? false : daten.value.istBerufsschulpflichtErfuellt.valueOf(),
 		set: (value) => props.stammdaten.patch({ istBerufsschulpflichtErfuellt: value })
 	});
 
-	const inputIstVolljaehrig: WritableComputedRef<boolean | undefined> = computed({
-		get: () => daten.value.istVolljaehrig?.valueOf(),
+	const inputIstVolljaehrig: WritableComputedRef<boolean> = computed({
+		get: () => daten.value.istVolljaehrig === null ? false : daten.value.istVolljaehrig.valueOf(),
 		set: (value) => props.stammdaten.patch({ istVolljaehrig: value })
 	});
 

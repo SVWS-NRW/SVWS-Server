@@ -16,7 +16,6 @@ import { Schule } from "./schule/Schule";
 
 import { Benutzer } from "./schule/benutzerverwaltung/Benutzer";
 import { Benutzergruppe } from "./schule/benutzerverwaltung/Benutzergruppe";
-import { Schueler } from "./schueler/Schueler";
 import { Faecher } from "./faecher/Faecher";
 import { Gost } from "./gost/Gost";
 import { Jahrgaenge } from "./jahrgaenge/Jahrgaenge";
@@ -222,7 +221,6 @@ export class Main {
 			schule: new Schule(),
 			benutzer: new Benutzer(),
 			benutzergruppe : new Benutzergruppe(),
-			schueler: new Schueler(),
 			kurse: new Kurse(),
 			klassen: new Klassen(),
 			jahrgaenge: new Jahrgaenge(),

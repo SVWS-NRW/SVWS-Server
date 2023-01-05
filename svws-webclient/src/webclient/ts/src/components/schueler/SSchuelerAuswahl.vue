@@ -63,7 +63,7 @@
 	import { computed, ComputedRef, Ref, ref, WritableComputedRef } from "vue";
 
 	import { SchuelerListeEintrag, SchuelerStatus, JahrgangsListeEintrag,
-		KlassenListeEintrag, KursListeEintrag, Schulgliederung, Schuljahresabschnitt } from "@svws-nrw/svws-core-ts";
+		KlassenListeEintrag, KursListeEintrag, Schulgliederung, Schuljahresabschnitt, LogConsumerConsole } from "@svws-nrw/svws-core-ts";
 
 	import { injectMainApp, Main } from "~/apps/Main";
 	import { routeSchueler } from "~/router/apps/RouteSchueler";
@@ -106,9 +106,8 @@
 		{ key: "vorname", label: "Vorname", sortable: true, span: '2' },
 	]
 	const main: Main = injectMainApp();
-	const app = main.apps.schueler;
 
-	const listSchueler: ComputedRef<ListSchueler> = computed(() => app.auswahl);
+	const listSchueler: ComputedRef<ListSchueler> = computed(() => routeSchueler.data.auswahl);
 
 	// rows(): Array<SchuelerListeEintrag & {klasse: string}> {
 	const rows: ComputedRef<Array<any>> = computed(() => {

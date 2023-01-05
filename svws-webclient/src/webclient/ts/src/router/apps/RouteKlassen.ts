@@ -40,10 +40,10 @@ export class RouteKlassen extends RouteNodeListView<KlassenListeEintrag, RouteDa
     }
 
     public async enter(to: RouteNode<unknown>, to_params: RouteParams) {
-		await this.data.auswahl.update_list();
 		await this.data.listLehrer.update_list();
 		this.data.mapLehrer.clear();
 		this.data.listLehrer.liste.forEach(l => this.data.mapLehrer.set(l.id, l));
+		await this.data.auswahl.update_list();  // Die Auswahlliste wird als letztes geladen
 	}
 
     public async update(to: RouteNode<unknown>, to_params: RouteParams) {
