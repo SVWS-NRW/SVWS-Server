@@ -12,9 +12,10 @@ export default function useCapturing() {
 
 	const constraints = {
 		video: {
-			width: 720,
+			width: 1280,
 			height: 720
 		},
+		facingMode: 'user',
 		audio: false
 	};
 
@@ -56,7 +57,7 @@ export default function useCapturing() {
 			canvasEl.value.width = width;
 			canvasEl.value.height = height;
 
-			canvasEl.value.getContext("2d")?.drawImage(videoEl.value, 0, 0, width, height);
+			canvasEl.value.getContext("2d")?.drawImage(videoEl.value, 0, 0);
 			canvasEl.value?.toBlob((blob: Blob | null) => {
 				capturedImage.value = blob;
 				emit("image:captured", blob);
