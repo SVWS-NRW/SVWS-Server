@@ -24,11 +24,11 @@
 								<th v-for="s in schienen" :key="s.id" class="text-center" >
 									<div v-if="allow_regeln" class="flex justify-center">
 										<template v-if="s === edit_schienenname">
-											<svws-ui-text-input :modelValue="s.bezeichnung" focus headless style="width: 6rem"
+											<svws-ui-text-input :modelValue="s.bezeichnung.toString()" focus headless style="width: 6rem"
 												@blur="edit_schienenname=undefined"
 												@keyup.enter="edit_schienenname=undefined"
 												@keyup.escape="edit_schienenname=undefined"
-												@update:modelValue="patch_schiene(s, $event)" /> </template>
+												@update:modelValue="patch_schiene(s, $event.toString())" /> </template>
 										<template v-else>
 											<span class="px-3 underline decoration-dotted underline-offset-2 cursor-text" title="Namen bearbeiten" @click="edit_schienenname = s">{{s.nummer}}</span>
 										</template>
@@ -100,7 +100,7 @@
 
 <script setup lang="ts">
 import {
-	GostBlockungSchiene, GostBlockungsdatenManager,
+	GostBlockungSchiene,
 	GostBlockungsergebnisManager,
 	GostStatistikFachwahl,
 	List,

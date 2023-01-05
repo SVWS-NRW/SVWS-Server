@@ -61,7 +61,9 @@
 				</svws-ui-badge>
 			</svws-ui-drag-data>
 			<template v-else>
-				<div class="cursor-pointer" @click="sperren_regel_toggle(schiene)" :class="{'bg-green-400': active && drag_data?.schiene?.id !== schiene.id && drag_data.kurs?.id === kurs.id && drag_data.schiene?.id !== schiene.id}">
+				<div class="cursor-pointer" @click="sperren_regel_toggle(schiene)"
+					:class="{'bg-green-400': active && drag_data?.schiene?.id !== schiene.id && drag_data.kurs?.id === kurs.id && drag_data.schiene?.id !== schiene.id,
+									 'bg-slate-500': schiene_gesperrt(schiene)}">
 					<svws-ui-icon>
 						<i-ri-forbid-fill v-if="sperr_regeln.find(r=>r.parameter.get(1) === ermittel_parent_schiene(schiene).nummer)" class="inline-block text-red-500" />
 						<i-ri-forbid-line v-if="allow_regeln && !sperr_regeln.find(r=>r.parameter.get(1) === ermittel_parent_schiene(schiene).nummer)" class="inline-block opacity-0 hover:opacity-25" />
@@ -390,9 +392,11 @@ const schiene_gesperrt = (schiene: GostBlockungsergebnisSchiene): boolean => {
 	for (const regel of regeln.value) {
 		const { nummer } = ermittel_parent_schiene(schiene)
 		if (regel.typ === GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS.typ
-			&& regel.parameter.get(0) !== props.kurs.kursart
-			&& (nummer >= regel.parameter.get(1) && nummer <= regel.parameter.get(2)))
-				return true;
+			&& (regel.parameter.get(0) !== props.kurs.kursart
+				&& (nummer >= regel.parameter.get(1) && nummer <= regel.parameter.get(2)))
+			|| (regel.parameter.get(0) === props.kurs.kursart
+				&& (nummer < regel.parameter.get(1) || nummer > regel.parameter.get(2))))
+			return true;
 		else if (regel.typ === GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS.typ
 			&& regel.parameter.get(0) === props.kurs.kursart
 			&& (nummer >= regel.parameter.get(1) && nummer <= regel.parameter.get(2)))
