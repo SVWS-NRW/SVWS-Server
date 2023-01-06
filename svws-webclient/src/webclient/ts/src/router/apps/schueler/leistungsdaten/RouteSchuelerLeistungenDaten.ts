@@ -27,9 +27,9 @@ export class RouteSchuelerLeistungenDaten extends RouteNodeListView<SchuelerLern
 
 	public constructor() {
 		super("schueler_leistungen_daten", ":idLernabschnitt(\\d+)?", SSchuelerLeistungenAuswahl, SSchuelerLeistungenDaten, new RouteDataSchuelerLeistungenDaten());
-		super.propHandler = (route) => this.getProps(route, true);
+		super.propHandler = (route) => this.getProps(route);
 		super.text = "Leistungsdaten";
-        super.setView("lernabschnittauswahl", SSchuelerLeistungenAuswahl, (route) => this.getProps(route, false));
+        super.setView("lernabschnittauswahl", SSchuelerLeistungenAuswahl, (route) => this.getProps(route));
 		super.children = [
 		];
 	}
@@ -52,6 +52,27 @@ export class RouteSchuelerLeistungenDaten extends RouteNodeListView<SchuelerLern
 			return { name: this.name, params: { id: to_params.id, idLernabschnitt: this.data.auswahl.liste.at(0)?.id }};
         return true;
     }
+
+    protected async update(to: RouteNode<unknown>, to_params: RouteParams) {
+		if (to_params.idLernabschnitt === undefined) {
+			this.onSelect(undefined);
+		} else {
+			const idLernabschnitt = parseInt(to_params.idLernabschnitt as string);
+			this.onSelect(this.data.auswahl.liste.find(s => s.id === idLernabschnitt));
+		}
+	}
+
+	protected onSelect(item?: SchuelerLernabschnittListeEintrag) {
+		if (item === this.data.item)
+			return;
+		if (item === undefined) {
+			this.data.item = undefined;
+			this.data.daten.unselect();
+		} else {
+			this.data.item = item;
+			this.data.daten.select(this.data.item);
+		}
+	}
 
 	protected getAuswahlComputedProperty(): WritableComputedRef<SchuelerLernabschnittListeEintrag | undefined> {
 		const router = useRouter();
@@ -81,29 +102,9 @@ export class RouteSchuelerLeistungenDaten extends RouteNodeListView<SchuelerLern
 		});
 		return selected;
 	}
-
-	protected onSelect(item?: SchuelerLernabschnittListeEintrag) {
-		if (item === this.data.item)
-			return;
-		if (item === undefined) {
-			this.data.item = undefined;
-			this.data.daten.unselect();
-		} else {
-			this.data.item = item;
-			this.data.daten.select(this.data.item);
-		}
-	}
-
-	public getProps(to: RouteLocationNormalized, doSelect: boolean): Record<string, any> {
+	
+	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		let prop: Record<string, any> = routeSchueler.getProps(to);
-		let idLernabschnitt: number | undefined = undefined;
-		let itemLernabschnitt: SchuelerLernabschnittListeEintrag | undefined = undefined;
-		if (to.params.idLernabschnitt !== undefined) {
-			idLernabschnitt = parseInt(to.params.idLernabschnitt as string);
-			itemLernabschnitt = this.data.auswahl.liste.find(s => s.id === idLernabschnitt);
-		}
-		if (doSelect)
-			this.onSelect(itemLernabschnitt);
 		prop.lernabschnitt = this.data.item;
 		prop.data = this.data.daten;
 		prop.mapFaecher = this.data.mapFaecher;

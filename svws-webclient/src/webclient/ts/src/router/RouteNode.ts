@@ -375,13 +375,22 @@ export abstract class RouteNode<TRouteData> {
      * @param to   die neue Route
      * @param to_params   die Routen-Parameter
      */
-    public async update(to: RouteNode<unknown>, to_params: RouteParams) {
+    protected async update(to: RouteNode<unknown>, to_params: RouteParams) {
     }
 
+    /**
+     * Ein Ereignis, welches im globalen beforeEach-Guard aufgerufen wird,
+     * wenn die Informationen einer Route aktualisiert werden sollen.
+     * Dieses Ereignis wird unabhängig davon aufgerufen, ob die Route das erste 
+     * mal betreten wird oder einfach nur angepasst wird
+     * 
+     * @param to   die neue Route
+     * @param to_params   die Routen-Parameter
+     */
     public async doUpdate(to: RouteNode<unknown>, to_params: RouteParams) {
         if (this._parent !== undefined)
             this._parent._selectedChild.value = this;
-        return this.update(to, to_params);
+        this.update(to, to_params);
     }
 
     /**

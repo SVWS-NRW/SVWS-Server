@@ -21,9 +21,9 @@ export class RouteSchuelerStundenplanDaten extends RouteNodeListView<Stundenplan
 
 	public constructor() {
 		super("schueler_stundenplan_daten", ":idStundenplan(\\d+)?", SSchuelerStundenplanAuswahl, SSchuelerStundenplanDaten, new RouteDataSchuelerStundenplan());
-		super.propHandler = (route) => this.getProps(route, true);
+		super.propHandler = (route) => this.getProps(route);
 		super.text = "Stundenplan";
-        super.setView("stundenplanauswahl", SSchuelerStundenplanAuswahl, (route) => this.getProps(route, false));
+        super.setView("stundenplanauswahl", SSchuelerStundenplanAuswahl, (route) => this.getProps(route));
 		super.children = [
 		];
 	}
@@ -34,6 +34,27 @@ export class RouteSchuelerStundenplanDaten extends RouteNodeListView<Stundenplan
 			return { name: this.name, params: { id: to_params.id, idStundenplan: this.data.auswahl.liste.at(0)?.id }};
         return true;
     }
+
+    protected async update(to: RouteNode<unknown>, to_params: RouteParams) {
+		if (to_params.idStundenplan === undefined) {
+			this.onSelect(undefined);
+		} else {
+			const idStundenplan = parseInt(to_params.idStundenplan as string);
+			this.onSelect(this.data.auswahl.liste.find(s => s.id === idStundenplan));
+		}
+	}
+
+	protected onSelect(item?: StundenplanListeEintrag) {
+		if (item === this.data.item)
+			return;
+		if (item === undefined) {
+			this.data.item = undefined;
+			this.data.daten.unselect();
+		} else {
+			this.data.item = item;
+			this.data.daten.select(this.data.item);
+		}
+	}
 
 	protected getAuswahlComputedProperty(): WritableComputedRef<StundenplanListeEintrag | undefined> {
 		const router = useRouter();
@@ -64,28 +85,8 @@ export class RouteSchuelerStundenplanDaten extends RouteNodeListView<Stundenplan
 		return selected;
 	}
 
-	protected onSelect(item?: StundenplanListeEintrag) {
-		if (item === this.data.item)
-			return;
-		if (item === undefined) {
-			this.data.item = undefined;
-			this.data.daten.unselect();
-		} else {
-			this.data.item = item;
-			this.data.daten.select(this.data.item);
-		}
-	}
-
-	public getProps(to: RouteLocationNormalized, doSelect: boolean): Record<string, any> {
+	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		let prop: Record<string, any> = routeSchueler.getProps(to);
-		let idStundenplan: number | undefined = undefined;
-		let itemStundenplan: StundenplanListeEintrag | undefined = undefined;
-		if (to.params.idStundenplan !== undefined) {
-			idStundenplan = parseInt(to.params.idStundenplan as string);
-			itemStundenplan = this.data.auswahl.liste.find(s => s.id === idStundenplan);
-		}
-		if (doSelect)
-			this.onSelect(itemStundenplan);
 		prop.stundenplan = this.data.item;
 		prop.data = this.data.daten;
 		return prop;
