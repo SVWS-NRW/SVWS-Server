@@ -14,8 +14,6 @@ const SGostKlausurplanung = () => import("~/components/gost/klausurplanung/SGost
 
 export class RouteGostKlausurplanung extends RouteNode<unknown> {
 
-	protected defaultChildNode = routeGostKlausurplanungKlausurdaten;
-
 	public constructor() {
 		super("gost_klausurplanung", "klausurplanung", SGostKlausurplanung);
 		super.propHandler = (route) => RouteGost.getPropsByAuswahlAbiturjahr(route, mainApp.apps.gost.auswahl);
@@ -30,6 +28,7 @@ export class RouteGostKlausurplanung extends RouteNode<unknown> {
 			routeGostKlausurplanungPlanung,
 			routeGostKlausurplanungKonflikte
 		];
+		super.defaultChild = routeGostKlausurplanungKlausurdaten;
 	}
 
     /**
@@ -39,13 +38,10 @@ export class RouteGostKlausurplanung extends RouteNode<unknown> {
      */
     public getChildRouteSelector() {
         const router = useRouter();
-		const self = this;
         const selectedRoute: WritableComputedRef<RouteRecordRaw> = computed({
-            get(): RouteRecordRaw {
-                return self.selectedChildRecord || self.defaultChildNode.record;
-            },
-            set(value: RouteRecordRaw) {
-                self.selectedChildRecord = value;
+            get: () => this.selectedChildRecord || this.defaultChild!.record,
+            set: (value) => {
+                this.selectedChildRecord = value;
 				const abiturjahr = (routeGost.data.item === undefined) ? undefined : "" + routeGost.data.item.abiturjahr;
                 router.push({ name: value.name, params: { abiturjahr: abiturjahr } });
             }

@@ -32,6 +32,9 @@ export abstract class RouteNode<TRouteData> {
 	/** Der ausgewählte Kind-Knoten, zu welchem geroutet werden soll (z.B. bei Tabs nach einer Auswahl) */
 	protected _selectedChild: Ref<RouteNode<unknown> | undefined> = ref(undefined);
 
+    /** Der Kind-Knoten, welcher als Default ausgewählt werden soll */
+    protected _defaultChild: RouteNode<unknown> | undefined = undefined;
+
 
     /**
      * Erstellt einen neuen Knoten für das Routing mithilfe einer
@@ -215,6 +218,20 @@ export abstract class RouteNode<TRouteData> {
     }
 
     /**
+     * TODO
+     */
+    public set defaultChild(node : RouteNode<unknown> | undefined) {
+        this._defaultChild = node;
+    }
+
+    /**
+     * TODO
+     */
+    public get defaultChild() : RouteNode<unknown> | undefined {
+        return this._defaultChild;
+    }
+
+    /**
      * Setzt der Property-Handler für die Default-View
      */
     public set propHandler(handler: (to: RouteLocationNormalized) => Record<string, any>) {
@@ -359,6 +376,12 @@ export abstract class RouteNode<TRouteData> {
      * @param to_params   die Routen-Parameter
      */
     public async update(to: RouteNode<unknown>, to_params: RouteParams) {
+    }
+
+    public async doUpdate(to: RouteNode<unknown>, to_params: RouteParams) {
+        if (this._parent !== undefined)
+            this._parent._selectedChild.value = this;
+        return this.update(to, to_params);
     }
 
     /**

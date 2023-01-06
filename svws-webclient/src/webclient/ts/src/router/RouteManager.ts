@@ -46,9 +46,9 @@ export class RouteManager {
             );
             await to_node.enter(to_node, to.params);
             to_predecessors.forEach(
-                async node => await node.update(to_node, to.params)
+                async node => await node.doUpdate(to_node, to.params)
             );
-            await to_node.update(to_node, to.params);
+            await to_node.doUpdate(to_node, to.params);
         } else {
             // Bestimme den Knoten, der Route, die zuvor ausgewählt war - diese muss ja auch gültig sein...
             if (from_node === undefined)
@@ -63,14 +63,14 @@ export class RouteManager {
                     if (node.name !== from_node.name)
                         await node.enter(to_node, to.params);
                 for (let node of to_is_successor)
-                    await node.update(to_node, to.params);
+                    await node.doUpdate(to_node, to.params);
             } else if (from_is_successor) {
                 from_is_successor.slice(1).reverse().forEach(
                     async node => await node.leave(from_node, from.params)
                 );
-                await to_node.update(to_node, to.params);
+                await to_node.doUpdate(to_node, to.params);
             } else if (equals) {
-                await to_node.update(to_node, to.params);
+                await to_node.doUpdate(to_node, to.params);
             } else {
                 let from_predecessors: RouteNode<unknown>[] = from_node.getPredecessors();
                 let to_predecessors: RouteNode<unknown>[] = to_node.getPredecessors();
@@ -88,9 +88,9 @@ export class RouteManager {
                 );
                 await to_node.enter(to_node, to.params);
                 to_predecessors.forEach(
-                    async node => await node.update(to_node, to.params)
+                    async node => await node.doUpdate(to_node, to.params)
                 );
-                await to_node.update(to_node, to.params);
+                await to_node.doUpdate(to_node, to.params);
             }
         }
         // Akzeptiere die Route...

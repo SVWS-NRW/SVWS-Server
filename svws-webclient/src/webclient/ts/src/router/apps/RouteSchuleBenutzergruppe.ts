@@ -19,8 +19,6 @@ const SBenutzergruppeApp = () => import("~/components/schule/benutzerverwaltung/
 
 export class RouteSchuleBenutzergruppe extends RouteNodeListView<BenutzergruppeListeEintrag, RouteDataSchuleBenutzergruppe> {
 
-	protected defaultChildNode = routeSchuleBenutzergruppeDaten;
-
 	public constructor() {
 		super("benutzergruppen", "/schule/benutzergruppe/:id(\\d+)?", SBenutzergruppeAuswahl, SBenutzergruppeApp, new RouteDataSchuleBenutzergruppe());
 		super.propHandler = (route) => this.getProps(route);
@@ -29,11 +27,12 @@ export class RouteSchuleBenutzergruppe extends RouteNodeListView<BenutzergruppeL
 		super.children = [
 			routeSchuleBenutzergruppeDaten
 		];
+		super.defaultChild = routeSchuleBenutzergruppeDaten;
 	}
 
     public async beforeEach(to: RouteNode<unknown>, to_params: RouteParams, from: RouteNode<unknown> | undefined, from_params: RouteParams): Promise<any> {
 		if ((to.name === this.name) && (to_params.id === undefined)) {
-			const redirect_name: string = (this.selectedChild === undefined) ? this.defaultChildNode.name : this.selectedChild.name;
+			const redirect_name: string = (this.selectedChild === undefined) ? this.defaultChild!.name : this.selectedChild.name;
 			return { name: redirect_name, params: { id: mainApp.apps.benutzergruppe.auswahl.liste.at(0)?.id }};
 		}
         return true;
@@ -66,14 +65,11 @@ export class RouteSchuleBenutzergruppe extends RouteNodeListView<BenutzergruppeL
      */
     public getChildRouteSelector() {
         const router = useRouter();
-        const self = this;
         const selectedRoute: WritableComputedRef<RouteRecordRaw> = computed({
-            get(): RouteRecordRaw {
-                return self.selectedChildRecord || self.defaultChildNode.record;
-            },
-            set(value: RouteRecordRaw) {
-                self.selectedChildRecord = value;
-				const id = (self.data.item === undefined) ? undefined : "" + self.data.item.id;
+            get: () => this.selectedChildRecord || this.defaultChild!.record,
+            set: (value) => {
+                this.selectedChildRecord = value;
+				const id = (this.data.item === undefined) ? undefined : "" + this.data.item.id;
                 router.push({ name: value.name, params: { id: id } });
             }
         });

@@ -25,8 +25,6 @@ const SLehrerApp = () => import("~/components/lehrer/SLehrerApp.vue")
 
 export class RouteLehrer extends RouteNodeListView<LehrerListeEintrag, RouteDataLehrer> {
 
-	protected defaultChildNode = routeLehrerIndividualdaten;
-
 	public constructor() {
 		super("lehrer", "/lehrkraefte/:id(\\d+)?", SLehrerAuswahl, SLehrerApp, new RouteDataLehrer());
 		super.propHandler = (route) => this.getProps(route);
@@ -37,11 +35,12 @@ export class RouteLehrer extends RouteNodeListView<LehrerListeEintrag, RouteData
 			routeLehrerPersonaldaten,
 			routeLehrerUnterrichtsdaten
 		];
+		super.defaultChild = routeLehrerIndividualdaten;
 	}
 
     public async beforeEach(to: RouteNode<unknown>, to_params: RouteParams, from: RouteNode<unknown> | undefined, from_params: RouteParams): Promise<any> {
 		if ((to.name === this.name) && (to_params.id === undefined)) {
-			const redirect_name: string = (this.selectedChild === undefined) ? this.defaultChildNode.name : this.selectedChild.name;
+			const redirect_name: string = (this.selectedChild === undefined) ? this.defaultChild!.name : this.selectedChild.name;
 			await this.data.auswahl.update_list();
 			return { name: redirect_name, params: { id: this.data.auswahl.liste.at(0)?.id }};  // TODO auswahl.gefiltert statt auswahl.liste nutzen
 		}
@@ -84,14 +83,11 @@ export class RouteLehrer extends RouteNodeListView<LehrerListeEintrag, RouteData
      */
     public getChildRouteSelector() {
         const router = useRouter();
-        const self = this;
         const selectedRoute: WritableComputedRef<RouteRecordRaw> = computed({
-            get(): RouteRecordRaw {
-                return self.selectedChildRecord || self.defaultChildNode.record;
-            },
-            set(value: RouteRecordRaw) {
-                self.selectedChildRecord = value;
-				const id = (self.data.item === undefined) ? undefined : "" + self.data.item.id;
+            get: () => this.selectedChildRecord || this.defaultChild!.record,
+            set: (value) => {
+                this.selectedChildRecord = value;
+				const id = (this.data.item === undefined) ? undefined : "" + this.data.item.id;
                 router.push({ name: value.name, params: { id: id } });
             }
         });

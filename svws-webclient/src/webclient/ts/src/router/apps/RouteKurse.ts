@@ -24,8 +24,6 @@ const SKurseApp = () => import("~/components/kurse/SKurseApp.vue")
 
 export class RouteKurse extends RouteNodeListView<KursListeEintrag, RouteDataKurse> {
 
-	protected defaultChildNode = routeKurseDaten;
-
 	public constructor() {
 		super("kurse", "/kurse/:id(\\d+)?", SKurseAuswahl, SKurseApp, new RouteDataKurse());
 		super.propHandler = (route) => this.getProps(route);
@@ -34,11 +32,12 @@ export class RouteKurse extends RouteNodeListView<KursListeEintrag, RouteDataKur
 		super.children = [
 			routeKurseDaten
 		];
+		super.defaultChild = routeKurseDaten;
 	}
 
     public async beforeEach(to: RouteNode<unknown>, to_params: RouteParams, from: RouteNode<unknown> | undefined, from_params: RouteParams): Promise<any> {
 		if ((to.name === this.name) && (to_params.id === undefined)) {
-			const redirect_name: string = (this.selectedChild === undefined) ? this.defaultChildNode.name : this.selectedChild.name;
+			const redirect_name: string = (this.selectedChild === undefined) ? this.defaultChild!.name : this.selectedChild.name;
 			await this.data.auswahl.update_list();
 			return { name: redirect_name, params: { id: this.data.auswahl.liste.at(0)?.id }};
 		}
@@ -88,7 +87,7 @@ export class RouteKurse extends RouteNodeListView<KursListeEintrag, RouteDataKur
      */
     public getChildRouteSelector() : WritableComputedRef<RouteRecordRaw> {
         return computed({
-            get: () => this.selectedChildRecord || this.defaultChildNode.record,
+            get: () => this.selectedChildRecord || this.defaultChild!.record,
             set: (value) => {
                 this.selectedChildRecord = value;
 				const id = (this.data.item === undefined) ? undefined : "" + this.data.item.id;

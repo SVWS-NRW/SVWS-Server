@@ -23,8 +23,6 @@ const SGostApp = () => import("~/components/gost/SGostApp.vue")
 
 export class RouteGost extends RouteNodeListView<GostJahrgang, RouteDataGost> {
 
-	protected defaultChildNode = routeGostJahrgangsdaten;
-
 	public constructor() {
 		super("gost", "/gost/:abiturjahr(-?\\d+)?", SGostAuswahl, SGostApp, new RouteDataGost());
 		super.propHandler = (route) => this.getProps(route);
@@ -37,11 +35,12 @@ export class RouteGost extends RouteNodeListView<GostJahrgang, RouteDataGost> {
 			routeGostKursplanung,
 			routeGostKlausurplanung
 		];
+        super.defaultChild = routeGostJahrgangsdaten;
 	}
 
     public async beforeEach(to: RouteNode<unknown>, to_params: RouteParams, from: RouteNode<unknown> | undefined, from_params: RouteParams): Promise<any> {
 		if ((to.name === this.name) && (to_params.abiturjahr === undefined)) {
-			const redirect_name: string = (this.selectedChild === undefined) ? this.defaultChildNode.name : this.selectedChild.name;
+			const redirect_name: string = (this.selectedChild === undefined) ? this.defaultChild!.name : this.selectedChild.name;
 			return { name: redirect_name, params: { abiturjahr: mainApp.apps.gost.auswahl.liste.at(0)?.abiturjahr }};
 		}
         return true;
@@ -94,14 +93,11 @@ export class RouteGost extends RouteNodeListView<GostJahrgang, RouteDataGost> {
      */
     public getChildRouteSelector() {
         const router = useRouter();
-        const self = this;
         const selectedRoute: WritableComputedRef<RouteRecordRaw> = computed({
-            get(): RouteRecordRaw {
-                return self.selectedChildRecord || self.defaultChildNode.record;
-            },
-            set(value: RouteRecordRaw) {
-                self.selectedChildRecord = value;
-				const abiturjahr = (self.data.item === undefined) ? undefined : "" + self.data.item.abiturjahr;
+            get:() => this.selectedChildRecord || this.defaultChild!.record,
+            set: (value) => {
+                this.selectedChildRecord = value;
+				const abiturjahr = (this.data.item === undefined) ? undefined : "" + this.data.item.abiturjahr;
                 router.push({ name: value.name, params: { abiturjahr: abiturjahr } });
             }
         });
