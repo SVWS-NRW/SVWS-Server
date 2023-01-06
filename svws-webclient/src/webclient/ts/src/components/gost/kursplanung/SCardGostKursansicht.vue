@@ -69,7 +69,8 @@
 							</tr>
 						</thead>
 						<tbody>
-							<s-fach-kurs v-for="fach in faecher" :key="fach.id" :fach="fach" :halbjahr="app.blockungsauswahl.ausgewaehlt?.gostHalbjahr || 0"/>
+							<s-fach-kurs v-for="fach in faecher" :key="fach.id" :fach="fach" :list-lehrer="listLehrer" :map-lehrer="mapLehrer"
+								:halbjahr="app.blockungsauswahl.ausgewaehlt?.gostHalbjahr || 0"/>
 						</tbody>
 					</table>
 				</div>
@@ -99,17 +100,17 @@
 </template>
 
 <script setup lang="ts">
-import {
-	GostBlockungSchiene,
-	GostBlockungsergebnisManager,
-	GostStatistikFachwahl,
-	List,
-	Vector
-} from "@svws-nrw/svws-core-ts";
+  import { GostBlockungSchiene, GostBlockungsergebnisManager, GostStatistikFachwahl, LehrerListeEintrag, List, Vector } from "@svws-nrw/svws-core-ts";
 	import { App } from "~/apps/BaseApp";
 	import { computed, ComputedRef, ref, Ref, WritableComputedRef } from "vue";
-
 	import { injectMainApp, Main, mainApp } from "~/apps/Main";
+	import { SvwsUiContentCard, SvwsUiButton, SvwsUiTextInput, SvwsUiIcon, SvwsUiModal } from "@svws-nrw/svws-ui";
+	import { ListLehrer } from "~/apps/lehrer/ListLehrer";
+
+	const { listLehrer, mapLehrer } = defineProps<{ 
+		listLehrer: ListLehrer;
+		mapLehrer: Map<Number, LehrerListeEintrag>;
+	}>();
 
 	const main: Main = injectMainApp();
 	const app = main.apps.gost

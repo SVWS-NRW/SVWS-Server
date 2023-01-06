@@ -13,21 +13,24 @@
 			</tr>
 		</template>
 		<template v-else>
-			<s-kurs-blockung v-for="kurs in vorhandene_kurse(kursart)" :key="kurs.id" :kurs="kurs"/>
+			<s-kurs-blockung v-for="kurs in vorhandene_kurse(kursart)" :key="kurs.id" :kurs="kurs" :list-lehrer="listLehrer" :map-lehrer="mapLehrer"/>
 		</template>
 	</template>
 </template>
 
 <script setup lang="ts">
-	import { List, Vector, GostBlockungKurs, GostBlockungSchiene, GostKursart, GostStatistikFachwahl, GostStatistikFachwahlHalbjahr, ZulaessigesFach, GostFach } from "@svws-nrw/svws-core-ts";
+	import { List, Vector, GostBlockungKurs, GostBlockungSchiene, GostKursart, GostStatistikFachwahl, GostStatistikFachwahlHalbjahr, ZulaessigesFach, GostFach, LehrerListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef } from "vue";
+	import { ListLehrer } from "~/apps/lehrer/ListLehrer";
 
 	import { injectMainApp, Main } from "~/apps/Main";
 
-	const props = defineProps({
-		fach: { type: GostStatistikFachwahl, required: true },
-		halbjahr: { type: Number, required: true }
-	});
+	const { listLehrer, mapLehrer } = defineProps<{ 
+		fach: GostStatistikFachwahl;
+		halbjahr: Number;
+		listLehrer: ListLehrer;
+		mapLehrer: Map<Number, LehrerListeEintrag>;
+	}>();
 
 	const main: Main = injectMainApp();
 	const app = main.apps.gost;

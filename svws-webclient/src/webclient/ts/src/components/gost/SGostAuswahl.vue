@@ -51,7 +51,7 @@
 												@click.stop="edit_blockungsname = true"
 											>{{blockung.name}}</span>
 											<svws-ui-text-input v-else
-												:modelValue="blockung.name"
+												:modelValue="blockung.name.toString()"
 												style="width: 10rem"
 												headless focus
 												@keyup.enter="edit_blockungsname=false"
@@ -134,19 +134,27 @@
 	import { GOST_CREATE_BLOCKUNG_SYMBOL } from "~/apps/core/LoadingSymbols";
 	import { injectMainApp, Main } from "~/apps/Main";
 	import { routeGost } from "~/router/apps/RouteGost";
-	import {Schuljahresabschnitt} from "@svws-nrw/svws-core-ts";
-	import {Schule} from "~/apps/schule/Schule";
+	import { Schuljahresabschnitt } from "@svws-nrw/svws-core-ts";
+	import { SvwsUiSecondaryMenu, SvwsUiMultiSelect, SvwsUiTable, SvwsUiDropdown, SvwsUiDropdownItem, SvwsUiButton, SvwsUiTextInput, SvwsUiIcon, SvwsUiModal, DataTableColumn } from "@svws-nrw/svws-ui";
+	import { DataGostJahrgang } from "~/apps/gost/DataGostJahrgang";
+	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 
-	const props = defineProps<{ id?: number; item?: GostJahrgang, routename: string }>();
-
+	const { schule } = defineProps<{ 
+		id?: number; 
+		item?: GostJahrgang;
+		schule: DataSchuleStammdaten;
+		jahrgangsdaten: DataGostJahrgang;
+		routename: string;
+	}>();
+	
 	const selected: WritableComputedRef<GostJahrgang | undefined> = routeGost.auswahl;
 	const main: Main = injectMainApp();
 	const app = main.apps.gost;
 	const appJahrgaenge = main.apps.jahrgaenge;
-	const cols = ref([
+	const cols: DataTableColumn[] = [
 		{ key: "bezeichnung", label: "Bezeichnung", sortable: true, span: 2 },
 		{ key: "abiturjahr", label: "Abiturjahr", sortable: true },
-		{ key: "jahrgang", label: "Stufe", sortable: true }]);
+		{ key: "jahrgang", label: "Stufe", sortable: true }];
 
 	const halbjahre = GostHalbjahr.values();
 	const hj_memo: Ref<GostHalbjahr | undefined> = ref(undefined);
@@ -348,12 +356,9 @@
 		modal_remove_blockung.value.isOpen ? modal_remove_blockung.value.closeModal() : modal_remove_blockung.value.openModal();
 	};
 
-	const schule_abschnitte: ComputedRef<
-		Array<Schuljahresabschnitt> | undefined
-	> = computed(() => {
-		const liste = appSchule.value.schuleStammdaten.daten?.abschnitte;
-		return liste?.toArray(new Array<Schuljahresabschnitt>()) || [];
-	});
+	const schule_abschnitte: ComputedRef<Array<Schuljahresabschnitt> | undefined> = computed(() => 
+		schule.daten?.abschnitte?.toArray(new Array<Schuljahresabschnitt>()) || []
+	);
 
 	const akt_abschnitt: WritableComputedRef<Schuljahresabschnitt> = computed({
 		get(): Schuljahresabschnitt {
@@ -364,9 +369,6 @@
 		}
 	});
 
-	const appSchule: ComputedRef<Schule> = computed(() => {
-		return main.apps.schule;
-	});
 	function item_sort(a: Schuljahresabschnitt, b: Schuljahresabschnitt) {
 		return (
 			b.schuljahr + b.abschnitt * 0.1 - (a.schuljahr + a.abschnitt * 0.1)

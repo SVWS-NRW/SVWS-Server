@@ -4,7 +4,7 @@
 		class="flex"
 	>
 		<div class="flex flex-row gap-4">
-			<s-card-gost-kursansicht />
+			<s-card-gost-kursansicht :list-lehrer="listLehrer" :map-lehrer="mapLehrer" />
 			<s-card-gost-umwahlansicht class="grow"/>
 		</div>
 		<div v-if="allow_regeln" class="app-layout--main-sidebar" :class="{ 'app-layout--main-sidebar--collapsed': collapsed }">
@@ -38,9 +38,23 @@
 </template>
 
 <script setup lang="ts">
+	import { GostJahrgang, LehrerListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, onMounted, onUnmounted, Ref, ref } from "vue";
+	import { DataGostJahrgang } from "~/apps/gost/DataGostJahrgang";
+	import { ListLehrer } from "~/apps/lehrer/ListLehrer";
 	import { injectMainApp, Main } from "~/apps/Main";
+	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 
+	const { schule } = defineProps<{ 
+		id?: number; 
+		item?: GostJahrgang;
+		schule: DataSchuleStammdaten;
+		jahrgangsdaten: DataGostJahrgang;
+		listLehrer: ListLehrer;
+		mapLehrer: Map<Number, LehrerListeEintrag>;
+		routename: string;
+	}>();
+	
 	const main: Main = injectMainApp();
 	const app = main.apps.gost;
 

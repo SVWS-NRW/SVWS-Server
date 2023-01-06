@@ -28,20 +28,29 @@
 
 	import { GostJahrgang } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef } from "vue";
+	import { RouterView } from "vue-router";
+	import { DataGostJahrgang } from "~/apps/gost/DataGostJahrgang";
+	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 
 	import { routeGost } from "~/router/apps/RouteGost";
 
-	const props = defineProps<{ id?: number; item?: GostJahrgang, routename: string }>();
+	const { item } = defineProps<{ 
+		id?: number; 
+		item?: GostJahrgang;
+		schule: DataSchuleStammdaten;
+		jahrgangsdaten: DataGostJahrgang;
+		routename: string;
+	}>();
 
 	const selectedRoute = routeGost.getChildRouteSelector();
 
 
 	const jahrgang: ComputedRef<string | undefined> = computed(() => {
-		return props.item?.jahrgang?.toString();
+		return item?.jahrgang?.toString();
 	});
 
 	const bezeichnung_abiturjahr: ComputedRef<string | undefined> = computed(() => {
-		return props.item?.bezeichnung?.toString();
+		return item?.bezeichnung?.toString();
 	});
 
 </script>

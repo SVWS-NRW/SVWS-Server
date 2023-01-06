@@ -1,9 +1,11 @@
-import { GostJahrgang } from "@svws-nrw/svws-core-ts";
+import { GostJahrgang, LehrerListeEintrag } from "@svws-nrw/svws-core-ts";
 import { computed, WritableComputedRef } from "vue";
 import { RouteLocationNormalized, RouteParams, RouteRecordRaw, useRoute, useRouter } from "vue-router";
 import { DataGostJahrgang } from "~/apps/gost/DataGostJahrgang";
 import { ListGost } from "~/apps/gost/ListGost";
+import { ListLehrer } from "~/apps/lehrer/ListLehrer";
 import { mainApp } from "~/apps/Main";
+import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 import { RouteNode } from "../RouteNode";
 import { RouteNodeListView } from "../RouteNodeListView";
 import { routeGostFachwahlen } from "./gost/RouteGostFachwahlen";
@@ -14,6 +16,7 @@ import { routeGostKursplanung } from "./gost/RouteGostKursplanung";
 
 export class RouteDataGost {
 	item: GostJahrgang | undefined = undefined;
+	schule: DataSchuleStammdaten = new DataSchuleStammdaten();
 	jahrgangsdaten: DataGostJahrgang = new DataGostJahrgang();
 }
 
@@ -27,7 +30,7 @@ export class RouteGost extends RouteNodeListView<GostJahrgang, RouteDataGost> {
 		super("gost", "/gost/:abiturjahr(-?\\d+)?", SGostAuswahl, SGostApp, new RouteDataGost());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Oberstufe";
-        super.setView("liste", SGostAuswahl, (route) => RouteGost.getPropsByAuswahlAbiturjahr(route, mainApp.apps.gost.auswahl));
+        super.setView("liste", SGostAuswahl, (route) => this.getProps(route));
 		super.children = [
 			routeGostJahrgangsdaten,
 			routeGostFaecher,
@@ -45,6 +48,19 @@ export class RouteGost extends RouteNodeListView<GostJahrgang, RouteDataGost> {
 		}
         return true;
     }
+
+    public async enter(to: RouteNode<unknown>, to_params: RouteParams) {
+		await this.data.schule.select(true);  // undefined würde das laden verhindern, daher true
+    }
+
+    protected async update(to: RouteNode<unknown>, to_params: RouteParams) {
+		if (to_params.abiturjahr === undefined) {
+			this.onSelect(undefined);
+		} else {
+			const abiturjahr = parseInt(to_params.abiturjahr as string);
+			this.onSelect(mainApp.apps.gost.auswahl.liste.find(s => s.abiturjahr === abiturjahr));
+		}
+	}
 
 	protected onSelect(item?: GostJahrgang) {
 		if (item === this.data.item)
@@ -80,8 +96,9 @@ export class RouteGost extends RouteNodeListView<GostJahrgang, RouteDataGost> {
     }
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
-		const prop = RouteGost.getPropsByAuswahlAbiturjahr(to, mainApp.apps.gost.auswahl);
-		this.onSelect(prop.item as GostJahrgang | undefined);
+		const prop: Record<string, any> = RouteGost.getPropsByAuswahlAbiturjahr(to, mainApp.apps.gost.auswahl);
+		prop.schule = this.data.schule;
+        prop.jahrgangsdaten = this.data.jahrgangsdaten;
 		return prop;
 	}
 
