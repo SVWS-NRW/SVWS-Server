@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 type CheckboxValue = string | number | boolean;
-type ModelValue = boolean | Array<CheckboxValue>;
+type ModelValue = boolean | Array<CheckboxValue> | undefined;
 
 const {
 	value = '',

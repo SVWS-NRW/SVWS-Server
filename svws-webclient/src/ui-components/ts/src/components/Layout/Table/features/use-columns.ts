@@ -10,9 +10,9 @@ export const buildTableColumn = (
 	return {
 		key: input.key,
 		label: input.label || capitalizeFirstLetter(input.key),
-		sortable: input.sortable ?? false,
-		span: input.span ?? '1',
-		defaultSort: input.defaultSort ?? null
+		sortable: input.sortable || false,
+		span: input.span || 1,
+		defaultSort: input.defaultSort || null
 	};
 };
 

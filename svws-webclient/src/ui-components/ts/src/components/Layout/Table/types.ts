@@ -4,6 +4,6 @@ export type DataTableColumn = {
 	key: string;
 	label?: string;
 	sortable?: boolean;
-	span?: string;
+	span?: number;
 	defaultSort?: 'asc' | 'desc' | null;
 };
