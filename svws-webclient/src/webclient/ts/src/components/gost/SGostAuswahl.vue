@@ -129,7 +129,7 @@
 <script setup lang="ts">
 	import { List, Vector, GostBlockungListeneintrag, GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag,
 		GostHalbjahr, GostJahrgang, JahrgangsListeEintrag } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, ref, Ref, watch, WritableComputedRef } from "vue";
+	import { computed, ComputedRef, ref, Ref, ShallowRef, watch, WritableComputedRef } from "vue";
 	import { App } from "~/apps/BaseApp";
 	import { GOST_CREATE_BLOCKUNG_SYMBOL } from "~/apps/core/LoadingSymbols";
 	import { injectMainApp, Main } from "~/apps/Main";
@@ -140,11 +140,9 @@
 	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 
 	const { schule } = defineProps<{ 
-		id?: number; 
-		item?: GostJahrgang;
+		item: ShallowRef<GostJahrgang | undefined>;
 		schule: DataSchuleStammdaten;
 		jahrgangsdaten: DataGostJahrgang;
-		routename: string;
 	}>();
 	
 	const selected: WritableComputedRef<GostJahrgang | undefined> = routeGost.auswahl;

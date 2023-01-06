@@ -11,16 +11,22 @@
 <script setup lang="ts">
 
 	import { GostJahrgang } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef } from "vue";
+	import { computed, ComputedRef, ShallowRef } from "vue";
+	import { RouterView } from "vue-router";
+	import { DataGostJahrgang } from "~/apps/gost/DataGostJahrgang";
+	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 	import { routeGostKlausurplanung } from "~/router/apps/gost/RouteGostKlausurplanung";
 
-	const props = defineProps<{ id?: number; item?: GostJahrgang, routename: string }>();
+	const { item } = defineProps<{ 
+		item: ShallowRef<GostJahrgang | undefined>;
+		schule: DataSchuleStammdaten;
+		jahrgangsdaten: DataGostJahrgang;
+	}>();
 
 	const selectedRoute = routeGostKlausurplanung.getChildRouteSelector();
 
 	const visible: ComputedRef<boolean> = computed(() => {
-		//TODO: richtige Bedingung einpflegen
-		return true;
+		return (!routeGostKlausurplanung.hidden);
 	});
 
 </script>

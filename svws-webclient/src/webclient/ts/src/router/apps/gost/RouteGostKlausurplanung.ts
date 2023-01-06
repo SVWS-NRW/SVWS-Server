@@ -1,7 +1,6 @@
 import { RouteRecordRaw, useRouter } from "vue-router";
-import { mainApp } from "~/apps/Main";
 import { RouteNode } from "~/router/RouteNode";
-import { routeGost, RouteGost } from "~/router/apps/RouteGost";
+import { routeGost } from "~/router/apps/RouteGost";
 import { routeGostKlausurplanungKlausurdaten } from "./klausurplanung/RouteGostKlausurplanungKlausurdaten";
 import { routeGostKlausurplanungSchienen } from "./klausurplanung/RouteGostKlausurplanungSchienen";
 import { routeGostKlausurplanungKalender } from "./klausurplanung/RouteGostKlausurplanungKalender";
@@ -16,10 +15,10 @@ export class RouteGostKlausurplanung extends RouteNode<unknown> {
 
 	public constructor() {
 		super("gost_klausurplanung", "klausurplanung", SGostKlausurplanung);
-		super.propHandler = (route) => RouteGost.getPropsByAuswahlAbiturjahr(route, mainApp.apps.gost.auswahl);
+		super.propHandler = (route) => routeGost.getProps(route);
 		super.text = "Klausurplanung";
 		this.isHidden = () => {
-			return (routeGost.data.item === undefined) || (routeGost.data.item.abiturjahr === -1);
+			return (routeGost.data.item.value === undefined) || (routeGost.data.item.value.abiturjahr === -1);
 		}
 		super.children = [
 			routeGostKlausurplanungKlausurdaten,

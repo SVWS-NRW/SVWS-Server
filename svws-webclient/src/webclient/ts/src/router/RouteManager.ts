@@ -57,23 +57,27 @@ export class RouteManager {
             const equals = (to_node.name === from_node.name);
             const to_is_successor = to_node.checkSuccessorOf(from_node);
             const from_is_successor = from_node.checkSuccessorOf(to_node);
+            const to_predecessors_all: RouteNode<unknown>[] = to_node.getPredecessors();
             if (to_is_successor) {
                 console.log("to_is_successor");
                 for (let node of to_is_successor)
                     if (node.name !== from_node.name)
                         await node.enter(to_node, to.params);
-                for (let node of to_is_successor)
+                for (let node of to_predecessors_all)
                     await node.doUpdate(to_node, to.params);
+                await to_node.doUpdate(to_node, to.params);
             } else if (from_is_successor) {
                 from_is_successor.slice(1).reverse().forEach(
                     async node => await node.leave(from_node, from.params)
                 );
                 await to_node.doUpdate(to_node, to.params);
             } else if (equals) {
+                for (let node of to_predecessors_all)
+                    await node.doUpdate(to_node, to.params);
                 await to_node.doUpdate(to_node, to.params);
             } else {
                 let from_predecessors: RouteNode<unknown>[] = from_node.getPredecessors();
-                let to_predecessors: RouteNode<unknown>[] = to_node.getPredecessors();
+                let to_predecessors: RouteNode<unknown>[] = [...to_predecessors_all];
                 // Entferne gemeinsame Teilroute am Anfang der beiden Routen - diese Routen-Teile bleiben erhalten
                 while ((from_predecessors.length > 0) && (to_predecessors.length > 0) && (from_predecessors[0].name === to_predecessors[0].name)) {
                     from_predecessors = from_predecessors.slice(1);
@@ -87,9 +91,8 @@ export class RouteManager {
                     async node => await node.enter(to_node, to.params)
                 );
                 await to_node.enter(to_node, to.params);
-                to_predecessors.forEach(
-                    async node => await node.doUpdate(to_node, to.params)
-                );
+                for (let node of to_predecessors_all)
+                    await node.doUpdate(to_node, to.params);
                 await to_node.doUpdate(to_node, to.params);
             }
         }

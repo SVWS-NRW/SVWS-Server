@@ -18,15 +18,15 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung> {
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Kursplanung";
 		this.isHidden = () => {
-			return (routeGost.data.item === undefined) || (routeGost.data.item.abiturjahr === -1);
+			return (routeGost.data.item.value === undefined) || (routeGost.data.item.value.abiturjahr === -1);
 		}
 	}
 
-  public async enter(to: RouteNode<unknown>, to_params: RouteParams) {
+	public async enter(to: RouteNode<unknown>, to_params: RouteParams) {
 		await this.data.listLehrer.update_list();
 		this.data.mapLehrer.clear();
 		this.data.listLehrer.liste.forEach(k => this.data.mapLehrer.set(k.id, k));
-  }
+	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		const prop: Record<string, any> = routeGost.getProps(to);

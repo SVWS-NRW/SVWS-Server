@@ -1,5 +1,5 @@
 <template>
-	<div v-if="app.dataFaecher?.daten && visible" class="s-gost-faecher--wrapper">
+	<div v-if="visible" class="s-gost-faecher--wrapper">
 		<div class="w-128">
 			<s-card-gost-faecher />
 		</div>
@@ -13,16 +13,20 @@
 
 <script setup lang="ts">
 
-	import { computed, ComputedRef } from "vue";
-	import { injectMainApp, Main } from "~/apps/Main";
+	import { computed, ComputedRef, ShallowRef } from "vue";
+	import { GostJahrgang, GostLaufbahnplanungFachkombinationTyp } from "@svws-nrw/svws-core-ts";
+	import { DataGostJahrgang } from "~/apps/gost/DataGostJahrgang";
+	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
+	import { routeGostFaecher } from "~/router/apps/gost/RouteGostFaecher";
 
-	import { GostLaufbahnplanungFachkombinationTyp } from "@svws-nrw/svws-core-ts";
+	const { item } = defineProps<{ 
+		item: ShallowRef<GostJahrgang | undefined>;
+		schule: DataSchuleStammdaten;
+		jahrgangsdaten: DataGostJahrgang;
+	}>();
 
-	const main: Main = injectMainApp();
-	const app = main.apps.gost;
 	const visible: ComputedRef<boolean> = computed(() => {
-		//return this.$app.gostFaecher.visible; //TODO: richtige Bedingung einpflegen
-		return true;
+		return (!routeGostFaecher.hidden);
 	});
 
 </script>

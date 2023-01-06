@@ -1,9 +1,8 @@
-import { GostJahrgang, LehrerListeEintrag } from "@svws-nrw/svws-core-ts";
-import { computed, WritableComputedRef } from "vue";
+import { GostJahrgang } from "@svws-nrw/svws-core-ts";
+import { computed, shallowRef, ShallowRef, WritableComputedRef } from "vue";
 import { RouteLocationNormalized, RouteParams, RouteRecordRaw, useRoute, useRouter } from "vue-router";
 import { DataGostJahrgang } from "~/apps/gost/DataGostJahrgang";
 import { ListGost } from "~/apps/gost/ListGost";
-import { ListLehrer } from "~/apps/lehrer/ListLehrer";
 import { mainApp } from "~/apps/Main";
 import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 import { RouteNode } from "../RouteNode";
@@ -15,7 +14,7 @@ import { routeGostKlausurplanung } from "./gost/RouteGostKlausurplanung";
 import { routeGostKursplanung } from "./gost/RouteGostKursplanung";
 
 export class RouteDataGost {
-	item: GostJahrgang | undefined = undefined;
+	item: ShallowRef<GostJahrgang | undefined> = shallowRef(undefined);
 	schule: DataSchuleStammdaten = new DataSchuleStammdaten();
 	jahrgangsdaten: DataGostJahrgang = new DataGostJahrgang();
 }
@@ -63,14 +62,14 @@ export class RouteGost extends RouteNodeListView<GostJahrgang, RouteDataGost> {
 	}
 
 	protected onSelect(item?: GostJahrgang) {
-		if (item === this.data.item)
+		if (item === this.data.item.value)
 			return;
 		if (item === undefined) {
-			this.data.item = undefined;
+			this.data.item.value = undefined;
 			this.data.jahrgangsdaten.unselect();
 		} else {
-			this.data.item = item;
-			this.data.jahrgangsdaten.select(this.data.item);
+			this.data.item.value = item;
+			this.data.jahrgangsdaten.select(this.data.item.value);
 		}
 	}
 
@@ -78,25 +77,9 @@ export class RouteGost extends RouteNodeListView<GostJahrgang, RouteDataGost> {
 		return this.getSelectorByAbiturjahr(mainApp.apps.gost.auswahl);
 	}
 
-    /**
-     * Eine Hilfs-Methode zum Erzeugen der Properties "id" und "item" zu einer Route bei
-     * der Auswahl-Liste des Abiturjahrgangs.
-     * 
-     * @param route     die aktuelle Route, für die die Properties erzeugt werden sollen
-     * @param auswahl   die Liste der Auswahl
-     * 
-     * @returns das Objekt mit den Werten für die Properties
-     */
-    public static getPropsByAuswahlAbiturjahr(route: RouteLocationNormalized, auswahl: ListGost) {
-        if ((auswahl === undefined) || (route.params.abiturjahr === undefined))
-            return { id: undefined, item: undefined, routename: route.name?.toString() };
-        const abiturjahr = parseInt(route.params.abiturjahr as string);
-        const item = auswahl.liste.find(s => s.abiturjahr === abiturjahr);
-        return { id: abiturjahr, item: item, routename: route.name?.toString() };
-    }
-
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
-		const prop: Record<string, any> = RouteGost.getPropsByAuswahlAbiturjahr(to, mainApp.apps.gost.auswahl);
+		const prop: Record<string, any> = {};
+        prop.item = this.data.item;
 		prop.schule = this.data.schule;
         prop.jahrgangsdaten = this.data.jahrgangsdaten;
 		return prop;
@@ -114,7 +97,7 @@ export class RouteGost extends RouteNodeListView<GostJahrgang, RouteDataGost> {
             get:() => this.selectedChildRecord || this.defaultChild!.record,
             set: (value) => {
                 this.selectedChildRecord = value;
-				const abiturjahr = (this.data.item === undefined) ? undefined : "" + this.data.item.abiturjahr;
+				const abiturjahr = (this.data.item.value === undefined) ? undefined : "" + this.data.item.value.abiturjahr;
                 router.push({ name: value.name, params: { abiturjahr: abiturjahr } });
             }
         });

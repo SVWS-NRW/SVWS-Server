@@ -39,20 +39,18 @@
 
 <script setup lang="ts">
 	import { GostJahrgang, LehrerListeEintrag } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, onMounted, onUnmounted, Ref, ref } from "vue";
+	import { computed, ComputedRef, onMounted, onUnmounted, Ref, ref, ShallowRef } from "vue";
 	import { DataGostJahrgang } from "~/apps/gost/DataGostJahrgang";
 	import { ListLehrer } from "~/apps/lehrer/ListLehrer";
 	import { injectMainApp, Main } from "~/apps/Main";
 	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 
 	const { schule } = defineProps<{ 
-		id?: number; 
-		item?: GostJahrgang;
+		item: ShallowRef<GostJahrgang | undefined>;
 		schule: DataSchuleStammdaten;
 		jahrgangsdaten: DataGostJahrgang;
 		listLehrer: ListLehrer;
 		mapLehrer: Map<Number, LehrerListeEintrag>;
-		routename: string;
 	}>();
 	
 	const main: Main = injectMainApp();

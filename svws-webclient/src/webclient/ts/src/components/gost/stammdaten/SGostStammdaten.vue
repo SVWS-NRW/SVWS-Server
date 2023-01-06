@@ -1,5 +1,5 @@
 <template>
-	<div v-if="props.item !== undefined" class="app-container">
+	<div v-if="item.value !== undefined" class="app-container">
 		<s-card-gost-beratungslehrer v-if="istAbiturjahrgang" :jahrgangsdaten="jahrgangsdaten" />
 		<div>
 			<s-card-gost-text-beratungsbogen :jahrgangsdaten="jahrgangsdaten" />
@@ -11,17 +11,22 @@
 <script setup lang="ts">
 
 	import { GostJahrgang } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef } from "vue";
+	import { computed, ComputedRef, ShallowRef } from "vue";
 	import { DataGostJahrgang } from "~/apps/gost/DataGostJahrgang";
+	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 
 	import { routeGost } from "~/router/apps/RouteGost";
 
-	const props = defineProps<{ id?: number; item?: GostJahrgang, routename: string }>();
+	const { item } = defineProps<{ 
+		item: ShallowRef<GostJahrgang | undefined>;
+		schule: DataSchuleStammdaten;
+		jahrgangsdaten: DataGostJahrgang;
+	}>();
 
 	const jahrgangsdaten: ComputedRef<DataGostJahrgang> = computed(() => {
 		return routeGost.data.jahrgangsdaten;
 	});
 
-	const istAbiturjahrgang: ComputedRef<boolean> = computed(() => (props.id !== undefined) && (props.id > 0));
+	const istAbiturjahrgang: ComputedRef<boolean> = computed(() => (item.value !== undefined) && (item.value?.abiturjahr > 0));
 
 </script>

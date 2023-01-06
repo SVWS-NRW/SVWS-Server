@@ -27,7 +27,7 @@
 <script setup lang="ts">
 
 	import { GostJahrgang } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef } from "vue";
+	import { computed, ComputedRef, ShallowRef } from "vue";
 	import { RouterView } from "vue-router";
 	import { DataGostJahrgang } from "~/apps/gost/DataGostJahrgang";
 	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
@@ -35,22 +35,20 @@
 	import { routeGost } from "~/router/apps/RouteGost";
 
 	const { item } = defineProps<{ 
-		id?: number; 
-		item?: GostJahrgang;
+		item: ShallowRef<GostJahrgang | undefined>;
 		schule: DataSchuleStammdaten;
 		jahrgangsdaten: DataGostJahrgang;
-		routename: string;
 	}>();
 
 	const selectedRoute = routeGost.getChildRouteSelector();
 
 
 	const jahrgang: ComputedRef<string | undefined> = computed(() => {
-		return item?.jahrgang?.toString();
+		return item.value?.jahrgang?.toString();
 	});
 
 	const bezeichnung_abiturjahr: ComputedRef<string | undefined> = computed(() => {
-		return item?.bezeichnung?.toString();
+		return item.value?.bezeichnung?.toString();
 	});
 
 </script>
