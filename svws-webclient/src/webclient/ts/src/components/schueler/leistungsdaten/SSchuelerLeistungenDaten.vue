@@ -18,7 +18,8 @@
 <script setup lang="ts">
 
 	import { FaecherListeEintrag, LehrerListeEintrag, SchuelerLeistungsdaten, SchuelerLernabschnittListeEintrag, SchuelerLernabschnittsdaten, SchuelerListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, ref, WritableComputedRef } from "vue";
+import { DataTableColumn } from "@svws-nrw/svws-ui";
+	import { computed, ComputedRef } from "vue";
 	import { DataSchuelerAbschnittsdaten } from "~/apps/schueler/DataSchuelerAbschnittsdaten";
 	import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
 	import { routeSchuelerLeistungenDaten } from "~/router/apps/schueler/leistungsdaten/RouteSchuelerLeistungenDaten";
@@ -41,11 +42,11 @@
 
 	// TODO const selected: WritableComputedRef<SchuelerLernabschnittListeEintrag | undefined> = routeSchuelerLeistungenDaten.auswahl;
 
-	const cols = ref([
-		{ key: "fach", label: "Fach", span: "1", sortable: false },
-		{ key: "lehrer", label: "Lehrer", span: "1", sortable: false },
-		{ key: "note", label: "Note", span: "1", sortable: false },
-	]);
+	const cols: DataTableColumn[] = [
+		{ key: "fach", label: "Fach", span: 1, sortable: false },
+		{ key: "lehrer", label: "Lehrer", span: 1, sortable: false },
+		{ key: "note", label: "Note", span: 1, sortable: false },
+	];
 
 	const visible: ComputedRef<boolean> = computed<boolean>(() => {
 		return (!routeSchuelerLeistungenDaten.hidden) && (props.lernabschnitt !== undefined);

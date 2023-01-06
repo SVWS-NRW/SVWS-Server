@@ -24,7 +24,7 @@
 		<template #modalContent>
 			<div class="input-wrapper">
 				<svws-ui-multi-select v-model="reli_neu.kuerzel" title="Statistikkürzel" :items="inputKatalogReligionenStatistik"
-					:item-text="(i: Religion) => i.daten.kuerzel" required />
+					:item-text="(i: Religion) => i.daten.kuerzel.toString()" required />
 				<svws-ui-text-input v-model="reli_neu.kuerzel" type="text" placeholder="Kürzel" />
 				<svws-ui-text-input v-model="reli_neu.text" type="text" placeholder="Bezeichnung" />
 				<svws-ui-text-input v-model="reli_neu.textZeugnis" type="text" placeholder="Zeugnisbezeichnung" />
@@ -48,21 +48,22 @@
 	import { routeKatalogReligion } from "~/router/apps/RouteKatalogReligion";
 	import {Schuljahresabschnitt} from "@svws-nrw/svws-core-ts";
 	import {Schule} from "~/apps/schule/Schule";
+	import { DataTableColumn } from "@svws-nrw/svws-ui";
 
 	const props = defineProps<{ id?: number; item?: ReligionEintrag, routename: string }>();
 	const selected = routeKatalogReligion.auswahl;
 
-	const cols = ref([
+	const cols: DataTableColumn[] = [
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: "asc" },
 		{ key: "text", label: "Bezeichnung", sortable: true, span: 2 }
-	]);
+	];
 
 	const main: Main = injectMainApp();
 	const app = main.apps.religionen;
 	const modalAdd = ref();
 
-	const rows: ComputedRef<ReligionEintrag[] | undefined> = computed(() => {
-		return app.auswahl.liste;
+	const rows: ComputedRef<ReligionEintrag[]> = computed(() => {
+		return app.auswahl.liste || [];
 	});
 
 	/**

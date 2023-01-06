@@ -73,6 +73,7 @@
 	import { ListKlassen } from "~/apps/klassen/ListKlassen";
 	import { ListJahrgaenge } from "~/apps/jahrgaenge/ListJahrgaenge";
 	import { ListKurse } from "~/apps/kurse/ListKurse";
+import { DataTableColumn } from "@svws-nrw/svws-ui";
 
 	export interface SchuelerProps {
 		selectedItems: Array<SchuelerListeEintrag>;
@@ -100,10 +101,10 @@
 	// TODO Speichere in einem speziellen Filter-Objekt
 	const filtered: Ref<boolean> = ref(false);
 	const search: Ref<string> = ref("");
-	const cols = [
-		{ key: "klasse", label: "Klasse", sortable: true, span: '1' },
-		{ key: "nachname", label: "Nachname", sortable: true, span: '2' },
-		{ key: "vorname", label: "Vorname", sortable: true, span: '2' },
+	const cols: DataTableColumn[] = [
+		{ key: "klasse", label: "Klasse", sortable: true, span: 1 },
+		{ key: "nachname", label: "Nachname", sortable: true, span: 2 },
+		{ key: "vorname", label: "Vorname", sortable: true, span: 2 },
 	]
 	const main: Main = injectMainApp();
 

@@ -3,13 +3,13 @@
 		<div class="content-wrapper">
 			<div class="input-wrapper">
 				<svws-ui-text-input placeholder="Kürzel" v-model="inputKuerzel" type="text" required />
-				<svws-ui-multi-select title="Personal-Typ" v-model="inputPersonalTyp" :items="PersonalTyp.values()" :item-text="(i: PersonalTyp) => i.bezeichnung" required />
+				<svws-ui-multi-select title="Personal-Typ" v-model="inputPersonalTyp" :items="PersonalTyp.values()" :item-text="(i: PersonalTyp) => i.bezeichnung.toString()" required />
 				<svws-ui-text-input placeholder="Nachname" v-model="inputNachname" type="text" required />
 				<svws-ui-text-input placeholder="Vorname" v-model="inputVorname" type="text" required />
 				<svws-ui-multi-select title="Geschlecht" v-model="inputGeschlecht" :items="Geschlecht.values()" required />
 				<svws-ui-text-input placeholder="Geburtsdatum" v-model="inputGeburtsdatum" type="date" required />
 				<svws-ui-multi-select title="Staatsangehörigkeit" v-model="inputStaatsangehoerigkeit" :items="Nationalitaeten.values()"
-					:item-text="(i: Nationalitaeten) => i.daten.staatsangehoerigkeit" :item-sort="staatsangehoerigkeitKatalogEintragSort"
+					:item-text="(i: Nationalitaeten) => i.daten.staatsangehoerigkeit.toString()" :item-sort="staatsangehoerigkeitKatalogEintragSort"
 					:item-filter="staatsangehoerigkeitKatalogEintragFilter" required />
 				<svws-ui-text-input placeholder="Akad.Grad" v-model="inputTitel" type="text" />
 				<svws-ui-text-input placeholder="Amtsbezeichnung" v-model="inputAmtsbezeichnung" type="text" />

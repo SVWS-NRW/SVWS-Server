@@ -2,11 +2,11 @@
 	<svws-ui-content-card title="Staatsangehörigkeit und Konfession">
 		<div class="input-wrapper">
 			<svws-ui-multi-select v-model="inputStaatsangehoerigkeit" title="1. Staatsangehörigkeit"
-				:items="Nationalitaeten.values()" :item-text="(i: Nationalitaeten) => i.daten.staatsangehoerigkeit"
+				:items="Nationalitaeten.values()" :item-text="(i: Nationalitaeten) => i.daten.staatsangehoerigkeit.toString()"
 				:item-sort="staatsangehoerigkeitKatalogEintragSort" :item-filter="staatsangehoerigkeitKatalogEintragFilter"
 				required />
 			<svws-ui-multi-select v-model="inputStaatsangehoerigkeit2" title="2. Staatsangehörigkeit"
-				:items="Nationalitaeten.values()" :item-text="(i: Nationalitaeten) => i.daten.staatsangehoerigkeit"
+				:items="Nationalitaeten.values()" :item-text="(i: Nationalitaeten) => i.daten.staatsangehoerigkeit.toString()"
 				:item-sort="staatsangehoerigkeitKatalogEintragSort" :item-filter="staatsangehoerigkeitKatalogEintragFilter" />
 			<svws-ui-multi-select v-model="inputReligionID" title="Konfession" :items="inputKatalogReligionen" required />
 			<svws-ui-checkbox v-model="inputDruckeKonfessionAufZeugnisse">Konfession aufs Zeugnis</svws-ui-checkbox>

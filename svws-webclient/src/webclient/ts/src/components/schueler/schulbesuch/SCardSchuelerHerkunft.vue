@@ -5,7 +5,7 @@
 			<svws-ui-text-input placeholder="allgemeine Herkunft" v-model="vorigeAllgHerkunft" type="text" />
 			<div class="input-wrapper-3-cols">
 				<svws-ui-text-input placeholder="Entlassen am" v-model="vorigeEntlassDatum" type="date" />
-				<svws-ui-text-input placeholder="Entlassjahrgang" v-model="vorigeEntlassjahrgang" type="year" />
+				<svws-ui-text-input placeholder="Entlassjahrgang" v-model="vorigeEntlassjahrgang" type="number" />
 				<svws-ui-multi-select title="Versetzung" v-model="vorigeArtLetzteVersetzung" :items="herkunftsarten" :item-text="(h: Herkunftsarten) => getBezeichnung(h) + ' (' + h.daten.kuerzel + ')'" :statistics="showstatistic" />
 			</div>
 			<div class="input-wrapper-3-cols">
@@ -25,7 +25,7 @@
 	import { DataSchuelerSchulbesuchsdaten } from "~/apps/schueler/DataSchuelerSchulbesuchsdaten";
 
 	const props = defineProps<{ data: DataSchuelerSchulbesuchsdaten }>();
-	const schulform: ComputedRef<Schulform> = computed(() => mainApp.apps.schule.schulform || Schulform.G);
+	const schulform: ComputedRef<Schulform> = computed(() => mainApp.apps.schule.schuleStammdaten.schulform.value || Schulform.G);
 
 	const vorigeSchulnummer: WritableComputedRef<string | undefined> = computed({
 		get: () => props.data.daten?.vorigeSchulnummer?.toString(),

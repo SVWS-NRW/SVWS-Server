@@ -129,8 +129,8 @@
 		}
 	});
 
-	function get_name(i: DBSchemaListeEintrag): string | undefined {
-		return i?.name?.toString();
+	function get_name(i: DBSchemaListeEintrag): string {
+		return i?.name?.toString() || '';
 	};
 
 	async function connectClicked() {

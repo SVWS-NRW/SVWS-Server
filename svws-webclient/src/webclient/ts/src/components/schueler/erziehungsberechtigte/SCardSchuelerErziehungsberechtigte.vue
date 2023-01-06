@@ -12,14 +12,14 @@
 				<h2 class="svws-ui-text-black col-span-2">Basisdaten</h2>
 				<div class="entry-content">
 					<svws-ui-multi-select title="Erzieherart" v-model="idErzieherArt" :items="katalogErzieherarten"
-						:item-sort="erzieherArtSort" :item-text="(i: Erzieherart) => i.bezeichnung" />
+						:item-sort="erzieherArtSort" :item-text="(i: Erzieherart) => i.bezeichnung?.toString() || ''" />
 					<svws-ui-checkbox v-model="erhaeltAnschreiben"> erhält Anschreiben </svws-ui-checkbox>
 					<svws-ui-text-input placeholder="Name" v-model="nachname" type="text" />
 					<svws-ui-text-input placeholder="Zusatz zum Nachnamen" v-model="zusatzNachname" type="text" />
 					<svws-ui-text-input placeholder="Vorname" v-model="vorname" type="text" />
 					<svws-ui-text-input placeholder="E-Mail Adresse" v-model="email" type="email" verify-email />
 					<svws-ui-multi-select title="1. Staatsangehörigkeit" v-model="staatsangehoerigkeit" :items="Nationalitaeten.values()"
-						:item-text="(i: Nationalitaeten) => i.daten.staatsangehoerigkeit" :item-sort="staatsangehoerigkeitKatalogEintragSort"
+						:item-text="(i: Nationalitaeten) => i.daten.staatsangehoerigkeit.toString()" :item-sort="staatsangehoerigkeitKatalogEintragSort"
 						:item-filter="staatsangehoerigkeitKatalogEintragFilter" />
 				</div>
 			</div>
@@ -35,7 +35,7 @@
 					<svws-ui-multi-select title="Wohnort" v-model="inputWohnortID" :items="inputKatalogOrte" :item-filter="orte_filter"
 						:item-sort="orte_sort" :item-text="(i: OrtKatalogEintrag) => `${i.plz} ${i.ortsname}`" autocomplete />
 					<svws-ui-multi-select title="Ortsteil" v-model="inputOrtsteilID" :items="inputKatalogOrtsteil"
-						:item-text="(i: OrtsteilKatalogEintrag) => i.ortsteil" :item-sort="ortsteilSort" :item-filter="ortsteilFilter" />
+						:item-text="(i: OrtsteilKatalogEintrag) => i.ortsteil?.toString() || ''" :item-sort="ortsteilSort" :item-filter="ortsteilFilter" />
 				</div>
 			</div>
 			<div class="entry-wrapper">

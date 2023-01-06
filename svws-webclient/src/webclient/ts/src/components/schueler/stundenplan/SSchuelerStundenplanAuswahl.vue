@@ -12,6 +12,7 @@
 	import { DataStundenplan } from "~/apps/schueler/DataStundenplan";
 	import { routeSchuelerStundenplanDaten } from "~/router/apps/schueler/stundenplan/RouteSchuelerStundenplanDaten";
 	import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
+import { DataTableColumn } from "@svws-nrw/svws-ui";
 
 	const props = defineProps<{ id?: number; item?: SchuelerListeEintrag, stammdaten: DataSchuelerStammdaten, stundenplan?: StundenplanListeEintrag, data: DataStundenplan, routename: string }>();
 
@@ -19,11 +20,11 @@
 
 	const selected: WritableComputedRef<StundenplanListeEintrag | undefined> = routeSchuelerStundenplanDaten.auswahl;
 
-	const cols = ref([
-		{ key: "bezeichnung", label: "Bezeichnung", span: "2", sortable: false },
-		{ key: "gueltigAb", label: "von", span: "1", sortable: false, defaultSort: 'asc' },
-		{ key: "gueltigBis", label: "bis", span: "1", sortable: false }
-	]);
+	const cols: DataTableColumn[] = [
+		{ key: "bezeichnung", label: "Bezeichnung", span: 2, sortable: false },
+		{ key: "gueltigAb", label: "von", span: 1, sortable: false, defaultSort: 'asc' },
+		{ key: "gueltigBis", label: "bis", span: 1, sortable: false }
+	];
 
 	const visible: ComputedRef<boolean> = computed<boolean>(() => {
 		return !(routeSchuelerStundenplanDaten.hidden);

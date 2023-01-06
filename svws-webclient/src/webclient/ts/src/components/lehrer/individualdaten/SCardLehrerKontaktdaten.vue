@@ -6,8 +6,8 @@
 			</div>
 			<svws-ui-multi-select v-model="inputWohnortID" title="Wohnort" :items="inputKatalogOrte" :item-filter="orte_filter" :item-sort="orte_sort"
 				:item-text="(i: OrtKatalogEintrag) => `${i.plz} ${i.ortsname}`" autocomplete />
-			<svws-ui-multi-select v-model="inputOrtsteilID" title="Ortsteil" :items="inputKatalogOrtsteil" :item-filter="ortsteilFilter" :item-sort="ortsteilSort"
-				:item-text="(i: OrtsteilKatalogEintrag | undefined) => i?.ortsteil" />
+			<svws-ui-multi-select v-model="inputOrtsteilID" title="Ortsteil" :items="inputKatalogOrtsteil" :item-sort="ortsteilSort"
+				:item-text="(i: OrtsteilKatalogEintrag) => i.ortsteil?.toString() || ''" />
 			<svws-ui-text-input v-model="inputTelefon" type="tel" placeholder="Telefon" />
 			<svws-ui-text-input v-model="inputTelefonMobil" type="tel" placeholder="Mobil oder Fax" />
 			<svws-ui-text-input v-model="inputEmailPrivat" type="email" placeholder="private E-Mail-Adresse" verify-email />
@@ -22,7 +22,7 @@
 
 	import { AdressenUtils, LehrerStammdaten, List, OrtKatalogEintrag, OrtsteilKatalogEintrag } from "@svws-nrw/svws-core-ts";
 	import { injectMainApp, Main } from "~/apps/Main";
-	import { orte_filter, orte_sort, ortsteilFilter, ortsteilSort } from "~/helfer";
+	import { orte_filter, orte_sort, ortsteilSort } from "~/helfer";
 	import { DataLehrerStammdaten } from "~/apps/lehrer/DataLehrerStammdaten";
 
 	const eingabeStrasseOk: Ref<boolean> = ref(true);

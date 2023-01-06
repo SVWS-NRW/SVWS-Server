@@ -6,7 +6,7 @@
 			</div>
 			<svws-ui-multi-select title="Wohnort" v-model="inputWohnortID" :items="inputKatalogOrte" :item-filter="orte_filter"
 				:item-sort="orte_sort" :item-text="(i: OrtKatalogEintrag) => `${i.plz} ${i.ortsname}`" autocomplete />
-			<svws-ui-multi-select title="Ortsteil" v-model="inputOrtsteilID" :items="inputKatalogOrtsteil" :item-text="(i: OrtsteilKatalogEintrag) => i.ortsteil"
+			<svws-ui-multi-select title="Ortsteil" v-model="inputOrtsteilID" :items="inputKatalogOrtsteil" :item-text="(i: OrtsteilKatalogEintrag) => i.ortsteil?.toString() || ''"
 				:item-sort="ortsteilSort" :item-filter="ortsteilFilter" />
 			<svws-ui-text-input placeholder="Telefon" v-model="inputTelefon" type="tel" />
 			<svws-ui-text-input placeholder="Mobil oder Fax" v-model="inputTelefonMobil" type="tel" />

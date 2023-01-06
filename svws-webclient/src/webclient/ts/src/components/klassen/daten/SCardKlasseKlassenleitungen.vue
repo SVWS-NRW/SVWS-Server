@@ -10,23 +10,24 @@
 
 <script setup lang="ts">
 
-	import { computed, ComputedRef, ref } from "vue";
+	import { computed, ComputedRef } from "vue";
 	import { LehrerListeEintrag, PersonalTyp } from "@svws-nrw/svws-core-ts";
 	import { DataKlasse } from "~/apps/klassen/DataKlasse";
 	import { ListLehrer } from "~/apps/lehrer/ListLehrer";
-
-	const { data, mapLehrer } = defineProps<{ 
-		data: DataKlasse,
-		listLehrer: ListLehrer,
-		mapLehrer: Map<Number, LehrerListeEintrag>
-	}>();
-
+	import type { DataTableColumn } from "@svws-nrw/svws-ui";
+	
 	type Lehrer = {
 		kuerzel?: string;
 		nachname?: string;
 		vorname?: string;
 		typ?: string;
 	}
+
+	const { data, mapLehrer } = defineProps<{ 
+		data: DataKlasse,
+		listLehrer: ListLehrer,
+		mapLehrer: Map<Number, LehrerListeEintrag>
+	}>();
 
 	const liste: ComputedRef<Lehrer[]> = computed(() => {
 		if (data.daten?.klassenLeitungen === undefined) 
@@ -44,11 +45,11 @@
 		});
 	});
 
-	const cols = ref([
-		{ key: "kuerzel", label: "Kürzel", span: "1", sortable: false },
-		{ key: "nachname", label: "Nachname", span: "1", sortable: false },
-		{ key: "vorname", label: "Vorname", span: "1", sortable: false },
-		{ key: "personTyp", label: "Typ", span: "1", sortable: false },
-	]);
+	const cols: DataTableColumn[] = [
+		{ key: "kuerzel", label: "Kürzel", span: 1, sortable: false },
+		{ key: "nachname", label: "Nachname", span: 1, sortable: false },
+		{ key: "vorname", label: "Vorname", span: 1, sortable: false },
+		{ key: "personTyp", label: "Typ", span: 1, sortable: false },
+	];
 
 </script>

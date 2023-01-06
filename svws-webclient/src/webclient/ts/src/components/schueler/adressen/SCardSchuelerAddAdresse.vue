@@ -5,14 +5,14 @@
 
 		<template #modalContent>
 			<div class="input-wrapper">
-				<svws-ui-multi-select title="Betrieb" v-model="betrieb" :items="inputBetriebListe" :item-text="(i: BetriebListeEintrag) => i.name1" />
+				<svws-ui-multi-select title="Betrieb" v-model="betrieb" :items="inputBetriebListe" :item-text="(i: BetriebListeEintrag) => i.name1?.toString() || ''" />
 				<svws-ui-text-input placeholder="Ausbilder" v-model="s_betrieb.ausbilder" type="text" />
-				<svws-ui-multi-select title="Beschäftigungsart" v-model="beschaeftigungsart" :items="inputBeschaeftigungsarten" :item-text="(i: KatalogEintrag) => i.text" />
+				<svws-ui-multi-select title="Beschäftigungsart" v-model="beschaeftigungsart" :items="inputBeschaeftigungsarten" :item-text="(i: KatalogEintrag) => i.text?.toString() || ''" />
 				<svws-ui-text-input placeholder="Vertragsbeginn" v-model="s_betrieb.vertragsbeginn" type="date" />
 				<svws-ui-text-input placeholder="Vertragsende" v-model="s_betrieb.vertragsende" type="date" />
 				<svws-ui-checkbox v-model="s_betrieb.praktikum"> Praktikum </svws-ui-checkbox>
-				<svws-ui-multi-select title="Betreuungslehrer" v-model="betreuungslehrer" :items="inputLehrerListe" :item-text="(i: LehrerListeEintrag) => i.nachname" />
-				<svws-ui-multi-select title="Ansprechpartner" v-model="ansprechpartner" :items="inputBetriebAnsprechpartner" :item-text="(i: BetriebAnsprechpartner) => i.name" />
+				<svws-ui-multi-select title="Betreuungslehrer" v-model="betreuungslehrer" :items="inputLehrerListe" :item-text="(i: LehrerListeEintrag) => i.nachname.toString()" />
+				<svws-ui-multi-select title="Ansprechpartner" v-model="ansprechpartner" :items="inputBetriebAnsprechpartner" :item-text="(i: BetriebAnsprechpartner) => i.name?.toString() || ''" />
 				<svws-ui-checkbox v-model="s_betrieb.allgadranschreiben"> Anschreiben </svws-ui-checkbox>
 			</div>
 		</template>
@@ -30,12 +30,14 @@
 	import { BetriebAnsprechpartner, BetriebListeEintrag, KatalogEintrag, LehrerListeEintrag, List, SchuelerBetriebsdaten, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, reactive, ref, WritableComputedRef } from "vue";
 	import { App } from "~/apps/BaseApp";
+import { injectMainApp, Main } from "~/apps/Main";
 	import { ListSchuelerBetriebsdaten } from "~/apps/schueler/ListSchuelerBetriebsdaten";
 
 	const { item, listSchuelerbetriebe } = defineProps<{ 
 		item?: SchuelerListeEintrag;
 		listSchuelerbetriebe : ListSchuelerBetriebsdaten;
 	}>();
+	const main: Main = injectMainApp();
 
 	const modalAddBetrieb = ref();
 	const s_betrieb : SchuelerBetriebsdaten = reactive(new SchuelerBetriebsdaten());

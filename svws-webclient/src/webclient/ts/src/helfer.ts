@@ -174,12 +174,13 @@ export const ortsteilSort = (
 	return 0;
 };
 
-export const ortsteilFilter = (
-	items: List<OrtsteilKatalogEintrag>,
-	search: string
-) => {
-	let o;
-	for (const r of items) { if (r.ortsteil?.includes(search)) { o = r; break } }
+export const ortsteilFilter = (items: OrtsteilKatalogEintrag[], search: string) => {
+	let o = [];
+	for (const i of items) {
+		if (i.ortsteil?.includes(search)) {
+			o.push(i);
+		}
+	}
 	return o;
 }
 export const erzieherArtSort = (a: Erzieherart, b: Erzieherart) => {
