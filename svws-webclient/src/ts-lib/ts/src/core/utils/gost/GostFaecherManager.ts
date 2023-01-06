@@ -2,11 +2,11 @@ import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject
 import { JavaInteger, cast_java_lang_Integer } from '../../../java/lang/JavaInteger';
 import { GostFach, cast_de_nrw_schule_svws_core_data_gost_GostFach } from '../../../core/data/gost/GostFach';
 import { HashMap, cast_java_util_HashMap } from '../../../java/util/HashMap';
-import { NullPointerException, cast_java_lang_NullPointerException } from '../../../java/lang/NullPointerException';
 import { LinkedCollection, cast_de_nrw_schule_svws_core_adt_collection_LinkedCollection } from '../../../core/adt/collection/LinkedCollection';
 import { JavaLong, cast_java_lang_Long } from '../../../java/lang/JavaLong';
 import { Collection, cast_java_util_Collection } from '../../../java/util/Collection';
 import { List, cast_java_util_List } from '../../../java/util/List';
+import { DeveloperNotificationException, cast_de_nrw_schule_svws_core_exceptions_DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 import { Comparator, cast_java_util_Comparator } from '../../../java/util/Comparator';
 
@@ -111,18 +111,16 @@ export class GostFaecherManager extends JavaObject {
 	}
 
 	/**
-	 * Gibt das Fach mit der angegebenen ID zurück.
+	 * Liefert das Fach mit der angegebenen ID zurück.
 	 * 
-	 * @param  pFachID              die ID des gesuchten Faches
-	 * 
-	 * @return                      das fach mit der angegebenen ID
-	 * 
-	 * @throws NullPointerException im Falle, dass die ID nicht bekannt ist.
+	 * @param pFachID die ID des gesuchten Faches.
+	 * @return Das Fach mit der angegebenen ID zurück.
+	 * @throws DeveloperNotificationException Falls ein Fach mit der ID nicht bekannt ist.
 	 */
 	public getOrException(pFachID : number) : GostFach {
 		let fach : GostFach | null = this._map.get(pFachID);
 		if (fach === null) 
-			throw new NullPointerException("GostFach mit id=" + pFachID + " gibt es nicht.")
+			throw new DeveloperNotificationException("GostFach mit id=" + pFachID + " gibt es nicht.")
 		return fach;
 	}
 

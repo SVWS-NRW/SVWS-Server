@@ -6,6 +6,7 @@ import java.util.List;
 
 import de.nrw.schule.svws.core.data.gost.GostBlockungKurs;
 import de.nrw.schule.svws.core.data.gost.GostFachwahl;
+import de.nrw.schule.svws.core.exceptions.DeveloperNotificationException;
 import de.nrw.schule.svws.core.types.kurse.ZulaessigeKursart;
 import jakarta.validation.constraints.NotNull;
 
@@ -145,16 +146,16 @@ public enum GostKursart {
      * 
      * @return die Kursart
      * 
-     * @throws IllegalArgumentException falls die ID ungültig ist 
+     * @throws DeveloperNotificationException falls die ID ungültig ist 
      */
-	public static @NotNull GostKursart fromID(int id) throws IllegalArgumentException {
+	public static @NotNull GostKursart fromID(int id) throws DeveloperNotificationException {
 		switch (id) {
 			case 1: return GostKursart.LK; 
 			case 2: return GostKursart.GK; 
 			case 3: return GostKursart.ZK; 
 			case 4: return GostKursart.PJK; 
 			case 5: return GostKursart.VTF;
-			default: throw new IllegalArgumentException("Invalid ID value.");
+			default: throw new DeveloperNotificationException("Invalid ID value.");
 		}
 	}
 	
@@ -163,9 +164,9 @@ public enum GostKursart {
      * 
      * @param pFachwahl Das Fachwahl-Objekt.
      * @return die Kursart anhand der Kursart-ID der Fachwahl.
-     * @throws IllegalArgumentException falls die ID ungültig ist 
+     * @throws DeveloperNotificationException falls die ID ungültig ist 
      */
-	public static @NotNull GostKursart fromFachwahlOrException(@NotNull GostFachwahl pFachwahl) throws IllegalArgumentException {
+	public static @NotNull GostKursart fromFachwahlOrException(@NotNull GostFachwahl pFachwahl) throws DeveloperNotificationException {
 		return fromID(pFachwahl.kursartID);
 	}
 

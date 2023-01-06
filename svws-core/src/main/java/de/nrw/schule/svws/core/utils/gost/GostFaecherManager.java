@@ -8,6 +8,7 @@ import java.util.Vector;
 
 import de.nrw.schule.svws.core.adt.collection.LinkedCollection;
 import de.nrw.schule.svws.core.data.gost.GostFach;
+import de.nrw.schule.svws.core.exceptions.DeveloperNotificationException;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -118,18 +119,16 @@ public class GostFaecherManager {
 	}
 
 	/**
-	 * Gibt das Fach mit der angegebenen ID zurück.
+	 * Liefert das Fach mit der angegebenen ID zurück.
 	 * 
-	 * @param  pFachID              die ID des gesuchten Faches
-	 * 
-	 * @return                      das fach mit der angegebenen ID
-	 * 
-	 * @throws NullPointerException im Falle, dass die ID nicht bekannt ist.
+	 * @param pFachID die ID des gesuchten Faches.
+	 * @return Das Fach mit der angegebenen ID zurück.
+	 * @throws DeveloperNotificationException Falls ein Fach mit der ID nicht bekannt ist.
 	 */
-	public @NotNull GostFach getOrException(long pFachID) throws NullPointerException {
+	public @NotNull GostFach getOrException(long pFachID) throws DeveloperNotificationException {
 		GostFach fach = _map.get(pFachID);
 		if (fach == null)
-			throw new NullPointerException("GostFach mit id=" + pFachID + " gibt es nicht.");
+			throw new DeveloperNotificationException("GostFach mit id=" + pFachID + " gibt es nicht.");
 		return fach;
 	}
 	

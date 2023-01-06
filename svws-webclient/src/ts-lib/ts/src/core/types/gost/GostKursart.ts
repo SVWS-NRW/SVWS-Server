@@ -4,8 +4,8 @@ import { GostFachwahl, cast_de_nrw_schule_svws_core_data_gost_GostFachwahl } fro
 import { List, cast_java_util_List } from '../../../java/util/List';
 import { ZulaessigeKursart, cast_de_nrw_schule_svws_core_types_kurse_ZulaessigeKursart } from '../../../core/types/kurse/ZulaessigeKursart';
 import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString';
+import { DeveloperNotificationException, cast_de_nrw_schule_svws_core_exceptions_DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { Arrays, cast_java_util_Arrays } from '../../../java/util/Arrays';
-import { IllegalArgumentException, cast_java_lang_IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
 import { GostBlockungKurs, cast_de_nrw_schule_svws_core_data_gost_GostBlockungKurs } from '../../../core/data/gost/GostBlockungKurs';
 
 export class GostKursart extends JavaObject {
@@ -132,7 +132,7 @@ export class GostKursart extends JavaObject {
 	 * 
 	 * @return die Kursart
 	 * 
-	 * @throws IllegalArgumentException falls die ID ungültig ist 
+	 * @throws DeveloperNotificationException falls die ID ungültig ist 
 	 */
 	public static fromID(id : number) : GostKursart {
 		switch (id) {
@@ -147,7 +147,7 @@ export class GostKursart extends JavaObject {
 			case 5: 
 				return GostKursart.VTF;
 			default: 
-				throw new IllegalArgumentException("Invalid ID value.")
+				throw new DeveloperNotificationException("Invalid ID value.")
 		}
 	}
 
@@ -156,7 +156,7 @@ export class GostKursart extends JavaObject {
 	 * 
 	 * @param pFachwahl Das Fachwahl-Objekt.
 	 * @return die Kursart anhand der Kursart-ID der Fachwahl.
-	 * @throws IllegalArgumentException falls die ID ungültig ist 
+	 * @throws DeveloperNotificationException falls die ID ungültig ist 
 	 */
 	public static fromFachwahlOrException(pFachwahl : GostFachwahl) : GostKursart {
 		return GostKursart.fromID(pFachwahl.kursartID);
