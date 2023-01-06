@@ -1,10 +1,11 @@
 import { mainApp } from "~/apps/Main";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteNodeListView } from "~/router/RouteNodeListView";
+import { RouteKatalogFaecher } from "../RouteKatalogFaecher";
 
 const SFachDaten = () => import("~/components/faecher/daten/SFachDaten.vue");
 
-export class RouteFaecherDaten extends RouteNode<unknown> {
+export class RouteFaecherDaten extends RouteNode<unknown, RouteKatalogFaecher> {
 
 	public constructor() {
 		super("faecher_daten", "daten", SFachDaten);

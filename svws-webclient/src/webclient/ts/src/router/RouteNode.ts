@@ -5,10 +5,10 @@ import { RouteComponent, RouteLocationNormalized, RouteParams, RouteRecordRaw } 
  * Diese abstrakte Klasse ist die Basisklasse aller Knoten für
  * das Routing innerhalb des SVWS-Clients.
  */
-export abstract class RouteNode<TRouteData> {
+export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unknown, any>> {
 
     /** Eine Map mit allen Knoten */
-    protected static mapNodesByName: Map<string, RouteNode<unknown>> = new Map();
+    protected static mapNodesByName: Map<string, RouteNode<unknown, any>> = new Map();
 
 
     /** Das vue-Router-Objekt (siehe RouteRecordRaw) */
@@ -18,22 +18,22 @@ export abstract class RouteNode<TRouteData> {
     protected isHidden: (() => boolean) | undefined = undefined;
 
     /** Der Elter-Knoten, sofern es sich um einen Kind-Knoten handelt. */
-    protected _parent?: RouteNode<unknown>;
+    protected _parent?: TRouteParent;
 
     /** Die Kind-Knoten zu dieser Route */
-    protected _children: RouteNode<unknown>[];
+    protected _children: RouteNode<unknown, any>[];
 
     /** Die Knoten, welche in einem Menu zu dieser Komponente zur Verfügung gestellt werden */
-    protected _menu: RouteNode<unknown>[];
+    protected _menu: RouteNode<unknown, any>[];
 
 	/** Die Daten, die dem Knoten zugeordnet sind */
 	protected _data: TRouteData;          
 
 	/** Der ausgewählte Kind-Knoten, zu welchem geroutet werden soll (z.B. bei Tabs nach einer Auswahl) */
-	protected _selectedChild: Ref<RouteNode<unknown> | undefined> = ref(undefined);
+	protected _selectedChild: Ref<RouteNode<unknown, any> | undefined> = ref(undefined);
 
     /** Der Kind-Knoten, welcher als Default ausgewählt werden soll */
-    protected _defaultChild: RouteNode<unknown> | undefined = undefined;
+    protected _defaultChild: RouteNode<unknown, any> | undefined = undefined;
 
 
     /**
@@ -118,7 +118,7 @@ export abstract class RouteNode<TRouteData> {
      * 
      * @param nodes   Ein Array mit den Kindern für das Routing
      */
-    public set children(nodes: RouteNode<unknown>[]) {
+    public set children(nodes: RouteNode<unknown, any>[]) {
         if (this._children !== undefined)
             this._children.forEach(c => c.parent = undefined);
         this._children = nodes;
@@ -133,7 +133,7 @@ export abstract class RouteNode<TRouteData> {
      * 
      * @returns ein Array mit den Kind-Knoten
      */
-    public get children() : RouteNode<unknown>[] {
+    public get children() : RouteNode<unknown, any>[] {
         return this._children;
     }
 
@@ -143,7 +143,7 @@ export abstract class RouteNode<TRouteData> {
      * 
      * @param nodes   Ein Array mit den Knoten
      */
-    public set menu(nodes: RouteNode<unknown>[]) {
+    public set menu(nodes: RouteNode<unknown, any>[]) {
         this._menu = nodes;
     }
 
@@ -153,7 +153,7 @@ export abstract class RouteNode<TRouteData> {
      * 
      * @returns ein Array mit den Knoten
      */
-    public get menu() : RouteNode<unknown>[] {
+    public get menu() : RouteNode<unknown, any>[] {
         return this._menu;
     }
 
@@ -162,7 +162,7 @@ export abstract class RouteNode<TRouteData> {
      * 
      * @return der Elter-Knoten oder undefined
      */
-    public get parent(): RouteNode<unknown> | undefined {
+    public get parent(): TRouteParent | undefined {
         return this._parent;
     }
 
@@ -171,7 +171,7 @@ export abstract class RouteNode<TRouteData> {
      * 
      * @param value der Elter-Knoten oder undefined
      */
-    protected set parent(value: RouteNode<unknown> | undefined) {
+    protected set parent(value: TRouteParent | undefined) {
         this._parent = value;
     }
 
@@ -199,7 +199,7 @@ export abstract class RouteNode<TRouteData> {
     /**
      * TODO
      */
-    public get selectedChild() : RouteNode<unknown> | undefined {
+    public get selectedChild() : RouteNode<unknown, any> | undefined {
         return this._selectedChild.value;
     }
 
@@ -220,14 +220,14 @@ export abstract class RouteNode<TRouteData> {
     /**
      * TODO
      */
-    public set defaultChild(node : RouteNode<unknown> | undefined) {
+    public set defaultChild(node : RouteNode<unknown, any> | undefined) {
         this._defaultChild = node;
     }
 
     /**
      * TODO
      */
-    public get defaultChild() : RouteNode<unknown> | undefined {
+    public get defaultChild() : RouteNode<unknown, any> | undefined {
         return this._defaultChild;
     }
 
@@ -286,7 +286,7 @@ export abstract class RouteNode<TRouteData> {
      * @param from   die Quell-Route
      * @param from_params die Parameter der Quell-Route
      */
-    public async beforeEach(to: RouteNode<unknown>, to_params: RouteParams, from: RouteNode<unknown> | undefined, from_params: RouteParams) {
+    public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams) {
         return true;
     }
 
@@ -299,12 +299,12 @@ export abstract class RouteNode<TRouteData> {
      * @returns die Folge der Knoten von dem anderen Knoten bis zu diesem Knoten (einschließlich), 
      *   falls dieser Knoten ein Nachfolger-Knoten ist und ansonsten false
      */
-    public checkSuccessorOf(other: string | RouteNode<unknown>): RouteNode<unknown>[] | false {
+    public checkSuccessorOf(other: string | RouteNode<unknown, any>): RouteNode<unknown, any>[] | false {
         const other_node = typeof other === "string" ? RouteNode.getNodeByName(other) : other;
         if ((other_node === undefined) || (this.parent === undefined))
             return false;
-        const result: RouteNode<unknown>[] = [ this ];
-        let current: RouteNode<unknown> | undefined = this.parent;
+        const result: RouteNode<unknown, any>[] = [ this ];
+        let current: RouteNode<unknown, any> | undefined = this.parent;
         do {
             result.push(current);
             if (current.name === other_node.name)
@@ -323,18 +323,18 @@ export abstract class RouteNode<TRouteData> {
      * @returns die Folge der Knoten von diesem Knoten bis zu dem anderen Knoten (einschließlich), 
      *   falls dieser Knoten ein Vorgänger-Knoten ist und ansonsten false
      */
-    public checkPredecessorOf(other: string | RouteNode<unknown>): RouteNode<unknown>[] | false {
+    public checkPredecessorOf(other: string | RouteNode<unknown, any>): RouteNode<unknown, any>[] | false {
         const other_node = typeof other === "string" ? RouteNode.getNodeByName(other) : other;
         if ((other_node === undefined) || (other_node.parent === undefined))
             return false;
-        const result: RouteNode<unknown>[] = [ this ];
-        let current: RouteNode<unknown> | undefined = other_node.parent;
-        do {
+        const result: RouteNode<unknown, any>[] = [ this ];
+        let current: RouteNode<unknown, any> | undefined = other_node.parent;
+        while (current !== undefined) {
             result.push(current);
             if (current.name === this.name)
                 return result.reverse();
             current = current.parent;
-        } while (current !== undefined);
+        }
         return false;
     }
 
@@ -346,9 +346,9 @@ export abstract class RouteNode<TRouteData> {
      * 
      * @returns die Vorgänger dieses Knotens als Array
      */
-    public getPredecessors(): RouteNode<unknown>[] {
-        const result: RouteNode<unknown>[] = [ ];
-        let current: RouteNode<unknown> | undefined = this.parent;
+    public getPredecessors(): RouteNode<unknown, any>[] {
+        const result: RouteNode<unknown, any>[] = [ ];
+        let current: RouteNode<unknown, any> | undefined = this.parent;
         while (current !== undefined) {
             result.push(current);
             current = current.parent;
@@ -363,7 +363,7 @@ export abstract class RouteNode<TRouteData> {
      * @param to   die neue Route
      * @param to_params   die Routen-Parameter
      */
-    public async enter(to: RouteNode<unknown>, to_params: RouteParams) {
+    public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) {
     }
 
     /**
@@ -375,7 +375,7 @@ export abstract class RouteNode<TRouteData> {
      * @param to   die neue Route
      * @param to_params   die Routen-Parameter
      */
-    protected async update(to: RouteNode<unknown>, to_params: RouteParams) {
+    protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
     }
 
     /**
@@ -387,7 +387,7 @@ export abstract class RouteNode<TRouteData> {
      * @param to   die neue Route
      * @param to_params   die Routen-Parameter
      */
-    public async doUpdate(to: RouteNode<unknown>, to_params: RouteParams) {
+    public async doUpdate(to: RouteNode<unknown, any>, to_params: RouteParams) {
         if (this._parent !== undefined)
             this._parent._selectedChild.value = this;
         this.update(to, to_params);
@@ -400,7 +400,7 @@ export abstract class RouteNode<TRouteData> {
      * @param from   die Route, die verlassen wird
      * @param from_params   die Routen-Parameter
      */
-    public async leave(from: RouteNode<unknown>, from_params: RouteParams) {
+    public async leave(from: RouteNode<unknown, any>, from_params: RouteParams) {
     }
 
     /**
@@ -410,7 +410,7 @@ export abstract class RouteNode<TRouteData> {
      * 
      * @returns der Knoten oder undefined
      */
-    public static getNodeByName(name : string | undefined | null) : RouteNode<unknown> | undefined {
+    public static getNodeByName(name : string | undefined | null) : RouteNode<unknown, any> | undefined {
         if ((name === undefined) || (name === null))
             return undefined;
         return RouteNode.mapNodesByName.get(name);

@@ -1,5 +1,5 @@
 import { RouteNode } from "~/router/RouteNode";
-import { routeGost } from "~/router/apps/RouteGost";
+import { RouteGost, routeGost } from "~/router/apps/RouteGost";
 import { ListLehrer } from "~/apps/lehrer/ListLehrer";
 import { LehrerListeEintrag } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized, RouteParams } from "vue-router";
@@ -11,7 +11,7 @@ export class RouteDataGostKursplanung  {
 
 const SGostKursplanung = () => import("~/components/gost/kursplanung/SGostKursplanung.vue");
 
-export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung> {
+export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, RouteGost> {
 
 	public constructor() {
 		super("gost_kursplanung", "kursplanung", SGostKursplanung, new RouteDataGostKursplanung());
@@ -22,7 +22,7 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung> {
 		}
 	}
 
-	public async enter(to: RouteNode<unknown>, to_params: RouteParams) {
+	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) {
 		await this.data.listLehrer.update_list();
 		this.data.mapLehrer.clear();
 		this.data.listLehrer.liste.forEach(k => this.data.mapLehrer.set(k.id, k));

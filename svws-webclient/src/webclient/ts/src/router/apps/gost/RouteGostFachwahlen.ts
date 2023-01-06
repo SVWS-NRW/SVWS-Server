@@ -1,9 +1,9 @@
 import { RouteNode } from "~/router/RouteNode";
-import { routeGost } from "~/router/apps/RouteGost";
+import { RouteGost, routeGost } from "~/router/apps/RouteGost";
 
 const SGostFachwahlen = () => import("~/components/gost/fachwahlen/SGostFachwahlen.vue");
 
-export class RouteGostFachwahlen extends RouteNode<unknown> {
+export class RouteGostFachwahlen extends RouteNode<unknown, RouteGost> {
 
 	public constructor() {
 		super("gost_fachwahlen", "fachwahlen", SGostFachwahlen);

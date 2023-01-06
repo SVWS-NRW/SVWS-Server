@@ -1,9 +1,9 @@
 import { RouteNode } from "~/router/RouteNode";
-import { routeGost } from "~/router/apps/RouteGost";
+import { RouteGost, routeGost } from "~/router/apps/RouteGost";
 
 const SGostStammdaten = () => import("~/components/gost/stammdaten/SGostStammdaten.vue");
 
-export class RouteGostJahrgangsdaten extends RouteNode<unknown> {
+export class RouteGostJahrgangsdaten extends RouteNode<unknown, RouteGost> {
 
 	public constructor() {
 		super("gost_jahrgangsdaten", "daten", SGostStammdaten);

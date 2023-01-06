@@ -1,9 +1,9 @@
 import { RouteNode } from "~/router/RouteNode";
-import { routeLehrer } from "../RouteLehrer";
+import { RouteLehrer, routeLehrer } from "~/router/apps/RouteLehrer";
 
 const SLehrerUnterrichtsdaten = () => import("~/components/lehrer/unterrichtsdaten/SLehrerUnterrichtsdaten.vue");
 
-	export class RouteLehrerUnterrichtsdaten extends RouteNode<unknown> {
+	export class RouteLehrerUnterrichtsdaten extends RouteNode<unknown, RouteLehrer> {
 
 	public constructor() {
 		super("lehrer_unterrichtsdaten", "unterrichtsdaten", SLehrerUnterrichtsdaten);

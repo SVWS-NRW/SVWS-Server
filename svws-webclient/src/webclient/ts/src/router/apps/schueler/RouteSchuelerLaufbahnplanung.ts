@@ -5,7 +5,7 @@ import { DataGostFachkombinationen } from "~/apps/gost/DataGostFachkombinationen
 import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
 import { DataSchuelerLaufbahnplanung } from "~/apps/schueler/DataSchuelerLaufbahnplanung";
 import { RouteNode } from "~/router/RouteNode";
-import { routeSchueler } from "../RouteSchueler";
+import { RouteSchueler, routeSchueler } from "~/router/apps/RouteSchueler";
 
 export class RouteDataSchuelerLaufbahnplanung {
 	item: SchuelerListeEintrag | undefined = undefined;
@@ -17,7 +17,7 @@ export class RouteDataSchuelerLaufbahnplanung {
 
 const SSchuelerLaufbahnplanung = () => import("~/components/schueler/laufbahnplanung/SSchuelerLaufbahnplanung.vue");
 
-export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLaufbahnplanung> {
+export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLaufbahnplanung, RouteSchueler> {
 
 	public constructor() {
 		super("schueler_laufbahnplanung", "laufbahnplanung", SSchuelerLaufbahnplanung, new RouteDataSchuelerLaufbahnplanung());

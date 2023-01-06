@@ -9,6 +9,7 @@ import { ListAbschnitte } from "~/apps/schueler/ListAbschnitte";
 import { ListFaecher } from "~/apps/faecher/ListFaecher";
 import { ListLehrer } from "~/apps/lehrer/ListLehrer";
 import { RouteNode } from "~/router/RouteNode";
+import { RouteSchuelerLeistungen } from "~/router/apps/schueler/RouteSchuelerLeistungen";
 
 export class RouteDataSchuelerLeistungenDaten {
 	auswahl: ListAbschnitte = new ListAbschnitte();
@@ -23,7 +24,7 @@ export class RouteDataSchuelerLeistungenDaten {
 const SSchuelerLeistungenDaten = () => import("~/components/schueler/leistungsdaten/SSchuelerLeistungenDaten.vue");
 const SSchuelerLeistungenAuswahl = () => import("~/components/schueler/leistungsdaten/SSchuelerLeistungenAuswahl.vue")
 
-export class RouteSchuelerLeistungenDaten extends RouteNodeListView<SchuelerLernabschnittListeEintrag, RouteDataSchuelerLeistungenDaten> {
+export class RouteSchuelerLeistungenDaten extends RouteNodeListView<SchuelerLernabschnittListeEintrag, RouteDataSchuelerLeistungenDaten, RouteSchuelerLeistungen> {
 
 	public constructor() {
 		super("schueler_leistungen_daten", ":idLernabschnitt(\\d+)?", SSchuelerLeistungenAuswahl, SSchuelerLeistungenDaten, new RouteDataSchuelerLeistungenDaten());
@@ -34,7 +35,7 @@ export class RouteSchuelerLeistungenDaten extends RouteNodeListView<SchuelerLern
 		];
 	}
 
-    public async beforeEach(to: RouteNode<unknown>, to_params: RouteParams, from: RouteNode<unknown> | undefined, from_params: RouteParams): Promise<any> {
+    public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
 		if (to_params.id === undefined)
 			return false;
 		const id = parseInt(to_params.id as string);
@@ -53,7 +54,7 @@ export class RouteSchuelerLeistungenDaten extends RouteNodeListView<SchuelerLern
         return true;
     }
 
-    protected async update(to: RouteNode<unknown>, to_params: RouteParams) {
+    protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
 		if (to_params.idLernabschnitt === undefined) {
 			this.onSelect(undefined);
 		} else {

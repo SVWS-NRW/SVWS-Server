@@ -3,7 +3,7 @@ import { RouteLocationNormalized } from "vue-router";
 import { DataFoerderschwerpunkt } from "~/apps/kataloge/foerderschwerpunkt/DataFoerderschwerpunkt";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteNodeListView } from "~/router/RouteNodeListView";
-import { routeKatalogFoerderschwerpunkte } from "../RouteKatalogFoerderschwerpunkte";
+import { RouteKatalogFoerderschwerpunkte, routeKatalogFoerderschwerpunkte } from "~/router/apps/RouteKatalogFoerderschwerpunkte";
 
 const SFoerderschwerpunktDaten = () => import("~/components/kataloge/foerderschwerpunkte/daten/SFoerderschwerpunktDaten.vue");
 
@@ -12,7 +12,7 @@ export class RouteDataKatalogFoerderschwerpunkteDaten {
 	daten: DataFoerderschwerpunkt = new DataFoerderschwerpunkt();
 }
 
-export class RouteKatalogFoerderschwerpunkteDaten extends RouteNode<RouteDataKatalogFoerderschwerpunkteDaten> {
+export class RouteKatalogFoerderschwerpunkteDaten extends RouteNode<RouteDataKatalogFoerderschwerpunkteDaten, RouteKatalogFoerderschwerpunkte> {
 
 	public constructor() {
 		super("foerderschwerpunkte_daten", "daten", SFoerderschwerpunktDaten, new RouteDataKatalogFoerderschwerpunkteDaten());

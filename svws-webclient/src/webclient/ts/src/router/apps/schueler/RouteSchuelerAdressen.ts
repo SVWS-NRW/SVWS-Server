@@ -3,7 +3,7 @@ import { RouteLocationNormalized, RouteParams } from "vue-router";
 import { DataBetriebsstammdaten } from "~/apps/schueler/DataBetriebsstammdaten";
 import { ListSchuelerBetriebsdaten } from "~/apps/schueler/ListSchuelerBetriebsdaten";
 import { RouteNode } from "~/router/RouteNode";
-import { routeSchueler } from "~/router/apps/RouteSchueler";
+import { RouteSchueler, routeSchueler } from "~/router/apps/RouteSchueler";
 
 const SSchuelerAdressen = () => import("~/components/schueler/adressen/SSchuelerAdressen.vue");
 
@@ -13,7 +13,7 @@ export class RouteDataSchuelerAdressen {
 	betriebsStammdaten: DataBetriebsstammdaten = new DataBetriebsstammdaten();
 }
 
-export class RouteSchuelerAdressen extends RouteNode<RouteDataSchuelerAdressen> {
+export class RouteSchuelerAdressen extends RouteNode<RouteDataSchuelerAdressen, RouteSchueler> {
 
 	public constructor() {
 		super("schueler_adressen", "adressen", SSchuelerAdressen, new RouteDataSchuelerAdressen());
@@ -23,7 +23,7 @@ export class RouteSchuelerAdressen extends RouteNode<RouteDataSchuelerAdressen> 
 		this.data.listSchuelerbetriebe.add_data(this.data.betriebsStammdaten); 
 	}
 
-    public async update(to: RouteNode<unknown>, to_params: RouteParams) {
+    public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
 		if (routeSchueler.data.item === undefined)
 			return;
 		await this.data.listSchuelerbetriebe.update_list(routeSchueler.data.item.id);

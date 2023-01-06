@@ -2,7 +2,7 @@ import SLogin from "~/components/SLogin.vue";
 import { RouteNode } from "~/router/RouteNode";
 
 
-export class RouteLogin extends RouteNode<unknown> {
+export class RouteLogin extends RouteNode<unknown, any> {
 
 	protected defaultChildNode = undefined;
 

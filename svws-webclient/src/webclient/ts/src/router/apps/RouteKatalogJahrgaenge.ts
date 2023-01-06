@@ -6,6 +6,7 @@ import { RouteNodeListView } from "~/router/RouteNodeListView";
 import { routeKatalogJahrgaengeDaten } from "~/router/apps/jahrgaenge/RouteKatalogJahrgaengeDaten";
 import { ListJahrgaenge } from "~/apps/jahrgaenge/ListJahrgaenge";
 import { RouteNode } from "~/router/RouteNode";
+import { RouteApp } from "~/router/RouteApp";
 
 export class RouteDataKatalogJahrgaenge {
 	item: JahrgangsListeEintrag | undefined = undefined;
@@ -14,7 +15,7 @@ export class RouteDataKatalogJahrgaenge {
 const SJahrgaengeAuswahl = () => import("~/components/jahrgaenge/SJahrgaengeAuswahl.vue")
 const SJahrgaengeApp = () => import("~/components/jahrgaenge/SJahrgaengeApp.vue")
 
-export class RouteKatalogJahrgaenge extends RouteNodeListView<JahrgangsListeEintrag, RouteDataKatalogJahrgaenge> {
+export class RouteKatalogJahrgaenge extends RouteNodeListView<JahrgangsListeEintrag, RouteDataKatalogJahrgaenge, RouteApp> {
 
 	public constructor() {
 		super("jahrgaenge", "/kataloge/jahrgaenge/:id(\\d+)?", SJahrgaengeAuswahl, SJahrgaengeApp, new RouteDataKatalogJahrgaenge());
@@ -27,7 +28,7 @@ export class RouteKatalogJahrgaenge extends RouteNodeListView<JahrgangsListeEint
 		super.defaultChild = routeKatalogJahrgaengeDaten;
 	}
 
-    public async beforeEach(to: RouteNode<unknown>, to_params: RouteParams, from: RouteNode<unknown> | undefined, from_params: RouteParams): Promise<any> {
+    public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
 		if ((to.name === this.name) && (to_params.id === undefined)) {
 			const redirect_name: string = (this.selectedChild === undefined) ? this.defaultChild!.name : this.selectedChild.name;
 			return { name: redirect_name, params: { id: mainApp.apps.jahrgaenge.auswahl.liste.at(0)?.id }};

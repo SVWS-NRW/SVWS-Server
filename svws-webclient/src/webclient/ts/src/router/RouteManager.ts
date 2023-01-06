@@ -24,8 +24,8 @@ export class RouteManager {
         if (!mainApp.authenticated && to.name !== "login")
             return { name: "login", query: { redirect: to.fullPath } }; // TODO 
         // Bestimme die Knoten, für die Quelle und das Ziel der Route
-        const to_node : RouteNode<unknown> | undefined = RouteNode.getNodeByName(to.name?.toString());
-        const from_node : RouteNode<unknown> | undefined = RouteNode.getNodeByName(from.name?.toString());
+        const to_node : RouteNode<unknown, any> | undefined = RouteNode.getNodeByName(to.name?.toString());
+        const from_node : RouteNode<unknown, any> | undefined = RouteNode.getNodeByName(from.name?.toString());
         if (to_node === undefined)
             return false;
         if ((from_node === undefined) && (from.fullPath !== "/"))
@@ -40,7 +40,7 @@ export class RouteManager {
         // Ereignisbehandlung: Sende die entsprechenden Nachrichten enter, update, leave zur Aktualisierung an die Knoten
         if (from.fullPath === "/") {
             // Die Analyse der Quell-Route ist nicht erheblich - die Ereignisse für die Ziel-Route sind aber wichtig
-            const to_predecessors: RouteNode<unknown>[] = to_node.getPredecessors();
+            const to_predecessors: RouteNode<unknown, any>[] = to_node.getPredecessors();
             to_predecessors.forEach(
                 async node => await node.enter(to_node, to.params)
             );
@@ -57,7 +57,7 @@ export class RouteManager {
             const equals = (to_node.name === from_node.name);
             const to_is_successor = to_node.checkSuccessorOf(from_node);
             const from_is_successor = from_node.checkSuccessorOf(to_node);
-            const to_predecessors_all: RouteNode<unknown>[] = to_node.getPredecessors();
+            const to_predecessors_all: RouteNode<unknown, any>[] = to_node.getPredecessors();
             if (to_is_successor) {
                 console.log("to_is_successor");
                 for (let node of to_is_successor)
@@ -76,8 +76,8 @@ export class RouteManager {
                     await node.doUpdate(to_node, to.params);
                 await to_node.doUpdate(to_node, to.params);
             } else {
-                let from_predecessors: RouteNode<unknown>[] = from_node.getPredecessors();
-                let to_predecessors: RouteNode<unknown>[] = [...to_predecessors_all];
+                let from_predecessors: RouteNode<unknown, any>[] = from_node.getPredecessors();
+                let to_predecessors: RouteNode<unknown, any>[] = [...to_predecessors_all];
                 // Entferne gemeinsame Teilroute am Anfang der beiden Routen - diese Routen-Teile bleiben erhalten
                 while ((from_predecessors.length > 0) && (to_predecessors.length > 0) && (from_predecessors[0].name === to_predecessors[0].name)) {
                     from_predecessors = from_predecessors.slice(1);

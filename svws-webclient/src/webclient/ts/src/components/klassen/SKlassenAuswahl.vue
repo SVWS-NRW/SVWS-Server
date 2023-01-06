@@ -17,7 +17,7 @@
 <script setup lang="ts">
 
 	import { Schuljahresabschnitt, KlassenListeEintrag, LehrerListeEintrag } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, ref, WritableComputedRef } from "vue";
+	import { computed, ComputedRef, ref, ShallowRef, WritableComputedRef } from "vue";
 	import { injectMainApp, Main } from "~/apps/Main";
 	import { routeKlassen } from "~/router/apps/RouteKlassen";
 	import { ListLehrer } from "~/apps/lehrer/ListLehrer";
@@ -25,12 +25,10 @@
 	import { DataTableColumn } from "@svws-nrw/svws-ui/dist/components/Layout/Table/types";
 
 	const { schule } = defineProps<{ 
-		id?: number; 
-		item?: KlassenListeEintrag;
+		item: ShallowRef<KlassenListeEintrag | undefined>;
 		schule: DataSchuleStammdaten;
 		listLehrer: ListLehrer;
 		mapLehrer: Map<Number, LehrerListeEintrag>;
-		routename: string;
 	}>();
 	const selected = routeKlassen.auswahl;
 

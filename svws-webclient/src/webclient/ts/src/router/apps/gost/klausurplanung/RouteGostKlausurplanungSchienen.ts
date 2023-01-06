@@ -1,14 +1,14 @@
-import { mainApp } from "~/apps/Main";
 import { RouteNode } from "~/router/RouteNode";
-import { RouteGost } from "~/router/apps/RouteGost";
+import { routeGost } from "~/router/apps/RouteGost";
+import { RouteGostKlausurplanung } from "../RouteGostKlausurplanung";
 
 const SGostKlausurplanungSchienen = () => import("~/components/gost/klausurplanung/SGostKlausurplanungSchienen.vue");
 
-export class RouteGostKlausurplanungSchienen extends RouteNode<unknown> {
+export class RouteGostKlausurplanungSchienen extends RouteNode<unknown, RouteGostKlausurplanung> {
 
 	public constructor() {
 		super("gost_klausurplanung_schienen", "schienen", SGostKlausurplanungSchienen);
-		super.propHandler = (route) => RouteGost.getPropsByAuswahlAbiturjahr(route, mainApp.apps.gost.auswahl);
+		super.propHandler = (route) => routeGost.getProps(route);
 		super.text = "Schienen";
 	}
 

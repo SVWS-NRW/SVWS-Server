@@ -1,10 +1,11 @@
 import { mainApp } from "~/apps/Main";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteNodeListView } from "~/router/RouteNodeListView";
+import { RouteSchuleBenutzer } from "~/router/apps/RouteSchuleBenutzer";
 
 const SBenutzergruppe = () => import("~/components/schule/benutzerverwaltung/daten/SBenutzergruppe.vue");
 
-export class RouteSchuleBenutzergruppeDaten extends RouteNode<unknown> {
+export class RouteSchuleBenutzergruppeDaten extends RouteNode<unknown, RouteSchuleBenutzer> {
 
 	public constructor() {
 		super("benutzergruppe_daten", "daten", SBenutzergruppe);

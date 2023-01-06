@@ -1,11 +1,9 @@
 import { SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized } from "vue-router";
-import { mainApp } from "~/apps/Main";
 import { DataKatalogErzieherarten } from "~/apps/schueler/DataKatalogErzieherarten";
 import { DataSchuelerErzieherStammdaten } from "~/apps/schueler/DataSchuelerErzieherStammdaten";
 import { RouteNode } from "~/router/RouteNode";
-import { RouteNodeListView } from "~/router/RouteNodeListView";
-import { routeSchueler } from "../RouteSchueler";
+import { RouteSchueler, routeSchueler } from "~/router/apps/RouteSchueler";
 
 const SSchuelerErziehungsberechtigte = () => import("~/components/schueler/erziehungsberechtigte/SSchuelerErziehungsberechtigte.vue");
 
@@ -15,7 +13,7 @@ export class RouteDataSchuelerErziehungsberechtigte {
 	erzieherarten: DataKatalogErzieherarten = new DataKatalogErzieherarten();
 }
 
-export class RouteSchuelerErziehungsberechtigte extends RouteNode<RouteDataSchuelerErziehungsberechtigte> {
+export class RouteSchuelerErziehungsberechtigte extends RouteNode<RouteDataSchuelerErziehungsberechtigte, RouteSchueler> {
 
 	public constructor() {
 		super("schueler_erziehungsberechtigte", "erziehungsberechtigte", SSchuelerErziehungsberechtigte, new RouteDataSchuelerErziehungsberechtigte());

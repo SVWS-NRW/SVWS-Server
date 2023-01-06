@@ -3,7 +3,7 @@ import { SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
 import { DataKatalogFahrschuelerarten } from "~/apps/schueler/DataKatalogFahrschuelerarten";
 import { DataKatalogFoerderschwerpunkte } from "~/apps/schueler/DataKatalogFoerderschwerpunkte";
 import { RouteLocationNormalized } from "vue-router";
-import { routeSchueler } from "../RouteSchueler";
+import { RouteSchueler, routeSchueler } from "../RouteSchueler";
 
 const SSchuelerIndividualdaten = () => import("~/components/schueler/individualdaten/SSchuelerIndividualdaten.vue");
 
@@ -13,7 +13,7 @@ export class RouteDataSchuelerIndividualdaten {
 	foerderschwerpunkte: DataKatalogFoerderschwerpunkte = new DataKatalogFoerderschwerpunkte();
 }
 
-export class RouteSchuelerIndividualdaten extends RouteNode<RouteDataSchuelerIndividualdaten> {
+export class RouteSchuelerIndividualdaten extends RouteNode<RouteDataSchuelerIndividualdaten, RouteSchueler> {
 
 	public constructor() {
 		super("schueler_daten", "daten", SSchuelerIndividualdaten, new RouteDataSchuelerIndividualdaten());

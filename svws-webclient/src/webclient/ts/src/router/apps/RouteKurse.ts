@@ -8,6 +8,7 @@ import { RouteNode } from "~/router/RouteNode";
 import { ListLehrer } from "~/apps/lehrer/ListLehrer";
 import { ListJahrgaenge } from "~/apps/jahrgaenge/ListJahrgaenge";
 import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
+import { RouteApp } from "../RouteApp";
 
 export class RouteDataKurse {
 	item: KursListeEintrag | undefined = undefined;
@@ -22,7 +23,7 @@ export class RouteDataKurse {
 const SKurseAuswahl = () => import("~/components/kurse/SKurseAuswahl.vue")
 const SKurseApp = () => import("~/components/kurse/SKurseApp.vue")
 
-export class RouteKurse extends RouteNodeListView<KursListeEintrag, RouteDataKurse> {
+export class RouteKurse extends RouteNodeListView<KursListeEintrag, RouteDataKurse, RouteApp> {
 
 	public constructor() {
 		super("kurse", "/kurse/:id(\\d+)?", SKurseAuswahl, SKurseApp, new RouteDataKurse());
@@ -35,7 +36,7 @@ export class RouteKurse extends RouteNodeListView<KursListeEintrag, RouteDataKur
 		super.defaultChild = routeKurseDaten;
 	}
 
-		public async beforeEach(to: RouteNode<unknown>, to_params: RouteParams, from: RouteNode<unknown> | undefined, from_params: RouteParams): Promise<any> {
+		public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
 		if ((to.name === this.name) && (to_params.id === undefined)) {
 			const redirect_name: string = (this.selectedChild === undefined) ? this.defaultChild!.name : this.selectedChild.name;
 			await this.data.auswahl.update_list();
@@ -44,7 +45,7 @@ export class RouteKurse extends RouteNodeListView<KursListeEintrag, RouteDataKur
         return true;
     }
 
-    public async enter(to: RouteNode<unknown>, to_params: RouteParams) {
+    public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) {
 		await this.data.schule.select(true);  // undefined würde das laden verhindern, daher true
 		await this.data.listJahrgaenge.update_list();
 		this.data.mapJahrgaenge.clear();

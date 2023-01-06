@@ -17,7 +17,7 @@ import { RouteNode } from "~/router/RouteNode";
 import SApp from "~/components/SApp.vue";
 
 
-export class RouteApp extends RouteNode<unknown> {
+export class RouteApp extends RouteNode<unknown, any> {
 
 	protected defaultChildNode = undefined;
 

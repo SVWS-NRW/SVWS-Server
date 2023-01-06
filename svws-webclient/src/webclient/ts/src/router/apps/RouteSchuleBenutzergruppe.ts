@@ -6,6 +6,7 @@ import { ListBenutzergruppe } from "~/apps/schule/benutzerverwaltung/ListBenutze
 import { computed, WritableComputedRef } from "vue";
 import { mainApp } from "~/apps/Main"
 import { RouteNode } from "~/router/RouteNode";
+import { RouteApp } from "~/router/RouteApp";
 
 
 export class RouteDataSchuleBenutzergruppe {
@@ -17,7 +18,7 @@ const SBenutzergruppeAuswahl = () => import("~/components/schule/benutzerverwalt
 const SBenutzergruppeApp = () => import("~/components/schule/benutzerverwaltung/SBenutzergruppeApp.vue")
 
 
-export class RouteSchuleBenutzergruppe extends RouteNodeListView<BenutzergruppeListeEintrag, RouteDataSchuleBenutzergruppe> {
+export class RouteSchuleBenutzergruppe extends RouteNodeListView<BenutzergruppeListeEintrag, RouteDataSchuleBenutzergruppe, RouteApp> {
 
 	public constructor() {
 		super("benutzergruppen", "/schule/benutzergruppe/:id(\\d+)?", SBenutzergruppeAuswahl, SBenutzergruppeApp, new RouteDataSchuleBenutzergruppe());
@@ -30,7 +31,7 @@ export class RouteSchuleBenutzergruppe extends RouteNodeListView<BenutzergruppeL
 		super.defaultChild = routeSchuleBenutzergruppeDaten;
 	}
 
-    public async beforeEach(to: RouteNode<unknown>, to_params: RouteParams, from: RouteNode<unknown> | undefined, from_params: RouteParams): Promise<any> {
+    public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
 		if ((to.name === this.name) && (to_params.id === undefined)) {
 			const redirect_name: string = (this.selectedChild === undefined) ? this.defaultChild!.name : this.selectedChild.name;
 			return { name: redirect_name, params: { id: mainApp.apps.benutzergruppe.auswahl.liste.at(0)?.id }};

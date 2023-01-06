@@ -17,6 +17,7 @@ import { ListKlassen } from "~/apps/klassen/ListKlassen";
 import { ListJahrgaenge } from "~/apps/jahrgaenge/ListJahrgaenge";
 import { ListKurse } from "~/apps/kurse/ListKurse";
 import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
+import { RouteApp } from "~/router/RouteApp";
 
 export class RouteDataSchueler {
 	item: SchuelerListeEintrag | undefined = undefined;
@@ -34,7 +35,7 @@ export class RouteDataSchueler {
 const SSchuelerAuswahl = () => import("~/components/schueler/SSchuelerAuswahl.vue")
 const SSchuelerApp = () => import("~/components/schueler/SSchuelerApp.vue")
 
-export class RouteSchueler extends RouteNodeListView<SchuelerListeEintrag, RouteDataSchueler> {
+export class RouteSchueler extends RouteNodeListView<SchuelerListeEintrag, RouteDataSchueler, RouteApp> {
 
 	public constructor() {
 		super("schueler", "/schueler/:id(\\d+)?", SSchuelerAuswahl, SSchuelerApp, new RouteDataSchueler());
@@ -54,7 +55,7 @@ export class RouteSchueler extends RouteNodeListView<SchuelerListeEintrag, Route
 		super.defaultChild = routeSchuelerIndividualdaten;
 	}
 
-    public async beforeEach(to: RouteNode<unknown>, to_params: RouteParams, from: RouteNode<unknown> | undefined, from_params: RouteParams): Promise<any> {
+    public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
 		if ((to.name === this.name) && (to_params.id === undefined)) {
 			const redirect_name: string = (this.selectedChild === undefined) ? this.defaultChild!.name : this.selectedChild.name;
 			await this.data.auswahl.update_list();
@@ -63,7 +64,7 @@ export class RouteSchueler extends RouteNodeListView<SchuelerListeEintrag, Route
         return true;
     }
 
-    public async enter(to: RouteNode<unknown>, to_params: RouteParams) {
+    public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) {
 		await this.data.schule.select(true);  // undefined würde das laden verhindern, daher true
 		await this.data.listKlassen.update_list();
 		this.data.mapKlassen.clear();

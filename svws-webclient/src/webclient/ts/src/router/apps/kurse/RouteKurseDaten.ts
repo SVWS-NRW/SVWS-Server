@@ -1,5 +1,5 @@
 import { RouteNode } from "~/router/RouteNode";
-import { routeKurse } from "~/router/apps/RouteKurse";
+import { RouteKurse, routeKurse } from "~/router/apps/RouteKurse";
 import { KursListeEintrag } from "@svws-nrw/svws-core-ts";
 import { DataKurs } from "~/apps/kurse/DataKurs";
 import { RouteLocationNormalized } from "vue-router";
@@ -12,7 +12,7 @@ export class RouteDataKurseDaten {
 }
 
 
-export class RouteKurseDaten extends RouteNode<RouteDataKurseDaten> {
+export class RouteKurseDaten extends RouteNode<RouteDataKurseDaten, RouteKurse> {
 
 	public constructor() {
 		super("kurse_daten", "daten", SKursDaten, new RouteDataKurseDaten());

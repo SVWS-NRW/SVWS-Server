@@ -1,14 +1,14 @@
-import { mainApp } from "~/apps/Main";
 import { RouteNode } from "~/router/RouteNode";
-import { RouteGost } from "~/router/apps/RouteGost";
+import { routeGost } from "~/router/apps/RouteGost";
+import { RouteGostKlausurplanung } from "../RouteGostKlausurplanung";
 
 const SGostKlausurplanungKalender = () => import("~/components/gost/klausurplanung/SGostKlausurplanungKalender.vue");
 
-export class RouteGostKlausurplanungKalender extends RouteNode<unknown> {
+export class RouteGostKlausurplanungKalender extends RouteNode<unknown, RouteGostKlausurplanung> {
 
 	public constructor() {
 		super("gost_klausurplanung_kalender", "kalender", SGostKlausurplanungKalender);
-		super.propHandler = (route) => RouteGost.getPropsByAuswahlAbiturjahr(route, mainApp.apps.gost.auswahl);
+		super.propHandler = (route) => routeGost.getProps(route);
 		super.text = "Kalender";
 	}
 

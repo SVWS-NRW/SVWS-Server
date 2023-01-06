@@ -5,7 +5,8 @@ import { mainApp } from "~/apps/Main";
 import { RouteNodeListView } from "~/router/RouteNodeListView";
 import { routeKatalogReligionDaten } from "~/router/apps/religion/RouteKatalogReligionDaten";
 import { ListReligionen } from "~/apps/kataloge/religionen/ListReligionen";
-import { RouteNode } from "../RouteNode";
+import { RouteNode } from "~/router/RouteNode";
+import { RouteApp } from "~/router/RouteApp";
 
 
 export class RouteDataKatalogReligion {
@@ -15,7 +16,7 @@ export class RouteDataKatalogReligion {
 const SReligionenAuswahl = () => import("~/components/kataloge/religionen/SReligionenAuswahl.vue")
 const SReligionenApp = () => import("~/components/kataloge/religionen/SReligionenApp.vue")
 
-export class RouteKatalogReligion extends RouteNodeListView<ReligionEintrag, RouteDataKatalogReligion> {
+export class RouteKatalogReligion extends RouteNodeListView<ReligionEintrag, RouteDataKatalogReligion, RouteApp> {
 
 	public constructor() {
 		super("religionen", "/kataloge/religion/:id(\\d+)?", SReligionenAuswahl, SReligionenApp, new RouteDataKatalogReligion());
@@ -28,7 +29,7 @@ export class RouteKatalogReligion extends RouteNodeListView<ReligionEintrag, Rou
 		super.defaultChild = routeKatalogReligionDaten;
 	}
 
-    public async beforeEach(to: RouteNode<unknown>, to_params: RouteParams, from: RouteNode<unknown> | undefined, from_params: RouteParams): Promise<any> {
+    public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
 		if ((to.name === this.name) && (to_params.id === undefined)) {
 			const redirect_name: string = (this.selectedChild === undefined) ? this.defaultChild!.name : this.selectedChild.name;
 			return { name: redirect_name, params: { id: mainApp.apps.religionen.auswahl.liste.at(0)?.id }};

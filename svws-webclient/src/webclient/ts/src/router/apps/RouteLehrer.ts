@@ -9,6 +9,7 @@ import { ListLehrer } from "~/apps/lehrer/ListLehrer";
 import { computed, WritableComputedRef } from "vue";
 import { RouteNode } from "~/router/RouteNode";
 import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
+import { RouteApp } from "~/router/RouteApp";
 
 
 export class RouteDataLehrer {
@@ -23,7 +24,7 @@ const SLehrerAuswahl = () => import("~/components/lehrer/SLehrerAuswahl.vue")
 const SLehrerApp = () => import("~/components/lehrer/SLehrerApp.vue")
 
 
-export class RouteLehrer extends RouteNodeListView<LehrerListeEintrag, RouteDataLehrer> {
+export class RouteLehrer extends RouteNodeListView<LehrerListeEintrag, RouteDataLehrer, RouteApp> {
 
 	public constructor() {
 		super("lehrer", "/lehrkraefte/:id(\\d+)?", SLehrerAuswahl, SLehrerApp, new RouteDataLehrer());
@@ -38,7 +39,7 @@ export class RouteLehrer extends RouteNodeListView<LehrerListeEintrag, RouteData
 		super.defaultChild = routeLehrerIndividualdaten;
 	}
 
-    public async beforeEach(to: RouteNode<unknown>, to_params: RouteParams, from: RouteNode<unknown> | undefined, from_params: RouteParams): Promise<any> {
+    public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
 		if ((to.name === this.name) && (to_params.id === undefined)) {
 			const redirect_name: string = (this.selectedChild === undefined) ? this.defaultChild!.name : this.selectedChild.name;
 			await this.data.auswahl.update_list();
@@ -47,7 +48,7 @@ export class RouteLehrer extends RouteNodeListView<LehrerListeEintrag, RouteData
         return true;
     }
 
-    public async enter(to: RouteNode<unknown>, to_params: RouteParams) {
+    public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) {
 		await this.data.schule.select(true);  // undefined würde das laden verhindern, daher true
 		await this.data.auswahl.update_list();  // Die Auswahlliste wird als letztes geladen
 	}

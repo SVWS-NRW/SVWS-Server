@@ -5,8 +5,9 @@ import { DataGostJahrgang } from "~/apps/gost/DataGostJahrgang";
 import { ListGost } from "~/apps/gost/ListGost";
 import { mainApp } from "~/apps/Main";
 import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
-import { RouteNode } from "../RouteNode";
-import { RouteNodeListView } from "../RouteNodeListView";
+import { RouteApp } from "~/router/RouteApp";
+import { RouteNode } from "~/router/RouteNode";
+import { RouteNodeListView } from "~/router/RouteNodeListView";
 import { routeGostFachwahlen } from "./gost/RouteGostFachwahlen";
 import { routeGostFaecher } from "./gost/RouteGostFaecher";
 import { routeGostJahrgangsdaten } from "./gost/RouteGostJahrgangsdaten";
@@ -23,7 +24,7 @@ const SGostAuswahl = () => import("~/components/gost/SGostAuswahl.vue")
 const SGostApp = () => import("~/components/gost/SGostApp.vue")
 
 
-export class RouteGost extends RouteNodeListView<GostJahrgang, RouteDataGost> {
+export class RouteGost extends RouteNodeListView<GostJahrgang, RouteDataGost, RouteApp> {
 
 	public constructor() {
 		super("gost", "/gost/:abiturjahr(-?\\d+)?", SGostAuswahl, SGostApp, new RouteDataGost());
@@ -40,7 +41,7 @@ export class RouteGost extends RouteNodeListView<GostJahrgang, RouteDataGost> {
         super.defaultChild = routeGostJahrgangsdaten;
 	}
 
-    public async beforeEach(to: RouteNode<unknown>, to_params: RouteParams, from: RouteNode<unknown> | undefined, from_params: RouteParams): Promise<any> {
+    public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
 		if ((to.name === this.name) && (to_params.abiturjahr === undefined)) {
 			const redirect_name: string = (this.selectedChild === undefined) ? this.defaultChild!.name : this.selectedChild.name;
 			return { name: redirect_name, params: { abiturjahr: mainApp.apps.gost.auswahl.liste.at(0)?.abiturjahr }};
@@ -48,11 +49,11 @@ export class RouteGost extends RouteNodeListView<GostJahrgang, RouteDataGost> {
         return true;
     }
 
-    public async enter(to: RouteNode<unknown>, to_params: RouteParams) {
+    public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) {
 		await this.data.schule.select(true);  // undefined würde das laden verhindern, daher true
     }
 
-    protected async update(to: RouteNode<unknown>, to_params: RouteParams) {
+    protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
 		if (to_params.abiturjahr === undefined) {
 			this.onSelect(undefined);
 		} else {

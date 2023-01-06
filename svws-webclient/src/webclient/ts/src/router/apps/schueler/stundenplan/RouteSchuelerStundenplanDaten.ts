@@ -7,6 +7,7 @@ import { RouteNodeListView } from "~/router/RouteNodeListView";
 import { routeSchueler } from "~/router/apps/RouteSchueler";
 import { computed } from "vue";
 import { RouteNode } from "~/router/RouteNode";
+import { RouteSchuelerStundenplan } from "~/router/apps/schueler/RouteSchuelerStundenplan";
 
 export class RouteDataSchuelerStundenplan {
 	auswahl: ListStundenplaene = new ListStundenplaene();
@@ -17,7 +18,7 @@ export class RouteDataSchuelerStundenplan {
 const SSchuelerStundenplanDaten = () => import("~/components/schueler/stundenplan/SSchuelerStundenplanDaten.vue");
 const SSchuelerStundenplanAuswahl = () => import("~/components/schueler/stundenplan/SSchuelerStundenplanAuswahl.vue")
 
-export class RouteSchuelerStundenplanDaten extends RouteNodeListView<StundenplanListeEintrag, RouteDataSchuelerStundenplan> {
+export class RouteSchuelerStundenplanDaten extends RouteNodeListView<StundenplanListeEintrag, RouteDataSchuelerStundenplan, RouteSchuelerStundenplan> {
 
 	public constructor() {
 		super("schueler_stundenplan_daten", ":idStundenplan(\\d+)?", SSchuelerStundenplanAuswahl, SSchuelerStundenplanDaten, new RouteDataSchuelerStundenplan());
@@ -28,14 +29,14 @@ export class RouteSchuelerStundenplanDaten extends RouteNodeListView<Stundenplan
 		];
 	}
 
-    public async beforeEach(to: RouteNode<unknown>, to_params: RouteParams, from: RouteNode<unknown> | undefined, from_params: RouteParams): Promise<any> {
+    public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
 		await this.data.auswahl.update_list();
 		if ((to.name === this.name) && (to_params.idStundenplan === undefined))
 			return { name: this.name, params: { id: to_params.id, idStundenplan: this.data.auswahl.liste.at(0)?.id }};
         return true;
     }
 
-    protected async update(to: RouteNode<unknown>, to_params: RouteParams) {
+    protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
 		if (to_params.idStundenplan === undefined) {
 			this.onSelect(undefined);
 		} else {

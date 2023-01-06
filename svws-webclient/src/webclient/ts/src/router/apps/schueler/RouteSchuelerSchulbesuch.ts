@@ -2,7 +2,7 @@ import { SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized } from "vue-router";
 import { DataSchuelerSchulbesuchsdaten } from "~/apps/schueler/DataSchuelerSchulbesuchsdaten";
 import { RouteNode } from "~/router/RouteNode";
-import { routeSchueler } from "~/router/apps/RouteSchueler";
+import { RouteSchueler, routeSchueler } from "~/router/apps/RouteSchueler";
 
 const SSchuelerSchulbesuch = () => import("~/components/schueler/schulbesuch/SSchuelerSchulbesuch.vue");
 
@@ -11,7 +11,7 @@ export class RouteDataSchuelerSchulbesuch {
 	daten: DataSchuelerSchulbesuchsdaten = new DataSchuelerSchulbesuchsdaten();
 }
 
-export class RouteSchuelerSchulbesuch extends RouteNode<RouteDataSchuelerSchulbesuch> {
+export class RouteSchuelerSchulbesuch extends RouteNode<RouteDataSchuelerSchulbesuch, RouteSchueler> {
 
 	public constructor() {
 		super("schueler_schulbesuch", "schulbesuch", SSchuelerSchulbesuch, new RouteDataSchuelerSchulbesuch());

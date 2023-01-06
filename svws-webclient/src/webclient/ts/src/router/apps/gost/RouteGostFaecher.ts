@@ -1,9 +1,9 @@
 import { RouteNode } from "~/router/RouteNode";
-import { routeGost } from "~/router/apps/RouteGost";
+import { RouteGost, routeGost } from "~/router/apps/RouteGost";
 
 const SGostFaecher = () => import("~/components/gost/faecher/SGostFaecher.vue");
 
-export class RouteGostFaecher extends RouteNode<unknown> {
+export class RouteGostFaecher extends RouteNode<unknown, RouteGost> {
 
 	public constructor() {
 		super("gost_faecher", "faecher", SGostFaecher);

@@ -1,6 +1,6 @@
 import { RouteRecordRaw, useRouter } from "vue-router";
 import { RouteNode } from "~/router/RouteNode";
-import { routeGost } from "~/router/apps/RouteGost";
+import { RouteGost, routeGost } from "~/router/apps/RouteGost";
 import { routeGostKlausurplanungKlausurdaten } from "./klausurplanung/RouteGostKlausurplanungKlausurdaten";
 import { routeGostKlausurplanungSchienen } from "./klausurplanung/RouteGostKlausurplanungSchienen";
 import { routeGostKlausurplanungKalender } from "./klausurplanung/RouteGostKlausurplanungKalender";
@@ -11,7 +11,7 @@ import { computed, WritableComputedRef } from "vue";
 
 const SGostKlausurplanung = () => import("~/components/gost/klausurplanung/SGostKlausurplanung.vue");
 
-export class RouteGostKlausurplanung extends RouteNode<unknown> {
+export class RouteGostKlausurplanung extends RouteNode<unknown, RouteGost> {
 
 	public constructor() {
 		super("gost_klausurplanung", "klausurplanung", SGostKlausurplanung);
@@ -41,7 +41,7 @@ export class RouteGostKlausurplanung extends RouteNode<unknown> {
             get: () => this.selectedChildRecord || this.defaultChild!.record,
             set: (value) => {
                 this.selectedChildRecord = value;
-				const abiturjahr = (routeGost.data.item === undefined) ? undefined : "" + routeGost.data.item.abiturjahr;
+				const abiturjahr = (routeGost.data.item.value === undefined) ? undefined : "" + routeGost.data.item.value.abiturjahr;
                 router.push({ name: value.name, params: { abiturjahr: abiturjahr } });
             }
         });

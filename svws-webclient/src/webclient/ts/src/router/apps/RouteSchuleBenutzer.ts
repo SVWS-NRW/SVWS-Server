@@ -6,6 +6,7 @@ import { ListBenutzer } from "~/apps/schule/benutzerverwaltung/ListBenutzer";
 import { computed, WritableComputedRef } from "vue";
 import { mainApp } from "~/apps/Main"
 import { RouteNode } from "~/router/RouteNode";
+import { RouteApp } from "~/router/RouteApp";
 
 
 export class RouteDataSchuleBenutzer {
@@ -17,7 +18,7 @@ const SBenutzerAuswahl = () => import("~/components/schule/benutzerverwaltung/SB
 const SBenutzerApp = () => import("~/components/schule/benutzerverwaltung/SBenutzerApp.vue")
 
 
-export class RouteSchuleBenutzer extends RouteNodeListView<BenutzerListeEintrag, RouteDataSchuleBenutzer> {
+export class RouteSchuleBenutzer extends RouteNodeListView<BenutzerListeEintrag, RouteDataSchuleBenutzer, RouteApp> {
 
 	public constructor() {
 		super("benutzer", "/schule/benutzer/:id(\\d+)?", SBenutzerAuswahl, SBenutzerApp, new RouteDataSchuleBenutzer());
@@ -30,7 +31,7 @@ export class RouteSchuleBenutzer extends RouteNodeListView<BenutzerListeEintrag,
 		super.defaultChild = routeSchuleBenutzerDaten;
 	}
 
-    public async beforeEach(to: RouteNode<unknown>, to_params: RouteParams, from: RouteNode<unknown> | undefined, from_params: RouteParams): Promise<any> {
+    public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
 		if ((to.name === this.name) && (to_params.id === undefined)) {
 			const redirect_name: string = (this.selectedChild === undefined) ? this.defaultChild!.name : this.selectedChild.name;
 			return { name: redirect_name, params: { id: mainApp.apps.benutzer.auswahl.liste.at(0)?.id }};

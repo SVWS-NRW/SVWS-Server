@@ -1,11 +1,12 @@
 import { computed, WritableComputedRef } from "vue";
 import { RouteLocationNormalized } from "vue-router";
+import { RouteApp } from "../RouteApp";
 import { RouteNodeListView } from "../RouteNodeListView";
 
 const SStatistikAuswahl = () => import("~/components/statistik/SStatistikAuswahl.vue")
 const SStatistikApp = () => import("~/components/statistik/SStatistikApp.vue")
 
-export class RouteStatistik extends RouteNodeListView<unknown, unknown> {
+export class RouteStatistik extends RouteNodeListView<unknown, unknown, RouteApp> {
 
 	protected defaultChildNode = undefined;
 

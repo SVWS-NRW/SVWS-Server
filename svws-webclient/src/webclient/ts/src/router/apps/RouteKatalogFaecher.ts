@@ -6,6 +6,7 @@ import { mainApp } from "~/apps/Main";
 import { RouteNodeListView } from "~/router/RouteNodeListView";
 import { routeFaecherDaten } from "~/router/apps/faecher/RouteFaecherDaten";
 import { RouteNode } from "~/router/RouteNode";
+import { RouteApp } from "~/router/RouteApp";
 
 const ROUTE_NAME: string = "faecher";
 
@@ -16,7 +17,7 @@ export class RouteDataKatalogFaecher {
 const SFaecherAuswahl = () => import("~/components/faecher/SFaecherAuswahl.vue")
 const SFaecherApp = () => import("~/components/faecher/SFaecherApp.vue")
 
-export class RouteKatalogFaecher extends RouteNodeListView<FaecherListeEintrag, RouteDataKatalogFaecher> {
+export class RouteKatalogFaecher extends RouteNodeListView<FaecherListeEintrag, RouteDataKatalogFaecher, RouteApp> {
 
 	public constructor() {
 		super("faecher", "/kataloge/faecher/:id(\\d+)?", SFaecherAuswahl, SFaecherApp, new RouteDataKatalogFaecher());
@@ -29,7 +30,7 @@ export class RouteKatalogFaecher extends RouteNodeListView<FaecherListeEintrag, 
 		super.defaultChild = routeFaecherDaten;
 	}
 
-    public async beforeEach(to: RouteNode<unknown>, to_params: RouteParams, from: RouteNode<unknown> | undefined, from_params: RouteParams): Promise<any> {
+    public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
 		if ((to.name === this.name) && (to_params.id === undefined)) {
 			const redirect_name: string = (this.selectedChild === undefined) ? this.defaultChild!.name : this.selectedChild.name;
 			return { name: redirect_name, params: { id: mainApp.apps.faecher.auswahl.liste.at(0)?.id }};

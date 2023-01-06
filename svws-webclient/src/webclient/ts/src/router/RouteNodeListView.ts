@@ -11,7 +11,7 @@ import { RouteNode } from "~/router/RouteNode";
  * einer Auswahlliste und die "default"-Router-View dient der Darstellung
  * von Detail-Informationen zu dem ausgewählten Listen-Eintrag.
  */
-export abstract class RouteNodeListView<TItemAuswahl, TRouteData> extends RouteNode<TRouteData> {
+export abstract class RouteNodeListView<TItemAuswahl, TRouteData, TRouteParent extends RouteNode<unknown, any>> extends RouteNode<TRouteData, TRouteParent> {
 
     /**
      * Erstellt einen Knoten für das Routing mithilfe einer Auswahl-Liste.

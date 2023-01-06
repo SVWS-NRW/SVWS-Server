@@ -2,7 +2,7 @@ import { LehrerListeEintrag } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized } from "vue-router";
 import { DataLehrerPersonaldaten } from "~/apps/lehrer/DataLehrerPersonaldaten";
 import { RouteNode } from "~/router/RouteNode";
-import { routeLehrer } from "../RouteLehrer";
+import { RouteLehrer, routeLehrer } from "~/router/apps/RouteLehrer";
 
 
 
@@ -13,7 +13,7 @@ export class RouteDataLehrerPersonaldaten {
 
 const SLehrerPersonaldaten = () => import("~/components/lehrer/personaldaten/SLehrerPersonaldaten.vue");
 
-export class RouteLehrerPersonaldaten extends RouteNode<RouteDataLehrerPersonaldaten> {
+export class RouteLehrerPersonaldaten extends RouteNode<RouteDataLehrerPersonaldaten, RouteLehrer> {
 
 	public constructor() {
 		super("lehrer_personaldaten", "personaldaten", SLehrerPersonaldaten, new RouteDataLehrerPersonaldaten());
