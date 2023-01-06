@@ -3,7 +3,7 @@
 import { Dialog, DialogTitle, DialogDescription } from "@headlessui/vue";
 import { Size } from "~/types";
 
-const { size = 'small' } = defineProps<{ size: Extract<Size, 'small' | 'medium' | 'big'>; }>();
+const { size = 'small' } = defineProps<{ size?: Extract<Size, 'small' | 'medium' | 'big'>; }>();
 
 const isOpen = ref(false);
 
