@@ -23,6 +23,6 @@ const selected = computed({
 	<svws-ui-multi-select
 		v-model="selected"
 		:items="app.dataKursblockung.datenmanager?.getMengeOfSchienen() || []"
-		:item-text="(i: GostBlockungSchiene) => i.bezeichnung"
+		:item-text="(i: GostBlockungSchiene) => i.bezeichnung.toString()"
 		/>
 </template>

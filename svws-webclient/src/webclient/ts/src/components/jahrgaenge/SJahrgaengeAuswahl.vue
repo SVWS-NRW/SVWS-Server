@@ -27,26 +27,25 @@
 	import { routeKatalogJahrgaenge } from "~/router/apps/RouteKatalogJahrgaenge";
 	import {Schuljahresabschnitt} from "@svws-nrw/svws-core-ts";
 	import {Schule} from "~/apps/schule/Schule";
+	import { DataTableColumn } from "@svws-nrw/svws-ui";
 
 	const props = defineProps<{ id?: number; item?: JahrgangsListeEintrag, routename: string }>();
 
 	const selected = routeKatalogJahrgaenge.auswahl;
 
-	const cols = [
-		{ key: "kuerzel", label: "Kürzel", width: "6em", sortable: true, defaultSort: "asc" },
+	const cols: DataTableColumn[] = [
+		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: "asc" },
 		{ key: "bezeichnung", label: "Bezeichnung", sortable: true, span: 3 }
 	];
 
 	const main: Main = injectMainApp();
 	const app = main.apps.jahrgaenge;
 
-	const rows: ComputedRef<JahrgangsListeEintrag[] | undefined> = computed(() => { 
-		return app.auswahl.liste; 
-	});
+	const rows: ComputedRef<JahrgangsListeEintrag[]> =
+		computed(() => app.auswahl.liste || []);
 
-	const schule_abschnitte: ComputedRef<
-		Array<Schuljahresabschnitt> | undefined
-	> = computed(() => {
+	const schule_abschnitte: ComputedRef< Array<Schuljahresabschnitt> | undefined > =
+		computed(() => {
 		const liste = appSchule.value.schuleStammdaten.daten?.abschnitte;
 		return liste?.toArray(new Array<Schuljahresabschnitt>()) || [];
 	});

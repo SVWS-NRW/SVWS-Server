@@ -18,20 +18,19 @@
 <script setup lang="ts">
 
 	import { FoerderschwerpunktEintrag } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, ref } from "vue";
+	import type { DataTableColumn } from "@svws-nrw/svws-ui";
+	import { computed, ComputedRef } from "vue";
 	import { router } from "~/router";
 	import { routeKatalogFoerderschwerpunkte } from "~/router/apps/RouteKatalogFoerderschwerpunkte";
 
 	const props = defineProps<{ id?: number; item?: FoerderschwerpunktEintrag, routename: string }>();
 	const selected = routeKatalogFoerderschwerpunkte.auswahl;
 
-	const cols = ref([
-		{ key: "kuerzel", label: "Kuerzel", width: "6em", sortable: true, defaultSort: 'asc' },
+	const cols: DataTableColumn[] = [
+		{ key: "kuerzel", label: "Kuerzel", sortable: true, defaultSort: 'asc' },
 		{ key: "text", label: "Bezeichnung", sortable: true }
-	]);
+	];
 
-	const rows: ComputedRef<FoerderschwerpunktEintrag[] | undefined> = computed(() => {
-		return routeKatalogFoerderschwerpunkte.data.auswahl.liste;
-	});
-
+	const rows: ComputedRef<FoerderschwerpunktEintrag[]> =
+	 	computed(() => routeKatalogFoerderschwerpunkte.data.auswahl.liste || []);
 </script>

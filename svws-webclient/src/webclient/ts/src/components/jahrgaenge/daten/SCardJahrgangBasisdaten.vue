@@ -20,7 +20,7 @@
 				<svws-ui-multi-select
 					v-model="inputIdFolgejahrgang"
 					:items="inputListJahrgaenge?.filter((e: JahrgangsListeEintrag) => e.id !== id)"
-					:item-text="(e: JahrgangsListeEintrag) => e?.bezeichnung || ''"
+					:item-text="(e: JahrgangsListeEintrag) => e.bezeichnung?.toString() || ''"
 					title="Folgejahrgang"
 				/>
 				<svws-ui-text-input
@@ -52,42 +52,42 @@ import { computed, ComputedRef, WritableComputedRef } from "vue";
 		return app.jahrgangsdaten.daten?.id.valueOf();
 	});
 
-	const inputKuerzel: WritableComputedRef<String | null | undefined> = computed({
-		get(): String | null | undefined {
-			return app.jahrgangsdaten.daten?.kuerzel;
+	const inputKuerzel: WritableComputedRef<string | undefined> = computed({
+		get(): string | undefined {
+			return app.jahrgangsdaten.daten?.kuerzel?.toString();
 		},
-		set(val: String | null | undefined) {
+		set(val: string | undefined) {
 			app.jahrgangsdaten.patch({ kuerzel: val });
 		}
 	});
 
-	const inputBezeichnung: WritableComputedRef<String | null | undefined> = computed({
-		get(): String | null | undefined {
-			return app.jahrgangsdaten.daten?.bezeichnung;
+	const inputBezeichnung: WritableComputedRef<string | undefined> = computed({
+		get(): string | undefined {
+			return app.jahrgangsdaten.daten?.bezeichnung?.toString();
 		},
-		set(val: String | null | undefined) {
+		set(val: string | undefined) {
 			app.jahrgangsdaten.patch({ bezeichnung: val });
 		}
 	});
 
-	const inputKuerzelStatistik: WritableComputedRef<String | null | undefined> =
+	const inputKuerzelStatistik: WritableComputedRef<string | undefined> =
 		computed({
-			get(): String | null | undefined {
-					return app.jahrgangsdaten.daten?.kuerzelStatistik;
+			get(): string | undefined {
+					return app.jahrgangsdaten.daten?.kuerzelStatistik?.toString();
 			},
-			set(val: String | null | undefined) {
+			set(val: string | undefined) {
 				app.jahrgangsdaten.patch({
 					kuerzelStatistik: val
 				});
 			}
 		});
 
-		const inputKuerzelSchulgliederung: WritableComputedRef<String | null | undefined> =
+		const inputKuerzelSchulgliederung: WritableComputedRef<string | undefined> =
 		computed({
-			get(): String | null | undefined {
-					return app.jahrgangsdaten.daten?.kuerzelSchulgliederung;
+			get(): string | undefined {
+					return app.jahrgangsdaten.daten?.kuerzelSchulgliederung?.toString();
 			},
-			set(val: String | null | undefined) {
+			set(val: string | undefined) {
 				app.jahrgangsdaten.patch({
 					kuerzelSchulgliederung: val
 				});

@@ -20,6 +20,6 @@ const selected = computed({
 	<svws-ui-multi-select
 		v-model="selected"
 		:items="kursarten"
-		:item-text="(i: GostKursart) => i.beschreibung" 
+		:item-text="(i: GostKursart) => i.beschreibung.toString()" 
 		/>
 </template>

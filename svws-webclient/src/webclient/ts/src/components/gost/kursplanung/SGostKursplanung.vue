@@ -22,7 +22,7 @@
 						<span>Regeln zur Blockung</span>
 					</div>
 					<div class="app-layout--main-sidebar--trigger-count" v-if="collapsed">
-						{{ app.dataKursblockung.daten?.regeln?.size() ?? '' }} <!--TODO: Update der Zahl, wenn sich die Regeln ändern.-->
+						{{ regelzahl }}
 					</div>
 				</div>
 				<div class="app-layout--main-sidebar--content">
@@ -44,27 +44,24 @@
 	const main: Main = injectMainApp();
 	const app = main.apps.gost;
 
-	const collapsed: Ref<boolean> = ref(true);
-	const active_panel: Ref<'regeln'> = ref('regeln')
-
-	const visible: ComputedRef<boolean> =
-		computed(() =>
-		//return this.$app.gostKursplanung.visible; //TODO: richtige Bedingung einpflegen
-		app.blockungsauswahl.liste.length > 0 && !!app.blockungsauswahl.ausgewaehlt);
-
 	const self = Symbol("kursplanung");
 
 	onMounted(() => main.config.kursblockung_aktiv.add(self));
 	onUnmounted(() => main.config.kursblockung_aktiv.delete(self));
+	
+	const collapsed: Ref<boolean> = ref(true);
+	const active_panel: Ref<'regeln'> = ref('regeln')
+
+	const visible: ComputedRef<boolean> =
+		computed(() => app.blockungsauswahl.liste.length > 0 && !!app.blockungsauswahl.ausgewaehlt);
+
+	const regelzahl: ComputedRef<number> =
+		computed(()=> app.dataKursblockung.datenmanager?.getRegelAnzahl() || 0);
+		
+	const allow_regeln: ComputedRef<boolean> =
+		computed(()=> app.blockungsergebnisauswahl.liste.length === 1);
 
 	function onToggle() {
 		collapsed.value = !collapsed.value;
 	}
-
-	function onToggleRegeln() {
-		onToggle();
-	}
-
-	const allow_regeln: ComputedRef<boolean> =
-		computed(()=> app.blockungsergebnisauswahl.liste.length === 1);
 </script>

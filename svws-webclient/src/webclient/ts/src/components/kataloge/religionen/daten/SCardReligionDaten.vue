@@ -6,7 +6,7 @@
 					v-model="inputStatistikKuerzel"
 					title="Statistikkürzel"
 					:items="inputKatalogReligionenStatistik"
-					:item-text="(i: Religion) => i.daten.kuerzel"
+					:item-text="(i: Religion) => i.daten.kuerzel.toString()"
 					required
 				/>
 				<svws-ui-text-input
