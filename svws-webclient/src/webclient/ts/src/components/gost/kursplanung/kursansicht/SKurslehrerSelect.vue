@@ -1,7 +1,7 @@
 <template>
 	<div class="flex flex-col gap-2 text-left">
 		<div class="flex w-full items-center" v-for="lehrer, i of kurslehrer" :key="lehrer.id">
-			<svws-ui-multi-select :modelValue="lehrer" @update:modelValue="(val: LehrerListeEintrag|undefined) => update_kurslehrer(val, lehrer)" class="flex-1"
+			<svws-ui-multi-select :modelValue="lehrer" @update:modelValue="(val) => update_kurslehrer(val, lehrer)" class="flex-1"
 				autocomplete :item-filter="lehrer_filter" :items="lehrer_liste" removable
 				:item-text="(l: LehrerListeEintrag)=> `${l.nachname}, ${l.vorname} (${l.kuerzel})`"/>
 			<svws-ui-icon v-if="!new_kurs_lehrer && i === kurslehrer.length-1" class="ml-3 cursor-pointer text-black hover:text-primary" @click="new_kurs_lehrer=true">
@@ -78,19 +78,21 @@ const bgColor: ComputedRef<string> =
 		app.dataKursblockung.datenmanager.patchOfKursRemoveLehrkraft(props.kurs.id, lehrer.id);
 	}
 
-	async function update_kurslehrer(lehrer: LehrerListeEintrag|undefined, lehrer_alt: LehrerListeEintrag) {
+	async function update_kurslehrer(lehrer: unknown, lehrer_alt?: LehrerListeEintrag) {
 		if (!app.dataKursblockung.datenmanager)
 			return;
-		if (lehrer === undefined) {
+		if (lehrer === undefined && lehrer_alt) {
 			remove_kurslehrer(lehrer_alt);
 			return;
 		}
-		const kurslehrer = await app.dataKursblockung.add_blockung_lehrer(props.kurs.id, lehrer.id);
-		if (!kurslehrer)
+		if (lehrer instanceof LehrerListeEintrag) {
+			const kurslehrer = await app.dataKursblockung.add_blockung_lehrer(props.kurs.id, lehrer.id);
+			if (!kurslehrer)
 			throw new Error("Fehler beim Anlegen des Kurslehrers");
-		add_lehrer_regel();
-		app.dataKursblockung.datenmanager.patchOfKursAddLehrkraft(props.kurs.id, kurslehrer);
-		new_kurs_lehrer.value = false;
+			add_lehrer_regel();
+			app.dataKursblockung.datenmanager.patchOfKursAddLehrkraft(props.kurs.id, kurslehrer);
+			new_kurs_lehrer.value = false;
+		}
 	}
 
 	const lehrer_regel: ComputedRef<GostBlockungRegel | undefined> =

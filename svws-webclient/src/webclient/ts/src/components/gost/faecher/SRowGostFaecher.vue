@@ -62,7 +62,7 @@
 				headless
 				:disabled="!leitfach1"
 				:items="katalogLeitfaecher"
-				:item-text="(i: GostFach) => i?.kuerzelAnzeige"
+				:item-text="(i: GostFach) => i.kuerzelAnzeige?.toString() || ''"
 				v-model="leitfach1"
 				/>
 				<svws-ui-icon class="text-red-400 cursor-pointer" @click="leitfach1=undefined"><i-ri-delete-bin-2-line/></svws-ui-icon>
@@ -80,7 +80,7 @@
 				headless
 				:disabled="!leitfach1"
 				:items="katalogLeitfaecher"
-				:item-text="(i: GostFach) => i?.kuerzelAnzeige"
+				:item-text="(i: GostFach) => i.kuerzelAnzeige?.toString() || ''"
 				v-model="leitfach2"
 			/>
 			<svws-ui-icon class="text-red-400 cursor-pointer" @click="leitfach2=undefined"><i-ri-delete-bin-2-line/></svws-ui-icon>

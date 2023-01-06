@@ -23,7 +23,7 @@
 	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 	import { ListJahrgaenge } from "~/apps/jahrgaenge/ListJahrgaenge";
 	import { ListLehrer } from "~/apps/lehrer/ListLehrer";
-	import { DataTableColumn } from "@svws-nrw/svws-ui/dist/components/Layout/Table/types";
+	import { DataTableColumn } from "@svws-nrw/svws-ui";
 
 	const { schule, listJahrgaenge, listLehrer } = defineProps<{ 
 		id?: number;
@@ -38,7 +38,7 @@
 
 	const selected = routeKurse.auswahl;
 
-	const cols = <DataTableColumn[]>[
+	const cols: DataTableColumn[] = [
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: "asc" },
 		{ key: "lehrer_name", label: "Fachlehrer", sortable: true },
 		{ key: "jahrgang", label: "Jahrgang", sortable: true }

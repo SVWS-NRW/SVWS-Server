@@ -36,7 +36,7 @@
 
 	const main: Main = injectMainApp();
 
-	const cols = <DataTableColumn[]>[
+	const cols: DataTableColumn[] = [
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: "asc" },
 		{ key: "bezeichnung", label: "Bezeichnung", sortable: true, span: 2 }
 	];

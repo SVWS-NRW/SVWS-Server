@@ -21,12 +21,14 @@
 <script setup lang="ts">
 
 	import { FaecherListeEintrag } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, ref, WritableComputedRef } from "vue";
+	import { computed, ComputedRef, WritableComputedRef } from "vue";
 	import { injectMainApp, Main } from "~/apps/Main";
 	import { router } from "~/router"
 	import { routeKatalogFaecher } from "~/router/apps/RouteKatalogFaecher";
 	import {Schuljahresabschnitt} from "@svws-nrw/svws-core-ts";
 	import {Schule} from "~/apps/schule/Schule";
+
+	import type { DataTableColumn } from "@svws-nrw/svws-ui";
 
 	const props = defineProps<{ id?: number; item?: FaecherListeEintrag, routename: string }>();
 	
@@ -35,12 +37,12 @@
 	const main: Main = injectMainApp();
 	const app = main.apps.faecher;
 
-	const cols = ref([
+	const cols: DataTableColumn[]= [
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: 'asc' },
 		{ key: "bezeichnung", label: "Bezeichnung", sortable: true, span: 3 }
-	]);
+	];
 
-	const rows: ComputedRef<FaecherListeEintrag[] | undefined> = computed(() => app.auswahl.liste);
+	const rows: ComputedRef<FaecherListeEintrag[]> = computed(() => app.auswahl.liste || []);
 
 	const schule_abschnitte: ComputedRef<
 		Array<Schuljahresabschnitt> | undefined

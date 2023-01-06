@@ -47,9 +47,9 @@
 	import { Schuljahresabschnitt } from "@svws-nrw/svws-core-ts";
 	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 	import { DataLehrerStammdaten } from "~/apps/lehrer/DataLehrerStammdaten";
-	import { DataTableColumn } from "@svws-nrw/svws-ui/dist/components/Layout/Table/types";
+	import type { DataTableColumn } from "@svws-nrw/svws-ui";
 
-	const cols = <DataTableColumn[]>[
+	const cols: DataTableColumn[] = [
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: "asc" },
 		{ key: "nachname", label: "Nachname", sortable: true, span: 2 },
 		{ key: "vorname", label: "Vorname", sortable: true, span: 2 }

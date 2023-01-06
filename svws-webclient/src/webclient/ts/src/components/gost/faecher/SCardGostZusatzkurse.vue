@@ -6,7 +6,7 @@
 				v-model="inputBeginnZusatzkursGE"
 				title="Beginn Zusatzkurs GE"
 				:items="inputBeginnZusatzkurs"
-				:item-text="(i: GostHalbjahr) => i.kuerzel"
+				:item-text="(i: GostHalbjahr) => i.kuerzel.toString()"
 				:disabled="!inputHatZusatzkursGE"
 			/>
 			<svws-ui-checkbox v-model="inputHatZusatzkursSW">Zusatzkurs in SW wird angeboten</svws-ui-checkbox>
@@ -14,7 +14,7 @@
 				v-model="inputBeginnZusatzkursSW"
 				title="Beginn Zusatzkurs SW"
 				:items="inputBeginnZusatzkurs"
-				:item-text="(i: GostHalbjahr) => i.kuerzel"
+				:item-text="(i: GostHalbjahr) => i.kuerzel.toString()"
 				:disabled="!inputHatZusatzkursSW"
 			/>
 		</div>
