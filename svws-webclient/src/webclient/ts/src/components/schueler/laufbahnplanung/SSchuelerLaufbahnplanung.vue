@@ -11,33 +11,31 @@
 			</svws-ui-button>
 		</template>
 	</svws-ui-modal>
-	<s-card-schueler-laufbahnplanung v-if="visible" :item="item" :stammdaten="stammdaten" :dataLaufbahn="dataLaufbahn" :dataFaecher="dataFaecher" :dataFachkombinationen="dataFachkombinationen" />
+	<s-card-schueler-laufbahnplanung v-if="visible" :item="item.value" :stammdaten="stammdaten" :dataLaufbahn="dataLaufbahn" :dataFaecher="dataFaecher" :dataFachkombinationen="dataFachkombinationen" />
 </template>
 
 <script setup lang="ts">
 
 	import { SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, ref } from "vue";
+	import { computed, ComputedRef, ref, ShallowRef } from "vue";
 	import { DataGostFachkombinationen } from "~/apps/gost/DataGostFachkombinationen";
 	import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
 	import { DataSchuelerLaufbahnplanung } from "~/apps/schueler/DataSchuelerLaufbahnplanung";
 	import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
 	import { routeSchuelerLaufbahnplanung } from "~/router/apps/schueler/RouteSchuelerLaufbahnplanung";
 
-	const { id, item, stammdaten, dataLaufbahn, dataFaecher, dataFachkombinationen } = defineProps<{ 
-		id?: number; 
-		item?: SchuelerListeEintrag, 
-		stammdaten: DataSchuelerStammdaten, 
-		dataLaufbahn: DataSchuelerLaufbahnplanung, 
-		dataFaecher: DataGostFaecher, 
-		dataFachkombinationen: DataGostFachkombinationen,
-		routename: string 
+	const { item, stammdaten, dataLaufbahn, dataFaecher, dataFachkombinationen } = defineProps<{ 
+		item: ShallowRef<SchuelerListeEintrag | undefined>;
+		stammdaten: DataSchuelerStammdaten;
+		dataLaufbahn: DataSchuelerLaufbahnplanung;
+		dataFaecher: DataGostFaecher;
+		dataFachkombinationen: DataGostFachkombinationen;
 	}>();
 
 	const modal = ref();
 
 	const visible: ComputedRef<boolean> = computed(() => {
-		return !(routeSchuelerLaufbahnplanung.hidden) && (id !== undefined) && (item?.abiturjahrgang !== undefined);
+		return !(routeSchuelerLaufbahnplanung.hidden) && (item.value?.id !== undefined) && (item.value?.abiturjahrgang !== undefined);
 	});
 
 </script>

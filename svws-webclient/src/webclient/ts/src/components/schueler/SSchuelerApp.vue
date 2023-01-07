@@ -7,7 +7,7 @@
 				</div>
 				<div>
 					<span class="inline-block mr-3"> {{ vorname }} {{ nachname }} </span>
-					<svws-ui-badge type="light"> {{ item?.id }} </svws-ui-badge>
+					<svws-ui-badge type="light"> {{ item.value?.id }} </svws-ui-badge>
 					<br/>
 					<span class="opacity-50"> {{ inputKlasse ? inputKlasse : '–' }} </span>
 				</div>
@@ -24,7 +24,7 @@
 
 <script setup lang="ts">
 
-	import { computed, ComputedRef } from "vue";
+	import { computed, ComputedRef, ShallowRef } from "vue";
 
 	import { routeSchueler, RouteDataSchueler } from "~/router/apps/RouteSchueler";
 	import { JahrgangsListeEintrag, KlassenListeEintrag, KursListeEintrag, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
@@ -35,8 +35,7 @@
 	import { ListKlassen } from "~/apps/klassen/ListKlassen";
 
 	const { item, mapKlassen } = defineProps<{ 
-		id?: number; 
-		item?: SchuelerListeEintrag, 
+		item: ShallowRef<SchuelerListeEintrag | undefined>;
 		stammdaten: DataSchuelerStammdaten;
 		schule: DataSchuleStammdaten;
 		listKlassen: ListKlassen;
@@ -45,7 +44,6 @@
 		mapJahrgaenge: Map<Number, JahrgangsListeEintrag>;
 		listKurse: ListKurse;
 		mapKurs: Map<Number, KursListeEintrag>;
-		routename: string
 	}>();
 
 	const data: RouteDataSchueler = routeSchueler.data;
@@ -57,17 +55,17 @@
 	});
 
 	const nachname: ComputedRef<string | undefined> = computed(() => {
-		return item?.nachname.toString();
+		return item.value?.nachname.toString();
 	});
 
 	const vorname: ComputedRef<string | undefined> = computed(() => {
-		return item?.vorname.toString();
+		return item.value?.vorname.toString();
 	});
 
 	const inputKlasse: ComputedRef<string | false> = computed(() => {
-		if (item === undefined)
+		if (item.value === undefined)
 			return false;
-		return mapKlassen.get(item.idKlasse)?.kuerzel?.toString() || false;
+		return mapKlassen.get(item.value?.idKlasse)?.kuerzel?.toString() || false;
 	});
 
 	const visible: ComputedRef<boolean> = computed(() => {

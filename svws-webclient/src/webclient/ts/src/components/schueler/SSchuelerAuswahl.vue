@@ -60,7 +60,7 @@
 </template>
 
 <script setup lang="ts">
-	import { computed, ComputedRef, Ref, ref, WritableComputedRef } from "vue";
+	import { computed, ComputedRef, Ref, ref, ShallowRef, WritableComputedRef } from "vue";
 
 	import { SchuelerListeEintrag, SchuelerStatus, JahrgangsListeEintrag,
 		KlassenListeEintrag, KursListeEintrag, Schulgliederung, Schuljahresabschnitt, LogConsumerConsole } from "@svws-nrw/svws-core-ts";
@@ -73,7 +73,7 @@
 	import { ListKlassen } from "~/apps/klassen/ListKlassen";
 	import { ListJahrgaenge } from "~/apps/jahrgaenge/ListJahrgaenge";
 	import { ListKurse } from "~/apps/kurse/ListKurse";
-import { DataTableColumn } from "@svws-nrw/svws-ui";
+	import { DataTableColumn } from "@svws-nrw/svws-ui";
 
 	export interface SchuelerProps {
 		selectedItems: Array<SchuelerListeEintrag>;
@@ -83,8 +83,7 @@ import { DataTableColumn } from "@svws-nrw/svws-ui";
 	}
 
 	const { schule, listKlassen, mapKlassen, listJahrgaenge, listKurse } = defineProps<{ 
-		id?: Number;
-		item?: SchuelerListeEintrag;
+		item: ShallowRef<SchuelerListeEintrag | undefined>;
 		stammdaten: DataSchuelerStammdaten;
 		schule: DataSchuleStammdaten;
 		listKlassen: ListKlassen;
@@ -93,7 +92,6 @@ import { DataTableColumn } from "@svws-nrw/svws-ui";
 		mapJahrgaenge: Map<Number, JahrgangsListeEintrag>;
 		listKurse: ListKurse;
 		mapKurs: Map<Number, KursListeEintrag>;
-		routename: string ;
 	}>();
 
 	const selected = routeSchueler.auswahl;

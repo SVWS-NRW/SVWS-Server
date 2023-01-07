@@ -36,13 +36,18 @@
 
 <script setup lang="ts">
 
-	import { computed, ComputedRef } from "vue";
+	import { computed, ComputedRef, ShallowRef } from "vue";
 
 	import { SchuelerListeEintrag, SchuelerStundenplanManager, StundenplanListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { DataStundenplan } from "~/apps/schueler/DataStundenplan";
 	import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
 
-	const props = defineProps<{ id?: number; item?: SchuelerListeEintrag, stammdaten: DataSchuelerStammdaten, stundenplan?: StundenplanListeEintrag, data: DataStundenplan, routename: string }>();
+	const props = defineProps<{ 
+		item: ShallowRef<SchuelerListeEintrag | undefined>;
+		stammdaten: DataSchuelerStammdaten;
+		stundenplan?: StundenplanListeEintrag;
+		data: DataStundenplan;
+	}>();
 	
 	const manager: ComputedRef<SchuelerStundenplanManager | undefined> = computed(() => 
 		props.data.daten === undefined ? undefined : new SchuelerStundenplanManager(props.data.daten)

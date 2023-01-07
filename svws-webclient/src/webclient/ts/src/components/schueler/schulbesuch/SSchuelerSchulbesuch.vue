@@ -13,14 +13,17 @@
 <script setup lang="ts">
 
 	import { SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef } from "vue";
+	import { computed, ComputedRef, ShallowRef } from "vue";
 	import { DataSchuelerSchulbesuchsdaten } from "~/apps/schueler/DataSchuelerSchulbesuchsdaten";
 	import { routeSchuelerSchulbesuch } from "~/router/apps/schueler/RouteSchuelerSchulbesuch";
 
-	const props = defineProps<{ id?: number, item?: SchuelerListeEintrag, data: DataSchuelerSchulbesuchsdaten, routename: string }>();
+	const props = defineProps<{ 
+		item: ShallowRef<SchuelerListeEintrag | undefined>;
+		data: DataSchuelerSchulbesuchsdaten;
+	}>();
 	
 	const visible: ComputedRef<boolean> = computed(() => {
-		return !(routeSchuelerSchulbesuch.hidden) && (props.id !== undefined);
+		return !(routeSchuelerSchulbesuch.hidden) && (props.item.value?.id !== undefined);
 	});
 
 </script>

@@ -3,6 +3,7 @@
 </template>
 
 <script setup lang="ts">
+
 	import { SchuelerStundenplanUnterricht } from "@svws-nrw/svws-core-ts";
 
     const props = defineProps({

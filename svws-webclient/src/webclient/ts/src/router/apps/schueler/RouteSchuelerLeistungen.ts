@@ -1,4 +1,4 @@
-import { RouteLocationNormalized, RouteParams } from "vue-router";
+import { RouteParams } from "vue-router";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteSchueler, routeSchueler } from "~/router/apps/RouteSchueler";
 import { routeSchuelerLeistungenDaten } from "~/router/apps/schueler/leistungsdaten/RouteSchuelerLeistungenDaten";

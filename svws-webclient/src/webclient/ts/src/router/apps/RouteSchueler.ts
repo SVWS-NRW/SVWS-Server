@@ -1,5 +1,5 @@
 import { JahrgangsListeEintrag, KlassenListeEintrag, KursListeEintrag, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
-import { computed, WritableComputedRef } from "vue";
+import { computed, shallowRef, ShallowRef, WritableComputedRef } from "vue";
 import { RouteLocationNormalized, RouteParams, RouteRecordRaw, useRouter } from "vue-router";
 import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
 import { RouteNodeListView } from "../RouteNodeListView";
@@ -20,7 +20,7 @@ import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 import { RouteApp } from "~/router/RouteApp";
 
 export class RouteDataSchueler {
-	item: SchuelerListeEintrag | undefined = undefined;
+	item: ShallowRef<SchuelerListeEintrag | undefined> = shallowRef(undefined);
 	auswahl: ListSchueler = new ListSchueler();
 	stammdaten: DataSchuelerStammdaten = new DataSchuelerStammdaten();
 	schule: DataSchuleStammdaten = new DataSchuleStammdaten();
@@ -78,15 +78,24 @@ export class RouteSchueler extends RouteNodeListView<SchuelerListeEintrag, Route
 		await this.data.auswahl.update_list();  // Die Auswahlliste wird als letztes geladen
 	}
 
+    protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
+		if (to_params.id === undefined) {
+			this.onSelect(undefined);
+		} else {
+			const id = parseInt(to_params.id as string);
+			this.onSelect(this.data.auswahl.liste.find(s => s.id === id));
+		}
+	}
+
 	protected onSelect(item?: SchuelerListeEintrag) {
-		if (item === this.data.item)
+		if (item === this.data.item.value)
 			return;
 		if (item === undefined) {
-			this.data.item = undefined;
+			this.data.item.value = undefined;
 			this.data.stammdaten.unselect();
 		} else {
-			this.data.item = item;
-			this.data.stammdaten.select(this.data.item);
+			this.data.item.value = item;
+			this.data.stammdaten.select(this.data.item.value);
 		}
 	}
 
@@ -95,17 +104,17 @@ export class RouteSchueler extends RouteNodeListView<SchuelerListeEintrag, Route
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
-		const prop: Record<string, any> = RouteNodeListView.getPropsByAuswahlID(to, this.data.auswahl);
-		this.onSelect(prop.item as SchuelerListeEintrag | undefined);
-		prop.stammdaten = this.data.stammdaten;
-		prop.schule = this.data.schule;
-		prop.listKlassen = this.data.listKlassen;
-		prop.mapKlassen = this.data.mapKlassen;
-		prop.listJahrgaenge = this.data.listJahrgaenge;
-		prop.mapJahrgaenge = this.data.mapJahrgaenge;
-		prop.listKurse = this.data.listKurse;
-		prop.mapKurs = this.data.mapKurs;
-		return prop;
+		return {
+			item: this.data.item,
+			stammdaten: this.data.stammdaten,
+			schule: this.data.schule,
+			listKlassen: this.data.listKlassen,
+			mapKlassen: this.data.mapKlassen,
+			listJahrgaenge: this.data.listJahrgaenge,
+			mapJahrgaenge: this.data.mapJahrgaenge,
+			listKurse: this.data.listKurse,
+			mapKurs: this.data.mapKurs
+		};
 	}
 
     /**
@@ -119,7 +128,7 @@ export class RouteSchueler extends RouteNodeListView<SchuelerListeEintrag, Route
             get: () => this.selectedChildRecord || this.defaultChild!.record,
             set: (value) => {
 				this.selectedChildRecord = value;
-				const id = (this.data.item === undefined) ? undefined : "" + this.data.item.id;
+				const id = (this.data.item.value === undefined) ? undefined : "" + this.data.item.value.id;
                 router.push({ name: value.name, params: { id: id } });
             }
         });

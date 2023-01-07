@@ -18,21 +18,19 @@
 <script setup lang="ts">
 
 	import { FaecherListeEintrag, LehrerListeEintrag, SchuelerLeistungsdaten, SchuelerLernabschnittListeEintrag, SchuelerLernabschnittsdaten, SchuelerListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
-import { DataTableColumn } from "@svws-nrw/svws-ui";
-	import { computed, ComputedRef } from "vue";
+	import { DataTableColumn } from "@svws-nrw/svws-ui";
+	import { computed, ComputedRef, ShallowRef } from "vue";
 	import { DataSchuelerAbschnittsdaten } from "~/apps/schueler/DataSchuelerAbschnittsdaten";
 	import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
 	import { routeSchuelerLeistungenDaten } from "~/router/apps/schueler/leistungsdaten/RouteSchuelerLeistungenDaten";
 
 	const props = defineProps<{ 
-		id?: number; 
-		item?: SchuelerListeEintrag, 
-		stammdaten: DataSchuelerStammdaten, 
-		lernabschnitt?: SchuelerLernabschnittListeEintrag, 
-		data: DataSchuelerAbschnittsdaten, 
-		mapFaecher: Map<number, FaecherListeEintrag>,
-		mapLehrer: Map<number, LehrerListeEintrag>,
-		routename: string
+		item: ShallowRef<SchuelerListeEintrag | undefined>;
+		stammdaten: DataSchuelerStammdaten;
+		lernabschnitt?: SchuelerLernabschnittListeEintrag;
+		data: DataSchuelerAbschnittsdaten;
+		mapFaecher: Map<number, FaecherListeEintrag>;
+		mapLehrer: Map<number, LehrerListeEintrag>;
 	}>();
 	
 	const lernabschnittsdaten: ComputedRef<SchuelerLernabschnittsdaten> = computed(() => props.data.daten || new SchuelerLernabschnittsdaten());

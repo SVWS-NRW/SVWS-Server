@@ -13,17 +13,21 @@
 <script setup lang="ts">
 
 	import { SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef } from "vue";
+	import { computed, ComputedRef, ShallowRef } from "vue";
 	import { DataKatalogFahrschuelerarten } from "~/apps/schueler/DataKatalogFahrschuelerarten";
 	import { DataKatalogFoerderschwerpunkte } from "~/apps/schueler/DataKatalogFoerderschwerpunkte";
 	import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
 	import { routeSchuelerIndividualdaten } from "~/router/apps/schueler/RouteSchuelerIndividualdaten";
 
-	const props = defineProps<{ id?: number, item?: SchuelerListeEintrag, stammdaten: DataSchuelerStammdaten, 
-		fachschuelerarten: DataKatalogFahrschuelerarten, foerderschwerpunkte: DataKatalogFoerderschwerpunkte, routename: string }>();
+	const props = defineProps<{ 
+		item: ShallowRef<SchuelerListeEintrag | undefined>;
+		stammdaten: DataSchuelerStammdaten;
+		fachschuelerarten: DataKatalogFahrschuelerarten;
+		foerderschwerpunkte: DataKatalogFoerderschwerpunkte;
+	}>();
 
 	const visible: ComputedRef<boolean> = computed(() => {
-		return !(routeSchuelerIndividualdaten.hidden) && (props.id !== undefined);
+		return !(routeSchuelerIndividualdaten.hidden) && (props.item.value?.id !== undefined);
 	});
 
 </script>

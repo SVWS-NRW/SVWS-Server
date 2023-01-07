@@ -1,7 +1,7 @@
 <template>
 	<div v-if="visible" class="app-container relative">
 		<div class="svws-ui-bg-white sticky top-0 z-50 col-span-3 flex justify-end py-4">
-			<s-card-schueler-add-adresse :item="item" :list-schuelerbetriebe="listSchuelerbetriebe" />
+			<s-card-schueler-add-adresse :item="item.value" :list-schuelerbetriebe="listSchuelerbetriebe" />
 		</div>
 		<div v-if="sb_vorhanden" class="col-span-3">
 			<s-card-schueler-beschaeftigung :list-schuelerbetriebe="listSchuelerbetriebe" />
@@ -18,17 +18,15 @@
 <script setup lang="ts">
 
 	import { SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef } from "vue";
+	import { computed, ComputedRef, ShallowRef } from "vue";
 	import { DataBetriebsstammdaten } from "~/apps/schueler/DataBetriebsstammdaten";
 	import { ListSchuelerBetriebsdaten } from "~/apps/schueler/ListSchuelerBetriebsdaten";
 	import { routeSchuelerAdressen } from "~/router/apps/schueler/RouteSchuelerAdressen";
 
 	const { listSchuelerbetriebe, betriebsStammdaten } = defineProps<{ 
-		id?: number;
-		item?: SchuelerListeEintrag;
+		item: ShallowRef<SchuelerListeEintrag | undefined>;
 		listSchuelerbetriebe : ListSchuelerBetriebsdaten;
 		betriebsStammdaten: DataBetriebsstammdaten;
-		routename: string;
 	}>();
 
 	const sb_vorhanden : ComputedRef<boolean> = computed(() => { 

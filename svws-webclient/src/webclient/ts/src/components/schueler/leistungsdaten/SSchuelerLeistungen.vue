@@ -8,11 +8,14 @@
 <script setup lang="ts">
 
 	import { SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef } from "vue";
+	import { computed, ComputedRef, ShallowRef } from "vue";
 	import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
 	import { routeSchuelerLeistungen } from "~/router/apps/schueler/RouteSchuelerLeistungen";
 	
-	const props = defineProps<{ id?: number; item?: SchuelerListeEintrag, stammdaten: DataSchuelerStammdaten, routename: string }>();
+	const props = defineProps<{ 
+		item: ShallowRef<SchuelerListeEintrag | undefined>;
+		stammdaten: DataSchuelerStammdaten;
+	}>();
 
 	const visible: ComputedRef<boolean> = computed(() => {
 		return !(routeSchuelerLeistungen.hidden);

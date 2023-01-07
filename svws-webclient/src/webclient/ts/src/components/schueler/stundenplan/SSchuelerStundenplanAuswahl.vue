@@ -7,14 +7,19 @@
 <script setup lang="ts">
 
 	import { SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, ref, WritableComputedRef } from "vue";
+	import { computed, ComputedRef, ref, ShallowRef, WritableComputedRef } from "vue";
 	import { StundenplanListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { DataStundenplan } from "~/apps/schueler/DataStundenplan";
 	import { routeSchuelerStundenplanDaten } from "~/router/apps/schueler/stundenplan/RouteSchuelerStundenplanDaten";
 	import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
-import { DataTableColumn } from "@svws-nrw/svws-ui";
+	import { DataTableColumn } from "@svws-nrw/svws-ui";
 
-	const props = defineProps<{ id?: number; item?: SchuelerListeEintrag, stammdaten: DataSchuelerStammdaten, stundenplan?: StundenplanListeEintrag, data: DataStundenplan, routename: string }>();
+	const props = defineProps<{ 
+		item: ShallowRef<SchuelerListeEintrag | undefined>;
+		stammdaten: DataSchuelerStammdaten;
+		stundenplan?: StundenplanListeEintrag;
+		data: DataStundenplan;
+	}>();
 
 	const liste: ComputedRef<StundenplanListeEintrag[]> = computed(() => routeSchuelerStundenplanDaten.data.auswahl.liste);
 
