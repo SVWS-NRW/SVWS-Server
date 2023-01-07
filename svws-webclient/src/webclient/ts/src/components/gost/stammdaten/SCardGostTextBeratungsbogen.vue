@@ -19,12 +19,8 @@
 	const daten: ComputedRef<GostJahrgangsdaten> = computed(() => props.jahrgangsdaten.daten || new GostJahrgangsdaten());
 
 	const inputTextBeratungsbogen: WritableComputedRef<string | undefined> = computed({
-		get(): string | undefined {
-			return daten.value.textBeratungsbogen?.toString();
-		},
-		set(val) {
-			props.jahrgangsdaten.patch({ textBeratungsbogen: val });
-		}
+		get: () => daten.value.textBeratungsbogen?.toString(),
+		set: (value) => props.jahrgangsdaten.patch({ textBeratungsbogen: value })
 	});
 
 </script>

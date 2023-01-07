@@ -1,8 +1,5 @@
 <template>
-	<div
-		v-if="visible"
-		class="flex"
-	>
+	<div v-if="visible" class="flex">
 		<div class="flex flex-row gap-4">
 			<s-card-gost-kursansicht :list-lehrer="listLehrer" :map-lehrer="mapLehrer" />
 			<s-card-gost-umwahlansicht class="grow"/>
@@ -12,18 +9,12 @@
 				<div class="app-layout--main-sidebar--trigger" @click="onToggle">
 					<div class="sidebar-trigger--text">
 						<svws-ui-button type="icon" class="mr-1 p-[0.1em]" v-if="!collapsed">
-							<svws-ui-icon>
-								<i-ri-close-line/>
-							</svws-ui-icon>
+							<svws-ui-icon> <i-ri-close-line/> </svws-ui-icon>
 						</svws-ui-button>
-						<svws-ui-icon v-if="collapsed" class="mr-2">
-							<i-ri-equalizer-line/>
-						</svws-ui-icon>
+						<svws-ui-icon v-if="collapsed" class="mr-2"> <i-ri-equalizer-line/> </svws-ui-icon>
 						<span>Regeln zur Blockung</span>
 					</div>
-					<div class="app-layout--main-sidebar--trigger-count" v-if="collapsed">
-						{{ regelzahl }}
-					</div>
+					<div v-if="collapsed" class="app-layout--main-sidebar--trigger-count"> {{ regelzahl }} </div>
 				</div>
 				<div class="app-layout--main-sidebar--content">
 					<s-card-gost-regelansicht v-if="!collapsed && active_panel==='regeln'"/>
@@ -38,6 +29,7 @@
 </template>
 
 <script setup lang="ts">
+
 	import { GostJahrgang, LehrerListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, onMounted, onUnmounted, Ref, ref, ShallowRef } from "vue";
 	import { DataGostJahrgang } from "~/apps/gost/DataGostJahrgang";
@@ -76,4 +68,5 @@
 	function onToggle() {
 		collapsed.value = !collapsed.value;
 	}
+
 </script>
