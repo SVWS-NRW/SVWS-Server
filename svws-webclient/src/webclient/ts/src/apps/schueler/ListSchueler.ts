@@ -21,6 +21,7 @@ interface Filter {
 	schulgliederung: Schulgliederung | undefined;
 	status: Array<SchuelerStatus>;
 }
+
 export class ListSchueler extends BaseList<SchuelerListeEintrag, Filter> {
 	protected _filter = reactive({
 		jahrgang: undefined,
@@ -33,6 +34,15 @@ export class ListSchueler extends BaseList<SchuelerListeEintrag, Filter> {
 	public constructor() {
 		super();
 	}
+
+	public reset_filter() {
+		this._filter.jahrgang = undefined;
+		this._filter.kurs = undefined;
+		this._filter.klasse = undefined;
+		this._filter.schulgliederung = undefined;
+		this._filter.status = [ SchuelerStatus.AKTIV, SchuelerStatus.EXTERN ];
+	}
+
 	/**
 	 * Aktualisiert die Liste für die Schülerauswahl
 	 *
@@ -42,7 +52,10 @@ export class ListSchueler extends BaseList<SchuelerListeEintrag, Filter> {
 		await super._update_list(() =>
 			App.api.getSchuelerFuerAbschnitt(App.schema, App.akt_abschnitt.id)
 		);
-		if (!this.ausgewaehlt) this.ausgewaehlt = this.gefiltert[0]
+		this.reset_filter();
+		if (!this.ausgewaehlt) {
+			this.ausgewaehlt = this.gefiltert[0]
+		}
 	}
 
 	/**
