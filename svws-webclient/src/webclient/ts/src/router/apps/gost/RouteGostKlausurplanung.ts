@@ -1,4 +1,4 @@
-import { RouteRecordRaw, useRouter } from "vue-router";
+import { RouteParams, RouteRecordRaw, useRouter } from "vue-router";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteGost, routeGost } from "~/router/apps/RouteGost";
 import { routeGostKlausurplanungKlausurdaten } from "./klausurplanung/RouteGostKlausurplanungKlausurdaten";
@@ -7,6 +7,8 @@ import { routeGostKlausurplanungKalender } from "./klausurplanung/RouteGostKlaus
 import { routeGostKlausurplanungPlanung } from "./klausurplanung/RouteGostKlausurplanungPlanung";
 import { routeGostKlausurplanungKonflikte } from "./klausurplanung/RouteGostKlausurplanungKonflikte";
 import { computed, WritableComputedRef } from "vue";
+import { GostJahrgang } from "@svws-nrw/svws-core-ts";
+import { mainApp } from "~/apps/Main";
 
 
 const SGostKlausurplanung = () => import("~/components/gost/klausurplanung/SGostKlausurplanung.vue");
@@ -18,7 +20,7 @@ export class RouteGostKlausurplanung extends RouteNode<unknown, RouteGost> {
 		super.propHandler = (route) => routeGost.getProps(route);
 		super.text = "Klausurplanung";
 		this.isHidden = () => {
-			return (routeGost.data.item.value === undefined) || (routeGost.data.item.value.abiturjahr === -1);
+			return this.checkHidden(routeGost.data.item.value);
 		}
 		super.children = [
 			routeGostKlausurplanungKlausurdaten,
@@ -29,6 +31,21 @@ export class RouteGostKlausurplanung extends RouteNode<unknown, RouteGost> {
 		];
 		super.defaultChild = routeGostKlausurplanungKlausurdaten;
 	}
+
+	public checkHidden(jahrgang: GostJahrgang | undefined) {
+		return (jahrgang === undefined) || (jahrgang.abiturjahr === -1);;
+	}
+
+    public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
+		if (to.name === this.name) {
+			if (to_params.abiturjahr === undefined)
+				return false;
+			const jahrgang = mainApp.apps.gost.auswahl.liste.find(elem => elem.abiturjahr.toString() === to_params.abiturjahr);
+			if (this.checkHidden(jahrgang))
+				return { name: this.parent!.defaultChild!.name, params: { abiturjahr: mainApp.apps.gost.auswahl.liste.at(0)?.abiturjahr }};
+		}
+        return true;
+    }
 
     /**
      * TODO
