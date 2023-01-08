@@ -16,17 +16,28 @@
 
 <script setup lang="ts">
 
-	import { SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
+	import { JahrgangsListeEintrag, KlassenListeEintrag, KursListeEintrag, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, ref, ShallowRef } from "vue";
 	import { DataGostFachkombinationen } from "~/apps/gost/DataGostFachkombinationen";
 	import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
+	import { ListJahrgaenge } from "~/apps/jahrgaenge/ListJahrgaenge";
+	import { ListKlassen } from "~/apps/klassen/ListKlassen";
+	import { ListKurse } from "~/apps/kurse/ListKurse";
 	import { DataSchuelerLaufbahnplanung } from "~/apps/schueler/DataSchuelerLaufbahnplanung";
 	import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
+	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 	import { routeSchuelerLaufbahnplanung } from "~/router/apps/schueler/RouteSchuelerLaufbahnplanung";
 
 	const { item, stammdaten, dataLaufbahn, dataFaecher, dataFachkombinationen } = defineProps<{ 
 		item: ShallowRef<SchuelerListeEintrag | undefined>;
 		stammdaten: DataSchuelerStammdaten;
+		schule: DataSchuleStammdaten;
+		listKlassen: ListKlassen;
+		mapKlassen: Map<Number, KlassenListeEintrag>;
+		listJahrgaenge: ListJahrgaenge;
+		mapJahrgaenge: Map<Number, JahrgangsListeEintrag>;
+		listKurse: ListKurse;
+		mapKurs: Map<Number, KursListeEintrag>;
 		dataLaufbahn: DataSchuelerLaufbahnplanung;
 		dataFaecher: DataGostFaecher;
 		dataFachkombinationen: DataGostFachkombinationen;

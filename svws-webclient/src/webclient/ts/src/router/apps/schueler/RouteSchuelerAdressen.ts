@@ -24,9 +24,9 @@ export class RouteSchuelerAdressen extends RouteNode<RouteDataSchuelerAdressen, 
 	}
 
     public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
-		if (routeSchueler.data.item === undefined)
+		if (routeSchueler.data.item.value === undefined)
 			return;
-		await this.data.listSchuelerbetriebe.update_list(routeSchueler.data.item.id);
+		await this.data.listSchuelerbetriebe.update_list(routeSchueler.data.item.value.id);
 	}
 
 	protected onSelect(item?: SchuelerListeEintrag) {
@@ -41,7 +41,7 @@ export class RouteSchuelerAdressen extends RouteNode<RouteDataSchuelerAdressen, 
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		let prop: Record<string, any> = routeSchueler.getProps(to);
-		this.onSelect(prop.item as SchuelerListeEintrag | undefined);
+		this.onSelect(prop.item.value);
 		prop.listSchuelerbetriebe = this.data.listSchuelerbetriebe;
 		prop.betriebsStammdaten = this.data.betriebsStammdaten;
 		return prop;

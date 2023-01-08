@@ -33,7 +33,7 @@ export class RouteSchuelerSchulbesuch extends RouteNode<RouteDataSchuelerSchulbe
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		let prop: Record<string, any> = routeSchueler.getProps(to);
-		this.onSelect(prop.item as SchuelerListeEintrag | undefined);
+		this.onSelect(prop.item.value);
 		prop.data = this.data.daten;
 		return prop;
 	}
