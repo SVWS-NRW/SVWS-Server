@@ -41,16 +41,19 @@
 <script setup lang="ts">
 
 	import { Religion, ReligionEintrag } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, reactive, ref, WritableComputedRef } from "vue";
+	import { computed, ComputedRef, reactive, ref, ShallowRef, WritableComputedRef } from "vue";
 	import { App } from "~/apps/BaseApp";
 	import { router } from "~/router";
 	import { injectMainApp, Main } from "~/apps/Main";
 	import { routeKatalogReligion } from "~/router/apps/RouteKatalogReligion";
-	import {Schuljahresabschnitt} from "@svws-nrw/svws-core-ts";
-	import {Schule} from "~/apps/schule/Schule";
+	import { Schuljahresabschnitt } from "@svws-nrw/svws-core-ts";
+	import { Schule } from "~/apps/schule/Schule";
 	import { DataTableColumn } from "@svws-nrw/svws-ui";
 
-	const props = defineProps<{ id?: number; item?: ReligionEintrag, routename: string }>();
+	const { item } = defineProps<{ 
+		item: ShallowRef<ReligionEintrag | undefined>;
+	}>();
+
 	const selected = routeKatalogReligion.auswahl;
 
 	const cols: DataTableColumn[] = [
@@ -59,32 +62,21 @@
 	];
 
 	const main: Main = injectMainApp();
-	const app = main.apps.religionen;
 	const modalAdd = ref();
 
-	const rows: ComputedRef<ReligionEintrag[]> = computed(() => {
-		return app.auswahl.liste || [];
-	});
+	const rows: ComputedRef<ReligionEintrag[]> = computed(() => routeKatalogReligion.liste.liste);
 
-	/**
-	 * Modalfenster: Neue Religion
-	 */
+	/** Modalfenster: Neue Religion */
 	const reli_neu: ReligionEintrag = reactive(new ReligionEintrag());
 
-	const inputKatalogReligionenStatistik: ComputedRef<Religion[] | undefined> =
-		computed(() => {
-			return Religion.values();
-		});
+	const inputKatalogReligionenStatistik: ComputedRef<Religion[] | undefined> = computed(() => Religion.values());
 
 	async function saveEntries() {
 		//TODO  Den Attributswert von reli_neu.id von 0 auf null setzen.
 		if (reli_neu.kuerzel) {
-			await App.api.createReligion(
-				reli_neu,
-				App.schema
-			);
+			await App.api.createReligion(reli_neu, App.schema);
 			modalAdd.value.closeModal();
-			app.auswahl.update_list();
+			routeKatalogReligion.liste.update_list();
 		} else {
 			alert("Kürzel darf nicht leer sein");
 		}
@@ -97,35 +89,20 @@
 		reli_neu.textZeugnis = null;
 	}
 
-	const schule_abschnitte: ComputedRef<
-		Array<Schuljahresabschnitt> | undefined
-	> = computed(() => {
+	const appSchule: ComputedRef<Schule> = computed(() => main.apps.schule);
+
+	const schule_abschnitte: ComputedRef<Array<Schuljahresabschnitt> | undefined> = computed(() => {
 		const liste = appSchule.value.schuleStammdaten.daten?.abschnitte;
 		return liste?.toArray(new Array<Schuljahresabschnitt>()) || [];
 	});
 
 	const akt_abschnitt: WritableComputedRef<Schuljahresabschnitt> = computed({
-		get(): Schuljahresabschnitt {
-			return main.config.akt_abschnitt;
-		},
-		set(abschnitt: Schuljahresabschnitt) {
-			main.config.akt_abschnitt = abschnitt;
-		}
+		get: () => main.config.akt_abschnitt,
+		set: (abschnitt) => main.config.akt_abschnitt = abschnitt
 	});
 
-	const appSchule: ComputedRef<Schule> = computed(() => {
-		return main.apps.schule;
-	});
-	function item_sort(a: Schuljahresabschnitt, b: Schuljahresabschnitt) {
-		return (
-			b.schuljahr + b.abschnitt * 0.1 - (a.schuljahr + a.abschnitt * 0.1)
-		);
-	}
+	const item_sort = (a: Schuljahresabschnitt, b: Schuljahresabschnitt) => (b.schuljahr + b.abschnitt * 0.1 - (a.schuljahr + a.abschnitt * 0.1));
 
-	function item_text(item: Schuljahresabschnitt) {
-		return item.schuljahr
-			? `${item.schuljahr}, ${item.abschnitt}. HJ`
-			: "Abschnitt";
-	}
+	const item_text = (item: Schuljahresabschnitt) => item.schuljahr ? `${item.schuljahr}, ${item.abschnitt}. HJ` : "Abschnitt";
 
 </script>

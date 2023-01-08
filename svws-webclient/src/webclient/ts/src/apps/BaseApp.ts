@@ -3,9 +3,6 @@ import { ref } from "vue";
 import type { Faecher } from "./faecher/Faecher";
 import type { Gost } from "./gost/Gost";
 import type { Jahrgaenge } from "./jahrgaenge/Jahrgaenge";
-import { Religionen } from "./kataloge/religionen/Religionen";
-import type { Klassen } from "./klassen/Klassen";
-import type { Kurse } from "./kurse/Kurse";
 import { Benutzer } from "./schule/benutzerverwaltung/Benutzer";
 import { Benutzergruppe } from "./schule/benutzerverwaltung/Benutzergruppe";
 import type { Schule } from "./schule/Schule";
@@ -18,7 +15,6 @@ export type Apps = {
 	gost: Gost;
 	jahrgaenge: Jahrgaenge;
 	faecher: Faecher;
-	religionen : Religionen;
 };
 
 /**

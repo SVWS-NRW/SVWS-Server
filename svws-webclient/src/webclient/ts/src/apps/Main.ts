@@ -20,7 +20,6 @@ import { Faecher } from "./faecher/Faecher";
 import { Gost } from "./gost/Gost";
 import { Jahrgaenge } from "./jahrgaenge/Jahrgaenge";
 import { BaseList } from "./BaseList";
-import { Religionen } from "./kataloge/religionen/Religionen";
 import { ApiLoadingStatus } from "./core/ApiLoadingStatus.class";
 import { MAIN_LOADING_SYMBOL } from "./core/LoadingSymbols";
 import { ComputedRef, inject, InjectionKey, provide, reactive } from "vue";
@@ -220,8 +219,7 @@ export class Main {
 			benutzergruppe : new Benutzergruppe(),
 			jahrgaenge: new Jahrgaenge(),
 			faecher: new Faecher(),
-			gost: new Gost(),
-			religionen : new Religionen()
+			gost: new Gost()
 		};
 		await App.apps.schule.init();
 		this.config.hasGost = !!App.apps.schule.schuleStammdaten.schulform.value?.daten.hatGymOb;

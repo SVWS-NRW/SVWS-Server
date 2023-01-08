@@ -2,89 +2,50 @@
 	<svws-ui-content-card title="Daten">
 		<div class="content-wrapper">
 			<div class="input-wrapper">
-				<svws-ui-multi-select
-					v-model="inputStatistikKuerzel"
-					title="Statistikkürzel"
-					:items="inputKatalogReligionenStatistik"
-					:item-text="(i: Religion) => i.daten.kuerzel.toString()"
-					required
-				/>
-				<svws-ui-text-input
-					v-model="inputKuerzel"
-					type="text"
-					placeholder="Kürzel"
-				/>
-				<svws-ui-text-input
-					v-model="inputText"
-					type="text"
-					placeholder="Bezeichnung"
-				/>
-				<svws-ui-text-input
-					v-model="inputTextzeugnis"
-					type="text"
-					placeholder="Zeugnisbezeichnung"
-				/>
+				<svws-ui-multi-select title="Statistikkürzel" v-model="inputStatistikKuerzel" :items="inputKatalogReligionenStatistik"
+					:item-text="(i: Religion) => i.daten.kuerzel.toString()" required />
+				<svws-ui-text-input placeholder="Kürzel" v-model="inputKuerzel" type="text" />
+				<svws-ui-text-input placeholder="Bezeichnung" v-model="inputText" type="text" />
+				<svws-ui-text-input placeholder="Zeugnisbezeichnung" v-model="inputTextzeugnis" type="text" />
 			</div>
 		</div>
 	</svws-ui-content-card>
 </template>
 
 <script setup lang="ts">
+
 	import { computed, ComputedRef, WritableComputedRef } from "vue";
-
 	import { Religion} from "@svws-nrw/svws-core-ts";
-	import { injectMainApp, Main } from "~/apps/Main";
+	import { DataReligion } from "~/apps/kataloge/religionen/DataReligion";
 
-	const main: Main = injectMainApp();
-	const app = main.apps.religionen
-	const inputKatalogReligionenStatistik: ComputedRef<
-		Religion[] | undefined
-	> = computed(() => {
-		return Religion.values();
-	});
+	const { data } = defineProps<{ 
+		data: DataReligion;
+	}>();
+
+	const inputKatalogReligionenStatistik: ComputedRef<Religion[] | undefined> = computed(() => Religion.values());
 
 	const id: ComputedRef<number | undefined> = computed(() => {
-		return app.dataReligion.daten?.id.valueOf();
+		return data.daten?.id.valueOf();
 	});
 
 	const inputKuerzel: WritableComputedRef<string | undefined> = computed({
-		get(): string | undefined {
-			return app.dataReligion.daten?.kuerzel?.toString();
-		},
-		set(val: string | undefined) {
-			app.dataReligion.patch({ kuerzel: val });
-		}
+		get: () => data.daten?.kuerzel?.toString(),
+		set: (value) => data.patch({ kuerzel: value })
 	});
 
 	const inputText: WritableComputedRef<string | undefined> = computed({
-		get(): string | undefined {
-			return app.dataReligion.daten?.text?.toString();
-		},
-		set(val: string | undefined) {
-			app.dataReligion.patch({ text: val });
-		}
+		get: () => data.daten?.text?.toString(),
+		set: (value) => data.patch({ text: value })
 	});
 
 	const inputTextzeugnis: WritableComputedRef<string | undefined> = computed({
-		get(): string | undefined {
-			return app.dataReligion.daten?.textZeugnis?.toString();
-		},
-		set(val: string | undefined) {
-			app.dataReligion.patch({ textZeugnis: val });
-		}
+		get: () => data.daten?.textZeugnis?.toString(),
+		set: (value) => data.patch({ textZeugnis: value })
 	});
 
 	const inputStatistikKuerzel: WritableComputedRef<Religion | undefined> = computed({
-		get(): Religion | undefined {
-			return Religion.getByKuerzel(
-				app.dataReligion.daten?.kuerzel || null
-			) || undefined;
-		},
-		set(val: Religion | undefined) {
-			app.dataReligion.patch({
-				kuerzel: val?.daten.kuerzel
-			});
-		}
+		get: () => Religion.getByKuerzel(data.daten?.kuerzel || null) || undefined,
+		set: (value) => data.patch({ kuerzel: value?.daten.kuerzel || null })
 	});
 
 </script>
