@@ -20,10 +20,10 @@ export class RouteDataKlassen {
 const SKlassenAuswahl = () => import("~/components/klassen/SKlassenAuswahl.vue")
 const SKlassenApp = () => import("~/components/klassen/SKlassenApp.vue")
 
-export class RouteKlassen extends RouteNodeListView<KlassenListeEintrag, RouteDataKlassen, RouteApp> {
+export class RouteKlassen extends RouteNodeListView<ListKlassen, KlassenListeEintrag, RouteDataKlassen, RouteApp> {
 
 	public constructor() {
-		super("klassen", "/klassen/:id(\\d+)?", SKlassenAuswahl, SKlassenApp, new RouteDataKlassen());
+		super("klassen", "/klassen/:id(\\d+)?", SKlassenAuswahl, SKlassenApp, new ListKlassen(), 'id', new RouteDataKlassen());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Klassen";
         super.setView("liste", SKlassenAuswahl, (route) => this.getProps(route));

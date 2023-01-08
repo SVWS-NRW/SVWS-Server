@@ -24,10 +24,10 @@ const SGostAuswahl = () => import("~/components/gost/SGostAuswahl.vue")
 const SGostApp = () => import("~/components/gost/SGostApp.vue")
 
 
-export class RouteGost extends RouteNodeListView<GostJahrgang, RouteDataGost, RouteApp> {
+export class RouteGost extends RouteNodeListView<ListGost, GostJahrgang, RouteDataGost, RouteApp> {
 
 	public constructor() {
-		super("gost", "/gost/:abiturjahr(-?\\d+)?", SGostAuswahl, SGostApp, new RouteDataGost());
+		super("gost", "/gost/:abiturjahr(-?\\d+)?", SGostAuswahl, SGostApp, new ListGost(undefined, undefined), 'abiturjahr', new RouteDataGost());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Oberstufe";
         super.setView("liste", SGostAuswahl, (route) => this.getProps(route));

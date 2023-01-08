@@ -17,10 +17,10 @@ export class RouteDataKatalogFaecher {
 const SFaecherAuswahl = () => import("~/components/faecher/SFaecherAuswahl.vue")
 const SFaecherApp = () => import("~/components/faecher/SFaecherApp.vue")
 
-export class RouteKatalogFaecher extends RouteNodeListView<FaecherListeEintrag, RouteDataKatalogFaecher, RouteApp> {
+export class RouteKatalogFaecher extends RouteNodeListView<ListFaecher, FaecherListeEintrag, RouteDataKatalogFaecher, RouteApp> {
 
 	public constructor() {
-		super("faecher", "/kataloge/faecher/:id(\\d+)?", SFaecherAuswahl, SFaecherApp, new RouteDataKatalogFaecher());
+		super("faecher", "/kataloge/faecher/:id(\\d+)?", SFaecherAuswahl, SFaecherApp, new ListFaecher(), 'id', new RouteDataKatalogFaecher());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Fächer";
         super.setView("liste", SFaecherAuswahl, (route) => RouteNodeListView.getPropsByAuswahlID(route, mainApp.apps.faecher.auswahl));

@@ -15,10 +15,10 @@ export class RouteDataKatalogJahrgaenge {
 const SJahrgaengeAuswahl = () => import("~/components/jahrgaenge/SJahrgaengeAuswahl.vue")
 const SJahrgaengeApp = () => import("~/components/jahrgaenge/SJahrgaengeApp.vue")
 
-export class RouteKatalogJahrgaenge extends RouteNodeListView<JahrgangsListeEintrag, RouteDataKatalogJahrgaenge, RouteApp> {
+export class RouteKatalogJahrgaenge extends RouteNodeListView<ListJahrgaenge, JahrgangsListeEintrag, RouteDataKatalogJahrgaenge, RouteApp> {
 
 	public constructor() {
-		super("jahrgaenge", "/kataloge/jahrgaenge/:id(\\d+)?", SJahrgaengeAuswahl, SJahrgaengeApp, new RouteDataKatalogJahrgaenge());
+		super("jahrgaenge", "/kataloge/jahrgaenge/:id(\\d+)?", SJahrgaengeAuswahl, SJahrgaengeApp, new ListJahrgaenge(), 'id', new RouteDataKatalogJahrgaenge());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Jahrgänge";
         super.setView("liste", SJahrgaengeAuswahl, (route) => RouteNodeListView.getPropsByAuswahlID(route, mainApp.apps.jahrgaenge.auswahl));

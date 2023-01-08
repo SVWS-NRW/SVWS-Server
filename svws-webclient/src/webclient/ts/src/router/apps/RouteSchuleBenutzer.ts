@@ -18,10 +18,10 @@ const SBenutzerAuswahl = () => import("~/components/schule/benutzerverwaltung/SB
 const SBenutzerApp = () => import("~/components/schule/benutzerverwaltung/SBenutzerApp.vue")
 
 
-export class RouteSchuleBenutzer extends RouteNodeListView<BenutzerListeEintrag, RouteDataSchuleBenutzer, RouteApp> {
+export class RouteSchuleBenutzer extends RouteNodeListView<ListBenutzer, BenutzerListeEintrag, RouteDataSchuleBenutzer, RouteApp> {
 
 	public constructor() {
-		super("benutzer", "/schule/benutzer/:id(\\d+)?", SBenutzerAuswahl, SBenutzerApp, new RouteDataSchuleBenutzer());
+		super("benutzer", "/schule/benutzer/:id(\\d+)?", SBenutzerAuswahl, SBenutzerApp, new ListBenutzer(), 'id', new RouteDataSchuleBenutzer());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Benutzer";
         super.setView("liste", SBenutzerAuswahl, (route) => RouteNodeListView.getPropsByAuswahlID(route, mainApp.apps.benutzer.auswahl));

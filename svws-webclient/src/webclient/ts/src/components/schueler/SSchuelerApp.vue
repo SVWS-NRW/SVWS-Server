@@ -26,7 +26,7 @@
 
 	import { computed, ComputedRef, ShallowRef } from "vue";
 
-	import { routeSchueler, RouteDataSchueler } from "~/router/apps/RouteSchueler";
+	import { routeSchueler } from "~/router/apps/RouteSchueler";
 	import { JahrgangsListeEintrag, KlassenListeEintrag, KursListeEintrag, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
 	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
@@ -34,7 +34,7 @@
 	import { ListJahrgaenge } from "~/apps/jahrgaenge/ListJahrgaenge";
 	import { ListKlassen } from "~/apps/klassen/ListKlassen";
 
-	const { item, mapKlassen } = defineProps<{ 
+	const { item, stammdaten, mapKlassen } = defineProps<{ 
 		item: ShallowRef<SchuelerListeEintrag | undefined>;
 		stammdaten: DataSchuelerStammdaten;
 		schule: DataSchuleStammdaten;
@@ -46,12 +46,11 @@
 		mapKurs: Map<Number, KursListeEintrag>;
 	}>();
 
-	const data: RouteDataSchueler = routeSchueler.data;
-	const selectedRoute = routeSchueler.getChildRouteSelector();
+	const selectedRoute = routeSchueler.childRouteSelector;
 
 
 	const foto: ComputedRef<String | undefined> = computed(() => {
-		return data.stammdaten.daten?.foto || undefined;
+		return stammdaten.daten?.foto || undefined;
 	});
 
 	const nachname: ComputedRef<string | undefined> = computed(() => {

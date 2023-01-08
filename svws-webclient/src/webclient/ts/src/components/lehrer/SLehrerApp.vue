@@ -36,7 +36,7 @@
 		schule: DataSchuleStammdaten;
 	}>();
 
-	const selectedRoute = routeLehrer.getChildRouteSelector();
+	const selectedRoute = routeLehrer.childRouteSelector;
 
 	const foto: ComputedRef<String | undefined> = computed(() => stammdaten.daten?.foto || undefined);
 

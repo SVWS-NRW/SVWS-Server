@@ -18,10 +18,10 @@ export class RouteDataSchuelerStundenplan {
 const SSchuelerStundenplanDaten = () => import("~/components/schueler/stundenplan/SSchuelerStundenplanDaten.vue");
 const SSchuelerStundenplanAuswahl = () => import("~/components/schueler/stundenplan/SSchuelerStundenplanAuswahl.vue")
 
-export class RouteSchuelerStundenplanDaten extends RouteNodeListView<StundenplanListeEintrag, RouteDataSchuelerStundenplan, RouteSchuelerStundenplan> {
+export class RouteSchuelerStundenplanDaten extends RouteNodeListView<ListStundenplaene, StundenplanListeEintrag, RouteDataSchuelerStundenplan, RouteSchuelerStundenplan> {
 
 	public constructor() {
-		super("schueler_stundenplan_daten", ":idStundenplan(\\d+)?", SSchuelerStundenplanAuswahl, SSchuelerStundenplanDaten, new RouteDataSchuelerStundenplan());
+		super("schueler_stundenplan_daten", ":idStundenplan(\\d+)?", SSchuelerStundenplanAuswahl, SSchuelerStundenplanDaten, new ListStundenplaene(), 'id', new RouteDataSchuelerStundenplan());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Stundenplan";
         super.setView("stundenplanauswahl", SSchuelerStundenplanAuswahl, (route) => this.getProps(route));

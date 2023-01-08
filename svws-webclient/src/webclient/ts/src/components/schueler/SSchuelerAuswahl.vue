@@ -106,7 +106,7 @@
 	]
 	const main: Main = injectMainApp();
 
-	const listSchueler: ComputedRef<ListSchueler> = computed(() => routeSchueler.data.auswahl);
+	const listSchueler: ComputedRef<ListSchueler> = computed(() => routeSchueler.liste);
 
 	// rows(): Array<SchuelerListeEintrag & {klasse: string}> {
 	const rows: ComputedRef<Array<any>> = computed(() => {

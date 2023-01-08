@@ -16,10 +16,10 @@ export class RouteDataKatalogReligion {
 const SReligionenAuswahl = () => import("~/components/kataloge/religionen/SReligionenAuswahl.vue")
 const SReligionenApp = () => import("~/components/kataloge/religionen/SReligionenApp.vue")
 
-export class RouteKatalogReligion extends RouteNodeListView<ReligionEintrag, RouteDataKatalogReligion, RouteApp> {
+export class RouteKatalogReligion extends RouteNodeListView<ListReligionen, ReligionEintrag, RouteDataKatalogReligion, RouteApp> {
 
 	public constructor() {
-		super("religionen", "/kataloge/religion/:id(\\d+)?", SReligionenAuswahl, SReligionenApp, new RouteDataKatalogReligion());
+		super("religionen", "/kataloge/religion/:id(\\d+)?", SReligionenAuswahl, SReligionenApp, new ListReligionen(), 'id', new RouteDataKatalogReligion());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Religion";
         super.setView("liste", SReligionenAuswahl, (route) => RouteNodeListView.getPropsByAuswahlID(route, mainApp.apps.religionen.auswahl));

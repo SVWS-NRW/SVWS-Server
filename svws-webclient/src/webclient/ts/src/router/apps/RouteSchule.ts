@@ -4,11 +4,12 @@ import { RouteApp } from "~/router/RouteApp";
 import { RouteNodeListView } from "~/router/RouteNodeListView";
 import { routeSchuleBenutzer } from "~/router/apps/RouteSchuleBenutzer";
 import { routeSchuleBenutzergruppe } from "~/router/apps/RouteSchuleBenutzergruppe";
+import { ListNone } from "~/apps/ListNone";
 
 const SSchuleAuswahl = () => import("~/components/schule/SSchuleAuswahl.vue")
 const SSchuleApp = () => import("~/components/schule/SSchuleApp.vue")
 
-export class RouteSchule extends RouteNodeListView<unknown, unknown, RouteApp> {
+export class RouteSchule extends RouteNodeListView<ListNone, unknown, unknown, RouteApp> {
 
 	protected defaultChildNode = undefined;
 

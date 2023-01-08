@@ -70,7 +70,7 @@
 		schule: DataSchuleStammdaten;
 	}>();
 
-	const rows: ComputedRef<LehrerListeEintrag[] | undefined> = computed(() => routeLehrer.data.auswahl.liste);
+	const rows: ComputedRef<LehrerListeEintrag[] | undefined> = computed(() => routeLehrer.liste.liste);
 
 	const rowsFiltered: ComputedRef<LehrerListeEintrag[]> = computed(() => {
 		if (rows.value === undefined)

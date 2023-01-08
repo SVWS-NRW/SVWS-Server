@@ -23,10 +23,10 @@ export class RouteDataKurse {
 const SKurseAuswahl = () => import("~/components/kurse/SKurseAuswahl.vue")
 const SKurseApp = () => import("~/components/kurse/SKurseApp.vue")
 
-export class RouteKurse extends RouteNodeListView<KursListeEintrag, RouteDataKurse, RouteApp> {
+export class RouteKurse extends RouteNodeListView<ListKurse, KursListeEintrag, RouteDataKurse, RouteApp> {
 
 	public constructor() {
-		super("kurse", "/kurse/:id(\\d+)?", SKurseAuswahl, SKurseApp, new RouteDataKurse());
+		super("kurse", "/kurse/:id(\\d+)?", SKurseAuswahl, SKurseApp, new ListKurse(), 'id', new RouteDataKurse());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Kurse";
         super.setView("liste", SKurseAuswahl, (route) => this.getProps(route));

@@ -24,10 +24,10 @@ export class RouteDataSchuelerLeistungenDaten {
 const SSchuelerLeistungenDaten = () => import("~/components/schueler/leistungsdaten/SSchuelerLeistungenDaten.vue");
 const SSchuelerLeistungenAuswahl = () => import("~/components/schueler/leistungsdaten/SSchuelerLeistungenAuswahl.vue")
 
-export class RouteSchuelerLeistungenDaten extends RouteNodeListView<SchuelerLernabschnittListeEintrag, RouteDataSchuelerLeistungenDaten, RouteSchuelerLeistungen> {
+export class RouteSchuelerLeistungenDaten extends RouteNodeListView<ListAbschnitte, SchuelerLernabschnittListeEintrag, RouteDataSchuelerLeistungenDaten, RouteSchuelerLeistungen> {
 
 	public constructor() {
-		super("schueler_leistungen_daten", ":idLernabschnitt(\\d+)?", SSchuelerLeistungenAuswahl, SSchuelerLeistungenDaten, new RouteDataSchuelerLeistungenDaten());
+		super("schueler_leistungen_daten", ":idLernabschnitt(\\d+)?", SSchuelerLeistungenAuswahl, SSchuelerLeistungenDaten, new ListAbschnitte(), 'id', new RouteDataSchuelerLeistungenDaten());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Leistungsdaten";
         super.setView("lernabschnittauswahl", SSchuelerLeistungenAuswahl, (route) => this.getProps(route));
@@ -78,30 +78,27 @@ export class RouteSchuelerLeistungenDaten extends RouteNodeListView<SchuelerLern
 	protected getAuswahlComputedProperty(): WritableComputedRef<SchuelerLernabschnittListeEintrag | undefined> {
 		const router = useRouter();
 		const route = useRoute();
-		const self = this;
-
-		const selected = computed({
-			get(): SchuelerLernabschnittListeEintrag | undefined {
+		return computed({
+			get: () => {
 				if (route.params.id === undefined)
 					return undefined;
-				let tmp = self.data.auswahl.ausgewaehlt;
-				if ((tmp === undefined) || (tmp.id.toString() !== route.params.idLernabschnitt))
-					tmp = self.data.auswahl.liste.find(s => s.id.toString() === route.params.idLernabschnitt);
+				let tmp = this.data.auswahl.ausgewaehlt;
+				if ((tmp === undefined) || (tmp.id === undefined) || (tmp.id.toString() !== route.params.idLernabschnitt))
+					tmp = this.data.auswahl.liste.find(s => s.id.toString() === route.params.idLernabschnitt);
 				return tmp;
 			},
-			set(value: SchuelerLernabschnittListeEintrag | undefined) {
-				self.data.auswahl.ausgewaehlt = value;
+			set: (value) => {
+				this.data.auswahl.ausgewaehlt = value;
 				const from_name = route.name?.toString() || "";
-				if ((from_name !== self.name) && from_name?.startsWith(self.name)) {  // TODO Ergänze Methode bei RouteNode isNested und nutze diese 
+				if ((from_name !== this.name) && from_name?.startsWith(this.name)) {  // TODO Ergänze Methode bei RouteNode isNested und nutze diese 
 					const params = {...route.params};
 					params.idLernabschnitt = "" + value?.id;
 					router.push({ name: from_name, params: params });
 				} else {
-					router.push({ name: self.name, params: { id: route.params.id, idLernabschnitt: value?.id } });
+					router.push({ name: this.name, params: { id: route.params.id, idLernabschnitt: value?.id } });
 				}
 			}
 		});
-		return selected;
 	}
 	
 	public getProps(to: RouteLocationNormalized): Record<string, any> {

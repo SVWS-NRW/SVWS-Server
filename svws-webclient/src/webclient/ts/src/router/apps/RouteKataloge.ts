@@ -6,11 +6,12 @@ import { routeKatalogFaecher } from "~/router/apps/RouteKatalogFaecher";
 import { routeKatalogFoerderschwerpunkte } from "~/router/apps/RouteKatalogFoerderschwerpunkte";
 import { routeKatalogJahrgaenge } from "~/router/apps/RouteKatalogJahrgaenge";
 import { routeKatalogReligion } from "~/router/apps/RouteKatalogReligion";
+import { ListNone } from "~/apps/ListNone";
 
 const SKatalogeAuswahl = () => import("~/components/kataloge/SKatalogeAuswahl.vue")
 const SKatalogeApp = () => import("~/components/kataloge/SKatalogeApp.vue")
 
-export class RouteKataloge extends RouteNodeListView<unknown, unknown, RouteApp> {
+export class RouteKataloge extends RouteNodeListView<ListNone, unknown, unknown, RouteApp> {
 
 	protected defaultChildNode = undefined;
 

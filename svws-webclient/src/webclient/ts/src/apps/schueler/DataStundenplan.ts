@@ -19,7 +19,7 @@ export class DataStundenplan extends BaseData<
 	 * @returns {Promise<StundenplanZeitraster>} Die Daten als Promise
 	 */
 	public async on_select(): Promise<SchuelerStundenplan | undefined> {
-		const schueler = routeSchueler.data.auswahl.ausgewaehlt;
+		const schueler = routeSchueler.liste.ausgewaehlt;
 		if (!schueler) 
 			return;
 		return super._select((eintrag: StundenplanListeEintrag) => App.api.getSchuelerStundenplan(App.schema, eintrag.id, schueler.id));

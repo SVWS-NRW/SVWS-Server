@@ -26,7 +26,7 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Laufbahnplanung";
 		super.isHidden = () => {
-			const abiturjahr = routeSchueler.data.item.value?.abiturjahrgang;
+			const abiturjahr = routeSchueler.item?.abiturjahrgang;
 			const jahrgang = App.apps.gost.auswahl.liste.find(j => (j.abiturjahr === abiturjahr));   // TODO Bestimme Jahrgang aus der Liste der Abiturjahgänge in RouteSchueler
 			return (jahrgang === undefined);
 		}

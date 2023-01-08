@@ -24,9 +24,9 @@ export class RouteSchuelerAdressen extends RouteNode<RouteDataSchuelerAdressen, 
 	}
 
     public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
-		if (routeSchueler.data.item.value === undefined)
+		if (routeSchueler.item === undefined)
 			return;
-		await this.data.listSchuelerbetriebe.update_list(routeSchueler.data.item.value.id);
+		await this.data.listSchuelerbetriebe.update_list(routeSchueler.item.id);
 	}
 
 	protected onSelect(item?: SchuelerListeEintrag) {

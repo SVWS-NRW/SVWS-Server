@@ -1,6 +1,6 @@
 import { JahrgangsListeEintrag, KlassenListeEintrag, KursListeEintrag, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
-import { computed, shallowRef, ShallowRef, WritableComputedRef } from "vue";
-import { RouteLocationNormalized, RouteParams, RouteRecordRaw, useRouter } from "vue-router";
+import { WritableComputedRef } from "vue";
+import { RouteLocationNormalized, RouteParams } from "vue-router";
 import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
 import { RouteNodeListView } from "../RouteNodeListView";
 import { routeSchuelerAbschnitt } from "~/router/apps/schueler/RouteSchuelerAbschnitt";
@@ -20,8 +20,6 @@ import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 import { RouteApp } from "~/router/RouteApp";
 
 export class RouteDataSchueler {
-	item: ShallowRef<SchuelerListeEintrag | undefined> = shallowRef(undefined);
-	auswahl: ListSchueler = new ListSchueler();
 	stammdaten: DataSchuelerStammdaten = new DataSchuelerStammdaten();
 	schule: DataSchuleStammdaten = new DataSchuleStammdaten();
 	listKlassen: ListKlassen = new ListKlassen();
@@ -35,10 +33,10 @@ export class RouteDataSchueler {
 const SSchuelerAuswahl = () => import("~/components/schueler/SSchuelerAuswahl.vue")
 const SSchuelerApp = () => import("~/components/schueler/SSchuelerApp.vue")
 
-export class RouteSchueler extends RouteNodeListView<SchuelerListeEintrag, RouteDataSchueler, RouteApp> {
+export class RouteSchueler extends RouteNodeListView<ListSchueler, SchuelerListeEintrag, RouteDataSchueler, RouteApp> {
 
 	public constructor() {
-		super("schueler", "/schueler/:id(\\d+)?", SSchuelerAuswahl, SSchuelerApp, new RouteDataSchueler());
+		super("schueler", "/schueler/:id(\\d+)?", SSchuelerAuswahl, SSchuelerApp, new ListSchueler(), 'id', new RouteDataSchueler());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Schüler";
         super.setView("liste", SSchuelerAuswahl, (route) => this.getProps(route));
@@ -58,8 +56,8 @@ export class RouteSchueler extends RouteNodeListView<SchuelerListeEintrag, Route
     public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
 		if ((to.name === this.name) && (to_params.id === undefined)) {
 			const redirect_name: string = (this.selectedChild === undefined) ? this.defaultChild!.name : this.selectedChild.name;
-			await this.data.auswahl.update_list();
-			return { name: redirect_name, params: { id: this.data.auswahl.gefiltert.at(0)?.id }};
+			await this.liste.update_list();
+			return { name: redirect_name, params: { id: this.liste.gefiltert.at(0)?.id }};
 		}
         return true;
     }
@@ -75,7 +73,7 @@ export class RouteSchueler extends RouteNodeListView<SchuelerListeEintrag, Route
 		await this.data.listKurse.update_list();
 		this.data.mapKurs.clear();
 		this.data.listKurse.liste.forEach(k => this.data.mapKurs.set(k.id, k));
-		await this.data.auswahl.update_list();  // Die Auswahlliste wird als letztes geladen
+		await this.liste.update_list();  // Die Auswahlliste wird als letztes geladen
 	}
 
     protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
@@ -83,29 +81,29 @@ export class RouteSchueler extends RouteNodeListView<SchuelerListeEintrag, Route
 			this.onSelect(undefined);
 		} else {
 			const id = parseInt(to_params.id as string);
-			this.onSelect(this.data.auswahl.liste.find(s => s.id === id));
+			this.onSelect(this.liste.liste.find(s => s.id === id));
 		}
 	}
 
 	protected onSelect(item?: SchuelerListeEintrag) {
-		if (item === this.data.item.value)
+		if (item === this.item)
 			return;
 		if (item === undefined) {
-			this.data.item.value = undefined;
+			this.item = undefined;
 			this.data.stammdaten.unselect();
 		} else {
-			this.data.item.value = item;
-			this.data.stammdaten.select(this.data.item.value);
+			this.item = item;
+			this.data.stammdaten.select(this.item);
 		}
 	}
 
     protected getAuswahlComputedProperty(): WritableComputedRef<SchuelerListeEintrag | undefined> {
-		return this.getSelectorByID<SchuelerListeEintrag, ListSchueler>(this.data.auswahl);
+		return this.getSelector();
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
-			item: this.data.item,
+			...super.getProps(to),
 			stammdaten: this.data.stammdaten,
 			schule: this.data.schule,
 			listKlassen: this.data.listKlassen,
@@ -116,24 +114,6 @@ export class RouteSchueler extends RouteNodeListView<SchuelerListeEintrag, Route
 			mapKurs: this.data.mapKurs
 		};
 	}
-
-    /**
-     * TODO
-     * 
-     * @returns 
-     */
-    public getChildRouteSelector() {
-        const router = useRouter();
-        const selectedRoute: WritableComputedRef<RouteRecordRaw> = computed({
-            get: () => this.selectedChildRecord || this.defaultChild!.record,
-            set: (value) => {
-				this.selectedChildRecord = value;
-				const id = (this.data.item.value === undefined) ? undefined : "" + this.data.item.value.id;
-                router.push({ name: value.name, params: { id: id } });
-            }
-        });
-        return selectedRoute;
-    }
 
 }
 

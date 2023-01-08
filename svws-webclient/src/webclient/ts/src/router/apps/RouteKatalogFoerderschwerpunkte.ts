@@ -16,10 +16,10 @@ export class RouteDataKatalogFoerderschwerpunkte {
 const SFoerderschwerpunkteAuswahl = () => import("~/components/kataloge/foerderschwerpunkte/SFoerderschwerpunkteAuswahl.vue")
 const SFoerderschwerpunkteApp = () => import("~/components/kataloge/foerderschwerpunkte/SFoerderschwerpunkteApp.vue")
 
-export class RouteKatalogFoerderschwerpunkte extends RouteNodeListView<FoerderschwerpunktEintrag, RouteDataKatalogFoerderschwerpunkte, RouteApp> {
+export class RouteKatalogFoerderschwerpunkte extends RouteNodeListView<ListFoerderschwerpunkte, FoerderschwerpunktEintrag, RouteDataKatalogFoerderschwerpunkte, RouteApp> {
 
 	public constructor() {
-		super("foerderschwerpunkte", "/kataloge/foerderschwerpunkte/:id(\\d+)?", SFoerderschwerpunkteAuswahl, SFoerderschwerpunkteApp, new RouteDataKatalogFoerderschwerpunkte());
+		super("foerderschwerpunkte", "/kataloge/foerderschwerpunkte/:id(\\d+)?", SFoerderschwerpunkteAuswahl, SFoerderschwerpunkteApp, new ListFoerderschwerpunkte(), 'id', new RouteDataKatalogFoerderschwerpunkte());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Förderschwerpunkte";
         super.setView("liste", SFoerderschwerpunkteAuswahl, (route) => RouteNodeListView.getPropsByAuswahlID(route, this.data.auswahl));
