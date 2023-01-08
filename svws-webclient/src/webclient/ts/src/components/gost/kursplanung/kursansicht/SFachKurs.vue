@@ -25,7 +25,7 @@
 
 	import { injectMainApp, Main } from "~/apps/Main";
 
-	const { listLehrer, mapLehrer } = defineProps<{ 
+	const { fach, halbjahr, listLehrer, mapLehrer } = defineProps<{ 
 		fach: GostStatistikFachwahl;
 		halbjahr: Number;
 		listLehrer: ListLehrer;
@@ -44,7 +44,7 @@
 			for (const kursart of GostKursart.values())
 				kurszahlen.set(kursart.id, 0);
 			for (const k of sorted_kurse.value) {
-				if (k.fach_id !== props.fach.id)
+				if (k.fach_id !== fach.id)
 					continue;
 				let anzahl = kurszahlen.get(k.kursart);
 				anzahl = (anzahl === undefined) ? 1 : anzahl + 1;
@@ -56,7 +56,7 @@
 	function vorhandene_kurse(kursart: GostKursart): GostBlockungKurs[] {
 		let liste = [];
 		for (const kurs of sorted_kurse.value)
-			if (kurs.fach_id === props.fach.id && kurs.kursart === kursart.id)
+			if (kurs.fach_id === fach.id && kurs.kursart === kursart.id)
 				liste.push(kurs);
 		return liste;
 	}
@@ -76,27 +76,27 @@
 		computed(()=> app.dataKursblockung.datenmanager?.getMengeOfSchienen() || new Vector<GostBlockungSchiene>())
 
 	const fach_halbjahr: ComputedRef<GostStatistikFachwahlHalbjahr> =
-		computed(() => props.fach.fachwahlen[props.halbjahr] ||	new GostStatistikFachwahlHalbjahr());
+		computed(() => fach.fachwahlen[halbjahr.valueOf()] ||	new GostStatistikFachwahlHalbjahr());
 
 	const wahlen: ComputedRef<Map<number, number>> =
 		computed(() => {
 			const wahlen : Map<number, number> = new Map();
-			const gostfach : GostFach | undefined = app.dataFaecher.manager?.get(props.fach.id) || undefined;
+			const gostfach : GostFach | undefined = app.dataFaecher.manager?.get(fach.id) || undefined;
 			if (gostfach === undefined)
 				return wahlen;
-			const fach : ZulaessigesFach = ZulaessigesFach.getByKuerzelASD(gostfach.kuerzel);
+			const zulFach : ZulaessigesFach = ZulaessigesFach.getByKuerzelASD(gostfach.kuerzel);
 			wahlen.set(GostKursart.LK.id, fach_halbjahr.value.wahlenLK);
-			wahlen.set(GostKursart.GK.id, fach === ZulaessigesFach.PX || fach === ZulaessigesFach.VX ? 0 : fach_halbjahr.value.wahlenGK);
+			wahlen.set(GostKursart.GK.id, zulFach === ZulaessigesFach.PX || zulFach === ZulaessigesFach.VX ? 0 : fach_halbjahr.value.wahlenGK);
 			wahlen.set(GostKursart.ZK.id, fach_halbjahr.value.wahlenZK);
-			wahlen.set(GostKursart.PJK.id, fach === ZulaessigesFach.PX ? fach_halbjahr.value.wahlenGK : 0);
-			wahlen.set(GostKursart.VTF.id, fach === ZulaessigesFach.VX ? fach_halbjahr.value.wahlenGK : 0);
+			wahlen.set(GostKursart.PJK.id, zulFach === ZulaessigesFach.PX ? fach_halbjahr.value.wahlenGK : 0);
+			wahlen.set(GostKursart.VTF.id, zulFach === ZulaessigesFach.VX ? fach_halbjahr.value.wahlenGK : 0);
 			return wahlen;
 		});
 
 	const bgColor: ComputedRef<string | undefined> =
-		computed(() => app.dataFachwahlen.getBgColor(props.fach));
+		computed(() => app.dataFachwahlen.getBgColor(fach));
 
 	function add_kurs(art: GostKursart) {
-		app.dataKursblockung.add_blockung_kurse(props.fach.id, art.id)
+		app.dataKursblockung.add_blockung_kurse(fach.id, art.id)
 	}
 </script>
