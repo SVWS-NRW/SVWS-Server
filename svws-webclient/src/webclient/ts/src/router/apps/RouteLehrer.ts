@@ -40,27 +40,20 @@ export class RouteLehrer extends RouteNodeListView<LehrerListeEintrag, RouteData
 	}
 
     public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
-console.log("beforeEach: " + to.name);
-console.log("beforeEach: " + to_params.id);
 		if ((to.name === this.name) && (to_params.id === undefined)) {
 			const redirect_name: string = (this.selectedChild === undefined) ? this.defaultChild!.name : this.selectedChild.name;
 			await this.data.auswahl.update_list();
-console.log(this.data.auswahl.liste);
 			return { name: redirect_name, params: { id: this.data.auswahl.liste.at(0)?.id }};  // TODO auswahl.gefiltert statt auswahl.liste nutzen
 		}
         return true;
     }
 
     public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) {
-console.log("enter");
 		await this.data.schule.select(true);  // undefined würde das laden verhindern, daher true
-console.log("enter2");
 		await this.data.auswahl.update_list();  // Die Auswahlliste wird als letztes geladen
-console.log(this.data.auswahl.liste);
 	}
 
     protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
-console.log("update: " + to_params.id);
 		if (to_params.id === undefined) {
 			this.onSelect(undefined);
 		} else {
@@ -70,7 +63,6 @@ console.log("update: " + to_params.id);
 	}
 
 	protected onSelect(item?: LehrerListeEintrag) {
-console.log("onSelect: " + item?.id);
 		if (item === this.data.item.value)
 			return;
 		if (item === undefined) {
