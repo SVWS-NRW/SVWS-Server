@@ -41,7 +41,7 @@
 <script setup lang="ts">
 
 	import type { LehrerListeEintrag } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, Ref, ref, WritableComputedRef } from "vue";
+	import { computed, ComputedRef, Ref, ref, ShallowRef, WritableComputedRef } from "vue";
 	import { injectMainApp, Main } from "~/apps/Main";
 	import { routeLehrer } from "~/router/apps/RouteLehrer";
 	import { Schuljahresabschnitt } from "@svws-nrw/svws-core-ts";
@@ -65,11 +65,9 @@
 	const main: Main = injectMainApp();
 
 	const { schule } = defineProps<{ 
-		id?: number;
-		item?: LehrerListeEintrag;
+		item: ShallowRef<LehrerListeEintrag | undefined>;
 		stammdaten: DataLehrerStammdaten;
 		schule: DataSchuleStammdaten;
-		routename: string;
 	}>();
 
 	const rows: ComputedRef<LehrerListeEintrag[] | undefined> = computed(() => routeLehrer.data.auswahl.liste);

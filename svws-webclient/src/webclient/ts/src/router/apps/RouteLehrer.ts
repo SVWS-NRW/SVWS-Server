@@ -6,14 +6,14 @@ import { routeLehrerUnterrichtsdaten } from "~/router/apps/lehrer/RouteLehrerUnt
 import { DataLehrerStammdaten } from "~/apps/lehrer/DataLehrerStammdaten";
 import { RouteNodeListView } from "../RouteNodeListView";
 import { ListLehrer } from "~/apps/lehrer/ListLehrer";
-import { computed, WritableComputedRef } from "vue";
+import { computed, shallowRef, ShallowRef, WritableComputedRef } from "vue";
 import { RouteNode } from "~/router/RouteNode";
 import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 import { RouteApp } from "~/router/RouteApp";
 
 
 export class RouteDataLehrer {
-	item: LehrerListeEintrag | undefined = undefined;
+	item: ShallowRef<LehrerListeEintrag | undefined> = shallowRef(undefined);
 	auswahl: ListLehrer = new ListLehrer();
 	stammdaten: DataLehrerStammdaten = new DataLehrerStammdaten();
 	schule: DataSchuleStammdaten = new DataSchuleStammdaten();
@@ -40,28 +40,45 @@ export class RouteLehrer extends RouteNodeListView<LehrerListeEintrag, RouteData
 	}
 
     public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
+console.log("beforeEach: " + to.name);
+console.log("beforeEach: " + to_params.id);
 		if ((to.name === this.name) && (to_params.id === undefined)) {
 			const redirect_name: string = (this.selectedChild === undefined) ? this.defaultChild!.name : this.selectedChild.name;
 			await this.data.auswahl.update_list();
+console.log(this.data.auswahl.liste);
 			return { name: redirect_name, params: { id: this.data.auswahl.liste.at(0)?.id }};  // TODO auswahl.gefiltert statt auswahl.liste nutzen
 		}
         return true;
     }
 
     public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) {
+console.log("enter");
 		await this.data.schule.select(true);  // undefined würde das laden verhindern, daher true
+console.log("enter2");
 		await this.data.auswahl.update_list();  // Die Auswahlliste wird als letztes geladen
+console.log(this.data.auswahl.liste);
+	}
+
+    protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
+console.log("update: " + to_params.id);
+		if (to_params.id === undefined) {
+			this.onSelect(undefined);
+		} else {
+			const id = parseInt(to_params.id as string);
+			this.onSelect(this.data.auswahl.liste.find(l => l.id === id));
+		}
 	}
 
 	protected onSelect(item?: LehrerListeEintrag) {
-		if (item === this.data.item)
+console.log("onSelect: " + item?.id);
+		if (item === this.data.item.value)
 			return;
 		if (item === undefined) {
-			this.data.item = undefined;
+			this.data.item.value = undefined;
 			this.data.stammdaten.unselect();
 		} else {
-			this.data.item = item;
-			this.data.stammdaten.select(this.data.item);
+			this.data.item.value = item;
+			this.data.stammdaten.select(this.data.item.value);
 		}
 	}
 
@@ -70,11 +87,11 @@ export class RouteLehrer extends RouteNodeListView<LehrerListeEintrag, RouteData
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
-		const prop: Record<string, any> = RouteNodeListView.getPropsByAuswahlID(to, this.data.auswahl);
-		this.onSelect(prop.item as LehrerListeEintrag | undefined);
-		prop.stammdaten = this.data.stammdaten;
-		prop.schule = this.data.schule;
-		return prop;
+		return {
+			item: this.data.item,
+			stammdaten: this.data.stammdaten,
+			schule: this.data.schule
+		};
 	}
 
     /**
@@ -88,7 +105,7 @@ export class RouteLehrer extends RouteNodeListView<LehrerListeEintrag, RouteData
             get: () => this.selectedChildRecord || this.defaultChild!.record,
             set: (value) => {
                 this.selectedChildRecord = value;
-				const id = (this.data.item === undefined) ? undefined : "" + this.data.item.id;
+				const id = (this.data.item.value === undefined) ? undefined : "" + this.data.item.value.id;
                 router.push({ name: value.name, params: { id: id } });
             }
         });

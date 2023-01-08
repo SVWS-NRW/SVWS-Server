@@ -3,6 +3,7 @@ import { App } from "../BaseApp";
 import { BaseList } from "../BaseList";
 
 export class ListLehrer extends BaseList<LehrerListeEintrag> {
+
 	protected _filter = undefined;
 
 	/**
@@ -11,8 +12,9 @@ export class ListLehrer extends BaseList<LehrerListeEintrag> {
 	 * @returns {Promise<void>}
 	 */
 	public async update_list(): Promise<void> {
-		if (this.liste.length) return;
 		await super._update_list(() => App.api.getLehrer(App.schema));
-		if (!this.ausgewaehlt) this.ausgewaehlt = this.gefiltert[0]
+		if (!this.ausgewaehlt) 
+			this.ausgewaehlt = this.gefiltert[0]
 	}
+
 }

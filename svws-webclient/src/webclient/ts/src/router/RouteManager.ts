@@ -41,13 +41,11 @@ export class RouteManager {
         if (from.fullPath === "/") {
             // Die Analyse der Quell-Route ist nicht erheblich - die Ereignisse für die Ziel-Route sind aber wichtig
             const to_predecessors: RouteNode<unknown, any>[] = to_node.getPredecessors();
-            to_predecessors.forEach(
-                async node => await node.enter(to_node, to.params)
-            );
+            for (let node of to_predecessors)
+                await node.enter(to_node, to.params);
             await to_node.enter(to_node, to.params);
-            to_predecessors.forEach(
-                async node => await node.doUpdate(to_node, to.params)
-            );
+            for (let node of to_predecessors)
+                await node.doUpdate(to_node, to.params);
             await to_node.doUpdate(to_node, to.params);
         } else {
             // Bestimme den Knoten, der Route, die zuvor ausgewählt war - diese muss ja auch gültig sein...
@@ -59,7 +57,6 @@ export class RouteManager {
             const from_is_successor = from_node.checkSuccessorOf(to_node);
             const to_predecessors_all: RouteNode<unknown, any>[] = to_node.getPredecessors();
             if (to_is_successor) {
-                console.log("to_is_successor");
                 for (let node of to_is_successor)
                     if (node.name !== from_node.name)
                         await node.enter(to_node, to.params);
@@ -67,9 +64,8 @@ export class RouteManager {
                     await node.doUpdate(to_node, to.params);
                 await to_node.doUpdate(to_node, to.params);
             } else if (from_is_successor) {
-                from_is_successor.slice(1).reverse().forEach(
-                    async node => await node.leave(from_node, from.params)
-                );
+                for (let node of from_is_successor.slice(1).reverse())
+                    await node.leave(from_node, from.params);
                 await to_node.doUpdate(to_node, to.params);
             } else if (equals) {
                 for (let node of to_predecessors_all)
@@ -84,12 +80,10 @@ export class RouteManager {
                     to_predecessors = to_predecessors.slice(1);
                 }
                 await from_node.leave(from_node, from.params);
-                [...from_predecessors].reverse().forEach(
-                    async node => await node.leave(from_node, from.params)
-                );
-                to_predecessors.forEach(
-                    async node => await node.enter(to_node, to.params)
-                );
+                for (let node of [...from_predecessors].reverse())
+                    await node.leave(from_node, from.params);
+                for (let node of to_predecessors)
+                    await node.enter(to_node, to.params);
                 await to_node.enter(to_node, to.params);
                 for (let node of to_predecessors_all)
                     await node.doUpdate(to_node, to.params);

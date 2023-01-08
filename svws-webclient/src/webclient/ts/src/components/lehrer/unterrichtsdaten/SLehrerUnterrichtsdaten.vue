@@ -11,13 +11,19 @@
 <script setup lang="ts">
 
 	import { LehrerListeEintrag } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef } from "vue";
+	import { computed, ComputedRef, ShallowRef } from "vue";
+	import { DataLehrerStammdaten } from "~/apps/lehrer/DataLehrerStammdaten";
+	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
+	import { routeLehrerUnterrichtsdaten } from "~/router/apps/lehrer/RouteLehrerUnterrichtsdaten";
 
-	const props = defineProps<{ id?: number; item?: LehrerListeEintrag, routename: string }>();
+	const { item } = defineProps<{ 
+		item: ShallowRef<LehrerListeEintrag | undefined>;
+		stammdaten: DataLehrerStammdaten;
+		schule: DataSchuleStammdaten;
+	}>();
 
 	const visible: ComputedRef<boolean> = computed(() => {
-		//return this.$app.lehrerUnterrichtsdaten.visible; //TODO: richtige Bedingung einpflegen
-		return true;
+		return (item.value !== undefined) && (!routeLehrerUnterrichtsdaten.hidden);
 	});
 
 </script>

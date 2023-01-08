@@ -49,13 +49,10 @@ export class ListSchueler extends BaseList<SchuelerListeEintrag, Filter> {
 	 * @returns {Promise<void>}
 	 */
 	public async update_list(): Promise<void> {
-		await super._update_list(() =>
-			App.api.getSchuelerFuerAbschnitt(App.schema, App.akt_abschnitt.id)
-		);
+		await super._update_list(() => App.api.getSchuelerFuerAbschnitt(App.schema, App.akt_abschnitt.id));
 		this.reset_filter();
-		if (!this.ausgewaehlt) {
-			this.ausgewaehlt = this.gefiltert[0]
-		}
+		if (!this.ausgewaehlt)
+			this.ausgewaehlt = this.gefiltert[0];
 	}
 
 	/**

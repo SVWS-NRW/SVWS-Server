@@ -1,5 +1,5 @@
 <template>
-	<div v-if="stammdaten.daten && item?.id">
+	<div v-if="visible">
 		<svws-ui-header>
 			<div class="flex items-center">
 				<div class="w-16 mr-4 -ml-2">
@@ -25,26 +25,28 @@
 <script setup lang="ts">
 
 	import { LehrerListeEintrag } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef } from "vue";
+	import { computed, ComputedRef, ShallowRef } from "vue";
 	import { DataLehrerStammdaten } from "~/apps/lehrer/DataLehrerStammdaten";
 	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 	import { routeLehrer } from "~/router/apps/RouteLehrer";
 
 	const { item, stammdaten } = defineProps<{ 
-		id?: number;
-		item?: LehrerListeEintrag;
+		item: ShallowRef<LehrerListeEintrag | undefined>;
 		stammdaten: DataLehrerStammdaten;
 		schule: DataSchuleStammdaten;
-		routename: string;
 	}>();
 
 	const selectedRoute = routeLehrer.getChildRouteSelector();
 
 	const foto: ComputedRef<String | undefined> = computed(() => stammdaten.daten?.foto || undefined);
 
-	const inputNachname: ComputedRef<string | undefined> = computed(() => item?.nachname.toString());
-	const inputVorname: ComputedRef<string | undefined> = computed(() => item?.vorname.toString());
-	const inputKuerzel: ComputedRef<string | undefined> = computed(() => item?.kuerzel.toString());
-	const inputTitel: ComputedRef<string | undefined> = computed(() => item?.titel?.toString());
+	const inputNachname: ComputedRef<string | undefined> = computed(() => item.value?.nachname.toString());
+	const inputVorname: ComputedRef<string | undefined> = computed(() => item.value?.vorname.toString());
+	const inputKuerzel: ComputedRef<string | undefined> = computed(() => item.value?.kuerzel.toString());
+	const inputTitel: ComputedRef<string | undefined> = computed(() => item.value?.titel?.toString());
+
+	const visible: ComputedRef<boolean> = computed(() => {
+		return (item.value !== undefined) && (!routeLehrer.hidden);
+	});
 
 </script>

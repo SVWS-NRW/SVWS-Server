@@ -35,7 +35,8 @@ export class RouteLehrerPersonaldaten extends RouteNode<RouteDataLehrerPersonald
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		const prop = routeLehrer.getProps(to);
-		this.onSelect(prop.item as LehrerListeEintrag | undefined);
+		this.onSelect(prop.item.value);
+		prop.personaldaten = this.data.personaldaten;
 		return prop;
 	}
 
