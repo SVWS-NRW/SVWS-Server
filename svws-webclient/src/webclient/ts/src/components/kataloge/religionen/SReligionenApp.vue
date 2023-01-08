@@ -1,5 +1,5 @@
 <template>
-	<div v-if="item.value?.id !== undefined">
+	<div v-if="visible">
 		<svws-ui-header>
 			<div class="flex items-center">
 				<span class="inline-block mr-3 capitalize">{{ item.value?.text }}</span>
@@ -19,7 +19,7 @@
 
 <script setup lang="ts">
 
-	import { ShallowRef } from "vue";
+	import { computed, ComputedRef, ShallowRef } from "vue";
 	import { ReligionEintrag } from "@svws-nrw/svws-core-ts";
 	import { routeKatalogReligion } from "~/router/apps/RouteKatalogReligion";
 
@@ -28,5 +28,9 @@
 	}>();
 
 	const selectedRoute = routeKatalogReligion.childRouteSelector;
+
+	const visible: ComputedRef<boolean> = computed(() => {
+		return (!routeKatalogReligion.hidden) && (item.value !== undefined);
+	});
 
 </script>

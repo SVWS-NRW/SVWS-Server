@@ -1,5 +1,5 @@
 <template>
-	<div v-if="item.value?.id">
+	<div v-if="visible">
 		<svws-ui-header>
 			<div class="flex items-center">
 				<span class="inline-block mr-3">{{ kuerzel }}</span>
@@ -45,6 +45,10 @@
 			return leer;
 		const lehrer = mapLehrer.get(id);
 		return lehrer?.kuerzel.toString() || leer;
+	});
+
+	const visible: ComputedRef<boolean> = computed(() => {
+		return (!routeKurse.hidden) && (item.value !== undefined);
 	});
 
 </script>

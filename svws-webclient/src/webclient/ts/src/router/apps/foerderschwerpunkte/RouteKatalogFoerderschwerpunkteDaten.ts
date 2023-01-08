@@ -1,16 +1,15 @@
 import { FoerderschwerpunktEintrag } from "@svws-nrw/svws-core-ts";
-import { RouteLocationNormalized } from "vue-router";
+import { RouteLocationNormalized, RouteParams } from "vue-router";
 import { DataFoerderschwerpunkt } from "~/apps/kataloge/foerderschwerpunkt/DataFoerderschwerpunkt";
 import { RouteNode } from "~/router/RouteNode";
-import { RouteNodeListView } from "~/router/RouteNodeListView";
 import { RouteKatalogFoerderschwerpunkte, routeKatalogFoerderschwerpunkte } from "~/router/apps/RouteKatalogFoerderschwerpunkte";
-
-const SFoerderschwerpunktDaten = () => import("~/components/kataloge/foerderschwerpunkte/daten/SFoerderschwerpunktDaten.vue");
 
 export class RouteDataKatalogFoerderschwerpunkteDaten {
 	item: FoerderschwerpunktEintrag | undefined = undefined;
 	daten: DataFoerderschwerpunkt = new DataFoerderschwerpunkt();
 }
+
+const SFoerderschwerpunktDaten = () => import("~/components/kataloge/foerderschwerpunkte/daten/SFoerderschwerpunktDaten.vue");
 
 export class RouteKatalogFoerderschwerpunkteDaten extends RouteNode<RouteDataKatalogFoerderschwerpunkteDaten, RouteKatalogFoerderschwerpunkte> {
 
@@ -18,6 +17,15 @@ export class RouteKatalogFoerderschwerpunkteDaten extends RouteNode<RouteDataKat
 		super("foerderschwerpunkte_daten", "daten", SFoerderschwerpunktDaten, new RouteDataKatalogFoerderschwerpunkteDaten());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Daten";
+	}
+
+    public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
+		if (to_params.id === undefined) {
+			this.onSelect(undefined);
+		} else {
+			const id = parseInt(to_params.id as string);
+			this.onSelect(this.parent!.liste.liste.find(f => f.id === id));
+		}
 	}
 
 	protected onSelect(item?: FoerderschwerpunktEintrag) {
@@ -33,10 +41,10 @@ export class RouteKatalogFoerderschwerpunkteDaten extends RouteNode<RouteDataKat
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
-		let prop: Record<string, any> = RouteNodeListView.getPropsByAuswahlID(to, routeKatalogFoerderschwerpunkte.data.auswahl);
-		this.onSelect(prop.item as FoerderschwerpunktEintrag | undefined);
-		prop.data = this.data.daten;
-		return prop;
+		return {
+			...routeKatalogFoerderschwerpunkte.getProps(to),
+			data: this.data.daten
+		};
 	}
 
 }
