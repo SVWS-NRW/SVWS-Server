@@ -2,15 +2,14 @@ import { RouteNode } from "~/router/RouteNode";
 import { RouteKurse, routeKurse } from "~/router/apps/RouteKurse";
 import { KursListeEintrag } from "@svws-nrw/svws-core-ts";
 import { DataKurs } from "~/apps/kurse/DataKurs";
-import { RouteLocationNormalized } from "vue-router";
-
-const SKursDaten = () => import("~/components/kurse/daten/SKursDaten.vue");
+import { RouteLocationNormalized, RouteParams } from "vue-router";
 
 export class RouteDataKurseDaten {
 	item: KursListeEintrag | undefined = undefined;
 	daten: DataKurs = new DataKurs();
 }
 
+const SKursDaten = () => import("~/components/kurse/daten/SKursDaten.vue");
 
 export class RouteKurseDaten extends RouteNode<RouteDataKurseDaten, RouteKurse> {
 
@@ -18,6 +17,15 @@ export class RouteKurseDaten extends RouteNode<RouteDataKurseDaten, RouteKurse> 
 		super("kurse_daten", "daten", SKursDaten, new RouteDataKurseDaten());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Daten";
+	}
+
+    public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
+		if (to_params.id === undefined) {
+			this.onSelect(undefined);
+		} else {
+			const id = parseInt(to_params.id as string);
+			this.onSelect(this.parent!.liste.liste.find(s => s.id === id));
+		}
 	}
 
 	protected onSelect(item?: KursListeEintrag) {
@@ -34,10 +42,10 @@ export class RouteKurseDaten extends RouteNode<RouteDataKurseDaten, RouteKurse> 
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
-		let prop: Record<string, any> = routeKurse.getProps(to);
-		this.onSelect(prop.item);
-		prop.data = this.data.daten;
-		return prop;
+		return {
+			...routeKurse.getProps(to),
+			data: this.data.daten
+		};
 	}
 
 }

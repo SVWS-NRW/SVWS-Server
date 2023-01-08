@@ -15,7 +15,7 @@
 
 <script setup lang="ts">
 
-	import { computed, ComputedRef, WritableComputedRef } from "vue";
+	import { computed, ComputedRef, ShallowRef, WritableComputedRef } from "vue";
 	import { injectMainApp, Main } from "~/apps/Main";
 	import { JahrgangsListeEintrag, KursListeEintrag, LehrerListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { routeKurse } from "~/router/apps/RouteKurse";
@@ -26,14 +26,12 @@
 	import { DataTableColumn } from "@svws-nrw/svws-ui";
 
 	const { schule, listJahrgaenge, listLehrer } = defineProps<{ 
-		id?: number;
-		item?: KursListeEintrag;
+		item: ShallowRef<KursListeEintrag | undefined>;
 		schule: DataSchuleStammdaten;
 		listJahrgaenge: ListJahrgaenge;
 		mapJahrgaenge: Map<Number, JahrgangsListeEintrag>;
 		listLehrer: ListLehrer;
 		mapLehrer: Map<Number, LehrerListeEintrag>;
-		routename: string;
 	}>();
 
 	const selected = routeKurse.auswahl;
@@ -47,7 +45,7 @@
 
 	// FIXME: Typing: const rows: ComputedRef<KursEintrag[] | undefined> = computed(() => {
 	const rows = computed(() => {
-		return routeKurse.data.auswahl.liste.map((e: KursListeEintrag) => ({
+		return routeKurse.liste.liste.map((e: KursListeEintrag) => ({
 			...e,
 			lehrer_name: listLehrer.liste.find(l => l.id === e.lehrer)?.kuerzel || "",
 			jahrgang: listJahrgaenge.liste.find(j => e.idJahrgaenge.toArray(new Array<number>()).includes(j.id))?.kuerzel?.toString() || ""

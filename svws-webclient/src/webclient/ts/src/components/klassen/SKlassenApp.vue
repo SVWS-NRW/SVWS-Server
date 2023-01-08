@@ -34,7 +34,7 @@
 		mapLehrer: Map<Number, LehrerListeEintrag>,
 	}>();
 
-	const selectedRoute = routeKlassen.getChildRouteSelector();
+	const selectedRoute = routeKlassen.childRouteSelector;
 
 	const inputKlassenlehrer: ComputedRef<LehrerListeEintrag[]> = computed(() =>
 		(item.value?.klassenLehrer?.toArray() as Number[] || []).map(id => mapLehrer.get(id) || undefined).filter(l => l !== undefined) as LehrerListeEintrag[]

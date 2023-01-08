@@ -1,6 +1,6 @@
 import { JahrgangsListeEintrag, KursListeEintrag, LehrerListeEintrag } from "@svws-nrw/svws-core-ts";
-import { computed, WritableComputedRef } from "vue";
-import { RouteLocationNormalized, RouteParams, RouteRecordRaw, useRouter } from "vue-router";
+import { WritableComputedRef } from "vue";
+import { RouteLocationNormalized, RouteParams } from "vue-router";
 import { ListKurse } from "~/apps/kurse/ListKurse";
 import { RouteNodeListView } from "~/router/RouteNodeListView";
 import { routeKurseDaten } from "~/router/apps/kurse/RouteKurseDaten";
@@ -11,8 +11,6 @@ import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 import { RouteApp } from "../RouteApp";
 
 export class RouteDataKurse {
-	item: KursListeEintrag | undefined = undefined;
-	auswahl: ListKurse = new ListKurse();
 	schule: DataSchuleStammdaten = new DataSchuleStammdaten();
 	listJahrgaenge: ListJahrgaenge = new ListJahrgaenge();
 	mapJahrgaenge: Map<Number, JahrgangsListeEintrag> = new Map();
@@ -39,8 +37,8 @@ export class RouteKurse extends RouteNodeListView<ListKurse, KursListeEintrag, R
 	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
 		if ((to.name === this.name) && (to_params.id === undefined)) {
 			const redirect_name: string = (this.selectedChild === undefined) ? this.defaultChild!.name : this.selectedChild.name;
-			await this.data.auswahl.update_list();
-			return { name: redirect_name, params: { id: this.data.auswahl.liste.at(0)?.id }};
+			await this.liste.update_list();
+			return { name: redirect_name, params: { id: this.liste.liste.at(0)?.id }};
 		}
         return true;
     }
@@ -53,49 +51,42 @@ export class RouteKurse extends RouteNodeListView<ListKurse, KursListeEintrag, R
 		await this.data.listLehrer.update_list();
 		this.data.mapLehrer.clear();
 		this.data.listLehrer.liste.forEach(k => this.data.mapLehrer.set(k.id, k));
-		await this.data.auswahl.update_list();  // Die Auswahlliste wird als letztes geladen
+		await this.liste.update_list();  // Die Auswahlliste wird als letztes geladen
+	}
+
+    public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
+		if (to_params.id === undefined) {
+			this.onSelect(undefined);
+		} else {
+			const id = parseInt(to_params.id as string);
+			this.onSelect(this.liste.liste.find(k => k.id === id));
+		}
 	}
 
 	protected onSelect(item?: KursListeEintrag) {
-		if (item === this.data.item)
+		if (item === this.item)
 			return;
 		if (item === undefined) {
-			this.data.item = undefined;
+			this.item = undefined;
 		} else {
-			this.data.item = item;
+			this.item = item;
 		}
 	}
 
     protected getAuswahlComputedProperty(): WritableComputedRef<KursListeEintrag | undefined> {
-		return this.getSelectorByID<KursListeEintrag, ListKurse>(this.data.auswahl);
+		return this.getSelector();
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
-		const prop: Record<string, any> = RouteNodeListView.getPropsByAuswahlID(to, this.data.auswahl);
-		this.onSelect(prop.item as KursListeEintrag | undefined);
-		prop.schule = this.data.schule;
-		prop.listJahrgaenge = this.data.listJahrgaenge;
-		prop.mapJahrgaenge = this.data.mapJahrgaenge;
-		prop.listLehrer = this.data.listLehrer;
-		prop.mapLehrer = this.data.mapLehrer;
-		return prop;
+		return {
+			...super.getProps(to),
+			schule: this.data.schule,
+			listJahrgaenge: this.data.listJahrgaenge,
+			mapJahrgaenge: this.data.mapJahrgaenge,
+			listLehrer: this.data.listLehrer,
+			mapLehrer: this.data.mapLehrer
+		};
 	}
-
-    /**
-     * TODO
-     * 
-     * @returns 
-     */
-    public getChildRouteSelector() : WritableComputedRef<RouteRecordRaw> {
-        return computed({
-            get: () => this.selectedChildRecord || this.defaultChild!.record,
-            set: (value) => {
-                this.selectedChildRecord = value;
-				const id = (this.data.item === undefined) ? undefined : "" + this.data.item.id;
-                useRouter().push({ name: value.name, params: { id: id } });
-            }
-        });
-    }
 
 }
 

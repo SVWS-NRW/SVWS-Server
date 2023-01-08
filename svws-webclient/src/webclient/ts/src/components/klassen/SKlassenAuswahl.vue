@@ -39,7 +39,7 @@
 		{ key: "bezeichnung", label: "Bezeichnung", sortable: true, span: 2 }
 	];
 
-	const rows: ComputedRef<KlassenListeEintrag[]> = computed(() => routeKlassen.data.auswahl.liste);
+	const rows: ComputedRef<KlassenListeEintrag[]> = computed(() => routeKlassen.liste.liste);
 
 	const schule_abschnitte: ComputedRef<Schuljahresabschnitt[] | undefined> = computed(() => 
 		schule.daten?.abschnitte?.toArray() as Schuljahresabschnitt[] || []

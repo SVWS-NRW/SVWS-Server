@@ -5,9 +5,9 @@
 				<svws-ui-text-input placeholder="Kürzel" v-model="kuerzel" type="text" />
 				<svws-ui-text-input placeholder="Schuljahresabschnitt" v-model="schuljahresabschnitt" type="text" />
 				<svws-ui-multi-select title="Jahrgaenge" v-model="jahrgaenge" tags :items="listJahrgaenge.liste"
-					:item-text="(item: JahrgangsListeEintrag) => item?.kuerzel?.toString() || ''" />
+					:item-text="(jg: JahrgangsListeEintrag) => jg?.kuerzel?.toString() || ''" />
 				<svws-ui-text-input placeholder="Fach-ID" v-model="fach" type="number" />
-				<svws-ui-multi-select title="Lehrer" v-model="lehrer" :items="listLehrer.liste" :item-text="(item:LehrerListeEintrag) => item.kuerzel.toString()" />
+				<svws-ui-multi-select title="Lehrer" v-model="lehrer" :items="listLehrer.liste" :item-text="(l: LehrerListeEintrag) => l.kuerzel.toString()" />
 				<svws-ui-text-input placeholder="Sortierung" v-model="sortierung" type="number" />
 				<svws-ui-checkbox v-model="istSichtbar"> Ist sichtbar </svws-ui-checkbox>
 			</div>
@@ -16,15 +16,15 @@
 </template>
 
 <script setup lang="ts">
-	import { computed, WritableComputedRef } from "vue";
 
+	import { computed, ShallowRef, WritableComputedRef } from "vue";
 	import { JahrgangsListeEintrag, KursListeEintrag, LehrerListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
 	import { ListLehrer } from "~/apps/lehrer/ListLehrer";
 	import { DataKurs } from "~/apps/kurse/DataKurs";
 	import { ListJahrgaenge } from "~/apps/jahrgaenge/ListJahrgaenge";
 
-	const { item, data, listLehrer, mapLehrer, listJahrgaenge, mapJahrgaenge } = defineProps<{ 
-		item?: KursListeEintrag;
+	const { data, listLehrer, mapLehrer, listJahrgaenge, mapJahrgaenge } = defineProps<{ 
+		item: ShallowRef<KursListeEintrag | undefined>;
 		data: DataKurs;
 		listJahrgaenge: ListJahrgaenge;
 		mapJahrgaenge: Map<Number, JahrgangsListeEintrag>;
@@ -62,12 +62,12 @@
 	});
 
 	const istSichtbar: WritableComputedRef<boolean> = computed({
-		get: () => item === undefined ? false : item.istSichtbar,
+		get: () => data.daten === undefined ? false : data.daten.istSichtbar,
 		set: (value) => data.patch({ istSichtbar: value })
 	});
 
 	const sortierung: WritableComputedRef<number> = computed({
-		get: () => item?.sortierung || 32000,
+		get: () => data.daten?.sortierung || 32000,
 		set: (value) => data.patch({ sortierung: value })
 	});
 

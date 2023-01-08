@@ -33,7 +33,7 @@ export class RouteKlassenDaten extends RouteNode<RouteDataKlassenDaten, RouteKla
 			this.onSelect(undefined);
 		} else {
 			const id = parseInt(to_params.id as string);
-			this.onSelect(this.parent!.data.auswahl.liste.find(s => s.id === id));
+			this.onSelect(this.parent!.liste.liste.find(s => s.id === id));
 		}
 	}
 
@@ -50,11 +50,12 @@ export class RouteKlassenDaten extends RouteNode<RouteDataKlassenDaten, RouteKla
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
-		let prop: Record<string, any> = routeKlassen.getProps(to);
-		prop.data = this.data.daten;
-		prop.listJahrgaenge = this.data.listJahrgaenge;
-		prop.mapJahrgaenge = this.data.mapJahrgaenge;
-		return prop;
+		return {
+			...routeKlassen.getProps(to),
+			data: this.data.daten,
+			listJahrgaenge: this.data.listJahrgaenge,
+			mapJahrgaenge: this.data.mapJahrgaenge	
+		};
 	}
 
 }

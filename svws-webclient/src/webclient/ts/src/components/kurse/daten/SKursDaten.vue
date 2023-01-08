@@ -8,7 +8,7 @@
 <script setup lang="ts">
 
 	import { JahrgangsListeEintrag, KursListeEintrag, LehrerListeEintrag } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef } from "vue";
+	import { computed, ComputedRef, ShallowRef } from "vue";
 	import { ListJahrgaenge } from "~/apps/jahrgaenge/ListJahrgaenge";
 	import { DataKurs } from "~/apps/kurse/DataKurs";
 	import { ListLehrer } from "~/apps/lehrer/ListLehrer";
@@ -16,20 +16,18 @@
 	import { routeKurseDaten } from "~/router/apps/kurse/RouteKurseDaten";
 
 	const { item, data, listJahrgaenge, mapJahrgaenge, listLehrer, mapLehrer } = defineProps<{ 
-		id?: number;
-		item?: KursListeEintrag;
+		item: ShallowRef<KursListeEintrag | undefined>;
 		data: DataKurs;
 		schule: DataSchuleStammdaten;
 		listJahrgaenge: ListJahrgaenge;
 		mapJahrgaenge: Map<Number, JahrgangsListeEintrag>;
 		listLehrer: ListLehrer;
 		mapLehrer: Map<Number, LehrerListeEintrag>;
-		routename: string;
 	}>();
 
 
 	const visible: ComputedRef<boolean> = computed(() => {
-		return (!routeKurseDaten.hidden) && (item !== undefined);
+		return (!routeKurseDaten.hidden) && (item.value !== undefined);
 	});
 
 </script>
