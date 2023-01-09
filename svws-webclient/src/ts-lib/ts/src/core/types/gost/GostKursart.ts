@@ -233,12 +233,12 @@ export class GostKursart extends JavaObject {
 	 * 
 	 * @return pKurs.fachID * {@link #FACHART_ID_FAKTOR} + pKurs.kursartID
 	 */
-	public static getFachartID(pKurs : GostBlockungKurs | null) : number;
+	public static getFachartID(pKurs : GostBlockungKurs) : number;
 
 	/**
 	 * Implementation for method overloads of 'getFachartID'
 	 */
-	public static getFachartID(__param0 : GostBlockungKurs | GostFachwahl | null | number, __param1? : number) : number {
+	public static getFachartID(__param0 : GostBlockungKurs | GostFachwahl | number, __param1? : number) : number {
 		if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && typeof __param1 === "number")) {
 			let pFachID : number = __param0 as number;
 			let pKursartID : number = __param1 as number;
@@ -246,8 +246,8 @@ export class GostKursart extends JavaObject {
 		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.data.gost.GostFachwahl')))) && (typeof __param1 === "undefined")) {
 			let pFachwahl : GostFachwahl = cast_de_nrw_schule_svws_core_data_gost_GostFachwahl(__param0);
 			return GostKursart.getFachartID(pFachwahl.fachID, pFachwahl.kursartID);
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.data.gost.GostBlockungKurs'))) || (__param0 === null)) && (typeof __param1 === "undefined")) {
-			let pKurs : GostBlockungKurs | null = cast_de_nrw_schule_svws_core_data_gost_GostBlockungKurs(__param0);
+		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.data.gost.GostBlockungKurs')))) && (typeof __param1 === "undefined")) {
+			let pKurs : GostBlockungKurs = cast_de_nrw_schule_svws_core_data_gost_GostBlockungKurs(__param0);
 			return GostKursart.getFachartID(pKurs.fach_id, pKurs.kursart);
 		} else throw new Error('invalid method overload');
 	}

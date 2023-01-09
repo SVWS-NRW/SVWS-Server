@@ -1385,8 +1385,10 @@ public class GostBlockungsdatenManager {
 	 */
 	public @NotNull List<@NotNull GostFachwahl> getOfFachartMengeFachwahlen(long pFachartID) throws DeveloperNotificationException{
 		List<@NotNull GostFachwahl> fachwahlenDerFachart = _map_fachartID_fachwahlen.get(pFachartID);
-		if (fachwahlenDerFachart == null)
-			throw new DeveloperNotificationException("Fachart-ID (" + pFachartID + ") unbekannt!");
+		if (fachwahlenDerFachart == null) {
+			fachwahlenDerFachart = new Vector<>();
+			_map_fachartID_fachwahlen.put(pFachartID, fachwahlenDerFachart);
+		}
 		return fachwahlenDerFachart;
 	}
 	

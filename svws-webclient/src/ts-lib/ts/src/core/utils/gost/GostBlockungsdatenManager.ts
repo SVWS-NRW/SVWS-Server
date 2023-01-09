@@ -1322,8 +1322,10 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public getOfFachartMengeFachwahlen(pFachartID : number) : List<GostFachwahl> {
 		let fachwahlenDerFachart : List<GostFachwahl> | null = this._map_fachartID_fachwahlen.get(pFachartID);
-		if (fachwahlenDerFachart === null) 
-			throw new DeveloperNotificationException("Fachart-ID (" + pFachartID + ") unbekannt!")
+		if (fachwahlenDerFachart === null) {
+			fachwahlenDerFachart = new Vector();
+			this._map_fachartID_fachwahlen.put(pFachartID, fachwahlenDerFachart);
+		}
 		return fachwahlenDerFachart;
 	}
 

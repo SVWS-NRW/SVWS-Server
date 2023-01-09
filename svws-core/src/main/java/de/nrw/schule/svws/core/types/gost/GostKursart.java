@@ -241,7 +241,7 @@ public enum GostKursart {
 	 * 
 	 * @return pKurs.fachID * {@link #FACHART_ID_FAKTOR} + pKurs.kursartID
 	 */
-	public static long getFachartID(GostBlockungKurs pKurs) {
+	public static long getFachartID(@NotNull GostBlockungKurs pKurs) {
 		return getFachartID(pKurs.fach_id, pKurs.kursart);
 	}
 	
