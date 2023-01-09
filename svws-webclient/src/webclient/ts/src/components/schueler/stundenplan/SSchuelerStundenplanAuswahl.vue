@@ -6,9 +6,8 @@
 
 <script setup lang="ts">
 
-	import { SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, ref, ShallowRef, WritableComputedRef } from "vue";
-	import { StundenplanListeEintrag } from "@svws-nrw/svws-core-ts";
+	import { SchuelerListeEintrag, StundenplanListeEintrag } from "@svws-nrw/svws-core-ts";
+	import { computed, ComputedRef, ShallowRef, WritableComputedRef } from "vue";
 	import { DataStundenplan } from "~/apps/schueler/DataStundenplan";
 	import { routeSchuelerStundenplanDaten } from "~/router/apps/schueler/stundenplan/RouteSchuelerStundenplanDaten";
 	import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";

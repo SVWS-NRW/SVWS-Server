@@ -29,7 +29,7 @@
 					</template>
 				</svws-ui-table>
 			</div>
-			<div v-if="main.config.kursblockung_aktiv.size && abiturjahr > 0" class="mt-20">
+			<div v-if="kursblockung_aktiv && abiturjahr > 0" class="mt-20">
 				<h3 class="text-headline px-6 4xl:px-8 mb-3 opacity-50">Blockungen</h3>
 				<svws-ui-table v-model="selected_hj" :columns="[{ key: 'kuerzel', label: 'Halbjahr' }]" :data="halbjahre" class="mb-10">
 					<template #body="{rows}">
@@ -138,6 +138,8 @@
 	import { SvwsUiSecondaryMenu, SvwsUiMultiSelect, SvwsUiTable, SvwsUiDropdown, SvwsUiDropdownItem, SvwsUiButton, SvwsUiTextInput, SvwsUiIcon, SvwsUiModal, DataTableColumn } from "@svws-nrw/svws-ui";
 	import { DataGostJahrgang } from "~/apps/gost/DataGostJahrgang";
 	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
+import { useRoute } from "vue-router";
+import { routeGostKursplanung } from "~/router/apps/gost/RouteGostKursplanung";
 
 	const { schule } = defineProps<{ 
 		item: ShallowRef<GostJahrgang | undefined>;
@@ -149,6 +151,8 @@
 	const main: Main = injectMainApp();
 	const app = main.apps.gost;
 	const appJahrgaenge = main.apps.jahrgaenge;
+	const route = useRoute();
+
 	const cols: DataTableColumn[] = [
 		{ key: "bezeichnung", label: "Bezeichnung", sortable: true, span: 2 },
 		{ key: "abiturjahr", label: "Abiturjahr", sortable: true },
@@ -158,6 +162,9 @@
 	const hj_memo: Ref<GostHalbjahr | undefined> = ref(undefined);
 	const edit_blockungsname: Ref<boolean> = ref(false);
 	const selected_ergebnisse: Ref<GostBlockungsergebnisListeneintrag[]> = ref([]);
+
+	const kursblockung_aktiv: ComputedRef<boolean> =
+		computed(()=> routeGostKursplanung.isSelected(route.name));
 
 	const rows: ComputedRef<GostJahrgang[]> =
 		computed(() => {

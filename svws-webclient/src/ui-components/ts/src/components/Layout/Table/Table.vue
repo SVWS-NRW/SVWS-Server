@@ -17,7 +17,7 @@
 		selection?: Array<DataTableItem>;
 		modelValue?: DataTableItem;
 		footer?: boolean;
-		id?: keyof DataTableColumn;
+		id?: string;
 	}>();
 
 	const emit = defineEmits<{

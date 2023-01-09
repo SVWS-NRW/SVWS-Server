@@ -31,7 +31,7 @@
 <script setup lang="ts">
 
 	import { GostJahrgang, LehrerListeEintrag } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, onMounted, onUnmounted, Ref, ref, ShallowRef } from "vue";
+	import { computed, ComputedRef, Ref, ref, ShallowRef } from "vue";
 	import { DataGostJahrgang } from "~/apps/gost/DataGostJahrgang";
 	import { ListLehrer } from "~/apps/lehrer/ListLehrer";
 	import { injectMainApp, Main } from "~/apps/Main";
@@ -48,11 +48,6 @@
 	const main: Main = injectMainApp();
 	const app = main.apps.gost;
 
-	const self = Symbol("kursplanung");
-
-	onMounted(() => main.config.kursblockung_aktiv.add(self));
-	onUnmounted(() => main.config.kursblockung_aktiv.delete(self));
-	
 	const collapsed: Ref<boolean> = ref(true);
 	const active_panel: Ref<'regeln'> = ref('regeln')
 

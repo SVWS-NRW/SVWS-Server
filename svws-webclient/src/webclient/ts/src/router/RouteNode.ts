@@ -1,5 +1,6 @@
+import { useDateFormat } from "@vueuse/core";
 import { ref, Ref } from "vue";
-import { RouteComponent, RouteLocationNormalized, RouteParams, RouteRecordRaw } from "vue-router";
+import type { RouteComponent, RouteLocationNormalized, RouteParams, RouteRecordName, RouteRecordRaw } from "vue-router";
 
 /**
  * Diese abstrakte Klasse ist die Basisklasse aller Knoten für
@@ -9,7 +10,6 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
 
     /** Eine Map mit allen Knoten */
     protected static mapNodesByName: Map<string, RouteNode<unknown, any>> = new Map();
-
 
     /** Das vue-Router-Objekt (siehe RouteRecordRaw) */
     protected _record: RouteRecordRaw;
@@ -27,7 +27,7 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
     protected _menu: RouteNode<unknown, any>[];
 
 	/** Die Daten, die dem Knoten zugeordnet sind */
-	protected _data: TRouteData;          
+	protected _data: TRouteData;
 
 	/** Der ausgewählte Kind-Knoten, zu welchem geroutet werden soll (z.B. bei Tabs nach einer Auswahl) */
 	protected _selectedChild: Ref<RouteNode<unknown, any> | undefined> = ref(undefined);
@@ -248,6 +248,20 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
         return (this.isHidden === undefined) ? false : this.isHidden();
     }
 
+    /** Prüft, ob die Route aktuell ausgewählt is oder Parent einer anderen Route
+     * @returns true, wenn die Route den vorgegebenen Namen hat.
+    */
+    public isSelected(name: RouteRecordName | null | undefined): boolean {
+        const node = RouteNode.getNodeByName(this.name);
+        if (node === undefined || !name)
+            return false;
+        if (node.name === name)
+            return true;
+        else if (this.parent !== undefined)
+            return this.parent.isSelected(name);
+        else
+            return false;
+    }
 
     /**
      * Setzt die Informationen zu der (weiteren?) Router-View mit dem Namen "name". Ist eine

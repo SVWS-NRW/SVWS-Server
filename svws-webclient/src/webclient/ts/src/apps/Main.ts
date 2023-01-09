@@ -40,8 +40,6 @@ export class MainConfig {
 	pending: ComputedRef<boolean> = this.apiLoadingStatus.api_pending;
 	isAuthenticated: boolean | undefined = undefined;
 	isConnected = false;
-	/** Bis uns etwas besseres einfällt, wird hier geschaut, ob die Kursblockung im Tab aktiv ist... */
-	kursblockung_aktiv = new Set();
 	blockung_aktiv = false;
 	hasGost = false;
 	user_config: Map<keyof UserConfigKeys, UserConfigKeys[keyof UserConfigKeys]> = new Map();
