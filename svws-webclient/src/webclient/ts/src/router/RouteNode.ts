@@ -241,15 +241,15 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
 	/** 
      * Gibt zurück, ob der Knoten für das Routing versteckt ist oder nicht.
      * 
-     * @returns true, falls der Knoten versteckt werden soll und für das Routing nicht zur Verfügung steht.
+     * @returns {boolean} true, falls der Knoten versteckt werden soll und für das Routing nicht zur Verfügung steht.
      */
 	public get hidden(): boolean {
         // TODO prüfen, ob die Komponente dargestellt werden darf oder nicht
         return (this.isHidden === undefined) ? false : this.isHidden();
     }
 
-    /** Prüft, ob die Route aktuell ausgewählt is oder Parent einer anderen Route
-     * @returns true, wenn die Route den vorgegebenen Namen hat.
+    /** Prüft, ob die Route aktuell ausgewählt ist oder Parent einer anderen Route
+     * @returns {boolean} true, wenn die Route den vorgegebenen Namen hat.
     */
     public isSelected(name: RouteRecordName | null | undefined): boolean {
         const node = RouteNode.getNodeByName(this.name);
