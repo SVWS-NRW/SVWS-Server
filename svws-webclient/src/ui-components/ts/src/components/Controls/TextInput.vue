@@ -17,7 +17,8 @@
 		required = false,
 		readonly = false,
 		headless = false,
-		focus = false
+		focus = false,
+		rounded = false
 	} = defineProps<{
 		type?: InputType;
 		modelValue?: string | number;
@@ -29,6 +30,7 @@
 		readonly?: boolean;
 		headless?: boolean;
 		focus?: boolean;
+		rounded?: boolean;
 	}>();
 
 	const emit = defineEmits<{
@@ -88,7 +90,7 @@
 			'text-input-readonly': readonly,
 			'text-input--icon': hasIcon,
 			'text-input--statistics': statistics,
-			'text-input--search': type === 'search'
+			'text-input--search': type === 'search',
 		}"
 	>
 		<input
@@ -96,7 +98,8 @@
 			v-focus
 			:class="{
 				'text-input--control': !headless,
-				'text-input--headless': headless
+				'text-input--headless': headless,
+				'text-input--rounded': rounded
 			}"
 			v-bind="{ ...$attrs }"
 			:type="type"
@@ -166,6 +169,10 @@
 		@apply text-base;
 		@apply whitespace-nowrap;
 		padding: 0.5em 0.7em;
+	}
+
+	.text-input--rounded {
+		@apply rounded-full;
 	}
 
 	.multiselect-input-component .text-input--control {

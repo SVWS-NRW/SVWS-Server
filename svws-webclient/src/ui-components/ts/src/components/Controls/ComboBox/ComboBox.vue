@@ -17,7 +17,8 @@ const {
 	itemFilter,
 	modelValue,
 	headless,
-	removable
+	removable,
+	rounded
 } = defineProps({
 	placeholder: {type: String, default: ""},
 	title: {type: String, default: ""},
@@ -44,7 +45,8 @@ const {
 		type: [Object, Array] as PropType<Item | Item[]>
 	},
 	headless: {type: Boolean, default: false},
-	removable: {type: Boolean, default: false}
+	removable: {type: Boolean, default: false},
+	rounded: {type: Boolean, default: false}
 });
 
 const emit = defineEmits<{
@@ -279,9 +281,10 @@ function removeItem() {
 					@keydown.enter.prevent="selectCurrentActiveItem"
 					@keydown.esc.prevent="onEscape"
 					@keydown.space="onSpace"
+					:rounded="rounded"
 				/>
 			</div>
-			<div v-if="tags" class="tag-list-wrapper" @click.self="toggleListbox">
+			<div v-if="tags" class="tag-list-wrapper" :class="{'tag-list-wrapper--rounded': rounded}" @click.self="toggleListbox">
 				<div class="tag-list" @click.self="toggleListbox">
 					<slot v-if="!selectedItemList.size && !showList" name="no-content">
 					</slot>
@@ -358,6 +361,7 @@ function removeItem() {
 	@apply border-purple;
 	@apply bg-purple bg-opacity-[0.02];
 }
+
 
 .multiselect-input-component.with-open-list,
 .multiselect-input-component.with-value,
@@ -475,7 +479,7 @@ function removeItem() {
 }
 
 .tag-badge {
-	@apply rounded-full bg-dark cursor-pointer text-white relative z-10;
+	@apply rounded-md bg-dark cursor-pointer text-white relative z-10;
 	@apply flex items-center leading-none;
 	padding: 0.2em 0.4em 0.2em 0.7em;
 }
@@ -517,7 +521,13 @@ function removeItem() {
 	@apply cursor-pointer;
 	padding: 0.5em 0.7em;
 	min-height: 3rem;
-	border-radius: 1.4em;
+
+	&--rounded {
+		@apply rounded-full;
+		.tag-badge {
+			@apply rounded-full;
+		}
+	}
 }
 
 .tag-list-wrapper .dropdown-icon {
