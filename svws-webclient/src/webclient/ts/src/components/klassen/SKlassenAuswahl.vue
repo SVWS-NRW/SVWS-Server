@@ -17,12 +17,12 @@
 <script setup lang="ts">
 
 	import { Schuljahresabschnitt, KlassenListeEintrag, LehrerListeEintrag } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, ref, ShallowRef, WritableComputedRef } from "vue";
+	import { computed, ComputedRef, ShallowRef, WritableComputedRef } from "vue";
 	import { injectMainApp, Main } from "~/apps/Main";
 	import { routeKlassen } from "~/router/apps/RouteKlassen";
 	import { ListLehrer } from "~/apps/lehrer/ListLehrer";
 	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
-	import { DataTableColumn } from "@svws-nrw/svws-ui/dist/components/Layout/Table/types";
+	import { DataTableColumn } from "@svws-nrw/svws-ui";
 
 	const { schule } = defineProps<{ 
 		item: ShallowRef<KlassenListeEintrag | undefined>;
