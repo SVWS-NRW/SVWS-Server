@@ -1281,12 +1281,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 		fachwahlenDesSchuelers.add(pFachwahl);
 		fachwahlenDesSchuelers.sort(this._compFachwahlen);
 		let fachartID : number = GostKursart.getFachartID(pFachwahl);
-		let fachwahlenDerFachart : List<GostFachwahl> | null = this._map_fachartID_fachwahlen.get(fachartID);
-		if (fachwahlenDerFachart === null) {
-			fachwahlenDerFachart = new Vector();
-			this._map_schuelerID_fachwahlen.put(fachartID, fachwahlenDerFachart);
-		}
-		fachwahlenDerFachart.add(pFachwahl);
+		this.getOfFachartMengeFachwahlen(fachartID).add(pFachwahl);
 		this._daten.fachwahlen.add(pFachwahl);
 	}
 
@@ -1314,11 +1309,9 @@ export class GostBlockungsdatenManager extends JavaObject {
 	/**
 	 * Liefert die Menge aller {@link GostFachwahl} einer bestimmten Fachart-ID. <br> 
 	 * Die Fachart-ID lässt sich mit {@link GostKursart#getFachartID} berechnen. <br>
-	 * Wirft eine DeveloperNotificationException, falls die Fachart-ID nicht existiert.
 	 * 
 	 * @param pFachartID Die Fachart-ID berechnet aus Fach-ID und Kursart-ID.
 	 * @return Die Menge aller {@link GostFachwahl} einer bestimmten Fachart-ID.
-	 * @throws DeveloperNotificationException  Falls die Fachart-ID nicht existiert.
 	 */
 	public getOfFachartMengeFachwahlen(pFachartID : number) : List<GostFachwahl> {
 		let fachwahlenDerFachart : List<GostFachwahl> | null = this._map_fachartID_fachwahlen.get(pFachartID);

@@ -1343,12 +1343,7 @@ public class GostBlockungsdatenManager {
 
 		// _map_fachartID_fachwahlen
 		long fachartID = GostKursart.getFachartID(pFachwahl);
-		List<@NotNull GostFachwahl> fachwahlenDerFachart = _map_fachartID_fachwahlen.get(fachartID);
-		if (fachwahlenDerFachart == null) {
-			fachwahlenDerFachart = new Vector<>();
-			_map_schuelerID_fachwahlen.put(fachartID, fachwahlenDerFachart);
-		}
-		fachwahlenDerFachart.add(pFachwahl);
+		getOfFachartMengeFachwahlen(fachartID).add(pFachwahl);
 
 		// fachwahlen
 		_daten.fachwahlen.add(pFachwahl);
@@ -1377,13 +1372,11 @@ public class GostBlockungsdatenManager {
 	/**
 	 * Liefert die Menge aller {@link GostFachwahl} einer bestimmten Fachart-ID. <br> 
 	 * Die Fachart-ID lässt sich mit {@link GostKursart#getFachartID} berechnen. <br>
-	 * Wirft eine DeveloperNotificationException, falls die Fachart-ID nicht existiert.
 	 * 
 	 * @param pFachartID Die Fachart-ID berechnet aus Fach-ID und Kursart-ID.
 	 * @return Die Menge aller {@link GostFachwahl} einer bestimmten Fachart-ID.
-	 * @throws DeveloperNotificationException  Falls die Fachart-ID nicht existiert.
 	 */
-	public @NotNull List<@NotNull GostFachwahl> getOfFachartMengeFachwahlen(long pFachartID) throws DeveloperNotificationException{
+	public @NotNull List<@NotNull GostFachwahl> getOfFachartMengeFachwahlen(long pFachartID) {
 		List<@NotNull GostFachwahl> fachwahlenDerFachart = _map_fachartID_fachwahlen.get(pFachartID);
 		if (fachwahlenDerFachart == null) {
 			fachwahlenDerFachart = new Vector<>();
