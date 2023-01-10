@@ -18,7 +18,7 @@
   "files": [
     "dist"
   ],
-  "main": "./dist/svws-ui.umd.js",
+  "main": "./dist/svws-ui.umd.cjs",
   "module": "./dist/svws-ui.js",
   "type": "module",
   "types": "./dist/index.d.ts",
