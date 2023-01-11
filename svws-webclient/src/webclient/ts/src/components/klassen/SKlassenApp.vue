@@ -4,10 +4,9 @@
 			<div class="flex items-center">
 				<span class="inline-block mr-3">{{ item.value?.kuerzel?.toString() }}</span>
 				<svws-ui-badge type="light">{{ "ID: " + item.value?.id }}</svws-ui-badge>
-				<br/>
-				<div class="separate-items--custom">
-					<span v-for="(l, i) in inputKlassenlehrer" :key="i" class="opacity-50"> {{ l.kuerzel }} </span>
-				</div>
+			</div>
+			<div class="separate-items--custom">
+				<span v-for="(l, i) in inputKlassenlehrer" :key="i" class="opacity-50"> {{ l.kuerzel }} </span>
 			</div>
 		</svws-ui-header>
 		<svws-ui-router-tab-bar :routes="routeKlassen.children_records" :hidden="routeKlassen.children_hidden" v-model="selectedRoute">

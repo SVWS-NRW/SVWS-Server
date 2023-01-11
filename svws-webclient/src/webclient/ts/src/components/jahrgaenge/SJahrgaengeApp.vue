@@ -4,9 +4,8 @@
 			<div class="flex items-center">
 				<span class="inline-block mr-3">{{ props.item?.bezeichnung }}</span>
 				<svws-ui-badge type="light">{{ "ID: " + props.id }}</svws-ui-badge>
-				<br/>
-				<span class="opacity-50">{{ props.item?.kuerzel }}</span>
 			</div>
+			<span class="opacity-50">{{ props.item?.kuerzel }}</span>
 		</svws-ui-header>
 		<svws-ui-router-tab-bar :routes="routeKatalogJahrgaenge.children_records" :hidden="routeKatalogJahrgaenge.children_hidden" v-model="selectedRoute">
 			<router-view />
