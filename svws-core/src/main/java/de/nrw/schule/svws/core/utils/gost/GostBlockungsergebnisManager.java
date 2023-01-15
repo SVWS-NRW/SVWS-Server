@@ -1670,8 +1670,7 @@ public class GostBlockungsergebnisManager {
 	 * 
 	 * @throws DeveloperNotificationException      Falls ein Fehler passiert, z. B. wenn es die Zuordnung bereits gab.
 	 */
-	public boolean setKursSchiene(long pKursID, long pSchienenID, boolean pHinzufuegenOderEntfernen)
-			throws DeveloperNotificationException {
+	public boolean setKursSchiene(long pKursID, long pSchienenID, boolean pHinzufuegenOderEntfernen) throws DeveloperNotificationException {
 		if (pHinzufuegenOderEntfernen)
 			return stateKursSchieneHinzufuegen(pKursID, pSchienenID);
 		return stateKursSchieneEntfernen(pKursID, pSchienenID);
@@ -1688,8 +1687,7 @@ public class GostBlockungsergebnisManager {
 	 * 
 	 * @throws DeveloperNotificationException      Falls ein Fehler passiert, z. B. wenn es die Zuordnung bereits gab.
 	 */
-	public boolean setSchuelerKurs(long pSchuelerID, long pKursID, boolean pHinzufuegenOderEntfernen)
-			throws DeveloperNotificationException {
+	public boolean setSchuelerKurs(long pSchuelerID, long pKursID, boolean pHinzufuegenOderEntfernen) throws DeveloperNotificationException {
 		if (pHinzufuegenOderEntfernen)
 			return stateSchuelerKursHinzufuegen(pSchuelerID, pKursID);
 		return stateSchuelerKursEntfernen(pSchuelerID, pKursID);
@@ -1821,6 +1819,65 @@ public class GostBlockungsergebnisManager {
 		kurs.schienen.clear();
 		
 		stateRevalidateEverything();
+	}
+	
+	/**
+	 * Verändert die Schienenanzahl eines Kurses. Dies ist nur bei einer Blockungsvorlage erlaubt.
+	 * 
+	 * @param  pKursID Die Datenbank-ID des Kurses.
+	 * @param  pAnzahlSchienenNeu Die neue Schienenanzahl des Kurses.
+	 * @throws DeveloperNotificationException Falls ein unerwarteter Fehler passiert.
+	 */
+	public void patchOfKursSchienenAnzahl(long pKursID, int pAnzahlSchienenNeu) throws DeveloperNotificationException {
+		// Daten holen.
+		@NotNull GostBlockungKurs kursG = getKursG(pKursID);
+		@NotNull GostBlockungsergebnisKurs kursE = getKursE(pKursID);
+		int nSchienen = _parent.getSchienenAnzahl();
+
+		// DeveloperNotificationException
+		if (_parent.getIstBlockungsVorlage() == false)
+			throw new DeveloperNotificationException("Die Schienenanzahl eines Kurses darf nur bei der Blockungsvorlage verändert werden!");
+		if (kursE.anzahlSchienen != kursG.anzahlSchienen)
+			throw new DeveloperNotificationException("Der GostBlockungKurs hat " + kursG.anzahlSchienen + " Schienen, der GostBlockungsergebnisKurs hat hingegen " + kursE.anzahlSchienen + " Schienen!");
+		if (nSchienen == 0)
+			throw new DeveloperNotificationException("Die Blockung hat 0 Schienen. Das darf nicht passieren!");
+		if (pAnzahlSchienenNeu <= 0)
+			throw new DeveloperNotificationException("Ein Kurs muss mindestens einer Schiene zugeordnet sein, statt " + pAnzahlSchienenNeu+" Schienen!");
+		if (pAnzahlSchienenNeu > nSchienen)
+			throw new DeveloperNotificationException("Es gibt nur "+nSchienen+" Schienen, der Kurs kann nicht " + pAnzahlSchienenNeu+" Schienen zugeordnet werden!");
+		
+		// Die Schienenanzahl erhöhen, ggf. mehrfach.
+		while (pAnzahlSchienenNeu > kursG.anzahlSchienen) {
+			boolean hinzugefuegt = false;
+			for (int nr = 1; (nr <= _map_schienenNr_schiene.size()) && (!hinzugefuegt) ; nr++) {
+				@NotNull GostBlockungsergebnisSchiene schiene = getSchieneEmitNr(nr);
+				if (kursE.schienen.contains(schiene.id) == false) {
+					hinzugefuegt = true;
+					kursG.anzahlSchienen++;
+					kursE.anzahlSchienen++;
+					setKursSchiene(pKursID, schiene.id, true);
+				}
+			}
+			if (!hinzugefuegt)
+				throw new DeveloperNotificationException("Es wurde keine freie Schiene für den Kurs " + pKursID + " gefunden!");
+		}
+		
+		// Die Schienenanzahl verringern, ggf. mehrfach.
+		while (pAnzahlSchienenNeu < kursG.anzahlSchienen) {
+			boolean entfernt = false;
+			for (int nr = _map_schienenNr_schiene.size(); (nr >= 1) && (!entfernt) ; nr--) {
+				@NotNull GostBlockungsergebnisSchiene schiene = getSchieneEmitNr(nr);
+				if (kursE.schienen.contains(schiene.id) == true) {
+					entfernt = true;
+					kursG.anzahlSchienen--;
+					kursE.anzahlSchienen--;
+					setKursSchiene(pKursID, schiene.id, false);
+				}
+			}
+			if (!entfernt)
+				throw new DeveloperNotificationException("Es wurde keine belegte Schiene von Kurs " + pKursID + " gefunden!");
+		}
+		
 	}
 	
 	/**

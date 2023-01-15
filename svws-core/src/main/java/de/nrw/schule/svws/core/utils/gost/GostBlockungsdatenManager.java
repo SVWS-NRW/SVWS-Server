@@ -206,7 +206,12 @@ public class GostBlockungsdatenManager {
 		return comp;
 	}
 
-	private boolean getIstBlockungsVorlage() {
+	/**
+	 * Liefert TRUE, falls in dieser Blockung genau 1 Ergebnis (die Blockungsvorlage) vorhanden ist.
+	 * 
+	 * @return TRUE, falls in dieser Blockung genau 1 Ergebnis (die Blockungsvorlage) vorhanden ist.
+	 */
+	public boolean getIstBlockungsVorlage() {
 		return _daten.ergebnisse.size() == 1;
 	}
 
@@ -867,6 +872,10 @@ public class GostBlockungsdatenManager {
 		throw new DeveloperNotificationException("Kurs (" + pKursID + ") hat keine Lehrkraft (" + pLehrkraftID+")!");
 	}
 
+	
+
+
+	
 	private void addSchieneOhneSortierung(@NotNull GostBlockungSchiene pSchiene) throws DeveloperNotificationException {
 		// Datenkonsistenz überprüfen.
 		if (pSchiene.id < 1)

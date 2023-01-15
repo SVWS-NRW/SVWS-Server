@@ -178,7 +178,12 @@ export class GostBlockungsdatenManager extends JavaObject {
 		return comp;
 	}
 
-	private getIstBlockungsVorlage() : boolean {
+	/**
+	 * Liefert TRUE, falls in dieser Blockung genau 1 Ergebnis (die Blockungsvorlage) vorhanden ist.
+	 * 
+	 * @return TRUE, falls in dieser Blockung genau 1 Ergebnis (die Blockungsvorlage) vorhanden ist.
+	 */
+	public getIstBlockungsVorlage() : boolean {
 		return this._daten.ergebnisse.size() === 1;
 	}
 

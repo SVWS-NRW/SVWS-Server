@@ -1679,6 +1679,57 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
+	 * Verändert die Schienenanzahl eines Kurses. Dies ist nur bei einer Blockungsvorlage erlaubt.
+	 * 
+	 * @param  pKursID Die Datenbank-ID des Kurses.
+	 * @param  pAnzahlSchienenNeu Die neue Schienenanzahl des Kurses.
+	 * @throws DeveloperNotificationException Falls ein unerwarteter Fehler passiert.
+	 */
+	public patchOfKursSchienenAnzahl(pKursID : number, pAnzahlSchienenNeu : number) : void {
+		let kursG : GostBlockungKurs = this.getKursG(pKursID);
+		let kursE : GostBlockungsergebnisKurs = this.getKursE(pKursID);
+		let nSchienen : number = this._parent.getSchienenAnzahl();
+		if (this._parent.getIstBlockungsVorlage() === false) 
+			throw new DeveloperNotificationException("Die Schienenanzahl eines Kurses darf nur bei der Blockungsvorlage verändert werden!")
+		if (kursE.anzahlSchienen !== kursG.anzahlSchienen) 
+			throw new DeveloperNotificationException("Der GostBlockungKurs hat " + kursG.anzahlSchienen + " Schienen, der GostBlockungsergebnisKurs hat hingegen " + kursE.anzahlSchienen + " Schienen!")
+		if (nSchienen === 0) 
+			throw new DeveloperNotificationException("Die Blockung hat 0 Schienen. Das darf nicht passieren!")
+		if (pAnzahlSchienenNeu <= 0) 
+			throw new DeveloperNotificationException("Ein Kurs muss mindestens einer Schiene zugeordnet sein, statt " + pAnzahlSchienenNeu + " Schienen!")
+		if (pAnzahlSchienenNeu > nSchienen) 
+			throw new DeveloperNotificationException("Es gibt nur " + nSchienen + " Schienen, der Kurs kann nicht " + pAnzahlSchienenNeu + " Schienen zugeordnet werden!")
+		while (pAnzahlSchienenNeu > kursG.anzahlSchienen) {
+			let hinzugefuegt : boolean = false;
+			for (let nr : number = 1; (nr <= this._map_schienenNr_schiene.size()) && (!hinzugefuegt); nr++){
+				let schiene : GostBlockungsergebnisSchiene = this.getSchieneEmitNr(nr);
+				if (kursE.schienen.contains(schiene.id) === false) {
+					hinzugefuegt = true;
+					kursG.anzahlSchienen++;
+					kursE.anzahlSchienen++;
+					this.setKursSchiene(pKursID, schiene.id, true);
+				}
+			}
+			if (!hinzugefuegt) 
+				throw new DeveloperNotificationException("Es wurde keine freie Schiene für den Kurs " + pKursID + " gefunden!")
+		}
+		while (pAnzahlSchienenNeu < kursG.anzahlSchienen) {
+			let entfernt : boolean = false;
+			for (let nr : number = this._map_schienenNr_schiene.size(); (nr >= 1) && (!entfernt); nr--){
+				let schiene : GostBlockungsergebnisSchiene = this.getSchieneEmitNr(nr);
+				if (kursE.schienen.contains(schiene.id) === true) {
+					entfernt = true;
+					kursG.anzahlSchienen--;
+					kursE.anzahlSchienen--;
+					this.setKursSchiene(pKursID, schiene.id, false);
+				}
+			}
+			if (!entfernt) 
+				throw new DeveloperNotificationException("Es wurde keine belegte Schiene von Kurs " + pKursID + " gefunden!")
+		}
+	}
+
+	/**
 	 * Nur für Debug-Zwecke.
 	 */
 	public debug() : void {
