@@ -59,11 +59,11 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 			if (hj === null) // In zwei Fällen existiert kein Planungshalbjahr, z.B. weil der Abiturjahrgang (fast) abgeschlossen ist oder noch in der Sek I ist.
 				hj = (abiturjahr < App.akt_abschnitt.schuljahr + App.akt_abschnitt.abschnitt) ? GostHalbjahr.Q22 : GostHalbjahr.EF1;
 			this.data.halbjahr.value = hj;
-			to_params.halbjahr = "" + hj.id;
-			return { name: this.defaultChild!.name, params: to_params };
+			return routeGostKursplanungHalbjahr.getRoute(abiturjahr, hj.id, undefined);
 		}
-		if (halbjahr.id !== this.data.halbjahr.value.id)
-			this.data.halbjahr.value = halbjahr;
+		this.data.halbjahr.value = halbjahr;
+		if (to.name === this.name)
+			return routeGostKursplanungHalbjahr.getRoute(abiturjahr, halbjahr.id, undefined);
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {

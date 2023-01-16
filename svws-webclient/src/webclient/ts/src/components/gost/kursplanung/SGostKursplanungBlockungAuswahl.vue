@@ -61,7 +61,7 @@
 	import { ListKursblockungen } from '~/apps/gost/ListKursblockungen';
 	import { routeGostKursplanungHalbjahr } from '~/router/apps/gost/kursplanung/RouteGostKursplanungHalbjahr';
 	import { useRouter } from 'vue-router';
-	import { routeGostKlausurplanung } from '~/router/apps/gost/RouteGostKlausurplanung';
+	import { routeGostKursplanung } from '~/router/apps/gost/RouteGostKursplanung';
 
 	const props = defineProps<{
 		item: ShallowRef<GostJahrgang | undefined>;
@@ -135,7 +135,7 @@
 		const abiturjahr = props.jahrgangsdaten.daten?.abiturjahr?.valueOf();
 		if (!abiturjahr)
 			return;
-		router.push({ name: routeGostKlausurplanung.name, params: { abiturjahr: abiturjahr, halbjahr: props.halbjahr.value?.id }});
+		router.push({ name: routeGostKursplanung.name, params: { abiturjahr: abiturjahr, halbjahr: props.halbjahr.value?.id }});
 	}
 
 	const modal_remove_blockung: Ref<any> = ref(null);

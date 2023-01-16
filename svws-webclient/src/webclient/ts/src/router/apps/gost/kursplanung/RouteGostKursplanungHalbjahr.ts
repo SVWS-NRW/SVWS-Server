@@ -61,8 +61,11 @@ export class RouteGostKursplanungHalbjahr extends RouteNode<RouteDataGostKurspla
 		const halbjahr = (to_params.halbjahr === undefined) ? undefined : GostHalbjahr.fromID(Number(parseInt(to_params.halbjahr as string))) || undefined;
 		if ((abiturjahr === undefined) || (halbjahr === undefined))
 			throw new Error("Fehler: Abiturjahr und Halbjahr müssen als Parameter der Route an dieser Stelle vorhanden sein.");
-		if ((abiturjahr !== this.data.listBlockungen.abiturjahr) || (halbjahr !== this.data.listBlockungen.halbjahr))
-			return routeGostKursplanung.getRoute(abiturjahr, halbjahr.id);
+		if ((abiturjahr !== this.data.listBlockungen.abiturjahr) || (halbjahr !== this.data.listBlockungen.halbjahr)) {
+			await this.data.listBlockungen.update_list(abiturjahr, halbjahr);
+			if ((abiturjahr !== this.data.listBlockungen.abiturjahr) || (halbjahr !== this.data.listBlockungen.halbjahr))
+				return false;
+		}
 		// Prüfe die ID der Blockung
 		const idBlockung = to_params.idblockung === undefined ? undefined : parseInt(to_params.idblockung as string);
 		// ... wurde die ID der Blockung auf undefined setzt, so prüfe, ob die Blockungsliste leer ist und wähle ggf. das erste Element aus
