@@ -47,10 +47,10 @@
 	import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
 	import { routeGost } from "~/router/apps/RouteGost";
 
-	const { dataFaecher } = defineProps<{
+	const props = defineProps<{
 		dataFaecher: DataGostFaecher;
 	}>();
 
-	const rows: ComputedRef<List<GostFach>> = computed(() => dataFaecher.daten || new Vector<GostFach>());
+	const rows: ComputedRef<List<GostFach>> = computed(() => props.dataFaecher.daten || new Vector<GostFach>());
 
 </script>

@@ -294,7 +294,7 @@
 	import { GostJahrgang, GostStatistikFachwahl, ZulaessigesFach } from "@svws-nrw/svws-core-ts";
 	import { DataGostSchuelerFachwahlen } from "~/apps/gost/DataGostSchuelerFachwahlen";
 
-	const { item, dataFachwahlen } = defineProps<{
+	const props = defineProps<{
 		item: ShallowRef<GostJahrgang | undefined>;
 		dataFachwahlen: DataGostSchuelerFachwahlen;
 	}>();
@@ -303,9 +303,9 @@
 	const waehlbarAusgewaehlt = ref("\u2705");
 	const waehlbarNichtAusgewaehlt = ref("\u274C");
 
-	const bezeichnung: ComputedRef<string | undefined> = computed(() => item.value?.bezeichnung?.toString());
+	const bezeichnung: ComputedRef<string | undefined> = computed(() => props.item.value?.bezeichnung?.toString());
 
-	const rows: ComputedRef<GostStatistikFachwahl[]> = computed(() => dataFachwahlen.daten?.toArray() as GostStatistikFachwahl[] || []);
+	const rows: ComputedRef<GostStatistikFachwahl[]> = computed(() => props.dataFachwahlen.daten?.toArray() as GostStatistikFachwahl[] || []);
 
 	const getBgColor = (row: GostStatistikFachwahl) => ZulaessigesFach.getByKuerzelASD(row.kuerzelStatistik).getHMTLFarbeRGBA(1.0).valueOf();
 

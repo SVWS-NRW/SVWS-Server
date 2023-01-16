@@ -39,14 +39,14 @@
 	import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
 	import { DataGostFachkombinationen } from "~/apps/gost/DataGostFachkombinationen";
 
-	const { typ, dataFaecher, dataFachkombinationen } = defineProps<{
+	const props = defineProps<{
 		typ: GostLaufbahnplanungFachkombinationTyp;
 		dataFaecher: DataGostFaecher;
 		dataFachkombinationen: DataGostFachkombinationen;
 	}>();
 
 	const title: ComputedRef<string> = computed(() => {
-		switch(typ) {
+		switch(props.typ) {
 			case GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH:
 				return "Regeln für geforderte Fachkombinationen";
 			case GostLaufbahnplanungFachkombinationTyp.VERBOTEN:
@@ -58,15 +58,15 @@
 
 	const rows: ComputedRef<List<GostJahrgangFachkombination>> = computed(() => {
 		const result = new Vector<GostJahrgangFachkombination>();
-		if (dataFachkombinationen.daten)
-			for (const kombi of dataFachkombinationen.daten)
-				if (GostLaufbahnplanungFachkombinationTyp.fromValue(kombi.typ) === typ)
+		if (props.dataFachkombinationen.daten)
+			for (const kombi of props.dataFachkombinationen.daten)
+				if (GostLaufbahnplanungFachkombinationTyp.fromValue(kombi.typ) === props.typ)
 					result.add(kombi);
 		return result;
 	});
 
 	const add_kurskombi = () => {
-		dataFachkombinationen.add(typ);
+		props.dataFachkombinationen.add(props.typ);
 	}
 
 </script>

@@ -46,7 +46,7 @@
 	import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
 	import { routeGostKursplanungHalbjahr } from "~/router/apps/gost/kursplanung/RouteGostKursplanungHalbjahr";
 
-	const { schule, jahrgangsdaten } = defineProps<{
+	const props = defineProps<{
 		item: ShallowRef<GostJahrgang | undefined>;
 		schule: DataSchuleStammdaten;
 		jahrgangsdaten: DataGostJahrgang;
@@ -79,7 +79,7 @@
 
 	async function abiturjahr_hinzufuegen(jahrgang: JahrgangsListeEintrag) {
 		try {
-			const abiturjahr = await jahrgangsdaten.post_jahrgang(jahrgang.id);
+			const abiturjahr = await props.jahrgangsdaten.post_jahrgang(jahrgang.id);
 			await routeGost.liste.update_list();
 			const jahr = routeGost.liste.liste?.find(j => j.abiturjahr === abiturjahr);
 			selected.value = jahr;
@@ -89,7 +89,7 @@
 	}
 
 	const schule_abschnitte: ComputedRef<Array<Schuljahresabschnitt> | undefined> = computed(() =>
-		schule.daten?.abschnitte?.toArray(new Array<Schuljahresabschnitt>()) || []
+		props.schule.daten?.abschnitte?.toArray(new Array<Schuljahresabschnitt>()) || []
 	);
 
 	const akt_abschnitt: WritableComputedRef<Schuljahresabschnitt> = computed({

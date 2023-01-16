@@ -18,7 +18,7 @@
 	import { GostHalbjahr } from "@svws-nrw/svws-core-ts";
 	import { DataGostJahrgang } from "~/apps/gost/DataGostJahrgang";
 
-	const { jahrgangsdaten } = defineProps<{
+	const props = defineProps<{
 		jahrgangsdaten: DataGostJahrgang;
 	}>();
 
@@ -27,34 +27,34 @@
 	);
 
 	const inputHatZusatzkursGE: WritableComputedRef<boolean | undefined> = computed({
-		get(): boolean | undefined { return jahrgangsdaten.daten?.hatZusatzkursGE; },
-		set(val: boolean | undefined) { jahrgangsdaten.patch({ hatZusatzkursGE: val }); }
+		get(): boolean | undefined { return props.jahrgangsdaten.daten?.hatZusatzkursGE; },
+		set(val: boolean | undefined) { props.jahrgangsdaten.patch({ hatZusatzkursGE: val }); }
 	});
 
 	const inputBeginnZusatzkursGE: WritableComputedRef<GostHalbjahr> = computed({
 		get(): GostHalbjahr {
-			if (jahrgangsdaten.daten === undefined)
+			if (props.jahrgangsdaten.daten === undefined)
 				return GostHalbjahr.Q21;
-			return GostHalbjahr.fromKuerzel(jahrgangsdaten.daten.beginnZusatzkursGE) || GostHalbjahr.Q21;
+			return GostHalbjahr.fromKuerzel(props.jahrgangsdaten.daten.beginnZusatzkursGE) || GostHalbjahr.Q21;
 		},
 		set(val: GostHalbjahr) {
-			jahrgangsdaten.patch({ beginnZusatzkursGE: val.kuerzel });
+			props.jahrgangsdaten.patch({ beginnZusatzkursGE: val.kuerzel });
 		}
 	});
 
 	const inputHatZusatzkursSW: WritableComputedRef<boolean | undefined> = computed({
-		get(): boolean | undefined { return jahrgangsdaten.daten?.hatZusatzkursSW; },
-		set(val: boolean | undefined) { jahrgangsdaten.patch({ hatZusatzkursSW: val }); }
+		get(): boolean | undefined { return props.jahrgangsdaten.daten?.hatZusatzkursSW; },
+		set(val: boolean | undefined) { props.jahrgangsdaten.patch({ hatZusatzkursSW: val }); }
 	});
 
 	const inputBeginnZusatzkursSW: WritableComputedRef<GostHalbjahr> = computed({
 		get(): GostHalbjahr {
-			if (jahrgangsdaten.daten === undefined)
+			if (props.jahrgangsdaten.daten === undefined)
 				return GostHalbjahr.Q21;
-			return GostHalbjahr.fromKuerzel(jahrgangsdaten.daten.beginnZusatzkursSW) || GostHalbjahr.Q21;
+			return GostHalbjahr.fromKuerzel(props.jahrgangsdaten.daten.beginnZusatzkursSW) || GostHalbjahr.Q21;
 		},
 		set(val: GostHalbjahr) {
-			jahrgangsdaten.patch({ beginnZusatzkursSW: val.kuerzel });
+			props.jahrgangsdaten.patch({ beginnZusatzkursSW: val.kuerzel });
 		}
 	});
 

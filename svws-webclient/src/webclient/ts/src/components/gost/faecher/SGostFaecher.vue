@@ -23,7 +23,7 @@
 	import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
 	import { DataGostFachkombinationen } from "~/apps/gost/DataGostFachkombinationen";
 
-	const { jahrgangsdaten, dataFaecher } = defineProps<{
+	const props = defineProps<{
 		item: ShallowRef<GostJahrgang | undefined>;
 		schule: DataSchuleStammdaten;
 		jahrgangsdaten: DataGostJahrgang;
