@@ -9,6 +9,7 @@ import { RouteGostKursplanungHalbjahr, routeGostKursplanungHalbjahr } from "./Ro
 import { routeGostKursplanung } from "../RouteGostKursplanung";
 import { computed, Ref, ref, WritableComputedRef } from "vue";
 import { routeGostKursplanungSchueler } from "./RouteGostKursplanungSchueler";
+import { RouteManager } from "~/router/RouteManager";
 
 export class RouteDataGostKursplanungBlockung {
 	ergebnis: Ref<GostBlockungsergebnisListeneintrag | undefined> = ref(undefined);
@@ -135,7 +136,7 @@ export class RouteGostKursplanungBlockung extends RouteNode<RouteDataGostKurspla
 		return computed({
 			get: () => this.data.ergebnis.value,
 			set: (value) => {
-				if (value?.id !== this.data.ergebnis.value?.id) {
+				if ((value?.id !== this.data.ergebnis.value?.id) && (!RouteManager.isActive())) {
 					const idSchueler = routeGostKursplanungSchueler.data.listSchueler.ausgewaehlt?.id;
 					if (idSchueler === undefined)
 						router.push(this.getRoute(routeGost.liste.ausgewaehlt?.abiturjahr, routeGostKursplanung.data.halbjahr.value.id, value?.blockungID, value?.id));

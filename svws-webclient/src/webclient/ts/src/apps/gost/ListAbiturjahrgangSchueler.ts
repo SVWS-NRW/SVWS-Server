@@ -59,7 +59,7 @@ export class ListAbiturjahrgangSchueler extends BaseList<SchuelerListeEintrag, F
 	protected filter_liste(): void {
 		const manager = this.dataKursblockung.ergebnismanager;
 		if (manager === undefined)
-			throw new Error("Kein Ergebnismanager für die Blockungsdaten vorhanden.");
+			return;
 		manager.getMengeDerSchuelerMitKollisionen
 		const pKonfliktTyp = 0 + (this._filter.kollisionen ? 1:0) + (this._filter.nichtwahlen ? 2:0)
 		const res = manager.getMengeDerSchuelerGefiltert(this._filter.kurs?.id || 0,

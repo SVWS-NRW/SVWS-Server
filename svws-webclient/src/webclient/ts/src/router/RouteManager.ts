@@ -45,6 +45,12 @@ export class RouteManager {
 		return RouteManager._instance;
 	}
 
+	public static isActive() : boolean {
+		const manager = RouteManager._instance;
+		if (manager === undefined)
+			return false;
+		return manager.active;
+	}
 
 	protected async beforeEach(to: RouteLocationNormalized, from: RouteLocationNormalized) {
 		// Prüfe, ob bereits ein Routing-Vorgang durchgeführt wird. Ist dies der Fall, so wird der neue Vorgang ignoriert
