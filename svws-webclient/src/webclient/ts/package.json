@@ -16,8 +16,6 @@
 		"serve": "vite preview",
 		"test": "vitest",
 		"test:run": "vitest run --coverage",
-		"lint": "eslint 'src/**/*.{ts,vue}' --cache",
-		"lint-fix": "eslint 'src/**/*.{ts,vue}' --fix --cache",
 		"lint-tsc": "vue-tsc --noEmit",
 		"check-licenses": "license-checker-rseidelsohn --summary --unknown --production"
 	},
