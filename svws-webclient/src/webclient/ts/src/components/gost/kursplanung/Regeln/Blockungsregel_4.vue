@@ -1,12 +1,12 @@
 <template>
-	<BlockungsregelBase v-model="regel" :regel-typ="regel_typ" @regel-hinzugefuegt="regel_hinzufuegen">
+	<BlockungsregelBase v-model="regel" :regel-typ="regel_typ" @regel-hinzugefuegt="regel_hinzufuegen" :blockung="blockung">
 		<template #beschreibung="{ regel: r }">
 			{{ name(r.parameter.get(0).valueOf()) }} in {{ getKursbezeichnung(r) }} fixiert
 		</template>
 		Fixiere
-		<parameter-schueler v-model="schueler" />
+		<parameter-schueler v-model="schueler" :list-schueler="listSchueler" />
 		in
-		<parameter-kurs v-model="kurs" :data-faecher="dataFaecher" />
+		<parameter-kurs v-model="kurs" :data-faecher="dataFaecher" :blockung="blockung" />
 	</BlockungsregelBase>
 </template>
 
@@ -18,9 +18,13 @@
 	import { useKurse } from '../composables'
 	import { useSchuelerListe } from "../../composables";
 	import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
+	import { DataGostKursblockung } from "~/apps/gost/DataGostKursblockung";
+	import { ListAbiturjahrgangSchueler } from "~/apps/gost/ListAbiturjahrgangSchueler";
 
-	const { dataFaecher } = defineProps<{
+	const props = defineProps<{
 		dataFaecher: DataGostFaecher;
+		blockung: DataGostKursblockung;
+		listSchueler: ListAbiturjahrgangSchueler;
 	}>();
 
 	const regel_typ = GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS
@@ -31,10 +35,10 @@
 
 	const regel: ShallowRef<GostBlockungRegel | undefined> = shallowRef(undefined)
 	const schueler = useRegelParameterSchueler(regel, 0)
-	const kurs = useRegelParameterKurs(regel, 1)
+	const kurs = useRegelParameterKurs(props.blockung, regel, 1)
 
 	const schuelerliste = useSchuelerListe();
-	const kurse = useKurse()
+	const kurse = useKurse(props.blockung)
 	const regel_hinzufuegen = (r: GostBlockungRegel) => {
 		r.parameter.add(schuelerliste[0].id)
 		r.parameter.add(kurse.value.get(0).id)
@@ -46,7 +50,7 @@
 		return schueler ? `${schueler.nachname}, ${schueler.vorname}` : "";
 	}
 
-	const getKursbezeichnung = createKursbezeichnungsGetter(1)
+	const getKursbezeichnung = createKursbezeichnungsGetter(props.blockung, 1)
 
 </script>
 

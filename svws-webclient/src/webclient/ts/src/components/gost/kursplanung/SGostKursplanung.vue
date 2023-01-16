@@ -20,7 +20,7 @@
 					<div v-if="collapsed" class="app-layout--main-sidebar--trigger-count"> {{ regelzahl }} </div>
 				</div>
 				<div class="app-layout--main-sidebar--content">
-					<s-card-gost-regelansicht v-if="!collapsed && active_panel==='regeln'" :data-faecher="dataFaecher" />
+					<s-card-gost-regelansicht v-if="!collapsed" :data-faecher="dataFaecher" :blockung="blockung" :list-schueler="listSchueler" />
 				</div>
 			</div>
 		</div>
@@ -40,9 +40,11 @@
 	import { DataGostKursblockung } from "~/apps/gost/DataGostKursblockung";
 	import { DataGostKursblockungsergebnis } from "~/apps/gost/DataGostKursblockungsergebnis";
 	import { DataGostSchuelerFachwahlen } from "~/apps/gost/DataGostSchuelerFachwahlen";
+	import { ListAbiturjahrgangSchueler } from "~/apps/gost/ListAbiturjahrgangSchueler";
 	import { ListKursblockungen } from "~/apps/gost/ListKursblockungen";
 	import { ListLehrer } from "~/apps/lehrer/ListLehrer";
 	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
+	import { routeGostKursplanungSchueler } from "~/router/apps/gost/kursplanung/RouteGostKursplanungSchueler";
 
 	const props = defineProps<{
 		item: ShallowRef<GostJahrgang | undefined>;
@@ -58,8 +60,9 @@
 		dataFachwahlen: DataGostSchuelerFachwahlen;
 	}>();
 
+	const listSchueler: ComputedRef<ListAbiturjahrgangSchueler> = computed(() => routeGostKursplanungSchueler.data.listSchueler);
+
 	const collapsed: Ref<boolean> = ref(true);
-	const active_panel: Ref<'regeln'> = ref('regeln')
 
 	const regelzahl: ComputedRef<number> = computed(() => props.blockung.datenmanager?.getRegelAnzahl() || 0);
 

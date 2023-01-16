@@ -1,24 +1,22 @@
 <template>
-	<svws-ui-multi-select v-model="selected" :items="app.listAbiturjahrgangSchueler.liste"
+	<svws-ui-multi-select v-model="selected" :items="props.listSchueler.liste"
 		:item-text="(i: SchuelerListeEintrag) => `${i.nachname}, ${i.vorname}`"
 		:item-filter="filter" :item-sort="sort" autocomplete />
 </template>
 
 <script setup lang="ts">
-	import { injectMainApp, Main } from "~/apps/Main";
 	import { SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { computed, WritableComputedRef } from "vue";
+	import { ListAbiturjahrgangSchueler } from "~/apps/gost/ListAbiturjahrgangSchueler";
 
-	const main: Main = injectMainApp();
-	const app = main.apps.gost;
-
-	const { modelValue } = defineProps<{
+	const props = defineProps<{
 		modelValue: SchuelerListeEintrag;
+		listSchueler: ListAbiturjahrgangSchueler;
 	}>();
 
 	const emit = defineEmits(['update:modelValue'])
 	const selected: WritableComputedRef<SchuelerListeEintrag> = computed({
-		get: () => modelValue,
+		get: () => props.modelValue,
 		set: (value) => emit('update:modelValue', value)
 	});
 

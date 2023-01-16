@@ -1,8 +1,6 @@
 import { SchuelerListeEintrag } from '@svws-nrw/svws-core-ts';
-import { injectMainApp } from '../../apps/Main';
+import { routeGostKursplanungSchueler } from '~/router/apps/gost/kursplanung/RouteGostKursplanungSchueler';
 
 export function useSchuelerListe(): SchuelerListeEintrag[] {
-	const { apps: { gost } } = injectMainApp();
-
-	return gost.listAbiturjahrgangSchueler.liste || []
+	return routeGostKursplanungSchueler.data.listSchueler.liste || []
 }

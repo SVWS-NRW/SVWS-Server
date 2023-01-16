@@ -1,12 +1,12 @@
 <template>
-	<BlockungsregelBase v-model="regel" :regel-typ="regel_typ" @regel-hinzugefuegt="regel_hinzufuegen">
+	<BlockungsregelBase v-model="regel" :regel-typ="regel_typ" @regel-hinzugefuegt="regel_hinzufuegen" :blockung="blockung">
 		<template #beschreibung="{ regel: r }">
 			{{ getKursbezeichnung(r) }} auf Schiene {{ r.parameter.get(1) }} fixiert
 		</template>
 		Fixiere
-		<parameter-kurs v-model="kurs" :data-faecher="dataFaecher" />
+		<parameter-kurs v-model="kurs" :data-faecher="dataFaecher" :blockung="blockung" />
 		in
-		<parameter-schiene v-model="schiene" />
+		<parameter-schiene v-model="schiene" :blockung="blockung" />
 	</BlockungsregelBase>
 </template>
 
@@ -15,11 +15,13 @@
 	import { GostBlockungRegel, GostKursblockungRegelTyp } from "@svws-nrw/svws-core-ts";
 	import { ShallowRef, shallowRef } from "vue";
 	import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
+	import { DataGostKursblockung } from "~/apps/gost/DataGostKursblockung";
 	import { createKursbezeichnungsGetter, useRegelParameterKurs, useRegelParameterSchiene  } from '../composables';
 	import { useKurse } from '../composables'
 
-	const { dataFaecher } = defineProps<{
+	const props = defineProps<{
 		dataFaecher: DataGostFaecher;
+		blockung: DataGostKursblockung;
 	}>();
 
 	const regel_typ = GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE
@@ -28,17 +30,17 @@
 	//Arrays.asList(GostKursblockungRegelParameterTyp.KURS_ID, GostKursblockungRegelParameterTyp.SCHIENEN_NR));
 
 	const regel: ShallowRef<GostBlockungRegel | undefined> = shallowRef(undefined)
-	const kurs = useRegelParameterKurs(regel, 0)
-	const schiene = useRegelParameterSchiene(regel, 1)
+	const kurs = useRegelParameterKurs(props.blockung, regel, 0)
+	const schiene = useRegelParameterSchiene(props.blockung, regel, 1)
 
 
-	const kurse = useKurse()
+	const kurse = useKurse(props.blockung)
 	const regel_hinzufuegen = (r: GostBlockungRegel) => {
 		r.parameter.add(kurse.value.get(0).id)
 		r.parameter.add(1);
 		regel.value = r;
 	}
 
-	const getKursbezeichnung = createKursbezeichnungsGetter()
+	const getKursbezeichnung = createKursbezeichnungsGetter(props.blockung)
 
 </script>

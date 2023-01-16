@@ -2,7 +2,7 @@
 	<div v-if="visible">
 		<svws-ui-table :v-model="selected_blockungauswahl" :columns="[{ key: 'name', label: 'Blockung' }]" :data="rows_blockungswahl" class="mt-10">
 			<template #body="{rows}">
-				<template v-for="row in rows_blockungswahl" :key="blockung.hashCode">
+				<template v-for="row in rows_blockungswahl" :key="row.hashCode()">
 					<tr :class="{'vt-clicked': row === selected_blockungauswahl}" @click="select_blockungauswahl(row)">
 						<td v-if=" row === selected_blockungauswahl ">
 							<div class="flex">

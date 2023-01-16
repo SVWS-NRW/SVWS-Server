@@ -1,6 +1,6 @@
 import { List, GostBlockungKurs, Vector, GostBlockungSchiene, GostBlockungRegel, GostKursart, SchuelerListeEintrag } from '@svws-nrw/svws-core-ts';
 import { ComputedRef, computed, Ref, WritableComputedRef } from 'vue';
-import { injectMainApp } from '../../../apps/Main';
+import { DataGostKursblockung } from '~/apps/gost/DataGostKursblockung';
 import { useSchuelerListe } from '../composables';
 
 /**
@@ -9,14 +9,12 @@ import { useSchuelerListe } from '../composables';
  * @export
  * @returns ComputedRef<List<GostBlockungKurs> | Vector<GostBlockungKurs>>
  */
-export function useKurse(): ComputedRef<List<GostBlockungKurs> | Vector<GostBlockungKurs>> {
-	const { apps: { gost } } = injectMainApp();
-	return computed(()=> gost.dataKursblockung.datenmanager?.getKursmengeSortiertNachKursartFachNummer() || new Vector<GostBlockungKurs>())
+export function useKurse(blockung: DataGostKursblockung): ComputedRef<List<GostBlockungKurs> | Vector<GostBlockungKurs>> {
+	return computed(()=> blockung.datenmanager?.getKursmengeSortiertNachKursartFachNummer() || new Vector<GostBlockungKurs>())
 }
 
-export function useSchienen(): ComputedRef<List<GostBlockungSchiene> | Vector<GostBlockungSchiene>> {
-	const { apps: { gost }} = injectMainApp();
-	return computed(()=> gost.dataKursblockung.datenmanager?.getMengeOfSchienen() || new Vector<GostBlockungSchiene>())
+export function useSchienen(blockung: DataGostKursblockung): ComputedRef<List<GostBlockungSchiene> | Vector<GostBlockungSchiene>> {
+	return computed(()=> blockung.datenmanager?.getMengeOfSchienen() || new Vector<GostBlockungSchiene>())
 }
 
 /**
@@ -27,10 +25,9 @@ export function useSchienen(): ComputedRef<List<GostBlockungSchiene> | Vector<Go
  * @param {number} [parameter=0]
  * @returns
  */
-export function createKursbezeichnungsGetter(parameter: number = 0) {
-	const { apps: { gost } } = injectMainApp();
+export function createKursbezeichnungsGetter(blockung: DataGostKursblockung, parameter: number = 0) {
 	return  (regel: GostBlockungRegel): String => {
-		const manager = gost.dataKursblockung.datenmanager
+		const manager = blockung.datenmanager
 		if (manager === undefined)
 			throw new Error("Der Kursblockungsmanager ist nicht verfügbar")
 		const kurs = manager.getKurs(regel.parameter.get(parameter).valueOf())
@@ -47,15 +44,14 @@ export function useRegelParameterKursart(regel: Ref<GostBlockungRegel | undefine
 			return GostKursart.LK
 		},
 		set(val: GostKursart) {
-			console.log(regel.value?.parameter.get(parameter))
 			if (regel.value)
 				regel.value.parameter.set(parameter, val.id)
 		}
 	})
 }
 
-export function useRegelParameterKurs(regel: Ref<GostBlockungRegel | undefined>, parameter: number): WritableComputedRef<GostBlockungKurs> {
-	const kurse = useKurse()
+export function useRegelParameterKurs(blockung: DataGostKursblockung, regel: Ref<GostBlockungRegel | undefined>, parameter: number): WritableComputedRef<GostBlockungKurs> {
+	const kurse = useKurse(blockung)
 	return computed({
 		get(): GostBlockungKurs {
 			for (const k of kurse.value)
@@ -70,8 +66,8 @@ export function useRegelParameterKurs(regel: Ref<GostBlockungRegel | undefined>,
 	})
 }
 
-export function useRegelParameterSchiene(regel: Ref<GostBlockungRegel | undefined>, parameter: number): WritableComputedRef<GostBlockungSchiene> {
-	const schienen = useSchienen()
+export function useRegelParameterSchiene(blockung: DataGostKursblockung, regel: Ref<GostBlockungRegel | undefined>, parameter: number): WritableComputedRef<GostBlockungSchiene> {
+	const schienen = useSchienen(blockung)
 	return computed({
 		get(): GostBlockungSchiene {
 			for (const schiene of schienen.value)

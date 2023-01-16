@@ -278,6 +278,7 @@
 		for (const r of regeln)
 			if (r.typ === regel_typ.typ)
 				return r;
+		return undefined;
 	})
 
 	function add_lehrer_regel() {
@@ -307,9 +308,9 @@
 	);
 
 	const filtered_by_kursart: ComputedRef<GostBlockungsergebnisKurs[]> = computed(() => {
-		let kurse: Vector<GostBlockungsergebnisKurs>|undefined
-		kurse = manager.value?.getOfFachKursmenge(props.kurs.fach_id)
-		if (!kurse) return []
+		const kurse = manager.value?.getOfFachKursmenge(props.kurs.fach_id)
+		if (!kurse)
+			return [];
 		const arr = kurse.toArray(new Array<GostBlockungsergebnisKurs>())
 		return arr.filter(k => k.kursart === art.id).sort((a,b)=>{
 			const a_name = manager.value?.getOfKursName(a.id)
@@ -371,8 +372,8 @@
 		for (const regel of regeln.value) {
 			const { nummer } = ermittel_parent_schiene(schiene)
 			if (regel.typ === GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS.typ
-				&& (regel.parameter.get(0) !== props.kurs.kursart && (nummer >= regel.parameter.get(1) && nummer <= regel.parameter.get(2)))
-				|| (regel.parameter.get(0) === props.kurs.kursart && (nummer < regel.parameter.get(1) || nummer > regel.parameter.get(2))))
+				&& ((regel.parameter.get(0) !== props.kurs.kursart && (nummer >= regel.parameter.get(1) && nummer <= regel.parameter.get(2)))
+					|| (regel.parameter.get(0) === props.kurs.kursart && (nummer < regel.parameter.get(1) || nummer > regel.parameter.get(2)))))
 				return true;
 			else if (regel.typ === GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS.typ
 				&& regel.parameter.get(0) === props.kurs.kursart

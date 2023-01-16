@@ -34,15 +34,13 @@
 
 	import { GostBlockungRegel, GostKursblockungRegelTyp } from '@svws-nrw/svws-core-ts';
 	import { ComputedRef, computed } from 'vue';
+	import { DataGostKursblockung } from '~/apps/gost/DataGostKursblockung';
 	import { useVModel } from '~/utils/composables/vmodel';
-	import { injectMainApp } from '~/apps/Main';
-
-	const main = injectMainApp();
-	const app = main.apps.gost;
 
 	const props = defineProps<{
-		modelValue: GostBlockungRegel | undefined,
-		regelTyp: GostKursblockungRegelTyp,
+		blockung: DataGostKursblockung;
+		modelValue: GostBlockungRegel | undefined;
+		regelTyp: GostKursblockungRegelTyp;
 	}>()
 
 	const emit = defineEmits<{
@@ -50,14 +48,13 @@
 		(e: 'regelHinzugefuegt', v: GostBlockungRegel): void
 	}>()
 
-	const allow_regeln: ComputedRef<boolean> =
-		computed(()=> app.blockungsergebnisauswahl.liste.length === 1)
+	const allow_regeln: ComputedRef<boolean> = computed(() => props.blockung.daten?.ergebnisse.size() === 1)
 
 	const regel = useVModel(props, 'modelValue', emit)
 
-	const regeln: ComputedRef<GostBlockungRegel[]> = computed(()=> {
+	const regeln: ComputedRef<GostBlockungRegel[]> = computed(() => {
 		const arr = []
-		const regeln = app.dataKursblockung.datenmanager?.getMengeOfRegeln()
+		const regeln = props.blockung.datenmanager?.getMengeOfRegeln()
 		if (!regeln)
 			return []
 		for (const r of regeln)
@@ -79,14 +76,14 @@
 	const speichern = async () => {
 		if (!regel.value)
 			return
-		await app.dataKursblockung.add_blockung_regel(regel.value)
+		await props.blockung.add_blockung_regel(regel.value)
 		regel.value = undefined
 	}
 
 	const regel_entfernen = async (r: GostBlockungRegel|undefined) => {
 		if (r === undefined)
 			return;
-		await app.dataKursblockung.del_blockung_regel(r.id)
+		await props.blockung.del_blockung_regel(r.id)
 		if (r === props.modelValue)
 			regel.value = undefined
 	}
