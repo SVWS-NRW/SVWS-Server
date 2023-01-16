@@ -2,21 +2,11 @@
 	<svws-ui-content-card title="Angebot von Zusatzkursen">
 		<div class="input-wrapper-1-col">
 			<svws-ui-checkbox v-model="inputHatZusatzkursGE">Zusatzkurs in GE wird angeboten</svws-ui-checkbox>
-			<svws-ui-multi-select
-				v-model="inputBeginnZusatzkursGE"
-				title="Beginn Zusatzkurs GE"
-				:items="inputBeginnZusatzkurs"
-				:item-text="(i: GostHalbjahr) => i.kuerzel.toString()"
-				:disabled="!inputHatZusatzkursGE"
-			/>
+			<svws-ui-multi-select title="Beginn Zusatzkurs GE" v-model="inputBeginnZusatzkursGE"
+				:items="inputBeginnZusatzkurs" :item-text="(i: GostHalbjahr) => i.kuerzel.toString()" :disabled="!inputHatZusatzkursGE" />
 			<svws-ui-checkbox v-model="inputHatZusatzkursSW">Zusatzkurs in SW wird angeboten</svws-ui-checkbox>
-			<svws-ui-multi-select
-				v-model="inputBeginnZusatzkursSW"
-				title="Beginn Zusatzkurs SW"
-				:items="inputBeginnZusatzkurs"
-				:item-text="(i: GostHalbjahr) => i.kuerzel.toString()"
-				:disabled="!inputHatZusatzkursSW"
-			/>
+			<svws-ui-multi-select title="Beginn Zusatzkurs SW" v-model="inputBeginnZusatzkursSW"
+				:items="inputBeginnZusatzkurs" :item-text="(i: GostHalbjahr) => i.kuerzel.toString()" :disabled="!inputHatZusatzkursSW" />
 		</div>
 	</svws-ui-content-card>
 </template>
@@ -26,44 +16,45 @@
 	import { computed, ComputedRef, WritableComputedRef } from "vue";
 
 	import { GostHalbjahr } from "@svws-nrw/svws-core-ts";
-	import { injectMainApp, Main } from "~/apps/Main";
+	import { DataGostJahrgang } from "~/apps/gost/DataGostJahrgang";
 
-	const main: Main = injectMainApp();
-	const app = main.apps.gost;
+	const { jahrgangsdaten } = defineProps<{ 
+		jahrgangsdaten: DataGostJahrgang;
+	}>();
 
 	const inputBeginnZusatzkurs: ComputedRef<Array<GostHalbjahr>> = computed(
 		() => { return [ GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21] }
 	);
 
 	const inputHatZusatzkursGE: WritableComputedRef<boolean | undefined> = computed({
-		get(): boolean | undefined { return app.dataJahrgang.daten?.hatZusatzkursGE; },
-		set(val: boolean | undefined) { app.dataJahrgang.patch({ hatZusatzkursGE: val }); }
+		get(): boolean | undefined { return jahrgangsdaten.daten?.hatZusatzkursGE; },
+		set(val: boolean | undefined) { jahrgangsdaten.patch({ hatZusatzkursGE: val }); }
 	});
 
 	const inputBeginnZusatzkursGE: WritableComputedRef<GostHalbjahr> = computed({
 		get(): GostHalbjahr { 
-			if (app.dataJahrgang.daten === undefined)
+			if (jahrgangsdaten.daten === undefined)
 				return GostHalbjahr.Q21;
-			return GostHalbjahr.fromKuerzel(app.dataJahrgang.daten.beginnZusatzkursGE) || GostHalbjahr.Q21; 
+			return GostHalbjahr.fromKuerzel(jahrgangsdaten.daten.beginnZusatzkursGE) || GostHalbjahr.Q21; 
 		},
 		set(val: GostHalbjahr) { 
-			app.dataJahrgang.patch({ beginnZusatzkursGE: val.kuerzel }); 
+			jahrgangsdaten.patch({ beginnZusatzkursGE: val.kuerzel }); 
 		}
 	});
 
 	const inputHatZusatzkursSW: WritableComputedRef<boolean | undefined> = computed({
-		get(): boolean | undefined { return app.dataJahrgang.daten?.hatZusatzkursSW; },
-		set(val: boolean | undefined) { app.dataJahrgang.patch({ hatZusatzkursSW: val }); }
+		get(): boolean | undefined { return jahrgangsdaten.daten?.hatZusatzkursSW; },
+		set(val: boolean | undefined) { jahrgangsdaten.patch({ hatZusatzkursSW: val }); }
 	});
 
 	const inputBeginnZusatzkursSW: WritableComputedRef<GostHalbjahr> = computed({
 		get(): GostHalbjahr { 
-			if (app.dataJahrgang.daten === undefined)
+			if (jahrgangsdaten.daten === undefined)
 				return GostHalbjahr.Q21;
-			return GostHalbjahr.fromKuerzel(app.dataJahrgang.daten.beginnZusatzkursSW) || GostHalbjahr.Q21; 
+			return GostHalbjahr.fromKuerzel(jahrgangsdaten.daten.beginnZusatzkursSW) || GostHalbjahr.Q21; 
 		},
 		set(val: GostHalbjahr) { 
-			app.dataJahrgang.patch({ beginnZusatzkursSW: val.kuerzel }); 
+			jahrgangsdaten.patch({ beginnZusatzkursSW: val.kuerzel }); 
 		}
 	});
 

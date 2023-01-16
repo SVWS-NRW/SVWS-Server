@@ -7,7 +7,7 @@
 			</div>
 			<span class="opacity-50">{{ item.value?.kuerzel }}</span>
 		</svws-ui-header>
-		<svws-ui-router-tab-bar :routes="routeKatalogReligion.children_records" :hidden="routeKatalogReligion.children_hidden" v-model="selectedRoute">
+		<svws-ui-router-tab-bar :routes="routeKatalogReligion.children_records" :hidden="children_hidden" v-model="selectedRoute">
 			<router-view />
 		</svws-ui-router-tab-bar>
 	</div>
@@ -27,6 +27,7 @@
 	}>();
 
 	const selectedRoute = routeKatalogReligion.childRouteSelector;
+	const children_hidden = routeKatalogReligion.children_hidden();
 
 	const visible: ComputedRef<boolean> = computed(() => {
 		return (!routeKatalogReligion.hidden) && (item.value !== undefined);

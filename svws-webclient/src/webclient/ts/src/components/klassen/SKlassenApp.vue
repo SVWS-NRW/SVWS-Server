@@ -9,7 +9,7 @@
 				<span v-for="(l, i) in inputKlassenlehrer" :key="i" class="opacity-50"> {{ l.kuerzel }} </span>
 			</div>
 		</svws-ui-header>
-		<svws-ui-router-tab-bar :routes="routeKlassen.children_records" :hidden="routeKlassen.children_hidden" v-model="selectedRoute">
+		<svws-ui-router-tab-bar :routes="routeKlassen.children_records" :hidden="children_hidden" v-model="selectedRoute">
 			<router-view />
 		</svws-ui-router-tab-bar>
 	</div>
@@ -34,6 +34,7 @@
 	}>();
 
 	const selectedRoute = routeKlassen.childRouteSelector;
+	const children_hidden = routeKlassen.children_hidden();
 
 	const inputKlassenlehrer: ComputedRef<LehrerListeEintrag[]> = computed(() =>
 		(item.value?.klassenLehrer?.toArray() as Number[] || []).map(id => mapLehrer.get(id) || undefined).filter(l => l !== undefined) as LehrerListeEintrag[]

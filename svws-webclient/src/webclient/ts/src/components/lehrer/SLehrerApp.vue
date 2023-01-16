@@ -13,7 +13,7 @@
 				</div>
 			</div>
 		</svws-ui-header>
-		<svws-ui-router-tab-bar :routes="routeLehrer.children_records" :hidden="routeLehrer.children_hidden" v-model="selectedRoute">
+		<svws-ui-router-tab-bar :routes="routeLehrer.children_records" :hidden="children_hidden" v-model="selectedRoute">
 			<router-view />
 		</svws-ui-router-tab-bar>
 	</div>
@@ -37,6 +37,7 @@
 	}>();
 
 	const selectedRoute = routeLehrer.childRouteSelector;
+	const children_hidden = routeLehrer.children_hidden();
 
 	const foto: ComputedRef<String | undefined> = computed(() => stammdaten.daten?.foto || undefined);
 

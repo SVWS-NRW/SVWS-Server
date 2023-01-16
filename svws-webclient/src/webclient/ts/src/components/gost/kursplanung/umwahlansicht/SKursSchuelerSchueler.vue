@@ -1,48 +1,45 @@
 <template>
-	<tr
-		class="cursor-pointer px-2 text-left"
-		:class="{ 'bg-red-400': kollision && !nichtwahl, 'bg-orange-400': nichtwahl && !kollision, 'bg-gradient-to-r':nichtwahl && kollision,'from-red-400': nichtwahl && kollision, 'to-orange-400': nichtwahl && kollision}"
-	>
+	<tr class="cursor-pointer px-2 text-left" :class="{ 'bg-red-400': kollision && !nichtwahl, 'bg-orange-400': nichtwahl && !kollision, 
+			'bg-gradient-to-r':nichtwahl && kollision, 'from-red-400': nichtwahl && kollision, 'to-orange-400': nichtwahl && kollision}">
 		<td class="px-2">
 			<div class="flex justify-between">
-				<span>{{ `${schueler.nachname}, ${schueler.vorname}`}} <svws-ui-badge v-if="schueler.status !== 'Aktiv'" size="tiny" type="highlight">{{schueler.status}}</svws-ui-badge></span>
-				<svws-ui-icon v-if="selected"><i-ri-checkbox-blank-circle-fill class="text-blue-400"/></svws-ui-icon>
+				<span>
+					{{ `${schueler.nachname}, ${schueler.vorname}`}} 
+					<svws-ui-badge v-if="schueler.status !== 'Aktiv'" size="tiny" type="highlight"> {{schueler.status}} </svws-ui-badge>
+				</span>
+				<svws-ui-icon v-if="selected"> <i-ri-checkbox-blank-circle-fill class="text-blue-400"/> </svws-ui-icon>
 			</div>
 		</td>
 	</tr>
 </template>
 
 <script setup lang="ts">
+
 	import { GostBlockungsergebnisManager, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { ComputedRef, computed } from "vue";
+	import { DataGostKursblockung } from "~/apps/gost/DataGostKursblockung";
+	import { ListAbiturjahrgangSchueler } from "~/apps/gost/ListAbiturjahrgangSchueler";
 
-	import { injectMainApp, Main } from "~/apps/Main";
+	const props = defineProps<{ 
+		schueler: SchuelerListeEintrag;
+		selected: Boolean;
+		blockung: DataGostKursblockung;
+		listSchueler: ListAbiturjahrgangSchueler;
+	}>();
 
-	const {schueler} = defineProps({
-		schueler: { type: SchuelerListeEintrag, required: true },
-		selected: { type: Boolean, required: true }
+	const manager: ComputedRef<GostBlockungsergebnisManager | undefined> = computed(() => props.blockung.ergebnismanager);
+
+	const kollision: ComputedRef<boolean> = computed(()=> {
+		if (manager.value === undefined)
+			return false;
+		const kursid = props.listSchueler.filter.kurs?.id;
+		if (kursid === undefined)
+			return manager.value.getOfSchuelerHatKollision(props.schueler.id);
+		return manager.value.getOfKursSchuelermengeMitKollisionen(kursid).contains(props.schueler.id);
 	});
 
-	const main: Main = injectMainApp();
-	const app = main.apps.gost;
+	const nichtwahl: ComputedRef<boolean> = computed(() =>
+		(manager.value === undefined) ? false : manager.value.getOfSchuelerHatNichtwahl(props.schueler.id)
+	);
 
-	const manager: ComputedRef<GostBlockungsergebnisManager | undefined> =
-		computed(() => app.dataKursblockung.ergebnismanager);
-
-	const kollision: ComputedRef<boolean> =
-		computed(()=> {
-			if (manager.value === undefined)
-				return false;
-			const kursid = app.listAbiturjahrgangSchueler.filter.kurs?.id;
-			if (kursid === undefined)
-				return manager.value.getOfSchuelerHatKollision(schueler.id);
-			return manager.value.getOfKursSchuelermengeMitKollisionen(kursid).contains(schueler.id);
-		});
-
-	const nichtwahl: ComputedRef<boolean> =
-		computed(() => {
-			if (manager.value === undefined)
-				return false;
-			return manager.value.getOfSchuelerHatNichtwahl(schueler.id);
-		});
 </script>

@@ -71,13 +71,4 @@ export class ListSchueler extends BaseList<SchuelerListeEintrag, Filter> {
 		if (this.ausgewaehlt && !this.gefiltert.includes(this.ausgewaehlt)) this.ausgewaehlt = this.gefiltert[0]
 	}
 
-	/**
-	 * Aktualisiert die Liste der Blockungsergebnisse
-	 *
-	 * @returns {Promise<void>}
-	 */
-	public async on_select(): Promise<void> {
-		if (!this._state.ausgewaehlt?.id) 
-			return;
-	}
 }

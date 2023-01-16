@@ -33,7 +33,7 @@
 					</tr>
 				</thead>
 				<tr v-for="row in rows" :key="row.id">
-					<s-row-gost-faecher :fach="row"></s-row-gost-faecher>
+					<s-row-gost-faecher :fach="row" :data-faecher="dataFaecher"></s-row-gost-faecher>
 				</tr>
 			</table>
 		</div>
@@ -44,16 +44,13 @@
 	import { computed, ComputedRef } from "vue";
 
 	import { GostFach, List, Vector } from "@svws-nrw/svws-core-ts";
-	import { injectMainApp, Main } from "~/apps/Main";
+	import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
+	import { routeGost } from "~/router/apps/RouteGost";
 
-	const main: Main = injectMainApp();
-	const app = main.apps.gost;
+	const { dataFaecher } = defineProps<{ 
+		dataFaecher: DataGostFaecher;
+	}>();
 
-	const bezeichnung: ComputedRef<string | undefined> = computed(() => {
-		return app.auswahl.ausgewaehlt?.bezeichnung?.toString() || "Allgemein";
-	});
+	const rows: ComputedRef<List<GostFach>> = computed(() => dataFaecher.daten || new Vector<GostFach>());
 
-	const rows: ComputedRef<List<GostFach>> = computed(() => {
-		return app.dataFaecher.daten || new Vector<GostFach>();
-	});
 </script>

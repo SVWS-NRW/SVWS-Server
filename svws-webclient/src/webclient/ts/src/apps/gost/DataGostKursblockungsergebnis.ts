@@ -1,22 +1,25 @@
 import { App } from "../BaseApp";
 
-import {
-	GostBlockungKursLehrer,
-	GostBlockungsergebnis,
-	GostBlockungsergebnisKurs,
-	GostBlockungsergebnisListeneintrag,
-	GostBlockungsergebnisManager,
-} from "@svws-nrw/svws-core-ts";
+import { GostBlockungsergebnis, GostBlockungsergebnisKurs, GostBlockungsergebnisListeneintrag, GostBlockungsergebnisManager, } from "@svws-nrw/svws-core-ts";
 import { BaseData } from "../BaseData";
 import { Ref, ref } from "vue";
+import { DataGostKursblockung } from "./DataGostKursblockung";
 
-export class DataGostKursblockungsergebnis extends BaseData<
-	GostBlockungsergebnis,
-	GostBlockungsergebnisListeneintrag,
-	GostBlockungsergebnisManager
-> {
+export class DataGostKursblockungsergebnis extends BaseData<GostBlockungsergebnis, GostBlockungsergebnisListeneintrag, GostBlockungsergebnisManager> {
 
 	public active_kurs: Ref<GostBlockungsergebnisKurs | undefined> = ref(undefined);
+
+	private _dataKursblockung: DataGostKursblockung | undefined;
+
+	public get dataKursblockung(): DataGostKursblockung {
+		if (this._dataKursblockung === undefined)
+			throw new Error("Zugriff auf die Daten der Kursblockung vor der Zuweisung.");
+		return this._dataKursblockung;
+	}
+
+	public set dataKursblockung(value: DataGostKursblockung) {
+		this._dataKursblockung = value;
+	}
 
 	protected on_update(daten: Partial<GostBlockungsergebnis>): void {
 		return void daten;
@@ -38,10 +41,10 @@ export class DataGostKursblockungsergebnis extends BaseData<
 				this.pending = false;
 				return ergebnis;
 			}
-		App.apps.gost.dataKursblockung.ergebnismanager = (App.apps.gost.dataKursblockung.datenmanager !== undefined)
-			? new GostBlockungsergebnisManager(App.apps.gost.dataKursblockung.datenmanager, ergebnis)
+		this.dataKursblockung.ergebnismanager = (this.dataKursblockung.datenmanager !== undefined)
+			? new GostBlockungsergebnisManager(this.dataKursblockung.datenmanager, ergebnis)
 			: undefined;
-		App.apps.gost.dataKursblockung.commit();
+		this.dataKursblockung.commit();
 		this.pending = false;
 		return ergebnis;
 	}
@@ -72,21 +75,21 @@ export class DataGostKursblockungsergebnis extends BaseData<
 			return false;
 		this.pending = true;
 		await App.api.updateGostBlockungsergebnisKursSchieneZuordnung(App.schema, this._daten.id, schienenid, kursid, schienenidneu);
-		App.apps.gost.dataKursblockung.ergebnismanager?.setKursSchiene(kursid, schienenid, false);
-		App.apps.gost.dataKursblockung.ergebnismanager?.setKursSchiene(kursid, schienenidneu, true);
-		App.apps.gost.dataKursblockung.commit();
+		this.dataKursblockung.ergebnismanager?.setKursSchiene(kursid, schienenid, false);
+		this.dataKursblockung.ergebnismanager?.setKursSchiene(kursid, schienenidneu, true);
+		this.dataKursblockung.commit();
 		this.pending = false;
 		return true;
 	}
 
 	public async removeSchuelerKurs(schuelerid: number, kursid: number): Promise<boolean> {
 		const ergebnisid = this._daten?.id;
-		if (ergebnisid === undefined || App.apps.gost.dataKursblockung.ergebnismanager === undefined)
+		if (ergebnisid === undefined || this.dataKursblockung.ergebnismanager === undefined)
 			return false;
 		this.pending = true;
 		await App.api.deleteGostBlockungsergebnisKursSchuelerZuordnung(App.schema, ergebnisid, schuelerid, kursid);
-		App.apps.gost.dataKursblockung.ergebnismanager.setSchuelerKurs(schuelerid, kursid, false);
-		App.apps.gost.dataKursblockung.commit();
+		this.dataKursblockung.ergebnismanager.setSchuelerKurs(schuelerid, kursid, false);
+		this.dataKursblockung.commit();
 		this.pending = false;
 		return true;
 	}
@@ -99,19 +102,18 @@ export class DataGostKursblockungsergebnis extends BaseData<
 		if (kursid_alt) {
 			await App.api.deleteGostBlockungsergebnisKursSchuelerZuordnung(App.schema, ergebnisid, schuelerid, kursid_alt);
 			await App.api.createGostBlockungsergebnisKursSchuelerZuordnung(App.schema, ergebnisid, schuelerid, kursid_neu);
-			App.apps.gost.dataKursblockung.ergebnismanager?.setSchuelerKurs(schuelerid, kursid_alt, false);
-		}
-		else {
+			this.dataKursblockung.ergebnismanager?.setSchuelerKurs(schuelerid, kursid_alt, false);
+		} else {
 			await App.api.createGostBlockungsergebnisKursSchuelerZuordnung(App.schema, ergebnisid, schuelerid, kursid_neu);
 		}
-		App.apps.gost.dataKursblockung.ergebnismanager?.setSchuelerKurs(schuelerid, kursid_neu, true);
-		App.apps.gost.dataKursblockung.commit();
+		this.dataKursblockung.ergebnismanager?.setSchuelerKurs(schuelerid, kursid_neu, true);
+		this.dataKursblockung.commit();
 		this.pending = false;
 		return true;
 	}
 
 	public async multiAssignSchuelerKurs(schuelerid: number) {
-		const ergebnismanager = App.apps.gost.dataKursblockung.ergebnismanager;
+		const ergebnismanager = this.dataKursblockung.ergebnismanager;
 		const ergebnisid = this._daten?.id;
 		if (ergebnismanager === undefined || schuelerid === undefined || ergebnisid === undefined)
 			return;
@@ -131,7 +133,7 @@ export class DataGostKursblockungsergebnis extends BaseData<
 				}
 			}
 		}
-		App.apps.gost.dataKursblockung.commit();
+		this.dataKursblockung.commit();
 		this.pending = false;
 	}
 
@@ -141,4 +143,5 @@ export class DataGostKursblockungsergebnis extends BaseData<
 		await App.api.activateGostBlockungsergebnis(App.schema, this.selected_list_item.id);
 		return true;
 	}
+
 }

@@ -102,8 +102,9 @@ export abstract class BaseList<ListenEintragTyp, ListenFilterTyp = undefined> {
 				this.ausgewaehlt = undefined;
 			this.liste = result.toArray(new Array<ListenEintragTyp>());
 		} catch (error) {
-			console.log( "Fehler, die Auswahlliste konnte nicht geladen werden: ", error);
-			this.liste = [];
+			throw error;
+			// console.log( "Fehler, die Auswahlliste konnte nicht geladen werden: ", error);
+			// this.liste = [];
 		} finally {
 			this._state.pending = false;
 		}

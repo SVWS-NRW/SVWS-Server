@@ -65,14 +65,12 @@
 								v-for="row in rows"
 								:key="row.id"
 								class="tableRow"
-								style="
-									grid-template-columns: 5em 15em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em;
-								"
+								style="grid-template-columns: 5em 15em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em;"
 							>
 								<div
 									class="cell text-left"
 									:style="{
-										'background-color': app.getBgColor(row)
+										'background-color': getBgColor(row)
 									}"
 								>
 									{{ row.kuerzel }}
@@ -80,7 +78,7 @@
 								<div
 									class="cell text-left"
 									:style="{
-										'background-color': app.getBgColor(row)
+										'background-color': getBgColor(row)
 									}"
 								>
 									{{ row.bezeichnung }}
@@ -305,29 +303,26 @@
 </template>
 
 <script setup lang="ts">
-	import { computed, ComputedRef, ref } from "vue";
 
-	import { GostStatistikFachwahl } from "@svws-nrw/svws-core-ts";
-	import { injectMainApp, Main } from "~/apps/Main";
+	import { computed, ComputedRef, ref, ShallowRef } from "vue";
+	import { GostJahrgang, GostStatistikFachwahl, ZulaessigesFach } from "@svws-nrw/svws-core-ts";
+	import { DataGostSchuelerFachwahlen } from "~/apps/gost/DataGostSchuelerFachwahlen";
+
+	const { item, dataFachwahlen } = defineProps<{
+		item: ShallowRef<GostJahrgang | undefined>;
+		dataFachwahlen: DataGostSchuelerFachwahlen;
+	}>();
 
 	const nichtWaehlbar = ref("");
 	const waehlbarAusgewaehlt = ref("\u2705");
 	const waehlbarNichtAusgewaehlt = ref("\u274C");
 
-	const main: Main = injectMainApp();
-	const app = main.apps.gost;
+	const bezeichnung: ComputedRef<string | undefined> = computed(() => item.value?.bezeichnung?.toString());
 
-	const bezeichnung: ComputedRef<string | undefined> = computed(() => {
-		return app.auswahl.ausgewaehlt?.bezeichnung?.toString();
-	});
+	const rows: ComputedRef<GostStatistikFachwahl[]> = computed(() => dataFachwahlen.daten?.toArray() as GostStatistikFachwahl[] || []);
 
-	const rows: ComputedRef<Array<GostStatistikFachwahl>> = computed(() => {
-		return (
-			app.dataFachwahlen.daten?.toArray(
-				new Array<GostStatistikFachwahl>()
-			) || []
-		);
-	});
+	const getBgColor = (row: GostStatistikFachwahl) => ZulaessigesFach.getByKuerzelASD(row.kuerzelStatistik).getHMTLFarbeRGBA(1.0).valueOf();
+
 </script>
 
 <style scoped>

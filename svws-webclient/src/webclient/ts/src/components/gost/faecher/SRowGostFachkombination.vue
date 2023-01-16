@@ -13,160 +13,156 @@
 </template>
 
 <script setup lang="ts">
-	import { computed, ComputedRef, WritableComputedRef } from "vue";
 
+	import { computed, ComputedRef, WritableComputedRef } from "vue";
 	import { List, GostJahrgangFachkombination, GostFach, GostFaecherManager, GostKursart, GostHalbjahr } from "@svws-nrw/svws-core-ts";
 	import { injectMainApp, Main } from "~/apps/Main";
+	import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
+	import { DataGostFachkombinationen } from "~/apps/gost/DataGostFachkombinationen";
+	import { routeGost } from "~/router/apps/RouteGost";
 
-	const props = defineProps({
-		kombination: {
-			type: Object as () => GostJahrgangFachkombination,
-			required: true
-		}
-	});
+	const { kombination, dataFaecher, dataFachkombinationen } = defineProps<{ 
+		kombination: GostJahrgangFachkombination;
+		dataFaecher: DataGostFaecher;
+		dataFachkombinationen: DataGostFachkombinationen;
+	}>();
 
 	const main: Main = injectMainApp();
 	const app = main.apps.gost;
-	const abiturjahr = app.auswahl.ausgewaehlt?.abiturjahr?.valueOf() || undefined;
+	const abiturjahr = routeGost.liste.ausgewaehlt?.abiturjahr?.valueOf() || undefined;
 
-	const fachManager: ComputedRef<GostFaecherManager | undefined> = computed(
-		() => { return app.dataFaecher.manager; }
-	);
+	const fachManager: ComputedRef<GostFaecherManager | undefined> = computed(() => dataFaecher.manager);
 
-	const faecher: ComputedRef<List<GostFach> | undefined> = computed(
-		() => { return app.dataFaecher.daten; }
-	);
+	const faecher: ComputedRef<List<GostFach> | undefined> = computed(() => dataFaecher.daten);
 
-	const kursarten: ComputedRef<GostKursart[]> = computed(() => 
-		GostKursart.values()
-	);
+	const kursarten: ComputedRef<GostKursart[]> = computed(() => GostKursart.values());
 
 	const fach1: WritableComputedRef<GostFach | undefined> = computed({
 		get(): GostFach | undefined {
-			return fachManager.value?.get(props.kombination.fachID1) || undefined;
+			return fachManager.value?.get(kombination.fachID1) || undefined;
 		},
 		set(val: GostFach | undefined) {
-			app.dataFachkombinationen.patch({ fachID1: val?.id }, props.kombination, abiturjahr);
+			dataFachkombinationen.patch({ fachID1: val?.id }, kombination, abiturjahr);
 		}
 	});
 
 	const kursart1: WritableComputedRef<GostKursart | undefined> = computed({
 		get(): GostKursart | undefined {
-			return GostKursart.fromKuerzel(props.kombination.kursart1) || undefined;
+			return GostKursart.fromKuerzel(kombination.kursart1) || undefined;
 		},
 		set(val: GostKursart | undefined) {
-			app.dataFachkombinationen.patch({ kursart1: val?.kuerzel || null }, props.kombination, abiturjahr);
+			dataFachkombinationen.patch({ kursart1: val?.kuerzel || null }, kombination, abiturjahr);
 		}
 	});
 
 	const fach2: WritableComputedRef<GostFach | undefined> = computed({
 		get(): GostFach | undefined {
-			return fachManager.value?.get(props.kombination.fachID2) || undefined;
+			return fachManager.value?.get(kombination.fachID2) || undefined;
 		},
 		set(val: GostFach | undefined) {
-			app.dataFachkombinationen.patch({ fachID2: val?.id }, props.kombination, abiturjahr);
+			dataFachkombinationen.patch({ fachID2: val?.id }, kombination, abiturjahr);
 		}
 	});
 
 	const kursart2: WritableComputedRef<GostKursart | undefined> = computed({
 		get(): GostKursart | undefined {
-			return GostKursart.fromKuerzel(props.kombination.kursart2) || undefined;
+			return GostKursart.fromKuerzel(kombination.kursart2) || undefined;
 		},
 		set(val: GostKursart | undefined) {
-			app.dataFachkombinationen.patch({ kursart2: val?.kuerzel || null }, props.kombination, abiturjahr);
+			dataFachkombinationen.patch({ kursart2: val?.kuerzel || null }, kombination, abiturjahr);
 		}
 	});
 
 	const gueltigEF1: WritableComputedRef<boolean> = computed({
 		get(): boolean {
-			return props.kombination.gueltigInHalbjahr[GostHalbjahr.EF1.id];
+			return kombination.gueltigInHalbjahr[GostHalbjahr.EF1.id];
 		},
 		set(value: boolean) {
-			if (!app.auswahl.ausgewaehlt?.abiturjahr) 
+			if (!routeGost.liste.ausgewaehlt?.abiturjahr) 
 				return;
-			const result : boolean[] = [...props.kombination.gueltigInHalbjahr];
+			const result : boolean[] = [...kombination.gueltigInHalbjahr];
 			result[GostHalbjahr.EF1.id] = value;
-			app.dataFachkombinationen.patch( { gueltigInHalbjahr: result }, props.kombination, abiturjahr);
+			dataFachkombinationen.patch( { gueltigInHalbjahr: result }, kombination, abiturjahr);
 		}
 	});
 
 	const gueltigEF2: WritableComputedRef<boolean> = computed({
 		get(): boolean {
-			return props.kombination.gueltigInHalbjahr[GostHalbjahr.EF2.id];
+			return kombination.gueltigInHalbjahr[GostHalbjahr.EF2.id];
 		},
 		set(value: boolean) {
-			if (!app.auswahl.ausgewaehlt?.abiturjahr) 
+			if (!routeGost.liste.ausgewaehlt?.abiturjahr) 
 				return;
-			const result : boolean[] = [...props.kombination.gueltigInHalbjahr];
+			const result : boolean[] = [...kombination.gueltigInHalbjahr];
 			result[GostHalbjahr.EF2.id] = value;
-			app.dataFachkombinationen.patch( { gueltigInHalbjahr: result }, props.kombination, 
-				app.auswahl.ausgewaehlt.abiturjahr.valueOf() 
+			dataFachkombinationen.patch( { gueltigInHalbjahr: result }, kombination, 
+				routeGost.liste.ausgewaehlt.abiturjahr.valueOf() 
 			);
 		}
 	});
 
 	const gueltigQ11: WritableComputedRef<boolean> = computed({
 		get(): boolean {
-			return props.kombination.gueltigInHalbjahr[GostHalbjahr.Q11.id];
+			return kombination.gueltigInHalbjahr[GostHalbjahr.Q11.id];
 		},
 		set(value: boolean) {
-			if (!app.auswahl.ausgewaehlt?.abiturjahr) 
+			if (!routeGost.liste.ausgewaehlt?.abiturjahr) 
 				return;
-			const result : boolean[] = [...props.kombination.gueltigInHalbjahr];
+			const result : boolean[] = [...kombination.gueltigInHalbjahr];
 			result[GostHalbjahr.Q11.id] = value;
-			app.dataFachkombinationen.patch( { gueltigInHalbjahr: result }, props.kombination, 
-				app.auswahl.ausgewaehlt.abiturjahr.valueOf() 
+			dataFachkombinationen.patch( { gueltigInHalbjahr: result }, kombination, 
+				routeGost.liste.ausgewaehlt.abiturjahr.valueOf() 
 			);
 		}
 	});
 
 	const gueltigQ12: WritableComputedRef<boolean> = computed({
 		get(): boolean {
-			return props.kombination.gueltigInHalbjahr[GostHalbjahr.Q12.id];
+			return kombination.gueltigInHalbjahr[GostHalbjahr.Q12.id];
 		},
 		set(value: boolean) {
-			if (!app.auswahl.ausgewaehlt?.abiturjahr) 
+			if (!routeGost.liste.ausgewaehlt?.abiturjahr) 
 				return;
-			const result : boolean[] = [...props.kombination.gueltigInHalbjahr];
+			const result : boolean[] = [...kombination.gueltigInHalbjahr];
 			result[GostHalbjahr.Q12.id] = value;
-			app.dataFachkombinationen.patch( { gueltigInHalbjahr: result }, props.kombination, 
-				app.auswahl.ausgewaehlt.abiturjahr.valueOf() 
+			dataFachkombinationen.patch( { gueltigInHalbjahr: result }, kombination, 
+				routeGost.liste.ausgewaehlt.abiturjahr.valueOf() 
 			);
 		}
 	});
 
 	const gueltigQ21: WritableComputedRef<boolean> = computed({
 		get(): boolean {
-			return props.kombination.gueltigInHalbjahr[GostHalbjahr.Q21.id];
+			return kombination.gueltigInHalbjahr[GostHalbjahr.Q21.id];
 		},
 		set(value: boolean) {
-			if (!app.auswahl.ausgewaehlt?.abiturjahr) 
+			if (!routeGost.liste.ausgewaehlt?.abiturjahr) 
 				return;
-			const result : boolean[] = [...props.kombination.gueltigInHalbjahr];
+			const result : boolean[] = [...kombination.gueltigInHalbjahr];
 			result[GostHalbjahr.Q21.id] = value;
-			app.dataFachkombinationen.patch( { gueltigInHalbjahr: result }, props.kombination, 
-				app.auswahl.ausgewaehlt.abiturjahr.valueOf() 
+			dataFachkombinationen.patch( { gueltigInHalbjahr: result }, kombination, 
+				routeGost.liste.ausgewaehlt.abiturjahr.valueOf() 
 			);
 		}
 	});
 
 	const gueltigQ22: WritableComputedRef<boolean> = computed({
 		get(): boolean {
-			return props.kombination.gueltigInHalbjahr[GostHalbjahr.Q22.id];
+			return kombination.gueltigInHalbjahr[GostHalbjahr.Q22.id];
 		},
 		set(value: boolean) {
-			if (!app.auswahl.ausgewaehlt?.abiturjahr) 
+			if (!routeGost.liste.ausgewaehlt?.abiturjahr) 
 				return;
-			const result : boolean[] = [...props.kombination.gueltigInHalbjahr];
+			const result : boolean[] = [...kombination.gueltigInHalbjahr];
 			result[GostHalbjahr.Q22.id] = value;
-			app.dataFachkombinationen.patch( { gueltigInHalbjahr: result }, props.kombination, 
-				app.auswahl.ausgewaehlt.abiturjahr.valueOf() 
+			dataFachkombinationen.patch( { gueltigInHalbjahr: result }, kombination, 
+				routeGost.liste.ausgewaehlt.abiturjahr.valueOf() 
 			);
 		}
 	});
 
 	const del_fachkombi = () => {
-		app.dataFachkombinationen.delete(props.kombination.id);
+		dataFachkombinationen.delete(kombination.id);
 	}
 
 </script>

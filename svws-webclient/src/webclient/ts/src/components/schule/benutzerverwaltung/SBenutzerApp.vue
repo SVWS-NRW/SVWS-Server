@@ -21,6 +21,7 @@
 	const props = defineProps<{ id?: number; item?: BenutzerListeEintrag, routename: string }>();
 
 	const selectedRoute = routeSchuleBenutzer.getChildRouteSelector();
+	const children_hidden = routeSchuleBenutzer.children_hidden();
 
 	const id: ComputedRef<string> = computed(() => "ID: " + props.id);
 	const anzeigename: ComputedRef<string> = computed(() => props.item?.anzeigename.toString() || "");

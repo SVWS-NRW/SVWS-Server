@@ -1,6 +1,6 @@
 import { useDateFormat } from "@vueuse/core";
-import { ref, Ref } from "vue";
-import type { RouteComponent, RouteLocationNormalized, RouteParams, RouteRecordName, RouteRecordRaw } from "vue-router";
+import { computed, ComputedRef, ref, Ref } from "vue";
+import { RouteComponent, RouteLocationNormalized, RouteParams, RouteRecordName, RouteRecordRaw, useRoute } from "vue-router";
 
 /**
  * Diese abstrakte Klasse ist die Basisklasse aller Knoten für
@@ -15,7 +15,7 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
     protected _record: RouteRecordRaw;
 
     // Eine Funktion zum Prüfen, ob der Knoten, d.h. die Route, versteckt sein soll oder nicht
-    protected isHidden: (() => boolean) | undefined = undefined;
+    protected isHidden: ((params: RouteParams) => boolean) | undefined = undefined;
 
     /** Der Elter-Knoten, sofern es sich um einen Kind-Knoten handelt. */
     protected _parent?: TRouteParent;
@@ -192,8 +192,9 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
      * 
      * @returns ein Array mit der 
      */
-    public get children_hidden() : boolean[] {
-        return this._children.map(c => c.hidden);
+    public children_hidden() : ComputedRef<boolean[]> {
+        const route = useRoute();
+        return computed(() => this._children.map(c => c.hidden(route.params)));
     }
 
     /**
@@ -243,14 +244,16 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
      * 
      * @returns {boolean} true, falls der Knoten versteckt werden soll und für das Routing nicht zur Verfügung steht.
      */
-	public get hidden(): boolean {
+	public hidden(params: RouteParams): boolean {
         // TODO prüfen, ob die Komponente dargestellt werden darf oder nicht
-        return (this.isHidden === undefined) ? false : this.isHidden();
+        return (this.isHidden === undefined) ? false : this.isHidden(params);
     }
 
-    /** Prüft, ob die Route aktuell ausgewählt ist oder Parent einer anderen Route
+    /** 
+     * Prüft, ob die Route aktuell ausgewählt ist oder Parent einer anderen Route
+     * 
      * @returns {boolean} true, wenn die Route den vorgegebenen Namen hat.
-    */
+     */
     public isSelected(name: RouteRecordName | null | undefined): boolean {
         const node = RouteNode.getNodeByName(this.name);
         if (node === undefined || !name)
@@ -404,7 +407,7 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
     public async doUpdate(to: RouteNode<unknown, any>, to_params: RouteParams) {
         if (this._parent !== undefined)
             this._parent._selectedChild.value = this;
-        this.update(to, to_params);
+        return await this.update(to, to_params);
     }
 
     /**

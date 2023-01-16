@@ -19,8 +19,8 @@ export class RouteGostKlausurplanung extends RouteNode<unknown, RouteGost> {
 		super("gost_klausurplanung", "klausurplanung", SGostKlausurplanung);
 		super.propHandler = (route) => routeGost.getProps(route);
 		super.text = "Klausurplanung";
-		this.isHidden = () => {
-			return this.checkHidden(routeGost.data.item.value);
+		this.isHidden = (params: RouteParams) => {
+			return this.checkHidden(params);
 		}
 		super.children = [
 			routeGostKlausurplanungKlausurdaten,
@@ -32,17 +32,18 @@ export class RouteGostKlausurplanung extends RouteNode<unknown, RouteGost> {
 		super.defaultChild = routeGostKlausurplanungKlausurdaten;
 	}
 
-	public checkHidden(jahrgang: GostJahrgang | undefined) {
-		return (jahrgang === undefined) || (jahrgang.abiturjahr === -1);;
+	public checkHidden(params: RouteParams) {
+		const abiturjahr = params.abiturjahr === undefined ? undefined : parseInt(params.abiturjahr as string);
+		return (abiturjahr === undefined) || (abiturjahr === -1);
 	}
 
     public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
 		if (to.name === this.name) {
 			if (to_params.abiturjahr === undefined)
 				return false;
-			const jahrgang = mainApp.apps.gost.auswahl.liste.find(elem => elem.abiturjahr.toString() === to_params.abiturjahr);
+			const jahrgang = routeGost.liste.liste.find(elem => elem.abiturjahr.toString() === to_params.abiturjahr);
 			if (this.checkHidden(jahrgang))
-				return { name: this.parent!.defaultChild!.name, params: { abiturjahr: mainApp.apps.gost.auswahl.liste.at(0)?.abiturjahr }};
+				return { name: this.parent!.defaultChild!.name, params: { abiturjahr: routeGost.liste.liste.at(0)?.abiturjahr }};
 		}
         return true;
     }

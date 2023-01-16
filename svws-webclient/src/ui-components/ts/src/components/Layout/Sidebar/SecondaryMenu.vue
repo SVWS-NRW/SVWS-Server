@@ -1,15 +1,17 @@
 <template>
-	<h1 class="secondary-menu--headline">
-		<slot name="headline" />
-		<div v-if="$slots.abschnitt" class="input--schule-abschnitte">
-			<slot name="abschnitt" />
+	<div>
+		<h1 class="secondary-menu--headline">
+			<slot name="headline" />
+			<div v-if="$slots.abschnitt" class="input--schule-abschnitte">
+				<slot name="abschnitt" />
+			</div>
+		</h1>
+		<div class="secondary-menu--header">
+			<slot name="header" />
 		</div>
-	</h1>
-	<div class="secondary-menu--header">
-		<slot name="header" />
-	</div>
-	<div class="secondary-menu--content">
-		<slot name="content" />
+		<div class="secondary-menu--content">
+			<slot name="content" />
+		</div>
 	</div>
 </template>
 

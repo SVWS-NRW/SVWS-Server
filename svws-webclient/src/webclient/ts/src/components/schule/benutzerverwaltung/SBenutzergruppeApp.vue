@@ -4,7 +4,7 @@
 			<svws-ui-header :badge="id" badge-type="light" badge-size="normal">
 				<span> {{ bezeichnung }} </span>
 			</svws-ui-header>
-			<svws-ui-router-tab-bar :routes="routeSchuleBenutzergruppe.children_records" :hidden="routeSchuleBenutzergruppe.children_hidden" v-model="selectedRoute">
+			<svws-ui-router-tab-bar :routes="routeSchuleBenutzergruppe.children_records" :hidden="children_hidden" v-model="selectedRoute">
 				<router-view />
 			</svws-ui-router-tab-bar>
 		</div>
@@ -21,6 +21,7 @@
 	const props = defineProps<{ id?: number; item?: BenutzergruppeListeEintrag, routename: string }>();
 
 	const selectedRoute = routeSchuleBenutzergruppe.getChildRouteSelector();
+	const children_hidden = routeSchuleBenutzergruppe.children_hidden();
 
 	const id: ComputedRef<string> = computed(() => "ID: " + props.id);
 	const bezeichnung: ComputedRef<string> = computed(() => props.item?.bezeichnung.toString() || "");

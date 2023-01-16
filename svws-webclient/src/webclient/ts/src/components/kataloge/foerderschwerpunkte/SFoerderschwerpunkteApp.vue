@@ -8,7 +8,7 @@
 				</div>
 				<span class="opacity-50">{{ item.value?.kuerzel }}</span>
 			</svws-ui-header>
-			<svws-ui-router-tab-bar :routes="routeKatalogFoerderschwerpunkte.children_records" :hidden="routeKatalogFoerderschwerpunkte.children_hidden" v-model="selectedRoute">
+			<svws-ui-router-tab-bar :routes="routeKatalogFoerderschwerpunkte.children_records" :hidden="children_hidden" v-model="selectedRoute">
 				<router-view />
 			</svws-ui-router-tab-bar>
 		</div>
@@ -26,6 +26,7 @@
 	}>();
 
 	const selectedRoute = routeKatalogFoerderschwerpunkte.childRouteSelector;
+	const children_hidden = routeKatalogFoerderschwerpunkte.children_hidden();
 
 	const visible: ComputedRef<boolean> = computed(() => {
 		return (!routeKatalogFoerderschwerpunkte.hidden) && (item.value !== undefined);

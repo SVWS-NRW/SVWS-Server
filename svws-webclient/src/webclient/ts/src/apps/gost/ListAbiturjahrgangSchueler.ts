@@ -2,6 +2,7 @@ import { GostBlockungKurs, GostFach, GostKursart, SchuelerListeEintrag } from "@
 import { reactive } from "vue";
 import { App } from "../BaseApp";
 import { BaseList } from "../BaseList";
+import { DataGostKursblockung } from "./DataGostKursblockung";
 
 interface Filter {
 	kollisionen: boolean;
@@ -14,6 +15,18 @@ interface Filter {
 }
 
 export class ListAbiturjahrgangSchueler extends BaseList<SchuelerListeEintrag, Filter> {
+
+	private _dataKursblockung: DataGostKursblockung | undefined;
+
+	public get dataKursblockung(): DataGostKursblockung {
+		if (this._dataKursblockung === undefined)
+			throw new Error("Zugriff auf die Daten der Kursblockung vor der Zuweisung.");
+		return this._dataKursblockung;
+	}
+
+	public set dataKursblockung(value: DataGostKursblockung) {
+		this._dataKursblockung = value;
+	}
 
 	protected _filter: Filter = reactive({
 		kollisionen: false,
@@ -44,9 +57,9 @@ export class ListAbiturjahrgangSchueler extends BaseList<SchuelerListeEintrag, F
 	 * @returns Void
 	 */
 	protected filter_liste(): void {
-		const manager = App.apps.gost.dataKursblockung.ergebnismanager;
-		if (!manager)
-			return;
+		const manager = this.dataKursblockung.ergebnismanager;
+		if (manager === undefined)
+			throw new Error("Kein Ergebnismanager für die Blockungsdaten vorhanden.");
 		manager.getMengeDerSchuelerMitKollisionen
 		const pKonfliktTyp = 0 + (this._filter.kollisionen ? 1:0) + (this._filter.nichtwahlen ? 2:0)
 		const res = manager.getMengeDerSchuelerGefiltert(this._filter.kurs?.id || 0,

@@ -208,167 +208,106 @@
 	import { GostFach } from "@svws-nrw/svws-core-ts";
 	import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
 	import { injectMainApp, Main } from "~/apps/Main";
+import { routeGost } from "~/router/apps/RouteGost";
 
-	const props = defineProps({
-		fach: {
-			type: Object as () => GostFach,
-			required: true
-		}
-	});
+	const { fach, dataFaecher } = defineProps<{ 
+		fach: GostFach;
+		dataFaecher: DataGostFaecher;
+	}>();
 
 	const main: Main = injectMainApp();
 	const app = main.apps.gost;
 
-	const katalogLeitfaecher: ComputedRef<(GostFach)[]> =
-		computed(() => app.dataFaecher.faecherOhnePJKundVTF);
+	const katalogLeitfaecher: ComputedRef<(GostFach)[]> = computed(() => dataFaecher.faecherOhnePJKundVTF);
 	
 	const leitfach1: WritableComputedRef<GostFach | undefined> = computed({
-		get(): GostFach | undefined {
-			return app.dataFaecher.faecherOhnePJKundVTF.find(
-				item => props.fach.projektKursLeitfach1ID == item.id
-			);
-		},
-		set(leitfachNeu: GostFach | undefined) {
-			if (!app.auswahl.ausgewaehlt?.abiturjahr) return;
-			app.dataFaecher.patch(
-				{ projektKursLeitfach1ID: leitfachNeu?.id || null },
-				props.fach,
-				app.auswahl.ausgewaehlt.abiturjahr.valueOf()
-			);
+		get: () => dataFaecher.faecherOhnePJKundVTF.find(item => fach.projektKursLeitfach1ID == item.id),
+		set: (value) => {
+			if (!routeGost.liste.ausgewaehlt?.abiturjahr) 
+				return;
+			dataFaecher.patch({ projektKursLeitfach1ID: value?.id || null }, fach, routeGost.liste.ausgewaehlt.abiturjahr.valueOf());
 		}
 	});
 
 	const leitfach2: WritableComputedRef<GostFach | undefined> = computed({
-		get(): GostFach | undefined {
-			return app.dataFaecher.faecherOhnePJKundVTF.find(
-				item => props.fach.projektKursLeitfach2ID == item.id
-			);
-		},
-		set(leitfachNeu: GostFach | undefined) {
-			if (!app.auswahl.ausgewaehlt?.abiturjahr
-					|| leitfachNeu === leitfach1.value)
+		get: () => dataFaecher.faecherOhnePJKundVTF.find(item => fach.projektKursLeitfach2ID == item.id),
+		set: (value) => {
+			if (!routeGost.liste.ausgewaehlt?.abiturjahr || value === leitfach1.value)
 				return;
-			app.dataFaecher.patch(
-				{ projektKursLeitfach2ID: leitfachNeu?.id || null },
-				props.fach,
-				app.auswahl.ausgewaehlt.abiturjahr.valueOf()
-			);
+			dataFaecher.patch({ projektKursLeitfach2ID: value?.id || null }, fach, routeGost.liste.ausgewaehlt.abiturjahr.valueOf());
 		}
 	});
 
-	const istJahrgangAllgemein: ComputedRef<boolean> = computed(() => {
-		return (
-			!app.auswahl.ausgewaehlt ||
-			!app.auswahl.ausgewaehlt.abiturjahr ||
-			app.auswahl.ausgewaehlt.abiturjahr < 0
-		);
-	});
+	const istJahrgangAllgemein: ComputedRef<boolean> = computed(() =>
+		!routeGost.liste.ausgewaehlt || !routeGost.liste.ausgewaehlt.abiturjahr || routeGost.liste.ausgewaehlt.abiturjahr < 0
+	);
 
-	const istProjektkurs: ComputedRef<boolean> = computed(() => {
-		return daten.value.ist_PJK(props.fach);
-	});
+	const istProjektkurs: ComputedRef<boolean> = computed(() => dataFaecher.ist_PJK(fach));
 
-	const hatLeitfach1: ComputedRef<boolean> = computed(() => {
-		return daten.value.hatLeitfach1(props.fach);
-	});
+	const hatLeitfach1: ComputedRef<boolean> = computed(() => dataFaecher.hatLeitfach1(fach));
 
-	const daten: ComputedRef<DataGostFaecher> = computed(() => {
-		return app.dataFaecher;
-	});
+	const bgColor: ComputedRef<string> = computed(() => dataFaecher.getBgColor(fach));
 
-	const bgColor: ComputedRef<string> = computed(() => {
-		return daten.value.getBgColor(props.fach);
-	});
-
-	const ef1_moeglich: ComputedRef<boolean> = computed(() => {
-		return daten.value.getEF1Moeglich(props.fach);
-	});
-
-	const ef2_moeglich: ComputedRef<boolean> = computed(() => {
-		return daten.value.getEF2Moeglich(props.fach);
-	});
-
-	const q11_moeglich: ComputedRef<boolean> = computed(() => {
-		return daten.value.getQ11Moeglich(props.fach);
-	});
-
-	const q12_moeglich: ComputedRef<boolean> = computed(() => {
-		return daten.value.getQ12Moeglich(props.fach);
-	});
-
-	const q21_moeglich: ComputedRef<boolean> = computed(() => {
-		return daten.value.getQ21Moeglich(props.fach);
-	});
-
-	const q22_moeglich: ComputedRef<boolean> = computed(() => {
-		return daten.value.getQ22Moeglich(props.fach);
-	});
-
-	const abi_gk_moeglich: ComputedRef<boolean> = computed(() => {
-		return daten.value.getAbiGKMoeglich(props.fach);
-	});
-
-	const abi_lk_moeglich: ComputedRef<boolean> = computed(() => {
-		return daten.value.getAbiLKMoeglich(props.fach);
-	});
+	const ef1_moeglich: ComputedRef<boolean> = computed(() => dataFaecher.getEF1Moeglich(fach));
+	const ef2_moeglich: ComputedRef<boolean> = computed(() => dataFaecher.getEF2Moeglich(fach));
+	const q11_moeglich: ComputedRef<boolean> = computed(() => dataFaecher.getQ11Moeglich(fach));
+	const q12_moeglich: ComputedRef<boolean> = computed(() => dataFaecher.getQ12Moeglich(fach));
+	const q21_moeglich: ComputedRef<boolean> = computed(() => dataFaecher.getQ21Moeglich(fach));
+	const q22_moeglich: ComputedRef<boolean> = computed(() => dataFaecher.getQ22Moeglich(fach));
+	const abi_gk_moeglich: ComputedRef<boolean> = computed(() => dataFaecher.getAbiGKMoeglich(fach));
+	const abi_lk_moeglich: ComputedRef<boolean> = computed(() => dataFaecher.getAbiLKMoeglich(fach));
 
 	function toggle(bool: boolean): string {
 		return bool ? "\u2705" : "\u274C";
 	}
 
 	function set(data: Partial<GostFach>) {
-		app.dataFaecher.patch(
-			data,
-			props.fach,
-			app.auswahl.ausgewaehlt?.abiturjahr?.valueOf()
-		);
+		dataFaecher.patch(data, fach, routeGost.liste.ausgewaehlt?.abiturjahr?.valueOf());
 	}
 
 	function ef1_set(): void {
 		if (!ef1_moeglich.value) return;
-		set({ istMoeglichEF1: !props.fach.istMoeglichEF1 });
+		set({ istMoeglichEF1: !fach.istMoeglichEF1 });
 	}
 
 	function ef2_set(): void {
 		if (!ef2_moeglich.value) return;
-		set({ istMoeglichEF2: !props.fach.istMoeglichEF2 });
+		set({ istMoeglichEF2: !fach.istMoeglichEF2 });
 	}
 
 	function q11_set(): void {
 		if (!q11_moeglich.value) return;
-		set({ istMoeglichQ11: !props.fach.istMoeglichQ11 });
+		set({ istMoeglichQ11: !fach.istMoeglichQ11 });
 	}
 
 	function q12_set(): void {
 		if (!q12_moeglich.value) return;
-		set({ istMoeglichQ12: !props.fach.istMoeglichQ12 });
+		set({ istMoeglichQ12: !fach.istMoeglichQ12 });
 	}
 
 	function q21_set(): void {
 		if (!q21_moeglich.value) return;
-		set({ istMoeglichQ21: !props.fach.istMoeglichQ21 });
+		set({ istMoeglichQ21: !fach.istMoeglichQ21 });
 	}
 
 	function q22_set(): void {
 		if (!q22_moeglich.value) return;
-		set({ istMoeglichQ22: !props.fach.istMoeglichQ22 });
+		set({ istMoeglichQ22: !fach.istMoeglichQ22 });
 	}
 
 	function abi_gk_set(): void {
-		if (!abi_gk_moeglich .value) return;
-		set({ istMoeglichAbiGK: !props.fach.istMoeglichAbiGK });
+		if (!abi_gk_moeglich.value) return;
+		set({ istMoeglichAbiGK: !fach.istMoeglichAbiGK });
 	}
 
 	function abi_lk_set(): void {
-		if (!abi_gk_moeglich .value) return;
-		set({ istMoeglichAbiLK: !props.fach.istMoeglichAbiLK });
+		if (!abi_gk_moeglich.value) return;
+		set({ istMoeglichAbiLK: !fach.istMoeglichAbiLK });
 	}
 
 	function set_pjk_stunden(): void {
-		if (!daten.value.ist_PJK(props.fach)) return;
-		set({
-			wochenstundenQualifikationsphase:
-				props.fach.wochenstundenQualifikationsphase == 2 ? 3 : 2
-		});
+		if (!dataFaecher.ist_PJK(fach)) return;
+		set({ wochenstundenQualifikationsphase: fach.wochenstundenQualifikationsphase == 2 ? 3 : 2 });
 	}
+
 </script>

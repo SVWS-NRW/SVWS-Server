@@ -1,21 +1,10 @@
 import { App } from "../BaseApp";
 
-import {
-	GostBlockungKurs,
-	GostBlockungKursLehrer,
-	GostBlockungListeneintrag,
-	GostBlockungRegel,
-	GostBlockungSchiene,
-	GostBlockungsdaten,
-	GostBlockungsdatenManager,
-	GostBlockungsergebnisListeneintrag,
-	GostBlockungsergebnisManager,
-	List,
-	Vector,
-} from "@svws-nrw/svws-core-ts";
+import { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungListeneintrag, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdaten, 
+	GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostBlockungsergebnisManager, List, Vector } from "@svws-nrw/svws-core-ts";
 import { BaseData } from "../BaseData";
-import { ListKursblockungsergebnisse } from "./ListKursblockungsergebnisse";
 import { ShallowReactive, shallowReactive } from "vue";
+import { routeGost } from "~/router/apps/RouteGost";
 
 interface DataGostKursblockungManagerContainer {
 	manager: {
@@ -24,18 +13,12 @@ interface DataGostKursblockungManagerContainer {
 	}
 }
 
-export class DataGostKursblockung extends BaseData<
-	GostBlockungsdaten,
-	GostBlockungListeneintrag,
-	unknown
-> {
-	protected listKursblockungsergebnisse: ListKursblockungsergebnisse;
-
+export class DataGostKursblockung extends BaseData<GostBlockungsdaten, GostBlockungListeneintrag, unknown> {
+	
 	public manager_container : ShallowReactive<DataGostKursblockungManagerContainer> = shallowReactive({manager: {daten: undefined, ergebnis: undefined}});
 
-	public constructor(listKursblockungsergebnisse: ListKursblockungsergebnisse) {
+	public constructor() {
 		super();
-		this.listKursblockungsergebnisse = listKursblockungsergebnisse;
 	}
 
 	protected on_update(daten: Partial<GostBlockungsdaten>): void {
@@ -73,28 +56,16 @@ export class DataGostKursblockung extends BaseData<
 		this.pending = true;
 		const blockungsdaten = await super._select((eintrag: GostBlockungListeneintrag) =>
 			App.api.getGostBlockung(App.schema, eintrag.id));
-		if (blockungsdaten && App.apps.gost.dataFaecher.manager){
-			App.apps.gost.listAbiturjahrgangSchueler.reset_filter();
+		if (blockungsdaten && routeGost.data.dataFaecher.manager){
 			this.ergebnismanager = undefined;
-			this.datenmanager = new GostBlockungsdatenManager(blockungsdaten, App.apps.gost.dataFaecher.manager);
+			this.datenmanager = new GostBlockungsdatenManager(blockungsdaten, routeGost.data.dataFaecher.manager);
 			this.commit();
-			await this.listKursblockungsergebnisse.update_list(blockungsdaten.id);
-			if (this.listKursblockungsergebnisse.liste.length) {
-				let ergebnis = this.listKursblockungsergebnisse.liste[0];
-				if (blockungsdaten.istAktiv)
-					for (const e of this.listKursblockungsergebnisse.liste)
-						if (e.istVorlage) {
-							ergebnis = e;
-							break;
-						}
-				this.listKursblockungsergebnisse.ausgewaehlt = ergebnis;
-			}
 		}
 		this.pending = false;
 		return blockungsdaten;
 	}
 
-	public async ergebnisse(): Promise<List<GostBlockungsergebnisListeneintrag>> {
+	public ergebnisse(): List<GostBlockungsergebnisListeneintrag> {
 		return this.datenmanager?.getErgebnisseSortiertNachBewertung() || new Vector<GostBlockungsergebnisListeneintrag>()
 	}
 
@@ -105,7 +76,6 @@ export class DataGostKursblockung extends BaseData<
 	 */
 	public async unselect(): Promise<undefined> {
 		this._daten = undefined;
-		await this.listKursblockungsergebnisse.update_list(undefined);
 		this.datenmanager = undefined;
 		this.ergebnismanager = undefined;
 		this.commit();
@@ -295,9 +265,6 @@ export class DataGostKursblockung extends BaseData<
 			return;
 		this.pending = true;
 		await App.api.deleteGostBlockungKurslehrer(App.schema, kursid, lehrerid)
-		const ergebnismanager = App.apps.gost.dataKursblockung.ergebnismanager;
-		// this.ergebnismanager?.setRemoveSchieneByID(s.id)
-		// this.commit();
 		this.pending = false;
 	}
 

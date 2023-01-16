@@ -111,7 +111,7 @@ export abstract class RouteNodeListView<TAuswahl extends BaseList<TItemAuswahl, 
 
         return computed({
             get: () => {
-                if (route.params.id === undefined)
+                if (route.params[this.itemKey.toString()] === undefined)
                     return undefined;
                 let tmp = this.liste.ausgewaehlt;
                 if ((tmp !== undefined) && (tmp !== null)) {
@@ -119,7 +119,7 @@ export abstract class RouteNodeListView<TAuswahl extends BaseList<TItemAuswahl, 
                     if ((id !== undefined) && (id !== null) && (id.toString() === route.params[this.itemKey.toString()]))
                         return tmp;
                 }
-                return this.liste.liste.find(s => "" + s[this.itemKey] === route.params.id);
+                return this.liste.liste.find(s => "" + s[this.itemKey] === route.params[this.itemKey.toString()]);
             },
             set: (value) => {
                 this.liste.ausgewaehlt = value;
@@ -127,7 +127,7 @@ export abstract class RouteNodeListView<TAuswahl extends BaseList<TItemAuswahl, 
                 const id_value = "" + (((value === undefined) || (value === null)) ? undefined : value[this.itemKey]); 
                 if ((from_name !== name) && from_name?.startsWith(name)) {  // TODO Ergänze Methode bei RouteNode isNested und nutze diese 
                     const params = {...route.params};
-                    params.id = id_value;
+                    params[this.itemKey.toString()] = id_value;
                     router.push({ name: from_name, params: params });
                 } else {
                     const params = { [this.itemKey]: id_value };

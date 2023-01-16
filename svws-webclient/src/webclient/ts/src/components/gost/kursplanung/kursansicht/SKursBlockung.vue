@@ -158,7 +158,7 @@
 	<svws-ui-modal ref="zusatzkraefte_modal" size="small">
 		<template #modalTitle>Zusatzkräfte für Kurs {{ kursbezeichnung }}</template>
 		<template #modalContent>
-			<s-kurslehrer-select :kurs="kurs"/>
+			<s-kurslehrer-select :kurs="kurs" :blockung="blockung" :list-lehrer="listLehrer" :map-lehrer="mapLehrer" :data-faecher="dataFaecher" />
 		</template>
 		<template #modalActions>
 			<svws-ui-button @click="toggle_zusatzkraefte_modal">Fertig</svws-ui-button>
@@ -167,129 +167,110 @@
 </template>
 
 <script setup lang="ts">
-import {
-	GostBlockungKurs,
-	GostBlockungRegel,
-	GostBlockungSchiene,
-	GostBlockungsergebnisKurs,
-	GostBlockungsergebnisManager,
-	GostBlockungsergebnisSchiene,
-	GostFach,
-	GostKursart,
-	GostKursblockungRegelTyp,
-	LehrerListeEintrag,
-	List,
-	Vector,
-	ZulaessigesFach
-} from "@svws-nrw/svws-core-ts";
-import { computed, ComputedRef, Ref, ref, WritableComputedRef } from "vue";
-import { App } from "~/apps/BaseApp";
-import { ListLehrer } from "~/apps/lehrer/ListLehrer";
 
-import { injectMainApp, Main } from "~/apps/Main";
-import { lehrer_filter } from "~/helfer";
+	import { GostBlockungKurs, GostBlockungRegel, GostBlockungSchiene, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, GostBlockungsergebnisSchiene, 
+		GostFach, GostKursart, GostKursblockungRegelTyp, LehrerListeEintrag, List, Vector, ZulaessigesFach } from "@svws-nrw/svws-core-ts";
+	import { computed, ComputedRef, Ref, ref, WritableComputedRef } from "vue";
+	import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
+	import { DataGostKursblockung } from "~/apps/gost/DataGostKursblockung";
+	import { DataGostKursblockungsergebnis } from "~/apps/gost/DataGostKursblockungsergebnis";
+	import { ListLehrer } from "~/apps/lehrer/ListLehrer";
+	import { injectMainApp, Main } from "~/apps/Main";
+	import { lehrer_filter } from "~/helfer";
+	import { routeGostKursplanungSchueler } from "~/router/apps/gost/kursplanung/RouteGostKursplanungSchueler";
 
+	const props = defineProps<{ 
+		kurs: GostBlockungKurs
+		dataFaecher: DataGostFaecher;
+		blockung: DataGostKursblockung;
+		ergebnis: DataGostKursblockungsergebnis;
+		listLehrer: ListLehrer;
+		mapLehrer: Map<Number, LehrerListeEintrag>;
+		allow_regeln: boolean;
+	}>();
 
-const { kurs, listLehrer, mapLehrer } = defineProps<{ 
-	kurs: GostBlockungKurs
-	listLehrer: ListLehrer;
-	mapLehrer: Map<Number, LehrerListeEintrag>;
-}>();
+	const art = GostKursart.fromID(props.kurs.kursart)
 
-const art = GostKursart.fromID(kurs.kursart)
+	const main: Main = injectMainApp();
 
-const main: Main = injectMainApp();
-const app = main.apps.gost;
+	const edit_name: Ref<GostBlockungKurs | undefined> = ref(undefined)
+	const kursdetail_anzeige: Ref<boolean> = ref(false)
 
-const edit_name: Ref<GostBlockungKurs | undefined> = ref(undefined)
-const kursdetail_anzeige: Ref<boolean> = ref(false)
+	const drag_data: Ref<{kurs: GostBlockungKurs|undefined; schiene: GostBlockungSchiene|undefined}> = ref({schiene: undefined, kurs: undefined})
 
-const drag_data: Ref<{kurs: GostBlockungKurs|undefined; schiene: GostBlockungSchiene|undefined}> = ref({schiene: undefined, kurs: undefined})
-
-const gostFach: ComputedRef<GostFach | null> =
-	computed(() => {
-		let fach: GostFach | null = null
-		if (!app.dataFaecher.manager) return null
-		for (const f of app.dataFaecher.manager.values())
-			if (f.id === kurs.fach_id) {
+	const gostFach: ComputedRef<GostFach | null> = computed(() => {
+		let fach: GostFach | null = null;
+		if (!props.dataFaecher.manager) 
+			return null;
+		for (const f of props.dataFaecher.manager.values())
+			if (f.id === props.kurs.fach_id) {
 				fach = f
 				break
 			}
 		return fach;
 	});
 
-const fach: ComputedRef<ZulaessigesFach> =
-	computed(() => ZulaessigesFach.getByKuerzelASD(gostFach.value?.kuerzel || null));
+	const fach: ComputedRef<ZulaessigesFach> = computed(() => ZulaessigesFach.getByKuerzelASD(gostFach.value?.kuerzel || null));
 
-const bgColor: ComputedRef<string> =
-	computed(() => fach.value ? fach.value.getHMTLFarbeRGB().valueOf() : "#ffffff");
+	const bgColor: ComputedRef<string> = computed(() => fach.value ? fach.value.getHMTLFarbeRGB().valueOf() : "#ffffff");
 
-const koop: WritableComputedRef<boolean> =
-	computed({
-	get(): boolean {
-		return kurs.istKoopKurs.valueOf();
-	},
-	set(value: boolean) {
-		const k = app.dataKursblockung.datenmanager?.getKurs(kurs.id)
-		if (!k)
-			return;
-		app.dataKursblockung.patch_kurs(k.id, { istKoopKurs: Boolean(value) });
-		k.istKoopKurs = value;
-	}});
-
-const suffix: WritableComputedRef<string> =
-	computed({
-	get(): string {
-		return kurs.suffix.toString();
-	},
-	set(value: string) {
-		const k = app.dataKursblockung.datenmanager?.getKurs(kurs.id)
-		if (!k)
-			return;
-		app.dataKursblockung.patch_kurs(k.id, { suffix: String(value) });
-	}});
-
-const manager: ComputedRef<GostBlockungsergebnisManager | undefined> =
-	computed(()=> app.dataKursblockung.ergebnismanager);
-
-const kursbezeichnung: ComputedRef<String> =
-	computed(()=> get_kursbezeichnung(kurs.id));
-
-const kurslehrer: WritableComputedRef<LehrerListeEintrag|undefined> =
-	computed({
-		get(): LehrerListeEintrag | undefined {
-			if (!app.dataKursblockung.datenmanager || !kurs)
+	const koop: WritableComputedRef<boolean> = computed({
+		get: () => props.kurs.istKoopKurs.valueOf(),
+		set: (value) => {
+			const k = props.blockung.datenmanager?.getKurs(props.kurs.id)
+			if (!k)
 				return;
-			const liste = app.dataKursblockung.datenmanager.getOfKursLehrkraefteSortiert(kurs.id);
-			return liste.size() > 0 ? mapLehrer.get(liste.get(0).id) : undefined;
+			props.blockung.patch_kurs(k.id, { istKoopKurs: Boolean(value) });
+			k.istKoopKurs = value;
+		}
+	});
+
+	const suffix: WritableComputedRef<string> = computed({
+		get: () => props.kurs.suffix.toString(),
+		set: (value) => {
+			const k = props.blockung.datenmanager?.getKurs(props.kurs.id)
+			if (!k)
+				return;
+			props.blockung.patch_kurs(k.id, { suffix: String(value) });
+		}
+	});
+
+	const manager: ComputedRef<GostBlockungsergebnisManager | undefined> = computed(() => props.blockung.ergebnismanager);
+
+	const kursbezeichnung: ComputedRef<String> = computed(() => get_kursbezeichnung(props.kurs.id));
+
+	const kurslehrer: WritableComputedRef<LehrerListeEintrag|undefined> = computed({
+		get: () => {
+			if (!props.blockung.datenmanager || !props.kurs)
+				return;
+			const liste = props.blockung.datenmanager.getOfKursLehrkraefteSortiert(props.kurs.id);
+			return liste.size() > 0 ? props.mapLehrer.get(liste.get(0).id) : undefined;
 		},
-		set(value: LehrerListeEintrag | undefined) {
-			if (!kurs)
+		set: (value) => {
+			if (!props.kurs)
 				return;
 			if (value !== undefined) {
-				app.dataKursblockung.add_blockung_lehrer(kurs.id, value.id)
-					.then(lehrer => {
-						if (!lehrer || !app.dataKursblockung.datenmanager || !kurs)
-							throw new Error("Fehler beim Anlegen des Kurslehrers");
-						app.dataKursblockung.datenmanager.patchOfKursAddLehrkraft(kurs.id, lehrer);
-						add_lehrer_regel();
-					})
-				}
-			else remove_kurslehrer()
+				props.blockung.add_blockung_lehrer(props.kurs.id, value.id).then(lehrer => {
+					if (!lehrer || !props.blockung.datenmanager || !props.kurs)
+						throw new Error("Fehler beim Anlegen des Kurslehrers");
+					props.blockung.datenmanager.patchOfKursAddLehrkraft(props.kurs.id, lehrer);
+					add_lehrer_regel();
+				});
+			} else 
+				remove_kurslehrer()
 		}
-	})
+	});
 
-function remove_kurslehrer() {
-	if (!app.dataKursblockung.datenmanager || !kurs || !kurslehrer.value)
-		return;
-	app.dataKursblockung.del_blockung_lehrer(kurs.id, kurslehrer.value.id);
-	app.dataKursblockung.datenmanager.patchOfKursRemoveLehrkraft(kurs.id, kurslehrer.value.id);
-}
+	function remove_kurslehrer() {
+		if (!props.blockung.datenmanager || !props.kurs || !kurslehrer.value)
+			return;
+		props.blockung.del_blockung_lehrer(props.kurs.id, kurslehrer.value.id);
+		props.blockung.datenmanager.patchOfKursRemoveLehrkraft(props.kurs.id, kurslehrer.value.id);
+	}
 
-const lehrer_regel: ComputedRef<GostBlockungRegel | undefined> =
-	computed(()=> {
+	const lehrer_regel: ComputedRef<GostBlockungRegel | undefined> = computed(()=> {
 		const regel_typ = GostKursblockungRegelTyp.LEHRKRAFT_BEACHTEN
-		const regeln = app.dataKursblockung.datenmanager?.getMengeOfRegeln()
+		const regeln = props.blockung.datenmanager?.getMengeOfRegeln()
 		if (!regeln)
 			return undefined;
 		for (const r of regeln)
@@ -297,36 +278,35 @@ const lehrer_regel: ComputedRef<GostBlockungRegel | undefined> =
 				return r;
 	})
 
-function add_lehrer_regel() {
-	if (lehrer_regel !== undefined)
-		return;
-	const r = new GostBlockungRegel();
-	const regel_typ = GostKursblockungRegelTyp.LEHRKRAFT_BEACHTEN
-	r.typ = regel_typ.typ;
-	r.parameter.add(1);
-	app.dataKursblockung.add_blockung_regel(r);
-}
+	function add_lehrer_regel() {
+		if (lehrer_regel !== undefined)
+			return;
+		const r = new GostBlockungRegel();
+		const regel_typ = GostKursblockungRegelTyp.LEHRKRAFT_BEACHTEN
+		r.typ = regel_typ.typ;
+		r.parameter.add(1);
+		props.blockung.add_blockung_regel(r);
+	}
 
-function get_kursbezeichnung(kurs_id: number | undefined) {
-	if (!kurs_id || !manager.value)
-		return String();
-	return manager.value.getOfKursName(kurs_id);
-}
+	function get_kursbezeichnung(kurs_id: number | undefined) {
+		if (!kurs_id || !manager.value)
+			return String();
+		return manager.value.getOfKursName(kurs_id);
+	}
 
-const schienen: ComputedRef<List<GostBlockungsergebnisSchiene>> =
-	computed(()=> manager.value?.getMengeAllerSchienen() || new Vector<GostBlockungsergebnisSchiene>())
+	const schienen: ComputedRef<List<GostBlockungsergebnisSchiene>> = computed(() => 
+		manager.value?.getMengeAllerSchienen() || new Vector<GostBlockungsergebnisSchiene>()
+	);
 
-const kurs_blockungsergebnis: ComputedRef<GostBlockungsergebnisKurs|undefined> =
-	computed(()=> manager.value?.getKursE(kurs.id))
+	const kurs_blockungsergebnis: ComputedRef<GostBlockungsergebnisKurs|undefined> = computed(() => manager.value?.getKursE(props.kurs.id));
 
-const selected_kurs: ComputedRef<boolean> =
-	computed(() => (kurs_blockungsergebnis.value !== undefined)
-		&& (kurs_blockungsergebnis.value?.id === app.listAbiturjahrgangSchueler.filter.kurs?.id))
+	const selected_kurs: ComputedRef<boolean> = computed(() => 
+		(kurs_blockungsergebnis.value !== undefined) && (kurs_blockungsergebnis.value?.id === routeGostKursplanungSchueler.data.listSchueler.filter.kurs?.id)
+	);
 
-const filtered_by_kursart: ComputedRef<GostBlockungsergebnisKurs[]> =
-	computed(()=>{
+	const filtered_by_kursart: ComputedRef<GostBlockungsergebnisKurs[]> = computed(() => {
 		let kurse: Vector<GostBlockungsergebnisKurs>|undefined
-			kurse = manager.value?.getOfFachKursmenge(kurs.fach_id)
+			kurse = manager.value?.getOfFachKursmenge(props.kurs.fach_id)
 		if (!kurse) return []
 		const arr = kurse.toArray(new Array<GostBlockungsergebnisKurs>())
 		return arr.filter(k => k.kursart === art.id).sort((a,b)=>{
@@ -336,209 +316,205 @@ const filtered_by_kursart: ComputedRef<GostBlockungsergebnisKurs[]> =
 		})
 	})
 
-const setze_kursdifferenz: ComputedRef<boolean> =
-	computed(()=>filtered_by_kursart.value[0]===kurs_blockungsergebnis.value)
+	const setze_kursdifferenz: ComputedRef<boolean> = computed(() => filtered_by_kursart.value[0] === kurs_blockungsergebnis.value);
 
-const kursdifferenz: ComputedRef<[number, number, number]> =
-	computed(() => {
-	if (!filtered_by_kursart.value.length) return [-1,-1, -1]
-	const wahlen = filtered_by_kursart.value.reduce((previousValue, currentValue) => previousValue + currentValue.schueler.size(), 0)
-	if (filtered_by_kursart.value.length === 2) return [2, Math.abs(filtered_by_kursart.value[0].schueler.size() - filtered_by_kursart.value[1].schueler.size()), wahlen]
-	const sorted = [...filtered_by_kursart.value].sort((a, b) => b.schueler.size() - a.schueler.size())
-	return [filtered_by_kursart.value.length, sorted[0].schueler.size() - sorted[sorted.length - 1].schueler.size(), wahlen]})
+	const kursdifferenz: ComputedRef<[number, number, number]> = computed(() => {
+		if (!filtered_by_kursart.value.length) 
+			return [-1,-1, -1]
+		const fachart_id = GostKursart.getFachartID(props.kurs.fach_id, props.kurs.kursart);
+		const wahlen = props.blockung.datenmanager?.getOfFachartMengeFachwahlen(fachart_id).size() || 0;
+		if (filtered_by_kursart.value.length === 2) 
+			return [2, Math.abs(filtered_by_kursart.value[0].schueler.size() - filtered_by_kursart.value[1].schueler.size()), wahlen];
+		const sorted = [...filtered_by_kursart.value].sort((a, b) => b.schueler.size() - a.schueler.size());
+		return [filtered_by_kursart.value.length, sorted[0].schueler.size() - sorted[sorted.length - 1].schueler.size(), wahlen]
+	});
 
-const regeln: ComputedRef<List<GostBlockungRegel>> =
-	computed(()=> app.dataKursblockung.datenmanager?.getMengeOfRegeln() || new Vector<GostBlockungRegel>())
+	const regeln: ComputedRef<List<GostBlockungRegel>> = computed(() => 
+		props.blockung.datenmanager?.getMengeOfRegeln() || new Vector<GostBlockungRegel>()
+	);
 
-const sperr_regeln: ComputedRef<GostBlockungRegel[]> =
-	computed(() => {
+	const sperr_regeln: ComputedRef<GostBlockungRegel[]> = computed(() => {
 		const arr = []
 		for (const regel of regeln.value)
-			if (regel.typ === GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ
-					&& regel.parameter.get(0) === kurs.id)
+			if (regel.typ === GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ && regel.parameter.get(0) === props.kurs.id)
 				arr.push(regel)
 		return arr;
 	})
 
-const fixier_regeln: ComputedRef<GostBlockungRegel[]> =
-	computed(() => {
+	const fixier_regeln: ComputedRef<GostBlockungRegel[]> = computed(() => {
 		const arr = []
 		for (const regel of regeln.value)
-			if (regel.typ === GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ
-					&& regel.parameter.get(0) === kurs.id)
+			if (regel.typ === GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ && regel.parameter.get(0) === props.kurs.id)
 				arr.push(regel)
 		return arr;
-	})
+	});
 
-const allow_regeln: ComputedRef<boolean> =
-	computed(()=> app.blockungsergebnisauswahl.liste.length === 1)
+	const blockung_aktiv: ComputedRef<boolean> = computed(() => (props.blockung.daten !== undefined) && props.blockung.daten?.istAktiv);
 
-const blockung_aktiv: ComputedRef<boolean> =
-	computed(()=> app.blockungsauswahl.ausgewaehlt?.istAktiv || false);
+	function drag_started(e: DragEvent) {
+		const transfer = e.dataTransfer;
+		const data = JSON.parse(transfer?.getData('text/plain') || "") as {kurs: GostBlockungKurs; schiene: GostBlockungSchiene} | undefined;
+		if (!data) 
+			return;
+		drag_data.value.kurs = data.kurs;
+		drag_data.value.schiene = data.schiene;
+	}
 
-function drag_started(e: DragEvent) {
-	const transfer = e.dataTransfer;
-	const data = JSON.parse(transfer?.getData('text/plain') || "") as {kurs: GostBlockungKurs; schiene: GostBlockungSchiene} | undefined;
-	if (!data) return;
-	drag_data.value.kurs = data.kurs;
-	drag_data.value.schiene = data.schiene;
-}
+	function drag_ended() {
+		drag_data.value.kurs = undefined;
+		drag_data.value.schiene = undefined;
+	}
 
-function drag_ended() {
-	drag_data.value.kurs = undefined;
-	drag_data.value.schiene = undefined;
-}
-
-const schiene_gesperrt = (schiene: GostBlockungsergebnisSchiene): boolean => {
-	for (const regel of regeln.value) {
-		const { nummer } = ermittel_parent_schiene(schiene)
-		if (regel.typ === GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS.typ
-			&& (regel.parameter.get(0) !== kurs.kursart
-				&& (nummer >= regel.parameter.get(1) && nummer <= regel.parameter.get(2)))
-			|| (regel.parameter.get(0) === kurs.kursart
-				&& (nummer < regel.parameter.get(1) || nummer > regel.parameter.get(2))))
-			return true;
-		else if (regel.typ === GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS.typ
-			&& regel.parameter.get(0) === kurs.kursart
-			&& (nummer >= regel.parameter.get(1) && nummer <= regel.parameter.get(2)))
+	const schiene_gesperrt = (schiene: GostBlockungsergebnisSchiene): boolean => {
+		for (const regel of regeln.value) {
+			const { nummer } = ermittel_parent_schiene(schiene)
+			if (regel.typ === GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS.typ
+					&& (regel.parameter.get(0) !== props.kurs.kursart && (nummer >= regel.parameter.get(1) && nummer <= regel.parameter.get(2)))
+					|| (regel.parameter.get(0) === props.kurs.kursart && (nummer < regel.parameter.get(1) || nummer > regel.parameter.get(2))))
 				return true;
+			else if (regel.typ === GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS.typ
+					&& regel.parameter.get(0) === props.kurs.kursart
+					&& (nummer >= regel.parameter.get(1) && nummer <= regel.parameter.get(2)))
+				return true;
+		}
+		return false;
 	}
-	return false;
-}
 
-const ermittel_parent_schiene = (ergebnis_schiene: GostBlockungsergebnisSchiene): GostBlockungSchiene => {
-	const schiene =	manager.value?.getSchieneG(ergebnis_schiene.id)
-	if (!schiene) throw new Error("Schiene fehlt in der Definition")
-	return schiene
-}
-
-const fixieren_regel_toggle = () => {
-	if (app.dataKursblockung.pending || !allow_regeln.value)
-		return;
-	fixier_regeln.value.length ? fixieren_regel_entfernen() : fixieren_regel_hinzufuegen()
-}
-const fixieren_regel_hinzufuegen = async () => {
-	if (app.dataKursblockung.pending || !manager.value)
-		return;
-	const regel = new GostBlockungRegel();
-	regel.typ = GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ;
-	const kurs = kurs_blockungsergebnis.value
-	if (!kurs)
-		return;
-	const schienen = manager.value.getOfKursSchienenmenge(kurs.id)
-	if (!schienen)
-		return;
-	const schiene = manager.value.getSchieneG([...schienen][0].id)
-	if (!schiene)
-		return;
-	regel.parameter.add(kurs.id);
-	regel.parameter.add(schiene.nummer);
-	await app.dataKursblockung.add_blockung_regel(regel)
-}
-
-const fixieren_regel_entfernen = async () => {
-	if (!fixier_regeln.value || app.dataKursblockung.pending)
-		return;
-	for (const regel of fixier_regeln.value)
-		app.dataKursblockung.del_blockung_regel(regel.id);
-}
-
-const sperren_regel_toggle = (schiene: GostBlockungsergebnisSchiene) => {
-	if (app.dataKursblockung.pending || !allow_regeln.value)
-		return;
-	const { nummer } = ermittel_parent_schiene(schiene);
-	return sperr_regeln.value.find(r=>r.parameter.get(1) === nummer)
-		? sperren_regel_entfernen(nummer)
-		: sperren_regel_hinzufuegen(nummer)
-}
-
-const sperren_regel_hinzufuegen = async (nummer: number) => {
-	const regel = new GostBlockungRegel();
-	regel.typ = GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ;
-	regel.parameter.add(kurs.id);
-	regel.parameter.add(nummer);
-	await app.dataKursblockung.add_blockung_regel(regel);
-}
-
-const sperren_regel_entfernen = async (nummer: number) => {
-	if (!sperr_regeln.value.length)
-		return
-	const regel = sperr_regeln.value.find(r=>r.parameter.get(1) === nummer)
-	if (!regel) return
-	await app.dataKursblockung.del_blockung_regel(regel.id)
-}
-
-let kurs1: GostBlockungsergebnisKurs | undefined = undefined;
-function drop_aendere_kursschiene(drag_data: {kurs: GostBlockungsergebnisKurs; schiene: GostBlockungSchiene}, schiene: GostBlockungsergebnisSchiene) {
-	if (!drag_data.kurs || !drag_data.schiene || app.dataKursblockungsergebnis.pending || kurs_blockungsergebnis.value === undefined)
-		return
-	if (drag_data.kurs.id !== kurs_blockungsergebnis.value.id && kurs_schiene_zugeordnet(schiene)) {
-		kurs1 = drag_data.kurs;
-		toggle_kurs_und_kurs_modal();
-		return;
+	const ermittel_parent_schiene = (ergebnis_schiene: GostBlockungsergebnisSchiene): GostBlockungSchiene => {
+		const schiene =	manager.value?.getSchieneG(ergebnis_schiene.id)
+		if (!schiene) 
+			throw new Error("Schiene fehlt in der Definition")
+		return schiene
 	}
-	if (drag_data.kurs.id === kurs_blockungsergebnis.value.id && schiene.id !== drag_data.schiene.id) {
-		if (fixier_regeln.value) fixieren_regel_entfernen()
-		app.dataKursblockungsergebnis.assignKursSchiene(drag_data.kurs.id, drag_data.schiene.id, schiene.id)
+
+	const fixieren_regel_toggle = () => {
+		if (props.blockung.pending || !props.allow_regeln)
+			return;
+		fixier_regeln.value.length ? fixieren_regel_entfernen() : fixieren_regel_hinzufuegen()
 	}
-}
-
-async function add_kurs() {
-	if (app.dataKursblockung.pending)
-		return;
-	await app.dataKursblockung.add_blockung_kurse(kurs.fach_id, kurs.kursart)
-}
-
-async function del_kurs() {
-	if (app.dataKursblockung.pending)
-		return;
-	await app.dataKursblockung.del_blockung_kurse(kurs.fach_id, kurs.kursart);
-}
-
-function toggle_active_kurs() {
-	const filterValue = app.listAbiturjahrgangSchueler.filter;
-	if (filterValue.kurs !== kurs) {
-		app.listAbiturjahrgangSchueler.reset_filter();
-		filterValue.kurs = kurs;
+	const fixieren_regel_hinzufuegen = async () => {
+		if (props.blockung.pending || !manager.value)
+			return;
+		const regel = new GostBlockungRegel();
+		regel.typ = GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ;
+		const kurs = kurs_blockungsergebnis.value
+		if (!kurs)
+			return;
+		const schienen = manager.value.getOfKursSchienenmenge(kurs.id)
+		if (!schienen)
+			return;
+		const schiene = manager.value.getSchieneG([...schienen][0].id)
+		if (!schiene)
+			return;
+		regel.parameter.add(kurs.id);
+		regel.parameter.add(schiene.nummer);
+		await props.blockung.add_blockung_regel(regel)
 	}
-	else app.listAbiturjahrgangSchueler.reset_filter();
-	app.listAbiturjahrgangSchueler.filter = filterValue;
-}
 
-function kurs_schiene_zugeordnet(schiene: GostBlockungsergebnisSchiene): boolean {
-	return manager.value?.getOfKursOfSchieneIstZugeordnet(kurs.id, schiene.id) || false
-}
+	const fixieren_regel_entfernen = async () => {
+		if (!fixier_regeln.value || props.blockung.pending)
+			return;
+		for (const regel of fixier_regeln.value)
+			props.blockung.del_blockung_regel(regel.id);
+	}
 
-const toggle_kursdetail_anzeige = () => kursdetail_anzeige.value = !kursdetail_anzeige.value
+	const sperren_regel_toggle = (schiene: GostBlockungsergebnisSchiene) => {
+		if (props.blockung.pending || !props.allow_regeln)
+			return;
+		const { nummer } = ermittel_parent_schiene(schiene);
+		return sperr_regeln.value.find(r=>r.parameter.get(1) === nummer)
+			? sperren_regel_entfernen(nummer)
+			: sperren_regel_hinzufuegen(nummer)
+	}
 
-const zusatzkraefte_modal: Ref<any> = ref(null);
-function toggle_zusatzkraefte_modal() {
-	zusatzkraefte_modal.value.isOpen ? zusatzkraefte_modal.value.closeModal() : zusatzkraefte_modal.value.openModal();
-};
+	const sperren_regel_hinzufuegen = async (nummer: number) => {
+		const regel = new GostBlockungRegel();
+		regel.typ = GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ;
+		regel.parameter.add(props.kurs.id);
+		regel.parameter.add(nummer);
+		await props.blockung.add_blockung_regel(regel);
+	}
 
-const kurs_und_kurs_modal: Ref<any> = ref(null);
-function toggle_kurs_und_kurs_modal() {
-	kurs_und_kurs_modal.value.isOpen ? kurs_und_kurs_modal.value.closeModal() : kurs_und_kurs_modal.value.openModal();
-};
+	const sperren_regel_entfernen = async (nummer: number) => {
+		if (!sperr_regeln.value.length)
+			return
+		const regel = sperr_regeln.value.find(r=>r.parameter.get(1) === nummer)
+		if (!regel) return
+		await props.blockung.del_blockung_regel(regel.id)
+	}
 
-async function create_regel_immer() {
-	kurs_und_kurs_modal.value.closeModal();
-	if (!kurs1)
-		return;
-	const regel = new GostBlockungRegel();
-	regel.typ = GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS.typ;
-	regel.parameter.add(kurs1.id)
-	regel.parameter.add(kurs.id);
-	await app.dataKursblockung.add_blockung_regel(regel)
-}
-async function create_regel_nie() {
-	kurs_und_kurs_modal.value.closeModal();
-	if (!kurs1)
-		return;
-	const regel = new GostBlockungRegel();
-	regel.typ = GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS.typ;
-	regel.parameter.add(kurs1.id)
-	regel.parameter.add(kurs.id);
-	await app.dataKursblockung.add_blockung_regel(regel)
-}
+	let kurs1: GostBlockungsergebnisKurs | undefined = undefined;
+	function drop_aendere_kursschiene(drag_data: {kurs: GostBlockungsergebnisKurs; schiene: GostBlockungSchiene}, schiene: GostBlockungsergebnisSchiene) {
+		if (!drag_data.kurs || !drag_data.schiene || props.ergebnis.pending || kurs_blockungsergebnis.value === undefined)
+			return
+		if (drag_data.kurs.id !== kurs_blockungsergebnis.value.id && kurs_schiene_zugeordnet(schiene)) {
+			kurs1 = drag_data.kurs;
+			toggle_kurs_und_kurs_modal();
+			return;
+		}
+		if (drag_data.kurs.id === kurs_blockungsergebnis.value.id && schiene.id !== drag_data.schiene.id) {
+			if (fixier_regeln.value) fixieren_regel_entfernen()
+			props.ergebnis.assignKursSchiene(drag_data.kurs.id, drag_data.schiene.id, schiene.id)
+		}
+	}
+
+	async function add_kurs() {
+		if (props.blockung.pending)
+			return;
+		await props.blockung.add_blockung_kurse(props.kurs.fach_id, props.kurs.kursart)
+	}
+
+	async function del_kurs() {
+		if (props.blockung.pending)
+			return;
+		await props.blockung.del_blockung_kurse(props.kurs.fach_id, props.kurs.kursart);
+	}
+
+	function toggle_active_kurs() {
+		const filterValue = routeGostKursplanungSchueler.data.listSchueler.filter;
+		if (filterValue.kurs !== props.kurs) {
+			routeGostKursplanungSchueler.data.listSchueler.reset_filter();
+			filterValue.kurs = props.kurs;
+		} else 
+			routeGostKursplanungSchueler.data.listSchueler.reset_filter();
+		routeGostKursplanungSchueler.data.listSchueler.filter = filterValue;
+	}
+
+	function kurs_schiene_zugeordnet(schiene: GostBlockungsergebnisSchiene): boolean {
+		return manager.value?.getOfKursOfSchieneIstZugeordnet(props.kurs.id, schiene.id) || false
+	}
+
+	const toggle_kursdetail_anzeige = () => kursdetail_anzeige.value = !kursdetail_anzeige.value
+
+	const zusatzkraefte_modal: Ref<any> = ref(null);
+	function toggle_zusatzkraefte_modal() {
+		zusatzkraefte_modal.value.isOpen ? zusatzkraefte_modal.value.closeModal() : zusatzkraefte_modal.value.openModal();
+	};
+
+	const kurs_und_kurs_modal: Ref<any> = ref(null);
+	function toggle_kurs_und_kurs_modal() {
+		kurs_und_kurs_modal.value.isOpen ? kurs_und_kurs_modal.value.closeModal() : kurs_und_kurs_modal.value.openModal();
+	};
+
+	async function create_regel_immer() {
+		kurs_und_kurs_modal.value.closeModal();
+		if (!kurs1)
+			return;
+		const regel = new GostBlockungRegel();
+		regel.typ = GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS.typ;
+		regel.parameter.add(kurs1.id)
+		regel.parameter.add(props.kurs.id);
+		await props.blockung.add_blockung_regel(regel)
+	}
+	async function create_regel_nie() {
+		kurs_und_kurs_modal.value.closeModal();
+		if (!kurs1)
+			return;
+		const regel = new GostBlockungRegel();
+		regel.typ = GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS.typ;
+		regel.parameter.add(kurs1.id)
+		regel.parameter.add(props.kurs.id);
+		await props.blockung.add_blockung_regel(regel)
+	}
+
 </script>

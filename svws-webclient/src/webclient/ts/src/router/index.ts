@@ -9,4 +9,4 @@ export const router = createRouter({
 	routes: [ ]
 });
 
-export const routerManager = new RouteManager(router);
+export const routerManager = RouteManager.create(router);

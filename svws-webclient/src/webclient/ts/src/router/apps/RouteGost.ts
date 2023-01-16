@@ -1,9 +1,9 @@
 import { GostJahrgang } from "@svws-nrw/svws-core-ts";
 import { computed, shallowRef, ShallowRef, WritableComputedRef } from "vue";
 import { RouteLocationNormalized, RouteParams, RouteRecordRaw, useRoute, useRouter } from "vue-router";
+import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
 import { DataGostJahrgang } from "~/apps/gost/DataGostJahrgang";
 import { ListGost } from "~/apps/gost/ListGost";
-import { mainApp } from "~/apps/Main";
 import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 import { RouteApp } from "~/router/RouteApp";
 import { RouteNode } from "~/router/RouteNode";
@@ -18,6 +18,7 @@ export class RouteDataGost {
 	item: ShallowRef<GostJahrgang | undefined> = shallowRef(undefined);
 	schule: DataSchuleStammdaten = new DataSchuleStammdaten();
 	jahrgangsdaten: DataGostJahrgang = new DataGostJahrgang();
+    dataFaecher: DataGostFaecher = new DataGostFaecher();
 }
 
 const SGostAuswahl = () => import("~/components/gost/SGostAuswahl.vue")
@@ -27,7 +28,7 @@ const SGostApp = () => import("~/components/gost/SGostApp.vue")
 export class RouteGost extends RouteNodeListView<ListGost, GostJahrgang, RouteDataGost, RouteApp> {
 
 	public constructor() {
-		super("gost", "/gost/:abiturjahr(-?\\d+)?", SGostAuswahl, SGostApp, new ListGost(undefined, undefined), 'abiturjahr', new RouteDataGost());
+		super("gost", "/gost/:abiturjahr(-?\\d+)?", SGostAuswahl, SGostApp, new ListGost(), 'abiturjahr', new RouteDataGost());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Oberstufe";
         super.setView("liste", SGostAuswahl, (route) => this.getProps(route));
@@ -44,13 +45,15 @@ export class RouteGost extends RouteNodeListView<ListGost, GostJahrgang, RouteDa
     public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
 		if ((to.name === this.name) && (to_params.abiturjahr === undefined)) {
 			const redirect_name: string = (this.selectedChild === undefined) ? this.defaultChild!.name : this.selectedChild.name;
-			return { name: redirect_name, params: { abiturjahr: mainApp.apps.gost.auswahl.liste.at(0)?.abiturjahr }};
+			await this.liste.update_list();
+			return { name: redirect_name, params: { abiturjahr: this.liste.liste.at(0)?.abiturjahr }};
 		}
         return true;
     }
 
     public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) {
 		await this.data.schule.select(true);  // undefined würde das laden verhindern, daher true
+		await this.liste.update_list();  // Die Auswahlliste wird als letztes geladen
     }
 
     protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
@@ -58,7 +61,7 @@ export class RouteGost extends RouteNodeListView<ListGost, GostJahrgang, RouteDa
 			this.onSelect(undefined);
 		} else {
 			const abiturjahr = parseInt(to_params.abiturjahr as string);
-			this.onSelect(mainApp.apps.gost.auswahl.liste.find(s => s.abiturjahr === abiturjahr));
+			this.onSelect(this.liste.liste.find(s => s.abiturjahr === abiturjahr));
 		}
 	}
 
@@ -68,14 +71,16 @@ export class RouteGost extends RouteNodeListView<ListGost, GostJahrgang, RouteDa
 		if (item === undefined) {
 			this.data.item.value = undefined;
 			this.data.jahrgangsdaten.unselect();
+            this.data.dataFaecher.unselect();
 		} else {
 			this.data.item.value = item;
 			this.data.jahrgangsdaten.select(this.data.item.value);
+            this.data.dataFaecher.select(this.data.item.value);
 		}
 	}
 
     protected getAuswahlComputedProperty(): WritableComputedRef<GostJahrgang | undefined> {
-		return this.getSelectorByAbiturjahr(mainApp.apps.gost.auswahl);
+		return this.getSelectorByAbiturjahr(this.liste);
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
@@ -83,6 +88,7 @@ export class RouteGost extends RouteNodeListView<ListGost, GostJahrgang, RouteDa
         prop.item = this.data.item;
 		prop.schule = this.data.schule;
         prop.jahrgangsdaten = this.data.jahrgangsdaten;
+        prop.dataFaecher = this.data.dataFaecher;
 		return prop;
 	}
 

@@ -23,28 +23,21 @@
 </template>
 
 <script setup lang="ts">
-import { GostBlockungListeneintrag } from "@svws-nrw/svws-core-ts";
-import {
-		computed,
-		ComputedRef,
-	} from "vue";
+	import { GostBlockungListeneintrag } from "@svws-nrw/svws-core-ts";
+	import { computed, ComputedRef } from "vue";
 	import { FeedbackValues } from "~/apps/gost/userfeedback";
-	import { injectMainApp, Main } from "~/apps/Main";
+	import { routeGostKursplanungHalbjahr } from "~/router/apps/gost/kursplanung/RouteGostKursplanungHalbjahr";
 	
-	const main: Main = injectMainApp();
-	const app = main.apps.gost;
-	const {blockung} = defineProps({
-		blockung: {
-			type: Object as () => GostBlockungListeneintrag,
-			required: true
-		}
-	});
-	// const apiStatus: ComputedRef<ApiStatus> = computed(()=>app.apiStatus)
-	const status_blockung: ComputedRef<FeedbackValues> = computed(()=>app.getApiStatus(blockung.hashCode()))
+	const props = defineProps<{ 
+		blockung: GostBlockungListeneintrag;
+	}>();
 
-	</script>
+	// const apiStatus: ComputedRef<ApiStatus> = computed(()=>app.apiStatus)
+	const status_blockung: ComputedRef<FeedbackValues> = computed(() => routeGostKursplanungHalbjahr.data.listBlockungen.getApiStatus(props.blockung.hashCode()))
+
+</script>
 	
-	<style>
+<style>
 	.loading-disclaimer {
 		background-color: rgba(var(--svws-ui-color-dark-20), var(--tw-border-opacity));
 		--tw-bg-opacity: 1;
@@ -107,4 +100,4 @@ import {
 			-webkit-transform: rotate(360deg);
 		}
 	}
-	</style>
+</style>

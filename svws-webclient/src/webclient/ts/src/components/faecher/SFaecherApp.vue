@@ -7,7 +7,7 @@
 			</div>
 			<span class="opacity-50">{{ props.item?.kuerzel }}</span>
 		</svws-ui-header>
-		<svws-ui-router-tab-bar :routes="routeKatalogFaecher.children_records" :hidden="routeKatalogFaecher.children_hidden" v-model="selectedRoute">
+		<svws-ui-router-tab-bar :routes="routeKatalogFaecher.children_records" :hidden="children_hidden" v-model="selectedRoute">
 			<router-view />
 		</svws-ui-router-tab-bar>
 	</div>
@@ -25,5 +25,6 @@
 
 	const data: RouteDataKatalogFaecher = routeKatalogFaecher.data;
 	const selectedRoute = routeKatalogFaecher.getChildRouteSelector();
+	const children_hidden = routeKatalogFaecher.children_hidden();
 
 </script>

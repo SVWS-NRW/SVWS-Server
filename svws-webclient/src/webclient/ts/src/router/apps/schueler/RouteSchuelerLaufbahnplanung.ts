@@ -1,5 +1,5 @@
 import { GostJahrgang, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
-import { RouteLocationNormalized } from "vue-router";
+import { RouteLocationNormalized, RouteParams } from "vue-router";
 import { App } from "~/apps/BaseApp";
 import { DataGostFachkombinationen } from "~/apps/gost/DataGostFachkombinationen";
 import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
@@ -25,9 +25,9 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 		super("schueler_laufbahnplanung", "laufbahnplanung", SSchuelerLaufbahnplanung, new RouteDataSchuelerLaufbahnplanung());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Laufbahnplanung";
-		super.isHidden = () => {
+		super.isHidden = (params: RouteParams) => {
 			const abiturjahr = routeSchueler.item?.abiturjahrgang;
-			const jahrgang = App.apps.gost.auswahl.liste.find(j => (j.abiturjahr === abiturjahr));   // TODO Bestimme Jahrgang aus der Liste der Abiturjahgänge in RouteSchueler
+			const jahrgang = routeSchueler.data.listeAbiturjahrgaenge.liste.find(j => (j.abiturjahr === abiturjahr));
 			return (jahrgang === undefined);
 		}
 	}

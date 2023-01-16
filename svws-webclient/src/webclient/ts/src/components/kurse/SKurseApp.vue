@@ -7,7 +7,7 @@
 				<span v-if="inputFachlehrer" class="opacity-50"><br/>{{ inputFachlehrer }}</span>
 			</div>
 		</svws-ui-header>
-		<svws-ui-router-tab-bar :routes="routeKurse.children_records" :hidden="routeKurse.children_hidden" v-model="selectedRoute">
+		<svws-ui-router-tab-bar :routes="routeKurse.children_records" :hidden="children_hidden" v-model="selectedRoute">
 			<router-view />
 		</svws-ui-router-tab-bar>
 	</div>
@@ -35,6 +35,7 @@
 	}>();
 
 	const selectedRoute = routeKurse.childRouteSelector;
+	const children_hidden = routeKurse.children_hidden();
 
 	const kuerzel: ComputedRef<string> = computed(() => item.value?.kuerzel.toString() || "");
 

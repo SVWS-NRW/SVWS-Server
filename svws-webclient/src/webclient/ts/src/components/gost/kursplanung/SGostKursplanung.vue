@@ -1,8 +1,11 @@
 <template>
 	<div v-if="visible" class="flex">
 		<div class="flex flex-row gap-4">
-			<s-card-gost-kursansicht :list-lehrer="listLehrer" :map-lehrer="mapLehrer" />
-			<s-card-gost-umwahlansicht class="grow"/>
+			<s-card-gost-kursansicht :jahrgangsdaten="jahrgangsdaten" :data-faecher="dataFaecher" :halbjahr="halbjahr.value"
+				:list-blockungen="listBlockungen" :blockung="blockung" :ergebnis="ergebnis"
+				:data-fachwahlen="dataFachwahlen" :list-lehrer="listLehrer" :map-lehrer="mapLehrer" />
+			<router-view name="gost_kursplanung_schueler_auswahl"/>
+			<router-view />
 		</div>
 		<div v-if="allow_regeln" class="app-layout--main-sidebar" :class="{ 'app-layout--main-sidebar--collapsed': collapsed }">
 			<div class="app-layout--main-sidebar--container">
@@ -17,7 +20,7 @@
 					<div v-if="collapsed" class="app-layout--main-sidebar--trigger-count"> {{ regelzahl }} </div>
 				</div>
 				<div class="app-layout--main-sidebar--content">
-					<s-card-gost-regelansicht v-if="!collapsed && active_panel==='regeln'"/>
+					<s-card-gost-regelansicht v-if="!collapsed && active_panel==='regeln'" :data-faecher="dataFaecher" />
 				</div>
 			</div>
 		</div>
@@ -30,38 +33,44 @@
 
 <script setup lang="ts">
 
-	import { GostJahrgang, LehrerListeEintrag } from "@svws-nrw/svws-core-ts";
+	import { GostHalbjahr, GostJahrgang, LehrerListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, Ref, ref, ShallowRef } from "vue";
+	import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
 	import { DataGostJahrgang } from "~/apps/gost/DataGostJahrgang";
+	import { DataGostKursblockung } from "~/apps/gost/DataGostKursblockung";
+	import { DataGostKursblockungsergebnis } from "~/apps/gost/DataGostKursblockungsergebnis";
+	import { DataGostSchuelerFachwahlen } from "~/apps/gost/DataGostSchuelerFachwahlen";
+	import { ListKursblockungen } from "~/apps/gost/ListKursblockungen";
 	import { ListLehrer } from "~/apps/lehrer/ListLehrer";
-	import { injectMainApp, Main } from "~/apps/Main";
 	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 
-	const { schule } = defineProps<{ 
+	const props = defineProps<{ 
 		item: ShallowRef<GostJahrgang | undefined>;
 		schule: DataSchuleStammdaten;
 		jahrgangsdaten: DataGostJahrgang;
+		dataFaecher: DataGostFaecher;
+		halbjahr: ShallowRef<GostHalbjahr>;
+		listBlockungen: ListKursblockungen;
+		blockung: DataGostKursblockung;
+		ergebnis: DataGostKursblockungsergebnis;
 		listLehrer: ListLehrer;
 		mapLehrer: Map<Number, LehrerListeEintrag>;
+		dataFachwahlen: DataGostSchuelerFachwahlen;
 	}>();
 	
-	const main: Main = injectMainApp();
-	const app = main.apps.gost;
-
 	const collapsed: Ref<boolean> = ref(true);
 	const active_panel: Ref<'regeln'> = ref('regeln')
 
-	const visible: ComputedRef<boolean> =
-		computed(() => app.blockungsauswahl.liste.length > 0 && !!app.blockungsauswahl.ausgewaehlt);
-
-	const regelzahl: ComputedRef<number> =
-		computed(()=> app.dataKursblockung.datenmanager?.getRegelAnzahl() || 0);
+	const regelzahl: ComputedRef<number> = computed(() => props.blockung.datenmanager?.getRegelAnzahl() || 0);
 		
-	const allow_regeln: ComputedRef<boolean> =
-		computed(()=> app.blockungsergebnisauswahl.liste.length === 1);
+	const allow_regeln: ComputedRef<boolean> = computed(() => props.blockung.daten?.ergebnisse.size() === 1);
 
 	function onToggle() {
 		collapsed.value = !collapsed.value;
 	}
+
+	const visible: ComputedRef<boolean> = computed(() => 
+		(props.blockung.daten !== undefined) && (props.ergebnis.daten !== undefined)
+	);
 
 </script>

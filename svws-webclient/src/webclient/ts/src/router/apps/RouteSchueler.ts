@@ -18,6 +18,7 @@ import { ListJahrgaenge } from "~/apps/jahrgaenge/ListJahrgaenge";
 import { ListKurse } from "~/apps/kurse/ListKurse";
 import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 import { RouteApp } from "~/router/RouteApp";
+import { ListGost } from "~/apps/gost/ListGost";
 
 export class RouteDataSchueler {
 	stammdaten: DataSchuelerStammdaten = new DataSchuelerStammdaten();
@@ -28,6 +29,7 @@ export class RouteDataSchueler {
 	mapJahrgaenge: Map<Number, JahrgangsListeEintrag> = new Map();
 	listKurse: ListKurse = new ListKurse();
 	mapKurs: Map<Number, KursListeEintrag> = new Map();
+	listeAbiturjahrgaenge: ListGost = new ListGost();
 }
 
 const SSchuelerAuswahl = () => import("~/components/schueler/SSchuelerAuswahl.vue")
@@ -63,6 +65,7 @@ export class RouteSchueler extends RouteNodeListView<ListSchueler, SchuelerListe
     }
 
     public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) {
+		await this.data.listeAbiturjahrgaenge.update_list();
 		await this.data.schule.select(true);  // undefined würde das laden verhindern, daher true
 		await this.data.listKlassen.update_list();
 		this.data.mapKlassen.clear();

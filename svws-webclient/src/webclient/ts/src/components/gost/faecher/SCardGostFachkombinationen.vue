@@ -23,7 +23,7 @@
 						</tr>
 					</thead>
 					<tr v-for="row in rows" :key="row.id">
-						<s-row-gost-fachkombination :kombination="row"></s-row-gost-fachkombination>
+						<s-row-gost-fachkombination :kombination="row" :data-faecher="dataFaecher" :data-fachkombinationen="dataFachkombinationen" />
 					</tr>
 				</table>
 				<svws-ui-button class="pl-2 pt-2" @click="add_kurskombi">Hinzufügen</svws-ui-button>
@@ -35,22 +35,18 @@
 <script setup lang="ts">
 
 	import { computed, ComputedRef } from "vue";
-
 	import { List, Vector, GostJahrgangFachkombination, GostLaufbahnplanungFachkombinationTyp } from "@svws-nrw/svws-core-ts";
-	import { injectMainApp, Main } from "~/apps/Main";
+	import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
+	import { DataGostFachkombinationen } from "~/apps/gost/DataGostFachkombinationen";
 
-	const props = defineProps({
-		typ: {
-			type: Object as () => GostLaufbahnplanungFachkombinationTyp,
-			required: true
-		}
-	});
-
-	const main: Main = injectMainApp();
-	const app = main.apps.gost;
+	const { typ, dataFaecher, dataFachkombinationen } = defineProps<{ 
+		typ: GostLaufbahnplanungFachkombinationTyp;
+		dataFaecher: DataGostFaecher;
+		dataFachkombinationen: DataGostFachkombinationen;
+	}>();
 
 	const title: ComputedRef<string> = computed(() => {
-		switch(props.typ) {
+		switch(typ) {
 			case GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH:
 				return "Regeln für geforderte Fachkombinationen";
 			case GostLaufbahnplanungFachkombinationTyp.VERBOTEN:
@@ -62,15 +58,15 @@
 
 	const rows: ComputedRef<List<GostJahrgangFachkombination>> = computed(() => {
 		const result = new Vector<GostJahrgangFachkombination>();
-		if (app.dataFachkombinationen.daten)
-			for (let kombi of app.dataFachkombinationen.daten)
-				if (GostLaufbahnplanungFachkombinationTyp.fromValue(kombi.typ) === props.typ)
+		if (dataFachkombinationen.daten)
+			for (let kombi of dataFachkombinationen.daten)
+				if (GostLaufbahnplanungFachkombinationTyp.fromValue(kombi.typ) === typ)
 					result.add(kombi);
 		return result;
 	});
 
 	const add_kurskombi = () => {
-		app.dataFachkombinationen.add(props.typ);
+		dataFachkombinationen.add(typ);
 	}
 
 </script>

@@ -1,7 +1,7 @@
 <template>
 	<div v-if="visible" class="flex h-full flex-row" >
 		<div class="flex w-full flex-col">
-			<svws-ui-router-vertical-tab-bar :routes="routeGostKlausurplanung.children_records" :hidden="routeGostKlausurplanung.children_hidden" v-model="selectedRoute">
+			<svws-ui-router-vertical-tab-bar :routes="routeGostKlausurplanung.children_records" :hidden="children_hidden" v-model="selectedRoute">
 				<router-view />
 			</svws-ui-router-vertical-tab-bar>
 		</div>
@@ -24,6 +24,7 @@
 	}>();
 
 	const selectedRoute = routeGostKlausurplanung.getChildRouteSelector();
+	const children_hidden = routeGostKlausurplanung.children_hidden();
 
 	const visible: ComputedRef<boolean> = computed(() => {
 		return (!routeGostKlausurplanung.hidden);
