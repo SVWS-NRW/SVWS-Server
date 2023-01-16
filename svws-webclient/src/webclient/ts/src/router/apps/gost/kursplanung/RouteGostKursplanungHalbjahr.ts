@@ -77,6 +77,8 @@ export class RouteGostKursplanungHalbjahr extends RouteNode<RouteDataGostKurspla
 		}
 		// ... wurde die ID der Blockung verändert, so lade die neue Blockung aus der Datenbank
 		if (this.data.listBlockungen.ausgewaehlt?.id !== idBlockung) {
+			// Lade die Liste der Blockungen neu
+			await this.data.listBlockungen.update_list(abiturjahr, halbjahr);
 			// Setze den neu ausgewählten Blockungs-Eintrag
 			const blockungsEintrag = this.data.listBlockungen.liste.find(b => b.id === idBlockung);
 			if (blockungsEintrag === undefined)
