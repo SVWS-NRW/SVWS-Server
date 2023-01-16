@@ -5,6 +5,7 @@ import { ListBenutzergruppenBenutzer } from "./ListBenutzergruppenBenutzer";
 
 import { BenutzergruppeDaten, BenutzergruppeListeEintrag, BenutzergruppenManager, BenutzerKompetenz, BenutzerKompetenzGruppe, List, Vector } from "@svws-nrw/svws-core-ts";
 import { router } from "~/router";
+import { routeSchuleBenutzergruppe } from "~/router/apps/RouteSchuleBenutzergruppe";
 
 
 export class DataBenutzergruppe extends BaseData<BenutzergruppeDaten, BenutzergruppeListeEintrag, BenutzergruppenManager> {
@@ -180,13 +181,32 @@ export class DataBenutzergruppe extends BaseData<BenutzergruppeDaten, Benutzergr
 		bg.istAdmin = istAdmin;
 		const result = await App.api.createBenutzergruppe(bg,App.schema);
 		const bgle: BenutzergruppeListeEintrag = new BenutzergruppeListeEintrag();
-		console.log(bgle);
 		bgle.id = result.id;
 		bgle.bezeichnung = result.bezeichnung;
 		bgle.istAdmin = result.istAdmin;
 		App.apps.benutzergruppe.auswahl.liste.push(bgle);
 		App.apps.benutzergruppe.auswahl.ausgewaehlt = result;
 		router.push("/schule/benutzerverwaltung/"+bgle.id+"/benutzergruppe");
+	}
+
+	/**
+	 * Entfernt die ausgewählten Benutzer 
+	 */
+	public async deleteBenutzergruppe_n(){
+		const benutzer : BenutzergruppeListeEintrag[] = App.apps.benutzergruppe.auswahl.ausgewaehlt_gruppe;
+		console.log(benutzer);
+		const bids : Vector<Number> = new Vector<Number>();
+		for ( let b of benutzer){
+			bids.add(b.id)
+		}
+		console.log(bids);
+		await App.api.removeBenutzerGruppe(bids,App.schema);
+		App.apps.benutzergruppe.auswahl.ausgewaehlt_gruppe = [];
+		for(let b of benutzer) {
+			App.apps.benutzergruppe.auswahl.liste = App.apps.benutzergruppe.auswahl.liste.filter(item => item.id !== b.id);
+		}
+		alert("Benutzergruppe gelöscht!!!");
+		router.push({ name: routeSchuleBenutzergruppe.name});
 	}
 
 }

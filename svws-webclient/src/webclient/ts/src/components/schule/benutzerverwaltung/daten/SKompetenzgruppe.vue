@@ -1,23 +1,35 @@
 <template>
-    <div v-if="kompetenzgruppe.daten.id >= 0">
-        <thead class="bg-slate-100">
-            <tr>
-                <td class="border border-[#7f7f7f]/20 text-center">
-                    <svws-ui-checkbox v-model="selected" :disabled="istAdmin"> {{kompetenzgruppe.daten.bezeichnung}} </svws-ui-checkbox>
-                </td>
-            </tr>
-        </thead>
-        <tbody>
-            <s-kompetenz v-for="kompetenz in BenutzerKompetenz.getKompetenzen(kompetenzgruppe)" 
-                :key="kompetenz.daten.id" :kompetenz="kompetenz" :istAdmin="istAdmin" :benutzertyp="benutzertyp">
-            </s-kompetenz>
-        </tbody>
-    </div>
+    <template v-if="collapsed">
+       <tr v-if="collapsed" style="background-color:lightblue; ">
+            <td>
+                <svws-ui-icon><i-ri-arrow-right-s-line @click="setCollapse()"/></svws-ui-icon>
+            </td>
+            <td colspan="2"> 
+                {{ kompetenzgruppe.daten.bezeichnung }} 
+            </td>
+            <td>
+                <svws-ui-checkbox v-model="selected" :disabled="istAdmin"/>
+            </td>
+        </tr>
+    </template>
+    <template v-else>    
+        <tr  style="background-color:lightblue;  ">
+            <td style="vertical-align: top;" :rowspan="BenutzerKompetenz.getKompetenzen(kompetenzgruppe).size()+1"> 
+                <svws-ui-icon><i-ri-arrow-down-s-line @click="collapsed = !collapsed"/></svws-ui-icon> 
+            </td>
+            <td colspan="2"> {{ kompetenzgruppe.daten.bezeichnung }} </td>
+            <td><svws-ui-checkbox v-model="selected" :disabled="istAdmin"/></td>
+        </tr>
+        <s-kompetenz v-for="kompetenz in BenutzerKompetenz.getKompetenzen(kompetenzgruppe)" 
+            :key="kompetenz.daten.id" :kompetenz="kompetenz" :istAdmin="istAdmin" :benutzertyp="benutzertyp">
+        </s-kompetenz>
+    </template>
+        
 </template>
 
 <script setup lang="ts">
 	import { BenutzergruppenManager, BenutzerKompetenz, BenutzerKompetenzGruppe, BenutzerManager } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, WritableComputedRef } from "vue";
+	import { ref, Ref, computed, ComputedRef, WritableComputedRef } from "vue";
 	import { injectMainApp, Main } from "~/apps/Main";
 
     
@@ -30,6 +42,8 @@
 	const main: Main = injectMainApp();
 	const app_b = main.apps.benutzer;
     const app_bg =  main.apps.benutzergruppe;
+
+    const collapsed: Ref<boolean> = ref(false);
 
     const manager: ComputedRef<BenutzergruppenManager | BenutzerManager| undefined> = computed(() => {
 		return (props.benutzertyp === 0) ? app_b.dataBenutzer.manager : app_bg.dataBenutzergruppe.manager;
@@ -55,5 +69,9 @@
             }
         }
     });
+
+    function setCollapse(){
+        collapsed.value = !collapsed.value;
+    }
 
 </script>

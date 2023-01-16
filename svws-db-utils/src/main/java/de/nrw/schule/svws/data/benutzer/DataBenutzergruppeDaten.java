@@ -1,12 +1,16 @@
 package de.nrw.schule.svws.data.benutzer;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Function;
+import java.util.stream.Collectors;
+
 import de.nrw.schule.svws.core.data.benutzer.BenutzergruppeDaten;
 import de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenz;
+import de.nrw.schule.svws.core.utils.benutzer.BenutzerManager;
 import de.nrw.schule.svws.core.utils.benutzer.BenutzergruppenManager;
 import de.nrw.schule.svws.data.DataManager;
 import de.nrw.schule.svws.data.JSONMapper;
@@ -435,6 +439,7 @@ public class DataBenutzergruppeDaten extends DataManager<Long> {
                 // TODO Konstruktor-Parameter überprüfen
                 bg = new DTOBenutzergruppe(ID,"temp",false);
               
+                
                 for (Entry<String, Object> entry : map.entrySet()) {
                     String key = entry.getKey();
                     Object value = entry.getValue();
@@ -462,9 +467,61 @@ public class DataBenutzergruppeDaten extends DataManager<Long> {
                 conn.transactionRollback();
             }
         }
+        if(bg == null)
+            throw OperationError.NOT_FOUND.exception();
         BenutzergruppeDaten daten = dtoMapper.apply(getDTO(bg.ID));
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 
     }
-
+    
+    /**
+     * Entfernt  die Benutzergruppen mit den IDs
+     * 
+     * @param bgids    die IDs der Bentuzergruppen
+     * 
+     * @return @return bei Erfolg eine HTTP-Response 200
+     */
+    public Response remove(List<Long> bgids) {
+        try {
+            conn.transactionBegin();
+           DTOBenutzer user = conn.queryByKey(DTOBenutzer.class, conn.getUser().getId());
+            if( user == null)
+                throw OperationError.NOT_FOUND.exception("Der User-Benutzer existiert nicht !!!");
+            
+            //In diesem Fall wird der mögliche Verlust der Adminberechtigung des Benutzers über Gruppen überprüft und ggf. verhindert
+            if(!user.IstAdmin) {
+                
+              //Lese die Benutzergruppen_IDs des Users ein.
+                List<Long> user_gruppen_ids = conn
+                        .queryNamed("DTOBenutzergruppenMitglied.benutzer_id", conn.getUser().getId(),
+                                DTOBenutzergruppenMitglied.class)
+                        .stream().map(g -> g.Gruppe_ID).sorted().toList();
+                
+                //Lese die IDs der administrativen Benutzergruppen aus user_gruppen_ids ein
+                List<Long>  user_admingruppen_ids =new ArrayList<Long>();
+                for(Long id : user_gruppen_ids) {
+                    if(getDTO(id).IstAdmin)
+                        user_admingruppen_ids.add(id);
+                }
+                
+                //Lese aus den bgids die ids der administrativen Benutzergruppen vom User.
+                List<Long> user_admingruppen_ids_request = bgids.stream().filter(item -> getDTO(item).IstAdmin && user_admingruppen_ids.contains(item)).collect(Collectors.toList());
+                
+                if( user_admingruppen_ids_request.size() == user_admingruppen_ids.size())
+                    throw OperationError.BAD_REQUEST.exception("Der Löschvorgang ist nicht erlaubt, weil dadurch die Adminberechtigung des Benutzers entfernt wird.");
+            }
+            
+            for ( Long id : bgids ) {
+                 conn.transactionRemove(getDTO(id));
+            }
+            conn.transactionCommit();
+        }catch (Exception e) {
+            if (e instanceof WebApplicationException webApplicationException)
+                return webApplicationException.getResponse();
+            return OperationError.INTERNAL_SERVER_ERROR.getResponse();
+        } finally {
+            conn.transactionRollback();
+        }
+        return Response.status(Status.OK).build();
+    }
 }

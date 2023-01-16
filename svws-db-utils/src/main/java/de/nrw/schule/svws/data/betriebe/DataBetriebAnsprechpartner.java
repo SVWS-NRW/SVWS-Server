@@ -142,6 +142,8 @@ public class DataBetriebAnsprechpartner  extends DataManager<Long>{
 	 */
 	public Response create(Long betrieb_id, InputStream is) {
 		DTOAnsprechpartnerAllgemeineAdresse ansprechpartner = null;
+		if ( betrieb_id == null)
+		    throw OperationError.NOT_FOUND.exception("Parameter betrieb_id darf nicht leer sein.");
 		Map<String, Object> map = JSONMapper.toMap(is);
 			if(map.size() > 0) {
 				try {
@@ -169,7 +171,7 @@ public class DataBetriebAnsprechpartner  extends DataManager<Long>{
 							}
 							case "betrieb_id" -> {
 								Long bid = JSONMapper.convertToLong( value , true );
-								if (bid == null)
+								if (bid == null )
 									throw OperationError.BAD_REQUEST.exception("SchülerID darf nicht fehlen.");
 								if (bid.longValue() != betrieb_id.longValue())
 									throw OperationError.BAD_REQUEST.exception("Betrieb_ID aus dem JSON-Objekt stimmt mit dem übergebenen Argument nicht überein.");

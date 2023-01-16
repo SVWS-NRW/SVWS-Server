@@ -14,9 +14,9 @@
 				</svws-ui-text-input>
 			</div>
 			<div class="pl-3 pt-6 container">
-				<svws-ui-table v-model="selected" v-model:selection="selection"  :columns="cols" :data="rowsFiltered" is-multi-select :footer="true">
+				<svws-ui-table v-model="selected" v-model:selection="selectedItems"  :columns="cols" :data="rowsFiltered" is-multi-select :footer="true">
 					<template #footer>
-						<s-modal-benutzergruppe-neu/>						
+						<s-modal-benutzergruppe-neu :show_delete_icon="selectedItems.length" />						
 					</template>
 				</svws-ui-table>
 			</div>
@@ -32,7 +32,7 @@
 <script setup lang="ts">
 
 	import { BenutzergruppeListeEintrag } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, Ref, ref } from "vue";
+	import { computed, ComputedRef, Ref, ref, WritableComputedRef } from "vue";
 	import { injectMainApp, Main } from "~/apps/Main";
 	import { router } from "~/router";
 	import { routeSchule } from "~/router/apps/RouteSchule";
@@ -45,6 +45,7 @@
 	const selection = ref([]);
 
 	const main: Main = injectMainApp();
+	const app = main.apps.benutzergruppe;
 
 	const cols = [
 		{ key: "id", label: "ID", sortable: true },
@@ -66,4 +67,10 @@
 			: rowsValue;
 	});
 
+	const selectedItems: WritableComputedRef<BenutzergruppeListeEintrag[]> = computed({
+		get: () => app.auswahl.ausgewaehlt_gruppe,
+		set: (items: BenutzergruppeListeEintrag[]) => {
+			app.auswahl.ausgewaehlt_gruppe = items;
+		}
+	});
 </script>

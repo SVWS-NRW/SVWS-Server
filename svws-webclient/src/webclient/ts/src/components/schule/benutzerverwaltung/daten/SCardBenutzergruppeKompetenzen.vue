@@ -1,16 +1,10 @@
 <template>
 	<svws-ui-content-card title="Kompetenzen">
-		<div class="flex flex-row gap-4">
-			<div class="-my-2 flex-none sm:-mx-6 lg:-mx-8">
-				<div class="inline-block py-2 align-middle sm:px-6 lg:px-8">
-					<div class="overflow-hidden rounded-lg shadow">
-						<table class="border-collapse text-sm">
-                            <s-kompetenzgruppe v-for="kompetenzgruppe in BenutzerKompetenzGruppe.values()" :key="kompetenzgruppe.daten.id" :kompetenzgruppe="kompetenzgruppe" :istAdmin="istAdmin" :benutzertyp=1>
-                            </s-kompetenzgruppe>
-                        </table>
-                    </div>
-                </div>
-            </div>
+		<div class="overflow-x-auto relative shadow-md sm:rounded-lg">
+			<table class="w-full ">
+				<s-kompetenzgruppe v-for="kompetenzgruppe in BenutzerKompetenzGruppe.values()" :key="kompetenzgruppe.daten.id" :kompetenzgruppe="kompetenzgruppe" :istAdmin="istAdmin" :benutzertyp=1>
+                </s-kompetenzgruppe>
+             </table>
         </div>
 	</svws-ui-content-card>
 </template>

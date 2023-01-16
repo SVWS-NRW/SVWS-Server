@@ -2,9 +2,11 @@ import { App } from "~/apps/BaseApp";
 import { BaseData } from "~/apps/BaseData";
 
 import { BenutzerDaten, BenutzergruppeDaten, BenutzergruppeListeEintrag, BenutzerKompetenz, BenutzerKompetenzGruppe, 
-	BenutzerListeEintrag, BenutzerManager, Credentials, Vector } from "@svws-nrw/svws-core-ts";
+	BenutzerListeEintrag, BenutzerManager, Credentials, LogConsumerConsole, Vector } from "@svws-nrw/svws-core-ts";
 import { router } from "~/router";
 import { routeSchuleBenutzer } from "~/router/apps/RouteSchuleBenutzer";
+import { mainApp } from "~/apps/Main";
+import { ApiLoadingStatus } from "~/apps/core/ApiLoadingStatus.class";
 
 export class DataBenutzer extends BaseData<BenutzerDaten, BenutzerListeEintrag, BenutzerManager> {
  
@@ -237,7 +239,6 @@ export class DataBenutzer extends BaseData<BenutzerDaten, BenutzerListeEintrag, 
 	 * @param kompetenzgruppe   die Kompetenzgruppe, deren Kompetenzen entfernt werden.
 	 */
 	 public async removeBenutzerKompetenzGruppe(kompetenzgruppe : BenutzerKompetenzGruppe) : Promise<boolean> {
-		console.log("hallo");
 		const kids : Vector<Number> = new Vector<Number>();
 		if (!this.manager)
 			return false;
@@ -274,5 +275,59 @@ export class DataBenutzer extends BaseData<BenutzerDaten, BenutzerListeEintrag, 
 		App.apps.benutzer.auswahl.liste.push(ble);
 		App.apps.benutzer.auswahl.ausgewaehlt = result;
 		router.push({ name: routeSchuleBenutzer.name, params: { id : ble.id } });
+	}
+
+	/**
+	 * Entfernt die ausgewählten Benutzer 
+	 */
+	public async deleteBenutzerAllgemein(){
+		const benutzer : BenutzerListeEintrag[] = mainApp.apps.benutzer.auswahl.ausgewaehlt_gruppe;
+		console.log(benutzer);
+		const bids : Vector<Number> = new Vector<Number>();
+		for ( let b of benutzer){
+			bids.add(b.id)
+		}
+		console.log(bids);
+		await App.api.removeBenutzerAllgemein(bids,App.schema);
+		App.apps.benutzer.auswahl.ausgewaehlt_gruppe = [];
+		for(let b of benutzer) {
+			App.apps.benutzer.auswahl.liste = App.apps.benutzer.auswahl.liste.filter(item => item.id !== b.id);
+		}
+		alert("Benutzer gelöscht!!!");
+		router.push({ name: routeSchuleBenutzer.name});
+	}
+
+	/**
+	 * Setzt das neue Passwort
+	 * 
+	 * @passwort das neue Passwort
+	 */
+
+	public async setPassword( passwort : string ){
+		console.log(passwort);
+		if (!this.manager)
+			return false;
+		await App.api.setBenutzerPasswort(passwort,App.schema,this.manager.getID());
+		setTimeout( function ( ) { alert( "Das Kennwort wurde erfolgreich geändert!!" ); }, 300 );
+	}
+
+	/**
+	 * Liefert zur einer Kompetenz die Gruppenzugehörigkeiten
+	 * 
+	 * @kompetenz die Kompetenz
+	 */
+	public getGruppen4Kompetenz( kompetenz : BenutzerKompetenz ) : string{
+		let text:string="";
+		let i = 0;
+		if(this.manager?.getGruppen(kompetenz)){
+			for(let bg of this.manager?.getGruppen(kompetenz)){
+				if( i === 0)
+					text+=bg.bezeichnung;
+				else
+					text+=", "+bg.bezeichnung;
+				i = -2;
+			}
+		}
+		return text;
 	}
 }

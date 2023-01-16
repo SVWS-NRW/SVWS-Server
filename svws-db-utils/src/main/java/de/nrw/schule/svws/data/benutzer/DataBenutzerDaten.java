@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 import de.nrw.schule.svws.core.data.benutzer.BenutzerDaten;
 import de.nrw.schule.svws.core.data.benutzer.BenutzergruppeDaten;
+import de.nrw.schule.svws.core.data.benutzer.Credentials;
 import de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenz;
 import de.nrw.schule.svws.core.types.benutzer.BenutzerTyp;
 import de.nrw.schule.svws.data.DataManager;
@@ -185,21 +186,22 @@ public class DataBenutzerDaten extends DataManager<Long> {
     /**
      * Erstellt einen neuen Benutzer *
      * 
-     * @param is       Das JSON-Objekt mit den Daten
+     * @param cred       Das JSON-Objekt mit den Daten für Credentials-Obejkt
      * @param anzeigename Anzeigename des neuen Benutzers
      * 
      * @return Eine Response mit dem neuen Benutzer
      */
-    public Response createBenutzerAllgemein(InputStream is, String anzeigename) {
+    public Response createBenutzerAllgemein(Credentials cred, String anzeigename) {
         DTOBenutzerAllgemein benutzer_allg = null;
         DTOBenutzer benutzer = null;
         DTOCredentials credential = null;
         Long c_ID = (long) 0;
+        
+        if(cred.benutzername == null || cred.password == null)
+                throw OperationError.BAD_REQUEST.exception("Benuzername oder Passwort leer!");
 
-        Map<String, Object> map = JSONMapper.toMap(is);
-        if (map.size() > 0) {
-            try {
-                conn.transactionBegin();
+        try {
+               conn.transactionBegin();
 
                 // Bestimme die ID des Benutzers / Credentials / BenutzerAllgemeins 
                 DTODBAutoInkremente ba_lastID = conn.queryByKey(DTODBAutoInkremente.class, "BenutzerAllgemein");
@@ -214,22 +216,10 @@ public class DataBenutzerDaten extends DataManager<Long> {
                 benutzer_allg.AnzeigeName = anzeigename;
                
                 benutzer = new DTOBenutzer(b_ID, BenutzerTyp.ALLGEMEIN, false);
-                credential = new DTOCredentials(c_ID, "test");
+                credential = new DTOCredentials(c_ID, cred.benutzername);
+                credential.PasswordHash = Benutzer.erstellePasswortHash(cred.password);
                 
-                for (Entry<String, Object> entry : map.entrySet()) {
-                    String key = entry.getKey();
-                    Object value = entry.getValue();
-                    switch (key) {
-                        case "id" -> {
-                            Long create_id = JSONMapper.convertToLong(value, true);
-                            if (create_id != null && create_id != -1)
-                                throw OperationError.BAD_REQUEST.exception("ID muss leer sein.");
-                        }
-                        case "benutzername" -> credential.Benutzername =  JSONMapper.convertToString(value, true, true);
-                        case "password" -> credential.PasswordHash = Benutzer.erstellePasswortHash(JSONMapper.convertToString(value, true, true));
-                        default -> throw OperationError.BAD_REQUEST.exception();
-                    }
-                }
+
                 // Objekten miteinander verbinden
                 benutzer.Allgemein_ID = benutzer_allg.ID;
                 benutzer_allg.CredentialID = credential.ID;
@@ -238,7 +228,7 @@ public class DataBenutzerDaten extends DataManager<Long> {
                 conn.transactionPersist(credential);
                 if (!conn.transactionCommit())
                     return OperationError.CONFLICT
-                            .getResponse("Datenbankfehler beim Persistieren des Betriebansprechpartners");
+                            .getResponse("Datenbankfehler beim Persistieren des Account-Credentials");
             } catch (Exception e) {
                 if (e instanceof WebApplicationException webApplicationException)
                     return webApplicationException.getResponse();
@@ -246,8 +236,7 @@ public class DataBenutzerDaten extends DataManager<Long> {
             } finally {
                 conn.transactionRollback();
             }
-        }
-        
+
         // BenutzerAllg.-Objekt persistieren
         try {
             conn.transactionBegin();
@@ -388,6 +377,59 @@ public class DataBenutzerDaten extends DataManager<Long> {
         }
         return Response.status(Status.OK).build();
     }
+    
+    /**
+     * Löscht die Benutzer mit den IDs
+     * 
+     * @param bids die IDs der Benutzer
+     * 
+     * @return bei Erfolg eine HTTP-Response 200
+     */
+    public Response removeBenutzerAllgemein(List<Long> bids) {
+        // TODO Auto-generated method stub
+        try {
+            conn.transactionBegin();
+            for( Long id : bids) {
+                
+                DTOViewBenutzerdetails v_benutzer= getDTO(id);
+                
+                //Ist der angemeldete Benutzer dabei?
+                if (conn.getUser().getId() == id)
+                    return OperationError.CONFLICT.getResponse("Der aktuelle User kann sich selber nicht löschen.");
+                
+                //Lese credential-ID
+                Long c_ID = v_benutzer.credentialID;
+                if(c_ID == null)
+                    throw OperationError.NOT_FOUND.exception("Der zu löschende Datensatz in DTOViewBentuerdetails mit der credential-ID" + id+" existiert nicht");
+                //Credential löschen
+                DTOCredentials credential = conn.queryByKey(DTOCredentials.class, c_ID);
+                if (credential == null)
+                    throw OperationError.NOT_FOUND.exception("Der zu löschende Datensatz in DTOCredentials mit der ID" + id+" existiert nicht");
+                conn.transactionRemove(credential);
+                 
+                //Lese benutzer-ID
+                Long b_ID = v_benutzer.ID;
+                // Benutzer löschen.
+                // Damit werden die dazugehörige Datensätze in den Tabenllen DaBenutzerAllgemein, BenutzerKompetenzen und BenutzergruppenMitglieder gelöscht.
+                DTOBenutzer benutzer = conn.queryByKey(DTOBenutzer.class, b_ID);
+                DTOBenutzerAllgemein allg_benutzer =  conn.queryByKey(DTOBenutzerAllgemein.class,benutzer.Allgemein_ID);
+                 
+                if (allg_benutzer == null)
+                    throw OperationError.NOT_FOUND.exception("Der zu löschende Datensatz in DTOBenutzerAllgemein mit der ID" + id+" existiert nicht");
+                conn.transactionRemove(allg_benutzer);
+                //conn.transactionRemove(benutzer);
+             }
+          conn.transactionCommit();  
+        }catch (Exception e) {
+            if (e instanceof WebApplicationException webApplicationException)
+                return webApplicationException.getResponse();
+            return OperationError.INTERNAL_SERVER_ERROR.getResponse();
+        } finally {
+            conn.transactionRollback();
+        }
+        return Response.status(Status.OK).build();
+    }
+    
     /**
      * Entfernt für die angegebene Benutzer-ID die Benutzerkompetenzen.
      * 
@@ -556,9 +598,4 @@ public class DataBenutzerDaten extends DataManager<Long> {
             throw exception;
         }
     }
-
-    
-
-    
-
 }

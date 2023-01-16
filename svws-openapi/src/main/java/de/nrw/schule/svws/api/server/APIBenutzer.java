@@ -11,9 +11,6 @@ import de.nrw.schule.svws.core.data.benutzer.BenutzerListeEintrag;
 import de.nrw.schule.svws.core.data.benutzer.BenutzergruppeDaten;
 import de.nrw.schule.svws.core.data.benutzer.BenutzergruppeListeEintrag;
 import de.nrw.schule.svws.core.data.benutzer.Credentials;
-import de.nrw.schule.svws.core.data.gost.GostBlockungSchiene;
-import de.nrw.schule.svws.core.data.kataloge.KatalogEintrag;
-import de.nrw.schule.svws.core.data.schueler.SchuelerBetriebsdaten;
 import de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenz;
 import de.nrw.schule.svws.data.JSONMapper;
 import de.nrw.schule.svws.data.benutzer.DataBenutzerDaten;
@@ -22,9 +19,7 @@ import de.nrw.schule.svws.data.benutzer.DataBenutzergruppeliste;
 import de.nrw.schule.svws.data.benutzer.DataBenutzerkompetenzGruppenliste;
 import de.nrw.schule.svws.data.benutzer.DataBenutzerkompetenzliste;
 import de.nrw.schule.svws.data.benutzer.DataBenutzerliste;
-import de.nrw.schule.svws.data.schueler.DataSchuelerBetriebsdaten;
 import de.nrw.schule.svws.db.DBEntityManager;
-import de.nrw.schule.svws.db.dto.current.schild.benutzer.DTOBenutzerAllgemein;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -665,7 +660,7 @@ public class APIBenutzer {
      *  
      * @param schema                das Datenbankschema, in welchem der Benutzer erstellt wird
      * @param request                die Informationen zur HTTP-Anfrage
-     * @param is                          JSON-Objekt mit den Daten
+     * @param daten                         JSON-Objekt mit den Daten
      * @param anzeigename      Azeigename des neuen Benutzers
      * @return die HTTP-Antwort mit dem neuen Benutzer
      */
@@ -685,10 +680,37 @@ public class APIBenutzer {
             @PathParam("schema") String schema,
             @PathParam("anzeigename") String anzeigename,
             @RequestBody(description = "Der Post für die Benutzer-Daten", required = true, content = 
-            @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Credentials.class))) InputStream is, 
+            @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Credentials.class))) Credentials daten, 
             @Context HttpServletRequest request) {
         try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADMIN)) { // TODO Anpassung der Benutzerrechte
-            return (new DataBenutzerDaten(conn)).createBenutzerAllgemein(is, anzeigename);
+            return (new DataBenutzerDaten(conn)).createBenutzerAllgemein(daten, anzeigename);
+        }
+    }
+    
+    /**
+     * Die OpenAPI-Methode zum Löschen von einer oder mehreren Benutzern
+     * 
+     * @param schema    das Datenbankschema
+     * @param bids      die IDs der Benutzer
+     * @param request   die Informationen zur HTTP-Anfrage
+     * 
+     * @return die HTTP-Antwort
+     */
+    @DELETE
+    @Path("/remove")
+    @Operation(summary = "Löscht einen oder mehrere Benutzer.", description = "Löscht einen oder mehrere Benutzer."
+            + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Löschen besitzt.")
+    @ApiResponse(responseCode = "204", description = "Die Benutzer wurden erfolgreich gelöscht.")
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Benutzer zu löschen.")
+    @ApiResponse(responseCode = "404", description = "Benötigte Information zum Benutzer wurden nicht in der DB gefunden.")
+    @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response removeBenutzerAllgemein(
+            @PathParam("schema") String schema, 
+            @RequestBody(description = "Die IDs der Benutzer", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class)))) List<Long> bids,
+            @Context HttpServletRequest request) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADMIN)) {
+            return (new DataBenutzerDaten(conn)).removeBenutzerAllgemein(bids);
         }
     }
     
@@ -719,6 +741,33 @@ public class APIBenutzer {
             @Context HttpServletRequest request) {
         try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADMIN)) { // TODO Anpassung der Benutzerrechte
              return (new DataBenutzergruppeDaten(conn)).create(is);
+        }
+    }
+    
+    /**
+     * Die OpenAPI-Methode zum Löschen von einer oder mehreren Benutzergruppen
+     * 
+     * @param schema    das Datenbankschema
+     * @param bgids      die IDs der Benutzergruppen
+     * @param request   die Informationen zur HTTP-Anfrage
+     * 
+     * @return die HTTP-Antwort
+     */
+    @DELETE
+    @Path("/guppe/remove")
+    @Operation(summary = "Löscht eine oder mehrere Benutzergruppe.", description = "Löscht eine oder mehrere Benutzergruppe."
+            + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Löschen besitzt.")
+    @ApiResponse(responseCode = "204", description = "Die Benutzergruppen wurden erfolgreich gelöscht.")
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Benutzergruppen zu löschen.")
+    @ApiResponse(responseCode = "404", description = "Benötigte Information zur Benutzergruppe wurden nicht in der DB gefunden.")
+    @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response removeBenutzerGruppe(
+            @PathParam("schema") String schema, 
+            @RequestBody(description = "Die IDs der Benutzergruppen", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class)))) List<Long> bgids,
+            @Context HttpServletRequest request) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADMIN)) {
+            return (new DataBenutzergruppeDaten(conn)).remove(bgids);
         }
     }
 

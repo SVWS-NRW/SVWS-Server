@@ -1,7 +1,11 @@
 <template>
-	<div class="app-container">
-		<s-card-benutzergruppe-daten />
-		<s-card-benutzergruppe-kompetenzen />
+	<div class="flex flex-row flex-grow">
+		<div class="mr-4"> 
+			<s-card-benutzergruppe-daten />
+		</div>
+		<div>
+			<s-card-benutzergruppe-kompetenzen />
+		</div>
 	</div>
 </template>
 

@@ -1,7 +1,14 @@
 <template>
-    <tr>
+    <tr :class="{vorhanden  : selected && !aktiviert, nichtvorhanden : !selected && !aktiviert, deaktiviert:aktiviert }">
+        <td >
+            {{ kompetenz.daten.id}}-{{ kompetenz.daten.bezeichnung }}
+            
+        </td>
         <td>
-			<svws-ui-checkbox v-model="selected" :disabled="aktiviert"> {{ kompetenz.daten.id}}-{{ kompetenz.daten.bezeichnung }} </svws-ui-checkbox>
+            {{ getGruppen(kompetenz)}}
+        </td>
+        <td>
+            <svws-ui-checkbox v-model="selected" :disabled="aktiviert"/>
         </td>
     </tr>
 </template>
@@ -58,5 +65,30 @@
             }        
         }
     });
+    // const gruppen:ComputedRef<string> = computed((kompetenz : BenutzerKompetenz) => {
+    //     if( props.benutzertyp === 0){
+    //         return app_b.dataBenutzer.getGruppen4Kompetenz(kompetenz);
+    //     }
+    // });
+
+    function getGruppen( kompetenz : BenutzerKompetenz ) : string {
+        if( props.benutzertyp === 0){
+            return app_b.dataBenutzer.getGruppen4Kompetenz(kompetenz);
+        }
+        return "";
+    }
 
 </script>
+
+<style scoped>
+.vorhanden{
+    background-color: aquamarine;
+}
+
+.nichtvorhanden{
+    background-color: white;
+}
+.deaktiviert{
+    background-color: rgb(220, 220, 220);
+}
+</style>

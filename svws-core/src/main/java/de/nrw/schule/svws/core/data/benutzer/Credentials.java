@@ -14,9 +14,6 @@ import jakarta.validation.constraints.NotNull;
 @TranspilerDTO
 public class Credentials {
 
-    /** Die ID des Credentials. */
-    @Schema(required = true, description = "die ID des Credentials", example="4711")
-    public long id = -1;
     
     /** Benutzername des Account-Credentials*/
     @Schema(required = true, description = "Benutzername des Account-Credentials", example="Max")

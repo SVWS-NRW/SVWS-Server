@@ -1,11 +1,13 @@
 <template>
 	<svws-ui-content-card title="Benutzer">
-		<div class="content-wrapper">
-			<div class="input-wrapper">
-				<svws-ui-text-input v-model="anzeigename" type="text" placeholder="Login-Name" />
-				<svws-ui-text-input v-model="name" type="text" placeholder="Name" />
-				<svws-ui-checkbox v-model="inputIstAdmin" :disabled="manager?.istInAdminGruppe()"> Admin ? </svws-ui-checkbox>
-			</div>
+		<div class="flex flex-col">
+			<svws-ui-text-input class="mb-3" v-model="name" type="text" placeholder="Name" />
+			<svws-ui-text-input class="mb-3" v-model="anzeigename" type="text" placeholder="Login-Name" />
+			<svws-ui-checkbox class="mb-4" v-model="inputIstAdmin" :disabled="manager?.istInAdminGruppe()"> Admin ? </svws-ui-checkbox>
+			
+			<svws-ui-text-input class="mb-3" v-model="kennwort1" type="password" placeholder="neues Kennwort" />
+			<svws-ui-text-input class="mb-3" v-model="kennwort2" type="password" placeholder="neues Kennwort wiederholen" />
+			<svws-ui-button  type="secondary" @click="setPassword()"> Kennwort ändern </svws-ui-button>
 		</div>
 	</svws-ui-content-card>
 	<s-card-benutzer-gruppen-liste > </s-card-benutzer-gruppen-liste>
@@ -55,5 +57,15 @@
 			app.dataBenutzer.setIstAdmin(val);
 		}
 	});
+
+	const kennwort1=ref();
+    const kennwort2=ref();
+
+	function setPassword(){
+		if(kennwort1.value === kennwort2.value)
+			app.dataBenutzer.setPassword(kennwort1.value)
+		else
+			alert("Kennwörter stimmen nicht überein")	
+	}
 
 </script>

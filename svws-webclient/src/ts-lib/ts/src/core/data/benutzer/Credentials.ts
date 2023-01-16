@@ -3,8 +3,6 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class Credentials extends JavaObject {
 
-	public id : number = -1;
-
 	public benutzername : String = "";
 
 	public password : String = "";
@@ -21,9 +19,6 @@ export class Credentials extends JavaObject {
 	public static transpilerFromJSON(json : string): Credentials {
 		const obj = JSON.parse(json);
 		const result = new Credentials();
-		if (typeof obj.id === "undefined")
-			 throw new Error('invalid json format, missing attribute id');
-		result.id = obj.id;
 		if (typeof obj.benutzername === "undefined")
 			 throw new Error('invalid json format, missing attribute benutzername');
 		result.benutzername = String(obj.benutzername);
@@ -35,7 +30,6 @@ export class Credentials extends JavaObject {
 
 	public static transpilerToJSON(obj : Credentials) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
 		result += '"benutzername" : ' + '"' + obj.benutzername.valueOf() + '"' + ',';
 		result += '"password" : ' + '"' + obj.password.valueOf() + '"' + ',';
 		result = result.slice(0, -1);
@@ -45,9 +39,6 @@ export class Credentials extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<Credentials>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
-			result += '"id" : ' + obj.id + ',';
-		}
 		if (typeof obj.benutzername !== "undefined") {
 			result += '"benutzername" : ' + '"' + obj.benutzername.valueOf() + '"' + ',';
 		}

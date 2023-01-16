@@ -3,7 +3,6 @@ package de.nrw.schule.svws.core.utils.benutzer;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Vector;
 
 import de.nrw.schule.svws.core.data.benutzer.BenutzerDaten;
@@ -145,6 +144,21 @@ public class BenutzerManager {
        }
        return false;
     }
+    
+//    /**
+//     * Liefert true, wenn der Benutzer durch die übergebene Gruppe in einer adminstrativen Gruppe ist, sonst false.
+//     * 
+//     *
+//     * 
+//     * @return true, wenn der Benutzer in einer administrativen Gruppe ist.
+//     */
+//    public @NotNull List<@NotNull BenutzergruppeDaten> getAdminGruppen() {
+//        Vector<@NotNull BenutzergruppeDaten> gruppen = new Vector<@NotNull BenutzergruppeDaten>();
+//        
+//        return null;
+//        
+//    }
+    
     
     /**
      * Initialisiert die lokalen Datenstrukturen.
