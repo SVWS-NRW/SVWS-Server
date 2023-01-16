@@ -1,18 +1,17 @@
 <script setup lang='ts'>
-import { Size, Type } from '~/types';
+	import { Size, Type } from '~/types';
 
-const {
-	type = 'light',
-	size = 'normal',
-} = defineProps<{
-	type?: Type;
-	size?: Size;
-}>();
+	const {
+		type = 'light',
+		size = 'normal',
+	} = defineProps<{
+		type?: Type;
+		size?: Size;
+	}>();
 </script>
 
 <template>
-	<span
-class="badge" :class="{
+	<span class="badge" :class="{
 		'badge--primary': type === 'primary',
 		'badge--success': type === 'success',
 		'badge--error': type === 'error',

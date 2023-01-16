@@ -1,12 +1,10 @@
 <template>
-	<component
-		:is="tag"
+	<component :is="tag"
 		@dragover.prevent="over"
 		@dragenter.prevent="active = true"
 		@dragleave.prevent="active = false"
-		@drop.prevent="drop"
-	>
-		<slot :active="active"></slot>
+		@drop.prevent="drop">
+		<slot :active="active" />
 	</component>
 </template>
 

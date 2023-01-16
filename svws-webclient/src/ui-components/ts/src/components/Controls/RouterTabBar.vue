@@ -1,108 +1,108 @@
 <template>
-    <div class="router-tab-bar--area">
-        <div class="router-tab-bar--wrapper print:hidden">
-            <div v-if="state.scrolled" class="router-tab-bar--scroll-button-background router-tab-bar--scroll-button-background-left">
-                <button class="router-tab-bar--scroll-button" @click="scroll('left')">
-                   <Icon> <i-ri-arrow-left-line /> </Icon>
-                </button>
-            </div>
-            <div ref="contentEl" class="router-tab-bar--content">
-                <router-tab-bar-button v-for="(route, index) in props.routes" :route="route" :selected="selected"
-                    :hidden="isHidden(index)" @select="select(route)" />
-            </div>
-            <div v-if="!state.scrolledMax"
-                class="router-tab-bar--scroll-button-background router-tab-bar--scroll-button-background-right">
-                <button class="router-tab-bar--scroll-button" @click="scroll('right')">
-                    <Icon> <i-ri-arrow-right-line /> </Icon>
-                </button>
-            </div>
-        </div>
-        <div class="router-tab-bar--panel">
-            <slot />
-        </div>
-    </div>
+	<div class="router-tab-bar--area">
+		<div class="router-tab-bar--wrapper print:hidden">
+			<div v-if="state.scrolled" class="router-tab-bar--scroll-button-background router-tab-bar--scroll-button-background-left">
+				<button class="router-tab-bar--scroll-button" @click="scroll('left')">
+					<Icon> <i-ri-arrow-left-line /> </Icon>
+				</button>
+			</div>
+			<div ref="contentEl" class="router-tab-bar--content">
+				<router-tab-bar-button v-for="(route, index) in props.routes" :route="route" :selected="selected"
+					:hidden="isHidden(index)" @select="select(route)" />
+			</div>
+			<div v-if="!state.scrolledMax"
+				class="router-tab-bar--scroll-button-background router-tab-bar--scroll-button-background-right">
+				<button class="router-tab-bar--scroll-button" @click="scroll('right')">
+					<Icon> <i-ri-arrow-right-line /> </Icon>
+				</button>
+			</div>
+		</div>
+		<div class="router-tab-bar--panel">
+			<slot />
+		</div>
+	</div>
 </template>
 
 <script lang="ts" setup>
-    import { computed, onMounted, onUnmounted, onUpdated, ref, WritableComputedRef } from 'vue';
-    import { RouteRecordRaw } from "vue-router";
+	import { computed, onMounted, onUnmounted, onUpdated, ref, WritableComputedRef } from 'vue';
+	import { RouteRecordRaw } from "vue-router";
 
-    const props = defineProps<{
-        routes: RouteRecordRaw[]
-        hidden: boolean[] | undefined
-        modelValue: RouteRecordRaw
-    }>();
+	const props = defineProps<{
+		routes: RouteRecordRaw[]
+		hidden: boolean[] | undefined
+		modelValue: RouteRecordRaw
+	}>();
 
-    const emit = defineEmits<{ (e: 'update:modelValue', value: RouteRecordRaw): void, }>();
+	const emit = defineEmits<{ (e: 'update:modelValue', value: RouteRecordRaw): void, }>();
 
-    type ComponentData = {
-        scrolled: boolean;
-        scrolledMax: boolean;
-        scrollFactor: number;
-        maxScrollLeft: number;
-    }
+	type ComponentData = {
+		scrolled: boolean;
+		scrolledMax: boolean;
+		scrollFactor: number;
+		maxScrollLeft: number;
+	}
 
-    const contentEl = ref();
-    const selected: WritableComputedRef<RouteRecordRaw> = computed({
-        get() : RouteRecordRaw {
-            return props.modelValue;
-        },
-        set(value: RouteRecordRaw ) {
-            emit('update:modelValue', value);
-        }
-    });
+	const contentEl = ref();
+	const selected: WritableComputedRef<RouteRecordRaw> = computed({
+		get() : RouteRecordRaw {
+			return props.modelValue;
+		},
+		set(value: RouteRecordRaw ) {
+			emit('update:modelValue', value);
+		}
+	});
 
-    function isHidden(index: number) {
-        if ((props.hidden === undefined) || props.hidden[index] === undefined)
-            return false;
-        return props.hidden[index];
-    }
+	function isHidden(index: number) {
+		if ((props.hidden === undefined) || props.hidden[index] === undefined)
+			return false;
+		return props.hidden[index];
+	}
 
-    const state = ref<ComponentData>({
-        scrolled: false,
-        scrolledMax: false,
-        scrollFactor: 4,
-        maxScrollLeft: 0,
-    });
+	const state = ref<ComponentData>({
+		scrolled: false,
+		scrolledMax: false,
+		scrollFactor: 4,
+		maxScrollLeft: 0,
+	});
 
-    onMounted(() => {
-        state.value.maxScrollLeft = (contentEl.value?.scrollWidth ?? 0) - (contentEl.value?.clientWidth ?? 0);
-        state.value.scrolledMax = (contentEl.value?.scrollLeft ?? 0) >= state.value.maxScrollLeft;
-        contentEl.value?.addEventListener("scroll", handleScroll);
-        window.addEventListener("resize", handleScroll);
-    })
-
-
-    onUnmounted(() => {
-        contentEl.value?.removeEventListener("scroll", handleScroll);
-        window.removeEventListener("resize", handleScroll);
-    });
+	onMounted(() => {
+		state.value.maxScrollLeft = (contentEl.value?.scrollWidth ?? 0) - (contentEl.value?.clientWidth ?? 0);
+		state.value.scrolledMax = (contentEl.value?.scrollLeft ?? 0) >= state.value.maxScrollLeft;
+		contentEl.value?.addEventListener("scroll", handleScroll);
+		window.addEventListener("resize", handleScroll);
+	})
 
 
-    onUpdated(() => {
-        handleScroll();
-    });
+	onUnmounted(() => {
+		contentEl.value?.removeEventListener("scroll", handleScroll);
+		window.removeEventListener("resize", handleScroll);
+	});
 
 
-    function handleScroll() {
-        state.value.scrolled = (contentEl.value?.scrollLeft ?? 0) > 0;
-        state.value.maxScrollLeft =
-            (contentEl.value?.scrollWidth ?? 0) - (contentEl.value?.clientWidth ?? 0);
-        state.value.scrolledMax = (contentEl.value?.scrollLeft ?? 0) >= state.value.maxScrollLeft;
-    }
+	onUpdated(() => {
+		handleScroll();
+	});
 
-    function scroll(direction: 'left' | 'right') {
-        const dir = direction == "left" ? -1 : 1;
-        contentEl.value?.scrollBy({
-            top: 0,
-            left: (dir * contentEl.value.scrollWidth) / state.value.scrollFactor,
-            behavior: "smooth"
-        });
-    }
 
-    function select(route: RouteRecordRaw) {
-        selected.value = route;
-    }
+	function handleScroll() {
+		state.value.scrolled = (contentEl.value?.scrollLeft ?? 0) > 0;
+		state.value.maxScrollLeft =
+			(contentEl.value?.scrollWidth ?? 0) - (contentEl.value?.clientWidth ?? 0);
+		state.value.scrolledMax = (contentEl.value?.scrollLeft ?? 0) >= state.value.maxScrollLeft;
+	}
+
+	function scroll(direction: 'left' | 'right') {
+		const dir = direction == "left" ? -1 : 1;
+		contentEl.value?.scrollBy({
+			top: 0,
+			left: (dir * contentEl.value.scrollWidth) / state.value.scrollFactor,
+			behavior: "smooth"
+		});
+	}
+
+	function select(route: RouteRecordRaw) {
+		selected.value = route;
+	}
 
 </script>
 

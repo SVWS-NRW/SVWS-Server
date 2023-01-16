@@ -1,22 +1,21 @@
 <script setup lang='ts'>
-const {
-	collapsed = false,
-} = defineProps<{
-	collapsed?: boolean;
-}>();
+	const {
+		collapsed = false,
+	} = defineProps<{
+		collapsed?: boolean;
+	}>();
 
-const emit = defineEmits<{
-	(e: 'click', event: MouseEvent): void;
-}>();
+	const emit = defineEmits<{
+		(e: 'click', event: MouseEvent): void;
+	}>();
 
-function onClick(event: MouseEvent) {
-	emit("click", event);
-}
+	function onClick(event: MouseEvent) {
+		emit("click", event);
+	}
 </script>
 
 <template>
-	<a
-		class="sidebar--menu--initials"
+	<a class="sidebar--menu--initials"
 		href="#" @click.prevent="onClick">
 		<Popover>
 			<template #trigger>
@@ -26,7 +25,7 @@ function onClick(event: MouseEvent) {
 			</template>
 			<template #content>
 				<div class="sidebar--menu-header--label">
-					Angemeldet als <slot/>
+					Angemeldet als <slot />
 				</div>
 			</template>
 		</Popover>

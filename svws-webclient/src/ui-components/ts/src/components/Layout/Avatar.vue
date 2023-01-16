@@ -1,28 +1,28 @@
 <script setup lang='ts'>
-import imageFile from "../../assets/img/avatar_placeholder.svg";
+	import imageFile from "../../assets/img/avatar_placeholder.svg";
 
-const {
-	src = '',
-	alt = '',
-	upload = false,
-	capture = false,
-} = defineProps<{
-	src?: string;
-	alt?: string;
-	upload?: boolean;
-	capture?: boolean;
-}>();
+	const {
+		src = '',
+		alt = '',
+		upload = false,
+		capture = false,
+	} = defineProps<{
+		src?: string;
+		alt?: string;
+		upload?: boolean;
+		capture?: boolean;
+	}>();
 
-defineEmits<{
-	(e: 'image:captured', val: Blob | null): void;
-}>();
+	defineEmits<{
+		(e: 'image:captured', val: Blob | null): void;
+	}>();
 
-const { videoEl, canvasEl, isCapturing, currentSnapshot, toggleCapturing, capturingError, toggleSnapshot } = useCapturing();
-const { fileInputEl, toggleUpload, onSelectFile, uploadedImage } = useUploading();
+	const { videoEl, canvasEl, isCapturing, currentSnapshot, toggleCapturing, capturingError, toggleSnapshot } = useCapturing();
+	const { fileInputEl, toggleUpload, onSelectFile, uploadedImage } = useUploading();
 
-function onError(e: Event) {
-	(e.target as HTMLImageElement).src = imageFile;
-}
+	function onError(e: Event) {
+		(e.target as HTMLImageElement).src = imageFile;
+	}
 </script>
 
 <template>
@@ -31,20 +31,20 @@ function onError(e: Event) {
 			<template v-if="isCapturing">
 				<span v-if="capturingError">{{ capturingError }}</span>
 				<template v-else>
-					<video playsinline ref="videoEl" autoplay id="video"></video>
-					<canvas ref="canvasEl" id="canvas" class="hidden"></canvas>
-					<img :src="currentSnapshot" :alt="alt" v-if="currentSnapshot" />
+					<video playsinline ref="videoEl" autoplay id="video" />
+					<canvas ref="canvasEl" id="canvas" class="hidden" />
+					<img :src="currentSnapshot" :alt="alt" v-if="currentSnapshot">
 				</template>
 			</template>
 			<template v-else-if="uploadedImage">
-				<img :src="uploadedImage" :alt="alt" />
+				<img :src="uploadedImage" :alt="alt">
 			</template>
 			<template v-else>
 				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
 					<path
 						d="M20 22h-2v-2a3 3 0 0 0-3-3H9a3 3 0 0 0-3 3v2H4v-2a5 5 0 0 1 5-5h6a5 5 0 0 1 5 5v2zm-8-9a6 6 0 1 1 0-12 6 6 0 0 1 0 12zm0-2a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" />
 				</svg>
-				<img :src="src" :alt="alt" @error="onError" />
+				<img :src="src" :alt="alt" @error="onError">
 			</template>
 		</div>
 		<div class="mt-1 flex gap-1" v-if="capture">

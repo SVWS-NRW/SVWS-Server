@@ -1,6 +1,6 @@
 <template>
 	<span class="icon">
-		<slot></slot>
+		<slot />
 	</span>
 </template>
 

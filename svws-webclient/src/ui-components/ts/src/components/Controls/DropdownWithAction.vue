@@ -1,21 +1,20 @@
 <script setup lang='ts'>
-import { Menu as MenuHeadless, MenuButton, MenuItems } from "@headlessui/vue";
-import { DropdownType } from "../../types";
+	import { Menu as MenuHeadless, MenuButton, MenuItems } from "@headlessui/vue";
+	import { DropdownType } from "../../types";
 
-const {
-	type = 'primary',
-	dropdownDisabled = false,
-} = defineProps<{
-	type?: DropdownType;
-	dropdownDisabled?: boolean;
-}>();
+	const {
+		type = 'primary',
+		dropdownDisabled = false,
+	} = defineProps<{
+		type?: DropdownType;
+		dropdownDisabled?: boolean;
+	}>();
 </script>
-	
+
 <template>
 	<MenuHeadless as="div" class="dropdown-with-action--wrapper">
 		<slot name="actionButton" />
-		<menu-button
-v-slot="{ open }" class="dropdown-with-action--button" :class="{
+		<menu-button v-slot="{ open }" class="dropdown-with-action--button" :class="{
 			'dropdown-with-action--button--primary':
 				type === 'primary',
 			'dropdown-with-action--button--secondary':
@@ -28,8 +27,7 @@ v-slot="{ open }" class="dropdown-with-action--button" :class="{
 				<i-ri-arrow-down-s-line v-else />
 			</Icon>
 		</menu-button>
-		<menu-items
-as="div" class="dropdown--items" :class="{
+		<menu-items as="div" class="dropdown--items" :class="{
 			'dropdown--items--primary': type === 'primary',
 			'dropdown--items--secondary': type === 'secondary',
 			'dropdown--items--error': type === 'error'

@@ -1,259 +1,256 @@
 <script setup lang="ts">
-import { type PropType, type ComputedRef } from "vue";
-import { genId } from "../../../utils";
-import TextInput from "../TextInput.vue";
+	import { type PropType, type ComputedRef } from "vue";
+	import { genId } from "../../../utils";
+	import TextInput from "../TextInput.vue";
 
-type Item = Record<string, any>;
+	type Item = Record<string, any>;
 
-const {
-	placeholder,
-	tags,
-	autocomplete,
-	disabled,
-	statistics,
-	items,
-	itemText,
-	itemSort,
-	itemFilter,
-	modelValue,
-	headless,
-	removable,
-	rounded
-} = defineProps({
-	placeholder: {type: String, default: ""},
-	title: {type: String, default: ""},
-	tags: {type: Boolean, default: false},
-	autocomplete: {type: Boolean, default: false},
-	disabled: {type: Boolean, default: false},
-	statistics: {type: Boolean, default: false},
-	items: {
-		type: [Array, Object],
-		default() {
-			return [];
-		}
-	},
-	itemText: {
-		type: Function as PropType<(item: any) => string>,
-		default(item: Item) {
-			return item.text || "";
-		}
-	},
-	itemSort: {type: Function as PropType<(a: any, b: any) => number>, default: null},
-	itemFilter: {type: Function as PropType<(items: any[], searchText: string) => any[]>, default: null},
-	// eslint-disable-next-line vue/require-default-prop
-	modelValue: {
-		type: [Object, Array] as PropType<Item | Item[]>
-	},
-	headless: {type: Boolean, default: false},
-	removable: {type: Boolean, default: false},
-	rounded: {type: Boolean, default: false}
-});
-
-const emit = defineEmits<{
-	(e: "update:modelValue", items: Array<Item | null> | Item | null | undefined): void;
-	(e: "focus", event: Event): void;
-	(e: "blur", event: Event): void;
-}>();
-
-const showList = ref(false);
-const itemRefs = shallowRef<HTMLLIElement[]>([]);
-const activeItemIndex = ref(-1);
-const listIdPrefix = genId();
-const showInput = computed(() => {
-	switch (true) {
-		default:
-			return true;
-		case tags && !autocomplete:
-			return false;
-		case tags && autocomplete && !showList.value:
-			return false;
-	}
-});
-
-// Input element
-const inputEl = ref<null | typeof TextInput>(null);
-const hasFocus = ref(false);
-const searchText = ref("");
-
-function onFocus() {
-	hasFocus.value = true;
-	// open();
-}
-
-function onBlur() {
-	hasFocus.value = false;
-	closeListbox();
-}
-
-const dynModelValue = computed<string>(() => {
-	switch (true) {
-		default:
-			return generateInputText() ?? '';
-		case showList.value && autocomplete:
-			return searchText.value;
-	}
-});
-
-function generateInputText() {
-	return tags
-		? [...selectedItemList].map(item => itemText(item)).join(", ")
-		: selectedItem.value
-			? itemText(selectedItem.value)
-			: "";
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function onInput(value: string | number): any {
-	searchText.value = "" + value;
-}
-
-const selectedItem = shallowRef(Array.isArray(modelValue) ? modelValue[0] : modelValue);
-const selectedItemList = shallowReactive(
-	new Set<Item>(Array.isArray(modelValue) ? modelValue : modelValue ? [modelValue] : [])
-);
-watch(
-	() => modelValue,
-	newVal => {
-		selectedItem.value = Array.isArray(newVal) ? newVal[0] : newVal;
-		selectedItemList.clear();
-		if (Array.isArray(newVal)) {
-			newVal.forEach(item => selectedItemList.add(item));
-		} else if (newVal) {
-			selectedItemList.add(newVal);
-		}
-	}
-);
-
-function isIterable(o: Item[] | object): o is Iterable<Item> {
-	return Symbol.iterator in o;
-}
-
-const sortedList: ComputedRef<Item[]> = computed(() => {
-	if (!isIterable(items)) return [];
-	const arr: Item[] = Array.isArray(items) ? items : [...items];
-	if (itemSort) return arr.sort(itemSort);
-	return arr;
-});
-
-const filteredList: ComputedRef<Array<Item>> = computed(() => {
-	if (autocomplete) {
-		if (itemFilter) return itemFilter(sortedList.value, searchText.value);
-		else
-			return sortedList.value.filter(i => {
-				return itemText(i).startsWith(searchText.value ?? "");
-			});
-	} else {
-		return sortedList.value;
-	}
-});
-
-function openListbox() {
-	showList.value = true;
-	if (selectedItem.value) {
-		activeItemIndex.value = filteredList.value.findIndex(item => item === selectedItem.value);
-		nextTick(() => scrollToActiveItem());
-	}
-	nextTick(() => {
-		inputEl.value?.input.focus();
+	const {
+		placeholder,
+		tags,
+		autocomplete,
+		disabled,
+		statistics,
+		items,
+		itemText,
+		itemSort,
+		itemFilter,
+		modelValue,
+		headless,
+		removable,
+		rounded
+	} = defineProps({
+		placeholder: {type: String, default: ""},
+		title: {type: String, default: ""},
+		tags: {type: Boolean, default: false},
+		autocomplete: {type: Boolean, default: false},
+		disabled: {type: Boolean, default: false},
+		statistics: {type: Boolean, default: false},
+		items: {
+			type: [Array, Object],
+			default() {
+				return [];
+			}
+		},
+		itemText: {
+			type: Function as PropType<(item: any) => string>,
+			default(item: Item) {
+				return item.text || "";
+			}
+		},
+		itemSort: {type: Function as PropType<(a: any, b: any) => number>, default: null},
+		itemFilter: {type: Function as PropType<(items: any[], searchText: string) => any[]>, default: null},
+		// eslint-disable-next-line vue/require-default-prop
+		modelValue: {
+			type: [Object, Array] as PropType<Item | Item[]>
+		},
+		headless: {type: Boolean, default: false},
+		removable: {type: Boolean, default: false},
+		rounded: {type: Boolean, default: false}
 	});
-}
 
-function closeListbox() {
-	showList.value = false;
-	searchText.value = "";
-	activeItemIndex.value = -1;
-}
+	const emit = defineEmits<{
+		(e: "update:modelValue", items: Array<Item | null> | Item | null | undefined): void;
+		(e: "focus", event: Event): void;
+		(e: "blur", event: Event): void;
+	}>();
 
-function selectCurrentActiveItem() {
-	if (!showList.value) return;
-	selectItem(filteredList.value[activeItemIndex.value]);
-	if (!tags) closeListbox();
-}
-
-function selectItem(item: Item | undefined) {
-	selectedItem.value = item;
-	if (item) {
-		if (tags) {
-			if (selectedItemList.has(item)) {
-				selectedItemList.delete(item);
-			} else selectedItemList.add(item);
-		} else {
-			selectedItemList.clear();
-			selectedItemList.add(item);
+	const showList = ref(false);
+	const itemRefs = shallowRef<HTMLLIElement[]>([]);
+	const activeItemIndex = ref(-1);
+	const listIdPrefix = genId();
+	const showInput = computed(() => {
+		switch (true) {
+			default:
+				return true;
+			case tags && !autocomplete:
+				return false;
+			case tags && autocomplete && !showList.value:
+				return false;
 		}
+	});
+
+	// Input element
+	const inputEl = ref<null | typeof TextInput>(null);
+	const hasFocus = ref(false);
+	const searchText = ref("");
+
+	function onFocus() {
+		hasFocus.value = true;
+	// open();
 	}
-	emit("update:modelValue", tags ? [...selectedItemList] : selectedItem.value);
-}
 
-function removeTag(item: Item) {
-	selectedItemList.delete(item);
-	emit("update:modelValue", [...selectedItemList]);
-}
-
-function toggleListbox() {
-	showList.value ? closeListbox() : openListbox();
-}
-
-// Arrow Navigation
-function onArrowDown() {
-	if (!showList.value) {
-		openListbox();
-		return;
-	}
-	const listLength = filteredList.value.length;
-	if (activeItemIndex.value < listLength - 1) activeItemIndex.value++;
-	else activeItemIndex.value = 0;
-	scrollToActiveItem();
-}
-
-function onArrowUp() {
-	const listLength = filteredList.value.length;
-	if (activeItemIndex.value === 0) activeItemIndex.value = listLength - 1;
-	else if (activeItemIndex.value >= 1) activeItemIndex.value--;
-	scrollToActiveItem();
-}
-
-function onEscape() {
-	if (showList.value) {
+	function onBlur() {
+		hasFocus.value = false;
 		closeListbox();
-	} else {
-		openListbox();
 	}
-}
 
-function onSpace (e: InputEvent) {
-	console.log('space')
-	if (!autocomplete)	{
-		e.preventDefault();
+	const dynModelValue = computed<string>(() => {
+		switch (true) {
+			default:
+				return generateInputText() ?? '';
+			case showList.value && autocomplete:
+				return searchText.value;
+		}
+	});
+
+	function generateInputText() {
+		return tags
+			? [...selectedItemList].map(item => itemText(item)).join(", ")
+			: selectedItem.value
+				? itemText(selectedItem.value)
+				: "";
+	}
+
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	function onInput(value: string | number): any {
+		searchText.value = "" + value;
+	}
+
+	const selectedItem = shallowRef(Array.isArray(modelValue) ? modelValue[0] : modelValue);
+	const selectedItemList = shallowReactive(
+		new Set<Item>(Array.isArray(modelValue) ? modelValue : modelValue ? [modelValue] : [])
+	);
+	watch(
+		() => modelValue,
+		newVal => {
+			selectedItem.value = Array.isArray(newVal) ? newVal[0] : newVal;
+			selectedItemList.clear();
+			if (Array.isArray(newVal)) {
+				newVal.forEach(item => selectedItemList.add(item));
+			} else if (newVal) {
+				selectedItemList.add(newVal);
+			}
+		}
+	);
+
+	function isIterable(o: Item[] | object): o is Iterable<Item> {
+		return Symbol.iterator in o;
+	}
+
+	const sortedList: ComputedRef<Item[]> = computed(() => {
+		if (!isIterable(items)) return [];
+		const arr: Item[] = Array.isArray(items) ? items : [...items];
+		if (itemSort) return arr.sort(itemSort);
+		return arr;
+	});
+
+	const filteredList: ComputedRef<Array<Item>> = computed(() => {
+		if (autocomplete) {
+			if (itemFilter) return itemFilter(sortedList.value, searchText.value);
+			else
+				return sortedList.value.filter(i => {
+					return itemText(i).startsWith(searchText.value ?? "");
+				});
+		} else {
+			return sortedList.value;
+		}
+	});
+
+	function openListbox() {
+		showList.value = true;
+		if (selectedItem.value) {
+			activeItemIndex.value = filteredList.value.findIndex(item => item === selectedItem.value);
+			nextTick(() => scrollToActiveItem());
+		}
+		nextTick(() => {
+			inputEl.value?.input.focus();
+		});
+	}
+
+	function closeListbox() {
+		showList.value = false;
+		searchText.value = "";
+		activeItemIndex.value = -1;
+	}
+
+	function selectCurrentActiveItem() {
+		if (!showList.value) return;
+		selectItem(filteredList.value[activeItemIndex.value]);
+		if (!tags) closeListbox();
+	}
+
+	function selectItem(item: Item | undefined) {
+		selectedItem.value = item;
+		if (item) {
+			if (tags) {
+				if (selectedItemList.has(item)) {
+					selectedItemList.delete(item);
+				} else selectedItemList.add(item);
+			} else {
+				selectedItemList.clear();
+				selectedItemList.add(item);
+			}
+		}
+		emit("update:modelValue", tags ? [...selectedItemList] : selectedItem.value);
+	}
+
+	function removeTag(item: Item) {
+		selectedItemList.delete(item);
+		emit("update:modelValue", [...selectedItemList]);
+	}
+
+	function toggleListbox() {
+		showList.value ? closeListbox() : openListbox();
+	}
+
+	// Arrow Navigation
+	function onArrowDown() {
 		if (!showList.value) {
 			openListbox();
+			return;
+		}
+		const listLength = filteredList.value.length;
+		if (activeItemIndex.value < listLength - 1) activeItemIndex.value++;
+		else activeItemIndex.value = 0;
+		scrollToActiveItem();
+	}
+
+	function onArrowUp() {
+		const listLength = filteredList.value.length;
+		if (activeItemIndex.value === 0) activeItemIndex.value = listLength - 1;
+		else if (activeItemIndex.value >= 1) activeItemIndex.value--;
+		scrollToActiveItem();
+	}
+
+	function onEscape() {
+		if (showList.value) {
+			closeListbox();
 		} else {
-			selectCurrentActiveItem();
+			openListbox();
 		}
 	}
-}
 
-function scrollToActiveItem() {
-	(itemRefs.value as HTMLElement[])[activeItemIndex.value]?.scrollIntoView({
-		block: "nearest",
-		inline: "nearest"
-	});
-}
+	function onSpace (e: InputEvent) {
+		console.log('space')
+		if (!autocomplete)	{
+			e.preventDefault();
+			if (!showList.value) {
+				openListbox();
+			} else {
+				selectCurrentActiveItem();
+			}
+		}
+	}
 
-function removeItem() {
-	selectItem(undefined);
-}
+	function scrollToActiveItem() {
+		(itemRefs.value as HTMLElement[])[activeItemIndex.value]?.scrollIntoView({
+			block: "nearest",
+			inline: "nearest"
+		});
+	}
+
+	function removeItem() {
+		selectItem(undefined);
+	}
 </script>
 
 <template>
 	<div class="wrapper" :class="{ 'z-50': showList, 'wrapper--tag-list' : tags }">
-		<div
-			class="multiselect-input-component"
-			:class="{ 'with-open-list': showList, 'multiselect-input-component--statistics': statistics, 'with-value': !!selectedItem }"
-		>
+		<div class="multiselect-input-component"
+			:class="{ 'with-open-list': showList, 'multiselect-input-component--statistics': statistics, 'with-value': !!selectedItem }">
 			<div :class="['input', !showInput ? 'sr-only' : '']">
-				<text-input
-					ref="inputEl"
+				<text-input ref="inputEl"
 					:model-value="dynModelValue"
 					:readonly="!autocomplete || !showInput"
 					:placeholder="title"
@@ -281,19 +278,17 @@ function removeItem() {
 					@keydown.enter.prevent="selectCurrentActiveItem"
 					@keydown.esc.prevent="onEscape"
 					@keydown.space="onSpace"
-					:rounded="rounded"
-				/>
+					:rounded="rounded" />
 			</div>
 			<div v-if="tags" class="tag-list-wrapper" :class="{'tag-list-wrapper--rounded': rounded}" @click.self="toggleListbox">
 				<div class="tag-list" @click.self="toggleListbox">
-					<slot v-if="!selectedItemList.size && !showList" name="no-content">
-					</slot>
+					<slot v-if="!selectedItemList.size && !showList" name="no-content" />
 					<div v-for="(item, index) in selectedItemList" v-else :key="index" class="tag">
 						<span class="tag-badge">
 							<span>{{ itemText(item) }}</span>
 							<span class="tag-remove ml-1" @click="removeTag(item)">
 								<Icon>
-									<i-ri-close-line/>
+									<i-ri-close-line />
 								</Icon>
 							</span>
 						</span>
@@ -301,30 +296,27 @@ function removeItem() {
 				</div>
 				<span v-if="!showInput" class="multiselect-tags--placeholder">
 					{{ title }}
-					<i-ri-bar-chart-fill v-if="statistics" class="ml-2"/>
+					<i-ri-bar-chart-fill v-if="statistics" class="ml-2" />
 				</span>
 			</div>
 			<div v-if="removable && modelValue" @click="removeItem" class="remove-icon">
 				<Icon>
-					<i-ri-close-line/>
+					<i-ri-close-line />
 				</Icon>
 			</div>
 			<div class="dropdown-icon" @click="showList ? closeListbox() : openListbox()">
 				<Icon>
-					<i-ri-arrow-up-s-line v-if="showList" class="pb-0.5"/>
-					<i-ri-arrow-down-s-line v-else class="pt-0.5"/>
+					<i-ri-arrow-up-s-line v-if="showList" class="pb-0.5" />
+					<i-ri-arrow-down-s-line v-else class="pt-0.5" />
 				</Icon>
 			</div>
 		</div>
-		<ul
-			v-show="showList"
+		<ul v-show="showList"
 			:id="listIdPrefix"
 			class="multiselect--items-wrapper"
 			role="listbox"
-			@mouseenter="activeItemIndex = -1"
-		>
-			<li
-				v-for="(item, index) in filteredList"
+			@mouseenter="activeItemIndex = -1">
+			<li v-for="(item, index) in filteredList"
 				:id="`${listIdPrefix}-${index}`"
 				:key="index"
 				ref="itemRefs"
@@ -341,8 +333,7 @@ function removeItem() {
 						selectItem(item);
 						!tags && closeListbox();
 					}
-				"
-			>
+				">
 				{{ itemText(item) }}
 			</li>
 		</ul>

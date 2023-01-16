@@ -1,18 +1,17 @@
 <script setup lang='ts'>
-import { Size } from '~/types';
+	import { Size } from '~/types';
 
-const {
-	size = 'normal',
-	progress = 0,
-} = defineProps<{
-	size?: Extract<Size, 'normal' | 'small'>;
-	progress?: number;
-}>();
+	const {
+		size = 'normal',
+		progress = 0,
+	} = defineProps<{
+		size?: Extract<Size, 'normal' | 'small'>;
+		progress?: number;
+	}>();
 </script>
-	
+
 <template>
-	<div
-class="progress-bar" :class="{
+	<div class="progress-bar" :class="{
 		'progress-bar--normal': size === 'normal',
 		'progress-bar--small': size === 'small'
 	}">

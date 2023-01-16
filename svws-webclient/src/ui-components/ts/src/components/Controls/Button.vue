@@ -1,32 +1,31 @@
 <script lang="ts" setup>
-import { Size, ButtonType } from '../../types';
+	import { Size, ButtonType } from '../../types';
 
-const {
-	type = 'primary',
-	disabled = false,
-	dropdownAction = false,
-	size = 'normal'
-} = defineProps<{
-	type?: ButtonType;
-	disabled?: boolean;
-	dropdownAction?: boolean;
-	size?: Extract<Size, 'small' | 'normal'>;
-}>();
+	const {
+		type = 'primary',
+		disabled = false,
+		dropdownAction = false,
+		size = 'normal'
+	} = defineProps<{
+		type?: ButtonType;
+		disabled?: boolean;
+		dropdownAction?: boolean;
+		size?: Extract<Size, 'small' | 'normal'>;
+	}>();
 
-const emit = defineEmits<{
-	(e: 'click', event: MouseEvent): void;
-}>();
+	const emit = defineEmits<{
+		(e: 'click', event: MouseEvent): void;
+	}>();
 
-function onClick(event: MouseEvent) {
-	if (!disabled) {
-		emit("click", event);
+	function onClick(event: MouseEvent) {
+		if (!disabled) {
+			emit("click", event);
+		}
 	}
-}
 </script>
 
 <template>
-	<button
-class="button" :class="{
+	<button class="button" :class="{
 		'button--primary': type === 'primary',
 		'button--secondary': type === 'secondary',
 		'button--error': type === 'error',

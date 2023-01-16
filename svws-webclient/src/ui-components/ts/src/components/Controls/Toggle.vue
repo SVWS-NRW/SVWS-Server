@@ -1,35 +1,34 @@
 <script setup lang='ts'>
-const {
-	modelValue = false,
-	statistics = false,
-	headless = false,
-} = defineProps<{
-	modelValue?: boolean;
-	statistics?: boolean;
-	headless?: boolean;
-}>();
+	const {
+		modelValue = false,
+		statistics = false,
+		headless = false,
+	} = defineProps<{
+		modelValue?: boolean;
+		statistics?: boolean;
+		headless?: boolean;
+	}>();
 
-const emit = defineEmits<{
-	(e: 'update:modelValue', value: boolean): void;
-}>();
+	const emit = defineEmits<{
+		(e: 'update:modelValue', value: boolean): void;
+	}>();
 
-const value = computed({
-	get() {
-		return modelValue;
-	},
-	set(value: boolean) {
-		emit('update:modelValue', value);
-	}
-});
+	const value = computed({
+		get() {
+			return modelValue;
+		},
+		set(value: boolean) {
+			emit('update:modelValue', value);
+		}
+	});
 </script>
 
 <template>
-	<label
-class="toggle" :class="{
+	<label class="toggle" :class="{
 		'toggle--statistics': statistics,
 		'toggle--headless': headless
 	}">
-		<input v-model="value" class="toggle--control" type="checkbox" />
+		<input v-model="value" class="toggle--control" type="checkbox">
 		<span class="toggle--indicator" />
 		<span v-if="$slots.default || statistics" class="toggle--label">
 			<slot />

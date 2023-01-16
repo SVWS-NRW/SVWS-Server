@@ -24,7 +24,7 @@
 <template>
 	<Story title="SVWS UI/Controls/Router Vertical Tab Bar">
 		<RouterVerticalTabBar :routes="routes" :hidden="hidden" v-model="selectedRoute">
-			<component :is="selectedRoute.component"></component>
+			<component :is="selectedRoute.component" />
 		</RouterVerticalTabBar>
 	</Story>
 </template>

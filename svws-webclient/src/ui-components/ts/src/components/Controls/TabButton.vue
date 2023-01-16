@@ -1,21 +1,21 @@
 <script lang="ts" setup>
-import { Tab } from '@headlessui/vue';
+	import { Tab } from '@headlessui/vue';
 
-const {
-  disabled = false,
-  hidden = false
-} = defineProps<{
-  disabled?: boolean;
-  hidden?: boolean;
-}>();
+	const {
+		disabled = false,
+		hidden = false
+	} = defineProps<{
+		disabled?: boolean;
+		hidden?: boolean;
+	}>();
 </script>
 
 <template>
-  <Tab v-slot="{ selected }" as="template" :disabled="disabled || hidden" >
-    <button :class="[selected ? 'tab--active' : '', hidden ? 'hidden' : 'tab']">
-      <slot />
-    </button>
-  </Tab>
+	<Tab v-slot="{ selected }" as="template" :disabled="disabled || hidden">
+		<button :class="[selected ? 'tab--active' : '', hidden ? 'hidden' : 'tab']">
+			<slot />
+		</button>
+	</Tab>
 </template>
 
 <style>

@@ -1,30 +1,30 @@
 <template>
-    <button @click="select()" :class="[isSelected ? 'router-tab-bar-button--active' : '', props.hidden ? 'hidden' : 'router-tab-bar-button']">
-        {{ route.meta?.text }}
-    </button>
+	<button @click="select()" :class="[isSelected ? 'router-tab-bar-button--active' : '', props.hidden ? 'hidden' : 'router-tab-bar-button']">
+		{{ route.meta?.text }}
+	</button>
 </template>
 
 <script lang="ts" setup>
-    import { computed, ComputedRef } from 'vue';
-    import { RouteRecordRaw } from "vue-router";
+	import { computed, ComputedRef } from 'vue';
+	import { RouteRecordRaw } from "vue-router";
 
-    const emit = defineEmits<{
-        (e: 'select', value: RouteRecordRaw) : void
-    }>();
+	const emit = defineEmits<{
+		(e: 'select', value: RouteRecordRaw) : void
+	}>();
 
-    const props = defineProps<{
-        route: RouteRecordRaw
-        hidden: boolean
-        selected: RouteRecordRaw
-    }>();
+	const props = defineProps<{
+		route: RouteRecordRaw
+		hidden: boolean
+		selected: RouteRecordRaw
+	}>();
 
-    const isSelected: ComputedRef<boolean> = computed(() => {
-        return props.route.name?.toString() === props.selected.name?.toString();
-    });
+	const isSelected: ComputedRef<boolean> = computed(() => {
+		return props.route.name?.toString() === props.selected.name?.toString();
+	});
 
-    function select() {
-        emit('select', props.route);
-    }
+	function select() {
+		emit('select', props.route);
+	}
 
 </script>
 

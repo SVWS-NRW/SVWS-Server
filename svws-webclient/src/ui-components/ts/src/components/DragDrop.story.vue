@@ -35,9 +35,9 @@
 			item.id !== itemID
 				? item
 				: {
-						...item,
-						list,
-				  }
+					...item,
+					list,
+				}
 		);
 	}
 </script>
@@ -46,26 +46,22 @@
 	<Story title="SVWS UI/Drag-n-Drop" auto-props-disabled>
 		<div class="h-screen w-screen">
 			<svws-ui-drop-data class="drop-zone" @drop="onDrop($event, 1)">
-        <div>List 1</div>
-				<svws-ui-drag-data
-					class="drag-el"
+				<div>List 1</div>
+				<svws-ui-drag-data class="drag-el"
 					v-for="item in listOne"
 					:key="item.title"
 					:data="{ id: item.id }"
-					draggable
-				>
+					draggable>
 					{{ item.title }}
 				</svws-ui-drag-data>
 			</svws-ui-drop-data>
 			<svws-ui-drop-data class="drop-zone" @drop="onDrop($event, 2)">
-        <div>List 2</div>
-				<svws-ui-drag-data
-					class="drag-el"
+				<div>List 2</div>
+				<svws-ui-drag-data class="drag-el"
 					v-for="item in listTwo"
 					:key="item.title"
 					:data="{ id: item.id }"
-					draggable
-				>
+					draggable>
 					{{ item.title }}
 				</svws-ui-drag-data>
 			</svws-ui-drop-data>

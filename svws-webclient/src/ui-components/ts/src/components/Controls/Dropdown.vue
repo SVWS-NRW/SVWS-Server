@@ -10,8 +10,7 @@
 
 <template>
 	<MenuHeadless as="div" class="dropdown--wrapper">
-		<MenuButton
-			v-slot="{ open }"
+		<MenuButton v-slot="{ open }"
 			class="dropdown--button"
 			:class="{
 				'dropdown--button--primary': type === 'primary',
@@ -19,24 +18,21 @@
 				'dropdown--button--error': type === 'error',
 				'dropdown--button--icon': type === 'icon'
 			}"
-			:disabled="disabled"
-		>
+			:disabled="disabled">
 			<slot name="dropdownButton" />
 			<Icon class="dropdown--icon">
 				<i-ri-arrow-up-s-line v-if="open" />
 				<i-ri-arrow-down-s-line v-else />
 			</Icon>
 		</MenuButton>
-		<MenuItems
-			as="div"
+		<MenuItems as="div"
 			class="dropdown--items"
 			:class="{
 				'dropdown--items--primary': type === 'primary',
 				'dropdown--items--secondary': type === 'secondary',
 				'dropdown--items--error': type === 'error',
 				'dropdown--items--icon': type === 'icon'
-			}"
-		>
+			}">
 			<slot name="dropdownItems" />
 		</MenuItems>
 	</MenuHeadless>

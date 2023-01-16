@@ -16,26 +16,26 @@ export default function useCapturing() {
 		if (files && files[0]) {
 			const reader = new FileReader();
 			reader.onload = e => {
-        emit("image:uploaded", e.target?.result);
+				emit("image:uploaded", e.target?.result);
 				uploadedImage.value = e.target?.result as string ?? null;
 			};
 			reader.readAsDataURL(files[0]);
 		}
 	}
 
-  function toggleUpload() {
-    if (uploadedImage.value) {
-      uploadedImage.value = null;
-    } else {
-      uploadImage();
-    }
-  }
+	function toggleUpload() {
+		if (uploadedImage.value) {
+			uploadedImage.value = null;
+		} else {
+			uploadImage();
+		}
+	}
 
 	return {
 		fileInputEl,
 		uploadImage,
 		onSelectFile,
 		uploadedImage,
-    toggleUpload
+		toggleUpload
 	};
 }

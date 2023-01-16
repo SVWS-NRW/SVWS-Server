@@ -1,21 +1,21 @@
 <script setup lang='ts'>
-import {ref} from "vue";
+	import {ref} from "vue";
 
-const {
-	fullwidthContent = false,
-} = defineProps<{
-	fullwidthContent?: boolean;
-}>();
+	const {
+		fullwidthContent = false,
+	} = defineProps<{
+		fullwidthContent?: boolean;
+	}>();
 
-const contentIsFullscreen = ref(false);
+	const contentIsFullscreen = ref(false);
 
-function toggleFullscreen() {
-	contentIsFullscreen.value = !contentIsFullscreen.value;
-	window.localStorage.setItem(
-		"fullscreen",
-		String(contentIsFullscreen.value)
-	);
-};
+	function toggleFullscreen() {
+		contentIsFullscreen.value = !contentIsFullscreen.value;
+		window.localStorage.setItem(
+			"fullscreen",
+			String(contentIsFullscreen.value)
+		);
+	}
 </script>
 <template>
 	<div class="app-layout--wrapper">

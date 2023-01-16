@@ -93,34 +93,28 @@
 </script>
 
 <template>
-	<VTable
-		ref="tableRef"
+	<VTable ref="tableRef"
 		:data="data"
 		:selection-mode="isMultiSelect ? 'multiple' : null"
 		:select-on-click="false"
-		hide-sort-icons
-	>
+		hide-sort-icons>
 		<template #head="{ allRowsSelected, toggleAllRows }">
-			<slot name="head" :allRowsSelected="allRowsSelected" :toggleAllRows="toggleAllRows">
+			<slot name="head" :all-rows-selected="allRowsSelected" :toggle-all-rows="toggleAllRows">
 				<tr>
 					<th v-if="isMultiSelect" class="column--checkbox">
 						<span class="table--head-content">
-							<Checkbox
-								v-if="isMultiSelect"
+							<Checkbox v-if="isMultiSelect"
 								:model-value="allRowsSelected"
-								@update:model-value="proxyUpdate(toggleAllRows)"
-							/>
+								@update:model-value="proxyUpdate(toggleAllRows)" />
 						</span>
 					</th>
 					<template v-for="(column, index) in columnsComputed" :key="`head-${index}`">
 						<slot :name="`head-${column.key}`" :column="column">
-							<VTh
-								v-if="column.sortable"
+							<VTh v-if="column.sortable"
 								v-slot="{ sortOrder }"
 								:sort-key="column.key"
 								:style="`flex-grow: ${column.span};`"
-								:default-sort="column.defaultSort"
-							>
+								:default-sort="column.defaultSort">
 								<div class="w-full">
 									<span class="column--title" :title="column.label">{{ column.label }}</span>
 									<span>
@@ -146,28 +140,22 @@
 		</template>
 		<template #body="{ rows }">
 			<slot name="body" :rows="rows">
-				<VTr
-					v-for="(row, index) in rows"
+				<VTr v-for="(row, index) in rows"
 					:key="`row-${index}`"
 					v-slot="{ isSelected, toggle }"
 					:row="row"
 					:class="{ 'vt-clicked': check_same(row) }"
-					@click="emit('update:modelValue', row)"
-				>
+					@click="emit('update:modelValue', row)">
 					<td v-if="isMultiSelect" class="column--checkbox">
 						<span class="table--cell-content">
-							<Checkbox
-								:model-value="isSelected === row"
+							<Checkbox :model-value="isSelected === row"
 								@click.stop
-								@update:model-value="proxyUpdate(toggle)"
-							/>
+								@update:model-value="proxyUpdate(toggle)" />
 						</span>
 					</td>
-					<td
-						v-for="(column, columnIndex) in columnsComputed"
+					<td v-for="(column, columnIndex) in columnsComputed"
 						:key="`row-column-${column.key}-${columnIndex}`"
-						:style="`flex-grow: ${column.span};`"
-					>
+						:style="`flex-grow: ${column.span};`">
 						<slot :name="`cell-${column.key}`" :column="column" :row="row">
 							<span class="table--cell-content" :title="row[column.key]">
 								{{ row[column.key] }}

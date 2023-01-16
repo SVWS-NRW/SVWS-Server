@@ -6,6 +6,6 @@ import "./assets/styles/index.css";
 import "./assets/styles/_histoire.css";
 
 export const setupVue3 = defineSetupVue3(({ app }) => {
-  app.component('SvwsUiIcon', SvwsUiIcon);
-  app.use(SmartTable);
+	app.component('SvwsUiIcon', SvwsUiIcon);
+	app.use(SmartTable);
 })

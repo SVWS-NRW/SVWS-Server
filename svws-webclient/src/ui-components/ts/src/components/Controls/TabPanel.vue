@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-import { TabPanel } from '@headlessui/vue'
+	import { TabPanel } from '@headlessui/vue'
 </script>
 
 <template>
-  <TabPanel as="div" class="tab-container">
-    <slot />
-  </TabPanel>
+	<TabPanel as="div" class="tab-container">
+		<slot />
+	</TabPanel>
 </template>
 
 <style>

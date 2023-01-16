@@ -3,18 +3,16 @@
 
 	const { disabled = false } = defineProps<{ disabled?: boolean; }>();
 </script>
-	
+
 <template>
 	<menu-item-headless v-slot="{ active }" :disabled="disabled">
-		<button
-			class="dropdown--item"
+		<button class="dropdown--item"
 			:class="{
 				'dropdown--item--active': active === true
-			}"
-		>
-			<Icon class="dropdown--item--icon"
-				><slot name="icon"></slot
-			></Icon>
+			}">
+			<Icon class="dropdown--item--icon">
+				<slot name="icon" />
+			</Icon>
 			<slot />
 		</button>
 	</menu-item-headless>

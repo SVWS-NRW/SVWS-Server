@@ -81,8 +81,7 @@
 </script>
 
 <template>
-	<label
-		class="text-input-component"
+	<label class="text-input-component"
 		:class="{
 			'text-input-filled': hasContent,
 			'text-input-invalid': !valid || !emailValid,
@@ -91,10 +90,8 @@
 			'text-input--icon': hasIcon,
 			'text-input--statistics': statistics,
 			'text-input--search': type === 'search',
-		}"
-	>
-		<input
-			ref="input"
+		}">
+		<input ref="input"
 			v-focus
 			:class="{
 				'text-input--control': !headless,
@@ -108,21 +105,18 @@
 			:required="required"
 			:readonly="readonly"
 			:aria-labelledby="labelId"
-			@input="onInput"
-		/>
-		<span
-			v-if="placeholder && !headless"
+			@input="onInput">
+		<span v-if="placeholder && !headless"
 			:id="labelId"
 			class="text-input--placeholder"
 			:class="{
 				'text-input--placeholder--required': required
-			}"
-		>
+			}">
 			{{ placeholder }}
 			<i-ri-bar-chart-fill v-if="statistics" class="ml-2" />
 		</span>
 		<Icon v-if="type !== 'date' && hasIcon">
-			<slot></slot>
+			<slot />
 		</Icon>
 		<Icon v-else-if="type === 'date'" class="text-input--calendar-icon">
 			<i-ri-calendar-line />

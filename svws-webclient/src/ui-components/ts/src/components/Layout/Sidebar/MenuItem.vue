@@ -1,31 +1,29 @@
 <script setup lang='ts'>
-const {
-	active = false,
-	collapsed = false,
-	subline = '',
-} = defineProps<{
-	active?: boolean;
-	collapsed?: boolean;
-	subline?: string;
-}>();
+	const {
+		active = false,
+		collapsed = false,
+		subline = '',
+	} = defineProps<{
+		active?: boolean;
+		collapsed?: boolean;
+		subline?: string;
+	}>();
 
-const emit = defineEmits<{
-	(e: 'click', event: MouseEvent): void;
-}>();
+	const emit = defineEmits<{
+		(e: 'click', event: MouseEvent): void;
+	}>();
 
-function onClick(event: MouseEvent) {
-	emit("click", event);
-}
+	function onClick(event: MouseEvent) {
+		emit("click", event);
+	}
 </script>
 
 <template>
-	<a
-		class="sidebar--menu-item" :class="{
-			'sidebar--menu-item--active': active,
-			'sidebar--menu-item--collapsed': collapsed
-		}" href="#" @click.prevent="onClick"
-		:title="($slots.label?.()[0].children as unknown as string)"
-	>
+	<a class="sidebar--menu-item" :class="{
+		'sidebar--menu-item--active': active,
+		'sidebar--menu-item--collapsed': collapsed
+	}" href="#" @click.prevent="onClick"
+		:title="($slots.label?.()[0].children as unknown as string)">
 		<span v-if="$slots.icon" class="sidebar--menu-item--icon">
 			<Icon>
 				<slot name="icon" />

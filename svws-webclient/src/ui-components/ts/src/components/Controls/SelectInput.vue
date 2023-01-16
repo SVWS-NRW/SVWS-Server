@@ -1,95 +1,92 @@
 <script setup lang='ts'>
-type Option = {
-	index: string;
-	label: string;
-	selected?: boolean;
-	disabled?: boolean;
-}
-
-const {
-	placeholder = '',
-	options = [],
-	valid = true,
-	disabled = false,
-	modelValue = ''
-} = defineProps<{
-	placeholder?: string;
-	options?: Array<Option>;
-	valid?: boolean;
-	disabled?: boolean;
-	modelValue?: string;
-}>();
-
-const emit = defineEmits<{
-	(e: 'update:modelValue', value: string): void,
-	(e: 'focus', event: Event): void,
-	(e: 'blur', event: Event): void,
-	(e: 'click', event: Event): void,
-	(e: 'mousedown', event: Event): void,
-	(e: 'keydown', event: Event): void,
-}>();
-
-const value = computed({
-	get() {
-		return modelValue;
-	},
-	set(value: string) {
-		emit('update:modelValue', value);
+	type Option = {
+		index: string;
+		label: string;
+		selected?: boolean;
+		disabled?: boolean;
 	}
-})
-const focused = ref(false);
 
-onMounted(() => {
-	options.forEach(option => {
-		if ("selected" in option) {
-			value.value = option.index;
+	const {
+		placeholder = '',
+		options = [],
+		valid = true,
+		disabled = false,
+		modelValue = ''
+	} = defineProps<{
+		placeholder?: string;
+		options?: Array<Option>;
+		valid?: boolean;
+		disabled?: boolean;
+		modelValue?: string;
+	}>();
+
+	const emit = defineEmits<{
+		(e: 'update:modelValue', value: string): void,
+		(e: 'focus', event: Event): void,
+		(e: 'blur', event: Event): void,
+		(e: 'click', event: Event): void,
+		(e: 'mousedown', event: Event): void,
+		(e: 'keydown', event: Event): void,
+	}>();
+
+	const value = computed({
+		get() {
+			return modelValue;
+		},
+		set(value: string) {
+			emit('update:modelValue', value);
 		}
+	})
+	const focused = ref(false);
+
+	onMounted(() => {
+		options.forEach(option => {
+			if ("selected" in option) {
+				value.value = option.index;
+			}
+		});
 	});
-});
 
-function onFocus(event: Event) {
-	focused.value = true;
-	emit("focus", event);
-}
+	function onFocus(event: Event) {
+		focused.value = true;
+		emit("focus", event);
+	}
 
-function onBlur(event: Event) {
-	focused.value = false;
-	emit("blur", event);
-}
+	function onBlur(event: Event) {
+		focused.value = false;
+		emit("blur", event);
+	}
 
-function onClick(event: MouseEvent) {
-	emit("click", event);
-}
+	function onClick(event: MouseEvent) {
+		emit("click", event);
+	}
 
-function onMouseDown(event: MouseEvent) {
-	emit("mousedown", event);
-}
+	function onMouseDown(event: MouseEvent) {
+		emit("mousedown", event);
+	}
 
-function onKeyDown(event: InputEvent) {
-	emit("keydown", event);
-}
+	function onKeyDown(event: InputEvent) {
+		emit("keydown", event);
+	}
 </script>
 
 <template>
-	<label
-class="select-input" :class="{
+	<label class="select-input" :class="{
 		'select-input-filled': !!value,
 		'select-input-focus': focused,
 		'select-input-invalid': !valid,
 		'select-input-disabled': disabled
 	}">
-		<select
-v-model="value" class="select-input--control" :disabled="disabled" @focus="onFocus" @blur="onBlur"
+		<select v-model="value" class="select-input--control" :disabled="disabled" @focus="onFocus" @blur="onBlur"
 			@click="onClick" @mousedown="onMouseDown" @onkeydown="onKeyDown">
 			<option v-if="!value" disabled selected>{{ placeholder }}</option>
-			<option
-v-for="option in options" :key="option.index" :value="option.index"
+			<option v-for="option in options" :key="option.index" :value="option.index"
 				:disabled="option.disabled">
 				{{ option.label }}
 			</option>
 		</select>
 		<span v-if="placeholder" class="select-input--placeholder">{{
-				placeholder
+			placeholder
 		}}</span>
 		<Icon class="dropdown--icon">
 			<i-ri-arrow-up-s-line v-if="focused" />

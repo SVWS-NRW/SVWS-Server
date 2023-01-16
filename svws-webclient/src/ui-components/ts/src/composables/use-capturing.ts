@@ -81,17 +81,17 @@ export default function useCapturing() {
 		}
 	}
 
-  onUnmounted(() => {
-    stopCapturing();
-  })
+	onUnmounted(() => {
+		stopCapturing();
+	})
 
 	return {
-    videoEl,
-    canvasEl,
+		videoEl,
+		canvasEl,
 		isCapturing,
 		toggleCapturing,
 		currentSnapshot,
-    toggleSnapshot,
-    capturingError
+		toggleSnapshot,
+		capturingError
 	};
 }

@@ -49,8 +49,8 @@
 			onKeydown,
 			...(autoresize
 				? {
-						contenteditable: !disabled
-				  }
+					contenteditable: !disabled
+				}
 				: {
 					rows,
 					cols,
@@ -112,8 +112,7 @@
 </script>
 
 <template>
-	<label
-		class="textarea-input"
+	<label class="textarea-input"
 		:class="{
 			'textarea-input-focus': focused,
 			'textarea-input-filled': !!modelValue,
@@ -124,16 +123,13 @@
 			'textarea-input--resize-horizontal': resizeable === 'horizontal',
 			'textarea-input--resize-vertical': resizeable === 'vertical',
 			'textarea-input--resize-both': resizeable === 'both'
-		}"
-	>
+		}">
 		<component :is="tag" v-bind="bindings" class="textarea-input--control" ref="element" />
-		<span
-			v-if="placeholder"
+		<span v-if="placeholder"
 			class="textarea-input--placeholder"
 			:class="{
 				'textarea-input--placeholder--required': required
-			}"
-		>
+			}">
 			{{ placeholder }}
 			<i-ri-bar-chart-fill v-if="statistics" class="ml-2" />
 		</span>

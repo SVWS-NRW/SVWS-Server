@@ -1,49 +1,47 @@
 <script setup lang='ts'>
-const {
-	name = '',
-	label = '',
-	value = '',
-	disabled = false,
-	statistics = false,
-	modelValue = '',
-} = defineProps<{
-	name?: string;
-	label?: string;
-	value?: string;
-	disabled?: boolean;
-	statistics?: boolean;
-	modelValue?: string;
-}>();
+	const {
+		name = '',
+		label = '',
+		value = '',
+		disabled = false,
+		statistics = false,
+		modelValue = '',
+	} = defineProps<{
+		name?: string;
+		label?: string;
+		value?: string;
+		disabled?: boolean;
+		statistics?: boolean;
+		modelValue?: string;
+	}>();
 
-const emit = defineEmits<{
-	(e: 'update:modelValue', value: string): void,
-}>();
+	const emit = defineEmits<{
+		(e: 'update:modelValue', value: string): void,
+	}>();
 
-function onInput(event: Event) {
-	if (!disabled) {
-		emit("update:modelValue", (event.target as HTMLInputElement).value);
+	function onInput(event: Event) {
+		if (!disabled) {
+			emit("update:modelValue", (event.target as HTMLInputElement).value);
+		}
 	}
-}
 
-const checked = computed({
-	get() {
-		return modelValue;
-	},
-	set(value: string) {
-		emit('update:modelValue', value);
-	}
-})
+	const checked = computed({
+		get() {
+			return modelValue;
+		},
+		set(value: string) {
+			emit('update:modelValue', value);
+		}
+	})
 </script>
 
 <template>
-	<label
-class="radio--label" :class="{
+	<label class="radio--label" :class="{
 		'radio--label--disabled': disabled,
 		'radio--statistics': statistics
 	}">
-		<input
-v-model="checked" type="radio" :name="name" :value="value" :disabled="disabled" class="radio--indicator"
-			@input="onInput" />
+		<input v-model="checked" type="radio" :name="name" :value="value" :disabled="disabled" class="radio--indicator"
+			@input="onInput">
 		<span class="radio--label">{{ label }}
 			<i-ri-bar-chart-fill v-if="statistics" class="ml-2" />
 		</span>

@@ -1,40 +1,39 @@
 <script lang="ts" setup>
-type CheckboxValue = string | number | boolean;
-type ModelValue = boolean | Array<CheckboxValue> | undefined;
+	type CheckboxValue = string | number | boolean;
+	type ModelValue = boolean | Array<CheckboxValue> | undefined;
 
-const {
-	value = '',
-	statistics = false,
-	disabled = false,
-	circle = false,
-	modelValue,
-	headless = false
-} = defineProps<{
-	value?: CheckboxValue;
-	modelValue: ModelValue;
-	statistics?: boolean;
-	disabled?: boolean;
-	circle?: boolean;
-	headless?: boolean;
-}>();
+	const {
+		value = '',
+		statistics = false,
+		disabled = false,
+		circle = false,
+		modelValue,
+		headless = false
+	} = defineProps<{
+		value?: CheckboxValue;
+		modelValue: ModelValue;
+		statistics?: boolean;
+		disabled?: boolean;
+		circle?: boolean;
+		headless?: boolean;
+	}>();
 
-const emit = defineEmits<{
-	(e: 'update:modelValue', event: ModelValue): void;
-}>();
+	const emit = defineEmits<{
+		(e: 'update:modelValue', event: ModelValue): void;
+	}>();
 
-const model = computed({
-	get(): ModelValue {
-		return modelValue;
-	},
-	set(value: ModelValue) {
-		emit("update:modelValue", value);
-	}
-});
+	const model = computed({
+		get(): ModelValue {
+			return modelValue;
+		},
+		set(value: ModelValue) {
+			emit("update:modelValue", value);
+		}
+	});
 </script>
 
 <template>
-	<label
-		class="checkbox"
+	<label class="checkbox"
 		:class="{
 			'checkbox--disabled': disabled,
 			'checkbox--statistics': statistics,
@@ -42,7 +41,7 @@ const model = computed({
 			'checkbox--circle': circle,
 			'checkbox--headless': headless
 		}">
-		<input v-model="model" class="checkbox--control" type="checkbox" :value="value" :disabled="disabled" :title="disabled ? 'Deaktiviert' : ''" />
+		<input v-model="model" class="checkbox--control" type="checkbox" :value="value" :disabled="disabled" :title="disabled ? 'Deaktiviert' : ''">
 		<Icon v-if="modelValue">
 			<i-ri-checkbox-line v-if="!circle" />
 			<i-ri-checkbox-circle-fill v-if="circle" />
@@ -53,7 +52,7 @@ const model = computed({
 		<span class="checkbox--label" v-if="$slots.default || statistics">
 			<slot />
 			<Icon v-if="statistics" class="ml-1">
-				<i-ri-bar-chart-fill  />
+				<i-ri-bar-chart-fill />
 			</Icon>
 		</span>
 	</label>

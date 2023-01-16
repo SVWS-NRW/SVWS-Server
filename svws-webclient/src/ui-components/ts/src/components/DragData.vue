@@ -1,14 +1,12 @@
 <template>
-	<component
-		:is="tag"
+	<component :is="tag"
 		:draggable="draggable"
 		@drag="drag"
 		@dragstart="start"
 		@dragenter="enter"
 		@dragleave="leave"
-		@dragend="end"
-	>
-		<slot :dragging="dragging"></slot>
+		@dragend="end">
+		<slot :dragging="dragging" />
 	</component>
 </template>
 
