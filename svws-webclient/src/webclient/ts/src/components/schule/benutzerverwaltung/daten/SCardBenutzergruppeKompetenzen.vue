@@ -2,10 +2,9 @@
 	<svws-ui-content-card title="Kompetenzen">
 		<div class="overflow-x-auto relative shadow-md sm:rounded-lg">
 			<table class="w-full ">
-				<s-kompetenzgruppe v-for="kompetenzgruppe in BenutzerKompetenzGruppe.values()" :key="kompetenzgruppe.daten.id" :kompetenzgruppe="kompetenzgruppe" :istAdmin="istAdmin" :benutzertyp=1>
-                </s-kompetenzgruppe>
-             </table>
-        </div>
+				<s-kompetenzgruppe v-for="kompetenzgruppe in BenutzerKompetenzGruppe.values()" :key="kompetenzgruppe.daten.id" :kompetenzgruppe="kompetenzgruppe" :ist-admin="istAdmin" :benutzertyp="1" />
+			</table>
+		</div>
 	</svws-ui-content-card>
 </template>
 

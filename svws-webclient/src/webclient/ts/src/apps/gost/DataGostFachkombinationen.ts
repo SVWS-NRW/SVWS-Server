@@ -30,12 +30,12 @@ export class DataGostFachkombinationen extends BaseData<List<GostJahrgangFachkom
 	 * Aktualisierung von Auswahllisten zusätzlich zu den Daten, etc.).
 	 *
 	 * @param {Partial<GostJahrgangFachkombination>} data   Die Daten, die aktualisiert werden sollen
-	 * 
+	 *
 	 * @returns {Promise<boolean>} True, wenn die Daten aktualisiert wurden, sonst false
 	 */
 	public async patch(data: Partial<GostJahrgangFachkombination>, fachkombi: GostJahrgangFachkombination, abiturjahr?: number): Promise<boolean> {
 		const daten = this._daten;
-		if (!daten) 
+		if (!daten)
 			return false;
 		return this._patchElement(data, () => App.api.patchGostFachkombination(data, App.schema, fachkombi.id), daten.indexOf(fachkombi));
 	}
@@ -43,9 +43,9 @@ export class DataGostFachkombinationen extends BaseData<List<GostJahrgangFachkom
 
 	/**
 	 * Fügt eine neue Regel für eine Fachkombination von dem angegebenen Typ hinzu
-	 * 
+	 *
 	 * @param {GostLaufbahnplanungFachkombinationTyp} typ
-	 * 
+	 *
 	 * @returns {Promise<GostJahrgangFachkombination | undefined>} Ein Kursobjekt bei Erfolg
 	 */
 	 public async add(typ: GostLaufbahnplanungFachkombinationTyp): Promise<GostJahrgangFachkombination | undefined> {
@@ -61,9 +61,9 @@ export class DataGostFachkombinationen extends BaseData<List<GostJahrgangFachkom
 
 	/**
 	 * Entfernt die Regel für eine Fachkombination mit der angegebenen ID.
-	 * 
+	 *
 	 * @param {number} id
-	 * 
+	 *
 	 * @returns {Promise<GostJahrgangFachkombination | undefined>} Ein Kursobjekt bei Erfolg
 	 */
 	 public async delete(id: number): Promise<GostJahrgangFachkombination | undefined> {

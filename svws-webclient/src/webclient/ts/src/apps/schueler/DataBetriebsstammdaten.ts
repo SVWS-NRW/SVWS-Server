@@ -4,7 +4,7 @@ import {  BetriebStammdaten, SchuelerBetriebsdaten} from "@svws-nrw/svws-core-ts
 import { BaseData } from "../BaseData";
 
 export class DataBetriebsstammdaten extends BaseData<BetriebStammdaten, SchuelerBetriebsdaten> {
-	
+
 	/** Erstellt ein neues Objekt dieser Klasse. */
 	public constructor() {
 		super();

@@ -17,9 +17,9 @@ export class RouteSchuelerLeistungen extends RouteNode<unknown, RouteSchueler> {
 		];
 	}
 
-    public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
+	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
 		return { name: routeSchuelerLeistungenDaten.name, params: to_params };
-    }
+	}
 
 }
 

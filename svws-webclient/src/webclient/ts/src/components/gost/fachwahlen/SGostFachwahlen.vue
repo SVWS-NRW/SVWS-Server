@@ -13,7 +13,7 @@
 	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 	import { routeGostFachwahlen } from "~/router/apps/gost/RouteGostFachwahlen";
 
-	const { item, dataFachwahlen } = defineProps<{ 
+	const { item, dataFachwahlen } = defineProps<{
 		item: ShallowRef<GostJahrgang | undefined>;
 		dataFachwahlen: DataGostSchuelerFachwahlen;
 		schule: DataSchuleStammdaten;

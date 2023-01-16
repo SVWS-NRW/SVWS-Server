@@ -7,9 +7,9 @@
 			</nav>
 		</template>
 		<template #abschnitt>
-			<svws-ui-multi-select v-if="schule_abschnitte" v-model="akt_abschnitt" :items="schule_abschnitte" :item-sort="item_sort" :item-text="item_text"></svws-ui-multi-select>
+			<svws-ui-multi-select v-if="schule_abschnitte" v-model="akt_abschnitt" :items="schule_abschnitte" :item-sort="item_sort" :item-text="item_text" />
 		</template>
-		<template #header> </template>
+		<template #header />
 		<template #content>
 			<div class="container">
 				<svws-ui-table v-model="selected" :columns="cols" :data="rows" />
@@ -46,9 +46,9 @@
 
 	const schule_abschnitte: ComputedRef< Array<Schuljahresabschnitt> | undefined > =
 		computed(() => {
-		const liste = appSchule.value.schuleStammdaten.daten?.abschnitte;
-		return liste?.toArray(new Array<Schuljahresabschnitt>()) || [];
-	});
+			const liste = appSchule.value.schuleStammdaten.daten?.abschnitte;
+			return liste?.toArray(new Array<Schuljahresabschnitt>()) || [];
+		});
 
 	const akt_abschnitt: WritableComputedRef<Schuljahresabschnitt> = computed({
 		get(): Schuljahresabschnitt {

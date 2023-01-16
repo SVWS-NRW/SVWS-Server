@@ -23,10 +23,10 @@ export class RouteGostFachwahlen extends RouteNode<RouteDataGostKursplanung, Rou
 	}
 
 	public checkHidden(jahrgang: GostJahrgang | undefined) {
-		return (jahrgang === undefined) || (jahrgang.abiturjahr === -1);;
+		return (jahrgang === undefined) || (jahrgang.abiturjahr === -1);
 	}
 
-    public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
+	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
 		if (to.name === this.name) {
 			if (to_params.abiturjahr === undefined)
 				return false;
@@ -34,10 +34,10 @@ export class RouteGostFachwahlen extends RouteNode<RouteDataGostKursplanung, Rou
 			if (this.checkHidden(jahrgang))
 				return { name: this.parent!.defaultChild!.name, params: { abiturjahr: this.parent!.liste.liste.at(0)?.abiturjahr }};
 		}
-        return true;
-    }
+		return true;
+	}
 
-    public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
+	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
 		if (to_params.abiturjahr === undefined) {
 			this.onSelect(undefined);
 		} else {

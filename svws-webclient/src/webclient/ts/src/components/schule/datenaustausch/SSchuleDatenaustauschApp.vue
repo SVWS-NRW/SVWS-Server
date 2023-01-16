@@ -15,8 +15,8 @@
 </template>
 
 <script setup lang="ts">
-import { injectMainApp, Main } from "~/apps/Main";
+	import { injectMainApp, Main } from "~/apps/Main";
 
-const main: Main = injectMainApp();
-const app = main.apps.schule;
+	const main: Main = injectMainApp();
+	const app = main.apps.schule;
 </script>

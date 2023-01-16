@@ -1,7 +1,7 @@
 /**
  * Sammlung von FeedbackValues unter IDs
  */
- export type ApiStatus = {
+export type ApiStatus = {
 	[key: number]: FeedbackValues
 }
 

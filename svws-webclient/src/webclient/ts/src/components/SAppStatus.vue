@@ -1,6 +1,6 @@
 <template>
 	<footer class="status svws-ui-bg-white svws-ui-text-black svws-ui-border-dark-20">
-		<s-loading-status v-if="loading"></s-loading-status>
+		<s-loading-status v-if="loading" />
 		<span v-if="error" class="text-red-400 font-bold">{{ error }}</span>
 	</footer>
 </template>

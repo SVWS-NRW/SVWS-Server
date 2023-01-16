@@ -23,13 +23,13 @@
 	import { ListSchuelerBetriebsdaten } from "~/apps/schueler/ListSchuelerBetriebsdaten";
 	import { routeSchuelerAdressen } from "~/router/apps/schueler/RouteSchuelerAdressen";
 
-	const { listSchuelerbetriebe, betriebsStammdaten } = defineProps<{ 
+	const { listSchuelerbetriebe, betriebsStammdaten } = defineProps<{
 		item: ShallowRef<SchuelerListeEintrag | undefined>;
 		listSchuelerbetriebe : ListSchuelerBetriebsdaten;
 		betriebsStammdaten: DataBetriebsstammdaten;
 	}>();
 
-	const sb_vorhanden : ComputedRef<boolean> = computed(() => { 
+	const sb_vorhanden : ComputedRef<boolean> = computed(() => {
 		return listSchuelerbetriebe?.liste.length > 0 ? true : false;
 	});
 

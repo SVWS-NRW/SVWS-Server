@@ -2,7 +2,7 @@
 	<svws-ui-content-card title="Klassenleitungen">
 		<div class="content-wrapper">
 			<div class="input-wrapper">
-				<svws-ui-table :columns="cols" :data="liste" :footer="false"/>
+				<svws-ui-table :columns="cols" :data="liste" :footer="false" />
 			</div>
 		</div>
 	</svws-ui-content-card>
@@ -15,7 +15,7 @@
 	import { DataKlasse } from "~/apps/klassen/DataKlasse";
 	import { ListLehrer } from "~/apps/lehrer/ListLehrer";
 	import type { DataTableColumn } from "@svws-nrw/svws-ui";
-	
+
 	type Lehrer = {
 		kuerzel?: string;
 		nachname?: string;
@@ -23,24 +23,24 @@
 		typ?: string;
 	}
 
-	const { data, mapLehrer } = defineProps<{ 
+	const { data, mapLehrer } = defineProps<{
 		data: DataKlasse,
 		listLehrer: ListLehrer,
 		mapLehrer: Map<Number, LehrerListeEintrag>
 	}>();
 
 	const liste: ComputedRef<Lehrer[]> = computed(() => {
-		if (data.daten?.klassenLeitungen === undefined) 
+		if (data.daten?.klassenLeitungen === undefined)
 			return [];
 		return (data.daten.klassenLeitungen?.toArray() as Number[]).map((id : Number) => {
 			const lehrer = mapLehrer.get(id);
 			if (lehrer === undefined)
 				return {};
-			return { 
-				kuerzel: lehrer.kuerzel.toString(), 
-				nachname: lehrer.nachname.toString(), 
-				vorname: lehrer.vorname.toString(), 
-				typ: PersonalTyp.fromBezeichnung(lehrer.personTyp)?.bezeichnung.toString() || undefined 
+			return {
+				kuerzel: lehrer.kuerzel.toString(),
+				nachname: lehrer.nachname.toString(),
+				vorname: lehrer.vorname.toString(),
+				typ: PersonalTyp.fromBezeichnung(lehrer.personTyp)?.bezeichnung.toString() || undefined
 			};
 		});
 	});

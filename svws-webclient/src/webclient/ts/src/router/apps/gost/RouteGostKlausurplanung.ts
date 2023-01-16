@@ -37,7 +37,7 @@ export class RouteGostKlausurplanung extends RouteNode<unknown, RouteGost> {
 		return (abiturjahr === undefined) || (abiturjahr === -1);
 	}
 
-    public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
+	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
 		if (to.name === this.name) {
 			if (to_params.abiturjahr === undefined)
 				return false;
@@ -45,26 +45,26 @@ export class RouteGostKlausurplanung extends RouteNode<unknown, RouteGost> {
 			if (this.checkHidden(jahrgang))
 				return { name: this.parent!.defaultChild!.name, params: { abiturjahr: routeGost.liste.liste.at(0)?.abiturjahr }};
 		}
-        return true;
-    }
+		return true;
+	}
 
-    /**
+	/**
      * TODO
-     * 
-     * @returns 
+     *
+     * @returns
      */
-    public getChildRouteSelector() {
-        const router = useRouter();
-        const selectedRoute: WritableComputedRef<RouteRecordRaw> = computed({
-            get: () => this.selectedChildRecord || this.defaultChild!.record,
-            set: (value) => {
-                this.selectedChildRecord = value;
+	public getChildRouteSelector() {
+		const router = useRouter();
+		const selectedRoute: WritableComputedRef<RouteRecordRaw> = computed({
+			get: () => this.selectedChildRecord || this.defaultChild!.record,
+			set: (value) => {
+				this.selectedChildRecord = value;
 				const abiturjahr = (routeGost.data.item.value === undefined) ? undefined : "" + routeGost.data.item.value.abiturjahr;
-                router.push({ name: value.name, params: { abiturjahr: abiturjahr } });
-            }
-        });
-        return selectedRoute;
-    }
+				router.push({ name: value.name, params: { abiturjahr: abiturjahr } });
+			}
+		});
+		return selectedRoute;
+	}
 
 }
 

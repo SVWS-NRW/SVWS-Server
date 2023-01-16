@@ -14,15 +14,15 @@
 				</svws-ui-text-input>
 			</div>
 			<div class="pl-3 pt-6 container">
-				<svws-ui-table v-model="selected" v-model:selection="selectedItems"  :columns="cols" :data="rowsFiltered" is-multi-select :footer="true">
+				<svws-ui-table v-model="selected" v-model:selection="selectedItems" :columns="cols" :data="rowsFiltered" is-multi-select :footer="true">
 					<template #footer>
-						<s-modal-benutzergruppe-neu :show_delete_icon="selectedItems.length" />						
+						<s-modal-benutzergruppe-neu :show_delete_icon="selectedItems.length" />
 					</template>
 				</svws-ui-table>
 			</div>
 			<!-- Wechsel zu den Benutzern -->
-			<div class="px-1 pt-3 text-lg font-bold" @click="router.push({ name: routeSchuleBenutzer.name })"> 
-				<i-ri-arrow-right-line class="inline-block cursor-pointer" /> 
+			<div class="px-1 pt-3 text-lg font-bold" @click="router.push({ name: routeSchuleBenutzer.name })">
+				<i-ri-arrow-right-line class="inline-block cursor-pointer" />
 				<div class="px-1 pt-3 text-lg font-bold inline-block cursor-pointer"> Benutzer  </div>
 			</div>
 		</template>
@@ -59,10 +59,10 @@
 	});
 
 	const rowsFiltered: ComputedRef<BenutzergruppeListeEintrag[] | undefined> = computed(() => {
-		if (rows.value === undefined) 
+		if (rows.value === undefined)
 			return undefined;
 		const rowsValue: BenutzergruppeListeEintrag[] = rows.value;
-		return (search.value) 
+		return (search.value)
 			? rowsValue.filter((e: BenutzergruppeListeEintrag) => e.bezeichnung.toLocaleLowerCase().includes(search.value.toLocaleLowerCase()))
 			: rowsValue;
 	});

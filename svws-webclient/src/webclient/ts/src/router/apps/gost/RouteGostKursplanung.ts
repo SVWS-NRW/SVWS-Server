@@ -18,12 +18,12 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 	public constructor() {
 		super("gost_kursplanung", "kursplanung/:halbjahr([0-5])?", SGostKursplanungEmpty, new RouteDataGostKursplanung());
 		super.propHandler = (route) => this.getProps(route);
-        super.setView("gost_kursplanung_auswahl", SGostKursplanungAuswahl, (route) => this.getProps(route));
+		super.setView("gost_kursplanung_auswahl", SGostKursplanungAuswahl, (route) => this.getProps(route));
 		super.text = "Kursplanung";
 		super.children = [
 			routeGostKursplanungHalbjahr
 		];
-        super.defaultChild = routeGostKursplanungHalbjahr;
+		super.defaultChild = routeGostKursplanungHalbjahr;
 		this.isHidden = (params: RouteParams) => {
 			return this.checkHidden(params);
 		}
@@ -34,7 +34,7 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 		return (abiturjahr === undefined) || (abiturjahr === -1);
 	}
 
-    public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
+	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
 		const abiturjahr = to_params.abiturjahr === undefined ? undefined : parseInt(to_params.abiturjahr as string);
 		if (abiturjahr === undefined)
 			return false;
@@ -42,12 +42,12 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 		if ((jahrgang === undefined) || (jahrgang.abiturjahr === -1))
 			return this.getRoute(-1);
 		return true;
-    }
+	}
 
-    public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) {
-    }
+	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) {
+	}
 
-    protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<any> {
+	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<any> {
 		// Prüfe das Abiturjahr
 		const abiturjahr = to_params.abiturjahr === undefined ? undefined : parseInt(to_params.abiturjahr as string);
 		if (abiturjahr === undefined)
@@ -79,20 +79,20 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 		return { name: this.name, params: { abiturjahr: abiturjahr, halbjahr: halbjahr }};
 	}
 
-    public getSelector() : WritableComputedRef<GostHalbjahr> {
-        const router = useRouter();
-        return computed({
-            get: () => {
+	public getSelector() : WritableComputedRef<GostHalbjahr> {
+		const router = useRouter();
+		return computed({
+			get: () => {
 				return this.data.halbjahr.value;
 			},
-            set: (value) => {
-                this.data.halbjahr.value = value;
-                const id_value = "" + value.id;
+			set: (value) => {
+				this.data.halbjahr.value = value;
+				const id_value = "" + value.id;
 				const params = { abiturjahr: routeGost.data.item.value!.abiturjahr, halbjahr: id_value };
 				router.push({ name: this.defaultChild!.name, params: params });
-            }
-        });
-    }
+			}
+		});
+	}
 
 }
 

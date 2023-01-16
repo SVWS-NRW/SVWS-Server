@@ -20,7 +20,7 @@ export class DataStundenplan extends BaseData<
 	 */
 	public async on_select(): Promise<SchuelerStundenplan | undefined> {
 		const schueler = routeSchueler.liste.ausgewaehlt;
-		if (!schueler) 
+		if (!schueler)
 			return;
 		return super._select((eintrag: StundenplanListeEintrag) => App.api.getSchuelerStundenplan(App.schema, eintrag.id, schueler.id));
 	}

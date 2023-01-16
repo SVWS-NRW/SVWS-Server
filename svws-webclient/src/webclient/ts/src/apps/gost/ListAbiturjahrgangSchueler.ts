@@ -63,10 +63,10 @@ export class ListAbiturjahrgangSchueler extends BaseList<SchuelerListeEintrag, F
 		manager.getMengeDerSchuelerMitKollisionen
 		const pKonfliktTyp = 0 + (this._filter.kollisionen ? 1:0) + (this._filter.nichtwahlen ? 2:0)
 		const res = manager.getMengeDerSchuelerGefiltert(this._filter.kurs?.id || 0,
-				this._filter.fach?.id || 0,
-				this._filter.kursart?.id || 0,
-				pKonfliktTyp,
-				this._filter.name);
+			this._filter.fach?.id || 0,
+			this._filter.kursart?.id || 0,
+			pKonfliktTyp,
+			this._filter.name);
 		const set = new Set();
 		for (const s of res)
 			set.add(s.id);

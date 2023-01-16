@@ -18,7 +18,7 @@
 	import { GostHalbjahr } from "@svws-nrw/svws-core-ts";
 	import { DataGostJahrgang } from "~/apps/gost/DataGostJahrgang";
 
-	const { jahrgangsdaten } = defineProps<{ 
+	const { jahrgangsdaten } = defineProps<{
 		jahrgangsdaten: DataGostJahrgang;
 	}>();
 
@@ -32,13 +32,13 @@
 	});
 
 	const inputBeginnZusatzkursGE: WritableComputedRef<GostHalbjahr> = computed({
-		get(): GostHalbjahr { 
+		get(): GostHalbjahr {
 			if (jahrgangsdaten.daten === undefined)
 				return GostHalbjahr.Q21;
-			return GostHalbjahr.fromKuerzel(jahrgangsdaten.daten.beginnZusatzkursGE) || GostHalbjahr.Q21; 
+			return GostHalbjahr.fromKuerzel(jahrgangsdaten.daten.beginnZusatzkursGE) || GostHalbjahr.Q21;
 		},
-		set(val: GostHalbjahr) { 
-			jahrgangsdaten.patch({ beginnZusatzkursGE: val.kuerzel }); 
+		set(val: GostHalbjahr) {
+			jahrgangsdaten.patch({ beginnZusatzkursGE: val.kuerzel });
 		}
 	});
 
@@ -48,13 +48,13 @@
 	});
 
 	const inputBeginnZusatzkursSW: WritableComputedRef<GostHalbjahr> = computed({
-		get(): GostHalbjahr { 
+		get(): GostHalbjahr {
 			if (jahrgangsdaten.daten === undefined)
 				return GostHalbjahr.Q21;
-			return GostHalbjahr.fromKuerzel(jahrgangsdaten.daten.beginnZusatzkursSW) || GostHalbjahr.Q21; 
+			return GostHalbjahr.fromKuerzel(jahrgangsdaten.daten.beginnZusatzkursSW) || GostHalbjahr.Q21;
 		},
-		set(val: GostHalbjahr) { 
-			jahrgangsdaten.patch({ beginnZusatzkursSW: val.kuerzel }); 
+		set(val: GostHalbjahr) {
+			jahrgangsdaten.patch({ beginnZusatzkursSW: val.kuerzel });
 		}
 	});
 

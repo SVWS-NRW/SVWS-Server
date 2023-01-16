@@ -4,7 +4,7 @@
 			<span>Lehrkräfte</span>
 		</template>
 		<template #abschnitt>
-			<svws-ui-multi-select v-if="schule_abschnitte" v-model="akt_abschnitt" :items="schule_abschnitte" :item-sort="item_sort" :item-text="item_text"></svws-ui-multi-select>
+			<svws-ui-multi-select v-if="schule_abschnitte" v-model="akt_abschnitt" :items="schule_abschnitte" :item-sort="item_sort" :item-text="item_text" />
 		</template>
 		<template #header>
 			<div>
@@ -17,21 +17,21 @@
 			<div class="container">
 				<svws-ui-table v-model="selected" :columns="cols" :data="rowsFiltered" :footer="false" is-multi-select>
 					<template #cell-actions="{ row }">
-          				<svws-ui-popover :hover="false" placement="left-end" :disable-click-away="false">
-            				<template #trigger>
-              					<button class="action-button">
-                					<svws-ui-icon> <i-ri-more-2-fill /> </svws-ui-icon>
-              					</button>
-            				</template>
-            				<template #content>
-              					<div class="action-items">
-                					<div v-for="action in actions" :key="action.action">
-                  						<button class="action-item" @click="onAction(action.action, row)">{{ action.label }}</button>
-                					</div>
-              					</div>
-            				</template>
-          				</svws-ui-popover>
-        			</template>
+						<svws-ui-popover :hover="false" placement="left-end" :disable-click-away="false">
+							<template #trigger>
+								<button class="action-button">
+									<svws-ui-icon> <i-ri-more-2-fill /> </svws-ui-icon>
+								</button>
+							</template>
+							<template #content>
+								<div class="action-items">
+									<div v-for="action in actions" :key="action.action">
+										<button class="action-item" @click="onAction(action.action, row)">{{ action.label }}</button>
+									</div>
+								</div>
+							</template>
+						</svws-ui-popover>
+					</template>
 				</svws-ui-table>
 			</div>
 		</template>
@@ -64,7 +64,7 @@
 
 	const main: Main = injectMainApp();
 
-	const { schule } = defineProps<{ 
+	const { schule } = defineProps<{
 		item: ShallowRef<LehrerListeEintrag | undefined>;
 		stammdaten: DataLehrerStammdaten;
 		schule: DataSchuleStammdaten;
@@ -102,7 +102,7 @@
 	});
 
 	const item_sort = (a: Schuljahresabschnitt, b: Schuljahresabschnitt) => b.schuljahr + b.abschnitt * 0.1 - (a.schuljahr + a.abschnitt * 0.1);
-	
+
 	const item_text = (item: Schuljahresabschnitt) => item.schuljahr ? `${item.schuljahr}, ${item.abschnitt}. HJ` : "Abschnitt";
 
 </script>

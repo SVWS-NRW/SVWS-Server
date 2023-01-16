@@ -7,27 +7,27 @@
 						<td v-if=" row === selected_blockungauswahl ">
 							<div class="flex">
 								<span v-if="(!edit_blockungsname && row === selected_blockungauswahl)" class="text-input--inline" @click.stop="edit_blockungsname = true">
-									{{row.name}}
+									{{ row.name }}
 								</span>
-								<svws-ui-text-input v-else :modelValue="row.name.toString()" style="width: 10rem" headless focus
-									@keyup.enter="edit_blockungsname=false" @keyup.escape="edit_blockungsname=false" @update:modelValue="patch_blockung"/>
+								<svws-ui-text-input v-else :model-value="row.name.toString()" style="width: 10rem" headless focus
+									@keyup.enter="edit_blockungsname=false" @keyup.escape="edit_blockungsname=false" @update:modelValue="patch_blockung" />
 							</div>
-							<svws-ui-icon v-if="row.istAktiv" > <i-ri-pushpin-fill /> </svws-ui-icon>
+							<svws-ui-icon v-if="row.istAktiv"> <i-ri-pushpin-fill /> </svws-ui-icon>
 							<div v-if="allow_add_blockung(props.halbjahr.value)" class="flex gap-1">
-								<svws-ui-button size="small" type="secondary" @click.stop="create_blockungsergebnisse" title="Ergebnisse berechnen" :disabled="pending">Berechnen</svws-ui-button >
+								<svws-ui-button size="small" type="secondary" @click.stop="create_blockungsergebnisse" title="Ergebnisse berechnen" :disabled="pending">Berechnen</svws-ui-button>
 								<svws-ui-button size="small" type="error" @click.stop="toggle_remove_blockung_modal" title="Blockung löschen" :disabled="pending">
-									<svws-ui-icon><i-ri-delete-bin-2-line/></svws-ui-icon>
+									<svws-ui-icon><i-ri-delete-bin-2-line /></svws-ui-icon>
 								</svws-ui-button>
 							</div>
 						</td>
 						<td v-else>
 							<div class="flex justify-between w-full">
-								<span>{{row.name}}</span>
-								<svws-ui-icon v-if="row.istAktiv" > <i-ri-pushpin-fill /> </svws-ui-icon>
+								<span>{{ row.name }}</span>
+								<svws-ui-icon v-if="row.istAktiv"> <i-ri-pushpin-fill /> </svws-ui-icon>
 							</div>
 						</td>
 					</tr>
-					<auswahl-blockung-api-status :blockung="row"/>
+					<auswahl-blockung-api-status :blockung="row" />
 				</template>
 			</template>
 		</svws-ui-table>
@@ -49,11 +49,11 @@
 
 <script setup lang="ts">
 
-    import { GostBlockungListeneintrag, GostHalbjahr, GostJahrgang, List } from '@svws-nrw/svws-core-ts';
-    import { computed, ComputedRef, ref, Ref, ShallowRef, WritableComputedRef } from 'vue';
-    import { DataGostJahrgang } from '~/apps/gost/DataGostJahrgang';
+	import { GostBlockungListeneintrag, GostHalbjahr, GostJahrgang, List } from '@svws-nrw/svws-core-ts';
+	import { computed, ComputedRef, ref, Ref, ShallowRef, WritableComputedRef } from 'vue';
+	import { DataGostJahrgang } from '~/apps/gost/DataGostJahrgang';
 	import { GOST_CREATE_BLOCKUNG_SYMBOL } from "~/apps/core/LoadingSymbols";
-    import { injectMainApp, Main } from '~/apps/Main';
+	import { injectMainApp, Main } from '~/apps/Main';
 	import { DataSchuleStammdaten } from '~/apps/schule/DataSchuleStammdaten';
 	import { DataGostFaecher } from '~/apps/gost/DataGostFaecher';
 	import { App } from '~/apps/BaseApp';
@@ -63,7 +63,7 @@
 	import { useRouter } from 'vue-router';
 	import { routeGostKlausurplanung } from '~/router/apps/gost/RouteGostKlausurplanung';
 
-	const props = defineProps<{ 
+	const props = defineProps<{
 		item: ShallowRef<GostJahrgang | undefined>;
 		schule: DataSchuleStammdaten;
 		jahrgangsdaten: DataGostJahrgang;
@@ -77,7 +77,7 @@
 
 	const main: Main = injectMainApp();
 
-    const edit_blockungsname: Ref<boolean> = ref(false);
+	const edit_blockungsname: Ref<boolean> = ref(false);
 
 	const rows_blockungswahl: ComputedRef<GostBlockungListeneintrag[]> = computed(() => props.listBlockungen.liste);
 
@@ -141,11 +141,11 @@
 	const modal_remove_blockung: Ref<any> = ref(null);
 	function toggle_remove_blockung_modal() {
 		modal_remove_blockung.value.isOpen ? modal_remove_blockung.value.closeModal() : modal_remove_blockung.value.openModal();
-	};
+	}
 
-    const visible: ComputedRef<boolean> = computed(() => {
+	const visible: ComputedRef<boolean> = computed(() => {
 		return rows_blockungswahl.value.length > 0;
-    });
+	});
 
 </script>
 

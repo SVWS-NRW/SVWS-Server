@@ -2,13 +2,13 @@
 	<svws-ui-content-card title="Laufbahnplanung">
 		<div class="content-wrapper">
 			Eine Lupo Datei importieren
-			<br /><input type="file" accept=".lup" @change="import_file" />
-			<br />{{
+			<br><input type="file" accept=".lup" @change="import_file">
+			<br>{{
 				status === false
 					? "Fehler beim Upload"
 					: status === true
-					? "Upload erfolgreich"
-					: ""
+						? "Upload erfolgreich"
+						: ""
 			}}
 		</div>
 	</svws-ui-content-card>

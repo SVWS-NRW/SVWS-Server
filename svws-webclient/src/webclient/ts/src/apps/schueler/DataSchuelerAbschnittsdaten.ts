@@ -44,7 +44,7 @@ export class DataSchuelerAbschnittsdaten extends BaseData<
 	 */
 	public async patch(data: Partial<SchuelerLernabschnittsdaten>): Promise<boolean> {
 		const daten = this._daten;
-		if (!daten) 
+		if (!daten)
 			return false;
 		// TODO richtige Patch-Methode suchen
 		// return this._patch(data, () => App.api.patchSchuelerLernabschnittsdaten(data as SchuelerLernabschnittsdaten, App.schema, daten.id));
@@ -54,7 +54,7 @@ export class DataSchuelerAbschnittsdaten extends BaseData<
 
 	public async patchLeistung(data: Partial<SchuelerLeistungsdaten>, idLeistung: number): Promise<boolean> {
 		const daten = this._daten;
-		if (!daten) 
+		if (!daten)
 			return false;
 		// TODO Patch-Methode aufrufen: await App.api.patchSchuelerLeistungsdaten(data, App.schema, idLeistung)
 		// TODO Daten anpassen

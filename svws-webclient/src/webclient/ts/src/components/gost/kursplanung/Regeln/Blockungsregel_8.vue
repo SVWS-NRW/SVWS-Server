@@ -1,7 +1,7 @@
 <template>
 	<BlockungsregelBase v-model="regel" :regel-typ="regel_typ" @regel-hinzugefuegt="regel_hinzufuegen">
 		<template #beschreibung="{ regel: r }">
-			{{kursbezeichnung1(r)}} nie zusammen mit {{kursbezeichnung2(r)}}
+			{{ kursbezeichnung1(r) }} nie zusammen mit {{ kursbezeichnung2(r) }}
 		</template>
 		<parameter-kurs v-model="kurs1" :data-faecher="dataFaecher" />
 		immer zusammen mit
@@ -16,7 +16,7 @@
 	import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
 	import { useKurse, useRegelParameterKurs, createKursbezeichnungsGetter } from '../composables';
 
-	const { dataFaecher } = defineProps<{ 
+	const { dataFaecher } = defineProps<{
 		dataFaecher: DataGostFaecher;
 	}>();
 

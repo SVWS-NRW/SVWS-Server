@@ -11,8 +11,8 @@
 	import { computed, ComputedRef, ShallowRef } from "vue";
 	import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
 	import { routeSchuelerLeistungen } from "~/router/apps/schueler/RouteSchuelerLeistungen";
-	
-	const props = defineProps<{ 
+
+	const props = defineProps<{
 		item: ShallowRef<SchuelerListeEintrag | undefined>;
 		stammdaten: DataSchuelerStammdaten;
 	}>();

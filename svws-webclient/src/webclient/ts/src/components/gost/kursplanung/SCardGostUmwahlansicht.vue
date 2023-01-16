@@ -5,8 +5,8 @@
 				<div class="">
 					<div class="overflow-hidden rounded-lg shadow">
 						<table class="border-collapse text-sm">
-							<s-kurs-schueler-schiene v-for="schiene in schienen" :key="schiene.id" :schiene="schiene" :selected="selected" 
-								:blockung="blockung" :ergebnis="ergebnis" :allow_regeln="allow_regeln"/>
+							<s-kurs-schueler-schiene v-for="schiene in schienen" :key="schiene.id" :schiene="schiene" :selected="selected"
+								:blockung="blockung" :ergebnis="ergebnis" :allow_regeln="allow_regeln" />
 						</table>
 					</div>
 				</div>
@@ -32,7 +32,7 @@
 	import { injectMainApp, Main } from "~/apps/Main";
 	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 
-	const props = defineProps<{ 
+	const props = defineProps<{
 		item: ShallowRef<GostJahrgang | undefined>;
 		schule: DataSchuleStammdaten;
 		jahrgangsdaten: DataGostJahrgang;
@@ -64,7 +64,7 @@
 		return props.blockung.ergebnismanager
 	});
 
-	const allow_regeln: ComputedRef<boolean> = computed(() => 
+	const allow_regeln: ComputedRef<boolean> = computed(() =>
 		(props.blockung.datenmanager !== undefined) && (props.blockung.datenmanager.getErgebnisseSortiertNachBewertung().size() === 1)
 	);
 
@@ -93,7 +93,7 @@
 
 	const blockungsergebnisse: ComputedRef<Map<GostBlockungKurs, GostBlockungsergebnisKurs[]>> = computed(() => {
 		const map = new Map();
-		if (!schienen.value?.size()) 
+		if (!schienen.value?.size())
 			return map;
 		for (const k of kurse.value)
 			for (const s of schienen.value) {
@@ -106,7 +106,7 @@
 	});
 
 	const fachbelegungen: ComputedRef<List<GostFachwahl>> = computed(() => {
-		if (!selected.value?.id || !props.blockung.datenmanager) 
+		if (!selected.value?.id || !props.blockung.datenmanager)
 			return new Vector<GostFachwahl>()
 		return props.blockung.datenmanager.getOfSchuelerFacharten(selected.value.id)
 	});
@@ -212,7 +212,7 @@
 		if (!schuelerid || !kurs?.id) return;
 		let ok = false
 		ok = await props.ergebnis.removeSchuelerKurs(schuelerid, kurs.id);
-		if (ok) 
+		if (ok)
 			main.config.drag_and_drop_data = undefined;
 	}
 

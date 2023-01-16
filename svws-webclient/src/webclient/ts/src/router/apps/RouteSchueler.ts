@@ -41,7 +41,7 @@ export class RouteSchueler extends RouteNodeListView<ListSchueler, SchuelerListe
 		super("schueler", "/schueler/:id(\\d+)?", SSchuelerAuswahl, SSchuelerApp, new ListSchueler(), 'id', new RouteDataSchueler());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Schüler";
-        super.setView("liste", SSchuelerAuswahl, (route) => this.getProps(route));
+		super.setView("liste", SSchuelerAuswahl, (route) => this.getProps(route));
 		super.children = [
 			routeSchuelerIndividualdaten,
 			routeSchuelerErziehungsberechtigte,
@@ -55,16 +55,16 @@ export class RouteSchueler extends RouteNodeListView<ListSchueler, SchuelerListe
 		super.defaultChild = routeSchuelerIndividualdaten;
 	}
 
-    public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
+	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
 		if ((to.name === this.name) && (to_params.id === undefined)) {
 			const redirect_name: string = (this.selectedChild === undefined) ? this.defaultChild!.name : this.selectedChild.name;
 			await this.liste.update_list();
 			return { name: redirect_name, params: { id: this.liste.gefiltert.at(0)?.id }};
 		}
-        return true;
-    }
+		return true;
+	}
 
-    public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) {
+	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) {
 		await this.data.listeAbiturjahrgaenge.update_list();
 		await this.data.schule.select(true);  // undefined würde das laden verhindern, daher true
 		await this.data.listKlassen.update_list();
@@ -79,7 +79,7 @@ export class RouteSchueler extends RouteNodeListView<ListSchueler, SchuelerListe
 		await this.liste.update_list();  // Die Auswahlliste wird als letztes geladen
 	}
 
-    protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
+	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
 		if (to_params.id === undefined) {
 			this.onSelect(undefined);
 		} else {
@@ -100,7 +100,7 @@ export class RouteSchueler extends RouteNodeListView<ListSchueler, SchuelerListe
 		}
 	}
 
-    protected getAuswahlComputedProperty(): WritableComputedRef<SchuelerListeEintrag | undefined> {
+	protected getAuswahlComputedProperty(): WritableComputedRef<SchuelerListeEintrag | undefined> {
 		return this.getSelector();
 	}
 

@@ -9,8 +9,8 @@
 	import { computed, WritableComputedRef } from "vue";
 	import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
 
-	const { modelValue, dataFaecher } = defineProps<{ 
-		modelValue: GostBlockungKurs; 
+	const { modelValue, dataFaecher } = defineProps<{
+		modelValue: GostBlockungKurs;
 		dataFaecher: DataGostFaecher;
 	}>();
 

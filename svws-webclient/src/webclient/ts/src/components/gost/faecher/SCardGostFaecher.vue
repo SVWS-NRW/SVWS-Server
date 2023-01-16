@@ -4,7 +4,7 @@
 			<table class="border-collapse text-sm">
 				<thead class="bg-slate-100">
 					<tr>
-						<td class="border border-[#7f7f7f]/20 text-center" colspan="4"></td>
+						<td class="border border-[#7f7f7f]/20 text-center" colspan="4" />
 						<td class="border border-[#7f7f7f]/20 text-center" colspan="2">
 							Leitfächer
 						</td>
@@ -33,7 +33,7 @@
 					</tr>
 				</thead>
 				<tr v-for="row in rows" :key="row.id">
-					<s-row-gost-faecher :fach="row" :data-faecher="dataFaecher"></s-row-gost-faecher>
+					<s-row-gost-faecher :fach="row" :data-faecher="dataFaecher" />
 				</tr>
 			</table>
 		</div>
@@ -47,7 +47,7 @@
 	import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
 	import { routeGost } from "~/router/apps/RouteGost";
 
-	const { dataFaecher } = defineProps<{ 
+	const { dataFaecher } = defineProps<{
 		dataFaecher: DataGostFaecher;
 	}>();
 

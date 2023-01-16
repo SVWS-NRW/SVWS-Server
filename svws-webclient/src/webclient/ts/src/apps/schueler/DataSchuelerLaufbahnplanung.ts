@@ -1,10 +1,10 @@
 import { App } from "../BaseApp";
 import { List, Vector, GostHalbjahr, GostKursart, Jahrgaenge, Fachgruppe, Schulgliederung,
-		Abiturdaten, AbiturdatenManager, AbiturFachbelegung, AbiturFachbelegungHalbjahr,
-		GostSchuelerFachwahl, GostAbiturjahrUtils, GostBelegpruefungErgebnis, GostBelegpruefungsArt,
-		ZulaessigesFach, GostFach, GostFachbereich, 
-		SchuelerListeEintrag,
-		Sprachbelegung, SprachendatenUtils } from "@svws-nrw/svws-core-ts";
+	Abiturdaten, AbiturdatenManager, AbiturFachbelegung, AbiturFachbelegungHalbjahr,
+	GostSchuelerFachwahl, GostAbiturjahrUtils, GostBelegpruefungErgebnis, GostBelegpruefungsArt,
+	ZulaessigesFach, GostFach, GostFachbereich,
+	SchuelerListeEintrag,
+	Sprachbelegung, SprachendatenUtils } from "@svws-nrw/svws-core-ts";
 import { BaseData } from "../BaseData";
 import { reactive } from "vue";
 import { mainApp } from "../Main";
@@ -172,7 +172,7 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 		this._data._wochenstunden = this.manager.getWochenstunden() || [];
 		this._data._anrechenbare_kurse = this.manager.getAnrechenbareKurse() || [];
 	}
-	
+
 	/** aktualisiert den Abiturdatenmanager, z.B. wenn sich die Belegprüfungsart ändert */
 	private set_manager() {
 		if (this._daten === undefined)
@@ -191,7 +191,7 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 	 */
 	public async on_select(): Promise<Abiturdaten | undefined> {
 		await super._select((eintrag: SchuelerListeEintrag) => App.api.getGostSchuelerLaufbahnplanung(App.schema, eintrag.id));
-		if (!this._daten) 
+		if (!this._daten)
 			return undefined;
 		if (!this.gostFaecher.size() && this.hasGostlaufbahn() && this.abiturjahr !== undefined && this.abiturjahr !== -1) {
 			this._data.gostFaecherOhnePJKundVTF = []
@@ -272,15 +272,15 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 		return fachbelegung.belegungen.map(
 			(b: AbiturFachbelegungHalbjahr | null) => {
 				b = b ? b : new AbiturFachbelegungHalbjahr();
-				if (!b.halbjahrKuerzel) 
+				if (!b.halbjahrKuerzel)
 					return "";
 				const kursart = GostKursart.fromKuerzel(b.kursartKuerzel);
-				if (!kursart) 
+				if (!kursart)
 					return b.kursartKuerzel.toString() || "";
 				switch (kursart) {
-					case GostKursart.ZK:
-					case GostKursart.LK:
-						return kursart.kuerzel.valueOf();
+				case GostKursart.ZK:
+				case GostKursart.LK:
+					return kursart.kuerzel.valueOf();
 				}
 				return b.schriftlich ? "S" : "M";
 			}
@@ -309,9 +309,9 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 		if (kursart === null)
 			return halbjahresbelegung.kursartKuerzel.toString() || null;
 		switch (kursart) {
-			case GostKursart.ZK:
-			case GostKursart.LK:
-				return kursart.kuerzel.valueOf();
+		case GostKursart.ZK:
+		case GostKursart.LK:
+			return kursart.kuerzel.valueOf();
 		}
 		return halbjahresbelegung.schriftlich ? "S" : "M";
 	}
@@ -338,14 +338,14 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 	public sprachenfolgeNr(row: GostFach): number {
 		if (this.getFallsSpracheMoeglich(row))
 			return this.sprachbelegung(row)?.reihenfolge?.valueOf() || 0;
-		else 
+		else
 			return 0;
 	}
 
 	public sprachenfolgeJahrgang(row: GostFach): string {
 		if (this.getFallsSpracheMoeglich(row))
 			return (this.sprachbelegung(row)?.belegungVonJahrgang?.valueOf() || "");
-		else 
+		else
 			return "";
 	}
 
@@ -395,7 +395,7 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 	 */
 	public getEF1Moeglich(row: GostFach): boolean {
 		const fach = ZulaessigesFach.getByKuerzelASD(row.kuerzel);
-		if (fach.getFachgruppe() === Fachgruppe.FG_ME || fach.getFachgruppe() === Fachgruppe.FG_PX 
+		if (fach.getFachgruppe() === Fachgruppe.FG_ME || fach.getFachgruppe() === Fachgruppe.FG_PX
 				|| (row.istFremdsprache && !this.getFallsSpracheMoeglich(row)))
 			return false;
 		return this.checkDoppelbelegung(row, GostHalbjahr.EF1)
@@ -411,7 +411,7 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 	 */
 	public getEF2Moeglich(row: GostFach): boolean {
 		const fach = ZulaessigesFach.getByKuerzelASD(row.kuerzel);
-		if (fach.getFachgruppe() === Fachgruppe.FG_ME || fach.getFachgruppe() === Fachgruppe.FG_PX 
+		if (fach.getFachgruppe() === Fachgruppe.FG_ME || fach.getFachgruppe() === Fachgruppe.FG_PX
 				|| (row.istFremdsprache && !this.getFallsSpracheMoeglich(row)))
 			return false;
 		return this.checkDoppelbelegung(row, GostHalbjahr.EF2)
@@ -430,7 +430,7 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 			return false;
 		if (row.istMoeglichQ11) {
 			return row.istFremdsprache ? this.getFallsSpracheMoeglich(row) : true;
-		} else 
+		} else
 			return row.istMoeglichQ11;
 	}
 
@@ -445,7 +445,7 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 			return false;
 		if (row.istMoeglichQ12) {
 			return row.istFremdsprache ? this.getFallsSpracheMoeglich(row) : true;
-		} else 
+		} else
 			return row.istMoeglichQ12;
 	}
 
@@ -456,11 +456,11 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 	 * @returns {boolean}
 	 */
 	public getQ21Moeglich(row: GostFach): boolean {
-		if (this.checkDoppelbelegung(row, GostHalbjahr.Q21)) 
+		if (this.checkDoppelbelegung(row, GostHalbjahr.Q21))
 			return false;
 		if (row.istMoeglichQ21) {
 			return row.istFremdsprache ? this.getFallsSpracheMoeglich(row) : true;
-		} else 
+		} else
 			return false;
 	}
 
@@ -471,11 +471,11 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 	 * @returns {boolean}
 	 */
 	public getQ22Moeglich(row: GostFach): boolean {
-		if (this.checkDoppelbelegung(row, GostHalbjahr.Q22)) 
+		if (this.checkDoppelbelegung(row, GostHalbjahr.Q22))
 			return false;
 		if (row.istMoeglichQ22) {
 			return row.istFremdsprache ? this.getFallsSpracheMoeglich(row) : true;
-		} else 
+		} else
 			return false;
 	}
 
@@ -488,7 +488,7 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 	public getAbiGKMoeglich(row: GostFach): boolean {
 		const fach = ZulaessigesFach.getByKuerzelASD(row.kuerzel);
 		if (fach.getFachgruppe() === Fachgruppe.FG_ME
-				|| fach.getFachgruppe() === Fachgruppe.FG_VX 
+				|| fach.getFachgruppe() === Fachgruppe.FG_VX
 				|| fach.getFachgruppe() === Fachgruppe.FG_PX)
 			return false;
 		return row.istMoeglichAbiGK;
@@ -498,14 +498,14 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 	 * Gibt an, ob die Fachwahl als LK möglich ist
 	 *
 	 * @param {GostFach} row
-	 * 
+	 *
 	 * @returns {boolean}
 	 */
 	public getAbiLKMoeglich(row: GostFach): boolean {
 		const fach = ZulaessigesFach.getByKuerzelASD(row.kuerzel);
 		if (fach.getFachgruppe() === Fachgruppe.FG_ME
-				|| fach.getFachgruppe() === Fachgruppe.FG_VX 
-				|| fach.getFachgruppe() === Fachgruppe.FG_PX || fach.getJahrgangAb() === Jahrgaenge.JG_EF 
+				|| fach.getFachgruppe() === Fachgruppe.FG_VX
+				|| fach.getFachgruppe() === Fachgruppe.FG_PX || fach.getJahrgangAb() === Jahrgaenge.JG_EF
 				|| (row.biliSprache === null && row.biliSprache === "D"))
 			return false;
 		return row.istMoeglichAbiLK;
@@ -515,37 +515,37 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 	 * Gibt an, ob die Fachwahl als Abiturfach möglich ist
 	 *
 	 * @param {GostFach} row
-	 * 
+	 *
 	 * @returns {boolean}
 	 */
 	public getAbiMoeglich(row: GostFach): boolean {
-		if (!row?.id) 
+		if (!row?.id)
 			return false;
 		const fachbelegung = this._data.gostFachbelegungen[row.id];
-		if (!fachbelegung?.letzteKursart) 
+		if (!fachbelegung?.letzteKursart)
 			return false;
 		switch (GostKursart.fromKuerzel(fachbelegung.letzteKursart)) {
-			case GostKursart.LK:
-				return this.getAbiLKMoeglich(row);
-			case GostKursart.GK: {
-				const hjQ11 = fachbelegung.belegungen?.[GostHalbjahr.Q11.id];
-				const hjQ12 = fachbelegung.belegungen?.[GostHalbjahr.Q12.id];
-				const hjQ21 = fachbelegung.belegungen?.[GostHalbjahr.Q21.id];
-				const hjQ22 = fachbelegung.belegungen?.[GostHalbjahr.Q22.id];
-				if (!hjQ11?.kursartKuerzel
+		case GostKursart.LK:
+			return this.getAbiLKMoeglich(row);
+		case GostKursart.GK: {
+			const hjQ11 = fachbelegung.belegungen?.[GostHalbjahr.Q11.id];
+			const hjQ12 = fachbelegung.belegungen?.[GostHalbjahr.Q12.id];
+			const hjQ21 = fachbelegung.belegungen?.[GostHalbjahr.Q21.id];
+			const hjQ22 = fachbelegung.belegungen?.[GostHalbjahr.Q22.id];
+			if (!hjQ11?.kursartKuerzel
 						|| !hjQ12?.kursartKuerzel
 						|| !hjQ21?.kursartKuerzel
 						|| !hjQ22?.kursartKuerzel)
-					return false;
-				if (GostKursart.fromKuerzel(hjQ11.kursartKuerzel) !== GostKursart.GK 
-						|| GostKursart.fromKuerzel(hjQ12.kursartKuerzel) !== GostKursart.GK 
-						|| GostKursart.fromKuerzel(hjQ21.kursartKuerzel) !== GostKursart.GK 
+				return false;
+			if (GostKursart.fromKuerzel(hjQ11.kursartKuerzel) !== GostKursart.GK
+						|| GostKursart.fromKuerzel(hjQ12.kursartKuerzel) !== GostKursart.GK
+						|| GostKursart.fromKuerzel(hjQ21.kursartKuerzel) !== GostKursart.GK
 						|| GostKursart.fromKuerzel(hjQ22.kursartKuerzel) !== GostKursart.GK)
-					return false;
-				if (!hjQ11.schriftlich || !hjQ12.schriftlich || !hjQ21.schriftlich)
-					return false;
-				return this.getAbiGKMoeglich(row);
-			}
+				return false;
+			if (!hjQ11.schriftlich || !hjQ12.schriftlich || !hjQ21.schriftlich)
+				return false;
+			return this.getAbiGKMoeglich(row);
+		}
 		}
 		return false;
 	}
@@ -559,7 +559,7 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 	 */
 	public setWahl(row: GostFach, wahl: GostSchuelerFachwahl): void {
 		const eintrag = this.selected_list_item;
-		if (!eintrag) 
+		if (!eintrag)
 			return;
 		this._patch(wahl, () => App.api.patchGostSchuelerFachwahl(wahl, App.schema, eintrag.id, row.id).then(() => { this.on_select(); }));
 	}
@@ -586,32 +586,32 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 	public stepper_manuell(row: GostFach, hj: 'EF1'|'EF2'|'Q11'|'Q12'|'Q21'|'Q22'|'abiturFach'): void {
 		const wahl = this.extract_fachwahl(row);
 		if (hj === 'abiturFach') {
-			if (!wahl.Q22) 
+			if (!wahl.Q22)
 				return
 			switch (wahl.abiturFach) {
-				case null: wahl.abiturFach = wahl.Q22 === "LK" ? 1 : 3; break;
-				case 1:    wahl.abiturFach = wahl.Q22 === "LK" ? 2 : 3; break;
-				case 2:    wahl.abiturFach = wahl.Q22 === "LK" ? null : 3; break;
-				case 3:    wahl.abiturFach = wahl.Q22 === "LK" ? null : 4; break;
-				case 4:    wahl.abiturFach = null; break;
-				default:   wahl.abiturFach = null; break;
+			case null: wahl.abiturFach = wahl.Q22 === "LK" ? 1 : 3; break;
+			case 1:    wahl.abiturFach = wahl.Q22 === "LK" ? 2 : 3; break;
+			case 2:    wahl.abiturFach = wahl.Q22 === "LK" ? null : 3; break;
+			case 3:    wahl.abiturFach = wahl.Q22 === "LK" ? null : 4; break;
+			case 4:    wahl.abiturFach = null; break;
+			default:   wahl.abiturFach = null; break;
 			}
 		} else {
 			switch (wahl[hj]) {
-				case "AT": wahl[hj] = null; break;
-				case "ZK": wahl[hj] = null; break;
-				case null: wahl[hj] = "M"; break;
-				case "M":  wahl[hj] = "S"; break
-				case "S":  wahl[hj] = "LK"; break;
-				case "LK": {
-					wahl[hj] = null
-					if (GostFachbereich.SPORT.hat(row))
-						wahl[hj] = "AT"
-					if (GostFachbereich.SOZIALWISSENSCHAFTEN.hat(row) || GostFachbereich.GESCHICHTE.hat(row)) 
-						wahl[hj] = "ZK"
-					break;
-				}
-				default:  wahl[hj] = null; break;
+			case "AT": wahl[hj] = null; break;
+			case "ZK": wahl[hj] = null; break;
+			case null: wahl[hj] = "M"; break;
+			case "M":  wahl[hj] = "S"; break
+			case "S":  wahl[hj] = "LK"; break;
+			case "LK": {
+				wahl[hj] = null
+				if (GostFachbereich.SPORT.hat(row))
+					wahl[hj] = "AT"
+				if (GostFachbereich.SOZIALWISSENSCHAFTEN.hat(row) || GostFachbereich.GESCHICHTE.hat(row))
+					wahl[hj] = "ZK"
+				break;
+			}
+			default:  wahl[hj] = null; break;
 			}
 		}
 		this.setWahl(row, wahl)
@@ -633,9 +633,9 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 		const wahl = this.extract_fachwahl(row);
 		const ist_PJK_VTF = this.istVertiefungsOderProjektkursfach(row);
 		switch (wahl.EF1) {
-			case null: wahl.EF1 = ist_PJK_VTF ? "M" : "S"; break;
-			case "S":  wahl.EF1 = "M"; break;
-			case "M":  wahl.EF1 = null; break;
+		case null: wahl.EF1 = ist_PJK_VTF ? "M" : "S"; break;
+		case "S":  wahl.EF1 = "M"; break;
+		case "M":  wahl.EF1 = null; break;
 		}
 		this.setWahl(row, wahl);
 	}
@@ -656,18 +656,18 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 		const wahl = this.extract_fachwahl(row);
 		const ist_PJK_VTF = this.istVertiefungsOderProjektkursfach(row);
 		switch (wahl.EF2) {
-			case null:
-				wahl.EF2 = ist_PJK_VTF ? "M" : "S";
-				break;
-			case "S":
-				wahl.EF2 = "M";
-				break;
-			case "M":
-				wahl.EF2 = null;
-				if (GostFachbereich.SPORT.hat(row)) wahl.EF2 = "AT";
-				break;
-			case "AT":
-				wahl.EF2 = null;
+		case null:
+			wahl.EF2 = ist_PJK_VTF ? "M" : "S";
+			break;
+		case "S":
+			wahl.EF2 = "M";
+			break;
+		case "M":
+			wahl.EF2 = null;
+			if (GostFachbereich.SPORT.hat(row)) wahl.EF2 = "AT";
+			break;
+		case "AT":
+			wahl.EF2 = null;
 		}
 		this.setWahl(row, wahl);
 	}
@@ -690,82 +690,82 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 		const lk1_belegt = this._data.gostFachbelegungen.find(f => f && f.abiturFach === 1);
 		const lk2_belegt = this._data.gostFachbelegungen.find(f => f && f.abiturFach === 2);
 		switch (wahl.Q11) {
-			case null: wahl.Q11 = (GostFachbereich.DEUTSCH.hat(row) || GostFachbereich.MATHEMATIK.hat(row)) ? "S" : "M"; break;
-			case "M":  wahl.Q11 = ist_PJK_VTF ? null : "S"; break;
+		case null: wahl.Q11 = (GostFachbereich.DEUTSCH.hat(row) || GostFachbereich.MATHEMATIK.hat(row)) ? "S" : "M"; break;
+		case "M":  wahl.Q11 = ist_PJK_VTF ? null : "S"; break;
 			//TODO S->S ist bestimmt falsch
-			case "S":  wahl.Q11 = (row.istMoeglichAbiLK) ? "LK" : (GostFachbereich.DEUTSCH.hat(row) || GostFachbereich.MATHEMATIK.hat(row)) ? "S" : null; break;
-			case "LK": 
-				wahl.Q11 = (GostFachbereich.DEUTSCH.hat(row) || GostFachbereich.MATHEMATIK.hat(row)) ? "S" : null;
-				wahl.abiturFach = null;
-				break;
+		case "S":  wahl.Q11 = (row.istMoeglichAbiLK) ? "LK" : (GostFachbereich.DEUTSCH.hat(row) || GostFachbereich.MATHEMATIK.hat(row)) ? "S" : null; break;
+		case "LK":
+			wahl.Q11 = (GostFachbereich.DEUTSCH.hat(row) || GostFachbereich.MATHEMATIK.hat(row)) ? "S" : null;
+			wahl.abiturFach = null;
+			break;
 		}
 		// Sonderfall Sport - darf AT haben
-		if (!wahl.Q11 && GostFachbereich.SPORT.hat(row)) 
+		if (!wahl.Q11 && GostFachbereich.SPORT.hat(row))
 			wahl.Q11 = "AT";
 		else if (wahl.Q11 === "AT" && GostFachbereich.SPORT.hat(row))
 			wahl.Q11 = null;
 		// Q11 wählt bis Q22
 		switch (wahl.Q11) {
-			case null:
-				if (!this.ist_VTF(row)) {
-					wahl.Q12 = null;
-					wahl.Q21 = null;
-					wahl.Q22 = null;
-				}
-				if (GostFachbereich.SOZIALWISSENSCHAFTEN.hat(row) && (this.dataGostJahrgang?.daten?.hatZusatzkursSW)) {
-					const beginn : GostHalbjahr | null = GostHalbjahr.fromKuerzel(this.dataGostJahrgang?.daten.beginnZusatzkursSW);
-					if ((beginn !== null) && (beginn === GostHalbjahr.Q11) && (wahl.EF2 === null)) {
-						wahl.Q11 = "ZK";
-						wahl.Q12 = "ZK";
-					}
-				}
-				if (GostFachbereich.GESCHICHTE.hat(row) && this.dataGostJahrgang?.daten?.hatZusatzkursGE) {
-					const beginn : GostHalbjahr | null = GostHalbjahr.fromKuerzel(this.dataGostJahrgang?.daten.beginnZusatzkursGE);
-					if ((beginn !== null) && (beginn === GostHalbjahr.Q11) && (wahl.EF2 === null)) {
-						wahl.Q11 = "ZK";
-						wahl.Q12 = "ZK";
-					}
-				}
-				break;
-			case "M":
-				if (row.istMoeglichQ12 && !this.ist_VTF(row))
-					wahl.Q12 = wahl.Q11;
-				if (!ist_PJK_VTF && !GostFachbereich.KUNST_MUSIK.hat(row) && !GostFachbereich.RELIGION.hat(row)) {
-					if (row.istMoeglichQ21) wahl.Q21 = wahl.Q11;
-					if (row.istMoeglichQ22) wahl.Q22 = wahl.Q11;
-				}
-				break;
-			case "S":
-				if (row.istMoeglichQ12) wahl.Q12 = wahl.Q11;
-				if (!ist_PJK_VTF) {
-					if (row.istMoeglichQ21) 
-						wahl.Q21 = wahl.Q11;
-					// "S" kann nur für drittes Abifach gewählt werden, Vorauswahl daher "M"
-					if (row.istMoeglichQ22) 
-						wahl.Q22 = "M";
-				}
-				break;
-			case "ZK":
-				const beginn : GostHalbjahr | null = (GostFachbereich.SOZIALWISSENSCHAFTEN.hat(row))
-					? GostHalbjahr.fromKuerzel(this.dataGostJahrgang?.daten?.beginnZusatzkursSW || "")
-					: GostHalbjahr.fromKuerzel(this.dataGostJahrgang?.daten?.beginnZusatzkursGE || "");
-				wahl.Q11 = null;
+		case null:
+			if (!this.ist_VTF(row)) {
 				wahl.Q12 = null;
-				break;
-			case "LK":
-				wahl.Q12 = row.istMoeglichQ12 ? wahl.Q11 : null;
-				wahl.Q21 = row.istMoeglichQ21 ? wahl.Q11 : null;
-				wahl.Q22 = row.istMoeglichQ22 ? wahl.Q11 : null;
-				// Bedingungen für LK1
-				if (GostFachbereich.DEUTSCH.hat(row) || GostFachbereich.MATHEMATIK.hat(row) 
-						|| GostFachbereich.NATURWISSENSCHAFTLICH_KLASSISCH.hat(row) 
+				wahl.Q21 = null;
+				wahl.Q22 = null;
+			}
+			if (GostFachbereich.SOZIALWISSENSCHAFTEN.hat(row) && (this.dataGostJahrgang?.daten?.hatZusatzkursSW)) {
+				const beginn : GostHalbjahr | null = GostHalbjahr.fromKuerzel(this.dataGostJahrgang?.daten.beginnZusatzkursSW);
+				if ((beginn !== null) && (beginn === GostHalbjahr.Q11) && (wahl.EF2 === null)) {
+					wahl.Q11 = "ZK";
+					wahl.Q12 = "ZK";
+				}
+			}
+			if (GostFachbereich.GESCHICHTE.hat(row) && this.dataGostJahrgang?.daten?.hatZusatzkursGE) {
+				const beginn : GostHalbjahr | null = GostHalbjahr.fromKuerzel(this.dataGostJahrgang?.daten.beginnZusatzkursGE);
+				if ((beginn !== null) && (beginn === GostHalbjahr.Q11) && (wahl.EF2 === null)) {
+					wahl.Q11 = "ZK";
+					wahl.Q12 = "ZK";
+				}
+			}
+			break;
+		case "M":
+			if (row.istMoeglichQ12 && !this.ist_VTF(row))
+				wahl.Q12 = wahl.Q11;
+			if (!ist_PJK_VTF && !GostFachbereich.KUNST_MUSIK.hat(row) && !GostFachbereich.RELIGION.hat(row)) {
+				if (row.istMoeglichQ21) wahl.Q21 = wahl.Q11;
+				if (row.istMoeglichQ22) wahl.Q22 = wahl.Q11;
+			}
+			break;
+		case "S":
+			if (row.istMoeglichQ12) wahl.Q12 = wahl.Q11;
+			if (!ist_PJK_VTF) {
+				if (row.istMoeglichQ21)
+					wahl.Q21 = wahl.Q11;
+					// "S" kann nur für drittes Abifach gewählt werden, Vorauswahl daher "M"
+				if (row.istMoeglichQ22)
+					wahl.Q22 = "M";
+			}
+			break;
+		case "ZK":
+			const beginn : GostHalbjahr | null = (GostFachbereich.SOZIALWISSENSCHAFTEN.hat(row))
+				? GostHalbjahr.fromKuerzel(this.dataGostJahrgang?.daten?.beginnZusatzkursSW || "")
+				: GostHalbjahr.fromKuerzel(this.dataGostJahrgang?.daten?.beginnZusatzkursGE || "");
+			wahl.Q11 = null;
+			wahl.Q12 = null;
+			break;
+		case "LK":
+			wahl.Q12 = row.istMoeglichQ12 ? wahl.Q11 : null;
+			wahl.Q21 = row.istMoeglichQ21 ? wahl.Q11 : null;
+			wahl.Q22 = row.istMoeglichQ22 ? wahl.Q11 : null;
+			// Bedingungen für LK1
+			if (GostFachbereich.DEUTSCH.hat(row) || GostFachbereich.MATHEMATIK.hat(row)
+						|| GostFachbereich.NATURWISSENSCHAFTLICH_KLASSISCH.hat(row)
 						|| (GostFachbereich.FREMDSPRACHE.hat(row) && !row.istFremdSpracheNeuEinsetzend))
-					wahl.abiturFach = !lk1_belegt ? 1 : lk2_belegt ? null : 2;
-				else 
-					wahl.abiturFach = lk2_belegt ? null : 2;
-				break;
+				wahl.abiturFach = !lk1_belegt ? 1 : lk2_belegt ? null : 2;
+			else
+				wahl.abiturFach = lk2_belegt ? null : 2;
+			break;
 		}
-		if (wahl.Q11 === null || wahl.Q11 === "M") 
+		if (wahl.Q11 === null || wahl.Q11 === "M")
 			wahl.abiturFach = null;
 		this.setWahl(row, wahl);
 	}
@@ -786,56 +786,56 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 		const wahl = this.extract_fachwahl(row);
 		const ist_PJK_VTF = this.istVertiefungsOderProjektkursfach(row);
 		switch (wahl.Q12) {
-			case null:
-				wahl.Q12 = "M";
-				if (this.ist_PJK(row) && wahl.Q11 === null && row.istMoeglichQ21) {
-					wahl.Q21 = "M";
-					wahl.Q22 = null;
+		case null:
+			wahl.Q12 = "M";
+			if (this.ist_PJK(row) && wahl.Q11 === null && row.istMoeglichQ21) {
+				wahl.Q21 = "M";
+				wahl.Q22 = null;
+			}
+			if (GostFachbereich.SOZIALWISSENSCHAFTEN.hat(row) && (this.dataGostJahrgang?.daten?.hatZusatzkursSW)) {
+				const beginn : GostHalbjahr | null = GostHalbjahr.fromKuerzel(this.dataGostJahrgang?.daten.beginnZusatzkursSW);
+				if ((beginn !== null) && (((beginn === GostHalbjahr.Q11) && (wahl.EF2 === null)) || ((beginn === GostHalbjahr.Q12) && (wahl.Q11 === null)))) {
+					if (beginn === GostHalbjahr.Q11)
+						wahl.Q11 = "ZK";
+					wahl.Q12 = "ZK";
+					if (beginn === GostHalbjahr.Q12)
+						wahl.Q21 = "ZK";
 				}
-				if (GostFachbereich.SOZIALWISSENSCHAFTEN.hat(row) && (this.dataGostJahrgang?.daten?.hatZusatzkursSW)) {
-					const beginn : GostHalbjahr | null = GostHalbjahr.fromKuerzel(this.dataGostJahrgang?.daten.beginnZusatzkursSW);
-					if ((beginn !== null) && (((beginn === GostHalbjahr.Q11) && (wahl.EF2 === null)) || ((beginn === GostHalbjahr.Q12) && (wahl.Q11 === null)))) {
-						if (beginn === GostHalbjahr.Q11)
-							wahl.Q11 = "ZK";
-						wahl.Q12 = "ZK";
-						if (beginn === GostHalbjahr.Q12)
-							wahl.Q21 = "ZK";
-					}
+			}
+			if (GostFachbereich.GESCHICHTE.hat(row) && this.dataGostJahrgang?.daten?.hatZusatzkursGE) {
+				const beginn : GostHalbjahr | null = GostHalbjahr.fromKuerzel(this.dataGostJahrgang?.daten.beginnZusatzkursGE);
+				if ((beginn !== null) && (((beginn === GostHalbjahr.Q11) && (wahl.EF2 === null)) || ((beginn === GostHalbjahr.Q12) && (wahl.Q11 === null)))) {
+					if (beginn === GostHalbjahr.Q11)
+						wahl.Q11 = "ZK";
+					wahl.Q12 = "ZK";
+					if (beginn === GostHalbjahr.Q12)
+						wahl.Q21 = "ZK";
 				}
-				if (GostFachbereich.GESCHICHTE.hat(row) && this.dataGostJahrgang?.daten?.hatZusatzkursGE) {
-					const beginn : GostHalbjahr | null = GostHalbjahr.fromKuerzel(this.dataGostJahrgang?.daten.beginnZusatzkursGE);
-					if ((beginn !== null) && (((beginn === GostHalbjahr.Q11) && (wahl.EF2 === null)) || ((beginn === GostHalbjahr.Q12) && (wahl.Q11 === null)))) {
-						if (beginn === GostHalbjahr.Q11)
-							wahl.Q11 = "ZK";
-						wahl.Q12 = "ZK";
-						if (beginn === GostHalbjahr.Q12)
-							wahl.Q21 = "ZK";
-					}
-				}
-				break;
-			case "M":
-				wahl.Q12 = ist_PJK_VTF ? null : "S";
-				break;
-			case "S":
-				wahl.Q12 = wahl.Q11 === "LK" ? "LK" : null;
-				break;
-			case "ZK":
-				const beginn : GostHalbjahr | null = (GostFachbereich.SOZIALWISSENSCHAFTEN.hat(row))
-					? GostHalbjahr.fromKuerzel(this.dataGostJahrgang?.daten?.beginnZusatzkursSW || "")
-					: GostHalbjahr.fromKuerzel(this.dataGostJahrgang?.daten?.beginnZusatzkursGE || "");
-				if ((beginn !== null) && (beginn === GostHalbjahr.Q11))
-					wahl.Q11 = null;
-				wahl.Q12 = null;
-				if ((beginn !== null) && (beginn === GostHalbjahr.Q12))
-					wahl.Q21 = null;
-				break;
+			}
+			break;
+		case "M":
+			wahl.Q12 = ist_PJK_VTF ? null : "S";
+			break;
+		case "S":
+			wahl.Q12 = wahl.Q11 === "LK" ? "LK" : null;
+			break;
+		case "ZK":
+			const beginn : GostHalbjahr | null = (GostFachbereich.SOZIALWISSENSCHAFTEN.hat(row))
+				? GostHalbjahr.fromKuerzel(this.dataGostJahrgang?.daten?.beginnZusatzkursSW || "")
+				: GostHalbjahr.fromKuerzel(this.dataGostJahrgang?.daten?.beginnZusatzkursGE || "");
+			if ((beginn !== null) && (beginn === GostHalbjahr.Q11))
+				wahl.Q11 = null;
+			wahl.Q12 = null;
+			if ((beginn !== null) && (beginn === GostHalbjahr.Q12))
+				wahl.Q21 = null;
+			break;
 			// TODO: Warum ist das so? Bis Q22. Was ist erlaubt: M, S, null?
-			case "LK":
-				wahl.Q12 = null;
-				wahl.abiturFach = null;
+		case "LK":
+			wahl.Q12 = null;
+			wahl.abiturFach = null;
 		}
 		// Sonderfall Sport - darf AT haben
-		if (!wahl.Q12 && GostFachbereich.SPORT.hat(row)) 
+		if (!wahl.Q12 && GostFachbereich.SPORT.hat(row))
 			wahl.Q12 = "AT";
 		else if (wahl.Q12 === "AT" && GostFachbereich.SPORT.hat(row))
 			wahl.Q12 = null;
@@ -844,7 +844,7 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 			wahl.Q21 = null;
 			wahl.Q22 = null;
 		}
-		if (wahl.Q12 === null || wahl.Q12 === "M") 
+		if (wahl.Q12 === null || wahl.Q12 === "M")
 			wahl.abiturFach = null;
 		this.setWahl(row, wahl);
 	}
@@ -865,62 +865,62 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 		const wahl = this.extract_fachwahl(row);
 		const ist_PJK_VTF = this.istVertiefungsOderProjektkursfach(row);
 		switch (wahl.Q21) {
-			case null:
-				wahl.Q21 = "M";
-				if (this.ist_PJK(row) && wahl.Q12 === null && row.istMoeglichQ22) {
-					wahl.Q22 = "M";
+		case null:
+			wahl.Q21 = "M";
+			if (this.ist_PJK(row) && wahl.Q12 === null && row.istMoeglichQ22) {
+				wahl.Q22 = "M";
+			}
+			if (GostFachbereich.SOZIALWISSENSCHAFTEN.hat(row) && (this.dataGostJahrgang?.daten?.hatZusatzkursSW)) {
+				const beginn : GostHalbjahr | null = GostHalbjahr.fromKuerzel(this.dataGostJahrgang?.daten.beginnZusatzkursSW);
+				if ((beginn !== null) && (((beginn === GostHalbjahr.Q12) && (wahl.Q11 === null)) || ((beginn === GostHalbjahr.Q21) && (wahl.Q12 === null)))) {
+					if (beginn === GostHalbjahr.Q12)
+						wahl.Q12 = "ZK";
+					wahl.Q21 = "ZK";
+					if (beginn === GostHalbjahr.Q21)
+						wahl.Q22 = "ZK";
 				}
-				if (GostFachbereich.SOZIALWISSENSCHAFTEN.hat(row) && (this.dataGostJahrgang?.daten?.hatZusatzkursSW)) {
-					const beginn : GostHalbjahr | null = GostHalbjahr.fromKuerzel(this.dataGostJahrgang?.daten.beginnZusatzkursSW);
-					if ((beginn !== null) && (((beginn === GostHalbjahr.Q12) && (wahl.Q11 === null)) || ((beginn === GostHalbjahr.Q21) && (wahl.Q12 === null)))) {
-						if (beginn === GostHalbjahr.Q12)
-							wahl.Q12 = "ZK";
-						wahl.Q21 = "ZK";
-						if (beginn === GostHalbjahr.Q21)
-							wahl.Q22 = "ZK";
-					}
+			}
+			if (GostFachbereich.GESCHICHTE.hat(row) && this.dataGostJahrgang?.daten?.hatZusatzkursGE) {
+				const beginn : GostHalbjahr | null = GostHalbjahr.fromKuerzel(this.dataGostJahrgang?.daten.beginnZusatzkursGE);
+				if ((beginn !== null) && (((beginn === GostHalbjahr.Q12) && (wahl.Q11 === null)) || ((beginn === GostHalbjahr.Q21) && (wahl.Q12 === null)))) {
+					if (beginn === GostHalbjahr.Q12)
+						wahl.Q12 = "ZK";
+					wahl.Q21 = "ZK";
+					if (beginn === GostHalbjahr.Q21)
+						wahl.Q22 = "ZK";
 				}
-				if (GostFachbereich.GESCHICHTE.hat(row) && this.dataGostJahrgang?.daten?.hatZusatzkursGE) {
-					const beginn : GostHalbjahr | null = GostHalbjahr.fromKuerzel(this.dataGostJahrgang?.daten.beginnZusatzkursGE);
-					if ((beginn !== null) && (((beginn === GostHalbjahr.Q12) && (wahl.Q11 === null)) || ((beginn === GostHalbjahr.Q21) && (wahl.Q12 === null)))) {
-						if (beginn === GostHalbjahr.Q12)
-							wahl.Q12 = "ZK";
-						wahl.Q21 = "ZK";
-						if (beginn === GostHalbjahr.Q21)
-							wahl.Q22 = "ZK";
-					}
-				}
-				break;
-			case "M":
-				wahl.Q21 = ist_PJK_VTF ? null : "S";
-				break;
-			case "S":
-				wahl.Q21 = wahl.Q12 === "LK" ? "LK" : null;
-				break;
-			case "ZK":
-				const beginn : GostHalbjahr | null = (GostFachbereich.SOZIALWISSENSCHAFTEN.hat(row))
-					? GostHalbjahr.fromKuerzel(this.dataGostJahrgang?.daten?.beginnZusatzkursSW || "")
-					: GostHalbjahr.fromKuerzel(this.dataGostJahrgang?.daten?.beginnZusatzkursGE || "");
-				if ((beginn !== null) && (beginn === GostHalbjahr.Q12))
-					wahl.Q12 = null;
-				wahl.Q21 = null;
-				if ((beginn !== null) && (beginn === GostHalbjahr.Q21))
-					wahl.Q22 = null;
-				break;
-			case "LK":
-				wahl.Q21 = null;
-				wahl.abiturFach = null;
-				break;
+			}
+			break;
+		case "M":
+			wahl.Q21 = ist_PJK_VTF ? null : "S";
+			break;
+		case "S":
+			wahl.Q21 = wahl.Q12 === "LK" ? "LK" : null;
+			break;
+		case "ZK":
+			const beginn : GostHalbjahr | null = (GostFachbereich.SOZIALWISSENSCHAFTEN.hat(row))
+				? GostHalbjahr.fromKuerzel(this.dataGostJahrgang?.daten?.beginnZusatzkursSW || "")
+				: GostHalbjahr.fromKuerzel(this.dataGostJahrgang?.daten?.beginnZusatzkursGE || "");
+			if ((beginn !== null) && (beginn === GostHalbjahr.Q12))
+				wahl.Q12 = null;
+			wahl.Q21 = null;
+			if ((beginn !== null) && (beginn === GostHalbjahr.Q21))
+				wahl.Q22 = null;
+			break;
+		case "LK":
+			wahl.Q21 = null;
+			wahl.abiturFach = null;
+			break;
 		}
 		// Sonderfall Sport - darf AT haben
-		if (!wahl.Q21 && GostFachbereich.SPORT.hat(row)) 
+		if (!wahl.Q21 && GostFachbereich.SPORT.hat(row))
 			wahl.Q21 = "AT";
 		else if (wahl.Q21 === "AT" && GostFachbereich.SPORT.hat(row))
 			wahl.Q21 = null;
 		// Nachfolgende HJ ebenfalls setzen
-		if (wahl.Q21 === null && !this.ist_VTF(row)) 
+		if (wahl.Q21 === null && !this.ist_VTF(row))
 			wahl.Q22 = null;
-		if (wahl.Q21 === null || wahl.Q21 === "ZK") 
+		if (wahl.Q21 === null || wahl.Q21 === "ZK")
 			wahl.abiturFach = null;
 		this.setWahl(row, wahl);
 	}
@@ -941,49 +941,49 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 		const wahl = this.extract_fachwahl(row);
 		const ist_PJK_VTF = this.istVertiefungsOderProjektkursfach(row);
 		switch (wahl.Q22) {
-			case null:
-				wahl.Q22 = "M";
-				if (GostFachbereich.SOZIALWISSENSCHAFTEN.hat(row) && (this.dataGostJahrgang?.daten?.hatZusatzkursSW)) {
-					const beginn : GostHalbjahr | null = GostHalbjahr.fromKuerzel(this.dataGostJahrgang?.daten.beginnZusatzkursSW);
-					if ((beginn !== null) && (beginn === GostHalbjahr.Q21) && (wahl.Q12 === null)) {
-						wahl.Q21 = "ZK";
-						wahl.Q22 = "ZK";
-					}
+		case null:
+			wahl.Q22 = "M";
+			if (GostFachbereich.SOZIALWISSENSCHAFTEN.hat(row) && (this.dataGostJahrgang?.daten?.hatZusatzkursSW)) {
+				const beginn : GostHalbjahr | null = GostHalbjahr.fromKuerzel(this.dataGostJahrgang?.daten.beginnZusatzkursSW);
+				if ((beginn !== null) && (beginn === GostHalbjahr.Q21) && (wahl.Q12 === null)) {
+					wahl.Q21 = "ZK";
+					wahl.Q22 = "ZK";
 				}
-				if (GostFachbereich.GESCHICHTE.hat(row) && this.dataGostJahrgang?.daten?.hatZusatzkursGE) {
-					const beginn : GostHalbjahr | null = GostHalbjahr.fromKuerzel(this.dataGostJahrgang?.daten.beginnZusatzkursGE);
-					if ((beginn !== null) && (beginn === GostHalbjahr.Q21) && (wahl.Q12 === null)) {
-						wahl.Q21 = "ZK";
-						wahl.Q22 = "ZK";
-					}
+			}
+			if (GostFachbereich.GESCHICHTE.hat(row) && this.dataGostJahrgang?.daten?.hatZusatzkursGE) {
+				const beginn : GostHalbjahr | null = GostHalbjahr.fromKuerzel(this.dataGostJahrgang?.daten.beginnZusatzkursGE);
+				if ((beginn !== null) && (beginn === GostHalbjahr.Q21) && (wahl.Q12 === null)) {
+					wahl.Q21 = "ZK";
+					wahl.Q22 = "ZK";
 				}
-				break;
-			case "M":
-				wahl.Q22 = ist_PJK_VTF ? null : "S";
-				break;
-			case "S":
-				wahl.Q22 = wahl.Q21 === "LK" ? "LK" : null;
-				break;
-			case "ZK":
-					const beginn : GostHalbjahr | null = (GostFachbereich.SOZIALWISSENSCHAFTEN.hat(row))
-						? GostHalbjahr.fromKuerzel(this.dataGostJahrgang?.daten?.beginnZusatzkursSW || "")
-						: GostHalbjahr.fromKuerzel(this.dataGostJahrgang?.daten?.beginnZusatzkursGE || "");
-					if ((beginn !== null) && (beginn === GostHalbjahr.Q21)) {
-						wahl.Q21 = null;
-					}
-					wahl.Q22 = null;
-				break;
-			case "LK":
-				wahl.Q22 = null;
-				wahl.abiturFach = null;
+			}
+			break;
+		case "M":
+			wahl.Q22 = ist_PJK_VTF ? null : "S";
+			break;
+		case "S":
+			wahl.Q22 = wahl.Q21 === "LK" ? "LK" : null;
+			break;
+		case "ZK":
+			const beginn : GostHalbjahr | null = (GostFachbereich.SOZIALWISSENSCHAFTEN.hat(row))
+				? GostHalbjahr.fromKuerzel(this.dataGostJahrgang?.daten?.beginnZusatzkursSW || "")
+				: GostHalbjahr.fromKuerzel(this.dataGostJahrgang?.daten?.beginnZusatzkursGE || "");
+			if ((beginn !== null) && (beginn === GostHalbjahr.Q21)) {
+				wahl.Q21 = null;
+			}
+			wahl.Q22 = null;
+			break;
+		case "LK":
+			wahl.Q22 = null;
+			wahl.abiturFach = null;
 		}
 		// Sonderfall Sport - darf AT haben
-		if (!wahl.Q22 && GostFachbereich.SPORT.hat(row)) 
+		if (!wahl.Q22 && GostFachbereich.SPORT.hat(row))
 			wahl.Q22 = "AT";
 		else if (wahl.Q22 === "AT" && GostFachbereich.SPORT.hat(row))
 			wahl.Q22 = null;
 		// Nachfolgende HJ ebenfalls setzen
-		if (wahl.Q22 === null || wahl.Q22 === "ZK") 
+		if (wahl.Q22 === null || wahl.Q22 === "ZK")
 			wahl.abiturFach = null;
 		if (wahl.abiturFach === 3 && wahl.Q22 === "M")
 			wahl.abiturFach = this._data.gostFachbelegungen.find(f => f && f.abiturFach === 4) ? null : 4;
@@ -1011,36 +1011,36 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 				wahl.abiturFach = null;
 			} else {
 				switch (wahl.abiturFach) {
-					case 1:
-						wahl.abiturFach = 2;
-						break;
-					case 2:
-						// TODO Prüfe zuvor, ob das Fach überhaupt als erster LK wählbar ist
-						wahl.abiturFach = 1;
-						break;
-					default:
-						wahl.abiturFach = 2;
-						break;
+				case 1:
+					wahl.abiturFach = 2;
+					break;
+				case 2:
+					// TODO Prüfe zuvor, ob das Fach überhaupt als erster LK wählbar ist
+					wahl.abiturFach = 1;
+					break;
+				default:
+					wahl.abiturFach = 2;
+					break;
 				}
 			}
-		} else if ((wahl.Q11 === "S" || wahl.Q11 === "LK") && (wahl.Q12 === "S" || wahl.Q12 === "LK") 
+		} else if ((wahl.Q11 === "S" || wahl.Q11 === "LK") && (wahl.Q12 === "S" || wahl.Q12 === "LK")
 				&& (wahl.Q21 === "S" || wahl.Q21 === "LK") && (wahl.Q22 === "S" || wahl.Q22 === "LK" || wahl.Q22 === "M")) {
 			if (!this.getAbiGKMoeglich(row)) {
 				wahl.abiturFach = null;
 			} else {
 				switch (wahl.abiturFach) {
-					case null:
-						wahl.abiturFach = wahl.Q22 === "M" ? 4 : 3;
-						break;
-					case 4:
-						wahl.abiturFach = wahl.Q22 === "S" ? 3 : null;
-						break;
-					case 3:
-						wahl.abiturFach = wahl.Q22 === "M" ? 4 : null;
-						break;
-					default:
-						wahl.abiturFach = null;
-						break;
+				case null:
+					wahl.abiturFach = wahl.Q22 === "M" ? 4 : 3;
+					break;
+				case 4:
+					wahl.abiturFach = wahl.Q22 === "S" ? 3 : null;
+					break;
+				case 3:
+					wahl.abiturFach = wahl.Q22 === "M" ? 4 : null;
+					break;
+				default:
+					wahl.abiturFach = null;
+					break;
 				}
 			}
 		} else {
@@ -1063,9 +1063,9 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 						const name = gost_hj?.toString() as 'EF1'|'EF2'|'Q11'|'Q12'|'Q21'|'Q22'|undefined
 						if (name)
 							fachwahl[name] = null;
-						}
-						++index;
 					}
+					++index;
+				}
 				fachwahl.abiturFach = null;
 				this.setWahl(fach, fachwahl);
 			}

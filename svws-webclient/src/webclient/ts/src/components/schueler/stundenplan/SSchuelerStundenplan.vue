@@ -12,7 +12,7 @@
 	import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
 	import { routeSchuelerStundenplan } from "~/router/apps/schueler/RouteSchuelerStundenplan";
 
-	const props = defineProps<{ 
+	const props = defineProps<{
 		item: ShallowRef<SchuelerListeEintrag | undefined>;
 		stammdaten: DataSchuelerStammdaten;
 	}>();

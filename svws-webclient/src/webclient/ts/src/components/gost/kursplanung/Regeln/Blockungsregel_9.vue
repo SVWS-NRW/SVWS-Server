@@ -2,7 +2,7 @@
 	<div>
 		<div class="flex justify-between items-center" :class="{'mb-2' : lehrer_regel}">
 			<h5 class="text-sm font-bold leading-loose pr-4 py-1">{{ regel_typ.bezeichnung }}</h5>
-			<svws-ui-checkbox v-model="regel" :disabled="!allow_regeln"/>
+			<svws-ui-checkbox v-model="regel" :disabled="!allow_regeln" />
 		</div>
 		<div v-if="lehrer_regel">
 			<svws-ui-radio-group>
@@ -60,7 +60,7 @@
 			} else {
 				const r = lehrer_regel.value;
 				if (r)
-				app.dataKursblockung.del_blockung_regel(r.id);
+					app.dataKursblockung.del_blockung_regel(r.id);
 			}
 		}
 	})

@@ -2,10 +2,10 @@
 	<svws-ui-secondary-menu>
 		<template #headline>Klassen</template>
 		<template #abschnitt>
-			<svws-ui-multi-select v-if="schule_abschnitte" v-model="akt_abschnitt" :items="schule_abschnitte" 
+			<svws-ui-multi-select v-if="schule_abschnitte" v-model="akt_abschnitt" :items="schule_abschnitte"
 				:item-sort="item_sort" :item-text="item_text" />
 		</template>
-		<template #header> </template>
+		<template #header />
 		<template #content>
 			<div class="container">
 				<svws-ui-table v-model="selected" :columns="cols" :data="rows" :footer="false" />
@@ -24,7 +24,7 @@
 	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 	import { DataTableColumn } from "@svws-nrw/svws-ui";
 
-	const { schule } = defineProps<{ 
+	const { schule } = defineProps<{
 		item: ShallowRef<KlassenListeEintrag | undefined>;
 		schule: DataSchuleStammdaten;
 		listLehrer: ListLehrer;
@@ -41,7 +41,7 @@
 
 	const rows: ComputedRef<KlassenListeEintrag[]> = computed(() => routeKlassen.liste.liste);
 
-	const schule_abschnitte: ComputedRef<Schuljahresabschnitt[] | undefined> = computed(() => 
+	const schule_abschnitte: ComputedRef<Schuljahresabschnitt[] | undefined> = computed(() =>
 		schule.daten?.abschnitte?.toArray() as Schuljahresabschnitt[] || []
 	);
 

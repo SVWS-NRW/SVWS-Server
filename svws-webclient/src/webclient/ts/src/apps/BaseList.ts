@@ -170,7 +170,7 @@ export abstract class BaseList<ListenEintragTyp, ListenFilterTyp = undefined> {
 		this._pending = [];
 		if (eintrag)
 			this._pending.concat(this.daten.map(d => { return d.select(eintrag); }));
-		else 
+		else
 			this._pending.concat(this.daten.map(d => d.unselect()));
 		Promise.allSettled(this._pending).then(()=> this.on_select()).then(() => this._state.pending = false);
 	}

@@ -19,7 +19,7 @@ export class RouteGostFaecher extends RouteNode<RouteDataGostKursplanung, RouteG
 		super.text = "Fächer";
 	}
 
-    public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
+	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
 		if (to_params.abiturjahr === undefined) {
 			this.onSelect(undefined);
 		} else {

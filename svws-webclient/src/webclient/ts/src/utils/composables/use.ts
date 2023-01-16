@@ -41,7 +41,7 @@ export class Use<T,U> {
 			},
 			set(val: Geschlecht | undefined) {
 				prop ||= 'geschlecht' as K;
-				let o: Partial<T> = {};
+				const o: Partial<T> = {};
 				if (typeof base.daten?.[prop] !== "number" && typeof base.daten?.[prop] !== "undefined")
 					throw new Error("invalid type");
 				o[prop] = val?.id as T[K]

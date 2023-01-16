@@ -24,23 +24,23 @@ export class RouteKlassen extends RouteNodeListView<ListKlassen, KlassenListeEin
 		super("klassen", "/klassen/:id(\\d+)?", SKlassenAuswahl, SKlassenApp, new ListKlassen(), 'id', new RouteDataKlassen());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Klassen";
-        super.setView("liste", SKlassenAuswahl, (route) => this.getProps(route));
+		super.setView("liste", SKlassenAuswahl, (route) => this.getProps(route));
 		super.children = [
 			routeKlassenDaten
 		];
 		super.defaultChild = routeKlassenDaten;
 	}
 
-    public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
+	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
 		if ((to.name === this.name) && (to_params.id === undefined)) {
 			const redirect_name: string = (this.selectedChild === undefined) ? this.defaultChild!.name : this.selectedChild.name;
 			await this.liste.update_list();
 			return { name: redirect_name, params: { id: this.liste.liste.at(0)?.id }};
 		}
-        return true;
-    }
+		return true;
+	}
 
-    public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) {
+	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) {
 		await this.data.schule.select(true);  // undefined würde das laden verhindern, daher true
 		await this.data.listLehrer.update_list();
 		this.data.mapLehrer.clear();
@@ -48,7 +48,7 @@ export class RouteKlassen extends RouteNodeListView<ListKlassen, KlassenListeEin
 		await this.liste.update_list();  // Die Auswahlliste wird als letztes geladen
 	}
 
-    public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
+	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
 		if (to_params.id === undefined) {
 			this.onSelect(undefined);
 		} else {
@@ -67,7 +67,7 @@ export class RouteKlassen extends RouteNodeListView<ListKlassen, KlassenListeEin
 		}
 	}
 
-    protected getAuswahlComputedProperty(): WritableComputedRef<KlassenListeEintrag | undefined> {
+	protected getAuswahlComputedProperty(): WritableComputedRef<KlassenListeEintrag | undefined> {
 		return this.getSelector();
 	}
 

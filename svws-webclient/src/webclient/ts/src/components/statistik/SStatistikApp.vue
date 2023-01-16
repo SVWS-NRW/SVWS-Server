@@ -1,6 +1,6 @@
 <template>
 	<div class="app-layout--main--placeholder">
-		<i-ri-bar-chart-2-line/>
+		<i-ri-bar-chart-2-line />
 	</div>
 	<!--		<div class="flex flex-row">
 			<div class="app-wrapper">

@@ -16,13 +16,13 @@
 			<div class="pl-3 pt-6 pb-6 container">
 				<svws-ui-table v-model="selected" :columns="cols" :data="rowsFiltered" v-model:selection="selectedItems" is-multi-select :footer="true">
 					<template #footer>
-						<s-modal-benutzer-neu :show_delete_icon="selectedItems.length > 0"/>
+						<s-modal-benutzer-neu :show_delete_icon="selectedItems.length > 0" />
 					</template>
 				</svws-ui-table>
 			</div>
 			<!-- Wechsel zu den Benutzer-Gruppen -->
-			<div class="px-1 pt-3 text-lg font-bold" @click="router.push({ name: routeSchuleBenutzergruppe.name })"> 
-				<i-ri-arrow-right-line class="inline-block cursor-pointer" /> 
+			<div class="px-1 pt-3 text-lg font-bold" @click="router.push({ name: routeSchuleBenutzergruppe.name })">
+				<i-ri-arrow-right-line class="inline-block cursor-pointer" />
 				<div class="px-1 pt-3 text-lg font-bold inline-block cursor-pointer"> Benutzergruppen  </div>
 			</div>
 		</template>
@@ -62,8 +62,8 @@
 		if (rows.value === undefined)
 			return undefined;
 		const rowsValue: BenutzerListeEintrag[] = rows.value;
-		return (search.value) 
-			? rowsValue.filter((e: BenutzerListeEintrag) => e.name.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) 
+		return (search.value)
+			? rowsValue.filter((e: BenutzerListeEintrag) => e.name.toLocaleLowerCase().includes(search.value.toLocaleLowerCase()))
 			: rowsValue;
 	});
 

@@ -61,7 +61,7 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
-		let prop: Record<string, any> = routeSchueler.getProps(to);
+		const prop: Record<string, any> = routeSchueler.getProps(to);
 		this.onSelect(prop.item.value);
 		prop.dataLaufbahn = this.data.dataLaufbahn;
 		prop.dataFaecher = this.data.dataFaecher;

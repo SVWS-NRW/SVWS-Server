@@ -1,7 +1,7 @@
 <template>
 	<svws-ui-secondary-menu>
 		<template #headline> Schulverwaltung </template>
-		<template #header> </template>
+		<template #header />
 		<template #content>
 			<div class="secondary-menu--navigation container">
 				<svws-ui-sidebar-menu-item v-for="item in routeSchule.menu" :key="item.name" @click="router.push({ name: item.name })">

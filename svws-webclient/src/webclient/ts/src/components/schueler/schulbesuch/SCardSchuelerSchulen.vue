@@ -15,5 +15,5 @@
 	import { DataSchuelerSchulbesuchsdaten } from "~/apps/schueler/DataSchuelerSchulbesuchsdaten";
 
 	const props = defineProps<{ data: DataSchuelerSchulbesuchsdaten }>();
-	
+
 </script>

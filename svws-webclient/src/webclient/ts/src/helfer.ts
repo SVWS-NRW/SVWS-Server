@@ -110,8 +110,8 @@ export const verkehrsspracheKatalogEintragFilter = (items: Verkehrssprache[], se
 };
 
 /** Sortierfunktion für Sprachen */
-export const verkehrsspracheKatalogEintragSort = (a: Verkehrssprache, b: Verkehrssprache) => { 
-	return a.daten.bezeichnung.localeCompare(b.daten.bezeichnung.toString()); 
+export const verkehrsspracheKatalogEintragSort = (a: Verkehrssprache, b: Verkehrssprache) => {
+	return a.daten.bezeichnung.localeCompare(b.daten.bezeichnung.toString());
 };
 
 /** Filter für Länder */
@@ -175,7 +175,7 @@ export const ortsteilSort = (
 };
 
 export const ortsteilFilter = (items: OrtsteilKatalogEintrag[], search: string) => {
-	let o = [];
+	const o = [];
 	for (const i of items) {
 		if (i.ortsteil?.includes(search)) {
 			o.push(i);

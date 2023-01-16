@@ -18,7 +18,7 @@
 	import { useSchuelerListe } from '../../composables';
 	import { createKursbezeichnungsGetter, useKurse, useRegelParameterKurs, useRegelParameterSchueler } from '../composables'
 
-	const { dataFaecher } = defineProps<{ 
+	const { dataFaecher } = defineProps<{
 		dataFaecher: DataGostFaecher;
 	}>();
 
@@ -31,7 +31,7 @@
 	const regel: ShallowRef<GostBlockungRegel | undefined> = shallowRef(undefined)
 	const schueler = useRegelParameterSchueler(regel, 0)
 	const kurs = useRegelParameterKurs(regel, 1)
-		
+
 	const schuelerliste = useSchuelerListe()
 	const kurse = useKurse()
 	const regel_hinzufuegen = (r: GostBlockungRegel) => {

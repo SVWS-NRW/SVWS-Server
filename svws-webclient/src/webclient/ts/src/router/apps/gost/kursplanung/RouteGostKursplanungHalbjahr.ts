@@ -21,12 +21,12 @@ export class RouteGostKursplanungHalbjahr extends RouteNode<RouteDataGostKurspla
 	public constructor() {
 		super("gost_kursplanung_halbjahr", "blockung/:idblockung(\\d+)?", SGostKursplanungEmptyErgebnis, new RouteDataGostKursplanungHalbjahr());
 		super.propHandler = (route) => this.getProps(route);
-        super.setView("gost_kursplanung_blockung_auswahl", SGostKursplanungBlockungAuswahl, (route) => this.getProps(route));
+		super.setView("gost_kursplanung_blockung_auswahl", SGostKursplanungBlockungAuswahl, (route) => this.getProps(route));
 		super.text = "Kursplanung Halbjahresauswahl";
 		super.children = [
 			routeGostKursplanungBlockung
 		];
-        super.defaultChild = routeGostKursplanungBlockung;
+		super.defaultChild = routeGostKursplanungBlockung;
 		this.isHidden = (params: RouteParams) => {
 			return this.checkHidden(params);
 		}
@@ -37,7 +37,7 @@ export class RouteGostKursplanungHalbjahr extends RouteNode<RouteDataGostKurspla
 		return (abiturjahr === undefined) || (abiturjahr === -1);
 	}
 
-    public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
+	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
 		const abiturjahr = to_params.abiturjahr === undefined ? undefined : parseInt(to_params.abiturjahr as string);
 		const halbjahr = (to_params.halbjahr === undefined) ? undefined : GostHalbjahr.fromID(Number(parseInt(to_params.halbjahr as string))) || undefined;
 		if ((abiturjahr === undefined) || (abiturjahr !== routeGost.data.item.value?.abiturjahr))
@@ -45,7 +45,7 @@ export class RouteGostKursplanungHalbjahr extends RouteNode<RouteDataGostKurspla
 		if ((halbjahr === undefined) || (halbjahr.id !== routeGostKursplanung.data.halbjahr.value.id))
 			return routeGostKursplanung.getRoute(abiturjahr, halbjahr?.id);
 		return true;
-    }
+	}
 
 	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<any> {
 		const abiturjahr = to_params.abiturjahr === undefined ? undefined : parseInt(to_params.abiturjahr as string);
@@ -55,7 +55,7 @@ export class RouteGostKursplanungHalbjahr extends RouteNode<RouteDataGostKurspla
 		await this.data.listBlockungen.update_list(abiturjahr, halbjahr);
 	}
 
-    public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<any> {
+	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<any> {
 		// Prüfe nochmals Abiturjahrgang und Halbjahr
 		const abiturjahr = to_params.abiturjahr === undefined ? undefined : parseInt(to_params.abiturjahr as string);
 		const halbjahr = (to_params.halbjahr === undefined) ? undefined : GostHalbjahr.fromID(Number(parseInt(to_params.halbjahr as string))) || undefined;
@@ -112,18 +112,18 @@ export class RouteGostKursplanungHalbjahr extends RouteNode<RouteDataGostKurspla
 		return { name: this.name, params: { abiturjahr: abiturjahr, halbjahr: halbjahr, idblockung: idblockung }};
 	}
 
-    public getSelector(onSet?: (value : GostBlockungListeneintrag | undefined) => void) : WritableComputedRef<GostBlockungListeneintrag | undefined> {
-        const router = useRouter();
-        return computed({
+	public getSelector(onSet?: (value : GostBlockungListeneintrag | undefined) => void) : WritableComputedRef<GostBlockungListeneintrag | undefined> {
+		const router = useRouter();
+		return computed({
 			get: () => this.data.listBlockungen.ausgewaehlt,
-            set: (value) => {
+			set: (value) => {
 				if (onSet !== undefined)
 					onSet(value);
 				if (value !== this.data.listBlockungen.ausgewaehlt)
 					router.push(this.getRoute(routeGost.liste.ausgewaehlt?.abiturjahr, routeGostKursplanung.data.halbjahr.value.id, value?.id));
-            }
-        });
-    }
+			}
+		});
+	}
 
 }
 

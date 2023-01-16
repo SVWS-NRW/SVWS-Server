@@ -1,8 +1,8 @@
 <template>
 	<tr class="px-2 text-left" :class="{ 'bg-red-400': schiene_hat_kollisionen }">
 		<td class="bg-slate-100 px-2">
-			{{ schiene_g?.bezeichnung }} <br />
-			{{ schiene.kurse.size() }} Kurse <br />
+			{{ schiene_g?.bezeichnung }} <br>
+			{{ schiene.kurse.size() }} Kurse <br>
 			{{ anzahl_schueler }} Schüler
 		</td>
 		<s-kurs-schueler-schiene-kurs v-for="kurs of getSchieneKurse" :key="kurs.hashCode()" :kurs="kurs" :schueler="selected"
@@ -18,7 +18,7 @@
 	import { DataGostKursblockung } from "~/apps/gost/DataGostKursblockung";
 	import { DataGostKursblockungsergebnis } from "~/apps/gost/DataGostKursblockungsergebnis";
 
-	const props = defineProps<{ 
+	const props = defineProps<{
 		schiene: GostBlockungsergebnisSchiene;
 		selected: SchuelerListeEintrag;
 		blockung: DataGostKursblockung;

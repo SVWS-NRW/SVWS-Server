@@ -2,21 +2,15 @@
 	<svws-ui-content-card title="Basisdaten">
 		<div class="content-wrapper">
 			<div class="input-wrapper">
-				<svws-ui-text-input
-					v-model="inputKuerzel"
+				<svws-ui-text-input v-model="inputKuerzel"
 					type="text"
-					placeholder="Kürzel"
-				/>
-				<svws-ui-text-input
-					v-model="inputBezeichnung"
+					placeholder="Kürzel" />
+				<svws-ui-text-input v-model="inputBezeichnung"
 					type="text"
-					placeholder="Bezeichnung"
-				/>
-				<svws-ui-text-input
-					v-model="inputFachStatistik"
+					placeholder="Bezeichnung" />
+				<svws-ui-text-input v-model="inputFachStatistik"
 					placeholder="Bezeichnung in Statistik"
-					type="text"
-				/>
+					type="text" />
 			</div>
 		</div>
 	</svws-ui-content-card>
@@ -55,7 +49,7 @@
 	const inputFachStatistik: WritableComputedRef<string | undefined> =
 		computed({
 			get(): string | undefined {
-					return app.dataFach.daten?.kuerzelStatistik?.toString();
+				return app.dataFach.daten?.kuerzelStatistik?.toString();
 			},
 			set(val: string | undefined) {
 				app.dataFach.patch({

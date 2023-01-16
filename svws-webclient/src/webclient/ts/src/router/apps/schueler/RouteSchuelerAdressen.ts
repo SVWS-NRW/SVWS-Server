@@ -20,10 +20,10 @@ export class RouteSchuelerAdressen extends RouteNode<RouteDataSchuelerAdressen, 
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Adressen / Betriebe";
 		// TODO Löse diesen Zusammenhang in den Komponente so auf, dass die übliche Vorgehensweise bei den Routen angewandt werden kann und die Folgezeile nicht mehr nötig ist
-		this.data.listSchuelerbetriebe.add_data(this.data.betriebsStammdaten); 
+		this.data.listSchuelerbetriebe.add_data(this.data.betriebsStammdaten);
 	}
 
-    public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
+	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
 		if (routeSchueler.item === undefined)
 			return;
 		await this.data.listSchuelerbetriebe.update_list(routeSchueler.item.id);
@@ -40,7 +40,7 @@ export class RouteSchuelerAdressen extends RouteNode<RouteDataSchuelerAdressen, 
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
-		let prop: Record<string, any> = routeSchueler.getProps(to);
+		const prop: Record<string, any> = routeSchueler.getProps(to);
 		this.onSelect(prop.item.value);
 		prop.listSchuelerbetriebe = this.data.listSchuelerbetriebe;
 		prop.betriebsStammdaten = this.data.betriebsStammdaten;

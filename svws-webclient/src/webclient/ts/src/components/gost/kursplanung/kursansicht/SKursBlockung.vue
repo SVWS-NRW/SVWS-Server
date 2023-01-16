@@ -1,5 +1,5 @@
 <template>
-	<tr v-if="setze_kursdifferenz" class="row--kursdifferenz"/>
+	<tr v-if="setze_kursdifferenz" class="row--kursdifferenz" />
 	<tr :style="{ 'background-color': bgColor }">
 		<td :class="{'cell--kursdifferenz': setze_kursdifferenz}">
 			<div class="flex gap-1">
@@ -16,23 +16,25 @@
 		<td class="text-center cell--has-multiselect" :class="{'cell--kursdifferenz': setze_kursdifferenz}">
 			<template v-if="allow_regeln">
 				<svws-ui-multi-select v-model="kurslehrer" class="w-20" autocomplete :item-filter="lehrer_filter" removable headless
-					:items="listLehrer.liste" :item-text="(l: LehrerListeEintrag)=> `${l.kuerzel}`"/>
+					:items="listLehrer.liste" :item-text="(l: LehrerListeEintrag)=> `${l.kuerzel}`" />
 			</template>
 			<template v-else>
 				{{ kurslehrer?.kuerzel }}
 			</template>
 		</td>
 		<td class="text-center" :class="{'cell--kursdifferenz': setze_kursdifferenz}">
-			<svws-ui-checkbox headless v-if="allow_regeln" v-model="koop"></svws-ui-checkbox>
-			<template v-else>{{koop ? "&#x2713;" : "&#x2717;"}}</template>
+			<svws-ui-checkbox headless v-if="allow_regeln" v-model="koop" />
+			<template v-else>{{ koop ? "&#x2713;" : "&#x2717;" }}</template>
 		</td>
 		<template v-if="setze_kursdifferenz && kurs_blockungsergebnis">
 			<td class="text-center blockung--kursdifferenz" :rowspan="kursdifferenz[0] + (kursdetail_anzeige ? 1:0)">
-				{{kursdifferenz[2]}}</td>
-			<td class="text-center blockung--kursdifferenz" :rowspan="kursdifferenz[0] + (kursdetail_anzeige ? 1:0)">{{kursdifferenz[1]}}</td>
+				{{ kursdifferenz[2] }}
+			</td>
+			<td class="text-center blockung--kursdifferenz" :rowspan="kursdifferenz[0] + (kursdetail_anzeige ? 1:0)">{{ kursdifferenz[1] }}</td>
 		</template>
 		<template v-if="!kurs_blockungsergebnis">
-			<td></td> </template>
+			<td />
+		</template>
 		<svws-ui-drop-data v-if="!blockung_aktiv"
 			v-for="(schiene) in schienen"
 			v-slot="{ active }"
@@ -40,8 +42,7 @@
 			class="text-center"
 			:class="{'cell--kursdifferenz': setze_kursdifferenz, 'bg-yellow-200': drag_data.kurs?.id === kurs.id && drag_data.schiene?.id !== schiene.id, 'bg-slate-500': schiene_gesperrt(schiene)}"
 			tag="td"
-			@drop="drop_aendere_kursschiene($event, schiene)"
-			>
+			@drop="drop_aendere_kursschiene($event, schiene)">
 			<svws-ui-drag-data v-if="kurs_schiene_zugeordnet(schiene)"
 				:key="kurs.id"
 				tag="div"
@@ -51,19 +52,19 @@
 				:class="{'bg-slate-500': schiene_gesperrt(schiene)}"
 				:style="{ 'background-color': schiene_gesperrt(schiene)? '':bgColor}"
 				@drag-start="drag_started"
-				@dragEnd="drag_ended"
-			>
+				@dragEnd="drag_ended">
 				<svws-ui-badge size="tiny" class="cursor-grab" :type="selected_kurs ? 'primary' : fixier_regeln.length ? 'error' : active && drag_data?.kurs?.id !== kurs.id ? 'success' : 'highlight'" @click="toggle_active_kurs">
 					{{ kurs_blockungsergebnis?.schueler.size() }}
-					<svws-ui-icon class="cursor-pointer" @click="fixieren_regel_toggle" >
-						<i-ri-pushpin-fill v-if="fixier_regeln.length" class="inline-block"/>
-						<i-ri-pushpin-line v-if="!fixier_regeln.length && allow_regeln" class="inline-block"/> </svws-ui-icon>
+					<svws-ui-icon class="cursor-pointer" @click="fixieren_regel_toggle">
+						<i-ri-pushpin-fill v-if="fixier_regeln.length" class="inline-block" />
+						<i-ri-pushpin-line v-if="!fixier_regeln.length && allow_regeln" class="inline-block" />
+					</svws-ui-icon>
 				</svws-ui-badge>
 			</svws-ui-drag-data>
 			<template v-else>
 				<div class="cursor-pointer" @click="sperren_regel_toggle(schiene)"
 					:class="{'bg-green-400': active && drag_data?.schiene?.id !== schiene.id && drag_data.kurs?.id === kurs.id && drag_data.schiene?.id !== schiene.id,
-									 'bg-slate-500': schiene_gesperrt(schiene)}">
+						'bg-slate-500': schiene_gesperrt(schiene)}">
 					<svws-ui-icon>
 						<i-ri-forbid-fill v-if="sperr_regeln.find(r=>r.parameter.get(1) === ermittel_parent_schiene(schiene).nummer)" class="inline-block text-red-500" />
 						<i-ri-forbid-line v-if="allow_regeln && !sperr_regeln.find(r=>r.parameter.get(1) === ermittel_parent_schiene(schiene).nummer)" class="inline-block opacity-0 hover:opacity-25" />
@@ -72,24 +73,25 @@
 			</template>
 		</svws-ui-drop-data>
 		<template v-else v-for="schiene in schienen" :key="schiene.nummer">
-			<td class="text-center leading-5 select-none" :class="{ 'cell--kursdifferenz': setze_kursdifferenz }" >
-				<svws-ui-badge
-					v-if="kurs_schiene_zugeordnet(schiene)"
+			<td class="text-center leading-5 select-none" :class="{ 'cell--kursdifferenz': setze_kursdifferenz }">
+				<svws-ui-badge v-if="kurs_schiene_zugeordnet(schiene)"
 					size="tiny" :type="selected_kurs?'primary':'highlight'" class="cursor-pointer"
 					@click="toggle_active_kurs">
 					{{ kurs_blockungsergebnis?.schueler.size() }}
 					<svws-ui-icon v-if="fixier_regeln.length">
-						<i-ri-pushpin-fill class="inline-block"/></svws-ui-icon>
+						<i-ri-pushpin-fill class="inline-block" />
+					</svws-ui-icon>
 					<svws-ui-icon class="px-4 py-2" v-if="sperr_regeln.find(r=>r.parameter.get(1) === ermittel_parent_schiene(schiene).nummer)">
-					<i-ri-forbid-fill class="inline-block text-red-500" /> </svws-ui-icon>
+						<i-ri-forbid-fill class="inline-block text-red-500" />
+					</svws-ui-icon>
 				</svws-ui-badge>
 			</td>
 		</template>
 		<template v-if="allow_regeln">
 			<td class="cursor-pointer text-center hover:opacity-100" :class="{'cell--kursdifferenz': setze_kursdifferenz, 'opacity-100' : kursdetail_anzeige, 'opacity-25' : !kursdetail_anzeige}" @click="toggle_kursdetail_anzeige" title="Kursdetails anzeigen">
 				<div class="inline-block">
-					<i-ri-arrow-up-s-line v-if="kursdetail_anzeige" class="relative top-0.5"/>
-					<i-ri-arrow-down-s-line v-else class="relative top-0.5"/>
+					<i-ri-arrow-up-s-line v-if="kursdetail_anzeige" class="relative top-0.5" />
+					<i-ri-arrow-down-s-line v-else class="relative top-0.5" />
 				</div>
 			</td>
 		</template>
@@ -103,29 +105,29 @@
 		<td :colspan="6+schienen.size()" style="padding-top: 0.75rem; padding-bottom: 0.75rem;">
 			<div class="flex justify-between items-center gap-2">
 				<div class="flex items-center gap-12">
-					<svws-ui-button size="small" type="secondary" @click="toggle_zusatzkraefte_modal">Zusatzkräfte anlegen<i-ri-briefcase-line class="ml-1 my-0.5"/></svws-ui-button>
+					<svws-ui-button size="small" type="secondary" @click="toggle_zusatzkraefte_modal">Zusatzkräfte anlegen<i-ri-briefcase-line class="ml-1 my-0.5" /></svws-ui-button>
 					<div class="flex items-center text-base">
 						<div class="mr-2">Schienen</div>
 						<button @click="" class="group">
-							<i-ri-indeterminate-circle-line class="w-5 h-5 group-hover:hidden"/>
-							<i-ri-indeterminate-circle-fill class="w-5 h-5 hidden group-hover:inline-block"/>
+							<i-ri-indeterminate-circle-line class="w-5 h-5 group-hover:hidden" />
+							<i-ri-indeterminate-circle-fill class="w-5 h-5 hidden group-hover:inline-block" />
 						</button>
 						<span class="mx-1">{{ kurs.anzahlSchienen }}</span>
 						<button @click="" class="group">
-							<i-ri-add-circle-line class="w-5 h-5 group-hover:hidden"/>
-							<i-ri-add-circle-fill class="w-5 h-5 hidden group-hover:inline-block"/>
+							<i-ri-add-circle-line class="w-5 h-5 group-hover:hidden" />
+							<i-ri-add-circle-fill class="w-5 h-5 hidden group-hover:inline-block" />
 						</button>
 					</div>
 					<div class="flex items-center text-sm font-bold">
 						<div class="mr-2 text-base">Kurse</div>
 						<button @click="del_kurs" class="group">
-							<i-ri-indeterminate-circle-line class="w-5 h-5 group-hover:hidden"/>
-							<i-ri-indeterminate-circle-fill class="w-5 h-5 hidden group-hover:inline-block"/>
+							<i-ri-indeterminate-circle-line class="w-5 h-5 group-hover:hidden" />
+							<i-ri-indeterminate-circle-fill class="w-5 h-5 hidden group-hover:inline-block" />
 						</button>
-						<span class="mx-0.5"></span>
+						<span class="mx-0.5" />
 						<button @click="add_kurs" class="group">
-							<i-ri-add-circle-line class="w-5 h-5 group-hover:hidden"/>
-							<i-ri-add-circle-fill class="w-5 h-5 hidden group-hover:inline-block"/>
+							<i-ri-add-circle-line class="w-5 h-5 group-hover:hidden" />
+							<i-ri-add-circle-fill class="w-5 h-5 hidden group-hover:inline-block" />
 						</button>
 					</div>
 				</div>
@@ -146,7 +148,7 @@
 		<template #modalTitle>Regel erstellen für Kurse</template>
 		<template #modalDescription>
 			<div class="">
-				Sollen die Kurse {{get_kursbezeichnung(kurs1?.id)}} und {{get_kursbezeichnung(kurs.id)}} immer oder nie zusammen auf einer Schiene liegen?
+				Sollen die Kurse {{ get_kursbezeichnung(kurs1?.id) }} und {{ get_kursbezeichnung(kurs.id) }} immer oder nie zusammen auf einer Schiene liegen?
 			</div>
 			<div class="flex gap-1">
 				<svws-ui-button @click="toggle_kurs_und_kurs_modal">Abbrechen</svws-ui-button>
@@ -168,7 +170,7 @@
 
 <script setup lang="ts">
 
-	import { GostBlockungKurs, GostBlockungRegel, GostBlockungSchiene, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, GostBlockungsergebnisSchiene, 
+	import { GostBlockungKurs, GostBlockungRegel, GostBlockungSchiene, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, GostBlockungsergebnisSchiene,
 		GostFach, GostKursart, GostKursblockungRegelTyp, LehrerListeEintrag, List, Vector, ZulaessigesFach } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, Ref, ref, WritableComputedRef } from "vue";
 	import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
@@ -179,7 +181,7 @@
 	import { lehrer_filter } from "~/helfer";
 	import { routeGostKursplanungSchueler } from "~/router/apps/gost/kursplanung/RouteGostKursplanungSchueler";
 
-	const props = defineProps<{ 
+	const props = defineProps<{
 		kurs: GostBlockungKurs
 		dataFaecher: DataGostFaecher;
 		blockung: DataGostKursblockung;
@@ -200,7 +202,7 @@
 
 	const gostFach: ComputedRef<GostFach | null> = computed(() => {
 		let fach: GostFach | null = null;
-		if (!props.dataFaecher.manager) 
+		if (!props.dataFaecher.manager)
 			return null;
 		for (const f of props.dataFaecher.manager.values())
 			if (f.id === props.kurs.fach_id) {
@@ -256,7 +258,7 @@
 					props.blockung.datenmanager.patchOfKursAddLehrkraft(props.kurs.id, lehrer);
 					add_lehrer_regel();
 				});
-			} else 
+			} else
 				remove_kurslehrer()
 		}
 	});
@@ -279,7 +281,7 @@
 	})
 
 	function add_lehrer_regel() {
-		if (lehrer_regel !== undefined)
+		if (lehrer_regel.value !== undefined)
 			return;
 		const r = new GostBlockungRegel();
 		const regel_typ = GostKursblockungRegelTyp.LEHRKRAFT_BEACHTEN
@@ -294,19 +296,19 @@
 		return manager.value.getOfKursName(kurs_id);
 	}
 
-	const schienen: ComputedRef<List<GostBlockungsergebnisSchiene>> = computed(() => 
+	const schienen: ComputedRef<List<GostBlockungsergebnisSchiene>> = computed(() =>
 		manager.value?.getMengeAllerSchienen() || new Vector<GostBlockungsergebnisSchiene>()
 	);
 
 	const kurs_blockungsergebnis: ComputedRef<GostBlockungsergebnisKurs|undefined> = computed(() => manager.value?.getKursE(props.kurs.id));
 
-	const selected_kurs: ComputedRef<boolean> = computed(() => 
+	const selected_kurs: ComputedRef<boolean> = computed(() =>
 		(kurs_blockungsergebnis.value !== undefined) && (kurs_blockungsergebnis.value?.id === routeGostKursplanungSchueler.data.listSchueler.filter.kurs?.id)
 	);
 
 	const filtered_by_kursart: ComputedRef<GostBlockungsergebnisKurs[]> = computed(() => {
 		let kurse: Vector<GostBlockungsergebnisKurs>|undefined
-			kurse = manager.value?.getOfFachKursmenge(props.kurs.fach_id)
+		kurse = manager.value?.getOfFachKursmenge(props.kurs.fach_id)
 		if (!kurse) return []
 		const arr = kurse.toArray(new Array<GostBlockungsergebnisKurs>())
 		return arr.filter(k => k.kursart === art.id).sort((a,b)=>{
@@ -319,17 +321,17 @@
 	const setze_kursdifferenz: ComputedRef<boolean> = computed(() => filtered_by_kursart.value[0] === kurs_blockungsergebnis.value);
 
 	const kursdifferenz: ComputedRef<[number, number, number]> = computed(() => {
-		if (!filtered_by_kursart.value.length) 
+		if (!filtered_by_kursart.value.length)
 			return [-1,-1, -1]
 		const fachart_id = GostKursart.getFachartID(props.kurs.fach_id, props.kurs.kursart);
 		const wahlen = props.blockung.datenmanager?.getOfFachartMengeFachwahlen(fachart_id).size() || 0;
-		if (filtered_by_kursart.value.length === 2) 
+		if (filtered_by_kursart.value.length === 2)
 			return [2, Math.abs(filtered_by_kursart.value[0].schueler.size() - filtered_by_kursart.value[1].schueler.size()), wahlen];
 		const sorted = [...filtered_by_kursart.value].sort((a, b) => b.schueler.size() - a.schueler.size());
 		return [filtered_by_kursart.value.length, sorted[0].schueler.size() - sorted[sorted.length - 1].schueler.size(), wahlen]
 	});
 
-	const regeln: ComputedRef<List<GostBlockungRegel>> = computed(() => 
+	const regeln: ComputedRef<List<GostBlockungRegel>> = computed(() =>
 		props.blockung.datenmanager?.getMengeOfRegeln() || new Vector<GostBlockungRegel>()
 	);
 
@@ -354,7 +356,7 @@
 	function drag_started(e: DragEvent) {
 		const transfer = e.dataTransfer;
 		const data = JSON.parse(transfer?.getData('text/plain') || "") as {kurs: GostBlockungKurs; schiene: GostBlockungSchiene} | undefined;
-		if (!data) 
+		if (!data)
 			return;
 		drag_data.value.kurs = data.kurs;
 		drag_data.value.schiene = data.schiene;
@@ -369,12 +371,12 @@
 		for (const regel of regeln.value) {
 			const { nummer } = ermittel_parent_schiene(schiene)
 			if (regel.typ === GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS.typ
-					&& (regel.parameter.get(0) !== props.kurs.kursart && (nummer >= regel.parameter.get(1) && nummer <= regel.parameter.get(2)))
-					|| (regel.parameter.get(0) === props.kurs.kursart && (nummer < regel.parameter.get(1) || nummer > regel.parameter.get(2))))
+				&& (regel.parameter.get(0) !== props.kurs.kursart && (nummer >= regel.parameter.get(1) && nummer <= regel.parameter.get(2)))
+				|| (regel.parameter.get(0) === props.kurs.kursart && (nummer < regel.parameter.get(1) || nummer > regel.parameter.get(2))))
 				return true;
 			else if (regel.typ === GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS.typ
-					&& regel.parameter.get(0) === props.kurs.kursart
-					&& (nummer >= regel.parameter.get(1) && nummer <= regel.parameter.get(2)))
+				&& regel.parameter.get(0) === props.kurs.kursart
+				&& (nummer >= regel.parameter.get(1) && nummer <= regel.parameter.get(2)))
 				return true;
 		}
 		return false;
@@ -382,7 +384,7 @@
 
 	const ermittel_parent_schiene = (ergebnis_schiene: GostBlockungsergebnisSchiene): GostBlockungSchiene => {
 		const schiene =	manager.value?.getSchieneG(ergebnis_schiene.id)
-		if (!schiene) 
+		if (!schiene)
 			throw new Error("Schiene fehlt in der Definition")
 		return schiene
 	}
@@ -475,7 +477,7 @@
 		if (filterValue.kurs !== props.kurs) {
 			routeGostKursplanungSchueler.data.listSchueler.reset_filter();
 			filterValue.kurs = props.kurs;
-		} else 
+		} else
 			routeGostKursplanungSchueler.data.listSchueler.reset_filter();
 		routeGostKursplanungSchueler.data.listSchueler.filter = filterValue;
 	}
@@ -489,12 +491,12 @@
 	const zusatzkraefte_modal: Ref<any> = ref(null);
 	function toggle_zusatzkraefte_modal() {
 		zusatzkraefte_modal.value.isOpen ? zusatzkraefte_modal.value.closeModal() : zusatzkraefte_modal.value.openModal();
-	};
+	}
 
 	const kurs_und_kurs_modal: Ref<any> = ref(null);
 	function toggle_kurs_und_kurs_modal() {
 		kurs_und_kurs_modal.value.isOpen ? kurs_und_kurs_modal.value.closeModal() : kurs_und_kurs_modal.value.openModal();
-	};
+	}
 
 	async function create_regel_immer() {
 		kurs_und_kurs_modal.value.closeModal();

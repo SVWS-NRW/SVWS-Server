@@ -8,7 +8,7 @@
 				<div>
 					<span class="inline-block mr-3">{{ inputTitel }} {{ inputVorname }} {{ inputNachname }}</span>
 					<svws-ui-badge type="light">ID: {{ item.value?.id }}</svws-ui-badge>
-					<br/>
+					<br>
 					<span class="opacity-50">{{ inputKuerzel }}</span>
 				</div>
 			</div>
@@ -18,7 +18,7 @@
 		</svws-ui-router-tab-bar>
 	</div>
 	<div v-else class="app-layout--main--placeholder">
-		<i-ri-briefcase-line/>
+		<i-ri-briefcase-line />
 	</div>
 </template>
 
@@ -30,7 +30,7 @@
 	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 	import { routeLehrer } from "~/router/apps/RouteLehrer";
 
-	const { item, stammdaten } = defineProps<{ 
+	const { item, stammdaten } = defineProps<{
 		item: ShallowRef<LehrerListeEintrag | undefined>;
 		stammdaten: DataLehrerStammdaten;
 		schule: DataSchuleStammdaten;

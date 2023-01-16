@@ -36,7 +36,7 @@
 	import { computed, ComputedRef } from 'vue';
 	import { DataGostFaecher } from '~/apps/gost/DataGostFaecher';
 
-	const { dataFaecher } = defineProps<{ 
+	const { dataFaecher } = defineProps<{
 		dataFaecher: DataGostFaecher;
 	}>();
 

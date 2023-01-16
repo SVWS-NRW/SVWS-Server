@@ -14,7 +14,7 @@
 		</svws-ui-router-tab-bar>
 	</div>
 	<div v-else class="app-layout--main--placeholder">
-		<i-ri-group-line/>
+		<i-ri-group-line />
 	</div>
 </template>
 
@@ -26,8 +26,8 @@
 	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 	import { routeKlassen } from "~/router/apps/RouteKlassen";
 
-	const { item, mapLehrer } = defineProps<{ 
-		item: ShallowRef<KlassenListeEintrag | undefined>, 
+	const { item, mapLehrer } = defineProps<{
+		item: ShallowRef<KlassenListeEintrag | undefined>,
 		schule: DataSchuleStammdaten;
 		listLehrer: ListLehrer,
 		mapLehrer: Map<Number, LehrerListeEintrag>,

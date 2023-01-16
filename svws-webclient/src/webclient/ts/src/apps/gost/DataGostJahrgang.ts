@@ -35,7 +35,7 @@ export class DataGostJahrgang extends BaseData<GostJahrgangsdaten, GostJahrgang>
 	 */
 	public async patch(data: Partial<GostJahrgangsdaten>): Promise<boolean> {
 		const daten = this._daten;
-		if (!daten || daten.abiturjahr === null) 
+		if (!daten || daten.abiturjahr === null)
 			return false;
 		const abijahr = daten.abiturjahr.valueOf();
 		return this._patch(data, () => App.api.patchGostAbiturjahrgang(data as GostJahrgangsdaten, App.schema, abijahr));

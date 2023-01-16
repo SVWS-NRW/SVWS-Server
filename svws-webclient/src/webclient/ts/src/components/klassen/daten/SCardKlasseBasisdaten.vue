@@ -20,8 +20,8 @@
 	import { DataKlasse } from "~/apps/klassen/DataKlasse";
 	import { ListJahrgaenge } from "~/apps/jahrgaenge/ListJahrgaenge";
 
-	const { data, listJahrgaenge, mapJahrgaenge } = defineProps<{ 
-		data: DataKlasse, 
+	const { data, listJahrgaenge, mapJahrgaenge } = defineProps<{
+		data: DataKlasse,
 		listJahrgaenge: ListJahrgaenge,
 		mapJahrgaenge: Map<Number, JahrgangsListeEintrag>
 	}>();

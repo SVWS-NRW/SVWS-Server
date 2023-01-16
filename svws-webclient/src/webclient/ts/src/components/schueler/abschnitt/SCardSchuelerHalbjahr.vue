@@ -1,12 +1,12 @@
 <template>
 	<svws-ui-content-card title="Allgemeine Angaben">
 		<div class="input-wrapper">
-			<svws-ui-multi-select title="Schuljahr" v-model="inputSchuljahr" :items="inputSchuljahre" :item-filter="schuljahr_filter" 
+			<svws-ui-multi-select title="Schuljahr" v-model="inputSchuljahr" :items="inputSchuljahre" :item-filter="schuljahr_filter"
 				:item-sort="schuljahr_sort" :item-text="i => `${i.schuljahr}`" autocomplete />
 			<svws-ui-multi-select title="Abschnitt" v-model="inputAbschnitt" :items="inputAbschnitte" :item-filter="abschnitt_filter"
 				:item-sort="abschnitt_sort" :item-text="i => `${i.abschnitt}`" autocomplete />
 
-			<svws-ui-multi-select title="Klasse" v-model="inputKlasse" :items="inputKlasse" :item-filter="klasse_filter" 
+			<svws-ui-multi-select title="Klasse" v-model="inputKlasse" :items="inputKlasse" :item-filter="klasse_filter"
 				:item-sort="klasse_sort" :item-text="i => `${i.klasse}`" autocomplete />
 			<svws-ui-multi-select title="Jahrgang" v-model="inputJahrgang" :items="inputJahrgange" :item-filter="jahrgang_filter"
 				:item-sort="jahrgang_sort" :item-text="i => `${i.jahrgang}`" autocomplete />
@@ -37,7 +37,7 @@
 
 			<svws-ui-multi-select title="Förderschwerpunkt" v-model="inputFoerderschwerpunkt" :items="inputFoerderschwerpunkt" :item-filter="foerderschwerpunkt_filter"
 				:item-sort="foerderschwerpunkt_sort" :item-text="i => `${i.foerderschwerpunkt}`" autocomplete />
-			<svws-ui-multi-select title="Weiterer Förderschwerpunkt" v-model="inputWeitererFoerderschwerpunkt" :items="inputWeitererFoerderschwerpunkte" :item-filter="weitererFoerderschwerpunkt_filter" 
+			<svws-ui-multi-select title="Weiterer Förderschwerpunkt" v-model="inputWeitererFoerderschwerpunkt" :items="inputWeitererFoerderschwerpunkte" :item-filter="weitererFoerderschwerpunkt_filter"
 				:item-sort="weitererFoerderschwerpunkt_sort" :item-text="i => `${i.weitererFoerderschwerpunkt}`" autocomplete />
 
 			<div class="col-span-2">

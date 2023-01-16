@@ -1,77 +1,76 @@
 <template>
-    <svws-ui-modal  ref="modalNeuerBenutzer"  size="small" >
-        <template #modalTitle>
-		    Benutzer hinzufügen
+	<svws-ui-modal ref="modalNeuerBenutzer" size="small">
+		<template #modalTitle>
+			Benutzer hinzufügen
 		</template>
-		
-        <template #modalContent>
+
+		<template #modalContent>
 			<div class="content-wrapper">
 				<div class="input-wrapper">
 					<svws-ui-text-input v-model="anzeigename" type="text" placeholder="Anzeigename" />
 					<svws-ui-text-input v-model="name" type="text" placeholder="Login-Name" />
-					<svws-ui-text-input v-model="passwort1" type="password" placeholder="Passwort"/>
-                    <svws-ui-text-input v-model="passwort2" type="password" placeholder="Passwort"/>
+					<svws-ui-text-input v-model="passwort1" type="password" placeholder="Passwort" />
+					<svws-ui-text-input v-model="passwort2" type="password" placeholder="Passwort" />
 				</div>
-			</div>	
-		</template>						
-		
-        <template #modalActions>
+			</div>
+		</template>
+
+		<template #modalActions>
 			<svws-ui-button type="secondary" @click="modalNeuerBenutzer.closeModal()"> Abbrechen </svws-ui-button>
 			<svws-ui-button @click="createBenutzerAllgemein"> Weiter </svws-ui-button>
 		</template>
-	</svws-ui-modal>								
-	
-    <button class="button button--icon" @click="modalNeuerBenutzer.openModal()">
+	</svws-ui-modal>
+
+	<button class="button button--icon" @click="modalNeuerBenutzer.openModal()">
 		<svws-ui-icon><i-ri-add-line /></svws-ui-icon>
 	</button>
-	
-    <button v-if="show_delete_icon" class="button button--icon" @click="deleteBenutzer()">
+
+	<button v-if="show_delete_icon" class="button button--icon" @click="deleteBenutzer()">
 		<svws-ui-icon><i-ri-delete-bin2-line /></svws-ui-icon>
 	</button>
 
-    <button class="button button--icon">
+	<button class="button button--icon">
 		<svws-ui-icon><i-ri-file-copy-line /></svws-ui-icon>
 	</button>
-	
-    <button class="button button--icon">
+
+	<button class="button button--icon">
 		<svws-ui-icon><i-ri-more-2-line /></svws-ui-icon>
 	</button>
-	
 </template>
 
 <script setup lang="ts">
-    import { computed, ComputedRef, ref } from "vue";
-    import { injectMainApp, Main } from "~/apps/Main";
+	import { computed, ComputedRef, ref } from "vue";
+	import { injectMainApp, Main } from "~/apps/Main";
 
-    const main: Main = injectMainApp();
-    const app = main.apps.benutzer;
-    const modalNeuerBenutzer = ref();
-	
-    const props=defineProps({
-        show_delete_icon : {type:Boolean, default:false}
-    });
+	const main: Main = injectMainApp();
+	const app = main.apps.benutzer;
+	const modalNeuerBenutzer = ref();
 
-    const anzeigename = ref();
+	const props=defineProps({
+		show_delete_icon : {type:Boolean, default:false}
+	});
+
+	const anzeigename = ref();
 	const name = ref();
 	const passwort1=ref();
-    const passwort2=ref();
+	const passwort2=ref();
 
 	function createBenutzerAllgemein(){
-        if(passwort1.value === passwort2.value){
-            main.apps.benutzer.dataBenutzer.createBenutzerAllgemein(name.value,anzeigename.value,passwort1.value);
-            modalNeuerBenutzer.value.closeModal();
-            anzeigename.value="";
-            name.value="";
-            passwort1.value="";
-            passwort2.value="";
-        }
-        else{
-            alert("Passwörter stimmen nicht überein")
-        }
+		if(passwort1.value === passwort2.value){
+			main.apps.benutzer.dataBenutzer.createBenutzerAllgemein(name.value,anzeigename.value,passwort1.value);
+			modalNeuerBenutzer.value.closeModal();
+			anzeigename.value="";
+			name.value="";
+			passwort1.value="";
+			passwort2.value="";
+		}
+		else{
+			alert("Passwörter stimmen nicht überein")
+		}
 	}
-    
-    function deleteBenutzer(){
-        app.dataBenutzer.deleteBenutzerAllgemein();
-    }
+
+	function deleteBenutzer(){
+		app.dataBenutzer.deleteBenutzerAllgemein();
+	}
 </script>
 

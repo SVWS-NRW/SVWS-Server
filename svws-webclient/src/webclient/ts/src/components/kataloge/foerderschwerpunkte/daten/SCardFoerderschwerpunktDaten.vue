@@ -17,8 +17,8 @@
 	import { Foerderschwerpunkt } from "@svws-nrw/svws-core-ts";
 	import { DataFoerderschwerpunkt } from "~/apps/kataloge/foerderschwerpunkt/DataFoerderschwerpunkt";
 
-	const { data } = defineProps<{ 
-		data: DataFoerderschwerpunkt 
+	const { data } = defineProps<{
+		data: DataFoerderschwerpunkt
 	}>();
 
 	const id: ComputedRef<number | undefined> = computed(() => data.daten?.id);

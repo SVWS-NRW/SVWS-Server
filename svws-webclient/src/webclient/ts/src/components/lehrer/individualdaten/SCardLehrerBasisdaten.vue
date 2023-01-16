@@ -30,7 +30,7 @@
 
 	const daten: ComputedRef<LehrerStammdaten> = computed(() => props.stammdaten.daten || new LehrerStammdaten());
 
-	const inputKuerzel: WritableComputedRef<string> = computed({ 
+	const inputKuerzel: WritableComputedRef<string> = computed({
 		get(): string {
 			return daten.value.kuerzel.toString();
 		},

@@ -18,7 +18,7 @@
 	import { createKursbezeichnungsGetter, useRegelParameterKurs, useRegelParameterSchiene  } from '../composables';
 	import { useKurse } from '../composables'
 
-	const { dataFaecher } = defineProps<{ 
+	const { dataFaecher } = defineProps<{
 		dataFaecher: DataGostFaecher;
 	}>();
 

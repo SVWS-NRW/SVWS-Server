@@ -11,13 +11,13 @@ export class ListKursblockungen extends BaseList<GostBlockungListeneintrag> {
 	protected _abiturjahr: number | undefined = undefined;
 	protected _halbjahr: GostHalbjahr | undefined = undefined;
 
-	public get abiturjahr() { 
+	public get abiturjahr() {
 		return this._abiturjahr;
-	};
+	}
 
-	public get halbjahr() { 
+	public get halbjahr() {
 		return this._halbjahr;
-	};
+	}
 
 	public async update_list(abiturjahr: number, halbjahr: GostHalbjahr, neue_blockung?: boolean): Promise<void> {
 		this._abiturjahr = abiturjahr;

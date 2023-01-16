@@ -25,9 +25,9 @@
 	import { DataKatalogFahrschuelerarten } from "~/apps/schueler/DataKatalogFahrschuelerarten";
 	import { injectMainApp, Main } from "~/apps/Main";
 
-	const props = defineProps<{ 
-		stammdaten: DataSchuelerStammdaten, 
-		fachschuelerarten: DataKatalogFahrschuelerarten 
+	const props = defineProps<{
+		stammdaten: DataSchuelerStammdaten,
+		fachschuelerarten: DataKatalogFahrschuelerarten
 	}>();
 
 	const main: Main = injectMainApp();

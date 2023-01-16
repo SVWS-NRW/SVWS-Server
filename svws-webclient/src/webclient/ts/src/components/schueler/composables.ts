@@ -29,7 +29,7 @@ export class UseSchuelerStammdaten<U> extends Use<SchuelerStammdaten, U> {
 // 		}
 // 	});
 
-// export const useInput = <T,U,K extends keyof T>(base_data: BaseData<T,U>, prop: K) => 
+// export const useInput = <T,U,K extends keyof T>(base_data: BaseData<T,U>, prop: K) =>
 // 	computed({
 // 		get(): T[K] | undefined {
 // 			const data = base_data.daten?.[prop];

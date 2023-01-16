@@ -21,7 +21,7 @@
 	import { FoerderschwerpunktEintrag } from "@svws-nrw/svws-core-ts";
 	import { routeKatalogFoerderschwerpunkte } from "~/router/apps/RouteKatalogFoerderschwerpunkte";
 
-	const { item } = defineProps<{ 
+	const { item } = defineProps<{
 		item: ShallowRef<FoerderschwerpunktEintrag | undefined>;
 	}>();
 

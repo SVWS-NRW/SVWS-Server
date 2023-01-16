@@ -87,7 +87,7 @@
 		if (r === undefined)
 			return;
 		await app.dataKursblockung.del_blockung_regel(r.id)
-		if (r === props.modelValue) 
+		if (r === props.modelValue)
 			regel.value = undefined
 	}
 

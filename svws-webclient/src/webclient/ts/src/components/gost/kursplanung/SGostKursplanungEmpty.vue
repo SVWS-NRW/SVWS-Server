@@ -12,12 +12,12 @@
 	import { DataGostJahrgang } from "~/apps/gost/DataGostJahrgang";
 	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 
-	const props = defineProps<{ 
+	const props = defineProps<{
 		item: ShallowRef<GostJahrgang | undefined>;
 		schule: DataSchuleStammdaten;
 		jahrgangsdaten: DataGostJahrgang;
 		dataFaecher: DataGostFaecher;
 		halbjahr: ShallowRef<GostHalbjahr>;
 	}>();
-	
+
 </script>

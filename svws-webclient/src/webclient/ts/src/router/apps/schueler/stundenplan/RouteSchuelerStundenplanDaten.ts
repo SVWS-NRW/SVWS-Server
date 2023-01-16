@@ -1,5 +1,5 @@
 import { StundenplanListeEintrag } from "@svws-nrw/svws-core-ts";
-import { WritableComputedRef } from "@vue/reactivity";
+import { WritableComputedRef } from "vue";
 import { RouteLocationNormalized, RouteParams, useRoute, useRouter } from "vue-router";
 import { DataStundenplan } from "~/apps/schueler/DataStundenplan";
 import { ListStundenplaene } from "~/apps/schueler/ListStundenplaene";
@@ -24,19 +24,19 @@ export class RouteSchuelerStundenplanDaten extends RouteNodeListView<ListStunden
 		super("schueler_stundenplan_daten", ":idStundenplan(\\d+)?", SSchuelerStundenplanAuswahl, SSchuelerStundenplanDaten, new ListStundenplaene(), 'id', new RouteDataSchuelerStundenplan());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Stundenplan";
-        super.setView("stundenplanauswahl", SSchuelerStundenplanAuswahl, (route) => this.getProps(route));
+		super.setView("stundenplanauswahl", SSchuelerStundenplanAuswahl, (route) => this.getProps(route));
 		super.children = [
 		];
 	}
 
-    public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
+	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
 		await this.data.auswahl.update_list();
 		if ((to.name === this.name) && (to_params.idStundenplan === undefined))
 			return { name: this.name, params: { id: to_params.id, idStundenplan: this.data.auswahl.liste.at(0)?.id }};
-        return true;
-    }
+		return true;
+	}
 
-    protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
+	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
 		if (to_params.idStundenplan === undefined) {
 			this.onSelect(undefined);
 		} else {
@@ -74,7 +74,7 @@ export class RouteSchuelerStundenplanDaten extends RouteNodeListView<ListStunden
 			set(value: StundenplanListeEintrag | undefined) {
 				self.data.auswahl.ausgewaehlt = value;
 				const from_name = route.name?.toString() || "";
-				if ((from_name !== self.name) && from_name?.startsWith(self.name)) {  // TODO Ergänze Methode bei RouteNode isNested und nutze diese 
+				if ((from_name !== self.name) && from_name?.startsWith(self.name)) {  // TODO Ergänze Methode bei RouteNode isNested und nutze diese
 					const params = {...route.params};
 					params.idStundenplan = "" + value?.id;
 					router.push({ name: from_name, params: params });
@@ -87,7 +87,7 @@ export class RouteSchuelerStundenplanDaten extends RouteNodeListView<ListStunden
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
-		let prop: Record<string, any> = routeSchueler.getProps(to);
+		const prop: Record<string, any> = routeSchueler.getProps(to);
 		prop.stundenplan = this.data.item;
 		prop.data = this.data.daten;
 		return prop;

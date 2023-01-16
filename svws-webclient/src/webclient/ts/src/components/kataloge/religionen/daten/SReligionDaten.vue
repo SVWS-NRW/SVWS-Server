@@ -11,7 +11,7 @@
 	import { DataReligion } from "~/apps/kataloge/religionen/DataReligion";
 	import { routeKatalogReligionDaten } from "~/router/apps/religion/RouteKatalogReligionDaten";
 
-	const { item, data } = defineProps<{ 
+	const { item, data } = defineProps<{
 		item: ShallowRef<ReligionEintrag | undefined>;
 		data: DataReligion;
 	}>();

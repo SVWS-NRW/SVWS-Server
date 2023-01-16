@@ -19,7 +19,7 @@
 	const props = defineProps<{ stammdaten: DataSchuelerStammdaten, foerderschwerpunkte: DataKatalogFoerderschwerpunkte }>();
 
 	const daten: ComputedRef<SchuelerStammdaten> = computed(() => props.stammdaten.daten || new SchuelerStammdaten());
-	
+
 	const inputKatalogFoerderschwerpunkte: ComputedRef<FoerderschwerpunktEintrag[]> = computed(() => props.foerderschwerpunkte.daten?.toArray() as FoerderschwerpunktEintrag[] || []);
 
 	const inputFoerderschwerpunktID: WritableComputedRef<FoerderschwerpunktEintrag | undefined> = computed({

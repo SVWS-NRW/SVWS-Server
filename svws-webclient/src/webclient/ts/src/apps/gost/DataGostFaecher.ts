@@ -21,7 +21,7 @@ export class DataGostFaecher extends BaseData<List<GostFach>, GostJahrgang, Gost
 	}
 
 	protected on_update(daten: Partial<GostFach>, id?: number): void {
-		if (!this._daten) 
+		if (!this._daten)
 			return;
 		if (!this.selected_list_item || !id)
 			return;
@@ -29,7 +29,7 @@ export class DataGostFaecher extends BaseData<List<GostFach>, GostJahrgang, Gost
 		for (const f of this._daten) {
 			if (!this.istVertiefungsOderProjektkursfach(f))
 				this._data.faecherOhnePJKundVTF.push(f);
-			if (f.id === id) 
+			if (f.id === id)
 				fach = f;
 		}
 		// const fach = this._daten.find(f => f.id === id);
@@ -72,7 +72,7 @@ export class DataGostFaecher extends BaseData<List<GostFach>, GostJahrgang, Gost
 	 *   Projektkursfach handelt, ansonsten false //--helfer TODO
 	 */
 	public istVertiefungsOderProjektkursfach(fach: GostFach): boolean {
-		if (!fach.kuerzel) 
+		if (!fach.kuerzel)
 			return false;
 		const fg = ZulaessigesFach.getByKuerzelASD(fach.kuerzel).getFachgruppe();
 		return fg == Fachgruppe.FG_VX || fg == Fachgruppe.FG_PX;

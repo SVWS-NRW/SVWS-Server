@@ -17,9 +17,9 @@
 	import { DataSchuelerErzieherStammdaten } from "~/apps/schueler/DataSchuelerErzieherStammdaten";
 	import { routeSchuelerErziehungsberechtigte } from "~/router/apps/schueler/RouteSchuelerErziehungsberechtigte";
 
-	const props = defineProps<{ 
+	const props = defineProps<{
 		item: ShallowRef<SchuelerListeEintrag | undefined>;
-		data: DataSchuelerErzieherStammdaten, 
+		data: DataSchuelerErzieherStammdaten,
 		erzieherarten: DataKatalogErzieherarten
 	}>();
 

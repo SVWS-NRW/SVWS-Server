@@ -1,13 +1,13 @@
 <template>
-	<tr class="cursor-pointer px-2 text-left" :class="{ 'bg-red-400': kollision && !nichtwahl, 'bg-orange-400': nichtwahl && !kollision, 
-			'bg-gradient-to-r':nichtwahl && kollision, 'from-red-400': nichtwahl && kollision, 'to-orange-400': nichtwahl && kollision}">
+	<tr class="cursor-pointer px-2 text-left" :class="{ 'bg-red-400': kollision && !nichtwahl, 'bg-orange-400': nichtwahl && !kollision,
+		'bg-gradient-to-r':nichtwahl && kollision, 'from-red-400': nichtwahl && kollision, 'to-orange-400': nichtwahl && kollision}">
 		<td class="px-2">
 			<div class="flex justify-between">
 				<span>
-					{{ `${schueler.nachname}, ${schueler.vorname}`}} 
-					<svws-ui-badge v-if="schueler.status !== 'Aktiv'" size="tiny" type="highlight"> {{schueler.status}} </svws-ui-badge>
+					{{ `${schueler.nachname}, ${schueler.vorname}` }}
+					<svws-ui-badge v-if="schueler.status !== 'Aktiv'" size="tiny" type="highlight"> {{ schueler.status }} </svws-ui-badge>
 				</span>
-				<svws-ui-icon v-if="selected"> <i-ri-checkbox-blank-circle-fill class="text-blue-400"/> </svws-ui-icon>
+				<svws-ui-icon v-if="selected"> <i-ri-checkbox-blank-circle-fill class="text-blue-400" /> </svws-ui-icon>
 			</div>
 		</td>
 	</tr>
@@ -20,7 +20,7 @@
 	import { DataGostKursblockung } from "~/apps/gost/DataGostKursblockung";
 	import { ListAbiturjahrgangSchueler } from "~/apps/gost/ListAbiturjahrgangSchueler";
 
-	const props = defineProps<{ 
+	const props = defineProps<{
 		schueler: SchuelerListeEintrag;
 		selected: Boolean;
 		blockung: DataGostKursblockung;

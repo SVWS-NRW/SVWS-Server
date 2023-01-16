@@ -12,8 +12,8 @@
 	const main: Main = injectMainApp();
 	const app = main.apps.gost;
 
-	const { modelValue } = defineProps<{ 
-		modelValue: GostBlockungSchiene; 
+	const { modelValue } = defineProps<{
+		modelValue: GostBlockungSchiene;
 	}>();
 	const emit = defineEmits(['update:modelValue'])
 

@@ -4,7 +4,7 @@
 			<div class="flex items-center">
 				<span class="inline-block mr-3">{{ kuerzel }}</span>
 				<svws-ui-badge type="light">{{ "ID: " + item.value?.id }}</svws-ui-badge>
-				<span v-if="inputFachlehrer" class="opacity-50"><br/>{{ inputFachlehrer }}</span>
+				<span v-if="inputFachlehrer" class="opacity-50"><br>{{ inputFachlehrer }}</span>
 			</div>
 		</svws-ui-header>
 		<svws-ui-router-tab-bar :routes="routeKurse.children_records" :hidden="children_hidden" v-model="selectedRoute">
@@ -12,7 +12,7 @@
 		</svws-ui-router-tab-bar>
 	</div>
 	<div v-else class="app-layout--main--placeholder">
-		<i-ri-slideshow-line/>
+		<i-ri-slideshow-line />
 	</div>
 </template>
 
@@ -25,7 +25,7 @@
 	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 	import { routeKurse } from "~/router/apps/RouteKurse";
 
-	const { item, mapLehrer } = defineProps<{ 
+	const { item, mapLehrer } = defineProps<{
 		item: ShallowRef<KursListeEintrag | undefined>;
 		schule: DataSchuleStammdaten;
 		listJahrgaenge: ListJahrgaenge;
@@ -42,7 +42,7 @@
 	const inputFachlehrer: ComputedRef<string> = computed(() => {
 		const id = routeKurse.liste.ausgewaehlt?.lehrer;
 		const leer = "kein Lehrer festgelegt";
-		if (!id) 
+		if (!id)
 			return leer;
 		const lehrer = mapLehrer.get(id);
 		return lehrer?.kuerzel.toString() || leer;

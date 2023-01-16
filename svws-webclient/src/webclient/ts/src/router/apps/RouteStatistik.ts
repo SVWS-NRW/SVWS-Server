@@ -20,7 +20,7 @@ export class RouteStatistik extends RouteNodeListView<ListNone, unknown, unknown
 		];
 	}
 
-    protected getAuswahlComputedProperty(): WritableComputedRef<undefined> {
+	protected getAuswahlComputedProperty(): WritableComputedRef<undefined> {
 		// TODO
 		return computed({ get(): undefined { return undefined; }, set(value: undefined) { }});
 	}

@@ -10,8 +10,8 @@
 	import { computed, WritableComputedRef } from "vue";
 	import { DataSchuelerAbschnittsdaten } from "~/apps/schueler/DataSchuelerAbschnittsdaten";
 
-	const props = defineProps<{ 
-		data: DataSchuelerAbschnittsdaten, 
+	const props = defineProps<{
+		data: DataSchuelerAbschnittsdaten,
 		leistungsdaten: SchuelerLeistungsdaten
 	}>();
 

@@ -18,8 +18,8 @@
 	import { useRegelParameterKursart, useRegelParameterSchiene } from '../composables';
 
 	const regel_typ = GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS
-	//public static readonly KURSART_SPERRE_SCHIENEN_VON_BIS : GostKursblockungRegelTyp = 
-	//new GostKursblockungRegelTyp("KURSART_SPERRE_SCHIENEN_VON_BIS", 1, 1, 
+	//public static readonly KURSART_SPERRE_SCHIENEN_VON_BIS : GostKursblockungRegelTyp =
+	//new GostKursblockungRegelTyp("KURSART_SPERRE_SCHIENEN_VON_BIS", 1, 1,
 	//"Kursart: Sperre Schienen (von/bis)", Arrays.asList(GostKursblockungRegelParameterTyp.KURSART, GostKursblockungRegelParameterTyp.SCHIENEN_NR, GostKursblockungRegelParameterTyp.SCHIENEN_NR));
 
 	const regel: ShallowRef<GostBlockungRegel | undefined> = shallowRef(undefined)

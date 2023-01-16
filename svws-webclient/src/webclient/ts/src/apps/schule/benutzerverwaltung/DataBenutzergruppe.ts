@@ -58,31 +58,31 @@ export class DataBenutzergruppe extends BaseData<BenutzergruppeDaten, Benutzergr
 
 	/**
 	 * Setzt die Bezeichnung der Benutzergruppe
-	 * 
+	 *
 	 * @param {string} bezeichnung
-	 * 
+	 *
 	 * @returns {Promise<void>}
 	 */
 	 public async setBezeichnung(bezeichnung: string): Promise<void> {
-		if (!this.manager) 
+		if (!this.manager)
 			return;
 		await App.api.setBenutzergruppeBezeichnung(bezeichnung, App.schema, this.manager.getID());
 		this.manager.setBezeichnung(bezeichnung);
-		for(var index in App.apps.benutzergruppe.auswahl.liste){
+		for(const index in App.apps.benutzergruppe.auswahl.liste){
 			if(App.apps.benutzergruppe.auswahl.liste[index].id === App.apps.benutzergruppe.dataBenutzergruppe.daten?.id)
-			App.apps.benutzergruppe.auswahl.liste[index].bezeichnung=bezeichnung;
+				App.apps.benutzergruppe.auswahl.liste[index].bezeichnung=bezeichnung;
 		}
 	}
 
 	/**
 	 * Setzt, ob die Benutzergruppe eine administrative Gruppe ist oder nicht
-	 * 
+	 *
 	 * @param {boolean} istAdmin
-	 * 
+	 *
 	 * @returns {Promise<void>}
 	 */
 	 public async setIstAdmin(istAdmin: boolean): Promise<void> {
-		if (!this.manager) 
+		if (!this.manager)
 			return;
 		if(istAdmin)
 			await App.api.addBenutzergruppeAdmin(App.schema, this.manager.getID());
@@ -94,7 +94,7 @@ export class DataBenutzergruppe extends BaseData<BenutzergruppeDaten, Benutzergr
 
 	/**
 	 * Fügt die übergebene Kompetenz zu dieser Benutzergruppe hinzu
-	 * 
+	 *
 	 * @param kompetenz   die hinzuzufügende Kompetenz
 	 */
 	public async addKompetenz(kompetenz : BenutzerKompetenz) : Promise<boolean> {
@@ -111,7 +111,7 @@ export class DataBenutzergruppe extends BaseData<BenutzergruppeDaten, Benutzergr
 
 	/**
 	 * Entfernt die übergebene Kompetenz aus dieser Benutzergruppe
-	 * 
+	 *
 	 * @param kompetenz   die zu entfernende Kompetenz
 	 */
 	 public async removeKompetenz(kompetenz : BenutzerKompetenz) : Promise<boolean> {
@@ -128,7 +128,7 @@ export class DataBenutzergruppe extends BaseData<BenutzergruppeDaten, Benutzergr
 
 	/**
 	 * Fügt die übergebene Kompetenzen einer Benutzerkompetenzgruppe zu dieser Benutzergruppe hinzu
-	 * 
+	 *
 	 * @param kompetenzgruppe   die Kompetenzgruppe, deren Kompetenzen hinzugefügt werden.
 	 */
 	 public async addBenutzerKompetenzGruppe(kompetenzgruppe : BenutzerKompetenzGruppe) : Promise<boolean> {
@@ -136,12 +136,12 @@ export class DataBenutzergruppe extends BaseData<BenutzergruppeDaten, Benutzergr
 		if (!this.manager)
 			return false;
 		if (!this.manager.istAdmin()) {
-			for (let komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe)) {
+			for (const komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe)) {
 				kids.add(Number(komp.daten.id));
 			}
 			await App.api.addBenutzergruppeKompetenzen(kids,App.schema,this.manager.getID());
 			const benutzergruppendaten = await App.api.getBenutzergruppeDaten(App.schema, this.manager.getID())
-			for (let komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe)) {
+			for (const komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe)) {
 				if (!this.manager?.hatKompetenz(komp))
 					this.manager?.addKompetenz(komp);
 			}
@@ -150,8 +150,8 @@ export class DataBenutzergruppe extends BaseData<BenutzergruppeDaten, Benutzergr
 	}
 
 	/**
-	 * Entfernt die übergebene Kompetenzen einer Benutzerkompetenzgruppe von dieser Benutzergruppe 
-	 * 
+	 * Entfernt die übergebene Kompetenzen einer Benutzerkompetenzgruppe von dieser Benutzergruppe
+	 *
 	 * @param kompetenzgruppe   die Kompetenzgruppe, deren Kompetenzen entfernt werden.
 	 */
 	 public async removeBenutzerKompetenzGruppe(kompetenzgruppe : BenutzerKompetenzGruppe) : Promise<boolean> {
@@ -159,10 +159,10 @@ export class DataBenutzergruppe extends BaseData<BenutzergruppeDaten, Benutzergr
 		if (!this.manager)
 			return false;
 		if (!this.manager.istAdmin()) {
-			for (let komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe))
+			for (const komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe))
 				kids.add(Number(komp.daten.id));
 			await App.api.removeBenutzergruppeKompetenzen(kids,App.schema,this.manager.getID());
-			for (let komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe)) {
+			for (const komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe)) {
 				if (this.manager?.hatKompetenz(komp))
 					this.manager?.removeKompetenz(komp);
 			}
@@ -190,19 +190,19 @@ export class DataBenutzergruppe extends BaseData<BenutzergruppeDaten, Benutzergr
 	}
 
 	/**
-	 * Entfernt die ausgewählten Benutzer 
+	 * Entfernt die ausgewählten Benutzer
 	 */
 	public async deleteBenutzergruppe_n(){
 		const benutzer : BenutzergruppeListeEintrag[] = App.apps.benutzergruppe.auswahl.ausgewaehlt_gruppe;
 		console.log(benutzer);
 		const bids : Vector<Number> = new Vector<Number>();
-		for ( let b of benutzer){
+		for ( const b of benutzer){
 			bids.add(b.id)
 		}
 		console.log(bids);
 		await App.api.removeBenutzerGruppe(bids,App.schema);
 		App.apps.benutzergruppe.auswahl.ausgewaehlt_gruppe = [];
-		for(let b of benutzer) {
+		for(const b of benutzer) {
 			App.apps.benutzergruppe.auswahl.liste = App.apps.benutzergruppe.auswahl.liste.filter(item => item.id !== b.id);
 		}
 		alert("Benutzergruppe gelöscht!!!");

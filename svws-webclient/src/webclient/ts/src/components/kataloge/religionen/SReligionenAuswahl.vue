@@ -6,7 +6,7 @@
 				<span>Religionen</span>
 			</nav>
 		</template>
-		<template #header> </template>
+		<template #header />
 		<template #content>
 			<div class="container">
 				<svws-ui-table v-model="selected" :columns="cols" :data="rows" :footer="true">
@@ -50,7 +50,7 @@
 	import { Schule } from "~/apps/schule/Schule";
 	import { DataTableColumn } from "@svws-nrw/svws-ui";
 
-	const { item } = defineProps<{ 
+	const { item } = defineProps<{
 		item: ShallowRef<ReligionEintrag | undefined>;
 	}>();
 

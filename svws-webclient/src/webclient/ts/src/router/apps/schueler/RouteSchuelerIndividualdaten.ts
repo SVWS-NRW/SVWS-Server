@@ -38,7 +38,7 @@ export class RouteSchuelerIndividualdaten extends RouteNode<RouteDataSchuelerInd
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
-		let prop: Record<string, any> = routeSchueler.getProps(to);
+		const prop: Record<string, any> = routeSchueler.getProps(to);
 		this.onSelect(prop.item.value);
 		prop.fachschuelerarten = this.data.fachschuelerarten;
 		prop.foerderschwerpunkte = this.data.foerderschwerpunkte;

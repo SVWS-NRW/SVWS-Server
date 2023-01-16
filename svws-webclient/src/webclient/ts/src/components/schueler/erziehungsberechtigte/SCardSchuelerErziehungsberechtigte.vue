@@ -57,7 +57,7 @@
 	import { injectMainApp, Main } from "~/apps/Main";
 	import { DataKatalogErzieherarten } from "~/apps/schueler/DataKatalogErzieherarten";
 	import { DataSchuelerErzieherStammdaten } from "~/apps/schueler/DataSchuelerErzieherStammdaten";
-	import { erzieherArtSort, staatsangehoerigkeitKatalogEintragFilter, staatsangehoerigkeitKatalogEintragSort, 
+	import { erzieherArtSort, staatsangehoerigkeitKatalogEintragFilter, staatsangehoerigkeitKatalogEintragSort,
 		orte_filter, orte_sort, ortsteilFilter, ortsteilSort } from "~/helfer";
 
 	const props = defineProps<{ data: DataSchuelerErzieherStammdaten, erzieher: ErzieherStammdaten, erzieherarten: DataKatalogErzieherarten }>();

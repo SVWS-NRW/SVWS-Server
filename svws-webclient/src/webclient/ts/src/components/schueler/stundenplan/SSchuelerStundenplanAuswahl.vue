@@ -13,7 +13,7 @@
 	import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
 	import { DataTableColumn } from "@svws-nrw/svws-ui";
 
-	const props = defineProps<{ 
+	const props = defineProps<{
 		item: ShallowRef<SchuelerListeEintrag | undefined>;
 		stammdaten: DataSchuelerStammdaten;
 		stundenplan?: StundenplanListeEintrag;

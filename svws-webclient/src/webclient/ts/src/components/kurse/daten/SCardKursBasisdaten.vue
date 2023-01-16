@@ -23,7 +23,7 @@
 	import { DataKurs } from "~/apps/kurse/DataKurs";
 	import { ListJahrgaenge } from "~/apps/jahrgaenge/ListJahrgaenge";
 
-	const { data, listLehrer, mapLehrer, listJahrgaenge, mapJahrgaenge } = defineProps<{ 
+	const { data, listLehrer, mapLehrer, listJahrgaenge, mapJahrgaenge } = defineProps<{
 		item: ShallowRef<KursListeEintrag | undefined>;
 		data: DataKurs;
 		listJahrgaenge: ListJahrgaenge;
@@ -44,7 +44,7 @@
 
 	const jahrgaenge: WritableComputedRef<JahrgangsListeEintrag[]> = computed({
 		get: () => data.daten === undefined ? [] : (data.daten.idJahrgaenge.toArray() as Number[]).map(id => mapJahrgaenge.get(id)).filter(j => j !== undefined) as JahrgangsListeEintrag[],
-		set: (value) => { 
+		set: (value) => {
 			const result: Vector<Number> = new Vector();
 			value.forEach(j => result.add(Number(j.id)));
 			data.patch({ idJahrgaenge: result });

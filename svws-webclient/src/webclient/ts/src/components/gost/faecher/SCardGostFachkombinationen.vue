@@ -7,7 +7,7 @@
 						<tr>
 							<td class="border border-[#7f7f7f]/20 text-center" colspan="4"> Fach/Kursart => Fach/Kursart </td>
 							<td class="border border-[#7f7f7f]/20 text-center" colspan="6"> Gültig in </td>
-							<td class="border border-[#7f7f7f]/20 text-center" rowspan="2"></td>
+							<td class="border border-[#7f7f7f]/20 text-center" rowspan="2" />
 						</tr>
 						<tr>
 							<td class="border border-[#7f7f7f]/20 text-center">Fach</td>
@@ -39,7 +39,7 @@
 	import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
 	import { DataGostFachkombinationen } from "~/apps/gost/DataGostFachkombinationen";
 
-	const { typ, dataFaecher, dataFachkombinationen } = defineProps<{ 
+	const { typ, dataFaecher, dataFachkombinationen } = defineProps<{
 		typ: GostLaufbahnplanungFachkombinationTyp;
 		dataFaecher: DataGostFaecher;
 		dataFachkombinationen: DataGostFachkombinationen;
@@ -59,7 +59,7 @@
 	const rows: ComputedRef<List<GostJahrgangFachkombination>> = computed(() => {
 		const result = new Vector<GostJahrgangFachkombination>();
 		if (dataFachkombinationen.daten)
-			for (let kombi of dataFachkombinationen.daten)
+			for (const kombi of dataFachkombinationen.daten)
 				if (GostLaufbahnplanungFachkombinationTyp.fromValue(kombi.typ) === typ)
 					result.add(kombi);
 		return result;

@@ -40,7 +40,7 @@
 	const inputKatalogOrtsteil: ComputedRef<List<OrtsteilKatalogEintrag>> = computed(() => {
 		return main.kataloge.ortsteile;
 	});
-	
+
 	const inputStrasse: WritableComputedRef<string | undefined> = computed({
 		get(): string {
 			const d = daten.value;

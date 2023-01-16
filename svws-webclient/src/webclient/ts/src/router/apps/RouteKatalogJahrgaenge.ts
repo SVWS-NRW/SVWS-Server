@@ -21,20 +21,20 @@ export class RouteKatalogJahrgaenge extends RouteNodeListView<ListJahrgaenge, Ja
 		super("jahrgaenge", "/kataloge/jahrgaenge/:id(\\d+)?", SJahrgaengeAuswahl, SJahrgaengeApp, new ListJahrgaenge(), 'id', new RouteDataKatalogJahrgaenge());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Jahrgänge";
-        super.setView("liste", SJahrgaengeAuswahl, (route) => RouteNodeListView.getPropsByAuswahlID(route, mainApp.apps.jahrgaenge.auswahl));
+		super.setView("liste", SJahrgaengeAuswahl, (route) => RouteNodeListView.getPropsByAuswahlID(route, mainApp.apps.jahrgaenge.auswahl));
 		super.children = [
 			routeKatalogJahrgaengeDaten
 		];
 		super.defaultChild = routeKatalogJahrgaengeDaten;
 	}
 
-    public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
+	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
 		if ((to.name === this.name) && (to_params.id === undefined)) {
 			const redirect_name: string = (this.selectedChild === undefined) ? this.defaultChild!.name : this.selectedChild.name;
 			return { name: redirect_name, params: { id: mainApp.apps.jahrgaenge.auswahl.liste.at(0)?.id }};
 		}
-        return true;
-    }
+		return true;
+	}
 
 	protected onSelect(item?: JahrgangsListeEintrag) {
 		if (item === this.data.item)
@@ -46,7 +46,7 @@ export class RouteKatalogJahrgaenge extends RouteNodeListView<ListJahrgaenge, Ja
 		}
 	}
 
-    protected getAuswahlComputedProperty(): WritableComputedRef<JahrgangsListeEintrag | undefined> {
+	protected getAuswahlComputedProperty(): WritableComputedRef<JahrgangsListeEintrag | undefined> {
 		return this.getSelectorByID<JahrgangsListeEintrag, ListJahrgaenge>(mainApp.apps.jahrgaenge.auswahl);
 	}
 
@@ -56,23 +56,23 @@ export class RouteKatalogJahrgaenge extends RouteNodeListView<ListJahrgaenge, Ja
 		return prop;
 	}
 
-    /**
+	/**
      * TODO
-     * 
-     * @returns 
+     *
+     * @returns
      */
-    public getChildRouteSelector() {
-        const router = useRouter();
-        const selectedRoute: WritableComputedRef<RouteRecordRaw> = computed({
-            get: () => this.selectedChildRecord || this.defaultChild!.record,
-            set: (value) => {
-                this.selectedChildRecord = value;
+	public getChildRouteSelector() {
+		const router = useRouter();
+		const selectedRoute: WritableComputedRef<RouteRecordRaw> = computed({
+			get: () => this.selectedChildRecord || this.defaultChild!.record,
+			set: (value) => {
+				this.selectedChildRecord = value;
 				const id = (this.data.item === undefined) ? undefined : "" + this.data.item.id;
-                router.push({ name: value.name, params: { id: id } });
-            }
-        });
-        return selectedRoute;
-    }
+				router.push({ name: value.name, params: { id: id } });
+			}
+		});
+		return selectedRoute;
+	}
 
 }
 

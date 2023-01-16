@@ -12,8 +12,8 @@
 	const main: Main = injectMainApp();
 	const app = main.apps.gost;
 
-	const { modelValue } = defineProps<{ 
-		modelValue: SchuelerListeEintrag; 
+	const { modelValue } = defineProps<{
+		modelValue: SchuelerListeEintrag;
 	}>();
 
 	const emit = defineEmits(['update:modelValue'])

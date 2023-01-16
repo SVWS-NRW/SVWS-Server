@@ -1,5 +1,5 @@
 <template>
-    <svws-ui-content-card>
+	<svws-ui-content-card>
 		<template #actions>
 			<svws-ui-button type="error">
 				<svws-ui-icon> <i-ri-delete-bin-2-line /> </svws-ui-icon>
@@ -71,7 +71,7 @@
 			<div class="input-wrapper">
 				<svws-ui-text-input placeholder="Name" v-model="ap_name" type="text" />
 				<svws-ui-text-input placeholder="Vorname" v-model="ap_vorname" type="text" />
-				<svws-ui-text-input placeholder="Anrede"  v-model="ap_anrede" type="text" />
+				<svws-ui-text-input placeholder="Anrede" v-model="ap_anrede" type="text" />
 				<svws-ui-text-input placeholder="Titel" v-model="ap_titel" type="text" />
 				<svws-ui-text-input placeholder="Abteilung" v-model="ap_abteilung" type="text" />
 				<svws-ui-text-input placeholder="Telefon-Nr." v-model="ap_telefonnr" type="tel" />
@@ -94,7 +94,7 @@
 				<svws-ui-text-input placeholder="Titel" v-model="ap_neu.titel" type="text" />
 				<svws-ui-text-input placeholder="Abteilung" v-model="ap_neu.abteilung" type="text" />
 				<svws-ui-text-input placeholder="Telefon-Nr." v-model="ap_neu.telefon" type="tel" />
-				<svws-ui-text-input placeholder="E-Mail Adresse"  v-model="ap_neu.email" type="email" verify-email />
+				<svws-ui-text-input placeholder="E-Mail Adresse" v-model="ap_neu.email" type="email" verify-email />
 			</div>
 		</template>
 		<template #modalActions>
@@ -114,7 +114,7 @@
 	import { DataBetriebsstammdaten } from "~/apps/schueler/DataBetriebsstammdaten";
 	import { ListSchuelerBetriebsdaten } from "~/apps/schueler/ListSchuelerBetriebsdaten";
 
-	const { listSchuelerbetriebe, betriebsStammdaten } = defineProps<{ 
+	const { listSchuelerbetriebe, betriebsStammdaten } = defineProps<{
 		listSchuelerbetriebe : ListSchuelerBetriebsdaten;
 		betriebsStammdaten: DataBetriebsstammdaten;
 	}>();
@@ -179,7 +179,7 @@
 	})
 
 	const ansprechpartner: WritableComputedRef<BetriebAnsprechpartner | undefined> = computed({
-		get: () => listSchuelerbetriebe.ausgewaehlt === undefined ? undefined 
+		get: () => listSchuelerbetriebe.ausgewaehlt === undefined ? undefined
 			: inputBetriebAnsprechpartner.value.find(l => l.id === listSchuelerbetriebe.ausgewaehlt?.ansprechpartner_id),
 		set: (value) => {
 			if (listSchuelerbetriebe.ausgewaehlt === undefined)
@@ -194,7 +194,7 @@
 
 	const inputBetreuungslehrer: WritableComputedRef<LehrerListeEintrag | undefined> = computed({
 		get: () => listSchuelerbetriebe.ausgewaehlt === undefined ? undefined
-				: inputLehrerListe.value.find(l => l.id === listSchuelerbetriebe.ausgewaehlt?.betreuungslehrer_id),
+			: inputLehrerListe.value.find(l => l.id === listSchuelerbetriebe.ausgewaehlt?.betreuungslehrer_id),
 		set: (value) => {
 			const data: SchuelerBetriebsdaten | undefined = listSchuelerbetriebe.ausgewaehlt;
 			if ((!data) || (!data.id) || (!value))
@@ -223,11 +223,11 @@
 			if (betriebsStammdaten.daten?.ort_id) {
 				const id = betriebsStammdaten.daten?.ort_id;
 				let o;
-				for (const r of inputKatalogOrte.value) { 
-					if (r.id === id) { 
-						o = r; 
+				for (const r of inputKatalogOrte.value) {
+					if (r.id === id) {
+						o = r;
 						break;
-					} 
+					}
 				}
 				return o;
 			}
@@ -350,10 +350,10 @@
 
 	async function saveEntries(){
 		const id = betriebsStammdaten.daten?.id?.valueOf();
-		if (id === undefined) 
+		if (id === undefined)
 			return;
 		ap_neu.betrieb_id = betriebsStammdaten.daten?.id || null;
-        await App.api.createBetriebansprechpartner(ap_neu, App.schema, id);
+		await App.api.createBetriebansprechpartner(ap_neu, App.schema, id);
 		listSchuelerbetriebe.betriebansprechpartner.update_list();
 		modalAdd.value.closeModal();
 	}

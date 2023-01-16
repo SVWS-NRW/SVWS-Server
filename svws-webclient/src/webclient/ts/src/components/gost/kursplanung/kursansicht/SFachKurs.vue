@@ -1,12 +1,13 @@
 <template>
-	<template v-for="kursart in GostKursart.values()" >
+	<template v-for="kursart in GostKursart.values()">
 		<template v-if="kurszahlen.get(kursart.id) === 0 && wahlen.get(kursart.id) && allow_regeln">
 			<tr class="text-left" :style="{ 'background-color': bgColor }">
 				<td colspan="3">
 					{{ fach.kuerzel }}-{{ kursart.kuerzel }}
 				</td>
 				<td class="text-center" colspan="1">
-					{{ wahlen.get(kursart.id) }} </td>
+					{{ wahlen.get(kursart.id) }}
+				</td>
 				<td :colspan="schienen.size()+2">
 					<svws-ui-button class="" type="secondary" size="small" @click="add_kurs(kursart)" title="Kurs hinzufügen">Kurs hinzufügen</svws-ui-button>
 				</td>
@@ -30,7 +31,7 @@
 	import { ListLehrer } from "~/apps/lehrer/ListLehrer";
 	import { injectMainApp, Main } from "~/apps/Main";
 
-	const props = defineProps<{ 
+	const props = defineProps<{
 		fach: GostStatistikFachwahl;
 		dataFaecher: DataGostFaecher;
 		halbjahr: Number;
@@ -59,7 +60,7 @@
 	});
 
 	function vorhandene_kurse(kursart: GostKursart): GostBlockungKurs[] {
-		let liste = [];
+		const liste = [];
 		for (const kurs of sorted_kurse.value)
 			if (kurs.fach_id === props.fach.id && kurs.kursart === kursart.id)
 				liste.push(kurs);

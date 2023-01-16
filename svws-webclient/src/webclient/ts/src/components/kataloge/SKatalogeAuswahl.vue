@@ -2,9 +2,9 @@
 	<svws-ui-secondary-menu>
 		<template #headline>Kataloge</template>
 		<template #abschnitt>
-			<svws-ui-multi-select v-if="schule_abschnitte" v-model="akt_abschnitt" :items="schule_abschnitte" :item-sort="item_sort" :item-text="item_text"></svws-ui-multi-select>
+			<svws-ui-multi-select v-if="schule_abschnitte" v-model="akt_abschnitt" :items="schule_abschnitte" :item-sort="item_sort" :item-text="item_text" />
 		</template>
-		<template #header> </template>
+		<template #header />
 		<template #content>
 			<div class="secondary-menu--navigation container">
 				<svws-ui-sidebar-menu-item v-for="item in routeKataloge.menu" :key="item.name" @click="router.push({ name: item.name })">

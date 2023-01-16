@@ -18,7 +18,7 @@
 	import { Religion} from "@svws-nrw/svws-core-ts";
 	import { DataReligion } from "~/apps/kataloge/religionen/DataReligion";
 
-	const { data } = defineProps<{ 
+	const { data } = defineProps<{
 		data: DataReligion;
 	}>();
 

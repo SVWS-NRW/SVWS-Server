@@ -24,7 +24,7 @@
 	import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
 	import { routeSchuelerLeistungenDaten } from "~/router/apps/schueler/leistungsdaten/RouteSchuelerLeistungenDaten";
 
-	const props = defineProps<{ 
+	const props = defineProps<{
 		item: ShallowRef<SchuelerListeEintrag | undefined>;
 		stammdaten: DataSchuelerStammdaten;
 		lernabschnitt?: SchuelerLernabschnittListeEintrag;
@@ -32,7 +32,7 @@
 		mapFaecher: Map<number, FaecherListeEintrag>;
 		mapLehrer: Map<number, LehrerListeEintrag>;
 	}>();
-	
+
 	const lernabschnittsdaten: ComputedRef<SchuelerLernabschnittsdaten> = computed(() => props.data.daten || new SchuelerLernabschnittsdaten());
 	const liste: ComputedRef<SchuelerLeistungsdaten[]> = computed(() =>
 		lernabschnittsdaten.value.leistungsdaten.toArray() as SchuelerLeistungsdaten[] || []

@@ -19,7 +19,7 @@ export class RouteKurseDaten extends RouteNode<RouteDataKurseDaten, RouteKurse> 
 		super.text = "Daten";
 	}
 
-    public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
+	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
 		if (to_params.id === undefined) {
 			this.onSelect(undefined);
 		} else {
@@ -34,7 +34,7 @@ export class RouteKurseDaten extends RouteNode<RouteDataKurseDaten, RouteKurse> 
 		if (item === undefined) {
 			this.data.item = undefined;
 			this.data.daten.unselect();
-			
+
 		} else {
 			this.data.item = item;
 			this.data.daten.select(this.data.item);

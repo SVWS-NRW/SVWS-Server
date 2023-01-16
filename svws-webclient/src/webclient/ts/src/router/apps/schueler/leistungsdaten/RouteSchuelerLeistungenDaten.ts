@@ -1,5 +1,5 @@
 import { FaecherListeEintrag, LehrerListeEintrag, SchuelerLernabschnittListeEintrag } from "@svws-nrw/svws-core-ts";
-import { WritableComputedRef } from "@vue/reactivity";
+import { WritableComputedRef } from "vue";
 import { RouteLocationNormalized, RouteParams, useRoute, useRouter } from "vue-router";
 import { RouteNodeListView } from "~/router/RouteNodeListView";
 import { routeSchueler } from "~/router/apps/RouteSchueler";
@@ -30,12 +30,12 @@ export class RouteSchuelerLeistungenDaten extends RouteNodeListView<ListAbschnit
 		super("schueler_leistungen_daten", ":idLernabschnitt(\\d+)?", SSchuelerLeistungenAuswahl, SSchuelerLeistungenDaten, new ListAbschnitte(), 'id', new RouteDataSchuelerLeistungenDaten());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Leistungsdaten";
-        super.setView("lernabschnittauswahl", SSchuelerLeistungenAuswahl, (route) => this.getProps(route));
+		super.setView("lernabschnittauswahl", SSchuelerLeistungenAuswahl, (route) => this.getProps(route));
 		super.children = [
 		];
 	}
 
-    public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
+	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
 		if (to_params.id === undefined)
 			return false;
 		const id = parseInt(to_params.id as string);
@@ -51,10 +51,10 @@ export class RouteSchuelerLeistungenDaten extends RouteNodeListView<ListAbschnit
 			await this.data.auswahl.update_list(id);
 		if ((to.name === this.name) && (to_params.idLernabschnitt === undefined))
 			return { name: this.name, params: { id: to_params.id, idLernabschnitt: this.data.auswahl.liste.at(0)?.id }};
-        return true;
-    }
+		return true;
+	}
 
-    protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
+	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
 		if (to_params.idLernabschnitt === undefined) {
 			this.onSelect(undefined);
 		} else {
@@ -90,7 +90,7 @@ export class RouteSchuelerLeistungenDaten extends RouteNodeListView<ListAbschnit
 			set: (value) => {
 				this.data.auswahl.ausgewaehlt = value;
 				const from_name = route.name?.toString() || "";
-				if ((from_name !== this.name) && from_name?.startsWith(this.name)) {  // TODO Ergänze Methode bei RouteNode isNested und nutze diese 
+				if ((from_name !== this.name) && from_name?.startsWith(this.name)) {  // TODO Ergänze Methode bei RouteNode isNested und nutze diese
 					const params = {...route.params};
 					params.idLernabschnitt = "" + value?.id;
 					router.push({ name: from_name, params: params });
@@ -100,9 +100,9 @@ export class RouteSchuelerLeistungenDaten extends RouteNodeListView<ListAbschnit
 			}
 		});
 	}
-	
+
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
-		let prop: Record<string, any> = routeSchueler.getProps(to);
+		const prop: Record<string, any> = routeSchueler.getProps(to);
 		prop.lernabschnitt = this.data.item;
 		prop.data = this.data.daten;
 		prop.mapFaecher = this.data.mapFaecher;

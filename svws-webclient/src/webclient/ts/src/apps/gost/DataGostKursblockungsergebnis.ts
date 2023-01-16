@@ -37,10 +37,10 @@ export class DataGostKursblockungsergebnis extends BaseData<GostBlockungsergebni
 		this.pending = true;
 		const ergebnis: GostBlockungsergebnis | undefined = await super._select(
 			(eintrag: GostBlockungsergebnisListeneintrag) => App.api.getGostBlockungsergebnis(App.schema, eintrag.id));
-			if (ergebnis === undefined) {
-				this.pending = false;
-				return ergebnis;
-			}
+		if (ergebnis === undefined) {
+			this.pending = false;
+			return ergebnis;
+		}
 		this.dataKursblockung.ergebnismanager = (this.dataKursblockung.datenmanager !== undefined)
 			? new GostBlockungsergebnisManager(this.dataKursblockung.datenmanager, ergebnis)
 			: undefined;

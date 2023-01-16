@@ -12,7 +12,7 @@ export class ListStundenplaene extends BaseList<StundenplanListeEintrag> {
 	 */
 	public async update_list(): Promise<void> {
 		const abschnitt = App.akt_abschnitt;
-		if (!abschnitt) 
+		if (!abschnitt)
 			return;
 		await super._update_list(() => App.api.getStundenplanlisteFuerAbschnitt(App.schema, abschnitt.id));
 	}

@@ -11,11 +11,9 @@
 			<svws-ui-button @click="addBenutzer"> Weiter {{ selection.length }}</svws-ui-button>
 		</template>
 	</svws-ui-modal>
-    <button class="button button--icon" @click="modalNeueBenutzergruppeBenutzerauswahl.openModal()">
-        <svws-ui-icon><i-ri-add-line /></svws-ui-icon>
-    </button>
-
-	
+	<button class="button button--icon" @click="modalNeueBenutzergruppeBenutzerauswahl.openModal()">
+		<svws-ui-icon><i-ri-add-line /></svws-ui-icon>
+	</button>
 </template>
 
 <script setup lang="ts">
@@ -26,7 +24,7 @@
 	const main: Main = injectMainApp();
 	const app = main.apps.benutzergruppe;
 
-    const modalNeueBenutzergruppeBenutzerauswahl = ref();
+	const modalNeueBenutzergruppeBenutzerauswahl = ref();
 
 	// Die Spalte für die Tabelle der Gruppenbenutzer
 	const cols = [
@@ -41,10 +39,10 @@
 	});
 
 	const rowsFiltered: ComputedRef<BenutzerListeEintrag[]> = computed(() => {
-		
-        return benutzer_liste.value || [];
+
+		return benutzer_liste.value || [];
 	});
-    const selected = ref([]);
+	const selected = ref([]);
 	const selection = ref(app.dataBenutzergruppe.listBenutzergruppenBenutzer.liste || []);
 	console.log(selection.value);
 	function addBenutzer(){

@@ -1,6 +1,6 @@
 <template>
 	<div class="flex flex-row flex-grow">
-		<div class="mr-4"> 
+		<div class="mr-4">
 			<s-card-benutzergruppe-daten />
 		</div>
 		<div>

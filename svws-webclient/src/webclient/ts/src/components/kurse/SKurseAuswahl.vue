@@ -2,9 +2,9 @@
 	<svws-ui-secondary-menu>
 		<template #headline>Kurse</template>
 		<template #abschnitt>
-			<svws-ui-multi-select v-if="schule_abschnitte" v-model="akt_abschnitt" :items="schule_abschnitte" :item-sort="item_sort" :item-text="item_text"></svws-ui-multi-select>
+			<svws-ui-multi-select v-if="schule_abschnitte" v-model="akt_abschnitt" :items="schule_abschnitte" :item-sort="item_sort" :item-text="item_text" />
 		</template>
-		<template #header> </template>
+		<template #header />
 		<template #content>
 			<div class="container">
 				<svws-ui-table v-model="selected" :columns="cols" :data="rows" :footer="false" />
@@ -25,7 +25,7 @@
 	import { ListLehrer } from "~/apps/lehrer/ListLehrer";
 	import { DataTableColumn } from "@svws-nrw/svws-ui";
 
-	const { schule, listJahrgaenge, listLehrer } = defineProps<{ 
+	const { schule, listJahrgaenge, listLehrer } = defineProps<{
 		item: ShallowRef<KursListeEintrag | undefined>;
 		schule: DataSchuleStammdaten;
 		listJahrgaenge: ListJahrgaenge;

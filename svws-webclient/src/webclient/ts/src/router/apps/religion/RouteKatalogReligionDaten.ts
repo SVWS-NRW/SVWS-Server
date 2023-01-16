@@ -19,7 +19,7 @@ export class RouteKatalogReligionDaten extends RouteNode<RouteDataKlassenDaten, 
 		super.text = "Daten";
 	}
 
-    public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
+	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
 		if (to_params.id === undefined) {
 			this.onSelect(undefined);
 		} else {

@@ -1,34 +1,34 @@
 <template>
-    <div v-if="visible" class="mt-10">
-        <svws-ui-table :v-model="selected_hj" :columns="[{ key: 'kuerzel', label: 'Halbjahr' }]" :data="GostHalbjahr.values()" class="mb-10">
-            <template #body="{rows}">
-                <template v-for="row in <GostHalbjahr[]>rows" :key="row.id">
-                    <tr :class="{'vt-clicked': row.id === selected_hj.id}" @click="select_hj(row)">
-                        <td>
-                            {{row.kuerzel}}
-                            <svws-ui-button type="transparent" v-if="allow_add_blockung(row)" @click.stop="blockung_hinzufuegen">Blockung hinzufügen</svws-ui-button>
-                        </td>
-                    </tr>
-                </template>
-            </template>
-        </svws-ui-table>
+	<div v-if="visible" class="mt-10">
+		<svws-ui-table :v-model="selected_hj" :columns="[{ key: 'kuerzel', label: 'Halbjahr' }]" :data="GostHalbjahr.values()" class="mb-10">
+			<template #body="{rows}">
+				<template v-for="row in <GostHalbjahr[]>rows" :key="row.id">
+					<tr :class="{'vt-clicked': row.id === selected_hj.id}" @click="select_hj(row)">
+						<td>
+							{{ row.kuerzel }}
+							<svws-ui-button type="transparent" v-if="allow_add_blockung(row)" @click.stop="blockung_hinzufuegen">Blockung hinzufügen</svws-ui-button>
+						</td>
+					</tr>
+				</template>
+			</template>
+		</svws-ui-table>
 		<router-view name="gost_kursplanung_blockung_auswahl" />
-    </div>    
+	</div>
 </template>
 
 <script setup lang="ts">
 
-    import { GostHalbjahr, GostJahrgang } from '@svws-nrw/svws-core-ts';
-    import { computed, ComputedRef, ShallowRef, WritableComputedRef } from 'vue';
-    import { RouterView, useRouter } from 'vue-router';
-    import { App } from '~/apps/BaseApp';
-    import { DataGostJahrgang } from '~/apps/gost/DataGostJahrgang';
+	import { GostHalbjahr, GostJahrgang } from '@svws-nrw/svws-core-ts';
+	import { computed, ComputedRef, ShallowRef, WritableComputedRef } from 'vue';
+	import { RouterView, useRouter } from 'vue-router';
+	import { App } from '~/apps/BaseApp';
+	import { DataGostJahrgang } from '~/apps/gost/DataGostJahrgang';
 	import { routeGostKursplanungHalbjahr } from '~/router/apps/gost/kursplanung/RouteGostKursplanungHalbjahr';
 	import { DataSchuleStammdaten } from '~/apps/schule/DataSchuleStammdaten';
 	import { DataGostFaecher } from '~/apps/gost/DataGostFaecher';
 	import { routeGostKursplanung } from '~/router/apps/gost/RouteGostKursplanung';
 
-	const props = defineProps<{ 
+	const props = defineProps<{
 		item: ShallowRef<GostJahrgang | undefined>;
 		schule: DataSchuleStammdaten;
 		jahrgangsdaten: DataGostJahrgang;
@@ -38,9 +38,9 @@
 
 	const router = useRouter();
 
-    const selected_hj: WritableComputedRef<GostHalbjahr> = routeGostKursplanung.getSelector();
+	const selected_hj: WritableComputedRef<GostHalbjahr> = routeGostKursplanung.getSelector();
 
-    const allow_add_blockung = (row: GostHalbjahr): boolean => {
+	const allow_add_blockung = (row: GostHalbjahr): boolean => {
 		const curr_hj = row.id === selected_hj.value?.id;
 		if (!curr_hj || props.jahrgangsdaten.daten === undefined)
 			return false;
@@ -59,9 +59,9 @@
 		router.push({ name: routeGostKursplanungHalbjahr.name, params: { abiturjahr: abiturjahr, halbjahr: props.halbjahr.value.id, idblockung: result.id } });
 	}
 
-    const visible: ComputedRef<boolean> = computed(() => {
+	const visible: ComputedRef<boolean> = computed(() => {
 		return (props.jahrgangsdaten.daten !== undefined) && (props.jahrgangsdaten.daten.abiturjahr > 0);
-    });
+	});
 
 </script>
 

@@ -1,5 +1,4 @@
 <template>
-
 	<svws-ui-modal ref="modalAddBetrieb" size="medium">
 		<template #modalTitle>Ansprechpartner Hinzufügen</template>
 
@@ -30,10 +29,10 @@
 	import { BetriebAnsprechpartner, BetriebListeEintrag, KatalogEintrag, LehrerListeEintrag, List, SchuelerBetriebsdaten, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, reactive, ref, WritableComputedRef } from "vue";
 	import { App } from "~/apps/BaseApp";
-import { injectMainApp, Main } from "~/apps/Main";
+	import { injectMainApp, Main } from "~/apps/Main";
 	import { ListSchuelerBetriebsdaten } from "~/apps/schueler/ListSchuelerBetriebsdaten";
 
-	const { item, listSchuelerbetriebe } = defineProps<{ 
+	const { item, listSchuelerbetriebe } = defineProps<{
 		item?: SchuelerListeEintrag;
 		listSchuelerbetriebe : ListSchuelerBetriebsdaten;
 	}>();
@@ -82,11 +81,11 @@ import { injectMainApp, Main } from "~/apps/Main";
 		get(): KatalogEintrag | undefined {
 			const id = s_betrieb.beschaeftigungsart_id;
 			let o;
-			for (const r of inputBeschaeftigungsarten.value) { 
-				if (r.id === id) { 
-					o = r; 
+			for (const r of inputBeschaeftigungsarten.value) {
+				if (r.id === id) {
+					o = r;
 					break;
-				} 
+				}
 			}
 			return o;
 		},

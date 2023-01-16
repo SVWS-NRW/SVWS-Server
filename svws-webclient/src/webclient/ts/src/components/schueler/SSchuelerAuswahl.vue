@@ -4,7 +4,7 @@
 			<span>Schüler</span>
 		</template>
 		<template #abschnitt>
-			<svws-ui-multi-select v-if="schule_abschnitte" v-model="akt_abschnitt" :items="schule_abschnitte" :item-sort="item_sort" :item-text="item_text"></svws-ui-multi-select>
+			<svws-ui-multi-select v-if="schule_abschnitte" v-model="akt_abschnitt" :items="schule_abschnitte" :item-sort="item_sort" :item-text="item_text" />
 		</template>
 		<template #header>
 			<div class="mt-1">
@@ -30,7 +30,7 @@
 			</div>
 			<div>
 				<div class="mt-6 mb-2">
-					<svws-ui-text-input v-model="search" type="search" placeholder="Suche nach Namen oder Klasse"><i-ri-search-line/></svws-ui-text-input>
+					<svws-ui-text-input v-model="search" type="search" placeholder="Suche nach Namen oder Klasse"><i-ri-search-line /></svws-ui-text-input>
 				</div>
 			</div>
 		</template>
@@ -40,8 +40,8 @@
 					<!-- Footer mit Button zum Hinzufügen einer Zeile -->
 					<template #footer>
 						<div class="text-sm-bold normal-case mr-auto">
-							<span v-if="selectedItems.length">{{selectedItems.length}}/{{rowsFiltered.length}} ausgewählt</span>
-							<span v-else>{{rowsFiltered.length}} Einträge</span>
+							<span v-if="selectedItems.length">{{ selectedItems.length }}/{{ rowsFiltered.length }} ausgewählt</span>
+							<span v-else>{{ rowsFiltered.length }} Einträge</span>
 						</div>
 						<button class="button button--icon" @click="addLine()">
 							<svws-ui-icon><i-ri-add-line /></svws-ui-icon>
@@ -82,7 +82,7 @@
 		search: string;
 	}
 
-	const { schule, listKlassen, mapKlassen, listJahrgaenge, listKurse } = defineProps<{ 
+	const { schule, listKlassen, mapKlassen, listJahrgaenge, listKurse } = defineProps<{
 		item: ShallowRef<SchuelerListeEintrag | undefined>;
 		stammdaten: DataSchuelerStammdaten;
 		schule: DataSchuleStammdaten;

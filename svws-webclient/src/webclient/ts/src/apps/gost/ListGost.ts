@@ -17,7 +17,7 @@ export class ListGost extends BaseList<GostJahrgang> {
 	 */
 	public async update_list(): Promise<void> {
 		await super._update_list(async () => App.api.getGostAbiturjahrgaenge(App.schema));
-		if (this.ausgewaehlt === undefined) 
+		if (this.ausgewaehlt === undefined)
 		 	this.ausgewaehlt = this.liste[0];
 	}
 

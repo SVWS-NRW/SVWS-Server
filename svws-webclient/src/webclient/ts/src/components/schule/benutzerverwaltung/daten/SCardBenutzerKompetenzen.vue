@@ -7,18 +7,17 @@
 					<td>durch Gruppe(n)</td>
 					<td>
 						<svws-ui-icon>
-							<i-ri-information-fill /> 
+							<i-ri-information-fill />
 						</svws-ui-icon>
 					</td>
 				</tr>
-                <s-kompetenzgruppe v-for="kompetenzgruppe in BenutzerKompetenzGruppe.values()" :key="kompetenzgruppe.daten.id" :kompetenzgruppe="kompetenzgruppe" :istAdmin="istAdmin" :benutzertyp=0>
-                </s-kompetenzgruppe>
-            </table>
-        </div>
-	</svws-ui-content-card>	
-		<!-- <svws-ui-table :columns="kompetenzen_cols">
+				<s-kompetenzgruppe v-for="kompetenzgruppe in BenutzerKompetenzGruppe.values()" :key="kompetenzgruppe.daten.id" :kompetenzgruppe="kompetenzgruppe" :ist-admin="istAdmin" :benutzertyp="0" />
+			</table>
+		</div>
+	</svws-ui-content-card>
+	<!-- <svws-ui-table :columns="kompetenzen_cols">
 							<template #body>
-								
+
 							</template>
 						</svws-ui-table>
 	</svws-ui-content-card> -->
@@ -38,7 +37,7 @@
 		{ key: "bezeichnung", label: "KOMPETENZEN", sortable: false },
 		{ key: "gruppen", label: "durch Gruppe(n)", sortable: false },
 		{ key: "direkt", label: "i", sortable: false },
-		
+
 	];
 
 	const manager: ComputedRef<BenutzerManager | undefined> = computed(() => {
@@ -72,5 +71,5 @@
   /* Position the tooltip */
   position: absolute;
   z-index: 1;
-}  
+}
 </style>

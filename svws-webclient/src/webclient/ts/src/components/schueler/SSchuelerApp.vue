@@ -8,7 +8,7 @@
 				<div>
 					<span class="inline-block mr-3"> {{ vorname }} {{ nachname }} </span>
 					<svws-ui-badge type="light"> {{ item.value?.id }} </svws-ui-badge>
-					<br/>
+					<br>
 					<span class="opacity-50"> {{ inputKlasse ? inputKlasse : '–' }} </span>
 				</div>
 			</div>
@@ -18,7 +18,7 @@
 		</svws-ui-router-tab-bar>
 	</div>
 	<div v-else class="app-layout--main--placeholder">
-		<i-ri-briefcase-line/>
+		<i-ri-briefcase-line />
 	</div>
 </template>
 
@@ -34,7 +34,7 @@
 	import { ListJahrgaenge } from "~/apps/jahrgaenge/ListJahrgaenge";
 	import { ListKlassen } from "~/apps/klassen/ListKlassen";
 
-	const { item, stammdaten, mapKlassen } = defineProps<{ 
+	const { item, stammdaten, mapKlassen } = defineProps<{
 		item: ShallowRef<SchuelerListeEintrag | undefined>;
 		stammdaten: DataSchuelerStammdaten;
 		schule: DataSchuleStammdaten;

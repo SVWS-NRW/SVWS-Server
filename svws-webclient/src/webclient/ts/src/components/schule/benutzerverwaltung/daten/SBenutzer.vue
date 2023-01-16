@@ -1,10 +1,10 @@
 <template>
 	<div class="flex flex-row flex-grow">
-		<div class="mr-4"> 
-			<s-card-benutzer-daten /> 
+		<div class="mr-4">
+			<s-card-benutzer-daten />
 		</div>
 		<div class="w-full">
-			<s-card-benutzer-kompetenzen /> 
+			<s-card-benutzer-kompetenzen />
 		</div>
 	</div>
 </template>

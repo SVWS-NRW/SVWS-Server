@@ -8,10 +8,10 @@ export function useVModel<
   K extends keyof P,
   Name extends string
 >(
-  props: P,
-  key?: K,
-  emit?: (name: Name, ...args: any[]) => void,
-  options?:UseVModelOptions<P[K]>
+	props: P,
+	key?: K,
+	emit?: (name: Name, ...args: any[]) => void,
+	options?:UseVModelOptions<P[K]>
 ) {
-  return _useVModel(props, key, emit, options) as WritableComputedRef<P[K]>;
+	return _useVModel(props, key, emit, options) as WritableComputedRef<P[K]>;
 }

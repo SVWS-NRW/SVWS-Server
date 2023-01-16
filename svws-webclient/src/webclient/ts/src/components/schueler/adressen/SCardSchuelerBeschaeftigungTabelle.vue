@@ -40,7 +40,7 @@
 	import { App } from "~/apps/BaseApp";
 	import { ListSchuelerBetriebsdaten } from "~/apps/schueler/ListSchuelerBetriebsdaten";
 
-	const { betrieb, listSchuelerbetriebe } = defineProps<{ 
+	const { betrieb, listSchuelerbetriebe } = defineProps<{
 		betrieb: SchuelerBetriebsdaten;
 		listSchuelerbetriebe : ListSchuelerBetriebsdaten;
 	}>();
@@ -111,9 +111,9 @@
 		get(): KatalogEintrag | undefined {
 			const id = betrieb.beschaeftigungsart_id;
 			let o;
-			for (const r of inputBeschaeftigungsarten.value) { 
-				if (r.id === id) { 
-					o = r; 
+			for (const r of inputBeschaeftigungsarten.value) {
+				if (r.id === id) {
+					o = r;
 					break;
 				}
 			}

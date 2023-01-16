@@ -6,7 +6,7 @@
 				<span>Förderschwerpunktauswahl</span>
 			</nav>
 		</template>
-		<template #header> </template>
+		<template #header />
 		<template #content>
 			<div class="container">
 				<svws-ui-table v-model="selected" :columns="cols" :data="rows" :footer="false" />
@@ -23,7 +23,7 @@
 	import { router } from "~/router";
 	import { routeKatalogFoerderschwerpunkte } from "~/router/apps/RouteKatalogFoerderschwerpunkte";
 
-	const { item } = defineProps<{ 
+	const { item } = defineProps<{
 		item: ShallowRef<FoerderschwerpunktEintrag | undefined>;
 	}>();
 

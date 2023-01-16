@@ -26,12 +26,12 @@ export class RouteGostKursplanungBlockung extends RouteNode<RouteDataGostKurspla
 	public constructor() {
 		super("gost_kursplanung_halbjahr_ergebnis", "ergebnis/:idergebnis(\\d+)?", SGostKursplanung, new RouteDataGostKursplanungBlockung());
 		super.propHandler = (route) => this.getProps(route);
-        super.setView("gost_kursplanung_ergebnis_auswahl", SGostKursplanungErgebnisAuswahl, (route) => this.getProps(route));
+		super.setView("gost_kursplanung_ergebnis_auswahl", SGostKursplanungErgebnisAuswahl, (route) => this.getProps(route));
 		super.text = "Kursplanung";
 		super.children = [
 			routeGostKursplanungSchueler
 		];
-        super.defaultChild = routeGostKursplanungSchueler;
+		super.defaultChild = routeGostKursplanungSchueler;
 		this.isHidden = (params: RouteParams) => {
 			return this.checkHidden(params);
 		}
@@ -42,7 +42,7 @@ export class RouteGostKursplanungBlockung extends RouteNode<RouteDataGostKurspla
 		return (abiturjahr === undefined) || (abiturjahr === -1);
 	}
 
-    public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
+	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
 		const abiturjahr = to_params.abiturjahr === undefined ? undefined : parseInt(to_params.abiturjahr as string);
 		const halbjahr = (to_params.halbjahr === undefined) ? undefined : GostHalbjahr.fromID(Number(parseInt(to_params.halbjahr as string))) || undefined;
 		const idBlockung = to_params.idblockung === undefined ? undefined : parseInt(to_params.idblockung as string);
@@ -67,7 +67,7 @@ export class RouteGostKursplanungBlockung extends RouteNode<RouteDataGostKurspla
 		this.data.dataKursblockungsergebnis.dataKursblockung = routeGostKursplanungHalbjahr.data.dataKursblockung;
 	}
 
-    public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<any> {
+	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<any> {
 		// Prüfe nochmals Abiturjahrgang, Halbjahr und ID der Blockung
 		const abiturjahr = to_params.abiturjahr === undefined ? undefined : parseInt(to_params.abiturjahr as string);
 		const halbjahr = (to_params.halbjahr === undefined) ? undefined : GostHalbjahr.fromID(Number(parseInt(to_params.halbjahr as string))) || undefined;
@@ -130,9 +130,9 @@ export class RouteGostKursplanungBlockung extends RouteNode<RouteDataGostKurspla
 		return { name: this.name, params: { abiturjahr: abiturjahr, halbjahr: halbjahr, idblockung: idblockung, idergebnis: idergebnis }};
 	}
 
-    public getSelector() : WritableComputedRef<GostBlockungsergebnisListeneintrag | undefined> {
-        const router = useRouter();
-        return computed({
+	public getSelector() : WritableComputedRef<GostBlockungsergebnisListeneintrag | undefined> {
+		const router = useRouter();
+		return computed({
 			get: () => this.data.ergebnis.value,
 			set: (value) => {
 				if (value?.id !== this.data.ergebnis.value?.id) {
@@ -140,7 +140,7 @@ export class RouteGostKursplanungBlockung extends RouteNode<RouteDataGostKurspla
 					if (idSchueler === undefined)
 						router.push(this.getRoute(routeGost.liste.ausgewaehlt?.abiturjahr, routeGostKursplanung.data.halbjahr.value.id, value?.blockungID, value?.id));
 					else
-						router.push(routeGostKursplanungSchueler.getRoute(routeGost.liste.ausgewaehlt?.abiturjahr, routeGostKursplanung.data.halbjahr.value.id, 
+						router.push(routeGostKursplanungSchueler.getRoute(routeGost.liste.ausgewaehlt?.abiturjahr, routeGostKursplanung.data.halbjahr.value.id,
 							value?.blockungID, value?.id, idSchueler));
 				}
 			}

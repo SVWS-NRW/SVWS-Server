@@ -12,7 +12,7 @@
 		</svws-ui-router-tab-bar>
 	</div>
 	<div v-else class="app-layout--main--placeholder">
-		<i-ri-archive-line/>
+		<i-ri-archive-line />
 	</div>
 </template>
 
@@ -22,7 +22,7 @@
 	import { ReligionEintrag } from "@svws-nrw/svws-core-ts";
 	import { routeKatalogReligion } from "~/router/apps/RouteKatalogReligion";
 
-	const { item } = defineProps<{ 
+	const { item } = defineProps<{
 		item: ShallowRef<ReligionEintrag | undefined>;
 	}>();
 

@@ -16,7 +16,7 @@
 	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 	import { routeLehrerPersonaldaten } from "~/router/apps/lehrer/RouteLehrerPersonaldaten";
 
-	const { item, personaldaten } = defineProps<{ 
+	const { item, personaldaten } = defineProps<{
 		item: ShallowRef<LehrerListeEintrag | undefined>;
 		stammdaten: DataLehrerStammdaten;
 		personaldaten: DataLehrerPersonaldaten;

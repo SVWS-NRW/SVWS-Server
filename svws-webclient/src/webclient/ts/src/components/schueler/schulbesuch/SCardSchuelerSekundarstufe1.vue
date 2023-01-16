@@ -14,7 +14,7 @@
 	import { DataSchuelerSchulbesuchsdaten } from "~/apps/schueler/DataSchuelerSchulbesuchsdaten";
 
 	const props = defineProps<{ data: DataSchuelerSchulbesuchsdaten }>();
-	
+
 	const sekIWechsel: WritableComputedRef<number | undefined> = computed({
 		get: () => props.data.daten?.sekIWechsel?.valueOf(),
 		set: (value) => props.data.patch({ sekIWechsel: value })

@@ -3,22 +3,16 @@
 		<div class="content-wrapper">
 			<div class="input-wrapper">
 				<div class="table-container">
-					<div
-						class="default-font-small elevation-5 table"
-						style="width: 68em"
-					>
-						<div
-							ref="tbody"
+					<div class="default-font-small elevation-5 table"
+						style="width: 68em">
+						<div ref="tbody"
 							class="default-font-small"
-							style="width=100%; height: 100%"
-						>
-							<div
-								ref="thead"
+							style="width=100%; height: 100%">
+							<div ref="thead"
 								class="table-head tableRow"
 								style="
 									grid-template-columns: 20em 6em 6em 8em 8em 10em 10em;
-								"
-							>
+								">
 								<div class="head cell center">Fach</div>
 								<div class="head cell center">EF.1</div>
 								<div class="head cell center">EF.2</div>
@@ -27,13 +21,11 @@
 								<div class="head cell center">Q2.1</div>
 								<div class="head cell center">Q2.2</div>
 							</div>
-							<div
-								ref="thead"
+							<div ref="thead"
 								class="table-head tableRow"
 								style="
 									grid-template-columns: 5em 15em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em;
-								"
-							>
+								">
 								<div class="head cell center">Kürzel</div>
 								<div class="head cell center">Fach</div>
 								<div class="head cell center">M</div>
@@ -61,51 +53,45 @@
 								<div class="head cell center">ZK</div>
 								<div class="head cell center">LK</div>
 							</div>
-							<div
-								v-for="row in rows"
+							<div v-for="row in rows"
 								:key="row.id"
 								class="tableRow"
-								style="grid-template-columns: 5em 15em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em;"
-							>
-								<div
-									class="cell text-left"
+								style="grid-template-columns: 5em 15em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em 2em;">
+								<div class="cell text-left"
 									:style="{
 										'background-color': getBgColor(row)
-									}"
-								>
+									}">
 									{{ row.kuerzel }}
 								</div>
-								<div
-									class="cell text-left"
+								<div class="cell text-left"
 									:style="{
 										'background-color': getBgColor(row)
-									}"
-								>
+									}">
 									{{ row.bezeichnung }}
 								</div>
 								<div class="cell center">
 									{{
 										row.fachwahlen[0] == null ||
-										row.fachwahlen[0].wahlenGKMuendlich == 0
+											row.fachwahlen[0].wahlenGKMuendlich == 0
 											? ""
 											: row.fachwahlen[0]
-													.wahlenGKMuendlich
+												.wahlenGKMuendlich
 									}}
 								</div>
 								<div class="cell center">
 									{{
 										row.fachwahlen[0] == null ||
-										row.fachwahlen[0].wahlenGKSchriftlich ==
+											row.fachwahlen[0].wahlenGKSchriftlich ==
 											0
 											? ""
 											: row.fachwahlen[0]
-													.wahlenGKSchriftlich
+												.wahlenGKSchriftlich
 									}}
 								</div>
 								<div class="cell center">
 									{{
 										row.fachwahlen[0] == null ||
-										row.fachwahlen[0].wahlenGK == 0
+											row.fachwahlen[0].wahlenGK == 0
 											? ""
 											: row.fachwahlen[0].wahlenGK
 									}}
@@ -113,26 +99,26 @@
 								<div class="cell center">
 									{{
 										row.fachwahlen[1] == null ||
-										row.fachwahlen[1].wahlenGKMuendlich == 0
+											row.fachwahlen[1].wahlenGKMuendlich == 0
 											? ""
 											: row.fachwahlen[1]
-													.wahlenGKMuendlich
+												.wahlenGKMuendlich
 									}}
 								</div>
 								<div class="cell center">
 									{{
 										row.fachwahlen[1] == null ||
-										row.fachwahlen[1].wahlenGKSchriftlich ==
+											row.fachwahlen[1].wahlenGKSchriftlich ==
 											0
 											? ""
 											: row.fachwahlen[1]
-													.wahlenGKSchriftlich
+												.wahlenGKSchriftlich
 									}}
 								</div>
 								<div class="cell center">
 									{{
 										row.fachwahlen[1] == null ||
-										row.fachwahlen[1].wahlenGK == 0
+											row.fachwahlen[1].wahlenGK == 0
 											? ""
 											: row.fachwahlen[1].wahlenGK
 									}}
@@ -140,26 +126,26 @@
 								<div class="cell center">
 									{{
 										row.fachwahlen[2] == null ||
-										row.fachwahlen[2].wahlenGKMuendlich == 0
+											row.fachwahlen[2].wahlenGKMuendlich == 0
 											? ""
 											: row.fachwahlen[2]
-													.wahlenGKMuendlich
+												.wahlenGKMuendlich
 									}}
 								</div>
 								<div class="cell center">
 									{{
 										row.fachwahlen[2] == null ||
-										row.fachwahlen[2].wahlenGKSchriftlich ==
+											row.fachwahlen[2].wahlenGKSchriftlich ==
 											0
 											? ""
 											: row.fachwahlen[2]
-													.wahlenGKSchriftlich
+												.wahlenGKSchriftlich
 									}}
 								</div>
 								<div class="cell center">
 									{{
 										row.fachwahlen[2] == null ||
-										row.fachwahlen[2].wahlenGK == 0
+											row.fachwahlen[2].wahlenGK == 0
 											? ""
 											: row.fachwahlen[2].wahlenGK
 									}}
@@ -167,7 +153,7 @@
 								<div class="cell center">
 									{{
 										row.fachwahlen[2] == null ||
-										row.fachwahlen[2].wahlenLK == 0
+											row.fachwahlen[2].wahlenLK == 0
 											? ""
 											: row.fachwahlen[2].wahlenLK
 									}}
@@ -175,26 +161,26 @@
 								<div class="cell center">
 									{{
 										row.fachwahlen[3] == null ||
-										row.fachwahlen[3].wahlenGKMuendlich == 0
+											row.fachwahlen[3].wahlenGKMuendlich == 0
 											? ""
 											: row.fachwahlen[3]
-													.wahlenGKMuendlich
+												.wahlenGKMuendlich
 									}}
 								</div>
 								<div class="cell center">
 									{{
 										row.fachwahlen[3] == null ||
-										row.fachwahlen[3].wahlenGKSchriftlich ==
+											row.fachwahlen[3].wahlenGKSchriftlich ==
 											0
 											? ""
 											: row.fachwahlen[3]
-													.wahlenGKSchriftlich
+												.wahlenGKSchriftlich
 									}}
 								</div>
 								<div class="cell center">
 									{{
 										row.fachwahlen[3] == null ||
-										row.fachwahlen[3].wahlenGK == 0
+											row.fachwahlen[3].wahlenGK == 0
 											? ""
 											: row.fachwahlen[3].wahlenGK
 									}}
@@ -202,7 +188,7 @@
 								<div class="cell center">
 									{{
 										row.fachwahlen[3] == null ||
-										row.fachwahlen[3].wahlenLK == 0
+											row.fachwahlen[3].wahlenLK == 0
 											? ""
 											: row.fachwahlen[3].wahlenLK
 									}}
@@ -210,26 +196,26 @@
 								<div class="cell center">
 									{{
 										row.fachwahlen[4] == null ||
-										row.fachwahlen[4].wahlenGKMuendlich == 0
+											row.fachwahlen[4].wahlenGKMuendlich == 0
 											? ""
 											: row.fachwahlen[4]
-													.wahlenGKMuendlich
+												.wahlenGKMuendlich
 									}}
 								</div>
 								<div class="cell center">
 									{{
 										row.fachwahlen[4] == null ||
-										row.fachwahlen[4].wahlenGKSchriftlich ==
+											row.fachwahlen[4].wahlenGKSchriftlich ==
 											0
 											? ""
 											: row.fachwahlen[4]
-													.wahlenGKSchriftlich
+												.wahlenGKSchriftlich
 									}}
 								</div>
 								<div class="cell center">
 									{{
 										row.fachwahlen[4] == null ||
-										row.fachwahlen[4].wahlenGK == 0
+											row.fachwahlen[4].wahlenGK == 0
 											? ""
 											: row.fachwahlen[4].wahlenGK
 									}}
@@ -237,7 +223,7 @@
 								<div class="cell center">
 									{{
 										row.fachwahlen[4] == null ||
-										row.fachwahlen[4].wahlenZK == 0
+											row.fachwahlen[4].wahlenZK == 0
 											? ""
 											: row.fachwahlen[4].wahlenZK
 									}}
@@ -245,7 +231,7 @@
 								<div class="cell center">
 									{{
 										row.fachwahlen[4] == null ||
-										row.fachwahlen[4].wahlenLK == 0
+											row.fachwahlen[4].wahlenLK == 0
 											? ""
 											: row.fachwahlen[4].wahlenLK
 									}}
@@ -253,26 +239,26 @@
 								<div class="cell center">
 									{{
 										row.fachwahlen[5] == null ||
-										row.fachwahlen[5].wahlenGKMuendlich == 0
+											row.fachwahlen[5].wahlenGKMuendlich == 0
 											? ""
 											: row.fachwahlen[5]
-													.wahlenGKMuendlich
+												.wahlenGKMuendlich
 									}}
 								</div>
 								<div class="cell center">
 									{{
 										row.fachwahlen[5] == null ||
-										row.fachwahlen[5].wahlenGKSchriftlich ==
+											row.fachwahlen[5].wahlenGKSchriftlich ==
 											0
 											? ""
 											: row.fachwahlen[5]
-													.wahlenGKSchriftlich
+												.wahlenGKSchriftlich
 									}}
 								</div>
 								<div class="cell center">
 									{{
 										row.fachwahlen[5] == null ||
-										row.fachwahlen[5].wahlenGK == 0
+											row.fachwahlen[5].wahlenGK == 0
 											? ""
 											: row.fachwahlen[5].wahlenGK
 									}}
@@ -280,7 +266,7 @@
 								<div class="cell center">
 									{{
 										row.fachwahlen[5] == null ||
-										row.fachwahlen[5].wahlenZK == 0
+											row.fachwahlen[5].wahlenZK == 0
 											? ""
 											: row.fachwahlen[5].wahlenZK
 									}}
@@ -288,7 +274,7 @@
 								<div class="cell center">
 									{{
 										row.fachwahlen[5] == null ||
-										row.fachwahlen[5].wahlenLK == 0
+											row.fachwahlen[5].wahlenLK == 0
 											? ""
 											: row.fachwahlen[5].wahlenLK
 									}}

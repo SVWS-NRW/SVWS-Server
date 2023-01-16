@@ -17,27 +17,27 @@ export class RouteKatalogFoerderschwerpunkte extends RouteNodeListView<ListFoerd
 		super("foerderschwerpunkte", "/kataloge/foerderschwerpunkte/:id(\\d+)?", SFoerderschwerpunkteAuswahl, SFoerderschwerpunkteApp, new ListFoerderschwerpunkte(), 'id');
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Förderschwerpunkte";
-        super.setView("liste", SFoerderschwerpunkteAuswahl, (route) => this.getProps(route));
+		super.setView("liste", SFoerderschwerpunkteAuswahl, (route) => this.getProps(route));
 		super.children = [
 			routeKatalogFoerderschwerpunkteDaten
 		];
 		super.defaultChild = routeKatalogFoerderschwerpunkteDaten;
 	}
 
-    public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
+	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
 		if ((to.name === this.name) && (to_params.id === undefined)) {
 			const redirect_name: string = (this.selectedChild === undefined) ? this.defaultChild!.name : this.selectedChild.name;
 			await this.liste.update_list();
 			return { name: redirect_name, params: { id: this.liste.liste.at(0)?.id }};
 		}
-        return true;
-    }
+		return true;
+	}
 
-    public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) {
+	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) {
 		await this.liste.update_list();  // Die Auswahlliste wird als letztes geladen
 	}
 
-    public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
+	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
 		if (to_params.id === undefined) {
 			this.onSelect(undefined);
 		} else {
@@ -56,7 +56,7 @@ export class RouteKatalogFoerderschwerpunkte extends RouteNodeListView<ListFoerd
 		}
 	}
 
-    protected getAuswahlComputedProperty(): WritableComputedRef<FoerderschwerpunktEintrag | undefined> {
+	protected getAuswahlComputedProperty(): WritableComputedRef<FoerderschwerpunktEintrag | undefined> {
 		return this.getSelector();
 	}
 

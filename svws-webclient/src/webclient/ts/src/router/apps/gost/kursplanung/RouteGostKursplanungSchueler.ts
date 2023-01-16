@@ -22,7 +22,7 @@ export class RouteGostKursplanungSchueler extends RouteNode<RouteDataGostKurspla
 	public constructor() {
 		super("gost_kursplanung_halbjahr_ergebnis_schueler", "schueler/:idschueler(\\d+)?", SCardGostUmwahlansicht, new RouteDataGostKursplanungSchueler());
 		super.propHandler = (route) => this.getProps(route);
-        super.setView("gost_kursplanung_schueler_auswahl", SGostKursplanungSchuelerAuswahl, (route) => this.getProps(route));
+		super.setView("gost_kursplanung_schueler_auswahl", SGostKursplanungSchuelerAuswahl, (route) => this.getProps(route));
 		super.text = "Kursplanung - Schüler";
 		this.isHidden = (params: RouteParams) => {
 			return this.checkHidden(params);
@@ -34,7 +34,7 @@ export class RouteGostKursplanungSchueler extends RouteNode<RouteDataGostKurspla
 		return (abiturjahr === undefined) || (abiturjahr === -1);
 	}
 
-    public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
+	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
 		const abiturjahr = to_params.abiturjahr === undefined ? undefined : parseInt(to_params.abiturjahr as string);
 		const halbjahr = (to_params.halbjahr === undefined) ? undefined : GostHalbjahr.fromID(Number(parseInt(to_params.halbjahr as string))) || undefined;
 		const idBlockung = to_params.idblockung === undefined ? undefined : parseInt(to_params.idblockung as string);
@@ -55,13 +55,13 @@ export class RouteGostKursplanungSchueler extends RouteNode<RouteDataGostKurspla
 		const idErgebnis = to_params.idergebnis === undefined ? undefined : parseInt(to_params.idergebnis as string);
 		if ((abiturjahr === undefined) || (halbjahr === undefined) || (idBlockung === undefined) || (idErgebnis === undefined))
 			throw new Error("Fehler: Abiturjahr, Halbjahr und ID der Blockung und des Ergebnisses müssen als Parameter der Route an dieser Stelle vorhanden sein.");
-		// notwendig, damit der Filter für die Schülerliste genutzt werden kann		
+		// notwendig, damit der Filter für die Schülerliste genutzt werden kann
 		this.data.listSchueler.dataKursblockung = routeGostKursplanungHalbjahr.data.dataKursblockung;
 		// Lade die Schülerliste
 		await this.data.listSchueler.update_list(abiturjahr);
 	}
 
-    public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<any> {
+	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<any> {
 		// Prüfe nochmals Abiturjahrgang, Halbjahr und ID der Blockung und des Ergebnisses
 		const abiturjahr = to_params.abiturjahr === undefined ? undefined : parseInt(to_params.abiturjahr as string);
 		const halbjahr = (to_params.halbjahr === undefined) ? undefined : GostHalbjahr.fromID(Number(parseInt(to_params.halbjahr as string))) || undefined;
@@ -89,7 +89,7 @@ export class RouteGostKursplanungSchueler extends RouteNode<RouteDataGostKurspla
 		// ... wurde die ID des Schülers verändert, so lade die Laufbahn-Daten des Schülers aus der Datenbank
 		if (this.data.listSchueler.ausgewaehlt?.id !== idSchueler) {
 			// Setze den neu ausgewählten Schüler-Eintrag
-			const schuelerEintrag = this.data.listSchueler.liste.find(s => s.id === idSchueler);;
+			const schuelerEintrag = this.data.listSchueler.liste.find(s => s.id === idSchueler);
 			if (schuelerEintrag === undefined)
 				throw new Error("Programmierfehler: Ein Eintrag für die Schüler-ID als Parameter der Route muss an dieser Stelle vorhanden sein.");
 			this.data.listSchueler.ausgewaehlt = schuelerEintrag;
@@ -117,13 +117,13 @@ export class RouteGostKursplanungSchueler extends RouteNode<RouteDataGostKurspla
 		return { name: this.name, params: { abiturjahr: abiturjahr, halbjahr: halbjahr, idblockung: idblockung, idergebnis: idergebnis, idschueler : idschueler }};
 	}
 
-    public getSelector() : WritableComputedRef<SchuelerListeEintrag | undefined> {
-        const router = useRouter();
-        return computed({
+	public getSelector() : WritableComputedRef<SchuelerListeEintrag | undefined> {
+		const router = useRouter();
+		return computed({
 			get: () => this.data.listSchueler.ausgewaehlt,
 			set: (value) => {
 				if (this.data.listSchueler.ausgewaehlt !== value)
-					router.push(routeGostKursplanungSchueler.getRoute(routeGost.liste.ausgewaehlt?.abiturjahr, routeGostKursplanung.data.halbjahr.value.id, 
+					router.push(routeGostKursplanungSchueler.getRoute(routeGost.liste.ausgewaehlt?.abiturjahr, routeGostKursplanung.data.halbjahr.value.id,
 						routeGostKursplanungHalbjahr.data.dataKursblockung.daten?.id, routeGostKursplanungBlockung.data.ergebnis.value?.id, value?.id));
 			}
 		});

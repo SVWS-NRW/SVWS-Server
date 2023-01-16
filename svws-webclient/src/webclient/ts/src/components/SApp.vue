@@ -12,9 +12,9 @@
 					</svws-ui-sidebar-menu-item>
 				</template>
 				<template #footer>
-					<svws-ui-sidebar-menu-item class="print:hidden" subline="" @click="logout" >
-						<template #label>Abmelden</template >
-						<template #icon> <i-ri-logout-circle-line /> </template >
+					<svws-ui-sidebar-menu-item class="print:hidden" subline="" @click="logout">
+						<template #label>Abmelden</template>
+						<template #icon> <i-ri-logout-circle-line /> </template>
 					</svws-ui-sidebar-menu-item>
 				</template>
 				<template #version>v{{ version }}</template>
@@ -25,7 +25,7 @@
 			</svws-ui-sidebar-menu>
 		</template>
 		<template #secondaryMenu>
-			<router-view :key="$route.hash" name="liste"/>
+			<router-view :key="$route.hash" name="liste" />
 		</template>
 		<template #main>
 			<svws-ui-overlay v-if="showOverlay || initializing" />
@@ -34,7 +34,7 @@
 				<main class="relative h-full">
 					<router-view :key="$route.hash" />
 				</main>
-				<s-app-status :error="error_message"/>
+				<s-app-status :error="error_message" />
 			</div>
 		</template>
 	</svws-ui-app-layout>

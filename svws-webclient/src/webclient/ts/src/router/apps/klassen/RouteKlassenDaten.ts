@@ -22,13 +22,13 @@ export class RouteKlassenDaten extends RouteNode<RouteDataKlassenDaten, RouteKla
 		super.text = "Daten";
 	}
 
-    public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) {
+	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) {
 		await this.data.listJahrgaenge.update_list();
 		this.data.mapJahrgaenge.clear();
 		this.data.listJahrgaenge.liste.forEach(j => this.data.mapJahrgaenge.set(j.id, j));
 	}
 
-    public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
+	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
 		if (to_params.id === undefined) {
 			this.onSelect(undefined);
 		} else {
@@ -54,7 +54,7 @@ export class RouteKlassenDaten extends RouteNode<RouteDataKlassenDaten, RouteKla
 			...routeKlassen.getProps(to),
 			data: this.data.daten,
 			listJahrgaenge: this.data.listJahrgaenge,
-			mapJahrgaenge: this.data.mapJahrgaenge	
+			mapJahrgaenge: this.data.mapJahrgaenge
 		};
 	}
 

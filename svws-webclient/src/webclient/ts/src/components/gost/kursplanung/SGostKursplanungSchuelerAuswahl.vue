@@ -5,13 +5,13 @@
 				<div class="sticky">
 					<div class="rounded-lg shadow">
 						<div class="flex justify-between w-72">
-							<svws-ui-checkbox v-model="kurs_filter_toggle" class="" > Kursfilter </svws-ui-checkbox>
-							<svws-ui-multi-select v-if="kurs_filter_toggle" v-model="kurs_filter" :items="kurse" headless :item-text="(kurs: GostBlockungKurs) => manager?.getOfKursName(kurs.id).toString() || ''" class="w-52"/>
+							<svws-ui-checkbox v-model="kurs_filter_toggle" class=""> Kursfilter </svws-ui-checkbox>
+							<svws-ui-multi-select v-if="kurs_filter_toggle" v-model="kurs_filter" :items="kurse" headless :item-text="(kurs: GostBlockungKurs) => manager?.getOfKursName(kurs.id).toString() || ''" class="w-52" />
 						</div>
 						<div class="flex justify-between w-72">
-							<svws-ui-checkbox v-model="fach_filter_toggle" class="" > Fachfilter </svws-ui-checkbox>
-							<svws-ui-multi-select v-if="fach_filter_toggle" v-model="fach_filter" :items="dataFaecher.daten" headless :item-text="(fach: GostFach) => fach.bezeichnung?.toString() || ''" class="w-36"/>
-							<svws-ui-multi-select v-if="fach_filter_toggle" v-model="kursart_filter" :items="GostKursart.values()" headless :item-text="(kursart: GostKursart) => kursart.kuerzel.toString()" class="w-16"/>
+							<svws-ui-checkbox v-model="fach_filter_toggle" class=""> Fachfilter </svws-ui-checkbox>
+							<svws-ui-multi-select v-if="fach_filter_toggle" v-model="fach_filter" :items="dataFaecher.daten" headless :item-text="(fach: GostFach) => fach.bezeichnung?.toString() || ''" class="w-36" />
+							<svws-ui-multi-select v-if="fach_filter_toggle" v-model="kursart_filter" :items="GostKursart.values()" headless :item-text="(kursart: GostKursart) => kursart.kuerzel.toString()" class="w-16" />
 						</div>
 						<div class="pl-4">
 							<svws-ui-radio-group>
@@ -37,7 +37,7 @@
 				<div :class="{ 'border-2 border-dashed border-red-700': active }">
 					<div class="overflow-hidden rounded-lg shadow">
 						<table class="w-full border-collapse text-sm">
-							<s-kurs-schueler-fachbelegung v-for="fach in fachbelegungen" :key="fach.fachID" :fach="fach" 
+							<s-kurs-schueler-fachbelegung v-for="fach in fachbelegungen" :key="fach.fachID" :fach="fach"
 								:kurse="blockungsergebnisse" :schueler-id="selected.id" :blockung="blockung" :ergebnis="ergebnis" />
 						</table>
 						<template v-if="!blockung_aktiv">
@@ -74,7 +74,7 @@
 	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 	import { routeGostKursplanungSchueler } from "~/router/apps/gost/kursplanung/RouteGostKursplanungSchueler";
 
-	const props = defineProps<{ 
+	const props = defineProps<{
 		item: ShallowRef<GostJahrgang | undefined>;
 		schule: DataSchuleStammdaten;
 		jahrgangsdaten: DataGostJahrgang;
@@ -130,7 +130,7 @@
 
 	const blockungsergebnisse: ComputedRef<Map<GostBlockungKurs, GostBlockungsergebnisKurs[]>> = computed(() => {
 		const map = new Map();
-		if (!schienen.value?.size()) 
+		if (!schienen.value?.size())
 			return map;
 		for (const k of kurse.value)
 			for (const s of schienen.value) {
@@ -143,7 +143,7 @@
 	});
 
 	const fachbelegungen: ComputedRef<List<GostFachwahl>> = computed(() => {
-		if (!selected.value?.id || !props.blockung.datenmanager) 
+		if (!selected.value?.id || !props.blockung.datenmanager)
 			return new Vector<GostFachwahl>()
 		return props.blockung.datenmanager.getOfSchuelerFacharten(selected.value.id)
 	});
@@ -249,7 +249,7 @@
 		if (!schuelerid || !kurs?.id) return;
 		let ok = false
 		ok = await props.ergebnis.removeSchuelerKurs(schuelerid, kurs.id);
-		if (ok) 
+		if (ok)
 			main.config.drag_and_drop_data = undefined;
 	}
 

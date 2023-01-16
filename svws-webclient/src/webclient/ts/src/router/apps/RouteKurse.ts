@@ -27,7 +27,7 @@ export class RouteKurse extends RouteNodeListView<ListKurse, KursListeEintrag, R
 		super("kurse", "/kurse/:id(\\d+)?", SKurseAuswahl, SKurseApp, new ListKurse(), 'id', new RouteDataKurse());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Kurse";
-        super.setView("liste", SKurseAuswahl, (route) => this.getProps(route));
+		super.setView("liste", SKurseAuswahl, (route) => this.getProps(route));
 		super.children = [
 			routeKurseDaten
 		];
@@ -40,10 +40,10 @@ export class RouteKurse extends RouteNodeListView<ListKurse, KursListeEintrag, R
 			await this.liste.update_list();
 			return { name: redirect_name, params: { id: this.liste.liste.at(0)?.id }};
 		}
-        return true;
-    }
+		return true;
+	}
 
-    public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) {
+	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) {
 		await this.data.schule.select(true);  // undefined würde das laden verhindern, daher true
 		await this.data.listJahrgaenge.update_list();
 		this.data.mapJahrgaenge.clear();
@@ -54,7 +54,7 @@ export class RouteKurse extends RouteNodeListView<ListKurse, KursListeEintrag, R
 		await this.liste.update_list();  // Die Auswahlliste wird als letztes geladen
 	}
 
-    public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
+	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
 		if (to_params.id === undefined) {
 			this.onSelect(undefined);
 		} else {
@@ -73,7 +73,7 @@ export class RouteKurse extends RouteNodeListView<ListKurse, KursListeEintrag, R
 		}
 	}
 
-    protected getAuswahlComputedProperty(): WritableComputedRef<KursListeEintrag | undefined> {
+	protected getAuswahlComputedProperty(): WritableComputedRef<KursListeEintrag | undefined> {
 		return this.getSelector();
 	}
 

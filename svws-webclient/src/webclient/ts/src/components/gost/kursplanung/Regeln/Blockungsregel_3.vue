@@ -18,7 +18,7 @@
 	import { createKursbezeichnungsGetter, useRegelParameterKurs, useRegelParameterSchiene } from '../composables';
 	import { useKurse } from '../composables'
 
-	const { dataFaecher } = defineProps<{ 
+	const { dataFaecher } = defineProps<{
 		dataFaecher: DataGostFaecher;
 	}>();
 
@@ -30,7 +30,7 @@
 	const regel: ShallowRef<GostBlockungRegel | undefined> = shallowRef(undefined)
 	const kurs = useRegelParameterKurs(regel, 0)
 	const schiene = useRegelParameterSchiene(regel, 1)
-		
+
 	const kurse = useKurse()
 	const regel_hinzufuegen = (r: GostBlockungRegel) => {
 		r.parameter.add(kurse.value.get(0).id)

@@ -2,27 +2,26 @@
 	<svws-ui-secondary-menu>
 		<template #headline>Abiturjahrgänge</template>
 		<template #abschnitt>
-			<svws-ui-multi-select v-if="schule_abschnitte" v-model="akt_abschnitt" :items="schule_abschnitte" :item-sort="item_sort" :item-text="item_text"></svws-ui-multi-select>
+			<svws-ui-multi-select v-if="schule_abschnitte" v-model="akt_abschnitt" :items="schule_abschnitte" :item-sort="item_sort" :item-text="item_text" />
 		</template>
-		<template #header></template>
+		<template #header />
 		<template #content>
 			<div class="container">
 				<svws-ui-table v-model="selected" :columns="cols" :data="rows" id="abiturjahr" :footer="true">
 					<template #cell-abiturjahr="{ row }">
-						{{row.abiturjahr === -1 ? '' : row.abiturjahr}}
+						{{ row.abiturjahr === -1 ? '' : row.abiturjahr }}
 						<span v-if="(pending && row.abiturjahr === selected?.abiturjahr)" class="loading-spinner-dimensions">
-							<img src="/loading_spinner.svg" alt="Ladeanzeige" class="loading-spinner-dimensions loading-rotation" ></span>
+							<img src="/loading_spinner.svg" alt="Ladeanzeige" class="loading-spinner-dimensions loading-rotation"></span>
 					</template>
 					<template #footer>
 						<svws-ui-dropdown type="icon" class="">
 							<template #dropdownButton>Abiturjahr hinzufügen</template>
 							<template #dropdownItems>
-								<svws-ui-dropdown-item
-									v-for="jahrgang in jahrgaenge"
+								<svws-ui-dropdown-item v-for="jahrgang in jahrgaenge"
 									:key="jahrgang.id"
 									class="px-2"
-									@click="abiturjahr_hinzufuegen(jahrgang)"
-								>{{ jahrgang.kuerzel }}
+									@click="abiturjahr_hinzufuegen(jahrgang)">
+									{{ jahrgang.kuerzel }}
 								</svws-ui-dropdown-item>
 							</template>
 						</svws-ui-dropdown>
@@ -31,7 +30,7 @@
 				<router-view name="gost_kursplanung_auswahl" />
 			</div>
 		</template>
-	</svws-ui-secondary-menu>	
+	</svws-ui-secondary-menu>
 </template>
 
 <script setup lang="ts">
@@ -47,13 +46,13 @@
 	import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
 	import { routeGostKursplanungHalbjahr } from "~/router/apps/gost/kursplanung/RouteGostKursplanungHalbjahr";
 
-	const { schule, jahrgangsdaten } = defineProps<{ 
+	const { schule, jahrgangsdaten } = defineProps<{
 		item: ShallowRef<GostJahrgang | undefined>;
 		schule: DataSchuleStammdaten;
 		jahrgangsdaten: DataGostJahrgang;
 		dataFaecher: DataGostFaecher;
 	}>();
-	
+
 	const selected: WritableComputedRef<GostJahrgang | undefined> = routeGost.auswahl;
 	const main: Main = injectMainApp();
 	const appJahrgaenge = main.apps.jahrgaenge;
@@ -89,7 +88,7 @@
 		}
 	}
 
-	const schule_abschnitte: ComputedRef<Array<Schuljahresabschnitt> | undefined> = computed(() => 
+	const schule_abschnitte: ComputedRef<Array<Schuljahresabschnitt> | undefined> = computed(() =>
 		schule.daten?.abschnitte?.toArray(new Array<Schuljahresabschnitt>()) || []
 	);
 

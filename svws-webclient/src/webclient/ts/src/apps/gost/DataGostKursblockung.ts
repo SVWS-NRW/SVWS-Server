@@ -1,6 +1,6 @@
 import { App } from "../BaseApp";
 
-import { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungListeneintrag, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdaten, 
+import { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungListeneintrag, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdaten,
 	GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostBlockungsergebnisManager, List, Vector } from "@svws-nrw/svws-core-ts";
 import { BaseData } from "../BaseData";
 import { ShallowReactive, shallowReactive } from "vue";
@@ -14,7 +14,7 @@ interface DataGostKursblockungManagerContainer {
 }
 
 export class DataGostKursblockung extends BaseData<GostBlockungsdaten, GostBlockungListeneintrag, unknown> {
-	
+
 	public manager_container : ShallowReactive<DataGostKursblockungManagerContainer> = shallowReactive({manager: {daten: undefined, ergebnis: undefined}});
 
 	public constructor() {
@@ -24,9 +24,9 @@ export class DataGostKursblockung extends BaseData<GostBlockungsdaten, GostBlock
 	protected on_update(daten: Partial<GostBlockungsdaten>): void {
 		return void daten;
 	}
-	
+
 	public commit() {
-    this.manager_container.manager = {...this.manager_container.manager};
+		this.manager_container.manager = {...this.manager_container.manager};
 	}
 
 	public get datenmanager() : GostBlockungsdatenManager | undefined {
@@ -81,7 +81,7 @@ export class DataGostKursblockung extends BaseData<GostBlockungsdaten, GostBlock
 		this.commit();
 		return undefined;
 	}
-	
+
 	/**
 	 * Aktualisiert die übergebenen Felder der Daten mit dem übergebenen Objekt.
 	 * Ruft ggf. einen Callback bei Änderungen an den Daten auf, so dass eine
@@ -120,7 +120,7 @@ export class DataGostKursblockung extends BaseData<GostBlockungsdaten, GostBlock
 		this.pending = false;
 		return kurs
 	}
-	
+
 	/**Löscht einen Kurs in der Blockung für das angegebene fach_id
 	 * @param {number} fach_id
 	 * @param {number} kursart_id
@@ -185,7 +185,7 @@ export class DataGostKursblockung extends BaseData<GostBlockungsdaten, GostBlock
 		this.datenmanager?.removeRegel(regel);
 		this.ergebnismanager?.setRemoveRegelByID(regel.id);
 		this.commit();
-			this.pending = false;
+		this.pending = false;
 		return regel
 	}
 
@@ -200,7 +200,7 @@ export class DataGostKursblockung extends BaseData<GostBlockungsdaten, GostBlock
 
 	/**Ergänzt eine Schiene in der Blockung für das angegebene
 	 * @returns {Promise<GostBlockungSchiene|undefined>} Ein Schienenobjekt bei Erfolg
-	 */	
+	 */
 	public async add_blockung_schiene(): Promise<GostBlockungSchiene | undefined> {
 		if (!this.daten?.id)
 			return;
@@ -239,10 +239,10 @@ export class DataGostKursblockung extends BaseData<GostBlockungsdaten, GostBlock
 		await App.api.patchGostBlockungSchiene(data, App.schema, data.id);
 		//TODO, der Manager sollte was tun..
 	}
-	
+
 	/**Ergänzt einen Lehrer in der Blockung zum angegebenen Kurs
 	 * @returns {Promise<GostBlockungKursLehrer|undefined>} Ein Schienenobjekt bei Erfolg
-	 */	
+	 */
 	public async add_blockung_lehrer(kursid: number, lehrerid: number): Promise<GostBlockungKursLehrer | undefined> {
 		if (!this.daten?.id)
 			return;

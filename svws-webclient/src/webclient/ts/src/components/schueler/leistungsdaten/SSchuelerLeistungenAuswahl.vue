@@ -16,15 +16,15 @@
 	import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
 	import { routeSchuelerLeistungenDaten } from "~/router/apps/schueler/leistungsdaten/RouteSchuelerLeistungenDaten";
 
-	const props = defineProps<{ 
+	const props = defineProps<{
 		item: ShallowRef<SchuelerListeEintrag | undefined>;
-		stammdaten: DataSchuelerStammdaten, 
-		lernabschnitt?: SchuelerLernabschnittListeEintrag, 
-		data: DataSchuelerAbschnittsdaten, 
+		stammdaten: DataSchuelerStammdaten,
+		lernabschnitt?: SchuelerLernabschnittListeEintrag,
+		data: DataSchuelerAbschnittsdaten,
 		mapFaecher: Map<number, FaecherListeEintrag>,
 		mapLehrer: Map<number, LehrerListeEintrag>,
 	}>();
-	
+
 	const liste: ComputedRef<SchuelerLernabschnittListeEintrag[]> = computed(() => routeSchuelerLeistungenDaten.data.auswahl.liste);
 
 	const selected: WritableComputedRef<SchuelerLernabschnittListeEintrag | undefined> = routeSchuelerLeistungenDaten.auswahl;

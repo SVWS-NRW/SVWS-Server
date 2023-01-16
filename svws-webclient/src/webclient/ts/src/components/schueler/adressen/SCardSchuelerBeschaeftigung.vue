@@ -18,7 +18,7 @@
 								<tbody>
 									<tr v-for="(ds, id) in betriebe" :key="id" @click="select(ds)" class="border-b bg-white transition duration-300 ease-in-out hover:bg-gray-400">
 										<s-card-schueler-beschaeftigungs-tabelle :betrieb="ds" :list-schuelerbetriebe="listSchuelerbetriebe" />
-									</tr>	
+									</tr>
 								</tbody>
 							</table>
 						</div>
@@ -35,14 +35,14 @@
 	import { SchuelerBetriebsdaten } from "@svws-nrw/svws-core-ts";
 	import { ListSchuelerBetriebsdaten } from "~/apps/schueler/ListSchuelerBetriebsdaten";
 
-	const { listSchuelerbetriebe } = defineProps<{ 
+	const { listSchuelerbetriebe } = defineProps<{
 		listSchuelerbetriebe : ListSchuelerBetriebsdaten;
 	}>();
 
 	const headerTags : ComputedRef<Array<string>> = computed(() => {
 		return [ "Betrieb", "Ausbilder","Beschäftigungsart", "Beginn", "Ende", "Praktikum"];
 	});
-	
+
 	const betriebe : ComputedRef<SchuelerBetriebsdaten[] | undefined> = computed(() => {
 		return listSchuelerbetriebe.liste;
 	});

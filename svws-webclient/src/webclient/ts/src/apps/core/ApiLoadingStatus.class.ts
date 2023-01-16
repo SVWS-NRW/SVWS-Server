@@ -10,7 +10,7 @@ export interface LoadingProcess {
 	/** Die Nachricht, die für diesen Prozess angezeigt werden soll */
 	message: string,
 	/** Liste der Kategorien, in die der Prozess fällt */
-	categories: Symbol[],
+	categories: symbol[],
 }
 
 /**
@@ -30,8 +30,8 @@ export class ApiLoadingStatus {
 	 * Zeigt an, ob ein Prozess bekannt ist, der für die Initialisierung der Anwendung verantwortlich ist.
 	 */
 	public initializing: ComputedRef<boolean> = computed(() => {
-		let result: boolean = false;
-		for (let [key, value] of this.activeCallsCache) {
+		let result = false;
+		for (const [key, value] of this.activeCallsCache) {
 			if (value.categories.includes(MAIN_LOADING_SYMBOL)) result = true;
 		}
 		return result;
@@ -43,7 +43,7 @@ export class ApiLoadingStatus {
 	 * Cache gehaltenen Prozesses ausgegeben.
 	 */
 	public loading_message: ComputedRef<string> = computed(() => {
-		let message: string = 'Anwendung lädt'
+		let message = 'Anwendung lädt'
 		if (this.api_pending.value === true) {
 			const keys = [...this.activeCallsCache];
 			// Zugriff auf erstes Element im activeCallsCache

@@ -2,32 +2,22 @@
 	<svws-ui-content-card title="Basisdaten">
 		<div class="content-wrapper">
 			<div class="input-wrapper">
-				<svws-ui-text-input
-					v-model="inputKuerzel"
+				<svws-ui-text-input v-model="inputKuerzel"
 					type="text"
-					placeholder="Kürzel"
-				/>
-				<svws-ui-text-input
-					v-model="inputBezeichnung"
+					placeholder="Kürzel" />
+				<svws-ui-text-input v-model="inputBezeichnung"
 					type="text"
-					placeholder="Bezeichnung"
-				/>
-				<svws-ui-text-input
-					v-model="inputKuerzelStatistik"
+					placeholder="Bezeichnung" />
+				<svws-ui-text-input v-model="inputKuerzelStatistik"
 					placeholder="Bezeichnung in Statistik"
-					type="text"
-				/>
-				<svws-ui-multi-select
-					v-model="inputIdFolgejahrgang"
+					type="text" />
+				<svws-ui-multi-select v-model="inputIdFolgejahrgang"
 					:items="inputListJahrgaenge?.filter((e: JahrgangsListeEintrag) => e.id !== id)"
 					:item-text="(e: JahrgangsListeEintrag) => e.bezeichnung?.toString() || ''"
-					title="Folgejahrgang"
-				/>
-				<svws-ui-text-input
-					v-model="inputKuerzelSchulgliederung"
+					title="Folgejahrgang" />
+				<svws-ui-text-input v-model="inputKuerzelSchulgliederung"
 					placeholder="Kürzel Schulgliederung"
-					type="text"
-				/>
+					type="text" />
 			</div>
 		</div>
 	</svws-ui-content-card>
@@ -35,7 +25,7 @@
 
 <script setup lang="ts">
 	import { JahrgangsListeEintrag } from "@svws-nrw/svws-core-ts";
-import { computed, ComputedRef, WritableComputedRef } from "vue";
+	import { computed, ComputedRef, WritableComputedRef } from "vue";
 
 	import { injectMainApp, Main } from "~/apps/Main";
 
@@ -73,7 +63,7 @@ import { computed, ComputedRef, WritableComputedRef } from "vue";
 	const inputKuerzelStatistik: WritableComputedRef<string | undefined> =
 		computed({
 			get(): string | undefined {
-					return app.jahrgangsdaten.daten?.kuerzelStatistik?.toString();
+				return app.jahrgangsdaten.daten?.kuerzelStatistik?.toString();
 			},
 			set(val: string | undefined) {
 				app.jahrgangsdaten.patch({
@@ -82,10 +72,10 @@ import { computed, ComputedRef, WritableComputedRef } from "vue";
 			}
 		});
 
-		const inputKuerzelSchulgliederung: WritableComputedRef<string | undefined> =
+	const inputKuerzelSchulgliederung: WritableComputedRef<string | undefined> =
 		computed({
 			get(): string | undefined {
-					return app.jahrgangsdaten.daten?.kuerzelSchulgliederung?.toString();
+				return app.jahrgangsdaten.daten?.kuerzelSchulgliederung?.toString();
 			},
 			set(val: string | undefined) {
 				app.jahrgangsdaten.patch({
@@ -94,7 +84,7 @@ import { computed, ComputedRef, WritableComputedRef } from "vue";
 			}
 		});
 
-		const inputIdFolgejahrgang: WritableComputedRef<JahrgangsListeEintrag | undefined> =
+	const inputIdFolgejahrgang: WritableComputedRef<JahrgangsListeEintrag | undefined> =
 		computed({
 			get(): JahrgangsListeEintrag | undefined {
 				const res = inputListJahrgaenge.value?.find((e: JahrgangsListeEintrag) => {

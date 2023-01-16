@@ -5,21 +5,21 @@
 				<div class="inline-block py-2 align-middle sm:px-6 lg:px-8">
 					<div class="overflow-hidden rounded-lg shadow">
 						<table class="border-collapse text-sm">
-                            <thead class="bg-slate-100">
-                             <tr>
-                                <td class="border border-[#7f7f7f]/20 text-center">
-                                    <svws-ui-checkbox v-model="selected"> Alle </svws-ui-checkbox>
-                                </td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <s-benutzergruppen-listeneintrag v-for="bgle in benutzergruppen" :key="bgle.id" :bgle="bgle" > </s-benutzergruppen-listeneintrag>
-                        </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
+							<thead class="bg-slate-100">
+								<tr>
+									<td class="border border-[#7f7f7f]/20 text-center">
+										<svws-ui-checkbox v-model="selected"> Alle </svws-ui-checkbox>
+									</td>
+								</tr>
+							</thead>
+							<tbody>
+								<s-benutzergruppen-listeneintrag v-for="bgle in benutzergruppen" :key="bgle.id" :bgle="bgle" />
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
 	</svws-ui-content-card>
 </template>
 
@@ -37,20 +37,20 @@
 		return app.dataBenutzer.manager;
 	});
 
-    const benutzergruppen: ComputedRef<BenutzergruppeListeEintrag[] | undefined> = computed(() => {
+	const benutzergruppen: ComputedRef<BenutzergruppeListeEintrag[] | undefined> = computed(() => {
 		return main.apps.benutzergruppe.auswahl.liste;
 	});
 
 	const selected: WritableComputedRef<boolean> = computed({
-        get(): boolean {
-            return benutzergruppen.value?.length === manager.value?.anzahlGruppen() ?  true : false;
-        },
-        set(value: boolean) {
-            if (value)
-                app.dataBenutzer.addBenutzergruppenBenutzer(benutzergruppen.value);
-            else
-                app.dataBenutzer.removeBenutzergruppenBenutzer(benutzergruppen.value);
-        }
-    });
+		get(): boolean {
+			return benutzergruppen.value?.length === manager.value?.anzahlGruppen() ?  true : false;
+		},
+		set(value: boolean) {
+			if (value)
+				app.dataBenutzer.addBenutzergruppenBenutzer(benutzergruppen.value);
+			else
+				app.dataBenutzer.removeBenutzergruppenBenutzer(benutzergruppen.value);
+		}
+	});
 
 </script>

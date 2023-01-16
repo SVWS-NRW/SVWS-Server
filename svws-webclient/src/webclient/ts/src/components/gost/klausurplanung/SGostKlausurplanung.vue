@@ -1,5 +1,5 @@
 <template>
-	<div v-if="visible" class="flex h-full flex-row" >
+	<div v-if="visible" class="flex h-full flex-row">
 		<div class="flex w-full flex-col">
 			<svws-ui-router-vertical-tab-bar :routes="routeGostKlausurplanung.children_records" :hidden="children_hidden" v-model="selectedRoute">
 				<router-view />
@@ -17,7 +17,7 @@
 	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 	import { routeGostKlausurplanung } from "~/router/apps/gost/RouteGostKlausurplanung";
 
-	const { item } = defineProps<{ 
+	const { item } = defineProps<{
 		item: ShallowRef<GostJahrgang | undefined>;
 		schule: DataSchuleStammdaten;
 		jahrgangsdaten: DataGostJahrgang;

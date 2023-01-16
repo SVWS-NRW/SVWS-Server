@@ -15,7 +15,7 @@
 	import { DataSchuelerSchulbesuchsdaten } from "~/apps/schueler/DataSchuelerSchulbesuchsdaten";
 
 	const props = defineProps<{ data: DataSchuelerSchulbesuchsdaten }>();
-	
+
 	const grundschuleEinschulungsjahr: WritableComputedRef<number | undefined> = computed({
 		get: () => props.data.daten?.grundschuleEinschulungsjahr?.valueOf(),
 		set: (value) => props.data.patch({ grundschuleEinschulungsjahr: value })

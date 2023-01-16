@@ -18,7 +18,7 @@
 	import { DataGostKursblockungsergebnis } from "~/apps/gost/DataGostKursblockungsergebnis";
 	import { injectMainApp, Main } from "~/apps/Main";
 
-	const props = defineProps<{ 
+	const props = defineProps<{
 		fach: GostFachwahl;
 		kurse: Map<GostBlockungKurs, GostBlockungsergebnisKurs[]>;
 		schuelerId: number;
@@ -38,7 +38,7 @@
 
 	const kursid: ComputedRef<number | undefined> = computed(() => belegung.value?.id);
 
-	const belegung: ComputedRef<GostBlockungsergebnisKurs | undefined> = computed(() => 
+	const belegung: ComputedRef<GostBlockungsergebnisKurs | undefined> = computed(() =>
 		manager.value?.getOfSchuelerOfFachZugeordneterKurs(props.schuelerId, props.fach.fachID) || undefined
 	);
 

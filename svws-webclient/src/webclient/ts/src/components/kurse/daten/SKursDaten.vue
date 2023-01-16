@@ -1,6 +1,6 @@
 <template>
 	<div v-if="visible" class="app-container">
-		<s-card-kurs-basisdaten :item="item" :data="data" :list-jahrgaenge="listJahrgaenge" :map-jahrgaenge="mapJahrgaenge" 
+		<s-card-kurs-basisdaten :item="item" :data="data" :list-jahrgaenge="listJahrgaenge" :map-jahrgaenge="mapJahrgaenge"
 			:list-lehrer="listLehrer" :map-lehrer="mapLehrer" />
 	</div>
 </template>
@@ -15,7 +15,7 @@
 	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 	import { routeKurseDaten } from "~/router/apps/kurse/RouteKurseDaten";
 
-	const { item, data, listJahrgaenge, mapJahrgaenge, listLehrer, mapLehrer } = defineProps<{ 
+	const { item, data, listJahrgaenge, mapJahrgaenge, listLehrer, mapLehrer } = defineProps<{
 		item: ShallowRef<KursListeEintrag | undefined>;
 		data: DataKurs;
 		schule: DataSchuleStammdaten;

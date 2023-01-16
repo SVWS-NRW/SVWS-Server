@@ -35,7 +35,7 @@ export class Benutzergruppe extends App {
 
 	/**
 	 * Gibt zurück, ob diese App eine gültige Auswahl in der Liste enthält.
-	 * 
+	 *
 	 * @returns true, falls diese App eine gültige Auswahl in der Liste enthält
 	 */
 	 public hatAuswahl() : boolean {

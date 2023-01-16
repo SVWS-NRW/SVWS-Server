@@ -25,31 +25,31 @@ export class RouteApp extends RouteNode<unknown, any> {
 		super("app", "/", SApp);
 		super.text = "SVWS-Client";
 		super.children = [
-                  routeSchule,
-                  routeSchuleBenutzer,
-                  routeSchuleBenutzergruppe,
-                  routeKataloge,
-                  routeKatalogFaecher,
-                  routeKatalogReligion,
-                  routeKatalogJahrgaenge,
-                  routeKatalogFoerderschwerpunkte,
-                  routeSchueler,
-                  routeLehrer,
-                  routeKlassen,
-                  routeKurse,
-                  routeGost,
-                  routeStatistik
-            ];
-            super.menu = [
-                  routeSchule,
-                  routeKataloge,
-                  routeSchueler,
-                  routeLehrer,
-                  routeKlassen,
-                  routeKurse,
-                  routeGost,
-                  routeStatistik
-            ];
+			routeSchule,
+			routeSchuleBenutzer,
+			routeSchuleBenutzergruppe,
+			routeKataloge,
+			routeKatalogFaecher,
+			routeKatalogReligion,
+			routeKatalogJahrgaenge,
+			routeKatalogFoerderschwerpunkte,
+			routeSchueler,
+			routeLehrer,
+			routeKlassen,
+			routeKurse,
+			routeGost,
+			routeStatistik
+		];
+		super.menu = [
+			routeSchule,
+			routeKataloge,
+			routeSchueler,
+			routeLehrer,
+			routeKlassen,
+			routeKurse,
+			routeGost,
+			routeStatistik
+		];
 	}
 
 }

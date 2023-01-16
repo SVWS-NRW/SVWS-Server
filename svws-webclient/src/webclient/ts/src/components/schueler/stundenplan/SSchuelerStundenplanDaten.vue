@@ -3,11 +3,11 @@
 		<div class="w-full flex-none sm:-mx-6 lg:-mx-8">
 			<div class="w-full inline-block py-2 align-middle sm:px-6 lg:px-8">
 				<div v-for="wochentyp in manager?.getWochentypen()" class="w-full rounded-lg shadow">
-					<p class="text-lg"></p>
+					<p class="text-lg" />
 					<table class="w-full table-auto border-collapse mb-5">
 						<thead>
 							<tr>
-								<th class="text-center border-2 border-collapse">Woche {{wochentyp}}</th>
+								<th class="text-center border-2 border-collapse">Woche {{ wochentyp }}</th>
 								<th class="text-center border-2 border-collapse">Montag</th>
 								<th class="text-center border-2 border-collapse">Dienstag</th>
 								<th class="text-center border-2 border-collapse">Mittwoch</th>
@@ -17,7 +17,7 @@
 						</thead>
 						<tbody>
 							<tr v-for="stunde in manager?.getMaxStunde()">
-								<th class="text-center border-2 border-collapse">{{stunde}}</th>
+								<th class="text-center border-2 border-collapse">{{ stunde }}</th>
 								<td class="text-center border-2 border-collapse" v-for="wochentag in manager?.getMaxWochentag()">
 									<table class="w-full">
 										<tr>
@@ -42,14 +42,14 @@
 	import { DataStundenplan } from "~/apps/schueler/DataStundenplan";
 	import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
 
-	const props = defineProps<{ 
+	const props = defineProps<{
 		item: ShallowRef<SchuelerListeEintrag | undefined>;
 		stammdaten: DataSchuelerStammdaten;
 		stundenplan?: StundenplanListeEintrag;
 		data: DataStundenplan;
 	}>();
-	
-	const manager: ComputedRef<SchuelerStundenplanManager | undefined> = computed(() => 
+
+	const manager: ComputedRef<SchuelerStundenplanManager | undefined> = computed(() =>
 		props.data.daten === undefined ? undefined : new SchuelerStundenplanManager(props.data.daten)
 	);
 

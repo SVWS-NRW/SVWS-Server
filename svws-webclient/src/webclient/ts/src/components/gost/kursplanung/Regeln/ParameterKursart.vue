@@ -7,12 +7,12 @@
 	import { GostKursart } from "@svws-nrw/svws-core-ts";
 	import { computed, WritableComputedRef } from "vue";
 
-	const { modelValue } = defineProps<{ 
-		modelValue: GostKursart; 
+	const { modelValue } = defineProps<{
+		modelValue: GostKursart;
 	}>();
 
 	const kursarten = GostKursart.values()
-		
+
 	const emit = defineEmits(['update:modelValue'])
 	const selected: WritableComputedRef<GostKursart> = computed({
 		get: () => modelValue,

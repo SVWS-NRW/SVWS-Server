@@ -17,11 +17,11 @@
 	import { DataSchuelerSchulbesuchsdaten } from "~/apps/schueler/DataSchuelerSchulbesuchsdaten";
 	import { routeSchuelerSchulbesuch } from "~/router/apps/schueler/RouteSchuelerSchulbesuch";
 
-	const props = defineProps<{ 
+	const props = defineProps<{
 		item: ShallowRef<SchuelerListeEintrag | undefined>;
 		data: DataSchuelerSchulbesuchsdaten;
 	}>();
-	
+
 	const visible: ComputedRef<boolean> = computed(() => {
 		return !(routeSchuelerSchulbesuch.hidden) && (props.item.value?.id !== undefined);
 	});
