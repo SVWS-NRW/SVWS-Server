@@ -43,10 +43,10 @@ export class RouteGost extends RouteNodeListView<ListGost, GostJahrgang, RouteDa
 	}
 
 	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
-		if ((to.name === this.name) && (to_params.abiturjahr === undefined)) {
+		if (to_params.abiturjahr === undefined) {
 			const redirect_name: string = (this.selectedChild === undefined) ? this.defaultChild!.name : this.selectedChild.name;
 			await this.liste.update_list();
-			return { name: redirect_name, params: { abiturjahr: this.liste.liste.at(0)?.abiturjahr }};
+			return { name: redirect_name, params: { abiturjahr: -1 }};
 		}
 		return true;
 	}

@@ -47,9 +47,9 @@ export class RouteGostKursplanungBlockung extends RouteNode<RouteDataGostKurspla
 		const abiturjahr = to_params.abiturjahr === undefined ? undefined : parseInt(to_params.abiturjahr as string);
 		const halbjahr = (to_params.halbjahr === undefined) ? undefined : GostHalbjahr.fromID(Number(parseInt(to_params.halbjahr as string))) || undefined;
 		const idBlockung = to_params.idblockung === undefined ? undefined : parseInt(to_params.idblockung as string);
-		if ((abiturjahr === undefined) || (abiturjahr !== routeGost.data.item.value?.abiturjahr))
+		if ((abiturjahr === undefined) || (routeGost.data.item.value !== undefined) && (abiturjahr !== routeGost.data.item.value.abiturjahr))
 			return { name: routeGost.name, params: { } };
-		if ((halbjahr === undefined) || (halbjahr.id !== routeGostKursplanung.data.halbjahr.value.id) || (idBlockung === undefined))
+		if ((halbjahr === undefined) || (idBlockung === undefined))
 			return routeGostKursplanung.getRoute(abiturjahr, halbjahr?.id);
 		return true;
 	}

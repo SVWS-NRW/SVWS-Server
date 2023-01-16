@@ -36,10 +36,7 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 
 	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
 		const abiturjahr = to_params.abiturjahr === undefined ? undefined : parseInt(to_params.abiturjahr as string);
-		if (abiturjahr === undefined)
-			return false;
-		const jahrgang = routeGost.liste.liste.find(elem => elem.abiturjahr === abiturjahr);
-		if ((jahrgang === undefined) || (jahrgang.abiturjahr === -1))
+		if ((abiturjahr === undefined) || (routeGost.data.item.value !== undefined) && (abiturjahr !== routeGost.data.item.value.abiturjahr))
 			return this.getRoute(-1);
 		return true;
 	}

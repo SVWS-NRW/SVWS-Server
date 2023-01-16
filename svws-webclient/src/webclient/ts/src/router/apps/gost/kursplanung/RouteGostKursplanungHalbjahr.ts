@@ -40,10 +40,10 @@ export class RouteGostKursplanungHalbjahr extends RouteNode<RouteDataGostKurspla
 	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
 		const abiturjahr = to_params.abiturjahr === undefined ? undefined : parseInt(to_params.abiturjahr as string);
 		const halbjahr = (to_params.halbjahr === undefined) ? undefined : GostHalbjahr.fromID(Number(parseInt(to_params.halbjahr as string))) || undefined;
-		if ((abiturjahr === undefined) || (abiturjahr !== routeGost.data.item.value?.abiturjahr))
+		if ((abiturjahr === undefined) || (routeGost.data.item.value !== undefined) && (abiturjahr !== routeGost.data.item.value.abiturjahr))
 			return { name: routeGost.name, params: { } };
-		if ((halbjahr === undefined) || (halbjahr.id !== routeGostKursplanung.data.halbjahr.value.id))
-			return routeGostKursplanung.getRoute(abiturjahr, halbjahr?.id);
+		if (halbjahr === undefined)
+			return routeGostKursplanung.getRoute(abiturjahr, undefined);
 		return true;
 	}
 
