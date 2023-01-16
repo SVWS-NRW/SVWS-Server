@@ -69,7 +69,7 @@
 	});
 
 	const visible: ComputedRef<boolean> = computed(() => {
-		return !(routeSchueler.hidden) && (item !== undefined);
+		return !(routeSchueler.hidden()) && (item !== undefined);
 	});
 
 </script>

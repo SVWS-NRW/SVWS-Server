@@ -26,7 +26,7 @@
 	const erzieher: ComputedRef<List<ErzieherStammdaten> | undefined> = computed(() => props.data.daten);
 
 	const visible: ComputedRef<boolean> = computed(() => {
-		return !(routeSchuelerErziehungsberechtigte.hidden);
+		return !(routeSchuelerErziehungsberechtigte.hidden());
 	});
 
 </script>

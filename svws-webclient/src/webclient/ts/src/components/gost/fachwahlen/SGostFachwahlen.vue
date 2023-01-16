@@ -21,7 +21,7 @@
 	}>();
 
 	const visible: ComputedRef<boolean> = computed(() => {
-		return (!routeGostFachwahlen.hidden);
+		return (!routeGostFachwahlen.hidden());
 	});
 
 </script>

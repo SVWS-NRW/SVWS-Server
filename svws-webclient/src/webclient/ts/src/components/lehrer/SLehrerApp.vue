@@ -47,7 +47,7 @@
 	const inputTitel: ComputedRef<string | undefined> = computed(() => item.value?.titel?.toString());
 
 	const visible: ComputedRef<boolean> = computed(() => {
-		return (item.value !== undefined) && (!routeLehrer.hidden);
+		return (item.value !== undefined) && (!routeLehrer.hidden());
 	});
 
 </script>

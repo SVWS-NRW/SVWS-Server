@@ -26,7 +26,7 @@
 	}>();
 
 	const visible: ComputedRef<boolean> = computed(() => {
-		return (!routeKlassenDaten.hidden) && (item.value !== undefined);
+		return (!routeKlassenDaten.hidden()) && (item.value !== undefined);
 	});
 
 </script>

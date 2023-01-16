@@ -85,12 +85,12 @@
 	watch(minDelayReached, () => { showOverlay.value = true; });
 	watch(minDurationReached, () => { showOverlay.value = false; });
 
-	function select(current : RouteNode<unknown>) : void {
+	function select(current : RouteNode<unknown, any>) : void {
 		router.push({ name: current.name });
 		document.title = schulname.value + " - " + current.text;
 	}
 
-	function is_active(current : RouteNode<unknown>): boolean {
+	function is_active(current : RouteNode<unknown, any>): boolean {
 		const routename = route.name?.toString().split('_')[0];
 		if (routename === undefined)
 			return false;
@@ -99,7 +99,7 @@
 		return current.menu.map(r => r.name).includes(routename);
 	}
 
-	function getText(item: RouteNode<unknown>): string {
+	function getText(item: RouteNode<unknown, any>): string {
 		return item.text;
 	}
 

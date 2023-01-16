@@ -17,7 +17,7 @@ export class RouteGostFachwahlen extends RouteNode<RouteDataGostKursplanung, Rou
 		super("gost_fachwahlen", "fachwahlen", SGostFachwahlen, new RouteDataGostKursplanung());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Fachwahlen";
-		this.isHidden = () => {
+		this.isHidden = (params?: RouteParams) => {
 			return this.checkHidden(routeGost.data.item.value);
 		}
 	}

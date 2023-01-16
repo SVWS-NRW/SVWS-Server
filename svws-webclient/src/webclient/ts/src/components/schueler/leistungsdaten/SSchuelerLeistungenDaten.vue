@@ -47,7 +47,7 @@
 	];
 
 	const visible: ComputedRef<boolean> = computed<boolean>(() => {
-		return (!routeSchuelerLeistungenDaten.hidden) && (props.lernabschnitt !== undefined);
+		return (!routeSchuelerLeistungenDaten.hidden()) && (props.lernabschnitt !== undefined);
 	});
 
 </script>

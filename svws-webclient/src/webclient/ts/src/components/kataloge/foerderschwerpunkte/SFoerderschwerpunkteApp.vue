@@ -29,7 +29,7 @@
 	const children_hidden = routeKatalogFoerderschwerpunkte.children_hidden();
 
 	const visible: ComputedRef<boolean> = computed(() => {
-		return (!routeKatalogFoerderschwerpunkte.hidden) && (item.value !== undefined);
+		return (!routeKatalogFoerderschwerpunkte.hidden()) && (item.value !== undefined);
 	});
 
 </script>

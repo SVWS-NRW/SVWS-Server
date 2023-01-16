@@ -4,7 +4,7 @@
 			<svws-ui-header :badge="id" badge-type="light" badge-size="normal">
 				<span> {{ anzeigename }} </span>
 			</svws-ui-header>
-			<svws-ui-router-tab-bar class="w-full" :routes="routeSchuleBenutzer.children_records" :hidden="routeSchuleBenutzer.children_hidden" v-model="selectedRoute">
+			<svws-ui-router-tab-bar class="w-full" :routes="routeSchuleBenutzer.children_records" :hidden="children_hidden" v-model="selectedRoute">
 				<router-view />
 			</svws-ui-router-tab-bar>
 		</div>

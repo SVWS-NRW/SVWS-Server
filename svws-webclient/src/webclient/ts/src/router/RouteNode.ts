@@ -1,4 +1,3 @@
-import { useDateFormat } from "@vueuse/core";
 import { computed, ComputedRef, ref, Ref } from "vue";
 import { RouteComponent, RouteLocationNormalized, RouteParams, RouteRecordName, RouteRecordRaw, useRoute } from "vue-router";
 
@@ -15,7 +14,7 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
 	protected _record: RouteRecordRaw;
 
 	// Eine Funktion zum Prüfen, ob der Knoten, d.h. die Route, versteckt sein soll oder nicht
-	protected isHidden: ((params: RouteParams) => boolean) | undefined = undefined;
+	protected isHidden: ((params?: RouteParams) => boolean) | undefined = undefined;
 
 	/** Der Elter-Knoten, sofern es sich um einen Kind-Knoten handelt. */
 	protected _parent?: TRouteParent;
@@ -244,7 +243,7 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
      *
      * @returns {boolean} true, falls der Knoten versteckt werden soll und für das Routing nicht zur Verfügung steht.
      */
-	public hidden(params: RouteParams): boolean {
+	public hidden(params?: RouteParams): boolean {
 		// TODO prüfen, ob die Komponente dargestellt werden darf oder nicht
 		return (this.isHidden === undefined) ? false : this.isHidden(params);
 	}

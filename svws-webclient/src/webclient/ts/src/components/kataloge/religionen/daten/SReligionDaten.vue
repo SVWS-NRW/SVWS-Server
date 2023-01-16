@@ -17,7 +17,7 @@
 	}>();
 
 	const visible: ComputedRef<boolean> = computed(() => {
-		return (item.value !== undefined) && (!routeKatalogReligionDaten.hidden);
+		return (item.value !== undefined) && (!routeKatalogReligionDaten.hidden());
 	});
 
 </script>

@@ -30,7 +30,7 @@
 	const children_hidden = routeKatalogReligion.children_hidden();
 
 	const visible: ComputedRef<boolean> = computed(() => {
-		return (!routeKatalogReligion.hidden) && (item.value !== undefined);
+		return (!routeKatalogReligion.hidden()) && (item.value !== undefined);
 	});
 
 </script>

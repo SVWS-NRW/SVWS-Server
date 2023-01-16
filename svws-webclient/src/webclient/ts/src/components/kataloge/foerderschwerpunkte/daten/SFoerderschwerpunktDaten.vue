@@ -17,7 +17,7 @@
 	}>();
 
 	const visible: ComputedRef<boolean> = computed(() => {
-		return !(routeKatalogFoerderschwerpunkteDaten.hidden);
+		return !(routeKatalogFoerderschwerpunkteDaten.hidden());
 	});
 
 </script>

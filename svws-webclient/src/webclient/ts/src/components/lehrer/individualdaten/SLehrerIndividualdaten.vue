@@ -20,7 +20,7 @@
 	}>();
 
 	const visible: ComputedRef<boolean> = computed(() => {
-		return (item.value !== undefined) && (!routeLehrerIndividualdaten.hidden);
+		return (item.value !== undefined) && (!routeLehrerIndividualdaten.hidden());
 	});
 
 </script>

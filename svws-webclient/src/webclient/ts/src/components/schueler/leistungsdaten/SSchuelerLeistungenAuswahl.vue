@@ -34,7 +34,7 @@
 	]);
 
 	const visible: ComputedRef<boolean> = computed<boolean>(() => {
-		return !(routeSchuelerLeistungenDaten.hidden);
+		return !(routeSchuelerLeistungenDaten.hidden());
 	});
 
 </script>

@@ -27,7 +27,7 @@
 
 
 	const visible: ComputedRef<boolean> = computed(() => {
-		return (!routeKurseDaten.hidden) && (item.value !== undefined);
+		return (!routeKurseDaten.hidden()) && (item.value !== undefined);
 	});
 
 </script>

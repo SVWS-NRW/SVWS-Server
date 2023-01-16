@@ -32,13 +32,13 @@ export class RouteGostKursplanungBlockung extends RouteNode<RouteDataGostKurspla
 			routeGostKursplanungSchueler
 		];
 		super.defaultChild = routeGostKursplanungSchueler;
-		this.isHidden = (params: RouteParams) => {
+		this.isHidden = (params?: RouteParams) => {
 			return this.checkHidden(params);
 		}
 	}
 
-	public checkHidden(params: RouteParams) {
-		const abiturjahr = params.abiturjahr === undefined ? undefined : parseInt(params.abiturjahr as string);
+	public checkHidden(params?: RouteParams) {
+		const abiturjahr = params?.abiturjahr === undefined ? undefined : parseInt(params.abiturjahr as string);
 		return (abiturjahr === undefined) || (abiturjahr === -1);
 	}
 

@@ -12,7 +12,7 @@
 	import { routeSchuelerAbschnitt } from "~/router/apps/schueler/RouteSchuelerAbschnitt";
 
 	const visible: ComputedRef<boolean> = computed(() => {
-		return !(routeSchuelerAbschnitt.hidden);
+		return !(routeSchuelerAbschnitt.hidden());
 	});
 
 </script>

@@ -46,7 +46,7 @@
 	const modal = ref();
 
 	const visible: ComputedRef<boolean> = computed(() => {
-		return !(routeSchuelerLaufbahnplanung.hidden) && (item.value?.id !== undefined) && (item.value?.abiturjahrgang !== undefined);
+		return !(routeSchuelerLaufbahnplanung.hidden()) && (item.value?.id !== undefined) && (item.value?.abiturjahrgang !== undefined);
 	});
 
 </script>
