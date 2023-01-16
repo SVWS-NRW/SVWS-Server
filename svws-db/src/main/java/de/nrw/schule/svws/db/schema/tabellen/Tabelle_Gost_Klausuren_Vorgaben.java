@@ -64,6 +64,20 @@ public class Tabelle_Gost_Klausuren_Vorgaben extends SchemaTabelle {
 		.setNotNull()
 		.setConverter(Boolean01Converter.class)
 		.setJavaComment("Gibt an, ob es sich um eine mündliche Prüfunge handelt oder nicht: 1 - true, 0 - false.");
+
+	/** Die Definition der Tabellenspalte IstAudioNotwendig */
+	public SchemaTabelleSpalte col_IstAudioNotwendig = add("IstAudioNotwendig", SchemaDatentypen.INT, false)
+		.setDefault("0")
+		.setNotNull()
+		.setConverter(Boolean01Converter.class)
+		.setJavaComment("Gibt an, ob es sich um eine Klausur mit Hörverstehen handelt oder nicht: 1 - true, 0 - false.");
+
+	/** Die Definition der Tabellenspalte IstVideoNotwendig */
+	public SchemaTabelleSpalte col_IstVideoNotwendig = add("IstVideoNotwendig", SchemaDatentypen.INT, false)
+		.setDefault("0")
+		.setNotNull()
+		.setConverter(Boolean01Converter.class)
+		.setJavaComment("Gibt an, ob es sich um eine Klausur handelt, in der ein Video gezeigt werden muss oder nicht: 1 - true, 0 - false.");
 	
 	/** Die Definition der Tabellenspalte Bemerkungen */
 	public SchemaTabelleSpalte col_Bemerkungen = add("Bemerkungen", SchemaDatentypen.TEXT, false)

@@ -654,20 +654,35 @@ public class Schema {
     /** Tabelle Gost_Klausuren_Vorgaben */
     public static final Tabelle_Gost_Klausuren_Vorgaben tab_Gost_Klausuren_Vorgaben = add(new Tabelle_Gost_Klausuren_Vorgaben());
     
-    /** Tabelle Gost_Klausuren_Klausuren */
+    /** Tabelle Gost_Klausuren_Termine */
     public static final Tabelle_Gost_Klausuren_Termine tab_Gost_Klausuren_Termine = add(new Tabelle_Gost_Klausuren_Termine());
+
+    /** Tabelle Gost_Klausuren_Kursklausuren */
+    public static final Tabelle_Gost_Klausuren_Kursklausuren tab_Gost_Klausuren_Kursklausuren = add(new Tabelle_Gost_Klausuren_Kursklausuren());
+
+    /** Tabelle Gost_Klausuren_Schuelerklausuren */
+    public static final Tabelle_Gost_Klausuren_Schuelerklausuren tab_Gost_Klausuren_Schuelerklausuren = add(new Tabelle_Gost_Klausuren_Schuelerklausuren());
+    
+    /** Tabelle Gost_Klausuren_NtaZeiten */
+    public static final Tabelle_Gost_Klausuren_NtaZeiten tab_Tabelle_Gost_Klausuren_NtaZeiten = add(new Tabelle_Gost_Klausuren_NtaZeiten());
 
     /** Tabelle Gost_Klausuren_Raeume */
     public static final Tabelle_Gost_Klausuren_Raeume tab_Gost_Klausuren_Raeume = add(new Tabelle_Gost_Klausuren_Raeume());
 
-    /** Tabelle Gost_Klausuren_Klausuren */
-    public static final Tabelle_Gost_Klausuren_Klausuren tab_Gost_Klausuren_Klausuren = add(new Tabelle_Gost_Klausuren_Klausuren());
+    /** Tabelle Gost_Klausuren_Raeume_Stunden */
+    public static final Tabelle_Gost_Klausuren_Raeume_Stunden tab_Gost_Klausuren_Raeume_Stunden = add(new Tabelle_Gost_Klausuren_Raeume_Stunden());
+    
+    /** Tabelle Gost_Klausuren_Schuelerklausuren_Raeume_Stunden */
+    public static final Tabelle_Gost_Klausuren_Schuelerklausuren_Raeume_Stunden tab_Gost_Klausuren_Schuelerklausuren_Raeume_Stunden = add(new Tabelle_Gost_Klausuren_Schuelerklausuren_Raeume_Stunden());
 
     /** Tabelle Gost_Klausuren_Aufsichten */
-    public static final Tabelle_Gost_Klausuren_Aufsichten tab_Gost_Klausuren_Aufsichten = add(new Tabelle_Gost_Klausuren_Aufsichten());
+    public static final Tabelle_Gost_Klausuren_Raeume_Stunden_Aufsichten tab_Gost_Klausuren_Raeume_Stunden_Aufsichten = add(new Tabelle_Gost_Klausuren_Raeume_Stunden_Aufsichten());
 
-    /** Tabelle Gost_Klausuren_Entfall */
-    public static final Tabelle_Gost_Klausuren_Entfall tab_Gost_Klausuren_Entfall = add(new Tabelle_Gost_Klausuren_Entfall());
+//    /** Tabelle Gost_Klausuren_Entfall */
+//    public static final Tabelle_Gost_Klausuren_Entfall tab_Gost_Klausuren_Entfall = add(new Tabelle_Gost_Klausuren_Entfall());
+
+    /** Tabelle Gost_Klausuren_Kalenderinformationen */
+    public static final Tabelle_Gost_Klausuren_Kalenderinformationen tab_Gost_Klausuren_Kalenderinformationen = add(new Tabelle_Gost_Klausuren_Kalenderinformationen());
 
     
 	// TODO Passe dieses Attribut an, sobald die Default-Daten nicht mehr über CSV-Dateien eingelesen werden

@@ -51,11 +51,15 @@ import de.nrw.schule.svws.csv.converter.current.gost.GOStHalbjahrConverterDeseri
 @NamedQuery(name="DTOGostKlausurenVorgaben.auswahlzeit.multiple", query="SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.Auswahlzeit IN :value")
 @NamedQuery(name="DTOGostKlausurenVorgaben.istmdlpruefung", query="SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.IstMdlPruefung = :value")
 @NamedQuery(name="DTOGostKlausurenVorgaben.istmdlpruefung.multiple", query="SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.IstMdlPruefung IN :value")
+@NamedQuery(name="DTOGostKlausurenVorgaben.istaudionotwendig", query="SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.IstAudioNotwendig = :value")
+@NamedQuery(name="DTOGostKlausurenVorgaben.istaudionotwendig.multiple", query="SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.IstAudioNotwendig IN :value")
+@NamedQuery(name="DTOGostKlausurenVorgaben.istvideonotwendig", query="SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.IstVideoNotwendig = :value")
+@NamedQuery(name="DTOGostKlausurenVorgaben.istvideonotwendig.multiple", query="SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.IstVideoNotwendig IN :value")
 @NamedQuery(name="DTOGostKlausurenVorgaben.bemerkungen", query="SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.Bemerkungen = :value")
 @NamedQuery(name="DTOGostKlausurenVorgaben.bemerkungen.multiple", query="SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.Bemerkungen IN :value")
 @NamedQuery(name="DTOGostKlausurenVorgaben.primaryKeyQuery", query="SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.ID = ?1")
 @NamedQuery(name="DTOGostKlausurenVorgaben.all.migration", query="SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Abi_Jahrgang","Halbjahr","Fach_ID","KursartAllg","Quartal","Dauer","Auswahlzeit","IstMdlPruefung","Bemerkungen"})
+@JsonPropertyOrder({"ID","Abi_Jahrgang","Halbjahr","Fach_ID","KursartAllg","Quartal","Dauer","Auswahlzeit","IstMdlPruefung","IstAudioNotwendig","IstVideoNotwendig","Bemerkungen"})
 public class DTOGostKlausurenVorgaben {
 
 	/** ID der Klausurvorgaben (generiert) */
@@ -110,6 +114,22 @@ public class DTOGostKlausurenVorgaben {
 	@JsonDeserialize(using=Boolean01ConverterDeserializer.class)
 	public Boolean IstMdlPruefung;
 
+	/** Gibt an, ob es sich um eine Klausur mit Hörverstehen handelt oder nicht: 1 - true, 0 - false. */
+	@Column(name = "IstAudioNotwendig")
+	@JsonProperty
+	@Convert(converter=Boolean01Converter.class)
+	@JsonSerialize(using=Boolean01ConverterSerializer.class)
+	@JsonDeserialize(using=Boolean01ConverterDeserializer.class)
+	public Boolean IstAudioNotwendig;
+
+	/** Gibt an, ob es sich um eine Klausur handelt, in der ein Video gezeigt werden muss oder nicht: 1 - true, 0 - false. */
+	@Column(name = "IstVideoNotwendig")
+	@JsonProperty
+	@Convert(converter=Boolean01Converter.class)
+	@JsonSerialize(using=Boolean01ConverterSerializer.class)
+	@JsonDeserialize(using=Boolean01ConverterDeserializer.class)
+	public Boolean IstVideoNotwendig;
+
 	/** Text für Bemerkungen zur Klausurvorlage */
 	@Column(name = "Bemerkungen")
 	@JsonProperty
@@ -133,8 +153,10 @@ public class DTOGostKlausurenVorgaben {
 	 * @param Dauer   der Wert für das Attribut Dauer
 	 * @param Auswahlzeit   der Wert für das Attribut Auswahlzeit
 	 * @param IstMdlPruefung   der Wert für das Attribut IstMdlPruefung
+	 * @param IstAudioNotwendig   der Wert für das Attribut IstAudioNotwendig
+	 * @param IstVideoNotwendig   der Wert für das Attribut IstVideoNotwendig
 	 */
-	public DTOGostKlausurenVorgaben(final Long ID, final Integer Abi_Jahrgang, final GostHalbjahr Halbjahr, final Long Fach_ID, final String KursartAllg, final Integer Quartal, final Integer Dauer, final Integer Auswahlzeit, final Boolean IstMdlPruefung) {
+	public DTOGostKlausurenVorgaben(final Long ID, final Integer Abi_Jahrgang, final GostHalbjahr Halbjahr, final Long Fach_ID, final String KursartAllg, final Integer Quartal, final Integer Dauer, final Integer Auswahlzeit, final Boolean IstMdlPruefung, final Boolean IstAudioNotwendig, final Boolean IstVideoNotwendig) {
 		if (ID == null) { 
 			throw new NullPointerException("ID must not be null");
 		}
@@ -171,6 +193,14 @@ public class DTOGostKlausurenVorgaben {
 			throw new NullPointerException("IstMdlPruefung must not be null");
 		}
 		this.IstMdlPruefung = IstMdlPruefung;
+		if (IstAudioNotwendig == null) { 
+			throw new NullPointerException("IstAudioNotwendig must not be null");
+		}
+		this.IstAudioNotwendig = IstAudioNotwendig;
+		if (IstVideoNotwendig == null) { 
+			throw new NullPointerException("IstVideoNotwendig must not be null");
+		}
+		this.IstVideoNotwendig = IstVideoNotwendig;
 	}
 
 
@@ -207,7 +237,7 @@ public class DTOGostKlausurenVorgaben {
 	 */
 	@Override
 	public String toString() {
-		return "DTOGostKlausurenVorgaben(ID=" + this.ID + ", Abi_Jahrgang=" + this.Abi_Jahrgang + ", Halbjahr=" + this.Halbjahr + ", Fach_ID=" + this.Fach_ID + ", KursartAllg=" + this.KursartAllg + ", Quartal=" + this.Quartal + ", Dauer=" + this.Dauer + ", Auswahlzeit=" + this.Auswahlzeit + ", IstMdlPruefung=" + this.IstMdlPruefung + ", Bemerkungen=" + this.Bemerkungen + ")";
+		return "DTOGostKlausurenVorgaben(ID=" + this.ID + ", Abi_Jahrgang=" + this.Abi_Jahrgang + ", Halbjahr=" + this.Halbjahr + ", Fach_ID=" + this.Fach_ID + ", KursartAllg=" + this.KursartAllg + ", Quartal=" + this.Quartal + ", Dauer=" + this.Dauer + ", Auswahlzeit=" + this.Auswahlzeit + ", IstMdlPruefung=" + this.IstMdlPruefung + ", IstAudioNotwendig=" + this.IstAudioNotwendig + ", IstVideoNotwendig=" + this.IstVideoNotwendig + ", Bemerkungen=" + this.Bemerkungen + ")";
 	}
 
 }

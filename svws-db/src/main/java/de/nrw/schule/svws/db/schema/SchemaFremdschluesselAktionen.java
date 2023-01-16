@@ -33,7 +33,13 @@ public enum SchemaFremdschluesselAktionen {
 	 * Wenn der Schlüssel des Eltern-Datensatzes verändert wird,
 	 * dann werden alle zugehörigen Datensätze entsprechend angepasst.
 	 */
-	CASCADE("CASCADE");
+	CASCADE("CASCADE"),
+	
+	/**
+	 * Wenn der Schlüssel des Eltern-Datensatzes entfernt werden soll,
+	 * wird dies verhindert, solange es noch zugehörige Datensätze gibt.
+	 */
+	RESTRICT("RESTRICT");
 
 	/** Der SQL-String für die Fremdschlüssel-Aktion */
 	private final String _sql;
@@ -72,6 +78,7 @@ public enum SchemaFremdschluesselAktionen {
 			case "SET NULL" -> SET_NULL;
 			case "SET DEFAULT" -> SET_DEFAULT;
 			case "CASCADE" -> CASCADE;
+			case "RESTRICT" -> RESTRICT;
 			default -> throw new IllegalArgumentException("Unexpected value: " + sql.toUpperCase());
 		};
 	}

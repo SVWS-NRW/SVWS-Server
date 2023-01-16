@@ -202,10 +202,14 @@
         <class>de.nrw.schule.svws.db.dto.current.gost.DTOGostJahrgangsdaten</class>
         <class>de.nrw.schule.svws.db.dto.current.gost.DTOGostSchueler</class>
         <class>de.nrw.schule.svws.db.dto.current.gost.DTOGostSchuelerFachbelegungen</class>
-        <class>de.nrw.schule.svws.db.dto.current.gost.klausurplanung.DTOGostKlausurenAufsichten</class>
-        <class>de.nrw.schule.svws.db.dto.current.gost.klausurplanung.DTOGostKlausurenEntfall</class>
-        <class>de.nrw.schule.svws.db.dto.current.gost.klausurplanung.DTOGostKlausurenKlausuren</class>
+        <class>de.nrw.schule.svws.db.dto.current.gost.klausurplanung.DTOGostKlausurenKalenderinformationen</class>
+        <class>de.nrw.schule.svws.db.dto.current.gost.klausurplanung.DTOGostKlausurenKursklausuren</class>
+        <class>de.nrw.schule.svws.db.dto.current.gost.klausurplanung.DTOGostKlausurenNtaZeiten</class>
         <class>de.nrw.schule.svws.db.dto.current.gost.klausurplanung.DTOGostKlausurenRaeume</class>
+        <class>de.nrw.schule.svws.db.dto.current.gost.klausurplanung.DTOGostKlausurenRaeumeStunden</class>
+        <class>de.nrw.schule.svws.db.dto.current.gost.klausurplanung.DTOGostKlausurenRaeumeStundenAufsichten</class>
+        <class>de.nrw.schule.svws.db.dto.current.gost.klausurplanung.DTOGostKlausurenSchuelerklausuren</class>
+        <class>de.nrw.schule.svws.db.dto.current.gost.klausurplanung.DTOGostKlausurenSchuelerklausurenRaeumeStunden</class>
         <class>de.nrw.schule.svws.db.dto.current.gost.klausurplanung.DTOGostKlausurenTermine</class>
         <class>de.nrw.schule.svws.db.dto.current.gost.klausurplanung.DTOGostKlausurenVorgaben</class>
         <class>de.nrw.schule.svws.db.dto.current.gost.kursblockung.DTOGostBlockung</class>
@@ -416,10 +420,14 @@
         <class>de.nrw.schule.svws.db.dto.rev9.gost.Rev9DTOGostJahrgangsdaten</class>
         <class>de.nrw.schule.svws.db.dto.rev9.gost.Rev9DTOGostSchueler</class>
         <class>de.nrw.schule.svws.db.dto.rev9.gost.Rev9DTOGostSchuelerFachbelegungen</class>
-        <class>de.nrw.schule.svws.db.dto.rev9.gost.klausurplanung.Rev9DTOGostKlausurenAufsichten</class>
-        <class>de.nrw.schule.svws.db.dto.rev9.gost.klausurplanung.Rev9DTOGostKlausurenEntfall</class>
-        <class>de.nrw.schule.svws.db.dto.rev9.gost.klausurplanung.Rev9DTOGostKlausurenKlausuren</class>
+        <class>de.nrw.schule.svws.db.dto.rev9.gost.klausurplanung.Rev9DTOGostKlausurenKalenderinformationen</class>
+        <class>de.nrw.schule.svws.db.dto.rev9.gost.klausurplanung.Rev9DTOGostKlausurenKursklausuren</class>
+        <class>de.nrw.schule.svws.db.dto.rev9.gost.klausurplanung.Rev9DTOGostKlausurenNtaZeiten</class>
         <class>de.nrw.schule.svws.db.dto.rev9.gost.klausurplanung.Rev9DTOGostKlausurenRaeume</class>
+        <class>de.nrw.schule.svws.db.dto.rev9.gost.klausurplanung.Rev9DTOGostKlausurenRaeumeStunden</class>
+        <class>de.nrw.schule.svws.db.dto.rev9.gost.klausurplanung.Rev9DTOGostKlausurenRaeumeStundenAufsichten</class>
+        <class>de.nrw.schule.svws.db.dto.rev9.gost.klausurplanung.Rev9DTOGostKlausurenSchuelerklausuren</class>
+        <class>de.nrw.schule.svws.db.dto.rev9.gost.klausurplanung.Rev9DTOGostKlausurenSchuelerklausurenRaeumeStunden</class>
         <class>de.nrw.schule.svws.db.dto.rev9.gost.klausurplanung.Rev9DTOGostKlausurenTermine</class>
         <class>de.nrw.schule.svws.db.dto.rev9.gost.klausurplanung.Rev9DTOGostKlausurenVorgaben</class>
         <class>de.nrw.schule.svws.db.dto.rev9.gost.kursblockung.Rev9DTOGostBlockung</class>

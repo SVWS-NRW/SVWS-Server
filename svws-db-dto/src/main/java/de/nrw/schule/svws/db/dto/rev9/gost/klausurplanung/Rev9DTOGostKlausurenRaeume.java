@@ -22,11 +22,15 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @NamedQuery(name="Rev9DTOGostKlausurenRaeume.all", query="SELECT e FROM Rev9DTOGostKlausurenRaeume e")
 @NamedQuery(name="Rev9DTOGostKlausurenRaeume.id", query="SELECT e FROM Rev9DTOGostKlausurenRaeume e WHERE e.ID = :value")
 @NamedQuery(name="Rev9DTOGostKlausurenRaeume.id.multiple", query="SELECT e FROM Rev9DTOGostKlausurenRaeume e WHERE e.ID IN :value")
+@NamedQuery(name="Rev9DTOGostKlausurenRaeume.termin_id", query="SELECT e FROM Rev9DTOGostKlausurenRaeume e WHERE e.Termin_ID = :value")
+@NamedQuery(name="Rev9DTOGostKlausurenRaeume.termin_id.multiple", query="SELECT e FROM Rev9DTOGostKlausurenRaeume e WHERE e.Termin_ID IN :value")
 @NamedQuery(name="Rev9DTOGostKlausurenRaeume.katalog_raum_id", query="SELECT e FROM Rev9DTOGostKlausurenRaeume e WHERE e.Katalog_Raum_ID = :value")
 @NamedQuery(name="Rev9DTOGostKlausurenRaeume.katalog_raum_id.multiple", query="SELECT e FROM Rev9DTOGostKlausurenRaeume e WHERE e.Katalog_Raum_ID IN :value")
+@NamedQuery(name="Rev9DTOGostKlausurenRaeume.bemerkungen", query="SELECT e FROM Rev9DTOGostKlausurenRaeume e WHERE e.Bemerkungen = :value")
+@NamedQuery(name="Rev9DTOGostKlausurenRaeume.bemerkungen.multiple", query="SELECT e FROM Rev9DTOGostKlausurenRaeume e WHERE e.Bemerkungen IN :value")
 @NamedQuery(name="Rev9DTOGostKlausurenRaeume.primaryKeyQuery", query="SELECT e FROM Rev9DTOGostKlausurenRaeume e WHERE e.ID = ?1")
 @NamedQuery(name="Rev9DTOGostKlausurenRaeume.all.migration", query="SELECT e FROM Rev9DTOGostKlausurenRaeume e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Katalog_Raum_ID"})
+@JsonPropertyOrder({"ID","Termin_ID","Katalog_Raum_ID","Bemerkungen"})
 public class Rev9DTOGostKlausurenRaeume {
 
 	/** ID des Klausurraums (generiert) */
@@ -35,10 +39,20 @@ public class Rev9DTOGostKlausurenRaeume {
 	@JsonProperty
 	public Long ID;
 
+	/** ID des Termins */
+	@Column(name = "Termin_ID")
+	@JsonProperty
+	public Long Termin_ID;
+
 	/** ID des Raums aus der Tabelle Katalog_Raeume */
 	@Column(name = "Katalog_Raum_ID")
 	@JsonProperty
 	public Long Katalog_Raum_ID;
+
+	/** Text für Bemerkungen zum Klausurraum */
+	@Column(name = "Bemerkungen")
+	@JsonProperty
+	public String Bemerkungen;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse Rev9DTOGostKlausurenRaeume ohne eine Initialisierung der Attribute.
@@ -92,7 +106,7 @@ public class Rev9DTOGostKlausurenRaeume {
 	 */
 	@Override
 	public String toString() {
-		return "Rev9DTOGostKlausurenRaeume(ID=" + this.ID + ", Katalog_Raum_ID=" + this.Katalog_Raum_ID + ")";
+		return "Rev9DTOGostKlausurenRaeume(ID=" + this.ID + ", Termin_ID=" + this.Termin_ID + ", Katalog_Raum_ID=" + this.Katalog_Raum_ID + ", Bemerkungen=" + this.Bemerkungen + ")";
 	}
 
 }
