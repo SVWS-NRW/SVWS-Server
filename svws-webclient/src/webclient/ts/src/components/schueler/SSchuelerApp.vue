@@ -18,7 +18,7 @@
 		</svws-ui-router-tab-bar>
 	</div>
 	<div v-else class="app-layout--main--placeholder">
-		<i-ri-briefcase-line />
+		<i-ri-group-line />
 	</div>
 </template>
 
@@ -69,7 +69,7 @@
 	});
 
 	const visible: ComputedRef<boolean> = computed(() => {
-		return !(routeSchueler.hidden()) && (props.item !== undefined);
+		return !(routeSchueler.hidden()) && (props.item.value !== undefined);
 	});
 
 </script>

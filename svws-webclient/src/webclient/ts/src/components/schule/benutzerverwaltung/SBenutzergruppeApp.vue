@@ -1,13 +1,17 @@
 <template>
-	<div class="flex h-full flex-row">
-		<div class="flex w-full flex-col">
-			<svws-ui-header :badge="id" badge-type="light" badge-size="normal">
-				<span> {{ bezeichnung }} </span>
-			</svws-ui-header>
-			<svws-ui-router-tab-bar :routes="routeSchuleBenutzergruppe.children_records" :hidden="children_hidden" v-model="selectedRoute">
-				<router-view />
-			</svws-ui-router-tab-bar>
-		</div>
+	<div v-if="props.id !== undefined">
+		<svws-ui-header>
+			<div class="flex items-center">
+				<span class="inline-block mr-3">{{ bezeichnung }}</span>
+				<svws-ui-badge title="ID" variant="light">{{ id }}</svws-ui-badge>
+			</div>
+		</svws-ui-header>
+		<svws-ui-router-tab-bar :routes="routeSchuleBenutzergruppe.children_records" :hidden="children_hidden" v-model="selectedRoute">
+			<router-view />
+		</svws-ui-router-tab-bar>
+	</div>
+	<div v-else class="app-layout--main--placeholder">
+		<i-ri-community-line/>
 	</div>
 </template>
 

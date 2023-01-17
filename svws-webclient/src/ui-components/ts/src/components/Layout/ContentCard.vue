@@ -45,4 +45,29 @@
 	.content-card--actions {
 		@apply flex items-center space-x-2;
 	}
+
+	.page-wrapper[class*="gost_kursplanung_halbjahr_ergebnis"] .router-tab-bar--panel {
+		@apply overflow-hidden;
+	}
+
+	.content-card--blockungsuebersicht {
+		@apply gap-x-[3vw];
+
+		> .content-card--wrapper {
+			@apply h-full;
+
+			> .mt-4 {
+				@apply pt-4 mt-0 h-full flex flex-col;
+			}
+
+			.v-table--container {
+				@apply h-full overflow-y-scroll;
+			}
+		}
+
+		.content-card--header {
+			@apply mt-5 mb-0;
+		}
+
+	}
 </style>

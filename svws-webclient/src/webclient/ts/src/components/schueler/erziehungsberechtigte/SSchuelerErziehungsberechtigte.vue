@@ -1,10 +1,10 @@
 <template>
 	<div v-if="visible" class="app-container relative">
-		<div class="svws-ui-bg-white sticky top-0 z-50 col-span-3 flex justify-end py-4">
-			<svws-ui-button>Erziehungsberechtigten hinzufügen</svws-ui-button>
-		</div>
-		<div v-for="(e, i) in erzieher" :key="i" class="col-span-3">
+		<div v-for="(e, i) in erzieher" :key="i" class="col-span-full">
 			<s-card-schueler-erziehungsberechtigte :data="props.data" :erzieher="e" :erzieherarten="props.erzieherarten" />
+		</div>
+		<div class="flex justify-start">
+			<svws-ui-button>Erziehungsberechtigten hinzufügen</svws-ui-button>
 		</div>
 	</div>
 </template>

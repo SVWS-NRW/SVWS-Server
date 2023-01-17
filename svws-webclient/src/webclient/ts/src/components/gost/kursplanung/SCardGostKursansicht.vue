@@ -1,114 +1,105 @@
 <template>
-	<div>
-		<svws-ui-content-card>
-			<div class="flex flex-wrap justify-between">
-				<h3 class="text-headline opacity-50">Übersicht {{ blockung.daten?.name ? blockung?.daten?.name : 'Blockungsübersicht' }}</h3>
-				<div class="flex items-center gap-2">
-					<svws-ui-button v-if="!blockung_aktiv" type="secondary" @click="toggle_modal_aktivieren">Aktivieren</svws-ui-button>
-					<svws-ui-button type="primary" @click="toggle_modal_hochschreiben">Hochschreiben</svws-ui-button>
-				</div>
+	<svws-ui-content-card>
+		<div class="flex flex-wrap justify-between mb-4">
+			<h3 class="text-headline opacity-50">Übersicht {{ blockung.daten?.name ? blockung?.daten?.name : 'Blockungsübersicht' }}</h3>
+			<div class="flex items-center gap-2">
+				<svws-ui-button v-if="!blockung_aktiv" type="secondary" @click="toggle_modal_aktivieren">Aktivieren</svws-ui-button>
+				<svws-ui-button type="primary" @click="toggle_modal_hochschreiben">Hochschreiben</svws-ui-button>
 			</div>
-			<div class="flex flex-row">
-				<div class="flex-none">
-					<div>
-						<div class="w-full flex gap-2 justify-between mb-2">
-							<div class="flex gap-2 content-start" />
-						</div>
-						<div v-if="blockungsergebnis_aktiv" class="text-lg font-bold">Dieses Blockungsergebnis ist aktiv.</div>
-						<div v-if="blockung_aktiv && !blockungsergebnis_aktiv" class="text-lg font-bold">Ein anderes Ergebnis dieser Blockung ist bereits aktiv.</div>
-						<table class="v-table--complex table--highlight-rows table-auto w-full border-collapse">
-							<thead class="sticky top-0">
-								<tr>
-									<th colspan="5">
-										Schiene
-									</th>
-									<th v-for="s in schienen" :key="s.id" class="text-center">
-										<div v-if="allow_regeln" class="flex justify-center">
-											<template v-if="s === edit_schienenname">
-												<svws-ui-text-input :model-value="s.bezeichnung.toString()" focus headless style="width: 6rem"
-													@blur="edit_schienenname=undefined"
-													@keyup.enter="edit_schienenname=undefined"
-													@keyup.escape="edit_schienenname=undefined"
-													@update:model-value="patch_schiene(s, $event.toString())" />
-											</template>
-											<template v-else>
-												<span class="px-3 underline decoration-dotted underline-offset-2 cursor-text" title="Namen bearbeiten" @click="edit_schienenname = s">{{ s.nummer }}</span>
-											</template>
-											<svws-ui-icon v-if="allow_del_schiene(s)" class="text-red-500 cursor-pointer" @click="del_schiene(s)"><i-ri-delete-bin-2-line /></svws-ui-icon>
-										</div>
-										<template v-else>{{ s.nummer }}</template>
-									</th>
-									<template v-if="allow_regeln">
-										<th rowspan="4" @click="add_schiene" title="Schiene hinzufügen" class="p-2">
-											<div class="p-2 cursor-pointer rounded bg-primary text-white">+</div>
-										</th>
-										<th rowspan="4" class="hidden" />
-									</template>
-								</tr>
-								<tr>
-									<th colspan="5">
-										Schülerzahl
-									</th>
-									<!-- Schülerzahlen -->
-									<th v-for="s in schienen" :key="s.id" class="text-center">
-										{{ getAnzahlSchuelerSchiene(s.id) }}
-									</th>
-								</tr>
-								<tr>
-									<th colspan="5">
-										Kollisionen
-									</th>
-									<!-- Kollisionen -->
-									<th v-for="s in schienen" :key="s.id" class="text-center">
-										{{ getAnzahlKollisionenSchiene(s.id) }}
-									</th>
-								</tr>
-								<tr>
-									<th class="text-center cursor-pointer" @click="sort_by = sort_by === 'kursart'? 'fach_id':'kursart'">
-										<div class="flex gap-1">Kurs<svws-ui-icon><i-ri-arrow-up-down-line /></svws-ui-icon></div>
-									</th>
-									<th>Lehrer</th>
-									<th class="text-center">Koop</th>
-									<th class="text-center">FW</th>
-									<th class="text-center">Diff</th>
-									<!--Schienen-->
-									<!-- eslint-disable-next-line vue/no-use-v-if-with-v-for-->
-									<s-drag-schiene v-if="allow_regeln" v-for="s in schienen" :key="s.id" :schiene="s" :blockung="blockung" />
-									<th v-else :colspan="schienen.size()" class="text-center">Regeln können nicht in Ergebnissen erstellt werden</th>
-								</tr>
-							</thead>
-							<tbody>
-								<s-fach-kurs v-for="fach in faecher" :key="fach.id" :fach="fach" :data-faecher="dataFaecher" :halbjahr="halbjahr.id" :blockung="blockung" :ergebnis="ergebnis"
-									:list-lehrer="listLehrer" :map-lehrer="mapLehrer" :data-fachwahlen="dataFachwahlen" :allow_regeln="allow_regeln" />
-							</tbody>
-						</table>
-					</div>
-				</div>
+		</div>
+		<div v-if="blockungsergebnis_aktiv" class="text-lg font-bold">Dieses Blockungsergebnis ist aktiv.</div>
+		<div v-if="blockung_aktiv && !blockungsergebnis_aktiv" class="text-lg font-bold">Ein anderes Ergebnis dieser Blockung ist bereits aktiv.</div>
+		<div class="v-table--container">
+			<table class="v-table--complex table--highlight-rows table-auto w-full">
+				<thead>
+					<tr>
+						<th colspan="5">
+							Schiene
+						</th>
+						<th v-for="s in schienen" :key="s.id" class="text-center">
+							<div v-if="allow_regeln" class="flex justify-center">
+								<template v-if="s === edit_schienenname">
+									<svws-ui-text-input :model-value="s.bezeichnung.toString()" focus headless style="width: 6rem"
+										@blur="edit_schienenname=undefined"
+										@keyup.enter="edit_schienenname=undefined"
+										@keyup.escape="edit_schienenname=undefined"
+										@update:model-value="patch_schiene(s, $event.toString())" />
+								</template>
+								<template v-else>
+									<span class="px-3 underline decoration-dotted underline-offset-2 cursor-text" title="Namen bearbeiten" @click="edit_schienenname = s">{{ s.nummer }}</span>
+								</template>
+								<svws-ui-icon v-if="allow_del_schiene(s)" class="text-red-500 cursor-pointer" @click="del_schiene(s)"><i-ri-delete-bin-2-line /></svws-ui-icon>
+							</div>
+							<template v-else>{{ s.nummer }}</template>
+						</th>
+						<template v-if="allow_regeln">
+							<th rowspan="4" @click="add_schiene" title="Schiene hinzufügen" class="p-2">
+								<div class="p-2 cursor-pointer rounded bg-primary text-white">+</div>
+							</th>
+							<th rowspan="4" class="hidden" />
+						</template>
+					</tr>
+					<tr>
+						<th colspan="5">
+							Schülerzahl
+						</th>
+						<!-- Schülerzahlen -->
+						<th v-for="s in schienen" :key="s.id" class="text-center">
+							{{ getAnzahlSchuelerSchiene(s.id) }}
+						</th>
+					</tr>
+					<tr>
+						<th colspan="5">
+							Kollisionen
+						</th>
+						<!-- Kollisionen -->
+						<th v-for="s in schienen" :key="s.id" class="text-center">
+							{{ getAnzahlKollisionenSchiene(s.id) }}
+						</th>
+					</tr>
+					<tr>
+						<th class="text-center cursor-pointer" @click="sort_by = sort_by === 'kursart'? 'fach_id':'kursart'">
+							<div class="flex gap-1">Kurs<svws-ui-icon><i-ri-arrow-up-down-line /></svws-ui-icon></div>
+						</th>
+						<th>Lehrer</th>
+						<th class="text-center">Koop</th>
+						<th class="text-center">FW</th>
+						<th class="text-center">Diff</th>
+						<!--Schienen-->
+						<!--eslint-disable-next-line vue/no-use-v-if-with-v-for-->
+						<s-drag-schiene v-if="allow_regeln" v-for="s in schienen" :key="s.id" :schiene="s" :blockung="blockung" />
+						<th v-else :colspan="schienen.size()" class="text-center">Regeln können nicht in Ergebnissen erstellt werden</th>
+					</tr>
+				</thead>
+				<tbody>
+					<s-fach-kurs v-for="fach in faecher" :key="fach.id" :fach="fach" :data-faecher="dataFaecher" :halbjahr="halbjahr.id" :blockung="blockung" :ergebnis="ergebnis"
+						:list-lehrer="listLehrer" :map-lehrer="mapLehrer" :data-fachwahlen="dataFachwahlen" :allow_regeln="allow_regeln" />
+				</tbody>
+			</table>
+		</div>
+	</svws-ui-content-card>
+	<svws-ui-modal ref="modal_aktivieren" size="small">
+		<template #modalTitle>Blockungsergebnis aktivieren</template>
+		<template #modalDescription>
+			<div class="flex gap-1 mb-2">
+				Soll das Blockungsergebnis aktiviert weregel
 			</div>
-		</svws-ui-content-card>
-		<svws-ui-modal ref="modal_aktivieren" size="small">
-			<template #modalTitle>Blockungsergebnis aktivieren</template>
-			<template #modalDescription>
-				<div class="flex gap-1 mb-2">
-					Soll das Blockungsergebnis aktiviert werden?
-				</div>
-				<div class="flex gap-1">
-					<svws-ui-button @click="toggle_modal_aktivieren">Abbrechen</svws-ui-button>
-					<svws-ui-button @click="activate_ergebnis">Ja</svws-ui-button>
-				</div>
-			</template>
-		</svws-ui-modal>
-		<svws-ui-modal ref="modal_hochschreiben" size="small">
-			<template #modalTitle>Blockungsergebnis hochschreiben</template>
-			<template #modalContent>
-				<p>Soll das Blockungsergebnis in das nächste Halbjahr ({{ blockung.datenmanager?.getHalbjahr().next()?.kuerzel }}) hochgeschrieben werden?</p>
-			</template>
-			<template #modalActions>
-				<svws-ui-button type="secondary" @click="toggle_modal_hochschreiben">Abbrechen</svws-ui-button>
-				<svws-ui-button @click="hochschreiben_ergebnis">Ja</svws-ui-button>
-			</template>
-		</svws-ui-modal>
-	</div>
+			<div class="flex gap-1">
+				<svws-ui-button @click="toggle_modal_aktivieren">Abbrechen</svws-ui-button>
+				<svws-ui-button @click="activate_ergebnis">Ja</svws-ui-button>
+			</div>
+		</template>
+	</svws-ui-modal>
+	<svws-ui-modal ref="modal_hochschreiben" size="small">
+		<template #modalTitle>Blockungsergebnis hochschreiben</template>
+		<template #modalContent>
+			<p>Soll das Blockungsergebnis in das nächste Halbjahr ({{ blockung.datenmanager?.getHalbjahr().next()?.kuerzel }}) hochgeschrieben werden?</p>
+		</template>
+		<template #modalActions>
+			<svws-ui-button type="secondary" @click="toggle_modal_hochschreiben">Abbrechen</svws-ui-button>
+			<svws-ui-button @click="hochschreiben_ergebnis">Ja</svws-ui-button>
+		</template>
+	</svws-ui-modal>
 </template>
 
 <script setup lang="ts">

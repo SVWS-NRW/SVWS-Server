@@ -1,30 +1,24 @@
 <template>
 	<svws-ui-secondary-menu>
 		<template #headline>
-			<div>
-				<i-ri-arrow-left-line class="inline-block cursor-pointer" @click="router.push({ name: routeSchule.name })" />
-				Benutzergruppen
-			</div>
+			<nav class="secondary-menu--breadcrumbs">
+				<a title="Schule" @click="router.push({ name: routeSchule.name })">Schule</a>
+				<span title="Benutzergruppen">Benutzergruppen</span>
+			</nav>
 		</template>
-		<template #content>
-			<!-- Auswahlliste für die Benutzergruppen -->
-			<div class="px-6 mt-4">
+		<template #header>
+			<div class="mb-2">
 				<svws-ui-text-input v-model="search" type="search" placeholder="Suche nach Namen oder Kürzel">
 					<i-ri-search-line />
 				</svws-ui-text-input>
 			</div>
-			<div class="pl-3 pt-6 container">
-				<svws-ui-table v-model="selected" v-model:selection="selectedItems" :columns="cols" :data="rowsFiltered" is-multi-select :footer="true">
-					<template #footer>
-						<s-modal-benutzergruppe-neu :show_delete_icon="selectedItems.length" />
-					</template>
-				</svws-ui-table>
-			</div>
-			<!-- Wechsel zu den Benutzern -->
-			<div class="px-1 pt-3 text-lg font-bold" @click="router.push({ name: routeSchuleBenutzer.name })">
-				<i-ri-arrow-right-line class="inline-block cursor-pointer" />
-				<div class="px-1 pt-3 text-lg font-bold inline-block cursor-pointer"> Benutzer  </div>
-			</div>
+		</template>
+		<template #content>
+			<svws-ui-table v-model="selected" v-model:selection="selectedItems"  :columns="cols" :data="rowsFiltered" is-multi-select :footer="true">
+				<template #footer>
+					<s-modal-benutzergruppe-neu :show_delete_icon="selectedItems.length" />
+				</template>
+			</svws-ui-table>
 		</template>
 	</svws-ui-secondary-menu>
 </template>
@@ -49,7 +43,7 @@
 
 	const cols = [
 		{ key: "id", label: "ID", sortable: true },
-		{ key: "bezeichnung", label: "Bezeichnung", sortable: true }
+		{ key: "bezeichnung", label: "Bezeichnung", sortable: true, span: 2 }
 	];
 
 	const search: Ref<string> = ref("");

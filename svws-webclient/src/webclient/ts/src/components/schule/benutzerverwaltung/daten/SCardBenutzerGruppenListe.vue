@@ -1,5 +1,8 @@
 <template>
 	<svws-ui-content-card title="Benutzergruppen">
+		<template #actions>
+			<a class="underline cursor-pointer mr-2 hover:no-underline" @click="router.push({ name: routeSchuleBenutzergruppe.name })" title="Zu den Einstellungen für Benutzergruppen">Bearbeiten</a>
+		</template>
 		<div class="flex flex-row gap-4">
 			<div class="-my-2 flex-none sm:-mx-6 lg:-mx-8">
 				<div class="inline-block py-2 align-middle sm:px-6 lg:px-8">
@@ -28,6 +31,8 @@
 	import { BenutzergruppeListeEintrag, BenutzerManager } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, WritableComputedRef } from "vue";
 	import { injectMainApp, Main } from "~/apps/Main";
+	import { router } from "~/router";
+	import { routeSchuleBenutzergruppe } from "~/router/apps/RouteSchuleBenutzergruppe";
 
 	const main: Main = injectMainApp();
 	const app = main.apps.benutzer;

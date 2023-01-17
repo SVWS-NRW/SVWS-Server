@@ -1,17 +1,20 @@
 <template>
-	<div class="flex h-full flex-row">
-		<div v-if="visible" class="flex w-full flex-col">
-			<svws-ui-header>
-				<div class="flex items-center">
-					<span class="inline-block mr-3">{{ item.value?.text }}</span>
-					<svws-ui-badge type="light">{{ "ID: " + item.value?.id }}</svws-ui-badge>
-				</div>
+	<div v-if="visible">
+		<svws-ui-header>
+			<div class="flex items-center">
+				<span class="inline-block mr-3">{{ item.value?.text }}</span>
+				<svws-ui-badge variant="light">{{ "ID: " + item.value?.id }}</svws-ui-badge>
+			</div>
+			<div>
 				<span class="opacity-50">{{ item.value?.kuerzel }}</span>
-			</svws-ui-header>
-			<svws-ui-router-tab-bar :routes="routeKatalogFoerderschwerpunkte.children_records" :hidden="children_hidden" v-model="selectedRoute">
-				<router-view />
-			</svws-ui-router-tab-bar>
-		</div>
+			</div>
+		</svws-ui-header>
+		<svws-ui-router-tab-bar :routes="routeKatalogFoerderschwerpunkte.children_records" :hidden="children_hidden" v-model="selectedRoute">
+			<router-view />
+		</svws-ui-router-tab-bar>
+	</div>
+	<div v-else class="app-layout--main--placeholder">
+		<i-ri-archive-line/>
 	</div>
 </template>
 

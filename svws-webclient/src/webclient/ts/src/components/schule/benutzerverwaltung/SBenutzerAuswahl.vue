@@ -1,30 +1,25 @@
 <template>
 	<svws-ui-secondary-menu>
 		<template #headline>
-			<div>
-				<i-ri-arrow-left-line class="inline-block cursor-pointer" @click="router.push({ name: routeSchule.name })" />
-				Benutzer
-			</div>
+			<nav class="secondary-menu--breadcrumbs">
+				<a title="Schule" @click="router.push({ name: routeSchule.name })">Schule</a>
+				<span title="Benutzer">Benutzer</span>
+			</nav>
 		</template>
-		<template #content>
-			<!-- Auswahlliste für die Benutzer -->
-			<div class="px-6 mt-4">
+		<template #header>
+			<div class="mb-2">
 				<svws-ui-text-input v-model="search" type="search" placeholder="Suche nach Namen oder Kürzel">
 					<i-ri-search-line />
 				</svws-ui-text-input>
 			</div>
-			<div class="pl-3 pt-6 pb-6 container">
-				<svws-ui-table v-model="selected" :columns="cols" :data="rowsFiltered" v-model:selection="selectedItems" is-multi-select :footer="true">
-					<template #footer>
-						<s-modal-benutzer-neu :show_delete_icon="selectedItems.length > 0" />
-					</template>
-				</svws-ui-table>
-			</div>
-			<!-- Wechsel zu den Benutzer-Gruppen -->
-			<div class="px-1 pt-3 text-lg font-bold" @click="router.push({ name: routeSchuleBenutzergruppe.name })">
-				<i-ri-arrow-right-line class="inline-block cursor-pointer" />
-				<div class="px-1 pt-3 text-lg font-bold inline-block cursor-pointer"> Benutzergruppen  </div>
-			</div>
+		</template>
+		<template #content>
+			<!-- Auswahlliste für die Benutzer -->
+			<svws-ui-table v-model="selected" :columns="cols" :data="rowsFiltered" v-model:selection="selectedItems" is-multi-select :footer="true">
+				<template #footer>
+					<s-modal-benutzer-neu :show_delete_icon="selectedItems.length > 0"/>
+				</template>
+			</svws-ui-table>
 		</template>
 	</svws-ui-secondary-menu>
 </template>
@@ -48,8 +43,8 @@
 
 	const cols = [
 		{ key: "id", label: "ID", sortable: true },
-		{ key: "anzeigename", label: "Anzeigename", sortable: true },
-		{ key: "name", label: "Name", sortable: true }
+		{ key: "anzeigename", label: "Anzeigename", sortable: true, span: 2 },
+		{ key: "name", label: "Name", sortable: true, span: 2}
 	];
 
 	const search: Ref<string> = ref("");

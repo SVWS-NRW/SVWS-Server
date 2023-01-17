@@ -3,9 +3,11 @@
 		<svws-ui-header>
 			<div class="flex items-center">
 				<span class="inline-block mr-3 capitalize">{{ item.value?.text }}</span>
-				<svws-ui-badge type="light">{{ "ID: " + item.value?.id }}</svws-ui-badge>
+				<svws-ui-badge variant="light">{{ "ID: " + item.value?.id }}</svws-ui-badge>
 			</div>
-			<span class="opacity-50">{{ item.value?.kuerzel }}</span>
+			<div>
+				<span class="opacity-50">{{ item.value?.kuerzel }}</span>
+			</div>
 		</svws-ui-header>
 		<svws-ui-router-tab-bar :routes="routeKatalogReligion.children_records" :hidden="children_hidden" v-model="selectedRoute">
 			<router-view />

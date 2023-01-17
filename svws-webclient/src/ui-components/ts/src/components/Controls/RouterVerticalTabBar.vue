@@ -130,13 +130,17 @@
 		@apply flex flex-col items-center;
 		@apply overflow-y-scroll;
 		@apply relative;
-		@apply rounded-md;
-		@apply space-y-2 p-1;
+		@apply space-y-1 p-1;
+		border-radius: 1.25rem;
 
 		-ms-overflow-style: none;
 		/* Remove Scrollbar in IE and Edge */
 		scrollbar-width: none;
 		/* Remove Scrollbar in Firefox */
+
+		.router-tab-bar-button {
+			@apply w-full;
+		}
     }
 
     .router-vertical-tab-bar--content::-webkit-scrollbar {

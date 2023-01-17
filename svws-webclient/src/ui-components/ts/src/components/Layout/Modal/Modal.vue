@@ -1,7 +1,8 @@
 <script setup lang='ts'>
 //TODO: props weiterleiten über :open. Das mit den refs ist Blödsinn
-	import { Dialog, DialogTitle, DialogDescription } from "@headlessui/vue";
+	import { Dialog, DialogTitle, DialogDescription, TransitionRoot, TransitionChild } from "@headlessui/vue";
 	import { Size } from "~/types";
+	import {ref} from "vue";
 
 	const { size = 'small' } = defineProps<{ size?: Extract<Size, 'small' | 'medium' | 'big'>; }>();
 
@@ -23,44 +24,68 @@
 </script>
 
 <template>
-	<Dialog :open="isOpen" class="modal--wrapper" @close="closeModal">
-		<div class="modal--pageWrapper">
-			<Overlay @click="closeModal" />
-			<div class="modal" :class="{
-				'modal--sm': size === 'small',
-				'modal--md': size === 'medium',
-				'modal--lg': size === 'big'
-			}">
-				<div class="modal--titlebar">
-					<DialogTitle class="modal--title">
-						<slot name="modalTitle" />
-					</DialogTitle>
-					<Button type="icon" @click="closeModal">
-						<Icon class="modal--closeIcon">
-							<i-ri-close-line />
-						</Icon>
-					</Button>
-				</div>
-				<DialogDescription v-if="$slots.modalDescription" class="modal--description">
-					<slot name="modalDescription" />
-				</DialogDescription>
+	<TransitionRoot appear :show="isOpen">
+		<Dialog class="modal--wrapper" @close="closeModal">
+			<div class="modal--pageWrapper">
+				<TransitionChild
+					as="template"
+					enter="ease-out duration-200"
+					enterFrom="opacity-0"
+					enterTo="opacity-100"
+					leave="ease-in duration-100"
+					leaveFrom="opacity-100"
+					leaveTo="opacity-0"
+				>
+					<Overlay @click="closeModal" />
+				</TransitionChild>
+				<TransitionChild
+					as="div"
+					enter="ease-out duration-200"
+					enterFrom="opacity-0 scale-95"
+					enterTo="opacity-100 scale-100"
+					leave="ease-in duration-100"
+					leaveFrom="opacity-100 scale-100"
+					leaveTo="opacity-0 scale-95"
+					class="modal inline-block align-bottom sm:align-middle sm:w-full sm:max-w-sm sm:my-8 transform transition-all overflow-hidden"
+					:class="{
+						'modal--sm': size === 'small',
+						'modal--md': size === 'medium',
+						'modal--lg': size === 'big'
+					}"
+				>
+					<div class="modal--titlebar">
+						<DialogTitle class="modal--title">
+							<slot name="modalTitle" />
+						</DialogTitle>
+						<Button type="icon" @click="closeModal">
+							<Icon class="modal--closeIcon">
+								<i-ri-close-line />
+							</Icon>
+						</Button>
+					</div>
+					<div class="modal--content-wrapper">
+						<DialogDescription v-if="$slots.modalDescription" class="modal--description">
+							<slot name="modalDescription" />
+						</DialogDescription>
 
-				<div v-if="$slots.modalContent" class="modal--content">
-					<slot name="modalContent" />
-				</div>
+						<div v-if="$slots.modalContent" class="modal--content">
+							<slot name="modalContent" />
+						</div>
 
-				<div class="modal--actions">
-					<slot name="modalActions" />
-				</div>
+						<div class="modal--actions">
+							<slot name="modalActions" />
+						</div>
+					</div>
+				</TransitionChild>
 			</div>
-		</div>
-	</Dialog>
+		</Dialog>
+	</TransitionRoot>
 </template>
 
-<style>
+<style lang="postcss">
 .modal--pageWrapper {
 	@apply flex items-center justify-center;
-	@apply min-h-screen;
+	@apply h-screen;
 	@apply p-8;
 }
 
@@ -70,11 +95,11 @@
 }
 
 .modal {
-	@apply bg-white;
+	@apply bg-white max-h-full;
 	@apply flex flex-col items-center;
 	@apply mx-auto;
 	@apply relative z-50;
-	@apply rounded-lg;
+	@apply rounded-lg overflow-hidden;
 	@apply shadow-xl shadow-dark-20;
 }
 
@@ -97,6 +122,11 @@
 .modal--title {
 	@apply flex-grow px-2;
 	@apply text-sm-bold uppercase;
+}
+
+.modal--content-wrapper {
+	@apply h-full overflow-y-auto w-full;
+	-webkit-overflow-scrolling: touch;
 }
 
 .modal--description {

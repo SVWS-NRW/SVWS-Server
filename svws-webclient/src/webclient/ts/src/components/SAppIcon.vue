@@ -6,10 +6,12 @@
 	<i-ri-archive-line v-else-if="props.routename === 'kataloge'" />
 	<i-ri-briefcase-line v-else-if="props.routename === 'lehrer'" />
 	<i-ri-slideshow-line v-else-if="props.routename === 'kurse'" />
-	<img v-else-if="props.routename === 'gost'" src="/images/gradcap.svg" alt="Graduation Cap Icon">
+	<IconGraduationCap v-else-if="props.routename === 'gost'" />
 </template>
 
 <script setup lang="ts">
+
+	import IconGraduationCap from "../../images/IconGraduationCap.vue";
 
 	const props = defineProps<{ routename: string }>();
 

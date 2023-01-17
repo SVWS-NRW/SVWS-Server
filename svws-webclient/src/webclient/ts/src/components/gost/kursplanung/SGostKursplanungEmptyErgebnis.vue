@@ -1,12 +1,10 @@
 <template>
-	<div>
-		<template v-if="hat_blockung">
-			<router-view :key="$route.hash" />
-		</template>
-		<div v-else>
-			Es liegt noch keine Planung für dieses Halbjahr vor. Klicken Sie auf
-			"Blockung hinzufügen", um eine neue Kursplanung zu erstellen.
-		</div>
+	<template v-if="hat_blockung">
+		<router-view :key="$route.hash" />
+	</template>
+	<div v-else>
+		Es liegt noch keine Planung für dieses Halbjahr vor. Klicken Sie auf
+		"Blockung hinzufügen", um eine neue Kursplanung zu erstellen.
 	</div>
 </template>
 

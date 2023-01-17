@@ -28,9 +28,9 @@
 			<router-view :key="$route.hash" name="liste" />
 		</template>
 		<template #main>
-			<svws-ui-overlay v-if="showOverlay || initializing" />
-			<div class="page-wrapper">
-				<svws-ui-overlay v-if="showOverlay || initializing" />
+			<!-- <svws-ui-overlay v-if="showOverlay || initializing" />-->
+			<div class="page-wrapper" :class="route.name">
+				<!-- <svws-ui-overlay v-if="showOverlay || initializing" />-->
 				<main class="relative h-full">
 					<router-view :key="$route.hash" />
 				</main>

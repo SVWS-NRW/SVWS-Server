@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="h-full flex flex-col">
 		<h1 class="secondary-menu--headline">
 			<slot name="headline" />
 			<div v-if="$slots.abschnitt" class="input--schule-abschnitte">
@@ -41,6 +41,10 @@
 
 .secondary-menu--content .secondary-menu--navigation {
 	@apply flex flex-col items-start
+}
+
+.input {
+	@apply cursor-pointer;
 }
 
 .input--schule-abschnitte {

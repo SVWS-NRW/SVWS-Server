@@ -1,7 +1,5 @@
 <template>
-	<div>
-		<router-view :key="$route.hash" />
-	</div>
+	<router-view :key="$route.hash" />
 </template>
 
 <script setup lang="ts">

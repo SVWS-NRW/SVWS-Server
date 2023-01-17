@@ -3,9 +3,11 @@
 		<svws-ui-header>
 			<div class="flex items-center">
 				<span class="inline-block mr-3">{{ props.item?.bezeichnung }}</span>
-				<svws-ui-badge type="light">{{ "ID: " + props.id }}</svws-ui-badge>
+				<svws-ui-badge variant="light">{{ "ID: " + props.id }}</svws-ui-badge>
 			</div>
-			<span class="opacity-50">{{ props.item?.kuerzel }}</span>
+			<div>
+				<span class="opacity-50">{{ props.item?.kuerzel }}</span>
+			</div>
 		</svws-ui-header>
 		<svws-ui-router-tab-bar :routes="routeKatalogFaecher.children_records" :hidden="children_hidden" v-model="selectedRoute">
 			<router-view />

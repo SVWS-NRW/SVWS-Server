@@ -1,12 +1,14 @@
 <template>
-	<div v-if="visible">
+	<div v-if="visible && item.value?.id">
 		<svws-ui-header>
 			<div class="flex items-center">
 				<span class="inline-block mr-3">{{ item.value?.kuerzel?.toString() }}</span>
 				<svws-ui-badge type="light">{{ "ID: " + item.value?.id }}</svws-ui-badge>
 			</div>
-			<div class="separate-items--custom">
-				<span v-for="(l, i) in inputKlassenlehrer" :key="i" class="opacity-50"> {{ l.kuerzel }} </span>
+			<div>
+				<div class="separate-items--custom">
+					<span v-for="(l, i) in inputKlassenlehrer" :key="i" class="opacity-50"> {{ l.kuerzel }} </span>
+				</div>
 			</div>
 		</svws-ui-header>
 		<svws-ui-router-tab-bar :routes="routeKlassen.children_records" :hidden="children_hidden" v-model="selectedRoute">
@@ -14,7 +16,7 @@
 		</svws-ui-router-tab-bar>
 	</div>
 	<div v-else class="app-layout--main--placeholder">
-		<i-ri-group-line />
+		<i-ri-team-line/>
 	</div>
 </template>
 

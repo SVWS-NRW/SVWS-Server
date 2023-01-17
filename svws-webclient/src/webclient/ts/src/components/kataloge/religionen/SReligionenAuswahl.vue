@@ -6,6 +6,9 @@
 				<span>Religionen</span>
 			</nav>
 		</template>
+		<template #abschnitt>
+			<svws-ui-multi-select v-if="schule_abschnitte" v-model="akt_abschnitt" :items="schule_abschnitte" :item-sort="item_sort" :item-text="item_text"></svws-ui-multi-select>
+		</template>
 		<template #header />
 		<template #content>
 			<div class="container">

@@ -98,12 +98,12 @@
 		:selection-mode="isMultiSelect ? 'multiple' : null"
 		:select-on-click="false"
 		hide-sort-icons>
-		<template #head="{ allRowsSelected, toggleAllRows }">
+		<template #head="{ allRowsSelected, toggleAllRows, rows }">
 			<slot name="head" :all-rows-selected="allRowsSelected" :toggle-all-rows="toggleAllRows">
 				<tr>
 					<th v-if="isMultiSelect" class="column--checkbox">
 						<span class="table--head-content">
-							<Checkbox v-if="isMultiSelect"
+							<Checkbox v-if="isMultiSelect && rows.length"
 								:model-value="allRowsSelected"
 								@update:model-value="proxyUpdate(toggleAllRows)" />
 						</span>
@@ -165,10 +165,10 @@
 				</VTr>
 			</slot>
 		</template>
-		<template v-if="isMultiSelect || footer" #foot="{ allRowsSelected, toggleAllRows }">
+		<template v-if="isMultiSelect || footer" #foot="{ allRowsSelected, toggleAllRows, rows }">
 			<tr class="table--footer">
 				<td class="table--footer-checkbox column--checkbox">
-					<Checkbox v-if="isMultiSelect" :model-value="allRowsSelected" @change="toggleAllRows" />
+					<Checkbox v-if="isMultiSelect && rows.length" :model-value="allRowsSelected" @change="toggleAllRows" />
 				</td>
 				<td class="table--footer--actions" :class="{ 'table--footer--has-actions': footer }">
 					<slot v-if="footer" name="footer" />
@@ -211,7 +211,7 @@
 
 		thead {
 			@apply sticky top-0 left-0 z-10 w-full bg-white;
-			@apply border-dark-20 shadow-dark-20 text-sm-bold border-t uppercase shadow;
+			@apply border-dark-20 shadow-black/25 text-sm-bold border-t uppercase shadow;
 			position: -webkit-sticky;
 
 			tr {
@@ -235,6 +235,10 @@
 						@apply text-sm-bold;
 					}
 				}
+			}
+
+			.column--checkbox {
+				min-height: 2.6rem;
 			}
 		}
 
@@ -279,7 +283,7 @@
 			@apply sticky bottom-0 left-0 z-20 flex w-full bg-white;
 			@apply border-dark-20 border-t;
 			position: -webkit-sticky;
-			box-shadow: 0 -6px 12px -12px rgba(var(--color-dark-20), 0.5);
+			box-shadow: 0 -6px 12px -12px rgba(var(--color-black), 0.25);
 		}
 
 		.column--checkbox,
@@ -344,8 +348,13 @@
 		}
 	}
 
+	.v-table--container {
+		@apply relative overflow-y-auto;
+		-webkit-overflow-scrolling: touch;
+	}
+
 	.v-table--complex {
-		@apply w-full border;
+		@apply w-full border-collapse;
 		--table-border-color: rgba(0, 0, 0, 0.25);
 		border-color: var(--table-border-color);
 
@@ -362,16 +371,22 @@
 		}
 
 		thead {
-			@apply sticky top-0 left-0 z-10;
-			@apply shadow-dark-20 text-sm-bold uppercase shadow;
+			@apply sticky top-px left-0 z-10;
+			@apply shadow-black/25 text-sm-bold uppercase shadow bg-dark-20;
 			position: -webkit-sticky;
 
 			tr {
 				height: 1.72rem;
+
+				&:first-child {
+					box-shadow: 0 -1px 0 rgb(var(--color-dark-20));
+				}
 			}
 
 			th {
+				@apply bg-white;
 				padding: 0.15rem 0.5rem 0.1rem;
+				background-clip: padding-box;
 			}
 
 			th:not(.text-center) {

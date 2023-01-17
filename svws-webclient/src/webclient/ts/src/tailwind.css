@@ -31,8 +31,12 @@
 }
 
 .app-container {
-	@apply grid grid-cols-1 gap-x-[3vw] gap-y-16 lg:gap-y-20 lg:grid-cols-2 4xl:grid-cols-3;
+	@apply grid grid-cols-1 gap-x-[3vw] gap-y-12 lg:gap-y-8 lg:grid-cols-2 4xl:grid-cols-3;
 	grid-template-rows: min-content;
+}
+
+.overflow-y-auto {
+	-webkit-overflow-scrolling: touch;
 }
 
 /* Defaults zu den Schriften */
@@ -82,4 +86,13 @@
 	--table-selection-background-color: rgb(184, 221, 233);
 	--table-selection-foreground-color: rgb(0, 0, 0, 1);
 	--table-cell-default-padding: 0px 0.25em 0px 0.25em;
+}
+
+.text-ellipsis-line-clamp {
+	@apply text-ellipsis overflow-hidden;
+	max-width: 100%;
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 1;
+	word-break: break-all;
 }
