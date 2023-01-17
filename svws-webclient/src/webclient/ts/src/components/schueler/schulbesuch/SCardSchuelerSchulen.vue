@@ -2,7 +2,7 @@
 	<svws-ui-content-card title="Alle bisher besuchten Schulen">
 		<div>
 			Hier wird demnächst die Übersicht über die besuchten Schulen implementiert
-			<div v-for="schule in props.data.daten?.alleSchulen">
+			<div v-for="schule in props.data.daten?.alleSchulen" :key="schule.schulnummer.toString()">
 				<!-- TODO <svws-zu-table> für die besuchten Schulen -->
 				<p> {{ schule.schulnummer + " ... (" + schule.datumVon + "-" + schule.datumBis + ")" }} </p>
 			</div>

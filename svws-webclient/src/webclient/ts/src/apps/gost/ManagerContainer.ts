@@ -13,13 +13,7 @@ export class ManagerContainer<T, U> {
 	}
 
 	commit() {
+		// eslint-disable-next-line no-self-assign
 		this._container.value = this._container.value;
 	}
-
 }
-
-
-/**
- *
- *
- */

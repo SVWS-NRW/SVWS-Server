@@ -1,7 +1,7 @@
 <template>
 	<template v-for="kursart in GostKursart.values()">
 		<template v-if="kurszahlen.get(kursart.id) === 0 && wahlen.get(kursart.id) && allow_regeln">
-			<tr class="text-left" :style="{ 'background-color': bgColor }">
+			<tr class="text-left" :style="{ 'background-color': bgColor }" :key="kursart.id">
 				<td colspan="3">
 					{{ fach.kuerzel }}-{{ kursart.kuerzel }}
 				</td>
@@ -30,6 +30,7 @@
 	import { DataGostSchuelerFachwahlen } from "~/apps/gost/DataGostSchuelerFachwahlen";
 	import { ListLehrer } from "~/apps/lehrer/ListLehrer";
 	import { injectMainApp, Main } from "~/apps/Main";
+	import type { UserConfigKeys } from "~/utils/userconfig/keys"
 
 	const props = defineProps<{
 		fach: GostStatistikFachwahl;

@@ -1,4 +1,5 @@
 import { ZulaessigesFach, GostStatistikFachwahl } from "@svws-nrw/svws-core-ts";
+import { UserConfigKeys } from "~/utils/userconfig/keys";
 
 import { App } from "../BaseApp";
 
@@ -23,11 +24,12 @@ export class Gost extends App {
 		try {
 			const sortierung = await App.api.getClientConfigUserKey(App.schema, 'SVWS-Client', 'gost.kursansicht.sortierung') as UserConfigKeys['gost.kursansicht.sortierung'];
 			mainApp.config.user_config.set('gost.kursansicht.sortierung', sortierung);
-		} catch (e) {}
+		} catch (e) {
+			console.log(e)
+		}
 	}
 
 	public getBgColor(row: GostStatistikFachwahl): string {
 		return ZulaessigesFach.getByKuerzelASD(row.kuerzelStatistik).getHMTLFarbeRGBA(1.0).valueOf();
 	}
-
 }

@@ -13,7 +13,7 @@
 					<svws-ui-multi-select v-model="filterKlassen" title="Klasse" :items="inputKlassen" :item-text="text_klasse" />
 					<svws-ui-multi-select v-model="filterJahrgaenge" title="Jahrgang" :items="inputJahrgaenge" :item-text="text_jahrgang" />
 					<svws-ui-multi-select v-model="filterKurse" title="Kurs" :items="inputKurse" :item-text="text_kurs" />
-					<svws-ui-multi-select v-model="filterSchulgliederung" title="Schulgliederung" :items="inputSchulgliederungen" :item-text="text_schulgliederung" />
+					<svws-ui-multi-select v-model="filterSchulgliederung" title="Schulgliederung" :items="schule.schulgliederungen" :item-text="text_schulgliederung" />
 				</div>
 			</div>
 			<div>
@@ -63,7 +63,7 @@
 	import { computed, ComputedRef, Ref, ref, ShallowRef, WritableComputedRef } from "vue";
 
 	import { SchuelerListeEintrag, SchuelerStatus, JahrgangsListeEintrag,
-		KlassenListeEintrag, KursListeEintrag, Schulgliederung, Schuljahresabschnitt, LogConsumerConsole } from "@svws-nrw/svws-core-ts";
+		KlassenListeEintrag, KursListeEintrag, Schulgliederung, Schuljahresabschnitt } from "@svws-nrw/svws-core-ts";
 
 	import { injectMainApp, Main } from "~/apps/Main";
 	import { routeSchueler } from "~/router/apps/RouteSchueler";
@@ -148,8 +148,6 @@
 				}
 			}
 		});
-
-	props.schule.schulgliederungen;
 
 	const filterSchulgliederung: WritableComputedRef<Schulgliederung | undefined> = computed({
 		get(): Schulgliederung | undefined {

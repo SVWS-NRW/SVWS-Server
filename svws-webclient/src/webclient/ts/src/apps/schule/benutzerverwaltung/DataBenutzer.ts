@@ -2,11 +2,10 @@ import { App } from "~/apps/BaseApp";
 import { BaseData } from "~/apps/BaseData";
 
 import { BenutzerDaten, BenutzergruppeDaten, BenutzergruppeListeEintrag, BenutzerKompetenz, BenutzerKompetenzGruppe,
-	BenutzerListeEintrag, BenutzerManager, Credentials, LogConsumerConsole, Vector } from "@svws-nrw/svws-core-ts";
+	BenutzerListeEintrag, BenutzerManager, Credentials, Vector } from "@svws-nrw/svws-core-ts";
 import { router } from "~/router";
 import { routeSchuleBenutzer } from "~/router/apps/RouteSchuleBenutzer";
 import { mainApp } from "~/apps/Main";
-import { ApiLoadingStatus } from "~/apps/core/ApiLoadingStatus.class";
 
 export class DataBenutzer extends BaseData<BenutzerDaten, BenutzerListeEintrag, BenutzerManager> {
 
@@ -320,7 +319,7 @@ export class DataBenutzer extends BaseData<BenutzerDaten, BenutzerListeEintrag, 
 		let text="";
 		let i = 0;
 		if(this.manager?.getGruppen(kompetenz)){
-			for(const bg of this.manager?.getGruppen(kompetenz)){
+			for(const bg of this.manager.getGruppen(kompetenz)){
 				if( i === 0)
 					text+=bg.bezeichnung;
 				else

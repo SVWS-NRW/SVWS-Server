@@ -1,12 +1,11 @@
 <template>
 	<svws-ui-modal ref="modalAddBetrieb" size="medium">
 		<template #modalTitle>Ansprechpartner Hinzufügen</template>
-
 		<template #modalContent>
 			<div class="input-wrapper">
 				<svws-ui-multi-select title="Betrieb" v-model="betrieb" :items="inputBetriebListe" :item-text="(i: BetriebListeEintrag) => i.name1?.toString() || ''" />
 				<svws-ui-text-input placeholder="Ausbilder" v-model="s_betrieb.ausbilder" type="text" />
-				<svws-ui-multi-select title="Beschäftigungsart" v-model="beschaeftigungsart" :items="inputBeschaeftigungsarten" :item-text="(i: KatalogEintrag) => i.text?.toString() || ''" />
+				<svws-ui-multi-select title="Beschäftigungsart" v-model="beschaeftigungsart" :items="inputBeschaeftigungsarten" :item-text="(i: KatalogEintrag) => i.text?.toString() || ''" />
 				<svws-ui-text-input placeholder="Vertragsbeginn" v-model="s_betrieb.vertragsbeginn" type="date" />
 				<svws-ui-text-input placeholder="Vertragsende" v-model="s_betrieb.vertragsende" type="date" />
 				<svws-ui-checkbox v-model="s_betrieb.praktikum"> Praktikum </svws-ui-checkbox>
@@ -15,7 +14,6 @@
 				<svws-ui-checkbox v-model="s_betrieb.allgadranschreiben"> Anschreiben </svws-ui-checkbox>
 			</div>
 		</template>
-
 		<template #modalActions>
 			<svws-ui-button type="secondary" @click="modalAddBetrieb.closeModal()"> Abbrechen </svws-ui-button>
 			<svws-ui-button type="primary" @click="save"> Speichern </svws-ui-button>
@@ -132,5 +130,4 @@
 		s_betrieb.vertragsbeginn = null;
 		s_betrieb.vertragsende = null;
 	}
-
 </script>

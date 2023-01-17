@@ -2,7 +2,7 @@
 	<div class="flex flex-row gap-4">
 		<div class="w-full flex-none sm:-mx-6 lg:-mx-8">
 			<div class="w-full inline-block py-2 align-middle sm:px-6 lg:px-8">
-				<div v-for="wochentyp in manager?.getWochentypen()" class="w-full rounded-lg shadow">
+				<div v-for="wochentyp in manager?.getWochentypen()" class="w-full rounded-lg shadow" :key="wochentyp.valueOf()">
 					<p class="text-lg" />
 					<table class="w-full table-auto border-collapse mb-5">
 						<thead>
@@ -16,9 +16,9 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr v-for="stunde in manager?.getMaxStunde()">
+							<tr v-for="stunde in manager?.getMaxStunde()" :key="stunde.valueOf()">
 								<th class="text-center border-2 border-collapse">{{ stunde }}</th>
-								<td class="text-center border-2 border-collapse" v-for="wochentag in manager?.getMaxWochentag()">
+								<td class="text-center border-2 border-collapse" v-for="wochentag in manager?.getMaxWochentag()" :key="wochentag.valueOf()">
 									<table class="w-full">
 										<tr>
 											<s-unterricht v-for="unterricht in unterrichtsdaten(wochentyp, wochentag, stunde)" :key="unterricht.idUnterricht" :unterricht="unterricht" />

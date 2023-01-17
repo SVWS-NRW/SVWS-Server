@@ -5,6 +5,6 @@
  *
  * der Typ UserConfigKeys enthält Optionen, die im Client verwendet werden.
  */
-type UserConfigKeys = {
+export type UserConfigKeys = {
 	'gost.kursansicht.sortierung'?: 'kursart'|'fach_id';
 }

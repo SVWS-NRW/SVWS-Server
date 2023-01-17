@@ -1,8 +1,8 @@
 <template>
 	<div v-if="visible" class="mt-10">
 		<svws-ui-table :v-model="selected_hj" :columns="[{ key: 'kuerzel', label: 'Halbjahr' }]" :data="GostHalbjahr.values()" class="mb-10">
-			<template #body="{rows}">
-				<template v-for="row in <GostHalbjahr[]>rows" :key="row.id">
+			<template #body="{rows}: {rows: GostHalbjahr[]}">
+				<template v-for="row in rows" :key="row.id">
 					<tr :class="{'vt-clicked': row.id === selected_hj.id}" @click="select_hj(row)">
 						<td>
 							{{ row.kuerzel }}

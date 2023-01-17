@@ -35,6 +35,7 @@
 		<template v-if="!kurs_blockungsergebnis">
 			<td />
 		</template>
+		<!-- eslint-disable-next-line vue/no-use-v-if-with-v-for-->
 		<svws-ui-drop-data v-if="!blockung_aktiv"
 			v-for="(schiene) in schienen"
 			v-slot="{ active }"
@@ -52,7 +53,7 @@
 				:class="{'bg-slate-500': schiene_gesperrt(schiene)}"
 				:style="{ 'background-color': schiene_gesperrt(schiene)? '':bgColor}"
 				@drag-start="drag_started"
-				@dragEnd="drag_ended">
+				@drag-end="drag_ended">
 				<svws-ui-badge size="tiny" class="cursor-grab" :type="selected_kurs ? 'primary' : fixier_regeln.length ? 'error' : active && drag_data?.kurs?.id !== kurs.id ? 'success' : 'highlight'" @click="toggle_active_kurs">
 					{{ kurs_blockungsergebnis?.schueler.size() }}
 					<svws-ui-icon class="cursor-pointer" @click="fixieren_regel_toggle">
@@ -108,12 +109,12 @@
 					<svws-ui-button size="small" type="secondary" @click="toggle_zusatzkraefte_modal">Zusatzkräfte anlegen<i-ri-briefcase-line class="ml-1 my-0.5" /></svws-ui-button>
 					<div class="flex items-center text-base">
 						<div class="mr-2">Schienen</div>
-						<button @click="" class="group">
+						<button class="group">
 							<i-ri-indeterminate-circle-line class="w-5 h-5 group-hover:hidden" />
 							<i-ri-indeterminate-circle-fill class="w-5 h-5 hidden group-hover:inline-block" />
 						</button>
 						<span class="mx-1">{{ kurs.anzahlSchienen }}</span>
-						<button @click="" class="group">
+						<button class="group">
 							<i-ri-add-circle-line class="w-5 h-5 group-hover:hidden" />
 							<i-ri-add-circle-fill class="w-5 h-5 hidden group-hover:inline-block" />
 						</button>
@@ -135,7 +136,7 @@
 					<svws-ui-dropdown type="icon" v-if="filtered_by_kursart.length>1">
 						<template #dropdownButton>Zusammenlegen</template>
 						<template #dropdownItems>
-							<svws-ui-dropdown-item v-for="k in filtered_by_kursart.filter(k=>k.id!==kurs.id)" :key="k.id" class="px-2" @click=""> {{ get_kursbezeichnung(k.id) }} </svws-ui-dropdown-item>
+							<svws-ui-dropdown-item v-for="k in filtered_by_kursart.filter(k=>k.id!==kurs.id)" :key="k.id" class="px-2"> {{ get_kursbezeichnung(k.id) }} </svws-ui-dropdown-item>
 						</template>
 					</svws-ui-dropdown>
 					<svws-ui-button size="small" type="secondary">Aufteilen…</svws-ui-button>

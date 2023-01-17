@@ -1,7 +1,7 @@
 <template>
 	<div v-if="visible">
 		<svws-ui-table :v-model="selected_blockungauswahl" :columns="[{ key: 'name', label: 'Blockung' }]" :data="rows_blockungswahl" class="mt-10">
-			<template #body="{rows}">
+			<template #body>
 				<template v-for="row in rows_blockungswahl" :key="row.hashCode()">
 					<tr :class="{'vt-clicked': row === selected_blockungauswahl}" @click="select_blockungauswahl(row)">
 						<td v-if=" row === selected_blockungauswahl ">
@@ -10,7 +10,7 @@
 									{{ row.name }}
 								</span>
 								<svws-ui-text-input v-else :model-value="row.name.toString()" style="width: 10rem" headless focus
-									@keyup.enter="edit_blockungsname=false" @keyup.escape="edit_blockungsname=false" @update:modelValue="patch_blockung" />
+									@keyup.enter="edit_blockungsname=false" @keyup.escape="edit_blockungsname=false" @update:model-value="patch_blockung" />
 							</div>
 							<svws-ui-icon v-if="row.istAktiv"> <i-ri-pushpin-fill /> </svws-ui-icon>
 							<div v-if="allow_add_blockung(props.halbjahr.value)" class="flex gap-1">
@@ -113,7 +113,6 @@
 		props.listBlockungen.setApiStatusIdle(hjId);
 		try {
 			const res = await App.api.rechneGostBlockung(App.schema, id, 5000)
-			props.listBlockungen.ausgewaehlt = props.listBlockungen.ausgewaehlt;
 			props.listBlockungen.removeApiStatusId(hjId)
 			return res
 		} catch (e) {
@@ -121,10 +120,12 @@
 		}
 	}
 
-	async function patch_blockung(name: string) {
-		const res = await props.blockung.patch({name});
-		if (res && selected_blockungauswahl.value)
-			selected_blockungauswahl.value.name = name;
+	function patch_blockung(value: string | number) {
+		props.blockung.patch({name: value.toString()})
+			.then(res => {
+				if (res && selected_blockungauswahl.value)
+					selected_blockungauswahl.value.name = value.toString();
+			})
 	}
 
 	async function remove_blockung() {

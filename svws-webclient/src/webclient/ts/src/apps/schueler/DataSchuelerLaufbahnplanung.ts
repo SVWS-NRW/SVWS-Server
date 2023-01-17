@@ -746,9 +746,6 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 			}
 			break;
 		case "ZK":
-			const beginn : GostHalbjahr | null = (GostFachbereich.SOZIALWISSENSCHAFTEN.hat(row))
-				? GostHalbjahr.fromKuerzel(this.dataGostJahrgang?.daten?.beginnZusatzkursSW || "")
-				: GostHalbjahr.fromKuerzel(this.dataGostJahrgang?.daten?.beginnZusatzkursGE || "");
 			wahl.Q11 = null;
 			wahl.Q12 = null;
 			break;
@@ -819,7 +816,7 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 		case "S":
 			wahl.Q12 = wahl.Q11 === "LK" ? "LK" : null;
 			break;
-		case "ZK":
+		case "ZK": {
 			const beginn : GostHalbjahr | null = (GostFachbereich.SOZIALWISSENSCHAFTEN.hat(row))
 				? GostHalbjahr.fromKuerzel(this.dataGostJahrgang?.daten?.beginnZusatzkursSW || "")
 				: GostHalbjahr.fromKuerzel(this.dataGostJahrgang?.daten?.beginnZusatzkursGE || "");
@@ -830,6 +827,7 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 				wahl.Q21 = null;
 			break;
 			// TODO: Warum ist das so? Bis Q22. Was ist erlaubt: M, S, null?
+		}
 		case "LK":
 			wahl.Q12 = null;
 			wahl.abiturFach = null;
@@ -897,7 +895,7 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 		case "S":
 			wahl.Q21 = wahl.Q12 === "LK" ? "LK" : null;
 			break;
-		case "ZK":
+		case "ZK": {
 			const beginn : GostHalbjahr | null = (GostFachbereich.SOZIALWISSENSCHAFTEN.hat(row))
 				? GostHalbjahr.fromKuerzel(this.dataGostJahrgang?.daten?.beginnZusatzkursSW || "")
 				: GostHalbjahr.fromKuerzel(this.dataGostJahrgang?.daten?.beginnZusatzkursGE || "");
@@ -907,6 +905,7 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 			if ((beginn !== null) && (beginn === GostHalbjahr.Q21))
 				wahl.Q22 = null;
 			break;
+		}
 		case "LK":
 			wahl.Q21 = null;
 			wahl.abiturFach = null;
@@ -964,7 +963,7 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 		case "S":
 			wahl.Q22 = wahl.Q21 === "LK" ? "LK" : null;
 			break;
-		case "ZK":
+		case "ZK": {
 			const beginn : GostHalbjahr | null = (GostFachbereich.SOZIALWISSENSCHAFTEN.hat(row))
 				? GostHalbjahr.fromKuerzel(this.dataGostJahrgang?.daten?.beginnZusatzkursSW || "")
 				: GostHalbjahr.fromKuerzel(this.dataGostJahrgang?.daten?.beginnZusatzkursGE || "");
@@ -973,6 +972,7 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 			}
 			wahl.Q22 = null;
 			break;
+		}
 		case "LK":
 			wahl.Q22 = null;
 			wahl.abiturFach = null;

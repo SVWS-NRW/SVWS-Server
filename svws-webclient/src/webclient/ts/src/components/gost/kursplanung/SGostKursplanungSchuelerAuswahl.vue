@@ -60,7 +60,6 @@
 	import { GostBlockungKurs, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, GostBlockungsergebnisSchiene,
 		GostFach, GostFachwahl, GostHalbjahr, GostJahrgang, GostKursart, LehrerListeEintrag, List, SchuelerListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, onErrorCaptured, Ref, ref, ShallowRef, WritableComputedRef } from "vue";
-	import { useRouter } from "vue-router";
 	import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
 	import { DataGostJahrgang } from "~/apps/gost/DataGostJahrgang";
 	import { DataGostKursblockung } from "~/apps/gost/DataGostKursblockung";
@@ -70,7 +69,6 @@
 	import { ListAbiturjahrgangSchueler } from "~/apps/gost/ListAbiturjahrgangSchueler";
 	import { ListKursblockungen } from "~/apps/gost/ListKursblockungen";
 	import { ListLehrer } from "~/apps/lehrer/ListLehrer";
-	import { injectMainApp, Main } from "~/apps/Main";
 	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 	import { routeGostKursplanungSchueler } from "~/router/apps/gost/kursplanung/RouteGostKursplanungSchueler";
 
@@ -90,11 +88,6 @@
 		dataSchueler: DataSchuelerLaufbahndaten;
 	}>();
 
-	const router = useRouter();
-
-	const main: Main = injectMainApp();
-	const schueler_filter = props.listSchueler.filter;
-
 	onErrorCaptured((e)=>{
 		alert("Es ist ein Fehler aufgetreten: " + e.message);
 		// return false;
@@ -104,7 +97,6 @@
 
 	const manager: ComputedRef<GostBlockungsergebnisManager | undefined> = computed(() => {
 		// löse ein erneutes Filtern aus, wenn der Manager sich ändert (z.B. bei Blockungs- oder -Ergebniswechsel)
-		props.listSchueler.filter = props.listSchueler.filter;
 		return props.blockung.ergebnismanager
 	});
 
@@ -117,16 +109,6 @@
 	const selected: WritableComputedRef<SchuelerListeEintrag | undefined> = routeGostKursplanungSchueler.getSelector();
 
 	const blockung_aktiv: ComputedRef<boolean> = computed(()=> props.blockung.daten?.istAktiv || false);
-
-	const aktiver_kursname: ComputedRef<String | undefined> = computed(() => schueler_filter.kurs === undefined ? undefined : manager.value?.getOfKursName(schueler_filter.kurs.id));
-
-	const schueler_kollisionen: ComputedRef<number> = computed(() => {
-		if (manager.value === undefined)
-			return 0;
-		if (schueler_filter.kurs?.id !== undefined)
-			return manager.value.getOfKursAnzahlKollisionen(schueler_filter.kurs.id);
-		return manager.value.getMengeDerSchuelerMitKollisionen().size();
-	});
 
 	const blockungsergebnisse: ComputedRef<Map<GostBlockungKurs, GostBlockungsergebnisKurs[]>> = computed(() => {
 		const map = new Map();
@@ -163,10 +145,9 @@
 	});
 
 	const fach_filter: WritableComputedRef<GostFach | undefined> = computed({
-		get: () => schueler_filter.fach,
+		get: () => props.listSchueler.filter.fach,
 		set: (value) => {
-			schueler_filter.fach = value;
-			props.listSchueler.filter = schueler_filter;
+			props.listSchueler.filter.fach = value;
 		}
 	})
 
@@ -182,58 +163,55 @@
 	})
 
 	const kurs_filter: WritableComputedRef<GostBlockungKurs | undefined> = computed({
-		get: () => schueler_filter.kurs,
+		get: () => props.listSchueler.filter.kurs,
 		set: (value) => {
-			schueler_filter.kurs = value;
-			props.listSchueler.filter = schueler_filter;
+			props.listSchueler.filter.kurs = value;
 		}
 	})
 
 	const kursart_filter: WritableComputedRef<GostKursart | undefined> = computed({
-		get: () => schueler_filter.kursart,
+		get: () => props.listSchueler.filter.kursart,
 		set: (value) => {
-			schueler_filter.kursart = value;
-			props.listSchueler.filter = schueler_filter;
+			props.listSchueler.filter.kursart = value;
 		}
 	})
 
 	const radio_filter: WritableComputedRef<string> = computed({
 		get: () => {
-			if (schueler_filter.kollisionen && schueler_filter.nichtwahlen)
+			if (props.listSchueler.filter.kollisionen && props.listSchueler.filter.nichtwahlen)
 				return 'kollisionen_nichtwahlen';
-			if (schueler_filter.kollisionen)
+			if (props.listSchueler.filter.kollisionen)
 				return 'kollisionen';
-			if (schueler_filter.nichtwahlen)
+			if (props.listSchueler.filter.nichtwahlen)
 				return 'nichtwahlen';
 			return 'alle';
 		},
 		set: (value) => {
 			switch (value) {
 				case 'alle':
-					schueler_filter.kollisionen = false;
-					schueler_filter.nichtwahlen = false;
+					props.listSchueler.filter.kollisionen = false;
+					props.listSchueler.filter.nichtwahlen = false;
 					break;
 				case 'kollisionen':
-					schueler_filter.kollisionen = true;
-					schueler_filter.nichtwahlen = false;
+					props.listSchueler.filter.kollisionen = true;
+					props.listSchueler.filter.nichtwahlen = false;
 					break;
 				case 'nichtwahlen':
-					schueler_filter.kollisionen = false;
-					schueler_filter.nichtwahlen = true;
+					props.listSchueler.filter.kollisionen = false;
+					props.listSchueler.filter.nichtwahlen = true;
 					break;
 				case 'kollisionen_nichtwahlen':
-					schueler_filter.kollisionen = true;
-					schueler_filter.nichtwahlen = true;
+					props.listSchueler.filter.kollisionen = true;
+					props.listSchueler.filter.nichtwahlen = true;
 					break;
 			}
-			props.listSchueler.filter = schueler_filter;
 		}
 	});
 
 	const filter_name: WritableComputedRef<string> = computed({
 		get: () => props.listSchueler?.filter?.name,
 		set: (value) => {
-			const filter = schueler_filter;
+			const filter = props.listSchueler.filter;
 			filter.name = value;
 			props.listSchueler.filter = filter;
 		}
@@ -247,10 +225,7 @@
 	async function drop_entferne_kurszuordnung(kurs: any) {
 		const schuelerid = selected.value?.id;
 		if (!schuelerid || !kurs?.id) return;
-		let ok = false
-		ok = await props.ergebnis.removeSchuelerKurs(schuelerid, kurs.id);
-		if (ok)
-			main.config.drag_and_drop_data = undefined;
+		await props.ergebnis.removeSchuelerKurs(schuelerid, kurs.id);
 	}
 
 	async function auto_verteilen() {
@@ -258,8 +233,4 @@
 			return;
 		await props.ergebnis.multiAssignSchuelerKurs(selected.value.id)
 	}
-
-	function doSelect(s: SchuelerListeEintrag) {
-	}
-
 </script>

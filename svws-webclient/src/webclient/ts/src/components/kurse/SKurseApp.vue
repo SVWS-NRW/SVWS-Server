@@ -4,7 +4,9 @@
 			<div class="flex items-center">
 				<span class="inline-block mr-3">{{ kuerzel }}</span>
 				<svws-ui-badge type="light">{{ "ID: " + item.value?.id }}</svws-ui-badge>
-				<span v-if="inputFachlehrer" class="opacity-50"><br>{{ inputFachlehrer }}</span>
+			</div>
+			<div class="separate-items--custom">
+				<span v-if="inputFachlehrer" class="opacity-50">{{ inputFachlehrer }}</span>
 			</div>
 		</svws-ui-header>
 		<svws-ui-router-tab-bar :routes="routeKurse.children_records" :hidden="children_hidden" v-model="selectedRoute">

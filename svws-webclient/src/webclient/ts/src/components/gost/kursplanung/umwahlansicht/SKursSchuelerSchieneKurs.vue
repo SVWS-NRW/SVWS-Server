@@ -116,6 +116,7 @@
 				&& regel.parameter.get(0) === props.schueler.id
 				&& regel.parameter.get(1) === props.kurs.id)
 				return regel;
+		return undefined;
 	})
 
 	// const verbieten_regel: ComputedRef<boolean> = computed(() => manager.value?.getOfSchuelerOfKursIstGesperrt(props.schueler.id, props.kurs.id) || false)
@@ -124,7 +125,8 @@
 			if (regel.typ === GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ
 				&& regel.parameter.get(0) === props.schueler.id
 				&& regel.parameter.get(1) === props.kurs.id)
-				return regel
+				return regel;
+		return undefined;
 	})
 
 	const fixieren_regel_toggle = () => fixier_regel.value ? fixieren_regel_entfernen() : fixieren_regel_hinzufuegen()

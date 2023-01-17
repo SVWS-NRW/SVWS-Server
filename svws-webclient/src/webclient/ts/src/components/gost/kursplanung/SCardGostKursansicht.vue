@@ -29,7 +29,7 @@
 													@blur="edit_schienenname=undefined"
 													@keyup.enter="edit_schienenname=undefined"
 													@keyup.escape="edit_schienenname=undefined"
-													@update:modelValue="patch_schiene(s, $event.toString())" />
+													@update:model-value="patch_schiene(s, $event.toString())" />
 											</template>
 											<template v-else>
 												<span class="px-3 underline decoration-dotted underline-offset-2 cursor-text" title="Namen bearbeiten" @click="edit_schienenname = s">{{ s.nummer }}</span>
@@ -72,6 +72,7 @@
 									<th class="text-center">FW</th>
 									<th class="text-center">Diff</th>
 									<!--Schienen-->
+									<!-- eslint-disable-next-line vue/no-use-v-if-with-v-for-->
 									<s-drag-schiene v-if="allow_regeln" v-for="s in schienen" :key="s.id" :schiene="s" :blockung="blockung" />
 									<th v-else :colspan="schienen.size()" class="text-center">Regeln können nicht in Ergebnissen erstellt werden</th>
 								</tr>
@@ -126,6 +127,7 @@
 	import { ListKursblockungen } from "~/apps/gost/ListKursblockungen";
 	import { router } from "~/router";
 	import { routeGostKursplanungHalbjahr } from "~/router/apps/gost/kursplanung/RouteGostKursplanungHalbjahr";
+	import type { UserConfigKeys } from "~/utils/userconfig/keys"
 
 	const props = defineProps<{
 		jahrgangsdaten: DataGostJahrgang;

@@ -11,9 +11,9 @@
 
 	const app = injectMainApp();
 	const loading: ComputedRef<boolean> = computed(() => app.config.pending);
-	defineProps({
-		error	: { type: String }
-	});
+	defineProps<{
+		error: string;
+	}>();
 </script>
 
 <style>
