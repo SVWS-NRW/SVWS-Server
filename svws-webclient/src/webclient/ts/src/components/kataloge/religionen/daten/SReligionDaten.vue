@@ -11,13 +11,13 @@
 	import { DataReligion } from "~/apps/kataloge/religionen/DataReligion";
 	import { routeKatalogReligionDaten } from "~/router/apps/religion/RouteKatalogReligionDaten";
 
-	const { item, data } = defineProps<{
+	const props = defineProps<{
 		item: ShallowRef<ReligionEintrag | undefined>;
 		data: DataReligion;
 	}>();
 
 	const visible: ComputedRef<boolean> = computed(() => {
-		return (item.value !== undefined) && (!routeKatalogReligionDaten.hidden());
+		return (props.item.value !== undefined) && (!routeKatalogReligionDaten.hidden());
 	});
 
 </script>

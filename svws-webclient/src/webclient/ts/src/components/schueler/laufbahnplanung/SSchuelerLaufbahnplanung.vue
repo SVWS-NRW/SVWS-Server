@@ -28,7 +28,7 @@
 	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 	import { routeSchuelerLaufbahnplanung } from "~/router/apps/schueler/RouteSchuelerLaufbahnplanung";
 
-	const { item, stammdaten, dataLaufbahn, dataFaecher, dataFachkombinationen } = defineProps<{
+	const props = defineProps<{
 		item: ShallowRef<SchuelerListeEintrag | undefined>;
 		stammdaten: DataSchuelerStammdaten;
 		schule: DataSchuleStammdaten;
@@ -45,8 +45,10 @@
 
 	const modal = ref();
 
-	const visible: ComputedRef<boolean> = computed(() => {
-		return !(routeSchuelerLaufbahnplanung.hidden()) && (item.value?.id !== undefined) && (item.value?.abiturjahrgang !== undefined);
-	});
-
+	const visible: ComputedRef<boolean> =
+		computed(() =>
+			!(routeSchuelerLaufbahnplanung.hidden())
+			&& (props.item.value?.id !== undefined)
+			&& (props.item.value?.abiturjahrgang !== undefined)
+		);
 </script>

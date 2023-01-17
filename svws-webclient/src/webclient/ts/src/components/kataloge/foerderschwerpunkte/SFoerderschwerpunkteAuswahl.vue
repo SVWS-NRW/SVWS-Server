@@ -23,7 +23,7 @@
 	import { router } from "~/router";
 	import { routeKatalogFoerderschwerpunkte } from "~/router/apps/RouteKatalogFoerderschwerpunkte";
 
-	const { item } = defineProps<{
+	const props = defineProps<{
 		item: ShallowRef<FoerderschwerpunktEintrag | undefined>;
 	}>();
 

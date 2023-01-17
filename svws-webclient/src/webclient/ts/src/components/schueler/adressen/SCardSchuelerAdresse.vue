@@ -114,7 +114,7 @@
 	import { DataBetriebsstammdaten } from "~/apps/schueler/DataBetriebsstammdaten";
 	import { ListSchuelerBetriebsdaten } from "~/apps/schueler/ListSchuelerBetriebsdaten";
 
-	const { listSchuelerbetriebe, betriebsStammdaten } = defineProps<{
+	const props = defineProps<{
 		listSchuelerbetriebe : ListSchuelerBetriebsdaten;
 		betriebsStammdaten: DataBetriebsstammdaten;
 	}>();
@@ -126,10 +126,10 @@
 	/** Kataloge */
 
 	const inputBetriebAnsprechpartner: ComputedRef<BetriebAnsprechpartner[]> = computed(() => {
-		if (listSchuelerbetriebe.ausgewaehlt === undefined)
+		if (props.listSchuelerbetriebe.ausgewaehlt === undefined)
 			return []
-		const id = listSchuelerbetriebe.ausgewaehlt.betrieb_id;
-		return listSchuelerbetriebe.betriebansprechpartner.liste.filter(l => l.betrieb_id === id);
+		const id = props.listSchuelerbetriebe.ausgewaehlt.betrieb_id;
+		return props.listSchuelerbetriebe.betriebansprechpartner.liste.filter(l => l.betrieb_id === id);
 	})
 
 	const inputKatalogOrte: ComputedRef<List<OrtKatalogEintrag>> = computed(() => {
@@ -137,54 +137,54 @@
 	});
 
 	const inputLehrerListe: ComputedRef<LehrerListeEintrag[]> = computed(() => {
-		return listSchuelerbetriebe.lehrer.liste;
+		return props.listSchuelerbetriebe.lehrer.liste;
 	});
 
 
 	/** Basisdaten */
 
 	const name : WritableComputedRef<string | undefined> = computed({
-		get: () => betriebsStammdaten.daten?.name1?.valueOf(),
-		set: (value) => betriebsStammdaten.patch({ name1 : value })
+		get: () => props.betriebsStammdaten.daten?.name1?.valueOf(),
+		set: (value) => props.betriebsStammdaten.patch({ name1 : value })
 	})
 
 	const namezusatz : WritableComputedRef<string | undefined> = computed({
-		get: () => betriebsStammdaten.daten?.name2?.valueOf(),
-		set: (value) => betriebsStammdaten.patch({ name2 : value })
+		get: () => props.betriebsStammdaten.daten?.name2?.valueOf(),
+		set: (value) => props.betriebsStammdaten.patch({ name2 : value })
 	})
 
 	const telefon1 : WritableComputedRef<string | undefined> = computed({
-		get: () => betriebsStammdaten.daten?.telefon1?.valueOf(),
-		set: (value) => betriebsStammdaten.patch({ telefon1 : value })
+		get: () => props.betriebsStammdaten.daten?.telefon1?.valueOf(),
+		set: (value) => props.betriebsStammdaten.patch({ telefon1 : value })
 	})
 
 	const telefon2 : WritableComputedRef<string | undefined> = computed({
-		get: () => betriebsStammdaten.daten?.telefon2?.valueOf(),
-		set: (value) => betriebsStammdaten.patch({ telefon2 : value })
+		get: () => props.betriebsStammdaten.daten?.telefon2?.valueOf(),
+		set: (value) => props.betriebsStammdaten.patch({ telefon2 : value })
 	})
 
 	const fax : WritableComputedRef<string | undefined> = computed({
-		get: () => betriebsStammdaten.daten?.fax?.valueOf(),
-		set: (value) => betriebsStammdaten.patch({ fax : value })
+		get: () => props.betriebsStammdaten.daten?.fax?.valueOf(),
+		set: (value) => props.betriebsStammdaten.patch({ fax : value })
 	})
 
 	const email : WritableComputedRef<string | undefined> = computed({
-		get: () => betriebsStammdaten.daten?.email?.valueOf(),
-		set: (value) => betriebsStammdaten.patch({ email : value })
+		get: () => props.betriebsStammdaten.daten?.email?.valueOf(),
+		set: (value) => props.betriebsStammdaten.patch({ email : value })
 	})
 
 	const branche : WritableComputedRef<string | undefined> = computed({
-		get: () => betriebsStammdaten.daten?.branche?.valueOf(),
-		set: (value) => betriebsStammdaten.patch({ branche : value })
+		get: () => props.betriebsStammdaten.daten?.branche?.valueOf(),
+		set: (value) => props.betriebsStammdaten.patch({ branche : value })
 	})
 
 	const ansprechpartner: WritableComputedRef<BetriebAnsprechpartner | undefined> = computed({
-		get: () => listSchuelerbetriebe.ausgewaehlt === undefined ? undefined
-			: inputBetriebAnsprechpartner.value.find(l => l.id === listSchuelerbetriebe.ausgewaehlt?.ansprechpartner_id),
+		get: () => props.listSchuelerbetriebe.ausgewaehlt === undefined ? undefined
+			: inputBetriebAnsprechpartner.value.find(l => l.id === props.listSchuelerbetriebe.ausgewaehlt?.ansprechpartner_id),
 		set: (value) => {
-			if (listSchuelerbetriebe.ausgewaehlt === undefined)
+			if (props.listSchuelerbetriebe.ausgewaehlt === undefined)
 				return;
-			const data = listSchuelerbetriebe.ausgewaehlt as SchuelerBetriebsdaten;
+			const data = props.listSchuelerbetriebe.ausgewaehlt as SchuelerBetriebsdaten;
 			data.ansprechpartner_id = Number(value?.id);
 			if (data.id === null)
 				return;
@@ -193,10 +193,10 @@
 	});
 
 	const inputBetreuungslehrer: WritableComputedRef<LehrerListeEintrag | undefined> = computed({
-		get: () => listSchuelerbetriebe.ausgewaehlt === undefined ? undefined
-			: inputLehrerListe.value.find(l => l.id === listSchuelerbetriebe.ausgewaehlt?.betreuungslehrer_id),
+		get: () => props.listSchuelerbetriebe.ausgewaehlt === undefined ? undefined
+			: inputLehrerListe.value.find(l => l.id === props.listSchuelerbetriebe.ausgewaehlt?.betreuungslehrer_id),
 		set: (value) => {
-			const data: SchuelerBetriebsdaten | undefined = listSchuelerbetriebe.ausgewaehlt;
+			const data: SchuelerBetriebsdaten | undefined = props.listSchuelerbetriebe.ausgewaehlt;
 			if ((!data) || (!data.id) || (!value))
 				return;
 			data.betreuungslehrer_id = Number(value?.id);
@@ -208,20 +208,20 @@
 	/** Adresse */
 
 	const strassenname : WritableComputedRef<string | undefined> = computed({
-		get: () => betriebsStammdaten.daten?.strassenname?.valueOf(),
-		set: (value) => betriebsStammdaten.patch({ strassenname : value })
+		get: () => props.betriebsStammdaten.daten?.strassenname?.valueOf(),
+		set: (value) => props.betriebsStammdaten.patch({ strassenname : value })
 	})
 
 	const hausnummerzusatz : WritableComputedRef<string | undefined> = computed({
-		get: () => betriebsStammdaten.daten?.hausnrzusatz?.valueOf(),
-		set: (value) => betriebsStammdaten.patch({ hausnrzusatz : value })
+		get: () => props.betriebsStammdaten.daten?.hausnrzusatz?.valueOf(),
+		set: (value) => props.betriebsStammdaten.patch({ hausnrzusatz : value })
 	})
 
 	const inputWohnortID: WritableComputedRef<OrtKatalogEintrag | undefined> = computed({
 		get: () => {
 			// TODO Die UI-Komponente zeigt nach Auswahl eines neuen Eintrags den Eintrag doppelt. Erst nach 10 Sekunden ist es wieder normal.
-			if (betriebsStammdaten.daten?.ort_id) {
-				const id = betriebsStammdaten.daten?.ort_id;
+			if (props.betriebsStammdaten.daten?.ort_id) {
+				const id = props.betriebsStammdaten.daten?.ort_id;
 				let o;
 				for (const r of inputKatalogOrte.value) {
 					if (r.id === id) {
@@ -233,21 +233,21 @@
 			}
 			return undefined;
 		},
-		set: (value) => betriebsStammdaten.patch({ ort_id: value?.id })
+		set: (value) => props.betriebsStammdaten.patch({ ort_id: value?.id })
 	});
 
 
 	const anschreiben: WritableComputedRef<boolean | undefined> = computed({
 		get: () => {
-			if (listSchuelerbetriebe?.ausgewaehlt) {
-				const data = listSchuelerbetriebe.ausgewaehlt as SchuelerBetriebsdaten;
+			if (props.listSchuelerbetriebe?.ausgewaehlt) {
+				const data = props.listSchuelerbetriebe.ausgewaehlt as SchuelerBetriebsdaten;
 				return data.allgadranschreiben?.valueOf();
 			}
 			return undefined;
 		},
 		set: (value) => {
-			if (listSchuelerbetriebe?.ausgewaehlt) {
-				const data = listSchuelerbetriebe.ausgewaehlt as SchuelerBetriebsdaten;
+			if (props.listSchuelerbetriebe?.ausgewaehlt) {
+				const data = props.listSchuelerbetriebe.ausgewaehlt as SchuelerBetriebsdaten;
 				data.allgadranschreiben = Boolean(value);
 				if ((!data) || (!data.id))
 					return;
@@ -258,8 +258,8 @@
 	});
 
 	const bemerkungen : WritableComputedRef<string | undefined> = computed({
-		get: () => betriebsStammdaten.daten?.bemerkungen?.valueOf() || undefined,
-		set: (value) => betriebsStammdaten.patch({ bemerkungen : value })
+		get: () => props.betriebsStammdaten.daten?.bemerkungen?.valueOf() || undefined,
+		set: (value) => props.betriebsStammdaten.patch({ bemerkungen : value })
 	})
 
 	/**
@@ -349,12 +349,12 @@
 	const ap_neu : BetriebAnsprechpartner = reactive(new BetriebAnsprechpartner())
 
 	async function saveEntries(){
-		const id = betriebsStammdaten.daten?.id?.valueOf();
+		const id = props.betriebsStammdaten.daten?.id?.valueOf();
 		if (id === undefined)
 			return;
-		ap_neu.betrieb_id = betriebsStammdaten.daten?.id || null;
+		ap_neu.betrieb_id = props.betriebsStammdaten.daten?.id || null;
 		await App.api.createBetriebansprechpartner(ap_neu, App.schema, id);
-		listSchuelerbetriebe.betriebansprechpartner.update_list();
+		props.listSchuelerbetriebe.betriebansprechpartner.update_list();
 		modalAdd.value.closeModal();
 	}
 

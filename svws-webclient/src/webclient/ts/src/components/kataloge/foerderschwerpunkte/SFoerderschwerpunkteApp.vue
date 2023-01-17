@@ -21,7 +21,7 @@
 	import { FoerderschwerpunktEintrag } from "@svws-nrw/svws-core-ts";
 	import { routeKatalogFoerderschwerpunkte } from "~/router/apps/RouteKatalogFoerderschwerpunkte";
 
-	const { item } = defineProps<{
+	const props = defineProps<{
 		item: ShallowRef<FoerderschwerpunktEintrag | undefined>;
 	}>();
 
@@ -29,7 +29,7 @@
 	const children_hidden = routeKatalogFoerderschwerpunkte.children_hidden();
 
 	const visible: ComputedRef<boolean> = computed(() => {
-		return (!routeKatalogFoerderschwerpunkte.hidden()) && (item.value !== undefined);
+		return (!routeKatalogFoerderschwerpunkte.hidden()) && (props.item.value !== undefined);
 	});
 
 </script>

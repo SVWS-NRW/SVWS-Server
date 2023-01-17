@@ -35,7 +35,7 @@
 	import { SchuelerBetriebsdaten } from "@svws-nrw/svws-core-ts";
 	import { ListSchuelerBetriebsdaten } from "~/apps/schueler/ListSchuelerBetriebsdaten";
 
-	const { listSchuelerbetriebe } = defineProps<{
+	const props = defineProps<{
 		listSchuelerbetriebe : ListSchuelerBetriebsdaten;
 	}>();
 
@@ -44,11 +44,11 @@
 	});
 
 	const betriebe : ComputedRef<SchuelerBetriebsdaten[] | undefined> = computed(() => {
-		return listSchuelerbetriebe.liste;
+		return props.listSchuelerbetriebe.liste;
 	});
 
 	function select(ds : SchuelerBetriebsdaten){
-		listSchuelerbetriebe.ausgewaehlt = ds;
+		props.listSchuelerbetriebe.ausgewaehlt = ds;
 	}
 
 </script>

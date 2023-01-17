@@ -15,7 +15,7 @@
 	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 	import { routeKlassenDaten } from "~/router/apps/klassen/RouteKlassenDaten";
 
-	const { item, data, listLehrer, mapLehrer, listJahrgaenge, mapJahrgaenge } = defineProps<{
+	const props = defineProps<{
 		item: ShallowRef<KlassenListeEintrag | undefined>,
 		data: DataKlasse,
 		schule: DataSchuleStammdaten;
@@ -26,7 +26,7 @@
 	}>();
 
 	const visible: ComputedRef<boolean> = computed(() => {
-		return (!routeKlassenDaten.hidden()) && (item.value !== undefined);
+		return (!routeKlassenDaten.hidden()) && (props.item.value !== undefined);
 	});
 
 </script>

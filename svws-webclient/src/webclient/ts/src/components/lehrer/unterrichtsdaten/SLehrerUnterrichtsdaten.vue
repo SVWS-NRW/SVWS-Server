@@ -16,14 +16,14 @@
 	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 	import { routeLehrerUnterrichtsdaten } from "~/router/apps/lehrer/RouteLehrerUnterrichtsdaten";
 
-	const { item } = defineProps<{
+	const props = defineProps<{
 		item: ShallowRef<LehrerListeEintrag | undefined>;
 		stammdaten: DataLehrerStammdaten;
 		schule: DataSchuleStammdaten;
 	}>();
 
 	const visible: ComputedRef<boolean> = computed(() => {
-		return (item.value !== undefined) && (!routeLehrerUnterrichtsdaten.hidden());
+		return (props.item.value !== undefined) && (!routeLehrerUnterrichtsdaten.hidden());
 	});
 
 </script>

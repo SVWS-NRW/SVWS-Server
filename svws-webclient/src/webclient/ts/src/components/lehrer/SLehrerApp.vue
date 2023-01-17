@@ -30,7 +30,7 @@
 	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 	import { routeLehrer } from "~/router/apps/RouteLehrer";
 
-	const { item, stammdaten } = defineProps<{
+	const props = defineProps<{
 		item: ShallowRef<LehrerListeEintrag | undefined>;
 		stammdaten: DataLehrerStammdaten;
 		schule: DataSchuleStammdaten;
@@ -39,15 +39,15 @@
 	const selectedRoute = routeLehrer.childRouteSelector;
 	const children_hidden = routeLehrer.children_hidden();
 
-	const foto: ComputedRef<String | undefined> = computed(() => stammdaten.daten?.foto || undefined);
+	const foto: ComputedRef<String | undefined> = computed(() => props.stammdaten.daten?.foto || undefined);
 
-	const inputNachname: ComputedRef<string | undefined> = computed(() => item.value?.nachname.toString());
-	const inputVorname: ComputedRef<string | undefined> = computed(() => item.value?.vorname.toString());
-	const inputKuerzel: ComputedRef<string | undefined> = computed(() => item.value?.kuerzel.toString());
-	const inputTitel: ComputedRef<string | undefined> = computed(() => item.value?.titel?.toString());
+	const inputNachname: ComputedRef<string | undefined> = computed(() => props.item.value?.nachname.toString());
+	const inputVorname: ComputedRef<string | undefined> = computed(() => props.item.value?.vorname.toString());
+	const inputKuerzel: ComputedRef<string | undefined> = computed(() => props.item.value?.kuerzel.toString());
+	const inputTitel: ComputedRef<string | undefined> = computed(() => props.item.value?.titel?.toString());
 
 	const visible: ComputedRef<boolean> = computed(() => {
-		return (item.value !== undefined) && (!routeLehrer.hidden());
+		return (props.item.value !== undefined) && (!routeLehrer.hidden());
 	});
 
 </script>

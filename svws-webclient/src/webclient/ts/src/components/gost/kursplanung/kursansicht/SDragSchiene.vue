@@ -31,30 +31,22 @@
 </template>
 
 <script setup lang="ts">
-	import {
-		GostBlockungRegel,
-		GostBlockungSchiene,
-		GostKursart,
-		GostKursblockungRegelTyp,
-	} from "@svws-nrw/svws-core-ts";
+	import { GostBlockungRegel, GostBlockungSchiene, GostKursart, GostKursblockungRegelTyp } from "@svws-nrw/svws-core-ts";
 	import { computed, ref, Ref, shallowRef } from "vue";
-
+	import { DataGostKursblockung } from "~/apps/gost/DataGostKursblockung";
 	import { injectMainApp, Main } from "~/apps/Main";
 
-	const {schiene} = defineProps({
-		schiene: {
-			type: Object as () => GostBlockungSchiene,
-			required: true
-		}
-	});
+	const props = defineProps<{
+		schiene:  GostBlockungSchiene;
+		blockung: DataGostKursblockung;
+	}>();
 
 	const main: Main = injectMainApp();
-	const app = main.apps.gost;
 
 	const modal: Ref<any> = ref(null);
 	const kursart: Ref<GostKursart> = shallowRef(GostKursart.GK)
-	const von: Ref<GostBlockungSchiene> = ref(schiene)
-	const bis: Ref<GostBlockungSchiene> = ref(schiene)
+	const von: Ref<GostBlockungSchiene> = ref(props.schiene)
+	const bis: Ref<GostBlockungSchiene> = ref(props.schiene)
 
 	const drag_data = computed({
 		get(): {schiene: GostBlockungSchiene|undefined; kurs?: undefined} {
@@ -72,14 +64,14 @@
 		regel.parameter.add(kursart.value.id)
 		regel.parameter.add(von.value.nummer)
 		regel.parameter.add(bis.value.nummer)
-		await app.dataKursblockung.add_blockung_regel(regel)
+		await props.blockung.add_blockung_regel(regel)
 	}
 
 	function regel_schiene() {
 		if (drag_data.value.kurs) return
-		if (drag_data.value?.schiene && schiene.id !== drag_data.value?.schiene.id) {
+		if (drag_data.value?.schiene && props.schiene.id !== drag_data.value?.schiene.id) {
 			von.value = drag_data.value.schiene;
-			bis.value = schiene;
+			bis.value = props.schiene;
 			toggle_modal();
 			drag_data.value.schiene = undefined
 		}}

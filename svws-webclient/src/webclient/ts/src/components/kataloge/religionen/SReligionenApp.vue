@@ -22,7 +22,7 @@
 	import { ReligionEintrag } from "@svws-nrw/svws-core-ts";
 	import { routeKatalogReligion } from "~/router/apps/RouteKatalogReligion";
 
-	const { item } = defineProps<{
+	const props = defineProps<{
 		item: ShallowRef<ReligionEintrag | undefined>;
 	}>();
 
@@ -30,7 +30,7 @@
 	const children_hidden = routeKatalogReligion.children_hidden();
 
 	const visible: ComputedRef<boolean> = computed(() => {
-		return (!routeKatalogReligion.hidden()) && (item.value !== undefined);
+		return (!routeKatalogReligion.hidden()) && (props.item.value !== undefined);
 	});
 
 </script>

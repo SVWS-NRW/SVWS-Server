@@ -34,7 +34,7 @@
 	import { ListJahrgaenge } from "~/apps/jahrgaenge/ListJahrgaenge";
 	import { ListKlassen } from "~/apps/klassen/ListKlassen";
 
-	const { item, stammdaten, mapKlassen } = defineProps<{
+	const props = defineProps<{
 		item: ShallowRef<SchuelerListeEintrag | undefined>;
 		stammdaten: DataSchuelerStammdaten;
 		schule: DataSchuleStammdaten;
@@ -51,25 +51,25 @@
 
 
 	const foto: ComputedRef<String | undefined> = computed(() => {
-		return stammdaten.daten?.foto || undefined;
+		return props.stammdaten.daten?.foto || undefined;
 	});
 
 	const nachname: ComputedRef<string | undefined> = computed(() => {
-		return item.value?.nachname.toString();
+		return props.item.value?.nachname.toString();
 	});
 
 	const vorname: ComputedRef<string | undefined> = computed(() => {
-		return item.value?.vorname.toString();
+		return props.item.value?.vorname.toString();
 	});
 
 	const inputKlasse: ComputedRef<string | false> = computed(() => {
-		if (item.value === undefined)
+		if (props.item.value === undefined)
 			return false;
-		return mapKlassen.get(item.value?.idKlasse)?.kuerzel?.toString() || false;
+		return props.mapKlassen.get(props.item.value?.idKlasse)?.kuerzel?.toString() || false;
 	});
 
 	const visible: ComputedRef<boolean> = computed(() => {
-		return !(routeSchueler.hidden()) && (item !== undefined);
+		return !(routeSchueler.hidden()) && (props.item !== undefined);
 	});
 
 </script>

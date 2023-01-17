@@ -23,7 +23,7 @@
 	import { DataKurs } from "~/apps/kurse/DataKurs";
 	import { ListJahrgaenge } from "~/apps/jahrgaenge/ListJahrgaenge";
 
-	const { data, listLehrer, mapLehrer, listJahrgaenge, mapJahrgaenge } = defineProps<{
+	const props = defineProps<{
 		item: ShallowRef<KursListeEintrag | undefined>;
 		data: DataKurs;
 		listJahrgaenge: ListJahrgaenge;
@@ -33,42 +33,42 @@
 	}>();
 
 	const schuljahresabschnitt: WritableComputedRef<number | undefined> = computed({
-		get: () => data.daten?.idSchuljahresabschnitt,
-		set: (value) => data.patch({idSchuljahresabschnitt: value})
+		get: () => props.data.daten?.idSchuljahresabschnitt,
+		set: (value) => props.data.patch({idSchuljahresabschnitt: value})
 	});
 
 	const kuerzel: WritableComputedRef<string | undefined> = computed({
-		get: () => data.daten?.kuerzel.toString(),
-		set: (value) => data.patch({ kuerzel: value })
+		get: () => props.data.daten?.kuerzel.toString(),
+		set: (value) => props.data.patch({ kuerzel: value })
 	});
 
 	const jahrgaenge: WritableComputedRef<JahrgangsListeEintrag[]> = computed({
-		get: () => data.daten === undefined ? [] : (data.daten.idJahrgaenge.toArray() as Number[]).map(id => mapJahrgaenge.get(id)).filter(j => j !== undefined) as JahrgangsListeEintrag[],
+		get: () => props.data.daten === undefined ? [] : (props.data.daten.idJahrgaenge.toArray() as Number[]).map(id => props.mapJahrgaenge.get(id)).filter(j => j !== undefined) as JahrgangsListeEintrag[],
 		set: (value) => {
 			const result: Vector<Number> = new Vector();
 			value.forEach(j => result.add(Number(j.id)));
-			data.patch({ idJahrgaenge: result });
+			props.data.patch({ idJahrgaenge: result });
 		}
 	});
 
 	const fach: WritableComputedRef<number | undefined> = computed({
-		get: () => data.daten?.idFach,
-		set: (value) => data.patch({idFach: value})
+		get: () => props.data.daten?.idFach,
+		set: (value) => props.data.patch({idFach: value})
 	});
 
 	const lehrer: WritableComputedRef<LehrerListeEintrag | undefined> = computed({
-		get: () => ((data.daten === undefined) || (data.daten.lehrer === null)) ? undefined : mapLehrer.get(data.daten.lehrer),
-		set: (value) => data.patch({lehrer: value === undefined ? null : value.id })
+		get: () => ((props.data.daten === undefined) || (props.data.daten.lehrer === null)) ? undefined : props.mapLehrer.get(props.data.daten.lehrer),
+		set: (value) => props.data.patch({lehrer: value === undefined ? null : value.id })
 	});
 
 	const istSichtbar: WritableComputedRef<boolean> = computed({
-		get: () => data.daten === undefined ? false : data.daten.istSichtbar,
-		set: (value) => data.patch({ istSichtbar: value })
+		get: () => props.data.daten === undefined ? false : props.data.daten.istSichtbar,
+		set: (value) => props.data.patch({ istSichtbar: value })
 	});
 
 	const sortierung: WritableComputedRef<number> = computed({
-		get: () => data.daten?.sortierung || 32000,
-		set: (value) => data.patch({ sortierung: value })
+		get: () => props.data.daten?.sortierung || 32000,
+		set: (value) => props.data.patch({ sortierung: value })
 	});
 
 </script>

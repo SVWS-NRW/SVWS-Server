@@ -82,7 +82,7 @@
 		search: string;
 	}
 
-	const { schule, listKlassen, mapKlassen, listJahrgaenge, listKurse } = defineProps<{
+	const props = defineProps<{
 		item: ShallowRef<SchuelerListeEintrag | undefined>;
 		stammdaten: DataSchuelerStammdaten;
 		schule: DataSchuleStammdaten;
@@ -112,7 +112,7 @@
 	const rows: ComputedRef<Array<any>> = computed(() => {
 		const array = listSchueler.value.gefiltert.map(e => ({
 			...e,
-			klasse: mapKlassen.get(e.idKlasse)?.kuerzel?.toString() || ""
+			klasse: props.mapKlassen.get(e.idKlasse)?.kuerzel?.toString() || ""
 		}));
 		return array;
 	});
@@ -149,7 +149,7 @@
 			}
 		});
 
-	const inputSchulgliederungen = schule.schulgliederungen;
+	props.schule.schulgliederungen;
 
 	const filterSchulgliederung: WritableComputedRef<Schulgliederung | undefined> = computed({
 		get(): Schulgliederung | undefined {
@@ -166,7 +166,7 @@
 	});
 
 	const inputJahrgaenge: ComputedRef<Array<JahrgangsListeEintrag> | undefined> = computed(() => {
-		return listJahrgaenge.liste;
+		return props.listJahrgaenge.liste;
 	});
 
 	const filterJahrgaenge: WritableComputedRef<JahrgangsListeEintrag | undefined> = computed({
@@ -186,7 +186,7 @@
 	});
 
 	const inputKlassen: ComputedRef<Array<KlassenListeEintrag> | undefined> = computed(() => {
-		const liste = [...listKlassen.liste];
+		const liste = [...props.listKlassen.liste];
 		const jahrgang = listSchueler.value.filter.jahrgang;
 		return (jahrgang === undefined) ? liste : liste.filter(k => k.idJahrgang === jahrgang.id);
 	});
@@ -206,7 +206,7 @@
 	});
 
 	const inputKurse: ComputedRef<Array<KursListeEintrag> | undefined> = computed(() => {
-		const liste = [...listKurse.liste];
+		const liste = [...props.listKurse.liste];
 		const jahrgang = listSchueler.value.filter.jahrgang;
 		return (jahrgang === undefined)
 			? liste
@@ -295,7 +295,7 @@
 		}
 	}
 	const schule_abschnitte: ComputedRef<Array<Schuljahresabschnitt> | undefined> = computed(() => {
-		return schule.daten?.abschnitte?.toArray(new Array<Schuljahresabschnitt>()) || [];
+		return props.schule.daten?.abschnitte?.toArray(new Array<Schuljahresabschnitt>()) || [];
 	});
 
 	const akt_abschnitt: WritableComputedRef<Schuljahresabschnitt> = computed({

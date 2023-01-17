@@ -18,34 +18,34 @@
 	import { Religion} from "@svws-nrw/svws-core-ts";
 	import { DataReligion } from "~/apps/kataloge/religionen/DataReligion";
 
-	const { data } = defineProps<{
+	const props = defineProps<{
 		data: DataReligion;
 	}>();
 
 	const inputKatalogReligionenStatistik: ComputedRef<Religion[] | undefined> = computed(() => Religion.values());
 
 	const id: ComputedRef<number | undefined> = computed(() => {
-		return data.daten?.id.valueOf();
+		return props.data.daten?.id.valueOf();
 	});
 
 	const inputKuerzel: WritableComputedRef<string | undefined> = computed({
-		get: () => data.daten?.kuerzel?.toString(),
-		set: (value) => data.patch({ kuerzel: value })
+		get: () => props.data.daten?.kuerzel?.toString(),
+		set: (value) => props.data.patch({ kuerzel: value })
 	});
 
 	const inputText: WritableComputedRef<string | undefined> = computed({
-		get: () => data.daten?.text?.toString(),
-		set: (value) => data.patch({ text: value })
+		get: () => props.data.daten?.text?.toString(),
+		set: (value) => props.data.patch({ text: value })
 	});
 
 	const inputTextzeugnis: WritableComputedRef<string | undefined> = computed({
-		get: () => data.daten?.textZeugnis?.toString(),
-		set: (value) => data.patch({ textZeugnis: value })
+		get: () => props.data.daten?.textZeugnis?.toString(),
+		set: (value) => props.data.patch({ textZeugnis: value })
 	});
 
 	const inputStatistikKuerzel: WritableComputedRef<Religion | undefined> = computed({
-		get: () => Religion.getByKuerzel(data.daten?.kuerzel || null) || undefined,
-		set: (value) => data.patch({ kuerzel: value?.daten.kuerzel || null })
+		get: () => Religion.getByKuerzel(props.data.daten?.kuerzel || null) || undefined,
+		set: (value) => props.data.patch({ kuerzel: value?.daten.kuerzel || null })
 	});
 
 </script>

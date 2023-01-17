@@ -17,7 +17,7 @@
 	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 	import { routeGostKlausurplanung } from "~/router/apps/gost/RouteGostKlausurplanung";
 
-	const { item } = defineProps<{
+	const props = defineProps<{
 		item: ShallowRef<GostJahrgang | undefined>;
 		schule: DataSchuleStammdaten;
 		jahrgangsdaten: DataGostJahrgang;

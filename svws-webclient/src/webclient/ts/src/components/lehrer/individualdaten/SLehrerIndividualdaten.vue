@@ -13,14 +13,14 @@
 	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 	import { routeLehrerIndividualdaten } from "~/router/apps/lehrer/RouteLehrerIndividualdaten";
 
-	const { item, stammdaten } = defineProps<{
+	const props = defineProps<{
 		item: ShallowRef<LehrerListeEintrag | undefined>;
 		stammdaten: DataLehrerStammdaten;
 		schule: DataSchuleStammdaten;
 	}>();
 
 	const visible: ComputedRef<boolean> = computed(() => {
-		return (item.value !== undefined) && (!routeLehrerIndividualdaten.hidden());
+		return (props.item.value !== undefined) && (!routeLehrerIndividualdaten.hidden());
 	});
 
 </script>

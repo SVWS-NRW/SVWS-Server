@@ -64,7 +64,7 @@
 
 	const main: Main = injectMainApp();
 
-	const { schule } = defineProps<{
+	const props = defineProps<{
 		item: ShallowRef<LehrerListeEintrag | undefined>;
 		stammdaten: DataLehrerStammdaten;
 		schule: DataSchuleStammdaten;
@@ -92,7 +92,7 @@
 	}
 
 	const schule_abschnitte: ComputedRef<Array<Schuljahresabschnitt> | undefined> = computed(() => {
-		const liste = schule.daten?.abschnitte;
+		const liste = props.schule.daten?.abschnitte;
 		return liste?.toArray(new Array<Schuljahresabschnitt>()) || [];
 	});
 

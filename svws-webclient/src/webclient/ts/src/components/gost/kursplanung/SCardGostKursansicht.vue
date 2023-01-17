@@ -72,7 +72,7 @@
 									<th class="text-center">FW</th>
 									<th class="text-center">Diff</th>
 									<!--Schienen-->
-									<s-drag-schiene v-if="allow_regeln" v-for="s in schienen" :key="s.id" :schiene="s" />
+									<s-drag-schiene v-if="allow_regeln" v-for="s in schienen" :key="s.id" :schiene="s" :blockung="blockung" />
 									<th v-else :colspan="schienen.size()" class="text-center">Regeln können nicht in Ergebnissen erstellt werden</th>
 								</tr>
 							</thead>

@@ -20,7 +20,7 @@
 	import { ListKursblockungen } from "~/apps/gost/ListKursblockungen";
 	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 
-	const { listBlockungen } = defineProps<{
+	const props = defineProps<{
 		item: ShallowRef<GostJahrgang | undefined>;
 		schule: DataSchuleStammdaten;
 		jahrgangsdaten: DataGostJahrgang;
@@ -30,6 +30,6 @@
 		blockung: DataGostKursblockung;
 	}>();
 
-	const hat_blockung: ComputedRef<boolean> = computed(() => listBlockungen.liste.length > 0);
+	const hat_blockung: ComputedRef<boolean> = computed(() => props.listBlockungen.liste.length > 0);
 
 </script>

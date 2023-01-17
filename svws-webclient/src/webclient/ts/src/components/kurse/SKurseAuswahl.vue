@@ -25,7 +25,7 @@
 	import { ListLehrer } from "~/apps/lehrer/ListLehrer";
 	import { DataTableColumn } from "@svws-nrw/svws-ui";
 
-	const { schule, listJahrgaenge, listLehrer } = defineProps<{
+	const props = defineProps<{
 		item: ShallowRef<KursListeEintrag | undefined>;
 		schule: DataSchuleStammdaten;
 		listJahrgaenge: ListJahrgaenge;
@@ -47,13 +47,13 @@
 	const rows = computed(() => {
 		return routeKurse.liste.liste.map((e: KursListeEintrag) => ({
 			...e,
-			lehrer_name: listLehrer.liste.find(l => l.id === e.lehrer)?.kuerzel || "",
-			jahrgang: listJahrgaenge.liste.find(j => e.idJahrgaenge.toArray(new Array<number>()).includes(j.id))?.kuerzel?.toString() || ""
+			lehrer_name: props.listLehrer.liste.find(l => l.id === e.lehrer)?.kuerzel || "",
+			jahrgang: props.listJahrgaenge.liste.find(j => e.idJahrgaenge.toArray(new Array<number>()).includes(j.id))?.kuerzel?.toString() || ""
 		}));
 	});
 
 	const schule_abschnitte: ComputedRef<Array<Schuljahresabschnitt> | undefined> = computed(() => {
-		const liste = schule.daten?.abschnitte;
+		const liste = props.schule.daten?.abschnitte;
 		return liste?.toArray(new Array<Schuljahresabschnitt>()) || [];
 	});
 

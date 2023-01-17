@@ -261,7 +261,7 @@
 	import { DataGostFachkombinationen } from "~/apps/gost/DataGostFachkombinationen";
 	import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
 
-	const { item, stammdaten, dataLaufbahn, dataFaecher, dataFachkombinationen } = defineProps<{
+	const props = defineProps<{
 		item?: SchuelerListeEintrag,
 		stammdaten: DataSchuelerStammdaten,
 		dataLaufbahn: DataSchuelerLaufbahnplanung,
@@ -281,20 +281,20 @@
 
 	function reset_fachwahlen() {
 		modal.value.closeModal();
-		dataLaufbahn.reset_fachwahlen();
+		props.dataLaufbahn.reset_fachwahlen();
 	}
 
-	const abiturmanager = computed(()=> dataLaufbahn.manager);
-	const faechermanager = computed(()=> dataFaecher.manager);
+	const abiturmanager = computed(()=> props.dataLaufbahn.manager);
+	const faechermanager = computed(()=> props.dataFaecher.manager);
 
-	const rows: ComputedRef<List<GostFach>> = computed(() => dataFaecher.daten || new Vector());
+	const rows: ComputedRef<List<GostFach>> = computed(() => props.dataFaecher.daten || new Vector());
 
-	const kurszahlen: ComputedRef<number[]> = computed(() => dataLaufbahn.anrechenbare_kurszahlen);
+	const kurszahlen: ComputedRef<number[]> = computed(() => props.dataLaufbahn.anrechenbare_kurszahlen);
 
-	const kurse_summe: ComputedRef<number> = computed(() => dataLaufbahn.anrechenbare_kurszahlen.reduce((p, c) => p + c, 0));
+	const kurse_summe: ComputedRef<number> = computed(() => props.dataLaufbahn.anrechenbare_kurszahlen.reduce((p, c) => p + c, 0));
 	//TODO korrigieren
 
-	const wochenstunden: ComputedRef<number[]> = computed(() => dataLaufbahn.wochenstunden);
+	const wochenstunden: ComputedRef<number[]> = computed(() => props.dataLaufbahn.wochenstunden);
 
 	const wst_summe: ComputedRef<number> = computed(() => wochenstunden.value.reduce((p, c) => p + c, 0) / 2);
 
@@ -306,7 +306,7 @@
 		return q.reduce((p, c) => p + c, 0) / 4;
 	});
 
-	const belegungsfehlerAlle: ComputedRef<List<GostBelegpruefungErgebnisFehler>> = computed(() => dataLaufbahn.gostBelegpruefungsErgebnis.fehlercodes);
+	const belegungsfehlerAlle: ComputedRef<List<GostBelegpruefungErgebnisFehler>> = computed(() => props.dataLaufbahn.gostBelegpruefungsErgebnis.fehlercodes);
 
 	const belegungsfehler: ComputedRef<List<GostBelegpruefungErgebnisFehler>> = computed(() => {
 		const res = new Vector<GostBelegpruefungErgebnisFehler>();
@@ -330,19 +330,19 @@
 
 	const belegpruefungsart: WritableComputedRef<GostBelegpruefungsArt> = computed({
 		get(): GostBelegpruefungsArt {
-			return dataLaufbahn.gostAktuelleBelegpruefungsart;
+			return props.dataLaufbahn.gostAktuelleBelegpruefungsart;
 		},
 		set(value: GostBelegpruefungsArt) {
-			dataLaufbahn.gostAktuelleBelegpruefungsart = value;
+			props.dataLaufbahn.gostAktuelleBelegpruefungsart = value;
 		}
 	});
 
 	const fachkombis: ComputedRef<List<GostJahrgangFachkombination>> = computed(()=>{
 		const list = new Vector<GostJahrgangFachkombination>();
-		if (dataFachkombinationen.daten === undefined)
+		if (props.dataFachkombinationen.daten === undefined)
 			return list;
-		for (const regel of	dataFachkombinationen.daten)
-			if (regel.abiturjahr === item?.abiturjahrgang)
+		for (const regel of	props.dataFachkombinationen.daten)
+			if (regel.abiturjahr === props.item?.abiturjahrgang)
 				list.add(regel)
 		return list;
 	})
@@ -386,11 +386,12 @@
 	});
 
 	function manu() {
-		manuell.value = manuell.value ? false:true; dataLaufbahn.manuelle_eingabe = manuell.value
+		manuell.value = manuell.value ? false:true;
+		props.dataLaufbahn.manuelle_eingabe = manuell.value
 	}
 
 	function download_file() {
-		const id = stammdaten.daten?.id;
+		const id = props.stammdaten.daten?.id;
 		if (!id)
 			return;
 		App.api.getGostSchuelerPDFWahlbogen(App.schema, id).then(blob => {

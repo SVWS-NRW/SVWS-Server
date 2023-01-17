@@ -39,14 +39,14 @@
 </template>
 
 <script setup lang="ts">
-	import { computed, ComputedRef, ref } from "vue";
+	import { ref } from "vue";
 	import { injectMainApp, Main } from "~/apps/Main";
 
 	const main: Main = injectMainApp();
 	const app = main.apps.benutzer;
 	const modalNeuerBenutzer = ref();
 
-	const props=defineProps({
+	const props = defineProps({
 		show_delete_icon : {type:Boolean, default:false}
 	});
 

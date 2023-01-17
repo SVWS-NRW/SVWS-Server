@@ -16,7 +16,7 @@
 	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 	import { routeLehrerPersonaldaten } from "~/router/apps/lehrer/RouteLehrerPersonaldaten";
 
-	const { item, personaldaten } = defineProps<{
+	const props = defineProps<{
 		item: ShallowRef<LehrerListeEintrag | undefined>;
 		stammdaten: DataLehrerStammdaten;
 		personaldaten: DataLehrerPersonaldaten;
@@ -24,7 +24,7 @@
 	}>();
 
 	const visible: ComputedRef<boolean> = computed(() => {
-		return (item.value !== undefined) && (!routeLehrerPersonaldaten.hidden());
+		return (props.item.value !== undefined) && (!routeLehrerPersonaldaten.hidden());
 	});
 
 </script>

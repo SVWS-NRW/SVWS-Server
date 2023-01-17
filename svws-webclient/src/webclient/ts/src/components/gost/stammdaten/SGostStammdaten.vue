@@ -15,12 +15,12 @@
 	import { DataGostJahrgang } from "~/apps/gost/DataGostJahrgang";
 	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 
-	const { jahrgangsdaten, item } = defineProps<{
+	const props = defineProps<{
 		item: ShallowRef<GostJahrgang | undefined>;
 		schule: DataSchuleStammdaten;
 		jahrgangsdaten: DataGostJahrgang;
 	}>();
 
-	const istAbiturjahrgang: ComputedRef<boolean> = computed(() => (item.value !== undefined) && (item.value?.abiturjahr > 0));
+	const istAbiturjahrgang: ComputedRef<boolean> = computed(() => (props.item.value !== undefined) && (props.item.value?.abiturjahr > 0));
 
 </script>

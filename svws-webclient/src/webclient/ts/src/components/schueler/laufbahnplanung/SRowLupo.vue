@@ -87,45 +87,45 @@
 	import { DataGostFachkombinationen } from "~/apps/gost/DataGostFachkombinationen";
 	import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
 
-	const { fach, dataLaufbahn, dataFaecher, dataFachkombinationen } = defineProps<{
+	const props = defineProps<{
 		fach: GostFach,
 		dataLaufbahn: DataSchuelerLaufbahnplanung
 		dataFaecher: DataGostFaecher,
 		dataFachkombinationen: DataGostFachkombinationen
 	}>();
 
-	const faechermanager: ComputedRef<GostFaecherManager | undefined> = computed(() => dataFaecher.manager);
-	const abiturmanager: ComputedRef<AbiturdatenManager | undefined> = computed(() => dataLaufbahn.manager);
+	const faechermanager: ComputedRef<GostFaecherManager | undefined> = computed(() => props.dataFaecher.manager);
+	const abiturmanager: ComputedRef<AbiturdatenManager | undefined> = computed(() => props.dataLaufbahn.manager);
 
-	const bewertet: ComputedRef<Array<boolean>> = computed(() => dataLaufbahn.daten?.bewertetesHalbjahr || []);
+	const bewertet: ComputedRef<Array<boolean>> = computed(() => props.dataLaufbahn.daten?.bewertetesHalbjahr || []);
 
-	const unbelegbarSprache: ComputedRef<boolean> = computed(() => dataLaufbahn.getFallsSpracheMoeglich(fach));
+	const unbelegbarSprache: ComputedRef<boolean> = computed(() => props.dataLaufbahn.getFallsSpracheMoeglich(props.fach));
 
-	const bgColor: ComputedRef<string> = computed(() => dataLaufbahn.getBgColor(fach));
+	const bgColor: ComputedRef<string> = computed(() => props.dataLaufbahn.getBgColor(props.fach));
 
-	const bgColorIfLanguage: ComputedRef<string> = computed(() => dataLaufbahn.getBgColorIfLanguage(fach));
+	const bgColorIfLanguage: ComputedRef<string> = computed(() => props.dataLaufbahn.getBgColorIfLanguage(props.fach));
 
-	const sprachenfolgeNr: ComputedRef<number> = computed(() => dataLaufbahn.sprachenfolgeNr(fach));
-	const sprachenfolgeJahrgang: ComputedRef<string> = computed(() => dataLaufbahn.sprachenfolgeJahrgang(fach));
+	const sprachenfolgeNr: ComputedRef<number> = computed(() => props.dataLaufbahn.sprachenfolgeNr(props.fach));
+	const sprachenfolgeJahrgang: ComputedRef<string> = computed(() => props.dataLaufbahn.sprachenfolgeJahrgang(props.fach));
 
-	const ef1_moeglich: ComputedRef<boolean> = computed(() => dataLaufbahn.getEF1Moeglich(fach));
-	const ef2_moeglich: ComputedRef<boolean> = computed(() => dataLaufbahn.getEF2Moeglich(fach));
-	const q11_moeglich: ComputedRef<boolean> = computed(() => dataLaufbahn.getQ11Moeglich(fach));
-	const q12_moeglich: ComputedRef<boolean> = computed(() => dataLaufbahn.getQ12Moeglich(fach));
-	const q21_moeglich: ComputedRef<boolean> = computed(() => dataLaufbahn.getQ21Moeglich(fach));
-	const q22_moeglich: ComputedRef<boolean> = computed(() => dataLaufbahn.getQ22Moeglich(fach));
-	const abi_moeglich: ComputedRef<boolean> = computed(() => dataLaufbahn.getAbiMoeglich(fach));
+	const ef1_moeglich: ComputedRef<boolean> = computed(() => props.dataLaufbahn.getEF1Moeglich(props.fach));
+	const ef2_moeglich: ComputedRef<boolean> = computed(() => props.dataLaufbahn.getEF2Moeglich(props.fach));
+	const q11_moeglich: ComputedRef<boolean> = computed(() => props.dataLaufbahn.getQ11Moeglich(props.fach));
+	const q12_moeglich: ComputedRef<boolean> = computed(() => props.dataLaufbahn.getQ12Moeglich(props.fach));
+	const q21_moeglich: ComputedRef<boolean> = computed(() => props.dataLaufbahn.getQ21Moeglich(props.fach));
+	const q22_moeglich: ComputedRef<boolean> = computed(() => props.dataLaufbahn.getQ22Moeglich(props.fach));
+	const abi_moeglich: ComputedRef<boolean> = computed(() => props.dataLaufbahn.getAbiMoeglich(props.fach));
 
-	const wahlen: ComputedRef<string[]> = computed(() => dataLaufbahn.getWahlen(fach));
+	const wahlen: ComputedRef<string[]> = computed(() => props.dataLaufbahn.getWahlen(props.fach));
 
-	const abi_wahl: ComputedRef<string> = computed(() => ( dataLaufbahn.gostFachbelegungen[ fach.id ]?.abiturFach?.toString() || ""));
+	const abi_wahl: ComputedRef<string> = computed(() => ( props.dataLaufbahn.gostFachbelegungen[ props.fach.id ]?.abiturFach?.toString() || ""));
 
 	const fachkombis: ComputedRef<List<GostJahrgangFachkombination>> =
 		computed(() => {
 			const result = new Vector<GostJahrgangFachkombination>();
-			if (dataFachkombinationen.daten)
-				for (const kombi of dataFachkombinationen.daten)
-					if (kombi.fachID2 === fach.id && kombi.abiturjahr === dataLaufbahn.abiturjahr)
+			if (props.dataFachkombinationen.daten)
+				for (const kombi of props.dataFachkombinationen.daten)
+					if (kombi.fachID2 === props.fach.id && kombi.abiturjahr === props.dataLaufbahn.abiturjahr)
 						result.add(kombi)
 			return result;
 		});
@@ -156,7 +156,7 @@
 					if (!fach1 || !abiturmanager.value)
 						return false;
 					const f1 = abiturmanager.value.getFachbelegungByKuerzel(fach1?.kuerzel || null)
-					const f2 = abiturmanager.value.getFachbelegungByKuerzel(fach.kuerzel)
+					const f2 = abiturmanager.value.getFachbelegungByKuerzel(props.fach.kuerzel)
 					const belegung_1 = abiturmanager.value.pruefeBelegungMitKursart(f1, GostKursart.fromKuerzel(kombi.kursart1)!, halbjahr)
 					const belegung_2 = abiturmanager.value.pruefeBelegungMitKursart(f2, GostKursart.fromKuerzel(kombi.kursart1)!, halbjahr);
 					if (belegung_2)
@@ -182,7 +182,7 @@
 					const fach = faechermanager.value?.get(kombi.fachID1)
 					if (!fach)
 						return false;
-					const belegung = dataLaufbahn.getWahlen(fach)[halbjahr.id]
+					const belegung = props.dataLaufbahn.getWahlen(fach)[halbjahr.id]
 					return belegung ? true : false;
 				}
 			}
@@ -197,12 +197,12 @@
 	const fachkombi_verboten_q21: ComputedRef<boolean> = computed(() => pruefeFachkombiVerboten(GostHalbjahr.Q21));
 	const fachkombi_verboten_q22: ComputedRef<boolean> = computed(() => pruefeFachkombiVerboten(GostHalbjahr.Q22));
 
-	function ef1_set(): void { dataLaufbahn.setEF1Wahl(fach); }
-	function ef2_set(): void { dataLaufbahn.setEF2Wahl(fach); }
-	function q11_set(): void { dataLaufbahn.setQ11Wahl(fach); }
-	function q12_set(): void { dataLaufbahn.setQ12Wahl(fach); }
-	function q21_set(): void { dataLaufbahn.setQ21Wahl(fach); }
-	function q22_set(): void { dataLaufbahn.setQ22Wahl(fach); }
-	function abi_set(): void { dataLaufbahn.setAbiturWahl(fach); }
+	function ef1_set(): void { props.dataLaufbahn.setEF1Wahl(props.fach); }
+	function ef2_set(): void { props.dataLaufbahn.setEF2Wahl(props.fach); }
+	function q11_set(): void { props.dataLaufbahn.setQ11Wahl(props.fach); }
+	function q12_set(): void { props.dataLaufbahn.setQ12Wahl(props.fach); }
+	function q21_set(): void { props.dataLaufbahn.setQ21Wahl(props.fach); }
+	function q22_set(): void { props.dataLaufbahn.setQ22Wahl(props.fach); }
+	function abi_set(): void { props.dataLaufbahn.setAbiturWahl(props.fach); }
 
 </script>

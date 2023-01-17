@@ -46,7 +46,7 @@
 	const bezeichnung = ref();
 	const inputbgIstAdmin=ref(false);
 
-	const props=defineProps({
+	const props = defineProps({
 		show_delete_icon : {type:Boolean, default:false}
 	});
 

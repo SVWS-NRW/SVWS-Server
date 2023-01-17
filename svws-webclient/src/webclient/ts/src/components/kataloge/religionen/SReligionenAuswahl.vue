@@ -50,7 +50,7 @@
 	import { Schule } from "~/apps/schule/Schule";
 	import { DataTableColumn } from "@svws-nrw/svws-ui";
 
-	const { item } = defineProps<{
+	const props = defineProps<{
 		item: ShallowRef<ReligionEintrag | undefined>;
 	}>();
 

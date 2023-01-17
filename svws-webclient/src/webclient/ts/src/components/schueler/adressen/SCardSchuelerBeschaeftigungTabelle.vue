@@ -40,7 +40,7 @@
 	import { App } from "~/apps/BaseApp";
 	import { ListSchuelerBetriebsdaten } from "~/apps/schueler/ListSchuelerBetriebsdaten";
 
-	const { betrieb, listSchuelerbetriebe } = defineProps<{
+	const props = defineProps<{
 		betrieb: SchuelerBetriebsdaten;
 		listSchuelerbetriebe : ListSchuelerBetriebsdaten;
 	}>();
@@ -50,25 +50,25 @@
 	const inputBeschaeftigungsarten: ComputedRef<List<KatalogEintrag>> = computed(() => main.kataloge.beschaeftigungsarten);
 
 	const inputLehrerListe: ComputedRef<LehrerListeEintrag[]> = computed(() => {
-		return listSchuelerbetriebe.lehrer.liste || [];
+		return props.listSchuelerbetriebe.lehrer.liste || [];
 	});
 
 	const inputBetriebListe: ComputedRef<BetriebListeEintrag[]> = computed(() => {
-		return listSchuelerbetriebe.betriebe.liste || [];
+		return props.listSchuelerbetriebe.betriebe.liste || [];
 	})
 
 	const inputBetriebAnsprechpartner: ComputedRef<BetriebAnsprechpartner[]> = computed(() => {
-		return listSchuelerbetriebe.betriebansprechpartner.liste.filter(l => l.betrieb_id === betrieb.betrieb_id) || [];
+		return props.listSchuelerbetriebe.betriebansprechpartner.liste.filter(l => l.betrieb_id === props.betrieb.betrieb_id) || [];
 	})
 
 	const inputBetreuungslehrer: WritableComputedRef<LehrerListeEintrag | undefined> = computed({
 		get(): LehrerListeEintrag | undefined {
 			if (!inputLehrerListe.value)
 				return undefined;
-			return inputLehrerListe.value.find(l => l.id === betrieb.betreuungslehrer_id);
+			return inputLehrerListe.value.find(l => l.id === props.betrieb.betreuungslehrer_id);
 		},
 		set(val: LehrerListeEintrag | undefined) {
-			const data: SchuelerBetriebsdaten | undefined = listSchuelerbetriebe.ausgewaehlt;
+			const data: SchuelerBetriebsdaten | undefined = props.listSchuelerbetriebe.ausgewaehlt;
 			if ((!data) || (!data.id) || (!val))
 				return;
 			data.betreuungslehrer_id = val?.id;
@@ -78,10 +78,10 @@
 
 	const ausbilder: WritableComputedRef<string | undefined> = computed({
 		get(): string | undefined {
-			return betrieb.ausbilder?.toString();
+			return props.betrieb.ausbilder?.toString();
 		},
 		set(val: string | undefined) {
-			const data = listSchuelerbetriebe.ausgewaehlt as SchuelerBetriebsdaten;
+			const data = props.listSchuelerbetriebe.ausgewaehlt as SchuelerBetriebsdaten;
 			data.ausbilder = String(val);
 			if ((!data) || (!data.id))
 				return;
@@ -94,12 +94,12 @@
 			// TODO ISAK BÜYÜK  : Nach Betriebsauswahl sollte als Defaultanpsrechpartner der erste gezeigt werden.
 			if (!inputBetriebListe.value)
 				return undefined;
-			return inputBetriebListe.value.find(l => { return l.id === betrieb.betrieb_id });
+			return inputBetriebListe.value.find(l => { return l.id === props.betrieb.betrieb_id });
 		},
 		set(val: BetriebListeEintrag | undefined) {
 			// Nach Auswahl des Betriebs werden die Ansprechpartner vom Server neugeladen.
-			listSchuelerbetriebe.betriebansprechpartner.update_list();
-			const data: SchuelerBetriebsdaten | undefined = listSchuelerbetriebe.ausgewaehlt;
+			props.listSchuelerbetriebe.betriebansprechpartner.update_list();
+			const data: SchuelerBetriebsdaten | undefined = props.listSchuelerbetriebe.ausgewaehlt;
 			if ((!data) || (!data.id) || (!val))
 				return;
 			data.betrieb_id = val?.id;
@@ -109,7 +109,7 @@
 
 	const beschaeftigungsart: WritableComputedRef<KatalogEintrag | undefined> = computed({
 		get(): KatalogEintrag | undefined {
-			const id = betrieb.beschaeftigungsart_id;
+			const id = props.betrieb.beschaeftigungsart_id;
 			let o;
 			for (const r of inputBeschaeftigungsarten.value) {
 				if (r.id === id) {
@@ -120,7 +120,7 @@
 			return o;
 		},
 		set(val: KatalogEintrag | undefined) {
-			const data: SchuelerBetriebsdaten | undefined = listSchuelerbetriebe.ausgewaehlt;
+			const data: SchuelerBetriebsdaten | undefined = props.listSchuelerbetriebe.ausgewaehlt;
 			if ((!data) || (!data.id) || (!val))
 				return;
 			data.beschaeftigungsart_id = val?.id;
@@ -130,10 +130,10 @@
 
 	const praktikum: WritableComputedRef<boolean | undefined> = computed({
 		get(): boolean | undefined {
-			return betrieb.praktikum?.valueOf();
+			return props.betrieb.praktikum?.valueOf();
 		},
 		set(val: boolean | undefined) {
-			const data = listSchuelerbetriebe.ausgewaehlt as SchuelerBetriebsdaten;
+			const data = props.listSchuelerbetriebe.ausgewaehlt as SchuelerBetriebsdaten;
 			data.praktikum = Boolean(val);
 			if ((!data) || (!data.id))
 				return;
@@ -143,10 +143,10 @@
 
 	const vertragsbeginn: WritableComputedRef<string | undefined> = computed({
 		get(): string | undefined {
-			return betrieb.vertragsbeginn?.toString();
+			return props.betrieb.vertragsbeginn?.toString();
 		},
 		set(val: string | undefined) {
-			const data = listSchuelerbetriebe?.ausgewaehlt as SchuelerBetriebsdaten;
+			const data = props.listSchuelerbetriebe?.ausgewaehlt as SchuelerBetriebsdaten;
 			data.vertragsbeginn = String(val);
 			if ((!data) || (!data.id))
 				return;
@@ -156,10 +156,10 @@
 
 	const vertragsende: WritableComputedRef<string | undefined> = computed({
 		get(): string | undefined {
-			return betrieb.vertragsende?.toString();
+			return props.betrieb.vertragsende?.toString();
 		},
 		set(val: string | undefined) {
-			const data = listSchuelerbetriebe?.ausgewaehlt as SchuelerBetriebsdaten;
+			const data = props.listSchuelerbetriebe?.ausgewaehlt as SchuelerBetriebsdaten;
 			if (val)
 				data.vertragsende = val;
 			if ((!data) || (!data.id))
@@ -170,10 +170,10 @@
 
 	const anschreiben: WritableComputedRef<boolean | undefined> = computed({
 		get(): boolean | undefined {
-			return betrieb.allgadranschreiben?.valueOf();
+			return props.betrieb.allgadranschreiben?.valueOf();
 		},
 		set(val: boolean | undefined) {
-			const data = listSchuelerbetriebe?.ausgewaehlt as SchuelerBetriebsdaten;
+			const data = props.listSchuelerbetriebe?.ausgewaehlt as SchuelerBetriebsdaten;
 			data.allgadranschreiben = Boolean(val);
 			if ((!data) || (!data.id))
 				return;
@@ -185,10 +185,10 @@
 		get(): BetriebAnsprechpartner | undefined {
 			if (!inputBetriebAnsprechpartner.value)
 				return undefined;
-			return inputBetriebAnsprechpartner.value.find(l => (l.id === betrieb.ansprechpartner_id));
+			return inputBetriebAnsprechpartner.value.find(l => (l.id === props.betrieb.ansprechpartner_id));
 		},
 		set(val: BetriebAnsprechpartner | undefined) {
-			const data: SchuelerBetriebsdaten | undefined = listSchuelerbetriebe?.ausgewaehlt;
+			const data: SchuelerBetriebsdaten | undefined = props.listSchuelerbetriebe?.ausgewaehlt;
 			if ((!data) || (!data.id) || (!val))
 				return;
 			data.ansprechpartner_id = val?.id;

@@ -25,7 +25,7 @@
 	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 	import { routeKurse } from "~/router/apps/RouteKurse";
 
-	const { item, mapLehrer } = defineProps<{
+	const props = defineProps<{
 		item: ShallowRef<KursListeEintrag | undefined>;
 		schule: DataSchuleStammdaten;
 		listJahrgaenge: ListJahrgaenge;
@@ -37,19 +37,19 @@
 	const selectedRoute = routeKurse.childRouteSelector;
 	const children_hidden = routeKurse.children_hidden();
 
-	const kuerzel: ComputedRef<string> = computed(() => item.value?.kuerzel.toString() || "");
+	const kuerzel: ComputedRef<string> = computed(() => props.item.value?.kuerzel.toString() || "");
 
 	const inputFachlehrer: ComputedRef<string> = computed(() => {
 		const id = routeKurse.liste.ausgewaehlt?.lehrer;
 		const leer = "kein Lehrer festgelegt";
 		if (!id)
 			return leer;
-		const lehrer = mapLehrer.get(id);
+		const lehrer = props.mapLehrer.get(id);
 		return lehrer?.kuerzel.toString() || leer;
 	});
 
 	const visible: ComputedRef<boolean> = computed(() => {
-		return (!routeKurse.hidden()) && (item.value !== undefined);
+		return (!routeKurse.hidden()) && (props.item.value !== undefined);
 	});
 
 </script>

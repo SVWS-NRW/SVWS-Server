@@ -20,35 +20,35 @@
 	import { DataKlasse } from "~/apps/klassen/DataKlasse";
 	import { ListJahrgaenge } from "~/apps/jahrgaenge/ListJahrgaenge";
 
-	const { data, listJahrgaenge, mapJahrgaenge } = defineProps<{
+	const props = defineProps<{
 		data: DataKlasse,
 		listJahrgaenge: ListJahrgaenge,
 		mapJahrgaenge: Map<Number, JahrgangsListeEintrag>
 	}>();
 
 	const kuerzel: WritableComputedRef<string | undefined> = computed({
-		get: () => data.daten?.kuerzel?.toString(),
-		set: (value) => data.patch({ kuerzel: value })
+		get: () => props.data.daten?.kuerzel?.toString(),
+		set: (value) => props.data.patch({ kuerzel: value })
 	});
 
 	const parallelitaet: WritableComputedRef<string | undefined> = computed({
-		get: () => data.daten?.parallelitaet?.toString(),
-		set: (value) => data.patch({ parallelitaet: value })
+		get: () => props.data.daten?.parallelitaet?.toString(),
+		set: (value) => props.data.patch({ parallelitaet: value })
 	});
 
 	const jahrgang: WritableComputedRef<JahrgangsListeEintrag | undefined> = computed({
-		get: () => ((data.daten === undefined) || (data.daten.idJahrgang === null)) ? undefined : mapJahrgaenge.get(data.daten.idJahrgang),
-		set: (value) => data.patch({ idJahrgang: value?.id })
+		get: () => ((props.data.daten === undefined) || (props.data.daten.idJahrgang === null)) ? undefined : props.mapJahrgaenge.get(props.data.daten.idJahrgang),
+		set: (value) => props.data.patch({ idJahrgang: value?.id })
 	});
 
 	const inputIstSichtbar: WritableComputedRef<boolean | undefined> = computed({
-		get: () => data.daten?.istSichtbar,
-		set: (value) => data.patch({ istSichtbar: value })
+		get: () => props.data.daten?.istSichtbar,
+		set: (value) => props.data.patch({ istSichtbar: value })
 	});
 
 	const inputSortierung: WritableComputedRef<number | undefined> = computed({
-		get: () => data.daten?.sortierung,
-		set: (value) => data.patch({ sortierung: value })
+		get: () => props.data.daten?.sortierung,
+		set: (value) => props.data.patch({ sortierung: value })
 	});
 
 </script>

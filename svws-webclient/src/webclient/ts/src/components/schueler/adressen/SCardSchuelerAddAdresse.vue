@@ -32,7 +32,7 @@
 	import { injectMainApp, Main } from "~/apps/Main";
 	import { ListSchuelerBetriebsdaten } from "~/apps/schueler/ListSchuelerBetriebsdaten";
 
-	const { item, listSchuelerbetriebe } = defineProps<{
+	const props = defineProps<{
 		item?: SchuelerListeEintrag;
 		listSchuelerbetriebe : ListSchuelerBetriebsdaten;
 	}>();
@@ -43,17 +43,17 @@
 	const inputBeschaeftigungsarten: ComputedRef<List<KatalogEintrag>> = computed(() => main.kataloge.beschaeftigungsarten);
 
 	const inputLehrerListe: ComputedRef<LehrerListeEintrag[]> = computed(() => {
-		return listSchuelerbetriebe.lehrer.liste || [];
+		return props.listSchuelerbetriebe.lehrer.liste || [];
 	});
 
 	const inputBetriebListe: ComputedRef<BetriebListeEintrag[]> = computed(() => {
-		return listSchuelerbetriebe.betriebe.liste || [];
+		return props.listSchuelerbetriebe.betriebe.liste || [];
 	})
 
 	const inputBetriebAnsprechpartner: ComputedRef<BetriebAnsprechpartner[]> = computed(() => {
 		if (s_betrieb.betrieb_id === null)
 			return [];
-		return listSchuelerbetriebe.betriebansprechpartner.liste.filter(l => l.betrieb_id === s_betrieb.betrieb_id);
+		return props.listSchuelerbetriebe.betriebansprechpartner.liste.filter(l => l.betrieb_id === s_betrieb.betrieb_id);
 	})
 
 	const betrieb: WritableComputedRef<BetriebListeEintrag | undefined> = computed({
@@ -104,14 +104,14 @@
 	});
 
 	async function save(){
-		s_betrieb.schueler_id = item === undefined ? null : Number(item?.id);
+		s_betrieb.schueler_id = props.item === undefined ? null : Number(props.item?.id);
 		if (!s_betrieb.betrieb_id || !s_betrieb.schueler_id){
 			alert("Betrieb-ID bzw. Schuler_ID darf nicht null sein.");
 		} else {
 			await App.api.createSchuelerbetrieb(s_betrieb,App.schema,s_betrieb.schueler_id.valueOf(),s_betrieb.betrieb_id.valueOf());
 			// TODO Zeitverzögerung muss her, weil das Laden der Daten schneller geht, als sie in die Datenbank geschrieben werden.
-			if (item !== undefined)
-				await listSchuelerbetriebe.update_list(item.id);
+			if (props.item !== undefined)
+				await props.listSchuelerbetriebe.update_list(props.item.id);
 			modalAddBetrieb.value.closeModal();
 		}
 		// TODO Nach der Erstellung eines neuen Schülerbetriebs wird die Schülerbetriebliste nicht aktualisiert.

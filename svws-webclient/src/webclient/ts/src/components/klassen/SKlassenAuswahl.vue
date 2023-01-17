@@ -24,7 +24,7 @@
 	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 	import { DataTableColumn } from "@svws-nrw/svws-ui";
 
-	const { schule } = defineProps<{
+	const props = defineProps<{
 		item: ShallowRef<KlassenListeEintrag | undefined>;
 		schule: DataSchuleStammdaten;
 		listLehrer: ListLehrer;
@@ -42,7 +42,7 @@
 	const rows: ComputedRef<KlassenListeEintrag[]> = computed(() => routeKlassen.liste.liste);
 
 	const schule_abschnitte: ComputedRef<Schuljahresabschnitt[] | undefined> = computed(() =>
-		schule.daten?.abschnitte?.toArray() as Schuljahresabschnitt[] || []
+		props.schule.daten?.abschnitte?.toArray() as Schuljahresabschnitt[] || []
 	);
 
 	const akt_abschnitt: WritableComputedRef<Schuljahresabschnitt> = computed({

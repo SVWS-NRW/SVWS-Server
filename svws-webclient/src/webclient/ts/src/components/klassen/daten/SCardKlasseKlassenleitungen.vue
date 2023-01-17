@@ -23,17 +23,17 @@
 		typ?: string;
 	}
 
-	const { data, mapLehrer } = defineProps<{
+	const props = defineProps<{
 		data: DataKlasse,
 		listLehrer: ListLehrer,
 		mapLehrer: Map<Number, LehrerListeEintrag>
 	}>();
 
 	const liste: ComputedRef<Lehrer[]> = computed(() => {
-		if (data.daten?.klassenLeitungen === undefined)
+		if (props.data.daten?.klassenLeitungen === undefined)
 			return [];
-		return (data.daten.klassenLeitungen?.toArray() as Number[]).map((id : Number) => {
-			const lehrer = mapLehrer.get(id);
+		return (props.data.daten.klassenLeitungen?.toArray() as Number[]).map((id : Number) => {
+			const lehrer = props.mapLehrer.get(id);
 			if (lehrer === undefined)
 				return {};
 			return {

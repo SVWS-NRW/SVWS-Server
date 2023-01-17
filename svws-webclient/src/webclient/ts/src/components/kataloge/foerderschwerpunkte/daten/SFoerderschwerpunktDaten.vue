@@ -11,7 +11,7 @@
 	import { DataFoerderschwerpunkt } from "~/apps/kataloge/foerderschwerpunkt/DataFoerderschwerpunkt";
 	import { routeKatalogFoerderschwerpunkteDaten } from "~/router/apps/foerderschwerpunkte/RouteKatalogFoerderschwerpunkteDaten";
 
-	const { data } = defineProps<{
+	const props = defineProps<{
 		item: ShallowRef<FoerderschwerpunktEintrag | undefined>;
 		data: DataFoerderschwerpunkt;
 	}>();
