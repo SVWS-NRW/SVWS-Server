@@ -144,7 +144,7 @@
 					<tr><th>Banana</th><th>Apple</th></tr>
 				</template>
 				<template #body="{rows}">
-					<tr v-for="row in rows"><td>{{ row.name }}</td><td>{{ row.email }}</td></tr>
+					<tr v-for="row, index in rows" :key="index"><td>{{ row.name }}</td><td>{{ row.email }}</td></tr>
 				</template>
 			</Table>
 		</Variant>

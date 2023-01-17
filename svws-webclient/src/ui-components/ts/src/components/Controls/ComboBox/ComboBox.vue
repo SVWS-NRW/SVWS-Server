@@ -222,7 +222,6 @@
 	}
 
 	function onSpace (e: InputEvent) {
-		console.log('space')
 		if (!autocomplete)	{
 			e.preventDefault();
 			if (!showList.value) {
@@ -458,7 +457,7 @@
 }
 
 /*.wrapper--tag-list .multiselect--items-wrapper .multiselect--item.selected:after {
-	content: '  ×';
+	content: ' ×';
 }*/
 
 .wrapper--tag-list .dropdown-icon {

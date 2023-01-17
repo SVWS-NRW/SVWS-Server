@@ -8,7 +8,7 @@
 			</div>
 			<div ref="contentEl" class="router-vertical-tab-bar--content">
 				<router-tab-bar-button v-for="(route, index) in props.routes" :route="route" :selected="selected"
-					:hidden="isHidden(index)" @select="select(route)" />
+					:hidden="isHidden(index)" @select="select(route)" :key="index" />
 			</div>
 			<div v-if="!state.scrolledMax"
 				class="router-vertical-tab-bar--scroll-button-background router-vertical-tab-bar--scroll-button-background-down">
