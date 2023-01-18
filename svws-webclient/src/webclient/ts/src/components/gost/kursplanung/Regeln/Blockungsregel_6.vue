@@ -1,5 +1,6 @@
 <template>
-	<BlockungsregelBase v-model="regel" :regel-typ="regel_typ" @regel-hinzugefuegt="regel_hinzufuegen" :blockung="blockung">
+	<BlockungsregelBase v-model="regel" @update:model-value="e => emit('update:modelValue', e)" :regel-typ="regel_typ" :regeln="regeln"
+		@regel-hinzugefuegen="regel_hinzufuegen" @regel-speichern="emit('regelSpeichern')" @regel-entfernen="e=>emit('regelEntfernen', e)">
 		<template #beschreibung="{ regel: r }">
 			{{ GostKursart.fromID(r.parameter.get(0).valueOf()).beschreibung }} alleine in Schiene {{ r.parameter.get(1) }} bis {{ r.parameter.get(2) }}
 		</template>
@@ -15,20 +16,28 @@
 <script setup lang="ts">
 
 	import { GostBlockungRegel, GostKursart, GostKursblockungRegelTyp } from "@svws-nrw/svws-core-ts";
-	import { ShallowRef, shallowRef } from "vue";
+	import { computed, WritableComputedRef } from "vue";
 	import { DataGostKursblockung } from "~/apps/gost/DataGostKursblockung";
 	import { useRegelParameterKursart, useRegelParameterSchiene } from '../composables';
 
 	const props = defineProps<{
+		modelValue: GostBlockungRegel | undefined;
 		blockung: DataGostKursblockung;
+		regeln: GostBlockungRegel[];
 	}>();
 
-	const regel_typ = GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS
-	// public static readonly KURSART_ALLEIN_IN_SCHIENEN_VON_BIS : GostKursblockungRegelTyp =
-	//new GostKursblockungRegelTyp("KURSART_ALLEIN_IN_SCHIENEN_VON_BIS", 2, 6, "Kursart: Allein in Schienen (von/bis)",
-	//Arrays.asList(GostKursblockungRegelParameterTyp.KURSART, GostKursblockungRegelParameterTyp.SCHIENEN_NR, GostKursblockungRegelParameterTyp.SCHIENEN_NR));
+	const emit = defineEmits<{
+		(e: 'update:modelValue', v: GostBlockungRegel | undefined): void;
+		(e: 'regelSpeichern'): void;
+		(e: 'regelEntfernen', v: GostBlockungRegel): void;
+	}>()
 
-	const regel: ShallowRef<GostBlockungRegel | undefined> = shallowRef(undefined)
+	const regel: WritableComputedRef<GostBlockungRegel | undefined> = computed({
+		get: () => props.modelValue,
+		set: (value) => emit('update:modelValue', value)
+	});
+
+	const regel_typ = GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS
 
 	const kursart = useRegelParameterKursart(regel, 0)
 	const start = useRegelParameterSchiene(props.blockung, regel, 1)

@@ -1,5 +1,6 @@
 <template>
-	<BlockungsregelBase v-model="regel" :regel-typ="regel_typ" @regel-hinzugefuegt="regel_hinzufuegen" :blockung="blockung">
+	<BlockungsregelBase v-model="regel" @update:model-value="e => emit('update:modelValue', e)" :regel-typ="regel_typ" :regeln="regeln"
+		@regel-hinzugefuegen="regel_hinzufuegen" @regel-speichern="emit('regelSpeichern')" @regel-entfernen="e=>emit('regelEntfernen', e)">
 		<template #beschreibung="{ regel: r }">
 			{{ kursbezeichnung1(r) }} nie zusammen mit {{ kursbezeichnung2(r) }}
 		</template>
@@ -12,21 +13,30 @@
 <script setup lang="ts">
 
 	import { GostBlockungRegel, GostKursblockungRegelTyp } from "@svws-nrw/svws-core-ts";
-	import { ShallowRef, shallowRef } from "vue";
+	import { WritableComputedRef, computed } from "vue";
 	import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
 	import { DataGostKursblockung } from "~/apps/gost/DataGostKursblockung";
 	import { useKurse, useRegelParameterKurs, createKursbezeichnungsGetter } from '../composables';
 
 	const props = defineProps<{
+		modelValue: GostBlockungRegel | undefined;
 		dataFaecher: DataGostFaecher;
 		blockung: DataGostKursblockung;
+		regeln: GostBlockungRegel[];
 	}>();
 
-	const regel: ShallowRef<GostBlockungRegel | undefined> = shallowRef(undefined)
+	const emit = defineEmits<{
+		(e: 'update:modelValue', v: GostBlockungRegel | undefined): void;
+		(e: 'regelSpeichern'): void;
+		(e: 'regelEntfernen', v: GostBlockungRegel): void;
+	}>()
+
+	const regel: WritableComputedRef<GostBlockungRegel | undefined> = computed({
+		get: () => props.modelValue,
+		set: (value) => emit('update:modelValue', value)
+	});
+
 	const regel_typ = GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS
-	//public static readonly KURS_VERBIETEN_MIT_KURS : GostKursblockungRegelTyp =
-	//new GostKursblockungRegelTyp("KURS_VERBIETEN_MIT_KURS", 7, 7, "Kurs verbiete mit Kurs",
-	//Arrays.asList(GostKursblockungRegelParameterTyp.KURS_ID, GostKursblockungRegelParameterTyp.KURS_ID));
 
 	const kurse = useKurse(props.blockung)
 

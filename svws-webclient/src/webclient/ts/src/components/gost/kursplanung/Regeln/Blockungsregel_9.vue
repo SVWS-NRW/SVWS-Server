@@ -19,15 +19,27 @@
 	import { DataGostKursblockung } from "~/apps/gost/DataGostKursblockung";
 
 	const props = defineProps<{
+		modelValue: GostBlockungRegel | undefined;
 		blockung: DataGostKursblockung;
+		regeln: GostBlockungRegel[];
 	}>();
+
+
+	const emit = defineEmits<{
+		(e: 'update:modelValue', v: GostBlockungRegel | undefined): void;
+		(e: 'regelHinzugefuegen', v: GostBlockungRegel): void;
+		(e: 'regelSpeichern'): void;
+		(e: 'regelEntfernen', v: GostBlockungRegel): void;
+	}>()
+
+	// const regel: WritableComputedRef<GostBlockungRegel | undefined> = computed({
+	// 	get: () => props.modelValue,
+	// 	set: (value) => emit('update:modelValue', value)
+	// });
 
 	const allow_regeln: ComputedRef<boolean> = computed(() => props.blockung.daten?.ergebnisse.size() === 1)
 
 	const regel_typ = GostKursblockungRegelTyp.LEHRKRAFT_BEACHTEN
-	//public static readonly LEHRKRAFT_BEACHTEN : GostKursblockungRegelTyp =
-	//new GostKursblockungRegelTyp("LEHRKRAFT_BEACHTEN", 9, 9, "Lehrkräfte beachten (auch Externe?)",
-	//Arrays.asList(GostKursblockungRegelParameterTyp.BOOLEAN));
 
 	const extern: Ref<boolean> = ref(true);
 
