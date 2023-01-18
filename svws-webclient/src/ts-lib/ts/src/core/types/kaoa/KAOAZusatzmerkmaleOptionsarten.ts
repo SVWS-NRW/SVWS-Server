@@ -15,18 +15,39 @@ export class KAOAZusatzmerkmaleOptionsarten extends JavaObject {
 	/** an array containing all values of this enumeration indexed by their name*/
 	private static readonly all_values_by_name : Map<String, KAOAZusatzmerkmaleOptionsarten> = new Map<String, KAOAZusatzmerkmaleOptionsarten>();
 
+	/**
+	 * Keine Option für das KAoA-Zusatzmerkmal 
+	 */
 	public static readonly KEINE : KAOAZusatzmerkmaleOptionsarten = new KAOAZusatzmerkmaleOptionsarten("KEINE", 0, null);
 
+	/**
+	 * Anschlussoptionen laut SBO 10.7 
+	 */
 	public static readonly ANSCHLUSSOPTION : KAOAZusatzmerkmaleOptionsarten = new KAOAZusatzmerkmaleOptionsarten("ANSCHLUSSOPTION", 1, "Anschlussoption");
 
+	/**
+	 * Berufsfelder 
+	 */
 	public static readonly BERUFSFELD : KAOAZusatzmerkmaleOptionsarten = new KAOAZusatzmerkmaleOptionsarten("BERUFSFELD", 2, "Berufsfeld");
 
+	/**
+	 * Freitext 
+	 */
 	public static readonly FREITEXT : KAOAZusatzmerkmaleOptionsarten = new KAOAZusatzmerkmaleOptionsarten("FREITEXT", 3, "Freitext");
 
+	/**
+	 * Freitext Beruf 
+	 */
 	public static readonly FREITEXT_BERUF : KAOAZusatzmerkmaleOptionsarten = new KAOAZusatzmerkmaleOptionsarten("FREITEXT_BERUF", 4, "Freitext Beruf");
 
+	/**
+	 * SBO der Ebene 4 (SBO x.x.x.y) 
+	 */
 	public static readonly SBO_EBENE_4 : KAOAZusatzmerkmaleOptionsarten = new KAOAZusatzmerkmaleOptionsarten("SBO_EBENE_4", 5, "SBO EB4");
 
+	/**
+	 * Das Kürzel für die Optionsart 
+	 */
 	public readonly kuerzel : String | null;
 
 	/**

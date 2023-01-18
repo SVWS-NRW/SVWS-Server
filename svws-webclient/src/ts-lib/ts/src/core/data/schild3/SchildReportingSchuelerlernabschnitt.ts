@@ -4,34 +4,79 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class SchildReportingSchuelerlernabschnitt extends JavaObject {
 
+	/**
+	 * Die ID des Lernabschnitts 
+	 */
 	public id : number = 0;
 
+	/**
+	 * Die ID des Schülers, zu dem die Lernabschnittdaten gehören. 
+	 */
 	public schuelerID : number = 0;
 
+	/**
+	 * Das Schuljahr, in welchem der Schuljahresabschnitt liegt 
+	 */
 	public schuljahr : number = 0;
 
+	/**
+	 * Die Nummer des Abschnitts im Schuljahr 
+	 */
 	public abschnitt : number = 0;
 
+	/**
+	 * Eine Nr, zur Unterscheidung von Lernabschnittsdaten, wenn beim Schüler mehrere Lernabschnitt in einem Schuljahresabschnitt vorliegen (z.B. Wechsel einer Klasse, NULL=aktueller Abschnitt, 1=vor dem ersten Wechsel, 2=vor dem zweiten Wechsel, usw.). 
+	 */
 	public wechselNr : Number | null = null;
 
+	/**
+	 * Gibt an, ob es sich um einen gewerteten Abschnitt handelt oder nicht 
+	 */
 	public istGewertet : boolean = true;
 
+	/**
+	 * Gibt an, ob es sich bei dem Abschnitt um einen wiederholten Abschnitt handelt oder nicht 
+	 */
 	public istWiederholung : boolean = false;
 
+	/**
+	 * Die Prüfungsordnung, die in dem Lernabschnitt bei dem Schüler anzuwenden ist. 
+	 */
 	public pruefungsOrdnung : String = "";
 
+	/**
+	 * Die Bezeichnung der Klasse des Schülers 
+	 */
 	public klasse : String = "";
 
+	/**
+	 * Die Statistik-Bezeichnung der Klasse des Schülers 
+	 */
 	public klasseStatistik : String = "";
 
+	/**
+	 * Die Bezeichnung des Jahrgangs 
+	 */
 	public jahrgang : String = "";
 
+	/**
+	 * Die Statistik-Bezeichnung des Jahrgangs 
+	 */
 	public jahrgangStatistik : String = "";
 
+	/**
+	 * Das Datum der Zeugniskonferenz 
+	 */
 	public datumZeugniskonferenz : String = "";
 
+	/**
+	 * Das Datum des Zeugnisses 
+	 */
 	public datumZeugnis : String = "";
 
+	/**
+	 * Das Ergebnis des Prüfungs-Algorithmus 
+	 */
 	public logPruefungsalgorithmus : String = "";
 
 

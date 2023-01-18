@@ -3,12 +3,24 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class GostBlockungSchiene extends JavaObject {
 
+	/**
+	 * Die ID der Schiene 
+	 */
 	public id : number = -1;
 
+	/**
+	 * Die Nummer der Schiene bei der Blockung (zur Sortierung) 
+	 */
 	public nummer : number = 1;
 
+	/**
+	 * Bezeichnung der Schiene (z.B. LK Schiene 1) 
+	 */
 	public bezeichnung : String = "Neue Schiene";
 
+	/**
+	 * Die Anzahl der Wochenstunden, welche der Schiene zugeordnet sind 
+	 */
 	public wochenstunden : number = 3;
 
 

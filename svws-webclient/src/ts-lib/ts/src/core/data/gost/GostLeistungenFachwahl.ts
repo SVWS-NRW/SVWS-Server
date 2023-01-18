@@ -6,12 +6,24 @@ import { GostLeistungenFachbelegung, cast_de_nrw_schule_svws_core_data_gost_Gost
 
 export class GostLeistungenFachwahl extends JavaObject {
 
+	/**
+	 * Das Fach der Gymnasialen Oberstufe, welches dieser Fachwahl zugeordnet ist. 
+	 */
 	public fach : GostFach | null = new GostFach();
 
+	/**
+	 * Die Nummer des Abiturfaches, sofern es sich um ein Abiturfach handelt - ansonsten null 
+	 */
 	public abiturfach : Number | null = null;
 
+	/**
+	 * Gibt an, ob es sich um eine neu einsetzende Fremdsprache handelt oder nicht. 
+	 */
 	public istFSNeu : boolean = false;
 
+	/**
+	 * Die einzelnen Belegungen dieses Faches 
+	 */
 	public readonly belegungen : Vector<GostLeistungenFachbelegung> = new Vector();
 
 

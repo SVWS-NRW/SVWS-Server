@@ -8,34 +8,86 @@ import { System, cast_java_lang_System } from '../../java/lang/System';
 
 export class KursblockungMatrix extends JavaObject {
 
+	/**
+	 * Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed. 
+	 */
 	private readonly _random : Random;
 
+	/**
+	 * Die Werte der Matrix [Zeile][Spalte]. 
+	 */
 	private readonly matrix : Array<Array<number>>;
 
+	/**
+	 * Die Anzahl der Zeilen der Matrix. 
+	 */
 	private readonly rows : number;
 
+	/**
+	 * Die Anzahl der Spalten der Matrix. 
+	 */
 	private readonly cols : number;
 
+	/**
+	 * Die aktuelle Permutation der Zeilen für potentiellen Nichtdeterminismus. Interne Algorithmen iterieren so über
+	 *  die Matrix-Zeilen in zufälliger Reihenfolge, damit aus mehreren optimalen Lösungen eine zufällige ausgewählt
+	 *  wird. Die echten Zeilen der Matrix bleiben unverändert. 
+	 */
 	private readonly permR : Array<number>;
 
+	/**
+	 * Die aktuelle Permutation der Spalten für potentiellen Nichtdeterminismus. Interne Algorithmen iterieren so über
+	 *  die Matrix-Spalten in zufälliger Reihenfolge, damit aus mehreren optimalen Lösungen eine zufällige ausgewählt
+	 *  wird. Die echten Spalten der Matrix bleiben unverändert. 
+	 */
 	private readonly permC : Array<number>;
 
+	/**
+	 * Die Zuordnung einer Zeile zu einer Spalte (für das bipartite Matching). 
+	 */
 	private readonly r2c : Array<number>;
 
+	/**
+	 * Die Zuordnung einer Spalte zu einer Zeile (für das bipartite Matching). 
+	 */
 	private readonly c2r : Array<number>;
 
+	/**
+	 * Definiert, ob eine linker Zeilen-Knoten bereits besucht wurde (für das bipartite Matching). 
+	 */
 	private readonly besuchtR : Array<boolean>;
 
+	/**
+	 * Definiert, ob eine rechter Spalten-Knoten bereits besucht wurde (für das bipartite Matching). 
+	 */
 	private readonly abgearbeitetC : Array<boolean>;
 
+	/**
+	 * Definiert, den Zeilen-Vorgänger-Knoten eines rechten Spalten-Knotens (für das bipartite Matching). 
+	 */
 	private readonly vorgaengerCzuR : Array<number>;
 
+	/**
+	 * Definiert eine Warteschlange mit maximal <i>rows</i> Knoten (für das bipartite Matching). 
+	 */
 	private readonly queueR : Array<number>;
 
+	/**
+	 * Definiert ein linkes Knotengewicht (Potential) zur Umgewichtung der ausgehenden Kanten (für das bipartite
+	 *  Matching). 
+	 */
 	private readonly potentialR : Array<number>;
 
+	/**
+	 * Definiert ein rechtes Knotengewicht (Potential) zur Umgewichtung der eingehenden Kanten (für das bipartite
+	 *  Matching). 
+	 */
 	private readonly potentialC : Array<number>;
 
+	/**
+	 * Definiert die Entfernung vom aktuellen Zeilen-Knoten zu den jeweiligen Spalten-Knoten (für das bipartite
+	 *  Matching). 
+	 */
 	private readonly distanzC : Array<number>;
 
 

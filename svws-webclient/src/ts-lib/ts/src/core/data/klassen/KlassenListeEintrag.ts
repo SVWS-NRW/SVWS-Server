@@ -5,18 +5,39 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 
 export class KlassenListeEintrag extends JavaObject {
 
+	/**
+	 * Die ID der Klasse. 
+	 */
 	public id : number = 0;
 
+	/**
+	 * Das Kürzel der Klasse. 
+	 */
 	public kuerzel : String | null = null;
 
+	/**
+	 * Die ID des zugeordneten Jahrgangs, dem die Klasse zugeordnet ist 
+	 */
 	public idJahrgang : Number | null = null;
 
+	/**
+	 * Das Kürzel für die Parallelität der Klasse innerhalb des Jahrgangs (A-Z). 
+	 */
 	public parallelitaet : String | null = null;
 
+	/**
+	 * Die Sortierreihenfolge des Jahrgangslisten-Eintrags. 
+	 */
 	public sortierung : number = 0;
 
+	/**
+	 * Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht. 
+	 */
 	public istSichtbar : boolean = false;
 
+	/**
+	 * Die Liste der IDs der Klassen-Lehrer der Klasse. 
+	 */
 	public klassenLehrer : Vector<Number> | null = new Vector();
 
 

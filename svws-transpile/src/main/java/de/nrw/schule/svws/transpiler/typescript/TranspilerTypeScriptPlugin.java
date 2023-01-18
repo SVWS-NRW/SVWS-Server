@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.AbstractMap;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -98,6 +99,19 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 	
 	/** the indentation state used during transpilation */
 	public int indentC = 0;  // TODO find another solution for indent
+
+	/**
+	 * Returns the transpiled comment 
+	 * 	
+	 * @param comment   the original comment, not yet transpiled
+	 */
+	private String formatComment(String comment) {
+        return (comment == null) 
+        		? "" 
+        		: getIndent() + "/**" + System.lineSeparator() 
+                + Arrays.asList(comment.split("\\r?\\n")).stream().map(s -> getIndent() + " * " +  s).collect(Collectors.joining(System.lineSeparator())) + System.lineSeparator()
+                + getIndent() + " */" + System.lineSeparator();
+	}
 	
 	
 	/**
@@ -1371,6 +1385,9 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 	 * @return the transpiled attribute 
 	 */
 	public String convertAttribute(VariableTree node, String enumName) {
+		// get comment
+		String comment = formatComment(this.getTranspiler().getComment(node));
+		
 		// get the typescript attribute initialization code
 		String initializer = "";
 		boolean forceNotNull = false; 
@@ -1416,7 +1433,7 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		
 		// convert to typescrypt code
 		TypeNode typeNode = new TypeNode(this, node.getType(), true, forceNotNull ? true : transpiler.hasNotNullAnnotation(node));
-		return getIndent() + "%s%s%s%s : %s%s;%s".formatted(
+		return comment + getIndent() + "%s%s%s%s : %s%s;%s".formatted(
 			"".equals(accessModifier) ? "" : accessModifier + " ",
 			transpiler.hasStaticModifier(node) ? "static " : "",
 			transpiler.hasFinalModifier(node) ? "readonly " : "",
@@ -1944,7 +1961,6 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 
 		// Generate Attributes
 		for (VariableTree attribute : Transpiler.getAttributes(node)) {
-			// TODO attribute comments
 			sb.append(convertAttribute(attribute, null));
 			sb.append(System.lineSeparator());
 		}
@@ -2073,7 +2089,6 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		sb.append(System.lineSeparator());
 		
 		for (VariableTree attribute : Transpiler.getAttributes(node)) {
-			// TODO attribute comments
 			sb.append(convertAttribute(attribute, "" + node.getSimpleName()));
 			sb.append(System.lineSeparator());
 		}

@@ -12,38 +12,89 @@ import { Pair, cast_de_nrw_schule_svws_core_adt_Pair } from '../../../core/adt/P
 
 export class FachKatalogEintrag extends JavaObject {
 
+	/**
+	 * Die ID des Katalog-Eintrags. 
+	 */
 	public id : number = -1;
 
+	/**
+	 * Das eindeutige Kürzel des Faches entsprechend der Vorgaben der amtlichen Schulstatistik 
+	 */
 	public kuerzelASD : String = "";
 
+	/**
+	 * Die texttuelle Beschreibung des Faches 
+	 */
 	public bezeichnung : String = "";
 
+	/**
+	 * Das atomare Kürzel des Faches (z.B. bei Fremdsprachen - für das Sprachenkürzel) - Teil des Kürzels für die amtliche Schulstatistik 
+	 */
 	public kuerzel : String = "";
 
+	/**
+	 * Das Aufgabenfeld, welchem das Fach ggf. zugeordnet ist (1, 2 oder 3) 
+	 */
 	public aufgabenfeld : Number | null = -1;
 
+	/**
+	 * Das Kürzel der zugeordneten Fachgruppe 
+	 */
 	public fachgruppe : String | null = "";
 
+	/**
+	 * Der ASD-Jahrgang, ab dem das Fach zulässig ist (z.B. bei Fremdsprachen) 
+	 */
 	public abJahrgang : String | null = "";
 
+	/**
+	 * Gibt an, ob es sich um eine Fremdsprache handelt 
+	 */
 	public istFremdsprache : boolean = false;
 
+	/**
+	 * Gibt an, ob es sich um ein Fach der Herkuntftsprache handelt (Unterrichts in der Herkunftssprache oder Herkunftssprache anstelle einer Pflichtfremdsprache) 
+	 */
 	public istHKFS : boolean = false;
 
+	/**
+	 * Gibt an, ob das Fach außerhalb des regulären Fachunterichts unterrichtet wird. 
+	 */
 	public istAusRegUFach : boolean = false;
 
+	/**
+	 * Gibt an, ob es sich bei dem Fach um einen Ersatz für eine Pflichtfremdsprache handelt (siehe auch istHKFS) 
+	 */
 	public istErsatzPflichtFS : boolean = false;
 
+	/**
+	 * Gibt an, ob das Religionsfach konfessionell kooperativ unterrichtet wird oder nicht - Teil des Kürzels für die amtliche Schulstatistik 
+	 */
 	public istKonfKoop : boolean = false;
 
+	/**
+	 * Gibt an, ob das Fach nur in der Sekundarstufe II unterrichtet wird. 
+	 */
 	public nurSII : boolean = false;
 
+	/**
+	 * Gibt an, ob das Fach bei Export der amtlichen Schulstatistik berücksichtigt werden soll oder nicht. 
+	 */
 	public exportASD : boolean = false;
 
+	/**
+	 * Die Informationen zu Schulformen und -gliederungen, wo das Fach zulässig ist. 
+	 */
 	public zulaessig : List<SchulformSchulgliederung> = new Vector();
 
+	/**
+	 * Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 */
 	public gueltigVon : Number | null = null;
 
+	/**
+	 * Gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 */
 	public gueltigBis : Number | null = null;
 
 

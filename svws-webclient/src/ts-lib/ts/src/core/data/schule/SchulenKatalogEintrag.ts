@@ -4,100 +4,244 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class SchulenKatalogEintrag extends JavaObject {
 
+	/**
+	 * Die Schulnummer. 
+	 */
 	public SchulNr : String = "";
 
+	/**
+	 * Regionalschlüssel der Schule 
+	 */
 	public RegSchl : String | null = null;
 
+	/**
+	 * Feld KoRe 
+	 */
 	public KoRe : number = 0;
 
+	/**
+	 * Feld KoHo 
+	 */
 	public KoHo : number = 0;
 
+	/**
+	 * Bezeichnung 1 der Schule 
+	 */
 	public ABez1 : String | null = null;
 
+	/**
+	 * Bezeichnung 2 der Schule 
+	 */
 	public ABez2 : String | null = null;
 
+	/**
+	 * Bezeichnung 3 der Schule 
+	 */
 	public ABez3 : String | null = null;
 
+	/**
+	 * Postleitzahl der Schule 
+	 */
 	public PLZ : String | null = null;
 
+	/**
+	 * Ort der Schule 
+	 */
 	public Ort : String | null = null;
 
+	/**
+	 * Straße der Schule 
+	 */
 	public Strasse : String | null = null;
 
+	/**
+	 * Telefonvorwahl der Schule 
+	 */
 	public TelVorw : String | null = null;
 
+	/**
+	 * Telefonnummer der Schule 
+	 */
 	public Telefon : String | null = null;
 
+	/**
+	 * Faxvorwahl der Schule 
+	 */
 	public FaxVorw : String | null = null;
 
+	/**
+	 * Faxnummer der Schule 
+	 */
 	public Fax : String | null = null;
 
+	/**
+	 * Modemvorwahl der Schule 
+	 */
 	public ModemVorw : String | null = null;
 
+	/**
+	 * Modem-Telefonnummer der Schule 
+	 */
 	public Modem : String | null = null;
 
+	/**
+	 * Schulform der Schule 
+	 */
 	public SF : String | null = null;
 
+	/**
+	 * OeffPri 
+	 */
 	public OeffPri : String | null = null;
 
+	/**
+	 * Kurzbezeichnung der Schule 
+	 */
 	public KurzBez : String | null = null;
 
+	/**
+	 * Schulbetriebsschlüssel der Schule 
+	 */
 	public SchBetrSchl : Number | null = null;
 
+	/**
+	 * Datum des Schulbetriensschlüssels der Schule 
+	 */
 	public SchBetrSchlDatum : String | null = null;
 
+	/**
+	 * Art der Trägerschaft der Schule 
+	 */
 	public ArtDerTraegerschaft : String | null = null;
 
+	/**
+	 * Schulträgernummer der Schule 
+	 */
 	public SchultraegerNr : String | null = null;
 
+	/**
+	 * Schulgliederung der Schule 
+	 */
 	public Schulgliederung : String | null = null;
 
+	/**
+	 * Schulart 
+	 */
 	public Schulart : String | null = null;
 
+	/**
+	 * Gibt an ob die Schule Ganztagsbetrieb hat 
+	 */
 	public Ganztagsbetrieb : String | null = null;
 
+	/**
+	 * Förderschwerpunkte der Schule 
+	 */
 	public FSP : String | null = null;
 
+	/**
+	 * Verbund 
+	 */
 	public Verbund : String | null = null;
 
+	/**
+	 * Bus 
+	 */
 	public Bus : String | null = null;
 
+	/**
+	 * Fachberater der Schule 
+	 */
 	public Fachberater : Number | null = null;
 
+	/**
+	 * FachberHauptamtl 
+	 */
 	public FachberHauptamtl : Number | null = null;
 
+	/**
+	 * TelNrDBSalt 
+	 */
 	public TelNrDBSalt : String | null = null;
 
+	/**
+	 * RP 
+	 */
 	public RP : String | null = null;
 
+	/**
+	 * Email-Adresse der Schule 
+	 */
 	public Email : String | null = null;
 
+	/**
+	 * Website der Schule 
+	 */
 	public URL : String | null = null;
 
+	/**
+	 * Bemerkung zur Schule 
+	 */
 	public Bemerkung : String | null = null;
 
+	/**
+	 * Gibt an ob die Schule eine CD für ASDPC32 möchte 
+	 */
 	public CD : Number | null = null;
 
+	/**
+	 * Stift 
+	 */
 	public Stift : Number | null = null;
 
+	/**
+	 * Gibt an ob die Schule offenen Ganztag hat 
+	 */
 	public OGTS : String | null = null;
 
+	/**
+	 * SELB 
+	 */
 	public SELB : String | null = null;
 
+	/**
+	 * Gibt an ob die Schule Internatsplätze hat 
+	 */
 	public Internat : String | null = null;
 
+	/**
+	 * Anzahl der Internatsplätze 
+	 */
 	public InternatPlaetze : Number | null = null;
 
+	/**
+	 * Schulmailadresse 
+	 */
 	public SMail : String | null = null;
 
+	/**
+	 * Hat die Schule Sport im Abitur? 
+	 */
 	public SportImAbi : String | null = null;
 
+	/**
+	 * Nimmt die Schule am Projekt Talentschule teil? 
+	 */
 	public Tal : String | null = null;
 
+	/**
+	 * Ist die konfessionelle Kooperation an dieser Schule genehmigt? 
+	 */
 	public KonKop : String | null = null;
 
+	/**
+	 * Gibt die Gültigkeit ab welchem Schuljahr an 
+	 */
 	public gueltigVon : Number | null = null;
 
+	/**
+	 * Gibt die Gültigkeit bis zu welchem Schuljahr an 
+	 */
 	public gueltigBis : Number | null = null;
 
 

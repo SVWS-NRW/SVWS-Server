@@ -11,16 +11,34 @@ import { IllegalArgumentException, cast_java_lang_IllegalArgumentException } fro
 
 export class HerkunftBildungsgangTypKatalogEintrag extends JavaObject {
 
+	/**
+	 * Die ID des Katalog-Eintrags. 
+	 */
 	public id : number = -1;
 
+	/**
+	 * Das Kürzel des Bildungsgangestyps, welches im Rahmen der amtlichen Schulstatistik verwendet wird 
+	 */
 	public kuerzel : String = "";
 
+	/**
+	 * Die Kürzel der Schulformen, bei welchen der Bildungsgangstyp als Herkunft vorkommen kann (WB oder BK und SB). 
+	 */
 	public schulformen : List<String> = new Vector();
 
+	/**
+	 * Die textuelle Beschreibung des Bildungsgangtyps. 
+	 */
 	public beschreibung : String = "";
 
+	/**
+	 * Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 */
 	public gueltigVon : Number | null = null;
 
+	/**
+	 * Gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 */
 	public gueltigBis : Number | null = null;
 
 

@@ -4,28 +4,64 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class Sprachpruefung extends JavaObject {
 
+	/**
+	 * Das einstellige Sprachkürzel des geprüften Faches 
+	 */
 	public sprache : String | null = null;
 
+	/**
+	 * Gibt an, in welchem ASD-Jahrgang die Prüfung abgelegt wurde 
+	 */
 	public jahrgang : String | null = null;
 
+	/**
+	 * ID der Bezeichnung des am Schulabschluss orientierte Anspruchsniveau der Sprachprüfung 
+	 */
 	public anspruchsniveauId : Number | null = null;
 
+	/**
+	 * Sprache, die durch die Prüfung ersetzt wird 
+	 */
 	public ersetzteSprache : String | null = null;
 
+	/**
+	 * Prüfung ist eine Prüfung im herkunftssprachlichen Unterricht 
+	 */
 	public istHSUPruefung : boolean = false;
 
+	/**
+	 * Prüfung ist eine Sprachfeststellungsprüfung 
+	 */
 	public istFeststellungspruefung : boolean = false;
 
+	/**
+	 * Durch die Prüfung kann die erste Pflichtfremdsprache ersetzt werden 
+	 */
 	public kannErstePflichtfremdspracheErsetzen : boolean = false;
 
+	/**
+	 * Durch die Prüfung kann die zweite Pflichtfremdsprache ersetzt werden 
+	 */
 	public kannZweitePflichtfremdspracheErsetzen : boolean = false;
 
+	/**
+	 * Durch die Prüfung kann die Wahlpflichtfremdsprache ersetzt werden 
+	 */
 	public kannWahlpflichtfremdspracheErsetzen : boolean = false;
 
+	/**
+	 * Durch die Prüfung kann die Sprache als fortgeführte Fremdsprache in der GOSt belegt werden.
+	 */
 	public kannBelegungAlsFortgefuehrteSpracheErlauben : boolean = false;
 
+	/**
+	 * Das Kürzel des GeR-Referenzniveaus, welches durch die Prüfung erreicht wurde 
+	 */
 	public referenzniveau : String | null = null;
 
+	/**
+	 * Die Note, die in der Sprachprüfung erreicht wurde (1,2,3,4,5,6 oder null, wenn keine Note angegeben ist) 
+	 */
 	public note : Number | null = null;
 
 

@@ -3,18 +3,39 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class StundenplanListeEintrag extends JavaObject {
 
+	/**
+	 * Die ID des Stundenplans. 
+	 */
 	public id : number = -1;
 
+	/**
+	 * Die textuelle Beschreibung des Stundenplans. 
+	 */
 	public bezeichnung : String = "";
 
+	/**
+	 * Die ID des Schuljahresabschnitts des Stundenplans. 
+	 */
 	public idSchuljahresabschnitt : number = -1;
 
+	/**
+	 * Das Schuljahr, in welchem der Stundenplan gültig ist. 
+	 */
 	public schuljahr : number = -1;
 
+	/**
+	 * Der Abschnitt, in welchem der Stundenplan gültig ist (z.B. 2. Halbjahr oder 3. Quartal). 
+	 */
 	public abschnitt : number = -1;
 
+	/**
+	 * Das Datum, ab dem der Stundenpland gültig ist. 
+	 */
 	public gueltigAb : String = "";
 
+	/**
+	 * Das Datum, bis wann der Stundenplan gültig ist. 
+	 */
 	public gueltigBis : String = "";
 
 

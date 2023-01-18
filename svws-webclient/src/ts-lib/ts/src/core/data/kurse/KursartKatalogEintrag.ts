@@ -10,26 +10,59 @@ import { Pair, cast_de_nrw_schule_svws_core_adt_Pair } from '../../../core/adt/P
 
 export class KursartKatalogEintrag extends JavaObject {
 
+	/**
+	 * Die ID des Katalog-Eintrags. 
+	 */
 	public id : number = -1;
 
+	/**
+	 * Das eindeutige Kürzel der Kursart entsprechend der Vorgaben der amtlichen Schulstatistik 
+	 */
 	public kuerzel : String = "";
 
+	/**
+	 * Die Nummer der Kursart entsprechend der Vorgaben der amtlichen Schulstatistik 
+	 */
 	public nummer : String = "";
 
+	/**
+	 * Die Bezeichnung der Kursart 
+	 */
 	public bezeichnung : String = "";
 
+	/**
+	 * Ergänzende Bemerkungen zu der Kursart 
+	 */
 	public bemerkungen : String | null = null;
 
+	/**
+	 * Das Kürzel einer verallgemeinerten Kursart, sofern diese angegeben ist 
+	 */
 	public kuerzelAllg : String | null = null;
 
+	/**
+	 * Die Bezeichnung der verallgemeinerter Kursart, sofern diese angegeben ist 
+	 */
 	public bezeichnungAllg : String | null = null;
 
+	/**
+	 * Gibt an, ob die Kursart in der Gymnasialen Oberstufe zulässig ist 
+	 */
 	public erlaubtGOSt : boolean = false;
 
+	/**
+	 * Die Informationen zu Schulformen und -gliederungen, wo die Kursart zulässig ist. 
+	 */
 	public zulaessig : List<SchulformSchulgliederung> = new Vector();
 
+	/**
+	 * Gibt an, in welchem Schuljahr die Kursart einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 */
 	public gueltigVon : Number | null = null;
 
+	/**
+	 * Gibt an, bis zu welchem Schuljahr die Kursart gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 */
 	public gueltigBis : Number | null = null;
 
 

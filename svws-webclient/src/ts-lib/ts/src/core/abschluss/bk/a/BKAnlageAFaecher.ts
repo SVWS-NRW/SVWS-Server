@@ -6,10 +6,19 @@ import { JavaBoolean, cast_java_lang_Boolean } from '../../../../java/lang/JavaB
 
 export class BKAnlageAFaecher extends JavaObject {
 
+	/**
+	 * Die Fachinformationen. 
+	 */
 	public faecher : List<BKAnlageAFach> | null = null;
 
+	/**
+	 * Information zur praktischen Teil der Berufsabschlussprüfung (IHK). 
+	 */
 	public hatBestandenBerufsAbschlussPruefung : Boolean | null = null;
 
+	/**
+	 * Die Bezeichnung des Sprachreferenzniveaus in Englisch nach dem GeR. 
+	 */
 	public englischGeR : String | null = null;
 
 

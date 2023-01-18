@@ -2,8 +2,14 @@ import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject
 
 export class KlausurblockungSchienenOutputKlausur extends JavaObject {
 
+	/**
+	 * Die Datenbank-ID der Klausur. 
+	 */
 	public id : number = -1;
 
+	/**
+	 * Die zugeordnete Schiene dieser Klausur. Hinweis: Die Schiene ist 0-indiziert! 
+	 */
 	public schiene : number = -1;
 
 

@@ -4,12 +4,24 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class AbschlussErgebnis extends JavaObject {
 
+	/**
+	 * Gibt an, ob der Abschluss erfolgreich erworben wurde, bzw. bei einer Prognose, ob ein ein Abschluss erworben wurde. 
+	 */
 	public erworben : boolean = false;
 
+	/**
+	 * Gibt an, welcher Abschluss geprüft wurde. 
+	 */
 	public abschluss : String | null = null;
 
+	/**
+	 * Eine Liste der Kuerzel für mögliche Nachprüfungsfächer. 
+	 */
 	public npFaecher : List<String> | null = null;
 
+	/**
+	 * Der Log der Abschlussberechnung. 
+	 */
 	public log : List<String> | null = null;
 
 

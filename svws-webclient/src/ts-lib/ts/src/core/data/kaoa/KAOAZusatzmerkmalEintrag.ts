@@ -6,18 +6,39 @@ import { KAOAMerkmal, cast_de_nrw_schule_svws_core_types_kaoa_KAOAMerkmal } from
 
 export class KAOAZusatzmerkmalEintrag extends JavaObject {
 
+	/**
+	 * Die ID des Katalog-Eintrags. 
+	 */
 	public id : number = 0;
 
+	/**
+	 * Das Kürzel des Zusatzmerkmals. 
+	 */
 	public kuerzel : String = "";
 
+	/**
+	 * Die Beschreibung des Zusatzmerkmals. 
+	 */
 	public beschreibung : String = "";
 
+	/**
+	 * Das Merkmal, welcher das Zusatzmerkmal zugeordnet ist. 
+	 */
 	public merkmal : String = "";
 
+	/**
+	 * Die Optionsart des Zusatzmerkmals. 
+	 */
 	public optionsart : String | null = null;
 
+	/**
+	 * Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 */
 	public gueltigVon : Number | null = null;
 
+	/**
+	 * Gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 */
 	public gueltigBis : Number | null = null;
 
 

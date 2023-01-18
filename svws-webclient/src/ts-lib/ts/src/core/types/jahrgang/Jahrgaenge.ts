@@ -23,70 +23,169 @@ export class Jahrgaenge extends JavaObject {
 	/** an array containing all values of this enumeration indexed by their name*/
 	private static readonly all_values_by_name : Map<String, Jahrgaenge> = new Map<String, Jahrgaenge>();
 
+	/**
+	 *  Jahrgang 00: Frühkindliche Förderung, Förderschulkindergarten 
+	 */
 	public static readonly JG_00 : Jahrgaenge = new Jahrgaenge("JG_00", 0, [new JahrgangsKatalogEintrag(0, "00", Arrays.asList(new JahrgangsKatalogEintragBezeichnung(Schulform.S, "Frühkindliche Förderung, Förderschulkindergarten"), new JahrgangsKatalogEintragBezeichnung(Schulform.KS, "Frühkindliche Förderung, Förderschulkindergarten")), null, null)]);
 
+	/**
+	 *  Jahrgang E1: Schuleingangsphase, 1. Schulbesuchsjahr 
+	 */
 	public static readonly JG_E1 : Jahrgaenge = new Jahrgaenge("JG_E1", 1, [new JahrgangsKatalogEintrag(1101000000, "E1", Arrays.asList(new JahrgangsKatalogEintragBezeichnung(Schulform.FW, "Schuleingangsphase, 1. Schulbesuchsjahr"), new JahrgangsKatalogEintragBezeichnung(Schulform.HI, "Schuleingangsphase, 1. Schulbesuchsjahr"), new JahrgangsKatalogEintragBezeichnung(Schulform.WF, "Schuleingangsphase, 1. Schulbesuchsjahr"), new JahrgangsKatalogEintragBezeichnung(Schulform.G, "Schuleingangsphase, 1. Schulbesuchsjahr"), new JahrgangsKatalogEintragBezeichnung(Schulform.PS, "Schuleingangsphase, 1. Schulbesuchsjahr"), new JahrgangsKatalogEintragBezeichnung(Schulform.S, "Schuleingangsphase, 1. Schulbesuchsjahr"), new JahrgangsKatalogEintragBezeichnung(Schulform.KS, "Schuleingangsphase, 1. Schulbesuchsjahr"), new JahrgangsKatalogEintragBezeichnung(Schulform.V, "Schuleingangsphase, 1. Schulbesuchsjahr")), null, null)]);
 
+	/**
+	 *  Jahrgang E2: Schuleingangsphase, 2. Schulbesuchsjahr 
+	 */
 	public static readonly JG_E2 : Jahrgaenge = new Jahrgaenge("JG_E2", 2, [new JahrgangsKatalogEintrag(1102000000, "E2", Arrays.asList(new JahrgangsKatalogEintragBezeichnung(Schulform.FW, "Schuleingangsphase, 2. Schulbesuchsjahr"), new JahrgangsKatalogEintragBezeichnung(Schulform.HI, "Schuleingangsphase, 2. Schulbesuchsjahr"), new JahrgangsKatalogEintragBezeichnung(Schulform.WF, "Schuleingangsphase, 2. Schulbesuchsjahr"), new JahrgangsKatalogEintragBezeichnung(Schulform.G, "Schuleingangsphase, 2. Schulbesuchsjahr"), new JahrgangsKatalogEintragBezeichnung(Schulform.PS, "Schuleingangsphase, 2. Schulbesuchsjahr"), new JahrgangsKatalogEintragBezeichnung(Schulform.S, "Schuleingangsphase, 2. Schulbesuchsjahr"), new JahrgangsKatalogEintragBezeichnung(Schulform.KS, "Schuleingangsphase, 2. Schulbesuchsjahr"), new JahrgangsKatalogEintragBezeichnung(Schulform.V, "Schuleingangsphase, 2. Schulbesuchsjahr")), null, null)]);
 
+	/**
+	 *  Jahrgang E3: Schuleingangsphase, 3. Schulbesuchsjahr 
+	 */
 	public static readonly JG_E3 : Jahrgaenge = new Jahrgaenge("JG_E3", 3, [new JahrgangsKatalogEintrag(1103000000, "E3", Arrays.asList(new JahrgangsKatalogEintragBezeichnung(Schulform.FW, "Schuleingangsphase, 3. Schulbesuchsjahr"), new JahrgangsKatalogEintragBezeichnung(Schulform.HI, "Schuleingangsphase, 3. Schulbesuchsjahr"), new JahrgangsKatalogEintragBezeichnung(Schulform.WF, "Schuleingangsphase, 3. Schulbesuchsjahr"), new JahrgangsKatalogEintragBezeichnung(Schulform.G, "Schuleingangsphase, 3. Schulbesuchsjahr"), new JahrgangsKatalogEintragBezeichnung(Schulform.PS, "Schuleingangsphase, 3. Schulbesuchsjahr"), new JahrgangsKatalogEintragBezeichnung(Schulform.S, "Schuleingangsphase, 3. Schulbesuchsjahr"), new JahrgangsKatalogEintragBezeichnung(Schulform.KS, "Schuleingangsphase, 3. Schulbesuchsjahr"), new JahrgangsKatalogEintragBezeichnung(Schulform.V, "Schuleingangsphase, 3. Schulbesuchsjahr")), null, null)]);
 
+	/**
+	 *  Jahrgang 01: 1. Jahrgang / 1. Semester 
+	 */
 	public static readonly JG_01 : Jahrgaenge = new Jahrgaenge("JG_01", 4, [new JahrgangsKatalogEintrag(1001000000, "01", Arrays.asList(new JahrgangsKatalogEintragBezeichnung(Schulform.BK, "1. Jahrgang dieser Schulgliederung"), new JahrgangsKatalogEintragBezeichnung(Schulform.SB, "1. Jahrgang dieser Schulgliederung"), new JahrgangsKatalogEintragBezeichnung(Schulform.HI, "1. Semester (Seiteneinsteiger)"), new JahrgangsKatalogEintragBezeichnung(Schulform.WB, "1. Semester (Einführungs-/Hauptphase)")), null, null)]);
 
+	/**
+	 *  Jahrgang 02: 2. Jahrgang / 2. Semester 
+	 */
 	public static readonly JG_02 : Jahrgaenge = new Jahrgaenge("JG_02", 5, [new JahrgangsKatalogEintrag(1002000000, "02", Arrays.asList(new JahrgangsKatalogEintragBezeichnung(Schulform.BK, "2. Jahrgang dieser Schulgliederung"), new JahrgangsKatalogEintragBezeichnung(Schulform.SB, "2. Jahrgang dieser Schulgliederung"), new JahrgangsKatalogEintragBezeichnung(Schulform.HI, "2. Semester (Seiteneinsteiger)"), new JahrgangsKatalogEintragBezeichnung(Schulform.WB, "2. Semester (Einführungs-/Hauptphase)")), null, null)]);
 
+	/**
+	 *  Jahrgang 03: 3. Jahrgang / 3. Semester 
+	 */
 	public static readonly JG_03 : Jahrgaenge = new Jahrgaenge("JG_03", 6, [new JahrgangsKatalogEintrag(1003000000, "03", Arrays.asList(new JahrgangsKatalogEintragBezeichnung(Schulform.BK, "3. Jahrgang dieser Schulgliederung"), new JahrgangsKatalogEintragBezeichnung(Schulform.SB, "3. Jahrgang dieser Schulgliederung"), new JahrgangsKatalogEintragBezeichnung(Schulform.HI, "3. Jahrgang / 3. Semester"), new JahrgangsKatalogEintragBezeichnung(Schulform.WB, "3. Semester (Einführungs-/Hauptphase)"), new JahrgangsKatalogEintragBezeichnung(Schulform.FW, "3. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.WF, "3. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.G, "3. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.PS, "3. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.KS, "3. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.S, "3. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.V, "3. Jahrgang")), null, null)]);
 
+	/**
+	 *  Jahrgang 04: 4. Jahrgang / 4. Semester 
+	 */
 	public static readonly JG_04 : Jahrgaenge = new Jahrgaenge("JG_04", 7, [new JahrgangsKatalogEintrag(1004000000, "04", Arrays.asList(new JahrgangsKatalogEintragBezeichnung(Schulform.BK, "4. Jahrgang dieser Schulgliederung"), new JahrgangsKatalogEintragBezeichnung(Schulform.SB, "4. Jahrgang dieser Schulgliederung"), new JahrgangsKatalogEintragBezeichnung(Schulform.HI, "4. Jahrgang / 4. Semester"), new JahrgangsKatalogEintragBezeichnung(Schulform.WB, "4. Semester (Einführungs-/Hauptphase)"), new JahrgangsKatalogEintragBezeichnung(Schulform.FW, "4. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.WF, "4. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.G, "4. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.PS, "4. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.KS, "4. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.S, "4. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.V, "4. Jahrgang")), null, null)]);
 
+	/**
+	 *  Jahrgang 05: 5. Jahrgang / 5. Semester 
+	 */
 	public static readonly JG_05 : Jahrgaenge = new Jahrgaenge("JG_05", 8, [new JahrgangsKatalogEintrag(2005000000, "05", Arrays.asList(new JahrgangsKatalogEintragBezeichnung(Schulform.BK, "5. Jahrgang dieser Schulgliederung"), new JahrgangsKatalogEintragBezeichnung(Schulform.SB, "5. Jahrgang dieser Schulgliederung"), new JahrgangsKatalogEintragBezeichnung(Schulform.HI, "5. Jahrgang / 5. Semester"), new JahrgangsKatalogEintragBezeichnung(Schulform.WB, "5. Semester (Qualifikationsphase)"), new JahrgangsKatalogEintragBezeichnung(Schulform.FW, "5. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.WF, "5. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.PS, "5. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.KS, "5. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.S, "5. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.V, "5. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.GE, "5. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.GM, "5. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.GY, "5. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.H, "5. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.R, "5. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.SG, "5. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.SK, "5. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.SR, "5. Jahrgang")), null, null)]);
 
+	/**
+	 *  Jahrgang 06: 6. Jahrgang / 6. Semester 
+	 */
 	public static readonly JG_06 : Jahrgaenge = new Jahrgaenge("JG_06", 9, [new JahrgangsKatalogEintrag(2006000000, "06", Arrays.asList(new JahrgangsKatalogEintragBezeichnung(Schulform.BK, "6. Jahrgang dieser Schulgliederung"), new JahrgangsKatalogEintragBezeichnung(Schulform.SB, "6. Jahrgang dieser Schulgliederung"), new JahrgangsKatalogEintragBezeichnung(Schulform.HI, "6. Jahrgang / 6. Semester"), new JahrgangsKatalogEintragBezeichnung(Schulform.WB, "6. Semester (Qualifikationsphase)"), new JahrgangsKatalogEintragBezeichnung(Schulform.FW, "6. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.WF, "6. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.PS, "6. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.KS, "6. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.S, "6. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.V, "6. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.GE, "6. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.GM, "6. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.GY, "6. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.H, "6. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.R, "6. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.SG, "6. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.SK, "6. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.SR, "6. Jahrgang")), null, null)]);
 
+	/**
+	 *  Jahrgang 07: 7. Jahrgang
+	 */
 	public static readonly JG_07 : Jahrgaenge = new Jahrgaenge("JG_07", 10, [new JahrgangsKatalogEintrag(2007000000, "07", Arrays.asList(new JahrgangsKatalogEintragBezeichnung(Schulform.HI, "7. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.FW, "7. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.WF, "7. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.PS, "7. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.KS, "7. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.S, "7. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.V, "7. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.GE, "7. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.GM, "7. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.GY, "7. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.H, "7. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.R, "7. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.SG, "7. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.SK, "7. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.SR, "7. Jahrgang")), null, null)]);
 
+	/**
+	 *  Jahrgang 08: 8. Jahrgang
+	 */
 	public static readonly JG_08 : Jahrgaenge = new Jahrgaenge("JG_08", 11, [new JahrgangsKatalogEintrag(2008000000, "08", Arrays.asList(new JahrgangsKatalogEintragBezeichnung(Schulform.HI, "8. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.FW, "8. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.WF, "8. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.PS, "8. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.KS, "8. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.S, "8. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.V, "8. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.GE, "8. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.GM, "8. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.GY, "8. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.H, "8. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.R, "8. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.SG, "8. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.SK, "8. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.SR, "8. Jahrgang")), null, null)]);
 
+	/**
+	 *  Jahrgang 09: 9. Jahrgang 
+	 */
 	public static readonly JG_09 : Jahrgaenge = new Jahrgaenge("JG_09", 12, [new JahrgangsKatalogEintrag(2009000000, "09", Arrays.asList(new JahrgangsKatalogEintragBezeichnung(Schulform.HI, "9. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.FW, "9. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.WF, "9. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.PS, "9. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.KS, "9. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.S, "9. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.V, "9. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.GE, "9. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.GM, "9. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.GY, "9. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.H, "9. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.R, "9. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.SG, "9. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.SK, "9. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.SR, "9. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.SB, "9. Jahrgang dieser Schulgliederung")), null, null)]);
 
+	/**
+	 *  Jahrgang 10: 10. Jahrgang 
+	 */
 	public static readonly JG_10 : Jahrgaenge = new Jahrgaenge("JG_10", 13, [new JahrgangsKatalogEintrag(2010000000, "10", Arrays.asList(new JahrgangsKatalogEintragBezeichnung(Schulform.HI, "10. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.FW, "10. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.WF, "10. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.PS, "10. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.KS, "10. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.S, "10. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.V, "10. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.GE, "10. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.GM, "10. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.GY, "10. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.H, "10. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.R, "10. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.SG, "10. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.SK, "10. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.SR, "10. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.SB, "10. Jahrgang dieser Schulgliederung")), null, null)]);
 
+	/**
+	 *  Jahrgang 11: 11. Jahrgang 
+	 */
 	public static readonly JG_11 : Jahrgaenge = new Jahrgaenge("JG_11", 14, [new JahrgangsKatalogEintrag(2011000000, "11", Arrays.asList(new JahrgangsKatalogEintragBezeichnung(Schulform.HI, "11. Jahrgang, Berufskolleg"), new JahrgangsKatalogEintragBezeichnung(Schulform.FW, "11. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.WF, "11. Jahrgang")), null, null)]);
 
+	/**
+	 *  Jahrgang 12: 12. Jahrgang 
+	 */
 	public static readonly JG_12 : Jahrgaenge = new Jahrgaenge("JG_12", 15, [new JahrgangsKatalogEintrag(2012000000, "12", Arrays.asList(new JahrgangsKatalogEintragBezeichnung(Schulform.HI, "12. Jahrgang, Berufskolleg"), new JahrgangsKatalogEintragBezeichnung(Schulform.FW, "12. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.WF, "12. Jahrgang")), null, null)]);
 
+	/**
+	 *  Jahrgang 13: 13. Jahrgang 
+	 */
 	public static readonly JG_13 : Jahrgaenge = new Jahrgaenge("JG_13", 16, [new JahrgangsKatalogEintrag(2013000000, "13", Arrays.asList(new JahrgangsKatalogEintragBezeichnung(Schulform.FW, "13. Jahrgang"), new JahrgangsKatalogEintragBezeichnung(Schulform.WF, "13. Jahrgang")), null, null)]);
 
+	/**
+	 *  Jahrgang 71: Schule für Kranke 
+	 */
 	public static readonly JG_71 : Jahrgaenge = new Jahrgaenge("JG_71", 17, [new JahrgangsKatalogEintrag(4071000000, "71", Arrays.asList(new JahrgangsKatalogEintragBezeichnung(Schulform.FW, "Schule für Kranke"), new JahrgangsKatalogEintragBezeichnung(Schulform.WF, "Schule für Kranke"), new JahrgangsKatalogEintragBezeichnung(Schulform.KS, "Schule für Kranke"), new JahrgangsKatalogEintragBezeichnung(Schulform.S, "Schule für Kranke")), null, null)]);
 
+	/**
+	 *  Jahrgang 85: Schule für Geistigbehinderte: Berufspraxisstufe in Vollzeitform
+	 */
 	public static readonly JG_85 : Jahrgaenge = new Jahrgaenge("JG_85", 18, [new JahrgangsKatalogEintrag(4085000000, "85", Arrays.asList(new JahrgangsKatalogEintragBezeichnung(Schulform.FW, "Schule für Geistigbehinderte: Berufspraxisstufe in Vollzeitform"), new JahrgangsKatalogEintragBezeichnung(Schulform.WF, "Schule für Geistigbehinderte: Berufspraxisstufe in Vollzeitform"), new JahrgangsKatalogEintragBezeichnung(Schulform.KS, "Schule für Geistigbehinderte: Berufspraxisstufe in Vollzeitform"), new JahrgangsKatalogEintragBezeichnung(Schulform.S, "Schule für Geistigbehinderte: Berufspraxisstufe in Vollzeitform")), null, null)]);
 
+	/**
+	 *  Jahrgang 86: Schule für Geistigbehinderte: Berufspraxisstufe in Teilzeitform 
+	 */
 	public static readonly JG_86 : Jahrgaenge = new Jahrgaenge("JG_86", 19, [new JahrgangsKatalogEintrag(4086000000, "86", Arrays.asList(new JahrgangsKatalogEintragBezeichnung(Schulform.FW, "Schule für Geistigbehinderte: Berufspraxisstufe in Teilzeitform"), new JahrgangsKatalogEintragBezeichnung(Schulform.WF, "Schule für Geistigbehinderte: Berufspraxisstufe in Teilzeitform"), new JahrgangsKatalogEintragBezeichnung(Schulform.KS, "Schule für Geistigbehinderte: Berufspraxisstufe in Teilzeitform"), new JahrgangsKatalogEintragBezeichnung(Schulform.S, "Schule für Geistigbehinderte: Berufspraxisstufe in Teilzeitform")), null, null)]);
 
+	/**
+	 *  Jahrgang 90: Hausfrüherziehung für Hör- bzw. Sehgeschädigte 
+	 */
 	public static readonly JG_90 : Jahrgaenge = new Jahrgaenge("JG_90", 20, [new JahrgangsKatalogEintrag(4090000000, "90", Arrays.asList(new JahrgangsKatalogEintragBezeichnung(Schulform.KS, "Hausfrüherziehung für Hör- bzw. Sehgeschädigte"), new JahrgangsKatalogEintragBezeichnung(Schulform.S, "Hausfrüherziehung für Hör- bzw. Sehgeschädigte")), null, null)]);
 
+	/**
+	 *  Jahrgang 91: Vorkurs/ 1. Semester 
+	 */
 	public static readonly JG_91 : Jahrgaenge = new Jahrgaenge("JG_91", 21, [new JahrgangsKatalogEintrag(4091000000, "91", Arrays.asList(new JahrgangsKatalogEintragBezeichnung(Schulform.WB, "Vorkurs / 1. Semester")), null, null)]);
 
+	/**
+	 *  Jahrgang 92: Vorkurs/ 2. Semester 
+	 */
 	public static readonly JG_92 : Jahrgaenge = new Jahrgaenge("JG_92", 22, [new JahrgangsKatalogEintrag(4092000000, "92", Arrays.asList(new JahrgangsKatalogEintragBezeichnung(Schulform.WB, "Vorkurs / 2. Semester")), null, null)]);
 
+	/**
+	 *  Jahrgang EF: Einführungsphase
+	 */
 	public static readonly JG_EF : Jahrgaenge = new Jahrgaenge("JG_EF", 23, [new JahrgangsKatalogEintrag(3000000000, "EF", Arrays.asList(new JahrgangsKatalogEintragBezeichnung(Schulform.GE, "Einführungsphase"), new JahrgangsKatalogEintragBezeichnung(Schulform.GM, "Einführungsphase"), new JahrgangsKatalogEintragBezeichnung(Schulform.GY, "Einführungsphase"), new JahrgangsKatalogEintragBezeichnung(Schulform.PS, "Einführungsphase"), new JahrgangsKatalogEintragBezeichnung(Schulform.SG, "Einführungsphase")), null, null)]);
 
+	/**
+	 *  Jahrgang Q1: Qualifikationsphase 1. Jahr
+	 */
 	public static readonly JG_Q1 : Jahrgaenge = new Jahrgaenge("JG_Q1", 24, [new JahrgangsKatalogEintrag(3001000000, "Q1", Arrays.asList(new JahrgangsKatalogEintragBezeichnung(Schulform.GE, "Qualifikationsphase 1. Jahr"), new JahrgangsKatalogEintragBezeichnung(Schulform.GM, "Qualifikationsphase 1. Jahr"), new JahrgangsKatalogEintragBezeichnung(Schulform.GY, "Qualifikationsphase 1. Jahr"), new JahrgangsKatalogEintragBezeichnung(Schulform.PS, "Qualifikationsphase 1. Jahr"), new JahrgangsKatalogEintragBezeichnung(Schulform.SG, "Qualifikationsphase 1. Jahr")), null, null)]);
 
+	/**
+	 *  Jahrgang Q2: Qualifikationsphase 2. Jahr
+	 */
 	public static readonly JG_Q2 : Jahrgaenge = new Jahrgaenge("JG_Q2", 25, [new JahrgangsKatalogEintrag(3002000000, "Q2", Arrays.asList(new JahrgangsKatalogEintragBezeichnung(Schulform.GE, "Qualifikationsphase 2. Jahr"), new JahrgangsKatalogEintragBezeichnung(Schulform.GM, "Qualifikationsphase 2. Jahr"), new JahrgangsKatalogEintragBezeichnung(Schulform.GY, "Qualifikationsphase 2. Jahr"), new JahrgangsKatalogEintragBezeichnung(Schulform.PS, "Qualifikationsphase 2. Jahr"), new JahrgangsKatalogEintragBezeichnung(Schulform.SG, "Qualifikationsphase 2. Jahr")), null, null)]);
 
+	/**
+	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. 
+	 */
 	public static VERSION : number = 1;
 
+	/**
+	 * Der aktuellen Daten des Jahrgangs, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null 
+	 */
 	public readonly daten : JahrgangsKatalogEintrag;
 
+	/**
+	 * Die Historie mit den Einträgen des Jahrgangs 
+	 */
 	public readonly historie : Array<JahrgangsKatalogEintrag>;
 
+	/**
+	 * Eine Map mit der Zuordnung des Jahrgangs zu dem Kürzel des Jahrgangs 
+	 */
 	private static readonly _mapKuerzel : HashMap<String, Jahrgaenge | null> = new HashMap();
 
+	/**
+	 * Eine Map mit der Zuordnung des Jahrgangs zu der ID des Jahrgangs 
+	 */
 	private static readonly _mapID : HashMap<Number, Jahrgaenge | null> = new HashMap();
 
+	/**
+	 * Die Schulformen, bei welchen der Jahrgang vorkommt, für die einzelnen Historieneinträge 
+	 */
 	private schulformen : Array<Vector<Schulform | null>>;
 
+	/**
+	 * Die Bezeichnungen bei den Schulformen, bei welchen der Jahrgang vorkommt, für die einzelnen Historieneinträge 
+	 */
 	private bezeichnungen : Array<Vector<String>>;
 
 	/**

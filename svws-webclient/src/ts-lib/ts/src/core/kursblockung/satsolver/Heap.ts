@@ -7,10 +7,20 @@ import { System, cast_java_lang_System } from '../../../java/lang/System';
 
 export class Heap extends JavaObject {
 
+	/**
+	 *  Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
+	 */
 	protected readonly _random : Random;
 
+	/**
+	 *  Das Array beinhaltet die Daten und wird als binärer Baum interpretiert. Das linke Kind von Index i ist der Index
+	 *  2*i+1 und das rechte Kind ist der Index 2*i+2.
+	 */
 	private _data : Array<Variable>;
 
+	/**
+	 *  Die wirkliche Anzahl an Elementen im Array {@link #_data}.
+	 */
 	private _size : number = 0;
 
 

@@ -3,12 +3,24 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class AdressbuchEintrag extends JavaObject {
 
+	/**
+	 * ID des AdressbuchEintrags 
+	 */
 	public id : String = "";
 
+	/**
+	 * ID des Adressbuchs 
+	 */
 	public adressbuchId : String = "";
 
+	/**
+	 *  URI der VCard des Kontakts
+	 */
 	public uri : String = "";
 
+	/**
+	 *  Versionskennzeichen des Kontaks
+	 */
 	public version : String = "";
 
 

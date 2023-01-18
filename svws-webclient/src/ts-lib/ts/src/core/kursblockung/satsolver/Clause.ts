@@ -9,10 +9,19 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class Clause extends JavaObject implements Comparable<Clause> {
 
+	/**
+	 *  Alle Variablen, die zu dieser Klausel gehören.
+	 */
 	readonly variables : Array<Variable>;
 
+	/**
+	 *  Die Anzahl an noch nicht definierten Literalen.
+	 */
 	free : number = 0;
 
+	/**
+	 *  Die Anzahl an erfüllten Literalen.
+	 */
 	sat : number = 0;
 
 

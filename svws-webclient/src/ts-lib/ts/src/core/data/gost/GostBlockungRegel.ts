@@ -4,10 +4,19 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 
 export class GostBlockungRegel extends JavaObject {
 
+	/**
+	 * Die ID der Regel 
+	 */
 	public id : number = -1;
 
+	/**
+	 * Der Type der Regel - siehe {@link GostKursblockungRegelTyp} 
+	 */
 	public typ : number = -1;
 
+	/**
+	 * Eine Liste der Regel-Parameter 
+	 */
 	public parameter : Vector<Number> = new Vector();
 
 

@@ -15,8 +15,14 @@ export class KAOAMerkmaleOptionsarten extends JavaObject {
 	/** an array containing all values of this enumeration indexed by their name*/
 	private static readonly all_values_by_name : Map<String, KAOAMerkmaleOptionsarten> = new Map<String, KAOAMerkmaleOptionsarten>();
 
+	/**
+	 * Keine Option für das KAoA-Merkmal 
+	 */
 	public static readonly KEINE : KAOAMerkmaleOptionsarten = new KAOAMerkmaleOptionsarten("KEINE", 0, null);
 
+	/**
+	 * Das Kürzel für die Optionsart 
+	 */
 	public readonly kuerzel : String | null;
 
 	/**

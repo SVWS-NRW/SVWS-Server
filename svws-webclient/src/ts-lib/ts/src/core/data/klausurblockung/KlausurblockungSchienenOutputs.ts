@@ -4,6 +4,9 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 
 export class KlausurblockungSchienenOutputs extends JavaObject {
 
+	/**
+	 * Rückgabe mehrerer {@link KlausurblockungSchienenOutput}. 
+	 */
 	public ergebnisse : Vector<KlausurblockungSchienenOutput> = new Vector();
 
 

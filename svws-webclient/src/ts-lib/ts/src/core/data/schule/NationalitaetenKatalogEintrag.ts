@@ -4,26 +4,59 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class NationalitaetenKatalogEintrag extends JavaObject {
 
+	/**
+	 * Die ID des Katalog-Eintrags. 
+	 */
 	public id : number = 0;
 
+	/**
+	 * Das 3-stellige Kürzel des ISO-Standards 3166-1 
+	 */
 	public iso3 : String = "";
 
+	/**
+	 * Das 2-stellige Kürzel des ISO-Standards 3166-1 
+	 */
 	public iso2 : String = "";
 
+	/**
+	 * Die 3-stellige Nummer des ISO-Standards 3166-1 
+	 */
 	public isoNumerisch : String | null = null;
 
+	/**
+	 * Die 3-stellige Nummer, welche vom statistischen Bundesamt verwendet wird (destatis.de) 
+	 */
 	public codeDEStatis : String = "";
 
+	/**
+	 * Die Bezeichnung für eine Suche 
+	 */
 	public bezeichnungSuche : String = "";
 
+	/**
+	 * Die kurze Bezeichnung 
+	 */
 	public bezeichnung : String = "";
 
+	/**
+	 * Die Bezeichnung für eine Suche 
+	 */
 	public bezeichnungLang : String = "";
 
+	/**
+	 * Die Bezeichnung der Staatsangehörigkeit 
+	 */
 	public staatsangehoerigkeit : String = "";
 
+	/**
+	 * Gibt an, in welchem Schuljahr die Nationalität ergänzt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 */
 	public gueltigVon : Number | null = null;
 
+	/**
+	 * Gibt an, bis zu welchem Schuljahr die Nationalität verwendet wird. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 */
 	public gueltigBis : Number | null = null;
 
 

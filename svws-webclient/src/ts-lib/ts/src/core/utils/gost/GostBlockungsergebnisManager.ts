@@ -31,38 +31,89 @@ import { Arrays, cast_java_util_Arrays } from '../../../java/util/Arrays';
 
 export class GostBlockungsergebnisManager extends JavaObject {
 
+	/**
+	 * Der Blockungsdaten-Manager ist das Elternteil dieses Objektes. 
+	 */
 	private readonly _parent : GostBlockungsdatenManager;
 
+	/**
+	 * Das Blockungsergebnis ist das zugehörige Eltern-Datenobjekt. 
+	 */
 	private _ergebnis : GostBlockungsergebnis = new GostBlockungsergebnis();
 
+	/**
+	 * Schienen-Nummer --> GostBlockungsergebnisSchiene 
+	 */
 	private readonly _map_schienenNr_schiene : HashMap<Number, GostBlockungsergebnisSchiene> = new HashMap();
 
+	/**
+	 * Schienen-ID --> GostBlockungSchiene 
+	 */
 	private readonly _map_schienenID_schiene : HashMap<Number, GostBlockungsergebnisSchiene> = new HashMap();
 
+	/**
+	 * Schienen-ID --> Integer = Anzahl SuS 
+	 */
 	private readonly _map_schienenID_schuelerAnzahl : HashMap<Number, Number> = new HashMap();
 
+	/**
+	 * Schienen-ID --> Anzahl Kollisionen 
+	 */
 	private readonly _map_schienenID_kollisionen : HashMap<Number, Number> = new HashMap();
 
+	/**
+	 * Schienen-ID --> Fachart-ID --> Vector<Kurse> = Alle Kurse in der Schiene mit der Fachart. 
+	 */
 	private readonly _map_schienenID_fachartID_kurse : HashMap<Number, HashMap<Number, Vector<GostBlockungsergebnisKurs>>> = new HashMap();
 
+	/**
+	 * Schüler-ID --> Set<GostBlockungsergebnisKurs> 
+	 */
 	private readonly _map_schuelerID_kurse : HashMap<Number, HashSet<GostBlockungsergebnisKurs>> = new HashMap();
 
+	/**
+	 * Schüler-ID --> Integer (Kollisionen) 
+	 */
 	private readonly _map_schuelerID_kollisionen : HashMap<Number, Number> = new HashMap();
 
+	/**
+	 * Schüler-ID --> Fach-ID --> GostBlockungsergebnisKurs 
+	 */
 	private readonly _map_schuelerID_fachID_kurs : HashMap<Number, HashMap<Number, GostBlockungsergebnisKurs | null>> = new HashMap();
 
+	/**
+	 * Schüler-ID --> Schienen-ID --> Set<GostBlockungsergebnisKurs> = Alle Kurse des Schülers in der Schiene.
+	 */
 	private readonly _map_schuelerID_schienenID_kurse : HashMap<Number, HashMap<Number, HashSet<GostBlockungsergebnisKurs>>> = new HashMap();
 
+	/**
+	 * Kurs-ID --> Set<GostBlockungsergebnisSchiene> 
+	 */
 	private readonly _map_kursID_schienen : HashMap<Number, HashSet<GostBlockungsergebnisSchiene>> = new HashMap();
 
+	/**
+	 * Kurs-ID --> GostBlockungsergebnisKurs 
+	 */
 	private readonly _map_kursID_kurs : HashMap<Number, GostBlockungsergebnisKurs> = new HashMap();
 
+	/**
+	 * Kurs-ID --> Set<SchuelerID> 
+	 */
 	private readonly _map_kursID_schuelerIDs : HashMap<Number, HashSet<Number>> = new HashMap();
 
+	/**
+	 * Fach-ID --> Vector<GostBlockungsergebnisKurs> 
+	 */
 	private readonly _map_fachID_kurse : HashMap<Number, Vector<GostBlockungsergebnisKurs>> = new HashMap();
 
+	/**
+	 * Fachart-ID --> Vector<GostBlockungsergebnisKurs> = Alle Kurse der selben Fachart. 
+	 */
 	private readonly _map_fachartID_kurse : HashMap<Number, Vector<GostBlockungsergebnisKurs>> = new HashMap();
 
+	/**
+	 * Fachart-ID --> Integer = Kursdifferenz der Fachart. 
+	 */
 	private readonly _map_fachartID_kursdifferenz : HashMap<Number, Number> = new HashMap();
 
 

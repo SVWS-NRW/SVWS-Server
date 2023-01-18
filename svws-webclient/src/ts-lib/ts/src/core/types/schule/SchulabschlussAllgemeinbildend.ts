@@ -18,50 +18,119 @@ export class SchulabschlussAllgemeinbildend extends JavaObject {
 	/** an array containing all values of this enumeration indexed by their name*/
 	private static readonly all_values_by_name : Map<String, SchulabschlussAllgemeinbildend> = new Map<String, SchulabschlussAllgemeinbildend>();
 
+	/**
+	 * Es liegt kein Abschluss vor 
+	 */
 	public static readonly OA : SchulabschlussAllgemeinbildend = new SchulabschlussAllgemeinbildend("OA", 0, [new SchulabschlussAllgemeinbildendKatalogEintrag(0, "OA", "Ohne Abschluss", "A", null, null)]);
 
+	/**
+	 * Hauptschulabschluss nach Klasse 9 (ohne Berechtigung zum Besuch der Klasse 10 Typ B) 
+	 */
 	public static readonly HA9A : SchulabschlussAllgemeinbildend = new SchulabschlussAllgemeinbildend("HA9A", 1, [new SchulabschlussAllgemeinbildendKatalogEintrag(1, "HA9A", "Hauptschulabschluss nach Klasse 9 (ohne Berechtigung zum Besuch der Klasse 10 Typ B)", "B", null, null)]);
 
+	/**
+	 * Hauptschulabschluss nach Klasse 9 (mit Berechtigung zum Besuch der Klasse 10 Typ B) 
+	 */
 	public static readonly HA9 : SchulabschlussAllgemeinbildend = new SchulabschlussAllgemeinbildend("HA9", 2, [new SchulabschlussAllgemeinbildendKatalogEintrag(2, "HA9", "Hauptschulabschluss nach Klasse 9 (mit Berechtigung zum Besuch der Klasse 10 Typ B)", "C", null, null)]);
 
+	/**
+	 * Hauptschulabschluss nach Klasse 9 (ggf. mit Berechtigung zum Besuch eines weiterführenden Bildungsgangs am Berufskolleg bei internationalen Förderklassen) - siehe BK-Bildungsgang A12 
+	 */
 	public static readonly HA9_FOE : SchulabschlussAllgemeinbildend = new SchulabschlussAllgemeinbildend("HA9_FOE", 3, [new SchulabschlussAllgemeinbildendKatalogEintrag(3, "HA9_FOE", "Hauptschulabschluss nach Klasse 9 (ggf. mit Berechtigung zum Besuch eines weiterführenden Bildungsgangs am Berufskolleg bei internationalen Förderklassen)", "S", null, null)]);
 
+	/**
+	 * Hauptschulabschluss nach Klasse 9 mit der Berechtigung zum Besuch der Gymnasialen Oberstufe 
+	 */
 	public static readonly HA9_Q : SchulabschlussAllgemeinbildend = new SchulabschlussAllgemeinbildend("HA9_Q", 4, [new SchulabschlussAllgemeinbildendKatalogEintrag(4, "HA9_Q", "Hauptschulabschluss nach Klasse 9 (mit der Berechtigung zum Besuch der Gymnasialen Oberstufe)", "O", null, null)]);
 
+	/**
+	 * Hauptschulabschluss nach Klasse 10 
+	 */
 	public static readonly HA10 : SchulabschlussAllgemeinbildend = new SchulabschlussAllgemeinbildend("HA10", 5, [new SchulabschlussAllgemeinbildendKatalogEintrag(5, "HA10", "Hauptschulabschluss nach Klasse 10", "D", null, null)]);
 
+	/**
+	 * Hauptschulabschluss nach Klasse 10 mit der Berechtigung zum Besuch der Gymnasialen Oberstufe 
+	 */
 	public static readonly HA10_Q : SchulabschlussAllgemeinbildend = new SchulabschlussAllgemeinbildend("HA10_Q", 6, [new SchulabschlussAllgemeinbildendKatalogEintrag(6, "HA10_Q", "Hauptschulabschluss nach Klasse 10 (mit der Berechtigung zum Besuch der Gymnasialen Oberstufe)", "U", null, null)]);
 
+	/**
+	 * Der Mittlere Schulabschluss bzw. Fachoberschulreife 
+	 */
 	public static readonly MSA : SchulabschlussAllgemeinbildend = new SchulabschlussAllgemeinbildend("MSA", 7, [new SchulabschlussAllgemeinbildendKatalogEintrag(10, "MSA", "Mittlerer Schulabschluss", "F", null, null)]);
 
+	/**
+	 * Der Mittlere Schulabschluss mit der Berechtigung zum Besuch Gymnasialen Oberstufe 
+	 */
 	public static readonly MSA_Q : SchulabschlussAllgemeinbildend = new SchulabschlussAllgemeinbildend("MSA_Q", 8, [new SchulabschlussAllgemeinbildendKatalogEintrag(11, "MSA_Q", "Mittlerer Schulabschluss (mit der Berechtigung zum Besuch Gymnasialen Oberstufe)", "G", null, null)]);
 
+	/**
+	 * Der Mittlere Schulabschluss mit der Berechtigung zum Besuch der Qualifikationsphase der Gymnasialen Oberstufe 
+	 */
 	public static readonly MSA_Q1 : SchulabschlussAllgemeinbildend = new SchulabschlussAllgemeinbildend("MSA_Q1", 9, [new SchulabschlussAllgemeinbildendKatalogEintrag(12, "MSA_Q1", "Mittlerer Schulabschluss mit der Berechtigung zum Besuch der Qualifikationsphase Gymnasialen Oberstufe", "I", null, null)]);
 
+	/**
+	 * Versetzung in die Klasse 11 der Fachoberschule (BK) 
+	 */
 	public static readonly VS_11 : SchulabschlussAllgemeinbildend = new SchulabschlussAllgemeinbildend("VS_11", 10, [new SchulabschlussAllgemeinbildendKatalogEintrag(13, "VS_11", "Versetzung in die Klasse 11 der Fachoberschule (BK)", "P", null, null)]);
 
+	/**
+	 * Fachhochschulreife (nur schulischer Teil) 
+	 */
 	public static readonly FHR_S : SchulabschlussAllgemeinbildend = new SchulabschlussAllgemeinbildend("FHR_S", 11, [new SchulabschlussAllgemeinbildendKatalogEintrag(20, "FHR_S", "Fachhochschulreife (nur schulischer Teil)", "H", null, null)]);
 
+	/**
+	 * Fachhochschulreife 
+	 */
 	public static readonly FHR : SchulabschlussAllgemeinbildend = new SchulabschlussAllgemeinbildend("FHR", 12, [new SchulabschlussAllgemeinbildendKatalogEintrag(21, "FHR", "Fachhochschulreife", "J", null, null)]);
 
+	/**
+	 * fachgebundene Hochschulreife (BK) 
+	 */
 	public static readonly FGHR : SchulabschlussAllgemeinbildend = new SchulabschlussAllgemeinbildend("FGHR", 13, [new SchulabschlussAllgemeinbildendKatalogEintrag(22, "FGHR", "fachgebundene Hochschulreife (BK)", "Q", null, null)]);
 
+	/**
+	 * Abitur / Allgemeine Hochschulreife 
+	 */
 	public static readonly ABITUR : SchulabschlussAllgemeinbildend = new SchulabschlussAllgemeinbildend("ABITUR", 14, [new SchulabschlussAllgemeinbildendKatalogEintrag(30, "ABITUR", "Abitur / Allgemeine Hochschulreife", "K", null, null)]);
 
+	/**
+	 * Förderschule (Förderschwerpunkt geistige Entwicklung) 
+	 */
 	public static readonly FOEG : SchulabschlussAllgemeinbildend = new SchulabschlussAllgemeinbildend("FOEG", 15, [new SchulabschlussAllgemeinbildendKatalogEintrag(40, "FOEG", "Förderschule (Förderschwerpunkt geistige Entwicklung)", "M", null, null)]);
 
+	/**
+	 * Förderschule (Förderschwerpunkt Lernen) 
+	 */
 	public static readonly FOEL : SchulabschlussAllgemeinbildend = new SchulabschlussAllgemeinbildend("FOEL", 16, [new SchulabschlussAllgemeinbildendKatalogEintrag(41, "FOEL", "Förderschule (Förderschwerpunkt Lernen)", "V", null, null)]);
 
+	/**
+	 * Waldorfschule 
+	 */
 	public static readonly WALD : SchulabschlussAllgemeinbildend = new SchulabschlussAllgemeinbildend("WALD", 17, [new SchulabschlussAllgemeinbildendKatalogEintrag(50, "WALD", "Zeugnis der Waldorfschule", "W", null, null)]);
 
+	/**
+	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. 
+	 */
 	public static VERSION : number = 1;
 
+	/**
+	 * Der aktuellen Daten der Abschlussart, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null 
+	 */
 	public readonly daten : SchulabschlussAllgemeinbildendKatalogEintrag;
 
+	/**
+	 * Die Historie mit den Einträgen der Abschlussarten 
+	 */
 	public readonly historie : Array<SchulabschlussAllgemeinbildendKatalogEintrag>;
 
+	/**
+	 * Eine HashMap mit den Abschlussarten, welche ihren Kürzeln zugeordnet werden 
+	 */
 	private static readonly _mapByKuerzel : HashMap<String, SchulabschlussAllgemeinbildend> = new HashMap();
 
+	/**
+	 * Eine HashMap mit den Abschlussarten, welche ihren Statistik-Kürzeln zugeordnet werden 
+	 */
 	private static readonly _mapByKuerzelStatistik : HashMap<String, SchulabschlussAllgemeinbildend> = new HashMap();
 
 	/**

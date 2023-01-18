@@ -4,32 +4,74 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class GostLeistungenFachbelegung extends JavaObject {
 
+	/**
+	 * Die ID des Datensatzes 
+	 */
 	public id : number = 0;
 
+	/**
+	 * Das Schuljahr der Fachbelegung 
+	 */
 	public schuljahr : number = 0;
 
+	/**
+	 * Das Kürzel des Halbjahres der Fachbelegung 
+	 */
 	public halbjahrKuerzel : String | null = null;
 
+	/**
+	 * Der Abschnitt, dem die Fachbelegung zugeordnet ist - unterscheidet sich z.B. im Quartalsbetrieb vom Halbjahr 
+	 */
 	public abschnitt : number = 0;
 
+	/**
+	 * Gibt an, ob es sich um einen gewerteten Abschnitt handelt. 
+	 */
 	public abschnittGewertet : boolean = false;
 
+	/**
+	 * Gibt den Jahrgang, an dem die Belegung zugeordnet ist 
+	 */
 	public jahrgang : String | null = null;
 
+	/**
+	 * Gibt die ID des Fachlehrers an, bei dem der zur Fachbelegung gehörige Kurs belegt wurde. 
+	 */
 	public lehrer : Number | null = null;
 
+	/**
+	 * Gibt die Note als Zeichenkette und mit Tendenz an 
+	 */
 	public notenKuerzel : String | null = null;
 
+	/**
+	 * Das Kürzel der Kursart der gymnasialen Oberstufe des belegten Kurses 
+	 */
 	public kursartKuerzel : String | null = null;
 
+	/**
+	 * Gibt an, ob der Kurs schriftlich belegt wurde. 
+	 */
 	public istSchriftlich : boolean = false;
 
+	/**
+	 * Gibt die Sprache als einstelliges Kürzel an, sofern der Kurs bilingual unterrichtet wurde. 
+	 */
 	public bilingualeSprache : String | null = null;
 
+	/**
+	 * Gibt die Anzahl der Wochenstunden für den Kurs an. 
+	 */
 	public wochenstunden : number = 0;
 
+	/**
+	 * Gibt die Anzahl der Fehlstunden in dem Halbjahr an. 
+	 */
 	public fehlstundenGesamt : number = 0;
 
+	/**
+	 * Gibt die Anzahl der unentschuldigten Fehlstunden in dem Halbjahr an. 
+	 */
 	public fehlstundenUnentschuldigt : number = 0;
 
 

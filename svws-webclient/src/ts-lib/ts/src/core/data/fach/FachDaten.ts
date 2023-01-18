@@ -3,12 +3,24 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class FachDaten extends JavaObject {
 
+	/**
+	 * Die ID des Faches. 
+	 */
 	public id : number = 0;
 
+	/**
+	 * Das eindeutige Kürzel des Faches 
+	 */
 	public kuerzel : String | null = null;
 
+	/**
+	 * Die Bezeichnung des Faches 
+	 */
 	public bezeichnung : String | null = null;
 
+	/**
+	 * Das Statistik-Kürzel des Faches 
+	 */
 	public kuerzelStatistik : String | null = null;
 
 

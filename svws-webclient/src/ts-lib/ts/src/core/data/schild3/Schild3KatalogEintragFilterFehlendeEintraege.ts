@@ -4,18 +4,39 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class Schild3KatalogEintragFilterFehlendeEintraege extends JavaObject {
 
+	/**
+	 * ID des Eintrags die bei der Prüfung auf fehlende Einträge genutzt werden 
+	 */
 	public ID : Number | null = null;
 
+	/**
+	 * Beschreibung des Eintrags die bei der Prüfung auf fehlende Einträge genutzt werden 
+	 */
 	public Beschreibung : String | null = null;
 
+	/**
+	 * Feldname des zu prüfenden Feldes 
+	 */
 	public Feldname : String | null = null;
 
+	/**
+	 * Tabellenname des zu prüfenden Feldes 
+	 */
 	public Tabellen : String | null = null;
 
+	/**
+	 * Abfrage die zur Prüfung des Feldes führt. 
+	 */
 	public SQLText : String | null = null;
 
+	/**
+	 * ggf. Schulform für bestimmte Schulformen 
+	 */
 	public Schulform : String | null = null;
 
+	/**
+	 * Feldtyp des zu prüfenden Feldes 
+	 */
 	public Feldtyp : String | null = null;
 
 

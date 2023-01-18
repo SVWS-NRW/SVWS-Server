@@ -4,18 +4,39 @@ import { JavaBoolean, cast_java_lang_Boolean } from '../../../java/lang/JavaBool
 
 export class GEAbschlussFach extends JavaObject {
 
+	/**
+	 * Das Kürzel des Faches 
+	 */
 	public kuerzel : String = "";
 
+	/**
+	 * Die Bezeichnung des Faches 
+	 */
 	public bezeichnung : String | null = null;
 
+	/**
+	 * Die Note, die in dem Fach erteilt wurde 
+	 */
 	public note : number = -1;
 
+	/**
+	 * Gibt an, ob das Fach eine Fremdsprache ist oder nicht 
+	 */
 	public istFremdsprache : Boolean | null = false;
 
+	/**
+	 * Gibt die Art der Leistungsdifferenzierung bei dem Fach an: E-Kurs, G-Kurs oder sonstiger Kurs 
+	 */
 	public kursart : String | null = "";
 
+	/**
+	 * Gibt an, ob das Fach als Ausgleich genutzt wurde oder nicht. 
+	 */
 	public ausgleich : Boolean | null = false;
 
+	/**
+	 * Gibt an, ob in diesem Fach ein Defizit ausgeglichen wurde. 
+	 */
 	public ausgeglichen : Boolean | null = false;
 
 

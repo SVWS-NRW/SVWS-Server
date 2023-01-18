@@ -4,34 +4,79 @@ import { JavaDouble, cast_java_lang_Double } from '../../../java/lang/JavaDouble
 
 export class LehrerPersonaldaten extends JavaObject {
 
+	/**
+	 * Die ID des Lehrers. 
+	 */
 	public id : number = 0;
 
+	/**
+	 * Der vordere Teil der NRW-weit eindeutigen Ident-Nummer - setzt sich normalerweise aus Geburtsdatum und Geschlecht (3/4) zusammen, kann in Einzelfällen aber von diesem Schema abweichen. 
+	 */
 	public identNrTeil1 : String | null = null;
 
+	/**
+	 * Der hintere Teil der Ident-Nummer – wird üblicherweise NRW-weit fortlaufend vergeben. 
+	 */
 	public identNrTeil2SerNr : String | null = null;
 
+	/**
+	 * Die Personalaktennummer des Lehrers für den Export zu GPC. 
+	 */
 	public personalaktennummer : String | null = null;
 
+	/**
+	 * Die Personalnummer des LBV. 
+	 */
 	public lbvPersonalnummer : String | null = null;
 
+	/**
+	 * Der zur Personalnummer gehörige Vergütungsschlüssel. 
+	 */
 	public lbvVerguetungsschluessel : String | null = null;
 
+	/**
+	 * Das Datum, wann der Lehrer an die Schule gekommen ist. 
+	 */
 	public zugangsdatum : String | null = null;
 
+	/**
+	 * Der Grund für den Zugang des Lehrers - siehe Statistik-Katalog. 
+	 */
 	public zugangsgrund : String | null = null;
 
+	/**
+	 * Das Datum, wann der Lehrer an die Schule verlassen hat. 
+	 */
 	public abgangsdatum : String | null = null;
 
+	/**
+	 * Der Grund für den Abgang des Lehrers - siehe Statistik-Katalog. 
+	 */
 	public abgangsgrund : String | null = null;
 
+	/**
+	 * Das Pflichtstundensoll des Lehrers. 
+	 */
 	public pflichtstundensoll : Number | null = null;
 
+	/**
+	 * Das Rechtsverhältnis unter welchem der Lehrer beschäftigt ist (z.B. Beamter auf Lebenszeit) - siehe Statistik-Katalog. 
+	 */
 	public rechtsverhaeltnis : String | null = null;
 
+	/**
+	 * Die Art der Beschäftigung (Vollzeit, Teilzeit, etc.) - siehe Statistik-Katalog. 
+	 */
 	public beschaeftigungsart : String | null = null;
 
+	/**
+	 * Der Einsatzstatus (z.B. Stammschule, nur hier tätig) - siehe Statistik-Katalog. 
+	 */
 	public einsatzstatus : String | null = null;
 
+	/**
+	 * Die Schulnummer der Stammschule, sofern diese abweicht. 
+	 */
 	public stammschulnummer : String | null = null;
 
 

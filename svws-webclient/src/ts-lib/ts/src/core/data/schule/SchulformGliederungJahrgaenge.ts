@@ -5,10 +5,19 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 
 export class SchulformGliederungJahrgaenge extends JavaObject {
 
+	/**
+	 * Das Kürzel der Schulform 
+	 */
 	public schulform : String = "";
 
+	/**
+	 * Das Kürzel der Schulgliederung bzw. des Bildungsganges. Null, falls alle Gliederungen der Schulform gemeint sind. 
+	 */
 	public gliederung : String | null = null;
 
+	/**
+	 * Die Liste der Jahrgänge. 
+	 */
 	public jahrgaenge : List<String> = new Vector();
 
 

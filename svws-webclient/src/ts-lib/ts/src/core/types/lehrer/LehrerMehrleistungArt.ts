@@ -18,26 +18,59 @@ export class LehrerMehrleistungArt extends JavaObject {
 	/** an array containing all values of this enumeration indexed by their name*/
 	private static readonly all_values_by_name : Map<String, LehrerMehrleistungArt> = new Map<String, LehrerMehrleistungArt>();
 
+	/**
+	 * Mehrleistungsart 'Beschäftigungsphase Sabbatjahr' 
+	 */
 	public static readonly ID_100 : LehrerMehrleistungArt = new LehrerMehrleistungArt("ID_100", 0, [new LehrerKatalogMehrleistungsartEintrag(1, "100", "Beschäftigungsphase Sabbatjahr", null, null)]);
 
+	/**
+	 * Mehrleistungsart 'Mehrarbeit (angeordnet und regelmäßig)' 
+	 */
 	public static readonly ID_110 : LehrerMehrleistungArt = new LehrerMehrleistungArt("ID_110", 1, [new LehrerKatalogMehrleistungsartEintrag(2, "110", "Mehrarbeit (angeordnet und regelmäßig)", null, null)]);
 
+	/**
+	 * Mehrleistungsart 'Aufrundung der Pflichtstundenzahl wegen Abrundung im folgenden Schuljahr ' 
+	 */
 	public static readonly ID_150 : LehrerMehrleistungArt = new LehrerMehrleistungArt("ID_150", 2, [new LehrerKatalogMehrleistungsartEintrag(3, "150", "Aufrundung der Pflichtstundenzahl wegen Abrundung im folgenden Schuljahr ", null, null)]);
 
+	/**
+	 * Mehrleistungsart 'Überschreitung der Pflichtstundenzahl aus organisatorischen Gründen (z. B. Epochenunterricht)' 
+	 */
 	public static readonly ID_160 : LehrerMehrleistungArt = new LehrerMehrleistungArt("ID_160", 3, [new LehrerKatalogMehrleistungsartEintrag(4, "160", "Überschreitung der Pflichtstundenzahl aus organisatorischen Gründen (z. B. Epochenunterricht)", null, null)]);
 
+	/**
+	 * Mehrleistungsart 'Überschreitung der Pflichtstundenzahl wegen COVID-19' 
+	 */
 	public static readonly ID_165 : LehrerMehrleistungArt = new LehrerMehrleistungArt("ID_165", 4, [new LehrerKatalogMehrleistungsartEintrag(6, "165", "Überschreitung der Pflichtstundenzahl wegen COVID-19", null, null)]);
 
+	/**
+	 * Mehrleistungsart 'Überschreitung der Pflichtstundenzahl wegen Pflichstunden-Bandbreite' 
+	 */
 	public static readonly ID_170 : LehrerMehrleistungArt = new LehrerMehrleistungArt("ID_170", 5, [new LehrerKatalogMehrleistungsartEintrag(5, "170", "Überschreitung der Pflichtstundenzahl wegen Pflichstunden-Bandbreite", null, null)]);
 
+	/**
+	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. 
+	 */
 	public static VERSION : number = 1;
 
+	/**
+	 * Der aktuellen Daten der Art von Mehrleistung, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null 
+	 */
 	public readonly daten : LehrerKatalogMehrleistungsartEintrag;
 
+	/**
+	 * Die Historie mit den Einträgen der Art von Mehrleistung 
+	 */
 	public readonly historie : Array<LehrerKatalogMehrleistungsartEintrag>;
 
+	/**
+	 * Eine Hashmap mit allen Arten von Mehrleistungen, welche ihrer ID zugeordnet sind. 
+	 */
 	private static readonly _artenByID : HashMap<Number, LehrerMehrleistungArt | null> = new HashMap();
 
+	/**
+	 * Eine Hashmap mit allen Arten von Mehrleistungen, welche dem Kürzel bzw. ASD-Schlüssel zugeordnet sind. 
+	 */
 	private static readonly _artenByKuerzel : HashMap<String, LehrerMehrleistungArt | null> = new HashMap();
 
 	/**

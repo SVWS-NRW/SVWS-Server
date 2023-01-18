@@ -3,8 +3,14 @@ import { JavaString, cast_java_lang_String } from '../../../../java/lang/JavaStr
 
 export class BKAnlageAFach extends JavaObject {
 
+	/**
+	 * Das Kürzel des Faches. 
+	 */
 	public kuerzel : String | null = null;
 
+	/**
+	 * Die Note in dem Fach. 
+	 */
 	public note : number = -1;
 
 

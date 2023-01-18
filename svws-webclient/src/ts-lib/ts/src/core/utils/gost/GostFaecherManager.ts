@@ -12,14 +12,23 @@ import { Comparator, cast_java_util_Comparator } from '../../../java/util/Compar
 
 export class GostFaecherManager extends JavaObject {
 
+	/**
+	 * Sortiert die Fächer anhand ihrer konfigurierten Sortierung 
+	 */
 	public static comp : Comparator<GostFach> = { compare : (a: GostFach | null, b: GostFach | null) => {
 		let va : number = (a === null) ? Number.MIN_VALUE : a.sortierung;
 		let vb : number = (b === null) ? Number.MIN_VALUE : b.sortierung;
 		return JavaInteger.compare(va, vb);
 	} };
 
+	/**
+	 * Die Liste der Fächer, die im Manager vorhanden sind. 
+	 */
 	private _faecher : LinkedCollection<GostFach> = new LinkedCollection();
 
+	/**
+	 * Eine HashMap für den schnellen Zugriff auf ein Fach anhand der ID 
+	 */
 	private _map : HashMap<Number, GostFach> = new HashMap();
 
 

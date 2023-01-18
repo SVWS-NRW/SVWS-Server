@@ -4,24 +4,56 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class ENMLernabschnitt extends JavaObject {
 
+	/**
+	 * 
+	 *  Die ID des Lernabschnittes in der SVWS-DB - kann zum Prüfen verwendet werden, ob der 
+	 *  zuvor exportierte Lernabschnitt in der DB noch gültig ist  
+	 */
 	public id : number = 0;
 
+	/**
+	 * Gibt die Anzahl der gesamten Fehlstunden an, sofern diese abschnittsbezogen ermittelt werden. 
+	 */
 	public fehlstundenGesamt : Number | null = null;
 
+	/**
+	 * Gibt den Zeitstempel der letzten Änderung für die Anzahl der gesamten Fehlstunden an, sofern diese abschnittsbezogen ermittelt werden. 
+	 */
 	public tsFehlstundenGesamt : String | null = null;
 
+	/**
+	 * Gibt die Anzahl der unentschuldigten Fehlstunden an, sofern diese abschnittsbezogen ermittelt werden. 
+	 */
 	public fehlstundenUnentschuldigt : Number | null = null;
 
+	/**
+	 * Gibt den Zeitstempel der letzten Änderung für die Anzahl der unentschuldigten Fehlstunden an, sofern diese abschnittsbezogen ermittelt werden. 
+	 */
 	public tsFehlstundenUnentschuldigt : String | null = null;
 
+	/**
+	 * Die Prüfungsordnung, die in dem Lernabschnitt verwendet werden muss 
+	 */
 	public pruefungsordnung : String | null = null;
 
+	/**
+	 * Das Kürzel der Note für den Lernbereich 1, die vergeben wurde. 
+	 */
 	public lernbereich1note : String | null = null;
 
+	/**
+	 * Das Kürzel der Note für den Lernbereich 2, die vergeben wurde. 
+	 */
 	public lernbereich2note : String | null = null;
 
+	/**
+	 * Das Kürzel des Haupförderschwerpunktes oder null bei keinem Haupförderschwerpunkt 
+	 */
 	public foerderschwerpunkt1 : String | null = null;
 
+	/**
+	 * Das Kürzel des weiteren Förderschwerpunktes oder null bei keinem weiteren Förderschwerpunkt 
+	 */
 	public foerderschwerpunkt2 : String | null = null;
 
 

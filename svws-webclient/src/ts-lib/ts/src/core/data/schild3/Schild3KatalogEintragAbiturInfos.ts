@@ -4,20 +4,44 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class Schild3KatalogEintragAbiturInfos extends JavaObject {
 
+	/**
+	 * Hier stehen neben Regeln für die alte u.a. einige Regeln für die FHR-Berechnung an GY und GE drin 
+	 */
 	public PrfOrdnung : String | null = null;
 
+	/**
+	 * Hier stehen neben Regeln für die alte u.a. einige Regeln für die FHR-Berechnung an GY und GE drin 
+	 */
 	public AbiFach : String | null = null;
 
+	/**
+	 * Hier stehen neben Regeln für die alte u.a. einige Regeln für die FHR-Berechnung an GY und GE drin 
+	 */
 	public Bedingung : String | null = null;
 
+	/**
+	 * Hier stehen neben Regeln für die alte u.a. einige Regeln für die FHR-Berechnung an GY und GE drin 
+	 */
 	public AbiInfoKrz : String | null = null;
 
+	/**
+	 * Hier stehen neben Regeln für die alte u.a. einige Regeln für die FHR-Berechnung an GY und GE drin 
+	 */
 	public AbiInfoBeschreibung : String | null = null;
 
+	/**
+	 * Hier stehen neben Regeln für die alte u.a. einige Regeln für die FHR-Berechnung an GY und GE drin 
+	 */
 	public AbiInfoText : String | null = null;
 
+	/**
+	 * Gültig ab Schuljahr 
+	 */
 	public gueltigVon : Number | null = null;
 
+	/**
+	 * Gültig bis Schuljahr 
+	 */
 	public gueltigBis : Number | null = null;
 
 

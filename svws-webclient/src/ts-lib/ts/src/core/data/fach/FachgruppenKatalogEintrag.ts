@@ -8,26 +8,59 @@ import { RGBFarbe, cast_de_nrw_schule_svws_core_data_RGBFarbe } from '../../../c
 
 export class FachgruppenKatalogEintrag extends JavaObject {
 
+	/**
+	 * Die ID des Katalog-Eintrags. 
+	 */
 	public id : number = -1;
 
+	/**
+	 * Die Nummer für den Fachbereich, sofern festgelegt, ansonsten null. 
+	 */
 	public nummer : Number | null = null;
 
+	/**
+	 * Die alte Fachgruppen-ID, welche in Schild_NRW 2.x verwendet wurde. 
+	 */
 	public idSchild : Number | null = null;
 
+	/**
+	 * Die Bezeichnung der Fachgruppe 
+	 */
 	public bezeichnung : String = "";
 
+	/**
+	 * Das Kürzel der Fachgruppe 
+	 */
 	public kuerzel : String = "";
 
+	/**
+	 * Die Farbe, welche der Fachgruppe zugeordnet wurde 
+	 */
 	public farbe : RGBFarbe = new RGBFarbe();
 
+	/**
+	 * Die Kürzel der Schulformen, bei welchen die Fachgruppe vorkommt. 
+	 */
 	public schulformen : List<String> = new Vector();
 
+	/**
+	 * Ein Zahlwert, welche eine Sortier-Reihenfolge der Fachgruppen angibt (aus Schild 2.x). 
+	 */
 	public sortierung : Number = 0;
 
+	/**
+	 * Gibt an, ob die Fachgruppe für die Unterteilung auf Zeugnissen genutzt wird oder nicht 
+	 */
 	public fuerZeugnis : boolean = false;
 
+	/**
+	 * Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 */
 	public gueltigVon : Number | null = null;
 
+	/**
+	 * Gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 */
 	public gueltigBis : Number | null = null;
 
 

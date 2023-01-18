@@ -4,12 +4,24 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class ENMNote extends JavaObject {
 
+	/**
+	 * Die ID der Note. 
+	 */
 	public id : number = 0;
 
+	/**
+	 * Die Kurzschreibweise der Note als Zahl ggf. mit Tendenz (+/-), ggf. auch ein Kürzel für PseudoNoten 
+	 */
 	public kuerzel : String | null = null;
 
+	/**
+	 * Die Notenpunkte, die dieser Note ggf. zugeordnet sind 
+	 */
 	public notenpunkte : Number | null = null;
 
+	/**
+	 * Die Note in ausführlicher Textform ggf. mit Tendenz (plus/minus) 
+	 */
 	public text : String | null = null;
 
 

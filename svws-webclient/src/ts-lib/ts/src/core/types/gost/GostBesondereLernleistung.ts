@@ -15,14 +15,29 @@ export class GostBesondereLernleistung extends JavaObject {
 	/** an array containing all values of this enumeration indexed by their name*/
 	private static readonly all_values_by_name : Map<String, GostBesondereLernleistung> = new Map<String, GostBesondereLernleistung>();
 
+	/**
+	 * keine besondere Lernleistung = K 
+	 */
 	public static readonly KEINE : GostBesondereLernleistung = new GostBesondereLernleistung("KEINE", 0, "K", "Keine");
 
+	/**
+	 * Projektkurs ist besondere Lernleistung = P 
+	 */
 	public static readonly PROJEKTKURS : GostBesondereLernleistung = new GostBesondereLernleistung("PROJEKTKURS", 1, "P", "Projektkurs ist besondere Lernleistung");
 
+	/**
+	 * externe besondere Lernleistung = E 
+	 */
 	public static readonly EXTERNE : GostBesondereLernleistung = new GostBesondereLernleistung("EXTERNE", 2, "E", "externe besondere Lernleistung");
 
+	/**
+	 * Das Kürzel für die Art der Besonderen Lernleistung 
+	 */
 	public readonly kuerzel : String;
 
+	/**
+	 * Die textuelle Beschreibung der Art der Besonderen Lernleistung 
+	 */
 	public readonly beschreibung : String;
 
 	/**

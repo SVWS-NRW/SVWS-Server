@@ -5,8 +5,14 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 
 export class AbgangsartKatalog extends JavaObject {
 
+	/**
+	 * Die Version des Katalog. Diese wird bei Änderungen am Katalog um 1 erhöht. 
+	 */
 	public version : number = -1;
 
+	/**
+	 * Die Einträge des Katalogs. 
+	 */
 	public eintraege : List<AbgangsartKatalogEintrag> = new Vector();
 
 

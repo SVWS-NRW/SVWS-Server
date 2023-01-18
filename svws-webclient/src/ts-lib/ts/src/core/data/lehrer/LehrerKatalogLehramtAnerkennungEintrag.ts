@@ -4,14 +4,29 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class LehrerKatalogLehramtAnerkennungEintrag extends JavaObject {
 
+	/**
+	 * Die ID des Katalog-Eintrags.
+	 */
 	public id : number = 0;
 
+	/**
+	 * Das Kürzel für den Anerkennungsgrund eines Lehramts. 
+	 */
 	public kuerzel : String = "";
 
+	/**
+	 * Der Klartext des Anerkennungsgrundes eines Lehramts. 
+	 */
 	public text : String = "";
 
+	/**
+	 * Gibt an, in welchem Schuljahr der Anerkennungsgrund eines Lehramts einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 */
 	public gueltigVon : Number | null = null;
 
+	/**
+	 * Gibt an, bis zu welchem Schuljahr der Anerkennungsgrund eines Lehramts gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 */
 	public gueltigBis : Number | null = null;
 
 

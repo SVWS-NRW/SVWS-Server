@@ -3,12 +3,24 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class GostBelegungsfehlerArt extends JavaObject {
 
+	/**
+	 * Belegungsfehler 
+	 */
 	public static readonly BELEGUNG : GostBelegungsfehlerArt = new GostBelegungsfehlerArt("BELEGUNG");
 
+	/**
+	 * Fehler bei der Schriftlichkeit 
+	 */
 	public static readonly SCHRIFTLICHKEIT : GostBelegungsfehlerArt = new GostBelegungsfehlerArt("SCHRIFTLICHKEIT");
 
+	/**
+	 * Information, aber kein Fehler 
+	 */
 	public static readonly HINWEIS : GostBelegungsfehlerArt = new GostBelegungsfehlerArt("HINWEIS");
 
+	/**
+	 * Das Kürzel für die Belegungsfehlerart 
+	 */
 	public readonly kuerzel : String;
 
 

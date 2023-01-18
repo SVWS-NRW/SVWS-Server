@@ -7,10 +7,20 @@ import { AVLMapSubMap, cast_de_nrw_schule_svws_core_adt_map_AVLMapSubMap } from 
 
 export class AVLMapSubEntrySetIterator<K, V> extends JavaObject implements JavaIterator<JavaMapEntry<K, V>> {
 
+	/**
+	 *  Die {@link AVLMapSubMap} auf der dieser Iterator operiert.
+	 */
 	private readonly _sub : AVLMapSubMap<K, V>;
 
+	/**
+	 *  Der aktuelle Eintrag. Ein NULL-Wert bedeutet, dass das Element bereits entfernt wurde oder der Iterator auf einer
+	 *  ungültigen Position ist, beispielsweise vor dem ersten Element.
+	 */
 	private _current : JavaMapEntry<K, V> | null = null;
 
+	/**
+	 *  Der nächste Eintrag.
+	 */
 	private _next : JavaMapEntry<K, V> | null = null;
 
 

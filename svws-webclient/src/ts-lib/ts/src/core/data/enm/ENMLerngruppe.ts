@@ -6,22 +6,49 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 
 export class ENMLerngruppe extends JavaObject {
 
+	/**
+	 * Die eindeutige ID der Lerngruppe - generiert, nicht (!) aus der SVWS-DB 
+	 */
 	public id : number = 0;
 
+	/**
+	 * Die ID der Lerngruppe in der SVWS-DB (Die ID des Kurses oder die ID der Klasse in der Versetzungstabelle, siehe kursartID). 
+	 */
 	public kID : number = 0;
 
+	/**
+	 * Die ID des Faches der Lerngruppe. 
+	 */
 	public fachID : number = 0;
 
+	/**
+	 * Gibt die ID der Kursart an. Ist dieser Wert null, so handelt es sich um Klassen-Unterricht. 
+	 */
 	public kursartID : Number | null = null;
 
+	/**
+	 * Die Bezeichnung der Lerngruppe (z.B. D-GK4) 
+	 */
 	public bezeichnung : String | null = null;
 
+	/**
+	 * Die Bezeichnung der (allgemeinen) Kursart (z.B. GK) 
+	 */
 	public kursartKuerzel : String | null = null;
 
+	/**
+	 * Das einstellige Kürzel der bilingualen Sprache, sofern es sich um eine bilinguale Lerngruppe handelt. (z.B. F) 
+	 */
 	public bilingualeSprache : String | null = null;
 
+	/**
+	 * Die IDs der Lehrer, die der Lerngruppe zugeordnet sind. 
+	 */
 	public lehrerID : Vector<Number> = new Vector();
 
+	/**
+	 * Die Anzahl der Wochenstunden, falls es sich um einen Kurs handelt. 
+	 */
 	public wochenstunden : number = 0;
 
 

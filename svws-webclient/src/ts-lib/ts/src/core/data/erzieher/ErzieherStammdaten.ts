@@ -5,38 +5,89 @@ import { JavaBoolean, cast_java_lang_Boolean } from '../../../java/lang/JavaBool
 
 export class ErzieherStammdaten extends JavaObject {
 
+	/**
+	 * Die ID des Erziehers. 
+	 */
 	public id : number = 0;
 
+	/**
+	 * Die ID des Schülers, welchem der Erzieher zugeordnet ist. 
+	 */
 	public idSchueler : number = 0;
 
+	/**
+	 * Die ID der Art des Erziehereintrages 
+	 */
 	public idErzieherArt : Number | null = null;
 
+	/**
+	 * Die Titel des Erziehers. 
+	 */
 	public titel : String | null = null;
 
+	/**
+	 * Die Anrede des Erziehers. 
+	 */
 	public anrede : String | null = null;
 
+	/**
+	 * Der Name des Erziehers. 
+	 */
 	public nachname : String | null = null;
 
+	/**
+	 * Ggf. Zusatz zum Nachnamen des Erziehers. 
+	 */
 	public zusatzNachname : String | null = null;
 
+	/**
+	 * Der Vorname des Erziehers. 
+	 */
 	public vorname : String | null = null;
 
+	/**
+	 * Ggf. der Straßenname im Wohnort des Erziehers. 
+	 */
 	public strassenname : String | null = null;
 
+	/**
+	 * Ggf. die Hausnummer zur Straße im Wohnort des Erziehers. 
+	 */
 	public hausnummer : String | null = null;
 
+	/**
+	 * Ggf. der Hausnummerzusatz zur Straße im Wohnort des Erziehers. 
+	 */
 	public hausnummerZusatz : String | null = null;
 
+	/**
+	 * Die ID des Wohnortes des Erziehers. 
+	 */
 	public wohnortID : Number | null = null;
 
+	/**
+	 * Die ID des Ortsteils des Erziehers. 
+	 */
 	public ortsteilID : Number | null = null;
 
+	/**
+	 * Gibt an, ob der Erzieher Anschreiben erhält oder nicht. 
+	 */
 	public erhaeltAnschreiben : Boolean | null = null;
 
+	/**
+	 * Die E-Mailadresse des Erziehers. 
+	 */
 	public eMail : String | null = null;
 
+	/**
+	 * Die ID der Staatsangehörigkeit des Erziehers. 
+	 */
 	public staatsangehoerigkeitID : String | null = null;
 
+	/**
+	 * Anmerkungen zum Erziehers. 
+	 */
 	public bemerkungen : String | null = null;
 
 

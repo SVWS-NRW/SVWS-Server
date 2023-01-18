@@ -3,10 +3,19 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class SchemaListeEintrag extends JavaObject {
 
+	/**
+	 * Der Name des Schemas. 
+	 */
 	public name : String | null = null;
 
+	/**
+	 * Die Revisionsnummer des Schemas. 
+	 */
 	public revision : number = 0;
 
+	/**
+	 * Gibt an, ob das Schema als "verdorben" markiert wurde und deswegen nicht mehr für den produktiven Einsatz in der Schule genutzt werden sollte. 
+	 */
 	public isTainted : boolean = false;
 
 

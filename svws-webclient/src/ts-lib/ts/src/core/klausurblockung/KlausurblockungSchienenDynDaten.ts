@@ -19,30 +19,64 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 
 	private static readonly SCHIENEN_MAX_ANZAHL : number = 1000;
 
+	/**
+	 * Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed. 
+	 */
 	private readonly _random : Random;
 
+	/**
+	 * Logger für Benutzerhinweise, Warnungen und Fehler. 
+	 */
 	private readonly _logger : Logger;
 
+	/**
+	 * Die Datenbank-ID der zugehörigen Klausurblockung. Sie muss positiv sein, sonst wird ein Fehler erzeugt. 
+	 */
 	private readonly _datenbankID : number;
 
+	/**
+	 * Mapping, um eine Sammlung von Long-Werten in laufende Integer-Werte umzuwandeln. 
+	 */
 	private readonly _mapKlausurZuNummer : HashMap<Number, Number> = new HashMap();
 
+	/**
+	 * Mapping, um eine Sammlung von Long-Werten in laufende Integer-Werte umzuwandeln. 
+	 */
 	private readonly _mapSchuelerZuNummer : HashMap<Number, Number> = new HashMap();
 
+	/**
+	 * Die Anzahl der Klausuren. 
+	 */
 	private readonly _klausurenAnzahl : number;
 
+	/**
+	 * Jeder Klausurnummer wird eine Schiene zugeordnet. Der Wert -1 definiert eine temporäre Nicht-Zuordnung. Am Ende
+	 *  des Algorithmus hat jede Klausur einen Wert >= 0. Und die Speicher-Zustände. 
+	 */
 	private readonly _klausurZuSchiene : Array<number>;
 
 	private readonly _klausurZuSchiene1 : Array<number>;
 
 	private readonly _klausurZuSchiene2 : Array<number>;
 
+	/**
+	 * Jeder Klausurnummer wird der Knotengrad (Anzahl an Nachbarn) zugeordnet. 
+	 */
 	private readonly _klausurnummerZuGrad : Array<number>;
 
+	/**
+	 * Ein Array aller Klausurnummern, sortiert nach ihrem Knotengrad (Anzahl an Nachbarn). 
+	 */
 	private readonly _klausurenSortiertGrad : Array<number>;
 
+	/**
+	 * Bestimmt, ob ein Klausurnummer-Paar in der selben Schiene verboten ist. 
+	 */
 	private readonly _verboten : Array<Array<boolean>>;
 
+	/**
+	 * Die Anzahl der derzeitigen verwendeten Schienen. Und die Speicher-Zustände. 
+	 */
 	private _schienenAnzahl : number = 0;
 
 	private _schienenAnzahl1 : number = KlausurblockungSchienenDynDaten.SCHIENEN_MAX_ANZAHL;

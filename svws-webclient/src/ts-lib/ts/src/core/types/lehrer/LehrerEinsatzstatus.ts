@@ -18,20 +18,44 @@ export class LehrerEinsatzstatus extends JavaObject {
 	/** an array containing all values of this enumeration indexed by their name*/
 	private static readonly all_values_by_name : Map<String, LehrerEinsatzstatus> = new Map<String, LehrerEinsatzstatus>();
 
+	/**
+	 * Einsatzstatus: 'Stammschule, ganz oder teilweise auch an anderen Schulen tätig' 
+	 */
 	public static readonly A : LehrerEinsatzstatus = new LehrerEinsatzstatus("A", 0, [new LehrerKatalogEinsatzstatusEintrag(1, "A", "Stammschule, ganz oder teilweise auch an anderen Schulen tätig", null, null)]);
 
+	/**
+	 * Einsatzstatus: 'nicht Stammschule, aber auch hier tätig' 
+	 */
 	public static readonly B : LehrerEinsatzstatus = new LehrerEinsatzstatus("B", 1, [new LehrerKatalogEinsatzstatusEintrag(2, "B", "nicht Stammschule, aber auch hier tätig", null, null)]);
 
+	/**
+	 * Einsatzstatus: 'Stammschule, nur hier tätig' 
+	 */
 	public static readonly DEFAULT : LehrerEinsatzstatus = new LehrerEinsatzstatus("DEFAULT", 2, [new LehrerKatalogEinsatzstatusEintrag(3, "*", "Stammschule, nur hier tätig", null, null)]);
 
+	/**
+	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. 
+	 */
 	public static VERSION : number = 1;
 
+	/**
+	 * Der aktuellen Daten des Einsatzstatus, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null 
+	 */
 	public readonly daten : LehrerKatalogEinsatzstatusEintrag;
 
+	/**
+	 * Die Historie mit den Einträgen des Einsatzstatus 
+	 */
 	public readonly historie : Array<LehrerKatalogEinsatzstatusEintrag>;
 
+	/**
+	 * Eine Hashmap mit allen Einsatzstatus, welche ihrer ID zugeordnet sind. 
+	 */
 	private static readonly _statusByID : HashMap<Number, LehrerEinsatzstatus | null> = new HashMap();
 
+	/**
+	 * Eine Hashmap mit allen Einsatzstatus, welche dem Kürzel bzw. ASD-Schlüssel zugeordnet sind. 
+	 */
 	private static readonly _statusByKuerzel : HashMap<String, LehrerEinsatzstatus | null> = new HashMap();
 
 	/**

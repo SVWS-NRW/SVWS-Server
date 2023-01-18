@@ -4,18 +4,46 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class SchulformKatalogEintrag extends JavaObject {
 
+	/**
+	 * Die ID des Katalog-Eintrags. 
+	 */
 	public id : number = 0;
 
+	/**
+	 * Das Kürzel der Schulform, welches im Rahmen der amtlichen Schulstatistik verwendet wird 
+	 */
 	public kuerzel : String = "";
 
+	/**
+	 * 
+	 *  Die Nummer, welche im Rahmen der amtlichen Schulstatistik verwendet wird. Diese wird zwar 
+	 *  in der SVWS-DB bei der Schule gespeichert, aber dort aus dem Schulverzeichnis genommen.
+	 *  Der Wert hier sollte i.A. nicht benötigt werden, da eine Unterscheidung anhand des Kürzels 
+	 *  stattfindet.
+	 *  Stand 4.1.2021: Bei der "Hibernia"-Schulform und der Schulform "Schule für Kranke" ist der
+	 *                  Wert der Nummer fehlerhaft, da dort eine Doppelung beim Kürzel vorliegt und
+	 *                  diese somit nicht korrekt erfasst werden. 
+	 */
 	public nummer : String = "";
 
+	/**
+	 * Die Bezeichnung der Schulform. 
+	 */
 	public bezeichnung : String = "";
 
+	/**
+	 * Gibt an, ob eine Schule der Schulform eine gymnasiale Oberstufe haben kann oder nicht. 
+	 */
 	public hatGymOb : boolean = false;
 
+	/**
+	 * Gibt an, in welchem Schuljahr die Schulform einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 */
 	public gueltigVon : Number | null = null;
 
+	/**
+	 * Gibt an, bis zu welchem Schuljahr die Schulform gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 */
 	public gueltigBis : Number | null = null;
 
 

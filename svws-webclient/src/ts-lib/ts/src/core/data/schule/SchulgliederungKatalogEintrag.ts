@@ -10,34 +10,79 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 
 export class SchulgliederungKatalogEintrag extends JavaObject {
 
+	/**
+	 * Die ID des Katalog-Eintrags. 
+	 */
 	public id : number = -1;
 
+	/**
+	 * Das Kürzel der Schulgliederung, welches im Rahmen der amtlichen Schulstatistik verwendet wird 
+	 */
 	public kuerzel : String = "";
 
+	/**
+	 * Gibt an, ob es sich um einen Bildungsgang am Berufskolleg handelt. 
+	 */
 	public istBK : boolean = false;
 
+	/**
+	 * Die Kürzel der Schulformen, bei welchen die Schulgliederung vorkommt. 
+	 */
 	public schulformen : List<String> = new Vector();
 
+	/**
+	 * Gibt an, ob es sich um eine auslaufende Schulgliederung oder einen auslaufenden Bildungsgang handelt. 
+	 */
 	public istAuslaufend : boolean = false;
 
+	/**
+	 * Gibt an, ob es sich um eine ausgelaufene Schulgliederung oder einen ausgelaufenen Bildungsgang handelt. 
+	 */
 	public istAusgelaufen : boolean = false;
 
+	/**
+	 * Die textuelle Beschreibung der Schulgliederung bzw. des Bildungsganges. 
+	 */
 	public beschreibung : String = "";
 
+	/**
+	 * Die Anlage, wenn es sich um einen Bildungsgang am Berufskolleg handelt. 
+	 */
 	public bkAnlage : String | null = null;
 
+	/**
+	 * Der Typ der Anlage, wenn es sich um einen Bildungsgang am Berufskolleg handelt. 
+	 */
 	public bkTyp : String | null = null;
 
+	/**
+	 * Der Index für den Zugriff auf die Fachklassen am Berufskolleg. Dieser kann bei unterschiedlichen Gliederungen identisch sein. 
+	 */
 	public bkIndex : Number | null = null;
 
+	/**
+	 * Gibt an, ob es sich um einen Bildungsgang in Vollzeit handelt oder nicht 
+	 */
 	public istVZ : boolean = false;
 
+	/**
+	 * Gibt eine Liste von berufsbildenden Abschlüssen an, die in diesem Bildungsgang erreicht werden können, wenn es sich um einen Bildungsgang am Berufskolleg handelt. 
+	 */
 	public bkAbschlussBerufsbildend : List<String> = new Vector();
 
+	/**
+	 * Gibt eine Liste von allgemeinbildenden Abschlüssen an, die in diesem Bildungsgang erreicht werden können, wenn es sich um einen Bildungsgang am Berufskolleg handelt. 
+	 */
 	public bkAbschlussAllgemeinbildend : List<String> = new Vector();
 
+	/**
+	 * Gibt an, in welchem Schuljahr die Schulgliederung einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 */
 	public gueltigVon : Number | null = null;
 
+	/**
+	 * Gibt an, bis zu welchem Schuljahr die Schulform gültig ist. Ist kein Schulgliederung bekannt, so ist null gesetzt. 
+	 */
 	public gueltigBis : Number | null = null;
 
 

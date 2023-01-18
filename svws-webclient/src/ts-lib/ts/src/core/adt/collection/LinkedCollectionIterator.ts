@@ -8,10 +8,21 @@ import { UnsupportedOperationException, cast_java_lang_UnsupportedOperationExcep
 
 export class LinkedCollectionIterator<E> extends JavaObject implements JavaIterator<E> {
 
+	/**
+	 * Die dem Iterator zugehörige Collection 
+	 */
 	private _collection : LinkedCollection<E>;
 
+	/**
+	 * Der Zeiger auf das aktuelle Element 
+	 */
 	private _current : LinkedCollectionElement<E> | null = null;
 
+	/**
+	 * Die Anzahl der Modifikationen, die bei der {@link LinkedCollection} zur Zeit des Erzeugen des Iterators
+	 *  gemacht wurden. Dieser Wert muss mit dem bei der {@link LinkedCollection} übereinstimmen. Ansonsten 
+	 *  wird eine {@link ConcurrentModificationException} generiert. 
+	 */
 	private readonly _expModCount : number;
 
 

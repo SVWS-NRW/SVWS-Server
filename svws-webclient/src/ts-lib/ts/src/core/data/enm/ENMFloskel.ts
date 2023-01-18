@@ -4,14 +4,31 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class ENMFloskel extends JavaObject {
 
+	/**
+	 * Das Kürzel der Floskel. 
+	 */
 	public kuerzel : String | null = null;
 
+	/**
+	 * Der Text der Floskel. 
+	 */
 	public text : String | null = null;
 
+	/**
+	 * Die ID des Faches, dem die Floskel zugeordnet ist, sofern die Floskel einem Fach 
+	 *  zugeordnet wurde, ansonsten null. 
+	 */
 	public fachID : Number | null = null;
 
+	/**
+	 * Eine den Notenstufen ähnliche Kategorisierung 
+	 */
 	public niveau : Number | null = null;
 
+	/**
+	 * Die ID des Jahrganges, dem die Floskel zugeordnet ist, falls die Floskel einem Fach 
+	 *  zugeordnet wurde, ansonsten null, falls sie für alle Jahrgänge gilt. 
+	 */
 	public jahrgangID : Number | null = null;
 
 

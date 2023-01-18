@@ -5,20 +5,44 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 
 export class KursListeEintrag extends JavaObject {
 
+	/**
+	 * Die ID des Kurses. 
+	 */
 	public id : number = 0;
 
+	/**
+	 * Die ID des Schuljahresabschnittes des Kurses. 
+	 */
 	public idSchuljahresabschnitt : number = 0;
 
+	/**
+	 * Das Kürzel des Kurses. 
+	 */
 	public kuerzel : String = "";
 
+	/**
+	 * Die IDs der Jahrgänge, denen der Kurs zugeordnet ist 
+	 */
 	public idJahrgaenge : Vector<Number> = new Vector();
 
+	/**
+	 * Die ID des Faches, dem der Kurs zugeordnet ist 
+	 */
 	public idFach : number = 0;
 
+	/**
+	 * Die ID des Kurslehrers. 
+	 */
 	public lehrer : Number | null = null;
 
+	/**
+	 * Die Sortierreihenfolge des Jahrgangslisten-Eintrags. 
+	 */
 	public sortierung : number = 0;
 
+	/**
+	 * Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht. 
+	 */
 	public istSichtbar : boolean = false;
 
 

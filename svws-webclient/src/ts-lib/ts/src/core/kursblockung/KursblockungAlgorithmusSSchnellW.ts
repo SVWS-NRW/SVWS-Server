@@ -8,8 +8,14 @@ import { Logger, cast_de_nrw_schule_svws_core_logger_Logger } from '../../core/l
 
 export class KursblockungAlgorithmusSSchnellW extends KursblockungAlgorithmusS {
 
+	/**
+	 *  Array der SuS, deren Kurse verteilt werden sollen.
+	 */
 	private readonly schuelerArr : Array<KursblockungDynSchueler>;
 
+	/**
+	 *  Zur Speicherung einer zufälligen Permutation der Indizes der Schüler.
+	 */
 	private readonly perm : Array<number>;
 
 

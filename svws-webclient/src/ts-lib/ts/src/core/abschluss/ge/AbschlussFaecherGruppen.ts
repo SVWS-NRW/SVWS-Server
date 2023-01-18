@@ -8,8 +8,14 @@ import { Predicate, cast_java_util_function_Predicate } from '../../../java/util
 
 export class AbschlussFaecherGruppen extends JavaObject {
 
+	/**
+	 * Die Fächergruppe 1 
+	 */
 	public readonly fg1 : AbschlussFaecherGruppe;
 
+	/**
+	 * Die Fächergruppe 1 
+	 */
 	public readonly fg2 : AbschlussFaecherGruppe;
 
 

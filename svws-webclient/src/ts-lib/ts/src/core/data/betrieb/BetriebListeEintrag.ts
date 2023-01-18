@@ -4,20 +4,44 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class BetriebListeEintrag extends JavaObject {
 
+	/**
+	 * ID der weiteren Adresse (Betriebe) 
+	 */
 	public id : Number | null = null;
 
+	/**
+	 * Adressart des Betriebs, Fremdschlüssel auf die ID in K_Adressart 
+	 */
 	public adressArt : Number | null = null;
 
+	/**
+	 * Name1 des Betriebs 
+	 */
 	public name1 : String | null = null;
 
+	/**
+	 * Straßenname des Betriebsdatensatz 
+	 */
 	public strassenname : String | null = null;
 
+	/**
+	 * Hausnummer wenn getrennt gespeichert 
+	 */
 	public hausnr : String | null = null;
 
+	/**
+	 * Zusatz zur Hausnummer wenn Hausnummern getrennt gespeichert werden 
+	 */
 	public hausnrzusatz : String | null = null;
 
+	/**
+	 * OrtID des Betriebs 
+	 */
 	public ort_id : Number | null = null;
 
+	/**
+	 * Brache des Betriebs 
+	 */
 	public branche : String | null = null;
 
 

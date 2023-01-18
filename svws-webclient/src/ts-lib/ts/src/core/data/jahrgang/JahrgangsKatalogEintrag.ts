@@ -7,14 +7,29 @@ import { JahrgangsKatalogEintragBezeichnung, cast_de_nrw_schule_svws_core_data_j
 
 export class JahrgangsKatalogEintrag extends JavaObject {
 
+	/**
+	 * Die ID des Katalog-Eintrags. 
+	 */
 	public id : number = 0;
 
+	/**
+	 * Das 2-stellige Jahrgangskürzel 
+	 */
 	public kuerzel : String = "";
 
+	/**
+	 * Die Jahrgangsbezeichungen bei den zulässigen Schulformen. 
+	 */
 	public bezeichnungen : List<JahrgangsKatalogEintragBezeichnung> = new Vector();
 
+	/**
+	 * Gibt an, in welchem Schuljahr der Jahrgang ergänzt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 */
 	public gueltigVon : Number | null = null;
 
+	/**
+	 * Gibt an, bis zu welchem Schuljahr der Jahrgang verwendet wird. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 */
 	public gueltigBis : Number | null = null;
 
 

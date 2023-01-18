@@ -2,10 +2,20 @@ import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject
 
 export abstract class SatSolverA extends JavaObject {
 
+	/**
+	 *  Ergebnis der Methode {@link #solve}, wenn die Formel unlösbar ist.
+	 */
 	public static readonly RESULT_UNSATISFIABLE : number = -1;
 
+	/**
+	 *  Ergebnis der Methode {@link #solve}, wenn die Lösbarkeit der Formel in der vorgegebenen Zeit nicht bestimmt
+	 *  werden konnte.
+	 */
 	public static readonly RESULT_UNKNOWN : number = 0;
 
+	/**
+	 *  Ergebnis der Methode {@link #solve}, wenn die Formel gelöst wurde ist.
+	 */
 	public static readonly RESULT_SATISFIABLE : number = 1;
 
 

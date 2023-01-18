@@ -6,16 +6,34 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 
 export class Adressbuch extends JavaObject {
 
+	/**
+	 * ID des Adressbuchs 
+	 */
 	public id : String = "";
 
+	/**
+	 * Anzeigename des Adressbuchs 
+	 */
 	public displayname : String | null = null;
 
+	/**
+	 * Beschreibung des Adressbuchs 
+	 */
 	public beschreibung : String | null = null;
 
+	/**
+	 * Versionskennzeichen des Adressbuchs 
+	 */
 	public synctoken : number = 0;
 
+	/**
+	 *  der Typ des Adressbuchs
+	 */
 	public adressbuchTyp : String = "";
 
+	/**
+	 *  eine Liste der Einträge des Adressbuchs
+	 */
 	public adressbuchEintraege : List<AdressbuchEintrag> = new Vector();
 
 

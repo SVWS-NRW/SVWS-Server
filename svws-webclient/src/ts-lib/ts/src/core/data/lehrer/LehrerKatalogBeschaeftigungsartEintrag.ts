@@ -4,14 +4,29 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class LehrerKatalogBeschaeftigungsartEintrag extends JavaObject {
 
+	/**
+	 * Die ID des Katalog-Eintrags. 
+	 */
 	public id : number = 0;
 
+	/**
+	 * Das Kürzel für die Beschäftigungsart. 
+	 */
 	public kuerzel : String = "";
 
+	/**
+	 * Der Klartext der Beschäftigungsart. 
+	 */
 	public text : String = "";
 
+	/**
+	 * Gibt an, in welchem Schuljahr die Beschäftigungsart einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 */
 	public gueltigVon : Number | null = null;
 
+	/**
+	 * Gibt an, bis zu welchem Schuljahr die Beschäftigungsart gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 */
 	public gueltigBis : Number | null = null;
 
 

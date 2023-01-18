@@ -11,22 +11,51 @@ import { System, cast_java_lang_System } from '../../java/lang/System';
 
 export class KursblockungDynFachart extends JavaObject {
 
+	/**
+	 * Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed. 
+	 */
 	private readonly _random : Random;
 
+	/**
+	 * Eine laufende Nummer der Fachart. 
+	 */
 	private readonly nr : number;
 
+	/**
+	 * Referenz zum zugehörigen GOST-Fach. 
+	 */
 	private readonly gostFach : GostFach;
 
+	/**
+	 * Referenz zur zugehörigen GOST-Kursart. 
+	 */
 	private readonly gostKursart : GostKursart;
 
+	/**
+	 * Ein Array aller Kurse dieser Fachart. Das Array bleibt dynamisch sortiert, so dass im Array zunächst der Kurs
+	 *  mit der geringsten Schüleranzahl ist. 
+	 */
 	private kursArr : Array<KursblockungDynKurs>;
 
+	/**
+	 * Die maximale Anzahl an Schülern, die dieser Fachart zugeordnet sein können. Also die Anzahl der Schüler, die
+	 *  diese Fachart gewählt haben. 
+	 */
 	private schuelerMax : number = 0;
 
+	/**
+	 * Die maximale Anzahl an Kursen, die dieser Fachart zugeordnet sein können. 
+	 */
 	private kurseMax : number = 0;
 
+	/**
+	 * Die aktuelle Anzahl an Schülern, die dieser Fachart zugeordnet sind. 
+	 */
 	private schuelerAnzNow : number = 0;
 
+	/**
+	 * Dem Statistik-Objekt wird eine Veränderung der Kursdifferenz mitgeteilt. 
+	 */
 	private readonly statistik : KursblockungDynStatistik;
 
 

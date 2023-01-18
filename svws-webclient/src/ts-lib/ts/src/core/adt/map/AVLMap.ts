@@ -20,16 +20,36 @@ import { UnsupportedOperationException, cast_java_lang_UnsupportedOperationExcep
 
 export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 
+	/**
+	 *  Ein Dummy-Element für den Schlüsselwert "-Unendlich".
+	 */
 	private readonly _infinityMinus : K = AVLMapIntervall._INFINITY_MINUS as unknown as K;
 
+	/**
+	 *  Ein Dummy-Element für den Schlüsselwert "+Unendlich".
+	 */
 	private readonly _infinityPlus : K = AVLMapIntervall._INFINITY_PLUS as unknown as K;
 
+	/**
+	 *  Ein Dummy-Element für ein Pseudo-Mapping.
+	 */
 	private readonly _dummyValue : V = new Object() as unknown as V;
 
+	/**
+	 *  Alle Anfragen werden an die Sub-Map delegiert. Diese hat einen Bereich von "-Unendlich" bis "+Unendlich" und
+	 *  beinhaltet somit alle Elemente.
+	 */
 	private readonly _sub : AVLMapSubMap<K, V> = new AVLMapSubMap(this, new AVLMapIntervall(this._infinityMinus, false, this._infinityPlus, false), true);
 
+	/**
+	 *  Der {@link Comparator}, der zum Vergleichen der Schlüsselwerte genutzt wird.
+	 */
 	private readonly _comparator : Comparator<K>;
 
+	/**
+	 *  Der {@link Comparator}, der zum Vergleichen der Schlüsselwerte genutzt wird, wenn eine natürliche Ordnung über
+	 *  das {@link Comparable} - Interface verwendet wird.
+	 */
 	private readonly _comparatorNatural : Comparator<K> = { compare : (key1: K, key2: K) => {
 		if ((key1 === null) || (key2 === null)) 
 			throw new NullPointerException()
@@ -39,8 +59,15 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 		return k1.compareTo(key2);
 	} };
 
+	/**
+	 *  Die Wurzel des Baumes. Bei einem leeren Baum ist diese Referenz NULL.
+	 */
 	private _root : AVLMapNode<K, V> | null = null;
 
+	/**
+	 *  Gibt an, ob das Hinzufügen von KEYs ohne VALUE erlaubt ist. Falls TRUE, dann wird der KEY einer Pseudo-VALUE
+	 *  zugeordnet.
+	 */
 	private _allowKeyAlone : boolean = false;
 
 

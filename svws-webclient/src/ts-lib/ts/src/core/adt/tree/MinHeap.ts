@@ -18,14 +18,29 @@ import { CloneNotSupportedException, cast_java_lang_CloneNotSupportedException }
 
 export class MinHeap<T> extends JavaObject implements Queue<T>, Cloneable {
 
+	/**
+	 * Die Anzahl der Elemente in diesem Heap. 
+	 */
 	private _size : number = 0;
 
+	/**
+	 * Dieses Array enthält die Elemente des MinHeap. 
+	 */
 	private _nodes : Array<T | null> = Array(0).fill(null);
 
+	/**
+	 * Ein Objekt zum Vergleichen von Werten. 
+	 */
 	private readonly _comparator : Comparator<T>;
 
+	/**
+	 * Die initiale Kapazität des Baums 
+	 */
 	private readonly _initialCapacity : number;
 
+	/**
+	 * Die Anzahl der Modifikationen, die an dieser Datenstruktur vorgenommen wurden 
+	 */
 	protected _modCount : number = 0;
 
 

@@ -3,8 +3,14 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class StundenplanInputSimpleKlasse extends JavaObject {
 
+	/**
+	 * Die ID der Klasse. 
+	 */
 	public id : number = 0;
 
+	/**
+	 * Das Kürzel der Klasse. Beispielsweise '7b' oder 'Q1'. 
+	 */
 	public kuerzel : String = "";
 
 

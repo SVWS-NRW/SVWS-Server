@@ -5,10 +5,19 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 
 export class StundenplanblockungManagerFach extends JavaObject {
 
+	/**
+	 * Die Datenbank-ID des Faches. 
+	 */
 	_id : number = 0;
 
+	/**
+	 * Das Kürzel des Faches. Beispielsweise 'D', 'E' oder 'M'. 
+	 */
 	_kuerzel : String = "";
 
+	/**
+	 * Alle Lerngruppen in denen das Fach vertreten ist. 
+	 */
 	_menge_gr : Vector<StundenplanblockungManagerLerngruppe | null> = new Vector();
 
 

@@ -13,16 +13,37 @@ import { HashSet, cast_java_util_HashSet } from '../../../java/util/HashSet';
 
 export class BenutzerManager extends JavaObject {
 
+	/**
+	 * Die Daten des Benutzers, die im Manager vorhanden sind. 
+	 */
 	private readonly _daten : BenutzerDaten;
 
+	/**
+	 * Eine Map zum schnellen Zugriff auf die Benutzergruppendaten 
+	 */
 	private readonly _mapGruppen : HashMap<Number, BenutzergruppeDaten> = new HashMap();
 
+	/**
+	 * Die Ids der Benutzergruppen des Benutzers 
+	 */
 	private readonly _setGruppenIDs : HashSet<Number> = new HashSet();
 
+	/**
+	 *  Eine Map, welche zu einer Kompetenz eine Liste zuordnet, welche alle
+	 *  Benutzer-Gruppen beinhaltet, von denen
+	 *  der Benutzer die Kompetenz erhalten hat.
+	 */
 	private readonly _mapKompetenzenVonGruppe : HashMap<BenutzerKompetenz, Vector<BenutzergruppeDaten>> = new HashMap();
 
+	/**
+	 * Die Menge an Kompetenzen, die diesem Benutzer direkt zugeordnet ist. 
+	 */
 	private readonly _setKompetenzen : HashSet<BenutzerKompetenz> = new HashSet();
 
+	/**
+	 *  Die Menge an Kompetenzen, die diesem Benutzer entweder direkt oder über
+	 *  mindestens eine Gruppe zugeordnet ist.
+	 */
 	private readonly _setKompetenzenAlle : HashSet<BenutzerKompetenz> = new HashSet();
 
 

@@ -3,18 +3,39 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class GostBlockungKursLehrer extends JavaObject {
 
+	/**
+	 * Die ID des Lehrers 
+	 */
 	public id : number = -1;
 
+	/**
+	 * Das Kürzel des Lehrers. 
+	 */
 	public kuerzel : String = "";
 
+	/**
+	 * Der Vorname des Lehrers. 
+	 */
 	public vorname : String = "";
 
+	/**
+	 * Der Nachname des Lehrers. 
+	 */
 	public nachname : String = "";
 
+	/**
+	 * Eine Reihenfolge für die Lehrer, z.B. zur Unterscheidung des eigentlichen Kurslehrer (z.B. 1) und einer Zusatzkraft (z.B. 2) 
+	 */
 	public reihenfolge : number = 1;
 
+	/**
+	 * Die Wochenstunden, welche die Lehrkraft in dem Kurs unterrichtet (Default: Wochenstunden des Kurses) 
+	 */
 	public wochenstunden : number = 3;
 
+	/**
+	 * Gibt an, ob es sich um eine externe Lehrkraft handelt (z.B. bei einem Kooperationskurs an einer anderen Schule) 
+	 */
 	public istExtern : boolean = false;
 
 

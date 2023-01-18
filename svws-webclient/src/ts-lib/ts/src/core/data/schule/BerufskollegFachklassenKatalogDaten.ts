@@ -4,28 +4,64 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class BerufskollegFachklassenKatalogDaten extends JavaObject {
 
+	/**
+	 * Die ID des Katalog-Eintrags. 
+	 */
 	public id : number = 0;
 
+	/**
+	 * Gibt an, ob die Fachklassen ausgelaufen ist oder nicht 
+	 */
 	public istAusgelaufen : boolean = false;
 
+	/**
+	 * Die Gruppe des Berufsfeldes. 
+	 */
 	public berufsfeldGruppe : String | null = null;
 
+	/**
+	 * Das Berufsfeld. 
+	 */
 	public berufsfeld : String | null = null;
 
+	/**
+	 * Ebene 1 des Berufsfeldes 
+	 */
 	public ebene1 : String | null = null;
 
+	/**
+	 * Ebene 2 des Berufsfeldes 
+	 */
 	public ebene2 : String | null = null;
 
+	/**
+	 * Ebene 3 des Berufsfeldes 
+	 */
 	public ebene3 : String | null = null;
 
+	/**
+	 * Die Bezeichnung der Fachklasse 
+	 */
 	public bezeichnung : String = "";
 
+	/**
+	 * Die Bezeichnung der Fachklasse (männlich) 
+	 */
 	public bezeichnungM : String = "";
 
+	/**
+	 * Die Bezeichnung der Fachklasse (weiblich) 
+	 */
 	public bezeichnungW : String = "";
 
+	/**
+	 * Gibt an, in welchem Schuljahr die Fachklasse einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 */
 	public gueltigVon : Number | null = null;
 
+	/**
+	 * Gibt an, bis zu welchem Schuljahr die Fachklasse gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 */
 	public gueltigBis : Number | null = null;
 
 

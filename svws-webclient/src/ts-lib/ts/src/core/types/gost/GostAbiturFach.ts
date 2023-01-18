@@ -16,18 +16,39 @@ export class GostAbiturFach extends JavaObject {
 	/** an array containing all values of this enumeration indexed by their name*/
 	private static readonly all_values_by_name : Map<String, GostAbiturFach> = new Map<String, GostAbiturFach>();
 
+	/**
+	 * 1. Leistungskurs = LK1 
+	 */
 	public static readonly LK1 : GostAbiturFach = new GostAbiturFach("LK1", 0, 1, "LK1", "1. Leistungskurs");
 
+	/**
+	 * 2. Leistungskurs = LK2 
+	 */
 	public static readonly LK2 : GostAbiturFach = new GostAbiturFach("LK2", 1, 2, "LK2", "2. Leistungskurs");
 
+	/**
+	 * 3. Abiturfach (GK, schriftlich in der Abiturprüfung) = AB3 
+	 */
 	public static readonly AB3 : GostAbiturFach = new GostAbiturFach("AB3", 2, 3, "AB3", "3. Abiturfach (GK, schriftlich)");
 
+	/**
+	 * 4. Abiturfach (GK, mündlich in der Abiturprüfung) = AB4 
+	 */
 	public static readonly AB4 : GostAbiturFach = new GostAbiturFach("AB4", 3, 4, "AB4", "4. Abiturfach (GK, mündlich)");
 
+	/**
+	 * Die ID bzw. Nummer der Abiturfachart (1-4) 
+	 */
 	public readonly id : number;
 
+	/**
+	 * Das Kürzel der Abiturfachart, welches auch in speziellen Kursarten genutzt wird. 
+	 */
 	public readonly kuerzel : String;
 
+	/**
+	 * Die textuelle Beschreibung der Abiturfachart. 
+	 */
 	public readonly beschreibung : String;
 
 	/**

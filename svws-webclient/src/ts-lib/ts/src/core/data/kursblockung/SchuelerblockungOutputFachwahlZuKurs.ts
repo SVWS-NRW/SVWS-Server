@@ -2,10 +2,20 @@ import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject
 
 export class SchuelerblockungOutputFachwahlZuKurs extends JavaObject {
 
+	/**
+	 * Die ID des Faches (des Schülers). 
+	 */
 	public fachID : number = 0;
 
+	/**
+	 * Die ID der Kursart (des Schülers). 
+	 */
 	public kursartID : number = 0;
 
+	/**
+	 * Die ID des zugeordneten Kurses zur Fachwahl (des Schülers). Ein Wert von {@code -1} bedeutet, dass das Fach
+	 *  nicht zugeordnet werden konnte, was als <b>Nicht-Wahl</b> bezeichnet wird. 
+	 */
 	public kursID : number = 0;
 
 

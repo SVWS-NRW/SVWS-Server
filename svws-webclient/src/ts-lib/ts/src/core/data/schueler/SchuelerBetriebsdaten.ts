@@ -6,28 +6,64 @@ import { JavaBoolean, cast_java_lang_Boolean } from '../../../java/lang/JavaBool
 
 export class SchuelerBetriebsdaten extends JavaObject {
 
+	/**
+	 * ID des Datensatzes 
+	 */
 	public id : Number | null = null;
 
+	/**
+	 * ID des Schülers 
+	 */
 	public schueler_id : Number | null = null;
 
+	/**
+	 * AdressID des Betriebeeintrags beim Schüler 
+	 */
 	public betrieb_id : Number | null = null;
 
+	/**
+	 * ID der Beschäftigungsart des Schülers 
+	 */
 	public beschaeftigungsart_id : Number | null = null;
 
+	/**
+	 * Datum Vertragsbeginn des Betriebeeintrags beim Schüler 
+	 */
 	public vertragsbeginn : String | null = null;
 
+	/**
+	 * Datum des Vertragsende des Betriebeeintrags beim Schüler 
+	 */
 	public vertragsende : String | null = null;
 
+	/**
+	 * Ausbildername des Betriebeeintrags beim Schüler 
+	 */
 	public ausbilder : String | null = null;
 
+	/**
+	 * Betrieb erhält Anschreiben Ja/Nein 
+	 */
 	public allgadranschreiben : Boolean | null = null;
 
+	/**
+	 * Gibt an ob es ein Praktikum ist beim Betriebeeintrags beim Schüler 
+	 */
 	public praktikum : Boolean | null = null;
 
+	/**
+	 * Sortierung des Betriebeeintrags beim Schüler 
+	 */
 	public sortierung : Number | null = null;
 
+	/**
+	 * AnsprechpartnerID des Betriebeeintrags beim Schüler 
+	 */
 	public ansprechpartner_id : Number | null = null;
 
+	/**
+	 * BetreuungslehrerID des Betriebeeintrags beim Schüler 
+	 */
 	public betreuungslehrer_id : Number | null = null;
 
 

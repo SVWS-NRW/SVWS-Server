@@ -5,8 +5,14 @@ import { Vector, cast_java_util_Vector } from '../../java/util/Vector';
 
 export class SimpleOperationResponse extends JavaObject {
 
+	/**
+	 * Gibt an, ob die Operation erfolgreich war. 
+	 */
 	public success : boolean = false;
 
+	/**
+	 * Das Log der Operation. 
+	 */
 	public log : List<String | null> = new Vector();
 
 

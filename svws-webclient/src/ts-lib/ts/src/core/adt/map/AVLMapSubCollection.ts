@@ -7,6 +7,9 @@ import { UnsupportedOperationException, cast_java_lang_UnsupportedOperationExcep
 
 export class AVLMapSubCollection<K, V> extends JavaObject implements Collection<V> {
 
+	/**
+	 *  Die {@link AVLMapSubMap} auf der diese Sub-Collection operiert.
+	 */
 	private readonly _sub : AVLMapSubMap<K, V>;
 
 

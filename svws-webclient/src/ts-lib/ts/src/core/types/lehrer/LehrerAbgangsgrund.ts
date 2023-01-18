@@ -16,24 +16,54 @@ export class LehrerAbgangsgrund extends JavaObject {
 	/** an array containing all values of this enumeration indexed by their name*/
 	private static readonly all_values_by_name : Map<String, LehrerAbgangsgrund> = new Map<String, LehrerAbgangsgrund>();
 
+	/**
+	 * Grund 'Eintritt in den Ruhestand' für das Verlassen der Schule durch den Lehrer 
+	 */
 	public static readonly RUHEST : LehrerAbgangsgrund = new LehrerAbgangsgrund("RUHEST", 0, [new LehrerKatalogAbgangsgrundEintrag(1, "RUHEST", "Eintritt in den Ruhestand", "11", null, null)]);
 
+	/**
+	 * Grund 'Dienst-, Erwerbs-, Berufsunfähigkeit' für das Verlassen der Schule durch den Lehrer 
+	 */
 	public static readonly UNFAEHIGK : LehrerAbgangsgrund = new LehrerAbgangsgrund("UNFAEHIGK", 1, [new LehrerKatalogAbgangsgrundEintrag(2, "UNFÄHIGK", "Dienst-, Erwerbs-, Berufsunfähigkeit", "12", null, null)]);
 
+	/**
+	 * Grund 'Tod' für das Verlassen der Schule durch den Lehrer 
+	 */
 	public static readonly TOD : LehrerAbgangsgrund = new LehrerAbgangsgrund("TOD", 2, [new LehrerKatalogAbgangsgrundEintrag(3, "TOD", "Tod", "13", null, null)]);
 
+	/**
+	 * Grund 'Übertritt in den Schuldienst eines anderen Bundeslandes' für das Verlassen der Schule durch den Lehrer 
+	 */
 	public static readonly AndBuLand : LehrerAbgangsgrund = new LehrerAbgangsgrund("AndBuLand", 3, [new LehrerKatalogAbgangsgrundEintrag(4, "AndBuLand", "Übertritt in den Schuldienst eines anderen Bundeslandes", "14", null, null)]);
 
+	/**
+	 * Grund 'Wechsel innerhalb des Landes von der berichtenden Schule an eine andere Schule' für das Verlassen der Schule durch den Lehrer 
+	 */
 	public static readonly WECHSEL : LehrerAbgangsgrund = new LehrerAbgangsgrund("WECHSEL", 4, [new LehrerKatalogAbgangsgrundEintrag(5, "WECHSEL", "Wechsel innerhalb des Landes von der berichtenden Schule an eine andere Schule", "15", null, null)]);
 
+	/**
+	 * Grund 'Befristete Abgänge' für das Verlassen der Schule durch den Lehrer 
+	 */
 	public static readonly BEFRIST : LehrerAbgangsgrund = new LehrerAbgangsgrund("BEFRIST", 5, [new LehrerKatalogAbgangsgrundEintrag(6, "BEFRIST", "Befristete Abgänge", "16", null, null)]);
 
+	/**
+	 * Grund 'Sonstige Abgänge' für das Verlassen der Schule durch den Lehrer 
+	 */
 	public static readonly SONSTIG : LehrerAbgangsgrund = new LehrerAbgangsgrund("SONSTIG", 6, [new LehrerKatalogAbgangsgrundEintrag(7, "SONSTIG", "Sonstige Abgänge", "17", null, null)]);
 
+	/**
+	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. 
+	 */
 	public static VERSION : number = 1;
 
+	/**
+	 * Der aktuellen Daten des Abgangsgrundes, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null 
+	 */
 	public readonly daten : LehrerKatalogAbgangsgrundEintrag;
 
+	/**
+	 * Die Historie mit den Einträgen des Abgangsgrundes 
+	 */
 	public readonly historie : Array<LehrerKatalogAbgangsgrundEintrag>;
 
 	/**

@@ -3,8 +3,14 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class Credentials extends JavaObject {
 
+	/**
+	 * Benutzername des Account-Credentials
+	 */
 	public benutzername : String = "";
 
+	/**
+	 * Passwort des Account-Credentials
+	 */
 	public password : String = "";
 
 

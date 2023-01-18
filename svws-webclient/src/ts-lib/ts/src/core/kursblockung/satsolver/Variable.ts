@@ -7,18 +7,42 @@ import { System, cast_java_lang_System } from '../../../java/lang/System';
 
 export class Variable extends JavaObject {
 
+	/**
+	 *  Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
+	 */
 	protected readonly _random : Random;
 
+	/**
+	 *  Die Nummer der Variablen.
+	 */
 	readonly nr : number;
 
+	/**
+	 *  Eine Statistik [sat][free] über Klauseln die nicht definierte Variablen haben und die schon erfüllte Variablen
+	 *  haben.
+	 */
 	readonly statSatFree : Array<Array<number>>;
 
+	/**
+	 *  Liste aller Klauseln in denen diese Variable vorkommt.
+	 */
 	readonly clauses : LinkedCollection<Clause>;
 
+	/**
+	 *  Liste aller Variablen, die mit dieser Variable in einer Klausel vorkommen.
+	 */
 	readonly neighbours : LinkedCollection<Variable>;
 
+	/**
+	 *  Der Index der Variablen im Heap. Wenn der Index negativ ist, dann ist die Variable nicht mehr im Heap. Zudem
+	 *  bedeutet der Wert -1, dass die Variable SAT ist und der Wert -2 UNSAT. Ein Wert kleiner als -2 ist nur ein
+	 *  Dummy-Wert.
+	 */
 	index : number = 0;
 
+	/**
+	 *  Eine Referenz zur negierten Variable.
+	 */
 	negation : Variable | null = null;
 
 

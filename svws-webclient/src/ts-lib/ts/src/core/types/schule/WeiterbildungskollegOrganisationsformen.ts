@@ -19,16 +19,34 @@ export class WeiterbildungskollegOrganisationsformen extends JavaObject {
 	/** an array containing all values of this enumeration indexed by their name*/
 	private static readonly all_values_by_name : Map<String, WeiterbildungskollegOrganisationsformen> = new Map<String, WeiterbildungskollegOrganisationsformen>();
 
+	/**
+	 * Organisationsform: Teilbeleger 
+	 */
 	public static readonly TEILZEIT : WeiterbildungskollegOrganisationsformen = new WeiterbildungskollegOrganisationsformen("TEILZEIT", 0, [new OrganisationsformKatalogEintrag(2001000, "T", "Teilbeleger", Arrays.asList(Schulform.WB), null, null)]);
 
+	/**
+	 * Organisationsform: Vollbeleger 
+	 */
 	public static readonly VOLLZEIT : WeiterbildungskollegOrganisationsformen = new WeiterbildungskollegOrganisationsformen("VOLLZEIT", 1, [new OrganisationsformKatalogEintrag(2002000, "V", "Vollbeleger", Arrays.asList(Schulform.WB), null, null)]);
 
+	/**
+	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. 
+	 */
 	public static VERSION : number = 1;
 
+	/**
+	 * Der aktuellen Daten der Organisationsform 
+	 */
 	public readonly daten : OrganisationsformKatalogEintrag;
 
+	/**
+	 * Die Historie mit den Einträgen der Organisationsform 
+	 */
 	public readonly historie : Array<OrganisationsformKatalogEintrag>;
 
+	/**
+	 * Eine Hashmap mit allen definierten Organisationsformen, zugeordnet zu ihren Kürzeln 
+	 */
 	private static readonly _mapKuerzel : HashMap<String, WeiterbildungskollegOrganisationsformen> = new HashMap();
 
 	/**

@@ -3,12 +3,24 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class GostBlockungListeneintrag extends JavaObject {
 
+	/**
+	 * Die ID der Blockung 
+	 */
 	public id : number = -1;
 
+	/**
+	 * Der Name der Blockung 
+	 */
 	public name : String = "Neue Blockung";
 
+	/**
+	 * Das Halbjahr, welchem die Kursblockung zugeordnet ist (0=EF.1, 1=EF.2, 2=Q1.1, 3=Q1.2, 4=Q2.1, 5=Q2.2) 
+	 */
 	public gostHalbjahr : number = 0;
 
+	/**
+	 * Gibt an, ob diese Blockung aktiviert wurde, d.h. bereits in die Leistungsdaten übertragen wurde. 
+	 */
 	public istAktiv : boolean = false;
 
 

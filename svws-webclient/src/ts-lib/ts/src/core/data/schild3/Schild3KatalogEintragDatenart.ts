@@ -4,16 +4,34 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class Schild3KatalogEintragDatenart extends JavaObject {
 
+	/**
+	 * Kürzel der Datenart 
+	 */
 	public DatenartKrz : String | null = null;
 
+	/**
+	 * Datenart  
+	 */
 	public Datenart : String | null = null;
 
+	/**
+	 * Name der Tabelle 
+	 */
 	public Tabellenname : String | null = null;
 
+	/**
+	 * Reihenfolge 
+	 */
 	public Reihenfolge : Number | null = null;
 
+	/**
+	 * Gültig ab Schuljahr 
+	 */
 	public gueltigVon : Number | null = null;
 
+	/**
+	 * Gültig bis Schuljahr 
+	 */
 	public gueltigBis : Number | null = null;
 
 

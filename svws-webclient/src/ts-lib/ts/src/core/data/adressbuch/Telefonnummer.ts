@@ -3,8 +3,14 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class Telefonnummer extends JavaObject {
 
+	/**
+	 *  die Art der Telefonnummer
+	 */
 	public type : String = "";
 
+	/**
+	 *  die Telefon-, Fax- oder Pagernummer
+	 */
 	public number : String = "";
 
 

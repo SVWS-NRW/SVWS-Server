@@ -10,76 +10,184 @@ import { Sprachendaten, cast_de_nrw_schule_svws_core_data_schueler_Sprachendaten
 
 export class Abiturdaten extends JavaObject {
 
+	/**
+	 * Die eindeutige ID des Schülers 
+	 */
 	public schuelerID : number = 0;
 
+	/**
+	 * Das Kalenderjahr, in dem der Schüler sein Abitur ablegt bzw. ablegen wird. 
+	 */
 	public abiturjahr : number = 0;
 
+	/**
+	 * Das Schuljahr, in dem der Schüler sein Abitur ablegt bzw. ablegen wird. 
+	 */
 	public schuljahrAbitur : number = 0;
 
+	/**
+	 * Gibt für die einzelnen {@link GostHalbjahr}-Werte an, ob gewertete Leistungsdaten vorhanden sind oder es sich um Werte der Laufbahnplanung handelt. 
+	 */
 	public readonly bewertetesHalbjahr : Array<boolean> = Array(6).fill(false);
 
+	/**
+	 * Ein Array mit den Fachbelegungen in der Oberstufe. 
+	 */
 	public readonly fachbelegungen : Vector<AbiturFachbelegung> = new Vector();
 
+	/**
+	 * Die Sprachendaten des Schülers mit Informationen zu Sprachbelegungen (Sprachenfolge) und zu Sprachprüfungen. 
+	 */
 	public sprachendaten : Sprachendaten = new Sprachendaten();
 
+	/**
+	 * Das einstellige Kürzel der Sprache des bilingualen Bildungsganges, falls der Schüler an einem solchen teilnimmt. 
+	 */
 	public bilingualeSprache : String | null = null;
 
+	/**
+	 * Gibt an, ob das große Latinum erworben wurde. 
+	 */
 	public latinum : boolean = false;
 
+	/**
+	 * Gibt an, ob das kleine Latinum erworben wurde. 
+	 */
 	public kleinesLatinum : boolean = false;
 
+	/**
+	 * Gibt an, ob das Graecum erworben wurde. 
+	 */
 	public graecum : boolean = false;
 
+	/**
+	 * Gibt an, ob das Hebraicum erworben wurde. 
+	 */
 	public hebraicum : boolean = false;
 
+	/**
+	 * Die Anzahl der Fehlstunden in der gesamten Qualifikationsphase. 
+	 */
 	public block1FehlstundenGesamt : number = 0;
 
+	/**
+	 * Die Anzahl der unentschuldigten Fehlstunden in der gesamten Qualifikationsphase. 
+	 */
 	public block1FehlstundenUnentschuldigt : number = 0;
 
+	/**
+	 * Das Projektkursthema, sofern ein Projektkurs belegt wurde.", example="Das Abitur IN NRW im Wandel der Zeit. 
+	 */
 	public projektKursThema : String | null = null;
 
+	/**
+	 * Das Kürzel des ersten Leitfaches des belegten Projektkurs, sofern einer belegt wurde. 
+	 */
 	public projektkursLeitfach1Kuerzel : String | null = null;
 
+	/**
+	 * Das Kürzel des zweiten Leitfaches des belegten Projektkurs, sofern einer belegt wurde und ein zweites Leitfach für diesen festgelegt wurde 
+	 */
 	public projektkursLeitfach2Kuerzel : String | null = null;
 
+	/**
+	 * Gibt an, ob eine besondere Lernleistung vorliegt (K - keine, P - in einem Projektkurs, E - extern). 
+	 */
 	public besondereLernleistung : String | null = GostBesondereLernleistung.KEINE.kuerzel;
 
+	/**
+	 * Gibt ggf. die Note einer externen besonderen Lernleistung an. 
+	 */
 	public besondereLernleistungNotenKuerzel : String | null = null;
 
+	/**
+	 * Gibt das Thema der Besonderen Lernleistung an. 
+	 */
 	public besondereLernleistungThema : String | null = null;
 
+	/**
+	 * Gibt die Anzahl der Kurse in der Qualifikationsphase an. 
+	 */
 	public block1AnzahlKurse : Number | null = null;
 
+	/**
+	 * Gibt die Anzahl der Gesamtdefizite in der Qualifikationsphase an. 
+	 */
 	public block1DefiziteGesamt : Number | null = null;
 
+	/**
+	 * Gibt die Anzahl der Defizite im LK-Bereich in der Qualifikationsphase an. 
+	 */
 	public block1DefiziteLK : Number | null = null;
 
+	/**
+	 * Gibt die Punktsumme aller Grundkurse in der Qualifikationsphase an. 
+	 */
 	public block1PunktSummeGK : Number | null = null;
 
+	/**
+	 * Gibt die Punktsumme aller Leistungskurse in der Qualifikationsphase an. 
+	 */
 	public block1PunktSummeLK : Number | null = null;
 
+	/**
+	 * Gibt die normierte Punktsumme aller Kurse in der Qualifikationsphase an. 
+	 */
 	public block1PunktSummeNormiert : Number | null = null;
 
+	/**
+	 * Gibt den Durchschnitt der Notenpunkte von allen Kursen der Qualifikationsphase an. 
+	 */
 	public block1NotenpunkteDurchschnitt : Number | null = null;
 
+	/**
+	 * Gibt an, ob die Zulassung erreicht wurde oder nicht - sofern diese schon geprüft wurde. 
+	 */
 	public block1Zulassung : Boolean | null = null;
 
+	/**
+	 * Gibt an, ob freiwillig von der Abiturprüfung zurückgetreten wurde. 
+	 */
 	public freiwilligerRuecktritt : boolean = false;
 
+	/**
+	 * Gibt die Anzahl der Gesamtdefizite im Abiturbereich (Block II) an. 
+	 */
 	public block2DefiziteGesamt : Number | null = null;
 
+	/**
+	 * Gibt die Anzahl der Leistungskurs-Defizite im Abiturbereich (Block II) an. 
+	 */
 	public block2DefiziteLK : Number | null = null;
 
+	/**
+	 * Gibt die Punktsumme im Abiturbereich (Block II) an. 
+	 */
 	public block2PunktSumme : Number | null = null;
 
+	/**
+	 * Gibt die erreichte Gesamtpunktzahl in der Qualifikation und im Abiturbereich (Block I und II) an. 
+	 */
 	public gesamtPunkte : Number | null = null;
 
+	/**
+	 * Gibt die Gesamtpunktzahl an, ab der sich die Abiturnote verbessern würde 
+	 */
 	public gesamtPunkteVerbesserung : Number | null = null;
 
+	/**
+	 * Gibt die Gesamtpunktzahl an, ab der sich die Abiturnote verschlechtern würde. 
+	 */
 	public gesamtPunkteVerschlechterung : Number | null = null;
 
+	/**
+	 * Gibt an, ob die Abiturprüfung bestanden wurde oder nicht - sofern das Prüfungsverfahren schon abgeschlossen wurde. 
+	 */
 	public pruefungBestanden : Boolean | null = null;
 
+	/**
+	 * Die Abiturnote einer bestandenen Abiturprüfung - sofern das Prüfungsverfahren schon abgeschlossen wurde. 
+	 */
 	public note : String | null = null;
 
 

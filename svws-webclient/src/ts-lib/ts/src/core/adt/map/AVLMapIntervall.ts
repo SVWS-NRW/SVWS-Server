@@ -3,16 +3,34 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class AVLMapIntervall<K> extends JavaObject {
 
+	/**
+	 *  Ein Dummy-Element für den Schlüsselwert "-Unendlich".
+	 */
 	static readonly _INFINITY_MINUS : unknown | null = new Object();
 
+	/**
+	 *  Ein Dummy-Element für den Schlüsselwert "+Unendlich".
+	 */
 	static readonly _INFINITY_PLUS : unknown | null = new Object();
 
+	/**
+	 *  Der Anfang des Intervalls.
+	 */
 	readonly from : K;
 
+	/**
+	 *  Gibt an, ob der Intervall-Anfang inklusive ist.
+	 */
 	readonly fromInc : boolean;
 
+	/**
+	 *  Das Ende des Intervalls.
+	 */
 	readonly to : K;
 
+	/**
+	 *  Gibt an, ob das Intervall-Ende inklusive ist.
+	 */
 	readonly toInc : boolean;
 
 

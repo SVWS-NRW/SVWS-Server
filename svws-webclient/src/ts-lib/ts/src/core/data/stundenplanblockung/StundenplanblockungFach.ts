@@ -3,10 +3,19 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class StundenplanblockungFach extends JavaObject {
 
+	/**
+	 * Die Datenbank-ID des Faches. 
+	 */
 	public id : number = 0;
 
+	/**
+	 * Das Kürzel des Faches. Beispielsweise 'KU'. 
+	 */
 	public kuerzel : String = "";
 
+	/**
+	 * Die Nummer, welche die Sortierung der Fächer angibt. 
+	 */
 	public sortierung : number = 32000;
 
 

@@ -7,16 +7,34 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 
 export class OrganisationsformKatalogEintrag extends JavaObject {
 
+	/**
+	 * Die ID des Katalog-Eintrags. 
+	 */
 	public id : number = 0;
 
+	/**
+	 * Das Kürzel der Organisationsform 
+	 */
 	public kuerzel : String = "";
 
+	/**
+	 * Die Beschreibung der Organisationsform. 
+	 */
 	public beschreibung : String = "";
 
+	/**
+	 * Die Kürzel der Schulformen, bei welchen die Organisationsform vorkommt. 
+	 */
 	public schulformen : List<String> = new Vector();
 
+	/**
+	 * Gibt an, in welchem Schuljahr die Organisationsform einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 */
 	public gueltigVon : Number | null = null;
 
+	/**
+	 * Gibt an, bis zu welchem Schuljahr die Organisationsform gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 */
 	public gueltigBis : Number | null = null;
 
 

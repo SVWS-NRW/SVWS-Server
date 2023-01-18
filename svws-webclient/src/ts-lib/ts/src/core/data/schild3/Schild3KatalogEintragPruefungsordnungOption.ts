@@ -4,36 +4,84 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class Schild3KatalogEintragPruefungsordnungOption extends JavaObject {
 
+	/**
+	 * Schulformen für die die Optionen gelten 
+	 */
 	public OP_Schulformen : String | null = null;
 
+	/**
+	 * Kürzel der Prüfungsordung 
+	 */
 	public OP_POKrz : String | null = null;
 
+	/**
+	 * Angezeigter Kurztext in Schild-NRW 
+	 */
 	public OP_Krz : String | null = null;
 
+	/**
+	 * Abgangsart in der Statistik B 
+	 */
 	public OP_Abgangsart_B : String | null = null;
 
+	/**
+	 * Abgangsart in der Statistik NB 
+	 */
 	public OP_Abgangsart_NB : String | null = null;
 
+	/**
+	 * A=Allgemein B=Berufsbildend 
+	 */
 	public OP_Art : String | null = null;
 
+	/**
+	 * Abschlusskürzel in Schild-NRW 
+	 */
 	public OP_Typ : String | null = null;
 
+	/**
+	 * Bildungsgang A oder B 
+	 */
 	public OP_Bildungsgang : String | null = null;
 
+	/**
+	 * Text des Abschlusses 
+	 */
 	public OP_Name : String | null = null;
 
+	/**
+	 * Paragraph in der BASS (veraltet?) 
+	 */
 	public OP_Kommentar : String | null = null;
 
+	/**
+	 * Zulässig für diese Jahrgänge 
+	 */
 	public OP_Jahrgaenge : String | null = null;
 
+	/**
+	 * Zulässig für BKIndex 
+	 */
 	public OP_BKIndex : String | null = null;
 
+	/**
+	 * Zulässig für diese Gliederungen 
+	 */
 	public OP_BKAnl_Typ : String | null = null;
 
+	/**
+	 * Reihenfolge 
+	 */
 	public OP_Reihenfolge : Number | null = null;
 
+	/**
+	 * Gültig ab Schuljahr 
+	 */
 	public gueltigVon : Number | null = null;
 
+	/**
+	 * Gültig bis Schuljahr 
+	 */
 	public gueltigBis : Number | null = null;
 
 

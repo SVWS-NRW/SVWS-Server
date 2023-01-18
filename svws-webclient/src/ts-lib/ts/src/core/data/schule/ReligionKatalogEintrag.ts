@@ -4,14 +4,29 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class ReligionKatalogEintrag extends JavaObject {
 
+	/**
+	 * Die ID des Katalog-Eintrags. 
+	 */
 	public id : number = -1;
 
+	/**
+	 * Das Kürzel der Religion, welches im Rahmen der amtlichen Schulstatistik verwendet wird 
+	 */
 	public kuerzel : String = "";
 
+	/**
+	 * Eine kurze Bezeichnung der Religion. 
+	 */
 	public bezeichnung : String = "";
 
+	/**
+	 * Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 */
 	public gueltigVon : Number | null = null;
 
+	/**
+	 * Gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 */
 	public gueltigBis : Number | null = null;
 
 

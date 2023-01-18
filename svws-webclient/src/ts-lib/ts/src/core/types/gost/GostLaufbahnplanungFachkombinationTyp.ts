@@ -15,10 +15,19 @@ export class GostLaufbahnplanungFachkombinationTyp extends JavaObject {
 	/** an array containing all values of this enumeration indexed by their name*/
 	private static readonly all_values_by_name : Map<String, GostLaufbahnplanungFachkombinationTyp> = new Map<String, GostLaufbahnplanungFachkombinationTyp>();
 
+	/**
+	 * Gibt an, das eine Fachkombination unzulässig ist 
+	 */
 	public static readonly VERBOTEN : GostLaufbahnplanungFachkombinationTyp = new GostLaufbahnplanungFachkombinationTyp("VERBOTEN", 0, 0);
 
+	/**
+	 * Gibt an, das eine Fachkombination erforderlich ist 
+	 */
 	public static readonly ERFORDERLICH : GostLaufbahnplanungFachkombinationTyp = new GostLaufbahnplanungFachkombinationTyp("ERFORDERLICH", 1, 1);
 
+	/**
+	 * Der Typ als Integer-Wert 
+	 */
 	private readonly value : number;
 
 	/**

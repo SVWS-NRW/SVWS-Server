@@ -6,8 +6,14 @@ import { System, cast_java_lang_System } from '../../java/lang/System';
 
 export class LogConsumerConsole extends JavaObject implements Consumer<LogData> {
 
+	/**
+	 * Gibt an, ob die Zeit beim Loggen ausgegeben wird oder nicht. 
+	 */
 	public readonly printTime : boolean;
 
+	/**
+	 * Gibt an, ob das Log-Level beim Loggen ausgegeben wird oder nicht. 
+	 */
 	public readonly printLevel : boolean;
 
 

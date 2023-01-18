@@ -9,54 +9,129 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 
 export class SchuelerSchulbesuchsdaten extends JavaObject {
 
+	/**
+	 * Die ID des Schülerdatensatzes. 
+	 */
 	public id : number = 0;
 
+	/**
+	 * Die Schulnummer der vorher besuchten Schule. 
+	 */
 	public vorigeSchulnummer : String | null = null;
 
+	/**
+	 * Die allgemeine Herkunftsart des Schüler in Bezug auf die schulform der zuvor besuchten Schule. 
+	 */
 	public vorigeAllgHerkunft : String | null = null;
 
+	/**
+	 * Das Entlassdatum an der zuvor besuchten Schule. 
+	 */
 	public vorigeEntlassdatum : String | null = null;
 
+	/**
+	 * Der Entlassjahrgang an der zuvor besuchten Schule. 
+	 */
 	public vorigeEntlassjahrgang : String | null = null;
 
+	/**
+	 * Die ID der Art der letzten Versetzung an der zuvor besuchten Schule. 
+	 */
 	public vorigeArtLetzteVersetzung : String | null = null;
 
+	/**
+	 * Bemerkungen zu der zuvor besuchten Schule. 
+	 */
 	public vorigeBemerkung : String | null = null;
 
+	/**
+	 * Die ID des Grundes für die Entlassung von der zuvor besuchten Schule. 
+	 */
 	public vorigeEntlassgrundID : Number | null = null;
 
+	/**
+	 * Die ID des Abschlusses, welcher an der zuvor besuchten Schule erworben wurde. 
+	 */
 	public vorigeAbschlussartID : String | null = null;
 
+	/**
+	 * Das Entlassdatum von dieser Schule. 
+	 */
 	public entlassungDatum : String | null = null;
 
+	/**
+	 * Der Jahrgang bei der Entlassung von dieser Schule. 
+	 */
 	public entlassungJahrgang : String | null = null;
 
+	/**
+	 * Die ID des Grundes für die Entlassung von dieser Schule. 
+	 */
 	public entlassungGrundID : Number | null = null;
 
+	/**
+	 * Die ID des Abschlusses, welcher an dieser Schule erworben wurde. 
+	 */
 	public entlassungAbschlussartID : String | null = null;
 
+	/**
+	 * Die Schulnummer der aufnehmenden Schule nach einer Entlassung. 
+	 */
 	public aufnehmdendSchulnummer : String | null = null;
 
+	/**
+	 * Das Datum beim Wechsel zu einer aufnehmenden Schule. 
+	 */
 	public aufnehmdendWechseldatum : String | null = null;
 
+	/**
+	 * Gibt an, ob die aufnehmende Schule den Wechsel bestätigt hat. 
+	 */
 	public aufnehmdendBestaetigt : Boolean | null = null;
 
+	/**
+	 * Das Jahr der Einschulung in die Grundschule. 
+	 */
 	public grundschuleEinschulungsjahr : Number | null = null;
 
+	/**
+	 * Die ID der Einschulungsart in die Grundschule. 
+	 */
 	public grundschuleEinschulungsartID : Number | null = null;
 
+	/**
+	 * Die Anzahl der Jahre in der Schuleingangsphase der Grundschule. 
+	 */
 	public grundschuleJahreEingangsphase : Number | null = null;
 
+	/**
+	 * Die ID für die Übergangsempfehlung der Grundschule in die Sekundarstufe I 
+	 */
 	public grundschuleUebergangsempfehlungID : Number | null = null;
 
+	/**
+	 * Das Jahr des Wechsels in die Sekundarstufe I. 
+	 */
 	public sekIWechsel : Number | null = null;
 
+	/**
+	 * Das Kürzel der ersten Schulform in der Sekundarstufe I 
+	 */
 	public sekIErsteSchulform : String | null = null;
 
+	/**
+	 * Das Jahr des Wechsels in die Sekundarstufe II. 
+	 */
 	public sekIIWechsel : Number | null = null;
 
+	/**
+	 * Die Informationen zu den besonderen Merkmalen für die Statistik. 
+	 */
 	public merkmale : Vector<SchuelerSchulbesuchMerkmal> = new Vector();
 
+	/**
+	 * Die Informationen zu allen bisher besuchten Schulen. 
+	 */
 	public alleSchulen : Vector<SchuelerSchulbesuchSchule> = new Vector();
 
 

@@ -6,24 +6,54 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 
 export class SchuelerListeEintrag extends JavaObject {
 
+	/**
+	 * Die ID des Schülers. 
+	 */
 	public id : number = 0;
 
+	/**
+	 * Der Nachname des Schülers. 
+	 */
 	public nachname : String = "";
 
+	/**
+	 * Der Vorname des Schülers. 
+	 */
 	public vorname : String = "";
 
+	/**
+	 * Die ID der aktuellen Klasse des Schülers.
+	 */
 	public idKlasse : Number = -1;
 
+	/**
+	 * Der aktuelle Jahrgang des Schülers.
+	 */
 	public jahrgang : String = "";
 
+	/**
+	 * Der Abiturjahrgang, falls es sich um eine Schule mit Gymnasialer Oberstufe handelt. 
+	 */
 	public abiturjahrgang : Number | null = null;
 
+	/**
+	 * Das Kürzel der aktuellen Schulgliederung des Schülers 
+	 */
 	public schulgliederung : String = "";
 
+	/**
+	 * Die Bezeichnung des Status des Schülers (Aktiv, Extern, etc.).
+	 */
 	public status : String = "";
 
+	/**
+	 * Die ID des Schuljahresabschnittes des Schülers. 
+	 */
 	public idSchuljahresabschnitt : Number = -1;
 
+	/**
+	 * Die Liste der IDs der belegten Kurse im aktuellen Abschnit  
+	 */
 	public readonly kurse : Vector<Number> = new Vector();
 
 

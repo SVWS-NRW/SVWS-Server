@@ -4,24 +4,54 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class Schild3KatalogEintragSchuelerImportExport extends JavaObject {
 
+	/**
+	 * Tabelle mit den Daten für den Import-Export 
+	 */
 	public Tabelle : String | null = null;
 
+	/**
+	 * Anzeigename 
+	 */
 	public TabellenAnzeige : String | null = null;
 
+	/**
+	 * Master-Tabelle 
+	 */
 	public MasterTable : String | null = null;
 
+	/**
+	 * SQL-Befehl für dem Export 
+	 */
 	public ExpCmd : String | null = null;
 
+	/**
+	 * SQL-Befehl zum Ermitteln der Feldnamen 
+	 */
 	public SrcGetFieldsSQL : String | null = null;
 
+	/**
+	 * SQL-Befehl zum Enternen der Daten 
+	 */
 	public DeleteSQL : String | null = null;
 
+	/**
+	 * SQL-Befehl zum Ermitteln der IDs 
+	 */
 	public DstGetIDSQL : String | null = null;
 
+	/**
+	 * Hauptfeld 
+	 */
 	public HauptFeld : String | null = null;
 
+	/**
+	 * Detail-Feld 
+	 */
 	public DetailFeld : String | null = null;
 
+	/**
+	 * Reihenfolge 
+	 */
 	public Reihenfolge : Number | null = null;
 
 

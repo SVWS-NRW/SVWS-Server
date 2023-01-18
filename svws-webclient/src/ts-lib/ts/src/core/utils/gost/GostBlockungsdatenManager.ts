@@ -28,10 +28,16 @@ import { UserNotificationException, cast_de_nrw_schule_svws_core_exceptions_User
 
 export class GostBlockungsdatenManager extends JavaObject {
 
+	/**
+	 * Ein Comparator für Schienen der Blockung 
+	 */
 	private static readonly compSchiene : Comparator<GostBlockungSchiene> = { compare : (a: GostBlockungSchiene, b: GostBlockungSchiene) => {
 		return JavaInteger.compare(a.nummer, b.nummer);
 	} };
 
+	/**
+	 * Ein Comparator für Regeln der Blockung 
+	 */
 	private static readonly compRegel : Comparator<GostBlockungRegel> = { compare : (a: GostBlockungRegel, b: GostBlockungRegel) => {
 		let result : number = JavaInteger.compare(a.typ, b.typ);
 		if (result !== 0) 
@@ -39,6 +45,9 @@ export class GostBlockungsdatenManager extends JavaObject {
 		return JavaLong.compare(a.id, b.id);
 	} };
 
+	/**
+	 * Ein Comparator für die Lehrkräfte eines Kurses 
+	 */
 	private static readonly compLehrkraefte : Comparator<GostBlockungKursLehrer> = { compare : (a: GostBlockungKursLehrer, b: GostBlockungKursLehrer) => {
 		let result : number = JavaInteger.compare(a.reihenfolge, b.reihenfolge);
 		if (result !== 0) 
@@ -46,38 +55,89 @@ export class GostBlockungsdatenManager extends JavaObject {
 		return JavaLong.compare(a.id, b.id);
 	} };
 
+	/**
+	 * Die Blockungsdaten, die im Manager vorhanden sind. 
+	 */
 	private readonly _daten : GostBlockungsdaten;
 
+	/**
+	 * Der Fächermanager mit den Fächern der gymnasialen Oberstufe. 
+	 */
 	private readonly _faecherManager : GostFaecherManager;
 
+	/**
+	 * Eine interne Hashmap zum schnellen Zugriff auf die Kurse anhand ihrer Datenbank-ID. 
+	 */
 	private readonly _mapKurse : HashMap<Number, GostBlockungKurs> = new HashMap();
 
+	/**
+	 * Eine interne Hashmap zum schnellen Zugriff auf die Schienen anhand ihrer Datenbank-ID. 
+	 */
 	private readonly _mapSchienen : HashMap<Number, GostBlockungSchiene> = new HashMap();
 
+	/**
+	 * Eine interne Hashmap zum schnellen Zugriff auf die Regeln anhand ihrer Datenbank-ID. 
+	 */
 	private readonly _mapRegeln : HashMap<Number, GostBlockungRegel> = new HashMap();
 
+	/**
+	 * Eine interne Hashmap zum schnellen Zugriff auf die Schueler anhand ihrer Datenbank-ID. 
+	 */
 	private readonly _map_id_schueler : HashMap<Number, Schueler> = new HashMap();
 
+	/**
+	 * Schüler-ID --> List<Fachwahl> = Die Fachwahlen des Schülers der jeweiligen Fachart. 
+	 */
 	private readonly _map_schuelerID_fachwahlen : HashMap<Number, List<GostFachwahl>> = new HashMap();
 
+	/**
+	 * Fachart-ID --> List<Fachwahl> = Die Fachwahlen einer Fachart. 
+	 */
 	private readonly _map_fachartID_fachwahlen : HashMap<Number, List<GostFachwahl>> = new HashMap();
 
+	/**
+	 * Schüler-ID --> Fach-ID --> Kursart = Die Fachwahl des Schülers die dem Fach die Kursart zuordnet. 
+	 */
 	private readonly _map_schulerID_fachID_fachwahl : HashMap<Number, HashMap<Number, GostFachwahl>> = new HashMap();
 
+	/**
+	 * Ergebnis-ID --> {@link GostBlockungsergebnisListeneintrag} 
+	 */
 	private readonly _mapErgebnis : HashMap<Number, GostBlockungsergebnisListeneintrag> = new HashMap();
 
+	/**
+	 * Ein Comparator für Kurse der Blockung (FACH, KURSART, KURSNUMMER). 
+	 */
 	private readonly _compKurs_fach_kursart_kursnummer : Comparator<GostBlockungKurs>;
 
+	/**
+	 * Eine sortierte, gecachte Menge der Kurse nach: (FACH, KURSART, KURSNUMMER). 
+	 */
 	private _kurse_sortiert_fach_kursart_kursnummer : List<GostBlockungKurs> = new Vector();
 
+	/**
+	 * Ein Comparator für Kurse der Blockung (KURSART, FACH, KURSNUMMER) 
+	 */
 	private readonly _compKurs_kursart_fach_kursnummer : Comparator<GostBlockungKurs>;
 
+	/**
+	 * Eine sortierte, gecachte Menge der Kurse nach: (KURSART, FACH, KURSNUMMER) 
+	 */
 	private _kurse_sortiert_kursart_fach_kursnummer : List<GostBlockungKurs> = new Vector();
 
+	/**
+	 * Ein Comparator für die Fachwahlen (SCHÜLERID, FACH, KURSART) 
+	 */
 	private readonly _compFachwahlen : Comparator<GostFachwahl>;
 
+	/**
+	 * Ein Comparator für die {@link GostBlockungsergebnisListeneintrag} nach ihrer Bewertung. 
+	 */
 	private readonly _compErgebnisse : Comparator<GostBlockungsergebnisListeneintrag> = new GostBlockungsergebnisComparator();
 
+	/**
+	 * Die maximale Zeit in Millisekunden die der Blockungsalgorithmus verwenden darf. 
+	 */
 	private _maxTimeMillis : number = 1000;
 
 

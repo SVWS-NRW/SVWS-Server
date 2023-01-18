@@ -8,24 +8,54 @@ import { Sprachendaten, cast_de_nrw_schule_svws_core_data_schueler_Sprachendaten
 
 export class GostLeistungen extends JavaObject {
 
+	/**
+	 * Die ID des Schülers, dessen Leistungen in diesem Objekt gespeichert sind. 
+	 */
 	public id : number = 0;
 
+	/**
+	 * Das aktuelle Schuljahr, welches dem Schüler zugeordnet ist. 
+	 */
 	public aktuellesSchuljahr : Number | null = null;
 
+	/**
+	 * Der Jahrgang, in dem sich der Schüler in dem aktuellen Schuljahr befindet. 
+	 */
 	public aktuellerJahrgang : String | null = null;
 
+	/**
+	 * Die Sprachbelegungen (Sprachenfolge) und die Sprachprüfungen des Schülers 
+	 */
 	public sprachendaten : Sprachendaten | null = null;
 
+	/**
+	 * Das einstellige Kürzel der bilingualen Sprache, sofern der Schüler einem bilingualen Bildungsgang angehört. 
+	 */
 	public bilingualeSprache : String | null = null;
 
+	/**
+	 * Das Thema des Projektkurses, sofern der Schüler einen Projektkurs belegt hatte. 
+	 */
 	public projektkursThema : String | null = null;
 
+	/**
+	 * Das Kürzel des ersten Leitfaches des Projektkurses, sofern der Schüler einen Projektkurs belegt hatte. 
+	 */
 	public projektkursLeitfach1Kuerzel : String | null = null;
 
+	/**
+	 * Das Kürzel eines zweiten Leitfaches des Projektkurses, sofern der Schüler einen Projektkurs belegt hatte und der Projektkurs ein zweites Leitfach hat. 
+	 */
 	public projektkursLeitfach2Kuerzel : String | null = null;
 
+	/**
+	 * Gibt für die einzelnen {@link GostHalbjahr}-Werte an, ob gewertete Leistungsdaten vorhanden sind. 
+	 */
 	public readonly bewertetesHalbjahr : Array<boolean> = Array(6).fill(false);
 
+	/**
+	 * Die einzelnen Fachwahlen des Schülers. 
+	 */
 	public readonly faecher : Vector<GostLeistungenFachwahl> = new Vector();
 
 

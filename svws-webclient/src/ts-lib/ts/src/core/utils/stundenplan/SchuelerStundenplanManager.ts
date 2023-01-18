@@ -11,28 +11,68 @@ import { SchuelerStundenplan, cast_de_nrw_schule_svws_core_data_stundenplan_Schu
 
 export class SchuelerStundenplanManager extends JavaObject {
 
+	/**
+	 * Die Stundenplandaten, die im Manager vorhanden sind 
+	 */
 	private readonly _daten : SchuelerStundenplan;
 
+	/**
+	 * Eine Map idUnterricht -> SchuelerStundenplanUnterricht 
+	 */
 	private readonly _mapUnterricht : HashMap<Number, SchuelerStundenplanUnterricht> = new HashMap();
 
+	/**
+	 * Eine Map idZeitraster -> Liste von Unterricht 
+	 */
 	private readonly _mapZeitrasterUnterricht : HashMap<Number, Vector<SchuelerStundenplanUnterricht>> = new HashMap();
 
+	/**
+	 * Eine Map wochentyp, idZeitraster -> Liste von Unterricht 
+	 */
 	private readonly _mapWocheZeitrasterUnterricht : HashMap<Number, HashMap<Number, Vector<SchuelerStundenplanUnterricht>>> = new HashMap();
 
+	/**
+	 * Eine Map idZeitraster -> Zeitraster 
+	 */
 	private readonly _mapZeitraster : HashMap<Number, StundenplanZeitraster> = new HashMap();
 
+	/**
+	 * Eine Map wochentag, stunde -> Zeitraster 
+	 */
 	private readonly _mapWochentagStundeZeitraster : HashMap<Number, HashMap<Number, StundenplanZeitraster>> = new HashMap();
 
+	/**
+	 * Eine Map wochentag -> Liste von Zeitrastern 
+	 */
 	private readonly _mapWochentagZeitraster : HashMap<Number, Vector<StundenplanZeitraster>> = new HashMap();
 
+	/**
+	 * Eine Map stunde -> Liste von Zeitrastern 
+	 */
 	private readonly _mapStundeZeitraster : HashMap<Number, Vector<StundenplanZeitraster>> = new HashMap();
 
+	/**
+	 *  Der minimale Wochentag, der in den Stundenplandaten vorkommt, z.B. 1 für
+	 *  Montag
+	 */
 	private minWochentag : number = Number.MAX_VALUE;
 
+	/**
+	 *  Der maximale Wochentag, der in den Stundenplandaten vorkommt, z.B. 5 für
+	 *  Freitag
+	 */
 	private maxWochentag : number = Number.MIN_VALUE;
 
+	/**
+	 *  Die minimale Unterrichtsstunde, die in den Stundenplandaten vorkommt, z.B. 1
+	 *  für die 1. Stunde
+	 */
 	private minStunde : number = Number.MAX_VALUE;
 
+	/**
+	 *  Die maximale Unterrichtsstunde, die in den Stundenplandaten vorkommt, z.B. 9
+	 *  für die 9. Stunde
+	 */
 	private maxStunde : number = Number.MIN_VALUE;
 
 

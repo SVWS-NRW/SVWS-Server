@@ -19,28 +19,64 @@ export class HerkunftBildungsgangsTyp extends JavaObject {
 	/** an array containing all values of this enumeration indexed by their name*/
 	private static readonly all_values_by_name : Map<String, HerkunftBildungsgangsTyp> = new Map<String, HerkunftBildungsgangsTyp>();
 
+	/**
+	 * Weiterbildungskolleg: Abendgymnasium 
+	 */
 	public static readonly AG : HerkunftBildungsgangsTyp = new HerkunftBildungsgangsTyp("AG", 0, [new HerkunftBildungsgangTypKatalogEintrag(1000, WeiterbildungskollegBildungsgangTyp.ABENDGYMNASIUM, null, null, null)]);
 
+	/**
+	 * Weiterbildungskolleg: Abendrealschule 
+	 */
 	public static readonly AR : HerkunftBildungsgangsTyp = new HerkunftBildungsgangsTyp("AR", 1, [new HerkunftBildungsgangTypKatalogEintrag(2000, WeiterbildungskollegBildungsgangTyp.ABENDREALSCHULE, null, null, null)]);
 
+	/**
+	 * Weiterbildungskolleg: Abendrealschule 
+	 */
 	public static readonly KL : HerkunftBildungsgangsTyp = new HerkunftBildungsgangsTyp("KL", 2, [new HerkunftBildungsgangTypKatalogEintrag(3000, WeiterbildungskollegBildungsgangTyp.KOLLEG, null, null, null)]);
 
+	/**
+	 * Berufskolleg: Berufsfachschule 
+	 */
 	public static readonly BF : HerkunftBildungsgangsTyp = new HerkunftBildungsgangsTyp("BF", 3, [new HerkunftBildungsgangTypKatalogEintrag(10000, null, BerufskollegBildungsgangTyp.BERUFSFACHSCHULE, null, null)]);
 
+	/**
+	 * Berufskolleg: Berufschule 
+	 */
 	public static readonly BS : HerkunftBildungsgangsTyp = new HerkunftBildungsgangsTyp("BS", 4, [new HerkunftBildungsgangTypKatalogEintrag(11000, null, BerufskollegBildungsgangTyp.BERUFSSCHULE, null, null)]);
 
+	/**
+	 * Berufskolleg: Berufliches Gymnasium 
+	 */
 	public static readonly BY : HerkunftBildungsgangsTyp = new HerkunftBildungsgangsTyp("BY", 5, [new HerkunftBildungsgangTypKatalogEintrag(12000, null, BerufskollegBildungsgangTyp.BERUFLICHES_GYMNASIUM, null, null)]);
 
+	/**
+	 * Berufskolleg: Fachoberschule 
+	 */
 	public static readonly FO : HerkunftBildungsgangsTyp = new HerkunftBildungsgangsTyp("FO", 6, [new HerkunftBildungsgangTypKatalogEintrag(13000, null, BerufskollegBildungsgangTyp.FACHOBERSCHULE, null, null)]);
 
+	/**
+	 * Berufskolleg: Fachschule 
+	 */
 	public static readonly FS : HerkunftBildungsgangsTyp = new HerkunftBildungsgangsTyp("FS", 7, [new HerkunftBildungsgangTypKatalogEintrag(14000, null, BerufskollegBildungsgangTyp.FACHSCHULE, null, null)]);
 
+	/**
+	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. 
+	 */
 	public static VERSION : number = 1;
 
+	/**
+	 * Der aktuellen Daten des Bildungsgangtyps, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null 
+	 */
 	public readonly daten : HerkunftBildungsgangTypKatalogEintrag;
 
+	/**
+	 * Die Historie mit den Einträgen des Bildungsgangtyps 
+	 */
 	public readonly historie : Array<HerkunftBildungsgangTypKatalogEintrag>;
 
+	/**
+	 * Eine Hashmap mit allen definierten Bildungsgangtypen, zugeordnet zu ihren Kürzeln 
+	 */
 	private static readonly _ebenen : HashMap<String, HerkunftBildungsgangsTyp | null> = new HashMap();
 
 	/**

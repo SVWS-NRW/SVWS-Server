@@ -3,20 +3,44 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class OrtKatalogEintrag extends JavaObject {
 
+	/**
+	 * Die ID des Katalog-Eintrags. 
+	 */
 	public id : number = 0;
 
+	/**
+	 * Die Postleitzahl. 
+	 */
 	public plz : String | null = null;
 
+	/**
+	 * Der Name des Ortes. 
+	 */
 	public ortsname : String | null = null;
 
+	/**
+	 * Der Name des Kreises. 
+	 */
 	public kreis : String | null = null;
 
+	/**
+	 * Das Kürzel des Bundeslandes.  
+	 */
 	public kuerzelBundesland : String | null = null;
 
+	/**
+	 * Gibt die Position in der Sortierreihenfolge für die Katalog-Einträge an. 
+	 */
 	public sortierung : number = 0;
 
+	/**
+	 * Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht. 
+	 */
 	public istSichtbar : boolean = false;
 
+	/**
+	 * Gibt an, ob der Eintrag in der Anwendung änderbar sein soll oder nicht. 
+	 */
 	public istAenderbar : boolean = false;
 
 

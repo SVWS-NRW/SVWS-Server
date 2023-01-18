@@ -3,8 +3,14 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class DBSchemaListeEintrag extends JavaObject {
 
+	/**
+	 * Der Name des Datenbank-Schemas. 
+	 */
 	public name : String | null = null;
 
+	/**
+	 * Gibt an, ob es sich um das Default-Schema in der Konfiguration handelt. 
+	 */
 	public isDefault : boolean = false;
 
 

@@ -2,8 +2,14 @@ import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject
 
 export class AbiturKursMarkierung extends JavaObject {
 
+	/**
+	 * Gibt an, ob der Kurs in die Berechnung eingeht 
+	 */
 	public fuerBerechnung : boolean = false;
 
+	/**
+	 * Gibt an, ob der Kurs auf dem Zeugnis angegeben werden soll. 
+	 */
 	public aufAbiturZeugnis : boolean = false;
 
 

@@ -8,10 +8,19 @@ import { Logger, cast_de_nrw_schule_svws_core_logger_Logger } from '../../core/l
 
 export class KursblockungAlgorithmusSMatchingW extends KursblockungAlgorithmusS {
 
+	/**
+	 *  Die Anzahl an Runden ohne Verbesserung, bevor es zum Abbruch kommt.
+	 */
 	private static readonly MAX_RUNDEN_IN_FOLGE_OHNE_VERBESSERUNG : number = 5;
 
+	/**
+	 *  Array der SuS, deren Kurse verteilt werden sollen.
+	 */
 	private readonly schuelerArr : Array<KursblockungDynSchueler>;
 
+	/**
+	 *  Zur Speicherung einer zufälligen Permutation der Indizes der Schüler.
+	 */
 	private readonly perm : Array<number>;
 
 

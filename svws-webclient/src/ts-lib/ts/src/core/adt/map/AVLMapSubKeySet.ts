@@ -9,6 +9,9 @@ import { Comparator, cast_java_util_Comparator } from '../../../java/util/Compar
 
 export class AVLMapSubKeySet<K, V> extends JavaObject implements NavigableSet<K> {
 
+	/**
+	 *  Die {@link AVLMap} auf der dieses Sub-Set operiert.
+	 */
 	private readonly _sub : AVLMapSubMap<K, V>;
 
 

@@ -2,18 +2,39 @@ import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject
 
 export class SchuelerblockungInputKurs extends JavaObject {
 
+	/**
+	 * Die ID des Kurses. 
+	 */
 	public id : number = -1;
 
+	/**
+	 * Die ID des zugeordneten Faches. Beispielsweise gehört der Kurs 'D-LK1' zum Fach 'D'. 
+	 */
 	public fach : number = -1;
 
+	/**
+	 * Die ID der zugeordneten Kursart. Beispielsweise gehört der Kurs 'D-LK1' zur Kursart 'LK'. 
+	 */
 	public kursart : number = -1;
 
+	/**
+	 * Falls TRUE, dann darf der Schüler diesen Kurs nicht erhalten. 
+	 */
 	public istGesperrt : boolean = false;
 
+	/**
+	 * Falls TRUE, dann muss der Schüler diesen Kurs erhalten. 
+	 */
 	public istFixiert : boolean = false;
 
+	/**
+	 * Die Anzahl an SuS, die derzeit in diesem Kurs sind, ohne diesen Schüler. 
+	 */
 	public anzahlSuS : number = -1;
 
+	/**
+	 * Die Schienen, die dieser Kurs belegt. In der Regel steht im Array eine Zahl (Schiene). Die Schienen sind 1-indiziert. 
+	 */
 	public schienen : Array<number> = Array(0).fill(0);
 
 

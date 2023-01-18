@@ -9,94 +9,229 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 
 export class SchuelerLernabschnittsdaten extends JavaObject {
 
+	/**
+	 * Die ID des Lernabschnitts in der Datenbank. 
+	 */
 	public id : number = 0;
 
+	/**
+	 * Die ID des Schülers, zu dem diese Lernabschnittdaten gehören. 
+	 */
 	public schuelerID : number = 0;
 
+	/**
+	 * Die ID des Schuljahresabschnitts, zu welchem diese Lernabschnittdaten gehören. 
+	 */
 	public schuljahresabschnitt : number = 0;
 
+	/**
+	 * Eine Nr, zur Unterscheidung von Lernabschnittsdaten, wenn beim Schüler mehrere Lernabschnitt in einem Schuljahresabschnitt vorliegen (z.B. Wechsel einer Klasse, NULL=aktueller Abschnitt, 1=vor dem ersten Wechsel, 2=vor dem zweiten Wechsel, usw.). 
+	 */
 	public wechselNr : Number | null = null;
 
+	/**
+	 * Das Datum, wann der Lernabschnitt beginnt 
+	 */
 	public datumAnfang : String | null = null;
 
+	/**
+	 * Das Datum, wann der Lernabschnitt endet 
+	 */
 	public datumEnde : String | null = null;
 
+	/**
+	 * Das Datum der Konferenz 
+	 */
 	public datumKonferenz : String | null = null;
 
+	/**
+	 * Das Datum des Zeugnisses bzw. der Laufbahnbescheinigung 
+	 */
 	public datumZeugnis : String | null = null;
 
+	/**
+	 * Die Anzahl der Schulbesuchsjahre 
+	 */
 	public anzahlSchulbesuchsjahre : Number | null = null;
 
+	/**
+	 * Gibt an, ob es sich um einen gewerteten Abschnitt handelt oder nicht 
+	 */
 	public istGewertet : boolean = true;
 
+	/**
+	 * Gibt an, ob es sich bei dem Abschnitt um einen wiederholten Abschnitt handelt oder nicht 
+	 */
 	public istWiederholung : boolean = false;
 
+	/**
+	 * Die Prüfungsordnung, die in dem Lernabschnitt bei dem Schüler anzuwenden ist. 
+	 */
 	public pruefungsOrdnung : String = "";
 
+	/**
+	 * Die ID der Klasse des Schülers. 
+	 */
 	public klassenID : number = -1;
 
+	/**
+	 * Die ID der Folge-Klasse des Schülers, sofern dieser vom Standard der Klassentabelle abweicht. 
+	 */
 	public folgeklassenID : Number | null = null;
 
+	/**
+	 * Das Kürzel der Schulgliederung bzw. des Bildungsgangs des Schülers. 
+	 */
 	public schulgliederung : String | null = null;
 
+	/**
+	 * Die ID des Jahrgangs des Schülers 
+	 */
 	public jahrgangID : number = -1;
 
+	/**
+	 * Die ID der Fachklasse des Schülers an einem Berufskolleg 
+	 */
 	public fachklasseID : Number | null = null;
 
+	/**
+	 * Der Schwerpunkt eines Schülers laut dem Schwerpunkt-Katalog 
+	 */
 	public schwerpunktID : Number | null = null;
 
+	/**
+	 * Das Kürzel der Organisationsform der Schule in Bezug auf den Schüler (z.B. Ganztag - siehe Core-Type) 
+	 */
 	public organisationsform : String | null = null;
 
+	/**
+	 * Das Kürzel der Klassenart in Bezug auf den Schüler (z.B. Regelklasse - siehe Core-Type) 
+	 */
 	public Klassenart : String | null = "RK";
 
+	/**
+	 * Die Summe der Gesamtfehlstunden für den gesamten Lernabschnitt 
+	 */
 	public fehlstundenGesamt : number = 0;
 
+	/**
+	 * Die Summe der unentschuldigten Fehlstunden für den gesamten Lernabschnitt 
+	 */
 	public fehlstundenUnentschuldigt : number = 0;
 
+	/**
+	 * Der Grenzwert für die Fehlstunden, ab dem am Berufskolleg Warnbriefe zur Entlassung verschickt werden 
+	 */
 	public fehlstundenGrenzwert : Number | null = null;
 
+	/**
+	 * Gibt an, ob eine Schwerbehinderung nachgewiesen ist oder nicht 
+	 */
 	public hatSchwerbehinderungsNachweis : boolean = false;
 
+	/**
+	 * Gibt an, ob eine Förderung nach der Ausbildungsordnung Sonderpädagogischer Förderung (AOSF) vorliegt 
+	 */
 	public hatAOSF : boolean = false;
 
+	/**
+	 * Gibt an, ob eine Diagnose zu Autismus vorliegt oder nicht 
+	 */
 	public hatAutismus : boolean = false;
 
+	/**
+	 * Gibt an, ob zieldifferent unterrichet wird oder nicht 
+	 */
 	public hatZieldifferentenUnterricht : boolean = false;
 
+	/**
+	 * Die ID des Haupförderschwerpunktes des Schülers 
+	 */
 	public foerderschwerpunkt1ID : Number | null = null;
 
+	/**
+	 * Die ID des weiteren Förderschwerpunktes des Schülers 
+	 */
 	public foerderschwerpunkt2ID : Number | null = null;
 
+	/**
+	 * Die ID eines Sonderpädagogen, der den Schüler betreut und auch im Notenmodul hat 
+	 */
 	public sonderpaedagogeID : Number | null = null;
 
+	/**
+	 * Die Sprache des bilngualen Zweigs, falls der Schüler im bilingualen Zweig unterrichtet wird 
+	 */
 	public bilingualerZweig : String | null = null;
 
+	/**
+	 * Gibt für das Berufskolleg an, ob der fachpraktische Anteil in den Anlagen B08, B09 und B10 ausreichend sind für Versetzung 
+	 */
 	public istFachpraktischerAnteilAusreichend : boolean = true;
 
+	/**
+	 * Das Kürzel des Versetzungsvermerks 
+	 */
 	public versetzungsvermerk : String | null = null;
 
+	/**
+	 * Die Durchschnittsnote in diesem Lernabschnitt - wird ggf. von einem Prüfungsalgorithmus gesetzt und kann dann ausgelesen werden 
+	 */
 	public noteDurchschnitt : String | null = null;
 
+	/**
+	 * Die Lernbereichnote Gesellschaftswissenschaft oder Arbeitlehre für den Hauptschulabschluss nach Klassen 10 
+	 */
 	public noteLernbereichGSbzwAL : Number | null = null;
 
+	/**
+	 * Die Lernbereichnote Naturwissenschaft für den Hauptschulabschluss nach Klassen 10 
+	 */
 	public noteLernbereichNW : Number | null = null;
 
+	/**
+	 * Die Art des Abschlusses (siehe Katalog) 
+	 */
 	public abschlussart : Number | null = null;
 
+	/**
+	 * Gibt an, ob der berechnete Abschluss eine Prognose ist oder nicht (siehe Katalog) 
+	 */
 	public istAbschlussPrognose : boolean = false;
 
+	/**
+	 * Der erreichte allgemeinbildende Abschluss 
+	 */
 	public abschluss : String | null = null;
 
+	/**
+	 * Der erreichte berufsbezogene Abschluss am Berufskolleg 
+	 */
 	public abschlussBerufsbildend : String | null = null;
 
+	/**
+	 * Die textuelle Ausgabe des Prüfungsalgorithmus für die Versetzungs-/Abschlussberechnung 
+	 */
 	public textErgebnisPruefungsalgorithmus : String | null = null;
 
+	/**
+	 * Die Art des Zeugnisses 
+	 */
 	public zeugnisart : String | null = null;
 
+	/**
+	 * Die Informationen den Nachprüfungen in diesem Lernabschnitt oder null, falls keine vorhanden sind. 
+	 */
 	public nachpruefungen : SchuelerLernabschnittNachpruefungsdaten | null = null;
 
+	/**
+	 * Die Bemerkungen in diesem Lernabschnitt. 
+	 */
 	public bemerkungen : SchuelerLernabschnittBemerkungen = new SchuelerLernabschnittBemerkungen();
 
+	/**
+	 * Die Leistungsdaten des Schülers in diesem Lernabschnitt. 
+	 */
 	public leistungsdaten : Vector<SchuelerLeistungsdaten> = new Vector();
 
 

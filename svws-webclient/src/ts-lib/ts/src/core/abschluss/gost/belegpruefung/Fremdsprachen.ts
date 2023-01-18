@@ -26,6 +26,10 @@ export class Fremdsprachen extends GostBelegpruefung {
 
 	private biliSachfaecher : List<AbiturFachbelegung> = new Vector();
 
+	/**
+	 * Die Anzahl der durchgehenden bzw. potenziell durchgehenden Belegungen - nur schriftlich (für die Schwerpunktberechnung
+	 *  - hier zählt auch ein bilinguales Sachfach, wo die Fremdsprache der Unterrichtsprache aus der Sek I nicht fortgeführt wurde) 
+	 */
 	private anzahl_schriftlich_durchgehend : number = 0;
 
 

@@ -5,10 +5,19 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 
 export class StundenplanblockungManagerKlasse extends JavaObject {
 
+	/**
+	 * Die Datenbank-ID der Klasse. 
+	 */
 	_id : number = 0;
 
+	/**
+	 * Das Kürzel der Klasse. Beispielsweise '05a' oder 'Q1'. 
+	 */
 	_kuerzel : String = "";
 
+	/**
+	 * Alle Lerngruppen der Klasse. 
+	 */
 	_menge_gr : Vector<StundenplanblockungManagerLerngruppe | null>;
 
 

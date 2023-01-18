@@ -3,12 +3,24 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class GostBelegpruefungsArt extends JavaObject {
 
+	/**
+	 * Prüfung nur der EF.1 
+	 */
 	public static readonly EF1 : GostBelegpruefungsArt = new GostBelegpruefungsArt("EF.1", "nur EF.1");
 
+	/**
+	 * Gesamtprüfung über die gesamte Oberstufe 
+	 */
 	public static readonly GESAMT : GostBelegpruefungsArt = new GostBelegpruefungsArt("Gesamt", "die gesamte Oberstufe");
 
+	/**
+	 * Das Kürzel für die Belegprüfungsart 
+	 */
 	public readonly kuerzel : String;
 
+	/**
+	 * Eine textuelle Beschreibung für die Art der Belegprüfung 
+	 */
 	public readonly beschreibung : String;
 
 

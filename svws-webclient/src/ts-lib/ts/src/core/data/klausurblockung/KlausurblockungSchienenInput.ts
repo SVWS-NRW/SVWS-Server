@@ -4,10 +4,19 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 
 export class KlausurblockungSchienenInput extends JavaObject {
 
+	/**
+	 * Die Datenbank-ID der zugehörigen Klausurblockung. Sie muss positiv sein, sonst wird ein Fehler erzeugt. 
+	 */
 	public datenbankID : number = -1;
 
+	/**
+	 * Die maximale Zeit (in Millisekunden), die der Algorithmus verwenden darf. 
+	 */
 	public maxTimeMillis : number = 1000;
 
+	/**
+	 * Eine Sammlung aller Schüler mit den zugeordneten Klausuren. 
+	 */
 	public schueler : Vector<KlausurblockungSchienenInputSchueler> = new Vector();
 
 

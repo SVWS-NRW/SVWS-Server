@@ -4,10 +4,19 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 
 export class KlausurblockungSchienenOutput extends JavaObject {
 
+	/**
+	 * Die Datenbank-ID der zugehörigen Klausurblockung, für die dieses Ergebnis gilt. 
+	 */
 	public datenbankID : number = -1;
 
+	/**
+	 * Die Anzahl an Schienen (ergo Klausurtage) für dieses Ergebnis. 
+	 */
 	public schienenAnzahl : number = -1;
 
+	/**
+	 * Alle Klausuren mit ihren Schienen-Zuordnungen 
+	 */
 	public klausuren : Vector<KlausurblockungSchienenOutputKlausur> = new Vector();
 
 

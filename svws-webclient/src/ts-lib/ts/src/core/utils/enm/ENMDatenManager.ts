@@ -21,22 +21,49 @@ import { Foerderschwerpunkt, cast_de_nrw_schule_svws_core_types_schueler_Foerder
 
 export class ENMDatenManager extends JavaObject {
 
+	/**
+	 * Die ENM-Daten, die von diesem Daten-Manager verwaltet werden. 
+	 */
 	public readonly daten : ENMDaten;
 
+	/**
+	 * Temporäre Map für das Befüllen der ENMLehrer-Vektors.
+	 */
 	private mapLehrer : HashMap<Number, ENMLehrer> = new HashMap();
 
+	/**
+	 * Temporäre Map für das Befüllen des ENMSchueler-Vektors.
+	 */
 	private mapSchueler : HashMap<Number, ENMSchueler> = new HashMap();
 
+	/**
+	 * Temporäre Map für das Befüllen des ENMFach-Vektors.
+	 */
 	private mapFaecher : HashMap<Number, ENMFach> = new HashMap();
 
+	/**
+	 * Temporäre Map für das Befüllen des ENMFach-Vektors.
+	 */
 	private mapFaecherByKuerzel : HashMap<String, ENMFach> = new HashMap();
 
+	/**
+	 * Temporäre Map für das Befüllen des ENMJahrgang-Vektors.
+	 */
 	private mapJahrgaenge : HashMap<Number, ENMJahrgang> = new HashMap();
 
+	/**
+	 * Temporäre Map für das Befüllen des ENMKlasse-Vektors.
+	 */
 	private mapKlassen : HashMap<Number, ENMKlasse> = new HashMap();
 
+	/**
+	 * Zählt die Id der Lerngruppe hoch. 
+	 */
 	private lerngruppenIDZaehler : number = 1;
 
+	/**
+	 * Temporäre Map für die Lerngruppen. 
+	 */
 	private mapLerngruppen : HashMap<String, ENMLerngruppe> = new HashMap();
 
 

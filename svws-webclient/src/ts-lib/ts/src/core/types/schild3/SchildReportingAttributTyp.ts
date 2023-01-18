@@ -15,18 +15,39 @@ export class SchildReportingAttributTyp extends JavaObject {
 	/** an array containing all values of this enumeration indexed by their name*/
 	private static readonly all_values_by_name : Map<String, SchildReportingAttributTyp> = new Map<String, SchildReportingAttributTyp>();
 
+	/**
+	 * Boolean 
+	 */
 	public static readonly BOOLEAN : SchildReportingAttributTyp = new SchildReportingAttributTyp("BOOLEAN", 0, "boolean");
 
+	/**
+	 * Ganzzahl 
+	 */
 	public static readonly INT : SchildReportingAttributTyp = new SchildReportingAttributTyp("INT", 1, "integer");
 
+	/**
+	 * Zahl, auch Kommazahlen 
+	 */
 	public static readonly NUMBER : SchildReportingAttributTyp = new SchildReportingAttributTyp("NUMBER", 2, "number");
 
+	/**
+	 * Zeichenkette 
+	 */
 	public static readonly STRING : SchildReportingAttributTyp = new SchildReportingAttributTyp("STRING", 3, "string");
 
+	/**
+	 * Mehrzeilige Zeichenkette 
+	 */
 	public static readonly MEMO : SchildReportingAttributTyp = new SchildReportingAttributTyp("MEMO", 4, "memo");
 
+	/**
+	 * Datumsangabe 
+	 */
 	public static readonly DATE : SchildReportingAttributTyp = new SchildReportingAttributTyp("DATE", 5, "date");
 
+	/**
+	 * Der JSON-Typ als String 
+	 */
 	private readonly type : String;
 
 	/**

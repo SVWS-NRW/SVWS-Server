@@ -3,8 +3,14 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class StundenplanInputSimpleRaum extends JavaObject {
 
+	/**
+	 * Die ID des Raumes. 
+	 */
 	public id : number = 0;
 
+	/**
+	 * Das Kürzel des Raumes. Beispielsweise 'SpH1' oder 'BK05'. 
+	 */
 	public kuerzel : String = "";
 
 

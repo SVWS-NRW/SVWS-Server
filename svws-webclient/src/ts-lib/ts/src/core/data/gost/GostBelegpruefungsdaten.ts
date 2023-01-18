@@ -6,8 +6,14 @@ import { Abiturdaten, cast_de_nrw_schule_svws_core_data_gost_Abiturdaten } from 
 
 export class GostBelegpruefungsdaten extends JavaObject {
 
+	/**
+	 * Das Jahr, in welchem der Jahrgang Abitur machen wird. 
+	 */
 	public abiturdaten : Abiturdaten | null = null;
 
+	/**
+	 * Die Liste der Fächer der gymnasialen Oberstufe, die für die Belegprüfung genutzt werden sollen 
+	 */
 	public gostFaecher : Vector<GostFach> = new Vector();
 
 

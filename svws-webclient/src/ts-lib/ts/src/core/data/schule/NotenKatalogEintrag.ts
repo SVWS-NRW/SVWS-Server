@@ -4,20 +4,44 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class NotenKatalogEintrag extends JavaObject {
 
+	/**
+	 * Die ID des Katalog-Eintrags. 
+	 */
 	public id : number = -1;
 
+	/**
+	 * Eine ID, die der Sortierung der Noteneinträge in einer Anwendung vorgibt 
+	 */
 	public sortierung : number = -1;
 
+	/**
+	 * Die Notenpunkte, die dieser Note zugeordnet sind 
+	 */
 	public notenpunkte : Number | null = null;
 
+	/**
+	 * Die Kurzschreibweise der Note als Zahl ggf. mit Tendenz (+/-) 
+	 */
 	public kuerzel : String = "";
 
+	/**
+	 * Die Note in ausführlicher Textform ggf. mit Tendenz (plus/minus) 
+	 */
 	public text : String = "";
 
+	/**
+	 * Die Note in ausführlicher Textform, wie sie auf einem Zeugnis dargestellt wird. 
+	 */
 	public textZeugnis : String = "";
 
+	/**
+	 * Gibt an, in welchem Schuljahr die Note einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 */
 	public gueltigVon : Number | null = null;
 
+	/**
+	 * Gibt an, bis zu welchem Schuljahr die Note gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 */
 	public gueltigBis : Number | null = null;
 
 

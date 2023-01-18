@@ -3,22 +3,49 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class Schild3KatalogEintragExportCSV extends JavaObject {
 
+	/**
+	 * Die Datenart 
+	 */
 	public DatenartKrz : String | null = null;
 
+	/**
+	 * Der Name des Feldes mit der ID 
+	 */
 	public Feldname : String | null = null;
 
+	/**
+	 * Der Text für die Anzeige 
+	 */
 	public AnzeigeText : String | null = null;
 
+	/**
+	 * Der Feldtyp 
+	 */
 	public Feldtyp : String | null = null;
 
+	/**
+	 * Feldwerte 
+	 */
 	public Feldwerte : String | null = null;
 
+	/**
+	 * Ergebniswerte 
+	 */
 	public ErgebnisWerte : String | null = null;
 
+	/**
+	 * Der Name des Lookup-Feldes 
+	 */
 	public LookupFeldname : String | null = null;
 
+	/**
+	 * Der SQL-Befehl zum Bestimmen des Loopup-Feldwertes 
+	 */
 	public LookupSQLText : String | null = null;
 
+	/**
+	 * Die unterstützen Datenbank-Formate 
+	 */
 	public DBFormat : String | null = null;
 
 

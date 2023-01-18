@@ -3,14 +3,29 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class ENMFach extends JavaObject {
 
+	/**
+	 * Die ID des Faches in der SVWS-DB. 
+	 */
 	public id : number = 0;
 
+	/**
+	 * Das Kürzel des Faches, wie es im Rahmen der amtlichen Schulstatistik verwendet wird. (z.B. D) 
+	 */
 	public kuerzel : String = "";
 
+	/**
+	 * Das Kürzel des Faches, wie es im Rahmen der Schule benannt wird und angezeigt werden soll. (z.B. D) 
+	 */
 	public kuerzelAnzeige : String = "";
 
+	/**
+	 * Die Reihenfolge des Faches bei der Sortierung der Fächer. (z.B. 37) 
+	 */
 	public sortierung : number = 0;
 
+	/**
+	 * Gibt an, ob es sich bei dem Fach um eine Fremdsprache handelt oder nicht. 
+	 */
 	public istFremdsprache : boolean = false;
 
 

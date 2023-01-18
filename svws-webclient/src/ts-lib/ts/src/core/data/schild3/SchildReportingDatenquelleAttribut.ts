@@ -3,10 +3,19 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class SchildReportingDatenquelleAttribut extends JavaObject {
 
+	/**
+	 * Der Name des Attributs 
+	 */
 	public name : String = "";
 
+	/**
+	 * Der Typ des Attributs 
+	 */
 	public typ : String = "";
 
+	/**
+	 * Die Beschreibung des Attributs 
+	 */
 	public beschreibung : String = "";
 
 

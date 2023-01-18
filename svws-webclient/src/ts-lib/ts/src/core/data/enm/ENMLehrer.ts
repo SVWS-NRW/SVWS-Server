@@ -3,16 +3,34 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class ENMLehrer extends JavaObject {
 
+	/**
+	 * Die ID des Lehrers aus der SVWS-DB (z.B. 42) 
+	 */
 	public id : number = 0;
 
+	/**
+	 * Das Kürzel des Lehrers für die Anzeige im Notenmodel (z.B. Mus) 
+	 */
 	public kuerzel : String | null = null;
 
+	/**
+	 * Der Nachname des Lehrers (z.B. Mustermann) 
+	 */
 	public nachname : String | null = null;
 
+	/**
+	 * Der Vorname des Lehrers (z.B. Max) 
+	 */
 	public vorname : String | null = null;
 
+	/**
+	 * Das Geschlecht des Lehrers (m,w,d,x) 
+	 */
 	public geschlecht : String | null = null;
 
+	/**
+	 * Die Dienst-EMail-Adresse des Lehrers 
+	 */
 	public eMailDienstlich : String | null = null;
 
 

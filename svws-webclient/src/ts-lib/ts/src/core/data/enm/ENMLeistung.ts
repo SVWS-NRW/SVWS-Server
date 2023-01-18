@@ -7,38 +7,90 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 
 export class ENMLeistung extends JavaObject {
 
+	/**
+	 * Die ID der Leistungsdaten des Schülers in der SVWS-DB (z.B. 307956) 
+	 */
 	public id : number = 0;
 
+	/**
+	 * Die eindeutige ID der Lerngruppe, der der Schüler zugeordnet ist. (Klasse oder Kurs wird erst 
+	 *  in der Lerngruppe unterschieden!) 
+	 */
 	public lerngruppenID : number = 0;
 
+	/**
+	 * Das Kürzel der Note, die vergeben wurde. 
+	 */
 	public note : String | null = null;
 
+	/**
+	 * Der Zeitstempel der letzten Änderung an der erteilten Note 
+	 */
 	public tsNote : String | null = null;
 
+	/**
+	 * Gibt bei Oberstufenkursen an, ob das Fach schriftlich belegt wurde oder nicht. 
+	 */
 	public istSchriftlich : Boolean | null = null;
 
+	/**
+	 * Gibt an, ob es sich um ein Abiturfach handelt (1,2,3 oder 4) oder nicht (null) 
+	 */
 	public abiturfach : Number | null = null;
 
+	/**
+	 * Gibt die Anzahl der gesamten Fehlstunden an, sofern diese fachbezogen ermittelt werden. 
+	 */
 	public fehlstundenGesamt : Number | null = null;
 
+	/**
+	 * Der Zeitstempel der letzten Änderung an Anzahl der gesamten Fehlstunden an, sofern diese fachbezogen ermittelt werden 
+	 */
 	public tsFehlstundenGesamt : String | null = null;
 
+	/**
+	 * Gibt die Anzahl der unentschuldigten Fehlstunden an, sofern diese fachbezogen ermittelt werden. 
+	 */
 	public fehlstundenUnentschuldigt : Number | null = null;
 
+	/**
+	 * Der Zeitstempel der letzten Änderung an Anzahl der unentschuldigten Fehlstunden an, sofern diese fachbezogen ermittelt werden 
+	 */
 	public tsFehlstundenUnentschuldigt : String | null = null;
 
+	/**
+	 * Die fachbezogenen Bemerkungen bzw. das Thema bei Projektkursen 
+	 */
 	public fachbezogeneBemerkungen : String | null = null;
 
+	/**
+	 * Der Zeitstempel der letzten Änderung an Anzahl den fachbezogenen Bemerkungen bzw. dem Thema bei Projektkursen 
+	 */
 	public tsFachbezogeneBemerkungen : String | null = null;
 
+	/**
+	 * Die Kurszuweisung, die auf dem Zeugnis erscheinen soll für den nächsten Kursabschnitt (z.B. E oder G-Kurs, z.B. an der Gesamtschule) 
+	 */
 	public neueZuweisungKursart : String | null = null;
 
+	/**
+	 * Gibt an, ob ein Fach gemahnt wurde oder nicht. 
+	 */
 	public istGemahnt : Boolean | null = null;
 
+	/**
+	 * Der Zeitstempel, wann gesetzt wurde, ob die Leistung gemahnt wurde 
+	 */
 	public tsIstGemahnt : String | null = null;
 
+	/**
+	 * Das Mahndatum bei erfolgter Mahnung. 
+	 */
 	public mahndatum : String | null = null;
 
+	/**
+	 * Die Teilleistungen, sofern welche vordefiniert sind. 
+	 */
 	public teilleistungen : Vector<ENMTeilleistung> = new Vector();
 
 

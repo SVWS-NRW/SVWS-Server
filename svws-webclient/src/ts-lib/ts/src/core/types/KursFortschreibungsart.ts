@@ -16,24 +16,54 @@ export class KursFortschreibungsart extends JavaObject {
 	/** an array containing all values of this enumeration indexed by their name*/
 	private static readonly all_values_by_name : Map<String, KursFortschreibungsart> = new Map<String, KursFortschreibungsart>();
 
+	/**
+	 * Keine Fortschreibung Kurs wird bei der Verstzung gelöscht. 
+	 */
 	public static readonly KEINE : KursFortschreibungsart = new KursFortschreibungsart("KEINE", 0, 0, "N", "Keine", null, null);
 
+	/**
+	 * Nur Definition, alle Schüler werden aus dem Kurs gelöscht, der Jahrgang wird aber erhöht. 
+	 */
 	public static readonly NUR_DEFINITION_JAHRGANG_HOCHSCHREIBEN : KursFortschreibungsart = new KursFortschreibungsart("NUR_DEFINITION_JAHRGANG_HOCHSCHREIBEN", 1, 1, "D", "Nur Definition, Jahrgang hochschreiben", null, null);
 
+	/**
+	 * Nur Definition, alle Schüler werden aus dem Kurs gelöscht, der Jahrgang wird nicht erhöht. 
+	 */
 	public static readonly NUR_DEFINITION_JAHRGANG_BEIBEHALTEN : KursFortschreibungsart = new KursFortschreibungsart("NUR_DEFINITION_JAHRGANG_BEIBEHALTEN", 2, 2, "B", "Nur Definition, Jahrgang beibehalten", null, null);
 
+	/**
+	 * Komplett, der Kurs wird mit Schülern hochgeschrieben und der Jahrgang erhöht. 
+	 */
 	public static readonly KOMPLETT : KursFortschreibungsart = new KursFortschreibungsart("KOMPLETT", 3, 3, "K", "Komplett", null, null);
 
+	/**
+	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. 
+	 */
 	public static VERSION : number = 1;
 
+	/**
+	 * Die ID der Kurs-Fortschreibungsart als Integer 
+	 */
 	public readonly id : number;
 
+	/**
+	 * Das eindeutige einstelleige Kürzel der Kurs-Fortschreibungsart. 
+	 */
 	public readonly kuerzel : String;
 
+	/**
+	 * Die Beschreibung der Kurs-Fortschreibungsart 
+	 */
 	public readonly beschreibung : String;
 
+	/**
+	 * Gibt an, in welchem Schuljahr die Fortschreibungsart einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 */
 	public readonly gueltigVon : Number | null;
 
+	/**
+	 * Gibt an, bis zu welchem Schuljahr die Fortschreibungsart gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 */
 	public readonly gueltigBis : Number | null;
 
 	/**

@@ -5,102 +5,249 @@ import { JavaBoolean, cast_java_lang_Boolean } from '../../../java/lang/JavaBool
 
 export class SchuelerStammdaten extends JavaObject {
 
+	/**
+	 * Die ID des Schülerdatensatzes. 
+	 */
 	public id : number = 0;
 
+	/**
+	 * Das Foto (in Base64 kodiert) des Schülerdatensatzes. 
+	 */
 	public foto : String | null = null;
 
+	/**
+	 * Der Nachname des Schülerdatensatzes. 
+	 */
 	public nachname : String = "";
 
+	/**
+	 * Ggf. Zusatz zum Nachnamen des Schülerdatensatzes. 
+	 */
 	public zusatzNachname : String = "";
 
+	/**
+	 * Der Vorname des Schülerdatensatzes. 
+	 */
 	public vorname : String = "";
 
+	/**
+	 * Alle Vornamen, sofern es mehrere gibt, des Schülerdatensatzes. 
+	 */
 	public alleVornamen : String = "";
 
+	/**
+	 * Die ID des Geschlechtes 
+	 */
 	public geschlecht : number = 0;
 
+	/**
+	 * Das Geburtsdatum des Schülerdatensatzes. 
+	 */
 	public geburtsdatum : String | null = null;
 
+	/**
+	 * Der Geburtsort des Schülerdatensatzes. 
+	 */
 	public geburtsort : String | null = null;
 
+	/**
+	 * Der Geburtsname des Schülerdatensatzes. 
+	 */
 	public geburtsname : String | null = null;
 
+	/**
+	 * Ggf. der Straßenname im Wohnort des Schülers. 
+	 */
 	public strassenname : String | null = null;
 
+	/**
+	 * Ggf. die Hausnummer zur Straße im Wohnort des Schülers. 
+	 */
 	public hausnummer : String | null = null;
 
+	/**
+	 * Ggf. der Hausnummerzusatz zur Straße im Wohnort des Schülers. 
+	 */
 	public hausnummerZusatz : String | null = null;
 
+	/**
+	 * Die ID des Wohnortes des Schülerdatensatzes. 
+	 */
 	public wohnortID : Number | null = null;
 
+	/**
+	 * Die ID des Ortsteils des Schülerdatensatzes. 
+	 */
 	public ortsteilID : Number | null = null;
 
+	/**
+	 * Die Telefonnummer des Schülerdatensatzes. 
+	 */
 	public telefon : String | null = null;
 
+	/**
+	 * Die Mobilnummer des Schülerdatensatzes. 
+	 */
 	public telefonMobil : String | null = null;
 
+	/**
+	 * Die private Email-Adresse des Schülerdatensatzes. 
+	 */
 	public emailPrivat : String | null = null;
 
+	/**
+	 * Die schulische Email-Adresse des Schülerdatensatzes. 
+	 */
 	public emailSchule : String | null = null;
 
+	/**
+	 * Die ID der Staatsangehörigkeit des Schülerdatensatzes. 
+	 */
 	public staatsangehoerigkeitID : String | null = null;
 
+	/**
+	 * Die ID einer zweiten Staatsangehörigkeit des Schülerdatensatzes. 
+	 */
 	public staatsangehoerigkeit2ID : String | null = null;
 
+	/**
+	 * Die ID der Religion des Schülerdatensatzes. 
+	 */
 	public religionID : Number | null = null;
 
+	/**
+	 * Gibt an, ob die Konfession bei dem Schülerdatensatz auf dem Zeugnis erscheinen soll. 
+	 */
 	public druckeKonfessionAufZeugnisse : boolean = false;
 
+	/**
+	 * Das Datum der Religionsabmeldung des Schülerdatensatzes. 
+	 */
 	public religionabmeldung : String | null = null;
 
+	/**
+	 * Das Datum der Religionsanmeldung des Schülerdatensatzes. 
+	 */
 	public religionanmeldung : String | null = null;
 
+	/**
+	 * Gibt an, ob ein Migrationshintergrund bei dems Schülerdatensatz vorhanden ist. 
+	 */
 	public hatMigrationshintergrund : boolean = false;
 
+	/**
+	 * Das Zuzugsjahr des Schülerdatensatzes. 
+	 */
 	public zuzugsjahr : String | null = null;
 
+	/**
+	 * Das Geburtsland des Schülerdatensatzes. 
+	 */
 	public geburtsland : String | null = null;
 
+	/**
+	 * Die Verkehrssprache der Familie des Schülerdatensatzes. 
+	 */
 	public verkehrspracheFamilie : String | null = null;
 
+	/**
+	 * Das Geburtsland des Vaters des Schülerdatensatzes. 
+	 */
 	public geburtslandVater : String | null = null;
 
+	/**
+	 * Das Geburtsland der Mutter des Schülerdatensatzes. 
+	 */
 	public geburtslandMutter : String | null = null;
 
+	/**
+	 * Die ID eines sonderpädagogischen Förderschwerpunnktes des Schülerdatensatzes. 
+	 */
 	public foerderschwerpunktID : Number | null = null;
 
+	/**
+	 * Die ID eines zweiten sonderpädagogischen Förderschwerpunnktes des Schülerdatensatzes. 
+	 */
 	public foerderschwerpunkt2ID : Number | null = null;
 
+	/**
+	 * Gibt an, ob ein AOSF bei dem Schülerdatensatz vorliegt. 
+	 */
 	public istAOSF : Boolean | null = null;
 
+	/**
+	 * Gibt an, ob zieldifferentes Lerne bei dem Schülerdatensatz vorliegt. 
+	 */
 	public istLernenZieldifferent : Boolean | null = null;
 
+	/**
+	 * Die Bezeichnung des Status des Schülerdatensatzes. 
+	 */
 	public status : String | null = null;
 
+	/**
+	 * Die ID der Art des Fahrschülers des Schülerdatensatzes. 
+	 */
 	public fahrschuelerArtID : Number | null = null;
 
+	/**
+	 * Die ID der Haltestelle, ab der der Schüler das Transportmittel nimmt, des Schülerdatensatzes. 
+	 */
 	public haltestelleID : Number | null = null;
 
+	/**
+	 * Das Anmeldedatum des Schülerdatensatzes. 
+	 */
 	public anmeldedatum : String | null = null;
 
+	/**
+	 * Das Aufnahmedatum des Schülerdatensatzes. 
+	 */
 	public aufnahmedatum : String | null = null;
 
+	/**
+	 * Gibt an, ob der Schüler volljährig ist oder nicht. 
+	 */
 	public istVolljaehrig : Boolean | null = null;
 
+	/**
+	 * Gibt an, ob der Schüler die Schulpflicht erfüllt hat oder nicht. 
+	 */
 	public istSchulpflichtErfuellt : Boolean | null = null;
 
+	/**
+	 * Gibt an, ob der Schüler die Berufsschulpflicht erfüllt hat oder nicht. 
+	 */
 	public istBerufsschulpflichtErfuellt : Boolean | null = null;
 
+	/**
+	 * Gibt an, ob der Schüler einen Nachweis über die Maserimpfpflicht erbracht hat. 
+	 */
 	public hatMasernimpfnachweis : boolean = false;
 
+	/**
+	 * Gibt an, ob über den Schüler eine Auskunft an dritte erteilt werden darf oder dies unter allen Umständen vermieden werden sollte.
+	 */
 	public keineAuskunftAnDritte : boolean = false;
 
+	/**
+	 * Gibt an, ob der Schüler BAFÖG erhält oder nicht. 
+	 */
 	public erhaeltSchuelerBAFOEG : boolean = false;
 
+	/**
+	 * Gibt an, ob der Schüler Meister-BAFÖG erhält oder nicht. 
+	 */
 	public erhaeltMeisterBAFOEG : boolean = false;
 
+	/**
+	 * Ggibt an, ob es sich bei dem Schülerdatensatz um ein Duplikat handelt oder nicht. 
+	 */
 	public istDuplikat : boolean = false;
 
+	/**
+	 * Textfeld mit Bemerkungen zum Schülerdatensatz. 
+	 */
 	public bemerkungen : String | null = null;
 
 

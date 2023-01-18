@@ -13,14 +13,29 @@ import { HashSet, cast_java_util_HashSet } from '../../java/util/HashSet';
 
 export class KursblockungDynSchueler extends JavaObject {
 
+	/**
+	 * Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed. 
+	 */
 	private readonly _random : Random;
 
+	/**
+	 * Die ID (von der GUI) des Schülers, beispielsweise 42. 
+	 */
 	private readonly guiID : number;
 
+	/**
+	 * Ein String-Darstellung des Schüler für Warnungen und Fehlermeldungen, beispielsweise 'Mareike Musterfrau'. 
+	 */
 	private readonly representation : String;
 
+	/**
+	 * Alle Facharten (=Fachwahlen) des Schüler, z.B. 'D;LK'. 
+	 */
 	private fachartArr : Array<KursblockungDynFachart>;
 
+	/**
+	 * Der aktuell zur Fachart zugeordnete Kurs. 
+	 */
 	private fachartZuKurs : Array<KursblockungDynKurs | null>;
 
 	private fachartZuKursSaveS : Array<KursblockungDynKurs | null>;
@@ -29,14 +44,29 @@ export class KursblockungDynSchueler extends JavaObject {
 
 	private fachartZuKursSaveG : Array<KursblockungDynKurs | null>;
 
+	/**
+	 * Referenz zur Statistik, um diese über Nichtwahlen zu informieren. 
+	 */
 	private readonly statistik : KursblockungDynStatistik;
 
+	/**
+	 * Die aktuellen Nichtwahlen dieses Schülers. 
+	 */
 	private nichtwahlen : number = 0;
 
+	/**
+	 * Die aktuelle Information darüber, ob die Schiene des Schülers belegt ist. 
+	 */
 	private readonly schieneBelegt : Array<boolean>;
 
+	/**
+	 * Diese Datenstruktur wird verwendet um bei bestimmten Algorithmus Kurse auf Schienen zu verteilen. 
+	 */
 	private matrix : KursblockungMatrix;
 
+	/**
+	 * Verbotene Kurse des Schülers. Diese dürfen nicht belegt werden. 
+	 */
 	private readonly kursGesperrt : Array<boolean>;
 
 

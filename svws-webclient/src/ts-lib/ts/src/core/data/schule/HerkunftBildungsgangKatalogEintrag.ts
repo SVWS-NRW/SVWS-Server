@@ -8,16 +8,34 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 
 export class HerkunftBildungsgangKatalogEintrag extends JavaObject {
 
+	/**
+	 * Die ID des Katalog-Eintrags. 
+	 */
 	public id : number = -1;
 
+	/**
+	 * Das Kürzel des Bildungsganges, welches im Rahmen der amtlichen Schulstatistik verwendet wird 
+	 */
 	public kuerzel : String = "";
 
+	/**
+	 * Die Kürzel der Schulformen, bei welchen der Bildungsgang als Herkunft vorkommen kann (BK und SB). 
+	 */
 	public schulformen : List<String> = new Vector();
 
+	/**
+	 * Die textuelle Beschreibung der sonstigen Herkunft. 
+	 */
 	public beschreibung : String = "";
 
+	/**
+	 * Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 */
 	public gueltigVon : Number | null = null;
 
+	/**
+	 * Gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 */
 	public gueltigBis : Number | null = null;
 
 

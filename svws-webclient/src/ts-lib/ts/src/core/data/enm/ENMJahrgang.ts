@@ -3,16 +3,34 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class ENMJahrgang extends JavaObject {
 
+	/**
+	 * Die ID des Jahrgangs aus der SVWS-DB (z.B. 16) 
+	 */
 	public id : number = 0;
 
+	/**
+	 * Das Kürzel des Jahrgangs, wie es im Rahmen der amtlichen Schulstatistik verwendet wird. (z.B. EF) 
+	 */
 	public kuerzel : String | null = null;
 
+	/**
+	 * Das Kürzel des Jahrgangs, wie er im Rahmen der Schule benannt wird und angezeigt werden soll. (z.B. EF) 
+	 */
 	public kuerzelAnzeige : String | null = null;
 
+	/**
+	 * Die textuelle Bezeichnung des Jahrgangs. (z.B. Einführungsphase) 
+	 */
 	public beschreibung : String | null = null;
 
+	/**
+	 * Die Stufe des Jahrgangs. (z.B. PR, SI, nur Berufskolleg: SII, Berufskolleg Anlage D und GOSt: SII-1, SII-2, SII-3) 
+	 */
 	public stufe : String | null = null;
 
+	/**
+	 * Die Reihenfolge des Jahrgangs bei der Sortierung der Jahrgänge. (z.B. 8) 
+	 */
 	public sortierung : number = 0;
 
 

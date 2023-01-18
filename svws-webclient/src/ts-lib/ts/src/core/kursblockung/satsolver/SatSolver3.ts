@@ -16,16 +16,34 @@ export class SatSolver3 extends SatSolverA {
 
 	private static readonly MAX_LEARNED_CLAUSE_SIZE : number = 3;
 
+	/**
+	 *  Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
+	 */
 	protected readonly _random : Random;
 
+	/**
+	 *  Im Heap werden Variablen gespeichert. Die oberste Variable wird als nächstes gewählt.
+	 */
 	private heap : Heap;
 
+	/**
+	 *  Die Anzahl an Variablen in den Arrays {@link #vArrayPos und #vArrayNeg}.
+	 */
 	private vSize : number = 0;
 
+	/**
+	 *  Alle positiven Variablen (bzw. Literale).
+	 */
 	private vArrayPos : Array<Variable>;
 
+	/**
+	 *  Alle negativen Variablen (bzw. Literale).
+	 */
 	private vArrayNeg : Array<Variable>;
 
+	/**
+	 *  Die Anzahl an eingefügten Klauseln.
+	 */
 	private cSize : number = 0;
 
 	private learnClauseMin : number = 0;

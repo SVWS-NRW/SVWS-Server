@@ -4,14 +4,29 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class LehrerKatalogFachrichtungAnerkennungEintrag extends JavaObject {
 
+	/**
+	 * Die ID des Katalog-Eintrags.
+	 */
 	public id : number = 0;
 
+	/**
+	 * Das Kürzel für den Anerkennungsgrund einer Fachrichtungen eines Lehrers. 
+	 */
 	public kuerzel : String = "";
 
+	/**
+	 * Der Klartext des Anerkennungsgrundes einer Fachrichtungen eines Lehrers. 
+	 */
 	public text : String = "";
 
+	/**
+	 * Gibt an, in welchem Schuljahr der Anerkennungsgrund einer Fachrichtungen eines Lehrers einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 */
 	public gueltigVon : Number | null = null;
 
+	/**
+	 * Gibt an, bis zu welchem Schuljahr der Anerkennungsgrund einer Fachrichtungen eines Lehrers gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 */
 	public gueltigBis : Number | null = null;
 
 

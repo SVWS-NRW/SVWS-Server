@@ -5,10 +5,19 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 
 export class StundenplanblockungKopplung extends JavaObject {
 
+	/**
+	 * Die Datenbank-ID der Kopplung. 
+	 */
 	public id : number = 0;
 
+	/**
+	 * Das Kürzel der Kopplung. Beispielsweise '5RE'. 
+	 */
 	public kuerzel : String = "";
 
+	/**
+	 * Alle Stundenelemente, die dieser Kopplung zugeordnet sind. 
+	 */
 	public stundenelemente : Vector<StundenplanblockungStundenelement> = new Vector();
 
 

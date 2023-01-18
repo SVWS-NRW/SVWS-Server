@@ -4,16 +4,34 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class VerkehrsspracheKatalogEintrag extends JavaObject {
 
+	/**
+	 * Die ID des Katalog-Eintrags. 
+	 */
 	public id : number = 0;
 
+	/**
+	 * Der dreistellige ISO 639-2 code 
+	 */
 	public kuerzel : String = "";
 
+	/**
+	 * Die ISO-Bezeichnung der Sprache. 
+	 */
 	public bezeichnung : String = "";
 
+	/**
+	 * Der zweistellige ISO 639-1 code (wird aktuell für die Statistik verwendet - null entspricht dem Statistik-Code xn) 
+	 */
 	public iso2 : String | null = null;
 
+	/**
+	 * Gibt an, in welchem Schuljahr die Verkehrssprache ergänzt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 */
 	public gueltigVon : Number | null = null;
 
+	/**
+	 * Gibt an, bis zu welchem Schuljahr die Verkehrssprache verwendet wird. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 */
 	public gueltigBis : Number | null = null;
 
 

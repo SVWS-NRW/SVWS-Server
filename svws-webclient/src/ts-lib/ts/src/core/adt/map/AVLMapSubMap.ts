@@ -24,10 +24,19 @@ import { IllegalArgumentException, cast_java_lang_IllegalArgumentException } fro
 
 export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 
+	/**
+	 *  Die {@link AVLMap} auf der diese Sup-Map operiert.
+	 */
 	private readonly _par : AVLMap<K, V>;
 
+	/**
+	 *  Das {@link AVLMapIntervall} auf das sich diese Sub-Map bezieht.
+	 */
 	private readonly _iv : AVLMapIntervall<K>;
 
+	/**
+	 *  Falls TRUE wird die {@link AVLMap} aufsteigend, andernfalls absteigend interpretiert.
+	 */
 	private _asc : boolean = false;
 
 

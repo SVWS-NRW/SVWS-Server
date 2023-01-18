@@ -15,12 +15,24 @@ export class GELeistungsdifferenzierteKursart extends JavaObject {
 	/** an array containing all values of this enumeration indexed by their name*/
 	private static readonly all_values_by_name : Map<String, GELeistungsdifferenzierteKursart> = new Map<String, GELeistungsdifferenzierteKursart>();
 
+	/**
+	 * Es handelt sich um einen leistungsdifferenzierten Kurs auf Erweiterungsebene (E-Kurs) 
+	 */
 	public static readonly E : GELeistungsdifferenzierteKursart = new GELeistungsdifferenzierteKursart("E", 0, "E");
 
+	/**
+	 * Es handelt sich um einen leistungsdifferenzierten Kurs auf Grundebene (G-Kurs) 
+	 */
 	public static readonly G : GELeistungsdifferenzierteKursart = new GELeistungsdifferenzierteKursart("G", 1, "G");
 
+	/**
+	 * Es handelt sich um einen sonstigen Kurs ohne Leistungsdifferenzierung 
+	 */
 	public static readonly Sonstige : GELeistungsdifferenzierteKursart = new GELeistungsdifferenzierteKursart("Sonstige", 2, "");
 
+	/**
+	 * Das Kürzel der leistungsdifferenzierten Kursart 
+	 */
 	public readonly kuerzel : String;
 
 	/**

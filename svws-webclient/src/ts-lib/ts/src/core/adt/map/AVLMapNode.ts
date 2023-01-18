@@ -5,20 +5,44 @@ import { UnsupportedOperationException, cast_java_lang_UnsupportedOperationExcep
 
 export class AVLMapNode<K, V> extends JavaObject implements JavaMapEntry<K, V> {
 
+	/**
+	 *  Der Schlüsselwert des Baum-Eintrags.
+	 */
 	readonly _key : K;
 
+	/**
+	 *  Der zum Schlüsselwert zugeordnete Wert des Baum-Eintrags.
+	 */
 	_val : V;
 
+	/**
+	 *  Der Vorgänger-Knoten.
+	 */
 	_prev : AVLMapNode<K, V> | null = null;
 
+	/**
+	 *  Der Nachfolger-Knoten.
+	 */
 	_next : AVLMapNode<K, V> | null = null;
 
+	/**
+	 *  Das linke Kind des Knotens.
+	 */
 	_childL : AVLMapNode<K, V> | null = null;
 
+	/**
+	 *  Das rechte Kind des Knotens.
+	 */
 	_childR : AVLMapNode<K, V> | null = null;
 
+	/**
+	 *  Die Höhe des Teilbaums dieses Knotens.
+	 */
 	_height : number = 1;
 
+	/**
+	 *  Die Summe aller Elemente der Sub-Bäume plus diesem Element.
+	 */
 	_size : number = 1;
 
 

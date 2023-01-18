@@ -8,10 +8,19 @@ import { System, cast_java_lang_System } from '../../java/lang/System';
 
 export class KlausurblockungSchienenAlgorithmusGreedy3 extends KlausurblockungSchienenAlgorithmusAbstract {
 
+	/**
+	 * Die kleinste Schienenanzahl, die bisher gefunden wurde. 
+	 */
 	private _minSchienen : number = 0;
 
+	/**
+	 * Bis zu welchem Zeitpunkt die Rekursion laufen darf. 
+	 */
 	private _zeitEnde : number = 0;
 
+	/**
+	 * TRUE, falls mindestens eine Lösung gefunden wurde. 
+	 */
 	private _saved : boolean = false;
 
 

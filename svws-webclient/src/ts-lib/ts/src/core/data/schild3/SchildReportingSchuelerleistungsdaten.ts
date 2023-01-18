@@ -5,32 +5,74 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class SchildReportingSchuelerleistungsdaten extends JavaObject {
 
+	/**
+	 * Die ID der Leistungsdaten 
+	 */
 	public id : number = -1;
 
+	/**
+	 * Die ID des Schüler-Lernabschnitts, zu dem die Leistungsdaten gehören. 
+	 */
 	public abschnittID : number = -1;
 
+	/**
+	 * Die ID des Faches der Leistungsdaten 
+	 */
 	public fachID : number = -1;
 
+	/**
+	 * Das Kürzel des Faches 
+	 */
 	public fachKuerzel : String = "";
 
+	/**
+	 * Die Bezeichnung des Faches 
+	 */
 	public fach : String = "";
 
+	/**
+	 * Die ID des Fachlehrers 
+	 */
 	public lehrerID : number = -1;
 
+	/**
+	 * Das Kürzel des Fachlehrers 
+	 */
 	public lehrerKuerzel : String = "";
 
+	/**
+	 * Die ID des Kurses, sofern vorhanden 
+	 */
 	public kursID : Number | null = null;
 
+	/**
+	 * Die Bezeichnung des Kurses, sofern vorhanden, sonst leer 
+	 */
 	public kurs : String = "";
 
+	/**
+	 * Die spezielle Kursart 
+	 */
 	public kursart : String = "";
 
+	/**
+	 * Die allgemeine Kursart 
+	 */
 	public kursartAllg : String = "";
 
+	/**
+	 * Die Bezeichnung der Note 
+	 */
 	public note : String = "";
 
+	/**
+	 * Das Notenkürzel 
+	 */
 	public noteKuerzel : String = "";
 
+	/**
+	 * Die Notenpunkte, sofern eine Note gesetzt ist 
+	 */
 	public notePunkte : Number | null = null;
 
 

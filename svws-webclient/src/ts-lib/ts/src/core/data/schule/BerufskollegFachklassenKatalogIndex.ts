@@ -5,10 +5,19 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 
 export class BerufskollegFachklassenKatalogIndex extends JavaObject {
 
+	/**
+	 * Der Index für die Verknüpfung von einem Bildungsgang des Berufskollegs mit Fachklassen 
+	 */
 	public index : number = 0;
 
+	/**
+	 * Die Version des Teilkatalogs. Diese wird bei Änderungen am Katalog erhöht. 
+	 */
 	public version : number = -1;
 
+	/**
+	 * Die Einträge des Katalogs. 
+	 */
 	public fachklassen : List<BerufskollegFachklassenKatalogEintrag> = new Vector();
 
 

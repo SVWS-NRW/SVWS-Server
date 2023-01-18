@@ -4,56 +4,134 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class SchultraegerKatalogEintrag extends JavaObject {
 
+	/**
+	 * Schulträgernummer des Schulträgers. 
+	 */
 	public SchulNr : String = "";
 
+	/**
+	 * Regionalschlüssel des Schulträgers 
+	 */
 	public RegSchl : String | null = null;
 
+	/**
+	 * KoRe 
+	 */
 	public KoRe : String | null = null;
 
+	/**
+	 * KoHo 
+	 */
 	public KoHo : String | null = null;
 
+	/**
+	 * Bezeichnung 1 des Schulträgers 
+	 */
 	public ABez1 : String | null = null;
 
+	/**
+	 * Bezeichnung 2 des Schulträgers 
+	 */
 	public ABez2 : String | null = null;
 
+	/**
+	 * Bezeichnung 3 des Schulträgers 
+	 */
 	public ABez3 : String | null = null;
 
+	/**
+	 * PLZ des Schulträgers 
+	 */
 	public PLZ : String | null = null;
 
+	/**
+	 * Ort des Schulträgers 
+	 */
 	public Ort : String | null = null;
 
+	/**
+	 * Straße des Schulträgers 
+	 */
 	public Strasse : String | null = null;
 
+	/**
+	 * Vorwahl des Schulträgers 
+	 */
 	public TelVorw : String | null = null;
 
+	/**
+	 * Telefonnummer des Schulträgers 
+	 */
 	public Telefon : String | null = null;
 
+	/**
+	 * Ist immer 00 ??? 
+	 */
 	public SF : String | null = null;
 
+	/**
+	 * Öffentlicher oder privater Schulträger 
+	 */
 	public OeffPri : String | null = null;
 
+	/**
+	 * Kurzbezeichnung des Schulträgers 
+	 */
 	public KurzBez : String | null = null;
 
+	/**
+	 * Schulbetriebsschlüssel des Schulträgers 
+	 */
 	public SchBetrSchl : Number | null = null;
 
+	/**
+	 * Datum des Schulbetriebsschlüssels 
+	 */
 	public SchBetrSchlDatum : String | null = null;
 
+	/**
+	 * Schülerzahl laut ASD 
+	 */
 	public SchuelerZahlASD : Number | null = null;
 
+	/**
+	 * Schülerzahl laut VS 
+	 */
 	public SchuelerZahlVS : Number | null = null;
 
+	/**
+	 * Art der Trägerschaft des Schulträgers 
+	 */
 	public ArtDerTraegerschaft : String | null = null;
 
+	/**
+	 * leer siehe SchulNr 
+	 */
 	public SchultraegerNr : String | null = null;
 
+	/**
+	 * leer Gliederung 
+	 */
 	public Schulgliederung : String | null = null;
 
+	/**
+	 * Leer Ganztagsbetrieb 
+	 */
 	public Ganztagsbetrieb : String | null = null;
 
+	/**
+	 * Aktiv ja nein des Schulträgers 
+	 */
 	public Aktiv : Number | null = null;
 
+	/**
+	 * Gibt die Gültigkeit ab welchem Schuljahr an 
+	 */
 	public gueltigVon : Number | null = null;
 
+	/**
+	 * Gibt die Gültigkeit bis zu welchem Schuljahr an 
+	 */
 	public gueltigBis : Number | null = null;
 
 

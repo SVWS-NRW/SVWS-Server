@@ -3,18 +3,39 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class BenutzerListeEintrag extends JavaObject {
 
+	/**
+	 * Die ID des Benutzers. 
+	 */
 	public id : number = -1;
 
+	/**
+	 * Der Typ des Benutzers. 
+	 */
 	public typ : number = 0;
 
+	/**
+	 * die ID des Benutzers in der Typ-spezifischen-Tabelle (z.B. Lehrer-ID) 
+	 */
 	public typID : number = -1;
 
+	/**
+	 * Der Anzeigename des Benutzers. 
+	 */
 	public anzeigename : String = "";
 
+	/**
+	 * Der Anmeldename des Benutzers 
+	 */
 	public name : String = "";
 
+	/**
+	 * Gibt an, ob es sich um einen Administrativen Benutzer handelt oder nicht. 
+	 */
 	public istAdmin : boolean = false;
 
+	/**
+	 * Die ID der Credentials des Benutzers. 
+	 */
 	public idCredentials : number = -1;
 
 

@@ -4,8 +4,14 @@ import { LogConsumerVector, cast_de_nrw_schule_svws_core_logger_LogConsumerVecto
 
 export abstract class Service<T_IN, T_OUT> extends JavaObject {
 
+	/**
+	 * Die Instanz des Logger, der von diesem Service genutzt wird 
+	 */
 	protected logger : Logger = new Logger();
 
+	/**
+	 * Die Instanz des Consumers von Log-Informationen. In diesem Fall ein einfacher Vektor 
+	 */
 	protected log : LogConsumerVector = new LogConsumerVector();
 
 

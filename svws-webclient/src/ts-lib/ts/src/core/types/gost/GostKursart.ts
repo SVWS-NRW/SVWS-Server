@@ -22,28 +22,61 @@ export class GostKursart extends JavaObject {
 	/** an array containing all values of this enumeration indexed by their name*/
 	private static readonly all_values_by_name : Map<String, GostKursart> = new Map<String, GostKursart>();
 
+	/**
+	 * Leistungskurs = LK 
+	 */
 	public static readonly LK : GostKursart = new GostKursart("LK", 0, 1, "LK", "Leistungskurs", Arrays.asList(ZulaessigeKursart.LK1, ZulaessigeKursart.LK2));
 
+	/**
+	 * Grundkurs = GK 
+	 */
 	public static readonly GK : GostKursart = new GostKursart("GK", 1, 2, "GK", "Grundkurs", Arrays.asList(ZulaessigeKursart.GKM, ZulaessigeKursart.GKS, ZulaessigeKursart.AB3, ZulaessigeKursart.AB4, ZulaessigeKursart.EFSP));
 
+	/**
+	 * Zusatzkurs = ZK 
+	 */
 	public static readonly ZK : GostKursart = new GostKursart("ZK", 2, 3, "ZK", "Zusatzkurs", Arrays.asList(ZulaessigeKursart.ZK));
 
+	/**
+	 * Projektkurs = PJK 
+	 */
 	public static readonly PJK : GostKursart = new GostKursart("PJK", 3, 4, "PJK", "Projektkurs", Arrays.asList(ZulaessigeKursart.PJK));
 
+	/**
+	 * Vertiefungskurs = VTF 
+	 */
 	public static readonly VTF : GostKursart = new GostKursart("VTF", 4, 5, "VTF", "Vertiefungskurs", Arrays.asList(ZulaessigeKursart.VTF));
 
 	private static readonly FACHART_ID_FAKTOR : number = 1000;
 
+	/**
+	 * Die Zuordnung der Kursarten zu dem Kürzel der Kursart 
+	 */
 	private static readonly _mapKuerzel : HashMap<String, GostKursart> = new HashMap();
 
+	/**
+	 * Die Zuordnung der Kursarten zu der jeweiligen zulässigen Kursart 
+	 */
 	private static readonly _mapZulKursart : HashMap<ZulaessigeKursart, GostKursart> = new HashMap();
 
+	/**
+	 * Die eindeutige ID der Kursart der Gymnasialen Oberstufe
+	 */
 	public readonly id : number;
 
+	/**
+	 * Das Kürzel der Kursart der Gymnasialen Oberstufe 
+	 */
 	public readonly kuerzel : String;
 
+	/**
+	 * Die textuelle Beschreibung der allgemeinen Kursart der Gymnasialen Oberstufe 
+	 */
 	public readonly beschreibung : String;
 
+	/**
+	 * Die Liste der Kursarten, welche zu dieser Gost-Kursart gehören 
+	 */
 	private readonly kursarten : List<ZulaessigeKursart>;
 
 	/**

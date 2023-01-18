@@ -17,12 +17,24 @@ import { CloneNotSupportedException, cast_java_lang_CloneNotSupportedException }
 
 export class LinkedCollection<E> extends JavaObject implements Deque<E>, Cloneable {
 
+	/**
+	 * Das erste Element der Collection. 
+	 */
 	_head : LinkedCollectionElement<E> | null = null;
 
+	/**
+	 * Das letze Element der Collection. 
+	 */
 	_tail : LinkedCollectionElement<E> | null = null;
 
+	/**
+	 * Die Anzahl der Elemente in der Collection. 
+	 */
 	private _size : number = 0;
 
+	/**
+	 * Die Anzahl der Modifikationen, die an dieser Datenstruktur vorgenommen wurden 
+	 */
 	_modCount : number = 0;
 
 

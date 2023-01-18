@@ -4,24 +4,54 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class PruefungsordnungKatalogEintrag extends JavaObject {
 
+	/**
+	 * Die ID des Eintrags. 
+	 */
 	public id : number = 0;
 
+	/**
+	 * Das Kürzel der Ausbildungs und/oder Prüfungsordnung 
+	 */
 	public kuerzel : String = "";
 
+	/**
+	 * Das Kürzel der Ausbildungs und/oder Prüfungsordnung, wie es in Schild NRW verwendet wird 
+	 */
 	public kuerzelSchild : String | null = "";
 
+	/**
+	 * Die Bezeichnung der Verordnung. 
+	 */
 	public bezeichnung : String = "";
 
+	/**
+	 * Gesetz- und Verordnungsblatt: Das Jahr in dem die Verordnung veröffentlich wurde 
+	 */
 	public gvJahr : Number | null = null;
 
+	/**
+	 * Gesetz- und Verordnungsblatt: Die Nummer im Jahr der Veröffentlichung 
+	 */
 	public gvNr : String = "";
 
+	/**
+	 * Gesetz- und Verordnungsblatt: ggf. die Seitenangaben im Jahr der Veröffentlichung 
+	 */
 	public gvSeiten : String = "";
 
+	/**
+	 * ggf. ein Link zu einer Version der Verordnung 
+	 */
 	public link : String = "";
 
+	/**
+	 * Gibt an, in welchem Schuljahr die Verordnung einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 */
 	public gueltigVon : Number | null = null;
 
+	/**
+	 * Gibt an, bis zu welchem Schuljahr die Verordnung gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 */
 	public gueltigBis : Number | null = null;
 
 

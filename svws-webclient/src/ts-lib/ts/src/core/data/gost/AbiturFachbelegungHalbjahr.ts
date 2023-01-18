@@ -5,26 +5,59 @@ import { JavaBoolean, cast_java_lang_Boolean } from '../../../java/lang/JavaBool
 
 export class AbiturFachbelegungHalbjahr extends JavaObject {
 
+	/**
+	 * Das Kürzel des Halbjahres der Fachbelegung 
+	 */
 	public halbjahrKuerzel : String = "";
 
+	/**
+	 * Das Kürzel der Kursart der Gymnasialen Oberstufe dieser Fachbelegung  
+	 */
 	public kursartKuerzel : String = "";
 
+	/**
+	 * Gibt an, ob das Fach schriftlich belegt wurde oder nicht. 
+	 */
 	public schriftlich : Boolean | null = null;
 
+	/**
+	 * Das einstellige Kürzel der bilingualen Sprache, sofern das Fach bilingual unterrichtet wurde. 
+	 */
 	public biliSprache : String | null = null;
 
+	/**
+	 * Die ID des unterrichtenden Lehrers, welcher die Note erteilt. 
+	 */
 	public lehrer : Number | null = null;
 
+	/**
+	 * Die Wochenstundenzahl, mir der das Fach belegt wurde 
+	 */
 	public wochenstunden : number = 0;
 
+	/**
+	 * Die Anzahl der Fehlstunden. 
+	 */
 	public fehlstundenGesamt : number = 0;
 
+	/**
+	 * Die Anzahl der unentschuldigten Fehlstunden. 
+	 */
 	public fehlstundenUnentschuldigt : number = 0;
 
+	/**
+	 * Das Notenkürzel der erteilten Note 
+	 */
 	public notenkuerzel : String | null = null;
 
+	/**
+	 * Gibt an, ob die Belegung für den Block I gewertet wird oder nicht - nicht alle Kursbelegungen müssen laut Prüfungsordnung in die Abiturnote einfliessen 
+	 */
 	public block1gewertet : Boolean | null = null;
 
+	/**
+	 * Gibt an, ob die Belegung des Kurses auf dem Abiturzeugnis angezeigt werden soll oder nicht. Eine Belegung kann auf Wunsch des Prüflings bei nicht gewerteten Kursen nicht auf dem Zeugnis erscheinen. 
+	 */
 	public block1kursAufZeugnis : Boolean | null = null;
 
 

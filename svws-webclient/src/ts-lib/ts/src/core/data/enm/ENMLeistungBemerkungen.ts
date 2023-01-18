@@ -3,26 +3,59 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class ENMLeistungBemerkungen extends JavaObject {
 
+	/**
+	 * Informationen zum Arbeits- und Sozialverhalten 
+	 */
 	public ASV : String | null = null;
 
+	/**
+	 * Der Zeitstempel mit den letzten Änderungen zu Bemerkungen zum Arbeits- und Sozialverhalten 
+	 */
 	public tsASV : String | null = null;
 
+	/**
+	 * Informationen zu dem Außerunterrichtlichen Engagement (AUE) 
+	 */
 	public AUE : String | null = null;
 
+	/**
+	 * Der Zeitstempel mit den letzten Änderungen zu Bemerkungen zum Außerunterrichtlichen Engagement (AUE) 
+	 */
 	public tsAUE : String | null = null;
 
+	/**
+	 * Zeugnisbemerkungen 
+	 */
 	public ZB : String | null = null;
 
+	/**
+	 * Der Zeitstempel mit den letzten Änderungen zu Zeugnis-Bemerkungen 
+	 */
 	public tsZB : String | null = null;
 
+	/**
+	 * Bemerkungen zur Lern und Leistungsentwicklung (LELS) in den Fächern 
+	 */
 	public LELS : String | null = null;
 
+	/**
+	 * Schulform-Empfehlungen 
+	 */
 	public schulformEmpf : String | null = null;
 
+	/**
+	 * Individuelle Bemerkungen zur Versetzung 
+	 */
 	public individuelleVersetzungsbemerkungen : String | null = null;
 
+	/**
+	 * Der Zeitstempel mit den letzten Änderungen zu individuellen Bemerkungen zur Versetzung 
+	 */
 	public tsIndividuelleVersetzungsbemerkungen : String | null = null;
 
+	/**
+	 * Förderbemerkungen 
+	 */
 	public foerderbemerkungen : String | null = null;
 
 

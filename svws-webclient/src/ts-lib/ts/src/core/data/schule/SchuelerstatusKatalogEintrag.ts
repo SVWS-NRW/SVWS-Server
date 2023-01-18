@@ -4,10 +4,19 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class SchuelerstatusKatalogEintrag extends JavaObject {
 
+	/**
+	 * Die numerische ID des Schüler-Status. 
+	 */
 	public StatusNr : Number | null = null;
 
+	/**
+	 * Klartext des Schülerstatus 
+	 */
 	public Bezeichnung : String | null = null;
 
+	/**
+	 * Sortierung des Schülerstatus 
+	 */
 	public Sortierung : Number | null = null;
 
 

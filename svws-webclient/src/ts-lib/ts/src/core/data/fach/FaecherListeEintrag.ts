@@ -3,20 +3,44 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class FaecherListeEintrag extends JavaObject {
 
+	/**
+	 * Die ID des Faches. 
+	 */
 	public id : number = 0;
 
+	/**
+	 * Das Kürzel des Faches. 
+	 */
 	public kuerzel : String | null = null;
 
+	/**
+	 * Das dem Fach zugeordnete Statistik-Kürzel. 
+	 */
 	public kuerzelStatistik : String | null = null;
 
+	/**
+	 * Der Name / die Bezeichnung des Faches. 
+	 */
 	public bezeichnung : String | null = null;
 
+	/**
+	 * Die Sortierreihenfolge des Fächerlisten-Eintrags. 
+	 */
 	public sortierung : number = 0;
 
+	/**
+	 * Gibt an, ob es sich um ein Fach der Oberstufe handelt oder nicht. 
+	 */
 	public istOberstufenFach : boolean = false;
 
+	/**
+	 * Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht. 
+	 */
 	public istSichtbar : boolean = false;
 
+	/**
+	 * Gibt an, ob der Eintrag in der Anwendung änderbar sein soll oder nicht. 
+	 */
 	public istAenderbar : boolean = false;
 
 

@@ -4,8 +4,14 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class Erzieherart extends JavaObject {
 
+	/**
+	 * ID der Erzieherart 
+	 */
 	public id : Number | null = null;
 
+	/**
+	 * Bezeichnung der Erzieherart 
+	 */
 	public bezeichnung : String | null = null;
 
 

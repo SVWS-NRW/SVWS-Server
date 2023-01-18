@@ -4,24 +4,54 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class BetriebAnsprechpartner extends JavaObject {
 
+	/**
+	 * ID des Ansprechpartners 
+	 */
 	public id : Number | null = null;
 
+	/**
+	 * ID des Betriebs, dem der Ansprechpartner zugeordnet ist 
+	 */
 	public betrieb_id : Number | null = null;
 
+	/**
+	 * Name des Ansprechpartners im Betrieb 
+	 */
 	public name : String | null = null;
 
+	/**
+	 * Vorname des Ansprechpartners im Betrieb 
+	 */
 	public vorname : String | null = null;
 
+	/**
+	 * Anrede des Ansprechpartners im Betrieb 
+	 */
 	public anrede : String | null = null;
 
+	/**
+	 * Telefonnummer des Ansprechpartners im Betrieb 
+	 */
 	public telefon : String | null = null;
 
+	/**
+	 * Email-Adresse des Ansprechpartners im Betrieb 
+	 */
 	public email : String | null = null;
 
+	/**
+	 * ggf Abteilung des Ansprechpartners im Betrieb 
+	 */
 	public abteilung : String | null = null;
 
+	/**
+	 * Titel des Ansprechpartners im Betrieb 
+	 */
 	public titel : String | null = null;
 
+	/**
+	 * GU_ID des Ansprechpartners im Betrieb 
+	 */
 	public GU_ID : String | null = null;
 
 

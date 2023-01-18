@@ -17,30 +17,69 @@ export class PersonalTyp extends JavaObject {
 	/** an array containing all values of this enumeration indexed by their name*/
 	private static readonly all_values_by_name : Map<String, PersonalTyp> = new Map<String, PersonalTyp>();
 
+	/**
+	 * Lehrkraft fest der Schule zugeodnet hat eine Identnummer 
+	 */
 	public static readonly LEHRKRAFT : PersonalTyp = new PersonalTyp("LEHRKRAFT", 0, 1, "LEHRKRAFT", "Lehrkraft", null, null);
 
+	/**
+	 * Verwaltungskraft ohne Identnummer 
+	 */
 	public static readonly SEKRETARIAT : PersonalTyp = new PersonalTyp("SEKRETARIAT", 1, 2, "SEKRETARIAT", "Sekretär/Sekretärin", null, null);
 
+	/**
+	 * angestelltes Personal (z.B. Sozialarbeiter*in ohne Identnummer 
+	 */
 	public static readonly PERSONAL : PersonalTyp = new PersonalTyp("PERSONAL", 2, 3, "PERSONAL", "Angestelltes Personal ohne Identnummer", null, null);
 
+	/**
+	 * externe Lehrkräfte mit Identnummer von anderen Schulen abgeordnet 
+	 */
 	public static readonly EXTERN : PersonalTyp = new PersonalTyp("EXTERN", 3, 4, "EXTERN", "Externe Lehrkraft, z.B. abgeordnet oder im Rahmen einer Kooperation", null, null);
 
+	/**
+	 * Sonstige Personaltypen 
+	 */
 	public static readonly SONSTIGE : PersonalTyp = new PersonalTyp("SONSTIGE", 4, 5, "SONSTIGE", "Sonstiges Personal", null, null);
 
+	/**
+	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. 
+	 */
 	public static VERSION : number = 1;
 
+	/**
+	 * Eine HashMap für den schnellen Zugriff auf Personal-Typen anhand der Bezeichnung des PersonalTyps 
+	 */
 	private static readonly _mapBezeichnungen : HashMap<String, PersonalTyp> = new HashMap();
 
+	/**
+	 * Eine HashMap für den schnellen Zugriff auf Personal-Typen anhand der ID des PersonalTyps 
+	 */
 	private static readonly _mapID : HashMap<Number, PersonalTyp> = new HashMap();
 
+	/**
+	 * Die ID des Personal-Typs als Integer 
+	 */
 	public readonly id : number;
 
+	/**
+	 * Das Kürzel des Personal-Typs als String 
+	 */
 	public readonly kuerzel : String;
 
+	/**
+	 * Die Bezeichnung des Personal-Typs als String 
+	 */
 	public readonly bezeichnung : String;
 
+	/**
+	 * Gibt an, in welchem Schuljahr der Personaltyp einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 */
 	public readonly gueltigVon : Number | null;
 
+	/**
+	 * Gibt an, bis zu welchem Schuljahr der Personaltyp gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 */
 	public readonly gueltigBis : Number | null;
 
 	/**

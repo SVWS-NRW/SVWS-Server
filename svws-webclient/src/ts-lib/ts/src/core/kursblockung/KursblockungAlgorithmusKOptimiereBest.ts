@@ -9,6 +9,9 @@ import { System, cast_java_lang_System } from '../../java/lang/System';
 
 export class KursblockungAlgorithmusKOptimiereBest extends KursblockungAlgorithmusK {
 
+	/**
+	 *  Mit diesem Algorithmus werden die SuS verteilt.
+	 */
 	private algoS : KursblockungAlgorithmusSSchnellW;
 
 

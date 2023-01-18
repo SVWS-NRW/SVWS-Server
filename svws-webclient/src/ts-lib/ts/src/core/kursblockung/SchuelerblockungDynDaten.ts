@@ -20,6 +20,9 @@ export class SchuelerblockungDynDaten extends JavaObject {
 
 	private static readonly UNENDLICH : number = 1000000;
 
+	/**
+	 * Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed. 
+	 */
 	private readonly _random : Random;
 
 	private readonly nFachwahlen : number;

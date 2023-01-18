@@ -5,14 +5,29 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class SprachBelegungSekI extends JavaObject implements Comparable<SprachBelegungSekI | null> {
 
+	/**
+	 * Gibt an, dass eine Sprache in der Sekundarstufe I nicht oder weniger als 2 Jahre belegt wurde 
+	 */
 	public static readonly NICHT_BELEGT : SprachBelegungSekI = new SprachBelegungSekI(0);
 
+	/**
+	 * Gibt an, dass eine Sprache in der Sekundarstufe I mindestens 2 Jahre - aber nicht 4 oder mehr Jahre - belegt wurde 
+	 */
 	public static readonly MIND_2_JAHRE : SprachBelegungSekI = new SprachBelegungSekI(2);
 
+	/**
+	 * Gibt an, dass eine Sprache in der Sekundarstufe I mindestens 4 Jahre - aber nicht ab Klasse 5 - belegt wurde 
+	 */
 	public static readonly MIND_4_JAHRE : SprachBelegungSekI = new SprachBelegungSekI(4);
 
+	/**
+	 * Gibt an, dass eine Sprache in der Sekundarstufe I ab Klasse 5, d.h. 5 (in G8) oder 6 Jahre belegt wurde. 
+	 */
 	public static readonly AB_JAHRGANG_5 : SprachBelegungSekI = new SprachBelegungSekI(6);
 
+	/**
+	 * Die Dauer der Sprachbelegung in der SekI - der Wert kann von der realen Belegung abweichen, da nur die relevante Dauer angeben ist und im Falle des Jahrgangs 5 abweichen kann, falls der G8-Bildungsgang vorliegt 
+	 */
 	public readonly dauer : number;
 
 

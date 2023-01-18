@@ -5,8 +5,14 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class SchulformSchulgliederung extends JavaObject {
 
+	/**
+	 * Das Kürzel der Schulform 
+	 */
 	public schulform : String = "GY";
 
+	/**
+	 * Das Kürzel der Schulgliederung bzw. des Bildungsganges. Null, falls alle Gliederungen der Schulform gemeint sind. 
+	 */
 	public gliederung : String | null = null;
 
 

@@ -15,14 +15,29 @@ export class AbiturBelegungsart extends JavaObject {
 	/** an array containing all values of this enumeration indexed by their name*/
 	private static readonly all_values_by_name : Map<String, AbiturBelegungsart> = new Map<String, AbiturBelegungsart>();
 
+	/**
+	 * AbiturBelegungsart "nicht belegt" 
+	 */
 	public static readonly NICHT_BELEGT : AbiturBelegungsart = new AbiturBelegungsart("NICHT_BELEGT", 0, "-", "nicht belegt");
 
+	/**
+	 * AbiturBelegungsart "mündlich" 
+	 */
 	public static readonly MUENDLICH : AbiturBelegungsart = new AbiturBelegungsart("MUENDLICH", 1, "M", "mündlich");
 
+	/**
+	 * AbiturBelegungsart "schriftlich" 
+	 */
 	public static readonly SCHRIFTLICH : AbiturBelegungsart = new AbiturBelegungsart("SCHRIFTLICH", 2, "S", "schriftlich");
 
+	/**
+	 * Das Kürzel für die Kurs-Belegungsart (-,M oder S)
+	 */
 	public kuerzel : String;
 
+	/**
+	 * Die textuelle Beschreibung der Kurs-Belegungsart (nicht belegt, mündlich oder schriftlich) 
+	 */
 	public beschreibung : String;
 
 	/**

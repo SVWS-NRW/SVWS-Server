@@ -5,8 +5,14 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 
 export class SchuelerLernabschnittNachpruefungsdaten extends JavaObject {
 
+	/**
+	 * Die Kürzel der möglichen Nachprüfungsfächer. 
+	 */
 	public moegliche : Vector<String> = new Vector();
 
+	/**
+	 * Die angesetzten bzw. durchgeführten Nachprüfungen 
+	 */
 	public pruefungen : Vector<SchuelerLernabschnittNachpruefung> = new Vector();
 
 

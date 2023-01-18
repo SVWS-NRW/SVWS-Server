@@ -10,8 +10,14 @@ import { HashSet, cast_java_util_HashSet } from '../../../java/util/HashSet';
 
 export class BenutzergruppenManager extends JavaObject {
 
+	/**
+	 * Die Daten der Benutzergruppe, die im Manager vorhanden sind. 
+	 */
 	private readonly _daten : BenutzergruppeDaten;
 
+	/**
+	 * Die Menge an Kompetenzen, die dieser Gruppe zugeordnet ist. 
+	 */
 	private readonly _setKompetenzen : HashSet<Number> = new HashSet();
 
 

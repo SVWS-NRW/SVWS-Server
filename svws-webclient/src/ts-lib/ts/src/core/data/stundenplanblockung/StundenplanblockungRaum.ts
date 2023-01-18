@@ -3,8 +3,14 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class StundenplanblockungRaum extends JavaObject {
 
+	/**
+	 * Die Datenbank-ID des Raumes. 
+	 */
 	public id : number = 0;
 
+	/**
+	 * Das Kürzel des Raumes. Beispielsweise 'E21'. 
+	 */
 	public kuerzel : String = "";
 
 

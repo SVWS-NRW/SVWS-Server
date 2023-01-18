@@ -4,20 +4,44 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class JahrgangsListeEintrag extends JavaObject {
 
+	/**
+	 * Die ID des Jahrgangs. 
+	 */
 	public id : number = 0;
 
+	/**
+	 * Das Kürzel des Jahrgangs. 
+	 */
 	public kuerzel : String | null = null;
 
+	/**
+	 * Das dem Jahrgang zugeordnete Statistik-Kürzel. 
+	 */
 	public kuerzelStatistik : String | null = null;
 
+	/**
+	 * Der Name / die Bezeichnung des Jahrgangs. 
+	 */
 	public bezeichnung : String | null = null;
 
+	/**
+	 * Die Sortierreihenfolge des Jahrgangslisten-Eintrags. 
+	 */
 	public sortierung : number = 0;
 
+	/**
+	 * Die ID der Schulgliederung, der der Eintrag zugeordnet ist. 
+	 */
 	public idSchulgliederung : String | null = null;
 
+	/**
+	 * Die ID des Folgejahrgangs, sofern einer definiert ist, ansonsten null 
+	 */
 	public idFolgejahrgang : Number | null = null;
 
+	/**
+	 * Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht. 
+	 */
 	public istSichtbar : boolean = false;
 
 

@@ -17,42 +17,99 @@ export class SchulabschlussBerufsbildend extends JavaObject {
 	/** an array containing all values of this enumeration indexed by their name*/
 	private static readonly all_values_by_name : Map<String, SchulabschlussBerufsbildend> = new Map<String, SchulabschlussBerufsbildend>();
 
+	/**
+	 * Es liegt kein Abschluss vor 
+	 */
 	public static readonly OA : SchulabschlussBerufsbildend = new SchulabschlussBerufsbildend("OA", 0, [new SchulabschlussBerufsbildendKatalogEintrag(0, "OA", "Ohne Abschluss", "0", null, null)]);
 
+	/**
+	 * Abschluss der Ausbildungsvorbereitung 
+	 */
 	public static readonly VORB : SchulabschlussBerufsbildend = new SchulabschlussBerufsbildend("VORB", 1, [new SchulabschlussBerufsbildendKatalogEintrag(10, "VORB", "Abschluss der Ausbildungsvorbereitung", "1", null, null)]);
 
+	/**
+	 * Versetzungszeugnis 
+	 */
 	public static readonly VERS : SchulabschlussBerufsbildend = new SchulabschlussBerufsbildend("VERS", 2, [new SchulabschlussBerufsbildendKatalogEintrag(11, "VERS", "Versetzungszeugnis", "1", null, null)]);
 
+	/**
+	 * Abschlusszeugnis in Aufbaubildungsgängen 
+	 */
 	public static readonly AUFB : SchulabschlussBerufsbildend = new SchulabschlussBerufsbildend("AUFB", 3, [new SchulabschlussBerufsbildendKatalogEintrag(12, "AUFB", "Abschlusszeugnis in Aufbaubildungsgängen", "1", null, null)]);
 
+	/**
+	 * Abschluss der Berufschulvorbereitung 
+	 */
 	public static readonly BV : SchulabschlussBerufsbildend = new SchulabschlussBerufsbildend("BV", 4, [new SchulabschlussBerufsbildendKatalogEintrag(13, "BV", "Abschluss der Berufschulvorbereitung", "1", null, null)]);
 
+	/**
+	 * Vorpraktikum 
+	 */
 	public static readonly VP : SchulabschlussBerufsbildend = new SchulabschlussBerufsbildend("VP", 5, [new SchulabschlussBerufsbildendKatalogEintrag(14, "VP", "Vorpraktikum", "1", null, null)]);
 
+	/**
+	 * Vorpraktikum 
+	 */
 	public static readonly BP : SchulabschlussBerufsbildend = new SchulabschlussBerufsbildend("BP", 6, [new SchulabschlussBerufsbildendKatalogEintrag(15, "BP", "Berufspraktikum", "1", null, null)]);
 
+	/**
+	 * Abschluss der Berufschulgrundjahres 
+	 */
 	public static readonly BG : SchulabschlussBerufsbildend = new SchulabschlussBerufsbildend("BG", 7, [new SchulabschlussBerufsbildendKatalogEintrag(20, "BG", "Abschluss der Berufschulgrundjahres", "2", null, null)]);
 
+	/**
+	 * Berufschulabschluss 
+	 */
 	public static readonly BS : SchulabschlussBerufsbildend = new SchulabschlussBerufsbildend("BS", 8, [new SchulabschlussBerufsbildendKatalogEintrag(30, "BS", "Berufschulabschluss", "3", null, null)]);
 
+	/**
+	 * Berufliche Kenntnisse, Fähigkeiten und Fertigkeiten 
+	 */
 	public static readonly BK : SchulabschlussBerufsbildend = new SchulabschlussBerufsbildend("BK", 9, [new SchulabschlussBerufsbildendKatalogEintrag(40, "BK", "Berufliche Kenntnisse, Fähigkeiten und Fertigkeiten", "4", null, null)]);
 
+	/**
+	 * Berufsabschluss 
+	 */
 	public static readonly BAB : SchulabschlussBerufsbildend = new SchulabschlussBerufsbildend("BAB", 10, [new SchulabschlussBerufsbildendKatalogEintrag(50, "BAB", "Berufsabschluss", "5", null, null)]);
 
+	/**
+	 * Fachschulabschluss (berufliche Weiterbildung) 
+	 */
 	public static readonly BW : SchulabschlussBerufsbildend = new SchulabschlussBerufsbildend("BW", 11, [new SchulabschlussBerufsbildendKatalogEintrag(60, "BW", "Fachschulabschluss (berufliche Weiterbildung)", "6", null, null)]);
 
+	/**
+	 * Vertiefte berufliche Kenntnisse, Fähigkeiten und Fertigkeiten 
+	 */
 	public static readonly VBK : SchulabschlussBerufsbildend = new SchulabschlussBerufsbildend("VBK", 12, [new SchulabschlussBerufsbildendKatalogEintrag(80, "VBK", "Vertiefte berufliche Kenntnisse, Fähigkeiten und Fertigkeiten", "8", null, null)]);
 
+	/**
+	 * Pseudoabschluss: Schulwechsler, die im selben Bildungsgang verbleiben 
+	 */
 	public static readonly WECHSEL : SchulabschlussBerufsbildend = new SchulabschlussBerufsbildend("WECHSEL", 13, [new SchulabschlussBerufsbildendKatalogEintrag(90, "WECHSEL", "Schulwechsler, die im selben Bildungsgang verbleiben", "9", null, null)]);
 
+	/**
+	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. 
+	 */
 	public static VERSION : number = 1;
 
+	/**
+	 * Der aktuellen Daten der Abschlussart, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null 
+	 */
 	public readonly daten : SchulabschlussBerufsbildendKatalogEintrag;
 
+	/**
+	 * Die Historie mit den Einträgen der Abschlussarten 
+	 */
 	public readonly historie : Array<SchulabschlussBerufsbildendKatalogEintrag>;
 
+	/**
+	 * Eine HashMap mit den Abschlussarten, welche ihren Kürzeln zugeordnet werden 
+	 */
 	private static readonly _mapByKuerzel : HashMap<String, SchulabschlussBerufsbildend> = new HashMap();
 
+	/**
+	 * Eine HashMap mit den Abschlussarten, welche ihren Statistik-Kürzeln zugeordnet werden 
+	 */
 	private static readonly _mapByKuerzelStatistik : HashMap<String, SchulabschlussBerufsbildend> = new HashMap();
 
 	/**

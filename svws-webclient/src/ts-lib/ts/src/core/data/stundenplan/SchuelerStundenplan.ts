@@ -7,28 +7,64 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 
 export class SchuelerStundenplan extends JavaObject {
 
+	/**
+	 * Die ID des Stundenplans. 
+	 */
 	public idStundenplan : number = -1;
 
+	/**
+	 * Die textuelle Beschreibung des Stundenplans. 
+	 */
 	public bezeichnungStundenplan : String = "";
 
+	/**
+	 * Die ID des Schuljahresabschnitts des Stundenplans. 
+	 */
 	public idSchuljahresabschnitt : number = -1;
 
+	/**
+	 * Das Zeitraster des Stundenplans. 
+	 */
 	public zeitraster : List<StundenplanZeitraster> = new Vector();
 
+	/**
+	 * Das Datum, ab dem der Stundenpland gültig ist. 
+	 */
 	public gueltigAb : String = "";
 
+	/**
+	 * Das Datum, bis wann der Stundenplan gültig ist. 
+	 */
 	public gueltigBis : String = "";
 
+	/**
+	 * Die ID des Schülers. 
+	 */
 	public idSchueler : number = -1;
 
+	/**
+	 * Der Nachname des Schülers. 
+	 */
 	public nachname : String = "";
 
+	/**
+	 * Der Vorname des Schülers. 
+	 */
 	public vorname : String = "";
 
+	/**
+	 * Die ID der Klasse des Schülers. 
+	 */
 	public idKlasse : number = -1;
 
+	/**
+	 * Der Statistik-Jahrgang des Schülers. 
+	 */
 	public jahrgang : String = "";
 
+	/**
+	 * Der Unterricht des Schülers. 
+	 */
 	public unterricht : List<SchuelerStundenplanUnterricht> = new Vector();
 
 

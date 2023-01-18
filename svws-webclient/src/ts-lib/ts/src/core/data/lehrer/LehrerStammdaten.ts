@@ -4,46 +4,109 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class LehrerStammdaten extends JavaObject {
 
+	/**
+	 * Die ID des Lehrers. 
+	 */
 	public id : number = 0;
 
+	/**
+	 * Das Kürzel des Lehrers. 
+	 */
 	public kuerzel : String = "";
 
+	/**
+	 * Die Bezeichnung des Personals-Typs des Lehrers. 
+	 */
 	public personalTyp : String = "";
 
+	/**
+	 * Ggf. die Anrede des Lehrers. 
+	 */
 	public anrede : String | null = null;
 
+	/**
+	 * Ggf. ein akademischer Grad des Lehrers. 
+	 */
 	public titel : String | null = null;
 
+	/**
+	 * Ggf. die Amtsbezeichnung des Lehrers. 
+	 */
 	public amtsbezeichnung : String | null = null;
 
+	/**
+	 * Der Nachname des Lehrers. 
+	 */
 	public nachname : String = "";
 
+	/**
+	 * Der Vorname des Lehrers. 
+	 */
 	public vorname : String = "";
 
+	/**
+	 * Die ID des Geschlechtes 
+	 */
 	public geschlecht : number = 0;
 
+	/**
+	 * Das Geburtsdatum des Lehrers. 
+	 */
 	public geburtsdatum : String | null = null;
 
+	/**
+	 * Ggf. die ID für die Staatsangehörigkeit des Lehrers. 
+	 */
 	public staatsangehoerigkeitID : String | null = null;
 
+	/**
+	 * Ggf. der Straßenname im Wohnort des Lehrers. 
+	 */
 	public strassenname : String | null = null;
 
+	/**
+	 * Ggf. die Hausnummer zur Straße im Wohnort des Lehrers. 
+	 */
 	public hausnummer : String | null = null;
 
+	/**
+	 * Ggf. der Hausnummerzusatz zur Straße im Wohnort des Lehrers. 
+	 */
 	public hausnummerZusatz : String | null = null;
 
+	/**
+	 * Ggf. die ID des Wohnortes des Lehrers. 
+	 */
 	public wohnortID : Number | null = null;
 
+	/**
+	 * Ggf. die ID des Ortsteils im Wohnort des Lehrers. 
+	 */
 	public ortsteilID : Number | null = null;
 
+	/**
+	 * Ggf. die Telefonnummer des Lehrers. 
+	 */
 	public telefon : String | null = null;
 
+	/**
+	 * Ggf. die Mobilnummer des Lehrers. 
+	 */
 	public telefonMobil : String | null = null;
 
+	/**
+	 * Ggf. die private Email-Adresse des Lehrers. 
+	 */
 	public emailPrivat : String | null = null;
 
+	/**
+	 * Ggf. die dienstliche Email-Adresse des Lehrers. 
+	 */
 	public emailDienstlich : String | null = null;
 
+	/**
+	 * Ggf. das Foto des Lehrers (jpg, Base64-kodiert des Lehrers.) 
+	 */
 	public foto : String | null = null;
 
 

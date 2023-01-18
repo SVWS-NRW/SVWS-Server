@@ -3,14 +3,29 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class ENMTeilleistung extends JavaObject {
 
+	/**
+	 * Die ID dieser Teilleistung in der SVWS-DB (z.B. 307956) 
+	 */
 	public id : number = 0;
 
+	/**
+	 * Die ID der Teilleistungsart (z.B. 42) 
+	 */
 	public artID : number = 0;
 
+	/**
+	 * Das Datum an dem die Teilleistung erbracht bzw. festgelegt wurde. (z.B. "2020-10-10") 
+	 */
 	public datum : String | null = null;
 
+	/**
+	 * Eine Bemerkung zu der Teilleistung (z.B. "Nachgeschrieben") 
+	 */
 	public bemerkung : String | null = null;
 
+	/**
+	 * Das Noten-Kürzel für die Teilleistung (z.B. "1+") 
+	 */
 	public notenKuerzel : String | null = null;
 
 

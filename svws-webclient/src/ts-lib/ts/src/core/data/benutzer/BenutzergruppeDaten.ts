@@ -5,12 +5,24 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 
 export class BenutzergruppeDaten extends JavaObject {
 
+	/**
+	 * Die ID der Benutzergruppe. 
+	 */
 	public id : number = -1;
 
+	/**
+	 * Die Bezeichnung der Benutzergruppe. 
+	 */
 	public bezeichnung : String = "";
 
+	/**
+	 * Gibt an, ob es sich um eine Administrative Benutzergruppe handelt oder nicht. 
+	 */
 	public istAdmin : boolean = false;
 
+	/**
+	 * Die IDs der Kompetenzen, die speziell dieser Benutzergruppe zugeordnet sind. 
+	 */
 	public kompetenzen : Vector<Number> = new Vector();
 
 

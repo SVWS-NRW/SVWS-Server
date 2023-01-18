@@ -3,12 +3,24 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class SchuelerLernabschnittNachpruefung extends JavaObject {
 
+	/**
+	 * Der Grund für die Versetzung (V - Versetzung, A - Abschluss, B - berufsqualifizierend) 
+	 */
 	public grund : String = "V";
 
+	/**
+	 * Die ID des Faches, auf welches sich die Leistungsdaten beziehen. 
+	 */
 	public fachID : number = -1;
 
+	/**
+	 * Das Kürzel der Note in der Nachprüfung. 
+	 */
 	public note : String | null = null;
 
+	/**
+	 * Das Datum der Nachprüfung. 
+	 */
 	public datum : String | null = null;
 
 

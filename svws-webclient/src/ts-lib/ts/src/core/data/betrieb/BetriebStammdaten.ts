@@ -8,60 +8,144 @@ import { BetriebAnsprechpartner, cast_de_nrw_schule_svws_core_data_betrieb_Betri
 
 export class BetriebStammdaten extends JavaObject {
 
+	/**
+	 * ID der weiteren Adresse (Betriebe) 
+	 */
 	public id : Number | null = null;
 
+	/**
+	 * Adressart des Betriebs, Fremdschlüssel auf die ID in K_Adressart 
+	 */
 	public adressArt : Number | null = null;
 
+	/**
+	 * Name1 des Betriebs 
+	 */
 	public name1 : String | null = null;
 
+	/**
+	 * Name2 des Betriebs 
+	 */
 	public name2 : String | null = null;
 
+	/**
+	 * Straßenname des Betriebsdatensatz 
+	 */
 	public strassenname : String | null = null;
 
+	/**
+	 * Hausnummer wenn getrennt gespeichert 
+	 */
 	public hausnr : String | null = null;
 
+	/**
+	 * Zusatz zur Hausnummer wenn Hausnummern getrennt gespeichert werden 
+	 */
 	public hausnrzusatz : String | null = null;
 
+	/**
+	 * OrtID des Betriebs 
+	 */
 	public ort_id : Number | null = null;
 
+	/**
+	 * PLZ des Betriebs 
+	 */
 	public plz : String | null = null;
 
+	/**
+	 * Telefonnummer1 des Betriebs 
+	 */
 	public telefon1 : String | null = null;
 
+	/**
+	 * Telefonnummer2 des Betriebs 
+	 */
 	public telefon2 : String | null = null;
 
+	/**
+	 * Faxnummer des Betriebs 
+	 */
 	public fax : String | null = null;
 
+	/**
+	 * E-MailAdresse des Betriebes 
+	 */
 	public email : String | null = null;
 
+	/**
+	 * Bemerkung zum Betrieb 
+	 */
 	public bemerkungen : String | null = null;
 
+	/**
+	 * Sortierung des Betriebsdatensatz 
+	 */
 	public sortierung : Number | null = null;
 
+	/**
+	 * Gibt an ob der Betrieb ausbildet Ja Nein 
+	 */
 	public ausbildungsbetrieb : Boolean | null = null;
 
+	/**
+	 * Gibt an ob der Betrieb Praktikumsplätze bietet Ja Nein 
+	 */
 	public bietetPraktika : Boolean | null = null;
 
+	/**
+	 * Brache des Betriebs 
+	 */
 	public branche : String | null = null;
 
+	/**
+	 * Adresszusatz zum Betrieb 
+	 */
 	public zusatz1 : String | null = null;
 
+	/**
+	 * Adresszusatz2 zum Betrieb 
+	 */
 	public zusatz2 : String | null = null;
 
+	/**
+	 * Sichtbarkeit des Datensatzes 
+	 */
 	public Sichtbar : Boolean | null = null;
 
+	/**
+	 * Datensatz ist änderbar Ja Nein 
+	 */
 	public Aenderbar : Boolean | null = null;
 
+	/**
+	 * Bezeichnung des Maßnahmenträgers 
+	 */
 	public Massnahmentraeger : Boolean | null = null;
 
+	/**
+	 * Belehrung nach Infektionsschutzgesetz notwendig Ja Nein 
+	 */
 	public BelehrungISG : Boolean | null = null;
 
+	/**
+	 * GU_ID des Betriebsdatensatzes (für Import zur Erkennung) 
+	 */
 	public GU_ID : String | null = null;
 
+	/**
+	 * Wird für diesen Betrieb ein Erweitertes Führungszeugnis benötigt? 
+	 */
 	public ErwFuehrungszeugnis : Boolean | null = null;
 
+	/**
+	 * Externe ID des Betriebsdatensatzes 
+	 */
 	public ExtID : String | null = null;
 
+	/**
+	 * Ein Array mit den Ansprechpartnern im Betrieb. 
+	 */
 	public ansprechpartner : Vector<BetriebAnsprechpartner> = new Vector();
 
 

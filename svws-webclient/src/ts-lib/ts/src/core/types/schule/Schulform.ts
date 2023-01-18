@@ -19,52 +19,124 @@ export class Schulform extends JavaObject {
 	/** an array containing all values of this enumeration indexed by their name*/
 	private static readonly all_values_by_name : Map<String, Schulform> = new Map<String, Schulform>();
 
+	/**
+	 * Schulform Berufskolleg 
+	 */
 	public static readonly BK : Schulform = new Schulform("BK", 0, [new SchulformKatalogEintrag(1000, "BK", "30", "Berufskolleg", false, null, null)]);
 
+	/**
+	 * Schulform Freie Waldorfschule 
+	 */
 	public static readonly FW : Schulform = new Schulform("FW", 1, [new SchulformKatalogEintrag(2000, "FW", "17", "Freie Waldorfschule", true, null, null)]);
 
+	/**
+	 * Schulform Grundschule 
+	 */
 	public static readonly G : Schulform = new Schulform("G", 2, [new SchulformKatalogEintrag(3000, "G", "02", "Grundschule", false, null, null)]);
 
+	/**
+	 * Schulform Gesamtschule 
+	 */
 	public static readonly GE : Schulform = new Schulform("GE", 3, [new SchulformKatalogEintrag(4000, "GE", "15", "Gesamtschule", true, null, null)]);
 
+	/**
+	 * Schulform Gemeinschaftsschule 
+	 */
 	public static readonly GM : Schulform = new Schulform("GM", 4, [new SchulformKatalogEintrag(5000, "GM", "16", "Gemeinschaftsschule", false, null, null)]);
 
+	/**
+	 * Schulform Gymnasium 
+	 */
 	public static readonly GY : Schulform = new Schulform("GY", 5, [new SchulformKatalogEintrag(6000, "GY", "20", "Gymnasium", true, null, null)]);
 
+	/**
+	 * Schulform Hauptschule 
+	 */
 	public static readonly H : Schulform = new Schulform("H", 6, [new SchulformKatalogEintrag(7000, "H", "04", "Hauptschule", false, null, null)]);
 
+	/**
+	 * Hibernia 
+	 */
 	public static readonly HI : Schulform = new Schulform("HI", 7, [new SchulformKatalogEintrag(8000, "HI", "18", "Hibernia", false, null, null)]);
 
+	/**
+	 * Schulform Schulversuch PRIMUS 
+	 */
 	public static readonly PS : Schulform = new Schulform("PS", 8, [new SchulformKatalogEintrag(9000, "PS", "13", "Schulversuch PRIMUS", false, null, null)]);
 
+	/**
+	 * Schulform Realschule 
+	 */
 	public static readonly R : Schulform = new Schulform("R", 9, [new SchulformKatalogEintrag(10000, "R", "10", "Realschule", false, null, null)]);
 
+	/**
+	 * Schulform Förderschule im Bereich G/H 
+	 */
 	public static readonly S : Schulform = new Schulform("S", 10, [new SchulformKatalogEintrag(11000, "S", "08", "Förderschule im Bereich G/H", false, null, null)]);
 
+	/**
+	 * Schulform Klinikschule 
+	 */
 	public static readonly KS : Schulform = new Schulform("KS", 11, [new SchulformKatalogEintrag(12000, "KS", "83", "Klinikschule", false, null, null)]);
 
+	/**
+	 * Schulform Förderschule im Bereich Berufskolleg 
+	 */
 	public static readonly SB : Schulform = new Schulform("SB", 12, [new SchulformKatalogEintrag(13000, "SB", "88", "Förderschule im Bereich Berufskolleg", false, null, null)]);
 
+	/**
+	 * Schulform Förderschule im Bereich Gymnasium 
+	 */
 	public static readonly SG : Schulform = new Schulform("SG", 13, [new SchulformKatalogEintrag(14000, "SG", "87", "Förderschule im Bereich Gymnasium", true, null, null)]);
 
+	/**
+	 * Schulform Sekundarschule 
+	 */
 	public static readonly SK : Schulform = new Schulform("SK", 14, [new SchulformKatalogEintrag(15000, "SK", "14", "Sekundarschule", false, null, null)]);
 
+	/**
+	 * Schulform Förderschule im Bereich Realschule 
+	 */
 	public static readonly SR : Schulform = new Schulform("SR", 15, [new SchulformKatalogEintrag(16000, "SR", "85", "Förderschule im Bereich Realschule", false, null, null)]);
 
+	/**
+	 * Schulform nicht umorganisierte Volksschule 
+	 */
 	public static readonly V : Schulform = new Schulform("V", 16, [new SchulformKatalogEintrag(17000, "V", "06", "nicht umorganisierte Volksschule", false, null, null)]);
 
+	/**
+	 * Schulform Weiterbildungskolleg 
+	 */
 	public static readonly WB : Schulform = new Schulform("WB", 17, [new SchulformKatalogEintrag(18000, "WB", "25", "Weiterbildungskolleg", false, null, null)]);
 
+	/**
+	 * Schulform Freie Waldorfschule (Förderschule) 
+	 */
 	public static readonly WF : Schulform = new Schulform("WF", 18, [new SchulformKatalogEintrag(19000, "WF", "19", "Freie Waldorfschule (Förderschule)", true, null, null)]);
 
+	/**
+	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. 
+	 */
 	public static VERSION : number = 1;
 
+	/**
+	 * Der aktuellen Daten der Schulform, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null 
+	 */
 	public readonly daten : SchulformKatalogEintrag;
 
+	/**
+	 * Die Historie mit den Einträgen der Schulformen 
+	 */
 	public readonly historie : Array<SchulformKatalogEintrag>;
 
+	/**
+	 * Ein Vector mit allen definierten Schulformen 
+	 */
 	private static readonly _schulformen : HashMap<String, Schulform | null> = new HashMap();
 
+	/**
+	 * Ein Vector mit allen definierten Schulformen, die eine Statistiknummer zugewiesen haben. 
+	 */
 	private static readonly _schulformenNummer : HashMap<String, Schulform | null> = new HashMap();
 
 	/**

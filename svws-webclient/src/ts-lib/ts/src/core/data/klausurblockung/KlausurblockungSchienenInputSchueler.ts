@@ -4,8 +4,14 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 
 export class KlausurblockungSchienenInputSchueler extends JavaObject {
 
+	/**
+	 * Die Datenbank-ID des Schülers. Sie muss positiv sein, sonst wird ein Fehler erzeugt. 
+	 */
 	public id : number = -1;
 
+	/**
+	 * Eine Sammlung der Klausuren von dieses Schülers. 
+	 */
 	public klausuren : Vector<Number> = new Vector();
 
 

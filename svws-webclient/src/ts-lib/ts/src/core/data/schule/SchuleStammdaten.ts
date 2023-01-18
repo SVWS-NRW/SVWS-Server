@@ -6,42 +6,99 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 
 export class SchuleStammdaten extends JavaObject {
 
+	/**
+	 * Die eindeutige Schulnummer der Schule 
+	 */
 	public schulNr : number = 0;
 
+	/**
+	 * Die Schulform der Schule 
+	 */
 	public schulform : String = "";
 
+	/**
+	 * Der erste Teil (von dreien) der Bezeichnung der Schule 
+	 */
 	public bezeichnung1 : String = "";
 
+	/**
+	 * Der zweite Teil (von dreien) der Bezeichnung der Schule 
+	 */
 	public bezeichnung2 : String | null = null;
 
+	/**
+	 * Der dritte Teil (von dreien) der Bezeichnung der Schule 
+	 */
 	public bezeichnung3 : String | null = null;
 
+	/**
+	 * Der Straßenname der Straße in der die Schule liegt. 
+	 */
 	public strassenname : String | null = null;
 
+	/**
+	 * Die Hausnummer zur Straße in der die Schule liegt. 
+	 */
 	public hausnummer : String | null = null;
 
+	/**
+	 * Ggf. der Hausnummerzusatz zur Straße in der die Schule liegt. 
+	 */
 	public hausnummerZusatz : String | null = null;
 
+	/**
+	 * Die Postleitzahl des Gebietes in dem die Schule liegt. 
+	 */
 	public plz : String | null = null;
 
+	/**
+	 * Der Ort in dem die Schule liegt. 
+	 */
 	public ort : String | null = null;
 
+	/**
+	 * Die Telefonnummer der Schule. 
+	 */
 	public telefon : String | null = null;
 
+	/**
+	 * Die Faxnummer der Schule. 
+	 */
 	public fax : String | null = null;
 
+	/**
+	 * Die Mailadresse der Schule. 
+	 */
 	public email : String | null = null;
 
+	/**
+	 * Die Adresse der Homepage der Schule (Domain-Name) 
+	 */
 	public webAdresse : String | null = null;
 
+	/**
+	 * Die ID des Schuljahresabschnittes, in welchem sich die Schule befindet. 
+	 */
 	public idSchuljahresabschnitt : number = 0;
 
+	/**
+	 * Die Anzahl der Abschnitte pro Jahrgangsstufe. 
+	 */
 	public anzJGS_Jahr : number = 0;
 
+	/**
+	 * Die Informationen zu den Abschnitten pro Jahr. (meist Haljahre (2) oder Quartale (4) 
+	 */
 	public schuleAbschnitte : SchuleAbschnitte = new SchuleAbschnitte();
 
+	/**
+	 * Die Dauer einer Unterrichsteinheit in Minuten. 
+	 */
 	public dauerUnterrichtseinheit : number = 0;
 
+	/**
+	 * Die Liste der Schuljahresabschnitte, welche an der Schule definiert sind. 
+	 */
 	public readonly abschnitte : Vector<Schuljahresabschnitt> = new Vector();
 
 

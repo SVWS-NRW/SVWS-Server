@@ -4,18 +4,39 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class Schild3KatalogEintragUnicodeUmwandlung extends JavaObject {
 
+	/**
+	 * ID für den Primärschlüssel der Tabelle UnicodeUmwandlung 
+	 */
 	public ID : Number | null = null;
 
+	/**
+	 * Unicodezeichen das umgewandelt werden muss 
+	 */
 	public Unicodezeichen : String | null = null;
 
+	/**
+	 * Ersatzzeichen für das Unicodezeichen 
+	 */
 	public Ersatzzeichen : String | null = null;
 
+	/**
+	 * Unicodezeichen in Dezimaldarstellung 
+	 */
 	public DecimalZeichen : String | null = null;
 
+	/**
+	 * Ersatzzeichen in Dezimaldarstellung (bei zwei Zeichen mit + getrennt) 
+	 */
 	public DecimalErsatzzeichen : String | null = null;
 
+	/**
+	 * Hexdarstellung des Unicodezeichen das gewandelt werden muss 
+	 */
 	public Hexzeichen : String | null = null;
 
+	/**
+	 * Hexdarstellung des Ersatzzeichens das gewandelt werden muss (bei zwei Zeichen mit + getrennt) 
+	 */
 	public HexErsatzzeichen : String | null = null;
 
 

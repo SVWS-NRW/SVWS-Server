@@ -3,30 +3,69 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class SchuelerStundenplanUnterricht extends JavaObject {
 
+	/**
+	 * Die ID der Leistungsdaten, um zusammen gehörige Unterrichtseinheiten zu erkennen. 
+	 */
 	public idLeistungen : number = -1;
 
+	/**
+	 * Die ID der Unterrichtseinheit 
+	 */
 	public idUnterricht : number = -1;
 
+	/**
+	 * Die ID im Zeitraster des Stundenplans 
+	 */
 	public idZeitraster : number = -1;
 
+	/**
+	 * Die Kursart der Unterrichtseinheit. 
+	 */
 	public kursart : String = "";
 
+	/**
+	 * Der Wochen-Typ bei der Unterscheidung von (A,B,... -Wochen -> 1, 2, ...) oder 0 
+	 */
 	public wochentyp : number = -1;
 
+	/**
+	 * Die ID des Faches 
+	 */
 	public idFach : number = -1;
 
+	/**
+	 * Das Kürzel des Unterrichtsfaches. 
+	 */
 	public fachKuerzel : String = "";
 
+	/**
+	 * Die Bezeichnung des Unterrichtsfaches. 
+	 */
 	public fachBezeichnung : String = "";
 
+	/**
+	 * Das Kürzel des Unterrichtsfaches in Bezug auf die amtliche Schulstatistik. 
+	 */
 	public fachKuerzelStatistik : String = "";
 
+	/**
+	 * Die ID des Lehrers. 
+	 */
 	public idLehrer : number = -1;
 
+	/**
+	 * Der Nachname des Schülers. 
+	 */
 	public lehrerKuerzel : String = "";
 
+	/**
+	 * Der Nachname des Schülers. 
+	 */
 	public lehrerNachname : String = "";
 
+	/**
+	 * Der Vorname des Schülers. 
+	 */
 	public lehrerVorname : String = "";
 
 

@@ -18,18 +18,39 @@ export class LehrerLeitungsfunktion extends JavaObject {
 	/** an array containing all values of this enumeration indexed by their name*/
 	private static readonly all_values_by_name : Map<String, LehrerLeitungsfunktion> = new Map<String, LehrerLeitungsfunktion>();
 
+	/**
+	 * Schulleitung 
+	 */
 	public static readonly SL : LehrerLeitungsfunktion = new LehrerLeitungsfunktion("SL", 0, [new LehrerKatalogLeitungsfunktionenEintrag(1, "SL", "Schulleitung", null, null)]);
 
+	/**
+	 * Stellvertretende Schulleitung 
+	 */
 	public static readonly SL_STV : LehrerLeitungsfunktion = new LehrerLeitungsfunktion("SL_STV", 1, [new LehrerKatalogLeitungsfunktionenEintrag(2, "Stv. SL", "Stellvertretende Schulleitung", null, null)]);
 
+	/**
+	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. 
+	 */
 	public static VERSION : number = 1;
 
+	/**
+	 * Der aktuellen Daten der Leitungsfunktionen von Lehrern 
+	 */
 	public readonly daten : LehrerKatalogLeitungsfunktionenEintrag;
 
+	/**
+	 * Die Historie mit den Einträgen der Leitungsfunktionen von Lehrern 
+	 */
 	public readonly historie : Array<LehrerKatalogLeitungsfunktionenEintrag>;
 
+	/**
+	 * Eine Hashmap mit allen definierten Leitungsfunktion, zugeordnet zu ihren Kürzeln 
+	 */
 	private static readonly _mapByKuerzel : HashMap<String, LehrerLeitungsfunktion | null> = new HashMap();
 
+	/**
+	 * Eine Hashmap mit allen definierten Leitungsfunktion, zugeordnet zu ihren IDs 
+	 */
 	private static readonly _mapByID : HashMap<Number, LehrerLeitungsfunktion | null> = new HashMap();
 
 	/**

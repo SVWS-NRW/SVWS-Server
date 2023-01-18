@@ -17,76 +17,184 @@ export class Note extends JavaObject {
 	/** an array containing all values of this enumeration indexed by their name*/
 	private static readonly all_values_by_name : Map<String, Note> = new Map<String, Note>();
 
+	/**
+	 * leerer Noteneintrag 
+	 */
 	public static readonly KEINE : Note = new Note("KEINE", 0, -1, -1, null, "", "", "--------------------", null, null);
 
+	/**
+	 * Die Note "ungenügend" mit 0 Punkten.
+	 */
 	public static readonly UNGENUEGEND : Note = new Note("UNGENUEGEND", 1, 0, 600, 0, "6", "ungenuegend", "ungenuegend", null, null);
 
+	/**
+	 * Die Note "mangelhaft minus" mit 1 Punkt.
+	 */
 	public static readonly MANGELHAFT_MINUS : Note = new Note("MANGELHAFT_MINUS", 2, 1, 501, 1, "5-", "mangelhaft (minus)", "mangelhaft", null, null);
 
+	/**
+	 * Die Note "mangelhaft" mit 2 Punkten.
+	 */
 	public static readonly MANGELHAFT : Note = new Note("MANGELHAFT", 3, 2, 500, 2, "5", "mangelhaft", "mangelhaft", null, null);
 
+	/**
+	 * Die Note "mangelhaft plus" mit 3 Punkten.
+	 */
 	public static readonly MANGELHAFT_PLUS : Note = new Note("MANGELHAFT_PLUS", 4, 3, 499, 3, "5+", "mangelhaft (plus)", "mangelhaft", null, null);
 
+	/**
+	 * Die Note "ausreichend minus" mit 4 Punkten.
+	 */
 	public static readonly AUSREICHEND_MINUS : Note = new Note("AUSREICHEND_MINUS", 5, 4, 401, 4, "4-", "ausreichend (minus)", "ausreichend", null, null);
 
+	/**
+	 * Die Note "ausreichend " mit 5 Punkten.
+	 */
 	public static readonly AUSREICHEND : Note = new Note("AUSREICHEND", 6, 5, 400, 5, "4", "ausreichend", "ausreichend", null, null);
 
+	/**
+	 * Die Note "ausreichend plus" mit 6 Punkten.
+	 */
 	public static readonly AUSREICHEND_PLUS : Note = new Note("AUSREICHEND_PLUS", 7, 6, 399, 6, "4+", "ausreichend (plus)", "ausreichend", null, null);
 
+	/**
+	 * Die Note "befriedigend minus" mit 7 Punkten.
+	 */
 	public static readonly BEFRIEDIGEND_MINUS : Note = new Note("BEFRIEDIGEND_MINUS", 8, 7, 301, 7, "3-", "befriedigend (minus)", "befriedigend", null, null);
 
+	/**
+	 * Die Note "befriedigend" mit 8 Punkten.
+	 */
 	public static readonly BEFRIEDIGEND : Note = new Note("BEFRIEDIGEND", 9, 8, 300, 8, "3", "befriedigend", "befriedigend", null, null);
 
+	/**
+	 * Die Note "befriedigend plus" mit 9 Punkten.
+	 */
 	public static readonly BEFRIEDIGEND_PLUS : Note = new Note("BEFRIEDIGEND_PLUS", 10, 9, 299, 9, "3+", "befriedigend (plus)", "befriedigend", null, null);
 
+	/**
+	 * Die Note "gut minus" mit 10 Punkten.
+	 */
 	public static readonly GUT_MINUS : Note = new Note("GUT_MINUS", 11, 10, 201, 10, "2-", "gut (minus)", "gut", null, null);
 
+	/**
+	 * Die Note "gut" mit 111 Punkten.
+	 */
 	public static readonly GUT : Note = new Note("GUT", 12, 11, 200, 11, "2", "gut", "gut", null, null);
 
+	/**
+	 * Die Note "gut plus" mit 12 Punkten.
+	 */
 	public static readonly GUT_PLUS : Note = new Note("GUT_PLUS", 13, 12, 199, 12, "2+", "gut (plus)", "gut", null, null);
 
+	/**
+	 * Die Note "sehr gut mnus" mit 13 Punkten.
+	 */
 	public static readonly SEHR_GUT_MINUS : Note = new Note("SEHR_GUT_MINUS", 14, 13, 101, 13, "1-", "sehr gut (minus)", "sehr gut", null, null);
 
+	/**
+	 * Die Note "sehr gut" mit 14 Punkten.
+	 */
 	public static readonly SEHR_GUT : Note = new Note("SEHR_GUT", 15, 14, 100, 14, "1", "sehr gut", "sehr gut", null, null);
 
+	/**
+	 * Die Note "sehr gut plus" mit 15 Punkten.
+	 */
 	public static readonly SEHR_GUT_PLUS : Note = new Note("SEHR_GUT_PLUS", 16, 15, 99, 15, "1+", "sehr gut (plus)", "sehr gut", null, null);
 
+	/**
+	 * Der Noteneintrag "ärtzliches Attest" mit dem Wert AT.
+	 */
 	public static readonly ATTEST : Note = new Note("ATTEST", 17, 16, 2500, null, "AT", "(ärtzliches Attest)", "--------------------", null, null);
 
+	/**
+	 * Der Noteneintrag "mit besonderem Erfolg teilgenommen" mit dem Wert E1.
+	 */
 	public static readonly E1_MIT_BESONDEREM_ERFOLG_TEILGENOMMEN : Note = new Note("E1_MIT_BESONDEREM_ERFOLG_TEILGENOMMEN", 18, 17, 1000, null, "E1", "mit besonderem Erfolg teilgenommen", "mit besonderem Erfolg teilgenommen", null, null);
 
+	/**
+	 * Der Noteneintrag "mit Erfolg teilgenommen" mit dem Wert E2.
+	 */
 	public static readonly E2_MIT_ERFOLG_TEILGENOMMEN : Note = new Note("E2_MIT_ERFOLG_TEILGENOMMEN", 19, 18, 1001, null, "E2", "mit Erfolg teilgenommen", "mit Erfolg teilgenommen", null, null);
 
+	/**
+	 * Der Noteneintrag "teilgenommen" mit dem Wert E3.
+	 */
 	public static readonly E3_TEILGENOMMEN : Note = new Note("E3_TEILGENOMMEN", 20, 19, 1002, null, "E3", "teilgenommen", "teilgenommen", null, null);
 
+	/**
+	 * Der Noteneintrag "nicht teilgenommen" mit dem Wert NT.
+	 */
 	public static readonly NICHT_TEILGENOMMEN : Note = new Note("NICHT_TEILGENOMMEN", 21, 20, 4010, null, "NT", "(nicht teilgenommen)", "--------------------", null, null);
 
+	/**
+	 * Der Noteneintrag "kann nicht beurteilt werdent" mit dem Wert NB.
+	 */
 	public static readonly NICHT_BEURTEILT : Note = new Note("NICHT_BEURTEILT", 22, 21, 4000, null, "NB", "(kann nicht beurteilt werden)", "--------------------", null, null);
 
+	/**
+	 * Der Noteneintrag "nicht erteilt" mit dem Wert NE.
+	 */
 	public static readonly NICHT_ERTEILT : Note = new Note("NICHT_ERTEILT", 23, 22, 4020, null, "NE", "(nicht erteilt)", "--------------------", null, null);
 
+	/**
+	 * Der Noteneintrag "kein Unterricht wegen Lehrermangel" mit dem Wert LM.
+	 */
 	public static readonly LEHRERMANGEL : Note = new Note("LEHRERMANGEL", 24, 23, 9000, null, "LM", "(kein Unterricht wegen Lehrermangel)", "--------------------", null, null);
 
+	/**
+	 * Der Noteneintrag "abgemeldet" mit dem Wert AM.
+	 */
 	public static readonly ABGEMELDET : Note = new Note("ABGEMELDET", 25, 24, 2000, null, "AM", "(abgemeldet)", "--------------------", null, null);
 
+	/**
+	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. 
+	 */
 	public static VERSION : number = 1;
 
+	/**
+	 * Die eindeutige ID der Note 
+	 */
 	public readonly id : number;
 
+	/**
+	 * Eine ID, die der Sortierung der Noteneinträge in einer Anwendung vorgibt 
+	 */
 	public readonly sortierung : number;
 
+	/**
+	 * Die Notenpunkte, die dieser Note zugeordnet sind 
+	 */
 	public readonly notenpunkte : Number | null;
 
+	/**
+	 * Die Kurzschreibweise der Note als Zahl ggf. mit Tendenz (+/-) 
+	 */
 	public readonly kuerzel : String;
 
+	/**
+	 * Die Note in ausführlicher Textform ggf. mit Tendenz (plus/minus) 
+	 */
 	public readonly text : String;
 
+	/**
+	 * Die Note in ausführlicher Textform, wie sie auf einem Zeugnis dargestellt wird. 
+	 */
 	public readonly textZeugnis : String;
 
+	/**
+	 * Gibt an, in welchem Schuljahr die Note einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 */
 	public readonly gueltigVon : Number | null;
 
+	/**
+	 * Gibt an, bis zu welchem Schuljahr die Note gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 */
 	public readonly gueltigBis : Number | null;
 
+	/**
+	 * Der Noten-Katalog-Eintrag 
+	 */
 	private katalogEintrag : NotenKatalogEintrag | null = null;
 
 	/**

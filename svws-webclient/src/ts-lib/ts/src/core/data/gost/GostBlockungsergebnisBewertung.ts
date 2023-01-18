@@ -4,18 +4,44 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 
 export class GostBlockungsergebnisBewertung extends JavaObject {
 
+	/**
+	 * Bewertungskriterium 1a: Array mit den Regel-IDs der {@link GostBlockungRegel} die nicht erfüllt werden konnten. 
+	 */
 	public regelVerletzungen : Vector<Number> = new Vector();
 
+	/**
+	 * Bewertungskriterium 1b: Anzahl aller Kurse, die nicht auf Schienen verteilt wurden. 
+	 */
 	public anzahlKurseNichtZugeordnet : number = 0;
 
+	/**
+	 * Bewertungskriterium 2a: Anzahl aller Fachwahlen der SuS, die nicht zugeordnet wurden. 
+	 */
 	public anzahlSchuelerNichtZugeordnet : number = 0;
 
+	/**
+	 * Bewertungskriterium 2b: Anzahl der Kollisionen bei der Zuordnung von Schülern zu den Kurses in den Schienen. 
+	 */
 	public anzahlSchuelerKollisionen : number = 0;
 
+	/**
+	 * Bewertungskriterium 3a: Die größte Kursdifferenz in der Blockung. 
+	 */
 	public kursdifferenzMax : number = 0;
 
+	/**
+	 * Bewertungskriterium 3b: Array mit dem Histogramm der Kursdifferenzen. <br>
+	 *  Beispiel: [7, 5, 2, 1, 0, 0, ...] bedeutet: <br>
+	 *  Die Kursdifferenz 0 gibt es 7 Mal <br>
+	 *  Die Kursdifferenz 1 gibt es 5 Mal <br>
+	 *  Die Kursdifferenz 2 gibt es 2 Mal <br>
+	 *  Die Kursdifferenz 3 gibt es 1 Mal <br>
+	 */
 	public kursdifferenzHistogramm : Array<number> = Array(0).fill(0);
 
+	/**
+	 * Bewertungskriterium 4: Anzahl aller Kurse mit gleicher Fachart in einer Schiene. 
+	 */
 	public anzahlKurseMitGleicherFachartProSchiene : number = 0;
 
 

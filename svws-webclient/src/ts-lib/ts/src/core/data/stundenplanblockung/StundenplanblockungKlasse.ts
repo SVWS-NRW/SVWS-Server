@@ -3,8 +3,14 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class StundenplanblockungKlasse extends JavaObject {
 
+	/**
+	 * Die Datenbank-ID der Klasse. 
+	 */
 	public id : number = 0;
 
+	/**
+	 * Das Kürzel der Lehrkraft. Beispielsweise '07c' oder 'Q1'. 
+	 */
 	public kuerzel : String = "";
 
 

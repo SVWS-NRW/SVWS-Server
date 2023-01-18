@@ -4,8 +4,14 @@ import { Schuljahresabschnitt, cast_de_nrw_schule_svws_core_data_schule_Schuljah
 
 export class SchuljahresAbschnittsManager extends JavaObject {
 
+	/**
+	 *  Der aktuelle Schuljahresabschnitt
+	 */
 	private abschnitt : Schuljahresabschnitt;
 
+	/**
+	 *  Die Anzahl an Schuljahresabschnitten an dieser Schule
+	 */
 	private anzahlAbschnitte : number = 0;
 
 

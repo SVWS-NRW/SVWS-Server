@@ -6,40 +6,99 @@ import { System, cast_java_lang_System } from '../../java/lang/System';
 
 export class KursblockungDynStatistik extends JavaObject {
 
+	/**
+	 * 
+	 *  In der Matrix ist zu jedem Kursart-Paar eine Bewertung die angibt, wie gut es wäre wenn zwei Kurses dieser
+	 *  Fachart in der selben Schiene landen. Je kleiner der Wert, desto besser. Erhöht man den Wert der Haupt-Diagonale
+	 *  in der Matrix, so werden Kurse der gleichen Fachart eher selten in eine Schiene getan. 
+	 */
 	private matrixFachartPaar : Array<Array<number>> = [...Array(0)].map(e => Array(0).fill(0));
 
+	/**
+	 * Regel: Kurs verbiete mit Kurs. 
+	 */
 	private regelVerletzungKursMitKurs : Array<Array<number>> = [...Array(0)].map(e => Array(0).fill(0));
 
+	/**
+	 * Die aktuelle Bewertung aller Regelverletzungen. 
+	 */
 	private bewertungRegelverletzungen : number = 0;
 
+	/**
+	 * Zum Speichern des Wertes von {@link KursblockungDynStatistik#bewertungRegelverletzungen} auf Schüler-Ebene. 
+	 */
 	private bewertungRegelverletzungenSaveS : number = 0;
 
+	/**
+	 * Zum Speichern des Wertes von {@link KursblockungDynStatistik#bewertungRegelverletzungen} auf Kurs-Ebene. 
+	 */
 	private bewertungRegelverletzungenSaveK : number = 0;
 
+	/**
+	 * Zum Speichern des Wertes von {@link KursblockungDynStatistik#bewertungRegelverletzungen} auf Globaler-Ebene. 
+	 */
 	private bewertungRegelverletzungenSaveG : number = 0;
 
+	/**
+	 * Die aktuelle Bewertung der Fachart-Paare aller Schienen. 
+	 */
 	private bewertungFachartPaar : number = 0;
 
+	/**
+	 * Zum Speichern des Wertes von {@link KursblockungDynStatistik#bewertungFachartPaar} auf Kurs-Ebene. 
+	 */
 	private bewertungFachartPaarSaveK : number = 0;
 
+	/**
+	 * Zum Speichern des Wertes von {@link KursblockungDynStatistik#bewertungFachartPaar} auf Globaler-Ebene. 
+	 */
 	private bewertungFachartPaarSaveG : number = 0;
 
+	/**
+	 * Die aktuelle Bewertung der Nichtwahlen aller Schüler. 
+	 */
 	private bewertungNichtwahlen : number = 0;
 
+	/**
+	 * Zum Speichern des Wertes von {@link KursblockungDynStatistik#bewertungNichtwahlen} auf Schüler-Ebene. 
+	 */
 	private bewertungNichtwahlenSaveS : number = 0;
 
+	/**
+	 * Zum Speichern des Wertes von {@link KursblockungDynStatistik#bewertungNichtwahlen} auf Kurs-Ebene. 
+	 */
 	private bewertungNichtwahlenSaveK : number = 0;
 
+	/**
+	 * Zum Speichern des Wertes von {@link KursblockungDynStatistik#bewertungNichtwahlen} auf Globaler-Ebene. 
+	 */
 	private bewertungNichtwahlenSaveG : number = 0;
 
+	/**
+	 * Das Array aller Kursdifferenzen. 
+	 */
 	private bewertungKursdifferenzen : Array<number> = Array(0).fill(0);
 
+	/**
+	 * Zum Speichern des Arrays von {@link KursblockungDynStatistik#bewertungKursdifferenzen} auf Schüler-Ebene. 
+	 */
 	private bewertungKursdifferenzenSaveS : Array<number> = Array(0).fill(0);
 
+	/**
+	 * Zum Speichern des Arrays von {@link KursblockungDynStatistik#bewertungKursdifferenzen} auf Kurs-Ebene. 
+	 */
 	private bewertungKursdifferenzenSaveK : Array<number> = Array(0).fill(0);
 
+	/**
+	 * Zum Speichern des Arrays von {@link KursblockungDynStatistik#bewertungKursdifferenzen} auf Globaler-Ebene. 
+	 */
 	private bewertungKursdifferenzenSaveG : Array<number> = Array(0).fill(0);
 
+	/**
+	 * Verweist im Array {@link KursblockungDynStatistik#bewertungKursdifferenzen} auf den höchsten Index mit einem
+	 *  Wert größer als 0. Das ist die größte Kursdifferenz. <br>
+	 *  Ausnahme: Falls das Array nur aus Nullen besteht, dann ist der Wert ebenfalls Null. 
+	 */
 	private bewertungKursdifferenzenMaxIndex : number = 0;
 
 

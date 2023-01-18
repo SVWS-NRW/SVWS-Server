@@ -5,14 +5,29 @@ import { JavaBoolean, cast_java_lang_Boolean } from '../../../java/lang/JavaBool
 
 export class AbschlussErgebnisBerufsbildend extends JavaObject {
 
+	/**
+	 * Gibt an, ob der Berufschulabschluss erfolgreich erworben wurde. 
+	 */
 	public hatBSA : boolean = false;
 
+	/**
+	 * Gibt die Note des Berufsschulabschlusses an, selbst wenn dieser nicht erreicht wurde. 
+	 */
 	public note : number = 0;
 
+	/**
+	 * Gibt an, ob der Berufabschluss insgesamt erfolgreich erworben wurde, falls genügend Informationen vorliegen. 
+	 */
 	public hatBA : Boolean | null = null;
 
+	/**
+	 * Gibt an, welcher allgemeinbildende Abschluss ggf. zusätzlich erreicht wurde, falls er nicht bereits vorher erreicht wurde. 
+	 */
 	public abschlussAllgemeinbildend : String | null = null;
 
+	/**
+	 * Der Log der Abschlussberechnung. 
+	 */
 	public log : List<String> | null = null;
 
 

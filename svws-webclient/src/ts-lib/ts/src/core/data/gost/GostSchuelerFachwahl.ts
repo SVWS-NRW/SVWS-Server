@@ -4,18 +4,39 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class GostSchuelerFachwahl extends JavaObject {
 
+	/**
+	 * Die Fachwahl des Schülers für die EF.1 
+	 */
 	public EF1 : String | null = null;
 
+	/**
+	 * Die Fachwahl des Schülers für die EF.2 
+	 */
 	public EF2 : String | null = null;
 
+	/**
+	 * Die Fachwahl des Schülers für die Q1.1 
+	 */
 	public Q11 : String | null = null;
 
+	/**
+	 * Die Fachwahl des Schülers für die Q1.2 
+	 */
 	public Q12 : String | null = null;
 
+	/**
+	 * Die Fachwahl des Schülers für die Q2.1 
+	 */
 	public Q21 : String | null = null;
 
+	/**
+	 * Die Fachwahl des Schülers für die Q2.2 
+	 */
 	public Q22 : String | null = null;
 
+	/**
+	 * Die Nummer des Abiturfaches (1-4), falls dieses Fach als Abiturfach gewählt wurde und ansonsten null 
+	 */
 	public abiturFach : Number | null = null;
 
 

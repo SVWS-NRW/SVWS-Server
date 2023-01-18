@@ -5,14 +5,29 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 
 export class ENMKlasse extends JavaObject {
 
+	/**
+	 * Die ID der Klasse Jahrgangs aus der SVWS-DB (z.B. 16) 
+	 */
 	public id : number = 0;
 
+	/**
+	 * Das Kürzel der Klasse, wie es im Rahmen der amtlichen Schulstatistik verwendet wird. (z.B. EF) 
+	 */
 	public kuerzel : String | null = null;
 
+	/**
+	 * Das Kürzel ser Klasse, wie er im Rahmen der Schule benannt wird und angezeigt werden soll. (z.B. EF) 
+	 */
 	public kuerzelAnzeige : String | null = null;
 
+	/**
+	 * Die Reihenfolge der Klasse bei der Sortierung der Klasse. (z.B. 8) 
+	 */
 	public sortierung : number = 0;
 
+	/**
+	 * Die IDs der zugeordneten Klassenlehrer. 
+	 */
 	public klassenlehrer : Vector<Number> = new Vector();
 
 

@@ -8,6 +8,9 @@ import { System, cast_java_lang_System } from '../../java/lang/System';
 
 export class KursblockungAlgorithmusKSchuelervorschlag extends KursblockungAlgorithmusK {
 
+	/**
+	 *  Die Anzahl an Runden ohne Verbesserung, bevor es zum Abbruch kommt.
+	 */
 	private static readonly MAX_RUNDEN_IN_FOLGE_OHNE_VERBESSERUNG : number = 2000;
 
 

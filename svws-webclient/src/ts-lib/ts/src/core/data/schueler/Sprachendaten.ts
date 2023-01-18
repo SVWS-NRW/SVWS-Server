@@ -5,10 +5,19 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 
 export class Sprachendaten extends JavaObject {
 
+	/**
+	 * Die ID des Schülers, dessen Sprachenfolge in diesem Objekt gespeichert ist. 
+	 */
 	public schuelerID : number = 0;
 
+	/**
+	 * Die Liste der Sprachbelegungen. 
+	 */
 	public belegungen : Vector<Sprachbelegung> = new Vector();
 
+	/**
+	 * Die Liste der Sprachpruefungen. 
+	 */
 	public pruefungen : Vector<Sprachpruefung> = new Vector();
 
 

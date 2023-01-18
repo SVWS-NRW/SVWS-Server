@@ -7,22 +7,49 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 
 export class AllgemeineMerkmaleKatalogEintrag extends JavaObject {
 
+	/**
+	 * Die ID des Katalog-Eintrags. 
+	 */
 	public id : number = -1;
 
+	/**
+	 * Das Kürzel des allgemeinen Merkmals 
+	 */
 	public kuerzel : String = "";
 
+	/**
+	 * Eine kurze Bezeichnung für das allgemeine Merkmal. 
+	 */
 	public bezeichnung : String = "";
 
+	/**
+	 * Gibt an, das das Merkmal bei der Schule gesetzt werden kann. 
+	 */
 	public beiSchule : boolean = false;
 
+	/**
+	 * Gibt an, das das Merkmal bei einem Schüler gesetzt werden kann. 
+	 */
 	public beiSchueler : boolean = false;
 
+	/**
+	 * Ggf. ein Kürzel, welches im Rahmen der amtlichen Schulstatistik verwendet wird. 
+	 */
 	public kuerzelASD : String | null = "";
 
+	/**
+	 * Die Kürzel der Schulformen, bei welchen das allgemeine Merkmal vorkommen kann. 
+	 */
 	public schulformen : List<String> = new Vector();
 
+	/**
+	 * Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 */
 	public gueltigVon : Number | null = null;
 
+	/**
+	 * Gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 */
 	public gueltigBis : Number | null = null;
 
 

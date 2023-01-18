@@ -10,34 +10,79 @@ import { ENMSprachenfolge, cast_de_nrw_schule_svws_core_data_enm_ENMSprachenfolg
 
 export class ENMSchueler extends JavaObject {
 
+	/**
+	 * Die ID des Schülers in der SVWS-DB 
+	 */
 	public id : number = 0;
 
+	/**
+	 * Die ID des aktuellen Jahrgangs, in dem sich der Schüler befindet 
+	 */
 	public jahrgangID : number = 0;
 
+	/**
+	 * Die ID der aktuellen Klasse, in der sich der Schüler befindet 
+	 */
 	public klasseID : number = 0;
 
+	/**
+	 * Der Nachname des Schülers (z.B. Mustermann) 
+	 */
 	public nachname : String | null = null;
 
+	/**
+	 * Der Vorname des Schülers (z.B. Max) 
+	 */
 	public vorname : String | null = null;
 
+	/**
+	 * Das Geschlecht des Schülers (m,w,d,x) 
+	 */
 	public geschlecht : String | null = null;
 
+	/**
+	 * Gibt an, ob sich der Schüler aktuell im bilingualen Bildungsgang befindet (wenn ja, z.B. F) oder nicht (null) 
+	 */
 	public bilingualeSprache : String | null = null;
 
+	/**
+	 * Gibt an, ob der Schüler Ziel-different unterrichtet wird 
+	 */
 	public istZieldifferent : boolean = false;
 
+	/**
+	 * Gibt an, ob der Schüler Deutsch-Förderung mit Deutsch als Zweitsprache (DaZ) bekommt (Seiteneinsteiger, z.B. Flüchtlingskinder) 
+	 */
 	public istDaZFoerderung : boolean = false;
 
+	/**
+	 * Die Sprachenfolge des Schülers 
+	 */
 	public sprachenfolge : Vector<ENMSprachenfolge> = new Vector();
 
+	/**
+	 * Informationen zum Lernabschnitt des Schülers in der Notendatei 
+	 */
 	public lernabschnitt : ENMLernabschnitt = new ENMLernabschnitt();
 
+	/**
+	 * Die Leistungsdaten des Schülers in dem Lernabschnitt der Notendatei 
+	 */
 	public readonly leistungsdaten : Vector<ENMLeistung> = new Vector();
 
+	/**
+	 * Die Bemerkungen bei dem Schüler in Bezug auf den Lernabschnitt der Notendatei 
+	 */
 	public bemerkungen : ENMLeistungBemerkungen | null = new ENMLeistungBemerkungen();
 
+	/**
+	 * Die Informationen zu den Zentralen Prüfungen Klasse 10, sofern vorhanden - ansonsten null 
+	 */
 	public zp10 : ENMZP10 | null = null;
 
+	/**
+	 * Die Informationen zu den Abschlüssen am Berufskolleg, sofern vorhanden - ansonsten null 
+	 */
 	public bkabschluss : ENMBKAbschluss | null = null;
 
 

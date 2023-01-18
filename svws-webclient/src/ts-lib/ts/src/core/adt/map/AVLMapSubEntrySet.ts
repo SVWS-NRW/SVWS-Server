@@ -9,6 +9,9 @@ import { AVLMapSubMap, cast_de_nrw_schule_svws_core_adt_map_AVLMapSubMap } from 
 
 export class AVLMapSubEntrySet<K, V> extends JavaObject implements JavaSet<JavaMapEntry<K, V>> {
 
+	/**
+	 *  Die {@link AVLMapSubMap} auf der diese Sup-Map operiert.
+	 */
 	private readonly _sub : AVLMapSubMap<K, V>;
 
 

@@ -4,10 +4,19 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 
 export class SchuleAbschnitte extends JavaObject {
 
+	/**
+	 * Die Anzahl der Abschnitte pro Jahr 
+	 */
 	public anzahlAbschnitte : number = 0;
 
+	/**
+	 * Die allgemeine Bezeichnung der Abschnitte (z.B. Quartal oder Halbjahr) 
+	 */
 	public abschnittBez : String = "Halbjahr";
 
+	/**
+	 * Eine Liste der einzelnen speziellen Bezeichnungnen für dei Abschnitte (z.B. 1. Quartal, 2. Quartal, ...) 
+	 */
 	public bezAbschnitte : Vector<String> = new Vector();
 
 

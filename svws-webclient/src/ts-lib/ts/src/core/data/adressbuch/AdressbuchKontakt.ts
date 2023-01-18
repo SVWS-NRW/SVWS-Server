@@ -7,36 +7,84 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 
 export class AdressbuchKontakt extends AdressbuchEintrag {
 
+	/**
+	 * Der Nachname des Kontakts. 
+	 */
 	public nachname : String = "";
 
+	/**
+	 * Ggf. Zusatz zum Nachnamen des Schülerdatensatzes. 
+	 */
 	public zusatzNachname : String = "";
 
+	/**
+	 * Der Vorname des Schülerdatensatzes. 
+	 */
 	public vorname : String = "";
 
+	/**
+	 * Der Straßenname des Kontakts. 
+	 */
 	public strassenname : String | null = null;
 
+	/**
+	 * Die Hausnummer des Kontakts. 
+	 */
 	public hausnummer : String | null = null;
 
+	/**
+	 * Ggf. der Hausnummerzusatz des Kontakts. 
+	 */
 	public hausnummerZusatz : String | null = null;
 
+	/**
+	 * Die Postleitzahl des Kontakts. 
+	 */
 	public plz : String | null = null;
 
+	/**
+	 * Der Ort des Kontakts. 
+	 */
 	public ort : String | null = null;
 
+	/**
+	 * Die Telefonnummern des Kontakts. 
+	 */
 	public telefonnummern : List<Telefonnummer> = new Vector();
 
+	/**
+	 * Die Mailadresse des Kontakts. 
+	 */
 	public email : String | null = null;
 
+	/**
+	 * Die Webadresse des Kontakts 
+	 */
 	public webAdresse : String | null = "";
 
+	/**
+	 * Die Kategorien dieses Kontakts 
+	 */
 	public kategorien : List<String | null> | null = new Vector();
 
+	/**
+	 *  Die Organisation dieses Kontakts 
+	 */
 	public organisation : String | null = null;
 
+	/**
+	 *  Die Rolle innerhalb der Organisation dieses Kontakts 
+	 */
 	public rolle : String | null = null;
 
+	/**
+	 * Die ID des Adressbuchkontakts des Kinds 
+	 */
 	public idKind : String | null = null;
 
+	/**
+	 * Die ID des Adressbuchkontakts der Eltern 
+	 */
 	public idEltern : String | null = null;
 
 

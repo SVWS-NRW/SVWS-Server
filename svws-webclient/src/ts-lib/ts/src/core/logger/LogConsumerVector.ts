@@ -9,10 +9,19 @@ import { LogLevel, cast_de_nrw_schule_svws_core_logger_LogLevel } from '../../co
 
 export class LogConsumerVector extends JavaObject implements Consumer<LogData> {
 
+	/**
+	 * Gibt an, ob die Zeit beim Loggen ausgegeben wird oder nicht. 
+	 */
 	public readonly printTime : boolean;
 
+	/**
+	 * Gibt an, ob das Log-Level beim Loggen ausgegeben wird oder nicht. 
+	 */
 	public readonly printLevel : boolean;
 
+	/**
+	 * Der Vektor mit den gesammelten Log-Informationen. 
+	 */
 	private readonly logData : Vector<LogData> = new Vector();
 
 

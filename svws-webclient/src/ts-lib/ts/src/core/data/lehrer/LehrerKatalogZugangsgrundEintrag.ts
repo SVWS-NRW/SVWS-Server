@@ -4,16 +4,34 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class LehrerKatalogZugangsgrundEintrag extends JavaObject {
 
+	/**
+	 * Die ID des Katalog-Eintrags.
+	 */
 	public id : number = 0;
 
+	/**
+	 * Das Kürzel für den Zugangsgrund. 
+	 */
 	public kuerzel : String = "";
 
+	/**
+	 * Kartext des Zugangsgrunds. 
+	 */
 	public text : String = "";
 
+	/**
+	 * Der Schlüssel für die ASD-Schulstatistik. 
+	 */
 	public schluessel : String = "";
 
+	/**
+	 * Gibt an, in welchem Schuljahr der Zugangsgrund einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 */
 	public gueltigVon : Number | null = null;
 
+	/**
+	 * Gibt an, bis zu welchem Schuljahr der Zugangsgrund gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. 
+	 */
 	public gueltigBis : Number | null = null;
 
 

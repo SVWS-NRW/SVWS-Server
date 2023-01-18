@@ -17,18 +17,39 @@ export class WeiterbildungskollegBildungsgangTyp extends JavaObject {
 	/** an array containing all values of this enumeration indexed by their name*/
 	private static readonly all_values_by_name : Map<String, WeiterbildungskollegBildungsgangTyp> = new Map<String, WeiterbildungskollegBildungsgangTyp>();
 
+	/**
+	 * Abendgymnasium 
+	 */
 	public static readonly ABENDGYMNASIUM : WeiterbildungskollegBildungsgangTyp = new WeiterbildungskollegBildungsgangTyp("ABENDGYMNASIUM", 0, [new BildungsgangTypKatalogEintrag(1000, "AG", "Abendgymnasium", null, null)]);
 
+	/**
+	 * Abendrealschule 
+	 */
 	public static readonly ABENDREALSCHULE : WeiterbildungskollegBildungsgangTyp = new WeiterbildungskollegBildungsgangTyp("ABENDREALSCHULE", 1, [new BildungsgangTypKatalogEintrag(2000, "AR", "Abendrealschule", null, null)]);
 
+	/**
+	 * Kolleg 
+	 */
 	public static readonly KOLLEG : WeiterbildungskollegBildungsgangTyp = new WeiterbildungskollegBildungsgangTyp("KOLLEG", 2, [new BildungsgangTypKatalogEintrag(3000, "KL", "Kolleg", null, null)]);
 
+	/**
+	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. 
+	 */
 	public static VERSION : number = 1;
 
+	/**
+	 * Der aktuellen Daten der Typen von Bildungsgängen, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null 
+	 */
 	public readonly daten : BildungsgangTypKatalogEintrag;
 
+	/**
+	 * Die Historie mit den Einträgen der Typen von Bildungsgängen 
+	 */
 	public readonly historie : Array<BildungsgangTypKatalogEintrag>;
 
+	/**
+	 * Eine Hashmap mit allen definierten Typen von Bildungsgängen, zugeordnet zu ihren Kürzeln 
+	 */
 	private static readonly _ebenen : HashMap<String, WeiterbildungskollegBildungsgangTyp> = new HashMap();
 
 	/**

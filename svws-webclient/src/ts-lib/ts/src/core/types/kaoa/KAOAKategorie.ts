@@ -20,32 +20,74 @@ export class KAOAKategorie extends JavaObject {
 	/** an array containing all values of this enumeration indexed by their name*/
 	private static readonly all_values_by_name : Map<String, KAOAKategorie> = new Map<String, KAOAKategorie>();
 
+	/**
+	 * KAoA-Kategorie: Formen der Orientierung und Beratung 
+	 */
 	public static readonly SBO_2 : KAOAKategorie = new KAOAKategorie("SBO_2", 0, [new KAOAKategorieEintrag(6, "SBO 2", "Formen der Orientierung und Beratung", Arrays.asList(Jahrgaenge.JG_08, Jahrgaenge.JG_09, Jahrgaenge.JG_10, Jahrgaenge.JG_EF, Jahrgaenge.JG_Q1, Jahrgaenge.JG_Q2), null, null)]);
 
+	/**
+	 * KAoA-Kategorie: Strukturen an Schulen 
+	 */
 	public static readonly SBO_3 : KAOAKategorie = new KAOAKategorie("SBO_3", 1, [new KAOAKategorieEintrag(7, "SBO 3", "Strukturen an Schulen", Arrays.asList(Jahrgaenge.JG_00), null, null)]);
 
+	/**
+	 * KAoA-Kategorie: Potenziale entdecken und den eigenen Standort bestimmen 
+	 */
 	public static readonly SBO_4 : KAOAKategorie = new KAOAKategorie("SBO_4", 2, [new KAOAKategorieEintrag(8, "SBO 4", "Potenziale entdecken und den eigenen Standort bestimmen", Arrays.asList(Jahrgaenge.JG_08, Jahrgaenge.JG_09), null, null)]);
 
+	/**
+	 * KAoA-Kategorie: Berufsfelder erkunden und Informationen sammeln 
+	 */
 	public static readonly SBO_5 : KAOAKategorie = new KAOAKategorie("SBO_5", 3, [new KAOAKategorieEintrag(9, "SBO 5", "Berufsfelder erkunden und Informationen sammeln", Arrays.asList(Jahrgaenge.JG_08, Jahrgaenge.JG_09), null, null)]);
 
+	/**
+	 * KAoA-Kategorie: Praxis der Arbeitswelt kennenlernen und erproben 
+	 */
 	public static readonly SBO_6 : KAOAKategorie = new KAOAKategorie("SBO_6", 4, [new KAOAKategorieEintrag(10, "SBO 6", "Praxis der Arbeitswelt kennenlernen und erproben", Arrays.asList(Jahrgaenge.JG_08, Jahrgaenge.JG_09, Jahrgaenge.JG_10), null, null)]);
 
+	/**
+	 * KAoA-Kategorie: Nachholung der Erstberufsorientierung 
+	 */
 	public static readonly SBO_7 : KAOAKategorie = new KAOAKategorie("SBO_7", 5, [new KAOAKategorieEintrag(11, "SBO 7", "Nachholung der Erstberufsorientierung", Arrays.asList(Jahrgaenge.JG_10), null, null)]);
 
+	/**
+	 * KAoA-Kategorie: Sekundarstufe II - Individuelle Voraussetzungen für eine Ausbildung oder ein Studium überprüfen 
+	 */
 	public static readonly SBO_8 : KAOAKategorie = new KAOAKategorie("SBO_8", 6, [new KAOAKategorieEintrag(12, "SBO 8", "Sekundarstufe II - Individuelle Voraussetzungen für eine Ausbildung oder ein Studium überprüfen", Arrays.asList(Jahrgaenge.JG_EF, Jahrgaenge.JG_Q1, Jahrgaenge.JG_Q2), null, null)]);
 
+	/**
+	 * KAoA-Kategorie: Sekundarstufe II - Praxis vertiefen - Ausbildungs- und Studienwahl konkretisieren 
+	 */
 	public static readonly SBO_9 : KAOAKategorie = new KAOAKategorie("SBO_9", 7, [new KAOAKategorieEintrag(13, "SBO 9", "Sekundarstufe II - Praxis vertiefen - Ausbildungs- und Studienwahl konkretisieren", Arrays.asList(Jahrgaenge.JG_EF, Jahrgaenge.JG_Q1, Jahrgaenge.JG_Q2), null, null)]);
 
+	/**
+	 * KAoA-Kategorie: Gestaltung und Koordination der Übergänge in der Sek. I und Sek. II 
+	 */
 	public static readonly SBO_10 : KAOAKategorie = new KAOAKategorie("SBO_10", 8, [new KAOAKategorieEintrag(14, "SBO 10", "Gestaltung und Koordination der Übergänge in der Sek. I und Sek. II", Arrays.asList(Jahrgaenge.JG_09, Jahrgaenge.JG_10, Jahrgaenge.JG_EF, Jahrgaenge.JG_Q1, Jahrgaenge.JG_Q2), null, null)]);
 
+	/**
+	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. 
+	 */
 	public static VERSION : number = 1;
 
+	/**
+	 * Die aktuellsten Daten der KAoA-Kategorie
+	 */
 	public readonly daten : KAOAKategorieEintrag;
 
+	/**
+	 * Die Historie mit den Einträgen der KAoA-Kategorie 
+	 */
 	public readonly historie : Array<KAOAKategorieEintrag>;
 
+	/**
+	 * Eine Hashmap mit allen Einträgen, welche ihrer ID zugeordnet sind. 
+	 */
 	private static readonly _statusByID : HashMap<Number, KAOAKategorie> = new HashMap();
 
+	/**
+	 * Eine Hashmap mit allen Einträgen, welche dem Kürzel zugeordnet sind. 
+	 */
 	private static readonly _statusByKuerzel : HashMap<String, KAOAKategorie> = new HashMap();
 
 	/**

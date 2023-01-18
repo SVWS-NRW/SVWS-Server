@@ -4,8 +4,14 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 
 export class JahrgangsKatalogEintragBezeichnung extends JavaObject {
 
+	/**
+	 * Das Kürzel der Schulform 
+	 */
 	public schulform : String = "";
 
+	/**
+	 * Die Bezeichnung des Jahrgangs 
+	 */
 	public bezeichnung : String = "";
 
 

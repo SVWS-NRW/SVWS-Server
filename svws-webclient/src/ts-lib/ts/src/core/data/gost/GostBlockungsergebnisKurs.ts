@@ -4,16 +4,34 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 
 export class GostBlockungsergebnisKurs extends JavaObject {
 
+	/**
+	 * Die ID des Kurses 
+	 */
 	public id : number = -1;
 
+	/**
+	 * Die ID des Kurs-Faches 
+	 */
 	public fachID : number = -1;
 
+	/**
+	 * Die Kursart des Kurses 
+	 */
 	public kursart : number = -1;
 
+	/**
+	 * Die Anzahl an Schienen die der Kurs belegen soll. Falls > 1 handelt es sich um einen Multikurs. 
+	 */
 	public anzahlSchienen : number = -1;
 
+	/**
+	 * Eine Liste Schüler-IDs, welche diesem Kurs zugeordnet sind. 
+	 */
 	public readonly schueler : Vector<Number> = new Vector();
 
+	/**
+	 * Die Schienen-IDs, denen der Kurs zugeordnet ist. 
+	 */
 	public readonly schienen : Vector<Number> = new Vector();
 
 
