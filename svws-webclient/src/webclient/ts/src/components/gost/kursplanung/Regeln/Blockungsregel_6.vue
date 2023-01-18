@@ -7,22 +7,21 @@
 		Nur
 		<parameter-kursart v-model="kursart" />
 		von
-		<parameter-schiene v-model="start" :blockung="blockung" />
+		<parameter-schiene v-model="start" :schienen="schienen" />
 		bis
-		<parameter-schiene v-model="ende" :blockung="blockung" />
+		<parameter-schiene v-model="ende" :schienen="schienen" />
 	</BlockungsregelBase>
 </template>
 
 <script setup lang="ts">
 
-	import { GostBlockungRegel, GostKursart, GostKursblockungRegelTyp } from "@svws-nrw/svws-core-ts";
+	import { GostBlockungRegel, GostBlockungSchiene, GostKursart, GostKursblockungRegelTyp } from "@svws-nrw/svws-core-ts";
 	import { computed, WritableComputedRef } from "vue";
-	import { DataGostKursblockung } from "~/apps/gost/DataGostKursblockung";
 	import { useRegelParameterKursart, useRegelParameterSchiene } from '../composables';
 
 	const props = defineProps<{
 		modelValue: GostBlockungRegel | undefined;
-		blockung: DataGostKursblockung;
+		schienen: GostBlockungSchiene[];
 		regeln: GostBlockungRegel[];
 	}>();
 
@@ -40,8 +39,8 @@
 	const regel_typ = GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS
 
 	const kursart = useRegelParameterKursart(regel, 0)
-	const start = useRegelParameterSchiene(props.blockung, regel, 1)
-	const ende = useRegelParameterSchiene(props.blockung, regel, 2)
+	const start = useRegelParameterSchiene(props.schienen, regel, 1)
+	const ende = useRegelParameterSchiene(props.schienen, regel, 2)
 
 	const regel_hinzufuegen = (r: GostBlockungRegel) => {
 		r.parameter.add(1);

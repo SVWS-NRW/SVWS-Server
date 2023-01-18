@@ -2,30 +2,25 @@
 	<BlockungsregelBase v-model="regel" @update:model-value="e => emit('update:modelValue', e)" :regel-typ="regel_typ" :regeln="regeln"
 		@regel-hinzugefuegen="regel_hinzufuegen" @regel-speichern="emit('regelSpeichern')" @regel-entfernen="e=>emit('regelEntfernen', e)">
 		<template #beschreibung="{ regel: r }">
-			{{ name(r.parameter.get(0).valueOf()) }} in {{ getKursbezeichnung(r) }} verboten
+			{{ name(r.parameter.get(0).valueOf()) }} in {{ getKursbezeichnung(getKursFromId(kurse, r.parameter.get(1).valueOf()), mapFaecher) }} verboten
 		</template>
 		Verbiete
 		<parameter-schueler v-model="schueler" :list-schueler="listSchueler" />
 		in
-		<parameter-kurs v-model="kurs" :data-faecher="dataFaecher" :blockung="blockung" />
+		<parameter-kurs v-model="kurs" :map-faecher="mapFaecher" :kurse="kurse" />
 	</BlockungsregelBase>
 </template>
 
 <script setup lang="ts">
-
-	import { GostBlockungRegel, GostKursblockungRegelTyp } from "@svws-nrw/svws-core-ts";
+	import { GostBlockungKurs, GostBlockungRegel, GostFach, GostKursblockungRegelTyp, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { computed, WritableComputedRef } from "vue";
-	import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
-	import { DataGostKursblockung } from "~/apps/gost/DataGostKursblockung";
-	import { ListAbiturjahrgangSchueler } from "~/apps/gost/ListAbiturjahrgangSchueler";
-	import { useSchuelerListe } from '../../composables';
-	import { createKursbezeichnungsGetter, useKurse, useRegelParameterKurs, useRegelParameterSchueler } from '../composables'
+	import { useRegelParameterKurs, useRegelParameterSchueler, getKursbezeichnung, getKursFromId } from '../composables';
 
 	const props = defineProps<{
 		modelValue: GostBlockungRegel | undefined;
-		dataFaecher: DataGostFaecher;
-		blockung: DataGostKursblockung;
-		listSchueler: ListAbiturjahrgangSchueler;
+		mapFaecher: Map<number, GostFach>;
+		kurse: GostBlockungKurs[];
+		listSchueler: SchuelerListeEintrag[];
 		regeln: GostBlockungRegel[];
 	}>();
 
@@ -39,25 +34,20 @@
 		get: () => props.modelValue,
 		set: (value) => emit('update:modelValue', value)
 	});
-
 	const regel_typ = GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS
 
-	const schueler = useRegelParameterSchueler(regel, 0)
-	const kurs = useRegelParameterKurs(props.blockung, regel, 1)
+	const schueler = useRegelParameterSchueler(props.listSchueler, regel, 0)
+	const kurs = useRegelParameterKurs(props.kurse, regel, 1)
 
-	const schuelerliste = useSchuelerListe()
-	const kurse = useKurse(props.blockung)
 	const regel_hinzufuegen = (r: GostBlockungRegel) => {
-		r.parameter.add(schuelerliste[0].id)
-		r.parameter.add(kurse.value.get(0).id)
+		r.parameter.add(props.listSchueler[0].id);
+		r.parameter.add(props.kurse[0].id);
 		regel.value = r;
 	}
 
 	const name = (id: number) => {
-		const schueler = schuelerliste.find(s => s.id === id)
-		return schueler ? `${schueler.nachname}, ${schueler.vorname}` : ""
+		const schueler = props.listSchueler.find(s => s.id === id);
+		return schueler ? `${schueler.nachname}, ${schueler.vorname}` : "";
 	}
-
-	const getKursbezeichnung = createKursbezeichnungsGetter(props.blockung, 1)
 
 </script>

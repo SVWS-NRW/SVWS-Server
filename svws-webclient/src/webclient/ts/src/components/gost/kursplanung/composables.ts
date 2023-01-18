@@ -1,31 +1,17 @@
-import { List, GostBlockungKurs, Vector, GostBlockungSchiene, GostBlockungRegel, GostKursart, SchuelerListeEintrag } from '@svws-nrw/svws-core-ts';
-import { ComputedRef, computed, Ref, WritableComputedRef } from 'vue';
-import { DataGostKursblockung } from '~/apps/gost/DataGostKursblockung';
-import { useSchuelerListe } from '../composables';
+import { GostBlockungKurs, GostBlockungSchiene, GostBlockungRegel, GostKursart, SchuelerListeEintrag, GostFach } from '@svws-nrw/svws-core-ts';
+import { computed, Ref, WritableComputedRef } from 'vue';
 
-/**
- * Liste der Kurse für die aktuelle Kursblockung
- *
- * @export
- * @returns ComputedRef<List<GostBlockungKurs> | Vector<GostBlockungKurs>>
- */
-export function useKurse(blockung: DataGostKursblockung): ComputedRef<List<GostBlockungKurs> | Vector<GostBlockungKurs>> {
-	return computed(()=> blockung.datenmanager?.getKursmengeSortiertNachKursartFachNummer() || new Vector<GostBlockungKurs>())
+export function getKursFromId(kurse: GostBlockungKurs[], kursId: number): GostBlockungKurs {
+	return kurse.find(kurs => kurs.id === kursId) || new GostBlockungKurs();
 }
-
-export function useSchienen(blockung: DataGostKursblockung): ComputedRef<List<GostBlockungSchiene> | Vector<GostBlockungSchiene>> {
-	return computed(()=> blockung.datenmanager?.getMengeOfSchienen() || new Vector<GostBlockungSchiene>())
+export function getKursbezeichnung(kurs: GostBlockungKurs, mapFaecher: Map<number, GostFach>) {
+	const kuerzel = mapFaecher.get(kurs.fach_id)?.kuerzel;
+	const kursart = kurs.kursart > 0 ? GostKursart.fromID(kurs.kursart) : 'kursart-fehlt';
+	const suffix = kurs.suffix ? "-" + kurs.suffix : "";
+	return `${kuerzel}-${kursart}${kurs.nummer}${suffix}`
 }
-
-/**
- *	Erzeugt Getter zum Auslesen der Kursbezeichung für einen Kurs.
- *  Beim Erzugen des Getters wird über `parameter` festlegt, in welchem Regelparameter der Kurs gespeichert ist
- *
- * @export
- * @param {number} [parameter=0]
- * @returns
- */
-export function createKursbezeichnungsGetter(blockung: DataGostKursblockung, parameter: number = 0) {
+/*
+export function createKursbezeichnungsGetter(kurs: GostBlockungKurs, mapFaecher: Map<number, GostFach>, parameter: number = 0) {
 	return  (regel: GostBlockungRegel): String => {
 		const manager = blockung.datenmanager
 		if (manager === undefined)
@@ -34,66 +20,31 @@ export function createKursbezeichnungsGetter(blockung: DataGostKursblockung, par
 		return manager.getNameOfKurs(kurs.id)
 	}
 }
-
+*/
 export function useRegelParameterKursart(regel: Ref<GostBlockungRegel | undefined>, parameter: number): WritableComputedRef<GostKursart> {
 	return computed({
-		get(): GostKursart {
-			const id = regel.value?.parameter.get(parameter)
-			if (id)
-				return GostKursart.fromID(id.valueOf())
-			return GostKursart.LK
-		},
-		set(val: GostKursart) {
-			if (regel.value)
-				regel.value.parameter.set(parameter, val.id)
-		}
+		get: () => regel.value === undefined ? GostKursart.LK : GostKursart.fromID(regel.value.parameter.get(parameter).valueOf()),
+		set: (value) => { if (regel.value) regel.value.parameter.set(parameter, value.id) }
 	})
 }
 
-export function useRegelParameterKurs(blockung: DataGostKursblockung, regel: Ref<GostBlockungRegel | undefined>, parameter: number): WritableComputedRef<GostBlockungKurs> {
-	const kurse = useKurse(blockung)
+export function useRegelParameterKurs(kurse: GostBlockungKurs[], regel: Ref<GostBlockungRegel | undefined>, parameter: number): WritableComputedRef<GostBlockungKurs> {
 	return computed({
-		get(): GostBlockungKurs {
-			for (const k of kurse.value)
-				if (k.id === regel.value?.parameter.get(parameter))
-					return k;
-			return new GostBlockungKurs()
-		},
-		set(val: GostBlockungKurs) {
-			if (regel.value)
-				regel.value.parameter.set(parameter, val.id)
-		}
+		get: () => kurse.find(kurs => kurs.id === regel.value?.parameter.get(parameter)) || new GostBlockungKurs(),
+		set: (value) => { if (regel.value) regel.value.parameter.set(parameter, value.id)	}
 	})
 }
 
-export function useRegelParameterSchiene(blockung: DataGostKursblockung, regel: Ref<GostBlockungRegel | undefined>, parameter: number): WritableComputedRef<GostBlockungSchiene> {
-	const schienen = useSchienen(blockung)
+export function useRegelParameterSchiene(schienen: GostBlockungSchiene[], regel: Ref<GostBlockungRegel | undefined>, parameter: number): WritableComputedRef<GostBlockungSchiene> {
 	return computed({
-		get(): GostBlockungSchiene {
-			for (const schiene of schienen.value)
-				if (schiene.nummer === regel.value?.parameter.get(parameter))
-					return schiene;
-			return new GostBlockungSchiene()
-		},
-		set(val: GostBlockungSchiene) {
-			if (regel.value)
-				regel.value.parameter.set(parameter, val.nummer)
-		}
+		get: () => schienen.find(schiene => schiene.nummer === regel.value?.parameter.get(parameter)) || new GostBlockungSchiene(),
+		set: (value) => { if (regel.value) regel.value.parameter.set(parameter, value.nummer) }
 	})
 }
 
-export function useRegelParameterSchueler (regel: Ref<GostBlockungRegel | undefined>, parameter: number): WritableComputedRef<SchuelerListeEintrag> {
-	const schuelerliste = useSchuelerListe()
+export function useRegelParameterSchueler (schueler: SchuelerListeEintrag[], regel: Ref<GostBlockungRegel | undefined>, parameter: number): WritableComputedRef<SchuelerListeEintrag> {
 	return computed({
-		get(): SchuelerListeEintrag {
-			for (const s of schuelerliste)
-				if (s.id === regel.value?.parameter.get(parameter))
-					return s;
-			return new SchuelerListeEintrag()
-		},
-		set(val: SchuelerListeEintrag) {
-			if (regel.value)
-				regel.value.parameter.set(parameter, val.id)
-		}
+		get: () => schueler.find(s => s.id === regel.value?.parameter.get(parameter)) || new SchuelerListeEintrag(),
+		set: (value) => { if (regel.value) regel.value.parameter.set(parameter, value.id)	}
 	})
 }

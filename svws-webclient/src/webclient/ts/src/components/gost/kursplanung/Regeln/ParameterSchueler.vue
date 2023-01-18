@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-multi-select v-model="selected" :items="props.listSchueler.liste"
+	<svws-ui-multi-select v-model="selected" :items="listSchueler"
 		:item-text="(i: SchuelerListeEintrag) => `${i.nachname}, ${i.vorname}`"
 		:item-filter="filter" :item-sort="sort" autocomplete />
 </template>
@@ -7,11 +7,10 @@
 <script setup lang="ts">
 	import { SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { computed, WritableComputedRef } from "vue";
-	import { ListAbiturjahrgangSchueler } from "~/apps/gost/ListAbiturjahrgangSchueler";
 
 	const props = defineProps<{
 		modelValue: SchuelerListeEintrag;
-		listSchueler: ListAbiturjahrgangSchueler;
+		listSchueler: SchuelerListeEintrag[];
 	}>();
 
 	const emit = defineEmits(['update:modelValue'])

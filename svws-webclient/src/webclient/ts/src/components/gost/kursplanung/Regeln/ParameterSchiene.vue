@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-multi-select v-model="selected" :items="props.blockung.datenmanager?.getMengeOfSchienen() || []"
+	<svws-ui-multi-select v-model="selected" :items="schienen"
 		:item-text="(i: GostBlockungSchiene) => i.bezeichnung.toString()" />
 </template>
 
@@ -7,11 +7,10 @@
 
 	import { GostBlockungSchiene } from "@svws-nrw/svws-core-ts";
 	import { computed, WritableComputedRef } from "vue";
-	import { DataGostKursblockung } from "~/apps/gost/DataGostKursblockung";
 
 	const props = defineProps<{
 		modelValue: GostBlockungSchiene;
-		blockung: DataGostKursblockung;
+		schienen: GostBlockungSchiene[];
 	}>();
 	const emit = defineEmits(['update:modelValue'])
 

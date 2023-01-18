@@ -1,13 +1,13 @@
 <template>
 	<div>
-		<div class="flex justify-between items-center" :class="{'mb-2' : lehrer_regel}">
+		<div class="flex justify-between items-center" :class="{'mb-2' : hatRegel}">
 			<h5 class="text-sm font-bold leading-loose pr-4 py-1">{{ regel_typ.bezeichnung }}</h5>
-			<svws-ui-checkbox v-model="regel" :disabled="!allow_regeln" />
+			<svws-ui-checkbox v-model="hatRegel" />
 		</div>
-		<div v-if="lehrer_regel">
+		<div v-if="hatRegel">
 			<svws-ui-radio-group>
-				<svws-ui-radio-option v-model="extern" :value="false" name="interne" label="externe Lehrkräfte nicht beachten" />
-				<svws-ui-radio-option v-model="extern" :value="true" name="externe" label="alle Lehrkräfte beachten" />
+				<svws-ui-radio-option v-model="regel" :value="false" name="interne" label="externe Lehrkräfte nicht beachten" />
+				<svws-ui-radio-option v-model="regel" :value="true" name="externe" label="alle Lehrkräfte beachten" />
 			</svws-ui-radio-group>
 		</div>
 	</div>
@@ -15,66 +15,44 @@
 
 <script setup lang="ts">
 	import { GostBlockungRegel, GostKursblockungRegelTyp } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, Ref, ref, watch, WritableComputedRef } from "vue";
-	import { DataGostKursblockung } from "~/apps/gost/DataGostKursblockung";
+	import { computed, Ref, ref, WritableComputedRef } from "vue";
 
 	const props = defineProps<{
 		modelValue: GostBlockungRegel | undefined;
-		blockung: DataGostKursblockung;
 		regeln: GostBlockungRegel[];
 	}>();
 
 
 	const emit = defineEmits<{
 		(e: 'update:modelValue', v: GostBlockungRegel | undefined): void;
-		(e: 'regelHinzugefuegen', v: GostBlockungRegel): void;
 		(e: 'regelSpeichern'): void;
 		(e: 'regelEntfernen', v: GostBlockungRegel): void;
 	}>()
-
-	// const regel: WritableComputedRef<GostBlockungRegel | undefined> = computed({
-	// 	get: () => props.modelValue,
-	// 	set: (value) => emit('update:modelValue', value)
-	// });
-
-	const allow_regeln: ComputedRef<boolean> = computed(() => props.blockung.daten?.ergebnisse.size() === 1)
 
 	const regel_typ = GostKursblockungRegelTyp.LEHRKRAFT_BEACHTEN
 
 	const extern: Ref<boolean> = ref(true);
 
-	watch(()=> extern.value, value => {
-		const r = lehrer_regel.value;
-		if (!r)
-			return;
-		r.parameter.set(0, value ? 1 : 0);
-		props.blockung.patch_blockung_regel(r)
-	})
-
-	const lehrer_regel: ComputedRef<GostBlockungRegel | undefined> = computed(()=> {
-		const regeln = props.blockung.datenmanager?.getMengeOfRegeln()
-		if (!regeln)
-			return undefined;
-		for (const r of regeln)
-			if (r.typ === regel_typ.typ)
-				return r;
-		return undefined;
-	})
-
 	const regel: WritableComputedRef<boolean> = computed({
-		get(): boolean {
-			return lehrer_regel.value ? true : false;
-		},
-		set(val: boolean) {
+		get: () => props.modelValue?.parameter.get(0) === 0 ? false : true,
+		set: (value) => {
+			props.modelValue?.parameter.set(0, value ? 1 : 0);
+			emit('update:modelValue', props.modelValue);
+		}
+	});
+
+	const hatRegel: WritableComputedRef<boolean> = computed({
+		get: () => props.regeln.length === 1 ? true : false,
+		set: (val) => {
 			if (val === true) {
 				const r = new GostBlockungRegel();
 				r.typ = regel_typ.typ;
 				r.parameter.add(extern.value ? 1 : 0);
-				props.blockung.add_blockung_regel(r);
+				emit('update:modelValue', r);
+				emit('regelSpeichern');
 			} else {
-				const r = lehrer_regel.value;
-				if (r)
-					props.blockung.del_blockung_regel(r.id);
+				if (props.regeln[0] !== undefined)
+					emit('regelEntfernen', props.regeln[0])
 			}
 		}
 	})

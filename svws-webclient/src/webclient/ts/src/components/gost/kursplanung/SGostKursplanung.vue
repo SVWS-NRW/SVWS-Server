@@ -1,8 +1,8 @@
 <template>
 	<div v-if="visible" class="content-card--blockungsuebersicht flex h-full content-start">
 		<s-card-gost-kursansicht :jahrgangsdaten="jahrgangsdaten" :data-faecher="dataFaecher" :halbjahr="halbjahr.value"
-								 :list-blockungen="listBlockungen" :blockung="blockung" :ergebnis="ergebnis"
-								 :data-fachwahlen="dataFachwahlen" :list-lehrer="listLehrer" :map-lehrer="mapLehrer" />
+			:list-blockungen="listBlockungen" :blockung="blockung" :ergebnis="ergebnis"
+			:data-fachwahlen="dataFachwahlen" :list-lehrer="listLehrer" :map-lehrer="mapLehrer" />
 		<section class="flex flex-col h-full overflow-y-auto flex-grow">
 			<router-view name="gost_kursplanung_schueler_auswahl" />
 			<router-view />

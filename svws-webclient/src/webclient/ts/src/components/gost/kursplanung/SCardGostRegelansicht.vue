@@ -2,38 +2,38 @@
 <template>
 	<div v-if="visible" class="space-y-3">
 		<div class="rounded bg-white px-4 py-3 shadow-dark-20 shadow">
-			<Blockungsregel_1 :blockung="blockung" v-model="regel" :regeln="regeln[1].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" />
+			<Blockungsregel_1 v-model="regel" :schienen="schienen" :regeln="regeln[1].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" />
 		</div>
 		<div class="rounded bg-white px-4 py-3 shadow-dark-20 shadow">
-			<Blockungsregel_6 :blockung="blockung" v-model="regel" :regeln="regeln[6].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" />
+			<Blockungsregel_6 v-model="regel" :schienen="schienen" :regeln="regeln[6].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" />
 		</div>
 		<div class="rounded bg-white px-4 py-3 shadow-dark-20 shadow">
-			<Blockungsregel_2 :blockung="blockung" v-model="regel" :data-faecher="dataFaecher" :regeln="regeln[2].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" />
+			<Blockungsregel_2 v-model="regel" :kurse="kurse" :schienen="schienen" :map-faecher="mapFaecher" :regeln="regeln[2].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" />
 		</div>
 		<div class="rounded bg-white px-4 py-3 shadow-dark-20 shadow">
-			<Blockungsregel_3 :blockung="blockung" v-model="regel" :data-faecher="dataFaecher" :regeln="regeln[3].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" />
+			<Blockungsregel_3 v-model="regel" :kurse="kurse" :schienen="schienen" :map-faecher="mapFaecher" :regeln="regeln[3].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" />
 		</div>
 		<div class="rounded bg-white px-4 py-3 shadow-dark-20 shadow">
-			<Blockungsregel_7 :blockung="blockung" v-model="regel" :data-faecher="dataFaecher" :regeln="regeln[7].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" />
+			<Blockungsregel_7 v-model="regel" :kurse="kurse" :map-faecher="mapFaecher" :regeln="regeln[7].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" />
 		</div>
 		<div class="rounded bg-white px-4 py-3 shadow-dark-20 shadow">
-			<Blockungsregel_8 :blockung="blockung" v-model="regel" :data-faecher="dataFaecher" :regeln="regeln[8].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" />
+			<Blockungsregel_8 v-model="regel" :kurse="kurse" :map-faecher="mapFaecher" :regeln="regeln[8].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" />
 		</div>
 		<div class="rounded bg-white px-4 py-3 shadow-dark-20 shadow">
-			<Blockungsregel_4 :blockung="blockung" v-model="regel" :data-faecher="dataFaecher" :list-schueler="listSchueler" :regeln="regeln[4].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" />
+			<Blockungsregel_4 v-model="regel" :kurse="kurse" :map-faecher="mapFaecher" :list-schueler="listSchueler.liste" :regeln="regeln[4].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" />
 		</div>
 		<div class="rounded bg-white px-4 py-3 shadow-dark-20 shadow">
-			<Blockungsregel_5 :blockung="blockung" v-model="regel" :data-faecher="dataFaecher" :list-schueler="listSchueler" :regeln="regeln[5].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" />
+			<Blockungsregel_5 v-model="regel" :kurse="kurse" :map-faecher="mapFaecher" :list-schueler="listSchueler.liste" :regeln="regeln[5].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" />
 		</div>
 		<div class="rounded bg-white px-4 py-3 shadow-dark-20 shadow">
-			<Blockungsregel_9 :blockung="blockung" v-model="regel" :regeln="regeln[9].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" />
+			<Blockungsregel_9 v-model="regel" :regeln="regeln[9].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" />
 		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
 
-	import { GostBlockungRegel } from '@svws-nrw/svws-core-ts';
+	import { GostBlockungKurs, GostBlockungRegel, GostBlockungSchiene, GostFach } from '@svws-nrw/svws-core-ts';
 	import { computed, ComputedRef, ShallowRef, shallowRef } from 'vue';
 	import { DataGostFaecher } from '~/apps/gost/DataGostFaecher';
 	import { DataGostKursblockung } from '~/apps/gost/DataGostKursblockung';
@@ -44,6 +44,22 @@
 		blockung: DataGostKursblockung;
 		listSchueler: ListAbiturjahrgangSchueler;
 	}>();
+
+	const mapFaecher: ComputedRef<Map<number, GostFach>> = computed(() => {
+		const result = new Map<number, GostFach>();
+		const faecher = props.dataFaecher.manager?.faecher() || [];
+		for (const fach of faecher)
+			result.set(fach.id, fach);
+		return result;
+	});
+
+	const schienen: ComputedRef<GostBlockungSchiene[]> = computed(() => {
+		return props.blockung.datenmanager?.getMengeOfSchienen()?.toArray() as GostBlockungSchiene[] || [];
+	});
+
+	const kurse: ComputedRef<GostBlockungKurs[]> = computed(() => {
+		return props.blockung.datenmanager?.getKursmengeSortiertNachKursartFachNummer()?.toArray() as GostBlockungKurs[] || [];
+	});
 
 	const regel: ShallowRef<GostBlockungRegel | undefined> = shallowRef(undefined);
 
