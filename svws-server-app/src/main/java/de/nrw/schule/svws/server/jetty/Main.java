@@ -12,7 +12,6 @@ import de.nrw.schule.svws.core.logger.Logger;
 import de.nrw.schule.svws.db.Benutzer;
 import de.nrw.schule.svws.db.DBConfig;
 import de.nrw.schule.svws.db.DBEntityManager;
-import de.nrw.schule.svws.db.utils.DBDefaultData;
 import de.nrw.schule.svws.db.utils.schema.DBSchemaManager;
 
 /**
@@ -48,9 +47,6 @@ public class Main {
 		
 		// Lese Konfiguration
 		SVWSKonfiguration svwsconfig = SVWSKonfiguration.get();
-		
-		// Lese den Default-Daten-Cache
-		DBDefaultData.reload(logger);
 		
 		// Read all HTML, CSS and Javascript resource files from the Web-Client
 		ResourceFile.add(svwsconfig.getClientPath());

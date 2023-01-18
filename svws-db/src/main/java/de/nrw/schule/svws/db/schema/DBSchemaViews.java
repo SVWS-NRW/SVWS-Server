@@ -33,9 +33,6 @@ public class DBSchemaViews {
 	 * Erstellt die Übersicht über alle View-Definitionen in der Datenbank 
 	 */
 	private DBSchemaViews() {
-		// Revision 0
-		add_Statkue_Herkunftsschulform();
-		add_Statkue_Herkunftsart();
 		// Revision 6
 		add_V_Benutzer();
 		add_V_Benutzerkompetenzen();
@@ -123,46 +120,6 @@ public class DBSchemaViews {
 			instance = new DBSchemaViews(); 
 		}
 		return instance;
-	}
-
-
-	private void add_Statkue_Herkunftsschulform() {
-		View view = new View(
-				"Statkue_Herkunftsschulform", "views.statkue", "DTOStatkueHerkunftsschulform", 
-				"View zur Simulation einer Statkue-Tabelle: Herkunftsschulform",
-				0, null,
-                """
-                Herkunft h 
-                JOIN Herkunft_Schulformen hs ON h.ID = hs.Herkunft_ID WHERE h.gueltigBis IS NULL
-                """
-		).add("SF", "Zulässige Schulform für die Herkunft", "String", "hs.Schulform_Kuerzel", null, true)
-		 .add("HSF", "Das Kürzel für die Herkunft/Herkunftsschulform", "String", "h.Kuerzel", null, true)
-		 .add("Beschreibung", "Textuelle Beschreibung der Herkunft/Herkunftsschulform", "String", "h.Beschreibung", null, false)
-		 .add("Flag", "Ein Flag (hier zur Kompatibilität vorhanden)", "String", "'1'", null, false)
-		 .add("geaendert", "Das Datum der letzten Änderung (hier zur Kompatibilität vorhanden)", "String", "NULL", null, false)
-		 .add("gueltigVon", "Gibt die Gültigkeit ab welchem Schuljahr an", "String", "h.gueltigVon", null, false)
-		 .add("gueltigBis", "Gibt die Gültigkeit bis zu welchem Schuljahr an", "String", "h.gueltigBis", null, false);
-		addView(view);
-	}
-
-	private void add_Statkue_Herkunftsart() {
-		View view = new View(
-				"Statkue_Herkunftsart", "views.statkue", "DTOStatkueHerkunftsart", 
-				"View zur Simulation einer Statkue-Tabelle: Herkunftsart",
-				0, null,
-                """
-			    Herkunftsart h 
-			    JOIN Herkunftsart_Schulformen hs ON h.ID = hs.Herkunftsart_ID WHERE h.gueltigBis IS NULL
-                """
-		).add("SF", "Zulässige Schulform für die Herkunft", "String", "hs.Schulform_Kuerzel", null, true)
-		 .add("Art", "Das Kürzel für die Herkunftsart", "String", "h.Kuerzel", null, true)
-		 .add("Beschreibung", "Textuelle Beschreibung der Herkunftsart", "String", "hs.Bezeichnung", null, false)
-		 .add("Flag", "Ein Flag (hier zur Kompatibilität vorhanden)", "String", "'1'", null, false)
-		 .add("Sortierung", "Die Sortierung (hier zur Kompatibilität vorhanden)", "Integer", "0", null, false)
-		 .add("geaendert", "Das Datum der letzten Änderung (hier zur Kompatibilität vorhanden)", "String", "NULL", null, false)
-		 .add("gueltigVon", "Gibt die Gültigkeit ab welchem Schuljahr an", "String", "h.gueltigVon", null, false)
-		 .add("gueltigBis", "Gibt die Gültigkeit bis zu welchem Schuljahr an", "String", "h.gueltigBis", null, false);
-		addView(view);
 	}
 
 	private void add_V_Benutzer() {

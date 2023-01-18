@@ -2,31 +2,24 @@ package de.nrw.schule.svws.db.utils.app;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
-import de.nrw.schule.svws.base.CsvReader;
 import de.nrw.schule.svws.base.shell.CommandLineException;
 import de.nrw.schule.svws.base.shell.CommandLineOption;
 import de.nrw.schule.svws.base.shell.CommandLineParser;
 import de.nrw.schule.svws.db.DBDriver;
-import de.nrw.schule.svws.db.dto.DTOs;
 import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaRevisionen;
 import de.nrw.schule.svws.db.schema.SchemaTabelle;
-import de.nrw.schule.svws.db.utils.DBDefaultData;
 
 /**
  * Dieses Programm erstellt die Skripte für die aktuelle Revision in dem Verzeichnis 
@@ -41,53 +34,6 @@ public class SQLGenerator {
 	private static CommandLineParser cmdLine;
 
 
-    /**
-     * Gibt den SQL-Befehl zum Einfügen aller Default-Daten in diese Tabelle zurück
-     * 
-     * @param tabelle   die Tabelle mit den Default-Daten
-     * @param rev       die Revision, für welche das Skript erzeugt wird
-     * 
-     * @return der SQL-Befehl zum Einfügen aller Default-Daten
-     */
-    public static String getSQLInsert(SchemaTabelle tabelle, long rev) {
-    	// Bestimme die Spalten der Tabelle und erzeuge die INSERT INTO - Zeile mit den Spaltennamen
-    	var cols = tabelle.getSpalten().stream()
-    			.filter(col -> ((rev == -1) && (col.veraltet().revision == -1)) 
-        				|| ((rev != -1) && (rev >= col.revision().revision) && ((col.veraltet().revision == -1) || (rev < col.veraltet().revision))))
-    			.sorted((a,b) -> Integer.compare(a.sortierung(), b.sortierung()))
-    			.collect(Collectors.toList());
-    	String newline = System.lineSeparator();
-    	String script = "INSERT INTO " + tabelle.name() + "(" 
-    			+ cols.stream().map(col -> col.name()).collect(Collectors.joining(","))
-    			+ ") VALUES" + newline;
-    	// Lese die Default-Daten ein
-		Class<?> dtoClass = DTOs.getFromTableName(tabelle.name());
-		if (dtoClass == null)
-			throw new RuntimeException("Fehler beim Erstellen des SQL-Skriptes für die Revision " + rev + " zum Einfügen der Default-Daten in die Tabelle " + tabelle.name());
-        var data = CsvReader.fromResource(DBDefaultData.getFileName(tabelle), dtoClass);
-        // Erstelle den einzelnen Zeilen für den Einfüge-Befehl
-        List<String> rows = data.stream()
-        		.map(dto -> {
-        			return "(" + cols.stream().map(col -> {
-        				try {
-            				Field field = dtoClass.getDeclaredField(col.name());
-            				field.setAccessible(true);
-							var obj = field.get(dto);
-							if (obj == null)
-								return "NULL";
-							var coldata = obj.toString();
-							if (col.datentyp().isQuoted()) 
-								coldata = "'" + coldata.replace("'", "''") + "'";
-	        				return coldata;
-						} catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
-							throw new RuntimeException("Fehler beim Erstellen des SQL-Skriptes für die Revision " + rev + " zum Einfügen der Default-Daten in die Tabelle " + tabelle.name() + " (kann die Daten nicht korrekt einlesen)", e);
-						} 
-        			}).collect(Collectors.joining(",")) + ")";
-        		}).collect(Collectors.toList());
-    	return script + rows.stream().collect(Collectors.joining("," + newline)) + ";";
-    }
-    
-    
 	/**
 	 * Generiert das SQL-Skript zum Erstellen eines Schema für die angebene Revision 
 	 * und den SQL-Dialekt des angegebenen DBMS. 
@@ -151,17 +97,11 @@ public class SQLGenerator {
 	public static String getInserts(long revision) {
 		final long rev = (revision == -1) ? SchemaRevisionen.maxRevision.revision : revision;
 		StringBuilder result = new StringBuilder();
-		Set<SchemaTabelle> tabsDefaultData = Arrays.stream(Schema.tabellenDefaultDaten).collect(Collectors.toSet());
 		for (SchemaTabelle tab : Schema.tabellen.values()) {
 		    if (!tab.isDefined(rev))
 		        continue;
 		    if (tab.hasCoreType()) {
 		        result.append(tab.getCoreType().getSQLInsert(rev)).append(";");
-	            result.append(System.lineSeparator());
-	            result.append(System.lineSeparator());
-	            result.append(System.lineSeparator());
-		    } else if (tabsDefaultData.contains(tab)) {
-		        result.append(getSQLInsert(tab, rev));
 	            result.append(System.lineSeparator());
 	            result.append(System.lineSeparator());
 	            result.append(System.lineSeparator());

@@ -132,11 +132,7 @@ public class DBUpdater {
 			if (!dropTables(neue_revision))
 				throw new DBException("Fehler beim Verwerfen veralteter Tabellen");
 			
-			// 17. Update-Schritt: Setze ggf. die Default_Daten neu
-			if (!copyDefaultDataUpdates(neue_revision))
-				throw new DBException("Fehler beim Aktualisieren der Default-Daten");
-			
-			// 18. Update-Schritt: Tabelle SVWS_DB_Version aktualisieren
+			// 17. Update-Schritt: Tabelle SVWS_DB_Version aktualisieren
 			logger.logLn("- Setze die DB-Revision auf " + neue_revision);
 			if (!schemaManager.setDBRevision(neue_revision))
 				throw new DBException("Fehler beim Setzen der SVWS-DB-Revision");
@@ -270,43 +266,7 @@ public class DBUpdater {
 		return success;
 	}
 
-	
-	
-	/**
-	 * Kopiert die Default-Daten für alle Tabellen, welche bei der angegebenen Revision 
-	 * Änderungen bei den Default-Daten haben.
-	 * 
-	 * @param rev   die Revision, bei der Änderungen bei den Default-Daten vorliegen sollen
-	 * 
-	 * @return true, falls die Daten erfolgreich kopiert wurden, sonst false.
-	 */
-	private boolean copyDefaultDataUpdates(long rev) {
-		logger.log("- Aktualisiere Daten: ");
-		// TODO Diese Methode der Aktualisierung ist veraltet... Sie ist nur für eine Übergangszeit zur Kompatibilität vorhanden
-		if (rev != 0) {
-			logger.logLn(0, "0 Tabellen");
-			return true;
-		}
-		List<SchemaTabelle> tabs = Schema.getTabellenDefaultDaten(rev);
-		if ((tabs == null) || (tabs.size() <= 0)) {
-			logger.logLn(0, "0 Tabellen");
-			return true;
-		}
-		boolean result = true;
-		logger.logLn(0, tabs.size() + " Tabellen...");
-		logger.modifyIndent(2);
-		for (SchemaTabelle tab : tabs) {
-			logger.logLn(tab.name());
-			result = schemaManager.copyDefaultData(tab, rev);
-			System.gc();
-			if (!result && returnOnError)
-				break;
-		}		
-		logger.modifyIndent(-2);
-		return result;
-	}	
 
-	
 	/**
 	 * Verwirft die Trigger, die mit der angegebenen Revision veraltet sind.
 	 * 

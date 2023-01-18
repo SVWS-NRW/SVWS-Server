@@ -1,6 +1,5 @@
 package de.nrw.schule.svws.db.schema;
 
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Vector;
@@ -573,12 +572,6 @@ public class Schema {
 	/** Tabelle Schulleitung */
 	public static final Tabelle_Schulleitung tab_Schulleitung = add(new Tabelle_Schulleitung());
 
-	/** Tabelle Statkue_Abgangsart */
-	public static final Tabelle_Statkue_Abgangsart tab_Statkue_Abgangsart = add(new Tabelle_Statkue_Abgangsart());
-
-	/** Tabelle Statkue_SchuelerErsteSchulformSekI */
-	public static final Tabelle_Statkue_SchuelerErsteSchulformSekI tab_Statkue_SchuelerErsteSchulformSekI = add(new Tabelle_Statkue_SchuelerErsteSchulformSekI());
-
 	/** Tabelle Stundenplan */
 	public static final Tabelle_Stundenplan tab_Stundenplan = add(new Tabelle_Stundenplan());
 
@@ -684,15 +677,6 @@ public class Schema {
     /** Tabelle Gost_Klausuren_Kalenderinformationen */
     public static final Tabelle_Gost_Klausuren_Kalenderinformationen tab_Gost_Klausuren_Kalenderinformationen = add(new Tabelle_Gost_Klausuren_Kalenderinformationen());
 
-    
-	// TODO Passe dieses Attribut an, sobald die Default-Daten nicht mehr über CSV-Dateien eingelesen werden
-	/** Die Tabellen, welche Default-Daten beinhalten und in diesem Zusammenhang aktualisiert werden sollen */
-	public static final SchemaTabelle[] tabellenDefaultDaten = new SchemaTabelle[] {
-		Schema.tab_Statkue_Abgangsart,
-		Schema.tab_Statkue_SchuelerErsteSchulformSekI
-	};
-
-
     /**
      * Liefert die SQL-Befehle zum Anlegen von Default-SVWS-Benutzern
      * bei einem leeren Schema in Abhängigkeit von der übergebenen Revision.
@@ -744,20 +728,4 @@ public class Schema {
     			.collect(Collectors.toList());
     }
 
-    
-    /**
-     * Liefert alle Tabellen mit Default-Daten, welche in der angegebenen Revision 
-     * definiert sind. 
-     * 
-     * @param rev   die SVWS-DB-Revision
-     * 
-     * @return eine Liste mit den in der Revision definierten Tabellen, die Default-Daten haben
-     */
-    public static final List<SchemaTabelle> getTabellenDefaultDaten(long rev) {
-    	return Arrays.stream(tabellenDefaultDaten)
-			.filter(t -> ((rev == -1) && (t.veraltet().revision == -1))
-					|| ((rev != -1) && (rev >= t.revision().revision) && ((t.veraltet().revision == -1) || (rev < t.veraltet().revision))))
-			.collect(Collectors.toList());
-    }
-    
 }

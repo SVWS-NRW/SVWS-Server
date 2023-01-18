@@ -4,12 +4,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import de.nrw.schule.svws.base.CsvReader;
 import de.nrw.schule.svws.core.logger.Logger;
 import de.nrw.schule.svws.db.Benutzer;
 import de.nrw.schule.svws.db.DBDriver;
 import de.nrw.schule.svws.db.DBEntityManager;
-import de.nrw.schule.svws.db.dto.DTOHelper;
 import de.nrw.schule.svws.db.dto.current.svws.db.DTODBVersion;
 import de.nrw.schule.svws.db.schema.DBSchemaViews;
 import de.nrw.schule.svws.db.schema.Schema;
@@ -19,7 +17,6 @@ import de.nrw.schule.svws.db.schema.SchemaTabelle;
 import de.nrw.schule.svws.db.schema.SchemaTabelleIndex;
 import de.nrw.schule.svws.db.schema.SchemaTabelleTrigger;
 import de.nrw.schule.svws.db.schema.View;
-import de.nrw.schule.svws.db.utils.DBDefaultData;
 
 /**
  * Diese Klasse stellt Hilfs-Funktionen zur Verfügung, um auf ein SVWS-Datenbank-Schema zuzugreifen und dieses zu bearbeiten.
@@ -307,61 +304,6 @@ public class DBSchemaManager {
 	
 
 	/**
-	 * Kopiert die Default-Daten für die Tabelle mit dem angegebenen Tabellennamen
-	 * 
-	 * @param tab    die Tabelle
-	 * @param rev    die Revision, in der die Default-Daten kopiert werden
-	 * 
-	 * @return true, falls die Daten erfolgreich kopiert wurden, sonst false.
-	 */
-	boolean copyDefaultData(SchemaTabelle tab, long rev) {
-		try (DBEntityManager conn = user.getEntityManager()) {
-			Class<?> dtoClass = DTOHelper.getFromTableName(tab.name(), rev);
-			if (dtoClass == null)
-				return false;
-			logger.modifyIndent(2);
-			logger.log("Lese Daten... ");
-	        var data = CsvReader.fromResource(DBDefaultData.getFileName(tab), dtoClass);
-	        boolean success = true;
-	        if (data != null) {
-	        	logger.logLn(0, "OK");
-	    		logger.log("Schreibe Daten... ");
-				success = conn.persistAll(data);
-	        	logger.logLn(0, success ? "OK" : "FEHLER");
-	        } else {
-	        	logger.logLn(0, "FEHLER");
-	        }
-	        logger.modifyIndent(-2);
-	        data = null;
-	        System.gc();
-	    	return success;
-		}
-	}
-	
-	
-	
-	/**
-	 * Kopiert die Default-Daten für alle Tabellen, welche Default-Daten bei dieser Revision haben
-	 * 
-	 * @param revision    die Revision bei der die Tabellen Default-Daten haben
-	 * 
-	 * @return true, falls die Daten erfolgreich kopiert wurden, sonst false.
-	 */
-	private boolean copyAllDefaultData(long revision) {
-		boolean success = true;
-		for (SchemaTabelle tab : Schema.getTabellenDefaultDaten(revision)) {
-			logger.logLn(tab.name());
-			boolean result = copyDefaultData(tab, revision);
-			if (!result && returnOnError)
-				return false;
-			success &= result;
-		}
-		return success;
-	}
-
-	
-	
-	/**
 	 * Setzt die Datenbank-Revision auf die angegebene Revision
 	 * 
 	 * @param revision   die zu setzende Revision, bei -1 wird die neueste Revision gesetzt
@@ -427,16 +369,6 @@ public class DBSchemaManager {
 		logger.logLn("- Schreibe die Daten der Core-Types");
 		logger.modifyIndent(2);
 		success = updater.coreTypes.update(false, revision);
-		logger.modifyIndent(-2);
-		if (!success) {
-			logger.logLn("[Fehler]");
-			if (returnOnError) return false;
-		}
-		logger.logLn("[OK]");
-		
-		logger.logLn("- Kopiere die Default-Daten");
-		logger.modifyIndent(2);
-		success = copyAllDefaultData(revision);
 		logger.modifyIndent(-2);
 		if (!success) {
 			logger.logLn("[Fehler]");

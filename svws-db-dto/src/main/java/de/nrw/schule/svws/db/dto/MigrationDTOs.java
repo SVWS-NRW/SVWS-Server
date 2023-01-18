@@ -159,8 +159,6 @@ import de.nrw.schule.svws.db.dto.migration.schule.MigrationDTOKAoASBOEB4Keys;
 import de.nrw.schule.svws.db.dto.migration.schule.MigrationDTOKAoAZusatzmerkmalKeys;
 import de.nrw.schule.svws.db.dto.migration.schule.MigrationDTONationalitaetenKeys;
 import de.nrw.schule.svws.db.dto.migration.schule.MigrationDTOReligionKeys;
-import de.nrw.schule.svws.db.dto.migration.statkue.MigrationDTOStatkueAbgangsart;
-import de.nrw.schule.svws.db.dto.migration.statkue.MigrationDTOStatkueSchuelerErsteSchulformSekI;
 import de.nrw.schule.svws.db.dto.migration.svws.auth.MigrationDTOCredentials;
 import de.nrw.schule.svws.db.dto.migration.svws.auth.MigrationDTOCredentialsLernplattformen;
 import de.nrw.schule.svws.db.dto.migration.svws.auth.MigrationDTOLernplattformen;
@@ -350,8 +348,6 @@ public class MigrationDTOs {
              mapDTOName2DTOClass.put(MigrationDTOKAoAZusatzmerkmalKeys.class.getSimpleName(),MigrationDTOKAoAZusatzmerkmalKeys.class);
              mapDTOName2DTOClass.put(MigrationDTONationalitaetenKeys.class.getSimpleName(),MigrationDTONationalitaetenKeys.class);
              mapDTOName2DTOClass.put(MigrationDTOReligionKeys.class.getSimpleName(),MigrationDTOReligionKeys.class);
-             mapDTOName2DTOClass.put(MigrationDTOStatkueAbgangsart.class.getSimpleName(),MigrationDTOStatkueAbgangsart.class);
-             mapDTOName2DTOClass.put(MigrationDTOStatkueSchuelerErsteSchulformSekI.class.getSimpleName(),MigrationDTOStatkueSchuelerErsteSchulformSekI.class);
              mapDTOName2DTOClass.put(MigrationDTOCredentials.class.getSimpleName(),MigrationDTOCredentials.class);
              mapDTOName2DTOClass.put(MigrationDTOCredentialsLernplattformen.class.getSimpleName(),MigrationDTOCredentialsLernplattformen.class);
              mapDTOName2DTOClass.put(MigrationDTOLernplattformen.class.getSimpleName(),MigrationDTOLernplattformen.class);
@@ -544,8 +540,6 @@ public class MigrationDTOs {
              mapTablename2DTOClass.put("KAoA_Zusatzmerkmal_Keys",MigrationDTOKAoAZusatzmerkmalKeys.class);
              mapTablename2DTOClass.put("Nationalitaeten_Keys",MigrationDTONationalitaetenKeys.class);
              mapTablename2DTOClass.put("Religionen_Keys",MigrationDTOReligionKeys.class);
-             mapTablename2DTOClass.put("Statkue_Abgangsart",MigrationDTOStatkueAbgangsart.class);
-             mapTablename2DTOClass.put("Statkue_SchuelerErsteSchulformSekI",MigrationDTOStatkueSchuelerErsteSchulformSekI.class);
              mapTablename2DTOClass.put("Credentials",MigrationDTOCredentials.class);
              mapTablename2DTOClass.put("CredentialsLernplattformen",MigrationDTOCredentialsLernplattformen.class);
              mapTablename2DTOClass.put("Lernplattformen",MigrationDTOLernplattformen.class);

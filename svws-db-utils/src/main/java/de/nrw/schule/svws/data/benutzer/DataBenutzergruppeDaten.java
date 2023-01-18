@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 
 import de.nrw.schule.svws.core.data.benutzer.BenutzergruppeDaten;
 import de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenz;
-import de.nrw.schule.svws.core.utils.benutzer.BenutzerManager;
 import de.nrw.schule.svws.core.utils.benutzer.BenutzergruppenManager;
 import de.nrw.schule.svws.data.DataManager;
 import de.nrw.schule.svws.data.JSONMapper;
@@ -479,7 +478,7 @@ public class DataBenutzergruppeDaten extends DataManager<Long> {
      * 
      * @param bgids    die IDs der Bentuzergruppen
      * 
-     * @return @return bei Erfolg eine HTTP-Response 200
+     * @return bei Erfolg eine HTTP-Response 200
      */
     public Response remove(List<Long> bgids) {
         try {
@@ -498,7 +497,7 @@ public class DataBenutzergruppeDaten extends DataManager<Long> {
                         .stream().map(g -> g.Gruppe_ID).sorted().toList();
                 
                 //Lese die IDs der administrativen Benutzergruppen aus user_gruppen_ids ein
-                List<Long>  user_admingruppen_ids =new ArrayList<Long>();
+                List<Long>  user_admingruppen_ids = new ArrayList<>();
                 for(Long id : user_gruppen_ids) {
                     if(getDTO(id).IstAdmin)
                         user_admingruppen_ids.add(id);
