@@ -1,19 +1,25 @@
 <template>
 	<div v-if="visible" class="app-container">
-		<s-card-fach-basisdaten />
+		<s-card-fach-basisdaten :item="item" :data="data" />
 	</div>
 </template>
 
 <script setup lang="ts">
 
 	import { FaecherListeEintrag } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef } from "vue";
+	import { computed, ComputedRef, ShallowRef } from "vue";
+	import { DataFach } from "~/apps/faecher/DataFach";
+	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
+	import { routeFaecherDaten } from "~/router/apps/faecher/RouteFaecherDaten";
 
-	const props = defineProps<{ id?: number; item?: FaecherListeEintrag, routename: string }>();
+	const props = defineProps<{
+		item: ShallowRef<FaecherListeEintrag | undefined>;
+		data: DataFach;
+		schule: DataSchuleStammdaten;
+	}>();
 
 	const visible: ComputedRef<boolean> = computed(() => {
-		//return this.$app.afaecher.visible; //TODO: richtige Bedingung einpflegen
-		return true;
+		return (!routeFaecherDaten.hidden()) && (props.item.value !== undefined);
 	});
 
 </script>

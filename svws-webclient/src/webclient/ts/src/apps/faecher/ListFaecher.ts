@@ -3,6 +3,7 @@ import { App } from "../BaseApp";
 import { BaseList } from "../BaseList";
 
 export class ListFaecher extends BaseList<FaecherListeEintrag, undefined> {
+
 	protected _filter = undefined;
 
 	/**
@@ -13,4 +14,5 @@ export class ListFaecher extends BaseList<FaecherListeEintrag, undefined> {
 	public async update_list(): Promise<void> {
 		await super._update_list(() => App.api.getFaecher(App.schema));
 	}
+
 }

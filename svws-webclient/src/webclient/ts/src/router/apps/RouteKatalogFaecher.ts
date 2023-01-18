@@ -1,16 +1,15 @@
 import { FaecherListeEintrag } from "@svws-nrw/svws-core-ts";
-import { computed, WritableComputedRef } from "vue";
-import { RouteLocationNormalized, RouteParams, RouteRecordRaw, useRouter } from "vue-router";
+import { WritableComputedRef } from "vue";
+import { RouteLocationNormalized, RouteParams } from "vue-router";
 import { ListFaecher } from "~/apps/faecher/ListFaecher";
-import { mainApp } from "~/apps/Main";
 import { RouteNodeListView } from "~/router/RouteNodeListView";
 import { routeFaecherDaten } from "~/router/apps/faecher/RouteFaecherDaten";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteApp } from "~/router/RouteApp";
-
-const ROUTE_NAME = "faecher";
+import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 
 export class RouteDataKatalogFaecher {
+	schule: DataSchuleStammdaten = new DataSchuleStammdaten();
 	item: FaecherListeEintrag | undefined = undefined;
 }
 
@@ -23,7 +22,7 @@ export class RouteKatalogFaecher extends RouteNodeListView<ListFaecher, FaecherL
 		super("faecher", "/kataloge/faecher/:id(\\d+)?", SFaecherAuswahl, SFaecherApp, new ListFaecher(), 'id', new RouteDataKatalogFaecher());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Fächer";
-		super.setView("liste", SFaecherAuswahl, (route) => RouteNodeListView.getPropsByAuswahlID(route, mainApp.apps.faecher.auswahl));
+		super.setView("liste", SFaecherAuswahl, (route) => this.getProps(route));
 		super.children = [
 			routeFaecherDaten
 		];
@@ -33,9 +32,24 @@ export class RouteKatalogFaecher extends RouteNodeListView<ListFaecher, FaecherL
 	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
 		if ((to.name === this.name) && (to_params.id === undefined)) {
 			const redirect_name: string = (this.selectedChild === undefined) ? this.defaultChild!.name : this.selectedChild.name;
-			return { name: redirect_name, params: { id: mainApp.apps.faecher.auswahl.liste.at(0)?.id }};
+			await this.liste.update_list();
+			return { name: redirect_name, params: { id: this.liste.gefiltert.at(0)?.id }};
 		}
 		return true;
+	}
+
+	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) {
+		await this.data.schule.select(true);  // undefined würde das laden verhindern, daher true
+		await this.liste.update_list();  // Die Auswahlliste wird als letztes geladen
+	}
+
+	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
+		if (to_params.id === undefined) {
+			this.onSelect(undefined);
+		} else {
+			const id = parseInt(to_params.id as string);
+			this.onSelect(this.liste.gefiltert.find(k => k.id === id));
+		}
 	}
 
 	protected onSelect(item?: FaecherListeEintrag) {
@@ -49,31 +63,14 @@ export class RouteKatalogFaecher extends RouteNodeListView<ListFaecher, FaecherL
 	}
 
 	protected getAuswahlComputedProperty(): WritableComputedRef<FaecherListeEintrag | undefined> {
-		return this.getSelectorByID<FaecherListeEintrag, ListFaecher>(mainApp.apps.faecher.auswahl);
+		return this.getSelector();
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
-		const prop = RouteNodeListView.getPropsByAuswahlID(to, mainApp.apps.faecher.auswahl);
-		this.onSelect(prop.item as FaecherListeEintrag | undefined);
-		return prop;
-	}
-
-	/**
-     * TODO
-     *
-     * @returns
-     */
-	public getChildRouteSelector() {
-		const router = useRouter();
-		const selectedRoute: WritableComputedRef<RouteRecordRaw> = computed({
-			get: () => this.selectedChildRecord || this.defaultChild!.record,
-			set: (value) => {
-				this.selectedChildRecord = value;
-				const id = (this.data.item === undefined) ? undefined : "" + this.data.item.id;
-				router.push({ name: value.name, params: { id: id } });
-			}
-		});
-		return selectedRoute;
+		return {
+			...super.getProps(to),
+			schule: this.data.schule
+		};
 	}
 
 }

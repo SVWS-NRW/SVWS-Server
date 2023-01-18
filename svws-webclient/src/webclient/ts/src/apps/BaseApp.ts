@@ -1,6 +1,5 @@
 import { ApiServer, Schuljahresabschnitt } from "@svws-nrw/svws-core-ts";
 import { ref } from "vue";
-import type { Faecher } from "./faecher/Faecher";
 import type { Jahrgaenge } from "./jahrgaenge/Jahrgaenge";
 import { Benutzer } from "./schule/benutzerverwaltung/Benutzer";
 import { Benutzergruppe } from "./schule/benutzerverwaltung/Benutzergruppe";
@@ -12,7 +11,6 @@ export type Apps = {
 	benutzer: Benutzer;
 	benutzergruppe: Benutzergruppe;
 	jahrgaenge: Jahrgaenge;
-	faecher: Faecher;
 };
 
 /**

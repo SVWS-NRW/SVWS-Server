@@ -16,8 +16,6 @@ import { Schule } from "./schule/Schule";
 
 import { Benutzer } from "./schule/benutzerverwaltung/Benutzer";
 import { Benutzergruppe } from "./schule/benutzerverwaltung/Benutzergruppe";
-import { Faecher } from "./faecher/Faecher";
-import { Gost } from "./gost/Gost";
 import { Jahrgaenge } from "./jahrgaenge/Jahrgaenge";
 import { BaseList } from "./BaseList";
 import { ApiLoadingStatus } from "./core/ApiLoadingStatus.class";
@@ -215,8 +213,7 @@ export class Main {
 			schule: new Schule(),
 			benutzer: new Benutzer(),
 			benutzergruppe : new Benutzergruppe(),
-			jahrgaenge: new Jahrgaenge(),
-			faecher: new Faecher()
+			jahrgaenge: new Jahrgaenge()
 		};
 		await App.apps.schule.init();
 		this.config.hasGost = !!App.apps.schule.schuleStammdaten.schulform.value?.daten.hatGymOb;

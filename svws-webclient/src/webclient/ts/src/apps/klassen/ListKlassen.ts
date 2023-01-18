@@ -3,6 +3,7 @@ import { App } from "../BaseApp";
 import { BaseList } from "../BaseList";
 
 export class ListKlassen extends BaseList<KlassenListeEintrag> {
+
 	protected _filter = undefined;
 
 	/**
@@ -11,8 +12,7 @@ export class ListKlassen extends BaseList<KlassenListeEintrag> {
 	 * @returns {Promise<void>}
 	 */
 	public async update_list(): Promise<void> {
-		await super._update_list(() =>
-			App.api.getKlassenFuerAbschnitt(App.schema, App.akt_abschnitt.id)
-		);
+		await super._update_list(() => App.api.getKlassenFuerAbschnitt(App.schema, App.akt_abschnitt.id));
 	}
+
 }

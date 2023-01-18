@@ -21,57 +21,46 @@
 <script setup lang="ts">
 
 	import { FaecherListeEintrag } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, WritableComputedRef } from "vue";
-	import { injectMainApp, Main } from "~/apps/Main";
+	import { computed, ComputedRef, ShallowRef, WritableComputedRef } from "vue";
 	import { router } from "~/router"
 	import { routeKatalogFaecher } from "~/router/apps/RouteKatalogFaecher";
-	import {Schuljahresabschnitt} from "@svws-nrw/svws-core-ts";
-	import {Schule} from "~/apps/schule/Schule";
-
+	import { Schuljahresabschnitt } from "@svws-nrw/svws-core-ts";
 	import type { DataTableColumn } from "@svws-nrw/svws-ui";
+	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
+	import { injectMainApp, Main } from "~/apps/Main";
 
-	const props = defineProps<{ id?: number; item?: FaecherListeEintrag, routename: string }>();
+	const props = defineProps<{
+		item: ShallowRef<FaecherListeEintrag | undefined>;
+		schule: DataSchuleStammdaten;
+	}>();
 
 	const selected = routeKatalogFaecher.auswahl;
-
-	const main: Main = injectMainApp();
-	const app = main.apps.faecher;
 
 	const cols: DataTableColumn[]= [
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: 'asc' },
 		{ key: "bezeichnung", label: "Bezeichnung", sortable: true, span: 3 }
 	];
 
-	const rows: ComputedRef<FaecherListeEintrag[]> = computed(() => app.auswahl.liste || []);
+	const main: Main = injectMainApp();
 
-	const schule_abschnitte: ComputedRef<
-		Array<Schuljahresabschnitt> | undefined
-	> = computed(() => {
-		const liste = appSchule.value.schuleStammdaten.daten?.abschnitte;
+	const rows: ComputedRef<FaecherListeEintrag[]> = computed(() => routeKatalogFaecher.liste.liste || []);
+
+	const schule_abschnitte: ComputedRef<Array<Schuljahresabschnitt> | undefined> = computed(() => {
+		const liste = props.schule.daten?.abschnitte;
 		return liste?.toArray(new Array<Schuljahresabschnitt>()) || [];
 	});
 
 	const akt_abschnitt: WritableComputedRef<Schuljahresabschnitt> = computed({
-		get(): Schuljahresabschnitt {
-			return main.config.akt_abschnitt;
-		},
-		set(abschnitt: Schuljahresabschnitt) {
-			main.config.akt_abschnitt = abschnitt;
-		}
+		get: () => main.config.akt_abschnitt,
+		set: (abschnitt) => main.config.akt_abschnitt = abschnitt
 	});
 
-	const appSchule: ComputedRef<Schule> = computed(() => {
-		return main.apps.schule;
-	});
 	function item_sort(a: Schuljahresabschnitt, b: Schuljahresabschnitt) {
-		return (
-			b.schuljahr + b.abschnitt * 0.1 - (a.schuljahr + a.abschnitt * 0.1)
-		);
+		return b.schuljahr + b.abschnitt * 0.1 - (a.schuljahr + a.abschnitt * 0.1);
 	}
 
 	function item_text(item: Schuljahresabschnitt) {
-		return item.schuljahr
-			? `${item.schuljahr}, ${item.abschnitt}. HJ`
-			: "Abschnitt";
+		return item.schuljahr ? `${item.schuljahr}, ${item.abschnitt}. HJ` : "Abschnitt";
 	}
+
 </script>
