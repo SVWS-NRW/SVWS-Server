@@ -221,7 +221,7 @@ task testTSLib(type: NpmRun) {
 	inputs.files file("$projectDir/src/ts-lib-test/ts/src")
 	outputs.dir file("$projectDir/build/coverage/ts-lib")
 	args = [ 'test:run' ]
-	workingDir = file("$projectDir/src/ts-lib-test/ts/src")
+	workingDir = file("$projectDir/src/ts-lib-test/ts")
 	doFirst {
 		mkdir file("$projectDir/build/coverage")
 		mkdir file("$projectDir/build/coverage/ts-lib")
