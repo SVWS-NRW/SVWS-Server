@@ -34,7 +34,7 @@
 <script setup lang="ts">
 
 	import { GostBlockungKurs, GostBlockungRegel, GostBlockungSchiene, GostFach } from '@svws-nrw/svws-core-ts';
-	import { computed, ComputedRef, ShallowRef, shallowRef } from 'vue';
+	import { computed, ComputedRef, ShallowRef, shallowRef, WritableComputedRef } from 'vue';
 	import { DataGostFaecher } from '~/apps/gost/DataGostFaecher';
 	import { DataGostKursblockung } from '~/apps/gost/DataGostKursblockung';
 	import { ListAbiturjahrgangSchueler } from '~/apps/gost/ListAbiturjahrgangSchueler';
@@ -61,7 +61,17 @@
 		return props.blockung.datenmanager?.getKursmengeSortiertNachKursartFachNummer()?.toArray() as GostBlockungKurs[] || [];
 	});
 
-	const regel: ShallowRef<GostBlockungRegel | undefined> = shallowRef(undefined);
+	const _regel: ShallowRef<GostBlockungRegel | undefined> = shallowRef(undefined);
+
+	const regel: WritableComputedRef<GostBlockungRegel|undefined> = computed({
+		get: () => _regel.value,
+		set: value => {
+			_regel.value = value;
+			if (value === undefined || value.id < 1)
+				return;
+			props.blockung.patch_blockung_regel(value);
+		}
+	})
 
 	const alle_regeln: ComputedRef<GostBlockungRegel[]> = computed(() => props.blockung.datenmanager?.getMengeOfRegeln().toArray() as GostBlockungRegel[] || []);
 	const regeln: ComputedRef<GostBlockungRegel[]>[] = [];

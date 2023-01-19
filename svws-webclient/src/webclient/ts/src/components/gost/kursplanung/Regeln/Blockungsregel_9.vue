@@ -6,8 +6,8 @@
 		</div>
 		<div v-if="hatRegel">
 			<svws-ui-radio-group>
-				<svws-ui-radio-option v-model="regel" :value="false" name="interne" label="externe Lehrkräfte nicht beachten" />
-				<svws-ui-radio-option v-model="regel" :value="true" name="externe" label="alle Lehrkräfte beachten" />
+				<svws-ui-radio-option v-model="regel" value="interne" name="interne" label="externe Lehrkräfte nicht beachten" />
+				<svws-ui-radio-option v-model="regel" value="externe" name="externe" label="alle Lehrkräfte beachten" />
 			</svws-ui-radio-group>
 		</div>
 	</div>
@@ -15,13 +15,11 @@
 
 <script setup lang="ts">
 	import { GostBlockungRegel, GostKursblockungRegelTyp } from "@svws-nrw/svws-core-ts";
-	import { computed, Ref, ref, WritableComputedRef } from "vue";
+	import { computed, WritableComputedRef, shallowRef, ShallowRef, watch } from "vue";
 
 	const props = defineProps<{
-		modelValue: GostBlockungRegel | undefined;
 		regeln: GostBlockungRegel[];
 	}>();
-
 
 	const emit = defineEmits<{
 		(e: 'update:modelValue', v: GostBlockungRegel | undefined): void;
@@ -31,31 +29,28 @@
 
 	const regel_typ = GostKursblockungRegelTyp.LEHRKRAFT_BEACHTEN
 
-	const extern: Ref<boolean> = ref(true);
+	const regel: ShallowRef<'externe'|'interne'> = shallowRef('interne');
 
-	const regel: WritableComputedRef<boolean> = computed({
-		get: () => props.modelValue?.parameter.get(0) === 0 ? false : true,
-		set: (value) => {
-			props.modelValue?.parameter.set(0, value ? 1 : 0);
-			emit('update:modelValue', props.modelValue);
-		}
-	});
+	watch(()=>regel.value, (value)=> {
+		props.regeln[0]?.parameter.set(0, value === 'interne' ? 0 : 1);
+		emit('update:modelValue', props.regeln[0]);
+
+	})
 
 	const hatRegel: WritableComputedRef<boolean> = computed({
-		get: () => props.regeln.length === 1 ? true : false,
+		get: () => props.regeln.length === 0 ? false : true,
 		set: (val) => {
 			if (val === true) {
 				const r = new GostBlockungRegel();
 				r.typ = regel_typ.typ;
-				r.parameter.add(extern.value ? 1 : 0);
+				r.parameter.add(1);
 				emit('update:modelValue', r);
 				emit('regelSpeichern');
 			} else {
 				if (props.regeln[0] !== undefined)
-					emit('regelEntfernen', props.regeln[0])
+					emit('regelEntfernen', props.regeln[0]);
 			}
 		}
 	})
-
 </script>
 
