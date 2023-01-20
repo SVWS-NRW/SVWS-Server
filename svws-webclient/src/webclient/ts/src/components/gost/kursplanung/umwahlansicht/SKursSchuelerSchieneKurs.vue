@@ -5,7 +5,8 @@
 		<svws-ui-drop-data @drop="drop_aendere_kurszuordnung($event, kurs.id)" v-slot="{active}">
 			<div :class="{'bg-green-400': active && is_drop_zone}">
 				<span>{{ kurs_name }}</span>
-				<br>{{ schueler_schriftlich }}/{{ kurs.schueler.size() }}
+				<br>
+				<span class="text-sm" title="Schriftlich/Insgesamt im Kurs">{{ schueler_schriftlich }}/{{ kurs.schueler.size() }}</span>
 				<br>
 				<span v-if="(allow_regeln && fach_gewaehlt && !blockung_aktiv)">
 					<svws-ui-icon class="cursor-pointer" @click.stop="verbieten_regel_toggle">

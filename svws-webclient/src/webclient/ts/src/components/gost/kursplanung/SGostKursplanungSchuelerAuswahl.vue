@@ -3,7 +3,7 @@
 		<div class="flex flex-row gap-4">
 			<div class="flex-none">
 				<div class="sticky">
-					<div class="rounded-lg shadow">
+					<div>
 						<div class="flex justify-between w-72">
 							<svws-ui-checkbox v-model="kurs_filter_toggle" class=""> Kursfilter </svws-ui-checkbox>
 							<svws-ui-multi-select v-if="kurs_filter_toggle" v-model="kurs_filter" :items="kurse" headless :item-text="(kurs: GostBlockungKurs) => manager?.getOfKursName(kurs.id).toString() || ''" class="w-52" />
@@ -24,8 +24,8 @@
 						<svws-ui-text-input v-model="filter_name" type="search" placeholder="Suche nach Namen">
 							<i-ri-search-line />
 						</svws-ui-text-input>
-						<div class="max-h-screen overflow-auto">
-							<table class="w-full border-collapse text-sm">
+						<div class="v-table--container">
+							<table class="v-table--complex">
 								<s-kurs-schueler-schueler v-for="s in schueler" :key="s.id" :schueler="s" :selected="selected === s" @click="selected = s"
 									:blockung="blockung" :list-schueler="listSchueler" />
 							</table>
@@ -35,16 +35,16 @@
 			</div>
 			<svws-ui-drop-data v-if="selected" v-slot="{ active }" class="w-40 flex-none" @drop="drop_entferne_kurszuordnung">
 				<div :class="{ 'border-2 border-dashed border-red-700': active }">
-					<div class="overflow-hidden rounded-lg shadow">
-						<table class="w-full border-collapse text-sm">
+					<div class="">
+						<table class="v-table--complex">
 							<s-kurs-schueler-fachbelegung v-for="fach in fachbelegungen" :key="fach.fachID" :fach="fach"
 								:kurse="blockungsergebnisse" :schueler-id="selected.id" :blockung="blockung" :ergebnis="ergebnis" />
 						</table>
 						<template v-if="!blockung_aktiv">
-							<div class="flex items-center justify-center bg-slate-100" :class="{'bg-red-400 text-white': active}">
+							<div class="flex items-center justify-center" :class="{'bg-red-400 text-white': active}">
 								<i-ri-delete-bin-2-line class="m-2 text-4xl" :class="{ 'text-red-700': is_dragging }" />
 							</div>
-							<div class="flex items-center justify-center bg-slate-100 py-2">
+							<div class="flex items-center justify-center">
 								<svws-ui-button size="small" class="m-2" @click="auto_verteilen" :disabled="pending">Automatisch verteilen</svws-ui-button>
 							</div>
 						</template>

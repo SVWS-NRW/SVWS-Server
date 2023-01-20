@@ -361,6 +361,10 @@
 		tr {
 			@apply border;
 			border-color: var(--table-border-color);
+
+			&.selected {
+				@apply text-primary bg-primary bg-opacity-5 font-bold;
+			}
 		}
 
 		th,
@@ -455,6 +459,11 @@
 				@apply rounded-none;
 			}
 		}
+	}
+
+	.schiene-gesperrt {
+		background-image: url("/images/table-cell--stripes.svg");
+		background-size: auto 100%;
 	}
 
 	.table--row-kursdetail {

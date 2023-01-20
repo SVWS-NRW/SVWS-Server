@@ -3,8 +3,8 @@
 		<div class="flex flex-row gap-4">
 			<div v-if="selected" class="flex-none">
 				<div class="">
-					<div class="overflow-hidden rounded-lg shadow">
-						<table class="border-collapse text-sm">
+					<div class="v-table--container">
+						<table class="v-table--complex">
 							<s-kurs-schueler-schiene v-for="schiene in schienen" :key="schiene.id" :schiene="schiene" :selected="selected"
 								:blockung="blockung" :ergebnis="ergebnis" :allow_regeln="allow_regeln" />
 						</table>

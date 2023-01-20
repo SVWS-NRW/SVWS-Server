@@ -17,11 +17,8 @@
 		'badge--error': type === 'error',
 		'badge--highlight': type === 'highlight',
 		'badge--light': type === 'light',
-		'badge--big': size === 'big',
-		'badge--medium': size === 'medium',
+		'badge--lg': size === 'big',
 		'badge--normal': size === 'normal',
-		'badge--small': size === 'small',
-		'badge--tiny': size === 'tiny'
 	}">
 		<slot />
 	</span>
@@ -33,6 +30,11 @@
 	@apply rounded inline-block align-top;
 	font-size: 0.65em;
 	padding: 0.35em 0.5em;
+}
+
+.badge--lg {
+	font-size: 0.8em;
+	padding: 0.25em 0.45em;
 }
 
 .badge--error {

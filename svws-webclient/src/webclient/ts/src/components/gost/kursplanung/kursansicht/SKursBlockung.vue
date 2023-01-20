@@ -41,7 +41,7 @@
 			v-slot="{ active }"
 			:key="schiene.id"
 			class="text-center"
-			:class="{'cell--kursdifferenz': setze_kursdifferenz, 'bg-yellow-200': drag_data.kurs?.id === kurs.id && drag_data.schiene?.id !== schiene.id, 'bg-slate-500': schiene_gesperrt(schiene)}"
+			:class="{'cell--kursdifferenz': setze_kursdifferenz, 'bg-yellow-200': drag_data.kurs?.id === kurs.id && drag_data.schiene?.id !== schiene.id, 'schiene-gesperrt': schiene_gesperrt(schiene)}"
 			tag="td"
 			@drop="drop_aendere_kursschiene($event, schiene)">
 			<svws-ui-drag-data v-if="kurs_schiene_zugeordnet(schiene)"
@@ -50,7 +50,7 @@
 				:data="{kurs, schiene}"
 				class="select-none leading-5"
 				:draggable="true"
-				:class="{'bg-slate-500': schiene_gesperrt(schiene)}"
+				:class="{'schiene-gesperrt': schiene_gesperrt(schiene)}"
 				:style="{ 'background-color': schiene_gesperrt(schiene)? '':bgColor}"
 				@drag-start="drag_started"
 				@drag-end="drag_ended">
@@ -65,7 +65,7 @@
 			<template v-else>
 				<div class="cursor-pointer" @click="sperren_regel_toggle(schiene)"
 					:class="{'bg-green-400': active && drag_data?.schiene?.id !== schiene.id && drag_data.kurs?.id === kurs.id && drag_data.schiene?.id !== schiene.id,
-						'bg-slate-500': schiene_gesperrt(schiene)}">
+						'schiene-gesperrt': schiene_gesperrt(schiene)}">
 					<svws-ui-icon>
 						<i-ri-forbid-fill v-if="sperr_regeln.find(r=>r.parameter.get(1) === ermittel_parent_schiene(schiene).nummer)" class="inline-block text-red-500" />
 						<i-ri-forbid-line v-if="allow_regeln && !sperr_regeln.find(r=>r.parameter.get(1) === ermittel_parent_schiene(schiene).nummer)" class="inline-block opacity-0 hover:opacity-25" />

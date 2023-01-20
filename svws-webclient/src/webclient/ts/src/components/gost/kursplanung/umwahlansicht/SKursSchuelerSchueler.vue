@@ -1,13 +1,39 @@
 <template>
-	<tr class="cursor-pointer px-2 text-left" :class="{ 'bg-red-400': kollision && !nichtwahl, 'bg-orange-400': nichtwahl && !kollision,
-		'bg-gradient-to-r':nichtwahl && kollision, 'from-red-400': nichtwahl && kollision, 'to-orange-400': nichtwahl && kollision}">
-		<td class="px-2">
-			<div class="flex justify-between">
+	<tr class="cursor-pointer" :class="{ 'selected': selected }">
+		<td>
+			<div class="flex justify-between items-center">
 				<span>
 					{{ `${schueler.nachname}, ${schueler.vorname}` }}
-					<svws-ui-badge v-if="schueler.status !== 'Aktiv'" size="tiny" type="highlight"> {{ schueler.status }} </svws-ui-badge>
 				</span>
-				<svws-ui-icon v-if="selected"> <i-ri-checkbox-blank-circle-fill class="text-blue-400" /> </svws-ui-icon>
+				<div>
+					<svws-ui-badge v-if="schueler.status !== 'Aktiv'" type="light" size="big"> {{ schueler.status }} </svws-ui-badge>
+					<div class="leading-none overflow-hidden" style="margin-bottom: -0.1em;">
+						<svws-ui-popover v-if="kollision && !nichtwahl">
+							<template #trigger>
+								<svws-ui-icon> <i-ri-alert-line class="text-error" /> </svws-ui-icon>
+							</template>
+							<template #content>
+								<span>Kollision</span>
+							</template>
+						</svws-ui-popover>
+						<svws-ui-popover v-if="!kollision && nichtwahl">
+							<template #trigger>
+								<svws-ui-icon> <i-ri-forbid-2-line class="text-dark-20" /> </svws-ui-icon>
+							</template>
+							<template #content>
+								<span>Nichtwahl</span>
+							</template>
+						</svws-ui-popover>
+						<svws-ui-popover v-if="kollision && nichtwahl">
+							<template #trigger>
+								<svws-ui-icon> <i-ri-alert-fill class="text-error" /> </svws-ui-icon>
+							</template>
+							<template #content>
+								<span>Kollision und Nichtwahl</span>
+							</template>
+						</svws-ui-popover>
+					</div>
+				</div>
 			</div>
 		</td>
 	</tr>

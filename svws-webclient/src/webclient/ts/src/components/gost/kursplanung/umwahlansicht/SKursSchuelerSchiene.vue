@@ -1,9 +1,11 @@
 <template>
-	<tr class="px-2 text-left" :class="{ 'bg-red-400': schiene_hat_kollisionen }">
-		<td class="bg-slate-100 px-2">
-			{{ schiene_g?.bezeichnung }} <br>
-			{{ schiene.kurse.size() }} Kurse <br>
-			{{ anzahl_schueler }} Schüler
+	<tr :class="{ 'bg-error': schiene_hat_kollisionen }">
+		<td class="bg-primary bg-opacity-5">
+			<div class="flex flex-col pb-1 pt-2">
+				<span class="text-sm-bold">{{ schiene_g?.bezeichnung }}</span>
+				<span class="text-sm">{{ schiene.kurse.size() }} Kurse</span>
+				<span class="text-sm">{{ anzahl_schueler }} Schüler</span>
+			</div>
 		</td>
 		<s-kurs-schueler-schiene-kurs v-for="kurs of getSchieneKurse" :key="kurs.hashCode()" :kurs="kurs" :schueler="selected"
 			:blockung="blockung" :ergebnis="ergebnis" :allow_regeln="allow_regeln" />
