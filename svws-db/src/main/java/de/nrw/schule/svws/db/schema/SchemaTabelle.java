@@ -472,7 +472,7 @@ public class SchemaTabelle {
      */
     public String getJavaKlasse(final long rev) {
     	if (rev > 0)
-    		return "Rev" + rev + _javaClassName;
+    		return "Dev" + _javaClassName;
     	if (rev == 0)
     		return "Migration" + _javaClassName;
 		return _javaClassName;

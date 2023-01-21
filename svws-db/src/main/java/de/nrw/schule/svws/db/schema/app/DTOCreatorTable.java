@@ -97,7 +97,7 @@ public class DTOCreatorTable {
 		} else if (rev == 0) {
 			packagename += ".migration." + tabelle.javaSubPackage();
 		} else {
-			packagename += ".rev" + rev + "." + tabelle.javaSubPackage();
+			packagename += ".dev." + tabelle.javaSubPackage();
 		}
 		return packagename;
 	}

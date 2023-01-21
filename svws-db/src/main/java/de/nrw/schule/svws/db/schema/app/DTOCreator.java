@@ -78,7 +78,7 @@ public class DTOCreator {
 			cmdLine.printOptionsAndExit(2, "Fehler beim Erstellen des Verzeichnisses für das DTO-Package. Korrigieren Sie den Ausgabe-Pfad.");
 
 		// Generiere den Code für die Java DTO-Klasse
-		final String dtosClassname = ((rev > 0) ? "Rev" + rev : ((rev == 0) ? "Migration" : "")) + "DTOs";
+		final String dtosClassname = ((rev > 0) ? "Dev" : ((rev == 0) ? "Migration" : "")) + "DTOs";
 		final File dtosFile = new File(packageDir, dtosClassname + ".java");
 		String codeDTOImports = "";
 		String codeMapDTOName2DTOClass = "";
@@ -132,12 +132,12 @@ public class DTOCreator {
 		// Erzeuge die DTOs für die einzelnen Views
 		if (rev != 0) {
 			long revision = (rev < 0) ? SchemaRevisionen.maxRevision.revision : rev;
-			String packagename = Schema.javaPackage + "." + Schema.javaDTOPackage + ((rev < 0) ? ".current" : ".rev" + rev) + ".";
+			String packagename = Schema.javaPackage + "." + Schema.javaDTOPackage + ((rev < 0) ? ".current" : ".dev") + ".";
 			for (View view : DBSchemaViews.getInstance().getViewsActive(revision)) {
 				logger.log("View " + view.name + ": ");
 				DTOCreatorView creator = new DTOCreatorView(view);
 				String javaPackage = packagename + view.packageName; 
-				String className = (rev < 0) ? view.dtoName : "Rev" + rev + view.dtoName;
+				String className = (rev < 0) ? view.dtoName : "Dev" + view.dtoName;
 				try {
 					// Erstelle das Verzeichnis für das Package
 					String fullqualifiedClassname = javaPackage + "." + className;
@@ -294,7 +294,7 @@ public class DTOCreator {
 		     + "        } else if ((rev < 0) || (rev <= SchemaRevisionen.maxRevision.revision)) {" + System.lineSeparator()
     		 + "            return DTOs.getFromDTOName(name);" + System.lineSeparator()
     		 + "        } else if (rev <= SchemaRevisionen.maxDeveloperRevision.revision) {" + System.lineSeparator()
-		     + "            return Rev" + SchemaRevisionen.maxDeveloperRevision.revision + "DTOs.getFromDTOName(name);" + System.lineSeparator()
+		     + "            return DevDTOs.getFromDTOName(name);" + System.lineSeparator()
 		     + "        } else {" + System.lineSeparator()
 		     + "            return null;" + System.lineSeparator()
 		     + "        }" + System.lineSeparator()
@@ -315,7 +315,7 @@ public class DTOCreator {
 		     + "        } else if ((rev < 0) || (rev <= SchemaRevisionen.maxRevision.revision)) {" + System.lineSeparator()
     		 + "            return DTOs.getFromTableName(name);" + System.lineSeparator()
     		 + "        } else if (rev <= SchemaRevisionen.maxDeveloperRevision.revision) {" + System.lineSeparator()
-		     + "            return Rev" + SchemaRevisionen.maxDeveloperRevision.revision + "DTOs.getFromTableName(name);" + System.lineSeparator()
+		     + "            return DevDTOs.getFromTableName(name);" + System.lineSeparator()
 		     + "        } else {" + System.lineSeparator()
 		     + "            return null;" + System.lineSeparator()
 		     + "        }" + System.lineSeparator()

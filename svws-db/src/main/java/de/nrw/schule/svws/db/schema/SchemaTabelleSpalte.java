@@ -314,7 +314,7 @@ public class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte> {
 			return DBAttributeConverter.getByClassName("Migration" + _javaConverter.getSimpleName());
 		if (rev <= SchemaRevisionen.maxRevision.revision)
 			return DBAttributeConverter.getByClass(_javaConverter);
-		return DBAttributeConverter.getByClassName("Rev" + rev + _javaConverter.getSimpleName());
+		return DBAttributeConverter.getByClassName("Dev" + _javaConverter.getSimpleName());
     }
 
     /** 
@@ -370,7 +370,7 @@ public class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte> {
 			return _javaConverter.getSimpleName();
 		if (rev == 0)
 			return "Migration" + _javaConverter.getSimpleName();
-		return "Rev" + rev + _javaConverter.getSimpleName();
+		return "Dev" + _javaConverter.getSimpleName();
 	}
 	
 	
