@@ -3,7 +3,7 @@ import { RouteNode } from "~/router/RouteNode";
 import { RouteNodeListView } from "~/router/RouteNodeListView";
 import { RouteSchuleBenutzer } from "~/router/apps/RouteSchuleBenutzer";
 
-const SBenutzergruppe = () => import("~/components/schule/benutzerverwaltung/daten/SBenutzergruppe.vue");
+const SBenutzergruppe = () => import("~/components/schule/benutzergruppen/daten/SBenutzergruppe.vue");
 
 export class RouteSchuleBenutzergruppeDaten extends RouteNode<unknown, RouteSchuleBenutzer> {
 

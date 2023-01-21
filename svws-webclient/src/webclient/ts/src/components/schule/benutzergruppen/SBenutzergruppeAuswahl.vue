@@ -16,7 +16,7 @@
 		<template #content>
 			<svws-ui-table v-model="selected" v-model:selection="selectedItems" :columns="cols" :data="rowsFiltered" is-multi-select :footer="true">
 				<template #footer>
-					<s-modal-benutzergruppe-neu :show_delete_icon="selectedItems.length" />
+					<s-modal-benutzergruppe-neu :show-delete-icon="selectedItems.length > 0" />
 				</template>
 			</svws-ui-table>
 		</template>
@@ -30,13 +30,15 @@
 	import { injectMainApp, Main } from "~/apps/Main";
 	import { router } from "~/router";
 	import { routeSchule } from "~/router/apps/RouteSchule";
-	import { routeSchuleBenutzer } from "~/router/apps/RouteSchuleBenutzer";
 	import { routeSchuleBenutzergruppe } from "~/router/apps/RouteSchuleBenutzergruppe";
 
-	const props = defineProps<{ id?: number; item?: BenutzergruppeListeEintrag, routename: string }>();
+	const props = defineProps<{
+		id?: number;
+		item?: BenutzergruppeListeEintrag;
+		routename: string;
+	}>();
 
 	const selected = routeSchuleBenutzergruppe.auswahl;
-	const selection = ref([]);
 
 	const main: Main = injectMainApp();
 	const app = main.apps.benutzergruppe;
@@ -52,14 +54,11 @@
 		return main.apps.benutzergruppe.auswahl.liste;
 	});
 
-	const rowsFiltered: ComputedRef<BenutzergruppeListeEintrag[] | undefined> = computed(() => {
-		if (rows.value === undefined)
-			return undefined;
-		const rowsValue: BenutzergruppeListeEintrag[] = rows.value;
-		return (search.value)
-			? rowsValue.filter((e: BenutzergruppeListeEintrag) => e.bezeichnung.toLocaleLowerCase().includes(search.value.toLocaleLowerCase()))
-			: rowsValue;
-	});
+	const rowsFiltered: ComputedRef<BenutzergruppeListeEintrag[]> = computed(() =>
+		(rows.value === undefined) ? [] : (search.value)
+			? rows.value.filter((e: BenutzergruppeListeEintrag) => e.bezeichnung.toLocaleLowerCase().includes(search.value.toLocaleLowerCase()))
+			: rows.value
+	);
 
 	const selectedItems: WritableComputedRef<BenutzergruppeListeEintrag[]> = computed({
 		get: () => app.auswahl.ausgewaehlt_gruppe,
@@ -67,4 +66,5 @@
 			app.auswahl.ausgewaehlt_gruppe = items;
 		}
 	});
+
 </script>

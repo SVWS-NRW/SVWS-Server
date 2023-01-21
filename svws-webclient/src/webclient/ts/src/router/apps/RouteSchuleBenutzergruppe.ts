@@ -14,8 +14,8 @@ export class RouteDataSchuleBenutzergruppe {
 }
 
 
-const SBenutzergruppeAuswahl = () => import("~/components/schule/benutzerverwaltung/SBenutzergruppeAuswahl.vue")
-const SBenutzergruppeApp = () => import("~/components/schule/benutzerverwaltung/SBenutzergruppeApp.vue")
+const SBenutzergruppeAuswahl = () => import("~/components/schule/benutzergruppen/SBenutzergruppeAuswahl.vue")
+const SBenutzergruppeApp = () => import("~/components/schule/benutzergruppen/SBenutzergruppeApp.vue")
 
 
 export class RouteSchuleBenutzergruppe extends RouteNodeListView<ListBenutzergruppe, BenutzergruppeListeEintrag, RouteDataSchuleBenutzergruppe, RouteApp> {

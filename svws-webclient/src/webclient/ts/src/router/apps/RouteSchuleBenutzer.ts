@@ -14,8 +14,8 @@ export class RouteDataSchuleBenutzer {
 }
 
 
-const SBenutzerAuswahl = () => import("~/components/schule/benutzerverwaltung/SBenutzerAuswahl.vue")
-const SBenutzerApp = () => import("~/components/schule/benutzerverwaltung/SBenutzerApp.vue")
+const SBenutzerAuswahl = () => import("~/components/schule/benutzer/SBenutzerAuswahl.vue")
+const SBenutzerApp = () => import("~/components/schule/benutzer/SBenutzerApp.vue")
 
 
 export class RouteSchuleBenutzer extends RouteNodeListView<ListBenutzer, BenutzerListeEintrag, RouteDataSchuleBenutzer, RouteApp> {

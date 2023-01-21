@@ -23,7 +23,7 @@
 		<svws-ui-icon><i-ri-add-line /></svws-ui-icon>
 	</button>
 
-	<button class="button button--icon" v-if="show_delete_icon" @click="deleteBenutzergruppe_n()">
+	<button class="button button--icon" v-if="showDeleteIcon" @click="deleteBenutzergruppe_n()">
 		<svws-ui-icon><i-ri-delete-bin-2-line /></svws-ui-icon>
 	</button>
 
@@ -37,6 +37,7 @@
 </template>
 
 <script setup lang="ts">
+
 	import { ref } from "vue";
 	import { injectMainApp, Main } from "~/apps/Main";
 
@@ -46,12 +47,11 @@
 	const bezeichnung = ref();
 	const inputbgIstAdmin=ref(false);
 
-	const props = defineProps({
-		show_delete_icon : {type:Boolean, default:false}
-	});
+	const props = defineProps<{
+		showDeleteIcon: boolean;
+	}>();
 
 	function createBenutzergruppe(){
-		console.log(bezeichnung.value+"-"+inputbgIstAdmin.value)
 		main.apps.benutzergruppe.dataBenutzergruppe.create(bezeichnung.value,inputbgIstAdmin.value);
 		modalNeueBenutzergruppe.value.closeModal();
 		bezeichnung.value="";
@@ -61,4 +61,5 @@
 	function deleteBenutzergruppe_n(){
 		main.apps.benutzergruppe.dataBenutzergruppe.deleteBenutzergruppe_n();
 	}
+
 </script>
