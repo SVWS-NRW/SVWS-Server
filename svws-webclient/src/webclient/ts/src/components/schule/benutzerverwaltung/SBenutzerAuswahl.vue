@@ -17,7 +17,7 @@
 			<!-- Auswahlliste für die Benutzer -->
 			<svws-ui-table v-model="selected" :columns="cols" :data="rowsFiltered" v-model:selection="selectedItems" is-multi-select :footer="true">
 				<template #footer>
-					<s-modal-benutzer-neu :show_delete_icon="selectedItems.length > 0"/>
+					<s-modal-benutzer-neu :show_delete_icon="selectedItems.length > 0" />
 				</template>
 			</svws-ui-table>
 		</template>

@@ -1,9 +1,10 @@
 <template>
-	<div class="flex flex-row flex-grow">
-		<div class="mr-4">
+	<div class="flex flex-row  gap-6">
+		<div class="w-2/5">
 			<s-card-benutzer-daten />
+			<s-card-benutzer-gruppen-liste />
 		</div>
-		<div class="w-full">
+		<div class="w-3/5">
 			<s-card-benutzer-kompetenzen />
 		</div>
 	</div>
@@ -11,7 +12,5 @@
 
 <script setup lang="ts">
 
-	import { computed, ComputedRef } from "vue";
-	import { App } from "~/apps/BaseApp";
 
 </script>

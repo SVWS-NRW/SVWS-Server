@@ -1,14 +1,14 @@
 <template>
 	<svws-ui-content-card title="Benutzergruppe">
 		<div class="flex flex-col">
-				<svws-ui-text-input v-model="bezeichnung" type="text" placeholder="Bezeichnung" />
-				<svws-ui-checkbox v-model="inputIstAdmin"> Admin ? </svws-ui-checkbox>
-				<svws-ui-table v-model="selected" v-model:selection="selection" :columns="cols" :data="rowsFiltered" :footer="true">
-					<!-- Footer mit Button zum Hinzufügen einer Zeile -->
-					<template #footer>
-						<s-modal-benutzergruppe-benutzer-auswahl  />
-					</template>
-				</svws-ui-table>
+			<svws-ui-text-input v-model="bezeichnung" type="text" placeholder="Bezeichnung" />
+			<svws-ui-checkbox v-model="inputIstAdmin"> Admin ? </svws-ui-checkbox>
+			<!-- <svws-ui-table v-model="selected" v-model:selection="selection" :columns="cols" :data="rowsFiltered" :footer="true"> -->
+				<!-- Footer mit Button zum Hinzufügen einer Zeile -->
+				<!-- <template #footer>
+					<s-modal-benutzergruppe-benutzer-auswahl />
+				</template>
+			</svws-ui-table> -->
 		</div>
 	</svws-ui-content-card>
 </template>

@@ -7,7 +7,7 @@
 			</nav>
 		</template>
 		<template #abschnitt>
-			<svws-ui-multi-select v-if="schule_abschnitte" v-model="akt_abschnitt" :items="schule_abschnitte" :item-sort="item_sort" :item-text="item_text"></svws-ui-multi-select>
+			<svws-ui-multi-select v-if="schule_abschnitte" v-model="akt_abschnitt" :items="schule_abschnitte" :item-sort="item_sort" :item-text="item_text" />
 		</template>
 		<template #header />
 		<template #content>

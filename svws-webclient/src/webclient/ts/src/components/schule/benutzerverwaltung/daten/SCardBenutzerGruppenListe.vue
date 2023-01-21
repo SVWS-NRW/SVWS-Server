@@ -4,24 +4,18 @@
 			<a class="underline cursor-pointer mr-2 hover:no-underline" @click="router.push({ name: routeSchuleBenutzergruppe.name })" title="Zu den Einstellungen für Benutzergruppen">Bearbeiten</a>
 		</template>
 		<div class="flex flex-row gap-4">
-			<div class="-my-2 flex-none sm:-mx-6 lg:-mx-8">
-				<div class="inline-block py-2 align-middle sm:px-6 lg:px-8">
-					<div class="overflow-hidden rounded-lg shadow">
-						<table class="border-collapse text-sm">
-							<thead class="bg-slate-100">
-								<tr>
-									<td class="border border-[#7f7f7f]/20 text-center">
-										<svws-ui-checkbox v-model="selected"> Alle </svws-ui-checkbox>
-									</td>
-								</tr>
-							</thead>
-							<tbody>
-								<s-benutzergruppen-listeneintrag v-for="bgle in benutzergruppen" :key="bgle.id" :bgle="bgle" />
-							</tbody>
-						</table>
-					</div>
-				</div>
-			</div>
+			<table class="border-collapse text-sm">
+				<thead class="bg-slate-100">
+					<tr>
+						<td class="border border-[#7f7f7f]/20 text-center">
+							<svws-ui-checkbox v-model="selected"> Alle </svws-ui-checkbox>
+						</td>
+					</tr>
+				</thead>
+				<tbody>
+					<s-benutzergruppen-listeneintrag v-for="bgle in benutzergruppen" :key="bgle.id" :bgle="bgle" />
+				</tbody>
+			</table>
 		</div>
 	</svws-ui-content-card>
 </template>

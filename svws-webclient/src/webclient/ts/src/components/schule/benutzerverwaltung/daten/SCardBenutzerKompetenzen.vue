@@ -1,7 +1,7 @@
 <template>
 	<svws-ui-content-card title="Kompetenzen">
-		<div class="overflow-x-auto relative shadow-md sm:rounded-lg">
-			<table class="w-full ">
+		<div class="overflow-y-scroll h-screen  shadow-md sm:rounded-lg">
+			<table class=" ">
 				<tr class="bg-green-100">
 					<td colspan="2">Kompetenzen</td>
 					<td>durch Gruppe(n)</td>

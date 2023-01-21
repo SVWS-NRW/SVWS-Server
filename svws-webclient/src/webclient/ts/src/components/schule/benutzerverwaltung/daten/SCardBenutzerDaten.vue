@@ -1,16 +1,18 @@
 <template>
 	<svws-ui-content-card title="Benutzer">
 		<div class="flex flex-col">
-			<svws-ui-text-input class="mb-3" v-model="name" type="text" placeholder="Name" />
-			<svws-ui-text-input class="mb-3" v-model="anzeigename" type="text" placeholder="Login-Name" />
-			<svws-ui-checkbox class="mb-4" v-model="inputIstAdmin" :disabled="manager?.istInAdminGruppe()"> Admin ? </svws-ui-checkbox>
-
-			<svws-ui-text-input class="mb-3" v-model="kennwort1" type="password" placeholder="neues Kennwort" />
-			<svws-ui-text-input class="mb-3" v-model="kennwort2" type="password" placeholder="neues Kennwort wiederholen" />
+			<div class="flex gap-4">
+				<svws-ui-text-input class="mb-5" v-model="name" type="text" placeholder="Name" />
+				<svws-ui-text-input class="mb-5" v-model="anzeigename" type="text" placeholder="Login-Name" />
+			</div>
+			<svws-ui-checkbox class="mb-4 " v-model="inputIstAdmin" :disabled="manager?.istInAdminGruppe()"> Admin ? </svws-ui-checkbox>
+			<div class="flex gap-4 mt-3">
+				<svws-ui-text-input class="mb-5" v-model="kennwort1" type="password" placeholder="neues Kennwort" />
+				<svws-ui-text-input class="mb-5" v-model="kennwort2" type="password" placeholder="neues Kennwort wiederholen" />
+			</div>
 			<svws-ui-button type="secondary" @click="setPassword()"> Kennwort ändern </svws-ui-button>
 		</div>
 	</svws-ui-content-card>
-	<s-card-benutzer-gruppen-liste />
 </template>
 
 <script setup lang="ts">

@@ -3,7 +3,7 @@ import { BaseData } from "~/apps/BaseData";
 
 import { ListBenutzergruppenBenutzer } from "./ListBenutzergruppenBenutzer";
 
-import { BenutzergruppeDaten, BenutzergruppeListeEintrag, BenutzergruppenManager, BenutzerKompetenz, BenutzerKompetenzGruppe, List, Vector } from "@svws-nrw/svws-core-ts";
+import { BenutzergruppeDaten, BenutzergruppeListeEintrag, BenutzergruppenManager, BenutzerKompetenz, BenutzerKompetenzGruppe, BenutzerListeEintrag, List, Vector } from "@svws-nrw/svws-core-ts";
 import { router } from "~/router";
 import { routeSchuleBenutzergruppe } from "~/router/apps/RouteSchuleBenutzergruppe";
 
@@ -190,7 +190,7 @@ export class DataBenutzergruppe extends BaseData<BenutzergruppeDaten, Benutzergr
 	}
 
 	/**
-	 * Entfernt die ausgewählten Benutzer
+	 * Entfernt die ausgewählten Benutzergruppen
 	 */
 	public async deleteBenutzergruppe_n(){
 		const benutzer : BenutzergruppeListeEintrag[] = App.apps.benutzergruppe.auswahl.ausgewaehlt_gruppe;
@@ -207,6 +207,39 @@ export class DataBenutzergruppe extends BaseData<BenutzergruppeDaten, Benutzergr
 		}
 		alert("Benutzergruppe gelöscht!!!");
 		router.push({ name: routeSchuleBenutzergruppe.name});
+	}
+
+	/**
+	 * Fügt den Benutzer in die Benutzergruppe ein
+	 *
+	 * @param {BenutzerListeEintrag} benutzer
+	 *
+	 * @returns {Promise<void>}
+	 */
+	public async addBenutzergruppeBenutzer(benutzer: BenutzerListeEintrag): Promise<void> {
+		if (!this.manager)
+			return;
+		const b_ids:Vector<Number> = new Vector<Number>();
+		b_ids.add(Number(benutzer.id));
+		await App.api.addBenutzergruppeBenutzer(b_ids, App.schema,this.manager.getID()) as BenutzergruppeDaten;
+		App.apps.benutzergruppe.dataBenutzergruppe.listBenutzergruppenBenutzer.liste.push(benutzer);
+
+	}
+
+	/**
+	 * Entfernt einen Benutzer aus der Gruppe
+	 *
+	 * @param {BenutzerListeEintrag} benutzer
+	 *
+	 * @returns {Promise<void>}
+	 */
+	public async removeBenutzergruppeBenutzer(benutzer: BenutzerListeEintrag): Promise<void> {
+		if (!this.manager)
+			return;
+		const bg_ids:Vector<Number> = new Vector<Number>();
+		bg_ids.add(Number(benutzer.id));
+		const result = await App.api.removeBenutzergruppeBenutzer(bg_ids, App.schema,this.manager.getID()) as BenutzergruppeDaten;
+		App.apps.benutzergruppe.dataBenutzergruppe.listBenutzergruppenBenutzer.liste = App.apps.benutzergruppe.dataBenutzergruppe.listBenutzergruppenBenutzer.liste.filter(item => item.id !== benutzer.id);
 	}
 
 }

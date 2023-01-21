@@ -3,7 +3,7 @@
 		<template #modalTitle> Benutzer hinzufügen </template>
 
 		<template #modalContent>
-			<svws-ui-table v-model="selected" v-model:selection="selection" :columns="cols" :data="rowsFiltered" is-multi-select />
+			<svws-ui-table v-model="selected" v-model:selection="selection" :columns="cols" :data="rowsFiltered" is-multi-select id="id" />
 		</template>
 
 		<template #modalActions>
@@ -43,7 +43,7 @@
 		return benutzer_liste.value || [];
 	});
 	const selected = ref([]);
-	const selection = ref(app.dataBenutzergruppe.listBenutzergruppenBenutzer.liste || []);
+	const selection = ref(benutzer_liste.value?.filter(item => item.id < 22));
 	console.log(selection.value);
 	function addBenutzer(){
 		console.log(selection.value)

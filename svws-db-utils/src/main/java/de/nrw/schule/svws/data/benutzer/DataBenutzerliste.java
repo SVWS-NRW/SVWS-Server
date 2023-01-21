@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Vector;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -75,7 +76,8 @@ public class DataBenutzerliste extends DataManager<Long> {
 				.collect(Collectors.toList());
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
-
+	
+	
 	@Override
 	public Response get(Long id) {
 		throw new UnsupportedOperationException();

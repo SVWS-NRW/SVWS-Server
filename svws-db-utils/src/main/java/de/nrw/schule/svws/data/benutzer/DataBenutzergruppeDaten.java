@@ -345,11 +345,9 @@ public class DataBenutzergruppeDaten extends DataManager<Long> {
         getDTO(id); // Prüfe, ob die Gruppe überhaupt in der DB definiert ist
         if (bids.size() > 0) {
             // Prüfe, ob die Benutzer mit den Ids existieren.
-            for (Long bid : bids) {
-                DTOBenutzer benutzer = conn.queryByKey(DTOBenutzer.class, bid);
-                if (benutzer == null)
-                    return OperationError.NOT_FOUND.getResponse("Der Benutzermit der ID " + bid + " existiert nicht!!");
-            }
+            List<DTOBenutzer> benutzer = conn.queryNamed("DTOBenutzer.id.multiple", bids, DTOBenutzer.class);
+            if (benutzer.size() != bids.size())
+                return OperationError.NOT_FOUND.getResponse("Ein übergebener Benutzer existiert nicht!");
             try {
                 conn.transactionBegin();
                 for (Long bid : bids) {
@@ -524,3 +522,4 @@ public class DataBenutzergruppeDaten extends DataManager<Long> {
         return Response.status(Status.OK).build();
     }
 }
+

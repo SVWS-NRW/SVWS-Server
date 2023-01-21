@@ -14,7 +14,7 @@
 			</div>
 		</template>
 		<template #content>
-			<svws-ui-table v-model="selected" v-model:selection="selectedItems"  :columns="cols" :data="rowsFiltered" is-multi-select :footer="true">
+			<svws-ui-table v-model="selected" v-model:selection="selectedItems" :columns="cols" :data="rowsFiltered" is-multi-select :footer="true">
 				<template #footer>
 					<s-modal-benutzergruppe-neu :show_delete_icon="selectedItems.length" />
 				</template>

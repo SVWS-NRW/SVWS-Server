@@ -1,9 +1,11 @@
 <template>
-	<div class="flex flex-row flex-grow">
-		<div class="mr-4">
+	<div class="flex flex-row gap-3">
+		<div class="felx flex-col w-2/5">
 			<s-card-benutzergruppe-daten />
+			<s-benutzergruppe-add-benutzer />
 		</div>
-		<div>
+
+		<div class="w-3/5">
 			<s-card-benutzergruppe-kompetenzen />
 		</div>
 	</div>
