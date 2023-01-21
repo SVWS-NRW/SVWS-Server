@@ -3,9 +3,9 @@
 		<s-card-gost-kursansicht :jahrgangsdaten="jahrgangsdaten" :data-faecher="dataFaecher" :halbjahr="halbjahr.value"
 			:list-blockungen="listBlockungen" :blockung="blockung" :ergebnis="ergebnis"
 			:data-fachwahlen="dataFachwahlen" :list-lehrer="listLehrer" :map-lehrer="mapLehrer" />
-		<section class="flex flex-col h-full overflow-y-auto flex-grow">
-			<router-view name="gost_kursplanung_schueler_auswahl" />
-			<router-view />
+		<section class="flex flex-row h-full overflow-y-auto flex-grow gap-4">
+			<div> <router-view name="gost_kursplanung_schueler_auswahl" /> </div>
+			<div> <router-view /> </div>
 		</section>
 		<div v-if="allow_regeln" class="app-layout--main-sidebar" :class="{ 'app-layout--main-sidebar--collapsed': collapsed }">
 			<div class="app-layout--main-sidebar--container">
