@@ -4,14 +4,11 @@ import { routeSchuleBenutzerDaten } from "~/router/apps/benutzer/RouteSchuleBenu
 import { RouteNodeListView } from "~/router/RouteNodeListView";
 import { ListBenutzer } from "~/apps/schule/benutzerverwaltung/ListBenutzer";
 import { WritableComputedRef } from "vue";
-import { mainApp } from "~/apps/Main"
 import { RouteNode } from "~/router/RouteNode";
 import { RouteApp } from "~/router/RouteApp";
 
-
 const SBenutzerAuswahl = () => import("~/components/schule/benutzer/SBenutzerAuswahl.vue")
 const SBenutzerApp = () => import("~/components/schule/benutzer/SBenutzerApp.vue")
-
 
 export class RouteSchuleBenutzer extends RouteNodeListView<ListBenutzer, BenutzerListeEintrag, unknown, RouteApp> {
 

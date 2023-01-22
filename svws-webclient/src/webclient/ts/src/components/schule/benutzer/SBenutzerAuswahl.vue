@@ -17,7 +17,7 @@
 			<!-- Auswahlliste für die Benutzer -->
 			<svws-ui-table v-model="selected" :columns="cols" :data="rowsFiltered" v-model:selection="selectedItems" is-multi-select :footer="true">
 				<template #footer>
-					<s-modal-benutzer-neu :show_delete_icon="selectedItems.length > 0" />
+					<s-modal-benutzer-neu :show-delete-icon="selectedItems.length > 0" />
 				</template>
 			</svws-ui-table>
 		</template>
@@ -28,12 +28,9 @@
 
 	import { BenutzerListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, Ref, ref, ShallowRef, WritableComputedRef } from "vue";
-	import { injectMainApp, Main } from "~/apps/Main";
 	import { router } from "~/router";
 	import { routeSchule } from "~/router/apps/RouteSchule";
 	import { routeSchuleBenutzer } from "~/router/apps/RouteSchuleBenutzer";
-
-	const main: Main = injectMainApp();
 
 	const props = defineProps<{
 		item: ShallowRef<BenutzerListeEintrag | undefined>;

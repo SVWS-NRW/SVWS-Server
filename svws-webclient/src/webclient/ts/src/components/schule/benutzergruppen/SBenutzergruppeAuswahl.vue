@@ -26,22 +26,16 @@
 <script setup lang="ts">
 
 	import { BenutzergruppeListeEintrag } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, Ref, ref, WritableComputedRef } from "vue";
-	import { injectMainApp, Main } from "~/apps/Main";
+	import { computed, ComputedRef, Ref, ref, ShallowRef, WritableComputedRef } from "vue";
 	import { router } from "~/router";
 	import { routeSchule } from "~/router/apps/RouteSchule";
 	import { routeSchuleBenutzergruppe } from "~/router/apps/RouteSchuleBenutzergruppe";
 
 	const props = defineProps<{
-		id?: number;
-		item?: BenutzergruppeListeEintrag;
-		routename: string;
+		item: ShallowRef<BenutzergruppeListeEintrag | undefined>;
 	}>();
 
 	const selected = routeSchuleBenutzergruppe.auswahl;
-
-	const main: Main = injectMainApp();
-	const app = main.apps.benutzergruppe;
 
 	const cols = [
 		{ key: "id", label: "ID", sortable: true },
@@ -51,7 +45,7 @@
 	const search: Ref<string> = ref("");
 
 	const rows: ComputedRef<BenutzergruppeListeEintrag[] | undefined> = computed(() => {
-		return main.apps.benutzergruppe.auswahl.liste;
+		return routeSchuleBenutzergruppe.liste.liste;
 	});
 
 	const rowsFiltered: ComputedRef<BenutzergruppeListeEintrag[]> = computed(() =>
@@ -61,9 +55,9 @@
 	);
 
 	const selectedItems: WritableComputedRef<BenutzergruppeListeEintrag[]> = computed({
-		get: () => app.auswahl.ausgewaehlt_gruppe,
+		get: () => routeSchuleBenutzergruppe.liste.ausgewaehlt_gruppe,
 		set: (items: BenutzergruppeListeEintrag[]) => {
-			app.auswahl.ausgewaehlt_gruppe = items;
+			routeSchuleBenutzergruppe.liste.ausgewaehlt_gruppe = items;
 		}
 	});
 

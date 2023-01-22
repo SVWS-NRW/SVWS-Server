@@ -25,7 +25,7 @@
 		<svws-ui-icon><i-ri-add-line /></svws-ui-icon>
 	</button>
 
-	<button v-if="show_delete_icon" class="button button--icon" @click="deleteBenutzer()">
+	<button v-if="showDeleteIcon" class="button button--icon" @click="deleteBenutzer()">
 		<svws-ui-icon><i-ri-delete-bin2-line /></svws-ui-icon>
 	</button>
 
@@ -39,15 +39,14 @@
 </template>
 
 <script setup lang="ts">
-	import { ref } from "vue";
-	import { injectMainApp, Main } from "~/apps/Main";
 
-	const main: Main = injectMainApp();
-	const app = main.apps.benutzer;
+	import { ref } from "vue";
+	import { routeSchuleBenutzerDaten } from "~/router/apps/benutzer/RouteSchuleBenutzerDaten";
+
 	const modalNeuerBenutzer = ref();
 
 	const props = defineProps({
-		show_delete_icon : {type:Boolean, default:false}
+		showDeleteIcon : {type:Boolean, default:false}
 	});
 
 	const anzeigename = ref();
@@ -56,8 +55,8 @@
 	const passwort2=ref();
 
 	function createBenutzerAllgemein(){
-		if(passwort1.value === passwort2.value){
-			main.apps.benutzer.dataBenutzer.createBenutzerAllgemein(name.value,anzeigename.value,passwort1.value);
+		if (passwort1.value === passwort2.value){
+			routeSchuleBenutzerDaten.data.daten.createBenutzerAllgemein(name.value, anzeigename.value, passwort1.value);
 			modalNeuerBenutzer.value.closeModal();
 			anzeigename.value="";
 			name.value="";
@@ -70,7 +69,7 @@
 	}
 
 	function deleteBenutzer(){
-		app.dataBenutzer.deleteBenutzerAllgemein();
+		routeSchuleBenutzerDaten.data.daten.deleteBenutzerAllgemein();
 	}
-</script>
 
+</script>

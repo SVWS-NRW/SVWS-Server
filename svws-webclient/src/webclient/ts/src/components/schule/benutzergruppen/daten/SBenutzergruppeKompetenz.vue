@@ -9,28 +9,26 @@
 
 	import { BenutzerKompetenz } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, WritableComputedRef } from "vue";
-	import { injectMainApp, Main } from "~/apps/Main";
+	import { DataBenutzergruppe } from "~/apps/schule/benutzerverwaltung/DataBenutzergruppe";
 
 	const props = defineProps<{
+		data: DataBenutzergruppe;
 		kompetenz: BenutzerKompetenz;
 		istAdmin: boolean;
 	}>();
 
-	const main : Main = injectMainApp();
-	const app =  main.apps.benutzergruppe;
-
 	const aktiviert : ComputedRef<boolean> = computed(() => props.istAdmin);
 
 	const selected: WritableComputedRef<boolean> = computed({
-		get: () => (app.dataBenutzergruppe.manager === undefined) ? false : app.dataBenutzergruppe.manager.hatKompetenz(props.kompetenz),
+		get: () => (props.data.manager === undefined) ? false : props.data.manager.hatKompetenz(props.kompetenz),
 		set: (value) => {
-			const alt : boolean = (app.dataBenutzergruppe.manager === undefined) ? false : app.dataBenutzergruppe.manager.hatKompetenz(props.kompetenz);
+			const alt : boolean = (props.data.manager === undefined) ? false : props.data.manager.hatKompetenz(props.kompetenz);
 			if (alt === value)
 				return;
 			if (value)
-				app.dataBenutzergruppe.addKompetenz(props.kompetenz);
+				props.data.addKompetenz(props.kompetenz);
 			else
-				app.dataBenutzergruppe.removeKompetenz(props.kompetenz);
+				props.data.removeKompetenz(props.kompetenz);
 		}
 	});
 

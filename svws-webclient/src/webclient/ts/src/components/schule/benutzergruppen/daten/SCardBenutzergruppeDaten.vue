@@ -4,8 +4,8 @@
 			<svws-ui-text-input v-model="bezeichnung" type="text" placeholder="Bezeichnung" />
 			<svws-ui-checkbox v-model="inputIstAdmin"> Admin ? </svws-ui-checkbox>
 			<!-- <svws-ui-table v-model="selected" v-model:selection="selection" :columns="cols" :data="rowsFiltered" :footer="true"> -->
-				<!-- Footer mit Button zum Hinzufügen einer Zeile -->
-				<!-- <template #footer>
+			<!-- Footer mit Button zum Hinzufügen einer Zeile -->
+			<!-- <template #footer>
 					<s-modal-benutzergruppe-benutzer-auswahl />
 				</template>
 			</svws-ui-table> -->
@@ -14,36 +14,32 @@
 </template>
 
 <script setup lang="ts">
+
 	import { BenutzergruppenManager, BenutzerListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, Ref, ref, WritableComputedRef } from "vue";
-	import { injectMainApp, Main } from "~/apps/Main";
+	import { DataBenutzergruppe } from "~/apps/schule/benutzerverwaltung/DataBenutzergruppe";
 
-	const main: Main = injectMainApp();
-	const app = main.apps.benutzergruppe;
+	const props = defineProps<{
+		data: DataBenutzergruppe;
+	}>();
 
-	const manager: ComputedRef<BenutzergruppenManager | undefined> = computed(() => {
-		return app.dataBenutzergruppe.manager;
-	})
+	const manager: ComputedRef<BenutzergruppenManager | undefined> = computed(() => props.data.manager);
 
 	const bezeichnung: WritableComputedRef<string | undefined> = computed({
-		get(): string | undefined {
-			return manager.value?.getBezeichnung().valueOf();
-		},
-		async set(val: string | undefined) {
-			if ((val === undefined) || (val === "") || (val === manager.value?.getBezeichnung().valueOf()))
+		get: () => manager.value?.getBezeichnung().valueOf(),
+		set: async (value) => {
+			if ((value === undefined) || (value === "") || (value === manager.value?.getBezeichnung().valueOf()))
 				return;
-			app.dataBenutzergruppe.setBezeichnung(val);
+			props.data.setBezeichnung(value);
 		}
 	});
 
 	const inputIstAdmin: WritableComputedRef<boolean | undefined> = computed({
-		get(): boolean | undefined {
-			return manager.value?.istAdmin();
-		},
-		set(val) {
-			if ((val === undefined) || (val === manager.value?.istAdmin()))
+		get: () => manager.value?.istAdmin(),
+		set: async (value) => {
+			if ((value === undefined) || (value === manager.value?.istAdmin()))
 				return;
-			app.dataBenutzergruppe.setIstAdmin(val);
+			props.data.setIstAdmin(value);
 		}
 	});
 
@@ -56,7 +52,7 @@
 	];
 
 	const rows: ComputedRef<BenutzerListeEintrag[] | undefined> = computed(() => {
-		return app.dataBenutzergruppe.listBenutzergruppenBenutzer.liste;
+		return props.data.listBenutzergruppenBenutzer.liste;
 	});
 
 	const rowsFiltered: ComputedRef<BenutzerListeEintrag[] | undefined> = computed(() => {
@@ -70,25 +66,17 @@
 
 	const search: Ref<string> = ref("");
 	const selection: WritableComputedRef<BenutzerListeEintrag[] | undefined> = computed({
-		get() : BenutzerListeEintrag[] | undefined {
-			return app.dataBenutzergruppe.listBenutzergruppenBenutzer.liste;
-		},
-		set(val:BenutzerListeEintrag[] | undefined){
+		get: () => props.data.listBenutzergruppenBenutzer.liste,
+		set: (value) => {
 			// TODO console.log(val)
 		}
 	});
 
 	const selected: WritableComputedRef<BenutzerListeEintrag | undefined> = computed({
-		get():BenutzerListeEintrag | undefined {
-			return app.dataBenutzergruppe.listBenutzergruppenBenutzer.liste[0] ;
-		},
-		set(val:BenutzerListeEintrag | undefined) {
+		get: () => props.data.listBenutzergruppenBenutzer.liste[0],
+		set: (value) => {
 			// TODO
 		}
 	});
-
-	function createUser(){
-		console.log("Halloe")
-	}
 
 </script>

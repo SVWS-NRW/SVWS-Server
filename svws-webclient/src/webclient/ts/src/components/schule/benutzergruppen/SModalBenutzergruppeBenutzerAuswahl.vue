@@ -17,12 +17,10 @@
 </template>
 
 <script setup lang="ts">
-	import { BenutzergruppenManager, BenutzerListeEintrag } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, Ref, ref, WritableComputedRef } from "vue";
-	import { injectMainApp, Main } from "~/apps/Main";
 
-	const main: Main = injectMainApp();
-	const app = main.apps.benutzergruppe;
+	import { BenutzerListeEintrag } from "@svws-nrw/svws-core-ts";
+	import { computed, ComputedRef, ref } from "vue";
+	import { routeSchuleBenutzergruppeDaten } from "~/router/apps/benutzergruppe/RouteSchuleBenutzergruppeDaten";
 
 	const modalNeueBenutzergruppeBenutzerauswahl = ref();
 
@@ -34,8 +32,8 @@
 		{ key: "istAdmin", label: "IstAdmin", sortable: false }
 	];
 
-	const benutzer_liste: ComputedRef<BenutzerListeEintrag[] | undefined> = computed(() => {
-		return main.apps.benutzer.auswahl.liste;
+	const benutzer_liste: ComputedRef<BenutzerListeEintrag[]> = computed(() => {
+		return routeSchuleBenutzergruppeDaten.data.listBenutzer.liste;
 	});
 
 	const rowsFiltered: ComputedRef<BenutzerListeEintrag[]> = computed(() => {
@@ -44,7 +42,7 @@
 	});
 	const selected = ref([]);
 	const selection = ref(benutzer_liste.value?.filter(item => item.id < 22));
-	console.log(selection.value);
+
 	function addBenutzer(){
 		console.log(selection.value)
 	}

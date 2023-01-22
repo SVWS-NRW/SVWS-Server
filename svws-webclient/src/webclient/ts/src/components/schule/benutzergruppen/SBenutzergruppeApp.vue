@@ -1,5 +1,5 @@
 <template>
-	<div v-if="props.id !== undefined">
+	<div v-if="visible">
 		<svws-ui-header>
 			<div class="flex items-center">
 				<span class="inline-block mr-3">{{ bezeichnung }}</span>
@@ -18,16 +18,22 @@
 <script setup lang="ts">
 
 	import { BenutzergruppeListeEintrag } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef } from "vue";
+	import { computed, ComputedRef, ShallowRef } from "vue";
 
 	import { routeSchuleBenutzergruppe } from "~/router/apps/RouteSchuleBenutzergruppe";
 
-	const props = defineProps<{ id?: number; item?: BenutzergruppeListeEintrag, routename: string }>();
+	const props = defineProps<{
+		item: ShallowRef<BenutzergruppeListeEintrag | undefined>;
+	}>();
 
-	const selectedRoute = routeSchuleBenutzergruppe.getChildRouteSelector();
+	const selectedRoute = routeSchuleBenutzergruppe.childRouteSelector;
 	const children_hidden = routeSchuleBenutzergruppe.children_hidden();
 
-	const id: ComputedRef<string> = computed(() => "ID: " + props.id);
-	const bezeichnung: ComputedRef<string> = computed(() => props.item?.bezeichnung.toString() || "");
+	const id: ComputedRef<string> = computed(() => "ID: " + props.item.value?.id);
+	const bezeichnung: ComputedRef<string> = computed(() => props.item.value?.bezeichnung.toString() || "");
+
+	const visible: ComputedRef<boolean> = computed(() => {
+		return (!routeSchuleBenutzergruppe.hidden()) && (props.item.value !== undefined);
+	});
 
 </script>

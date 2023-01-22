@@ -39,9 +39,8 @@
 <script setup lang="ts">
 
 	import { ref } from "vue";
-	import { injectMainApp, Main } from "~/apps/Main";
+	import { routeSchuleBenutzergruppeDaten } from "~/router/apps/benutzergruppe/RouteSchuleBenutzergruppeDaten";
 
-	const main: Main = injectMainApp();
 	const modalNeueBenutzergruppe = ref();
 
 	const bezeichnung = ref();
@@ -52,14 +51,14 @@
 	}>();
 
 	function createBenutzergruppe(){
-		main.apps.benutzergruppe.dataBenutzergruppe.create(bezeichnung.value,inputbgIstAdmin.value);
+		routeSchuleBenutzergruppeDaten.data.daten.create(bezeichnung.value,inputbgIstAdmin.value);
 		modalNeueBenutzergruppe.value.closeModal();
 		bezeichnung.value="";
 		inputbgIstAdmin.value=false;
 	}
 
 	function deleteBenutzergruppe_n(){
-		main.apps.benutzergruppe.dataBenutzergruppe.deleteBenutzergruppe_n();
+		routeSchuleBenutzergruppeDaten.data.daten.deleteBenutzergruppe_n();
 	}
 
 </script>

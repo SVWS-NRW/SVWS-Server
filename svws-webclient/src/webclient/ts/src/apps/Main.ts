@@ -14,7 +14,6 @@ import {
 import { type Apps, App } from "./BaseApp";
 import { Schule } from "./schule/Schule";
 
-import { Benutzergruppe } from "./schule/benutzerverwaltung/Benutzergruppe";
 import { Jahrgaenge } from "./jahrgaenge/Jahrgaenge";
 import { BaseList } from "./BaseList";
 import { ApiLoadingStatus } from "./core/ApiLoadingStatus.class";
@@ -210,7 +209,6 @@ export class Main {
 		});
 		App.apps = {
 			schule: new Schule(),
-			benutzergruppe : new Benutzergruppe(),
 			jahrgaenge: new Jahrgaenge()
 		};
 		await App.apps.schule.init();
