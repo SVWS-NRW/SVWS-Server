@@ -14,7 +14,9 @@
 			<td><svws-ui-checkbox v-model="selected" :disabled="istAdmin" /></td>
 			<td colspan="2"> {{ kompetenzgruppe.daten.bezeichnung }} </td>
 		</tr>
-		<s-benutzer-kompetenz v-for="kompetenz in BenutzerKompetenz.getKompetenzen(kompetenzgruppe)" :key="kompetenz.daten.id" :kompetenz="kompetenz" :ist-admin="istAdmin" />
+		<template v-for="kompetenz in BenutzerKompetenz.getKompetenzen(kompetenzgruppe)" :key="kompetenz.daten.id">
+			<s-benutzer-kompetenz :kompetenz="kompetenz" :ist-admin="istAdmin" :data="data" />
+		</template>
 	</template>
 </template>
 
@@ -22,25 +24,23 @@
 
 	import { BenutzerKompetenz, BenutzerKompetenzGruppe } from "@svws-nrw/svws-core-ts";
 	import { ref, Ref, computed, WritableComputedRef } from "vue";
-	import { injectMainApp, Main } from "~/apps/Main";
+	import { DataBenutzer } from "~/apps/schule/benutzerverwaltung/DataBenutzer";
 
 	const props = defineProps<{
+		data: DataBenutzer;
 		kompetenzgruppe: BenutzerKompetenzGruppe;
 		istAdmin: boolean;
 	}>();
 
-	const main: Main = injectMainApp();
-	const app = main.apps.benutzer;
-
 	const collapsed: Ref<boolean> = ref(true);
 
 	const selected: WritableComputedRef<boolean> = computed({
-		get: () => (app.dataBenutzer.manager === undefined) ? false : app.dataBenutzer.manager.hatKompetenzen(BenutzerKompetenz.getKompetenzen(props.kompetenzgruppe)),
+		get: () => (props.data.manager === undefined) ? false : props.data.manager.hatKompetenzen(BenutzerKompetenz.getKompetenzen(props.kompetenzgruppe)),
 		set: (value) => {
 			if (value)
-				app.dataBenutzer.addBenutzerKompetenzGruppe(props.kompetenzgruppe);
+				props.data.addBenutzerKompetenzGruppe(props.kompetenzgruppe);
 			else
-				app.dataBenutzer.removeBenutzerKompetenzGruppe(props.kompetenzgruppe);
+				props.data.removeBenutzerKompetenzGruppe(props.kompetenzgruppe);
 		}
 	});
 

@@ -5,7 +5,7 @@ import { BenutzerDaten, BenutzergruppeDaten, BenutzergruppeListeEintrag, Benutze
 	BenutzerListeEintrag, BenutzerManager, Credentials, Vector } from "@svws-nrw/svws-core-ts";
 import { router } from "~/router";
 import { routeSchuleBenutzer } from "~/router/apps/RouteSchuleBenutzer";
-import { mainApp } from "~/apps/Main";
+import { routeSchuleBenutzerDaten } from "~/router/apps/benutzer/RouteSchuleBenutzerDaten";
 
 export class DataBenutzer extends BaseData<BenutzerDaten, BenutzerListeEintrag, BenutzerManager> {
 
@@ -57,9 +57,9 @@ export class DataBenutzer extends BaseData<BenutzerDaten, BenutzerListeEintrag, 
 		if (!this.manager)
 			return;
 		await App.api.setAnzeigename(anzeigename,App.schema,this.manager.getID());
-		for (const index in App.apps.benutzer.auswahl.liste) {
-			if (App.apps.benutzer.auswahl.liste[index].id === App.apps.benutzer.dataBenutzer.daten?.id)
-				App.apps.benutzer.auswahl.liste[index].anzeigename = anzeigename;
+		for (const index in routeSchuleBenutzer.liste.liste) {
+			if (routeSchuleBenutzer.liste.liste[index].id === routeSchuleBenutzerDaten.data.daten.daten?.id)
+				routeSchuleBenutzer.liste.liste[index].anzeigename = anzeigename;
 		}
 		this.manager.setAnzeigename(anzeigename);
 	}
@@ -75,9 +75,9 @@ export class DataBenutzer extends BaseData<BenutzerDaten, BenutzerListeEintrag, 
 		if (!this.manager)
 			return;
 		await App.api.setAnmeldename(anmeldename, App.schema, this.manager.getID());
-		for (const index in App.apps.benutzer.auswahl.liste){
-			if (App.apps.benutzer.auswahl.liste[index].id === App.apps.benutzer.dataBenutzer.daten?.id)
-				App.apps.benutzer.auswahl.liste[index].name = anmeldename;
+		for (const index in routeSchuleBenutzer.liste.liste){
+			if (routeSchuleBenutzer.liste.liste[index].id === routeSchuleBenutzerDaten.data.daten.daten?.id)
+				routeSchuleBenutzer.liste.liste[index].name = anmeldename;
 		}
 		this.manager.setAnmeldename(anmeldename);
 	}
@@ -271,8 +271,8 @@ export class DataBenutzer extends BaseData<BenutzerDaten, BenutzerListeEintrag, 
 		ble.name = result.name;
 		ble.istAdmin= result.istAdmin;
 		ble.idCredentials = result.idCredentials;
-		App.apps.benutzer.auswahl.liste.push(ble);
-		App.apps.benutzer.auswahl.ausgewaehlt = result;
+		routeSchuleBenutzer.liste.liste.push(ble);
+		routeSchuleBenutzer.liste.ausgewaehlt = result;
 		router.push({ name: routeSchuleBenutzer.name, params: { id : ble.id } });
 	}
 
@@ -280,17 +280,15 @@ export class DataBenutzer extends BaseData<BenutzerDaten, BenutzerListeEintrag, 
 	 * Entfernt die ausgewählten Benutzer
 	 */
 	public async deleteBenutzerAllgemein(){
-		const benutzer : BenutzerListeEintrag[] = mainApp.apps.benutzer.auswahl.ausgewaehlt_gruppe;
-		console.log(benutzer);
+		const benutzer : BenutzerListeEintrag[] = routeSchuleBenutzer.liste.ausgewaehlt_gruppe;
 		const bids : Vector<Number> = new Vector<Number>();
 		for ( const b of benutzer){
 			bids.add(b.id)
 		}
-		console.log(bids);
 		await App.api.removeBenutzerAllgemein(bids,App.schema);
-		App.apps.benutzer.auswahl.ausgewaehlt_gruppe = [];
+		routeSchuleBenutzer.liste.ausgewaehlt_gruppe = [];
 		for(const b of benutzer) {
-			App.apps.benutzer.auswahl.liste = App.apps.benutzer.auswahl.liste.filter(item => item.id !== b.id);
+			routeSchuleBenutzer.liste.liste = routeSchuleBenutzer.liste.liste.filter(item => item.id !== b.id);
 		}
 		alert("Benutzer gelöscht!!!");
 		router.push({ name: routeSchuleBenutzer.name});
@@ -303,7 +301,6 @@ export class DataBenutzer extends BaseData<BenutzerDaten, BenutzerListeEintrag, 
 	 */
 
 	public async setPassword( passwort : string ){
-		console.log(passwort);
 		if (!this.manager)
 			return false;
 		await App.api.setBenutzerPasswort(passwort,App.schema,this.manager.getID());

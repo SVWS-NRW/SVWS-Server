@@ -10,33 +10,31 @@
 
 	import { BenutzerKompetenz } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, WritableComputedRef } from "vue";
-	import { injectMainApp, Main } from "~/apps/Main";
+	import { DataBenutzer } from "~/apps/schule/benutzerverwaltung/DataBenutzer";
 
 	const props = defineProps<{
+		data: DataBenutzer;
 		kompetenz: BenutzerKompetenz;
 		istAdmin: boolean;
 	}>();
 
-	const main : Main = injectMainApp();
-	const app = main.apps.benutzer;
-
 	// True wenn Benutzer Admin ist oder die Kompetenz von einer Gruppe geerbt wird.
 	const aktiviert : ComputedRef<boolean | undefined> = computed(() =>
-		app.dataBenutzer.manager?.istAdmin() || (app.dataBenutzer.manager?.getGruppen(props.kompetenz).size() !== 0)
+		props.data.manager?.istAdmin() || (props.data.manager?.getGruppen(props.kompetenz).size() !== 0)
 	);
 
 	const selected: WritableComputedRef<boolean> = computed({
-		get: () => (app.dataBenutzer.manager === undefined) ? false : app.dataBenutzer.manager.hatKompetenz(props.kompetenz),
+		get: () => (props.data.manager === undefined) ? false : props.data.manager.hatKompetenz(props.kompetenz),
 		set: (value) => {
 			if (value)
-				app.dataBenutzer.addKompetenz(props.kompetenz);
+				props.data.addKompetenz(props.kompetenz);
 			else
-				app.dataBenutzer.removeKompetenz(props.kompetenz);
+				props.data.removeKompetenz(props.kompetenz);
 		}
 	});
 
 	function getGruppen( kompetenz : BenutzerKompetenz ) : string {
-		return app.dataBenutzer.getGruppen4Kompetenz(kompetenz);
+		return props.data.getGruppen4Kompetenz(kompetenz);
 	}
 
 </script>

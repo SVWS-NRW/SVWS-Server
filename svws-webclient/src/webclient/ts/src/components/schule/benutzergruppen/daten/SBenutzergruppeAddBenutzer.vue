@@ -10,7 +10,6 @@
 <script setup lang="ts">
 	import { BenutzerListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef } from "vue";
-	import { App } from "~/apps/BaseApp";
 	import { injectMainApp, Main } from "~/apps/Main";
 
 	const main: Main = injectMainApp();
@@ -25,13 +24,6 @@
 	const benutzer_liste: ComputedRef<BenutzerListeEintrag[] | undefined> = computed(() => {
 		return app_b.auswahl.liste.filter(item => !app_bg.dataBenutzergruppe.listBenutzergruppenBenutzer.liste.find(i => item.id===i.id));
 	});
-
-
-
-
-
-
-
 
 </script>
 

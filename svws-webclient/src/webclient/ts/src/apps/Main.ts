@@ -14,7 +14,6 @@ import {
 import { type Apps, App } from "./BaseApp";
 import { Schule } from "./schule/Schule";
 
-import { Benutzer } from "./schule/benutzerverwaltung/Benutzer";
 import { Benutzergruppe } from "./schule/benutzerverwaltung/Benutzergruppe";
 import { Jahrgaenge } from "./jahrgaenge/Jahrgaenge";
 import { BaseList } from "./BaseList";
@@ -211,7 +210,6 @@ export class Main {
 		});
 		App.apps = {
 			schule: new Schule(),
-			benutzer: new Benutzer(),
 			benutzergruppe : new Benutzergruppe(),
 			jahrgaenge: new Jahrgaenge()
 		};

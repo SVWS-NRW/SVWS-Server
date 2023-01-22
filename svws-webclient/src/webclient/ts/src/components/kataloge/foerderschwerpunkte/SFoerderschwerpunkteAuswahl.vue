@@ -43,29 +43,20 @@
 
 	const rows: ComputedRef<FoerderschwerpunktEintrag[]> = computed(() => routeKatalogFoerderschwerpunkte.liste.liste || []);
 
-	const schule_abschnitte: ComputedRef<
-		Array<Schuljahresabschnitt> | undefined
-	> = computed(() => {
+	const schule_abschnitte: ComputedRef<Array<Schuljahresabschnitt> | undefined> = computed(() => {
 		const liste = appSchule.value.schuleStammdaten.daten?.abschnitte;
 		return liste?.toArray(new Array<Schuljahresabschnitt>()) || [];
 	});
 
 	const akt_abschnitt: WritableComputedRef<Schuljahresabschnitt> = computed({
-		get(): Schuljahresabschnitt {
-			return main.config.akt_abschnitt;
-		},
-		set(abschnitt: Schuljahresabschnitt) {
-			main.config.akt_abschnitt = abschnitt;
-		}
+		get: () => main.config.akt_abschnitt,
+		set: (abschnitt) => main.config.akt_abschnitt = abschnitt
 	});
 
-	const appSchule: ComputedRef<Schule> = computed(() => {
-		return main.apps.schule;
-	});
+	const appSchule: ComputedRef<Schule> = computed(() => main.apps.schule);
+
 	function item_sort(a: Schuljahresabschnitt, b: Schuljahresabschnitt) {
-		return (
-			b.schuljahr + b.abschnitt * 0.1 - (a.schuljahr + a.abschnitt * 0.1)
-		);
+		return b.schuljahr + b.abschnitt * 0.1 - (a.schuljahr + a.abschnitt * 0.1);
 	}
 
 	function item_text(item: Schuljahresabschnitt) {

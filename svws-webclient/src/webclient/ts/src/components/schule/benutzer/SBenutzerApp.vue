@@ -1,11 +1,11 @@
 <template>
-	<div v-if="props.id !== undefined">
+	<div v-if="visible">
 		<svws-ui-header>
 			<div class="flex items-center">
 				<span class="inline-block mr-3">{{ anzeigename }}</span>
 				<svws-ui-badge title="ID" variant="light">{{ id }}</svws-ui-badge>
 			</div>
-			<div v-if="name">
+			<div>
 				<span class="opacity-50">{{ name }}</span>
 			</div>
 		</svws-ui-header>
@@ -21,17 +21,23 @@
 <script setup lang="ts">
 
 	import { BenutzerListeEintrag } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef } from "vue";
+	import { computed, ComputedRef, ShallowRef } from "vue";
 
 	import { routeSchuleBenutzer } from "~/router/apps/RouteSchuleBenutzer";
 
-	const props = defineProps<{ id?: number; item?: BenutzerListeEintrag, routename: string }>();
+	const props = defineProps<{
+		item: ShallowRef<BenutzerListeEintrag | undefined>;
+	}>();
 
-	const selectedRoute = routeSchuleBenutzer.getChildRouteSelector();
+	const selectedRoute = routeSchuleBenutzer.childRouteSelector;
 	const children_hidden = routeSchuleBenutzer.children_hidden();
 
-	const id: ComputedRef<string> = computed(() => "ID: " + props.id);
-	const anzeigename: ComputedRef<string> = computed(() => props.item?.anzeigename.toString() || "");
-	const name: ComputedRef<string> = computed(() => props.item?.name.toString() || "");
+	const id: ComputedRef<string> = computed(() => props.item.value?.id.toString() || "?");
+	const anzeigename: ComputedRef<string> = computed(() => props.item.value?.anzeigename.toString() || "---");
+	const name: ComputedRef<string> = computed(() => props.item.value?.name.toString() || "---");
+
+	const visible: ComputedRef<boolean> = computed(() => {
+		return (!routeSchuleBenutzer.hidden()) && (props.item.value !== undefined);
+	});
 
 </script>

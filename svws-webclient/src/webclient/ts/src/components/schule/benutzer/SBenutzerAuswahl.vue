@@ -27,19 +27,19 @@
 <script setup lang="ts">
 
 	import { BenutzerListeEintrag } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, Ref, ref, WritableComputedRef } from "vue";
+	import { computed, ComputedRef, Ref, ref, ShallowRef, WritableComputedRef } from "vue";
 	import { injectMainApp, Main } from "~/apps/Main";
 	import { router } from "~/router";
 	import { routeSchule } from "~/router/apps/RouteSchule";
 	import { routeSchuleBenutzer } from "~/router/apps/RouteSchuleBenutzer";
-	import { routeSchuleBenutzergruppe } from "~/router/apps/RouteSchuleBenutzergruppe";
-
-	const props = defineProps<{ id?: number; item?: BenutzerListeEintrag, routename: string }>();
-
-	const selected = routeSchuleBenutzer.auswahl;
 
 	const main: Main = injectMainApp();
-	const app = main.apps.benutzer;
+
+	const props = defineProps<{
+		item: ShallowRef<BenutzerListeEintrag | undefined>;
+	}>();
+
+	const selected = routeSchuleBenutzer.auswahl;
 
 	const cols = [
 		{ key: "id", label: "ID", sortable: true },
@@ -49,9 +49,7 @@
 
 	const search: Ref<string> = ref("");
 
-	const rows: ComputedRef<BenutzerListeEintrag[] | undefined> = computed(() => {
-		return app.auswahl.liste;
-	});
+	const rows: ComputedRef<BenutzerListeEintrag[]> = computed(() => routeSchuleBenutzer.liste.liste || []);
 
 	const rowsFiltered: ComputedRef<BenutzerListeEintrag[] | undefined> = computed(() => {
 		if (rows.value === undefined)
@@ -63,10 +61,8 @@
 	});
 
 	const selectedItems: WritableComputedRef<BenutzerListeEintrag[]> = computed({
-		get: () => app.auswahl.ausgewaehlt_gruppe,
-		set: (items: BenutzerListeEintrag[]) => {
-			app.auswahl.ausgewaehlt_gruppe = items;
-		}
+		get: () => routeSchuleBenutzer.liste.ausgewaehlt_gruppe,
+		set: (items) => routeSchuleBenutzer.liste.ausgewaehlt_gruppe = items
 	});
 
 </script>

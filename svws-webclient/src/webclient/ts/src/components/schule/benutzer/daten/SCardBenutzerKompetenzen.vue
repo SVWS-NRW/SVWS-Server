@@ -8,7 +8,9 @@
 					<td> Kompetenz / Kompetenzgruppe </td>
 					<td>durch Gruppe(n)</td>
 				</tr>
-				<s-benutzer-kompetenzgruppe v-for="kompetenzgruppe in kompetenzgruppen" :key="kompetenzgruppe.daten.id" :kompetenzgruppe="kompetenzgruppe" :ist-admin="istAdmin" />
+				<template v-for="kompetenzgruppe in kompetenzgruppen" :key="kompetenzgruppe.daten.id">
+					<s-benutzer-kompetenzgruppe :kompetenzgruppe="kompetenzgruppe" :ist-admin="istAdmin" :data="data" />
+				</template>
 			</table>
 		</div>
 	</svws-ui-content-card>
@@ -18,12 +20,13 @@
 
 	import { BenutzerKompetenzGruppe } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef } from "vue";
-	import { injectMainApp, Main } from "~/apps/Main";
+	import { DataBenutzer } from "~/apps/schule/benutzerverwaltung/DataBenutzer";
 
-	const main: Main = injectMainApp();
-	const app = main.apps.benutzer;
+	const props = defineProps<{
+		data: DataBenutzer;
+	}>();
 
-	const istAdmin: ComputedRef<boolean> = computed(() => (app.dataBenutzer.manager === undefined) ? false: app.dataBenutzer.manager.istAdmin());
+	const istAdmin: ComputedRef<boolean> = computed(() => (props.data.manager === undefined) ? false: props.data.manager.istAdmin());
 
 	const kompetenzgruppen: ComputedRef<BenutzerKompetenzGruppe[]> = computed(() => BenutzerKompetenzGruppe.values().filter(gr => gr.daten.id >= 0));
 

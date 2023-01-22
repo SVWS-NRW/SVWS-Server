@@ -1,30 +1,25 @@
 import { BenutzerListeEintrag } from "@svws-nrw/svws-core-ts";
-import { RouteLocationNormalized, RouteParams, RouteRecordRaw, useRouter } from "vue-router";
+import { RouteLocationNormalized, RouteParams } from "vue-router";
 import { routeSchuleBenutzerDaten } from "~/router/apps/benutzer/RouteSchuleBenutzerDaten";
 import { RouteNodeListView } from "~/router/RouteNodeListView";
 import { ListBenutzer } from "~/apps/schule/benutzerverwaltung/ListBenutzer";
-import { computed, WritableComputedRef } from "vue";
+import { WritableComputedRef } from "vue";
 import { mainApp } from "~/apps/Main"
 import { RouteNode } from "~/router/RouteNode";
 import { RouteApp } from "~/router/RouteApp";
-
-
-export class RouteDataSchuleBenutzer {
-	item: BenutzerListeEintrag | undefined = undefined;
-}
 
 
 const SBenutzerAuswahl = () => import("~/components/schule/benutzer/SBenutzerAuswahl.vue")
 const SBenutzerApp = () => import("~/components/schule/benutzer/SBenutzerApp.vue")
 
 
-export class RouteSchuleBenutzer extends RouteNodeListView<ListBenutzer, BenutzerListeEintrag, RouteDataSchuleBenutzer, RouteApp> {
+export class RouteSchuleBenutzer extends RouteNodeListView<ListBenutzer, BenutzerListeEintrag, unknown, RouteApp> {
 
 	public constructor() {
-		super("benutzer", "/schule/benutzer/:id(\\d+)?", SBenutzerAuswahl, SBenutzerApp, new ListBenutzer(), 'id', new RouteDataSchuleBenutzer());
+		super("benutzer", "/schule/benutzer/:id(\\d+)?", SBenutzerAuswahl, SBenutzerApp, new ListBenutzer(), 'id');
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Benutzer";
-		super.setView("liste", SBenutzerAuswahl, (route) => RouteNodeListView.getPropsByAuswahlID(route, mainApp.apps.benutzer.auswahl));
+		super.setView("liste", SBenutzerAuswahl, (route) => this.getProps(route));
 		super.children = [
 			routeSchuleBenutzerDaten
 		];
@@ -34,47 +29,43 @@ export class RouteSchuleBenutzer extends RouteNodeListView<ListBenutzer, Benutze
 	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
 		if ((to.name === this.name) && (to_params.id === undefined)) {
 			const redirect_name: string = (this.selectedChild === undefined) ? this.defaultChild!.name : this.selectedChild.name;
-			return { name: redirect_name, params: { id: mainApp.apps.benutzer.auswahl.liste.at(0)?.id }};
+			await this.liste.update_list();
+			return { name: redirect_name, params: { id: this.liste.liste.at(0)?.id }};
 		}
 		return true;
 	}
 
+	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) {
+		await this.liste.update_list();  // Die Auswahlliste wird als letztes geladen
+	}
+
+	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
+		if (to_params.id === undefined) {
+			await this.onSelect(undefined);
+		} else {
+			const id = parseInt(to_params.id as string);
+			await this.onSelect(this.liste.liste.find(f => f.id === id));
+		}
+	}
+
 	protected async onSelect(item?: BenutzerListeEintrag) {
-		if (item === this.data.item)
+		if (item === this.item)
 			return;
 		if (item === undefined) {
-			this.data.item = undefined;
+			this.item = undefined;
 		} else {
-			this.data.item = item;
+			this.item = item;
 		}
 	}
 
 	protected getAuswahlComputedProperty(): WritableComputedRef<BenutzerListeEintrag | undefined> {
-		return this.getSelectorByID<BenutzerListeEintrag, ListBenutzer>(mainApp.apps.benutzer.auswahl);
+		return this.getSelector();
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
-		const prop = RouteNodeListView.getPropsByAuswahlID(to, mainApp.apps.benutzer.auswahl);
-		this.onSelect(prop.item as BenutzerListeEintrag | undefined);
-		return prop;
-	}
-
-	/**
-     * TODO
-     *
-     * @returns
-     */
-	public getChildRouteSelector() {
-		const router = useRouter();
-		const selectedRoute: WritableComputedRef<RouteRecordRaw> = computed({
-			get: () => this.selectedChildRecord || this.defaultChild!.record,
-			set: (value) => {
-				this.selectedChildRecord = value;
-				const id = (this.data.item === undefined) ? undefined : "" + this.data.item.id;
-				router.push({ name: value.name, params: { id: id } });
-			}
-		});
-		return selectedRoute;
+		return {
+			...super.getProps(to)
+		};
 	}
 
 }

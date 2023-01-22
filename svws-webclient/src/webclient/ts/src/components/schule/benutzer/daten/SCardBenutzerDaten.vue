@@ -17,55 +17,49 @@
 
 <script setup lang="ts">
 	import { BenutzerManager } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, Ref, ref, WritableComputedRef } from "vue";
+	import { computed, ComputedRef, ref, WritableComputedRef } from "vue";
 
-	import { injectMainApp, Main } from "~/apps/Main";
+	import { DataBenutzer } from "~/apps/schule/benutzerverwaltung/DataBenutzer";
 
-	const main: Main = injectMainApp();
-	const app = main.apps.benutzer;
+	const props = defineProps<{
+		data: DataBenutzer;
+	}>();
 
-	const manager: ComputedRef<BenutzerManager | undefined> = computed(() => {
-		return app.dataBenutzer.manager;
-	})
+	const manager: ComputedRef<BenutzerManager | undefined> = computed(() => props.data.manager);
 
 	const anzeigename: WritableComputedRef<string | undefined> = computed({
-		get(): string | undefined {
-			return manager.value?.getAnzeigename().valueOf();
-		},
-		async set(val: string | undefined) {
-			if ((val === undefined) || (val === "") || (val === manager.value?.getAnzeigename().valueOf()))
+		get: () => manager.value?.getAnzeigename().valueOf(),
+		set: async (value) => {
+			if ((value === undefined) || (value === "") || (value === manager.value?.getAnzeigename().valueOf()))
 				return;
-			app.dataBenutzer.setAnzeigename(val);
+			props.data.setAnzeigename(value);
 		}
 	});
 
 	const name: WritableComputedRef<string | undefined> = computed({
-		get(): string | undefined {
-			return manager.value?.getAnmeldename().valueOf();
-		},
-		async set(val: string | undefined) {
-			if ((val === undefined) || (val === "") || (val === manager.value?.getAnmeldename().valueOf()))
+		get: () => manager.value?.getAnmeldename().valueOf(),
+		set: async (value) => {
+			if ((value === undefined) || (value === "") || (value === manager.value?.getAnmeldename().valueOf()))
 				return;
-			app.dataBenutzer.setAnmeldename(val);
-		}
-	});
-	const inputIstAdmin: WritableComputedRef<boolean | undefined> = computed({
-		get(): boolean | undefined {
-			return manager.value?.istAdmin();
-		},
-		set(val) {
-			if ((val === undefined) || (val === manager.value?.istAdmin()))
-				return;
-			app.dataBenutzer.setIstAdmin(val);
+			props.data.setAnmeldename(value);
 		}
 	});
 
-	const kennwort1=ref();
-	const kennwort2=ref();
+	const inputIstAdmin: WritableComputedRef<boolean | undefined> = computed({
+		get: () => manager.value?.istAdmin(),
+		set: (value) => {
+			if ((value === undefined) || (value === manager.value?.istAdmin()))
+				return;
+			props.data.setIstAdmin(value);
+		}
+	});
+
+	const kennwort1 = ref();
+	const kennwort2 = ref();
 
 	function setPassword(){
-		if(kennwort1.value === kennwort2.value)
-			app.dataBenutzer.setPassword(kennwort1.value)
+		if (kennwort1.value === kennwort2.value)
+			props.data.setPassword(kennwort1.value)
 		else
 			alert("Kennwörter stimmen nicht überein")
 	}
