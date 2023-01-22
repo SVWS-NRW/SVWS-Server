@@ -1,19 +1,22 @@
 <template>
 	<footer class="status svws-ui-bg-white svws-ui-text-black svws-ui-border-dark-20">
 		<s-loading-status v-if="loading" />
-		<span v-if="error" class="text-red-400 font-bold">{{ error }}</span>
+		<span v-if="error !== undefined" class="text-red-400 font-bold">{{ error }}</span>
 	</footer>
 </template>
 
 <script setup lang="ts">
+
 	import { computed, ComputedRef } from "vue";
 	import { injectMainApp } from "~/apps/Main";
 
+	defineProps<{
+		error?: string;
+	}>();
+
 	const app = injectMainApp();
 	const loading: ComputedRef<boolean> = computed(() => app.config.pending);
-	defineProps<{
-		error: string;
-	}>();
+
 </script>
 
 <style>
