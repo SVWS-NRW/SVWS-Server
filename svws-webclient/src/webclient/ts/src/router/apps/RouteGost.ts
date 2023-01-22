@@ -58,24 +58,24 @@ export class RouteGost extends RouteNodeListView<ListGost, GostJahrgang, RouteDa
 
 	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
 		if (to_params.abiturjahr === undefined) {
-			this.onSelect(undefined);
+			await this.onSelect(undefined);
 		} else {
 			const abiturjahr = parseInt(to_params.abiturjahr as string);
-			this.onSelect(this.liste.liste.find(s => s.abiturjahr === abiturjahr));
+			await this.onSelect(this.liste.liste.find(s => s.abiturjahr === abiturjahr));
 		}
 	}
 
-	protected onSelect(item?: GostJahrgang) {
+	protected async onSelect(item?: GostJahrgang) {
 		if (item === this.data.item.value)
 			return;
 		if (item === undefined) {
 			this.data.item.value = undefined;
-			this.data.jahrgangsdaten.unselect();
-			this.data.dataFaecher.unselect();
+			await this.data.jahrgangsdaten.unselect();
+			await this.data.dataFaecher.unselect();
 		} else {
 			this.data.item.value = item;
-			this.data.jahrgangsdaten.select(this.data.item.value);
-			this.data.dataFaecher.select(this.data.item.value);
+			await this.data.jahrgangsdaten.select(this.data.item.value);
+			await this.data.dataFaecher.select(this.data.item.value);
 		}
 	}
 
