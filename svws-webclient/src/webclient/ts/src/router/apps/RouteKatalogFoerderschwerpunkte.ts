@@ -39,14 +39,14 @@ export class RouteKatalogFoerderschwerpunkte extends RouteNodeListView<ListFoerd
 
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
 		if (to_params.id === undefined) {
-			this.onSelect(undefined);
+			await this.onSelect(undefined);
 		} else {
 			const id = parseInt(to_params.id as string);
-			this.onSelect(this.liste.liste.find(f => f.id === id));
+			await this.onSelect(this.liste.liste.find(f => f.id === id));
 		}
 	}
 
-	protected onSelect(item?: FoerderschwerpunktEintrag) {
+	protected async onSelect(item?: FoerderschwerpunktEintrag) {
 		if (item === this.item)
 			return;
 		if (item === undefined) {

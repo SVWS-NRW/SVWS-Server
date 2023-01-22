@@ -81,22 +81,22 @@ export class RouteSchueler extends RouteNodeListView<ListSchueler, SchuelerListe
 
 	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
 		if (to_params.id === undefined) {
-			this.onSelect(undefined);
+			await this.onSelect(undefined);
 		} else {
 			const id = parseInt(to_params.id as string);
-			this.onSelect(this.liste.liste.find(s => s.id === id));
+			await this.onSelect(this.liste.liste.find(s => s.id === id));
 		}
 	}
 
-	protected onSelect(item?: SchuelerListeEintrag) {
+	protected async onSelect(item?: SchuelerListeEintrag) {
 		if (item === this.item)
 			return;
 		if (item === undefined) {
 			this.item = undefined;
-			this.data.stammdaten.unselect();
+			await this.data.stammdaten.unselect();
 		} else {
 			this.item = item;
-			this.data.stammdaten.select(this.item);
+			await this.data.stammdaten.select(this.item);
 		}
 	}
 

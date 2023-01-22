@@ -56,22 +56,22 @@ export class RouteSchuelerLeistungenDaten extends RouteNodeListView<ListAbschnit
 
 	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
 		if (to_params.idLernabschnitt === undefined) {
-			this.onSelect(undefined);
+			await this.onSelect(undefined);
 		} else {
 			const idLernabschnitt = parseInt(to_params.idLernabschnitt as string);
-			this.onSelect(this.data.auswahl.liste.find(s => s.id === idLernabschnitt));
+			await this.onSelect(this.data.auswahl.liste.find(s => s.id === idLernabschnitt));
 		}
 	}
 
-	protected onSelect(item?: SchuelerLernabschnittListeEintrag) {
+	protected async onSelect(item?: SchuelerLernabschnittListeEintrag) {
 		if (item === this.data.item)
 			return;
 		if (item === undefined) {
 			this.data.item = undefined;
-			this.data.daten.unselect();
+			await this.data.daten.unselect();
 		} else {
 			this.data.item = item;
-			this.data.daten.select(this.data.item);
+			await this.data.daten.select(this.data.item);
 		}
 	}
 

@@ -21,23 +21,22 @@ export class RouteKurseDaten extends RouteNode<RouteDataKurseDaten, RouteKurse> 
 
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
 		if (to_params.id === undefined) {
-			this.onSelect(undefined);
+			await this.onSelect(undefined);
 		} else {
 			const id = parseInt(to_params.id as string);
-			this.onSelect(this.parent!.liste.liste.find(s => s.id === id));
+			await this.onSelect(this.parent!.liste.liste.find(s => s.id === id));
 		}
 	}
 
-	protected onSelect(item?: KursListeEintrag) {
+	protected async onSelect(item?: KursListeEintrag) {
 		if (item === this.data.item)
 			return;
 		if (item === undefined) {
 			this.data.item = undefined;
-			this.data.daten.unselect();
-
+			await this.data.daten.unselect();
 		} else {
 			this.data.item = item;
-			this.data.daten.select(this.data.item);
+			await this.data.daten.select(this.data.item);
 		}
 	}
 

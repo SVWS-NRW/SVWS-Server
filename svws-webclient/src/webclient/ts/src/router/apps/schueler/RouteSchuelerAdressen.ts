@@ -29,7 +29,7 @@ export class RouteSchuelerAdressen extends RouteNode<RouteDataSchuelerAdressen, 
 		await this.data.listSchuelerbetriebe.update_list(routeSchueler.item.id);
 	}
 
-	protected onSelect(item?: SchuelerListeEintrag) {
+	protected async onSelect(item?: SchuelerListeEintrag) {
 		if (item === this.data.item)
 			return;
 		if (item === undefined) {

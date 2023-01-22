@@ -53,22 +53,22 @@ export class RouteLehrer extends RouteNodeListView<ListLehrer, LehrerListeEintra
 
 	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
 		if (to_params.id === undefined) {
-			this.onSelect(undefined);
+			await this.onSelect(undefined);
 		} else {
 			const id = parseInt(to_params.id as string);
-			this.onSelect(this.liste.liste.find(l => l.id === id));
+			await this.onSelect(this.liste.liste.find(l => l.id === id));
 		}
 	}
 
-	protected onSelect(item?: LehrerListeEintrag) {
+	protected async onSelect(item?: LehrerListeEintrag) {
 		if (item === this.item)
 			return;
 		if (item === undefined) {
 			this.item = undefined;
-			this.data.stammdaten.unselect();
+			await this.data.stammdaten.unselect();
 		} else {
 			this.item = item;
-			this.data.stammdaten.select(this.item);
+			await this.data.stammdaten.select(this.item);
 		}
 	}
 

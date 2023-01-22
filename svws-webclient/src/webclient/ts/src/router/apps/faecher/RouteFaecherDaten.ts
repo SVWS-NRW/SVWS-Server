@@ -21,22 +21,22 @@ export class RouteFaecherDaten extends RouteNode<RouteDataFaecherDaten, RouteKat
 
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
 		if (to_params.id === undefined) {
-			this.onSelect(undefined);
+			await this.onSelect(undefined);
 		} else {
 			const id = parseInt(to_params.id as string);
-			this.onSelect(this.parent!.liste.gefiltert.find(f => f.id === id));
+			await this.onSelect(this.parent!.liste.gefiltert.find(f => f.id === id));
 		}
 	}
 
-	protected onSelect(item?: FaecherListeEintrag) {
+	protected async onSelect(item?: FaecherListeEintrag) {
 		if (item === this.data.item)
 			return;
 		if (item === undefined) {
 			this.data.item = undefined;
-			this.data.daten.unselect();
+			await this.data.daten.unselect();
 		} else {
 			this.data.item = item;
-			this.data.daten.select(this.data.item);
+			await this.data.daten.select(this.data.item);
 		}
 	}
 

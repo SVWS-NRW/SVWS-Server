@@ -39,22 +39,22 @@ export class RouteGostFachwahlen extends RouteNode<RouteDataGostKursplanung, Rou
 
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
 		if (to_params.abiturjahr === undefined) {
-			this.onSelect(undefined);
+			await this.onSelect(undefined);
 		} else {
 			const tmp = parseInt(to_params.abiturjahr as string);
-			this.onSelect(this.parent!.liste.liste.find(s => s.abiturjahr === tmp));
+			await this.onSelect(this.parent!.liste.liste.find(s => s.abiturjahr === tmp));
 		}
 	}
 
-	protected onSelect(item?: GostJahrgang) {
+	protected async onSelect(item?: GostJahrgang) {
 		if (item === this.data.item)
 			return;
 		if (item === undefined) {
 			this.data.item = undefined;
-			this.data.dataFachwahlen.unselect();
+			await this.data.dataFachwahlen.unselect();
 		} else {
 			this.data.item = item;
-			this.data.dataFachwahlen.select(this.data.item);
+			await this.data.dataFachwahlen.select(this.data.item);
 		}
 	}
 

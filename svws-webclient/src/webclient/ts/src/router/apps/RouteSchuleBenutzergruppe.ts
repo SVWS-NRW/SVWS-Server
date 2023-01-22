@@ -39,7 +39,7 @@ export class RouteSchuleBenutzergruppe extends RouteNodeListView<ListBenutzergru
 		return true;
 	}
 
-	protected onSelect(item?: BenutzergruppeListeEintrag) {
+	protected async onSelect(item?: BenutzergruppeListeEintrag) {
 		if (item === this.data.item)
 			return;
 		if (item === undefined) {

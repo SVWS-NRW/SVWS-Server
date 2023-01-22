@@ -21,17 +21,17 @@ export class RouteSchuelerErziehungsberechtigte extends RouteNode<RouteDataSchue
 		super.text = "Erziehungsberechtigte";
 	}
 
-	protected onSelect(item?: SchuelerListeEintrag) {
+	protected async onSelect(item?: SchuelerListeEintrag) {
 		if (item === this.data.item)
 			return;
 		if (item === undefined) {
 			this.data.item = undefined;
-			this.data.daten.unselect();
-			this.data.erzieherarten.unselect();
+			await this.data.daten.unselect();
+			await this.data.erzieherarten.unselect();
 		} else {
 			this.data.item = item;
-			this.data.daten.select(this.data.item);
-			this.data.erzieherarten.select(undefined);
+			await this.data.daten.select(this.data.item);
+			await this.data.erzieherarten.select(undefined);
 		}
 	}
 

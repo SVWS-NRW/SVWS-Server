@@ -38,22 +38,22 @@ export class RouteSchuelerStundenplanDaten extends RouteNodeListView<ListStunden
 
 	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
 		if (to_params.idStundenplan === undefined) {
-			this.onSelect(undefined);
+			await this.onSelect(undefined);
 		} else {
 			const idStundenplan = parseInt(to_params.idStundenplan as string);
-			this.onSelect(this.data.auswahl.liste.find(s => s.id === idStundenplan));
+			await this.onSelect(this.data.auswahl.liste.find(s => s.id === idStundenplan));
 		}
 	}
 
-	protected onSelect(item?: StundenplanListeEintrag) {
+	protected async onSelect(item?: StundenplanListeEintrag) {
 		if (item === this.data.item)
 			return;
 		if (item === undefined) {
 			this.data.item = undefined;
-			this.data.daten.unselect();
+			await this.data.daten.unselect();
 		} else {
 			this.data.item = item;
-			this.data.daten.select(this.data.item);
+			await this.data.daten.select(this.data.item);
 		}
 	}
 

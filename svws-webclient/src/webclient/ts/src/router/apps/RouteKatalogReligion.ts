@@ -39,14 +39,14 @@ export class RouteKatalogReligion extends RouteNodeListView<ListReligionen, Reli
 
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
 		if (to_params.id === undefined) {
-			this.onSelect(undefined);
+			await this.onSelect(undefined);
 		} else {
 			const id = parseInt(to_params.id as string);
-			this.onSelect(this.liste.liste.find(k => k.id === id));
+			await this.onSelect(this.liste.liste.find(k => k.id === id));
 		}
 	}
 
-	protected onSelect(item?: ReligionEintrag) {
+	protected async onSelect(item?: ReligionEintrag) {
 		if (item === this.item)
 			return;
 		if (item === undefined) {

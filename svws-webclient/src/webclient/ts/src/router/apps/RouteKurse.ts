@@ -56,14 +56,14 @@ export class RouteKurse extends RouteNodeListView<ListKurse, KursListeEintrag, R
 
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
 		if (to_params.id === undefined) {
-			this.onSelect(undefined);
+			await this.onSelect(undefined);
 		} else {
 			const id = parseInt(to_params.id as string);
-			this.onSelect(this.liste.liste.find(k => k.id === id));
+			await this.onSelect(this.liste.liste.find(k => k.id === id));
 		}
 	}
 
-	protected onSelect(item?: KursListeEintrag) {
+	protected async onSelect(item?: KursListeEintrag) {
 		if (item === this.item)
 			return;
 		if (item === undefined) {

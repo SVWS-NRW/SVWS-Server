@@ -1,6 +1,5 @@
 import { GostJahrgang, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized, RouteParams } from "vue-router";
-import { App } from "~/apps/BaseApp";
 import { DataGostFachkombinationen } from "~/apps/gost/DataGostFachkombinationen";
 import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
 import { DataSchuelerLaufbahnplanung } from "~/apps/schueler/DataSchuelerLaufbahnplanung";
@@ -32,30 +31,30 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 		}
 	}
 
-	protected onSelect(item?: SchuelerListeEintrag) {
+	protected async onSelect(item?: SchuelerListeEintrag) {
 		if (item === this.data.item)
 			return;
 		if (item === undefined) {
 			this.data.item = undefined;
-			this.data.dataLaufbahn.unselect();
+			await this.data.dataLaufbahn.unselect();
 			this.data.dataLaufbahn.dataGostFaecher = undefined;
 			this.data.dataLaufbahn.dataGostJahrgang = undefined;
 			this.data.dataLaufbahn.dataSchule = undefined;
-			this.data.dataJahrgang.unselect();
-			this.data.dataFaecher.unselect();
-			this.data.dataFachkombinationen.unselect();
+			await this.data.dataJahrgang.unselect();
+			await this.data.dataFaecher.unselect();
+			await this.data.dataFachkombinationen.unselect();
 		} else {
 			this.data.item = item;
-			this.data.dataLaufbahn.select(this.data.item);
+			await this.data.dataLaufbahn.select(this.data.item);
 			if (this.data.item.abiturjahrgang !== null) {
 				this.data.gostJahrgang.abiturjahr = this.data.item.abiturjahrgang.valueOf();
 				this.data.gostJahrgang.jahrgang = this.data.item.jahrgang;
-				this.data.dataJahrgang.select(this.data.gostJahrgang);
-				this.data.dataFaecher.select(this.data.gostJahrgang);
+				await this.data.dataJahrgang.select(this.data.gostJahrgang);
+				await this.data.dataFaecher.select(this.data.gostJahrgang);
 				this.data.dataLaufbahn.dataGostFaecher = this.data.dataFaecher;
 				this.data.dataLaufbahn.dataGostJahrgang = this.data.dataJahrgang;
 				this.data.dataLaufbahn.dataSchule = routeSchueler.data.schule;
-				this.data.dataFachkombinationen.select(this.data.gostJahrgang);
+				await this.data.dataFachkombinationen.select(this.data.gostJahrgang);
 			}
 		}
 	}

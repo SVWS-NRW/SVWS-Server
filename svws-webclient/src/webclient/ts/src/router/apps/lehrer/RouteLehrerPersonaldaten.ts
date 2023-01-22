@@ -21,15 +21,15 @@ export class RouteLehrerPersonaldaten extends RouteNode<RouteDataLehrerPersonald
 		super.text = "Personaldaten";
 	}
 
-	protected onSelect(item?: LehrerListeEintrag) {
+	protected async onSelect(item?: LehrerListeEintrag) {
 		if (item === this.data.item)
 			return;
 		if (item === undefined) {
 			this.data.item = undefined;
-			this.data.personaldaten.unselect();
+			await this.data.personaldaten.unselect();
 		} else {
 			this.data.item = item;
-			this.data.personaldaten.select(this.data.item);
+			await this.data.personaldaten.select(this.data.item);
 		}
 	}
 

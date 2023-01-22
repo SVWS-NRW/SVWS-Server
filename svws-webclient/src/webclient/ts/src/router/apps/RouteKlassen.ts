@@ -50,14 +50,14 @@ export class RouteKlassen extends RouteNodeListView<ListKlassen, KlassenListeEin
 
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
 		if (to_params.id === undefined) {
-			this.onSelect(undefined);
+			await this.onSelect(undefined);
 		} else {
 			const id = parseInt(to_params.id as string);
-			this.onSelect(this.liste.liste.find(k => k.id === id));
+			await this.onSelect(this.liste.liste.find(k => k.id === id));
 		}
 	}
 
-	protected onSelect(item?: KlassenListeEintrag) {
+	protected async onSelect(item?: KlassenListeEintrag) {
 		if (item === this.item)
 			return;
 		if (item === undefined) {

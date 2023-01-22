@@ -39,7 +39,7 @@ export class RouteSchuleBenutzer extends RouteNodeListView<ListBenutzer, Benutze
 		return true;
 	}
 
-	protected onSelect(item?: BenutzerListeEintrag) {
+	protected async onSelect(item?: BenutzerListeEintrag) {
 		if (item === this.data.item)
 			return;
 		if (item === undefined) {

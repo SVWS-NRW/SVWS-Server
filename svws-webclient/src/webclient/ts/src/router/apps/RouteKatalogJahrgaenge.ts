@@ -36,7 +36,7 @@ export class RouteKatalogJahrgaenge extends RouteNodeListView<ListJahrgaenge, Ja
 		return true;
 	}
 
-	protected onSelect(item?: JahrgangsListeEintrag) {
+	protected async onSelect(item?: JahrgangsListeEintrag) {
 		if (item === this.data.item)
 			return;
 		if (item === undefined) {

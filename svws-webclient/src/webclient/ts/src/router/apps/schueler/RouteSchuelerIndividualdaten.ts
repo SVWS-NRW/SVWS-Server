@@ -21,17 +21,17 @@ export class RouteSchuelerIndividualdaten extends RouteNode<RouteDataSchuelerInd
 		super.text = "Individualdaten";
 	}
 
-	protected onSelect(item?: SchuelerListeEintrag) {
+	protected async onSelect(item?: SchuelerListeEintrag) {
 		if (item === this.data.item)
 			return;
 		if (item === undefined) {
 			this.data.item = undefined;
-			this.data.fachschuelerarten.unselect();
-			this.data.foerderschwerpunkte.unselect();
+			await this.data.fachschuelerarten.unselect();
+			await this.data.foerderschwerpunkte.unselect();
 		} else {
 			if (this.data.item === undefined) {
-				this.data.fachschuelerarten.select(undefined);
-				this.data.foerderschwerpunkte.select(undefined);
+				await this.data.fachschuelerarten.select(undefined);
+				await this.data.foerderschwerpunkte.select(undefined);
 			}
 			this.data.item = item;
 		}
