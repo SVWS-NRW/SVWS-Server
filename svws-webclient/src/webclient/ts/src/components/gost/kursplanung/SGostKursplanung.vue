@@ -2,7 +2,7 @@
 	<div v-if="visible" class="content-card--blockungsuebersicht flex h-full content-start">
 		<s-card-gost-kursansicht :jahrgangsdaten="jahrgangsdaten" :data-faecher="dataFaecher" :halbjahr="halbjahr.value"
 			:list-blockungen="listBlockungen" :blockung="blockung" :ergebnis="ergebnis"
-			:data-fachwahlen="dataFachwahlen" :list-lehrer="listLehrer" :map-lehrer="mapLehrer" />
+			:fachwahlen="fachwahlen" :list-lehrer="listLehrer" :map-lehrer="mapLehrer" />
 		<section class="flex flex-row h-full overflow-y-auto flex-grow gap-4">
 			<div> <router-view name="gost_kursplanung_schueler_auswahl" /> </div>
 			<div> <router-view /> </div>
@@ -33,13 +33,12 @@
 
 <script setup lang="ts">
 
-	import { GostHalbjahr, GostJahrgang, LehrerListeEintrag } from "@svws-nrw/svws-core-ts";
+	import { GostHalbjahr, GostJahrgang, GostStatistikFachwahl, LehrerListeEintrag, List } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, Ref, ref, ShallowRef } from "vue";
 	import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
 	import { DataGostJahrgang } from "~/apps/gost/DataGostJahrgang";
 	import { DataGostKursblockung } from "~/apps/gost/DataGostKursblockung";
 	import { DataGostKursblockungsergebnis } from "~/apps/gost/DataGostKursblockungsergebnis";
-	import { DataGostSchuelerFachwahlen } from "~/apps/gost/DataGostSchuelerFachwahlen";
 	import { ListAbiturjahrgangSchueler } from "~/apps/gost/ListAbiturjahrgangSchueler";
 	import { ListKursblockungen } from "~/apps/gost/ListKursblockungen";
 	import { ListLehrer } from "~/apps/lehrer/ListLehrer";
@@ -57,7 +56,7 @@
 		ergebnis: DataGostKursblockungsergebnis;
 		listLehrer: ListLehrer;
 		mapLehrer: Map<Number, LehrerListeEintrag>;
-		dataFachwahlen: DataGostSchuelerFachwahlen;
+		fachwahlen: List<GostStatistikFachwahl>;
 	}>();
 
 	const listSchueler: ComputedRef<ListAbiturjahrgangSchueler> = computed(() => routeGostKursplanungSchueler.data.listSchueler);

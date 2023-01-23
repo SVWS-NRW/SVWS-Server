@@ -1,22 +1,22 @@
 import { RouteNode } from "~/router/RouteNode";
 import { routeGost } from "~/router/apps/RouteGost";
 import { ListLehrer } from "~/apps/lehrer/ListLehrer";
-import { GostBlockungsergebnisListeneintrag, GostHalbjahr, LehrerListeEintrag } from "@svws-nrw/svws-core-ts";
+import { GostBlockungsergebnisListeneintrag, GostHalbjahr, GostStatistikFachwahl, LehrerListeEintrag, List, Vector } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams, useRouter } from "vue-router";
-import { DataGostSchuelerFachwahlen } from "~/apps/gost/DataGostSchuelerFachwahlen";
 import { DataGostKursblockungsergebnis } from "~/apps/gost/DataGostKursblockungsergebnis";
 import { RouteGostKursplanungHalbjahr, routeGostKursplanungHalbjahr } from "./RouteGostKursplanungHalbjahr";
 import { routeGostKursplanung } from "../RouteGostKursplanung";
 import { computed, Ref, ref, WritableComputedRef } from "vue";
 import { routeGostKursplanungSchueler } from "./RouteGostKursplanungSchueler";
 import { RouteManager } from "~/router/RouteManager";
+import { App } from "~/apps/BaseApp";
 
 export class RouteDataGostKursplanungBlockung {
 	ergebnis: Ref<GostBlockungsergebnisListeneintrag | undefined> = ref(undefined);
 	dataKursblockungsergebnis: DataGostKursblockungsergebnis = new DataGostKursblockungsergebnis();
 	listLehrer: ListLehrer = new ListLehrer();
 	mapLehrer: Map<Number, LehrerListeEintrag> = new Map();
-	dataFachwahlen: DataGostSchuelerFachwahlen = new DataGostSchuelerFachwahlen();
+	fachwahlen: List<GostStatistikFachwahl> = new Vector<GostStatistikFachwahl>();
 }
 
 const SGostKursplanung = () => import("~/components/gost/kursplanung/SGostKursplanung.vue");
@@ -63,7 +63,7 @@ export class RouteGostKursplanungBlockung extends RouteNode<RouteDataGostKurspla
 		await this.data.listLehrer.update_list();
 		this.data.mapLehrer.clear();
 		this.data.listLehrer.liste.forEach(k => this.data.mapLehrer.set(k.id, k));
-		await this.data.dataFachwahlen.select(routeGost.data.item.value);
+		this.data.fachwahlen = await App.api.getGostAbiturjahrgangFachwahlstatistik(App.schema, abiturjahr);
 		// notwendig, damit der Ergebnis-Manager initialisiert werden kann
 		this.data.dataKursblockungsergebnis.dataKursblockung = routeGostKursplanungHalbjahr.data.dataKursblockung;
 	}
@@ -119,7 +119,7 @@ export class RouteGostKursplanungBlockung extends RouteNode<RouteDataGostKurspla
 			ergebnis: this.data.dataKursblockungsergebnis,
 			listLehrer: this.data.listLehrer,
 			mapLehrer: this.data.mapLehrer,
-			dataFachwahlen: this.data.dataFachwahlen
+			fachwahlen: this.data.fachwahlen
 		}
 	}
 

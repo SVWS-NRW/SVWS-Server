@@ -30,13 +30,12 @@
 
 <script setup lang="ts">
 
-	import { GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostHalbjahr, GostJahrgang, LehrerListeEintrag, List, Vector } from '@svws-nrw/svws-core-ts';
+	import { GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostHalbjahr, GostJahrgang, GostStatistikFachwahl, LehrerListeEintrag, List, Vector } from '@svws-nrw/svws-core-ts';
 	import { computed, ComputedRef, ref, Ref, ShallowRef, WritableComputedRef } from 'vue';
 	import { App } from '~/apps/BaseApp';
 	import { DataGostJahrgang } from '~/apps/gost/DataGostJahrgang';
 	import { DataTableItem, SvwsUiButton, SvwsUiIcon, SvwsUiTable } from '@svws-nrw/svws-ui';
 	import { DataSchuleStammdaten } from '~/apps/schule/DataSchuleStammdaten';
-	import { DataGostSchuelerFachwahlen } from '~/apps/gost/DataGostSchuelerFachwahlen';
 	import { ListLehrer } from '~/apps/lehrer/ListLehrer';
 	import { DataGostFaecher } from '~/apps/gost/DataGostFaecher';
 	import { DataGostKursblockung } from '~/apps/gost/DataGostKursblockung';
@@ -55,7 +54,7 @@
 		ergebnis: DataGostKursblockungsergebnis;
 		listLehrer: ListLehrer;
 		mapLehrer: Map<Number, LehrerListeEintrag>;
-		dataFachwahlen: DataGostSchuelerFachwahlen;
+		fachwahlen: List<GostStatistikFachwahl>;
 	}>();
 
 	const selected_ergebnisse: Ref<GostBlockungsergebnisListeneintrag[]> = ref([]);

@@ -1,6 +1,6 @@
 <template>
 	<template v-for="kursart in GostKursart.values()">
-		<template v-if="kurszahlen.get(kursart.id) === 0 && wahlen.get(kursart.id) && allow_regeln">
+		<template v-if="kurszahlen.get(kursart.id) === 0 && wahlen.get(kursart.id) && allowRegeln">
 			<tr class="text-left" :style="{ 'background-color': bgColor }" :key="kursart.id">
 				<td colspan="3">
 					{{ fach.kuerzel }}-{{ kursart.kuerzel }}
@@ -15,7 +15,7 @@
 		</template>
 		<template v-else>
 			<s-kurs-blockung v-for="kurs in vorhandene_kurse(kursart)" :key="kurs.id" :kurs="kurs" :data-faecher="dataFaecher" :blockung="blockung" :ergebnis="ergebnis"
-				:list-lehrer="listLehrer" :map-lehrer="mapLehrer" :allow_regeln="allow_regeln" />
+				:list-lehrer="listLehrer" :map-lehrer="mapLehrer" :allow_regeln="allowRegeln" />
 		</template>
 	</template>
 </template>
@@ -27,7 +27,6 @@
 	import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
 	import { DataGostKursblockung } from "~/apps/gost/DataGostKursblockung";
 	import { DataGostKursblockungsergebnis } from "~/apps/gost/DataGostKursblockungsergebnis";
-	import { DataGostSchuelerFachwahlen } from "~/apps/gost/DataGostSchuelerFachwahlen";
 	import { ListLehrer } from "~/apps/lehrer/ListLehrer";
 	import { injectMainApp, Main } from "~/apps/Main";
 	import type { UserConfigKeys } from "~/utils/userconfig/keys"
@@ -38,10 +37,9 @@
 		halbjahr: Number;
 		blockung: DataGostKursblockung;
 		ergebnis: DataGostKursblockungsergebnis;
-		dataFachwahlen: DataGostSchuelerFachwahlen;
 		listLehrer: ListLehrer;
 		mapLehrer: Map<Number, LehrerListeEintrag>;
-		allow_regeln: boolean;
+		allowRegeln: boolean;
 	}>();
 
 	const main: Main = injectMainApp();
@@ -96,7 +94,7 @@
 		return wahlen;
 	});
 
-	const bgColor: ComputedRef<string | undefined> = computed(() => props.dataFachwahlen.getBgColor(props.fach));
+	const bgColor: ComputedRef<string | undefined> = computed(() => ZulaessigesFach.getByKuerzelASD(props.fach.kuerzelStatistik).getHMTLFarbeRGBA(1.0).valueOf());
 
 	function add_kurs(art: GostKursart) {
 		void props.blockung.add_blockung_kurse(props.fach.id, art.id);

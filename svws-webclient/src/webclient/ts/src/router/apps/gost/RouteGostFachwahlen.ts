@@ -1,12 +1,12 @@
 import { RouteNode } from "~/router/RouteNode";
 import { RouteGost, routeGost } from "~/router/apps/RouteGost";
 import { RouteLocationNormalized, RouteParams } from "vue-router";
-import { GostJahrgang } from "@svws-nrw/svws-core-ts";
-import { DataGostSchuelerFachwahlen } from "~/apps/gost/DataGostSchuelerFachwahlen";
+import { GostJahrgang, GostStatistikFachwahl, List, Vector } from "@svws-nrw/svws-core-ts";
+import { App } from "~/apps/BaseApp";
 
 export class RouteDataGostKursplanung  {
 	item: GostJahrgang | undefined = undefined;
-	dataFachwahlen: DataGostSchuelerFachwahlen = new DataGostSchuelerFachwahlen();
+	fachwahlen: List<GostStatistikFachwahl> = new Vector<GostStatistikFachwahl>();
 }
 
 const SGostFachwahlen = () => import("~/components/gost/fachwahlen/SGostFachwahlen.vue");
@@ -51,10 +51,10 @@ export class RouteGostFachwahlen extends RouteNode<RouteDataGostKursplanung, Rou
 			return;
 		if (item === undefined) {
 			this.data.item = undefined;
-			await this.data.dataFachwahlen.unselect();
+			this.data.fachwahlen = new Vector<GostStatistikFachwahl>();
 		} else {
 			this.data.item = item;
-			await this.data.dataFachwahlen.select(this.data.item);
+			this.data.fachwahlen = await App.api.getGostAbiturjahrgangFachwahlstatistik(App.schema, this.data.item.abiturjahr?.valueOf() || -1);
 		}
 	}
 
@@ -62,7 +62,7 @@ export class RouteGostFachwahlen extends RouteNode<RouteDataGostKursplanung, Rou
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
 			...routeGost.getProps(to),
-			dataFachwahlen: this.data.dataFachwahlen
+			fachwahlen: this.data.fachwahlen
 		};
 	}
 

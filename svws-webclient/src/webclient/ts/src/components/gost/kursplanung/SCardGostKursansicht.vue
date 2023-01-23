@@ -72,8 +72,8 @@
 					</tr>
 				</thead>
 				<tbody>
-					<s-fach-kurs v-for="fach in faecher" :key="fach.id" :fach="fach" :data-faecher="dataFaecher" :halbjahr="halbjahr.id" :blockung="blockung" :ergebnis="ergebnis"
-						:list-lehrer="listLehrer" :map-lehrer="mapLehrer" :data-fachwahlen="dataFachwahlen" :allow_regeln="allow_regeln" />
+					<s-fach-kurs v-for="fach in fachwahlen" :key="fach.id" :fach="fach" :data-faecher="dataFaecher" :halbjahr="halbjahr.id" :blockung="blockung" :ergebnis="ergebnis"
+						:list-lehrer="listLehrer" :map-lehrer="mapLehrer" :allow-regeln="allow_regeln" />
 				</tbody>
 			</table>
 		</div>
@@ -110,7 +110,6 @@
 	import { injectMainApp, Main, mainApp } from "~/apps/Main";
 	import { SvwsUiContentCard, SvwsUiButton, SvwsUiTextInput, SvwsUiIcon, SvwsUiModal } from "@svws-nrw/svws-ui";
 	import { ListLehrer } from "~/apps/lehrer/ListLehrer";
-	import { DataGostSchuelerFachwahlen } from "~/apps/gost/DataGostSchuelerFachwahlen";
 	import { DataGostJahrgang } from "~/apps/gost/DataGostJahrgang";
 	import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
 	import { DataGostKursblockung } from "~/apps/gost/DataGostKursblockung";
@@ -129,7 +128,7 @@
 		ergebnis: DataGostKursblockungsergebnis;
 		listLehrer: ListLehrer;
 		mapLehrer: Map<Number, LehrerListeEintrag>;
-		dataFachwahlen: DataGostSchuelerFachwahlen;
+		fachwahlen: List<GostStatistikFachwahl>;
 	}>();
 
 	const main: Main = injectMainApp();
@@ -149,8 +148,6 @@
 				mainApp.config.user_config.set('gost.kursansicht.sortierung', value)
 			}
 		});
-
-	const faecher: ComputedRef<List<GostStatistikFachwahl>> = computed(() => props.dataFachwahlen.daten || new Vector<GostStatistikFachwahl>());
 
 	const schienen: ComputedRef<List<GostBlockungSchiene>> = computed(() =>
 		props.blockung.datenmanager?.getMengeOfSchienen() || new Vector<GostBlockungSchiene>()
