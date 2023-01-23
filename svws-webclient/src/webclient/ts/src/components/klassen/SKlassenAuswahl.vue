@@ -8,7 +8,7 @@
 		<template #header />
 		<template #content>
 			<div class="container">
-				<svws-ui-table v-model="selected" :columns="cols" :data="rows" :footer="false" />
+				<svws-ui-data-table v-model:clicked="selected" clickable :columns="cols" :items="rows" :footer="false" />
 			</div>
 		</template>
 	</svws-ui-secondary-menu>

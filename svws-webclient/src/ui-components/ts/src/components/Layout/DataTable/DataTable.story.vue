@@ -5,18 +5,21 @@
 
 	const data = ref([
 		{
+			id: 1,
 			name: "A",
 			email: "test@web.de",
 			age: 16,
 			isActive: false,
 		},
 		{
+			id: 2,
 			name: "B",
 			email: "bla@gmx.de",
 			age: 31,
 			isActive: true,
 		},
 		{
+			id: 3,
 			name: "C",
 			email: "hallo@gmail.com",
 			age: 49,

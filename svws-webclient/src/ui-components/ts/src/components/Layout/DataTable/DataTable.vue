@@ -83,6 +83,7 @@
 
 					<td v-for="cell in row.cells"
 						:key="`table-cell_${cell.column.key + cell.rowIndex}`"
+						:style="`flex-grow: ${cell.column.span};`"
 						class="data-table__td">
 						<slot v-if="`cell(${cell.column.key})` in $slots"
 							:name="`cell(${cell.column.key})`"
@@ -154,6 +155,7 @@
 			clicked?: DataTableItem | undefined;
 			clickable?: boolean;
 			noDataHtml?: string;
+			uniqueKey?: string;
 		}>(),
 		{
 			columns: () => [],
@@ -165,6 +167,7 @@
 			clickable: false,
 			selectable: false,
 			noDataHtml: "Keine Einträge vorhanden",
+			uniqueKey: "id"
 		}
 	);
 

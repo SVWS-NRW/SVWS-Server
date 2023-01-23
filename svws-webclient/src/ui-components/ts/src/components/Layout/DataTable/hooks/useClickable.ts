@@ -6,6 +6,7 @@ import useSafeVModel from './useSafeVModel'
 interface UseClickableProps {
 	clicked: DataTableItem | undefined
 	clickable: boolean
+	uniqueKey: string
 }
 
 export default function useClickable(
@@ -14,10 +15,8 @@ export default function useClickable(
 ) {
 	const clickedItem = useSafeVModel(props, null as DataTableItem | null, 'clicked');
 
-	watch(sortedRows, () => { resetClickedRow() })
-
 	function isRowClicked(row: DataTableRow) {
-		return clickedItem.value === row.source
+		return clickedItem.value?.[props.uniqueKey] === row.source?.[props.uniqueKey]
 	}
 
 	function resetClickedRow() {

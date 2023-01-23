@@ -35,3 +35,4 @@ export { default as SvwsUiRouterTabBarButton } from "./Controls/RouterTabBarButt
 export { default as SvwsUiRouterVerticalTabBar } from "./Controls/RouterVerticalTabBar.vue";
 export { default as SvwsUiDragData } from "./DragData.vue";
 export { default as SvwsUiDropData } from "./DropData.vue";
+export { default as SvwsUiDataTable } from "./Layout/DataTable/DataTable.vue";

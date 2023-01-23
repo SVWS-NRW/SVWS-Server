@@ -49,7 +49,8 @@ export {
 	SvwsUiRouterTabBarButton,
 	SvwsUiRouterVerticalTabBar,
 	SvwsUiDragData,
-	SvwsUiDropData
+	SvwsUiDropData,
+	SvwsUiDataTable
 } from './components'
 
 export type { DataTableColumn, DataTableItem } from './components/Layout/Table/types'
