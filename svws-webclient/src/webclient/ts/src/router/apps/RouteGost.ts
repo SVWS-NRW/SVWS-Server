@@ -105,7 +105,7 @@ export class RouteGost extends RouteNodeListView<ListGost, GostJahrgang, RouteDa
 			set: (value) => {
 				this.selectedChildRecord = value;
 				const abiturjahr = (this.data.item.value === undefined) ? undefined : "" + this.data.item.value.abiturjahr;
-				router.push({ name: value.name, params: { abiturjahr: abiturjahr } });
+				void router.push({ name: value.name, params: { abiturjahr: abiturjahr } });
 			}
 		});
 		return selectedRoute;
@@ -140,9 +140,9 @@ export class RouteGost extends RouteNodeListView<ListGost, GostJahrgang, RouteDa
 				if ((from_name !== name) && from_name?.startsWith(name)) {  // TODO Ergänze Methode bei RouteNode isNested und nutze diese
 					const params = {...route.params};
 					params.abiturjahr = "" + value?.abiturjahr;
-					router.push({ name: from_name, params: params });
+					void router.push({ name: from_name, params: params });
 				} else {
-					router.push({ name: redirect_name, params: { abiturjahr: value?.abiturjahr } });
+					void router.push({ name: redirect_name, params: { abiturjahr: value?.abiturjahr } });
 				}
 			}
 		});

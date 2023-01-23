@@ -50,7 +50,7 @@
 		set(val: string | undefined) {
 			if (val) {
 				const vals = AdressenUtils.splitStrasse(val);
-				props.stammdaten.patch({ strassenname: vals?.[0] || val, hausnummer: vals?.[1] || "", hausnummerZusatz: vals?.[2] || "" });
+				void props.stammdaten.patch({ strassenname: vals?.[0] || val, hausnummer: vals?.[1] || "", hausnummerZusatz: vals?.[2] || "" });
 				eingabeStrasseOk.value = !!vals;
 			}
 		}
@@ -69,7 +69,7 @@
 			return o;
 		},
 		set(val: OrtKatalogEintrag | undefined) {
-			props.stammdaten.patch({ wohnortID: val?.id });
+			void props.stammdaten.patch({ wohnortID: val?.id });
 		}
 	});
 
@@ -86,7 +86,7 @@
 			return o;
 		},
 		set(val) {
-			props.stammdaten.patch({ ortsteilID: val?.id });
+			void props.stammdaten.patch({ ortsteilID: val?.id });
 		}
 	});
 
@@ -95,7 +95,7 @@
 			return daten.value.telefon?.toString();
 		},
 		set(val: string | undefined) {
-			props.stammdaten.patch({ telefon: val });
+			void props.stammdaten.patch({ telefon: val });
 		}
 	});
 
@@ -104,7 +104,7 @@
 			return daten.value.telefonMobil?.toString();
 		},
 		set(val) {
-			props.stammdaten.patch({ telefonMobil: val });
+			void props.stammdaten.patch({ telefonMobil: val });
 		}
 	});
 
@@ -113,7 +113,7 @@
 			return daten.value.emailPrivat?.toString();
 		},
 		set(val) {
-			props.stammdaten.patch({ emailPrivat: val });
+			void props.stammdaten.patch({ emailPrivat: val });
 		}
 	});
 
@@ -122,7 +122,7 @@
 			return daten.value.emailDienstlich?.toString();
 		},
 		set(val) {
-			props.stammdaten.patch({ emailDienstlich: val });
+			void props.stammdaten.patch({ emailDienstlich: val });
 		}
 	});
 

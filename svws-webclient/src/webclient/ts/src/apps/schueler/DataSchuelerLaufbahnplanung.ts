@@ -561,7 +561,7 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 		const eintrag = this.selected_list_item;
 		if (!eintrag)
 			return;
-		this._patch(wahl, () => App.api.patchGostSchuelerFachwahl(wahl, App.schema, eintrag.id, row.id).then(() => { this.on_select(); }));
+		void this._patch(wahl, () => App.api.patchGostSchuelerFachwahl(wahl, App.schema, eintrag.id, row.id).then(async () => { await this.on_select() }));
 	}
 
 	/**

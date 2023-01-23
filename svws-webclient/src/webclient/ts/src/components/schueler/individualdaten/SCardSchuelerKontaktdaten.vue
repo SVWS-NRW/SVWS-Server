@@ -41,7 +41,7 @@
 		set(value: string | undefined) {
 			if (value) {
 				const vals = AdressenUtils.splitStrasse(value);
-				props.stammdaten.patch({ strassenname: vals?.[0] || value, hausnummer: vals?.[1] || "", hausnummerZusatz: vals?.[2] || "" });
+				void props.stammdaten.patch({ strassenname: vals?.[0] || value, hausnummer: vals?.[1] || "", hausnummerZusatz: vals?.[2] || "" });
 				eingabeStrasseOk.value = !!vals;
 			}
 		}
@@ -50,33 +50,33 @@
 	const inputKatalogOrte: ComputedRef<OrtKatalogEintrag[]> = computed(() => main.kataloge.orte.toArray() as OrtKatalogEintrag[]);
 	const inputWohnortID: WritableComputedRef<OrtKatalogEintrag | undefined> = computed({
 		get: () => inputKatalogOrte.value.find(ort => ort.id == daten.value.wohnortID),
-		set: (value) => props.stammdaten.patch({ wohnortID: value?.id })
+		set: (value) => void props.stammdaten.patch({ wohnortID: value?.id })
 	});
 
 	const inputKatalogOrtsteil: ComputedRef<OrtsteilKatalogEintrag[]> = computed(() => main.kataloge.ortsteile.toArray() as OrtsteilKatalogEintrag[]);
 	const inputOrtsteilID: WritableComputedRef<OrtsteilKatalogEintrag | undefined> = computed({
 		get: () => inputKatalogOrtsteil.value.find(ortsteil => ortsteil.id == daten.value.ortsteilID),
-		set: (value) => props.stammdaten.patch({ ortsteilID: value?.id })
+		set: (value) => void props.stammdaten.patch({ ortsteilID: value?.id })
 	});
 
 	const inputTelefon: WritableComputedRef<string | undefined> = computed({
 		get: () => daten.value.telefon?.toString(),
-		set: (value) => props.stammdaten.patch({ telefon: value })
+		set: (value) => void props.stammdaten.patch({ telefon: value })
 	});
 
 	const inputTelefonMobil: WritableComputedRef<string | undefined> = computed({
 		get: () => daten.value.telefonMobil?.toString(),
-		set: (value) => props.stammdaten.patch({ telefonMobil: value })
+		set: (value) => void props.stammdaten.patch({ telefonMobil: value })
 	});
 
 	const inputEmailPrivat: WritableComputedRef<string | undefined> = computed({
 		get: () => daten.value.emailPrivat?.toString(),
-		set: (value) => props.stammdaten.patch({ emailPrivat: value })
+		set: (value) => void props.stammdaten.patch({ emailPrivat: value })
 	});
 
 	const inputEmailSchule: WritableComputedRef<string | undefined> = computed({
 		get: () => daten.value.emailSchule?.toString(),
-		set: (value) => props.stammdaten.patch({ emailSchule: value })
+		set: (value) => void props.stammdaten.patch({ emailSchule: value })
 	});
 
 </script>

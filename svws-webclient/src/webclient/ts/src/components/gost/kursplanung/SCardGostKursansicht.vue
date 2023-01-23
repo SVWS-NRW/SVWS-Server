@@ -145,7 +145,7 @@
 			set(value: UserConfigKeys['gost.kursansicht.sortierung']) {
 				if (value === undefined)
 					value = 'kursart'
-				App.api.setClientConfigUserKey(value, App.schema, 'SVWS-Client', 'gost.kursansicht.sortierung')
+				void App.api.setClientConfigUserKey(value, App.schema, 'SVWS-Client', 'gost.kursansicht.sortierung')
 				mainApp.config.user_config.set('gost.kursansicht.sortierung', value)
 			}
 		});
@@ -231,7 +231,7 @@
 		if (abiturjahr === undefined)
 			throw new Error("Unerwarteter Fehler: Kein gültiger Abiturjahrgang ausgewählt.");
 		const result = await App.api.schreibeGostBlockungsErgebnisHoch(App.schema, props.ergebnis.daten.id);
-		router.push({ name: routeGostKursplanungHalbjahr.name, params: { abiturjahr: abiturjahr, halbjahr: props.halbjahr.next()?.id || props.halbjahr.id, idblockung: result.id } });
+		await 	router.push({ name: routeGostKursplanungHalbjahr.name, params: { abiturjahr: abiturjahr, halbjahr: props.halbjahr.next()?.id || props.halbjahr.id, idblockung: result.id } });
 	}
 
 </script>

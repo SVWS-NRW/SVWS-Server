@@ -35,7 +35,7 @@
 			return daten.value.kuerzel.toString();
 		},
 		set(val) {
-			props.stammdaten.patch({ kuerzel: val });
+			void props.stammdaten.patch({ kuerzel: val });
 		}
 	});
 
@@ -44,7 +44,7 @@
 			return daten.value.nachname.toString();
 		},
 		set(val: string) {
-			props.stammdaten.patch({ nachname: val });
+			void props.stammdaten.patch({ nachname: val });
 		}
 	});
 
@@ -53,7 +53,7 @@
 			return daten.value.vorname.toString();
 		},
 		set(val) {
-			props.stammdaten.patch({ vorname: val });
+			void props.stammdaten.patch({ vorname: val });
 		}
 	});
 
@@ -62,7 +62,7 @@
 			return Geschlecht.fromValue(Number(daten.value.geschlecht)) || Geschlecht.X;
 		},
 		set(val: Geschlecht) {
-			props.stammdaten.patch({ geschlecht: val.id });
+			void props.stammdaten.patch({ geschlecht: val.id });
 		}
 	});
 
@@ -71,7 +71,7 @@
 			return daten.value?.geburtsdatum ? String(daten.value.geburtsdatum) : '';
 		},
 		set(val) {
-			props.stammdaten.patch({ geburtsdatum: val });
+			void props.stammdaten.patch({ geburtsdatum: val });
 		}
 	});
 
@@ -80,7 +80,7 @@
 			return PersonalTyp.values().find(i => i.kuerzel === daten.value.personalTyp) || PersonalTyp.SONSTIGE;
 		},
 		set(val: PersonalTyp) {
-			props.stammdaten.patch({ personalTyp: val.kuerzel.toString() });
+			void props.stammdaten.patch({ personalTyp: val.kuerzel.toString() });
 		}
 	});
 
@@ -89,7 +89,7 @@
 			return Nationalitaeten.getByISO3(daten.value.staatsangehoerigkeitID) || Nationalitaeten.DEU;
 		},
 		set(val: Nationalitaeten) {
-			props.stammdaten.patch({ staatsangehoerigkeitID: val.daten.iso3 });
+			void props.stammdaten.patch({ staatsangehoerigkeitID: val.daten.iso3 });
 		}
 	});
 
@@ -98,7 +98,7 @@
 			return (daten.value.titel) === null ? "" : String(daten.value.titel);
 		},
 		set(val) {
-			props.stammdaten.patch({ titel: val });
+			void props.stammdaten.patch({ titel: val });
 		}
 	});
 
@@ -107,7 +107,7 @@
 			return (daten.value.amtsbezeichnung === null) ? "" : String(daten.value.amtsbezeichnung);
 		},
 		set(val) {
-			props.stammdaten.patch({ amtsbezeichnung: val });
+			void props.stammdaten.patch({ amtsbezeichnung: val });
 		}
 	});
 

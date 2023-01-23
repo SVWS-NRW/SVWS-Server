@@ -17,17 +17,17 @@
 
 	const aufnehmdendSchulnummer: WritableComputedRef<string | undefined> = computed({
 		get: () => props.data.daten?.aufnehmdendSchulnummer?.toString(),
-		set: (value) => props.data.patch({ aufnehmdendSchulnummer: value })
+		set: (value) => void props.data.patch({ aufnehmdendSchulnummer: value })
 	});
 
 	const aufnehmdendWechseldatum: WritableComputedRef<string | undefined> = computed({
 		get: () => props.data.daten?.aufnehmdendWechseldatum?.toString(),
-		set: (value) => props.data.patch({ aufnehmdendWechseldatum: value })
+		set: (value) => void props.data.patch({ aufnehmdendWechseldatum: value })
 	});
 
 	const aufnehmdendBestaetigt: WritableComputedRef<boolean | undefined> = computed({
 		get: () => props.data.daten?.aufnehmdendBestaetigt?.valueOf(),
-		set: (value) => props.data.patch({ aufnehmdendBestaetigt: value })
+		set: (value) => void props.data.patch({ aufnehmdendBestaetigt: value })
 	});
 
 </script>

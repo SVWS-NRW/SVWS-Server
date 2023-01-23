@@ -29,7 +29,7 @@
 
 	const vorigeSchulnummer: WritableComputedRef<string | undefined> = computed({
 		get: () => props.data.daten?.vorigeSchulnummer?.toString(),
-		set: (value) => props.data.patch({ vorigeSchulnummer:  value })
+		set: (value) => void props.data.patch({ vorigeSchulnummer:  value })
 	});
 
 	const vorigeSchulform: ComputedRef<Schulform | undefined> = computed(() => {
@@ -43,17 +43,17 @@
 	});
 	const vorigeAllgHerkunft: WritableComputedRef<string | undefined> = computed({
 		get: () => props.data.daten?.vorigeAllgHerkunft?.toString(),
-		set: (value) => props.data.patch({ vorigeAllgHerkunft:  value })
+		set: (value) => void props.data.patch({ vorigeAllgHerkunft:  value })
 	});
 
 	const vorigeEntlassDatum: WritableComputedRef<string | undefined> = computed({
 		get: () => props.data.daten?.vorigeEntlassdatum?.toString(),
-		set: (value) => props.data.patch({ vorigeEntlassdatum:  value })
+		set: (value) => void props.data.patch({ vorigeEntlassdatum:  value })
 	});
 
 	const vorigeEntlassjahrgang: WritableComputedRef<string | undefined> = computed({
 		get: () => props.data.daten?.vorigeEntlassjahrgang?.toString(),
-		set: (value) => props.data.patch({ vorigeEntlassjahrgang:  value })
+		set: (value) => void props.data.patch({ vorigeEntlassjahrgang:  value })
 	});
 
 	const herkunftsarten:ComputedRef<Herkunftsarten[]> = computed(() => {
@@ -66,7 +66,7 @@
 			const artID = parseInt(props.data.daten.vorigeArtLetzteVersetzung.valueOf());
 			return  Herkunftsarten.getByID(artID) || undefined;
 		},
-		set: (value) => props.data.patch({ vorigeArtLetzteVersetzung:  value === undefined || value === null ? null : "" + value.daten.id.valueOf() })
+		set: (value) => void props.data.patch({ vorigeArtLetzteVersetzung:  value === undefined || value === null ? null : "" + value.daten.id.valueOf() })
 	});
 	function getBezeichnung(h: Herkunftsarten) {
 		return h.getBezeichnung(vorigeSchulform.value || Schulform.G);
@@ -74,17 +74,17 @@
 
 	const vorigeBemerkung: WritableComputedRef<string | undefined> = computed({
 		get: () => props.data.daten?.vorigeBemerkung?.toString(),
-		set: (value) => props.data.patch({ vorigeBemerkung:  value })
+		set: (value) => void props.data.patch({ vorigeBemerkung:  value })
 	});
 
 	const vorigeEntlassgrundID: WritableComputedRef<number | undefined> = computed({
 		get: () => props.data.daten?.vorigeEntlassgrundID?.valueOf(),
-		set: (value) => props.data.patch({ vorigeEntlassgrundID: value })
+		set: (value) => void props.data.patch({ vorigeEntlassgrundID: value })
 	});
 
 	const vorigeAbschlussartID: WritableComputedRef<string | undefined> = computed({
 		get: () => props.data.daten?.vorigeAbschlussartID?.toString(),
-		set: (value) => props.data.patch({ vorigeAbschlussartID:  value })
+		set: (value) => void props.data.patch({ vorigeAbschlussartID:  value })
 	});
 
 	const showstatistic: ComputedRef<boolean> = computed(() => true);

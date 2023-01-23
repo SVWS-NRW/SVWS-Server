@@ -34,12 +34,12 @@
 
 	const schuljahresabschnitt: WritableComputedRef<number | undefined> = computed({
 		get: () => props.data.daten?.idSchuljahresabschnitt,
-		set: (value) => props.data.patch({idSchuljahresabschnitt: value})
+		set: (value) => void props.data.patch({idSchuljahresabschnitt: value})
 	});
 
 	const kuerzel: WritableComputedRef<string | undefined> = computed({
 		get: () => props.data.daten?.kuerzel.toString(),
-		set: (value) => props.data.patch({ kuerzel: value })
+		set: (value) => void props.data.patch({ kuerzel: value })
 	});
 
 	const jahrgaenge: WritableComputedRef<JahrgangsListeEintrag[]> = computed({
@@ -47,28 +47,28 @@
 		set: (value) => {
 			const result: Vector<Number> = new Vector();
 			value.forEach(j => result.add(Number(j.id)));
-			props.data.patch({ idJahrgaenge: result });
+			void props.data.patch({ idJahrgaenge: result });
 		}
 	});
 
 	const fach: WritableComputedRef<number | undefined> = computed({
 		get: () => props.data.daten?.idFach,
-		set: (value) => props.data.patch({idFach: value})
+		set: (value) => void props.data.patch({idFach: value})
 	});
 
 	const lehrer: WritableComputedRef<LehrerListeEintrag | undefined> = computed({
 		get: () => ((props.data.daten === undefined) || (props.data.daten.lehrer === null)) ? undefined : props.mapLehrer.get(props.data.daten.lehrer),
-		set: (value) => props.data.patch({lehrer: value === undefined ? null : value.id })
+		set: (value) => void props.data.patch({lehrer: value === undefined ? null : value.id })
 	});
 
 	const istSichtbar: WritableComputedRef<boolean> = computed({
 		get: () => props.data.daten === undefined ? false : props.data.daten.istSichtbar,
-		set: (value) => props.data.patch({ istSichtbar: value })
+		set: (value) => void props.data.patch({ istSichtbar: value })
 	});
 
 	const sortierung: WritableComputedRef<number> = computed({
 		get: () => props.data.daten?.sortierung || 32000,
-		set: (value) => props.data.patch({ sortierung: value })
+		set: (value) => void props.data.patch({ sortierung: value })
 	});
 
 </script>

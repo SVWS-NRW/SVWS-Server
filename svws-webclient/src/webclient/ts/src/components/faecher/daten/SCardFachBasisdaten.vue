@@ -23,17 +23,17 @@
 
 	const inputKuerzel: WritableComputedRef<string | undefined> = computed({
 		get: () => props.data.daten?.kuerzel?.toString(),
-		set: (value) => props.data.patch({ kuerzel: value })
+		set: (value) => void props.data.patch({ kuerzel: value })
 	});
 
 	const inputBezeichnung: WritableComputedRef<string | undefined> = computed({
 		get: () => props.data.daten?.bezeichnung?.toString(),
-		set: (value) => props.data.patch({ bezeichnung: value })
+		set: (value) => void props.data.patch({ bezeichnung: value })
 	});
 
 	const inputFachStatistik: WritableComputedRef<string | undefined> = computed({
 		get: () => props.data.daten?.kuerzelStatistik?.toString(),
-		set: (value) =>props.data.patch({ kuerzelStatistik: value })
+		set: (value) => void props.data.patch({ kuerzelStatistik: value })
 	});
 
 </script>

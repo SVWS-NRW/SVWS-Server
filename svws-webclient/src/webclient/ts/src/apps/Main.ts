@@ -18,6 +18,7 @@ import { BaseList } from "./BaseList";
 import { ApiLoadingStatus } from "./core/ApiLoadingStatus.class";
 import { MAIN_LOADING_SYMBOL } from "./core/LoadingSymbols";
 import { ComputedRef, inject, InjectionKey, provide, reactive } from "vue";
+import { UserConfigKeys } from "~/utils/userconfig/keys";
 
 export type Kataloge = {
 	orte: List<OrtKatalogEintrag>;
@@ -63,7 +64,7 @@ export class MainConfig {
 		App.akt_abschnitt = abschnitt;
 		const lists = BaseList.all
 		for (const l of lists) {
-			l.update_list()
+			void l.update_list()
 		}
 	}
 }
@@ -241,9 +242,9 @@ export class Main {
 	 *
 	 * @returns {Promise<void>}
 	 */
-	public logout(): void {
+	public async logout(): Promise<void> {
 		this.config.selected_app = "Schueler";
-		this.connectTo(this.hostname);
+		await this.connectTo(this.hostname);
 	}
 }
 

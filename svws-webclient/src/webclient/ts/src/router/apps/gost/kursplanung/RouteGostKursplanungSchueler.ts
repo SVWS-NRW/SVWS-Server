@@ -83,7 +83,7 @@ export class RouteGostKursplanungSchueler extends RouteNode<RouteDataGostKurspla
 				return this.getRoute(abiturjahr, halbjahr.id, idBlockung, idErgebnis, schueler?.id);
 			}
 			if (this.data.dataSchueler.daten !== undefined)
-				this.data.dataSchueler.unselect();
+				await this.data.dataSchueler.unselect();
 			return;
 		}
 		// ... wurde die ID des Schülers verändert, so lade die Laufbahn-Daten des Schülers aus der Datenbank
@@ -123,7 +123,7 @@ export class RouteGostKursplanungSchueler extends RouteNode<RouteDataGostKurspla
 			get: () => this.data.listSchueler.ausgewaehlt,
 			set: (value) => {
 				if (this.data.listSchueler.ausgewaehlt !== value)
-					router.push(routeGostKursplanungSchueler.getRoute(routeGost.liste.ausgewaehlt?.abiturjahr, routeGostKursplanung.data.halbjahr.value.id,
+					void router.push(routeGostKursplanungSchueler.getRoute(routeGost.liste.ausgewaehlt?.abiturjahr, routeGostKursplanung.data.halbjahr.value.id,
 						routeGostKursplanungHalbjahr.data.dataKursblockung.daten?.id, routeGostKursplanungBlockung.data.ergebnis.value?.id, value?.id));
 			}
 		});

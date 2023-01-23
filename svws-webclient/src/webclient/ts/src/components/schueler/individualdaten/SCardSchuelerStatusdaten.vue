@@ -36,64 +36,64 @@
 
 	const inputStatus: WritableComputedRef<SchuelerStatus | undefined> = computed({
 		get: () => (SchuelerStatus.fromBezeichnung(daten.value.status) || undefined),
-		set: (value) => props.stammdaten.patch({ status: value?.bezeichnung })
+		set: (value) => void props.stammdaten.patch({ status: value?.bezeichnung })
 	});
 
 	const inputKatalogFahrschuelerarten: ComputedRef<KatalogEintrag[]> = computed(() => props.fachschuelerarten.daten?.toArray() as KatalogEintrag[] || []);
 	const inputFahrschuelerArtID: WritableComputedRef<KatalogEintrag | undefined> = computed({
 		get: () => inputKatalogFahrschuelerarten.value.find(n => n.id === daten.value.fahrschuelerArtID),
-		set: (value) => props.stammdaten.patch({ fahrschuelerArtID: value?.id })
+		set: (value) => void props.stammdaten.patch({ fahrschuelerArtID: value?.id })
 	});
 
 	const inputKatalogHaltestellen: ComputedRef<KatalogEintrag[]> = computed(() => main.kataloge.haltestellen.toArray() as KatalogEintrag[]);
 	const inputHaltestelleID: WritableComputedRef<KatalogEintrag | undefined> = computed({
 		get: () => inputKatalogHaltestellen.value.find(n => n.id === daten.value.haltestelleID),
-		set: (value) => props.stammdaten.patch({ haltestelleID: value?.id })
+		set: (value) => void props.stammdaten.patch({ haltestelleID: value?.id })
 	});
 
 	const inputAnmeldedatum: WritableComputedRef<string | undefined> = computed({
 		get: () => daten.value.anmeldedatum?.toString(),
-		set: (value) => props.stammdaten.patch({ anmeldedatum: value })
+		set: (value) => void props.stammdaten.patch({ anmeldedatum: value })
 	});
 
 	const inputAufnahmedatum: WritableComputedRef<string | undefined> = computed({
 		get: () => daten.value.aufnahmedatum?.toString(),
-		set: (value) => props.stammdaten.patch({ aufnahmedatum: value })
+		set: (value) => void props.stammdaten.patch({ aufnahmedatum: value })
 	});
 
 	const inputIstDuplikat: WritableComputedRef<boolean> = computed({
 		get: () => daten.value.istDuplikat,
-		set: (value) => props.stammdaten.patch({ istDuplikat: value })
+		set: (value) => void props.stammdaten.patch({ istDuplikat: value })
 	});
 
 	const inputIstSchulpflichtErfuellt: WritableComputedRef<boolean> = computed({
 		get: () => daten.value.istSchulpflichtErfuellt === null ? false : daten.value.istSchulpflichtErfuellt.valueOf(),
-		set: (value) => props.stammdaten.patch({ istSchulpflichtErfuellt: value })
+		set: (value) => void props.stammdaten.patch({ istSchulpflichtErfuellt: value })
 	});
 
 	const inputHatMasernimpfnachweis: WritableComputedRef<boolean> = computed({
 		get: () => daten.value.hatMasernimpfnachweis,
-		set: (value) => props.stammdaten.patch({ hatMasernimpfnachweis: value })
+		set: (value) => void props.stammdaten.patch({ hatMasernimpfnachweis: value })
 	});
 
 	const inputKeineAuskunftAnDritte: WritableComputedRef<boolean> = computed({
 		get: () => daten.value.keineAuskunftAnDritte,
-		set: (value) => props.stammdaten.patch({ keineAuskunftAnDritte: value })
+		set: (value) => void props.stammdaten.patch({ keineAuskunftAnDritte: value })
 	});
 
 	const inputErhaeltSchuelerBAFOEG: WritableComputedRef<boolean> = computed({
 		get: () => daten.value.erhaeltSchuelerBAFOEG,
-		set: (value) => props.stammdaten.patch({ erhaeltSchuelerBAFOEG: value })
+		set: (value) => void props.stammdaten.patch({ erhaeltSchuelerBAFOEG: value })
 	});
 
 	const inputIstBerufsschulpflichtErfuellt: WritableComputedRef<boolean> = computed({
 		get: () => daten.value.istBerufsschulpflichtErfuellt === null ? false : daten.value.istBerufsschulpflichtErfuellt.valueOf(),
-		set: (value) => props.stammdaten.patch({ istBerufsschulpflichtErfuellt: value })
+		set: (value) => void props.stammdaten.patch({ istBerufsschulpflichtErfuellt: value })
 	});
 
 	const inputIstVolljaehrig: WritableComputedRef<boolean> = computed({
 		get: () => daten.value.istVolljaehrig === null ? false : daten.value.istVolljaehrig.valueOf(),
-		set: (value) => props.stammdaten.patch({ istVolljaehrig: value })
+		set: (value) => void props.stammdaten.patch({ istVolljaehrig: value })
 	});
 
 </script>

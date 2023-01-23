@@ -66,67 +66,67 @@
 
 	const nachname: WritableComputedRef<string> = computed({
 		get: () => props.erzieher.nachname?.toString() || "",
-		set: (value) => props.data.patch({ nachname: value }, props.erzieher)
+		set: (value) => void props.data.patch({ nachname: value }, props.erzieher)
 	});
 
 	const zusatzNachname: WritableComputedRef<string> = computed({
 		get: () => props.erzieher.zusatzNachname?.toString() || "",
-		set: (value) => props.data.patch({ zusatzNachname: value }, props.erzieher)
+		set: (value) => void props.data.patch({ zusatzNachname: value }, props.erzieher)
 	});
 
 	const vorname: WritableComputedRef<string> = computed({
 		get: () => props.erzieher.vorname?.toString() || "",
-		set: (value) => props.data.patch({ vorname: value }, props.erzieher)
+		set: (value) => void props.data.patch({ vorname: value }, props.erzieher)
 	});
 
 	const email: WritableComputedRef<string> = computed({
 		get: () => props.erzieher.eMail?.toString() || "",
-		set: (value) => props.data.patch({ eMail: value }, props.erzieher)
+		set: (value) => void props.data.patch({ eMail: value }, props.erzieher)
 	});
 
 	const erhaeltAnschreiben: WritableComputedRef<boolean> = computed({
 		get: () => (props.erzieher.erhaeltAnschreiben === null) ? true : props.erzieher.erhaeltAnschreiben?.valueOf(),
-		set: (value) => props.data.patch({ erhaeltAnschreiben: value }, props.erzieher)
+		set: (value) => void props.data.patch({ erhaeltAnschreiben: value }, props.erzieher)
 	});
 
 	// TODO Lese Katalog in der Route aus und nutze keinen globalen Katalog
 	const inputKatalogOrte: Ref<OrtKatalogEintrag[]> = ref(main.kataloge.orte.toArray() as OrtKatalogEintrag[]);
 	const inputWohnortID: WritableComputedRef<OrtKatalogEintrag | undefined> = computed({
 		get: () => inputKatalogOrte.value.find(ort => ort.id == props.erzieher.wohnortID),
-		set: (value) => props.data.patch({ wohnortID: value?.id }, props.erzieher)
+		set: (value) => void props.data.patch({ wohnortID: value?.id }, props.erzieher)
 	});
 
 	// TODO Lese Katalog in der Route aus und nutze keinen globalen Katalog
 	const inputKatalogOrtsteil: Ref<OrtsteilKatalogEintrag[]> = ref(main.kataloge.ortsteile.toArray() as OrtsteilKatalogEintrag[]);
 	const inputOrtsteilID: WritableComputedRef<OrtsteilKatalogEintrag | undefined> = computed({
 		get: () => inputKatalogOrtsteil.value.find(ortsteil => ortsteil.id == props.erzieher.ortsteilID),
-		set: (value) => props.data.patch({ ortsteilID: value?.id }, props.erzieher)
+		set: (value) => void props.data.patch({ ortsteilID: value?.id }, props.erzieher)
 	});
 
 	const staatsangehoerigkeit: WritableComputedRef<Nationalitaeten> = computed({
 		get: () => Nationalitaeten.getByISO3(props.erzieher.staatsangehoerigkeitID) || Nationalitaeten.DEU,
-		set: (value) => props.data.patch({ staatsangehoerigkeitID: value.daten.iso3 }, props.erzieher)
+		set: (value) => void props.data.patch({ staatsangehoerigkeitID: value.daten.iso3 }, props.erzieher)
 	});
 
 	const katalogErzieherarten: ComputedRef<Erzieherart[]> = computed(() => props.erzieherarten.daten?.toArray() as Erzieherart[] || []);
 	const idErzieherArt: WritableComputedRef<Erzieherart | undefined> = computed({
 		get: () => katalogErzieherarten.value.find(n => n.id === props.erzieher.idErzieherArt),
-		set: (value) => props.data.patch({ idErzieherArt: value?.id }, props.erzieher)
+		set: (value) => void props.data.patch({ idErzieherArt: value?.id }, props.erzieher)
 	});
 
 	const strassenname: WritableComputedRef<string> = computed({
 		get: () => props.erzieher.strassenname?.toString() || "",
-		set: (value) => props.data.patch({ strassenname: value }, props.erzieher)
+		set: (value) => void props.data.patch({ strassenname: value }, props.erzieher)
 	});
 
 	const hausnummerZusatz: WritableComputedRef<string> = computed({
 		get: () => props.erzieher.hausnummerZusatz?.toString() || "",
-		set: (value) => props.data.patch({ hausnummerZusatz: value }, props.erzieher)
+		set: (value) => void props.data.patch({ hausnummerZusatz: value }, props.erzieher)
 	});
 
 	const bemerkungen: WritableComputedRef<string> = computed({
 		get: () => props.erzieher.bemerkungen?.toString() || "",
-		set: (value) => props.data.patch({ bemerkungen: value }, props.erzieher)
+		set: (value) => void props.data.patch({ bemerkungen: value }, props.erzieher)
 	});
 
 </script>

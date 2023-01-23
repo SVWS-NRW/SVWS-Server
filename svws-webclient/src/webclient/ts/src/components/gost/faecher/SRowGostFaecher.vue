@@ -184,7 +184,7 @@
 		set: (value) => {
 			if (!routeGost.liste.ausgewaehlt?.abiturjahr)
 				return;
-			props.dataFaecher.patch({ projektKursLeitfach1ID: value?.id || null }, props.fach, routeGost.liste.ausgewaehlt.abiturjahr.valueOf());
+			void props.dataFaecher.patch({ projektKursLeitfach1ID: value?.id || null }, props.fach, routeGost.liste.ausgewaehlt.abiturjahr.valueOf());
 		}
 	});
 
@@ -193,7 +193,7 @@
 		set: (value) => {
 			if (!routeGost.liste.ausgewaehlt?.abiturjahr || value === leitfach1.value)
 				return;
-			props.dataFaecher.patch({ projektKursLeitfach2ID: value?.id || null }, props.fach, routeGost.liste.ausgewaehlt.abiturjahr.valueOf());
+			void props.dataFaecher.patch({ projektKursLeitfach2ID: value?.id || null }, props.fach, routeGost.liste.ausgewaehlt.abiturjahr.valueOf());
 		}
 	});
 
@@ -221,7 +221,7 @@
 	}
 
 	function set(data: Partial<GostFach>) {
-		props.dataFaecher.patch(data, props.fach, routeGost.liste.ausgewaehlt?.abiturjahr?.valueOf());
+		void props.dataFaecher.patch(data, props.fach, routeGost.liste.ausgewaehlt?.abiturjahr?.valueOf());
 	}
 
 	function ef1_set(): void {

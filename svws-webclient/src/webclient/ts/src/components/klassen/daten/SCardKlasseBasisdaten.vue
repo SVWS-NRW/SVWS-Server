@@ -28,27 +28,27 @@
 
 	const kuerzel: WritableComputedRef<string | undefined> = computed({
 		get: () => props.data.daten?.kuerzel?.toString(),
-		set: (value) => props.data.patch({ kuerzel: value })
+		set: (value) => void props.data.patch({ kuerzel: value })
 	});
 
 	const parallelitaet: WritableComputedRef<string | undefined> = computed({
 		get: () => props.data.daten?.parallelitaet?.toString(),
-		set: (value) => props.data.patch({ parallelitaet: value })
+		set: (value) => void props.data.patch({ parallelitaet: value })
 	});
 
 	const jahrgang: WritableComputedRef<JahrgangsListeEintrag | undefined> = computed({
 		get: () => ((props.data.daten === undefined) || (props.data.daten.idJahrgang === null)) ? undefined : props.mapJahrgaenge.get(props.data.daten.idJahrgang),
-		set: (value) => props.data.patch({ idJahrgang: value?.id })
+		set: (value) => void props.data.patch({ idJahrgang: value?.id })
 	});
 
 	const inputIstSichtbar: WritableComputedRef<boolean | undefined> = computed({
 		get: () => props.data.daten?.istSichtbar,
-		set: (value) => props.data.patch({ istSichtbar: value })
+		set: (value) => void props.data.patch({ istSichtbar: value })
 	});
 
 	const inputSortierung: WritableComputedRef<number | undefined> = computed({
 		get: () => props.data.daten?.sortierung,
-		set: (value) => props.data.patch({ sortierung: value })
+		set: (value) => void props.data.patch({ sortierung: value })
 	});
 
 </script>

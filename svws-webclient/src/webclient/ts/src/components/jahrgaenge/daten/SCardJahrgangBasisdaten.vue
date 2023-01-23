@@ -31,27 +31,27 @@
 
 	const inputKuerzel: WritableComputedRef<string | undefined> = computed({
 		get: () => props.data.daten?.kuerzel?.toString(),
-		set: (value) => props.data.patch({ kuerzel: value })
+		set: (value) => void props.data.patch({ kuerzel: value })
 	});
 
 	const inputBezeichnung: WritableComputedRef<string | undefined> = computed({
 		get: () => props.data.daten?.bezeichnung?.toString(),
-		set: (value) => props.data.patch({ bezeichnung: value })
+		set: (value) => void props.data.patch({ bezeichnung: value })
 	});
 
 	const inputKuerzelStatistik: WritableComputedRef<string | undefined> = computed({
 		get: () => props.data.daten?.kuerzelStatistik?.toString(),
-		set: (value: string | undefined) => props.data.patch({ kuerzelStatistik: value })
+		set: (value: string | undefined) => void props.data.patch({ kuerzelStatistik: value })
 	});
 
 	const inputKuerzelSchulgliederung: WritableComputedRef<string | undefined> = computed({
 		get: () => props.data.daten?.kuerzelSchulgliederung?.toString(),
-		set: (value) => props.data.patch({ kuerzelSchulgliederung: value })
+		set: (value) => void props.data.patch({ kuerzelSchulgliederung: value })
 	});
 
 	const inputIdFolgejahrgang: WritableComputedRef<JahrgangsListeEintrag | undefined> = computed({
 		get: () => props.listJahrgaenge.find((e: JahrgangsListeEintrag) => props.data.daten?.idFolgejahrgang === e.id),
-		set: (value) => props.data.patch({ idFolgejahrgang: value?.id })
+		set: (value) => void props.data.patch({ idFolgejahrgang: value?.id })
 	});
 
 </script>

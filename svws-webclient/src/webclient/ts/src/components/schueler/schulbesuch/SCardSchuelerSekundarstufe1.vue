@@ -17,17 +17,17 @@
 
 	const sekIWechsel: WritableComputedRef<number | undefined> = computed({
 		get: () => props.data.daten?.sekIWechsel?.valueOf(),
-		set: (value) => props.data.patch({ sekIWechsel: value })
+		set: (value) => void props.data.patch({ sekIWechsel: value })
 	});
 
 	const sekIErsteSchulform: WritableComputedRef<string | undefined> = computed({
 		get: () => props.data.daten?.sekIErsteSchulform?.toString(),
-		set: (value) => props.data.patch({ sekIErsteSchulform: value })
+		set: (value) => void props.data.patch({ sekIErsteSchulform: value })
 	});
 
 	const sekIIWechsel: WritableComputedRef<number | undefined> = computed({
 		get: () => props.data.daten?.sekIIWechsel?.valueOf(),
-		set: (value) => props.data.patch({ sekIIWechsel: value })
+		set: (value) => void props.data.patch({ sekIIWechsel: value })
 	});
 
 </script>

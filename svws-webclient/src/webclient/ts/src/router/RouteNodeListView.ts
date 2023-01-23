@@ -74,7 +74,7 @@ export abstract class RouteNodeListView<TAuswahl extends BaseList<TItemAuswahl, 
 				if ((this.item !== undefined) && (this.item !== null))
 					id_value = "" + this.item[this.itemKey];
 				const params = { [this.itemKey]: id_value };
-				router.push({ name: value.name, params: params });
+				void router.push({ name: value.name, params: params });
 			}
 		});
 	}
@@ -128,10 +128,10 @@ export abstract class RouteNodeListView<TAuswahl extends BaseList<TItemAuswahl, 
     			if ((from_name !== name) && from_name?.startsWith(name)) {  // TODO Ergänze Methode bei RouteNode isNested und nutze diese
     				const params = {...route.params};
     				params[this.itemKey.toString()] = id_value;
-    				router.push({ name: from_name, params: params });
+    				void router.push({ name: from_name, params: params });
     			} else {
     				const params = { [this.itemKey]: id_value };
-    				router.push({ name: redirect_name, params: params });
+    				void router.push({ name: redirect_name, params: params });
     			}
     		}
     	});
@@ -167,9 +167,9 @@ export abstract class RouteNodeListView<TAuswahl extends BaseList<TItemAuswahl, 
     			if ((from_name !== name) && from_name?.startsWith(name)) {  // TODO Ergänze Methode bei RouteNode isNested und nutze diese
     				const params = {...route.params};
     				params.id = "" + value?.id;
-    				router.push({ name: from_name, params: params });
+    				void router.push({ name: from_name, params: params });
     			} else {
-    				router.push({ name: redirect_name, params: { id: value?.id } });
+    				void router.push({ name: redirect_name, params: { id: value?.id } });
     			}
     		}
     	});

@@ -33,17 +33,17 @@
 
 	const inputGeburtsdatum: WritableComputedRef<string | undefined> = computed({
 		get: () => daten.value.geburtsdatum?.toString(),
-		set: (value) => props.stammdaten.patch({ geburtsdatum: value })
+		set: (value) => void props.stammdaten.patch({ geburtsdatum: value })
 	});
 
 	const inputGeburtsort: WritableComputedRef<string | undefined> = computed({
 		get: () => daten.value.geburtsort?.toString(),
-		set: (value) => props.stammdaten.patch({ geburtsort: value })
+		set: (value) => void props.stammdaten.patch({ geburtsort: value })
 	});
 
 	const inputGeburtsname: WritableComputedRef<string | undefined> = computed({
 		get: () => daten.value.geburtsname?.toString(),
-		set: (value) => props.stammdaten.patch({ geburtsname: value })
+		set: (value) => void props.stammdaten.patch({ geburtsname: value })
 	});
 
 </script>

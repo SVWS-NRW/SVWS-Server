@@ -34,7 +34,7 @@
 				return LehrerZugangsgrund.values().find(e => e.daten.kuerzel === daten.value.zugangsgrund);
 			},
 			set(val: LehrerZugangsgrund | undefined) {
-				props.personaldaten.patch({ zugangsgrund: val?.daten.kuerzel });
+				void props.personaldaten.patch({ zugangsgrund: val?.daten.kuerzel });
 			}
 		});
 
@@ -44,7 +44,7 @@
 				return LehrerAbgangsgrund.values().find(e => e.daten.kuerzel === daten.value.abgangsgrund );
 			},
 			set(val: LehrerAbgangsgrund | undefined) {
-				props.personaldaten.patch({ abgangsgrund: val?.daten.kuerzel });
+				void props.personaldaten.patch({ abgangsgrund: val?.daten.kuerzel });
 			}
 		});
 
@@ -77,7 +77,7 @@
 			return daten.value.zugangsdatum?.toString();
 		},
 		set(val) {
-			props.personaldaten.patch({ zugangsdatum: val });
+			void props.personaldaten.patch({ zugangsdatum: val });
 		}
 	});
 
@@ -86,7 +86,7 @@
 			return daten.value.abgangsdatum?.toString();
 		},
 		set(val: string | undefined) {
-			props.personaldaten.patch({ abgangsdatum: val });
+			void props.personaldaten.patch({ abgangsdatum: val });
 		}
 	});
 
@@ -95,7 +95,7 @@
 			return daten.value.identNrTeil1?.toString();
 		},
 		set(val: string | undefined) {
-			props.personaldaten.patch({ identNrTeil1: val });
+			void props.personaldaten.patch({ identNrTeil1: val });
 		}
 	});
 
@@ -104,7 +104,7 @@
 			return daten.value.identNrTeil2SerNr?.toString();
 		},
 		set(val: string | undefined) {
-			props.personaldaten.patch({ identNrTeil2SerNr: val });
+			void props.personaldaten.patch({ identNrTeil2SerNr: val });
 		}
 	});
 
@@ -113,7 +113,7 @@
 			return daten.value.lbvVerguetungsschluessel?.toString();
 		},
 		set(val: string | undefined) {
-			props.personaldaten.patch({ lbvVerguetungsschluessel: val });
+			void props.personaldaten.patch({ lbvVerguetungsschluessel: val });
 		}
 	});
 
@@ -122,7 +122,7 @@
 			return daten.value.personalaktennummer?.toString();
 		},
 		set(val) {
-			props.personaldaten.patch({ personalaktennummer: val });
+			void props.personaldaten.patch({ personalaktennummer: val });
 		}
 	});
 
@@ -131,7 +131,7 @@
 			return daten.value.lbvPersonalnummer?.toString();
 		},
 		set(val) {
-			props.personaldaten.patch({ lbvPersonalnummer: val });
+			void props.personaldaten.patch({ lbvPersonalnummer: val });
 		}
 	});
 

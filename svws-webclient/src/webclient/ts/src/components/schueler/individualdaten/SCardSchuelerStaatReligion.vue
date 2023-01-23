@@ -35,33 +35,33 @@
 
 	const inputStaatsangehoerigkeit: WritableComputedRef<Nationalitaeten> = computed({
 		get: () => Nationalitaeten.getByISO3(daten.value.staatsangehoerigkeitID) || Nationalitaeten.DEU,
-		set: (value) => props.stammdaten.patch({ staatsangehoerigkeitID: value.daten.iso3 })
+		set: (value) => void props.stammdaten.patch({ staatsangehoerigkeitID: value.daten.iso3 })
 	});
 
 	const inputStaatsangehoerigkeit2: WritableComputedRef<Nationalitaeten> = computed({
 		get: () => Nationalitaeten.getByISO3(daten.value.staatsangehoerigkeit2ID) || Nationalitaeten.DEU,
-		set: (value) => props.stammdaten.patch({ staatsangehoerigkeit2ID: value.daten.iso3 })
+		set: (value) => void props.stammdaten.patch({ staatsangehoerigkeit2ID: value.daten.iso3 })
 	});
 
 	const inputKatalogReligionen: ComputedRef<ReligionEintrag[]> = computed(() => main.kataloge.religionen.toArray() as ReligionEintrag[]);
 	const inputReligionID: WritableComputedRef<ReligionEintrag | undefined> = computed({
 		get: () => inputKatalogReligionen.value.find(n => n.id === daten.value.religionID),
-		set: (value) => props.stammdaten.patch({ religionID: value?.id })
+		set: (value) => void props.stammdaten.patch({ religionID: value?.id })
 	});
 
 	const inputReligionabmeldung: WritableComputedRef<string | undefined> = computed({
 		get: () => daten.value.religionabmeldung?.toString(),
-		set: (value) => props.stammdaten.patch({ religionabmeldung: value })
+		set: (value) => void props.stammdaten.patch({ religionabmeldung: value })
 	});
 
 	const inputReligionanmeldung: WritableComputedRef<string | undefined> = computed({
 		get: () => daten.value.religionanmeldung?.toString(),
-		set: (value) => props.stammdaten.patch({ religionanmeldung: value })
+		set: (value) => void props.stammdaten.patch({ religionanmeldung: value })
 	});
 
 	const inputDruckeKonfessionAufZeugnisse: WritableComputedRef<boolean> = computed({
 		get: () => daten.value.druckeKonfessionAufZeugnisse,
-		set: (value) => props.stammdaten.patch({ druckeKonfessionAufZeugnisse: value })
+		set: (value) => void props.stammdaten.patch({ druckeKonfessionAufZeugnisse: value })
 	});
 
 </script>

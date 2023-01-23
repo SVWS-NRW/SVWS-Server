@@ -39,7 +39,7 @@
 			return fachManager.value?.get(props.kombination.fachID1) || undefined;
 		},
 		set(val: GostFach | undefined) {
-			props.dataFachkombinationen.patch({ fachID1: val?.id }, props.kombination, abiturjahr);
+			void props.dataFachkombinationen.patch({ fachID1: val?.id }, props.kombination, abiturjahr);
 		}
 	});
 
@@ -48,7 +48,7 @@
 			return GostKursart.fromKuerzel(props.kombination.kursart1) || undefined;
 		},
 		set(val: GostKursart | undefined) {
-			props.dataFachkombinationen.patch({ kursart1: val?.kuerzel || null }, props.kombination, abiturjahr);
+			void props.dataFachkombinationen.patch({ kursart1: val?.kuerzel || null }, props.kombination, abiturjahr);
 		}
 	});
 
@@ -57,7 +57,7 @@
 			return fachManager.value?.get(props.kombination.fachID2) || undefined;
 		},
 		set(val: GostFach | undefined) {
-			props.dataFachkombinationen.patch({ fachID2: val?.id }, props.kombination, abiturjahr);
+			void props.dataFachkombinationen.patch({ fachID2: val?.id }, props.kombination, abiturjahr);
 		}
 	});
 
@@ -66,7 +66,7 @@
 			return GostKursart.fromKuerzel(props.kombination.kursart2) || undefined;
 		},
 		set(val: GostKursart | undefined) {
-			props.dataFachkombinationen.patch({ kursart2: val?.kuerzel || null }, props.kombination, abiturjahr);
+			void props.dataFachkombinationen.patch({ kursart2: val?.kuerzel || null }, props.kombination, abiturjahr);
 		}
 	});
 
@@ -79,7 +79,7 @@
 				return;
 			const result : boolean[] = [...props.kombination.gueltigInHalbjahr];
 			result[GostHalbjahr.EF1.id] = value;
-			props.dataFachkombinationen.patch( { gueltigInHalbjahr: result }, props.kombination, abiturjahr);
+			void props.dataFachkombinationen.patch( { gueltigInHalbjahr: result }, props.kombination, abiturjahr);
 		}
 	});
 
@@ -92,7 +92,7 @@
 				return;
 			const result : boolean[] = [...props.kombination.gueltigInHalbjahr];
 			result[GostHalbjahr.EF2.id] = value;
-			props.dataFachkombinationen.patch( { gueltigInHalbjahr: result }, props.kombination,
+			void props.dataFachkombinationen.patch( { gueltigInHalbjahr: result }, props.kombination,
 				routeGost.liste.ausgewaehlt.abiturjahr.valueOf()
 			);
 		}
@@ -107,7 +107,7 @@
 				return;
 			const result : boolean[] = [...props.kombination.gueltigInHalbjahr];
 			result[GostHalbjahr.Q11.id] = value;
-			props.dataFachkombinationen.patch( { gueltigInHalbjahr: result }, props.kombination,
+			void props.dataFachkombinationen.patch( { gueltigInHalbjahr: result }, props.kombination,
 				routeGost.liste.ausgewaehlt.abiturjahr.valueOf()
 			);
 		}
@@ -122,7 +122,7 @@
 				return;
 			const result : boolean[] = [...props.kombination.gueltigInHalbjahr];
 			result[GostHalbjahr.Q12.id] = value;
-			props.dataFachkombinationen.patch( { gueltigInHalbjahr: result }, props.kombination,
+			void props.dataFachkombinationen.patch( { gueltigInHalbjahr: result }, props.kombination,
 				routeGost.liste.ausgewaehlt.abiturjahr.valueOf()
 			);
 		}
@@ -137,7 +137,7 @@
 				return;
 			const result : boolean[] = [...props.kombination.gueltigInHalbjahr];
 			result[GostHalbjahr.Q21.id] = value;
-			props.dataFachkombinationen.patch( { gueltigInHalbjahr: result }, props.kombination,
+			void props.dataFachkombinationen.patch( { gueltigInHalbjahr: result }, props.kombination,
 				routeGost.liste.ausgewaehlt.abiturjahr.valueOf()
 			);
 		}
@@ -152,14 +152,14 @@
 				return;
 			const result : boolean[] = [...props.kombination.gueltigInHalbjahr];
 			result[GostHalbjahr.Q22.id] = value;
-			props.dataFachkombinationen.patch( { gueltigInHalbjahr: result }, props.kombination,
+			void props.dataFachkombinationen.patch( { gueltigInHalbjahr: result }, props.kombination,
 				routeGost.liste.ausgewaehlt.abiturjahr.valueOf()
 			);
 		}
 	});
 
 	const del_fachkombi = () => {
-		props.dataFachkombinationen.delete(props.kombination.id);
+		void props.dataFachkombinationen.delete(props.kombination.id);
 	}
 
 </script>

@@ -145,37 +145,37 @@
 
 	const name : WritableComputedRef<string | undefined> = computed({
 		get: () => props.betriebsStammdaten.daten?.name1?.valueOf(),
-		set: (value) => props.betriebsStammdaten.patch({ name1 : value })
+		set: (value) => void props.betriebsStammdaten.patch({ name1 : value })
 	})
 
 	const namezusatz : WritableComputedRef<string | undefined> = computed({
 		get: () => props.betriebsStammdaten.daten?.name2?.valueOf(),
-		set: (value) => props.betriebsStammdaten.patch({ name2 : value })
+		set: (value) => void props.betriebsStammdaten.patch({ name2 : value })
 	})
 
 	const telefon1 : WritableComputedRef<string | undefined> = computed({
 		get: () => props.betriebsStammdaten.daten?.telefon1?.valueOf(),
-		set: (value) => props.betriebsStammdaten.patch({ telefon1 : value })
+		set: (value) => void props.betriebsStammdaten.patch({ telefon1 : value })
 	})
 
 	const telefon2 : WritableComputedRef<string | undefined> = computed({
 		get: () => props.betriebsStammdaten.daten?.telefon2?.valueOf(),
-		set: (value) => props.betriebsStammdaten.patch({ telefon2 : value })
+		set: (value) => void props.betriebsStammdaten.patch({ telefon2 : value })
 	})
 
 	const fax : WritableComputedRef<string | undefined> = computed({
 		get: () => props.betriebsStammdaten.daten?.fax?.valueOf(),
-		set: (value) => props.betriebsStammdaten.patch({ fax : value })
+		set: (value) => void props.betriebsStammdaten.patch({ fax : value })
 	})
 
 	const email : WritableComputedRef<string | undefined> = computed({
 		get: () => props.betriebsStammdaten.daten?.email?.valueOf(),
-		set: (value) => props.betriebsStammdaten.patch({ email : value })
+		set: (value) => void props.betriebsStammdaten.patch({ email : value })
 	})
 
 	const branche : WritableComputedRef<string | undefined> = computed({
 		get: () => props.betriebsStammdaten.daten?.branche?.valueOf(),
-		set: (value) => props.betriebsStammdaten.patch({ branche : value })
+		set: (value) => void props.betriebsStammdaten.patch({ branche : value })
 	})
 
 	const ansprechpartner: WritableComputedRef<BetriebAnsprechpartner | undefined> = computed({
@@ -188,7 +188,7 @@
 			data.ansprechpartner_id = Number(value?.id);
 			if (data.id === null)
 				return;
-			App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id.valueOf());
+			void App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id.valueOf());
 		}
 	});
 
@@ -200,7 +200,7 @@
 			if ((!data) || (!data.id) || (!value))
 				return;
 			data.betreuungslehrer_id = Number(value?.id);
-			App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id.valueOf());
+			void App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id.valueOf());
 		}
 	});
 
@@ -209,12 +209,12 @@
 
 	const strassenname : WritableComputedRef<string | undefined> = computed({
 		get: () => props.betriebsStammdaten.daten?.strassenname?.valueOf(),
-		set: (value) => props.betriebsStammdaten.patch({ strassenname : value })
+		set: (value) => void props.betriebsStammdaten.patch({ strassenname : value })
 	})
 
 	const hausnummerzusatz : WritableComputedRef<string | undefined> = computed({
 		get: () => props.betriebsStammdaten.daten?.hausnrzusatz?.valueOf(),
-		set: (value) => props.betriebsStammdaten.patch({ hausnrzusatz : value })
+		set: (value) => void props.betriebsStammdaten.patch({ hausnrzusatz : value })
 	})
 
 	const inputWohnortID: WritableComputedRef<OrtKatalogEintrag | undefined> = computed({
@@ -233,7 +233,7 @@
 			}
 			return undefined;
 		},
-		set: (value) => props.betriebsStammdaten.patch({ ort_id: value?.id })
+		set: (value) => void props.betriebsStammdaten.patch({ ort_id: value?.id })
 	});
 
 
@@ -251,7 +251,7 @@
 				data.allgadranschreiben = Boolean(value);
 				if ((!data) || (!data.id))
 					return;
-				App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id.valueOf());
+				void App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id.valueOf());
 			}
 			return;
 		}
@@ -259,7 +259,7 @@
 
 	const bemerkungen : WritableComputedRef<string | undefined> = computed({
 		get: () => props.betriebsStammdaten.daten?.bemerkungen?.valueOf() || undefined,
-		set: (value) => props.betriebsStammdaten.patch({ bemerkungen : value })
+		set: (value) => void props.betriebsStammdaten.patch({ bemerkungen : value })
 	})
 
 	/**
@@ -273,7 +273,7 @@
 			data.name = String(value);
 			if ((!data) || (!data.id))
 				return;
-			App.api.patchBetriebanpsrechpartnerdaten(data, App.schema, data.id.valueOf());
+			void App.api.patchBetriebanpsrechpartnerdaten(data, App.schema, data.id.valueOf());
 		}
 	})
 
@@ -284,7 +284,7 @@
 			data.vorname = String(value);
 			if ((!data) || (!data.id))
 				return;
-			App.api.patchBetriebanpsrechpartnerdaten(data, App.schema, data.id.valueOf());
+			void App.api.patchBetriebanpsrechpartnerdaten(data, App.schema, data.id.valueOf());
 		}
 	})
 
@@ -295,7 +295,7 @@
 			data.anrede = String(value);
 			if ((!data) || (!data.id))
 				return;
-			App.api.patchBetriebanpsrechpartnerdaten(data, App.schema, data.id.valueOf());
+			void App.api.patchBetriebanpsrechpartnerdaten(data, App.schema, data.id.valueOf());
 		}
 	})
 
@@ -306,7 +306,7 @@
 			data.telefon = String(value);
 			if ((!data) || (!data.id))
 				return;
-			App.api.patchBetriebanpsrechpartnerdaten(data, App.schema, data.id.valueOf());
+			void App.api.patchBetriebanpsrechpartnerdaten(data, App.schema, data.id.valueOf());
 		}
 	})
 
@@ -317,7 +317,7 @@
 			data.email = String(value);
 			if ((!data) || (!data.id))
 				return;
-			App.api.patchBetriebanpsrechpartnerdaten(data, App.schema, data.id.valueOf());
+			void App.api.patchBetriebanpsrechpartnerdaten(data, App.schema, data.id.valueOf());
 		}
 	})
 
@@ -328,7 +328,7 @@
 			data.abteilung = String(value);
 			if ((!data) || (!data.id))
 				return;
-			App.api.patchBetriebanpsrechpartnerdaten(data, App.schema, data.id.valueOf());
+			void App.api.patchBetriebanpsrechpartnerdaten(data, App.schema, data.id.valueOf());
 		}
 	})
 
@@ -339,7 +339,7 @@
 			data.titel = String(value);
 			if ((!data) || (!data.id))
 				return;
-			App.api.patchBetriebanpsrechpartnerdaten(data, App.schema, data.id.valueOf());
+			void App.api.patchBetriebanpsrechpartnerdaten(data, App.schema, data.id.valueOf());
 		}
 	})
 
@@ -354,7 +354,7 @@
 			return;
 		ap_neu.betrieb_id = props.betriebsStammdaten.daten?.id || null;
 		await App.api.createBetriebansprechpartner(ap_neu, App.schema, id);
-		props.listSchuelerbetriebe.betriebansprechpartner.update_list();
+		void props.listSchuelerbetriebe.betriebansprechpartner.update_list();
 		modalAdd.value.closeModal();
 	}
 

@@ -79,7 +79,7 @@
 		if (reli_neu.kuerzel) {
 			await App.api.createReligion(reli_neu, App.schema);
 			modalAdd.value.closeModal();
-			routeKatalogReligion.liste.update_list();
+			await routeKatalogReligion.liste.update_list();
 		} else {
 			alert("Kürzel darf nicht leer sein");
 		}

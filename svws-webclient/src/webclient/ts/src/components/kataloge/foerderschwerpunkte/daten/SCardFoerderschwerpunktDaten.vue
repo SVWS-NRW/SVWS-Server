@@ -25,18 +25,18 @@
 
 	const kuerzel: WritableComputedRef<string | undefined> = computed({
 		get: () => props.data.daten?.kuerzel?.toString(),
-		set: (value) => props.data.patch({ kuerzel: value })
+		set: (value) => void props.data.patch({ kuerzel: value })
 	});
 
 	const bezeichnung: WritableComputedRef<string | undefined> = computed({
 		get: () => props.data.daten?.text?.toString(),
-		set: (value) => props.data.patch({ text: value })
+		set: (value) => void props.data.patch({ text: value })
 	});
 
 	const statistikKatalog: ComputedRef<Foerderschwerpunkt[] | undefined> = computed(() => Foerderschwerpunkt.values());
 	const statistikEintrag: WritableComputedRef<Foerderschwerpunkt | undefined> = computed({
 		get: () => Foerderschwerpunkt.getByKuerzel(props.data.daten?.kuerzelStatistik || null) || undefined,
-		set: (value) => props.data.patch({ kuerzelStatistik: value?.daten.kuerzel })
+		set: (value) => void props.data.patch({ kuerzelStatistik: value?.daten.kuerzel })
 	});
 
 </script>

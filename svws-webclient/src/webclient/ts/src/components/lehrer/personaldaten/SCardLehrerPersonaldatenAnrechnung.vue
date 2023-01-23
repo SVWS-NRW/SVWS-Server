@@ -61,7 +61,7 @@
 			return daten.value.pflichtstundensoll?.valueOf();
 		},
 		set(val: number | undefined) {
-			props.personaldaten.patch({ pflichtstundensoll: val });
+			void props.personaldaten.patch({ pflichtstundensoll: val });
 		}
 	});
 
@@ -70,7 +70,7 @@
 			return daten.value.stammschulnummer?.toString();
 		},
 		set(val: string | undefined) {
-			props.personaldaten.patch({ stammschulnummer: val });
+			void props.personaldaten.patch({ stammschulnummer: val });
 		}
 	});
 

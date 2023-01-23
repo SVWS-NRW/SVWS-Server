@@ -66,7 +66,7 @@
 	});
 
 	const add_kurskombi = () => {
-		props.dataFachkombinationen.add(props.typ);
+		void props.dataFachkombinationen.add(props.typ);
 	}
 
 </script>

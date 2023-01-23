@@ -20,7 +20,7 @@
 
 	const inputBemerkungen: WritableComputedRef<string | undefined> = computed({
 		get: () => daten.value.bemerkungen?.toString() || undefined,
-		set: (value) => props.stammdaten.patch({ bemerkungen: value })
+		set: (value) => void props.stammdaten.patch({ bemerkungen: value })
 	});
 
 </script>

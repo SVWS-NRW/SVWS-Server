@@ -56,7 +56,7 @@
 			return;
 		const result = await App.api.createGostAbiturjahrgangBlockung(App.schema, props.jahrgangsdaten.daten.abiturjahr.valueOf(), selected_hj.value.id);
 		const abiturjahr = props.jahrgangsdaten.daten.abiturjahr.valueOf();
-		router.push({ name: routeGostKursplanungHalbjahr.name, params: { abiturjahr: abiturjahr, halbjahr: props.halbjahr.value.id, idblockung: result.id } });
+		await router.push({ name: routeGostKursplanungHalbjahr.name, params: { abiturjahr: abiturjahr, halbjahr: props.halbjahr.value.id, idblockung: result.id } });
 	}
 
 	const visible: ComputedRef<boolean> = computed(() => {

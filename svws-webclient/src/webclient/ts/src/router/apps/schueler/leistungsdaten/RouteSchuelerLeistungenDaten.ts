@@ -93,9 +93,9 @@ export class RouteSchuelerLeistungenDaten extends RouteNodeListView<ListAbschnit
 				if ((from_name !== this.name) && from_name?.startsWith(this.name)) {  // TODO Ergänze Methode bei RouteNode isNested und nutze diese
 					const params = {...route.params};
 					params.idLernabschnitt = "" + value?.id;
-					router.push({ name: from_name, params: params });
+					void router.push({ name: from_name, params: params });
 				} else {
-					router.push({ name: this.name, params: { id: route.params.id, idLernabschnitt: value?.id } });
+					void router.push({ name: this.name, params: { id: route.params.id, idLernabschnitt: value?.id } });
 				}
 			}
 		});

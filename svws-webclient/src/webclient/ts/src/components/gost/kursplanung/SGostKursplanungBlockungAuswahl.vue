@@ -126,6 +126,7 @@
 				if (res && selected_blockungauswahl.value)
 					selected_blockungauswahl.value.name = value.toString();
 			})
+			.catch(error => { throw error });
 	}
 
 	async function remove_blockung() {
@@ -136,7 +137,7 @@
 		const abiturjahr = props.jahrgangsdaten.daten?.abiturjahr?.valueOf();
 		if (!abiturjahr)
 			return;
-		router.push({ name: routeGostKursplanung.name, params: { abiturjahr: abiturjahr, halbjahr: props.halbjahr.value?.id }});
+		await router.push({ name: routeGostKursplanung.name, params: { abiturjahr: abiturjahr, halbjahr: props.halbjahr.value?.id }});
 	}
 
 	const modal_remove_blockung: Ref<any> = ref(null);

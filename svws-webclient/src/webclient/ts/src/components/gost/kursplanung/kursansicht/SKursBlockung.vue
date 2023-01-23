@@ -223,8 +223,9 @@
 			const k = props.blockung.datenmanager?.getKurs(props.kurs.id)
 			if (!k)
 				return;
-			props.blockung.patch_kurs(k.id, { istKoopKurs: Boolean(value) });
-			k.istKoopKurs = value;
+			props.blockung.patch_kurs(k.id, { istKoopKurs: Boolean(value) })
+				.then(() => k.istKoopKurs = value)
+				.catch(error => { throw error });
 		}
 	});
 
@@ -234,7 +235,7 @@
 			const k = props.blockung.datenmanager?.getKurs(props.kurs.id)
 			if (!k)
 				return;
-			props.blockung.patch_kurs(k.id, { suffix: String(value) });
+			void props.blockung.patch_kurs(k.id, { suffix: String(value) });
 		}
 	});
 
@@ -253,21 +254,23 @@
 			if (!props.kurs)
 				return;
 			if (value !== undefined) {
-				props.blockung.add_blockung_lehrer(props.kurs.id, value.id).then(lehrer => {
-					if (!lehrer || !props.blockung.datenmanager || !props.kurs)
-						throw new Error("Fehler beim Anlegen des Kurslehrers");
-					props.blockung.datenmanager.patchOfKursAddLehrkraft(props.kurs.id, lehrer);
-					add_lehrer_regel();
-				});
+				props.blockung.add_blockung_lehrer(props.kurs.id, value.id)
+					.then(lehrer => {
+						if (!lehrer || !props.blockung.datenmanager || !props.kurs)
+							throw new Error("Fehler beim Anlegen des Kurslehrers");
+						props.blockung.datenmanager.patchOfKursAddLehrkraft(props.kurs.id, lehrer);
+						add_lehrer_regel();
+					})
+					.catch(error => { throw error });
 			} else
-				remove_kurslehrer()
+				void remove_kurslehrer();
 		}
 	});
 
-	function remove_kurslehrer() {
+	async function remove_kurslehrer() {
 		if (!props.blockung.datenmanager || !props.kurs || !kurslehrer.value)
 			return;
-		props.blockung.del_blockung_lehrer(props.kurs.id, kurslehrer.value.id);
+		await props.blockung.del_blockung_lehrer(props.kurs.id, kurslehrer.value.id);
 		props.blockung.datenmanager.patchOfKursRemoveLehrkraft(props.kurs.id, kurslehrer.value.id);
 	}
 
@@ -289,7 +292,7 @@
 		const regel_typ = GostKursblockungRegelTyp.LEHRKRAFT_BEACHTEN
 		r.typ = regel_typ.typ;
 		r.parameter.add(1);
-		props.blockung.add_blockung_regel(r);
+		void props.blockung.add_blockung_regel(r);
 	}
 
 	function get_kursbezeichnung(kurs_id: number | undefined) {
@@ -396,7 +399,7 @@
 			return;
 		fixier_regeln.value.length ? fixieren_regel_entfernen() : fixieren_regel_hinzufuegen()
 	}
-	const fixieren_regel_hinzufuegen = async () => {
+	const fixieren_regel_hinzufuegen = () => {
 		if (props.blockung.pending || !manager.value)
 			return;
 		const regel = new GostBlockungRegel();
@@ -412,14 +415,14 @@
 			return;
 		regel.parameter.add(kurs.id);
 		regel.parameter.add(schiene.nummer);
-		await props.blockung.add_blockung_regel(regel)
+		void props.blockung.add_blockung_regel(regel)
 	}
 
-	const fixieren_regel_entfernen = async () => {
+	const fixieren_regel_entfernen = () => {
 		if (!fixier_regeln.value || props.blockung.pending)
 			return;
 		for (const regel of fixier_regeln.value)
-			props.blockung.del_blockung_regel(regel.id);
+			void props.blockung.del_blockung_regel(regel.id);
 	}
 
 	const sperren_regel_toggle = (schiene: GostBlockungsergebnisSchiene) => {
@@ -458,7 +461,7 @@
 		}
 		if (drag_data.kurs.id === kurs_blockungsergebnis.value.id && schiene.id !== drag_data.schiene.id) {
 			if (fixier_regeln.value) fixieren_regel_entfernen()
-			props.ergebnis.assignKursSchiene(drag_data.kurs.id, drag_data.schiene.id, schiene.id)
+			void props.ergebnis.assignKursSchiene(drag_data.kurs.id, drag_data.schiene.id, schiene.id)
 		}
 	}
 

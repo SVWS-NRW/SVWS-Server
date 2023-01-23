@@ -58,7 +58,7 @@ export class RouteGostKlausurplanung extends RouteNode<unknown, RouteGost> {
 			set: (value) => {
 				this.selectedChildRecord = value;
 				const abiturjahr = (routeGost.data.item.value === undefined) ? undefined : "" + routeGost.data.item.value.abiturjahr;
-				router.push({ name: value.name, params: { abiturjahr: abiturjahr } });
+				void router.push({ name: value.name, params: { abiturjahr: abiturjahr } });
 			}
 		});
 		return selectedRoute;

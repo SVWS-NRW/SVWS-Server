@@ -86,7 +86,7 @@
 	watch(minDurationReached, () => { showOverlay.value = false; });
 
 	function select(current : RouteNode<unknown, any>) : void {
-		router.push({ name: current.name });
+		void router.push({ name: current.name });
 		document.title = schulname.value + " - " + current.text;
 	}
 
@@ -103,9 +103,9 @@
 		return item.text;
 	}
 
-	function logout() {
-		main.logout();
+	async function logout() {
+		await main.logout();
 		document.title = "SVWS-Client";
-		router.push("/login");
+		await router.push("/login");
 	}
 </script>

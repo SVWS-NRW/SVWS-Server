@@ -18,22 +18,22 @@
 
 	const entlassungDatum: WritableComputedRef<string | undefined> = computed({
 		get: () => props.data.daten?.entlassungDatum?.toString(),
-		set: (value) => props.data.patch({ entlassungDatum:  value })
+		set: (value) => void props.data.patch({ entlassungDatum:  value })
 	});
 
 	const entlassungJahrgang: WritableComputedRef<string | undefined> = computed({
 		get: () => props.data.daten?.entlassungJahrgang?.toString(),
-		set: (value) => props.data.patch({ entlassungJahrgang:  value })
+		set: (value) => void props.data.patch({ entlassungJahrgang:  value })
 	});
 
 	const entlassungGrundID: WritableComputedRef<number | undefined> = computed({
 		get: () => props.data.daten?.entlassungGrundID?.valueOf(),
-		set: (value) => props.data.patch({ entlassungGrundID: value })
+		set: (value) => void props.data.patch({ entlassungGrundID: value })
 	});
 
 	const entlassungAbschlussartID: WritableComputedRef<string | undefined> = computed({
 		get: () => props.data.daten?.entlassungAbschlussartID?.toString(),
-		set: (value) => props.data.patch({ entlassungAbschlussartID: value })
+		set: (value) => void props.data.patch({ entlassungAbschlussartID: value })
 	});
 
 </script>

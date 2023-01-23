@@ -28,7 +28,7 @@
 
 	const inputHatZusatzkursGE: WritableComputedRef<boolean | undefined> = computed({
 		get(): boolean | undefined { return props.jahrgangsdaten.daten?.hatZusatzkursGE; },
-		set(val: boolean | undefined) { props.jahrgangsdaten.patch({ hatZusatzkursGE: val }); }
+		set(val: boolean | undefined) { void props.jahrgangsdaten.patch({ hatZusatzkursGE: val }); }
 	});
 
 	const inputBeginnZusatzkursGE: WritableComputedRef<GostHalbjahr> = computed({
@@ -38,13 +38,13 @@
 			return GostHalbjahr.fromKuerzel(props.jahrgangsdaten.daten.beginnZusatzkursGE) || GostHalbjahr.Q21;
 		},
 		set(val: GostHalbjahr) {
-			props.jahrgangsdaten.patch({ beginnZusatzkursGE: val.kuerzel });
+			void props.jahrgangsdaten.patch({ beginnZusatzkursGE: val.kuerzel });
 		}
 	});
 
 	const inputHatZusatzkursSW: WritableComputedRef<boolean | undefined> = computed({
 		get(): boolean | undefined { return props.jahrgangsdaten.daten?.hatZusatzkursSW; },
-		set(val: boolean | undefined) { props.jahrgangsdaten.patch({ hatZusatzkursSW: val }); }
+		set(val: boolean | undefined) { void props.jahrgangsdaten.patch({ hatZusatzkursSW: val }); }
 	});
 
 	const inputBeginnZusatzkursSW: WritableComputedRef<GostHalbjahr> = computed({
@@ -54,7 +54,7 @@
 			return GostHalbjahr.fromKuerzel(props.jahrgangsdaten.daten.beginnZusatzkursSW) || GostHalbjahr.Q21;
 		},
 		set(val: GostHalbjahr) {
-			props.jahrgangsdaten.patch({ beginnZusatzkursSW: val.kuerzel });
+			void props.jahrgangsdaten.patch({ beginnZusatzkursSW: val.kuerzel });
 		}
 	});
 

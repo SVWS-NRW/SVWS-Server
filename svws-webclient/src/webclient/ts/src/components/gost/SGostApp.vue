@@ -12,7 +12,7 @@
 		</div>
 	</div>
 	<div v-else class="app-layout--main--placeholder">
-		<IconGraduationCap />
+		<icon-graduation-cap />
 	</div>
 </template>
 
@@ -26,7 +26,6 @@
 	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 
 	import { routeGost } from "~/router/apps/RouteGost";
-	import IconGraduationCap from "../../../images/IconGraduationCap.vue";
 
 	const props = defineProps<{
 		item: ShallowRef<GostJahrgang | undefined>;

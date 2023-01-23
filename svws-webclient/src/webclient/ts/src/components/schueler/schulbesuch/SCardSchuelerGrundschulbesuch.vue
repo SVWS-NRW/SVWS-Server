@@ -18,22 +18,22 @@
 
 	const grundschuleEinschulungsjahr: WritableComputedRef<number | undefined> = computed({
 		get: () => props.data.daten?.grundschuleEinschulungsjahr?.valueOf(),
-		set: (value) => props.data.patch({ grundschuleEinschulungsjahr: value })
+		set: (value) => void props.data.patch({ grundschuleEinschulungsjahr: value })
 	});
 
 	const grundschuleEinschulungsartID: WritableComputedRef<number | undefined> = computed({
 		get: () => props.data.daten?.grundschuleEinschulungsartID?.valueOf(),
-		set: (value) => props.data.patch({ grundschuleEinschulungsartID: value })
+		set: (value) => void props.data.patch({ grundschuleEinschulungsartID: value })
 	});
 
 	const grundschuleJahreEingangsphase: WritableComputedRef<number | undefined> = computed({
 		get: () => props.data.daten?.grundschuleJahreEingangsphase?.valueOf(),
-		set: (value) => props.data.patch({ grundschuleJahreEingangsphase: value })
+		set: (value) => void props.data.patch({ grundschuleJahreEingangsphase: value })
 	});
 
 	const grundschuleUebergangsempfehlungID: WritableComputedRef<number | undefined> = computed({
 		get: () => props.data.daten?.grundschuleUebergangsempfehlungID?.valueOf(),
-		set: (value) => props.data.patch({ grundschuleUebergangsempfehlungID: value })
+		set: (value) => void props.data.patch({ grundschuleUebergangsempfehlungID: value })
 	});
 
 </script>

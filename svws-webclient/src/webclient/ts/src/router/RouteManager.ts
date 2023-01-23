@@ -18,7 +18,7 @@ export class RouteManager {
 	protected active = false;
 
 	/**
-     * Erstellt die Instanz des Managers für den übergebenen Route
+     * Erstellt die Instanz des Managers für die übergebene Route
      *
      * @param router   der Router, welcher dem Manager zugeordnet wird
      */

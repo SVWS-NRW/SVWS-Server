@@ -25,7 +25,7 @@ export class Use<T,U> {
 			set(val: T[K] | undefined) {
 				const o: Partial<T> = {};
 				o[prop] = val ?? undefined;
-				base.patch(o);
+				void base.patch(o);
 			}
 		});
 	}
@@ -45,7 +45,7 @@ export class Use<T,U> {
 				if (typeof base.daten?.[prop] !== "number" && typeof base.daten?.[prop] !== "undefined")
 					throw new Error("invalid type");
 				o[prop] = val?.id as T[K]
-				base.patch(o);
+				void base.patch(o);
 			}
 		});
 	}

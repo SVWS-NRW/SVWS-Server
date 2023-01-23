@@ -28,7 +28,7 @@
 			return LehrerRechtsverhaeltnis.values().find(r => r.daten.kuerzel === daten.value.rechtsverhaeltnis);
 		},
 		set(val: LehrerRechtsverhaeltnis | undefined) {
-			props.personaldaten.patch({ rechtsverhaeltnis: val?.daten.kuerzel });
+			void props.personaldaten.patch({ rechtsverhaeltnis: val?.daten.kuerzel });
 		}
 	});
 
@@ -37,7 +37,7 @@
 			return LehrerBeschaeftigungsart.values().find(r => r.daten.kuerzel === daten.value.beschaeftigungsart);
 		},
 		set(val: LehrerBeschaeftigungsart | undefined) {
-			props.personaldaten.patch({ beschaeftigungsart: val?.daten.kuerzel });
+			void props.personaldaten.patch({ beschaeftigungsart: val?.daten.kuerzel });
 		}
 	});
 
@@ -46,7 +46,7 @@
 			return LehrerEinsatzstatus.values().find(r => r.daten.kuerzel === daten.value.einsatzstatus);
 		},
 		set(val: LehrerEinsatzstatus | undefined) {
-			props.personaldaten.patch({ einsatzstatus: val?.daten.kuerzel });
+			void props.personaldaten.patch({ einsatzstatus: val?.daten.kuerzel });
 		}
 	});
 
@@ -56,7 +56,7 @@
 				return daten.value.pflichtstundensoll?.valueOf();
 			},
 			set(val: number | undefined) {
-				props.personaldaten.patch({ pflichtstundensoll: val });
+				void props.personaldaten.patch({ pflichtstundensoll: val });
 			}
 		});
 
@@ -65,7 +65,7 @@
 			return daten.value.stammschulnummer?.toString();
 		},
 		set(val: string | undefined) {
-			props.personaldaten.patch({ stammschulnummer: val });
+			void props.personaldaten.patch({ stammschulnummer: val });
 		}
 	});
 

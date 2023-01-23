@@ -72,7 +72,7 @@
 			if ((!data) || (!data.id) || (!val))
 				return;
 			data.betreuungslehrer_id = val?.id;
-			App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id.valueOf()).then();
+			void App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id.valueOf()).then();
 		}
 	});
 
@@ -85,7 +85,7 @@
 			data.ausbilder = String(val);
 			if ((!data) || (!data.id))
 				return;
-			App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id.valueOf());
+			void App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id.valueOf());
 		}
 	})
 
@@ -98,12 +98,12 @@
 		},
 		set(val: BetriebListeEintrag | undefined) {
 			// Nach Auswahl des Betriebs werden die Ansprechpartner vom Server neugeladen.
-			props.listSchuelerbetriebe.betriebansprechpartner.update_list();
+			void props.listSchuelerbetriebe.betriebansprechpartner.update_list();
 			const data: SchuelerBetriebsdaten | undefined = props.listSchuelerbetriebe.ausgewaehlt;
 			if ((!data) || (!data.id) || (!val))
 				return;
 			data.betrieb_id = val?.id;
-			App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id.valueOf()).then();
+			void App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id.valueOf()).then();
 		}
 	});
 
@@ -124,7 +124,7 @@
 			if ((!data) || (!data.id) || (!val))
 				return;
 			data.beschaeftigungsart_id = val?.id;
-			App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id.valueOf());
+			void App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id.valueOf());
 		}
 	})
 
@@ -137,7 +137,7 @@
 			data.praktikum = Boolean(val);
 			if ((!data) || (!data.id))
 				return;
-			App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id.valueOf());
+			void App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id.valueOf());
 		}
 	});
 
@@ -150,7 +150,7 @@
 			data.vertragsbeginn = String(val);
 			if ((!data) || (!data.id))
 				return;
-			App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id.valueOf());
+			void App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id.valueOf());
 		}
 	})
 
@@ -164,7 +164,7 @@
 				data.vertragsende = val;
 			if ((!data) || (!data.id))
 				return;
-			App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id.valueOf());
+			void App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id.valueOf());
 		}
 	})
 
@@ -177,7 +177,7 @@
 			data.allgadranschreiben = Boolean(val);
 			if ((!data) || (!data.id))
 				return;
-			App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id.valueOf());
+			void App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id.valueOf());
 		}
 	});
 
@@ -192,7 +192,7 @@
 			if ((!data) || (!data.id) || (!val))
 				return;
 			data.ansprechpartner_id = val?.id;
-			App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id.valueOf()).then();
+			void App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id.valueOf()).then();
 		}
 	});
 </script>

@@ -71,10 +71,10 @@
 		return props.listLehrer.liste.filter(l => !vergeben.has(l.id));
 	})
 
-	function remove_kurslehrer(lehrer: LehrerListeEintrag) {
+	async function remove_kurslehrer(lehrer: LehrerListeEintrag) {
 		if (!props.blockung.datenmanager )
 			return;
-		props.blockung.del_blockung_lehrer(props.kurs.id, lehrer.id);
+		await props.blockung.del_blockung_lehrer(props.kurs.id, lehrer.id);
 		props.blockung.datenmanager.patchOfKursRemoveLehrkraft(props.kurs.id, lehrer.id);
 	}
 
@@ -82,7 +82,7 @@
 		if (!props.blockung.datenmanager)
 			return;
 		if ((lehrer === undefined) && lehrer_alt) {
-			remove_kurslehrer(lehrer_alt);
+			await remove_kurslehrer(lehrer_alt);
 			return;
 		}
 		if (lehrer instanceof LehrerListeEintrag) {
@@ -113,7 +113,7 @@
 		const regel_typ = GostKursblockungRegelTyp.LEHRKRAFT_BEACHTEN
 		r.typ = regel_typ.typ;
 		r.parameter.add(1);
-		props.blockung.add_blockung_regel(r);
+		void props.blockung.add_blockung_regel(r);
 	}
 
 </script>

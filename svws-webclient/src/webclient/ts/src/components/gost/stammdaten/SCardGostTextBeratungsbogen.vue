@@ -20,7 +20,7 @@
 
 	const inputTextBeratungsbogen: WritableComputedRef<string | undefined> = computed({
 		get: () => daten.value.textBeratungsbogen?.toString(),
-		set: (value) => props.jahrgangsdaten.patch({ textBeratungsbogen: value })
+		set: (value) => void props.jahrgangsdaten.patch({ textBeratungsbogen: value })
 	});
 
 </script>

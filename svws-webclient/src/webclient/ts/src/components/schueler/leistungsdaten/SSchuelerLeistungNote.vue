@@ -17,7 +17,7 @@
 
 	const inputNote: WritableComputedRef<Note | undefined> = computed({
 		get: () => Note.fromKuerzel(props.leistungsdaten.note),
-		set: (value) => props.data.patchLeistung({ note: value?.kuerzel }, props.leistungsdaten.id)
+		set: (value) => void props.data.patchLeistung({ note: value?.kuerzel }, props.leistungsdaten.id)
 	});
 
 </script>

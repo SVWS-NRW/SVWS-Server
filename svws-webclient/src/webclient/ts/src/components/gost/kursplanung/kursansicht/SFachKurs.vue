@@ -99,7 +99,7 @@
 	const bgColor: ComputedRef<string | undefined> = computed(() => props.dataFachwahlen.getBgColor(props.fach));
 
 	function add_kurs(art: GostKursart) {
-		props.blockung.add_blockung_kurse(props.fach.id, art.id);
+		void props.blockung.add_blockung_kurse(props.fach.id, art.id);
 	}
 
 </script>

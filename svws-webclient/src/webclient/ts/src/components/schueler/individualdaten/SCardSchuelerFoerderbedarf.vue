@@ -16,7 +16,10 @@
 	import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
 	import { DataKatalogFoerderschwerpunkte } from "~/apps/schueler/DataKatalogFoerderschwerpunkte";
 
-	const props = defineProps<{ stammdaten: DataSchuelerStammdaten, foerderschwerpunkte: DataKatalogFoerderschwerpunkte }>();
+	const props = defineProps<{
+		stammdaten: DataSchuelerStammdaten,
+		foerderschwerpunkte: DataKatalogFoerderschwerpunkte
+	}>();
 
 	const daten: ComputedRef<SchuelerStammdaten> = computed(() => props.stammdaten.daten || new SchuelerStammdaten());
 
@@ -24,22 +27,22 @@
 
 	const inputFoerderschwerpunktID: WritableComputedRef<FoerderschwerpunktEintrag | undefined> = computed({
 		get: () => inputKatalogFoerderschwerpunkte.value.find(n => n.id === props.stammdaten.daten?.foerderschwerpunktID),
-		set: (value) => props.stammdaten.patch({ foerderschwerpunktID: value?.id })
+		set: (value) => void props.stammdaten.patch({ foerderschwerpunktID: value?.id })
 	});
 
 	const inputFoerderschwerpunkt2ID: WritableComputedRef<FoerderschwerpunktEintrag | undefined> = computed({
 		get: () => inputKatalogFoerderschwerpunkte.value.find(n => n.id === props.stammdaten.daten?.foerderschwerpunkt2ID),
-		set: (value) => props.stammdaten.patch({ foerderschwerpunkt2ID: value?.id })
+		set: (value) => void props.stammdaten.patch({ foerderschwerpunkt2ID: value?.id })
 	});
 
 	const inputIstAOSF: WritableComputedRef<boolean | undefined> = computed({
 		get: () => !!daten.value.istAOSF,
-		set: (value) => props.stammdaten.patch({ istAOSF: value })
+		set: (value) => void props.stammdaten.patch({ istAOSF: value })
 	});
 
 	const inputIstLernenZieldifferent: WritableComputedRef<boolean | undefined> = computed({
 		get: () => !!daten.value.istLernenZieldifferent,
-		set: (value) => props.stammdaten.patch({ istLernenZieldifferent: value })
+		set: (value) => void props.stammdaten.patch({ istLernenZieldifferent: value })
 	});
 
 </script>

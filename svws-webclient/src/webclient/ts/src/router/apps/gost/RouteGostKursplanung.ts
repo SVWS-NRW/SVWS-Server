@@ -86,7 +86,7 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 				this.data.halbjahr.value = value;
 				const id_value = "" + value.id;
 				const params = { abiturjahr: routeGost.data.item.value!.abiturjahr, halbjahr: id_value };
-				router.push({ name: this.defaultChild!.name, params: params });
+				void router.push({ name: this.defaultChild!.name, params: params });
 			}
 		});
 	}

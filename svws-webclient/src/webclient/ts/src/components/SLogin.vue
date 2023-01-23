@@ -93,13 +93,13 @@
 		const redirect = route.query.redirect as string | undefined
 		if (!pending) {
 			if (redirect && !guards.includes(redirect))
-				router.push(redirect);
+				void router.push(redirect);
 			else
-				router.push({ name: defaultRoute.name });
+				void router.push({ name: defaultRoute.name });
 		}
 	})
 
-	main.connectTo(window.location.hostname + ":" + window.location.port)
+	void main.connectTo(window.location.hostname + ":" + window.location.port)
 
 	const inputDBSchema: WritableComputedRef<DBSchemaListeEintrag | undefined> = computed({
 		set(val: DBSchemaListeEintrag | undefined) {

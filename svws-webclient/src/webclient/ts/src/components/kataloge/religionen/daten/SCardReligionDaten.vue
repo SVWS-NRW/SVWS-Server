@@ -30,22 +30,22 @@
 
 	const inputKuerzel: WritableComputedRef<string | undefined> = computed({
 		get: () => props.data.daten?.kuerzel?.toString(),
-		set: (value) => props.data.patch({ kuerzel: value })
+		set: (value) => void props.data.patch({ kuerzel: value })
 	});
 
 	const inputText: WritableComputedRef<string | undefined> = computed({
 		get: () => props.data.daten?.text?.toString(),
-		set: (value) => props.data.patch({ text: value })
+		set: (value) => void props.data.patch({ text: value })
 	});
 
 	const inputTextzeugnis: WritableComputedRef<string | undefined> = computed({
 		get: () => props.data.daten?.textZeugnis?.toString(),
-		set: (value) => props.data.patch({ textZeugnis: value })
+		set: (value) => void props.data.patch({ textZeugnis: value })
 	});
 
 	const inputStatistikKuerzel: WritableComputedRef<Religion | undefined> = computed({
 		get: () => Religion.getByKuerzel(props.data.daten?.kuerzel || null) || undefined,
-		set: (value) => props.data.patch({ kuerzel: value?.daten.kuerzel || null })
+		set: (value) => void props.data.patch({ kuerzel: value?.daten.kuerzel || null })
 	});
 
 </script>

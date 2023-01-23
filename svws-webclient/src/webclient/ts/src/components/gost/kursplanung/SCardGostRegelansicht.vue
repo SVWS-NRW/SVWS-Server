@@ -69,7 +69,7 @@
 			_regel.value = value;
 			if (value === undefined || value.id < 1)
 				return;
-			props.blockung.patch_blockung_regel(value);
+			void props.blockung.patch_blockung_regel(value);
 		}
 	})
 

@@ -77,9 +77,9 @@ export class RouteSchuelerStundenplanDaten extends RouteNodeListView<ListStunden
 				if ((from_name !== self.name) && from_name?.startsWith(self.name)) {  // TODO Ergänze Methode bei RouteNode isNested und nutze diese
 					const params = {...route.params};
 					params.idStundenplan = "" + value?.id;
-					router.push({ name: from_name, params: params });
+					void router.push({ name: from_name, params: params });
 				} else {
-					router.push({ name: self.name, params: { id: route.params.id, idStundenplan: value?.id } });
+					void router.push({ name: self.name, params: { id: route.params.id, idStundenplan: value?.id } });
 				}
 			}
 		});

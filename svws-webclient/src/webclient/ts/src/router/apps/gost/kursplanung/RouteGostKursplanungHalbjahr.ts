@@ -73,7 +73,7 @@ export class RouteGostKursplanungHalbjahr extends RouteNode<RouteDataGostKurspla
 			if ((idBlockung === undefined) && (this.data.listBlockungen.liste.length > 0))
 				return this.getRoute(abiturjahr, halbjahr.id, this.data.listBlockungen.liste.at(0)?.id);
 			if (this.data.listBlockungen.ausgewaehlt !== undefined) {
-				this.data.dataKursblockung.unselect();
+				await this.data.dataKursblockung.unselect();
 				this.data.listBlockungen.ausgewaehlt = undefined;
 			}
 			return;
@@ -125,7 +125,7 @@ export class RouteGostKursplanungHalbjahr extends RouteNode<RouteDataGostKurspla
 				if (onSet !== undefined)
 					onSet(value);
 				if (value !== this.data.listBlockungen.ausgewaehlt)
-					router.push(this.getRoute(routeGost.liste.ausgewaehlt?.abiturjahr, routeGostKursplanung.data.halbjahr.value.id, value?.id));
+					void router.push(this.getRoute(routeGost.liste.ausgewaehlt?.abiturjahr, routeGostKursplanung.data.halbjahr.value.id, value?.id));
 			}
 		});
 	}

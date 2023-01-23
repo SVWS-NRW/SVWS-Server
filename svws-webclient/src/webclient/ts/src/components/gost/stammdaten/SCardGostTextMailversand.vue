@@ -20,7 +20,7 @@
 
 	const inputTextMailversand: WritableComputedRef<string | undefined> = computed({
 		get:() => daten.value.textMailversand?.toString(),
-		set: (value) => props.jahrgangsdaten.patch({ textMailversand: value })
+		set: (value) => void props.jahrgangsdaten.patch({ textMailversand: value })
 	});
 
 </script>
