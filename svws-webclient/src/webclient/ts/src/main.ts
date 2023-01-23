@@ -21,5 +21,6 @@ app.mixin({
 		}
 	}
 });
-await router.isReady();
-app.mount("#app");
+router.isReady()
+	.then(() => app.mount("#app"))
+	.catch(e => { throw e });
