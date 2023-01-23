@@ -3,7 +3,8 @@
 		<slot />
 	</div>
 </template>
-
+<script setup lang="ts">
+</script>
 <style>
 	.radio {
 		@apply inline-flex flex-col;

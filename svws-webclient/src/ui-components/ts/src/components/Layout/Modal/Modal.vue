@@ -27,32 +27,28 @@
 	<TransitionRoot appear :show="isOpen">
 		<Dialog class="modal--wrapper" @close="closeModal">
 			<div class="modal--pageWrapper">
-				<TransitionChild
-					as="template"
+				<TransitionChild as="template"
 					enter="ease-out duration-200"
-					enterFrom="opacity-0"
-					enterTo="opacity-100"
+					enter-from="opacity-0"
+					enter-to="opacity-100"
 					leave="ease-in duration-100"
-					leaveFrom="opacity-100"
-					leaveTo="opacity-0"
-				>
+					leave-from="opacity-100"
+					leave-to="opacity-0">
 					<Overlay @click="closeModal" />
 				</TransitionChild>
-				<TransitionChild
-					as="div"
+				<TransitionChild as="div"
 					enter="ease-out duration-200"
-					enterFrom="opacity-0 scale-95"
-					enterTo="opacity-100 scale-100"
+					enter-from="opacity-0 scale-95"
+					enter-to="opacity-100 scale-100"
 					leave="ease-in duration-100"
-					leaveFrom="opacity-100 scale-100"
-					leaveTo="opacity-0 scale-95"
+					leave-from="opacity-100 scale-100"
+					leave-to="opacity-0 scale-95"
 					class="modal inline-block align-bottom sm:align-middle sm:w-full sm:max-w-sm sm:my-8 transform transition-all overflow-hidden"
 					:class="{
 						'modal--sm': size === 'small',
 						'modal--md': size === 'medium',
 						'modal--lg': size === 'big'
-					}"
-				>
+					}">
 					<div class="modal--titlebar">
 						<DialogTitle class="modal--title">
 							<slot name="modalTitle" />

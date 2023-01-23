@@ -8,7 +8,8 @@ module.exports = {
 	],
 	parserOptions: {
 		ecmaVersion: "latest",
-		project: ["./tsconfig.json"]
+		tsconfigRootDir: __dirname,
+		project: ["./src/**/ts/tsconfig.json"]
 	},
 	rules: {
 		// Standard Regeln

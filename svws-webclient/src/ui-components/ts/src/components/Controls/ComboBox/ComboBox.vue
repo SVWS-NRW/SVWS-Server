@@ -151,11 +151,9 @@
 		showList.value = true;
 		if (selectedItem.value) {
 			activeItemIndex.value = filteredList.value.findIndex(item => item === selectedItem.value);
-			nextTick(() => scrollToActiveItem());
+			void nextTick(() => scrollToActiveItem());
 		}
-		nextTick(() => {
-			inputEl.value?.input.focus();
-		});
+		void nextTick(() => inputEl.value?.input.focus());
 	}
 
 	function closeListbox() {

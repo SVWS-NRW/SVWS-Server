@@ -77,7 +77,7 @@ export default function useCapturing() {
 		if (isCapturing.value) {
 			stopCapturing();
 		} else {
-			startCapturing();
+			void startCapturing();
 		}
 	}
 

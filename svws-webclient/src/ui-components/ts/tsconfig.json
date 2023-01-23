@@ -1,7 +1,7 @@
 {
 	"extends": "../../../tsconfig.base.json",
 	"compilerOptions": {
-		"rootDir": "./src",
+		"rootDir": ".",
 		"outDir": "./dist",
 		"baseUrl": ".",
 		"paths": {
@@ -13,6 +13,7 @@
 	},
 	"include": [
 		"env.d.ts",
+		"vite.config.ts",
 		"src/**/*",
 		"src/**/*.vue",
 		"components.d.ts",

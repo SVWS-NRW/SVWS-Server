@@ -14,6 +14,8 @@
 		</div>
 	</div>
 </template>
+<script setup lang="ts">
+</script>
 
 <style lang="postcss">
 .secondary-menu--headline {

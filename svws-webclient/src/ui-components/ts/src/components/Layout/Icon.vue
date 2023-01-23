@@ -3,7 +3,8 @@
 		<slot />
 	</span>
 </template>
-
+<script setup lang="ts">
+</script>
 <style>
 .icon {
 	line-height: 1 !important;

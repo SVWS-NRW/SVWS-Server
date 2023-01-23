@@ -20,7 +20,7 @@ export default defineConfig({
 		AutoImport({
 			dts: true,
 			eslintrc: {
-				enabled: true, 
+				enabled: true,
 			},
 			include: [
 				/\.[tj]sx?$/, // .ts, .tsx, .js, .jsx
