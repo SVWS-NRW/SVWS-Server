@@ -25,7 +25,7 @@
 		"eslint-plugin-prettier": "^4.0.0",
 		"eslint-plugin-vue": "^9.1.1",
 		"histoire": "^0.12.4",
-		"license-checker-rseidelsohn": "^3.1.0",
+		"license-checker-rseidelsohn": "^4.0.0",
 		"postcss": "^8.4.16",
 		"prettier": "^2.2.1",
 		"prettier-plugin-jsdoc": "^0.4.2",
@@ -40,7 +40,7 @@
 		"vitest": "^0.27.0",
 		"vue-tsc": "^1.0.3",
 		"vue3-popper": "^1.4.1",
-		"rollup": "3.9.1"
+		"rollup": "^3.9.1"
 	},
 	"peerDependencies": {
 		"vue": "^3.2"
