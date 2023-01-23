@@ -1,12 +1,12 @@
 <template>
-	<div v-if="app.auswahl.ausgewaehlt && app.auswahl.ausgewaehlt !== null">
+	<div v-if="visible">
 		<svws-ui-header>
 			<div class="flex items-center">
-				<span class="inline-block mr-3">{{ props.item?.bezeichnung }}</span>
-				<svws-ui-badge variant="light">{{ "ID: " + props.id }}</svws-ui-badge>
+				<span class="inline-block mr-3">{{ item.value?.bezeichnung }}</span>
+				<svws-ui-badge variant="light">{{ "ID: " + item.value?.id }}</svws-ui-badge>
 			</div>
 			<div>
-				<span class="opacity-50">{{ props.item?.kuerzel }}</span>
+				<span class="opacity-50">{{ item.value?.kuerzel }}</span>
 			</div>
 		</svws-ui-header>
 		<svws-ui-router-tab-bar :routes="routeKatalogJahrgaenge.children_records" :hidden="children_hidden" v-model="selectedRoute">
@@ -21,16 +21,20 @@
 <script setup lang="ts">
 
 	import { JahrgangsListeEintrag } from "@svws-nrw/svws-core-ts";
-	import { injectMainApp, Main } from "~/apps/Main";
-	import { RouteDataKatalogJahrgaenge, routeKatalogJahrgaenge } from "~/router/apps/RouteKatalogJahrgaenge";
+	import { computed, ComputedRef, ShallowRef } from "vue";
+	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
+	import { routeKatalogJahrgaenge } from "~/router/apps/RouteKatalogJahrgaenge";
 
-	const props = defineProps<{ id?: number; item?: JahrgangsListeEintrag, routename: string }>();
+	const props = defineProps<{
+		item: ShallowRef<JahrgangsListeEintrag | undefined>;
+		schule: DataSchuleStammdaten;
+	}>();
 
-	const data: RouteDataKatalogJahrgaenge = routeKatalogJahrgaenge.data;
-	const selectedRoute = routeKatalogJahrgaenge.getChildRouteSelector();
+	const selectedRoute = routeKatalogJahrgaenge.childRouteSelector;
 	const children_hidden = routeKatalogJahrgaenge.children_hidden();
 
-	const main: Main = injectMainApp();
-	const app = main.apps.jahrgaenge;
+	const visible: ComputedRef<boolean> = computed(() => {
+		return (!routeKatalogJahrgaenge.hidden()) && (props.item.value !== undefined);
+	});
 
 </script>

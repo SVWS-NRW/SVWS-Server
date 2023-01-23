@@ -1,15 +1,15 @@
 import { JahrgangsListeEintrag } from "@svws-nrw/svws-core-ts";
-import { computed, WritableComputedRef } from "vue";
-import { RouteLocationNormalized, RouteParams, RouteRecordRaw, useRouter } from "vue-router";
-import { mainApp } from "~/apps/Main";
+import { WritableComputedRef } from "vue";
+import { RouteLocationNormalized, RouteParams } from "vue-router";
 import { RouteNodeListView } from "~/router/RouteNodeListView";
 import { routeKatalogJahrgaengeDaten } from "~/router/apps/jahrgaenge/RouteKatalogJahrgaengeDaten";
 import { ListJahrgaenge } from "~/apps/jahrgaenge/ListJahrgaenge";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteApp } from "~/router/RouteApp";
+import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 
 export class RouteDataKatalogJahrgaenge {
-	item: JahrgangsListeEintrag | undefined = undefined;
+	schule: DataSchuleStammdaten = new DataSchuleStammdaten();
 }
 
 const SJahrgaengeAuswahl = () => import("~/components/jahrgaenge/SJahrgaengeAuswahl.vue")
@@ -21,7 +21,7 @@ export class RouteKatalogJahrgaenge extends RouteNodeListView<ListJahrgaenge, Ja
 		super("jahrgaenge", "/kataloge/jahrgaenge/:id(\\d+)?", SJahrgaengeAuswahl, SJahrgaengeApp, new ListJahrgaenge(), 'id', new RouteDataKatalogJahrgaenge());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Jahrgänge";
-		super.setView("liste", SJahrgaengeAuswahl, (route) => RouteNodeListView.getPropsByAuswahlID(route, mainApp.apps.jahrgaenge.auswahl));
+		super.setView("liste", SJahrgaengeAuswahl, (route) => this.getProps(route));
 		super.children = [
 			routeKatalogJahrgaengeDaten
 		];
@@ -31,47 +31,45 @@ export class RouteKatalogJahrgaenge extends RouteNodeListView<ListJahrgaenge, Ja
 	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
 		if ((to.name === this.name) && (to_params.id === undefined)) {
 			const redirect_name: string = (this.selectedChild === undefined) ? this.defaultChild!.name : this.selectedChild.name;
-			return { name: redirect_name, params: { id: mainApp.apps.jahrgaenge.auswahl.liste.at(0)?.id }};
+			await this.liste.update_list();
+			return { name: redirect_name, params: { id: this.liste.liste.at(0)?.id }};
 		}
 		return true;
 	}
 
+	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) {
+		await this.data.schule.select(true);  // undefined würde das laden verhindern, daher true
+		await this.liste.update_list();  // Die Auswahlliste wird als letztes geladen
+	}
+
+	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
+		if (to_params.id === undefined) {
+			await this.onSelect(undefined);
+		} else {
+			const id = parseInt(to_params.id as string);
+			await this.onSelect(this.liste.liste.find(k => k.id === id));
+		}
+	}
+
 	protected async onSelect(item?: JahrgangsListeEintrag) {
-		if (item === this.data.item)
+		if (item === this.item)
 			return;
 		if (item === undefined) {
-			this.data.item = undefined;
+			this.item = undefined;
 		} else {
-			this.data.item = item;
+			this.item = item;
 		}
 	}
 
 	protected getAuswahlComputedProperty(): WritableComputedRef<JahrgangsListeEintrag | undefined> {
-		return this.getSelectorByID<JahrgangsListeEintrag, ListJahrgaenge>(mainApp.apps.jahrgaenge.auswahl);
+		return this.getSelector();
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
-		const prop = RouteNodeListView.getPropsByAuswahlID(to, mainApp.apps.jahrgaenge.auswahl);
-		this.onSelect(prop.item as JahrgangsListeEintrag | undefined);
-		return prop;
-	}
-
-	/**
-     * TODO
-     *
-     * @returns
-     */
-	public getChildRouteSelector() {
-		const router = useRouter();
-		const selectedRoute: WritableComputedRef<RouteRecordRaw> = computed({
-			get: () => this.selectedChildRecord || this.defaultChild!.record,
-			set: (value) => {
-				this.selectedChildRecord = value;
-				const id = (this.data.item === undefined) ? undefined : "" + this.data.item.id;
-				router.push({ name: value.name, params: { id: id } });
-			}
-		});
-		return selectedRoute;
+		return {
+			...super.getProps(to),
+			schule: this.data.schule,
+		};
 	}
 
 }

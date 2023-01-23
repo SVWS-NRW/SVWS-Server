@@ -1,12 +1,10 @@
 import { ApiServer, Schuljahresabschnitt } from "@svws-nrw/svws-core-ts";
 import { ref } from "vue";
-import type { Jahrgaenge } from "./jahrgaenge/Jahrgaenge";
 import type { Schule } from "./schule/Schule";
 
 /** Der Typ mit allen Apps als App */
 export type Apps = {
 	schule: Schule;
-	jahrgaenge: Jahrgaenge;
 };
 
 /**

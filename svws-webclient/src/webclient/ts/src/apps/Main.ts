@@ -14,7 +14,6 @@ import {
 import { type Apps, App } from "./BaseApp";
 import { Schule } from "./schule/Schule";
 
-import { Jahrgaenge } from "./jahrgaenge/Jahrgaenge";
 import { BaseList } from "./BaseList";
 import { ApiLoadingStatus } from "./core/ApiLoadingStatus.class";
 import { MAIN_LOADING_SYMBOL } from "./core/LoadingSymbols";
@@ -209,17 +208,9 @@ export class Main {
 		});
 		App.apps = {
 			schule: new Schule(),
-			jahrgaenge: new Jahrgaenge()
 		};
 		await App.apps.schule.init();
 		this.config.hasGost = !!App.apps.schule.schuleStammdaten.schulform.value?.daten.hatGymOb;
-		for (const a of Object.values(App.apps)) {
-			const schule = a instanceof Schule
-			if (!schule) {
-				this._pending.push(a.init());
-				this._pending.push(a.auswahl.update_list());
-			}
-		}
 		const o = App.schema;
 		this._pending.push(App.api.getOrte(o).then(r => this.kataloge.orte = r));
 		this._pending.push(App.api.getOrtsteile(o).then(r => this.kataloge.ortsteile = r));
@@ -228,13 +219,11 @@ export class Main {
 		this._pending.push(App.api.getKatalogBeschaeftigungsart(o).then(r => this.kataloge.beschaeftigungsarten = r));
 
 		const prom = Promise.all(this._pending).finally(() => (this.config.selected_app = "Schueler"));
-		this.config.apiLoadingStatus.addStatusByPromise(
-			prom,
-			{
-				caller: 'Main',
-				message: 'Anwendung wird aktualisiert.',
-				categories: [MAIN_LOADING_SYMBOL]
-			});
+		this.config.apiLoadingStatus.addStatusByPromise(prom, {
+			caller: 'Main',
+			message: 'Anwendung wird aktualisiert.',
+			categories: [MAIN_LOADING_SYMBOL]
+		});
 	}
 
 	/**
