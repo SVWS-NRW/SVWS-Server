@@ -262,33 +262,3 @@
 		</Variant>
 	</Story>
 </template>
-
-<style>
-.action-button {
-  @apply h-6 w-6;
-}
-
-.action-items {
-  @apply bg-white;
-  @apply flex flex-col;
-  @apply px-2 py-1;
-  @apply ring-1;
-  @apply ring-black ring-opacity-5;
-  @apply rounded-md;
-  @apply shadow-lg;
-  @apply w-48;
-}
-
-.action-item {
-  @apply block;
-  @apply w-full;
-}
-
-.action-items:focus {
-  @apply outline-none;
-}
-
-.action-button:focus {
-  @apply outline-none ring-2 ring-inset ring-primary;
-}
-</style>
