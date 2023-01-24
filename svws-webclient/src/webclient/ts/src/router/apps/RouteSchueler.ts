@@ -14,7 +14,7 @@ import { routeSchuelerStundenplan } from "~/router/apps/schueler/RouteSchuelerSt
 import { ListSchueler } from "~/apps/schueler/ListSchueler";
 import { RouteNode } from "~/router/RouteNode";
 import { ListKlassen } from "~/apps/klassen/ListKlassen";
-import { ListJahrgaenge } from "~/apps/jahrgaenge/ListJahrgaenge";
+import { ListJahrgaenge } from "~/apps/kataloge/jahrgaenge/ListJahrgaenge";
 import { ListKurse } from "~/apps/kurse/ListKurse";
 import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 import { RouteApp } from "~/router/RouteApp";

@@ -6,7 +6,7 @@ import { routeSchueler } from "~/router/apps/RouteSchueler";
 import { computed } from "vue";
 import { DataSchuelerAbschnittsdaten } from "~/apps/schueler/DataSchuelerAbschnittsdaten";
 import { ListAbschnitte } from "~/apps/schueler/ListAbschnitte";
-import { ListFaecher } from "~/apps/faecher/ListFaecher";
+import { ListFaecher } from "~/apps/kataloge/faecher/ListFaecher";
 import { ListLehrer } from "~/apps/lehrer/ListLehrer";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteSchuelerLeistungen } from "~/router/apps/schueler/RouteSchuelerLeistungen";

@@ -1,9 +1,9 @@
 import { FaecherListeEintrag } from "@svws-nrw/svws-core-ts";
 import { WritableComputedRef } from "vue";
 import { RouteLocationNormalized, RouteParams } from "vue-router";
-import { ListFaecher } from "~/apps/faecher/ListFaecher";
+import { ListFaecher } from "~/apps/kataloge/faecher/ListFaecher";
 import { RouteNodeListView } from "~/router/RouteNodeListView";
-import { routeFaecherDaten } from "~/router/apps/faecher/RouteFaecherDaten";
+import { routeFaecherDaten } from "~/router/apps/faecher/RouteKatalogFaecherDaten";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteApp } from "~/router/RouteApp";
 import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
@@ -13,8 +13,8 @@ export class RouteDataKatalogFaecher {
 	item: FaecherListeEintrag | undefined = undefined;
 }
 
-const SFaecherAuswahl = () => import("~/components/faecher/SFaecherAuswahl.vue")
-const SFaecherApp = () => import("~/components/faecher/SFaecherApp.vue")
+const SFaecherAuswahl = () => import("~/components/kataloge/faecher/SFaecherAuswahl.vue")
+const SFaecherApp = () => import("~/components/kataloge/faecher/SFaecherApp.vue")
 
 export class RouteKatalogFaecher extends RouteNodeListView<ListFaecher, FaecherListeEintrag, RouteDataKatalogFaecher, RouteApp> {
 

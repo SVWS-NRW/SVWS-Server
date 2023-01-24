@@ -3,7 +3,7 @@ import { WritableComputedRef } from "vue";
 import { RouteLocationNormalized, RouteParams } from "vue-router";
 import { RouteNodeListView } from "~/router/RouteNodeListView";
 import { routeKatalogJahrgaengeDaten } from "~/router/apps/jahrgaenge/RouteKatalogJahrgaengeDaten";
-import { ListJahrgaenge } from "~/apps/jahrgaenge/ListJahrgaenge";
+import { ListJahrgaenge } from "~/apps/kataloge/jahrgaenge/ListJahrgaenge";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteApp } from "~/router/RouteApp";
 import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
@@ -12,8 +12,8 @@ export class RouteDataKatalogJahrgaenge {
 	schule: DataSchuleStammdaten = new DataSchuleStammdaten();
 }
 
-const SJahrgaengeAuswahl = () => import("~/components/jahrgaenge/SJahrgaengeAuswahl.vue")
-const SJahrgaengeApp = () => import("~/components/jahrgaenge/SJahrgaengeApp.vue")
+const SJahrgaengeAuswahl = () => import("~/components/kataloge/jahrgaenge/SJahrgaengeAuswahl.vue")
+const SJahrgaengeApp = () => import("~/components/kataloge/jahrgaenge/SJahrgaengeApp.vue")
 
 export class RouteKatalogJahrgaenge extends RouteNodeListView<ListJahrgaenge, JahrgangsListeEintrag, RouteDataKatalogJahrgaenge, RouteApp> {
 

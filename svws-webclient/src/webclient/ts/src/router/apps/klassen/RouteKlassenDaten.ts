@@ -1,6 +1,6 @@
 import { JahrgangsListeEintrag, KlassenListeEintrag } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized, RouteParams } from "vue-router";
-import { ListJahrgaenge } from "~/apps/jahrgaenge/ListJahrgaenge";
+import { ListJahrgaenge } from "~/apps/kataloge/jahrgaenge/ListJahrgaenge";
 import { DataKlasse } from "~/apps/klassen/DataKlasse";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteKlassen, routeKlassen } from "../RouteKlassen";

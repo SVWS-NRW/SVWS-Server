@@ -10,7 +10,7 @@
 	import { computed, ComputedRef, ShallowRef } from "vue";
 	import { DataFach } from "~/apps/faecher/DataFach";
 	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
-	import { routeFaecherDaten } from "~/router/apps/faecher/RouteFaecherDaten";
+	import { routeFaecherDaten } from "~/router/apps/faecher/RouteKatalogFaecherDaten";
 
 	const props = defineProps<{
 		item: ShallowRef<FaecherListeEintrag | undefined>;

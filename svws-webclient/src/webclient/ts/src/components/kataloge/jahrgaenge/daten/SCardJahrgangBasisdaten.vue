@@ -18,7 +18,7 @@
 
 	import { JahrgangsListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, WritableComputedRef } from "vue";
-	import { DataJahrgang } from "~/apps/jahrgaenge/DataJahrgang";
+	import { DataJahrgang } from "~/apps/kataloge/jahrgaenge/DataJahrgang";
 
 	const props = defineProps<{
 		data: DataJahrgang,

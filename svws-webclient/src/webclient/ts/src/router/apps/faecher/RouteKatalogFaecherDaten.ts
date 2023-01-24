@@ -1,6 +1,6 @@
 import { FaecherListeEintrag } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized, RouteParams } from "vue-router";
-import { DataFach } from "~/apps/faecher/DataFach";
+import { DataFach } from "~/apps/kataloge/faecher/DataFach";
 import { RouteNode } from "~/router/RouteNode";
 import { routeKatalogFaecher, RouteKatalogFaecher } from "../RouteKatalogFaecher";
 
@@ -9,7 +9,7 @@ export class RouteDataFaecherDaten {
 	daten: DataFach = new DataFach();
 }
 
-const SFachDaten = () => import("~/components/faecher/daten/SFachDaten.vue");
+const SFachDaten = () => import("~/components/kataloge/faecher/daten/SFachDaten.vue");
 
 export class RouteFaecherDaten extends RouteNode<RouteDataFaecherDaten, RouteKatalogFaecher> {
 

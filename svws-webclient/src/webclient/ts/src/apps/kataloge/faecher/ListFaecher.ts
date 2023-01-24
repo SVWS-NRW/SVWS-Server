@@ -1,6 +1,6 @@
 import { FaecherListeEintrag } from "@svws-nrw/svws-core-ts";
-import { App } from "../BaseApp";
-import { BaseList } from "../BaseList";
+import { App } from "../../BaseApp";
+import { BaseList } from "../../BaseList";
 
 export class ListFaecher extends BaseList<FaecherListeEintrag, undefined> {
 

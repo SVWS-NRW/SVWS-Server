@@ -6,7 +6,7 @@ import { RouteNodeListView } from "~/router/RouteNodeListView";
 import { routeKurseDaten } from "~/router/apps/kurse/RouteKurseDaten";
 import { RouteNode } from "~/router/RouteNode";
 import { ListLehrer } from "~/apps/lehrer/ListLehrer";
-import { ListJahrgaenge } from "~/apps/jahrgaenge/ListJahrgaenge";
+import { ListJahrgaenge } from "~/apps/kataloge/jahrgaenge/ListJahrgaenge";
 import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 import { RouteApp } from "../RouteApp";
 

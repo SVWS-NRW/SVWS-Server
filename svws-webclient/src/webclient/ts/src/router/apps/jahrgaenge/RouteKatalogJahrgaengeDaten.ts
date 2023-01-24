@@ -1,7 +1,7 @@
 import { RouteNode } from "~/router/RouteNode";
 import { routeKatalogJahrgaenge, RouteKatalogJahrgaenge } from "~/router/apps/RouteKatalogJahrgaenge";
 import { JahrgangsListeEintrag } from "@svws-nrw/svws-core-ts";
-import { DataJahrgang } from "~/apps/jahrgaenge/DataJahrgang";
+import { DataJahrgang } from "~/apps/kataloge/jahrgaenge/DataJahrgang";
 import { RouteLocationNormalized, RouteParams } from "vue-router";
 
 export class RouteDataKatalogJahrgaengeDaten {
@@ -9,7 +9,7 @@ export class RouteDataKatalogJahrgaengeDaten {
 	daten: DataJahrgang = new DataJahrgang();
 }
 
-const SJahrgangDaten = () => import("~/components/jahrgaenge/daten/SJahrgangDaten.vue");
+const SJahrgangDaten = () => import("~/components/kataloge/jahrgaenge/daten/SJahrgangDaten.vue");
 
 export class RouteKatalogJahrgaengeDaten extends RouteNode<RouteDataKatalogJahrgaengeDaten, RouteKatalogJahrgaenge> {
 
