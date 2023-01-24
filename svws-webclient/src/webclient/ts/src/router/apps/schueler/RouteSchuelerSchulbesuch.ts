@@ -1,15 +1,15 @@
 import { SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
-import { RouteLocationNormalized } from "vue-router";
+import { RouteLocationNormalized, RouteParams } from "vue-router";
 import { DataSchuelerSchulbesuchsdaten } from "~/apps/schueler/DataSchuelerSchulbesuchsdaten";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteSchueler, routeSchueler } from "~/router/apps/RouteSchueler";
-
-const SSchuelerSchulbesuch = () => import("~/components/schueler/schulbesuch/SSchuelerSchulbesuch.vue");
 
 export class RouteDataSchuelerSchulbesuch {
 	item: SchuelerListeEintrag | undefined = undefined;
 	daten: DataSchuelerSchulbesuchsdaten = new DataSchuelerSchulbesuchsdaten();
 }
+
+const SSchuelerSchulbesuch = () => import("~/components/schueler/schulbesuch/SSchuelerSchulbesuch.vue");
 
 export class RouteSchuelerSchulbesuch extends RouteNode<RouteDataSchuelerSchulbesuch, RouteSchueler> {
 
@@ -17,6 +17,15 @@ export class RouteSchuelerSchulbesuch extends RouteNode<RouteDataSchuelerSchulbe
 		super("schueler_schulbesuch", "schulbesuch", SSchuelerSchulbesuch, new RouteDataSchuelerSchulbesuch());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Schulbesuch";
+	}
+
+	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
+		if (to_params.id === undefined) {
+			await this.onSelect(undefined);
+		} else {
+			const tmp = parseInt(to_params.id as string);
+			await this.onSelect(this.parent!.liste.liste.find(s => s.id === tmp));
+		}
 	}
 
 	protected async onSelect(item?: SchuelerListeEintrag) {
@@ -32,10 +41,10 @@ export class RouteSchuelerSchulbesuch extends RouteNode<RouteDataSchuelerSchulbe
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
-		const prop: Record<string, any> = routeSchueler.getProps(to);
-		this.onSelect(prop.item.value);
-		prop.data = this.data.daten;
-		return prop;
+		return {
+			...routeSchueler.getProps(to),
+			data: this.data.daten
+		};
 	}
 
 }

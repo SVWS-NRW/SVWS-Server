@@ -19,14 +19,15 @@ export class RouteSchuelerAdressen extends RouteNode<RouteDataSchuelerAdressen, 
 		super("schueler_adressen", "adressen", SSchuelerAdressen, new RouteDataSchuelerAdressen());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Adressen / Betriebe";
-		// TODO Löse diesen Zusammenhang in den Komponente so auf, dass die übliche Vorgehensweise bei den Routen angewandt werden kann und die Folgezeile nicht mehr nötig ist
-		this.data.listSchuelerbetriebe.add_data(this.data.betriebsStammdaten);
 	}
 
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
-		if (routeSchueler.item === undefined)
-			return;
-		await this.data.listSchuelerbetriebe.update_list(routeSchueler.item.id);
+		if (to_params.id === undefined) {
+			await this.onSelect(undefined);
+		} else {
+			const tmp = parseInt(to_params.id as string);
+			await this.onSelect(this.parent!.liste.liste.find(s => s.id === tmp));
+		}
 	}
 
 	protected async onSelect(item?: SchuelerListeEintrag) {
@@ -34,17 +35,20 @@ export class RouteSchuelerAdressen extends RouteNode<RouteDataSchuelerAdressen, 
 			return;
 		if (item === undefined) {
 			this.data.item = undefined;
+			await this.data.betriebsStammdaten.unselect();
 		} else {
 			this.data.item = item;
+			await this.data.listSchuelerbetriebe.update_list(this.data.item.id);
+			await this.data.betriebsStammdaten.select(this.data.listSchuelerbetriebe.ausgewaehlt);
 		}
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
-		const prop: Record<string, any> = routeSchueler.getProps(to);
-		this.onSelect(prop.item.value);
-		prop.listSchuelerbetriebe = this.data.listSchuelerbetriebe;
-		prop.betriebsStammdaten = this.data.betriebsStammdaten;
-		return prop;
+		return {
+			...routeSchueler.getProps(to),
+			listSchuelerbetriebe: this.data.listSchuelerbetriebe,
+			betriebsStammdaten: this.data.betriebsStammdaten
+		};
 	}
 
 }

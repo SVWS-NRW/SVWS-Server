@@ -102,12 +102,13 @@ export class RouteSchuelerLeistungenDaten extends RouteNodeListView<ListAbschnit
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
-		const prop: Record<string, any> = routeSchueler.getProps(to);
-		prop.lernabschnitt = this.data.item;
-		prop.data = this.data.daten;
-		prop.mapFaecher = this.data.mapFaecher;
-		prop.mapLehrer = this.data.mapLehrer;
-		return prop;
+		return {
+			...routeSchueler.getProps(to),
+			lernabschnitt: this.data.item,
+			data: this.data.daten,
+			mapFaecher: this.data.mapFaecher,
+			mapLehrer: this.data.mapLehrer
+		};
 	}
 
 }

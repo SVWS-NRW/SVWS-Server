@@ -31,6 +31,15 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 		}
 	}
 
+	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
+		if (to_params.id === undefined) {
+			await this.onSelect(undefined);
+		} else {
+			const tmp = parseInt(to_params.id as string);
+			await this.onSelect(this.parent!.liste.liste.find(s => s.id === tmp));
+		}
+	}
+
 	protected async onSelect(item?: SchuelerListeEintrag) {
 		if (item === this.data.item)
 			return;
@@ -60,12 +69,12 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
-		const prop: Record<string, any> = routeSchueler.getProps(to);
-		this.onSelect(prop.item.value);
-		prop.dataLaufbahn = this.data.dataLaufbahn;
-		prop.dataFaecher = this.data.dataFaecher;
-		prop.dataFachkombinationen = this.data.dataFachkombinationen;
-		return prop;
+		return {
+			...routeSchueler.getProps(to),
+			dataLaufbahn: this.data.dataLaufbahn,
+			dataFaecher: this.data.dataFaecher,
+			dataFachkombinationen: this.data.dataFachkombinationen
+		};
 	}
 
 }

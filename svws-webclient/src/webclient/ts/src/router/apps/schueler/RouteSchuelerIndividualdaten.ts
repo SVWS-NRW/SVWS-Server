@@ -2,7 +2,7 @@ import { RouteNode } from "~/router/RouteNode";
 import { SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
 import { DataKatalogFahrschuelerarten } from "~/apps/schueler/DataKatalogFahrschuelerarten";
 import { DataKatalogFoerderschwerpunkte } from "~/apps/schueler/DataKatalogFoerderschwerpunkte";
-import { RouteLocationNormalized } from "vue-router";
+import { RouteLocationNormalized, RouteParams } from "vue-router";
 import { RouteSchueler, routeSchueler } from "../RouteSchueler";
 
 const SSchuelerIndividualdaten = () => import("~/components/schueler/individualdaten/SSchuelerIndividualdaten.vue");
@@ -19,6 +19,15 @@ export class RouteSchuelerIndividualdaten extends RouteNode<RouteDataSchuelerInd
 		super("schueler_daten", "daten", SSchuelerIndividualdaten, new RouteDataSchuelerIndividualdaten());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Individualdaten";
+	}
+
+	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
+		if (to_params.id === undefined) {
+			await this.onSelect(undefined);
+		} else {
+			const tmp = parseInt(to_params.id as string);
+			await this.onSelect(this.parent!.liste.liste.find(s => s.id === tmp));
+		}
 	}
 
 	protected async onSelect(item?: SchuelerListeEintrag) {
@@ -38,11 +47,11 @@ export class RouteSchuelerIndividualdaten extends RouteNode<RouteDataSchuelerInd
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
-		const prop: Record<string, any> = routeSchueler.getProps(to);
-		this.onSelect(prop.item.value);
-		prop.fachschuelerarten = this.data.fachschuelerarten;
-		prop.foerderschwerpunkte = this.data.foerderschwerpunkte;
-		return prop;
+		return {
+			...routeSchueler.getProps(to),
+			fachschuelerarten: this.data.fachschuelerarten,
+			foerderschwerpunkte: this.data.foerderschwerpunkte
+		};
 	}
 
 }

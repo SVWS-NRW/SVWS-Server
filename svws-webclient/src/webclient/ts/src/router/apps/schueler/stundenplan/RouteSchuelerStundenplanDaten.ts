@@ -87,10 +87,11 @@ export class RouteSchuelerStundenplanDaten extends RouteNodeListView<ListStunden
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
-		const prop: Record<string, any> = routeSchueler.getProps(to);
-		prop.stundenplan = this.data.item;
-		prop.data = this.data.daten;
-		return prop;
+		return {
+			...routeSchueler.getProps(to),
+			stundenplan: this.data.item,
+			data: this.data.daten,
+		};
 	}
 
 }

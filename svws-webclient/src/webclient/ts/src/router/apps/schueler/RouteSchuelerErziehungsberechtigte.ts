@@ -1,5 +1,5 @@
 import { SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
-import { RouteLocationNormalized } from "vue-router";
+import { RouteLocationNormalized, RouteParams } from "vue-router";
 import { DataKatalogErzieherarten } from "~/apps/schueler/DataKatalogErzieherarten";
 import { DataSchuelerErzieherStammdaten } from "~/apps/schueler/DataSchuelerErzieherStammdaten";
 import { RouteNode } from "~/router/RouteNode";
@@ -21,6 +21,15 @@ export class RouteSchuelerErziehungsberechtigte extends RouteNode<RouteDataSchue
 		super.text = "Erziehungsberechtigte";
 	}
 
+	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
+		if (to_params.id === undefined) {
+			await this.onSelect(undefined);
+		} else {
+			const tmp = parseInt(to_params.id as string);
+			await this.onSelect(this.parent!.liste.liste.find(s => s.id === tmp));
+		}
+	}
+
 	protected async onSelect(item?: SchuelerListeEintrag) {
 		if (item === this.data.item)
 			return;
@@ -36,11 +45,11 @@ export class RouteSchuelerErziehungsberechtigte extends RouteNode<RouteDataSchue
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
-		const prop: Record<string, any> = routeSchueler.getProps(to);
-		this.onSelect(prop.item.value);
-		prop.data = this.data.daten;
-		prop.erzieherarten = this.data.erzieherarten;
-		return prop;
+		return {
+			...routeSchueler.getProps(to),
+			data: this.data.daten,
+			erzieherarten: this.data.erzieherarten
+		};
 	}
 
 }
