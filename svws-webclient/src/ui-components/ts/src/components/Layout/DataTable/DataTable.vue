@@ -155,7 +155,7 @@
 			clicked?: DataTableItem | undefined;
 			clickable?: boolean;
 			noDataHtml?: string;
-			uniqueKey?: string;
+			uniqueKey: string;
 		}>(),
 		{
 			columns: () => [],
@@ -167,7 +167,6 @@
 			clickable: false,
 			selectable: false,
 			noDataHtml: "Keine Einträge vorhanden",
-			uniqueKey: "id"
 		}
 	);
 

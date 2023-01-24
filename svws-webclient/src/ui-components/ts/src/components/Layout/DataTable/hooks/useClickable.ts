@@ -6,7 +6,7 @@ import useSafeVModel from './useSafeVModel'
 interface UseClickableProps {
 	clicked: DataTableItem | undefined
 	clickable: boolean
-	uniqueKey: string
+	uniqueKey: string | undefined
 }
 
 export default function useClickable(
@@ -16,7 +16,15 @@ export default function useClickable(
 	const clickedItem = useSafeVModel(props, null as DataTableItem | null, 'clicked');
 
 	function isRowClicked(row: DataTableRow) {
-		return clickedItem.value?.[props.uniqueKey] === row.source?.[props.uniqueKey]
+		if (props.uniqueKey) {
+			if (clickedItem.value?.[props.uniqueKey]) {
+				return clickedItem.value?.[props.uniqueKey] === row.source?.[props.uniqueKey]
+			} else {
+				return clickedItem.value === row.source
+			}
+		} else {
+			return clickedItem.value === row.source
+		}
 	}
 
 	function resetClickedRow() {
