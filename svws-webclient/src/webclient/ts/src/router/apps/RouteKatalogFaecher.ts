@@ -53,12 +53,12 @@ export class RouteKatalogFaecher extends RouteNodeListView<ListFaecher, FaecherL
 	}
 
 	protected async onSelect(item?: FaecherListeEintrag) {
-		if (item === this.data.item)
+		if (item === this.item)
 			return;
 		if (item === undefined) {
-			this.data.item = undefined;
+			this.item = undefined;
 		} else {
-			this.data.item = item;
+			this.item = item;
 		}
 	}
 
