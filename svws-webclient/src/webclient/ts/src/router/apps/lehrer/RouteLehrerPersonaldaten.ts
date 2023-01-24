@@ -1,5 +1,5 @@
 import { LehrerListeEintrag } from "@svws-nrw/svws-core-ts";
-import { RouteLocationNormalized } from "vue-router";
+import { RouteLocationNormalized, RouteParams } from "vue-router";
 import { DataLehrerPersonaldaten } from "~/apps/lehrer/DataLehrerPersonaldaten";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteLehrer, routeLehrer } from "~/router/apps/RouteLehrer";
@@ -21,6 +21,15 @@ export class RouteLehrerPersonaldaten extends RouteNode<RouteDataLehrerPersonald
 		super.text = "Personaldaten";
 	}
 
+	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
+		if (to_params.id === undefined) {
+			await this.onSelect(undefined);
+		} else {
+			const tmp = parseInt(to_params.id as string);
+			await this.onSelect(this.parent!.liste.liste.find(s => s.id === tmp));
+		}
+	}
+
 	protected async onSelect(item?: LehrerListeEintrag) {
 		if (item === this.data.item)
 			return;
@@ -34,10 +43,10 @@ export class RouteLehrerPersonaldaten extends RouteNode<RouteDataLehrerPersonald
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
-		const prop = routeLehrer.getProps(to);
-		this.onSelect(prop.item.value);
-		prop.personaldaten = this.data.personaldaten;
-		return prop;
+		return {
+			...routeLehrer.getProps(to),
+			personaldaten: this.data.personaldaten
+		};
 	}
 
 }
