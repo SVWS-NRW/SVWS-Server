@@ -14,7 +14,7 @@
 
 	import { FaecherListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { computed, ShallowRef, WritableComputedRef } from "vue";
-	import { DataFach } from "~/apps/faecher/DataFach";
+	import { DataFach } from "~/apps/kataloge/faecher/DataFach";
 
 	const props = defineProps<{
 		item: ShallowRef<FaecherListeEintrag | undefined>;

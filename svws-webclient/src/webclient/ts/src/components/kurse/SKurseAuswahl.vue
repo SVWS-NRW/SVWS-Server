@@ -21,7 +21,7 @@
 	import { routeKurse } from "~/router/apps/RouteKurse";
 	import { Schuljahresabschnitt } from "@svws-nrw/svws-core-ts";
 	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
-	import { ListJahrgaenge } from "~/apps/jahrgaenge/ListJahrgaenge";
+	import { ListJahrgaenge } from "~/apps/kataloge/jahrgaenge/ListJahrgaenge";
 	import { ListLehrer } from "~/apps/lehrer/ListLehrer";
 	import { DataTableColumn } from "@svws-nrw/svws-ui";
 

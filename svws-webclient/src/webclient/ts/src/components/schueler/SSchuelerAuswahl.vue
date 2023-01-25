@@ -71,7 +71,7 @@
 	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 	import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
 	import { ListKlassen } from "~/apps/klassen/ListKlassen";
-	import { ListJahrgaenge } from "~/apps/jahrgaenge/ListJahrgaenge";
+	import { ListJahrgaenge } from "~/apps/kataloge/jahrgaenge/ListJahrgaenge";
 	import { ListKurse } from "~/apps/kurse/ListKurse";
 	import { DataTableColumn } from "@svws-nrw/svws-ui";
 

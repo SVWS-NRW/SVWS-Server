@@ -20,7 +20,7 @@
 	import { computed, ComputedRef, ref, ShallowRef } from "vue";
 	import { DataGostFachkombinationen } from "~/apps/gost/DataGostFachkombinationen";
 	import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
-	import { ListJahrgaenge } from "~/apps/jahrgaenge/ListJahrgaenge";
+	import { ListJahrgaenge } from "~/apps/kataloge/jahrgaenge/ListJahrgaenge";
 	import { ListKlassen } from "~/apps/klassen/ListKlassen";
 	import { ListKurse } from "~/apps/kurse/ListKurse";
 	import { DataSchuelerLaufbahnplanung } from "~/apps/schueler/DataSchuelerLaufbahnplanung";

@@ -8,7 +8,7 @@
 
 	import { JahrgangsListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, ShallowRef } from "vue";
-	import { DataJahrgang } from "~/apps/jahrgaenge/DataJahrgang";
+	import { DataJahrgang } from "~/apps/kataloge/jahrgaenge/DataJahrgang";
 	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 	import { routeKatalogJahrgaengeDaten } from "~/router/apps/jahrgaenge/RouteKatalogJahrgaengeDaten";
 

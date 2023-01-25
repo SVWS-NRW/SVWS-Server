@@ -18,7 +18,7 @@
 	import { computed, WritableComputedRef } from "vue";
 	import { JahrgangsListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { DataKlasse } from "~/apps/klassen/DataKlasse";
-	import { ListJahrgaenge } from "~/apps/jahrgaenge/ListJahrgaenge";
+	import { ListJahrgaenge } from "~/apps/kataloge/jahrgaenge/ListJahrgaenge";
 
 	const props = defineProps<{
 		data: DataKlasse,

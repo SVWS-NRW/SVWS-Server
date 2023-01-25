@@ -8,7 +8,7 @@
 
 	import { FaecherListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, ShallowRef } from "vue";
-	import { DataFach } from "~/apps/faecher/DataFach";
+	import { DataFach } from "~/apps/kataloge/faecher/DataFach";
 	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 	import { routeFaecherDaten } from "~/router/apps/faecher/RouteKatalogFaecherDaten";
 

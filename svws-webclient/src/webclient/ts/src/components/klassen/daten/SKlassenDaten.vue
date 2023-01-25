@@ -11,7 +11,7 @@
 	import { computed, ComputedRef, ShallowRef } from "vue";
 	import { DataKlasse } from "~/apps/klassen/DataKlasse";
 	import { ListLehrer } from "~/apps/lehrer/ListLehrer";
-	import { ListJahrgaenge } from "~/apps/jahrgaenge/ListJahrgaenge";
+	import { ListJahrgaenge } from "~/apps/kataloge/jahrgaenge/ListJahrgaenge";
 	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 	import { routeKlassenDaten } from "~/router/apps/klassen/RouteKlassenDaten";
 

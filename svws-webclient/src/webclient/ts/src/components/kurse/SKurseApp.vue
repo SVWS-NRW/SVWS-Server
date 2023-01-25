@@ -22,7 +22,7 @@
 
 	import { JahrgangsListeEintrag, KursListeEintrag, LehrerListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, ShallowRef } from "vue";
-	import { ListJahrgaenge } from "~/apps/jahrgaenge/ListJahrgaenge";
+	import { ListJahrgaenge } from "~/apps/kataloge/jahrgaenge/ListJahrgaenge";
 	import { ListLehrer } from "~/apps/lehrer/ListLehrer";
 	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 	import { routeKurse } from "~/router/apps/RouteKurse";

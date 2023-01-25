@@ -31,7 +31,7 @@
 	import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
 	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 	import { ListKurse } from "~/apps/kurse/ListKurse";
-	import { ListJahrgaenge } from "~/apps/jahrgaenge/ListJahrgaenge";
+	import { ListJahrgaenge } from "~/apps/kataloge/jahrgaenge/ListJahrgaenge";
 	import { ListKlassen } from "~/apps/klassen/ListKlassen";
 
 	const props = defineProps<{
