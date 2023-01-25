@@ -1,22 +1,20 @@
 <template>
-	<template v-for="kursart in GostKursart.values()">
-		<template v-if="kurszahlen.get(kursart.id) === 0 && wahlen.get(kursart.id) && allowRegeln">
-			<tr class="text-left" :style="{ 'background-color': bgColor }" :key="kursart.id">
-				<td colspan="3">
-					{{ fach.kuerzel }}-{{ kursart.kuerzel }}
-				</td>
-				<td class="text-center" colspan="1">
-					{{ wahlen.get(kursart.id) }}
-				</td>
-				<td :colspan="schienen.size()+2">
-					<svws-ui-button class="" type="secondary" size="small" @click="add_kurs(kursart)" title="Kurs hinzufügen">Kurs hinzufügen</svws-ui-button>
-				</td>
-			</tr>
-		</template>
-		<template v-else>
-			<s-kurs-blockung v-for="kurs in vorhandene_kurse(kursart)" :key="kurs.id" :kurs="kurs" :data-faecher="dataFaecher" :blockung="blockung" :ergebnis="ergebnis"
-				:list-lehrer="listLehrer" :map-lehrer="mapLehrer" :allow_regeln="allowRegeln" />
-		</template>
+	<template v-if="kurszahlen.get(kursart.id) === 0 && wahlen.get(kursart.id) && allowRegeln">
+		<tr class="text-left" :style="{ 'background-color': bgColor }" :key="kursart.id">
+			<td colspan="3">
+				{{ fach.kuerzel }}-{{ kursart.kuerzel }}
+			</td>
+			<td class="text-center" colspan="1">
+				{{ wahlen.get(kursart.id) }}
+			</td>
+			<td :colspan="schienen.size()+2">
+				<svws-ui-button class="" type="secondary" size="small" @click="add_kurs(kursart)" title="Kurs hinzufügen">Kurs hinzufügen</svws-ui-button>
+			</td>
+		</tr>
+	</template>
+	<template v-else>
+		<s-kurs-blockung v-for="kurs in vorhandene_kurse(kursart)" :key="kurs.id" :kurs="kurs" :data-faecher="dataFaecher" :blockung="blockung" :ergebnis="ergebnis"
+			:list-lehrer="listLehrer" :map-lehrer="mapLehrer" :allow_regeln="allowRegeln" />
 	</template>
 </template>
 
@@ -33,6 +31,7 @@
 
 	const props = defineProps<{
 		fach: GostStatistikFachwahl;
+		kursart: GostKursart;
 		dataFaecher: DataGostFaecher;
 		halbjahr: Number;
 		blockung: DataGostKursblockung;

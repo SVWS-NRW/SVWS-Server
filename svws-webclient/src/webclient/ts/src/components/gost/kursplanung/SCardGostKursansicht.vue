@@ -72,8 +72,22 @@
 					</tr>
 				</thead>
 				<tbody>
-					<s-fach-kurs v-for="fach in fachwahlen" :key="fach.id" :fach="fach" :data-faecher="dataFaecher" :halbjahr="halbjahr.id" :blockung="blockung" :ergebnis="ergebnis"
-						:list-lehrer="listLehrer" :map-lehrer="mapLehrer" :allow-regeln="allow_regeln" />
+					<template v-if="sort_by==='fach_id'">
+						<template v-for="fach in fachwahlen" :key="fach.id">
+							<template v-for="kursart in GostKursart.values()" :key="kursart.id">
+								<s-fach-kurs :fach="fach" :kursart="kursart" :data-faecher="dataFaecher" :halbjahr="halbjahr.id" :blockung="blockung" :ergebnis="ergebnis"
+									:list-lehrer="listLehrer" :map-lehrer="mapLehrer" :allow-regeln="allow_regeln" />
+							</template>
+						</template>
+					</template>
+					<template v-else>
+						<template v-for="kursart in GostKursart.values()" :key="kursart.id">
+							<template v-for="fach in fachwahlen" :key="fach.id">
+								<s-fach-kurs :fach="fach" :kursart="kursart" :data-faecher="dataFaecher" :halbjahr="halbjahr.id" :blockung="blockung" :ergebnis="ergebnis"
+									:list-lehrer="listLehrer" :map-lehrer="mapLehrer" :allow-regeln="allow_regeln" />
+							</template>
+						</template>
+					</template>
 				</tbody>
 			</table>
 		</div>
@@ -104,7 +118,7 @@
 
 <script setup lang="ts">
 
-	import { GostBlockungSchiene, GostBlockungsergebnisManager, GostHalbjahr, GostStatistikFachwahl, LehrerListeEintrag, List, Vector } from "@svws-nrw/svws-core-ts";
+	import { GostBlockungSchiene, GostBlockungsergebnisManager, GostHalbjahr, GostStatistikFachwahl, LehrerListeEintrag, List, Vector, GostKursart } from "@svws-nrw/svws-core-ts";
 	import { App } from "~/apps/BaseApp";
 	import { computed, ComputedRef, ref, Ref, WritableComputedRef } from "vue";
 	import { injectMainApp, Main, mainApp } from "~/apps/Main";
