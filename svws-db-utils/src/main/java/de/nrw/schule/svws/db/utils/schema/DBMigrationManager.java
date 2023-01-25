@@ -1013,8 +1013,8 @@ public class DBMigrationManager {
 			return null;
 		String result = switch (kursart) {
 			case "FS" -> "DFG";
-			case "FSD" -> "FUEK";
-			case "FÜK" -> "DFG";
+			case "FSD" -> "DFK";
+			case "FÜK" -> "FUEK";
 			case "KMFÖ" -> "KMFOE";
 			case "SPFÖ" -> "SPF";
 			case "AGK" -> (schulform == Schulform.WB) ? "AGKWB" : "AGK";
