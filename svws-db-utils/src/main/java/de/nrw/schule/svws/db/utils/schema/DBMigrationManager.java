@@ -64,6 +64,7 @@ import de.nrw.schule.svws.db.dto.migration.schild.personengruppen.MigrationDTOPe
 import de.nrw.schule.svws.db.dto.migration.schild.schueler.MigrationDTOSchueler;
 import de.nrw.schule.svws.db.dto.migration.schild.schueler.MigrationDTOSchuelerAllgemeineAdresse;
 import de.nrw.schule.svws.db.dto.migration.schild.schueler.MigrationDTOSchuelerDatenschutz;
+import de.nrw.schule.svws.db.dto.migration.schild.schueler.MigrationDTOSchuelerFoerderempfehlung;
 import de.nrw.schule.svws.db.dto.migration.schild.schueler.MigrationDTOSchuelerFoto;
 import de.nrw.schule.svws.db.dto.migration.schild.schueler.MigrationDTOSchuelerGrundschuldaten;
 import de.nrw.schule.svws.db.dto.migration.schild.schueler.MigrationDTOSchuelerLeistungsdaten;
@@ -975,6 +976,35 @@ public class DBMigrationManager {
 	
 	
 	/**
+	 * Prüft die Entitäten der Tabelle "SchuelerFoerderempfehlungen".
+	 * Hierbei wird geprüft, ob Abschnitt existiert. Doppelte Einträge für den gleichen Abschnitt werden auch entfernt.
+	 * 
+	 * @param entities   die Entitäten
+	 * 
+	 * @return true, falls die Daten ohne schwerwiegenden Fehler geprüft wurden
+	 */
+	private boolean checkSchuelerFoerderempfehlungen(List<MigrationDTOSchuelerFoerderempfehlung> entities) {
+		HashSet<Long> localSchuelerLernabschnittsIDs = new HashSet<>();
+		for (int i = entities.size() - 1; i >= 0; i--) {
+			MigrationDTOSchuelerFoerderempfehlung daten = entities.get(i);
+			if ((daten.Schueler_ID == null) || (!schuelerIDs.contains(daten.Schueler_ID))) {
+				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Es gibt keinen Schüler mit der angebenen ID in der Datenbank.");
+				entities.remove(i);
+			} else if ((daten.Abschnitt_ID == null) || (!schuelerLernabschnittsIDs.contains(daten.Abschnitt_ID))) {
+				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Es gibt keinen Lernabschnitt mit der angebenen ID in der Datenbank.");
+				entities.remove(i);
+			} else if (localSchuelerLernabschnittsIDs.contains(daten.Abschnitt_ID)) {
+				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Doppelte Lernabschnitt-IDs sind unzulässig.");
+				entities.remove(i);
+			} else {
+				localSchuelerLernabschnittsIDs.add(daten.Abschnitt_ID);
+			}
+		}
+		return true;
+	}
+	
+	
+	/**
 	 * Prüft die Entitäten der Tabelle "SchuelerAbiFaecher".
 	 * Hierbei wird geprüft, ob die Fremdschlüssel auf den Schüler und das Fach gültig ist.
 	 *  
@@ -1715,6 +1745,8 @@ public class DBMigrationManager {
 			return checkSchuelerLeistungsdaten((List<MigrationDTOSchuelerLeistungsdaten>)entities);
 		if (firstObject instanceof MigrationDTOSchuelerPSFachBemerkungen)
 			return checkSchuelerLD_PSFachBem((List<MigrationDTOSchuelerPSFachBemerkungen>)entities);
+		if (firstObject instanceof MigrationDTOSchuelerFoerderempfehlung)
+			return checkSchuelerFoerderempfehlungen((List<MigrationDTOSchuelerFoerderempfehlung>)entities);
 		if (firstObject instanceof MigrationDTOSchuelerAbiturFach)
 			return checkSchuelerAbiFaecher((List<MigrationDTOSchuelerAbiturFach>)entities);
 		if (firstObject instanceof MigrationDTOKurs)
@@ -1810,8 +1842,10 @@ public class DBMigrationManager {
 			// Prüfe die Entitäten auf fehlerhafte Daten, welche dann gefiltert werden, und ergänze ggf. zusätzliche Informationen während der Migration
 			if (!checkData(entities))
 				return false;
-			if (entities.size() == 0)
+			if (entities.size() == 0) {
+				logger.modifyIndent(-2);				
 				continue;
+			}
 			
 			// Schreibe die Datensätze in die Zieltabelle
 			write(entities);
