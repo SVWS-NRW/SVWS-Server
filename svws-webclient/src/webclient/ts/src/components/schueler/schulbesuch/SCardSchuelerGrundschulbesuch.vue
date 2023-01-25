@@ -11,29 +11,15 @@
 
 <script setup lang="ts">
 
-	import { computed, WritableComputedRef } from "vue";
-	import { DataSchuelerSchulbesuchsdaten } from "~/apps/schueler/DataSchuelerSchulbesuchsdaten";
+	import { PropDataSchulbesuch } from "./PropDataSchulbesuch";
 
-	const props = defineProps<{ data: DataSchuelerSchulbesuchsdaten }>();
+	const props = defineProps<{
+		data: PropDataSchulbesuch;
+	}>();
 
-	const grundschuleEinschulungsjahr: WritableComputedRef<number | undefined> = computed({
-		get: () => props.data.daten?.grundschuleEinschulungsjahr?.valueOf(),
-		set: (value) => void props.data.patch({ grundschuleEinschulungsjahr: value })
-	});
-
-	const grundschuleEinschulungsartID: WritableComputedRef<number | undefined> = computed({
-		get: () => props.data.daten?.grundschuleEinschulungsartID?.valueOf(),
-		set: (value) => void props.data.patch({ grundschuleEinschulungsartID: value })
-	});
-
-	const grundschuleJahreEingangsphase: WritableComputedRef<number | undefined> = computed({
-		get: () => props.data.daten?.grundschuleJahreEingangsphase?.valueOf(),
-		set: (value) => void props.data.patch({ grundschuleJahreEingangsphase: value })
-	});
-
-	const grundschuleUebergangsempfehlungID: WritableComputedRef<number | undefined> = computed({
-		get: () => props.data.daten?.grundschuleUebergangsempfehlungID?.valueOf(),
-		set: (value) => void props.data.patch({ grundschuleUebergangsempfehlungID: value })
-	});
+	const grundschuleEinschulungsjahr = props.data.grundschuleEinschulungsjahr();
+	const grundschuleEinschulungsartID = props.data.grundschuleEinschulungsartID();
+	const grundschuleJahreEingangsphase = props.data.grundschuleJahreEingangsphase();
+	const grundschuleUebergangsempfehlungID = props.data.grundschuleUebergangsempfehlungID();
 
 </script>

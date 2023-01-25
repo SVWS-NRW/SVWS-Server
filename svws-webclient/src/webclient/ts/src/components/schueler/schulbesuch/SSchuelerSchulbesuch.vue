@@ -14,12 +14,12 @@
 
 	import { SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, ShallowRef } from "vue";
-	import { DataSchuelerSchulbesuchsdaten } from "~/apps/schueler/DataSchuelerSchulbesuchsdaten";
 	import { routeSchuelerSchulbesuch } from "~/router/apps/schueler/RouteSchuelerSchulbesuch";
+	import { PropDataSchulbesuch } from "./PropDataSchulbesuch";
 
 	const props = defineProps<{
 		item: ShallowRef<SchuelerListeEintrag | undefined>;
-		data: DataSchuelerSchulbesuchsdaten;
+		data: PropDataSchulbesuch;
 	}>();
 
 	const visible: ComputedRef<boolean> = computed(() => {

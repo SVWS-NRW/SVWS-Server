@@ -2,7 +2,7 @@
 	<svws-ui-content-card title="Alle bisher besuchten Schulen">
 		<div>
 			Hier wird demnächst die Übersicht über die besuchten Schulen implementiert
-			<div v-for="schule in props.data.daten?.alleSchulen" :key="schule.schulnummer.toString()">
+			<div v-for="schule in alleSchulen" :key="schule.schulnummer.toString()">
 				<!-- TODO <svws-zu-table> für die besuchten Schulen -->
 				<p> {{ schule.schulnummer + " ... (" + schule.datumVon + "-" + schule.datumBis + ")" }} </p>
 			</div>
@@ -12,8 +12,12 @@
 
 <script setup lang="ts">
 
-	import { DataSchuelerSchulbesuchsdaten } from "~/apps/schueler/DataSchuelerSchulbesuchsdaten";
+	import { PropDataSchulbesuch } from "./PropDataSchulbesuch";
 
-	const props = defineProps<{ data: DataSchuelerSchulbesuchsdaten }>();
+	const props = defineProps<{
+		data: PropDataSchulbesuch;
+	}>();
+
+	const alleSchulen = props.data.alleSchulen();
 
 </script>

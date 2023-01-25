@@ -10,24 +10,14 @@
 
 <script setup lang="ts">
 
-	import { computed, WritableComputedRef } from "vue";
-	import { DataSchuelerSchulbesuchsdaten } from "~/apps/schueler/DataSchuelerSchulbesuchsdaten";
+	import { PropDataSchulbesuch } from "./PropDataSchulbesuch";
 
-	const props = defineProps<{ data: DataSchuelerSchulbesuchsdaten }>();
+	const props = defineProps<{
+		data: PropDataSchulbesuch;
+	}>();
 
-	const sekIWechsel: WritableComputedRef<number | undefined> = computed({
-		get: () => props.data.daten?.sekIWechsel?.valueOf(),
-		set: (value) => void props.data.patch({ sekIWechsel: value })
-	});
-
-	const sekIErsteSchulform: WritableComputedRef<string | undefined> = computed({
-		get: () => props.data.daten?.sekIErsteSchulform?.toString(),
-		set: (value) => void props.data.patch({ sekIErsteSchulform: value })
-	});
-
-	const sekIIWechsel: WritableComputedRef<number | undefined> = computed({
-		get: () => props.data.daten?.sekIIWechsel?.valueOf(),
-		set: (value) => void props.data.patch({ sekIIWechsel: value })
-	});
+	const sekIWechsel = props.data.sekIWechsel();
+	const sekIErsteSchulform = props.data.sekIErsteSchulform();
+	const sekIIWechsel = props.data.sekIIWechsel();
 
 </script>

@@ -11,29 +11,15 @@
 
 <script setup lang="ts">
 
-	import { computed, WritableComputedRef } from "vue";
-	import { DataSchuelerSchulbesuchsdaten } from "~/apps/schueler/DataSchuelerSchulbesuchsdaten";
+	import { PropDataSchulbesuch } from "./PropDataSchulbesuch";
 
-	const props = defineProps<{ data: DataSchuelerSchulbesuchsdaten }>();
+	const props = defineProps<{
+		data: PropDataSchulbesuch;
+	}>();
 
-	const entlassungDatum: WritableComputedRef<string | undefined> = computed({
-		get: () => props.data.daten?.entlassungDatum?.toString(),
-		set: (value) => void props.data.patch({ entlassungDatum:  value })
-	});
-
-	const entlassungJahrgang: WritableComputedRef<string | undefined> = computed({
-		get: () => props.data.daten?.entlassungJahrgang?.toString(),
-		set: (value) => void props.data.patch({ entlassungJahrgang:  value })
-	});
-
-	const entlassungGrundID: WritableComputedRef<number | undefined> = computed({
-		get: () => props.data.daten?.entlassungGrundID?.valueOf(),
-		set: (value) => void props.data.patch({ entlassungGrundID: value })
-	});
-
-	const entlassungAbschlussartID: WritableComputedRef<string | undefined> = computed({
-		get: () => props.data.daten?.entlassungAbschlussartID?.toString(),
-		set: (value) => void props.data.patch({ entlassungAbschlussartID: value })
-	});
+	const entlassungDatum = props.data.entlassungDatum();
+	const entlassungJahrgang = props.data.entlassungJahrgang();
+	const entlassungGrundID = props.data.entlassungGrundID();
+	const entlassungAbschlussartID = props.data.entlassungAbschlussartID();
 
 </script>

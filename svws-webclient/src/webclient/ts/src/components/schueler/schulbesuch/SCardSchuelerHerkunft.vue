@@ -19,73 +19,34 @@
 
 <script setup lang="ts">
 
-	import { Herkunftsarten, HerkunftsartKatalogEintrag, Schulform, Schulgliederung } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, WritableComputedRef } from "vue";
+	import { Herkunftsarten, Schulform } from "@svws-nrw/svws-core-ts";
+	import { computed, ComputedRef } from "vue";
 	import { mainApp } from "~/apps/Main";
-	import { DataSchuelerSchulbesuchsdaten } from "~/apps/schueler/DataSchuelerSchulbesuchsdaten";
+	import { PropDataSchulbesuch } from "./PropDataSchulbesuch";
 
-	const props = defineProps<{ data: DataSchuelerSchulbesuchsdaten }>();
+	const props = defineProps<{
+		data: PropDataSchulbesuch;
+	}>();
+
+	const vorigeSchulnummer = props.data.vorigeSchulnummer();
+	const vorigeSchulform = props.data.vorigeSchulform();
+	const vorigeAllgHerkunft = props.data.vorigeAllgHerkunft();
+	const vorigeEntlassDatum = props.data.vorigeEntlassDatum();
+	const vorigeEntlassjahrgang = props.data.vorigeEntlassjahrgang();
+	const vorigeArtLetzteVersetzung = props.data.vorigeArtLetzteVersetzung();
+	const vorigeBemerkung = props.data.vorigeBemerkung();
+	const vorigeEntlassgrundID = props.data.vorigeEntlassgrundID();
+	const vorigeAbschlussartID = props.data.vorigeAbschlussartID();
+
 	const schulform: ComputedRef<Schulform> = computed(() => mainApp.apps.schule.schuleStammdaten.schulform.value || Schulform.G);
-
-	const vorigeSchulnummer: WritableComputedRef<string | undefined> = computed({
-		get: () => props.data.daten?.vorigeSchulnummer?.toString(),
-		set: (value) => void props.data.patch({ vorigeSchulnummer:  value })
-	});
-
-	const vorigeSchulform: ComputedRef<Schulform | undefined> = computed(() => {
-		const vorigeAllgHerkunft = props.data.daten?.vorigeAllgHerkunft;
-		if (vorigeAllgHerkunft === undefined)
-			return undefined;
-		const sgl = Schulgliederung.getByKuerzel(vorigeAllgHerkunft);
-		if (sgl !== null)
-			return Schulform.BK;
-		return Schulform.getByKuerzel(vorigeAllgHerkunft) || undefined;
-	});
-	const vorigeAllgHerkunft: WritableComputedRef<string | undefined> = computed({
-		get: () => props.data.daten?.vorigeAllgHerkunft?.toString(),
-		set: (value) => void props.data.patch({ vorigeAllgHerkunft:  value })
-	});
-
-	const vorigeEntlassDatum: WritableComputedRef<string | undefined> = computed({
-		get: () => props.data.daten?.vorigeEntlassdatum?.toString(),
-		set: (value) => void props.data.patch({ vorigeEntlassdatum:  value })
-	});
-
-	const vorigeEntlassjahrgang: WritableComputedRef<string | undefined> = computed({
-		get: () => props.data.daten?.vorigeEntlassjahrgang?.toString(),
-		set: (value) => void props.data.patch({ vorigeEntlassjahrgang:  value })
-	});
 
 	const herkunftsarten:ComputedRef<Herkunftsarten[]> = computed(() => {
 		return Herkunftsarten.values().filter(h => getBezeichnung(h) !== null);
 	});
-	const vorigeArtLetzteVersetzung: WritableComputedRef<Herkunftsarten | undefined> = computed({
-		get: () => {
-			if ((props.data.daten === undefined) || (props.data.daten.vorigeArtLetzteVersetzung === null))
-				return undefined;
-			const artID = parseInt(props.data.daten.vorigeArtLetzteVersetzung.valueOf());
-			return  Herkunftsarten.getByID(artID) || undefined;
-		},
-		set: (value) => void props.data.patch({ vorigeArtLetzteVersetzung:  value === undefined || value === null ? null : "" + value.daten.id.valueOf() })
-	});
+
 	function getBezeichnung(h: Herkunftsarten) {
 		return h.getBezeichnung(vorigeSchulform.value || Schulform.G);
 	}
-
-	const vorigeBemerkung: WritableComputedRef<string | undefined> = computed({
-		get: () => props.data.daten?.vorigeBemerkung?.toString(),
-		set: (value) => void props.data.patch({ vorigeBemerkung:  value })
-	});
-
-	const vorigeEntlassgrundID: WritableComputedRef<number | undefined> = computed({
-		get: () => props.data.daten?.vorigeEntlassgrundID?.valueOf(),
-		set: (value) => void props.data.patch({ vorigeEntlassgrundID: value })
-	});
-
-	const vorigeAbschlussartID: WritableComputedRef<string | undefined> = computed({
-		get: () => props.data.daten?.vorigeAbschlussartID?.toString(),
-		set: (value) => void props.data.patch({ vorigeAbschlussartID:  value })
-	});
 
 	const showstatistic: ComputedRef<boolean> = computed(() => true);
 

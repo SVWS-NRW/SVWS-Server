@@ -10,24 +10,14 @@
 
 <script setup lang="ts">
 
-	import { computed, WritableComputedRef } from "vue";
-	import { DataSchuelerSchulbesuchsdaten } from "~/apps/schueler/DataSchuelerSchulbesuchsdaten";
+	import { PropDataSchulbesuch } from "./PropDataSchulbesuch";
 
-	const props = defineProps<{ data: DataSchuelerSchulbesuchsdaten }>();
+	const props = defineProps<{
+		data: PropDataSchulbesuch;
+	}>();
 
-	const aufnehmdendSchulnummer: WritableComputedRef<string | undefined> = computed({
-		get: () => props.data.daten?.aufnehmdendSchulnummer?.toString(),
-		set: (value) => void props.data.patch({ aufnehmdendSchulnummer: value })
-	});
-
-	const aufnehmdendWechseldatum: WritableComputedRef<string | undefined> = computed({
-		get: () => props.data.daten?.aufnehmdendWechseldatum?.toString(),
-		set: (value) => void props.data.patch({ aufnehmdendWechseldatum: value })
-	});
-
-	const aufnehmdendBestaetigt: WritableComputedRef<boolean | undefined> = computed({
-		get: () => props.data.daten?.aufnehmdendBestaetigt?.valueOf(),
-		set: (value) => void props.data.patch({ aufnehmdendBestaetigt: value })
-	});
+	const aufnehmdendSchulnummer = props.data.aufnehmdendSchulnummer();
+	const aufnehmdendWechseldatum = props.data.aufnehmdendWechseldatum();
+	const aufnehmdendBestaetigt = props.data.aufnehmdendBestaetigt();
 
 </script>
