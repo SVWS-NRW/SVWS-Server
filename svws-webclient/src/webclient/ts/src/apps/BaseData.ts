@@ -115,7 +115,8 @@ export abstract class BaseData<T, ListItem, U = unknown> {
 			this._daten = result;
 		} catch (error) {
 			console.log(`Fehler: ${error}`);
-			return this.unselect();
+			await this.unselect();
+			throw error;
 		}
 		return this._daten;
 	}

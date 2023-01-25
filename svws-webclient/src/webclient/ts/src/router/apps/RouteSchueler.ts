@@ -1,6 +1,6 @@
 import { JahrgangsListeEintrag, KlassenListeEintrag, KursListeEintrag, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
 import { WritableComputedRef } from "vue";
-import { RouteLocationNormalized, RouteParams } from "vue-router";
+import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
 import { RouteNodeListView } from "../RouteNodeListView";
 import { routeSchuelerAbschnitt } from "~/router/apps/schueler/RouteSchuelerAbschnitt";
@@ -102,6 +102,10 @@ export class RouteSchueler extends RouteNodeListView<ListSchueler, SchuelerListe
 
 	protected getAuswahlComputedProperty(): WritableComputedRef<SchuelerListeEintrag | undefined> {
 		return this.getSelector();
+	}
+
+	public getRoute(id: number) : RouteLocationRaw {
+		return { name: this.defaultChild!.name, params: { id: id }};
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {

@@ -15,6 +15,7 @@
 							<div class="flex items-center justify-center">
 								<svws-ui-button size="small" class="m-2" @click="auto_verteilen" :disabled="pending">Automatisch verteilen</svws-ui-button>
 							</div>
+							<svws-ui-button v-if="listSchueler.ausgewaehlt" size="small" class="m-2" @click="routeLaufbahnplanung()">Laufbahnplanung</svws-ui-button>
 						</template>
 					</div>
 				</div>
@@ -38,6 +39,7 @@
 	import { GostBlockungKurs, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, GostBlockungsergebnisSchiene,
 		GostFach, GostFachwahl, GostHalbjahr, GostJahrgang, GostKursart, GostStatistikFachwahl, LehrerListeEintrag, List, SchuelerListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, onErrorCaptured, Ref, ref, ShallowRef, WritableComputedRef } from "vue";
+	import { useRouter } from "vue-router";
 	import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
 	import { DataGostJahrgang } from "~/apps/gost/DataGostJahrgang";
 	import { DataGostKursblockung } from "~/apps/gost/DataGostKursblockung";
@@ -47,6 +49,7 @@
 	import { ListKursblockungen } from "~/apps/gost/ListKursblockungen";
 	import { ListLehrer } from "~/apps/lehrer/ListLehrer";
 	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
+	import { routeSchuelerLaufbahnplanung } from "~/router/apps/schueler/RouteSchuelerLaufbahnplanung";
 
 	const props = defineProps<{
 		item: ShallowRef<GostJahrgang | undefined>;
@@ -64,6 +67,7 @@
 		dataSchueler: DataSchuelerLaufbahndaten;
 	}>();
 
+	const router = useRouter();
 	const is_dragging: Ref<boolean> = ref(false)
 
 	onErrorCaptured((e)=>{
@@ -171,4 +175,9 @@
 		}
 	})
 
+	function routeLaufbahnplanung() {
+		if (props.listSchueler.ausgewaehlt?.id === undefined)
+			return;
+		void router.push(routeSchuelerLaufbahnplanung.getRoute(props.listSchueler.ausgewaehlt.id));
+	}
 </script>

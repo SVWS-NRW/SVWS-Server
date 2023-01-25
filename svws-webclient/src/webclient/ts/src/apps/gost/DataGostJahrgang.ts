@@ -17,11 +17,15 @@ export class DataGostJahrgang extends BaseData<GostJahrgangsdaten, GostJahrgang>
 	 */
 	public async on_select(): Promise<GostJahrgangsdaten | undefined> {
 		if (!this.selected_list_item?.abiturjahr)
-			return super.unselect();
-		this.pending = true;
-		const res = super._select((eintrag: GostJahrgang) => App.api.getGostAbiturjahrgang(App.schema, eintrag.abiturjahr?.valueOf() || -1));
-		this.pending = false;
-		return res;
+			return await super.unselect();
+		try {
+			this.pending = true;
+			const res = await super._select((eintrag: GostJahrgang) => App.api.getGostAbiturjahrgang(App.schema, eintrag.abiturjahr?.valueOf() || -1));
+			this.pending = false;
+			return res;
+		} catch (e) {
+			return undefined;
+		}
 	}
 
 	/**
@@ -38,7 +42,7 @@ export class DataGostJahrgang extends BaseData<GostJahrgangsdaten, GostJahrgang>
 		if (!daten || daten.abiturjahr === null)
 			return false;
 		const abijahr = daten.abiturjahr.valueOf();
-		return this._patch(data, () => App.api.patchGostAbiturjahrgang(data as GostJahrgangsdaten, App.schema, abijahr));
+		return await this._patch(data, () => App.api.patchGostAbiturjahrgang(data as GostJahrgangsdaten, App.schema, abijahr));
 	}
 
 	/** Erstellt einen neuen Abiturjahrgang für die Gost mittels übergebener Jahrgang-ID

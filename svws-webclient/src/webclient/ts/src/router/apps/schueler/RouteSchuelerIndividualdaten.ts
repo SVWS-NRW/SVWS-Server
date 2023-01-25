@@ -2,7 +2,7 @@ import { RouteNode } from "~/router/RouteNode";
 import { SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
 import { DataKatalogFahrschuelerarten } from "~/apps/schueler/DataKatalogFahrschuelerarten";
 import { DataKatalogFoerderschwerpunkte } from "~/apps/schueler/DataKatalogFoerderschwerpunkte";
-import { RouteLocationNormalized, RouteParams } from "vue-router";
+import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { RouteSchueler, routeSchueler } from "../RouteSchueler";
 
 const SSchuelerIndividualdaten = () => import("~/components/schueler/individualdaten/SSchuelerIndividualdaten.vue");
@@ -44,6 +44,10 @@ export class RouteSchuelerIndividualdaten extends RouteNode<RouteDataSchuelerInd
 			}
 			this.data.item = item;
 		}
+	}
+
+	public getRoute(id: number) : RouteLocationRaw {
+		return { name: this.name, params: { id: id }};
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {

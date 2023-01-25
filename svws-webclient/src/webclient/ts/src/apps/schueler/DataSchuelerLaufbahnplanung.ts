@@ -190,7 +190,11 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 	 * @returns {Promise<SchuelerStammdaten>} Die Daten als Promise
 	 */
 	public async on_select(): Promise<Abiturdaten | undefined> {
-		await super._select((eintrag: SchuelerListeEintrag) => App.api.getGostSchuelerLaufbahnplanung(App.schema, eintrag.id));
+		try {
+			await super._select((eintrag: SchuelerListeEintrag) => App.api.getGostSchuelerLaufbahnplanung(App.schema, eintrag.id));
+		} catch(e) {
+			return undefined;
+		}
 		if (!this._daten)
 			return undefined;
 		if (!this.gostFaecher.size() && this.hasGostlaufbahn() && this.abiturjahr !== undefined && this.abiturjahr !== -1) {
