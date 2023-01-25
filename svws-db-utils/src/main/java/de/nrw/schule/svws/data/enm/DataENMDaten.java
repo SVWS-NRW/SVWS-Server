@@ -208,6 +208,13 @@ public class DataENMDaten extends DataManager<Long> {
     			}
     			lerngruppe = manager.getLerngruppe(strLerngruppenID);
     			lerngruppe.lehrerID.add(schuelerabschnitt.lehrerID);
+				if (manager.getLehrer(schuelerabschnitt.lehrerID) == null) {
+					DTOLehrer dtoFachlehrer = mapLehrer.get(schuelerabschnitt.lehrerID);
+					if (dtoFachlehrer != null) {
+						manager.addLehrer(dtoFachlehrer.ID, dtoFachlehrer.Kuerzel, 
+								dtoFachlehrer.Nachname, dtoFachlehrer.Vorname, dtoFachlehrer.Geschlecht, dtoFachlehrer.eMailDienstlich);
+					}
+				}
 				// TODO ggf. im Team-Teaching unterrichtende Lehrer hinzufügen (Zusatzkraft in Leistungsdaten bzw. weitere Lehrkraft bei Kursen)
     		}
     		
