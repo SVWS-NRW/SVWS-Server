@@ -1,4 +1,4 @@
-import { RouteParams } from "vue-router";
+import { RouteLocationRaw, RouteParams } from "vue-router";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteSchueler, routeSchueler } from "~/router/apps/RouteSchueler";
 import { routeSchuelerLeistungenDaten } from "~/router/apps/schueler/leistungsdaten/RouteSchuelerLeistungenDaten";
@@ -15,10 +15,15 @@ export class RouteSchuelerLeistungen extends RouteNode<unknown, RouteSchueler> {
 		super.children = [
 			routeSchuelerLeistungenDaten
 		];
+		super.defaultChild = routeSchuelerLeistungenDaten;
 	}
 
 	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
 		return { name: routeSchuelerLeistungenDaten.name, params: to_params };
+	}
+
+	public getRoute(id: number) : RouteLocationRaw {
+		return { name: this.defaultChild!.name, params: { id: id }};
 	}
 
 }

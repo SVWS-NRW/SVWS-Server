@@ -101,20 +101,20 @@ export class RouteGostKursplanungSchueler extends RouteNode<RouteDataGostKurspla
 		}
 	}
 
-	public getProps(to: RouteLocationNormalized): Record<string, any> {
-		return {
-			...routeGostKursplanungBlockung.getProps(to),
-			listSchueler: this.data.listSchueler,
-			dataSchueler: this.data.dataSchueler,
-		}
-	}
-
 	public getRoute(abiturjahr: number | undefined, halbjahr: number | undefined, idblockung: number | undefined, idergebnis: number | undefined, idschueler: number | undefined) : RouteLocationRaw {
 		if ((abiturjahr === undefined) || (halbjahr === undefined) || (idblockung === undefined) || (idergebnis === undefined))
 			throw new Error("Abiturjahr, Halbjahr und die ID der Blockung und des Ergebnisses müssen für diese Route definiert sein.");
 		if (idschueler === undefined)
 			return { name: this.name, params: { abiturjahr: abiturjahr, halbjahr: halbjahr, idblockung: idblockung, idergebnis: idergebnis }};
 		return { name: this.name, params: { abiturjahr: abiturjahr, halbjahr: halbjahr, idblockung: idblockung, idergebnis: idergebnis, idschueler : idschueler }};
+	}
+
+	public getProps(to: RouteLocationNormalized): Record<string, any> {
+		return {
+			...routeGostKursplanungBlockung.getProps(to),
+			listSchueler: this.data.listSchueler,
+			dataSchueler: this.data.dataSchueler,
+		}
 	}
 
 	public getSelector() : WritableComputedRef<SchuelerListeEintrag | undefined> {

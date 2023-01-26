@@ -1,6 +1,6 @@
 import { GostJahrgang } from "@svws-nrw/svws-core-ts";
 import { computed, shallowRef, ShallowRef, WritableComputedRef } from "vue";
-import { RouteLocationNormalized, RouteParams, RouteRecordRaw, useRoute, useRouter } from "vue-router";
+import { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteRecordRaw, useRoute, useRouter } from "vue-router";
 import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
 import { DataGostJahrgang } from "~/apps/gost/DataGostJahrgang";
 import { ListGost } from "~/apps/gost/ListGost";
@@ -81,6 +81,10 @@ export class RouteGost extends RouteNodeListView<ListGost, GostJahrgang, RouteDa
 
 	protected getAuswahlComputedProperty(): WritableComputedRef<GostJahrgang | undefined> {
 		return this.getSelectorByAbiturjahr(this.liste);
+	}
+
+	public getRoute() : RouteLocationRaw {
+		return { name: this.defaultChild!.name, params: { abiturjahr: -1 }};
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {

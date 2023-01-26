@@ -1,6 +1,6 @@
 import { FaecherListeEintrag, LehrerListeEintrag, SchuelerLernabschnittListeEintrag } from "@svws-nrw/svws-core-ts";
 import { WritableComputedRef } from "vue";
-import { RouteLocationNormalized, RouteParams, useRoute, useRouter } from "vue-router";
+import { RouteLocationNormalized, RouteLocationRaw, RouteParams, useRoute, useRouter } from "vue-router";
 import { RouteNodeListView } from "~/router/RouteNodeListView";
 import { routeSchueler } from "~/router/apps/RouteSchueler";
 import { computed } from "vue";
@@ -99,6 +99,10 @@ export class RouteSchuelerLeistungenDaten extends RouteNodeListView<ListAbschnit
 				}
 			}
 		});
+	}
+
+	public getRoute(id: number, idLernabschnitt: number) : RouteLocationRaw {
+		return { name: this.name, params: { id, idLernabschnitt }};
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {

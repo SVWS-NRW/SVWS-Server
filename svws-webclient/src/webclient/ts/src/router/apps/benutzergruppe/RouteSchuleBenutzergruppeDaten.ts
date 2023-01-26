@@ -2,7 +2,7 @@ import { RouteNode } from "~/router/RouteNode";
 import { BenutzergruppeListeEintrag } from "@svws-nrw/svws-core-ts";
 import { DataBenutzergruppe } from "~/apps/schule/benutzerverwaltung/DataBenutzergruppe";
 import { ListBenutzer } from "~/apps/schule/benutzerverwaltung/ListBenutzer";
-import { RouteLocationNormalized, RouteParams } from "vue-router";
+import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { RouteSchuleBenutzergruppe, routeSchuleBenutzergruppe } from "../RouteSchuleBenutzergruppe";
 
 const SBenutzergruppe = () => import("~/components/schule/benutzergruppen/daten/SBenutzergruppe.vue");
@@ -41,6 +41,10 @@ export class RouteSchuleBenutzergruppeDaten extends RouteNode<RouteDataSchuleBen
 			this.data.item = item;
 			await this.data.daten.select(this.data.item);
 		}
+	}
+
+	public getRoute(id: number) : RouteLocationRaw {
+		return { name: this.name, params: { id: id }};
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {

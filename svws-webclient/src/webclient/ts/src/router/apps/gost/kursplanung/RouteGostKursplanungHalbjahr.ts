@@ -101,20 +101,20 @@ export class RouteGostKursplanungHalbjahr extends RouteNode<RouteDataGostKurspla
 		}
 	}
 
-	public getProps(to: RouteLocationNormalized): Record<string, any> {
-		return {
-			...routeGostKursplanung.getProps(to),
-			listBlockungen: this.data.listBlockungen,
-			blockung: this.data.dataKursblockung
-		}
-	}
-
 	public getRoute(abiturjahr: number | undefined, halbjahr: number | undefined, idblockung: number | undefined) : RouteLocationRaw {
 		if ((abiturjahr === undefined) || (halbjahr === undefined))
 			throw new Error("Abiturjahr und Halbjahr müssen für diese Route definiert sein.");
 		if (idblockung === undefined)
 			return { name: this.name, params: { abiturjahr: abiturjahr, halbjahr: halbjahr }};
 		return { name: this.name, params: { abiturjahr: abiturjahr, halbjahr: halbjahr, idblockung: idblockung }};
+	}
+
+	public getProps(to: RouteLocationNormalized): Record<string, any> {
+		return {
+			...routeGostKursplanung.getProps(to),
+			listBlockungen: this.data.listBlockungen,
+			blockung: this.data.dataKursblockung
+		}
 	}
 
 	public getSelector(onSet?: (value : GostBlockungListeneintrag | undefined) => void) : WritableComputedRef<GostBlockungListeneintrag | undefined> {

@@ -1,5 +1,5 @@
 import { SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
-import { RouteLocationNormalized, RouteParams } from "vue-router";
+import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { DataBetriebsstammdaten } from "~/apps/schueler/DataBetriebsstammdaten";
 import { ListSchuelerBetriebsdaten } from "~/apps/schueler/ListSchuelerBetriebsdaten";
 import { RouteNode } from "~/router/RouteNode";
@@ -41,6 +41,10 @@ export class RouteSchuelerAdressen extends RouteNode<RouteDataSchuelerAdressen, 
 			await this.data.listSchuelerbetriebe.update_list(this.data.item.id);
 			await this.data.betriebsStammdaten.select(this.data.listSchuelerbetriebe.ausgewaehlt);
 		}
+	}
+
+	public getRoute(id: number) : RouteLocationRaw {
+		return { name: this.name, params: { id: id }};
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {

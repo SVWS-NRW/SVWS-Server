@@ -1,5 +1,5 @@
 import { FaecherListeEintrag } from "@svws-nrw/svws-core-ts";
-import { RouteLocationNormalized, RouteParams } from "vue-router";
+import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { DataFach } from "~/apps/kataloge/faecher/DataFach";
 import { RouteNode } from "~/router/RouteNode";
 import { routeKatalogFaecher, RouteKatalogFaecher } from "../RouteKatalogFaecher";
@@ -38,6 +38,10 @@ export class RouteFaecherDaten extends RouteNode<RouteDataFaecherDaten, RouteKat
 			this.data.item = item;
 			await this.data.daten.select(this.data.item);
 		}
+	}
+
+	public getRoute(id: number) : RouteLocationRaw {
+		return { name: this.name, params: { id: id }};
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {

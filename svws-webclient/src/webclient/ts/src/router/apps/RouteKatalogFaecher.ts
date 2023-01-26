@@ -1,6 +1,6 @@
 import { FaecherListeEintrag } from "@svws-nrw/svws-core-ts";
 import { WritableComputedRef } from "vue";
-import { RouteLocationNormalized, RouteParams } from "vue-router";
+import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { ListFaecher } from "~/apps/kataloge/faecher/ListFaecher";
 import { RouteNodeListView } from "~/router/RouteNodeListView";
 import { routeFaecherDaten } from "~/router/apps/faecher/RouteKatalogFaecherDaten";
@@ -64,6 +64,10 @@ export class RouteKatalogFaecher extends RouteNodeListView<ListFaecher, FaecherL
 
 	protected getAuswahlComputedProperty(): WritableComputedRef<FaecherListeEintrag | undefined> {
 		return this.getSelector();
+	}
+
+	public getRoute(id: number) : RouteLocationRaw {
+		return { name: this.defaultChild!.name, params: { id: id }};
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {

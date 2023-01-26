@@ -15,11 +15,10 @@ import { routeStatistik } from "~/router/apps/RouteStatistik";
 import { RouteNode } from "~/router/RouteNode";
 
 import SApp from "~/components/SApp.vue";
+import { RouteLocationRaw } from "vue-router";
 
 
 export class RouteApp extends RouteNode<unknown, any> {
-
-	protected defaultChildNode = undefined;
 
 	public constructor() {
 		super("app", "/", SApp);
@@ -50,6 +49,11 @@ export class RouteApp extends RouteNode<unknown, any> {
 			routeGost,
 			routeStatistik
 		];
+		super.defaultChild = routeSchueler;
+	}
+
+	public getRoute(): RouteLocationRaw {
+		return { name: this.defaultChild!.name };
 	}
 
 }

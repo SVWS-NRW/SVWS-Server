@@ -1,5 +1,5 @@
 import { BenutzerListeEintrag } from "@svws-nrw/svws-core-ts";
-import { RouteLocationNormalized, RouteParams } from "vue-router";
+import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { routeSchuleBenutzerDaten } from "~/router/apps/benutzer/RouteSchuleBenutzerDaten";
 import { RouteNodeListView } from "~/router/RouteNodeListView";
 import { ListBenutzer } from "~/apps/schule/benutzerverwaltung/ListBenutzer";
@@ -57,6 +57,10 @@ export class RouteSchuleBenutzer extends RouteNodeListView<ListBenutzer, Benutze
 
 	protected getAuswahlComputedProperty(): WritableComputedRef<BenutzerListeEintrag | undefined> {
 		return this.getSelector();
+	}
+
+	public getRoute(id: number) : RouteLocationRaw {
+		return { name: this.defaultChild!.name, params: { id: id }};
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {

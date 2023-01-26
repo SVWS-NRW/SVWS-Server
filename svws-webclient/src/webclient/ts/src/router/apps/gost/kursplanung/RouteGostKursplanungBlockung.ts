@@ -113,6 +113,14 @@ export class RouteGostKursplanungBlockung extends RouteNode<RouteDataGostKurspla
 			return routeGostKursplanungSchueler.getRoute(abiturjahr, halbjahr.id, ergebnisEintrag.blockungID, ergebnisEintrag.id, undefined);
 	}
 
+	public getRoute(abiturjahr: number | undefined, halbjahr: number | undefined, idblockung: number | undefined, idergebnis: number | undefined) : RouteLocationRaw {
+		if ((abiturjahr === undefined) || (halbjahr === undefined) || (idblockung === undefined))
+			throw new Error("Abiturjahr, Halbjahr und die ID der Blockung müssen für diese Route definiert sein.");
+		if (idergebnis === undefined)
+			return { name: this.name, params: { abiturjahr: abiturjahr, halbjahr: halbjahr, idblockung: idblockung }};
+		return { name: this.name, params: { abiturjahr: abiturjahr, halbjahr: halbjahr, idblockung: idblockung, idergebnis: idergebnis }};
+	}
+
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
 			...routeGostKursplanungHalbjahr.getProps(to),
@@ -121,14 +129,6 @@ export class RouteGostKursplanungBlockung extends RouteNode<RouteDataGostKurspla
 			mapLehrer: this.data.mapLehrer,
 			fachwahlen: this.data.fachwahlen
 		}
-	}
-
-	public getRoute(abiturjahr: number | undefined, halbjahr: number | undefined, idblockung: number | undefined, idergebnis: number | undefined) : RouteLocationRaw {
-		if ((abiturjahr === undefined) || (halbjahr === undefined) || (idblockung === undefined))
-			throw new Error("Abiturjahr, Halbjahr und die ID der Blockung müssen für diese Route definiert sein.");
-		if (idergebnis === undefined)
-			return { name: this.name, params: { abiturjahr: abiturjahr, halbjahr: halbjahr, idblockung: idblockung }};
-		return { name: this.name, params: { abiturjahr: abiturjahr, halbjahr: halbjahr, idblockung: idblockung, idergebnis: idergebnis }};
 	}
 
 	public getSelector() : WritableComputedRef<GostBlockungsergebnisListeneintrag | undefined> {

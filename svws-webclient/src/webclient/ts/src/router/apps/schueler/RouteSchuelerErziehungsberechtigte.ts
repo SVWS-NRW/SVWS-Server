@@ -1,5 +1,5 @@
 import { SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
-import { RouteLocationNormalized, RouteParams } from "vue-router";
+import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { DataKatalogErzieherarten } from "~/apps/schueler/DataKatalogErzieherarten";
 import { DataSchuelerErzieherStammdaten } from "~/apps/schueler/DataSchuelerErzieherStammdaten";
 import { RouteNode } from "~/router/RouteNode";
@@ -42,6 +42,10 @@ export class RouteSchuelerErziehungsberechtigte extends RouteNode<RouteDataSchue
 			await this.data.daten.select(this.data.item);
 			await this.data.erzieherarten.select(undefined);
 		}
+	}
+
+	public getRoute(id: number) : RouteLocationRaw {
+		return { name: this.name, params: { id: id }};
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {

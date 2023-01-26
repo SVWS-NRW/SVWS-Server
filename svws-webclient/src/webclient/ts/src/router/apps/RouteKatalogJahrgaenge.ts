@@ -1,6 +1,6 @@
 import { JahrgangsListeEintrag } from "@svws-nrw/svws-core-ts";
 import { WritableComputedRef } from "vue";
-import { RouteLocationNormalized, RouteParams } from "vue-router";
+import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { RouteNodeListView } from "~/router/RouteNodeListView";
 import { routeKatalogJahrgaengeDaten } from "~/router/apps/jahrgaenge/RouteKatalogJahrgaengeDaten";
 import { ListJahrgaenge } from "~/apps/kataloge/jahrgaenge/ListJahrgaenge";
@@ -63,6 +63,10 @@ export class RouteKatalogJahrgaenge extends RouteNodeListView<ListJahrgaenge, Ja
 
 	protected getAuswahlComputedProperty(): WritableComputedRef<JahrgangsListeEintrag | undefined> {
 		return this.getSelector();
+	}
+
+	public getRoute(id: number) : RouteLocationRaw {
+		return { name: this.defaultChild!.name, params: { id: id }};
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {

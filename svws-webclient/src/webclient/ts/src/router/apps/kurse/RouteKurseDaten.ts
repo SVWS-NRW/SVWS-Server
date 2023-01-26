@@ -2,7 +2,7 @@ import { RouteNode } from "~/router/RouteNode";
 import { RouteKurse, routeKurse } from "~/router/apps/RouteKurse";
 import { KursListeEintrag } from "@svws-nrw/svws-core-ts";
 import { DataKurs } from "~/apps/kurse/DataKurs";
-import { RouteLocationNormalized, RouteParams } from "vue-router";
+import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
 export class RouteDataKurseDaten {
 	item: KursListeEintrag | undefined = undefined;
@@ -38,6 +38,10 @@ export class RouteKurseDaten extends RouteNode<RouteDataKurseDaten, RouteKurse> 
 			this.data.item = item;
 			await this.data.daten.select(this.data.item);
 		}
+	}
+
+	public getRoute(id: number) : RouteLocationRaw {
+		return { name: this.name, params: { id: id }};
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {

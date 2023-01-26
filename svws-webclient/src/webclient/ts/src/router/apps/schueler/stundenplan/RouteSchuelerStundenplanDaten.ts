@@ -1,6 +1,6 @@
 import { StundenplanListeEintrag } from "@svws-nrw/svws-core-ts";
 import { WritableComputedRef } from "vue";
-import { RouteLocationNormalized, RouteParams, useRoute, useRouter } from "vue-router";
+import { RouteLocationNormalized, RouteLocationRaw, RouteParams, useRoute, useRouter } from "vue-router";
 import { DataStundenplan } from "~/apps/schueler/DataStundenplan";
 import { ListStundenplaene } from "~/apps/schueler/ListStundenplaene";
 import { RouteNodeListView } from "~/router/RouteNodeListView";
@@ -84,6 +84,10 @@ export class RouteSchuelerStundenplanDaten extends RouteNodeListView<ListStunden
 			}
 		});
 		return selected;
+	}
+
+	public getRoute(id: number, idStundenplan: number) : RouteLocationRaw {
+		return { name: this.name, params: { id, idStundenplan }};
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {

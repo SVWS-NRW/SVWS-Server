@@ -1,5 +1,5 @@
 import { computed, WritableComputedRef } from "vue";
-import { RouteLocationNormalized } from "vue-router";
+import { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
 import { RouteApp } from "~/router/RouteApp";
 import { RouteNodeListView } from "~/router/RouteNodeListView";
 import { routeKatalogFaecher } from "~/router/apps/RouteKatalogFaecher";
@@ -12,8 +12,6 @@ const SKatalogeAuswahl = () => import("~/components/kataloge/SKatalogeAuswahl.vu
 const SKatalogeApp = () => import("~/components/kataloge/SKatalogeApp.vue")
 
 export class RouteKataloge extends RouteNodeListView<ListNone, unknown, unknown, RouteApp> {
-
-	protected defaultChildNode = undefined;
 
 	public constructor() {
 		super("kataloge", "/kataloge", SKatalogeAuswahl, SKatalogeApp);
@@ -30,11 +28,16 @@ export class RouteKataloge extends RouteNodeListView<ListNone, unknown, unknown,
 			// TODO { title: "Haltestellen", value: "haltestellen" },
 			// TODO { title: "Betriebe", value: "betriebe" }
 		];
+		super.defaultChild = routeKatalogFaecher;
 	}
 
 	protected getAuswahlComputedProperty(): WritableComputedRef<undefined> {
 		// TODO
 		return computed({ get(): undefined { return undefined; }, set(value: undefined) { }});
+	}
+
+	public getRoute(id: number) : RouteLocationRaw {
+		return { name: this.defaultChild!.name, params: { id: id }};
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {

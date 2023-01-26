@@ -1,5 +1,5 @@
 import { FoerderschwerpunktEintrag } from "@svws-nrw/svws-core-ts";
-import { RouteLocationNormalized, RouteParams } from "vue-router";
+import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { DataFoerderschwerpunkt } from "~/apps/kataloge/foerderschwerpunkt/DataFoerderschwerpunkt";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteKatalogFoerderschwerpunkte, routeKatalogFoerderschwerpunkte } from "~/router/apps/RouteKatalogFoerderschwerpunkte";
@@ -38,6 +38,10 @@ export class RouteKatalogFoerderschwerpunkteDaten extends RouteNode<RouteDataKat
 			this.data.item = item;
 			await this.data.daten.select(this.data.item);
 		}
+	}
+
+	public getRoute(id: number) : RouteLocationRaw {
+		return { name: this.name, params: { id: id }};
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {

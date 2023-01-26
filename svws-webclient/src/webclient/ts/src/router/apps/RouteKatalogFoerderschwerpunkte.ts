@@ -1,6 +1,6 @@
 import { FoerderschwerpunktEintrag } from "@svws-nrw/svws-core-ts";
 import { WritableComputedRef } from "vue";
-import { RouteLocationNormalized, RouteParams } from "vue-router";
+import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { RouteNodeListView } from "~/router/RouteNodeListView";
 import { routeKatalogFoerderschwerpunkteDaten } from "~/router/apps/foerderschwerpunkte/RouteKatalogFoerderschwerpunkteDaten";
 import { ListFoerderschwerpunkte } from "~/apps/kataloge/foerderschwerpunkt/ListFoerderschwerpunkte";
@@ -58,6 +58,10 @@ export class RouteKatalogFoerderschwerpunkte extends RouteNodeListView<ListFoerd
 
 	protected getAuswahlComputedProperty(): WritableComputedRef<FoerderschwerpunktEintrag | undefined> {
 		return this.getSelector();
+	}
+
+	public getRoute(id: number) : RouteLocationRaw {
+		return { name: this.defaultChild!.name, params: { id: id }};
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {

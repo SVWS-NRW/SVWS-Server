@@ -1,5 +1,5 @@
 import { computed, WritableComputedRef } from "vue";
-import { RouteLocationNormalized } from "vue-router";
+import { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
 import { RouteApp } from "~/router/RouteApp";
 import { RouteNodeListView } from "~/router/RouteNodeListView";
 import { routeSchuleBenutzer } from "~/router/apps/RouteSchuleBenutzer";
@@ -10,8 +10,6 @@ const SSchuleAuswahl = () => import("~/components/schule/SSchuleAuswahl.vue")
 const SSchuleApp = () => import("~/components/schule/SSchuleApp.vue")
 
 export class RouteSchule extends RouteNodeListView<ListNone, unknown, unknown, RouteApp> {
-
-	protected defaultChildNode = undefined;
 
 	public constructor() {
 		super("schule", "/schule", SSchuleAuswahl, SSchuleApp);
@@ -31,11 +29,16 @@ export class RouteSchule extends RouteNodeListView<ListNone, unknown, unknown, R
 			routeSchuleBenutzergruppe
 			// TODO { title: "Hilfe", value: "hilfe" }
 		];
+		super.defaultChild = routeSchuleBenutzer;
 	}
 
 	protected getAuswahlComputedProperty(): WritableComputedRef<undefined> {
 		// TODO
 		return computed({ get(): undefined { return undefined; }, set(value: undefined) { }});
+	}
+
+	public getRoute(id: number) : RouteLocationRaw {
+		return { name: this.defaultChild!.name, params: { id: id }};
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {

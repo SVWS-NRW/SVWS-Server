@@ -1,6 +1,6 @@
 import { ReligionEintrag } from "@svws-nrw/svws-core-ts";
 import { WritableComputedRef } from "vue";
-import { RouteLocationNormalized, RouteParams } from "vue-router";
+import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { RouteNodeListView } from "~/router/RouteNodeListView";
 import { routeKatalogReligionDaten } from "~/router/apps/religion/RouteKatalogReligionDaten";
 import { ListReligionen } from "~/apps/kataloge/religionen/ListReligionen";
@@ -58,6 +58,10 @@ export class RouteKatalogReligion extends RouteNodeListView<ListReligionen, Reli
 
 	protected getAuswahlComputedProperty(): WritableComputedRef<ReligionEintrag | undefined> {
 		return this.getSelector();
+	}
+
+	public getRoute(id: number) : RouteLocationRaw {
+		return { name: this.defaultChild!.name, params: { id: id }};
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {

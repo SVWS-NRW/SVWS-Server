@@ -1,6 +1,6 @@
 import { KlassenListeEintrag, LehrerListeEintrag } from "@svws-nrw/svws-core-ts";
 import { WritableComputedRef } from "vue";
-import { RouteLocationNormalized, RouteParams } from "vue-router";
+import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { RouteNodeListView } from "~/router/RouteNodeListView";
 import { routeKlassenDaten } from "~/router/apps/klassen/RouteKlassenDaten";
 import { ListKlassen } from "~/apps/klassen/ListKlassen";
@@ -69,6 +69,10 @@ export class RouteKlassen extends RouteNodeListView<ListKlassen, KlassenListeEin
 
 	protected getAuswahlComputedProperty(): WritableComputedRef<KlassenListeEintrag | undefined> {
 		return this.getSelector();
+	}
+
+	public getRoute(id: number) : RouteLocationRaw {
+		return { name: this.defaultChild!.name, params: { id: id }};
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {

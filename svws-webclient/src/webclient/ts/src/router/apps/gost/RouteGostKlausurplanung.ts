@@ -1,4 +1,4 @@
-import { RouteParams, RouteRecordRaw, useRouter } from "vue-router";
+import { RouteLocationRaw, RouteParams, RouteRecordRaw, useRouter } from "vue-router";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteGost, routeGost } from "~/router/apps/RouteGost";
 import { routeGostKlausurplanungKlausurdaten } from "./klausurplanung/RouteGostKlausurplanungKlausurdaten";
@@ -62,6 +62,10 @@ export class RouteGostKlausurplanung extends RouteNode<unknown, RouteGost> {
 			}
 		});
 		return selectedRoute;
+	}
+
+	public getRoute(abiturjahr: number) : RouteLocationRaw {
+		return { name: this.defaultChild!.name, params: { abiturjahr }};
 	}
 
 }

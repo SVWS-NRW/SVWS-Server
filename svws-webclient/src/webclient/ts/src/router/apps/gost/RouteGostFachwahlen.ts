@@ -1,6 +1,6 @@
 import { RouteNode } from "~/router/RouteNode";
 import { RouteGost, routeGost } from "~/router/apps/RouteGost";
-import { RouteLocationNormalized, RouteParams } from "vue-router";
+import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { GostJahrgang, GostStatistikFachwahl, List, Vector } from "@svws-nrw/svws-core-ts";
 import { App } from "~/apps/BaseApp";
 
@@ -58,6 +58,9 @@ export class RouteGostFachwahlen extends RouteNode<RouteDataGostKursplanung, Rou
 		}
 	}
 
+	public getRoute(abiturjahr: number) : RouteLocationRaw {
+		return { name: this.name, params: { abiturjahr }};
+	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {

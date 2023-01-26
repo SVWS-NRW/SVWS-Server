@@ -1,5 +1,5 @@
 import { JahrgangsListeEintrag, KlassenListeEintrag } from "@svws-nrw/svws-core-ts";
-import { RouteLocationNormalized, RouteParams } from "vue-router";
+import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { ListJahrgaenge } from "~/apps/kataloge/jahrgaenge/ListJahrgaenge";
 import { DataKlasse } from "~/apps/klassen/DataKlasse";
 import { RouteNode } from "~/router/RouteNode";
@@ -47,6 +47,10 @@ export class RouteKlassenDaten extends RouteNode<RouteDataKlassenDaten, RouteKla
 			this.data.item = item;
 			await this.data.daten.select(this.data.item);
 		}
+	}
+
+	public getRoute(id: number) : RouteLocationRaw {
+		return { name: this.name, params: { id: id }};
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {

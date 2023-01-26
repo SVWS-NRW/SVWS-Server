@@ -2,7 +2,7 @@ import { RouteNode } from "~/router/RouteNode";
 import { RouteGost, routeGost } from "~/router/apps/RouteGost";
 import { DataGostFachkombinationen } from "~/apps/gost/DataGostFachkombinationen";
 import { GostJahrgang } from "@svws-nrw/svws-core-ts";
-import { RouteLocationNormalized, RouteParams } from "vue-router";
+import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
 export class RouteDataGostKursplanung  {
 	item: GostJahrgang | undefined = undefined;
@@ -38,6 +38,10 @@ export class RouteGostFaecher extends RouteNode<RouteDataGostKursplanung, RouteG
 			this.data.item = item;
 			await this.data.dataFachkombinationen.select(this.data.item);
 		}
+	}
+
+	public getRoute(abiturjahr: number) : RouteLocationRaw {
+		return { name: this.name, params: { abiturjahr }};
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {

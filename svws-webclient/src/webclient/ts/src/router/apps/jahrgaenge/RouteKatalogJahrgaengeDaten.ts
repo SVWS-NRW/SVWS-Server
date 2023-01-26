@@ -2,7 +2,7 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeKatalogJahrgaenge, RouteKatalogJahrgaenge } from "~/router/apps/RouteKatalogJahrgaenge";
 import { JahrgangsListeEintrag } from "@svws-nrw/svws-core-ts";
 import { DataJahrgang } from "~/apps/kataloge/jahrgaenge/DataJahrgang";
-import { RouteLocationNormalized, RouteParams } from "vue-router";
+import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
 export class RouteDataKatalogJahrgaengeDaten {
 	item: JahrgangsListeEintrag | undefined = undefined;
@@ -38,6 +38,10 @@ export class RouteKatalogJahrgaengeDaten extends RouteNode<RouteDataKatalogJahrg
 			this.data.item = item;
 			await this.data.daten.select(this.data.item);
 		}
+	}
+
+	public getRoute(id: number) : RouteLocationRaw {
+		return { name: this.name, params: { id: id }};
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {

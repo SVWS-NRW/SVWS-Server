@@ -63,17 +63,17 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 			return routeGostKursplanungHalbjahr.getRoute(abiturjahr, halbjahr.id, undefined);
 	}
 
+	public getRoute(abiturjahr: number, halbjahr?: number) : RouteLocationRaw {
+		if (halbjahr === undefined)
+			return { name: this.name, params: { abiturjahr: abiturjahr }};
+		return { name: this.name, params: { abiturjahr: abiturjahr, halbjahr: halbjahr }};
+	}
+
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
 			...routeGost.getProps(to),
 			halbjahr: this.data.halbjahr
 		}
-	}
-
-	public getRoute(abiturjahr: number, halbjahr?: number) : RouteLocationRaw {
-		if (halbjahr === undefined)
-			return { name: this.name, params: { abiturjahr: abiturjahr }};
-		return { name: this.name, params: { abiturjahr: abiturjahr, halbjahr: halbjahr }};
 	}
 
 	public getSelector() : WritableComputedRef<GostHalbjahr> {

@@ -1,4 +1,4 @@
-import { RouteLocationNormalized, RouteParams } from "vue-router";
+import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteSchueler, routeSchueler } from "~/router/apps/RouteSchueler";
 import { SchuelerSchulbesuchsdaten } from "@svws-nrw/svws-core-ts";
@@ -53,6 +53,10 @@ export class RouteSchuelerSchulbesuch extends RouteNode<RouteDataSchuelerSchulbe
 			const tmp = parseInt(to_params.id as string);
 			await this.data.onSelect(this.parent!.liste.liste.find(s => s.id === tmp)?.id);
 		}
+	}
+
+	public getRoute(id: number) : RouteLocationRaw {
+		return { name: this.name, params: { id: id }};
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {

@@ -1,5 +1,5 @@
 import { computed, ComputedRef, ref, Ref } from "vue";
-import { RouteComponent, RouteLocationNormalized, RouteParams, RouteRecordName, RouteRecordRaw, useRoute } from "vue-router";
+import { RouteComponent, RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteRecordName, RouteRecordRaw, useRoute } from "vue-router";
 
 /**
  * Diese abstrakte Klasse ist die Basisklasse aller Knoten für
@@ -84,8 +84,15 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
 	}
 
 	/**
-     * Gibt den Text der Route zurück, welcher für die Visualisierung genutzt wird (z.B. bei Tabs).
-     */
+	 * Gibt die Route zurück, die die notwendigen Parameter mitbringt.
+	 *
+	 * @param {any[]} args die Parameter
+	 */
+	public abstract getRoute(...args: any[]) : RouteLocationRaw;
+
+	/**
+   * Gibt den Text der Route zurück, welcher für die Visualisierung genutzt wird (z.B. bei Tabs).
+   */
 	public get text() : string {
 		return (this._record.meta as { text: string }).text;
 	}

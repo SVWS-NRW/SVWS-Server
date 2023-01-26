@@ -2,7 +2,7 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeSchuleBenutzer, RouteSchuleBenutzer } from "~/router/apps/RouteSchuleBenutzer";
 import { BenutzerListeEintrag } from "@svws-nrw/svws-core-ts";
 import { DataBenutzer } from "~/apps/schule/benutzerverwaltung/DataBenutzer";
-import { RouteLocationNormalized, RouteParams } from "vue-router";
+import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { ListBenutzergruppe } from "~/apps/schule/benutzerverwaltung/ListBenutzergruppe";
 
 const SBenutzer = () => import("~/components/schule/benutzer/daten/SBenutzer.vue");
@@ -41,6 +41,10 @@ export class RouteSchuleBenutzerDaten extends RouteNode<RouteDataSchuleBenutzerD
 			this.data.item = item;
 			await this.data.daten.select(this.data.item);
 		}
+	}
+
+	public getRoute(id: number) : RouteLocationRaw {
+		return { name: this.name, params: { id: id }};
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {

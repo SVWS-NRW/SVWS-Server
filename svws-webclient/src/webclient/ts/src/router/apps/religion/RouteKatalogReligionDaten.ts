@@ -1,5 +1,5 @@
 import { ReligionEintrag } from "@svws-nrw/svws-core-ts";
-import { RouteLocationNormalized, RouteParams } from "vue-router";
+import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { DataReligion } from "~/apps/kataloge/religionen/DataReligion";
 import { RouteNode } from "~/router/RouteNode";
 import { routeKatalogReligion, RouteKatalogReligion } from "../RouteKatalogReligion";
@@ -38,6 +38,10 @@ export class RouteKatalogReligionDaten extends RouteNode<RouteDataKlassenDaten, 
 			this.data.item = item;
 			await this.data.daten.select(this.data.item);
 		}
+	}
+
+	public getRoute(id: number) : RouteLocationRaw {
+		return { name: this.name, params: { id: id }};
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {

@@ -1,5 +1,5 @@
 import { BenutzergruppeListeEintrag } from "@svws-nrw/svws-core-ts";
-import { RouteLocationNormalized, RouteParams } from "vue-router";
+import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { routeSchuleBenutzergruppeDaten } from "~/router/apps/benutzergruppe/RouteSchuleBenutzergruppeDaten";
 import { RouteNodeListView } from "~/router/RouteNodeListView";
 import { ListBenutzergruppe } from "~/apps/schule/benutzerverwaltung/ListBenutzergruppe";
@@ -57,6 +57,10 @@ export class RouteSchuleBenutzergruppe extends RouteNodeListView<ListBenutzergru
 
 	protected getAuswahlComputedProperty(): WritableComputedRef<BenutzergruppeListeEintrag | undefined> {
 		return this.getSelector();
+	}
+
+	public getRoute(id: number) : RouteLocationRaw {
+		return { name: this.defaultChild!.name, params: { id: id }};
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
