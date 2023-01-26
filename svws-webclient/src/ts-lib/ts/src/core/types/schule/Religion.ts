@@ -6,7 +6,7 @@ import { ReligionKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_Religi
 export class Religion extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -15,7 +15,7 @@ export class Religion extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<Religion> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, Religion> = new Map<String, Religion>();
+	private static readonly all_values_by_name : Map<string, Religion> = new Map<string, Religion>();
 
 	/**
 	 * Religion: alevitisch 
@@ -90,7 +90,7 @@ export class Religion extends JavaObject {
 	/**
 	 * Eine Hashmap mit allen definierten Einschulungsarten, zugeordnet zu ihren Kürzeln 
 	 */
-	private static readonly _mapKuerzel : HashMap<String, Religion | null> = new HashMap();
+	private static readonly _mapKuerzel : HashMap<string, Religion | null> = new HashMap();
 
 	/**
 	 * Erzeugt eine neue Religion in der Aufzählung.
@@ -115,7 +115,7 @@ export class Religion extends JavaObject {
 	 *    
 	 * @return die Map von den Kürzeln auf die zugehörigen Religionen
 	 */
-	private static getMapByKuerzel() : HashMap<String, Religion | null> {
+	private static getMapByKuerzel() : HashMap<string, Religion | null> {
 		if (Religion._mapKuerzel.size() === 0) {
 			for (let s of Religion.values()) {
 				if (s.daten !== null) 
@@ -132,7 +132,7 @@ export class Religion extends JavaObject {
 	 * 
 	 * @return die Religion oder null, falls das Kürzel ungültig ist
 	 */
-	public static getByKuerzel(kuerzel : String | null) : Religion | null {
+	public static getByKuerzel(kuerzel : string | null) : Religion | null {
 		return Religion.getMapByKuerzel().get(kuerzel);
 	}
 
@@ -141,7 +141,7 @@ export class Religion extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -159,7 +159,7 @@ export class Religion extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -213,7 +213,7 @@ export class Religion extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : Religion | null {
+	public static valueOf(name : string) : Religion | null {
 		let tmp : Religion | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

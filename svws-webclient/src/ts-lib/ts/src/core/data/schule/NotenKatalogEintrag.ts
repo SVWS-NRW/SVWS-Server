@@ -17,32 +17,32 @@ export class NotenKatalogEintrag extends JavaObject {
 	/**
 	 * Die Notenpunkte, die dieser Note zugeordnet sind 
 	 */
-	public notenpunkte : Number | null = null;
+	public notenpunkte : number | null = null;
 
 	/**
 	 * Die Kurzschreibweise der Note als Zahl ggf. mit Tendenz (+/-) 
 	 */
-	public kuerzel : String = "";
+	public kuerzel : string = "";
 
 	/**
 	 * Die Note in ausführlicher Textform ggf. mit Tendenz (plus/minus) 
 	 */
-	public text : String = "";
+	public text : string = "";
 
 	/**
 	 * Die Note in ausführlicher Textform, wie sie auf einem Zeugnis dargestellt wird. 
 	 */
-	public textZeugnis : String = "";
+	public textZeugnis : string = "";
 
 	/**
 	 * Gibt an, in welchem Schuljahr die Note einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. 
 	 */
-	public gueltigVon : Number | null = null;
+	public gueltigVon : number | null = null;
 
 	/**
 	 * Gibt an, bis zu welchem Schuljahr die Note gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. 
 	 */
-	public gueltigBis : Number | null = null;
+	public gueltigBis : number | null = null;
 
 
 	/**
@@ -62,23 +62,23 @@ export class NotenKatalogEintrag extends JavaObject {
 	 * @param gueltigVon      das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und "schon immer gültig war"
 	 * @param gueltigBis      das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */
-	public constructor(id : number, sortierung : number, notenpunkte : Number | null, kuerzel : String, text : String, textZeugnis : String, gueltigVon : Number | null, gueltigBis : Number | null);
+	public constructor(id : number, sortierung : number, notenpunkte : number | null, kuerzel : string, text : string, textZeugnis : string, gueltigVon : number | null, gueltigBis : number | null);
 
 	/**
 	 * Implementation for method overloads of 'constructor'
 	 */
-	public constructor(__param0? : number, __param1? : number, __param2? : Number | null, __param3? : String, __param4? : String, __param5? : String, __param6? : Number | null, __param7? : Number | null) {
+	public constructor(__param0? : number, __param1? : number, __param2? : null | number, __param3? : string, __param4? : string, __param5? : string, __param6? : null | number, __param7? : null | number) {
 		super();
 		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined") && (typeof __param2 === "undefined") && (typeof __param3 === "undefined") && (typeof __param4 === "undefined") && (typeof __param5 === "undefined") && (typeof __param6 === "undefined") && (typeof __param7 === "undefined")) {
-			} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && typeof __param1 === "number") && ((typeof __param2 !== "undefined") && ((__param2 instanceof Number) || (typeof __param2 === "number")) || (__param2 === null)) && ((typeof __param3 !== "undefined") && ((__param3 instanceof String) || (typeof __param3 === "string"))) && ((typeof __param4 !== "undefined") && ((__param4 instanceof String) || (typeof __param4 === "string"))) && ((typeof __param5 !== "undefined") && ((__param5 instanceof String) || (typeof __param5 === "string"))) && ((typeof __param6 !== "undefined") && ((__param6 instanceof Number) || (typeof __param6 === "number")) || (__param6 === null)) && ((typeof __param7 !== "undefined") && ((__param7 instanceof Number) || (typeof __param7 === "number")) || (__param7 === null))) {
+			} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && typeof __param1 === "number") && ((typeof __param2 !== "undefined") && (typeof __param2 === "number") || (__param2 === null)) && ((typeof __param3 !== "undefined") && (typeof __param3 === "string")) && ((typeof __param4 !== "undefined") && (typeof __param4 === "string")) && ((typeof __param5 !== "undefined") && (typeof __param5 === "string")) && ((typeof __param6 !== "undefined") && (typeof __param6 === "number") || (__param6 === null)) && ((typeof __param7 !== "undefined") && (typeof __param7 === "number") || (__param7 === null))) {
 			let id : number = __param0 as number;
 			let sortierung : number = __param1 as number;
-			let notenpunkte : Number | null = cast_java_lang_Integer(__param2);
-			let kuerzel : String = __param3;
-			let text : String = __param4;
-			let textZeugnis : String = __param5;
-			let gueltigVon : Number | null = cast_java_lang_Integer(__param6);
-			let gueltigBis : Number | null = cast_java_lang_Integer(__param7);
+			let notenpunkte : number | null = __param2;
+			let kuerzel : string = __param3;
+			let text : string = __param4;
+			let textZeugnis : string = __param5;
+			let gueltigVon : number | null = __param6;
+			let gueltigBis : number | null = __param7;
 			this.id = id;
 			this.sortierung = sortierung;
 			this.notenpunkte = notenpunkte;
@@ -103,18 +103,18 @@ export class NotenKatalogEintrag extends JavaObject {
 		if (typeof obj.sortierung === "undefined")
 			 throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
-		result.notenpunkte = typeof obj.notenpunkte === "undefined" ? null : obj.notenpunkte === null ? null : Number(obj.notenpunkte);
+		result.notenpunkte = typeof obj.notenpunkte === "undefined" ? null : obj.notenpunkte === null ? null : obj.notenpunkte;
 		if (typeof obj.kuerzel === "undefined")
 			 throw new Error('invalid json format, missing attribute kuerzel');
-		result.kuerzel = String(obj.kuerzel);
+		result.kuerzel = obj.kuerzel;
 		if (typeof obj.text === "undefined")
 			 throw new Error('invalid json format, missing attribute text');
-		result.text = String(obj.text);
+		result.text = obj.text;
 		if (typeof obj.textZeugnis === "undefined")
 			 throw new Error('invalid json format, missing attribute textZeugnis');
-		result.textZeugnis = String(obj.textZeugnis);
-		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : Number(obj.gueltigVon);
-		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : Number(obj.gueltigBis);
+		result.textZeugnis = obj.textZeugnis;
+		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
+		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
 		return result;
 	}
 
@@ -122,12 +122,12 @@ export class NotenKatalogEintrag extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
 		result += '"sortierung" : ' + obj.sortierung + ',';
-		result += '"notenpunkte" : ' + ((!obj.notenpunkte) ? 'null' : obj.notenpunkte.valueOf()) + ',';
-		result += '"kuerzel" : ' + '"' + obj.kuerzel.valueOf() + '"' + ',';
-		result += '"text" : ' + '"' + obj.text.valueOf() + '"' + ',';
-		result += '"textZeugnis" : ' + '"' + obj.textZeugnis.valueOf() + '"' + ',';
-		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.valueOf()) + ',';
-		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.valueOf()) + ',';
+		result += '"notenpunkte" : ' + ((!obj.notenpunkte) ? 'null' : obj.notenpunkte) + ',';
+		result += '"kuerzel" : ' + '"' + obj.kuerzel! + '"' + ',';
+		result += '"text" : ' + '"' + obj.text! + '"' + ',';
+		result += '"textZeugnis" : ' + '"' + obj.textZeugnis! + '"' + ',';
+		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
+		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -142,22 +142,22 @@ export class NotenKatalogEintrag extends JavaObject {
 			result += '"sortierung" : ' + obj.sortierung + ',';
 		}
 		if (typeof obj.notenpunkte !== "undefined") {
-			result += '"notenpunkte" : ' + ((!obj.notenpunkte) ? 'null' : obj.notenpunkte.valueOf()) + ',';
+			result += '"notenpunkte" : ' + ((!obj.notenpunkte) ? 'null' : obj.notenpunkte) + ',';
 		}
 		if (typeof obj.kuerzel !== "undefined") {
-			result += '"kuerzel" : ' + '"' + obj.kuerzel.valueOf() + '"' + ',';
+			result += '"kuerzel" : ' + '"' + obj.kuerzel + '"' + ',';
 		}
 		if (typeof obj.text !== "undefined") {
-			result += '"text" : ' + '"' + obj.text.valueOf() + '"' + ',';
+			result += '"text" : ' + '"' + obj.text + '"' + ',';
 		}
 		if (typeof obj.textZeugnis !== "undefined") {
-			result += '"textZeugnis" : ' + '"' + obj.textZeugnis.valueOf() + '"' + ',';
+			result += '"textZeugnis" : ' + '"' + obj.textZeugnis + '"' + ',';
 		}
 		if (typeof obj.gueltigVon !== "undefined") {
-			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.valueOf()) + ',';
+			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
 		}
 		if (typeof obj.gueltigBis !== "undefined") {
-			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.valueOf()) + ',';
+			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

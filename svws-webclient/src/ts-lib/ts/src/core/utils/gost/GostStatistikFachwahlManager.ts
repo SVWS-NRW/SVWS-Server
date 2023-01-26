@@ -18,7 +18,7 @@ export class GostStatistikFachwahlManager extends JavaObject {
 	 * @param halbjahr   das Halbjahr, zu der die Fachwahl gehört
 	 * @param fachwahl   die Fachwahl
 	 */
-	public static setFachwahlHalbjahr(statfw : GostStatistikFachwahl, halbjahr : GostHalbjahr, fachwahl : String | null) : void {
+	public static setFachwahlHalbjahr(statfw : GostStatistikFachwahl, halbjahr : GostHalbjahr, fachwahl : string | null) : void {
 		if (statfw.fachwahlen[halbjahr.id] === null) 
 			statfw.fachwahlen[halbjahr.id] = new GostStatistikFachwahlHalbjahr();
 		if ((fachwahl === null) || !(JavaObject.equalsTranspiler("M", (fachwahl)) || JavaObject.equalsTranspiler("S", (fachwahl)) || JavaObject.equalsTranspiler("ZK", (fachwahl)) || JavaObject.equalsTranspiler("LK", (fachwahl)))) 

@@ -19,8 +19,8 @@ export class Throwable extends Error implements TranspiledObject {
 
     private _cause : Throwable | null = null;
 
-    constructor(param1? : String | Throwable | string, param2? : Throwable) {
-        super(param1 instanceof String ? param1.valueOf() : param1?.toString().valueOf());
+    constructor(param1? : Throwable | string | null, param2? : Throwable) {
+        super(typeof param1 === "string" ? param1 : param1?.toString());
         Object.setPrototypeOf(this, new.target.prototype);
         this.name = this.constructor.name;
 
@@ -32,22 +32,17 @@ export class Throwable extends Error implements TranspiledObject {
         } else if ((typeof param1 === "string") && (param2 instanceof Throwable)) {
             this.message = param1;
             this._cause = param2;
-        } else if ((param1 instanceof String) && (typeof param2 === "undefined")) {
-            this.message = param1.valueOf();
-        } else if ((param1 instanceof String) && (param2 instanceof Throwable)) {
-            this.message = param1.valueOf();
-            this._cause = param2;
         } else if ((param1 instanceof Throwable) && (typeof param2 === "undefined")) {
             this.message = param1.toString().valueOf();
             this._cause = param1;
         }
     }
 
-    public getMessage() : String {
+    public getMessage() : string {
         return this.message;
     }
 
-    public getLocalizedMessage() : String {
+    public getLocalizedMessage() : string {
         return this.getMessage();
     }
 

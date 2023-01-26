@@ -15,7 +15,7 @@ export class SchuelerStundenplan extends JavaObject {
 	/**
 	 * Die textuelle Beschreibung des Stundenplans. 
 	 */
-	public bezeichnungStundenplan : String = "";
+	public bezeichnungStundenplan : string = "";
 
 	/**
 	 * Die ID des Schuljahresabschnitts des Stundenplans. 
@@ -30,12 +30,12 @@ export class SchuelerStundenplan extends JavaObject {
 	/**
 	 * Das Datum, ab dem der Stundenpland gültig ist. 
 	 */
-	public gueltigAb : String = "";
+	public gueltigAb : string = "";
 
 	/**
 	 * Das Datum, bis wann der Stundenplan gültig ist. 
 	 */
-	public gueltigBis : String = "";
+	public gueltigBis : string = "";
 
 	/**
 	 * Die ID des Schülers. 
@@ -45,12 +45,12 @@ export class SchuelerStundenplan extends JavaObject {
 	/**
 	 * Der Nachname des Schülers. 
 	 */
-	public nachname : String = "";
+	public nachname : string = "";
 
 	/**
 	 * Der Vorname des Schülers. 
 	 */
-	public vorname : String = "";
+	public vorname : string = "";
 
 	/**
 	 * Die ID der Klasse des Schülers. 
@@ -60,7 +60,7 @@ export class SchuelerStundenplan extends JavaObject {
 	/**
 	 * Der Statistik-Jahrgang des Schülers. 
 	 */
-	public jahrgang : String = "";
+	public jahrgang : string = "";
 
 	/**
 	 * Der Unterricht des Schülers. 
@@ -84,7 +84,7 @@ export class SchuelerStundenplan extends JavaObject {
 		result.idStundenplan = obj.idStundenplan;
 		if (typeof obj.bezeichnungStundenplan === "undefined")
 			 throw new Error('invalid json format, missing attribute bezeichnungStundenplan');
-		result.bezeichnungStundenplan = String(obj.bezeichnungStundenplan);
+		result.bezeichnungStundenplan = obj.bezeichnungStundenplan;
 		if (typeof obj.idSchuljahresabschnitt === "undefined")
 			 throw new Error('invalid json format, missing attribute idSchuljahresabschnitt');
 		result.idSchuljahresabschnitt = obj.idSchuljahresabschnitt;
@@ -95,25 +95,25 @@ export class SchuelerStundenplan extends JavaObject {
 		}
 		if (typeof obj.gueltigAb === "undefined")
 			 throw new Error('invalid json format, missing attribute gueltigAb');
-		result.gueltigAb = String(obj.gueltigAb);
+		result.gueltigAb = obj.gueltigAb;
 		if (typeof obj.gueltigBis === "undefined")
 			 throw new Error('invalid json format, missing attribute gueltigBis');
-		result.gueltigBis = String(obj.gueltigBis);
+		result.gueltigBis = obj.gueltigBis;
 		if (typeof obj.idSchueler === "undefined")
 			 throw new Error('invalid json format, missing attribute idSchueler');
 		result.idSchueler = obj.idSchueler;
 		if (typeof obj.nachname === "undefined")
 			 throw new Error('invalid json format, missing attribute nachname');
-		result.nachname = String(obj.nachname);
+		result.nachname = obj.nachname;
 		if (typeof obj.vorname === "undefined")
 			 throw new Error('invalid json format, missing attribute vorname');
-		result.vorname = String(obj.vorname);
+		result.vorname = obj.vorname;
 		if (typeof obj.idKlasse === "undefined")
 			 throw new Error('invalid json format, missing attribute idKlasse');
 		result.idKlasse = obj.idKlasse;
 		if (typeof obj.jahrgang === "undefined")
 			 throw new Error('invalid json format, missing attribute jahrgang');
-		result.jahrgang = String(obj.jahrgang);
+		result.jahrgang = obj.jahrgang;
 		if (!!obj.unterricht) {
 			for (let elem of obj.unterricht) {
 				result.unterricht?.add(SchuelerStundenplanUnterricht.transpilerFromJSON(JSON.stringify(elem)));
@@ -125,7 +125,7 @@ export class SchuelerStundenplan extends JavaObject {
 	public static transpilerToJSON(obj : SchuelerStundenplan) : string {
 		let result = '{';
 		result += '"idStundenplan" : ' + obj.idStundenplan + ',';
-		result += '"bezeichnungStundenplan" : ' + '"' + obj.bezeichnungStundenplan.valueOf() + '"' + ',';
+		result += '"bezeichnungStundenplan" : ' + '"' + obj.bezeichnungStundenplan! + '"' + ',';
 		result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt + ',';
 		if (!obj.zeitraster) {
 			result += '"zeitraster" : []';
@@ -139,13 +139,13 @@ export class SchuelerStundenplan extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		result += '"gueltigAb" : ' + '"' + obj.gueltigAb.valueOf() + '"' + ',';
-		result += '"gueltigBis" : ' + '"' + obj.gueltigBis.valueOf() + '"' + ',';
+		result += '"gueltigAb" : ' + '"' + obj.gueltigAb! + '"' + ',';
+		result += '"gueltigBis" : ' + '"' + obj.gueltigBis! + '"' + ',';
 		result += '"idSchueler" : ' + obj.idSchueler + ',';
-		result += '"nachname" : ' + '"' + obj.nachname.valueOf() + '"' + ',';
-		result += '"vorname" : ' + '"' + obj.vorname.valueOf() + '"' + ',';
+		result += '"nachname" : ' + '"' + obj.nachname! + '"' + ',';
+		result += '"vorname" : ' + '"' + obj.vorname! + '"' + ',';
 		result += '"idKlasse" : ' + obj.idKlasse + ',';
-		result += '"jahrgang" : ' + '"' + obj.jahrgang.valueOf() + '"' + ',';
+		result += '"jahrgang" : ' + '"' + obj.jahrgang! + '"' + ',';
 		if (!obj.unterricht) {
 			result += '"unterricht" : []';
 		} else {
@@ -169,7 +169,7 @@ export class SchuelerStundenplan extends JavaObject {
 			result += '"idStundenplan" : ' + obj.idStundenplan + ',';
 		}
 		if (typeof obj.bezeichnungStundenplan !== "undefined") {
-			result += '"bezeichnungStundenplan" : ' + '"' + obj.bezeichnungStundenplan.valueOf() + '"' + ',';
+			result += '"bezeichnungStundenplan" : ' + '"' + obj.bezeichnungStundenplan + '"' + ',';
 		}
 		if (typeof obj.idSchuljahresabschnitt !== "undefined") {
 			result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt + ',';
@@ -189,25 +189,25 @@ export class SchuelerStundenplan extends JavaObject {
 			}
 		}
 		if (typeof obj.gueltigAb !== "undefined") {
-			result += '"gueltigAb" : ' + '"' + obj.gueltigAb.valueOf() + '"' + ',';
+			result += '"gueltigAb" : ' + '"' + obj.gueltigAb + '"' + ',';
 		}
 		if (typeof obj.gueltigBis !== "undefined") {
-			result += '"gueltigBis" : ' + '"' + obj.gueltigBis.valueOf() + '"' + ',';
+			result += '"gueltigBis" : ' + '"' + obj.gueltigBis + '"' + ',';
 		}
 		if (typeof obj.idSchueler !== "undefined") {
 			result += '"idSchueler" : ' + obj.idSchueler + ',';
 		}
 		if (typeof obj.nachname !== "undefined") {
-			result += '"nachname" : ' + '"' + obj.nachname.valueOf() + '"' + ',';
+			result += '"nachname" : ' + '"' + obj.nachname + '"' + ',';
 		}
 		if (typeof obj.vorname !== "undefined") {
-			result += '"vorname" : ' + '"' + obj.vorname.valueOf() + '"' + ',';
+			result += '"vorname" : ' + '"' + obj.vorname + '"' + ',';
 		}
 		if (typeof obj.idKlasse !== "undefined") {
 			result += '"idKlasse" : ' + obj.idKlasse + ',';
 		}
 		if (typeof obj.jahrgang !== "undefined") {
-			result += '"jahrgang" : ' + '"' + obj.jahrgang.valueOf() + '"' + ',';
+			result += '"jahrgang" : ' + '"' + obj.jahrgang + '"' + ',';
 		}
 		if (typeof obj.unterricht !== "undefined") {
 			if (!obj.unterricht) {

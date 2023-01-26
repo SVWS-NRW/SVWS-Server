@@ -13,7 +13,7 @@ export class StundenplanblockungManagerLehrkraft extends JavaObject {
 	/**
 	 * Das Kürzel der Lehrkraft. Beispielsweise 'BAR'. 
 	 */
-	_kuerzel : String = "";
+	_kuerzel : string = "";
 
 	/**
 	 * TRUE, falls die Lehrkraft zur Vertretung in Springstunden herangezogen werden kann. 
@@ -30,7 +30,7 @@ export class StundenplanblockungManagerLehrkraft extends JavaObject {
 	 * @param pLehrkraftID  Die Datenbank-ID der Lehrkraft.
 	 * @param pKuerzel      Das Kürzel der Lehrkraft.
 	 */
-	public constructor(pLehrkraftID : number, pKuerzel : String) {
+	public constructor(pLehrkraftID : number, pKuerzel : string) {
 		super();
 		this._id = pLehrkraftID;
 		this._kuerzel = pKuerzel;
@@ -60,7 +60,7 @@ export class StundenplanblockungManagerLehrkraft extends JavaObject {
 	 * 
 	 * @param pKuerzel  Das neue Kürzel der Lehrkraft.
 	 */
-	public setKuerzel(pKuerzel : String) : void {
+	public setKuerzel(pKuerzel : string) : void {
 		this._kuerzel = pKuerzel;
 	}
 

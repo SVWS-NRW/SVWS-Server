@@ -3,7 +3,7 @@ import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject
 export class GostKursblockungRegelParameterTyp extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -12,7 +12,7 @@ export class GostKursblockungRegelParameterTyp extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<GostKursblockungRegelParameterTyp> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, GostKursblockungRegelParameterTyp> = new Map<String, GostKursblockungRegelParameterTyp>();
+	private static readonly all_values_by_name : Map<string, GostKursblockungRegelParameterTyp> = new Map<string, GostKursblockungRegelParameterTyp>();
 
 	/**
 	 * Der Parameter-Typ Kursart 
@@ -52,7 +52,7 @@ export class GostKursblockungRegelParameterTyp extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -70,7 +70,7 @@ export class GostKursblockungRegelParameterTyp extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -124,7 +124,7 @@ export class GostKursblockungRegelParameterTyp extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : GostKursblockungRegelParameterTyp | null {
+	public static valueOf(name : string) : GostKursblockungRegelParameterTyp | null {
 		let tmp : GostKursblockungRegelParameterTyp | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

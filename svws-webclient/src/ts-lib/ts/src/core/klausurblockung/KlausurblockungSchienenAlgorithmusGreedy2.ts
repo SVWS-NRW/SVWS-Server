@@ -20,7 +20,7 @@ export class KlausurblockungSchienenAlgorithmusGreedy2 extends KlausurblockungSc
 		super(pRandom, pLogger, pDynDaten);
 	}
 
-	public toString() : String {
+	public toString() : string {
 		return "Klausuren nach Knotengrad & Schienen zufällig";
 	}
 

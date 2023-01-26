@@ -13,7 +13,7 @@ export class DeveloperNotificationException extends RuntimeException {
 	 * 
 	 * @param pFehlermeldung Eine Beschreibung des Fehlers, die dem User hilft die Ursache des Fehlers zu beheben.
 	 */
-	public constructor(pFehlermeldung : String) {
+	public constructor(pFehlermeldung : string) {
 		super(pFehlermeldung);
 	}
 

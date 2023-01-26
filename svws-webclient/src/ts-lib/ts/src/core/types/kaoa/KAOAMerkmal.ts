@@ -11,7 +11,7 @@ import { Arrays, cast_java_util_Arrays } from '../../../java/util/Arrays';
 export class KAOAMerkmal extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -20,7 +20,7 @@ export class KAOAMerkmal extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<KAOAMerkmal> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, KAOAMerkmal> = new Map<String, KAOAMerkmal>();
+	private static readonly all_values_by_name : Map<string, KAOAMerkmal> = new Map<string, KAOAMerkmal>();
 
 	/**
 	 * KAoA-Merkmal: Schulische prozessorientierte Begleitung und Beratung 
@@ -215,12 +215,12 @@ export class KAOAMerkmal extends JavaObject {
 	/**
 	 * Eine Hashmap mit allen Einträgen, welche ihrer ID zugeordnet sind. 
 	 */
-	private static readonly _statusByID : HashMap<Number, KAOAMerkmal> = new HashMap();
+	private static readonly _statusByID : HashMap<number, KAOAMerkmal> = new HashMap();
 
 	/**
 	 * Eine Hashmap mit allen Einträgen, welche dem Kürzel zugeordnet sind. 
 	 */
-	private static readonly _statusByKuerzel : HashMap<String, KAOAMerkmal> = new HashMap();
+	private static readonly _statusByKuerzel : HashMap<string, KAOAMerkmal> = new HashMap();
 
 	/**
 	 * Erzeugt ein neues Element in der Aufzählung.
@@ -243,7 +243,7 @@ export class KAOAMerkmal extends JavaObject {
 	 *    
 	 * @return die Map von der ID auf das zugehörige Merkmal
 	 */
-	private static getMapStatusByID() : HashMap<Number, KAOAMerkmal> {
+	private static getMapStatusByID() : HashMap<number, KAOAMerkmal> {
 		if (KAOAMerkmal._statusByID.size() === 0) 
 			for (let g of KAOAMerkmal.values()) 
 				KAOAMerkmal._statusByID.put(g.daten.id, g);
@@ -256,7 +256,7 @@ export class KAOAMerkmal extends JavaObject {
 	 *    
 	 * @return die Map von dem Kürzel auf das zugehörige Merkmal
 	 */
-	private static getMapStatusByKuerzel() : HashMap<String, KAOAMerkmal> {
+	private static getMapStatusByKuerzel() : HashMap<string, KAOAMerkmal> {
 		if (KAOAMerkmal._statusByKuerzel.size() === 0) 
 			for (let g of KAOAMerkmal.values()) 
 				KAOAMerkmal._statusByKuerzel.put(g.daten.kuerzel, g);
@@ -281,7 +281,7 @@ export class KAOAMerkmal extends JavaObject {
 	 * 
 	 * @return das Merkmal oder null, falls das Kürzel ungültig ist
 	 */
-	public static getByKuerzel(kuerzel : String | null) : KAOAMerkmal | null {
+	public static getByKuerzel(kuerzel : string | null) : KAOAMerkmal | null {
 		return KAOAMerkmal.getMapStatusByKuerzel().get(kuerzel);
 	}
 
@@ -290,7 +290,7 @@ export class KAOAMerkmal extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -308,7 +308,7 @@ export class KAOAMerkmal extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -362,7 +362,7 @@ export class KAOAMerkmal extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : KAOAMerkmal | null {
+	public static valueOf(name : string) : KAOAMerkmal | null {
 		let tmp : KAOAMerkmal | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

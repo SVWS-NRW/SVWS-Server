@@ -11,17 +11,17 @@ export class ReligionEintrag extends JavaObject {
 	/**
 	 * Die Bezeichnung bzw. der Name der Religion. 
 	 */
-	public text : String | null = "";
+	public text : string | null = "";
 
 	/**
 	 * Die Bezeichnung bzw. der Name der Religion, wie sie auf einem Zeugnis erscheint. 
 	 */
-	public textZeugnis : String | null = "";
+	public textZeugnis : string | null = "";
 
 	/**
 	 * Das Kürzel des Eintrages für die Statistik. 
 	 */
-	public kuerzel : String | null = "";
+	public kuerzel : string | null = "";
 
 	/**
 	 * Gibt die Position in der Sortierreihenfolge für die Katalog-Einträge an. 
@@ -53,9 +53,9 @@ export class ReligionEintrag extends JavaObject {
 		if (typeof obj.id === "undefined")
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		result.text = typeof obj.text === "undefined" ? null : obj.text === null ? null : String(obj.text);
-		result.textZeugnis = typeof obj.textZeugnis === "undefined" ? null : obj.textZeugnis === null ? null : String(obj.textZeugnis);
-		result.kuerzel = typeof obj.kuerzel === "undefined" ? null : obj.kuerzel === null ? null : String(obj.kuerzel);
+		result.text = typeof obj.text === "undefined" ? null : obj.text === null ? null : obj.text;
+		result.textZeugnis = typeof obj.textZeugnis === "undefined" ? null : obj.textZeugnis === null ? null : obj.textZeugnis;
+		result.kuerzel = typeof obj.kuerzel === "undefined" ? null : obj.kuerzel === null ? null : obj.kuerzel;
 		if (typeof obj.sortierung === "undefined")
 			 throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
@@ -71,9 +71,9 @@ export class ReligionEintrag extends JavaObject {
 	public static transpilerToJSON(obj : ReligionEintrag) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"text" : ' + ((!obj.text) ? 'null' : '"' + obj.text.valueOf() + '"') + ',';
-		result += '"textZeugnis" : ' + ((!obj.textZeugnis) ? 'null' : '"' + obj.textZeugnis.valueOf() + '"') + ',';
-		result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : '"' + obj.kuerzel.valueOf() + '"') + ',';
+		result += '"text" : ' + ((!obj.text) ? 'null' : '"' + obj.text + '"') + ',';
+		result += '"textZeugnis" : ' + ((!obj.textZeugnis) ? 'null' : '"' + obj.textZeugnis + '"') + ',';
+		result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : '"' + obj.kuerzel + '"') + ',';
 		result += '"sortierung" : ' + obj.sortierung + ',';
 		result += '"istSichtbar" : ' + obj.istSichtbar + ',';
 		result += '"istAenderbar" : ' + obj.istAenderbar + ',';
@@ -88,13 +88,13 @@ export class ReligionEintrag extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.text !== "undefined") {
-			result += '"text" : ' + ((!obj.text) ? 'null' : '"' + obj.text.valueOf() + '"') + ',';
+			result += '"text" : ' + ((!obj.text) ? 'null' : '"' + obj.text + '"') + ',';
 		}
 		if (typeof obj.textZeugnis !== "undefined") {
-			result += '"textZeugnis" : ' + ((!obj.textZeugnis) ? 'null' : '"' + obj.textZeugnis.valueOf() + '"') + ',';
+			result += '"textZeugnis" : ' + ((!obj.textZeugnis) ? 'null' : '"' + obj.textZeugnis + '"') + ',';
 		}
 		if (typeof obj.kuerzel !== "undefined") {
-			result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : '"' + obj.kuerzel.valueOf() + '"') + ',';
+			result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : '"' + obj.kuerzel + '"') + ',';
 		}
 		if (typeof obj.sortierung !== "undefined") {
 			result += '"sortierung" : ' + obj.sortierung + ',';

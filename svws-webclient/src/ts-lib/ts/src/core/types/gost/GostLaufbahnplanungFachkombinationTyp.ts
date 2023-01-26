@@ -4,7 +4,7 @@ import { IllegalArgumentException, cast_java_lang_IllegalArgumentException } fro
 export class GostLaufbahnplanungFachkombinationTyp extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -13,7 +13,7 @@ export class GostLaufbahnplanungFachkombinationTyp extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<GostLaufbahnplanungFachkombinationTyp> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, GostLaufbahnplanungFachkombinationTyp> = new Map<String, GostLaufbahnplanungFachkombinationTyp>();
+	private static readonly all_values_by_name : Map<string, GostLaufbahnplanungFachkombinationTyp> = new Map<string, GostLaufbahnplanungFachkombinationTyp>();
 
 	/**
 	 * Gibt an, das eine Fachkombination unzulässig ist 
@@ -74,7 +74,7 @@ export class GostLaufbahnplanungFachkombinationTyp extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -92,7 +92,7 @@ export class GostLaufbahnplanungFachkombinationTyp extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -146,7 +146,7 @@ export class GostLaufbahnplanungFachkombinationTyp extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : GostLaufbahnplanungFachkombinationTyp | null {
+	public static valueOf(name : string) : GostLaufbahnplanungFachkombinationTyp | null {
 		let tmp : GostLaufbahnplanungFachkombinationTyp | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

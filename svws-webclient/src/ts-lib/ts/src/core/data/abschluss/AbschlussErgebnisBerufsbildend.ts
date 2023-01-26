@@ -18,17 +18,17 @@ export class AbschlussErgebnisBerufsbildend extends JavaObject {
 	/**
 	 * Gibt an, ob der Berufabschluss insgesamt erfolgreich erworben wurde, falls genügend Informationen vorliegen. 
 	 */
-	public hatBA : Boolean | null = null;
+	public hatBA : boolean | null = null;
 
 	/**
 	 * Gibt an, welcher allgemeinbildende Abschluss ggf. zusätzlich erreicht wurde, falls er nicht bereits vorher erreicht wurde. 
 	 */
-	public abschlussAllgemeinbildend : String | null = null;
+	public abschlussAllgemeinbildend : string | null = null;
 
 	/**
 	 * Der Log der Abschlussberechnung. 
 	 */
-	public log : List<String> | null = null;
+	public log : List<string> | null = null;
 
 
 	public constructor() {
@@ -48,11 +48,11 @@ export class AbschlussErgebnisBerufsbildend extends JavaObject {
 		if (typeof obj.note === "undefined")
 			 throw new Error('invalid json format, missing attribute note');
 		result.note = obj.note;
-		result.hatBA = typeof obj.hatBA === "undefined" ? null : obj.hatBA === null ? null : Boolean(obj.hatBA);
-		result.abschlussAllgemeinbildend = typeof obj.abschlussAllgemeinbildend === "undefined" ? null : obj.abschlussAllgemeinbildend === null ? null : String(obj.abschlussAllgemeinbildend);
+		result.hatBA = typeof obj.hatBA === "undefined" ? null : obj.hatBA === null ? null : obj.hatBA;
+		result.abschlussAllgemeinbildend = typeof obj.abschlussAllgemeinbildend === "undefined" ? null : obj.abschlussAllgemeinbildend === null ? null : obj.abschlussAllgemeinbildend;
 		if (!!obj.log) {
 			for (let elem of obj.log) {
-				result.log?.add(String(elem));
+				result.log?.add(elem);
 			}
 		}
 		return result;
@@ -62,8 +62,8 @@ export class AbschlussErgebnisBerufsbildend extends JavaObject {
 		let result = '{';
 		result += '"hatBSA" : ' + obj.hatBSA + ',';
 		result += '"note" : ' + obj.note + ',';
-		result += '"hatBA" : ' + ((!obj.hatBA) ? 'null' : obj.hatBA.valueOf()) + ',';
-		result += '"abschlussAllgemeinbildend" : ' + ((!obj.abschlussAllgemeinbildend) ? 'null' : '"' + obj.abschlussAllgemeinbildend.valueOf() + '"') + ',';
+		result += '"hatBA" : ' + ((!obj.hatBA) ? 'null' : obj.hatBA) + ',';
+		result += '"abschlussAllgemeinbildend" : ' + ((!obj.abschlussAllgemeinbildend) ? 'null' : '"' + obj.abschlussAllgemeinbildend + '"') + ',';
 		if (!obj.log) {
 			result += '"log" : []';
 		} else {
@@ -90,10 +90,10 @@ export class AbschlussErgebnisBerufsbildend extends JavaObject {
 			result += '"note" : ' + obj.note + ',';
 		}
 		if (typeof obj.hatBA !== "undefined") {
-			result += '"hatBA" : ' + ((!obj.hatBA) ? 'null' : obj.hatBA.valueOf()) + ',';
+			result += '"hatBA" : ' + ((!obj.hatBA) ? 'null' : obj.hatBA) + ',';
 		}
 		if (typeof obj.abschlussAllgemeinbildend !== "undefined") {
-			result += '"abschlussAllgemeinbildend" : ' + ((!obj.abschlussAllgemeinbildend) ? 'null' : '"' + obj.abschlussAllgemeinbildend.valueOf() + '"') + ',';
+			result += '"abschlussAllgemeinbildend" : ' + ((!obj.abschlussAllgemeinbildend) ? 'null' : '"' + obj.abschlussAllgemeinbildend + '"') + ',';
 		}
 		if (typeof obj.log !== "undefined") {
 			if (!obj.log) {

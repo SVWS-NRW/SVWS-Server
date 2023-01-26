@@ -4,7 +4,7 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class GostBesondereLernleistung extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -13,7 +13,7 @@ export class GostBesondereLernleistung extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<GostBesondereLernleistung> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, GostBesondereLernleistung> = new Map<String, GostBesondereLernleistung>();
+	private static readonly all_values_by_name : Map<string, GostBesondereLernleistung> = new Map<string, GostBesondereLernleistung>();
 
 	/**
 	 * keine besondere Lernleistung = K 
@@ -33,12 +33,12 @@ export class GostBesondereLernleistung extends JavaObject {
 	/**
 	 * Das Kürzel für die Art der Besonderen Lernleistung 
 	 */
-	public readonly kuerzel : String;
+	public readonly kuerzel : string;
 
 	/**
 	 * Die textuelle Beschreibung der Art der Besonderen Lernleistung 
 	 */
-	public readonly beschreibung : String;
+	public readonly beschreibung : string;
 
 	/**
 	 * Erzeugt ein neues Objekt für die Aufzählung der Arten von Besonderen
@@ -47,7 +47,7 @@ export class GostBesondereLernleistung extends JavaObject {
 	 * @param kuerzel        das Kürzel für die Art der Besonderen Lernleistung
 	 * @param beschreibung   die textuelle Beschreibung der Art der Besonderen Lernleistung
 	 */
-	private constructor(name : string, ordinal : number, kuerzel : String, beschreibung : String) {
+	private constructor(name : string, ordinal : number, kuerzel : string, beschreibung : string) {
 		super();
 		this.__name = name;
 		this.__ordinal = ordinal;
@@ -65,7 +65,7 @@ export class GostBesondereLernleistung extends JavaObject {
 	 * 
 	 * @return die Art der Besonderen Lernleistung
 	 */
-	public static fromKuerzel(kuerzel : String | null) : GostBesondereLernleistung {
+	public static fromKuerzel(kuerzel : string | null) : GostBesondereLernleistung {
 		if (kuerzel === null) 
 			return GostBesondereLernleistung.KEINE;
 		switch (kuerzel) {
@@ -79,7 +79,7 @@ export class GostBesondereLernleistung extends JavaObject {
 		return GostBesondereLernleistung.KEINE;
 	}
 
-	public toString() : String {
+	public toString() : string {
 		return this.kuerzel;
 	}
 
@@ -92,7 +92,7 @@ export class GostBesondereLernleistung extends JavaObject {
 	 *
 	 * @return true, falls die Arten übereinstimmen und ansonsten false
 	 */
-	public is(kuerzel : String | null) : boolean {
+	public is(kuerzel : string | null) : boolean {
 		return JavaObject.equalsTranspiler(this.kuerzel, (kuerzel));
 	}
 
@@ -101,7 +101,7 @@ export class GostBesondereLernleistung extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -164,7 +164,7 @@ export class GostBesondereLernleistung extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : GostBesondereLernleistung | null {
+	public static valueOf(name : string) : GostBesondereLernleistung | null {
 		let tmp : GostBesondereLernleistung | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

@@ -17,7 +17,7 @@ export class GostBlockungRegel extends JavaObject {
 	/**
 	 * Eine Liste der Regel-Parameter 
 	 */
-	public parameter : Vector<Number> = new Vector();
+	public parameter : Vector<number> = new Vector();
 
 
 	public constructor() {
@@ -39,7 +39,7 @@ export class GostBlockungRegel extends JavaObject {
 		result.typ = obj.typ;
 		if (!!obj.parameter) {
 			for (let elem of obj.parameter) {
-				result.parameter?.add(Number(elem));
+				result.parameter?.add(elem);
 			}
 		}
 		return result;

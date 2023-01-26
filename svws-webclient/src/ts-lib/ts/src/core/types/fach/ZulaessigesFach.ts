@@ -17,7 +17,7 @@ import { Pair, cast_de_nrw_schule_svws_core_adt_Pair } from '../../../core/adt/P
 export class ZulaessigesFach extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -26,7 +26,7 @@ export class ZulaessigesFach extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<ZulaessigesFach> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, ZulaessigesFach> = new Map<String, ZulaessigesFach>();
+	private static readonly all_values_by_name : Map<string, ZulaessigesFach> = new Map<string, ZulaessigesFach>();
 
 	/**
 	 * Fach Arbeits- und Betriebswirtschaftslehre 
@@ -1466,12 +1466,12 @@ export class ZulaessigesFach extends JavaObject {
 	/**
 	 * Eine HashMap mit allen zulässigen Fächern. Der Zugriff erfolgt dabei über die ID 
 	 */
-	private static readonly _mapID : HashMap<Number, ZulaessigesFach | null> = new HashMap();
+	private static readonly _mapID : HashMap<number, ZulaessigesFach | null> = new HashMap();
 
 	/**
 	 * Eine HashMap mit zulässigen Fächern. Der Zugriff erfolgt dabei das Statistik-Kürzel 
 	 */
-	private static readonly _mapKuerzelASD : HashMap<String, ZulaessigesFach | null> = new HashMap();
+	private static readonly _mapKuerzelASD : HashMap<string, ZulaessigesFach | null> = new HashMap();
 
 	/**
 	 * Die Informationen zu den Kombinationen aus Schulformen und -gliederungen, wo das Fach zulässig ist 
@@ -1510,7 +1510,7 @@ export class ZulaessigesFach extends JavaObject {
 	 *    
 	 * @return die Map von den ASD-Kürzeln der Fächer auf die zugehörigen Fächer
 	 */
-	private static getMapByASDKuerzel() : HashMap<String, ZulaessigesFach | null> {
+	private static getMapByASDKuerzel() : HashMap<string, ZulaessigesFach | null> {
 		if (ZulaessigesFach._mapKuerzelASD.size() === 0) 
 			for (let s of ZulaessigesFach.values()) 
 				ZulaessigesFach._mapKuerzelASD.put(s.daten.kuerzelASD, s);
@@ -1584,7 +1584,7 @@ export class ZulaessigesFach extends JavaObject {
 	 * 
 	 * @return das zugehörige Fach oder {@link ZulaessigesFach#DEFAULT} 
 	 */
-	public static getByKuerzelASD(kuerzel : String | null) : ZulaessigesFach {
+	public static getByKuerzelASD(kuerzel : string | null) : ZulaessigesFach {
 		let result : ZulaessigesFach | null = ZulaessigesFach.getMapByASDKuerzel().get(kuerzel);
 		return (result === null) ? ZulaessigesFach.DEFAULT : result;
 	}
@@ -1605,7 +1605,7 @@ export class ZulaessigesFach extends JavaObject {
 	 * 
 	 * @return die RGB-HTML-Farbdefinition als String
 	 */
-	public getHMTLFarbeRGB() : String {
+	public getHMTLFarbeRGB() : string {
 		let farbe : RGBFarbe = this.getFarbe();
 		return "rgba(" + farbe.red + "," + farbe.green + "," + farbe.blue + ")";
 	}
@@ -1618,7 +1618,7 @@ export class ZulaessigesFach extends JavaObject {
 	 * 
 	 * @return die RGBA-HTML-Farbdefinition als String
 	 */
-	public getHMTLFarbeRGBA(alpha : number) : String {
+	public getHMTLFarbeRGBA(alpha : number) : string {
 		let farbe : RGBFarbe = this.getFarbe();
 		let a : number = (alpha < 0.0) ? 0.0 : ((alpha > 1.0) ? 1.0 : alpha);
 		return "rgba(" + farbe.red + "," + farbe.green + "," + farbe.blue + ", " + a + ")";
@@ -1629,7 +1629,7 @@ export class ZulaessigesFach extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -1647,7 +1647,7 @@ export class ZulaessigesFach extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -1701,7 +1701,7 @@ export class ZulaessigesFach extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : ZulaessigesFach | null {
+	public static valueOf(name : string) : ZulaessigesFach | null {
 		let tmp : ZulaessigesFach | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

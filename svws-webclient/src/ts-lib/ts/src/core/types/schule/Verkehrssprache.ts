@@ -6,7 +6,7 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class Verkehrssprache extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -15,7 +15,7 @@ export class Verkehrssprache extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<Verkehrssprache> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, Verkehrssprache> = new Map<String, Verkehrssprache>();
+	private static readonly all_values_by_name : Map<string, Verkehrssprache> = new Map<string, Verkehrssprache>();
 
 	/**
 	 * Afar (aar) 
@@ -2370,12 +2370,12 @@ export class Verkehrssprache extends JavaObject {
 	/**
 	 * Eine Hashmap mit allen definierten Verkehrssprachen, zugeordnet zu ihren Kürzeln 
 	 */
-	private static readonly _sprachen : HashMap<String, Verkehrssprache> = new HashMap();
+	private static readonly _sprachen : HashMap<string, Verkehrssprache> = new HashMap();
 
 	/**
 	 * Eine Hashmap mit allen definierten Verkehrssprachen, zugeordnet zu ihren zweistelligen ISO 639-1-Codes 
 	 */
-	private static readonly _kuerzel2 : HashMap<String, Verkehrssprache> = new HashMap();
+	private static readonly _kuerzel2 : HashMap<string, Verkehrssprache> = new HashMap();
 
 	/**
 	 * Erzeugt eine neue Verkehrssprache in der Aufzählung.
@@ -2398,7 +2398,7 @@ export class Verkehrssprache extends JavaObject {
 	 *    
 	 * @return die Map von den Kürzeln der Verkehrssprache auf die zugehörigen Verkehrssprache
 	 */
-	private static getMapSpracheByKuerzel() : HashMap<String, Verkehrssprache> {
+	private static getMapSpracheByKuerzel() : HashMap<string, Verkehrssprache> {
 		if (Verkehrssprache._sprachen.size() === 0) {
 			for (let s of Verkehrssprache.values()) {
 				if (s.daten !== null) 
@@ -2414,7 +2414,7 @@ export class Verkehrssprache extends JavaObject {
 	 *    
 	 * @return die Map von den zweistelligen Kürzeln der Verkehrssprache auf die zugehörigen Verkehrssprache
 	 */
-	private static getMapSpracheByKuerzel2() : HashMap<String, Verkehrssprache> {
+	private static getMapSpracheByKuerzel2() : HashMap<string, Verkehrssprache> {
 		if (Verkehrssprache._kuerzel2.size() === 0) {
 			for (let s of Verkehrssprache.values()) {
 				if ((s.daten !== null) && (s.daten.iso2 !== null)) 
@@ -2431,7 +2431,7 @@ export class Verkehrssprache extends JavaObject {
 	 * 
 	 * @return die Verkehrssprache oder null, falls das Kürzel unbekannt ist
 	 */
-	public static getByKuerzel(kuerzel : String | null) : Verkehrssprache | null {
+	public static getByKuerzel(kuerzel : string | null) : Verkehrssprache | null {
 		return Verkehrssprache.getMapSpracheByKuerzel().get(kuerzel);
 	}
 
@@ -2442,7 +2442,7 @@ export class Verkehrssprache extends JavaObject {
 	 * 
 	 * @return die Verkehrssprache oder null, falls das Kürzel unbekannt ist
 	 */
-	public static getByKuerzelISO2(kuerzel : String | null) : Verkehrssprache | null {
+	public static getByKuerzelISO2(kuerzel : string | null) : Verkehrssprache | null {
 		return Verkehrssprache.getMapSpracheByKuerzel2().get(kuerzel);
 	}
 
@@ -2455,7 +2455,7 @@ export class Verkehrssprache extends JavaObject {
 	 * 
 	 * @return die Verkehrssprache oder null, falls das Kürzel unbekannt ist
 	 */
-	public static getByKuerzelAuto(kuerzel : String | null) : Verkehrssprache | null {
+	public static getByKuerzelAuto(kuerzel : string | null) : Verkehrssprache | null {
 		if (kuerzel === null) 
 			return null;
 		if (kuerzel.length === 2) 
@@ -2468,7 +2468,7 @@ export class Verkehrssprache extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -2486,7 +2486,7 @@ export class Verkehrssprache extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -2540,7 +2540,7 @@ export class Verkehrssprache extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : Verkehrssprache | null {
+	public static valueOf(name : string) : Verkehrssprache | null {
 		let tmp : Verkehrssprache | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

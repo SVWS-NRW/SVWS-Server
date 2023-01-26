@@ -26,7 +26,7 @@ export class KursblockungAlgorithmusKFachwahlmatrix extends KursblockungAlgorith
 		super(pRandom, pLogger, pDynDat);
 	}
 
-	public toString() : String {
+	public toString() : string {
 		return "Fachwahlmatrix";
 	}
 

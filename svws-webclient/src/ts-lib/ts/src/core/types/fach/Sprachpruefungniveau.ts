@@ -7,7 +7,7 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class Sprachpruefungniveau extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -16,7 +16,7 @@ export class Sprachpruefungniveau extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<Sprachpruefungniveau> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, Sprachpruefungniveau> = new Map<String, Sprachpruefungniveau>();
+	private static readonly all_values_by_name : Map<string, Sprachpruefungniveau> = new Map<string, Sprachpruefungniveau>();
 
 	/**
 	 * Prüfungsniveau angelehnt an 'HA9' 
@@ -66,12 +66,12 @@ export class Sprachpruefungniveau extends JavaObject {
 	/**
 	 * Die Zuordnung der Sprachreferenzniveaus zu ihren IDs 
 	 */
-	private static readonly _mapID : HashMap<Number, Sprachpruefungniveau> = new HashMap();
+	private static readonly _mapID : HashMap<number, Sprachpruefungniveau> = new HashMap();
 
 	/**
 	 * Die Zuordnung der Sprachreferenzniveaus zu ihren Bezeichnungen 
 	 */
-	private static readonly _mapKuerzel : HashMap<String, Sprachpruefungniveau> = new HashMap();
+	private static readonly _mapKuerzel : HashMap<string, Sprachpruefungniveau> = new HashMap();
 
 	/**
 	 * Erstellt ein neues Prüfungsniveau dieser Aufzählung.
@@ -95,7 +95,7 @@ export class Sprachpruefungniveau extends JavaObject {
 	 *    
 	 * @return die Map von den IDs der Sprachprüfungsniveaus auf die zugehörigen Sprachprüfungsniveaus
 	 */
-	private static getMapByID() : HashMap<Number, Sprachpruefungniveau> {
+	private static getMapByID() : HashMap<number, Sprachpruefungniveau> {
 		if (Sprachpruefungniveau._mapID.size() === 0) 
 			for (let l of Sprachpruefungniveau.values()) 
 				Sprachpruefungniveau._mapID.put(l.daten.id, l);
@@ -108,7 +108,7 @@ export class Sprachpruefungniveau extends JavaObject {
 	 *    
 	 * @return die Map von den Bezeichnungen der Sprachprüfungsniveaus auf die zugehörigen Sprachprüfungsniveaus
 	 */
-	private static getMapByKuerzel() : HashMap<String, Sprachpruefungniveau> {
+	private static getMapByKuerzel() : HashMap<string, Sprachpruefungniveau> {
 		if (Sprachpruefungniveau._mapKuerzel.size() === 0) 
 			for (let l of Sprachpruefungniveau.values()) 
 				Sprachpruefungniveau._mapKuerzel.put(l.daten.kuerzel, l);
@@ -122,7 +122,7 @@ export class Sprachpruefungniveau extends JavaObject {
 	 *
 	 * @return das Prüfungsniveaus oder null, wenn die ID ungültig ist
 	 */
-	public static getByID(id : Number | null) : Sprachpruefungniveau | null {
+	public static getByID(id : number | null) : Sprachpruefungniveau | null {
 		return Sprachpruefungniveau.getMapByID().get(id);
 	}
 
@@ -133,7 +133,7 @@ export class Sprachpruefungniveau extends JavaObject {
 	 * 
 	 * @return das Prüfungsniveaus oder null, wenn das Kürzel ungültig ist
 	 */
-	public static getByKuerzel(kuerzel : String | null) : Sprachpruefungniveau | null {
+	public static getByKuerzel(kuerzel : string | null) : Sprachpruefungniveau | null {
 		return Sprachpruefungniveau.getMapByKuerzel().get(kuerzel);
 	}
 
@@ -142,7 +142,7 @@ export class Sprachpruefungniveau extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -160,7 +160,7 @@ export class Sprachpruefungniveau extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -214,7 +214,7 @@ export class Sprachpruefungniveau extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : Sprachpruefungniveau | null {
+	public static valueOf(name : string) : Sprachpruefungniveau | null {
 		let tmp : Sprachpruefungniveau | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

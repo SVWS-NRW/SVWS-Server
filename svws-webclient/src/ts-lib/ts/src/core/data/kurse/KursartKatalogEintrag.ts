@@ -18,32 +18,32 @@ export class KursartKatalogEintrag extends JavaObject {
 	/**
 	 * Das eindeutige Kürzel der Kursart entsprechend der Vorgaben der amtlichen Schulstatistik 
 	 */
-	public kuerzel : String = "";
+	public kuerzel : string = "";
 
 	/**
 	 * Die Nummer der Kursart entsprechend der Vorgaben der amtlichen Schulstatistik 
 	 */
-	public nummer : String = "";
+	public nummer : string = "";
 
 	/**
 	 * Die Bezeichnung der Kursart 
 	 */
-	public bezeichnung : String = "";
+	public bezeichnung : string = "";
 
 	/**
 	 * Ergänzende Bemerkungen zu der Kursart 
 	 */
-	public bemerkungen : String | null = null;
+	public bemerkungen : string | null = null;
 
 	/**
 	 * Das Kürzel einer verallgemeinerten Kursart, sofern diese angegeben ist 
 	 */
-	public kuerzelAllg : String | null = null;
+	public kuerzelAllg : string | null = null;
 
 	/**
 	 * Die Bezeichnung der verallgemeinerter Kursart, sofern diese angegeben ist 
 	 */
-	public bezeichnungAllg : String | null = null;
+	public bezeichnungAllg : string | null = null;
 
 	/**
 	 * Gibt an, ob die Kursart in der Gymnasialen Oberstufe zulässig ist 
@@ -58,12 +58,12 @@ export class KursartKatalogEintrag extends JavaObject {
 	/**
 	 * Gibt an, in welchem Schuljahr die Kursart einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. 
 	 */
-	public gueltigVon : Number | null = null;
+	public gueltigVon : number | null = null;
 
 	/**
 	 * Gibt an, bis zu welchem Schuljahr die Kursart gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. 
 	 */
-	public gueltigBis : Number | null = null;
+	public gueltigBis : number | null = null;
 
 
 	/**
@@ -87,26 +87,26 @@ export class KursartKatalogEintrag extends JavaObject {
 	 *                           "schon immer gültig war"
 	 * @param gueltigBis         das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */
-	public constructor(id : number, kuerzel : String, nummer : String, bezeichnung : String, bemerkungen : String | null, kuerzelAllg : String | null, bezeichnungAllg : String | null, erlaubtGOSt : boolean, zulaessig : List<Pair<Schulform, Schulgliederung | null>>, gueltigVon : Number | null, gueltigBis : Number | null);
+	public constructor(id : number, kuerzel : string, nummer : string, bezeichnung : string, bemerkungen : string | null, kuerzelAllg : string | null, bezeichnungAllg : string | null, erlaubtGOSt : boolean, zulaessig : List<Pair<Schulform, Schulgliederung | null>>, gueltigVon : number | null, gueltigBis : number | null);
 
 	/**
 	 * Implementation for method overloads of 'constructor'
 	 */
-	public constructor(__param0? : number, __param1? : String, __param2? : String, __param3? : String, __param4? : String | null, __param5? : String | null, __param6? : String | null, __param7? : boolean, __param8? : List<Pair<Schulform, Schulgliederung | null>>, __param9? : Number | null, __param10? : Number | null) {
+	public constructor(__param0? : number, __param1? : string, __param2? : string, __param3? : string, __param4? : null | string, __param5? : null | string, __param6? : null | string, __param7? : boolean, __param8? : List<Pair<Schulform, Schulgliederung | null>>, __param9? : null | number, __param10? : null | number) {
 		super();
 		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined") && (typeof __param2 === "undefined") && (typeof __param3 === "undefined") && (typeof __param4 === "undefined") && (typeof __param5 === "undefined") && (typeof __param6 === "undefined") && (typeof __param7 === "undefined") && (typeof __param8 === "undefined") && (typeof __param9 === "undefined") && (typeof __param10 === "undefined")) {
-			} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && ((__param1 instanceof String) || (typeof __param1 === "string"))) && ((typeof __param2 !== "undefined") && ((__param2 instanceof String) || (typeof __param2 === "string"))) && ((typeof __param3 !== "undefined") && ((__param3 instanceof String) || (typeof __param3 === "string"))) && ((typeof __param4 !== "undefined") && ((__param4 instanceof String) || (typeof __param4 === "string")) || (__param4 === null)) && ((typeof __param5 !== "undefined") && ((__param5 instanceof String) || (typeof __param5 === "string")) || (__param5 === null)) && ((typeof __param6 !== "undefined") && ((__param6 instanceof String) || (typeof __param6 === "string")) || (__param6 === null)) && ((typeof __param7 !== "undefined") && typeof __param7 === "boolean") && ((typeof __param8 !== "undefined") && ((__param8 instanceof JavaObject) && (__param8.isTranspiledInstanceOf('java.util.List'))) || (__param8 === null)) && ((typeof __param9 !== "undefined") && ((__param9 instanceof Number) || (typeof __param9 === "number")) || (__param9 === null)) && ((typeof __param10 !== "undefined") && ((__param10 instanceof Number) || (typeof __param10 === "number")) || (__param10 === null))) {
+			} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && (typeof __param1 === "string")) && ((typeof __param2 !== "undefined") && (typeof __param2 === "string")) && ((typeof __param3 !== "undefined") && (typeof __param3 === "string")) && ((typeof __param4 !== "undefined") && (typeof __param4 === "string") || (__param4 === null)) && ((typeof __param5 !== "undefined") && (typeof __param5 === "string") || (__param5 === null)) && ((typeof __param6 !== "undefined") && (typeof __param6 === "string") || (__param6 === null)) && ((typeof __param7 !== "undefined") && typeof __param7 === "boolean") && ((typeof __param8 !== "undefined") && ((__param8 instanceof JavaObject) && (__param8.isTranspiledInstanceOf('java.util.List'))) || (__param8 === null)) && ((typeof __param9 !== "undefined") && (typeof __param9 === "number") || (__param9 === null)) && ((typeof __param10 !== "undefined") && (typeof __param10 === "number") || (__param10 === null))) {
 			let id : number = __param0 as number;
-			let kuerzel : String = __param1;
-			let nummer : String = __param2;
-			let bezeichnung : String = __param3;
-			let bemerkungen : String | null = __param4;
-			let kuerzelAllg : String | null = __param5;
-			let bezeichnungAllg : String | null = __param6;
+			let kuerzel : string = __param1;
+			let nummer : string = __param2;
+			let bezeichnung : string = __param3;
+			let bemerkungen : string | null = __param4;
+			let kuerzelAllg : string | null = __param5;
+			let bezeichnungAllg : string | null = __param6;
 			let erlaubtGOSt : boolean = __param7 as boolean;
 			let zulaessig : List<Pair<Schulform, Schulgliederung | null>> = cast_java_util_List(__param8);
-			let gueltigVon : Number | null = cast_java_lang_Integer(__param9);
-			let gueltigBis : Number | null = cast_java_lang_Integer(__param10);
+			let gueltigVon : number | null = __param9;
+			let gueltigBis : number | null = __param10;
 			this.id = id;
 			this.kuerzel = kuerzel;
 			this.nummer = nummer;
@@ -142,16 +142,16 @@ export class KursartKatalogEintrag extends JavaObject {
 		result.id = obj.id;
 		if (typeof obj.kuerzel === "undefined")
 			 throw new Error('invalid json format, missing attribute kuerzel');
-		result.kuerzel = String(obj.kuerzel);
+		result.kuerzel = obj.kuerzel;
 		if (typeof obj.nummer === "undefined")
 			 throw new Error('invalid json format, missing attribute nummer');
-		result.nummer = String(obj.nummer);
+		result.nummer = obj.nummer;
 		if (typeof obj.bezeichnung === "undefined")
 			 throw new Error('invalid json format, missing attribute bezeichnung');
-		result.bezeichnung = String(obj.bezeichnung);
-		result.bemerkungen = typeof obj.bemerkungen === "undefined" ? null : obj.bemerkungen === null ? null : String(obj.bemerkungen);
-		result.kuerzelAllg = typeof obj.kuerzelAllg === "undefined" ? null : obj.kuerzelAllg === null ? null : String(obj.kuerzelAllg);
-		result.bezeichnungAllg = typeof obj.bezeichnungAllg === "undefined" ? null : obj.bezeichnungAllg === null ? null : String(obj.bezeichnungAllg);
+		result.bezeichnung = obj.bezeichnung;
+		result.bemerkungen = typeof obj.bemerkungen === "undefined" ? null : obj.bemerkungen === null ? null : obj.bemerkungen;
+		result.kuerzelAllg = typeof obj.kuerzelAllg === "undefined" ? null : obj.kuerzelAllg === null ? null : obj.kuerzelAllg;
+		result.bezeichnungAllg = typeof obj.bezeichnungAllg === "undefined" ? null : obj.bezeichnungAllg === null ? null : obj.bezeichnungAllg;
 		if (typeof obj.erlaubtGOSt === "undefined")
 			 throw new Error('invalid json format, missing attribute erlaubtGOSt');
 		result.erlaubtGOSt = obj.erlaubtGOSt;
@@ -160,20 +160,20 @@ export class KursartKatalogEintrag extends JavaObject {
 				result.zulaessig?.add(SchulformSchulgliederung.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : Number(obj.gueltigVon);
-		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : Number(obj.gueltigBis);
+		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
+		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : KursartKatalogEintrag) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"kuerzel" : ' + '"' + obj.kuerzel.valueOf() + '"' + ',';
-		result += '"nummer" : ' + '"' + obj.nummer.valueOf() + '"' + ',';
-		result += '"bezeichnung" : ' + '"' + obj.bezeichnung.valueOf() + '"' + ',';
-		result += '"bemerkungen" : ' + ((!obj.bemerkungen) ? 'null' : '"' + obj.bemerkungen.valueOf() + '"') + ',';
-		result += '"kuerzelAllg" : ' + ((!obj.kuerzelAllg) ? 'null' : '"' + obj.kuerzelAllg.valueOf() + '"') + ',';
-		result += '"bezeichnungAllg" : ' + ((!obj.bezeichnungAllg) ? 'null' : '"' + obj.bezeichnungAllg.valueOf() + '"') + ',';
+		result += '"kuerzel" : ' + '"' + obj.kuerzel! + '"' + ',';
+		result += '"nummer" : ' + '"' + obj.nummer! + '"' + ',';
+		result += '"bezeichnung" : ' + '"' + obj.bezeichnung! + '"' + ',';
+		result += '"bemerkungen" : ' + ((!obj.bemerkungen) ? 'null' : '"' + obj.bemerkungen + '"') + ',';
+		result += '"kuerzelAllg" : ' + ((!obj.kuerzelAllg) ? 'null' : '"' + obj.kuerzelAllg + '"') + ',';
+		result += '"bezeichnungAllg" : ' + ((!obj.bezeichnungAllg) ? 'null' : '"' + obj.bezeichnungAllg + '"') + ',';
 		result += '"erlaubtGOSt" : ' + obj.erlaubtGOSt + ',';
 		if (!obj.zulaessig) {
 			result += '"zulaessig" : []';
@@ -187,8 +187,8 @@ export class KursartKatalogEintrag extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.valueOf()) + ',';
-		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.valueOf()) + ',';
+		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
+		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -200,22 +200,22 @@ export class KursartKatalogEintrag extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.kuerzel !== "undefined") {
-			result += '"kuerzel" : ' + '"' + obj.kuerzel.valueOf() + '"' + ',';
+			result += '"kuerzel" : ' + '"' + obj.kuerzel + '"' + ',';
 		}
 		if (typeof obj.nummer !== "undefined") {
-			result += '"nummer" : ' + '"' + obj.nummer.valueOf() + '"' + ',';
+			result += '"nummer" : ' + '"' + obj.nummer + '"' + ',';
 		}
 		if (typeof obj.bezeichnung !== "undefined") {
-			result += '"bezeichnung" : ' + '"' + obj.bezeichnung.valueOf() + '"' + ',';
+			result += '"bezeichnung" : ' + '"' + obj.bezeichnung + '"' + ',';
 		}
 		if (typeof obj.bemerkungen !== "undefined") {
-			result += '"bemerkungen" : ' + ((!obj.bemerkungen) ? 'null' : '"' + obj.bemerkungen.valueOf() + '"') + ',';
+			result += '"bemerkungen" : ' + ((!obj.bemerkungen) ? 'null' : '"' + obj.bemerkungen + '"') + ',';
 		}
 		if (typeof obj.kuerzelAllg !== "undefined") {
-			result += '"kuerzelAllg" : ' + ((!obj.kuerzelAllg) ? 'null' : '"' + obj.kuerzelAllg.valueOf() + '"') + ',';
+			result += '"kuerzelAllg" : ' + ((!obj.kuerzelAllg) ? 'null' : '"' + obj.kuerzelAllg + '"') + ',';
 		}
 		if (typeof obj.bezeichnungAllg !== "undefined") {
-			result += '"bezeichnungAllg" : ' + ((!obj.bezeichnungAllg) ? 'null' : '"' + obj.bezeichnungAllg.valueOf() + '"') + ',';
+			result += '"bezeichnungAllg" : ' + ((!obj.bezeichnungAllg) ? 'null' : '"' + obj.bezeichnungAllg + '"') + ',';
 		}
 		if (typeof obj.erlaubtGOSt !== "undefined") {
 			result += '"erlaubtGOSt" : ' + obj.erlaubtGOSt + ',';
@@ -235,10 +235,10 @@ export class KursartKatalogEintrag extends JavaObject {
 			}
 		}
 		if (typeof obj.gueltigVon !== "undefined") {
-			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.valueOf()) + ',';
+			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
 		}
 		if (typeof obj.gueltigBis !== "undefined") {
-			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.valueOf()) + ',';
+			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

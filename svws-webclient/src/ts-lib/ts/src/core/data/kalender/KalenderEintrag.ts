@@ -6,37 +6,37 @@ export class KalenderEintrag extends JavaObject {
 	/**
 	 * ID des Kalendereintrags 
 	 */
-	public id : String = "";
+	public id : string = "";
 
 	/**
 	 * ID des Kalenders 
 	 */
-	public kalenderId : String = "";
+	public kalenderId : string = "";
 
 	/**
 	 *  URI der ICS-Repräsentation des Kalendereintrags
 	 */
-	public uid : String = "";
+	public uid : string = "";
 
 	/**
 	 *  Versionskennzeichen des Kontaks
 	 */
-	public version : String = "";
+	public version : string = "";
 
 	/**
 	 * das serialisierte .ics dieses Kalendereintrags 
 	 */
-	public data : String = "";
+	public data : string = "";
 
 	/**
 	 * der Startzeitpunkt dieses Kalendereintrags als SQL-Timestamp 
 	 */
-	public kalenderStart : String | null = null;
+	public kalenderStart : string | null = null;
 
 	/**
 	 * der Endzeitpunkt dieses Kalendereintrags als SQL-Timestamp 
 	 */
-	public kalenderEnde : String | null = null;
+	public kalenderEnde : string | null = null;
 
 	/**
 	 * ob der angemeldete Nutzer Schreibrecht auf dem Kalender hat 
@@ -56,7 +56,7 @@ export class KalenderEintrag extends JavaObject {
 	/**
 	 * der Typ des Kalendereintrags 
 	 */
-	public kalenderTyp : String = "VEVENT";
+	public kalenderTyp : string = "VEVENT";
 
 
 	public constructor() {
@@ -72,21 +72,21 @@ export class KalenderEintrag extends JavaObject {
 		const result = new KalenderEintrag();
 		if (typeof obj.id === "undefined")
 			 throw new Error('invalid json format, missing attribute id');
-		result.id = String(obj.id);
+		result.id = obj.id;
 		if (typeof obj.kalenderId === "undefined")
 			 throw new Error('invalid json format, missing attribute kalenderId');
-		result.kalenderId = String(obj.kalenderId);
+		result.kalenderId = obj.kalenderId;
 		if (typeof obj.uid === "undefined")
 			 throw new Error('invalid json format, missing attribute uid');
-		result.uid = String(obj.uid);
+		result.uid = obj.uid;
 		if (typeof obj.version === "undefined")
 			 throw new Error('invalid json format, missing attribute version');
-		result.version = String(obj.version);
+		result.version = obj.version;
 		if (typeof obj.data === "undefined")
 			 throw new Error('invalid json format, missing attribute data');
-		result.data = String(obj.data);
-		result.kalenderStart = typeof obj.kalenderStart === "undefined" ? null : obj.kalenderStart === null ? null : String(obj.kalenderStart);
-		result.kalenderEnde = typeof obj.kalenderEnde === "undefined" ? null : obj.kalenderEnde === null ? null : String(obj.kalenderEnde);
+		result.data = obj.data;
+		result.kalenderStart = typeof obj.kalenderStart === "undefined" ? null : obj.kalenderStart === null ? null : obj.kalenderStart;
+		result.kalenderEnde = typeof obj.kalenderEnde === "undefined" ? null : obj.kalenderEnde === null ? null : obj.kalenderEnde;
 		if (typeof obj.darfSchreiben === "undefined")
 			 throw new Error('invalid json format, missing attribute darfSchreiben');
 		result.darfSchreiben = obj.darfSchreiben;
@@ -98,23 +98,23 @@ export class KalenderEintrag extends JavaObject {
 		result.istBesitzer = obj.istBesitzer;
 		if (typeof obj.kalenderTyp === "undefined")
 			 throw new Error('invalid json format, missing attribute kalenderTyp');
-		result.kalenderTyp = String(obj.kalenderTyp);
+		result.kalenderTyp = obj.kalenderTyp;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : KalenderEintrag) : string {
 		let result = '{';
-		result += '"id" : ' + '"' + obj.id.valueOf() + '"' + ',';
-		result += '"kalenderId" : ' + '"' + obj.kalenderId.valueOf() + '"' + ',';
-		result += '"uid" : ' + '"' + obj.uid.valueOf() + '"' + ',';
-		result += '"version" : ' + '"' + obj.version.valueOf() + '"' + ',';
-		result += '"data" : ' + '"' + obj.data.valueOf() + '"' + ',';
-		result += '"kalenderStart" : ' + ((!obj.kalenderStart) ? 'null' : '"' + obj.kalenderStart.valueOf() + '"') + ',';
-		result += '"kalenderEnde" : ' + ((!obj.kalenderEnde) ? 'null' : '"' + obj.kalenderEnde.valueOf() + '"') + ',';
+		result += '"id" : ' + '"' + obj.id! + '"' + ',';
+		result += '"kalenderId" : ' + '"' + obj.kalenderId! + '"' + ',';
+		result += '"uid" : ' + '"' + obj.uid! + '"' + ',';
+		result += '"version" : ' + '"' + obj.version! + '"' + ',';
+		result += '"data" : ' + '"' + obj.data! + '"' + ',';
+		result += '"kalenderStart" : ' + ((!obj.kalenderStart) ? 'null' : '"' + obj.kalenderStart + '"') + ',';
+		result += '"kalenderEnde" : ' + ((!obj.kalenderEnde) ? 'null' : '"' + obj.kalenderEnde + '"') + ',';
 		result += '"darfSchreiben" : ' + obj.darfSchreiben + ',';
 		result += '"darfLesen" : ' + obj.darfLesen + ',';
 		result += '"istBesitzer" : ' + obj.istBesitzer + ',';
-		result += '"kalenderTyp" : ' + '"' + obj.kalenderTyp.valueOf() + '"' + ',';
+		result += '"kalenderTyp" : ' + '"' + obj.kalenderTyp! + '"' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -123,25 +123,25 @@ export class KalenderEintrag extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<KalenderEintrag>) : string {
 		let result = '{';
 		if (typeof obj.id !== "undefined") {
-			result += '"id" : ' + '"' + obj.id.valueOf() + '"' + ',';
+			result += '"id" : ' + '"' + obj.id + '"' + ',';
 		}
 		if (typeof obj.kalenderId !== "undefined") {
-			result += '"kalenderId" : ' + '"' + obj.kalenderId.valueOf() + '"' + ',';
+			result += '"kalenderId" : ' + '"' + obj.kalenderId + '"' + ',';
 		}
 		if (typeof obj.uid !== "undefined") {
-			result += '"uid" : ' + '"' + obj.uid.valueOf() + '"' + ',';
+			result += '"uid" : ' + '"' + obj.uid + '"' + ',';
 		}
 		if (typeof obj.version !== "undefined") {
-			result += '"version" : ' + '"' + obj.version.valueOf() + '"' + ',';
+			result += '"version" : ' + '"' + obj.version + '"' + ',';
 		}
 		if (typeof obj.data !== "undefined") {
-			result += '"data" : ' + '"' + obj.data.valueOf() + '"' + ',';
+			result += '"data" : ' + '"' + obj.data + '"' + ',';
 		}
 		if (typeof obj.kalenderStart !== "undefined") {
-			result += '"kalenderStart" : ' + ((!obj.kalenderStart) ? 'null' : '"' + obj.kalenderStart.valueOf() + '"') + ',';
+			result += '"kalenderStart" : ' + ((!obj.kalenderStart) ? 'null' : '"' + obj.kalenderStart + '"') + ',';
 		}
 		if (typeof obj.kalenderEnde !== "undefined") {
-			result += '"kalenderEnde" : ' + ((!obj.kalenderEnde) ? 'null' : '"' + obj.kalenderEnde.valueOf() + '"') + ',';
+			result += '"kalenderEnde" : ' + ((!obj.kalenderEnde) ? 'null' : '"' + obj.kalenderEnde + '"') + ',';
 		}
 		if (typeof obj.darfSchreiben !== "undefined") {
 			result += '"darfSchreiben" : ' + obj.darfSchreiben + ',';
@@ -153,7 +153,7 @@ export class KalenderEintrag extends JavaObject {
 			result += '"istBesitzer" : ' + obj.istBesitzer + ',';
 		}
 		if (typeof obj.kalenderTyp !== "undefined") {
-			result += '"kalenderTyp" : ' + '"' + obj.kalenderTyp.valueOf() + '"' + ',';
+			result += '"kalenderTyp" : ' + '"' + obj.kalenderTyp + '"' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

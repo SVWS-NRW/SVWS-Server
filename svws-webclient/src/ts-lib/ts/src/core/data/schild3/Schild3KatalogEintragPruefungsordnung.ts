@@ -7,47 +7,47 @@ export class Schild3KatalogEintragPruefungsordnung extends JavaObject {
 	/**
 	 * Zulässige Schulformen der Prüfungsordnungen 
 	 */
-	public PO_Schulform : String | null = null;
+	public PO_Schulform : string | null = null;
 
 	/**
 	 * Erstes Kürzel 
 	 */
-	public PO_Krz : String | null = null;
+	public PO_Krz : string | null = null;
 
 	/**
 	 * Zweites Kürzel 
 	 */
-	public PO_Name : String | null = null;
+	public PO_Name : string | null = null;
 
 	/**
 	 * Zulässige Gliederungen 
 	 */
-	public PO_SGL : String | null = null;
+	public PO_SGL : string | null = null;
 
 	/**
 	 * Deprecated  
 	 */
-	public PO_MinJahrgang : Number | null = null;
+	public PO_MinJahrgang : number | null = null;
 
 	/**
 	 * Deprecated 
 	 */
-	public PO_MaxJahrgang : Number | null = null;
+	public PO_MaxJahrgang : number | null = null;
 
 	/**
 	 * Zulässige Jahrgänge 
 	 */
-	public PO_Jahrgaenge : String | null = null;
+	public PO_Jahrgaenge : string | null = null;
 
 	/**
 	 * Gültig ab Schuljahr 
 	 */
-	public gueltigVon : Number | null = null;
+	public gueltigVon : number | null = null;
 
 	/**
 	 * Gültig bis Schuljahr 
 	 */
-	public gueltigBis : Number | null = null;
+	public gueltigBis : number | null = null;
 
 
 	public constructor() {
@@ -61,29 +61,29 @@ export class Schild3KatalogEintragPruefungsordnung extends JavaObject {
 	public static transpilerFromJSON(json : string): Schild3KatalogEintragPruefungsordnung {
 		const obj = JSON.parse(json);
 		const result = new Schild3KatalogEintragPruefungsordnung();
-		result.PO_Schulform = typeof obj.PO_Schulform === "undefined" ? null : obj.PO_Schulform === null ? null : String(obj.PO_Schulform);
-		result.PO_Krz = typeof obj.PO_Krz === "undefined" ? null : obj.PO_Krz === null ? null : String(obj.PO_Krz);
-		result.PO_Name = typeof obj.PO_Name === "undefined" ? null : obj.PO_Name === null ? null : String(obj.PO_Name);
-		result.PO_SGL = typeof obj.PO_SGL === "undefined" ? null : obj.PO_SGL === null ? null : String(obj.PO_SGL);
-		result.PO_MinJahrgang = typeof obj.PO_MinJahrgang === "undefined" ? null : obj.PO_MinJahrgang === null ? null : Number(obj.PO_MinJahrgang);
-		result.PO_MaxJahrgang = typeof obj.PO_MaxJahrgang === "undefined" ? null : obj.PO_MaxJahrgang === null ? null : Number(obj.PO_MaxJahrgang);
-		result.PO_Jahrgaenge = typeof obj.PO_Jahrgaenge === "undefined" ? null : obj.PO_Jahrgaenge === null ? null : String(obj.PO_Jahrgaenge);
-		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : Number(obj.gueltigVon);
-		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : Number(obj.gueltigBis);
+		result.PO_Schulform = typeof obj.PO_Schulform === "undefined" ? null : obj.PO_Schulform === null ? null : obj.PO_Schulform;
+		result.PO_Krz = typeof obj.PO_Krz === "undefined" ? null : obj.PO_Krz === null ? null : obj.PO_Krz;
+		result.PO_Name = typeof obj.PO_Name === "undefined" ? null : obj.PO_Name === null ? null : obj.PO_Name;
+		result.PO_SGL = typeof obj.PO_SGL === "undefined" ? null : obj.PO_SGL === null ? null : obj.PO_SGL;
+		result.PO_MinJahrgang = typeof obj.PO_MinJahrgang === "undefined" ? null : obj.PO_MinJahrgang === null ? null : obj.PO_MinJahrgang;
+		result.PO_MaxJahrgang = typeof obj.PO_MaxJahrgang === "undefined" ? null : obj.PO_MaxJahrgang === null ? null : obj.PO_MaxJahrgang;
+		result.PO_Jahrgaenge = typeof obj.PO_Jahrgaenge === "undefined" ? null : obj.PO_Jahrgaenge === null ? null : obj.PO_Jahrgaenge;
+		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
+		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : Schild3KatalogEintragPruefungsordnung) : string {
 		let result = '{';
-		result += '"PO_Schulform" : ' + ((!obj.PO_Schulform) ? 'null' : '"' + obj.PO_Schulform.valueOf() + '"') + ',';
-		result += '"PO_Krz" : ' + ((!obj.PO_Krz) ? 'null' : '"' + obj.PO_Krz.valueOf() + '"') + ',';
-		result += '"PO_Name" : ' + ((!obj.PO_Name) ? 'null' : '"' + obj.PO_Name.valueOf() + '"') + ',';
-		result += '"PO_SGL" : ' + ((!obj.PO_SGL) ? 'null' : '"' + obj.PO_SGL.valueOf() + '"') + ',';
-		result += '"PO_MinJahrgang" : ' + ((!obj.PO_MinJahrgang) ? 'null' : obj.PO_MinJahrgang.valueOf()) + ',';
-		result += '"PO_MaxJahrgang" : ' + ((!obj.PO_MaxJahrgang) ? 'null' : obj.PO_MaxJahrgang.valueOf()) + ',';
-		result += '"PO_Jahrgaenge" : ' + ((!obj.PO_Jahrgaenge) ? 'null' : '"' + obj.PO_Jahrgaenge.valueOf() + '"') + ',';
-		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.valueOf()) + ',';
-		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.valueOf()) + ',';
+		result += '"PO_Schulform" : ' + ((!obj.PO_Schulform) ? 'null' : '"' + obj.PO_Schulform + '"') + ',';
+		result += '"PO_Krz" : ' + ((!obj.PO_Krz) ? 'null' : '"' + obj.PO_Krz + '"') + ',';
+		result += '"PO_Name" : ' + ((!obj.PO_Name) ? 'null' : '"' + obj.PO_Name + '"') + ',';
+		result += '"PO_SGL" : ' + ((!obj.PO_SGL) ? 'null' : '"' + obj.PO_SGL + '"') + ',';
+		result += '"PO_MinJahrgang" : ' + ((!obj.PO_MinJahrgang) ? 'null' : obj.PO_MinJahrgang) + ',';
+		result += '"PO_MaxJahrgang" : ' + ((!obj.PO_MaxJahrgang) ? 'null' : obj.PO_MaxJahrgang) + ',';
+		result += '"PO_Jahrgaenge" : ' + ((!obj.PO_Jahrgaenge) ? 'null' : '"' + obj.PO_Jahrgaenge + '"') + ',';
+		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
+		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -92,31 +92,31 @@ export class Schild3KatalogEintragPruefungsordnung extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<Schild3KatalogEintragPruefungsordnung>) : string {
 		let result = '{';
 		if (typeof obj.PO_Schulform !== "undefined") {
-			result += '"PO_Schulform" : ' + ((!obj.PO_Schulform) ? 'null' : '"' + obj.PO_Schulform.valueOf() + '"') + ',';
+			result += '"PO_Schulform" : ' + ((!obj.PO_Schulform) ? 'null' : '"' + obj.PO_Schulform + '"') + ',';
 		}
 		if (typeof obj.PO_Krz !== "undefined") {
-			result += '"PO_Krz" : ' + ((!obj.PO_Krz) ? 'null' : '"' + obj.PO_Krz.valueOf() + '"') + ',';
+			result += '"PO_Krz" : ' + ((!obj.PO_Krz) ? 'null' : '"' + obj.PO_Krz + '"') + ',';
 		}
 		if (typeof obj.PO_Name !== "undefined") {
-			result += '"PO_Name" : ' + ((!obj.PO_Name) ? 'null' : '"' + obj.PO_Name.valueOf() + '"') + ',';
+			result += '"PO_Name" : ' + ((!obj.PO_Name) ? 'null' : '"' + obj.PO_Name + '"') + ',';
 		}
 		if (typeof obj.PO_SGL !== "undefined") {
-			result += '"PO_SGL" : ' + ((!obj.PO_SGL) ? 'null' : '"' + obj.PO_SGL.valueOf() + '"') + ',';
+			result += '"PO_SGL" : ' + ((!obj.PO_SGL) ? 'null' : '"' + obj.PO_SGL + '"') + ',';
 		}
 		if (typeof obj.PO_MinJahrgang !== "undefined") {
-			result += '"PO_MinJahrgang" : ' + ((!obj.PO_MinJahrgang) ? 'null' : obj.PO_MinJahrgang.valueOf()) + ',';
+			result += '"PO_MinJahrgang" : ' + ((!obj.PO_MinJahrgang) ? 'null' : obj.PO_MinJahrgang) + ',';
 		}
 		if (typeof obj.PO_MaxJahrgang !== "undefined") {
-			result += '"PO_MaxJahrgang" : ' + ((!obj.PO_MaxJahrgang) ? 'null' : obj.PO_MaxJahrgang.valueOf()) + ',';
+			result += '"PO_MaxJahrgang" : ' + ((!obj.PO_MaxJahrgang) ? 'null' : obj.PO_MaxJahrgang) + ',';
 		}
 		if (typeof obj.PO_Jahrgaenge !== "undefined") {
-			result += '"PO_Jahrgaenge" : ' + ((!obj.PO_Jahrgaenge) ? 'null' : '"' + obj.PO_Jahrgaenge.valueOf() + '"') + ',';
+			result += '"PO_Jahrgaenge" : ' + ((!obj.PO_Jahrgaenge) ? 'null' : '"' + obj.PO_Jahrgaenge + '"') + ',';
 		}
 		if (typeof obj.gueltigVon !== "undefined") {
-			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.valueOf()) + ',';
+			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
 		}
 		if (typeof obj.gueltigBis !== "undefined") {
-			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.valueOf()) + ',';
+			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

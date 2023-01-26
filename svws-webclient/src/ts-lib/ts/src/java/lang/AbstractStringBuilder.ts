@@ -7,11 +7,11 @@ import { StringIndexOutOfBoundsException } from './StringIndexOutOfBoundsExcepti
 
 export class AbstractStringBuilder extends JavaObject implements Appendable, CharSequence {
 
-    protected value: String;
+    protected value: string;
 
-    constructor(param? : String | number) {
+    constructor(param? : string | number) {
         super();
-        if (param instanceof String) {
+        if (typeof param === "string") {
             this.value = param;
         } else {
             this.value = "";
@@ -133,9 +133,9 @@ export class AbstractStringBuilder extends JavaObject implements Appendable, Cha
             }
         } else if ((typeof param === "object") && (param instanceof AbstractStringBuilder)) { // TODO CharSequence ... use type guards ?
             if ((typeof start !== "undefined") && (typeof end !== "undefined")) {
-                this.value += param.toString().substring(start, end);
+                this.value += param.toString()?.substring(start, end) || "";
             } else {
-                this.value += param.toString().valueOf();
+                this.value += (param.toString() || "");
             }
         } else if ((typeof param === "function") || (typeof param === "object") || (typeof param === "symbol")) {
             this.value += JSON.stringify(param);
@@ -167,7 +167,7 @@ export class AbstractStringBuilder extends JavaObject implements Appendable, Cha
     }
 
 
-    public replace(start : number, end : number, str : String) : AbstractStringBuilder {
+    public replace(start : number, end : number, str : string) : AbstractStringBuilder {
         this.value = this.value.substring(0, start) + str + this.value.substring(end, this.value.length);
         return this;
     }
@@ -207,7 +207,7 @@ export class AbstractStringBuilder extends JavaObject implements Appendable, Cha
     }
 
 
-    public toString() : String {
+    public toString() : string {
         return this.value;
     }
 

@@ -10,7 +10,7 @@ import { KAOAZusatzmerkmal, cast_de_nrw_schule_svws_core_types_kaoa_KAOAZusatzme
 export class KAOAAnschlussoptionen extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -19,7 +19,7 @@ export class KAOAAnschlussoptionen extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<KAOAAnschlussoptionen> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, KAOAAnschlussoptionen> = new Map<String, KAOAAnschlussoptionen>();
+	private static readonly all_values_by_name : Map<string, KAOAAnschlussoptionen> = new Map<string, KAOAAnschlussoptionen>();
 
 	/**
 	 * KAoA-Anschlussoption: Berufspraxisstufe einer Förderschule für Geistige Entwicklung 
@@ -224,12 +224,12 @@ export class KAOAAnschlussoptionen extends JavaObject {
 	/**
 	 * Eine Hashmap mit allen Einträgen, welche ihrer ID zugeordnet sind. 
 	 */
-	private static readonly _statusByID : HashMap<Number, KAOAAnschlussoptionen> = new HashMap();
+	private static readonly _statusByID : HashMap<number, KAOAAnschlussoptionen> = new HashMap();
 
 	/**
 	 * Eine Hashmap mit allen Einträgen, welche dem Kürzel zugeordnet sind. 
 	 */
-	private static readonly _statusByKuerzel : HashMap<String, KAOAAnschlussoptionen> = new HashMap();
+	private static readonly _statusByKuerzel : HashMap<string, KAOAAnschlussoptionen> = new HashMap();
 
 	/**
 	 * Erzeugt ein neues Element in der Aufzählung.
@@ -252,7 +252,7 @@ export class KAOAAnschlussoptionen extends JavaObject {
 	 *    
 	 * @return die Map von der ID auf die zugehörige Anschlussoption
 	 */
-	private static getMapStatusByID() : HashMap<Number, KAOAAnschlussoptionen> {
+	private static getMapStatusByID() : HashMap<number, KAOAAnschlussoptionen> {
 		if (KAOAAnschlussoptionen._statusByID.size() === 0) 
 			for (let g of KAOAAnschlussoptionen.values()) 
 				KAOAAnschlussoptionen._statusByID.put(g.daten.id, g);
@@ -265,7 +265,7 @@ export class KAOAAnschlussoptionen extends JavaObject {
 	 *    
 	 * @return die Map von dem Kürzel auf die zugehörige Anschlussoption
 	 */
-	private static getMapStatusByKuerzel() : HashMap<String, KAOAAnschlussoptionen> {
+	private static getMapStatusByKuerzel() : HashMap<string, KAOAAnschlussoptionen> {
 		if (KAOAAnschlussoptionen._statusByKuerzel.size() === 0) 
 			for (let g of KAOAAnschlussoptionen.values()) 
 				KAOAAnschlussoptionen._statusByKuerzel.put(g.daten.kuerzel, g);
@@ -290,7 +290,7 @@ export class KAOAAnschlussoptionen extends JavaObject {
 	 * 
 	 * @return die Anschlussoption oder null, falls das Kürzel ungültig ist
 	 */
-	public static getByKuerzel(kuerzel : String | null) : KAOAAnschlussoptionen | null {
+	public static getByKuerzel(kuerzel : string | null) : KAOAAnschlussoptionen | null {
 		return KAOAAnschlussoptionen.getMapStatusByKuerzel().get(kuerzel);
 	}
 
@@ -299,7 +299,7 @@ export class KAOAAnschlussoptionen extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -317,7 +317,7 @@ export class KAOAAnschlussoptionen extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -371,7 +371,7 @@ export class KAOAAnschlussoptionen extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : KAOAAnschlussoptionen | null {
+	public static valueOf(name : string) : KAOAAnschlussoptionen | null {
 		let tmp : KAOAAnschlussoptionen | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

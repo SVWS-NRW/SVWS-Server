@@ -11,7 +11,7 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 export class Foerderschwerpunkt extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -20,7 +20,7 @@ export class Foerderschwerpunkt extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<Foerderschwerpunkt> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, Foerderschwerpunkt> = new Map<String, Foerderschwerpunkt>();
+	private static readonly all_values_by_name : Map<string, Foerderschwerpunkt> = new Map<string, Foerderschwerpunkt>();
 
 	/**
 	 * Förderschwerpunkt - kein Förderschwerpunkt 
@@ -120,12 +120,12 @@ export class Foerderschwerpunkt extends JavaObject {
 	/**
 	 * Eine Map mit der Zuordnung des Förderschwerpunktes zu dem Kürzel des Förderschwerpunktes 
 	 */
-	private static readonly _foerderschwerpunkteKuerzel : HashMap<String, Foerderschwerpunkt> = new HashMap();
+	private static readonly _foerderschwerpunkteKuerzel : HashMap<string, Foerderschwerpunkt> = new HashMap();
 
 	/**
 	 * Eine Map mit der Zuordnung des Förderschwerpunktes zu der ID des Förderschwerpunktes 
 	 */
-	private static readonly _foerderschwerpunkteID : HashMap<Number, Foerderschwerpunkt> = new HashMap();
+	private static readonly _foerderschwerpunkteID : HashMap<number, Foerderschwerpunkt> = new HashMap();
 
 	/**
 	 * Die Schulformen, bei welchen der Förderschwerpunkt vorkommt 
@@ -162,7 +162,7 @@ export class Foerderschwerpunkt extends JavaObject {
 	 *    
 	 * @return die Map von den Kürzeln der Förderschwerpunkte auf die zugehörigen Förderschwerpunkte
 	 */
-	private static getMapFoerderschwerpunktByKuerzel() : HashMap<String, Foerderschwerpunkt> {
+	private static getMapFoerderschwerpunktByKuerzel() : HashMap<string, Foerderschwerpunkt> {
 		if (Foerderschwerpunkt._foerderschwerpunkteKuerzel.size() === 0) 
 			for (let s of Foerderschwerpunkt.values()) 
 				Foerderschwerpunkt._foerderschwerpunkteKuerzel.put(s.daten.kuerzel, s);
@@ -175,7 +175,7 @@ export class Foerderschwerpunkt extends JavaObject {
 	 *    
 	 * @return die Map von den IDs der Förderschwerpunkte auf die zugehörigen Förderschwerpunkte
 	 */
-	private static getMapFoerderschwerpunktByID() : HashMap<Number, Foerderschwerpunkt> {
+	private static getMapFoerderschwerpunktByID() : HashMap<number, Foerderschwerpunkt> {
 		if (Foerderschwerpunkt._foerderschwerpunkteID.size() === 0) 
 			for (let s of Foerderschwerpunkt.values()) {
 				for (let k of s.historie) 
@@ -191,7 +191,7 @@ export class Foerderschwerpunkt extends JavaObject {
 	 * 
 	 * @return der Förderschwerpunkt oder null, falls das Kürzel ungültig ist
 	 */
-	public static getByKuerzel(kuerzel : String | null) : Foerderschwerpunkt | null {
+	public static getByKuerzel(kuerzel : string | null) : Foerderschwerpunkt | null {
 		return Foerderschwerpunkt.getMapFoerderschwerpunktByKuerzel().get(kuerzel);
 	}
 
@@ -202,7 +202,7 @@ export class Foerderschwerpunkt extends JavaObject {
 	 * 
 	 * @return der Förderschwerpunkt oder null, falls die ID ungültig ist
 	 */
-	public static getByID(id : Number | null) : Foerderschwerpunkt | null {
+	public static getByID(id : number | null) : Foerderschwerpunkt | null {
 		return Foerderschwerpunkt.getMapFoerderschwerpunktByID().get(id);
 	}
 
@@ -243,12 +243,12 @@ export class Foerderschwerpunkt extends JavaObject {
 	 * 
 	 * @return true, falls der Förderschwerpunkt bei der Schulform existiert und ansonsten false
 	 */
-	public hasSchulformByKuerzel(kuerzel : String | null) : boolean {
+	public hasSchulformByKuerzel(kuerzel : string | null) : boolean {
 		if ((kuerzel === null) || JavaObject.equalsTranspiler("", (kuerzel))) 
 			return false;
 		if (this.daten.schulformen !== null) {
 			for (let i : number = 0; i < this.daten.schulformen.size(); i++){
-				let sfKuerzel : String | null = this.daten.schulformen.get(i);
+				let sfKuerzel : string | null = this.daten.schulformen.get(i);
 				if (JavaObject.equalsTranspiler(sfKuerzel, (kuerzel))) 
 					return true;
 			}
@@ -268,7 +268,7 @@ export class Foerderschwerpunkt extends JavaObject {
 			return false;
 		if (this.daten.schulformen !== null) {
 			for (let i : number = 0; i < this.daten.schulformen.size(); i++){
-				let sfKuerzel : String | null = this.daten.schulformen.get(i);
+				let sfKuerzel : string | null = this.daten.schulformen.get(i);
 				if (JavaObject.equalsTranspiler(sfKuerzel, (schulform.daten.kuerzel))) 
 					return true;
 			}
@@ -284,7 +284,7 @@ export class Foerderschwerpunkt extends JavaObject {
 	 * 
 	 * @return der Förderschwerpunkt, falls die Parameter gültige Werte sind und ansonsten null 
 	 */
-	public static getBySchulformAndKuerzel(sf : Schulform | null, kuerzel : String | null) : Foerderschwerpunkt | null {
+	public static getBySchulformAndKuerzel(sf : Schulform | null, kuerzel : string | null) : Foerderschwerpunkt | null {
 		if (sf === null) 
 			return null;
 		if ((kuerzel === null) || JavaObject.equalsTranspiler("", (kuerzel))) 
@@ -303,7 +303,7 @@ export class Foerderschwerpunkt extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -321,7 +321,7 @@ export class Foerderschwerpunkt extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -375,7 +375,7 @@ export class Foerderschwerpunkt extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : Foerderschwerpunkt | null {
+	public static valueOf(name : string) : Foerderschwerpunkt | null {
 		let tmp : Foerderschwerpunkt | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

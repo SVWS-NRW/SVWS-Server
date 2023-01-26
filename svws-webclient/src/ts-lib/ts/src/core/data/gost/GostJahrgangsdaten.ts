@@ -14,12 +14,12 @@ export class GostJahrgangsdaten extends JavaObject {
 	/**
 	 * Die aktuelle Jahrgangsstufe, welche dem Abiturjahrgang zugeordnet ist. 
 	 */
-	public jahrgang : String | null = null;
+	public jahrgang : string | null = null;
 
 	/**
 	 * Die textuelle Bezeichnung für den Abiturjahrgang 
 	 */
-	public bezeichnung : String | null = null;
+	public bezeichnung : string | null = null;
 
 	/**
 	 * Gibt an, ob das Abitur für diesen Jahrgang berets abgeschlossen ist, d.h. die Schule sich bereits in einem späteren Schuljahr befindet. 
@@ -30,12 +30,12 @@ export class GostJahrgangsdaten extends JavaObject {
 	 * Der derzeitige Beratungstext, welcher auf einem Ausdruck eines Schülerlaufbahnbogens für die 
 	 *  gymnasiale Oberstufe gedruckt wird. 
 	 */
-	public textBeratungsbogen : String | null = null;
+	public textBeratungsbogen : string | null = null;
 
 	/**
 	 * Der derzeitige Text, der beim Versenden einer Beratungsdatei per Mail verwendet wird. 
 	 */
-	public textMailversand : String | null = null;
+	public textMailversand : string | null = null;
 
 	/**
 	 * Legt fest, ob ein Zusatzkurs in Geschichte angeboten wird. 
@@ -45,7 +45,7 @@ export class GostJahrgangsdaten extends JavaObject {
 	/**
 	 * Das eindeutige Kürzel des Halbjahrs, zu dem ein Zusatzkurs in Geschichte beginnt. 
 	 */
-	public beginnZusatzkursGE : String | null = null;
+	public beginnZusatzkursGE : string | null = null;
 
 	/**
 	 * Legt fest, ob ein Zusatzkurs in Sozialwissenschaften angeboten wird. 
@@ -55,7 +55,7 @@ export class GostJahrgangsdaten extends JavaObject {
 	/**
 	 * Das eindeutige Kürzel des Halbjahrs, zu dem ein Zusatzkurs in Sozialwissenschaften beginnt. 
 	 */
-	public beginnZusatzkursSW : String | null = null;
+	public beginnZusatzkursSW : string | null = null;
 
 	/**
 	 * Gibt an, ob für die jeweilige Halbjahre der Oberstufe bereits eine Blockung in den Leistungsdaten persistiert wurde (0 = EF.1, 1=EF.2, ...) 
@@ -82,21 +82,21 @@ export class GostJahrgangsdaten extends JavaObject {
 		if (typeof obj.abiturjahr === "undefined")
 			 throw new Error('invalid json format, missing attribute abiturjahr');
 		result.abiturjahr = obj.abiturjahr;
-		result.jahrgang = typeof obj.jahrgang === "undefined" ? null : obj.jahrgang === null ? null : String(obj.jahrgang);
-		result.bezeichnung = typeof obj.bezeichnung === "undefined" ? null : obj.bezeichnung === null ? null : String(obj.bezeichnung);
+		result.jahrgang = typeof obj.jahrgang === "undefined" ? null : obj.jahrgang === null ? null : obj.jahrgang;
+		result.bezeichnung = typeof obj.bezeichnung === "undefined" ? null : obj.bezeichnung === null ? null : obj.bezeichnung;
 		if (typeof obj.istAbgeschlossen === "undefined")
 			 throw new Error('invalid json format, missing attribute istAbgeschlossen');
 		result.istAbgeschlossen = obj.istAbgeschlossen;
-		result.textBeratungsbogen = typeof obj.textBeratungsbogen === "undefined" ? null : obj.textBeratungsbogen === null ? null : String(obj.textBeratungsbogen);
-		result.textMailversand = typeof obj.textMailversand === "undefined" ? null : obj.textMailversand === null ? null : String(obj.textMailversand);
+		result.textBeratungsbogen = typeof obj.textBeratungsbogen === "undefined" ? null : obj.textBeratungsbogen === null ? null : obj.textBeratungsbogen;
+		result.textMailversand = typeof obj.textMailversand === "undefined" ? null : obj.textMailversand === null ? null : obj.textMailversand;
 		if (typeof obj.hatZusatzkursGE === "undefined")
 			 throw new Error('invalid json format, missing attribute hatZusatzkursGE');
 		result.hatZusatzkursGE = obj.hatZusatzkursGE;
-		result.beginnZusatzkursGE = typeof obj.beginnZusatzkursGE === "undefined" ? null : obj.beginnZusatzkursGE === null ? null : String(obj.beginnZusatzkursGE);
+		result.beginnZusatzkursGE = typeof obj.beginnZusatzkursGE === "undefined" ? null : obj.beginnZusatzkursGE === null ? null : obj.beginnZusatzkursGE;
 		if (typeof obj.hatZusatzkursSW === "undefined")
 			 throw new Error('invalid json format, missing attribute hatZusatzkursSW');
 		result.hatZusatzkursSW = obj.hatZusatzkursSW;
-		result.beginnZusatzkursSW = typeof obj.beginnZusatzkursSW === "undefined" ? null : obj.beginnZusatzkursSW === null ? null : String(obj.beginnZusatzkursSW);
+		result.beginnZusatzkursSW = typeof obj.beginnZusatzkursSW === "undefined" ? null : obj.beginnZusatzkursSW === null ? null : obj.beginnZusatzkursSW;
 		for (let i : number = 0; i < obj.istBlockungFestgelegt.length; i++) {
 			result.istBlockungFestgelegt[i] = obj.istBlockungFestgelegt[i];
 		}
@@ -111,15 +111,15 @@ export class GostJahrgangsdaten extends JavaObject {
 	public static transpilerToJSON(obj : GostJahrgangsdaten) : string {
 		let result = '{';
 		result += '"abiturjahr" : ' + obj.abiturjahr + ',';
-		result += '"jahrgang" : ' + ((!obj.jahrgang) ? 'null' : '"' + obj.jahrgang.valueOf() + '"') + ',';
-		result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : '"' + obj.bezeichnung.valueOf() + '"') + ',';
+		result += '"jahrgang" : ' + ((!obj.jahrgang) ? 'null' : '"' + obj.jahrgang + '"') + ',';
+		result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : '"' + obj.bezeichnung + '"') + ',';
 		result += '"istAbgeschlossen" : ' + obj.istAbgeschlossen + ',';
-		result += '"textBeratungsbogen" : ' + ((!obj.textBeratungsbogen) ? 'null' : '"' + obj.textBeratungsbogen.valueOf() + '"') + ',';
-		result += '"textMailversand" : ' + ((!obj.textMailversand) ? 'null' : '"' + obj.textMailversand.valueOf() + '"') + ',';
+		result += '"textBeratungsbogen" : ' + ((!obj.textBeratungsbogen) ? 'null' : '"' + obj.textBeratungsbogen + '"') + ',';
+		result += '"textMailversand" : ' + ((!obj.textMailversand) ? 'null' : '"' + obj.textMailversand + '"') + ',';
 		result += '"hatZusatzkursGE" : ' + obj.hatZusatzkursGE + ',';
-		result += '"beginnZusatzkursGE" : ' + ((!obj.beginnZusatzkursGE) ? 'null' : '"' + obj.beginnZusatzkursGE.valueOf() + '"') + ',';
+		result += '"beginnZusatzkursGE" : ' + ((!obj.beginnZusatzkursGE) ? 'null' : '"' + obj.beginnZusatzkursGE + '"') + ',';
 		result += '"hatZusatzkursSW" : ' + obj.hatZusatzkursSW + ',';
-		result += '"beginnZusatzkursSW" : ' + ((!obj.beginnZusatzkursSW) ? 'null' : '"' + obj.beginnZusatzkursSW.valueOf() + '"') + ',';
+		result += '"beginnZusatzkursSW" : ' + ((!obj.beginnZusatzkursSW) ? 'null' : '"' + obj.beginnZusatzkursSW + '"') + ',';
 		if (!obj.istBlockungFestgelegt) {
 			result += '"istBlockungFestgelegt" : []';
 		} else {
@@ -155,31 +155,31 @@ export class GostJahrgangsdaten extends JavaObject {
 			result += '"abiturjahr" : ' + obj.abiturjahr + ',';
 		}
 		if (typeof obj.jahrgang !== "undefined") {
-			result += '"jahrgang" : ' + ((!obj.jahrgang) ? 'null' : '"' + obj.jahrgang.valueOf() + '"') + ',';
+			result += '"jahrgang" : ' + ((!obj.jahrgang) ? 'null' : '"' + obj.jahrgang + '"') + ',';
 		}
 		if (typeof obj.bezeichnung !== "undefined") {
-			result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : '"' + obj.bezeichnung.valueOf() + '"') + ',';
+			result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : '"' + obj.bezeichnung + '"') + ',';
 		}
 		if (typeof obj.istAbgeschlossen !== "undefined") {
 			result += '"istAbgeschlossen" : ' + obj.istAbgeschlossen + ',';
 		}
 		if (typeof obj.textBeratungsbogen !== "undefined") {
-			result += '"textBeratungsbogen" : ' + ((!obj.textBeratungsbogen) ? 'null' : '"' + obj.textBeratungsbogen.valueOf() + '"') + ',';
+			result += '"textBeratungsbogen" : ' + ((!obj.textBeratungsbogen) ? 'null' : '"' + obj.textBeratungsbogen + '"') + ',';
 		}
 		if (typeof obj.textMailversand !== "undefined") {
-			result += '"textMailversand" : ' + ((!obj.textMailversand) ? 'null' : '"' + obj.textMailversand.valueOf() + '"') + ',';
+			result += '"textMailversand" : ' + ((!obj.textMailversand) ? 'null' : '"' + obj.textMailversand + '"') + ',';
 		}
 		if (typeof obj.hatZusatzkursGE !== "undefined") {
 			result += '"hatZusatzkursGE" : ' + obj.hatZusatzkursGE + ',';
 		}
 		if (typeof obj.beginnZusatzkursGE !== "undefined") {
-			result += '"beginnZusatzkursGE" : ' + ((!obj.beginnZusatzkursGE) ? 'null' : '"' + obj.beginnZusatzkursGE.valueOf() + '"') + ',';
+			result += '"beginnZusatzkursGE" : ' + ((!obj.beginnZusatzkursGE) ? 'null' : '"' + obj.beginnZusatzkursGE + '"') + ',';
 		}
 		if (typeof obj.hatZusatzkursSW !== "undefined") {
 			result += '"hatZusatzkursSW" : ' + obj.hatZusatzkursSW + ',';
 		}
 		if (typeof obj.beginnZusatzkursSW !== "undefined") {
-			result += '"beginnZusatzkursSW" : ' + ((!obj.beginnZusatzkursSW) ? 'null' : '"' + obj.beginnZusatzkursSW.valueOf() + '"') + ',';
+			result += '"beginnZusatzkursSW" : ' + ((!obj.beginnZusatzkursSW) ? 'null' : '"' + obj.beginnZusatzkursSW + '"') + ',';
 		}
 		if (typeof obj.istBlockungFestgelegt !== "undefined") {
 			let a = obj.istBlockungFestgelegt;

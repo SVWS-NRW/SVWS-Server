@@ -7,7 +7,7 @@ import { SprachreferenzniveauKatalogEintrag, cast_de_nrw_schule_svws_core_data_f
 export class Sprachreferenzniveau extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -16,7 +16,7 @@ export class Sprachreferenzniveau extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<Sprachreferenzniveau> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, Sprachreferenzniveau> = new Map<String, Sprachreferenzniveau>();
+	private static readonly all_values_by_name : Map<string, Sprachreferenzniveau> = new Map<string, Sprachreferenzniveau>();
 
 	/**
 	 * Referenzniveau nach GeR A1. 
@@ -101,12 +101,12 @@ export class Sprachreferenzniveau extends JavaObject {
 	/**
 	 * Die Zuordnung der Sprachreferenzniveaus zu ihren IDs 
 	 */
-	private static readonly _mapID : HashMap<Number, Sprachreferenzniveau> = new HashMap();
+	private static readonly _mapID : HashMap<number, Sprachreferenzniveau> = new HashMap();
 
 	/**
 	 * Die Zuordnung der Sprachreferenzniveaus zu ihren Bezeichnungen 
 	 */
-	private static readonly _mapKuerzel : HashMap<String, Sprachreferenzniveau> = new HashMap();
+	private static readonly _mapKuerzel : HashMap<string, Sprachreferenzniveau> = new HashMap();
 
 	/**
 	 *
@@ -131,7 +131,7 @@ export class Sprachreferenzniveau extends JavaObject {
 	 *    
 	 * @return die Map von den IDs der Sprachreferenzniveaus auf die zugehörigen Sprachreferenzniveaus
 	 */
-	private static getMapByID() : HashMap<Number, Sprachreferenzniveau> {
+	private static getMapByID() : HashMap<number, Sprachreferenzniveau> {
 		if (Sprachreferenzniveau._mapID.size() === 0) 
 			for (let l of Sprachreferenzniveau.values()) 
 				Sprachreferenzniveau._mapID.put(l.daten.id, l);
@@ -144,7 +144,7 @@ export class Sprachreferenzniveau extends JavaObject {
 	 *    
 	 * @return die Map von den Bezeichnungen der Sprachreferenzniveaus auf die zugehörigen Sprachreferenzniveaus
 	 */
-	private static getMapByKuerzel() : HashMap<String, Sprachreferenzniveau> {
+	private static getMapByKuerzel() : HashMap<string, Sprachreferenzniveau> {
 		if (Sprachreferenzniveau._mapKuerzel.size() === 0) 
 			for (let l of Sprachreferenzniveau.values()) 
 				Sprachreferenzniveau._mapKuerzel.put(l.daten.kuerzel, l);
@@ -158,7 +158,7 @@ export class Sprachreferenzniveau extends JavaObject {
 	 *
 	 * @return das Sprachreferenzniveau oder null, wenn die ID ungültig ist
 	 */
-	public static getByID(id : Number | null) : Sprachreferenzniveau | null {
+	public static getByID(id : number | null) : Sprachreferenzniveau | null {
 		return Sprachreferenzniveau.getMapByID().get(id);
 	}
 
@@ -169,7 +169,7 @@ export class Sprachreferenzniveau extends JavaObject {
 	 * 
 	 * @return das Sprachreferenzniveau oder null, wenn das Kürzel ungültig ist
 	 */
-	public static getByKuerzel(kuerzel : String | null) : Sprachreferenzniveau | null {
+	public static getByKuerzel(kuerzel : string | null) : Sprachreferenzniveau | null {
 		return Sprachreferenzniveau.getMapByKuerzel().get(kuerzel);
 	}
 
@@ -180,7 +180,7 @@ export class Sprachreferenzniveau extends JavaObject {
 	 * 
 	 * @return -1 (kleiner), 0 (gleich) oder 1 (größer)
 	 */
-	public vergleiche(kuerzel : String | null) : number {
+	public vergleiche(kuerzel : string | null) : number {
 		let other : Sprachreferenzniveau | null = Sprachreferenzniveau.getByKuerzel(kuerzel);
 		if (other === null) 
 			return 1;
@@ -192,7 +192,7 @@ export class Sprachreferenzniveau extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -210,7 +210,7 @@ export class Sprachreferenzniveau extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -264,7 +264,7 @@ export class Sprachreferenzniveau extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : Sprachreferenzniveau | null {
+	public static valueOf(name : string) : Sprachreferenzniveau | null {
 		let tmp : Sprachreferenzniveau | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

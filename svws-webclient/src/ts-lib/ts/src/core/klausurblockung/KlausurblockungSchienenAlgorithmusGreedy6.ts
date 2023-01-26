@@ -22,7 +22,7 @@ export class KlausurblockungSchienenAlgorithmusGreedy6 extends KlausurblockungSc
 		super(pRandom, pLogger, pDynDaten);
 	}
 
-	public toString() : String {
+	public toString() : string {
 		return "Recursive Largest First (RLF)";
 	}
 
@@ -48,7 +48,7 @@ export class KlausurblockungSchienenAlgorithmusGreedy6 extends KlausurblockungSc
 				this._dynDaten.aktionZustand2Speichern();
 		} else if ((typeof __param0 === "undefined")) {
 			this._dynDaten.aktionKlausurenAusSchienenEntfernen();
-			let setS : LinkedCollection<Number> = new LinkedCollection();
+			let setS : LinkedCollection<number> = new LinkedCollection();
 			while (this._dynDaten.gibAnzahlNichtverteilterKlausuren() > 0) {
 				setS.clear();
 				let nr1 : number = this._dynDaten.gibKlausurDieFreiIstMitDenMeistenFreienNachbarn();

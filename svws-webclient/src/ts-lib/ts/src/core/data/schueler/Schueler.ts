@@ -11,12 +11,12 @@ export class Schueler extends JavaObject {
 	/**
 	 * Der Nachname des Schülerdatensatzes. 
 	 */
-	public nachname : String = "";
+	public nachname : string = "";
 
 	/**
 	 * Der Vorname des Schülerdatensatzes. 
 	 */
-	public vorname : String = "";
+	public vorname : string = "";
 
 	/**
 	 * Die ID des Geschlechtes 
@@ -40,10 +40,10 @@ export class Schueler extends JavaObject {
 		result.id = obj.id;
 		if (typeof obj.nachname === "undefined")
 			 throw new Error('invalid json format, missing attribute nachname');
-		result.nachname = String(obj.nachname);
+		result.nachname = obj.nachname;
 		if (typeof obj.vorname === "undefined")
 			 throw new Error('invalid json format, missing attribute vorname');
-		result.vorname = String(obj.vorname);
+		result.vorname = obj.vorname;
 		if (typeof obj.geschlecht === "undefined")
 			 throw new Error('invalid json format, missing attribute geschlecht');
 		result.geschlecht = obj.geschlecht;
@@ -53,8 +53,8 @@ export class Schueler extends JavaObject {
 	public static transpilerToJSON(obj : Schueler) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"nachname" : ' + '"' + obj.nachname.valueOf() + '"' + ',';
-		result += '"vorname" : ' + '"' + obj.vorname.valueOf() + '"' + ',';
+		result += '"nachname" : ' + '"' + obj.nachname! + '"' + ',';
+		result += '"vorname" : ' + '"' + obj.vorname! + '"' + ',';
 		result += '"geschlecht" : ' + obj.geschlecht + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -67,10 +67,10 @@ export class Schueler extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.nachname !== "undefined") {
-			result += '"nachname" : ' + '"' + obj.nachname.valueOf() + '"' + ',';
+			result += '"nachname" : ' + '"' + obj.nachname + '"' + ',';
 		}
 		if (typeof obj.vorname !== "undefined") {
-			result += '"vorname" : ' + '"' + obj.vorname.valueOf() + '"' + ',';
+			result += '"vorname" : ' + '"' + obj.vorname + '"' + ',';
 		}
 		if (typeof obj.geschlecht !== "undefined") {
 			result += '"geschlecht" : ' + obj.geschlecht + ',';

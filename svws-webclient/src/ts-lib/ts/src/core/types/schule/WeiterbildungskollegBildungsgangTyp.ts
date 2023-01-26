@@ -6,7 +6,7 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class WeiterbildungskollegBildungsgangTyp extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -15,7 +15,7 @@ export class WeiterbildungskollegBildungsgangTyp extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<WeiterbildungskollegBildungsgangTyp> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, WeiterbildungskollegBildungsgangTyp> = new Map<String, WeiterbildungskollegBildungsgangTyp>();
+	private static readonly all_values_by_name : Map<string, WeiterbildungskollegBildungsgangTyp> = new Map<string, WeiterbildungskollegBildungsgangTyp>();
 
 	/**
 	 * Abendgymnasium 
@@ -50,7 +50,7 @@ export class WeiterbildungskollegBildungsgangTyp extends JavaObject {
 	/**
 	 * Eine Hashmap mit allen definierten Typen von Bildungsgängen, zugeordnet zu ihren Kürzeln 
 	 */
-	private static readonly _ebenen : HashMap<String, WeiterbildungskollegBildungsgangTyp> = new HashMap();
+	private static readonly _ebenen : HashMap<string, WeiterbildungskollegBildungsgangTyp> = new HashMap();
 
 	/**
 	 * Erzeugt einen neuen Typ von Bildungsgängen in der Aufzählung.
@@ -75,7 +75,7 @@ export class WeiterbildungskollegBildungsgangTyp extends JavaObject {
 	 *    
 	 * @return die Map von den Kürzeln der Typen auf die zugehörigen Typen von Bildungsgängen
 	 */
-	private static getMapByKuerzel() : HashMap<String, WeiterbildungskollegBildungsgangTyp> {
+	private static getMapByKuerzel() : HashMap<string, WeiterbildungskollegBildungsgangTyp> {
 		if (WeiterbildungskollegBildungsgangTyp._ebenen.size() === 0) {
 			for (let s of WeiterbildungskollegBildungsgangTyp.values()) {
 				if (s.daten !== null) 
@@ -92,7 +92,7 @@ export class WeiterbildungskollegBildungsgangTyp extends JavaObject {
 	 * 
 	 * @return der Typ von Bildungsgängen oder null, falls das Kürzel ungültig ist
 	 */
-	public static getByKuerzel(kuerzel : String | null) : WeiterbildungskollegBildungsgangTyp | null {
+	public static getByKuerzel(kuerzel : string | null) : WeiterbildungskollegBildungsgangTyp | null {
 		return WeiterbildungskollegBildungsgangTyp.getMapByKuerzel().get(kuerzel);
 	}
 
@@ -101,7 +101,7 @@ export class WeiterbildungskollegBildungsgangTyp extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -119,7 +119,7 @@ export class WeiterbildungskollegBildungsgangTyp extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -173,7 +173,7 @@ export class WeiterbildungskollegBildungsgangTyp extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : WeiterbildungskollegBildungsgangTyp | null {
+	public static valueOf(name : string) : WeiterbildungskollegBildungsgangTyp | null {
 		let tmp : WeiterbildungskollegBildungsgangTyp | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

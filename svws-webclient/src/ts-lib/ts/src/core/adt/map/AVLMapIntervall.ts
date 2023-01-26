@@ -48,10 +48,10 @@ export class AVLMapIntervall<K> extends JavaObject {
 		this.toInc = pToInc;
 	}
 
-	public toString() : String {
-		let sFrom : String = (this.from === AVLMapIntervall._INFINITY_MINUS) ? "-INF" : "" + this.from;
-		let sTo : String = (this.to === AVLMapIntervall._INFINITY_PLUS) ? "+INF" : "" + this.to;
-		return "[" + sFrom.valueOf() + ", " + this.fromInc + ", " + sTo.valueOf() + ", " + this.toInc + "]";
+	public toString() : string {
+		let sFrom : string = (this.from === AVLMapIntervall._INFINITY_MINUS) ? "-INF" : "" + this.from;
+		let sTo : string = (this.to === AVLMapIntervall._INFINITY_PLUS) ? "+INF" : "" + this.to;
+		return "[" + sFrom! + ", " + this.fromInc + ", " + sTo! + ", " + this.toInc + "]";
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

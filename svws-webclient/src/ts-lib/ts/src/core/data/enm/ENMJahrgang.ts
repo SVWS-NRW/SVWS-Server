@@ -11,22 +11,22 @@ export class ENMJahrgang extends JavaObject {
 	/**
 	 * Das Kürzel des Jahrgangs, wie es im Rahmen der amtlichen Schulstatistik verwendet wird. (z.B. EF) 
 	 */
-	public kuerzel : String | null = null;
+	public kuerzel : string | null = null;
 
 	/**
 	 * Das Kürzel des Jahrgangs, wie er im Rahmen der Schule benannt wird und angezeigt werden soll. (z.B. EF) 
 	 */
-	public kuerzelAnzeige : String | null = null;
+	public kuerzelAnzeige : string | null = null;
 
 	/**
 	 * Die textuelle Bezeichnung des Jahrgangs. (z.B. Einführungsphase) 
 	 */
-	public beschreibung : String | null = null;
+	public beschreibung : string | null = null;
 
 	/**
 	 * Die Stufe des Jahrgangs. (z.B. PR, SI, nur Berufskolleg: SII, Berufskolleg Anlage D und GOSt: SII-1, SII-2, SII-3) 
 	 */
-	public stufe : String | null = null;
+	public stufe : string | null = null;
 
 	/**
 	 * Die Reihenfolge des Jahrgangs bei der Sortierung der Jahrgänge. (z.B. 8) 
@@ -48,10 +48,10 @@ export class ENMJahrgang extends JavaObject {
 		if (typeof obj.id === "undefined")
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		result.kuerzel = typeof obj.kuerzel === "undefined" ? null : obj.kuerzel === null ? null : String(obj.kuerzel);
-		result.kuerzelAnzeige = typeof obj.kuerzelAnzeige === "undefined" ? null : obj.kuerzelAnzeige === null ? null : String(obj.kuerzelAnzeige);
-		result.beschreibung = typeof obj.beschreibung === "undefined" ? null : obj.beschreibung === null ? null : String(obj.beschreibung);
-		result.stufe = typeof obj.stufe === "undefined" ? null : obj.stufe === null ? null : String(obj.stufe);
+		result.kuerzel = typeof obj.kuerzel === "undefined" ? null : obj.kuerzel === null ? null : obj.kuerzel;
+		result.kuerzelAnzeige = typeof obj.kuerzelAnzeige === "undefined" ? null : obj.kuerzelAnzeige === null ? null : obj.kuerzelAnzeige;
+		result.beschreibung = typeof obj.beschreibung === "undefined" ? null : obj.beschreibung === null ? null : obj.beschreibung;
+		result.stufe = typeof obj.stufe === "undefined" ? null : obj.stufe === null ? null : obj.stufe;
 		if (typeof obj.sortierung === "undefined")
 			 throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
@@ -61,10 +61,10 @@ export class ENMJahrgang extends JavaObject {
 	public static transpilerToJSON(obj : ENMJahrgang) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : '"' + obj.kuerzel.valueOf() + '"') + ',';
-		result += '"kuerzelAnzeige" : ' + ((!obj.kuerzelAnzeige) ? 'null' : '"' + obj.kuerzelAnzeige.valueOf() + '"') + ',';
-		result += '"beschreibung" : ' + ((!obj.beschreibung) ? 'null' : '"' + obj.beschreibung.valueOf() + '"') + ',';
-		result += '"stufe" : ' + ((!obj.stufe) ? 'null' : '"' + obj.stufe.valueOf() + '"') + ',';
+		result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : '"' + obj.kuerzel + '"') + ',';
+		result += '"kuerzelAnzeige" : ' + ((!obj.kuerzelAnzeige) ? 'null' : '"' + obj.kuerzelAnzeige + '"') + ',';
+		result += '"beschreibung" : ' + ((!obj.beschreibung) ? 'null' : '"' + obj.beschreibung + '"') + ',';
+		result += '"stufe" : ' + ((!obj.stufe) ? 'null' : '"' + obj.stufe + '"') + ',';
 		result += '"sortierung" : ' + obj.sortierung + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -77,16 +77,16 @@ export class ENMJahrgang extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.kuerzel !== "undefined") {
-			result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : '"' + obj.kuerzel.valueOf() + '"') + ',';
+			result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : '"' + obj.kuerzel + '"') + ',';
 		}
 		if (typeof obj.kuerzelAnzeige !== "undefined") {
-			result += '"kuerzelAnzeige" : ' + ((!obj.kuerzelAnzeige) ? 'null' : '"' + obj.kuerzelAnzeige.valueOf() + '"') + ',';
+			result += '"kuerzelAnzeige" : ' + ((!obj.kuerzelAnzeige) ? 'null' : '"' + obj.kuerzelAnzeige + '"') + ',';
 		}
 		if (typeof obj.beschreibung !== "undefined") {
-			result += '"beschreibung" : ' + ((!obj.beschreibung) ? 'null' : '"' + obj.beschreibung.valueOf() + '"') + ',';
+			result += '"beschreibung" : ' + ((!obj.beschreibung) ? 'null' : '"' + obj.beschreibung + '"') + ',';
 		}
 		if (typeof obj.stufe !== "undefined") {
-			result += '"stufe" : ' + ((!obj.stufe) ? 'null' : '"' + obj.stufe.valueOf() + '"') + ',';
+			result += '"stufe" : ' + ((!obj.stufe) ? 'null' : '"' + obj.stufe + '"') + ',';
 		}
 		if (typeof obj.sortierung !== "undefined") {
 			result += '"sortierung" : ' + obj.sortierung + ',';

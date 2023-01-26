@@ -92,14 +92,14 @@ export class SatSolver3 extends SatSolverA {
 			console.log(JSON.stringify("WARNUNG: Leere Klausel bei SatSolver.addClause(int[] pVars)!"));
 			return;
 		}
-		let set : AVLSet<Number> = new AVLSet();
+		let set : AVLSet<number> = new AVLSet();
 		for (let v of pVars) {
 			if (set.contains(-v)) {
 				return;
 			}
 			set.add(v);
 		}
-		let list : LinkedCollection<Number> = new LinkedCollection();
+		let list : LinkedCollection<number> = new LinkedCollection();
 		while (!set.isEmpty()) {
 			list.addLast(set.pollFirst());
 		}
@@ -113,13 +113,13 @@ export class SatSolver3 extends SatSolverA {
 			this.addClause3(x, y, -z);
 		}
 		if (list.size() === 3) {
-			this.addClause3(list.removeFirst().valueOf(), list.removeFirst().valueOf(), list.removeFirst().valueOf());
+			this.addClause3(list.removeFirst()!, list.removeFirst()!, list.removeFirst()!);
 		}
 		if (list.size() === 2) {
-			this.addClause2(list.removeFirst().valueOf(), list.removeFirst().valueOf());
+			this.addClause2(list.removeFirst()!, list.removeFirst()!);
 		}
 		if (list.size() === 1) {
-			this.addClause1(list.removeFirst().valueOf());
+			this.addClause1(list.removeFirst()!);
 		}
 	}
 
@@ -364,10 +364,10 @@ export class SatSolver3 extends SatSolverA {
 		return SatSolverA.RESULT_UNKNOWN;
 	}
 
-	private static fill(index : number) : String | null {
-		let s : String | null = "";
+	private static fill(index : number) : string | null {
+		let s : string | null = "";
 		for (let i : number = 0; i < index; i++){
-			s = s.valueOf() + "    ";
+			s = s! + "    ";
 		}
 		return s;
 	}

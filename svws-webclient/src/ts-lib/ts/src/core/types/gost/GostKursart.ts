@@ -11,7 +11,7 @@ import { GostBlockungKurs, cast_de_nrw_schule_svws_core_data_gost_GostBlockungKu
 export class GostKursart extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -20,7 +20,7 @@ export class GostKursart extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<GostKursart> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, GostKursart> = new Map<String, GostKursart>();
+	private static readonly all_values_by_name : Map<string, GostKursart> = new Map<string, GostKursart>();
 
 	/**
 	 * Leistungskurs = LK 
@@ -52,7 +52,7 @@ export class GostKursart extends JavaObject {
 	/**
 	 * Die Zuordnung der Kursarten zu dem Kürzel der Kursart 
 	 */
-	private static readonly _mapKuerzel : HashMap<String, GostKursart> = new HashMap();
+	private static readonly _mapKuerzel : HashMap<string, GostKursart> = new HashMap();
 
 	/**
 	 * Die Zuordnung der Kursarten zu der jeweiligen zulässigen Kursart 
@@ -67,12 +67,12 @@ export class GostKursart extends JavaObject {
 	/**
 	 * Das Kürzel der Kursart der Gymnasialen Oberstufe 
 	 */
-	public readonly kuerzel : String;
+	public readonly kuerzel : string;
 
 	/**
 	 * Die textuelle Beschreibung der allgemeinen Kursart der Gymnasialen Oberstufe 
 	 */
-	public readonly beschreibung : String;
+	public readonly beschreibung : string;
 
 	/**
 	 * Die Liste der Kursarten, welche zu dieser Gost-Kursart gehören 
@@ -86,7 +86,7 @@ export class GostKursart extends JavaObject {
 	 * @param kuerzel        das Kürzel der Kursart der Gymnasialen Oberstufe
 	 * @param beschreibung   die textuelle Beschreibung der allgemeinen Kursart der Gymnasialen Oberstufe
 	 */
-	private constructor(name : string, ordinal : number, id : number, kuerzel : String, beschreibung : String, kursarten : List<ZulaessigeKursart>) {
+	private constructor(name : string, ordinal : number, id : number, kuerzel : string, beschreibung : string, kursarten : List<ZulaessigeKursart>) {
 		super();
 		this.__name = name;
 		this.__ordinal = ordinal;
@@ -128,7 +128,7 @@ export class GostKursart extends JavaObject {
 	 *    
 	 * @return die Map von den Kürzeln auf die Gost-Kursarten
 	 */
-	private static getMapByKuerzel() : HashMap<String, GostKursart> {
+	private static getMapByKuerzel() : HashMap<string, GostKursart> {
 		if (GostKursart._mapKuerzel.size() === 0) 
 			for (let k of GostKursart.values()) 
 				GostKursart._mapKuerzel.put(k.kuerzel, k);
@@ -226,7 +226,7 @@ export class GostKursart extends JavaObject {
 	 * 
 	 * @return die Kursart oder null, falls das Kürzel ungültig ist 
 	 */
-	public static fromKuerzel(kuerzel : String | null) : GostKursart | null {
+	public static fromKuerzel(kuerzel : string | null) : GostKursart | null {
 		return GostKursart.getMapByKuerzel().get(kuerzel);
 	}
 
@@ -307,7 +307,7 @@ export class GostKursart extends JavaObject {
 		return (pFachartID % GostKursart.FACHART_ID_FAKTOR) as number;
 	}
 
-	public toString() : String {
+	public toString() : string {
 		return this.kuerzel;
 	}
 
@@ -316,7 +316,7 @@ export class GostKursart extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -379,7 +379,7 @@ export class GostKursart extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : GostKursart | null {
+	public static valueOf(name : string) : GostKursart | null {
 		let tmp : GostKursart | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

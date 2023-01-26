@@ -11,12 +11,12 @@ export class SchuelerSchulbesuchMerkmal extends JavaObject {
 	/**
 	 * Das Datum, ab dem das Merkmal vorliegt. 
 	 */
-	public datumVon : String | null = null;
+	public datumVon : string | null = null;
 
 	/**
 	 * Das Datum, bis wann das Merkmal vorliegt. 
 	 */
-	public datumBis : String | null = null;
+	public datumBis : string | null = null;
 
 
 	public constructor() {
@@ -33,16 +33,16 @@ export class SchuelerSchulbesuchMerkmal extends JavaObject {
 		if (typeof obj.id === "undefined")
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		result.datumVon = typeof obj.datumVon === "undefined" ? null : obj.datumVon === null ? null : String(obj.datumVon);
-		result.datumBis = typeof obj.datumBis === "undefined" ? null : obj.datumBis === null ? null : String(obj.datumBis);
+		result.datumVon = typeof obj.datumVon === "undefined" ? null : obj.datumVon === null ? null : obj.datumVon;
+		result.datumBis = typeof obj.datumBis === "undefined" ? null : obj.datumBis === null ? null : obj.datumBis;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : SchuelerSchulbesuchMerkmal) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"datumVon" : ' + ((!obj.datumVon) ? 'null' : '"' + obj.datumVon.valueOf() + '"') + ',';
-		result += '"datumBis" : ' + ((!obj.datumBis) ? 'null' : '"' + obj.datumBis.valueOf() + '"') + ',';
+		result += '"datumVon" : ' + ((!obj.datumVon) ? 'null' : '"' + obj.datumVon + '"') + ',';
+		result += '"datumBis" : ' + ((!obj.datumBis) ? 'null' : '"' + obj.datumBis + '"') + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -54,10 +54,10 @@ export class SchuelerSchulbesuchMerkmal extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.datumVon !== "undefined") {
-			result += '"datumVon" : ' + ((!obj.datumVon) ? 'null' : '"' + obj.datumVon.valueOf() + '"') + ',';
+			result += '"datumVon" : ' + ((!obj.datumVon) ? 'null' : '"' + obj.datumVon + '"') + ',';
 		}
 		if (typeof obj.datumBis !== "undefined") {
-			result += '"datumBis" : ' + ((!obj.datumBis) ? 'null' : '"' + obj.datumBis.valueOf() + '"') + ',';
+			result += '"datumBis" : ' + ((!obj.datumBis) ? 'null' : '"' + obj.datumBis + '"') + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

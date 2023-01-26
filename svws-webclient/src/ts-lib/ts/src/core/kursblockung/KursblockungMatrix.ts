@@ -240,7 +240,7 @@ export class KursblockungMatrix extends JavaObject {
 				let c : number = this.permC[ic];
 				this.vorgaengerCzuR[c] = -1;
 				this.abgearbeitetC[c] = false;
-				this.distanzC[c] = Number.MAX_VALUE;
+				this.distanzC[c] = JavaLong.MAX_VALUE;
 				for (let ir : number = 0; ir < this.rows; ir++){
 					let r : number = this.permR[ir];
 					if (this.r2c[r] < 0) {
@@ -365,21 +365,21 @@ export class KursblockungMatrix extends JavaObject {
 	 *                            Knotenpotentiale, andernfalls bleiben die Kantenwerte unverändert.
 	 * @return                    Eine String-Representation der Matrix. 
 	 */
-	public convertToString(kommentar : String, zellenbreite : number, mitKnotenPotential : boolean) : String {
+	public convertToString(kommentar : string, zellenbreite : number, mitKnotenPotential : boolean) : string {
 		let sb : StringBuilder = new StringBuilder();
-		sb.append(kommentar.valueOf() + System.lineSeparator().valueOf());
+		sb.append(kommentar! + System.lineSeparator()!);
 		for (let r : number = 0; r < this.rows; r++){
 			for (let c : number = 0; c < this.cols; c++){
 				let wert : number = mitKnotenPotential ? this.matrix[r][c] + this.potentialR[r] - this.potentialC[c] : this.matrix[r][c];
-				let sWert : String | null = "" + wert;
+				let sWert : string | null = "" + wert;
 				while (sWert.length < zellenbreite) 
-					sWert = " " + sWert.valueOf();
-				let sZusatz : String = this.r2c[r] === c ? "*" : " ";
-				sb.append(sWert.valueOf() + sZusatz.valueOf());
+					sWert = " " + sWert!;
+				let sZusatz : string = this.r2c[r] === c ? "*" : " ";
+				sb.append(sWert! + sZusatz!);
 			}
 			sb.append("\n");
 		}
-		sb.append("r2c = " + Arrays.toString(this.r2c).valueOf());
+		sb.append("r2c = " + Arrays.toString(this.r2c)!);
 		sb.append("\n");
 		return sb.toString();
 	}

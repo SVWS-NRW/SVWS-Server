@@ -6,12 +6,12 @@ export class Credentials extends JavaObject {
 	/**
 	 * Benutzername des Account-Credentials
 	 */
-	public benutzername : String = "";
+	public benutzername : string = "";
 
 	/**
 	 * Passwort des Account-Credentials
 	 */
-	public password : String = "";
+	public password : string = "";
 
 
 	public constructor() {
@@ -27,17 +27,17 @@ export class Credentials extends JavaObject {
 		const result = new Credentials();
 		if (typeof obj.benutzername === "undefined")
 			 throw new Error('invalid json format, missing attribute benutzername');
-		result.benutzername = String(obj.benutzername);
+		result.benutzername = obj.benutzername;
 		if (typeof obj.password === "undefined")
 			 throw new Error('invalid json format, missing attribute password');
-		result.password = String(obj.password);
+		result.password = obj.password;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : Credentials) : string {
 		let result = '{';
-		result += '"benutzername" : ' + '"' + obj.benutzername.valueOf() + '"' + ',';
-		result += '"password" : ' + '"' + obj.password.valueOf() + '"' + ',';
+		result += '"benutzername" : ' + '"' + obj.benutzername! + '"' + ',';
+		result += '"password" : ' + '"' + obj.password! + '"' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -46,10 +46,10 @@ export class Credentials extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<Credentials>) : string {
 		let result = '{';
 		if (typeof obj.benutzername !== "undefined") {
-			result += '"benutzername" : ' + '"' + obj.benutzername.valueOf() + '"' + ',';
+			result += '"benutzername" : ' + '"' + obj.benutzername + '"' + ',';
 		}
 		if (typeof obj.password !== "undefined") {
-			result += '"password" : ' + '"' + obj.password.valueOf() + '"' + ',';
+			result += '"password" : ' + '"' + obj.password + '"' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

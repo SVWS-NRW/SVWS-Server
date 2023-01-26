@@ -116,7 +116,7 @@ export class HashMapCollection<K, V> implements Collection<V> {
         throw new UnsupportedOperationException();
     }
 
-    toString(): string {
+    toString(): string | null {
         let res = '[';
         this.#_map.forEach(v => res + (v as unknown as JavaObject).toString() + ', ');
         res = res.substring(-2, 0);

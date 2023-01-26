@@ -11,12 +11,12 @@ export class ENMFach extends JavaObject {
 	/**
 	 * Das Kürzel des Faches, wie es im Rahmen der amtlichen Schulstatistik verwendet wird. (z.B. D) 
 	 */
-	public kuerzel : String = "";
+	public kuerzel : string = "";
 
 	/**
 	 * Das Kürzel des Faches, wie es im Rahmen der Schule benannt wird und angezeigt werden soll. (z.B. D) 
 	 */
-	public kuerzelAnzeige : String = "";
+	public kuerzelAnzeige : string = "";
 
 	/**
 	 * Die Reihenfolge des Faches bei der Sortierung der Fächer. (z.B. 37) 
@@ -45,10 +45,10 @@ export class ENMFach extends JavaObject {
 		result.id = obj.id;
 		if (typeof obj.kuerzel === "undefined")
 			 throw new Error('invalid json format, missing attribute kuerzel');
-		result.kuerzel = String(obj.kuerzel);
+		result.kuerzel = obj.kuerzel;
 		if (typeof obj.kuerzelAnzeige === "undefined")
 			 throw new Error('invalid json format, missing attribute kuerzelAnzeige');
-		result.kuerzelAnzeige = String(obj.kuerzelAnzeige);
+		result.kuerzelAnzeige = obj.kuerzelAnzeige;
 		if (typeof obj.sortierung === "undefined")
 			 throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
@@ -61,8 +61,8 @@ export class ENMFach extends JavaObject {
 	public static transpilerToJSON(obj : ENMFach) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"kuerzel" : ' + '"' + obj.kuerzel.valueOf() + '"' + ',';
-		result += '"kuerzelAnzeige" : ' + '"' + obj.kuerzelAnzeige.valueOf() + '"' + ',';
+		result += '"kuerzel" : ' + '"' + obj.kuerzel! + '"' + ',';
+		result += '"kuerzelAnzeige" : ' + '"' + obj.kuerzelAnzeige! + '"' + ',';
 		result += '"sortierung" : ' + obj.sortierung + ',';
 		result += '"istFremdsprache" : ' + obj.istFremdsprache + ',';
 		result = result.slice(0, -1);
@@ -76,10 +76,10 @@ export class ENMFach extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.kuerzel !== "undefined") {
-			result += '"kuerzel" : ' + '"' + obj.kuerzel.valueOf() + '"' + ',';
+			result += '"kuerzel" : ' + '"' + obj.kuerzel + '"' + ',';
 		}
 		if (typeof obj.kuerzelAnzeige !== "undefined") {
-			result += '"kuerzelAnzeige" : ' + '"' + obj.kuerzelAnzeige.valueOf() + '"' + ',';
+			result += '"kuerzelAnzeige" : ' + '"' + obj.kuerzelAnzeige + '"' + ',';
 		}
 		if (typeof obj.sortierung !== "undefined") {
 			result += '"sortierung" : ' + obj.sortierung + ',';

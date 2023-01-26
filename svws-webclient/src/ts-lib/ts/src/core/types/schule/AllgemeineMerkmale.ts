@@ -8,7 +8,7 @@ import { Arrays, cast_java_util_Arrays } from '../../../java/util/Arrays';
 export class AllgemeineMerkmale extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -17,7 +17,7 @@ export class AllgemeineMerkmale extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<AllgemeineMerkmale> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, AllgemeineMerkmale> = new Map<String, AllgemeineMerkmale>();
+	private static readonly all_values_by_name : Map<string, AllgemeineMerkmale> = new Map<string, AllgemeineMerkmale>();
 
 	/**
 	 * Merkmal: Ganztagschule 
@@ -142,7 +142,7 @@ export class AllgemeineMerkmale extends JavaObject {
 	/**
 	 * Eine Hashmap mit allen definierten allgemeinen Merkmalen, zugeordnet zu ihren Kürzeln 
 	 */
-	private static readonly _mapByKuerzel : HashMap<String, AllgemeineMerkmale | null> = new HashMap();
+	private static readonly _mapByKuerzel : HashMap<string, AllgemeineMerkmale | null> = new HashMap();
 
 	/**
 	 * Erzeugt ein neues allgemeines Merkmal in der Aufzählung.
@@ -167,7 +167,7 @@ export class AllgemeineMerkmale extends JavaObject {
 	 *    
 	 * @return die Map von den Kürzeln auf die zugehörigen allgemeinen Merkmale
 	 */
-	private static getMapByKuerzel() : HashMap<String, AllgemeineMerkmale | null> {
+	private static getMapByKuerzel() : HashMap<string, AllgemeineMerkmale | null> {
 		if (AllgemeineMerkmale._mapByKuerzel.size() === 0) {
 			for (let s of AllgemeineMerkmale.values()) {
 				if (s.daten !== null) 
@@ -184,7 +184,7 @@ export class AllgemeineMerkmale extends JavaObject {
 	 * 
 	 * @return das allgemeine Merkmal oder null, falls das Kürzel ungültig ist
 	 */
-	public static getByKuerzel(kuerzel : String | null) : AllgemeineMerkmale | null {
+	public static getByKuerzel(kuerzel : string | null) : AllgemeineMerkmale | null {
 		return AllgemeineMerkmale.getMapByKuerzel().get(kuerzel);
 	}
 
@@ -193,7 +193,7 @@ export class AllgemeineMerkmale extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -211,7 +211,7 @@ export class AllgemeineMerkmale extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -265,7 +265,7 @@ export class AllgemeineMerkmale extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : AllgemeineMerkmale | null {
+	public static valueOf(name : string) : AllgemeineMerkmale | null {
 		let tmp : AllgemeineMerkmale | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

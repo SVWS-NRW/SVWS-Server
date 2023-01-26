@@ -4,7 +4,7 @@ import { JavaBoolean, cast_java_lang_Boolean } from '../../../../../java/lang/Ja
 import { Abiturdaten, cast_de_nrw_schule_svws_core_data_gost_Abiturdaten } from '../../../../../core/data/gost/Abiturdaten';
 import { LogLevel, cast_de_nrw_schule_svws_core_logger_LogLevel } from '../../../../../core/logger/LogLevel';
 
-export class AbiturBlockIMarkierPruefung extends Service<Abiturdaten | null, Boolean | null> {
+export class AbiturBlockIMarkierPruefung extends Service<Abiturdaten | null, boolean | null> {
 
 
 	/**
@@ -14,13 +14,13 @@ export class AbiturBlockIMarkierPruefung extends Service<Abiturdaten | null, Boo
 		super();
 	}
 
-	public handle(abidaten : Abiturdaten | null) : Boolean | null {
+	public handle(abidaten : Abiturdaten | null) : boolean | null {
 		if (abidaten === null) {
-			this.logger.logLn(LogLevel.ERROR, "Der Dienst " + this.getClass().getSimpleName().valueOf() + " hat keine gültigen Abiturdaten erhalten.");
+			this.logger.logLn(LogLevel.ERROR, "Der Dienst " + this.getClass().getSimpleName()! + " hat keine gültigen Abiturdaten erhalten.");
 			return null;
 		}
 		let ergebnis : boolean = false;
-		this.logger.logLn(LogLevel.ERROR, "Der Dienst " + this.getClass().getSimpleName().valueOf() + " ist noch nicht fertig programmiert...");
+		this.logger.logLn(LogLevel.ERROR, "Der Dienst " + this.getClass().getSimpleName()! + " ist noch nicht fertig programmiert...");
 		return ergebnis;
 	}
 

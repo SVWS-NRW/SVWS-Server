@@ -6,17 +6,17 @@ export class SchildReportingDatenquelleAttribut extends JavaObject {
 	/**
 	 * Der Name des Attributs 
 	 */
-	public name : String = "";
+	public name : string = "";
 
 	/**
 	 * Der Typ des Attributs 
 	 */
-	public typ : String = "";
+	public typ : string = "";
 
 	/**
 	 * Die Beschreibung des Attributs 
 	 */
-	public beschreibung : String = "";
+	public beschreibung : string = "";
 
 
 	public constructor() {
@@ -32,21 +32,21 @@ export class SchildReportingDatenquelleAttribut extends JavaObject {
 		const result = new SchildReportingDatenquelleAttribut();
 		if (typeof obj.name === "undefined")
 			 throw new Error('invalid json format, missing attribute name');
-		result.name = String(obj.name);
+		result.name = obj.name;
 		if (typeof obj.typ === "undefined")
 			 throw new Error('invalid json format, missing attribute typ');
-		result.typ = String(obj.typ);
+		result.typ = obj.typ;
 		if (typeof obj.beschreibung === "undefined")
 			 throw new Error('invalid json format, missing attribute beschreibung');
-		result.beschreibung = String(obj.beschreibung);
+		result.beschreibung = obj.beschreibung;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : SchildReportingDatenquelleAttribut) : string {
 		let result = '{';
-		result += '"name" : ' + '"' + obj.name.valueOf() + '"' + ',';
-		result += '"typ" : ' + '"' + obj.typ.valueOf() + '"' + ',';
-		result += '"beschreibung" : ' + '"' + obj.beschreibung.valueOf() + '"' + ',';
+		result += '"name" : ' + '"' + obj.name! + '"' + ',';
+		result += '"typ" : ' + '"' + obj.typ! + '"' + ',';
+		result += '"beschreibung" : ' + '"' + obj.beschreibung! + '"' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -55,13 +55,13 @@ export class SchildReportingDatenquelleAttribut extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<SchildReportingDatenquelleAttribut>) : string {
 		let result = '{';
 		if (typeof obj.name !== "undefined") {
-			result += '"name" : ' + '"' + obj.name.valueOf() + '"' + ',';
+			result += '"name" : ' + '"' + obj.name + '"' + ',';
 		}
 		if (typeof obj.typ !== "undefined") {
-			result += '"typ" : ' + '"' + obj.typ.valueOf() + '"' + ',';
+			result += '"typ" : ' + '"' + obj.typ + '"' + ',';
 		}
 		if (typeof obj.beschreibung !== "undefined") {
-			result += '"beschreibung" : ' + '"' + obj.beschreibung.valueOf() + '"' + ',';
+			result += '"beschreibung" : ' + '"' + obj.beschreibung + '"' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

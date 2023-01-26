@@ -12,12 +12,12 @@ export class SchuleAbschnitte extends JavaObject {
 	/**
 	 * Die allgemeine Bezeichnung der Abschnitte (z.B. Quartal oder Halbjahr) 
 	 */
-	public abschnittBez : String = "Halbjahr";
+	public abschnittBez : string = "Halbjahr";
 
 	/**
 	 * Eine Liste der einzelnen speziellen Bezeichnungnen für dei Abschnitte (z.B. 1. Quartal, 2. Quartal, ...) 
 	 */
-	public bezAbschnitte : Vector<String> = new Vector();
+	public bezAbschnitte : Vector<string> = new Vector();
 
 
 	public constructor() {
@@ -36,10 +36,10 @@ export class SchuleAbschnitte extends JavaObject {
 		result.anzahlAbschnitte = obj.anzahlAbschnitte;
 		if (typeof obj.abschnittBez === "undefined")
 			 throw new Error('invalid json format, missing attribute abschnittBez');
-		result.abschnittBez = String(obj.abschnittBez);
+		result.abschnittBez = obj.abschnittBez;
 		if (!!obj.bezAbschnitte) {
 			for (let elem of obj.bezAbschnitte) {
-				result.bezAbschnitte?.add(String(elem));
+				result.bezAbschnitte?.add(elem);
 			}
 		}
 		return result;
@@ -48,7 +48,7 @@ export class SchuleAbschnitte extends JavaObject {
 	public static transpilerToJSON(obj : SchuleAbschnitte) : string {
 		let result = '{';
 		result += '"anzahlAbschnitte" : ' + obj.anzahlAbschnitte + ',';
-		result += '"abschnittBez" : ' + '"' + obj.abschnittBez.valueOf() + '"' + ',';
+		result += '"abschnittBez" : ' + '"' + obj.abschnittBez! + '"' + ',';
 		if (!obj.bezAbschnitte) {
 			result += '"bezAbschnitte" : []';
 		} else {
@@ -72,7 +72,7 @@ export class SchuleAbschnitte extends JavaObject {
 			result += '"anzahlAbschnitte" : ' + obj.anzahlAbschnitte + ',';
 		}
 		if (typeof obj.abschnittBez !== "undefined") {
-			result += '"abschnittBez" : ' + '"' + obj.abschnittBez.valueOf() + '"' + ',';
+			result += '"abschnittBez" : ' + '"' + obj.abschnittBez + '"' + ',';
 		}
 		if (typeof obj.bezAbschnitte !== "undefined") {
 			if (!obj.bezAbschnitte) {

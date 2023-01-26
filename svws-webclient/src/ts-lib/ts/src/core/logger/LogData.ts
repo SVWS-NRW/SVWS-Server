@@ -11,7 +11,7 @@ export class LogData extends JavaObject implements Comparable<LogData | null> {
 
 	private readonly level : LogLevel;
 
-	private readonly text : String;
+	private readonly text : string;
 
 	private readonly newLine : boolean;
 
@@ -26,7 +26,7 @@ export class LogData extends JavaObject implements Comparable<LogData | null> {
 	 * @param newLine   gibt an, ob die Log-Informationen beim Ausgeben mit einer neuen Zeile beendet werden sollen oder nicht
 	 * @param text      der Text der Log-Information
 	 */
-	public constructor(level : LogLevel, indent : number, newLine : boolean, text : String) {
+	public constructor(level : LogLevel, indent : number, newLine : boolean, text : string) {
 		super();
 		this.time = System.currentTimeMillis();
 		this.level = level;
@@ -57,8 +57,8 @@ export class LogData extends JavaObject implements Comparable<LogData | null> {
 	 * 
 	 * @return die Log-Informationen als JSON-String
 	 */
-	public toString() : String {
-		return "{ \"time\":" + this.time + ", \"level\":" + this.level.toInteger() + ", \"text\":\"" + this.getText().valueOf() + "\"}";
+	public toString() : string {
+		return "{ \"time\":" + this.time + ", \"level\":" + this.level.toInteger() + ", \"text\":\"" + this.getText()! + "\"}";
 	}
 
 	/**
@@ -103,12 +103,12 @@ export class LogData extends JavaObject implements Comparable<LogData | null> {
 	 *  
 	 * @return der Text dieser Log-Information
 	 */
-	public getText() : String {
+	public getText() : string {
 		if (this.indent <= 0) 
 			return this.text;
 		let indentChars : Array<string> | null = Array(this.indent).fill("");
 		Arrays.fill(indentChars, ' ');
-		return indentChars.join("") + this.text.valueOf();
+		return indentChars.join("") + this.text!;
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

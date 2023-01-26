@@ -12,27 +12,27 @@ export class LehrerKatalogAbgangsgrundEintrag extends JavaObject {
 	/**
 	 * Das Kürzel für den Abgangsgrund. 
 	 */
-	public kuerzel : String = "";
+	public kuerzel : string = "";
 
 	/**
 	 * Der Klartext des Abgangsgrunds. 
 	 */
-	public text : String = "";
+	public text : string = "";
 
 	/**
 	 * Der Schlüssel für die ASD-Schulstatistik.
 	 */
-	public schluessel : String = "";
+	public schluessel : string = "";
 
 	/**
 	 * Gibt an, in welchem Schuljahr der Abgangsgrund einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. 
 	 */
-	public gueltigVon : Number | null = null;
+	public gueltigVon : number | null = null;
 
 	/**
 	 * Gibt an, bis zu welchem Schuljahr der Abgangsgrund gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. 
 	 */
-	public gueltigBis : Number | null = null;
+	public gueltigBis : number | null = null;
 
 
 	/**
@@ -50,21 +50,21 @@ export class LehrerKatalogAbgangsgrundEintrag extends JavaObject {
 	 * @param gueltigVon   das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und "schon immer gültig war"
 	 * @param gueltigBis   das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */
-	public constructor(id : number, kuerzel : String, text : String, schluessel : String, gueltigVon : Number | null, gueltigBis : Number | null);
+	public constructor(id : number, kuerzel : string, text : string, schluessel : string, gueltigVon : number | null, gueltigBis : number | null);
 
 	/**
 	 * Implementation for method overloads of 'constructor'
 	 */
-	public constructor(__param0? : number, __param1? : String, __param2? : String, __param3? : String, __param4? : Number | null, __param5? : Number | null) {
+	public constructor(__param0? : number, __param1? : string, __param2? : string, __param3? : string, __param4? : null | number, __param5? : null | number) {
 		super();
 		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined") && (typeof __param2 === "undefined") && (typeof __param3 === "undefined") && (typeof __param4 === "undefined") && (typeof __param5 === "undefined")) {
-			} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && ((__param1 instanceof String) || (typeof __param1 === "string"))) && ((typeof __param2 !== "undefined") && ((__param2 instanceof String) || (typeof __param2 === "string"))) && ((typeof __param3 !== "undefined") && ((__param3 instanceof String) || (typeof __param3 === "string"))) && ((typeof __param4 !== "undefined") && ((__param4 instanceof Number) || (typeof __param4 === "number")) || (__param4 === null)) && ((typeof __param5 !== "undefined") && ((__param5 instanceof Number) || (typeof __param5 === "number")) || (__param5 === null))) {
+			} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && (typeof __param1 === "string")) && ((typeof __param2 !== "undefined") && (typeof __param2 === "string")) && ((typeof __param3 !== "undefined") && (typeof __param3 === "string")) && ((typeof __param4 !== "undefined") && (typeof __param4 === "number") || (__param4 === null)) && ((typeof __param5 !== "undefined") && (typeof __param5 === "number") || (__param5 === null))) {
 			let id : number = __param0 as number;
-			let kuerzel : String = __param1;
-			let text : String = __param2;
-			let schluessel : String = __param3;
-			let gueltigVon : Number | null = cast_java_lang_Integer(__param4);
-			let gueltigBis : Number | null = cast_java_lang_Integer(__param5);
+			let kuerzel : string = __param1;
+			let text : string = __param2;
+			let schluessel : string = __param3;
+			let gueltigVon : number | null = __param4;
+			let gueltigBis : number | null = __param5;
 			this.id = id;
 			this.kuerzel = kuerzel;
 			this.text = text;
@@ -86,26 +86,26 @@ export class LehrerKatalogAbgangsgrundEintrag extends JavaObject {
 		result.id = obj.id;
 		if (typeof obj.kuerzel === "undefined")
 			 throw new Error('invalid json format, missing attribute kuerzel');
-		result.kuerzel = String(obj.kuerzel);
+		result.kuerzel = obj.kuerzel;
 		if (typeof obj.text === "undefined")
 			 throw new Error('invalid json format, missing attribute text');
-		result.text = String(obj.text);
+		result.text = obj.text;
 		if (typeof obj.schluessel === "undefined")
 			 throw new Error('invalid json format, missing attribute schluessel');
-		result.schluessel = String(obj.schluessel);
-		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : Number(obj.gueltigVon);
-		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : Number(obj.gueltigBis);
+		result.schluessel = obj.schluessel;
+		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
+		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : LehrerKatalogAbgangsgrundEintrag) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"kuerzel" : ' + '"' + obj.kuerzel.valueOf() + '"' + ',';
-		result += '"text" : ' + '"' + obj.text.valueOf() + '"' + ',';
-		result += '"schluessel" : ' + '"' + obj.schluessel.valueOf() + '"' + ',';
-		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.valueOf()) + ',';
-		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.valueOf()) + ',';
+		result += '"kuerzel" : ' + '"' + obj.kuerzel! + '"' + ',';
+		result += '"text" : ' + '"' + obj.text! + '"' + ',';
+		result += '"schluessel" : ' + '"' + obj.schluessel! + '"' + ',';
+		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
+		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -117,19 +117,19 @@ export class LehrerKatalogAbgangsgrundEintrag extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.kuerzel !== "undefined") {
-			result += '"kuerzel" : ' + '"' + obj.kuerzel.valueOf() + '"' + ',';
+			result += '"kuerzel" : ' + '"' + obj.kuerzel + '"' + ',';
 		}
 		if (typeof obj.text !== "undefined") {
-			result += '"text" : ' + '"' + obj.text.valueOf() + '"' + ',';
+			result += '"text" : ' + '"' + obj.text + '"' + ',';
 		}
 		if (typeof obj.schluessel !== "undefined") {
-			result += '"schluessel" : ' + '"' + obj.schluessel.valueOf() + '"' + ',';
+			result += '"schluessel" : ' + '"' + obj.schluessel + '"' + ',';
 		}
 		if (typeof obj.gueltigVon !== "undefined") {
-			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.valueOf()) + ',';
+			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
 		}
 		if (typeof obj.gueltigBis !== "undefined") {
-			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.valueOf()) + ',';
+			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

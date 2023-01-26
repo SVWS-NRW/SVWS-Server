@@ -7,7 +7,7 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class LehrerLeitungsfunktion extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -16,7 +16,7 @@ export class LehrerLeitungsfunktion extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<LehrerLeitungsfunktion> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, LehrerLeitungsfunktion> = new Map<String, LehrerLeitungsfunktion>();
+	private static readonly all_values_by_name : Map<string, LehrerLeitungsfunktion> = new Map<string, LehrerLeitungsfunktion>();
 
 	/**
 	 * Schulleitung 
@@ -46,12 +46,12 @@ export class LehrerLeitungsfunktion extends JavaObject {
 	/**
 	 * Eine Hashmap mit allen definierten Leitungsfunktion, zugeordnet zu ihren Kürzeln 
 	 */
-	private static readonly _mapByKuerzel : HashMap<String, LehrerLeitungsfunktion | null> = new HashMap();
+	private static readonly _mapByKuerzel : HashMap<string, LehrerLeitungsfunktion | null> = new HashMap();
 
 	/**
 	 * Eine Hashmap mit allen definierten Leitungsfunktion, zugeordnet zu ihren IDs 
 	 */
-	private static readonly _mapByID : HashMap<Number, LehrerLeitungsfunktion | null> = new HashMap();
+	private static readonly _mapByID : HashMap<number, LehrerLeitungsfunktion | null> = new HashMap();
 
 	/**
 	 * Erzeugt eine neue Leitungsfunktion in der Aufzählung.
@@ -74,7 +74,7 @@ export class LehrerLeitungsfunktion extends JavaObject {
 	 *    
 	 * @return die Map von den Kürzeln der Leitungsfunktionen auf die zugehörigen Leitungsfunktionen
 	 */
-	private static getMapByKuerzel() : HashMap<String, LehrerLeitungsfunktion | null> {
+	private static getMapByKuerzel() : HashMap<string, LehrerLeitungsfunktion | null> {
 		if (LehrerLeitungsfunktion._mapByKuerzel.size() === 0) {
 			for (let s of LehrerLeitungsfunktion.values()) {
 				if (s.daten !== null) 
@@ -90,7 +90,7 @@ export class LehrerLeitungsfunktion extends JavaObject {
 	 *    
 	 * @return die Map von den IDs der Leitungsfunktionen auf die zugehörigen Leitungsfunktionen
 	 */
-	private static getMapByID() : HashMap<Number, LehrerLeitungsfunktion | null> {
+	private static getMapByID() : HashMap<number, LehrerLeitungsfunktion | null> {
 		if (LehrerLeitungsfunktion._mapByID.size() === 0) {
 			for (let s of LehrerLeitungsfunktion.values()) {
 				if (s.daten !== null) 
@@ -107,7 +107,7 @@ export class LehrerLeitungsfunktion extends JavaObject {
 	 * 
 	 * @return die Leitungsfunktion oder null, falls das Kürzel ungültig ist
 	 */
-	public static getByKuerzel(kuerzel : String | null) : LehrerLeitungsfunktion | null {
+	public static getByKuerzel(kuerzel : string | null) : LehrerLeitungsfunktion | null {
 		return LehrerLeitungsfunktion.getMapByKuerzel().get(kuerzel);
 	}
 
@@ -127,7 +127,7 @@ export class LehrerLeitungsfunktion extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -145,7 +145,7 @@ export class LehrerLeitungsfunktion extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -199,7 +199,7 @@ export class LehrerLeitungsfunktion extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : LehrerLeitungsfunktion | null {
+	public static valueOf(name : string) : LehrerLeitungsfunktion | null {
 		let tmp : LehrerLeitungsfunktion | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

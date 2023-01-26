@@ -4,7 +4,7 @@ import { JavaString, cast_java_lang_String } from '../../java/lang/JavaString';
 export class DQR extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -13,7 +13,7 @@ export class DQR extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<DQR> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, DQR> = new Map<String, DQR>();
+	private static readonly all_values_by_name : Map<string, DQR> = new Map<string, DQR>();
 
 	/**
 	 * DQR Niveau 1 
@@ -58,12 +58,12 @@ export class DQR extends JavaObject {
 	/**
 	 * Die Bezeichnung des Niveaus 
 	 */
-	public readonly bezeichnung : String | null;
+	public readonly bezeichnung : string | null;
 
 	/**
 	 * Eine Beschreibung des DQR-Niveaus 
 	 */
-	public readonly beschreibung : String | null;
+	public readonly beschreibung : string | null;
 
 	/**
 	 * Erstell ein neues DQR-Niveau.
@@ -71,7 +71,7 @@ export class DQR extends JavaObject {
 	 * @param bezeichnung    die Bezeichnung des Niveaus
 	 * @param beschreibung   eine kurze Beschreibung des Niveaus
 	 */
-	private constructor(name : string, ordinal : number, bezeichnung : String, beschreibung : String) {
+	private constructor(name : string, ordinal : number, bezeichnung : string, beschreibung : string) {
 		super();
 		this.__name = name;
 		this.__ordinal = ordinal;
@@ -86,7 +86,7 @@ export class DQR extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -104,7 +104,7 @@ export class DQR extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -158,7 +158,7 @@ export class DQR extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : DQR | null {
+	public static valueOf(name : string) : DQR | null {
 		let tmp : DQR | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

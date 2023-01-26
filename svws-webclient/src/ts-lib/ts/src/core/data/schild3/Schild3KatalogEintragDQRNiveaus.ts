@@ -7,27 +7,27 @@ export class Schild3KatalogEintragDQRNiveaus extends JavaObject {
 	/**
 	 * DQR-Niveau für Gliederung 
 	 */
-	public Gliederung : String | null = null;
+	public Gliederung : string | null = null;
 
 	/**
 	 * DQR-Niveau für die Fachklasse 
 	 */
-	public FKS : String | null = null;
+	public FKS : string | null = null;
 
 	/**
 	 * DQR-Niveau als Nummer 
 	 */
-	public DQR_Niveau : Number | null = null;
+	public DQR_Niveau : number | null = null;
 
 	/**
 	 * Gültig ab Schuljahr 
 	 */
-	public gueltigVon : Number | null = null;
+	public gueltigVon : number | null = null;
 
 	/**
 	 * Gültig bis Schuljahr 
 	 */
-	public gueltigBis : Number | null = null;
+	public gueltigBis : number | null = null;
 
 
 	public constructor() {
@@ -41,21 +41,21 @@ export class Schild3KatalogEintragDQRNiveaus extends JavaObject {
 	public static transpilerFromJSON(json : string): Schild3KatalogEintragDQRNiveaus {
 		const obj = JSON.parse(json);
 		const result = new Schild3KatalogEintragDQRNiveaus();
-		result.Gliederung = typeof obj.Gliederung === "undefined" ? null : obj.Gliederung === null ? null : String(obj.Gliederung);
-		result.FKS = typeof obj.FKS === "undefined" ? null : obj.FKS === null ? null : String(obj.FKS);
-		result.DQR_Niveau = typeof obj.DQR_Niveau === "undefined" ? null : obj.DQR_Niveau === null ? null : Number(obj.DQR_Niveau);
-		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : Number(obj.gueltigVon);
-		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : Number(obj.gueltigBis);
+		result.Gliederung = typeof obj.Gliederung === "undefined" ? null : obj.Gliederung === null ? null : obj.Gliederung;
+		result.FKS = typeof obj.FKS === "undefined" ? null : obj.FKS === null ? null : obj.FKS;
+		result.DQR_Niveau = typeof obj.DQR_Niveau === "undefined" ? null : obj.DQR_Niveau === null ? null : obj.DQR_Niveau;
+		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
+		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : Schild3KatalogEintragDQRNiveaus) : string {
 		let result = '{';
-		result += '"Gliederung" : ' + ((!obj.Gliederung) ? 'null' : '"' + obj.Gliederung.valueOf() + '"') + ',';
-		result += '"FKS" : ' + ((!obj.FKS) ? 'null' : '"' + obj.FKS.valueOf() + '"') + ',';
-		result += '"DQR_Niveau" : ' + ((!obj.DQR_Niveau) ? 'null' : obj.DQR_Niveau.valueOf()) + ',';
-		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.valueOf()) + ',';
-		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.valueOf()) + ',';
+		result += '"Gliederung" : ' + ((!obj.Gliederung) ? 'null' : '"' + obj.Gliederung + '"') + ',';
+		result += '"FKS" : ' + ((!obj.FKS) ? 'null' : '"' + obj.FKS + '"') + ',';
+		result += '"DQR_Niveau" : ' + ((!obj.DQR_Niveau) ? 'null' : obj.DQR_Niveau) + ',';
+		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
+		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -64,19 +64,19 @@ export class Schild3KatalogEintragDQRNiveaus extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<Schild3KatalogEintragDQRNiveaus>) : string {
 		let result = '{';
 		if (typeof obj.Gliederung !== "undefined") {
-			result += '"Gliederung" : ' + ((!obj.Gliederung) ? 'null' : '"' + obj.Gliederung.valueOf() + '"') + ',';
+			result += '"Gliederung" : ' + ((!obj.Gliederung) ? 'null' : '"' + obj.Gliederung + '"') + ',';
 		}
 		if (typeof obj.FKS !== "undefined") {
-			result += '"FKS" : ' + ((!obj.FKS) ? 'null' : '"' + obj.FKS.valueOf() + '"') + ',';
+			result += '"FKS" : ' + ((!obj.FKS) ? 'null' : '"' + obj.FKS + '"') + ',';
 		}
 		if (typeof obj.DQR_Niveau !== "undefined") {
-			result += '"DQR_Niveau" : ' + ((!obj.DQR_Niveau) ? 'null' : obj.DQR_Niveau.valueOf()) + ',';
+			result += '"DQR_Niveau" : ' + ((!obj.DQR_Niveau) ? 'null' : obj.DQR_Niveau) + ',';
 		}
 		if (typeof obj.gueltigVon !== "undefined") {
-			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.valueOf()) + ',';
+			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
 		}
 		if (typeof obj.gueltigBis !== "undefined") {
-			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.valueOf()) + ',';
+			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

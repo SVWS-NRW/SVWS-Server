@@ -12,17 +12,17 @@ export class AbschlussErgebnis extends JavaObject {
 	/**
 	 * Gibt an, welcher Abschluss geprüft wurde. 
 	 */
-	public abschluss : String | null = null;
+	public abschluss : string | null = null;
 
 	/**
 	 * Eine Liste der Kuerzel für mögliche Nachprüfungsfächer. 
 	 */
-	public npFaecher : List<String> | null = null;
+	public npFaecher : List<string> | null = null;
 
 	/**
 	 * Der Log der Abschlussberechnung. 
 	 */
-	public log : List<String> | null = null;
+	public log : List<string> | null = null;
 
 
 	public constructor() {
@@ -39,15 +39,15 @@ export class AbschlussErgebnis extends JavaObject {
 		if (typeof obj.erworben === "undefined")
 			 throw new Error('invalid json format, missing attribute erworben');
 		result.erworben = obj.erworben;
-		result.abschluss = typeof obj.abschluss === "undefined" ? null : obj.abschluss === null ? null : String(obj.abschluss);
+		result.abschluss = typeof obj.abschluss === "undefined" ? null : obj.abschluss === null ? null : obj.abschluss;
 		if (!!obj.npFaecher) {
 			for (let elem of obj.npFaecher) {
-				result.npFaecher?.add(String(elem));
+				result.npFaecher?.add(elem);
 			}
 		}
 		if (!!obj.log) {
 			for (let elem of obj.log) {
-				result.log?.add(String(elem));
+				result.log?.add(elem);
 			}
 		}
 		return result;
@@ -56,7 +56,7 @@ export class AbschlussErgebnis extends JavaObject {
 	public static transpilerToJSON(obj : AbschlussErgebnis) : string {
 		let result = '{';
 		result += '"erworben" : ' + obj.erworben + ',';
-		result += '"abschluss" : ' + ((!obj.abschluss) ? 'null' : '"' + obj.abschluss.valueOf() + '"') + ',';
+		result += '"abschluss" : ' + ((!obj.abschluss) ? 'null' : '"' + obj.abschluss + '"') + ',';
 		if (!obj.npFaecher) {
 			result += '"npFaecher" : []';
 		} else {
@@ -92,7 +92,7 @@ export class AbschlussErgebnis extends JavaObject {
 			result += '"erworben" : ' + obj.erworben + ',';
 		}
 		if (typeof obj.abschluss !== "undefined") {
-			result += '"abschluss" : ' + ((!obj.abschluss) ? 'null' : '"' + obj.abschluss.valueOf() + '"') + ',';
+			result += '"abschluss" : ' + ((!obj.abschluss) ? 'null' : '"' + obj.abschluss + '"') + ',';
 		}
 		if (typeof obj.npFaecher !== "undefined") {
 			if (!obj.npFaecher) {

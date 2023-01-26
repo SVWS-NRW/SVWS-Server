@@ -75,21 +75,21 @@ export class Clause extends JavaObject implements Comparable<Clause> {
 		} else throw new Error('invalid method overload');
 	}
 
-	public toString() : String {
-		let s : String = "";
+	public toString() : string {
+		let s : string = "";
 		for (let v of this.variables) {
 			if (v.index === -1) {
 				return "[SAT]";
 			}
 			if (v.index >= 0) {
-				s = s.valueOf() + " " + v.nr;
+				s = s! + " " + v.nr;
 			}
 		}
-		return "[" + s.valueOf() + "]";
+		return "[" + s! + "]";
 	}
 
-	private getSet() : AVLSet<Number> {
-		let set : AVLSet<Number> = new AVLSet();
+	private getSet() : AVLSet<number> {
+		let set : AVLSet<number> = new AVLSet();
 		for (let v of this.variables) {
 			if (v.index >= 0) {
 				set.add(v.nr);
@@ -99,18 +99,18 @@ export class Clause extends JavaObject implements Comparable<Clause> {
 	}
 
 	public compareTo(o : Clause) : number {
-		let set1 : AVLSet<Number> = this.getSet();
-		let set2 : AVLSet<Number> = o.getSet();
+		let set1 : AVLSet<number> = this.getSet();
+		let set2 : AVLSet<number> = o.getSet();
 		if (set1.size() < set2.size()) 
 			return -1;
 		if (set1.size() > set2.size()) 
 			return +1;
-		let i1 : JavaIterator<Number> | null = set1.iterator();
-		let i2 : JavaIterator<Number> | null = set2.iterator();
+		let i1 : JavaIterator<number> | null = set1.iterator();
+		let i2 : JavaIterator<number> | null = set2.iterator();
 		if ((i1 === null) || (i2 === null)) 
 			throw new NullPointerException()
 		while (i1.hasNext()) {
-			let cmp : number = JavaInteger.compare(i1.next().valueOf(), i2.next().valueOf());
+			let cmp : number = JavaInteger.compare(i1.next()!, i2.next()!);
 			if (cmp !== 0) 
 				return cmp;
 		}

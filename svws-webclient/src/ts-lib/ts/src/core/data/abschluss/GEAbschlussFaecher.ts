@@ -19,7 +19,7 @@ export class GEAbschlussFaecher extends JavaObject {
 	/**
 	 * Gibt den Jahrgang an, für den die Abschlussberechnung durchgeführt werden soll. 
 	 */
-	public jahrgang : String | null = null;
+	public jahrgang : string | null = null;
 
 	/**
 	 * Eine Liste der einzelnen Fächer, die für die Abschlussberechnung genutzt werden sollen. 
@@ -44,7 +44,7 @@ export class GEAbschlussFaecher extends JavaObject {
 		if (typeof obj.abschnitt === "undefined")
 			 throw new Error('invalid json format, missing attribute abschnitt');
 		result.abschnitt = obj.abschnitt;
-		result.jahrgang = typeof obj.jahrgang === "undefined" ? null : obj.jahrgang === null ? null : String(obj.jahrgang);
+		result.jahrgang = typeof obj.jahrgang === "undefined" ? null : obj.jahrgang === null ? null : obj.jahrgang;
 		if (!!obj.faecher) {
 			for (let elem of obj.faecher) {
 				result.faecher?.add(GEAbschlussFach.transpilerFromJSON(JSON.stringify(elem)));
@@ -57,7 +57,7 @@ export class GEAbschlussFaecher extends JavaObject {
 		let result = '{';
 		result += '"schuljahr" : ' + obj.schuljahr + ',';
 		result += '"abschnitt" : ' + obj.abschnitt + ',';
-		result += '"jahrgang" : ' + ((!obj.jahrgang) ? 'null' : '"' + obj.jahrgang.valueOf() + '"') + ',';
+		result += '"jahrgang" : ' + ((!obj.jahrgang) ? 'null' : '"' + obj.jahrgang + '"') + ',';
 		if (!obj.faecher) {
 			result += '"faecher" : []';
 		} else {
@@ -84,7 +84,7 @@ export class GEAbschlussFaecher extends JavaObject {
 			result += '"abschnitt" : ' + obj.abschnitt + ',';
 		}
 		if (typeof obj.jahrgang !== "undefined") {
-			result += '"jahrgang" : ' + ((!obj.jahrgang) ? 'null' : '"' + obj.jahrgang.valueOf() + '"') + ',';
+			result += '"jahrgang" : ' + ((!obj.jahrgang) ? 'null' : '"' + obj.jahrgang + '"') + ',';
 		}
 		if (typeof obj.faecher !== "undefined") {
 			if (!obj.faecher) {

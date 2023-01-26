@@ -19,27 +19,27 @@ export class HerkunftBildungsgangTypKatalogEintrag extends JavaObject {
 	/**
 	 * Das Kürzel des Bildungsgangestyps, welches im Rahmen der amtlichen Schulstatistik verwendet wird 
 	 */
-	public kuerzel : String = "";
+	public kuerzel : string = "";
 
 	/**
 	 * Die Kürzel der Schulformen, bei welchen der Bildungsgangstyp als Herkunft vorkommen kann (WB oder BK und SB). 
 	 */
-	public schulformen : List<String> = new Vector();
+	public schulformen : List<string> = new Vector();
 
 	/**
 	 * Die textuelle Beschreibung des Bildungsgangtyps. 
 	 */
-	public beschreibung : String = "";
+	public beschreibung : string = "";
 
 	/**
 	 * Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. 
 	 */
-	public gueltigVon : Number | null = null;
+	public gueltigVon : number | null = null;
 
 	/**
 	 * Gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. 
 	 */
-	public gueltigBis : Number | null = null;
+	public gueltigBis : number | null = null;
 
 
 	/**
@@ -56,20 +56,20 @@ export class HerkunftBildungsgangTypKatalogEintrag extends JavaObject {
 	 * @param gueltigVon    das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und "schon immer gültig war"
 	 * @param gueltigBis    das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */
-	public constructor(id : number, wbkTyp : WeiterbildungskollegBildungsgangTyp | null, bkTyp : BerufskollegBildungsgangTyp | null, gueltigVon : Number | null, gueltigBis : Number | null);
+	public constructor(id : number, wbkTyp : WeiterbildungskollegBildungsgangTyp | null, bkTyp : BerufskollegBildungsgangTyp | null, gueltigVon : number | null, gueltigBis : number | null);
 
 	/**
 	 * Implementation for method overloads of 'constructor'
 	 */
-	public constructor(__param0? : number, __param1? : WeiterbildungskollegBildungsgangTyp | null, __param2? : BerufskollegBildungsgangTyp | null, __param3? : Number | null, __param4? : Number | null) {
+	public constructor(__param0? : number, __param1? : WeiterbildungskollegBildungsgangTyp | null, __param2? : BerufskollegBildungsgangTyp | null, __param3? : null | number, __param4? : null | number) {
 		super();
 		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined") && (typeof __param2 === "undefined") && (typeof __param3 === "undefined") && (typeof __param4 === "undefined")) {
-			} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('de.nrw.schule.svws.core.types.schule.WeiterbildungskollegBildungsgangTyp'))) || (__param1 === null)) && ((typeof __param2 !== "undefined") && ((__param2 instanceof JavaObject) && (__param2.isTranspiledInstanceOf('de.nrw.schule.svws.core.types.schule.BerufskollegBildungsgangTyp'))) || (__param2 === null)) && ((typeof __param3 !== "undefined") && ((__param3 instanceof Number) || (typeof __param3 === "number")) || (__param3 === null)) && ((typeof __param4 !== "undefined") && ((__param4 instanceof Number) || (typeof __param4 === "number")) || (__param4 === null))) {
+			} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('de.nrw.schule.svws.core.types.schule.WeiterbildungskollegBildungsgangTyp'))) || (__param1 === null)) && ((typeof __param2 !== "undefined") && ((__param2 instanceof JavaObject) && (__param2.isTranspiledInstanceOf('de.nrw.schule.svws.core.types.schule.BerufskollegBildungsgangTyp'))) || (__param2 === null)) && ((typeof __param3 !== "undefined") && (typeof __param3 === "number") || (__param3 === null)) && ((typeof __param4 !== "undefined") && (typeof __param4 === "number") || (__param4 === null))) {
 			let id : number = __param0 as number;
 			let wbkTyp : WeiterbildungskollegBildungsgangTyp | null = cast_de_nrw_schule_svws_core_types_schule_WeiterbildungskollegBildungsgangTyp(__param1);
 			let bkTyp : BerufskollegBildungsgangTyp | null = cast_de_nrw_schule_svws_core_types_schule_BerufskollegBildungsgangTyp(__param2);
-			let gueltigVon : Number | null = cast_java_lang_Integer(__param3);
-			let gueltigBis : Number | null = cast_java_lang_Integer(__param4);
+			let gueltigVon : number | null = __param3;
+			let gueltigBis : number | null = __param4;
 			this.id = id;
 			if ((wbkTyp !== null) && (bkTyp !== null)) 
 				throw new IllegalArgumentException("Fehler im Core-Type: wbkTyp und bkTyp dürfen nicht gleichzeitig gesetzt sein.")
@@ -102,24 +102,24 @@ export class HerkunftBildungsgangTypKatalogEintrag extends JavaObject {
 		result.id = obj.id;
 		if (typeof obj.kuerzel === "undefined")
 			 throw new Error('invalid json format, missing attribute kuerzel');
-		result.kuerzel = String(obj.kuerzel);
+		result.kuerzel = obj.kuerzel;
 		if (!!obj.schulformen) {
 			for (let elem of obj.schulformen) {
-				result.schulformen?.add(String(elem));
+				result.schulformen?.add(elem);
 			}
 		}
 		if (typeof obj.beschreibung === "undefined")
 			 throw new Error('invalid json format, missing attribute beschreibung');
-		result.beschreibung = String(obj.beschreibung);
-		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : Number(obj.gueltigVon);
-		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : Number(obj.gueltigBis);
+		result.beschreibung = obj.beschreibung;
+		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
+		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : HerkunftBildungsgangTypKatalogEintrag) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"kuerzel" : ' + '"' + obj.kuerzel.valueOf() + '"' + ',';
+		result += '"kuerzel" : ' + '"' + obj.kuerzel! + '"' + ',';
 		if (!obj.schulformen) {
 			result += '"schulformen" : []';
 		} else {
@@ -132,9 +132,9 @@ export class HerkunftBildungsgangTypKatalogEintrag extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		result += '"beschreibung" : ' + '"' + obj.beschreibung.valueOf() + '"' + ',';
-		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.valueOf()) + ',';
-		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.valueOf()) + ',';
+		result += '"beschreibung" : ' + '"' + obj.beschreibung! + '"' + ',';
+		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
+		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -146,7 +146,7 @@ export class HerkunftBildungsgangTypKatalogEintrag extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.kuerzel !== "undefined") {
-			result += '"kuerzel" : ' + '"' + obj.kuerzel.valueOf() + '"' + ',';
+			result += '"kuerzel" : ' + '"' + obj.kuerzel + '"' + ',';
 		}
 		if (typeof obj.schulformen !== "undefined") {
 			if (!obj.schulformen) {
@@ -163,13 +163,13 @@ export class HerkunftBildungsgangTypKatalogEintrag extends JavaObject {
 			}
 		}
 		if (typeof obj.beschreibung !== "undefined") {
-			result += '"beschreibung" : ' + '"' + obj.beschreibung.valueOf() + '"' + ',';
+			result += '"beschreibung" : ' + '"' + obj.beschreibung + '"' + ',';
 		}
 		if (typeof obj.gueltigVon !== "undefined") {
-			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.valueOf()) + ',';
+			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
 		}
 		if (typeof obj.gueltigBis !== "undefined") {
-			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.valueOf()) + ',';
+			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

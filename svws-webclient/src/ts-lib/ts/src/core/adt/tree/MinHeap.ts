@@ -335,7 +335,7 @@ export class MinHeap<T> extends JavaObject implements Queue<T>, Cloneable {
 	 * 
 	 * @return der Inhalt des Heaps
 	 */
-	public toString() : String {
+	public toString() : string {
 		let sb : StringBuilder = new StringBuilder();
 		for (let i : number = 0; i < this._size; i++){
 			sb.append(this._nodes[i]);
@@ -501,11 +501,11 @@ export class MinHeap<T> extends JavaObject implements Queue<T>, Cloneable {
 	 * @throws IllegalStateException
 	 */
 	private grow() : void {
-		if (this._nodes.length === Number.MAX_VALUE) 
-			throw new IllegalStateException("Der Minimum-Heap kann nicht mehr als " + Number.MAX_VALUE + " Elemente beinhalten.")
+		if (this._nodes.length === JavaInteger.MAX_VALUE) 
+			throw new IllegalStateException("Der Minimum-Heap kann nicht mehr als " + JavaInteger.MAX_VALUE + " Elemente beinhalten.")
 		let newLength : number = this._nodes.length * 2 + 1;
 		if (newLength < 0) 
-			newLength = Number.MAX_VALUE;
+			newLength = JavaInteger.MAX_VALUE;
 		let tmp : Array<T> = this.newArray(this._nodes[0], newLength);
 		System.arraycopy(this._nodes, 0, tmp, 0, this._size);
 		this._nodes = tmp;

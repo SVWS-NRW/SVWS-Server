@@ -14,7 +14,7 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 export class Schulgliederung extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -23,7 +23,7 @@ export class Schulgliederung extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<Schulgliederung> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, Schulgliederung> = new Map<String, Schulgliederung>();
+	private static readonly all_values_by_name : Map<string, Schulgliederung> = new Map<string, Schulgliederung>();
 
 	/**
 	 *  Schulgliederung DEFAULT: 
@@ -629,12 +629,12 @@ export class Schulgliederung extends JavaObject {
 	/**
 	 * Eine Map mit der Zuordnung der Schulgliederung zu dem Kürzel der Schulgliederung 
 	 */
-	private static readonly _schulgliederungenKuerzel : HashMap<String, Schulgliederung> = new HashMap();
+	private static readonly _schulgliederungenKuerzel : HashMap<string, Schulgliederung> = new HashMap();
 
 	/**
 	 * Eine Map mit der Zuordnung der Schulgliederung zu der ID der Schulgliederung 
 	 */
-	private static readonly _schulgliederungenID : HashMap<Number, Schulgliederung> = new HashMap();
+	private static readonly _schulgliederungenID : HashMap<number, Schulgliederung> = new HashMap();
 
 	/**
 	 * Die Schulformen, bei welchen die Schulgliederung vorkommt 
@@ -671,7 +671,7 @@ export class Schulgliederung extends JavaObject {
 	 *    
 	 * @return die Map von den Kürzels der Schulgliederungen auf die zugehörigen Schulgliederungen
 	 */
-	private static getMapSchulgliederungByKuerzel() : HashMap<String, Schulgliederung> {
+	private static getMapSchulgliederungByKuerzel() : HashMap<string, Schulgliederung> {
 		if (Schulgliederung._schulgliederungenKuerzel.size() === 0) 
 			for (let s of Schulgliederung.values()) 
 				Schulgliederung._schulgliederungenKuerzel.put(s.daten.kuerzel, s);
@@ -684,7 +684,7 @@ export class Schulgliederung extends JavaObject {
 	 *    
 	 * @return die Map von den IDs der Schulgliederungen auf die zugehörigen Schulgliederungen
 	 */
-	private static getMapSchulgliederungByID() : HashMap<Number, Schulgliederung> {
+	private static getMapSchulgliederungByID() : HashMap<number, Schulgliederung> {
 		if (Schulgliederung._schulgliederungenID.size() === 0) 
 			for (let s of Schulgliederung.values()) {
 				for (let k of s.historie) 
@@ -700,7 +700,7 @@ export class Schulgliederung extends JavaObject {
 	 * 
 	 * @return die Schulgliederung oder null, falls das Kürzel ungültig ist
 	 */
-	public static getByKuerzel(kuerzel : String | null) : Schulgliederung | null {
+	public static getByKuerzel(kuerzel : string | null) : Schulgliederung | null {
 		if ((kuerzel === null) || JavaObject.equalsTranspiler("", (kuerzel))) 
 			return Schulgliederung.DEFAULT;
 		return Schulgliederung.getMapSchulgliederungByKuerzel().get(kuerzel);
@@ -713,7 +713,7 @@ export class Schulgliederung extends JavaObject {
 	 * 
 	 * @return die Schulgliederung oder null, falls die ID ungültig ist
 	 */
-	public static getByID(id : Number | null) : Schulgliederung | null {
+	public static getByID(id : number | null) : Schulgliederung | null {
 		return Schulgliederung.getMapSchulgliederungByID().get(id);
 	}
 
@@ -773,12 +773,12 @@ export class Schulgliederung extends JavaObject {
 	 * 
 	 * @return true, falls die Gliederung bei der Schulform existiert und ansonsten false
 	 */
-	public hasSchulformByKuerzel(kuerzel : String | null) : boolean {
+	public hasSchulformByKuerzel(kuerzel : string | null) : boolean {
 		if ((kuerzel === null) || JavaObject.equalsTranspiler("", (kuerzel))) 
 			return false;
 		if (this.daten.schulformen !== null) {
 			for (let i : number = 0; i < this.daten.schulformen.size(); i++){
-				let sfKuerzel : String | null = this.daten.schulformen.get(i);
+				let sfKuerzel : string | null = this.daten.schulformen.get(i);
 				if (JavaObject.equalsTranspiler(sfKuerzel, (kuerzel))) 
 					return true;
 			}
@@ -798,7 +798,7 @@ export class Schulgliederung extends JavaObject {
 			return false;
 		if (this.daten.schulformen !== null) {
 			for (let i : number = 0; i < this.daten.schulformen.size(); i++){
-				let sfKuerzel : String | null = this.daten.schulformen.get(i);
+				let sfKuerzel : string | null = this.daten.schulformen.get(i);
 				if (JavaObject.equalsTranspiler(sfKuerzel, (schulform.daten.kuerzel))) 
 					return true;
 			}
@@ -841,7 +841,7 @@ export class Schulgliederung extends JavaObject {
 	 * 
 	 * @return die Schulgliederung, falls die Parameter gültige Werte sind und ansonsten null 
 	 */
-	public static getBySchulformAndKuerzel(sf : Schulform | null, kuerzel : String | null) : Schulgliederung | null {
+	public static getBySchulformAndKuerzel(sf : Schulform | null, kuerzel : string | null) : Schulgliederung | null {
 		if (sf === null) 
 			return null;
 		if ((kuerzel === null) || JavaObject.equalsTranspiler("", (kuerzel))) 
@@ -860,7 +860,7 @@ export class Schulgliederung extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -878,7 +878,7 @@ export class Schulgliederung extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -932,7 +932,7 @@ export class Schulgliederung extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : Schulgliederung | null {
+	public static valueOf(name : string) : Schulgliederung | null {
 		let tmp : Schulgliederung | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

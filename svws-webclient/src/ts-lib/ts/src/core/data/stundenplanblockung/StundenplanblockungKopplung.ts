@@ -13,7 +13,7 @@ export class StundenplanblockungKopplung extends JavaObject {
 	/**
 	 * Das Kürzel der Kopplung. Beispielsweise '5RE'. 
 	 */
-	public kuerzel : String = "";
+	public kuerzel : string = "";
 
 	/**
 	 * Alle Stundenelemente, die dieser Kopplung zugeordnet sind. 
@@ -37,7 +37,7 @@ export class StundenplanblockungKopplung extends JavaObject {
 		result.id = obj.id;
 		if (typeof obj.kuerzel === "undefined")
 			 throw new Error('invalid json format, missing attribute kuerzel');
-		result.kuerzel = String(obj.kuerzel);
+		result.kuerzel = obj.kuerzel;
 		if (!!obj.stundenelemente) {
 			for (let elem of obj.stundenelemente) {
 				result.stundenelemente?.add(StundenplanblockungStundenelement.transpilerFromJSON(JSON.stringify(elem)));
@@ -49,7 +49,7 @@ export class StundenplanblockungKopplung extends JavaObject {
 	public static transpilerToJSON(obj : StundenplanblockungKopplung) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"kuerzel" : ' + '"' + obj.kuerzel.valueOf() + '"' + ',';
+		result += '"kuerzel" : ' + '"' + obj.kuerzel! + '"' + ',';
 		if (!obj.stundenelemente) {
 			result += '"stundenelemente" : []';
 		} else {
@@ -73,7 +73,7 @@ export class StundenplanblockungKopplung extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.kuerzel !== "undefined") {
-			result += '"kuerzel" : ' + '"' + obj.kuerzel.valueOf() + '"' + ',';
+			result += '"kuerzel" : ' + '"' + obj.kuerzel + '"' + ',';
 		}
 		if (typeof obj.stundenelemente !== "undefined") {
 			if (!obj.stundenelemente) {

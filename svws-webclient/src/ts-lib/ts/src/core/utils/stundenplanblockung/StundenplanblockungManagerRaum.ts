@@ -13,7 +13,7 @@ export class StundenplanblockungManagerRaum extends JavaObject {
 	/**
 	 * Das Kürzel des Raumes. Beispielsweise 'E01'. 
 	 */
-	private _kuerzel : String = "";
+	private _kuerzel : string = "";
 
 	/**
 	 * Alle Lerngruppen der Räume. 
@@ -25,7 +25,7 @@ export class StundenplanblockungManagerRaum extends JavaObject {
 	 * @param pRaumID   Die Datenbank-ID des Raumes.
 	 * @param pKuerzel  Das Kürzel des Raumes.
 	 */
-	public constructor(pRaumID : number, pKuerzel : String) {
+	public constructor(pRaumID : number, pKuerzel : string) {
 		super();
 		this._id = pRaumID;
 		this._kuerzel = pKuerzel;
@@ -46,7 +46,7 @@ export class StundenplanblockungManagerRaum extends JavaObject {
 	 * 
 	 * @param pKuerzel  Das neue Kürzel des Raumes.
 	 */
-	public setKuerzel(pKuerzel : String) : void {
+	public setKuerzel(pKuerzel : string) : void {
 		this._kuerzel = pKuerzel;
 	}
 

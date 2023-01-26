@@ -6,7 +6,7 @@ import { BenutzerKompetenzGruppenKatalogEintrag, cast_de_nrw_schule_svws_core_da
 export class BenutzerKompetenzGruppe extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -15,7 +15,7 @@ export class BenutzerKompetenzGruppe extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<BenutzerKompetenzGruppe> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, BenutzerKompetenzGruppe> = new Map<String, BenutzerKompetenzGruppe>();
+	private static readonly all_values_by_name : Map<string, BenutzerKompetenzGruppe> = new Map<string, BenutzerKompetenzGruppe>();
 
 	/**
 	 * Es werden keinerlei Kompetenzen benötigt. 
@@ -145,7 +145,7 @@ export class BenutzerKompetenzGruppe extends JavaObject {
 	/**
 	 * Eine HashMap zum schnellen Zugriff auf ein Aufzählungobjekt anhand der ID der Benutzerkompetenz-Gruppe 
 	 */
-	private static readonly _mapID : HashMap<Number, BenutzerKompetenzGruppe> = new HashMap();
+	private static readonly _mapID : HashMap<number, BenutzerKompetenzGruppe> = new HashMap();
 
 	/**
 	 * Erzeugt eine neue Benutzerkompetenz-Gruppe für die Aufzählung.
@@ -167,7 +167,7 @@ export class BenutzerKompetenzGruppe extends JavaObject {
 	 *    
 	 * @return die Map von den IDs der Benutzerkompetenz-Gruppen auf die zugehörigen Benutzerkompetenz-Gruppen
 	 */
-	private static getMapID() : HashMap<Number, BenutzerKompetenzGruppe> {
+	private static getMapID() : HashMap<number, BenutzerKompetenzGruppe> {
 		if (BenutzerKompetenzGruppe._mapID.size() === 0) 
 			for (let p of BenutzerKompetenzGruppe.values()) 
 				BenutzerKompetenzGruppe._mapID.put(p.daten.id, p);
@@ -191,7 +191,7 @@ export class BenutzerKompetenzGruppe extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -209,7 +209,7 @@ export class BenutzerKompetenzGruppe extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -263,7 +263,7 @@ export class BenutzerKompetenzGruppe extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : BenutzerKompetenzGruppe | null {
+	public static valueOf(name : string) : BenutzerKompetenzGruppe | null {
 		let tmp : BenutzerKompetenzGruppe | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

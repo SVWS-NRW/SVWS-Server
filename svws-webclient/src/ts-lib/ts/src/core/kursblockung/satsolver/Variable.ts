@@ -63,7 +63,7 @@ export class Variable extends JavaObject {
 		this.negation = null;
 	}
 
-	public toString() : String {
+	public toString() : string {
 		return "" + this.nr;
 	}
 

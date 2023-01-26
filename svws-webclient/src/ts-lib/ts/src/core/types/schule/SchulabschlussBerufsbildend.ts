@@ -6,7 +6,7 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class SchulabschlussBerufsbildend extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -15,7 +15,7 @@ export class SchulabschlussBerufsbildend extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<SchulabschlussBerufsbildend> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, SchulabschlussBerufsbildend> = new Map<String, SchulabschlussBerufsbildend>();
+	private static readonly all_values_by_name : Map<string, SchulabschlussBerufsbildend> = new Map<string, SchulabschlussBerufsbildend>();
 
 	/**
 	 * Es liegt kein Abschluss vor 
@@ -105,12 +105,12 @@ export class SchulabschlussBerufsbildend extends JavaObject {
 	/**
 	 * Eine HashMap mit den Abschlussarten, welche ihren Kürzeln zugeordnet werden 
 	 */
-	private static readonly _mapByKuerzel : HashMap<String, SchulabschlussBerufsbildend> = new HashMap();
+	private static readonly _mapByKuerzel : HashMap<string, SchulabschlussBerufsbildend> = new HashMap();
 
 	/**
 	 * Eine HashMap mit den Abschlussarten, welche ihren Statistik-Kürzeln zugeordnet werden 
 	 */
-	private static readonly _mapByKuerzelStatistik : HashMap<String, SchulabschlussBerufsbildend> = new HashMap();
+	private static readonly _mapByKuerzelStatistik : HashMap<string, SchulabschlussBerufsbildend> = new HashMap();
 
 	/**
 	 * Erzeugt eine neue Abschlussart in der Aufzählung.
@@ -133,7 +133,7 @@ export class SchulabschlussBerufsbildend extends JavaObject {
 	 *    
 	 * @return die Map von den Kürzeln der Abschlussarten auf die zugehörigen Abschlussarten
 	 */
-	private static getMapByKuerzel() : HashMap<String, SchulabschlussBerufsbildend> {
+	private static getMapByKuerzel() : HashMap<string, SchulabschlussBerufsbildend> {
 		if (SchulabschlussBerufsbildend._mapByKuerzel.size() === 0) {
 			for (let s of SchulabschlussBerufsbildend.values()) {
 				if (s.daten !== null) 
@@ -150,7 +150,7 @@ export class SchulabschlussBerufsbildend extends JavaObject {
 	 * 
 	 * @return die Abschlussart oder null, falls das Kürzel ungültig ist
 	 */
-	public static getByKuerzel(kuerzel : String | null) : SchulabschlussBerufsbildend | null {
+	public static getByKuerzel(kuerzel : string | null) : SchulabschlussBerufsbildend | null {
 		return SchulabschlussBerufsbildend.getMapByKuerzel().get(kuerzel);
 	}
 
@@ -160,7 +160,7 @@ export class SchulabschlussBerufsbildend extends JavaObject {
 	 *    
 	 * @return die Map von den Statistik-Kürzeln der Abschlussarten auf die zugehörigen Abschlussarten
 	 */
-	private static getMapByKuerzelStatistik() : HashMap<String, SchulabschlussBerufsbildend> {
+	private static getMapByKuerzelStatistik() : HashMap<string, SchulabschlussBerufsbildend> {
 		if (SchulabschlussBerufsbildend._mapByKuerzelStatistik.size() === 0) {
 			for (let s of SchulabschlussBerufsbildend.values()) {
 				if (s.daten !== null) 
@@ -177,7 +177,7 @@ export class SchulabschlussBerufsbildend extends JavaObject {
 	 * 
 	 * @return die Abschlussart oder null, falls das Statistik-Kürzel ungültig ist
 	 */
-	public static getByKuerzelStatistik(kuerzel : String | null) : SchulabschlussBerufsbildend | null {
+	public static getByKuerzelStatistik(kuerzel : string | null) : SchulabschlussBerufsbildend | null {
 		return SchulabschlussBerufsbildend.getMapByKuerzelStatistik().get(kuerzel);
 	}
 
@@ -186,7 +186,7 @@ export class SchulabschlussBerufsbildend extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -204,7 +204,7 @@ export class SchulabschlussBerufsbildend extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -258,7 +258,7 @@ export class SchulabschlussBerufsbildend extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : SchulabschlussBerufsbildend | null {
+	public static valueOf(name : string) : SchulabschlussBerufsbildend | null {
 		let tmp : SchulabschlussBerufsbildend | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

@@ -489,7 +489,7 @@ export class GostBelegungsfehler extends JavaObject {
 	/**
 	 * Der eindeutige Code des Belegungsfehlers 
 	 */
-	public readonly code : String;
+	public readonly code : string;
 
 	/**
 	 * Die Art des Fehlers 
@@ -499,12 +499,12 @@ export class GostBelegungsfehler extends JavaObject {
 	/**
 	 * Der Text des Fehlers, der bei einer Gesamtprüfung ausgegeben wird 
 	 */
-	public readonly textGESAMT : String;
+	public readonly textGESAMT : string;
 
 	/**
 	 * Der alternative Text, der bei der eingeschränkten Prüfung für die EF.1 ausgegeben wird 
 	 */
-	public readonly textEF1 : String;
+	public readonly textEF1 : string;
 
 
 	/**
@@ -516,7 +516,7 @@ export class GostBelegungsfehler extends JavaObject {
 	 * @param textGESAMT   der zugeordnete Text für die Gesamtbelegprüfung oder null
 	 * @param textEF1      der zugeordnete Text für die EF.1-Prüfung oder null
 	 */
-	private constructor(code : String, art : GostBelegungsfehlerArt, textGESAMT : String | null, textEF1 : String | null) {
+	private constructor(code : string, art : GostBelegungsfehlerArt, textGESAMT : string | null, textEF1 : string | null) {
 		super();
 		this.code = code;
 		this.art = art;
@@ -561,7 +561,7 @@ export class GostBelegungsfehler extends JavaObject {
 	 *
 	 * @return der zugehörige Text des Belegungsfehlers
 	 */
-	public getText(pruef_art : GostBelegpruefungsArt) : String {
+	public getText(pruef_art : GostBelegpruefungsArt) : string {
 		if (pruef_art as unknown === GostBelegpruefungsArt.EF1 as unknown) 
 			return this.textEF1;
 		if (pruef_art as unknown === GostBelegpruefungsArt.GESAMT as unknown) 
@@ -569,7 +569,7 @@ export class GostBelegungsfehler extends JavaObject {
 		return this.textGESAMT;
 	}
 
-	public toString() : String {
+	public toString() : string {
 		return this.code;
 	}
 

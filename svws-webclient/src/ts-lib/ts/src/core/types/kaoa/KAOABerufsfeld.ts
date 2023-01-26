@@ -7,7 +7,7 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class KAOABerufsfeld extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -16,7 +16,7 @@ export class KAOABerufsfeld extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<KAOABerufsfeld> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, KAOABerufsfeld> = new Map<String, KAOABerufsfeld>();
+	private static readonly all_values_by_name : Map<string, KAOABerufsfeld> = new Map<string, KAOABerufsfeld>();
 
 	/**
 	 * KAoA-Berufsfeld: Bau, Architektur, Vermessung 
@@ -116,12 +116,12 @@ export class KAOABerufsfeld extends JavaObject {
 	/**
 	 * Eine Hashmap mit allen Einträgen, welche ihrer ID zugeordnet sind. 
 	 */
-	private static readonly _statusByID : HashMap<Number, KAOABerufsfeld> = new HashMap();
+	private static readonly _statusByID : HashMap<number, KAOABerufsfeld> = new HashMap();
 
 	/**
 	 * Eine Hashmap mit allen Einträgen, welche dem Kürzel zugeordnet sind. 
 	 */
-	private static readonly _statusByKuerzel : HashMap<String, KAOABerufsfeld> = new HashMap();
+	private static readonly _statusByKuerzel : HashMap<string, KAOABerufsfeld> = new HashMap();
 
 	/**
 	 * Erzeugt ein neues Element in der Aufzählung.
@@ -144,7 +144,7 @@ export class KAOABerufsfeld extends JavaObject {
 	 *    
 	 * @return die Map von der ID auf das zugehörige Berufsfeld
 	 */
-	private static getMapStatusByID() : HashMap<Number, KAOABerufsfeld> {
+	private static getMapStatusByID() : HashMap<number, KAOABerufsfeld> {
 		if (KAOABerufsfeld._statusByID.size() === 0) 
 			for (let g of KAOABerufsfeld.values()) 
 				KAOABerufsfeld._statusByID.put(g.daten.id, g);
@@ -157,7 +157,7 @@ export class KAOABerufsfeld extends JavaObject {
 	 *    
 	 * @return die Map von dem Kürzel auf das zugehörige Berufsfeld
 	 */
-	private static getMapStatusByKuerzel() : HashMap<String, KAOABerufsfeld> {
+	private static getMapStatusByKuerzel() : HashMap<string, KAOABerufsfeld> {
 		if (KAOABerufsfeld._statusByKuerzel.size() === 0) 
 			for (let g of KAOABerufsfeld.values()) 
 				KAOABerufsfeld._statusByKuerzel.put(g.daten.kuerzel, g);
@@ -182,7 +182,7 @@ export class KAOABerufsfeld extends JavaObject {
 	 * 
 	 * @return das Berufsfeld oder null, falls das Kürzel ungültig ist
 	 */
-	public static getByKuerzel(kuerzel : String | null) : KAOABerufsfeld | null {
+	public static getByKuerzel(kuerzel : string | null) : KAOABerufsfeld | null {
 		return KAOABerufsfeld.getMapStatusByKuerzel().get(kuerzel);
 	}
 
@@ -191,7 +191,7 @@ export class KAOABerufsfeld extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -209,7 +209,7 @@ export class KAOABerufsfeld extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -263,7 +263,7 @@ export class KAOABerufsfeld extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : KAOABerufsfeld | null {
+	public static valueOf(name : string) : KAOABerufsfeld | null {
 		let tmp : KAOABerufsfeld | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

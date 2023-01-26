@@ -68,42 +68,42 @@ export class GostBlockungsdatenManager extends JavaObject {
 	/**
 	 * Eine interne Hashmap zum schnellen Zugriff auf die Kurse anhand ihrer Datenbank-ID. 
 	 */
-	private readonly _mapKurse : HashMap<Number, GostBlockungKurs> = new HashMap();
+	private readonly _mapKurse : HashMap<number, GostBlockungKurs> = new HashMap();
 
 	/**
 	 * Eine interne Hashmap zum schnellen Zugriff auf die Schienen anhand ihrer Datenbank-ID. 
 	 */
-	private readonly _mapSchienen : HashMap<Number, GostBlockungSchiene> = new HashMap();
+	private readonly _mapSchienen : HashMap<number, GostBlockungSchiene> = new HashMap();
 
 	/**
 	 * Eine interne Hashmap zum schnellen Zugriff auf die Regeln anhand ihrer Datenbank-ID. 
 	 */
-	private readonly _mapRegeln : HashMap<Number, GostBlockungRegel> = new HashMap();
+	private readonly _mapRegeln : HashMap<number, GostBlockungRegel> = new HashMap();
 
 	/**
 	 * Eine interne Hashmap zum schnellen Zugriff auf die Schueler anhand ihrer Datenbank-ID. 
 	 */
-	private readonly _map_id_schueler : HashMap<Number, Schueler> = new HashMap();
+	private readonly _map_id_schueler : HashMap<number, Schueler> = new HashMap();
 
 	/**
 	 * Schüler-ID --> List<Fachwahl> = Die Fachwahlen des Schülers der jeweiligen Fachart. 
 	 */
-	private readonly _map_schuelerID_fachwahlen : HashMap<Number, List<GostFachwahl>> = new HashMap();
+	private readonly _map_schuelerID_fachwahlen : HashMap<number, List<GostFachwahl>> = new HashMap();
 
 	/**
 	 * Fachart-ID --> List<Fachwahl> = Die Fachwahlen einer Fachart. 
 	 */
-	private readonly _map_fachartID_fachwahlen : HashMap<Number, List<GostFachwahl>> = new HashMap();
+	private readonly _map_fachartID_fachwahlen : HashMap<number, List<GostFachwahl>> = new HashMap();
 
 	/**
 	 * Schüler-ID --> Fach-ID --> Kursart = Die Fachwahl des Schülers die dem Fach die Kursart zuordnet. 
 	 */
-	private readonly _map_schulerID_fachID_fachwahl : HashMap<Number, HashMap<Number, GostFachwahl>> = new HashMap();
+	private readonly _map_schulerID_fachID_fachwahl : HashMap<number, HashMap<number, GostFachwahl>> = new HashMap();
 
 	/**
 	 * Ergebnis-ID --> {@link GostBlockungsergebnisListeneintrag} 
 	 */
-	private readonly _mapErgebnis : HashMap<Number, GostBlockungsergebnisListeneintrag> = new HashMap();
+	private readonly _mapErgebnis : HashMap<number, GostBlockungsergebnisListeneintrag> = new HashMap();
 
 	/**
 	 * Ein Comparator für Kurse der Blockung (FACH, KURSART, KURSNUMMER). 
@@ -395,7 +395,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @return Die Anzahl verschiedenen Kursarten. 
 	 */
 	public getKursartenAnzahl() : number {
-		let setKursartenIDs : HashSet<Number> = new HashSet();
+		let setKursartenIDs : HashSet<number> = new HashSet();
 		for (let fachwahl of this._daten.fachwahlen) 
 			setKursartenIDs.add(fachwahl.kursartID);
 		return setKursartenIDs.size();
@@ -460,7 +460,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * 
 	 * @return der Name der Blockung
 	 */
-	public getName() : String {
+	public getName() : string {
 		return this._daten.name;
 	}
 
@@ -471,7 +471,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @param pName der Name, welcher der Blockung zugewiesen wird.
 	 * @throws UserNotificationException Falls der übergebene String leer ist. 
 	 */
-	public setName(pName : String) : void {
+	public setName(pName : string) : void {
 		if (JavaObject.equalsTranspiler("", (pName))) 
 			throw new UserNotificationException("Ein leerer Name ist für die Blockung nicht zulässig.")
 		this._daten.name = pName;
@@ -692,11 +692,11 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @return Den Namen des Kurses der Form [Fach]-[Kursart][Kursnummer][Suffix], beispielsweise D-GK1.
 	 * @throws DeveloperNotificationException Falls der Kurs nicht in der Blockung existiert.
 	 */
-	public getNameOfKurs(pKursID : number) : String {
+	public getNameOfKurs(pKursID : number) : string {
 		let kurs : GostBlockungKurs = this.getKurs(pKursID);
 		let gFach : GostFach = this._faecherManager.getOrException(kurs.fach_id);
-		let sSuffix : String = JavaObject.equalsTranspiler(kurs.suffix, ("")) ? "" : ("-" + kurs.suffix);
-		return gFach.kuerzelAnzeige + "-" + GostKursart.fromID(kurs.kursart).kuerzel + kurs.nummer + sSuffix.valueOf();
+		let sSuffix : string = JavaObject.equalsTranspiler(kurs.suffix, ("")) ? "" : ("-" + kurs.suffix);
+		return gFach.kuerzelAnzeige + "-" + GostKursart.fromID(kurs.kursart).kuerzel + kurs.nummer + sSuffix!;
 	}
 
 	/**
@@ -706,7 +706,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @return Den Namen (Fach-Kursart) der Fachwahl.
 	 * @throws DeveloperNotificationException Falls ein Fach mit der ID nicht bekannt ist. 
 	 */
-	public getNameOfFachwahl(pFachwahl : GostFachwahl) : String {
+	public getNameOfFachwahl(pFachwahl : GostFachwahl) : string {
 		let gFach : GostFach = this._faecherManager.getOrException(pFachwahl.fachID);
 		let gKursart : GostKursart = GostKursart.fromID(pFachwahl.kursartID);
 		return gFach.kuerzelAnzeige + "-" + gKursart.kuerzel;
@@ -719,7 +719,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @param  pSuffix  Der neue Suffix des Kurses.
 	 * @throws DeveloperNotificationException Falls der Kurs nicht in der Blockung existiert.
 	 */
-	public setSuffixOfKurs(pKursID : number, pSuffix : String) : void {
+	public setSuffixOfKurs(pKursID : number, pSuffix : string) : void {
 		let kurs : GostBlockungKurs = this.getKurs(pKursID);
 		kurs.suffix = pSuffix;
 	}
@@ -1241,7 +1241,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @return die Anzahl an Schülern, die mindestens eine Fachwahl haben.
 	 */
 	public getSchuelerAnzahlMitFachwahlen() : number {
-		let setSchuelerIDs : HashSet<Number> | null = new HashSet();
+		let setSchuelerIDs : HashSet<number> | null = new HashSet();
 		for (let fachwahl of this._daten.fachwahlen) 
 			setSchuelerIDs.add(fachwahl.schuelerID);
 		return setSchuelerIDs.size();
@@ -1280,7 +1280,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException Falls der Schüler das Fach nicht gewählt hat.
 	 */
 	public getOfSchuelerOfFachFachwahl(pSchuelerID : number, pFachID : number) : GostFachwahl {
-		let mapFachFachwahl : HashMap<Number, GostFachwahl> | null = this._map_schulerID_fachID_fachwahl.get(pSchuelerID);
+		let mapFachFachwahl : HashMap<number, GostFachwahl> | null = this._map_schulerID_fachID_fachwahl.get(pSchuelerID);
 		if (mapFachFachwahl === null) 
 			throw new DeveloperNotificationException("Schüler-ID (" + pSchuelerID + ") unbekannt!")
 		let fachwahl : GostFachwahl | null = mapFachFachwahl.get(pFachID);
@@ -1313,7 +1313,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException Falls die Schüler-ID unbekannt ist. 
 	 */
 	public getOfSchuelerHatFachart(pSchuelerID : number, pFach : number, pKursart : number) : boolean {
-		let map : HashMap<Number, GostFachwahl> | null = this._map_schulerID_fachID_fachwahl.get(pSchuelerID);
+		let map : HashMap<number, GostFachwahl> | null = this._map_schulerID_fachID_fachwahl.get(pSchuelerID);
 		if (map === null) 
 			throw new DeveloperNotificationException("Schüler-ID (" + pSchuelerID + ") unbekannt!")
 		let wahl : GostFachwahl | null = map.get(pFach);
@@ -1330,7 +1330,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException Falls die Fachwahl-Daten inkonsistent sind. 
 	 */
 	public addFachwahl(pFachwahl : GostFachwahl) : void {
-		let mapSFA : HashMap<Number, GostFachwahl> | null = this._map_schulerID_fachID_fachwahl.get(pFachwahl.schuelerID);
+		let mapSFA : HashMap<number, GostFachwahl> | null = this._map_schulerID_fachID_fachwahl.get(pFachwahl.schuelerID);
 		if (mapSFA === null) {
 			mapSFA = new HashMap();
 			this._map_schulerID_fachID_fachwahl.put(pFachwahl.schuelerID, mapSFA);

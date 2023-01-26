@@ -7,42 +7,42 @@ export class Schild3KatalogEintragAbiturInfos extends JavaObject {
 	/**
 	 * Hier stehen neben Regeln für die alte u.a. einige Regeln für die FHR-Berechnung an GY und GE drin 
 	 */
-	public PrfOrdnung : String | null = null;
+	public PrfOrdnung : string | null = null;
 
 	/**
 	 * Hier stehen neben Regeln für die alte u.a. einige Regeln für die FHR-Berechnung an GY und GE drin 
 	 */
-	public AbiFach : String | null = null;
+	public AbiFach : string | null = null;
 
 	/**
 	 * Hier stehen neben Regeln für die alte u.a. einige Regeln für die FHR-Berechnung an GY und GE drin 
 	 */
-	public Bedingung : String | null = null;
+	public Bedingung : string | null = null;
 
 	/**
 	 * Hier stehen neben Regeln für die alte u.a. einige Regeln für die FHR-Berechnung an GY und GE drin 
 	 */
-	public AbiInfoKrz : String | null = null;
+	public AbiInfoKrz : string | null = null;
 
 	/**
 	 * Hier stehen neben Regeln für die alte u.a. einige Regeln für die FHR-Berechnung an GY und GE drin 
 	 */
-	public AbiInfoBeschreibung : String | null = null;
+	public AbiInfoBeschreibung : string | null = null;
 
 	/**
 	 * Hier stehen neben Regeln für die alte u.a. einige Regeln für die FHR-Berechnung an GY und GE drin 
 	 */
-	public AbiInfoText : String | null = null;
+	public AbiInfoText : string | null = null;
 
 	/**
 	 * Gültig ab Schuljahr 
 	 */
-	public gueltigVon : Number | null = null;
+	public gueltigVon : number | null = null;
 
 	/**
 	 * Gültig bis Schuljahr 
 	 */
-	public gueltigBis : Number | null = null;
+	public gueltigBis : number | null = null;
 
 
 	public constructor() {
@@ -56,27 +56,27 @@ export class Schild3KatalogEintragAbiturInfos extends JavaObject {
 	public static transpilerFromJSON(json : string): Schild3KatalogEintragAbiturInfos {
 		const obj = JSON.parse(json);
 		const result = new Schild3KatalogEintragAbiturInfos();
-		result.PrfOrdnung = typeof obj.PrfOrdnung === "undefined" ? null : obj.PrfOrdnung === null ? null : String(obj.PrfOrdnung);
-		result.AbiFach = typeof obj.AbiFach === "undefined" ? null : obj.AbiFach === null ? null : String(obj.AbiFach);
-		result.Bedingung = typeof obj.Bedingung === "undefined" ? null : obj.Bedingung === null ? null : String(obj.Bedingung);
-		result.AbiInfoKrz = typeof obj.AbiInfoKrz === "undefined" ? null : obj.AbiInfoKrz === null ? null : String(obj.AbiInfoKrz);
-		result.AbiInfoBeschreibung = typeof obj.AbiInfoBeschreibung === "undefined" ? null : obj.AbiInfoBeschreibung === null ? null : String(obj.AbiInfoBeschreibung);
-		result.AbiInfoText = typeof obj.AbiInfoText === "undefined" ? null : obj.AbiInfoText === null ? null : String(obj.AbiInfoText);
-		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : Number(obj.gueltigVon);
-		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : Number(obj.gueltigBis);
+		result.PrfOrdnung = typeof obj.PrfOrdnung === "undefined" ? null : obj.PrfOrdnung === null ? null : obj.PrfOrdnung;
+		result.AbiFach = typeof obj.AbiFach === "undefined" ? null : obj.AbiFach === null ? null : obj.AbiFach;
+		result.Bedingung = typeof obj.Bedingung === "undefined" ? null : obj.Bedingung === null ? null : obj.Bedingung;
+		result.AbiInfoKrz = typeof obj.AbiInfoKrz === "undefined" ? null : obj.AbiInfoKrz === null ? null : obj.AbiInfoKrz;
+		result.AbiInfoBeschreibung = typeof obj.AbiInfoBeschreibung === "undefined" ? null : obj.AbiInfoBeschreibung === null ? null : obj.AbiInfoBeschreibung;
+		result.AbiInfoText = typeof obj.AbiInfoText === "undefined" ? null : obj.AbiInfoText === null ? null : obj.AbiInfoText;
+		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
+		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : Schild3KatalogEintragAbiturInfos) : string {
 		let result = '{';
-		result += '"PrfOrdnung" : ' + ((!obj.PrfOrdnung) ? 'null' : '"' + obj.PrfOrdnung.valueOf() + '"') + ',';
-		result += '"AbiFach" : ' + ((!obj.AbiFach) ? 'null' : '"' + obj.AbiFach.valueOf() + '"') + ',';
-		result += '"Bedingung" : ' + ((!obj.Bedingung) ? 'null' : '"' + obj.Bedingung.valueOf() + '"') + ',';
-		result += '"AbiInfoKrz" : ' + ((!obj.AbiInfoKrz) ? 'null' : '"' + obj.AbiInfoKrz.valueOf() + '"') + ',';
-		result += '"AbiInfoBeschreibung" : ' + ((!obj.AbiInfoBeschreibung) ? 'null' : '"' + obj.AbiInfoBeschreibung.valueOf() + '"') + ',';
-		result += '"AbiInfoText" : ' + ((!obj.AbiInfoText) ? 'null' : '"' + obj.AbiInfoText.valueOf() + '"') + ',';
-		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.valueOf()) + ',';
-		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.valueOf()) + ',';
+		result += '"PrfOrdnung" : ' + ((!obj.PrfOrdnung) ? 'null' : '"' + obj.PrfOrdnung + '"') + ',';
+		result += '"AbiFach" : ' + ((!obj.AbiFach) ? 'null' : '"' + obj.AbiFach + '"') + ',';
+		result += '"Bedingung" : ' + ((!obj.Bedingung) ? 'null' : '"' + obj.Bedingung + '"') + ',';
+		result += '"AbiInfoKrz" : ' + ((!obj.AbiInfoKrz) ? 'null' : '"' + obj.AbiInfoKrz + '"') + ',';
+		result += '"AbiInfoBeschreibung" : ' + ((!obj.AbiInfoBeschreibung) ? 'null' : '"' + obj.AbiInfoBeschreibung + '"') + ',';
+		result += '"AbiInfoText" : ' + ((!obj.AbiInfoText) ? 'null' : '"' + obj.AbiInfoText + '"') + ',';
+		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
+		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -85,28 +85,28 @@ export class Schild3KatalogEintragAbiturInfos extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<Schild3KatalogEintragAbiturInfos>) : string {
 		let result = '{';
 		if (typeof obj.PrfOrdnung !== "undefined") {
-			result += '"PrfOrdnung" : ' + ((!obj.PrfOrdnung) ? 'null' : '"' + obj.PrfOrdnung.valueOf() + '"') + ',';
+			result += '"PrfOrdnung" : ' + ((!obj.PrfOrdnung) ? 'null' : '"' + obj.PrfOrdnung + '"') + ',';
 		}
 		if (typeof obj.AbiFach !== "undefined") {
-			result += '"AbiFach" : ' + ((!obj.AbiFach) ? 'null' : '"' + obj.AbiFach.valueOf() + '"') + ',';
+			result += '"AbiFach" : ' + ((!obj.AbiFach) ? 'null' : '"' + obj.AbiFach + '"') + ',';
 		}
 		if (typeof obj.Bedingung !== "undefined") {
-			result += '"Bedingung" : ' + ((!obj.Bedingung) ? 'null' : '"' + obj.Bedingung.valueOf() + '"') + ',';
+			result += '"Bedingung" : ' + ((!obj.Bedingung) ? 'null' : '"' + obj.Bedingung + '"') + ',';
 		}
 		if (typeof obj.AbiInfoKrz !== "undefined") {
-			result += '"AbiInfoKrz" : ' + ((!obj.AbiInfoKrz) ? 'null' : '"' + obj.AbiInfoKrz.valueOf() + '"') + ',';
+			result += '"AbiInfoKrz" : ' + ((!obj.AbiInfoKrz) ? 'null' : '"' + obj.AbiInfoKrz + '"') + ',';
 		}
 		if (typeof obj.AbiInfoBeschreibung !== "undefined") {
-			result += '"AbiInfoBeschreibung" : ' + ((!obj.AbiInfoBeschreibung) ? 'null' : '"' + obj.AbiInfoBeschreibung.valueOf() + '"') + ',';
+			result += '"AbiInfoBeschreibung" : ' + ((!obj.AbiInfoBeschreibung) ? 'null' : '"' + obj.AbiInfoBeschreibung + '"') + ',';
 		}
 		if (typeof obj.AbiInfoText !== "undefined") {
-			result += '"AbiInfoText" : ' + ((!obj.AbiInfoText) ? 'null' : '"' + obj.AbiInfoText.valueOf() + '"') + ',';
+			result += '"AbiInfoText" : ' + ((!obj.AbiInfoText) ? 'null' : '"' + obj.AbiInfoText + '"') + ',';
 		}
 		if (typeof obj.gueltigVon !== "undefined") {
-			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.valueOf()) + ',';
+			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
 		}
 		if (typeof obj.gueltigBis !== "undefined") {
-			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.valueOf()) + ',';
+			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

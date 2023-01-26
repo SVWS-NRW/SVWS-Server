@@ -21,12 +21,12 @@ export class BenutzerListeEintrag extends JavaObject {
 	/**
 	 * Der Anzeigename des Benutzers. 
 	 */
-	public anzeigename : String = "";
+	public anzeigename : string = "";
 
 	/**
 	 * Der Anmeldename des Benutzers 
 	 */
-	public name : String = "";
+	public name : string = "";
 
 	/**
 	 * Gibt an, ob es sich um einen Administrativen Benutzer handelt oder nicht. 
@@ -61,10 +61,10 @@ export class BenutzerListeEintrag extends JavaObject {
 		result.typID = obj.typID;
 		if (typeof obj.anzeigename === "undefined")
 			 throw new Error('invalid json format, missing attribute anzeigename');
-		result.anzeigename = String(obj.anzeigename);
+		result.anzeigename = obj.anzeigename;
 		if (typeof obj.name === "undefined")
 			 throw new Error('invalid json format, missing attribute name');
-		result.name = String(obj.name);
+		result.name = obj.name;
 		if (typeof obj.istAdmin === "undefined")
 			 throw new Error('invalid json format, missing attribute istAdmin');
 		result.istAdmin = obj.istAdmin;
@@ -79,8 +79,8 @@ export class BenutzerListeEintrag extends JavaObject {
 		result += '"id" : ' + obj.id + ',';
 		result += '"typ" : ' + obj.typ + ',';
 		result += '"typID" : ' + obj.typID + ',';
-		result += '"anzeigename" : ' + '"' + obj.anzeigename.valueOf() + '"' + ',';
-		result += '"name" : ' + '"' + obj.name.valueOf() + '"' + ',';
+		result += '"anzeigename" : ' + '"' + obj.anzeigename! + '"' + ',';
+		result += '"name" : ' + '"' + obj.name! + '"' + ',';
 		result += '"istAdmin" : ' + obj.istAdmin + ',';
 		result += '"idCredentials" : ' + obj.idCredentials + ',';
 		result = result.slice(0, -1);
@@ -100,10 +100,10 @@ export class BenutzerListeEintrag extends JavaObject {
 			result += '"typID" : ' + obj.typID + ',';
 		}
 		if (typeof obj.anzeigename !== "undefined") {
-			result += '"anzeigename" : ' + '"' + obj.anzeigename.valueOf() + '"' + ',';
+			result += '"anzeigename" : ' + '"' + obj.anzeigename + '"' + ',';
 		}
 		if (typeof obj.name !== "undefined") {
-			result += '"name" : ' + '"' + obj.name.valueOf() + '"' + ',';
+			result += '"name" : ' + '"' + obj.name + '"' + ',';
 		}
 		if (typeof obj.istAdmin !== "undefined") {
 			result += '"istAdmin" : ' + obj.istAdmin + ',';

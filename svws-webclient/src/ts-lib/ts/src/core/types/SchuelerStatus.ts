@@ -6,7 +6,7 @@ import { JavaString, cast_java_lang_String } from '../../java/lang/JavaString';
 export class SchuelerStatus extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -15,7 +15,7 @@ export class SchuelerStatus extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<SchuelerStatus> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, SchuelerStatus> = new Map<String, SchuelerStatus>();
+	private static readonly all_values_by_name : Map<string, SchuelerStatus> = new Map<string, SchuelerStatus>();
 
 	/**
 	 * Status Neuaufnahme mit dem Wert 0 
@@ -65,12 +65,12 @@ export class SchuelerStatus extends JavaObject {
 	/**
 	 * Die Zuordnung des Schüler-Status zu der ID 
 	 */
-	private static readonly _mapID : HashMap<Number, SchuelerStatus> = new HashMap();
+	private static readonly _mapID : HashMap<number, SchuelerStatus> = new HashMap();
 
 	/**
 	 * Die Zuordnung des Schüler-Status zu der ID 
 	 */
-	private static readonly _mapBezeichnungen : HashMap<String, SchuelerStatus> = new HashMap();
+	private static readonly _mapBezeichnungen : HashMap<string, SchuelerStatus> = new HashMap();
 
 	/**
 	 * Die ID des Schüler Status, welche auch in der SVWS-Datenbank genutzt wird. 
@@ -80,17 +80,17 @@ export class SchuelerStatus extends JavaObject {
 	/**
 	 * Die textuelle Bezeichnung des Schülerstatus. 
 	 */
-	public readonly bezeichnung : String;
+	public readonly bezeichnung : string;
 
 	/**
 	 * Gibt an, in welchem Schuljahr der Schülerstatus einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. 
 	 */
-	public readonly gueltigVon : Number | null;
+	public readonly gueltigVon : number | null;
 
 	/**
 	 * Gibt an, bis zu welchem Schuljahr der Schülerstatus gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. 
 	 */
-	public readonly gueltigBis : Number | null;
+	public readonly gueltigBis : number | null;
 
 	/**
 	 * Erzeugt einen neuen Schüler-Status in der Aufzählung.
@@ -100,7 +100,7 @@ export class SchuelerStatus extends JavaObject {
 	 * @param gueltigVon    gibt an, in welchem Schuljahr der Schülerstatus einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 * @param gueltigBis    gibt an, bis zu welchem Schuljahr der Schülerstatus gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
-	private constructor(name : string, ordinal : number, id : number, bezeichnung : String, gueltigVon : Number | null, gueltigBis : Number | null) {
+	private constructor(name : string, ordinal : number, id : number, bezeichnung : string, gueltigVon : number | null, gueltigBis : number | null) {
 		super();
 		this.__name = name;
 		this.__ordinal = ordinal;
@@ -118,7 +118,7 @@ export class SchuelerStatus extends JavaObject {
 	 *    
 	 * @return die Map von den IDs der Schüler-Status auf die zugehörigen Schüler-Status
 	 */
-	private static getMapID() : HashMap<Number, SchuelerStatus> {
+	private static getMapID() : HashMap<number, SchuelerStatus> {
 		if (SchuelerStatus._mapID.size() === 0) 
 			for (let p of SchuelerStatus.values()) 
 				SchuelerStatus._mapID.put(p.id, p);
@@ -131,7 +131,7 @@ export class SchuelerStatus extends JavaObject {
 	 *    
 	 * @return die Map von den Bezeichnungen der Schüler-Status auf die zugehörigen Schüler-Status
 	 */
-	private static getMapBezeichnungen() : HashMap<String, SchuelerStatus> {
+	private static getMapBezeichnungen() : HashMap<string, SchuelerStatus> {
 		if (SchuelerStatus._mapBezeichnungen.size() === 0) 
 			for (let p of SchuelerStatus.values()) 
 				SchuelerStatus._mapBezeichnungen.put(p.bezeichnung.toUpperCase(), p);
@@ -160,7 +160,7 @@ export class SchuelerStatus extends JavaObject {
 	 * @return der Schülerstatus oder null, falls die Bezeichnung ungültig ist
 	 * 
 	 */
-	public static fromBezeichnung(value : String | null) : SchuelerStatus | null {
+	public static fromBezeichnung(value : string | null) : SchuelerStatus | null {
 		if (value === null) 
 			return null;
 		return SchuelerStatus.getMapBezeichnungen().get(value.toUpperCase());
@@ -174,7 +174,7 @@ export class SchuelerStatus extends JavaObject {
 	 * 
 	 * @return true, falls die ID gültig ist.
 	 */
-	public static isValidID(id : Number | null) : boolean {
+	public static isValidID(id : number | null) : boolean {
 		if (id === null) 
 			return false;
 		for (let status of SchuelerStatus.values()) 
@@ -188,7 +188,7 @@ export class SchuelerStatus extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -206,7 +206,7 @@ export class SchuelerStatus extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -260,7 +260,7 @@ export class SchuelerStatus extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : SchuelerStatus | null {
+	public static valueOf(name : string) : SchuelerStatus | null {
 		let tmp : SchuelerStatus | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

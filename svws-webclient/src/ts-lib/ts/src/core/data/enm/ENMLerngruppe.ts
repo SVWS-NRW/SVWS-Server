@@ -24,27 +24,27 @@ export class ENMLerngruppe extends JavaObject {
 	/**
 	 * Gibt die ID der Kursart an. Ist dieser Wert null, so handelt es sich um Klassen-Unterricht. 
 	 */
-	public kursartID : Number | null = null;
+	public kursartID : number | null = null;
 
 	/**
 	 * Die Bezeichnung der Lerngruppe (z.B. D-GK4) 
 	 */
-	public bezeichnung : String | null = null;
+	public bezeichnung : string | null = null;
 
 	/**
 	 * Die Bezeichnung der (allgemeinen) Kursart (z.B. GK) 
 	 */
-	public kursartKuerzel : String | null = null;
+	public kursartKuerzel : string | null = null;
 
 	/**
 	 * Das einstellige Kürzel der bilingualen Sprache, sofern es sich um eine bilinguale Lerngruppe handelt. (z.B. F) 
 	 */
-	public bilingualeSprache : String | null = null;
+	public bilingualeSprache : string | null = null;
 
 	/**
 	 * Die IDs der Lehrer, die der Lerngruppe zugeordnet sind. 
 	 */
-	public lehrerID : Vector<Number> = new Vector();
+	public lehrerID : Vector<number> = new Vector();
 
 	/**
 	 * Die Anzahl der Wochenstunden, falls es sich um einen Kurs handelt. 
@@ -72,13 +72,13 @@ export class ENMLerngruppe extends JavaObject {
 		if (typeof obj.fachID === "undefined")
 			 throw new Error('invalid json format, missing attribute fachID');
 		result.fachID = obj.fachID;
-		result.kursartID = typeof obj.kursartID === "undefined" ? null : obj.kursartID === null ? null : Number(obj.kursartID);
-		result.bezeichnung = typeof obj.bezeichnung === "undefined" ? null : obj.bezeichnung === null ? null : String(obj.bezeichnung);
-		result.kursartKuerzel = typeof obj.kursartKuerzel === "undefined" ? null : obj.kursartKuerzel === null ? null : String(obj.kursartKuerzel);
-		result.bilingualeSprache = typeof obj.bilingualeSprache === "undefined" ? null : obj.bilingualeSprache === null ? null : String(obj.bilingualeSprache);
+		result.kursartID = typeof obj.kursartID === "undefined" ? null : obj.kursartID === null ? null : obj.kursartID;
+		result.bezeichnung = typeof obj.bezeichnung === "undefined" ? null : obj.bezeichnung === null ? null : obj.bezeichnung;
+		result.kursartKuerzel = typeof obj.kursartKuerzel === "undefined" ? null : obj.kursartKuerzel === null ? null : obj.kursartKuerzel;
+		result.bilingualeSprache = typeof obj.bilingualeSprache === "undefined" ? null : obj.bilingualeSprache === null ? null : obj.bilingualeSprache;
 		if (!!obj.lehrerID) {
 			for (let elem of obj.lehrerID) {
-				result.lehrerID?.add(Number(elem));
+				result.lehrerID?.add(elem);
 			}
 		}
 		if (typeof obj.wochenstunden === "undefined")
@@ -92,10 +92,10 @@ export class ENMLerngruppe extends JavaObject {
 		result += '"id" : ' + obj.id + ',';
 		result += '"kID" : ' + obj.kID + ',';
 		result += '"fachID" : ' + obj.fachID + ',';
-		result += '"kursartID" : ' + ((!obj.kursartID) ? 'null' : obj.kursartID.valueOf()) + ',';
-		result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : '"' + obj.bezeichnung.valueOf() + '"') + ',';
-		result += '"kursartKuerzel" : ' + ((!obj.kursartKuerzel) ? 'null' : '"' + obj.kursartKuerzel.valueOf() + '"') + ',';
-		result += '"bilingualeSprache" : ' + ((!obj.bilingualeSprache) ? 'null' : '"' + obj.bilingualeSprache.valueOf() + '"') + ',';
+		result += '"kursartID" : ' + ((!obj.kursartID) ? 'null' : obj.kursartID) + ',';
+		result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : '"' + obj.bezeichnung + '"') + ',';
+		result += '"kursartKuerzel" : ' + ((!obj.kursartKuerzel) ? 'null' : '"' + obj.kursartKuerzel + '"') + ',';
+		result += '"bilingualeSprache" : ' + ((!obj.bilingualeSprache) ? 'null' : '"' + obj.bilingualeSprache + '"') + ',';
 		if (!obj.lehrerID) {
 			result += '"lehrerID" : []';
 		} else {
@@ -126,16 +126,16 @@ export class ENMLerngruppe extends JavaObject {
 			result += '"fachID" : ' + obj.fachID + ',';
 		}
 		if (typeof obj.kursartID !== "undefined") {
-			result += '"kursartID" : ' + ((!obj.kursartID) ? 'null' : obj.kursartID.valueOf()) + ',';
+			result += '"kursartID" : ' + ((!obj.kursartID) ? 'null' : obj.kursartID) + ',';
 		}
 		if (typeof obj.bezeichnung !== "undefined") {
-			result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : '"' + obj.bezeichnung.valueOf() + '"') + ',';
+			result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : '"' + obj.bezeichnung + '"') + ',';
 		}
 		if (typeof obj.kursartKuerzel !== "undefined") {
-			result += '"kursartKuerzel" : ' + ((!obj.kursartKuerzel) ? 'null' : '"' + obj.kursartKuerzel.valueOf() + '"') + ',';
+			result += '"kursartKuerzel" : ' + ((!obj.kursartKuerzel) ? 'null' : '"' + obj.kursartKuerzel + '"') + ',';
 		}
 		if (typeof obj.bilingualeSprache !== "undefined") {
-			result += '"bilingualeSprache" : ' + ((!obj.bilingualeSprache) ? 'null' : '"' + obj.bilingualeSprache.valueOf() + '"') + ',';
+			result += '"bilingualeSprache" : ' + ((!obj.bilingualeSprache) ? 'null' : '"' + obj.bilingualeSprache + '"') + ',';
 		}
 		if (typeof obj.lehrerID !== "undefined") {
 			if (!obj.lehrerID) {

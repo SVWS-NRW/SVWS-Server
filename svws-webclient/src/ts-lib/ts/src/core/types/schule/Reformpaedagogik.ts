@@ -11,7 +11,7 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 export class Reformpaedagogik extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -20,7 +20,7 @@ export class Reformpaedagogik extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<Reformpaedagogik> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, Reformpaedagogik> = new Map<String, Reformpaedagogik>();
+	private static readonly all_values_by_name : Map<string, Reformpaedagogik> = new Map<string, Reformpaedagogik>();
 
 	/**
 	 * Reformpaedagogik KEIN_EINTRAG - Es ist kein Eintrag zur Reformpädagogik vorhanden 
@@ -70,12 +70,12 @@ export class Reformpaedagogik extends JavaObject {
 	/**
 	 * Eine Map mit der Zuordnung der Reformpädagogik zu dem Kürzel der Reformpädagogik 
 	 */
-	private static readonly _schulgliederungenKuerzel : HashMap<String, Reformpaedagogik> = new HashMap();
+	private static readonly _schulgliederungenKuerzel : HashMap<string, Reformpaedagogik> = new HashMap();
 
 	/**
 	 * Eine Map mit der Zuordnung der Reformpädagogik zu der ID der Reformpädagogik 
 	 */
-	private static readonly _schulgliederungenID : HashMap<Number, Reformpaedagogik> = new HashMap();
+	private static readonly _schulgliederungenID : HashMap<number, Reformpaedagogik> = new HashMap();
 
 	/**
 	 * Die Schulformen, bei welchen die Reformpädagogik vorkommt 
@@ -112,7 +112,7 @@ export class Reformpaedagogik extends JavaObject {
 	 *    
 	 * @return die Map von den Kürzeln der Reformpädagogik auf die zugehörige Reformpädagogik
 	 */
-	private static getMapSchulgliederungByKuerzel() : HashMap<String, Reformpaedagogik> {
+	private static getMapSchulgliederungByKuerzel() : HashMap<string, Reformpaedagogik> {
 		if (Reformpaedagogik._schulgliederungenKuerzel.size() === 0) 
 			for (let r of Reformpaedagogik.values()) 
 				Reformpaedagogik._schulgliederungenKuerzel.put(r.daten.kuerzel, r);
@@ -125,7 +125,7 @@ export class Reformpaedagogik extends JavaObject {
 	 *    
 	 * @return die Map von den IDs der Reformpädagogik auf die zugehörige Reformpädagogik
 	 */
-	private static getMapSchulgliederungByID() : HashMap<Number, Reformpaedagogik> {
+	private static getMapSchulgliederungByID() : HashMap<number, Reformpaedagogik> {
 		if (Reformpaedagogik._schulgliederungenID.size() === 0) 
 			for (let r of Reformpaedagogik.values()) {
 				for (let k of r.historie) 
@@ -141,7 +141,7 @@ export class Reformpaedagogik extends JavaObject {
 	 * 
 	 * @return die Reformpädagogik oder null, falls das Kürzel ungültig ist
 	 */
-	public static getByKuerzel(kuerzel : String | null) : Reformpaedagogik | null {
+	public static getByKuerzel(kuerzel : string | null) : Reformpaedagogik | null {
 		if ((kuerzel === null) || JavaObject.equalsTranspiler("", (kuerzel))) 
 			return Reformpaedagogik.KEIN_EINTRAG;
 		return Reformpaedagogik.getMapSchulgliederungByKuerzel().get(kuerzel);
@@ -154,7 +154,7 @@ export class Reformpaedagogik extends JavaObject {
 	 * 
 	 * @return die Reformpädagogik oder null, falls die ID ungültig ist
 	 */
-	public static getByID(id : Number | null) : Reformpaedagogik | null {
+	public static getByID(id : number | null) : Reformpaedagogik | null {
 		return Reformpaedagogik.getMapSchulgliederungByID().get(id);
 	}
 
@@ -195,12 +195,12 @@ export class Reformpaedagogik extends JavaObject {
 	 * 
 	 * @return true, falls die Reformpädagogik bei der Schulform vorkommen kann und ansonsten false
 	 */
-	public hasSchulformByKuerzel(kuerzel : String | null) : boolean {
+	public hasSchulformByKuerzel(kuerzel : string | null) : boolean {
 		if ((kuerzel === null) || JavaObject.equalsTranspiler("", (kuerzel))) 
 			return false;
 		if (this.daten.schulformen !== null) {
 			for (let i : number = 0; i < this.daten.schulformen.size(); i++){
-				let sfKuerzel : String | null = this.daten.schulformen.get(i);
+				let sfKuerzel : string | null = this.daten.schulformen.get(i);
 				if (JavaObject.equalsTranspiler(sfKuerzel, (kuerzel))) 
 					return true;
 			}
@@ -220,7 +220,7 @@ export class Reformpaedagogik extends JavaObject {
 			return false;
 		if (this.daten.schulformen !== null) {
 			for (let i : number = 0; i < this.daten.schulformen.size(); i++){
-				let sfKuerzel : String | null = this.daten.schulformen.get(i);
+				let sfKuerzel : string | null = this.daten.schulformen.get(i);
 				if (JavaObject.equalsTranspiler(sfKuerzel, (schulform.daten.kuerzel))) 
 					return true;
 			}
@@ -233,7 +233,7 @@ export class Reformpaedagogik extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -251,7 +251,7 @@ export class Reformpaedagogik extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -305,7 +305,7 @@ export class Reformpaedagogik extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : Reformpaedagogik | null {
+	public static valueOf(name : string) : Reformpaedagogik | null {
 		let tmp : Reformpaedagogik | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

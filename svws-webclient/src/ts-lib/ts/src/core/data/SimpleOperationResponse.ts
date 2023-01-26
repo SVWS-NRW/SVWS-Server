@@ -13,7 +13,7 @@ export class SimpleOperationResponse extends JavaObject {
 	/**
 	 * Das Log der Operation. 
 	 */
-	public log : List<String | null> = new Vector();
+	public log : List<string | null> = new Vector();
 
 
 	public constructor() {
@@ -32,7 +32,7 @@ export class SimpleOperationResponse extends JavaObject {
 		result.success = obj.success;
 		if (!!obj.log) {
 			for (let elem of obj.log) {
-				result.log?.add(elem === null ? null : String(elem));
+				result.log?.add(elem === null ? null : elem);
 			}
 		}
 		return result;

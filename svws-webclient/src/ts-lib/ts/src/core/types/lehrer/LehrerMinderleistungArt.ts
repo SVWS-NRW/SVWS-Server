@@ -7,7 +7,7 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class LehrerMinderleistungArt extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -16,7 +16,7 @@ export class LehrerMinderleistungArt extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<LehrerMinderleistungArt> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, LehrerMinderleistungArt> = new Map<String, LehrerMinderleistungArt>();
+	private static readonly all_values_by_name : Map<string, LehrerMinderleistungArt> = new Map<string, LehrerMinderleistungArt>();
 
 	/**
 	 * Minderleistungsart 'Pflichtstundenermäßigung aus Altersgründen' 
@@ -126,12 +126,12 @@ export class LehrerMinderleistungArt extends JavaObject {
 	/**
 	 * Eine Hashmap mit allen Arten von Minderleistungen, welche ihrer ID zugeordnet sind. 
 	 */
-	private static readonly _artenByID : HashMap<Number, LehrerMinderleistungArt | null> = new HashMap();
+	private static readonly _artenByID : HashMap<number, LehrerMinderleistungArt | null> = new HashMap();
 
 	/**
 	 * Eine Hashmap mit allen Arten von Minderleistungen, welche dem Kürzel bzw. ASD-Schlüssel zugeordnet sind. 
 	 */
-	private static readonly _artenByKuerzel : HashMap<String, LehrerMinderleistungArt | null> = new HashMap();
+	private static readonly _artenByKuerzel : HashMap<string, LehrerMinderleistungArt | null> = new HashMap();
 
 	/**
 	 * Erzeugt eine neue Art von Minderleistung in der Aufzählung.
@@ -154,7 +154,7 @@ export class LehrerMinderleistungArt extends JavaObject {
 	 *    
 	 * @return die Map von den IDs der Minderleistungsarten auf die zugehörigen Minderleistungsarten
 	 */
-	private static getMapArtenByID() : HashMap<Number, LehrerMinderleistungArt | null> {
+	private static getMapArtenByID() : HashMap<number, LehrerMinderleistungArt | null> {
 		if (LehrerMinderleistungArt._artenByID.size() === 0) 
 			for (let g of LehrerMinderleistungArt.values()) 
 				LehrerMinderleistungArt._artenByID.put(g.daten.id, g);
@@ -167,7 +167,7 @@ export class LehrerMinderleistungArt extends JavaObject {
 	 *    
 	 * @return die Map von den Kürzeln der Minderleistungsarten auf die zugehörigen Minderleistungsarten
 	 */
-	private static getMapArtenByKuerzel() : HashMap<String, LehrerMinderleistungArt | null> {
+	private static getMapArtenByKuerzel() : HashMap<string, LehrerMinderleistungArt | null> {
 		if (LehrerMinderleistungArt._artenByKuerzel.size() === 0) 
 			for (let g of LehrerMinderleistungArt.values()) 
 				LehrerMinderleistungArt._artenByKuerzel.put(g.daten.kuerzel, g);
@@ -192,7 +192,7 @@ export class LehrerMinderleistungArt extends JavaObject {
 	 * 
 	 * @return die Art der Minderleistung oder null, falls das Kürzel ungültig ist
 	 */
-	public static getByKuerzel(kuerzel : String | null) : LehrerMinderleistungArt | null {
+	public static getByKuerzel(kuerzel : string | null) : LehrerMinderleistungArt | null {
 		return LehrerMinderleistungArt.getMapArtenByKuerzel().get(kuerzel);
 	}
 
@@ -201,7 +201,7 @@ export class LehrerMinderleistungArt extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -219,7 +219,7 @@ export class LehrerMinderleistungArt extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -273,7 +273,7 @@ export class LehrerMinderleistungArt extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : LehrerMinderleistungArt | null {
+	public static valueOf(name : string) : LehrerMinderleistungArt | null {
 		let tmp : LehrerMinderleistungArt | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

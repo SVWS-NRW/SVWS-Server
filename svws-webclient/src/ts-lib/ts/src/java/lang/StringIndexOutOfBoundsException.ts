@@ -2,10 +2,10 @@ import  { IndexOutOfBoundsException } from './IndexOutOfBoundsException';
 
 export class StringIndexOutOfBoundsException extends IndexOutOfBoundsException {
 
-    public constructor(param? : String | number) {
+    public constructor(param? : string | number) {
         if (typeof param === "undefined")
             super();
-        else if (param instanceof String)
+        else if (typeof param === "string")
             super(param);
         else 
             super("String index invalid: " + param);

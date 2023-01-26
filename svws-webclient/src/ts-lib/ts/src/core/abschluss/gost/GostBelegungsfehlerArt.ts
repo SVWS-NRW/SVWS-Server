@@ -21,7 +21,7 @@ export class GostBelegungsfehlerArt extends JavaObject {
 	/**
 	 * Das Kürzel für die Belegungsfehlerart 
 	 */
-	public readonly kuerzel : String;
+	public readonly kuerzel : string;
 
 
 	/**
@@ -29,7 +29,7 @@ export class GostBelegungsfehlerArt extends JavaObject {
 	 * 
 	 * @param kuerzel        das Kürzel der Fehler-Art
 	 */
-	private constructor(kuerzel : String) {
+	private constructor(kuerzel : string) {
 		super();
 		this.kuerzel = kuerzel;
 	}
@@ -41,7 +41,7 @@ export class GostBelegungsfehlerArt extends JavaObject {
 	 *  
 	 * @return die Belegungsfehler-Art
 	 */
-	public static fromKuerzel(kuerzel : String | null) : GostBelegungsfehlerArt | null {
+	public static fromKuerzel(kuerzel : string | null) : GostBelegungsfehlerArt | null {
 		if (kuerzel === null) 
 			return null;
 		switch (kuerzel) {
@@ -55,7 +55,7 @@ export class GostBelegungsfehlerArt extends JavaObject {
 		return null;
 	}
 
-	public toString() : String {
+	public toString() : string {
 		return this.kuerzel;
 	}
 

@@ -25,7 +25,7 @@ export class AVLMapSubKeySet<K, V> extends JavaObject implements NavigableSet<K>
 		this._sub = sub;
 	}
 
-	public toString() : String {
+	public toString() : string {
 		return this._sub.toString();
 	}
 

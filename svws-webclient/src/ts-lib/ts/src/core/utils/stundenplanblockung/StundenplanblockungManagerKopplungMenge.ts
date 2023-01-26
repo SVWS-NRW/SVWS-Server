@@ -11,7 +11,7 @@ export class StundenplanblockungManagerKopplungMenge extends JavaObject {
 
 	private readonly _menge : Vector<StundenplanblockungManagerKopplung>;
 
-	private readonly _map : HashMap<Number, StundenplanblockungManagerKopplung>;
+	private readonly _map : HashMap<number, StundenplanblockungManagerKopplung>;
 
 
 	/**
@@ -31,7 +31,7 @@ export class StundenplanblockungManagerKopplungMenge extends JavaObject {
 	 * @param pKuerzel               Das Kürzel der Kopplung.
 	 * @throws NullPointerException  Falls die Kopplung-ID bereits existiert.
 	 */
-	public addOrException(pKopplungID : number, pKuerzel : String) : void {
+	public addOrException(pKopplungID : number, pKuerzel : string) : void {
 		if (this._map.containsKey(pKopplungID) === true) 
 			throw new NullPointerException("Die Kopplung-ID " + pKopplungID + " existiert bereits!")
 		let ko : StundenplanblockungManagerKopplung | null = new StundenplanblockungManagerKopplung(pKopplungID, pKuerzel);

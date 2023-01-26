@@ -11,12 +11,12 @@ export class GostJahrgang extends JavaObject {
 	/**
 	 * Die aktuelle Jahrgangstufe, welche dem Abiturjahrgang zugeordnet ist. 
 	 */
-	public jahrgang : String | null = null;
+	public jahrgang : string | null = null;
 
 	/**
 	 * Die textuelle Bezeichnung für den Abiturjahrgang 
 	 */
-	public bezeichnung : String | null = "Allgemein / Vorlage";
+	public bezeichnung : string | null = "Allgemein / Vorlage";
 
 	/**
 	 * Gibt an, ob das Abitur für diesen Jahrgang berets abgeschlossen ist, d.h. die Schule sich bereits in einem späteren Schuljahr befindet. 
@@ -38,8 +38,8 @@ export class GostJahrgang extends JavaObject {
 		if (typeof obj.abiturjahr === "undefined")
 			 throw new Error('invalid json format, missing attribute abiturjahr');
 		result.abiturjahr = obj.abiturjahr;
-		result.jahrgang = typeof obj.jahrgang === "undefined" ? null : obj.jahrgang === null ? null : String(obj.jahrgang);
-		result.bezeichnung = typeof obj.bezeichnung === "undefined" ? null : obj.bezeichnung === null ? null : String(obj.bezeichnung);
+		result.jahrgang = typeof obj.jahrgang === "undefined" ? null : obj.jahrgang === null ? null : obj.jahrgang;
+		result.bezeichnung = typeof obj.bezeichnung === "undefined" ? null : obj.bezeichnung === null ? null : obj.bezeichnung;
 		if (typeof obj.istAbgeschlossen === "undefined")
 			 throw new Error('invalid json format, missing attribute istAbgeschlossen');
 		result.istAbgeschlossen = obj.istAbgeschlossen;
@@ -49,8 +49,8 @@ export class GostJahrgang extends JavaObject {
 	public static transpilerToJSON(obj : GostJahrgang) : string {
 		let result = '{';
 		result += '"abiturjahr" : ' + obj.abiturjahr + ',';
-		result += '"jahrgang" : ' + ((!obj.jahrgang) ? 'null' : '"' + obj.jahrgang.valueOf() + '"') + ',';
-		result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : '"' + obj.bezeichnung.valueOf() + '"') + ',';
+		result += '"jahrgang" : ' + ((!obj.jahrgang) ? 'null' : '"' + obj.jahrgang + '"') + ',';
+		result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : '"' + obj.bezeichnung + '"') + ',';
 		result += '"istAbgeschlossen" : ' + obj.istAbgeschlossen + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -63,10 +63,10 @@ export class GostJahrgang extends JavaObject {
 			result += '"abiturjahr" : ' + obj.abiturjahr + ',';
 		}
 		if (typeof obj.jahrgang !== "undefined") {
-			result += '"jahrgang" : ' + ((!obj.jahrgang) ? 'null' : '"' + obj.jahrgang.valueOf() + '"') + ',';
+			result += '"jahrgang" : ' + ((!obj.jahrgang) ? 'null' : '"' + obj.jahrgang + '"') + ',';
 		}
 		if (typeof obj.bezeichnung !== "undefined") {
-			result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : '"' + obj.bezeichnung.valueOf() + '"') + ',';
+			result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : '"' + obj.bezeichnung + '"') + ',';
 		}
 		if (typeof obj.istAbgeschlossen !== "undefined") {
 			result += '"istAbgeschlossen" : ' + obj.istAbgeschlossen + ',';

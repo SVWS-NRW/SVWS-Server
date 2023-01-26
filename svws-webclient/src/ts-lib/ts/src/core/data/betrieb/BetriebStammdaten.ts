@@ -11,137 +11,137 @@ export class BetriebStammdaten extends JavaObject {
 	/**
 	 * ID der weiteren Adresse (Betriebe) 
 	 */
-	public id : Number | null = null;
+	public id : number | null = null;
 
 	/**
 	 * Adressart des Betriebs, Fremdschlüssel auf die ID in K_Adressart 
 	 */
-	public adressArt : Number | null = null;
+	public adressArt : number | null = null;
 
 	/**
 	 * Name1 des Betriebs 
 	 */
-	public name1 : String | null = null;
+	public name1 : string | null = null;
 
 	/**
 	 * Name2 des Betriebs 
 	 */
-	public name2 : String | null = null;
+	public name2 : string | null = null;
 
 	/**
 	 * Straßenname des Betriebsdatensatz 
 	 */
-	public strassenname : String | null = null;
+	public strassenname : string | null = null;
 
 	/**
 	 * Hausnummer wenn getrennt gespeichert 
 	 */
-	public hausnr : String | null = null;
+	public hausnr : string | null = null;
 
 	/**
 	 * Zusatz zur Hausnummer wenn Hausnummern getrennt gespeichert werden 
 	 */
-	public hausnrzusatz : String | null = null;
+	public hausnrzusatz : string | null = null;
 
 	/**
 	 * OrtID des Betriebs 
 	 */
-	public ort_id : Number | null = null;
+	public ort_id : number | null = null;
 
 	/**
 	 * PLZ des Betriebs 
 	 */
-	public plz : String | null = null;
+	public plz : string | null = null;
 
 	/**
 	 * Telefonnummer1 des Betriebs 
 	 */
-	public telefon1 : String | null = null;
+	public telefon1 : string | null = null;
 
 	/**
 	 * Telefonnummer2 des Betriebs 
 	 */
-	public telefon2 : String | null = null;
+	public telefon2 : string | null = null;
 
 	/**
 	 * Faxnummer des Betriebs 
 	 */
-	public fax : String | null = null;
+	public fax : string | null = null;
 
 	/**
 	 * E-MailAdresse des Betriebes 
 	 */
-	public email : String | null = null;
+	public email : string | null = null;
 
 	/**
 	 * Bemerkung zum Betrieb 
 	 */
-	public bemerkungen : String | null = null;
+	public bemerkungen : string | null = null;
 
 	/**
 	 * Sortierung des Betriebsdatensatz 
 	 */
-	public sortierung : Number | null = null;
+	public sortierung : number | null = null;
 
 	/**
 	 * Gibt an ob der Betrieb ausbildet Ja Nein 
 	 */
-	public ausbildungsbetrieb : Boolean | null = null;
+	public ausbildungsbetrieb : boolean | null = null;
 
 	/**
 	 * Gibt an ob der Betrieb Praktikumsplätze bietet Ja Nein 
 	 */
-	public bietetPraktika : Boolean | null = null;
+	public bietetPraktika : boolean | null = null;
 
 	/**
 	 * Brache des Betriebs 
 	 */
-	public branche : String | null = null;
+	public branche : string | null = null;
 
 	/**
 	 * Adresszusatz zum Betrieb 
 	 */
-	public zusatz1 : String | null = null;
+	public zusatz1 : string | null = null;
 
 	/**
 	 * Adresszusatz2 zum Betrieb 
 	 */
-	public zusatz2 : String | null = null;
+	public zusatz2 : string | null = null;
 
 	/**
 	 * Sichtbarkeit des Datensatzes 
 	 */
-	public Sichtbar : Boolean | null = null;
+	public Sichtbar : boolean | null = null;
 
 	/**
 	 * Datensatz ist änderbar Ja Nein 
 	 */
-	public Aenderbar : Boolean | null = null;
+	public Aenderbar : boolean | null = null;
 
 	/**
 	 * Bezeichnung des Maßnahmenträgers 
 	 */
-	public Massnahmentraeger : Boolean | null = null;
+	public Massnahmentraeger : boolean | null = null;
 
 	/**
 	 * Belehrung nach Infektionsschutzgesetz notwendig Ja Nein 
 	 */
-	public BelehrungISG : Boolean | null = null;
+	public BelehrungISG : boolean | null = null;
 
 	/**
 	 * GU_ID des Betriebsdatensatzes (für Import zur Erkennung) 
 	 */
-	public GU_ID : String | null = null;
+	public GU_ID : string | null = null;
 
 	/**
 	 * Wird für diesen Betrieb ein Erweitertes Führungszeugnis benötigt? 
 	 */
-	public ErwFuehrungszeugnis : Boolean | null = null;
+	public ErwFuehrungszeugnis : boolean | null = null;
 
 	/**
 	 * Externe ID des Betriebsdatensatzes 
 	 */
-	public ExtID : String | null = null;
+	public ExtID : string | null = null;
 
 	/**
 	 * Ein Array mit den Ansprechpartnern im Betrieb. 
@@ -160,33 +160,33 @@ export class BetriebStammdaten extends JavaObject {
 	public static transpilerFromJSON(json : string): BetriebStammdaten {
 		const obj = JSON.parse(json);
 		const result = new BetriebStammdaten();
-		result.id = typeof obj.id === "undefined" ? null : obj.id === null ? null : Number(obj.id);
-		result.adressArt = typeof obj.adressArt === "undefined" ? null : obj.adressArt === null ? null : Number(obj.adressArt);
-		result.name1 = typeof obj.name1 === "undefined" ? null : obj.name1 === null ? null : String(obj.name1);
-		result.name2 = typeof obj.name2 === "undefined" ? null : obj.name2 === null ? null : String(obj.name2);
-		result.strassenname = typeof obj.strassenname === "undefined" ? null : obj.strassenname === null ? null : String(obj.strassenname);
-		result.hausnr = typeof obj.hausnr === "undefined" ? null : obj.hausnr === null ? null : String(obj.hausnr);
-		result.hausnrzusatz = typeof obj.hausnrzusatz === "undefined" ? null : obj.hausnrzusatz === null ? null : String(obj.hausnrzusatz);
-		result.ort_id = typeof obj.ort_id === "undefined" ? null : obj.ort_id === null ? null : Number(obj.ort_id);
-		result.plz = typeof obj.plz === "undefined" ? null : obj.plz === null ? null : String(obj.plz);
-		result.telefon1 = typeof obj.telefon1 === "undefined" ? null : obj.telefon1 === null ? null : String(obj.telefon1);
-		result.telefon2 = typeof obj.telefon2 === "undefined" ? null : obj.telefon2 === null ? null : String(obj.telefon2);
-		result.fax = typeof obj.fax === "undefined" ? null : obj.fax === null ? null : String(obj.fax);
-		result.email = typeof obj.email === "undefined" ? null : obj.email === null ? null : String(obj.email);
-		result.bemerkungen = typeof obj.bemerkungen === "undefined" ? null : obj.bemerkungen === null ? null : String(obj.bemerkungen);
-		result.sortierung = typeof obj.sortierung === "undefined" ? null : obj.sortierung === null ? null : Number(obj.sortierung);
-		result.ausbildungsbetrieb = typeof obj.ausbildungsbetrieb === "undefined" ? null : obj.ausbildungsbetrieb === null ? null : Boolean(obj.ausbildungsbetrieb);
-		result.bietetPraktika = typeof obj.bietetPraktika === "undefined" ? null : obj.bietetPraktika === null ? null : Boolean(obj.bietetPraktika);
-		result.branche = typeof obj.branche === "undefined" ? null : obj.branche === null ? null : String(obj.branche);
-		result.zusatz1 = typeof obj.zusatz1 === "undefined" ? null : obj.zusatz1 === null ? null : String(obj.zusatz1);
-		result.zusatz2 = typeof obj.zusatz2 === "undefined" ? null : obj.zusatz2 === null ? null : String(obj.zusatz2);
-		result.Sichtbar = typeof obj.Sichtbar === "undefined" ? null : obj.Sichtbar === null ? null : Boolean(obj.Sichtbar);
-		result.Aenderbar = typeof obj.Aenderbar === "undefined" ? null : obj.Aenderbar === null ? null : Boolean(obj.Aenderbar);
-		result.Massnahmentraeger = typeof obj.Massnahmentraeger === "undefined" ? null : obj.Massnahmentraeger === null ? null : Boolean(obj.Massnahmentraeger);
-		result.BelehrungISG = typeof obj.BelehrungISG === "undefined" ? null : obj.BelehrungISG === null ? null : Boolean(obj.BelehrungISG);
-		result.GU_ID = typeof obj.GU_ID === "undefined" ? null : obj.GU_ID === null ? null : String(obj.GU_ID);
-		result.ErwFuehrungszeugnis = typeof obj.ErwFuehrungszeugnis === "undefined" ? null : obj.ErwFuehrungszeugnis === null ? null : Boolean(obj.ErwFuehrungszeugnis);
-		result.ExtID = typeof obj.ExtID === "undefined" ? null : obj.ExtID === null ? null : String(obj.ExtID);
+		result.id = typeof obj.id === "undefined" ? null : obj.id === null ? null : obj.id;
+		result.adressArt = typeof obj.adressArt === "undefined" ? null : obj.adressArt === null ? null : obj.adressArt;
+		result.name1 = typeof obj.name1 === "undefined" ? null : obj.name1 === null ? null : obj.name1;
+		result.name2 = typeof obj.name2 === "undefined" ? null : obj.name2 === null ? null : obj.name2;
+		result.strassenname = typeof obj.strassenname === "undefined" ? null : obj.strassenname === null ? null : obj.strassenname;
+		result.hausnr = typeof obj.hausnr === "undefined" ? null : obj.hausnr === null ? null : obj.hausnr;
+		result.hausnrzusatz = typeof obj.hausnrzusatz === "undefined" ? null : obj.hausnrzusatz === null ? null : obj.hausnrzusatz;
+		result.ort_id = typeof obj.ort_id === "undefined" ? null : obj.ort_id === null ? null : obj.ort_id;
+		result.plz = typeof obj.plz === "undefined" ? null : obj.plz === null ? null : obj.plz;
+		result.telefon1 = typeof obj.telefon1 === "undefined" ? null : obj.telefon1 === null ? null : obj.telefon1;
+		result.telefon2 = typeof obj.telefon2 === "undefined" ? null : obj.telefon2 === null ? null : obj.telefon2;
+		result.fax = typeof obj.fax === "undefined" ? null : obj.fax === null ? null : obj.fax;
+		result.email = typeof obj.email === "undefined" ? null : obj.email === null ? null : obj.email;
+		result.bemerkungen = typeof obj.bemerkungen === "undefined" ? null : obj.bemerkungen === null ? null : obj.bemerkungen;
+		result.sortierung = typeof obj.sortierung === "undefined" ? null : obj.sortierung === null ? null : obj.sortierung;
+		result.ausbildungsbetrieb = typeof obj.ausbildungsbetrieb === "undefined" ? null : obj.ausbildungsbetrieb === null ? null : obj.ausbildungsbetrieb;
+		result.bietetPraktika = typeof obj.bietetPraktika === "undefined" ? null : obj.bietetPraktika === null ? null : obj.bietetPraktika;
+		result.branche = typeof obj.branche === "undefined" ? null : obj.branche === null ? null : obj.branche;
+		result.zusatz1 = typeof obj.zusatz1 === "undefined" ? null : obj.zusatz1 === null ? null : obj.zusatz1;
+		result.zusatz2 = typeof obj.zusatz2 === "undefined" ? null : obj.zusatz2 === null ? null : obj.zusatz2;
+		result.Sichtbar = typeof obj.Sichtbar === "undefined" ? null : obj.Sichtbar === null ? null : obj.Sichtbar;
+		result.Aenderbar = typeof obj.Aenderbar === "undefined" ? null : obj.Aenderbar === null ? null : obj.Aenderbar;
+		result.Massnahmentraeger = typeof obj.Massnahmentraeger === "undefined" ? null : obj.Massnahmentraeger === null ? null : obj.Massnahmentraeger;
+		result.BelehrungISG = typeof obj.BelehrungISG === "undefined" ? null : obj.BelehrungISG === null ? null : obj.BelehrungISG;
+		result.GU_ID = typeof obj.GU_ID === "undefined" ? null : obj.GU_ID === null ? null : obj.GU_ID;
+		result.ErwFuehrungszeugnis = typeof obj.ErwFuehrungszeugnis === "undefined" ? null : obj.ErwFuehrungszeugnis === null ? null : obj.ErwFuehrungszeugnis;
+		result.ExtID = typeof obj.ExtID === "undefined" ? null : obj.ExtID === null ? null : obj.ExtID;
 		if (!!obj.ansprechpartner) {
 			for (let elem of obj.ansprechpartner) {
 				result.ansprechpartner?.add(BetriebAnsprechpartner.transpilerFromJSON(JSON.stringify(elem)));
@@ -197,33 +197,33 @@ export class BetriebStammdaten extends JavaObject {
 
 	public static transpilerToJSON(obj : BetriebStammdaten) : string {
 		let result = '{';
-		result += '"id" : ' + ((!obj.id) ? 'null' : obj.id.valueOf()) + ',';
-		result += '"adressArt" : ' + ((!obj.adressArt) ? 'null' : obj.adressArt.valueOf()) + ',';
-		result += '"name1" : ' + ((!obj.name1) ? 'null' : '"' + obj.name1.valueOf() + '"') + ',';
-		result += '"name2" : ' + ((!obj.name2) ? 'null' : '"' + obj.name2.valueOf() + '"') + ',';
-		result += '"strassenname" : ' + ((!obj.strassenname) ? 'null' : '"' + obj.strassenname.valueOf() + '"') + ',';
-		result += '"hausnr" : ' + ((!obj.hausnr) ? 'null' : '"' + obj.hausnr.valueOf() + '"') + ',';
-		result += '"hausnrzusatz" : ' + ((!obj.hausnrzusatz) ? 'null' : '"' + obj.hausnrzusatz.valueOf() + '"') + ',';
-		result += '"ort_id" : ' + ((!obj.ort_id) ? 'null' : obj.ort_id.valueOf()) + ',';
-		result += '"plz" : ' + ((!obj.plz) ? 'null' : '"' + obj.plz.valueOf() + '"') + ',';
-		result += '"telefon1" : ' + ((!obj.telefon1) ? 'null' : '"' + obj.telefon1.valueOf() + '"') + ',';
-		result += '"telefon2" : ' + ((!obj.telefon2) ? 'null' : '"' + obj.telefon2.valueOf() + '"') + ',';
-		result += '"fax" : ' + ((!obj.fax) ? 'null' : '"' + obj.fax.valueOf() + '"') + ',';
-		result += '"email" : ' + ((!obj.email) ? 'null' : '"' + obj.email.valueOf() + '"') + ',';
-		result += '"bemerkungen" : ' + ((!obj.bemerkungen) ? 'null' : '"' + obj.bemerkungen.valueOf() + '"') + ',';
-		result += '"sortierung" : ' + ((!obj.sortierung) ? 'null' : obj.sortierung.valueOf()) + ',';
-		result += '"ausbildungsbetrieb" : ' + ((!obj.ausbildungsbetrieb) ? 'null' : obj.ausbildungsbetrieb.valueOf()) + ',';
-		result += '"bietetPraktika" : ' + ((!obj.bietetPraktika) ? 'null' : obj.bietetPraktika.valueOf()) + ',';
-		result += '"branche" : ' + ((!obj.branche) ? 'null' : '"' + obj.branche.valueOf() + '"') + ',';
-		result += '"zusatz1" : ' + ((!obj.zusatz1) ? 'null' : '"' + obj.zusatz1.valueOf() + '"') + ',';
-		result += '"zusatz2" : ' + ((!obj.zusatz2) ? 'null' : '"' + obj.zusatz2.valueOf() + '"') + ',';
-		result += '"Sichtbar" : ' + ((!obj.Sichtbar) ? 'null' : obj.Sichtbar.valueOf()) + ',';
-		result += '"Aenderbar" : ' + ((!obj.Aenderbar) ? 'null' : obj.Aenderbar.valueOf()) + ',';
-		result += '"Massnahmentraeger" : ' + ((!obj.Massnahmentraeger) ? 'null' : obj.Massnahmentraeger.valueOf()) + ',';
-		result += '"BelehrungISG" : ' + ((!obj.BelehrungISG) ? 'null' : obj.BelehrungISG.valueOf()) + ',';
-		result += '"GU_ID" : ' + ((!obj.GU_ID) ? 'null' : '"' + obj.GU_ID.valueOf() + '"') + ',';
-		result += '"ErwFuehrungszeugnis" : ' + ((!obj.ErwFuehrungszeugnis) ? 'null' : obj.ErwFuehrungszeugnis.valueOf()) + ',';
-		result += '"ExtID" : ' + ((!obj.ExtID) ? 'null' : '"' + obj.ExtID.valueOf() + '"') + ',';
+		result += '"id" : ' + ((!obj.id) ? 'null' : obj.id) + ',';
+		result += '"adressArt" : ' + ((!obj.adressArt) ? 'null' : obj.adressArt) + ',';
+		result += '"name1" : ' + ((!obj.name1) ? 'null' : '"' + obj.name1 + '"') + ',';
+		result += '"name2" : ' + ((!obj.name2) ? 'null' : '"' + obj.name2 + '"') + ',';
+		result += '"strassenname" : ' + ((!obj.strassenname) ? 'null' : '"' + obj.strassenname + '"') + ',';
+		result += '"hausnr" : ' + ((!obj.hausnr) ? 'null' : '"' + obj.hausnr + '"') + ',';
+		result += '"hausnrzusatz" : ' + ((!obj.hausnrzusatz) ? 'null' : '"' + obj.hausnrzusatz + '"') + ',';
+		result += '"ort_id" : ' + ((!obj.ort_id) ? 'null' : obj.ort_id) + ',';
+		result += '"plz" : ' + ((!obj.plz) ? 'null' : '"' + obj.plz + '"') + ',';
+		result += '"telefon1" : ' + ((!obj.telefon1) ? 'null' : '"' + obj.telefon1 + '"') + ',';
+		result += '"telefon2" : ' + ((!obj.telefon2) ? 'null' : '"' + obj.telefon2 + '"') + ',';
+		result += '"fax" : ' + ((!obj.fax) ? 'null' : '"' + obj.fax + '"') + ',';
+		result += '"email" : ' + ((!obj.email) ? 'null' : '"' + obj.email + '"') + ',';
+		result += '"bemerkungen" : ' + ((!obj.bemerkungen) ? 'null' : '"' + obj.bemerkungen + '"') + ',';
+		result += '"sortierung" : ' + ((!obj.sortierung) ? 'null' : obj.sortierung) + ',';
+		result += '"ausbildungsbetrieb" : ' + ((!obj.ausbildungsbetrieb) ? 'null' : obj.ausbildungsbetrieb) + ',';
+		result += '"bietetPraktika" : ' + ((!obj.bietetPraktika) ? 'null' : obj.bietetPraktika) + ',';
+		result += '"branche" : ' + ((!obj.branche) ? 'null' : '"' + obj.branche + '"') + ',';
+		result += '"zusatz1" : ' + ((!obj.zusatz1) ? 'null' : '"' + obj.zusatz1 + '"') + ',';
+		result += '"zusatz2" : ' + ((!obj.zusatz2) ? 'null' : '"' + obj.zusatz2 + '"') + ',';
+		result += '"Sichtbar" : ' + ((!obj.Sichtbar) ? 'null' : obj.Sichtbar) + ',';
+		result += '"Aenderbar" : ' + ((!obj.Aenderbar) ? 'null' : obj.Aenderbar) + ',';
+		result += '"Massnahmentraeger" : ' + ((!obj.Massnahmentraeger) ? 'null' : obj.Massnahmentraeger) + ',';
+		result += '"BelehrungISG" : ' + ((!obj.BelehrungISG) ? 'null' : obj.BelehrungISG) + ',';
+		result += '"GU_ID" : ' + ((!obj.GU_ID) ? 'null' : '"' + obj.GU_ID + '"') + ',';
+		result += '"ErwFuehrungszeugnis" : ' + ((!obj.ErwFuehrungszeugnis) ? 'null' : obj.ErwFuehrungszeugnis) + ',';
+		result += '"ExtID" : ' + ((!obj.ExtID) ? 'null' : '"' + obj.ExtID + '"') + ',';
 		if (!obj.ansprechpartner) {
 			result += '"ansprechpartner" : []';
 		} else {
@@ -244,85 +244,85 @@ export class BetriebStammdaten extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<BetriebStammdaten>) : string {
 		let result = '{';
 		if (typeof obj.id !== "undefined") {
-			result += '"id" : ' + ((!obj.id) ? 'null' : obj.id.valueOf()) + ',';
+			result += '"id" : ' + ((!obj.id) ? 'null' : obj.id) + ',';
 		}
 		if (typeof obj.adressArt !== "undefined") {
-			result += '"adressArt" : ' + ((!obj.adressArt) ? 'null' : obj.adressArt.valueOf()) + ',';
+			result += '"adressArt" : ' + ((!obj.adressArt) ? 'null' : obj.adressArt) + ',';
 		}
 		if (typeof obj.name1 !== "undefined") {
-			result += '"name1" : ' + ((!obj.name1) ? 'null' : '"' + obj.name1.valueOf() + '"') + ',';
+			result += '"name1" : ' + ((!obj.name1) ? 'null' : '"' + obj.name1 + '"') + ',';
 		}
 		if (typeof obj.name2 !== "undefined") {
-			result += '"name2" : ' + ((!obj.name2) ? 'null' : '"' + obj.name2.valueOf() + '"') + ',';
+			result += '"name2" : ' + ((!obj.name2) ? 'null' : '"' + obj.name2 + '"') + ',';
 		}
 		if (typeof obj.strassenname !== "undefined") {
-			result += '"strassenname" : ' + ((!obj.strassenname) ? 'null' : '"' + obj.strassenname.valueOf() + '"') + ',';
+			result += '"strassenname" : ' + ((!obj.strassenname) ? 'null' : '"' + obj.strassenname + '"') + ',';
 		}
 		if (typeof obj.hausnr !== "undefined") {
-			result += '"hausnr" : ' + ((!obj.hausnr) ? 'null' : '"' + obj.hausnr.valueOf() + '"') + ',';
+			result += '"hausnr" : ' + ((!obj.hausnr) ? 'null' : '"' + obj.hausnr + '"') + ',';
 		}
 		if (typeof obj.hausnrzusatz !== "undefined") {
-			result += '"hausnrzusatz" : ' + ((!obj.hausnrzusatz) ? 'null' : '"' + obj.hausnrzusatz.valueOf() + '"') + ',';
+			result += '"hausnrzusatz" : ' + ((!obj.hausnrzusatz) ? 'null' : '"' + obj.hausnrzusatz + '"') + ',';
 		}
 		if (typeof obj.ort_id !== "undefined") {
-			result += '"ort_id" : ' + ((!obj.ort_id) ? 'null' : obj.ort_id.valueOf()) + ',';
+			result += '"ort_id" : ' + ((!obj.ort_id) ? 'null' : obj.ort_id) + ',';
 		}
 		if (typeof obj.plz !== "undefined") {
-			result += '"plz" : ' + ((!obj.plz) ? 'null' : '"' + obj.plz.valueOf() + '"') + ',';
+			result += '"plz" : ' + ((!obj.plz) ? 'null' : '"' + obj.plz + '"') + ',';
 		}
 		if (typeof obj.telefon1 !== "undefined") {
-			result += '"telefon1" : ' + ((!obj.telefon1) ? 'null' : '"' + obj.telefon1.valueOf() + '"') + ',';
+			result += '"telefon1" : ' + ((!obj.telefon1) ? 'null' : '"' + obj.telefon1 + '"') + ',';
 		}
 		if (typeof obj.telefon2 !== "undefined") {
-			result += '"telefon2" : ' + ((!obj.telefon2) ? 'null' : '"' + obj.telefon2.valueOf() + '"') + ',';
+			result += '"telefon2" : ' + ((!obj.telefon2) ? 'null' : '"' + obj.telefon2 + '"') + ',';
 		}
 		if (typeof obj.fax !== "undefined") {
-			result += '"fax" : ' + ((!obj.fax) ? 'null' : '"' + obj.fax.valueOf() + '"') + ',';
+			result += '"fax" : ' + ((!obj.fax) ? 'null' : '"' + obj.fax + '"') + ',';
 		}
 		if (typeof obj.email !== "undefined") {
-			result += '"email" : ' + ((!obj.email) ? 'null' : '"' + obj.email.valueOf() + '"') + ',';
+			result += '"email" : ' + ((!obj.email) ? 'null' : '"' + obj.email + '"') + ',';
 		}
 		if (typeof obj.bemerkungen !== "undefined") {
-			result += '"bemerkungen" : ' + ((!obj.bemerkungen) ? 'null' : '"' + obj.bemerkungen.valueOf() + '"') + ',';
+			result += '"bemerkungen" : ' + ((!obj.bemerkungen) ? 'null' : '"' + obj.bemerkungen + '"') + ',';
 		}
 		if (typeof obj.sortierung !== "undefined") {
-			result += '"sortierung" : ' + ((!obj.sortierung) ? 'null' : obj.sortierung.valueOf()) + ',';
+			result += '"sortierung" : ' + ((!obj.sortierung) ? 'null' : obj.sortierung) + ',';
 		}
 		if (typeof obj.ausbildungsbetrieb !== "undefined") {
-			result += '"ausbildungsbetrieb" : ' + ((!obj.ausbildungsbetrieb) ? 'null' : obj.ausbildungsbetrieb.valueOf()) + ',';
+			result += '"ausbildungsbetrieb" : ' + ((!obj.ausbildungsbetrieb) ? 'null' : obj.ausbildungsbetrieb) + ',';
 		}
 		if (typeof obj.bietetPraktika !== "undefined") {
-			result += '"bietetPraktika" : ' + ((!obj.bietetPraktika) ? 'null' : obj.bietetPraktika.valueOf()) + ',';
+			result += '"bietetPraktika" : ' + ((!obj.bietetPraktika) ? 'null' : obj.bietetPraktika) + ',';
 		}
 		if (typeof obj.branche !== "undefined") {
-			result += '"branche" : ' + ((!obj.branche) ? 'null' : '"' + obj.branche.valueOf() + '"') + ',';
+			result += '"branche" : ' + ((!obj.branche) ? 'null' : '"' + obj.branche + '"') + ',';
 		}
 		if (typeof obj.zusatz1 !== "undefined") {
-			result += '"zusatz1" : ' + ((!obj.zusatz1) ? 'null' : '"' + obj.zusatz1.valueOf() + '"') + ',';
+			result += '"zusatz1" : ' + ((!obj.zusatz1) ? 'null' : '"' + obj.zusatz1 + '"') + ',';
 		}
 		if (typeof obj.zusatz2 !== "undefined") {
-			result += '"zusatz2" : ' + ((!obj.zusatz2) ? 'null' : '"' + obj.zusatz2.valueOf() + '"') + ',';
+			result += '"zusatz2" : ' + ((!obj.zusatz2) ? 'null' : '"' + obj.zusatz2 + '"') + ',';
 		}
 		if (typeof obj.Sichtbar !== "undefined") {
-			result += '"Sichtbar" : ' + ((!obj.Sichtbar) ? 'null' : obj.Sichtbar.valueOf()) + ',';
+			result += '"Sichtbar" : ' + ((!obj.Sichtbar) ? 'null' : obj.Sichtbar) + ',';
 		}
 		if (typeof obj.Aenderbar !== "undefined") {
-			result += '"Aenderbar" : ' + ((!obj.Aenderbar) ? 'null' : obj.Aenderbar.valueOf()) + ',';
+			result += '"Aenderbar" : ' + ((!obj.Aenderbar) ? 'null' : obj.Aenderbar) + ',';
 		}
 		if (typeof obj.Massnahmentraeger !== "undefined") {
-			result += '"Massnahmentraeger" : ' + ((!obj.Massnahmentraeger) ? 'null' : obj.Massnahmentraeger.valueOf()) + ',';
+			result += '"Massnahmentraeger" : ' + ((!obj.Massnahmentraeger) ? 'null' : obj.Massnahmentraeger) + ',';
 		}
 		if (typeof obj.BelehrungISG !== "undefined") {
-			result += '"BelehrungISG" : ' + ((!obj.BelehrungISG) ? 'null' : obj.BelehrungISG.valueOf()) + ',';
+			result += '"BelehrungISG" : ' + ((!obj.BelehrungISG) ? 'null' : obj.BelehrungISG) + ',';
 		}
 		if (typeof obj.GU_ID !== "undefined") {
-			result += '"GU_ID" : ' + ((!obj.GU_ID) ? 'null' : '"' + obj.GU_ID.valueOf() + '"') + ',';
+			result += '"GU_ID" : ' + ((!obj.GU_ID) ? 'null' : '"' + obj.GU_ID + '"') + ',';
 		}
 		if (typeof obj.ErwFuehrungszeugnis !== "undefined") {
-			result += '"ErwFuehrungszeugnis" : ' + ((!obj.ErwFuehrungszeugnis) ? 'null' : obj.ErwFuehrungszeugnis.valueOf()) + ',';
+			result += '"ErwFuehrungszeugnis" : ' + ((!obj.ErwFuehrungszeugnis) ? 'null' : obj.ErwFuehrungszeugnis) + ',';
 		}
 		if (typeof obj.ExtID !== "undefined") {
-			result += '"ExtID" : ' + ((!obj.ExtID) ? 'null' : '"' + obj.ExtID.valueOf() + '"') + ',';
+			result += '"ExtID" : ' + ((!obj.ExtID) ? 'null' : '"' + obj.ExtID + '"') + ',';
 		}
 		if (typeof obj.ansprechpartner !== "undefined") {
 			if (!obj.ansprechpartner) {

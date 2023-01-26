@@ -20,7 +20,7 @@ export class KlausurblockungSchienenAlgorithmusGreedy5 extends KlausurblockungSc
 		super(pRandom, pLogger, pDynDaten);
 	}
 
-	public toString() : String {
+	public toString() : string {
 		return "Simulated Annealing";
 	}
 

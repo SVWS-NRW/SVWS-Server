@@ -5,7 +5,7 @@ import { JavaString, cast_java_lang_String } from '../../java/lang/JavaString';
 export class Geschlecht extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -14,7 +14,7 @@ export class Geschlecht extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<Geschlecht> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, Geschlecht> = new Map<String, Geschlecht>();
+	private static readonly all_values_by_name : Map<string, Geschlecht> = new Map<string, Geschlecht>();
 
 	/**
 	 * Männlich mit Statistikcode 3 
@@ -44,17 +44,17 @@ export class Geschlecht extends JavaObject {
 	/**
 	 * Das Geschlecht als einstelliges Kürzel 
 	 */
-	public readonly kuerzel : String;
+	public readonly kuerzel : string;
 
 	/**
 	 * Die Kurz-Bezeichnung des Geschlechtes 
 	 */
-	public readonly text : String;
+	public readonly text : string;
 
 	/**
 	 * Die ausführliche Bezeichnung des Geschlechtes 
 	 */
-	public readonly textLang : String;
+	public readonly textLang : string;
 
 	/**
 	 * Erzeugt ein neues Geschlecht für die Aufzählung der Geschlechter. 
@@ -64,7 +64,7 @@ export class Geschlecht extends JavaObject {
 	 * @param text        die textuelle Kurz-Bezeichnung des Geschlechtes
 	 * @param textLang    die ausführliche textuelle Bezeichnung des Geschlechtes
 	 */
-	private constructor(name : string, ordinal : number, id : number, kuerzel : String, text : String, textLang : String) {
+	private constructor(name : string, ordinal : number, id : number, kuerzel : string, text : string, textLang : string) {
 		super();
 		this.__name = name;
 		this.__ordinal = ordinal;
@@ -84,7 +84,7 @@ export class Geschlecht extends JavaObject {
 	 * 
 	 * @return das Geschlecht oder null, falls die ID fehlerhaft ist
 	 */
-	public static fromValue(value : Number | null) : Geschlecht | null {
+	public static fromValue(value : number | null) : Geschlecht | null {
 		if (value === null) 
 			return null;
 		switch (value) {
@@ -111,10 +111,10 @@ export class Geschlecht extends JavaObject {
 	 * 
 	 * @return das Geschlecht als Type
 	 */
-	public static fromStringValue(text : String | null) : Geschlecht {
+	public static fromStringValue(text : string | null) : Geschlecht {
 		if ((text === null) || JavaObject.equalsTranspiler("", (text))) 
 			return Geschlecht.X;
-		let upperValue : String | null = text.toUpperCase();
+		let upperValue : string | null = text.toUpperCase();
 		switch (upperValue) {
 			case "MÄNNLICH":
 			case "MAENNLICH":
@@ -143,7 +143,7 @@ export class Geschlecht extends JavaObject {
 	 * 
 	 * @return die Anrede
 	 */
-	public getAnrede(alter : number) : String | null {
+	public getAnrede(alter : number) : string | null {
 		switch (this.id) {
 			case 3: 
 				return (alter < 18) ? "Lieber" : "Sehr geehrter Herr";
@@ -157,7 +157,7 @@ export class Geschlecht extends JavaObject {
 		return "Guten Tag";
 	}
 
-	public toString() : String {
+	public toString() : string {
 		return this.kuerzel;
 	}
 
@@ -166,7 +166,7 @@ export class Geschlecht extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -229,7 +229,7 @@ export class Geschlecht extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : Geschlecht | null {
+	public static valueOf(name : string) : Geschlecht | null {
 		let tmp : Geschlecht | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

@@ -12,7 +12,7 @@ export class KlausurblockungSchienenInputSchueler extends JavaObject {
 	/**
 	 * Eine Sammlung der Klausuren von dieses Schülers. 
 	 */
-	public klausuren : Vector<Number> = new Vector();
+	public klausuren : Vector<number> = new Vector();
 
 
 	public constructor() {
@@ -31,7 +31,7 @@ export class KlausurblockungSchienenInputSchueler extends JavaObject {
 		result.id = obj.id;
 		if (!!obj.klausuren) {
 			for (let elem of obj.klausuren) {
-				result.klausuren?.add(Number(elem));
+				result.klausuren?.add(elem);
 			}
 		}
 		return result;

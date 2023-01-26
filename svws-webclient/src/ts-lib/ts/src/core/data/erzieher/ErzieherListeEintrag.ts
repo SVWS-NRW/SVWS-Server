@@ -17,27 +17,27 @@ export class ErzieherListeEintrag extends JavaObject {
 	/**
 	 * Die ID der Art des Erziehereintrages 
 	 */
-	public idErzieherArt : Number | null = null;
+	public idErzieherArt : number | null = null;
 
 	/**
 	 * Die Anrede des Erziehers. 
 	 */
-	public anrede : String | null = null;
+	public anrede : string | null = null;
 
 	/**
 	 * Der Name des Erziehers. 
 	 */
-	public name : String | null = null;
+	public name : string | null = null;
 
 	/**
 	 * Der Vorname des Erziehers. 
 	 */
-	public vorname : String | null = null;
+	public vorname : string | null = null;
 
 	/**
 	 * Die E-Mailadresse des  Erziehers. 
 	 */
-	public email : String | null = null;
+	public email : string | null = null;
 
 
 	public constructor() {
@@ -57,11 +57,11 @@ export class ErzieherListeEintrag extends JavaObject {
 		if (typeof obj.idSchueler === "undefined")
 			 throw new Error('invalid json format, missing attribute idSchueler');
 		result.idSchueler = obj.idSchueler;
-		result.idErzieherArt = typeof obj.idErzieherArt === "undefined" ? null : obj.idErzieherArt === null ? null : Number(obj.idErzieherArt);
-		result.anrede = typeof obj.anrede === "undefined" ? null : obj.anrede === null ? null : String(obj.anrede);
-		result.name = typeof obj.name === "undefined" ? null : obj.name === null ? null : String(obj.name);
-		result.vorname = typeof obj.vorname === "undefined" ? null : obj.vorname === null ? null : String(obj.vorname);
-		result.email = typeof obj.email === "undefined" ? null : obj.email === null ? null : String(obj.email);
+		result.idErzieherArt = typeof obj.idErzieherArt === "undefined" ? null : obj.idErzieherArt === null ? null : obj.idErzieherArt;
+		result.anrede = typeof obj.anrede === "undefined" ? null : obj.anrede === null ? null : obj.anrede;
+		result.name = typeof obj.name === "undefined" ? null : obj.name === null ? null : obj.name;
+		result.vorname = typeof obj.vorname === "undefined" ? null : obj.vorname === null ? null : obj.vorname;
+		result.email = typeof obj.email === "undefined" ? null : obj.email === null ? null : obj.email;
 		return result;
 	}
 
@@ -69,11 +69,11 @@ export class ErzieherListeEintrag extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
 		result += '"idSchueler" : ' + obj.idSchueler + ',';
-		result += '"idErzieherArt" : ' + ((!obj.idErzieherArt) ? 'null' : obj.idErzieherArt.valueOf()) + ',';
-		result += '"anrede" : ' + ((!obj.anrede) ? 'null' : '"' + obj.anrede.valueOf() + '"') + ',';
-		result += '"name" : ' + ((!obj.name) ? 'null' : '"' + obj.name.valueOf() + '"') + ',';
-		result += '"vorname" : ' + ((!obj.vorname) ? 'null' : '"' + obj.vorname.valueOf() + '"') + ',';
-		result += '"email" : ' + ((!obj.email) ? 'null' : '"' + obj.email.valueOf() + '"') + ',';
+		result += '"idErzieherArt" : ' + ((!obj.idErzieherArt) ? 'null' : obj.idErzieherArt) + ',';
+		result += '"anrede" : ' + ((!obj.anrede) ? 'null' : '"' + obj.anrede + '"') + ',';
+		result += '"name" : ' + ((!obj.name) ? 'null' : '"' + obj.name + '"') + ',';
+		result += '"vorname" : ' + ((!obj.vorname) ? 'null' : '"' + obj.vorname + '"') + ',';
+		result += '"email" : ' + ((!obj.email) ? 'null' : '"' + obj.email + '"') + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -88,19 +88,19 @@ export class ErzieherListeEintrag extends JavaObject {
 			result += '"idSchueler" : ' + obj.idSchueler + ',';
 		}
 		if (typeof obj.idErzieherArt !== "undefined") {
-			result += '"idErzieherArt" : ' + ((!obj.idErzieherArt) ? 'null' : obj.idErzieherArt.valueOf()) + ',';
+			result += '"idErzieherArt" : ' + ((!obj.idErzieherArt) ? 'null' : obj.idErzieherArt) + ',';
 		}
 		if (typeof obj.anrede !== "undefined") {
-			result += '"anrede" : ' + ((!obj.anrede) ? 'null' : '"' + obj.anrede.valueOf() + '"') + ',';
+			result += '"anrede" : ' + ((!obj.anrede) ? 'null' : '"' + obj.anrede + '"') + ',';
 		}
 		if (typeof obj.name !== "undefined") {
-			result += '"name" : ' + ((!obj.name) ? 'null' : '"' + obj.name.valueOf() + '"') + ',';
+			result += '"name" : ' + ((!obj.name) ? 'null' : '"' + obj.name + '"') + ',';
 		}
 		if (typeof obj.vorname !== "undefined") {
-			result += '"vorname" : ' + ((!obj.vorname) ? 'null' : '"' + obj.vorname.valueOf() + '"') + ',';
+			result += '"vorname" : ' + ((!obj.vorname) ? 'null' : '"' + obj.vorname + '"') + ',';
 		}
 		if (typeof obj.email !== "undefined") {
-			result += '"email" : ' + ((!obj.email) ? 'null' : '"' + obj.email.valueOf() + '"') + ',';
+			result += '"email" : ' + ((!obj.email) ? 'null' : '"' + obj.email + '"') + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

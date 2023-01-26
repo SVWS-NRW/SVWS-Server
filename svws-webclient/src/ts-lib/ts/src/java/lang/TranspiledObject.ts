@@ -7,7 +7,7 @@ export interface TranspiledObject {
 
     clone() : unknown;
 
-    toString() : String;
+    toString() : string | null;
 
     isTranspiledInstanceOf(name: string) : boolean;
 }

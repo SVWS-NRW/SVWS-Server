@@ -24,7 +24,7 @@ export class AbschlussManagerBerufsbildend extends JavaObject {
 	 * 
 	 * @return das Ergebnis der Abschlussberechnung 
 	 */
-	public static getErgebnis(hatBSA : boolean, note : number, hatBA : Boolean | null, abschlussAllgemeinbildend : SchulabschlussAllgemeinbildend | null) : AbschlussErgebnisBerufsbildend {
+	public static getErgebnis(hatBSA : boolean, note : number, hatBA : boolean | null, abschlussAllgemeinbildend : SchulabschlussAllgemeinbildend | null) : AbschlussErgebnisBerufsbildend {
 		let ergebnis : AbschlussErgebnisBerufsbildend = new AbschlussErgebnisBerufsbildend();
 		ergebnis.hatBSA = hatBSA;
 		ergebnis.note = note;

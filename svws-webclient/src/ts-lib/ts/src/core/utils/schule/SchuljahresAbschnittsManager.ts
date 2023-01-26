@@ -41,7 +41,7 @@ export class SchuljahresAbschnittsManager extends JavaObject {
 	 *         {@code 4/6 2022}<br>
 	 * 
 	 */
-	public getSchuljahresAbschnittAsString() : String {
+	public getSchuljahresAbschnittAsString() : string {
 		return SchuljahresAbschnittsManager.createSchuljahresAbschnittString(this.abschnitt, this.anzahlAbschnitte);
 	}
 
@@ -60,12 +60,12 @@ export class SchuljahresAbschnittsManager extends JavaObject {
 	 *         {@code 4/6 2022}<br>
 	 * 
 	 */
-	public static createSchuljahresAbschnittString(abschnitt : Schuljahresabschnitt, anzahlAbschnitte : number) : String {
+	public static createSchuljahresAbschnittString(abschnitt : Schuljahresabschnitt, anzahlAbschnitte : number) : string {
 		if (anzahlAbschnitte <= 1) {
 			return "" + abschnitt.schuljahr;
 		} else 
 			if (anzahlAbschnitte > 1 && anzahlAbschnitte < 5) {
-				return SchuljahresAbschnittsManager.createRepresentationForAnzahlAbschnitte(anzahlAbschnitte).valueOf() + abschnitt.abschnitt + " " + abschnitt.schuljahr;
+				return SchuljahresAbschnittsManager.createRepresentationForAnzahlAbschnitte(anzahlAbschnitte)! + abschnitt.abschnitt + " " + abschnitt.schuljahr;
 			} else {
 				return abschnitt.abschnitt + "/" + anzahlAbschnitte + " " + abschnitt.schuljahr;
 			}
@@ -80,7 +80,7 @@ export class SchuljahresAbschnittsManager extends JavaObject {
 	 *         Q (für Quartale), wenn es 4 Abschnitte gibt<br>
 	 *         leerer String, bei 1 oder mehr als 4 Abschnitten<br>
 	 */
-	public getRepresentationForAnzahlAbschnitte() : String {
+	public getRepresentationForAnzahlAbschnitte() : string {
 		return SchuljahresAbschnittsManager.createRepresentationForAnzahlAbschnitte(this.anzahlAbschnitte);
 	}
 
@@ -95,7 +95,7 @@ export class SchuljahresAbschnittsManager extends JavaObject {
 	 *         Q (für Quartale), wenn es 4 Abschnitte gibt<br>
 	 *         leerer String, bei 1 oder mehr als 4 Abschnitten<br>
 	 */
-	public static createRepresentationForAnzahlAbschnitte(anzahlAbschnitte : number) : String {
+	public static createRepresentationForAnzahlAbschnitte(anzahlAbschnitte : number) : string {
 		if (anzahlAbschnitte === 2) 
 			return "S"; else 
 			if (anzahlAbschnitte === 3) 

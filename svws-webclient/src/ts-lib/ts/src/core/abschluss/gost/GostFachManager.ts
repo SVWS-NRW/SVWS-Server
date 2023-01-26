@@ -65,7 +65,7 @@ export class GostFachManager extends JavaObject {
 	 * 
 	 * @return true, falls das Fach zu der angegebenen Sprache passt, sonst false 
 	 */
-	public static istFremdsprachenfach(fach : GostFach | null, sprache : String | null) : boolean {
+	public static istFremdsprachenfach(fach : GostFach | null, sprache : string | null) : boolean {
 		if ((fach === null) || (fach.kuerzel === null) || (JavaObject.equalsTranspiler("", (fach.kuerzel))) || !GostFachbereich.FREMDSPRACHE.hat(fach) || (sprache === null)) 
 			return false;
 		return (JavaString.compareToIgnoreCase(sprache, fach.kuerzel.substring(0, 1)) === 0);
@@ -78,7 +78,7 @@ export class GostFachManager extends JavaObject {
 	 * 
 	 * @return das Kürzel der Sprache oder null
 	 */
-	public static getFremdsprache(fach : GostFach) : String | null {
+	public static getFremdsprache(fach : GostFach) : string | null {
 		if ((fach.kuerzel === null) || (JavaObject.equalsTranspiler("", (fach.kuerzel))) || !GostFachbereich.FREMDSPRACHE.hat(fach)) 
 			return null;
 		return fach.kuerzel.substring(0, 1).toUpperCase();

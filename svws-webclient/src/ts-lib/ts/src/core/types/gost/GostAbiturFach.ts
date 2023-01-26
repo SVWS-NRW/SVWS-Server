@@ -5,7 +5,7 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class GostAbiturFach extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -14,7 +14,7 @@ export class GostAbiturFach extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<GostAbiturFach> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, GostAbiturFach> = new Map<String, GostAbiturFach>();
+	private static readonly all_values_by_name : Map<string, GostAbiturFach> = new Map<string, GostAbiturFach>();
 
 	/**
 	 * 1. Leistungskurs = LK1 
@@ -44,12 +44,12 @@ export class GostAbiturFach extends JavaObject {
 	/**
 	 * Das Kürzel der Abiturfachart, welches auch in speziellen Kursarten genutzt wird. 
 	 */
-	public readonly kuerzel : String;
+	public readonly kuerzel : string;
 
 	/**
 	 * Die textuelle Beschreibung der Abiturfachart. 
 	 */
-	public readonly beschreibung : String;
+	public readonly beschreibung : string;
 
 	/**
 	 * Erstellt eine Abiturfachart für diese Aufzählung der Abiturfacharten.
@@ -58,7 +58,7 @@ export class GostAbiturFach extends JavaObject {
 	 * @param kuerzel        das Kürzel der Abiturfachart, welches auch in speziellen Kursarten genutzt wird
 	 * @param beschreibung   die textuelle Beschreibung der Abiturfachart
 	 */
-	private constructor(name : string, ordinal : number, id : number, kuerzel : String, beschreibung : String) {
+	private constructor(name : string, ordinal : number, id : number, kuerzel : string, beschreibung : string) {
 		super();
 		this.__name = name;
 		this.__ordinal = ordinal;
@@ -78,7 +78,7 @@ export class GostAbiturFach extends JavaObject {
 	 * @return die Abiturfachart oder null falls die ID ungültig ist
 	 * 
 	 */
-	public static fromID(id : Number | null) : GostAbiturFach | null {
+	public static fromID(id : number | null) : GostAbiturFach | null {
 		if (id === null) 
 			return null;
 		switch (id) {
@@ -103,7 +103,7 @@ export class GostAbiturFach extends JavaObject {
 	 * @return die Abiturfachart oder null, falls die ID ungültig ist
 	 * 
 	 */
-	public static fromIDString(strID : String | null) : GostAbiturFach | null {
+	public static fromIDString(strID : string | null) : GostAbiturFach | null {
 		if (strID === null) 
 			return null;
 		switch (strID) {
@@ -128,7 +128,7 @@ export class GostAbiturFach extends JavaObject {
 	 * @return die Abiturfachart oder null, falls das Kürzel ungültig ist
 	 * 
 	 */
-	public static fromKuerzel(kuerzel : String | null) : GostAbiturFach | null {
+	public static fromKuerzel(kuerzel : string | null) : GostAbiturFach | null {
 		switch (kuerzel) {
 			case "LK1": 
 				return GostAbiturFach.LK1;
@@ -142,7 +142,7 @@ export class GostAbiturFach extends JavaObject {
 		return null;
 	}
 
-	public toString() : String {
+	public toString() : string {
 		return this.kuerzel;
 	}
 
@@ -151,7 +151,7 @@ export class GostAbiturFach extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -214,7 +214,7 @@ export class GostAbiturFach extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : GostAbiturFach | null {
+	public static valueOf(name : string) : GostAbiturFach | null {
 		let tmp : GostAbiturFach | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

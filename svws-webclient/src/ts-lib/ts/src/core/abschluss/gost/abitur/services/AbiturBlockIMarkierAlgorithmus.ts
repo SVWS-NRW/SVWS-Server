@@ -16,10 +16,10 @@ export class AbiturBlockIMarkierAlgorithmus extends Service<Abiturdaten | null, 
 
 	public handle(abidaten : Abiturdaten | null) : Abiturdaten | null {
 		if (abidaten === null) {
-			this.logger.logLn(LogLevel.ERROR, "Der Dienst " + this.getClass().getSimpleName().valueOf() + " hat keine gültigen Abiturdaten erhalten.");
+			this.logger.logLn(LogLevel.ERROR, "Der Dienst " + this.getClass().getSimpleName()! + " hat keine gültigen Abiturdaten erhalten.");
 			return null;
 		}
-		this.logger.logLn(LogLevel.ERROR, "Der Dienst " + this.getClass().getSimpleName().valueOf() + " ist noch nicht fertig programmiert...");
+		this.logger.logLn(LogLevel.ERROR, "Der Dienst " + this.getClass().getSimpleName()! + " ist noch nicht fertig programmiert...");
 		return abidaten;
 	}
 

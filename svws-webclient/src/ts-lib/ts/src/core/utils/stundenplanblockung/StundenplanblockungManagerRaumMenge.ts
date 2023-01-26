@@ -11,7 +11,7 @@ export class StundenplanblockungManagerRaumMenge extends JavaObject {
 
 	private readonly _menge : Vector<StundenplanblockungManagerRaum>;
 
-	private readonly _map : HashMap<Number, StundenplanblockungManagerRaum>;
+	private readonly _map : HashMap<number, StundenplanblockungManagerRaum>;
 
 
 	/**
@@ -31,7 +31,7 @@ export class StundenplanblockungManagerRaumMenge extends JavaObject {
 	 * @param pKuerzel               Das Kürzel des Raumes.
 	 * @throws NullPointerException  Falls die Raum-ID bereits existiert.
 	 */
-	public addOrException(pRaumID : number, pKuerzel : String) : void {
+	public addOrException(pRaumID : number, pKuerzel : string) : void {
 		if (this._map.containsKey(pRaumID) === true) 
 			throw new NullPointerException("Die Raum-ID " + pRaumID + " existiert bereits!")
 		let ra : StundenplanblockungManagerRaum = new StundenplanblockungManagerRaum(pRaumID, pKuerzel);

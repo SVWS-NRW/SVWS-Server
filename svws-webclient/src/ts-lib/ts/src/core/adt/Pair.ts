@@ -26,7 +26,7 @@ export class Pair<A, B> extends JavaObject {
 		this.b = b;
 	}
 
-	public toString() : String {
+	public toString() : string {
 		return "[" + this.a + ", " + this.b + "]";
 	}
 

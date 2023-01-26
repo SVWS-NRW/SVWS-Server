@@ -8,7 +8,7 @@ import { Arrays, cast_java_util_Arrays } from '../../../java/util/Arrays';
 export class HerkunftSonstige extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -17,7 +17,7 @@ export class HerkunftSonstige extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<HerkunftSonstige> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, HerkunftSonstige> = new Map<String, HerkunftSonstige>();
+	private static readonly all_values_by_name : Map<string, HerkunftSonstige> = new Map<string, HerkunftSonstige>();
 
 	/**
 	 * Ausländische Schüler, die seit den letzten amtlichen Schuldaten aus dem Ausland zugezogen sind 
@@ -82,7 +82,7 @@ export class HerkunftSonstige extends JavaObject {
 	/**
 	 * Eine Hashmap mit allen definierten sonstigen Herkünfte, zugeordnet zu ihren Kürzeln 
 	 */
-	private static readonly _ebenen : HashMap<String, HerkunftSonstige | null> = new HashMap();
+	private static readonly _ebenen : HashMap<string, HerkunftSonstige | null> = new HashMap();
 
 	/**
 	 * Erzeugt eine neue sonstige Herkunft in der Aufzählung.
@@ -107,7 +107,7 @@ export class HerkunftSonstige extends JavaObject {
 	 *    
 	 * @return die Map von den Kürzeln auf die zugehörigen sonstigen Herkünfte
 	 */
-	private static getMapByKuerzel() : HashMap<String, HerkunftSonstige | null> {
+	private static getMapByKuerzel() : HashMap<string, HerkunftSonstige | null> {
 		if (HerkunftSonstige._ebenen.size() === 0) {
 			for (let s of HerkunftSonstige.values()) {
 				if (s.daten !== null) 
@@ -124,7 +124,7 @@ export class HerkunftSonstige extends JavaObject {
 	 * 
 	 * @return die sonstige Herkunft oder null, falls das Kürzel ungültig ist
 	 */
-	public static getByKuerzel(kuerzel : String | null) : HerkunftSonstige | null {
+	public static getByKuerzel(kuerzel : string | null) : HerkunftSonstige | null {
 		return HerkunftSonstige.getMapByKuerzel().get(kuerzel);
 	}
 
@@ -133,7 +133,7 @@ export class HerkunftSonstige extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -151,7 +151,7 @@ export class HerkunftSonstige extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -205,7 +205,7 @@ export class HerkunftSonstige extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : HerkunftSonstige | null {
+	public static valueOf(name : string) : HerkunftSonstige | null {
 		let tmp : HerkunftSonstige | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

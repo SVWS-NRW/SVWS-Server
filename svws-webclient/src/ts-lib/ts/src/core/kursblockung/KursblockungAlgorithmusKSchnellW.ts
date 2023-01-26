@@ -21,7 +21,7 @@ export class KursblockungAlgorithmusKSchnellW extends KursblockungAlgorithmusK {
 		super(pRandom, pLogger, pDynDat);
 	}
 
-	public toString() : String {
+	public toString() : string {
 		return "SchnellW";
 	}
 

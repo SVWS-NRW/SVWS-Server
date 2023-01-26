@@ -22,7 +22,7 @@ export class SchuelerblockungInputFachwahl extends JavaObject {
 	 * Eine String-Darstellung der Fachwahl, damit bei Warnungen oder Fehlern dem Benutzer diese angezeigt werden kann,
 	 *  beispielsweise 'Mareike Musterfrau hat D;LK'. 
 	 */
-	public representation : String = "";
+	public representation : string = "";
 
 
 	public constructor() {
@@ -47,7 +47,7 @@ export class SchuelerblockungInputFachwahl extends JavaObject {
 		result.kursart = obj.kursart;
 		if (typeof obj.representation === "undefined")
 			 throw new Error('invalid json format, missing attribute representation');
-		result.representation = String(obj.representation);
+		result.representation = obj.representation;
 		return result;
 	}
 
@@ -56,7 +56,7 @@ export class SchuelerblockungInputFachwahl extends JavaObject {
 		result += '"id" : ' + obj.id + ',';
 		result += '"fach" : ' + obj.fach + ',';
 		result += '"kursart" : ' + obj.kursart + ',';
-		result += '"representation" : ' + '"' + obj.representation.valueOf() + '"' + ',';
+		result += '"representation" : ' + '"' + obj.representation! + '"' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -74,7 +74,7 @@ export class SchuelerblockungInputFachwahl extends JavaObject {
 			result += '"kursart" : ' + obj.kursart + ',';
 		}
 		if (typeof obj.representation !== "undefined") {
-			result += '"representation" : ' + '"' + obj.representation.valueOf() + '"' + ',';
+			result += '"representation" : ' + '"' + obj.representation + '"' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

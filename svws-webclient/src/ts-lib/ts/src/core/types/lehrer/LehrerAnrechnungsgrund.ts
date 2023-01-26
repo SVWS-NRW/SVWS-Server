@@ -7,7 +7,7 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class LehrerAnrechnungsgrund extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -16,7 +16,7 @@ export class LehrerAnrechnungsgrund extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<LehrerAnrechnungsgrund> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, LehrerAnrechnungsgrund> = new Map<String, LehrerAnrechnungsgrund>();
+	private static readonly all_values_by_name : Map<string, LehrerAnrechnungsgrund> = new Map<string, LehrerAnrechnungsgrund>();
 
 	/**
 	 * Anrechnungsgrund 'Seiteneinsteiger/-in: Entlastung für berufsbegleitende Ausbildung für Universitätsabsolventen OBAS' für Stunden bei einem Lehrer 
@@ -445,12 +445,12 @@ export class LehrerAnrechnungsgrund extends JavaObject {
 	/**
 	 * Eine Hashmap mit allen Anrechnungsgründen, welche ihrer ID zugeordnet sind. 
 	 */
-	private static readonly _gruendeByID : HashMap<Number, LehrerAnrechnungsgrund | null> = new HashMap();
+	private static readonly _gruendeByID : HashMap<number, LehrerAnrechnungsgrund | null> = new HashMap();
 
 	/**
 	 * Eine Hashmap mit allen Anrechnungsgründen, welche dem Kürzel bzw. ASD-Schlüssel zugeordnet sind. 
 	 */
-	private static readonly _gruendeByKuerzel : HashMap<String, LehrerAnrechnungsgrund | null> = new HashMap();
+	private static readonly _gruendeByKuerzel : HashMap<string, LehrerAnrechnungsgrund | null> = new HashMap();
 
 	/**
 	 * Erzeugt einen neuen Grund in der Aufzählung.
@@ -473,7 +473,7 @@ export class LehrerAnrechnungsgrund extends JavaObject {
 	 *    
 	 * @return die Map von den IDs der Anrechnungsgründe auf die zugehörigen Anrechnungsgründe
 	 */
-	private static getMapGruendeByID() : HashMap<Number, LehrerAnrechnungsgrund | null> {
+	private static getMapGruendeByID() : HashMap<number, LehrerAnrechnungsgrund | null> {
 		if (LehrerAnrechnungsgrund._gruendeByID.size() === 0) 
 			for (let g of LehrerAnrechnungsgrund.values()) 
 				LehrerAnrechnungsgrund._gruendeByID.put(g.daten.id, g);
@@ -486,7 +486,7 @@ export class LehrerAnrechnungsgrund extends JavaObject {
 	 *    
 	 * @return die Map von den Kürzeln der Anrechnungsgründe auf die zugehörigen Anrechnungsgründe
 	 */
-	private static getMapGruendeByKuerzel() : HashMap<String, LehrerAnrechnungsgrund | null> {
+	private static getMapGruendeByKuerzel() : HashMap<string, LehrerAnrechnungsgrund | null> {
 		if (LehrerAnrechnungsgrund._gruendeByKuerzel.size() === 0) 
 			for (let g of LehrerAnrechnungsgrund.values()) 
 				LehrerAnrechnungsgrund._gruendeByKuerzel.put(g.daten.kuerzel, g);
@@ -511,7 +511,7 @@ export class LehrerAnrechnungsgrund extends JavaObject {
 	 * 
 	 * @return der Anrechnungsgrund oder null, falls das Kürzel ungültig ist
 	 */
-	public static getByKuerzel(kuerzel : String | null) : LehrerAnrechnungsgrund | null {
+	public static getByKuerzel(kuerzel : string | null) : LehrerAnrechnungsgrund | null {
 		return LehrerAnrechnungsgrund.getMapGruendeByKuerzel().get(kuerzel);
 	}
 
@@ -520,7 +520,7 @@ export class LehrerAnrechnungsgrund extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -538,7 +538,7 @@ export class LehrerAnrechnungsgrund extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -592,7 +592,7 @@ export class LehrerAnrechnungsgrund extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : LehrerAnrechnungsgrund | null {
+	public static valueOf(name : string) : LehrerAnrechnungsgrund | null {
 		let tmp : LehrerAnrechnungsgrund | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

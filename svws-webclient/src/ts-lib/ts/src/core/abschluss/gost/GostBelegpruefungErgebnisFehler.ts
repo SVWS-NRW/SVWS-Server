@@ -8,17 +8,17 @@ export class GostBelegpruefungErgebnisFehler extends JavaObject {
 	/**
 	 * Ein eindeutiger Fehlercode für den Fehler 
 	 */
-	public code : String = "";
+	public code : string = "";
 
 	/**
 	 * Die Art des Belegungsfehlers (siehe {@link GostBelegungsfehlerArt}). 
 	 */
-	public art : String = "";
+	public art : string = "";
 
 	/**
 	 * Eine textuelle Beschreibung des Fehlers. 
 	 */
-	public beschreibung : String = "";
+	public beschreibung : string = "";
 
 
 	/**
@@ -61,21 +61,21 @@ export class GostBelegpruefungErgebnisFehler extends JavaObject {
 		const result = new GostBelegpruefungErgebnisFehler();
 		if (typeof obj.code === "undefined")
 			 throw new Error('invalid json format, missing attribute code');
-		result.code = String(obj.code);
+		result.code = obj.code;
 		if (typeof obj.art === "undefined")
 			 throw new Error('invalid json format, missing attribute art');
-		result.art = String(obj.art);
+		result.art = obj.art;
 		if (typeof obj.beschreibung === "undefined")
 			 throw new Error('invalid json format, missing attribute beschreibung');
-		result.beschreibung = String(obj.beschreibung);
+		result.beschreibung = obj.beschreibung;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : GostBelegpruefungErgebnisFehler) : string {
 		let result = '{';
-		result += '"code" : ' + '"' + obj.code.valueOf() + '"' + ',';
-		result += '"art" : ' + '"' + obj.art.valueOf() + '"' + ',';
-		result += '"beschreibung" : ' + '"' + obj.beschreibung.valueOf() + '"' + ',';
+		result += '"code" : ' + '"' + obj.code! + '"' + ',';
+		result += '"art" : ' + '"' + obj.art! + '"' + ',';
+		result += '"beschreibung" : ' + '"' + obj.beschreibung! + '"' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -84,13 +84,13 @@ export class GostBelegpruefungErgebnisFehler extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<GostBelegpruefungErgebnisFehler>) : string {
 		let result = '{';
 		if (typeof obj.code !== "undefined") {
-			result += '"code" : ' + '"' + obj.code.valueOf() + '"' + ',';
+			result += '"code" : ' + '"' + obj.code + '"' + ',';
 		}
 		if (typeof obj.art !== "undefined") {
-			result += '"art" : ' + '"' + obj.art.valueOf() + '"' + ',';
+			result += '"art" : ' + '"' + obj.art + '"' + ',';
 		}
 		if (typeof obj.beschreibung !== "undefined") {
-			result += '"beschreibung" : ' + '"' + obj.beschreibung.valueOf() + '"' + ',';
+			result += '"beschreibung" : ' + '"' + obj.beschreibung + '"' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

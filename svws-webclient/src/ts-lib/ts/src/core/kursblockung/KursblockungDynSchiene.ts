@@ -26,7 +26,7 @@ export class KursblockungDynSchiene extends JavaObject {
 	/**
 	 * Die aktuellen Kurse in dieser Schiene. Über die ID (Long-Wert der GUI) kann man schnell darauf zugreifen. 
 	 */
-	private readonly kursMap : HashMap<Number, KursblockungDynKurs>;
+	private readonly kursMap : HashMap<number, KursblockungDynKurs>;
 
 	/**
 	 * Das Statistik-Objekt wird über die aktuellen Kurs-Paarungen informiert. 
@@ -49,7 +49,7 @@ export class KursblockungDynSchiene extends JavaObject {
 		this.statistik = pStatistik;
 	}
 
-	public toString() : String {
+	public toString() : string {
 		return "" + this.nr;
 	}
 
@@ -62,7 +62,7 @@ export class KursblockungDynSchiene extends JavaObject {
 	public aktionKursHinzufuegen(kurs1 : KursblockungDynKurs) : void {
 		let kursID : number = kurs1.gibDatenbankID();
 		if (this.kursMap.containsKey(kursID)) {
-			let fehler : String | null = "Kurs \'" + kurs1.toString().valueOf() + "\' soll in Schiene " + this.nr + ", ist aber bereits drin.";
+			let fehler : string | null = "Kurs \'" + kurs1.toString()! + "\' soll in Schiene " + this.nr + ", ist aber bereits drin.";
 			this.logger.logLn(LogLevel.ERROR, fehler);
 			throw new UserNotificationException(fehler)
 		}
@@ -79,7 +79,7 @@ export class KursblockungDynSchiene extends JavaObject {
 	public aktionKursEntfernen(kurs1 : KursblockungDynKurs) : void {
 		let kursID : number = kurs1.gibDatenbankID();
 		if (!this.kursMap.containsKey(kursID)) {
-			let fehler : String | null = "Kurs \'" + kurs1.toString().valueOf() + "\' soll aus Schiene " + this.nr + " entfernt werden, ist aber nicht drin.";
+			let fehler : string | null = "Kurs \'" + kurs1.toString()! + "\' soll aus Schiene " + this.nr + " entfernt werden, ist aber nicht drin.";
 			this.logger.logLn(LogLevel.ERROR, fehler);
 			throw new UserNotificationException(fehler)
 		}
@@ -118,7 +118,7 @@ export class KursblockungDynSchiene extends JavaObject {
 					continue;
 				}
 			}
-			console.log(JSON.stringify("    " + k.toString().valueOf() + "\n"));
+			console.log(JSON.stringify("    " + k.toString()! + "\n"));
 		}
 	}
 
@@ -130,7 +130,7 @@ export class KursblockungDynSchiene extends JavaObject {
 	 *         für die Blockung verwendet. 
 	 */
 	gibAnzahlGleicherFacharten() : number {
-		let setFachart : AVLSet<Number | null> | null = new AVLSet();
+		let setFachart : AVLSet<number | null> | null = new AVLSet();
 		let summe : number = 0;
 		for (let kurs of this.kursMap.values()) 
 			if (setFachart.add(kurs.gibFachart().gibNr()) === false) 

@@ -34,7 +34,7 @@ export class GostBlockungKurs extends JavaObject {
 	/**
 	 * Ein Suffix, welches einer Standard-Kursbezeichnung angehangen wird - z.B. um spezielle Kurse zu markieren. 
 	 */
-	public suffix : String = "";
+	public suffix : string = "";
 
 	/**
 	 * Die Anzahl der Wochenstunden, welche dem Kurs zugeordnet 
@@ -80,7 +80,7 @@ export class GostBlockungKurs extends JavaObject {
 		result.istKoopKurs = obj.istKoopKurs;
 		if (typeof obj.suffix === "undefined")
 			 throw new Error('invalid json format, missing attribute suffix');
-		result.suffix = String(obj.suffix);
+		result.suffix = obj.suffix;
 		if (typeof obj.wochenstunden === "undefined")
 			 throw new Error('invalid json format, missing attribute wochenstunden');
 		result.wochenstunden = obj.wochenstunden;
@@ -102,7 +102,7 @@ export class GostBlockungKurs extends JavaObject {
 		result += '"kursart" : ' + obj.kursart + ',';
 		result += '"nummer" : ' + obj.nummer + ',';
 		result += '"istKoopKurs" : ' + obj.istKoopKurs + ',';
-		result += '"suffix" : ' + '"' + obj.suffix.valueOf() + '"' + ',';
+		result += '"suffix" : ' + '"' + obj.suffix! + '"' + ',';
 		result += '"wochenstunden" : ' + obj.wochenstunden + ',';
 		result += '"anzahlSchienen" : ' + obj.anzahlSchienen + ',';
 		if (!obj.lehrer) {
@@ -140,7 +140,7 @@ export class GostBlockungKurs extends JavaObject {
 			result += '"istKoopKurs" : ' + obj.istKoopKurs + ',';
 		}
 		if (typeof obj.suffix !== "undefined") {
-			result += '"suffix" : ' + '"' + obj.suffix.valueOf() + '"' + ',';
+			result += '"suffix" : ' + '"' + obj.suffix + '"' + ',';
 		}
 		if (typeof obj.wochenstunden !== "undefined") {
 			result += '"wochenstunden" : ' + obj.wochenstunden + ',';

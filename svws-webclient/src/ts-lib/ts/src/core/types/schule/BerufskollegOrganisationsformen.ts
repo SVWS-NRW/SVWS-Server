@@ -8,7 +8,7 @@ import { Arrays, cast_java_util_Arrays } from '../../../java/util/Arrays';
 export class BerufskollegOrganisationsformen extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -17,7 +17,7 @@ export class BerufskollegOrganisationsformen extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<BerufskollegOrganisationsformen> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, BerufskollegOrganisationsformen> = new Map<String, BerufskollegOrganisationsformen>();
+	private static readonly all_values_by_name : Map<string, BerufskollegOrganisationsformen> = new Map<string, BerufskollegOrganisationsformen>();
 
 	/**
 	 * Organisationsform: Teilzeitunterricht (außerhalb der TZ-Berufsschule) 
@@ -122,7 +122,7 @@ export class BerufskollegOrganisationsformen extends JavaObject {
 	/**
 	 * Eine Hashmap mit allen definierten Organisationsformen, zugeordnet zu ihren Kürzeln 
 	 */
-	private static readonly _mapKuerzel : HashMap<String, BerufskollegOrganisationsformen> = new HashMap();
+	private static readonly _mapKuerzel : HashMap<string, BerufskollegOrganisationsformen> = new HashMap();
 
 	/**
 	 * Erzeugt eine neue Organisationsform in der Aufzählung.
@@ -147,7 +147,7 @@ export class BerufskollegOrganisationsformen extends JavaObject {
 	 *    
 	 * @return die Map von den Kürzeln auf die zugehörigen Organisationsformen
 	 */
-	private static getMapByKuerzel() : HashMap<String, BerufskollegOrganisationsformen> {
+	private static getMapByKuerzel() : HashMap<string, BerufskollegOrganisationsformen> {
 		if (BerufskollegOrganisationsformen._mapKuerzel.size() === 0) {
 			for (let s of BerufskollegOrganisationsformen.values()) {
 				if (s.daten !== null) 
@@ -164,7 +164,7 @@ export class BerufskollegOrganisationsformen extends JavaObject {
 	 * 
 	 * @return die Organisationsform oder null, falls das Kürzel ungültig ist
 	 */
-	public static getByKuerzel(kuerzel : String | null) : BerufskollegOrganisationsformen | null {
+	public static getByKuerzel(kuerzel : string | null) : BerufskollegOrganisationsformen | null {
 		return BerufskollegOrganisationsformen.getMapByKuerzel().get(kuerzel);
 	}
 
@@ -173,7 +173,7 @@ export class BerufskollegOrganisationsformen extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -191,7 +191,7 @@ export class BerufskollegOrganisationsformen extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -245,7 +245,7 @@ export class BerufskollegOrganisationsformen extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : BerufskollegOrganisationsformen | null {
+	public static valueOf(name : string) : BerufskollegOrganisationsformen | null {
 		let tmp : BerufskollegOrganisationsformen | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

@@ -6,7 +6,7 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class Einschulungsart extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -15,7 +15,7 @@ export class Einschulungsart extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<Einschulungsart> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, Einschulungsart> = new Map<String, Einschulungsart>();
+	private static readonly all_values_by_name : Map<string, Einschulungsart> = new Map<string, Einschulungsart>();
 
 	/**
 	 * Einschulungsart: Kinder, die bis zum gültigen Einschulungsstichtag das 6. Lebensjahr vollendet haben 
@@ -65,7 +65,7 @@ export class Einschulungsart extends JavaObject {
 	/**
 	 * Eine Hashmap mit allen definierten Einschulungsarten, zugeordnet zu ihren Kürzeln 
 	 */
-	private static readonly _ebenen : HashMap<String, Einschulungsart | null> = new HashMap();
+	private static readonly _ebenen : HashMap<string, Einschulungsart | null> = new HashMap();
 
 	/**
 	 * Erzeugt eine neuen Einschulungsart in der Aufzählung.
@@ -90,7 +90,7 @@ export class Einschulungsart extends JavaObject {
 	 *    
 	 * @return die Map von den Kürzeln auf die zugehörigen Einschulungsarten
 	 */
-	private static getMapByKuerzel() : HashMap<String, Einschulungsart | null> {
+	private static getMapByKuerzel() : HashMap<string, Einschulungsart | null> {
 		if (Einschulungsart._ebenen.size() === 0) {
 			for (let s of Einschulungsart.values()) {
 				if (s.daten !== null) 
@@ -107,7 +107,7 @@ export class Einschulungsart extends JavaObject {
 	 * 
 	 * @return die Einschulungsart oder null, falls das Kürzel ungültig ist
 	 */
-	public static getByKuerzel(kuerzel : String | null) : Einschulungsart | null {
+	public static getByKuerzel(kuerzel : string | null) : Einschulungsart | null {
 		return Einschulungsart.getMapByKuerzel().get(kuerzel);
 	}
 
@@ -116,7 +116,7 @@ export class Einschulungsart extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -134,7 +134,7 @@ export class Einschulungsart extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -188,7 +188,7 @@ export class Einschulungsart extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : Einschulungsart | null {
+	public static valueOf(name : string) : Einschulungsart | null {
 		let tmp : Einschulungsart | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

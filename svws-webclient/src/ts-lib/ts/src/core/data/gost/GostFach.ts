@@ -12,17 +12,17 @@ export class GostFach extends JavaObject {
 	/**
 	 * Das Statistik-Kürzel des Faches 
 	 */
-	public kuerzel : String = "";
+	public kuerzel : string = "";
 
 	/**
 	 * Das Fach-Kürzel, welches zur Anzeige verwendet wird. 
 	 */
-	public kuerzelAnzeige : String | null = null;
+	public kuerzelAnzeige : string | null = null;
 
 	/**
 	 * Die Bezeichnung des Faches 
 	 */
-	public bezeichnung : String | null = null;
+	public bezeichnung : string | null = null;
 
 	/**
 	 * Die Nummer, welche die Sortierung der Fächer angibt. 
@@ -42,7 +42,7 @@ export class GostFach extends JavaObject {
 	/**
 	 * Gibt im Falle eines bilingualen Sachfaches das einstellige Fremdsprachenkürzel an. 
 	 */
-	public biliSprache : String | null = null;
+	public biliSprache : string | null = null;
 
 	/**
 	 * Gibt an, ob das Fach als Leistungskurs im Abitur gewählt werden kann. 
@@ -92,22 +92,22 @@ export class GostFach extends JavaObject {
 	/**
 	 * Die Fach-ID des Leitfaches eines Projektkurses oder Vertiefungsfaches 
 	 */
-	public projektKursLeitfach1ID : Number | null = null;
+	public projektKursLeitfach1ID : number | null = null;
 
 	/**
 	 * Das Fach-Kürzel des Leitfaches eines Projektkurses oder Vertiefungsfaches 
 	 */
-	public projektKursLeitfach1Kuerzel : String | null = null;
+	public projektKursLeitfach1Kuerzel : string | null = null;
 
 	/**
 	 * Die Fach-ID des zweiten Leitfaches eines Projektkurses 
 	 */
-	public projektKursLeitfach2ID : Number | null = null;
+	public projektKursLeitfach2ID : number | null = null;
 
 	/**
 	 * Die Fach-Kürzel des zweiten Leitfaches eines Projektkurses 
 	 */
-	public projektKursLeitfach2Kuerzel : String | null = null;
+	public projektKursLeitfach2Kuerzel : string | null = null;
 
 
 	public constructor() {
@@ -126,9 +126,9 @@ export class GostFach extends JavaObject {
 		result.id = obj.id;
 		if (typeof obj.kuerzel === "undefined")
 			 throw new Error('invalid json format, missing attribute kuerzel');
-		result.kuerzel = String(obj.kuerzel);
-		result.kuerzelAnzeige = typeof obj.kuerzelAnzeige === "undefined" ? null : obj.kuerzelAnzeige === null ? null : String(obj.kuerzelAnzeige);
-		result.bezeichnung = typeof obj.bezeichnung === "undefined" ? null : obj.bezeichnung === null ? null : String(obj.bezeichnung);
+		result.kuerzel = obj.kuerzel;
+		result.kuerzelAnzeige = typeof obj.kuerzelAnzeige === "undefined" ? null : obj.kuerzelAnzeige === null ? null : obj.kuerzelAnzeige;
+		result.bezeichnung = typeof obj.bezeichnung === "undefined" ? null : obj.bezeichnung === null ? null : obj.bezeichnung;
 		if (typeof obj.sortierung === "undefined")
 			 throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
@@ -138,7 +138,7 @@ export class GostFach extends JavaObject {
 		if (typeof obj.istFremdSpracheNeuEinsetzend === "undefined")
 			 throw new Error('invalid json format, missing attribute istFremdSpracheNeuEinsetzend');
 		result.istFremdSpracheNeuEinsetzend = obj.istFremdSpracheNeuEinsetzend;
-		result.biliSprache = typeof obj.biliSprache === "undefined" ? null : obj.biliSprache === null ? null : String(obj.biliSprache);
+		result.biliSprache = typeof obj.biliSprache === "undefined" ? null : obj.biliSprache === null ? null : obj.biliSprache;
 		if (typeof obj.istMoeglichAbiLK === "undefined")
 			 throw new Error('invalid json format, missing attribute istMoeglichAbiLK');
 		result.istMoeglichAbiLK = obj.istMoeglichAbiLK;
@@ -166,23 +166,23 @@ export class GostFach extends JavaObject {
 		if (typeof obj.wochenstundenQualifikationsphase === "undefined")
 			 throw new Error('invalid json format, missing attribute wochenstundenQualifikationsphase');
 		result.wochenstundenQualifikationsphase = obj.wochenstundenQualifikationsphase;
-		result.projektKursLeitfach1ID = typeof obj.projektKursLeitfach1ID === "undefined" ? null : obj.projektKursLeitfach1ID === null ? null : Number(obj.projektKursLeitfach1ID);
-		result.projektKursLeitfach1Kuerzel = typeof obj.projektKursLeitfach1Kuerzel === "undefined" ? null : obj.projektKursLeitfach1Kuerzel === null ? null : String(obj.projektKursLeitfach1Kuerzel);
-		result.projektKursLeitfach2ID = typeof obj.projektKursLeitfach2ID === "undefined" ? null : obj.projektKursLeitfach2ID === null ? null : Number(obj.projektKursLeitfach2ID);
-		result.projektKursLeitfach2Kuerzel = typeof obj.projektKursLeitfach2Kuerzel === "undefined" ? null : obj.projektKursLeitfach2Kuerzel === null ? null : String(obj.projektKursLeitfach2Kuerzel);
+		result.projektKursLeitfach1ID = typeof obj.projektKursLeitfach1ID === "undefined" ? null : obj.projektKursLeitfach1ID === null ? null : obj.projektKursLeitfach1ID;
+		result.projektKursLeitfach1Kuerzel = typeof obj.projektKursLeitfach1Kuerzel === "undefined" ? null : obj.projektKursLeitfach1Kuerzel === null ? null : obj.projektKursLeitfach1Kuerzel;
+		result.projektKursLeitfach2ID = typeof obj.projektKursLeitfach2ID === "undefined" ? null : obj.projektKursLeitfach2ID === null ? null : obj.projektKursLeitfach2ID;
+		result.projektKursLeitfach2Kuerzel = typeof obj.projektKursLeitfach2Kuerzel === "undefined" ? null : obj.projektKursLeitfach2Kuerzel === null ? null : obj.projektKursLeitfach2Kuerzel;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : GostFach) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"kuerzel" : ' + '"' + obj.kuerzel.valueOf() + '"' + ',';
-		result += '"kuerzelAnzeige" : ' + ((!obj.kuerzelAnzeige) ? 'null' : '"' + obj.kuerzelAnzeige.valueOf() + '"') + ',';
-		result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : '"' + obj.bezeichnung.valueOf() + '"') + ',';
+		result += '"kuerzel" : ' + '"' + obj.kuerzel! + '"' + ',';
+		result += '"kuerzelAnzeige" : ' + ((!obj.kuerzelAnzeige) ? 'null' : '"' + obj.kuerzelAnzeige + '"') + ',';
+		result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : '"' + obj.bezeichnung + '"') + ',';
 		result += '"sortierung" : ' + obj.sortierung + ',';
 		result += '"istFremdsprache" : ' + obj.istFremdsprache + ',';
 		result += '"istFremdSpracheNeuEinsetzend" : ' + obj.istFremdSpracheNeuEinsetzend + ',';
-		result += '"biliSprache" : ' + ((!obj.biliSprache) ? 'null' : '"' + obj.biliSprache.valueOf() + '"') + ',';
+		result += '"biliSprache" : ' + ((!obj.biliSprache) ? 'null' : '"' + obj.biliSprache + '"') + ',';
 		result += '"istMoeglichAbiLK" : ' + obj.istMoeglichAbiLK + ',';
 		result += '"istMoeglichAbiGK" : ' + obj.istMoeglichAbiGK + ',';
 		result += '"istMoeglichEF1" : ' + obj.istMoeglichEF1 + ',';
@@ -192,10 +192,10 @@ export class GostFach extends JavaObject {
 		result += '"istMoeglichQ21" : ' + obj.istMoeglichQ21 + ',';
 		result += '"istMoeglichQ22" : ' + obj.istMoeglichQ22 + ',';
 		result += '"wochenstundenQualifikationsphase" : ' + obj.wochenstundenQualifikationsphase + ',';
-		result += '"projektKursLeitfach1ID" : ' + ((!obj.projektKursLeitfach1ID) ? 'null' : obj.projektKursLeitfach1ID.valueOf()) + ',';
-		result += '"projektKursLeitfach1Kuerzel" : ' + ((!obj.projektKursLeitfach1Kuerzel) ? 'null' : '"' + obj.projektKursLeitfach1Kuerzel.valueOf() + '"') + ',';
-		result += '"projektKursLeitfach2ID" : ' + ((!obj.projektKursLeitfach2ID) ? 'null' : obj.projektKursLeitfach2ID.valueOf()) + ',';
-		result += '"projektKursLeitfach2Kuerzel" : ' + ((!obj.projektKursLeitfach2Kuerzel) ? 'null' : '"' + obj.projektKursLeitfach2Kuerzel.valueOf() + '"') + ',';
+		result += '"projektKursLeitfach1ID" : ' + ((!obj.projektKursLeitfach1ID) ? 'null' : obj.projektKursLeitfach1ID) + ',';
+		result += '"projektKursLeitfach1Kuerzel" : ' + ((!obj.projektKursLeitfach1Kuerzel) ? 'null' : '"' + obj.projektKursLeitfach1Kuerzel + '"') + ',';
+		result += '"projektKursLeitfach2ID" : ' + ((!obj.projektKursLeitfach2ID) ? 'null' : obj.projektKursLeitfach2ID) + ',';
+		result += '"projektKursLeitfach2Kuerzel" : ' + ((!obj.projektKursLeitfach2Kuerzel) ? 'null' : '"' + obj.projektKursLeitfach2Kuerzel + '"') + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -207,13 +207,13 @@ export class GostFach extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.kuerzel !== "undefined") {
-			result += '"kuerzel" : ' + '"' + obj.kuerzel.valueOf() + '"' + ',';
+			result += '"kuerzel" : ' + '"' + obj.kuerzel + '"' + ',';
 		}
 		if (typeof obj.kuerzelAnzeige !== "undefined") {
-			result += '"kuerzelAnzeige" : ' + ((!obj.kuerzelAnzeige) ? 'null' : '"' + obj.kuerzelAnzeige.valueOf() + '"') + ',';
+			result += '"kuerzelAnzeige" : ' + ((!obj.kuerzelAnzeige) ? 'null' : '"' + obj.kuerzelAnzeige + '"') + ',';
 		}
 		if (typeof obj.bezeichnung !== "undefined") {
-			result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : '"' + obj.bezeichnung.valueOf() + '"') + ',';
+			result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : '"' + obj.bezeichnung + '"') + ',';
 		}
 		if (typeof obj.sortierung !== "undefined") {
 			result += '"sortierung" : ' + obj.sortierung + ',';
@@ -225,7 +225,7 @@ export class GostFach extends JavaObject {
 			result += '"istFremdSpracheNeuEinsetzend" : ' + obj.istFremdSpracheNeuEinsetzend + ',';
 		}
 		if (typeof obj.biliSprache !== "undefined") {
-			result += '"biliSprache" : ' + ((!obj.biliSprache) ? 'null' : '"' + obj.biliSprache.valueOf() + '"') + ',';
+			result += '"biliSprache" : ' + ((!obj.biliSprache) ? 'null' : '"' + obj.biliSprache + '"') + ',';
 		}
 		if (typeof obj.istMoeglichAbiLK !== "undefined") {
 			result += '"istMoeglichAbiLK" : ' + obj.istMoeglichAbiLK + ',';
@@ -255,16 +255,16 @@ export class GostFach extends JavaObject {
 			result += '"wochenstundenQualifikationsphase" : ' + obj.wochenstundenQualifikationsphase + ',';
 		}
 		if (typeof obj.projektKursLeitfach1ID !== "undefined") {
-			result += '"projektKursLeitfach1ID" : ' + ((!obj.projektKursLeitfach1ID) ? 'null' : obj.projektKursLeitfach1ID.valueOf()) + ',';
+			result += '"projektKursLeitfach1ID" : ' + ((!obj.projektKursLeitfach1ID) ? 'null' : obj.projektKursLeitfach1ID) + ',';
 		}
 		if (typeof obj.projektKursLeitfach1Kuerzel !== "undefined") {
-			result += '"projektKursLeitfach1Kuerzel" : ' + ((!obj.projektKursLeitfach1Kuerzel) ? 'null' : '"' + obj.projektKursLeitfach1Kuerzel.valueOf() + '"') + ',';
+			result += '"projektKursLeitfach1Kuerzel" : ' + ((!obj.projektKursLeitfach1Kuerzel) ? 'null' : '"' + obj.projektKursLeitfach1Kuerzel + '"') + ',';
 		}
 		if (typeof obj.projektKursLeitfach2ID !== "undefined") {
-			result += '"projektKursLeitfach2ID" : ' + ((!obj.projektKursLeitfach2ID) ? 'null' : obj.projektKursLeitfach2ID.valueOf()) + ',';
+			result += '"projektKursLeitfach2ID" : ' + ((!obj.projektKursLeitfach2ID) ? 'null' : obj.projektKursLeitfach2ID) + ',';
 		}
 		if (typeof obj.projektKursLeitfach2Kuerzel !== "undefined") {
-			result += '"projektKursLeitfach2Kuerzel" : ' + ((!obj.projektKursLeitfach2Kuerzel) ? 'null' : '"' + obj.projektKursLeitfach2Kuerzel.valueOf() + '"') + ',';
+			result += '"projektKursLeitfach2Kuerzel" : ' + ((!obj.projektKursLeitfach2Kuerzel) ? 'null' : '"' + obj.projektKursLeitfach2Kuerzel + '"') + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

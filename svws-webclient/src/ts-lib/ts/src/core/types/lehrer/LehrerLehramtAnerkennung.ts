@@ -7,7 +7,7 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class LehrerLehramtAnerkennung extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -16,7 +16,7 @@ export class LehrerLehramtAnerkennung extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<LehrerLehramtAnerkennung> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, LehrerLehramtAnerkennung> = new Map<String, LehrerLehramtAnerkennung>();
+	private static readonly all_values_by_name : Map<string, LehrerLehramtAnerkennung> = new Map<string, LehrerLehramtAnerkennung>();
 
 	/**
 	 * Lehramtsanerkennung 'Zweite Staatsprüfung für ein Lehramt' 
@@ -61,12 +61,12 @@ export class LehrerLehramtAnerkennung extends JavaObject {
 	/**
 	 * Eine Hashmap mit allen Lehramtsanerkennungen, welche ihrer ID zugeordnet sind. 
 	 */
-	private static readonly _anerkennungenByID : HashMap<Number, LehrerLehramtAnerkennung | null> = new HashMap();
+	private static readonly _anerkennungenByID : HashMap<number, LehrerLehramtAnerkennung | null> = new HashMap();
 
 	/**
 	 * Eine Hashmap mit allen Lehramtsanerkennungen, welche dem Kürzel bzw. ASD-Schlüssel zugeordnet sind. 
 	 */
-	private static readonly _anerkennungenByKuerzel : HashMap<String, LehrerLehramtAnerkennung | null> = new HashMap();
+	private static readonly _anerkennungenByKuerzel : HashMap<string, LehrerLehramtAnerkennung | null> = new HashMap();
 
 	/**
 	 * Erzeugt eine neue Lehramtsanerkennung in der Aufzählung.
@@ -89,7 +89,7 @@ export class LehrerLehramtAnerkennung extends JavaObject {
 	 *    
 	 * @return die Map von den IDs der Lehramtssanerkennungen auf die zugehörigen Lehramtssanerkennungen
 	 */
-	private static getMapAnerkennungenByID() : HashMap<Number, LehrerLehramtAnerkennung | null> {
+	private static getMapAnerkennungenByID() : HashMap<number, LehrerLehramtAnerkennung | null> {
 		if (LehrerLehramtAnerkennung._anerkennungenByID.size() === 0) 
 			for (let l of LehrerLehramtAnerkennung.values()) 
 				LehrerLehramtAnerkennung._anerkennungenByID.put(l.daten.id, l);
@@ -102,7 +102,7 @@ export class LehrerLehramtAnerkennung extends JavaObject {
 	 *    
 	 * @return die Map von den Kürzeln der Lehramtssanerkennungen auf die zugehörigen Lehramtssanerkennungen
 	 */
-	private static getMapAnerkennungenByKuerzel() : HashMap<String, LehrerLehramtAnerkennung | null> {
+	private static getMapAnerkennungenByKuerzel() : HashMap<string, LehrerLehramtAnerkennung | null> {
 		if (LehrerLehramtAnerkennung._anerkennungenByKuerzel.size() === 0) 
 			for (let l of LehrerLehramtAnerkennung.values()) 
 				LehrerLehramtAnerkennung._anerkennungenByKuerzel.put(l.daten.kuerzel, l);
@@ -127,7 +127,7 @@ export class LehrerLehramtAnerkennung extends JavaObject {
 	 * 
 	 * @return die Lehramtsanerkennung oder null, falls das Kürzel ungültig ist
 	 */
-	public static getByKuerzel(kuerzel : String | null) : LehrerLehramtAnerkennung | null {
+	public static getByKuerzel(kuerzel : string | null) : LehrerLehramtAnerkennung | null {
 		return LehrerLehramtAnerkennung.getMapAnerkennungenByKuerzel().get(kuerzel);
 	}
 
@@ -136,7 +136,7 @@ export class LehrerLehramtAnerkennung extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -154,7 +154,7 @@ export class LehrerLehramtAnerkennung extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -208,7 +208,7 @@ export class LehrerLehramtAnerkennung extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : LehrerLehramtAnerkennung | null {
+	public static valueOf(name : string) : LehrerLehramtAnerkennung | null {
 		let tmp : LehrerLehramtAnerkennung | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

@@ -13,7 +13,7 @@ export class StundenplanblockungManagerKlasse extends JavaObject {
 	/**
 	 * Das Kürzel der Klasse. Beispielsweise '05a' oder 'Q1'. 
 	 */
-	_kuerzel : String = "";
+	_kuerzel : string = "";
 
 	/**
 	 * Alle Lerngruppen der Klasse. 
@@ -27,7 +27,7 @@ export class StundenplanblockungManagerKlasse extends JavaObject {
 	 * @param pKlasseID  Die Datenbank-ID der Klasse.
 	 * @param pKuerzel   Das Kürzel der Klasse.
 	 */
-	public constructor(pKlasseID : number, pKuerzel : String) {
+	public constructor(pKlasseID : number, pKuerzel : string) {
 		super();
 		this._id = pKlasseID;
 		this._kuerzel = pKuerzel;
@@ -48,7 +48,7 @@ export class StundenplanblockungManagerKlasse extends JavaObject {
 	 * 
 	 * @param pKuerzel  Das neue Kürzel der Klasse.
 	 */
-	public setKuerzel(pKuerzel : String) : void {
+	public setKuerzel(pKuerzel : string) : void {
 		this._kuerzel = pKuerzel;
 	}
 

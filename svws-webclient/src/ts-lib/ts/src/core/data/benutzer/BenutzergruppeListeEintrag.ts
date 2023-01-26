@@ -11,7 +11,7 @@ export class BenutzergruppeListeEintrag extends JavaObject {
 	/**
 	 * Die Bezeichnung der Benutzergruppe. 
 	 */
-	public bezeichnung : String = "";
+	public bezeichnung : string = "";
 
 	/**
 	 * Gibt an, ob es sich um eine Administrative Benutzergruppe handelt oder nicht. 
@@ -35,7 +35,7 @@ export class BenutzergruppeListeEintrag extends JavaObject {
 		result.id = obj.id;
 		if (typeof obj.bezeichnung === "undefined")
 			 throw new Error('invalid json format, missing attribute bezeichnung');
-		result.bezeichnung = String(obj.bezeichnung);
+		result.bezeichnung = obj.bezeichnung;
 		if (typeof obj.istAdmin === "undefined")
 			 throw new Error('invalid json format, missing attribute istAdmin');
 		result.istAdmin = obj.istAdmin;
@@ -45,7 +45,7 @@ export class BenutzergruppeListeEintrag extends JavaObject {
 	public static transpilerToJSON(obj : BenutzergruppeListeEintrag) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"bezeichnung" : ' + '"' + obj.bezeichnung.valueOf() + '"' + ',';
+		result += '"bezeichnung" : ' + '"' + obj.bezeichnung! + '"' + ',';
 		result += '"istAdmin" : ' + obj.istAdmin + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -58,7 +58,7 @@ export class BenutzergruppeListeEintrag extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.bezeichnung !== "undefined") {
-			result += '"bezeichnung" : ' + '"' + obj.bezeichnung.valueOf() + '"' + ',';
+			result += '"bezeichnung" : ' + '"' + obj.bezeichnung + '"' + ',';
 		}
 		if (typeof obj.istAdmin !== "undefined") {
 			result += '"istAdmin" : ' + obj.istAdmin + ',';

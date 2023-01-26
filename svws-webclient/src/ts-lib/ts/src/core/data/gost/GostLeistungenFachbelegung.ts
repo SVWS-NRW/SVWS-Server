@@ -17,7 +17,7 @@ export class GostLeistungenFachbelegung extends JavaObject {
 	/**
 	 * Das Kürzel des Halbjahres der Fachbelegung 
 	 */
-	public halbjahrKuerzel : String | null = null;
+	public halbjahrKuerzel : string | null = null;
 
 	/**
 	 * Der Abschnitt, dem die Fachbelegung zugeordnet ist - unterscheidet sich z.B. im Quartalsbetrieb vom Halbjahr 
@@ -32,22 +32,22 @@ export class GostLeistungenFachbelegung extends JavaObject {
 	/**
 	 * Gibt den Jahrgang, an dem die Belegung zugeordnet ist 
 	 */
-	public jahrgang : String | null = null;
+	public jahrgang : string | null = null;
 
 	/**
 	 * Gibt die ID des Fachlehrers an, bei dem der zur Fachbelegung gehörige Kurs belegt wurde. 
 	 */
-	public lehrer : Number | null = null;
+	public lehrer : number | null = null;
 
 	/**
 	 * Gibt die Note als Zeichenkette und mit Tendenz an 
 	 */
-	public notenKuerzel : String | null = null;
+	public notenKuerzel : string | null = null;
 
 	/**
 	 * Das Kürzel der Kursart der gymnasialen Oberstufe des belegten Kurses 
 	 */
-	public kursartKuerzel : String | null = null;
+	public kursartKuerzel : string | null = null;
 
 	/**
 	 * Gibt an, ob der Kurs schriftlich belegt wurde. 
@@ -57,7 +57,7 @@ export class GostLeistungenFachbelegung extends JavaObject {
 	/**
 	 * Gibt die Sprache als einstelliges Kürzel an, sofern der Kurs bilingual unterrichtet wurde. 
 	 */
-	public bilingualeSprache : String | null = null;
+	public bilingualeSprache : string | null = null;
 
 	/**
 	 * Gibt die Anzahl der Wochenstunden für den Kurs an. 
@@ -92,21 +92,21 @@ export class GostLeistungenFachbelegung extends JavaObject {
 		if (typeof obj.schuljahr === "undefined")
 			 throw new Error('invalid json format, missing attribute schuljahr');
 		result.schuljahr = obj.schuljahr;
-		result.halbjahrKuerzel = typeof obj.halbjahrKuerzel === "undefined" ? null : obj.halbjahrKuerzel === null ? null : String(obj.halbjahrKuerzel);
+		result.halbjahrKuerzel = typeof obj.halbjahrKuerzel === "undefined" ? null : obj.halbjahrKuerzel === null ? null : obj.halbjahrKuerzel;
 		if (typeof obj.abschnitt === "undefined")
 			 throw new Error('invalid json format, missing attribute abschnitt');
 		result.abschnitt = obj.abschnitt;
 		if (typeof obj.abschnittGewertet === "undefined")
 			 throw new Error('invalid json format, missing attribute abschnittGewertet');
 		result.abschnittGewertet = obj.abschnittGewertet;
-		result.jahrgang = typeof obj.jahrgang === "undefined" ? null : obj.jahrgang === null ? null : String(obj.jahrgang);
-		result.lehrer = typeof obj.lehrer === "undefined" ? null : obj.lehrer === null ? null : Number(obj.lehrer);
-		result.notenKuerzel = typeof obj.notenKuerzel === "undefined" ? null : obj.notenKuerzel === null ? null : String(obj.notenKuerzel);
-		result.kursartKuerzel = typeof obj.kursartKuerzel === "undefined" ? null : obj.kursartKuerzel === null ? null : String(obj.kursartKuerzel);
+		result.jahrgang = typeof obj.jahrgang === "undefined" ? null : obj.jahrgang === null ? null : obj.jahrgang;
+		result.lehrer = typeof obj.lehrer === "undefined" ? null : obj.lehrer === null ? null : obj.lehrer;
+		result.notenKuerzel = typeof obj.notenKuerzel === "undefined" ? null : obj.notenKuerzel === null ? null : obj.notenKuerzel;
+		result.kursartKuerzel = typeof obj.kursartKuerzel === "undefined" ? null : obj.kursartKuerzel === null ? null : obj.kursartKuerzel;
 		if (typeof obj.istSchriftlich === "undefined")
 			 throw new Error('invalid json format, missing attribute istSchriftlich');
 		result.istSchriftlich = obj.istSchriftlich;
-		result.bilingualeSprache = typeof obj.bilingualeSprache === "undefined" ? null : obj.bilingualeSprache === null ? null : String(obj.bilingualeSprache);
+		result.bilingualeSprache = typeof obj.bilingualeSprache === "undefined" ? null : obj.bilingualeSprache === null ? null : obj.bilingualeSprache;
 		if (typeof obj.wochenstunden === "undefined")
 			 throw new Error('invalid json format, missing attribute wochenstunden');
 		result.wochenstunden = obj.wochenstunden;
@@ -123,15 +123,15 @@ export class GostLeistungenFachbelegung extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
 		result += '"schuljahr" : ' + obj.schuljahr + ',';
-		result += '"halbjahrKuerzel" : ' + ((!obj.halbjahrKuerzel) ? 'null' : '"' + obj.halbjahrKuerzel.valueOf() + '"') + ',';
+		result += '"halbjahrKuerzel" : ' + ((!obj.halbjahrKuerzel) ? 'null' : '"' + obj.halbjahrKuerzel + '"') + ',';
 		result += '"abschnitt" : ' + obj.abschnitt + ',';
 		result += '"abschnittGewertet" : ' + obj.abschnittGewertet + ',';
-		result += '"jahrgang" : ' + ((!obj.jahrgang) ? 'null' : '"' + obj.jahrgang.valueOf() + '"') + ',';
-		result += '"lehrer" : ' + ((!obj.lehrer) ? 'null' : obj.lehrer.valueOf()) + ',';
-		result += '"notenKuerzel" : ' + ((!obj.notenKuerzel) ? 'null' : '"' + obj.notenKuerzel.valueOf() + '"') + ',';
-		result += '"kursartKuerzel" : ' + ((!obj.kursartKuerzel) ? 'null' : '"' + obj.kursartKuerzel.valueOf() + '"') + ',';
+		result += '"jahrgang" : ' + ((!obj.jahrgang) ? 'null' : '"' + obj.jahrgang + '"') + ',';
+		result += '"lehrer" : ' + ((!obj.lehrer) ? 'null' : obj.lehrer) + ',';
+		result += '"notenKuerzel" : ' + ((!obj.notenKuerzel) ? 'null' : '"' + obj.notenKuerzel + '"') + ',';
+		result += '"kursartKuerzel" : ' + ((!obj.kursartKuerzel) ? 'null' : '"' + obj.kursartKuerzel + '"') + ',';
 		result += '"istSchriftlich" : ' + obj.istSchriftlich + ',';
-		result += '"bilingualeSprache" : ' + ((!obj.bilingualeSprache) ? 'null' : '"' + obj.bilingualeSprache.valueOf() + '"') + ',';
+		result += '"bilingualeSprache" : ' + ((!obj.bilingualeSprache) ? 'null' : '"' + obj.bilingualeSprache + '"') + ',';
 		result += '"wochenstunden" : ' + obj.wochenstunden + ',';
 		result += '"fehlstundenGesamt" : ' + obj.fehlstundenGesamt + ',';
 		result += '"fehlstundenUnentschuldigt" : ' + obj.fehlstundenUnentschuldigt + ',';
@@ -149,7 +149,7 @@ export class GostLeistungenFachbelegung extends JavaObject {
 			result += '"schuljahr" : ' + obj.schuljahr + ',';
 		}
 		if (typeof obj.halbjahrKuerzel !== "undefined") {
-			result += '"halbjahrKuerzel" : ' + ((!obj.halbjahrKuerzel) ? 'null' : '"' + obj.halbjahrKuerzel.valueOf() + '"') + ',';
+			result += '"halbjahrKuerzel" : ' + ((!obj.halbjahrKuerzel) ? 'null' : '"' + obj.halbjahrKuerzel + '"') + ',';
 		}
 		if (typeof obj.abschnitt !== "undefined") {
 			result += '"abschnitt" : ' + obj.abschnitt + ',';
@@ -158,22 +158,22 @@ export class GostLeistungenFachbelegung extends JavaObject {
 			result += '"abschnittGewertet" : ' + obj.abschnittGewertet + ',';
 		}
 		if (typeof obj.jahrgang !== "undefined") {
-			result += '"jahrgang" : ' + ((!obj.jahrgang) ? 'null' : '"' + obj.jahrgang.valueOf() + '"') + ',';
+			result += '"jahrgang" : ' + ((!obj.jahrgang) ? 'null' : '"' + obj.jahrgang + '"') + ',';
 		}
 		if (typeof obj.lehrer !== "undefined") {
-			result += '"lehrer" : ' + ((!obj.lehrer) ? 'null' : obj.lehrer.valueOf()) + ',';
+			result += '"lehrer" : ' + ((!obj.lehrer) ? 'null' : obj.lehrer) + ',';
 		}
 		if (typeof obj.notenKuerzel !== "undefined") {
-			result += '"notenKuerzel" : ' + ((!obj.notenKuerzel) ? 'null' : '"' + obj.notenKuerzel.valueOf() + '"') + ',';
+			result += '"notenKuerzel" : ' + ((!obj.notenKuerzel) ? 'null' : '"' + obj.notenKuerzel + '"') + ',';
 		}
 		if (typeof obj.kursartKuerzel !== "undefined") {
-			result += '"kursartKuerzel" : ' + ((!obj.kursartKuerzel) ? 'null' : '"' + obj.kursartKuerzel.valueOf() + '"') + ',';
+			result += '"kursartKuerzel" : ' + ((!obj.kursartKuerzel) ? 'null' : '"' + obj.kursartKuerzel + '"') + ',';
 		}
 		if (typeof obj.istSchriftlich !== "undefined") {
 			result += '"istSchriftlich" : ' + obj.istSchriftlich + ',';
 		}
 		if (typeof obj.bilingualeSprache !== "undefined") {
-			result += '"bilingualeSprache" : ' + ((!obj.bilingualeSprache) ? 'null' : '"' + obj.bilingualeSprache.valueOf() + '"') + ',';
+			result += '"bilingualeSprache" : ' + ((!obj.bilingualeSprache) ? 'null' : '"' + obj.bilingualeSprache + '"') + ',';
 		}
 		if (typeof obj.wochenstunden !== "undefined") {
 			result += '"wochenstunden" : ' + obj.wochenstunden + ',';

@@ -310,7 +310,7 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E>, Cloneab
 		return new LinkedCollection(this);
 	}
 
-	public toString() : String {
+	public toString() : string {
 		let sb : StringBuilder = new StringBuilder();
 		sb.append("[");
 		let iter : JavaIterator<E> = this.iterator();

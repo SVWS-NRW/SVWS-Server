@@ -27,12 +27,12 @@ export class GostBlockungsergebnisKurs extends JavaObject {
 	/**
 	 * Eine Liste Schüler-IDs, welche diesem Kurs zugeordnet sind. 
 	 */
-	public readonly schueler : Vector<Number> = new Vector();
+	public readonly schueler : Vector<number> = new Vector();
 
 	/**
 	 * Die Schienen-IDs, denen der Kurs zugeordnet ist. 
 	 */
-	public readonly schienen : Vector<Number> = new Vector();
+	public readonly schienen : Vector<number> = new Vector();
 
 
 	public constructor() {
@@ -60,12 +60,12 @@ export class GostBlockungsergebnisKurs extends JavaObject {
 		result.anzahlSchienen = obj.anzahlSchienen;
 		if (!!obj.schueler) {
 			for (let elem of obj.schueler) {
-				result.schueler?.add(Number(elem));
+				result.schueler?.add(elem);
 			}
 		}
 		if (!!obj.schienen) {
 			for (let elem of obj.schienen) {
-				result.schienen?.add(Number(elem));
+				result.schienen?.add(elem);
 			}
 		}
 		return result;

@@ -8,17 +8,17 @@ export class SchulformGliederungJahrgaenge extends JavaObject {
 	/**
 	 * Das Kürzel der Schulform 
 	 */
-	public schulform : String = "";
+	public schulform : string = "";
 
 	/**
 	 * Das Kürzel der Schulgliederung bzw. des Bildungsganges. Null, falls alle Gliederungen der Schulform gemeint sind. 
 	 */
-	public gliederung : String | null = null;
+	public gliederung : string | null = null;
 
 	/**
 	 * Die Liste der Jahrgänge. 
 	 */
-	public jahrgaenge : List<String> = new Vector();
+	public jahrgaenge : List<string> = new Vector();
 
 
 	public constructor() {
@@ -34,11 +34,11 @@ export class SchulformGliederungJahrgaenge extends JavaObject {
 		const result = new SchulformGliederungJahrgaenge();
 		if (typeof obj.schulform === "undefined")
 			 throw new Error('invalid json format, missing attribute schulform');
-		result.schulform = String(obj.schulform);
-		result.gliederung = typeof obj.gliederung === "undefined" ? null : obj.gliederung === null ? null : String(obj.gliederung);
+		result.schulform = obj.schulform;
+		result.gliederung = typeof obj.gliederung === "undefined" ? null : obj.gliederung === null ? null : obj.gliederung;
 		if (!!obj.jahrgaenge) {
 			for (let elem of obj.jahrgaenge) {
-				result.jahrgaenge?.add(String(elem));
+				result.jahrgaenge?.add(elem);
 			}
 		}
 		return result;
@@ -46,8 +46,8 @@ export class SchulformGliederungJahrgaenge extends JavaObject {
 
 	public static transpilerToJSON(obj : SchulformGliederungJahrgaenge) : string {
 		let result = '{';
-		result += '"schulform" : ' + '"' + obj.schulform.valueOf() + '"' + ',';
-		result += '"gliederung" : ' + ((!obj.gliederung) ? 'null' : '"' + obj.gliederung.valueOf() + '"') + ',';
+		result += '"schulform" : ' + '"' + obj.schulform! + '"' + ',';
+		result += '"gliederung" : ' + ((!obj.gliederung) ? 'null' : '"' + obj.gliederung + '"') + ',';
 		if (!obj.jahrgaenge) {
 			result += '"jahrgaenge" : []';
 		} else {
@@ -68,10 +68,10 @@ export class SchulformGliederungJahrgaenge extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<SchulformGliederungJahrgaenge>) : string {
 		let result = '{';
 		if (typeof obj.schulform !== "undefined") {
-			result += '"schulform" : ' + '"' + obj.schulform.valueOf() + '"' + ',';
+			result += '"schulform" : ' + '"' + obj.schulform + '"' + ',';
 		}
 		if (typeof obj.gliederung !== "undefined") {
-			result += '"gliederung" : ' + ((!obj.gliederung) ? 'null' : '"' + obj.gliederung.valueOf() + '"') + ',';
+			result += '"gliederung" : ' + ((!obj.gliederung) ? 'null' : '"' + obj.gliederung + '"') + ',';
 		}
 		if (typeof obj.jahrgaenge !== "undefined") {
 			if (!obj.jahrgaenge) {

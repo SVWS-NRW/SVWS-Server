@@ -6,7 +6,7 @@ import { PruefungsordnungKatalogEintrag, cast_de_nrw_schule_svws_core_data_schul
 export class Pruefungsordnung extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -15,7 +15,7 @@ export class Pruefungsordnung extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<Pruefungsordnung> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, Pruefungsordnung> = new Map<String, Pruefungsordnung>();
+	private static readonly all_values_by_name : Map<string, Pruefungsordnung> = new Map<string, Pruefungsordnung>();
 
 	/**
 	 * APO-BK: Verordnung über die Ausbildung und Prüfung in den Bildungsgängen des Berufskollegs 
@@ -70,7 +70,7 @@ export class Pruefungsordnung extends JavaObject {
 	/**
 	 * Eine Hashmap mit allen definierten Verordnungen, zugeordnet zu ihren Kürzeln 
 	 */
-	private static readonly _verordnungen : HashMap<String, Pruefungsordnung> = new HashMap();
+	private static readonly _verordnungen : HashMap<string, Pruefungsordnung> = new HashMap();
 
 	/**
 	 * Erzeugt eine neue Verordnung in der Aufzählung.
@@ -93,7 +93,7 @@ export class Pruefungsordnung extends JavaObject {
 	 *    
 	 * @return die Map von den Kürzeln der Prüfungsordnungen auf die zugehörigen Prüfungsordnungen
 	 */
-	private static getMapPruefungsordnungByKuerzel() : HashMap<String, Pruefungsordnung> {
+	private static getMapPruefungsordnungByKuerzel() : HashMap<string, Pruefungsordnung> {
 		if (Pruefungsordnung._verordnungen.size() === 0) {
 			for (let s of Pruefungsordnung.values()) {
 				if (s.daten !== null) 
@@ -110,7 +110,7 @@ export class Pruefungsordnung extends JavaObject {
 	 * 
 	 * @return die Prüfungsordnung oder null, falls das Kürzel ungültig ist
 	 */
-	public static getByKuerzel(kuerzel : String | null) : Pruefungsordnung | null {
+	public static getByKuerzel(kuerzel : string | null) : Pruefungsordnung | null {
 		return Pruefungsordnung.getMapPruefungsordnungByKuerzel().get(kuerzel);
 	}
 
@@ -119,7 +119,7 @@ export class Pruefungsordnung extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -137,7 +137,7 @@ export class Pruefungsordnung extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -191,7 +191,7 @@ export class Pruefungsordnung extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : Pruefungsordnung | null {
+	public static valueOf(name : string) : Pruefungsordnung | null {
 		let tmp : Pruefungsordnung | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

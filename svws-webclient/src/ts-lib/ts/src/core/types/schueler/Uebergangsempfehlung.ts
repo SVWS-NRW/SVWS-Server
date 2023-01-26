@@ -7,7 +7,7 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class Uebergangsempfehlung extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -16,7 +16,7 @@ export class Uebergangsempfehlung extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<Uebergangsempfehlung> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, Uebergangsempfehlung> = new Map<String, Uebergangsempfehlung>();
+	private static readonly all_values_by_name : Map<string, Uebergangsempfehlung> = new Map<string, Uebergangsempfehlung>();
 
 	/**
 	 * Übergangsempfehlung Hauptschule 
@@ -66,7 +66,7 @@ export class Uebergangsempfehlung extends JavaObject {
 	/**
 	 * Eine Hashmap mit allen definierten Übergangsempfehlungen, zugeordnet zu ihren Kürzeln 
 	 */
-	private static readonly _mapKuerzel : HashMap<String, Uebergangsempfehlung | null> = new HashMap();
+	private static readonly _mapKuerzel : HashMap<string, Uebergangsempfehlung | null> = new HashMap();
 
 	/**
 	 * Erzeugt einen neuen Eintrag in der Aufzählung.
@@ -90,7 +90,7 @@ export class Uebergangsempfehlung extends JavaObject {
 	 *    
 	 * @return die Map von den Kürzeln auf den zugehörigen Core-Type-Wert
 	 */
-	private static getMapByKuerzel() : HashMap<String, Uebergangsempfehlung | null> {
+	private static getMapByKuerzel() : HashMap<string, Uebergangsempfehlung | null> {
 		if (Uebergangsempfehlung._mapKuerzel.size() === 0) {
 			for (let s of Uebergangsempfehlung.values()) {
 				if (s.daten !== null) 
@@ -107,7 +107,7 @@ export class Uebergangsempfehlung extends JavaObject {
 	 * 
 	 * @return die Übergangsempfehlung oder null, falls das Kürzel ungültig ist
 	 */
-	public static getByKuerzel(kuerzel : String | null) : Uebergangsempfehlung | null {
+	public static getByKuerzel(kuerzel : string | null) : Uebergangsempfehlung | null {
 		return Uebergangsempfehlung.getMapByKuerzel().get(kuerzel);
 	}
 
@@ -116,7 +116,7 @@ export class Uebergangsempfehlung extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -134,7 +134,7 @@ export class Uebergangsempfehlung extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -188,7 +188,7 @@ export class Uebergangsempfehlung extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : Uebergangsempfehlung | null {
+	public static valueOf(name : string) : Uebergangsempfehlung | null {
 		let tmp : Uebergangsempfehlung | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

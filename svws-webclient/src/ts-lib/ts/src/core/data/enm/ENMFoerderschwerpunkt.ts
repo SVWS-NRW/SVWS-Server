@@ -11,12 +11,12 @@ export class ENMFoerderschwerpunkt extends JavaObject {
 	/**
 	 * Das Kürzel, welche im Rahmen der amtlichen Schulstatistik verwendet wird 
 	 */
-	public kuerzel : String | null = null;
+	public kuerzel : string | null = null;
 
 	/**
 	 * Die textuelle Bezeichnung des Förderschwerpunktes. 
 	 */
-	public beschreibung : String | null = null;
+	public beschreibung : string | null = null;
 
 
 	public constructor() {
@@ -33,16 +33,16 @@ export class ENMFoerderschwerpunkt extends JavaObject {
 		if (typeof obj.id === "undefined")
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		result.kuerzel = typeof obj.kuerzel === "undefined" ? null : obj.kuerzel === null ? null : String(obj.kuerzel);
-		result.beschreibung = typeof obj.beschreibung === "undefined" ? null : obj.beschreibung === null ? null : String(obj.beschreibung);
+		result.kuerzel = typeof obj.kuerzel === "undefined" ? null : obj.kuerzel === null ? null : obj.kuerzel;
+		result.beschreibung = typeof obj.beschreibung === "undefined" ? null : obj.beschreibung === null ? null : obj.beschreibung;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : ENMFoerderschwerpunkt) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : '"' + obj.kuerzel.valueOf() + '"') + ',';
-		result += '"beschreibung" : ' + ((!obj.beschreibung) ? 'null' : '"' + obj.beschreibung.valueOf() + '"') + ',';
+		result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : '"' + obj.kuerzel + '"') + ',';
+		result += '"beschreibung" : ' + ((!obj.beschreibung) ? 'null' : '"' + obj.beschreibung + '"') + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -54,10 +54,10 @@ export class ENMFoerderschwerpunkt extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.kuerzel !== "undefined") {
-			result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : '"' + obj.kuerzel.valueOf() + '"') + ',';
+			result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : '"' + obj.kuerzel + '"') + ',';
 		}
 		if (typeof obj.beschreibung !== "undefined") {
-			result += '"beschreibung" : ' + ((!obj.beschreibung) ? 'null' : '"' + obj.beschreibung.valueOf() + '"') + ',';
+			result += '"beschreibung" : ' + ((!obj.beschreibung) ? 'null' : '"' + obj.beschreibung + '"') + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

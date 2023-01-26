@@ -4,7 +4,7 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class GELeistungsdifferenzierteKursart extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -13,7 +13,7 @@ export class GELeistungsdifferenzierteKursart extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<GELeistungsdifferenzierteKursart> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, GELeistungsdifferenzierteKursart> = new Map<String, GELeistungsdifferenzierteKursart>();
+	private static readonly all_values_by_name : Map<string, GELeistungsdifferenzierteKursart> = new Map<string, GELeistungsdifferenzierteKursart>();
 
 	/**
 	 * Es handelt sich um einen leistungsdifferenzierten Kurs auf Erweiterungsebene (E-Kurs) 
@@ -33,14 +33,14 @@ export class GELeistungsdifferenzierteKursart extends JavaObject {
 	/**
 	 * Das Kürzel der leistungsdifferenzierten Kursart 
 	 */
-	public readonly kuerzel : String;
+	public readonly kuerzel : string;
 
 	/**
 	 * Erzeugt eine neue leistungsdifferenzierte Kursart.
 	 * 
 	 * @param kuerzel   das Kürzel für die leistungsdifferenzierte Kursart
 	 */
-	private constructor(name : string, ordinal : number, kuerzel : String) {
+	private constructor(name : string, ordinal : number, kuerzel : string) {
 		super();
 		this.__name = name;
 		this.__ordinal = ordinal;
@@ -58,7 +58,7 @@ export class GELeistungsdifferenzierteKursart extends JavaObject {
 	 * 
 	 * @return das resultierende Objekt dieser Aufzählung
 	 */
-	public static from(kuerzel : String | null) : GELeistungsdifferenzierteKursart {
+	public static from(kuerzel : string | null) : GELeistungsdifferenzierteKursart {
 		switch (kuerzel) {
 			case "E": 
 				return GELeistungsdifferenzierteKursart.E;
@@ -75,7 +75,7 @@ export class GELeistungsdifferenzierteKursart extends JavaObject {
 	 * 
 	 * @return true, falls sie das Kürzel hat und ansonsten false
 	 */
-	public hat(kuerzel : String | null) : boolean {
+	public hat(kuerzel : string | null) : boolean {
 		return JavaObject.equalsTranspiler(this.kuerzel, (GELeistungsdifferenzierteKursart.from(kuerzel).kuerzel));
 	}
 
@@ -84,7 +84,7 @@ export class GELeistungsdifferenzierteKursart extends JavaObject {
 	 * 
 	 * @return die Zeichenkette die zu dieser Kursart gehört
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.kuerzel;
 	}
 
@@ -93,7 +93,7 @@ export class GELeistungsdifferenzierteKursart extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -156,7 +156,7 @@ export class GELeistungsdifferenzierteKursart extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : GELeistungsdifferenzierteKursart | null {
+	public static valueOf(name : string) : GELeistungsdifferenzierteKursart | null {
 		let tmp : GELeistungsdifferenzierteKursart | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

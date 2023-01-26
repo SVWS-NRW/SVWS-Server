@@ -32,27 +32,27 @@ export class BerufskollegFachklassenManager extends JavaObject {
 	/**
 	 * Eine HashMap für den schnellen Zugriff auf einen Teilkatalog anhand eines Index. 
 	 */
-	private readonly _mapByIndex : HashMap<Number, BerufskollegFachklassenKatalogIndex> = new HashMap();
+	private readonly _mapByIndex : HashMap<number, BerufskollegFachklassenKatalogIndex> = new HashMap();
 
 	/**
 	 * Eine HashMap für den Zugriff auf den Index anhand eines Eintrags. 
 	 */
-	private readonly _mapIndexByEintrag : HashMap<BerufskollegFachklassenKatalogEintrag, Number> = new HashMap();
+	private readonly _mapIndexByEintrag : HashMap<BerufskollegFachklassenKatalogEintrag, number> = new HashMap();
 
 	/**
 	 * Eine HashMap für den schnellen Zugriff auf die Fachklassen anhand des Fachklassen-Schlüssels. 
 	 */
-	private readonly _mapByKuerzel : HashMap<String, BerufskollegFachklassenKatalogEintrag> = new HashMap();
+	private readonly _mapByKuerzel : HashMap<string, BerufskollegFachklassenKatalogEintrag> = new HashMap();
 
 	/**
 	 * Eine HashMap für den schnellen Zugriff auf die Fachklassen anhand der ID. 
 	 */
-	private readonly _mapByID : HashMap<Number, BerufskollegFachklassenKatalogEintrag> = new HashMap();
+	private readonly _mapByID : HashMap<number, BerufskollegFachklassenKatalogEintrag> = new HashMap();
 
 	/**
 	 * Eine HashMap für den schnellen Zugriff auf die Daten der Fachklasse anhand der ID. 
 	 */
-	private readonly _mapDatenByID : HashMap<Number, BerufskollegFachklassenKatalogDaten> = new HashMap();
+	private readonly _mapDatenByID : HashMap<number, BerufskollegFachklassenKatalogDaten> = new HashMap();
 
 
 	/**
@@ -69,12 +69,12 @@ export class BerufskollegFachklassenManager extends JavaObject {
 			this._mapByIndex.put(katIndex.index, katIndex);
 			for (let eintrag of katIndex.fachklassen) {
 				this._mapIndexByEintrag.put(eintrag, katIndex.index);
-				let kuerzel : String | null = "" + katIndex.index + "-" + eintrag.schluessel + "-" + eintrag.schluessel2;
+				let kuerzel : string | null = "" + katIndex.index + "-" + eintrag.schluessel + "-" + eintrag.schluessel2;
 				this._mapByKuerzel.put(kuerzel, eintrag);
 				for (let daten of eintrag.historie) {
 					let alt : BerufskollegFachklassenKatalogEintrag | null = this._mapByID.put(daten.id, eintrag);
 					if (alt !== null) 
-						throw new RuntimeException("Fehlerhafter Katalog: Doppelte ID \'" + daten.id + "\' bei der Fachklasse \'" + kuerzel.valueOf() + "\'")
+						throw new RuntimeException("Fehlerhafter Katalog: Doppelte ID \'" + daten.id + "\' bei der Fachklasse \'" + kuerzel! + "\'")
 					this._mapDatenByID.put(daten.id, daten);
 				}
 			}
@@ -139,7 +139,7 @@ export class BerufskollegFachklassenManager extends JavaObject {
 	 * 
 	 * @return der Katalog-Eintrag oder null, falls das Kürzel ungültig ist. 
 	 */
-	public get(kuerzel : String) : BerufskollegFachklassenKatalogEintrag | null {
+	public get(kuerzel : string) : BerufskollegFachklassenKatalogEintrag | null {
 		return this._mapByKuerzel.get(kuerzel);
 	}
 
@@ -163,7 +163,7 @@ export class BerufskollegFachklassenManager extends JavaObject {
 	 * @return der Katalog-Eintrag oder null, falls das Kürzel ungültig ist oder der Katalog-Eintrag 
 	 *         keine Daten für das übergebene Schuljahr hat 
 	 */
-	public getDaten(kuerzel : String, schuljahr : number) : BerufskollegFachklassenKatalogDaten | null;
+	public getDaten(kuerzel : string, schuljahr : number) : BerufskollegFachklassenKatalogDaten | null;
 
 	/**
 	 * Gibt die Katalog-Daten für die Fachklasse zurück. 
@@ -177,9 +177,9 @@ export class BerufskollegFachklassenManager extends JavaObject {
 	/**
 	 * Implementation for method overloads of 'getDaten'
 	 */
-	public getDaten(__param0 : String | number, __param1? : number) : BerufskollegFachklassenKatalogDaten | null {
-		if (((typeof __param0 !== "undefined") && ((__param0 instanceof String) || (typeof __param0 === "string"))) && ((typeof __param1 !== "undefined") && typeof __param1 === "number")) {
-			let kuerzel : String = __param0;
+	public getDaten(__param0 : number | string, __param1? : number) : BerufskollegFachklassenKatalogDaten | null {
+		if (((typeof __param0 !== "undefined") && (typeof __param0 === "string")) && ((typeof __param1 !== "undefined") && typeof __param1 === "number")) {
+			let kuerzel : string = __param0;
 			let schuljahr : number = __param1 as number;
 			let eintrag : BerufskollegFachklassenKatalogEintrag | null = this._mapByKuerzel.get(kuerzel);
 			if (eintrag === null) 
@@ -203,10 +203,10 @@ export class BerufskollegFachklassenManager extends JavaObject {
 	 * 
 	 * @return das Kürzel der Fachklasse oder null, falls die ID ungültig ist 
 	 */
-	public getKuerzel(id : number) : String | null {
+	public getKuerzel(id : number) : string | null {
 		let eintrag : BerufskollegFachklassenKatalogEintrag | null = this._mapByID.get(id);
-		let index : Number | null = this._mapIndexByEintrag.get(eintrag);
-		return (eintrag === null) || (index === null) ? null : "" + index.valueOf() + "-" + eintrag.schluessel + "-" + eintrag.schluessel2;
+		let index : number | null = this._mapIndexByEintrag.get(eintrag);
+		return (eintrag === null) || (index === null) ? null : "" + index! + "-" + eintrag.schluessel + "-" + eintrag.schluessel2;
 	}
 
 	/**

@@ -13,7 +13,7 @@ export class StundenplanblockungManagerLerngruppeMenge extends JavaObject {
 	 */
 	private readonly _menge : Vector<StundenplanblockungManagerLerngruppe>;
 
-	private readonly _map : HashMap<Number, StundenplanblockungManagerLerngruppe>;
+	private readonly _map : HashMap<number, StundenplanblockungManagerLerngruppe>;
 
 
 	/**

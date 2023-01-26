@@ -25,7 +25,7 @@ export class AVLMapSubEntrySet<K, V> extends JavaObject implements JavaSet<JavaM
 		this._sub = sub;
 	}
 
-	public toString() : String {
+	public toString() : string {
 		return this._sub.toString();
 	}
 

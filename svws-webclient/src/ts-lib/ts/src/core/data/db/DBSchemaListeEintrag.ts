@@ -6,7 +6,7 @@ export class DBSchemaListeEintrag extends JavaObject {
 	/**
 	 * Der Name des Datenbank-Schemas. 
 	 */
-	public name : String | null = null;
+	public name : string | null = null;
 
 	/**
 	 * Gibt an, ob es sich um das Default-Schema in der Konfiguration handelt. 
@@ -25,7 +25,7 @@ export class DBSchemaListeEintrag extends JavaObject {
 	public static transpilerFromJSON(json : string): DBSchemaListeEintrag {
 		const obj = JSON.parse(json);
 		const result = new DBSchemaListeEintrag();
-		result.name = typeof obj.name === "undefined" ? null : obj.name === null ? null : String(obj.name);
+		result.name = typeof obj.name === "undefined" ? null : obj.name === null ? null : obj.name;
 		if (typeof obj.isDefault === "undefined")
 			 throw new Error('invalid json format, missing attribute isDefault');
 		result.isDefault = obj.isDefault;
@@ -34,7 +34,7 @@ export class DBSchemaListeEintrag extends JavaObject {
 
 	public static transpilerToJSON(obj : DBSchemaListeEintrag) : string {
 		let result = '{';
-		result += '"name" : ' + ((!obj.name) ? 'null' : '"' + obj.name.valueOf() + '"') + ',';
+		result += '"name" : ' + ((!obj.name) ? 'null' : '"' + obj.name + '"') + ',';
 		result += '"isDefault" : ' + obj.isDefault + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -44,7 +44,7 @@ export class DBSchemaListeEintrag extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<DBSchemaListeEintrag>) : string {
 		let result = '{';
 		if (typeof obj.name !== "undefined") {
-			result += '"name" : ' + ((!obj.name) ? 'null' : '"' + obj.name.valueOf() + '"') + ',';
+			result += '"name" : ' + ((!obj.name) ? 'null' : '"' + obj.name + '"') + ',';
 		}
 		if (typeof obj.isDefault !== "undefined") {
 			result += '"isDefault" : ' + obj.isDefault + ',';

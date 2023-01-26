@@ -14,7 +14,7 @@ import { Pair, cast_de_nrw_schule_svws_core_adt_Pair } from '../../../core/adt/P
 export class ZulaessigeKursart extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -23,7 +23,7 @@ export class ZulaessigeKursart extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<ZulaessigeKursart> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, ZulaessigeKursart> = new Map<String, ZulaessigeKursart>();
+	private static readonly all_values_by_name : Map<string, ZulaessigeKursart> = new Map<string, ZulaessigeKursart>();
 
 	/**
 	 * Kursart 3. Abiturfach 
@@ -413,12 +413,12 @@ export class ZulaessigeKursart extends JavaObject {
 	/**
 	 * Eine HashMap mit allen zulässigen Kursarten. Der Zugriff erfolgt dabei über die ID 
 	 */
-	private static readonly _mapID : HashMap<Number, ZulaessigeKursart | null> = new HashMap();
+	private static readonly _mapID : HashMap<number, ZulaessigeKursart | null> = new HashMap();
 
 	/**
 	 * Eine HashMap mit zulässigen Kursarten. Der Zugriff erfolgt dabei über das Kürzel 
 	 */
-	private static readonly _mapKuerzel : HashMap<String, ZulaessigeKursart | null> = new HashMap();
+	private static readonly _mapKuerzel : HashMap<string, ZulaessigeKursart | null> = new HashMap();
 
 	/**
 	 * Die Informationen zu den Kombinationen aus Schulformen und -gliederungen, wo die Kursart zulässig ist 
@@ -457,7 +457,7 @@ export class ZulaessigeKursart extends JavaObject {
 	 *    
 	 * @return die Map von den IDs der Kursarten auf die zugehörigen Kursarten
 	 */
-	private static getMapByID() : HashMap<Number, ZulaessigeKursart | null> {
+	private static getMapByID() : HashMap<number, ZulaessigeKursart | null> {
 		if (ZulaessigeKursart._mapID.size() === 0) 
 			for (let s of ZulaessigeKursart.values()) 
 				if (s.daten !== null) 
@@ -471,7 +471,7 @@ export class ZulaessigeKursart extends JavaObject {
 	 *    
 	 * @return die Map von den Kürzeln der Kursarten auf die zugehörigen Kursarten
 	 */
-	private static getMapByKuerzel() : HashMap<String, ZulaessigeKursart | null> {
+	private static getMapByKuerzel() : HashMap<string, ZulaessigeKursart | null> {
 		if (ZulaessigeKursart._mapKuerzel.size() === 0) 
 			for (let s of ZulaessigeKursart.values()) 
 				if (s.daten !== null) 
@@ -532,7 +532,7 @@ export class ZulaessigeKursart extends JavaObject {
 	 * 
 	 * @return die Kursart oder null, wenn keine Zuordnung für das übergebene Kürzel vorhanden ist
 	 */
-	public static getByASDKursart(kursart : String | null) : ZulaessigeKursart | null {
+	public static getByASDKursart(kursart : string | null) : ZulaessigeKursart | null {
 		return ZulaessigeKursart.getMapByKuerzel().get(kursart);
 	}
 
@@ -541,7 +541,7 @@ export class ZulaessigeKursart extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -559,7 +559,7 @@ export class ZulaessigeKursart extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -613,7 +613,7 @@ export class ZulaessigeKursart extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : ZulaessigeKursart | null {
+	public static valueOf(name : string) : ZulaessigeKursart | null {
 		let tmp : ZulaessigeKursart | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

@@ -11,7 +11,7 @@ export class BenutzerKompetenzGruppenKatalogEintrag extends JavaObject {
 	/**
 	 * Die Bezeichnung der Kompetenzgruppe. 
 	 */
-	public bezeichnung : String = "";
+	public bezeichnung : string = "";
 
 	/**
 	 * Die Spalte bei der Darstellung der Benutzerverwaltung in Schild. 
@@ -38,17 +38,17 @@ export class BenutzerKompetenzGruppenKatalogEintrag extends JavaObject {
 	 * @param zeile          die Zeile bei der Darstellung der Benutzerverwaltung in Schild
 	 *  
 	 */
-	public constructor(id : number, bezeichnung : String, spalte : number, zeile : number);
+	public constructor(id : number, bezeichnung : string, spalte : number, zeile : number);
 
 	/**
 	 * Implementation for method overloads of 'constructor'
 	 */
-	public constructor(__param0? : number, __param1? : String, __param2? : number, __param3? : number) {
+	public constructor(__param0? : number, __param1? : string, __param2? : number, __param3? : number) {
 		super();
 		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined") && (typeof __param2 === "undefined") && (typeof __param3 === "undefined")) {
-			} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && ((__param1 instanceof String) || (typeof __param1 === "string"))) && ((typeof __param2 !== "undefined") && typeof __param2 === "number") && ((typeof __param3 !== "undefined") && typeof __param3 === "number")) {
+			} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && (typeof __param1 === "string")) && ((typeof __param2 !== "undefined") && typeof __param2 === "number") && ((typeof __param3 !== "undefined") && typeof __param3 === "number")) {
 			let id : number = __param0 as number;
-			let bezeichnung : String = __param1;
+			let bezeichnung : string = __param1;
 			let spalte : number = __param2 as number;
 			let zeile : number = __param3 as number;
 			this.id = id;
@@ -70,7 +70,7 @@ export class BenutzerKompetenzGruppenKatalogEintrag extends JavaObject {
 		result.id = obj.id;
 		if (typeof obj.bezeichnung === "undefined")
 			 throw new Error('invalid json format, missing attribute bezeichnung');
-		result.bezeichnung = String(obj.bezeichnung);
+		result.bezeichnung = obj.bezeichnung;
 		if (typeof obj.spalte === "undefined")
 			 throw new Error('invalid json format, missing attribute spalte');
 		result.spalte = obj.spalte;
@@ -83,7 +83,7 @@ export class BenutzerKompetenzGruppenKatalogEintrag extends JavaObject {
 	public static transpilerToJSON(obj : BenutzerKompetenzGruppenKatalogEintrag) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"bezeichnung" : ' + '"' + obj.bezeichnung.valueOf() + '"' + ',';
+		result += '"bezeichnung" : ' + '"' + obj.bezeichnung! + '"' + ',';
 		result += '"spalte" : ' + obj.spalte + ',';
 		result += '"zeile" : ' + obj.zeile + ',';
 		result = result.slice(0, -1);
@@ -97,7 +97,7 @@ export class BenutzerKompetenzGruppenKatalogEintrag extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.bezeichnung !== "undefined") {
-			result += '"bezeichnung" : ' + '"' + obj.bezeichnung.valueOf() + '"' + ',';
+			result += '"bezeichnung" : ' + '"' + obj.bezeichnung + '"' + ',';
 		}
 		if (typeof obj.spalte !== "undefined") {
 			result += '"spalte" : ' + obj.spalte + ',';

@@ -7,7 +7,7 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class LehrerRechtsverhaeltnis extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -16,7 +16,7 @@ export class LehrerRechtsverhaeltnis extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<LehrerRechtsverhaeltnis> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, LehrerRechtsverhaeltnis> = new Map<String, LehrerRechtsverhaeltnis>();
+	private static readonly all_values_by_name : Map<string, LehrerRechtsverhaeltnis> = new Map<string, LehrerRechtsverhaeltnis>();
 
 	/**
 	 * Rechtsverhältnis 'Beamter auf Lebenszeit' 
@@ -86,12 +86,12 @@ export class LehrerRechtsverhaeltnis extends JavaObject {
 	/**
 	 * Eine Hashmap mit allen Arten von Rechtsverhältnissen, welche ihrer ID zugeordnet sind. 
 	 */
-	private static readonly _rechtsverhaeltnisByID : HashMap<Number, LehrerRechtsverhaeltnis | null> = new HashMap();
+	private static readonly _rechtsverhaeltnisByID : HashMap<number, LehrerRechtsverhaeltnis | null> = new HashMap();
 
 	/**
 	 * Eine Hashmap mit allen Arten von Rechtsverhältnissen, welche dem Kürzel bzw. ASD-Schlüssel zugeordnet sind. 
 	 */
-	private static readonly _rechtsverhaeltnisByKuerzel : HashMap<String, LehrerRechtsverhaeltnis | null> = new HashMap();
+	private static readonly _rechtsverhaeltnisByKuerzel : HashMap<string, LehrerRechtsverhaeltnis | null> = new HashMap();
 
 	/**
 	 * Erzeugt eine neue Art von Rechtsverhältnissen in der Aufzählung.
@@ -114,7 +114,7 @@ export class LehrerRechtsverhaeltnis extends JavaObject {
 	 *    
 	 * @return die Map von den IDs der Rechtsverhältnisse auf die zugehörigen Rechtsverhältnisse
 	 */
-	private static getMapRechtsverhaeltnisByID() : HashMap<Number, LehrerRechtsverhaeltnis | null> {
+	private static getMapRechtsverhaeltnisByID() : HashMap<number, LehrerRechtsverhaeltnis | null> {
 		if (LehrerRechtsverhaeltnis._rechtsverhaeltnisByID.size() === 0) 
 			for (let l of LehrerRechtsverhaeltnis.values()) 
 				LehrerRechtsverhaeltnis._rechtsverhaeltnisByID.put(l.daten.id, l);
@@ -127,7 +127,7 @@ export class LehrerRechtsverhaeltnis extends JavaObject {
 	 *    
 	 * @return die Map von den Kürzeln der Rechtsverhältnisse auf die zugehörigen Rechtsverhältnisse
 	 */
-	private static getMapRechtsverhaeltnisByKuerzel() : HashMap<String, LehrerRechtsverhaeltnis | null> {
+	private static getMapRechtsverhaeltnisByKuerzel() : HashMap<string, LehrerRechtsverhaeltnis | null> {
 		if (LehrerRechtsverhaeltnis._rechtsverhaeltnisByKuerzel.size() === 0) 
 			for (let l of LehrerRechtsverhaeltnis.values()) 
 				LehrerRechtsverhaeltnis._rechtsverhaeltnisByKuerzel.put(l.daten.kuerzel, l);
@@ -152,7 +152,7 @@ export class LehrerRechtsverhaeltnis extends JavaObject {
 	 * 
 	 * @return die Art von Rechtsverhältnissen oder null, falls das Kürzel ungültig ist
 	 */
-	public static getByKuerzel(kuerzel : String | null) : LehrerRechtsverhaeltnis | null {
+	public static getByKuerzel(kuerzel : string | null) : LehrerRechtsverhaeltnis | null {
 		return LehrerRechtsverhaeltnis.getMapRechtsverhaeltnisByKuerzel().get(kuerzel);
 	}
 
@@ -161,7 +161,7 @@ export class LehrerRechtsverhaeltnis extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -179,7 +179,7 @@ export class LehrerRechtsverhaeltnis extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -233,7 +233,7 @@ export class LehrerRechtsverhaeltnis extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : LehrerRechtsverhaeltnis | null {
+	public static valueOf(name : string) : LehrerRechtsverhaeltnis | null {
 		let tmp : LehrerRechtsverhaeltnis | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

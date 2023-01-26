@@ -26,7 +26,7 @@ export class KursblockungAlgorithmusKSchuelervorschlag extends KursblockungAlgor
 		super(pRandom, pLogger, pDynDat);
 	}
 
-	public toString() : String {
+	public toString() : string {
 		return "Schülervorschlag";
 	}
 

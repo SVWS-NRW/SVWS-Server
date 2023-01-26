@@ -8,7 +8,7 @@ export class SchuelerLernabschnittNachpruefungsdaten extends JavaObject {
 	/**
 	 * Die Kürzel der möglichen Nachprüfungsfächer. 
 	 */
-	public moegliche : Vector<String> = new Vector();
+	public moegliche : Vector<string> = new Vector();
 
 	/**
 	 * Die angesetzten bzw. durchgeführten Nachprüfungen 
@@ -29,7 +29,7 @@ export class SchuelerLernabschnittNachpruefungsdaten extends JavaObject {
 		const result = new SchuelerLernabschnittNachpruefungsdaten();
 		if (!!obj.moegliche) {
 			for (let elem of obj.moegliche) {
-				result.moegliche?.add(String(elem));
+				result.moegliche?.add(elem);
 			}
 		}
 		if (!!obj.pruefungen) {

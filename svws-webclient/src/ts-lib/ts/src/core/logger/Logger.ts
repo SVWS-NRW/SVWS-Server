@@ -97,7 +97,7 @@ export class Logger extends JavaObject {
 	 * @param indent   die Einrückung, die bei dem Text verwendet werden soll
 	 * @param text     der Text
 	 */
-	public log(level : LogLevel, indent : number, text : String) : void;
+	public log(level : LogLevel, indent : number, text : string) : void;
 
 	/**
 	 * Loggt den angebenen Text mit dem angegebenen Log-Level und der Standard-Einrückung.
@@ -105,7 +105,7 @@ export class Logger extends JavaObject {
 	 * @param level    das Log-Level des zu loggenden Textes  
 	 * @param text     der Text
 	 */
-	public log(level : LogLevel, text : String) : void;
+	public log(level : LogLevel, text : string) : void;
 
 	/**
 	 * Loggt den angebenen Text mit dem Standard-Log-Level und der angebenen Einrückung.
@@ -113,19 +113,19 @@ export class Logger extends JavaObject {
 	 * @param indent   die Einrückung, die bei dem Text verwendet werden soll
 	 * @param text     der Text
 	 */
-	public log(indent : number, text : String) : void;
+	public log(indent : number, text : string) : void;
 
 	/**
 	 * Loggt den angebenen Text mit dem Standard-Log-Level und der Standard-Einrückung.
 	 * 
 	 * @param text     der Text
 	 */
-	public log(text : String) : void;
+	public log(text : string) : void;
 
 	/**
 	 * Implementation for method overloads of 'log'
 	 */
-	public log(__param0 : LogData | LogLevel | String | number, __param1? : String | number, __param2? : String) : void {
+	public log(__param0 : LogData | LogLevel | number | string, __param1? : number | string, __param2? : string) : void {
 		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.logger.LogData')))) && (typeof __param1 === "undefined") && (typeof __param2 === "undefined")) {
 			let data : LogData = cast_de_nrw_schule_svws_core_logger_LogData(__param0);
 			for (let i : number = 0; i < this.consumer.size(); i++){
@@ -134,21 +134,21 @@ export class Logger extends JavaObject {
 					continue;
 				c.accept(data);
 			}
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.logger.LogLevel')))) && ((typeof __param1 !== "undefined") && typeof __param1 === "number") && ((typeof __param2 !== "undefined") && ((__param2 instanceof String) || (typeof __param2 === "string")))) {
+		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.logger.LogLevel')))) && ((typeof __param1 !== "undefined") && typeof __param1 === "number") && ((typeof __param2 !== "undefined") && (typeof __param2 === "string"))) {
 			let level : LogLevel = cast_de_nrw_schule_svws_core_logger_LogLevel(__param0);
 			let indent : number = __param1 as number;
-			let text : String = __param2;
+			let text : string = __param2;
 			this.log(new LogData(level, indent, false, text));
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.logger.LogLevel')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof String) || (typeof __param1 === "string"))) && (typeof __param2 === "undefined")) {
+		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.logger.LogLevel')))) && ((typeof __param1 !== "undefined") && (typeof __param1 === "string")) && (typeof __param2 === "undefined")) {
 			let level : LogLevel = cast_de_nrw_schule_svws_core_logger_LogLevel(__param0);
-			let text : String = __param1;
+			let text : string = __param1;
 			this.log(level, this.indent, text);
-		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && ((__param1 instanceof String) || (typeof __param1 === "string"))) && (typeof __param2 === "undefined")) {
+		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && (typeof __param1 === "string")) && (typeof __param2 === "undefined")) {
 			let indent : number = __param0 as number;
-			let text : String = __param1;
+			let text : string = __param1;
 			this.log(this.defaultLevel, indent, text);
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof String) || (typeof __param0 === "string"))) && (typeof __param1 === "undefined") && (typeof __param2 === "undefined")) {
-			let text : String = __param0;
+		} else if (((typeof __param0 !== "undefined") && (typeof __param0 === "string")) && (typeof __param1 === "undefined") && (typeof __param2 === "undefined")) {
+			let text : string = __param0;
 			this.log(this.defaultLevel, text);
 		} else throw new Error('invalid method overload');
 	}
@@ -161,7 +161,7 @@ export class Logger extends JavaObject {
 	 * @param indent   die Einrückung, die bei dem Text verwendet werden soll
 	 * @param text     der Text
 	 */
-	public logLn(level : LogLevel, indent : number, text : String) : void;
+	public logLn(level : LogLevel, indent : number, text : string) : void;
 
 	/**
 	 * Loggt den angebenen Text mit dem angegebenen Log-Level und der Standard-Einrückung
@@ -171,7 +171,7 @@ export class Logger extends JavaObject {
 	 * @param level    das Log-Level des zu loggenden Textes  
 	 * @param text     der Text
 	 */
-	public logLn(level : LogLevel, text : String) : void;
+	public logLn(level : LogLevel, text : string) : void;
 
 	/**
 	 * Loggt den angebenen Text mit dem Standard-Log-Level und der angebenen Einrückung
@@ -180,7 +180,7 @@ export class Logger extends JavaObject {
 	 * @param indent   die Einrückung, die bei dem Text verwendet werden soll
 	 * @param text     der Text
 	 */
-	public logLn(indent : number, text : String) : void;
+	public logLn(indent : number, text : string) : void;
 
 	/**
 	 * Loggt den angebenen Text mit dem Standard-Log-Level und der Standard-Einrückung
@@ -188,27 +188,27 @@ export class Logger extends JavaObject {
 	 * 
 	 * @param text     der Text
 	 */
-	public logLn(text : String) : void;
+	public logLn(text : string) : void;
 
 	/**
 	 * Implementation for method overloads of 'logLn'
 	 */
-	public logLn(__param0 : LogLevel | String | number, __param1? : String | number, __param2? : String) : void {
-		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.logger.LogLevel')))) && ((typeof __param1 !== "undefined") && typeof __param1 === "number") && ((typeof __param2 !== "undefined") && ((__param2 instanceof String) || (typeof __param2 === "string")))) {
+	public logLn(__param0 : LogLevel | number | string, __param1? : number | string, __param2? : string) : void {
+		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.logger.LogLevel')))) && ((typeof __param1 !== "undefined") && typeof __param1 === "number") && ((typeof __param2 !== "undefined") && (typeof __param2 === "string"))) {
 			let level : LogLevel = cast_de_nrw_schule_svws_core_logger_LogLevel(__param0);
 			let indent : number = __param1 as number;
-			let text : String = __param2;
+			let text : string = __param2;
 			this.log(new LogData(level, indent, true, text));
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.logger.LogLevel')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof String) || (typeof __param1 === "string"))) && (typeof __param2 === "undefined")) {
+		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.logger.LogLevel')))) && ((typeof __param1 !== "undefined") && (typeof __param1 === "string")) && (typeof __param2 === "undefined")) {
 			let level : LogLevel = cast_de_nrw_schule_svws_core_logger_LogLevel(__param0);
-			let text : String = __param1;
+			let text : string = __param1;
 			this.logLn(level, this.indent, text);
-		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && ((__param1 instanceof String) || (typeof __param1 === "string"))) && (typeof __param2 === "undefined")) {
+		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && (typeof __param1 === "string")) && (typeof __param2 === "undefined")) {
 			let indent : number = __param0 as number;
-			let text : String = __param1;
+			let text : string = __param1;
 			this.logLn(this.defaultLevel, indent, text);
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof String) || (typeof __param0 === "string"))) && (typeof __param1 === "undefined") && (typeof __param2 === "undefined")) {
-			let text : String = __param0;
+		} else if (((typeof __param0 !== "undefined") && (typeof __param0 === "string")) && (typeof __param1 === "undefined") && (typeof __param2 === "undefined")) {
+			let text : string = __param0;
 			this.logLn(this.defaultLevel, text);
 		} else throw new Error('invalid method overload');
 	}

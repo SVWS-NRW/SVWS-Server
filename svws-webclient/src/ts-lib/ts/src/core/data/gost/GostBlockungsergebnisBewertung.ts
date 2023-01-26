@@ -7,7 +7,7 @@ export class GostBlockungsergebnisBewertung extends JavaObject {
 	/**
 	 * Bewertungskriterium 1a: Array mit den Regel-IDs der {@link GostBlockungRegel} die nicht erfüllt werden konnten. 
 	 */
-	public regelVerletzungen : Vector<Number> = new Vector();
+	public regelVerletzungen : Vector<number> = new Vector();
 
 	/**
 	 * Bewertungskriterium 1b: Anzahl aller Kurse, die nicht auf Schienen verteilt wurden. 
@@ -58,7 +58,7 @@ export class GostBlockungsergebnisBewertung extends JavaObject {
 		const result = new GostBlockungsergebnisBewertung();
 		if (!!obj.regelVerletzungen) {
 			for (let elem of obj.regelVerletzungen) {
-				result.regelVerletzungen?.add(Number(elem));
+				result.regelVerletzungen?.add(elem);
 			}
 		}
 		if (typeof obj.anzahlKurseNichtZugeordnet === "undefined")

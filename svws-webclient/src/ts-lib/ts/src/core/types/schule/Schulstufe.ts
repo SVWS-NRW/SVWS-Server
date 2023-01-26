@@ -8,7 +8,7 @@ import { SchulstufeKatalogEintrag, cast_de_nrw_schule_svws_core_data_schule_Schu
 export class Schulstufe extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -17,7 +17,7 @@ export class Schulstufe extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<Schulstufe> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, Schulstufe> = new Map<String, Schulstufe>();
+	private static readonly all_values_by_name : Map<string, Schulstufe> = new Map<string, Schulstufe>();
 
 	/**
 	 * Die Vorschulstufe 
@@ -67,7 +67,7 @@ export class Schulstufe extends JavaObject {
 	/**
 	 * Eine Hashmap mit allen definierten Schulstufe, zugeordnet zu ihren Kürzeln 
 	 */
-	private static readonly _mapByKuerzel : HashMap<String, Schulstufe> = new HashMap();
+	private static readonly _mapByKuerzel : HashMap<string, Schulstufe> = new HashMap();
 
 	/**
 	 * Erzeugt eine neue Schulstufe in der Aufzählung.
@@ -90,7 +90,7 @@ export class Schulstufe extends JavaObject {
 	 *    
 	 * @return die Map von den Kürzeln der Schulstufen auf die zugehörigen Schulstufen
 	 */
-	private static getMapByKuerzel() : HashMap<String, Schulstufe> {
+	private static getMapByKuerzel() : HashMap<string, Schulstufe> {
 		if (Schulstufe._mapByKuerzel.size() === 0) {
 			for (let s of Schulstufe.values()) {
 				if (s.daten !== null) 
@@ -107,7 +107,7 @@ export class Schulstufe extends JavaObject {
 	 * 
 	 * @return die Schulstufe oder null, falls das Kürzel ungültig ist
 	 */
-	public static getByKuerzel(kuerzel : String | null) : Schulstufe | null {
+	public static getByKuerzel(kuerzel : string | null) : Schulstufe | null {
 		return Schulstufe.getMapByKuerzel().get(kuerzel);
 	}
 
@@ -116,7 +116,7 @@ export class Schulstufe extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -134,7 +134,7 @@ export class Schulstufe extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -188,7 +188,7 @@ export class Schulstufe extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : Schulstufe | null {
+	public static valueOf(name : string) : Schulstufe | null {
 		let tmp : Schulstufe | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

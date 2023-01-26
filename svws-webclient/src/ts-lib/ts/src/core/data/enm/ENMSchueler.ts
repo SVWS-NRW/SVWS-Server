@@ -28,22 +28,22 @@ export class ENMSchueler extends JavaObject {
 	/**
 	 * Der Nachname des Schülers (z.B. Mustermann) 
 	 */
-	public nachname : String | null = null;
+	public nachname : string | null = null;
 
 	/**
 	 * Der Vorname des Schülers (z.B. Max) 
 	 */
-	public vorname : String | null = null;
+	public vorname : string | null = null;
 
 	/**
 	 * Das Geschlecht des Schülers (m,w,d,x) 
 	 */
-	public geschlecht : String | null = null;
+	public geschlecht : string | null = null;
 
 	/**
 	 * Gibt an, ob sich der Schüler aktuell im bilingualen Bildungsgang befindet (wenn ja, z.B. F) oder nicht (null) 
 	 */
-	public bilingualeSprache : String | null = null;
+	public bilingualeSprache : string | null = null;
 
 	/**
 	 * Gibt an, ob der Schüler Ziel-different unterrichtet wird 
@@ -106,10 +106,10 @@ export class ENMSchueler extends JavaObject {
 		if (typeof obj.klasseID === "undefined")
 			 throw new Error('invalid json format, missing attribute klasseID');
 		result.klasseID = obj.klasseID;
-		result.nachname = typeof obj.nachname === "undefined" ? null : obj.nachname === null ? null : String(obj.nachname);
-		result.vorname = typeof obj.vorname === "undefined" ? null : obj.vorname === null ? null : String(obj.vorname);
-		result.geschlecht = typeof obj.geschlecht === "undefined" ? null : obj.geschlecht === null ? null : String(obj.geschlecht);
-		result.bilingualeSprache = typeof obj.bilingualeSprache === "undefined" ? null : obj.bilingualeSprache === null ? null : String(obj.bilingualeSprache);
+		result.nachname = typeof obj.nachname === "undefined" ? null : obj.nachname === null ? null : obj.nachname;
+		result.vorname = typeof obj.vorname === "undefined" ? null : obj.vorname === null ? null : obj.vorname;
+		result.geschlecht = typeof obj.geschlecht === "undefined" ? null : obj.geschlecht === null ? null : obj.geschlecht;
+		result.bilingualeSprache = typeof obj.bilingualeSprache === "undefined" ? null : obj.bilingualeSprache === null ? null : obj.bilingualeSprache;
 		if (typeof obj.istZieldifferent === "undefined")
 			 throw new Error('invalid json format, missing attribute istZieldifferent');
 		result.istZieldifferent = obj.istZieldifferent;
@@ -140,10 +140,10 @@ export class ENMSchueler extends JavaObject {
 		result += '"id" : ' + obj.id + ',';
 		result += '"jahrgangID" : ' + obj.jahrgangID + ',';
 		result += '"klasseID" : ' + obj.klasseID + ',';
-		result += '"nachname" : ' + ((!obj.nachname) ? 'null' : '"' + obj.nachname.valueOf() + '"') + ',';
-		result += '"vorname" : ' + ((!obj.vorname) ? 'null' : '"' + obj.vorname.valueOf() + '"') + ',';
-		result += '"geschlecht" : ' + ((!obj.geschlecht) ? 'null' : '"' + obj.geschlecht.valueOf() + '"') + ',';
-		result += '"bilingualeSprache" : ' + ((!obj.bilingualeSprache) ? 'null' : '"' + obj.bilingualeSprache.valueOf() + '"') + ',';
+		result += '"nachname" : ' + ((!obj.nachname) ? 'null' : '"' + obj.nachname + '"') + ',';
+		result += '"vorname" : ' + ((!obj.vorname) ? 'null' : '"' + obj.vorname + '"') + ',';
+		result += '"geschlecht" : ' + ((!obj.geschlecht) ? 'null' : '"' + obj.geschlecht + '"') + ',';
+		result += '"bilingualeSprache" : ' + ((!obj.bilingualeSprache) ? 'null' : '"' + obj.bilingualeSprache + '"') + ',';
 		result += '"istZieldifferent" : ' + obj.istZieldifferent + ',';
 		result += '"istDaZFoerderung" : ' + obj.istDaZFoerderung + ',';
 		if (!obj.sprachenfolge) {
@@ -191,16 +191,16 @@ export class ENMSchueler extends JavaObject {
 			result += '"klasseID" : ' + obj.klasseID + ',';
 		}
 		if (typeof obj.nachname !== "undefined") {
-			result += '"nachname" : ' + ((!obj.nachname) ? 'null' : '"' + obj.nachname.valueOf() + '"') + ',';
+			result += '"nachname" : ' + ((!obj.nachname) ? 'null' : '"' + obj.nachname + '"') + ',';
 		}
 		if (typeof obj.vorname !== "undefined") {
-			result += '"vorname" : ' + ((!obj.vorname) ? 'null' : '"' + obj.vorname.valueOf() + '"') + ',';
+			result += '"vorname" : ' + ((!obj.vorname) ? 'null' : '"' + obj.vorname + '"') + ',';
 		}
 		if (typeof obj.geschlecht !== "undefined") {
-			result += '"geschlecht" : ' + ((!obj.geschlecht) ? 'null' : '"' + obj.geschlecht.valueOf() + '"') + ',';
+			result += '"geschlecht" : ' + ((!obj.geschlecht) ? 'null' : '"' + obj.geschlecht + '"') + ',';
 		}
 		if (typeof obj.bilingualeSprache !== "undefined") {
-			result += '"bilingualeSprache" : ' + ((!obj.bilingualeSprache) ? 'null' : '"' + obj.bilingualeSprache.valueOf() + '"') + ',';
+			result += '"bilingualeSprache" : ' + ((!obj.bilingualeSprache) ? 'null' : '"' + obj.bilingualeSprache + '"') + ',';
 		}
 		if (typeof obj.istZieldifferent !== "undefined") {
 			result += '"istZieldifferent" : ' + obj.istZieldifferent + ',';

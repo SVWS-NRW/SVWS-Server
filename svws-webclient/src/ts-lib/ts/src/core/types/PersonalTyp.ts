@@ -6,7 +6,7 @@ import { JavaString, cast_java_lang_String } from '../../java/lang/JavaString';
 export class PersonalTyp extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -15,7 +15,7 @@ export class PersonalTyp extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<PersonalTyp> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, PersonalTyp> = new Map<String, PersonalTyp>();
+	private static readonly all_values_by_name : Map<string, PersonalTyp> = new Map<string, PersonalTyp>();
 
 	/**
 	 * Lehrkraft fest der Schule zugeodnet hat eine Identnummer 
@@ -50,12 +50,12 @@ export class PersonalTyp extends JavaObject {
 	/**
 	 * Eine HashMap für den schnellen Zugriff auf Personal-Typen anhand der Bezeichnung des PersonalTyps 
 	 */
-	private static readonly _mapBezeichnungen : HashMap<String, PersonalTyp> = new HashMap();
+	private static readonly _mapBezeichnungen : HashMap<string, PersonalTyp> = new HashMap();
 
 	/**
 	 * Eine HashMap für den schnellen Zugriff auf Personal-Typen anhand der ID des PersonalTyps 
 	 */
-	private static readonly _mapID : HashMap<Number, PersonalTyp> = new HashMap();
+	private static readonly _mapID : HashMap<number, PersonalTyp> = new HashMap();
 
 	/**
 	 * Die ID des Personal-Typs als Integer 
@@ -65,22 +65,22 @@ export class PersonalTyp extends JavaObject {
 	/**
 	 * Das Kürzel des Personal-Typs als String 
 	 */
-	public readonly kuerzel : String;
+	public readonly kuerzel : string;
 
 	/**
 	 * Die Bezeichnung des Personal-Typs als String 
 	 */
-	public readonly bezeichnung : String;
+	public readonly bezeichnung : string;
 
 	/**
 	 * Gibt an, in welchem Schuljahr der Personaltyp einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. 
 	 */
-	public readonly gueltigVon : Number | null;
+	public readonly gueltigVon : number | null;
 
 	/**
 	 * Gibt an, bis zu welchem Schuljahr der Personaltyp gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. 
 	 */
-	public readonly gueltigBis : Number | null;
+	public readonly gueltigBis : number | null;
 
 	/**
 	 * Erzeugt einen neuen PersonalTyp für die Aufzählung.
@@ -91,7 +91,7 @@ export class PersonalTyp extends JavaObject {
 	 * @param gueltigVon   gibt an, in welchem Schuljahr der Personaltyp einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 * @param gueltigBis   gibt an, bis zu welchem Schuljahr der Personaltyp gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
-	private constructor(name : string, ordinal : number, id : number, kuerzel : String, bezeichnung : String, gueltigVon : Number | null, gueltigBis : Number | null) {
+	private constructor(name : string, ordinal : number, id : number, kuerzel : string, bezeichnung : string, gueltigVon : number | null, gueltigBis : number | null) {
 		super();
 		this.__name = name;
 		this.__ordinal = ordinal;
@@ -110,7 +110,7 @@ export class PersonalTyp extends JavaObject {
 	 *    
 	 * @return die Map von den IDs der Personal-Typen auf die zugehörigen Personal-Typen
 	 */
-	private static getMapID() : HashMap<Number, PersonalTyp> {
+	private static getMapID() : HashMap<number, PersonalTyp> {
 		if (PersonalTyp._mapID.size() === 0) 
 			for (let p of PersonalTyp.values()) 
 				PersonalTyp._mapID.put(p.id, p);
@@ -123,7 +123,7 @@ export class PersonalTyp extends JavaObject {
 	 *    
 	 * @return die Map von den Bezeichnungen der Personal-Typen auf die zugehörigen Personal-Typen
 	 */
-	private static getMapBezeichnungen() : HashMap<String, PersonalTyp> {
+	private static getMapBezeichnungen() : HashMap<string, PersonalTyp> {
 		if (PersonalTyp._mapBezeichnungen.size() === 0) 
 			for (let p of PersonalTyp.values()) 
 				PersonalTyp._mapBezeichnungen.put(p.kuerzel, p);
@@ -139,7 +139,7 @@ export class PersonalTyp extends JavaObject {
 	 * @return der Personal-Typ oder null, falls die Bezeichnung ungültig ist
 	 * 
 	 */
-	public static fromBezeichnung(bezeichnung : String | null) : PersonalTyp | null {
+	public static fromBezeichnung(bezeichnung : string | null) : PersonalTyp | null {
 		return PersonalTyp.getMapBezeichnungen().get(bezeichnung);
 	}
 
@@ -152,11 +152,11 @@ export class PersonalTyp extends JavaObject {
 	 * @return der Personal-Typ oder null, falls die ID ungültig ist
 	 * 
 	 */
-	public static fromID(id : Number | null) : PersonalTyp | null {
+	public static fromID(id : number | null) : PersonalTyp | null {
 		return PersonalTyp.getMapID().get(id);
 	}
 
-	public toString() : String {
+	public toString() : string {
 		return this.kuerzel;
 	}
 
@@ -165,7 +165,7 @@ export class PersonalTyp extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -228,7 +228,7 @@ export class PersonalTyp extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : PersonalTyp | null {
+	public static valueOf(name : string) : PersonalTyp | null {
 		let tmp : PersonalTyp | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

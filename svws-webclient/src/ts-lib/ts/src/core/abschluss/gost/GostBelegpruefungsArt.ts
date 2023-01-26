@@ -16,12 +16,12 @@ export class GostBelegpruefungsArt extends JavaObject {
 	/**
 	 * Das Kürzel für die Belegprüfungsart 
 	 */
-	public readonly kuerzel : String;
+	public readonly kuerzel : string;
 
 	/**
 	 * Eine textuelle Beschreibung für die Art der Belegprüfung 
 	 */
-	public readonly beschreibung : String;
+	public readonly beschreibung : string;
 
 
 	/**
@@ -30,7 +30,7 @@ export class GostBelegpruefungsArt extends JavaObject {
 	 * @param kuerzel        das der Kurs-Belegungsart
 	 * @param beschreibung   die textuelle Beschreibung der Kurs-Belegungsart
 	 */
-	private constructor(kuerzel : String, beschreibung : String) {
+	private constructor(kuerzel : string, beschreibung : string) {
 		super();
 		this.kuerzel = kuerzel;
 		this.beschreibung = beschreibung;
@@ -43,7 +43,7 @@ export class GostBelegpruefungsArt extends JavaObject {
 	 *  
 	 * @return die Art der Belegprüfung
 	 */
-	public static fromKuerzel(kuerzel : String | null) : GostBelegpruefungsArt | null {
+	public static fromKuerzel(kuerzel : string | null) : GostBelegpruefungsArt | null {
 		if (kuerzel === null) 
 			return null;
 		switch (kuerzel) {
@@ -55,7 +55,7 @@ export class GostBelegpruefungsArt extends JavaObject {
 		return null;
 	}
 
-	public toString() : String {
+	public toString() : string {
 		return this.kuerzel;
 	}
 

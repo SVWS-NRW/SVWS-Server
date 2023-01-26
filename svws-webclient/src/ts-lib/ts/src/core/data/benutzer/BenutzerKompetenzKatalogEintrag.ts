@@ -17,7 +17,7 @@ export class BenutzerKompetenzKatalogEintrag extends JavaObject {
 	/**
 	 * Die Bezeichnung der Benutzerkompetenz. 
 	 */
-	public bezeichnung : String = "";
+	public bezeichnung : string = "";
 
 
 	/**
@@ -32,18 +32,18 @@ export class BenutzerKompetenzKatalogEintrag extends JavaObject {
 	 * @param gruppe         die Gruppe, welcher die Benutzerkompetenz zugeordnet ist
 	 * @param bezeichnung    die Bezeichnung der Benutzerkompetenz
 	 */
-	public constructor(id : number, gruppe : BenutzerKompetenzGruppe, bezeichnung : String);
+	public constructor(id : number, gruppe : BenutzerKompetenzGruppe, bezeichnung : string);
 
 	/**
 	 * Implementation for method overloads of 'constructor'
 	 */
-	public constructor(__param0? : number, __param1? : BenutzerKompetenzGruppe, __param2? : String) {
+	public constructor(__param0? : number, __param1? : BenutzerKompetenzGruppe, __param2? : string) {
 		super();
 		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined") && (typeof __param2 === "undefined")) {
-			} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenzGruppe')))) && ((typeof __param2 !== "undefined") && ((__param2 instanceof String) || (typeof __param2 === "string")))) {
+			} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenzGruppe')))) && ((typeof __param2 !== "undefined") && (typeof __param2 === "string"))) {
 			let id : number = __param0 as number;
 			let gruppe : BenutzerKompetenzGruppe = cast_de_nrw_schule_svws_core_types_benutzer_BenutzerKompetenzGruppe(__param1);
-			let bezeichnung : String = __param2;
+			let bezeichnung : string = __param2;
 			this.id = id;
 			this.bezeichnung = bezeichnung;
 			this.gruppe_id = gruppe.daten.id;
@@ -65,7 +65,7 @@ export class BenutzerKompetenzKatalogEintrag extends JavaObject {
 		result.gruppe_id = obj.gruppe_id;
 		if (typeof obj.bezeichnung === "undefined")
 			 throw new Error('invalid json format, missing attribute bezeichnung');
-		result.bezeichnung = String(obj.bezeichnung);
+		result.bezeichnung = obj.bezeichnung;
 		return result;
 	}
 
@@ -73,7 +73,7 @@ export class BenutzerKompetenzKatalogEintrag extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
 		result += '"gruppe_id" : ' + obj.gruppe_id + ',';
-		result += '"bezeichnung" : ' + '"' + obj.bezeichnung.valueOf() + '"' + ',';
+		result += '"bezeichnung" : ' + '"' + obj.bezeichnung! + '"' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -88,7 +88,7 @@ export class BenutzerKompetenzKatalogEintrag extends JavaObject {
 			result += '"gruppe_id" : ' + obj.gruppe_id + ',';
 		}
 		if (typeof obj.bezeichnung !== "undefined") {
-			result += '"bezeichnung" : ' + '"' + obj.bezeichnung.valueOf() + '"' + ',';
+			result += '"bezeichnung" : ' + '"' + obj.bezeichnung + '"' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

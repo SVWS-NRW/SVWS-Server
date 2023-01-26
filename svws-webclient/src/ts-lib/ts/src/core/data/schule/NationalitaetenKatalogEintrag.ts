@@ -12,52 +12,52 @@ export class NationalitaetenKatalogEintrag extends JavaObject {
 	/**
 	 * Das 3-stellige Kürzel des ISO-Standards 3166-1 
 	 */
-	public iso3 : String = "";
+	public iso3 : string = "";
 
 	/**
 	 * Das 2-stellige Kürzel des ISO-Standards 3166-1 
 	 */
-	public iso2 : String = "";
+	public iso2 : string = "";
 
 	/**
 	 * Die 3-stellige Nummer des ISO-Standards 3166-1 
 	 */
-	public isoNumerisch : String | null = null;
+	public isoNumerisch : string | null = null;
 
 	/**
 	 * Die 3-stellige Nummer, welche vom statistischen Bundesamt verwendet wird (destatis.de) 
 	 */
-	public codeDEStatis : String = "";
+	public codeDEStatis : string = "";
 
 	/**
 	 * Die Bezeichnung für eine Suche 
 	 */
-	public bezeichnungSuche : String = "";
+	public bezeichnungSuche : string = "";
 
 	/**
 	 * Die kurze Bezeichnung 
 	 */
-	public bezeichnung : String = "";
+	public bezeichnung : string = "";
 
 	/**
 	 * Die Bezeichnung für eine Suche 
 	 */
-	public bezeichnungLang : String = "";
+	public bezeichnungLang : string = "";
 
 	/**
 	 * Die Bezeichnung der Staatsangehörigkeit 
 	 */
-	public staatsangehoerigkeit : String = "";
+	public staatsangehoerigkeit : string = "";
 
 	/**
 	 * Gibt an, in welchem Schuljahr die Nationalität ergänzt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. 
 	 */
-	public gueltigVon : Number | null = null;
+	public gueltigVon : number | null = null;
 
 	/**
 	 * Gibt an, bis zu welchem Schuljahr die Nationalität verwendet wird. Ist kein Schuljahr bekannt, so ist null gesetzt. 
 	 */
-	public gueltigBis : Number | null = null;
+	public gueltigBis : number | null = null;
 
 
 	/**
@@ -80,26 +80,26 @@ export class NationalitaetenKatalogEintrag extends JavaObject {
 	 * @param gueltigVon             das Schuljahr, wann der Eintrag eingeführt wurde oder null, falls es nicht bekannt ist und "schon immer gültig war"
 	 * @param gueltigBis             das Schuljahr, bis zu welchem der Eintrag gültig ist
 	 */
-	public constructor(id : number, iso3 : String, iso2 : String, isoNumerisch : String | null, codeDEStatis : String, bezeichnungSuche : String, bezeichnung : String, bezeichnungLang : String, staatsangehoerigkeit : String, gueltigVon : Number | null, gueltigBis : Number | null);
+	public constructor(id : number, iso3 : string, iso2 : string, isoNumerisch : string | null, codeDEStatis : string, bezeichnungSuche : string, bezeichnung : string, bezeichnungLang : string, staatsangehoerigkeit : string, gueltigVon : number | null, gueltigBis : number | null);
 
 	/**
 	 * Implementation for method overloads of 'constructor'
 	 */
-	public constructor(__param0? : number, __param1? : String, __param2? : String, __param3? : String | null, __param4? : String, __param5? : String, __param6? : String, __param7? : String, __param8? : String, __param9? : Number | null, __param10? : Number | null) {
+	public constructor(__param0? : number, __param1? : string, __param2? : string, __param3? : null | string, __param4? : string, __param5? : string, __param6? : string, __param7? : string, __param8? : string, __param9? : null | number, __param10? : null | number) {
 		super();
 		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined") && (typeof __param2 === "undefined") && (typeof __param3 === "undefined") && (typeof __param4 === "undefined") && (typeof __param5 === "undefined") && (typeof __param6 === "undefined") && (typeof __param7 === "undefined") && (typeof __param8 === "undefined") && (typeof __param9 === "undefined") && (typeof __param10 === "undefined")) {
-			} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && ((__param1 instanceof String) || (typeof __param1 === "string"))) && ((typeof __param2 !== "undefined") && ((__param2 instanceof String) || (typeof __param2 === "string"))) && ((typeof __param3 !== "undefined") && ((__param3 instanceof String) || (typeof __param3 === "string")) || (__param3 === null)) && ((typeof __param4 !== "undefined") && ((__param4 instanceof String) || (typeof __param4 === "string"))) && ((typeof __param5 !== "undefined") && ((__param5 instanceof String) || (typeof __param5 === "string"))) && ((typeof __param6 !== "undefined") && ((__param6 instanceof String) || (typeof __param6 === "string"))) && ((typeof __param7 !== "undefined") && ((__param7 instanceof String) || (typeof __param7 === "string"))) && ((typeof __param8 !== "undefined") && ((__param8 instanceof String) || (typeof __param8 === "string"))) && ((typeof __param9 !== "undefined") && ((__param9 instanceof Number) || (typeof __param9 === "number")) || (__param9 === null)) && ((typeof __param10 !== "undefined") && ((__param10 instanceof Number) || (typeof __param10 === "number")) || (__param10 === null))) {
+			} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && (typeof __param1 === "string")) && ((typeof __param2 !== "undefined") && (typeof __param2 === "string")) && ((typeof __param3 !== "undefined") && (typeof __param3 === "string") || (__param3 === null)) && ((typeof __param4 !== "undefined") && (typeof __param4 === "string")) && ((typeof __param5 !== "undefined") && (typeof __param5 === "string")) && ((typeof __param6 !== "undefined") && (typeof __param6 === "string")) && ((typeof __param7 !== "undefined") && (typeof __param7 === "string")) && ((typeof __param8 !== "undefined") && (typeof __param8 === "string")) && ((typeof __param9 !== "undefined") && (typeof __param9 === "number") || (__param9 === null)) && ((typeof __param10 !== "undefined") && (typeof __param10 === "number") || (__param10 === null))) {
 			let id : number = __param0 as number;
-			let iso3 : String = __param1;
-			let iso2 : String = __param2;
-			let isoNumerisch : String | null = __param3;
-			let codeDEStatis : String = __param4;
-			let bezeichnungSuche : String = __param5;
-			let bezeichnung : String = __param6;
-			let bezeichnungLang : String = __param7;
-			let staatsangehoerigkeit : String = __param8;
-			let gueltigVon : Number | null = cast_java_lang_Integer(__param9);
-			let gueltigBis : Number | null = cast_java_lang_Integer(__param10);
+			let iso3 : string = __param1;
+			let iso2 : string = __param2;
+			let isoNumerisch : string | null = __param3;
+			let codeDEStatis : string = __param4;
+			let bezeichnungSuche : string = __param5;
+			let bezeichnung : string = __param6;
+			let bezeichnungLang : string = __param7;
+			let staatsangehoerigkeit : string = __param8;
+			let gueltigVon : number | null = __param9;
+			let gueltigBis : number | null = __param10;
 			this.id = id;
 			this.iso3 = iso3;
 			this.iso2 = iso2;
@@ -126,44 +126,44 @@ export class NationalitaetenKatalogEintrag extends JavaObject {
 		result.id = obj.id;
 		if (typeof obj.iso3 === "undefined")
 			 throw new Error('invalid json format, missing attribute iso3');
-		result.iso3 = String(obj.iso3);
+		result.iso3 = obj.iso3;
 		if (typeof obj.iso2 === "undefined")
 			 throw new Error('invalid json format, missing attribute iso2');
-		result.iso2 = String(obj.iso2);
-		result.isoNumerisch = typeof obj.isoNumerisch === "undefined" ? null : obj.isoNumerisch === null ? null : String(obj.isoNumerisch);
+		result.iso2 = obj.iso2;
+		result.isoNumerisch = typeof obj.isoNumerisch === "undefined" ? null : obj.isoNumerisch === null ? null : obj.isoNumerisch;
 		if (typeof obj.codeDEStatis === "undefined")
 			 throw new Error('invalid json format, missing attribute codeDEStatis');
-		result.codeDEStatis = String(obj.codeDEStatis);
+		result.codeDEStatis = obj.codeDEStatis;
 		if (typeof obj.bezeichnungSuche === "undefined")
 			 throw new Error('invalid json format, missing attribute bezeichnungSuche');
-		result.bezeichnungSuche = String(obj.bezeichnungSuche);
+		result.bezeichnungSuche = obj.bezeichnungSuche;
 		if (typeof obj.bezeichnung === "undefined")
 			 throw new Error('invalid json format, missing attribute bezeichnung');
-		result.bezeichnung = String(obj.bezeichnung);
+		result.bezeichnung = obj.bezeichnung;
 		if (typeof obj.bezeichnungLang === "undefined")
 			 throw new Error('invalid json format, missing attribute bezeichnungLang');
-		result.bezeichnungLang = String(obj.bezeichnungLang);
+		result.bezeichnungLang = obj.bezeichnungLang;
 		if (typeof obj.staatsangehoerigkeit === "undefined")
 			 throw new Error('invalid json format, missing attribute staatsangehoerigkeit');
-		result.staatsangehoerigkeit = String(obj.staatsangehoerigkeit);
-		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : Number(obj.gueltigVon);
-		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : Number(obj.gueltigBis);
+		result.staatsangehoerigkeit = obj.staatsangehoerigkeit;
+		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
+		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : NationalitaetenKatalogEintrag) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"iso3" : ' + '"' + obj.iso3.valueOf() + '"' + ',';
-		result += '"iso2" : ' + '"' + obj.iso2.valueOf() + '"' + ',';
-		result += '"isoNumerisch" : ' + ((!obj.isoNumerisch) ? 'null' : '"' + obj.isoNumerisch.valueOf() + '"') + ',';
-		result += '"codeDEStatis" : ' + '"' + obj.codeDEStatis.valueOf() + '"' + ',';
-		result += '"bezeichnungSuche" : ' + '"' + obj.bezeichnungSuche.valueOf() + '"' + ',';
-		result += '"bezeichnung" : ' + '"' + obj.bezeichnung.valueOf() + '"' + ',';
-		result += '"bezeichnungLang" : ' + '"' + obj.bezeichnungLang.valueOf() + '"' + ',';
-		result += '"staatsangehoerigkeit" : ' + '"' + obj.staatsangehoerigkeit.valueOf() + '"' + ',';
-		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.valueOf()) + ',';
-		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.valueOf()) + ',';
+		result += '"iso3" : ' + '"' + obj.iso3! + '"' + ',';
+		result += '"iso2" : ' + '"' + obj.iso2! + '"' + ',';
+		result += '"isoNumerisch" : ' + ((!obj.isoNumerisch) ? 'null' : '"' + obj.isoNumerisch + '"') + ',';
+		result += '"codeDEStatis" : ' + '"' + obj.codeDEStatis! + '"' + ',';
+		result += '"bezeichnungSuche" : ' + '"' + obj.bezeichnungSuche! + '"' + ',';
+		result += '"bezeichnung" : ' + '"' + obj.bezeichnung! + '"' + ',';
+		result += '"bezeichnungLang" : ' + '"' + obj.bezeichnungLang! + '"' + ',';
+		result += '"staatsangehoerigkeit" : ' + '"' + obj.staatsangehoerigkeit! + '"' + ',';
+		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
+		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -175,34 +175,34 @@ export class NationalitaetenKatalogEintrag extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.iso3 !== "undefined") {
-			result += '"iso3" : ' + '"' + obj.iso3.valueOf() + '"' + ',';
+			result += '"iso3" : ' + '"' + obj.iso3 + '"' + ',';
 		}
 		if (typeof obj.iso2 !== "undefined") {
-			result += '"iso2" : ' + '"' + obj.iso2.valueOf() + '"' + ',';
+			result += '"iso2" : ' + '"' + obj.iso2 + '"' + ',';
 		}
 		if (typeof obj.isoNumerisch !== "undefined") {
-			result += '"isoNumerisch" : ' + ((!obj.isoNumerisch) ? 'null' : '"' + obj.isoNumerisch.valueOf() + '"') + ',';
+			result += '"isoNumerisch" : ' + ((!obj.isoNumerisch) ? 'null' : '"' + obj.isoNumerisch + '"') + ',';
 		}
 		if (typeof obj.codeDEStatis !== "undefined") {
-			result += '"codeDEStatis" : ' + '"' + obj.codeDEStatis.valueOf() + '"' + ',';
+			result += '"codeDEStatis" : ' + '"' + obj.codeDEStatis + '"' + ',';
 		}
 		if (typeof obj.bezeichnungSuche !== "undefined") {
-			result += '"bezeichnungSuche" : ' + '"' + obj.bezeichnungSuche.valueOf() + '"' + ',';
+			result += '"bezeichnungSuche" : ' + '"' + obj.bezeichnungSuche + '"' + ',';
 		}
 		if (typeof obj.bezeichnung !== "undefined") {
-			result += '"bezeichnung" : ' + '"' + obj.bezeichnung.valueOf() + '"' + ',';
+			result += '"bezeichnung" : ' + '"' + obj.bezeichnung + '"' + ',';
 		}
 		if (typeof obj.bezeichnungLang !== "undefined") {
-			result += '"bezeichnungLang" : ' + '"' + obj.bezeichnungLang.valueOf() + '"' + ',';
+			result += '"bezeichnungLang" : ' + '"' + obj.bezeichnungLang + '"' + ',';
 		}
 		if (typeof obj.staatsangehoerigkeit !== "undefined") {
-			result += '"staatsangehoerigkeit" : ' + '"' + obj.staatsangehoerigkeit.valueOf() + '"' + ',';
+			result += '"staatsangehoerigkeit" : ' + '"' + obj.staatsangehoerigkeit + '"' + ',';
 		}
 		if (typeof obj.gueltigVon !== "undefined") {
-			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.valueOf()) + ',';
+			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
 		}
 		if (typeof obj.gueltigBis !== "undefined") {
-			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.valueOf()) + ',';
+			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

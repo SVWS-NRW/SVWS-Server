@@ -58,7 +58,7 @@ export class AVLMapNode<K, V> extends JavaObject implements JavaMapEntry<K, V> {
 		this._val = val;
 	}
 
-	public toString() : String {
+	public toString() : string {
 		return "[" + this._key + ", " + this._val + "]";
 	}
 

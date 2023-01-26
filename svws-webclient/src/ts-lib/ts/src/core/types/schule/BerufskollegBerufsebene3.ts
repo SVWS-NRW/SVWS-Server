@@ -6,7 +6,7 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class BerufskollegBerufsebene3 extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -15,7 +15,7 @@ export class BerufskollegBerufsebene3 extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<BerufskollegBerufsebene3> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, BerufskollegBerufsebene3> = new Map<String, BerufskollegBerufsebene3>();
+	private static readonly all_values_by_name : Map<string, BerufskollegBerufsebene3> = new Map<string, BerufskollegBerufsebene3>();
 
 	/**
 	 * Berufsebene 3 : Absatzwirtschaft 
@@ -415,7 +415,7 @@ export class BerufskollegBerufsebene3 extends JavaObject {
 	/**
 	 * Eine Hashmap mit allen definierten Berufsebenen der Ebene 3, zugeordnet zu ihren Kürzeln 
 	 */
-	private static readonly _ebenen : HashMap<String, BerufskollegBerufsebene3> = new HashMap();
+	private static readonly _ebenen : HashMap<string, BerufskollegBerufsebene3> = new HashMap();
 
 	/**
 	 * Erzeugt eine neue Berufsebene in der Aufzählung.
@@ -438,7 +438,7 @@ export class BerufskollegBerufsebene3 extends JavaObject {
 	 *    
 	 * @return die Map von den Kürzeln der Berufsebene auf die zugehörigen Berufsebene
 	 */
-	private static getMapBerufsebenenByKuerzel() : HashMap<String, BerufskollegBerufsebene3> {
+	private static getMapBerufsebenenByKuerzel() : HashMap<string, BerufskollegBerufsebene3> {
 		if (BerufskollegBerufsebene3._ebenen.size() === 0) {
 			for (let s of BerufskollegBerufsebene3.values()) {
 				if (s.daten !== null) 
@@ -455,7 +455,7 @@ export class BerufskollegBerufsebene3 extends JavaObject {
 	 * 
 	 * @return die Berufsebene oder null, falls das Kürzel ungültig ist
 	 */
-	public static getByKuerzel(kuerzel : String | null) : BerufskollegBerufsebene3 | null {
+	public static getByKuerzel(kuerzel : string | null) : BerufskollegBerufsebene3 | null {
 		return BerufskollegBerufsebene3.getMapBerufsebenenByKuerzel().get(kuerzel);
 	}
 
@@ -464,7 +464,7 @@ export class BerufskollegBerufsebene3 extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -482,7 +482,7 @@ export class BerufskollegBerufsebene3 extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -536,7 +536,7 @@ export class BerufskollegBerufsebene3 extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : BerufskollegBerufsebene3 | null {
+	public static valueOf(name : string) : BerufskollegBerufsebene3 | null {
 		let tmp : BerufskollegBerufsebene3 | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

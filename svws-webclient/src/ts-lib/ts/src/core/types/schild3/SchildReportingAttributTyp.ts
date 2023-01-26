@@ -4,7 +4,7 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class SchildReportingAttributTyp extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -13,7 +13,7 @@ export class SchildReportingAttributTyp extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<SchildReportingAttributTyp> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, SchildReportingAttributTyp> = new Map<String, SchildReportingAttributTyp>();
+	private static readonly all_values_by_name : Map<string, SchildReportingAttributTyp> = new Map<string, SchildReportingAttributTyp>();
 
 	/**
 	 * Boolean 
@@ -48,14 +48,14 @@ export class SchildReportingAttributTyp extends JavaObject {
 	/**
 	 * Der JSON-Typ als String 
 	 */
-	private readonly type : String;
+	private readonly type : string;
 
 	/**
 	 * Initialisiert den Datentype für die Aufzählung
 	 * 
 	 * @param type   der JSON-Datentyp
 	 */
-	private constructor(name : string, ordinal : number, type : String) {
+	private constructor(name : string, ordinal : number, type : string) {
 		super();
 		this.__name = name;
 		this.__ordinal = ordinal;
@@ -64,7 +64,7 @@ export class SchildReportingAttributTyp extends JavaObject {
 		this.type = type;
 	}
 
-	public toString() : String {
+	public toString() : string {
 		return this.type;
 	}
 
@@ -73,7 +73,7 @@ export class SchildReportingAttributTyp extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -136,7 +136,7 @@ export class SchildReportingAttributTyp extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : SchildReportingAttributTyp | null {
+	public static valueOf(name : string) : SchildReportingAttributTyp | null {
 		let tmp : SchildReportingAttributTyp | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

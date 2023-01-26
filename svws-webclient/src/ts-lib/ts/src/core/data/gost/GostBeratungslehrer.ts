@@ -11,17 +11,17 @@ export class GostBeratungslehrer extends JavaObject {
 	/**
 	 * Das Kürzel des Lehrers. 
 	 */
-	public kuerzel : String | null = null;
+	public kuerzel : string | null = null;
 
 	/**
 	 * Der Nachname des Lehrers. 
 	 */
-	public nachname : String | null = null;
+	public nachname : string | null = null;
 
 	/**
 	 * Der Vorname des Lehrers. 
 	 */
-	public vorname : String | null = null;
+	public vorname : string | null = null;
 
 
 	public constructor() {
@@ -38,18 +38,18 @@ export class GostBeratungslehrer extends JavaObject {
 		if (typeof obj.id === "undefined")
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		result.kuerzel = typeof obj.kuerzel === "undefined" ? null : obj.kuerzel === null ? null : String(obj.kuerzel);
-		result.nachname = typeof obj.nachname === "undefined" ? null : obj.nachname === null ? null : String(obj.nachname);
-		result.vorname = typeof obj.vorname === "undefined" ? null : obj.vorname === null ? null : String(obj.vorname);
+		result.kuerzel = typeof obj.kuerzel === "undefined" ? null : obj.kuerzel === null ? null : obj.kuerzel;
+		result.nachname = typeof obj.nachname === "undefined" ? null : obj.nachname === null ? null : obj.nachname;
+		result.vorname = typeof obj.vorname === "undefined" ? null : obj.vorname === null ? null : obj.vorname;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : GostBeratungslehrer) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : '"' + obj.kuerzel.valueOf() + '"') + ',';
-		result += '"nachname" : ' + ((!obj.nachname) ? 'null' : '"' + obj.nachname.valueOf() + '"') + ',';
-		result += '"vorname" : ' + ((!obj.vorname) ? 'null' : '"' + obj.vorname.valueOf() + '"') + ',';
+		result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : '"' + obj.kuerzel + '"') + ',';
+		result += '"nachname" : ' + ((!obj.nachname) ? 'null' : '"' + obj.nachname + '"') + ',';
+		result += '"vorname" : ' + ((!obj.vorname) ? 'null' : '"' + obj.vorname + '"') + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -61,13 +61,13 @@ export class GostBeratungslehrer extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.kuerzel !== "undefined") {
-			result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : '"' + obj.kuerzel.valueOf() + '"') + ',';
+			result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : '"' + obj.kuerzel + '"') + ',';
 		}
 		if (typeof obj.nachname !== "undefined") {
-			result += '"nachname" : ' + ((!obj.nachname) ? 'null' : '"' + obj.nachname.valueOf() + '"') + ',';
+			result += '"nachname" : ' + ((!obj.nachname) ? 'null' : '"' + obj.nachname + '"') + ',';
 		}
 		if (typeof obj.vorname !== "undefined") {
-			result += '"vorname" : ' + ((!obj.vorname) ? 'null' : '"' + obj.vorname.valueOf() + '"') + ',';
+			result += '"vorname" : ' + ((!obj.vorname) ? 'null' : '"' + obj.vorname + '"') + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

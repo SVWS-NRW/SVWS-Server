@@ -54,11 +54,11 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 		this._asc = asc;
 	}
 
-	public toString() : String {
-		let s : String | null = "";
+	public toString() : string {
+		let s : string | null = "";
 		for (let e of this.entrySet()) 
 			s += (s.length === 0 ? "" : ", ") + e;
-		return "Entries = [" + s.valueOf() + "], iv = " + this._iv + ", asc = " + this._asc;
+		return "Entries = [" + s! + "], iv = " + this._iv + ", asc = " + this._asc;
 	}
 
 	public equals(o : unknown) : boolean {

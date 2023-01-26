@@ -5,7 +5,7 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class LehrerAbgangsgrund extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -14,7 +14,7 @@ export class LehrerAbgangsgrund extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<LehrerAbgangsgrund> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, LehrerAbgangsgrund> = new Map<String, LehrerAbgangsgrund>();
+	private static readonly all_values_by_name : Map<string, LehrerAbgangsgrund> = new Map<string, LehrerAbgangsgrund>();
 
 	/**
 	 * Grund 'Eintritt in den Ruhestand' für das Verlassen der Schule durch den Lehrer 
@@ -102,7 +102,7 @@ export class LehrerAbgangsgrund extends JavaObject {
 	 * 
 	 * @return der Grund für das Verlassen der Schule durch den Lehrer oder null, falls das kuerzel ungültig ist
 	 */
-	public static getByKuerzel(kuerzel : String | null) : LehrerAbgangsgrund | null {
+	public static getByKuerzel(kuerzel : string | null) : LehrerAbgangsgrund | null {
 		for (let grund of LehrerAbgangsgrund.values()) 
 			if (JavaObject.equalsTranspiler(grund.daten.kuerzel, (kuerzel))) 
 				return grund;
@@ -118,7 +118,7 @@ export class LehrerAbgangsgrund extends JavaObject {
 	 * 
 	 * @return der Grund für das Verlassen der Schule durch den Lehrer oder null, falls der Schlüssel ungültig ist
 	 */
-	public static getByASDSchluessel(schluessel : String | null) : LehrerAbgangsgrund | null {
+	public static getByASDSchluessel(schluessel : string | null) : LehrerAbgangsgrund | null {
 		for (let grund of LehrerAbgangsgrund.values()) 
 			if (JavaObject.equalsTranspiler(grund.daten.schluessel, (schluessel))) 
 				return grund;
@@ -130,7 +130,7 @@ export class LehrerAbgangsgrund extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -148,7 +148,7 @@ export class LehrerAbgangsgrund extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -202,7 +202,7 @@ export class LehrerAbgangsgrund extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : LehrerAbgangsgrund | null {
+	public static valueOf(name : string) : LehrerAbgangsgrund | null {
 		let tmp : LehrerAbgangsgrund | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

@@ -10,7 +10,7 @@ export class StundenplanblockungManagerFachMenge extends JavaObject {
 
 	private readonly _menge : Vector<StundenplanblockungManagerFach>;
 
-	private readonly _map : HashMap<Number, StundenplanblockungManagerFach>;
+	private readonly _map : HashMap<number, StundenplanblockungManagerFach>;
 
 
 	/**
@@ -30,7 +30,7 @@ export class StundenplanblockungManagerFachMenge extends JavaObject {
 	 * @param pKuerzel               Das Kürzel des Faches.
 	 * @throws NullPointerException  Falls die Fach-ID bereits existiert.
 	 */
-	public addOrException(pFachID : number, pKuerzel : String) : void {
+	public addOrException(pFachID : number, pKuerzel : string) : void {
 		if (this._map.containsKey(pFachID) === true) 
 			throw new NullPointerException("Die Fach-ID " + pFachID + " existiert bereits!")
 		let fa : StundenplanblockungManagerFach = new StundenplanblockungManagerFach(pFachID, pKuerzel);

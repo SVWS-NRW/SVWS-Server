@@ -11,7 +11,7 @@ export class StundenplanInputSimpleKopplung extends JavaObject {
 	/**
 	 * Das Kürzel des Kopplung. Beispielsweise '5RE' oder 'Q1LK1'. 
 	 */
-	public kuerzel : String = "";
+	public kuerzel : string = "";
 
 	/**
 	 * Die Anzahl der Stunden der Kopplung. Muss mindestens so groß sein, wie der Kurs mit den meisten Stunden in
@@ -36,7 +36,7 @@ export class StundenplanInputSimpleKopplung extends JavaObject {
 		result.id = obj.id;
 		if (typeof obj.kuerzel === "undefined")
 			 throw new Error('invalid json format, missing attribute kuerzel');
-		result.kuerzel = String(obj.kuerzel);
+		result.kuerzel = obj.kuerzel;
 		if (typeof obj.stunden === "undefined")
 			 throw new Error('invalid json format, missing attribute stunden');
 		result.stunden = obj.stunden;
@@ -46,7 +46,7 @@ export class StundenplanInputSimpleKopplung extends JavaObject {
 	public static transpilerToJSON(obj : StundenplanInputSimpleKopplung) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"kuerzel" : ' + '"' + obj.kuerzel.valueOf() + '"' + ',';
+		result += '"kuerzel" : ' + '"' + obj.kuerzel! + '"' + ',';
 		result += '"stunden" : ' + obj.stunden + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -59,7 +59,7 @@ export class StundenplanInputSimpleKopplung extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.kuerzel !== "undefined") {
-			result += '"kuerzel" : ' + '"' + obj.kuerzel.valueOf() + '"' + ',';
+			result += '"kuerzel" : ' + '"' + obj.kuerzel + '"' + ',';
 		}
 		if (typeof obj.stunden !== "undefined") {
 			result += '"stunden" : ' + obj.stunden + ',';

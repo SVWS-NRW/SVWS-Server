@@ -17,17 +17,17 @@ export class AdressenUtils extends JavaObject {
 	 * 
 	 * @return ein Array mit den 3 Elementen (0 - Strassennamen, 1 - Hausnummer und 2 - Hausnummerzusatz)
 	 */
-	public static splitStrasse(strasse : String | null) : Array<String> {
-		let result : Array<String> = Array(3).fill(null);
+	public static splitStrasse(strasse : string | null) : Array<string> {
+		let result : Array<string> = Array(3).fill(null);
 		if (strasse === null) {
 			result[0] = "";
 			result[1] = "";
 			result[2] = "";
 			return result;
 		}
-		let tmp : String = strasse.trim().replace("  ", " ").replace("  ", " ").replace(" -", "-").replace("- ", "-");
+		let tmp : string = strasse.trim().replace("  ", " ").replace("  ", " ").replace(" -", "-").replace("- ", "-");
 		result[0] = JavaString.replaceFirst(tmp, " *([0-9]+ *[-\\+]+)* *[0-9]+\\D*$", "");
-		let rest : String = tmp.substring(result[0].length).trim();
+		let rest : string = tmp.substring(result[0].length).trim();
 		result[1] = JavaString.replaceFirst(rest, "\\D*$", "").trim();
 		result[2] = rest.substring(result[1].length).trim();
 		if (result[0].length > 55) 
@@ -49,12 +49,12 @@ export class AdressenUtils extends JavaObject {
 	 * 
 	 * @return die kombinierte Strassenangabe
 	 */
-	public static combineStrasse(name : String | null, hausNummer : String | null, zusatz : String | null) : String | null {
+	public static combineStrasse(name : string | null, hausNummer : string | null, zusatz : string | null) : string | null {
 		if ((name === null) || (hausNummer === null) || (zusatz === null)) 
 			return null;
 		if (JavaObject.equalsTranspiler("", (hausNummer.trim())) && (JavaObject.equalsTranspiler("", (zusatz.trim())))) 
 			return name;
-		return name.valueOf() + " " + hausNummer.trim().valueOf() + zusatz.trim().valueOf();
+		return name! + " " + hausNummer.trim()! + zusatz.trim()!;
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

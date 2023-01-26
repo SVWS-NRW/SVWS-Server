@@ -7,7 +7,7 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class HerkunftBildungsgang extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -16,7 +16,7 @@ export class HerkunftBildungsgang extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<HerkunftBildungsgang> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, HerkunftBildungsgang> = new Map<String, HerkunftBildungsgang>();
+	private static readonly all_values_by_name : Map<string, HerkunftBildungsgang> = new Map<string, HerkunftBildungsgang>();
 
 	/**
 	 * Berufsschule, Fachklassen (Teilzeit) 
@@ -241,7 +241,7 @@ export class HerkunftBildungsgang extends JavaObject {
 	/**
 	 * Eine Hashmap mit allen definierten Herkunftsbildungsgängen, zugeordnet zu ihren Kürzeln 
 	 */
-	private static readonly _ebenen : HashMap<String, HerkunftBildungsgang | null> = new HashMap();
+	private static readonly _ebenen : HashMap<string, HerkunftBildungsgang | null> = new HashMap();
 
 	/**
 	 * Erzeugt einen neuen Herkunftsbildungsgang in der Aufzählung.
@@ -266,7 +266,7 @@ export class HerkunftBildungsgang extends JavaObject {
 	 *    
 	 * @return die Map von den Kürzeln auf die zugehörigen Herkunftsbildungsgänge
 	 */
-	private static getMapByKuerzel() : HashMap<String, HerkunftBildungsgang | null> {
+	private static getMapByKuerzel() : HashMap<string, HerkunftBildungsgang | null> {
 		if (HerkunftBildungsgang._ebenen.size() === 0) {
 			for (let s of HerkunftBildungsgang.values()) {
 				if (s.daten !== null) 
@@ -283,7 +283,7 @@ export class HerkunftBildungsgang extends JavaObject {
 	 * 
 	 * @return der Herkunftsbildungsgang oder null, falls das Kürzel ungültig ist
 	 */
-	public static getByKuerzel(kuerzel : String | null) : HerkunftBildungsgang | null {
+	public static getByKuerzel(kuerzel : string | null) : HerkunftBildungsgang | null {
 		return HerkunftBildungsgang.getMapByKuerzel().get(kuerzel);
 	}
 
@@ -292,7 +292,7 @@ export class HerkunftBildungsgang extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -310,7 +310,7 @@ export class HerkunftBildungsgang extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -364,7 +364,7 @@ export class HerkunftBildungsgang extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : HerkunftBildungsgang | null {
+	public static valueOf(name : string) : HerkunftBildungsgang | null {
 		let tmp : HerkunftBildungsgang | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

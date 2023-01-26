@@ -7,7 +7,7 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class LehrerFachrichtungAnerkennung extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -16,7 +16,7 @@ export class LehrerFachrichtungAnerkennung extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<LehrerFachrichtungAnerkennung> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, LehrerFachrichtungAnerkennung> = new Map<String, LehrerFachrichtungAnerkennung>();
+	private static readonly all_values_by_name : Map<string, LehrerFachrichtungAnerkennung> = new Map<string, LehrerFachrichtungAnerkennung>();
 
 	/**
 	 * Fachrichtungsanerkennung 'erworben durch LABG/OVP bzw. Laufbahnverordnung'  
@@ -56,12 +56,12 @@ export class LehrerFachrichtungAnerkennung extends JavaObject {
 	/**
 	 * Eine Hashmap mit allen Fachrichtungsanerkennungen, welche ihrer ID zugeordnet sind. 
 	 */
-	private static readonly _anerkennungenByID : HashMap<Number, LehrerFachrichtungAnerkennung | null> = new HashMap();
+	private static readonly _anerkennungenByID : HashMap<number, LehrerFachrichtungAnerkennung | null> = new HashMap();
 
 	/**
 	 * Eine Hashmap mit allen Fachrichtungsanerkennungen, welche dem Kürzel bzw. ASD-Schlüssel zugeordnet sind. 
 	 */
-	private static readonly _anerkennungenByKuerzel : HashMap<String, LehrerFachrichtungAnerkennung | null> = new HashMap();
+	private static readonly _anerkennungenByKuerzel : HashMap<string, LehrerFachrichtungAnerkennung | null> = new HashMap();
 
 	/**
 	 * Erzeugt neue Anerkennung für Fachrichtungen in der Aufzählung.
@@ -84,7 +84,7 @@ export class LehrerFachrichtungAnerkennung extends JavaObject {
 	 *    
 	 * @return die Map von den IDs der Fachrichtungsanerkennungen auf die zugehörigen Fachrichtungsanerkennungen
 	 */
-	private static getMapAnerkennungenByID() : HashMap<Number, LehrerFachrichtungAnerkennung | null> {
+	private static getMapAnerkennungenByID() : HashMap<number, LehrerFachrichtungAnerkennung | null> {
 		if (LehrerFachrichtungAnerkennung._anerkennungenByID.size() === 0) 
 			for (let l of LehrerFachrichtungAnerkennung.values()) 
 				LehrerFachrichtungAnerkennung._anerkennungenByID.put(l.daten.id, l);
@@ -97,7 +97,7 @@ export class LehrerFachrichtungAnerkennung extends JavaObject {
 	 *    
 	 * @return die Map von den Kürzeln der Fachrichtungsanerkennungen auf die zugehörigen Fachrichtungsanerkennungen
 	 */
-	private static getMapAnerkennungenByKuerzel() : HashMap<String, LehrerFachrichtungAnerkennung | null> {
+	private static getMapAnerkennungenByKuerzel() : HashMap<string, LehrerFachrichtungAnerkennung | null> {
 		if (LehrerFachrichtungAnerkennung._anerkennungenByKuerzel.size() === 0) 
 			for (let l of LehrerFachrichtungAnerkennung.values()) 
 				LehrerFachrichtungAnerkennung._anerkennungenByKuerzel.put(l.daten.kuerzel, l);
@@ -122,7 +122,7 @@ export class LehrerFachrichtungAnerkennung extends JavaObject {
 	 * 
 	 * @return die Fachrichtungsanerkennung oder null, falls das Kürzel ungültig ist
 	 */
-	public static getByKuerzel(kuerzel : String | null) : LehrerFachrichtungAnerkennung | null {
+	public static getByKuerzel(kuerzel : string | null) : LehrerFachrichtungAnerkennung | null {
 		return LehrerFachrichtungAnerkennung.getMapAnerkennungenByKuerzel().get(kuerzel);
 	}
 
@@ -131,7 +131,7 @@ export class LehrerFachrichtungAnerkennung extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -149,7 +149,7 @@ export class LehrerFachrichtungAnerkennung extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -203,7 +203,7 @@ export class LehrerFachrichtungAnerkennung extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : LehrerFachrichtungAnerkennung | null {
+	public static valueOf(name : string) : LehrerFachrichtungAnerkennung | null {
 		let tmp : LehrerFachrichtungAnerkennung | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

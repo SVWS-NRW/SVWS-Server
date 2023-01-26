@@ -8,37 +8,37 @@ export class KatalogEintragOrte extends JavaObject {
 	/**
 	 * Katalog von IT.NRW PLZ Ort: die ID des Katalog-Eintrags 
 	 */
-	public ID : Number | null = null;
+	public ID : number | null = null;
 
 	/**
 	 * Katalog von IT.NRW PLZ Ort: die Postleitzahl 
 	 */
-	public PLZ : String | null = null;
+	public PLZ : string | null = null;
 
 	/**
 	 * Katalog von IT.NRW PLZ Ort: der Regionalschlüssel 
 	 */
-	public RegSchl : String | null = null;
+	public RegSchl : string | null = null;
 
 	/**
 	 * Katalog von IT.NRW PLZ Ort: die Ortsbezeichnung 
 	 */
-	public Ort : String | null = null;
+	public Ort : string | null = null;
 
 	/**
 	 * Katalog von IT.NRW PLZ Ort: eine Nummer für die Sortierreihenfolge der Katalog-Einträge 
 	 */
-	public Sortierung : Number | null = null;
+	public Sortierung : number | null = null;
 
 	/**
 	 * Katalog von IT.NRW PLZ Ort: Gibt die Gültigkeit ab welchem Schuljahr an 
 	 */
-	public gueltigVon : Number | null = null;
+	public gueltigVon : number | null = null;
 
 	/**
 	 * Katalog von IT.NRW PLZ Ort: Gibt die Gültigkeit bis zu welchem Schuljahr an 
 	 */
-	public gueltigBis : Number | null = null;
+	public gueltigBis : number | null = null;
 
 
 	public constructor() {
@@ -52,25 +52,25 @@ export class KatalogEintragOrte extends JavaObject {
 	public static transpilerFromJSON(json : string): KatalogEintragOrte {
 		const obj = JSON.parse(json);
 		const result = new KatalogEintragOrte();
-		result.ID = typeof obj.ID === "undefined" ? null : obj.ID === null ? null : Number(obj.ID);
-		result.PLZ = typeof obj.PLZ === "undefined" ? null : obj.PLZ === null ? null : String(obj.PLZ);
-		result.RegSchl = typeof obj.RegSchl === "undefined" ? null : obj.RegSchl === null ? null : String(obj.RegSchl);
-		result.Ort = typeof obj.Ort === "undefined" ? null : obj.Ort === null ? null : String(obj.Ort);
-		result.Sortierung = typeof obj.Sortierung === "undefined" ? null : obj.Sortierung === null ? null : Number(obj.Sortierung);
-		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : Number(obj.gueltigVon);
-		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : Number(obj.gueltigBis);
+		result.ID = typeof obj.ID === "undefined" ? null : obj.ID === null ? null : obj.ID;
+		result.PLZ = typeof obj.PLZ === "undefined" ? null : obj.PLZ === null ? null : obj.PLZ;
+		result.RegSchl = typeof obj.RegSchl === "undefined" ? null : obj.RegSchl === null ? null : obj.RegSchl;
+		result.Ort = typeof obj.Ort === "undefined" ? null : obj.Ort === null ? null : obj.Ort;
+		result.Sortierung = typeof obj.Sortierung === "undefined" ? null : obj.Sortierung === null ? null : obj.Sortierung;
+		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
+		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : KatalogEintragOrte) : string {
 		let result = '{';
-		result += '"ID" : ' + ((!obj.ID) ? 'null' : obj.ID.valueOf()) + ',';
-		result += '"PLZ" : ' + ((!obj.PLZ) ? 'null' : '"' + obj.PLZ.valueOf() + '"') + ',';
-		result += '"RegSchl" : ' + ((!obj.RegSchl) ? 'null' : '"' + obj.RegSchl.valueOf() + '"') + ',';
-		result += '"Ort" : ' + ((!obj.Ort) ? 'null' : '"' + obj.Ort.valueOf() + '"') + ',';
-		result += '"Sortierung" : ' + ((!obj.Sortierung) ? 'null' : obj.Sortierung.valueOf()) + ',';
-		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.valueOf()) + ',';
-		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.valueOf()) + ',';
+		result += '"ID" : ' + ((!obj.ID) ? 'null' : obj.ID) + ',';
+		result += '"PLZ" : ' + ((!obj.PLZ) ? 'null' : '"' + obj.PLZ + '"') + ',';
+		result += '"RegSchl" : ' + ((!obj.RegSchl) ? 'null' : '"' + obj.RegSchl + '"') + ',';
+		result += '"Ort" : ' + ((!obj.Ort) ? 'null' : '"' + obj.Ort + '"') + ',';
+		result += '"Sortierung" : ' + ((!obj.Sortierung) ? 'null' : obj.Sortierung) + ',';
+		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
+		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -79,25 +79,25 @@ export class KatalogEintragOrte extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<KatalogEintragOrte>) : string {
 		let result = '{';
 		if (typeof obj.ID !== "undefined") {
-			result += '"ID" : ' + ((!obj.ID) ? 'null' : obj.ID.valueOf()) + ',';
+			result += '"ID" : ' + ((!obj.ID) ? 'null' : obj.ID) + ',';
 		}
 		if (typeof obj.PLZ !== "undefined") {
-			result += '"PLZ" : ' + ((!obj.PLZ) ? 'null' : '"' + obj.PLZ.valueOf() + '"') + ',';
+			result += '"PLZ" : ' + ((!obj.PLZ) ? 'null' : '"' + obj.PLZ + '"') + ',';
 		}
 		if (typeof obj.RegSchl !== "undefined") {
-			result += '"RegSchl" : ' + ((!obj.RegSchl) ? 'null' : '"' + obj.RegSchl.valueOf() + '"') + ',';
+			result += '"RegSchl" : ' + ((!obj.RegSchl) ? 'null' : '"' + obj.RegSchl + '"') + ',';
 		}
 		if (typeof obj.Ort !== "undefined") {
-			result += '"Ort" : ' + ((!obj.Ort) ? 'null' : '"' + obj.Ort.valueOf() + '"') + ',';
+			result += '"Ort" : ' + ((!obj.Ort) ? 'null' : '"' + obj.Ort + '"') + ',';
 		}
 		if (typeof obj.Sortierung !== "undefined") {
-			result += '"Sortierung" : ' + ((!obj.Sortierung) ? 'null' : obj.Sortierung.valueOf()) + ',';
+			result += '"Sortierung" : ' + ((!obj.Sortierung) ? 'null' : obj.Sortierung) + ',';
 		}
 		if (typeof obj.gueltigVon !== "undefined") {
-			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.valueOf()) + ',';
+			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
 		}
 		if (typeof obj.gueltigBis !== "undefined") {
-			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.valueOf()) + ',';
+			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

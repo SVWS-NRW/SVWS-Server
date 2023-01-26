@@ -13,7 +13,7 @@ export class BenutzergruppeDaten extends JavaObject {
 	/**
 	 * Die Bezeichnung der Benutzergruppe. 
 	 */
-	public bezeichnung : String = "";
+	public bezeichnung : string = "";
 
 	/**
 	 * Gibt an, ob es sich um eine Administrative Benutzergruppe handelt oder nicht. 
@@ -23,7 +23,7 @@ export class BenutzergruppeDaten extends JavaObject {
 	/**
 	 * Die IDs der Kompetenzen, die speziell dieser Benutzergruppe zugeordnet sind. 
 	 */
-	public kompetenzen : Vector<Number> = new Vector();
+	public kompetenzen : Vector<number> = new Vector();
 
 
 	public constructor() {
@@ -42,13 +42,13 @@ export class BenutzergruppeDaten extends JavaObject {
 		result.id = obj.id;
 		if (typeof obj.bezeichnung === "undefined")
 			 throw new Error('invalid json format, missing attribute bezeichnung');
-		result.bezeichnung = String(obj.bezeichnung);
+		result.bezeichnung = obj.bezeichnung;
 		if (typeof obj.istAdmin === "undefined")
 			 throw new Error('invalid json format, missing attribute istAdmin');
 		result.istAdmin = obj.istAdmin;
 		if (!!obj.kompetenzen) {
 			for (let elem of obj.kompetenzen) {
-				result.kompetenzen?.add(Number(elem));
+				result.kompetenzen?.add(elem);
 			}
 		}
 		return result;
@@ -57,7 +57,7 @@ export class BenutzergruppeDaten extends JavaObject {
 	public static transpilerToJSON(obj : BenutzergruppeDaten) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"bezeichnung" : ' + '"' + obj.bezeichnung.valueOf() + '"' + ',';
+		result += '"bezeichnung" : ' + '"' + obj.bezeichnung! + '"' + ',';
 		result += '"istAdmin" : ' + obj.istAdmin + ',';
 		if (!obj.kompetenzen) {
 			result += '"kompetenzen" : []';
@@ -82,7 +82,7 @@ export class BenutzergruppeDaten extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.bezeichnung !== "undefined") {
-			result += '"bezeichnung" : ' + '"' + obj.bezeichnung.valueOf() + '"' + ',';
+			result += '"bezeichnung" : ' + '"' + obj.bezeichnung + '"' + ',';
 		}
 		if (typeof obj.istAdmin !== "undefined") {
 			result += '"istAdmin" : ' + obj.istAdmin + ',';

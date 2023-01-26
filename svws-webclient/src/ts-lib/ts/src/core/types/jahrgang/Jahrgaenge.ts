@@ -12,7 +12,7 @@ import { JahrgangsKatalogEintragBezeichnung, cast_de_nrw_schule_svws_core_data_j
 export class Jahrgaenge extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -21,7 +21,7 @@ export class Jahrgaenge extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<Jahrgaenge> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, Jahrgaenge> = new Map<String, Jahrgaenge>();
+	private static readonly all_values_by_name : Map<string, Jahrgaenge> = new Map<string, Jahrgaenge>();
 
 	/**
 	 *  Jahrgang 00: Frühkindliche Förderung, Förderschulkindergarten 
@@ -171,12 +171,12 @@ export class Jahrgaenge extends JavaObject {
 	/**
 	 * Eine Map mit der Zuordnung des Jahrgangs zu dem Kürzel des Jahrgangs 
 	 */
-	private static readonly _mapKuerzel : HashMap<String, Jahrgaenge | null> = new HashMap();
+	private static readonly _mapKuerzel : HashMap<string, Jahrgaenge | null> = new HashMap();
 
 	/**
 	 * Eine Map mit der Zuordnung des Jahrgangs zu der ID des Jahrgangs 
 	 */
-	private static readonly _mapID : HashMap<Number, Jahrgaenge | null> = new HashMap();
+	private static readonly _mapID : HashMap<number, Jahrgaenge | null> = new HashMap();
 
 	/**
 	 * Die Schulformen, bei welchen der Jahrgang vorkommt, für die einzelnen Historieneinträge 
@@ -186,7 +186,7 @@ export class Jahrgaenge extends JavaObject {
 	/**
 	 * Die Bezeichnungen bei den Schulformen, bei welchen der Jahrgang vorkommt, für die einzelnen Historieneinträge 
 	 */
-	private bezeichnungen : Array<Vector<String>>;
+	private bezeichnungen : Array<Vector<string>>;
 
 	/**
 	 * Erzeugt einen neuen Jahrgang in der Aufzählung.
@@ -221,7 +221,7 @@ export class Jahrgaenge extends JavaObject {
 	 *    
 	 * @return die Map von den Kürzel der Jahrgänge auf die zugehörigen Jahrgänge
 	 */
-	private static getMapJahrgangByKuerzel() : HashMap<String, Jahrgaenge | null> {
+	private static getMapJahrgangByKuerzel() : HashMap<string, Jahrgaenge | null> {
 		if (Jahrgaenge._mapKuerzel.size() === 0) 
 			for (let j of Jahrgaenge.values()) 
 				Jahrgaenge._mapKuerzel.put(j.daten.kuerzel, j);
@@ -234,7 +234,7 @@ export class Jahrgaenge extends JavaObject {
 	 *    
 	 * @return die Map von den IDs der Jahrgänge auf die zugehörigen Jahrgänge
 	 */
-	private static getMapJahrgangByID() : HashMap<Number, Jahrgaenge | null> {
+	private static getMapJahrgangByID() : HashMap<number, Jahrgaenge | null> {
 		if (Jahrgaenge._mapID.size() === 0) 
 			for (let j of Jahrgaenge.values()) {
 				for (let k of j.historie) 
@@ -250,7 +250,7 @@ export class Jahrgaenge extends JavaObject {
 	 * 
 	 * @return der Jahrgang oder null, falls das Kürzel ungültig ist
 	 */
-	public static getByKuerzel(kuerzel : String | null) : Jahrgaenge | null {
+	public static getByKuerzel(kuerzel : string | null) : Jahrgaenge | null {
 		return Jahrgaenge.getMapJahrgangByKuerzel().get(kuerzel);
 	}
 
@@ -261,7 +261,7 @@ export class Jahrgaenge extends JavaObject {
 	 * 
 	 * @return der Jahrgang oder null, falls die ID ungültig ist
 	 */
-	public static getByID(id : Number | null) : Jahrgaenge | null {
+	public static getByID(id : number | null) : Jahrgaenge | null {
 		return Jahrgaenge.getMapJahrgangByID().get(id);
 	}
 
@@ -272,13 +272,13 @@ export class Jahrgaenge extends JavaObject {
 	 * 
 	 * @return die Bezeichung des Jahrgangs oder null, falls die Schulform nicht zulässig ist
 	 */
-	public getBezeichnung(schulform : Schulform | null) : String | null {
+	public getBezeichnung(schulform : Schulform | null) : string | null {
 		if ((schulform === null) || (schulform.daten === null)) 
 			return null;
 		if (this.daten.bezeichnungen !== null) {
 			for (let i : number = 0; i < this.daten.bezeichnungen.size(); i++){
 				let bez : JahrgangsKatalogEintragBezeichnung | null = this.daten.bezeichnungen.get(i);
-				let sfKuerzel : String | null = bez.schulform;
+				let sfKuerzel : string | null = bez.schulform;
 				if (JavaObject.equalsTranspiler(sfKuerzel, (schulform.daten.kuerzel))) 
 					return bez.bezeichnung;
 			}
@@ -322,7 +322,7 @@ export class Jahrgaenge extends JavaObject {
 	 * 
 	 * @return true, falls das übergebene Kürzel das Kürzel dieses Jahrgangs ist.
 	 */
-	public isKuerzel(kuerzel : String | null) : boolean {
+	public isKuerzel(kuerzel : string | null) : boolean {
 		if (this.daten === null) 
 			return false;
 		return JavaObject.equalsTranspiler(this.daten.kuerzel, (kuerzel));
@@ -336,12 +336,12 @@ export class Jahrgaenge extends JavaObject {
 	 * 
 	 * @return true, falls der Jahrgang bei der Schulform existiert und ansonsten false
 	 */
-	public hasSchulformByKuerzel(kuerzel : String | null) : boolean {
+	public hasSchulformByKuerzel(kuerzel : string | null) : boolean {
 		if ((kuerzel === null) || JavaObject.equalsTranspiler("", (kuerzel))) 
 			return false;
 		if (this.daten.bezeichnungen !== null) {
 			for (let i : number = 0; i < this.daten.bezeichnungen.size(); i++){
-				let sfKuerzel : String | null = this.daten.bezeichnungen.get(i).schulform;
+				let sfKuerzel : string | null = this.daten.bezeichnungen.get(i).schulform;
 				if (JavaObject.equalsTranspiler(sfKuerzel, (kuerzel))) 
 					return true;
 			}
@@ -361,7 +361,7 @@ export class Jahrgaenge extends JavaObject {
 			return false;
 		if (this.daten.bezeichnungen !== null) {
 			for (let i : number = 0; i < this.daten.bezeichnungen.size(); i++){
-				let sfKuerzel : String | null = this.daten.bezeichnungen.get(i).schulform;
+				let sfKuerzel : string | null = this.daten.bezeichnungen.get(i).schulform;
 				if (JavaObject.equalsTranspiler(sfKuerzel, (schulform.daten.kuerzel))) 
 					return true;
 			}
@@ -374,7 +374,7 @@ export class Jahrgaenge extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -392,7 +392,7 @@ export class Jahrgaenge extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -446,7 +446,7 @@ export class Jahrgaenge extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : Jahrgaenge | null {
+	public static valueOf(name : string) : Jahrgaenge | null {
 		let tmp : Jahrgaenge | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

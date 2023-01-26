@@ -7,7 +7,7 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class LehrerBeschaeftigungsart extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -16,7 +16,7 @@ export class LehrerBeschaeftigungsart extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<LehrerBeschaeftigungsart> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, LehrerBeschaeftigungsart> = new Map<String, LehrerBeschaeftigungsart>();
+	private static readonly all_values_by_name : Map<string, LehrerBeschaeftigungsart> = new Map<string, LehrerBeschaeftigungsart>();
 
 	/**
 	 * Beschaeftigungsart 'Vollzeit' eines Lehrers 
@@ -106,12 +106,12 @@ export class LehrerBeschaeftigungsart extends JavaObject {
 	/**
 	 * Eine Hashmap mit allen Beschäftigungsarten, welche ihrer ID zugeordnet sind. 
 	 */
-	private static readonly _artenByID : HashMap<Number, LehrerBeschaeftigungsart | null> = new HashMap();
+	private static readonly _artenByID : HashMap<number, LehrerBeschaeftigungsart | null> = new HashMap();
 
 	/**
 	 * Eine Hashmap mit allen Beschäftigungsarten, welche dem Kürzel bzw. ASD-Schlüssel zugeordnet sind. 
 	 */
-	private static readonly _artenByKuerzel : HashMap<String, LehrerBeschaeftigungsart | null> = new HashMap();
+	private static readonly _artenByKuerzel : HashMap<string, LehrerBeschaeftigungsart | null> = new HashMap();
 
 	/**
 	 * Erzeugt eine neue Beschäftigungsart in der Aufzählung.
@@ -134,7 +134,7 @@ export class LehrerBeschaeftigungsart extends JavaObject {
 	 *    
 	 * @return die Map von den IDs der Beschäftigungsarten auf die zugehörigen Beschäftigungsarten
 	 */
-	private static getMapArtenByID() : HashMap<Number, LehrerBeschaeftigungsart | null> {
+	private static getMapArtenByID() : HashMap<number, LehrerBeschaeftigungsart | null> {
 		if (LehrerBeschaeftigungsart._artenByID.size() === 0) 
 			for (let l of LehrerBeschaeftigungsart.values()) 
 				LehrerBeschaeftigungsart._artenByID.put(l.daten.id, l);
@@ -147,7 +147,7 @@ export class LehrerBeschaeftigungsart extends JavaObject {
 	 *    
 	 * @return die Map von den Kürzeln der Beschäftigungsarten auf die zugehörigen Beschäftigungsarten
 	 */
-	private static getMapArtenByKuerzel() : HashMap<String, LehrerBeschaeftigungsart | null> {
+	private static getMapArtenByKuerzel() : HashMap<string, LehrerBeschaeftigungsart | null> {
 		if (LehrerBeschaeftigungsart._artenByKuerzel.size() === 0) 
 			for (let l of LehrerBeschaeftigungsart.values()) 
 				LehrerBeschaeftigungsart._artenByKuerzel.put(l.daten.kuerzel, l);
@@ -172,7 +172,7 @@ export class LehrerBeschaeftigungsart extends JavaObject {
 	 * 
 	 * @return die Beschäftigungsart oder null, falls das Kürzel ungültig ist
 	 */
-	public static getByKuerzel(kuerzel : String | null) : LehrerBeschaeftigungsart | null {
+	public static getByKuerzel(kuerzel : string | null) : LehrerBeschaeftigungsart | null {
 		return LehrerBeschaeftigungsart.getMapArtenByKuerzel().get(kuerzel);
 	}
 
@@ -181,7 +181,7 @@ export class LehrerBeschaeftigungsart extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -199,7 +199,7 @@ export class LehrerBeschaeftigungsart extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -253,7 +253,7 @@ export class LehrerBeschaeftigungsart extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : LehrerBeschaeftigungsart | null {
+	public static valueOf(name : string) : LehrerBeschaeftigungsart | null {
 		let tmp : LehrerBeschaeftigungsart | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

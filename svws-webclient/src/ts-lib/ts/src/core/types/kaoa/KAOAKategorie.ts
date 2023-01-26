@@ -9,7 +9,7 @@ import { Arrays, cast_java_util_Arrays } from '../../../java/util/Arrays';
 export class KAOAKategorie extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -18,7 +18,7 @@ export class KAOAKategorie extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<KAOAKategorie> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, KAOAKategorie> = new Map<String, KAOAKategorie>();
+	private static readonly all_values_by_name : Map<string, KAOAKategorie> = new Map<string, KAOAKategorie>();
 
 	/**
 	 * KAoA-Kategorie: Formen der Orientierung und Beratung 
@@ -83,12 +83,12 @@ export class KAOAKategorie extends JavaObject {
 	/**
 	 * Eine Hashmap mit allen Einträgen, welche ihrer ID zugeordnet sind. 
 	 */
-	private static readonly _statusByID : HashMap<Number, KAOAKategorie> = new HashMap();
+	private static readonly _statusByID : HashMap<number, KAOAKategorie> = new HashMap();
 
 	/**
 	 * Eine Hashmap mit allen Einträgen, welche dem Kürzel zugeordnet sind. 
 	 */
-	private static readonly _statusByKuerzel : HashMap<String, KAOAKategorie> = new HashMap();
+	private static readonly _statusByKuerzel : HashMap<string, KAOAKategorie> = new HashMap();
 
 	/**
 	 * Erzeugt ein neues Element in der Aufzählung.
@@ -111,7 +111,7 @@ export class KAOAKategorie extends JavaObject {
 	 *    
 	 * @return die Map von der ID auf die zugehörige Kategorie
 	 */
-	private static getMapStatusByID() : HashMap<Number, KAOAKategorie> {
+	private static getMapStatusByID() : HashMap<number, KAOAKategorie> {
 		if (KAOAKategorie._statusByID.size() === 0) 
 			for (let g of KAOAKategorie.values()) 
 				KAOAKategorie._statusByID.put(g.daten.id, g);
@@ -124,7 +124,7 @@ export class KAOAKategorie extends JavaObject {
 	 *    
 	 * @return die Map von dem Kürzel auf die zugehörige Kategorie
 	 */
-	private static getMapStatusByKuerzel() : HashMap<String, KAOAKategorie> {
+	private static getMapStatusByKuerzel() : HashMap<string, KAOAKategorie> {
 		if (KAOAKategorie._statusByKuerzel.size() === 0) 
 			for (let g of KAOAKategorie.values()) 
 				KAOAKategorie._statusByKuerzel.put(g.daten.kuerzel, g);
@@ -149,7 +149,7 @@ export class KAOAKategorie extends JavaObject {
 	 * 
 	 * @return die Kategorie oder null, falls das Kürzel ungültig ist
 	 */
-	public static getByKuerzel(kuerzel : String | null) : KAOAKategorie | null {
+	public static getByKuerzel(kuerzel : string | null) : KAOAKategorie | null {
 		return KAOAKategorie.getMapStatusByKuerzel().get(kuerzel);
 	}
 
@@ -158,7 +158,7 @@ export class KAOAKategorie extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -176,7 +176,7 @@ export class KAOAKategorie extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -230,7 +230,7 @@ export class KAOAKategorie extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : KAOAKategorie | null {
+	public static valueOf(name : string) : KAOAKategorie | null {
 		let tmp : KAOAKategorie | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

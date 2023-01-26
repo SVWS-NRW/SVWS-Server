@@ -8,17 +8,17 @@ export class ENMFloskelgruppe extends JavaObject {
 	/**
 	 * Das Kürzel der Floskelgruppe, z. B. AL1, AL2 oder ASV. 
 	 */
-	public kuerzel : String | null = null;
+	public kuerzel : string | null = null;
 
 	/**
 	 * Die textuelle Bezeichnung der Floskelgruppe, z. B. Allgemeine Floskeln oder Floskeln zum Arbeits- und Sozialverhalten. 
 	 */
-	public bezeichnung : String | null = null;
+	public bezeichnung : string | null = null;
 
 	/**
 	 * Die Hauptgruppe für Floskeln. Diese kann bei mehreren Floskelgruppen auftreten und fasst diese ggf. nochmals zusammen (z.B. ALLG) 
 	 */
-	public hauptgruppe : String | null = null;
+	public hauptgruppe : string | null = null;
 
 	/**
 	 * Die Liste der Floskeln, die dieser Floskelgruppe zugeordnet sind. 
@@ -37,9 +37,9 @@ export class ENMFloskelgruppe extends JavaObject {
 	public static transpilerFromJSON(json : string): ENMFloskelgruppe {
 		const obj = JSON.parse(json);
 		const result = new ENMFloskelgruppe();
-		result.kuerzel = typeof obj.kuerzel === "undefined" ? null : obj.kuerzel === null ? null : String(obj.kuerzel);
-		result.bezeichnung = typeof obj.bezeichnung === "undefined" ? null : obj.bezeichnung === null ? null : String(obj.bezeichnung);
-		result.hauptgruppe = typeof obj.hauptgruppe === "undefined" ? null : obj.hauptgruppe === null ? null : String(obj.hauptgruppe);
+		result.kuerzel = typeof obj.kuerzel === "undefined" ? null : obj.kuerzel === null ? null : obj.kuerzel;
+		result.bezeichnung = typeof obj.bezeichnung === "undefined" ? null : obj.bezeichnung === null ? null : obj.bezeichnung;
+		result.hauptgruppe = typeof obj.hauptgruppe === "undefined" ? null : obj.hauptgruppe === null ? null : obj.hauptgruppe;
 		if (!!obj.floskeln) {
 			for (let elem of obj.floskeln) {
 				result.floskeln?.add(ENMFloskel.transpilerFromJSON(JSON.stringify(elem)));
@@ -50,9 +50,9 @@ export class ENMFloskelgruppe extends JavaObject {
 
 	public static transpilerToJSON(obj : ENMFloskelgruppe) : string {
 		let result = '{';
-		result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : '"' + obj.kuerzel.valueOf() + '"') + ',';
-		result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : '"' + obj.bezeichnung.valueOf() + '"') + ',';
-		result += '"hauptgruppe" : ' + ((!obj.hauptgruppe) ? 'null' : '"' + obj.hauptgruppe.valueOf() + '"') + ',';
+		result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : '"' + obj.kuerzel + '"') + ',';
+		result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : '"' + obj.bezeichnung + '"') + ',';
+		result += '"hauptgruppe" : ' + ((!obj.hauptgruppe) ? 'null' : '"' + obj.hauptgruppe + '"') + ',';
 		if (!obj.floskeln) {
 			result += '"floskeln" : []';
 		} else {
@@ -73,13 +73,13 @@ export class ENMFloskelgruppe extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<ENMFloskelgruppe>) : string {
 		let result = '{';
 		if (typeof obj.kuerzel !== "undefined") {
-			result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : '"' + obj.kuerzel.valueOf() + '"') + ',';
+			result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : '"' + obj.kuerzel + '"') + ',';
 		}
 		if (typeof obj.bezeichnung !== "undefined") {
-			result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : '"' + obj.bezeichnung.valueOf() + '"') + ',';
+			result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : '"' + obj.bezeichnung + '"') + ',';
 		}
 		if (typeof obj.hauptgruppe !== "undefined") {
-			result += '"hauptgruppe" : ' + ((!obj.hauptgruppe) ? 'null' : '"' + obj.hauptgruppe.valueOf() + '"') + ',';
+			result += '"hauptgruppe" : ' + ((!obj.hauptgruppe) ? 'null' : '"' + obj.hauptgruppe + '"') + ',';
 		}
 		if (typeof obj.floskeln !== "undefined") {
 			if (!obj.floskeln) {

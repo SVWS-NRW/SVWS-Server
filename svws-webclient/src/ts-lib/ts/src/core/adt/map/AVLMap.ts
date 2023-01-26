@@ -108,7 +108,7 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 		} else throw new Error('invalid method overload');
 	}
 
-	public toString() : String {
+	public toString() : string {
 		return this._sub.toString();
 	}
 

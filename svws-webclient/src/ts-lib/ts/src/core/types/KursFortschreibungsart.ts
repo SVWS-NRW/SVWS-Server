@@ -5,7 +5,7 @@ import { JavaString, cast_java_lang_String } from '../../java/lang/JavaString';
 export class KursFortschreibungsart extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -14,7 +14,7 @@ export class KursFortschreibungsart extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<KursFortschreibungsart> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, KursFortschreibungsart> = new Map<String, KursFortschreibungsart>();
+	private static readonly all_values_by_name : Map<string, KursFortschreibungsart> = new Map<string, KursFortschreibungsart>();
 
 	/**
 	 * Keine Fortschreibung Kurs wird bei der Verstzung gelöscht. 
@@ -49,22 +49,22 @@ export class KursFortschreibungsart extends JavaObject {
 	/**
 	 * Das eindeutige einstelleige Kürzel der Kurs-Fortschreibungsart. 
 	 */
-	public readonly kuerzel : String;
+	public readonly kuerzel : string;
 
 	/**
 	 * Die Beschreibung der Kurs-Fortschreibungsart 
 	 */
-	public readonly beschreibung : String;
+	public readonly beschreibung : string;
 
 	/**
 	 * Gibt an, in welchem Schuljahr die Fortschreibungsart einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. 
 	 */
-	public readonly gueltigVon : Number | null;
+	public readonly gueltigVon : number | null;
 
 	/**
 	 * Gibt an, bis zu welchem Schuljahr die Fortschreibungsart gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. 
 	 */
-	public readonly gueltigBis : Number | null;
+	public readonly gueltigBis : number | null;
 
 	/**
 	 * Erstellt eine neue Kurs-Fortschreibungsart in der Aufzählung.
@@ -75,7 +75,7 @@ export class KursFortschreibungsart extends JavaObject {
 	 * @param gueltigVon     gibt an, in welchem Schuljahr die Fortschreibungsart einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 * @param gueltigBis     gibt an, bis zu welchem Schuljahr die Fortschreibungsart gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
-	private constructor(name : string, ordinal : number, id : number, kuerzel : String, beschreibung : String, gueltigVon : Number | null, gueltigBis : Number | null) {
+	private constructor(name : string, ordinal : number, id : number, kuerzel : string, beschreibung : string, gueltigVon : number | null, gueltigBis : number | null) {
 		super();
 		this.__name = name;
 		this.__ordinal = ordinal;
@@ -96,7 +96,7 @@ export class KursFortschreibungsart extends JavaObject {
 	 * 
 	 * @return die Kurs-Fortschreibungsart 
 	 */
-	public static fromID(id : Number | null) : KursFortschreibungsart | null {
+	public static fromID(id : number | null) : KursFortschreibungsart | null {
 		if (id === null) 
 			return KursFortschreibungsart.KEINE;
 		switch (id) {
@@ -120,7 +120,7 @@ export class KursFortschreibungsart extends JavaObject {
 	 * 
 	 * @return die Kurs-Fortschreibungsart 
 	 */
-	public static fromKuerzel(kuerzel : String | null) : KursFortschreibungsart | null {
+	public static fromKuerzel(kuerzel : string | null) : KursFortschreibungsart | null {
 		if (kuerzel === null) 
 			return KursFortschreibungsart.KEINE;
 		switch (kuerzel) {
@@ -144,7 +144,7 @@ export class KursFortschreibungsart extends JavaObject {
 	 * 
 	 * @return true, falls das kürzel gültig ist.
 	 */
-	public static isValidKuerzel(kuerzel : String | null) : boolean {
+	public static isValidKuerzel(kuerzel : string | null) : boolean {
 		for (let art of KursFortschreibungsart.values()) 
 			if (JavaObject.equalsTranspiler(art.kuerzel, (kuerzel))) 
 				return true;
@@ -156,7 +156,7 @@ export class KursFortschreibungsart extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -174,7 +174,7 @@ export class KursFortschreibungsart extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -228,7 +228,7 @@ export class KursFortschreibungsart extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : KursFortschreibungsart | null {
+	public static valueOf(name : string) : KursFortschreibungsart | null {
 		let tmp : KursFortschreibungsart | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

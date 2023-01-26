@@ -90,7 +90,7 @@ export class LogConsumerVector extends JavaObject implements Consumer<LogData> {
 	 * 
 	 * @return die gesammelten Log-Informationen als Liste von Strings
 	 */
-	public getStrings() : List<String> | null;
+	public getStrings() : List<string> | null;
 
 	/**
 	 * Gibt die gesammelten Log-Informationen als Liste von Strings zurück, die alle
@@ -100,22 +100,22 @@ export class LogConsumerVector extends JavaObject implements Consumer<LogData> {
 	 * 
 	 * @return die gesammelten Log-Informationen als Liste von Strings
 	 */
-	public getStrings(indent : String) : List<String> | null;
+	public getStrings(indent : string) : List<string> | null;
 
 	/**
 	 * Implementation for method overloads of 'getStrings'
 	 */
-	public getStrings(__param0? : String) : List<String> | null {
+	public getStrings(__param0? : string) : List<string> | null {
 		if ((typeof __param0 === "undefined")) {
 			return this.getStrings("");
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof String) || (typeof __param0 === "string")))) {
-			let indent : String = __param0;
-			let result : Vector<String> | null = new Vector();
+		} else if (((typeof __param0 !== "undefined") && (typeof __param0 === "string"))) {
+			let indent : string = __param0;
+			let result : Vector<string> | null = new Vector();
 			for (let i : number = 0; i < this.logData.size(); i++){
 				let data : LogData = this.logData.get(i);
 				if (data === null) 
 					continue;
-				result.add(indent.valueOf() + data.getText().valueOf());
+				result.add(indent! + data.getText()!);
 			}
 			return result;
 		} else throw new Error('invalid method overload');
@@ -130,7 +130,7 @@ export class LogConsumerVector extends JavaObject implements Consumer<LogData> {
 	 *   
 	 * @return der Text der Log-Informationen für das Log-Level LogLevel.INFO
 	 */
-	public getText() : String;
+	public getText() : string;
 
 	/**
 	 * Gibt die gesammelten Log-Informationen als Text zurück, bei dem
@@ -144,7 +144,7 @@ export class LogConsumerVector extends JavaObject implements Consumer<LogData> {
 	 * 
 	 * @return der Text der Log-Informationen für das angegebene Log-Level
 	 */
-	public getText(level : LogLevel) : String;
+	public getText(level : LogLevel) : string;
 
 	/**
 	 * Gibt die gesammelten Log-Informationen als Text zurück, bei dem
@@ -159,20 +159,20 @@ export class LogConsumerVector extends JavaObject implements Consumer<LogData> {
 	 * 
 	 * @return der Text der Log-Informationen für das angegebene Log-Level
 	 */
-	public getText(level : LogLevel, indent : String) : String;
+	public getText(level : LogLevel, indent : string) : string;
 
 	/**
 	 * Implementation for method overloads of 'getText'
 	 */
-	public getText(__param0? : LogLevel, __param1? : String) : String {
+	public getText(__param0? : LogLevel, __param1? : string) : string {
 		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined")) {
 			return this.getText(LogLevel.INFO, "");
 		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.logger.LogLevel')))) && (typeof __param1 === "undefined")) {
 			let level : LogLevel = cast_de_nrw_schule_svws_core_logger_LogLevel(__param0);
 			return this.getText(level, "");
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.logger.LogLevel')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof String) || (typeof __param1 === "string")))) {
+		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.logger.LogLevel')))) && ((typeof __param1 !== "undefined") && (typeof __param1 === "string"))) {
 			let level : LogLevel = cast_de_nrw_schule_svws_core_logger_LogLevel(__param0);
-			let indent : String = __param1;
+			let indent : string = __param1;
 			let sb : StringBuilder | null = new StringBuilder();
 			for (let i : number = 0; i < this.logData.size(); i++){
 				let data : LogData | null = this.logData.get(i);

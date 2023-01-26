@@ -8,7 +8,7 @@ import { KAOAZusatzmerkmal, cast_de_nrw_schule_svws_core_types_kaoa_KAOAZusatzme
 export class KAOAEbene4 extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -17,7 +17,7 @@ export class KAOAEbene4 extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<KAOAEbene4> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, KAOAEbene4> = new Map<String, KAOAEbene4>();
+	private static readonly all_values_by_name : Map<string, KAOAEbene4> = new Map<string, KAOAEbene4>();
 
 	/**
 	 * KAoA-Eintrag der SBO Ebene 4: Langzeitpraktikum 1-tägig 
@@ -157,12 +157,12 @@ export class KAOAEbene4 extends JavaObject {
 	/**
 	 * Eine Hashmap mit allen Einträgen, welche ihrer ID zugeordnet sind. 
 	 */
-	private static readonly _statusByID : HashMap<Number, KAOAEbene4> = new HashMap();
+	private static readonly _statusByID : HashMap<number, KAOAEbene4> = new HashMap();
 
 	/**
 	 * Eine Hashmap mit allen Einträgen, welche dem Kürzel zugeordnet sind. 
 	 */
-	private static readonly _statusByKuerzel : HashMap<String, KAOAEbene4> = new HashMap();
+	private static readonly _statusByKuerzel : HashMap<string, KAOAEbene4> = new HashMap();
 
 	/**
 	 * Erzeugt ein neues Element in der Aufzählung.
@@ -185,7 +185,7 @@ export class KAOAEbene4 extends JavaObject {
 	 *    
 	 * @return die Map von der ID auf den zugehörigen Eintrag der SBO Ebene 4
 	 */
-	private static getMapStatusByID() : HashMap<Number, KAOAEbene4> {
+	private static getMapStatusByID() : HashMap<number, KAOAEbene4> {
 		if (KAOAEbene4._statusByID.size() === 0) 
 			for (let g of KAOAEbene4.values()) 
 				KAOAEbene4._statusByID.put(g.daten.id, g);
@@ -198,7 +198,7 @@ export class KAOAEbene4 extends JavaObject {
 	 *    
 	 * @return die Map von dem Kürzel auf den zugehörigen Eintrag der SBO Ebene 4
 	 */
-	private static getMapStatusByKuerzel() : HashMap<String, KAOAEbene4> {
+	private static getMapStatusByKuerzel() : HashMap<string, KAOAEbene4> {
 		if (KAOAEbene4._statusByKuerzel.size() === 0) 
 			for (let g of KAOAEbene4.values()) 
 				KAOAEbene4._statusByKuerzel.put(g.daten.kuerzel, g);
@@ -223,7 +223,7 @@ export class KAOAEbene4 extends JavaObject {
 	 * 
 	 * @return der Eintrag der SBO Ebene 4 oder null, falls das Kürzel ungültig ist
 	 */
-	public static getByKuerzel(kuerzel : String | null) : KAOAEbene4 | null {
+	public static getByKuerzel(kuerzel : string | null) : KAOAEbene4 | null {
 		return KAOAEbene4.getMapStatusByKuerzel().get(kuerzel);
 	}
 
@@ -232,7 +232,7 @@ export class KAOAEbene4 extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -250,7 +250,7 @@ export class KAOAEbene4 extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -304,7 +304,7 @@ export class KAOAEbene4 extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : KAOAEbene4 | null {
+	public static valueOf(name : string) : KAOAEbene4 | null {
 		let tmp : KAOAEbene4 | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

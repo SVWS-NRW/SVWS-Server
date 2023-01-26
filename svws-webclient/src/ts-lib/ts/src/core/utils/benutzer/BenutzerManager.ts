@@ -21,12 +21,12 @@ export class BenutzerManager extends JavaObject {
 	/**
 	 * Eine Map zum schnellen Zugriff auf die Benutzergruppendaten 
 	 */
-	private readonly _mapGruppen : HashMap<Number, BenutzergruppeDaten> = new HashMap();
+	private readonly _mapGruppen : HashMap<number, BenutzergruppeDaten> = new HashMap();
 
 	/**
 	 * Die Ids der Benutzergruppen des Benutzers 
 	 */
-	private readonly _setGruppenIDs : HashSet<Number> = new HashSet();
+	private readonly _setGruppenIDs : HashSet<number> = new HashSet();
 
 	/**
 	 *  Eine Map, welche zu einer Kompetenz eine Liste zuordnet, welche alle
@@ -80,11 +80,11 @@ export class BenutzerManager extends JavaObject {
 			for (let kID of pDaten.kompetenzen) {
 				if (kID === null) 
 					throw new NullPointerException("Fehlerhafte Daten: Die Liste der Kompetenzen darf keine Null-Werte enthalten.")
-				let komp : BenutzerKompetenz | null = BenutzerKompetenz.getByID(kID.valueOf());
+				let komp : BenutzerKompetenz | null = BenutzerKompetenz.getByID(kID!);
 				if (komp === null) 
-					throw new NullPointerException("Fehlerhafte Daten: Die Kompetenz mit der ID " + kID.valueOf() + " existiert nicht.")
+					throw new NullPointerException("Fehlerhafte Daten: Die Kompetenz mit der ID " + kID! + " existiert nicht.")
 				if (this._setKompetenzen.contains(komp)) 
-					throw new IllegalArgumentException("Die Kompetenz mit der ID " + kID.valueOf() + " wurde mehrfach bei der Gruppe eingetragen.")
+					throw new IllegalArgumentException("Die Kompetenz mit der ID " + kID! + " wurde mehrfach bei der Gruppe eingetragen.")
 				this._setKompetenzen.add(komp);
 				this._setKompetenzenAlle.add(komp);
 			}
@@ -104,9 +104,9 @@ export class BenutzerManager extends JavaObject {
 		this._mapGruppen.put(bgd.id, bgd);
 		this._setGruppenIDs.add(bgd.id);
 		for (let kid of bgd.kompetenzen) {
-			let komp : BenutzerKompetenz | null = BenutzerKompetenz.getByID(kid.valueOf());
+			let komp : BenutzerKompetenz | null = BenutzerKompetenz.getByID(kid!);
 			if (komp === null) 
-				throw new NullPointerException("Fehlerhafte Daten: Die Kompetenz mit der ID " + kid.valueOf() + " existiert nicht.")
+				throw new NullPointerException("Fehlerhafte Daten: Die Kompetenz mit der ID " + kid! + " existiert nicht.")
 			this._setKompetenzenAlle.add(komp);
 			let gruppen : Vector<BenutzergruppeDaten> | null = this._mapKompetenzenVonGruppe.get(komp);
 			if (gruppen === null) 
@@ -126,7 +126,7 @@ export class BenutzerManager extends JavaObject {
 		this._mapGruppen.remove(bgd.id);
 		this._setGruppenIDs.remove(bgd.id);
 		for (let kid of bgd.kompetenzen) {
-			let komp : BenutzerKompetenz | null = BenutzerKompetenz.getByID(kid.valueOf());
+			let komp : BenutzerKompetenz | null = BenutzerKompetenz.getByID(kid!);
 			if (komp !== null) {
 				let gruppen : Vector<BenutzergruppeDaten> | null = this._mapKompetenzenVonGruppe.get(komp);
 				if (gruppen === null) 
@@ -209,7 +209,7 @@ export class BenutzerManager extends JavaObject {
 	 * 
 	 * @return Gibt den Anmeldenamen des Benutzers zurück.
 	 */
-	public getAnmeldename() : String {
+	public getAnmeldename() : string {
 		return this._daten.name;
 	}
 
@@ -218,7 +218,7 @@ export class BenutzerManager extends JavaObject {
 	 * 
 	 * @param name der neue Anmeldename des Benutzers
 	 */
-	public setAnmeldename(name : String) : void {
+	public setAnmeldename(name : string) : void {
 		if (JavaObject.equalsTranspiler("", (name))) 
 			throw new IllegalArgumentException("Der Anmeldename eines Benutzers darf nicht leer sein.")
 		this._daten.name = name;
@@ -229,7 +229,7 @@ export class BenutzerManager extends JavaObject {
 	 * 
 	 * @return Gibt den Anzeigenamen des Benutzers zurück.
 	 */
-	public getAnzeigename() : String {
+	public getAnzeigename() : string {
 		return this._daten.anzeigename;
 	}
 
@@ -238,7 +238,7 @@ export class BenutzerManager extends JavaObject {
 	 * 
 	 * @param name der neue Anzeigenamen des Benutzers
 	 */
-	public setAnzeigename(name : String) : void {
+	public setAnzeigename(name : string) : void {
 		if (JavaObject.equalsTranspiler("", (name))) 
 			throw new IllegalArgumentException("Der Anmeldename eines Benutzers darf nicht leer sein.")
 		this._daten.anzeigename = name;

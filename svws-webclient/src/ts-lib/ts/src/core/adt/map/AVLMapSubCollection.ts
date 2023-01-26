@@ -23,11 +23,11 @@ export class AVLMapSubCollection<K, V> extends JavaObject implements Collection<
 		this._sub = sub;
 	}
 
-	public toString() : String {
-		let s : String | null = "";
+	public toString() : string {
+		let s : string | null = "";
 		for (let value of this) 
 			s += (s.length === 0 ? "" : ", ") + value;
-		return "values = [" + s.valueOf() + "], size = " + this.size() + " --> " + this._sub.toString().valueOf();
+		return "values = [" + s! + "], size = " + this.size() + " --> " + this._sub.toString()!;
 	}
 
 	public size() : number {

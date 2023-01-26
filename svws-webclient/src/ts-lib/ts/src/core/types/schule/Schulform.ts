@@ -8,7 +8,7 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 export class Schulform extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -17,7 +17,7 @@ export class Schulform extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<Schulform> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, Schulform> = new Map<String, Schulform>();
+	private static readonly all_values_by_name : Map<string, Schulform> = new Map<string, Schulform>();
 
 	/**
 	 * Schulform Berufskolleg 
@@ -132,12 +132,12 @@ export class Schulform extends JavaObject {
 	/**
 	 * Ein Vector mit allen definierten Schulformen 
 	 */
-	private static readonly _schulformen : HashMap<String, Schulform | null> = new HashMap();
+	private static readonly _schulformen : HashMap<string, Schulform | null> = new HashMap();
 
 	/**
 	 * Ein Vector mit allen definierten Schulformen, die eine Statistiknummer zugewiesen haben. 
 	 */
-	private static readonly _schulformenNummer : HashMap<String, Schulform | null> = new HashMap();
+	private static readonly _schulformenNummer : HashMap<string, Schulform | null> = new HashMap();
 
 	/**
 	 * Erzeugt eine neue Schulform in der Aufzählung.
@@ -160,7 +160,7 @@ export class Schulform extends JavaObject {
 	 *    
 	 * @return die Map von den Kürzels der Schulformen auf die zugehörigen Schulformen
 	 */
-	private static getMapSchulformenByKuerzel() : HashMap<String, Schulform | null> {
+	private static getMapSchulformenByKuerzel() : HashMap<string, Schulform | null> {
 		if (Schulform._schulformen.size() === 0) {
 			for (let s of Schulform.values()) {
 				if (s.daten !== null) 
@@ -176,7 +176,7 @@ export class Schulform extends JavaObject {
 	 *    
 	 * @return die Map von den Kürzels der Schulformen auf die zugehörigen Schulformen
 	 */
-	private static getMapSchulformenByNummer() : HashMap<String, Schulform | null> {
+	private static getMapSchulformenByNummer() : HashMap<string, Schulform | null> {
 		if (Schulform._schulformenNummer.size() === 0) 
 			for (let s of Schulform.values()) 
 				if ((s.daten !== null) && (s.daten.nummer !== null)) 
@@ -191,7 +191,7 @@ export class Schulform extends JavaObject {
 	 * 
 	 * @return die Schulform oder null, falls das Kürzel ungültig ist
 	 */
-	public static getByKuerzel(kuerzel : String | null) : Schulform | null {
+	public static getByKuerzel(kuerzel : string | null) : Schulform | null {
 		return Schulform.getMapSchulformenByKuerzel().get(kuerzel);
 	}
 
@@ -202,7 +202,7 @@ export class Schulform extends JavaObject {
 	 * 
 	 * @return die Schulform oder null, falls keine Schulform mit dieser Nummer vorhanden ist
 	 */
-	public static getByNummer(nummer : String | null) : Schulform | null {
+	public static getByNummer(nummer : string | null) : Schulform | null {
 		return Schulform.getMapSchulformenByNummer().get(nummer);
 	}
 
@@ -226,7 +226,7 @@ export class Schulform extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -244,7 +244,7 @@ export class Schulform extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -298,7 +298,7 @@ export class Schulform extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : Schulform | null {
+	public static valueOf(name : string) : Schulform | null {
 		let tmp : Schulform | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

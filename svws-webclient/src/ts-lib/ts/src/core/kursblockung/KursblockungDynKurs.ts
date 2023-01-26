@@ -132,7 +132,7 @@ export class KursblockungDynKurs extends JavaObject {
 		}
 	}
 
-	public toString() : String {
+	public toString() : string {
 		return "Kurs (dbID=" + this.databaseID + ", intiD=" + this.internalID + ")";
 	}
 
@@ -376,7 +376,7 @@ export class KursblockungDynKurs extends JavaObject {
 	 * 
 	 * @param pSchienenWahl Die Schienen (0-indiziert), in denen der Kurs liegen soll. 
 	 */
-	public aktionVerteileAufSchienen(pSchienenWahl : LinkedCollection<Number>) : void {
+	public aktionVerteileAufSchienen(pSchienenWahl : LinkedCollection<number>) : void {
 		for (let iLage : number = this.schienenLageFixiert; iLage < this.schienenLage.length; iLage++){
 			let schieneL : KursblockungDynSchiene = this.schienenLage[iLage];
 			if (pSchienenWahl.contains(schieneL.gibNr())) {
@@ -457,7 +457,7 @@ export class KursblockungDynKurs extends JavaObject {
 	 * @param schuelerArr Nötig, um den Kursen SuS zuzuordnen. 
 	 */
 	debug(schuelerArr : Array<KursblockungDynSchueler>) : void {
-		console.log(JSON.stringify(this.toString().valueOf() + " --> " + this.schuelerAnz + " SuS."));
+		console.log(JSON.stringify(this.toString()! + " --> " + this.schuelerAnz + " SuS."));
 		for (let s of schuelerArr) {
 			let kurse : Array<KursblockungDynKurs | null> = s.gibKurswahlen();
 			for (let kurs of kurse) {

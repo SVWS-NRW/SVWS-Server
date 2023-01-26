@@ -83,7 +83,7 @@ export class KursblockungDynFachart extends JavaObject {
 	 *Durch das Überschreiben dieser Methode, liefert dieses Objekt eine automatische String-Darstellung,
 	 * beispielsweise 'D;LK'. 
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.gostFach.kuerzel + ";" + this.gostKursart.kuerzel;
 	}
 

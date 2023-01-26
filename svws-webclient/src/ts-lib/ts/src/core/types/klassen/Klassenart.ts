@@ -14,7 +14,7 @@ import { Pair, cast_de_nrw_schule_svws_core_adt_Pair } from '../../../core/adt/P
 export class Klassenart extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -23,7 +23,7 @@ export class Klassenart extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<Klassenart> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, Klassenart> = new Map<String, Klassenart>();
+	private static readonly all_values_by_name : Map<string, Klassenart> = new Map<string, Klassenart>();
 
 	/**
 	 * Klassenart: Kein Eintrag 
@@ -88,12 +88,12 @@ export class Klassenart extends JavaObject {
 	/**
 	 * Eine HashMap mit allen zulässigen Klassenarten. Der Zugriff erfolgt dabei über die ID 
 	 */
-	private static readonly _mapID : HashMap<Number, Klassenart | null> = new HashMap();
+	private static readonly _mapID : HashMap<number, Klassenart | null> = new HashMap();
 
 	/**
 	 * Eine HashMap mit zulässigen Klassenarten. Der Zugriff erfolgt dabei über das Kürzel 
 	 */
-	private static readonly _mapKuerzel : HashMap<String, Klassenart | null> = new HashMap();
+	private static readonly _mapKuerzel : HashMap<string, Klassenart | null> = new HashMap();
 
 	/**
 	 * Die Informationen zu den Kombinationen aus Schulformen und -gliederungen, wo die Klassenart zulässig ist 
@@ -132,7 +132,7 @@ export class Klassenart extends JavaObject {
 	 *    
 	 * @return die Map von den IDs auf die zugehörigen Klassenarten
 	 */
-	private static getMapByID() : HashMap<Number, Klassenart | null> {
+	private static getMapByID() : HashMap<number, Klassenart | null> {
 		if (Klassenart._mapID.size() === 0) 
 			for (let s of Klassenart.values()) 
 				if (s.daten !== null) 
@@ -146,7 +146,7 @@ export class Klassenart extends JavaObject {
 	 *    
 	 * @return die Map von den Kürzeln auf die zugehörigen Klassenarten
 	 */
-	private static getMapByKuerzel() : HashMap<String, Klassenart | null> {
+	private static getMapByKuerzel() : HashMap<string, Klassenart | null> {
 		if (Klassenart._mapKuerzel.size() === 0) 
 			for (let s of Klassenart.values()) 
 				if (s.daten !== null) 
@@ -207,7 +207,7 @@ export class Klassenart extends JavaObject {
 	 * 
 	 * @return die Klassenart oder null, wenn keine Zuordnung für das übergebene Kürzel vorhanden ist
 	 */
-	public static getByASDKursart(kursart : String | null) : Klassenart | null {
+	public static getByASDKursart(kursart : string | null) : Klassenart | null {
 		return Klassenart.getMapByKuerzel().get(kursart);
 	}
 
@@ -216,7 +216,7 @@ export class Klassenart extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -234,7 +234,7 @@ export class Klassenart extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -288,7 +288,7 @@ export class Klassenart extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : Klassenart | null {
+	public static valueOf(name : string) : Klassenart | null {
 		let tmp : Klassenart | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

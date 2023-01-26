@@ -4,7 +4,7 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class BenutzerTyp extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -13,7 +13,7 @@ export class BenutzerTyp extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<BenutzerTyp> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, BenutzerTyp> = new Map<String, BenutzerTyp>();
+	private static readonly all_values_by_name : Map<string, BenutzerTyp> = new Map<string, BenutzerTyp>();
 
 	/**
 	 * Ein allgemeiner Benutzertyp 
@@ -43,7 +43,7 @@ export class BenutzerTyp extends JavaObject {
 	/**
 	 * Die textuelle Bezeichnung des Benutzertyps. 
 	 */
-	public readonly bezeichnung : String;
+	public readonly bezeichnung : string;
 
 	/**
 	 * Erzeugt einen neuen Benutzertyp für die Aufzählung.
@@ -51,7 +51,7 @@ export class BenutzerTyp extends JavaObject {
 	 * @param id                  die ID des Benutzertyps
 	 * @param bezeichnung         die Bezeichnung des Benutzertyps
 	 */
-	private constructor(name : string, ordinal : number, id : number, bezeichnung : String) {
+	private constructor(name : string, ordinal : number, id : number, bezeichnung : string) {
 		super();
 		this.__name = name;
 		this.__ordinal = ordinal;
@@ -88,7 +88,7 @@ export class BenutzerTyp extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -106,7 +106,7 @@ export class BenutzerTyp extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -160,7 +160,7 @@ export class BenutzerTyp extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : BenutzerTyp | null {
+	public static valueOf(name : string) : BenutzerTyp | null {
 		let tmp : BenutzerTyp | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

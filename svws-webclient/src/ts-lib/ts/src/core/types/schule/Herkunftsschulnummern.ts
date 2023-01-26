@@ -10,7 +10,7 @@ import { Pair, cast_de_nrw_schule_svws_core_adt_Pair } from '../../../core/adt/P
 export class Herkunftsschulnummern extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -19,7 +19,7 @@ export class Herkunftsschulnummern extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<Herkunftsschulnummern> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, Herkunftsschulnummern> = new Map<String, Herkunftsschulnummern>();
+	private static readonly all_values_by_name : Map<string, Herkunftsschulnummern> = new Map<string, Herkunftsschulnummern>();
 
 	/**
 	 * Herkunft Schulnummer : Schule aus dem sonstigen Ausland 
@@ -144,7 +144,7 @@ export class Herkunftsschulnummern extends JavaObject {
 	/**
 	 * Eine Hashmap mit allen definierten Herkunftsschulnummern, zugeordnet zu ihren Schulnummern 
 	 */
-	private static readonly _mapBySchulnummer : HashMap<Number, Herkunftsschulnummern | null> = new HashMap();
+	private static readonly _mapBySchulnummer : HashMap<number, Herkunftsschulnummern | null> = new HashMap();
 
 	/**
 	 * Erzeugt eine neue Herkunftsschulnummer in der Aufzählung.
@@ -167,7 +167,7 @@ export class Herkunftsschulnummern extends JavaObject {
 	 *    
 	 * @return die Map von den Kürzeln der Herkunftsschulnummern auf die zugehörigen Herkunftsschulnummern
 	 */
-	private static getMapBySchulnummer() : HashMap<Number, Herkunftsschulnummern | null> {
+	private static getMapBySchulnummer() : HashMap<number, Herkunftsschulnummern | null> {
 		if (Herkunftsschulnummern._mapBySchulnummer.size() === 0) {
 			for (let s of Herkunftsschulnummern.values()) {
 				if (s.daten !== null) 
@@ -184,7 +184,7 @@ export class Herkunftsschulnummern extends JavaObject {
 	 * 
 	 * @return die Herkunftsschulnummer oder null, falls die Schulnummer hier nicht vohanden ist
 	 */
-	public static getByKuerzel(nummer : Number | null) : Herkunftsschulnummern | null {
+	public static getByKuerzel(nummer : number | null) : Herkunftsschulnummern | null {
 		return Herkunftsschulnummern.getMapBySchulnummer().get(nummer);
 	}
 
@@ -193,7 +193,7 @@ export class Herkunftsschulnummern extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -211,7 +211,7 @@ export class Herkunftsschulnummern extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -265,7 +265,7 @@ export class Herkunftsschulnummern extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : Herkunftsschulnummern | null {
+	public static valueOf(name : string) : Herkunftsschulnummern | null {
 		let tmp : Herkunftsschulnummern | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

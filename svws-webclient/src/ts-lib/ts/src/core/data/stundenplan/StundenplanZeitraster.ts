@@ -21,12 +21,12 @@ export class StundenplanZeitraster extends JavaObject {
 	/**
 	 * Die Uhrzeit, wann die Unterrichtsstunde beginnt. 
 	 */
-	public stundenbeginn : String = "";
+	public stundenbeginn : string = "";
 
 	/**
 	 * Die Uhrzeit, wann die Unterrichtsstunde endet. 
 	 */
-	public stundenende : String = "";
+	public stundenende : string = "";
 
 
 	/**
@@ -43,20 +43,20 @@ export class StundenplanZeitraster extends JavaObject {
 	 * @param stundenbeginn      die Uhrzeit, wann die Unterrichtsstunde beginnt
 	 * @param stundenende        die Uhrzeit, wann die Unterrichtsstunde endet
 	 */
-	public constructor(id : number, wochentag : number, unterrichtstunde : number, stundenbeginn : String, stundenende : String);
+	public constructor(id : number, wochentag : number, unterrichtstunde : number, stundenbeginn : string, stundenende : string);
 
 	/**
 	 * Implementation for method overloads of 'constructor'
 	 */
-	public constructor(__param0? : number, __param1? : number, __param2? : number, __param3? : String, __param4? : String) {
+	public constructor(__param0? : number, __param1? : number, __param2? : number, __param3? : string, __param4? : string) {
 		super();
 		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined") && (typeof __param2 === "undefined") && (typeof __param3 === "undefined") && (typeof __param4 === "undefined")) {
-			} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && typeof __param1 === "number") && ((typeof __param2 !== "undefined") && typeof __param2 === "number") && ((typeof __param3 !== "undefined") && ((__param3 instanceof String) || (typeof __param3 === "string"))) && ((typeof __param4 !== "undefined") && ((__param4 instanceof String) || (typeof __param4 === "string")))) {
+			} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && typeof __param1 === "number") && ((typeof __param2 !== "undefined") && typeof __param2 === "number") && ((typeof __param3 !== "undefined") && (typeof __param3 === "string")) && ((typeof __param4 !== "undefined") && (typeof __param4 === "string"))) {
 			let id : number = __param0 as number;
 			let wochentag : number = __param1 as number;
 			let unterrichtstunde : number = __param2 as number;
-			let stundenbeginn : String = __param3;
-			let stundenende : String = __param4;
+			let stundenbeginn : string = __param3;
+			let stundenende : string = __param4;
 			this.id = id;
 			this.wochentag = wochentag;
 			this.unterrichtstunde = unterrichtstunde;
@@ -83,10 +83,10 @@ export class StundenplanZeitraster extends JavaObject {
 		result.unterrichtstunde = obj.unterrichtstunde;
 		if (typeof obj.stundenbeginn === "undefined")
 			 throw new Error('invalid json format, missing attribute stundenbeginn');
-		result.stundenbeginn = String(obj.stundenbeginn);
+		result.stundenbeginn = obj.stundenbeginn;
 		if (typeof obj.stundenende === "undefined")
 			 throw new Error('invalid json format, missing attribute stundenende');
-		result.stundenende = String(obj.stundenende);
+		result.stundenende = obj.stundenende;
 		return result;
 	}
 
@@ -95,8 +95,8 @@ export class StundenplanZeitraster extends JavaObject {
 		result += '"id" : ' + obj.id + ',';
 		result += '"wochentag" : ' + obj.wochentag + ',';
 		result += '"unterrichtstunde" : ' + obj.unterrichtstunde + ',';
-		result += '"stundenbeginn" : ' + '"' + obj.stundenbeginn.valueOf() + '"' + ',';
-		result += '"stundenende" : ' + '"' + obj.stundenende.valueOf() + '"' + ',';
+		result += '"stundenbeginn" : ' + '"' + obj.stundenbeginn! + '"' + ',';
+		result += '"stundenende" : ' + '"' + obj.stundenende! + '"' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -114,10 +114,10 @@ export class StundenplanZeitraster extends JavaObject {
 			result += '"unterrichtstunde" : ' + obj.unterrichtstunde + ',';
 		}
 		if (typeof obj.stundenbeginn !== "undefined") {
-			result += '"stundenbeginn" : ' + '"' + obj.stundenbeginn.valueOf() + '"' + ',';
+			result += '"stundenbeginn" : ' + '"' + obj.stundenbeginn + '"' + ',';
 		}
 		if (typeof obj.stundenende !== "undefined") {
-			result += '"stundenende" : ' + '"' + obj.stundenende.valueOf() + '"' + ',';
+			result += '"stundenende" : ' + '"' + obj.stundenende + '"' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

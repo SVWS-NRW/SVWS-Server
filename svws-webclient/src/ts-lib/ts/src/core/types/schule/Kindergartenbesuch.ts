@@ -6,7 +6,7 @@ import { KindergartenbesuchKatalogEintrag, cast_de_nrw_schule_svws_core_data_sch
 export class Kindergartenbesuch extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -15,7 +15,7 @@ export class Kindergartenbesuch extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<Kindergartenbesuch> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, Kindergartenbesuch> = new Map<String, Kindergartenbesuch>();
+	private static readonly all_values_by_name : Map<string, Kindergartenbesuch> = new Map<string, Kindergartenbesuch>();
 
 	/**
 	 * Kein Kindergartenbesuch 
@@ -60,7 +60,7 @@ export class Kindergartenbesuch extends JavaObject {
 	/**
 	 * Eine Hashmap mit allen definierten Dauern des Kindergartenbesuchs, zugeordnet zu ihren Kürzeln 
 	 */
-	private static readonly _mapKuerzel : HashMap<Number, Kindergartenbesuch | null> = new HashMap();
+	private static readonly _mapKuerzel : HashMap<number, Kindergartenbesuch | null> = new HashMap();
 
 	/**
 	 * Erzeugt einen neuen Eintrag in der Aufzählung.
@@ -84,7 +84,7 @@ export class Kindergartenbesuch extends JavaObject {
 	 *    
 	 * @return die Map von den Kürzeln auf den zugehörigen Core-Type-Wert
 	 */
-	private static getMapByKuerzel() : HashMap<Number, Kindergartenbesuch | null> {
+	private static getMapByKuerzel() : HashMap<number, Kindergartenbesuch | null> {
 		if (Kindergartenbesuch._mapKuerzel.size() === 0) {
 			for (let s of Kindergartenbesuch.values()) {
 				if (s.daten !== null) 
@@ -110,7 +110,7 @@ export class Kindergartenbesuch extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -128,7 +128,7 @@ export class Kindergartenbesuch extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -182,7 +182,7 @@ export class Kindergartenbesuch extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : Kindergartenbesuch | null {
+	public static valueOf(name : string) : Kindergartenbesuch | null {
 		let tmp : Kindergartenbesuch | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

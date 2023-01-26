@@ -12,7 +12,7 @@ export class KlausurblockungException extends RuntimeException {
 	 * 
 	 * @param fehlermeldung Eine Beschreibung des Fehlers. 
 	 */
-	public constructor(fehlermeldung : String) {
+	public constructor(fehlermeldung : string) {
 		super(fehlermeldung);
 	}
 

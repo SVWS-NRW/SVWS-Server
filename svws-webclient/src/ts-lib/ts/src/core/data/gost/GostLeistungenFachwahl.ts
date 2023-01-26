@@ -14,7 +14,7 @@ export class GostLeistungenFachwahl extends JavaObject {
 	/**
 	 * Die Nummer des Abiturfaches, sofern es sich um ein Abiturfach handelt - ansonsten null 
 	 */
-	public abiturfach : Number | null = null;
+	public abiturfach : number | null = null;
 
 	/**
 	 * Gibt an, ob es sich um eine neu einsetzende Fremdsprache handelt oder nicht. 
@@ -39,7 +39,7 @@ export class GostLeistungenFachwahl extends JavaObject {
 		const obj = JSON.parse(json);
 		const result = new GostLeistungenFachwahl();
 		result.fach = ((typeof obj.fach === "undefined") || (obj.fach === null)) ? null : GostFach.transpilerFromJSON(JSON.stringify(obj.fach));
-		result.abiturfach = typeof obj.abiturfach === "undefined" ? null : obj.abiturfach === null ? null : Number(obj.abiturfach);
+		result.abiturfach = typeof obj.abiturfach === "undefined" ? null : obj.abiturfach === null ? null : obj.abiturfach;
 		if (typeof obj.istFSNeu === "undefined")
 			 throw new Error('invalid json format, missing attribute istFSNeu');
 		result.istFSNeu = obj.istFSNeu;
@@ -54,7 +54,7 @@ export class GostLeistungenFachwahl extends JavaObject {
 	public static transpilerToJSON(obj : GostLeistungenFachwahl) : string {
 		let result = '{';
 		result += '"fach" : ' + ((!obj.fach) ? 'null' : GostFach.transpilerToJSON(obj.fach)) + ',';
-		result += '"abiturfach" : ' + ((!obj.abiturfach) ? 'null' : obj.abiturfach.valueOf()) + ',';
+		result += '"abiturfach" : ' + ((!obj.abiturfach) ? 'null' : obj.abiturfach) + ',';
 		result += '"istFSNeu" : ' + obj.istFSNeu + ',';
 		if (!obj.belegungen) {
 			result += '"belegungen" : []';
@@ -79,7 +79,7 @@ export class GostLeistungenFachwahl extends JavaObject {
 			result += '"fach" : ' + ((!obj.fach) ? 'null' : GostFach.transpilerToJSON(obj.fach)) + ',';
 		}
 		if (typeof obj.abiturfach !== "undefined") {
-			result += '"abiturfach" : ' + ((!obj.abiturfach) ? 'null' : obj.abiturfach.valueOf()) + ',';
+			result += '"abiturfach" : ' + ((!obj.abiturfach) ? 'null' : obj.abiturfach) + ',';
 		}
 		if (typeof obj.istFSNeu !== "undefined") {
 			result += '"istFSNeu" : ' + obj.istFSNeu + ',';

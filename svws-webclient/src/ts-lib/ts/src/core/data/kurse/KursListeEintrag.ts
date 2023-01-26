@@ -18,12 +18,12 @@ export class KursListeEintrag extends JavaObject {
 	/**
 	 * Das Kürzel des Kurses. 
 	 */
-	public kuerzel : String = "";
+	public kuerzel : string = "";
 
 	/**
 	 * Die IDs der Jahrgänge, denen der Kurs zugeordnet ist 
 	 */
-	public idJahrgaenge : Vector<Number> = new Vector();
+	public idJahrgaenge : Vector<number> = new Vector();
 
 	/**
 	 * Die ID des Faches, dem der Kurs zugeordnet ist 
@@ -33,7 +33,7 @@ export class KursListeEintrag extends JavaObject {
 	/**
 	 * Die ID des Kurslehrers. 
 	 */
-	public lehrer : Number | null = null;
+	public lehrer : number | null = null;
 
 	/**
 	 * Die Sortierreihenfolge des Jahrgangslisten-Eintrags. 
@@ -65,16 +65,16 @@ export class KursListeEintrag extends JavaObject {
 		result.idSchuljahresabschnitt = obj.idSchuljahresabschnitt;
 		if (typeof obj.kuerzel === "undefined")
 			 throw new Error('invalid json format, missing attribute kuerzel');
-		result.kuerzel = String(obj.kuerzel);
+		result.kuerzel = obj.kuerzel;
 		if (!!obj.idJahrgaenge) {
 			for (let elem of obj.idJahrgaenge) {
-				result.idJahrgaenge?.add(Number(elem));
+				result.idJahrgaenge?.add(elem);
 			}
 		}
 		if (typeof obj.idFach === "undefined")
 			 throw new Error('invalid json format, missing attribute idFach');
 		result.idFach = obj.idFach;
-		result.lehrer = typeof obj.lehrer === "undefined" ? null : obj.lehrer === null ? null : Number(obj.lehrer);
+		result.lehrer = typeof obj.lehrer === "undefined" ? null : obj.lehrer === null ? null : obj.lehrer;
 		if (typeof obj.sortierung === "undefined")
 			 throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
@@ -88,7 +88,7 @@ export class KursListeEintrag extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
 		result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt + ',';
-		result += '"kuerzel" : ' + '"' + obj.kuerzel.valueOf() + '"' + ',';
+		result += '"kuerzel" : ' + '"' + obj.kuerzel! + '"' + ',';
 		if (!obj.idJahrgaenge) {
 			result += '"idJahrgaenge" : []';
 		} else {
@@ -102,7 +102,7 @@ export class KursListeEintrag extends JavaObject {
 			result += ' ]' + ',';
 		}
 		result += '"idFach" : ' + obj.idFach + ',';
-		result += '"lehrer" : ' + ((!obj.lehrer) ? 'null' : obj.lehrer.valueOf()) + ',';
+		result += '"lehrer" : ' + ((!obj.lehrer) ? 'null' : obj.lehrer) + ',';
 		result += '"sortierung" : ' + obj.sortierung + ',';
 		result += '"istSichtbar" : ' + obj.istSichtbar + ',';
 		result = result.slice(0, -1);
@@ -119,7 +119,7 @@ export class KursListeEintrag extends JavaObject {
 			result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt + ',';
 		}
 		if (typeof obj.kuerzel !== "undefined") {
-			result += '"kuerzel" : ' + '"' + obj.kuerzel.valueOf() + '"' + ',';
+			result += '"kuerzel" : ' + '"' + obj.kuerzel + '"' + ',';
 		}
 		if (typeof obj.idJahrgaenge !== "undefined") {
 			if (!obj.idJahrgaenge) {
@@ -139,7 +139,7 @@ export class KursListeEintrag extends JavaObject {
 			result += '"idFach" : ' + obj.idFach + ',';
 		}
 		if (typeof obj.lehrer !== "undefined") {
-			result += '"lehrer" : ' + ((!obj.lehrer) ? 'null' : obj.lehrer.valueOf()) + ',';
+			result += '"lehrer" : ' + ((!obj.lehrer) ? 'null' : obj.lehrer) + ',';
 		}
 		if (typeof obj.sortierung !== "undefined") {
 			result += '"sortierung" : ' + obj.sortierung + ',';

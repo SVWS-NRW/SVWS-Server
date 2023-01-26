@@ -9,7 +9,7 @@ import { KAOAMerkmal, cast_de_nrw_schule_svws_core_types_kaoa_KAOAMerkmal } from
 export class KAOAZusatzmerkmal extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -18,7 +18,7 @@ export class KAOAZusatzmerkmal extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<KAOAZusatzmerkmal> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, KAOAZusatzmerkmal> = new Map<String, KAOAZusatzmerkmal>();
+	private static readonly all_values_by_name : Map<string, KAOAZusatzmerkmal> = new Map<string, KAOAZusatzmerkmal>();
 
 	/**
 	 * KAoA-Zusatzmerkmal: Schulisches individuelles Beratungsgespräch durchgeführt 
@@ -623,12 +623,12 @@ export class KAOAZusatzmerkmal extends JavaObject {
 	/**
 	 * Eine Hashmap mit allen Einträgen, welche ihrer ID zugeordnet sind. 
 	 */
-	private static readonly _statusByID : HashMap<Number, KAOAZusatzmerkmal> = new HashMap();
+	private static readonly _statusByID : HashMap<number, KAOAZusatzmerkmal> = new HashMap();
 
 	/**
 	 * Eine Hashmap mit allen Einträgen, welche dem Kürzel zugeordnet sind. 
 	 */
-	private static readonly _statusByKuerzel : HashMap<String, KAOAZusatzmerkmal> = new HashMap();
+	private static readonly _statusByKuerzel : HashMap<string, KAOAZusatzmerkmal> = new HashMap();
 
 	/**
 	 * Erzeugt ein neues Element in der Aufzählung.
@@ -651,7 +651,7 @@ export class KAOAZusatzmerkmal extends JavaObject {
 	 *    
 	 * @return die Map von der ID auf das zugehörige Merkmal
 	 */
-	private static getMapStatusByID() : HashMap<Number, KAOAZusatzmerkmal> {
+	private static getMapStatusByID() : HashMap<number, KAOAZusatzmerkmal> {
 		if (KAOAZusatzmerkmal._statusByID.size() === 0) 
 			for (let g of KAOAZusatzmerkmal.values()) 
 				KAOAZusatzmerkmal._statusByID.put(g.daten.id, g);
@@ -664,7 +664,7 @@ export class KAOAZusatzmerkmal extends JavaObject {
 	 *    
 	 * @return die Map von dem Kürzel auf das zugehörige Merkmal
 	 */
-	private static getMapStatusByKuerzel() : HashMap<String, KAOAZusatzmerkmal> {
+	private static getMapStatusByKuerzel() : HashMap<string, KAOAZusatzmerkmal> {
 		if (KAOAZusatzmerkmal._statusByKuerzel.size() === 0) 
 			for (let g of KAOAZusatzmerkmal.values()) 
 				KAOAZusatzmerkmal._statusByKuerzel.put(g.daten.kuerzel, g);
@@ -689,7 +689,7 @@ export class KAOAZusatzmerkmal extends JavaObject {
 	 * 
 	 * @return das Merkmal oder null, falls das Kürzel ungültig ist
 	 */
-	public static getByKuerzel(kuerzel : String | null) : KAOAZusatzmerkmal | null {
+	public static getByKuerzel(kuerzel : string | null) : KAOAZusatzmerkmal | null {
 		return KAOAZusatzmerkmal.getMapStatusByKuerzel().get(kuerzel);
 	}
 
@@ -698,7 +698,7 @@ export class KAOAZusatzmerkmal extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -716,7 +716,7 @@ export class KAOAZusatzmerkmal extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -770,7 +770,7 @@ export class KAOAZusatzmerkmal extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : KAOAZusatzmerkmal | null {
+	public static valueOf(name : string) : KAOAZusatzmerkmal | null {
 		let tmp : KAOAZusatzmerkmal | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

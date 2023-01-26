@@ -229,7 +229,7 @@ export class Fremdsprachen extends GostBelegpruefung {
 		let fsDurchgehend : GostFach | null = this.manager.getFach(fremdsprachenDurchgehend.get(0));
 		if (fsDurchgehend === null) 
 			return;
-		let fremdspracheDurchgehend : String | null = GostFachManager.getFremdsprache(fsDurchgehend);
+		let fremdspracheDurchgehend : string | null = GostFachManager.getFremdsprache(fsDurchgehend);
 		if (fremdspracheDurchgehend === null) 
 			return;
 		let biliSachfaecherDurchgehendSchriftlich : List<AbiturFachbelegung | null> | null = this.manager.filterBelegungenMitSchriftlichkeit(this.manager.filterDurchgehendBelegbar(this.biliSachfaecher), GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1);
@@ -253,7 +253,7 @@ export class Fremdsprachen extends GostBelegpruefung {
 			let fach : GostFach | null = this.manager.getFach(biliSachfach);
 			if (fach === null) 
 				continue;
-			let biliSprache : String | null = fach.biliSprache;
+			let biliSprache : string | null = fach.biliSprache;
 			if (!SprachendatenUtils.hatSprachbelegungInSekIMitDauer(this.manager.getSprachendaten(), biliSprache, 2)) {
 				this.addFehler(GostBelegungsfehler.BIL_14);
 				continue;
@@ -269,7 +269,7 @@ export class Fremdsprachen extends GostBelegpruefung {
 	 * Prüfe, ob die Bedingungen für den bilingualen Bildungsgang erfüllt sind, sofern ein solcher vom Schüler gewählt wurde.
 	 */
 	private pruefeEF1BilingualenBildungsgang() : void {
-		let biligualeSprache : String | null = this.manager.getBiligualenBildungsgang();
+		let biligualeSprache : string | null = this.manager.getBiligualenBildungsgang();
 		if (biligualeSprache === null) 
 			return;
 		let biliSprache : AbiturFachbelegung | null = this.manager.getSprachbelegung(biligualeSprache);
@@ -450,7 +450,7 @@ export class Fremdsprachen extends GostBelegpruefung {
 		let fsDurchgehend : GostFach | null = this.manager.getFach(fremdsprachenDurchgehendSchriftlich.get(0));
 		if (fsDurchgehend === null) 
 			return;
-		let fremdspracheDurchgehend : String | null = GostFachManager.getFremdsprache(fsDurchgehend);
+		let fremdspracheDurchgehend : string | null = GostFachManager.getFremdsprache(fsDurchgehend);
 		if (fremdspracheDurchgehend === null) 
 			return;
 		let biliSachfaecherDurchgehend : List<AbiturFachbelegung> = this.manager.filterBelegungen(this.biliSachfaecher, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22);
@@ -483,7 +483,7 @@ export class Fremdsprachen extends GostBelegpruefung {
 	 * Schüler gewählt wurde.
 	 */
 	private pruefeGesamtBilingualenBildungsgang() : void {
-		let biligualeSprache : String | null = this.manager.getBiligualenBildungsgang();
+		let biligualeSprache : string | null = this.manager.getBiligualenBildungsgang();
 		if (biligualeSprache === null) 
 			return;
 		let biliSprache : AbiturFachbelegung | null = this.manager.getSprachbelegung(biligualeSprache);

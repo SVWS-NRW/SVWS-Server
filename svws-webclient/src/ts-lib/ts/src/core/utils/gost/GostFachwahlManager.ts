@@ -17,17 +17,17 @@ export class GostFachwahlManager extends JavaObject {
 	/**
 	 * Eine Map, mit einer Zuordnung der Schüler-IDs zu der FachID und der Kursart 
 	 */
-	private readonly mapFachKursart : HashMap<Number, HashMap<GostKursart, HashSet<Number>>> = new HashMap();
+	private readonly mapFachKursart : HashMap<number, HashMap<GostKursart, HashSet<number>>> = new HashMap();
 
 	/**
 	 * Eine Map, mit einer Zuordnung der Fachwahlen zu der FachID 
 	 */
-	private readonly mapFach : HashMap<Number, Vector<GostFachwahl>> = new HashMap();
+	private readonly mapFach : HashMap<number, Vector<GostFachwahl>> = new HashMap();
 
 	/**
 	 * Eine Map, mit einer Zuordnung der Fachwahlen zu der Schüler-ID 
 	 */
-	private readonly mapSchueler : HashMap<Number, Vector<GostFachwahl>> = new HashMap();
+	private readonly mapSchueler : HashMap<number, Vector<GostFachwahl>> = new HashMap();
 
 
 	/**
@@ -76,13 +76,13 @@ export class GostFachwahlManager extends JavaObject {
 			this.mapSchueler.put(fachwahl.schuelerID, fwSchueler);
 		}
 		fwSchueler.add(fachwahl);
-		let mapKursart : HashMap<GostKursart, HashSet<Number>> | null = this.mapFachKursart.get(fachwahl.fachID);
+		let mapKursart : HashMap<GostKursart, HashSet<number>> | null = this.mapFachKursart.get(fachwahl.fachID);
 		if (mapKursart === null) {
 			mapKursart = new HashMap();
 			this.mapFachKursart.put(fachwahl.fachID, mapKursart);
 		}
 		let kursart : GostKursart | null = GostKursart.fromFachwahlOrException(fachwahl);
-		let schueler : HashSet<Number> | null = mapKursart.get(kursart);
+		let schueler : HashSet<number> | null = mapKursart.get(kursart);
 		if (schueler === null) {
 			schueler = new HashSet();
 			mapKursart.put(kursart, schueler);
@@ -127,10 +127,10 @@ export class GostFachwahlManager extends JavaObject {
 	 * @return true, falls die Fachwahl existiert und ansonsten false
 	 */
 	public hatFachwahl(idSchueler : number, idFach : number, kursart : GostKursart) : boolean {
-		let mapKursart : HashMap<GostKursart, HashSet<Number>> | null = this.mapFachKursart.get(idFach);
+		let mapKursart : HashMap<GostKursart, HashSet<number>> | null = this.mapFachKursart.get(idFach);
 		if (mapKursart === null) 
 			return false;
-		let schueler : HashSet<Number> | null = mapKursart.get(kursart);
+		let schueler : HashSet<number> | null = mapKursart.get(kursart);
 		if (schueler === null) 
 			return false;
 		return schueler.contains(idSchueler);

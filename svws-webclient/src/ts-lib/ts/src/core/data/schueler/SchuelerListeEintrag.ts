@@ -14,47 +14,47 @@ export class SchuelerListeEintrag extends JavaObject {
 	/**
 	 * Der Nachname des Schülers. 
 	 */
-	public nachname : String = "";
+	public nachname : string = "";
 
 	/**
 	 * Der Vorname des Schülers. 
 	 */
-	public vorname : String = "";
+	public vorname : string = "";
 
 	/**
 	 * Die ID der aktuellen Klasse des Schülers.
 	 */
-	public idKlasse : Number = -1;
+	public idKlasse : number = -1;
 
 	/**
 	 * Der aktuelle Jahrgang des Schülers.
 	 */
-	public jahrgang : String = "";
+	public jahrgang : string = "";
 
 	/**
 	 * Der Abiturjahrgang, falls es sich um eine Schule mit Gymnasialer Oberstufe handelt. 
 	 */
-	public abiturjahrgang : Number | null = null;
+	public abiturjahrgang : number | null = null;
 
 	/**
 	 * Das Kürzel der aktuellen Schulgliederung des Schülers 
 	 */
-	public schulgliederung : String = "";
+	public schulgliederung : string = "";
 
 	/**
 	 * Die Bezeichnung des Status des Schülers (Aktiv, Extern, etc.).
 	 */
-	public status : String = "";
+	public status : string = "";
 
 	/**
 	 * Die ID des Schuljahresabschnittes des Schülers. 
 	 */
-	public idSchuljahresabschnitt : Number = -1;
+	public idSchuljahresabschnitt : number = -1;
 
 	/**
 	 * Die Liste der IDs der belegten Kurse im aktuellen Abschnit  
 	 */
-	public readonly kurse : Vector<Number> = new Vector();
+	public readonly kurse : Vector<number> = new Vector();
 
 
 	public constructor() {
@@ -73,29 +73,29 @@ export class SchuelerListeEintrag extends JavaObject {
 		result.id = obj.id;
 		if (typeof obj.nachname === "undefined")
 			 throw new Error('invalid json format, missing attribute nachname');
-		result.nachname = String(obj.nachname);
+		result.nachname = obj.nachname;
 		if (typeof obj.vorname === "undefined")
 			 throw new Error('invalid json format, missing attribute vorname');
-		result.vorname = String(obj.vorname);
+		result.vorname = obj.vorname;
 		if (typeof obj.idKlasse === "undefined")
 			 throw new Error('invalid json format, missing attribute idKlasse');
-		result.idKlasse = Number(obj.idKlasse);
+		result.idKlasse = obj.idKlasse;
 		if (typeof obj.jahrgang === "undefined")
 			 throw new Error('invalid json format, missing attribute jahrgang');
-		result.jahrgang = String(obj.jahrgang);
-		result.abiturjahrgang = typeof obj.abiturjahrgang === "undefined" ? null : obj.abiturjahrgang === null ? null : Number(obj.abiturjahrgang);
+		result.jahrgang = obj.jahrgang;
+		result.abiturjahrgang = typeof obj.abiturjahrgang === "undefined" ? null : obj.abiturjahrgang === null ? null : obj.abiturjahrgang;
 		if (typeof obj.schulgliederung === "undefined")
 			 throw new Error('invalid json format, missing attribute schulgliederung');
-		result.schulgliederung = String(obj.schulgliederung);
+		result.schulgliederung = obj.schulgliederung;
 		if (typeof obj.status === "undefined")
 			 throw new Error('invalid json format, missing attribute status');
-		result.status = String(obj.status);
+		result.status = obj.status;
 		if (typeof obj.idSchuljahresabschnitt === "undefined")
 			 throw new Error('invalid json format, missing attribute idSchuljahresabschnitt');
-		result.idSchuljahresabschnitt = Number(obj.idSchuljahresabschnitt);
+		result.idSchuljahresabschnitt = obj.idSchuljahresabschnitt;
 		if (!!obj.kurse) {
 			for (let elem of obj.kurse) {
-				result.kurse?.add(Number(elem));
+				result.kurse?.add(elem);
 			}
 		}
 		return result;
@@ -104,14 +104,14 @@ export class SchuelerListeEintrag extends JavaObject {
 	public static transpilerToJSON(obj : SchuelerListeEintrag) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"nachname" : ' + '"' + obj.nachname.valueOf() + '"' + ',';
-		result += '"vorname" : ' + '"' + obj.vorname.valueOf() + '"' + ',';
-		result += '"idKlasse" : ' + obj.idKlasse.valueOf() + ',';
-		result += '"jahrgang" : ' + '"' + obj.jahrgang.valueOf() + '"' + ',';
-		result += '"abiturjahrgang" : ' + ((!obj.abiturjahrgang) ? 'null' : obj.abiturjahrgang.valueOf()) + ',';
-		result += '"schulgliederung" : ' + '"' + obj.schulgliederung.valueOf() + '"' + ',';
-		result += '"status" : ' + '"' + obj.status.valueOf() + '"' + ',';
-		result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt.valueOf() + ',';
+		result += '"nachname" : ' + '"' + obj.nachname! + '"' + ',';
+		result += '"vorname" : ' + '"' + obj.vorname! + '"' + ',';
+		result += '"idKlasse" : ' + obj.idKlasse! + ',';
+		result += '"jahrgang" : ' + '"' + obj.jahrgang! + '"' + ',';
+		result += '"abiturjahrgang" : ' + ((!obj.abiturjahrgang) ? 'null' : obj.abiturjahrgang) + ',';
+		result += '"schulgliederung" : ' + '"' + obj.schulgliederung! + '"' + ',';
+		result += '"status" : ' + '"' + obj.status! + '"' + ',';
+		result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt! + ',';
 		if (!obj.kurse) {
 			result += '"kurse" : []';
 		} else {
@@ -135,28 +135,28 @@ export class SchuelerListeEintrag extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.nachname !== "undefined") {
-			result += '"nachname" : ' + '"' + obj.nachname.valueOf() + '"' + ',';
+			result += '"nachname" : ' + '"' + obj.nachname + '"' + ',';
 		}
 		if (typeof obj.vorname !== "undefined") {
-			result += '"vorname" : ' + '"' + obj.vorname.valueOf() + '"' + ',';
+			result += '"vorname" : ' + '"' + obj.vorname + '"' + ',';
 		}
 		if (typeof obj.idKlasse !== "undefined") {
-			result += '"idKlasse" : ' + obj.idKlasse.valueOf() + ',';
+			result += '"idKlasse" : ' + obj.idKlasse + ',';
 		}
 		if (typeof obj.jahrgang !== "undefined") {
-			result += '"jahrgang" : ' + '"' + obj.jahrgang.valueOf() + '"' + ',';
+			result += '"jahrgang" : ' + '"' + obj.jahrgang + '"' + ',';
 		}
 		if (typeof obj.abiturjahrgang !== "undefined") {
-			result += '"abiturjahrgang" : ' + ((!obj.abiturjahrgang) ? 'null' : obj.abiturjahrgang.valueOf()) + ',';
+			result += '"abiturjahrgang" : ' + ((!obj.abiturjahrgang) ? 'null' : obj.abiturjahrgang) + ',';
 		}
 		if (typeof obj.schulgliederung !== "undefined") {
-			result += '"schulgliederung" : ' + '"' + obj.schulgliederung.valueOf() + '"' + ',';
+			result += '"schulgliederung" : ' + '"' + obj.schulgliederung + '"' + ',';
 		}
 		if (typeof obj.status !== "undefined") {
-			result += '"status" : ' + '"' + obj.status.valueOf() + '"' + ',';
+			result += '"status" : ' + '"' + obj.status + '"' + ',';
 		}
 		if (typeof obj.idSchuljahresabschnitt !== "undefined") {
-			result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt.valueOf() + ',';
+			result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt + ',';
 		}
 		if (typeof obj.kurse !== "undefined") {
 			if (!obj.kurse) {

@@ -16,7 +16,7 @@ export class GostBlockungSchiene extends JavaObject {
 	/**
 	 * Bezeichnung der Schiene (z.B. LK Schiene 1) 
 	 */
-	public bezeichnung : String = "Neue Schiene";
+	public bezeichnung : string = "Neue Schiene";
 
 	/**
 	 * Die Anzahl der Wochenstunden, welche der Schiene zugeordnet sind 
@@ -43,7 +43,7 @@ export class GostBlockungSchiene extends JavaObject {
 		result.nummer = obj.nummer;
 		if (typeof obj.bezeichnung === "undefined")
 			 throw new Error('invalid json format, missing attribute bezeichnung');
-		result.bezeichnung = String(obj.bezeichnung);
+		result.bezeichnung = obj.bezeichnung;
 		if (typeof obj.wochenstunden === "undefined")
 			 throw new Error('invalid json format, missing attribute wochenstunden');
 		result.wochenstunden = obj.wochenstunden;
@@ -54,7 +54,7 @@ export class GostBlockungSchiene extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
 		result += '"nummer" : ' + obj.nummer + ',';
-		result += '"bezeichnung" : ' + '"' + obj.bezeichnung.valueOf() + '"' + ',';
+		result += '"bezeichnung" : ' + '"' + obj.bezeichnung! + '"' + ',';
 		result += '"wochenstunden" : ' + obj.wochenstunden + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -70,7 +70,7 @@ export class GostBlockungSchiene extends JavaObject {
 			result += '"nummer" : ' + obj.nummer + ',';
 		}
 		if (typeof obj.bezeichnung !== "undefined") {
-			result += '"bezeichnung" : ' + '"' + obj.bezeichnung.valueOf() + '"' + ',';
+			result += '"bezeichnung" : ' + '"' + obj.bezeichnung + '"' + ',';
 		}
 		if (typeof obj.wochenstunden !== "undefined") {
 			result += '"wochenstunden" : ' + obj.wochenstunden + ',';

@@ -4,7 +4,7 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class GostFremdsprachenart extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -13,7 +13,7 @@ export class GostFremdsprachenart extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<GostFremdsprachenart> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, GostFremdsprachenart> = new Map<String, GostFremdsprachenart>();
+	private static readonly all_values_by_name : Map<string, GostFremdsprachenart> = new Map<string, GostFremdsprachenart>();
 
 	/**
 	 * Ist eine fortgeführte Fremdsprache. 
@@ -38,7 +38,7 @@ export class GostFremdsprachenart extends JavaObject {
 	/**
 	 * Die Bezeichnung der Fremdsprachenart als Text 
 	 */
-	public readonly bezeichnung : String;
+	public readonly bezeichnung : string;
 
 	/**
 	 * Erzeugt eine neue Fremdsprachenart für die Aufzählung.
@@ -46,7 +46,7 @@ export class GostFremdsprachenart extends JavaObject {
 	 * @param id            die eindeutige ID für die Fremdsprachenart
 	 * @param bezeichnung   die Bezeichnung der Fremdsprachenart als Text
 	 */
-	private constructor(name : string, ordinal : number, id : number, bezeichnung : String) {
+	private constructor(name : string, ordinal : number, id : number, bezeichnung : string) {
 		super();
 		this.__name = name;
 		this.__ordinal = ordinal;
@@ -61,7 +61,7 @@ export class GostFremdsprachenart extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -79,7 +79,7 @@ export class GostFremdsprachenart extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -133,7 +133,7 @@ export class GostFremdsprachenart extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : GostFremdsprachenart | null {
+	public static valueOf(name : string) : GostFremdsprachenart | null {
 		let tmp : GostFremdsprachenart | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

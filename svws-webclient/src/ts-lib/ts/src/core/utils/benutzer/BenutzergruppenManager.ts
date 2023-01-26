@@ -18,7 +18,7 @@ export class BenutzergruppenManager extends JavaObject {
 	/**
 	 * Die Menge an Kompetenzen, die dieser Gruppe zugeordnet ist. 
 	 */
-	private readonly _setKompetenzen : HashSet<Number> = new HashSet();
+	private readonly _setKompetenzen : HashSet<number> = new HashSet();
 
 
 	/**
@@ -28,7 +28,7 @@ export class BenutzergruppenManager extends JavaObject {
 	 * @param id            die ID der Benutzergruppe
 	 * @param bezeichnung   die Bezeichnung der Benutzergruppe
 	 */
-	public constructor(id : number, bezeichnung : String);
+	public constructor(id : number, bezeichnung : string);
 
 	/**
 	 *
@@ -41,11 +41,11 @@ export class BenutzergruppenManager extends JavaObject {
 	/**
 	 * Implementation for method overloads of 'constructor'
 	 */
-	public constructor(__param0 : BenutzergruppeDaten | number, __param1? : String) {
+	public constructor(__param0 : BenutzergruppeDaten | number, __param1? : string) {
 		super();
-		if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && ((__param1 instanceof String) || (typeof __param1 === "string")))) {
+		if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && (typeof __param1 === "string"))) {
 			let id : number = __param0 as number;
-			let bezeichnung : String = __param1;
+			let bezeichnung : string = __param1;
 			this._daten = new BenutzergruppeDaten();
 			this._daten.id = id;
 			this._daten.bezeichnung = bezeichnung;
@@ -57,7 +57,7 @@ export class BenutzergruppenManager extends JavaObject {
 				if (kID === null) 
 					throw new NullPointerException("Fehlerhafte Daten: Die Liste der Kompetenzen darf keine Null-Werte enthalten.")
 				if (this._setKompetenzen.contains(kID)) 
-					throw new IllegalArgumentException("Die Kompetenz mit der ID " + kID.valueOf() + " wurde mehrfach bei der Gruppe eingetragen.")
+					throw new IllegalArgumentException("Die Kompetenz mit der ID " + kID! + " wurde mehrfach bei der Gruppe eingetragen.")
 				this._setKompetenzen.add(kID);
 			}
 		} else throw new Error('invalid method overload');
@@ -87,7 +87,7 @@ export class BenutzergruppenManager extends JavaObject {
 	 * 
 	 * @return die Bezeichnung der Benutzergruppe
 	 */
-	public getBezeichnung() : String {
+	public getBezeichnung() : string {
 		return this._daten.bezeichnung;
 	}
 
@@ -96,7 +96,7 @@ export class BenutzergruppenManager extends JavaObject {
 	 * 
 	 * @param bezeichnung  die neue Bezeichnung der Benutzergruppe
 	 */
-	public setBezeichnung(bezeichnung : String) : void {
+	public setBezeichnung(bezeichnung : string) : void {
 		if (JavaObject.equalsTranspiler("", (bezeichnung))) 
 			throw new IllegalArgumentException("Die Bezeichnung einer Benutzergruppe darf nicht leer sein.")
 		this._daten.bezeichnung = bezeichnung;

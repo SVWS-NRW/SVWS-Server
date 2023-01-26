@@ -7,7 +7,7 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class LehrerLehrbefaehigungAnerkennung extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -16,7 +16,7 @@ export class LehrerLehrbefaehigungAnerkennung extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<LehrerLehrbefaehigungAnerkennung> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, LehrerLehrbefaehigungAnerkennung> = new Map<String, LehrerLehrbefaehigungAnerkennung>();
+	private static readonly all_values_by_name : Map<string, LehrerLehrbefaehigungAnerkennung> = new Map<string, LehrerLehrbefaehigungAnerkennung>();
 
 	/**
 	 * Anerkennung der Lehrbefähigung 'erworben durch LABG/OVP bzw. Laufbahnverordnung'  
@@ -56,12 +56,12 @@ export class LehrerLehrbefaehigungAnerkennung extends JavaObject {
 	/**
 	 * Eine Hashmap mit allen Anerkennungsgründen für Lehrbefähigungen, welche ihrer ID zugeordnet sind. 
 	 */
-	private static readonly _anerkennungenByID : HashMap<Number, LehrerLehrbefaehigungAnerkennung | null> = new HashMap();
+	private static readonly _anerkennungenByID : HashMap<number, LehrerLehrbefaehigungAnerkennung | null> = new HashMap();
 
 	/**
 	 * Eine Hashmap mit allen Anerkennungsgründen für Lehrbefähigungen, welche dem Kürzel bzw. ASD-Schlüssel zugeordnet sind. 
 	 */
-	private static readonly _anerkennungenByKuerzel : HashMap<String, LehrerLehrbefaehigungAnerkennung | null> = new HashMap();
+	private static readonly _anerkennungenByKuerzel : HashMap<string, LehrerLehrbefaehigungAnerkennung | null> = new HashMap();
 
 	/**
 	 * Erzeugt einen neuen Anerkennungsgrund für Lehrbefähigungen in der Aufzählung.
@@ -84,7 +84,7 @@ export class LehrerLehrbefaehigungAnerkennung extends JavaObject {
 	 *    
 	 * @return die Map von den IDs der Lehrbefaehigungssanerkennungen auf die zugehörigen Lehrbefaehigungssanerkennungen
 	 */
-	private static getMapAnerkennungenByID() : HashMap<Number, LehrerLehrbefaehigungAnerkennung | null> {
+	private static getMapAnerkennungenByID() : HashMap<number, LehrerLehrbefaehigungAnerkennung | null> {
 		if (LehrerLehrbefaehigungAnerkennung._anerkennungenByID.size() === 0) 
 			for (let l of LehrerLehrbefaehigungAnerkennung.values()) 
 				LehrerLehrbefaehigungAnerkennung._anerkennungenByID.put(l.daten.id, l);
@@ -97,7 +97,7 @@ export class LehrerLehrbefaehigungAnerkennung extends JavaObject {
 	 *    
 	 * @return die Map von den Kürzeln der Lehrbefaehigungssanerkennungen auf die zugehörigen Lehrbefaehigungssanerkennungen
 	 */
-	private static getMapAnerkennungenByKuerzel() : HashMap<String, LehrerLehrbefaehigungAnerkennung | null> {
+	private static getMapAnerkennungenByKuerzel() : HashMap<string, LehrerLehrbefaehigungAnerkennung | null> {
 		if (LehrerLehrbefaehigungAnerkennung._anerkennungenByKuerzel.size() === 0) 
 			for (let l of LehrerLehrbefaehigungAnerkennung.values()) 
 				LehrerLehrbefaehigungAnerkennung._anerkennungenByKuerzel.put(l.daten.kuerzel, l);
@@ -122,7 +122,7 @@ export class LehrerLehrbefaehigungAnerkennung extends JavaObject {
 	 * 
 	 * @return der Anerkennungsgrund für Lehrbefähigungen oder null, falls das Kürzel ungültig ist
 	 */
-	public static getByKuerzel(kuerzel : String | null) : LehrerLehrbefaehigungAnerkennung | null {
+	public static getByKuerzel(kuerzel : string | null) : LehrerLehrbefaehigungAnerkennung | null {
 		return LehrerLehrbefaehigungAnerkennung.getMapAnerkennungenByKuerzel().get(kuerzel);
 	}
 
@@ -131,7 +131,7 @@ export class LehrerLehrbefaehigungAnerkennung extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -149,7 +149,7 @@ export class LehrerLehrbefaehigungAnerkennung extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -203,7 +203,7 @@ export class LehrerLehrbefaehigungAnerkennung extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : LehrerLehrbefaehigungAnerkennung | null {
+	public static valueOf(name : string) : LehrerLehrbefaehigungAnerkennung | null {
 		let tmp : LehrerLehrbefaehigungAnerkennung | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

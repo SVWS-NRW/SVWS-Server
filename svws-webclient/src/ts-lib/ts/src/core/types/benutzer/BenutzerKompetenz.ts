@@ -9,7 +9,7 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 export class BenutzerKompetenz extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -18,7 +18,7 @@ export class BenutzerKompetenz extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<BenutzerKompetenz> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, BenutzerKompetenz> = new Map<String, BenutzerKompetenz>();
+	private static readonly all_values_by_name : Map<string, BenutzerKompetenz> = new Map<string, BenutzerKompetenz>();
 
 	/**
 	 * Es werden keinerlei Kompetenzen benötigt. 
@@ -458,7 +458,7 @@ export class BenutzerKompetenz extends JavaObject {
 	/**
 	 * Eine HashMap zum schnellen Zugriff auf ein Aufzählungobjekt anhand der ID der Benutzerkompetenz 
 	 */
-	private static readonly _mapID : HashMap<Number, BenutzerKompetenz> = new HashMap();
+	private static readonly _mapID : HashMap<number, BenutzerKompetenz> = new HashMap();
 
 	/**
 	 * Eine HashMap zum schnellen Zugriff auf die Benutzer-Kompetenzen anhand der Benutzer-Kompetenz-Gruppe
@@ -487,7 +487,7 @@ export class BenutzerKompetenz extends JavaObject {
 	 *    
 	 * @return die Map von den IDs der Benutzerkompetenzen auf die zugehörigen Benutzerkompetenzen
 	 */
-	private static getMapID() : HashMap<Number, BenutzerKompetenz> {
+	private static getMapID() : HashMap<number, BenutzerKompetenz> {
 		if (BenutzerKompetenz._mapID.size() === 0) 
 			for (let p of BenutzerKompetenz.values()) 
 				BenutzerKompetenz._mapID.put(p.daten.id, p);
@@ -548,7 +548,7 @@ export class BenutzerKompetenz extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -566,7 +566,7 @@ export class BenutzerKompetenz extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -620,7 +620,7 @@ export class BenutzerKompetenz extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : BenutzerKompetenz | null {
+	public static valueOf(name : string) : BenutzerKompetenz | null {
 		let tmp : BenutzerKompetenz | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

@@ -64,7 +64,7 @@ export class ServicePrognose extends Service<GEAbschlussFaecher, AbschlussErgebn
 			return prognose;
 		}
 		let abschluss : SchulabschlussAllgemeinbildend = SchulabschlussAllgemeinbildend.OA;
-		let np_faecher : List<String> | null = null;
+		let np_faecher : List<string> | null = null;
 		if (!JavaObject.equalsTranspiler("10", (input.jahrgang))) {
 			let ha9 : ServiceAbschlussHA9 = new ServiceAbschlussHA9();
 			let ha9output : AbschlussErgebnis = ha9.handle(input);

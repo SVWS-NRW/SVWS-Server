@@ -11,27 +11,27 @@ export class LehrerListeEintrag extends JavaObject {
 	/**
 	 * Das Kürzel des Lehrers. 
 	 */
-	public kuerzel : String = "";
+	public kuerzel : string = "";
 
 	/**
 	 * Ggf. ein akademischer Grad des Lehrers. 
 	 */
-	public titel : String | null = null;
+	public titel : string | null = null;
 
 	/**
 	 * Der Nachname des Lehrers. 
 	 */
-	public nachname : String = "";
+	public nachname : string = "";
 
 	/**
 	 * Der Vorname des Lehrers. 
 	 */
-	public vorname : String = "";
+	public vorname : string = "";
 
 	/**
 	 * Der Personaltyp des Lehrerlisten-Eintrags. 
 	 */
-	public personTyp : String = "";
+	public personTyp : string = "";
 
 	/**
 	 * Die Sortierreihenfolge des Lehrerlisten-Eintrags. 
@@ -70,17 +70,17 @@ export class LehrerListeEintrag extends JavaObject {
 		result.id = obj.id;
 		if (typeof obj.kuerzel === "undefined")
 			 throw new Error('invalid json format, missing attribute kuerzel');
-		result.kuerzel = String(obj.kuerzel);
-		result.titel = typeof obj.titel === "undefined" ? null : obj.titel === null ? null : String(obj.titel);
+		result.kuerzel = obj.kuerzel;
+		result.titel = typeof obj.titel === "undefined" ? null : obj.titel === null ? null : obj.titel;
 		if (typeof obj.nachname === "undefined")
 			 throw new Error('invalid json format, missing attribute nachname');
-		result.nachname = String(obj.nachname);
+		result.nachname = obj.nachname;
 		if (typeof obj.vorname === "undefined")
 			 throw new Error('invalid json format, missing attribute vorname');
-		result.vorname = String(obj.vorname);
+		result.vorname = obj.vorname;
 		if (typeof obj.personTyp === "undefined")
 			 throw new Error('invalid json format, missing attribute personTyp');
-		result.personTyp = String(obj.personTyp);
+		result.personTyp = obj.personTyp;
 		if (typeof obj.sortierung === "undefined")
 			 throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
@@ -99,11 +99,11 @@ export class LehrerListeEintrag extends JavaObject {
 	public static transpilerToJSON(obj : LehrerListeEintrag) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"kuerzel" : ' + '"' + obj.kuerzel.valueOf() + '"' + ',';
-		result += '"titel" : ' + ((!obj.titel) ? 'null' : '"' + obj.titel.valueOf() + '"') + ',';
-		result += '"nachname" : ' + '"' + obj.nachname.valueOf() + '"' + ',';
-		result += '"vorname" : ' + '"' + obj.vorname.valueOf() + '"' + ',';
-		result += '"personTyp" : ' + '"' + obj.personTyp.valueOf() + '"' + ',';
+		result += '"kuerzel" : ' + '"' + obj.kuerzel! + '"' + ',';
+		result += '"titel" : ' + ((!obj.titel) ? 'null' : '"' + obj.titel + '"') + ',';
+		result += '"nachname" : ' + '"' + obj.nachname! + '"' + ',';
+		result += '"vorname" : ' + '"' + obj.vorname! + '"' + ',';
+		result += '"personTyp" : ' + '"' + obj.personTyp! + '"' + ',';
 		result += '"sortierung" : ' + obj.sortierung + ',';
 		result += '"istSichtbar" : ' + obj.istSichtbar + ',';
 		result += '"istAenderbar" : ' + obj.istAenderbar + ',';
@@ -119,19 +119,19 @@ export class LehrerListeEintrag extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.kuerzel !== "undefined") {
-			result += '"kuerzel" : ' + '"' + obj.kuerzel.valueOf() + '"' + ',';
+			result += '"kuerzel" : ' + '"' + obj.kuerzel + '"' + ',';
 		}
 		if (typeof obj.titel !== "undefined") {
-			result += '"titel" : ' + ((!obj.titel) ? 'null' : '"' + obj.titel.valueOf() + '"') + ',';
+			result += '"titel" : ' + ((!obj.titel) ? 'null' : '"' + obj.titel + '"') + ',';
 		}
 		if (typeof obj.nachname !== "undefined") {
-			result += '"nachname" : ' + '"' + obj.nachname.valueOf() + '"' + ',';
+			result += '"nachname" : ' + '"' + obj.nachname + '"' + ',';
 		}
 		if (typeof obj.vorname !== "undefined") {
-			result += '"vorname" : ' + '"' + obj.vorname.valueOf() + '"' + ',';
+			result += '"vorname" : ' + '"' + obj.vorname + '"' + ',';
 		}
 		if (typeof obj.personTyp !== "undefined") {
-			result += '"personTyp" : ' + '"' + obj.personTyp.valueOf() + '"' + ',';
+			result += '"personTyp" : ' + '"' + obj.personTyp + '"' + ',';
 		}
 		if (typeof obj.sortierung !== "undefined") {
 			result += '"sortierung" : ' + obj.sortierung + ',';

@@ -6,22 +6,22 @@ export class KatalogEintragStrassen extends JavaObject {
 	/**
 	 * Katalog von ITNRW Straßen: zugehörige Ort 
 	 */
-	public Ort : String | null = null;
+	public Ort : string | null = null;
 
 	/**
 	 * Katalog von ITNRW Straßen: zugehöriger Regionalschlüssel 
 	 */
-	public RegSchl : String | null = null;
+	public RegSchl : string | null = null;
 
 	/**
 	 * Katalog von ITNRW Straßen: Straßenname 
 	 */
-	public Strasse : String | null = null;
+	public Strasse : string | null = null;
 
 	/**
 	 * Katalog von ITNRW Straßen: aktueller Stand 
 	 */
-	public Stand : String | null = null;
+	public Stand : string | null = null;
 
 
 	public constructor() {
@@ -35,19 +35,19 @@ export class KatalogEintragStrassen extends JavaObject {
 	public static transpilerFromJSON(json : string): KatalogEintragStrassen {
 		const obj = JSON.parse(json);
 		const result = new KatalogEintragStrassen();
-		result.Ort = typeof obj.Ort === "undefined" ? null : obj.Ort === null ? null : String(obj.Ort);
-		result.RegSchl = typeof obj.RegSchl === "undefined" ? null : obj.RegSchl === null ? null : String(obj.RegSchl);
-		result.Strasse = typeof obj.Strasse === "undefined" ? null : obj.Strasse === null ? null : String(obj.Strasse);
-		result.Stand = typeof obj.Stand === "undefined" ? null : obj.Stand === null ? null : String(obj.Stand);
+		result.Ort = typeof obj.Ort === "undefined" ? null : obj.Ort === null ? null : obj.Ort;
+		result.RegSchl = typeof obj.RegSchl === "undefined" ? null : obj.RegSchl === null ? null : obj.RegSchl;
+		result.Strasse = typeof obj.Strasse === "undefined" ? null : obj.Strasse === null ? null : obj.Strasse;
+		result.Stand = typeof obj.Stand === "undefined" ? null : obj.Stand === null ? null : obj.Stand;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : KatalogEintragStrassen) : string {
 		let result = '{';
-		result += '"Ort" : ' + ((!obj.Ort) ? 'null' : '"' + obj.Ort.valueOf() + '"') + ',';
-		result += '"RegSchl" : ' + ((!obj.RegSchl) ? 'null' : '"' + obj.RegSchl.valueOf() + '"') + ',';
-		result += '"Strasse" : ' + ((!obj.Strasse) ? 'null' : '"' + obj.Strasse.valueOf() + '"') + ',';
-		result += '"Stand" : ' + ((!obj.Stand) ? 'null' : '"' + obj.Stand.valueOf() + '"') + ',';
+		result += '"Ort" : ' + ((!obj.Ort) ? 'null' : '"' + obj.Ort + '"') + ',';
+		result += '"RegSchl" : ' + ((!obj.RegSchl) ? 'null' : '"' + obj.RegSchl + '"') + ',';
+		result += '"Strasse" : ' + ((!obj.Strasse) ? 'null' : '"' + obj.Strasse + '"') + ',';
+		result += '"Stand" : ' + ((!obj.Stand) ? 'null' : '"' + obj.Stand + '"') + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -56,16 +56,16 @@ export class KatalogEintragStrassen extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<KatalogEintragStrassen>) : string {
 		let result = '{';
 		if (typeof obj.Ort !== "undefined") {
-			result += '"Ort" : ' + ((!obj.Ort) ? 'null' : '"' + obj.Ort.valueOf() + '"') + ',';
+			result += '"Ort" : ' + ((!obj.Ort) ? 'null' : '"' + obj.Ort + '"') + ',';
 		}
 		if (typeof obj.RegSchl !== "undefined") {
-			result += '"RegSchl" : ' + ((!obj.RegSchl) ? 'null' : '"' + obj.RegSchl.valueOf() + '"') + ',';
+			result += '"RegSchl" : ' + ((!obj.RegSchl) ? 'null' : '"' + obj.RegSchl + '"') + ',';
 		}
 		if (typeof obj.Strasse !== "undefined") {
-			result += '"Strasse" : ' + ((!obj.Strasse) ? 'null' : '"' + obj.Strasse.valueOf() + '"') + ',';
+			result += '"Strasse" : ' + ((!obj.Strasse) ? 'null' : '"' + obj.Strasse + '"') + ',';
 		}
 		if (typeof obj.Stand !== "undefined") {
-			result += '"Stand" : ' + ((!obj.Stand) ? 'null' : '"' + obj.Stand.valueOf() + '"') + ',';
+			result += '"Stand" : ' + ((!obj.Stand) ? 'null' : '"' + obj.Stand + '"') + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

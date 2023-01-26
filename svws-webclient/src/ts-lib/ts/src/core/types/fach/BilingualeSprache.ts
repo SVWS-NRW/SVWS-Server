@@ -12,7 +12,7 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 export class BilingualeSprache extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -21,7 +21,7 @@ export class BilingualeSprache extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<BilingualeSprache> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, BilingualeSprache> = new Map<String, BilingualeSprache>();
+	private static readonly all_values_by_name : Map<string, BilingualeSprache> = new Map<string, BilingualeSprache>();
 
 	/**
 	 * Bilinguale Sprache Englisch 
@@ -76,17 +76,17 @@ export class BilingualeSprache extends JavaObject {
 	/**
 	 * Eine Map, welche der ID der bilingualen Sprache die Instanz dieser Aufzählung zuordnet. 
 	 */
-	private static readonly _mapEintragByID : HashMap<Number, BilingualeSpracheKatalogEintrag> = new HashMap();
+	private static readonly _mapEintragByID : HashMap<number, BilingualeSpracheKatalogEintrag> = new HashMap();
 
 	/**
 	 * Eine Map, welche der ID der bilingualen Sprache die Instanz dieser Aufzählung zuordnet. 
 	 */
-	private static readonly _mapByID : HashMap<Number, BilingualeSprache> = new HashMap();
+	private static readonly _mapByID : HashMap<number, BilingualeSprache> = new HashMap();
 
 	/**
 	 * Eine Map, welche dem Kürzel der bilingualen Sprache die Instanz dieser Aufzählung zuordnet. 
 	 */
-	private static readonly _mapByKuerzel : HashMap<String, BilingualeSprache> = new HashMap();
+	private static readonly _mapByKuerzel : HashMap<string, BilingualeSprache> = new HashMap();
 
 	/**
 	 * Die Schulformen, bei welchen die bilingualen Sprache vorkommt 
@@ -124,7 +124,7 @@ export class BilingualeSprache extends JavaObject {
 	 *    
 	 * @return die Map von den IDs der bilingualen Sprachen auf die zugehörigen Katalog-Einträge
 	 */
-	private static getMapEintragByID() : HashMap<Number, BilingualeSpracheKatalogEintrag> {
+	private static getMapEintragByID() : HashMap<number, BilingualeSpracheKatalogEintrag> {
 		if (BilingualeSprache._mapEintragByID.size() === 0) 
 			for (let s of BilingualeSprache.values()) 
 				for (let k of s.historie) 
@@ -138,7 +138,7 @@ export class BilingualeSprache extends JavaObject {
 	 *    
 	 * @return die Map von den IDs der bilingualen Sprachen auf die zugehörigen bilingualen Sprachen
 	 */
-	private static getMapByID() : HashMap<Number, BilingualeSprache> {
+	private static getMapByID() : HashMap<number, BilingualeSprache> {
 		if (BilingualeSprache._mapByID.size() === 0) 
 			for (let s of BilingualeSprache.values()) 
 				BilingualeSprache._mapByID.put(s.daten.id, s);
@@ -151,7 +151,7 @@ export class BilingualeSprache extends JavaObject {
 	 *    
 	 * @return die Map von den Kürzeln der bilingualen Sprachen auf die zugehörigen bilingualen Sprachen
 	 */
-	private static getMapByKuerzel() : HashMap<String, BilingualeSprache> {
+	private static getMapByKuerzel() : HashMap<string, BilingualeSprache> {
 		if (BilingualeSprache._mapByKuerzel.size() === 0) 
 			for (let s of BilingualeSprache.values()) 
 				BilingualeSprache._mapByKuerzel.put(s.daten.kuerzel, s);
@@ -179,7 +179,7 @@ export class BilingualeSprache extends JavaObject {
 			return false;
 		if (this.daten.schulformen !== null) {
 			for (let i : number = 0; i < this.daten.schulformen.size(); i++){
-				let sfKuerzel : String | null = this.daten.schulformen.get(i);
+				let sfKuerzel : string | null = this.daten.schulformen.get(i);
 				if (JavaObject.equalsTranspiler(sfKuerzel, (schulform.daten.kuerzel))) 
 					return true;
 			}
@@ -216,7 +216,7 @@ export class BilingualeSprache extends JavaObject {
 	 * 
 	 * @return die bilingualen Sprache oder null, falls das Kürzel ungültig ist
 	 */
-	public static getByKuerzel(kuerzel : String | null) : BilingualeSprache | null {
+	public static getByKuerzel(kuerzel : string | null) : BilingualeSprache | null {
 		return BilingualeSprache.getMapByKuerzel().get(kuerzel);
 	}
 
@@ -245,7 +245,7 @@ export class BilingualeSprache extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -263,7 +263,7 @@ export class BilingualeSprache extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -317,7 +317,7 @@ export class BilingualeSprache extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : BilingualeSprache | null {
+	public static valueOf(name : string) : BilingualeSprache | null {
 		let tmp : BilingualeSprache | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

@@ -11,7 +11,7 @@ import { IllegalArgumentException, cast_java_lang_IllegalArgumentException } fro
 export class GostHalbjahr extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -20,7 +20,7 @@ export class GostHalbjahr extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<GostHalbjahr> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, GostHalbjahr> = new Map<String, GostHalbjahr>();
+	private static readonly all_values_by_name : Map<string, GostHalbjahr> = new Map<string, GostHalbjahr>();
 
 	/**
 	 * Einführungsphase 1. Halbjahr = EF1 
@@ -55,17 +55,17 @@ export class GostHalbjahr extends JavaObject {
 	/**
 	 * Eine Zuordnung der Halbjahre zu der ID, welche die Reihenfolge der Halbjahre angibt. 
 	 */
-	private static readonly _mapID : HashMap<Number, GostHalbjahr> = new HashMap();
+	private static readonly _mapID : HashMap<number, GostHalbjahr> = new HashMap();
 
 	/**
 	 * Eine Zuordnung der Halbjahre zu dem Kürzel. 
 	 */
-	private static readonly _mapKuerzel : HashMap<String, GostHalbjahr> = new HashMap();
+	private static readonly _mapKuerzel : HashMap<string, GostHalbjahr> = new HashMap();
 
 	/**
 	 * Eine Zuordnung der Halbjahre zu dem alten Kürzel. 
 	 */
-	private static readonly _mapKuerzelAlt : HashMap<String, GostHalbjahr> = new HashMap();
+	private static readonly _mapKuerzelAlt : HashMap<string, GostHalbjahr> = new HashMap();
 
 	/**
 	 * Die maximale Anzahl an Halbjahren in der gymnasialen Oberstufe 
@@ -80,7 +80,7 @@ export class GostHalbjahr extends JavaObject {
 	/**
 	 * Das Jahrgangskürzel des Halbjahres 
 	 */
-	public readonly jahrgang : String;
+	public readonly jahrgang : string;
 
 	/**
 	 * Die Nummer des Halbjahres 
@@ -90,17 +90,17 @@ export class GostHalbjahr extends JavaObject {
 	/**
 	 * Das eindeutige Kürzel für das Halbjahr der gymnasialen Oberstufe 
 	 */
-	public readonly kuerzel : String;
+	public readonly kuerzel : string;
 
 	/**
 	 * Ein eindeutiges Kürzel, welche in alten Tabellen (z.B. LuPO) verwendet wurde. 
 	 */
-	public readonly kuerzelAlt : String;
+	public readonly kuerzelAlt : string;
 
 	/**
 	 * Eine textuelle Beschreibung für das Halbjahr der gymnasialen Oberstufe 
 	 */
-	public readonly beschreibung : String;
+	public readonly beschreibung : string;
 
 	/**
 	 * Erzeugt ein neues Halbjahr der Gymnasialen Oberstufe für diese Aufzählung.
@@ -112,7 +112,7 @@ export class GostHalbjahr extends JavaObject {
 	 * @param kuerzelAlt     ein eindeutiges Kürzel, welche in alten Tabellen verwendet wurde.
 	 * @param beschreibung   die textuelle Beschreibung für das Halbjahr der gymnasialen Oberstufe
 	 */
-	private constructor(name : string, ordinal : number, id : number, jahrgang : String, halbjahr : number, kuerzel : String, kuerzelAlt : String, beschreibung : String) {
+	private constructor(name : string, ordinal : number, id : number, jahrgang : string, halbjahr : number, kuerzel : string, kuerzelAlt : string, beschreibung : string) {
 		super();
 		this.__name = name;
 		this.__ordinal = ordinal;
@@ -132,7 +132,7 @@ export class GostHalbjahr extends JavaObject {
 	 *    
 	 * @return die Map von den IDs auf das Gost-Halbjahr
 	 */
-	private static getMapByID() : HashMap<Number, GostHalbjahr> {
+	private static getMapByID() : HashMap<number, GostHalbjahr> {
 		if (GostHalbjahr._mapID.size() === 0) 
 			for (let h of GostHalbjahr.values()) 
 				GostHalbjahr._mapID.put(h.id, h);
@@ -145,7 +145,7 @@ export class GostHalbjahr extends JavaObject {
 	 *    
 	 * @return die Map von den Kürzeln auf das Gost-Halbjahr
 	 */
-	private static getMapByKuerzel() : HashMap<String, GostHalbjahr> {
+	private static getMapByKuerzel() : HashMap<string, GostHalbjahr> {
 		if (GostHalbjahr._mapKuerzel.size() === 0) 
 			for (let h of GostHalbjahr.values()) 
 				GostHalbjahr._mapKuerzel.put(h.kuerzel, h);
@@ -158,7 +158,7 @@ export class GostHalbjahr extends JavaObject {
 	 *    
 	 * @return die Map von den alten Kürzeln auf das Gost-Halbjahr
 	 */
-	private static getMapByKuerzelAlt() : HashMap<String, GostHalbjahr> {
+	private static getMapByKuerzelAlt() : HashMap<string, GostHalbjahr> {
 		if (GostHalbjahr._mapKuerzelAlt.size() === 0) 
 			for (let h of GostHalbjahr.values()) 
 				GostHalbjahr._mapKuerzelAlt.put(h.kuerzelAlt, h);
@@ -210,7 +210,7 @@ export class GostHalbjahr extends JavaObject {
 	 * 
 	 * @return ein Array mit den Halbjahren des Jahrgangs
 	 */
-	public static getHalbjahreFromJahrgang(jahrgang : String) : Array<GostHalbjahr> {
+	public static getHalbjahreFromJahrgang(jahrgang : string) : Array<GostHalbjahr> {
 		switch (jahrgang) {
 			case "EF": 
 				let ef : Array<GostHalbjahr> = [GostHalbjahr.EF1, GostHalbjahr.EF2]
@@ -233,7 +233,7 @@ export class GostHalbjahr extends JavaObject {
 	 * 
 	 * @return das Halbjahr oder null, falls die ID nicht gültig ist
 	 */
-	public static fromID(id : Number | null) : GostHalbjahr | null {
+	public static fromID(id : number | null) : GostHalbjahr | null {
 		if (id === null) 
 			return null;
 		switch (id) {
@@ -277,7 +277,7 @@ export class GostHalbjahr extends JavaObject {
 	 * 
 	 * @return das Halbjahr oder null, falls das Kürzel nicht gültig ist
 	 */
-	public static fromKuerzel(kuerzel : String | null) : GostHalbjahr | null {
+	public static fromKuerzel(kuerzel : string | null) : GostHalbjahr | null {
 		return GostHalbjahr.getMapByKuerzel().get(kuerzel);
 	}
 
@@ -288,7 +288,7 @@ export class GostHalbjahr extends JavaObject {
 	 * 
 	 * @return das Halbjahr oder null, falls das Kürzel nicht gültig ist
 	 */
-	public static fromKuerzelAlt(kuerzelAlt : String | null) : GostHalbjahr | null {
+	public static fromKuerzelAlt(kuerzelAlt : string | null) : GostHalbjahr | null {
 		return GostHalbjahr.getMapByKuerzelAlt().get(kuerzelAlt);
 	}
 
@@ -300,7 +300,7 @@ export class GostHalbjahr extends JavaObject {
 	 * 
 	 * @return das Halbjahr oder null, falls es kein gültiges Halbjahr mit den Angaben gibt.
 	 */
-	public static fromJahrgangUndHalbjahr(jahrgang : String | null, halbjahr : number) : GostHalbjahr | null {
+	public static fromJahrgangUndHalbjahr(jahrgang : string | null, halbjahr : number) : GostHalbjahr | null {
 		if ((halbjahr !== 1) && (halbjahr !== 2)) 
 			return null;
 		switch (jahrgang) {
@@ -427,7 +427,7 @@ export class GostHalbjahr extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -445,7 +445,7 @@ export class GostHalbjahr extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -499,7 +499,7 @@ export class GostHalbjahr extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : GostHalbjahr | null {
+	public static valueOf(name : string) : GostHalbjahr | null {
 		let tmp : GostHalbjahr | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

@@ -9,12 +9,12 @@ export class BerufskollegFachklassenKatalogEintrag extends JavaObject {
 	/**
 	 * Der Fachklassenschlüssel. 
 	 */
-	public schluessel : String = "";
+	public schluessel : string = "";
 
 	/**
 	 * Der Fachklassenschlüssel - Teil 2. 
 	 */
-	public schluessel2 : String = "";
+	public schluessel2 : string = "";
 
 	/**
 	 * Die Historie des Katalog-Eintrags. 
@@ -35,10 +35,10 @@ export class BerufskollegFachklassenKatalogEintrag extends JavaObject {
 		const result = new BerufskollegFachklassenKatalogEintrag();
 		if (typeof obj.schluessel === "undefined")
 			 throw new Error('invalid json format, missing attribute schluessel');
-		result.schluessel = String(obj.schluessel);
+		result.schluessel = obj.schluessel;
 		if (typeof obj.schluessel2 === "undefined")
 			 throw new Error('invalid json format, missing attribute schluessel2');
-		result.schluessel2 = String(obj.schluessel2);
+		result.schluessel2 = obj.schluessel2;
 		if (!!obj.historie) {
 			for (let elem of obj.historie) {
 				result.historie?.add(BerufskollegFachklassenKatalogDaten.transpilerFromJSON(JSON.stringify(elem)));
@@ -49,8 +49,8 @@ export class BerufskollegFachklassenKatalogEintrag extends JavaObject {
 
 	public static transpilerToJSON(obj : BerufskollegFachklassenKatalogEintrag) : string {
 		let result = '{';
-		result += '"schluessel" : ' + '"' + obj.schluessel.valueOf() + '"' + ',';
-		result += '"schluessel2" : ' + '"' + obj.schluessel2.valueOf() + '"' + ',';
+		result += '"schluessel" : ' + '"' + obj.schluessel! + '"' + ',';
+		result += '"schluessel2" : ' + '"' + obj.schluessel2! + '"' + ',';
 		if (!obj.historie) {
 			result += '"historie" : []';
 		} else {
@@ -71,10 +71,10 @@ export class BerufskollegFachklassenKatalogEintrag extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<BerufskollegFachklassenKatalogEintrag>) : string {
 		let result = '{';
 		if (typeof obj.schluessel !== "undefined") {
-			result += '"schluessel" : ' + '"' + obj.schluessel.valueOf() + '"' + ',';
+			result += '"schluessel" : ' + '"' + obj.schluessel + '"' + ',';
 		}
 		if (typeof obj.schluessel2 !== "undefined") {
-			result += '"schluessel2" : ' + '"' + obj.schluessel2.valueOf() + '"' + ',';
+			result += '"schluessel2" : ' + '"' + obj.schluessel2 + '"' + ',';
 		}
 		if (typeof obj.historie !== "undefined") {
 			if (!obj.historie) {

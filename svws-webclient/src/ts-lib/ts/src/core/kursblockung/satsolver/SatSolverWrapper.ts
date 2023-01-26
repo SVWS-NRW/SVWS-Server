@@ -157,20 +157,20 @@ export class SatSolverWrapper extends SatSolverA {
 	 * @param pList   Die Variablenliste.
 	 * @param pAmount Die Anzahl an TRUEs in der Variablenliste.
 	 */
-	public c_exactly_GENERIC(pList : LinkedCollection<Number>, pAmount : number) : void;
+	public c_exactly_GENERIC(pList : LinkedCollection<number>, pAmount : number) : void;
 
 	/**
 	 * Implementation for method overloads of 'c_exactly_GENERIC'
 	 */
-	public c_exactly_GENERIC(__param0 : Array<number> | LinkedCollection<Number>, __param1 : number) : void {
+	public c_exactly_GENERIC(__param0 : Array<number> | LinkedCollection<number>, __param1 : number) : void {
 		if (((typeof __param0 !== "undefined") && Array.isArray(__param0)) && ((typeof __param1 !== "undefined") && typeof __param1 === "number")) {
 			let pArray : Array<number> = __param0;
 			let amount : number = __param1 as number;
 			this.c_exactly_GENERIC(SatSolverWrapper.toList(pArray), amount);
 		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.adt.collection.LinkedCollection'))) || (__param0 === null)) && ((typeof __param1 !== "undefined") && typeof __param1 === "number")) {
-			let pList : LinkedCollection<Number> = cast_de_nrw_schule_svws_core_adt_collection_LinkedCollection(__param0);
+			let pList : LinkedCollection<number> = cast_de_nrw_schule_svws_core_adt_collection_LinkedCollection(__param0);
 			let pAmount : number = __param1 as number;
-			let list : LinkedCollection<Number> = new LinkedCollection(pList);
+			let list : LinkedCollection<number> = new LinkedCollection(pList);
 			if (pAmount > list.size()) {
 				console.log(JSON.stringify("FEHLER: c_exactly_GENERIC --> amount > list.size()"));
 			}
@@ -188,11 +188,11 @@ export class SatSolverWrapper extends SatSolverA {
 			}
 			if (pAmount === 1) {
 				if (list.size() === 1) {
-					this.c_1(list.getFirst().valueOf());
+					this.c_1(list.getFirst()!);
 					return;
 				}
 				if (list.size() === 2) {
-					this.c_unequal(list.getFirst().valueOf(), list.getLast().valueOf());
+					this.c_unequal(list.getFirst()!, list.getLast()!);
 					return;
 				}
 				this.c_exactly_one(list);
@@ -208,8 +208,8 @@ export class SatSolverWrapper extends SatSolverA {
 	 * @param pList    Die Variablenliste.
 	 * @param pMaximum Die maximale Anzahl an TRUEs in der Variablenliste.
 	 */
-	public c_at_most_GENERIC(pList : LinkedCollection<Number>, pMaximum : number) : void {
-		let list : LinkedCollection<Number> = new LinkedCollection(pList);
+	public c_at_most_GENERIC(pList : LinkedCollection<number>, pMaximum : number) : void {
+		let list : LinkedCollection<number> = new LinkedCollection(pList);
 		if (pMaximum >= list.size()) {
 			return;
 		}
@@ -232,7 +232,7 @@ export class SatSolverWrapper extends SatSolverA {
 	 * 
 	 * @param list Genau eine der Variablen der Liste muss TRUE sein.
 	 */
-	private c_exactly_one(list : LinkedCollection<Number>) : void {
+	private c_exactly_one(list : LinkedCollection<number>) : void {
 		this.c_1(this.c_at_most_one_tree(list));
 	}
 
@@ -273,8 +273,8 @@ export class SatSolverWrapper extends SatSolverA {
 	 * 
 	 * @return Die Ergebnisvariable ist eine OR-Verknüpfung aller Variablen der Liste.
 	 */
-	private c_at_most_one_tree(pList : LinkedCollection<Number>) : number {
-		let list : LinkedCollection<Number> = new LinkedCollection(pList);
+	private c_at_most_one_tree(pList : LinkedCollection<number>) : number {
+		let list : LinkedCollection<number> = new LinkedCollection(pList);
 		if (list.isEmpty()) {
 			list.add(this.varFALSE);
 		}
@@ -286,42 +286,42 @@ export class SatSolverWrapper extends SatSolverA {
 			this.c_z_equals_x_or_y(a, b, c);
 			list.add(c);
 		}
-		return list.removeFirst().valueOf();
+		return list.removeFirst()!;
 	}
 
-	private c_exactly_NETWORK(list : LinkedCollection<Number>, amount : number) : void {
+	private c_exactly_NETWORK(list : LinkedCollection<number>, amount : number) : void {
 		this.c_bitonic_sort(list);
 		let i : number = 0;
-		let iter : JavaIterator<Number> = list.iterator();
+		let iter : JavaIterator<number> = list.iterator();
 		while (iter.hasNext()) {
-			let value : Number = iter.next();
+			let value : number = iter.next();
 			if (i < amount) {
-				this.c_1(+value.valueOf());
+				this.c_1(+value!);
 			} else {
-				this.c_1(-value.valueOf());
+				this.c_1(-value!);
 			}
 			i++;
 		}
 	}
 
-	private c_at_most_NETWORK(list : LinkedCollection<Number>, maximum : number) : void {
+	private c_at_most_NETWORK(list : LinkedCollection<number>, maximum : number) : void {
 		this.c_bitonic_sort(list);
 		let i : number = 0;
-		let iter : JavaIterator<Number> = list.iterator();
+		let iter : JavaIterator<number> = list.iterator();
 		while (iter.hasNext()) {
-			let value : Number = iter.next();
+			let value : number = iter.next();
 			if (i < maximum) 
 				i++; else 
-				this.c_1(-value.valueOf());
+				this.c_1(-value!);
 		}
 	}
 
-	private c_bitonic_sort(list : LinkedCollection<Number>) : void {
+	private c_bitonic_sort(list : LinkedCollection<number>) : void {
 		this.c_fill_False_until_power_two(list);
 		this.c_bitonic_sort_power_two(list);
 	}
 
-	private c_fill_False_until_power_two(list : LinkedCollection<Number>) : void {
+	private c_fill_False_until_power_two(list : LinkedCollection<number>) : void {
 		let size : number = 1;
 		while (size < list.size()) {
 			size *= 2;
@@ -331,7 +331,7 @@ export class SatSolverWrapper extends SatSolverA {
 		}
 	}
 
-	private c_bitonic_sort_power_two(list : LinkedCollection<Number>) : void {
+	private c_bitonic_sort_power_two(list : LinkedCollection<number>) : void {
 		for (let window : number = 2; window <= list.size(); window *= 2){
 			this.c_bitonic_sort_spiral(list, window);
 			for (let difference : number = Math.trunc(window / 2); difference >= 2; difference /= 2){
@@ -340,7 +340,7 @@ export class SatSolverWrapper extends SatSolverA {
 		}
 	}
 
-	private c_bitonic_sort_spiral(list : LinkedCollection<Number>, size : number) : void {
+	private c_bitonic_sort_spiral(list : LinkedCollection<number>, size : number) : void {
 		for (let i : number = 0; i < list.size(); i += size){
 			for (let i1 : number = i, i2 : number = i + size - 1; i1 < i2; i1++, i2--){
 				this.c_bitonic_comparator(list, i1, i2);
@@ -348,7 +348,7 @@ export class SatSolverWrapper extends SatSolverA {
 		}
 	}
 
-	private c_bitonic_sort_difference(list : LinkedCollection<Number>, size : number) : void {
+	private c_bitonic_sort_difference(list : LinkedCollection<number>, size : number) : void {
 		let half : number = Math.trunc(size / 2);
 		for (let i : number = 0; i < list.size(); i += size){
 			for (let j : number = 0; j < half; j++){
@@ -357,7 +357,7 @@ export class SatSolverWrapper extends SatSolverA {
 		}
 	}
 
-	private c_bitonic_comparator(result : LinkedCollection<Number>, i1 : number, i2 : number) : void {
+	private c_bitonic_comparator(result : LinkedCollection<number>, i1 : number, i2 : number) : void {
 		if (i1 >= i2) {
 			console.log(JSON.stringify("c_bitonic_comparator: " + i1 + "," + i2 + " <-- ERROR!!!"));
 		}
@@ -367,8 +367,8 @@ export class SatSolverWrapper extends SatSolverA {
 		result.set(i2, this.c_new_var_AND(a, b));
 	}
 
-	private static toList(pArray : Array<number>) : LinkedCollection<Number> {
-		let list : LinkedCollection<Number> = new LinkedCollection();
+	private static toList(pArray : Array<number>) : LinkedCollection<number> {
+		let list : LinkedCollection<number> = new LinkedCollection();
 		for (let x of pArray) {
 			list.addLast(x);
 		}

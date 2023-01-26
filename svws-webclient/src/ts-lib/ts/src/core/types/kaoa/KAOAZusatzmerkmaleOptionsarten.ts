@@ -4,7 +4,7 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class KAOAZusatzmerkmaleOptionsarten extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -13,7 +13,7 @@ export class KAOAZusatzmerkmaleOptionsarten extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<KAOAZusatzmerkmaleOptionsarten> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, KAOAZusatzmerkmaleOptionsarten> = new Map<String, KAOAZusatzmerkmaleOptionsarten>();
+	private static readonly all_values_by_name : Map<string, KAOAZusatzmerkmaleOptionsarten> = new Map<string, KAOAZusatzmerkmaleOptionsarten>();
 
 	/**
 	 * Keine Option für das KAoA-Zusatzmerkmal 
@@ -48,14 +48,14 @@ export class KAOAZusatzmerkmaleOptionsarten extends JavaObject {
 	/**
 	 * Das Kürzel für die Optionsart 
 	 */
-	public readonly kuerzel : String | null;
+	public readonly kuerzel : string | null;
 
 	/**
 	 * Erzeugt ein neues Element in der Aufzählung.
 	 * 
 	 * @param kuerzel   das Kürzel  
 	 */
-	private constructor(name : string, ordinal : number, kuerzel : String | null) {
+	private constructor(name : string, ordinal : number, kuerzel : string | null) {
 		super();
 		this.__name = name;
 		this.__ordinal = ordinal;
@@ -71,7 +71,7 @@ export class KAOAZusatzmerkmaleOptionsarten extends JavaObject {
 	 * 
 	 * @return die Optionsart oder null, falls das Kürzel ungültig ist
 	 */
-	public static getByKuerzel(kuerzel : String | null) : KAOAZusatzmerkmaleOptionsarten | null {
+	public static getByKuerzel(kuerzel : string | null) : KAOAZusatzmerkmaleOptionsarten | null {
 		for (let art of KAOAZusatzmerkmaleOptionsarten.values()) 
 			if (JavaObject.equalsTranspiler(art.kuerzel, (kuerzel))) 
 				return art;
@@ -83,7 +83,7 @@ export class KAOAZusatzmerkmaleOptionsarten extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -101,7 +101,7 @@ export class KAOAZusatzmerkmaleOptionsarten extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -155,7 +155,7 @@ export class KAOAZusatzmerkmaleOptionsarten extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : KAOAZusatzmerkmaleOptionsarten | null {
+	public static valueOf(name : string) : KAOAZusatzmerkmaleOptionsarten | null {
 		let tmp : KAOAZusatzmerkmaleOptionsarten | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

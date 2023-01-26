@@ -25,7 +25,7 @@ export class SprachendatenUtils extends JavaObject {
 	 *
 	 * @return true, falls eine Belegung existiert und ansonsten false
 	 */
-	public static hatSprachbelegung(sprachendaten : Sprachendaten | null, sprache : String | null) : boolean {
+	public static hatSprachbelegung(sprachendaten : Sprachendaten | null, sprache : string | null) : boolean {
 		if (sprachendaten === null || sprachendaten.belegungen === null || sprache === null || JavaObject.equalsTranspiler("", (sprache))) {
 			return false;
 		}
@@ -40,7 +40,7 @@ export class SprachendatenUtils extends JavaObject {
 	 *
 	 * @return true, falls eine Belegung existiert und ansonsten false
 	 */
-	public static hatSprachbelegungInSekI(sprachendaten : Sprachendaten | null, sprache : String | null) : boolean {
+	public static hatSprachbelegungInSekI(sprachendaten : Sprachendaten | null, sprache : string | null) : boolean {
 		if (sprachendaten === null || sprachendaten.belegungen === null || sprache === null || JavaObject.equalsTranspiler("", (sprache))) {
 			return false;
 		}
@@ -60,7 +60,7 @@ export class SprachendatenUtils extends JavaObject {
 	 *
 	 * @return true, falls eine Belegung existiert und ansonsten false
 	 */
-	public static hatSprachbelegungInSekIMitDauer(sprachendaten : Sprachendaten | null, sprache : String | null, mindestBelegdauer : Number | null) : boolean {
+	public static hatSprachbelegungInSekIMitDauer(sprachendaten : Sprachendaten | null, sprache : string | null, mindestBelegdauer : number | null) : boolean {
 		if (sprachendaten === null || sprachendaten.belegungen === null || sprache === null || JavaObject.equalsTranspiler("", (sprache)) || mindestBelegdauer === null || mindestBelegdauer <= 0) {
 			return false;
 		}
@@ -96,7 +96,7 @@ export class SprachendatenUtils extends JavaObject {
 	 *
 	 * @return die Sprachbelegung oder null, falls keine existiert
 	 */
-	public static getSprachbelegung(sprachendaten : Sprachendaten | null, sprache : String | null) : Sprachbelegung | null {
+	public static getSprachbelegung(sprachendaten : Sprachendaten | null, sprache : string | null) : Sprachbelegung | null {
 		if (sprachendaten === null || sprachendaten.belegungen === null || sprache === null || JavaObject.equalsTranspiler("", (sprache))) {
 			return null;
 		}
@@ -122,13 +122,13 @@ export class SprachendatenUtils extends JavaObject {
 	 *
 	 * @return Vector mit Sprachbelegungen, die die Kriterien erfüllen. Die Liste ist nach Belegungsbeginn aufsteigend sortiert
 	 */
-	public static getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten : Sprachendaten | null, belegungbeginnStart : String | null, belegungbeginnEnde : String | null, mindestBelegdauer : Number | null) : Vector<Sprachbelegung> {
+	public static getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten : Sprachendaten | null, belegungbeginnStart : string | null, belegungbeginnEnde : string | null, mindestBelegdauer : number | null) : Vector<Sprachbelegung> {
 		let belegungen : Vector<Sprachbelegung> = new Vector();
 		if (sprachendaten !== null && sprachendaten.belegungen !== null && belegungbeginnStart !== null && !JavaObject.equalsTranspiler(belegungbeginnStart, ("")) && belegungbeginnEnde !== null && !JavaObject.equalsTranspiler(belegungbeginnEnde, ("")) && mindestBelegdauer !== null && mindestBelegdauer >= 0) {
 			let belegtVonJahrgangNumerisch : number;
 			let belegtBisJahrgangNumerisch : number;
 			let letzterJahrgangSekI : number;
-			let gefundeneSprachen : HashSet<String | null> | null = new HashSet();
+			let gefundeneSprachen : HashSet<string | null> | null = new HashSet();
 			let alleBelegungen : Vector<Sprachbelegung> = sprachendaten.belegungen;
 			for (let belegung of alleBelegungen) {
 				if (belegung.belegungVonJahrgang !== null) {
@@ -169,7 +169,7 @@ export class SprachendatenUtils extends JavaObject {
 	 *
 	 * @return true, falls die Sprache als fortgeführte Fremdsprache als EF belegt werden kann, andernfalls false
 	 */
-	public static istFortfuehrbareSpracheInGOSt(sprachendaten : Sprachendaten | null, sprache : String | null) : boolean {
+	public static istFortfuehrbareSpracheInGOSt(sprachendaten : Sprachendaten | null, sprache : string | null) : boolean {
 		if (sprachendaten === null || sprache === null || JavaObject.equalsTranspiler("", (sprache))) {
 			return false;
 		}
@@ -201,8 +201,8 @@ export class SprachendatenUtils extends JavaObject {
 	 *
 	 * @return Liste alle Sprachen, die in der GOSt fortgeführt werden können.
 	 */
-	public static getFortfuehrbareSprachenInGOSt(sprachendaten : Sprachendaten | null) : Vector<String> {
-		let sprachen : Vector<String> = new Vector();
+	public static getFortfuehrbareSprachenInGOSt(sprachendaten : Sprachendaten | null) : Vector<string> {
+		let sprachen : Vector<string> = new Vector();
 		if (sprachendaten !== null) {
 			let belegungen : Vector<Sprachbelegung> = SprachendatenUtils.getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten, "05", "10", 2);
 			for (let belegung of belegungen) {
@@ -352,7 +352,7 @@ export class SprachendatenUtils extends JavaObject {
 	 *
 	 * @return Die erste belegte Sprache (gemäß Belegung oder Prüfung) oder null, falls keine existiert
 	 */
-	public static getErsteSpracheInSekI(sprachendaten : Sprachendaten | null) : String | null {
+	public static getErsteSpracheInSekI(sprachendaten : Sprachendaten | null) : string | null {
 		if (sprachendaten === null) {
 			return null;
 		}
@@ -384,12 +384,12 @@ export class SprachendatenUtils extends JavaObject {
 	 *
 	 * @return Die zweite belegte Sprache (gemäß Belegung oder Prüfung) oder null, falls keine existiert
 	 */
-	public static getZweiteSpracheInSekI(sprachendaten : Sprachendaten | null) : String | null {
+	public static getZweiteSpracheInSekI(sprachendaten : Sprachendaten | null) : string | null {
 		if (sprachendaten === null) {
 			return null;
 		}
-		let pruefungErsteSprache : String | null = "";
-		let pruefungZweiteSprache : String | null = "";
+		let pruefungErsteSprache : string | null = "";
+		let pruefungZweiteSprache : string | null = "";
 		let pruefungen : Vector<Sprachpruefung> = sprachendaten.pruefungen;
 		if (pruefungen !== null) {
 			for (let pruefung of pruefungen) {
@@ -430,7 +430,7 @@ export class SprachendatenUtils extends JavaObject {
 	 *
 	 * @return Sprache, falls eine Belegung vorhanden ist, sonst null
 	 */
-	public static getSpracheMit2JahrenDauerEndeSekI(sprachendaten : Sprachendaten | null) : String | null {
+	public static getSpracheMit2JahrenDauerEndeSekI(sprachendaten : Sprachendaten | null) : string | null {
 		if (sprachendaten === null) {
 			return null;
 		}
@@ -452,7 +452,7 @@ export class SprachendatenUtils extends JavaObject {
 	 *
 	 * @return Wert des ASDJahrgangs zwischen 5 und 13, wenn dieser nicht bestimmt werden kann, wird der Wert 0 zurückgegeben.
 	 */
-	private static ASDJahrgangNumerisch(ASDJahrgang : String | null) : number {
+	private static ASDJahrgangNumerisch(ASDJahrgang : string | null) : number {
 		if (ASDJahrgang === null || JavaObject.equalsTranspiler(ASDJahrgang, (""))) {
 			return 0;
 		}

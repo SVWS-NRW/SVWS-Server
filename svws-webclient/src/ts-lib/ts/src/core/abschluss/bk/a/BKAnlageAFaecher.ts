@@ -14,12 +14,12 @@ export class BKAnlageAFaecher extends JavaObject {
 	/**
 	 * Information zur praktischen Teil der Berufsabschlussprüfung (IHK). 
 	 */
-	public hatBestandenBerufsAbschlussPruefung : Boolean | null = null;
+	public hatBestandenBerufsAbschlussPruefung : boolean | null = null;
 
 	/**
 	 * Die Bezeichnung des Sprachreferenzniveaus in Englisch nach dem GeR. 
 	 */
-	public englischGeR : String | null = null;
+	public englischGeR : string | null = null;
 
 
 	public constructor() {

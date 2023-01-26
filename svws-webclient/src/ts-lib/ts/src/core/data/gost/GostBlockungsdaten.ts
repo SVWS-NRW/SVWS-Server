@@ -20,7 +20,7 @@ export class GostBlockungsdaten extends JavaObject {
 	/**
 	 * Der Name der Blockung 
 	 */
-	public name : String = "Neue Blockung";
+	public name : string = "Neue Blockung";
 
 	/**
 	 * Der Abiturjahrgang, dem die Kursblockung zugeordnet ist 
@@ -84,7 +84,7 @@ export class GostBlockungsdaten extends JavaObject {
 		result.id = obj.id;
 		if (typeof obj.name === "undefined")
 			 throw new Error('invalid json format, missing attribute name');
-		result.name = String(obj.name);
+		result.name = obj.name;
 		if (typeof obj.abijahrgang === "undefined")
 			 throw new Error('invalid json format, missing attribute abijahrgang');
 		result.abijahrgang = obj.abijahrgang;
@@ -130,7 +130,7 @@ export class GostBlockungsdaten extends JavaObject {
 	public static transpilerToJSON(obj : GostBlockungsdaten) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"name" : ' + '"' + obj.name.valueOf() + '"' + ',';
+		result += '"name" : ' + '"' + obj.name! + '"' + ',';
 		result += '"abijahrgang" : ' + obj.abijahrgang + ',';
 		result += '"gostHalbjahr" : ' + obj.gostHalbjahr + ',';
 		result += '"istAktiv" : ' + obj.istAktiv + ',';
@@ -217,7 +217,7 @@ export class GostBlockungsdaten extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.name !== "undefined") {
-			result += '"name" : ' + '"' + obj.name.valueOf() + '"' + ',';
+			result += '"name" : ' + '"' + obj.name + '"' + ',';
 		}
 		if (typeof obj.abijahrgang !== "undefined") {
 			result += '"abijahrgang" : ' + obj.abijahrgang + ',';

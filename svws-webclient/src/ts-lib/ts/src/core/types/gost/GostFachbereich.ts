@@ -10,7 +10,7 @@ import { Vector, cast_java_util_Vector } from '../../../java/util/Vector';
 export class GostFachbereich extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -19,7 +19,7 @@ export class GostFachbereich extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<GostFachbereich> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, GostFachbereich> = new Map<String, GostFachbereich>();
+	private static readonly all_values_by_name : Map<string, GostFachbereich> = new Map<string, GostFachbereich>();
 
 	/**
 	 * Fachbereich deutsch 
@@ -129,7 +129,7 @@ export class GostFachbereich extends JavaObject {
 	/**
 	 * Eine Liste der Fächerkürzel dieses Fachbereichs 
 	 */
-	private readonly kuerzel : Vector<String> = new Vector();
+	private readonly kuerzel : Vector<string> = new Vector();
 
 	/**
 	 * Erstellt einen neuen Fachbereich als Kombination der übergebenen Fachbereiche
@@ -205,17 +205,17 @@ export class GostFachbereich extends JavaObject {
 	 * 
 	 * @return true, falls das Fach zu dem Fachbereich gehört, sonst false
 	 */
-	public hat(kuerzel : String | null) : boolean;
+	public hat(kuerzel : string | null) : boolean;
 
 	/**
 	 * Implementation for method overloads of 'hat'
 	 */
-	public hat(__param0 : GostFach | String | null) : boolean {
+	public hat(__param0 : GostFach | null | string) : boolean {
 		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.data.gost.GostFach'))) || (__param0 === null))) {
 			let fach : GostFach | null = cast_de_nrw_schule_svws_core_data_gost_GostFach(__param0);
 			return fach === null ? false : this.hat(fach.kuerzel);
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof String) || (typeof __param0 === "string")) || (__param0 === null))) {
-			let kuerzel : String | null = __param0;
+		} else if (((typeof __param0 !== "undefined") && (typeof __param0 === "string") || (__param0 === null))) {
+			let kuerzel : string | null = __param0;
 			if (kuerzel === null) 
 				return false;
 			return this.kuerzel.contains(kuerzel);
@@ -244,7 +244,7 @@ export class GostFachbereich extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -262,7 +262,7 @@ export class GostFachbereich extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -316,7 +316,7 @@ export class GostFachbereich extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : GostFachbereich | null {
+	public static valueOf(name : string) : GostFachbereich | null {
 		let tmp : GostFachbereich | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

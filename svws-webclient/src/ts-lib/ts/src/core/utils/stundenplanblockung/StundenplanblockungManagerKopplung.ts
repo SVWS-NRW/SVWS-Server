@@ -13,7 +13,7 @@ export class StundenplanblockungManagerKopplung extends JavaObject {
 	/**
 	 * Das Kürzel der Kopplung. Beispielsweise '7RE'. 
 	 */
-	private _kuerzel : String = "";
+	private _kuerzel : string = "";
 
 	/**
 	 * Alle Lerngruppen der Kopplungen. 
@@ -27,7 +27,7 @@ export class StundenplanblockungManagerKopplung extends JavaObject {
 	 * @param pKopplungID  Die Datenbank-ID der Kopplung.
 	 * @param pKuerzel     Das Kürzel der Kopplung.
 	 */
-	public constructor(pKopplungID : number, pKuerzel : String) {
+	public constructor(pKopplungID : number, pKuerzel : string) {
 		super();
 		this._id = pKopplungID;
 		this._kuerzel = pKuerzel;
@@ -47,7 +47,7 @@ export class StundenplanblockungManagerKopplung extends JavaObject {
 	 * 
 	 * @param pKuerzel  Das neue Kürzel der Kopplung.
 	 */
-	public setKuerzel(pKuerzel : String) : void {
+	public setKuerzel(pKuerzel : string) : void {
 		this._kuerzel = pKuerzel;
 	}
 

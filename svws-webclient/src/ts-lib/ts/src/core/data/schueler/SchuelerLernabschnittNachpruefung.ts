@@ -6,7 +6,7 @@ export class SchuelerLernabschnittNachpruefung extends JavaObject {
 	/**
 	 * Der Grund für die Versetzung (V - Versetzung, A - Abschluss, B - berufsqualifizierend) 
 	 */
-	public grund : String = "V";
+	public grund : string = "V";
 
 	/**
 	 * Die ID des Faches, auf welches sich die Leistungsdaten beziehen. 
@@ -16,12 +16,12 @@ export class SchuelerLernabschnittNachpruefung extends JavaObject {
 	/**
 	 * Das Kürzel der Note in der Nachprüfung. 
 	 */
-	public note : String | null = null;
+	public note : string | null = null;
 
 	/**
 	 * Das Datum der Nachprüfung. 
 	 */
-	public datum : String | null = null;
+	public datum : string | null = null;
 
 
 	public constructor() {
@@ -37,21 +37,21 @@ export class SchuelerLernabschnittNachpruefung extends JavaObject {
 		const result = new SchuelerLernabschnittNachpruefung();
 		if (typeof obj.grund === "undefined")
 			 throw new Error('invalid json format, missing attribute grund');
-		result.grund = String(obj.grund);
+		result.grund = obj.grund;
 		if (typeof obj.fachID === "undefined")
 			 throw new Error('invalid json format, missing attribute fachID');
 		result.fachID = obj.fachID;
-		result.note = typeof obj.note === "undefined" ? null : obj.note === null ? null : String(obj.note);
-		result.datum = typeof obj.datum === "undefined" ? null : obj.datum === null ? null : String(obj.datum);
+		result.note = typeof obj.note === "undefined" ? null : obj.note === null ? null : obj.note;
+		result.datum = typeof obj.datum === "undefined" ? null : obj.datum === null ? null : obj.datum;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : SchuelerLernabschnittNachpruefung) : string {
 		let result = '{';
-		result += '"grund" : ' + '"' + obj.grund.valueOf() + '"' + ',';
+		result += '"grund" : ' + '"' + obj.grund! + '"' + ',';
 		result += '"fachID" : ' + obj.fachID + ',';
-		result += '"note" : ' + ((!obj.note) ? 'null' : '"' + obj.note.valueOf() + '"') + ',';
-		result += '"datum" : ' + ((!obj.datum) ? 'null' : '"' + obj.datum.valueOf() + '"') + ',';
+		result += '"note" : ' + ((!obj.note) ? 'null' : '"' + obj.note + '"') + ',';
+		result += '"datum" : ' + ((!obj.datum) ? 'null' : '"' + obj.datum + '"') + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -60,16 +60,16 @@ export class SchuelerLernabschnittNachpruefung extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<SchuelerLernabschnittNachpruefung>) : string {
 		let result = '{';
 		if (typeof obj.grund !== "undefined") {
-			result += '"grund" : ' + '"' + obj.grund.valueOf() + '"' + ',';
+			result += '"grund" : ' + '"' + obj.grund + '"' + ',';
 		}
 		if (typeof obj.fachID !== "undefined") {
 			result += '"fachID" : ' + obj.fachID + ',';
 		}
 		if (typeof obj.note !== "undefined") {
-			result += '"note" : ' + ((!obj.note) ? 'null' : '"' + obj.note.valueOf() + '"') + ',';
+			result += '"note" : ' + ((!obj.note) ? 'null' : '"' + obj.note + '"') + ',';
 		}
 		if (typeof obj.datum !== "undefined") {
-			result += '"datum" : ' + ((!obj.datum) ? 'null' : '"' + obj.datum.valueOf() + '"') + ',';
+			result += '"datum" : ' + ((!obj.datum) ? 'null' : '"' + obj.datum + '"') + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

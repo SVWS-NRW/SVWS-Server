@@ -4,7 +4,7 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class KAOAMerkmaleOptionsarten extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -13,7 +13,7 @@ export class KAOAMerkmaleOptionsarten extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<KAOAMerkmaleOptionsarten> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, KAOAMerkmaleOptionsarten> = new Map<String, KAOAMerkmaleOptionsarten>();
+	private static readonly all_values_by_name : Map<string, KAOAMerkmaleOptionsarten> = new Map<string, KAOAMerkmaleOptionsarten>();
 
 	/**
 	 * Keine Option für das KAoA-Merkmal 
@@ -23,14 +23,14 @@ export class KAOAMerkmaleOptionsarten extends JavaObject {
 	/**
 	 * Das Kürzel für die Optionsart 
 	 */
-	public readonly kuerzel : String | null;
+	public readonly kuerzel : string | null;
 
 	/**
 	 * Erzeugt ein neues Element in der Aufzählung.
 	 * 
 	 * @param kuerzel   das Kürzel  
 	 */
-	private constructor(name : string, ordinal : number, kuerzel : String | null) {
+	private constructor(name : string, ordinal : number, kuerzel : string | null) {
 		super();
 		this.__name = name;
 		this.__ordinal = ordinal;
@@ -46,7 +46,7 @@ export class KAOAMerkmaleOptionsarten extends JavaObject {
 	 * 
 	 * @return die Optionsart oder null, falls das Kürzel ungültig ist
 	 */
-	public static getByKuerzel(kuerzel : String | null) : KAOAMerkmaleOptionsarten | null {
+	public static getByKuerzel(kuerzel : string | null) : KAOAMerkmaleOptionsarten | null {
 		for (let art of KAOAMerkmaleOptionsarten.values()) 
 			if (JavaObject.equalsTranspiler(art.kuerzel, (kuerzel))) 
 				return art;
@@ -58,7 +58,7 @@ export class KAOAMerkmaleOptionsarten extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -76,7 +76,7 @@ export class KAOAMerkmaleOptionsarten extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -130,7 +130,7 @@ export class KAOAMerkmaleOptionsarten extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : KAOAMerkmaleOptionsarten | null {
+	public static valueOf(name : string) : KAOAMerkmaleOptionsarten | null {
 		let tmp : KAOAMerkmaleOptionsarten | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

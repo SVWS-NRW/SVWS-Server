@@ -8,12 +8,12 @@ export class SchulformSchulgliederung extends JavaObject {
 	/**
 	 * Das Kürzel der Schulform 
 	 */
-	public schulform : String = "GY";
+	public schulform : string = "GY";
 
 	/**
 	 * Das Kürzel der Schulgliederung bzw. des Bildungsganges. Null, falls alle Gliederungen der Schulform gemeint sind. 
 	 */
-	public gliederung : String | null = null;
+	public gliederung : string | null = null;
 
 
 	/**
@@ -52,15 +52,15 @@ export class SchulformSchulgliederung extends JavaObject {
 		const result = new SchulformSchulgliederung();
 		if (typeof obj.schulform === "undefined")
 			 throw new Error('invalid json format, missing attribute schulform');
-		result.schulform = String(obj.schulform);
-		result.gliederung = typeof obj.gliederung === "undefined" ? null : obj.gliederung === null ? null : String(obj.gliederung);
+		result.schulform = obj.schulform;
+		result.gliederung = typeof obj.gliederung === "undefined" ? null : obj.gliederung === null ? null : obj.gliederung;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : SchulformSchulgliederung) : string {
 		let result = '{';
-		result += '"schulform" : ' + '"' + obj.schulform.valueOf() + '"' + ',';
-		result += '"gliederung" : ' + ((!obj.gliederung) ? 'null' : '"' + obj.gliederung.valueOf() + '"') + ',';
+		result += '"schulform" : ' + '"' + obj.schulform! + '"' + ',';
+		result += '"gliederung" : ' + ((!obj.gliederung) ? 'null' : '"' + obj.gliederung + '"') + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -69,10 +69,10 @@ export class SchulformSchulgliederung extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<SchulformSchulgliederung>) : string {
 		let result = '{';
 		if (typeof obj.schulform !== "undefined") {
-			result += '"schulform" : ' + '"' + obj.schulform.valueOf() + '"' + ',';
+			result += '"schulform" : ' + '"' + obj.schulform + '"' + ',';
 		}
 		if (typeof obj.gliederung !== "undefined") {
-			result += '"gliederung" : ' + ((!obj.gliederung) ? 'null' : '"' + obj.gliederung.valueOf() + '"') + ',';
+			result += '"gliederung" : ' + ((!obj.gliederung) ? 'null' : '"' + obj.gliederung + '"') + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

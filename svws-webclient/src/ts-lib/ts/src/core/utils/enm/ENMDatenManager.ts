@@ -29,32 +29,32 @@ export class ENMDatenManager extends JavaObject {
 	/**
 	 * Temporäre Map für das Befüllen der ENMLehrer-Vektors.
 	 */
-	private mapLehrer : HashMap<Number, ENMLehrer> = new HashMap();
+	private mapLehrer : HashMap<number, ENMLehrer> = new HashMap();
 
 	/**
 	 * Temporäre Map für das Befüllen des ENMSchueler-Vektors.
 	 */
-	private mapSchueler : HashMap<Number, ENMSchueler> = new HashMap();
+	private mapSchueler : HashMap<number, ENMSchueler> = new HashMap();
 
 	/**
 	 * Temporäre Map für das Befüllen des ENMFach-Vektors.
 	 */
-	private mapFaecher : HashMap<Number, ENMFach> = new HashMap();
+	private mapFaecher : HashMap<number, ENMFach> = new HashMap();
 
 	/**
 	 * Temporäre Map für das Befüllen des ENMFach-Vektors.
 	 */
-	private mapFaecherByKuerzel : HashMap<String, ENMFach> = new HashMap();
+	private mapFaecherByKuerzel : HashMap<string, ENMFach> = new HashMap();
 
 	/**
 	 * Temporäre Map für das Befüllen des ENMJahrgang-Vektors.
 	 */
-	private mapJahrgaenge : HashMap<Number, ENMJahrgang> = new HashMap();
+	private mapJahrgaenge : HashMap<number, ENMJahrgang> = new HashMap();
 
 	/**
 	 * Temporäre Map für das Befüllen des ENMKlasse-Vektors.
 	 */
-	private mapKlassen : HashMap<Number, ENMKlasse> = new HashMap();
+	private mapKlassen : HashMap<number, ENMKlasse> = new HashMap();
 
 	/**
 	 * Zählt die Id der Lerngruppe hoch. 
@@ -64,7 +64,7 @@ export class ENMDatenManager extends JavaObject {
 	/**
 	 * Temporäre Map für die Lerngruppen. 
 	 */
-	private mapLerngruppen : HashMap<String, ENMLerngruppe> = new HashMap();
+	private mapLerngruppen : HashMap<string, ENMLerngruppe> = new HashMap();
 
 
 	/**
@@ -72,7 +72,7 @@ export class ENMDatenManager extends JavaObject {
 	 * 
 	 * @param lehrerID   die ID des Lehrers für welchen die ENM-Daten erzeugt werden oder null für alle Lehrer 
 	 */
-	public constructor(lehrerID : Number | null);
+	public constructor(lehrerID : number | null);
 
 	/**
 	 * Erzeugt einen neuen ENM-Daten-Manager für die übergebenen Daten.
@@ -84,10 +84,10 @@ export class ENMDatenManager extends JavaObject {
 	/**
 	 * Implementation for method overloads of 'constructor'
 	 */
-	public constructor(__param0 : ENMDaten | Number | null) {
+	public constructor(__param0 : ENMDaten | null | number) {
 		super();
-		if (((typeof __param0 !== "undefined") && ((__param0 instanceof Number) || (typeof __param0 === "number")) || (__param0 === null))) {
-			let lehrerID : Number | null = cast_java_lang_Long(__param0);
+		if (((typeof __param0 !== "undefined") && (typeof __param0 === "number") || (__param0 === null))) {
+			let lehrerID : number | null = __param0;
 			this.daten = new ENMDaten();
 			this.daten.lehrerID = lehrerID;
 		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.nrw.schule.svws.core.data.enm.ENMDaten'))))) {
@@ -115,7 +115,7 @@ export class ENMDatenManager extends JavaObject {
 	 * @param schulform                   das Kürzel der Schulform der Schule
 	 * @param mailadresse                 gibt die Mailadresse an, an welche die verschlüsselte Datei zurückgesendet werden soll (z.B. mail@schule.nrw.de)
 	 */
-	public setSchuldaten(schulnummer : number, schuljahr : number, anzahlAbschnitte : number, abschnitt : number, publicKey : String | null, fehlstundenEingabe : boolean, fehlstundenSIFachbezogen : boolean, fehlstundenSIIFachbezogen : boolean, schulform : String, mailadresse : String | null) : void {
+	public setSchuldaten(schulnummer : number, schuljahr : number, anzahlAbschnitte : number, abschnitt : number, publicKey : string | null, fehlstundenEingabe : boolean, fehlstundenSIFachbezogen : boolean, fehlstundenSIIFachbezogen : boolean, schulform : string, mailadresse : string | null) : void {
 		this.daten.schulnummer = schulnummer;
 		this.daten.schuljahr = schuljahr;
 		this.daten.anzahlAbschnitte = anzahlAbschnitte;
@@ -179,7 +179,7 @@ export class ENMDatenManager extends JavaObject {
 	 * 
 	 * @return true, falls der Lehrer hinzugefügt wurde, ansonsten false  
 	 */
-	public addLehrer(id : number, kuerzel : String | null, nachname : String | null, vorname : String | null, geschlecht : Geschlecht, eMailDienstlich : String | null) : boolean {
+	public addLehrer(id : number, kuerzel : string | null, nachname : string | null, vorname : string | null, geschlecht : Geschlecht, eMailDienstlich : string | null) : boolean {
 		if (this.mapLehrer.get(id) !== null) 
 			return false;
 		let enmLehrer : ENMLehrer = new ENMLehrer();
@@ -211,7 +211,7 @@ export class ENMDatenManager extends JavaObject {
 	 * 
 	 * @return true, falls der Schueler hinzugefügt wurde, ansonsten false  
 	 */
-	public addSchueler(id : number, jahrgangID : number, klasseID : number, nachname : String | null, vorname : String | null, geschlecht : Geschlecht, bilingualeSprache : String | null, istZieldifferent : boolean, istDaZFoerderung : boolean) : boolean {
+	public addSchueler(id : number, jahrgangID : number, klasseID : number, nachname : string | null, vorname : string | null, geschlecht : Geschlecht, bilingualeSprache : string | null, istZieldifferent : boolean, istDaZFoerderung : boolean) : boolean {
 		if (this.mapSchueler.get(id) !== null) 
 			return false;
 		let enmSchueler : ENMSchueler = new ENMSchueler();
@@ -240,7 +240,7 @@ export class ENMDatenManager extends JavaObject {
 	 * 
 	 * @return true, falls das Fach hinzugefügt wurde, ansonsten false  
 	 */
-	public addFach(id : number, kuerzel : String, kuerzelAnzeige : String, sortierung : number, istFremdsprache : boolean) : boolean {
+	public addFach(id : number, kuerzel : string, kuerzelAnzeige : string, sortierung : number, istFremdsprache : boolean) : boolean {
 		if (this.mapFaecher.get(id) !== null) 
 			return false;
 		let enmFach : ENMFach = new ENMFach();
@@ -267,7 +267,7 @@ export class ENMDatenManager extends JavaObject {
 	 * 
 	 * @return true, falls der Jahrgang hinzugefügt wurde, ansonsten false  
 	 */
-	public addJahrgang(id : number, kuerzel : String | null, kuerzelAnzeige : String | null, beschreibung : String | null, stufe : String | null, sortierung : number) : boolean {
+	public addJahrgang(id : number, kuerzel : string | null, kuerzelAnzeige : string | null, beschreibung : string | null, stufe : string | null, sortierung : number) : boolean {
 		if (this.mapJahrgaenge.get(id) !== null) 
 			return false;
 		let enmJahrgang : ENMJahrgang = new ENMJahrgang();
@@ -292,7 +292,7 @@ export class ENMDatenManager extends JavaObject {
 	 * 
 	 * @return true, falls die Klasse hinzugefügt wurde, ansonsten false  
 	 */
-	public addKlasse(id : number, kuerzel : String | null, kuerzelAnzeige : String | null, sortierung : number) : boolean {
+	public addKlasse(id : number, kuerzel : string | null, kuerzelAnzeige : string | null, sortierung : number) : boolean {
 		if (this.mapKlassen.get(id) !== null) 
 			return false;
 		let enmKlasse : ENMKlasse = new ENMKlasse();
@@ -353,7 +353,7 @@ export class ENMDatenManager extends JavaObject {
 	 * 
 	 * @return das ENM-Fächer-Objekt
 	 */
-	public getFachByKuerzel(kuerzel : String) : ENMFach | null {
+	public getFachByKuerzel(kuerzel : string) : ENMFach | null {
 		return this.mapFaecherByKuerzel.get(kuerzel);
 	}
 
@@ -397,7 +397,7 @@ export class ENMDatenManager extends JavaObject {
 	 *                            Lerngruppe handelt. (z.B. F)
 	 * @param wochenstunden       die Anzahl der Wochenstunden, falls es sich um einen Kurs handelt.
 	 */
-	public addLerngruppe(strID : String, kID : number, fachID : number, kursartID : Number | null, bezeichnung : String | null, kursartKuerzel : String | null, bilingualeSprache : String | null, wochenstunden : number) : void {
+	public addLerngruppe(strID : string, kID : number, fachID : number, kursartID : number | null, bezeichnung : string | null, kursartKuerzel : string | null, bilingualeSprache : string | null, wochenstunden : number) : void {
 		if (this.mapLerngruppen.get(strID) !== null) 
 			return;
 		let lerngruppe : ENMLerngruppe = new ENMLerngruppe();
@@ -420,7 +420,7 @@ export class ENMDatenManager extends JavaObject {
 	 * 
 	 * @return die Lerngruppe
 	 */
-	public getLerngruppe(strID : String) : ENMLerngruppe | null {
+	public getLerngruppe(strID : string) : ENMLerngruppe | null {
 		return this.mapLerngruppen.get(strID);
 	}
 
@@ -448,7 +448,7 @@ export class ENMDatenManager extends JavaObject {
 	 * @param referenzniveau         die Bezeichnung des Sprachreferenzniveaus, welches bisher erreicht wurde (z.B. B2/C1)
 	 * @param belegungSekI           die Mindest-Dauer der Belegung in der Sekundarstufe I gemäß den Stufen im Core-Type SprachBelegungSekI (z.B. 0, 2, 4, 6)
 	 */
-	public addSchuelerSprachenfolge(schueler : ENMSchueler, sprache : String | null, fachID : number, fachKuerzel : String | null, reihenfolge : number, belegungVonJahrgang : number, belegungVonAbschnitt : number, belegungBisJahrgang : Number | null, belegungBisAbschnitt : Number | null, referenzniveau : String | null, belegungSekI : Number | null) : void {
+	public addSchuelerSprachenfolge(schueler : ENMSchueler, sprache : string | null, fachID : number, fachKuerzel : string | null, reihenfolge : number, belegungVonJahrgang : number, belegungVonAbschnitt : number, belegungBisJahrgang : number | null, belegungBisAbschnitt : number | null, referenzniveau : string | null, belegungSekI : number | null) : void {
 	}
 
 	/**
@@ -476,7 +476,7 @@ export class ENMDatenManager extends JavaObject {
 	 * @param tsIstGemahnt                der Zeitstempel der letzten Änderung an der Angabe, ob ein Fach gemahnt wurde oder nicht 
 	 * @param mahndatum                   das Mahndatum bei erfolgter Mahnung
 	 */
-	public addSchuelerLeistungsdaten(schueler : ENMSchueler, leistungID : number, lerngruppenID : number, note : String | null, tsNote : String | null, istSchriftlich : boolean, abiturfach : Number | null, fehlstundenGesamt : Number | null, tsFehlstundenGesamt : String | null, fehlstundenUnentschuldigt : Number | null, tsFehlstundenUnentschuldigt : String | null, fachbezogeneBemerkungen : String | null, tsFachbezogeneBemerkungen : String | null, neueZuweisungKursart : String | null, istGemahnt : boolean, tsIstGemahnt : String | null, mahndatum : String | null) : void {
+	public addSchuelerLeistungsdaten(schueler : ENMSchueler, leistungID : number, lerngruppenID : number, note : string | null, tsNote : string | null, istSchriftlich : boolean, abiturfach : number | null, fehlstundenGesamt : number | null, tsFehlstundenGesamt : string | null, fehlstundenUnentschuldigt : number | null, tsFehlstundenUnentschuldigt : string | null, fachbezogeneBemerkungen : string | null, tsFachbezogeneBemerkungen : string | null, neueZuweisungKursart : string | null, istGemahnt : boolean, tsIstGemahnt : string | null, mahndatum : string | null) : void {
 		let enmLeistung : ENMLeistung = new ENMLeistung();
 		enmLeistung.id = leistungID;
 		enmLeistung.lerngruppenID = lerngruppenID;
@@ -508,7 +508,7 @@ export class ENMDatenManager extends JavaObject {
 	 * @param bemerkung      ggf. eine Bemerkung zu der Teilleistung 
 	 * @param notenKuerzel   das Notenkürzel, welches der Teilleistung zuzuordnen ist.
 	 */
-	public addSchuelerTeilleistung(leistung : ENMLeistung, id : number, artID : number, datum : String | null, bemerkung : String | null, notenKuerzel : String | null) : void {
+	public addSchuelerTeilleistung(leistung : ENMLeistung, id : number, artID : number, datum : string | null, bemerkung : string | null, notenKuerzel : string | null) : void {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

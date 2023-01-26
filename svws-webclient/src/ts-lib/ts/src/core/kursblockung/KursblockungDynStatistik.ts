@@ -173,8 +173,8 @@ export class KursblockungDynStatistik extends JavaObject {
 	 * 
 	 * @param pPrefix Ein String-Prefix vor der Ausgabe. 
 	 */
-	debug(pPrefix : String) : void {
-		console.log(JSON.stringify(pPrefix.valueOf() + ", RV = " + this.bewertungRegelverletzungen + ", NW = " + this.bewertungNichtwahlen + ", FW = " + this.bewertungFachartPaar + ", KDs = " + this.bewertungKursdifferenzenMaxIndex + " = " + Arrays.toString(this.bewertungKursdifferenzen).valueOf()));
+	debug(pPrefix : string) : void {
+		console.log(JSON.stringify(pPrefix! + ", RV = " + this.bewertungRegelverletzungen + ", NW = " + this.bewertungNichtwahlen + ", FW = " + this.bewertungFachartPaar + ", KDs = " + this.bewertungKursdifferenzenMaxIndex + " = " + Arrays.toString(this.bewertungKursdifferenzen)!));
 	}
 
 	/**

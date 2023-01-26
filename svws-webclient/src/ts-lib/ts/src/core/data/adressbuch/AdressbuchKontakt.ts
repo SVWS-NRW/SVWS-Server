@@ -10,42 +10,42 @@ export class AdressbuchKontakt extends AdressbuchEintrag {
 	/**
 	 * Der Nachname des Kontakts. 
 	 */
-	public nachname : String = "";
+	public nachname : string = "";
 
 	/**
 	 * Ggf. Zusatz zum Nachnamen des Schülerdatensatzes. 
 	 */
-	public zusatzNachname : String = "";
+	public zusatzNachname : string = "";
 
 	/**
 	 * Der Vorname des Schülerdatensatzes. 
 	 */
-	public vorname : String = "";
+	public vorname : string = "";
 
 	/**
 	 * Der Straßenname des Kontakts. 
 	 */
-	public strassenname : String | null = null;
+	public strassenname : string | null = null;
 
 	/**
 	 * Die Hausnummer des Kontakts. 
 	 */
-	public hausnummer : String | null = null;
+	public hausnummer : string | null = null;
 
 	/**
 	 * Ggf. der Hausnummerzusatz des Kontakts. 
 	 */
-	public hausnummerZusatz : String | null = null;
+	public hausnummerZusatz : string | null = null;
 
 	/**
 	 * Die Postleitzahl des Kontakts. 
 	 */
-	public plz : String | null = null;
+	public plz : string | null = null;
 
 	/**
 	 * Der Ort des Kontakts. 
 	 */
-	public ort : String | null = null;
+	public ort : string | null = null;
 
 	/**
 	 * Die Telefonnummern des Kontakts. 
@@ -55,37 +55,37 @@ export class AdressbuchKontakt extends AdressbuchEintrag {
 	/**
 	 * Die Mailadresse des Kontakts. 
 	 */
-	public email : String | null = null;
+	public email : string | null = null;
 
 	/**
 	 * Die Webadresse des Kontakts 
 	 */
-	public webAdresse : String | null = "";
+	public webAdresse : string | null = "";
 
 	/**
 	 * Die Kategorien dieses Kontakts 
 	 */
-	public kategorien : List<String | null> | null = new Vector();
+	public kategorien : List<string | null> | null = new Vector();
 
 	/**
 	 *  Die Organisation dieses Kontakts 
 	 */
-	public organisation : String | null = null;
+	public organisation : string | null = null;
 
 	/**
 	 *  Die Rolle innerhalb der Organisation dieses Kontakts 
 	 */
-	public rolle : String | null = null;
+	public rolle : string | null = null;
 
 	/**
 	 * Die ID des Adressbuchkontakts des Kinds 
 	 */
-	public idKind : String | null = null;
+	public idKind : string | null = null;
 
 	/**
 	 * Die ID des Adressbuchkontakts der Eltern 
 	 */
-	public idEltern : String | null = null;
+	public idEltern : string | null = null;
 
 
 	public constructor() {
@@ -101,47 +101,47 @@ export class AdressbuchKontakt extends AdressbuchEintrag {
 		const result = new AdressbuchKontakt();
 		if (typeof obj.nachname === "undefined")
 			 throw new Error('invalid json format, missing attribute nachname');
-		result.nachname = String(obj.nachname);
+		result.nachname = obj.nachname;
 		if (typeof obj.zusatzNachname === "undefined")
 			 throw new Error('invalid json format, missing attribute zusatzNachname');
-		result.zusatzNachname = String(obj.zusatzNachname);
+		result.zusatzNachname = obj.zusatzNachname;
 		if (typeof obj.vorname === "undefined")
 			 throw new Error('invalid json format, missing attribute vorname');
-		result.vorname = String(obj.vorname);
-		result.strassenname = typeof obj.strassenname === "undefined" ? null : obj.strassenname === null ? null : String(obj.strassenname);
-		result.hausnummer = typeof obj.hausnummer === "undefined" ? null : obj.hausnummer === null ? null : String(obj.hausnummer);
-		result.hausnummerZusatz = typeof obj.hausnummerZusatz === "undefined" ? null : obj.hausnummerZusatz === null ? null : String(obj.hausnummerZusatz);
-		result.plz = typeof obj.plz === "undefined" ? null : obj.plz === null ? null : String(obj.plz);
-		result.ort = typeof obj.ort === "undefined" ? null : obj.ort === null ? null : String(obj.ort);
+		result.vorname = obj.vorname;
+		result.strassenname = typeof obj.strassenname === "undefined" ? null : obj.strassenname === null ? null : obj.strassenname;
+		result.hausnummer = typeof obj.hausnummer === "undefined" ? null : obj.hausnummer === null ? null : obj.hausnummer;
+		result.hausnummerZusatz = typeof obj.hausnummerZusatz === "undefined" ? null : obj.hausnummerZusatz === null ? null : obj.hausnummerZusatz;
+		result.plz = typeof obj.plz === "undefined" ? null : obj.plz === null ? null : obj.plz;
+		result.ort = typeof obj.ort === "undefined" ? null : obj.ort === null ? null : obj.ort;
 		if (!!obj.telefonnummern) {
 			for (let elem of obj.telefonnummern) {
 				result.telefonnummern?.add(Telefonnummer.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		result.email = typeof obj.email === "undefined" ? null : obj.email === null ? null : String(obj.email);
-		result.webAdresse = typeof obj.webAdresse === "undefined" ? null : obj.webAdresse === null ? null : String(obj.webAdresse);
+		result.email = typeof obj.email === "undefined" ? null : obj.email === null ? null : obj.email;
+		result.webAdresse = typeof obj.webAdresse === "undefined" ? null : obj.webAdresse === null ? null : obj.webAdresse;
 		if (!!obj.kategorien) {
 			for (let elem of obj.kategorien) {
-				result.kategorien?.add(elem === null ? null : String(elem));
+				result.kategorien?.add(elem === null ? null : elem);
 			}
 		}
-		result.organisation = typeof obj.organisation === "undefined" ? null : obj.organisation === null ? null : String(obj.organisation);
-		result.rolle = typeof obj.rolle === "undefined" ? null : obj.rolle === null ? null : String(obj.rolle);
-		result.idKind = typeof obj.idKind === "undefined" ? null : obj.idKind === null ? null : String(obj.idKind);
-		result.idEltern = typeof obj.idEltern === "undefined" ? null : obj.idEltern === null ? null : String(obj.idEltern);
+		result.organisation = typeof obj.organisation === "undefined" ? null : obj.organisation === null ? null : obj.organisation;
+		result.rolle = typeof obj.rolle === "undefined" ? null : obj.rolle === null ? null : obj.rolle;
+		result.idKind = typeof obj.idKind === "undefined" ? null : obj.idKind === null ? null : obj.idKind;
+		result.idEltern = typeof obj.idEltern === "undefined" ? null : obj.idEltern === null ? null : obj.idEltern;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : AdressbuchKontakt) : string {
 		let result = '{';
-		result += '"nachname" : ' + '"' + obj.nachname.valueOf() + '"' + ',';
-		result += '"zusatzNachname" : ' + '"' + obj.zusatzNachname.valueOf() + '"' + ',';
-		result += '"vorname" : ' + '"' + obj.vorname.valueOf() + '"' + ',';
-		result += '"strassenname" : ' + ((!obj.strassenname) ? 'null' : '"' + obj.strassenname.valueOf() + '"') + ',';
-		result += '"hausnummer" : ' + ((!obj.hausnummer) ? 'null' : '"' + obj.hausnummer.valueOf() + '"') + ',';
-		result += '"hausnummerZusatz" : ' + ((!obj.hausnummerZusatz) ? 'null' : '"' + obj.hausnummerZusatz.valueOf() + '"') + ',';
-		result += '"plz" : ' + ((!obj.plz) ? 'null' : '"' + obj.plz.valueOf() + '"') + ',';
-		result += '"ort" : ' + ((!obj.ort) ? 'null' : '"' + obj.ort.valueOf() + '"') + ',';
+		result += '"nachname" : ' + '"' + obj.nachname! + '"' + ',';
+		result += '"zusatzNachname" : ' + '"' + obj.zusatzNachname! + '"' + ',';
+		result += '"vorname" : ' + '"' + obj.vorname! + '"' + ',';
+		result += '"strassenname" : ' + ((!obj.strassenname) ? 'null' : '"' + obj.strassenname + '"') + ',';
+		result += '"hausnummer" : ' + ((!obj.hausnummer) ? 'null' : '"' + obj.hausnummer + '"') + ',';
+		result += '"hausnummerZusatz" : ' + ((!obj.hausnummerZusatz) ? 'null' : '"' + obj.hausnummerZusatz + '"') + ',';
+		result += '"plz" : ' + ((!obj.plz) ? 'null' : '"' + obj.plz + '"') + ',';
+		result += '"ort" : ' + ((!obj.ort) ? 'null' : '"' + obj.ort + '"') + ',';
 		if (!obj.telefonnummern) {
 			result += '"telefonnummern" : []';
 		} else {
@@ -154,8 +154,8 @@ export class AdressbuchKontakt extends AdressbuchEintrag {
 			}
 			result += ' ]' + ',';
 		}
-		result += '"email" : ' + ((!obj.email) ? 'null' : '"' + obj.email.valueOf() + '"') + ',';
-		result += '"webAdresse" : ' + ((!obj.webAdresse) ? 'null' : '"' + obj.webAdresse.valueOf() + '"') + ',';
+		result += '"email" : ' + ((!obj.email) ? 'null' : '"' + obj.email + '"') + ',';
+		result += '"webAdresse" : ' + ((!obj.webAdresse) ? 'null' : '"' + obj.webAdresse + '"') + ',';
 		if (!obj.kategorien) {
 			result += '"kategorien" : []';
 		} else {
@@ -168,10 +168,10 @@ export class AdressbuchKontakt extends AdressbuchEintrag {
 			}
 			result += ' ]' + ',';
 		}
-		result += '"organisation" : ' + ((!obj.organisation) ? 'null' : '"' + obj.organisation.valueOf() + '"') + ',';
-		result += '"rolle" : ' + ((!obj.rolle) ? 'null' : '"' + obj.rolle.valueOf() + '"') + ',';
-		result += '"idKind" : ' + ((!obj.idKind) ? 'null' : '"' + obj.idKind.valueOf() + '"') + ',';
-		result += '"idEltern" : ' + ((!obj.idEltern) ? 'null' : '"' + obj.idEltern.valueOf() + '"') + ',';
+		result += '"organisation" : ' + ((!obj.organisation) ? 'null' : '"' + obj.organisation + '"') + ',';
+		result += '"rolle" : ' + ((!obj.rolle) ? 'null' : '"' + obj.rolle + '"') + ',';
+		result += '"idKind" : ' + ((!obj.idKind) ? 'null' : '"' + obj.idKind + '"') + ',';
+		result += '"idEltern" : ' + ((!obj.idEltern) ? 'null' : '"' + obj.idEltern + '"') + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -180,28 +180,28 @@ export class AdressbuchKontakt extends AdressbuchEintrag {
 	public static transpilerToJSONPatch(obj : Partial<AdressbuchKontakt>) : string {
 		let result = '{';
 		if (typeof obj.nachname !== "undefined") {
-			result += '"nachname" : ' + '"' + obj.nachname.valueOf() + '"' + ',';
+			result += '"nachname" : ' + '"' + obj.nachname + '"' + ',';
 		}
 		if (typeof obj.zusatzNachname !== "undefined") {
-			result += '"zusatzNachname" : ' + '"' + obj.zusatzNachname.valueOf() + '"' + ',';
+			result += '"zusatzNachname" : ' + '"' + obj.zusatzNachname + '"' + ',';
 		}
 		if (typeof obj.vorname !== "undefined") {
-			result += '"vorname" : ' + '"' + obj.vorname.valueOf() + '"' + ',';
+			result += '"vorname" : ' + '"' + obj.vorname + '"' + ',';
 		}
 		if (typeof obj.strassenname !== "undefined") {
-			result += '"strassenname" : ' + ((!obj.strassenname) ? 'null' : '"' + obj.strassenname.valueOf() + '"') + ',';
+			result += '"strassenname" : ' + ((!obj.strassenname) ? 'null' : '"' + obj.strassenname + '"') + ',';
 		}
 		if (typeof obj.hausnummer !== "undefined") {
-			result += '"hausnummer" : ' + ((!obj.hausnummer) ? 'null' : '"' + obj.hausnummer.valueOf() + '"') + ',';
+			result += '"hausnummer" : ' + ((!obj.hausnummer) ? 'null' : '"' + obj.hausnummer + '"') + ',';
 		}
 		if (typeof obj.hausnummerZusatz !== "undefined") {
-			result += '"hausnummerZusatz" : ' + ((!obj.hausnummerZusatz) ? 'null' : '"' + obj.hausnummerZusatz.valueOf() + '"') + ',';
+			result += '"hausnummerZusatz" : ' + ((!obj.hausnummerZusatz) ? 'null' : '"' + obj.hausnummerZusatz + '"') + ',';
 		}
 		if (typeof obj.plz !== "undefined") {
-			result += '"plz" : ' + ((!obj.plz) ? 'null' : '"' + obj.plz.valueOf() + '"') + ',';
+			result += '"plz" : ' + ((!obj.plz) ? 'null' : '"' + obj.plz + '"') + ',';
 		}
 		if (typeof obj.ort !== "undefined") {
-			result += '"ort" : ' + ((!obj.ort) ? 'null' : '"' + obj.ort.valueOf() + '"') + ',';
+			result += '"ort" : ' + ((!obj.ort) ? 'null' : '"' + obj.ort + '"') + ',';
 		}
 		if (typeof obj.telefonnummern !== "undefined") {
 			if (!obj.telefonnummern) {
@@ -218,10 +218,10 @@ export class AdressbuchKontakt extends AdressbuchEintrag {
 			}
 		}
 		if (typeof obj.email !== "undefined") {
-			result += '"email" : ' + ((!obj.email) ? 'null' : '"' + obj.email.valueOf() + '"') + ',';
+			result += '"email" : ' + ((!obj.email) ? 'null' : '"' + obj.email + '"') + ',';
 		}
 		if (typeof obj.webAdresse !== "undefined") {
-			result += '"webAdresse" : ' + ((!obj.webAdresse) ? 'null' : '"' + obj.webAdresse.valueOf() + '"') + ',';
+			result += '"webAdresse" : ' + ((!obj.webAdresse) ? 'null' : '"' + obj.webAdresse + '"') + ',';
 		}
 		if (typeof obj.kategorien !== "undefined") {
 			if (!obj.kategorien) {
@@ -238,16 +238,16 @@ export class AdressbuchKontakt extends AdressbuchEintrag {
 			}
 		}
 		if (typeof obj.organisation !== "undefined") {
-			result += '"organisation" : ' + ((!obj.organisation) ? 'null' : '"' + obj.organisation.valueOf() + '"') + ',';
+			result += '"organisation" : ' + ((!obj.organisation) ? 'null' : '"' + obj.organisation + '"') + ',';
 		}
 		if (typeof obj.rolle !== "undefined") {
-			result += '"rolle" : ' + ((!obj.rolle) ? 'null' : '"' + obj.rolle.valueOf() + '"') + ',';
+			result += '"rolle" : ' + ((!obj.rolle) ? 'null' : '"' + obj.rolle + '"') + ',';
 		}
 		if (typeof obj.idKind !== "undefined") {
-			result += '"idKind" : ' + ((!obj.idKind) ? 'null' : '"' + obj.idKind.valueOf() + '"') + ',';
+			result += '"idKind" : ' + ((!obj.idKind) ? 'null' : '"' + obj.idKind + '"') + ',';
 		}
 		if (typeof obj.idEltern !== "undefined") {
-			result += '"idEltern" : ' + ((!obj.idEltern) ? 'null' : '"' + obj.idEltern.valueOf() + '"') + ',';
+			result += '"idEltern" : ' + ((!obj.idEltern) ? 'null' : '"' + obj.idEltern + '"') + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

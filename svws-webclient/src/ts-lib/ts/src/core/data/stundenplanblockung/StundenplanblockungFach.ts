@@ -11,7 +11,7 @@ export class StundenplanblockungFach extends JavaObject {
 	/**
 	 * Das Kürzel des Faches. Beispielsweise 'KU'. 
 	 */
-	public kuerzel : String = "";
+	public kuerzel : string = "";
 
 	/**
 	 * Die Nummer, welche die Sortierung der Fächer angibt. 
@@ -35,7 +35,7 @@ export class StundenplanblockungFach extends JavaObject {
 		result.id = obj.id;
 		if (typeof obj.kuerzel === "undefined")
 			 throw new Error('invalid json format, missing attribute kuerzel');
-		result.kuerzel = String(obj.kuerzel);
+		result.kuerzel = obj.kuerzel;
 		if (typeof obj.sortierung === "undefined")
 			 throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
@@ -45,7 +45,7 @@ export class StundenplanblockungFach extends JavaObject {
 	public static transpilerToJSON(obj : StundenplanblockungFach) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"kuerzel" : ' + '"' + obj.kuerzel.valueOf() + '"' + ',';
+		result += '"kuerzel" : ' + '"' + obj.kuerzel! + '"' + ',';
 		result += '"sortierung" : ' + obj.sortierung + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -58,7 +58,7 @@ export class StundenplanblockungFach extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.kuerzel !== "undefined") {
-			result += '"kuerzel" : ' + '"' + obj.kuerzel.valueOf() + '"' + ',';
+			result += '"kuerzel" : ' + '"' + obj.kuerzel + '"' + ',';
 		}
 		if (typeof obj.sortierung !== "undefined") {
 			result += '"sortierung" : ' + obj.sortierung + ',';

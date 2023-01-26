@@ -11,7 +11,7 @@ export interface CharSequence {
 
     subSequence(start : number, end : number) : CharSequence;
 
-    toString() : String;
+    toString() : string | null;
 
 }
 

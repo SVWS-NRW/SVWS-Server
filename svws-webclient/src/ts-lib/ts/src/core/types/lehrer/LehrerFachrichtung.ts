@@ -7,7 +7,7 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class LehrerFachrichtung extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -16,7 +16,7 @@ export class LehrerFachrichtung extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<LehrerFachrichtung> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, LehrerFachrichtung> = new Map<String, LehrerFachrichtung>();
+	private static readonly all_values_by_name : Map<string, LehrerFachrichtung> = new Map<string, LehrerFachrichtung>();
 
 	/**
 	 * Fachrichtung 'Kraftfahrzeugtechnik' 
@@ -591,12 +591,12 @@ export class LehrerFachrichtung extends JavaObject {
 	/**
 	 * Eine Hashmap mit allen Fachrichtungen, welche ihrer ID zugeordnet sind. 
 	 */
-	private static readonly _fachrichtungenByID : HashMap<Number, LehrerFachrichtung | null> = new HashMap();
+	private static readonly _fachrichtungenByID : HashMap<number, LehrerFachrichtung | null> = new HashMap();
 
 	/**
 	 * Eine Hashmap mit allen Fachrichtungen, welche dem Kürzel bzw. ASD-Schlüssel zugeordnet sind. 
 	 */
-	private static readonly _fachrichtungenByKuerzel : HashMap<String, LehrerFachrichtung | null> = new HashMap();
+	private static readonly _fachrichtungenByKuerzel : HashMap<string, LehrerFachrichtung | null> = new HashMap();
 
 	/**
 	 * Erzeugt eine neuen Fachrichtung in der Aufzählung.
@@ -619,7 +619,7 @@ export class LehrerFachrichtung extends JavaObject {
 	 *    
 	 * @return die Map von den IDs der Fachrichtungen auf die zugehörigen Fachrichtungen
 	 */
-	private static getMapFachrichtungByID() : HashMap<Number, LehrerFachrichtung | null> {
+	private static getMapFachrichtungByID() : HashMap<number, LehrerFachrichtung | null> {
 		if (LehrerFachrichtung._fachrichtungenByID.size() === 0) 
 			for (let g of LehrerFachrichtung.values()) 
 				LehrerFachrichtung._fachrichtungenByID.put(g.daten.id, g);
@@ -632,7 +632,7 @@ export class LehrerFachrichtung extends JavaObject {
 	 *    
 	 * @return die Map von den Kürzeln der Fachrichtungen auf die zugehörigen Fachrichtungen
 	 */
-	private static getMapFachrichtungByKuerzel() : HashMap<String, LehrerFachrichtung | null> {
+	private static getMapFachrichtungByKuerzel() : HashMap<string, LehrerFachrichtung | null> {
 		if (LehrerFachrichtung._fachrichtungenByKuerzel.size() === 0) 
 			for (let g of LehrerFachrichtung.values()) 
 				LehrerFachrichtung._fachrichtungenByKuerzel.put(g.daten.kuerzel, g);
@@ -657,7 +657,7 @@ export class LehrerFachrichtung extends JavaObject {
 	 * 
 	 * @return die Fachrichtung oder null, falls das Kürzel ungültig ist
 	 */
-	public static getByKuerzel(kuerzel : String | null) : LehrerFachrichtung | null {
+	public static getByKuerzel(kuerzel : string | null) : LehrerFachrichtung | null {
 		return LehrerFachrichtung.getMapFachrichtungByKuerzel().get(kuerzel);
 	}
 
@@ -666,7 +666,7 @@ export class LehrerFachrichtung extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -684,7 +684,7 @@ export class LehrerFachrichtung extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -738,7 +738,7 @@ export class LehrerFachrichtung extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : LehrerFachrichtung | null {
+	public static valueOf(name : string) : LehrerFachrichtung | null {
 		let tmp : LehrerFachrichtung | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

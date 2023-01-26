@@ -4,7 +4,7 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class AbiturBelegungsart extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -13,7 +13,7 @@ export class AbiturBelegungsart extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<AbiturBelegungsart> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, AbiturBelegungsart> = new Map<String, AbiturBelegungsart>();
+	private static readonly all_values_by_name : Map<string, AbiturBelegungsart> = new Map<string, AbiturBelegungsart>();
 
 	/**
 	 * AbiturBelegungsart "nicht belegt" 
@@ -33,12 +33,12 @@ export class AbiturBelegungsart extends JavaObject {
 	/**
 	 * Das Kürzel für die Kurs-Belegungsart (-,M oder S)
 	 */
-	public kuerzel : String;
+	public kuerzel : string;
 
 	/**
 	 * Die textuelle Beschreibung der Kurs-Belegungsart (nicht belegt, mündlich oder schriftlich) 
 	 */
-	public beschreibung : String;
+	public beschreibung : string;
 
 	/**
 	 * Erzeugt ein neues Abitur-Belegungsart-Objekt
@@ -46,7 +46,7 @@ export class AbiturBelegungsart extends JavaObject {
 	 * @param kuerzel        das der Kurs-Belegungsart
 	 * @param beschreibung   die textuelle Beschreibung der Kurs-Belegungsart
 	 */
-	private constructor(name : string, ordinal : number, kuerzel : String, beschreibung : String) {
+	private constructor(name : string, ordinal : number, kuerzel : string, beschreibung : string) {
 		super();
 		this.__name = name;
 		this.__ordinal = ordinal;
@@ -63,7 +63,7 @@ export class AbiturBelegungsart extends JavaObject {
 	 *  
 	 * @return die Kurs-Belegungsart oder null, falls das kuerzel fehlerhaft ist
 	 */
-	public static fromKuerzel(kuerzel : String | null) : AbiturBelegungsart | null {
+	public static fromKuerzel(kuerzel : string | null) : AbiturBelegungsart | null {
 		if (kuerzel === null) 
 			return AbiturBelegungsart.NICHT_BELEGT;
 		switch (kuerzel) {
@@ -77,7 +77,7 @@ export class AbiturBelegungsart extends JavaObject {
 		return null;
 	}
 
-	public toString() : String {
+	public toString() : string {
 		return this.kuerzel;
 	}
 
@@ -86,7 +86,7 @@ export class AbiturBelegungsart extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -149,7 +149,7 @@ export class AbiturBelegungsart extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : AbiturBelegungsart | null {
+	public static valueOf(name : string) : AbiturBelegungsart | null {
 		let tmp : AbiturBelegungsart | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

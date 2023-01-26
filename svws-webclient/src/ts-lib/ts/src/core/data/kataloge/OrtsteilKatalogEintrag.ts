@@ -12,12 +12,12 @@ export class OrtsteilKatalogEintrag extends JavaObject {
 	/**
 	 * Die ID des zugehörigen Ortes. 
 	 */
-	public ort_id : Number | null = null;
+	public ort_id : number | null = null;
 
 	/**
 	 * Der Name des Ortsteils. 
 	 */
-	public ortsteil : String | null = null;
+	public ortsteil : string | null = null;
 
 	/**
 	 * Gibt die Position in der Sortierreihenfolge für die Katalog-Einträge an. 
@@ -49,8 +49,8 @@ export class OrtsteilKatalogEintrag extends JavaObject {
 		if (typeof obj.id === "undefined")
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		result.ort_id = typeof obj.ort_id === "undefined" ? null : obj.ort_id === null ? null : Number(obj.ort_id);
-		result.ortsteil = typeof obj.ortsteil === "undefined" ? null : obj.ortsteil === null ? null : String(obj.ortsteil);
+		result.ort_id = typeof obj.ort_id === "undefined" ? null : obj.ort_id === null ? null : obj.ort_id;
+		result.ortsteil = typeof obj.ortsteil === "undefined" ? null : obj.ortsteil === null ? null : obj.ortsteil;
 		if (typeof obj.sortierung === "undefined")
 			 throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
@@ -66,8 +66,8 @@ export class OrtsteilKatalogEintrag extends JavaObject {
 	public static transpilerToJSON(obj : OrtsteilKatalogEintrag) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"ort_id" : ' + ((!obj.ort_id) ? 'null' : obj.ort_id.valueOf()) + ',';
-		result += '"ortsteil" : ' + ((!obj.ortsteil) ? 'null' : '"' + obj.ortsteil.valueOf() + '"') + ',';
+		result += '"ort_id" : ' + ((!obj.ort_id) ? 'null' : obj.ort_id) + ',';
+		result += '"ortsteil" : ' + ((!obj.ortsteil) ? 'null' : '"' + obj.ortsteil + '"') + ',';
 		result += '"sortierung" : ' + obj.sortierung + ',';
 		result += '"istSichtbar" : ' + obj.istSichtbar + ',';
 		result += '"istAenderbar" : ' + obj.istAenderbar + ',';
@@ -82,10 +82,10 @@ export class OrtsteilKatalogEintrag extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.ort_id !== "undefined") {
-			result += '"ort_id" : ' + ((!obj.ort_id) ? 'null' : obj.ort_id.valueOf()) + ',';
+			result += '"ort_id" : ' + ((!obj.ort_id) ? 'null' : obj.ort_id) + ',';
 		}
 		if (typeof obj.ortsteil !== "undefined") {
-			result += '"ortsteil" : ' + ((!obj.ortsteil) ? 'null' : '"' + obj.ortsteil.valueOf() + '"') + ',';
+			result += '"ortsteil" : ' + ((!obj.ortsteil) ? 'null' : '"' + obj.ortsteil + '"') + ',';
 		}
 		if (typeof obj.sortierung !== "undefined") {
 			result += '"sortierung" : ' + obj.sortierung + ',';

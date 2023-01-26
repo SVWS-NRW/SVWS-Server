@@ -26,7 +26,7 @@ export class KursblockungDynSchueler extends JavaObject {
 	/**
 	 * Ein String-Darstellung des Schüler für Warnungen und Fehlermeldungen, beispielsweise 'Mareike Musterfrau'. 
 	 */
-	private readonly representation : String;
+	private readonly representation : string;
 
 	/**
 	 * Alle Facharten (=Fachwahlen) des Schüler, z.B. 'D;LK'. 
@@ -97,7 +97,7 @@ export class KursblockungDynSchueler extends JavaObject {
 		this.matrix = new KursblockungMatrix(this._random, 0, 0);
 	}
 
-	public toString() : String {
+	public toString() : string {
 		return this.representation;
 	}
 
@@ -116,7 +116,7 @@ export class KursblockungDynSchueler extends JavaObject {
 	 * 
 	 * @return Eine String-Darstellung des Schülers.
 	 */
-	gibRepresentation() : String {
+	gibRepresentation() : string {
 		return this.representation;
 	}
 
@@ -509,7 +509,7 @@ export class KursblockungDynSchueler extends JavaObject {
 		this.nichtwahlen--;
 		for (let nr of kurs.gibSchienenLage()) {
 			if (this.schieneBelegt[nr]) {
-				console.log(JSON.stringify("FEHLER: Schienen-Doppelbelegung! " + this.representation.valueOf()));
+				console.log(JSON.stringify("FEHLER: Schienen-Doppelbelegung! " + this.representation!));
 			}
 			this.schieneBelegt[nr] = true;
 		}
@@ -522,7 +522,7 @@ export class KursblockungDynSchueler extends JavaObject {
 		this.nichtwahlen++;
 		for (let nr of kurs.gibSchienenLage()) {
 			if (!this.schieneBelegt[nr]) {
-				console.log(JSON.stringify("FEHLER: Kurs ist gar nicht in Schiene ! " + this.representation.valueOf()));
+				console.log(JSON.stringify("FEHLER: Kurs ist gar nicht in Schiene ! " + this.representation!));
 			}
 			this.schieneBelegt[nr] = false;
 		}
@@ -549,12 +549,12 @@ export class KursblockungDynSchueler extends JavaObject {
 	public debugKurswahlen() : void {
 		console.log();
 		console.log(JSON.stringify(this.representation));
-		let setSchienenLage : HashSet<Number | null> | null = new HashSet();
+		let setSchienenLage : HashSet<number | null> | null = new HashSet();
 		for (let i : number = 0; i < this.fachartZuKurs.length; i++){
 			let kurs : KursblockungDynKurs | null = this.fachartZuKurs[i];
 			if (kurs === null) 
 				continue;
-			console.log(JSON.stringify("    " + kurs.toString().valueOf() + "    " + Arrays.toString(kurs.gibSchienenLage()).valueOf()));
+			console.log(JSON.stringify("    " + kurs.toString()! + "    " + Arrays.toString(kurs.gibSchienenLage())!));
 			for (let schiene of kurs.gibSchienenLage()) {
 				if (setSchienenLage.add(schiene) === false) {
 					console.log(JSON.stringify("Kollision"));

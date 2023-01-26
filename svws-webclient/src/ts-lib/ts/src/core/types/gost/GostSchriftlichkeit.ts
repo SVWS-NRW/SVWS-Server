@@ -4,7 +4,7 @@ import { JavaBoolean, cast_java_lang_Boolean } from '../../../java/lang/JavaBool
 export class GostSchriftlichkeit extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -13,7 +13,7 @@ export class GostSchriftlichkeit extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<GostSchriftlichkeit> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, GostSchriftlichkeit> = new Map<String, GostSchriftlichkeit>();
+	private static readonly all_values_by_name : Map<string, GostSchriftlichkeit> = new Map<string, GostSchriftlichkeit>();
 
 	/**
 	 * Ist mündlich. 
@@ -33,9 +33,9 @@ export class GostSchriftlichkeit extends JavaObject {
 	/**
 	 * Gibt an, ob eine Schriftlichkeit vorliegt (true), nicht vorliegt (false), oder beliebig sein kann (null) 
 	 */
-	public readonly istSchriftlich : Boolean | null;
+	public readonly istSchriftlich : boolean | null;
 
-	private constructor(name : string, ordinal : number, istSchriftlich : Boolean | null) {
+	private constructor(name : string, ordinal : number, istSchriftlich : boolean | null) {
 		super();
 		this.__name = name;
 		this.__ordinal = ordinal;
@@ -49,7 +49,7 @@ export class GostSchriftlichkeit extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -67,7 +67,7 @@ export class GostSchriftlichkeit extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -121,7 +121,7 @@ export class GostSchriftlichkeit extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : GostSchriftlichkeit | null {
+	public static valueOf(name : string) : GostSchriftlichkeit | null {
 		let tmp : GostSchriftlichkeit | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

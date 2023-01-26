@@ -43,7 +43,7 @@ export class Abiturdaten extends JavaObject {
 	/**
 	 * Das einstellige Kürzel der Sprache des bilingualen Bildungsganges, falls der Schüler an einem solchen teilnimmt. 
 	 */
-	public bilingualeSprache : String | null = null;
+	public bilingualeSprache : string | null = null;
 
 	/**
 	 * Gibt an, ob das große Latinum erworben wurde. 
@@ -78,72 +78,72 @@ export class Abiturdaten extends JavaObject {
 	/**
 	 * Das Projektkursthema, sofern ein Projektkurs belegt wurde.", example="Das Abitur IN NRW im Wandel der Zeit. 
 	 */
-	public projektKursThema : String | null = null;
+	public projektKursThema : string | null = null;
 
 	/**
 	 * Das Kürzel des ersten Leitfaches des belegten Projektkurs, sofern einer belegt wurde. 
 	 */
-	public projektkursLeitfach1Kuerzel : String | null = null;
+	public projektkursLeitfach1Kuerzel : string | null = null;
 
 	/**
 	 * Das Kürzel des zweiten Leitfaches des belegten Projektkurs, sofern einer belegt wurde und ein zweites Leitfach für diesen festgelegt wurde 
 	 */
-	public projektkursLeitfach2Kuerzel : String | null = null;
+	public projektkursLeitfach2Kuerzel : string | null = null;
 
 	/**
 	 * Gibt an, ob eine besondere Lernleistung vorliegt (K - keine, P - in einem Projektkurs, E - extern). 
 	 */
-	public besondereLernleistung : String | null = GostBesondereLernleistung.KEINE.kuerzel;
+	public besondereLernleistung : string | null = GostBesondereLernleistung.KEINE.kuerzel;
 
 	/**
 	 * Gibt ggf. die Note einer externen besonderen Lernleistung an. 
 	 */
-	public besondereLernleistungNotenKuerzel : String | null = null;
+	public besondereLernleistungNotenKuerzel : string | null = null;
 
 	/**
 	 * Gibt das Thema der Besonderen Lernleistung an. 
 	 */
-	public besondereLernleistungThema : String | null = null;
+	public besondereLernleistungThema : string | null = null;
 
 	/**
 	 * Gibt die Anzahl der Kurse in der Qualifikationsphase an. 
 	 */
-	public block1AnzahlKurse : Number | null = null;
+	public block1AnzahlKurse : number | null = null;
 
 	/**
 	 * Gibt die Anzahl der Gesamtdefizite in der Qualifikationsphase an. 
 	 */
-	public block1DefiziteGesamt : Number | null = null;
+	public block1DefiziteGesamt : number | null = null;
 
 	/**
 	 * Gibt die Anzahl der Defizite im LK-Bereich in der Qualifikationsphase an. 
 	 */
-	public block1DefiziteLK : Number | null = null;
+	public block1DefiziteLK : number | null = null;
 
 	/**
 	 * Gibt die Punktsumme aller Grundkurse in der Qualifikationsphase an. 
 	 */
-	public block1PunktSummeGK : Number | null = null;
+	public block1PunktSummeGK : number | null = null;
 
 	/**
 	 * Gibt die Punktsumme aller Leistungskurse in der Qualifikationsphase an. 
 	 */
-	public block1PunktSummeLK : Number | null = null;
+	public block1PunktSummeLK : number | null = null;
 
 	/**
 	 * Gibt die normierte Punktsumme aller Kurse in der Qualifikationsphase an. 
 	 */
-	public block1PunktSummeNormiert : Number | null = null;
+	public block1PunktSummeNormiert : number | null = null;
 
 	/**
 	 * Gibt den Durchschnitt der Notenpunkte von allen Kursen der Qualifikationsphase an. 
 	 */
-	public block1NotenpunkteDurchschnitt : Number | null = null;
+	public block1NotenpunkteDurchschnitt : number | null = null;
 
 	/**
 	 * Gibt an, ob die Zulassung erreicht wurde oder nicht - sofern diese schon geprüft wurde. 
 	 */
-	public block1Zulassung : Boolean | null = null;
+	public block1Zulassung : boolean | null = null;
 
 	/**
 	 * Gibt an, ob freiwillig von der Abiturprüfung zurückgetreten wurde. 
@@ -153,42 +153,42 @@ export class Abiturdaten extends JavaObject {
 	/**
 	 * Gibt die Anzahl der Gesamtdefizite im Abiturbereich (Block II) an. 
 	 */
-	public block2DefiziteGesamt : Number | null = null;
+	public block2DefiziteGesamt : number | null = null;
 
 	/**
 	 * Gibt die Anzahl der Leistungskurs-Defizite im Abiturbereich (Block II) an. 
 	 */
-	public block2DefiziteLK : Number | null = null;
+	public block2DefiziteLK : number | null = null;
 
 	/**
 	 * Gibt die Punktsumme im Abiturbereich (Block II) an. 
 	 */
-	public block2PunktSumme : Number | null = null;
+	public block2PunktSumme : number | null = null;
 
 	/**
 	 * Gibt die erreichte Gesamtpunktzahl in der Qualifikation und im Abiturbereich (Block I und II) an. 
 	 */
-	public gesamtPunkte : Number | null = null;
+	public gesamtPunkte : number | null = null;
 
 	/**
 	 * Gibt die Gesamtpunktzahl an, ab der sich die Abiturnote verbessern würde 
 	 */
-	public gesamtPunkteVerbesserung : Number | null = null;
+	public gesamtPunkteVerbesserung : number | null = null;
 
 	/**
 	 * Gibt die Gesamtpunktzahl an, ab der sich die Abiturnote verschlechtern würde. 
 	 */
-	public gesamtPunkteVerschlechterung : Number | null = null;
+	public gesamtPunkteVerschlechterung : number | null = null;
 
 	/**
 	 * Gibt an, ob die Abiturprüfung bestanden wurde oder nicht - sofern das Prüfungsverfahren schon abgeschlossen wurde. 
 	 */
-	public pruefungBestanden : Boolean | null = null;
+	public pruefungBestanden : boolean | null = null;
 
 	/**
 	 * Die Abiturnote einer bestandenen Abiturprüfung - sofern das Prüfungsverfahren schon abgeschlossen wurde. 
 	 */
-	public note : String | null = null;
+	public note : string | null = null;
 
 
 	public constructor() {
@@ -222,7 +222,7 @@ export class Abiturdaten extends JavaObject {
 		if (typeof obj.sprachendaten === "undefined")
 			 throw new Error('invalid json format, missing attribute sprachendaten');
 		result.sprachendaten = Sprachendaten.transpilerFromJSON(JSON.stringify(obj.sprachendaten));
-		result.bilingualeSprache = typeof obj.bilingualeSprache === "undefined" ? null : obj.bilingualeSprache === null ? null : String(obj.bilingualeSprache);
+		result.bilingualeSprache = typeof obj.bilingualeSprache === "undefined" ? null : obj.bilingualeSprache === null ? null : obj.bilingualeSprache;
 		if (typeof obj.latinum === "undefined")
 			 throw new Error('invalid json format, missing attribute latinum');
 		result.latinum = obj.latinum;
@@ -241,31 +241,31 @@ export class Abiturdaten extends JavaObject {
 		if (typeof obj.block1FehlstundenUnentschuldigt === "undefined")
 			 throw new Error('invalid json format, missing attribute block1FehlstundenUnentschuldigt');
 		result.block1FehlstundenUnentschuldigt = obj.block1FehlstundenUnentschuldigt;
-		result.projektKursThema = typeof obj.projektKursThema === "undefined" ? null : obj.projektKursThema === null ? null : String(obj.projektKursThema);
-		result.projektkursLeitfach1Kuerzel = typeof obj.projektkursLeitfach1Kuerzel === "undefined" ? null : obj.projektkursLeitfach1Kuerzel === null ? null : String(obj.projektkursLeitfach1Kuerzel);
-		result.projektkursLeitfach2Kuerzel = typeof obj.projektkursLeitfach2Kuerzel === "undefined" ? null : obj.projektkursLeitfach2Kuerzel === null ? null : String(obj.projektkursLeitfach2Kuerzel);
-		result.besondereLernleistung = typeof obj.besondereLernleistung === "undefined" ? null : obj.besondereLernleistung === null ? null : String(obj.besondereLernleistung);
-		result.besondereLernleistungNotenKuerzel = typeof obj.besondereLernleistungNotenKuerzel === "undefined" ? null : obj.besondereLernleistungNotenKuerzel === null ? null : String(obj.besondereLernleistungNotenKuerzel);
-		result.besondereLernleistungThema = typeof obj.besondereLernleistungThema === "undefined" ? null : obj.besondereLernleistungThema === null ? null : String(obj.besondereLernleistungThema);
-		result.block1AnzahlKurse = typeof obj.block1AnzahlKurse === "undefined" ? null : obj.block1AnzahlKurse === null ? null : Number(obj.block1AnzahlKurse);
-		result.block1DefiziteGesamt = typeof obj.block1DefiziteGesamt === "undefined" ? null : obj.block1DefiziteGesamt === null ? null : Number(obj.block1DefiziteGesamt);
-		result.block1DefiziteLK = typeof obj.block1DefiziteLK === "undefined" ? null : obj.block1DefiziteLK === null ? null : Number(obj.block1DefiziteLK);
-		result.block1PunktSummeGK = typeof obj.block1PunktSummeGK === "undefined" ? null : obj.block1PunktSummeGK === null ? null : Number(obj.block1PunktSummeGK);
-		result.block1PunktSummeLK = typeof obj.block1PunktSummeLK === "undefined" ? null : obj.block1PunktSummeLK === null ? null : Number(obj.block1PunktSummeLK);
-		result.block1PunktSummeNormiert = typeof obj.block1PunktSummeNormiert === "undefined" ? null : obj.block1PunktSummeNormiert === null ? null : Number(obj.block1PunktSummeNormiert);
-		result.block1NotenpunkteDurchschnitt = typeof obj.block1NotenpunkteDurchschnitt === "undefined" ? null : obj.block1NotenpunkteDurchschnitt === null ? null : Number(obj.block1NotenpunkteDurchschnitt);
-		result.block1Zulassung = typeof obj.block1Zulassung === "undefined" ? null : obj.block1Zulassung === null ? null : Boolean(obj.block1Zulassung);
+		result.projektKursThema = typeof obj.projektKursThema === "undefined" ? null : obj.projektKursThema === null ? null : obj.projektKursThema;
+		result.projektkursLeitfach1Kuerzel = typeof obj.projektkursLeitfach1Kuerzel === "undefined" ? null : obj.projektkursLeitfach1Kuerzel === null ? null : obj.projektkursLeitfach1Kuerzel;
+		result.projektkursLeitfach2Kuerzel = typeof obj.projektkursLeitfach2Kuerzel === "undefined" ? null : obj.projektkursLeitfach2Kuerzel === null ? null : obj.projektkursLeitfach2Kuerzel;
+		result.besondereLernleistung = typeof obj.besondereLernleistung === "undefined" ? null : obj.besondereLernleistung === null ? null : obj.besondereLernleistung;
+		result.besondereLernleistungNotenKuerzel = typeof obj.besondereLernleistungNotenKuerzel === "undefined" ? null : obj.besondereLernleistungNotenKuerzel === null ? null : obj.besondereLernleistungNotenKuerzel;
+		result.besondereLernleistungThema = typeof obj.besondereLernleistungThema === "undefined" ? null : obj.besondereLernleistungThema === null ? null : obj.besondereLernleistungThema;
+		result.block1AnzahlKurse = typeof obj.block1AnzahlKurse === "undefined" ? null : obj.block1AnzahlKurse === null ? null : obj.block1AnzahlKurse;
+		result.block1DefiziteGesamt = typeof obj.block1DefiziteGesamt === "undefined" ? null : obj.block1DefiziteGesamt === null ? null : obj.block1DefiziteGesamt;
+		result.block1DefiziteLK = typeof obj.block1DefiziteLK === "undefined" ? null : obj.block1DefiziteLK === null ? null : obj.block1DefiziteLK;
+		result.block1PunktSummeGK = typeof obj.block1PunktSummeGK === "undefined" ? null : obj.block1PunktSummeGK === null ? null : obj.block1PunktSummeGK;
+		result.block1PunktSummeLK = typeof obj.block1PunktSummeLK === "undefined" ? null : obj.block1PunktSummeLK === null ? null : obj.block1PunktSummeLK;
+		result.block1PunktSummeNormiert = typeof obj.block1PunktSummeNormiert === "undefined" ? null : obj.block1PunktSummeNormiert === null ? null : obj.block1PunktSummeNormiert;
+		result.block1NotenpunkteDurchschnitt = typeof obj.block1NotenpunkteDurchschnitt === "undefined" ? null : obj.block1NotenpunkteDurchschnitt === null ? null : obj.block1NotenpunkteDurchschnitt;
+		result.block1Zulassung = typeof obj.block1Zulassung === "undefined" ? null : obj.block1Zulassung === null ? null : obj.block1Zulassung;
 		if (typeof obj.freiwilligerRuecktritt === "undefined")
 			 throw new Error('invalid json format, missing attribute freiwilligerRuecktritt');
 		result.freiwilligerRuecktritt = obj.freiwilligerRuecktritt;
-		result.block2DefiziteGesamt = typeof obj.block2DefiziteGesamt === "undefined" ? null : obj.block2DefiziteGesamt === null ? null : Number(obj.block2DefiziteGesamt);
-		result.block2DefiziteLK = typeof obj.block2DefiziteLK === "undefined" ? null : obj.block2DefiziteLK === null ? null : Number(obj.block2DefiziteLK);
-		result.block2PunktSumme = typeof obj.block2PunktSumme === "undefined" ? null : obj.block2PunktSumme === null ? null : Number(obj.block2PunktSumme);
-		result.gesamtPunkte = typeof obj.gesamtPunkte === "undefined" ? null : obj.gesamtPunkte === null ? null : Number(obj.gesamtPunkte);
-		result.gesamtPunkteVerbesserung = typeof obj.gesamtPunkteVerbesserung === "undefined" ? null : obj.gesamtPunkteVerbesserung === null ? null : Number(obj.gesamtPunkteVerbesserung);
-		result.gesamtPunkteVerschlechterung = typeof obj.gesamtPunkteVerschlechterung === "undefined" ? null : obj.gesamtPunkteVerschlechterung === null ? null : Number(obj.gesamtPunkteVerschlechterung);
-		result.pruefungBestanden = typeof obj.pruefungBestanden === "undefined" ? null : obj.pruefungBestanden === null ? null : Boolean(obj.pruefungBestanden);
-		result.note = typeof obj.note === "undefined" ? null : obj.note === null ? null : String(obj.note);
+		result.block2DefiziteGesamt = typeof obj.block2DefiziteGesamt === "undefined" ? null : obj.block2DefiziteGesamt === null ? null : obj.block2DefiziteGesamt;
+		result.block2DefiziteLK = typeof obj.block2DefiziteLK === "undefined" ? null : obj.block2DefiziteLK === null ? null : obj.block2DefiziteLK;
+		result.block2PunktSumme = typeof obj.block2PunktSumme === "undefined" ? null : obj.block2PunktSumme === null ? null : obj.block2PunktSumme;
+		result.gesamtPunkte = typeof obj.gesamtPunkte === "undefined" ? null : obj.gesamtPunkte === null ? null : obj.gesamtPunkte;
+		result.gesamtPunkteVerbesserung = typeof obj.gesamtPunkteVerbesserung === "undefined" ? null : obj.gesamtPunkteVerbesserung === null ? null : obj.gesamtPunkteVerbesserung;
+		result.gesamtPunkteVerschlechterung = typeof obj.gesamtPunkteVerschlechterung === "undefined" ? null : obj.gesamtPunkteVerschlechterung === null ? null : obj.gesamtPunkteVerschlechterung;
+		result.pruefungBestanden = typeof obj.pruefungBestanden === "undefined" ? null : obj.pruefungBestanden === null ? null : obj.pruefungBestanden;
+		result.note = typeof obj.note === "undefined" ? null : obj.note === null ? null : obj.note;
 		return result;
 	}
 
@@ -299,36 +299,36 @@ export class Abiturdaten extends JavaObject {
 			result += ' ]' + ',';
 		}
 		result += '"sprachendaten" : ' + Sprachendaten.transpilerToJSON(obj.sprachendaten) + ',';
-		result += '"bilingualeSprache" : ' + ((!obj.bilingualeSprache) ? 'null' : '"' + obj.bilingualeSprache.valueOf() + '"') + ',';
+		result += '"bilingualeSprache" : ' + ((!obj.bilingualeSprache) ? 'null' : '"' + obj.bilingualeSprache + '"') + ',';
 		result += '"latinum" : ' + obj.latinum + ',';
 		result += '"kleinesLatinum" : ' + obj.kleinesLatinum + ',';
 		result += '"graecum" : ' + obj.graecum + ',';
 		result += '"hebraicum" : ' + obj.hebraicum + ',';
 		result += '"block1FehlstundenGesamt" : ' + obj.block1FehlstundenGesamt + ',';
 		result += '"block1FehlstundenUnentschuldigt" : ' + obj.block1FehlstundenUnentschuldigt + ',';
-		result += '"projektKursThema" : ' + ((!obj.projektKursThema) ? 'null' : '"' + obj.projektKursThema.valueOf() + '"') + ',';
-		result += '"projektkursLeitfach1Kuerzel" : ' + ((!obj.projektkursLeitfach1Kuerzel) ? 'null' : '"' + obj.projektkursLeitfach1Kuerzel.valueOf() + '"') + ',';
-		result += '"projektkursLeitfach2Kuerzel" : ' + ((!obj.projektkursLeitfach2Kuerzel) ? 'null' : '"' + obj.projektkursLeitfach2Kuerzel.valueOf() + '"') + ',';
-		result += '"besondereLernleistung" : ' + ((!obj.besondereLernleistung) ? 'null' : '"' + obj.besondereLernleistung.valueOf() + '"') + ',';
-		result += '"besondereLernleistungNotenKuerzel" : ' + ((!obj.besondereLernleistungNotenKuerzel) ? 'null' : '"' + obj.besondereLernleistungNotenKuerzel.valueOf() + '"') + ',';
-		result += '"besondereLernleistungThema" : ' + ((!obj.besondereLernleistungThema) ? 'null' : '"' + obj.besondereLernleistungThema.valueOf() + '"') + ',';
-		result += '"block1AnzahlKurse" : ' + ((!obj.block1AnzahlKurse) ? 'null' : obj.block1AnzahlKurse.valueOf()) + ',';
-		result += '"block1DefiziteGesamt" : ' + ((!obj.block1DefiziteGesamt) ? 'null' : obj.block1DefiziteGesamt.valueOf()) + ',';
-		result += '"block1DefiziteLK" : ' + ((!obj.block1DefiziteLK) ? 'null' : obj.block1DefiziteLK.valueOf()) + ',';
-		result += '"block1PunktSummeGK" : ' + ((!obj.block1PunktSummeGK) ? 'null' : obj.block1PunktSummeGK.valueOf()) + ',';
-		result += '"block1PunktSummeLK" : ' + ((!obj.block1PunktSummeLK) ? 'null' : obj.block1PunktSummeLK.valueOf()) + ',';
-		result += '"block1PunktSummeNormiert" : ' + ((!obj.block1PunktSummeNormiert) ? 'null' : obj.block1PunktSummeNormiert.valueOf()) + ',';
-		result += '"block1NotenpunkteDurchschnitt" : ' + ((!obj.block1NotenpunkteDurchschnitt) ? 'null' : obj.block1NotenpunkteDurchschnitt.valueOf()) + ',';
-		result += '"block1Zulassung" : ' + ((!obj.block1Zulassung) ? 'null' : obj.block1Zulassung.valueOf()) + ',';
+		result += '"projektKursThema" : ' + ((!obj.projektKursThema) ? 'null' : '"' + obj.projektKursThema + '"') + ',';
+		result += '"projektkursLeitfach1Kuerzel" : ' + ((!obj.projektkursLeitfach1Kuerzel) ? 'null' : '"' + obj.projektkursLeitfach1Kuerzel + '"') + ',';
+		result += '"projektkursLeitfach2Kuerzel" : ' + ((!obj.projektkursLeitfach2Kuerzel) ? 'null' : '"' + obj.projektkursLeitfach2Kuerzel + '"') + ',';
+		result += '"besondereLernleistung" : ' + ((!obj.besondereLernleistung) ? 'null' : '"' + obj.besondereLernleistung + '"') + ',';
+		result += '"besondereLernleistungNotenKuerzel" : ' + ((!obj.besondereLernleistungNotenKuerzel) ? 'null' : '"' + obj.besondereLernleistungNotenKuerzel + '"') + ',';
+		result += '"besondereLernleistungThema" : ' + ((!obj.besondereLernleistungThema) ? 'null' : '"' + obj.besondereLernleistungThema + '"') + ',';
+		result += '"block1AnzahlKurse" : ' + ((!obj.block1AnzahlKurse) ? 'null' : obj.block1AnzahlKurse) + ',';
+		result += '"block1DefiziteGesamt" : ' + ((!obj.block1DefiziteGesamt) ? 'null' : obj.block1DefiziteGesamt) + ',';
+		result += '"block1DefiziteLK" : ' + ((!obj.block1DefiziteLK) ? 'null' : obj.block1DefiziteLK) + ',';
+		result += '"block1PunktSummeGK" : ' + ((!obj.block1PunktSummeGK) ? 'null' : obj.block1PunktSummeGK) + ',';
+		result += '"block1PunktSummeLK" : ' + ((!obj.block1PunktSummeLK) ? 'null' : obj.block1PunktSummeLK) + ',';
+		result += '"block1PunktSummeNormiert" : ' + ((!obj.block1PunktSummeNormiert) ? 'null' : obj.block1PunktSummeNormiert) + ',';
+		result += '"block1NotenpunkteDurchschnitt" : ' + ((!obj.block1NotenpunkteDurchschnitt) ? 'null' : obj.block1NotenpunkteDurchschnitt) + ',';
+		result += '"block1Zulassung" : ' + ((!obj.block1Zulassung) ? 'null' : obj.block1Zulassung) + ',';
 		result += '"freiwilligerRuecktritt" : ' + obj.freiwilligerRuecktritt + ',';
-		result += '"block2DefiziteGesamt" : ' + ((!obj.block2DefiziteGesamt) ? 'null' : obj.block2DefiziteGesamt.valueOf()) + ',';
-		result += '"block2DefiziteLK" : ' + ((!obj.block2DefiziteLK) ? 'null' : obj.block2DefiziteLK.valueOf()) + ',';
-		result += '"block2PunktSumme" : ' + ((!obj.block2PunktSumme) ? 'null' : obj.block2PunktSumme.valueOf()) + ',';
-		result += '"gesamtPunkte" : ' + ((!obj.gesamtPunkte) ? 'null' : obj.gesamtPunkte.valueOf()) + ',';
-		result += '"gesamtPunkteVerbesserung" : ' + ((!obj.gesamtPunkteVerbesserung) ? 'null' : obj.gesamtPunkteVerbesserung.valueOf()) + ',';
-		result += '"gesamtPunkteVerschlechterung" : ' + ((!obj.gesamtPunkteVerschlechterung) ? 'null' : obj.gesamtPunkteVerschlechterung.valueOf()) + ',';
-		result += '"pruefungBestanden" : ' + ((!obj.pruefungBestanden) ? 'null' : obj.pruefungBestanden.valueOf()) + ',';
-		result += '"note" : ' + ((!obj.note) ? 'null' : '"' + obj.note.valueOf() + '"') + ',';
+		result += '"block2DefiziteGesamt" : ' + ((!obj.block2DefiziteGesamt) ? 'null' : obj.block2DefiziteGesamt) + ',';
+		result += '"block2DefiziteLK" : ' + ((!obj.block2DefiziteLK) ? 'null' : obj.block2DefiziteLK) + ',';
+		result += '"block2PunktSumme" : ' + ((!obj.block2PunktSumme) ? 'null' : obj.block2PunktSumme) + ',';
+		result += '"gesamtPunkte" : ' + ((!obj.gesamtPunkte) ? 'null' : obj.gesamtPunkte) + ',';
+		result += '"gesamtPunkteVerbesserung" : ' + ((!obj.gesamtPunkteVerbesserung) ? 'null' : obj.gesamtPunkteVerbesserung) + ',';
+		result += '"gesamtPunkteVerschlechterung" : ' + ((!obj.gesamtPunkteVerschlechterung) ? 'null' : obj.gesamtPunkteVerschlechterung) + ',';
+		result += '"pruefungBestanden" : ' + ((!obj.pruefungBestanden) ? 'null' : obj.pruefungBestanden) + ',';
+		result += '"note" : ' + ((!obj.note) ? 'null' : '"' + obj.note + '"') + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -378,7 +378,7 @@ export class Abiturdaten extends JavaObject {
 			result += '"sprachendaten" : ' + Sprachendaten.transpilerToJSON(obj.sprachendaten) + ',';
 		}
 		if (typeof obj.bilingualeSprache !== "undefined") {
-			result += '"bilingualeSprache" : ' + ((!obj.bilingualeSprache) ? 'null' : '"' + obj.bilingualeSprache.valueOf() + '"') + ',';
+			result += '"bilingualeSprache" : ' + ((!obj.bilingualeSprache) ? 'null' : '"' + obj.bilingualeSprache + '"') + ',';
 		}
 		if (typeof obj.latinum !== "undefined") {
 			result += '"latinum" : ' + obj.latinum + ',';
@@ -399,73 +399,73 @@ export class Abiturdaten extends JavaObject {
 			result += '"block1FehlstundenUnentschuldigt" : ' + obj.block1FehlstundenUnentschuldigt + ',';
 		}
 		if (typeof obj.projektKursThema !== "undefined") {
-			result += '"projektKursThema" : ' + ((!obj.projektKursThema) ? 'null' : '"' + obj.projektKursThema.valueOf() + '"') + ',';
+			result += '"projektKursThema" : ' + ((!obj.projektKursThema) ? 'null' : '"' + obj.projektKursThema + '"') + ',';
 		}
 		if (typeof obj.projektkursLeitfach1Kuerzel !== "undefined") {
-			result += '"projektkursLeitfach1Kuerzel" : ' + ((!obj.projektkursLeitfach1Kuerzel) ? 'null' : '"' + obj.projektkursLeitfach1Kuerzel.valueOf() + '"') + ',';
+			result += '"projektkursLeitfach1Kuerzel" : ' + ((!obj.projektkursLeitfach1Kuerzel) ? 'null' : '"' + obj.projektkursLeitfach1Kuerzel + '"') + ',';
 		}
 		if (typeof obj.projektkursLeitfach2Kuerzel !== "undefined") {
-			result += '"projektkursLeitfach2Kuerzel" : ' + ((!obj.projektkursLeitfach2Kuerzel) ? 'null' : '"' + obj.projektkursLeitfach2Kuerzel.valueOf() + '"') + ',';
+			result += '"projektkursLeitfach2Kuerzel" : ' + ((!obj.projektkursLeitfach2Kuerzel) ? 'null' : '"' + obj.projektkursLeitfach2Kuerzel + '"') + ',';
 		}
 		if (typeof obj.besondereLernleistung !== "undefined") {
-			result += '"besondereLernleistung" : ' + ((!obj.besondereLernleistung) ? 'null' : '"' + obj.besondereLernleistung.valueOf() + '"') + ',';
+			result += '"besondereLernleistung" : ' + ((!obj.besondereLernleistung) ? 'null' : '"' + obj.besondereLernleistung + '"') + ',';
 		}
 		if (typeof obj.besondereLernleistungNotenKuerzel !== "undefined") {
-			result += '"besondereLernleistungNotenKuerzel" : ' + ((!obj.besondereLernleistungNotenKuerzel) ? 'null' : '"' + obj.besondereLernleistungNotenKuerzel.valueOf() + '"') + ',';
+			result += '"besondereLernleistungNotenKuerzel" : ' + ((!obj.besondereLernleistungNotenKuerzel) ? 'null' : '"' + obj.besondereLernleistungNotenKuerzel + '"') + ',';
 		}
 		if (typeof obj.besondereLernleistungThema !== "undefined") {
-			result += '"besondereLernleistungThema" : ' + ((!obj.besondereLernleistungThema) ? 'null' : '"' + obj.besondereLernleistungThema.valueOf() + '"') + ',';
+			result += '"besondereLernleistungThema" : ' + ((!obj.besondereLernleistungThema) ? 'null' : '"' + obj.besondereLernleistungThema + '"') + ',';
 		}
 		if (typeof obj.block1AnzahlKurse !== "undefined") {
-			result += '"block1AnzahlKurse" : ' + ((!obj.block1AnzahlKurse) ? 'null' : obj.block1AnzahlKurse.valueOf()) + ',';
+			result += '"block1AnzahlKurse" : ' + ((!obj.block1AnzahlKurse) ? 'null' : obj.block1AnzahlKurse) + ',';
 		}
 		if (typeof obj.block1DefiziteGesamt !== "undefined") {
-			result += '"block1DefiziteGesamt" : ' + ((!obj.block1DefiziteGesamt) ? 'null' : obj.block1DefiziteGesamt.valueOf()) + ',';
+			result += '"block1DefiziteGesamt" : ' + ((!obj.block1DefiziteGesamt) ? 'null' : obj.block1DefiziteGesamt) + ',';
 		}
 		if (typeof obj.block1DefiziteLK !== "undefined") {
-			result += '"block1DefiziteLK" : ' + ((!obj.block1DefiziteLK) ? 'null' : obj.block1DefiziteLK.valueOf()) + ',';
+			result += '"block1DefiziteLK" : ' + ((!obj.block1DefiziteLK) ? 'null' : obj.block1DefiziteLK) + ',';
 		}
 		if (typeof obj.block1PunktSummeGK !== "undefined") {
-			result += '"block1PunktSummeGK" : ' + ((!obj.block1PunktSummeGK) ? 'null' : obj.block1PunktSummeGK.valueOf()) + ',';
+			result += '"block1PunktSummeGK" : ' + ((!obj.block1PunktSummeGK) ? 'null' : obj.block1PunktSummeGK) + ',';
 		}
 		if (typeof obj.block1PunktSummeLK !== "undefined") {
-			result += '"block1PunktSummeLK" : ' + ((!obj.block1PunktSummeLK) ? 'null' : obj.block1PunktSummeLK.valueOf()) + ',';
+			result += '"block1PunktSummeLK" : ' + ((!obj.block1PunktSummeLK) ? 'null' : obj.block1PunktSummeLK) + ',';
 		}
 		if (typeof obj.block1PunktSummeNormiert !== "undefined") {
-			result += '"block1PunktSummeNormiert" : ' + ((!obj.block1PunktSummeNormiert) ? 'null' : obj.block1PunktSummeNormiert.valueOf()) + ',';
+			result += '"block1PunktSummeNormiert" : ' + ((!obj.block1PunktSummeNormiert) ? 'null' : obj.block1PunktSummeNormiert) + ',';
 		}
 		if (typeof obj.block1NotenpunkteDurchschnitt !== "undefined") {
-			result += '"block1NotenpunkteDurchschnitt" : ' + ((!obj.block1NotenpunkteDurchschnitt) ? 'null' : obj.block1NotenpunkteDurchschnitt.valueOf()) + ',';
+			result += '"block1NotenpunkteDurchschnitt" : ' + ((!obj.block1NotenpunkteDurchschnitt) ? 'null' : obj.block1NotenpunkteDurchschnitt) + ',';
 		}
 		if (typeof obj.block1Zulassung !== "undefined") {
-			result += '"block1Zulassung" : ' + ((!obj.block1Zulassung) ? 'null' : obj.block1Zulassung.valueOf()) + ',';
+			result += '"block1Zulassung" : ' + ((!obj.block1Zulassung) ? 'null' : obj.block1Zulassung) + ',';
 		}
 		if (typeof obj.freiwilligerRuecktritt !== "undefined") {
 			result += '"freiwilligerRuecktritt" : ' + obj.freiwilligerRuecktritt + ',';
 		}
 		if (typeof obj.block2DefiziteGesamt !== "undefined") {
-			result += '"block2DefiziteGesamt" : ' + ((!obj.block2DefiziteGesamt) ? 'null' : obj.block2DefiziteGesamt.valueOf()) + ',';
+			result += '"block2DefiziteGesamt" : ' + ((!obj.block2DefiziteGesamt) ? 'null' : obj.block2DefiziteGesamt) + ',';
 		}
 		if (typeof obj.block2DefiziteLK !== "undefined") {
-			result += '"block2DefiziteLK" : ' + ((!obj.block2DefiziteLK) ? 'null' : obj.block2DefiziteLK.valueOf()) + ',';
+			result += '"block2DefiziteLK" : ' + ((!obj.block2DefiziteLK) ? 'null' : obj.block2DefiziteLK) + ',';
 		}
 		if (typeof obj.block2PunktSumme !== "undefined") {
-			result += '"block2PunktSumme" : ' + ((!obj.block2PunktSumme) ? 'null' : obj.block2PunktSumme.valueOf()) + ',';
+			result += '"block2PunktSumme" : ' + ((!obj.block2PunktSumme) ? 'null' : obj.block2PunktSumme) + ',';
 		}
 		if (typeof obj.gesamtPunkte !== "undefined") {
-			result += '"gesamtPunkte" : ' + ((!obj.gesamtPunkte) ? 'null' : obj.gesamtPunkte.valueOf()) + ',';
+			result += '"gesamtPunkte" : ' + ((!obj.gesamtPunkte) ? 'null' : obj.gesamtPunkte) + ',';
 		}
 		if (typeof obj.gesamtPunkteVerbesserung !== "undefined") {
-			result += '"gesamtPunkteVerbesserung" : ' + ((!obj.gesamtPunkteVerbesserung) ? 'null' : obj.gesamtPunkteVerbesserung.valueOf()) + ',';
+			result += '"gesamtPunkteVerbesserung" : ' + ((!obj.gesamtPunkteVerbesserung) ? 'null' : obj.gesamtPunkteVerbesserung) + ',';
 		}
 		if (typeof obj.gesamtPunkteVerschlechterung !== "undefined") {
-			result += '"gesamtPunkteVerschlechterung" : ' + ((!obj.gesamtPunkteVerschlechterung) ? 'null' : obj.gesamtPunkteVerschlechterung.valueOf()) + ',';
+			result += '"gesamtPunkteVerschlechterung" : ' + ((!obj.gesamtPunkteVerschlechterung) ? 'null' : obj.gesamtPunkteVerschlechterung) + ',';
 		}
 		if (typeof obj.pruefungBestanden !== "undefined") {
-			result += '"pruefungBestanden" : ' + ((!obj.pruefungBestanden) ? 'null' : obj.pruefungBestanden.valueOf()) + ',';
+			result += '"pruefungBestanden" : ' + ((!obj.pruefungBestanden) ? 'null' : obj.pruefungBestanden) + ',';
 		}
 		if (typeof obj.note !== "undefined") {
-			result += '"note" : ' + ((!obj.note) ? 'null' : '"' + obj.note.valueOf() + '"') + ',';
+			result += '"note" : ' + ((!obj.note) ? 'null' : '"' + obj.note + '"') + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

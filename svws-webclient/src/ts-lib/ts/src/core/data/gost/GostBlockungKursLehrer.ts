@@ -11,17 +11,17 @@ export class GostBlockungKursLehrer extends JavaObject {
 	/**
 	 * Das Kürzel des Lehrers. 
 	 */
-	public kuerzel : String = "";
+	public kuerzel : string = "";
 
 	/**
 	 * Der Vorname des Lehrers. 
 	 */
-	public vorname : String = "";
+	public vorname : string = "";
 
 	/**
 	 * Der Nachname des Lehrers. 
 	 */
-	public nachname : String = "";
+	public nachname : string = "";
 
 	/**
 	 * Eine Reihenfolge für die Lehrer, z.B. zur Unterscheidung des eigentlichen Kurslehrer (z.B. 1) und einer Zusatzkraft (z.B. 2) 
@@ -55,13 +55,13 @@ export class GostBlockungKursLehrer extends JavaObject {
 		result.id = obj.id;
 		if (typeof obj.kuerzel === "undefined")
 			 throw new Error('invalid json format, missing attribute kuerzel');
-		result.kuerzel = String(obj.kuerzel);
+		result.kuerzel = obj.kuerzel;
 		if (typeof obj.vorname === "undefined")
 			 throw new Error('invalid json format, missing attribute vorname');
-		result.vorname = String(obj.vorname);
+		result.vorname = obj.vorname;
 		if (typeof obj.nachname === "undefined")
 			 throw new Error('invalid json format, missing attribute nachname');
-		result.nachname = String(obj.nachname);
+		result.nachname = obj.nachname;
 		if (typeof obj.reihenfolge === "undefined")
 			 throw new Error('invalid json format, missing attribute reihenfolge');
 		result.reihenfolge = obj.reihenfolge;
@@ -77,9 +77,9 @@ export class GostBlockungKursLehrer extends JavaObject {
 	public static transpilerToJSON(obj : GostBlockungKursLehrer) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"kuerzel" : ' + '"' + obj.kuerzel.valueOf() + '"' + ',';
-		result += '"vorname" : ' + '"' + obj.vorname.valueOf() + '"' + ',';
-		result += '"nachname" : ' + '"' + obj.nachname.valueOf() + '"' + ',';
+		result += '"kuerzel" : ' + '"' + obj.kuerzel! + '"' + ',';
+		result += '"vorname" : ' + '"' + obj.vorname! + '"' + ',';
+		result += '"nachname" : ' + '"' + obj.nachname! + '"' + ',';
 		result += '"reihenfolge" : ' + obj.reihenfolge + ',';
 		result += '"wochenstunden" : ' + obj.wochenstunden + ',';
 		result += '"istExtern" : ' + obj.istExtern + ',';
@@ -94,13 +94,13 @@ export class GostBlockungKursLehrer extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.kuerzel !== "undefined") {
-			result += '"kuerzel" : ' + '"' + obj.kuerzel.valueOf() + '"' + ',';
+			result += '"kuerzel" : ' + '"' + obj.kuerzel + '"' + ',';
 		}
 		if (typeof obj.vorname !== "undefined") {
-			result += '"vorname" : ' + '"' + obj.vorname.valueOf() + '"' + ',';
+			result += '"vorname" : ' + '"' + obj.vorname + '"' + ',';
 		}
 		if (typeof obj.nachname !== "undefined") {
-			result += '"nachname" : ' + '"' + obj.nachname.valueOf() + '"' + ',';
+			result += '"nachname" : ' + '"' + obj.nachname + '"' + ',';
 		}
 		if (typeof obj.reihenfolge !== "undefined") {
 			result += '"reihenfolge" : ' + obj.reihenfolge + ',';

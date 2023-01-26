@@ -16,17 +16,17 @@ export class ENMTeilleistung extends JavaObject {
 	/**
 	 * Das Datum an dem die Teilleistung erbracht bzw. festgelegt wurde. (z.B. "2020-10-10") 
 	 */
-	public datum : String | null = null;
+	public datum : string | null = null;
 
 	/**
 	 * Eine Bemerkung zu der Teilleistung (z.B. "Nachgeschrieben") 
 	 */
-	public bemerkung : String | null = null;
+	public bemerkung : string | null = null;
 
 	/**
 	 * Das Noten-Kürzel für die Teilleistung (z.B. "1+") 
 	 */
-	public notenKuerzel : String | null = null;
+	public notenKuerzel : string | null = null;
 
 
 	public constructor() {
@@ -46,9 +46,9 @@ export class ENMTeilleistung extends JavaObject {
 		if (typeof obj.artID === "undefined")
 			 throw new Error('invalid json format, missing attribute artID');
 		result.artID = obj.artID;
-		result.datum = typeof obj.datum === "undefined" ? null : obj.datum === null ? null : String(obj.datum);
-		result.bemerkung = typeof obj.bemerkung === "undefined" ? null : obj.bemerkung === null ? null : String(obj.bemerkung);
-		result.notenKuerzel = typeof obj.notenKuerzel === "undefined" ? null : obj.notenKuerzel === null ? null : String(obj.notenKuerzel);
+		result.datum = typeof obj.datum === "undefined" ? null : obj.datum === null ? null : obj.datum;
+		result.bemerkung = typeof obj.bemerkung === "undefined" ? null : obj.bemerkung === null ? null : obj.bemerkung;
+		result.notenKuerzel = typeof obj.notenKuerzel === "undefined" ? null : obj.notenKuerzel === null ? null : obj.notenKuerzel;
 		return result;
 	}
 
@@ -56,9 +56,9 @@ export class ENMTeilleistung extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
 		result += '"artID" : ' + obj.artID + ',';
-		result += '"datum" : ' + ((!obj.datum) ? 'null' : '"' + obj.datum.valueOf() + '"') + ',';
-		result += '"bemerkung" : ' + ((!obj.bemerkung) ? 'null' : '"' + obj.bemerkung.valueOf() + '"') + ',';
-		result += '"notenKuerzel" : ' + ((!obj.notenKuerzel) ? 'null' : '"' + obj.notenKuerzel.valueOf() + '"') + ',';
+		result += '"datum" : ' + ((!obj.datum) ? 'null' : '"' + obj.datum + '"') + ',';
+		result += '"bemerkung" : ' + ((!obj.bemerkung) ? 'null' : '"' + obj.bemerkung + '"') + ',';
+		result += '"notenKuerzel" : ' + ((!obj.notenKuerzel) ? 'null' : '"' + obj.notenKuerzel + '"') + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -73,13 +73,13 @@ export class ENMTeilleistung extends JavaObject {
 			result += '"artID" : ' + obj.artID + ',';
 		}
 		if (typeof obj.datum !== "undefined") {
-			result += '"datum" : ' + ((!obj.datum) ? 'null' : '"' + obj.datum.valueOf() + '"') + ',';
+			result += '"datum" : ' + ((!obj.datum) ? 'null' : '"' + obj.datum + '"') + ',';
 		}
 		if (typeof obj.bemerkung !== "undefined") {
-			result += '"bemerkung" : ' + ((!obj.bemerkung) ? 'null' : '"' + obj.bemerkung.valueOf() + '"') + ',';
+			result += '"bemerkung" : ' + ((!obj.bemerkung) ? 'null' : '"' + obj.bemerkung + '"') + ',';
 		}
 		if (typeof obj.notenKuerzel !== "undefined") {
-			result += '"notenKuerzel" : ' + ((!obj.notenKuerzel) ? 'null' : '"' + obj.notenKuerzel.valueOf() + '"') + ',';
+			result += '"notenKuerzel" : ' + ((!obj.notenKuerzel) ? 'null' : '"' + obj.notenKuerzel + '"') + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

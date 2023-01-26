@@ -11,17 +11,17 @@ export class FoerderschwerpunktEintrag extends JavaObject {
 	/**
 	 * Das Kürzel des Eintrags. 
 	 */
-	public kuerzel : String = "";
+	public kuerzel : string = "";
 
 	/**
 	 * Die textuelle Beschreibung des Katalog-Eintrags. 
 	 */
-	public text : String = "";
+	public text : string = "";
 
 	/**
 	 * Das Kürzel des Eintrags im Rahmen der amtlichen Schulstatisik. 
 	 */
-	public kuerzelStatistik : String = "";
+	public kuerzelStatistik : string = "";
 
 	/**
 	 * Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht. 
@@ -50,13 +50,13 @@ export class FoerderschwerpunktEintrag extends JavaObject {
 		result.id = obj.id;
 		if (typeof obj.kuerzel === "undefined")
 			 throw new Error('invalid json format, missing attribute kuerzel');
-		result.kuerzel = String(obj.kuerzel);
+		result.kuerzel = obj.kuerzel;
 		if (typeof obj.text === "undefined")
 			 throw new Error('invalid json format, missing attribute text');
-		result.text = String(obj.text);
+		result.text = obj.text;
 		if (typeof obj.kuerzelStatistik === "undefined")
 			 throw new Error('invalid json format, missing attribute kuerzelStatistik');
-		result.kuerzelStatistik = String(obj.kuerzelStatistik);
+		result.kuerzelStatistik = obj.kuerzelStatistik;
 		if (typeof obj.istSichtbar === "undefined")
 			 throw new Error('invalid json format, missing attribute istSichtbar');
 		result.istSichtbar = obj.istSichtbar;
@@ -69,9 +69,9 @@ export class FoerderschwerpunktEintrag extends JavaObject {
 	public static transpilerToJSON(obj : FoerderschwerpunktEintrag) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"kuerzel" : ' + '"' + obj.kuerzel.valueOf() + '"' + ',';
-		result += '"text" : ' + '"' + obj.text.valueOf() + '"' + ',';
-		result += '"kuerzelStatistik" : ' + '"' + obj.kuerzelStatistik.valueOf() + '"' + ',';
+		result += '"kuerzel" : ' + '"' + obj.kuerzel! + '"' + ',';
+		result += '"text" : ' + '"' + obj.text! + '"' + ',';
+		result += '"kuerzelStatistik" : ' + '"' + obj.kuerzelStatistik! + '"' + ',';
 		result += '"istSichtbar" : ' + obj.istSichtbar + ',';
 		result += '"istAenderbar" : ' + obj.istAenderbar + ',';
 		result = result.slice(0, -1);
@@ -85,13 +85,13 @@ export class FoerderschwerpunktEintrag extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.kuerzel !== "undefined") {
-			result += '"kuerzel" : ' + '"' + obj.kuerzel.valueOf() + '"' + ',';
+			result += '"kuerzel" : ' + '"' + obj.kuerzel + '"' + ',';
 		}
 		if (typeof obj.text !== "undefined") {
-			result += '"text" : ' + '"' + obj.text.valueOf() + '"' + ',';
+			result += '"text" : ' + '"' + obj.text + '"' + ',';
 		}
 		if (typeof obj.kuerzelStatistik !== "undefined") {
-			result += '"kuerzelStatistik" : ' + '"' + obj.kuerzelStatistik.valueOf() + '"' + ',';
+			result += '"kuerzelStatistik" : ' + '"' + obj.kuerzelStatistik + '"' + ',';
 		}
 		if (typeof obj.istSichtbar !== "undefined") {
 			result += '"istSichtbar" : ' + obj.istSichtbar + ',';

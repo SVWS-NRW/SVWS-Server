@@ -50,7 +50,7 @@ export class SprachBelegungSekI extends JavaObject implements Comparable<SprachB
 	 * 
 	 * @return die Sprachbelegung in der Sek I
 	 */
-	public static getByASDJahrgang(ASDJahrgang : String | null) : SprachBelegungSekI {
+	public static getByASDJahrgang(ASDJahrgang : string | null) : SprachBelegungSekI {
 		if (ASDJahrgang === null) 
 			return SprachBelegungSekI.NICHT_BELEGT;
 		if (JavaString.compareTo(ASDJahrgang, "05") <= 0) 

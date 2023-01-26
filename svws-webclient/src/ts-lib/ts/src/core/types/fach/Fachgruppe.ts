@@ -12,7 +12,7 @@ import { RGBFarbe, cast_de_nrw_schule_svws_core_data_RGBFarbe } from '../../../c
 export class Fachgruppe extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -21,7 +21,7 @@ export class Fachgruppe extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<Fachgruppe> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, Fachgruppe> = new Map<String, Fachgruppe>();
+	private static readonly all_values_by_name : Map<string, Fachgruppe> = new Map<string, Fachgruppe>();
 
 	/**
 	 * Fachgruppe Deutsch 
@@ -186,17 +186,17 @@ export class Fachgruppe extends JavaObject {
 	/**
 	 * Eine Map, welche der ID der Fachgruppe die Instanz dieser Aufzählung zuordnet. 
 	 */
-	private static readonly _mapEintragByID : HashMap<Number, FachgruppenKatalogEintrag> = new HashMap();
+	private static readonly _mapEintragByID : HashMap<number, FachgruppenKatalogEintrag> = new HashMap();
 
 	/**
 	 * Eine Map, welche der ID der Fachgruppe die Instanz dieser Aufzählung zuordnet. 
 	 */
-	private static readonly _mapByID : HashMap<Number, Fachgruppe> = new HashMap();
+	private static readonly _mapByID : HashMap<number, Fachgruppe> = new HashMap();
 
 	/**
 	 * Eine Map, welche dem Kürzel der Fachgruppe die Instanz dieser Aufzählung zuordnet. 
 	 */
-	private static readonly _mapByKuerzel : HashMap<String, Fachgruppe> = new HashMap();
+	private static readonly _mapByKuerzel : HashMap<string, Fachgruppe> = new HashMap();
 
 	/**
 	 * Die Schulformen, bei welchen die Fachgruppe vorkommt 
@@ -234,7 +234,7 @@ export class Fachgruppe extends JavaObject {
 	 *    
 	 * @return die Map von den IDs der Fachgruppen auf die zugehörigen Katalog-Einträge
 	 */
-	private static getMapEintragByID() : HashMap<Number, FachgruppenKatalogEintrag> {
+	private static getMapEintragByID() : HashMap<number, FachgruppenKatalogEintrag> {
 		if (Fachgruppe._mapEintragByID.size() === 0) 
 			for (let g of Fachgruppe.values()) 
 				for (let k of g.historie) 
@@ -248,7 +248,7 @@ export class Fachgruppe extends JavaObject {
 	 *    
 	 * @return die Map von den IDs der Fachgruppen auf die zugehörigen Fachgruppen
 	 */
-	private static getMapByID() : HashMap<Number, Fachgruppe> {
+	private static getMapByID() : HashMap<number, Fachgruppe> {
 		if (Fachgruppe._mapByID.size() === 0) 
 			for (let g of Fachgruppe.values()) 
 				Fachgruppe._mapByID.put(g.daten.id, g);
@@ -261,7 +261,7 @@ export class Fachgruppe extends JavaObject {
 	 *    
 	 * @return die Map von den Kürzeln der Fachgruppen auf die zugehörigen Fachgruppen
 	 */
-	private static getMapByKuerzel() : HashMap<String, Fachgruppe> {
+	private static getMapByKuerzel() : HashMap<string, Fachgruppe> {
 		if (Fachgruppe._mapByKuerzel.size() === 0) 
 			for (let g of Fachgruppe.values()) 
 				Fachgruppe._mapByKuerzel.put(g.daten.kuerzel, g);
@@ -290,7 +290,7 @@ export class Fachgruppe extends JavaObject {
 			return false;
 		if (this.daten.schulformen !== null) {
 			for (let i : number = 0; i < this.daten.schulformen.size(); i++){
-				let sfKuerzel : String | null = this.daten.schulformen.get(i);
+				let sfKuerzel : string | null = this.daten.schulformen.get(i);
 				if (JavaObject.equalsTranspiler(sfKuerzel, (schulform.daten.kuerzel))) 
 					return true;
 			}
@@ -327,7 +327,7 @@ export class Fachgruppe extends JavaObject {
 	 * 
 	 * @return die Fachgruppe oder null, falls das Kürzel ungültig ist
 	 */
-	public static getByKuerzel(kuerzel : String | null) : Fachgruppe | null {
+	public static getByKuerzel(kuerzel : string | null) : Fachgruppe | null {
 		return Fachgruppe.getMapByKuerzel().get(kuerzel);
 	}
 
@@ -356,7 +356,7 @@ export class Fachgruppe extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -374,7 +374,7 @@ export class Fachgruppe extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -428,7 +428,7 @@ export class Fachgruppe extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : Fachgruppe | null {
+	public static valueOf(name : string) : Fachgruppe | null {
 		let tmp : Fachgruppe | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

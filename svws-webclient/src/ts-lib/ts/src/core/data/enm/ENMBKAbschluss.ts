@@ -28,12 +28,12 @@ export class ENMBKAbschluss extends JavaObject {
 	/**
 	 * Das Notenkürzel der Note der praktischen Prüfung. 
 	 */
-	public notePraktischePruefung : String | null = null;
+	public notePraktischePruefung : string | null = null;
 
 	/**
 	 * Das Notenkürzel der Note aus dem Kolloqium. 
 	 */
-	public noteKolloqium : String | null = null;
+	public noteKolloqium : string | null = null;
 
 	/**
 	 * Gibt an, ob der Schüler die Zulassung zur Berufsabschlussprüfung hat. 
@@ -48,7 +48,7 @@ export class ENMBKAbschluss extends JavaObject {
 	/**
 	 * Gibt das Thema der Abschlussarbeit an. 
 	 */
-	public themaAbschlussarbeit : String | null = null;
+	public themaAbschlussarbeit : string | null = null;
 
 	/**
 	 * Gibt an, ob eine Berufsabschlussprüfung vorhanden ist oder nicht. 
@@ -58,7 +58,7 @@ export class ENMBKAbschluss extends JavaObject {
 	/**
 	 * Das Notenkürzel der Note aus der Fachpraxis. 
 	 */
-	public noteFachpraxis : String | null = null;
+	public noteFachpraxis : string | null = null;
 
 	/**
 	 * Gibt an, ob der fachpraktische Teil ausreichend ist oder nicht. 
@@ -94,19 +94,19 @@ export class ENMBKAbschluss extends JavaObject {
 		if (typeof obj.hatErworbenErweiterteBeruflicheKenntnisse === "undefined")
 			 throw new Error('invalid json format, missing attribute hatErworbenErweiterteBeruflicheKenntnisse');
 		result.hatErworbenErweiterteBeruflicheKenntnisse = obj.hatErworbenErweiterteBeruflicheKenntnisse;
-		result.notePraktischePruefung = typeof obj.notePraktischePruefung === "undefined" ? null : obj.notePraktischePruefung === null ? null : String(obj.notePraktischePruefung);
-		result.noteKolloqium = typeof obj.noteKolloqium === "undefined" ? null : obj.noteKolloqium === null ? null : String(obj.noteKolloqium);
+		result.notePraktischePruefung = typeof obj.notePraktischePruefung === "undefined" ? null : obj.notePraktischePruefung === null ? null : obj.notePraktischePruefung;
+		result.noteKolloqium = typeof obj.noteKolloqium === "undefined" ? null : obj.noteKolloqium === null ? null : obj.noteKolloqium;
 		if (typeof obj.hatZulassungBerufsabschlusspruefung === "undefined")
 			 throw new Error('invalid json format, missing attribute hatZulassungBerufsabschlusspruefung');
 		result.hatZulassungBerufsabschlusspruefung = obj.hatZulassungBerufsabschlusspruefung;
 		if (typeof obj.hatBestandenBerufsabschlusspruefung === "undefined")
 			 throw new Error('invalid json format, missing attribute hatBestandenBerufsabschlusspruefung');
 		result.hatBestandenBerufsabschlusspruefung = obj.hatBestandenBerufsabschlusspruefung;
-		result.themaAbschlussarbeit = typeof obj.themaAbschlussarbeit === "undefined" ? null : obj.themaAbschlussarbeit === null ? null : String(obj.themaAbschlussarbeit);
+		result.themaAbschlussarbeit = typeof obj.themaAbschlussarbeit === "undefined" ? null : obj.themaAbschlussarbeit === null ? null : obj.themaAbschlussarbeit;
 		if (typeof obj.istVorhandenBerufsabschlusspruefung === "undefined")
 			 throw new Error('invalid json format, missing attribute istVorhandenBerufsabschlusspruefung');
 		result.istVorhandenBerufsabschlusspruefung = obj.istVorhandenBerufsabschlusspruefung;
-		result.noteFachpraxis = typeof obj.noteFachpraxis === "undefined" ? null : obj.noteFachpraxis === null ? null : String(obj.noteFachpraxis);
+		result.noteFachpraxis = typeof obj.noteFachpraxis === "undefined" ? null : obj.noteFachpraxis === null ? null : obj.noteFachpraxis;
 		if (typeof obj.istFachpraktischerTeilAusreichend === "undefined")
 			 throw new Error('invalid json format, missing attribute istFachpraktischerTeilAusreichend');
 		result.istFachpraktischerTeilAusreichend = obj.istFachpraktischerTeilAusreichend;
@@ -124,13 +124,13 @@ export class ENMBKAbschluss extends JavaObject {
 		result += '"hatBestanden" : ' + obj.hatBestanden + ',';
 		result += '"hatZulassungErweiterteBeruflicheKenntnisse" : ' + obj.hatZulassungErweiterteBeruflicheKenntnisse + ',';
 		result += '"hatErworbenErweiterteBeruflicheKenntnisse" : ' + obj.hatErworbenErweiterteBeruflicheKenntnisse + ',';
-		result += '"notePraktischePruefung" : ' + ((!obj.notePraktischePruefung) ? 'null' : '"' + obj.notePraktischePruefung.valueOf() + '"') + ',';
-		result += '"noteKolloqium" : ' + ((!obj.noteKolloqium) ? 'null' : '"' + obj.noteKolloqium.valueOf() + '"') + ',';
+		result += '"notePraktischePruefung" : ' + ((!obj.notePraktischePruefung) ? 'null' : '"' + obj.notePraktischePruefung + '"') + ',';
+		result += '"noteKolloqium" : ' + ((!obj.noteKolloqium) ? 'null' : '"' + obj.noteKolloqium + '"') + ',';
 		result += '"hatZulassungBerufsabschlusspruefung" : ' + obj.hatZulassungBerufsabschlusspruefung + ',';
 		result += '"hatBestandenBerufsabschlusspruefung" : ' + obj.hatBestandenBerufsabschlusspruefung + ',';
-		result += '"themaAbschlussarbeit" : ' + ((!obj.themaAbschlussarbeit) ? 'null' : '"' + obj.themaAbschlussarbeit.valueOf() + '"') + ',';
+		result += '"themaAbschlussarbeit" : ' + ((!obj.themaAbschlussarbeit) ? 'null' : '"' + obj.themaAbschlussarbeit + '"') + ',';
 		result += '"istVorhandenBerufsabschlusspruefung" : ' + obj.istVorhandenBerufsabschlusspruefung + ',';
-		result += '"noteFachpraxis" : ' + ((!obj.noteFachpraxis) ? 'null' : '"' + obj.noteFachpraxis.valueOf() + '"') + ',';
+		result += '"noteFachpraxis" : ' + ((!obj.noteFachpraxis) ? 'null' : '"' + obj.noteFachpraxis + '"') + ',';
 		result += '"istFachpraktischerTeilAusreichend" : ' + obj.istFachpraktischerTeilAusreichend + ',';
 		if (!obj.faecher) {
 			result += '"faecher" : []';
@@ -164,10 +164,10 @@ export class ENMBKAbschluss extends JavaObject {
 			result += '"hatErworbenErweiterteBeruflicheKenntnisse" : ' + obj.hatErworbenErweiterteBeruflicheKenntnisse + ',';
 		}
 		if (typeof obj.notePraktischePruefung !== "undefined") {
-			result += '"notePraktischePruefung" : ' + ((!obj.notePraktischePruefung) ? 'null' : '"' + obj.notePraktischePruefung.valueOf() + '"') + ',';
+			result += '"notePraktischePruefung" : ' + ((!obj.notePraktischePruefung) ? 'null' : '"' + obj.notePraktischePruefung + '"') + ',';
 		}
 		if (typeof obj.noteKolloqium !== "undefined") {
-			result += '"noteKolloqium" : ' + ((!obj.noteKolloqium) ? 'null' : '"' + obj.noteKolloqium.valueOf() + '"') + ',';
+			result += '"noteKolloqium" : ' + ((!obj.noteKolloqium) ? 'null' : '"' + obj.noteKolloqium + '"') + ',';
 		}
 		if (typeof obj.hatZulassungBerufsabschlusspruefung !== "undefined") {
 			result += '"hatZulassungBerufsabschlusspruefung" : ' + obj.hatZulassungBerufsabschlusspruefung + ',';
@@ -176,13 +176,13 @@ export class ENMBKAbschluss extends JavaObject {
 			result += '"hatBestandenBerufsabschlusspruefung" : ' + obj.hatBestandenBerufsabschlusspruefung + ',';
 		}
 		if (typeof obj.themaAbschlussarbeit !== "undefined") {
-			result += '"themaAbschlussarbeit" : ' + ((!obj.themaAbschlussarbeit) ? 'null' : '"' + obj.themaAbschlussarbeit.valueOf() + '"') + ',';
+			result += '"themaAbschlussarbeit" : ' + ((!obj.themaAbschlussarbeit) ? 'null' : '"' + obj.themaAbschlussarbeit + '"') + ',';
 		}
 		if (typeof obj.istVorhandenBerufsabschlusspruefung !== "undefined") {
 			result += '"istVorhandenBerufsabschlusspruefung" : ' + obj.istVorhandenBerufsabschlusspruefung + ',';
 		}
 		if (typeof obj.noteFachpraxis !== "undefined") {
-			result += '"noteFachpraxis" : ' + ((!obj.noteFachpraxis) ? 'null' : '"' + obj.noteFachpraxis.valueOf() + '"') + ',';
+			result += '"noteFachpraxis" : ' + ((!obj.noteFachpraxis) ? 'null' : '"' + obj.noteFachpraxis + '"') + ',';
 		}
 		if (typeof obj.istFachpraktischerTeilAusreichend !== "undefined") {
 			result += '"istFachpraktischerTeilAusreichend" : ' + obj.istFachpraktischerTeilAusreichend + ',';

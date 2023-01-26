@@ -12,37 +12,37 @@ export class KatalogEintragOrtsteile extends JavaObject {
 	/**
 	 * Katalog von IT.NRW PLZ Ortsteile: die Postleitzahl 
 	 */
-	public PLZ : String = "";
+	public PLZ : string = "";
 
 	/**
 	 * Katalog von IT.NRW PLZ Ortsteile: der Regionalschlüssel 
 	 */
-	public RegSchl : String = "";
+	public RegSchl : string = "";
 
 	/**
 	 * Katalog von IT.NRW PLZ Ortsteile: die Ortsbezeichnung 
 	 */
-	public Ort : String = "";
+	public Ort : string = "";
 
 	/**
 	 * Katalog von IT.NRW PLZ Ortsteile: die Bezeichnung des Ortsteils 
 	 */
-	public Ortsteil : String = "";
+	public Ortsteil : string = "";
 
 	/**
 	 * Katalog von IT.NRW PLZ Ortsteile: der Stand des Katalog-Eintrags 
 	 */
-	public Stand : String = "";
+	public Stand : string = "";
 
 	/**
 	 * Katalog von IT.NRW PLZ Ortsteile: Gibt die Gültigkeit ab welchem Schuljahr an 
 	 */
-	public gueltigVon : Number | null = null;
+	public gueltigVon : number | null = null;
 
 	/**
 	 * Katalog von IT.NRW PLZ Ortsteile: Gibt die Gültigkeit bis zu welchem Schuljahr an 
 	 */
-	public gueltigBis : Number | null = null;
+	public gueltigBis : number | null = null;
 
 
 	public constructor() {
@@ -61,34 +61,34 @@ export class KatalogEintragOrtsteile extends JavaObject {
 		result.ID = obj.ID;
 		if (typeof obj.PLZ === "undefined")
 			 throw new Error('invalid json format, missing attribute PLZ');
-		result.PLZ = String(obj.PLZ);
+		result.PLZ = obj.PLZ;
 		if (typeof obj.RegSchl === "undefined")
 			 throw new Error('invalid json format, missing attribute RegSchl');
-		result.RegSchl = String(obj.RegSchl);
+		result.RegSchl = obj.RegSchl;
 		if (typeof obj.Ort === "undefined")
 			 throw new Error('invalid json format, missing attribute Ort');
-		result.Ort = String(obj.Ort);
+		result.Ort = obj.Ort;
 		if (typeof obj.Ortsteil === "undefined")
 			 throw new Error('invalid json format, missing attribute Ortsteil');
-		result.Ortsteil = String(obj.Ortsteil);
+		result.Ortsteil = obj.Ortsteil;
 		if (typeof obj.Stand === "undefined")
 			 throw new Error('invalid json format, missing attribute Stand');
-		result.Stand = String(obj.Stand);
-		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : Number(obj.gueltigVon);
-		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : Number(obj.gueltigBis);
+		result.Stand = obj.Stand;
+		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
+		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : KatalogEintragOrtsteile) : string {
 		let result = '{';
 		result += '"ID" : ' + obj.ID + ',';
-		result += '"PLZ" : ' + '"' + obj.PLZ.valueOf() + '"' + ',';
-		result += '"RegSchl" : ' + '"' + obj.RegSchl.valueOf() + '"' + ',';
-		result += '"Ort" : ' + '"' + obj.Ort.valueOf() + '"' + ',';
-		result += '"Ortsteil" : ' + '"' + obj.Ortsteil.valueOf() + '"' + ',';
-		result += '"Stand" : ' + '"' + obj.Stand.valueOf() + '"' + ',';
-		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.valueOf()) + ',';
-		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.valueOf()) + ',';
+		result += '"PLZ" : ' + '"' + obj.PLZ! + '"' + ',';
+		result += '"RegSchl" : ' + '"' + obj.RegSchl! + '"' + ',';
+		result += '"Ort" : ' + '"' + obj.Ort! + '"' + ',';
+		result += '"Ortsteil" : ' + '"' + obj.Ortsteil! + '"' + ',';
+		result += '"Stand" : ' + '"' + obj.Stand! + '"' + ',';
+		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
+		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -100,25 +100,25 @@ export class KatalogEintragOrtsteile extends JavaObject {
 			result += '"ID" : ' + obj.ID + ',';
 		}
 		if (typeof obj.PLZ !== "undefined") {
-			result += '"PLZ" : ' + '"' + obj.PLZ.valueOf() + '"' + ',';
+			result += '"PLZ" : ' + '"' + obj.PLZ + '"' + ',';
 		}
 		if (typeof obj.RegSchl !== "undefined") {
-			result += '"RegSchl" : ' + '"' + obj.RegSchl.valueOf() + '"' + ',';
+			result += '"RegSchl" : ' + '"' + obj.RegSchl + '"' + ',';
 		}
 		if (typeof obj.Ort !== "undefined") {
-			result += '"Ort" : ' + '"' + obj.Ort.valueOf() + '"' + ',';
+			result += '"Ort" : ' + '"' + obj.Ort + '"' + ',';
 		}
 		if (typeof obj.Ortsteil !== "undefined") {
-			result += '"Ortsteil" : ' + '"' + obj.Ortsteil.valueOf() + '"' + ',';
+			result += '"Ortsteil" : ' + '"' + obj.Ortsteil + '"' + ',';
 		}
 		if (typeof obj.Stand !== "undefined") {
-			result += '"Stand" : ' + '"' + obj.Stand.valueOf() + '"' + ',';
+			result += '"Stand" : ' + '"' + obj.Stand + '"' + ',';
 		}
 		if (typeof obj.gueltigVon !== "undefined") {
-			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.valueOf()) + ',';
+			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
 		}
 		if (typeof obj.gueltigBis !== "undefined") {
-			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.valueOf()) + ',';
+			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

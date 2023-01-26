@@ -7,22 +7,22 @@ export class Sprachpruefung extends JavaObject {
 	/**
 	 * Das einstellige Sprachkürzel des geprüften Faches 
 	 */
-	public sprache : String | null = null;
+	public sprache : string | null = null;
 
 	/**
 	 * Gibt an, in welchem ASD-Jahrgang die Prüfung abgelegt wurde 
 	 */
-	public jahrgang : String | null = null;
+	public jahrgang : string | null = null;
 
 	/**
 	 * ID der Bezeichnung des am Schulabschluss orientierte Anspruchsniveau der Sprachprüfung 
 	 */
-	public anspruchsniveauId : Number | null = null;
+	public anspruchsniveauId : number | null = null;
 
 	/**
 	 * Sprache, die durch die Prüfung ersetzt wird 
 	 */
-	public ersetzteSprache : String | null = null;
+	public ersetzteSprache : string | null = null;
 
 	/**
 	 * Prüfung ist eine Prüfung im herkunftssprachlichen Unterricht 
@@ -57,12 +57,12 @@ export class Sprachpruefung extends JavaObject {
 	/**
 	 * Das Kürzel des GeR-Referenzniveaus, welches durch die Prüfung erreicht wurde 
 	 */
-	public referenzniveau : String | null = null;
+	public referenzniveau : string | null = null;
 
 	/**
 	 * Die Note, die in der Sprachprüfung erreicht wurde (1,2,3,4,5,6 oder null, wenn keine Note angegeben ist) 
 	 */
-	public note : Number | null = null;
+	public note : number | null = null;
 
 
 	public constructor() {
@@ -76,10 +76,10 @@ export class Sprachpruefung extends JavaObject {
 	public static transpilerFromJSON(json : string): Sprachpruefung {
 		const obj = JSON.parse(json);
 		const result = new Sprachpruefung();
-		result.sprache = typeof obj.sprache === "undefined" ? null : obj.sprache === null ? null : String(obj.sprache);
-		result.jahrgang = typeof obj.jahrgang === "undefined" ? null : obj.jahrgang === null ? null : String(obj.jahrgang);
-		result.anspruchsniveauId = typeof obj.anspruchsniveauId === "undefined" ? null : obj.anspruchsniveauId === null ? null : Number(obj.anspruchsniveauId);
-		result.ersetzteSprache = typeof obj.ersetzteSprache === "undefined" ? null : obj.ersetzteSprache === null ? null : String(obj.ersetzteSprache);
+		result.sprache = typeof obj.sprache === "undefined" ? null : obj.sprache === null ? null : obj.sprache;
+		result.jahrgang = typeof obj.jahrgang === "undefined" ? null : obj.jahrgang === null ? null : obj.jahrgang;
+		result.anspruchsniveauId = typeof obj.anspruchsniveauId === "undefined" ? null : obj.anspruchsniveauId === null ? null : obj.anspruchsniveauId;
+		result.ersetzteSprache = typeof obj.ersetzteSprache === "undefined" ? null : obj.ersetzteSprache === null ? null : obj.ersetzteSprache;
 		if (typeof obj.istHSUPruefung === "undefined")
 			 throw new Error('invalid json format, missing attribute istHSUPruefung');
 		result.istHSUPruefung = obj.istHSUPruefung;
@@ -98,25 +98,25 @@ export class Sprachpruefung extends JavaObject {
 		if (typeof obj.kannBelegungAlsFortgefuehrteSpracheErlauben === "undefined")
 			 throw new Error('invalid json format, missing attribute kannBelegungAlsFortgefuehrteSpracheErlauben');
 		result.kannBelegungAlsFortgefuehrteSpracheErlauben = obj.kannBelegungAlsFortgefuehrteSpracheErlauben;
-		result.referenzniveau = typeof obj.referenzniveau === "undefined" ? null : obj.referenzniveau === null ? null : String(obj.referenzniveau);
-		result.note = typeof obj.note === "undefined" ? null : obj.note === null ? null : Number(obj.note);
+		result.referenzniveau = typeof obj.referenzniveau === "undefined" ? null : obj.referenzniveau === null ? null : obj.referenzniveau;
+		result.note = typeof obj.note === "undefined" ? null : obj.note === null ? null : obj.note;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : Sprachpruefung) : string {
 		let result = '{';
-		result += '"sprache" : ' + ((!obj.sprache) ? 'null' : '"' + obj.sprache.valueOf() + '"') + ',';
-		result += '"jahrgang" : ' + ((!obj.jahrgang) ? 'null' : '"' + obj.jahrgang.valueOf() + '"') + ',';
-		result += '"anspruchsniveauId" : ' + ((!obj.anspruchsniveauId) ? 'null' : obj.anspruchsniveauId.valueOf()) + ',';
-		result += '"ersetzteSprache" : ' + ((!obj.ersetzteSprache) ? 'null' : '"' + obj.ersetzteSprache.valueOf() + '"') + ',';
+		result += '"sprache" : ' + ((!obj.sprache) ? 'null' : '"' + obj.sprache + '"') + ',';
+		result += '"jahrgang" : ' + ((!obj.jahrgang) ? 'null' : '"' + obj.jahrgang + '"') + ',';
+		result += '"anspruchsniveauId" : ' + ((!obj.anspruchsniveauId) ? 'null' : obj.anspruchsniveauId) + ',';
+		result += '"ersetzteSprache" : ' + ((!obj.ersetzteSprache) ? 'null' : '"' + obj.ersetzteSprache + '"') + ',';
 		result += '"istHSUPruefung" : ' + obj.istHSUPruefung + ',';
 		result += '"istFeststellungspruefung" : ' + obj.istFeststellungspruefung + ',';
 		result += '"kannErstePflichtfremdspracheErsetzen" : ' + obj.kannErstePflichtfremdspracheErsetzen + ',';
 		result += '"kannZweitePflichtfremdspracheErsetzen" : ' + obj.kannZweitePflichtfremdspracheErsetzen + ',';
 		result += '"kannWahlpflichtfremdspracheErsetzen" : ' + obj.kannWahlpflichtfremdspracheErsetzen + ',';
 		result += '"kannBelegungAlsFortgefuehrteSpracheErlauben" : ' + obj.kannBelegungAlsFortgefuehrteSpracheErlauben + ',';
-		result += '"referenzniveau" : ' + ((!obj.referenzniveau) ? 'null' : '"' + obj.referenzniveau.valueOf() + '"') + ',';
-		result += '"note" : ' + ((!obj.note) ? 'null' : obj.note.valueOf()) + ',';
+		result += '"referenzniveau" : ' + ((!obj.referenzniveau) ? 'null' : '"' + obj.referenzniveau + '"') + ',';
+		result += '"note" : ' + ((!obj.note) ? 'null' : obj.note) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -125,16 +125,16 @@ export class Sprachpruefung extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<Sprachpruefung>) : string {
 		let result = '{';
 		if (typeof obj.sprache !== "undefined") {
-			result += '"sprache" : ' + ((!obj.sprache) ? 'null' : '"' + obj.sprache.valueOf() + '"') + ',';
+			result += '"sprache" : ' + ((!obj.sprache) ? 'null' : '"' + obj.sprache + '"') + ',';
 		}
 		if (typeof obj.jahrgang !== "undefined") {
-			result += '"jahrgang" : ' + ((!obj.jahrgang) ? 'null' : '"' + obj.jahrgang.valueOf() + '"') + ',';
+			result += '"jahrgang" : ' + ((!obj.jahrgang) ? 'null' : '"' + obj.jahrgang + '"') + ',';
 		}
 		if (typeof obj.anspruchsniveauId !== "undefined") {
-			result += '"anspruchsniveauId" : ' + ((!obj.anspruchsniveauId) ? 'null' : obj.anspruchsniveauId.valueOf()) + ',';
+			result += '"anspruchsniveauId" : ' + ((!obj.anspruchsniveauId) ? 'null' : obj.anspruchsniveauId) + ',';
 		}
 		if (typeof obj.ersetzteSprache !== "undefined") {
-			result += '"ersetzteSprache" : ' + ((!obj.ersetzteSprache) ? 'null' : '"' + obj.ersetzteSprache.valueOf() + '"') + ',';
+			result += '"ersetzteSprache" : ' + ((!obj.ersetzteSprache) ? 'null' : '"' + obj.ersetzteSprache + '"') + ',';
 		}
 		if (typeof obj.istHSUPruefung !== "undefined") {
 			result += '"istHSUPruefung" : ' + obj.istHSUPruefung + ',';
@@ -155,10 +155,10 @@ export class Sprachpruefung extends JavaObject {
 			result += '"kannBelegungAlsFortgefuehrteSpracheErlauben" : ' + obj.kannBelegungAlsFortgefuehrteSpracheErlauben + ',';
 		}
 		if (typeof obj.referenzniveau !== "undefined") {
-			result += '"referenzniveau" : ' + ((!obj.referenzniveau) ? 'null' : '"' + obj.referenzniveau.valueOf() + '"') + ',';
+			result += '"referenzniveau" : ' + ((!obj.referenzniveau) ? 'null' : '"' + obj.referenzniveau + '"') + ',';
 		}
 		if (typeof obj.note !== "undefined") {
-			result += '"note" : ' + ((!obj.note) ? 'null' : obj.note.valueOf()) + ',';
+			result += '"note" : ' + ((!obj.note) ? 'null' : obj.note) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

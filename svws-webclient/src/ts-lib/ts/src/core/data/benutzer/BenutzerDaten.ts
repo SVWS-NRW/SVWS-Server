@@ -25,12 +25,12 @@ export class BenutzerDaten extends JavaObject {
 	/**
 	 * Der Anzeigename des Benutzers. 
 	 */
-	public anzeigename : String = "";
+	public anzeigename : string = "";
 
 	/**
 	 * Der Anmeldename des Benutzers 
 	 */
-	public name : String = "";
+	public name : string = "";
 
 	/**
 	 * Gibt an, ob es sich um einen Administrativen Benutzer handelt oder nicht. 
@@ -50,7 +50,7 @@ export class BenutzerDaten extends JavaObject {
 	/**
 	 * Die Kompetenzen, die speziell diesem Benutzer zugeordnet sind. 
 	 */
-	public kompetenzen : Vector<Number> = new Vector();
+	public kompetenzen : Vector<number> = new Vector();
 
 
 	public constructor() {
@@ -75,10 +75,10 @@ export class BenutzerDaten extends JavaObject {
 		result.typID = obj.typID;
 		if (typeof obj.anzeigename === "undefined")
 			 throw new Error('invalid json format, missing attribute anzeigename');
-		result.anzeigename = String(obj.anzeigename);
+		result.anzeigename = obj.anzeigename;
 		if (typeof obj.name === "undefined")
 			 throw new Error('invalid json format, missing attribute name');
-		result.name = String(obj.name);
+		result.name = obj.name;
 		if (typeof obj.istAdmin === "undefined")
 			 throw new Error('invalid json format, missing attribute istAdmin');
 		result.istAdmin = obj.istAdmin;
@@ -92,7 +92,7 @@ export class BenutzerDaten extends JavaObject {
 		}
 		if (!!obj.kompetenzen) {
 			for (let elem of obj.kompetenzen) {
-				result.kompetenzen?.add(Number(elem));
+				result.kompetenzen?.add(elem);
 			}
 		}
 		return result;
@@ -103,8 +103,8 @@ export class BenutzerDaten extends JavaObject {
 		result += '"id" : ' + obj.id + ',';
 		result += '"typ" : ' + obj.typ + ',';
 		result += '"typID" : ' + obj.typID + ',';
-		result += '"anzeigename" : ' + '"' + obj.anzeigename.valueOf() + '"' + ',';
-		result += '"name" : ' + '"' + obj.name.valueOf() + '"' + ',';
+		result += '"anzeigename" : ' + '"' + obj.anzeigename! + '"' + ',';
+		result += '"name" : ' + '"' + obj.name! + '"' + ',';
 		result += '"istAdmin" : ' + obj.istAdmin + ',';
 		result += '"idCredentials" : ' + obj.idCredentials + ',';
 		if (!obj.gruppen) {
@@ -148,10 +148,10 @@ export class BenutzerDaten extends JavaObject {
 			result += '"typID" : ' + obj.typID + ',';
 		}
 		if (typeof obj.anzeigename !== "undefined") {
-			result += '"anzeigename" : ' + '"' + obj.anzeigename.valueOf() + '"' + ',';
+			result += '"anzeigename" : ' + '"' + obj.anzeigename + '"' + ',';
 		}
 		if (typeof obj.name !== "undefined") {
-			result += '"name" : ' + '"' + obj.name.valueOf() + '"' + ',';
+			result += '"name" : ' + '"' + obj.name + '"' + ',';
 		}
 		if (typeof obj.istAdmin !== "undefined") {
 			result += '"istAdmin" : ' + obj.istAdmin + ',';

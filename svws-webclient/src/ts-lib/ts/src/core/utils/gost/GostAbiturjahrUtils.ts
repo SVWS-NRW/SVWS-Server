@@ -25,11 +25,11 @@ export class GostAbiturjahrUtils extends JavaObject {
 	 * 
 	 * @return das Kalenderjahr des Abiturs oder null, falls das Jahr des Abiturs nicht bestimmt werden kann.
 	 */
-	public static getGostAbiturjahr(schulform : Schulform, gliederung : Schulgliederung, aktuellesSchuljahr : number, jahrgang : String) : Number | null {
+	public static getGostAbiturjahr(schulform : Schulform, gliederung : Schulgliederung, aktuellesSchuljahr : number, jahrgang : string) : number | null {
 		if ((schulform.daten === null) || (!schulform.daten.hatGymOb)) 
 			return null;
-		let restjahre : Number | null = JahrgangsUtils.getRestlicheJahre(schulform, gliederung, jahrgang);
-		return restjahre === null ? null : aktuellesSchuljahr + restjahre.valueOf();
+		let restjahre : number | null = JahrgangsUtils.getRestlicheJahre(schulform, gliederung, jahrgang);
+		return restjahre === null ? null : aktuellesSchuljahr + restjahre!;
 	}
 
 	/**
@@ -44,7 +44,7 @@ export class GostAbiturjahrUtils extends JavaObject {
 	 * 
 	 * @return der Statistik-Jahrgang zu dem angegeben Abiturjahrgang
 	 */
-	public static getGostAbiturjahrJahrgang(schulform : Schulform, gliederung : Schulgliederung, schuljahr : number, abiturjahr : number) : String | null {
+	public static getGostAbiturjahrJahrgang(schulform : Schulform, gliederung : Schulgliederung, schuljahr : number, abiturjahr : number) : string | null {
 		if ((schulform.daten === null) || (!schulform.daten.hatGymOb)) 
 			return null;
 		let restlicheJahre : number = abiturjahr - schuljahr;
@@ -57,9 +57,9 @@ export class GostAbiturjahrUtils extends JavaObject {
 		let sekIJahre : number = gliederung.istG8() || ((schulform as unknown === Schulform.GY as unknown) && (gliederung as unknown === Schulgliederung.DEFAULT as unknown)) ? 9 : 10;
 		if (restlicheJahre >= sekIJahre) 
 			return null;
-		let strJG : String | null = "" + (sekIJahre - (restlicheJahre - 4));
+		let strJG : string | null = "" + (sekIJahre - (restlicheJahre - 4));
 		if (strJG.length === 1) 
-			strJG = "0" + strJG.valueOf();
+			strJG = "0" + strJG!;
 		return strJG;
 	}
 

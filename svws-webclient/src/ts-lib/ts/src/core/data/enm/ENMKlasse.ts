@@ -13,12 +13,12 @@ export class ENMKlasse extends JavaObject {
 	/**
 	 * Das Kürzel der Klasse, wie es im Rahmen der amtlichen Schulstatistik verwendet wird. (z.B. EF) 
 	 */
-	public kuerzel : String | null = null;
+	public kuerzel : string | null = null;
 
 	/**
 	 * Das Kürzel ser Klasse, wie er im Rahmen der Schule benannt wird und angezeigt werden soll. (z.B. EF) 
 	 */
-	public kuerzelAnzeige : String | null = null;
+	public kuerzelAnzeige : string | null = null;
 
 	/**
 	 * Die Reihenfolge der Klasse bei der Sortierung der Klasse. (z.B. 8) 
@@ -28,7 +28,7 @@ export class ENMKlasse extends JavaObject {
 	/**
 	 * Die IDs der zugeordneten Klassenlehrer. 
 	 */
-	public klassenlehrer : Vector<Number> = new Vector();
+	public klassenlehrer : Vector<number> = new Vector();
 
 
 	public constructor() {
@@ -45,14 +45,14 @@ export class ENMKlasse extends JavaObject {
 		if (typeof obj.id === "undefined")
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		result.kuerzel = typeof obj.kuerzel === "undefined" ? null : obj.kuerzel === null ? null : String(obj.kuerzel);
-		result.kuerzelAnzeige = typeof obj.kuerzelAnzeige === "undefined" ? null : obj.kuerzelAnzeige === null ? null : String(obj.kuerzelAnzeige);
+		result.kuerzel = typeof obj.kuerzel === "undefined" ? null : obj.kuerzel === null ? null : obj.kuerzel;
+		result.kuerzelAnzeige = typeof obj.kuerzelAnzeige === "undefined" ? null : obj.kuerzelAnzeige === null ? null : obj.kuerzelAnzeige;
 		if (typeof obj.sortierung === "undefined")
 			 throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
 		if (!!obj.klassenlehrer) {
 			for (let elem of obj.klassenlehrer) {
-				result.klassenlehrer?.add(Number(elem));
+				result.klassenlehrer?.add(elem);
 			}
 		}
 		return result;
@@ -61,8 +61,8 @@ export class ENMKlasse extends JavaObject {
 	public static transpilerToJSON(obj : ENMKlasse) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : '"' + obj.kuerzel.valueOf() + '"') + ',';
-		result += '"kuerzelAnzeige" : ' + ((!obj.kuerzelAnzeige) ? 'null' : '"' + obj.kuerzelAnzeige.valueOf() + '"') + ',';
+		result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : '"' + obj.kuerzel + '"') + ',';
+		result += '"kuerzelAnzeige" : ' + ((!obj.kuerzelAnzeige) ? 'null' : '"' + obj.kuerzelAnzeige + '"') + ',';
 		result += '"sortierung" : ' + obj.sortierung + ',';
 		if (!obj.klassenlehrer) {
 			result += '"klassenlehrer" : []';
@@ -87,10 +87,10 @@ export class ENMKlasse extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.kuerzel !== "undefined") {
-			result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : '"' + obj.kuerzel.valueOf() + '"') + ',';
+			result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : '"' + obj.kuerzel + '"') + ',';
 		}
 		if (typeof obj.kuerzelAnzeige !== "undefined") {
-			result += '"kuerzelAnzeige" : ' + ((!obj.kuerzelAnzeige) ? 'null' : '"' + obj.kuerzelAnzeige.valueOf() + '"') + ',';
+			result += '"kuerzelAnzeige" : ' + ((!obj.kuerzelAnzeige) ? 'null' : '"' + obj.kuerzelAnzeige + '"') + ',';
 		}
 		if (typeof obj.sortierung !== "undefined") {
 			result += '"sortierung" : ' + obj.sortierung + ',';

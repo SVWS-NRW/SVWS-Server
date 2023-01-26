@@ -13,17 +13,17 @@ export class KlassenDaten extends JavaObject {
 	/**
 	 * Das Kürzel der Klasse. 
 	 */
-	public kuerzel : String | null = null;
+	public kuerzel : string | null = null;
 
 	/**
 	 * Die ID des zugeordneten Jahrgangs, dem die Klasse zugeordnet ist 
 	 */
-	public idJahrgang : Number | null = null;
+	public idJahrgang : number | null = null;
 
 	/**
 	 * Das Kürzel für die Parallelität der Klasse innerhalb des Jahrgangs (A-Z). 
 	 */
-	public parallelitaet : String | null = null;
+	public parallelitaet : string | null = null;
 
 	/**
 	 * Die Sortierreihenfolge des Jahrgangslisten-Eintrags. 
@@ -38,7 +38,7 @@ export class KlassenDaten extends JavaObject {
 	/**
 	 * Die Liste der IDs der Klassenleitungen der Klasse. 
 	 */
-	public klassenLeitungen : Vector<Number> | null = new Vector();
+	public klassenLeitungen : Vector<number> | null = new Vector();
 
 
 	public constructor() {
@@ -55,9 +55,9 @@ export class KlassenDaten extends JavaObject {
 		if (typeof obj.id === "undefined")
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		result.kuerzel = typeof obj.kuerzel === "undefined" ? null : obj.kuerzel === null ? null : String(obj.kuerzel);
-		result.idJahrgang = typeof obj.idJahrgang === "undefined" ? null : obj.idJahrgang === null ? null : Number(obj.idJahrgang);
-		result.parallelitaet = typeof obj.parallelitaet === "undefined" ? null : obj.parallelitaet === null ? null : String(obj.parallelitaet);
+		result.kuerzel = typeof obj.kuerzel === "undefined" ? null : obj.kuerzel === null ? null : obj.kuerzel;
+		result.idJahrgang = typeof obj.idJahrgang === "undefined" ? null : obj.idJahrgang === null ? null : obj.idJahrgang;
+		result.parallelitaet = typeof obj.parallelitaet === "undefined" ? null : obj.parallelitaet === null ? null : obj.parallelitaet;
 		if (typeof obj.sortierung === "undefined")
 			 throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
@@ -66,7 +66,7 @@ export class KlassenDaten extends JavaObject {
 		result.istSichtbar = obj.istSichtbar;
 		if (!!obj.klassenLeitungen) {
 			for (let elem of obj.klassenLeitungen) {
-				result.klassenLeitungen?.add(Number(elem));
+				result.klassenLeitungen?.add(elem);
 			}
 		}
 		return result;
@@ -75,9 +75,9 @@ export class KlassenDaten extends JavaObject {
 	public static transpilerToJSON(obj : KlassenDaten) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : '"' + obj.kuerzel.valueOf() + '"') + ',';
-		result += '"idJahrgang" : ' + ((!obj.idJahrgang) ? 'null' : obj.idJahrgang.valueOf()) + ',';
-		result += '"parallelitaet" : ' + ((!obj.parallelitaet) ? 'null' : '"' + obj.parallelitaet.valueOf() + '"') + ',';
+		result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : '"' + obj.kuerzel + '"') + ',';
+		result += '"idJahrgang" : ' + ((!obj.idJahrgang) ? 'null' : obj.idJahrgang) + ',';
+		result += '"parallelitaet" : ' + ((!obj.parallelitaet) ? 'null' : '"' + obj.parallelitaet + '"') + ',';
 		result += '"sortierung" : ' + obj.sortierung + ',';
 		result += '"istSichtbar" : ' + obj.istSichtbar + ',';
 		if (!obj.klassenLeitungen) {
@@ -103,13 +103,13 @@ export class KlassenDaten extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.kuerzel !== "undefined") {
-			result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : '"' + obj.kuerzel.valueOf() + '"') + ',';
+			result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : '"' + obj.kuerzel + '"') + ',';
 		}
 		if (typeof obj.idJahrgang !== "undefined") {
-			result += '"idJahrgang" : ' + ((!obj.idJahrgang) ? 'null' : obj.idJahrgang.valueOf()) + ',';
+			result += '"idJahrgang" : ' + ((!obj.idJahrgang) ? 'null' : obj.idJahrgang) + ',';
 		}
 		if (typeof obj.parallelitaet !== "undefined") {
-			result += '"parallelitaet" : ' + ((!obj.parallelitaet) ? 'null' : '"' + obj.parallelitaet.valueOf() + '"') + ',';
+			result += '"parallelitaet" : ' + ((!obj.parallelitaet) ? 'null' : '"' + obj.parallelitaet + '"') + ',';
 		}
 		if (typeof obj.sortierung !== "undefined") {
 			result += '"sortierung" : ' + obj.sortierung + ',';

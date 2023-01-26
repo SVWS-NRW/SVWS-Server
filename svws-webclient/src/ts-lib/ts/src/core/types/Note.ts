@@ -6,7 +6,7 @@ import { JavaString, cast_java_lang_String } from '../../java/lang/JavaString';
 export class Note extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -15,7 +15,7 @@ export class Note extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<Note> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, Note> = new Map<String, Note>();
+	private static readonly all_values_by_name : Map<string, Note> = new Map<string, Note>();
 
 	/**
 	 * leerer Noteneintrag 
@@ -165,32 +165,32 @@ export class Note extends JavaObject {
 	/**
 	 * Die Notenpunkte, die dieser Note zugeordnet sind 
 	 */
-	public readonly notenpunkte : Number | null;
+	public readonly notenpunkte : number | null;
 
 	/**
 	 * Die Kurzschreibweise der Note als Zahl ggf. mit Tendenz (+/-) 
 	 */
-	public readonly kuerzel : String;
+	public readonly kuerzel : string;
 
 	/**
 	 * Die Note in ausführlicher Textform ggf. mit Tendenz (plus/minus) 
 	 */
-	public readonly text : String;
+	public readonly text : string;
 
 	/**
 	 * Die Note in ausführlicher Textform, wie sie auf einem Zeugnis dargestellt wird. 
 	 */
-	public readonly textZeugnis : String;
+	public readonly textZeugnis : string;
 
 	/**
 	 * Gibt an, in welchem Schuljahr die Note einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. 
 	 */
-	public readonly gueltigVon : Number | null;
+	public readonly gueltigVon : number | null;
 
 	/**
 	 * Gibt an, bis zu welchem Schuljahr die Note gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. 
 	 */
-	public readonly gueltigBis : Number | null;
+	public readonly gueltigBis : number | null;
 
 	/**
 	 * Der Noten-Katalog-Eintrag 
@@ -209,7 +209,7 @@ export class Note extends JavaObject {
 	 * @param gueltigVon      gibt an, in welchem Schuljahr die Note einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 * @param gueltigBis      gibt an, bis zu welchem Schuljahr die Note gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
-	private constructor(name : string, ordinal : number, id : number, sortierung : number, notenpunkte : Number | null, kuerzel : String, text : String, textZeugnis : String, gueltigVon : Number | null, gueltigBis : Number | null) {
+	private constructor(name : string, ordinal : number, id : number, sortierung : number, notenpunkte : number | null, kuerzel : string, text : string, textZeugnis : string, gueltigVon : number | null, gueltigBis : number | null) {
 		super();
 		this.__name = name;
 		this.__ordinal = ordinal;
@@ -242,7 +242,7 @@ export class Note extends JavaObject {
 	 * 
 	 * @return die Note
 	 */
-	public static fromNoteSekI(noteSekI : Number | null) : Note | null {
+	public static fromNoteSekI(noteSekI : number | null) : Note | null {
 		if (noteSekI === null) 
 			return null;
 		switch (noteSekI) {
@@ -270,7 +270,7 @@ export class Note extends JavaObject {
 	 * 
 	 * @return die Note aus dieser Aufzählung oder Note.KEINE im Fehlerfall
 	 */
-	public static fromNotenpunkte(notenpunkte : Number | null) : Note {
+	public static fromNotenpunkte(notenpunkte : number | null) : Note {
 		if (notenpunkte === null) 
 			return Note.KEINE;
 		switch (notenpunkte) {
@@ -317,10 +317,10 @@ export class Note extends JavaObject {
 	 * 
 	 * @return die Note aus dieser Aufzählung oder Note.KEINE im Fehlerfall
 	 */
-	public static fromKuerzel(kuerzel : String | null) : Note {
+	public static fromKuerzel(kuerzel : string | null) : Note {
 		if (kuerzel === null) 
 			return Note.KEINE;
-		let kuerzelUppercase : String | null = kuerzel.toUpperCase();
+		let kuerzelUppercase : string | null = kuerzel.toUpperCase();
 		switch (kuerzelUppercase) {
 			case "6": 
 				return Note.UNGENUEGEND;
@@ -384,7 +384,7 @@ export class Note extends JavaObject {
 	 * 
 	 * @return die Note aus dieser Aufzählung oder Note.KEINE im Fehlerfall
 	 */
-	public static fromNotenpunkteString(notenpunkte : String | null) : Note {
+	public static fromNotenpunkteString(notenpunkte : string | null) : Note {
 		if (notenpunkte === null) 
 			return Note.KEINE;
 		switch (notenpunkte) {
@@ -479,7 +479,7 @@ export class Note extends JavaObject {
 		return Note.KEINE;
 	}
 
-	public toString() : String {
+	public toString() : string {
 		return this.kuerzel;
 	}
 
@@ -488,7 +488,7 @@ export class Note extends JavaObject {
 	 * 
 	 * @return die Noten 1-6 oder im Fehlerfall null  
 	 */
-	public getNoteSekI() : Number | null {
+	public getNoteSekI() : number | null {
 		switch (this.notenpunkte) {
 			case 15: 
 			case 14: 
@@ -533,7 +533,7 @@ export class Note extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -596,7 +596,7 @@ export class Note extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : Note | null {
+	public static valueOf(name : string) : Note | null {
 		let tmp : Note | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

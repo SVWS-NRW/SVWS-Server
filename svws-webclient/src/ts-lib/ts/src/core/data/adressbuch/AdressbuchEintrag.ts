@@ -6,22 +6,22 @@ export class AdressbuchEintrag extends JavaObject {
 	/**
 	 * ID des AdressbuchEintrags 
 	 */
-	public id : String = "";
+	public id : string = "";
 
 	/**
 	 * ID des Adressbuchs 
 	 */
-	public adressbuchId : String = "";
+	public adressbuchId : string = "";
 
 	/**
 	 *  URI der VCard des Kontakts
 	 */
-	public uri : String = "";
+	public uri : string = "";
 
 	/**
 	 *  Versionskennzeichen des Kontaks
 	 */
-	public version : String = "";
+	public version : string = "";
 
 
 	public constructor() {
@@ -37,25 +37,25 @@ export class AdressbuchEintrag extends JavaObject {
 		const result = new AdressbuchEintrag();
 		if (typeof obj.id === "undefined")
 			 throw new Error('invalid json format, missing attribute id');
-		result.id = String(obj.id);
+		result.id = obj.id;
 		if (typeof obj.adressbuchId === "undefined")
 			 throw new Error('invalid json format, missing attribute adressbuchId');
-		result.adressbuchId = String(obj.adressbuchId);
+		result.adressbuchId = obj.adressbuchId;
 		if (typeof obj.uri === "undefined")
 			 throw new Error('invalid json format, missing attribute uri');
-		result.uri = String(obj.uri);
+		result.uri = obj.uri;
 		if (typeof obj.version === "undefined")
 			 throw new Error('invalid json format, missing attribute version');
-		result.version = String(obj.version);
+		result.version = obj.version;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : AdressbuchEintrag) : string {
 		let result = '{';
-		result += '"id" : ' + '"' + obj.id.valueOf() + '"' + ',';
-		result += '"adressbuchId" : ' + '"' + obj.adressbuchId.valueOf() + '"' + ',';
-		result += '"uri" : ' + '"' + obj.uri.valueOf() + '"' + ',';
-		result += '"version" : ' + '"' + obj.version.valueOf() + '"' + ',';
+		result += '"id" : ' + '"' + obj.id! + '"' + ',';
+		result += '"adressbuchId" : ' + '"' + obj.adressbuchId! + '"' + ',';
+		result += '"uri" : ' + '"' + obj.uri! + '"' + ',';
+		result += '"version" : ' + '"' + obj.version! + '"' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -64,16 +64,16 @@ export class AdressbuchEintrag extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<AdressbuchEintrag>) : string {
 		let result = '{';
 		if (typeof obj.id !== "undefined") {
-			result += '"id" : ' + '"' + obj.id.valueOf() + '"' + ',';
+			result += '"id" : ' + '"' + obj.id + '"' + ',';
 		}
 		if (typeof obj.adressbuchId !== "undefined") {
-			result += '"adressbuchId" : ' + '"' + obj.adressbuchId.valueOf() + '"' + ',';
+			result += '"adressbuchId" : ' + '"' + obj.adressbuchId + '"' + ',';
 		}
 		if (typeof obj.uri !== "undefined") {
-			result += '"uri" : ' + '"' + obj.uri.valueOf() + '"' + ',';
+			result += '"uri" : ' + '"' + obj.uri + '"' + ',';
 		}
 		if (typeof obj.version !== "undefined") {
-			result += '"version" : ' + '"' + obj.version.valueOf() + '"' + ',';
+			result += '"version" : ' + '"' + obj.version + '"' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

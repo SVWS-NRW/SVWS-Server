@@ -22,7 +22,7 @@ export class GostJahrgangFachkombination extends JavaObject {
 	/**
 	 * Die Kursart der Fachwahl von Fach 1, falls die Fachkombination auf diese Kursart bei Fach 1 eingeschränkt ist 
 	 */
-	public kursart1 : String | null = null;
+	public kursart1 : string | null = null;
 
 	/**
 	 * Die ID des Faches (Fach 2), welches in der Kombination verlangt oder ausgeschlossen wird 
@@ -32,7 +32,7 @@ export class GostJahrgangFachkombination extends JavaObject {
 	/**
 	 * Die Kursart der Fachwahl von Fach 2, falls die Fachkombination auf diese Kursart bei Fach 2 eingeschränkt ist 
 	 */
-	public kursart2 : String | null = null;
+	public kursart2 : string | null = null;
 
 	/**
 	 * Gibt an, ob für die jeweilige Halbjahre der Oberstufe die Fachkombination gilt (0 = EF.1, 1=EF.2, ...) 
@@ -47,7 +47,7 @@ export class GostJahrgangFachkombination extends JavaObject {
 	/**
 	 * Der erläuternde Hinweistext zu der Fachkombination 
 	 */
-	public hinweistext : String = "";
+	public hinweistext : string = "";
 
 
 	public constructor() {
@@ -70,11 +70,11 @@ export class GostJahrgangFachkombination extends JavaObject {
 		if (typeof obj.fachID1 === "undefined")
 			 throw new Error('invalid json format, missing attribute fachID1');
 		result.fachID1 = obj.fachID1;
-		result.kursart1 = typeof obj.kursart1 === "undefined" ? null : obj.kursart1 === null ? null : String(obj.kursart1);
+		result.kursart1 = typeof obj.kursart1 === "undefined" ? null : obj.kursart1 === null ? null : obj.kursart1;
 		if (typeof obj.fachID2 === "undefined")
 			 throw new Error('invalid json format, missing attribute fachID2');
 		result.fachID2 = obj.fachID2;
-		result.kursart2 = typeof obj.kursart2 === "undefined" ? null : obj.kursart2 === null ? null : String(obj.kursart2);
+		result.kursart2 = typeof obj.kursart2 === "undefined" ? null : obj.kursart2 === null ? null : obj.kursart2;
 		for (let i : number = 0; i < obj.gueltigInHalbjahr.length; i++) {
 			result.gueltigInHalbjahr[i] = obj.gueltigInHalbjahr[i];
 		}
@@ -83,7 +83,7 @@ export class GostJahrgangFachkombination extends JavaObject {
 		result.typ = obj.typ;
 		if (typeof obj.hinweistext === "undefined")
 			 throw new Error('invalid json format, missing attribute hinweistext');
-		result.hinweistext = String(obj.hinweistext);
+		result.hinweistext = obj.hinweistext;
 		return result;
 	}
 
@@ -92,9 +92,9 @@ export class GostJahrgangFachkombination extends JavaObject {
 		result += '"id" : ' + obj.id + ',';
 		result += '"abiturjahr" : ' + obj.abiturjahr + ',';
 		result += '"fachID1" : ' + obj.fachID1 + ',';
-		result += '"kursart1" : ' + ((!obj.kursart1) ? 'null' : '"' + obj.kursart1.valueOf() + '"') + ',';
+		result += '"kursart1" : ' + ((!obj.kursart1) ? 'null' : '"' + obj.kursart1 + '"') + ',';
 		result += '"fachID2" : ' + obj.fachID2 + ',';
-		result += '"kursart2" : ' + ((!obj.kursart2) ? 'null' : '"' + obj.kursart2.valueOf() + '"') + ',';
+		result += '"kursart2" : ' + ((!obj.kursart2) ? 'null' : '"' + obj.kursart2 + '"') + ',';
 		if (!obj.gueltigInHalbjahr) {
 			result += '"gueltigInHalbjahr" : []';
 		} else {
@@ -108,7 +108,7 @@ export class GostJahrgangFachkombination extends JavaObject {
 			result += ' ]' + ',';
 		}
 		result += '"typ" : ' + obj.typ + ',';
-		result += '"hinweistext" : ' + '"' + obj.hinweistext.valueOf() + '"' + ',';
+		result += '"hinweistext" : ' + '"' + obj.hinweistext! + '"' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -126,13 +126,13 @@ export class GostJahrgangFachkombination extends JavaObject {
 			result += '"fachID1" : ' + obj.fachID1 + ',';
 		}
 		if (typeof obj.kursart1 !== "undefined") {
-			result += '"kursart1" : ' + ((!obj.kursart1) ? 'null' : '"' + obj.kursart1.valueOf() + '"') + ',';
+			result += '"kursart1" : ' + ((!obj.kursart1) ? 'null' : '"' + obj.kursart1 + '"') + ',';
 		}
 		if (typeof obj.fachID2 !== "undefined") {
 			result += '"fachID2" : ' + obj.fachID2 + ',';
 		}
 		if (typeof obj.kursart2 !== "undefined") {
-			result += '"kursart2" : ' + ((!obj.kursart2) ? 'null' : '"' + obj.kursart2.valueOf() + '"') + ',';
+			result += '"kursart2" : ' + ((!obj.kursart2) ? 'null' : '"' + obj.kursart2 + '"') + ',';
 		}
 		if (typeof obj.gueltigInHalbjahr !== "undefined") {
 			let a = obj.gueltigInHalbjahr;
@@ -153,7 +153,7 @@ export class GostJahrgangFachkombination extends JavaObject {
 			result += '"typ" : ' + obj.typ + ',';
 		}
 		if (typeof obj.hinweistext !== "undefined") {
-			result += '"hinweistext" : ' + '"' + obj.hinweistext.valueOf() + '"' + ',';
+			result += '"hinweistext" : ' + '"' + obj.hinweistext + '"' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

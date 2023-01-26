@@ -35,7 +35,7 @@ export class KlausurblockungSchienenAlgorithmusGreedy3 extends KlausurblockungSc
 		super(pRandom, pLogger, pDynDaten);
 	}
 
-	public toString() : String {
+	public toString() : string {
 		return "Backtracking";
 	}
 

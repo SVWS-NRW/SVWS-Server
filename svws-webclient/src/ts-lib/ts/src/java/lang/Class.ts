@@ -4,7 +4,7 @@ import { TranspiledObject } from './TranspiledObject';
 
 export class Class<T extends TranspiledObject> implements TranspiledObject {
 
-    private simplename : String;
+    private simplename : string;
 
     public constructor(obj : T) {
         if (obj instanceof Class)
@@ -16,12 +16,12 @@ export class Class<T extends TranspiledObject> implements TranspiledObject {
     }
 
 
-    public getSimpleName() : String {
+    public getSimpleName() : string {
         return this.simplename;
     }
 
 
-    public getName() : String {
+    public getName() : string {
         return this.simplename;
     }
 

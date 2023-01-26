@@ -16,12 +16,12 @@ export class GostLeistungen extends JavaObject {
 	/**
 	 * Das aktuelle Schuljahr, welches dem Schüler zugeordnet ist. 
 	 */
-	public aktuellesSchuljahr : Number | null = null;
+	public aktuellesSchuljahr : number | null = null;
 
 	/**
 	 * Der Jahrgang, in dem sich der Schüler in dem aktuellen Schuljahr befindet. 
 	 */
-	public aktuellerJahrgang : String | null = null;
+	public aktuellerJahrgang : string | null = null;
 
 	/**
 	 * Die Sprachbelegungen (Sprachenfolge) und die Sprachprüfungen des Schülers 
@@ -31,22 +31,22 @@ export class GostLeistungen extends JavaObject {
 	/**
 	 * Das einstellige Kürzel der bilingualen Sprache, sofern der Schüler einem bilingualen Bildungsgang angehört. 
 	 */
-	public bilingualeSprache : String | null = null;
+	public bilingualeSprache : string | null = null;
 
 	/**
 	 * Das Thema des Projektkurses, sofern der Schüler einen Projektkurs belegt hatte. 
 	 */
-	public projektkursThema : String | null = null;
+	public projektkursThema : string | null = null;
 
 	/**
 	 * Das Kürzel des ersten Leitfaches des Projektkurses, sofern der Schüler einen Projektkurs belegt hatte. 
 	 */
-	public projektkursLeitfach1Kuerzel : String | null = null;
+	public projektkursLeitfach1Kuerzel : string | null = null;
 
 	/**
 	 * Das Kürzel eines zweiten Leitfaches des Projektkurses, sofern der Schüler einen Projektkurs belegt hatte und der Projektkurs ein zweites Leitfach hat. 
 	 */
-	public projektkursLeitfach2Kuerzel : String | null = null;
+	public projektkursLeitfach2Kuerzel : string | null = null;
 
 	/**
 	 * Gibt für die einzelnen {@link GostHalbjahr}-Werte an, ob gewertete Leistungsdaten vorhanden sind. 
@@ -73,13 +73,13 @@ export class GostLeistungen extends JavaObject {
 		if (typeof obj.id === "undefined")
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		result.aktuellesSchuljahr = typeof obj.aktuellesSchuljahr === "undefined" ? null : obj.aktuellesSchuljahr === null ? null : Number(obj.aktuellesSchuljahr);
-		result.aktuellerJahrgang = typeof obj.aktuellerJahrgang === "undefined" ? null : obj.aktuellerJahrgang === null ? null : String(obj.aktuellerJahrgang);
+		result.aktuellesSchuljahr = typeof obj.aktuellesSchuljahr === "undefined" ? null : obj.aktuellesSchuljahr === null ? null : obj.aktuellesSchuljahr;
+		result.aktuellerJahrgang = typeof obj.aktuellerJahrgang === "undefined" ? null : obj.aktuellerJahrgang === null ? null : obj.aktuellerJahrgang;
 		result.sprachendaten = ((typeof obj.sprachendaten === "undefined") || (obj.sprachendaten === null)) ? null : Sprachendaten.transpilerFromJSON(JSON.stringify(obj.sprachendaten));
-		result.bilingualeSprache = typeof obj.bilingualeSprache === "undefined" ? null : obj.bilingualeSprache === null ? null : String(obj.bilingualeSprache);
-		result.projektkursThema = typeof obj.projektkursThema === "undefined" ? null : obj.projektkursThema === null ? null : String(obj.projektkursThema);
-		result.projektkursLeitfach1Kuerzel = typeof obj.projektkursLeitfach1Kuerzel === "undefined" ? null : obj.projektkursLeitfach1Kuerzel === null ? null : String(obj.projektkursLeitfach1Kuerzel);
-		result.projektkursLeitfach2Kuerzel = typeof obj.projektkursLeitfach2Kuerzel === "undefined" ? null : obj.projektkursLeitfach2Kuerzel === null ? null : String(obj.projektkursLeitfach2Kuerzel);
+		result.bilingualeSprache = typeof obj.bilingualeSprache === "undefined" ? null : obj.bilingualeSprache === null ? null : obj.bilingualeSprache;
+		result.projektkursThema = typeof obj.projektkursThema === "undefined" ? null : obj.projektkursThema === null ? null : obj.projektkursThema;
+		result.projektkursLeitfach1Kuerzel = typeof obj.projektkursLeitfach1Kuerzel === "undefined" ? null : obj.projektkursLeitfach1Kuerzel === null ? null : obj.projektkursLeitfach1Kuerzel;
+		result.projektkursLeitfach2Kuerzel = typeof obj.projektkursLeitfach2Kuerzel === "undefined" ? null : obj.projektkursLeitfach2Kuerzel === null ? null : obj.projektkursLeitfach2Kuerzel;
 		for (let i : number = 0; i < obj.bewertetesHalbjahr.length; i++) {
 			result.bewertetesHalbjahr[i] = obj.bewertetesHalbjahr[i];
 		}
@@ -94,13 +94,13 @@ export class GostLeistungen extends JavaObject {
 	public static transpilerToJSON(obj : GostLeistungen) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"aktuellesSchuljahr" : ' + ((!obj.aktuellesSchuljahr) ? 'null' : obj.aktuellesSchuljahr.valueOf()) + ',';
-		result += '"aktuellerJahrgang" : ' + ((!obj.aktuellerJahrgang) ? 'null' : '"' + obj.aktuellerJahrgang.valueOf() + '"') + ',';
+		result += '"aktuellesSchuljahr" : ' + ((!obj.aktuellesSchuljahr) ? 'null' : obj.aktuellesSchuljahr) + ',';
+		result += '"aktuellerJahrgang" : ' + ((!obj.aktuellerJahrgang) ? 'null' : '"' + obj.aktuellerJahrgang + '"') + ',';
 		result += '"sprachendaten" : ' + ((!obj.sprachendaten) ? 'null' : Sprachendaten.transpilerToJSON(obj.sprachendaten)) + ',';
-		result += '"bilingualeSprache" : ' + ((!obj.bilingualeSprache) ? 'null' : '"' + obj.bilingualeSprache.valueOf() + '"') + ',';
-		result += '"projektkursThema" : ' + ((!obj.projektkursThema) ? 'null' : '"' + obj.projektkursThema.valueOf() + '"') + ',';
-		result += '"projektkursLeitfach1Kuerzel" : ' + ((!obj.projektkursLeitfach1Kuerzel) ? 'null' : '"' + obj.projektkursLeitfach1Kuerzel.valueOf() + '"') + ',';
-		result += '"projektkursLeitfach2Kuerzel" : ' + ((!obj.projektkursLeitfach2Kuerzel) ? 'null' : '"' + obj.projektkursLeitfach2Kuerzel.valueOf() + '"') + ',';
+		result += '"bilingualeSprache" : ' + ((!obj.bilingualeSprache) ? 'null' : '"' + obj.bilingualeSprache + '"') + ',';
+		result += '"projektkursThema" : ' + ((!obj.projektkursThema) ? 'null' : '"' + obj.projektkursThema + '"') + ',';
+		result += '"projektkursLeitfach1Kuerzel" : ' + ((!obj.projektkursLeitfach1Kuerzel) ? 'null' : '"' + obj.projektkursLeitfach1Kuerzel + '"') + ',';
+		result += '"projektkursLeitfach2Kuerzel" : ' + ((!obj.projektkursLeitfach2Kuerzel) ? 'null' : '"' + obj.projektkursLeitfach2Kuerzel + '"') + ',';
 		if (!obj.bewertetesHalbjahr) {
 			result += '"bewertetesHalbjahr" : []';
 		} else {
@@ -136,25 +136,25 @@ export class GostLeistungen extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.aktuellesSchuljahr !== "undefined") {
-			result += '"aktuellesSchuljahr" : ' + ((!obj.aktuellesSchuljahr) ? 'null' : obj.aktuellesSchuljahr.valueOf()) + ',';
+			result += '"aktuellesSchuljahr" : ' + ((!obj.aktuellesSchuljahr) ? 'null' : obj.aktuellesSchuljahr) + ',';
 		}
 		if (typeof obj.aktuellerJahrgang !== "undefined") {
-			result += '"aktuellerJahrgang" : ' + ((!obj.aktuellerJahrgang) ? 'null' : '"' + obj.aktuellerJahrgang.valueOf() + '"') + ',';
+			result += '"aktuellerJahrgang" : ' + ((!obj.aktuellerJahrgang) ? 'null' : '"' + obj.aktuellerJahrgang + '"') + ',';
 		}
 		if (typeof obj.sprachendaten !== "undefined") {
 			result += '"sprachendaten" : ' + ((!obj.sprachendaten) ? 'null' : Sprachendaten.transpilerToJSON(obj.sprachendaten)) + ',';
 		}
 		if (typeof obj.bilingualeSprache !== "undefined") {
-			result += '"bilingualeSprache" : ' + ((!obj.bilingualeSprache) ? 'null' : '"' + obj.bilingualeSprache.valueOf() + '"') + ',';
+			result += '"bilingualeSprache" : ' + ((!obj.bilingualeSprache) ? 'null' : '"' + obj.bilingualeSprache + '"') + ',';
 		}
 		if (typeof obj.projektkursThema !== "undefined") {
-			result += '"projektkursThema" : ' + ((!obj.projektkursThema) ? 'null' : '"' + obj.projektkursThema.valueOf() + '"') + ',';
+			result += '"projektkursThema" : ' + ((!obj.projektkursThema) ? 'null' : '"' + obj.projektkursThema + '"') + ',';
 		}
 		if (typeof obj.projektkursLeitfach1Kuerzel !== "undefined") {
-			result += '"projektkursLeitfach1Kuerzel" : ' + ((!obj.projektkursLeitfach1Kuerzel) ? 'null' : '"' + obj.projektkursLeitfach1Kuerzel.valueOf() + '"') + ',';
+			result += '"projektkursLeitfach1Kuerzel" : ' + ((!obj.projektkursLeitfach1Kuerzel) ? 'null' : '"' + obj.projektkursLeitfach1Kuerzel + '"') + ',';
 		}
 		if (typeof obj.projektkursLeitfach2Kuerzel !== "undefined") {
-			result += '"projektkursLeitfach2Kuerzel" : ' + ((!obj.projektkursLeitfach2Kuerzel) ? 'null' : '"' + obj.projektkursLeitfach2Kuerzel.valueOf() + '"') + ',';
+			result += '"projektkursLeitfach2Kuerzel" : ' + ((!obj.projektkursLeitfach2Kuerzel) ? 'null' : '"' + obj.projektkursLeitfach2Kuerzel + '"') + ',';
 		}
 		if (typeof obj.bewertetesHalbjahr !== "undefined") {
 			let a = obj.bewertetesHalbjahr;

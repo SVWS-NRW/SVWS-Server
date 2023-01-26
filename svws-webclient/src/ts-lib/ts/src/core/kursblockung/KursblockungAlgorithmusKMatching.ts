@@ -26,7 +26,7 @@ export class KursblockungAlgorithmusKMatching extends KursblockungAlgorithmusK {
 		super(pRandom, pLogger, pDynDat);
 	}
 
-	public toString() : String {
+	public toString() : string {
 		return "Matching";
 	}
 

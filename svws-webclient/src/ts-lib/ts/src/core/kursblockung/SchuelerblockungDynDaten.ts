@@ -101,7 +101,7 @@ export class SchuelerblockungDynDaten extends JavaObject {
 		let nKurse : number = pInput.kurse.size();
 		if (nKurse < 1) 
 			throw new DeveloperNotificationException("Die Kursanzahl (" + nKurse + ") ist zu gering!")
-		let setKursID : HashSet<Number | null> | null = new HashSet();
+		let setKursID : HashSet<number | null> | null = new HashSet();
 		for (let kurs of pInput.kurse) {
 			if (kurs.id < 0) 
 				throw new DeveloperNotificationException("kurs.id (" + kurs.id + ") ist zu gering!")
@@ -140,7 +140,7 @@ export class SchuelerblockungDynDaten extends JavaObject {
 			let fachwahl : GostFachwahl = pInput.fachwahlen.get(iFachwahl);
 			if (iFachwahl >= pInput.fachwahlenText.size()) 
 				throw new DeveloperNotificationException("pInput.fachwahlenText: Es fehlt der Text zur Fachwahl (" + iFachwahl + ")!")
-			let representation : String | null = pInput.fachwahlenText.get(iFachwahl);
+			let representation : string | null = pInput.fachwahlenText.get(iFachwahl);
 			let kursWurdeFixiert : boolean = false;
 			for (let kurs of pInput.kurse) 
 				if ((fachwahl.fachID === kurs.fach) && (fachwahl.kursartID === kurs.kursart)) {
@@ -148,7 +148,7 @@ export class SchuelerblockungDynDaten extends JavaObject {
 						continue;
 					if (kurs.istFixiert) {
 						if (kursWurdeFixiert) 
-							throw new UserNotificationException("Die Fachart/Fachwahl (" + representation.valueOf() + ") hat mehr als eine Fixierung!")
+							throw new UserNotificationException("Die Fachart/Fachwahl (" + representation! + ") hat mehr als eine Fixierung!")
 						kursWurdeFixiert = true;
 					}
 				}
@@ -294,7 +294,7 @@ export class SchuelerblockungDynDaten extends JavaObject {
 	}
 
 	private static gibKleinstenKursInSchiene(pKurse : Vector<SchuelerblockungInputKurs>, pSchiene : number) : SchuelerblockungInputKurs | null {
-		let maxSuS : number = Number.MAX_VALUE;
+		let maxSuS : number = JavaInteger.MAX_VALUE;
 		let best : SchuelerblockungInputKurs | null = null;
 		for (let kurs of pKurse) 
 			if (kurs.schienen[0] - 1 === pSchiene) 
@@ -327,30 +327,30 @@ export class SchuelerblockungDynDaten extends JavaObject {
 		return true;
 	}
 
-	private debug(pHeader : String, pPrintMatrix : boolean) : void {
+	private debug(pHeader : string, pPrintMatrix : boolean) : void {
 		console.log();
-		console.log(JSON.stringify("#################### " + pHeader.valueOf() + " ####################"));
+		console.log(JSON.stringify("#################### " + pHeader! + " ####################"));
 		console.log(JSON.stringify("Bewertung      = " + this._aktuellNichtwahlen + " / " + this._aktuellBewertung));
-		console.log(JSON.stringify("Fachwahlen     = " + Arrays.toString(this._aktuellFachwahlZuKurs).valueOf()));
+		console.log(JSON.stringify("Fachwahlen     = " + Arrays.toString(this._aktuellFachwahlZuKurs)!));
 		console.log(JSON.stringify("BewertungBest  = " + this._aktuellNichtwahlenBest + " / " + this._aktuellBewertungBest));
-		console.log(JSON.stringify("FachwahlenBest = " + Arrays.toString(this._aktuellFachwahlZuKursBest).valueOf()));
+		console.log(JSON.stringify("FachwahlenBest = " + Arrays.toString(this._aktuellFachwahlZuKursBest)!));
 		if (!pPrintMatrix) 
 			return;
 		let data : Array<Array<number>> = this._aktuellMatrix.getMatrix();
 		for (let schiene : number = 0; schiene < this.nSchienen; schiene++){
-			let sData : String | null = this._aktuellGesperrteSchiene[schiene] ? "1" : "0";
+			let sData : string | null = this._aktuellGesperrteSchiene[schiene] ? "1" : "0";
 			while (sData.length < 5) 
-				sData = " " + sData.valueOf();
+				sData = " " + sData!;
 			console.log(JSON.stringify(sData));
 		}
 		console.log();
 		for (let iFachwahl : number = 0; iFachwahl < this.nFachwahlen; iFachwahl++){
 			for (let schiene : number = 0; schiene < this.nSchienen; schiene++){
-				let sData : String = "" + data[iFachwahl][schiene];
+				let sData : string = "" + data[iFachwahl][schiene];
 				if (data[iFachwahl][schiene] === SchuelerblockungDynDaten.UNENDLICH) 
 					sData = "INF";
 				while (sData.length < 5) 
-					sData = " " + sData.valueOf();
+					sData = " " + sData!;
 				console.log(JSON.stringify(sData));
 			}
 			console.log();

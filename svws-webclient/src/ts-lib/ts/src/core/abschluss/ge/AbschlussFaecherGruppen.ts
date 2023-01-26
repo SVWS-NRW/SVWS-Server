@@ -48,7 +48,7 @@ export class AbschlussFaecherGruppen extends JavaObject {
 	 * 
 	 * @return true, falls das Fach vorhanden ist, und ansonsten false
 	 */
-	public contains(kuerzel : String | null) : boolean {
+	public contains(kuerzel : string | null) : boolean {
 		return this.fg1.contains(kuerzel) || this.fg2.contains(kuerzel);
 	}
 
@@ -86,8 +86,8 @@ export class AbschlussFaecherGruppen extends JavaObject {
 	 * 
 	 * @return eine Liste der Kürzel der Fächer, die dem Filterkriterium entsprechen
 	 */
-	public getKuerzel(filter : Predicate<GEAbschlussFach>) : List<String> {
-		let faecher : List<String> = this.fg1.getKuerzel(filter);
+	public getKuerzel(filter : Predicate<GEAbschlussFach>) : List<string> {
+		let faecher : List<string> = this.fg1.getKuerzel(filter);
 		faecher.addAll(this.fg2.getKuerzel(filter));
 		return faecher;
 	}
@@ -100,7 +100,7 @@ export class AbschlussFaecherGruppen extends JavaObject {
 	 * 
 	 * @return die Zeichenkette mit einer Komma-separierten Liste der Fächerkürzel
 	 */
-	public getKuerzelListe(filter : Predicate<GEAbschlussFach>) : String;
+	public getKuerzelListe(filter : Predicate<GEAbschlussFach>) : string;
 
 	/**
 	 * Erstellt eine Zeichenkette mit einer Komma-separierten Liste der Kürzel aller Fächer
@@ -112,16 +112,16 @@ export class AbschlussFaecherGruppen extends JavaObject {
 	 * 
 	 * @return die Zeichenkette mit einer Komma-separierten Liste der Fächerkürzel
 	 */
-	public getKuerzelListe(filterFG1 : Predicate<GEAbschlussFach>, filterFG2 : Predicate<GEAbschlussFach>) : String;
+	public getKuerzelListe(filterFG1 : Predicate<GEAbschlussFach>, filterFG2 : Predicate<GEAbschlussFach>) : string;
 
 	/**
 	 * Implementation for method overloads of 'getKuerzelListe'
 	 */
-	public getKuerzelListe(__param0 : Predicate<GEAbschlussFach>, __param1? : Predicate<GEAbschlussFach>) : String {
+	public getKuerzelListe(__param0 : Predicate<GEAbschlussFach>, __param1? : Predicate<GEAbschlussFach>) : string {
 		if (((typeof __param0 !== "undefined") && ((typeof __param0 !== 'undefined') && (__param0 instanceof Object) && (__param0 !== null) && ('test' in __param0) && (typeof __param0.test === 'function')) || (__param0 === null)) && (typeof __param1 === "undefined")) {
 			let filter : Predicate<GEAbschlussFach> = cast_java_util_function_Predicate(__param0);
 			let sb : StringBuilder = new StringBuilder();
-			let faecher : List<String> = this.getKuerzel(filter);
+			let faecher : List<string> = this.getKuerzel(filter);
 			for (let fach of faecher) {
 				if (sb.length() > 0) 
 					sb.append(", ");
@@ -132,8 +132,8 @@ export class AbschlussFaecherGruppen extends JavaObject {
 			let filterFG1 : Predicate<GEAbschlussFach> = cast_java_util_function_Predicate(__param0);
 			let filterFG2 : Predicate<GEAbschlussFach> = cast_java_util_function_Predicate(__param1);
 			let sb : StringBuilder = new StringBuilder();
-			let faecherFG1 : List<String> = this.fg1.getKuerzel(filterFG1);
-			let faecherFG2 : List<String> = this.fg2.getKuerzel(filterFG2);
+			let faecherFG1 : List<string> = this.fg1.getKuerzel(filterFG1);
+			let faecherFG2 : List<string> = this.fg2.getKuerzel(filterFG2);
 			for (let fach of faecherFG1) {
 				if (sb.length() > 0) 
 					sb.append(", ");

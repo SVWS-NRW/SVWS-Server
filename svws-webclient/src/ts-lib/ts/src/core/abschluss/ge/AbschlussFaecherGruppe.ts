@@ -23,7 +23,7 @@ export class AbschlussFaecherGruppe extends JavaObject {
 	 * @param faecherNutzen     nur die gelisteten Fächer nutzen, null bedeutet grundsätzlich alle benoteten Fächer nutzen (außer den gefilterten)
 	 * @param faecherFiltern    null bedeutet keinen Filter verwenden, ansonsten werden die gelisteten Fächer gefiltert
 	 */
-	public constructor(faecherAlle : List<GEAbschlussFach>, faecherNutzen : List<String> | null, faecherFiltern : List<String> | null) {
+	public constructor(faecherAlle : List<GEAbschlussFach>, faecherNutzen : List<string> | null, faecherFiltern : List<string> | null) {
 		super();
 		if (faecherAlle === null) 
 			return;
@@ -46,7 +46,7 @@ export class AbschlussFaecherGruppe extends JavaObject {
 	 * 
 	 * @return true, falls die angegebenen Fächer und nur diese in der Fächergruppe sind, ansonsten false.
 	 */
-	public istVollstaendig(faecherAbgleich : List<String> | null) : boolean {
+	public istVollstaendig(faecherAbgleich : List<string> | null) : boolean {
 		if (faecherAbgleich === null) 
 			return true;
 		if (this.isEmpty()) 
@@ -80,7 +80,7 @@ export class AbschlussFaecherGruppe extends JavaObject {
 	 * 
 	 * @return true, falls das Fach vorhanden ist, und ansonsten false
 	 */
-	public contains(kuerzel : String | null) : boolean {
+	public contains(kuerzel : string | null) : boolean {
 		if (kuerzel === null) 
 			return false;
 		for (let i : number = 0; i < this.faecher.size(); i++){
@@ -168,8 +168,8 @@ export class AbschlussFaecherGruppe extends JavaObject {
 	 * 
 	 * @return eine Liste der Kürzel der Fächer, die dem Filterkriterium entsprechen
 	 */
-	public getKuerzel(filter : Predicate<GEAbschlussFach>) : List<String> {
-		let result : Vector<String> = new Vector();
+	public getKuerzel(filter : Predicate<GEAbschlussFach>) : List<string> {
+		let result : Vector<string> = new Vector();
 		for (let i : number = 0; i < this.faecher.size(); i++){
 			let fach : GEAbschlussFach = this.faecher.get(i);
 			if (filter.test(fach) && (fach.kuerzel !== null)) 
@@ -186,7 +186,7 @@ export class AbschlussFaecherGruppe extends JavaObject {
 	 * 
 	 * @return die Zeichenkette mit einer Komma-separierten Liste der Fächerkürzel
 	 */
-	public getKuerzelListe(filter : Predicate<GEAbschlussFach>) : String {
+	public getKuerzelListe(filter : Predicate<GEAbschlussFach>) : string {
 		let sb : StringBuilder = new StringBuilder();
 		for (let i : number = 0; i < this.faecher.size(); i++){
 			let fach : GEAbschlussFach = this.faecher.get(i);
@@ -203,18 +203,18 @@ export class AbschlussFaecherGruppe extends JavaObject {
 	 * Gibt eine Komma-separierte Liste, der Abschlussfächer aus. Dabei wird
 	 * die toString Methode der Klasse AbschlussFach verwendet.
 	 */
-	public toString() : String {
+	public toString() : string {
 		let sb : StringBuilder = new StringBuilder();
 		for (let i : number = 0; i < this.faecher.size(); i++){
 			let fach : GEAbschlussFach = this.faecher.get(i);
 			if (sb.length() > 0) 
 				sb.append(", ");
-			let diffkursinfo : String = "";
+			let diffkursinfo : string = "";
 			if ((fach.kursart === null) || (fach.kuerzel === null)) 
 				continue;
 			if (!GELeistungsdifferenzierteKursart.Sonstige.hat(fach.kursart)) 
 				diffkursinfo += fach.kursart + ",";
-			sb.append(fach.kuerzel + "(" + diffkursinfo.valueOf() + fach.note + ")");
+			sb.append(fach.kuerzel + "(" + diffkursinfo! + fach.note + ")");
 		}
 		return sb.toString();
 	}

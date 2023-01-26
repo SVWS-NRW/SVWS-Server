@@ -8,7 +8,7 @@ import { Arrays, cast_java_util_Arrays } from '../../../java/util/Arrays';
 export class WeiterbildungskollegOrganisationsformen extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -17,7 +17,7 @@ export class WeiterbildungskollegOrganisationsformen extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<WeiterbildungskollegOrganisationsformen> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, WeiterbildungskollegOrganisationsformen> = new Map<String, WeiterbildungskollegOrganisationsformen>();
+	private static readonly all_values_by_name : Map<string, WeiterbildungskollegOrganisationsformen> = new Map<string, WeiterbildungskollegOrganisationsformen>();
 
 	/**
 	 * Organisationsform: Teilbeleger 
@@ -47,7 +47,7 @@ export class WeiterbildungskollegOrganisationsformen extends JavaObject {
 	/**
 	 * Eine Hashmap mit allen definierten Organisationsformen, zugeordnet zu ihren Kürzeln 
 	 */
-	private static readonly _mapKuerzel : HashMap<String, WeiterbildungskollegOrganisationsformen> = new HashMap();
+	private static readonly _mapKuerzel : HashMap<string, WeiterbildungskollegOrganisationsformen> = new HashMap();
 
 	/**
 	 * Erzeugt eine neue Organisationsform in der Aufzählung.
@@ -72,7 +72,7 @@ export class WeiterbildungskollegOrganisationsformen extends JavaObject {
 	 *    
 	 * @return die Map von den Kürzeln auf die zugehörigen Organisationsformen
 	 */
-	private static getMapByKuerzel() : HashMap<String, WeiterbildungskollegOrganisationsformen> {
+	private static getMapByKuerzel() : HashMap<string, WeiterbildungskollegOrganisationsformen> {
 		if (WeiterbildungskollegOrganisationsformen._mapKuerzel.size() === 0) {
 			for (let s of WeiterbildungskollegOrganisationsformen.values()) {
 				if (s.daten !== null) 
@@ -89,7 +89,7 @@ export class WeiterbildungskollegOrganisationsformen extends JavaObject {
 	 * 
 	 * @return die Organisationsform oder null, falls das Kürzel ungültig ist
 	 */
-	public static getByKuerzel(kuerzel : String | null) : WeiterbildungskollegOrganisationsformen | null {
+	public static getByKuerzel(kuerzel : string | null) : WeiterbildungskollegOrganisationsformen | null {
 		return WeiterbildungskollegOrganisationsformen.getMapByKuerzel().get(kuerzel);
 	}
 
@@ -98,7 +98,7 @@ export class WeiterbildungskollegOrganisationsformen extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -116,7 +116,7 @@ export class WeiterbildungskollegOrganisationsformen extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -170,7 +170,7 @@ export class WeiterbildungskollegOrganisationsformen extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : WeiterbildungskollegOrganisationsformen | null {
+	public static valueOf(name : string) : WeiterbildungskollegOrganisationsformen | null {
 		let tmp : WeiterbildungskollegOrganisationsformen | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

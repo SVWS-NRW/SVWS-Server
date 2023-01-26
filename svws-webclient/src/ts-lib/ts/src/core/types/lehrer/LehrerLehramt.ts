@@ -7,7 +7,7 @@ import { LehrerKatalogLehramtEintrag, cast_de_nrw_schule_svws_core_data_lehrer_L
 export class LehrerLehramt extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -16,7 +16,7 @@ export class LehrerLehramt extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<LehrerLehramt> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, LehrerLehramt> = new Map<String, LehrerLehramt>();
+	private static readonly all_values_by_name : Map<string, LehrerLehramt> = new Map<string, LehrerLehramt>();
 
 	/**
 	 * Lehramt 'für die Primarstufe' 
@@ -266,12 +266,12 @@ export class LehrerLehramt extends JavaObject {
 	/**
 	 * Eine Hashmap mit allen Lehrämtern, welche ihrer ID zugeordnet sind. 
 	 */
-	private static readonly _aemterByID : HashMap<Number, LehrerLehramt | null> = new HashMap();
+	private static readonly _aemterByID : HashMap<number, LehrerLehramt | null> = new HashMap();
 
 	/**
 	 * Eine Hashmap mit allen Lehrämtern, welche dem Kürzel bzw. ASD-Schlüssel zugeordnet sind. 
 	 */
-	private static readonly _aemterByKuerzel : HashMap<String, LehrerLehramt | null> = new HashMap();
+	private static readonly _aemterByKuerzel : HashMap<string, LehrerLehramt | null> = new HashMap();
 
 	/**
 	 * Erzeugt ein neues Lehramt in der Aufzählung.
@@ -294,7 +294,7 @@ export class LehrerLehramt extends JavaObject {
 	 *    
 	 * @return die Map von den IDs der Lehrämter auf die zugehörigen Lehrämter
 	 */
-	private static getMapLehraemterByID() : HashMap<Number, LehrerLehramt | null> {
+	private static getMapLehraemterByID() : HashMap<number, LehrerLehramt | null> {
 		if (LehrerLehramt._aemterByID.size() === 0) 
 			for (let l of LehrerLehramt.values()) 
 				LehrerLehramt._aemterByID.put(l.daten.id, l);
@@ -307,7 +307,7 @@ export class LehrerLehramt extends JavaObject {
 	 *    
 	 * @return die Map von den Kürzeln der Lehrämter auf die zugehörigen Lehrämter
 	 */
-	private static getMapLehraemterByKuerzel() : HashMap<String, LehrerLehramt | null> {
+	private static getMapLehraemterByKuerzel() : HashMap<string, LehrerLehramt | null> {
 		if (LehrerLehramt._aemterByKuerzel.size() === 0) 
 			for (let l of LehrerLehramt.values()) 
 				LehrerLehramt._aemterByKuerzel.put(l.daten.kuerzel, l);
@@ -332,7 +332,7 @@ export class LehrerLehramt extends JavaObject {
 	 * 
 	 * @return das Lehramt oder null, falls das Kürzel ungültig ist
 	 */
-	public static getByKuerzel(kuerzel : String | null) : LehrerLehramt | null {
+	public static getByKuerzel(kuerzel : string | null) : LehrerLehramt | null {
 		return LehrerLehramt.getMapLehraemterByKuerzel().get(kuerzel);
 	}
 
@@ -341,7 +341,7 @@ export class LehrerLehramt extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -359,7 +359,7 @@ export class LehrerLehramt extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -413,7 +413,7 @@ export class LehrerLehramt extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : LehrerLehramt | null {
+	public static valueOf(name : string) : LehrerLehramt | null {
 		let tmp : LehrerLehramt | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

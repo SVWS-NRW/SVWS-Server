@@ -7,7 +7,7 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class LehrerMehrleistungArt extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -16,7 +16,7 @@ export class LehrerMehrleistungArt extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<LehrerMehrleistungArt> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, LehrerMehrleistungArt> = new Map<String, LehrerMehrleistungArt>();
+	private static readonly all_values_by_name : Map<string, LehrerMehrleistungArt> = new Map<string, LehrerMehrleistungArt>();
 
 	/**
 	 * Mehrleistungsart 'Beschäftigungsphase Sabbatjahr' 
@@ -66,12 +66,12 @@ export class LehrerMehrleistungArt extends JavaObject {
 	/**
 	 * Eine Hashmap mit allen Arten von Mehrleistungen, welche ihrer ID zugeordnet sind. 
 	 */
-	private static readonly _artenByID : HashMap<Number, LehrerMehrleistungArt | null> = new HashMap();
+	private static readonly _artenByID : HashMap<number, LehrerMehrleistungArt | null> = new HashMap();
 
 	/**
 	 * Eine Hashmap mit allen Arten von Mehrleistungen, welche dem Kürzel bzw. ASD-Schlüssel zugeordnet sind. 
 	 */
-	private static readonly _artenByKuerzel : HashMap<String, LehrerMehrleistungArt | null> = new HashMap();
+	private static readonly _artenByKuerzel : HashMap<string, LehrerMehrleistungArt | null> = new HashMap();
 
 	/**
 	 * Erzeugt eine neue Art von Mehrleistung in der Aufzählung.
@@ -94,7 +94,7 @@ export class LehrerMehrleistungArt extends JavaObject {
 	 *    
 	 * @return die Map von den IDs der Mehrleistungsarten auf die zugehörigen Mehrleistungsarten
 	 */
-	private static getMapArtenByID() : HashMap<Number, LehrerMehrleistungArt | null> {
+	private static getMapArtenByID() : HashMap<number, LehrerMehrleistungArt | null> {
 		if (LehrerMehrleistungArt._artenByID.size() === 0) 
 			for (let g of LehrerMehrleistungArt.values()) 
 				LehrerMehrleistungArt._artenByID.put(g.daten.id, g);
@@ -107,7 +107,7 @@ export class LehrerMehrleistungArt extends JavaObject {
 	 *    
 	 * @return die Map von den Kürzeln der Mehrleistungsarten auf die zugehörigen Mehrleistungsarten
 	 */
-	private static getMapArtenByKuerzel() : HashMap<String, LehrerMehrleistungArt | null> {
+	private static getMapArtenByKuerzel() : HashMap<string, LehrerMehrleistungArt | null> {
 		if (LehrerMehrleistungArt._artenByKuerzel.size() === 0) 
 			for (let g of LehrerMehrleistungArt.values()) 
 				LehrerMehrleistungArt._artenByKuerzel.put(g.daten.kuerzel, g);
@@ -132,7 +132,7 @@ export class LehrerMehrleistungArt extends JavaObject {
 	 * 
 	 * @return die Art der Mehrleistung oder null, falls das Kürzel ungültig ist
 	 */
-	public static getByKuerzel(kuerzel : String | null) : LehrerMehrleistungArt | null {
+	public static getByKuerzel(kuerzel : string | null) : LehrerMehrleistungArt | null {
 		return LehrerMehrleistungArt.getMapArtenByKuerzel().get(kuerzel);
 	}
 
@@ -141,7 +141,7 @@ export class LehrerMehrleistungArt extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -159,7 +159,7 @@ export class LehrerMehrleistungArt extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -213,7 +213,7 @@ export class LehrerMehrleistungArt extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : LehrerMehrleistungArt | null {
+	public static valueOf(name : string) : LehrerMehrleistungArt | null {
 		let tmp : LehrerMehrleistungArt | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

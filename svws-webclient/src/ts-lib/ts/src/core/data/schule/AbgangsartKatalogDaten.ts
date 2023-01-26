@@ -15,7 +15,7 @@ export class AbgangsartKatalogDaten extends JavaObject {
 	/**
 	 * Die Beschreibung der Abgangsart. 
 	 */
-	public beschreibung : String = "";
+	public beschreibung : string = "";
 
 	/**
 	 * Die Kombinationen von Schulformen, -gliederungen und Jahrgängen, bei der die Abgangsart zulässig ist. 
@@ -25,12 +25,12 @@ export class AbgangsartKatalogDaten extends JavaObject {
 	/**
 	 * Gibt an, in welchem Schuljahr der Historien-Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. 
 	 */
-	public gueltigVon : Number | null = null;
+	public gueltigVon : number | null = null;
 
 	/**
 	 * Gibt an, bis zu welchem Schuljahr der Historien-Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. 
 	 */
-	public gueltigBis : Number | null = null;
+	public gueltigBis : number | null = null;
 
 
 	public constructor() {
@@ -49,21 +49,21 @@ export class AbgangsartKatalogDaten extends JavaObject {
 		result.id = obj.id;
 		if (typeof obj.beschreibung === "undefined")
 			 throw new Error('invalid json format, missing attribute beschreibung');
-		result.beschreibung = String(obj.beschreibung);
+		result.beschreibung = obj.beschreibung;
 		if (!!obj.zulaessig) {
 			for (let elem of obj.zulaessig) {
 				result.zulaessig?.add(SchulformGliederungJahrgaenge.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : Number(obj.gueltigVon);
-		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : Number(obj.gueltigBis);
+		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
+		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : AbgangsartKatalogDaten) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"beschreibung" : ' + '"' + obj.beschreibung.valueOf() + '"' + ',';
+		result += '"beschreibung" : ' + '"' + obj.beschreibung! + '"' + ',';
 		if (!obj.zulaessig) {
 			result += '"zulaessig" : []';
 		} else {
@@ -76,8 +76,8 @@ export class AbgangsartKatalogDaten extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.valueOf()) + ',';
-		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.valueOf()) + ',';
+		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
+		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -89,7 +89,7 @@ export class AbgangsartKatalogDaten extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.beschreibung !== "undefined") {
-			result += '"beschreibung" : ' + '"' + obj.beschreibung.valueOf() + '"' + ',';
+			result += '"beschreibung" : ' + '"' + obj.beschreibung + '"' + ',';
 		}
 		if (typeof obj.zulaessig !== "undefined") {
 			if (!obj.zulaessig) {
@@ -106,10 +106,10 @@ export class AbgangsartKatalogDaten extends JavaObject {
 			}
 		}
 		if (typeof obj.gueltigVon !== "undefined") {
-			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.valueOf()) + ',';
+			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
 		}
 		if (typeof obj.gueltigBis !== "undefined") {
-			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.valueOf()) + ',';
+			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

@@ -12,17 +12,17 @@ export class ENMNote extends JavaObject {
 	/**
 	 * Die Kurzschreibweise der Note als Zahl ggf. mit Tendenz (+/-), ggf. auch ein Kürzel für PseudoNoten 
 	 */
-	public kuerzel : String | null = null;
+	public kuerzel : string | null = null;
 
 	/**
 	 * Die Notenpunkte, die dieser Note ggf. zugeordnet sind 
 	 */
-	public notenpunkte : Number | null = null;
+	public notenpunkte : number | null = null;
 
 	/**
 	 * Die Note in ausführlicher Textform ggf. mit Tendenz (plus/minus) 
 	 */
-	public text : String | null = null;
+	public text : string | null = null;
 
 
 	public constructor() {
@@ -39,18 +39,18 @@ export class ENMNote extends JavaObject {
 		if (typeof obj.id === "undefined")
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		result.kuerzel = typeof obj.kuerzel === "undefined" ? null : obj.kuerzel === null ? null : String(obj.kuerzel);
-		result.notenpunkte = typeof obj.notenpunkte === "undefined" ? null : obj.notenpunkte === null ? null : Number(obj.notenpunkte);
-		result.text = typeof obj.text === "undefined" ? null : obj.text === null ? null : String(obj.text);
+		result.kuerzel = typeof obj.kuerzel === "undefined" ? null : obj.kuerzel === null ? null : obj.kuerzel;
+		result.notenpunkte = typeof obj.notenpunkte === "undefined" ? null : obj.notenpunkte === null ? null : obj.notenpunkte;
+		result.text = typeof obj.text === "undefined" ? null : obj.text === null ? null : obj.text;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : ENMNote) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : '"' + obj.kuerzel.valueOf() + '"') + ',';
-		result += '"notenpunkte" : ' + ((!obj.notenpunkte) ? 'null' : obj.notenpunkte.valueOf()) + ',';
-		result += '"text" : ' + ((!obj.text) ? 'null' : '"' + obj.text.valueOf() + '"') + ',';
+		result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : '"' + obj.kuerzel + '"') + ',';
+		result += '"notenpunkte" : ' + ((!obj.notenpunkte) ? 'null' : obj.notenpunkte) + ',';
+		result += '"text" : ' + ((!obj.text) ? 'null' : '"' + obj.text + '"') + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -62,13 +62,13 @@ export class ENMNote extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.kuerzel !== "undefined") {
-			result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : '"' + obj.kuerzel.valueOf() + '"') + ',';
+			result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : '"' + obj.kuerzel + '"') + ',';
 		}
 		if (typeof obj.notenpunkte !== "undefined") {
-			result += '"notenpunkte" : ' + ((!obj.notenpunkte) ? 'null' : obj.notenpunkte.valueOf()) + ',';
+			result += '"notenpunkte" : ' + ((!obj.notenpunkte) ? 'null' : obj.notenpunkte) + ',';
 		}
 		if (typeof obj.text !== "undefined") {
-			result += '"text" : ' + ((!obj.text) ? 'null' : '"' + obj.text.valueOf() + '"') + ',';
+			result += '"text" : ' + ((!obj.text) ? 'null' : '"' + obj.text + '"') + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

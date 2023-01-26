@@ -1,4 +1,5 @@
 import { JavaObject } from './JavaObject';
+import { NullPointerException } from './NullPointerException';
 import { NumberFormatException } from './NumberFormatException';
 
 export class JavaFloat extends JavaObject {
@@ -8,17 +9,17 @@ export class JavaFloat extends JavaObject {
     public static SIZE : number = 32;
     public static BYTES : number = 4;
 
-    public static parseFloat(s : String) : number {
-        let a : number = parseFloat(s.valueOf());
+    public static parseFloat(s : string | null) : number {
+        if (s === null)
+            throw new NullPointerException();
+        let a : number = parseFloat(s);
         if (Number.isNaN(a) || (a < this.MIN_VALUE) || (a > this.MAX_VALUE))
             throw new NumberFormatException();
         return a;
     }
 
-    public static compare(a : Number, b : Number) {
-        let first : number = (a instanceof Number) ? a.valueOf() : a;
-        let second : number = (b instanceof Number) ? b.valueOf() : b;
-        return first === second ? 0 : (first < second) ? -1 : 1;
+    public static compare(a : number, b : number) {
+        return a === b ? 0 : (a < b) ? -1 : 1;
     }
 
 	isTranspiledInstanceOf(name : string): boolean {
@@ -34,6 +35,6 @@ export class JavaFloat extends JavaObject {
 }
 
 
-export function cast_java_lang_Float(obj : unknown) : Number {
-	return obj as Number;
+export function cast_java_lang_Float(obj : unknown) : number | null {
+	return obj as number | null;
 }

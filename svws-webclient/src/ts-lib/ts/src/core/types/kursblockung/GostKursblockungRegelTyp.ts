@@ -16,7 +16,7 @@ import { IllegalArgumentException, cast_java_lang_IllegalArgumentException } fro
 export class GostKursblockungRegelTyp extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -25,7 +25,7 @@ export class GostKursblockungRegelTyp extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<GostKursblockungRegelTyp> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, GostKursblockungRegelTyp> = new Map<String, GostKursblockungRegelTyp>();
+	private static readonly all_values_by_name : Map<string, GostKursblockungRegelTyp> = new Map<string, GostKursblockungRegelTyp>();
 
 	/**
 	 * 
@@ -132,7 +132,7 @@ export class GostKursblockungRegelTyp extends JavaObject {
 	/**
 	 * Die Bezeichnung des Regel-Typs 
 	 */
-	public readonly bezeichnung : String | null;
+	public readonly bezeichnung : string | null;
 
 	/**
 	 * Die Typen der Regel-Parameter 
@@ -142,7 +142,7 @@ export class GostKursblockungRegelTyp extends JavaObject {
 	/**
 	 * Mapping von "Typ --> GostKursblockungRegelTyp". 
 	 */
-	private static readonly _map_id_regel : HashMap<Number, GostKursblockungRegelTyp> = new HashMap();
+	private static readonly _map_id_regel : HashMap<number, GostKursblockungRegelTyp> = new HashMap();
 
 	/**
 	 *
@@ -152,7 +152,7 @@ export class GostKursblockungRegelTyp extends JavaObject {
 	 * @param paramCount    die Anzahl der Parameter für diesen Regel-Typ
 	 * @param bezeichnung   die textuelle Bezeichnung für diesen Regel-Typ 
 	 */
-	private constructor(name : string, ordinal : number, id : number, bezeichnung : String, paramTypes : List<GostKursblockungRegelParameterTyp>) {
+	private constructor(name : string, ordinal : number, id : number, bezeichnung : string, paramTypes : List<GostKursblockungRegelParameterTyp>) {
 		super();
 		this.__name = name;
 		this.__ordinal = ordinal;
@@ -163,7 +163,7 @@ export class GostKursblockungRegelTyp extends JavaObject {
 		this.paramTypes = paramTypes;
 	}
 
-	private static getMap() : HashMap<Number, GostKursblockungRegelTyp> {
+	private static getMap() : HashMap<number, GostKursblockungRegelTyp> {
 		if (GostKursblockungRegelTyp._map_id_regel.isEmpty()) 
 			for (let gostTyp of GostKursblockungRegelTyp.values()) 
 				GostKursblockungRegelTyp._map_id_regel.put(gostTyp.typ, gostTyp);
@@ -187,7 +187,7 @@ export class GostKursblockungRegelTyp extends JavaObject {
 	 * 
 	 * @return der Regel-Typ 
 	 */
-	public static fromTyp(id : Number | null) : GostKursblockungRegelTyp {
+	public static fromTyp(id : number | null) : GostKursblockungRegelTyp {
 		if (id === null) 
 			return GostKursblockungRegelTyp.UNDEFINIERT;
 		let gostTyp : GostKursblockungRegelTyp | null = GostKursblockungRegelTyp.getMap().get(id);
@@ -217,7 +217,7 @@ export class GostKursblockungRegelTyp extends JavaObject {
 	 */
 	public getParamType(i : number) : GostKursblockungRegelParameterTyp {
 		if ((i < 0) || (i >= this.paramTypes.size())) 
-			throw new IllegalArgumentException("Ein Parameter mit dem Index i existiert nicht für den Regel-Typ " + this.name().valueOf())
+			throw new IllegalArgumentException("Ein Parameter mit dem Index i existiert nicht für den Regel-Typ " + this.name()!)
 		return this.paramTypes.get(i);
 	}
 
@@ -247,7 +247,7 @@ export class GostKursblockungRegelTyp extends JavaObject {
 	 */
 	public static getNeueParameterBeiSchienenLoeschung(pRegel : GostBlockungRegel, pSchienenNr : number) : Array<number> | null {
 		let typ : GostKursblockungRegelTyp = GostKursblockungRegelTyp.fromTyp(pRegel.typ);
-		let param : Vector<Number> = pRegel.parameter;
+		let param : Vector<number> = pRegel.parameter;
 		switch (typ) {
 			case GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN: {
 				return [];
@@ -296,7 +296,7 @@ export class GostKursblockungRegelTyp extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -314,7 +314,7 @@ export class GostKursblockungRegelTyp extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -368,7 +368,7 @@ export class GostKursblockungRegelTyp extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : GostKursblockungRegelTyp | null {
+	public static valueOf(name : string) : GostKursblockungRegelTyp | null {
 		let tmp : GostKursblockungRegelTyp | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

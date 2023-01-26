@@ -50,7 +50,7 @@ export class AbiturdatenManager extends JavaObject {
 	/**
 	 * Eine Map mit der Zuordnung der zulässigen Fächer der gymnasialen Oberstufe für diesen Abiturjahrgang 
 	 */
-	private readonly gostFaecher : HashMap<Number, GostFach>;
+	private readonly gostFaecher : HashMap<number, GostFach>;
 
 	/**
 	 * Die Art der durchzuführenden Belegprüfung 
@@ -456,7 +456,7 @@ export class AbiturdatenManager extends JavaObject {
 			let belegungHalbjahr : AbiturFachbelegungHalbjahr | null = fachbelegung.belegungen[halbjahr.id];
 			if (belegungHalbjahr === null) 
 				continue;
-			let schriftlich : Boolean = belegungHalbjahr.schriftlich === null ? false : belegungHalbjahr.schriftlich;
+			let schriftlich : boolean = belegungHalbjahr.schriftlich === null ? false : belegungHalbjahr.schriftlich;
 			if (((schriftlichkeit as unknown !== GostSchriftlichkeit.BELIEBIG as unknown) && (((schriftlichkeit as unknown === GostSchriftlichkeit.SCHRIFTLICH as unknown) && (!schriftlich)) || ((schriftlichkeit as unknown === GostSchriftlichkeit.MUENDLICH as unknown) && (schriftlich))))) 
 				return true;
 		}
@@ -954,7 +954,7 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return true, falls eine doppelte Belegung vorliegt, sonst false
 	 */
 	public hatDoppelteFachbelegungInHalbjahr(halbjahr : GostHalbjahr) : boolean {
-		let set : HashSet<String> = new HashSet();
+		let set : HashSet<string> = new HashSet();
 		let fachbelegungen : Vector<AbiturFachbelegung> = this.abidaten.fachbelegungen;
 		for (let fb of fachbelegungen) {
 			let fach : GostFach | null = this.getFach(fb);
@@ -963,7 +963,7 @@ export class AbiturdatenManager extends JavaObject {
 			let belegung : AbiturFachbelegungHalbjahr | null = this.getBelegungHalbjahr(fb, halbjahr, GostSchriftlichkeit.BELIEBIG);
 			if (belegung === null) 
 				continue;
-			let kuerzel : String | null = GostFachManager.getFremdsprache(fach);
+			let kuerzel : string | null = GostFachManager.getFremdsprache(fach);
 			if (kuerzel === null) 
 				kuerzel = fach.kuerzel === null ? "" : fach.kuerzel;
 			if (!set.add(kuerzel) && (!JavaObject.equalsTranspiler("VX", (kuerzel)))) 
@@ -1006,7 +1006,7 @@ export class AbiturdatenManager extends JavaObject {
 	 * 
 	 * @return die Fachbelegung oder null, falls keine vorhanden ist
 	 */
-	public getFachbelegungByKuerzel(kuerzel : String | null) : AbiturFachbelegung | null {
+	public getFachbelegungByKuerzel(kuerzel : string | null) : AbiturFachbelegung | null {
 		if ((kuerzel === null) || (JavaObject.equalsTranspiler("", (kuerzel)))) 
 			return null;
 		let fachbelegungen : Vector<AbiturFachbelegung> = this.abidaten.fachbelegungen;
@@ -1280,7 +1280,7 @@ export class AbiturdatenManager extends JavaObject {
 	 * 
 	 * @return eine Liste mit den Fachbelegungen
 	 */
-	public getFachbelegungByFachkuerzel(kuerzel : String | null) : List<AbiturFachbelegung> {
+	public getFachbelegungByFachkuerzel(kuerzel : string | null) : List<AbiturFachbelegung> {
 		let fachbelegungen : Vector<AbiturFachbelegung> = new Vector();
 		if (kuerzel === null) 
 			return fachbelegungen;
@@ -1316,7 +1316,7 @@ export class AbiturdatenManager extends JavaObject {
 	 * 
 	 * @return die Fachbelegung für die Sprache
 	 */
-	public getSprachbelegung(sprache : String | null) : AbiturFachbelegung | null {
+	public getSprachbelegung(sprache : string | null) : AbiturFachbelegung | null {
 		if (sprache === null) 
 			return null;
 		let fachbelegungen : Vector<AbiturFachbelegung> = this.abidaten.fachbelegungen;
@@ -1369,7 +1369,7 @@ export class AbiturdatenManager extends JavaObject {
 	 * 
 	 * @return die Sprache des bilingualen Bildungsgang oder null
 	 */
-	public getBiligualenBildungsgang() : String | null {
+	public getBiligualenBildungsgang() : string | null {
 		return this.abidaten.bilingualeSprache;
 	}
 

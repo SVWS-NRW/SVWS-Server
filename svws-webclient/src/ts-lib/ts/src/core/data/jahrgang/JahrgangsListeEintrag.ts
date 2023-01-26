@@ -12,17 +12,17 @@ export class JahrgangsListeEintrag extends JavaObject {
 	/**
 	 * Das Kürzel des Jahrgangs. 
 	 */
-	public kuerzel : String | null = null;
+	public kuerzel : string | null = null;
 
 	/**
 	 * Das dem Jahrgang zugeordnete Statistik-Kürzel. 
 	 */
-	public kuerzelStatistik : String | null = null;
+	public kuerzelStatistik : string | null = null;
 
 	/**
 	 * Der Name / die Bezeichnung des Jahrgangs. 
 	 */
-	public bezeichnung : String | null = null;
+	public bezeichnung : string | null = null;
 
 	/**
 	 * Die Sortierreihenfolge des Jahrgangslisten-Eintrags. 
@@ -32,12 +32,12 @@ export class JahrgangsListeEintrag extends JavaObject {
 	/**
 	 * Die ID der Schulgliederung, der der Eintrag zugeordnet ist. 
 	 */
-	public idSchulgliederung : String | null = null;
+	public idSchulgliederung : string | null = null;
 
 	/**
 	 * Die ID des Folgejahrgangs, sofern einer definiert ist, ansonsten null 
 	 */
-	public idFolgejahrgang : Number | null = null;
+	public idFolgejahrgang : number | null = null;
 
 	/**
 	 * Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht. 
@@ -59,14 +59,14 @@ export class JahrgangsListeEintrag extends JavaObject {
 		if (typeof obj.id === "undefined")
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		result.kuerzel = typeof obj.kuerzel === "undefined" ? null : obj.kuerzel === null ? null : String(obj.kuerzel);
-		result.kuerzelStatistik = typeof obj.kuerzelStatistik === "undefined" ? null : obj.kuerzelStatistik === null ? null : String(obj.kuerzelStatistik);
-		result.bezeichnung = typeof obj.bezeichnung === "undefined" ? null : obj.bezeichnung === null ? null : String(obj.bezeichnung);
+		result.kuerzel = typeof obj.kuerzel === "undefined" ? null : obj.kuerzel === null ? null : obj.kuerzel;
+		result.kuerzelStatistik = typeof obj.kuerzelStatistik === "undefined" ? null : obj.kuerzelStatistik === null ? null : obj.kuerzelStatistik;
+		result.bezeichnung = typeof obj.bezeichnung === "undefined" ? null : obj.bezeichnung === null ? null : obj.bezeichnung;
 		if (typeof obj.sortierung === "undefined")
 			 throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
-		result.idSchulgliederung = typeof obj.idSchulgliederung === "undefined" ? null : obj.idSchulgliederung === null ? null : String(obj.idSchulgliederung);
-		result.idFolgejahrgang = typeof obj.idFolgejahrgang === "undefined" ? null : obj.idFolgejahrgang === null ? null : Number(obj.idFolgejahrgang);
+		result.idSchulgliederung = typeof obj.idSchulgliederung === "undefined" ? null : obj.idSchulgliederung === null ? null : obj.idSchulgliederung;
+		result.idFolgejahrgang = typeof obj.idFolgejahrgang === "undefined" ? null : obj.idFolgejahrgang === null ? null : obj.idFolgejahrgang;
 		if (typeof obj.istSichtbar === "undefined")
 			 throw new Error('invalid json format, missing attribute istSichtbar');
 		result.istSichtbar = obj.istSichtbar;
@@ -76,12 +76,12 @@ export class JahrgangsListeEintrag extends JavaObject {
 	public static transpilerToJSON(obj : JahrgangsListeEintrag) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : '"' + obj.kuerzel.valueOf() + '"') + ',';
-		result += '"kuerzelStatistik" : ' + ((!obj.kuerzelStatistik) ? 'null' : '"' + obj.kuerzelStatistik.valueOf() + '"') + ',';
-		result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : '"' + obj.bezeichnung.valueOf() + '"') + ',';
+		result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : '"' + obj.kuerzel + '"') + ',';
+		result += '"kuerzelStatistik" : ' + ((!obj.kuerzelStatistik) ? 'null' : '"' + obj.kuerzelStatistik + '"') + ',';
+		result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : '"' + obj.bezeichnung + '"') + ',';
 		result += '"sortierung" : ' + obj.sortierung + ',';
-		result += '"idSchulgliederung" : ' + ((!obj.idSchulgliederung) ? 'null' : '"' + obj.idSchulgliederung.valueOf() + '"') + ',';
-		result += '"idFolgejahrgang" : ' + ((!obj.idFolgejahrgang) ? 'null' : obj.idFolgejahrgang.valueOf()) + ',';
+		result += '"idSchulgliederung" : ' + ((!obj.idSchulgliederung) ? 'null' : '"' + obj.idSchulgliederung + '"') + ',';
+		result += '"idFolgejahrgang" : ' + ((!obj.idFolgejahrgang) ? 'null' : obj.idFolgejahrgang) + ',';
 		result += '"istSichtbar" : ' + obj.istSichtbar + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -94,22 +94,22 @@ export class JahrgangsListeEintrag extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.kuerzel !== "undefined") {
-			result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : '"' + obj.kuerzel.valueOf() + '"') + ',';
+			result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : '"' + obj.kuerzel + '"') + ',';
 		}
 		if (typeof obj.kuerzelStatistik !== "undefined") {
-			result += '"kuerzelStatistik" : ' + ((!obj.kuerzelStatistik) ? 'null' : '"' + obj.kuerzelStatistik.valueOf() + '"') + ',';
+			result += '"kuerzelStatistik" : ' + ((!obj.kuerzelStatistik) ? 'null' : '"' + obj.kuerzelStatistik + '"') + ',';
 		}
 		if (typeof obj.bezeichnung !== "undefined") {
-			result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : '"' + obj.bezeichnung.valueOf() + '"') + ',';
+			result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : '"' + obj.bezeichnung + '"') + ',';
 		}
 		if (typeof obj.sortierung !== "undefined") {
 			result += '"sortierung" : ' + obj.sortierung + ',';
 		}
 		if (typeof obj.idSchulgliederung !== "undefined") {
-			result += '"idSchulgliederung" : ' + ((!obj.idSchulgliederung) ? 'null' : '"' + obj.idSchulgliederung.valueOf() + '"') + ',';
+			result += '"idSchulgliederung" : ' + ((!obj.idSchulgliederung) ? 'null' : '"' + obj.idSchulgliederung + '"') + ',';
 		}
 		if (typeof obj.idFolgejahrgang !== "undefined") {
-			result += '"idFolgejahrgang" : ' + ((!obj.idFolgejahrgang) ? 'null' : obj.idFolgejahrgang.valueOf()) + ',';
+			result += '"idFolgejahrgang" : ' + ((!obj.idFolgejahrgang) ? 'null' : obj.idFolgejahrgang) + ',';
 		}
 		if (typeof obj.istSichtbar !== "undefined") {
 			result += '"istSichtbar" : ' + obj.istSichtbar + ',';

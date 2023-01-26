@@ -3,7 +3,7 @@ import { JavaObject, cast_java_lang_Object } from '../../java/lang/JavaObject';
 export class LogLevel extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -12,7 +12,7 @@ export class LogLevel extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<LogLevel> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, LogLevel> = new Map<String, LogLevel>();
+	private static readonly all_values_by_name : Map<string, LogLevel> = new Map<string, LogLevel>();
 
 	/**
 	 * Das Log-Level, bei dem keine Fehler, etc. ausgegeben werden, sondern nur Informationen der Anwendung 
@@ -69,7 +69,7 @@ export class LogLevel extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -87,7 +87,7 @@ export class LogLevel extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -141,7 +141,7 @@ export class LogLevel extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : LogLevel | null {
+	public static valueOf(name : string) : LogLevel | null {
 		let tmp : LogLevel | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

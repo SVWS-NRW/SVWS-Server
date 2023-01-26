@@ -14,7 +14,7 @@ import { IllegalArgumentException, cast_java_lang_IllegalArgumentException } fro
 export class StundenplanblockungRegelTyp extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -23,7 +23,7 @@ export class StundenplanblockungRegelTyp extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<StundenplanblockungRegelTyp> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, StundenplanblockungRegelTyp> = new Map<String, StundenplanblockungRegelTyp>();
+	private static readonly all_values_by_name : Map<string, StundenplanblockungRegelTyp> = new Map<string, StundenplanblockungRegelTyp>();
 
 	/**
 	 * 
@@ -84,7 +84,7 @@ export class StundenplanblockungRegelTyp extends JavaObject {
 	/**
 	 * Die Bezeichnung des Regel-Typs. 
 	 */
-	public readonly bezeichnung : String | null;
+	public readonly bezeichnung : string | null;
 
 	/**
 	 * Die Typen der Regel-Parameter 
@@ -94,7 +94,7 @@ export class StundenplanblockungRegelTyp extends JavaObject {
 	/**
 	 * Mapping von "Typ --> GostKursblockungRegelTyp". 
 	 */
-	private static readonly _map_id_regel : HashMap<Number, StundenplanblockungRegelTyp | null> = new HashMap();
+	private static readonly _map_id_regel : HashMap<number, StundenplanblockungRegelTyp | null> = new HashMap();
 
 	/**
 	 *
@@ -104,7 +104,7 @@ export class StundenplanblockungRegelTyp extends JavaObject {
 	 * @param paramCount    die Anzahl der Parameter für diesen Regel-Typ
 	 * @param bezeichnung   die textuelle Bezeichnung für diesen Regel-Typ 
 	 */
-	private constructor(name : string, ordinal : number, id : number, bezeichnung : String, paramTypes : List<StundenplanblockungRegelParameterTyp>) {
+	private constructor(name : string, ordinal : number, id : number, bezeichnung : string, paramTypes : List<StundenplanblockungRegelParameterTyp>) {
 		super();
 		this.__name = name;
 		this.__ordinal = ordinal;
@@ -120,7 +120,7 @@ export class StundenplanblockungRegelTyp extends JavaObject {
 	 * 
 	 * @return Liefert die Map. Falls diese leer ist, wird sie vorher gefüllt.
 	 */
-	private static getMap() : HashMap<Number, StundenplanblockungRegelTyp | null> {
+	private static getMap() : HashMap<number, StundenplanblockungRegelTyp | null> {
 		if (StundenplanblockungRegelTyp._map_id_regel.isEmpty()) 
 			for (let typ of StundenplanblockungRegelTyp.values()) 
 				if (StundenplanblockungRegelTyp._map_id_regel.put(typ.id, typ) !== null) 
@@ -144,7 +144,7 @@ export class StundenplanblockungRegelTyp extends JavaObject {
 	 * @param id   die ID des Regel-Typs
 	 * @return der Regel-Typ 
 	 */
-	public static fromTyp(id : Number | null) : StundenplanblockungRegelTyp {
+	public static fromTyp(id : number | null) : StundenplanblockungRegelTyp {
 		if (id === null) 
 			return StundenplanblockungRegelTyp.UNDEFINIERT;
 		let gostTyp : StundenplanblockungRegelTyp | null = StundenplanblockungRegelTyp.getMap().get(id);
@@ -184,7 +184,7 @@ export class StundenplanblockungRegelTyp extends JavaObject {
 	 */
 	public getParamType(i : number) : StundenplanblockungRegelParameterTyp {
 		if ((i < 0) || (i >= this.paramTypes.size())) 
-			throw new IllegalArgumentException("Ein Parameter mit dem Index i existiert nicht für den Regel-Typ " + this.name().valueOf())
+			throw new IllegalArgumentException("Ein Parameter mit dem Index i existiert nicht für den Regel-Typ " + this.name()!)
 		return this.paramTypes.get(i);
 	}
 
@@ -208,7 +208,7 @@ export class StundenplanblockungRegelTyp extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -226,7 +226,7 @@ export class StundenplanblockungRegelTyp extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -280,7 +280,7 @@ export class StundenplanblockungRegelTyp extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : StundenplanblockungRegelTyp | null {
+	public static valueOf(name : string) : StundenplanblockungRegelTyp | null {
 		let tmp : StundenplanblockungRegelTyp | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

@@ -8,7 +8,7 @@ import { Arrays, cast_java_util_Arrays } from '../../../java/util/Arrays';
 export class AllgemeinbildendOrganisationsformen extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -17,7 +17,7 @@ export class AllgemeinbildendOrganisationsformen extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<AllgemeinbildendOrganisationsformen> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, AllgemeinbildendOrganisationsformen> = new Map<String, AllgemeinbildendOrganisationsformen>();
+	private static readonly all_values_by_name : Map<string, AllgemeinbildendOrganisationsformen> = new Map<string, AllgemeinbildendOrganisationsformen>();
 
 	/**
 	 * Organisationsform: Nicht zuordbar (Früherziehung für Hör- und Sehgeschädigte, Ambulante Maßnahmen) 
@@ -62,7 +62,7 @@ export class AllgemeinbildendOrganisationsformen extends JavaObject {
 	/**
 	 * Eine Hashmap mit allen definierten Organisationsformen, zugeordnet zu ihren Kürzeln 
 	 */
-	private static readonly _mapKuerzel : HashMap<String, AllgemeinbildendOrganisationsformen> = new HashMap();
+	private static readonly _mapKuerzel : HashMap<string, AllgemeinbildendOrganisationsformen> = new HashMap();
 
 	/**
 	 * Erzeugt eine neue Organisationsform in der Aufzählung.
@@ -87,7 +87,7 @@ export class AllgemeinbildendOrganisationsformen extends JavaObject {
 	 *    
 	 * @return die Map von den Kürzeln auf die zugehörigen Organisationsformen
 	 */
-	private static getMapByKuerzel() : HashMap<String, AllgemeinbildendOrganisationsformen> {
+	private static getMapByKuerzel() : HashMap<string, AllgemeinbildendOrganisationsformen> {
 		if (AllgemeinbildendOrganisationsformen._mapKuerzel.size() === 0) {
 			for (let s of AllgemeinbildendOrganisationsformen.values()) {
 				if (s.daten !== null) 
@@ -104,7 +104,7 @@ export class AllgemeinbildendOrganisationsformen extends JavaObject {
 	 * 
 	 * @return die Organisationsform oder null, falls das Kürzel ungültig ist
 	 */
-	public static getByKuerzel(kuerzel : String | null) : AllgemeinbildendOrganisationsformen | null {
+	public static getByKuerzel(kuerzel : string | null) : AllgemeinbildendOrganisationsformen | null {
 		return AllgemeinbildendOrganisationsformen.getMapByKuerzel().get(kuerzel);
 	}
 
@@ -113,7 +113,7 @@ export class AllgemeinbildendOrganisationsformen extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -131,7 +131,7 @@ export class AllgemeinbildendOrganisationsformen extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -185,7 +185,7 @@ export class AllgemeinbildendOrganisationsformen extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : AllgemeinbildendOrganisationsformen | null {
+	public static valueOf(name : string) : AllgemeinbildendOrganisationsformen | null {
 		let tmp : AllgemeinbildendOrganisationsformen | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

@@ -6,7 +6,7 @@ export class SchemaListeEintrag extends JavaObject {
 	/**
 	 * Der Name des Schemas. 
 	 */
-	public name : String | null = null;
+	public name : string | null = null;
 
 	/**
 	 * Die Revisionsnummer des Schemas. 
@@ -30,7 +30,7 @@ export class SchemaListeEintrag extends JavaObject {
 	public static transpilerFromJSON(json : string): SchemaListeEintrag {
 		const obj = JSON.parse(json);
 		const result = new SchemaListeEintrag();
-		result.name = typeof obj.name === "undefined" ? null : obj.name === null ? null : String(obj.name);
+		result.name = typeof obj.name === "undefined" ? null : obj.name === null ? null : obj.name;
 		if (typeof obj.revision === "undefined")
 			 throw new Error('invalid json format, missing attribute revision');
 		result.revision = obj.revision;
@@ -42,7 +42,7 @@ export class SchemaListeEintrag extends JavaObject {
 
 	public static transpilerToJSON(obj : SchemaListeEintrag) : string {
 		let result = '{';
-		result += '"name" : ' + ((!obj.name) ? 'null' : '"' + obj.name.valueOf() + '"') + ',';
+		result += '"name" : ' + ((!obj.name) ? 'null' : '"' + obj.name + '"') + ',';
 		result += '"revision" : ' + obj.revision + ',';
 		result += '"isTainted" : ' + obj.isTainted + ',';
 		result = result.slice(0, -1);
@@ -53,7 +53,7 @@ export class SchemaListeEintrag extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<SchemaListeEintrag>) : string {
 		let result = '{';
 		if (typeof obj.name !== "undefined") {
-			result += '"name" : ' + ((!obj.name) ? 'null' : '"' + obj.name.valueOf() + '"') + ',';
+			result += '"name" : ' + ((!obj.name) ? 'null' : '"' + obj.name + '"') + ',';
 		}
 		if (typeof obj.revision !== "undefined") {
 			result += '"revision" : ' + obj.revision + ',';

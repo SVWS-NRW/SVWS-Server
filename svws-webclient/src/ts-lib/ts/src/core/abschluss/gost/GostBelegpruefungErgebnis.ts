@@ -19,7 +19,7 @@ export class GostBelegpruefungErgebnis extends JavaObject {
 	/**
 	 * Ein Log, der den Ablauf der Belegprüfung verdeutlicht 
 	 */
-	public log : List<String> = new Vector();
+	public log : List<string> = new Vector();
 
 
 	public constructor() {
@@ -43,7 +43,7 @@ export class GostBelegpruefungErgebnis extends JavaObject {
 		}
 		if (!!obj.log) {
 			for (let elem of obj.log) {
-				result.log?.add(String(elem));
+				result.log?.add(elem);
 			}
 		}
 		return result;

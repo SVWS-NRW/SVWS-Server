@@ -6,7 +6,7 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class BerufskollegBildungsgangTyp extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -15,7 +15,7 @@ export class BerufskollegBildungsgangTyp extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<BerufskollegBildungsgangTyp> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, BerufskollegBildungsgangTyp> = new Map<String, BerufskollegBildungsgangTyp>();
+	private static readonly all_values_by_name : Map<string, BerufskollegBildungsgangTyp> = new Map<string, BerufskollegBildungsgangTyp>();
 
 	/**
 	 * Berufsfachschulen 
@@ -60,7 +60,7 @@ export class BerufskollegBildungsgangTyp extends JavaObject {
 	/**
 	 * Eine Hashmap mit allen definierten Berufsschultypen von Bildungsgängen, zugeordnet zu ihren Kürzeln 
 	 */
-	private static readonly _ebenen : HashMap<String, BerufskollegBildungsgangTyp> = new HashMap();
+	private static readonly _ebenen : HashMap<string, BerufskollegBildungsgangTyp> = new HashMap();
 
 	/**
 	 * Erzeugt einen neuen Berufsschultyp von Bildungsgängen in der Aufzählung.
@@ -85,7 +85,7 @@ export class BerufskollegBildungsgangTyp extends JavaObject {
 	 *    
 	 * @return die Map von den Kürzeln der Typen auf die zugehörigen Berufsschultypen von Bildungsgängen
 	 */
-	private static getMapByKuerzel() : HashMap<String, BerufskollegBildungsgangTyp> {
+	private static getMapByKuerzel() : HashMap<string, BerufskollegBildungsgangTyp> {
 		if (BerufskollegBildungsgangTyp._ebenen.size() === 0) {
 			for (let s of BerufskollegBildungsgangTyp.values()) {
 				if (s.daten !== null) 
@@ -102,7 +102,7 @@ export class BerufskollegBildungsgangTyp extends JavaObject {
 	 * 
 	 * @return der Berufsschultyp von Bildungsgängen oder null, falls das Kürzel ungültig ist
 	 */
-	public static getByKuerzel(kuerzel : String | null) : BerufskollegBildungsgangTyp | null {
+	public static getByKuerzel(kuerzel : string | null) : BerufskollegBildungsgangTyp | null {
 		return BerufskollegBildungsgangTyp.getMapByKuerzel().get(kuerzel);
 	}
 
@@ -111,7 +111,7 @@ export class BerufskollegBildungsgangTyp extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -129,7 +129,7 @@ export class BerufskollegBildungsgangTyp extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -183,7 +183,7 @@ export class BerufskollegBildungsgangTyp extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : BerufskollegBildungsgangTyp | null {
+	public static valueOf(name : string) : BerufskollegBildungsgangTyp | null {
 		let tmp : BerufskollegBildungsgangTyp | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

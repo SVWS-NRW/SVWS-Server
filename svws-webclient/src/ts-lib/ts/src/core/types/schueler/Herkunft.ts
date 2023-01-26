@@ -10,7 +10,7 @@ import { HerkunftSonstige, cast_de_nrw_schule_svws_core_types_schueler_HerkunftS
 export class Herkunft extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -19,7 +19,7 @@ export class Herkunft extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<Herkunft> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, Herkunft> = new Map<String, Herkunft>();
+	private static readonly all_values_by_name : Map<string, Herkunft> = new Map<string, Herkunft>();
 
 	/**
 	 * Schulform: Berufskolleg 
@@ -389,7 +389,7 @@ export class Herkunft extends JavaObject {
 	/**
 	 * Eine Hashmap mit allen definierten Herkünften, zugeordnet zu ihren Kürzeln 
 	 */
-	private static readonly _kuerzel : HashMap<String, Herkunft | null> = new HashMap();
+	private static readonly _kuerzel : HashMap<string, Herkunft | null> = new HashMap();
 
 	/**
 	 * Erzeugt eine neue Herkunft in der Aufzählung anhand einer sonstigen Herkunft.
@@ -470,7 +470,7 @@ export class Herkunft extends JavaObject {
 	 *    
 	 * @return die Map von den Kürzeln auf die zugehörigen Herkünfte
 	 */
-	private static getMapByKuerzel() : HashMap<String, Herkunft | null> {
+	private static getMapByKuerzel() : HashMap<string, Herkunft | null> {
 		if (Herkunft._kuerzel.size() === 0) {
 			for (let h of Herkunft.values()) {
 				if (h.daten !== null) 
@@ -487,7 +487,7 @@ export class Herkunft extends JavaObject {
 	 * 
 	 * @return die Herkunft oder null, falls das Kürzel ungültig ist
 	 */
-	public static getByKuerzel(kuerzel : String | null) : Herkunft | null {
+	public static getByKuerzel(kuerzel : string | null) : Herkunft | null {
 		return Herkunft.getMapByKuerzel().get(kuerzel);
 	}
 
@@ -496,7 +496,7 @@ export class Herkunft extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -514,7 +514,7 @@ export class Herkunft extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -568,7 +568,7 @@ export class Herkunft extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : Herkunft | null {
+	public static valueOf(name : string) : Herkunft | null {
 		let tmp : Herkunft | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

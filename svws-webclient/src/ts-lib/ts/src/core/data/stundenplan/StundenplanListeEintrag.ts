@@ -11,7 +11,7 @@ export class StundenplanListeEintrag extends JavaObject {
 	/**
 	 * Die textuelle Beschreibung des Stundenplans. 
 	 */
-	public bezeichnung : String = "";
+	public bezeichnung : string = "";
 
 	/**
 	 * Die ID des Schuljahresabschnitts des Stundenplans. 
@@ -31,12 +31,12 @@ export class StundenplanListeEintrag extends JavaObject {
 	/**
 	 * Das Datum, ab dem der Stundenpland gültig ist. 
 	 */
-	public gueltigAb : String = "";
+	public gueltigAb : string = "";
 
 	/**
 	 * Das Datum, bis wann der Stundenplan gültig ist. 
 	 */
-	public gueltigBis : String = "";
+	public gueltigBis : string = "";
 
 
 	public constructor() {
@@ -55,7 +55,7 @@ export class StundenplanListeEintrag extends JavaObject {
 		result.id = obj.id;
 		if (typeof obj.bezeichnung === "undefined")
 			 throw new Error('invalid json format, missing attribute bezeichnung');
-		result.bezeichnung = String(obj.bezeichnung);
+		result.bezeichnung = obj.bezeichnung;
 		if (typeof obj.idSchuljahresabschnitt === "undefined")
 			 throw new Error('invalid json format, missing attribute idSchuljahresabschnitt');
 		result.idSchuljahresabschnitt = obj.idSchuljahresabschnitt;
@@ -67,22 +67,22 @@ export class StundenplanListeEintrag extends JavaObject {
 		result.abschnitt = obj.abschnitt;
 		if (typeof obj.gueltigAb === "undefined")
 			 throw new Error('invalid json format, missing attribute gueltigAb');
-		result.gueltigAb = String(obj.gueltigAb);
+		result.gueltigAb = obj.gueltigAb;
 		if (typeof obj.gueltigBis === "undefined")
 			 throw new Error('invalid json format, missing attribute gueltigBis');
-		result.gueltigBis = String(obj.gueltigBis);
+		result.gueltigBis = obj.gueltigBis;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : StundenplanListeEintrag) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"bezeichnung" : ' + '"' + obj.bezeichnung.valueOf() + '"' + ',';
+		result += '"bezeichnung" : ' + '"' + obj.bezeichnung! + '"' + ',';
 		result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt + ',';
 		result += '"schuljahr" : ' + obj.schuljahr + ',';
 		result += '"abschnitt" : ' + obj.abschnitt + ',';
-		result += '"gueltigAb" : ' + '"' + obj.gueltigAb.valueOf() + '"' + ',';
-		result += '"gueltigBis" : ' + '"' + obj.gueltigBis.valueOf() + '"' + ',';
+		result += '"gueltigAb" : ' + '"' + obj.gueltigAb! + '"' + ',';
+		result += '"gueltigBis" : ' + '"' + obj.gueltigBis! + '"' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -94,7 +94,7 @@ export class StundenplanListeEintrag extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.bezeichnung !== "undefined") {
-			result += '"bezeichnung" : ' + '"' + obj.bezeichnung.valueOf() + '"' + ',';
+			result += '"bezeichnung" : ' + '"' + obj.bezeichnung + '"' + ',';
 		}
 		if (typeof obj.idSchuljahresabschnitt !== "undefined") {
 			result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt + ',';
@@ -106,10 +106,10 @@ export class StundenplanListeEintrag extends JavaObject {
 			result += '"abschnitt" : ' + obj.abschnitt + ',';
 		}
 		if (typeof obj.gueltigAb !== "undefined") {
-			result += '"gueltigAb" : ' + '"' + obj.gueltigAb.valueOf() + '"' + ',';
+			result += '"gueltigAb" : ' + '"' + obj.gueltigAb + '"' + ',';
 		}
 		if (typeof obj.gueltigBis !== "undefined") {
-			result += '"gueltigBis" : ' + '"' + obj.gueltigBis.valueOf() + '"' + ',';
+			result += '"gueltigBis" : ' + '"' + obj.gueltigBis + '"' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

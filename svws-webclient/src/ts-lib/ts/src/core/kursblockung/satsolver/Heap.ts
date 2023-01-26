@@ -36,8 +36,8 @@ export class Heap extends JavaObject {
 		this._size = 0;
 	}
 
-	public toString() : String {
-		return "Heap: " + Arrays.toString(Arrays.copyOf(this._data, this._size)).valueOf();
+	public toString() : string {
+		return "Heap: " + Arrays.toString(Arrays.copyOf(this._data, this._size))!;
 	}
 
 	/**

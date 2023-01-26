@@ -9,37 +9,37 @@ export class SchildReportingDatenquelle extends JavaObject {
 	/**
 	 * Der Name der Datenquelle 
 	 */
-	public name : String = "";
+	public name : string = "";
 
 	/**
 	 * Die Beschreibung der Datenquelle 
 	 */
-	public beschreibung : String = "";
+	public beschreibung : string = "";
 
 	/**
 	 * Die Art der Daten, welche von der Datenquelle verwaltet werden 
 	 */
-	public datenart : String = "";
+	public datenart : string = "";
 
 	/**
 	 * Der Name der Master-Datenquelle 
 	 */
-	public master : String | null = null;
+	public master : string | null = null;
 
 	/**
 	 * Der Name des identifizierenden Attributs der Master-Datenquelle 
 	 */
-	public masterattribut : String | null = null;
+	public masterattribut : string | null = null;
 
 	/**
 	 * Der Typ des Attributs der Master-Datenquelle (z.B. die ID) 
 	 */
-	public mastertyp : String | null = null;
+	public mastertyp : string | null = null;
 
 	/**
 	 * Der Name des Attributs dieser Datenquelle, welches für die Verbindung zu der Master-Datenquelle genutzt wird 
 	 */
-	public linkattribut : String | null = null;
+	public linkattribut : string | null = null;
 
 	/**
 	 * Die Liste der JSON-Attribute für diese Datenquelle. 
@@ -60,17 +60,17 @@ export class SchildReportingDatenquelle extends JavaObject {
 		const result = new SchildReportingDatenquelle();
 		if (typeof obj.name === "undefined")
 			 throw new Error('invalid json format, missing attribute name');
-		result.name = String(obj.name);
+		result.name = obj.name;
 		if (typeof obj.beschreibung === "undefined")
 			 throw new Error('invalid json format, missing attribute beschreibung');
-		result.beschreibung = String(obj.beschreibung);
+		result.beschreibung = obj.beschreibung;
 		if (typeof obj.datenart === "undefined")
 			 throw new Error('invalid json format, missing attribute datenart');
-		result.datenart = String(obj.datenart);
-		result.master = typeof obj.master === "undefined" ? null : obj.master === null ? null : String(obj.master);
-		result.masterattribut = typeof obj.masterattribut === "undefined" ? null : obj.masterattribut === null ? null : String(obj.masterattribut);
-		result.mastertyp = typeof obj.mastertyp === "undefined" ? null : obj.mastertyp === null ? null : String(obj.mastertyp);
-		result.linkattribut = typeof obj.linkattribut === "undefined" ? null : obj.linkattribut === null ? null : String(obj.linkattribut);
+		result.datenart = obj.datenart;
+		result.master = typeof obj.master === "undefined" ? null : obj.master === null ? null : obj.master;
+		result.masterattribut = typeof obj.masterattribut === "undefined" ? null : obj.masterattribut === null ? null : obj.masterattribut;
+		result.mastertyp = typeof obj.mastertyp === "undefined" ? null : obj.mastertyp === null ? null : obj.mastertyp;
+		result.linkattribut = typeof obj.linkattribut === "undefined" ? null : obj.linkattribut === null ? null : obj.linkattribut;
 		if (!!obj.attribute) {
 			for (let elem of obj.attribute) {
 				result.attribute?.add(SchildReportingDatenquelleAttribut.transpilerFromJSON(JSON.stringify(elem)));
@@ -81,13 +81,13 @@ export class SchildReportingDatenquelle extends JavaObject {
 
 	public static transpilerToJSON(obj : SchildReportingDatenquelle) : string {
 		let result = '{';
-		result += '"name" : ' + '"' + obj.name.valueOf() + '"' + ',';
-		result += '"beschreibung" : ' + '"' + obj.beschreibung.valueOf() + '"' + ',';
-		result += '"datenart" : ' + '"' + obj.datenart.valueOf() + '"' + ',';
-		result += '"master" : ' + ((!obj.master) ? 'null' : '"' + obj.master.valueOf() + '"') + ',';
-		result += '"masterattribut" : ' + ((!obj.masterattribut) ? 'null' : '"' + obj.masterattribut.valueOf() + '"') + ',';
-		result += '"mastertyp" : ' + ((!obj.mastertyp) ? 'null' : '"' + obj.mastertyp.valueOf() + '"') + ',';
-		result += '"linkattribut" : ' + ((!obj.linkattribut) ? 'null' : '"' + obj.linkattribut.valueOf() + '"') + ',';
+		result += '"name" : ' + '"' + obj.name! + '"' + ',';
+		result += '"beschreibung" : ' + '"' + obj.beschreibung! + '"' + ',';
+		result += '"datenart" : ' + '"' + obj.datenart! + '"' + ',';
+		result += '"master" : ' + ((!obj.master) ? 'null' : '"' + obj.master + '"') + ',';
+		result += '"masterattribut" : ' + ((!obj.masterattribut) ? 'null' : '"' + obj.masterattribut + '"') + ',';
+		result += '"mastertyp" : ' + ((!obj.mastertyp) ? 'null' : '"' + obj.mastertyp + '"') + ',';
+		result += '"linkattribut" : ' + ((!obj.linkattribut) ? 'null' : '"' + obj.linkattribut + '"') + ',';
 		if (!obj.attribute) {
 			result += '"attribute" : []';
 		} else {
@@ -108,25 +108,25 @@ export class SchildReportingDatenquelle extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<SchildReportingDatenquelle>) : string {
 		let result = '{';
 		if (typeof obj.name !== "undefined") {
-			result += '"name" : ' + '"' + obj.name.valueOf() + '"' + ',';
+			result += '"name" : ' + '"' + obj.name + '"' + ',';
 		}
 		if (typeof obj.beschreibung !== "undefined") {
-			result += '"beschreibung" : ' + '"' + obj.beschreibung.valueOf() + '"' + ',';
+			result += '"beschreibung" : ' + '"' + obj.beschreibung + '"' + ',';
 		}
 		if (typeof obj.datenart !== "undefined") {
-			result += '"datenart" : ' + '"' + obj.datenart.valueOf() + '"' + ',';
+			result += '"datenart" : ' + '"' + obj.datenart + '"' + ',';
 		}
 		if (typeof obj.master !== "undefined") {
-			result += '"master" : ' + ((!obj.master) ? 'null' : '"' + obj.master.valueOf() + '"') + ',';
+			result += '"master" : ' + ((!obj.master) ? 'null' : '"' + obj.master + '"') + ',';
 		}
 		if (typeof obj.masterattribut !== "undefined") {
-			result += '"masterattribut" : ' + ((!obj.masterattribut) ? 'null' : '"' + obj.masterattribut.valueOf() + '"') + ',';
+			result += '"masterattribut" : ' + ((!obj.masterattribut) ? 'null' : '"' + obj.masterattribut + '"') + ',';
 		}
 		if (typeof obj.mastertyp !== "undefined") {
-			result += '"mastertyp" : ' + ((!obj.mastertyp) ? 'null' : '"' + obj.mastertyp.valueOf() + '"') + ',';
+			result += '"mastertyp" : ' + ((!obj.mastertyp) ? 'null' : '"' + obj.mastertyp + '"') + ',';
 		}
 		if (typeof obj.linkattribut !== "undefined") {
-			result += '"linkattribut" : ' + ((!obj.linkattribut) ? 'null' : '"' + obj.linkattribut.valueOf() + '"') + ',';
+			result += '"linkattribut" : ' + ((!obj.linkattribut) ? 'null' : '"' + obj.linkattribut + '"') + ',';
 		}
 		if (typeof obj.attribute !== "undefined") {
 			if (!obj.attribute) {

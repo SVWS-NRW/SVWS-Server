@@ -6,12 +6,12 @@ export class Telefonnummer extends JavaObject {
 	/**
 	 *  die Art der Telefonnummer
 	 */
-	public type : String = "";
+	public type : string = "";
 
 	/**
 	 *  die Telefon-, Fax- oder Pagernummer
 	 */
-	public number : String = "";
+	public number : string = "";
 
 
 	public constructor() {
@@ -27,17 +27,17 @@ export class Telefonnummer extends JavaObject {
 		const result = new Telefonnummer();
 		if (typeof obj.type === "undefined")
 			 throw new Error('invalid json format, missing attribute type');
-		result.type = String(obj.type);
+		result.type = obj.type;
 		if (typeof obj.number === "undefined")
 			 throw new Error('invalid json format, missing attribute number');
-		result.number = String(obj.number);
+		result.number = obj.number;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : Telefonnummer) : string {
 		let result = '{';
-		result += '"type" : ' + '"' + obj.type.valueOf() + '"' + ',';
-		result += '"number" : ' + '"' + obj.number.valueOf() + '"' + ',';
+		result += '"type" : ' + '"' + obj.type! + '"' + ',';
+		result += '"number" : ' + '"' + obj.number! + '"' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -46,10 +46,10 @@ export class Telefonnummer extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<Telefonnummer>) : string {
 		let result = '{';
 		if (typeof obj.type !== "undefined") {
-			result += '"type" : ' + '"' + obj.type.valueOf() + '"' + ',';
+			result += '"type" : ' + '"' + obj.type + '"' + ',';
 		}
 		if (typeof obj.number !== "undefined") {
-			result += '"number" : ' + '"' + obj.number.valueOf() + '"' + ',';
+			result += '"number" : ' + '"' + obj.number + '"' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

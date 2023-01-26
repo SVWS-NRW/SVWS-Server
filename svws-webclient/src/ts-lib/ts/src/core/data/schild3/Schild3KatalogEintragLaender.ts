@@ -7,27 +7,27 @@ export class Schild3KatalogEintragLaender extends JavaObject {
 	/**
 	 * Bundesländer/Nachbarländer Kurztext 
 	 */
-	public Kurztext : String | null = null;
+	public Kurztext : string | null = null;
 
 	/**
 	 * Bundesländer/Nachbarländer Langtext 
 	 */
-	public Langtext : String | null = null;
+	public Langtext : string | null = null;
 
 	/**
 	 * Bundesländer/Nachbarländer Sortierung 
 	 */
-	public Sortierung : Number | null = null;
+	public Sortierung : number | null = null;
 
 	/**
 	 * Gültig ab Schuljahr 
 	 */
-	public gueltigVon : Number | null = null;
+	public gueltigVon : number | null = null;
 
 	/**
 	 * Gültig bis Schuljahr 
 	 */
-	public gueltigBis : Number | null = null;
+	public gueltigBis : number | null = null;
 
 
 	public constructor() {
@@ -41,21 +41,21 @@ export class Schild3KatalogEintragLaender extends JavaObject {
 	public static transpilerFromJSON(json : string): Schild3KatalogEintragLaender {
 		const obj = JSON.parse(json);
 		const result = new Schild3KatalogEintragLaender();
-		result.Kurztext = typeof obj.Kurztext === "undefined" ? null : obj.Kurztext === null ? null : String(obj.Kurztext);
-		result.Langtext = typeof obj.Langtext === "undefined" ? null : obj.Langtext === null ? null : String(obj.Langtext);
-		result.Sortierung = typeof obj.Sortierung === "undefined" ? null : obj.Sortierung === null ? null : Number(obj.Sortierung);
-		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : Number(obj.gueltigVon);
-		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : Number(obj.gueltigBis);
+		result.Kurztext = typeof obj.Kurztext === "undefined" ? null : obj.Kurztext === null ? null : obj.Kurztext;
+		result.Langtext = typeof obj.Langtext === "undefined" ? null : obj.Langtext === null ? null : obj.Langtext;
+		result.Sortierung = typeof obj.Sortierung === "undefined" ? null : obj.Sortierung === null ? null : obj.Sortierung;
+		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
+		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : Schild3KatalogEintragLaender) : string {
 		let result = '{';
-		result += '"Kurztext" : ' + ((!obj.Kurztext) ? 'null' : '"' + obj.Kurztext.valueOf() + '"') + ',';
-		result += '"Langtext" : ' + ((!obj.Langtext) ? 'null' : '"' + obj.Langtext.valueOf() + '"') + ',';
-		result += '"Sortierung" : ' + ((!obj.Sortierung) ? 'null' : obj.Sortierung.valueOf()) + ',';
-		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.valueOf()) + ',';
-		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.valueOf()) + ',';
+		result += '"Kurztext" : ' + ((!obj.Kurztext) ? 'null' : '"' + obj.Kurztext + '"') + ',';
+		result += '"Langtext" : ' + ((!obj.Langtext) ? 'null' : '"' + obj.Langtext + '"') + ',';
+		result += '"Sortierung" : ' + ((!obj.Sortierung) ? 'null' : obj.Sortierung) + ',';
+		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
+		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -64,19 +64,19 @@ export class Schild3KatalogEintragLaender extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<Schild3KatalogEintragLaender>) : string {
 		let result = '{';
 		if (typeof obj.Kurztext !== "undefined") {
-			result += '"Kurztext" : ' + ((!obj.Kurztext) ? 'null' : '"' + obj.Kurztext.valueOf() + '"') + ',';
+			result += '"Kurztext" : ' + ((!obj.Kurztext) ? 'null' : '"' + obj.Kurztext + '"') + ',';
 		}
 		if (typeof obj.Langtext !== "undefined") {
-			result += '"Langtext" : ' + ((!obj.Langtext) ? 'null' : '"' + obj.Langtext.valueOf() + '"') + ',';
+			result += '"Langtext" : ' + ((!obj.Langtext) ? 'null' : '"' + obj.Langtext + '"') + ',';
 		}
 		if (typeof obj.Sortierung !== "undefined") {
-			result += '"Sortierung" : ' + ((!obj.Sortierung) ? 'null' : obj.Sortierung.valueOf()) + ',';
+			result += '"Sortierung" : ' + ((!obj.Sortierung) ? 'null' : obj.Sortierung) + ',';
 		}
 		if (typeof obj.gueltigVon !== "undefined") {
-			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.valueOf()) + ',';
+			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
 		}
 		if (typeof obj.gueltigBis !== "undefined") {
-			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.valueOf()) + ',';
+			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

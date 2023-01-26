@@ -7,7 +7,7 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class LehrerEinsatzstatus extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -16,7 +16,7 @@ export class LehrerEinsatzstatus extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<LehrerEinsatzstatus> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, LehrerEinsatzstatus> = new Map<String, LehrerEinsatzstatus>();
+	private static readonly all_values_by_name : Map<string, LehrerEinsatzstatus> = new Map<string, LehrerEinsatzstatus>();
 
 	/**
 	 * Einsatzstatus: 'Stammschule, ganz oder teilweise auch an anderen Schulen tätig' 
@@ -51,12 +51,12 @@ export class LehrerEinsatzstatus extends JavaObject {
 	/**
 	 * Eine Hashmap mit allen Einsatzstatus, welche ihrer ID zugeordnet sind. 
 	 */
-	private static readonly _statusByID : HashMap<Number, LehrerEinsatzstatus | null> = new HashMap();
+	private static readonly _statusByID : HashMap<number, LehrerEinsatzstatus | null> = new HashMap();
 
 	/**
 	 * Eine Hashmap mit allen Einsatzstatus, welche dem Kürzel bzw. ASD-Schlüssel zugeordnet sind. 
 	 */
-	private static readonly _statusByKuerzel : HashMap<String, LehrerEinsatzstatus | null> = new HashMap();
+	private static readonly _statusByKuerzel : HashMap<string, LehrerEinsatzstatus | null> = new HashMap();
 
 	/**
 	 * Erzeugt einen neuen Einsatzstatus in der Aufzählung.
@@ -79,7 +79,7 @@ export class LehrerEinsatzstatus extends JavaObject {
 	 *    
 	 * @return die Map von der ID des Einsatzstatus auf den zugehörigen Einsatzstatus
 	 */
-	private static getMapStatusByID() : HashMap<Number, LehrerEinsatzstatus | null> {
+	private static getMapStatusByID() : HashMap<number, LehrerEinsatzstatus | null> {
 		if (LehrerEinsatzstatus._statusByID.size() === 0) 
 			for (let g of LehrerEinsatzstatus.values()) 
 				LehrerEinsatzstatus._statusByID.put(g.daten.id, g);
@@ -92,7 +92,7 @@ export class LehrerEinsatzstatus extends JavaObject {
 	 *    
 	 * @return die Map von de Kürzel des Einsatzstatus auf den zugehörigen Einsatzstatus
 	 */
-	private static getMapStatusByKuerzel() : HashMap<String, LehrerEinsatzstatus | null> {
+	private static getMapStatusByKuerzel() : HashMap<string, LehrerEinsatzstatus | null> {
 		if (LehrerEinsatzstatus._statusByKuerzel.size() === 0) 
 			for (let g of LehrerEinsatzstatus.values()) 
 				LehrerEinsatzstatus._statusByKuerzel.put(g.daten.kuerzel, g);
@@ -117,7 +117,7 @@ export class LehrerEinsatzstatus extends JavaObject {
 	 * 
 	 * @return der Einsatzstatus oder null, falls das Kürzel ungültig ist
 	 */
-	public static getByKuerzel(kuerzel : String | null) : LehrerEinsatzstatus | null {
+	public static getByKuerzel(kuerzel : string | null) : LehrerEinsatzstatus | null {
 		return LehrerEinsatzstatus.getMapStatusByKuerzel().get(kuerzel);
 	}
 
@@ -126,7 +126,7 @@ export class LehrerEinsatzstatus extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -144,7 +144,7 @@ export class LehrerEinsatzstatus extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -198,7 +198,7 @@ export class LehrerEinsatzstatus extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : LehrerEinsatzstatus | null {
+	public static valueOf(name : string) : LehrerEinsatzstatus | null {
 		let tmp : LehrerEinsatzstatus | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

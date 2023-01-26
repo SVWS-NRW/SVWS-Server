@@ -7,12 +7,12 @@ export class Erzieherart extends JavaObject {
 	/**
 	 * ID der Erzieherart 
 	 */
-	public id : Number | null = null;
+	public id : number | null = null;
 
 	/**
 	 * Bezeichnung der Erzieherart 
 	 */
-	public bezeichnung : String | null = null;
+	public bezeichnung : string | null = null;
 
 
 	public constructor() {
@@ -26,15 +26,15 @@ export class Erzieherart extends JavaObject {
 	public static transpilerFromJSON(json : string): Erzieherart {
 		const obj = JSON.parse(json);
 		const result = new Erzieherart();
-		result.id = typeof obj.id === "undefined" ? null : obj.id === null ? null : Number(obj.id);
-		result.bezeichnung = typeof obj.bezeichnung === "undefined" ? null : obj.bezeichnung === null ? null : String(obj.bezeichnung);
+		result.id = typeof obj.id === "undefined" ? null : obj.id === null ? null : obj.id;
+		result.bezeichnung = typeof obj.bezeichnung === "undefined" ? null : obj.bezeichnung === null ? null : obj.bezeichnung;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : Erzieherart) : string {
 		let result = '{';
-		result += '"id" : ' + ((!obj.id) ? 'null' : obj.id.valueOf()) + ',';
-		result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : '"' + obj.bezeichnung.valueOf() + '"') + ',';
+		result += '"id" : ' + ((!obj.id) ? 'null' : obj.id) + ',';
+		result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : '"' + obj.bezeichnung + '"') + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -43,10 +43,10 @@ export class Erzieherart extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<Erzieherart>) : string {
 		let result = '{';
 		if (typeof obj.id !== "undefined") {
-			result += '"id" : ' + ((!obj.id) ? 'null' : obj.id.valueOf()) + ',';
+			result += '"id" : ' + ((!obj.id) ? 'null' : obj.id) + ',';
 		}
 		if (typeof obj.bezeichnung !== "undefined") {
-			result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : '"' + obj.bezeichnung.valueOf() + '"') + ',';
+			result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : '"' + obj.bezeichnung + '"') + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

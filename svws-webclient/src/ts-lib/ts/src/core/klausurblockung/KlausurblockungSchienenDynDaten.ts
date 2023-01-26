@@ -37,12 +37,12 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	/**
 	 * Mapping, um eine Sammlung von Long-Werten in laufende Integer-Werte umzuwandeln. 
 	 */
-	private readonly _mapKlausurZuNummer : HashMap<Number, Number> = new HashMap();
+	private readonly _mapKlausurZuNummer : HashMap<number, number> = new HashMap();
 
 	/**
 	 * Mapping, um eine Sammlung von Long-Werten in laufende Integer-Werte umzuwandeln. 
 	 */
-	private readonly _mapSchuelerZuNummer : HashMap<Number, Number> = new HashMap();
+	private readonly _mapSchuelerZuNummer : HashMap<number, number> = new HashMap();
 
 	/**
 	 * Die Anzahl der Klausuren. 
@@ -119,7 +119,7 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	 * 
 	 * @param fehlermeldung Die Fehlermeldung. 
 	 */
-	private fehler(fehlermeldung : String) : KlausurblockungException | null {
+	private fehler(fehlermeldung : string) : KlausurblockungException | null {
 		this._logger.logLn(LogLevel.ERROR, fehlermeldung);
 		return new KlausurblockungException(fehlermeldung);
 	}
@@ -128,12 +128,12 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 		for (let schueler of pInput.schueler) {
 			for (let klausurID1 of schueler.klausuren) {
 				for (let klausurID2 of schueler.klausuren) {
-					let klausurNr1 : Number | null = this._mapKlausurZuNummer.get(klausurID1);
-					let klausurNr2 : Number | null = this._mapKlausurZuNummer.get(klausurID2);
+					let klausurNr1 : number | null = this._mapKlausurZuNummer.get(klausurID1);
+					let klausurNr2 : number | null = this._mapKlausurZuNummer.get(klausurID2);
 					if (klausurNr1 === null) 
-						throw this.fehler("NULL-Wert beim Mapping von klausurID1 --> " + klausurID1.valueOf())
+						throw this.fehler("NULL-Wert beim Mapping von klausurID1 --> " + klausurID1!)
 					if (klausurNr2 === null) 
-						throw this.fehler("NULL-Wert beim Mapping von klausurID2 --> " + klausurID2.valueOf())
+						throw this.fehler("NULL-Wert beim Mapping von klausurID2 --> " + klausurID2!)
 					this._verboten[klausurNr1.valueOf()][klausurNr2.valueOf()] = true;
 				}
 			}
@@ -175,7 +175,7 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 		for (let schueler of pInput.schueler) 
 			for (let klausurID of schueler.klausuren) {
 				if (klausurID < 0) 
-					throw this.fehler("pInput.schueler.klausuren hat eine negative Klausur-ID=" + klausurID.valueOf() + "!")
+					throw this.fehler("pInput.schueler.klausuren hat eine negative Klausur-ID=" + klausurID! + "!")
 				if (this._mapKlausurZuNummer.containsKey(klausurID)) 
 					continue;
 				let klausurNummer : number = this._mapKlausurZuNummer.size();
@@ -205,8 +205,8 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 		out.datenbankID = this._datenbankID;
 		out.schienenAnzahl = this._schienenAnzahl;
 		for (let e of this._mapKlausurZuNummer.entrySet()) {
-			let klausurID : Number | null = e.getKey();
-			let klausurNr : Number | null = e.getValue();
+			let klausurID : number | null = e.getKey();
+			let klausurNr : number | null = e.getValue();
 			if (klausurID === null) 
 				throw this.fehler("gibErzeugeOutput(): NULL-Wert bei \'klausurID\'!")
 			if (klausurNr === null) 
@@ -456,7 +456,7 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	 * @return      eine freie Klausur, die nicht mit "nr1" benachbart ist, welche aber die meisten freien Nachbarn hat,
 	 *              die widerum mit "nr1" benachbart sind. 
 	 */
-	gibKlausurDieFreiIstUndNichtBenachbartZurMengeAberDerenNachbarnMaximalBenachbartSind(setS : LinkedCollection<Number>) : number {
+	gibKlausurDieFreiIstUndNichtBenachbartZurMengeAberDerenNachbarnMaximalBenachbartSind(setS : LinkedCollection<number>) : number {
 		let maxNachbarn : number = -1;
 		let maxNr : number = -1;
 		for (let nr2 of this.gibErzeugeKlausurenInZufaelligerReihenfolge()) {
@@ -473,7 +473,7 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 		return maxNr;
 	}
 
-	private gibAnzahlFreierNachbarnVonNr2DieMitDerMengeBenachbartSind(setS : LinkedCollection<Number>, nr2 : number) : number {
+	private gibAnzahlFreierNachbarnVonNr2DieMitDerMengeBenachbartSind(setS : LinkedCollection<number>, nr2 : number) : number {
 		let summe : number = 0;
 		for (let nr3 : number = 0; nr3 < this._klausurenAnzahl; nr3++)
 			if ((this._verboten[nr2][nr3]) && (this._klausurZuSchiene[nr3] < 0)) 
@@ -482,9 +482,9 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 		return summe;
 	}
 
-	private gibIstBenachbart(nr3 : number, setS : LinkedCollection<Number>) : boolean {
+	private gibIstBenachbart(nr3 : number, setS : LinkedCollection<number>) : boolean {
 		for (let nr4 of setS) 
-			if (this._verboten[nr3][nr4.valueOf()]) 
+			if (this._verboten[nr3][nr4!]) 
 				return true;
 		return false;
 	}
@@ -642,7 +642,7 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	 * 
 	 * @param header Überschrift der Debug-Ausgabe. 
 	 */
-	debug(header : String | null) : void {
+	debug(header : string | null) : void {
 		console.log();
 		console.log(JSON.stringify(header));
 		for (let s : number = 0; s < this._schienenAnzahl; s++){

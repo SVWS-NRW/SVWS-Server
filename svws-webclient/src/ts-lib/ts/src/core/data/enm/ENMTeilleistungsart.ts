@@ -13,17 +13,17 @@ export class ENMTeilleistungsart extends JavaObject {
 	/**
 	 * Die Bezeichnung der Teilleistungsart (z.B. Somi-1) 
 	 */
-	public bezeichnung : String | null = null;
+	public bezeichnung : string | null = null;
 
 	/**
 	 * Sortierung der Teilleistungsarten (z.B. 12) 
 	 */
-	public sortierung : Number | null = null;
+	public sortierung : number | null = null;
 
 	/**
 	 * Die Gewichtung der Teilleistungsart in Bezug auf die Leistungsdaten (z.B. 0,25) 
 	 */
-	public gewichtung : Number | null = null;
+	public gewichtung : number | null = null;
 
 
 	public constructor() {
@@ -40,18 +40,18 @@ export class ENMTeilleistungsart extends JavaObject {
 		if (typeof obj.id === "undefined")
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		result.bezeichnung = typeof obj.bezeichnung === "undefined" ? null : obj.bezeichnung === null ? null : String(obj.bezeichnung);
-		result.sortierung = typeof obj.sortierung === "undefined" ? null : obj.sortierung === null ? null : Number(obj.sortierung);
-		result.gewichtung = typeof obj.gewichtung === "undefined" ? null : obj.gewichtung === null ? null : Number(obj.gewichtung);
+		result.bezeichnung = typeof obj.bezeichnung === "undefined" ? null : obj.bezeichnung === null ? null : obj.bezeichnung;
+		result.sortierung = typeof obj.sortierung === "undefined" ? null : obj.sortierung === null ? null : obj.sortierung;
+		result.gewichtung = typeof obj.gewichtung === "undefined" ? null : obj.gewichtung === null ? null : obj.gewichtung;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : ENMTeilleistungsart) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : '"' + obj.bezeichnung.valueOf() + '"') + ',';
-		result += '"sortierung" : ' + ((!obj.sortierung) ? 'null' : obj.sortierung.valueOf()) + ',';
-		result += '"gewichtung" : ' + ((!obj.gewichtung) ? 'null' : obj.gewichtung.valueOf()) + ',';
+		result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : '"' + obj.bezeichnung + '"') + ',';
+		result += '"sortierung" : ' + ((!obj.sortierung) ? 'null' : obj.sortierung) + ',';
+		result += '"gewichtung" : ' + ((!obj.gewichtung) ? 'null' : obj.gewichtung) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -63,13 +63,13 @@ export class ENMTeilleistungsart extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.bezeichnung !== "undefined") {
-			result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : '"' + obj.bezeichnung.valueOf() + '"') + ',';
+			result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : '"' + obj.bezeichnung + '"') + ',';
 		}
 		if (typeof obj.sortierung !== "undefined") {
-			result += '"sortierung" : ' + ((!obj.sortierung) ? 'null' : obj.sortierung.valueOf()) + ',';
+			result += '"sortierung" : ' + ((!obj.sortierung) ? 'null' : obj.sortierung) + ',';
 		}
 		if (typeof obj.gewichtung !== "undefined") {
-			result += '"gewichtung" : ' + ((!obj.gewichtung) ? 'null' : obj.gewichtung.valueOf()) + ',';
+			result += '"gewichtung" : ' + ((!obj.gewichtung) ? 'null' : obj.gewichtung) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

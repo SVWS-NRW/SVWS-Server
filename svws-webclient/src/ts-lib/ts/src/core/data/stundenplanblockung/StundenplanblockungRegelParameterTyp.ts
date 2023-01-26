@@ -3,7 +3,7 @@ import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject
 export class StundenplanblockungRegelParameterTyp extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -12,7 +12,7 @@ export class StundenplanblockungRegelParameterTyp extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<StundenplanblockungRegelParameterTyp> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, StundenplanblockungRegelParameterTyp> = new Map<String, StundenplanblockungRegelParameterTyp>();
+	private static readonly all_values_by_name : Map<string, StundenplanblockungRegelParameterTyp> = new Map<string, StundenplanblockungRegelParameterTyp>();
 
 	/**
 	 * Der Parameter-Typ der Lehrkraft. 
@@ -67,7 +67,7 @@ export class StundenplanblockungRegelParameterTyp extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -85,7 +85,7 @@ export class StundenplanblockungRegelParameterTyp extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -139,7 +139,7 @@ export class StundenplanblockungRegelParameterTyp extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : StundenplanblockungRegelParameterTyp | null {
+	public static valueOf(name : string) : StundenplanblockungRegelParameterTyp | null {
 		let tmp : StundenplanblockungRegelParameterTyp | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

@@ -8,7 +8,7 @@ import { Arrays, cast_java_util_Arrays } from '../../../java/util/Arrays';
 export class HerkunftSchulform extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -17,7 +17,7 @@ export class HerkunftSchulform extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<HerkunftSchulform> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, HerkunftSchulform> = new Map<String, HerkunftSchulform>();
+	private static readonly all_values_by_name : Map<string, HerkunftSchulform> = new Map<string, HerkunftSchulform>();
 
 	/**
 	 * Berufskolleg 
@@ -102,7 +102,7 @@ export class HerkunftSchulform extends JavaObject {
 	/**
 	 * Eine Hashmap mit allen definierten Herkunftsschulformen, zugeordnet zu ihren Kürzeln 
 	 */
-	private static readonly _ebenen : HashMap<String, HerkunftSchulform | null> = new HashMap();
+	private static readonly _ebenen : HashMap<string, HerkunftSchulform | null> = new HashMap();
 
 	/**
 	 * Erzeugt eine neue Herkunftsschulform in der Aufzählung.
@@ -127,7 +127,7 @@ export class HerkunftSchulform extends JavaObject {
 	 *    
 	 * @return die Map von den Kürzeln auf die zugehörigen Herkunftsschulformen
 	 */
-	private static getMapByKuerzel() : HashMap<String, HerkunftSchulform | null> {
+	private static getMapByKuerzel() : HashMap<string, HerkunftSchulform | null> {
 		if (HerkunftSchulform._ebenen.size() === 0) {
 			for (let s of HerkunftSchulform.values()) {
 				if (s.daten !== null) 
@@ -144,7 +144,7 @@ export class HerkunftSchulform extends JavaObject {
 	 * 
 	 * @return die Herkunftsschulform oder null, falls das Kürzel ungültig ist
 	 */
-	public static getByKuerzel(kuerzel : String | null) : HerkunftSchulform | null {
+	public static getByKuerzel(kuerzel : string | null) : HerkunftSchulform | null {
 		return HerkunftSchulform.getMapByKuerzel().get(kuerzel);
 	}
 
@@ -153,7 +153,7 @@ export class HerkunftSchulform extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -171,7 +171,7 @@ export class HerkunftSchulform extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -225,7 +225,7 @@ export class HerkunftSchulform extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : HerkunftSchulform | null {
+	public static valueOf(name : string) : HerkunftSchulform | null {
 		let tmp : HerkunftSchulform | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

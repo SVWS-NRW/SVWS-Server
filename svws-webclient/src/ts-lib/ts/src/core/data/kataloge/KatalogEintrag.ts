@@ -11,12 +11,12 @@ export class KatalogEintrag extends JavaObject {
 	/**
 	 * Das Kürzel des Eintrags. 
 	 */
-	public kuerzel : String | null = null;
+	public kuerzel : string | null = null;
 
 	/**
 	 * Die textuelle Beschreibung des Katalog-Eintrags. 
 	 */
-	public text : String | null = null;
+	public text : string | null = null;
 
 	/**
 	 * Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht. 
@@ -43,8 +43,8 @@ export class KatalogEintrag extends JavaObject {
 		if (typeof obj.id === "undefined")
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		result.kuerzel = typeof obj.kuerzel === "undefined" ? null : obj.kuerzel === null ? null : String(obj.kuerzel);
-		result.text = typeof obj.text === "undefined" ? null : obj.text === null ? null : String(obj.text);
+		result.kuerzel = typeof obj.kuerzel === "undefined" ? null : obj.kuerzel === null ? null : obj.kuerzel;
+		result.text = typeof obj.text === "undefined" ? null : obj.text === null ? null : obj.text;
 		if (typeof obj.istSichtbar === "undefined")
 			 throw new Error('invalid json format, missing attribute istSichtbar');
 		result.istSichtbar = obj.istSichtbar;
@@ -57,8 +57,8 @@ export class KatalogEintrag extends JavaObject {
 	public static transpilerToJSON(obj : KatalogEintrag) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : '"' + obj.kuerzel.valueOf() + '"') + ',';
-		result += '"text" : ' + ((!obj.text) ? 'null' : '"' + obj.text.valueOf() + '"') + ',';
+		result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : '"' + obj.kuerzel + '"') + ',';
+		result += '"text" : ' + ((!obj.text) ? 'null' : '"' + obj.text + '"') + ',';
 		result += '"istSichtbar" : ' + obj.istSichtbar + ',';
 		result += '"istAenderbar" : ' + obj.istAenderbar + ',';
 		result = result.slice(0, -1);
@@ -72,10 +72,10 @@ export class KatalogEintrag extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.kuerzel !== "undefined") {
-			result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : '"' + obj.kuerzel.valueOf() + '"') + ',';
+			result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : '"' + obj.kuerzel + '"') + ',';
 		}
 		if (typeof obj.text !== "undefined") {
-			result += '"text" : ' + ((!obj.text) ? 'null' : '"' + obj.text.valueOf() + '"') + ',';
+			result += '"text" : ' + ((!obj.text) ? 'null' : '"' + obj.text + '"') + ',';
 		}
 		if (typeof obj.istSichtbar !== "undefined") {
 			result += '"istSichtbar" : ' + obj.istSichtbar + ',';

@@ -20,7 +20,7 @@ export class KlausurblockungSchienenAlgorithmusGreedy1b extends KlausurblockungS
 		super(pRandom, pLogger, pDynDaten);
 	}
 
-	public toString() : String {
+	public toString() : string {
 		return "Klausuren zufällig & Schienen nacheinander";
 	}
 

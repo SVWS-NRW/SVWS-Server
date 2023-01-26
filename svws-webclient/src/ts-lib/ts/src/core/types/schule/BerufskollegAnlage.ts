@@ -6,7 +6,7 @@ import { BerufskollegAnlageKatalogEintrag, cast_de_nrw_schule_svws_core_data_sch
 export class BerufskollegAnlage extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -15,7 +15,7 @@ export class BerufskollegAnlage extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<BerufskollegAnlage> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, BerufskollegAnlage> = new Map<String, BerufskollegAnlage>();
+	private static readonly all_values_by_name : Map<string, BerufskollegAnlage> = new Map<string, BerufskollegAnlage>();
 
 	/**
 	 * Anlage A: Fachklassen duales System und Ausbildungsvorbereitung 
@@ -75,7 +75,7 @@ export class BerufskollegAnlage extends JavaObject {
 	/**
 	 * Eine Hashmap mit allen definierten Anlagen, zugeordnet zu ihren Kürzeln
 	 */
-	private static readonly _anlagen : HashMap<String, BerufskollegAnlage> = new HashMap();
+	private static readonly _anlagen : HashMap<string, BerufskollegAnlage> = new HashMap();
 
 	/**
 	 * Erzeugt eine neue Anlage in der Aufzählung.
@@ -98,7 +98,7 @@ export class BerufskollegAnlage extends JavaObject {
 	 *    
 	 * @return die Map von den Kürzeln der Anlagen auf die zugehörigen Anlagen
 	 */
-	private static getMapAnlageByKuerzel() : HashMap<String, BerufskollegAnlage> {
+	private static getMapAnlageByKuerzel() : HashMap<string, BerufskollegAnlage> {
 		if (BerufskollegAnlage._anlagen.size() === 0) {
 			for (let s of BerufskollegAnlage.values()) {
 				if (s.daten !== null) 
@@ -115,7 +115,7 @@ export class BerufskollegAnlage extends JavaObject {
 	 * 
 	 * @return die Anlage oder null, falls das Kürzel ungültig ist
 	 */
-	public static getByKuerzel(kuerzel : String | null) : BerufskollegAnlage | null {
+	public static getByKuerzel(kuerzel : string | null) : BerufskollegAnlage | null {
 		return BerufskollegAnlage.getMapAnlageByKuerzel().get(kuerzel);
 	}
 
@@ -124,7 +124,7 @@ export class BerufskollegAnlage extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -142,7 +142,7 @@ export class BerufskollegAnlage extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -196,7 +196,7 @@ export class BerufskollegAnlage extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : BerufskollegAnlage | null {
+	public static valueOf(name : string) : BerufskollegAnlage | null {
 		let tmp : BerufskollegAnlage | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

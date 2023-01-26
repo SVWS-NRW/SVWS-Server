@@ -11,7 +11,7 @@ export class GostBlockungListeneintrag extends JavaObject {
 	/**
 	 * Der Name der Blockung 
 	 */
-	public name : String = "Neue Blockung";
+	public name : string = "Neue Blockung";
 
 	/**
 	 * Das Halbjahr, welchem die Kursblockung zugeordnet ist (0=EF.1, 1=EF.2, 2=Q1.1, 3=Q1.2, 4=Q2.1, 5=Q2.2) 
@@ -40,7 +40,7 @@ export class GostBlockungListeneintrag extends JavaObject {
 		result.id = obj.id;
 		if (typeof obj.name === "undefined")
 			 throw new Error('invalid json format, missing attribute name');
-		result.name = String(obj.name);
+		result.name = obj.name;
 		if (typeof obj.gostHalbjahr === "undefined")
 			 throw new Error('invalid json format, missing attribute gostHalbjahr');
 		result.gostHalbjahr = obj.gostHalbjahr;
@@ -53,7 +53,7 @@ export class GostBlockungListeneintrag extends JavaObject {
 	public static transpilerToJSON(obj : GostBlockungListeneintrag) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"name" : ' + '"' + obj.name.valueOf() + '"' + ',';
+		result += '"name" : ' + '"' + obj.name! + '"' + ',';
 		result += '"gostHalbjahr" : ' + obj.gostHalbjahr + ',';
 		result += '"istAktiv" : ' + obj.istAktiv + ',';
 		result = result.slice(0, -1);
@@ -67,7 +67,7 @@ export class GostBlockungListeneintrag extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.name !== "undefined") {
-			result += '"name" : ' + '"' + obj.name.valueOf() + '"' + ',';
+			result += '"name" : ' + '"' + obj.name + '"' + ',';
 		}
 		if (typeof obj.gostHalbjahr !== "undefined") {
 			result += '"gostHalbjahr" : ' + obj.gostHalbjahr + ',';

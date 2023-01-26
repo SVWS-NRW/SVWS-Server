@@ -2,7 +2,7 @@ import { JavaObject } from './JavaObject';
 
 export class JavaBoolean extends JavaObject {
 
-    public static parseBoolean(s : String) : boolean {
+    public static parseBoolean(s : string | null) : boolean {
         return (s === null) ? false : s.localeCompare("true", undefined, { sensitivity: 'accent' }) === 0;
     }
 
@@ -18,6 +18,6 @@ export class JavaBoolean extends JavaObject {
 }
 
 
-export function cast_java_lang_Boolean(obj : unknown) : Boolean {
-	return obj as Boolean;
+export function cast_java_lang_Boolean(obj : unknown) : boolean {
+	return obj as boolean;
 }

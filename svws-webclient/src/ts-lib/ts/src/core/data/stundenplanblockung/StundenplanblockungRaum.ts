@@ -11,7 +11,7 @@ export class StundenplanblockungRaum extends JavaObject {
 	/**
 	 * Das Kürzel des Raumes. Beispielsweise 'E21'. 
 	 */
-	public kuerzel : String = "";
+	public kuerzel : string = "";
 
 
 	public constructor() {
@@ -30,14 +30,14 @@ export class StundenplanblockungRaum extends JavaObject {
 		result.id = obj.id;
 		if (typeof obj.kuerzel === "undefined")
 			 throw new Error('invalid json format, missing attribute kuerzel');
-		result.kuerzel = String(obj.kuerzel);
+		result.kuerzel = obj.kuerzel;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : StundenplanblockungRaum) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"kuerzel" : ' + '"' + obj.kuerzel.valueOf() + '"' + ',';
+		result += '"kuerzel" : ' + '"' + obj.kuerzel! + '"' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -49,7 +49,7 @@ export class StundenplanblockungRaum extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.kuerzel !== "undefined") {
-			result += '"kuerzel" : ' + '"' + obj.kuerzel.valueOf() + '"' + ',';
+			result += '"kuerzel" : ' + '"' + obj.kuerzel + '"' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

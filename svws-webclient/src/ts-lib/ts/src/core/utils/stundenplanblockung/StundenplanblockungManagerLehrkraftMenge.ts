@@ -11,7 +11,7 @@ export class StundenplanblockungManagerLehrkraftMenge extends JavaObject {
 
 	private readonly _menge : Vector<StundenplanblockungManagerLehrkraft>;
 
-	private readonly _map : HashMap<Number, StundenplanblockungManagerLehrkraft>;
+	private readonly _map : HashMap<number, StundenplanblockungManagerLehrkraft>;
 
 
 	/**
@@ -31,7 +31,7 @@ export class StundenplanblockungManagerLehrkraftMenge extends JavaObject {
 	 * @param pKuerzel               Das Kürzel der Lehrkraft.
 	 * @throws NullPointerException  Falls die Lehrkraft-ID bereits existiert.
 	 */
-	public addOrException(pLehrkraftID : number, pKuerzel : String) : void {
+	public addOrException(pLehrkraftID : number, pKuerzel : string) : void {
 		if (this._map.containsKey(pLehrkraftID) === true) 
 			throw new NullPointerException("Die Lehrkraft-ID " + pLehrkraftID + " existiert bereits!")
 		let le : StundenplanblockungManagerLehrkraft | null = new StundenplanblockungManagerLehrkraft(pLehrkraftID, pKuerzel);

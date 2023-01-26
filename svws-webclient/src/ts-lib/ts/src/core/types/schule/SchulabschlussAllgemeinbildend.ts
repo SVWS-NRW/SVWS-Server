@@ -7,7 +7,7 @@ import { IllegalArgumentException, cast_java_lang_IllegalArgumentException } fro
 export class SchulabschlussAllgemeinbildend extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -16,7 +16,7 @@ export class SchulabschlussAllgemeinbildend extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<SchulabschlussAllgemeinbildend> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, SchulabschlussAllgemeinbildend> = new Map<String, SchulabschlussAllgemeinbildend>();
+	private static readonly all_values_by_name : Map<string, SchulabschlussAllgemeinbildend> = new Map<string, SchulabschlussAllgemeinbildend>();
 
 	/**
 	 * Es liegt kein Abschluss vor 
@@ -126,12 +126,12 @@ export class SchulabschlussAllgemeinbildend extends JavaObject {
 	/**
 	 * Eine HashMap mit den Abschlussarten, welche ihren Kürzeln zugeordnet werden 
 	 */
-	private static readonly _mapByKuerzel : HashMap<String, SchulabschlussAllgemeinbildend> = new HashMap();
+	private static readonly _mapByKuerzel : HashMap<string, SchulabschlussAllgemeinbildend> = new HashMap();
 
 	/**
 	 * Eine HashMap mit den Abschlussarten, welche ihren Statistik-Kürzeln zugeordnet werden 
 	 */
-	private static readonly _mapByKuerzelStatistik : HashMap<String, SchulabschlussAllgemeinbildend> = new HashMap();
+	private static readonly _mapByKuerzelStatistik : HashMap<string, SchulabschlussAllgemeinbildend> = new HashMap();
 
 	/**
 	 * Erzeugt eine neue Abschlussart in der Aufzählung.
@@ -154,7 +154,7 @@ export class SchulabschlussAllgemeinbildend extends JavaObject {
 	 *    
 	 * @return die Map von den Kürzeln der Abschlussarten auf die zugehörigen Abschlussarten
 	 */
-	private static getMapByKuerzel() : HashMap<String, SchulabschlussAllgemeinbildend> {
+	private static getMapByKuerzel() : HashMap<string, SchulabschlussAllgemeinbildend> {
 		if (SchulabschlussAllgemeinbildend._mapByKuerzel.size() === 0) {
 			for (let s of SchulabschlussAllgemeinbildend.values()) {
 				if (s.daten !== null) 
@@ -171,7 +171,7 @@ export class SchulabschlussAllgemeinbildend extends JavaObject {
 	 * 
 	 * @return die Abschlussart oder null, falls das Kürzel ungültig ist
 	 */
-	public static getByKuerzel(kuerzel : String | null) : SchulabschlussAllgemeinbildend | null {
+	public static getByKuerzel(kuerzel : string | null) : SchulabschlussAllgemeinbildend | null {
 		return SchulabschlussAllgemeinbildend.getMapByKuerzel().get(kuerzel);
 	}
 
@@ -181,7 +181,7 @@ export class SchulabschlussAllgemeinbildend extends JavaObject {
 	 *    
 	 * @return die Map von den Statistik-Kürzeln der Abschlussarten auf die zugehörigen Abschlussarten
 	 */
-	private static getMapByKuerzelStatistik() : HashMap<String, SchulabschlussAllgemeinbildend> {
+	private static getMapByKuerzelStatistik() : HashMap<string, SchulabschlussAllgemeinbildend> {
 		if (SchulabschlussAllgemeinbildend._mapByKuerzelStatistik.size() === 0) {
 			for (let s of SchulabschlussAllgemeinbildend.values()) {
 				if (s.daten !== null) 
@@ -198,7 +198,7 @@ export class SchulabschlussAllgemeinbildend extends JavaObject {
 	 * 
 	 * @return die Abschlussart oder null, falls das Statistik-Kürzel ungültig ist
 	 */
-	public static getByKuerzelStatistik(kuerzel : String | null) : SchulabschlussAllgemeinbildend | null {
+	public static getByKuerzelStatistik(kuerzel : string | null) : SchulabschlussAllgemeinbildend | null {
 		return SchulabschlussAllgemeinbildend.getMapByKuerzelStatistik().get(kuerzel);
 	}
 
@@ -210,7 +210,7 @@ export class SchulabschlussAllgemeinbildend extends JavaObject {
 	 * 
 	 * @return true, falls beide Abschlüsse übereinstimmen und ansonsten false
 	 */
-	public is(str : String | null) : boolean {
+	public is(str : string | null) : boolean {
 		if (str === null) 
 			return false;
 		try {
@@ -226,7 +226,7 @@ export class SchulabschlussAllgemeinbildend extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -244,7 +244,7 @@ export class SchulabschlussAllgemeinbildend extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -298,7 +298,7 @@ export class SchulabschlussAllgemeinbildend extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : SchulabschlussAllgemeinbildend | null {
+	public static valueOf(name : string) : SchulabschlussAllgemeinbildend | null {
 		let tmp : SchulabschlussAllgemeinbildend | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

@@ -25,7 +25,7 @@ export class SchuelerblockungInput extends JavaObject {
 	/**
 	 * Zu jeder Fachwahl eine textuelle Darstellung. 
 	 */
-	public fachwahlenText : Vector<String> = new Vector();
+	public fachwahlenText : Vector<string> = new Vector();
 
 
 	public constructor() {
@@ -54,7 +54,7 @@ export class SchuelerblockungInput extends JavaObject {
 		}
 		if (!!obj.fachwahlenText) {
 			for (let elem of obj.fachwahlenText) {
-				result.fachwahlenText?.add(String(elem));
+				result.fachwahlenText?.add(elem);
 			}
 		}
 		return result;

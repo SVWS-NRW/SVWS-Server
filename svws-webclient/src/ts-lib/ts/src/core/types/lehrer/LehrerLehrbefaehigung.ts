@@ -7,7 +7,7 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class LehrerLehrbefaehigung extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -16,7 +16,7 @@ export class LehrerLehrbefaehigung extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<LehrerLehrbefaehigung> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, LehrerLehrbefaehigung> = new Map<String, LehrerLehrbefaehigung>();
+	private static readonly all_values_by_name : Map<string, LehrerLehrbefaehigung> = new Map<string, LehrerLehrbefaehigung>();
 
 	/**
 	 * Lehrbefähigung 'Arbeitslehre / Schwerpunkt Haushaltslehre' 
@@ -586,12 +586,12 @@ export class LehrerLehrbefaehigung extends JavaObject {
 	/**
 	 * Eine Hashmap mit allen Lehrbefähigungen, welche ihrer ID zugeordnet sind. 
 	 */
-	private static readonly _lehrbefaehigungenByID : HashMap<Number, LehrerLehrbefaehigung | null> = new HashMap();
+	private static readonly _lehrbefaehigungenByID : HashMap<number, LehrerLehrbefaehigung | null> = new HashMap();
 
 	/**
 	 * Eine Hashmap mit allen Lehrbefähigungen, welche dem Kürzel bzw. ASD-Schlüssel zugeordnet sind. 
 	 */
-	private static readonly _lehrbefaehigungenByKuerzel : HashMap<String, LehrerLehrbefaehigung | null> = new HashMap();
+	private static readonly _lehrbefaehigungenByKuerzel : HashMap<string, LehrerLehrbefaehigung | null> = new HashMap();
 
 	/**
 	 * Erzeugt eine neue Lehrbefähigung in der Aufzählung.
@@ -614,7 +614,7 @@ export class LehrerLehrbefaehigung extends JavaObject {
 	 *    
 	 * @return die Map von den IDs der Lehrbefähigungen auf die zugehörigen Lehrbefähigungen
 	 */
-	private static getMapLehrbefaehigungByID() : HashMap<Number, LehrerLehrbefaehigung | null> {
+	private static getMapLehrbefaehigungByID() : HashMap<number, LehrerLehrbefaehigung | null> {
 		if (LehrerLehrbefaehigung._lehrbefaehigungenByID.size() === 0) 
 			for (let l of LehrerLehrbefaehigung.values()) 
 				LehrerLehrbefaehigung._lehrbefaehigungenByID.put(l.daten.id, l);
@@ -627,7 +627,7 @@ export class LehrerLehrbefaehigung extends JavaObject {
 	 *    
 	 * @return die Map von den Kürzeln der Lehrbefähigungen auf die zugehörigen Lehrbefähigungen
 	 */
-	private static getMapLehrbefaehigungByKuerzel() : HashMap<String, LehrerLehrbefaehigung | null> {
+	private static getMapLehrbefaehigungByKuerzel() : HashMap<string, LehrerLehrbefaehigung | null> {
 		if (LehrerLehrbefaehigung._lehrbefaehigungenByKuerzel.size() === 0) 
 			for (let l of LehrerLehrbefaehigung.values()) 
 				LehrerLehrbefaehigung._lehrbefaehigungenByKuerzel.put(l.daten.kuerzel, l);
@@ -652,7 +652,7 @@ export class LehrerLehrbefaehigung extends JavaObject {
 	 * 
 	 * @return die Lehrbefähigung oder null, falls das Kürzel ungültig ist
 	 */
-	public static getByKuerzel(kuerzel : String | null) : LehrerLehrbefaehigung | null {
+	public static getByKuerzel(kuerzel : string | null) : LehrerLehrbefaehigung | null {
 		return LehrerLehrbefaehigung.getMapLehrbefaehigungByKuerzel().get(kuerzel);
 	}
 
@@ -661,7 +661,7 @@ export class LehrerLehrbefaehigung extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -679,7 +679,7 @@ export class LehrerLehrbefaehigung extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -733,7 +733,7 @@ export class LehrerLehrbefaehigung extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : LehrerLehrbefaehigung | null {
+	public static valueOf(name : string) : LehrerLehrbefaehigung | null {
 		let tmp : LehrerLehrbefaehigung | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

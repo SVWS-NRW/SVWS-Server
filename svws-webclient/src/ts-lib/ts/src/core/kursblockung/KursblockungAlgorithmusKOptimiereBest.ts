@@ -28,7 +28,7 @@ export class KursblockungAlgorithmusKOptimiereBest extends KursblockungAlgorithm
 		this.algoS = new KursblockungAlgorithmusSSchnellW(pRandom, pLogger, pDynDat);
 	}
 
-	public toString() : String {
+	public toString() : string {
 		return "OptimiereBest";
 	}
 

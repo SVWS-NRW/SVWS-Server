@@ -6,7 +6,7 @@ import { JavaString, cast_java_lang_String } from '../../../java/lang/JavaString
 export class Nationalitaeten extends JavaObject {
 
 	/** the name of the enumeration value */
-	private readonly __name : String;
+	private readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
 	private readonly __ordinal : number;
@@ -15,7 +15,7 @@ export class Nationalitaeten extends JavaObject {
 	private static readonly all_values_by_ordinal : Array<Nationalitaeten> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<String, Nationalitaeten> = new Map<String, Nationalitaeten>();
+	private static readonly all_values_by_name : Map<string, Nationalitaeten> = new Map<string, Nationalitaeten>();
 
 	/**
 	 * Staatenlos (XXA) - benutzerdefinierter ISO-Code 
@@ -1070,17 +1070,17 @@ export class Nationalitaeten extends JavaObject {
 	/**
 	 * Eine Hashmap mit allen definierten Nationalitäten, zugeordnet zu dem dreistelligen ISO-Code 
 	 */
-	private static readonly _mapISO3 : HashMap<String, Nationalitaeten> = new HashMap();
+	private static readonly _mapISO3 : HashMap<string, Nationalitaeten> = new HashMap();
 
 	/**
 	 * Eine Hashmap mit allen definierten Nationalitäten, zugeordnet zu dem zweistelligen ISO-Code 
 	 */
-	private static readonly _mapISO2 : HashMap<String, Nationalitaeten> = new HashMap();
+	private static readonly _mapISO2 : HashMap<string, Nationalitaeten> = new HashMap();
 
 	/**
 	 * Eine Hashmap mit allen definierten Nationalitäten, zugeordnet zu DESTATIS-Code 
 	 */
-	private static readonly _mapDESTATIS : HashMap<String, Nationalitaeten> = new HashMap();
+	private static readonly _mapDESTATIS : HashMap<string, Nationalitaeten> = new HashMap();
 
 	/**
 	 * Erzeugt eine neue Nationalität in der Aufzählung.
@@ -1103,7 +1103,7 @@ export class Nationalitaeten extends JavaObject {
 	 *    
 	 * @return die Map von den Kürzeln der Nationalitäten auf die zugehörigen Nationalitäten
 	 */
-	private static getMapISO3() : HashMap<String, Nationalitaeten> {
+	private static getMapISO3() : HashMap<string, Nationalitaeten> {
 		if (Nationalitaeten._mapISO3.size() === 0) {
 			for (let s of Nationalitaeten.values()) {
 				if (s.daten !== null) 
@@ -1119,7 +1119,7 @@ export class Nationalitaeten extends JavaObject {
 	 *    
 	 * @return die Map von den Kürzeln der Nationalitäten auf die zugehörigen Nationalitäten
 	 */
-	private static getMapISO2() : HashMap<String, Nationalitaeten> {
+	private static getMapISO2() : HashMap<string, Nationalitaeten> {
 		if (Nationalitaeten._mapISO2.size() === 0) {
 			for (let s of Nationalitaeten.values()) {
 				if (s.daten !== null) 
@@ -1135,7 +1135,7 @@ export class Nationalitaeten extends JavaObject {
 	 *    
 	 * @return die Map von den Kürzeln der Nationalitäten auf die zugehörigen Nationalitäten
 	 */
-	private static getMapDESTATIS() : HashMap<String, Nationalitaeten> {
+	private static getMapDESTATIS() : HashMap<string, Nationalitaeten> {
 		if (Nationalitaeten._mapDESTATIS.size() === 0) {
 			for (let s of Nationalitaeten.values()) {
 				if (s.daten !== null) 
@@ -1152,7 +1152,7 @@ export class Nationalitaeten extends JavaObject {
 	 * 
 	 * @return die Nationalität oder null, falls der Code unbekannt ist
 	 */
-	public static getByISO3(code : String | null) : Nationalitaeten | null {
+	public static getByISO3(code : string | null) : Nationalitaeten | null {
 		return Nationalitaeten.getMapISO3().get(code);
 	}
 
@@ -1163,7 +1163,7 @@ export class Nationalitaeten extends JavaObject {
 	 * 
 	 * @return die Nationalität oder null, falls der Code unbekannt ist
 	 */
-	public static getByISO2(code : String | null) : Nationalitaeten | null {
+	public static getByISO2(code : string | null) : Nationalitaeten | null {
 		return Nationalitaeten.getMapISO2().get(code);
 	}
 
@@ -1174,7 +1174,7 @@ export class Nationalitaeten extends JavaObject {
 	 * 
 	 * @return die Nationalität oder null, falls der Code unbekannt ist
 	 */
-	public static getByDESTATIS(code : String | null) : Nationalitaeten | null {
+	public static getByDESTATIS(code : string | null) : Nationalitaeten | null {
 		return Nationalitaeten.getMapDESTATIS().get(code);
 	}
 
@@ -1183,7 +1183,7 @@ export class Nationalitaeten extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : String {
+	private name() : string {
 		return this.__name;
 	}
 
@@ -1201,7 +1201,7 @@ export class Nationalitaeten extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	public toString() : String {
+	public toString() : string {
 		return this.__name;
 	}
 
@@ -1255,7 +1255,7 @@ export class Nationalitaeten extends JavaObject {
 	 *
 	 * @returns the enumeration values or null
 	 */
-	public static valueOf(name : String) : Nationalitaeten | null {
+	public static valueOf(name : string) : Nationalitaeten | null {
 		let tmp : Nationalitaeten | undefined = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}

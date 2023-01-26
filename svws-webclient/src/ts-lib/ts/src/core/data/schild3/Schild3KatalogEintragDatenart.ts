@@ -7,32 +7,32 @@ export class Schild3KatalogEintragDatenart extends JavaObject {
 	/**
 	 * Kürzel der Datenart 
 	 */
-	public DatenartKrz : String | null = null;
+	public DatenartKrz : string | null = null;
 
 	/**
 	 * Datenart  
 	 */
-	public Datenart : String | null = null;
+	public Datenart : string | null = null;
 
 	/**
 	 * Name der Tabelle 
 	 */
-	public Tabellenname : String | null = null;
+	public Tabellenname : string | null = null;
 
 	/**
 	 * Reihenfolge 
 	 */
-	public Reihenfolge : Number | null = null;
+	public Reihenfolge : number | null = null;
 
 	/**
 	 * Gültig ab Schuljahr 
 	 */
-	public gueltigVon : Number | null = null;
+	public gueltigVon : number | null = null;
 
 	/**
 	 * Gültig bis Schuljahr 
 	 */
-	public gueltigBis : Number | null = null;
+	public gueltigBis : number | null = null;
 
 
 	public constructor() {
@@ -46,23 +46,23 @@ export class Schild3KatalogEintragDatenart extends JavaObject {
 	public static transpilerFromJSON(json : string): Schild3KatalogEintragDatenart {
 		const obj = JSON.parse(json);
 		const result = new Schild3KatalogEintragDatenart();
-		result.DatenartKrz = typeof obj.DatenartKrz === "undefined" ? null : obj.DatenartKrz === null ? null : String(obj.DatenartKrz);
-		result.Datenart = typeof obj.Datenart === "undefined" ? null : obj.Datenart === null ? null : String(obj.Datenart);
-		result.Tabellenname = typeof obj.Tabellenname === "undefined" ? null : obj.Tabellenname === null ? null : String(obj.Tabellenname);
-		result.Reihenfolge = typeof obj.Reihenfolge === "undefined" ? null : obj.Reihenfolge === null ? null : Number(obj.Reihenfolge);
-		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : Number(obj.gueltigVon);
-		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : Number(obj.gueltigBis);
+		result.DatenartKrz = typeof obj.DatenartKrz === "undefined" ? null : obj.DatenartKrz === null ? null : obj.DatenartKrz;
+		result.Datenart = typeof obj.Datenart === "undefined" ? null : obj.Datenart === null ? null : obj.Datenart;
+		result.Tabellenname = typeof obj.Tabellenname === "undefined" ? null : obj.Tabellenname === null ? null : obj.Tabellenname;
+		result.Reihenfolge = typeof obj.Reihenfolge === "undefined" ? null : obj.Reihenfolge === null ? null : obj.Reihenfolge;
+		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
+		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : Schild3KatalogEintragDatenart) : string {
 		let result = '{';
-		result += '"DatenartKrz" : ' + ((!obj.DatenartKrz) ? 'null' : '"' + obj.DatenartKrz.valueOf() + '"') + ',';
-		result += '"Datenart" : ' + ((!obj.Datenart) ? 'null' : '"' + obj.Datenart.valueOf() + '"') + ',';
-		result += '"Tabellenname" : ' + ((!obj.Tabellenname) ? 'null' : '"' + obj.Tabellenname.valueOf() + '"') + ',';
-		result += '"Reihenfolge" : ' + ((!obj.Reihenfolge) ? 'null' : obj.Reihenfolge.valueOf()) + ',';
-		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.valueOf()) + ',';
-		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.valueOf()) + ',';
+		result += '"DatenartKrz" : ' + ((!obj.DatenartKrz) ? 'null' : '"' + obj.DatenartKrz + '"') + ',';
+		result += '"Datenart" : ' + ((!obj.Datenart) ? 'null' : '"' + obj.Datenart + '"') + ',';
+		result += '"Tabellenname" : ' + ((!obj.Tabellenname) ? 'null' : '"' + obj.Tabellenname + '"') + ',';
+		result += '"Reihenfolge" : ' + ((!obj.Reihenfolge) ? 'null' : obj.Reihenfolge) + ',';
+		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
+		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -71,22 +71,22 @@ export class Schild3KatalogEintragDatenart extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<Schild3KatalogEintragDatenart>) : string {
 		let result = '{';
 		if (typeof obj.DatenartKrz !== "undefined") {
-			result += '"DatenartKrz" : ' + ((!obj.DatenartKrz) ? 'null' : '"' + obj.DatenartKrz.valueOf() + '"') + ',';
+			result += '"DatenartKrz" : ' + ((!obj.DatenartKrz) ? 'null' : '"' + obj.DatenartKrz + '"') + ',';
 		}
 		if (typeof obj.Datenart !== "undefined") {
-			result += '"Datenart" : ' + ((!obj.Datenart) ? 'null' : '"' + obj.Datenart.valueOf() + '"') + ',';
+			result += '"Datenart" : ' + ((!obj.Datenart) ? 'null' : '"' + obj.Datenart + '"') + ',';
 		}
 		if (typeof obj.Tabellenname !== "undefined") {
-			result += '"Tabellenname" : ' + ((!obj.Tabellenname) ? 'null' : '"' + obj.Tabellenname.valueOf() + '"') + ',';
+			result += '"Tabellenname" : ' + ((!obj.Tabellenname) ? 'null' : '"' + obj.Tabellenname + '"') + ',';
 		}
 		if (typeof obj.Reihenfolge !== "undefined") {
-			result += '"Reihenfolge" : ' + ((!obj.Reihenfolge) ? 'null' : obj.Reihenfolge.valueOf()) + ',';
+			result += '"Reihenfolge" : ' + ((!obj.Reihenfolge) ? 'null' : obj.Reihenfolge) + ',';
 		}
 		if (typeof obj.gueltigVon !== "undefined") {
-			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.valueOf()) + ',';
+			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
 		}
 		if (typeof obj.gueltigBis !== "undefined") {
-			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.valueOf()) + ',';
+			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

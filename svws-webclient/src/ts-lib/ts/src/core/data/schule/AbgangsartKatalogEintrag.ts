@@ -9,7 +9,7 @@ export class AbgangsartKatalogEintrag extends JavaObject {
 	/**
 	 * Das eindeutige Kürzel des Katalog-Eintrags. 
 	 */
-	public kuerzel : String = "";
+	public kuerzel : string = "";
 
 	/**
 	 * Die Historie des Katalog-Eintrags. 
@@ -30,7 +30,7 @@ export class AbgangsartKatalogEintrag extends JavaObject {
 		const result = new AbgangsartKatalogEintrag();
 		if (typeof obj.kuerzel === "undefined")
 			 throw new Error('invalid json format, missing attribute kuerzel');
-		result.kuerzel = String(obj.kuerzel);
+		result.kuerzel = obj.kuerzel;
 		if (!!obj.historie) {
 			for (let elem of obj.historie) {
 				result.historie?.add(AbgangsartKatalogDaten.transpilerFromJSON(JSON.stringify(elem)));
@@ -41,7 +41,7 @@ export class AbgangsartKatalogEintrag extends JavaObject {
 
 	public static transpilerToJSON(obj : AbgangsartKatalogEintrag) : string {
 		let result = '{';
-		result += '"kuerzel" : ' + '"' + obj.kuerzel.valueOf() + '"' + ',';
+		result += '"kuerzel" : ' + '"' + obj.kuerzel! + '"' + ',';
 		if (!obj.historie) {
 			result += '"historie" : []';
 		} else {
@@ -62,7 +62,7 @@ export class AbgangsartKatalogEintrag extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<AbgangsartKatalogEintrag>) : string {
 		let result = '{';
 		if (typeof obj.kuerzel !== "undefined") {
-			result += '"kuerzel" : ' + '"' + obj.kuerzel.valueOf() + '"' + ',';
+			result += '"kuerzel" : ' + '"' + obj.kuerzel + '"' + ',';
 		}
 		if (typeof obj.historie !== "undefined") {
 			if (!obj.historie) {

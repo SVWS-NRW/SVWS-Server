@@ -6,7 +6,7 @@ export class BKAnlageAFach extends JavaObject {
 	/**
 	 * Das Kürzel des Faches. 
 	 */
-	public kuerzel : String | null = null;
+	public kuerzel : string | null = null;
 
 	/**
 	 * Die Note in dem Fach. 

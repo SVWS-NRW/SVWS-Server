@@ -13,7 +13,7 @@ export class StundenplanblockungManagerFach extends JavaObject {
 	/**
 	 * Das Kürzel des Faches. Beispielsweise 'D', 'E' oder 'M'. 
 	 */
-	_kuerzel : String = "";
+	_kuerzel : string = "";
 
 	/**
 	 * Alle Lerngruppen in denen das Fach vertreten ist. 
@@ -27,7 +27,7 @@ export class StundenplanblockungManagerFach extends JavaObject {
 	 * @param pFachID   Die Datenbank-ID des Faches.
 	 * @param pKuerzel  Das Kürzel des Faches.
 	 */
-	public constructor(pFachID : number, pKuerzel : String) {
+	public constructor(pFachID : number, pKuerzel : string) {
 		super();
 		this._id = pFachID;
 		this._kuerzel = pKuerzel;
