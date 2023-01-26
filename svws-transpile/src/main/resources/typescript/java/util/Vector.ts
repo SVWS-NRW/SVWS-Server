@@ -64,7 +64,9 @@ export class Vector<E> extends AbstractList<E> implements List<E>, RandomAccess,
         this.elementData.length = newSize;
     }
 
-    /** returns the length of the Vector
+    /** 
+     * Returns the length of the Vector
+     * 
      * @returns {number}
      */
     public capacity() : number {
@@ -72,29 +74,38 @@ export class Vector<E> extends AbstractList<E> implements List<E>, RandomAccess,
     }
 
 
-    /** returns the length of the Vector
+    /** 
+     * Returns the length of the Vector
+     * 
      * @returns {number}
      */
     public size() : number {
         return this.elementData.length;
     }
 
-    /** returns whether the Vector is empty
+    /** 
+     * Returns whether the Vector is empty
+     * 
      * @returns {boolean}
      */
     public isEmpty() : boolean {
         return this.elementData.length === 0;
     }
 
-    /** returns an instance of VectorEnumerator of this vector
+    /** 
+     * Returns an instance of VectorEnumerator of this vector
+     * 
      * @returns {VectorEnumerator<E>}
      */
     public elements() : Enumeration<E> {
         return new VectorEnumerator<E>(this);
     }
 
-    /** returns whether the Vector contains given element
+    /** 
+     * Returns whether the Vector contains given element
+     * 
      * @param {E} e
+     * 
      * @returns {boolean}
      */
     public contains(e : E) : boolean {
@@ -171,17 +182,22 @@ export class Vector<E> extends AbstractList<E> implements List<E>, RandomAccess,
         return -1;
     }
 
-    /** Returns the element E from index
+    /** 
+     * Returns the element E from index
+     * 
      * @param {number} index
+     * 
      * @returns {E}
-    */
+     */
     public elementAt(index : number) : E {
         if ((index < 0) || (index >= this.elementData.length))
             throw new ArrayIndexOutOfBoundsException("Invalid index: " + index + " (valid: 0 - " + (this.elementData.length - 1) + ")");
         return this.elementData[index];
     }
 
-    /** returns the first Element E from Vector
+    /** 
+     * Returns the first Element E from Vector
+     * 
      * @returns {E}
      */
     public firstElement() : E {
@@ -190,28 +206,36 @@ export class Vector<E> extends AbstractList<E> implements List<E>, RandomAccess,
         return this.elementData[0];
     }
 
-    /** returns the last Element E from Vector 
+    /** 
+     * Returns the last Element E from Vector 
+     * 
      * @returns {E}
-    */
+     */
     public lastElement() : E {
         if (this.elementData.length === 0)
             throw new NoSuchElementException();
         return this.elementData[this.elementData.length - 1];
     }
 
-    /**Adds an element to the Vector in given position
+    /**
+     * Adds an element to the Vector in given position
+     * 
      * @param {E} e The new element
      * @param {number} index position of the new element
+     * 
      * @returns {void}
-      */
+     */
     public setElementAt(e : E, index : number) : void {
         if ((index < 0) || (index >= this.elementData.length))
             throw new ArrayIndexOutOfBoundsException(`Invalid index: ${index} (valid: 0 - ${this.elementData.length - 1})`);
         this.elementData[index] = e;
     }
 
-    /** removes element at given position
+    /** 
+     * Removes element at given position
+     * 
      * @param {number} index
+     * 
      * @returns {void}
      */
     public removeElementAt(index : number) : void {
@@ -227,9 +251,12 @@ export class Vector<E> extends AbstractList<E> implements List<E>, RandomAccess,
         this.elementData.length = this.elementData.length -1;
     }
 
-    /** inserts an element at the given position
+    /** 
+     * Inserts an element at the given position
+     * 
      * @param {E} e the element
      * @param {number} index the position
+     * 
      * @returns {void}
      */
     public insertElementAt(e : E, index : number) : void {
@@ -241,8 +268,11 @@ export class Vector<E> extends AbstractList<E> implements List<E>, RandomAccess,
         this.elementData[index] = e;
     }
 
-    /** appends Vector with given element
+    /** 
+     * Appends Vector with given element
+     * 
      * @param {E} e the element
+     * 
      * @returns {void}
      */
     public addElement(e : E) : void {
@@ -250,8 +280,11 @@ export class Vector<E> extends AbstractList<E> implements List<E>, RandomAccess,
         this.elementData.push(e);
     }
 
-    /**removes element from Vector
+    /**
+     * Removes element from Vector
+     * 
      * @param {E} e the element
+     * 
      * @returns {boolean} true if element is removed
      */
     public removeElement(e : E) : boolean {
@@ -264,7 +297,9 @@ export class Vector<E> extends AbstractList<E> implements List<E>, RandomAccess,
         return false;
     }
 
-    /** removes all elements from Vector but keeps the reference to the internal array
+    /** 
+     * Removes all elements from Vector but keeps the reference to the internal array
+     * 
      * @returns {void}
      */
     public removeAllElements() : void {
@@ -272,15 +307,20 @@ export class Vector<E> extends AbstractList<E> implements List<E>, RandomAccess,
         this.modCount++;
     }
 
-    /** returns a clone of the current vector instance. Just a copy though
+    /** 
+     * Returns a clone of the current vector instance. Just a copy though
+     * 
      * @returns {Vector<E>}
      */
     public clone() : Vector<E> {
         return new Vector<E>(this);
     }
 
-    /** either returns a new Array of Vector elements or copies elements into given array
+    /** 
+     * Either returns a new Array of Vector elements or copies elements into given array
+     * 
      * @param {Array<E>?} array the optional array
+     * 
      * @returns {Array<E>}
      */
     public toArray() : Array<unknown>;
@@ -300,10 +340,13 @@ export class Vector<E> extends AbstractList<E> implements List<E>, RandomAccess,
 
     }
 
-    /** returns element from index
-     * @param {number} index
-     * @returns {E}
+    /** 
+     * Returns element from index
      * see {@link Vector#elementAt}
+     * 
+     * @param {number} index
+     * 
+     * @returns {E}
      */
     public get(index : number) : E {
         if ((index < 0) || (index >= this.elementData.length))
@@ -311,11 +354,14 @@ export class Vector<E> extends AbstractList<E> implements List<E>, RandomAccess,
         return this.elementData[index];
     }
 
-    /** sets element at index
+    /** 
+     * Sets element at index
+     * see {@link Vector#setElementAt}
+     * 
      * @param {number} index
      * @param {E} e
+     * 
      * @returns {E}
-     * see {@link Vector#setElementAt}
      */
     public set(index : number, e : E) : E {
         if ((index < 0) || (index >= this.elementData.length))
@@ -325,8 +371,11 @@ export class Vector<E> extends AbstractList<E> implements List<E>, RandomAccess,
         return old;
     }
 
-    /** adds element by appending or position
-     * @param {E | number}
+    /** 
+     * Adds element by appending or position
+     * 
+     * @param {E | number} e
+     * 
      * @returns {boolean | E}
      */
     public add(e : E | null) : boolean;
@@ -344,39 +393,37 @@ export class Vector<E> extends AbstractList<E> implements List<E>, RandomAccess,
         } else throw new Error("invalid method overload");
     }
 
-    /** removes element either via element or index
-     * @param {E | number}
+    /** 
+     * Removes element either via element
+     * For removing the element via index use removeElementAt instead.
+     * 
+     * @param {E | number} e
+     * 
      * @returns {E | boolean}
      */
     public remove(e : E) : boolean;
     public remove(index : number) : E;
     public remove(param : E | number) : boolean | E {
-        if (typeof param === "number") {
-            let index : number = param;
-            this.modCount++;
-            if ((index < 0) || (index >= this.elementData.length))
-                throw new ArrayIndexOutOfBoundsException(`Invalid index: ${index} (valid: 0 - ${this.elementData.length - 1})`);
-            let old : E = this.elementData[index];
-            for (let i : number = 0; i < this.elementData.length - index - 1; i++)
-                this.elementData[index + i] = this.elementData[index + i + 1];
-            this.elementData.length = this.elementData.length - 1;
-            return old;    
-        } else if (typeof param !== "number") {
-            return this.removeElement(param);
-        } else throw new Error("invalid method overload");
+        // WARNING: Removing the element via index is not available since the vector may contain number values...
+        return this.removeElement(param as E);
     }
 
-    /** removes all elements from vector
+    /** 
+     * Removes all elements from vector
+     * 
      * @returns {void}
      */
     public clear() : void {
         this.removeAllElements();
     }
 
-    /** check if incoming Collection is part of the Vector
+    /** 
+     * Checks if incoming Collection is part of the Vector
+     * 
      * @param {Collection<E>} c
+     * 
      * @returns {boolean}
-    */
+     */
     public containsAll(c : Collection<E>) : boolean {
         return super.containsAll(c);
     }
@@ -387,9 +434,12 @@ export class Vector<E> extends AbstractList<E> implements List<E>, RandomAccess,
      */
     public addAll(c : Collection<E>) : boolean;
 
-    /** add a collection of elements to the vector at a given position
+    /** 
+     * Add a collection of elements to the vector at a given position
+     * 
      * @param {number} index
      * @param {Collection<E>} c
+     * 
      * @returns {boolean}
      */ 
     public addAll(index : number, c : Collection<E>) : boolean;
@@ -431,7 +481,9 @@ export class Vector<E> extends AbstractList<E> implements List<E>, RandomAccess,
     }
 
 
-    /** adds each Element from Vector to Consumer
+    /** 
+     * Adds each Element from Vector to Consumer
+     * 
      * @param {Consumer<E>} action
      */
     public forEach(action : Consumer<E>) : void {
@@ -445,8 +497,11 @@ export class Vector<E> extends AbstractList<E> implements List<E>, RandomAccess,
         }
     }
 
-    /** returns whether given string is included in list of class tree
+    /** 
+     * Returns whether given string is included in list of class tree
+     * 
      * @param {string} name
+     * 
      * @returns {boolean}
      */
 	public isTranspiledInstanceOf(name : string): boolean {

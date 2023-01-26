@@ -2,31 +2,27 @@ import { NullPointerException } from "./NullPointerException";
 
 export abstract class JavaString {
 
-    public static contains(str: String, s: String) : boolean {
-        if (str === null)
-            throw new NullPointerException();
+    public static contains(str: string, s: string | null) : boolean {
         if (s === null)
             return false;
-        return str.includes(s.valueOf());
+        return str.includes(s);
     }
 
-    public static indexOf(s : String, str : String, fromIndex? : number) : number {
-        if (s === null)
-            throw new NullPointerException();
+    public static indexOf(s : string, str : string | null, fromIndex? : number) : number {
         if (str === null)
             return -1;
-        return s.indexOf(str.valueOf(), fromIndex);
+        return s.indexOf(str, fromIndex);
     }
 
-    public static replaceFirst(s : String, regex : String, replacement : String) {
-        return s.replace(new RegExp(regex.valueOf()), replacement.valueOf());
+    public static replaceFirst(s : string, regex : string, replacement : string) {
+        return s.replace(new RegExp(regex), replacement);
     }
 
-    public static replaceAll(s : String, regex : String, replacement : String) {
-        return s.replace(new RegExp(regex.valueOf(), "g"), replacement.valueOf());
+    public static replaceAll(s : string, regex : string, replacement : string) {
+        return s.replace(new RegExp(regex, "g"), replacement);
     }
 
-    public static compareToIgnoreCase(a: String, b : String | null) : number {
+    public static compareToIgnoreCase(a: string, b : string | null) : number {
         if (b === null)
             return -1;
         const ca : string[] = a.split('');
@@ -47,7 +43,7 @@ export abstract class JavaString {
         return ca.length - cb.length;
     }
 
-    public static compareTo(a: String, b : String | null) : number {
+    public static compareTo(a: string, b : string | null) : number {
         if (b === null)
             return -1;
         const ca : string[] = a.split('');
@@ -69,13 +65,13 @@ export abstract class JavaString {
     }
 
 
-    public static equalsIgnoreCase(a : String, b : String | null) : boolean {
+    public static equalsIgnoreCase(a : string, b : string | null) : boolean {
         return (b === null) ? false : a.localeCompare(b.valueOf(), undefined, { sensitivity: 'accent' }) === 0;
     }
 
 }
 
 
-export function cast_java_lang_String(obj : unknown) : String {
-	return obj as String;
+export function cast_java_lang_String(obj : unknown) : string | null {
+	return obj as string | null;
 }

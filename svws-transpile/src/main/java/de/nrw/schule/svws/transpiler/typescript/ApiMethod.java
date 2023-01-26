@@ -224,10 +224,10 @@ public class ApiMethod {
 	public String getJSDoc() {
 		String result = "\t/**" + System.lineSeparator();
 		result += "\t * Implementierung der " + httpMethod + "-Methode " + name + " für den Zugriff auf die URL https://{hostname}" + path + System.lineSeparator();
-		result += "\t * " + System.lineSeparator();
+		result += "\t *" + System.lineSeparator();
 		result += "\t * " + docDescription + System.lineSeparator();
-		result += "\t * " + System.lineSeparator();
-		result += "\t * Mögliche HTTP-Antworten: " + System.lineSeparator();
+		result += "\t *" + System.lineSeparator();
+		result += "\t * Mögliche HTTP-Antworten:" + System.lineSeparator();
 		for (ApiResponse response : responses) {
 			result += "\t *   Code " + response.responseCode + ": " + response.description + System.lineSeparator();
 			if (response.content != null) {
@@ -239,20 +239,20 @@ public class ApiMethod {
 		String requestBodyType = getRequestBodyType();
 		if (requestBodyType != null) {
 			if (isFirstParam) {
-				result += "\t * " + System.lineSeparator();
+				result += "\t *" + System.lineSeparator();
 				isFirstParam = false;
 			}
 			result += "\t * @param {" + requestBodyType + "} data - der Request-Body für die HTTP-Methode" + System.lineSeparator();
 		}
 		for (Map.Entry<String, String> pathParam : this.pathParams.params) {
 			if (isFirstParam) {
-				result += "\t * " + System.lineSeparator();
+				result += "\t *" + System.lineSeparator();
 				isFirstParam = false;
 			}
 			result += "\t * @param {" + pathParam.getValue() + "} " + pathParam.getKey() + " - der Pfad-Parameter " + pathParam.getKey() + System.lineSeparator();
 		}
 		if ((returnResponse != null) && (returnResponse.content != null)) {
-			result += "\t * " + System.lineSeparator();
+			result += "\t *" + System.lineSeparator();
 			result += "\t * @returns " + returnResponse.description;
 			result += System.lineSeparator();
 		}
@@ -268,13 +268,21 @@ public class ApiMethod {
 	public String getReturnType() {
 		if ((returnResponse != null) && (returnResponse.content != null)) {
 			String datatype = (returnResponse.content.isArrayType) ? returnResponse.content.arrayElementType : returnResponse.content.datatype;
+			if (returnResponse.content.isArrayType) {
+				datatype = switch (datatype) {
+					case "Byte", "Short", "Integer", "Long", "Float", "Double" -> "number";
+					case "Character", "String" -> "string";
+					case "Boolean" -> "boolean";
+					default -> datatype;
+				};
+				return "Promise<List<" + datatype + ">>";
+			}
 			datatype = switch (datatype) {
-				case "Byte", "Short", "Integer", "Long", "Float", "Double" -> "Number";
-				case "Character" -> "String";
+				case "Byte", "Short", "Integer", "Long", "Float", "Double" -> "number | null";
+				case "Character", "String" -> "string | null";
+				case "Boolean" -> "boolean | null";
 				default -> datatype;
 			};
-			if (returnResponse.content.isArrayType)
-				return "Promise<List<" + datatype + ">>";
 			return "Promise<" + datatype + ">";
 		}
 		return "Promise<void>";
@@ -298,13 +306,21 @@ public class ApiMethod {
 	
 	private static String getTSType(ApiContent content) {
 	    String datatype = (content.isArrayType) ? content.arrayElementType : content.datatype;
+		if (content.isArrayType) {
+		    datatype = switch (datatype) {
+				case "Byte", "Short", "Integer", "Long", "Float", "Double" -> "number";
+				case "Character", "String" -> "string";
+				case "Boolean" -> "boolean";
+				default -> datatype;
+			};
+		    return "List<" + datatype + ">";
+		}
 	    datatype = switch (datatype) {
-			case "Byte", "Short", "Integer", "Long", "Float", "Double" -> "Number";
-			case "Character", "String" -> "String";
+			case "Byte", "Short", "Integer", "Long", "Float", "Double" -> "number | null";
+			case "Character", "String" -> "string | null";
+			case "Boolean" -> "boolean | null";
 			default -> datatype;
 		};
-		if (content.isArrayType)
-		    return "List<" + datatype + ">";
 		return datatype;
 	}
 
@@ -313,12 +329,20 @@ public class ApiMethod {
         if (!content.isArrayType)
             throw new TranspilerException("Transpiler Error: getTSArrayElementType invoked on non-array content.");
         return switch (content.arrayElementType) {
-            case "Byte", "Short", "Integer", "Long", "Float", "Double" -> "Number";
-            case "Character", "String" -> "String";
+            case "Byte", "Short", "Integer", "Long", "Float", "Double" -> "number";
+            case "Character", "String" -> "string";
+			case "Boolean" -> "boolean";
             default -> content.arrayElementType;
         };
     }
 	
+    private static boolean isTSPrimitive(String type) {
+    	return switch (type) {
+	        case "number", "string", "boolean", "number | null", "string | null", "boolean | null" -> true;
+    		default -> false;
+    	};
+    }
+    
 	
 	private String getTSMethodHead() {
 		String result = "\tpublic async " + this.name + "(";
@@ -344,15 +368,15 @@ public class ApiMethod {
 		String result = "{" + System.lineSeparator();
 		// Erstelle die URL für den HTTP-Request
 		if (pathParams.params.size() == 0) {
-			result += "\t\tlet path : string = \"" + path + "\";" + System.lineSeparator();
+			result += "\t\tconst path = \"" + path.replace("\\", "\\\\") + "\";" + System.lineSeparator();
 		} else {
-			result += "\t\tlet path : string = \"" + path + "\"" + System.lineSeparator();
+			result += "\t\tconst path = \"" + path.replace("\\", "\\\\") + "\"" + System.lineSeparator();
 			for (int i = 0; i < this.pathParams.params.size(); i++) {
 				Map.Entry<String, String> pathParam = this.pathParams.params.get(i);
 				String replaceParam = pathParam.getKey();
 				if ("number".equals(pathParam.getValue()))
 					replaceParam += ".toString()";
-				result += "\t\t\t\t.replace(/{" + pathParam.getKey() + "\\s*(:[^}]+)?}/g, " + replaceParam + ")";
+				result += "\t\t\t.replace(/{" + pathParam.getKey() + "\\s*(:[^}]+)?}/g, " + replaceParam + ")";
 				if (i == this.pathParams.params.size() - 1)
 					result += ";";
 				result += System.lineSeparator();
@@ -363,25 +387,22 @@ public class ApiMethod {
 			// Prüfe, ob der Request-Body in JSON umgewandelt werden muss
 			if (requestBody.content.mimetype == ApiMimeType.APPLICATION_JSON) {
 				if (requestBody.content.isArrayType) {
-                    String tsType = getTSArrayElementType(requestBody.content); 
-                    if ("String".equals(tsType) || "Number".equals(tsType) || "Boolean".equals(tsType)) {
-                        result += "\t\tlet body : string = \"[\" + data.toArray().map(d => JSON.stringify(d)).join() + \"]\";" + System.lineSeparator();
+                    if (isTSPrimitive(getTSArrayElementType(requestBody.content))) {
+                        result += "\t\tconst body : string = \"[\" + data.toArray().map(d => JSON.stringify(d)).join() + \"]\";" + System.lineSeparator();
                     } else {
     					if (httpMethod == ApiHttpMethod.PATCH) {
     						throw new TranspilerException("Transpiler Error: Patch Methods are currently not supported for array based json objects (method: " + name + " in API " + api + ")");
-    					} else {
-    					    result += "\t\tlet body : string = \"[\" + data.toArray().map(d => Object.transpilerToJSON(d)).join() + \"]\";" + System.lineSeparator();
     					}
+    					result += "\t\tconst body : string = \"[\" + data.toArray().map(d => Object.transpilerToJSON(d)).join() + \"]\";" + System.lineSeparator();
                     }
 				} else {
-					String tsType = getTSType(requestBody.content); 
-					if ("String".equals(tsType) || "Number".equals(tsType) || "Boolean".equals(tsType)) {
-						result += "\t\tlet body : string = JSON.stringify(data);" + System.lineSeparator();
+					if (isTSPrimitive(getTSType(requestBody.content))) {
+						result += "\t\tconst body : string = JSON.stringify(data);" + System.lineSeparator();
 					} else {
 						if (httpMethod == ApiHttpMethod.PATCH) {
-							result += "\t\tlet body : string = " + requestBody.content.datatype + ".transpilerToJSONPatch(data);" + System.lineSeparator();
+							result += "\t\tconst body : string = " + requestBody.content.datatype + ".transpilerToJSONPatch(data);" + System.lineSeparator();
 						} else {
-							result += "\t\tlet body : string = " + requestBody.content.datatype + ".transpilerToJSON(data);" + System.lineSeparator();
+							result += "\t\tconst body : string = " + requestBody.content.datatype + ".transpilerToJSON(data);" + System.lineSeparator();
 						}
 					}
 				}
@@ -404,14 +425,15 @@ public class ApiMethod {
 						default -> datatype + ".transpilerFromJSON(text)";
 					};
 					String resultDatatype = switch (datatype) {
-						case "Byte", "Short", "Integer", "Long", "Float", "Double" -> "Number";
-						case "Character", "String" -> "String";
+						case "Byte", "Short", "Integer", "Long", "Float", "Double" -> "number";
+						case "Character", "String" -> "string";
+	                    case "Boolean" -> "boolean";
 						default -> datatype;
 					};
 					if (returnResponse.content.isArrayType) {
 						result += "\t\tconst obj = JSON.parse(result);" + System.lineSeparator();
-						result += "\t\tlet ret = new Vector<" + resultDatatype + ">();" + System.lineSeparator();
-						result += "\t\tobj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(" + conversion + "); });" + System.lineSeparator();
+						result += "\t\tconst ret = new Vector<" + resultDatatype + ">();" + System.lineSeparator();
+						result += "\t\tobj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(" + conversion + "); });" + System.lineSeparator();
 						result += "\t\treturn ret;" + System.lineSeparator();
 					} else {
 						result += "\t\tconst text = result;" + System.lineSeparator();
@@ -429,14 +451,15 @@ public class ApiMethod {
 					default -> datatype + ".transpilerFromJSON(text)";
 				};
 				String resultDatatype = switch (datatype) {
-					case "Byte", "Short", "Integer", "Long", "Float", "Double" -> "Number";
-					case "Character", "String" -> "String";
+					case "Byte", "Short", "Integer", "Long", "Float", "Double" -> "number";
+					case "Character", "String" -> "string";
+                    case "Boolean" -> "boolean";
 					default -> datatype;
 				};
 				if (returnResponse.content.isArrayType) {
 					result += "\t\tconst obj = JSON.parse(result);" + System.lineSeparator();
-					result += "\t\tlet ret = new Vector<" + resultDatatype + ">();" + System.lineSeparator();
-					result += "\t\tobj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(" + conversion + "); });" + System.lineSeparator();
+					result += "\t\tconst ret = new Vector<" + resultDatatype + ">();" + System.lineSeparator();
+					result += "\t\tobj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(" + conversion + "); });" + System.lineSeparator();
 					result += "\t\treturn ret;" + System.lineSeparator();
 				} else {
 					result += "\t\tconst text = result;" + System.lineSeparator();
@@ -456,14 +479,15 @@ public class ApiMethod {
 					default -> datatype + ".transpilerFromJSON(text)";
 				};
 				String resultDatatype = switch (datatype) {
-					case "Byte", "Short", "Integer", "Long", "Float", "Double" -> "Number";
-					case "Character", "String" -> "String";
+					case "Byte", "Short", "Integer", "Long", "Float", "Double" -> "number";
+					case "Character", "String" -> "string";
+                    case "Boolean" -> "boolean";
 					default -> datatype;
 				};
 				if (returnResponse.content.isArrayType) {
 					result += "\t\tconst obj = JSON.parse(result);" + System.lineSeparator();
-					result += "\t\tlet ret = new Vector<" + resultDatatype + ">();" + System.lineSeparator();
-					result += "\t\tobj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(" + conversion + "); });" + System.lineSeparator();
+					result += "\t\tconst ret = new Vector<" + resultDatatype + ">();" + System.lineSeparator();
+					result += "\t\tobj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(" + conversion + "); });" + System.lineSeparator();
 					result += "\t\treturn ret;" + System.lineSeparator();
 				} else {
 					result += "\t\tconst text = result;" + System.lineSeparator();
@@ -471,7 +495,7 @@ public class ApiMethod {
 				}
 			} else if (this.produces == ApiMimeType.TEXT_PLAIN) {
 				result += "\t\tconst text : string = await super.getText(path);" + System.lineSeparator();
-				result += "\t\treturn String(text);" + System.lineSeparator();
+				result += "\t\treturn text;" + System.lineSeparator();
 			} else if (this.produces == ApiMimeType.PDF) {
 				result += "\t\tconst data : Blob = await super.getPDF(path);" + System.lineSeparator();
 				result += "\t\treturn data;" + System.lineSeparator();
@@ -513,15 +537,15 @@ public class ApiMethod {
 						default -> datatype + ".transpilerFromJSON(text)";
 					};
 					String resultDatatype = switch (datatype) {
-						case "Byte", "Short", "Integer", "Long", "Float", "Double" -> "Number";
-						case "Character", "String" -> "String";
-                        case "Boolean" -> "Boolean";
+						case "Byte", "Short", "Integer", "Long", "Float", "Double" -> "number";
+						case "Character", "String" -> "string";
+                        case "Boolean" -> "boolean";
 						default -> datatype;
 					};
 					if (returnResponse.content.isArrayType) {
 						result += "\t\tconst obj = JSON.parse(result);" + System.lineSeparator();
-						result += "\t\tlet ret = new Vector<" + resultDatatype + ">();" + System.lineSeparator();
-						result += "\t\tobj.forEach((elem: any) => { let text : string = JSON.stringify(elem); ret.add(" + conversion + "); });" + System.lineSeparator();
+						result += "\t\tconst ret = new Vector<" + resultDatatype + ">();" + System.lineSeparator();
+						result += "\t\tobj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(" + conversion + "); });" + System.lineSeparator();
 						result += "\t\treturn ret;" + System.lineSeparator();
 					} else {
 						result += "\t\tconst text = result;" + System.lineSeparator();

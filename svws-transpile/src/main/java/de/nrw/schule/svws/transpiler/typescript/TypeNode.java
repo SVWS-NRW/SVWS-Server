@@ -468,15 +468,17 @@ public class TypeNode {
 			}
 			if (type instanceof ExpressionClassType classType) {
 				if ("java.lang.String".equals(classType.getFullQualifiedName()))
-					return "((" + obj + " instanceof String) || (typeof " + obj + " === \"string\"))";
+					return "(typeof " + obj + " === \"string\")";
 				if ("java.lang.Byte".equals(classType.getFullQualifiedName()) ||
 					"java.lang.Short".equals(classType.getFullQualifiedName()) ||
 					"java.lang.Integer".equals(classType.getFullQualifiedName()) ||
 					"java.lang.Long".equals(classType.getFullQualifiedName()) ||
 					"java.lang.Float".equals(classType.getFullQualifiedName()) ||
 					"java.lang.Double".equals(classType.getFullQualifiedName()))
-					return "((" + obj + " instanceof Number) || (typeof " + obj + " === \"number\"))";
-				// Check whether we check for a functional interface - then we need only an object with the functino...
+					return "(typeof " + obj + " === \"number\")";
+				if ("java.lang.Boolean".equals(classType.getFullQualifiedName()))
+					return "(typeof " + obj + " === \"boolean\")";
+				// Check whether we check for a functional interface - then we need only an object with the function...
 				String functionalInterfaceMethodName = plugin.getTranspiler().getFunctionInterfaceMethodName(classType.getFullQualifiedName()); 
 				if (functionalInterfaceMethodName != null)
 					return "((typeof " + obj + " !== 'undefined') && (" + obj + " instanceof Object) && (" + obj + " !== null) && ('" + functionalInterfaceMethodName + "' in " + obj + ") && (typeof " + obj + "." + functionalInterfaceMethodName + " === 'function'))";
@@ -557,12 +559,12 @@ public class TypeNode {
 			if (type == null)
 				throw new TranspilerException("Transpiler Error: Cannot retrieve the type information for the identifier " + i.getName().toString());
 			if (type instanceof ExpressionClassType classType) {
-				if ("java.lang.String".equals(classType.getFullQualifiedName()))
-					return identifier;
-				if ("java.lang.Object".equals(classType.getFullQualifiedName())) {
-					return "(" + identifier + " instanceof JavaObject) ? cast_" + classType.getFullQualifiedName().replace('.', '_') + "(" + identifier + ") : " + identifier;
-				}
-				return "cast_" + classType.getFullQualifiedName().replace('.', '_') + "(" + identifier + ")";
+				return switch (classType.getFullQualifiedName()) {
+					case "java.lang.String", "java.lang.Boolean", "java.lang.Byte", "java.lang.Short", 
+						"java.lang.Integer", "java.lang.Long", "java.lang.Float", "java.lang.Double" -> identifier;
+					case "java.lang.Object" -> "(" + identifier + " instanceof JavaObject) ? cast_" + classType.getFullQualifiedName().replace('.', '_') + "(" + identifier + ") : " + identifier;
+					default -> "cast_" + classType.getFullQualifiedName().replace('.', '_') + "(" + identifier + ")"; 
+				};
 			}
 			if (type instanceof ExpressionTypeVar typeVar)
 				return identifier + " as unknown as " + type.toString();

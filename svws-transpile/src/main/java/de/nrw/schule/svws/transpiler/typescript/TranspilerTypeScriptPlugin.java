@@ -309,10 +309,10 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		if (type == null)
 			throw new TranspilerException("Transpiler Error: Cannot retrieve the type information for the identifier " + node.getName().toString());
 		String result = switch (node.getName().toString()) {
-			case "String" -> "String";
-			case "Long", "Integer", "Short", "Byte", "Float", "Double" -> "Number";
-			case "Boolean" -> "Boolean";
-			case "Character" -> "String";
+			case "String" -> "string";
+			case "Long", "Integer", "Short", "Byte", "Float", "Double" -> "number";
+			case "Boolean" -> "boolean";
+			case "Character" -> "string";
 			case "Object" -> {
 				if (!((type instanceof ExpressionClassType classType) && ("Object".equals(classType.toString()))))
 					yield null;
@@ -339,7 +339,7 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			if ((parent instanceof BinaryTree bt) && ((bt.getKind() == Kind.MULTIPLY) || (bt.getKind() == Kind.DIVIDE)
 			    || (bt.getKind() == Kind.REMAINDER) || (bt.getKind() == Kind.PLUS) || (bt.getKind() == Kind.MINUS)
 			    || (bt.getKind() == Kind.LEFT_SHIFT) || (bt.getKind() == Kind.RIGHT_SHIFT) || (bt.getKind() == Kind.UNSIGNED_RIGHT_SHIFT)))
-				valueOf = ".valueOf()";
+				valueOf = "!";
 		}
 		// check whether we have a case identifier of a switch statement where we have to add the class/enumeration name
 		if ((type instanceof ExpressionClassType classType) && (transpiler.getParent(node) instanceof CaseTree)) {
@@ -370,39 +370,69 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			}
 			case "Byte" -> {
 				yield switch (node.getIdentifier().toString()) {
-					case "parseByte" -> "JavaInteger.parseByte";
+					case "compare" -> "JavaByte.compare";
+					case "parseByte" -> "JavaByte.parseByte";
+					case "MIN_VALUE" -> "JavaByte.MIN_VALUE";
+					case "MAX_VALUE" -> "JavaByte.MAX_VALUE";
+					case "SIZE" -> "JavaByte.SIZE";
+					case "BYTES" -> "JavaByte.BYTES";
 					default -> null;
 				};
 			}
 			case "Short" -> {
 				yield switch (node.getIdentifier().toString()) {
-					case "parseShort" -> "JavaInteger.parseShort";
+					case "compare" -> "JavaShort.compare";
+					case "parseShort" -> "JavaShort.parseShort";
+					case "MIN_VALUE" -> "JavaShort.MIN_VALUE";
+					case "MAX_VALUE" -> "JavaShort.MAX_VALUE";
+					case "SIZE" -> "JavaShort.SIZE";
+					case "BYTES" -> "JavaShort.BYTES";
 					default -> null;
 				};
 			}
 			case "Integer" -> {
 				yield switch (node.getIdentifier().toString()) {
+					case "compare" -> "JavaInteger.compare";
 					case "parseInt" -> "JavaInteger.parseInt";
+					case "MIN_VALUE" -> "JavaInteger.MIN_VALUE";
+					case "MAX_VALUE" -> "JavaInteger.MAX_VALUE";
+					case "SIZE" -> "JavaInteger.SIZE";
+					case "BYTES" -> "JavaInteger.BYTES";
 					default -> null;
 				};
 			}
 			case "Long" -> {
 				yield switch (node.getIdentifier().toString()) {
+					case "compare" -> "JavaLong.compare";
 					case "parseLong" -> "JavaLong.parseLong";
+					case "MIN_VALUE" -> "JavaLong.MIN_VALUE";
+					case "MAX_VALUE" -> "JavaLong.MAX_VALUE";
+					case "SIZE" -> "JavaLong.SIZE";
+					case "BYTES" -> "JavaLong.BYTES";
 					default -> null;
 				};
 			}
 			case "Float" -> {
 				yield switch (node.getIdentifier().toString()) {
+					case "compare" -> "JavaFloat.compare";
 					case "parseFloat" -> "JavaFloat.parseFloat";
 					case "NaN" -> "NaN";
+					case "MIN_VALUE" -> "JavaFloat.MIN_VALUE";
+					case "MAX_VALUE" -> "JavaFloat.MAX_VALUE";
+					case "SIZE" -> "JavaFloat.SIZE";
+					case "BYTES" -> "JavaFloat.BYTES";
 					default -> null;
 				};
 			}
 			case "Double" -> {
 				yield switch (node.getIdentifier().toString()) {
+					case "compare" -> "JavaDouble.compare";
 					case "parseDouble" -> "JavaDouble.parseDouble";
 					case "NaN" -> "NaN";
+					case "MIN_VALUE" -> "JavaDouble.MIN_VALUE";
+					case "MAX_VALUE" -> "JavaDouble.MAX_VALUE";
+					case "SIZE" -> "JavaDouble.SIZE";
+					case "BYTES" -> "JavaDouble.BYTES";
 					default -> null;
 				};
 			}
@@ -979,7 +1009,7 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				if (returnType == null)
 					throw new TranspilerException("Transpiler Error: Method return type expected while handling boxed return type.");
 				if (returnType.isPrimitive())
-					converted += ".valueOf()";
+					converted += "!";
 			} else if (parent instanceof LambdaExpressionTree let) {
 				throw new TranspilerException("Transpiler Error: Handling boxed return types for lambda expressions not yet supported");
 			}
@@ -1189,7 +1219,7 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 							VariableElement param = params.get(i);
 							// append ".valueOf()" if the parameter type requires a primitive type instead of the wrapper type 
 							if (param.asType().getKind().isPrimitive())
-								result += ".valueOf()";
+								result += "!";
 						} else if (exprTree instanceof IdentifierTree it) {
 							Set<ExecutableElement> methods = unit.allLocalMethodElements.get(it.toString());
 							if (methods == null)
@@ -1204,7 +1234,7 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 								VariableElement param = methodParams.get(i);
 								// append ".valueOf()" if the parameter type requires a primitive type instead of the wrapper type 
 								if (param.asType().getKind().isPrimitive())
-									result += ".valueOf()";
+									result += "!";
 							}
 						}
 					}
@@ -1295,8 +1325,8 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				if (("byteValue".equals(identifier) || "shortValue".equals(identifier) || "intValue".equals(identifier) || "longValue".equals(identifier)) && (type instanceof ExpressionClassType ect)) {
 					String expression = convertExpression(ms.getExpression());
 					if ("java.lang.Double".equals(ect.getFullQualifiedName()) || ("java.lang.Float".equals(ect.getFullQualifiedName())))
-						return "Math.trunc(" + expression + ".valueOf())";
-					return expression + ".valueOf()";
+						return "Math.trunc(" + expression + "!)";
+					return expression + "!";
 				}
 			}
 			// TODO replace String methods...
@@ -1368,7 +1398,7 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		if ((type instanceof ExpressionClassType ect) && ("java.lang.String".equals(ect.getFullQualifiedName()))) {
 			Tree parent = transpiler.getParent(node);
 			if ((parent instanceof BinaryTree bt) && (bt.getKind() == Kind.PLUS))
-				valueOf = ".valueOf()";
+				valueOf = "!";
 		}
 		
 		// print arguments for the method call
@@ -1533,31 +1563,15 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			if (variable.isStatic()) // ignore static members
 				continue;
 			TypeNode type = variable.getTypeNode();
-			if (type.isPrimitive()) {
+			if (type.isPrimitive() || (type.isNotNull() && (type.isString() || type.isNumberClass() || type.isBoolean()))) {
 				result += getIndent() + "if (typeof obj." + attribute.getName() + " === \"undefined\")" + System.lineSeparator();
 				result += getIndent() + "\t throw new Error('invalid json format, missing attribute " + attribute.getName() + "');" + System.lineSeparator();
 				result += getIndent() + "result." + attribute.getName() + " = obj." + attribute.getName() + ";" + System.lineSeparator();
-			} else if (type.isString() || type.isNumberClass() || type.isBoolean()) {
+			} else if ((!type.isNotNull()) && (type.isString() || type.isNumberClass() || type.isBoolean())) {
 				String tmpAttribute = "obj." + attribute.getName();
-				if (type.isNotNull()) {
-					if (type.isString())
-						tmpAttribute = "String(" + tmpAttribute + ")";
-					else if (type.isNumberClass())
-						tmpAttribute = "Number(" + tmpAttribute + ")";
-					else if (type.isBoolean())
-						tmpAttribute = "Boolean(" + tmpAttribute + ")";
-					result += getIndent() + "if (typeof obj." + attribute.getName() + " === \"undefined\")" + System.lineSeparator();
-					result += getIndent() + "\t throw new Error('invalid json format, missing attribute " + attribute.getName() + "');" + System.lineSeparator();
-					result += getIndent() + "result." + attribute.getName() + " = " + tmpAttribute + ";" + System.lineSeparator();
-				} else { 
-					if (type.isString())
-						tmpAttribute = "" + tmpAttribute + " === null ? null : String(" + tmpAttribute + ")";
-					else if (type.isNumberClass())
-						tmpAttribute = "" + tmpAttribute + " === null ? null : Number(" + tmpAttribute + ")";
-					else if (type.isBoolean())
-						tmpAttribute = "" + tmpAttribute + " === null ? null : Boolean(" + tmpAttribute + ")";
-					result += getIndent() + "result." + attribute.getName() + " = typeof obj." + attribute.getName() + " === \"undefined\" ? null : " + tmpAttribute + ";" + System.lineSeparator();
-				}
+				if (type.isString() || type.isNumberClass() || type.isBoolean())
+					tmpAttribute = "" + tmpAttribute + " === null ? null : " + tmpAttribute;
+				result += getIndent() + "result." + attribute.getName() + " = typeof obj." + attribute.getName() + " === \"undefined\" ? null : " + tmpAttribute + ";" + System.lineSeparator();
 			} else if (type.isCollectionType()) {
 				// TODO notNull, Collection initialisiert
 				TypeNode paramType = type.getParameterType(0, false);
@@ -1567,18 +1581,10 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				indentC++;
 				result += getIndent() + "for (let elem of obj." + attribute.getName() + ") {" + System.lineSeparator();
 				indentC++;
-				if (paramType.isString() && paramType.isNotNull())
-					result += getIndent() + "result." + attribute.getName() + "?.add(String(elem));" + System.lineSeparator();
-				else if (paramType.isNumberClass() && paramType.isNotNull())
-					result += getIndent() + "result." + attribute.getName() + "?.add(Number(elem));" + System.lineSeparator();
-				else if (paramType.isBoolean() && paramType.isNotNull())
-					result += getIndent() + "result." + attribute.getName() + "?.add(Boolean(elem));" + System.lineSeparator();
-				else if (paramType.isString())
-					result += getIndent() + "result." + attribute.getName() + "?.add(elem === null ? null : String(elem));" + System.lineSeparator();
-				else if (paramType.isNumberClass())
-					result += getIndent() + "result." + attribute.getName() + "?.add(elem === null ? null : Number(elem));" + System.lineSeparator();
-				else if (paramType.isBoolean())
-					result += getIndent() + "result." + attribute.getName() + "?.add(elem === null ? null : Boolean(elem));" + System.lineSeparator();
+				if (paramType.isNotNull() && (paramType.isString() || paramType.isNumberClass() || paramType.isBoolean()))
+					result += getIndent() + "result." + attribute.getName() + "?.add(elem);" + System.lineSeparator();
+				else if (paramType.isString() || paramType.isNumberClass() || paramType.isBoolean())
+					result += getIndent() + "result." + attribute.getName() + "?.add(elem === null ? null : elem);" + System.lineSeparator();
 				else 
 					result += getIndent() + "result." + attribute.getName() + "?.add(" + paramType.transpile(true) + ".transpilerFromJSON(JSON.stringify(elem)));" + System.lineSeparator();
 				indentC--;
@@ -1596,22 +1602,14 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 					result += getIndent() + "result." + attribute.getName() + "[i] = obj." + attribute.getName() + "[i];" + System.lineSeparator();
 				} else if (contentType.isNotNull()) {
 					String tmpAttribute = "obj." + attribute.getName() + "[i]";
-					if (contentType.isString())
-						result += getIndent() + "result." + attribute.getName() + "[i] = String(" + tmpAttribute + ");" + System.lineSeparator();
-					else if (contentType.isNumberClass())
-						result += getIndent() + "result." + attribute.getName() + "[i] = Number(" + tmpAttribute + ");" + System.lineSeparator();
-					else if (contentType.isBoolean())
-						result += getIndent() + "result." + attribute.getName() + "[i] = Boolean(" + tmpAttribute + ");" + System.lineSeparator();
+					if (contentType.isString() || contentType.isNumberClass() || contentType.isBoolean())
+						result += getIndent() + "result." + attribute.getName() + "[i] = " + tmpAttribute + ";" + System.lineSeparator();
 					else 
 						result += getIndent() + "result." + attribute.getName() + "[i] = (" + contentType.transpile(true) + ".transpilerFromJSON(JSON.stringify(" + tmpAttribute + ")));" + System.lineSeparator();
 				} else {
 					String tmpAttribute = "obj." + attribute.getName() + "[i]";
-					if (contentType.isString())
-						result += getIndent() + "result." + attribute.getName() + "[i] = " + tmpAttribute + " === null ? null : String(" + tmpAttribute + ");" + System.lineSeparator();
-					else if (contentType.isNumberClass())
-						result += getIndent() + "result." + attribute.getName() + "[i] = " + tmpAttribute + " === null ? null : Number(" + tmpAttribute + ");" + System.lineSeparator();
-					else if (contentType.isBoolean())
-						result += getIndent() + "result." + attribute.getName() + "[i] = " + tmpAttribute + " === null ? null : Boolean(" + tmpAttribute + ");" + System.lineSeparator();
+					if (contentType.isString() || contentType.isNumberClass() || contentType.isBoolean())
+						result += getIndent() + "result." + attribute.getName() + "[i] = " + tmpAttribute + " === null ? null : " + tmpAttribute + ";" + System.lineSeparator();
 					else 
 						result += getIndent() + "result." + attribute.getName() + "[i] = " + tmpAttribute + " == null ? null : (" + contentType.transpile(true) + ".transpilerFromJSON(JSON.stringify(" + tmpAttribute + ")));" + System.lineSeparator();
 				}
@@ -1670,15 +1668,15 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				}
 			} else if (type.isString()) {
 				if (type.isNotNull()) {
-					result += getIndent() + addAttrName + " + '\"' + " + objAttr + ".valueOf() + '\"'" + endline;
+					result += getIndent() + addAttrName + " + '\"' + " + objAttr + "! + '\"'" + endline;
 				} else { 
-					result += getIndent() + addAttrName + " + ((!" + objAttr + ") ? 'null' : '\"' + " + objAttr + ".valueOf() + '\"')" + endline;
+					result += getIndent() + addAttrName + " + ((!" + objAttr + ") ? 'null' : '\"' + " + objAttr + " + '\"')" + endline;
 				}
 			} else if (type.isNumberClass() || type.isBoolean()) {
 				if (type.isNotNull()) {
-					result += getIndent() + addAttrName + " + " + objAttr + ".valueOf()" + endline;
+					result += getIndent() + addAttrName + " + " + objAttr + "!" + endline;
 				} else { 
-					result += getIndent() + addAttrName + " + ((!" + objAttr + ") ? 'null' : " + objAttr + ".valueOf())" + endline;
+					result += getIndent() + addAttrName + " + ((!" + objAttr + ") ? 'null' : " + objAttr + ")" + endline;
 				}
 			} else if (type.isCollectionType()) {
 				// TODO notNull, Collection initialisiert
@@ -1700,7 +1698,7 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 						result += getIndent() + "result += " + "'\"' + elem + '\"';" + System.lineSeparator();
 					else
 						result += getIndent() + "result += " + "(elem == null) ? null : '\"' + elem + '\"';" + System.lineSeparator();
-				} else if (paramType.isNumberClass()) {
+				} else if (paramType.isNumberClass() || paramType.isBoolean()) {
 					if (paramType.isNotNull())
 						result += getIndent() + "result += elem;" + System.lineSeparator();
 					else
@@ -1737,7 +1735,7 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 						result += getIndent() + "result += " + "'\"' + elem + '\"';" + System.lineSeparator();
 					else
 						result += getIndent() + "result += " + "(elem == null) ? null : '\"' + elem + '\"';" + System.lineSeparator();
-				} else if (contentType.isNumberClass()) {
+				} else if (contentType.isNumberClass() || contentType.isBoolean()) {
 					if (contentType.isNotNull())
 						result += getIndent() + "result += elem;" + System.lineSeparator();
 					else
@@ -1814,15 +1812,15 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				}
 			} else if (type.isString()) {
 				if (type.isNotNull()) {
-					result += getIndent() + addAttrName + " + '\"' + " + objAttr + ".valueOf() + '\"'" + endline;
+					result += getIndent() + addAttrName + " + '\"' + " + objAttr + " + '\"'" + endline;
 				} else { 
-					result += getIndent() + addAttrName + " + ((!" + objAttr + ") ? 'null' : '\"' + " + objAttr + ".valueOf() + '\"')" + endline;
+					result += getIndent() + addAttrName + " + ((!" + objAttr + ") ? 'null' : '\"' + " + objAttr + " + '\"')" + endline;
 				}
 			} else if (type.isNumberClass() || type.isBoolean()) {
 				if (type.isNotNull()) {
-					result += getIndent() + addAttrName + " + " + objAttr + ".valueOf()" + endline;
+					result += getIndent() + addAttrName + " + " + objAttr + endline;
 				} else { 
-					result += getIndent() + addAttrName + " + ((!" + objAttr + ") ? 'null' : " + objAttr + ".valueOf())" + endline;
+					result += getIndent() + addAttrName + " + ((!" + objAttr + ") ? 'null' : " + objAttr + ")" + endline;
 				}
 			} else if (type.isCollectionType()) {
 				// TODO notNull, Collection initialisiert
@@ -1844,7 +1842,7 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 						result += getIndent() + "result += " + "'\"' + elem + '\"';" + System.lineSeparator();
 					else
 						result += getIndent() + "result += " + "(elem == null) ? null : '\"' + elem + '\"';" + System.lineSeparator();
-				} else if (paramType.isNumberClass()) {
+				} else if (paramType.isNumberClass() || paramType.isBoolean()) {
 					if (paramType.isNotNull())
 						result += getIndent() + "result += elem;" + System.lineSeparator();
 					else
@@ -1881,7 +1879,7 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 						result += getIndent() + "result += " + "'\"' + elem + '\"';" + System.lineSeparator();
 					else
 						result += getIndent() + "result += " + "(elem == null) ? null : '\"' + elem + '\"';" + System.lineSeparator();
-				} else if (contentType.isNumberClass()) {
+				} else if (contentType.isNumberClass() || contentType.isBoolean()) {
 					if (contentType.isNotNull())
 						result += getIndent() + "result += elem;" + System.lineSeparator();
 					else
@@ -2076,7 +2074,7 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		// Generate Attributes
 		indentC++;
 		sb.append(getIndent()).append("/** the name of the enumeration value */").append(System.lineSeparator());
-		sb.append(getIndent()).append("private readonly __name : String;").append(System.lineSeparator());
+		sb.append(getIndent()).append("private readonly __name : string;").append(System.lineSeparator());
 		sb.append(System.lineSeparator());
 		sb.append(getIndent()).append("/** the ordinal value for the enumeration value */").append(System.lineSeparator());
 		sb.append(getIndent()).append("private readonly __ordinal : number;").append(System.lineSeparator());
@@ -2085,7 +2083,7 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		sb.append(getIndent()).append("private static readonly all_values_by_ordinal : Array<").append(node.getSimpleName()).append("> = [];").append(System.lineSeparator());
 		sb.append(System.lineSeparator());
 		sb.append(getIndent()).append("/** an array containing all values of this enumeration indexed by their name*/").append(System.lineSeparator());
-		sb.append(getIndent()).append("private static readonly all_values_by_name : Map<String, ").append(node.getSimpleName()).append("> = new Map<String, ").append(node.getSimpleName()).append(">();").append(System.lineSeparator());
+		sb.append(getIndent()).append("private static readonly all_values_by_name : Map<string, ").append(node.getSimpleName()).append("> = new Map<string, ").append(node.getSimpleName()).append(">();").append(System.lineSeparator());
 		sb.append(System.lineSeparator());
 		
 		for (VariableTree attribute : Transpiler.getAttributes(node)) {
@@ -2142,7 +2140,7 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		sb.append(getIndent()).append(" *").append(System.lineSeparator());
 		sb.append(getIndent()).append(" * @returns the name").append(System.lineSeparator());
 		sb.append(getIndent()).append(" */").append(System.lineSeparator());
-		sb.append(getIndent()).append("private name() : String {").append(System.lineSeparator());
+		sb.append(getIndent()).append("private name() : string {").append(System.lineSeparator());
 		sb.append(getIndent()).append("\treturn this.__name;").append(System.lineSeparator());
 		sb.append(getIndent()).append("}").append(System.lineSeparator());
 		sb.append(System.lineSeparator());
@@ -2163,7 +2161,7 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			sb.append(getIndent()).append(" *").append(System.lineSeparator());
 			sb.append(getIndent()).append(" * @returns the name").append(System.lineSeparator());
 			sb.append(getIndent()).append(" */").append(System.lineSeparator());
-			sb.append(getIndent()).append("public toString() : String {").append(System.lineSeparator());
+			sb.append(getIndent()).append("public toString() : string {").append(System.lineSeparator());
 			sb.append(getIndent()).append("\treturn this.__name;").append(System.lineSeparator());
 			sb.append(getIndent()).append("}").append(System.lineSeparator());
 			sb.append(System.lineSeparator());			
@@ -2223,7 +2221,7 @@ public class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		sb.append(getIndent()).append(" *").append(System.lineSeparator());
 		sb.append(getIndent()).append(" * @returns the enumeration values or null").append(System.lineSeparator());
 		sb.append(getIndent()).append(" */").append(System.lineSeparator());
-		sb.append(getIndent()).append("public static valueOf(name : String) : ").append(node.getSimpleName()).append(" | null {").append(System.lineSeparator());
+		sb.append(getIndent()).append("public static valueOf(name : string) : ").append(node.getSimpleName()).append(" | null {").append(System.lineSeparator());
 		sb.append(getIndent()).append("\tlet tmp : ").append(node.getSimpleName()).append(" | undefined = this.all_values_by_name.get(name);").append(System.lineSeparator());
 		sb.append(getIndent()).append("\treturn (!tmp) ? null : tmp;").append(System.lineSeparator());
 		sb.append(getIndent()).append("}").append(System.lineSeparator());

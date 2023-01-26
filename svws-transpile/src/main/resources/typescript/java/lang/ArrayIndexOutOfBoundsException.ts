@@ -2,8 +2,8 @@ import { IndexOutOfBoundsException } from './IndexOutOfBoundsException';
 
 export class ArrayIndexOutOfBoundsException extends IndexOutOfBoundsException {
 
-    public constructor(param? : String | Number) {
-        super(typeof param === "undefined" ? "" : (typeof param === "number" ? "Array index out of range: " + param : param as String));
+    public constructor(param? : string | number) {
+        super(typeof param === "undefined" ? "" : (typeof param === "number" ? "Array index out of range: " + param : param));
     }
 
 	isTranspiledInstanceOf(name : string): boolean {

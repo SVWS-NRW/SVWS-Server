@@ -53,7 +53,7 @@ export abstract class JavaObject implements TranspiledObject {
         return { ...this };
     }
 
-    public toString() : String {
+    public toString() : string | null {
         return JSON.stringify(this, prepareAttributeOrderForStringify());
     }
 

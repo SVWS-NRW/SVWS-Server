@@ -1,4 +1,5 @@
 import { JavaObject } from './JavaObject';
+import { NullPointerException } from './NullPointerException';
 import { NumberFormatException } from './NumberFormatException';
 
 export class JavaByte extends JavaObject {
@@ -8,17 +9,17 @@ export class JavaByte extends JavaObject {
     public static SIZE : number = 8;
     public static BYTES : number = 1;
 
-    public static parseShort(s : String) : number {
-        let a : number = parseInt(s.valueOf(), 10);
+    public static parseByte(s : string | null) : number {
+        if (s === null)
+            throw new NullPointerException();
+        let a : number = parseInt(s, 10);
         if (Number.isNaN(a) || (a < this.MIN_VALUE) || (a > this.MAX_VALUE))
             throw new NumberFormatException();
         return a;
     }
 
-    public static compare(a : Number, b : Number) {
-        let first : number = (a instanceof Number) ? a.valueOf() : a;
-        let second : number = (b instanceof Number) ? b.valueOf() : b;
-        return first === second ? 0 : (first < second) ? -1 : 1;
+    public static compare(a : number, b : number) {
+        return a === b ? 0 : (a < b) ? -1 : 1;
     }
 
 	isTranspiledInstanceOf(name : string): boolean {
@@ -34,6 +35,6 @@ export class JavaByte extends JavaObject {
 }
 
 
-export function cast_java_lang_Byte(obj : unknown) : Number {
-	return obj as Number;
+export function cast_java_lang_Byte(obj : unknown) : number | null {
+	return obj as number | null;
 }

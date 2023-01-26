@@ -84,7 +84,7 @@ public class ApiRequestBody {
 	private static boolean determineRequired(Map<String, ExpressionTree> args) {
 		ExpressionTree value = args.get("required");
 		if ((value.getKind() == Kind.BOOLEAN_LITERAL) && (value instanceof LiteralTree literal) && (literal.getValue() instanceof Boolean bool))
-			return bool == null ? false : bool;
+			return bool;
 		return false;
 	}
 

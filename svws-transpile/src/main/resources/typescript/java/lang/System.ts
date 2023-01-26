@@ -18,7 +18,7 @@ export class System extends JavaObject {
         return Date.now();
     }
 
-    public static lineSeparator() : String {
+    public static lineSeparator() : string {
         return "\n";
     }
 

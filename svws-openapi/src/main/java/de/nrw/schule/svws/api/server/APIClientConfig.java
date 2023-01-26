@@ -102,7 +102,7 @@ public class APIClientConfig {
     @Path("/config/{app}/user/{key}")
     @Operation(summary = "Schreibt den Konfigurationseintrag der angegebenen Anwendung für den angebenen Schlüsselwert in die benutzerspezifische Konfiguration",
                description = "Schreibt den Konfigurationseintrag der angegebenen Anwendung für den angebenen Schlüsselwert in die "
-               		       + "benutzerspezifische Konfiguration. ")
+               		       + "benutzerspezifische Konfiguration.")
     @ApiResponse(responseCode = "200", description = "Der Konfigurationseintrag wurde erfolgreich geschrieben")
     public void setClientConfigUserKey(@PathParam("schema") String schema, @PathParam("app") String app, @PathParam("key") String key,
     		                          @RequestBody(description = "Der Wert des Konfigurationseintrags", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = String.class))) InputStream data, 

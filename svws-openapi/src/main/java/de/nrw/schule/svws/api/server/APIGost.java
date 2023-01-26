@@ -1565,7 +1565,7 @@ public class APIGost {
                	+ "oder Zuordnung neu generiert. "
     		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Hochschreiben einer Blockung "
     		    + "besitzt.")
-    @ApiResponse(responseCode = "200", description = "Die Blockung und das Ergebnis wurde erfolgreich hochgeschrieben. ",
+    @ApiResponse(responseCode = "200", description = "Die Blockung und das Ergebnis wurde erfolgreich hochgeschrieben.",
     	content = @Content(mediaType = "application/json",
     	schema = @Schema(implementation = GostBlockungsdaten.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Blockung der Gymnasialen Oberstufe hochzuschreiben.")

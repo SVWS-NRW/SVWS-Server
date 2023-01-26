@@ -58,11 +58,7 @@ export abstract class AbstractList<E> extends AbstractCollection<E> implements L
     public remove(index : number) : E;
     public remove(e : E) : boolean;
     public remove(param : number | E) : E | boolean {
-        if (typeof param === "number") {
-            throw new UnsupportedOperationException();
-        } else {
-            return super.remove(param);
-        }
+        return super.remove(param);
     }
 
 
