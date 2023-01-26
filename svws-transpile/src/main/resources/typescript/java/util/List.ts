@@ -50,6 +50,8 @@ export interface List<E> extends Collection<E> {
 
     remove(index : number) : E;
 
+    removeElementAt(index : number) : void;
+
     indexOf(o : any) : number;
 
     lastIndexOf(o : any) : number;

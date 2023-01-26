@@ -62,6 +62,11 @@ export abstract class AbstractList<E> extends AbstractCollection<E> implements L
     }
 
 
+    public removeElementAt(index: number): void {
+        throw new Error('Method not implemented.');
+    }
+
+
     public indexOf(e : E) : number {
         let it : ListIterator<E> = this.listIterator();
         if (e === null)

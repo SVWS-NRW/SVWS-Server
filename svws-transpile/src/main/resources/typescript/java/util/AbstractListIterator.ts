@@ -54,7 +54,7 @@ export class AbstractListIterator<E> extends JavaObject implements JavaIterator<
             throw new IllegalStateException();
         this.checkForComodification();
         try {
-            this.list.remove(this.lastReturned);
+            this.list.removeElementAt(this.lastReturned);
             if (this.lastReturned < this.current)
                 this.current--;
             this.lastReturned = -1;
