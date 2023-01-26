@@ -7,14 +7,12 @@
 				</span>
 				<div class="flex items-center">
 					<svws-ui-badge v-if="schueler.status !== 'Aktiv'" type="light" size="big" class="mr-1"> {{ schueler.status }} </svws-ui-badge>
-					<div
-						class="leading-none overflow-hidden w-5"
+					<div class="leading-none overflow-hidden w-5"
 						style="margin-bottom: -0.1em;"
 						:class="{
 							'color--error': kollision,
 							'color--dark': !kollision,
-						}"
-					>
+						}">
 						<svws-ui-popover v-if="kollision && !nichtwahl" class="popper--danger">
 							<template #trigger>
 								<svws-ui-icon> <i-ri-alert-fill /> </svws-ui-icon>
