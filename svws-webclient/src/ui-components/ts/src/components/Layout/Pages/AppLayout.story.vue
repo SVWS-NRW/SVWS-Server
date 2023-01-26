@@ -12,6 +12,7 @@
 	import SvwsUiBadge from "../../Typography/Badge.vue";
 	import SvwsUiTabBar from "../../Controls/TabBar.vue";
 	import SvwsUiTabPanel from "../../Controls/TabPanel.vue";
+	import SvwsUiNotification from "../Modal/Notification.vue";
 
 </script>
 
@@ -134,13 +135,15 @@
 						</svws-ui-tab-panel>
 					</template>
 				</svws-ui-tab-bar>
-				<div class="px-6">
-					<div>
-						Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus aliquam, atque
-						earum est, explicabo in iste laudantium maiores molestiae necessitatibus quaerat
-						quod ratione reprehenderit sapiente sit sunt temporibus tenetur voluptatum!
-					</div>
-				</div>
+				<!--TODO bzw. WIP, das muss noch aufgeräumt werden-->
+				<Notification>Test</Notification>
+				<Notification type="success">Success!</Notification>
+				<Notification type="highlight">Hinweis</Notification>
+				<Notification type="error">
+					<div class="py-1 mb-1">Error Notification</div>
+					<div class="font-normal">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab at commodi cumque, esse eum fugit hic inventore magnam, minus nihil possimus praesentium ratione repellendus soluta temporibus vitae voluptatibus. Aspernatur, itaque!</div>
+					<Button type="transparent" class="inline-flex items-center -ml-2 my-2"><i-ri-bug-line/>Fehler melden</Button>
+				</Notification>
 			</template>
 		</svws-ui-app-layout>
 	</Story>
