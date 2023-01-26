@@ -1,25 +1,32 @@
 <template>
 	<svws-ui-content-card title="Entlassung von eigener Schule">
 		<div class="input-wrapper">
-			<svws-ui-text-input placeholder="Entlassung am" v-model="entlassungDatum" type="date" />
-			<svws-ui-text-input placeholder="Entlassjahrgang" v-model="entlassungJahrgang" type="date" />
-			<svws-ui-text-input placeholder="Bemerkung / Entlassgrund" v-model="entlassungGrundID" />
-			<svws-ui-text-input placeholder="Art des Abschlusses" v-model="entlassungAbschlussartID" />
+			<svws-ui-text-input placeholder="Entlassung am" :model-value="data.entlassungDatum?.valueOf()"
+				@update:model-value="doPatch({ entlassungDatum: String($event) })" type="date" />
+			<svws-ui-text-input placeholder="Entlassjahrgang" :model-value="data.entlassungJahrgang?.valueOf()"
+				@update:model-value="doPatch({ entlassungJahrgang: String($event) })" type="text" />
+			<svws-ui-text-input placeholder="Bemerkung / Entlassgrund" :model-value="data.entlassungGrundID?.valueOf()"
+				@update:model-value="doPatch({ entlassungGrundID: Number($event) })" />
+			<svws-ui-text-input placeholder="Art des Abschlusses" :model-value="data.entlassungAbschlussartID?.valueOf()"
+				@update:model-value="doPatch({ entlassungAbschlussartID: String($event) })" />
 		</div>
 	</svws-ui-content-card>
 </template>
 
 <script setup lang="ts">
 
-	import { PropDataSchulbesuch } from "./PropDataSchulbesuch";
+	import { SchuelerSchulbesuchsdaten } from "@svws-nrw/svws-core-ts";
 
-	const props = defineProps<{
-		data: PropDataSchulbesuch;
+	defineProps<{
+		data: SchuelerSchulbesuchsdaten;
 	}>();
 
-	const entlassungDatum = props.data.entlassungDatum();
-	const entlassungJahrgang = props.data.entlassungJahrgang();
-	const entlassungGrundID = props.data.entlassungGrundID();
-	const entlassungAbschlussartID = props.data.entlassungAbschlussartID();
+	const emit = defineEmits<{
+		(e: 'patch', data: Partial<SchuelerSchulbesuchsdaten>): void;
+	}>()
+
+	function doPatch(data: Partial<SchuelerSchulbesuchsdaten>) {
+		emit('patch', data);
+	}
 
 </script>

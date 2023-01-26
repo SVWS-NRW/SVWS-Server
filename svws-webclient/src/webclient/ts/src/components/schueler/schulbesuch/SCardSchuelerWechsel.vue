@@ -1,23 +1,30 @@
 <template>
 	<svws-ui-content-card title="Wechsel zu aufnehmender Schule">
 		<div class="input-wrapper">
-			<svws-ui-text-input placeholder="Name der Schule" v-model="aufnehmdendSchulnummer" type="text" />
-			<svws-ui-text-input placeholder="Wechseldatum" v-model="aufnehmdendWechseldatum" type="date" />
-			<svws-ui-checkbox text="Aufnahme bestätigt" v-model="aufnehmdendBestaetigt" />
+			<svws-ui-text-input placeholder="Name der Schule" :model-value="data.aufnehmdendSchulnummer?.valueOf()"
+				@update:model-value="doPatch({ aufnehmdendSchulnummer: String($event) })" type="text" />
+			<svws-ui-text-input placeholder="Wechseldatum" :model-value="data.aufnehmdendWechseldatum?.valueOf()"
+				@update:model-value="doPatch({ aufnehmdendWechseldatum: String($event) })" type="date" />
+			<svws-ui-checkbox text="Aufnahme bestätigt" :model-value="data.aufnehmdendBestaetigt?.valueOf()"
+				@update:model-value="doPatch({ aufnehmdendBestaetigt: Boolean($event) })" />
 		</div>
 	</svws-ui-content-card>
 </template>
 
 <script setup lang="ts">
 
-	import { PropDataSchulbesuch } from "./PropDataSchulbesuch";
+	import { SchuelerSchulbesuchsdaten } from "@svws-nrw/svws-core-ts";
 
-	const props = defineProps<{
-		data: PropDataSchulbesuch;
+	defineProps<{
+		data: SchuelerSchulbesuchsdaten;
 	}>();
 
-	const aufnehmdendSchulnummer = props.data.aufnehmdendSchulnummer();
-	const aufnehmdendWechseldatum = props.data.aufnehmdendWechseldatum();
-	const aufnehmdendBestaetigt = props.data.aufnehmdendBestaetigt();
+	const emit = defineEmits<{
+		(e: 'patch', data: Partial<SchuelerSchulbesuchsdaten>): void;
+	}>()
+
+	function doPatch(data: Partial<SchuelerSchulbesuchsdaten>) {
+		emit('patch', data);
+	}
 
 </script>

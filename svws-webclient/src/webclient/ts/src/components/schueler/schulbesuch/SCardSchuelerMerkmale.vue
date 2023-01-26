@@ -2,7 +2,7 @@
 	<svws-ui-content-card title="Besondere Merkmale für die Statistik">
 		<div>
 			Hier wird demnächst die Unterstützung für Merkmale implementiert
-			<div v-for="merkmal in merkmale" :key="merkmal.id">
+			<div v-for="merkmal in data.merkmale" :key="merkmal.id">
 				<!-- TODO <svws-zu-table> für die Merkmale -->
 				<p> {{ merkmal.id + " (" + merkmal.datumVon + "-" + merkmal.datumBis + ")" }} </p>
 			</div>
@@ -12,12 +12,10 @@
 
 <script setup lang="ts">
 
-	import { PropDataSchulbesuch } from "./PropDataSchulbesuch";
+	import { SchuelerSchulbesuchsdaten } from "@svws-nrw/svws-core-ts";
 
-	const props = defineProps<{
-		data: PropDataSchulbesuch;
+	defineProps<{
+		data: SchuelerSchulbesuchsdaten;
 	}>();
-
-	const merkmale = props.data.merkmale();
 
 </script>

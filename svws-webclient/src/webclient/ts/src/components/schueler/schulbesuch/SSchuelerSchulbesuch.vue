@@ -1,29 +1,26 @@
 <template>
-	<div v-if="visible" class="app-container">
-		<s-card-schueler-herkunft :data="props.data" />
-		<s-card-schueler-entlassung :data="props.data" />
-		<s-card-schueler-wechsel :data="props.data" />
-		<s-card-schueler-grundschulbesuch :data="props.data" />
-		<s-card-schueler-sekundarstufe1 :data="props.data" />
-		<s-card-schueler-merkmale :data="props.data" />
-		<s-card-schueler-schulen :data="props.data" />
+	<div class="app-container">
+		<s-card-schueler-herkunft :data="data" @patch="(data) => doPatch(data)" />
+		<s-card-schueler-entlassung :data="data" @patch="(data) => doPatch(data)" />
+		<s-card-schueler-wechsel :data="data" @patch="(data) => doPatch(data)" />
+		<s-card-schueler-grundschulbesuch :data="data" @patch="(data) => doPatch(data)" />
+		<s-card-schueler-sekundarstufe1 :data="data" @patch="(data) => doPatch(data)" />
+		<s-card-schueler-merkmale :data="data" />
+		<s-card-schueler-schulen :data="data" />
 	</div>
 </template>
 
 <script setup lang="ts">
 
-	import { SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, ShallowRef } from "vue";
-	import { routeSchuelerSchulbesuch } from "~/router/apps/schueler/RouteSchuelerSchulbesuch";
-	import { PropDataSchulbesuch } from "./PropDataSchulbesuch";
+	import { SchuelerSchulbesuchsdaten } from "@svws-nrw/svws-core-ts";
 
 	const props = defineProps<{
-		item: ShallowRef<SchuelerListeEintrag | undefined>;
-		data: PropDataSchulbesuch;
+		data: SchuelerSchulbesuchsdaten;
+		patch: (data : Partial<SchuelerSchulbesuchsdaten>) => Promise<void>;
 	}>();
 
-	const visible: ComputedRef<boolean> = computed(() => {
-		return !(routeSchuelerSchulbesuch.hidden()) && (props.item.value?.id !== undefined);
-	});
+	function doPatch(data: Partial<SchuelerSchulbesuchsdaten>) {
+		void props.patch(data);
+	}
 
 </script>

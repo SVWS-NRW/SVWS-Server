@@ -1,25 +1,32 @@
 <template>
 	<svws-ui-content-card title="Grundschulbesuch">
 		<div class="input-wrapper">
-			<svws-ui-text-input placeholder="Einschulung" v-model="grundschuleEinschulungsjahr" type="text" />
-			<svws-ui-text-input placeholder="Einschulungsart" v-model="grundschuleEinschulungsartID" />
-			<svws-ui-text-input placeholder="EP-Jahre" v-model="grundschuleJahreEingangsphase" />
-			<svws-ui-text-input placeholder="Übergangsempfehlung Jg. 5" v-model="grundschuleUebergangsempfehlungID" type="text" />
+			<svws-ui-text-input placeholder="Einschulung" :model-value="data.grundschuleEinschulungsjahr?.valueOf()"
+				@update:model-value="doPatch({ grundschuleEinschulungsjahr: Number($event) })" type="text" />
+			<svws-ui-text-input placeholder="Einschulungsart" :model-value="data.grundschuleEinschulungsartID?.valueOf()"
+				@update:model-value="doPatch({ grundschuleEinschulungsartID: Number($event) })" />
+			<svws-ui-text-input placeholder="EP-Jahre" :model-value="data.grundschuleJahreEingangsphase?.valueOf()"
+				@update:model-value="doPatch({ grundschuleJahreEingangsphase: Number($event) })" />
+			<svws-ui-text-input placeholder="Übergangsempfehlung Jg. 5" :model-value="data.grundschuleUebergangsempfehlungID?.valueOf()"
+				@update:model-value="doPatch({ grundschuleUebergangsempfehlungID: Number($event) })" type="text" />
 		</div>
 	</svws-ui-content-card>
 </template>
 
 <script setup lang="ts">
 
-	import { PropDataSchulbesuch } from "./PropDataSchulbesuch";
+	import { SchuelerSchulbesuchsdaten } from "@svws-nrw/svws-core-ts";
 
-	const props = defineProps<{
-		data: PropDataSchulbesuch;
+	defineProps<{
+		data: SchuelerSchulbesuchsdaten;
 	}>();
 
-	const grundschuleEinschulungsjahr = props.data.grundschuleEinschulungsjahr();
-	const grundschuleEinschulungsartID = props.data.grundschuleEinschulungsartID();
-	const grundschuleJahreEingangsphase = props.data.grundschuleJahreEingangsphase();
-	const grundschuleUebergangsempfehlungID = props.data.grundschuleUebergangsempfehlungID();
+	const emit = defineEmits<{
+		(e: 'patch', data: Partial<SchuelerSchulbesuchsdaten>): void;
+	}>()
+
+	function doPatch(data: Partial<SchuelerSchulbesuchsdaten>) {
+		emit('patch', data);
+	}
 
 </script>

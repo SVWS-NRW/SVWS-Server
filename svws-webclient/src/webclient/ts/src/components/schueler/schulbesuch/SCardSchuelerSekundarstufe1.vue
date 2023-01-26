@@ -1,23 +1,30 @@
 <template>
 	<svws-ui-content-card title="Sekundarstufe I">
 		<div class="input-wrapper">
-			<svws-ui-text-input placeholder="Jahr Wechsel Sek I" v-model="sekIWechsel" type="text" />
-			<svws-ui-text-input placeholder="Erste Schulform Sek I" v-model="sekIErsteSchulform" type="text" />
-			<svws-ui-text-input placeholder="Jahr Wechsel Sek II" v-model="sekIIWechsel" type="text" />
+			<svws-ui-text-input placeholder="Jahr Wechsel Sek I" :model-value="data.sekIWechsel?.valueOf()"
+				@update:model-value="doPatch({ sekIWechsel: Number($event) })" type="text" />
+			<svws-ui-text-input placeholder="Erste Schulform Sek I" :model-value="data.sekIErsteSchulform?.valueOf()"
+				@update:model-value="doPatch({ sekIErsteSchulform: String($event) })" type="text" />
+			<svws-ui-text-input placeholder="Jahr Wechsel Sek II" :model-value="data.sekIIWechsel?.valueOf()"
+				@update:model-value="doPatch({ sekIIWechsel: Number($event) })" type="text" />
 		</div>
 	</svws-ui-content-card>
 </template>
 
 <script setup lang="ts">
 
-	import { PropDataSchulbesuch } from "./PropDataSchulbesuch";
+	import { SchuelerSchulbesuchsdaten } from "@svws-nrw/svws-core-ts";
 
-	const props = defineProps<{
-		data: PropDataSchulbesuch;
+	defineProps<{
+		data: SchuelerSchulbesuchsdaten;
 	}>();
 
-	const sekIWechsel = props.data.sekIWechsel();
-	const sekIErsteSchulform = props.data.sekIErsteSchulform();
-	const sekIIWechsel = props.data.sekIIWechsel();
+	const emit = defineEmits<{
+		(e: 'patch', data: Partial<SchuelerSchulbesuchsdaten>): void;
+	}>()
+
+	function doPatch(data: Partial<SchuelerSchulbesuchsdaten>) {
+		emit('patch', data);
+	}
 
 </script>

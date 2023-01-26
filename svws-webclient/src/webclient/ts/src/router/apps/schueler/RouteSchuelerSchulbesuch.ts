@@ -1,9 +1,42 @@
 import { RouteLocationNormalized, RouteParams } from "vue-router";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteSchueler, routeSchueler } from "~/router/apps/RouteSchueler";
-import { RouteDataSchuelerSchulbesuch } from "./RouteDataSchuelerSchulbesuch";
+import { SchuelerSchulbesuchsdaten } from "@svws-nrw/svws-core-ts";
+import { Ref, ref } from "vue";
+import { App } from "~/apps/BaseApp";
 
 const SSchuelerSchulbesuch = () => import("~/components/schueler/schulbesuch/SSchuelerSchulbesuch.vue");
+
+class RouteDataSchuelerSchulbesuch {
+
+	_daten: Ref<SchuelerSchulbesuchsdaten | undefined>;
+
+	public constructor() {
+		this._daten = ref(undefined);
+	}
+
+	public get daten(): SchuelerSchulbesuchsdaten {
+		if (this._daten.value === undefined)
+			throw new Error("Beim Zugriff auf die Daten sind noch keine gültigen Daten geladen.");
+		return this._daten.value;
+	}
+
+	public get visible(): boolean {
+		return !(routeSchuelerSchulbesuch.hidden()) && (this._daten.value !== undefined);
+	}
+
+	public async onSelect(id?: number) {
+		if (((id === undefined) && (this._daten.value === undefined)) || ((this._daten.value !== undefined) && (this.daten.id === id)))
+			return;
+		this._daten.value = (id === undefined) ? undefined : await App.api.getSchuelerSchulbesuch(App.schema, id);
+	}
+
+	patch = async (data : Partial<SchuelerSchulbesuchsdaten>) => {
+		if (this._daten.value === undefined)
+			throw new Error("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
+		await App.api.patchSchuelerSchulbesuch(data, App.schema, this.daten.id);
+	}
+}
 
 export class RouteSchuelerSchulbesuch extends RouteNode<RouteDataSchuelerSchulbesuch, RouteSchueler> {
 
@@ -25,7 +58,9 @@ export class RouteSchuelerSchulbesuch extends RouteNode<RouteDataSchuelerSchulbe
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
 			...routeSchueler.getProps(to),
-			data: this.data
+			propdata: this.data,
+			data: this.data.daten,
+			patch: this.data.patch
 		};
 	}
 
