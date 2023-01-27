@@ -135,6 +135,11 @@ export class RouteManager {
 					if (result !== undefined)
 						return result;
 				}
+				for (const node of to_predecessors_all) {
+					result = await node.doUpdate(to_node, to.params);
+					if (result !== undefined)
+						return result;
+				}
 				result = await to_node.doUpdate(to_node, to.params);
 				if (result !== undefined)
 					return result;
