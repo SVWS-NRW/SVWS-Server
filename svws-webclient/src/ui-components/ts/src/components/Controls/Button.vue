@@ -31,20 +31,31 @@
 		'button--error': type === 'error',
 		'button--transparent': type === 'transparent',
 		'button--icon': type === 'icon',
+		'button--trash': type === 'trash',
 		'button--dropdown-action': dropdownAction === true,
 		'button--normal': size === 'normal',
 		'button--small': size === 'small',
 	}" :disabled="disabled" @click="onClick">
 		<slot />
+		<Icon v-if="type === 'trash'" class="button--trash-icon">
+			<i-ri-delete-bin-line class="icon--line" />
+			<i-ri-delete-bin-fill class="icon--fill" />
+		</Icon>
 	</button>
 </template>
 
-<style>
+<style lang="postcss">
 .button {
 	@apply rounded-full border-2;
 	@apply select-none;
 	@apply text-button font-bold;
 	@apply flex items-center;
+	gap: 0.25em;
+}
+
+.button svg {
+	margin-top: -0.1em;
+	margin-bottom: -0.1em;
 }
 
 .button:focus {
@@ -93,6 +104,38 @@
 	@apply bg-error;
 	@apply ring-error ring-opacity-50;
 	@apply text-white;
+}
+
+.button--trash {
+	@apply bg-transparent rounded relative;
+	@apply py-0 px-2;
+	@apply text-error;
+	border: 0 !important;
+	padding: 0.2em !important;
+	width: 1.6em;
+	height: 1.6em;
+
+	.icon--fill {
+		@apply hidden;
+	}
+
+	&:hover {
+		@apply bg-error text-white;
+
+		.icon--line {
+			@apply hidden;
+		}
+
+		.icon--fill {
+			@apply inline-block;
+		}
+	}
+
+	&:focus {
+		@apply bg-error;
+		@apply ring-error ring-opacity-25;
+		@apply text-white;
+	}
 }
 
 .button--transparent {

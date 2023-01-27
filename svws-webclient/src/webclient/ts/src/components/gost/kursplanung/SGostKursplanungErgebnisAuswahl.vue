@@ -1,28 +1,62 @@
 <template>
 	<div v-if="visible">
 		<svws-ui-table v-model="selected_ergebnis" v-model:selection="selected_ergebnisse" is-multi-select class="mt-10"
-			:columns="[{ key: 'id', label: 'ID'}, { key: 'bewertung', label: 'Bewertungen', span: 15 }]" :data="(rows_ergebnisse.toArray() as DataTableItem[])"
-			:footer="selected_ergebnisse.length > 0">
+			:columns="[{ key: 'id', label: 'ID'}, { key: 'bewertung', label: 'Bewertungen', span: 8 }]" :data="(rows_ergebnisse.toArray() as DataTableItem[])"
+			:footer="true">
+			<template #head-bewertung>
+				<th style="flex-grow: 8;">
+					<svws-ui-popover style="width: auto;" class="cursor-default">
+						<template #trigger>
+							<span class="inline-flex items-center">
+								Bewertungen
+								<svws-ui-icon class="ml-1">
+									<i-ri-information-line/>
+								</svws-ui-icon>
+							</span>
+						</template>
+						<template #content>
+							<span class="normal-case text-base font-normal">
+								<span class="bewertung--letter text-primary">R</span> Regelverletzungen<br/>
+								<span class="bewertung--letter text-primary">W</span> Wahlkonflikte<br/>
+								<span class="bewertung--letter text-primary">D</span> max. Kursdifferenz<br/>
+								<span class="bewertung--letter text-primary">P</span> Fächerparallelität
+							</span>
+						</template>
+					</svws-ui-popover>
+				</th>
+			</template>
 			<template #cell-bewertung="{ row }: {row: GostBlockungsergebnisListeneintrag}">
-				<span class="flex gap-1 cell--bewertung">
-					<span :style="{'background-color': color1(row)}">{{ manager?.getOfBewertung1Wert(row.id) }}</span>
-					<span :style="{'background-color': color2(row)}">{{ manager?.getOfBewertung2Wert(row.id) }}</span>
-					<span :style="{'background-color': color3(row)}">{{ manager?.getOfBewertung3Wert(row.id) }}</span>
-					<span :style="{'background-color': color4(row)}">{{ manager?.getOfBewertung4Wert(row.id) }}</span>
+				<span class="flex gap-1 cell--bewertung items-center">
+					<span class="bewertung--help relative" :style="{'background-color': colorMix(row)}">{{ manager?.getOfBewertung1Wert(row.id) + manager?.getOfBewertung2Wert(row.id) + manager?.getOfBewertung3Wert(row.id) + manager?.getOfBewertung4Wert(row.id) }}</span>
+					<span class="text-sm">{{ manager?.getOfBewertung1Wert(row.id) }} R</span>
+					<span class="text-sm">{{ manager?.getOfBewertung2Wert(row.id) }} W</span>
+					<span class="text-sm">{{ manager?.getOfBewertung3Wert(row.id) }} D</span>
+					<span class="text-sm">{{ manager?.getOfBewertung4Wert(row.id) }} P</span>
 				</span>
 				<svws-ui-icon v-if="row.istVorlage"> <i-ri-pushpin-fill /></svws-ui-icon>
 				<div v-if="(row.id === selected_ergebnis?.id && !blockung_aktiv)" class="flex gap-1">
 					<svws-ui-button size="small" type="secondary" class="cursor-pointer" @click.stop="derive_blockung" :disabled="pending"> Ableiten </svws-ui-button>
-					<svws-ui-button v-if="rows_ergebnisse.size() > 1" size="small" type="error" class="cursor-pointer" @click.stop="remove_ergebnis" :disabled="pending">
-						<svws-ui-icon><i-ri-delete-bin-2-line /></svws-ui-icon>
-					</svws-ui-button>
+					<svws-ui-button v-if="rows_ergebnisse.size() > 1" type="trash" class="cursor-pointer" @click.stop="remove_ergebnis" :disabled="pending" title="Ergebnis löschen"/>
 				</div>
 			</template>
 			<template #footer>
-				<span v-if="selected_ergebnisse.length === rows_ergebnisse.size()">Mindestens ein Ergebnis behalten!</span>
-				<svws-ui-button @click="remove_ergebnisse" type="error" size="small" :disabled="selected_ergebnisse.length > rows_ergebnisse.size() - 1">
-					Auswahl löschen
-				</svws-ui-button>
+				<span v-if="selected_ergebnisse.length > 0" class="text-sm normal-case mr-auto">
+					<span v-if="selected_ergebnisse.length === rows_ergebnisse.size()">Es muss mindestens ein Ergebnis behalten werden.</span>
+					<span v-else>{{ selected_ergebnisse.length }}/{{ rows_ergebnisse.size() }} ausgewählt</span>
+				</span>
+				<div v-if="selected_ergebnisse.length > 0 && selected_ergebnisse.length !== rows_ergebnisse.size()" class="overflow-y-hidden flex items-center justify-end pr-1 h-full">
+					<svws-ui-popover class="popper--danger" :open-delay="200">
+						<template #trigger>
+							<svws-ui-button @click="remove_ergebnisse" type="trash" class="cursor-pointer"
+											@click.stop="remove_ergebnis"
+											:disabled="selected_ergebnisse.length > rows_ergebnisse.size() - 1"
+											/>
+						</template>
+						<template #content>
+							Auswahl löschen
+						</template>
+					</svws-ui-popover>
+				</div>
 			</template>
 		</svws-ui-table>
 	</div>
@@ -100,16 +134,20 @@
 	}
 
 	function color1(ergebnis: GostBlockungsergebnisListeneintrag): string {
-		return `hsl(${Math.round((1 - (manager.value?.getOfBewertung1Intervall(ergebnis.id)||0)) * 120)},100%,80%)`
+		return `hsl(${Math.round((1 - (manager.value?.getOfBewertung1Intervall(ergebnis.id)||0)) * 120)},100%,75%)`
 	}
 	function color2(ergebnis: GostBlockungsergebnisListeneintrag): string {
-		return `hsl(${Math.round((1 - (manager.value?.getOfBewertung2Intervall(ergebnis.id)||0)) * 120)},100%,80%)`
+		return `hsl(${Math.round((1 - (manager.value?.getOfBewertung2Intervall(ergebnis.id)||0)) * 120)},100%,75%)`
 	}
 	function color3(ergebnis: GostBlockungsergebnisListeneintrag): string {
-		return `hsl(${Math.round((1 - (manager.value?.getOfBewertung3Intervall(ergebnis.id)||0)) * 120)},100%,80%)`
+		return `hsl(${Math.round((1 - (manager.value?.getOfBewertung3Intervall(ergebnis.id)||0)) * 120)},100%,75%)`
 	}
 	function color4(ergebnis: GostBlockungsergebnisListeneintrag): string {
-		return `hsl(${Math.round((1 - (manager.value?.getOfBewertung4Intervall(ergebnis.id)||0)) * 120)},100%,80%)`
+		return `hsl(${Math.round((1 - (manager.value?.getOfBewertung4Intervall(ergebnis.id)||0)) * 120)},100%,75%)`
+	}
+	function colorMix(ergebnis: GostBlockungsergebnisListeneintrag): string {
+		const combined = (manager.value?.getOfBewertung1Intervall(ergebnis.id)||0) + (manager.value?.getOfBewertung2Intervall(ergebnis.id)||0) + (manager.value?.getOfBewertung3Intervall(ergebnis.id)||0) + (manager.value?.getOfBewertung4Intervall(ergebnis.id)||0);
+		return `hsl(${Math.round((1 - (combined > 1 ? 1 : combined)) * 120)},100%,70%)`
 	}
 
 	const visible: ComputedRef<boolean> = computed(() => {
@@ -186,11 +224,22 @@
 <style lang="postcss" scoped>
 	.cell--bewertung span {
 		@apply inline-block text-center text-black rounded font-normal;
-		min-width: 5ex;
+		min-width: 3em;
 		padding: 0.05em 0.2em;
 	}
 
+	.bewertung--letter {
+		@apply inline-block text-center rounded font-bold bg-white leading-tight;
+		padding: 0.05em 0.1em;
+		min-width: 2em;
+		font-size: 0.8em;
+	}
+
 	.vt-clicked .cell--bewertung span {
-		filter: brightness(0.8) saturate(200%);
+		@apply font-bold;
+	}
+
+	.v-table tr {
+		@apply overflow-visible;
 	}
 </style>

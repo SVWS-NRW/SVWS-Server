@@ -3,7 +3,10 @@
 		<svws-ui-header>
 			<div class="flex items-center">
 				<span class="inline-block mr-3">{{ item.value?.kuerzel?.toString() }}</span>
-				<svws-ui-badge type="light">{{ "ID: " + item.value?.id }}</svws-ui-badge>
+				<svws-ui-badge type="light" title="ID">
+					<i-ri-fingerprint-line/>
+					{{ item.value?.id }}
+				</svws-ui-badge>
 			</div>
 			<div>
 				<div class="separate-items--custom">

@@ -104,7 +104,7 @@
 					<th v-if="isMultiSelect" class="column--checkbox">
 						<span class="table--head-content">
 							<Checkbox v-if="isMultiSelect && rows.length"
-								:model-value="allRowsSelected"
+								:model-value="allRowsSelected ? allRowsSelected : (selection.length > 0 ? undefined : false)"
 								@update:model-value="proxyUpdate(toggleAllRows)" />
 						</span>
 					</th>
@@ -168,7 +168,7 @@
 		<template v-if="isMultiSelect || footer" #foot="{ allRowsSelected, toggleAllRows, rows }">
 			<tr class="table--footer">
 				<td class="table--footer-checkbox column--checkbox">
-					<Checkbox v-if="isMultiSelect && rows.length" :model-value="allRowsSelected" @change="toggleAllRows" />
+					<Checkbox v-if="isMultiSelect && rows.length" :model-value="allRowsSelected ? allRowsSelected : (selection.length > 0 ? undefined : false)" @update:model-value="proxyUpdate(toggleAllRows)" />
 				</td>
 				<td class="table--footer--actions" :class="{ 'table--footer--has-actions': footer }">
 					<slot v-if="footer" name="footer" />
@@ -183,7 +183,7 @@
 		@apply border-dark-20 flex w-full flex-col border-l bg-white;
 
 		tr {
-			@apply border-dark-20 relative flex w-full items-center overflow-hidden border-b;
+			@apply border-dark-20 relative flex w-full items-center border-b;
 		}
 
 		th,
@@ -211,7 +211,7 @@
 
 		thead {
 			@apply sticky top-0 left-0 z-10 w-full bg-white;
-			@apply border-dark-20 shadow-black/25 text-sm-bold border-t uppercase shadow;
+			@apply border-dark-20 shadow-black/25 text-sm-bold border-t uppercase shadow-sm;
 			position: -webkit-sticky;
 
 			tr {

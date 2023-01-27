@@ -17,7 +17,7 @@
 						<template #icon> <i-ri-logout-circle-line /> </template>
 					</svws-ui-sidebar-menu-item>
 				</template>
-				<template #version>v{{ version }}</template>
+				<template #version>{{ version }}</template>
 				<template #metaNavigation>
 					<a href="https://www.svws.nrw.de/faq/impressum">Impressum</a>
 					<a href="#">Datenschutz</a>
@@ -87,15 +87,17 @@
 
 	function select(current : RouteNode<unknown, any>) : void {
 		void router.push({ name: current.name });
-		document.title = schulname.value + " - " + current.text;
+		document.title = current.text + " - " + schulname.value;
 	}
 
 	function is_active(current : RouteNode<unknown, any>): boolean {
 		const routename = route.name?.toString().split('_')[0];
 		if (routename === undefined)
 			return false;
-		if (routename === current.name)
+		if (routename === current.name) {
+			document.title = current.text + " - " + schulname.value;
 			return true;
+		}
 		return current.menu.map(r => r.name).includes(routename);
 	}
 
@@ -105,7 +107,7 @@
 
 	async function logout() {
 		await main.logout();
-		document.title = "SVWS-Client";
+		document.title = "SVWS NRW";
 		await router.push("/login");
 	}
 </script>

@@ -15,9 +15,7 @@
 							<svws-ui-icon v-if="row.istAktiv"> <i-ri-pushpin-fill /> </svws-ui-icon>
 							<div v-if="allow_add_blockung(props.halbjahr.value)" class="flex gap-1">
 								<svws-ui-button size="small" type="secondary" @click.stop="create_blockungsergebnisse" title="Ergebnisse berechnen" :disabled="pending">Berechnen</svws-ui-button>
-								<svws-ui-button size="small" type="error" @click.stop="toggle_remove_blockung_modal" title="Blockung löschen" :disabled="pending">
-									<svws-ui-icon><i-ri-delete-bin-2-line /></svws-ui-icon>
-								</svws-ui-button>
+								<svws-ui-button type="trash" class="cursor-pointer" @click.stop="toggle_remove_blockung_modal" title="Blockung löschen" :disabled="pending"/>
 							</div>
 						</td>
 						<td v-else>

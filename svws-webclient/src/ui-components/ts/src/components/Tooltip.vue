@@ -10,10 +10,4 @@
 .tooltip {
 	@apply text-body;
 }
-
-.popper #arrow::before,
-.popper:hover,
-.popper:hover > #arrow::before{
-	@apply bg-primary;
-}
 </style>

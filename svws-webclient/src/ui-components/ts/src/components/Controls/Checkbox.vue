@@ -39,14 +39,18 @@
 			'checkbox--statistics': statistics,
 			'checkbox--checked': modelValue,
 			'checkbox--circle': circle,
-			'checkbox--headless': headless
+			'checkbox--headless': headless,
+			'checkbox--indeterminate': modelValue === undefined
 		}">
 		<input v-model="model" class="checkbox--control" type="checkbox" :value="value" :disabled="disabled" :title="disabled ? 'Deaktiviert' : ''">
-		<Icon v-if="modelValue">
+		<Icon v-if="modelValue === undefined">
+			<i-ri-checkbox-indeterminate-line />
+		</Icon>
+		<Icon v-else-if="modelValue">
 			<i-ri-checkbox-line v-if="!circle" />
 			<i-ri-checkbox-circle-fill v-if="circle" />
 		</Icon>
-		<Icon v-if="!modelValue">
+		<Icon v-else-if="!modelValue">
 			<i-ri-checkbox-blank-line v-if="!circle" />
 		</Icon>
 		<span class="checkbox--label" v-if="$slots.default || statistics">
@@ -68,7 +72,7 @@
 	@apply my-1;
 }
 
-.checkbox:not(.checkbox--checked) .icon {
+.checkbox:not(.checkbox--checked):not(.checkbox--indeterminate) .icon {
 	@apply opacity-50;
 }
 
@@ -81,7 +85,8 @@
 	@apply cursor-not-allowed;
 }
 
-.checkbox--checked {
+.checkbox--checked,
+.checkbox--indeterminate {
 	@apply font-medium;
 }
 

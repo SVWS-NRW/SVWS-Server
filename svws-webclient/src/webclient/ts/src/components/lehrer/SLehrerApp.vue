@@ -7,7 +7,10 @@
 				</div>
 				<div>
 					<span class="inline-block mr-3">{{ inputTitel }} {{ inputVorname }} {{ inputNachname }}</span>
-					<svws-ui-badge type="light">ID: {{ item.value?.id }}</svws-ui-badge>
+					<svws-ui-badge type="light" title="ID">
+						<i-ri-fingerprint-line/>
+						{{ item.value?.id }}
+					</svws-ui-badge>
 					<br>
 					<span class="opacity-50">{{ inputKuerzel }}</span>
 				</div>

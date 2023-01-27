@@ -39,6 +39,14 @@
 	-webkit-overflow-scrolling: touch;
 }
 
+.color--error {
+	color: rgb(var(--color-error));
+}
+
+.color--dark {
+	color: rgb(var(--color-dark));
+}
+
 /* Defaults zu den Schriften */
 
 .default-font {

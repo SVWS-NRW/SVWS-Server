@@ -34,5 +34,24 @@
 	.popper {
 		@apply w-max z-50 leading-tight;
 		max-width: 16rem;
+		color: var(--popper-theme-text-color);
+	}
+
+	.popper--danger {
+		--popper-theme-background-color: theme("colors.error");
+		--popper-theme-background-color-hover: theme("colors.error");
+		--popper-theme-text-color: theme("colors.white");
+	}
+
+	.popper--dark {
+		--popper-theme-background-color: theme("colors.dark");
+		--popper-theme-background-color-hover: theme("colors.dark");
+		--popper-theme-text-color: theme("colors.white");
+	}
+
+	.popper--light {
+		--popper-theme-background-color: theme("colors.light");
+		--popper-theme-background-color-hover: theme("colors.light");
+		--popper-theme-text-color: theme("colors.black");
 	}
 </style>

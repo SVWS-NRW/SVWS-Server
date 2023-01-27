@@ -27,9 +27,14 @@
 <style lang="postcss">
 .badge {
 	@apply font-bold leading-none;
-	@apply rounded inline-block align-top;
+	@apply rounded inline-flex items-center align-top;
 	font-size: 0.65em;
 	padding: 0.35em 0.5em;
+	gap: 0.25em;
+
+	svg {
+		margin: -0.1em;
+	}
 }
 
 .badge--lg {

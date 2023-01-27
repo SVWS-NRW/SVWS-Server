@@ -5,33 +5,41 @@
 				<span>
 					{{ `${schueler.nachname}, ${schueler.vorname}` }}
 				</span>
-				<div>
-					<svws-ui-badge v-if="schueler.status !== 'Aktiv'" type="light" size="big"> {{ schueler.status }} </svws-ui-badge>
-					<div class="leading-none overflow-hidden" style="margin-bottom: -0.1em;">
-						<svws-ui-popover v-if="kollision && !nichtwahl">
+				<div class="flex items-center">
+					<svws-ui-badge v-if="schueler.status !== 'Aktiv'" type="light" size="big" class="mr-1"> {{ schueler.status }} </svws-ui-badge>
+					<div
+						class="leading-none overflow-hidden w-5"
+						style="margin-bottom: -0.1em;"
+						:class="{
+							'color--error': kollision,
+							'color--dark': !kollision,
+						}"
+					>
+						<svws-ui-popover v-if="kollision && !nichtwahl" class="popper--danger">
 							<template #trigger>
-								<svws-ui-icon> <i-ri-alert-line class="text-error" /> </svws-ui-icon>
+								<svws-ui-icon> <i-ri-alert-fill /> </svws-ui-icon>
 							</template>
 							<template #content>
 								<span>Kollision</span>
 							</template>
 						</svws-ui-popover>
-						<svws-ui-popover v-if="!kollision && nichtwahl">
+						<svws-ui-popover v-else-if="!kollision && nichtwahl" class="popper--dark">
 							<template #trigger>
-								<svws-ui-icon> <i-ri-forbid-2-line class="text-dark-20" /> </svws-ui-icon>
+								<svws-ui-icon> <i-ri-forbid-2-line /> </svws-ui-icon>
 							</template>
 							<template #content>
 								<span>Nichtwahl</span>
 							</template>
 						</svws-ui-popover>
-						<svws-ui-popover v-if="kollision && nichtwahl">
+						<svws-ui-popover v-else-if="kollision && nichtwahl" class="popper--danger">
 							<template #trigger>
-								<svws-ui-icon> <i-ri-alert-fill class="text-error" /> </svws-ui-icon>
+								<svws-ui-icon> <i-ri-alert-line /> </svws-ui-icon>
 							</template>
 							<template #content>
 								<span>Kollision und Nichtwahl</span>
 							</template>
 						</svws-ui-popover>
+						<svws-ui-icon v-else class="opacity-25"> <i-ri-check-fill /> </svws-ui-icon>
 					</div>
 				</div>
 			</div>

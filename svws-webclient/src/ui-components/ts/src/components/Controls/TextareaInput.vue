@@ -136,7 +136,7 @@
 	</label>
 </template>
 
-<style>
+<style lang="postcss">
 	.textarea-input {
 		@apply flex;
 		@apply relative;
@@ -237,5 +237,25 @@
 	.textarea-input--placeholder--required:after {
 		@apply text-error;
 		content: " *";
+	}
+
+	.textarea--disguise {
+		&:not(.textarea-input-filled):not(.textarea-input-focus) {
+			.textarea-input--placeholder {
+				&:after {
+					content: ' hinzufügen…';
+				}
+			}
+		}
+
+		&:not(.textarea-input-filled):not(.textarea-input-focus):not(:hover):not(:focus) {
+			.textarea-input--control {
+				@apply border-transparent resize-none;
+			}
+
+			.textarea-input--placeholder {
+				@apply left-0;
+			}
+		}
 	}
 </style>

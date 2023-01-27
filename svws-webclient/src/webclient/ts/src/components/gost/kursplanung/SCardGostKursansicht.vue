@@ -92,16 +92,15 @@
 			</table>
 		</div>
 	</svws-ui-content-card>
+	<div class="hidden">
 	<svws-ui-modal ref="modal_aktivieren" size="small">
 		<template #modalTitle>Blockungsergebnis aktivieren</template>
 		<template #modalDescription>
-			<div class="flex gap-1 mb-2">
-				Soll das Blockungsergebnis aktiviert weregel
-			</div>
-			<div class="flex gap-1">
-				<svws-ui-button @click="toggle_modal_aktivieren">Abbrechen</svws-ui-button>
-				<svws-ui-button @click="activate_ergebnis">Ja</svws-ui-button>
-			</div>
+			Soll {{ blockung.daten?.name ? blockung.daten?.name : 'das Blockungsergebnis' }} aktiviert werden?
+		</template>
+		<template #modalActions>
+			<svws-ui-button type="secondary" @click="toggle_modal_aktivieren">Abbrechen</svws-ui-button>
+			<svws-ui-button type="primary" @click="activate_ergebnis">Ja</svws-ui-button>
 		</template>
 	</svws-ui-modal>
 	<svws-ui-modal ref="modal_hochschreiben" size="small">
@@ -113,7 +112,7 @@
 			<svws-ui-button type="secondary" @click="toggle_modal_hochschreiben">Abbrechen</svws-ui-button>
 			<svws-ui-button @click="hochschreiben_ergebnis">Ja</svws-ui-button>
 		</template>
-	</svws-ui-modal>
+	</svws-ui-modal></div>
 </template>
 
 <script setup lang="ts">

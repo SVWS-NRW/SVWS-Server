@@ -210,7 +210,7 @@
 	.text-input-component:focus-within .text-input--control[type="date"],
 	.text-input-filled .text-input--control[type="date"] {
 		@apply text-black;
-		@apply pr-2;
+		@apply pr-1;
 	}
 
 	@-moz-document url-prefix() {

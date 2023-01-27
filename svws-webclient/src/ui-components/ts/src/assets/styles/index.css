@@ -33,7 +33,7 @@
 		--color-green-dark: 15, 93, 66; /* #0f5d42 */
 
 		--popper-theme-background-color: rgb(var(--color-primary));
-		--popper-theme-background-color-hover: rgb(var(--color-primary));
+		--popper-theme-background-color-hover: var(--popper-theme-background-color);
 		--popper-theme-padding: 0.4em 0.75em 0.45em;
 		--popper-theme-text-color: rgb(var(--color-white));
 		--popper-theme-border-radius: 0.25rem;

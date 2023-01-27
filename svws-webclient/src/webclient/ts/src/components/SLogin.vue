@@ -5,10 +5,7 @@
 				<div class="login-container">
 					<div class="login-form">
 						<h1 class="login-form-header">
-							<span class="login-form-logo">
-								<img src="/images/Wappenzeichen_NRW.svg" alt="Wappenzeichen NRW">
-							</span>
-							<span>SVWS NRW</span>
+							<span>SVWS <span class="font-normal">NRW</span></span>
 						</h1>
 						<div class="flex items-center w-full space-x-4 mt-1">
 							<svws-ui-text-input v-model="serverAddress" type="text" placeholder="Server Addresse" />
@@ -29,7 +26,10 @@
 								<div class="w-full flex justify-end items-start">
 									<div v-if="main.config.isAuthenticated === false" class="text-left mr-4 leading-tight text-red-500 font-bold">Fehler bei der Anmeldung. Passwort oder Benutzername falsch.</div>
 									<div v-else class="text-left mr-4 leading-tight w-full my-auto opacity-50">Verbunden mit {{ serverAddress }}</div>
-									<svws-ui-button @click="login">Anmelden</svws-ui-button>
+									<svws-ui-button @click="login">
+										Anmelden
+										<i-ri-login-circle-line/>
+									</svws-ui-button>
 								</div>
 							</div>
 							<div v-else class="login-input-group">
@@ -146,7 +146,7 @@
 .login-form {
 	@apply w-full p-4 lg:p-8 bg-white rounded-xl flex flex-col items-center;
 	max-width: 40rem;
-	@apply shadow-lg;
+	@apply shadow-md;
 }
 
 .login-input-group .wrapper {
