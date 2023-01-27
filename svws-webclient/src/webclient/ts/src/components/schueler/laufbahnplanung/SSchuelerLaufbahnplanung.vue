@@ -1,23 +1,12 @@
 <template>
-	<svws-ui-badge class="cursor-pointer print:hidden" size="tiny" type="primary" @click="modal.openModal()"> Hilfe </svws-ui-badge>
-	<svws-ui-modal ref="modal">
-		<template #modalTitle>Hilfe</template>
-		<template #modalDescription>
-			<hilfe-laufbahnplanung />
-		</template>
-		<template #modalActions>
-			<svws-ui-button type="secondary" @click="modal.closeModal">
-				Schließen
-			</svws-ui-button>
-		</template>
-	</svws-ui-modal>
+	<s-modal-hilfe> <hilfe-laufbahnplanung /> </s-modal-hilfe>
 	<s-card-schueler-laufbahnplanung v-if="visible" :item="item.value" :stammdaten="stammdaten" :data-laufbahn="dataLaufbahn" :data-faecher="dataFaecher" :data-fachkombinationen="dataFachkombinationen" />
 </template>
 
 <script setup lang="ts">
 
 	import { JahrgangsListeEintrag, KlassenListeEintrag, KursListeEintrag, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
-	import { computed, ComputedRef, ref, ShallowRef } from "vue";
+	import { computed, ComputedRef, ShallowRef } from "vue";
 	import { DataGostFachkombinationen } from "~/apps/gost/DataGostFachkombinationen";
 	import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
 	import { ListJahrgaenge } from "~/apps/kataloge/jahrgaenge/ListJahrgaenge";
@@ -43,12 +32,10 @@
 		dataFachkombinationen: DataGostFachkombinationen;
 	}>();
 
-	const modal = ref();
+	const visible: ComputedRef<boolean> = computed(() =>
+		!(routeSchuelerLaufbahnplanung.hidden())
+		&& (props.item.value?.id !== undefined)
+		&& (props.item.value?.abiturjahrgang !== undefined)
+	);
 
-	const visible: ComputedRef<boolean> =
-		computed(() =>
-			!(routeSchuelerLaufbahnplanung.hidden())
-			&& (props.item.value?.id !== undefined)
-			&& (props.item.value?.abiturjahrgang !== undefined)
-		);
 </script>
