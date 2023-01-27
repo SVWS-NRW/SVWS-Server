@@ -436,3 +436,6 @@ import_mdb.cmd
 svwsconfig.json
 /Notizen
 /deployment/docker/svws/app/
+
+# Local Netlify folder
+.netlify
