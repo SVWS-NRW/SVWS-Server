@@ -11,13 +11,14 @@
 		<div v-if="title || $slots.actions" class="content-card--header" :class="{
 			'content-card--header--has-actions': $slots.actions
 		}">
-			<h3 v-if="title" class="headline-5 content-card--headline">
+			<h3 v-if="title" class="content-card--headline text-headline-sm">
 				{{ title }}
 			</h3>
 			<div v-if="$slots.actions" class="content-card--actions">
 				<slot name="actions" />
 			</div>
 		</div>
+		<slot name="title" />
 		<div class="mt-4">
 			<slot />
 		</div>
@@ -35,7 +36,11 @@
 	}
 
 	.content-card--header {
-		@apply inline-flex items-center justify-between px-3 py-1 rounded bg-light mt-6 mb-2 w-auto -mx-1;
+		@apply inline-flex items-center justify-between px-3 py-1 rounded bg-light mt-6 mb-2 w-auto;
+	}
+
+	.content-card--wrapper--light-bg .content-card--header {
+		@apply bg-white;
 	}
 
 	.content-card--header--has-actions {
@@ -51,9 +56,9 @@
 	}
 
 	.content-card--blockungsuebersicht {
-		@apply gap-x-[3vw];
+		@apply gap-x-16;
 
-		> .content-card--wrapper {
+		.content-card--wrapper {
 			@apply h-full;
 
 			> .mt-4 {
@@ -66,7 +71,7 @@
 		}
 
 		.content-card--header {
-			@apply mt-5 mb-0;
+			@apply mt-0 mb-0;
 		}
 
 	}

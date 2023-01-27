@@ -1,11 +1,17 @@
 <template>
 	<div v-if="visible" class="content-card--blockungsuebersicht flex h-full content-start">
 		<s-card-gost-kursansicht :jahrgangsdaten="jahrgangsdaten" :data-faecher="dataFaecher" :halbjahr="halbjahr.value"
-			:list-blockungen="listBlockungen" :blockung="blockung" :ergebnis="ergebnis"
-			:fachwahlen="fachwahlen" :list-lehrer="listLehrer" :map-lehrer="mapLehrer" />
-		<section class="flex flex-row h-full overflow-y-auto flex-grow gap-4">
-			<div> <router-view name="gost_kursplanung_schueler_auswahl" /> </div>
-			<div> <router-view /> </div>
+								 :list-blockungen="listBlockungen" :blockung="blockung" :ergebnis="ergebnis"
+								 :fachwahlen="fachwahlen" :list-lehrer="listLehrer" :map-lehrer="mapLehrer"
+		/>
+		<section class="content-card--wrapper flex gap-16" style="flex: 2 1 60%;">
+			<!--rounded-xl px-4 shadow-dark-20 shadow-sm border border-dark-20 border-opacity-60-->
+			<div class="w-1/4">
+				<router-view name="gost_kursplanung_schueler_auswahl"/>
+			</div>
+			<div class="w-3/4">
+				<router-view/>
+			</div>
 		</section>
 		<div v-if="allow_regeln" class="app-layout--main-sidebar" :class="{ 'app-layout--main-sidebar--collapsed': collapsed }">
 			<div class="app-layout--main-sidebar--container">

@@ -1,8 +1,8 @@
 <template>
 	<tr :class="{ 'bg-error': schiene_hat_kollisionen }">
-		<td class="bg-primary bg-opacity-5">
-			<div class="flex flex-col pb-1 pt-2">
-				<span class="text-sm-bold">{{ schiene_g?.bezeichnung }}</span>
+		<td class="border-r-2 border-black/25">
+			<div class="flex flex-col py-1">
+				<span class="font-bold">{{ schiene_g?.bezeichnung }}</span>
 				<span class="text-sm">{{ schiene.kurse.size() }} Kurse</span>
 				<span class="text-sm">{{ anzahl_schueler }} Schüler</span>
 			</div>

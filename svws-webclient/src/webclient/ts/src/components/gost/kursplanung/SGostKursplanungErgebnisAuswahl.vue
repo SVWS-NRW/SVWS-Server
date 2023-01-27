@@ -6,7 +6,7 @@
 			<template #head-bewertung>
 				<th style="flex-grow: 10;">
 					<div>
-						<svws-ui-popover style="width: auto;">
+						<svws-ui-popover placement="bottom">
 							<template #trigger>
 							<span class="inline-flex items-center">
 								Bewertungen

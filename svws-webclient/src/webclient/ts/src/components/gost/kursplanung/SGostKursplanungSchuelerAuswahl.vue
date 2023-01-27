@@ -1,37 +1,42 @@
 <template>
-	<svws-ui-content-card title="Schülerauswahl" class="grow">
-		<div class="flex flex-row gap-4">
-			<div class="flex-none">
-				<div class="sticky">
-					<div>
-						<div class="flex justify-between w-72">
-							<svws-ui-checkbox v-model="kurs_filter_toggle" class=""> Kursfilter </svws-ui-checkbox>
-							<svws-ui-multi-select v-if="kurs_filter_toggle" v-model="kurs_filter" :items="kurse" headless :item-text="(kurs: GostBlockungKurs) => manager?.getOfKursName(kurs.id).toString() || ''" class="w-52" />
-						</div>
-						<div class="flex justify-between w-72 mb-3">
-							<svws-ui-checkbox v-model="fach_filter_toggle" class=""> Fachfilter </svws-ui-checkbox>
-							<svws-ui-multi-select v-if="fach_filter_toggle" v-model="fach_filter" :items="dataFaecher.daten" headless :item-text="(fach: GostFach) => fach.bezeichnung?.toString() || ''" class="w-36" />
-							<svws-ui-multi-select v-if="fach_filter_toggle" v-model="kursart_filter" :items="GostKursart.values()" headless :item-text="(kursart: GostKursart) => kursart.kuerzel.toString()" class="w-16" />
-						</div>
-						<div class="mb-3">
-							<svws-ui-radio-group>
-								<svws-ui-radio-option v-model="radio_filter" value="alle" name="Alle" label="Alle" />
-								<svws-ui-radio-option v-model="radio_filter" value="kollisionen" name="Kollisionen" label="Kollisionen" />
-								<svws-ui-radio-option v-model="radio_filter" value="nichtwahlen" name="Nichtwahlen" label="Nichtwahlen" />
-								<svws-ui-radio-option v-model="radio_filter" value="kollisionen_nichtwahlen" name="Kollisionen_Nichtwahlen" label="Kollisionen und Nichtwahlen" />
-							</svws-ui-radio-group>
-						</div>
-						<svws-ui-text-input v-model="filter_name" type="search" placeholder="Suche nach Namen" class="mb-2">
-							<i-ri-search-line />
-						</svws-ui-text-input>
-						<div class="v-table--container">
-							<table class="v-table--complex">
-								<s-kurs-schueler-schueler v-for="s in schueler" :key="s.id" :schueler="s" :selected="selected === s" @click="selected = s"
-									:blockung="blockung" :list-schueler="listSchueler" />
-							</table>
-						</div>
-					</div>
-				</div>
+	<svws-ui-content-card>
+		<div class="flex justify-between items-center">
+			<svws-ui-checkbox v-model="kurs_filter_toggle" class="">Kursfilter<span v-if="kurs_filter_toggle">:</span></svws-ui-checkbox>
+			<svws-ui-multi-select v-if="kurs_filter_toggle" v-model="kurs_filter" :items="kurse" headless :item-text="(kurs: GostBlockungKurs) => manager?.getOfKursName(kurs.id).toString() || ''" class="w-48" />
+		</div>
+		<div class="flex justify-between items-center mb-3">
+			<svws-ui-checkbox v-model="fach_filter_toggle" class=""> Fachfilter<span v-if="fach_filter_toggle">:</span></svws-ui-checkbox>
+			<svws-ui-multi-select v-if="fach_filter_toggle" v-model="fach_filter" :items="dataFaecher.daten" headless :item-text="(fach: GostFach) => fach.bezeichnung?.toString() || ''" class="w-32" />
+			<svws-ui-multi-select v-if="fach_filter_toggle" v-model="kursart_filter" :items="GostKursart.values()" headless :item-text="(kursart: GostKursart) => kursart.kuerzel.toString()" class="w-16" />
+		</div>
+		<div class="mb-3">
+			<svws-ui-radio-group>
+				<svws-ui-radio-option v-model="radio_filter" value="alle" name="Alle" label="Alle" />
+				<svws-ui-radio-option v-model="radio_filter" value="kollisionen" name="Kollisionen" label="Kollisionen" />
+				<svws-ui-radio-option v-model="radio_filter" value="nichtwahlen" name="Nichtwahlen" label="Nichtwahlen" />
+				<svws-ui-radio-option v-model="radio_filter" value="kollisionen_nichtwahlen" name="Kollisionen_Nichtwahlen" label="Kollisionen und Nichtwahlen" />
+			</svws-ui-radio-group>
+		</div>
+		<div class="mb-2">
+			<svws-ui-text-input v-model="filter_name" type="search" placeholder="Suche nach Namen">
+				<i-ri-search-line />
+			</svws-ui-text-input>
+		</div>
+		<div class="h-full overflow-hidden mb-[-1px]">
+			<!---ml-4 -mr-4, table--container: -ml-px-->
+			<div class="v-table--container v-table--rows-white">
+				<table class="v-table--complex">
+					<thead>
+						<tr>
+							<th class="table--th-padding">Schülerauswahl</th>
+						</tr>
+					</thead>
+					<tbody>
+					<s-kurs-schueler-schueler v-for="s in schueler" :key="s.id" :schueler="s" :selected="selected === s"
+											  @click="selected = s"
+											  :blockung="blockung" :list-schueler="listSchueler"/>
+					</tbody>
+				</table>
 			</div>
 		</div>
 	</svws-ui-content-card>

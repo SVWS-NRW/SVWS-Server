@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-content-card>
+	<svws-ui-content-card style="flex: 1 0 40%;">
 		<div class="flex flex-wrap justify-between mb-4">
 			<h3 class="text-headline">{{ blockung.daten?.name ? blockung?.daten?.name : 'Blockungsübersicht' }}</h3>
 			<div class="flex items-center gap-2">

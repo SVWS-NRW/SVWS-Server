@@ -11,7 +11,7 @@
 							<div class="modal--content">
 								<div class="login-form-header mb-8">
 									<h1 class="leading-none py-3 text-center w-full">
-										<span class="font-black">SVWS <span class="font-normal">NRW</span></span>
+										<span class="font-bold">SVWS <span class="font-normal">NRW</span></span>
 									</h1>
 								</div>
 								<div class="w-full mt-1 flex flex-col gap-3 items-center">
@@ -93,7 +93,7 @@
 
 	const route = useRoute();
 
-	const serverAddress = ref("svws-nrw.de");
+	const serverAddress = ref("localhost");
 	const username = ref("Admin");
 	const password = ref("");
 	const defaultRoute = routeSchueler;
@@ -175,7 +175,7 @@
 
 .login-form-header {
 	@apply flex flex-row items-start justify-between gap-4 font-bold leading-tight;
-	font-size: 3rem;
+	font-size: 2.618rem;
 }
 
 .login-footer-links {

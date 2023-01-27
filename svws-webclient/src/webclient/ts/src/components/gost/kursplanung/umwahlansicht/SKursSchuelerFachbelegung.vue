@@ -1,7 +1,7 @@
 <template>
 	<tr v-if="visible" class="cursor-pointer" :class="{ 'bg-red-400': (belegung === undefined) }">
 		<svws-ui-drag-data :key="kursid" tag="td" :data="{ id: kursid, fachID: fach.fachID, kursart: kursartid }"
-			class="select-none" :class="{ 'bg-transparent' : (belegung !== undefined), 'cursor-move' : (belegung === undefined) }"
+			class="select-none" :class="{ 'bg-white' : (belegung !== undefined), 'cursor-move' : (belegung === undefined) }"
 			:style="{ 'background-color': belegung === undefined ? bgColor : false }"
 			:draggable="(belegung === undefined) && (!blockung_aktiv)" @drag-start="drag_started" @drag-end="drag_ended">
 			{{ get_kurs_name() }}

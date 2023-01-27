@@ -237,6 +237,10 @@
 						@apply text-sm-bold;
 					}
 				}
+
+				&.column--key-id {
+					@apply tabular-nums;
+				}
 			}
 
 			.column--checkbox {
@@ -276,7 +280,7 @@
 				}
 
 				&.column--key-id {
-					@apply font-mono justify-end;
+					@apply tabular-nums;
 				}
 			}
 
@@ -359,6 +363,18 @@
 		-webkit-overflow-scrolling: touch;
 	}
 
+	.v-table--rows-white {
+		tr {
+			@apply bg-white;
+		}
+
+		.v-table--complex tr {
+			&.selected {
+				@apply bg-white bg-opacity-100;
+			}
+		}
+	}
+
 	.v-table--complex {
 		@apply w-full border-collapse;
 		--table-border-color: rgba(0, 0, 0, 0.25);
@@ -389,7 +405,7 @@
 				height: 1.72rem;
 
 				&:first-child {
-					box-shadow: 0 -1px 0 rgb(var(--color-dark-20));
+					box-shadow: 0 -1px 0 rgb(var(--color-dark-20)), inset -1px 0 rgb(var(--color-dark-20));
 				}
 			}
 
@@ -397,6 +413,10 @@
 				@apply bg-white;
 				padding: 0.15rem 0.5rem 0.1rem;
 				background-clip: padding-box;
+
+				&.table--th-padding {
+					padding: .8rem .5rem;
+				}
 			}
 
 			th:not(.text-center) {
@@ -467,13 +487,10 @@
 		}
 	}
 
-	.schiene-gesperrt {
-		background-image: url("/images/table-cell--stripes.svg");
-		background-size: auto 100%;
-	}
-
-	.table--row-kursdetail {
-		box-shadow: inset 0 -2px 4px 0 rgba(0, 0, 0, 0.1), inset 0 1px 4px 0 rgba(0, 0, 0, 0.1);
+	.-ml-4 {
+		.v-table--complex th, .v-table--complex thead th.table--th-padding, .v-table--complex td {
+			@apply pl-6;
+		}
 	}
 
 	/*.table--highlight-rows tr:hover,

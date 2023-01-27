@@ -1,10 +1,33 @@
 <template>
-	<svws-ui-content-card :title="`Kurszuordnungen für ${listSchueler.ausgewaehlt?.vorname} ${listSchueler.ausgewaehlt?.nachname}`" class="grow">
-		<div class="flex flex-row gap-4">
-			<svws-ui-drop-data v-if="selected" v-slot="{ active }" class="w-40 flex-none" @drop="drop_entferne_kurszuordnung">
+	<svws-ui-content-card class="mt-4">
+		<template #title v-if="listSchueler.ausgewaehlt">
+			<div class="content-card--header content-card--header--has-actions flex justify-between">
+				<h3 class="content-card--headline">
+					<span>Kurszuordnungen für</span>
+					<span @click="routeSchueler()"
+						  class="inline-flex items-center align-text-bottom gap-1 font-bold link-hover--primary leading-tight cursor-pointer ml-1"
+						  :title="'Zur Seite von ' + listSchueler.ausgewaehlt?.vorname + ' ' + listSchueler.ausgewaehlt?.nachname + ' wechseln'"
+					>
+								<svws-ui-icon class="icon--1-em">
+									<i-ri-group-line/>
+								</svws-ui-icon>
+								{{ listSchueler.ausgewaehlt?.vorname }}
+								{{ listSchueler.ausgewaehlt?.nachname }}
+							</span>
+				</h3>
+				<span @click="routeLaufbahnplanung()"
+					  class="font-bold link-hover--primary cursor-pointer pr-2"
+					  :title="'Zur Laufbahnplanung von ' + listSchueler.ausgewaehlt?.vorname + ' ' + listSchueler.ausgewaehlt?.nachname + ' wechseln'"
+				>
+								Laufbahnplanung
+							</span>
+			</div>
+		</template>
+		<div class="flex gap-4">
+			<svws-ui-drop-data v-if="selected" v-slot="{ active }" class="w-1/6" @drop="drop_entferne_kurszuordnung">
 				<div :class="{ 'border-2 border-dashed border-red-700': active }">
 					<div class="">
-						<table class="v-table--complex">
+						<table class="v-table--complex table-fixed">
 							<s-kurs-schueler-fachbelegung v-for="fach in fachbelegungen" :key="fach.fachID" :fach="fach"
 								:kurse="blockungsergebnisse" :schueler-id="selected.id" :blockung="blockung" :ergebnis="ergebnis" />
 						</table>
@@ -15,19 +38,16 @@
 							<div class="flex items-center justify-center">
 								<svws-ui-button size="small" class="m-2" @click="auto_verteilen" :disabled="pending">Automatisch verteilen</svws-ui-button>
 							</div>
-							<svws-ui-button v-if="listSchueler.ausgewaehlt" size="small" class="m-2" @click="routeLaufbahnplanung()">Laufbahnplanung</svws-ui-button>
 						</template>
 					</div>
 				</div>
 			</svws-ui-drop-data>
-			<div v-if="selected" class="flex-none">
-				<div class="">
-					<div class="v-table--container">
-						<table class="v-table--complex">
-							<s-kurs-schueler-schiene v-for="schiene in schienen" :key="schiene.id" :schiene="schiene" :selected="selected"
-								:blockung="blockung" :ergebnis="ergebnis" :allow_regeln="allow_regeln" />
-						</table>
-					</div>
+			<div v-if="selected" class="flex-grow">
+				<div class="v-table--container">
+					<table class="v-table--complex">
+						<s-kurs-schueler-schiene v-for="schiene in schienen" :key="schiene.id" :schiene="schiene" :selected="selected"
+							:blockung="blockung" :ergebnis="ergebnis" :allow_regeln="allow_regeln" />
+					</table>
 				</div>
 			</div>
 		</div>
@@ -50,6 +70,7 @@
 	import { ListLehrer } from "~/apps/lehrer/ListLehrer";
 	import { DataSchuleStammdaten } from "~/apps/schule/DataSchuleStammdaten";
 	import { routeSchuelerLaufbahnplanung } from "~/router/apps/schueler/RouteSchuelerLaufbahnplanung";
+	import { routeSchuelerIndividualdaten} from "~/router/apps/schueler/RouteSchuelerIndividualdaten";
 
 	const props = defineProps<{
 		item: ShallowRef<GostJahrgang | undefined>;
@@ -179,5 +200,11 @@
 		if (props.listSchueler.ausgewaehlt?.id === undefined)
 			return;
 		void router.push(routeSchuelerLaufbahnplanung.getRoute(props.listSchueler.ausgewaehlt.id));
+	}
+
+	function routeSchueler() {
+		if (props.listSchueler.ausgewaehlt?.id === undefined)
+			return;
+		void router.push(routeSchuelerIndividualdaten.getRoute(props.listSchueler.ausgewaehlt.id));
 	}
 </script>

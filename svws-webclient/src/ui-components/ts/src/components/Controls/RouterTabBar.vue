@@ -114,7 +114,7 @@
 
     .router-tab-bar--panel {
         @apply h-full;
-        @apply mt-0 mb-8 flex-grow overflow-y-auto px-6 flex-auto w-full;
+        @apply mt-0 mb-6 flex-grow overflow-y-auto px-6 flex-auto w-full;
     }
 
 	.router-tab-bar--area {
@@ -129,7 +129,7 @@
 		@apply rounded-full;
 		@apply w-full;
 		@apply flex-shrink-0;
-		@apply px-4 mb-6;
+		@apply px-6 mb-6;
 		@apply sticky top-0 left-0 z-20 bg-white;
 		box-shadow: 0 0 1.5rem 1rem theme("colors.white");
     }

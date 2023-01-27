@@ -79,20 +79,6 @@ html {
 	@apply uppercase;
 }
 
-.headline-1, .text-headline-1 {
-	@apply text-headline-xl;
-}
-
-.headline-2, .text-headline-2,
-.headline-3, .text-headline-3 {
-	@apply text-headline;
-}
-
-.headline-4, .text-headline-4,
-.headline-5, .text-headline-5 {
-	@apply text-headline-sm;
-}
-
 .text-caption {
 	@apply text-sm;
 }
