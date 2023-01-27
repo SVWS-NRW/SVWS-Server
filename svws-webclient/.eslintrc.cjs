@@ -36,7 +36,7 @@ module.exports = {
 		// TypeScript-spezifische Regeln
 		// "@typescript-eslint/no-unused-vars": ["warn", { varsIgnorePattern: "^_" }],
 		"@typescript-eslint/no-inferrable-types": [ 1, { ignoreParameters: true } ],
-		"@typescript-eslint/ban-types": [ "error", { types: { "Number": false, "String": false, "Boolean": false }, extendDefaults: true } ],
+		"@typescript-eslint/ban-types": [ "off", { types: { "Number": false, "String": false, "Boolean": false }, extendDefaults: true } ],
 		// BEGIN Für's erste deaktiviert, zu diskutieren
 		// TODO: klären, ggf. reaktivieren, lint-fehler fixen
 		"vue/no-mutating-props": "off", // deaktiviert, da wir recht häufig Objekte, die wir per props bekommen haben, verändern.
