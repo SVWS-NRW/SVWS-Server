@@ -26,9 +26,9 @@
 			if (alt === value)
 				return;
 			if (value)
-				props.data.addKompetenz(props.kompetenz);
+				void props.data.addKompetenz(props.kompetenz);
 			else
-				props.data.removeKompetenz(props.kompetenz);
+				void props.data.removeKompetenz(props.kompetenz);
 		}
 	});
 

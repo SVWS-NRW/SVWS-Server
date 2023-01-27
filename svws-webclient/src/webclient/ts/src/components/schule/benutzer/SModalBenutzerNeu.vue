@@ -54,9 +54,9 @@
 	const passwort1=ref();
 	const passwort2=ref();
 
-	function createBenutzerAllgemein(){
+	async function createBenutzerAllgemein(){
 		if (passwort1.value === passwort2.value){
-			routeSchuleBenutzerDaten.data.daten.createBenutzerAllgemein(name.value, anzeigename.value, passwort1.value);
+			await routeSchuleBenutzerDaten.data.daten.createBenutzerAllgemein(name.value, anzeigename.value, passwort1.value);
 			modalNeuerBenutzer.value.closeModal();
 			anzeigename.value="";
 			name.value="";
@@ -68,8 +68,8 @@
 		}
 	}
 
-	function deleteBenutzer(){
-		routeSchuleBenutzerDaten.data.daten.deleteBenutzerAllgemein();
+	async function deleteBenutzer(){
+		await routeSchuleBenutzerDaten.data.daten.deleteBenutzerAllgemein();
 	}
 
 </script>

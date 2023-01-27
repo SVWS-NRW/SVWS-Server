@@ -1,9 +1,10 @@
 <template>
 	<tr>
-		<td>
+		<td class="flex flex-row justify-between">
 			<svws-ui-checkbox v-model="selected" :disabled="istAlle"> 
-				<span> {{ bgle.id }}-{{ bgle.bezeichnung }} <i-ri-external-link-fill @click="doRoute()" /> </span>
+				<span> {{ bgle.id }}-{{ bgle.bezeichnung }}  </span>
 			</svws-ui-checkbox>
+			<i-ri-external-link-fill @click="doRoute()" class="cursor-pointer align-botton ml-3" />
 		</td>
 	</tr>
 </template>
@@ -13,7 +14,7 @@
 	import { computed, ComputedRef, WritableComputedRef } from "vue";
 	import { useRouter } from "vue-router";
 	import { DataBenutzer } from "~/apps/schule/benutzerverwaltung/DataBenutzer";
-	import { routeSchuleBenutzergruppe } from "~/router/apps/RouteSchuleBenutzergruppe";
+	import { routeSchuleBenutzergruppeDaten } from "~/router/apps/benutzergruppe/RouteSchuleBenutzergruppeDaten";
 
 	const props = withDefaults(defineProps<{
 		data: DataBenutzer;
@@ -31,14 +32,14 @@
 		get: () => manager.value?.IstInGruppe(props.bgle.id),
 		set: (value) => {
 			if (value)
-				props.data.addBenutzergruppeBenutzer(props.bgle.id);
+				void props.data.addBenutzergruppeBenutzer(props.bgle.id);
 			else
-				props.data.removeBenutzergruppeBenutzer(props.bgle.id);
+				void props.data.removeBenutzergruppeBenutzer(props.bgle.id);
 		}
 	});
 
-	function doRoute() {
-		router.push({ name: routeSchuleBenutzergruppe.name, params: { id: props.bgle.id } });
+	async function doRoute() {
+		await router.push({ name: routeSchuleBenutzergruppeDaten.name, params: { id: props.bgle.id } });
 	}
 
 </script>

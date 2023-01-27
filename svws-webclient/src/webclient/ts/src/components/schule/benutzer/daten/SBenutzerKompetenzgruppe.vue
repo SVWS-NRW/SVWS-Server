@@ -38,9 +38,9 @@
 		get: () => (props.data.manager === undefined) ? false : props.data.manager.hatKompetenzen(BenutzerKompetenz.getKompetenzen(props.kompetenzgruppe)),
 		set: (value) => {
 			if (value)
-				props.data.addBenutzerKompetenzGruppe(props.kompetenzgruppe);
+				void props.data.addBenutzerKompetenzGruppe(props.kompetenzgruppe);
 			else
-				props.data.removeBenutzerKompetenzGruppe(props.kompetenzgruppe);
+				void props.data.removeBenutzerKompetenzGruppe(props.kompetenzgruppe);
 		}
 	});
 

@@ -1,10 +1,7 @@
 <template>
 	<svws-ui-content-card title="Benutzergruppen">
-		<template #actions>
-			<a class="underline cursor-pointer mr-2 hover:no-underline" @click="router.push({ name: routeSchuleBenutzergruppe.name })" title="Zu den Einstellungen für Benutzergruppen">Bearbeiten</a>
-		</template>
-		<div class="flex flex-row gap-4">
-			<table class="border-collapse text-sm">
+		<div class="flex flex-row gap-4 ">
+			<table class="border-collapse text-sm ">
 				<thead class="bg-slate-100">
 					<tr>
 						<td class="border border-[#7f7f7f]/20 text-center">
@@ -27,8 +24,6 @@
 	import { BenutzergruppeListeEintrag, BenutzerManager } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, WritableComputedRef } from "vue";
 	import { DataBenutzer } from "~/apps/schule/benutzerverwaltung/DataBenutzer";
-	import { router } from "~/router";
-	import { routeSchuleBenutzergruppe } from "~/router/apps/RouteSchuleBenutzergruppe";
 
 	const props = defineProps<{
 		data: DataBenutzer;
@@ -45,9 +40,9 @@
 		},
 		set(value: boolean) {
 			if (value)
-				props.data.addBenutzergruppenBenutzer(props.benutzergruppen);
+				void props.data.addBenutzergruppenBenutzer(props.benutzergruppen);
 			else
-				props.data.removeBenutzergruppenBenutzer(props.benutzergruppen);
+				void props.data.removeBenutzergruppenBenutzer(props.benutzergruppen);
 		}
 	});
 

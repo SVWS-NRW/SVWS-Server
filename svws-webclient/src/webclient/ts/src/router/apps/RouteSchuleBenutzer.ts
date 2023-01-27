@@ -1,4 +1,4 @@
-import { BenutzerListeEintrag } from "@svws-nrw/svws-core-ts";
+import { BenutzerListeEintrag, LogConsumerConsole } from "@svws-nrw/svws-core-ts";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { routeSchuleBenutzerDaten } from "~/router/apps/benutzer/RouteSchuleBenutzerDaten";
 import { RouteNodeListView } from "~/router/RouteNodeListView";

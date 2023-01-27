@@ -27,9 +27,9 @@
 		get: () => (props.data.manager === undefined) ? false : props.data.manager.hatKompetenz(props.kompetenz),
 		set: (value) => {
 			if (value)
-				props.data.addKompetenz(props.kompetenz);
+				void props.data.addKompetenz(props.kompetenz);
 			else
-				props.data.removeKompetenz(props.kompetenz);
+				void props.data.removeKompetenz(props.kompetenz);
 		}
 	});
 

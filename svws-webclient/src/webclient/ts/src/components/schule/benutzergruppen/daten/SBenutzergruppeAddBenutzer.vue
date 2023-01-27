@@ -1,8 +1,8 @@
 <template>
 	<svws-ui-content-card title="Benutzerzuordnung" >
 		<div class="flex gap-5 divide-x-2 divide-gray-200 overflow-auto w-full">
-			<s-benutzer-checkbox-list :benutzer-liste="benutzer_da" title="Entfernen" :icon="false" :data="data" />
-			<s-benutzer-checkbox-list class="pl-4" :benutzer-liste="benutzer_liste" title="Einfügen" :icon="true" :data="data" />
+			<s-benutzer-checkbox-list :benutzer-liste="benutzer_da" title="Entfernen" :spalte-links="true" :data="data" />
+			<s-benutzer-checkbox-list class="pl-4" :benutzer-liste="benutzer_liste" title="Einfügen" :spalte-links="false" :data="data" />
 		</div>
 	</svws-ui-content-card>
 </template>
