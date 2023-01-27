@@ -22,8 +22,8 @@ export class Gost extends App {
 	 */
 	public async init(): Promise<void> {
 		try {
-			const sortierung = await App.api.getClientConfigUserKey(App.schema, 'SVWS-Client', 'gost.kursansicht.sortierung') as UserConfigKeys['gost.kursansicht.sortierung'];
-			mainApp.config.user_config.set('gost.kursansicht.sortierung', sortierung);
+			const sortierung = await App.api.getClientConfigUserKey(App.schema, 'SVWS-Client', 'gost.kursansicht.sortierung') as UserConfigKeys['gost.kursansicht.sortierung'] | undefined;
+			mainApp.config.user_config.set('gost.kursansicht.sortierung', sortierung || 'kursart');
 		} catch (e) {
 			console.log(e)
 		}
