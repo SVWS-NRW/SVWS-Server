@@ -34,6 +34,7 @@ export {
 	SvwsUiHeader,
 	SvwsUiIcon,
 	SvwsUiModal,
+	SvwsUiNotification,
 	SvwsUiOverlay,
 	SvwsUiAppLayout,
 	SvwsUiSidebarMenu,

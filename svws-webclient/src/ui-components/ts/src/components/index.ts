@@ -19,6 +19,7 @@ export { default as SvwsUiContentCard } from "./Layout/ContentCard.vue";
 export { default as SvwsUiHeader } from "./Layout/Header.vue";
 export { default as SvwsUiIcon } from "./Layout/Icon.vue";
 export { default as SvwsUiModal } from "./Layout/Modal/Modal.vue";
+export { default as SvwsUiNotification } from "./Layout/Modal/Notification.vue";
 export { default as SvwsUiOverlay } from "./Layout/Modal/Overlay.vue";
 export { default as SvwsUiAppLayout } from "./Layout/Pages/AppLayout.vue";
 export { default as SvwsUiSidebarMenu } from "./Layout/Sidebar/Menu.vue";

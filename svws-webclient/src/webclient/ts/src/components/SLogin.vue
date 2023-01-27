@@ -2,61 +2,79 @@
 	<svws-ui-app-layout :fullwidth-content="true">
 		<template #main>
 			<div class="login-wrapper">
+				<div class="inline-flex bg-white py-2 px-3 rounded-lg absolute bottom-3 right-3">
+					<img class="h-16" src="/images/MSB_NRW_Logo.svg">
+				</div>
 				<div class="login-container">
-					<div class="login-form">
-						<h1 class="login-form-header">
-							<span>SVWS <span class="font-normal">NRW</span></span>
-						</h1>
-						<div class="flex items-center w-full space-x-4 mt-1">
-							<svws-ui-text-input v-model="serverAddress" type="text" placeholder="Server Addresse" />
-							<svws-ui-button type="secondary" @click="connectClicked">
-								Verbinden
-							</svws-ui-button>
-						</div>
-						<Transition>
-							<div v-if="inputDBSchema" class="login-input-group mt-16">
-								<svws-ui-multi-select v-model="inputDBSchema" title="DB-Schema" :items="inputDBSchemata" :item-text="get_name" />
-								<div class="flex space-x-4 w-full">
-									<svws-ui-text-input v-model="username" type="text" placeholder="Benutzername" />
-									<svws-ui-text-input v-model="password"
-										type="password"
-										placeholder="Passwort"
-										@keyup.enter="login" />
+					<div class="login-form modal modal--sm">
+						<div class="modal--content-wrapper pt-3 pb-2 px-4">
+							<div class="modal--content">
+								<div class="login-form-header mb-8">
+									<h1 class="leading-none py-3 text-center w-full">
+										<span class="font-black">SVWS <span class="font-normal">NRW</span></span>
+									</h1>
 								</div>
-								<div class="w-full flex justify-end items-start">
-									<div v-if="main.config.isAuthenticated === false" class="text-left mr-4 leading-tight text-red-500 font-bold">Fehler bei der Anmeldung. Passwort oder Benutzername falsch.</div>
-									<div v-else class="text-left mr-4 leading-tight w-full my-auto opacity-50">Verbunden mit {{ serverAddress }}</div>
-									<svws-ui-button @click="login">
-										Anmelden
-										<i-ri-login-circle-line/>
+								<div class="w-full mt-1 flex flex-col gap-3 items-center">
+									<svws-ui-text-input v-model="serverAddress" type="text" placeholder="Server Addresse" />
+									<svws-ui-button type="secondary" @click="connectClicked">
+										Verbinden
 									</svws-ui-button>
 								</div>
+								<Transition>
+									<div v-if="inputDBSchema" class="flex flex-col gap-3 items-center mt-16">
+										<svws-ui-multi-select v-model="inputDBSchema" title="DB-Schema" :items="inputDBSchemata" :item-text="get_name" class="w-full" />
+										<svws-ui-text-input v-model="username" type="text" placeholder="Benutzername" />
+										<svws-ui-text-input v-model="password"
+															type="password"
+															placeholder="Passwort"
+															@keyup.enter="login" />
+										<svws-ui-button @click="login">
+											Anmelden
+											<i-ri-login-circle-line/>
+										</svws-ui-button>
+									</div>
+								</Transition>
+								<div class="mt-16 text-center text-sm">
+									<p class="mb-2 opacity-50">
+										Powered by SVWS-NRW<br/>Client Version {{ version }}
+									</p>
+									<nav class="login-footer-links mb-4">
+										<a class="login-footer-link" href="#">Impressum</a>
+										<a class="login-footer-link" href="#">Datenschutz</a>
+										<a class="login-footer-link" href="#">
+											<span class="inline-flex items-center gap-0.5 align-middle">
+												<span class="hover-underline">Hilfe</span> <i-ri-question-line/>
+											</span>
+										</a>
+									</nav>
+									<p class="text-sm opacity-50">
+										Hinweis: Um eine gute Lesbarkeit zu erzeugen, wird bei SVWS-NRW möglichst auf
+										geschlechtsneutrale Begriffe wie Lehrkräfte, Klassenleitung, Erzieher usw.
+										zurückgegriffen. An Stellen, wo das nicht möglich ist, wird versucht alle
+										Geschlechter gleichermaßen zu berücksichtigen.
+									</p>
+								</div>
 							</div>
-							<div v-else class="login-input-group">
-								<div v-if="!connection_ok" class="text-red-500 font-bold mt-4">Fehler beim Verbinden zum Server.</div>
+						</div>
+					</div>
+					<svws-ui-notification v-if="main.config.isAuthenticated === false" type="error">
+						<div class="flex items-center space-x-4">
+							<i-ri-lock-2-line class="text-headline" />
+							<div>
+								<div class="font-bold">Anmeldung fehlgeschlagen</div>
+								<div class="font-normal">Passwort oder Benutzername falsch.</div>
 							</div>
-						</Transition>
-					</div>
-				</div>
-				<div class="login-footer">
-					<img class="lg:order-last login-footer-logo" src="/images/MSB_NRW_Logo.svg">
-					<div class="lg:pr-16">
-						<span class="block mb-1">Powered by SVWS-NRW, Version {{ version }}</span>
-						<p class="login-footer-hint mb-1 opacity-50">
-							<span class="login-footer-hint-label">Hinweis:</span> Um
-							eine gute Lesbarkeit zu erzeugen, wird bei SVWS-NRW
-							möglichst auf geschlechtsneutrale Begriffe wie
-							Lehrkräfte, Klassenleitung, Erzieher usw.
-							zurückgegriffen. An Stellen, wo das nicht möglich ist,
-							wird versucht alle Geschlechter gleichermaßen zu
-							berücksichtigen.
-						</p>
-						<nav class="login-footer-links">
-							<a class="login-footer-link" href="#">Impressum</a>
-							<a class="login-footer-link" href="#">Datenschutz</a>
-							<a class="login-footer-link" href="#">Hilfe</a>
-						</nav>
-					</div>
+						</div>
+					</svws-ui-notification>
+					<svws-ui-notification v-if="!connection_ok" type="error">
+						<div class="flex items-center space-x-4">
+							<i-ri-alert-line class="text-headline" />
+							<div>
+								<div class="font-bold">Verbindung zum Server fehlgeschlagen</div>
+								<div class="font-normal">Bitte überprüfe die Server Addresse und versuche es erneut.</div>
+							</div>
+						</div>
+					</svws-ui-notification>
 				</div>
 			</div>
 		</template>
@@ -75,7 +93,7 @@
 
 	const route = useRoute();
 
-	const serverAddress = ref("localhost");
+	const serverAddress = ref("svws-nrw.de");
 	const username = ref("Admin");
 	const password = ref("");
 	const defaultRoute = routeSchueler;
@@ -143,10 +161,8 @@
 	background-image: url("/images/placeholder-background.jpg");
 }
 
-.login-form {
-	@apply w-full p-4 lg:p-8 bg-white rounded-xl flex flex-col items-center;
-	max-width: 40rem;
-	@apply shadow-md;
+.modal {
+	@apply shadow-black/25;
 }
 
 .login-input-group .wrapper {
@@ -158,33 +174,23 @@
 }
 
 .login-form-header {
-	@apply flex flex-row items-center space-x-4 font-bold leading-tight mb-6;
-	font-size: 2.618rem;
-}
-
-.login-form-logo {
-	@apply h-[0.8em] w-[0.8em];
-}
-
-.login-footer {
-	@apply p-8 flex flex-wrap lg:flex-nowrap justify-between items-center;
-}
-
-.login-footer-logo {
-	@apply h-auto w-80 mb-4 lg:mb-0;
+	@apply flex flex-row items-start justify-between gap-4 font-bold leading-tight;
+	font-size: 3rem;
 }
 
 .login-footer-links {
-	@apply flex flex-row items-center space-x-2;
+	@apply flex flex-row items-center gap-2 justify-center;
 }
 
 .login-footer-link {
-	@apply inline-block underline opacity-50;
+	@apply inline-block;
 }
 
 .login-footer-link:hover,
-.login-footer-link:focus {
-	@apply opacity-100 no-underline;
+.login-footer-link:focus,
+.login-footer-link:hover .hover-underline,
+.login-footer-link:focus .hover-underline {
+	@apply underline;
 }
 
 .v-enter-active,

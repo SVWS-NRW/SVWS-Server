@@ -1,7 +1,7 @@
 <template>
 	<svws-ui-content-card>
 		<div class="flex flex-wrap justify-between mb-4">
-			<h3 class="text-headline opacity-50">Übersicht {{ blockung.daten?.name ? blockung?.daten?.name : 'Blockungsübersicht' }}</h3>
+			<h3 class="text-headline">{{ blockung.daten?.name ? blockung?.daten?.name : 'Blockungsübersicht' }}</h3>
 			<div class="flex items-center gap-2">
 				<svws-ui-button v-if="!blockung_aktiv" type="secondary" @click="toggle_modal_aktivieren">Aktivieren</svws-ui-button>
 				<svws-ui-button type="primary" @click="toggle_modal_hochschreiben">Hochschreiben</svws-ui-button>

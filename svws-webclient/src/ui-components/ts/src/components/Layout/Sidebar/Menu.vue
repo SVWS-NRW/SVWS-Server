@@ -33,11 +33,8 @@
 					</template>
 					<template #content>
 						<div class="py-1">
-							<div class="whitespace-nowrap text-ellipsis-line-clamp opacity-50">
-								SVWS-Client
-								<span v-if="$slots.version" class="whitespace-nowrap">
-									v<slot name="version"/>
-								</span>
+							<div class="text-ellipsis-line-clamp">
+								SVWS-Client <slot name="version"/>
 							</div>
 							<div class="flex flex-wrap gap-2 meta-navigation">
 								<slot name="metaNavigation" />

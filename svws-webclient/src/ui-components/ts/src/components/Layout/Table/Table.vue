@@ -114,7 +114,8 @@
 								v-slot="{ sortOrder }"
 								:sort-key="column.key"
 								:style="`flex-grow: ${column.span};`"
-								:default-sort="column.defaultSort">
+								:default-sort="column.defaultSort"
+								:class="`column--key-${column.key}`">
 								<div class="w-full">
 									<span class="column--title" :title="column.label">{{ column.label }}</span>
 									<span>
@@ -130,7 +131,7 @@
 									</span>
 								</div>
 							</VTh>
-							<th v-else :style="`flex-grow: ${column.span};`">
+							<th v-else :style="`flex-grow: ${column.span};`" :class="`column--key-${column.key}`">
 								<span class="column--title" :title="column.label">{{ column.label }}</span>
 							</th>
 						</slot>
@@ -155,7 +156,8 @@
 					</td>
 					<td v-for="(column, columnIndex) in columnsComputed"
 						:key="`row-column-${column.key}-${columnIndex}`"
-						:style="`flex-grow: ${column.span};`">
+						:style="`flex-grow: ${column.span};`"
+						:class="`column--key-${column.key}`">
 						<slot :name="`cell-${column.key}`" :column="column" :row="row">
 							<span class="table--cell-content" :title="row[column.key]">
 								{{ row[column.key] }}
@@ -271,6 +273,10 @@
 					@apply border;
 					font-size: 0.833rem;
 					padding: 0.1em 0.7em;
+				}
+
+				&.column--key-id {
+					@apply font-mono justify-end;
 				}
 			}
 
@@ -461,12 +467,21 @@
 		}
 	}
 
-	/*.table--highlight-rows tr:hover,
-.table--highlight-rows tr:hover ~ tr:not(.blockung--kursdifferenz) {
-	filter: brightness(0.8) saturate(200%);
-}
+	.schiene-gesperrt {
+		background-image: url("/images/table-cell--stripes.svg");
+		background-size: auto 100%;
+	}
 
-.table--highlight-rows tr:hover ~ tr.blockung--kursdifferenz ~ tr {
-	filter: none;
-}*/
+	.table--row-kursdetail {
+		box-shadow: inset 0 -2px 4px 0 rgba(0, 0, 0, 0.1), inset 0 1px 4px 0 rgba(0, 0, 0, 0.1);
+	}
+
+	/*.table--highlight-rows tr:hover,
+	.table--highlight-rows tr:hover ~ tr:not(.blockung--kursdifferenz) {
+		filter: brightness(0.8) saturate(200%);
+	}
+
+	.table--highlight-rows tr:hover ~ tr.blockung--kursdifferenz ~ tr {
+		filter: none;
+	}*/
 </style>

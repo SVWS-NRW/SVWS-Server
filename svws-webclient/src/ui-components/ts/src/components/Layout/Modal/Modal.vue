@@ -43,7 +43,7 @@
 					leave="ease-in duration-100"
 					leave-from="opacity-100 scale-100"
 					leave-to="opacity-0 scale-95"
-					class="modal inline-block align-bottom sm:align-middle sm:w-full sm:max-w-sm sm:my-8 transform transition-all overflow-hidden"
+					class="modal"
 					:class="{
 						'modal--sm': size === 'small',
 						'modal--md': size === 'medium',
@@ -91,11 +91,12 @@
 }
 
 .modal {
-	@apply bg-white max-h-full;
+	@apply align-bottom sm:align-middle my-8 transform transition-all overflow-hidden;
+	@apply bg-white max-h-full max-w-modal-sm;
 	@apply flex flex-col items-center;
-	@apply mx-auto;
+	@apply w-full mx-auto;
 	@apply relative z-50;
-	@apply rounded-lg overflow-hidden;
+	@apply rounded-lg;
 	@apply shadow-xl shadow-dark-20;
 }
 
@@ -105,10 +106,12 @@
 
 .modal--md {
 	@apply w-full max-w-modal-md;
+	@apply rounded-xl;
 }
 
 .modal--lg {
 	@apply w-full max-w-modal-lg;
+	@apply rounded-xl;
 }
 
 .modal--titlebar {

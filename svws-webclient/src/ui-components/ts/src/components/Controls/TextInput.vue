@@ -300,7 +300,7 @@
 	}
 
 	.text-input--headless {
-		@apply w-full whitespace-nowrap border-0 bg-white px-3 font-medium text-black outline-none;
+		@apply w-full whitespace-nowrap border-0 bg-transparent px-3 font-medium text-black outline-none;
 	}
 </style>
 <style lang="postcss">

@@ -1,37 +1,35 @@
 <template>
 	<div v-if="visible">
 		<svws-ui-table v-model="selected_ergebnis" v-model:selection="selected_ergebnisse" is-multi-select class="mt-10"
-			:columns="[{ key: 'id', label: 'ID'}, { key: 'bewertung', label: 'Bewertungen', span: 8 }]" :data="(rows_ergebnisse.toArray() as DataTableItem[])"
+			:columns="[{ key: 'id', label: 'ID'}, { key: 'bewertung', label: 'Bewertungen', span: 10 }]" :data="(rows_ergebnisse.toArray() as DataTableItem[])"
 			:footer="true">
 			<template #head-bewertung>
-				<th style="flex-grow: 8;">
-					<svws-ui-popover style="width: auto;" class="cursor-default">
-						<template #trigger>
+				<th style="flex-grow: 10;">
+					<div>
+						<svws-ui-popover style="width: auto;">
+							<template #trigger>
 							<span class="inline-flex items-center">
 								Bewertungen
 								<svws-ui-icon class="ml-1">
 									<i-ri-information-line/>
 								</svws-ui-icon>
 							</span>
-						</template>
-						<template #content>
+							</template>
+							<template #content>
 							<span class="normal-case text-base font-normal">
-								<span class="bewertung--letter text-primary">R</span> Regelverletzungen<br/>
-								<span class="bewertung--letter text-primary">W</span> Wahlkonflikte<br/>
-								<span class="bewertung--letter text-primary">D</span> max. Kursdifferenz<br/>
-								<span class="bewertung--letter text-primary">P</span> Fächerparallelität
+								Regelverletzungen, Wahlkonflikte, maximale Kursdifferenz, Fächerparallelität<br/>
 							</span>
-						</template>
-					</svws-ui-popover>
+							</template>
+						</svws-ui-popover>
+					</div>
 				</th>
 			</template>
 			<template #cell-bewertung="{ row }: {row: GostBlockungsergebnisListeneintrag}">
 				<span class="flex gap-1 cell--bewertung items-center">
-					<span class="bewertung--help relative" :style="{'background-color': colorMix(row)}">{{ manager?.getOfBewertung1Wert(row.id) + manager?.getOfBewertung2Wert(row.id) || 0 + manager?.getOfBewertung3Wert(row.id) + manager?.getOfBewertung4Wert(row.id) }}</span>
-					<span class="text-sm">{{ manager?.getOfBewertung1Wert(row.id) }} R</span>
-					<span class="text-sm">{{ manager?.getOfBewertung2Wert(row.id) }} W</span>
-					<span class="text-sm">{{ manager?.getOfBewertung3Wert(row.id) }} D</span>
-					<span class="text-sm">{{ manager?.getOfBewertung4Wert(row.id) }} P</span>
+					<span :style="{'background-color': color1(row)}">{{ manager?.getOfBewertung1Wert(row.id) }}</span>
+					<span :style="{'background-color': color2(row)}">{{ manager?.getOfBewertung2Wert(row.id) }}</span>
+					<span :style="{'background-color': color3(row)}">{{ manager?.getOfBewertung3Wert(row.id) }}</span>
+					<span :style="{'background-color': color4(row)}">{{ manager?.getOfBewertung4Wert(row.id) }}</span>
 				</span>
 				<svws-ui-icon v-if="row.istVorlage"> <i-ri-pushpin-fill /></svws-ui-icon>
 				<div v-if="(row.id === selected_ergebnis?.id && !blockung_aktiv)" class="flex gap-1">
