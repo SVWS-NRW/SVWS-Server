@@ -16,14 +16,14 @@ export function createKursbezeichnungsGetter(kurs: GostBlockungKurs, mapFaecher:
 		const manager = blockung.datenmanager
 		if (manager === undefined)
 			throw new Error("Der Kursblockungsmanager ist nicht verfügbar")
-		const kurs = manager.getKurs(regel.parameter.get(parameter).valueOf())
+		const kurs = manager.getKurs(regel.parameter.get(parameter))
 		return manager.getNameOfKurs(kurs.id)
 	}
 }
 */
 export function useRegelParameterKursart(regel: Ref<GostBlockungRegel | undefined>, parameter: number): WritableComputedRef<GostKursart> {
 	return computed({
-		get: () => regel.value === undefined ? GostKursart.LK : GostKursart.fromID(regel.value.parameter.get(parameter).valueOf()),
+		get: () => regel.value === undefined ? GostKursart.LK : GostKursart.fromID(regel.value.parameter.get(parameter)),
 		set: (value) => { if (regel.value) regel.value.parameter.set(parameter, value.id) }
 	})
 }

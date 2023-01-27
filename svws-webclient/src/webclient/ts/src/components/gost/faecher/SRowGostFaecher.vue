@@ -182,18 +182,18 @@
 	const leitfach1: WritableComputedRef<GostFach | undefined> = computed({
 		get: () => props.dataFaecher.faecherOhnePJKundVTF.find(item => props.fach.projektKursLeitfach1ID == item.id),
 		set: (value) => {
-			if (!routeGost.liste.ausgewaehlt?.abiturjahr)
+			if (routeGost.liste.ausgewaehlt?.abiturjahr === undefined)
 				return;
-			void props.dataFaecher.patch({ projektKursLeitfach1ID: value?.id || null }, props.fach, routeGost.liste.ausgewaehlt.abiturjahr.valueOf());
+			void props.dataFaecher.patch({ projektKursLeitfach1ID: value?.id || null }, props.fach, routeGost.liste.ausgewaehlt.abiturjahr);
 		}
 	});
 
 	const leitfach2: WritableComputedRef<GostFach | undefined> = computed({
 		get: () => props.dataFaecher.faecherOhnePJKundVTF.find(item => props.fach.projektKursLeitfach2ID == item.id),
 		set: (value) => {
-			if (!routeGost.liste.ausgewaehlt?.abiturjahr || value === leitfach1.value)
+			if (routeGost.liste.ausgewaehlt?.abiturjahr === undefined || value === leitfach1.value)
 				return;
-			void props.dataFaecher.patch({ projektKursLeitfach2ID: value?.id || null }, props.fach, routeGost.liste.ausgewaehlt.abiturjahr.valueOf());
+			void props.dataFaecher.patch({ projektKursLeitfach2ID: value?.id || null }, props.fach, routeGost.liste.ausgewaehlt.abiturjahr);
 		}
 	});
 
@@ -221,7 +221,7 @@
 	}
 
 	function set(data: Partial<GostFach>) {
-		void props.dataFaecher.patch(data, props.fach, routeGost.liste.ausgewaehlt?.abiturjahr?.valueOf());
+		void props.dataFaecher.patch(data, props.fach, routeGost.liste.ausgewaehlt?.abiturjahr);
 	}
 
 	function ef1_set(): void {

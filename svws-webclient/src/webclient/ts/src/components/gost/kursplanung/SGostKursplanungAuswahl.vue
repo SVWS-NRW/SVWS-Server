@@ -52,10 +52,10 @@
 	}
 
 	async function blockung_hinzufuegen() {
-		if (!props.jahrgangsdaten.daten?.abiturjahr || !selected_hj.value)
+		if (props.jahrgangsdaten.daten?.abiturjahr === undefined || !selected_hj.value)
 			return;
-		const result = await App.api.createGostAbiturjahrgangBlockung(App.schema, props.jahrgangsdaten.daten.abiturjahr.valueOf(), selected_hj.value.id);
-		const abiturjahr = props.jahrgangsdaten.daten.abiturjahr.valueOf();
+		const result = await App.api.createGostAbiturjahrgangBlockung(App.schema, props.jahrgangsdaten.daten.abiturjahr, selected_hj.value.id);
+		const abiturjahr = props.jahrgangsdaten.daten.abiturjahr;
 		await router.push({ name: routeGostKursplanungHalbjahr.name, params: { abiturjahr: abiturjahr, halbjahr: props.halbjahr.value.id, idblockung: result.id } });
 	}
 

@@ -119,7 +119,7 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 		const result = GostAbiturjahrUtils.getGostAbiturjahr(
 			schulform, gliederung, schuljahr?.schuljahr || 0, this.selected_list_item.jahrgang
 		);
-		return result === null ? undefined : result.valueOf();
+		return result ?? undefined;
 	}
 
 	/**
@@ -213,7 +213,7 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 			this._data.gostSprachbelegungen = {};
 			for (const belegung of this._daten.sprachendaten.belegungen) {
 				if (belegung.sprache)
-					this._data.gostSprachbelegungen[belegung.sprache.valueOf()] = belegung;
+					this._data.gostSprachbelegungen[belegung.sprache] = belegung;
 			}
 			this.set_manager();
 			this.gostBelegpruefung();
@@ -284,7 +284,7 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 				switch (kursart) {
 				case GostKursart.ZK:
 				case GostKursart.LK:
-					return kursart.kuerzel.valueOf();
+					return kursart.kuerzel;
 				}
 				return b.schriftlich ? "S" : "M";
 			}
@@ -315,7 +315,7 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 		switch (kursart) {
 		case GostKursart.ZK:
 		case GostKursart.LK:
-			return kursart.kuerzel.valueOf();
+			return kursart.kuerzel;
 		}
 		return halbjahresbelegung.schriftlich ? "S" : "M";
 	}
@@ -328,7 +328,7 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 	 * @returns {string}
 	 */
 	public getBgColor(row: GostFach): string {
-		return ZulaessigesFach.getByKuerzelASD(row.kuerzel).getHMTLFarbeRGB().valueOf();
+		return ZulaessigesFach.getByKuerzelASD(row.kuerzel).getHMTLFarbeRGB();
 	}
 
 	public getBgColorIfLanguage(row: GostFach): string {
@@ -336,19 +336,19 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 	}
 
 	private sprachbelegung(row: GostFach): Sprachbelegung | undefined {
-		return this._data.gostSprachbelegungen[ZulaessigesFach.getByKuerzelASD(row.kuerzel).daten.kuerzel.valueOf()];
+		return this._data.gostSprachbelegungen[ZulaessigesFach.getByKuerzelASD(row.kuerzel).daten.kuerzel];
 	}
 
 	public sprachenfolgeNr(row: GostFach): number {
 		if (this.getFallsSpracheMoeglich(row))
-			return this.sprachbelegung(row)?.reihenfolge?.valueOf() || 0;
+			return this.sprachbelegung(row)?.reihenfolge ?? 0;
 		else
 			return 0;
 	}
 
 	public sprachenfolgeJahrgang(row: GostFach): string {
 		if (this.getFallsSpracheMoeglich(row))
-			return (this.sprachbelegung(row)?.belegungVonJahrgang?.valueOf() || "");
+			return (this.sprachbelegung(row)?.belegungVonJahrgang ?? "");
 		else
 			return "";
 	}

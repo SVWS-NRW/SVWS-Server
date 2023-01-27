@@ -220,7 +220,7 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr v-for="pruefung in dataLaufbahn.daten?.sprachendaten.pruefungen" :key="pruefung.sprache?.valueOf()" class="border bottom-1  border-[#7f7f7f]/20">
+								<tr v-for="pruefung in dataLaufbahn.daten?.sprachendaten.pruefungen" :key="pruefung.sprache || ''" class="border bottom-1  border-[#7f7f7f]/20">
 									<td class="px-2">{{ pruefung.sprache }}</td>
 									<td class="px-2">{{ pruefung.istHSUPruefung ? "HSU":'' }}{{ pruefung.istFeststellungspruefung ? 'SFP':'' }}</td>
 									<td class="px-2">{{ Sprachpruefungniveau.getByID(pruefung.anspruchsniveauId || null)?.daten.beschreibung }}</td>

@@ -101,23 +101,22 @@
 		}
 	});
 
-	async function save(){
+	async function save() {
 		s_betrieb.schueler_id = props.item === undefined ? null : Number(props.item?.id);
 		if (!s_betrieb.betrieb_id || !s_betrieb.schueler_id){
 			alert("Betrieb-ID bzw. Schuler_ID darf nicht null sein.");
 		} else {
-			await App.api.createSchuelerbetrieb(s_betrieb,App.schema,s_betrieb.schueler_id.valueOf(),s_betrieb.betrieb_id.valueOf());
+			await App.api.createSchuelerbetrieb(s_betrieb,App.schema,s_betrieb.schueler_id, s_betrieb.betrieb_id);
 			// TODO Zeitverzögerung muss her, weil das Laden der Daten schneller geht, als sie in die Datenbank geschrieben werden.
 			if (props.item !== undefined)
 				await props.listSchuelerbetriebe.update_list(props.item.id);
 			modalAddBetrieb.value.closeModal();
 		}
 		// TODO Nach der Erstellung eines neuen Schülerbetriebs wird die Schülerbetriebliste nicht aktualisiert.
-		//app.listSchuelerbetriebe?.update_list(item.id.valueOf());
 		loeschen();
 	}
 
-	function loeschen(){
+	function loeschen() {
 		s_betrieb.id = null;
 		s_betrieb.allgadranschreiben = null;
 		s_betrieb.ansprechpartner_id = null;

@@ -87,7 +87,7 @@ export class DataGostFaecher extends BaseData<List<GostFach>, GostJahrgang, Gost
 	public async on_select(): Promise<List<GostFach> | undefined> {
 		const getter = (eintrag: GostJahrgang | undefined) => {
 			const abiturjahr = eintrag?.abiturjahr || -1;
-			return App.api.getGostAbiturjahrgangFaecher(App.schema, abiturjahr.valueOf());
+			return App.api.getGostAbiturjahrgangFaecher(App.schema, abiturjahr);
 		};
 		const res = await super._select(getter);
 		const daten = this._daten;
@@ -127,7 +127,7 @@ export class DataGostFaecher extends BaseData<List<GostFach>, GostJahrgang, Gost
 	 * @returns {string}
 	 */
 	public getBgColor(row: GostFach): string {
-		return ZulaessigesFach.getByKuerzelASD(row.kuerzel).getHMTLFarbeRGB().valueOf();
+		return ZulaessigesFach.getByKuerzelASD(row.kuerzel).getHMTLFarbeRGB();
 	}
 
 	public ist_PJK(fach: GostFach): boolean {

@@ -215,10 +215,10 @@
 
 	const fach: ComputedRef<ZulaessigesFach> = computed(() => ZulaessigesFach.getByKuerzelASD(gostFach.value?.kuerzel || null));
 
-	const bgColor: ComputedRef<string> = computed(() => fach.value ? fach.value.getHMTLFarbeRGB().valueOf() : "#ffffff");
+	const bgColor: ComputedRef<string> = computed(() => fach.value ? fach.value.getHMTLFarbeRGB() : "#ffffff");
 
 	const koop: WritableComputedRef<boolean> = computed({
-		get: () => props.kurs.istKoopKurs.valueOf(),
+		get: () => props.kurs.istKoopKurs,
 		set: (value) => {
 			const k = props.blockung.datenmanager?.getKurs(props.kurs.id)
 			if (!k)

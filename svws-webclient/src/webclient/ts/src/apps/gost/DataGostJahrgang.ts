@@ -20,7 +20,7 @@ export class DataGostJahrgang extends BaseData<GostJahrgangsdaten, GostJahrgang>
 			return await super.unselect();
 		try {
 			this.pending = true;
-			const res = await super._select((eintrag: GostJahrgang) => App.api.getGostAbiturjahrgang(App.schema, eintrag.abiturjahr?.valueOf() || -1));
+			const res = await super._select((eintrag: GostJahrgang) => App.api.getGostAbiturjahrgang(App.schema, eintrag.abiturjahr));
 			this.pending = false;
 			return res;
 		} catch (e) {
@@ -41,7 +41,7 @@ export class DataGostJahrgang extends BaseData<GostJahrgangsdaten, GostJahrgang>
 		const daten = this._daten;
 		if (!daten || daten.abiturjahr === null)
 			return false;
-		const abijahr = daten.abiturjahr.valueOf();
+		const abijahr = daten.abiturjahr;
 		return await this._patch(data, () => App.api.patchGostAbiturjahrgang(data as GostJahrgangsdaten, App.schema, abijahr));
 	}
 
@@ -51,7 +51,7 @@ export class DataGostJahrgang extends BaseData<GostJahrgangsdaten, GostJahrgang>
 	 */
 	public async post_jahrgang(id: number): Promise<number> {
 		const abiturjahr = await App.api.createGostAbiturjahrgang(App.schema, id);
-		return abiturjahr.valueOf();
+		return abiturjahr || -1;
 	}
 
 }

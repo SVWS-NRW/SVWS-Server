@@ -53,7 +53,7 @@
 	const pflichtstundensoll: WritableComputedRef<number | undefined> =
 		computed({
 			get(): number | undefined {
-				return daten.value.pflichtstundensoll?.valueOf();
+				return daten.value.pflichtstundensoll ?? undefined;
 			},
 			set(val: number | undefined) {
 				void props.personaldaten.patch({ pflichtstundensoll: val });
@@ -62,7 +62,7 @@
 
 	const stammschulnummer: WritableComputedRef<string | undefined> = computed({
 		get(): string | undefined {
-			return daten.value.stammschulnummer?.toString();
+			return daten.value.stammschulnummer ?? undefined;
 		},
 		set(val: string | undefined) {
 			void props.personaldaten.patch({ stammschulnummer: val });

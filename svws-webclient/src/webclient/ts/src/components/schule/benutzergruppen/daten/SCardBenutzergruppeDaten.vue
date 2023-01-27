@@ -26,20 +26,20 @@
 	const manager: ComputedRef<BenutzergruppenManager | undefined> = computed(() => props.data.manager);
 
 	const bezeichnung: WritableComputedRef<string | undefined> = computed({
-		get: () => manager.value?.getBezeichnung().valueOf(),
-		set: async (value) => {
-			if ((value === undefined) || (value === "") || (value === manager.value?.getBezeichnung().valueOf()))
+		get: () => manager.value?.getBezeichnung(),
+		set: (value) => {
+			if ((value === undefined) || (value === "") || (value === manager.value?.getBezeichnung()))
 				return;
-			props.data.setBezeichnung(value);
+			void props.data.setBezeichnung(value);
 		}
 	});
 
 	const inputIstAdmin: WritableComputedRef<boolean | undefined> = computed({
 		get: () => manager.value?.istAdmin(),
-		set: async (value) => {
+		set: (value) => {
 			if ((value === undefined) || (value === manager.value?.istAdmin()))
 				return;
-			props.data.setIstAdmin(value);
+			void props.data.setIstAdmin(value);
 		}
 	});
 

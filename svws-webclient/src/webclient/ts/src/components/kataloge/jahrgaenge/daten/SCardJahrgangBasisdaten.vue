@@ -26,7 +26,7 @@
 	}>();
 
 	const id: ComputedRef<number | undefined> = computed(() => {
-		return props.data.daten?.id.valueOf();
+		return props.data.daten?.id;
 	});
 
 	const inputKuerzel: WritableComputedRef<string | undefined> = computed({

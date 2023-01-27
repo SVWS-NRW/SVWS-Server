@@ -144,37 +144,37 @@
 	/** Basisdaten */
 
 	const name : WritableComputedRef<string | undefined> = computed({
-		get: () => props.betriebsStammdaten.daten?.name1?.valueOf(),
+		get: () => props.betriebsStammdaten.daten?.name1 ?? undefined,
 		set: (value) => void props.betriebsStammdaten.patch({ name1 : value })
 	})
 
 	const namezusatz : WritableComputedRef<string | undefined> = computed({
-		get: () => props.betriebsStammdaten.daten?.name2?.valueOf(),
+		get: () => props.betriebsStammdaten.daten?.name2 ?? undefined,
 		set: (value) => void props.betriebsStammdaten.patch({ name2 : value })
 	})
 
 	const telefon1 : WritableComputedRef<string | undefined> = computed({
-		get: () => props.betriebsStammdaten.daten?.telefon1?.valueOf(),
+		get: () => props.betriebsStammdaten.daten?.telefon1 ?? undefined,
 		set: (value) => void props.betriebsStammdaten.patch({ telefon1 : value })
 	})
 
 	const telefon2 : WritableComputedRef<string | undefined> = computed({
-		get: () => props.betriebsStammdaten.daten?.telefon2?.valueOf(),
+		get: () => props.betriebsStammdaten.daten?.telefon2 ?? undefined,
 		set: (value) => void props.betriebsStammdaten.patch({ telefon2 : value })
 	})
 
 	const fax : WritableComputedRef<string | undefined> = computed({
-		get: () => props.betriebsStammdaten.daten?.fax?.valueOf(),
+		get: () => props.betriebsStammdaten.daten?.fax ?? undefined,
 		set: (value) => void props.betriebsStammdaten.patch({ fax : value })
 	})
 
 	const email : WritableComputedRef<string | undefined> = computed({
-		get: () => props.betriebsStammdaten.daten?.email?.valueOf(),
+		get: () => props.betriebsStammdaten.daten?.email ?? undefined,
 		set: (value) => void props.betriebsStammdaten.patch({ email : value })
 	})
 
 	const branche : WritableComputedRef<string | undefined> = computed({
-		get: () => props.betriebsStammdaten.daten?.branche?.valueOf(),
+		get: () => props.betriebsStammdaten.daten?.branche ?? undefined,
 		set: (value) => void props.betriebsStammdaten.patch({ branche : value })
 	})
 
@@ -188,7 +188,7 @@
 			data.ansprechpartner_id = Number(value?.id);
 			if (data.id === null)
 				return;
-			void App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id.valueOf());
+			void App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id);
 		}
 	});
 
@@ -200,7 +200,7 @@
 			if ((!data) || (!data.id) || (!value))
 				return;
 			data.betreuungslehrer_id = Number(value?.id);
-			void App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id.valueOf());
+			void App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id);
 		}
 	});
 
@@ -208,12 +208,12 @@
 	/** Adresse */
 
 	const strassenname : WritableComputedRef<string | undefined> = computed({
-		get: () => props.betriebsStammdaten.daten?.strassenname?.valueOf(),
+		get: () => props.betriebsStammdaten.daten?.strassenname ?? undefined,
 		set: (value) => void props.betriebsStammdaten.patch({ strassenname : value })
 	})
 
 	const hausnummerzusatz : WritableComputedRef<string | undefined> = computed({
-		get: () => props.betriebsStammdaten.daten?.hausnrzusatz?.valueOf(),
+		get: () => props.betriebsStammdaten.daten?.hausnrzusatz ?? undefined,
 		set: (value) => void props.betriebsStammdaten.patch({ hausnrzusatz : value })
 	})
 
@@ -240,8 +240,8 @@
 	const anschreiben: WritableComputedRef<boolean | undefined> = computed({
 		get: () => {
 			if (props.listSchuelerbetriebe?.ausgewaehlt) {
-				const data = props.listSchuelerbetriebe.ausgewaehlt as SchuelerBetriebsdaten;
-				return data.allgadranschreiben?.valueOf();
+				const data = props.listSchuelerbetriebe.ausgewaehlt;
+				return data.allgadranschreiben ?? undefined;
 			}
 			return undefined;
 		},
@@ -251,14 +251,14 @@
 				data.allgadranschreiben = Boolean(value);
 				if ((!data) || (!data.id))
 					return;
-				void App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id.valueOf());
+				void App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id);
 			}
 			return;
 		}
 	});
 
 	const bemerkungen : WritableComputedRef<string | undefined> = computed({
-		get: () => props.betriebsStammdaten.daten?.bemerkungen?.valueOf() || undefined,
+		get: () => props.betriebsStammdaten.daten?.bemerkungen ?? undefined,
 		set: (value) => void props.betriebsStammdaten.patch({ bemerkungen : value })
 	})
 
@@ -267,79 +267,79 @@
 	 */
 
 	const ap_name : WritableComputedRef<string | undefined> = computed({
-		get: () => ansprechpartner.value?.name?.valueOf() || undefined,
+		get: () => ansprechpartner.value?.name ?? undefined,
 		set: (value) => {
 			const data = ansprechpartner.value as BetriebAnsprechpartner;
 			data.name = String(value);
 			if ((!data) || (!data.id))
 				return;
-			void App.api.patchBetriebanpsrechpartnerdaten(data, App.schema, data.id.valueOf());
+			void App.api.patchBetriebanpsrechpartnerdaten(data, App.schema, data.id);
 		}
 	})
 
 	const ap_vorname : WritableComputedRef<string | undefined> = computed({
-		get: () => ansprechpartner.value?.vorname?.valueOf(),
+		get: () => ansprechpartner.value?.vorname ?? undefined,
 		set: (value) => {
 			const data = ansprechpartner.value as BetriebAnsprechpartner;
 			data.vorname = String(value);
 			if ((!data) || (!data.id))
 				return;
-			void App.api.patchBetriebanpsrechpartnerdaten(data, App.schema, data.id.valueOf());
+			void App.api.patchBetriebanpsrechpartnerdaten(data, App.schema, data.id);
 		}
 	})
 
 	const ap_anrede : WritableComputedRef<string | undefined> = computed({
-		get: () => ansprechpartner.value?.anrede?.valueOf(),
+		get: () => ansprechpartner.value?.anrede ?? undefined,
 		set: (value) => {
 			const data = ansprechpartner.value as BetriebAnsprechpartner;
 			data.anrede = String(value);
 			if ((!data) || (!data.id))
 				return;
-			void App.api.patchBetriebanpsrechpartnerdaten(data, App.schema, data.id.valueOf());
+			void App.api.patchBetriebanpsrechpartnerdaten(data, App.schema, data.id);
 		}
 	})
 
 	const ap_telefonnr : WritableComputedRef<string | undefined> = computed({
-		get: () => ansprechpartner.value?.telefon?.valueOf(),
+		get: () => ansprechpartner.value?.telefon ?? undefined,
 		set: (value) => {
 			const data = ansprechpartner.value as BetriebAnsprechpartner;
 			data.telefon = String(value);
 			if ((!data) || (!data.id))
 				return;
-			void App.api.patchBetriebanpsrechpartnerdaten(data, App.schema, data.id.valueOf());
+			void App.api.patchBetriebanpsrechpartnerdaten(data, App.schema, data.id);
 		}
 	})
 
 	const ap_email : WritableComputedRef<string | undefined> = computed({
-		get: () => ansprechpartner.value?.email?.valueOf(),
+		get: () => ansprechpartner.value?.email ?? undefined,
 		set: (value) => {
 			const data = ansprechpartner.value as BetriebAnsprechpartner;
 			data.email = String(value);
 			if ((!data) || (!data.id))
 				return;
-			void App.api.patchBetriebanpsrechpartnerdaten(data, App.schema, data.id.valueOf());
+			void App.api.patchBetriebanpsrechpartnerdaten(data, App.schema, data.id);
 		}
 	})
 
 	const ap_abteilung : WritableComputedRef<string | undefined> = computed({
-		get: () => ansprechpartner.value?.abteilung?.valueOf(),
+		get: () => ansprechpartner.value?.abteilung ?? undefined,
 		set: (value) => {
 			const data = ansprechpartner.value as BetriebAnsprechpartner;
 			data.abteilung = String(value);
 			if ((!data) || (!data.id))
 				return;
-			void App.api.patchBetriebanpsrechpartnerdaten(data, App.schema, data.id.valueOf());
+			void App.api.patchBetriebanpsrechpartnerdaten(data, App.schema, data.id);
 		}
 	})
 
 	const ap_titel : WritableComputedRef<string | undefined> = computed({
-		get: () => ansprechpartner.value?.titel?.valueOf(),
+		get: () => ansprechpartner.value?.titel ?? undefined,
 		set: (value) => {
 			const data = ansprechpartner.value as BetriebAnsprechpartner;
 			data.titel = String(value);
 			if ((!data) || (!data.id))
 				return;
-			void App.api.patchBetriebanpsrechpartnerdaten(data, App.schema, data.id.valueOf());
+			void App.api.patchBetriebanpsrechpartnerdaten(data, App.schema, data.id);
 		}
 	})
 
@@ -349,7 +349,7 @@
 	const ap_neu : BetriebAnsprechpartner = reactive(new BetriebAnsprechpartner())
 
 	async function saveEntries(){
-		const id = props.betriebsStammdaten.daten?.id?.valueOf();
+		const id = props.betriebsStammdaten.daten?.id ?? undefined;
 		if (id === undefined)
 			return;
 		ap_neu.betrieb_id = props.betriebsStammdaten.daten?.id || null;

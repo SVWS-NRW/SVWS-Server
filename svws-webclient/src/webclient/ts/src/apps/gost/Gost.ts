@@ -30,6 +30,6 @@ export class Gost extends App {
 	}
 
 	public getBgColor(row: GostStatistikFachwahl): string {
-		return ZulaessigesFach.getByKuerzelASD(row.kuerzelStatistik).getHMTLFarbeRGBA(1.0).valueOf();
+		return ZulaessigesFach.getByKuerzelASD(row.kuerzelStatistik).getHMTLFarbeRGBA(1.0);
 	}
 }

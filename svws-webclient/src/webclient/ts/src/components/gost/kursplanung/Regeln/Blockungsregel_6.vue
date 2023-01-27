@@ -2,7 +2,7 @@
 	<BlockungsregelBase v-model="regel" @update:model-value="e => emit('update:modelValue', e)" :regel-typ="regel_typ" :regeln="regeln"
 		@regel-hinzugefuegen="regel_hinzufuegen" @regel-speichern="emit('regelSpeichern')" @regel-entfernen="e=>emit('regelEntfernen', e)">
 		<template #beschreibung="{ regel: r }">
-			{{ GostKursart.fromID(r.parameter.get(0).valueOf()).beschreibung }} alleine in Schiene {{ r.parameter.get(1) }} bis {{ r.parameter.get(2) }}
+			{{ GostKursart.fromID(r.parameter.get(0)).beschreibung }} alleine in Schiene {{ r.parameter.get(1) }} bis {{ r.parameter.get(2) }}
 		</template>
 		Nur
 		<parameter-kursart v-model="kursart" />

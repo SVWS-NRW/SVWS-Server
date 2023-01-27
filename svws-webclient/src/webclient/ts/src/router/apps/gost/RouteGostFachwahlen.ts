@@ -54,7 +54,7 @@ export class RouteGostFachwahlen extends RouteNode<RouteDataGostKursplanung, Rou
 			this.data.fachwahlen = new Vector<GostStatistikFachwahl>();
 		} else {
 			this.data.item = item;
-			this.data.fachwahlen = await App.api.getGostAbiturjahrgangFachwahlstatistik(App.schema, this.data.item.abiturjahr?.valueOf() || -1);
+			this.data.fachwahlen = await App.api.getGostAbiturjahrgangFachwahlstatistik(App.schema, this.data.item.abiturjahr || -1);
 		}
 	}
 

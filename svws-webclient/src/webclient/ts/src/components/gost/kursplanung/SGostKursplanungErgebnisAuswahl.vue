@@ -27,7 +27,7 @@
 			</template>
 			<template #cell-bewertung="{ row }: {row: GostBlockungsergebnisListeneintrag}">
 				<span class="flex gap-1 cell--bewertung items-center">
-					<span class="bewertung--help relative" :style="{'background-color': colorMix(row)}">{{ manager?.getOfBewertung1Wert(row.id) + manager?.getOfBewertung2Wert(row.id) + manager?.getOfBewertung3Wert(row.id) + manager?.getOfBewertung4Wert(row.id) }}</span>
+					<span class="bewertung--help relative" :style="{'background-color': colorMix(row)}">{{ manager?.getOfBewertung1Wert(row.id) + manager?.getOfBewertung2Wert(row.id) || 0 + manager?.getOfBewertung3Wert(row.id) + manager?.getOfBewertung4Wert(row.id) }}</span>
 					<span class="text-sm">{{ manager?.getOfBewertung1Wert(row.id) }} R</span>
 					<span class="text-sm">{{ manager?.getOfBewertung2Wert(row.id) }} W</span>
 					<span class="text-sm">{{ manager?.getOfBewertung3Wert(row.id) }} D</span>
@@ -36,7 +36,7 @@
 				<svws-ui-icon v-if="row.istVorlage"> <i-ri-pushpin-fill /></svws-ui-icon>
 				<div v-if="(row.id === selected_ergebnis?.id && !blockung_aktiv)" class="flex gap-1">
 					<svws-ui-button size="small" type="secondary" class="cursor-pointer" @click.stop="derive_blockung" :disabled="pending"> Ableiten </svws-ui-button>
-					<svws-ui-button v-if="rows_ergebnisse.size() > 1" type="trash" class="cursor-pointer" @click.stop="remove_ergebnis" :disabled="pending" title="Ergebnis löschen"/>
+					<svws-ui-button v-if="rows_ergebnisse.size() > 1" type="trash" class="cursor-pointer" @click.stop="remove_ergebnis" :disabled="pending" title="Ergebnis löschen" />
 				</div>
 			</template>
 			<template #footer>
@@ -48,9 +48,7 @@
 					<svws-ui-popover class="popper--danger" :open-delay="200">
 						<template #trigger>
 							<svws-ui-button @click="remove_ergebnisse" type="trash" class="cursor-pointer"
-											@click.stop="remove_ergebnis"
-											:disabled="selected_ergebnisse.length > rows_ergebnisse.size() - 1"
-											/>
+								@click.stop="remove_ergebnis" :disabled="selected_ergebnisse.length > rows_ergebnisse.size() - 1" />
 						</template>
 						<template #content>
 							Auswahl löschen
@@ -107,7 +105,7 @@
 	async function remove_ergebnisse() {
 		if (props.halbjahr.value === undefined)
 			return;
-		const abiturjahr = props.jahrgangsdaten.daten?.abiturjahr?.valueOf() || -1;
+		const abiturjahr = props.jahrgangsdaten.daten?.abiturjahr ?? -1;
 		if (selected_ergebnisse.value.length > 0 && abiturjahr) {
 			for (const ergebnis of selected_ergebnisse.value) {
 				await App.api.deleteGostBlockungsergebnis(App.schema, ergebnis.id);
@@ -121,7 +119,7 @@
 		if (!selected_ergebnis.value)
 			return;
 		await App.api.deleteGostBlockungsergebnis(App.schema, selected_ergebnis.value.id);
-		const abiturjahr = props.jahrgangsdaten.daten?.abiturjahr?.valueOf() || -1;
+		const abiturjahr = props.jahrgangsdaten.daten?.abiturjahr ?? -1;
 		await props.listBlockungen.update_list(abiturjahr, props.halbjahr.value)
 	}
 
@@ -129,7 +127,7 @@
 		if (!selected_ergebnis.value)
 			return;
 		await App.api.dupliziereGostBlockungMitErgebnis(App.schema, selected_ergebnis.value.id);
-		const abiturjahr = props.jahrgangsdaten.daten?.abiturjahr?.valueOf() || -1;
+		const abiturjahr = props.jahrgangsdaten.daten?.abiturjahr ?? -1;
 		await props.listBlockungen.update_list(abiturjahr, props.halbjahr.value, true);
 	}
 

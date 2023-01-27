@@ -68,11 +68,11 @@
 			return inputLehrerListe.value.find(l => l.id === props.betrieb.betreuungslehrer_id);
 		},
 		set(val: LehrerListeEintrag | undefined) {
-			const data: SchuelerBetriebsdaten | undefined = props.listSchuelerbetriebe.ausgewaehlt;
-			if ((!data) || (!data.id) || (!val))
+			const data = props.listSchuelerbetriebe.ausgewaehlt;
+			if (data?.id == null || val === undefined)
 				return;
-			data.betreuungslehrer_id = val?.id;
-			void App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id.valueOf()).then();
+			data.betreuungslehrer_id = val.id;
+			void App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id);
 		}
 	});
 
@@ -83,9 +83,9 @@
 		set(val: string | undefined) {
 			const data = props.listSchuelerbetriebe.ausgewaehlt as SchuelerBetriebsdaten;
 			data.ausbilder = String(val);
-			if ((!data) || (!data.id))
+			if (data?.id == null)
 				return;
-			void App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id.valueOf());
+			void App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id);
 		}
 	})
 
@@ -100,10 +100,10 @@
 			// Nach Auswahl des Betriebs werden die Ansprechpartner vom Server neugeladen.
 			void props.listSchuelerbetriebe.betriebansprechpartner.update_list();
 			const data: SchuelerBetriebsdaten | undefined = props.listSchuelerbetriebe.ausgewaehlt;
-			if ((!data) || (!data.id) || (!val))
+			if (data?.id == null || val === undefined)
 				return;
-			data.betrieb_id = val?.id;
-			void App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id.valueOf()).then();
+			data.betrieb_id = val.id;
+			void App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id);
 		}
 	});
 
@@ -121,78 +121,78 @@
 		},
 		set(val: KatalogEintrag | undefined) {
 			const data: SchuelerBetriebsdaten | undefined = props.listSchuelerbetriebe.ausgewaehlt;
-			if ((!data) || (!data.id) || (!val))
+			if (data?.id == null || val === undefined)
 				return;
-			data.beschaeftigungsart_id = val?.id;
-			void App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id.valueOf());
+			data.beschaeftigungsart_id = val.id;
+			void App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id);
 		}
 	})
 
 	const praktikum: WritableComputedRef<boolean | undefined> = computed({
 		get(): boolean | undefined {
-			return props.betrieb.praktikum?.valueOf();
+			return props.betrieb.praktikum ?? undefined;
 		},
 		set(val: boolean | undefined) {
 			const data = props.listSchuelerbetriebe.ausgewaehlt as SchuelerBetriebsdaten;
 			data.praktikum = Boolean(val);
-			if ((!data) || (!data.id))
+			if (data?.id == null)
 				return;
-			void App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id.valueOf());
+			void App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id);
 		}
 	});
 
 	const vertragsbeginn: WritableComputedRef<string | undefined> = computed({
 		get(): string | undefined {
-			return props.betrieb.vertragsbeginn?.toString();
+			return props.betrieb.vertragsbeginn ?? undefined;
 		},
 		set(val: string | undefined) {
 			const data = props.listSchuelerbetriebe?.ausgewaehlt as SchuelerBetriebsdaten;
 			data.vertragsbeginn = String(val);
-			if ((!data) || (!data.id))
+			if (data?.id == null)
 				return;
-			void App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id.valueOf());
+			void App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id);
 		}
 	})
 
 	const vertragsende: WritableComputedRef<string | undefined> = computed({
 		get(): string | undefined {
-			return props.betrieb.vertragsende?.toString();
+			return props.betrieb.vertragsende ?? undefined;
 		},
 		set(val: string | undefined) {
 			const data = props.listSchuelerbetriebe?.ausgewaehlt as SchuelerBetriebsdaten;
 			if (val)
 				data.vertragsende = val;
-			if ((!data) || (!data.id))
+			if (data?.id == null)
 				return;
-			void App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id.valueOf());
+			void App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id);
 		}
 	})
 
 	const anschreiben: WritableComputedRef<boolean | undefined> = computed({
 		get(): boolean | undefined {
-			return props.betrieb.allgadranschreiben?.valueOf();
+			return props.betrieb.allgadranschreiben ?? undefined;
 		},
 		set(val: boolean | undefined) {
 			const data = props.listSchuelerbetriebe?.ausgewaehlt as SchuelerBetriebsdaten;
 			data.allgadranschreiben = Boolean(val);
-			if ((!data) || (!data.id))
+			if (data?.id == null)
 				return;
-			void App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id.valueOf());
+			void App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id);
 		}
 	});
 
 	const ansprechpartner: WritableComputedRef<BetriebAnsprechpartner | undefined> = computed({
 		get(): BetriebAnsprechpartner | undefined {
 			if (!inputBetriebAnsprechpartner.value)
-				return undefined;
+				return;
 			return inputBetriebAnsprechpartner.value.find(l => (l.id === props.betrieb.ansprechpartner_id));
 		},
 		set(val: BetriebAnsprechpartner | undefined) {
 			const data: SchuelerBetriebsdaten | undefined = props.listSchuelerbetriebe?.ausgewaehlt;
-			if ((!data) || (!data.id) || (!val))
+			if (data?.id == null || val === undefined)
 				return;
-			data.ansprechpartner_id = val?.id;
-			void App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id.valueOf()).then();
+			data.ansprechpartner_id = val.id;
+			void App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id);
 		}
 	});
 </script>

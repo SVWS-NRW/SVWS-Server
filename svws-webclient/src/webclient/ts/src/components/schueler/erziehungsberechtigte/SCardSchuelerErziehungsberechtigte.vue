@@ -85,7 +85,7 @@
 	});
 
 	const erhaeltAnschreiben: WritableComputedRef<boolean> = computed({
-		get: () => (props.erzieher.erhaeltAnschreiben === null) ? true : props.erzieher.erhaeltAnschreiben?.valueOf(),
+		get: () => (props.erzieher.erhaeltAnschreiben === null) ? true : props.erzieher.erhaeltAnschreiben,
 		set: (value) => void props.data.patch({ erhaeltAnschreiben: value }, props.erzieher)
 	});
 

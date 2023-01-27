@@ -45,7 +45,7 @@ export class MainConfig {
 
 	get schemaname(): string {
 		if (!this.dbSchema || !this.dbSchema.name) return "";
-		return this.dbSchema.name.valueOf();
+		return this.dbSchema.name;
 	}
 	/**
 	 * Der aktuell ausgewählte Abschnitt

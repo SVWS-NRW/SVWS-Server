@@ -28,20 +28,20 @@
 	const manager: ComputedRef<BenutzerManager | undefined> = computed(() => props.data.manager);
 
 	const anzeigename: WritableComputedRef<string | undefined> = computed({
-		get: () => manager.value?.getAnzeigename().valueOf(),
-		set: async (value) => {
-			if ((value === undefined) || (value === "") || (value === manager.value?.getAnzeigename().valueOf()))
+		get: () => manager.value?.getAnzeigename(),
+		set: (value) => {
+			if ((value === undefined) || (value === "") || (value === manager.value?.getAnzeigename()))
 				return;
-			props.data.setAnzeigename(value);
+			void props.data.setAnzeigename(value);
 		}
 	});
 
 	const name: WritableComputedRef<string | undefined> = computed({
-		get: () => manager.value?.getAnmeldename().valueOf(),
-		set: async (value) => {
-			if ((value === undefined) || (value === "") || (value === manager.value?.getAnmeldename().valueOf()))
+		get: () => manager.value?.getAnmeldename(),
+		set: (value) => {
+			if ((value === undefined) || (value === "") || (value === manager.value?.getAnmeldename()))
 				return;
-			props.data.setAnmeldename(value);
+			void props.data.setAnmeldename(value);
 		}
 	});
 
@@ -50,7 +50,7 @@
 		set: (value) => {
 			if ((value === undefined) || (value === manager.value?.istAdmin()))
 				return;
-			props.data.setIstAdmin(value);
+			void props.data.setIstAdmin(value);
 		}
 	});
 
@@ -59,7 +59,7 @@
 
 	function setPassword(){
 		if (kennwort1.value === kennwort2.value)
-			props.data.setPassword(kennwort1.value)
+			void props.data.setPassword(kennwort1.value)
 		else
 			alert("Kennwörter stimmen nicht überein")
 	}

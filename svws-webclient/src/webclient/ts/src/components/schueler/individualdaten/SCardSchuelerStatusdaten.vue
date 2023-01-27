@@ -67,7 +67,7 @@
 	});
 
 	const inputIstSchulpflichtErfuellt: WritableComputedRef<boolean> = computed({
-		get: () => daten.value.istSchulpflichtErfuellt === null ? false : daten.value.istSchulpflichtErfuellt.valueOf(),
+		get: () => daten.value.istSchulpflichtErfuellt === null ? false : daten.value.istSchulpflichtErfuellt,
 		set: (value) => void props.stammdaten.patch({ istSchulpflichtErfuellt: value })
 	});
 
@@ -87,12 +87,12 @@
 	});
 
 	const inputIstBerufsschulpflichtErfuellt: WritableComputedRef<boolean> = computed({
-		get: () => daten.value.istBerufsschulpflichtErfuellt === null ? false : daten.value.istBerufsschulpflichtErfuellt.valueOf(),
+		get: () => daten.value.istBerufsschulpflichtErfuellt === null ? false : daten.value.istBerufsschulpflichtErfuellt,
 		set: (value) => void props.stammdaten.patch({ istBerufsschulpflichtErfuellt: value })
 	});
 
 	const inputIstVolljaehrig: WritableComputedRef<boolean> = computed({
-		get: () => daten.value.istVolljaehrig === null ? false : daten.value.istVolljaehrig.valueOf(),
+		get: () => daten.value.istVolljaehrig === null ? false : daten.value.istVolljaehrig,
 		set: (value) => void props.stammdaten.patch({ istVolljaehrig: value })
 	});
 

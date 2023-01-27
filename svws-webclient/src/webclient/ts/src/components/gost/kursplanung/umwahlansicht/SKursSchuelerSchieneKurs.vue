@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-drag-data :key="kurs.id" tag="td" :data="{ id: kurs.id, fachID: kurs.fachID, kursart: kurs.kursart?.valueOf() }"
+	<svws-ui-drag-data :key="kurs.id" tag="td" :data="{ id: kurs.id, fachID: kurs.fachID, kursart: kurs.kursart }"
 		class="select-none text-center" :class="{ 'cursor-move border-2 border-green-700': is_draggable, 'bg-yellow-200': is_drop_zone }"
 		:draggable="is_draggable" @drag-start="drag_started" @drag-end="drag_ended" :style="{ 'background-color': bgColor }">
 		<svws-ui-drop-data @drop="drop_aendere_kurszuordnung($event, kurs.id)" v-slot="{active}">
@@ -86,7 +86,8 @@
 	const schueler_schriftlich: ComputedRef<number> = computed(() => manager.value?.getOfKursAnzahlSchuelerSchriftlich(props.kurs.id) || 0);
 
 	const gostfach: ComputedRef<ZulaessigesFach | undefined> = computed(() => {
-		if (props.blockung.datenmanager === undefined) return
+		if (props.blockung.datenmanager === undefined)
+			return
 		let fach
 		for (const f of props.blockung.datenmanager.faecherManager().values())
 			if (f.id === kurs_original.value?.fach_id) {
@@ -97,10 +98,10 @@
 	});
 
 	const bgColor: ComputedRef<string> = computed(() => {
-		if (!gostfach.value)
+		if (gostfach.value === undefined)
 			return "";
 		if (manager.value?.getOfSchuelerOfKursIstZugeordnet(props.schueler.id, props.kurs.id))
-			return gostfach.value.getHMTLFarbeRGB().valueOf();
+			return gostfach.value.getHMTLFarbeRGB();
 		return "";
 	});
 
@@ -144,7 +145,8 @@
 		await regel_speichern(regel)
 	}
 	const fixieren_regel_entfernen = async () => {
-		if (!fixier_regel.value) return
+		if (!fixier_regel.value)
+			return
 		await props.blockung.del_blockung_regel(fixier_regel.value.id)
 	}
 	const verbieten_regel_hinzufuegen = async () => {
@@ -153,7 +155,8 @@
 		await regel_speichern(regel)
 	}
 	const verbieten_regel_entfernen = async () => {
-		if (!verbieten_regel.value) return
+		if (verbieten_regel.value === undefined)
+			return
 		await props.blockung.del_blockung_regel(verbieten_regel.value.id)
 	}
 

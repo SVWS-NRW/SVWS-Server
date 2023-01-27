@@ -2,7 +2,7 @@
 	<BlockungsregelBase v-model="regel" @update:model-value="e => emit('update:modelValue', e)" :regel-typ="regel_typ" :regeln="regeln"
 		@regel-hinzugefuegen="regel_hinzufuegen" @regel-speichern="emit('regelSpeichern')" @regel-entfernen="e=>emit('regelEntfernen', e)">
 		<template #beschreibung="{ regel: r }">
-			{{ name(r.parameter.get(0).valueOf()) }} in {{ getKursbezeichnung(getKursFromId(kurse, r.parameter.get(1).valueOf()), mapFaecher) }} verboten
+			{{ name(r.parameter.get(0)) }} in {{ getKursbezeichnung(getKursFromId(kurse, r.parameter.get(1)), mapFaecher) }} verboten
 		</template>
 		Verbiete
 		<parameter-schueler v-model="schueler" :list-schueler="listSchueler" />

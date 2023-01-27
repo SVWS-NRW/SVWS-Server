@@ -1,13 +1,13 @@
 <template>
 	<svws-ui-content-card title="Entlassung von eigener Schule">
 		<div class="input-wrapper">
-			<svws-ui-text-input placeholder="Entlassung am" :model-value="data.entlassungDatum?.valueOf()"
+			<svws-ui-text-input placeholder="Entlassung am" :model-value="data.entlassungDatum ?? undefined"
 				@update:model-value="doPatch({ entlassungDatum: String($event) })" type="date" />
-			<svws-ui-text-input placeholder="Entlassjahrgang" :model-value="data.entlassungJahrgang?.valueOf()"
+			<svws-ui-text-input placeholder="Entlassjahrgang" :model-value="data.entlassungJahrgang ?? undefined"
 				@update:model-value="doPatch({ entlassungJahrgang: String($event) })" type="text" />
-			<svws-ui-text-input placeholder="Bemerkung / Entlassgrund" :model-value="data.entlassungGrundID?.valueOf()"
+			<svws-ui-text-input placeholder="Bemerkung / Entlassgrund" :model-value="data.entlassungGrundID ?? undefined"
 				@update:model-value="doPatch({ entlassungGrundID: Number($event) })" />
-			<svws-ui-text-input placeholder="Art des Abschlusses" :model-value="data.entlassungAbschlussartID?.valueOf()"
+			<svws-ui-text-input placeholder="Art des Abschlusses" :model-value="data.entlassungAbschlussartID ?? undefined"
 				@update:model-value="doPatch({ entlassungAbschlussartID: String($event) })" />
 		</div>
 	</svws-ui-content-card>

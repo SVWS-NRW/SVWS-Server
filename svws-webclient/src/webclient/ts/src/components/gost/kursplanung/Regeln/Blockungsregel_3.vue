@@ -2,7 +2,7 @@
 	<BlockungsregelBase v-model="regel" @update:model-value="e => emit('update:modelValue', e)" :regel-typ="regel_typ" :regeln="regeln"
 		@regel-hinzugefuegen="regel_hinzufuegen" @regel-speichern="emit('regelSpeichern')" @regel-entfernen="e=>emit('regelEntfernen', e)">
 		<template #beschreibung="{ regel: r }">
-			{{ getKursbezeichnung(getKursFromId(kurse, r.parameter.get(0).valueOf()), mapFaecher) }} auf Schiene {{ r.parameter.get(1) }} gesperrt
+			{{ getKursbezeichnung(getKursFromId(kurse, r.parameter.get(0)), mapFaecher) }} auf Schiene {{ r.parameter.get(1) }} gesperrt
 		</template>
 		Sperre
 		<parameter-kurs v-model="kurs" :map-faecher="mapFaecher" :kurse="kurse" />

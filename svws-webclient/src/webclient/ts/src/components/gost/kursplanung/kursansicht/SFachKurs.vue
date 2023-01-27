@@ -33,11 +33,11 @@
 		fach: GostStatistikFachwahl;
 		kursart: GostKursart;
 		dataFaecher: DataGostFaecher;
-		halbjahr: Number;
+		halbjahr: number;
 		blockung: DataGostKursblockung;
 		ergebnis: DataGostKursblockungsergebnis;
 		listLehrer: ListLehrer;
-		mapLehrer: Map<Number, LehrerListeEintrag>;
+		mapLehrer: Map<number, LehrerListeEintrag>;
 		allowRegeln: boolean;
 	}>();
 
@@ -77,7 +77,7 @@
 
 	const schienen: ComputedRef<List<GostBlockungSchiene>> = computed(()=> props.blockung.datenmanager?.getMengeOfSchienen() || new Vector<GostBlockungSchiene>())
 
-	const fach_halbjahr: ComputedRef<GostStatistikFachwahlHalbjahr> = computed(() => props.fach.fachwahlen[props.halbjahr.valueOf()] ||	new GostStatistikFachwahlHalbjahr());
+	const fach_halbjahr: ComputedRef<GostStatistikFachwahlHalbjahr> = computed(() => props.fach.fachwahlen[props.halbjahr] ||	new GostStatistikFachwahlHalbjahr());
 
 	const wahlen: ComputedRef<Map<number, number>> = computed(() => {
 		const wahlen : Map<number, number> = new Map();
@@ -93,7 +93,7 @@
 		return wahlen;
 	});
 
-	const bgColor: ComputedRef<string | undefined> = computed(() => ZulaessigesFach.getByKuerzelASD(props.fach.kuerzelStatistik).getHMTLFarbeRGBA(1.0).valueOf());
+	const bgColor: ComputedRef<string | undefined> = computed(() => ZulaessigesFach.getByKuerzelASD(props.fach.kuerzelStatistik).getHMTLFarbeRGBA(1.0));
 
 	function add_kurs(art: GostKursart) {
 		void props.blockung.add_blockung_kurse(props.fach.id, art.id);

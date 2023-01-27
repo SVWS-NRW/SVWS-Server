@@ -15,7 +15,7 @@
 							<svws-ui-icon v-if="row.istAktiv"> <i-ri-pushpin-fill /> </svws-ui-icon>
 							<div v-if="allow_add_blockung(props.halbjahr.value)" class="flex gap-1">
 								<svws-ui-button size="small" type="secondary" @click.stop="create_blockungsergebnisse" title="Ergebnisse berechnen" :disabled="pending">Berechnen</svws-ui-button>
-								<svws-ui-button type="trash" class="cursor-pointer" @click.stop="toggle_remove_blockung_modal" title="Blockung löschen" :disabled="pending"/>
+								<svws-ui-button type="trash" class="cursor-pointer" @click.stop="toggle_remove_blockung_modal" title="Blockung löschen" :disabled="pending" />
 							</div>
 						</td>
 						<td v-else>
@@ -129,11 +129,11 @@
 
 	async function remove_blockung() {
 		modal_remove_blockung.value.closeModal()
-		if (!selected_blockungauswahl.value)
+		if (selected_blockungauswahl.value === undefined)
 			return;
 		await App.api.deleteGostBlockung(App.schema, selected_blockungauswahl.value?.id);
-		const abiturjahr = props.jahrgangsdaten.daten?.abiturjahr?.valueOf();
-		if (!abiturjahr)
+		const abiturjahr = props.jahrgangsdaten.daten?.abiturjahr;
+		if (abiturjahr === undefined)
 			return;
 		await router.push({ name: routeGostKursplanung.name, params: { abiturjahr: abiturjahr, halbjahr: props.halbjahr.value?.id }});
 	}

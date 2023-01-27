@@ -62,7 +62,7 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 			if (this.data.dataLaufbahn.daten === undefined)
 				return false;
 			if (this.data.item.abiturjahrgang !== null) {
-				this.data.gostJahrgang.abiturjahr = this.data.item.abiturjahrgang.valueOf();
+				this.data.gostJahrgang.abiturjahr = this.data.item.abiturjahrgang;
 				this.data.gostJahrgang.jahrgang = this.data.item.jahrgang;
 				await this.data.dataJahrgang.select(this.data.gostJahrgang);
 				if (this.data.dataJahrgang.daten === undefined) {

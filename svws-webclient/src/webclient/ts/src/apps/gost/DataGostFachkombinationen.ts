@@ -17,7 +17,7 @@ export class DataGostFachkombinationen extends BaseData<List<GostJahrgangFachkom
 	public async on_select(): Promise<List<GostJahrgangFachkombination> | undefined> {
 		const getter = (eintrag: GostJahrgang | undefined)  => {
 			const abiturjahr = eintrag?.abiturjahr || -1;
-			return App.api.getGostAbiturjahrgangFachkombinationen(App.schema, abiturjahr.valueOf());
+			return App.api.getGostAbiturjahrgangFachkombinationen(App.schema, abiturjahr);
 		};
 		const res = await super._select(getter);
 		return res;
@@ -49,7 +49,9 @@ export class DataGostFachkombinationen extends BaseData<List<GostJahrgangFachkom
 	 * @returns {Promise<GostJahrgangFachkombination | undefined>} Ein Kursobjekt bei Erfolg
 	 */
 	 public async add(typ: GostLaufbahnplanungFachkombinationTyp): Promise<GostJahrgangFachkombination | undefined> {
-		const abijahr = App.apps.gost.auswahl.ausgewaehlt?.abiturjahr?.valueOf();
+		//TODO App.apps.gost existiert nicht mehr...
+		throw new Error("App.apps.gost existiert nicht mehr...")
+		const abijahr = -1 //App.apps.gost.auswahl.ausgewaehlt?.abiturjahr;
 		if (abijahr === undefined)
 			return undefined;
 		const result = await App.api.addGostAbiturjahrgangFachkombination(App.schema, abijahr, typ.getValue());
@@ -83,7 +85,7 @@ export class DataGostFachkombinationen extends BaseData<List<GostJahrgangFachkom
 	 * @returns {string}
 	 */
 	public getBgColor(fach: GostFach): string {
-		return ZulaessigesFach.getByKuerzelASD(fach.kuerzel).getHMTLFarbeRGB().valueOf();
+		return ZulaessigesFach.getByKuerzelASD(fach.kuerzel).getHMTLFarbeRGB();
 	}
 
 }

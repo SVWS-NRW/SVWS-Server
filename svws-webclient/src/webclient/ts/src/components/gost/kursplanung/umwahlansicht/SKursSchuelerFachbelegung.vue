@@ -50,7 +50,7 @@
 		const zulfach = ZulaessigesFach.getByKuerzelASD(gostfach.value?.kuerzel || null);
 		if (!zulfach)
 			return "#ffffff";
-		return zulfach.getHMTLFarbeRGB().valueOf()
+		return zulfach.getHMTLFarbeRGB();
 	});
 
 	const drag_data: WritableComputedRef<{ id: number, fachID: number, kursart: number } | undefined> = computed({
@@ -84,8 +84,6 @@
 		drag_data.value = undefined;
 	}
 
-	const visible: ComputedRef<boolean> = computed(
-		() => true
-	);
+	const visible: ComputedRef<boolean> = computed( () => true);
 
 </script>

@@ -32,7 +32,7 @@ export class DataBetriebsstammdaten extends BaseData<BetriebStammdaten, Schueler
 	 */
 	 public async on_select(): Promise<BetriebStammdaten | undefined> {
 		return super._select((eintrag: SchuelerBetriebsdaten) =>
-			App.api.getBetriebStammdaten(App.schema, eintrag.betrieb_id?.valueOf() || -1)
+			App.api.getBetriebStammdaten(App.schema, eintrag.betrieb_id ?? -1)
 		);
 	}
 

@@ -1,11 +1,11 @@
 <template>
 	<svws-ui-content-card title="Wechsel zu aufnehmender Schule">
 		<div class="input-wrapper">
-			<svws-ui-text-input placeholder="Name der Schule" :model-value="data.aufnehmdendSchulnummer?.valueOf()"
+			<svws-ui-text-input placeholder="Name der Schule" :model-value="data.aufnehmdendSchulnummer ?? undefined"
 				@update:model-value="doPatch({ aufnehmdendSchulnummer: String($event) })" type="text" />
-			<svws-ui-text-input placeholder="Wechseldatum" :model-value="data.aufnehmdendWechseldatum?.valueOf()"
+			<svws-ui-text-input placeholder="Wechseldatum" :model-value="data.aufnehmdendWechseldatum ?? undefined"
 				@update:model-value="doPatch({ aufnehmdendWechseldatum: String($event) })" type="date" />
-			<svws-ui-checkbox text="Aufnahme bestätigt" :model-value="data.aufnehmdendBestaetigt?.valueOf()"
+			<svws-ui-checkbox text="Aufnahme bestätigt" :model-value="data.aufnehmdendBestaetigt ?? undefined"
 				@update:model-value="doPatch({ aufnehmdendBestaetigt: Boolean($event) })" />
 		</div>
 	</svws-ui-content-card>

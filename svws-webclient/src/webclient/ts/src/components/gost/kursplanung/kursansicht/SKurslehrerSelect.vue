@@ -50,7 +50,7 @@
 
 	const fach: ComputedRef<ZulaessigesFach> = computed(() => ZulaessigesFach.getByKuerzelASD(gostFach.value?.kuerzel || null));
 
-	const bgColor: ComputedRef<string> = computed(() => fach.value ? fach.value.getHMTLFarbeRGB().valueOf() : "#ffffff");
+	const bgColor: ComputedRef<string> = computed(() => fach.value ? fach.value.getHMTLFarbeRGB() : "#ffffff");
 
 	const kursbezeichnung: ComputedRef<String> = computed(()=> manager.value?.getOfKursName(props.kurs.id) || "")
 

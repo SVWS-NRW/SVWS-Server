@@ -18,18 +18,18 @@
 
 	const id: ComputedRef<number> = computed(() => props.leistungsdaten.fachID);
 	const fach: ComputedRef<FaecherListeEintrag | undefined> = computed(() => props.mapFaecher.get(id.value));
-	const fach_bezeichnung: ComputedRef<string | undefined> = computed(() => fach.value?.bezeichnung?.toString());
+	const fach_bezeichnung: ComputedRef<string | undefined> = computed(() => fach.value?.bezeichnung ?? undefined);
 
 	const zul_fach: ComputedRef<ZulaessigesFach | undefined> = computed(() => {
 		if (fach.value === undefined)
-			return undefined;
-		return ZulaessigesFach.getByKuerzelASD(fach.value?.kuerzel);
+			return;
+		return ZulaessigesFach.getByKuerzelASD(fach.value.kuerzel);
 	});
 
 	const bgColor: ComputedRef<string> = computed<string>(() => {
-		if (!zul_fach.value)
+		if (zul_fach.value === undefined)
 			return "#ffffff";
-		return zul_fach.value.getHMTLFarbeRGB().valueOf();
+		return zul_fach.value.getHMTLFarbeRGB();
 	});
 
 </script>

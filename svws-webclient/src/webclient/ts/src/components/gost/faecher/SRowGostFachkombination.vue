@@ -26,7 +26,7 @@
 		dataFachkombinationen: DataGostFachkombinationen;
 	}>();
 
-	const abiturjahr = routeGost.liste.ausgewaehlt?.abiturjahr?.valueOf() || undefined;
+	const abiturjahr = routeGost.liste.ausgewaehlt?.abiturjahr ?? undefined;
 
 	const fachManager: ComputedRef<GostFaecherManager | undefined> = computed(() => props.dataFaecher.manager);
 
@@ -75,7 +75,7 @@
 			return props.kombination.gueltigInHalbjahr[GostHalbjahr.EF1.id];
 		},
 		set(value: boolean) {
-			if (!routeGost.liste.ausgewaehlt?.abiturjahr)
+			if (routeGost.liste.ausgewaehlt?.abiturjahr === undefined)
 				return;
 			const result : boolean[] = [...props.kombination.gueltigInHalbjahr];
 			result[GostHalbjahr.EF1.id] = value;
@@ -88,13 +88,11 @@
 			return props.kombination.gueltigInHalbjahr[GostHalbjahr.EF2.id];
 		},
 		set(value: boolean) {
-			if (!routeGost.liste.ausgewaehlt?.abiturjahr)
+			if (routeGost.liste.ausgewaehlt?.abiturjahr === undefined)
 				return;
 			const result : boolean[] = [...props.kombination.gueltigInHalbjahr];
 			result[GostHalbjahr.EF2.id] = value;
-			void props.dataFachkombinationen.patch( { gueltigInHalbjahr: result }, props.kombination,
-				routeGost.liste.ausgewaehlt.abiturjahr.valueOf()
-			);
+			void props.dataFachkombinationen.patch({ gueltigInHalbjahr: result }, props.kombination, routeGost.liste.ausgewaehlt.abiturjahr);
 		}
 	});
 
@@ -103,13 +101,11 @@
 			return props.kombination.gueltigInHalbjahr[GostHalbjahr.Q11.id];
 		},
 		set(value: boolean) {
-			if (!routeGost.liste.ausgewaehlt?.abiturjahr)
+			if (routeGost.liste.ausgewaehlt?.abiturjahr === undefined)
 				return;
 			const result : boolean[] = [...props.kombination.gueltigInHalbjahr];
 			result[GostHalbjahr.Q11.id] = value;
-			void props.dataFachkombinationen.patch( { gueltigInHalbjahr: result }, props.kombination,
-				routeGost.liste.ausgewaehlt.abiturjahr.valueOf()
-			);
+			void props.dataFachkombinationen.patch({ gueltigInHalbjahr: result }, props.kombination, routeGost.liste.ausgewaehlt.abiturjahr);
 		}
 	});
 
@@ -118,13 +114,11 @@
 			return props.kombination.gueltigInHalbjahr[GostHalbjahr.Q12.id];
 		},
 		set(value: boolean) {
-			if (!routeGost.liste.ausgewaehlt?.abiturjahr)
+			if (routeGost.liste.ausgewaehlt?.abiturjahr === undefined)
 				return;
 			const result : boolean[] = [...props.kombination.gueltigInHalbjahr];
 			result[GostHalbjahr.Q12.id] = value;
-			void props.dataFachkombinationen.patch( { gueltigInHalbjahr: result }, props.kombination,
-				routeGost.liste.ausgewaehlt.abiturjahr.valueOf()
-			);
+			void props.dataFachkombinationen.patch({ gueltigInHalbjahr: result }, props.kombination, routeGost.liste.ausgewaehlt.abiturjahr);
 		}
 	});
 
@@ -133,13 +127,11 @@
 			return props.kombination.gueltigInHalbjahr[GostHalbjahr.Q21.id];
 		},
 		set(value: boolean) {
-			if (!routeGost.liste.ausgewaehlt?.abiturjahr)
+			if (routeGost.liste.ausgewaehlt?.abiturjahr === undefined)
 				return;
 			const result : boolean[] = [...props.kombination.gueltigInHalbjahr];
 			result[GostHalbjahr.Q21.id] = value;
-			void props.dataFachkombinationen.patch( { gueltigInHalbjahr: result }, props.kombination,
-				routeGost.liste.ausgewaehlt.abiturjahr.valueOf()
-			);
+			void props.dataFachkombinationen.patch({ gueltigInHalbjahr: result }, props.kombination, routeGost.liste.ausgewaehlt.abiturjahr);
 		}
 	});
 
@@ -148,13 +140,11 @@
 			return props.kombination.gueltigInHalbjahr[GostHalbjahr.Q22.id];
 		},
 		set(value: boolean) {
-			if (!routeGost.liste.ausgewaehlt?.abiturjahr)
+			if (routeGost.liste.ausgewaehlt?.abiturjahr === undefined)
 				return;
 			const result : boolean[] = [...props.kombination.gueltigInHalbjahr];
 			result[GostHalbjahr.Q22.id] = value;
-			void props.dataFachkombinationen.patch( { gueltigInHalbjahr: result }, props.kombination,
-				routeGost.liste.ausgewaehlt.abiturjahr.valueOf()
-			);
+			void props.dataFachkombinationen.patch({ gueltigInHalbjahr: result }, props.kombination, routeGost.liste.ausgewaehlt.abiturjahr);
 		}
 	});
 
