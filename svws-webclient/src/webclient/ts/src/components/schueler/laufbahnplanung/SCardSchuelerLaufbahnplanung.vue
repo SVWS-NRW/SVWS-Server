@@ -204,33 +204,7 @@
 				<div class="am:px-6 py-2 lg:px-8">
 					<svws-ui-textarea-input placeholder="Kommentar" resizeable="vertical" />
 				</div>
-				<div v-if="dataLaufbahn.daten?.sprachendaten.pruefungen.size()" class="inline-block py-2 align-middle sm:px-6 lg:px-8 w-full">
-					<div class="overflow-hidden rounded-lg shadow">
-						<table class="border-collapse text-sm w-full">
-							<thead class="bg-slate-100">
-								<tr>
-									<td colspan="5" class="px-2">Sprachprüfungen</td>
-								</tr>
-								<tr>
-									<td class="px-2">Sprache</td>
-									<td class="px-2">Typ</td>
-									<td class="px-2">Niveau</td>
-									<td class="px-2">Ersetzt</td>
-									<td class="px-2 text-center">Note</td>
-								</tr>
-							</thead>
-							<tbody>
-								<tr v-for="pruefung in dataLaufbahn.daten?.sprachendaten.pruefungen" :key="pruefung.sprache || ''" class="border bottom-1  border-[#7f7f7f]/20">
-									<td class="px-2">{{ pruefung.sprache }}</td>
-									<td class="px-2">{{ pruefung.istHSUPruefung ? "HSU":'' }}{{ pruefung.istFeststellungspruefung ? 'SFP':'' }}</td>
-									<td class="px-2">{{ Sprachpruefungniveau.getByID(pruefung.anspruchsniveauId || null)?.daten.beschreibung }}</td>
-									<td class="px-2">{{ pruefung.istHSUPruefung?'–':'' }}{{ pruefung.kannErstePflichtfremdspracheErsetzen ? 'Erste Fremdsprache':'' }}{{ pruefung.kannZweitePflichtfremdspracheErsetzen ? 'Zweite Fremdsprache':'' }}{{ pruefung.kannWahlpflichtfremdspracheErsetzen ? 'Wahlpflichtfremdsprache':'' }}</td>
-									<td class="text-center">{{ pruefung.note }}</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-				</div>
+				<s-laufbahnplanung-sprachpruefungen v-if="dataLaufbahn.daten" :sprachendaten="dataLaufbahn.daten?.sprachendaten" />
 			</div>
 		</div>
 	</svws-ui-content-card>
@@ -240,7 +214,7 @@
 
 	import { computed, ComputedRef, Ref, ref, WritableComputedRef } from "vue";
 
-	import { GostBelegpruefungErgebnisFehler, GostBelegpruefungsArt, GostBelegungsfehlerArt, GostFach, Sprachpruefungniveau,
+	import { GostBelegpruefungErgebnisFehler, GostBelegpruefungsArt, GostBelegungsfehlerArt, GostFach,
 		List, Vector, GostJahrgangFachkombination, GostLaufbahnplanungFachkombinationTyp, GostHalbjahr, GostKursart, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
 	import { App } from "~/apps/BaseApp";
 	import { DataSchuelerLaufbahnplanung } from "~/apps/schueler/DataSchuelerLaufbahnplanung";
