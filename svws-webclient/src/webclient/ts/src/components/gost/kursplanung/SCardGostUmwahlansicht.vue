@@ -4,23 +4,17 @@
 			<div class="content-card--header content-card--header--has-actions flex justify-between">
 				<h3 class="content-card--headline">
 					<span>Kurszuordnungen für</span>
-					<span @click="routeSchueler()"
-						  class="inline-flex items-center align-text-bottom gap-1 font-bold link-hover--primary leading-tight cursor-pointer ml-1"
-						  :title="'Zur Seite von ' + listSchueler.ausgewaehlt?.vorname + ' ' + listSchueler.ausgewaehlt?.nachname + ' wechseln'"
-					>
-								<svws-ui-icon class="icon--1-em">
-									<i-ri-group-line/>
-								</svws-ui-icon>
-								{{ listSchueler.ausgewaehlt?.vorname }}
-								{{ listSchueler.ausgewaehlt?.nachname }}
-							</span>
+					<span @click="routeSchueler()" class="inline-flex items-center align-text-bottom gap-1 font-bold link-hover--primary leading-tight cursor-pointer ml-1"
+						:title="'Zur Seite von ' + listSchueler.ausgewaehlt?.vorname + ' ' + listSchueler.ausgewaehlt?.nachname + ' wechseln'">
+						<svws-ui-icon class="icon--1-em"> <i-ri-group-line /> </svws-ui-icon>
+						{{ listSchueler.ausgewaehlt?.vorname }}
+						{{ listSchueler.ausgewaehlt?.nachname }}
+					</span>
 				</h3>
-				<span @click="routeLaufbahnplanung()"
-					  class="font-bold link-hover--primary cursor-pointer pr-2"
-					  :title="'Zur Laufbahnplanung von ' + listSchueler.ausgewaehlt?.vorname + ' ' + listSchueler.ausgewaehlt?.nachname + ' wechseln'"
-				>
-								Laufbahnplanung
-							</span>
+				<span @click="routeLaufbahnplanung()" class="font-bold link-hover--primary cursor-pointer pr-2"
+					:title="'Zur Laufbahnplanung von ' + listSchueler.ausgewaehlt?.vorname + ' ' + listSchueler.ausgewaehlt?.nachname + ' wechseln'">
+					Laufbahnplanung
+				</span>
 			</div>
 		</template>
 		<div class="flex gap-4">

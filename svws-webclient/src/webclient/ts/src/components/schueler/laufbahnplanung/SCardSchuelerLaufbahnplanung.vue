@@ -120,22 +120,7 @@
 				<div>
 					<div>Belegprüfung</div>
 				</div>
-				<div>
-					<div class="form-check form-check-inline cursor-pointer">
-						<input type="radio" name="inlineRadioOptions" id="ef"
-							v-model="belegpruefungsart"
-							:value="ef1"
-							class="bg-text-center float-left mt-[0.15rem] mr-2 h-4 w-4 cursor-pointer rounded-full border border-gray-300 bg-white bg-contain checked:border-slate-100 checked:bg-slate-100 focus:outline-none">
-						<label class="form-check-label inline-block cursor-pointer" for="ef">EF 1</label>
-					</div>
-					<div class="form-check form-check-inline cursor-pointer">
-						<input id="gesamt" type="radio" name="inlineRadioOptions"
-							v-model="belegpruefungsart"
-							:value="gesamt"
-							class="bg-text-center float-left mt-[0.15rem] mr-2 h-4 w-4 cursor-pointer rounded-full border border-gray-300 bg-white bg-contain checked:border-slate-100 checked:bg-slate-100 focus:outline-none">
-						<label class="form-check-label inline-block cursor-pointer" for="gesamt">Gesamt</label>
-					</div>
-				</div>
+				<s-laufbahnplanung-belegpruefungsart v-model="props.dataLaufbahn.gostAktuelleBelegpruefungsart" />
 				<s-laufbahnplanung-fehler :fehlerliste="belegungsfehlerAlle" />
 				<s-laufbahnplanung-informationen :fehlerliste="belegungsfehlerAlle" />
 				<s-laufbahnplanung-fachkombinationen :abiturmanager="abiturmanager" :faechermanager="faechermanager" :fachkombinationen="fachkombis" />
@@ -155,7 +140,7 @@
 
 	import { computed, ComputedRef, ref, WritableComputedRef } from "vue";
 
-	import { List, Vector, GostBelegpruefungErgebnisFehler, GostBelegpruefungsArt, GostFach, GostJahrgangFachkombination, SchuelerListeEintrag, AbiturdatenManager, GostFaecherManager } from "@svws-nrw/svws-core-ts";
+	import { List, Vector, GostBelegpruefungErgebnisFehler, GostFach, GostJahrgangFachkombination, SchuelerListeEintrag, AbiturdatenManager, GostFaecherManager } from "@svws-nrw/svws-core-ts";
 	import { App } from "~/apps/BaseApp";
 	import { DataSchuelerLaufbahnplanung } from "~/apps/schueler/DataSchuelerLaufbahnplanung";
 	import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
@@ -172,8 +157,6 @@
 		dataFachkombinationen: DataGostFachkombinationen
 	}>();
 
-	const ef1: GostBelegpruefungsArt = GostBelegpruefungsArt.EF1;
-	const gesamt: GostBelegpruefungsArt = GostBelegpruefungsArt.GESAMT;
 	const manuell = ref(false)
 
 	function reset_fachwahlen() {
@@ -200,15 +183,6 @@
 	});
 
 	const belegungsfehlerAlle: ComputedRef<List<GostBelegpruefungErgebnisFehler>> = computed(() => props.dataLaufbahn.gostBelegpruefungsErgebnis.fehlercodes);
-
-	const belegpruefungsart: WritableComputedRef<GostBelegpruefungsArt> = computed({
-		get(): GostBelegpruefungsArt {
-			return props.dataLaufbahn.gostAktuelleBelegpruefungsart;
-		},
-		set(value: GostBelegpruefungsArt) {
-			props.dataLaufbahn.gostAktuelleBelegpruefungsart = value;
-		}
-	});
 
 	const fachkombis: ComputedRef<List<GostJahrgangFachkombination>> = computed(()=>{
 		const list = new Vector<GostJahrgangFachkombination>();

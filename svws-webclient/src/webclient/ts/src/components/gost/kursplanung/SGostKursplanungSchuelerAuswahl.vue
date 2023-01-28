@@ -32,9 +32,8 @@
 						</tr>
 					</thead>
 					<tbody>
-					<s-kurs-schueler-schueler v-for="s in schueler" :key="s.id" :schueler="s" :selected="selected === s"
-											  @click="selected = s"
-											  :blockung="blockung" :list-schueler="listSchueler"/>
+						<s-kurs-schueler-schueler v-for="s in schueler" :key="s.id" :schueler="s" :selected="selected === s" @click="selected = s"
+							:blockung="blockung" :list-schueler="listSchueler" />
 					</tbody>
 				</table>
 			</div>
