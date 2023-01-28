@@ -28,7 +28,7 @@
 							</tr>
 						</thead>
 						<tr v-for="row in rows" :key="row.id" class="select-none">
-							<s-row-lupo :fach="row" :data-laufbahn="dataLaufbahn" :data-faecher="dataFaecher" :data-fachkombinationen="dataFachkombinationen" />
+							<s-laufbahnplanung-fach :fach="row" :data-laufbahn="dataLaufbahn" :data-faecher="dataFaecher" :data-fachkombinationen="dataFachkombinationen" />
 						</tr>
 						<thead class="bg-slate-100">
 							<tr>
