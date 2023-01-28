@@ -1,12 +1,19 @@
 <template>
-	<s-modal-hilfe> <hilfe-laufbahnplanung /> </s-modal-hilfe>
-	<s-card-schueler-laufbahnplanung v-if="visible" :abiturmanager="abiturmanager" :faechermanager="faechermanager" :item="item.value" :stammdaten="stammdaten"
-		:data-laufbahn="dataLaufbahn" :data-faecher="dataFaecher" :data-fachkombinationen="dataFachkombinationen" />
+	<div class="flex flex-row gap-4">
+		<div class="flex-none">
+			<s-laufbahnplanung-card-planung v-if="visible" :abiturmanager="abiturmanager" :faechermanager="faechermanager" :item="item.value" :stammdaten="stammdaten"
+				:data-laufbahn="dataLaufbahn" :data-faecher="dataFaecher" :data-fachkombinationen="dataFachkombinationen" />
+		</div>
+		<div class="flex-auto">
+			<s-laufbahnplanung-card-status v-if="visible" :abiturmanager="abiturmanager" :faechermanager="faechermanager" :fachkombinationen="fachkombinationen"
+				:fehlerliste="fehlerliste" :belegpruefungsart="props.dataLaufbahn.gostAktuelleBelegpruefungsart" />
+		</div>
+	</div>
 </template>
 
 <script setup lang="ts">
 
-	import { JahrgangsListeEintrag, KlassenListeEintrag, KursListeEintrag, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
+	import { GostBelegpruefungErgebnisFehler, GostJahrgangFachkombination, JahrgangsListeEintrag, KlassenListeEintrag, KursListeEintrag, List, SchuelerListeEintrag, Vector } from "@svws-nrw/svws-core-ts";
 	import { computed, ComputedRef, ShallowRef } from "vue";
 	import { DataGostFachkombinationen } from "~/apps/gost/DataGostFachkombinationen";
 	import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
@@ -44,6 +51,18 @@
 			throw new Error("Unerwarteter Fehler: Fächer-Manager nicht initialisiert");
 		return props.dataFaecher.manager
 	});
+
+	const fachkombinationen: ComputedRef<List<GostJahrgangFachkombination>> = computed(()=>{
+		const list = new Vector<GostJahrgangFachkombination>();
+		if (props.dataFachkombinationen.daten === undefined)
+			return list;
+		for (const regel of	props.dataFachkombinationen.daten)
+			if (regel.abiturjahr === props.item.value?.abiturjahrgang)
+				list.add(regel)
+		return list;
+	})
+
+	const fehlerliste: ComputedRef<List<GostBelegpruefungErgebnisFehler>> = computed(() => props.dataLaufbahn.gostBelegpruefungsErgebnis.fehlercodes);
 
 	const visible: ComputedRef<boolean> = computed(() =>
 		!(routeSchuelerLaufbahnplanung.hidden())
