@@ -116,88 +116,29 @@
 					</div>
 				</div>
 			</div>
-			<div class="-my-2 print:hidden sm:-mx-6 lg:-mx-8">
-				<div class="inline-block py-2 align-middle sm:px-6 lg:px-8 w-full">
-					<div class="overflow-hidden rounded-lg shadow">
-						<table class="border-collapse text-sm">
-							<thead class="bg-slate-100">
-								<tr> <td class="px-2">Belegprüfung</td> </tr>
-							</thead>
-							<tbody>
-								<tr class="border border-[#7f7f7f]/20 text-left">
-									<td class="px-2">
-										<div class="flex gap-4">
-											<div class="form-check form-check-inline cursor-pointer">
-												<input type="radio" name="inlineRadioOptions" id="ef"
-													v-model="belegpruefungsart"
-													:value="ef1"
-													class="bg-text-center float-left mt-[0.15rem] mr-2 h-4 w-4 cursor-pointer rounded-full border border-gray-300 bg-white bg-contain checked:border-slate-100 checked:bg-slate-100 focus:outline-none">
-												<label class="form-check-label inline-block cursor-pointer" for="ef">EF 1</label>
-											</div>
-											<div class="form-check form-check-inline cursor-pointer">
-												<input id="gesamt" type="radio" name="inlineRadioOptions"
-													v-model="belegpruefungsart"
-													:value="gesamt"
-													class="bg-text-center float-left mt-[0.15rem] mr-2 h-4 w-4 cursor-pointer rounded-full border border-gray-300 bg-white bg-contain checked:border-slate-100 checked:bg-slate-100 focus:outline-none">
-												<label class="form-check-label inline-block cursor-pointer" for="gesamt">Gesamt</label>
-											</div>
-										</div>
-									</td>
-								</tr>
-							</tbody>
-							<thead class="bg-slate-100">
-								<tr>
-									<td class="px-2">
-										Laufbahnfehler
-										<svws-ui-badge v-if="belegungsfehler.size()" type="error" size="tiny">
-											{{ belegungsfehler.size() }}
-										</svws-ui-badge>
-									</td>
-								</tr>
-							</thead>
-							<tbody>
-								<tr v-for="fehler in belegungsfehler" :key="fehler.code.toString()" class="border border-[#7f7f7f]/20 text-left">
-									<td v-if="belegungsfehler.size()" class="px-2"> {{ fehler.beschreibung }} </td>
-								</tr>
-								<tr v-if="!belegungsfehler.size()">
-									<td class="px-2">Keine</td>
-								</tr>
-							</tbody>
-							<thead class="bg-slate-100">
-								<tr>
-									<td class="px-2"> Informationen zur Laufbahn </td>
-								</tr>
-							</thead>
-							<tbody>
-								<tr v-for="fehler in belegungsHinweise" :key="fehler.code.toString()" class="border border-[#7f7f7f]/20 text-left">
-									<td class="px-2"> {{ fehler.beschreibung }} </td>
-								</tr>
-								<tr v-if="!belegungsHinweise.size()">
-									<td class="px-2">Keine</td>
-								</tr>
-							</tbody>
-							<template v-if="(fachkombis.size())">
-								<thead class="bg-slate-100">
-									<tr>
-										<td class="px-2"> Informationen zu Fachkombinationsregeln </td>
-									</tr>
-								</thead>
-								<tbody>
-									<tr v-for="regel in fachkombi_erforderlich()" :key="regel.id" class="border border-[#7f7f7f]/20 text-left">
-										<td class="px-2">
-											<span v-if="regel_umgesetzt(regel)" class="px-2 rounded-full bg-green-400 mr-1" /> {{ regel.hinweistext }}
-										</td>
-									</tr>
-									<tr v-for="regel in fachkombi_verboten()" :key="regel.id" class="border border-[#7f7f7f]/20 text-left">
-										<td class="px-2">
-											<span v-if="regel_umgesetzt(regel)" class="px-2 rounded-full bg-green-400 mr-1" /> {{ regel.hinweistext }}
-										</td>
-									</tr>
-								</tbody>
-							</template>
-						</table>
+			<div class="print:hidden">
+				<div>
+					<div>Belegprüfung</div>
+				</div>
+				<div>
+					<div class="form-check form-check-inline cursor-pointer">
+						<input type="radio" name="inlineRadioOptions" id="ef"
+							v-model="belegpruefungsart"
+							:value="ef1"
+							class="bg-text-center float-left mt-[0.15rem] mr-2 h-4 w-4 cursor-pointer rounded-full border border-gray-300 bg-white bg-contain checked:border-slate-100 checked:bg-slate-100 focus:outline-none">
+						<label class="form-check-label inline-block cursor-pointer" for="ef">EF 1</label>
+					</div>
+					<div class="form-check form-check-inline cursor-pointer">
+						<input id="gesamt" type="radio" name="inlineRadioOptions"
+							v-model="belegpruefungsart"
+							:value="gesamt"
+							class="bg-text-center float-left mt-[0.15rem] mr-2 h-4 w-4 cursor-pointer rounded-full border border-gray-300 bg-white bg-contain checked:border-slate-100 checked:bg-slate-100 focus:outline-none">
+						<label class="form-check-label inline-block cursor-pointer" for="gesamt">Gesamt</label>
 					</div>
 				</div>
+				<s-laufbahnplanung-fehler :fehlerliste="belegungsfehlerAlle" />
+				<s-laufbahnplanung-informationen :fehlerliste="belegungsfehlerAlle" />
+				<s-laufbahnplanung-fachkombinationen :abiturmanager="abiturmanager" :faechermanager="faechermanager" :fachkombinationen="fachkombis" />
 				<div class="am:px-6 py-2 lg:px-8">
 					<svws-ui-text-input v-model="inputBeratungsdatum" type="date" placeholder="Beratungsdatum" />
 				</div>
@@ -212,10 +153,9 @@
 
 <script setup lang="ts">
 
-	import { computed, ComputedRef, Ref, ref, WritableComputedRef } from "vue";
+	import { computed, ComputedRef, ref, WritableComputedRef } from "vue";
 
-	import { GostBelegpruefungErgebnisFehler, GostBelegpruefungsArt, GostBelegungsfehlerArt, GostFach,
-		List, Vector, GostJahrgangFachkombination, GostLaufbahnplanungFachkombinationTyp, GostHalbjahr, GostKursart, SchuelerListeEintrag } from "@svws-nrw/svws-core-ts";
+	import { List, Vector, GostBelegpruefungErgebnisFehler, GostBelegpruefungsArt, GostFach, GostJahrgangFachkombination, SchuelerListeEintrag, AbiturdatenManager, GostFaecherManager } from "@svws-nrw/svws-core-ts";
 	import { App } from "~/apps/BaseApp";
 	import { DataSchuelerLaufbahnplanung } from "~/apps/schueler/DataSchuelerLaufbahnplanung";
 	import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
@@ -223,6 +163,8 @@
 	import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
 
 	const props = defineProps<{
+		abiturmanager: AbiturdatenManager;
+		faechermanager: GostFaecherManager;
 		item?: SchuelerListeEintrag,
 		stammdaten: DataSchuelerStammdaten,
 		dataLaufbahn: DataSchuelerLaufbahnplanung,
@@ -234,18 +176,9 @@
 	const gesamt: GostBelegpruefungsArt = GostBelegpruefungsArt.GESAMT;
 	const manuell = ref(false)
 
-	const modal: Ref<any> = ref(null);
-
-	function toggle_modal() {
-		modal.value.isOpen ? modal.value.closeModal() : modal.value.openModal();
-	}
-
 	function reset_fachwahlen() {
 		props.dataLaufbahn.reset_fachwahlen();
 	}
-
-	const abiturmanager = computed(()=> props.dataLaufbahn.manager);
-	const faechermanager = computed(()=> props.dataFaecher.manager);
 
 	const rows: ComputedRef<List<GostFach>> = computed(() => props.dataFaecher.daten || new Vector());
 
@@ -268,26 +201,6 @@
 
 	const belegungsfehlerAlle: ComputedRef<List<GostBelegpruefungErgebnisFehler>> = computed(() => props.dataLaufbahn.gostBelegpruefungsErgebnis.fehlercodes);
 
-	const belegungsfehler: ComputedRef<List<GostBelegpruefungErgebnisFehler>> = computed(() => {
-		const res = new Vector<GostBelegpruefungErgebnisFehler>();
-		for (const fehler of belegungsfehlerAlle.value)
-			if (!!fehler &&
-				(GostBelegungsfehlerArt.fromKuerzel(fehler.art) ===
-					GostBelegungsfehlerArt.BELEGUNG ||
-					GostBelegungsfehlerArt.fromKuerzel(fehler.art) ===
-					GostBelegungsfehlerArt.SCHRIFTLICHKEIT))
-				res.add(fehler);
-		return res;
-	});
-
-	const belegungsHinweise: ComputedRef<List<GostBelegpruefungErgebnisFehler>> = computed(() => {
-		const res = new Vector<GostBelegpruefungErgebnisFehler>();
-		for (const fehler of belegungsfehlerAlle.value)
-			if (!!fehler && GostBelegungsfehlerArt.fromKuerzel(fehler.art) === GostBelegungsfehlerArt.HINWEIS)
-				res.add(fehler);
-		return res;
-	});
-
 	const belegpruefungsart: WritableComputedRef<GostBelegpruefungsArt> = computed({
 		get(): GostBelegpruefungsArt {
 			return props.dataLaufbahn.gostAktuelleBelegpruefungsart;
@@ -306,34 +219,6 @@
 				list.add(regel)
 		return list;
 	})
-
-	const fachkombi_erforderlich = (): List<GostJahrgangFachkombination> => {
-		const result = new Vector<GostJahrgangFachkombination>()
-		for (const kombi of fachkombis.value)
-			if (GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH.getValue() === kombi.typ) {
-				if (kombi.hinweistext === "") {
-					const fach1 = faechermanager.value?.get(kombi.fachID1);
-					const fach2 = faechermanager.value?.get(kombi.fachID2);
-					kombi.hinweistext = `${fach1?.kuerzel} als ${kombi.kursart1} erlaubt kein ${fach2} als ${kombi.kursart2}`;
-				}
-				result.add(kombi);
-			}
-		return result;
-	}
-
-	const fachkombi_verboten = (): List<GostJahrgangFachkombination> => {
-		const result = new Vector<GostJahrgangFachkombination>()
-		for (const kombi of fachkombis.value)
-			if (GostLaufbahnplanungFachkombinationTyp.VERBOTEN.getValue() === kombi.typ) {
-				if (kombi.hinweistext === "") {
-					const fach1 = faechermanager.value?.get(kombi.fachID1);
-					const fach2 = faechermanager.value?.get(kombi.fachID2);
-					kombi.hinweistext = `${fach1?.kuerzel} als ${kombi.kursart1} erfordert ${fach2} als ${kombi.kursart2}`;
-				}
-				result.add(kombi);
-			}
-		return result;
-	}
 
 	const inputBeratungsdatum: WritableComputedRef<string> = computed({
 		get(): string {
@@ -362,26 +247,6 @@
 			link.click();
 			URL.revokeObjectURL(link.href);
 		}).catch(console.error);
-	}
-
-	function regel_umgesetzt(kombi: GostJahrgangFachkombination): boolean {
-		if (!abiturmanager.value || !faechermanager.value)
-			return true;
-		const fach1 = faechermanager.value.get(kombi.fachID1);
-		const f1 = abiturmanager.value.getFachbelegungByKuerzel(fach1?.kuerzel || null)
-		const fach2 = faechermanager.value.get(kombi.fachID2);
-		const f2 = abiturmanager.value.getFachbelegungByKuerzel(fach2?.kuerzel || null)
-		for (const hj of GostHalbjahr.values()) {
-			if (kombi.gueltigInHalbjahr[hj.id]) {
-				const belegung_1 = abiturmanager.value.pruefeBelegungMitKursart(f1, GostKursart.fromKuerzel(kombi.kursart1)!, hj)
-				const belegung_2 = abiturmanager.value.pruefeBelegungMitKursart(f2, GostKursart.fromKuerzel(kombi.kursart1)!, hj);
-				if (belegung_1 && belegung_2 && kombi.typ === GostLaufbahnplanungFachkombinationTyp.VERBOTEN.getValue())
-					return false;
-				if (kombi.typ === GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH.getValue() && belegung_1 != belegung_2)
-					return false;
-			}
-		}
-		return true;
 	}
 
 </script>

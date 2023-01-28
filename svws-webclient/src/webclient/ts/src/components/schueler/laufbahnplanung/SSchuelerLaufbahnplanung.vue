@@ -1,6 +1,7 @@
 <template>
 	<s-modal-hilfe> <hilfe-laufbahnplanung /> </s-modal-hilfe>
-	<s-card-schueler-laufbahnplanung v-if="visible" :item="item.value" :stammdaten="stammdaten" :data-laufbahn="dataLaufbahn" :data-faecher="dataFaecher" :data-fachkombinationen="dataFachkombinationen" />
+	<s-card-schueler-laufbahnplanung v-if="visible" :abiturmanager="abiturmanager" :faechermanager="faechermanager" :item="item.value" :stammdaten="stammdaten"
+		:data-laufbahn="dataLaufbahn" :data-faecher="dataFaecher" :data-fachkombinationen="dataFachkombinationen" />
 </template>
 
 <script setup lang="ts">
@@ -31,6 +32,18 @@
 		dataFaecher: DataGostFaecher;
 		dataFachkombinationen: DataGostFachkombinationen;
 	}>();
+
+	const abiturmanager = computed(() => {
+		if (props.dataLaufbahn.manager === undefined)
+			throw new Error("Unerwarteter Fehler: Abiturdaten-Manager nicht initialisiert");
+		return props.dataLaufbahn.manager;
+	});
+
+	const faechermanager = computed(() => {
+		if (props.dataFaecher.manager === undefined)
+			throw new Error("Unerwarteter Fehler: Fächer-Manager nicht initialisiert");
+		return props.dataFaecher.manager
+	});
 
 	const visible: ComputedRef<boolean> = computed(() =>
 		!(routeSchuelerLaufbahnplanung.hidden())
