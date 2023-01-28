@@ -111,7 +111,7 @@
 					</div>
 					<div class="flex justify-between gap-1">
 						<svws-ui-button @click.prevent="download_file">Wahlbogen herunterladen</svws-ui-button>
-						<svws-ui-button @click="toggle_modal">Reset</svws-ui-button>
+						<s-modal-laufbahnplanung-kurswahlen-loeschen @delete="reset_fachwahlen" />
 						<svws-ui-button :type="manuell ? 'error':'primary'" @click="manu">Manuellen Modus {{ manuell?"de":"" }}aktivieren</svws-ui-button>
 					</div>
 				</div>
@@ -234,19 +234,6 @@
 			</div>
 		</div>
 	</svws-ui-content-card>
-
-	<svws-ui-modal ref="modal" size="small">
-		<template #modalTitle>Alle Kurswahlen löschen</template>
-		<template #modalDescription>
-			<div class="flex gap-1 mb-2">
-				Sollen die Fachwahlen der noch in Planung befindlichen Halbjahre gelöscht werden?
-			</div>
-			<div class="flex gap-1">
-				<svws-ui-button @click="toggle_modal">Abbrechen</svws-ui-button>
-				<svws-ui-button @click="reset_fachwahlen">Ja</svws-ui-button>
-			</div>
-		</template>
-	</svws-ui-modal>
 </template>
 
 <script setup lang="ts">
@@ -280,7 +267,6 @@
 	}
 
 	function reset_fachwahlen() {
-		modal.value.closeModal();
 		props.dataLaufbahn.reset_fachwahlen();
 	}
 
