@@ -33,6 +33,11 @@ public class Tabelle_Gost_Klausuren_Vorgaben extends SchemaTabelle {
 		.setConverter(GOStHalbjahrConverter.class)
 		.setJavaComment("Das Halbjahr, welchem die Klausurvorgabe zugeordnet ist (0=EF.1, 1=EF.2, 2=Q1.1, 3=Q1.2, 4=Q2.1, 5=Q2.2)");
 	
+	/** Die Definition der Tabellenspalte Quartal */
+	public SchemaTabelleSpalte col_Quartal = add("Quartal", SchemaDatentypen.INT, false)
+		.setNotNull()
+		.setJavaComment("Das Quartal, in dem die Klausur geschrieben wird.");
+	
 	/** Die Definition der Tabellenspalte Fach_ID */
 	public SchemaTabelleSpalte col_Fach_ID = add("Fach_ID", SchemaDatentypen.BIGINT, false)
 		.setNotNull()
@@ -42,11 +47,6 @@ public class Tabelle_Gost_Klausuren_Vorgaben extends SchemaTabelle {
 	public SchemaTabelleSpalte col_KursartAllg = add("KursartAllg", SchemaDatentypen.VARCHAR, false).setDatenlaenge(10)
 		.setNotNull()
 		.setJavaComment("Allgemeine Kursart des Klausur-Kurses");
-
-	/** Die Definition der Tabellenspalte Quartal */
-	public SchemaTabelleSpalte col_Quartal = add("Quartal", SchemaDatentypen.INT, false)
-		.setNotNull()
-		.setJavaComment("Das Quartal, in dem die Klausur geschrieben wird.");
 
 	/** Die Definition der Tabellenspalte Dauer */
 	public SchemaTabelleSpalte col_Dauer = add("Dauer", SchemaDatentypen.INT, false)
