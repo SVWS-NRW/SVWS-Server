@@ -1,21 +1,27 @@
 package de.nrw.schule.svws.api.server;
 
+import java.io.InputStream;
+
 import de.nrw.schule.svws.api.OpenAPIApplication;
 import de.nrw.schule.svws.core.data.gost.klausuren.GostKlausurtermin;
 import de.nrw.schule.svws.core.data.gost.klausuren.GostKursklausur;
+import de.nrw.schule.svws.core.data.schueler.SchuelerBetriebsdaten;
 import de.nrw.schule.svws.core.types.benutzer.BenutzerKompetenz;
 import de.nrw.schule.svws.data.gost.klausurplan.DataGostKlausurenKursklausuren;
 import de.nrw.schule.svws.data.gost.klausurplan.DataGostKlausurenTermine;
+import de.nrw.schule.svws.data.schueler.DataSchuelerBetriebsdaten;
 import de.nrw.schule.svws.db.DBEntityManager;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
@@ -90,6 +96,40 @@ public class APIKlausuren {
     	}
     }
 	
+    /**
+     * Die OpenAPI-Methode für das Erstellen eines neuen Klausurtermins.
+     *  
+     * @param schema     		 	das Datenbankschema, in welchem der Schülerbetrieb erstellt wird
+     * @param request      			die Informationen zur HTTP-Anfrage
+     * @param abiturjahr 			das Jahr, in welchem der Jahrgang Abitur machen wird
+     * @param halbjahr   			das Gost-Halbjahr
+     * @param quartal   			das Quartal
+     * @param is					JSON-Objekt mit den Daten
+     * @return die HTTP-Antwort mit der neuen Blockung
+     */
+    @POST
+    @Path("/termine/new/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : \\d+}/quartal/{quartal : \\d+}")
+    @Operation(summary = "Erstellt einen neuen Gost-Klausurtermin und gibt ihn zurück.",
+    description = "Erstellt einen neuen Gost-Klausurtermin und gibt ihn zurück."
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Gost-Klausurtermins "
+    		    + "besitzt.")
+    @ApiResponse(responseCode = "200", description = "Gost-Klausurtermin wurde erfolgreich angelegt.",
+            content = @Content(mediaType = MediaType.APPLICATION_JSON,
+            schema = @Schema(implementation = GostKlausurtermin.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Gost-Klausurtermin anzulegen.")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response createKlausurtermin(
+    		@PathParam("schema") String schema,
+    		@PathParam("abiturjahr") int abiturjahr,
+    		@PathParam("halbjahr") int halbjahr,
+    		@PathParam("quartal") int quartal,
+    		@RequestBody(description = "Der Post für die Klausurtermin-Daten", required = true, content = 
+			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostKlausurtermin.class))) InputStream is, 
+    		@Context HttpServletRequest request) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN)) { // TODO Anpassung der Benutzerrechte
+    		return (new DataGostKlausurenTermine(conn, abiturjahr)).create(halbjahr, quartal, is);
+    	}
+    }
 
 
 
