@@ -1,6 +1,8 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
 import de.nrw.schule.svws.db.converter.current.Boolean01Converter;
+import de.nrw.schule.svws.db.converter.current.DatumConverter;
+import de.nrw.schule.svws.db.converter.current.UhrzeitConverter;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaRevisionen;
 import de.nrw.schule.svws.db.schema.SchemaTabelle;
@@ -22,18 +24,22 @@ public class Tabelle_Gost_Klausuren_Kalenderinformationen extends SchemaTabelle 
 
 	/** Die Definition der Tabellenspalte Startdatum */
 	public SchemaTabelleSpalte col_Startdatum = add("Startdatum", SchemaDatentypen.DATE, false)
+		.setConverter(DatumConverter.class)
 		.setJavaComment("Startdatum für den Kalendereintrag");
 
 	/** Die Definition der Tabellenspalte Startzeit */
 	public SchemaTabelleSpalte col_Startzeit = add("Startzeit", SchemaDatentypen.TIME, false)
+		.setConverter(UhrzeitConverter.class)
 		.setJavaComment("Startzeit für den Kalendereintrag");
 
 	/** Die Definition der Tabellenspalte Enddatum */
 	public SchemaTabelleSpalte col_Enddatum = add("Enddatum", SchemaDatentypen.DATE, false)
+		.setConverter(DatumConverter.class)
 		.setJavaComment("Enddatum für den Kalendereintrag");
 
 	/** Die Definition der Tabellenspalte Endzeit */
 	public SchemaTabelleSpalte col_Endzeit = add("Endzeit", SchemaDatentypen.TIME, false)
+		.setConverter(UhrzeitConverter.class)
 		.setJavaComment("Endzeit für den Kalendereintrag");
 
 	/** Die Definition der Tabellenspalte IstSperrtermin */

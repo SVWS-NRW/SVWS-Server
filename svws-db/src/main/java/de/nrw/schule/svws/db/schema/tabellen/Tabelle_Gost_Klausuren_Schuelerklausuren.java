@@ -1,6 +1,7 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
 import de.nrw.schule.svws.core.adt.Pair;
+import de.nrw.schule.svws.db.converter.current.UhrzeitConverter;
 import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaFremdschluesselAktionen;
@@ -40,6 +41,7 @@ public class Tabelle_Gost_Klausuren_Schuelerklausuren extends SchemaTabelle {
 	
 	/** Die Definition der Tabellenspalte Startzeit */
 	public SchemaTabelleSpalte col_Startzeit = add("Startzeit", SchemaDatentypen.TIME, false)
+		.setConverter(UhrzeitConverter.class)
 		.setJavaComment("Startzeit der Klausur, wenn abweichend von Startzeit der Klausur-Schiene");	
 	
 	

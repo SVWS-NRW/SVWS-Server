@@ -1,6 +1,7 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
 import de.nrw.schule.svws.core.adt.Pair;
+import de.nrw.schule.svws.db.converter.current.UhrzeitConverter;
 import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
 import de.nrw.schule.svws.db.schema.SchemaFremdschluesselAktionen;
@@ -30,10 +31,12 @@ public class Tabelle_Gost_Klausuren_Raeume_Stunden_Aufsichten extends SchemaTabe
 	
 	/** Die Definition der Tabellenspalte Startzeit */
 	public SchemaTabelleSpalte col_Startzeit = add("Startzeit", SchemaDatentypen.TIME, false)
+		.setConverter(UhrzeitConverter.class)
 		.setJavaComment("Die Startzeit der Aufsicht");
 
 	/** Die Definition der Tabellenspalte Endzeit */
 	public SchemaTabelleSpalte col_Endzeit = add("Endzeit", SchemaDatentypen.TIME, false)
+		.setConverter(UhrzeitConverter.class)			
 		.setJavaComment("Die Endzeit der Aufsicht");
 
 	/** Die Definition der Tabellenspalte Bemerkungen */

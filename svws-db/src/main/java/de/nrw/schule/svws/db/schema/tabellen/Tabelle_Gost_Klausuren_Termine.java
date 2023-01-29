@@ -1,6 +1,8 @@
 package de.nrw.schule.svws.db.schema.tabellen;
 
 import de.nrw.schule.svws.core.adt.Pair;
+import de.nrw.schule.svws.db.converter.current.DatumConverter;
+import de.nrw.schule.svws.db.converter.current.UhrzeitConverter;
 import de.nrw.schule.svws.db.converter.current.gost.GOStHalbjahrConverter;
 import de.nrw.schule.svws.db.schema.Schema;
 import de.nrw.schule.svws.db.schema.SchemaDatentypen;
@@ -38,10 +40,12 @@ public class Tabelle_Gost_Klausuren_Termine extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte Datum */
 	public SchemaTabelleSpalte col_Datum = add("Datum", SchemaDatentypen.DATE, false)
+		.setConverter(DatumConverter.class)
 		.setJavaComment("Das Datum des Klausurtermins");
 
 	/** Die Definition der Tabellenspalte Startzeit */
 	public SchemaTabelleSpalte col_Startzeit = add("Startzeit", SchemaDatentypen.TIME, false)
+		.setConverter(UhrzeitConverter.class)			
 		.setJavaComment("Die Startzeit des Klausurtermins");
 
 	/** Die Definition der Tabellenspalte Bemerkungen */
