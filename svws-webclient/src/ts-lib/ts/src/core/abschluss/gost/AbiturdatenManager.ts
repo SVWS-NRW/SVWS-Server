@@ -172,7 +172,7 @@ export class AbiturdatenManager extends JavaObject {
 	 *
 	 * @return Die Sprachendaten (siehe {@link Sprachendaten})
 	 */
-	public getSprachendaten() : Sprachendaten | null {
+	public getSprachendaten() : Sprachendaten {
 		return this.abidaten.sprachendaten;
 	}
 
@@ -182,8 +182,8 @@ export class AbiturdatenManager extends JavaObject {
 	 * 
 	 * @return ein Array mit den Wochenstunden für die sechs Halbjahre 
 	 */
-	public getWochenstunden() : Array<number> | null {
-		let stunden : Array<number> | null = [0, 0, 0, 0, 0, 0];
+	public getWochenstunden() : Array<number> {
+		let stunden : Array<number> = [0, 0, 0, 0, 0, 0];
 		for (let i : number = 0; i < 6; i++){
 			for (let fb of this.abidaten.fachbelegungen) {
 				let hjb : AbiturFachbelegungHalbjahr | null = fb.belegungen[i];
@@ -201,8 +201,8 @@ export class AbiturdatenManager extends JavaObject {
 	 * 
 	 * @return ein Array mit den anrechenbaren Kursen für die sechs Halbjahre 
 	 */
-	public getAnrechenbareKurse() : Array<number> | null {
-		let anzahl : Array<number> | null = [0, 0, 0, 0, 0, 0];
+	public getAnrechenbareKurse() : Array<number> {
+		let anzahl : Array<number> = [0, 0, 0, 0, 0, 0];
 		let bll : GostBesondereLernleistung | null = GostBesondereLernleistung.fromKuerzel(this.abidaten.besondereLernleistung);
 		for (let i : number = 0; i < 6; i++){
 			for (let fb of this.abidaten.fachbelegungen) {

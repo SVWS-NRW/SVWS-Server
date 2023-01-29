@@ -169,8 +169,8 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 	private gostBelegpruefung(): void {
 		if (this._daten === undefined || this.manager === undefined) return;
 		this._data.gostBelegpruefungsErgebnis = this.manager.getBelegpruefungErgebnis();
-		this._data._wochenstunden = this.manager.getWochenstunden() || [];
-		this._data._anrechenbare_kurse = this.manager.getAnrechenbareKurse() || [];
+		this._data._wochenstunden = this.manager.getWochenstunden();
+		this._data._anrechenbare_kurse = this.manager.getAnrechenbareKurse();
 	}
 
 	/** aktualisiert den Abiturdatenmanager, z.B. wenn sich die Belegprüfungsart ändert */

@@ -146,12 +146,12 @@
 
 	const rows: ComputedRef<List<GostFach>> = computed(() => props.faechermanager.toVector());
 
-	const kurszahlen: ComputedRef<number[]> = computed(() => props.dataLaufbahn.anrechenbare_kurszahlen);
+	const kurszahlen: ComputedRef<number[]> = computed(() => props.abiturmanager.getAnrechenbareKurse());
 
-	const kurse_summe: ComputedRef<number> = computed(() => props.dataLaufbahn.anrechenbare_kurszahlen.reduce((p, c) => p + c, 0));
+	const kurse_summe: ComputedRef<number> = computed(() => kurszahlen.value.reduce((p, c) => p + c, 0));
 	//TODO korrigieren
 
-	const wochenstunden: ComputedRef<number[]> = computed(() => props.dataLaufbahn.wochenstunden);
+	const wochenstunden: ComputedRef<number[]> = computed(() => props.abiturmanager.getWochenstunden());
 
 	const wst_summe: ComputedRef<number> = computed(() => wochenstunden.value.reduce((p, c) => p + c, 0) / 2);
 

@@ -170,7 +170,7 @@ public class AbiturdatenManager {
      *
      * @return Die Sprachendaten (siehe {@link Sprachendaten})
      */
-    public Sprachendaten getSprachendaten() {
+    public @NotNull Sprachendaten getSprachendaten() {
         return abidaten.sprachendaten;
     }
     
@@ -181,8 +181,8 @@ public class AbiturdatenManager {
      * 
      * @return ein Array mit den Wochenstunden für die sechs Halbjahre 
      */
-    public int[] getWochenstunden() {
-		int[] stunden = new int[] {0, 0, 0, 0, 0, 0};
+    public @NotNull int[] getWochenstunden() {
+		@NotNull int[] stunden = new int[] {0, 0, 0, 0, 0, 0};
 		for (int i = 0; i < 6; i++) {
 			for (AbiturFachbelegung fb : abidaten.fachbelegungen) {
 				AbiturFachbelegungHalbjahr hjb = fb.belegungen[i];
@@ -200,8 +200,8 @@ public class AbiturdatenManager {
      * 
      * @return ein Array mit den anrechenbaren Kursen für die sechs Halbjahre 
      */
-    public int[] getAnrechenbareKurse() {
-		int[] anzahl = new int[] {0, 0, 0, 0, 0, 0};
+    public @NotNull int[] getAnrechenbareKurse() {
+    	@NotNull int[] anzahl = new int[] {0, 0, 0, 0, 0, 0};
 		GostBesondereLernleistung bll = GostBesondereLernleistung.fromKuerzel(abidaten.besondereLernleistung);
 		for (int i = 0; i < 6; i++) {
 			for (AbiturFachbelegung fb : abidaten.fachbelegungen) {
