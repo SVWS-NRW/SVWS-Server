@@ -16,49 +16,76 @@
 	</td>
 	<template v-for="halbjahr in GostHalbjahr.values()" :key="halbjahr.id">
 		<s-laufbahnplanung-fach-halbjahr :abiturmanager="abiturmanager" :faechermanager="faechermanager" :jahrgangsdaten="jahrgangsdaten" :manueller-modus="manuellerModus"
-			:fach="fach" :halbjahr="halbjahr" :wahl="wahlen[halbjahr.id]" :moeglich="istMoeglich(halbjahr)" :bewertet="bewertet[halbjahr.id]"
+			:fach="fach" :halbjahr="halbjahr" :wahl="wahlen[halbjahr.id]" :moeglich="istMoeglich(halbjahr)" :bewertet="istBewertet(halbjahr)"
 			:fachkombi-erforderlich="fachkombi_erforderlich" :fachkombi-verboten="fachkombi_verboten" @update:wahl="onUpdateWahl" />
 	</template>
 	<s-laufbahnplanung-fach-halbjahr :abiturmanager="abiturmanager" :faechermanager="faechermanager" :jahrgangsdaten="jahrgangsdaten" :manueller-modus="manuellerModus"
-		:fach="fach" :wahl="abi_wahl" :moeglich="istMoeglich()" :bewertet="bewertet[GostHalbjahr.Q22.id]" @update:wahl="onUpdateWahl" />
+		:fach="fach" :wahl="abi_wahl" :moeglich="istMoeglich()" :bewertet="istBewertet(GostHalbjahr.Q22)" @update:wahl="onUpdateWahl" />
 </template>
 
 <script setup lang="ts">
 
 	import { computed, ComputedRef } from "vue";
-
-	import { AbiturdatenManager, AbiturFachbelegungHalbjahr, Fachgruppe, GostFach, GostFaecherManager, GostHalbjahr,
+	import { AbiturdatenManager, AbiturFachbelegung, AbiturFachbelegungHalbjahr, Fachgruppe, GostFach, GostFaecherManager, GostHalbjahr,
 		GostJahrgangFachkombination, GostJahrgangsdaten, GostKursart, GostLaufbahnplanungFachkombinationTyp, GostSchriftlichkeit,
-		GostSchuelerFachwahl, Jahrgaenge, List, Vector, ZulaessigesFach } from "@svws-nrw/svws-core-ts";
-	import { DataSchuelerLaufbahnplanung } from "~/apps/schueler/DataSchuelerLaufbahnplanung";
+		GostSchuelerFachwahl, Jahrgaenge, List, Sprachbelegung, SprachendatenUtils, Vector, ZulaessigesFach } from "@svws-nrw/svws-core-ts";
 
 	const props = defineProps<{
 		abiturmanager: AbiturdatenManager;
 		faechermanager: GostFaecherManager;
 		jahrgangsdaten: GostJahrgangsdaten;
-		fach: GostFach,
+		fach: GostFach;
 		fachkombinationen: List<GostJahrgangFachkombination>;
 		manuellerModus: boolean;
-		dataLaufbahn: DataSchuelerLaufbahnplanung
 	}>();
 
-	const bewertet: ComputedRef<Array<boolean>> = computed(() => props.dataLaufbahn.daten?.bewertetesHalbjahr || []);
+	const emit = defineEmits<{
+		(e: 'update:wahl', fach: GostFach, wahl: GostSchuelerFachwahl): void,
+	}>();
 
-	const unbelegbarSprache: ComputedRef<boolean> = computed(() => props.dataLaufbahn.getFallsSpracheMoeglich(props.fach));
 
-	const bgColor: ComputedRef<string> = computed(() => props.dataLaufbahn.getBgColor(props.fach));
+	const bgColor: ComputedRef<string> = computed(() => ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGB());
 
-	const bgColorIfLanguage: ComputedRef<string> = computed(() => props.dataLaufbahn.getBgColorIfLanguage(props.fach));
+	const bgColorIfLanguage: ComputedRef<string> = computed(() => ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).daten.istFremdsprache ? bgColor.value : "gray");
 
-	const sprachenfolgeNr: ComputedRef<number> = computed(() => props.dataLaufbahn.sprachenfolgeNr(props.fach));
-	const sprachenfolgeJahrgang: ComputedRef<string> = computed(() => props.dataLaufbahn.sprachenfolgeJahrgang(props.fach));
+	const fachbelegung: ComputedRef<AbiturFachbelegung | null> = computed(() => props.abiturmanager.getFachbelegungByID(props.fach.id));
 
-	const abi_wahl: ComputedRef<string> = computed(() => ( props.dataLaufbahn.gostFachbelegungen[ props.fach.id ]?.abiturFach?.toString() || ""));
+	function sprachbelegung(): Sprachbelegung | null {
+		const sprach_kuerzel = ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).daten.kuerzel;
+		for (const sprache of props.abiturmanager.getSprachendaten().belegungen) {
+			if (sprache.sprache === sprach_kuerzel)
+				return sprache;
+		}
+		return null;
+	}
+
+	// Prüft, ob eine Sprache bisher schon unterrichtet wurde oder neu einsetzend ist
+	function getFallsSpracheMoeglich(): boolean {
+		const ist_fortfuehrbar = SprachendatenUtils.istFortfuehrbareSpracheInGOSt(
+			props.abiturmanager.getSprachendaten(), ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).daten.kuerzel
+		);
+		sprachbelegung(); // TODO warum muss diese Zeile hier rein? Sonst Fehler mit Sprachenfolge in Laufbahnplanung  <--- ENTFERNEN ?!
+		return ((ist_fortfuehrbar && !props.fach.istFremdSpracheNeuEinsetzend) || (!ist_fortfuehrbar && props.fach.istFremdSpracheNeuEinsetzend));
+	}
+
+	const sprachenfolgeNr: ComputedRef<number> = computed(() =>
+		getFallsSpracheMoeglich() ? sprachbelegung()?.reihenfolge ?? 0 : 0
+	);
+
+	const sprachenfolgeJahrgang: ComputedRef<string> = computed(() =>
+		getFallsSpracheMoeglich() ? (sprachbelegung()?.belegungVonJahrgang ?? "") : ""
+	);
+
+	const unbelegbarSprache: ComputedRef<boolean> = computed(() => getFallsSpracheMoeglich());
+
+	function istBewertet(halbjahr: GostHalbjahr): boolean {
+		return props.abiturmanager.istBewertet(halbjahr);
+	}
 
 	const fachkombis: ComputedRef<List<GostJahrgangFachkombination>> = computed(() => {
 		const result = new Vector<GostJahrgangFachkombination>();
 		for (const kombi of props.fachkombinationen)
-			if (kombi.fachID2 === props.fach.id && kombi.abiturjahr === props.dataLaufbahn.abiturjahr)
+			if (kombi.fachID2 === props.fach.id && kombi.abiturjahr === props.jahrgangsdaten.abiturjahr)
 				result.add(kombi)
 		return result;
 	});
@@ -81,7 +108,7 @@
 
 
 	function onUpdateWahl(wahl: GostSchuelerFachwahl) {
-		props.dataLaufbahn.setWahl(props.fach, wahl);
+		emit('update:wahl', props.fach, wahl);
 	}
 
 
@@ -122,45 +149,81 @@
 	}
 
 
-	function istMoeglich(halbjahr?: GostHalbjahr) {
-		if (halbjahr === undefined) {
-			return getAbiMoeglich();
-		} else if (halbjahr === GostHalbjahr.EF1) {
-			return props.dataLaufbahn.getEF1Moeglich(props.fach);
-		} else if (halbjahr === GostHalbjahr.EF2) {
-			return props.dataLaufbahn.getEF2Moeglich(props.fach);
-		} else if (halbjahr === GostHalbjahr.Q11) {
-			return props.dataLaufbahn.getQ11Moeglich(props.fach);
-		} else if (halbjahr === GostHalbjahr.Q12) {
-			return props.dataLaufbahn.getQ12Moeglich(props.fach);
-		} else if (halbjahr === GostHalbjahr.Q21) {
-			return props.dataLaufbahn.getQ21Moeglich(props.fach);
-		} else if (halbjahr === GostHalbjahr.Q22) {
-			return props.dataLaufbahn.getQ22Moeglich(props.fach);
+	/**
+	 * Prüft, ob ein Fach bereits belegt ist durch ein gleichnamiges Fach, z.B. bei Bili-Fächern
+	 *
+	 * @param {GostHalbjahr} hj Das GostHalbjahr
+	 *
+	 * @returns {boolean} ob doppel belegt wurde, z.B. bei Bili-Fächern
+	 */
+	function checkDoppelbelegung(hj: GostHalbjahr): boolean {
+		// TODO Prüfe, ob der AbiturdatenManager nicht schon eine solche Methode hat - wenn nicht, dann ergänze eine
+		const fach = ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel);
+		if (fach.getFachgruppe() === Fachgruppe.FG_VX)
+			return false;
+		const fachbelegungen = props.abiturmanager.getFachbelegungByFachkuerzel(props.fach.kuerzel);
+		if (fachbelegungen !== undefined) {
+			for (const fachbelegung of fachbelegungen) {
+				if (props.abiturmanager.pruefeBelegung(fachbelegung, hj)) {
+					if (fachbelegung.fachID !== props.fach.id)
+						return true;
+				}
+			}
 		}
 		return false;
 	}
 
+
+	function istMoeglich(halbjahr?: GostHalbjahr) {
+		if (props.fach.istFremdsprache && !getFallsSpracheMoeglich())
+			return false;
+		if (halbjahr === undefined)
+			return getAbiMoeglich();
+		if (checkDoppelbelegung(halbjahr))
+			return false;
+		if (halbjahr === GostHalbjahr.EF1) {
+			const fach = ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel);
+			if (fach.getFachgruppe() === Fachgruppe.FG_ME || fach.getFachgruppe() === Fachgruppe.FG_PX)
+				return false;
+			return props.fach.istMoeglichEF1;
+		}
+		if (halbjahr === GostHalbjahr.EF2) {
+			const fach = ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel);
+			if (fach.getFachgruppe() === Fachgruppe.FG_ME || fach.getFachgruppe() === Fachgruppe.FG_PX)
+				return false;
+			return props.fach.istMoeglichEF2;
+		}
+		if (halbjahr === GostHalbjahr.Q11)
+			return props.fach.istMoeglichQ11;
+		if (halbjahr === GostHalbjahr.Q12)
+			return props.fach.istMoeglichQ12;
+		if (halbjahr === GostHalbjahr.Q21)
+			return props.fach.istMoeglichQ21;
+		if (halbjahr === GostHalbjahr.Q22)
+			return props.fach.istMoeglichQ22;
+		return false;
+	}
+
+
+	const abi_wahl: ComputedRef<string> = computed(() => ( fachbelegung.value?.abiturFach?.toString() || ""));
+
 	const wahlen: ComputedRef<string[]> = computed(() => {
-		const belegung = props.dataLaufbahn.gostFachbelegungen[props.fach.id];
-		if (belegung === undefined)
+		if (fachbelegung.value === null)
 			return ["", "", "", "", "", ""];
-		return belegung.belegungen.map(
-			(b: AbiturFachbelegungHalbjahr | null) => {
-				b = b ? b : new AbiturFachbelegungHalbjahr();
-				if (!b.halbjahrKuerzel)
-					return "";
-				const kursart = GostKursart.fromKuerzel(b.kursartKuerzel);
-				if (!kursart)
-					return b.kursartKuerzel.toString() || "";
-				switch (kursart) {
-					case GostKursart.ZK:
-					case GostKursart.LK:
-						return kursart.kuerzel;
-				}
-				return b.schriftlich ? "S" : "M";
+		return fachbelegung.value.belegungen.map((b: AbiturFachbelegungHalbjahr | null) => {
+			b = b ? b : new AbiturFachbelegungHalbjahr();
+			if (!b.halbjahrKuerzel)
+				return "";
+			const kursart = GostKursart.fromKuerzel(b.kursartKuerzel);
+			if (!kursart)
+				return b.kursartKuerzel.toString() || "";
+			switch (kursart) {
+				case GostKursart.ZK:
+				case GostKursart.LK:
+					return kursart.kuerzel;
 			}
-		)
+			return b.schriftlich ? "S" : "M";
+		});
 	});
 
 </script>
