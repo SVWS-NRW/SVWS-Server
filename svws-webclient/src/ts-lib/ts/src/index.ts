@@ -140,6 +140,10 @@ export { GostLeistungenFachwahl } from './core/data/gost/GostLeistungenFachwahl'
 export { GostSchuelerFachwahl } from './core/data/gost/GostSchuelerFachwahl';
 export { GostStatistikFachwahl } from './core/data/gost/GostStatistikFachwahl';
 export { GostStatistikFachwahlHalbjahr } from './core/data/gost/GostStatistikFachwahlHalbjahr';
+export { GostKlausurtermin } from './core/data/gost/klausuren/GostKlausurtermin';
+export { GostKursklausur } from './core/data/gost/klausuren/GostKursklausur';
+export { Klausurvorgabe } from './core/data/gost/klausuren/Klausurvorgabe';
+export { Schuelerklausur } from './core/data/gost/klausuren/Schuelerklausur';
 export { JahrgangsDaten } from './core/data/jahrgang/JahrgangsDaten';
 export { JahrgangsKatalogEintrag } from './core/data/jahrgang/JahrgangsKatalogEintrag';
 export { JahrgangsKatalogEintragBezeichnung } from './core/data/jahrgang/JahrgangsKatalogEintragBezeichnung';
@@ -440,6 +444,7 @@ export { GostFachwahlManager } from './core/utils/gost/GostFachwahlManager';
 export { GostFaecherManager } from './core/utils/gost/GostFaecherManager';
 export { GostStatistikFachwahlManager } from './core/utils/gost/GostStatistikFachwahlManager';
 export { JahrgangsUtils } from './core/utils/jahrgang/JahrgangsUtils';
+export { GostKursklausurManager } from './core/utils/klausurplan/GostKursklausurManager';
 export { SprachendatenUtils } from './core/utils/schueler/SprachendatenUtils';
 export { AbgangsartenManager } from './core/utils/schule/AbgangsartenManager';
 export { BerufskollegFachklassenManager } from './core/utils/schule/BerufskollegFachklassenManager';

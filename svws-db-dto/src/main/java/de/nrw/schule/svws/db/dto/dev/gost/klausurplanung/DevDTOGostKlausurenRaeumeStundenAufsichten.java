@@ -1,9 +1,12 @@
 package de.nrw.schule.svws.db.dto.dev.gost.klausurplanung;
 
 import de.nrw.schule.svws.db.DBEntityManager;
+import de.nrw.schule.svws.db.converter.current.UhrzeitConverter;
+
 
 import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.NamedQuery;
@@ -11,6 +14,11 @@ import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import de.nrw.schule.svws.csv.converter.current.UhrzeitConverterSerializer;
+import de.nrw.schule.svws.csv.converter.current.UhrzeitConverterDeserializer;
+
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Gost_Klausuren_Raeume_Stunden_Aufsichten.
  * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
@@ -56,11 +64,17 @@ public class DevDTOGostKlausurenRaeumeStundenAufsichten {
 	/** Die Startzeit der Aufsicht */
 	@Column(name = "Startzeit")
 	@JsonProperty
+	@Convert(converter=UhrzeitConverter.class)
+	@JsonSerialize(using=UhrzeitConverterSerializer.class)
+	@JsonDeserialize(using=UhrzeitConverterDeserializer.class)
 	public String Startzeit;
 
 	/** Die Endzeit der Aufsicht */
 	@Column(name = "Endzeit")
 	@JsonProperty
+	@Convert(converter=UhrzeitConverter.class)
+	@JsonSerialize(using=UhrzeitConverterSerializer.class)
+	@JsonDeserialize(using=UhrzeitConverterDeserializer.class)
 	public String Endzeit;
 
 	/** Text für Bemerkungen zur Aufsicht */

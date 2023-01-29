@@ -39,12 +39,12 @@ import de.nrw.schule.svws.csv.converter.current.gost.GOStHalbjahrConverterDeseri
 @NamedQuery(name="DevDTOGostKlausurenVorgaben.abi_jahrgang.multiple", query="SELECT e FROM DevDTOGostKlausurenVorgaben e WHERE e.Abi_Jahrgang IN :value")
 @NamedQuery(name="DevDTOGostKlausurenVorgaben.halbjahr", query="SELECT e FROM DevDTOGostKlausurenVorgaben e WHERE e.Halbjahr = :value")
 @NamedQuery(name="DevDTOGostKlausurenVorgaben.halbjahr.multiple", query="SELECT e FROM DevDTOGostKlausurenVorgaben e WHERE e.Halbjahr IN :value")
+@NamedQuery(name="DevDTOGostKlausurenVorgaben.quartal", query="SELECT e FROM DevDTOGostKlausurenVorgaben e WHERE e.Quartal = :value")
+@NamedQuery(name="DevDTOGostKlausurenVorgaben.quartal.multiple", query="SELECT e FROM DevDTOGostKlausurenVorgaben e WHERE e.Quartal IN :value")
 @NamedQuery(name="DevDTOGostKlausurenVorgaben.fach_id", query="SELECT e FROM DevDTOGostKlausurenVorgaben e WHERE e.Fach_ID = :value")
 @NamedQuery(name="DevDTOGostKlausurenVorgaben.fach_id.multiple", query="SELECT e FROM DevDTOGostKlausurenVorgaben e WHERE e.Fach_ID IN :value")
 @NamedQuery(name="DevDTOGostKlausurenVorgaben.kursartallg", query="SELECT e FROM DevDTOGostKlausurenVorgaben e WHERE e.KursartAllg = :value")
 @NamedQuery(name="DevDTOGostKlausurenVorgaben.kursartallg.multiple", query="SELECT e FROM DevDTOGostKlausurenVorgaben e WHERE e.KursartAllg IN :value")
-@NamedQuery(name="DevDTOGostKlausurenVorgaben.quartal", query="SELECT e FROM DevDTOGostKlausurenVorgaben e WHERE e.Quartal = :value")
-@NamedQuery(name="DevDTOGostKlausurenVorgaben.quartal.multiple", query="SELECT e FROM DevDTOGostKlausurenVorgaben e WHERE e.Quartal IN :value")
 @NamedQuery(name="DevDTOGostKlausurenVorgaben.dauer", query="SELECT e FROM DevDTOGostKlausurenVorgaben e WHERE e.Dauer = :value")
 @NamedQuery(name="DevDTOGostKlausurenVorgaben.dauer.multiple", query="SELECT e FROM DevDTOGostKlausurenVorgaben e WHERE e.Dauer IN :value")
 @NamedQuery(name="DevDTOGostKlausurenVorgaben.auswahlzeit", query="SELECT e FROM DevDTOGostKlausurenVorgaben e WHERE e.Auswahlzeit = :value")
@@ -59,7 +59,7 @@ import de.nrw.schule.svws.csv.converter.current.gost.GOStHalbjahrConverterDeseri
 @NamedQuery(name="DevDTOGostKlausurenVorgaben.bemerkungen.multiple", query="SELECT e FROM DevDTOGostKlausurenVorgaben e WHERE e.Bemerkungen IN :value")
 @NamedQuery(name="DevDTOGostKlausurenVorgaben.primaryKeyQuery", query="SELECT e FROM DevDTOGostKlausurenVorgaben e WHERE e.ID = ?1")
 @NamedQuery(name="DevDTOGostKlausurenVorgaben.all.migration", query="SELECT e FROM DevDTOGostKlausurenVorgaben e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Abi_Jahrgang","Halbjahr","Fach_ID","KursartAllg","Quartal","Dauer","Auswahlzeit","IstMdlPruefung","IstAudioNotwendig","IstVideoNotwendig","Bemerkungen"})
+@JsonPropertyOrder({"ID","Abi_Jahrgang","Halbjahr","Quartal","Fach_ID","KursartAllg","Dauer","Auswahlzeit","IstMdlPruefung","IstAudioNotwendig","IstVideoNotwendig","Bemerkungen"})
 public class DevDTOGostKlausurenVorgaben {
 
 	/** ID der Klausurvorgaben (generiert) */
@@ -81,6 +81,11 @@ public class DevDTOGostKlausurenVorgaben {
 	@JsonDeserialize(using=GOStHalbjahrConverterDeserializer.class)
 	public GostHalbjahr Halbjahr;
 
+	/** Das Quartal, in dem die Klausur geschrieben wird. */
+	@Column(name = "Quartal")
+	@JsonProperty
+	public Integer Quartal;
+
 	/** Fach_ID der Klausurvorgaben */
 	@Column(name = "Fach_ID")
 	@JsonProperty
@@ -90,11 +95,6 @@ public class DevDTOGostKlausurenVorgaben {
 	@Column(name = "KursartAllg")
 	@JsonProperty
 	public String KursartAllg;
-
-	/** Das Quartal, in dem die Klausur geschrieben wird. */
-	@Column(name = "Quartal")
-	@JsonProperty
-	public Integer Quartal;
 
 	/** Das Dauer der Klausur/Prüfung in Minuten */
 	@Column(name = "Dauer")
@@ -147,16 +147,16 @@ public class DevDTOGostKlausurenVorgaben {
 	 * @param ID   der Wert für das Attribut ID
 	 * @param Abi_Jahrgang   der Wert für das Attribut Abi_Jahrgang
 	 * @param Halbjahr   der Wert für das Attribut Halbjahr
+	 * @param Quartal   der Wert für das Attribut Quartal
 	 * @param Fach_ID   der Wert für das Attribut Fach_ID
 	 * @param KursartAllg   der Wert für das Attribut KursartAllg
-	 * @param Quartal   der Wert für das Attribut Quartal
 	 * @param Dauer   der Wert für das Attribut Dauer
 	 * @param Auswahlzeit   der Wert für das Attribut Auswahlzeit
 	 * @param IstMdlPruefung   der Wert für das Attribut IstMdlPruefung
 	 * @param IstAudioNotwendig   der Wert für das Attribut IstAudioNotwendig
 	 * @param IstVideoNotwendig   der Wert für das Attribut IstVideoNotwendig
 	 */
-	public DevDTOGostKlausurenVorgaben(final Long ID, final Integer Abi_Jahrgang, final GostHalbjahr Halbjahr, final Long Fach_ID, final String KursartAllg, final Integer Quartal, final Integer Dauer, final Integer Auswahlzeit, final Boolean IstMdlPruefung, final Boolean IstAudioNotwendig, final Boolean IstVideoNotwendig) {
+	public DevDTOGostKlausurenVorgaben(final Long ID, final Integer Abi_Jahrgang, final GostHalbjahr Halbjahr, final Integer Quartal, final Long Fach_ID, final String KursartAllg, final Integer Dauer, final Integer Auswahlzeit, final Boolean IstMdlPruefung, final Boolean IstAudioNotwendig, final Boolean IstVideoNotwendig) {
 		if (ID == null) { 
 			throw new NullPointerException("ID must not be null");
 		}
@@ -169,6 +169,10 @@ public class DevDTOGostKlausurenVorgaben {
 			throw new NullPointerException("Halbjahr must not be null");
 		}
 		this.Halbjahr = Halbjahr;
+		if (Quartal == null) { 
+			throw new NullPointerException("Quartal must not be null");
+		}
+		this.Quartal = Quartal;
 		if (Fach_ID == null) { 
 			throw new NullPointerException("Fach_ID must not be null");
 		}
@@ -177,10 +181,6 @@ public class DevDTOGostKlausurenVorgaben {
 			throw new NullPointerException("KursartAllg must not be null");
 		}
 		this.KursartAllg = KursartAllg;
-		if (Quartal == null) { 
-			throw new NullPointerException("Quartal must not be null");
-		}
-		this.Quartal = Quartal;
 		if (Dauer == null) { 
 			throw new NullPointerException("Dauer must not be null");
 		}
@@ -237,7 +237,7 @@ public class DevDTOGostKlausurenVorgaben {
 	 */
 	@Override
 	public String toString() {
-		return "DevDTOGostKlausurenVorgaben(ID=" + this.ID + ", Abi_Jahrgang=" + this.Abi_Jahrgang + ", Halbjahr=" + this.Halbjahr + ", Fach_ID=" + this.Fach_ID + ", KursartAllg=" + this.KursartAllg + ", Quartal=" + this.Quartal + ", Dauer=" + this.Dauer + ", Auswahlzeit=" + this.Auswahlzeit + ", IstMdlPruefung=" + this.IstMdlPruefung + ", IstAudioNotwendig=" + this.IstAudioNotwendig + ", IstVideoNotwendig=" + this.IstVideoNotwendig + ", Bemerkungen=" + this.Bemerkungen + ")";
+		return "DevDTOGostKlausurenVorgaben(ID=" + this.ID + ", Abi_Jahrgang=" + this.Abi_Jahrgang + ", Halbjahr=" + this.Halbjahr + ", Quartal=" + this.Quartal + ", Fach_ID=" + this.Fach_ID + ", KursartAllg=" + this.KursartAllg + ", Dauer=" + this.Dauer + ", Auswahlzeit=" + this.Auswahlzeit + ", IstMdlPruefung=" + this.IstMdlPruefung + ", IstAudioNotwendig=" + this.IstAudioNotwendig + ", IstVideoNotwendig=" + this.IstVideoNotwendig + ", Bemerkungen=" + this.Bemerkungen + ")";
 	}
 
 }

@@ -2,6 +2,8 @@ package de.nrw.schule.svws.db.dto.dev.gost.klausurplanung;
 
 import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.converter.current.Boolean01Converter;
+import de.nrw.schule.svws.db.converter.current.DatumConverter;
+import de.nrw.schule.svws.db.converter.current.UhrzeitConverter;
 
 
 import jakarta.persistence.Cacheable;
@@ -18,6 +20,10 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import de.nrw.schule.svws.csv.converter.current.Boolean01ConverterSerializer;
 import de.nrw.schule.svws.csv.converter.current.Boolean01ConverterDeserializer;
+import de.nrw.schule.svws.csv.converter.current.DatumConverterSerializer;
+import de.nrw.schule.svws.csv.converter.current.DatumConverterDeserializer;
+import de.nrw.schule.svws.csv.converter.current.UhrzeitConverterSerializer;
+import de.nrw.schule.svws.csv.converter.current.UhrzeitConverterDeserializer;
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Gost_Klausuren_Kalenderinformationen.
@@ -63,21 +69,33 @@ public class DevDTOGostKlausurenKalenderinformationen {
 	/** Startdatum für den Kalendereintrag */
 	@Column(name = "Startdatum")
 	@JsonProperty
+	@Convert(converter=DatumConverter.class)
+	@JsonSerialize(using=DatumConverterSerializer.class)
+	@JsonDeserialize(using=DatumConverterDeserializer.class)
 	public String Startdatum;
 
 	/** Startzeit für den Kalendereintrag */
 	@Column(name = "Startzeit")
 	@JsonProperty
+	@Convert(converter=UhrzeitConverter.class)
+	@JsonSerialize(using=UhrzeitConverterSerializer.class)
+	@JsonDeserialize(using=UhrzeitConverterDeserializer.class)
 	public String Startzeit;
 
 	/** Enddatum für den Kalendereintrag */
 	@Column(name = "Enddatum")
 	@JsonProperty
+	@Convert(converter=DatumConverter.class)
+	@JsonSerialize(using=DatumConverterSerializer.class)
+	@JsonDeserialize(using=DatumConverterDeserializer.class)
 	public String Enddatum;
 
 	/** Endzeit für den Kalendereintrag */
 	@Column(name = "Endzeit")
 	@JsonProperty
+	@Convert(converter=UhrzeitConverter.class)
+	@JsonSerialize(using=UhrzeitConverterSerializer.class)
+	@JsonDeserialize(using=UhrzeitConverterDeserializer.class)
 	public String Endzeit;
 
 	/** Gibt an, ob es sich um einen Sperrtermin handelt oder nicht: 1 - true, 0 - false. */
