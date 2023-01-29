@@ -128,16 +128,14 @@ public class APIKlausuren {
 	 * @param schema     das Datenbankschema, auf welches der Patch ausgeführt
 	 *                   werden soll
 	 * @param request    die Informationen zur HTTP-Anfrage
-	 * @param abiturjahr das Jahr, in welchem der Jahrgang Abitur machen wird
-	 * @param halbjahr   das Gost-Halbjahr
-	 * @param quartal    das Quartal
+	 * @param id		 die ID des Klausurtermins
 	 * @param is         JSON-Objekt mit den Daten
 	 * 
 	 * @return das Ergebnis der Patch-Operation
 	 */
 	@PATCH
 	@Path("/termine/{id : \\d+}")
-	@Operation(summary = "Patcht einen Gost-Klausurtermin und gibt ihn zurück.", description = "Patcht einen Gost-Klausurtermin und gibt ihn zurück."
+	@Operation(summary = "Patcht einen Gost-Klausurtermin.", description = "Patcht einen Gost-Klausurtermin."
 			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Gost-Klausurtermins " + "besitzt.")
 	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich in die Schülerstammdaten integriert.")
 	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
