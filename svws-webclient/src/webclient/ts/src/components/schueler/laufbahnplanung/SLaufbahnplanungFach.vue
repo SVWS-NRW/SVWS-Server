@@ -14,6 +14,15 @@
 	<td :class="[ 'text-center', { 'border border-[#7f7f7f]/20': bgColorIfLanguage !== '#7f7f7f' } ]" :style="{ 'background-color': bgColorIfLanguage }">
 		{{ sprachenfolgeJahrgang }}
 	</td>
+	<template v-for="halbjahr in GostHalbjahr.values()" :key="halbjahr.id">
+		<s-laufbahnplanung-fach-halbjahr :abiturmanager="abiturmanager" :faechermanager="faechermanager"
+			:fach="fach" :halbjahr="halbjahr" :wahl="wahlen[halbjahr.id]" :moeglich="istMoeglich(halbjahr)" :bewertet="bewertet[halbjahr.id]"
+			:fachkombi-erforderlich="fachkombi_erforderlich" :fachkombi-verboten="fachkombi_verboten" @click="onClick(halbjahr)" />
+	</template>
+	<s-laufbahnplanung-fach-halbjahr :abiturmanager="abiturmanager" :faechermanager="faechermanager"
+		:fach="fach" :wahl="abi_wahl" :moeglich="istMoeglich()" :bewertet="bewertet[GostHalbjahr.Q22.id]" @click="onClick()" />
+
+	<!--
 	<td :class="[ 'w-12 text-center', {
 			'cursor-pointer border': ef1_moeglich && !bewertet[0],
 			'border-[#7f7f7f]/20': ef1_moeglich,
@@ -75,27 +84,26 @@
 			'cursor-not-allowed': !abi_moeglich } ]"
 		:style="{ 'background-color': abi_moeglich ? bgColor : 'gray' }" @click.stop="() => abi_set()">
 		{{ abi_wahl }}
-	</td>
+	</td> -->
 </template>
 
 <script setup lang="ts">
 
 	import { computed, ComputedRef } from "vue";
 
-	import { AbiturdatenManager, GostFach, GostFaecherManager, GostHalbjahr, GostJahrgangFachkombination, GostKursart, GostLaufbahnplanungFachkombinationTyp, List, Vector } from "@svws-nrw/svws-core-ts";
+	import { AbiturdatenManager, AbiturFachbelegungHalbjahr, GostFach, GostFaecherManager, GostHalbjahr, GostJahrgangFachkombination, GostKursart, GostLaufbahnplanungFachkombinationTyp, List, Vector } from "@svws-nrw/svws-core-ts";
 	import { DataSchuelerLaufbahnplanung } from "~/apps/schueler/DataSchuelerLaufbahnplanung";
 	import { DataGostFachkombinationen } from "~/apps/gost/DataGostFachkombinationen";
 	import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
 
 	const props = defineProps<{
+		abiturmanager: AbiturdatenManager;
+		faechermanager: GostFaecherManager;
 		fach: GostFach,
 		dataLaufbahn: DataSchuelerLaufbahnplanung
 		dataFaecher: DataGostFaecher,
 		dataFachkombinationen: DataGostFachkombinationen
 	}>();
-
-	const faechermanager: ComputedRef<GostFaecherManager | undefined> = computed(() => props.dataFaecher.manager);
-	const abiturmanager: ComputedRef<AbiturdatenManager | undefined> = computed(() => props.dataLaufbahn.manager);
 
 	const bewertet: ComputedRef<Array<boolean>> = computed(() => props.dataLaufbahn.daten?.bewertetesHalbjahr || []);
 
@@ -108,101 +116,90 @@
 	const sprachenfolgeNr: ComputedRef<number> = computed(() => props.dataLaufbahn.sprachenfolgeNr(props.fach));
 	const sprachenfolgeJahrgang: ComputedRef<string> = computed(() => props.dataLaufbahn.sprachenfolgeJahrgang(props.fach));
 
-	const ef1_moeglich: ComputedRef<boolean> = computed(() => props.dataLaufbahn.getEF1Moeglich(props.fach));
-	const ef2_moeglich: ComputedRef<boolean> = computed(() => props.dataLaufbahn.getEF2Moeglich(props.fach));
-	const q11_moeglich: ComputedRef<boolean> = computed(() => props.dataLaufbahn.getQ11Moeglich(props.fach));
-	const q12_moeglich: ComputedRef<boolean> = computed(() => props.dataLaufbahn.getQ12Moeglich(props.fach));
-	const q21_moeglich: ComputedRef<boolean> = computed(() => props.dataLaufbahn.getQ21Moeglich(props.fach));
-	const q22_moeglich: ComputedRef<boolean> = computed(() => props.dataLaufbahn.getQ22Moeglich(props.fach));
-	const abi_moeglich: ComputedRef<boolean> = computed(() => props.dataLaufbahn.getAbiMoeglich(props.fach));
-
-	const wahlen: ComputedRef<string[]> = computed(() => props.dataLaufbahn.getWahlen(props.fach));
-
 	const abi_wahl: ComputedRef<string> = computed(() => ( props.dataLaufbahn.gostFachbelegungen[ props.fach.id ]?.abiturFach?.toString() || ""));
 
-	const fachkombis: ComputedRef<List<GostJahrgangFachkombination>> =
-		computed(() => {
-			const result = new Vector<GostJahrgangFachkombination>();
-			if (props.dataFachkombinationen.daten)
-				for (const kombi of props.dataFachkombinationen.daten)
-					if (kombi.fachID2 === props.fach.id && kombi.abiturjahr === props.dataLaufbahn.abiturjahr)
-						result.add(kombi)
-			return result;
-		});
+	const fachkombis: ComputedRef<List<GostJahrgangFachkombination>> = computed(() => {
+		const result = new Vector<GostJahrgangFachkombination>();
+		if (props.dataFachkombinationen.daten)
+			for (const kombi of props.dataFachkombinationen.daten)
+				if (kombi.fachID2 === props.fach.id && kombi.abiturjahr === props.dataLaufbahn.abiturjahr)
+					result.add(kombi)
+		return result;
+	});
 
-	const fachkombi_erforderlich: ComputedRef<List<GostJahrgangFachkombination>> =
-		computed(()=> {
-			const result = new Vector<GostJahrgangFachkombination>()
-			for (const kombi of fachkombis.value)
-				if (GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH.getValue() === kombi.typ)
-					result.add(kombi);
-			return result;
-		})
+	const fachkombi_erforderlich: ComputedRef<List<GostJahrgangFachkombination>> = computed(()=> {
+		const result = new Vector<GostJahrgangFachkombination>()
+		for (const kombi of fachkombis.value)
+			if (GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH.getValue() === kombi.typ)
+				result.add(kombi);
+		return result;
+	})
 
-	const fachkombi_verboten: ComputedRef<List<GostJahrgangFachkombination>> =
-		computed(()=> {
-			const result = new Vector<GostJahrgangFachkombination>()
-			for (const kombi of fachkombis.value)
-				if (GostLaufbahnplanungFachkombinationTyp.VERBOTEN.getValue() === kombi.typ)
-					result.add(kombi);
-			return result;
-		})
+	const fachkombi_verboten: ComputedRef<List<GostJahrgangFachkombination>> = computed(()=> {
+		const result = new Vector<GostJahrgangFachkombination>()
+		for (const kombi of fachkombis.value)
+			if (GostLaufbahnplanungFachkombinationTyp.VERBOTEN.getValue() === kombi.typ)
+				result.add(kombi);
+		return result;
+	})
 
-	function pruefeFachkombiErforderlich(halbjahr: GostHalbjahr) : boolean {
-		if (fachkombi_erforderlich.value.size() > 0) {
-			for (const kombi of fachkombi_erforderlich.value) {
-				if (kombi.gueltigInHalbjahr[halbjahr.id]) {
-					const fach1 = faechermanager.value?.get(kombi.fachID1);
-					if (!fach1 || !abiturmanager.value)
-						return false;
-					const f1 = abiturmanager.value.getFachbelegungByKuerzel(fach1?.kuerzel || null)
-					const f2 = abiturmanager.value.getFachbelegungByKuerzel(props.fach.kuerzel)
-					const belegung_1 = abiturmanager.value.pruefeBelegungMitKursart(f1, GostKursart.fromKuerzel(kombi.kursart1)!, halbjahr)
-					const belegung_2 = abiturmanager.value.pruefeBelegungMitKursart(f2, GostKursart.fromKuerzel(kombi.kursart1)!, halbjahr);
-					if (belegung_2)
-						return false;
-					return belegung_1 !== belegung_2;
-				}
-			}
+	function onClick(halbjahr?: GostHalbjahr) {
+		if (halbjahr === undefined) {
+			props.dataLaufbahn.setAbiturWahl(props.fach);
+		} else if (halbjahr === GostHalbjahr.EF1) {
+			props.dataLaufbahn.setEF1Wahl(props.fach);
+		} else if (halbjahr === GostHalbjahr.EF2) {
+			props.dataLaufbahn.setEF2Wahl(props.fach);
+		} else if (halbjahr === GostHalbjahr.Q11) {
+			props.dataLaufbahn.setQ11Wahl(props.fach);
+		} else if (halbjahr === GostHalbjahr.Q12) {
+			props.dataLaufbahn.setQ12Wahl(props.fach);
+		} else if (halbjahr === GostHalbjahr.Q21) {
+			props.dataLaufbahn.setQ21Wahl(props.fach);
+		} else if (halbjahr === GostHalbjahr.Q22) {
+			props.dataLaufbahn.setQ22Wahl(props.fach);
+		}
+	}
+
+	function istMoeglich(halbjahr?: GostHalbjahr) {
+		if (halbjahr === undefined) {
+			return props.dataLaufbahn.getAbiMoeglich(props.fach);
+		} else if (halbjahr === GostHalbjahr.EF1) {
+			return props.dataLaufbahn.getEF1Moeglich(props.fach);
+		} else if (halbjahr === GostHalbjahr.EF2) {
+			return props.dataLaufbahn.getEF2Moeglich(props.fach);
+		} else if (halbjahr === GostHalbjahr.Q11) {
+			return props.dataLaufbahn.getQ11Moeglich(props.fach);
+		} else if (halbjahr === GostHalbjahr.Q12) {
+			return props.dataLaufbahn.getQ12Moeglich(props.fach);
+		} else if (halbjahr === GostHalbjahr.Q21) {
+			return props.dataLaufbahn.getQ21Moeglich(props.fach);
+		} else if (halbjahr === GostHalbjahr.Q22) {
+			return props.dataLaufbahn.getQ22Moeglich(props.fach);
 		}
 		return false;
 	}
 
-	const fachkombi_erforderlich_ef1: ComputedRef<boolean> = computed(() => pruefeFachkombiErforderlich(GostHalbjahr.EF1));
-	const fachkombi_erforderlich_ef2: ComputedRef<boolean> = computed(() => pruefeFachkombiErforderlich(GostHalbjahr.EF2));
-	const fachkombi_erforderlich_q11: ComputedRef<boolean> = computed(() => pruefeFachkombiErforderlich(GostHalbjahr.Q11));
-	const fachkombi_erforderlich_q12: ComputedRef<boolean> = computed(() => pruefeFachkombiErforderlich(GostHalbjahr.Q12));
-	const fachkombi_erforderlich_q21: ComputedRef<boolean> = computed(() => pruefeFachkombiErforderlich(GostHalbjahr.Q21));
-	const fachkombi_erforderlich_q22: ComputedRef<boolean> = computed(() => pruefeFachkombiErforderlich(GostHalbjahr.Q22));
-
-	function pruefeFachkombiVerboten(halbjahr: GostHalbjahr) : boolean {
-		if ((fachkombi_verboten.value.size() > 0)) {
-			for (const kombi of fachkombi_verboten.value) {
-				if (kombi.gueltigInHalbjahr[halbjahr.id]) {
-					const fach = faechermanager.value?.get(kombi.fachID1)
-					if (!fach)
-						return false;
-					const belegung = props.dataLaufbahn.getWahlen(fach)[halbjahr.id]
-					return belegung ? true : false;
+	const wahlen: ComputedRef<string[]> = computed(() => {
+		const belegung = props.dataLaufbahn.gostFachbelegungen[props.fach.id];
+		if (belegung === undefined)
+			return ["", "", "", "", "", ""];
+		return belegung.belegungen.map(
+			(b: AbiturFachbelegungHalbjahr | null) => {
+				b = b ? b : new AbiturFachbelegungHalbjahr();
+				if (!b.halbjahrKuerzel)
+					return "";
+				const kursart = GostKursart.fromKuerzel(b.kursartKuerzel);
+				if (!kursart)
+					return b.kursartKuerzel.toString() || "";
+				switch (kursart) {
+					case GostKursart.ZK:
+					case GostKursart.LK:
+						return kursart.kuerzel;
 				}
+				return b.schriftlich ? "S" : "M";
 			}
-		}
-		return false;
-	}
-
-	const fachkombi_verboten_ef1: ComputedRef<boolean> = computed(() => pruefeFachkombiVerboten(GostHalbjahr.EF1));
-	const fachkombi_verboten_ef2: ComputedRef<boolean> = computed(() => pruefeFachkombiVerboten(GostHalbjahr.EF2));
-	const fachkombi_verboten_q11: ComputedRef<boolean> = computed(() => pruefeFachkombiVerboten(GostHalbjahr.Q11));
-	const fachkombi_verboten_q12: ComputedRef<boolean> = computed(() => pruefeFachkombiVerboten(GostHalbjahr.Q12));
-	const fachkombi_verboten_q21: ComputedRef<boolean> = computed(() => pruefeFachkombiVerboten(GostHalbjahr.Q21));
-	const fachkombi_verboten_q22: ComputedRef<boolean> = computed(() => pruefeFachkombiVerboten(GostHalbjahr.Q22));
-
-	function ef1_set(): void { props.dataLaufbahn.setEF1Wahl(props.fach); }
-	function ef2_set(): void { props.dataLaufbahn.setEF2Wahl(props.fach); }
-	function q11_set(): void { props.dataLaufbahn.setQ11Wahl(props.fach); }
-	function q12_set(): void { props.dataLaufbahn.setQ12Wahl(props.fach); }
-	function q21_set(): void { props.dataLaufbahn.setQ21Wahl(props.fach); }
-	function q22_set(): void { props.dataLaufbahn.setQ22Wahl(props.fach); }
-	function abi_set(): void { props.dataLaufbahn.setAbiturWahl(props.fach); }
+		)
+	});
 
 </script>
