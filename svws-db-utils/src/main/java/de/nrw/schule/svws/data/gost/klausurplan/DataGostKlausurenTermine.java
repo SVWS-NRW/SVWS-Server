@@ -88,9 +88,58 @@ public class DataGostKlausurenTermine extends DataManager<Long> {
 
 	@Override
 	public Response patch(Long id, InputStream is) {
-		throw new UnsupportedOperationException();
+    	Map<String, Object> map = JSONMapper.toMap(is);
+    	if (map.size() > 0) {
+    		try {
+    			conn.transactionBegin();
+    			DTOGostKlausurenTermine termin = conn.queryByKey(DTOGostKlausurenTermine.class, id);
+		    	if (termin == null)
+		    		throw OperationError.NOT_FOUND.exception();
+		    	for (Entry<String, Object> entry : map.entrySet()) {
+		    		String key = entry.getKey();
+		    		Object value = entry.getValue();
+		    		switch (key) {
+						case "id" -> {
+							Long patch_id = JSONMapper.convertToLong(value, true);
+							if ((patch_id == null) || (patch_id.longValue() != id.longValue()))
+								throw OperationError.BAD_REQUEST.exception();
+						}
+						case "abijahr" -> {
+							int patch_abijahr = JSONMapper.convertToInteger(value, false);
+							if ((patch_abijahr != termin.Abi_Jahrgang))
+								throw OperationError.BAD_REQUEST.exception();
+						}
+						case "halbjahr" -> {
+							int patch_halbjahr = JSONMapper.convertToInteger(value, false);
+							if ((patch_halbjahr != termin.Halbjahr.id))
+								throw OperationError.BAD_REQUEST.exception();
+						}
+						case "quartal" -> {
+							int patch_quartal = JSONMapper.convertToInteger(value, false);
+							if ((patch_quartal != termin.Quartal))
+								throw OperationError.BAD_REQUEST.exception();
+						}
+						case "bemerkung" -> termin.Bemerkungen = JSONMapper.convertToString(value, true, false);
+						case "datum" -> termin.Datum = JSONMapper.convertToString(value, true, false);
+						case "startzeit" -> termin.Startzeit = JSONMapper.convertToString(value, true, false);
+		    			
+		    			default -> throw OperationError.BAD_REQUEST.exception();
+		    		}
+		    	}
+		    	conn.transactionPersist(termin);
+		    	conn.transactionCommit();
+    		} catch (Exception e) {
+    			if (e instanceof WebApplicationException webAppException)
+    				return webAppException.getResponse();
+				return OperationError.INTERNAL_SERVER_ERROR.getResponse();
+    		} finally {
+    			// Perform a rollback if necessary
+    			conn.transactionRollback();
+    		}
+    	}
+    	return Response.status(Status.OK).build();
 	}
-
+	
 	@Override
 	public Response getList() {
 		throw new UnsupportedOperationException();
@@ -101,7 +150,7 @@ public class DataGostKlausurenTermine extends DataManager<Long> {
 	 * 
 	 * @param halbjahr das Gost-Halbjahr, in dem der Klausurtermin liegen soll
 	 * @param quartal  das Quartal, in dem der Klausurtermin liegen soll.
-	 * @param is          Das JSON-Objekt mit den Daten
+	 * @param is       Das JSON-Objekt mit den Daten
 	 * 
 	 * @return Eine Response mit dem neuen Gost-Klausurtermin
 	 */
@@ -119,9 +168,29 @@ public class DataGostKlausurenTermine extends DataManager<Long> {
 					String key = entry.getKey();
 					Object value = entry.getValue();
 					switch (key) {
-					case "bemerkung" -> termin.Bemerkungen = JSONMapper.convertToString(value, true, true);
-//					case "datum" -> termin.Datum = JSONMapper.convertToString(value, true, true);
-//					case "startzeit" -> termin.Startzeit = JSONMapper.convertToString(value, true, true);
+					case "id" -> {
+						Long patch_id = JSONMapper.convertToLong(value, true);
+						if ((patch_id == null) || (patch_id.longValue() != ID.longValue()))
+							throw OperationError.BAD_REQUEST.exception();
+					}
+					case "abijahr" -> {
+						int patch_abijahr = JSONMapper.convertToInteger(value, false);
+						if ((patch_abijahr != termin.Abi_Jahrgang))
+							throw OperationError.BAD_REQUEST.exception();
+					}
+					case "halbjahr" -> {
+						int patch_halbjahr = JSONMapper.convertToInteger(value, false);
+						if ((patch_halbjahr != termin.Halbjahr.id))
+							throw OperationError.BAD_REQUEST.exception();
+					}
+					case "quartal" -> {
+						int patch_quartal = JSONMapper.convertToInteger(value, false);
+						if ((patch_quartal != termin.Quartal))
+							throw OperationError.BAD_REQUEST.exception();
+					}
+					case "bemerkung" -> termin.Bemerkungen = JSONMapper.convertToString(value, true, false);
+					case "datum" -> termin.Datum = JSONMapper.convertToString(value, true, false);
+					case "startzeit" -> termin.Startzeit = JSONMapper.convertToString(value, true, false);
 					default -> throw OperationError.BAD_REQUEST.exception();
 					}
 				}
