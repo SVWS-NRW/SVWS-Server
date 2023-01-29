@@ -1,8 +1,8 @@
 <template>
 	<div class="flex flex-row gap-4">
 		<div class="flex-none">
-			<s-laufbahnplanung-card-planung v-if="visible" :abiturmanager="abiturmanager" :faechermanager="faechermanager" :item="item.value" :stammdaten="stammdaten"
-				:data-laufbahn="dataLaufbahn" :data-faecher="dataFaecher" :data-fachkombinationen="dataFachkombinationen" />
+			<s-laufbahnplanung-card-planung v-if="visible" :abiturmanager="abiturmanager" :faechermanager="faechermanager"  :fachkombinationen="fachkombinationen"
+				:item="item.value" :stammdaten="stammdaten" :data-laufbahn="dataLaufbahn" />
 		</div>
 		<div class="flex-auto">
 			<s-laufbahnplanung-card-status v-if="visible" :abiturmanager="abiturmanager" :faechermanager="faechermanager" :fachkombinationen="fachkombinationen"

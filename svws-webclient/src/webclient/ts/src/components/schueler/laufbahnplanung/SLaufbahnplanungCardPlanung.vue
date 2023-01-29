@@ -28,8 +28,8 @@
 							</tr>
 						</thead>
 						<tr v-for="row in rows" :key="row.id" class="select-none">
-							<s-laufbahnplanung-fach :abiturmanager="abiturmanager" :faechermanager="faechermanager"
-								:fach="row" :data-laufbahn="dataLaufbahn" :data-faecher="dataFaecher" :data-fachkombinationen="dataFachkombinationen" />
+							<s-laufbahnplanung-fach :abiturmanager="abiturmanager" :faechermanager="faechermanager" :fach="row" :fachkombinationen="fachkombinationen"
+								:data-laufbahn="dataLaufbahn" />
 						</tr>
 						<thead class="bg-slate-100">
 							<tr>
@@ -124,21 +124,18 @@
 
 	import { computed, ComputedRef, ref } from "vue";
 
-	import { List, Vector, GostFach, SchuelerListeEintrag, AbiturdatenManager, GostFaecherManager } from "@svws-nrw/svws-core-ts";
+	import { List, GostFach, SchuelerListeEintrag, AbiturdatenManager, GostFaecherManager, GostJahrgangFachkombination } from "@svws-nrw/svws-core-ts";
 	import { App } from "~/apps/BaseApp";
 	import { DataSchuelerLaufbahnplanung } from "~/apps/schueler/DataSchuelerLaufbahnplanung";
 	import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
-	import { DataGostFachkombinationen } from "~/apps/gost/DataGostFachkombinationen";
-	import { DataGostFaecher } from "~/apps/gost/DataGostFaecher";
 
 	const props = defineProps<{
 		abiturmanager: AbiturdatenManager;
 		faechermanager: GostFaecherManager;
-		item?: SchuelerListeEintrag,
-		stammdaten: DataSchuelerStammdaten,
-		dataLaufbahn: DataSchuelerLaufbahnplanung,
-		dataFaecher: DataGostFaecher,
-		dataFachkombinationen: DataGostFachkombinationen
+		fachkombinationen: List<GostJahrgangFachkombination>;
+		item?: SchuelerListeEintrag;
+		stammdaten: DataSchuelerStammdaten;
+		dataLaufbahn: DataSchuelerLaufbahnplanung;
 	}>();
 
 	const manuell = ref(false)
@@ -147,7 +144,7 @@
 		props.dataLaufbahn.reset_fachwahlen();
 	}
 
-	const rows: ComputedRef<List<GostFach>> = computed(() => props.dataFaecher.daten || new Vector());
+	const rows: ComputedRef<List<GostFach>> = computed(() => props.faechermanager.toVector());
 
 	const kurszahlen: ComputedRef<number[]> = computed(() => props.dataLaufbahn.anrechenbare_kurszahlen);
 
