@@ -25,6 +25,7 @@ import de.nrw.schule.svws.core.data.gost.AbiturFachbelegung;
 import de.nrw.schule.svws.core.data.gost.AbiturFachbelegungHalbjahr;
 import de.nrw.schule.svws.core.data.gost.Abiturdaten;
 import de.nrw.schule.svws.core.data.gost.GostFach;
+import de.nrw.schule.svws.core.data.gost.GostSchuelerFachwahl;
 import de.nrw.schule.svws.core.data.schueler.Sprachendaten;
 import de.nrw.schule.svws.core.types.fach.ZulaessigesFach;
 import de.nrw.schule.svws.core.types.gost.GostAbiturFach;
@@ -165,6 +166,18 @@ public class AbiturdatenManager {
 	}
 
 
+	/**
+	 * Gibt zurück, ob das angegebene Halbjahr bereits bewertet ist oder nicht.
+	 *  
+	 * @param halbjahr   das Halbjahr
+	 * 
+	 * @return true, falls es bereits bewertet ist
+	 */
+	public boolean istBewertet(@NotNull GostHalbjahr halbjahr) {
+		return abidaten.bewertetesHalbjahr[halbjahr.id];
+	}
+
+
     /**
      * Liefert die in den Abiturdaten enthaltenen Sprachendaten.
      *
@@ -216,6 +229,44 @@ public class AbiturdatenManager {
 		return anzahl;
     }
     
+    
+	private static String getSchuelerFachwahlFromBelegung(@NotNull AbiturFachbelegung belegung, @NotNull GostHalbjahr halbjahr) {
+		AbiturFachbelegungHalbjahr halbjahresbelegung = belegung.belegungen[halbjahr.id];
+		if (halbjahresbelegung == null) {
+			halbjahresbelegung = new AbiturFachbelegungHalbjahr();
+			halbjahresbelegung.halbjahrKuerzel = halbjahr.kuerzel;
+			belegung.belegungen[halbjahr.id] = halbjahresbelegung;   // TODO prüfen, ob dies zu Fehlern im Manager führt (state)
+		}
+		GostKursart kursart = GostKursart.fromKuerzel(halbjahresbelegung.kursartKuerzel);
+		if (kursart == null)
+			return ("".equals(halbjahresbelegung.kursartKuerzel) ? null : halbjahresbelegung.kursartKuerzel);
+		if ((kursart == GostKursart.ZK) || (kursart == GostKursart.LK))
+			return kursart.kuerzel;
+		return halbjahresbelegung.schriftlich ? "S" : "M";
+	}
+
+
+	/**
+	 * Bestimmt die Schüler-Fachwahl für das Fach mit der übegebenen ID
+	 * 
+	 * @param fach_id   die ID des Faches
+	 * 
+	 * @return die Schüler-Fachwahl
+	 */
+    public @NotNull GostSchuelerFachwahl getSchuelerFachwahl(long fach_id) {
+    	AbiturFachbelegung belegung = getFachbelegungByID(fach_id);
+    	if (belegung == null)
+    		return new GostSchuelerFachwahl();
+    	@NotNull GostSchuelerFachwahl wahl = new GostSchuelerFachwahl();
+		wahl.EF1 = getSchuelerFachwahlFromBelegung(belegung, GostHalbjahr.EF1);
+		wahl.EF2 = getSchuelerFachwahlFromBelegung(belegung, GostHalbjahr.EF2);
+		wahl.Q11 = getSchuelerFachwahlFromBelegung(belegung, GostHalbjahr.Q11);
+		wahl.Q12 = getSchuelerFachwahlFromBelegung(belegung, GostHalbjahr.Q12);
+		wahl.Q21 = getSchuelerFachwahlFromBelegung(belegung, GostHalbjahr.Q21);
+		wahl.Q22 = getSchuelerFachwahlFromBelegung(belegung, GostHalbjahr.Q22);
+		wahl.abiturFach = belegung.abiturFach;
+		return wahl;    	
+    }
 
     /**
 	 * Liefert das Fach der gymnasialen Oberstufe für die angegeben Abiturfachbelegung.
@@ -1054,6 +1105,24 @@ public class AbiturdatenManager {
 		return (GostBesondereLernleistung.PROJEKTKURS.is(abidaten.besondereLernleistung));
 	}
 	
+	
+	
+	/**
+	 * Bestimmt die Fachbelegung des Faches mit der angegebenen ID
+	 * 
+	 * @param fach_id   die ID des Faches
+	 * 
+	 * @return die Fachbelegung oder null, falls keine vorhanden ist
+	 */
+	public AbiturFachbelegung getFachbelegungByID(long fach_id) {
+		@NotNull Vector<@NotNull AbiturFachbelegung> fachbelegungen = abidaten.fachbelegungen;
+		for (AbiturFachbelegung fb : fachbelegungen) {
+			GostFach fach = getFach(fb);
+			if ((fach != null) && (fach_id == fach.id))
+				return fb;
+		}
+		return null;
+	}
 	
 	
 	/**

@@ -5,7 +5,7 @@
 			<div class="inline-block py-2 align-middle sm:px-6 lg:px-8">
 				<div class="overflow-hidden rounded-lg shadow">
 					<table class="border-collapse text-sm">
-						<thead :class="{'bg-slate-100': !manuell, 'bg-red-400': manuell}">
+						<thead :class="{'bg-slate-100': !istManuellerModus, 'bg-red-400': istManuellerModus}">
 							<tr>
 								<td class="border border-[#7f7f7f]/20 text-center" colspan="3"> Fach </td>
 								<td class="border border-[#7f7f7f]/20 text-center" colspan="2"> Sprachen </td>
@@ -28,8 +28,8 @@
 							</tr>
 						</thead>
 						<tr v-for="row in rows" :key="row.id" class="select-none">
-							<s-laufbahnplanung-fach :abiturmanager="abiturmanager" :faechermanager="faechermanager" :fach="row" :fachkombinationen="fachkombinationen"
-								:data-laufbahn="dataLaufbahn" />
+							<s-laufbahnplanung-fach :abiturmanager="abiturmanager" :faechermanager="faechermanager" :jahrgangsdaten="jahrgangsdaten"
+								:fach="row" :fachkombinationen="fachkombinationen" :data-laufbahn="dataLaufbahn" :manueller-modus="istManuellerModus" />
 						</tr>
 						<thead class="bg-slate-100">
 							<tr>
@@ -113,7 +113,7 @@
 				<div class="flex justify-between gap-1">
 					<svws-ui-button @click.prevent="download_file">Wahlbogen herunterladen</svws-ui-button>
 					<s-modal-laufbahnplanung-kurswahlen-loeschen @delete="reset_fachwahlen" />
-					<svws-ui-button :type="manuell ? 'error':'primary'" @click="manu">Manuellen Modus {{ manuell?"de":"" }}aktivieren</svws-ui-button>
+					<svws-ui-button :type="istManuellerModus ? 'error' : 'primary'" @click="switchManuellerModus">Manuellen Modus {{ istManuellerModus ? "de" : "" }}aktivieren</svws-ui-button>
 				</div>
 			</div>
 		</div>
@@ -124,7 +124,7 @@
 
 	import { computed, ComputedRef, ref } from "vue";
 
-	import { List, GostFach, SchuelerListeEintrag, AbiturdatenManager, GostFaecherManager, GostJahrgangFachkombination } from "@svws-nrw/svws-core-ts";
+	import { List, GostFach, SchuelerListeEintrag, AbiturdatenManager, GostFaecherManager, GostJahrgangFachkombination, GostHalbjahr, AbiturFachbelegung, GostSchuelerFachwahl, GostKursart, AbiturFachbelegungHalbjahr, GostJahrgang, GostJahrgangsdaten } from "@svws-nrw/svws-core-ts";
 	import { App } from "~/apps/BaseApp";
 	import { DataSchuelerLaufbahnplanung } from "~/apps/schueler/DataSchuelerLaufbahnplanung";
 	import { DataSchuelerStammdaten } from "~/apps/schueler/DataSchuelerStammdaten";
@@ -135,13 +135,23 @@
 		fachkombinationen: List<GostJahrgangFachkombination>;
 		item?: SchuelerListeEintrag;
 		stammdaten: DataSchuelerStammdaten;
+		jahrgangsdaten: GostJahrgangsdaten;
 		dataLaufbahn: DataSchuelerLaufbahnplanung;
 	}>();
 
-	const manuell = ref(false)
-
 	function reset_fachwahlen() {
-		props.dataLaufbahn.reset_fachwahlen();
+		for (const fachbelegung of props.abiturmanager.getFachbelegungen()) {
+			const fach = props.abiturmanager.getFach(fachbelegung);
+			if (fach) {
+				const fachwahl = props.abiturmanager.getSchuelerFachwahl(fach.id);
+				for (const hj  of GostHalbjahr.values()) {
+					if (!props.abiturmanager.istBewertet(hj))
+						fachwahl[hj?.toString() as 'EF1' | 'EF2' | 'Q11' | 'Q12' | 'Q21' | 'Q22'] = null;
+				}
+				fachwahl.abiturFach = null;
+				props.dataLaufbahn.setWahl(fach, fachwahl);
+			}
+		}
 	}
 
 	const rows: ComputedRef<List<GostFach>> = computed(() => props.faechermanager.toVector());
@@ -163,9 +173,9 @@
 		return q.reduce((p, c) => p + c, 0) / 4;
 	});
 
-	function manu() {
-		manuell.value = manuell.value ? false:true;
-		props.dataLaufbahn.manuelle_eingabe = manuell.value
+	const istManuellerModus = ref(false)
+	function switchManuellerModus() {
+		istManuellerModus.value = istManuellerModus.value ? false : true;
 	}
 
 	function download_file() {

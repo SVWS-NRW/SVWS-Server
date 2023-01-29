@@ -13,6 +13,7 @@ import { Latinum, cast_de_nrw_schule_svws_core_abschluss_gost_belegpruefung_Lati
 import { Sprachendaten, cast_de_nrw_schule_svws_core_data_schueler_Sprachendaten } from '../../../core/data/schueler/Sprachendaten';
 import { GostFachbereich, cast_de_nrw_schule_svws_core_types_gost_GostFachbereich } from '../../../core/types/gost/GostFachbereich';
 import { Allgemeines, cast_de_nrw_schule_svws_core_abschluss_gost_belegpruefung_Allgemeines } from '../../../core/abschluss/gost/belegpruefung/Allgemeines';
+import { GostSchuelerFachwahl, cast_de_nrw_schule_svws_core_data_gost_GostSchuelerFachwahl } from '../../../core/data/gost/GostSchuelerFachwahl';
 import { Sport, cast_de_nrw_schule_svws_core_abschluss_gost_belegpruefung_Sport } from '../../../core/abschluss/gost/belegpruefung/Sport';
 import { GostHalbjahr, cast_de_nrw_schule_svws_core_types_gost_GostHalbjahr } from '../../../core/types/gost/GostHalbjahr';
 import { GostSchriftlichkeit, cast_de_nrw_schule_svws_core_types_gost_GostSchriftlichkeit } from '../../../core/types/gost/GostSchriftlichkeit';
@@ -168,6 +169,17 @@ export class AbiturdatenManager extends JavaObject {
 	}
 
 	/**
+	 * Gibt zurück, ob das angegebene Halbjahr bereits bewertet ist oder nicht.
+	 *  
+	 * @param halbjahr   das Halbjahr
+	 * 
+	 * @return true, falls es bereits bewertet ist
+	 */
+	public istBewertet(halbjahr : GostHalbjahr) : boolean {
+		return this.abidaten.bewertetesHalbjahr[halbjahr.id];
+	}
+
+	/**
 	 * Liefert die in den Abiturdaten enthaltenen Sprachendaten.
 	 *
 	 * @return Die Sprachendaten (siehe {@link Sprachendaten})
@@ -215,6 +227,43 @@ export class AbiturdatenManager extends JavaObject {
 			}
 		}
 		return anzahl;
+	}
+
+	private static getSchuelerFachwahlFromBelegung(belegung : AbiturFachbelegung, halbjahr : GostHalbjahr) : string | null {
+		let halbjahresbelegung : AbiturFachbelegungHalbjahr | null = belegung.belegungen[halbjahr.id];
+		if (halbjahresbelegung === null) {
+			halbjahresbelegung = new AbiturFachbelegungHalbjahr();
+			halbjahresbelegung.halbjahrKuerzel = halbjahr.kuerzel;
+			belegung.belegungen[halbjahr.id] = halbjahresbelegung;
+		}
+		let kursart : GostKursart | null = GostKursart.fromKuerzel(halbjahresbelegung.kursartKuerzel);
+		if (kursart === null) 
+			return (JavaObject.equalsTranspiler("", (halbjahresbelegung.kursartKuerzel)) ? null : halbjahresbelegung.kursartKuerzel);
+		if ((kursart as unknown === GostKursart.ZK as unknown) || (kursart as unknown === GostKursart.LK as unknown)) 
+			return kursart.kuerzel;
+		return halbjahresbelegung.schriftlich ? "S" : "M";
+	}
+
+	/**
+	 * Bestimmt die Schüler-Fachwahl für das Fach mit der übegebenen ID
+	 * 
+	 * @param fach_id   die ID des Faches
+	 * 
+	 * @return die Schüler-Fachwahl
+	 */
+	public getSchuelerFachwahl(fach_id : number) : GostSchuelerFachwahl {
+		let belegung : AbiturFachbelegung | null = this.getFachbelegungByID(fach_id);
+		if (belegung === null) 
+			return new GostSchuelerFachwahl();
+		let wahl : GostSchuelerFachwahl = new GostSchuelerFachwahl();
+		wahl.EF1 = AbiturdatenManager.getSchuelerFachwahlFromBelegung(belegung, GostHalbjahr.EF1);
+		wahl.EF2 = AbiturdatenManager.getSchuelerFachwahlFromBelegung(belegung, GostHalbjahr.EF2);
+		wahl.Q11 = AbiturdatenManager.getSchuelerFachwahlFromBelegung(belegung, GostHalbjahr.Q11);
+		wahl.Q12 = AbiturdatenManager.getSchuelerFachwahlFromBelegung(belegung, GostHalbjahr.Q12);
+		wahl.Q21 = AbiturdatenManager.getSchuelerFachwahlFromBelegung(belegung, GostHalbjahr.Q21);
+		wahl.Q22 = AbiturdatenManager.getSchuelerFachwahlFromBelegung(belegung, GostHalbjahr.Q22);
+		wahl.abiturFach = belegung.abiturFach;
+		return wahl;
 	}
 
 	/**
@@ -997,6 +1046,23 @@ export class AbiturdatenManager extends JavaObject {
 	 */
 	public istProjektKursBesondereLernleistung() : boolean {
 		return (GostBesondereLernleistung.PROJEKTKURS.is(this.abidaten.besondereLernleistung));
+	}
+
+	/**
+	 * Bestimmt die Fachbelegung des Faches mit der angegebenen ID
+	 * 
+	 * @param fach_id   die ID des Faches
+	 * 
+	 * @return die Fachbelegung oder null, falls keine vorhanden ist
+	 */
+	public getFachbelegungByID(fach_id : number) : AbiturFachbelegung | null {
+		let fachbelegungen : Vector<AbiturFachbelegung> = this.abidaten.fachbelegungen;
+		for (let fb of fachbelegungen) {
+			let fach : GostFach | null = this.getFach(fb);
+			if ((fach !== null) && (fach_id === fach.id)) 
+				return fb;
+		}
+		return null;
 	}
 
 	/**

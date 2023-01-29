@@ -74,6 +74,10 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 				this.data.dataLaufbahn.dataGostJahrgang = this.data.dataJahrgang;
 				this.data.dataLaufbahn.dataSchule = routeSchueler.data.schule;
 				await this.data.dataFachkombinationen.select(this.data.gostJahrgang);
+				// TODO: Dies ist nur ein temporärer Workaround, um das Setzen des Abiturdaten-Managers und die Durchführung der Belegprüfung zu triggern...
+				const tmp = this.data.dataLaufbahn.gostAktuelleBelegpruefungsart;
+				this.data.dataLaufbahn.gostAktuelleBelegpruefungsart = tmp;
+				// TODO Workaround Ende
 			}
 		}
 		return true;
@@ -86,6 +90,7 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
 			...routeSchueler.getProps(to),
+			jahrgangsdaten: this.data.dataJahrgang.daten,
 			dataLaufbahn: this.data.dataLaufbahn,
 			dataFaecher: this.data.dataFaecher,
 			dataFachkombinationen: this.data.dataFachkombinationen

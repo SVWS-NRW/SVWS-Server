@@ -15,26 +15,30 @@
 		{{ sprachenfolgeJahrgang }}
 	</td>
 	<template v-for="halbjahr in GostHalbjahr.values()" :key="halbjahr.id">
-		<s-laufbahnplanung-fach-halbjahr :abiturmanager="abiturmanager" :faechermanager="faechermanager"
+		<s-laufbahnplanung-fach-halbjahr :abiturmanager="abiturmanager" :faechermanager="faechermanager" :jahrgangsdaten="jahrgangsdaten" :manueller-modus="manuellerModus"
 			:fach="fach" :halbjahr="halbjahr" :wahl="wahlen[halbjahr.id]" :moeglich="istMoeglich(halbjahr)" :bewertet="bewertet[halbjahr.id]"
-			:fachkombi-erforderlich="fachkombi_erforderlich" :fachkombi-verboten="fachkombi_verboten" @click="onClick(halbjahr)" />
+			:fachkombi-erforderlich="fachkombi_erforderlich" :fachkombi-verboten="fachkombi_verboten" @update:wahl="onUpdateWahl" />
 	</template>
-	<s-laufbahnplanung-fach-halbjahr :abiturmanager="abiturmanager" :faechermanager="faechermanager"
-		:fach="fach" :wahl="abi_wahl" :moeglich="istMoeglich()" :bewertet="bewertet[GostHalbjahr.Q22.id]" @click="onClick()" />
+	<s-laufbahnplanung-fach-halbjahr :abiturmanager="abiturmanager" :faechermanager="faechermanager" :jahrgangsdaten="jahrgangsdaten" :manueller-modus="manuellerModus"
+		:fach="fach" :wahl="abi_wahl" :moeglich="istMoeglich()" :bewertet="bewertet[GostHalbjahr.Q22.id]" @update:wahl="onUpdateWahl" />
 </template>
 
 <script setup lang="ts">
 
 	import { computed, ComputedRef } from "vue";
 
-	import { AbiturdatenManager, AbiturFachbelegungHalbjahr, GostFach, GostFaecherManager, GostHalbjahr, GostJahrgangFachkombination, GostKursart, GostLaufbahnplanungFachkombinationTyp, List, Vector } from "@svws-nrw/svws-core-ts";
+	import { AbiturdatenManager, AbiturFachbelegungHalbjahr, Fachgruppe, GostFach, GostFaecherManager, GostHalbjahr,
+		GostJahrgangFachkombination, GostJahrgangsdaten, GostKursart, GostLaufbahnplanungFachkombinationTyp, GostSchriftlichkeit,
+		GostSchuelerFachwahl, Jahrgaenge, List, Vector, ZulaessigesFach } from "@svws-nrw/svws-core-ts";
 	import { DataSchuelerLaufbahnplanung } from "~/apps/schueler/DataSchuelerLaufbahnplanung";
 
 	const props = defineProps<{
 		abiturmanager: AbiturdatenManager;
 		faechermanager: GostFaecherManager;
+		jahrgangsdaten: GostJahrgangsdaten;
 		fach: GostFach,
 		fachkombinationen: List<GostJahrgangFachkombination>;
+		manuellerModus: boolean;
 		dataLaufbahn: DataSchuelerLaufbahnplanung
 	}>();
 
@@ -75,27 +79,52 @@
 		return result;
 	})
 
-	function onClick(halbjahr?: GostHalbjahr) {
-		if (halbjahr === undefined) {
-			props.dataLaufbahn.setAbiturWahl(props.fach);
-		} else if (halbjahr === GostHalbjahr.EF1) {
-			props.dataLaufbahn.setEF1Wahl(props.fach);
-		} else if (halbjahr === GostHalbjahr.EF2) {
-			props.dataLaufbahn.setEF2Wahl(props.fach);
-		} else if (halbjahr === GostHalbjahr.Q11) {
-			props.dataLaufbahn.setQ11Wahl(props.fach);
-		} else if (halbjahr === GostHalbjahr.Q12) {
-			props.dataLaufbahn.setQ12Wahl(props.fach);
-		} else if (halbjahr === GostHalbjahr.Q21) {
-			props.dataLaufbahn.setQ21Wahl(props.fach);
-		} else if (halbjahr === GostHalbjahr.Q22) {
-			props.dataLaufbahn.setQ22Wahl(props.fach);
-		}
+
+	function onUpdateWahl(wahl: GostSchuelerFachwahl) {
+		props.dataLaufbahn.setWahl(props.fach, wahl);
 	}
+
+
+	function getAbiGKMoeglich(): boolean {
+		const fachgruppe = ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getFachgruppe();
+		if (fachgruppe === Fachgruppe.FG_ME || fachgruppe === Fachgruppe.FG_VX || fachgruppe === Fachgruppe.FG_PX)
+			return false;
+		return props.fach.istMoeglichAbiGK;
+	}
+
+
+	function getAbiLKMoeglich(): boolean {
+		const fach = ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel);
+		const fachgruppe = fach.getFachgruppe();
+		if (fachgruppe === Fachgruppe.FG_ME || fachgruppe === Fachgruppe.FG_VX || fachgruppe === Fachgruppe.FG_PX
+			|| fach.getJahrgangAb() === Jahrgaenge.JG_EF || (props.fach.biliSprache === null && props.fach.biliSprache === "D"))
+			return false;
+		return props.fach.istMoeglichAbiLK;
+	}
+
+
+	function getAbiMoeglich(): boolean {
+		const fachbelegung = props.abiturmanager.getFachbelegungByID(props.fach.id);
+		if (!fachbelegung?.letzteKursart)
+			return false;
+		switch (GostKursart.fromKuerzel(fachbelegung.letzteKursart)) {
+			case GostKursart.LK:
+				return getAbiLKMoeglich();
+			case GostKursart.GK: {
+				if (!props.abiturmanager.pruefeBelegungMitKursart(fachbelegung, GostKursart.GK, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22))
+					return false;
+				if (!props.abiturmanager.pruefeBelegungMitSchriftlichkeit(fachbelegung, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21))
+					return false;
+				return getAbiGKMoeglich();
+			}
+		}
+		return false;
+	}
+
 
 	function istMoeglich(halbjahr?: GostHalbjahr) {
 		if (halbjahr === undefined) {
-			return props.dataLaufbahn.getAbiMoeglich(props.fach);
+			return getAbiMoeglich();
 		} else if (halbjahr === GostHalbjahr.EF1) {
 			return props.dataLaufbahn.getEF1Moeglich(props.fach);
 		} else if (halbjahr === GostHalbjahr.EF2) {
