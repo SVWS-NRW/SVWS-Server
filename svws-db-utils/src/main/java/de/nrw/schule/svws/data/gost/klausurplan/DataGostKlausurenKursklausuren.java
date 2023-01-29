@@ -3,16 +3,20 @@ package de.nrw.schule.svws.data.gost.klausurplan;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Vector;
 import java.util.stream.Collectors;
 
 import de.nrw.schule.svws.core.data.gost.klausuren.GostKursklausur;
 import de.nrw.schule.svws.core.types.gost.GostHalbjahr;
 import de.nrw.schule.svws.data.DataManager;
+import de.nrw.schule.svws.data.JSONMapper;
 import de.nrw.schule.svws.db.DBEntityManager;
 import de.nrw.schule.svws.db.dto.current.gost.klausurplanung.DTOGostKlausurenKursklausuren;
 import de.nrw.schule.svws.db.dto.current.gost.klausurplanung.DTOGostKlausurenSchuelerklausuren;
 import de.nrw.schule.svws.db.dto.current.gost.klausurplanung.DTOGostKlausurenVorgaben;
+import de.nrw.schule.svws.db.utils.OperationError;
+import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -117,9 +121,56 @@ public class DataGostKlausurenKursklausuren extends DataManager<Long> {
 
 	@Override
 	public Response patch(Long id, InputStream is) {
-		throw new UnsupportedOperationException();
+    	Map<String, Object> map = JSONMapper.toMap(is);
+    	if (map.size() > 0) {
+    		try {
+    			conn.transactionBegin();
+    			DTOGostKlausurenKursklausuren kursklausur = conn.queryByKey(DTOGostKlausurenKursklausuren.class, id);
+		    	if (kursklausur == null)
+		    		throw OperationError.NOT_FOUND.exception();
+		    	for (Entry<String, Object> entry : map.entrySet()) {
+		    		String key = entry.getKey();
+		    		Object value = entry.getValue();
+		    		switch (key) {
+						case "id" -> {
+							Long patch_id = JSONMapper.convertToLong(value, true);
+							if ((patch_id == null) || (patch_id.longValue() != id.longValue()))
+								throw OperationError.BAD_REQUEST.exception();
+						}
+						case "idVorgabe" -> {
+							long patch_vorgabeid = JSONMapper.convertToLong(value, false);
+							if ((patch_vorgabeid != kursklausur.Vorgabe_ID))
+								throw OperationError.BAD_REQUEST.exception();
+						}
+						case "idKurs" -> {
+							long patch_kursid = JSONMapper.convertToLong(value, false);
+							if ((patch_kursid != kursklausur.Kurs_ID))
+								throw OperationError.BAD_REQUEST.exception();
+						}
+						case "idTermin" -> kursklausur.Termin_ID = JSONMapper.convertToLong(value, true);
+						case "startzeit" -> kursklausur.Startzeit = JSONMapper.convertToString(value, true, false);
+						
+						// TODO Was ist mit anderen Attributen, falls sie im InputStream vorkommen?
+		    			
+		    			default -> throw OperationError.BAD_REQUEST.exception();
+		    		}
+		    	}
+		    	conn.transactionPersist(kursklausur);
+		    	if (!conn.transactionCommit()) {
+			    	// TODO so richtig? Fremdschlüsselbedingung schlägt fehl
+		    		throw OperationError.CONFLICT.exception();
+		    	}
+    		} catch (Exception e) {
+    			if (e instanceof WebApplicationException webAppException)
+    				return webAppException.getResponse();
+				return OperationError.INTERNAL_SERVER_ERROR.getResponse();
+    		} finally {
+    			// Perform a rollback if necessary
+    			conn.transactionRollback();
+    		}
+    	}
+    	return Response.status(Status.OK).build();
 	}
-
 	@Override
 	public Response getList() {
 		throw new UnsupportedOperationException();

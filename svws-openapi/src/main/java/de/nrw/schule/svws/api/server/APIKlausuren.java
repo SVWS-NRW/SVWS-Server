@@ -136,11 +136,11 @@ public class APIKlausuren {
 	@PATCH
 	@Path("/termine/{id : \\d+}")
 	@Operation(summary = "Patcht einen Gost-Klausurtermin.", description = "Patcht einen Gost-Klausurtermin."
-			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Gost-Klausurtermins " + "besitzt.")
-	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich in die Schülerstammdaten integriert.")
+			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Patchen eines Gost-Klausurtermins besitzt.")
+	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich in den Klausurtermin integriert.")
 	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schülerdaten zu ändern.")
-	@ApiResponse(responseCode = "404", description = "Kein Schüler-Eintrag mit der angegebenen ID gefunden")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Klausurtermine zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Kein Klausurtermin-Eintrag mit der angegebenen ID gefunden")
 	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response patchKlausurtermin(@PathParam("schema") String schema, @PathParam("id") long id,
@@ -148,6 +148,35 @@ public class APIKlausuren {
 			@Context HttpServletRequest request) {
 		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN)) {
 			return (new DataGostKlausurenTermine(conn, -1).patch(id, is));
+		}
+	}
+	
+	/**
+	 * Die OpenAPI-Methode für das Patchen der Daten einer Gost-Kursklausur.
+	 * 
+	 * @param schema     das Datenbankschema, auf welches der Patch ausgeführt
+	 *                   werden soll
+	 * @param request    die Informationen zur HTTP-Anfrage
+	 * @param id		 die ID der Kursklausur
+	 * @param is         JSON-Objekt mit den Daten
+	 * 
+	 * @return das Ergebnis der Patch-Operation
+	 */
+	@PATCH
+	@Path("/kursklausuren/{id : \\d+}")
+	@Operation(summary = "Patcht einen Gost-Kursklausur.", description = "Patcht einen Gost-Kursklausur."
+			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Patchen einer Gost-Kursklausur besitzt.")
+	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich in die Kursklausur integriert.")
+	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Kursklausuren zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Kein Kursklausur-Eintrag mit der angegebenen ID gefunden")
+	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response patchKursklausur(@PathParam("schema") String schema, @PathParam("id") long id,
+			@RequestBody(description = "Der Patch für die Kursklausur-Daten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostKursklausur.class))) InputStream is,
+			@Context HttpServletRequest request) {
+		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN)) {
+			return (new DataGostKlausurenKursklausuren(conn, -1).patch(id, is));
 		}
 	}
 
