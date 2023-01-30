@@ -109,6 +109,11 @@ export class RouteGostKursplanungHalbjahr extends RouteNode<RouteDataGostKurspla
 		}
 	}
 
+	public async leave(from: RouteNode<unknown, any>, from_params: RouteParams): Promise<void> {
+		this.data.listBlockungen.ausgewaehlt = undefined;
+		await this.data.dataKursblockung.unselect();
+	}
+
 	public getRoute(abiturjahr: number | undefined, halbjahr: number | undefined, idblockung: number | undefined) : RouteLocationRaw {
 		if ((abiturjahr === undefined) || (halbjahr === undefined))
 			throw new Error("Abiturjahr und Halbjahr müssen für diese Route definiert sein.");

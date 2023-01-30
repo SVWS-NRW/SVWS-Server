@@ -118,6 +118,11 @@ export class RouteGostKursplanungBlockung extends RouteNode<RouteDataGostKurspla
 			return routeGostKursplanungSchueler.getRoute(abiturjahr, halbjahr.id, ergebnisEintrag.blockungID, ergebnisEintrag.id, undefined);
 	}
 
+	public async leave(from: RouteNode<unknown, any>, from_params: RouteParams): Promise<void> {
+		this.data.ergebnis.value = undefined;
+		await this.data.dataKursblockungsergebnis.unselect();
+	}
+
 	public getRoute(abiturjahr: number | undefined, halbjahr: number | undefined, idblockung: number | undefined, idergebnis: number | undefined) : RouteLocationRaw {
 		if ((abiturjahr === undefined) || (halbjahr === undefined) || (idblockung === undefined))
 			throw new Error("Abiturjahr, Halbjahr und die ID der Blockung müssen für diese Route definiert sein.");
