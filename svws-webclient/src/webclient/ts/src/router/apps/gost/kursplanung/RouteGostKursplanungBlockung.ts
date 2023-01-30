@@ -100,8 +100,7 @@ export class RouteGostKursplanungBlockung extends RouteNode<RouteDataGostKurspla
 			return;
 		}
 		// ... bestimme den Listen-Eintrag zu dem Ergebnis
-		const ergebnisEintrag = (routeGostKursplanungHalbjahr.data.dataKursblockung.daten?.ergebnisse.toArray() as GostBlockungsergebnisListeneintrag[])
-			.find(e => e.id === idErgebnis);
+		const ergebnisEintrag = (routeGostKursplanungHalbjahr.data.dataKursblockung.ergebnisse().toArray() as GostBlockungsergebnisListeneintrag[]).find(e => e.id === idErgebnis);
 		if (ergebnisEintrag === undefined)
 			throw new Error("Programmierfehler: Ein Eintrag für die Ergebnis-ID als Parameter der Route muss an dieser Stelle vorhanden sein.");
 		// ... wurde die ID des Ergebnisses verändert, so lade das neue Ergebnis aus der Datenbank

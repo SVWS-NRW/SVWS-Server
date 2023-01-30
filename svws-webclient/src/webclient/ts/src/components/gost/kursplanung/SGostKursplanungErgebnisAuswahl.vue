@@ -126,7 +126,7 @@
 			return;
 		await App.api.dupliziereGostBlockungMitErgebnis(App.schema, selected_ergebnis.value.id);
 		const abiturjahr = props.jahrgangsdaten.daten?.abiturjahr ?? -1;
-		await props.listBlockungen.update_list(abiturjahr, props.halbjahr.value, true);
+		await props.listBlockungen.update_list(abiturjahr, props.halbjahr.value);
 	}
 
 	function color1(ergebnis: GostBlockungsergebnisListeneintrag): string {

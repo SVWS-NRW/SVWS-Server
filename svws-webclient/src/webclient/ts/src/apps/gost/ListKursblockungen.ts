@@ -19,25 +19,10 @@ export class ListKursblockungen extends BaseList<GostBlockungListeneintrag> {
 		return this._halbjahr;
 	}
 
-	public async update_list(abiturjahr: number, halbjahr: GostHalbjahr, neue_blockung?: boolean): Promise<void> {
+	public async update_list(abiturjahr: number, halbjahr: GostHalbjahr): Promise<void> {
 		this._abiturjahr = abiturjahr;
 		this._halbjahr = halbjahr;
-		const id = this.ausgewaehlt?.id;
 		await super._update_list(async () => App.api.getGostAbiturjahrgangBlockungsliste(App.schema, abiturjahr, halbjahr.id));
-		let blockung: GostBlockungListeneintrag = (neue_blockung)
-			? this.liste[this.liste.length - 1]
-			: this.liste.find(e => e.id === id) || this.liste[this.liste.length - 1];
-		if (this.liste.length > 0) {
-			for (const b of this.liste) {
-				if (b.istAktiv) {
-					blockung = b;
-					break;
-				}
-			}
-			this.ausgewaehlt = blockung;
-		} else {
-			this.ausgewaehlt = undefined;
-		}
 	}
 
 	/**

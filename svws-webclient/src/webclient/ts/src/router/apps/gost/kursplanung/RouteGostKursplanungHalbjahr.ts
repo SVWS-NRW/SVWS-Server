@@ -76,8 +76,10 @@ export class RouteGostKursplanungHalbjahr extends RouteNode<RouteDataGostKurspla
 		const idBlockung = to_params.idblockung === undefined ? undefined : parseInt(to_params.idblockung as string);
 		// ... wurde die ID der Blockung auf undefined setzt, so prüfe, ob die Blockungsliste leer ist und wähle ggf. das erste Element aus
 		if (idBlockung === undefined) {
-			if ((idBlockung === undefined) && (this.data.listBlockungen.liste.length > 0))
-				return this.getRoute(abiturjahr, halbjahr.id, this.data.listBlockungen.liste.at(0)?.id);
+			if ((idBlockung === undefined) && (this.data.listBlockungen.liste.length > 0)) {
+				const blockungsEintrag = this.data.listBlockungen.liste[0];
+				return this.getRoute(abiturjahr, halbjahr.id, blockungsEintrag.id);
+			}
 			if (this.data.listBlockungen.ausgewaehlt !== undefined) {
 				await this.data.dataKursblockung.unselect();
 				this.data.listBlockungen.ausgewaehlt = undefined;
