@@ -134,7 +134,7 @@
 		},
 		set(val: boolean | undefined) {
 			const data = props.listSchuelerbetriebe.ausgewaehlt as SchuelerBetriebsdaten;
-			data.praktikum = Boolean(val);
+			data.praktikum = val ?? null;
 			if (data?.id == null)
 				return;
 			void App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id);
@@ -174,7 +174,7 @@
 		},
 		set(val: boolean | undefined) {
 			const data = props.listSchuelerbetriebe?.ausgewaehlt as SchuelerBetriebsdaten;
-			data.allgadranschreiben = Boolean(val);
+			data.allgadranschreiben = val ?? null;
 			if (data?.id == null)
 				return;
 			void App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id);

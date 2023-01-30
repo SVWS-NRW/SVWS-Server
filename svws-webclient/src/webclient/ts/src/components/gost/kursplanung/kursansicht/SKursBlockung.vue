@@ -223,7 +223,7 @@
 			const k = props.blockung.datenmanager?.getKurs(props.kurs.id)
 			if (!k)
 				return;
-			props.blockung.patch_kurs(k.id, { istKoopKurs: Boolean(value) })
+			props.blockung.patch_kurs(k.id, { istKoopKurs: value })
 				.then(() => k.istKoopKurs = value)
 				.catch(error => { throw error });
 		}

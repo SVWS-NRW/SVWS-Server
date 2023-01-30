@@ -248,7 +248,7 @@
 		set: (value) => {
 			if (props.listSchuelerbetriebe?.ausgewaehlt) {
 				const data = props.listSchuelerbetriebe.ausgewaehlt as SchuelerBetriebsdaten;
-				data.allgadranschreiben = Boolean(value);
+				data.allgadranschreiben = value ?? null;
 				if ((!data) || (!data.id))
 					return;
 				void App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id);

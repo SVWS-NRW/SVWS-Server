@@ -54,7 +54,7 @@
 
 	const props = defineProps<{
 		schueler: SchuelerListeEintrag;
-		selected: Boolean;
+		selected: boolean;
 		blockung: DataGostKursblockung;
 		listSchueler: ListAbiturjahrgangSchueler;
 	}>();
