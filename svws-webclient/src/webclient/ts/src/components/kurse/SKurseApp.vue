@@ -4,7 +4,7 @@
 			<div class="flex items-center">
 				<span class="inline-block mr-3">{{ kuerzel }}</span>
 				<svws-ui-badge type="light" title="ID">
-					<i-ri-fingerprint-line/>
+					<i-ri-fingerprint-line />
 					{{ item.value?.id }}
 				</svws-ui-badge>
 			</div>
@@ -36,13 +36,13 @@
 		listJahrgaenge: ListJahrgaenge;
 		mapJahrgaenge: Map<Number, JahrgangsListeEintrag>;
 		listLehrer: ListLehrer;
-		mapLehrer: Map<Number, LehrerListeEintrag>;
+		mapLehrer: Map<number, LehrerListeEintrag>;
 	}>();
 
 	const selectedRoute = routeKurse.childRouteSelector;
 	const children_hidden = routeKurse.children_hidden();
 
-	const kuerzel: ComputedRef<string> = computed(() => props.item.value?.kuerzel.toString() || "");
+	const kuerzel: ComputedRef<string> = computed(() => props.item.value?.kuerzel ?? "");
 
 	const inputFachlehrer: ComputedRef<string> = computed(() => {
 		const id = routeKurse.liste.ausgewaehlt?.lehrer;
@@ -50,7 +50,7 @@
 		if (!id)
 			return leer;
 		const lehrer = props.mapLehrer.get(id);
-		return lehrer?.kuerzel.toString() || leer;
+		return lehrer?.kuerzel ?? leer;
 	});
 
 	const visible: ComputedRef<boolean> = computed(() => {

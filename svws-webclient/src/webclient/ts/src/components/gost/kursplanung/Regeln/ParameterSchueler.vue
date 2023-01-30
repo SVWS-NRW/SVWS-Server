@@ -33,7 +33,7 @@
 
 	const sort = (a: SchuelerListeEintrag, b: SchuelerListeEintrag) => {
 		if (a.nachname && b.nachname) {
-			return a.nachname.localeCompare(b.nachname.toString());
+			return a.nachname.localeCompare(b.nachname);
 		} else if (a.nachname && !b.nachname) {
 			return -1;
 		} else if (!a.nachname && !b.nachname) {

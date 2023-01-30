@@ -37,7 +37,7 @@
 	});
 
 	const inputZuzugsjahr: WritableComputedRef<string | undefined> = computed({
-		get: () => daten.value.zuzugsjahr?.toString(),
+		get: () => daten.value.zuzugsjahr ?? undefined,
 		set: (value) => void props.stammdaten.patch({ zuzugsjahr: value })
 	});
 

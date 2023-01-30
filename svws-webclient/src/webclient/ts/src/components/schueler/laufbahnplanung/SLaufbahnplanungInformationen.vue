@@ -6,7 +6,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr v-for="fehler in belegungsHinweise" :key="fehler.code.toString()" class="border border-[#7f7f7f]/20 text-left">
+			<tr v-for="fehler in belegungsHinweise" :key="fehler.code" class="border border-[#7f7f7f]/20 text-left">
 				<td class="px-2"> {{ fehler.beschreibung }} </td>
 			</tr>
 			<tr v-if="!belegungsHinweise.size()">

@@ -98,8 +98,8 @@ export class DataBenutzergruppe extends BaseData<BenutzergruppeDaten, Benutzergr
 	 * @param kompetenz   die hinzuzufügende Kompetenz
 	 */
 	public async addKompetenz(kompetenz : BenutzerKompetenz) : Promise<boolean> {
-		const kid:Vector<Number> = new Vector<Number>();
-		kid.add(Number(kompetenz.daten.id));
+		const kid = new Vector<number>();
+		kid.add(kompetenz.daten.id);
 		if (!this.manager)
 			return false;
 		if (this.manager.hatKompetenz(kompetenz))
@@ -115,8 +115,8 @@ export class DataBenutzergruppe extends BaseData<BenutzergruppeDaten, Benutzergr
 	 * @param kompetenz   die zu entfernende Kompetenz
 	 */
 	 public async removeKompetenz(kompetenz : BenutzerKompetenz) : Promise<boolean> {
-		const kid:Vector<Number> = new Vector<Number>();
-		kid.add(Number(kompetenz.daten.id));
+		const kid = new Vector<number>();
+		kid.add(kompetenz.daten.id);
 		if (!this.manager)
 			return false;
 		if (!this.manager.hatKompetenz(kompetenz))
@@ -132,12 +132,12 @@ export class DataBenutzergruppe extends BaseData<BenutzergruppeDaten, Benutzergr
 	 * @param kompetenzgruppe   die Kompetenzgruppe, deren Kompetenzen hinzugefügt werden.
 	 */
 	 public async addBenutzerKompetenzGruppe(kompetenzgruppe : BenutzerKompetenzGruppe) : Promise<boolean> {
-		const kids : Vector<Number> = new Vector<Number>();
+		const kids  = new Vector<number>();
 		if (!this.manager)
 			return false;
 		if (!this.manager.istAdmin()) {
 			for (const komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe)) {
-				kids.add(Number(komp.daten.id));
+				kids.add(komp.daten.id);
 			}
 			await App.api.addBenutzergruppeKompetenzen(kids,App.schema,this.manager.getID());
 			const benutzergruppendaten = await App.api.getBenutzergruppeDaten(App.schema, this.manager.getID())
@@ -155,12 +155,12 @@ export class DataBenutzergruppe extends BaseData<BenutzergruppeDaten, Benutzergr
 	 * @param kompetenzgruppe   die Kompetenzgruppe, deren Kompetenzen entfernt werden.
 	 */
 	 public async removeBenutzerKompetenzGruppe(kompetenzgruppe : BenutzerKompetenzGruppe) : Promise<boolean> {
-		const kids : Vector<Number> = new Vector<Number>();
+		const kids = new Vector<number>();
 		if (!this.manager)
 			return false;
 		if (!this.manager.istAdmin()) {
 			for (const komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe))
-				kids.add(Number(komp.daten.id));
+				kids.add(komp.daten.id);
 			await App.api.removeBenutzergruppeKompetenzen(kids,App.schema,this.manager.getID());
 			for (const komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe)) {
 				if (this.manager?.hatKompetenz(komp))
@@ -176,26 +176,26 @@ export class DataBenutzergruppe extends BaseData<BenutzergruppeDaten, Benutzergr
 	 * @param istAdmin    True, wenn die neue Benutzrgruppe administrativ ist.
 	 */
 	public async create( bezeichnung : string, istAdmin : boolean){
-		const bg : BenutzergruppeDaten = new BenutzergruppeDaten();
+		const bg = new BenutzergruppeDaten();
 		bg.bezeichnung = bezeichnung;
 		bg.istAdmin = istAdmin;
 		const result = await App.api.createBenutzergruppe(bg,App.schema);
-		const bgle: BenutzergruppeListeEintrag = new BenutzergruppeListeEintrag();
+		const bgle = new BenutzergruppeListeEintrag();
 		bgle.id = result.id;
 		bgle.bezeichnung = result.bezeichnung;
 		bgle.istAdmin = result.istAdmin;
 		App.apps.benutzergruppe.auswahl.liste.push(bgle);
 		App.apps.benutzergruppe.auswahl.ausgewaehlt = result;
-		router.push("/schule/benutzerverwaltung/"+bgle.id+"/benutzergruppe");
+		await router.push("/schule/benutzerverwaltung/"+bgle.id+"/benutzergruppe");
 	}
 
 	/**
 	 * Entfernt die ausgewählten Benutzergruppen
 	 */
 	public async deleteBenutzergruppe_n(){
-		const benutzer : BenutzergruppeListeEintrag[] = App.apps.benutzergruppe.auswahl.ausgewaehlt_gruppe;
+		const benutzer = App.apps.benutzergruppe.auswahl.ausgewaehlt_gruppe;
 		console.log(benutzer);
-		const bids : Vector<Number> = new Vector<Number>();
+		const bids = new Vector<number>();
 		for ( const b of benutzer){
 			bids.add(b.id)
 		}
@@ -206,7 +206,7 @@ export class DataBenutzergruppe extends BaseData<BenutzergruppeDaten, Benutzergr
 			App.apps.benutzergruppe.auswahl.liste = App.apps.benutzergruppe.auswahl.liste.filter(item => item.id !== b.id);
 		}
 		alert("Benutzergruppe gelöscht!!!");
-		router.push({ name: routeSchuleBenutzergruppe.name});
+		await router.push({ name: routeSchuleBenutzergruppe.name});
 	}
 
 	/**
@@ -219,8 +219,8 @@ export class DataBenutzergruppe extends BaseData<BenutzergruppeDaten, Benutzergr
 	public async addBenutzergruppeBenutzer(benutzer: BenutzerListeEintrag): Promise<void> {
 		if (!this.manager)
 			return;
-		const b_ids:Vector<Number> = new Vector<Number>();
-		b_ids.add(Number(benutzer.id));
+		const b_ids = new Vector<number>();
+		b_ids.add(benutzer.id);
 		await App.api.addBenutzergruppeBenutzer(b_ids, App.schema,this.manager.getID()) as BenutzergruppeDaten;
 		App.apps.benutzergruppe.dataBenutzergruppe.listBenutzergruppenBenutzer.liste.push(benutzer);
 
@@ -236,8 +236,8 @@ export class DataBenutzergruppe extends BaseData<BenutzergruppeDaten, Benutzergr
 	public async removeBenutzergruppeBenutzer(benutzer: BenutzerListeEintrag): Promise<void> {
 		if (!this.manager)
 			return;
-		const bg_ids:Vector<Number> = new Vector<Number>();
-		bg_ids.add(Number(benutzer.id));
+		const bg_ids = new Vector<number>();
+		bg_ids.add(benutzer.id);
 		const result = await App.api.removeBenutzergruppeBenutzer(bg_ids, App.schema,this.manager.getID()) as BenutzergruppeDaten;
 		App.apps.benutzergruppe.dataBenutzergruppe.listBenutzergruppenBenutzer.liste = App.apps.benutzergruppe.dataBenutzergruppe.listBenutzergruppenBenutzer.liste.filter(item => item.id !== benutzer.id);
 	}

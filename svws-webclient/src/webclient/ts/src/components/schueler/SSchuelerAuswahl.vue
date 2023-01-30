@@ -112,7 +112,7 @@
 	const rows: ComputedRef<Array<any>> = computed(() => {
 		const array = listSchueler.value.gefiltert.map(e => ({
 			...e,
-			klasse: props.mapKlassen.get(e.idKlasse)?.kuerzel?.toString() || ""
+			klasse: props.mapKlassen.get(e.idKlasse)?.kuerzel ?? ""
 		}));
 		return array;
 	});
@@ -227,23 +227,23 @@
 
 	function text_status(status: SchuelerStatus): string {
 		if (status instanceof Array) return "";
-		return status.bezeichnung.toString();
+		return status.bezeichnung;
 	}
 
 	function text_klasse(klasse: KlassenListeEintrag): string {
-		return klasse.kuerzel?.toString() ?? "";
+		return klasse.kuerzel ?? "";
 	}
 
 	function text_jahrgang(jahrgang: JahrgangsListeEintrag): string {
-		return jahrgang.kuerzel?.toString() ?? "";
+		return jahrgang.kuerzel ?? "";
 	}
 
 	function text_kurs(kurs: KursListeEintrag): string {
-		return kurs.kuerzel.toString();
+		return kurs.kuerzel;
 	}
 
 	function text_schulgliederung(schulgliederung: Schulgliederung): string {
-		return schulgliederung.daten.kuerzel.toString();
+		return schulgliederung.daten.kuerzel;
 	}
 
 	const selectedItems: WritableComputedRef<SchuelerListeEintrag[]> = computed({

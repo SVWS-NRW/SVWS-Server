@@ -38,6 +38,6 @@ export class DataReligion extends BaseData<ReligionEintrag , ReligionEintrag> {
 		const daten = this._daten;
 		if (!daten)
 			return false;
-		return this._patch(data, () => App.api.patchReligion(data, App.schema, Number(daten.id)));
+		return this._patch(data, () => App.api.patchReligion(data, App.schema, daten.id));
 	}
 }

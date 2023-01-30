@@ -19,7 +19,7 @@
 						<th v-for="s in schienen" :key="s.id" class="text-center">
 							<div v-if="allow_regeln" class="flex justify-center">
 								<template v-if="s === edit_schienenname">
-									<svws-ui-text-input :model-value="s.bezeichnung.toString()" focus headless style="width: 6rem"
+									<svws-ui-text-input :model-value="s.bezeichnung" focus headless style="width: 6rem"
 										@blur="edit_schienenname=undefined"
 										@keyup.enter="edit_schienenname=undefined"
 										@keyup.escape="edit_schienenname=undefined"
@@ -93,26 +93,27 @@
 		</div>
 	</svws-ui-content-card>
 	<div class="hidden">
-	<svws-ui-modal ref="modal_aktivieren" size="small">
-		<template #modalTitle>Blockungsergebnis aktivieren</template>
-		<template #modalDescription>
-			Soll {{ blockung.daten?.name ? blockung.daten?.name : 'das Blockungsergebnis' }} aktiviert werden?
-		</template>
-		<template #modalActions>
-			<svws-ui-button type="secondary" @click="toggle_modal_aktivieren">Abbrechen</svws-ui-button>
-			<svws-ui-button type="primary" @click="activate_ergebnis">Ja</svws-ui-button>
-		</template>
-	</svws-ui-modal>
-	<svws-ui-modal ref="modal_hochschreiben" size="small">
-		<template #modalTitle>Blockungsergebnis hochschreiben</template>
-		<template #modalContent>
-			<p>Soll das Blockungsergebnis in das nächste Halbjahr ({{ blockung.datenmanager?.getHalbjahr().next()?.kuerzel }}) hochgeschrieben werden?</p>
-		</template>
-		<template #modalActions>
-			<svws-ui-button type="secondary" @click="toggle_modal_hochschreiben">Abbrechen</svws-ui-button>
-			<svws-ui-button @click="hochschreiben_ergebnis">Ja</svws-ui-button>
-		</template>
-	</svws-ui-modal></div>
+		<svws-ui-modal ref="modal_aktivieren" size="small">
+			<template #modalTitle>Blockungsergebnis aktivieren</template>
+			<template #modalDescription>
+				Soll {{ blockung.daten?.name ? blockung.daten?.name : 'das Blockungsergebnis' }} aktiviert werden?
+			</template>
+			<template #modalActions>
+				<svws-ui-button type="secondary" @click="toggle_modal_aktivieren">Abbrechen</svws-ui-button>
+				<svws-ui-button type="primary" @click="activate_ergebnis">Ja</svws-ui-button>
+			</template>
+		</svws-ui-modal>
+		<svws-ui-modal ref="modal_hochschreiben" size="small">
+			<template #modalTitle>Blockungsergebnis hochschreiben</template>
+			<template #modalContent>
+				<p>Soll das Blockungsergebnis in das nächste Halbjahr ({{ blockung.datenmanager?.getHalbjahr().next()?.kuerzel }}) hochgeschrieben werden?</p>
+			</template>
+			<template #modalActions>
+				<svws-ui-button type="secondary" @click="toggle_modal_hochschreiben">Abbrechen</svws-ui-button>
+				<svws-ui-button @click="hochschreiben_ergebnis">Ja</svws-ui-button>
+			</template>
+		</svws-ui-modal>
+	</div>
 </template>
 
 <script setup lang="ts">
@@ -140,7 +141,7 @@
 		blockung: DataGostKursblockung;
 		ergebnis: DataGostKursblockungsergebnis;
 		listLehrer: ListLehrer;
-		mapLehrer: Map<Number, LehrerListeEintrag>;
+		mapLehrer: Map<number, LehrerListeEintrag>;
 		fachwahlen: List<GostStatistikFachwahl>;
 	}>();
 
@@ -190,7 +191,7 @@
 		return manager.value?.getOfSchieneAnzahlSchuelerMitKollisionen(idSchiene) || 0;
 	}
 
-	async function patch_schiene(schiene: GostBlockungSchiene, bezeichnung: String) {
+	async function patch_schiene(schiene: GostBlockungSchiene, bezeichnung: string) {
 		schiene.bezeichnung = bezeichnung;
 		await props.blockung.patch_schiene(schiene);
 	}
@@ -241,7 +242,7 @@
 		if (abiturjahr === undefined)
 			throw new Error("Unerwarteter Fehler: Kein gültiger Abiturjahrgang ausgewählt.");
 		const result = await App.api.schreibeGostBlockungsErgebnisHoch(App.schema, props.ergebnis.daten.id);
-		await 	router.push({ name: routeGostKursplanungHalbjahr.name, params: { abiturjahr: abiturjahr, halbjahr: props.halbjahr.next()?.id || props.halbjahr.id, idblockung: result.id } });
+		await router.push({ name: routeGostKursplanungHalbjahr.name, params: { abiturjahr: abiturjahr, halbjahr: props.halbjahr.next()?.id || props.halbjahr.id, idblockung: result.id } });
 	}
 
 </script>

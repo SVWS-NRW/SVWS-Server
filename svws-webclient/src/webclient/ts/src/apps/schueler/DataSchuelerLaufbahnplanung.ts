@@ -268,7 +268,7 @@ export class DataSchuelerLaufbahnplanung extends BaseData<Abiturdaten, SchuelerL
 					return "";
 				const kursart = GostKursart.fromKuerzel(b.kursartKuerzel);
 				if (!kursart)
-					return b.kursartKuerzel.toString() || "";
+					return b.kursartKuerzel;
 				switch (kursart) {
 				case GostKursart.ZK:
 				case GostKursart.LK:

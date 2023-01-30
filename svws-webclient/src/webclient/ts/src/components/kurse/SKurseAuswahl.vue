@@ -31,7 +31,7 @@
 		listJahrgaenge: ListJahrgaenge;
 		mapJahrgaenge: Map<Number, JahrgangsListeEintrag>;
 		listLehrer: ListLehrer;
-		mapLehrer: Map<Number, LehrerListeEintrag>;
+		mapLehrer: Map<number, LehrerListeEintrag>;
 	}>();
 
 	const selected = routeKurse.auswahl;
@@ -48,7 +48,7 @@
 		return routeKurse.liste.liste.map((e: KursListeEintrag) => ({
 			...e,
 			lehrer_name: props.listLehrer.liste.find(l => l.id === e.lehrer)?.kuerzel || "",
-			jahrgang: props.listJahrgaenge.liste.find(j => e.idJahrgaenge.toArray(new Array<number>()).includes(j.id))?.kuerzel?.toString() || ""
+			jahrgang: props.listJahrgaenge.liste.find(j => e.idJahrgaenge.toArray(new Array<number>()).includes(j.id))?.kuerzel ?? ""
 		}));
 	});
 

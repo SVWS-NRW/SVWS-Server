@@ -11,7 +11,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr v-for="fehler in belegungsfehler" :key="fehler.code.toString()" class="border border-[#7f7f7f]/20 text-left">
+			<tr v-for="fehler in belegungsfehler" :key="fehler.code" class="border border-[#7f7f7f]/20 text-left">
 				<td v-if="belegungsfehler.size()" class="px-2"> {{ fehler.beschreibung }} </td>
 			</tr>
 			<tr v-if="!belegungsfehler.size()">

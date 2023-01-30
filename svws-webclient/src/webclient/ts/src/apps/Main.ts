@@ -178,8 +178,8 @@ export class Main {
 		try {
 			this.api_schema = new ApiSchema(this.hostname, username, password);
 			// const result = await this.api.isAlive();
-			if (!this.config.dbSchema?.name) return
-			const result = await this.api_schema.revision(this.config.dbSchema?.name.toString())
+			if (this.config.dbSchema?.name == undefined) return
+			const result = await this.api_schema.revision(this.config.dbSchema.name)
 			// TODO verwende revision für Client Check
 			console.log(`DB-Revision: ${result}`);
 			this.username = username;

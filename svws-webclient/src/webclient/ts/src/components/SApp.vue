@@ -53,7 +53,7 @@
 	import { RouteNode } from "~/router/RouteNode";
 
 	onErrorCaptured((e)=>{
-		error_message.value = e.message.toString();
+		error_message.value = e.message;
 	});
 
 	const error_message: Ref<undefined|string> = ref(undefined);
@@ -71,7 +71,7 @@
 
 	const schulname: ComputedRef<string> = computed(() => {
 		const name = appSchule.value.schuleStammdaten.daten?.bezeichnung1;
-		return name ? name.toString() : "fehlende Bezeichnung";
+		return name ? name : "fehlende Bezeichnung";
 	});
 
 	const minDelayReached = ref(false);

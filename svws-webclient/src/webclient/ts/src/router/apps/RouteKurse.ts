@@ -15,7 +15,7 @@ export class RouteDataKurse {
 	listJahrgaenge: ListJahrgaenge = new ListJahrgaenge();
 	mapJahrgaenge: Map<Number, JahrgangsListeEintrag> = new Map();
 	listLehrer: ListLehrer = new ListLehrer();
-	mapLehrer: Map<Number, LehrerListeEintrag> = new Map();
+	mapLehrer: Map<number, LehrerListeEintrag> = new Map();
 }
 
 const SKurseAuswahl = () => import("~/components/kurse/SKurseAuswahl.vue")

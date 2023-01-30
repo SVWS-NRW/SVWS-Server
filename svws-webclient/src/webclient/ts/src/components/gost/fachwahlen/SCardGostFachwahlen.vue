@@ -302,7 +302,7 @@
 	const waehlbarAusgewaehlt = ref("\u2705");
 	const waehlbarNichtAusgewaehlt = ref("\u274C");
 
-	const bezeichnung: ComputedRef<string | undefined> = computed(() => props.item.value?.bezeichnung?.toString());
+	const bezeichnung: ComputedRef<string | undefined> = computed(() => props.item.value?.bezeichnung ?? undefined);
 
 	const rows: ComputedRef<GostStatistikFachwahl[]> = computed(() => props.fachwahlen.toArray() as GostStatistikFachwahl[]);
 

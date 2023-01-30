@@ -2,11 +2,11 @@
 	<svws-ui-content-card title="Staatsangehörigkeit und Konfession">
 		<div class="input-wrapper">
 			<svws-ui-multi-select v-model="inputStaatsangehoerigkeit" title="1. Staatsangehörigkeit"
-				:items="Nationalitaeten.values()" :item-text="(i: Nationalitaeten) => i.daten.staatsangehoerigkeit.toString()"
+				:items="Nationalitaeten.values()" :item-text="(i: Nationalitaeten) => i.daten.staatsangehoerigkeit"
 				:item-sort="staatsangehoerigkeitKatalogEintragSort" :item-filter="staatsangehoerigkeitKatalogEintragFilter"
 				required />
 			<svws-ui-multi-select v-model="inputStaatsangehoerigkeit2" title="2. Staatsangehörigkeit"
-				:items="Nationalitaeten.values()" :item-text="(i: Nationalitaeten) => i.daten.staatsangehoerigkeit.toString()"
+				:items="Nationalitaeten.values()" :item-text="(i: Nationalitaeten) => i.daten.staatsangehoerigkeit"
 				:item-sort="staatsangehoerigkeitKatalogEintragSort" :item-filter="staatsangehoerigkeitKatalogEintragFilter" />
 			<svws-ui-multi-select v-model="inputReligionID" title="Konfession" :items="inputKatalogReligionen" required />
 			<svws-ui-checkbox v-model="inputDruckeKonfessionAufZeugnisse">Konfession aufs Zeugnis</svws-ui-checkbox>
@@ -50,12 +50,12 @@
 	});
 
 	const inputReligionabmeldung: WritableComputedRef<string | undefined> = computed({
-		get: () => daten.value.religionabmeldung?.toString(),
+		get: () => daten.value.religionabmeldung ?? undefined,
 		set: (value) => void props.stammdaten.patch({ religionabmeldung: value })
 	});
 
 	const inputReligionanmeldung: WritableComputedRef<string | undefined> = computed({
-		get: () => daten.value.religionanmeldung?.toString(),
+		get: () => daten.value.religionanmeldung ?? undefined,
 		set: (value) => void props.stammdaten.patch({ religionanmeldung: value })
 	});
 

@@ -32,17 +32,17 @@
 	const { vorname, alleVornamen, nachname, zusatzNachname, geschlecht } = use;
 
 	const inputGeburtsdatum: WritableComputedRef<string | undefined> = computed({
-		get: () => daten.value.geburtsdatum?.toString(),
+		get: () => daten.value.geburtsdatum ?? undefined,
 		set: (value) => void props.stammdaten.patch({ geburtsdatum: value })
 	});
 
 	const inputGeburtsort: WritableComputedRef<string | undefined> = computed({
-		get: () => daten.value.geburtsort?.toString(),
+		get: () => daten.value.geburtsort ?? undefined,
 		set: (value) => void props.stammdaten.patch({ geburtsort: value })
 	});
 
 	const inputGeburtsname: WritableComputedRef<string | undefined> = computed({
-		get: () => daten.value.geburtsname?.toString(),
+		get: () => daten.value.geburtsname ?? undefined,
 		set: (value) => void props.stammdaten.patch({ geburtsname: value })
 	});
 

@@ -29,7 +29,7 @@
 		dataFaecher: DataGostFaecher;
 		blockung: DataGostKursblockung;
 		listLehrer: ListLehrer;
-		mapLehrer: Map<Number, LehrerListeEintrag>;
+		mapLehrer: Map<number, LehrerListeEintrag>;
 	}>();
 
 	const new_kurs_lehrer: Ref<boolean> = ref(false);

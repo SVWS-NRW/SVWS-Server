@@ -1,26 +1,14 @@
-import {
-	Erzieherart,
-	KatalogEintrag,
-	LehrerListeEintrag,
-	List,
-	Nationalitaeten,
-	OrtKatalogEintrag,
-	OrtsteilKatalogEintrag,
-	Verkehrssprache
-} from "@svws-nrw/svws-core-ts";
+import { Erzieherart, KatalogEintrag, LehrerListeEintrag, Nationalitaeten, OrtKatalogEintrag, OrtsteilKatalogEintrag, Verkehrssprache } from "@svws-nrw/svws-core-ts";
 
 /** Die Sortierfunktion für den Ortskatalog */
 export const orte_sort = (a: OrtKatalogEintrag, b: OrtKatalogEintrag): number => {
 	if (a.ortsname == null) return -1;
 	if (b.ortsname == null) return 1;
-	return a.ortsname.localeCompare(String(b.ortsname), "de-DE");
+	return a.ortsname.localeCompare(b.ortsname, "de-DE");
 };
 
 /** Der Filter für Ortsteile */
-export const orte_filter = (
-	items: OrtKatalogEintrag[],
-	search: string
-): OrtKatalogEintrag[] => {
+export const orte_filter = (items: OrtKatalogEintrag[], search: string): OrtKatalogEintrag[] => {
 	// Teilmatch PLZ
 	const plzmatch = search.match(/\d+/);
 	const plz = plzmatch ? plzmatch[0] : undefined;
@@ -61,10 +49,7 @@ export const orte_filter = (
 };
 
 /** Filter für Staatsangehörigkeiten */
-export const staatsangehoerigkeitKatalogEintragFilter = (
-	items: Nationalitaeten[],
-	search: string
-) => {
+export const staatsangehoerigkeitKatalogEintragFilter = (items: Nationalitaeten[], search: string) => {
 	return items.filter((i: Nationalitaeten) => {
 		if (i.daten.staatsangehoerigkeit) {
 			return (
@@ -81,14 +66,9 @@ export const staatsangehoerigkeitKatalogEintragFilter = (
 };
 
 /** Sortierfunktion für Staatsangehörigkeiten */
-export const staatsangehoerigkeitKatalogEintragSort = (
-	a: Nationalitaeten,
-	b: Nationalitaeten
-) => {
+export const staatsangehoerigkeitKatalogEintragSort = (a: Nationalitaeten, b: Nationalitaeten) => {
 	if (a.daten.staatsangehoerigkeit && b.daten.staatsangehoerigkeit) {
-		return a.daten.staatsangehoerigkeit.localeCompare(
-			b.daten.staatsangehoerigkeit.toString()
-		);
+		return a.daten.staatsangehoerigkeit.localeCompare( b.daten.staatsangehoerigkeit);
 	} else if (a.daten.staatsangehoerigkeit && !b.daten.staatsangehoerigkeit) {
 		return -1;
 	} else if (!a.daten.staatsangehoerigkeit && !b.daten.staatsangehoerigkeit) {
@@ -101,18 +81,14 @@ export const staatsangehoerigkeitKatalogEintragSort = (
 export const verkehrsspracheKatalogEintragFilter = (items: Verkehrssprache[], search: string) => {
 	if (!items.length)
 		return [];
-	return items.filter((i : Verkehrssprache) => {
-		return (
-			i.daten.kuerzel.toLocaleLowerCase().includes(search.toLocaleLowerCase()) ||
-			i.daten.bezeichnung.toLocaleLowerCase().includes(search.toLocaleLowerCase())
-		);
-	});
+	return items.filter((i : Verkehrssprache) => i.daten.kuerzel.toLocaleLowerCase().includes(search.toLocaleLowerCase())
+			|| i.daten.bezeichnung.toLocaleLowerCase().includes(search.toLocaleLowerCase())
+	)
 };
 
 /** Sortierfunktion für Sprachen */
-export const verkehrsspracheKatalogEintragSort = (a: Verkehrssprache, b: Verkehrssprache) => {
-	return a.daten.bezeichnung.localeCompare(b.daten.bezeichnung.toString());
-};
+export const verkehrsspracheKatalogEintragSort = (a: Verkehrssprache, b: Verkehrssprache) =>
+	a.daten.bezeichnung.localeCompare(b.daten.bezeichnung)
 
 /** Filter für Länder */
 export const nationalitaetenKatalogEintragFilter = (items: Nationalitaeten[], search: string) => {
@@ -127,16 +103,13 @@ export const nationalitaetenKatalogEintragFilter = (items: Nationalitaeten[], se
 };
 
 /** Sortierfunktion für Länder */
-export const nationalitaetenKatalogEintragSort = (a: Nationalitaeten, b: Nationalitaeten) => {
-	return a.daten.bezeichnung.localeCompare(b.daten.bezeichnung.toString());
-};
+export const nationalitaetenKatalogEintragSort = (a: Nationalitaeten, b: Nationalitaeten) =>
+	a.daten.bezeichnung.localeCompare(b.daten.bezeichnung);
 
-export const katalogEintragSort = (
-	a: KatalogEintrag | null,
-	b: KatalogEintrag | null
-) => {
+
+export const katalogEintragSort = (a: KatalogEintrag | null, b: KatalogEintrag | null) => {
 	if (a?.text && b?.text) {
-		return a?.text.localeCompare(b.text.toString());
+		return a?.text.localeCompare(b.text);
 	} else if (a && !b) {
 		return -1;
 	} else if (!a && !b) {
@@ -145,10 +118,7 @@ export const katalogEintragSort = (
 	return 0;
 };
 
-export const katalogEintragFilter = (
-	items: KatalogEintrag[] | undefined,
-	search: string
-) => {
+export const katalogEintragFilter = (items: KatalogEintrag[] | undefined, search: string) => {
 	return items?.filter((i: KatalogEintrag) => {
 		if (i.text && i.kuerzel) {
 			i.text.toLocaleLowerCase().includes(search.toLocaleLowerCase()) ||
@@ -160,12 +130,9 @@ export const katalogEintragFilter = (
 	});
 };
 
-export const ortsteilSort = (
-	a: OrtsteilKatalogEintrag,
-	b: OrtsteilKatalogEintrag
-) => {
+export const ortsteilSort = (a: OrtsteilKatalogEintrag, b: OrtsteilKatalogEintrag) => {
 	if (a.ortsteil && b.ortsteil) {
-		a.ortsteil.localeCompare(b.ortsteil.toString());
+		a.ortsteil.localeCompare(b.ortsteil);
 	} else if (a.ortsteil && !b.ortsteil) {
 		return -1;
 	} else if (!a.ortsteil && !b.ortsteil) {
@@ -185,7 +152,7 @@ export const ortsteilFilter = (items: OrtsteilKatalogEintrag[], search: string) 
 }
 export const erzieherArtSort = (a: Erzieherart, b: Erzieherart) => {
 	if (a.bezeichnung && b.bezeichnung) {
-		a.bezeichnung.localeCompare(b.bezeichnung.toString());
+		a.bezeichnung.localeCompare(b.bezeichnung);
 	} else if (a.bezeichnung && !b.bezeichnung) {
 		return -1;
 	} else if (!a.bezeichnung && !b.bezeichnung) {

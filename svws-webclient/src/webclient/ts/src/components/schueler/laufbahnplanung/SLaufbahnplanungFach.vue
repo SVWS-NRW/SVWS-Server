@@ -212,11 +212,11 @@
 			return ["", "", "", "", "", ""];
 		return fachbelegung.value.belegungen.map((b: AbiturFachbelegungHalbjahr | null) => {
 			b = b ? b : new AbiturFachbelegungHalbjahr();
-			if (!b.halbjahrKuerzel)
+			if (b.halbjahrKuerzel === undefined)
 				return "";
 			const kursart = GostKursart.fromKuerzel(b.kursartKuerzel);
 			if (!kursart)
-				return b.kursartKuerzel.toString() || "";
+				return b.kursartKuerzel;
 			switch (kursart) {
 				case GostKursart.ZK:
 				case GostKursart.LK:

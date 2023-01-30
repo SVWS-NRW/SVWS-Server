@@ -6,7 +6,7 @@
 				<svws-ui-text-input placeholder="Parallelität" v-model="parallelitaet" type="text" />
 				<svws-ui-text-input placeholder="Sortierung" v-model="inputSortierung" type="text" />
 				<svws-ui-multi-select title="Jahrgang" v-model="jahrgang" :items="listJahrgaenge.liste"
-					:item-text="(item: JahrgangsListeEintrag) => item.kuerzel?.toString() || ''" />
+					:item-text="(item: JahrgangsListeEintrag) => item.kuerzel ?? ''" />
 				<svws-ui-checkbox v-model="inputIstSichtbar"> Ist sichtbar </svws-ui-checkbox>
 			</div>
 		</div>
@@ -27,12 +27,12 @@
 	}>();
 
 	const kuerzel: WritableComputedRef<string | undefined> = computed({
-		get: () => props.data.daten?.kuerzel?.toString(),
+		get: () => props.data.daten?.kuerzel ?? undefined,
 		set: (value) => void props.data.patch({ kuerzel: value })
 	});
 
 	const parallelitaet: WritableComputedRef<string | undefined> = computed({
-		get: () => props.data.daten?.parallelitaet?.toString(),
+		get: () => props.data.daten?.parallelitaet ?? undefined,
 		set: (value) => void props.data.patch({ parallelitaet: value })
 	});
 

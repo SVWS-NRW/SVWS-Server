@@ -6,7 +6,7 @@
 			</div>
 			<svws-ui-multi-select title="Wohnort" v-model="inputWohnortID" :items="inputKatalogOrte" :item-filter="orte_filter"
 				:item-sort="orte_sort" :item-text="(i: OrtKatalogEintrag) => `${i.plz} ${i.ortsname}`" autocomplete />
-			<svws-ui-multi-select title="Ortsteil" v-model="inputOrtsteilID" :items="inputKatalogOrtsteil" :item-text="(i: OrtsteilKatalogEintrag) => i.ortsteil?.toString() || ''"
+			<svws-ui-multi-select title="Ortsteil" v-model="inputOrtsteilID" :items="inputKatalogOrtsteil" :item-text="(i: OrtsteilKatalogEintrag) => i.ortsteil ?? ''"
 				:item-sort="ortsteilSort" :item-filter="ortsteilFilter" />
 			<svws-ui-text-input placeholder="Telefon" v-model="inputTelefon" type="tel" />
 			<svws-ui-text-input placeholder="Mobil oder Fax" v-model="inputTelefonMobil" type="tel" />
@@ -36,7 +36,7 @@
 	const inputStrasse: WritableComputedRef<string | undefined> = computed({
 		get: () => {
 			const ret = AdressenUtils.combineStrasse(daten.value.strassenname || "", daten.value.hausnummer || "", daten.value.hausnummerZusatz || "");
-			return ret ? ret.toString() : undefined;
+			return ret ?? undefined;
 		},
 		set(value: string | undefined) {
 			if (value) {
@@ -60,22 +60,22 @@
 	});
 
 	const inputTelefon: WritableComputedRef<string | undefined> = computed({
-		get: () => daten.value.telefon?.toString(),
+		get: () => daten.value.telefon ?? undefined,
 		set: (value) => void props.stammdaten.patch({ telefon: value })
 	});
 
 	const inputTelefonMobil: WritableComputedRef<string | undefined> = computed({
-		get: () => daten.value.telefonMobil?.toString(),
+		get: () => daten.value.telefonMobil ?? undefined,
 		set: (value) => void props.stammdaten.patch({ telefonMobil: value })
 	});
 
 	const inputEmailPrivat: WritableComputedRef<string | undefined> = computed({
-		get: () => daten.value.emailPrivat?.toString(),
+		get: () => daten.value.emailPrivat ?? undefined,
 		set: (value) => void props.stammdaten.patch({ emailPrivat: value })
 	});
 
 	const inputEmailSchule: WritableComputedRef<string | undefined> = computed({
-		get: () => daten.value.emailSchule?.toString(),
+		get: () => daten.value.emailSchule ?? undefined,
 		set: (value) => void props.stammdaten.patch({ emailSchule: value })
 	});
 

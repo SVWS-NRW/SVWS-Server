@@ -2,12 +2,12 @@
 	<svws-ui-content-card title="Beschäftigungsdaten">
 		<div class="input-wrapper">
 			<svws-ui-multi-select title="Rechtsverhältnis" v-model="rechtsverhaeltnis" :items="LehrerRechtsverhaeltnis.values()"
-				:item-text="(i: LehrerRechtsverhaeltnis) =>i.daten.text.toString()" />
+				:item-text="(i: LehrerRechtsverhaeltnis) =>i.daten.text" />
 			<svws-ui-multi-select title="Beschäftigungsart" v-model="beschaeftigungsart" :items="LehrerBeschaeftigungsart.values()"
-				:item-text="(i: LehrerBeschaeftigungsart) =>i.daten.text.toString()" />
+				:item-text="(i: LehrerBeschaeftigungsart) =>i.daten.text" />
 			<svws-ui-text-input placeholder="Pflichtstundensoll" v-model="pflichtstundensoll" type="text" />
 			<svws-ui-multi-select title="Einsatzstatus" v-model="einsatzstatus" :items="LehrerEinsatzstatus.values()"
-				:item-text="(i: LehrerEinsatzstatus) =>i.daten.text.toString()" />
+				:item-text="(i: LehrerEinsatzstatus) =>i.daten.text" />
 			<svws-ui-text-input placeholder="Stammschule" v-model="stammschulnummer" type="text" />
 		</div>
 	</svws-ui-content-card>

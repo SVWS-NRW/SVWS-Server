@@ -2,12 +2,12 @@
 	<svws-ui-content-card>
 		<div class="flex justify-between items-center">
 			<svws-ui-checkbox v-model="kurs_filter_toggle" class="">Kursfilter<span v-if="kurs_filter_toggle">:</span></svws-ui-checkbox>
-			<svws-ui-multi-select v-if="kurs_filter_toggle" v-model="kurs_filter" :items="kurse" headless :item-text="(kurs: GostBlockungKurs) => manager?.getOfKursName(kurs.id).toString() || ''" class="w-48" />
+			<svws-ui-multi-select v-if="kurs_filter_toggle" v-model="kurs_filter" :items="kurse" headless :item-text="(kurs: GostBlockungKurs) => manager?.getOfKursName(kurs.id) ?? ''" class="w-48" />
 		</div>
 		<div class="flex justify-between items-center mb-3">
 			<svws-ui-checkbox v-model="fach_filter_toggle" class=""> Fachfilter<span v-if="fach_filter_toggle">:</span></svws-ui-checkbox>
-			<svws-ui-multi-select v-if="fach_filter_toggle" v-model="fach_filter" :items="dataFaecher.daten" headless :item-text="(fach: GostFach) => fach.bezeichnung?.toString() || ''" class="w-32" />
-			<svws-ui-multi-select v-if="fach_filter_toggle" v-model="kursart_filter" :items="GostKursart.values()" headless :item-text="(kursart: GostKursart) => kursart.kuerzel.toString()" class="w-16" />
+			<svws-ui-multi-select v-if="fach_filter_toggle" v-model="fach_filter" :items="dataFaecher.daten" headless :item-text="(fach: GostFach) => fach.bezeichnung ?? ''" class="w-32" />
+			<svws-ui-multi-select v-if="fach_filter_toggle" v-model="kursart_filter" :items="GostKursart.values()" headless :item-text="(kursart: GostKursart) => kursart.kuerzel" class="w-16" />
 		</div>
 		<div class="mb-3">
 			<svws-ui-radio-group>
@@ -67,7 +67,7 @@
 		blockung: DataGostKursblockung;
 		ergebnis: DataGostKursblockungsergebnis;
 		listLehrer: ListLehrer;
-		mapLehrer: Map<Number, LehrerListeEintrag>;
+		mapLehrer: Map<number, LehrerListeEintrag>;
 		fachwahlen: List<GostStatistikFachwahl>;
 		listSchueler: ListAbiturjahrgangSchueler;
 		dataSchueler: DataSchuelerLaufbahndaten;

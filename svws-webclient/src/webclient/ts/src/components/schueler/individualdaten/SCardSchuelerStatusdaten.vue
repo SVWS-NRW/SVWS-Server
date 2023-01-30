@@ -1,7 +1,7 @@
 <template>
 	<svws-ui-content-card title="Statusdaten">
 		<div class="input-wrapper">
-			<svws-ui-multi-select title="Status" v-model="inputStatus" :items="SchuelerStatus.values()" :item-text="(i: SchuelerStatus) => i.bezeichnung.toString()" />
+			<svws-ui-multi-select title="Status" v-model="inputStatus" :items="SchuelerStatus.values()" :item-text="(i: SchuelerStatus) => i.bezeichnung" />
 			<svws-ui-checkbox v-model="inputIstDuplikat">Ist Duplikat</svws-ui-checkbox>
 			<svws-ui-multi-select title="Fahrschüler" v-model="inputFahrschuelerArtID" :items="inputKatalogFahrschuelerarten" />
 			<svws-ui-multi-select title="Haltestelle" v-model="inputHaltestelleID" :items="inputKatalogHaltestellen" />
@@ -52,12 +52,12 @@
 	});
 
 	const inputAnmeldedatum: WritableComputedRef<string | undefined> = computed({
-		get: () => daten.value.anmeldedatum?.toString(),
+		get: () => daten.value.anmeldedatum ?? undefined,
 		set: (value) => void props.stammdaten.patch({ anmeldedatum: value })
 	});
 
 	const inputAufnahmedatum: WritableComputedRef<string | undefined> = computed({
-		get: () => daten.value.aufnahmedatum?.toString(),
+		get: () => daten.value.aufnahmedatum ?? undefined,
 		set: (value) => void props.stammdaten.patch({ aufnahmedatum: value })
 	});
 

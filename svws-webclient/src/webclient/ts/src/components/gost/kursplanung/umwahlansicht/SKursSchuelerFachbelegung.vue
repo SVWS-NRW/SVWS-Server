@@ -31,8 +31,7 @@
 	const manager: ComputedRef<GostBlockungsergebnisManager | undefined> = computed(() => props.blockung.ergebnismanager);
 
 	const kursart: ComputedRef<string | undefined> = computed(() =>
-		manager.value?.getOfSchuelerOfFachKursart(props.schuelerId, props.fach.fachID).kuerzel.toString()
-	);
+		manager.value?.getOfSchuelerOfFachKursart(props.schuelerId, props.fach.fachID).kuerzel);
 
 	const kursartid: ComputedRef<number | undefined> = computed(() => GostKursart.fromKuerzel(!kursart.value ? null : kursart.value)?.id)
 

@@ -20,7 +20,7 @@
 		data: DataKlasse,
 		schule: DataSchuleStammdaten;
 		listLehrer: ListLehrer,
-		mapLehrer: Map<Number, LehrerListeEintrag>,
+		mapLehrer: Map<number, LehrerListeEintrag>,
 		listJahrgaenge: ListJahrgaenge,
 		mapJahrgaenge: Map<Number, JahrgangsListeEintrag>,
 	}>();

@@ -3,7 +3,7 @@
 		<div class="content-wrapper">
 			<div class="input-wrapper">
 				<svws-ui-multi-select title="Statistikkürzel" v-model="inputStatistikKuerzel" :items="inputKatalogReligionenStatistik"
-					:item-text="(i: Religion) => i.daten.kuerzel.toString()" required />
+					:item-text="(i: Religion) => i.daten.kuerzel" required />
 				<svws-ui-text-input placeholder="Kürzel" v-model="inputKuerzel" type="text" />
 				<svws-ui-text-input placeholder="Bezeichnung" v-model="inputText" type="text" />
 				<svws-ui-text-input placeholder="Zeugnisbezeichnung" v-model="inputTextzeugnis" type="text" />
@@ -29,17 +29,17 @@
 	});
 
 	const inputKuerzel: WritableComputedRef<string | undefined> = computed({
-		get: () => props.data.daten?.kuerzel?.toString(),
+		get: () => props.data.daten?.kuerzel ?? undefined,
 		set: (value) => void props.data.patch({ kuerzel: value })
 	});
 
 	const inputText: WritableComputedRef<string | undefined> = computed({
-		get: () => props.data.daten?.text?.toString(),
+		get: () => props.data.daten?.text ?? undefined,
 		set: (value) => void props.data.patch({ text: value })
 	});
 
 	const inputTextzeugnis: WritableComputedRef<string | undefined> = computed({
-		get: () => props.data.daten?.textZeugnis?.toString(),
+		get: () => props.data.daten?.textZeugnis ?? undefined,
 		set: (value) => void props.data.patch({ textZeugnis: value })
 	});
 

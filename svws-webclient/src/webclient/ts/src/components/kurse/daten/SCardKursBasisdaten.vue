@@ -5,9 +5,9 @@
 				<svws-ui-text-input placeholder="Kürzel" v-model="kuerzel" type="text" />
 				<svws-ui-text-input placeholder="Schuljahresabschnitt" v-model="schuljahresabschnitt" type="text" />
 				<svws-ui-multi-select title="Jahrgaenge" v-model="jahrgaenge" tags :items="listJahrgaenge.liste"
-					:item-text="(jg: JahrgangsListeEintrag) => jg?.kuerzel?.toString() || ''" />
+					:item-text="(jg: JahrgangsListeEintrag) => jg?.kuerzel ?? ''" />
 				<svws-ui-text-input placeholder="Fach-ID" v-model="fach" type="number" />
-				<svws-ui-multi-select title="Lehrer" v-model="lehrer" :items="listLehrer.liste" :item-text="(l: LehrerListeEintrag) => l.kuerzel.toString()" />
+				<svws-ui-multi-select title="Lehrer" v-model="lehrer" :items="listLehrer.liste" :item-text="(l: LehrerListeEintrag) => l.kuerzel" />
 				<svws-ui-text-input placeholder="Sortierung" v-model="sortierung" type="number" />
 				<svws-ui-checkbox v-model="istSichtbar"> Ist sichtbar </svws-ui-checkbox>
 			</div>
@@ -29,7 +29,7 @@
 		listJahrgaenge: ListJahrgaenge;
 		mapJahrgaenge: Map<Number, JahrgangsListeEintrag>;
 		listLehrer: ListLehrer;
-		mapLehrer: Map<Number, LehrerListeEintrag>;
+		mapLehrer: Map<number, LehrerListeEintrag>;
 	}>();
 
 	const schuljahresabschnitt: WritableComputedRef<number | undefined> = computed({
@@ -38,15 +38,15 @@
 	});
 
 	const kuerzel: WritableComputedRef<string | undefined> = computed({
-		get: () => props.data.daten?.kuerzel.toString(),
+		get: () => props.data.daten?.kuerzel,
 		set: (value) => void props.data.patch({ kuerzel: value })
 	});
 
 	const jahrgaenge: WritableComputedRef<JahrgangsListeEintrag[]> = computed({
-		get: () => props.data.daten === undefined ? [] : (props.data.daten.idJahrgaenge.toArray() as Number[]).map(id => props.mapJahrgaenge.get(id)).filter(j => j !== undefined) as JahrgangsListeEintrag[],
+		get: () => props.data.daten === undefined ? [] : (props.data.daten.idJahrgaenge.toArray() as number[]).map(id => props.mapJahrgaenge.get(id)).filter(j => j !== undefined) as JahrgangsListeEintrag[],
 		set: (value) => {
-			const result: Vector<Number> = new Vector();
-			value.forEach(j => result.add(Number(j.id)));
+			const result: Vector<number> = new Vector();
+			value.forEach(j => result.add(j.id));
 			void props.data.patch({ idJahrgaenge: result });
 		}
 	});

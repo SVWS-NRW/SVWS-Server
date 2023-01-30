@@ -25,25 +25,25 @@
 										<svws-ui-multi-select v-model="inputDBSchema" title="DB-Schema" :items="inputDBSchemata" :item-text="get_name" class="w-full" />
 										<svws-ui-text-input v-model="username" type="text" placeholder="Benutzername" />
 										<svws-ui-text-input v-model="password"
-															type="password"
-															placeholder="Passwort"
-															@keyup.enter="login" />
+											type="password"
+											placeholder="Passwort"
+											@keyup.enter="login" />
 										<svws-ui-button @click="login">
 											Anmelden
-											<i-ri-login-circle-line/>
+											<i-ri-login-circle-line />
 										</svws-ui-button>
 									</div>
 								</Transition>
 								<div class="mt-16 text-center text-sm">
 									<p class="mb-2 opacity-50">
-										Powered by SVWS-NRW<br/>Client Version {{ version }}
+										Powered by SVWS-NRW<br>Client Version {{ version }}
 									</p>
 									<nav class="login-footer-links mb-4">
 										<a class="login-footer-link" href="#">Impressum</a>
 										<a class="login-footer-link" href="#">Datenschutz</a>
 										<a class="login-footer-link" href="#">
 											<span class="inline-flex items-center gap-0.5 align-middle">
-												<span class="hover-underline">Hilfe</span> <i-ri-question-line/>
+												<span class="hover-underline">Hilfe</span> <i-ri-question-line />
 											</span>
 										</a>
 									</nav>
@@ -131,7 +131,7 @@
 	});
 
 	function get_name(i: DBSchemaListeEintrag): string {
-		return i?.name?.toString() || '';
+		return i?.name ?? '';
 	}
 
 	async function connectClicked() {

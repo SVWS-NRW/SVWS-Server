@@ -9,9 +9,9 @@
 			<svws-ui-text-input placeholder="PA-Nummer" v-model="inputPersonalaktennummer" type="text" />
 			<svws-ui-text-input placeholder="LBV-Pers.Nummer" v-model="inputLbvPersonalnummer" type="text" />
 			<svws-ui-multi-select title="Lehrbefähigung" v-model="lehrbefaehigung" :items="LehrerLehrbefaehigung.values()"
-				:item-text="(i: LehrerLehrbefaehigung) => i.daten.text.toString()" required />
+				:item-text="(i: LehrerLehrbefaehigung) => i.daten.text" required />
 			<svws-ui-multi-select title="Fachrichtung" v-model="fachrichtung" :items="LehrerFachrichtung.values()"
-				:item-text="(i: LehrerFachrichtung) =>i.daten.text.toString()" required />
+				:item-text="(i: LehrerFachrichtung) =>i.daten.text" required />
 			<svws-ui-text-input placeholder="Zugangsdatum" v-model="inputZugangsdatum" type="date" />
 			<svws-ui-text-input placeholder="Abgangsdatum" v-model="inputAbgangsdatum" type="date" />
 		</div>
@@ -64,7 +64,7 @@
 		get(): LehrerFachrichtung | undefined {
 			// TODO aus Personaldaten bestimmten
 			const kuerzel = undefined;
-			return LehrerFachrichtung.values().find(e => String(e.daten.kuerzel) === kuerzel);
+			return LehrerFachrichtung.values().find(e => e.daten.kuerzel === kuerzel);
 		},
 		set(val: LehrerFachrichtung | undefined) {
 			void val;
@@ -74,7 +74,7 @@
 
 	const inputZugangsdatum: WritableComputedRef<string | undefined> = computed({
 		get(): string | undefined {
-			return daten.value.zugangsdatum?.toString();
+			return daten.value.zugangsdatum ?? undefined;
 		},
 		set(val) {
 			void props.personaldaten.patch({ zugangsdatum: val });
@@ -83,7 +83,7 @@
 
 	const inputAbgangsdatum: WritableComputedRef<string | undefined> = computed({
 		get(): string | undefined {
-			return daten.value.abgangsdatum?.toString();
+			return daten.value.abgangsdatum ?? undefined;
 		},
 		set(val: string | undefined) {
 			void props.personaldaten.patch({ abgangsdatum: val });
@@ -92,7 +92,7 @@
 
 	const inputIdentNrTeil1: WritableComputedRef<string | undefined> = computed({
 		get(): string | undefined {
-			return daten.value.identNrTeil1?.toString();
+			return daten.value.identNrTeil1 ?? undefined;
 		},
 		set(val: string | undefined) {
 			void props.personaldaten.patch({ identNrTeil1: val });
@@ -101,7 +101,7 @@
 
 	const inputIdentNrTeil2SerNr: WritableComputedRef<string | undefined> = computed({
 		get(): string | undefined {
-			return daten.value.identNrTeil2SerNr?.toString();
+			return daten.value.identNrTeil2SerNr ?? undefined;
 		},
 		set(val: string | undefined) {
 			void props.personaldaten.patch({ identNrTeil2SerNr: val });
@@ -110,7 +110,7 @@
 
 	const inputLbvVerguetungsschluessel: WritableComputedRef<string | undefined> = computed({
 		get(): string | undefined {
-			return daten.value.lbvVerguetungsschluessel?.toString();
+			return daten.value.lbvVerguetungsschluessel ?? undefined;
 		},
 		set(val: string | undefined) {
 			void props.personaldaten.patch({ lbvVerguetungsschluessel: val });
@@ -119,7 +119,7 @@
 
 	const inputPersonalaktennummer: WritableComputedRef<string | undefined> = computed({
 		get(): string | undefined {
-			return daten.value.personalaktennummer?.toString();
+			return daten.value.personalaktennummer ?? undefined;
 		},
 		set(val) {
 			void props.personaldaten.patch({ personalaktennummer: val });
@@ -128,7 +128,7 @@
 
 	const inputLbvPersonalnummer: WritableComputedRef<string | undefined> = computed({
 		get(): string | undefined {
-			return daten.value.lbvPersonalnummer?.toString();
+			return daten.value.lbvPersonalnummer ?? undefined;
 		},
 		set(val) {
 			void props.personaldaten.patch({ lbvPersonalnummer: val });

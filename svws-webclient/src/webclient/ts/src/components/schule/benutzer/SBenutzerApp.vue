@@ -32,9 +32,9 @@
 	const selectedRoute = routeSchuleBenutzer.childRouteSelector;
 	const children_hidden = routeSchuleBenutzer.children_hidden();
 
-	const id: ComputedRef<string> = computed(() => props.item.value?.id.toString() || "?");
-	const anzeigename: ComputedRef<string> = computed(() => props.item.value?.anzeigename.toString() || "---");
-	const name: ComputedRef<string> = computed(() => props.item.value?.name.toString() || "---");
+	const id: ComputedRef<number | string> = computed(() => props.item.value?.id ?? "?");
+	const anzeigename: ComputedRef<string> = computed(() => props.item.value?.anzeigename ?? "---");
+	const name: ComputedRef<string> = computed(() => props.item.value?.name ?? "---");
 
 	const visible: ComputedRef<boolean> = computed(() => {
 		return (!routeSchuleBenutzer.hidden()) && (props.item.value !== undefined);

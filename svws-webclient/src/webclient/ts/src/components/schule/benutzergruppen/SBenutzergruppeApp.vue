@@ -30,7 +30,7 @@
 	const children_hidden = routeSchuleBenutzergruppe.children_hidden();
 
 	const id: ComputedRef<string> = computed(() => "ID: " + props.item.value?.id);
-	const bezeichnung: ComputedRef<string> = computed(() => props.item.value?.bezeichnung.toString() || "");
+	const bezeichnung: ComputedRef<string> = computed(() => props.item.value?.bezeichnung ?? "");
 
 	const visible: ComputedRef<boolean> = computed(() => {
 		return (!routeSchuleBenutzergruppe.hidden()) && (props.item.value !== undefined);

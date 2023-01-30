@@ -3,10 +3,10 @@
 		<div class="input-wrapper-1-col">
 			<svws-ui-checkbox v-model="inputHatZusatzkursGE">Zusatzkurs in GE wird angeboten</svws-ui-checkbox>
 			<svws-ui-multi-select title="Beginn Zusatzkurs GE" v-model="inputBeginnZusatzkursGE"
-				:items="inputBeginnZusatzkurs" :item-text="(i: GostHalbjahr) => i.kuerzel.toString()" :disabled="!inputHatZusatzkursGE" />
+				:items="inputBeginnZusatzkurs" :item-text="(i: GostHalbjahr) => i.kuerzel" :disabled="!inputHatZusatzkursGE" />
 			<svws-ui-checkbox v-model="inputHatZusatzkursSW">Zusatzkurs in SW wird angeboten</svws-ui-checkbox>
 			<svws-ui-multi-select title="Beginn Zusatzkurs SW" v-model="inputBeginnZusatzkursSW"
-				:items="inputBeginnZusatzkurs" :item-text="(i: GostHalbjahr) => i.kuerzel.toString()" :disabled="!inputHatZusatzkursSW" />
+				:items="inputBeginnZusatzkurs" :item-text="(i: GostHalbjahr) => i.kuerzel" :disabled="!inputHatZusatzkursSW" />
 		</div>
 	</svws-ui-content-card>
 </template>

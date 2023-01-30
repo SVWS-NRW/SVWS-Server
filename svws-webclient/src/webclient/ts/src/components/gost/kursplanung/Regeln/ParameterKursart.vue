@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-multi-select v-model="selected" :items="kursarten" :item-text="(i: GostKursart) => i.beschreibung.toString()" />
+	<svws-ui-multi-select v-model="selected" :items="kursarten" :item-text="(i: GostKursart) => i.beschreibung" />
 </template>
 
 <script setup lang="ts">

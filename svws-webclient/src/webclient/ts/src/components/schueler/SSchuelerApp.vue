@@ -8,7 +8,7 @@
 				<div>
 					<span class="inline-block mr-3"> {{ vorname }} {{ nachname }} </span>
 					<svws-ui-badge type="light" title="ID">
-						<i-ri-fingerprint-line/>
+						<i-ri-fingerprint-line />
 						{{ item.value?.id }}
 					</svws-ui-badge>
 					<br>
@@ -54,21 +54,21 @@
 
 
 	const foto: ComputedRef<String | undefined> = computed(() => {
-		return props.stammdaten.daten?.foto || undefined;
+		return props.stammdaten.daten?.foto ?? undefined;
 	});
 
 	const nachname: ComputedRef<string | undefined> = computed(() => {
-		return props.item.value?.nachname.toString();
+		return props.item.value?.nachname;
 	});
 
 	const vorname: ComputedRef<string | undefined> = computed(() => {
-		return props.item.value?.vorname.toString();
+		return props.item.value?.vorname;
 	});
 
 	const inputKlasse: ComputedRef<string | false> = computed(() => {
 		if (props.item.value === undefined)
 			return false;
-		return props.mapKlassen.get(props.item.value?.idKlasse)?.kuerzel?.toString() || false;
+		return props.mapKlassen.get(props.item.value?.idKlasse)?.kuerzel ?? false;
 	});
 
 	const visible: ComputedRef<boolean> = computed(() => {

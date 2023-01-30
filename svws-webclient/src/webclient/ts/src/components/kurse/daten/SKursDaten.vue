@@ -22,7 +22,7 @@
 		listJahrgaenge: ListJahrgaenge;
 		mapJahrgaenge: Map<Number, JahrgangsListeEintrag>;
 		listLehrer: ListLehrer;
-		mapLehrer: Map<Number, LehrerListeEintrag>;
+		mapLehrer: Map<number, LehrerListeEintrag>;
 	}>();
 
 

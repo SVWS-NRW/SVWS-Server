@@ -9,7 +9,7 @@
 								<span v-if="(!edit_blockungsname && row === selected_blockungauswahl)" class="text-input--inline" @click.stop="edit_blockungsname = true">
 									{{ row.name }}
 								</span>
-								<svws-ui-text-input v-else :model-value="row.name.toString()" style="width: 10rem" headless focus
+								<svws-ui-text-input v-else :model-value="row.name" style="width: 10rem" headless focus
 									@keyup.enter="edit_blockungsname=false" @keyup.escape="edit_blockungsname=false" @update:model-value="patch_blockung" />
 							</div>
 							<svws-ui-icon v-if="row.istAktiv"> <i-ri-pushpin-fill /> </svws-ui-icon>

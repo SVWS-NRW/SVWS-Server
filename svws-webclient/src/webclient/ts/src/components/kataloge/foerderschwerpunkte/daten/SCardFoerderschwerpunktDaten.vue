@@ -24,12 +24,12 @@
 	const id: ComputedRef<number | undefined> = computed(() => props.data.daten?.id);
 
 	const kuerzel: WritableComputedRef<string | undefined> = computed({
-		get: () => props.data.daten?.kuerzel?.toString(),
+		get: () => props.data.daten?.kuerzel ?? undefined,
 		set: (value) => void props.data.patch({ kuerzel: value })
 	});
 
 	const bezeichnung: WritableComputedRef<string | undefined> = computed({
-		get: () => props.data.daten?.text?.toString(),
+		get: () => props.data.daten?.text ?? undefined,
 		set: (value) => void props.data.patch({ text: value })
 	});
 

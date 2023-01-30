@@ -37,7 +37,7 @@ export class Use<T,U> {
 				const val = base.daten?.[prop];
 				if (typeof val !== "number")
 					return undefined;
-				return (val) ? Geschlecht.fromValue(Number(val)) || undefined : Geschlecht.X;
+				return (val) ? Geschlecht.fromValue(val) || undefined : Geschlecht.X;
 			},
 			set(val: Geschlecht | undefined) {
 				prop ||= 'geschlecht' as K;

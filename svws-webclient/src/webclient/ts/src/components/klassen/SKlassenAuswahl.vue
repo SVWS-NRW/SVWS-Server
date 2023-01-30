@@ -28,7 +28,7 @@
 		item: ShallowRef<KlassenListeEintrag | undefined>;
 		schule: DataSchuleStammdaten;
 		listLehrer: ListLehrer;
-		mapLehrer: Map<Number, LehrerListeEintrag>;
+		mapLehrer: Map<number, LehrerListeEintrag>;
 	}>();
 	const selected = routeKlassen.auswahl;
 

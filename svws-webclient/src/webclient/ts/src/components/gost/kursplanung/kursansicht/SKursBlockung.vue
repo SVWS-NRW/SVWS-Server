@@ -188,7 +188,7 @@
 		blockung: DataGostKursblockung;
 		ergebnis: DataGostKursblockungsergebnis;
 		listLehrer: ListLehrer;
-		mapLehrer: Map<Number, LehrerListeEintrag>;
+		mapLehrer: Map<number, LehrerListeEintrag>;
 		allow_regeln: boolean;
 	}>();
 
@@ -230,12 +230,12 @@
 	});
 
 	const suffix: WritableComputedRef<string> = computed({
-		get: () => props.kurs.suffix.toString(),
+		get: () => props.kurs.suffix,
 		set: (value) => {
 			const k = props.blockung.datenmanager?.getKurs(props.kurs.id)
-			if (!k)
+			if (k === undefined)
 				return;
-			void props.blockung.patch_kurs(k.id, { suffix: String(value) });
+			void props.blockung.patch_kurs(k.id, { suffix: value });
 		}
 	});
 
@@ -295,9 +295,9 @@
 		void props.blockung.add_blockung_regel(r);
 	}
 
-	function get_kursbezeichnung(kurs_id: number | undefined) {
-		if (!kurs_id || !manager.value)
-			return String();
+	function get_kursbezeichnung(kurs_id: number | undefined): string {
+		if (kurs_id === undefined || !manager.value)
+			return ""
 		return manager.value.getOfKursName(kurs_id);
 	}
 
@@ -317,9 +317,9 @@
 			return [];
 		const arr = kurse.toArray(new Array<GostBlockungsergebnisKurs>())
 		return arr.filter(k => k.kursart === art.id).sort((a,b)=>{
-			const a_name = manager.value?.getOfKursName(a.id)
+			const a_name: string | undefined = manager.value?.getOfKursName(a.id)
 			const b_name = manager.value?.getOfKursName(b.id)
-			return a_name?.localeCompare(String(b_name), "de-DE") || 0
+			return a_name?.localeCompare(b_name ?? '', "de-DE") || 0
 		})
 	})
 

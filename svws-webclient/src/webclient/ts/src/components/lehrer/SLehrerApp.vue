@@ -42,12 +42,12 @@
 	const selectedRoute = routeLehrer.childRouteSelector;
 	const children_hidden = routeLehrer.children_hidden();
 
-	const foto: ComputedRef<String | undefined> = computed(() => props.stammdaten.daten?.foto || undefined);
+	const foto: ComputedRef<String | undefined> = computed(() => props.stammdaten.daten?.foto ?? undefined);
 
-	const inputNachname: ComputedRef<string | undefined> = computed(() => props.item.value?.nachname.toString());
-	const inputVorname: ComputedRef<string | undefined> = computed(() => props.item.value?.vorname.toString());
-	const inputKuerzel: ComputedRef<string | undefined> = computed(() => props.item.value?.kuerzel.toString());
-	const inputTitel: ComputedRef<string | undefined> = computed(() => props.item.value?.titel?.toString());
+	const inputNachname: ComputedRef<string | undefined> = computed(() => props.item.value?.nachname);
+	const inputVorname: ComputedRef<string | undefined> = computed(() => props.item.value?.vorname);
+	const inputKuerzel: ComputedRef<string | undefined> = computed(() => props.item.value?.kuerzel);
+	const inputTitel: ComputedRef<string | undefined> = computed(() => props.item.value?.titel ?? undefined);
 
 	const visible: ComputedRef<boolean> = computed(() => {
 		return (props.item.value !== undefined) && (!routeLehrer.hidden());

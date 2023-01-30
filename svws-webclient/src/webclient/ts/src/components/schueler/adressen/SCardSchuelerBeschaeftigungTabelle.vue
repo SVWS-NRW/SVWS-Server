@@ -1,12 +1,12 @@
 <template>
 	<td>
-		<svws-ui-multi-select title="Betrieb" v-model="inputBetrieb" :items="inputBetriebListe" :item-text="(i: BetriebListeEintrag) => i.name1?.toString() || ''" />
+		<svws-ui-multi-select title="Betrieb" v-model="inputBetrieb" :items="inputBetriebListe" :item-text="(i: BetriebListeEintrag) => i.name1 ?? ''" />
 	</td>
 	<td>
 		<svws-ui-text-input placeholder="Ausbilder" v-model="ausbilder" type="text" />
 	</td>
 	<td>
-		<svws-ui-multi-select title="Beschäftigungsart" v-model="beschaeftigungsart" :items="inputBeschaeftigungsarten" :item-text="(i: KatalogEintrag) => i.text?.toString() || ''" />
+		<svws-ui-multi-select title="Beschäftigungsart" v-model="beschaeftigungsart" :items="inputBeschaeftigungsarten" :item-text="(i: KatalogEintrag) => i.text ?? ''" />
 	</td>
 	<td>
 		<svws-ui-text-input placeholder="Vertragsbeginn" v-model="vertragsbeginn" type="date" />
@@ -78,11 +78,11 @@
 
 	const ausbilder: WritableComputedRef<string | undefined> = computed({
 		get(): string | undefined {
-			return props.betrieb.ausbilder?.toString();
+			return props.betrieb.ausbilder ?? undefined;
 		},
 		set(val: string | undefined) {
 			const data = props.listSchuelerbetriebe.ausgewaehlt as SchuelerBetriebsdaten;
-			data.ausbilder = String(val);
+			data.ausbilder = val ?? null;
 			if (data?.id == null)
 				return;
 			void App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id);
@@ -147,7 +147,7 @@
 		},
 		set(val: string | undefined) {
 			const data = props.listSchuelerbetriebe?.ausgewaehlt as SchuelerBetriebsdaten;
-			data.vertragsbeginn = String(val);
+			data.vertragsbeginn = val ?? null;
 			if (data?.id == null)
 				return;
 			void App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id);

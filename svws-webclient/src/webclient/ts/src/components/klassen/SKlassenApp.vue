@@ -2,7 +2,7 @@
 	<div v-if="visible && item.value?.id">
 		<svws-ui-header>
 			<div class="flex items-center">
-				<span class="inline-block mr-3">{{ item.value?.kuerzel?.toString() }}</span>
+				<span class="inline-block mr-3">{{ item.value?.kuerzel ?? '' }}</span>
 				<svws-ui-badge type="light" title="ID">
 					<i-ri-fingerprint-line/>
 					{{ item.value?.id }}
@@ -35,14 +35,14 @@
 		item: ShallowRef<KlassenListeEintrag | undefined>,
 		schule: DataSchuleStammdaten;
 		listLehrer: ListLehrer,
-		mapLehrer: Map<Number, LehrerListeEintrag>,
+		mapLehrer: Map<number, LehrerListeEintrag>,
 	}>();
 
 	const selectedRoute = routeKlassen.childRouteSelector;
 	const children_hidden = routeKlassen.children_hidden();
 
 	const inputKlassenlehrer: ComputedRef<LehrerListeEintrag[]> = computed(() =>
-		(props.item.value?.klassenLehrer?.toArray() as Number[] || []).map(id => props.mapLehrer.get(id) || undefined).filter(l => l !== undefined) as LehrerListeEintrag[]
+		(props.item.value?.klassenLehrer?.toArray() as number[] || []).map(id => props.mapLehrer.get(id) || undefined).filter(l => l !== undefined) as LehrerListeEintrag[]
 	);
 
 	const visible: ComputedRef<boolean> = computed(() => {

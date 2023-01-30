@@ -46,11 +46,13 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 
 	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<any> {
 		// Prüfe das Abiturjahr
-		const abiturjahr = to_params.abiturjahr === undefined ? undefined : parseInt(to_params.abiturjahr as string);
+		if (to_params.abiturjahr instanceof Array || to_params.halbjahr instanceof Array)
+			throw new Error("Fehler: Die Parameter Abiturjahr und Halbjahr dürfen keine Arrays sein");
+		const abiturjahr = to_params.abiturjahr === undefined ? undefined : parseInt(to_params.abiturjahr);
 		if (abiturjahr === undefined)
 			throw new Error("Fehler: Das Abiturjahr darf an dieser Stelle nicht undefined sein.");
 		// Aktualisiere das Halbjahr
-		const halbjahr = (to_params.halbjahr === undefined) ? undefined : GostHalbjahr.fromID(Number(parseInt(to_params.halbjahr as string))) || undefined;
+		const halbjahr = (to_params.halbjahr === undefined) ? undefined : GostHalbjahr.fromID(parseInt(to_params.halbjahr)) || undefined;
 		if (halbjahr === undefined) {
 			let hj = GostHalbjahr.getPlanungshalbjahrFromAbiturjahrSchuljahrUndHalbjahr(abiturjahr, App.akt_abschnitt.schuljahr, App.akt_abschnitt.abschnitt);
 			if (hj === null) // In zwei Fällen existiert kein Planungshalbjahr, z.B. weil der Abiturjahrgang (fast) abgeschlossen ist oder noch in der Sek I ist.

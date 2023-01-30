@@ -7,7 +7,7 @@
 				<svws-ui-text-input placeholder="Bezeichnung in Statistik" v-model="inputKuerzelStatistik" type="text" />
 				<svws-ui-multi-select title="Folgejahrgang" v-model="inputIdFolgejahrgang"
 					:items="listJahrgaenge?.filter((e: JahrgangsListeEintrag) => e.id !== id)"
-					:item-text="(e: JahrgangsListeEintrag) => e.bezeichnung?.toString() || ''" />
+					:item-text="(e: JahrgangsListeEintrag) => e.bezeichnung ?? ''" />
 				<svws-ui-text-input placeholder="Kürzel Schulgliederung" v-model="inputKuerzelSchulgliederung" type="text" />
 			</div>
 		</div>
@@ -30,22 +30,22 @@
 	});
 
 	const inputKuerzel: WritableComputedRef<string | undefined> = computed({
-		get: () => props.data.daten?.kuerzel?.toString(),
+		get: () => props.data.daten?.kuerzel ?? undefined,
 		set: (value) => void props.data.patch({ kuerzel: value })
 	});
 
 	const inputBezeichnung: WritableComputedRef<string | undefined> = computed({
-		get: () => props.data.daten?.bezeichnung?.toString(),
+		get: () => props.data.daten?.bezeichnung ?? undefined,
 		set: (value) => void props.data.patch({ bezeichnung: value })
 	});
 
 	const inputKuerzelStatistik: WritableComputedRef<string | undefined> = computed({
-		get: () => props.data.daten?.kuerzelStatistik?.toString(),
+		get: () => props.data.daten?.kuerzelStatistik ?? undefined,
 		set: (value: string | undefined) => void props.data.patch({ kuerzelStatistik: value })
 	});
 
 	const inputKuerzelSchulgliederung: WritableComputedRef<string | undefined> = computed({
-		get: () => props.data.daten?.kuerzelSchulgliederung?.toString(),
+		get: () => props.data.daten?.kuerzelSchulgliederung ?? undefined,
 		set: (value) => void props.data.patch({ kuerzelSchulgliederung: value })
 	});
 

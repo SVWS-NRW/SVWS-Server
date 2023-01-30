@@ -26,21 +26,21 @@
 	const props = defineProps<{
 		data: DataKlasse,
 		listLehrer: ListLehrer,
-		mapLehrer: Map<Number, LehrerListeEintrag>
+		mapLehrer: Map<number, LehrerListeEintrag>
 	}>();
 
 	const liste: ComputedRef<Lehrer[]> = computed(() => {
 		if (props.data.daten?.klassenLeitungen === undefined)
 			return [];
-		return (props.data.daten.klassenLeitungen?.toArray() as Number[]).map((id : Number) => {
+		return (props.data.daten.klassenLeitungen?.toArray() as number[]).map((id) => {
 			const lehrer = props.mapLehrer.get(id);
 			if (lehrer === undefined)
 				return {};
 			return {
-				kuerzel: lehrer.kuerzel.toString(),
-				nachname: lehrer.nachname.toString(),
-				vorname: lehrer.vorname.toString(),
-				typ: PersonalTyp.fromBezeichnung(lehrer.personTyp)?.bezeichnung.toString() || undefined
+				kuerzel: lehrer.kuerzel,
+				nachname: lehrer.nachname,
+				vorname: lehrer.vorname,
+				typ: PersonalTyp.fromBezeichnung(lehrer.personTyp)?.bezeichnung ?? undefined
 			};
 		});
 	});

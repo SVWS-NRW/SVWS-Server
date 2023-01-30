@@ -51,6 +51,6 @@ export class DataBetriebsstammdaten extends BaseData<BetriebStammdaten, Schueler
 		const daten = this._daten;
 		if (!daten)
 			return false;
-		return this._patch(data, () => App.api.patchBetriebStammdaten(data, App.schema, Number(daten.id)));
+		return this._patch(data, () => App.api.patchBetriebStammdaten(data, App.schema, daten.id ?? -1));
 	}
 }

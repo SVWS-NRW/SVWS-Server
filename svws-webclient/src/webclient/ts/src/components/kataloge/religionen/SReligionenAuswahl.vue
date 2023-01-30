@@ -27,7 +27,7 @@
 		<template #modalContent>
 			<div class="input-wrapper">
 				<svws-ui-multi-select v-model="reli_neu.kuerzel" title="Statistikkürzel" :items="inputKatalogReligionenStatistik"
-					:item-text="(i: Religion) => i.daten.kuerzel.toString()" required />
+					:item-text="(i: Religion) => i.daten.kuerzel" required />
 				<svws-ui-text-input v-model="reli_neu.kuerzel" type="text" placeholder="Kürzel" />
 				<svws-ui-text-input v-model="reli_neu.text" type="text" placeholder="Bezeichnung" />
 				<svws-ui-text-input v-model="reli_neu.textZeugnis" type="text" placeholder="Zeugnisbezeichnung" />

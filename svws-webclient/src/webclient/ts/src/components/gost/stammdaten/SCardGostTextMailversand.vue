@@ -19,7 +19,7 @@
 	const daten: ComputedRef<GostJahrgangsdaten> = computed(() => props.jahrgangsdaten.daten || new GostJahrgangsdaten());
 
 	const inputTextMailversand: WritableComputedRef<string | undefined> = computed({
-		get:() => daten.value.textMailversand?.toString(),
+		get:() => daten.value.textMailversand ?? undefined,
 		set: (value) => void props.jahrgangsdaten.patch({ textMailversand: value })
 	});
 

@@ -12,7 +12,7 @@ import { RouteApp } from "~/router/RouteApp";
 export class RouteDataKlassen {
 	schule: DataSchuleStammdaten = new DataSchuleStammdaten();
 	listLehrer: ListLehrer = new ListLehrer();
-	mapLehrer: Map<Number, LehrerListeEintrag> = new Map();
+	mapLehrer: Map<number, LehrerListeEintrag> = new Map();
 }
 
 const SKlassenAuswahl = () => import("~/components/klassen/SKlassenAuswahl.vue")

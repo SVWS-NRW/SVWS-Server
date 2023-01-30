@@ -3,13 +3,13 @@
 		<div class="content-wrapper">
 			<div class="input-wrapper">
 				<svws-ui-text-input placeholder="Kürzel" v-model="inputKuerzel" type="text" required />
-				<svws-ui-multi-select title="Personal-Typ" v-model="inputPersonalTyp" :items="PersonalTyp.values()" :item-text="(i: PersonalTyp) => i.bezeichnung.toString()" required />
+				<svws-ui-multi-select title="Personal-Typ" v-model="inputPersonalTyp" :items="PersonalTyp.values()" :item-text="(i: PersonalTyp) => i.bezeichnung" required />
 				<svws-ui-text-input placeholder="Nachname" v-model="inputNachname" type="text" required />
 				<svws-ui-text-input placeholder="Vorname" v-model="inputVorname" type="text" required />
 				<svws-ui-multi-select title="Geschlecht" v-model="inputGeschlecht" :items="Geschlecht.values()" required />
 				<svws-ui-text-input placeholder="Geburtsdatum" v-model="inputGeburtsdatum" type="date" required />
 				<svws-ui-multi-select title="Staatsangehörigkeit" v-model="inputStaatsangehoerigkeit" :items="Nationalitaeten.values()"
-					:item-text="(i: Nationalitaeten) => i.daten.staatsangehoerigkeit.toString()" :item-sort="staatsangehoerigkeitKatalogEintragSort"
+					:item-text="(i: Nationalitaeten) => i.daten.staatsangehoerigkeit" :item-sort="staatsangehoerigkeitKatalogEintragSort"
 					:item-filter="staatsangehoerigkeitKatalogEintragFilter" required />
 				<svws-ui-text-input placeholder="Akad.Grad" v-model="inputTitel" type="text" />
 				<svws-ui-text-input placeholder="Amtsbezeichnung" v-model="inputAmtsbezeichnung" type="text" />
@@ -32,7 +32,7 @@
 
 	const inputKuerzel: WritableComputedRef<string> = computed({
 		get(): string {
-			return daten.value.kuerzel.toString();
+			return daten.value.kuerzel;
 		},
 		set(val) {
 			void props.stammdaten.patch({ kuerzel: val });
@@ -41,7 +41,7 @@
 
 	const inputNachname: WritableComputedRef<string> = computed({
 		get(): string {
-			return daten.value.nachname.toString();
+			return daten.value.nachname;
 		},
 		set(val: string) {
 			void props.stammdaten.patch({ nachname: val });
@@ -50,7 +50,7 @@
 
 	const inputVorname: WritableComputedRef<string> = computed({
 		get(): string {
-			return daten.value.vorname.toString();
+			return daten.value.vorname;
 		},
 		set(val) {
 			void props.stammdaten.patch({ vorname: val });
@@ -59,7 +59,7 @@
 
 	const inputGeschlecht: WritableComputedRef<Geschlecht> = computed({
 		get(): Geschlecht {
-			return Geschlecht.fromValue(Number(daten.value.geschlecht)) || Geschlecht.X;
+			return Geschlecht.fromValue(daten.value.geschlecht) || Geschlecht.X;
 		},
 		set(val: Geschlecht) {
 			void props.stammdaten.patch({ geschlecht: val.id });
@@ -68,7 +68,7 @@
 
 	const inputGeburtsdatum: WritableComputedRef<string> = computed({
 		get(): string {
-			return daten.value?.geburtsdatum ? String(daten.value.geburtsdatum) : '';
+			return daten.value?.geburtsdatum ? daten.value.geburtsdatum : '';
 		},
 		set(val) {
 			void props.stammdaten.patch({ geburtsdatum: val });
@@ -80,7 +80,7 @@
 			return PersonalTyp.values().find(i => i.kuerzel === daten.value.personalTyp) || PersonalTyp.SONSTIGE;
 		},
 		set(val: PersonalTyp) {
-			void props.stammdaten.patch({ personalTyp: val.kuerzel.toString() });
+			void props.stammdaten.patch({ personalTyp: val.kuerzel });
 		}
 	});
 
@@ -95,7 +95,7 @@
 
 	const inputTitel: WritableComputedRef<string | undefined> = computed({
 		get(): string | undefined {
-			return (daten.value.titel) === null ? "" : String(daten.value.titel);
+			return (daten.value.titel) === null ? "" : daten.value.titel;
 		},
 		set(val) {
 			void props.stammdaten.patch({ titel: val });
@@ -104,7 +104,7 @@
 
 	const inputAmtsbezeichnung: WritableComputedRef<string | undefined> = computed({
 		get(): string | undefined {
-			return (daten.value.amtsbezeichnung === null) ? "" : String(daten.value.amtsbezeichnung);
+			return (daten.value.amtsbezeichnung === null) ? "" : daten.value.amtsbezeichnung;
 		},
 		set(val) {
 			void props.stammdaten.patch({ amtsbezeichnung: val });

@@ -1,8 +1,8 @@
 <template>
-	<td> <svws-ui-multi-select v-model="fach1" title="Fach" :items="faecher" :item-text="(i: GostFach) => i.kuerzelAnzeige?.toString() || ''" headless /> </td>
-	<td> <svws-ui-multi-select v-model="kursart1" title="Kursart" :items="kursarten" :item-text="(i: GostKursart) => i.kuerzel.toString()" headless /> </td>
-	<td> <svws-ui-multi-select v-model="fach2" title="Fach" :items="faecher" :item-text="(i: GostFach) => i.kuerzelAnzeige?.toString() || ''" headless /> </td>
-	<td> <svws-ui-multi-select v-model="kursart2" title="Kursart" :items="kursarten" :item-text="(i: GostKursart) => i.kuerzel.toString()" headless /> </td>
+	<td> <svws-ui-multi-select v-model="fach1" title="Fach" :items="faecher" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? ''" headless /> </td>
+	<td> <svws-ui-multi-select v-model="kursart1" title="Kursart" :items="kursarten" :item-text="(i: GostKursart) => i.kuerzel" headless /> </td>
+	<td> <svws-ui-multi-select v-model="fach2" title="Fach" :items="faecher" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? ''" headless /> </td>
+	<td> <svws-ui-multi-select v-model="kursart2" title="Kursart" :items="kursarten" :item-text="(i: GostKursart) => i.kuerzel" headless /> </td>
 	<td> <svws-ui-checkbox v-model="gueltigEF1" headless /> </td>
 	<td> <svws-ui-checkbox v-model="gueltigEF2" headless /> </td>
 	<td> <svws-ui-checkbox v-model="gueltigQ11" headless /> </td>

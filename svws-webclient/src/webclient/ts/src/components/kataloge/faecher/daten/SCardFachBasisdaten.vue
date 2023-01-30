@@ -22,17 +22,17 @@
 	}>();
 
 	const inputKuerzel: WritableComputedRef<string | undefined> = computed({
-		get: () => props.data.daten?.kuerzel?.toString(),
+		get: () => props.data.daten?.kuerzel ?? undefined,
 		set: (value) => void props.data.patch({ kuerzel: value })
 	});
 
 	const inputBezeichnung: WritableComputedRef<string | undefined> = computed({
-		get: () => props.data.daten?.bezeichnung?.toString(),
+		get: () => props.data.daten?.bezeichnung ?? undefined,
 		set: (value) => void props.data.patch({ bezeichnung: value })
 	});
 
 	const inputFachStatistik: WritableComputedRef<string | undefined> = computed({
-		get: () => props.data.daten?.kuerzelStatistik?.toString(),
+		get: () => props.data.daten?.kuerzelStatistik ?? undefined,
 		set: (value) => void props.data.patch({ kuerzelStatistik: value })
 	});
 

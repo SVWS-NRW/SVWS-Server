@@ -1,6 +1,6 @@
 <template>
 	<span>
-		<svws-ui-multi-select title="Note" v-model="inputNote" :items="Note.values()" :item-text="(item: Note) => item.kuerzel.toString()" headless />
+		<svws-ui-multi-select title="Note" v-model="inputNote" :items="Note.values()" :item-text="(item: Note) => item.kuerzel" headless />
 	</span>
 </template>
 

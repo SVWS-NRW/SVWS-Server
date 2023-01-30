@@ -39,11 +39,11 @@
 
 
 	const jahrgang: ComputedRef<string | undefined> = computed(() => {
-		return props.item.value?.jahrgang?.toString();
+		return props.item.value?.jahrgang ?? undefined;
 	});
 
 	const bezeichnung_abiturjahr: ComputedRef<string | undefined> = computed(() => {
-		return props.item.value?.bezeichnung?.toString();
+		return props.item.value?.bezeichnung ?? undefined;
 	});
 
 </script>

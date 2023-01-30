@@ -2,12 +2,12 @@
 	<svws-ui-content-card title="Mehr- / Minderleistung /Anrechnungsstunden">
 		<div class="input-wrapper">
 			<svws-ui-multi-select title="Mehrleistung" v-model="mehrleistungsgrund" :items="LehrerMehrleistungArt.values()"
-				:item-text="(i: LehrerMehrleistungArt) =>i.daten.text.toString()" />
+				:item-text="(i: LehrerMehrleistungArt) =>i.daten.text" />
 			<svws-ui-multi-select title="Minderleistung" v-model="minderleistungsgrund" :items="LehrerMinderleistungArt.values()"
-				:item-text="(i: LehrerMinderleistungArt) =>i.daten.text.toString()" />
+				:item-text="(i: LehrerMinderleistungArt) =>i.daten.text" />
 			<svws-ui-text-input placeholder="Stundensumme" v-model="pflichtstundensoll" type="text" />
 			<svws-ui-multi-select title="Nicht unterichtliche Tätigkeiten" v-model="anrechnungsgrund" :items="LehrerAnrechnungsgrund.values()"
-				:item-text="(i: LehrerAnrechnungsgrund) =>i.daten.text.toString()" />
+				:item-text="(i: LehrerAnrechnungsgrund) =>i.daten.text" />
 			<svws-ui-text-input placeholder="Stammschulnummer" v-model="stammschulnummer" type="text" />
 		</div>
 	</svws-ui-content-card>

@@ -83,7 +83,7 @@
 		blockung: DataGostKursblockung;
 		ergebnis: DataGostKursblockungsergebnis;
 		listLehrer: ListLehrer;
-		mapLehrer: Map<Number, LehrerListeEintrag>;
+		mapLehrer: Map<number, LehrerListeEintrag>;
 		fachwahlen: List<GostStatistikFachwahl>;
 	}>();
 

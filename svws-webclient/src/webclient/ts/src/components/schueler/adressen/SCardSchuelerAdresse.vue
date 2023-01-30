@@ -20,7 +20,7 @@
 					<div class="flex w-full flex-row items-center space-x-4">
 						<div class="flex-grow">
 							<svws-ui-multi-select v-if="inputBetriebAnsprechpartner.length > 0" title="Ansprechpartner" v-model="ansprechpartner"
-								:items="inputBetriebAnsprechpartner" :item-text="(i: BetriebAnsprechpartner) => i.name?.toString() || ''" />
+								:items="inputBetriebAnsprechpartner" :item-text="(i: BetriebAnsprechpartner) => i.name ??''" />
 							<p v-else>Kein Ansprechpartner</p>
 						</div>
 						<div class="flex flex-row space-x-4">
@@ -32,7 +32,7 @@
 							</svws-ui-button>
 						</div>
 					</div>
-					<svws-ui-multi-select title="betreuende Lehrkraft" v-model="inputBetreuungslehrer" :items="inputLehrerListe" :item-text="(i:LehrerListeEintrag) => i.nachname.toString()" />
+					<svws-ui-multi-select title="betreuende Lehrkraft" v-model="inputBetreuungslehrer" :items="inputLehrerListe" :item-text="(i:LehrerListeEintrag) => i.nachname" />
 				</div>
 			</div>
 			<div class="entry-wrapper">
@@ -185,7 +185,7 @@
 			if (props.listSchuelerbetriebe.ausgewaehlt === undefined)
 				return;
 			const data = props.listSchuelerbetriebe.ausgewaehlt as SchuelerBetriebsdaten;
-			data.ansprechpartner_id = Number(value?.id);
+			data.ansprechpartner_id = value?.id ?? null;
 			if (data.id === null)
 				return;
 			void App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id);
@@ -199,7 +199,7 @@
 			const data: SchuelerBetriebsdaten | undefined = props.listSchuelerbetriebe.ausgewaehlt;
 			if ((!data) || (!data.id) || (!value))
 				return;
-			data.betreuungslehrer_id = Number(value?.id);
+			data.betreuungslehrer_id = value?.id ?? null;
 			void App.api.patchSchuelerBetriebsdaten(data, App.schema, data.id);
 		}
 	});
@@ -270,7 +270,7 @@
 		get: () => ansprechpartner.value?.name ?? undefined,
 		set: (value) => {
 			const data = ansprechpartner.value as BetriebAnsprechpartner;
-			data.name = String(value);
+			data.name = value ?? null;
 			if ((!data) || (!data.id))
 				return;
 			void App.api.patchBetriebanpsrechpartnerdaten(data, App.schema, data.id);
@@ -281,7 +281,7 @@
 		get: () => ansprechpartner.value?.vorname ?? undefined,
 		set: (value) => {
 			const data = ansprechpartner.value as BetriebAnsprechpartner;
-			data.vorname = String(value);
+			data.vorname = value ?? null;
 			if ((!data) || (!data.id))
 				return;
 			void App.api.patchBetriebanpsrechpartnerdaten(data, App.schema, data.id);
@@ -292,7 +292,7 @@
 		get: () => ansprechpartner.value?.anrede ?? undefined,
 		set: (value) => {
 			const data = ansprechpartner.value as BetriebAnsprechpartner;
-			data.anrede = String(value);
+			data.anrede = value ?? null;
 			if ((!data) || (!data.id))
 				return;
 			void App.api.patchBetriebanpsrechpartnerdaten(data, App.schema, data.id);
@@ -303,7 +303,7 @@
 		get: () => ansprechpartner.value?.telefon ?? undefined,
 		set: (value) => {
 			const data = ansprechpartner.value as BetriebAnsprechpartner;
-			data.telefon = String(value);
+			data.telefon = value ?? null;
 			if ((!data) || (!data.id))
 				return;
 			void App.api.patchBetriebanpsrechpartnerdaten(data, App.schema, data.id);
@@ -314,7 +314,7 @@
 		get: () => ansprechpartner.value?.email ?? undefined,
 		set: (value) => {
 			const data = ansprechpartner.value as BetriebAnsprechpartner;
-			data.email = String(value);
+			data.email = value ?? null;
 			if ((!data) || (!data.id))
 				return;
 			void App.api.patchBetriebanpsrechpartnerdaten(data, App.schema, data.id);
@@ -325,7 +325,7 @@
 		get: () => ansprechpartner.value?.abteilung ?? undefined,
 		set: (value) => {
 			const data = ansprechpartner.value as BetriebAnsprechpartner;
-			data.abteilung = String(value);
+			data.abteilung = value ?? null;
 			if ((!data) || (!data.id))
 				return;
 			void App.api.patchBetriebanpsrechpartnerdaten(data, App.schema, data.id);
@@ -336,7 +336,7 @@
 		get: () => ansprechpartner.value?.titel ?? undefined,
 		set: (value) => {
 			const data = ansprechpartner.value as BetriebAnsprechpartner;
-			data.titel = String(value);
+			data.titel = value ?? null;
 			if ((!data) || (!data.id))
 				return;
 			void App.api.patchBetriebanpsrechpartnerdaten(data, App.schema, data.id);

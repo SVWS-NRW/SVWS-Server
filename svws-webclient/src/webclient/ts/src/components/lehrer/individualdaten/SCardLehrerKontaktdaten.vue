@@ -7,7 +7,7 @@
 			<svws-ui-multi-select v-model="inputWohnortID" title="Wohnort" :items="inputKatalogOrte" :item-filter="orte_filter" :item-sort="orte_sort"
 				:item-text="(i: OrtKatalogEintrag) => `${i.plz} ${i.ortsname}`" autocomplete />
 			<svws-ui-multi-select v-model="inputOrtsteilID" title="Ortsteil" :items="inputKatalogOrtsteil" :item-sort="ortsteilSort"
-				:item-text="(i: OrtsteilKatalogEintrag) => i.ortsteil?.toString() || ''" />
+				:item-text="(i: OrtsteilKatalogEintrag) => i.ortsteil ?? ''" />
 			<svws-ui-text-input v-model="inputTelefon" type="tel" placeholder="Telefon" />
 			<svws-ui-text-input v-model="inputTelefonMobil" type="tel" placeholder="Mobil oder Fax" />
 			<svws-ui-text-input v-model="inputEmailPrivat" type="email" placeholder="private E-Mail-Adresse" verify-email />
@@ -45,7 +45,7 @@
 		get(): string {
 			const d = daten.value;
 			const ret = AdressenUtils.combineStrasse(d.strassenname || "", d.hausnummer || "", d.hausnummerZusatz || "");
-			return ret ? ret.toString() : "";
+			return ret ?? "";
 		},
 		set(val: string | undefined) {
 			if (val) {
@@ -92,7 +92,7 @@
 
 	const inputTelefon: WritableComputedRef<string | undefined> = computed({
 		get(): string | undefined {
-			return daten.value.telefon?.toString();
+			return daten.value.telefon ?? undefined;
 		},
 		set(val: string | undefined) {
 			void props.stammdaten.patch({ telefon: val });
@@ -101,7 +101,7 @@
 
 	const inputTelefonMobil: WritableComputedRef<string | undefined> = computed({
 		get(): string | undefined {
-			return daten.value.telefonMobil?.toString();
+			return daten.value.telefonMobil ?? undefined;
 		},
 		set(val) {
 			void props.stammdaten.patch({ telefonMobil: val });
@@ -110,7 +110,7 @@
 
 	const inputEmailPrivat: WritableComputedRef<string | undefined> = computed({
 		get(): string | undefined {
-			return daten.value.emailPrivat?.toString();
+			return daten.value.emailPrivat ?? undefined;
 		},
 		set(val) {
 			void props.stammdaten.patch({ emailPrivat: val });
@@ -119,7 +119,7 @@
 
 	const inputEmailDienstlich: WritableComputedRef<string | undefined> = computed({
 		get(): string | undefined {
-			return daten.value.emailDienstlich?.toString();
+			return daten.value.emailDienstlich ?? undefined;
 		},
 		set(val) {
 			void props.stammdaten.patch({ emailDienstlich: val });
